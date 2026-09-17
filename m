@@ -1,108 +1,145 @@
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2CF545DBF;
-	Thu, 17 Sep 2026 14:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8598F4E2F3A;
+	Thu, 17 Sep 2026 14:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789654460; cv=none; b=WfexzVrzA1t/m9uzT2uitYOWbycCYz4iGYN0ZX/RpxP5aec5gzse26OEVYsMN81PgZ0+1prp1RE30FBpNbAgO0ZwlH2MzL8wA8c4TQYxQYeTP+llBgCXx7B2+1M0ZGvpnJQ0YPToNWFP1zkpLB0DdAGFnW+ZJxPiCWRF26d2CJM=
+	t=1789654717; cv=none; b=qym1YTDY0K1fgiy13INEZFD1jf3BWRyKbfisiktc+WceW+m4LZAvCi7MVVqZa3ZqTiKctgjWksxtsxBRAa80Zt/n7f1gNLtcgldlBR9MT0NY6/6jFXNXjWsfCyoLoglTfvhVxxNYY3xn7KXMuuQqP+LsMoUCON7qd/wlfDxEUsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789654460; c=relaxed/simple;
-	bh=CKzwH5IlqQ4tcQlRqwBTavEe5X3w0+DdU2PZds2WOgc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CvP4JzMySfSekwjqqxq7t8UG3OrLdlrpSgxauRjlB9hePWjpwlmJ+gNzsS9aFBmRsiVElXewMdX20ZIPmlUs5ayMBjtmpRBCLrv9kXu57icR3XLGBg+KsRHNlfA9n86iOTUUGFKivt57cyno/H1C+BgHBHrRsO+Shd+jikYwG7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from dfae2b116770.home.arpa (unknown [36.110.52.2])
-	by APP-05 (Coremail) with SMTP id zQCowADnVD+39atqTzOCCA--.4496S2;
-	Thu, 17 Sep 2026 22:14:15 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: andriy.shevchenko@linux.intel.com
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	mingo@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86: pmc_atom: Fix PCI device reference leak in pmc_atom_init()
-Date: Thu, 17 Sep 2026 14:14:14 +0000
-Message-Id: <20260917141414.2156326-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1789654717; c=relaxed/simple;
+	bh=sBxu93ntkSf2EUgxRcvdCDlKltgmL/NyoVJM9Ujl5m4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nt6aXQiTYKAlzZ2WagQapnkSyIRoj6cB1aDwe01F+y9nsNMM+AIrh3qG9zuQ2Fmh+24d+Ofe9pXo0iyRfkwzzVIPsx5Yct+SgTnjNev8dh8xXsLEPoxKUdu+44UlOJr+wGb3cTg62ExyAyIaLhFMZfXGZ6z5l1kf8bEjE+YnuX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YB2/eWbt; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YB2/eWbt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789654715; x=1821190715;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=sBxu93ntkSf2EUgxRcvdCDlKltgmL/NyoVJM9Ujl5m4=;
+  b=YB2/eWbtAckReLPI0wvr4qCdFrvlytjx0kzQRbunq4lO5X2sVfcl2PJC
+   Sgo+DpFDteYBn7IyY5c0kfh8jzScR62yzy95S9gF0SiewHEdPQjAOgsoZ
+   9Sy/VGdIN+j9VQ+q7BEboatayEJoopTLSLwKWlBQ9cvz4fuJR+ZNNwQal
+   EG7zf+FPZ+bfrWGw3/HE4/QKaVQNx+hjmbc5fSspiKjhXmzceORZzKzl2
+   rgXjmln6bWi2001O38GFMO/MQnj7VxaXWZ8VfuaVXwnYPC8yEnKXEbOcs
+   CNA0FE5nQheei7qM33Kp1SV8bIXajQAzzvOkdGc0p6pjnujD5bxz3uy85
+   g==;
+X-CSE-ConnectionGUID: ZnYTVbupRWeyhErdDlUlvQ==
+X-CSE-MsgGUID: kcKNP4bzTUKkstwHmSnKwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="100744295"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="100744295"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 07:18:34 -0700
+X-CSE-ConnectionGUID: uDgtl66KRI6dxI0+WkYCmQ==
+X-CSE-MsgGUID: yfJsfrAnTmGpXHOdP5UFMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="2043329"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 07:18:32 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 17 Sep 2026 17:18:28 +0300 (EEST)
+To: Muhammad Bilal <meatuni001@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, jorge.lopez2@hp.com, 
+    Hans de Goede <hansg@kernel.org>, linux@weissschuh.net, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] platform/x86: hp-bioscfg: remove dead bounds
+ check in audit_log_entries_show
+In-Reply-To: <20260818191120.38556-3-meatuni001@gmail.com>
+Message-ID: <248467bd-0f04-0588-4680-871f6e34ca2f@linux.intel.com>
+References: <20260818191120.38556-1-meatuni001@gmail.com> <20260818191120.38556-3-meatuni001@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADnVD+39atqTzOCCA--.4496S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ar15Ww47Xry3WFy5Zw1xAFb_yoW8Xw47pr
-	sruFyayry5Gwn7Ka1DZa10vFy5AF42v34fC3y0y3Wq93s09Fy5J34Iqa43ZFnrAFWkJ3W5
-	t3yDtF48Wa15XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB0b7Iv0xC_Zr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2
-	AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v2
-	6r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWxJr0_GcWlOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq62Iq12xI8VA0II8E6IAqYI8I648v4I1lc7Cj
-	xVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GFyrJr
-	1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x
-	0267AKxVW0oVCq3bIYCTnIWIevJa73UjIFyTuYvjxUznYFDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAMNA2qrrJrfXAAAs1
+Content-Type: multipart/mixed; boundary="8323328-1652208460-1789654708=:1179"
 
-pmc_atom_init() iterates over the PCI devices with for_each_pci_dev()
-and returns pmc_setup_dev()'s result directly from inside the loop when
-a matching device is found. The reference obtained for the matched
-device by pci_get_device() (via for_each_pci_dev()) is never dropped,
-leaking a reference to the PCI device on every successful init.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Break out of the loop, drop the reference with pci_dev_put() before
-returning, as pci_dev_put() on a NULL pointer is a no-op when no device
-was matched.
+--8323328-1652208460-1789654708=:1179
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Fixes: 2b8f8eddaf05 ("x86/platform/intel/pmc_atom: Add Cherrytrail PMC interface")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/platform/x86/pmc_atom.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+On Wed, 19 Aug 2026, Muhammad Bilal wrote:
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 48c2a0e59d18..750b72c6c616 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -579,6 +579,7 @@ static int __init pmc_atom_init(void)
- {
- 	struct pci_dev *pdev = NULL;
- 	const struct pci_device_id *ent;
-+	int ret = -ENODEV;
- 
- 	/*
- 	 * We look for our device - PCU PMC.
-@@ -591,11 +592,14 @@ static int __init pmc_atom_init(void)
- 	 */
- 	for_each_pci_dev(pdev) {
- 		ent = pci_match_id(pmc_pci_ids, pdev);
--		if (ent)
--			return pmc_setup_dev(pdev, ent);
-+		if (ent) {
-+			ret = pmc_setup_dev(pdev, ent);
-+			break;
-+		}
- 	}
--	/* Device not found */
--	return -ENODEV;
-+
-+	pci_dev_put(pdev);
-+	return ret;
- }
- 
- device_initcall(pmc_atom_init);
--- 
-2.34.1
+> audit_log_entries_show() checks "count * LOG_ENTRY_SIZE > PAGE_SIZE"
+> prior to entering the loop. Because "count" is already bounded to fit
+> within PAGE_SIZE, the inner loop check "(LOG_ENTRY_SIZE * i) > PAGE_SIZE"
+> can never be reached and is dead code.
+>=20
+> Remove the redundant inner bounds check and eliminate the unnecessary
+> "else" block after "break" to clean up the loop control flow.
+>=20
+> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+> ---
+> Changes in v3:
+>   - Remove the dead inner loop check completely instead of adjusting
+>     the boundary arithmetic, as noted by Ilpo J=C3=A4rvinen.
+>   - Remove the redundant else block after break.
+>=20
+> Changes in v2:
+>   - None for this patch; resubmitted as part of the v2 series.
+>=20
+> Link: https://lore.kernel.org/r/20260803143037.93105-1-meatuni001@gmail.c=
+om [v1]
+> Link: https://lore.kernel.org/r/20260812111829.172273-1-meatuni001@gmail.=
+com [v2]
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/=
+drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> index b57e42f29282..3b20757a3e74 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> @@ -93,15 +93,12 @@ static ssize_t audit_log_entries_show(struct kobject =
+*kobj,
+>  =09=09=09=09=09   HPWMI_SURESTART,
+>  =09=09=09=09=09   audit_log_buffer, 1, 128);
+> =20
+> -=09=09if (ret < 0 || (LOG_ENTRY_SIZE * i) > PAGE_SIZE) {
+> -=09=09=09/*
+> -=09=09=09 * Encountered a failure while reading
+> -=09=09=09 * individual logs. Only a partial list of
+> -=09=09=09 * audit log will be returned.
+> -=09=09=09 */
+> +=09=09/*
+> +=09=09 * Encountered a failure while reading individual logs.
+> +=09=09 * Only a partial list of audit log will be returned.
+> +=09=09 */
+> +=09=09if (ret < 0)
+>  =09=09=09break;
+> -=09=09} else {
+> -=09=09=09memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
+> -=09=09=09buf +=3D LOG_ENTRY_SIZE;
+> -=09=09}
+> +
+> +=09=09memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
+> +=09=09buf +=3D LOG_ENTRY_SIZE;
+>  =09}
+> =20
+>  =09return i * LOG_ENTRY_SIZE;
+>=20
 
+Patch 1 didn't apply without special trickery, this patch 2 doesn't even=20
+get that far:
+
+checking file drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+patch: **** malformed patch at line 65:         }
+
+:-(
+
+--=20
+ i.
+
+--8323328-1652208460-1789654708=:1179--
