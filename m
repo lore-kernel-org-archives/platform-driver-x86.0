@@ -1,160 +1,128 @@
-Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEA13812C2
-	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2026 02:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42459449B33;
+	Thu, 17 Sep 2026 08:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789611089; cv=none; b=gbZW+pLZSZY1Y4Mk05P7jB1aDlpT9ipNuz0pV6ZAreHZfjbeSn/+1AkHQtbEK7kE1w4vzFeJjduLLEb4pxpr+Ca5me//6yLvIATDr4ZqxLui6IPmtZbC+yWbeOFyvnRSGVW9JVTRDrXHEhKY+YPZUZUKm6MHY8ct35xKjNvgKC4=
+	t=1789634700; cv=none; b=gtITAfGNkUbzLBAjMeq6H2RWYAyhCDXJFt473OwkZi7XTvAGMe/bI3fFI2BQ2txNdKvHHgBfxlLzDTlJ6IOH/M/oL34DULC4ND+U/DInUE5wkhnF1b6Iv+bzI7KTydoe0n22uu8/auXh5ADrbhpkF+R7FiYudH+95JPi1yL8jHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789611089; c=relaxed/simple;
-	bh=HZBXv4jU+OH7HPxkBvcIcczFxFHKKG0jFS4KYrWsCr8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hkAk5LyXgL+x/D2nIMVAnhltdzkZKiwpPY8RxKIBo1T+0iDyTweiy9P1cCIkQxzAS4+hFYh7Nzf+3Z+RUfAg7hf4+ygo0djdbXWJineXdhuddmBnGKL4UdeAQ1Nsr00ynLhaHkSo2rhNEJ8tEHlkSLiVubBnoMhhjNJbS2r04Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDpjiPO0; arc=none smtp.client-ip=74.125.227.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789634700; c=relaxed/simple;
+	bh=TMTaIbJLsJLv/mTg2rgUmjtIHOhKYVUPD303vPU1PyA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hnBlMHealxYoIfda0Ac6nq6fCc9OtKcy+uQeUPnQHVWqOLb8ADSC8NEWkAC0Q4H2uB+ILb0HuvLrjb/3CY8cmVUV1WKhlwZ5bkrWesDaCJ3oMqhoHi+sCcDfSL81jkto+vROzKIIxniERxkh/TETy83e0+oLTRImljjTCaDcxeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIZ1G7vz; arc=none smtp.client-ip=192.198.163.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDpjiPO0"
-Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-39e03468a5fso289773a91.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 19:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789611086; x=1790215886; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=4gsVWXpnjX78h0nmw4XlSnFALx3t9o8uakK9lz3EF6E=;
-        b=HDpjiPO0ejwReNHOfXmIBm3Sk6V2MJzJ8HfUhc99Q0MpPLV6e7VxZxvBQ9AFDQylmQ
-         W3YJnespGd+MW9JUJ7Zxvnc37VZ12y1yasBAgjig2jVQp2/LmeA+xmR6VrpoE2xKsMA4
-         WTsC48oJyignIWj5gVseFVxzY1+lmByuf4QcKdwUfBUoZxcRkO/75rRzE1h0AcTky/74
-         ZREo31ife4Y/CquG0uZR9fzKcVFazVnBZLsP/9p6sQ5BpUXOk/1e9WoOy98swVHK3r/V
-         hiKhB6BbTtKMphyheERjZ1EeFd87HNLTUn21mM5d1xKlRe6gJ7SS2ifV0+2yeu2oxpc6
-         S4Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789611086; x=1790215886;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=4gsVWXpnjX78h0nmw4XlSnFALx3t9o8uakK9lz3EF6E=;
-        b=TwcxhNYiw6r3QeZeclPLA+oButoEHsA7qPDckGLheOI3RcGtJdGJMTmtQJ+xufo1Ab
-         fz/xcDK3F1Slzm35hgCPqyUHhj3HxS2qjR+U8lC95uHy4AQJnufCjcX5d+MKPrJrWpm5
-         cbcMQVOgLwhwQnH59dW/yeK13yDvChwZYXRmYdKPUVs/Lpv5KBculmL0YD6ZnGjOdw8L
-         aYoqBVivRku1IBaYlT9I+c884zQAudlDBIqBTgvLHURZyy7VwjipzUiBsIuihUTKzSfO
-         WvkJR05dWdtK1PLFSag+xRXpHI7kfcny4O2/qi+QvtdRuZkcAxe6NPRo7X6H59iCWo+q
-         7iOQ==
-X-Gm-Message-State: AFuF++mF+i9ki+9J3DIb8+R4M75zw10Jd0mB7FntFhbJCKxx7e64wGdv
-	CMKEtCMmNSLdW5gphxJa+lhF8hNQ4wr4JRM0zznyeGRSfWjLzA4T2+abrn43gjjRgio=
-X-Gm-Gg: AYBFou2G9kzJM/DHhBRHiA66M0VcfNAXW9zihE0fL5F6QmHyOa2ihFK1CTF8fpu/q3B
-	sENjFqK3HdUceR7aGQWi1eYS0AmjXSobC/lO+zpu0tWTzJASu2A5AoqxAkYd1Zo4i1L6wIYAqQz
-	dD+w0hoxPG9nImItzovAR1T9/lZvfCLDGGYlXtyCZrSpNOFemKIRPMpsct9iojpMZ4h7alb8lQ2
-	tdHi2ARH6MD0A6y5tE9Vl1cAfvjaHxKUag+cukPcJIsO6m1PC2+s/m6vuMLreFILJPYSerdekrc
-	sDaqydhDE8AZhtFFEQzLwQa9DriCnylQrn35DD+xelzH6PZGYCuhp2uu5+UOwAf4KE+NbrPamYT
-	TyEqsZKDaIiZKWZYs1yqGB72x+wLiVZVugReyl868oDpuQ8LEoupMPUuC0WalZBKgcfTraNIaRn
-	viWch9xq6J3ptsR1zGZVYqyb5aF/J4Pa3wN88Y52fhc5kJjxexo3ASUefifvWHBme0y4tJaR92u
-	3IQYSQlRtIJTJmF+L3NTg52aSnPYUEbgoM=
-X-Received: by 2002:a17:90b:524d:b0:39d:eca2:5c81 with SMTP id 98e67ed59e1d1-39e1e2dea05mr11005754a91.8.1789611086223;
-        Wed, 16 Sep 2026 19:11:26 -0700 (PDT)
-Received: from localhost.. (59-124-112-186.hinet-ip.hinet.net. [59.124.112.186])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e36096735sm2341821a91.12.2026.09.16.19.11.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2026 19:11:25 -0700 (PDT)
-From: chipang_kao <prozac2734@gmail.com>
-X-Google-Original-From: chipang_kao <chipang_kao@asus.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	bryan.odonoghue@linaro.org,
-	W_Armin@gmx.de
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chipang_kao <chipang_kao@asus.com>
-Subject: [PATCH 2/2] platform/arm64: Enable ASUS WMI driver support
-Date: Thu, 17 Sep 2026 10:10:55 +0800
-Message-ID: <20260917021055.8029-3-chipang_kao@asus.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260917021055.8029-1-chipang_kao@asus.com>
-References: <20260917021055.8029-1-chipang_kao@asus.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIZ1G7vz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789634679; x=1821170679;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TMTaIbJLsJLv/mTg2rgUmjtIHOhKYVUPD303vPU1PyA=;
+  b=NIZ1G7vzss9ByRy7Hvwa+MMVhaA4uWwkzyTe6ZbvRu9sFcMro3Zy9HhC
+   d4Vaog6rAILg4e+SaHtuCjz0lGNVRRitRANhPKDvbkTDTjxEu0COHoDJC
+   AhRK0flDPyLJdlnYudTJry0JNYhl9N6g/Hjx7yT9DwFF82KqI6Wua89Mr
+   Fprw6nt0DeFFQsx2Ifv6IL+XrIgWCISe0duPgGEvp07Fetsrr0yCSS3vv
+   4izHSgBYsTnKYQx/dGylqJZiRt47FpIXV9h/PS45japFT+wT0KKG/B3Oc
+   rED4CcBRIedRhAW9A8+iu9fHNIXurXLko6eFhzfU+GGPkrrMS7+o9b+gP
+   A==;
+X-CSE-ConnectionGUID: b11WNkkOQI6f+An0Jra2+w==
+X-CSE-MsgGUID: 0+QFpiYdQHeW08u34FzE1A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="543456"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="543456"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa116.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:44:34 -0700
+X-CSE-ConnectionGUID: A7xAF+jvQ86QaNy8zguPww==
+X-CSE-MsgGUID: nhNzkWHhS/yCaInJ3w0gnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="1874791"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:44:31 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 17 Sep 2026 11:44:26 +0300 (EEST)
+To: Daasaradhi Mannava <daasaradhimannava@gmail.com>, 
+    Denis Benato <denis.benato@linux.dev>
+cc: Nikita Kravets <teackot@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: msi-ec: Report valid charge thresholds
+ when unset
+In-Reply-To: <20260916174812.11496-1-daasaradhimannava@gmail.com>
+Message-ID: <12cdf224-08aa-d19f-62fd-fbc6e26d6103@linux.intel.com>
+References: <20260916174812.11496-1-daasaradhimannava@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Wire up the Makefile to build drivers/platform/x86/asus-wmi.c
-and asus-nb-wmi.c without duplicating driver source code.
+On Wed, 16 Sep 2026, Daasaradhi Mannava wrote:
 
-Signed-off-by: chipang_kao <chipang_kao@asus.com>
----
- drivers/platform/arm64/Kconfig  | 46 +++++++++++++++++++++++++++++++++
- drivers/platform/arm64/Makefile |  2 ++
- 2 files changed, 48 insertions(+)
+> The charge thresholds are computed by subtracting a fixed offset from
+> the raw EC value. When no charge limit has been set, the EC can hold a
+> value below range_min (0x80 on an MSI GL65 Leopard 9SCXK), and reading
+> the sysfs attributes returns nonsense:
+> 
+>   charge_control_start_threshold: -10
+>   charge_control_end_threshold:   0
+> 
+> Both attributes are documented to be within 0 - 100, and an end
+> threshold of 0 wrongly suggests that charging is disabled.
+> 
+> The store path already rejects values outside range_min..range_max.
+> Apply the same range to the show path and report the maximum threshold
+> for any value outside of it.
+> 
+> Tested on an MSI GL65 Leopard 9SCXK (EC firmware 16U8EMS2.100) with
+> the EC holding 0x80: the attributes now read 90 and 100.
+> 
+> Fixes: 392cacf2aa10 ("platform/x86: Add new msi-ec driver")
+> Assisted-by: LLM
+> Signed-off-by: Daasaradhi Mannava <daasaradhimannava@gmail.com>
+> ---
+>  drivers/platform/x86/msi-ec.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
+> index 566dfc73c..1762551e0 100644
+> --- a/drivers/platform/x86/msi-ec.c
+> +++ b/drivers/platform/x86/msi-ec.c
+> @@ -1279,6 +1279,15 @@ static ssize_t charge_control_threshold_show(u8 offset,
+>  	if (result < 0)
+>  		return result;
+>  
+> +	/*
+> +	 * The EC may hold an out-of-range value (e.g. 0x80) when no charge
+> +	 * limit has been set. Report the maximum threshold instead of a
+> +	 * meaningless (possibly negative) percentage.
+> +	 */
+> +	if (rdata < conf.charge_control.range_min ||
+> +	    rdata > conf.charge_control.range_max)
+> +		rdata = conf.charge_control.range_max;
+> +
+>  	return sysfs_emit(buf, "%i\n", rdata - offset);
+>  }
 
-diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-index e32e01b2a9bd..59aa389d9aab 100644
---- a/drivers/platform/arm64/Kconfig
-+++ b/drivers/platform/arm64/Kconfig
-@@ -103,4 +103,50 @@ config EC_QCOM_HAMOA
- 
- 	  This driver currently supports Hamoa/Purwa/Glymur reference devices.
- 
-+config ASUS_WMI
-+	tristate "ASUS WMI Driver"
-+	depends on ACPI_WMI
-+	depends on ACPI_BATTERY
-+	depends on INPUT
-+	depends on HWMON
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	depends on RFKILL || RFKILL = n
-+	depends on HOTPLUG_PCI
-+	depends on ACPI_VIDEO || ACPI_VIDEO = n
-+	depends on SERIO_I8042 || SERIO_I8042 = n
-+	select INPUT_SPARSEKMAP
-+	select LEDS_CLASS
-+	select NEW_LEDS
-+	select ACPI_PLATFORM_PROFILE
-+	help
-+	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
-+	  Asus Notebooks).
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called asus-wmi.
-+
-+config ASUS_WMI_DEPRECATED_ATTRS
-+	bool "BIOS option support in WMI platform (DEPRECATED)"
-+	depends on ASUS_WMI
-+	default y
-+	help
-+	  Say Y to expose the configurable BIOS options through the asus-wmi
-+	  driver.
-+
-+	  This can be used with or without the asus-armoury driver which
-+	  has the same attributes, but more, and better features.
-+
-+config ASUS_NB_WMI
-+	tristate "Asus Notebook WMI Driver"
-+	depends on ASUS_WMI
-+	help
-+	  This is a driver for newer Asus notebooks. It adds extra features
-+	  like wireless radio and bluetooth control, leds, hotkeys, backlight...
-+
-+	  For more information, see
-+	  <file:Documentation/ABI/testing/sysfs-platform-asus-wmi>
-+
-+	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
-+	  here.
-+
- endif # ARM64_PLATFORM_DEVICES
-diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-index 7681be4a46e9..d608b2aa8c12 100644
---- a/drivers/platform/arm64/Makefile
-+++ b/drivers/platform/arm64/Makefile
-@@ -10,3 +10,5 @@ obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
- obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
- obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
- obj-$(CONFIG_EC_QCOM_HAMOA) += qcom-hamoa-ec.o
-+obj-$(CONFIG_ASUS_WMI) += ../x86/asus-wmi.o
-+obj-$(CONFIG_ASUS_NB_WMI) += ../x86/asus-nb-wmi.o
+Hi,
+
+This seems similar to case in commits:
+
+186bf9031666 ("platform/x86: asus-wmi: do not enforce a battery charge threshold")
+78bf392ba77d ("platform/x86: asus-wmi: temporarily revert to setting a charge limit")
+
+(The latter reverts first one as userspace could not handle -ENODATA but 
+thought the feature was available.)
+
+So ideally, I'd tend to think we'd want to return -ENODATA when the 
+threshold hasn't been set. But whether userspace survives that is a 
+question we cannot ignore.
+
 -- 
-2.43.0
+ i.
 
