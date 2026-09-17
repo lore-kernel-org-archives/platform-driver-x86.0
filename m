@@ -1,269 +1,284 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA04A3921CE;
-	Thu, 17 Sep 2026 12:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789648302; cv=none; b=GTKpRKUwUOdgcar01uPibkCZzDfPDZR6gG+zyLAQxAsyh6sSc/+pFC2izb2YjETjEj9UZRFgUpyswZjaLZbrVo3DV6UvF8xzJoaEjGtKzy12ZQMLWbGM588D3Wyy0koSV6uKup5tXynWWWcqliaoC0OCHORwMvQo5NYQdT0u5UM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789648302; c=relaxed/simple;
-	bh=ej9da1CE5FWPagSE8f/cuLclZWz2eQSFfpoNcK1TfIo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nYTjPdvHiWxUeK1IaP6Mcu1FkpFltlI6aClCql2ax9MvUT07ujtBTCyEamkIURvfcDLYzivUbY+5r1Qv0yUbK9r2Gt0XN65mUc6tODiZNUCS9ILIc7iFQGcowuEdelgjtlr9HPI5kFIqswqFvbtGf1uXPqrqeUVJh92Yi+e69AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IcrNaz4j; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A1448CD55
+	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2026 12:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789649731; cv=fail; b=kHQM2RR+RFxWMTDsU1M1JoE4xsMV+cFkD2VJoDIvBCqqnz4wXSLKkVtpC0BbKjO5nonbvToh3OeslOdxNSsaQ5ZjEqtFUeXYuIkGPiSkWO0G0hlVQJ67ZsQz9C00bK9YXYehZyFhiy1Lyz5kP6/SWWiBIS+hsVmEZHmcWMt8kuA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789649731; c=relaxed/simple;
+	bh=FMBYxHsXshheyhB3cAahyI17DQ13rKbabxb0tKXK/uY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QvKsmp7VzO2fPDSyLpRxuIUDZVdvU9wgF2T++Ct1RU/I79yuUNR5cNq9iKzd8M/byRpIzJnuIB7qwGF7hAHkiOA0AoDRIcjXy/7zuiEDKoKqFuIHbrfbwYr5q7sESt5Oz5K7hHKiIYQ5TkMKlrEDcM6UtkRhrsD3f/r1HDUaAAI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BVaB1ZcO; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IcrNaz4j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BVaB1ZcO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789648294; x=1821184294;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ej9da1CE5FWPagSE8f/cuLclZWz2eQSFfpoNcK1TfIo=;
-  b=IcrNaz4jwWjsJfGSBB78xy+PMo8L464SlddFtRydO0SYJErf0+tC5zi9
-   dAgpMVivBucx1mdbiyL/sUQoK7ZuXbWYquerAXnWPzTDWxiNs59/ru6xi
-   B9kchZq8C5yj/D80qci62PNRM/fQweN/L0v/u82Pte+atmZk0nebI5ZC0
-   6qLmK3wS8bKaTNB6MrpTnB5lqSVYTZ0GgVfu1hBQ7D5KlZU3CBfoGOwv0
-   DFfs6dDOFjOckfJB4HvdSAcZx+8Ga562S2NFrw/SWITOdjtohROyqz6AK
-   oNh34HGCvFWmsJQVLx/Bq8ZIdpJFfEkeZzMcxi53PIRAur7Cxxg4cF58S
+  t=1789649722; x=1821185722;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=FMBYxHsXshheyhB3cAahyI17DQ13rKbabxb0tKXK/uY=;
+  b=BVaB1ZcOw9oFHAJ82KYv5OC/56lvMM9HwLNFkrti+NsXeP66kBPF+oMU
+   XVScqr6zFkTmRnHqvNzPev2C0HtyHQyvCUkzhAX+PGnjI93yPGqpY2X1K
+   62IQSlkIr7Np+EmeNSavrRsTKxx3Ek+XqUA/qclOMJ1iILL89jLgllM2g
+   ubh+p8bpJ/GbCVpFDk1WQMy+VZE4tRcCkCxpwpt7AeLl8hCzkYKSRwL+K
+   xgR8eDfaSDvMjX1BKpMt/ZsgiMog9TWlvOTvt8ekJfNaa6Xvhy7C5LXa4
+   O/iQv/Y5dRRedLPYur68kFHEQPEyhySdUiZjag5IbLdFNdHzYgfDGeJpw
    Q==;
-X-CSE-ConnectionGUID: OteWGfv8QOaENNqF0WZYpA==
-X-CSE-MsgGUID: VPpuPZk0ShK5e2DzhL4tJA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="107570768"
+X-CSE-ConnectionGUID: glwCa11tSVe3+HdrxrILUQ==
+X-CSE-MsgGUID: f6jsXBvPTJGPvgNXvnY36g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="77632616"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="107570768"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:31:26 -0700
-X-CSE-ConnectionGUID: qO9cgzIlRAOoAGe78dRXWQ==
-X-CSE-MsgGUID: 4APwPwyLQQSDuTIm07YTOQ==
+   d="scan'208";a="77632616"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:55:18 -0700
+X-CSE-ConnectionGUID: EOgTqgbIT8SWGejFmlgtJA==
+X-CSE-MsgGUID: CtVsie0sQzyQziaTys2xMQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="270453428"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:31:19 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 17 Sep 2026 15:31:13 +0300 (EEST)
-To: Hilgad Montelo <hilgad.montelo@gmail.com>
-cc: kenneth.t.chan@gmail.com, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] platform/x86: panasonic-laptop: Handle CF-33
- rotation-lock button
-In-Reply-To: <20260813221744.25668-2-hilgad.montelo@gmail.com>
-Message-ID: <d08ccf78-5d8f-f37a-c8df-2efa5623ec1d@linux.intel.com>
-References: <20260813221744.25668-1-hilgad.montelo@gmail.com> <20260813221744.25668-2-hilgad.montelo@gmail.com>
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:55:18 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Thu, 17 Sep 2026 05:55:18 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46 via Frontend Transport; Thu, 17 Sep 2026 05:55:18 -0700
+Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.38) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Thu, 17 Sep 2026 05:55:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DTMi4HxzLRGcmmezy8SLl05d0Dnd+Uey/8El8B3updjslvEhu897nffpVTPjeMftlvA0wxBUbGZbSrio/fQ4f/V9fh7i75enSwrcnm108hSEaJUEcsO0I5hnglYlTZ7pqGvsY+g/piQGAyauKoIk/tpr4MoxQvnkcjTlt9TetresxhHWYRgjLbxSdOX3FYBrGIUVS0/dL0PlWcdH/0gIPGEkajRZ0SDd9PSdM0hdqnHs7BV/dhB952JB7qYoHkJP5tTaDETjltPjoUIRCGdqPcOmWcRwJq/g1LU4yUxX/e5+KPYq983qNRL/SDo9ChVywiRkhG8coz7QVAeSocSlWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xfEm96vfvOOuAV5/Ak6v9CDGqH9vkZEzzfyrwb2UlYo=;
+ b=bKbKrvBhULRuro6DSxepMc/U+WKhdVrlHfLDA9fhfKPuK0QcZBeEf5G9G94GMJ0ZXyHzy2cVQhj+vjME8nmzpCDl5sqVdHyYyhac1X0k8m8PzXhFpE+4KQ6xfe9VafdnL6IyYbyVSYUCYYjaTjSWJEzPPXfoW14vIIXDfxs3FoIEuEziBGOr7VDma+VTgoEOaEmtlIGYvAIIiaKsDdeKwq+2PbAC7WlPZXgm2JkgynGPt3681jsMogFjc31FtyRFF13qisBH0zMv8NLb7R1Ry0O/esBA/aPJhBMnf2dtt+skDPJzmqY7BrZsg7wFnEVSw6YEZXNzZ2Eb82xGmk18SQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CH3PR11MB046149.namprd11.prod.outlook.com
+ (2603:10b6:610:367::19) by PH0PR11MB7634.namprd11.prod.outlook.com
+ (2603:10b6:510:28d::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Thu, 17 Sep
+ 2026 12:55:14 +0000
+Received: from CH3PR11MB046149.namprd11.prod.outlook.com
+ ([fe80::7c3f:5300:19c4:b823]) by CH3PR11MB046149.namprd11.prod.outlook.com
+ ([fe80::7c3f:5300:19c4:b823%6]) with mapi id 15.21.0428.011; Thu, 17 Sep 2026
+ 12:55:13 +0000
+From: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "intel-xe@lists.freedesktop.org"
+	<intel-xe@lists.freedesktop.org>, Hans de Goede <hansg@kernel.org>, "Brost,
+ Matthew" <matthew.brost@intel.com>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+	"thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>,
+	"airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
+	"david.e.box@linux.intel.com" <david.e.box@linux.intel.com>, "Vijay, Anoop C"
+	<anoop.c.vijay@intel.com>, "Nilawar, Badal" <badal.nilawar@intel.com>,
+	"Roper, Matthew D" <matthew.d.roper@intel.com>, "Ausmus, James"
+	<james.ausmus@intel.com>, "Poosa, Karthik" <karthik.poosa@intel.com>
+Subject: RE: [PATCH v9 09/20] drm/xe/vsec: Add DOC text for VSEC
+Thread-Topic: [PATCH v9 09/20] drm/xe/vsec: Add DOC text for VSEC
+Thread-Index: AQHdRhe+/rwzmr3xE0iBusYR8jkhMrbSicEAgAAw62A=
+Date: Thu, 17 Sep 2026 12:55:13 +0000
+Message-ID: <CH3PR11MB04614971E2CE95C3E8DA7A9E5AC1B82@CH3PR11MB046149.namprd11.prod.outlook.com>
+References: <20260916201139.2374531-22-michael.j.ruhl@intel.com>
+ <20260916201139.2374531-31-michael.j.ruhl@intel.com>
+ <054c50bc-7fc7-c5f1-e650-5233048b9188@linux.intel.com>
+In-Reply-To: <054c50bc-7fc7-c5f1-e650-5233048b9188@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB046149:EE_|PH0PR11MB7634:EE_
+x-ms-office365-filtering-correlation-id: 131143e9-9522-434a-03c4-08df14baea64
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|56012099006|18002099003|22082099003|38070700021|4143699003|11063799006|10067099003;
+x-microsoft-antispam-message-info: dKpS7+MjLlDOl/dI/wDrkJfwCXJ5z//CiRnVECNZzWHwXD8bD5KV1+BOdvROhgpIMpF1uPrDV7m6S/WT9DoLQlGo/1S/gvRLQ3ODHRdeqV2lkSTBH/E01odwab65k+YETBHGJ40dmAaaOd7xiizDqO7xOtuDds5aPtc/wieeZG+AxFmgU0pa/qfBbojfrexPL2bKjcIPDYyvJJpwvD8dz1sHxDXRxdRpGHZnT1+VDC2gWgD3YN61iUmPHTS4ED6x7kKLezzkB87hYCZVtN8nriT+MV2dWz4kNcGMlWPYBgebb8BoxRG630HmXDEILZQIJb1W9vfx5Pmc7uZYz7n1ZttqVxj0xKoDBNDYgyTIjRgm75g9OEYYIzH1Hp3z4UG04nHP7iwh3emWfhuRd0ryG+CY414zKU5FEewrbxLqrS3PwSCtcWjrPA+pbfrM7s+yGexEEz1a993DFIzebeBs/kE5x+HbEtT8TMMsDNWuXMlUFOnWAet4OEPmwpRJECrltqgeWEl6Nqzx8X1JcS9F/7NHFTmn0/3Y/AO/0LGdSGHM20qKZj52XtgNMc1kQiuwCBNHrCulWwguZpdDa5JsJEHi0WZt++r2J43q66umAa2ruFpcLlfbV17GokHsnfYAEdvB7JiCTRvUSrgde802pEWYRbQ2qvHFm6c+rGQ9nM95ADdznShHMFbWUhXOGlttQs5j3a0AeVsDRW8P0Jr09P5wF07c1+CgdHUoZFLZ3d8=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB046149.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(56012099006)(18002099003)(22082099003)(38070700021)(4143699003)(11063799006)(10067099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?VRKD3HCKYaNN2IFDLT4wwv0DZyi8tk0Y4KvLnCObwFZ0O3XUdmQ6TZjh7f?=
+ =?iso-8859-1?Q?ff+YIqNqmH+Jm0tODL9BQDO1k0MuVYZ3qLHU5z0I0lvv7mqV2lYiXxCrHS?=
+ =?iso-8859-1?Q?G/Fih/OhJ4AlSQ2ylsKPL9ggOkXtDm33rhatI+3sKHQ715m1pVEMF/inOa?=
+ =?iso-8859-1?Q?zfC9UPIoWF6rr6qd0WJCTrzcF6LkwRsPTfv7pxxTDHSc2gH+XvE0GIaQ6m?=
+ =?iso-8859-1?Q?j9pUKQYR1ZPqEHmL1AxPfEXfDSnM+FSgP9pUD/aEPfcITou5U2JRQ2UTBN?=
+ =?iso-8859-1?Q?0Xsyk5obwRwynpPeiPQMcbHU54i8kNk7LBq0NRMEhMMW+ZFaY9zixDkTzy?=
+ =?iso-8859-1?Q?67cmY3cfh9KVfHDownhHWiPLmwJS+bYTudBRz9uD37KTdQNVDZPXUMoFn1?=
+ =?iso-8859-1?Q?WMRogivn8Fp0Epb/XJWjOIVJBRlflhblFU1fASGa94JA49Dhd6CljhSHfg?=
+ =?iso-8859-1?Q?wU1AzFsBobTQF4iDJIsm+s3SHXY8q7k69/hCuPBUHcnV7ZCkSZIKaRHl00?=
+ =?iso-8859-1?Q?6qfngMVRtfe03wD21Inq8R3O0sxyWSJs6MaZ4+YDd1jfN14y12gYzK9JGI?=
+ =?iso-8859-1?Q?KyXieb4c4CDbpPGQUJORzCaSPjGe0S0qikjK6jFhilfcEq3sjE4/8m8mxv?=
+ =?iso-8859-1?Q?nmDGO+YT+DTuxUo3I+ybb09u3iTIjKq8nQVSW3cfVo8wWte9c+m84n3rtj?=
+ =?iso-8859-1?Q?vzy6V8nGhgEFmcDSAnvRp72FxjDsZO8+aCw/YYliYA3kDssoHspa816rhW?=
+ =?iso-8859-1?Q?2/71jSOsT8+HWF2LN7gCiCD7sAXpyHuIKpTVIQ/dVHJvL+42w124rBHgZR?=
+ =?iso-8859-1?Q?/kgHhr+Jzc6PcsLTkeDztNE514JQx+GvfsZNc9i3Kxq9pLW+4iNmp9+IeT?=
+ =?iso-8859-1?Q?ruJ0yA8lZEhbm31pGVUrAm7Xm0w3sTJUamuLXTfNLiMUMjHwiY2jZGmiIp?=
+ =?iso-8859-1?Q?h+AqqILQfcXDuVTz6VPzrBY2MXcLSD+cow/wrZTnRlBFplHpYWbUYGm8nR?=
+ =?iso-8859-1?Q?qQWA8qsCbs2fkLBFjUdNvS951AkszvYr7xCGaeI34apVmAKEIAVRTI67/g?=
+ =?iso-8859-1?Q?rfj2MNmOb9jYWfY/x7In/YKNPzuDDdRSZPAz2q62/o9Mtdf6Bo3WsaxKW0?=
+ =?iso-8859-1?Q?hnuiAIFZfYdOhQJ9FEywZq0EvQTtZwLEjAAKMZ4CKNa1f0Q1ZuFh13PvYj?=
+ =?iso-8859-1?Q?OroAewLZGhRsEtQaIXjES1RyNf6AoqsdqSd1UXJEi1p4pPirQzX9bitAC5?=
+ =?iso-8859-1?Q?X8lT+oJBs/EbfjFFsxBjS2DWOZ+uQ5ftITkXypB9XxzplWka66VsvUX9h2?=
+ =?iso-8859-1?Q?Yj/+z+mM/QqT09JmiSy6bkjpBZ4QK10lLJLd1KiQAjB59/51epEW+ycput?=
+ =?iso-8859-1?Q?PswoeQbqTbiHHO4gWOPZXVSY4CLsElI9Ks8M12X4JmlIynHrL6Tdbk3JTH?=
+ =?iso-8859-1?Q?wuMDfO1Z/p5wCzSARp7gkLC+OusQCT5nw93F+ycg5N2uPKEvo3eiBPjo9Y?=
+ =?iso-8859-1?Q?MoVUOXq/bfUMcCIox9Avkv+N0ImjJppPPUNicaXnubczBhSYMwBeYehCpH?=
+ =?iso-8859-1?Q?3jPIhF1fIilk+oT7FRVuoBZqqOh+Pyazu4YHkESLpwmeVIHqVmyplNzxJT?=
+ =?iso-8859-1?Q?As4z21zqU14MUZkW+I8fe61tEV1gosPbbgk57963wQdTJvP4u/R+TYeAVu?=
+ =?iso-8859-1?Q?CKiiVpIvIeLXi4Q6gDotQgj0MGCacus4IcsgTXTurcKt+Ohyeg+VNg3BwW?=
+ =?iso-8859-1?Q?sFsAHHMCTMLGY8qbO1DP6/AoXrIRTEB9leVeD02uOUdtg1y0B6agGVX8+t?=
+ =?iso-8859-1?Q?tM1wfD7E5g=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1278692877-1789648273=:1179"
+X-Exchange-RoutingPolicyChecked: gSi95AuWyjxABRxIPW0S2xEUUVzOtf/PON9/t/0wtT6cp6AuSGdrWqzx7+jaOauoGj3uDdTZWi8WTqajVQy83MbQYn9W6FxzZxJHwaVwpuTdZV+CLPORkIOyCgJWbquWU2FM8XoAgqXoIYIxVHdvtNysZAlTwwTofppY1yaaoNH0QtdgyKiQYu1gzZqKZVdEVIW1Y9DEcyNd/2uCh4Z6YnDsVIqzTSr2/C3OUiTOm1n9TiUltfJebxL4a27pHa6NpeW3CDxkI+w6S6fJQFnYczsEW93VVgEnZf06+97Swt29C0yy5IuPL+BRCw6tPg0taskwkTkUPrQ9DAaVHU78gg==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB046149.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 131143e9-9522-434a-03c4-08df14baea64
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2026 12:55:13.8774
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QNxDmldr4UzkZZ/OQiFHrBVRlWPI7QNWnkMdAJjlUfE/CzhnlX0Vi9/dJfexNrCaMuDytdxlTd+1Xt48griX/AzjabizMKsThSQc1uiL75g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7634
+X-OriginatorOrg: intel.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+>-----Original Message-----
+>From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>Sent: Thursday, September 17, 2026 5:58 AM
+>To: Ruhl, Michael J <michael.j.ruhl@intel.com>
+>Cc: platform-driver-x86@vger.kernel.org; intel-xe@lists.freedesktop.org; H=
+ans
+>de Goede <hansg@kernel.org>; Brost, Matthew <matthew.brost@intel.com>;
+>Vivi, Rodrigo <rodrigo.vivi@intel.com>; thomas.hellstrom@linux.intel.com;
+>airlied@gmail.com; simona@ffwll.ch; david.e.box@linux.intel.com; Vijay,
+>Anoop C <anoop.c.vijay@intel.com>; Nilawar, Badal
+><badal.nilawar@intel.com>; Roper, Matthew D <matthew.d.roper@intel.com>;
+>Ausmus, James <james.ausmus@intel.com>; Poosa, Karthik
+><karthik.poosa@intel.com>
+>Subject: Re: [PATCH v9 09/20] drm/xe/vsec: Add DOC text for VSEC
+>
+>On Wed, 16 Sep 2026, Michael J. Ruhl wrote:
+>
+>> Add the necessary files and text to use the DOC system.
+>>
+>> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+>> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>> ---
+>>  Documentation/gpu/xe/index.rst   |  1 +
+>>  Documentation/gpu/xe/xe_vsec.rst | 14 ++++++++++++++
+>>  drivers/gpu/drm/xe/xe_vsec.c     | 23 +++++++++++++++++++++++
+>>  3 files changed, 38 insertions(+)
+>>  create mode 100644 Documentation/gpu/xe/xe_vsec.rst
+>>
+>> diff --git a/Documentation/gpu/xe/index.rst
+>b/Documentation/gpu/xe/index.rst
+>> index 0247a255f7e6..89f013418cf5 100644
+>> --- a/Documentation/gpu/xe/index.rst
+>> +++ b/Documentation/gpu/xe/index.rst
+>> @@ -36,3 +36,4 @@ The display, or :ref:`drm-kms`, support for drm/xe is
+>provided by
+>>     xe_configfs
+>>     xe_gt_stats
+>>     xe_sigid
+>> +   xe_vsec
+>> diff --git a/Documentation/gpu/xe/xe_vsec.rst
+>b/Documentation/gpu/xe/xe_vsec.rst
+>> new file mode 100644
+>> index 000000000000..1a87548489ea
+>> --- /dev/null
+>> +++ b/Documentation/gpu/xe/xe_vsec.rst
+>> @@ -0,0 +1,14 @@
+>> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +
+>> +=3D=3D=3D=3D=3D
+>> +VSEC
+>> +=3D=3D=3D=3D=3D
+>> +
+>> +.. kernel-doc:: drivers/gpu/drm/xe/xe_vsec.c
+>> +   :doc: VSEC
+>> +
+>> +Internal API
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +.. kernel-doc:: drivers/gpu/drm/xe/xe_vsec.c
+>> +   :internal:
+>> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+>> index 1cb9a78ee0ef..ca5d02dce818 100644
+>> --- a/drivers/gpu/drm/xe/xe_vsec.c
+>> +++ b/drivers/gpu/drm/xe/xe_vsec.c
+>> @@ -19,6 +19,17 @@
+>>
+>>  #include "regs/xe_pmt.h"
+>>
+>> +/**
+>> + * DOC: VSEC
+>> + *
+>> + * Some GPUs support the PMT feature.  For those that do, this API prov=
+ides
+>> + * probe, discovery and usage (control and access) for GPUs that have P=
+MT.
+>> + *
+>> + * PMT is usually accessed through a PCI function.  However, that is no=
+t
+>always
+>> + * available, so the PMT intel_vsec_register() function can be used to =
+setup
+>up
+>> + * PMT usage.
+>> + */
+>> +
+>>  /* PMT GUID value for BMG devices.  NOTE: this is NOT a PCI id */
+>>  #define BMG_DEVICE_ID 0xE2F8
+>>
+>> @@ -140,6 +151,18 @@ static int xe_guid_decode(u32 guid, int *index, u32
+>*offset)
+>>  	return 0;
+>>  }
+>>
+>> +/**
+>> + * xe_pmt_telem_read - Given a device and a PMT GUID, read data into a
+>buffer
+>> + * @dev: valid Xe device
+>> + * @guid: PMT GUID (from the PMT discovery struct)
+>> + * @data: buffer to place data in
+>> + * @user_offset: a user offset relative to the beginning of the data to=
+ read
+>> + * @count: bytes to read
+>> + *
+>> + * Return:
+>> + * * -EINVAL for VF and PMT WATCHER requests
+>> + * * count   number of bytes read on success
+>
+>Please also check sashiko's comment on the set of return values.
 
---8323328-1278692877-1789648273=:1179
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+I have addressed invalid return code usage (reverted function to bool) and =
+fixed
+the text in my local repo.
 
-On Thu, 13 Aug 2026, Hilgad Montelo wrote:
+Will push an update soon.
 
-> On the Panasonic Toughbook CF-33 the bezel "Rotation Lock" button does
-> not signal via ACPI notify like the other hotkeys. Instead the
-> embedded controller injects raw i8042/PS2 scancodes that alias the
-> real Left-GUI/Meta key:
->=20
->     press:   e0 5b   65
->     release: e5      e0 db
->=20
-> e0 5b / e0 db are the standard AT scancode for the physical Left-GUI
-> key. The bare 65 / e5 bytes interleaved with them are not valid codes
-> for any real key and only ever appear as part of this vendor signal
-> (confirmed by tracing raw bytes crossing the i8042 port on the actual
-> hardware). Left unfiltered, this shows up as a spurious KEY_LEFTMETA +
-> KEY_F14 combo, which does nothing useful and can trigger desktop
-> environment Meta-key bindings on every press.
->=20
-> This driver already installs an i8042 filter (panasonic_i8042_filter)
-> to de-duplicate volume key events. Extend it with a small state
-> machine that recognizes and swallows the exact e0 5b 65 ... e5 e0 db
-> sequence, and emits a single debounced KEY_ROTATE_LOCK_TOGGLE event
-> instead. The 600ms debounce is needed because the EC repeats the
-> make/break unit every ~280-400ms for as long as the button is
-> physically held, which would otherwise fire multiple toggles for one
-> tap. If a byte sequence starts the same way but doesn't complete the
-> pattern, the buffered e0 5b bytes are replayed unfiltered, so a
-> genuine Left-GUI keypress is unaffected.
->=20
-> Verified on a CF-33 Mk1: each button press now produces exactly one
-> KEY_ROTATE_LOCK_TOGGLE pair, the plain keyboard device stays silent
-> during presses (no more stray LEFTMETA/F14), and GNOME's auto-rotate
-> lock correctly engages/disengages. Brightness and volume hotkeys are
-> unaffected.
->=20
-> Signed-off-by: Hilgad Montelo <hilgad.montelo@gmail.com>
-> ---
->  drivers/platform/x86/panasonic-laptop.c | 85 ++++++++++++++++++++++++-
->  1 file changed, 84 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x=
-86/panasonic-laptop.c
-> index 719add7..0c0e4a6 100644
-> --- a/drivers/platform/x86/panasonic-laptop.c
-> +++ b/drivers/platform/x86/panasonic-laptop.c
-> @@ -127,6 +127,7 @@
->  #include <linux/init.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> +#include <linux/jiffies.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> @@ -256,15 +257,81 @@ struct pcc_acpi {
->  /*
->   * On some Panasonic models the volume up / down / mute keys send duplic=
-ate
->   * keypress events over the PS/2 kbd interface, filter these out.
-> + *
-> + * On the CF-33 the bezel "Rotation Lock" button also signals over this =
-same
-> + * interface, instead of via an ACPI notify like the other hotkeys. It d=
-oes
-> + * so by injecting scancodes that alias the real Left-GUI/Meta key
-> + * (e0 5b make / e0 db break), interleaved with a bare byte (0x65 / 0xe5=
-)
-> + * that no physical key on this keyboard uses. Left unfiltered this show=
-s up
-> + * as a bogus LEFTMETA+F14 combo. We recognize and swallow the whole
-> + * sequence and emit a single debounced KEY_ROTATE_LOCK_TOGGLE instead; =
-any
-> + * byte that breaks the expected pattern is treated as a genuine key and
-> + * replayed unfiltered.
->   */
-> +enum rot_lock_state {
-> +=09ROT_IDLE,
-> +=09ROT_WAIT_65,
-> +=09ROT_WAIT_E5,
-> +=09ROT_WAIT_E0B,
-> +=09ROT_WAIT_DB,
-> +};
-> +
->  static bool panasonic_i8042_filter(unsigned char data, unsigned char str=
-,
->  =09=09=09=09   struct serio *port, void *context)
->  {
-> +=09struct pcc_acpi *pcc =3D context;
->  =09static bool extended;
-> +=09static enum rot_lock_state rstate =3D ROT_IDLE;
-> +=09static unsigned long last_toggle;
-> +=09const unsigned long debounce =3D msecs_to_jiffies(600);
+Thanks!
 
-Please try to sort the 4 variables into reverse-xmas tree order (the=20
-context assignment feels boilerplate noise so it can be left as the=20
-first entry but that's up to you).
+M
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>--
+> i.
 
-> =20
->  =09if (str & I8042_STR_AUXDATA)
->  =09=09return false;
-> =20
-> +=09switch (rstate) {
-> +=09case ROT_WAIT_65:
-> +=09=09if (data =3D=3D 0x65) {
-> +=09=09=09rstate =3D ROT_WAIT_E5;
-> +=09=09=09if (pcc && pcc->input_dev &&
-> +=09=09=09    time_after(jiffies, last_toggle + debounce)) {
-> +=09=09=09=09input_report_key(pcc->input_dev,
-> +=09=09=09=09=09=09  KEY_ROTATE_LOCK_TOGGLE, 1);
-> +=09=09=09=09input_sync(pcc->input_dev);
-> +=09=09=09=09input_report_key(pcc->input_dev,
-> +=09=09=09=09=09=09  KEY_ROTATE_LOCK_TOGGLE, 0);
-> +=09=09=09=09input_sync(pcc->input_dev);
-> +=09=09=09=09last_toggle =3D jiffies;
-> +=09=09=09}
-> +=09=09=09return true;
-> +=09=09}
-> +=09=09/* Not our sequence: replay the buffered genuine Left-GUI make. */
-> +=09=09rstate =3D ROT_IDLE;
-> +=09=09serio_interrupt(port, 0xe0, 0);
-> +=09=09serio_interrupt(port, 0x5b, 0);
-> +=09=09break;
-> +=09case ROT_WAIT_E5:
-> +=09=09if (data =3D=3D 0xe5) {
-> +=09=09=09rstate =3D ROT_WAIT_E0B;
-> +=09=09=09return true;
-> +=09=09}
-> +=09=09rstate =3D ROT_IDLE;
-> +=09=09break;
-> +=09case ROT_WAIT_E0B:
-> +=09=09if (data =3D=3D 0xe0) {
-> +=09=09=09rstate =3D ROT_WAIT_DB;
-> +=09=09=09return true;
-> +=09=09}
-> +=09=09rstate =3D ROT_IDLE;
-> +=09=09break;
-> +=09case ROT_WAIT_DB:
-> +=09=09rstate =3D ROT_IDLE;
-> +=09=09if (data =3D=3D 0xdb)
-> +=09=09=09return true;
-> +=09=09break;
-> +=09case ROT_IDLE:
-> +=09=09break;
-> +=09}
-> +
->  =09if (data =3D=3D 0xe0) {
->  =09=09extended =3D true;
->  =09=09return true;
-> @@ -276,6 +343,19 @@ static bool panasonic_i8042_filter(unsigned char dat=
-a, unsigned char str,
->  =09=09case 0x2e: /* e0 2e / e0 ae, Volume Down press / release */
->  =09=09case 0x30: /* e0 30 / e0 b0, Volume Up press / release */
->  =09=09=09return true;
-> +=09=09case 0x5b: /* e0 5b, possible start of rotate-lock sequence */
-> +=09=09=09if (data =3D=3D 0x5b) {
-> +=09=09=09=09rstate =3D ROT_WAIT_65;
-> +=09=09=09=09return true;
-> +=09=09=09}
-> +=09=09=09/*
-> +=09=09=09 * data =3D=3D 0xdb: genuine Left-GUI/Meta break code.
-> +=09=09=09 * The rotate-lock sequence only ever begins with
-> +=09=09=09 * the make code, so this is a real key release,
-> +=09=09=09 * not our sequence; the code below replays it
-> +=09=09=09 * untouched.
-> +=09=09=09 */
-> +=09=09=09fallthrough;
->  =09=09default:
->  =09=09=09/*
->  =09=09=09 * Report the previously filtered e0 before continuing
-> @@ -944,6 +1024,9 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
->  =09=09goto err_free_dev;
->  =09}
-> =20
-> +=09/* Synthesized by panasonic_i8042_filter(), not part of the ACPI keym=
-ap. */
-> +=09input_set_capability(input_dev, EV_KEY, KEY_ROTATE_LOCK_TOGGLE);
-> +
->  =09error =3D input_register_device(input_dev);
->  =09if (error) {
->  =09=09pr_err("Unable to register input device\n");
-> @@ -1090,7 +1173,7 @@ static int acpi_pcc_hotkey_probe(struct platform_de=
-vice *pdev)
->  =09=09pcc->platform =3D NULL;
->  =09}
-> =20
-> -=09i8042_install_filter(panasonic_i8042_filter, NULL);
-> +=09i8042_install_filter(panasonic_i8042_filter, pcc);
->  =09return 0;
-> =20
->  out_platform:
->=20
-
-
-
---=20
- i.
-
---8323328-1278692877-1789648273=:1179--
