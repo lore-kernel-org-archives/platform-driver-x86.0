@@ -1,128 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.6])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42459449B33;
-	Thu, 17 Sep 2026 08:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DDC3AEB5D;
+	Thu, 17 Sep 2026 08:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789634700; cv=none; b=gtITAfGNkUbzLBAjMeq6H2RWYAyhCDXJFt473OwkZi7XTvAGMe/bI3fFI2BQ2txNdKvHHgBfxlLzDTlJ6IOH/M/oL34DULC4ND+U/DInUE5wkhnF1b6Iv+bzI7KTydoe0n22uu8/auXh5ADrbhpkF+R7FiYudH+95JPi1yL8jHc=
+	t=1789635132; cv=none; b=ASYW/i1MffR9DNrTYX4m8AeTqiKm0GsfBQC/WzmjZNTPMd++vbXuk7J+6w9ZF+KYcZBHUfi45XmXFfJvQhK/h8Da3bjkYScUsRU3dd3JWoIdcA4lk5glnq9zmC+G0gHqITWla5+erMxfv7zEbn8IBbKPSh/fUQetjz8FCryPBIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789634700; c=relaxed/simple;
-	bh=TMTaIbJLsJLv/mTg2rgUmjtIHOhKYVUPD303vPU1PyA=;
+	s=arc-20240116; t=1789635132; c=relaxed/simple;
+	bh=/FGylfRZaQ6waq3D2PjTE/n1dsllKXrh7Yr2qSLhGYI=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hnBlMHealxYoIfda0Ac6nq6fCc9OtKcy+uQeUPnQHVWqOLb8ADSC8NEWkAC0Q4H2uB+ILb0HuvLrjb/3CY8cmVUV1WKhlwZ5bkrWesDaCJ3oMqhoHi+sCcDfSL81jkto+vROzKIIxniERxkh/TETy83e0+oLTRImljjTCaDcxeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIZ1G7vz; arc=none smtp.client-ip=192.198.163.6
+	 MIME-Version:Content-Type; b=PDyguhnN6+p8d8pSqprsF0cqsZ6gzykPNj6iOPO1jy4YwmmblAq09VZtibaOog+VpdrydqeL1ZSfXxsACOnC/bIKMttxPuFrfC2za07r7QbsBxMaKYJQb9t0qDglG/Wnz65keYDOP5mun+B2bEctOniKCJq6U/U/KrAXhptMHx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iuuvEenl; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIZ1G7vz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iuuvEenl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789634679; x=1821170679;
+  t=1789635128; x=1821171128;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=TMTaIbJLsJLv/mTg2rgUmjtIHOhKYVUPD303vPU1PyA=;
-  b=NIZ1G7vzss9ByRy7Hvwa+MMVhaA4uWwkzyTe6ZbvRu9sFcMro3Zy9HhC
-   d4Vaog6rAILg4e+SaHtuCjz0lGNVRRitRANhPKDvbkTDTjxEu0COHoDJC
-   AhRK0flDPyLJdlnYudTJry0JNYhl9N6g/Hjx7yT9DwFF82KqI6Wua89Mr
-   Fprw6nt0DeFFQsx2Ifv6IL+XrIgWCISe0duPgGEvp07Fetsrr0yCSS3vv
-   4izHSgBYsTnKYQx/dGylqJZiRt47FpIXV9h/PS45japFT+wT0KKG/B3Oc
-   rED4CcBRIedRhAW9A8+iu9fHNIXurXLko6eFhzfU+GGPkrrMS7+o9b+gP
-   A==;
-X-CSE-ConnectionGUID: b11WNkkOQI6f+An0Jra2+w==
-X-CSE-MsgGUID: 0+QFpiYdQHeW08u34FzE1A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="543456"
+  bh=/FGylfRZaQ6waq3D2PjTE/n1dsllKXrh7Yr2qSLhGYI=;
+  b=iuuvEenlMNNGHDKx3Ue8L1OdUc5TXr3bkNzTVPMbVixa+aA8HwiLQV9U
+   5n3lN+ws2Ux10d0R2FxPnJbK6IWjmVmJOHJRZi10hwxUsvuDyd5DWricW
+   A/+yfkXlyfinmNv9e9ikIIfbNO9EcRyU1AzJYXAlt/qOVqV1j4hlTdrV/
+   C6ZcNXIm9kjAVjXG6h5bcsslpgX7IFp2T3TVB8vOE05Ee+W2nT4t9T6KJ
+   yfseVA9VkHKHTF3pnxo6nfZo0ik2Oa/CYbuIHJC/sGxwjBWzsZgQ/KcjC
+   xIWDios5Ai4P/CfNhxwatNYe1LbLw49pHiL2A5zCQnw1ty8Tr/xHS679C
+   Q==;
+X-CSE-ConnectionGUID: Yyn9U7vnR8mHLIXO6ut1gw==
+X-CSE-MsgGUID: 56XEOpuxSrynEI6V2yEaEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93861168"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="543456"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa116.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:44:34 -0700
-X-CSE-ConnectionGUID: A7xAF+jvQ86QaNy8zguPww==
-X-CSE-MsgGUID: nhNzkWHhS/yCaInJ3w0gnQ==
+   d="scan'208";a="93861168"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:52:05 -0700
+X-CSE-ConnectionGUID: MC9eEeDcQbyG3e4l9KMQJw==
+X-CSE-MsgGUID: brFmUwqeRo+TfgHd4vgEww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="1874791"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:44:31 -0700
+   d="scan'208";a="275620364"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:52:02 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 17 Sep 2026 11:44:26 +0300 (EEST)
-To: Daasaradhi Mannava <daasaradhimannava@gmail.com>, 
-    Denis Benato <denis.benato@linux.dev>
-cc: Nikita Kravets <teackot@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: msi-ec: Report valid charge thresholds
- when unset
-In-Reply-To: <20260916174812.11496-1-daasaradhimannava@gmail.com>
-Message-ID: <12cdf224-08aa-d19f-62fd-fbc6e26d6103@linux.intel.com>
-References: <20260916174812.11496-1-daasaradhimannava@gmail.com>
+Date: Thu, 17 Sep 2026 11:51:56 +0300 (EEST)
+To: Asai Neko <sugar@sne.moe>
+cc: Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: don't warn when LPS0 is
+ unavailable
+In-Reply-To: <20260917-asus-wmi-lps0-unavailable-warn-v2-1-aa8e3d73634a@sne.moe>
+Message-ID: <c2be7ab0-8e9f-1b40-b019-c32a3a97fcc9@linux.intel.com>
+References: <20260916-asus-wmi-lps0-unavailable-warn-v1-1-9bd6fb4c10f9@sne.moe> <20260917-asus-wmi-lps0-unavailable-warn-v2-1-aa8e3d73634a@sne.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-350711589-1789635116=:1179"
 
-On Wed, 16 Sep 2026, Daasaradhi Mannava wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> The charge thresholds are computed by subtracting a fixed offset from
-> the raw EC value. When no charge limit has been set, the EC can hold a
-> value below range_min (0x80 on an MSI GL65 Leopard 9SCXK), and reading
-> the sysfs attributes returns nonsense:
-> 
->   charge_control_start_threshold: -10
->   charge_control_end_threshold:   0
-> 
-> Both attributes are documented to be within 0 - 100, and an end
-> threshold of 0 wrongly suggests that charging is disabled.
-> 
-> The store path already rejects values outside range_min..range_max.
-> Apply the same range to the show path and report the maximum threshold
-> for any value outside of it.
-> 
-> Tested on an MSI GL65 Leopard 9SCXK (EC firmware 16U8EMS2.100) with
-> the EC holding 0x80: the attributes now read 90 and 100.
-> 
-> Fixes: 392cacf2aa10 ("platform/x86: Add new msi-ec driver")
-> Assisted-by: LLM
-> Signed-off-by: Daasaradhi Mannava <daasaradhimannava@gmail.com>
-> ---
->  drivers/platform/x86/msi-ec.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
-> index 566dfc73c..1762551e0 100644
-> --- a/drivers/platform/x86/msi-ec.c
-> +++ b/drivers/platform/x86/msi-ec.c
-> @@ -1279,6 +1279,15 @@ static ssize_t charge_control_threshold_show(u8 offset,
->  	if (result < 0)
->  		return result;
->  
-> +	/*
-> +	 * The EC may hold an out-of-range value (e.g. 0x80) when no charge
-> +	 * limit has been set. Report the maximum threshold instead of a
-> +	 * meaningless (possibly negative) percentage.
-> +	 */
-> +	if (rdata < conf.charge_control.range_min ||
-> +	    rdata > conf.charge_control.range_max)
-> +		rdata = conf.charge_control.range_max;
-> +
->  	return sysfs_emit(buf, "%i\n", rdata - offset);
->  }
+--8323328-350711589-1789635116=:1179
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi,
+On Thu, 17 Sep 2026, Asai Neko wrote:
 
-This seems similar to case in commits:
+> asus-wmi attempts to register its LPS0 suspend-to-idle callback during
+> probe. acpi_register_lps0_dev() returns -ENODEV when the LPS0 interface
+> is unavailable or explicitly disabled, but the driver treats this
+> expected condition as a registration failure and prints:
+>=20
+>   failed to register LPS0 sleep handler in asus-wmi
+>=20
+> This occurs on the ASUS ROG STRIX X670E-A GAMING WIFI with BIOS 2704.
+> The system exposes no PNP0D80 ACPI device and uses deep suspend. The
+> warning therefore misleadingly suggests a sleep-related malfunction
+> on a platform where the LPS0 callback is not applicable.
+>=20
+> Suppress the warning for -ENODEV while retaining it for other errors.
+> Leave callback registration and suspend/resume behavior unchanged.
+>=20
+> Signed-off-by: Asai Neko <sugar@sne.moe>
 
-186bf9031666 ("platform/x86: asus-wmi: do not enforce a battery charge threshold")
-78bf392ba77d ("platform/x86: asus-wmi: temporarily revert to setting a charge limit")
+Thanks, I've replaced v1 with this one in the review-ilpo-next branch.
 
-(The latter reverts first one as userspace could not handle -ENODATA but 
-thought the feature was available.)
+Next time, please collect the Reviewed-by (and possible Tested-by) tags=20
+from the previous version(s) when sending another version because our=20
+maintainer tools only collect them for the current version.
 
-So ideally, I'd tend to think we'd want to return -ENODATA when the 
-threshold hasn't been set. But whether userspace survives that is a 
-question we cannot ignore.
+Only if you make really major changes, then you may opt to drop the tags.
 
--- 
+--
  i.
 
+> ---
+> Avoid the misleading ASUS WMI warning when LPS0 is unavailable.
+> The diagnosis and rationale are included in the patch commit
+> message.
+> ---
+> Changes in v2:
+> - Fix the missing format specifier for ret reported by kernel test robot.
+> - Shorten the warning message to keep the format string on one line.
+> - Report: https://lore.kernel.org/oe-kbuild-all/202609170237.IYNujwsM-lkp=
+@intel.com/
+> - Link to v1: https://patch.msgid.link/20260916-asus-wmi-lps0-unavailable=
+-warn-v1-1-9bd6fb4c10f9@sne.moe
+>=20
+> To: Corentin Chary <corentin.chary@gmail.com>
+> To: "Luke D. Jones" <luke@ljones.dev>
+> To: Denis Benato <denis.benato@linux.dev>
+> To: Hans de Goede <hansg@kernel.org>
+> To: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/platform/x86/asus-wmi.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
+wmi.c
+> index a65090429ca7..c2af1f049b67 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -5421,8 +5421,11 @@ static struct acpi_s2idle_dev_ops asus_ally_s2idle=
+_dev_ops =3D {
+> =20
+>  static void asus_s2idle_check_register(void)
+>  {
+> -=09if (acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops))
+> -=09=09pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
+> +=09int ret;
+> +
+> +=09ret =3D acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
+> +=09if (ret && ret !=3D -ENODEV)
+> +=09=09pr_warn("failed to register LPS0 sleep handler: %d\n", ret);
+>  }
+> =20
+>  static void asus_s2idle_check_unregister(void)
+>=20
+> ---
+> base-commit: 587858367581b9c55c3690f4e63382ad622719d4
+> change-id: 20260916-asus-wmi-lps0-unavailable-warn-9a72be44b9ed
+>=20
+> Best regards,
+> -- =20
+> Asai Neko <sugar@sne.moe>
+>=20
+>=20
+>=20
+--8323328-350711589-1789635116=:1179--
