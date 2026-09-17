@@ -1,91 +1,108 @@
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEC951FCD5;
-	Thu, 17 Sep 2026 14:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D47E568548;
+	Thu, 17 Sep 2026 14:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789653708; cv=none; b=CDVKmpkv1lAHzN4nXYUp4+W4KwMBtZ5A/3kUfyJmbn/86ybmcri1tk4RI5ugZllFOvFWP8W74Shdt+c7xrmGsGNgPMggvO14OodB7wMSiS+WGljShomj9rFkxTOle8E5oKisXP1mQTqhMZS2R7z0yHSK6+/lEUKt97Y1rW5W84s=
+	t=1789653745; cv=none; b=ubeOlIHInDuitTT/oSknvPzuBK5/3e2XnusTdBC8VdAN7hDtPkW3bvwUOi4fBziigO85ZnnjFHy7te3sxMBLIPbu0xrEHuICR0tgYmnG27+HMwSEzqd3uqrqQdAnX+SK5xlGZ9oWE/AbH8kSQtonmpl5QD+2lfzkES4jb4sLALw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789653708; c=relaxed/simple;
-	bh=v6+x40zMq95VSAnlvbv/3gE7FC6GwK92Tt/b2Un7SW4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zou6AQjU2Bj9GlDwchywg1ETM7ha9nlhMTEryrSBdeKLp8jn2dUErmDNmXwyuiYgcri0ozqmslzRkt1YrKVhjZ6Ibs9bc6kky15uS3MSckPaiGZBPzBVVxARAG1dO4/6sdVMCYV7n1W7x/6JvCImTxb7eoDmIeQ4Lj5qIf20Z8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from dfae2b116770.home.arpa (unknown [36.110.52.2])
-	by APP-05 (Coremail) with SMTP id zQCowAA3oz3E8qtqIv2BCA--.4222S2;
-	Thu, 17 Sep 2026 22:01:40 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: Shyam-sundar.S-k@amd.com
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	mario.limonciello@amd.com,
-	platform-driver-x86@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86/amd/pmf: Fix power supply leak in amd_pmf_get_battery_prop()
-Date: Thu, 17 Sep 2026 14:01:40 +0000
-Message-Id: <20260917140140.2154244-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1789653745; c=relaxed/simple;
+	bh=0cM3yF3/PnTDBZOzObj0AvBvE9agboG0VyNJjYcxuxs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=H3jWmaSnRmuebLKg5+uy9XgHpaT52x+kQKQdL9irF8nkYn1c7/XUqTZxFgyc1vfg3dLB4Zgo3IVAzGXJ0yToT+9biun2M1d2dElF1rh50JmMy7UszZSDHyQQUCH6/GsQH4H5Cj5BtO1CXVkIlSM/eJAl3MCRS4hG2gA4ATB732M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMQAd+xB; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMQAd+xB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789653743; x=1821189743;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0cM3yF3/PnTDBZOzObj0AvBvE9agboG0VyNJjYcxuxs=;
+  b=OMQAd+xBoC15SkNqv3zXxViJw4YRugj3sxVL2lsp70f0lRpaCoz+aIGJ
+   lKtDoX5UswGdNDWDMjkWjnRTVdJpmrju+W1mc2X8sxkHC+ND1UErKEDCL
+   2txAxgMEvRzCCcLSpeRFV1gIEtgHL92Roi73zhAYCPQB+ek358j6DBfM4
+   1wlFqI3ElLchWQv0JNh0RpUQnEpCOjMpGBTjg0QZZI395gxlOrCpeHRH5
+   Y2dOJ9N5d+c/s4p4viQuhPBcrP5Ii95ZPfYhM7Nv8ec6a8JXABsxKTJce
+   /ghrEI9OGe4KIzc40MrvddzXjzXwnBDg77t/mbHX08bDiN1newetTbQeo
+   g==;
+X-CSE-ConnectionGUID: IiClQxn1Sg+LJvmb/4mOJA==
+X-CSE-MsgGUID: 6C1Ye+96RpufpTR1IAsgOw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="77643063"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="77643063"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 07:02:03 -0700
+X-CSE-ConnectionGUID: 0X2txHzYTvaEC9d0eaG11Q==
+X-CSE-MsgGUID: kk3vzQsqQ/aXEEEHcacWBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="298886087"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 07:01:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 17 Sep 2026 17:01:55 +0300 (EEST)
+To: Luis Miguel Arias <luismiguel@godjango.dev>
+cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: asus-wmi: restore battery charge limit
+ support
+In-Reply-To: <20260818175814.65757-1-luismiguel@godjango.dev>
+Message-ID: <568d06ad-1e2a-34c7-614f-4ee4432e5cc5@linux.intel.com>
+References: <20260818175814.65757-1-luismiguel@godjango.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAA3oz3E8qtqIv2BCA--.4222S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr17JF4kJrWkJr1xWF4xCrg_yoWDtFg_Gr
-	y8Cas7Jry0qF4qyr1DtrsIkF97ta4DWrWvqFsrtFZxtFy5Aw1kXr90yrZ8XwnrC3yUCFyD
-	Wa1DC3y7ua4fCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAYjsxI4VWDJwAYFVCjjxCrM7CY07I20VC2zVCF04k26cxKx2IY
-	s7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4
-	kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_
-	Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVWxJr0_GcWlOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq62Iq12xI8VA0II8E6IAqYI8I648v4I1lc7Cj
-	xVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GFyrJr
-	1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_GcCE3sUvcSsGvfC2KfnxnUUI43ZEXa7IU1mLvtUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgINA2qrq3bazwAAsD
+Content-Type: text/plain; charset=US-ASCII
 
-power_supply_get_by_name() takes a reference that is only dropped on
-the error path of power_supply_get_property(). Drop it as soon as the
-property has been read and stop searching, so that a successful lookup
-does not leak the reference.
+On Tue, 18 Aug 2026, Luis Miguel Arias wrote:
 
-Fixes: f4627dfd0e19 ("platform/x86/amd/pmf: Add support to get inputs from other subsystems")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/platform/x86/amd/pmf/spc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> On ASUS systems where the charge threshold is supported through
+> ASUS_WMI_DEVID_RSOC, initializing charge_end_threshold to -1 causes
+> the sysfs attribute to return -ENODATA. This makes TLP consider
+> charge threshold support unavailable.
+> 
+> Initialize the cached threshold to 100 instead, allowing userspace
+> to set the desired threshold normally.
+> 
+> Tested on ASUS with TLP 1.8.0:
+> 
+> Before this change:
+> * charge_end_threshold = -1
+> * TLP reported no charge threshold support
+> 
+> After this change:
+> * TLP reports "charge threshold" as supported
+> * natacpi (asus_wmi) is active
+> * charge_control_end_threshold can be set to 80%
+> 
+> Signed-off-by: Luis Miguel Arias <luismiguel@godjango.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 80144c412..87363b198 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1586,7 +1586,7 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
+>  	 * platforms retains it, therefore signal the threshold as unknown
+>  	 * until user explicitly sets it to a new value.
+>  	 */
+> -	charge_end_threshold = -1;
+> +	charge_end_threshold = 100;
 
-diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-index f48678a23cc7..cd957d7a4e48 100644
---- a/drivers/platform/x86/amd/pmf/spc.c
-+++ b/drivers/platform/x86/amd/pmf/spc.c
-@@ -249,10 +249,11 @@ static int amd_pmf_get_battery_prop(enum power_supply_property prop)
- 			continue;
- 
- 		ret = power_supply_get_property(psy, prop, &value);
--		if (ret) {
--			power_supply_put(psy);
-+		power_supply_put(psy);
-+		if (ret)
- 			return ret;
--		}
-+
-+		break;
- 	}
- 
- 	return value.intval;
+Thank you for the submission but is is already covered by the commit 
+78bf392ba77d ("platform/x86: asus-wmi: temporarily revert to setting a 
+charge limit").
+
 -- 
-2.34.1
+ i.
 
