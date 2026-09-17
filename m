@@ -1,60 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85584585989;
-	Thu, 17 Sep 2026 15:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BA138B124;
+	Thu, 17 Sep 2026 15:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789657487; cv=none; b=XjJueW23LawNGjNtokl6zmCkmJXll1wcLUkqcb7WMyMsuvM2yEUXkX+SeJlqkoBsFlhNMMCKHXVwvigQRD0gZ/0USBA6kWCaMEwO631+lcIUG/HAVHPPLgEwaODaCJWB4/dLiUGj9slF2BAnPW+yWG69jpFT6u8076xlwVtYvUE=
+	t=1789657591; cv=none; b=IpCM7OWvbyvo/4IifAinHDSh1nFP47Lcg3m4pjxKa0zLreJIzsQnipuhykAXl+DU+PdvXopQBo+0I3iWzLvksodRsthdWW2aDEUNcyY5/V9asnFbtrTPEBMR32rRe19g+azVE0lmXPVq5Xklwk1h3PNsmA2c6MvawRfANJ6t1tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789657487; c=relaxed/simple;
-	bh=gEqQ7udERlY5WEVQ8KerG8FZgNUI/m67FqyuSdT1Org=;
+	s=arc-20240116; t=1789657591; c=relaxed/simple;
+	bh=F06S3muBwIFxsUQylcInCznpkcEWUBoslR1nKphRXtc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=SvaukuiryCZAt+hhT0rSQCQkpfVe3uEwVZnNKDsLvpdv7FTo2PBxXN4W7dFfzOSusg3gXz838+ATrhsOOUqIwugx6EYYI+6OBe2DjYzYbvv2h8t6r2U66kb3cf9sL8u2HaY8GXc4CtJgJ3LZAPni3KiKNqFndQo1LyfW39Usg08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJ7yCHmJ; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=OPHoIgCLdFJVKOEz6yqm7czMTW773NWRCpxjG5XgHe+c5g28caUBD6kE7dArDC7R9xrRzl7fFA3GXIjWHKi8HwlUnlK/rAte9HGpYHnv2UlXeeepzFUNTKx20jN0zNck4ACUFdVRkqJyjJx42Giy0+pUhw6Cgp1MgCbCOmneuo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FnQ9rKdm; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJ7yCHmJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FnQ9rKdm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789657473; x=1821193473;
+  t=1789657584; x=1821193584;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=gEqQ7udERlY5WEVQ8KerG8FZgNUI/m67FqyuSdT1Org=;
-  b=cJ7yCHmJyR6CG7WTuGLnBCgNzDjHK6pJpJysqMCCQlxNygTUBa7uvOiB
-   IJj8MVjpx0mbYBf/2IBJFZPjnFYWYZTkSHa9FafpMPDF1t8rEVrj2vNgs
-   Cxe0L7wa8as7iQ8iJxOgzAZ5mofi9L9r3McyOFIGnWQc1FOTWQo3xebUq
-   oeACIvlXNWjo9VsPSwsbz7Vlfy4slY+idIrkNDAOct9bhkyATOgbbZ7uV
-   p46216jNLfF0RQ3TDDLfsCuPB7culMbTwZmj1dZJFg3cpEBD94eMFsERb
-   UigS3LZNOjTAgLKkuMcYrmssgAWu/q/NGON3S32UUA4eB0IkK+707po5K
-   Q==;
-X-CSE-ConnectionGUID: 0qPWfSieSCeN9+GMdI8Zhw==
-X-CSE-MsgGUID: lOnThV5PSAqJw/bIMKGFZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="92597518"
+  bh=F06S3muBwIFxsUQylcInCznpkcEWUBoslR1nKphRXtc=;
+  b=FnQ9rKdmff8jhawgLZzKSSB8vbeDjzvpF5KY+JNo+/6Cj0yyuS8Q1Dze
+   v7FgP1HuoULqpAndbKAPJIHcqZnc83giDJEYuEqtfmIITH3Gn9CXgkpaO
+   k8Wmz8wpP4nFuF+6yJ/JgXgJp7Vu1FLnTJ1SD+ozwb5EiaofKywBsM52W
+   Oo8mPRsO5/vUEBO/4kLXK9wBSprpB01i23QMZzQW9MVYrcFMQRPZsqdnX
+   Xxj8Z2LSWeoHRxmoTRE1zU6OnbSrRGkPVYd/X9fm5b/juZbKEaECojSbD
+   Jmz9BV7pqasPYH2/1s9C/bS3PlIGwXs7JOOMjdkzGqcHdbH8qfY4gGNrb
+   A==;
+X-CSE-ConnectionGUID: N2m8O55nQTqXCg8gLPCK6Q==
+X-CSE-MsgGUID: 9/ZdPi3oSj+5FYYD40hsiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="101433704"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="92597518"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:24 -0700
-X-CSE-ConnectionGUID: Rsh6lF3oT3GHCKjXZArINw==
-X-CSE-MsgGUID: 6nZrAugRTumnJz+Z8+Nlsg==
+   d="scan'208";a="101433704"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:10 -0700
+X-CSE-ConnectionGUID: Ye20C1nmRcKxJCL/EN5sXg==
+X-CSE-MsgGUID: 3xml8dD9TZezgZ9E5SUOFw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="279078841"
+   d="scan'208";a="275797888"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:21 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:08 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: David E Box <david.e.box@intel.com>, Hans de Goede <hansg@kernel.org>, 
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260819173804.1184250-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20260819173804.1184250-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v1] platform/x86/intel/pmc: Add rugged Panther Lake
- support to intel_pmc_core
-Message-Id: <178965745740.22350.4851475547797127227.b4-ty@b4>
-Date: Thu, 17 Sep 2026 18:04:17 +0300
+To: hansg@kernel.org, 
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260818203427.2738209-1-srinivas.pandruvada@linux.intel.com>
+References: <20260818203427.2738209-1-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86: ISST: Avoid model check for recent
+ servers
+Message-Id: <178965744374.22350.4555360742713357018.b4-ty@b4>
+Date: Thu, 17 Sep 2026 18:04:03 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,9 +63,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 19 Aug 2026 10:38:04 -0700, Kuppuswamy Sathyanarayanan wrote:
+On Tue, 18 Aug 2026 13:34:27 -0700, Srinivas Pandruvada wrote:
 
-> Add rugged Panther Lake support to intel_pmc_core driver.
+> To enable SST functions, a CPU model entry is required. This causes
+> unnecessary delays in deploying new servers on older kernels.
+> 
+> To avoid this, if no CPU model match is found, allow the SST common
+> driver to load, when all of the following conditions are met:
+> 
+> - Not running as a guest.
+> - The platform is identified as a server via ACPI PM profile.
+> - The CPU belongs to the Intel family 19 (decimal), which starts with
+> Diamond Rapids. All recent servers are capable of enumerating SST
+> features.
+> - MSR_PM_LOGICAL_ID (0x54) is present to retrieve the PM logical ID.
+> 
+> [...]
 
 Thank you for your contribution, it has been applied to my local
 review-ilpo-next branch. Note it will show up in the public
@@ -80,8 +91,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/intel/pmc: Add rugged Panther Lake support to intel_pmc_core
-      commit: 15961651876bbb63547785454e49c8a2e30ae2eb
+[1/1] platform/x86: ISST: Avoid model check for recent servers
+      commit: 153de724f47af43f0e0a1acc3b1dada18322cd18
 
 --
  i.
