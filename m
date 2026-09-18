@@ -1,59 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F14951DDED;
-	Fri, 18 Sep 2026 18:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5490851EE12;
+	Fri, 18 Sep 2026 18:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789756047; cv=none; b=DH5uKhb5WqJambLpOv58Qb9j7i5W0g9IxPgnUoBkVYTXe2O+KNdHbhjPQjoTvS9uj0HnH4g493ceGSSpLxtsZrQdD/b8zEWR8AkKp2KJNpJ4N5Le9PaXLvFNwE9TfJfQ4ws45JkDwIF1ErEdcqW9XIIL4RyyJH7HhrILTcCgibU=
+	t=1789756055; cv=none; b=NWVFxLfFQgFuHvhzbGMFiZa1N6FSufC34i5SuBzaRgpDSsMKpLAE5/pR2kOwVa1bHDqPcjCVD0r6r0gKqLe/4diTxHJyNRWtbTmMKVjgQoVYP2hELpBlC4SOEYh2DK1yQe6/WP09gHElanHzgnFsHRoZddxL1ohduPWNaldu/iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789756047; c=relaxed/simple;
-	bh=4Yy3nhNLFGl//EfeeNNsF/NGZo+QkZ2vHRpVmWsD3Yw=;
+	s=arc-20240116; t=1789756055; c=relaxed/simple;
+	bh=8gqRjWyH7bE8lydZgzpRt/XjPaNUVcqgzseq/EV7oqI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NBPs7tgh+MviIK5oxpp7bwnxCl+WJGes1tDxxFv13cDL28rSAsSkg7jOBbm8vro9ePW/0aVyCiPKtRJlWd4cH21b+p99a78TkKNbGiT9kb4l5kheGIIEr2tpzJd+FuWZdl6PEJ99pCDxzEtbnzgRSLpmij3nDW/aAXS12R/B+Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acZUZK+Y; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=rn30gsSH1y85KMGPePq5VAnKFf0619xUanKrBgQWBu7kUkvyIq2zAHF4K6wkd2eGgrPWC+Ywg4cWD1JJaywh2puuR5bpwq06YogJyD8njrx6754EHZ5nyTPhy7jEo2Z1bcolyamR1OFNgooEXolJUHLX05dzYzFhLXI5dHrf4yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iMrk3pW3; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acZUZK+Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iMrk3pW3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789756046; x=1821292046;
+  t=1789756054; x=1821292054;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=4Yy3nhNLFGl//EfeeNNsF/NGZo+QkZ2vHRpVmWsD3Yw=;
-  b=acZUZK+YLVR1SX7lWp6KE9DAP2j5Ted1krOTAvJfWGjExEYQ1q0Y6eyd
-   4aS6zRg7igm02OsJGbOybIjoexv7Z1zXSo6hV6VMkb+ePzzYI85Ccvf0w
-   NfTmwJhhzWI6s63xce9WyOC07/GH/sYdlHyfhr5o5XAl7IZw6ZOc54gci
-   xBJ1DmOeDOSKAi+ypubB8GWvf8IGON2VsbWnXs8FJWUAWfk3T9OpIFxz7
-   8mPzrU/hT6JdebbYfQL2SZlguY2qtW/1zFrntP+LoISS95BZnyGmBAdr4
-   13Lw23ourUGW1KpkwLwuV+Wv+lPq8KjHKGIggqKi0+SLabqMswjhITu5c
-   Q==;
-X-CSE-ConnectionGUID: YKKw5zl7SVmZj90pWLhv2A==
-X-CSE-MsgGUID: I4YkUPvMSb2OUf1PlncjAg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100881195"
+  bh=8gqRjWyH7bE8lydZgzpRt/XjPaNUVcqgzseq/EV7oqI=;
+  b=iMrk3pW3+d6N9+qR3oqzAvRsaHchCT99EV7YzFFQ+xpFO8Zjbg5vShZQ
+   iaQL8nIqaDF/vyoKu8dhcoLLBNtv+Lz4T20pqiukqkW6AdHzvjma2a/Z2
+   TJn/rfPOhaJTMpSTdlo0VH/haISgWmkGbhDY07BGjhoKqZHKWmMyKK3Ed
+   i1C/lXLiADsGO51wjTiOLZpMmkrfUSKCw/pi467aV6F/7Osm4e5bNQe77
+   n1j5zGote8PTXg3CgnD6msQsZ1P9M2Q14sIhkD1+nvSJ0ovZo/zrMtQbw
+   rh5BdUZx4UiRAUdz6Y6f0j0r0K//LUx4RCYswRaebLjHMes323AV1dZP/
+   w==;
+X-CSE-ConnectionGUID: LKv/EpPoRQCk8FhF3pBvOQ==
+X-CSE-MsgGUID: oBVUeCGIQ0GJdQm7pyEZig==
+X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100881228"
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="100881195"
+   d="scan'208";a="100881228"
 Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:26 -0700
-X-CSE-ConnectionGUID: B4ePEV7DRsa+YQT5sBkqiQ==
-X-CSE-MsgGUID: Agsz4B5iQg6ytIZzhPmG6Q==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:34 -0700
+X-CSE-ConnectionGUID: G3K6vj5iQtGECfFhhedtqA==
+X-CSE-MsgGUID: QAbNZhgLRl+ZBmPwTWmiYQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="2763397"
+   d="scan'208";a="2763454"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:23 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:31 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Hans de Goede <hansg@kernel.org>, Sanket Goswami <Sanket.Goswami@amd.com>, 
- Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20260915202535.3689880-1-arnd@kernel.org>
-References: <20260915202535.3689880-1-arnd@kernel.org>
-Subject: Re: [PATCH] platform/x86/amd/pmf: fix compat ioctl handling
-Message-Id: <178975603478.29716.17360914104877936757.b4-ty@b4>
-Date: Fri, 18 Sep 2026 21:27:14 +0300
+To: Hans de Goede <hansg@kernel.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ Marco Giunta <marco_giunta@outlook.it>
+Cc: Ike Panhc <ikepanhc@gmail.com>, 
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <SN6PR19MB2303EBD5288E51BA50D904EFFCB92@SN6PR19MB2303.namprd19.prod.outlook.com>
+References: <SN6PR19MB2303EBD5288E51BA50D904EFFCB92@SN6PR19MB2303.namprd19.prod.outlook.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Map Smart Connect hotkey
+ to KEY_LINK_PHONE
+Message-Id: <178975604656.29716.8490939485587895062.b4-ty@b4>
+Date: Fri, 18 Sep 2026 21:27:26 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,15 +66,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 15 Sep 2026 22:25:20 +0200, Arnd Bergmann wrote:
+On Wed, 16 Sep 2026 15:47:51 +0200, Marco Giunta wrote:
 
-> Build testing with -Wpadded shows a structure that is incompatible
-> between 32-bit and 64-bit x86 userspace:
+> On certain 2025 Lenovo laptops, such as the Yoga Pro 7 14ASP10 and Legion
+> Pro 7 16AFR10H, the F11 key includes a symbol showing a laptop, a tablet
+> and a smartphone. According to the user manual, the key starts the Lenovo
+> Smart Connect app, which connects the laptop to phones and tablets.
 > 
-> ./usr/include/linux/amd-pmf.h:202:1: error: padding struct size to alignment boundary with 4 bytes [-Werror=padded]
-> 
-> Use the 64-bit padded on all architectures here to avoid both
-> the warning and allow compat ioctl handling.
+> These laptops send WMI hotkey event 0x48 (scancode 0x148) when the key
+> is pressed, which is currently reported as KEY_UNKNOWN. Map it to
+> KEY_LINK_PHONE as the closest match, as thinkpad_acpi does for the
+> Microsoft Phone Link and Intel Unison keys, see
+> commit 7ba618e893a4 ("platform/x86: thinkpad_acpi: Add support for new
+> phone link hotkey") and commit b511bbfe4242 ("platform/x86: thinkpad_acpi:
+> handle HKEY 0x1402 event").
 > 
 > [...]
 
@@ -87,8 +94,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/amd/pmf: fix compat ioctl handling
-      commit: ac523aa5562fd4761509a012a68d2462ccf6c921
+[1/1] platform/x86: ideapad-laptop: Map Smart Connect hotkey to KEY_LINK_PHONE
+      commit: bc39af8c2c43b493ae914245a3092128424ceb62
 
 --
  i.
