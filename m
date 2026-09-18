@@ -1,57 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2775218B2;
-	Fri, 18 Sep 2026 18:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D008B5226B5;
+	Fri, 18 Sep 2026 18:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789756078; cv=none; b=dEquzTI7wOr+60Tt1CWtBXdp/M6FOlV40GTKtdOcaTs9Iq2qg1Udia11cc8/7ZTDP6HK9VpeGwotiz8c44vixNHWigcfwspzRfyuY9cUZ94CgZXYVSnJkvzteMyIqWwzskAvJp5PeVKP4mb1RIOfo97gcGs8ZrR4qvUkUveIrEk=
+	t=1789756090; cv=none; b=CeaPx2Gm7e3PjT6nqyVA0+5SRXoLdK8R4/Qa43q85xwa4xmVOvVnbap7cj2w3rof2ivLvbVUQSGCKcVgn99kKH+at/MFgs0h7YecCjW5WiKIvnxAB2vCKzb615pFEpqDFvmGVXAsxO3ikcdsRdEj05lQvYwunArZTD1m7/6GXpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789756078; c=relaxed/simple;
-	bh=BgkaW6wj+6zFv+XnrwpXeXcQvV/ocLAYH7HtAOUdScA=;
+	s=arc-20240116; t=1789756090; c=relaxed/simple;
+	bh=4lojWxo8rC9vVCTqGk7xvzH14JSENg0ZHxmFnmuVneo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ita+z5X3k2WWWqM+hgY/lYgbKpYyEx8FkUxWDNbSCyhWKEk6XOQ2RPnC8HKr48g9my/vzuftlzueJSUOXEB/1/QZvJCTPiQhVp4+WJVW+0D2iMV/yhgxABZHOSvC2nwcnpjrj69Rsh8Fkvo64h9c/dzJy78Nkj/66cEQdeAGiwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GURw9/9S; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=Q4Zcwjt9UrChAQMWgDoduNU964JTaZvoxoyf2Tut+bkk1Zo3qZs0KcGnkH8AYBD5g0rrWoyoOp6vapbaRAXdsmJZInWt8HJYfzyj3CtXURUu1aO2dORo/HxHDXhsGx6ikNzc4K3RJbZhVs8z910RL4AXUEsJeOcQZ7u2wcabT7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKwr5g1w; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GURw9/9S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKwr5g1w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789756075; x=1821292075;
+  t=1789756088; x=1821292088;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=BgkaW6wj+6zFv+XnrwpXeXcQvV/ocLAYH7HtAOUdScA=;
-  b=GURw9/9SWIPdlaqk2JybjfxMt5r5JnLF8D4u7vH7VrhjIoJQsEE+ZvIu
-   5w6NvbYv3c5Oe6aAXM5UmpWZrZI9CccmtbNPnFiYtJtv+iZypK4dyBiuJ
-   0KjpZa6ykp93zh7MC/1jckv/qXfbkzIPoxIehSvoFNeP1oJy4MqSIwOKw
-   fHmKIgtch1hYIJ9tBpJ6fYr2Lfmdz5goHkIIFa3ZQuUkMzNHc3pK1DZjj
-   cMWgGv6jmgi53g524vmZgvgzdNSXZjuRHTDbVnP3twGc994NYQc8URGKc
-   z3Y/9Sr9K1Hlt12r62IwcNCdtavMxc9M5z7fboYfli2IJcpjnhZZjjCQg
+  bh=4lojWxo8rC9vVCTqGk7xvzH14JSENg0ZHxmFnmuVneo=;
+  b=mKwr5g1wXN9ul3jVvEosFsN8MUp3GuGL5i8Pns2yi8MnrDQ90Cb60Ppk
+   lEs2ZBfBKorQXlrnF+9lXxK27L6arqxqhEWLQRThf/PwLbjF0ISKXitlW
+   MSSmWwmFSdQbYZHd1a900Z6f9m1UDB0XhfktS2kBwh4/ViF/QWrGDmrN5
+   vGvQesjkos0n2Gf8oiOoqxDF40PuHYEUErGReM5MVMoMXef+zS5xe2Oz8
+   t6mX1IGyJxGmlkb0sbiJ8hL0G+YFvvHwMwaKCFDgpJfWVBHiJ2smhXRmQ
+   dxyAFGSmOFAntrX3q7oSt8n7ctdwcq0++JodAN2qwj7P/YrBjgLa6XUs7
    A==;
-X-CSE-ConnectionGUID: proqhESBQiGXgmS8Tp6e4Q==
-X-CSE-MsgGUID: o16Zhd19TLuQLE5jN5DoIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100881278"
+X-CSE-ConnectionGUID: inPI4vx6RV+V6mte5EBvZw==
+X-CSE-MsgGUID: qnz59nzWRvG+JsFRMPgWEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100947891"
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="100881278"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:52 -0700
-X-CSE-ConnectionGUID: 7NSzilHxTNWi2GVmQsIUZw==
-X-CSE-MsgGUID: 5dQLH8dfT4eq4ci06iFYQg==
+   d="scan'208";a="100947891"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:28:05 -0700
+X-CSE-ConnectionGUID: 7oltIlv7RqacV42NsOx/Ug==
+X-CSE-MsgGUID: XF6hHf4LS7uY3t6rL1QPaw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="2763539"
+   d="scan'208";a="271862667"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:48 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:28:03 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, sjunhyuk1@gmail.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260917011909.75399-1-sjunhyuk1@gmail.com>
-References: <20260917011909.75399-1-sjunhyuk1@gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Add board 8E41 (OMEN Transcend
- 14) to feature board list
-Message-Id: <178975606335.29716.2385953891625117788.b4-ty@b4>
-Date: Fri, 18 Sep 2026 21:27:43 +0300
+To: Maximilian Luz <luzmaximilian@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Dale Whinham <daleyo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+In-Reply-To: <20260918-surface-pro-11-aggregator-registry-fixes-v2-0-c4ed9335814a@gmail.com>
+References: <20260918-surface-pro-11-aggregator-registry-fixes-v2-0-c4ed9335814a@gmail.com>
+Subject: Re: [PATCH v2 0/3] SSAM registry fixes for Surface Pro 11
+Message-Id: <178975607267.29716.17374385294631713506.b4-ty@b4>
+Date: Fri, 18 Sep 2026 21:27:52 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,16 +63,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 16 Sep 2026 21:19:09 -0400, sjunhyuk1@gmail.com wrote:
+On Fri, 18 Sep 2026 18:49:28 +0100, Dale Whinham wrote:
 
-> The HP OMEN Transcend 14-fb1xxx (DMI board name "8E41") is recognized
-> as an Omen board by omen_thermal_profile_boards[] (so platform_profile
-> switching works via the generic path), but it has no entry in
-> hp_wmi_feature_boards[]. As a result active_board_params stays NULL
-> for this board, is_victus_s_board is never set, and none of the
-> board-specific paths that depend on a real ModelCapabilities entry
-> (EC thermal-profile readback, the Victus-S GPU CTGP/PPAB WMI calls,
-> the AC/battery power-source re-apply handler) ever run for it.
+> This series brings a handful of important fixes to the Surface
+> System Aggregator Module client device registry for the Surface Pro 11
+> (Qualcomm X1):
+> 
+>  - An unneeded driver was removed, silencing a dmesg error.
+>  - Tablet mode detection fixed by replacing KIP with POS driver.
+>  - Performance profile and fan support added.
 > 
 > [...]
 
@@ -86,8 +86,12 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: hp-wmi: Add board 8E41 (OMEN Transcend 14) to feature board list
-      commit: 976f48f87e7e4e2b1ee366d75e6e6451fcf3d389
+[1/3] platform/surface: aggregator_registry: Remove sensors device for Surface Pro 11
+      commit: 4ade3ea4320003c209d36e6a1e0002762b0ffdb4
+[2/3] platform/surface: aggregator_registry: Fix tablet-mode detection on Surface Pro 11
+      commit: b318a0b79a8a865200738e9d9d09beaed459a93c
+[3/3] platform/surface: aggregator_registry: Add performance profile and fan support for Surface Pro 11
+      commit: f475845eaf3d749114a63270bf2efea459e14dd2
 
 --
  i.
