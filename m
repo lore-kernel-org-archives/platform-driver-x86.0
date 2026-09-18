@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A968C4F3911
-	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 13:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D0A4F403C
+	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 13:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789737492; cv=none; b=uFe8K37xlozRriicDqyX1gRVyhfhcw+JhGhdXrq9bUOEp6SLSBP+5U+hFTK0V1BEJzxq/kncC5jzi40NcJz3xKDr+iFGJc8/SXY8j8dYUFOPBkoGD7Njh0t3cgiwDPOoGsnFX+NEo5wvIKtGPgv6pM1m8/JkWQ+Bfp1H3GLT8L0=
+	t=1789737495; cv=none; b=HJUFrnkKe9WsrU0BHCCl2clT7WLN4GvSyK55MccqB//V4Ck2wTDc59crie1+OgF+Hota/rDPuqmtipaOo7gJOJLpLaNrV798cuq7HOLEitOPs+lNPScGBm29d/m6I3Oh/CrjmV/ekd/4CBYxAs8hVK1DtQuizFVwkPHtK6gE710=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789737492; c=relaxed/simple;
-	bh=PnRYI15Ur0sELkA4t8Fjg9KmL8IGQA8lX7IlQ/RTe94=;
+	s=arc-20240116; t=1789737495; c=relaxed/simple;
+	bh=zGpE73V/hkrWMc8qKCQ3sV0WJK524j/nIBbGfm+6rec=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cI5pEqBRvVQMkbjqbQo3gZoJTE/x9Kz9qWaXi0/afRiils5O/xFMdY1kr4iwAO9ArQcl6Z7+6wS0y6gTjE8gNFs6L4pm4BMYM90wo9rfwgukX3I+Hc94HtbT/Oe4itLtQHpeAtKCt/0sQM5Gys+W+i8JoRtWjF5UgrnvnZTf8q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EnSxuHcu; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=izrgGezf4lb6c1MbuFFodI/aM83oRrEkKHY9Lm+pABS63nCSHEyvYl7pSH3jF6AjXwYQqi+B/MdMkLX1GKrmH3/6D+d8j1w6xIBMcbM8UC4I66O0Aa4ac1VPiPaZG3uWANYaQ55bCNj1I9s8yL/aVzGZ93kbHCcyQF7A8ediD74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iOA/wug3; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EnSxuHcu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iOA/wug3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789737489; x=1821273489;
+  t=1789737493; x=1821273493;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=PnRYI15Ur0sELkA4t8Fjg9KmL8IGQA8lX7IlQ/RTe94=;
-  b=EnSxuHcuF0qnHQpwyKT3/i+PplwUzLuR4HH/hZRd48xpbwIXwc50p16C
-   bZ7N8LmGQCWk0zoDSjzDKj75hGEPT+9BSZ0kPC91SUIQRjNC1tPoAw0i/
-   HMqT2DaVOsnDZMP+Gt8cBch2eTNaPx7HSfXGZ/0GKWXsqfv50+UtTMiq+
-   EkjP9OzJ4lcvoD4xBa4P2UoBDsR5P1vy8t/OjRNnEJOdxQAr+VwVAoEkC
-   0lTwcYGwVAsnLZGXHrtHADWPQ6OF3o7OIgIt87MiBulCw3gUxRLNTv2dr
-   +RU/nKINqR1+gFDmdTSm5RauIbQ9sUFMdkmoSmeD+WAw+zHTyoUPkzULE
-   Q==;
-X-CSE-ConnectionGUID: gu3RxzFITAu0RduDiwTSgg==
-X-CSE-MsgGUID: Y+ZhI0FuTOijsRGIpMyUEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11908"; a="89378202"
+  bh=zGpE73V/hkrWMc8qKCQ3sV0WJK524j/nIBbGfm+6rec=;
+  b=iOA/wug3G8pnyjTXuUYS3u+k+jcM96XgHg6yUB11QNW4rOTQm0szmNjs
+   Kw2Jh4buJ0xE/5/3L9O/K+YgQPxY4CiH1lxTHXXEonVvZiyebUMxWcH+V
+   xR/Ir7AFzrswPnaStWxr3B08rhi4p4LmHy1hp1X1qz+4n9WedfoJJ0ob6
+   MT1fzGOVR+88ghes6XMxtRYDwZ7q+sdqrgY2APX4Rn7z2ix5/lByzWH7s
+   aDjHYAXQT386voi3/nAMpTIh3ssjC9WA6umZ/2fQj1nRnNkm5LpOJ4tGX
+   rI+SVfZqV0NdxmzclzQVu76cEtfUz3zTv4Vu97+x4A2EDKZ0ELImYOpnk
+   A==;
+X-CSE-ConnectionGUID: 37t5vEG3TOmNOINARCpxZw==
+X-CSE-MsgGUID: VyMPpDvRRrKNX64ADRvDkg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11908"; a="89378230"
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="89378202"
+   d="scan'208,146";a="89378230"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 06:18:02 -0700
-X-CSE-ConnectionGUID: yFpKYKmmSeSM07GoDzL0yQ==
-X-CSE-MsgGUID: ZEe8gD+NTMerf68roOyDaw==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 06:18:03 -0700
+X-CSE-ConnectionGUID: r6CadKkoSceC5V/88w2+jw==
+X-CSE-MsgGUID: CpdZdbG7S027vqqgq0zFiA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="270095304"
+   d="scan'208,146";a="270095323"
 Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
   by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 06:18:02 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
@@ -59,9 +59,9 @@ To: platform-driver-x86@vger.kernel.org,
 	matthew.d.roper@intel.com,
 	james.ausmus@intel.com,
 	karthik.poosa@intel.com
-Subject: [PATCH v10 01/20] platform/x86/intel/pmt: complete pcidev to device update
-Date: Fri, 18 Sep 2026 06:17:52 -0700
-Message-ID: <20260918131751.2408883-23-michael.j.ruhl@intel.com>
+Subject: [PATCH v10 06/20] drm/xe/vsec: Do not register BMG PMT for VF
+Date: Fri, 18 Sep 2026 06:17:57 -0700
+Message-ID: <20260918131751.2408883-28-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260918131751.2408883-22-michael.j.ruhl@intel.com>
 References: <20260918131751.2408883-22-michael.j.ruhl@intel.com>
@@ -73,90 +73,48 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The update that moved struct pci_dev usage to struct device is
-incomplete. Only telemetry endpoints are covered.
+BMG PMT is not supported for VF nodes.
 
-Other PMT features (crashlog) are now blocked from using the callback
-mechanism.
+If IS_SRIOV_VF() is true, do NOT register with PMT.
 
-Change struct intel_pmt_entry pci_dev member to device.
-
-Update callback usage to use the intel_pmt_entry rather than the
-telemetry endpoint.
-
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Fixes: 353042d54d82 ("platform/x86/intel/vsec: Switch exported helpers from pci_dev to device")
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/class.c     | 5 ++---
- drivers/platform/x86/intel/pmt/class.h     | 3 +--
- drivers/platform/x86/intel/pmt/discovery.c | 2 +-
- 3 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/xe/xe_vsec.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index d0ab8e33c62a..402d51df834a 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -100,7 +100,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
- 	if (count > entry->size - off)
- 		count = entry->size - off;
+diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+index a9baf0bfe572..481bcbcc6372 100644
+--- a/drivers/gpu/drm/xe/xe_vsec.c
++++ b/drivers/gpu/drm/xe/xe_vsec.c
+@@ -149,6 +149,8 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
+ 	u32 offset;
+ 	int ret;
  
--	count = pmt_telem_read_mmio(entry->ep->dev, entry->cb, entry->header.guid, buf,
-+	count = pmt_telem_read_mmio(entry->dev, entry->cb, entry->header.guid, buf,
- 				    entry->base, off, count);
++	xe_assert(xe, !IS_SRIOV_VF(xe));
++
+ 	ret = xe_guid_decode(guid, &mem_region, &offset);
+ 	if (ret)
+ 		return ret;
+@@ -157,9 +159,6 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
  
- 	return count;
-@@ -286,8 +286,6 @@ static int pmt_resolve_access_pci(struct intel_pmt_entry *entry,
- 		return -EINVAL;
- 	}
+ 	guard(mutex)(&xe->pmt.lock);
  
--	entry->pcidev = pci_dev;
+-	if (!xe->soc_remapper.set_telem_region)
+-		return -ENODEV;
 -
- 	return 0;
+ 	/* indicate that we are not at an appropriate power level */
+ 	if (!xe_pm_runtime_get_if_active(xe))
+ 		return -ENODATA;
+@@ -186,6 +185,9 @@ static enum xe_vsec get_platform_info(struct xe_device *xe)
+ 	if (xe->info.platform > XE_BATTLEMAGE)
+ 		return XE_VSEC_UNKNOWN;
+ 
++	if (IS_SRIOV_VF(xe) && (xe->info.platform == XE_BATTLEMAGE))
++		return XE_VSEC_UNKNOWN;
++
+ 	return vsec_platforms[xe->info.platform];
  }
  
-@@ -365,6 +363,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
- 	entry->guid = header->guid;
- 	entry->size = header->size;
- 	entry->cb = ivdev->priv_data;
-+	entry->dev = ivdev->dev;
- 
- 	return 0;
- }
-diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-index a0ece4fc3837..258cb460e61c 100644
---- a/drivers/platform/x86/intel/pmt/class.h
-+++ b/drivers/platform/x86/intel/pmt/class.h
-@@ -20,7 +20,6 @@
- #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
- 
- struct device;
--struct pci_dev;
- extern struct class intel_pmt_class;
- 
- struct telem_endpoint {
-@@ -42,7 +41,7 @@ struct intel_pmt_header {
- 
- struct intel_pmt_entry {
- 	struct telem_endpoint	*ep;
--	struct pci_dev		*pcidev;
-+	struct device		*dev;
- 	struct intel_pmt_header	header;
- 	u32			disc_header[PMT_DISC_DWORDS];
- 	struct bin_attribute	pmt_bin_attr;
-diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/x86/intel/pmt/discovery.c
-index c482368bfaae..f4203d240f54 100644
---- a/drivers/platform/x86/intel/pmt/discovery.c
-+++ b/drivers/platform/x86/intel/pmt/discovery.c
-@@ -609,7 +609,7 @@ void intel_pmt_get_features(struct intel_pmt_entry *entry)
- 
- 	mutex_lock(&feature_list_lock);
- 	list_for_each_entry(feature, &pmt_feature_list, list) {
--		if (feature->priv->parent != entry->ep->dev)
-+		if (feature->priv->parent != entry->dev)
- 			continue;
- 
- 		pmt_get_features(entry, feature);
 -- 
 2.43.0
 
