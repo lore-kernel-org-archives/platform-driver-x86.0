@@ -1,59 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9E451DDF4;
-	Fri, 18 Sep 2026 18:24:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0894E51E428
+	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 18:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789755896; cv=none; b=fJwFOqp18HaVSEslYKO2WWjQm0xz5ck79Q8hMZ/OcDRNxfqO4+QCwzuAKy02f4zpW5zQFMrkdP0RgpD/J5oDeyJDVLQVKsL2KCR1Y+yZkQzKxrCc+KcddDAeXRTo9z1AmuXr6D2aBXYu/TTiM8qsqVhsatqoLFdeggemBgx+xS0=
+	t=1789755904; cv=none; b=hSoY0rZQZSOOpsKcAv+ltqrtJqD+FYb6bw9yfp8sN3KpQBnAD7f8TZ+c73xZeoe3MZy//nTBdgP8fQkta2Gc8SsJ/8jwrv5Sw7kmykHX/9Jxlel8M50jm8DyO6ZeYHKUdKkLk2gpuRbWEYrbtlKF4Kv74yajtwnZitMmuN9pCSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789755896; c=relaxed/simple;
-	bh=n3GTwo07VabT6Um6fys7CkPvfOGICzrGoxo9avyWeP8=;
+	s=arc-20240116; t=1789755904; c=relaxed/simple;
+	bh=3RZfnPHn1y0Qt21UiwNDUvs6G3nXFC7UP90fbrHvV3k=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Kt3+Yvz3MQZJ5Up6vDROSLQieluIExBXKW51acA5BjCa0dw4fIlfxQWqMTh7WIQUGdZNYu8fxk/ZoNqovDQEa1XIHh+LcobtYxjNcQFzT29UskaMyIUv1OtiKg8/eGI+/FPJa7EXtl3XjyFZIaZV2IFU2TfbZbyeiP8m3CXbafY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O44Q/gGB; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=l1Rxru+pt9qLU7xt8zX7kwXouTynHb+xTInPO6r2aUtykikZxGNtVW0PkVnnMOqlbuMOwvQin9/Kt4Ske4dX0dgatngS31Rg/DUhTOymaR4B5V8jLbZKz0sPrb0qzSIegi05rykdXvUQpYG9D/lefNkIy/F5MwJggKesFrdOlYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yh6uw8CI; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O44Q/gGB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yh6uw8CI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789755895; x=1821291895;
+  t=1789755903; x=1821291903;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=n3GTwo07VabT6Um6fys7CkPvfOGICzrGoxo9avyWeP8=;
-  b=O44Q/gGBylKfuIuYvoksHTIbAg/bRpnMDDm7Qd2j0UbYBfinmq3bKT9y
-   vn+Hi42VQJwPRsmXE+QOGbfDteTPDKYSE5qXaPV0fqjmCRckVVgc+53hQ
-   cGTcnb5/oZ00ul5OvKD0/rmayRbOt88ERRWiNJOWLteUJOYI4eP2bEu7a
-   vD167DY/gGPQ6VoIWkDQhZQfBEM0V8CGCFLoDASfeyrtgROHUCDgXYC8w
-   yY5I8IcUDc6N9KVappIRxB+5Hw/yYmXvcWyjXsWSG+LBs7Z6PniJYd+yW
-   J1XVYbK12ROkOJNMW3g7b9JeHx9ZuMMn0m1Ju6iOFBf3dqhXyEPOUVOW0
-   w==;
-X-CSE-ConnectionGUID: +Pt5ZsbHS/iVR4SoAn9Imw==
-X-CSE-MsgGUID: yOmL37ylQjKP8YewzZfhug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="107785009"
+  bh=3RZfnPHn1y0Qt21UiwNDUvs6G3nXFC7UP90fbrHvV3k=;
+  b=Yh6uw8CIMDS7tYEXDnmAyWm6fPtco13Bn+kUAnWp149anm1HdbsS56lo
+   U19zGNLb5YkNzn2glJPJLwycA5xGsYJl8SyPn82Z2FTWHmNR6pkakhKrx
+   o1VrOI5N9avdDvQwi6HT4S7T1yMBedVvokcAiQ3mw2jHVBULGLTa6o80n
+   ZvgLDXfKUvWaMzLuDzLfoMvDq6CbIJZEIawZgR/ND91ZRYqYm0Q6gLzZw
+   LM62qsb4W5oQfHK8e2lpSFa1wRAWlQ5rUaKdbRO+QrVINl1wsecs0/HYH
+   lZuWqZq0z+2ohV3e8JkyNgMwhVs4jED7zuaomOBSWn9d2gaKcRiB0ly6M
+   g==;
+X-CSE-ConnectionGUID: 7cXG6HviSUyP3K5XvhISOQ==
+X-CSE-MsgGUID: odg2x/qSTbCO9SBZUw6DUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="107785020"
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="107785009"
+   d="scan'208";a="107785020"
 Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:24:54 -0700
-X-CSE-ConnectionGUID: d+DUhK+6QP6rNDRmYQK/Rw==
-X-CSE-MsgGUID: aCqByL5lQqaGl7iPykimIw==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:25:02 -0700
+X-CSE-ConnectionGUID: Mkco7CT8TQaVBRBeV8QTCw==
+X-CSE-MsgGUID: bC0US/2LS/aJL82/fNZ2zQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="2726933"
+   d="scan'208";a="2726968"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:24:51 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:25:00 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: luke@ljones.dev, Armandas Kvietkus <armandas.kvietkus@proton.me>
-Cc: denis.benato@linux.dev, hansg@kernel.org, corentin.chary@gmail.com, 
- fxzxaxon@outlook.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20260825-fan-curve-v3-1-617f8e661e9c@proton.me>
-References: <20260825-fan-curve-v3-1-617f8e661e9c@proton.me>
-Subject: Re: [PATCH v3] platform/x86: asus-wmi: suppress -ENODEV warning in
- fan_curve_get_factory_default()
-Message-Id: <178975588661.29716.3167848890407727242.b4-ty@b4>
-Date: Fri, 18 Sep 2026 21:24:46 +0300
+To: Sebastian Reichel <sre@kernel.org>, 
+ David Stephenson <git@davidstephenson.net>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20260825193556.133277-1-git@davidstephenson.net>
+References: <20260825193556.133277-1-git@davidstephenson.net>
+Subject: Re: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send
+ KEY_KBDILLUMTOGGLE on Fn+Space
+Message-Id: <178975589490.29716.11621877814351272958.b4-ty@b4>
+Date: Fri, 18 Sep 2026 21:24:54 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,14 +63,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 25 Aug 2026 00:47:07 +0200, Armandas Kvietkus wrote:
+On Tue, 25 Aug 2026 19:36:21 +0000, David Stephenson wrote:
 
-> When firmware does not support the fan curve WMI method,
-> asus_wmi_evaluate_method_buf() returns -ENODEV. Callers treat this
-> as non-fatal, but the pr_warn() here still fires, producing
-> spurious boot noise on unsupported hardware. Downgrade the message
-> to pr_debug().
+> On the T14s, the EC already steps the keyboard backlight when you press
+> Fn+Space: off, then low, then high.
 > 
+> We report that change with t14s_kbd_bl_update() (brightness_hw_changed).
+> We then also send KEY_KBDILLUMTOGGLE.
+> 
+> The extra key is the problem. Desktops treat it as "please toggle the
+> light." GNOME calls Keyboard.Toggle() and changes the LED itself. That
+> fights the EC's three steps. The on-screen bar also stays empty,
+> because Toggle() always returns 0%.
 > 
 > [...]
 
@@ -86,8 +89,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: asus-wmi: suppress -ENODEV warning in fan_curve_get_factory_default()
-      commit: 9af7fddef448d649fa1332d86a14465a1d1fafe3
+[1/1] platform: arm64: thinkpad-t14s-ec: don't send KEY_KBDILLUMTOGGLE on Fn+Space
+      commit: 2782e0c22e155cc0852114dcf9bb98c209b06853
 
 --
  i.
