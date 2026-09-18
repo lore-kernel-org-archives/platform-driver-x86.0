@@ -1,60 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF5B51DB14;
-	Fri, 18 Sep 2026 18:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F14951DDED;
+	Fri, 18 Sep 2026 18:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789756036; cv=none; b=k3v7lG9wq+oogymVQ56gw+hyG/dWPx5YnYyQYLy/MSwKxA9+69Z/nJrqOtHgjNQJwZlLvQ3mfhLzp7/I7KoMnqxJA6UHbJ7RhCKw6+W0pe39JE5X+i4X2E9FTYVvNsbH73c4zmAVtTMT3IxXlsrRNQPJRh2cxVoeU9wMB91mpGo=
+	t=1789756047; cv=none; b=DH5uKhb5WqJambLpOv58Qb9j7i5W0g9IxPgnUoBkVYTXe2O+KNdHbhjPQjoTvS9uj0HnH4g493ceGSSpLxtsZrQdD/b8zEWR8AkKp2KJNpJ4N5Le9PaXLvFNwE9TfJfQ4ws45JkDwIF1ErEdcqW9XIIL4RyyJH7HhrILTcCgibU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789756036; c=relaxed/simple;
-	bh=isa4/aanmESCUJ9/BwfBY2bbaB78VAV8h8iWLe1alaY=;
+	s=arc-20240116; t=1789756047; c=relaxed/simple;
+	bh=4Yy3nhNLFGl//EfeeNNsF/NGZo+QkZ2vHRpVmWsD3Yw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eOzRrV0u9TVrtM5YdcZk7mCOaoeOTgYpSChPnF0UKMhDr1fKHZ/VQh+SkAgJDb9ESGIC2fwF3UVEYQYbpJsH3NL6UIRGmLr1Y1ynGpsE7teO+S6q1P/Nv3UildNuRV966eL5rWcqP5ZoMUd3JAvrnfyn2wGKy0OZh3D0Ub918ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WNbHIXH0; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=NBPs7tgh+MviIK5oxpp7bwnxCl+WJGes1tDxxFv13cDL28rSAsSkg7jOBbm8vro9ePW/0aVyCiPKtRJlWd4cH21b+p99a78TkKNbGiT9kb4l5kheGIIEr2tpzJd+FuWZdl6PEJ99pCDxzEtbnzgRSLpmij3nDW/aAXS12R/B+Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acZUZK+Y; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WNbHIXH0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acZUZK+Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789756035; x=1821292035;
+  t=1789756046; x=1821292046;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=isa4/aanmESCUJ9/BwfBY2bbaB78VAV8h8iWLe1alaY=;
-  b=WNbHIXH0gsixszd/oizobsLlhxTnhps2p/sIEey2lf+EtV4pDigaOS9B
-   MWut3OqDcqDEiJXOOF9T5vXgVi4O26adcyP9uI+UaYQklRhju5jPeShgy
-   sQpdXZmHzVXLadH1naPGpcOdendgYwtEZ2zxcevVzAQUDgKfGaQpD+HZV
-   69tveDlSl2hgBe3mcqYGvmgjUM43jhY/uIJ3SNhjWbhcH6X8JRTa1bThD
-   3hwhwOMxpEheUdEOF8LLb/ocEVFRiYO5OtS+nCWuTZlvngoMWqofxsAjt
-   4PMXota8Vt2CJDJ8Ofi3Q36TpwPW7CIFirVfr9O3sgPDouXkjEhFGwJnu
-   w==;
-X-CSE-ConnectionGUID: ADluup6uQV2+tlmTvWht/A==
-X-CSE-MsgGUID: fFdBQuOYRtmVu7IBcQS9vw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100881159"
+  bh=4Yy3nhNLFGl//EfeeNNsF/NGZo+QkZ2vHRpVmWsD3Yw=;
+  b=acZUZK+YLVR1SX7lWp6KE9DAP2j5Ted1krOTAvJfWGjExEYQ1q0Y6eyd
+   4aS6zRg7igm02OsJGbOybIjoexv7Z1zXSo6hV6VMkb+ePzzYI85Ccvf0w
+   NfTmwJhhzWI6s63xce9WyOC07/GH/sYdlHyfhr5o5XAl7IZw6ZOc54gci
+   xBJ1DmOeDOSKAi+ypubB8GWvf8IGON2VsbWnXs8FJWUAWfk3T9OpIFxz7
+   8mPzrU/hT6JdebbYfQL2SZlguY2qtW/1zFrntP+LoISS95BZnyGmBAdr4
+   13Lw23ourUGW1KpkwLwuV+Wv+lPq8KjHKGIggqKi0+SLabqMswjhITu5c
+   Q==;
+X-CSE-ConnectionGUID: YKKw5zl7SVmZj90pWLhv2A==
+X-CSE-MsgGUID: I4YkUPvMSb2OUf1PlncjAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100881195"
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="100881159"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:14 -0700
-X-CSE-ConnectionGUID: vVeRMT6uRDSkL89BU7Izhg==
-X-CSE-MsgGUID: jxA2izzsStO+nW+T8aDahw==
+   d="scan'208";a="100881195"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:26 -0700
+X-CSE-ConnectionGUID: B4ePEV7DRsa+YQT5sBkqiQ==
+X-CSE-MsgGUID: Agsz4B5iQg6ytIZzhPmG6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="276499528"
+   d="scan'208";a="2763397"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:09 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 11:27:23 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org, 
- patryk.dankow@protonmail.com
-Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
- hansg@kernel.org, perex@perex.cz, tiwai@suse.com, zhangheng@kylinos.cn, 
- dnaim@cachyos.org, damien.dagorn29@gmail.com, kailang@realtek.com, 
- habilerenturker@hotmail.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20260915174110.67871-1-patryk.dankow@protonmail.com>
-References: <20260915174110.67871-1-patryk.dankow@protonmail.com>
-Subject: Re: [PATCH 0/2] Add ASUS ExpertBook mute LED support
-Message-Id: <178975602496.29716.5435505954300657044.b4-ty@b4>
-Date: Fri, 18 Sep 2026 21:27:04 +0300
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Hans de Goede <hansg@kernel.org>, Sanket Goswami <Sanket.Goswami@amd.com>, 
+ Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260915202535.3689880-1-arnd@kernel.org>
+References: <20260915202535.3689880-1-arnd@kernel.org>
+Subject: Re: [PATCH] platform/x86/amd/pmf: fix compat ioctl handling
+Message-Id: <178975603478.29716.17360914104877936757.b4-ty@b4>
+Date: Fri, 18 Sep 2026 21:27:14 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,17 +64,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 15 Sep 2026 17:41:20 +0000, patryk.dankow@protonmail.com wrote:
+On Tue, 15 Sep 2026 22:25:20 +0200, Arnd Bergmann wrote:
 
-> This series adds speaker mute LED support for the ASUS ExpertBook
-> PM3406CKA.
+> Build testing with -Wpadded shows a structure that is incompatible
+> between 32-bit and 64-bit x86 userspace:
 > 
-> The first patch adds the ASUS WMI mute LED endpoint and registers it as
-> the platform::mute LED using the audio-mute trigger.
+> ./usr/include/linux/amd-pmf.h:202:1: error: padding struct size to alignment boundary with 4 bytes [-Werror=padded]
 > 
-> The second patch enables vmaster mute LED handling for the PM3406CKA in
-> the Realtek HDA codec driver. The existing CS35L41 I2C fixup is retained
-> by chaining the new fixup to it.
+> Use the 64-bit padded on all architectures here to avoid both
+> the warning and allow compat ioctl handling.
 > 
 > [...]
 
@@ -90,10 +87,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/2] platform/x86: asus-wmi: Add mute LED support
-      commit: d95982b2ea3453998466efe1e7e06fee7392e800
-[2/2] ALSA: hda/realtek: Add mute LED support for ASUS PM3406CKA
-      (no commit info)
+[1/1] platform/x86/amd/pmf: fix compat ioctl handling
+      commit: ac523aa5562fd4761509a012a68d2462ccf6c921
 
 --
  i.
