@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3693C3A9013;
-	Fri, 18 Sep 2026 07:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811C32D8762;
+	Fri, 18 Sep 2026 07:49:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789717098; cv=none; b=mo2gK3dy+V20Vxs3ePmD7+afmxVrrBa9H+utMGXLbsEbF8DQqPHc9jjVIDnKypD3lAp1V7tyqOK2fBHXch6vOVOOrqRc/1Xx72c4r/JEOa2Qn7gpyUp8gZ/1uh0j4EuxiO2Nm5zvCjRu+/mSe6mdHruPtRIVqxeA1llB0WGiW9o=
+	t=1789717749; cv=none; b=Gr8yJWcMe+X4Uxt4eYzh0dpIsxCdJUGesnNGU0DUf4Op8WRmL5hLXCaS5og10OlXKMfKVMRicTUoR5sAweurUWZfKulRTTpL23TVjA76PMpGr16JDVp4eON9O/mqZeJoe7p6zCKOoK//iVJqsEArGsFzXeg0h/RvBoSd/PlyyUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789717098; c=relaxed/simple;
-	bh=7BrrV7AehTnGjC9gSf58u46X8TAtQftac1nVa0bTp7A=;
+	s=arc-20240116; t=1789717749; c=relaxed/simple;
+	bh=k0z/hR+5yIlHyOF4LmazOep/oe9lcjen+OyfmO/OnLc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hFyZaj0uzm1NmMp8RXrN9G3v6j8pwJRcmCbICuz6yFTLdZuU2GmVqx+XbIwfdCU5BJaV26d/NubmQwp+awWYcvUlodqaowwv2P0iVQaju6L2ob/9CtC/0BUPW2wtG8V5YQ0nA4EjL9TVbYxYoNEG+Ma+xb+h6J9IvE6+WYX1Gz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHeeebV1; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=QTb6soiLTMcSTwzN8ZOw/xbeMRHlVanbCdO0FDcjJjBsxPqKCQgOuk0uBPg4Sd5lzsLjZFaK3FpSAEO6W9o2Bhxeq0c5Sam8gTmKnLwA3ltbjAjSEOaJnIyZgWj7hZjBwsK1vieFWnyYMR9IKfQBSi0cSfYEXM/6Fdst2fuQcHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDRgRPlt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHeeebV1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD261F000FF;
-	Fri, 18 Sep 2026 07:38:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDRgRPlt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E541F000FF;
+	Fri, 18 Sep 2026 07:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789717088;
-	bh=503mo/X0Uj5uw7WFqHnkSpePuvYL7gWtidtTQRcnQHE=;
+	s=k20260515; t=1789717748;
+	bh=vJKvMLbmElK8KttkMQ8hkz5u79hzTkh0lL7FQh+PFqI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=QHeeebV1yNVsFuaxSU6dENXr0azq8pARsPLH/eFvuUgi9AMbd4YT0JJukmyJdvUSe
-	 2RD2zY6msDOydpaLlq2gPKvm7d9E2GMv8jlufMM4n2rKNVRaMfnphs455edR2DZ82+
-	 oTruau9O/oKz09uWnn7BUQcC9HdOQ7qfzDtjW9zmJAOyTb1aQ2XnfHKVH6ULEZgU1A
-	 FMjEUmRa9X7FIvCa3nigJRYPD4GxPehBs1R2Oyb6V/UrenSUoAvOfE/v1BDVQdUOzt
-	 5nQxQ2iSXMTTh4lEBa3pFNTZOQsRfcpOthc2kPO12ulxLZnOdwg7R0HZzwgS5CICx4
-	 tMESEjzBBccUA==
-Message-ID: <2384d8f5-106c-4cbd-a119-62d923725bf7@kernel.org>
-Date: Fri, 18 Sep 2026 09:38:04 +0200
+	b=nDRgRPltaEljYrKy94fX1kR91hzN+MpRB9MPYQ1+4X04V6e9jP3UfdRBCwxDx9K5k
+	 HXbmXYGRYtQCwaFnLwhM994HkXABJDE1B7q288wgf2cSwxgOV0X+nst+TUVfWYtSZV
+	 nbSiMiW0yIZ1cYuVI9XNOBUIv7iAr3VnyAaxvUeKTQTQH4RcNVgcALNTYovLq/EN9a
+	 Q1whWRiOGgumpL4WL/RbxPaThWEKILE9Un6A3b/6x6Fho1G8BwsQfgIpsV1ilZZX+8
+	 Uyt2Gb849GzU3liO1eddWwgQAd5v1SYlhj/O25klzrxqM2SI7i35i+7BFnqaob9Lhv
+	 jWTT3uwM5QgwQ==
+Message-ID: <06550473-63c2-4a3e-a5ad-7e23d7b6b050@kernel.org>
+Date: Fri, 18 Sep 2026 09:49:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,78 +35,134 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] platform: Enable ACPI WMI and ASUS WMI driver for
- ARM64
-To: chipang_kao <prozac2734@gmail.com>, ilpo.jarvinen@linux.intel.com,
- bryan.odonoghue@linaro.org, W_Armin@gmx.de
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- chipang_kao <chipang_kao@asus.com>
-References: <20260917021055.8029-1-chipang_kao@asus.com>
+Subject: Re: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
+ nvidia_wmi_ec_supported()
+To: Jani Nikula <jani.nikula@linux.intel.com>, Armin Wolf <W_Armin@gmx.de>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux@weissschuh.net" <linux@weissschuh.net>,
+ "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
+ <lenb@kernel.org>, "linux-acpi@vger.kernel.org"
+ <linux-acpi@vger.kernel.org>, "Koenig, Christian"
+ <Christian.Koenig@amd.com>, "airlied@gmail.com" <airlied@gmail.com>,
+ "simona@ffwll.ch" <simona@ffwll.ch>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "patrik.r.jakobsson@gmail.com" <patrik.r.jakobsson@gmail.com>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+ "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+ "tursulin@ursulin.net" <tursulin@ursulin.net>,
+ "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+ "matthew.brost@intel.com" <matthew.brost@intel.com>,
+ "thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>,
+ "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>
+References: <20260724025959.142826-1-W_Armin@gmx.de>
+ <20260724025959.142826-3-W_Armin@gmx.de>
+ <BN9PR12MB514668975E87D570F50B2D91F7A82@BN9PR12MB5146.namprd12.prod.outlook.com>
+ <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de>
+ <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
+ <11976ed3784675ad241646287a909286a42675a8@intel.com>
+ <3ef68773-e07e-437a-98fb-a3c5fc08539c@gmx.de>
+ <62d7da838e7042df8456e76190db792093065b57@intel.com>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20260917021055.8029-1-chipang_kao@asus.com>
+In-Reply-To: <62d7da838e7042df8456e76190db792093065b57@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 17-Sep-26 04:10, chipang_kao wrote:
-> This series enables ACPI WMI core support and the ASUS WMI platform
-> driver on ARM64 architectures.
+On 16-Sep-26 09:16, Jani Nikula wrote:
+> On Wed, 16 Sep 2026, Armin Wolf <W_Armin@gmx.de> wrote:
+>> Am 15.09.26 um 14:31 schrieb Jani Nikula:
+>>
+>>> On Tue, 15 Sep 2026, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+>>>> GPU people heads up!!
+>>>>
+>>>> On Wed, 2 Sep 2026, Armin Wolf wrote:
+>>>>
+>>>>> Am 01.09.26 um 23:30 schrieb Deucher, Alexander:
+>>>>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
+>>>>>>> b/drivers/gpu/drm/amd/amdgpu/Kconfig
+>>>>>>> index 12e4a41bf1f0..50305630f533 100644
+>>>>>>> --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
+>>>>>>> +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+>>>>>>> @@ -30,9 +30,7 @@ config DRM_AMDGPU
+>>>>>>>         # ACPI_VIDEO's dependencies must also be selected.
+>>>>>>>         select INPUT if ACPI
+>>>>>>>         select ACPI_VIDEO if ACPI
+>>>>>>> -     # On x86 ACPI_VIDEO also needs ACPI_WMI
+>>>>>>> -     select X86_PLATFORM_DEVICES if ACPI && X86
+>>>>>> The change below makes sense, but this one looks like it should remain
+>>>>>> unless X86_PLATFORM_DEVICES is handled some other way?
+>>>>>>
+>>>>>> Alex
+>>>>> AFAIK the dependency on X86_PLATFORM_DEVICES was only necessary because
+>>>>> ACPI-WMI depended on it in the past.
+>>>>> By now ACPI-WMI neither depends on X86_PLATFORM_DEVICES or X86 anymore.
+>>>> Hi all,
+>>>>
+>>>> Could more GPU people besides Alex take a look on this. I'd want to make
+>>>> progress with this series within this cycle but would prefer to have Acks
+>>>> from GPU side.
+>>> I share the same concern with Alex. It seems to me we could now end up
+>>> with x86 configurations without X86_PLATFORM_DEVICES, which handle
+>>> e.g. backlight on a lot of platforms.
+>>>
+>>> I think the safer option might be to go for:
+>>>
+>>> 	depends on X86_PLATFORM_DEVICES || !X86
+>>>
+>>> in all of the cases that select/depend on X86_PLATFORM_DEVICES in drm.
+>>>
+>>> The alternative is to find out, and handle the fallout, if any.
+>>>
+>>>
+>>> BR,
+>>> Jani.
+>>
+>> Alright, should i leave the original "select X86_PLATFORM_DEVICES if ..." statements
+>> as-is or should is change them to "depends on X86_PLATFORM_DEVICES || !X86" everywhere?
 > 
-> ACPI WMI is not limited to x86 platforms. Modern ARM64 laptops and
-> platforms have adopted ACPI WMI to expose vendor-specific features
-> such as hotkeys and fan control.
-> 
-> To support these devices:
-> 1. Removes the strict 'X86' dependency from CONFIG_ACPI_WMI.
-> 2. Updates the ARM64 platform driver infrastructure to allow
->    building the ASUS WMI driver without duplicating source code.
+> There are some places that depends on X86_PLATFORM_DEVICES. I think it's
+> almost always a mistake to have some places select and some places
+> depends on, and select should anyway be used with care. I'd go for
+> depends on.
 
-This cover-letter is missing some important information, namely
-why do this.
+I'm a bit late to the party here, sorry.
 
-Yes ACPI / WMI is used on some ARM64 laptops, but AFAIK all of
-those are currently still booting through Devicetree since
-the current generation ARM64 laptops is missing various info Linux
-needs in the ACPI tables. So for a fully functional system 
-Devicetree is necessary.
+Note that X86_PLATFORM_DEVICES is an option which enables / disables
+a menu and does nothing more.
 
-I think making the generic WMI code availabe on ARM64 is good
-and this is something which Armin has already been working on.
+Enabling it or depending on it by itself does nothing.
 
-But I wonder what the concrete use-case is to build the ASUS WMI
-driver on ARM64.
+The select used to be there since it must be selected to be able
+to select ACPI_WMI (which is no longer the case after this series).
 
-Questions:
+To depends on in XE was probably copy pasted from the existing
+select-s and then changed to a depends and already was a completely
+no-op since depending on ACPI_WMI was enough as that itself
+dependend on ACPI_WMI.
 
-1. Has this been tested on an actual Asus ARM64 laptop or other
-   ARM64 device? 
+As for X86_PLATFORM_DEVICES being needed for some backlight
+interfaces, depending on it by itself does not result in those
+interfaces being there. That requires enabling the actual drivers
+providing those interfaces.
 
-2. On which laptop/device model ?
+And I don't think that the GPU drivers should start depending
+on those since that will become very unyielding.
 
-3. How was this tested, how was the laptop booted; and does booting
-   it this way lead to loosing any other functionality
-
-4. Were any other kernel patches used during testing?
-
-As for patch 2/2 I think that if we want this the driver should
-simply be moved to platform/wmi .
+TL;DR: I believe Armin's original patch is fine and this is
+a welcome cleanup / simplification of the DRM drivers Kconfig
+bits.
 
 Regards,
 
 Hans
 
-
-
-> 
-> chipang_kao (2):
->   platform/wmi: Remove X86 dependency for ACPI_WMI
->   platform/arm64: Enable ASUS WMI driver support
-> 
->  drivers/platform/arm64/Kconfig  | 46 +++++++++++++++++++++++++++++++++
->  drivers/platform/arm64/Makefile |  2 ++
->  drivers/platform/wmi/Kconfig    |  2 +-
->  3 files changed, 49 insertions(+), 1 deletion(-)
-> 
 
