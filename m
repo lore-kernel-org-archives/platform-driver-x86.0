@@ -1,46 +1,46 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010058.outbound.protection.outlook.com [40.93.198.58])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011060.outbound.protection.outlook.com [52.101.57.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF55509EED
-	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 17:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABC850EC07
+	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 17:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789751040; cv=fail; b=lgGsaPqpx27unjae5dUS6JjdDuHd3i0a3U5Np0t1ZpnW7BqYNcVFJmsrR4c3R+nNmgLooJp+snRq2f0LiUFPSCPdNSW9ZIiZj00Sqh15wuOAsaFIh/EQZ+z44XkM+9du7mQ8rZAEWY2vuRSf6U0VsTPUfExc91yamGU+4A+Izss=
+	t=1789751069; cv=fail; b=hsdxR1U8lVN/8pEut2z3U+2ER+998xLUdEKqOw5t637f6Ki2EWbbPl3fGkWDBiY16gPYaFPgYWYA3eUI3CQqyHi7HH8xDFb8Wuj8tWqEsPPj5ZPBTAYfesJlDlgYDmQRB/srZ42OD7x0q19x31V1Lsfs7iu/Fpjb8T0X0Zpd+90=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789751040; c=relaxed/simple;
-	bh=Be1kurNo3TjgLSatxf08UC+7tTnD6p99A7w7MYvbmNg=;
+	s=arc-20240116; t=1789751069; c=relaxed/simple;
+	bh=5PIyYaNYbE07p26AM9CiRgYBifbZvYOiDBlE9RXQN9g=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NH+LNmWGqP5AV5zs+QhZD3JKi+o1aOM77ZVkcsAd0giftTCbF/8z1DiiZfgYlhDmg04NvBvDA8EK4xGBplPvNlbvh5auMas3gGlx1PuwV4Y+0xtQYaM5AWqmYK/zkhu67jHyljQoZ9ZRMZAg+AQgivw+aL5SwmnkjetrF1twhBY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C8f7OAqB; arc=fail smtp.client-ip=40.93.198.58
+	 MIME-Version:Content-Type; b=fgLo679IZDW6mCcE0gE2otKRa3MaTUWrnjGp6vhrZ1igWK8CA3AV+md5oRlKmFDTMQM8RcVoIvNbtoEeJ3DHfhljrE6cWgw37dzckxupgQf0TPgZ0cGcdShz5buybX1wt1rBwLCaR9gTowRIppbbfLhbNmV+1sSBW/urlGQTRl8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XQ46U55j; arc=fail smtp.client-ip=52.101.57.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C8f7OAqB"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XQ46U55j"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D67St+S3curlB8WZjEl1HgN2ZAF9RkLkxaQJAdtaOIMcj3aIqhyRsMqgs6WPZTYkKb7XjzBrrvr1Gzs82QajV3iI23M4XraQSHf93Gtxjjb3JXpt+cpzo1pXkCC7V6dsFOMHoXpTe1jpkclHQ/wWRPQAxuv1dZCMIDdws7+2HhEZaNhCITFoQE8W5JS4j1Js274ImM9ek+J0D4puJG3DaApX3uRM9vUz2ohD0kQHV8UeUFUAYhQSo3seAAseGC0rw67baM9vXYqy8v40PbMzfoDbL6NFOs1c3UVTn7Fu+DtzyzI3meyB0ox4TbYcy+/1IVph0oa7Mw+Auvt/v3C+mg==
+ b=ecRChVfWN6r8OpydKINN0axkj+ZHJ/RllaOCAswGuaEFYKHvehibF7YnPdBEvBaTBJMr5sG1RLkRjUqK6FJXX0Rbc0IJSpkBmVnBy97qNYQ3efKuvsckJwZ7LccSLZW0VUo6TZLuNrgcQYPbDzuTlsczeKfLxg+IJx6Z+VRxD+9TjeFTZnTZNP/sfeaIkyyYLy6savgOs981NBEgWph1aLqLsVpfCSraQOhJreIHAJTkM9O2im62srORQqlihdKtzG0A87KFmP+faeeVwMye2LDm/CQNmImOzHEaBZVvV2j9Glp9oErJ+zztQy8Hr69wVquhF+RCgy7oLookc1+3TA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yykgGVjfQdW2URMxSLiK1Xb7VAcVOMEJUVIcurJTyog=;
- b=lSXdcyeOt4fvnC3NwHAgQFMT+V1ennYfIBKOAy5hyAjXviXwvfBHf/8wtM7aYaOcaoxrnnoY2llVZ8CZnYbqsGKaafjiVWqqBG3Dwv0mAFMVIlcpvD8eynyuFJpTAfaV/VUVWwt3ZLseR6IAGpcQROBHP0688cG5M0NJcPWta2fIve+/GXuA6pXoJccs4cIBItuXPdQ1gLwZ7l5xIxylUW9CInKvaGMjzPfldpsI9btLgaZr0bSxuvft7nkvU5Ng5dboGhhkoCRAXtRsTu9SSmUBJWClxVX7NjzqadlqVQfbPZfKGWTjpxu5J1GFDXZYjpyav+JfxNpw9truSWh8UA==
+ bh=6JcfpOJjmxL6QESh9XSICH3qT34nGRkBoRu9S1Wx3pE=;
+ b=Sx2F1BYZ6uuGmtHoo6yR63WXZaY2yLTzM0ZD4fvazSmL3lwKT6QP4/8jC1BB0xLriqsjyWSbUebcL46qsQkhcwMmDMcef+YkQ5LcFZyGoshAmCYH3URM/Q4k8frJYsUaqdFk3BIqvvqi8LgrKv55JBI+AFw64awPKoa7gIgtJcPuxoEwhEWOMjTULZpBBIiHFPHCoI2qOT+OEJwe7SangZRsdhZoQ4Upq7Gg0QdOgUnF019dsDk/XNPQIDIxfBzLVXDbV12IB4K/PpzpFPMFdoeUvfedcESJ4iKovWs95GcnBPNUFwNHgXWIae6+F3SrX+OUSUvsv4+DX2+UF6CxsQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yykgGVjfQdW2URMxSLiK1Xb7VAcVOMEJUVIcurJTyog=;
- b=C8f7OAqB02//67qQrkzQwY9kKFvM2rUhFSd0dHEWc+ZMmpqWidxThegONwlH4pl4Nm5yvG6sD1G+Vn1Y0GjFtoYt1f2ahqz8RztWwFMz3bF/KewKEBSwHy8l4gw/gDns2c95wiaZ8/m6rDY63hI1AdBQuwGvQnULzDOOU7/2ts8=
-Received: from BN0PR10CA0022.namprd10.prod.outlook.com (2603:10b6:408:143::30)
- by MW4PR12MB6998.namprd12.prod.outlook.com (2603:10b6:303:20a::22) with
+ bh=6JcfpOJjmxL6QESh9XSICH3qT34nGRkBoRu9S1Wx3pE=;
+ b=XQ46U55jUFb40tiursZb/blEt641fmxOhT1/SqaHJCNPYdOydhGtUfVpW4C8O7HOECL9Ot3hpKGjlv/nfR4VsPM5NIC62OKcM6UMH9xpb4kcTjdRfdD2y1sFg0kNzz04W02qWMTFNoq30jr7cSGTAeaE4Z/FwakomeAr0npQdQ0=
+Received: from BN0PR10CA0015.namprd10.prod.outlook.com (2603:10b6:408:143::33)
+ by CH3PR12MB8548.namprd12.prod.outlook.com (2603:10b6:610:165::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.13; Fri, 18 Sep
- 2026 17:03:51 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.11; Fri, 18 Sep
+ 2026 17:03:54 +0000
 Received: from BN1PEPF00004684.namprd03.prod.outlook.com
- (2603:10b6:408:143:cafe::89) by BN0PR10CA0022.outlook.office365.com
- (2603:10b6:408:143::30) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:408:143:cafe::67) by BN0PR10CA0015.outlook.office365.com
+ (2603:10b6:408:143::33) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.13 via Frontend Transport; Fri,
- 18 Sep 2026 17:03:50 +0000
+ 18 Sep 2026 17:03:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,19 +50,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  BN1PEPF00004684.mail.protection.outlook.com (10.167.243.90) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.451.8 via Frontend Transport; Fri, 18 Sep 2026 17:03:50 +0000
+ 15.21.451.8 via Frontend Transport; Fri, 18 Sep 2026 17:03:51 +0000
 Received: from ausmlimonci-lx1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Fri, 18 Sep
- 2026 12:03:49 -0500
+ 2026 12:03:50 -0500
 From: Mario Limonciello <mario.limonciello@amd.com>
 To: <Shyam-sundar.S-k@amd.com>, <hansg@kernel.org>,
 	<ilpo.jarvinen@linux.intel.com>, <superm1@kernel.org>
 CC: Mario Limonciello <mario.limonciello@amd.com>,
 	<platform-driver-x86@vger.kernel.org>
-Subject: [PATCH 1/2] platform/x86/amd: pmc: Only create amd_pmc_idlemask if scratch defined
-Date: Fri, 18 Sep 2026 12:02:15 -0500
-Message-ID: <20260918170302.352054-2-mario.limonciello@amd.com>
+Subject: [PATCH 2/2] platform/x86/amd: pmc: Drop scratch_reg from amd_1ah_m80_cpu_info
+Date: Fri, 18 Sep 2026 12:02:16 -0500
+Message-ID: <20260918170302.352054-3-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260918170302.352054-1-mario.limonciello@amd.com>
 References: <20260918170302.352054-1-mario.limonciello@amd.com>
@@ -78,55 +78,51 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004684:EE_|MW4PR12MB6998:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99a9b893-6480-4ca8-bc0f-08df15a6d00b
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004684:EE_|CH3PR12MB8548:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf0d2fbb-d815-445c-c24d-08df15a6d09b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|82310400026|1800799024|36860700016|376014|11063799006|10067099003|56012099006|22082099003|18002099003;
+	BCL:0;ARA:13230040|23010399003|82310400026|1800799024|36860700016|376014|18002099003|22082099003|56012099006|11063799006|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	F/pdeogEacv0/BNVEsEjNKisG9yWoxO+z2QB49q2Po92mBZmmGtkRDqTHFwKFBToDCR5Pve83RXOM3RtuAXDMwFPH9B1KAdDfHbYwk8WIoe49N+g/hj4k9vXGxj9ZKCjGOEtcPF+ML7pwqA4rDR4PwgkaRu/ZTO79o6clfA2q6YheEqFSE7OWqg/aQnraOl48sGITuD7ynQ2CPKGXg2jVU42x1vJfeJBCe63R48ayUUg8n6Y4PJyWZyyTPJFvY2XLBtoYkHkriuYzdaRB91SnDkZvNvWKdf2ntoeqBAyI9VVD7iAhssKH6oI7Ncivi2q6u0sUJr98PXM0lXL9839NZ84ikIWle6j7Mq5GU5AX9A+jPg1uMZlGbKuXtGoKakwUeiUHubnC9LFP1uudvGPvXDEeVoYJLerYYAA2JtZjQq7gMPBWR1AZW5avc9GICxI+kDLXWqlaVUqYiTBAHYcFshsN0A15LY5o3dNQHUtPmk8yBPIPY0KUAYssZs9Fq04TDRoFO8xKPvMDZ/F+gX5pSVWfJAfjlY/VBHEPKltacQhP7D/bI5aHHLQdAzTlu2s1QEh0+Qnl58q/kYnzgrvtUvau8HZ7MUEEWme5yZ2I82MRLlckigEIl//zp2Cc70JBlqJ0bC1nxGwywxlciklymr8AK+JHLbl7O3baX13MZ32CLX4pxYkj1a6XjMbBQwAjTXyho/Vjpxe7k2ohWVuog==
+	ihSJVVIg3pX/R4Db51kT8VzMZm+Q4v2DbnuvsYzHAI14RFmdo4SnO9v87VM4I+rSkW1gH458WzI2ITEyuAOfKw9h7sVE/Uu82w6Wy8KpjpPof/RVrwRIoYnfRw+5F+a3rq0rt7f+zvIvm597nY4q+qKGDt0Hvc3TINvK2UT5FNTUkeWo3p9aaZZHbuktea51tklPGIW8RB8yQhWbmj1uQyQdh0amoD781qr7nFIIcPT9kUxyM2h2f2uOz5W+zg+hK63irWOpl2aEBOYR7pxfBLiGECHZ0sGnftudhmqTytJ3YgYO3WouTnR/qP8WmLEJYmIQPQk5XkwrsypWOe/0rNoHLnNAWh2pePAdEPZGVFyDFZvqRes80faD4nW1czPsI9VptE9syD4K/Dp0Gt66DOjkEA41igeDcjRETW2/qNLD2ciZobJ/z5sl45vWlD8jhcTIPK+/l7oiw0Xi+mpvRhbj69iv0Yy+wYecRrYf5b8BA5QYC55GHAG2zht2CsU49e0bLstZQ3Q9UqGzz0GJFDVXaTACZDbdKd4bEfRiUSnDtPw37MrDSmaBSSwA2e2FeoP5ywx6+/1D1VkuClw7+e+KF/oNF1bu3asLPU9Jji9ibleK1n+KUs1pBBcNcGhKzSH41whJwTJdgSxeDzXjdrS4JpNoE7nYQIQEtF/Plw50DBsxOo0qqfHCh57xSKwNa1YZjbQKJ4bed+bZCWBB9A==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(1800799024)(36860700016)(376014)(11063799006)(10067099003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(1800799024)(36860700016)(376014)(18002099003)(22082099003)(56012099006)(11063799006)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	7FltJezLehr1Rk8IEK8vO7imhVyLjw8CowzCYPjWy5mauyzUmB08mMBjbUloQyBkGhXIN7bH3fSgZVlWfoB0XsHuFAXkpo27Y2NPKoHj2wUFIFOfkjtf6NA9orRBE4oOMADuuUXG5h/HGEJgA5D4C5HOqUGlWmH6eK5A9ckJbToOXvXcGi7mgMU7nXiszSuP20eRu/2UY4lk+A/8xTnkMZQiz+8ZZfdGnSKAsTCPBWDGLNSdbfxN8dcksbYyZZbi9X88iLdc+rH17657iR4MJ13KOJdbMmnN0e3x5WmDR0y5RmVrf71RPXJyuo7LaFDxAFjfcaxQD3x07lue/m0vJkp+nvp0PvUNm9GgoMYlJmz61eu4wwi1qDUHJoKq1aPzLmVRDjnpaSVjo8uLACuUpwrTzSt2W2PD9YjcScicWB5Y+oYrsXf3OsinDlfby1hu
+	LRgWRBzJrTrIK6GVtiOhVuea8GVi1PVT9GF0eIIL89/s0YNE+sXVVDRICNub5cQeZbntuHQSNextQr6TaD7klpb85ZsRPdPSn9Pnatg2VXIFqGqnKyIwRy+V33vFjsBMijeFf7KULsKEk8w6T0pSIr2siqW+pd8OM5nfn1UPRRhlAzhWVTfdzkYHc/xeWN1ZIGW6qRwKsAGTTL2x8cPj6NHENquMom779Oj0QhYVqohW9GQAvw/5NHcYnS/bbgiUVF8S9c+IRVNa1VsnTJ2rwIzHOhUjJ1oKcWwstSZf++ymWpJTaYstIZu8QdwD6aYtEmsRKEOzl8gJTSdLF7DInzbQT0/KTXZX3qqbceyrDAtdmh05VHtokpR82aUOAcwsvW1afcsJN17HAizhi/TO0SjB33B/yAp7iWg2g3nBf5+8IyIWXBJPg09e+kwTxSBO
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2026 17:03:50.8661
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2026 17:03:51.8095
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99a9b893-6480-4ca8-bc0f-08df15a6d00b
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf0d2fbb-d815-445c-c24d-08df15a6d09b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BN1PEPF00004684.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6998
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8548
 
-If the scratch register isn't defined for a platform, the debugfs file
-will always fail.  Only create it when declared.
+This platform does no longer populate this register.
 
+Fixes: 2726b5758f80a ("platform/x86: amd-pmc: Use correct IP block table for AMD 1Ah M80H SoC")
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/platform/x86/amd/pmc/pmc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/amd/pmc/pmc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index e384b56d67559..666ecdd8888b5 100644
+index 666ecdd8888b5..2bb61a65e1cb5 100644
 --- a/drivers/platform/x86/amd/pmc/pmc.c
 +++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -517,8 +517,9 @@ static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
- 			    &smu_fw_info_fops);
- 	debugfs_create_file("s0ix_stats", 0644, dev->dbgfs_dir, dev,
- 			    &s0ix_stats_fops);
--	debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
--			    &amd_pmc_idlemask_fops);
-+	if (dev->cpu_info->scratch_reg)
-+		debugfs_create_file("amd_pmc_idlemask", 0644, dev->dbgfs_dir, dev,
-+					&amd_pmc_idlemask_fops);
- }
- 
- static char *amd_pmc_get_msg_port(struct amd_pmc_dev *dev)
+@@ -182,7 +182,6 @@ static const struct amd_pmc_cpu_info amd_1ah_m80_cpu_info = {
+ 	.smu_arg	= AMD_PMC_REGISTER_ARG_1AH_80H,
+ 	.smu_rsp	= AMD_PMC_REGISTER_RSP_1AH_80H,
+ 	.num_ips	= ARRAY_SIZE(soc15_ip_blk_v3),
+-	.scratch_reg	= AMD_PMC_SCRATCH_REG_1AH,
+ 	.ips_ptr	= soc15_ip_blk_v3,
+ 	.os_hint	= MSG_OS_HINT_RN,
+ };
 -- 
 2.43.0
 
