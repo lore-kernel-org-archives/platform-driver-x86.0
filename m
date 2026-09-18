@@ -1,168 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811C32D8762;
-	Fri, 18 Sep 2026 07:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EB01AA1D5;
+	Fri, 18 Sep 2026 09:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789717749; cv=none; b=Gr8yJWcMe+X4Uxt4eYzh0dpIsxCdJUGesnNGU0DUf4Op8WRmL5hLXCaS5og10OlXKMfKVMRicTUoR5sAweurUWZfKulRTTpL23TVjA76PMpGr16JDVp4eON9O/mqZeJoe7p6zCKOoK//iVJqsEArGsFzXeg0h/RvBoSd/PlyyUM=
+	t=1789722998; cv=none; b=dK2jNfmhoTN4W7Wl6iWYkQVT4iXOX2KOi9LhLkz7QriKZtaPH9p3pqvNJSvCy7ZPkrMomtPkhY+QV51ZAr3GOiNugKIU3YZP9gBHEAkIk6OpMaPIFUCL0xig5DOIPa8yNj4jHSx46V7UNC8D3LI5THf6N2jkPRE4q6GN7e5uTx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789717749; c=relaxed/simple;
-	bh=k0z/hR+5yIlHyOF4LmazOep/oe9lcjen+OyfmO/OnLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QTb6soiLTMcSTwzN8ZOw/xbeMRHlVanbCdO0FDcjJjBsxPqKCQgOuk0uBPg4Sd5lzsLjZFaK3FpSAEO6W9o2Bhxeq0c5Sam8gTmKnLwA3ltbjAjSEOaJnIyZgWj7hZjBwsK1vieFWnyYMR9IKfQBSi0cSfYEXM/6Fdst2fuQcHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDRgRPlt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789722998; c=relaxed/simple;
+	bh=6Whwp4PCCSrdaf9ovni71s2JM8RT4iYDS9A+tyEds2M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G4eJ81VGpwA8h2ODVTe060eAjpI0Tp5B+Th+GfMyL4N3z7vrcZQgYmZiCrBnZHitQ2afz6qYp+s7tvFUieDMaLT3hAW4JbebIBBtdOouNVGay2DNePAdHD1Dh8g7wZQ8u71Np54vMm8c4g1x76JaKJWdXmeAom0gk1eRQ9cR3Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=eNByspGH; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDRgRPlt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E541F000FF;
-	Fri, 18 Sep 2026 07:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789717748;
-	bh=vJKvMLbmElK8KttkMQ8hkz5u79hzTkh0lL7FQh+PFqI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nDRgRPltaEljYrKy94fX1kR91hzN+MpRB9MPYQ1+4X04V6e9jP3UfdRBCwxDx9K5k
-	 HXbmXYGRYtQCwaFnLwhM994HkXABJDE1B7q288wgf2cSwxgOV0X+nst+TUVfWYtSZV
-	 nbSiMiW0yIZ1cYuVI9XNOBUIv7iAr3VnyAaxvUeKTQTQH4RcNVgcALNTYovLq/EN9a
-	 Q1whWRiOGgumpL4WL/RbxPaThWEKILE9Un6A3b/6x6Fho1G8BwsQfgIpsV1ilZZX+8
-	 Uyt2Gb849GzU3liO1eddWwgQAd5v1SYlhj/O25klzrxqM2SI7i35i+7BFnqaob9Lhv
-	 jWTT3uwM5QgwQ==
-Message-ID: <06550473-63c2-4a3e-a5ad-7e23d7b6b050@kernel.org>
-Date: Fri, 18 Sep 2026 09:49:01 +0200
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="eNByspGH"
+Received: from mail01.layka.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A5CD481191;
+	Fri, 18 Sep 2026 11:16:28 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 8V-LhdPYbjUy; Fri, 18 Sep 2026 11:16:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1789722987; bh=6Whwp4PCCSrdaf9ovni71s2JM8RT4iYDS9A+tyEds2M=;
+	h=From:To:Cc:Subject:Date;
+	b=eNByspGHv987imF3OdyJdhvq6JuDEuFMIt5cgV8+4/OPbwLs06Q90i1ZnSKTAfmVU
+	 o9rBqM7tJg+jcceRFkpmjgbAYfh/fmEQtq+Gw4AhEwMnA4Fr5vZ3K8utkpkTjm/ekW
+	 AOXetkK7TnW2UAYviT3lEk2QkKjF80484GJasKS6wYL2Sw/DOBZbs0flVpMMXJokjq
+	 Llekv3wCz5Wh9bo7zF2Mc9FilUDLgx9vndMzZOZWL8OHVt7fO0hHcMjaX52cHkRiX1
+	 8LBzS05SBolEx/XUY6rHJICFyZTLW59ktIc2iMy2OCibKg7SCe4Cq3xlyw1htuqSmS
+	 YHEWK9RNr41GQ==
+From: Marco Scardovi <scardracs@disroot.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 0/2] platform/x86: asus-wmi: Serialize WMI evaluations and drop redundant rfkill lock
+Date: Fri, 18 Sep 2026 11:14:58 +0200
+Message-ID: <cover.1789722252.git.scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
- nvidia_wmi_ec_supported()
-To: Jani Nikula <jani.nikula@linux.intel.com>, Armin Wolf <W_Armin@gmx.de>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux@weissschuh.net" <linux@weissschuh.net>,
- "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
- <lenb@kernel.org>, "linux-acpi@vger.kernel.org"
- <linux-acpi@vger.kernel.org>, "Koenig, Christian"
- <Christian.Koenig@amd.com>, "airlied@gmail.com" <airlied@gmail.com>,
- "simona@ffwll.ch" <simona@ffwll.ch>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "patrik.r.jakobsson@gmail.com" <patrik.r.jakobsson@gmail.com>,
- "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "mripard@kernel.org" <mripard@kernel.org>,
- "tzimmermann@suse.de" <tzimmermann@suse.de>,
- "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
- "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
- "tursulin@ursulin.net" <tursulin@ursulin.net>,
- "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
- "matthew.brost@intel.com" <matthew.brost@intel.com>,
- "thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>,
- "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>
-References: <20260724025959.142826-1-W_Armin@gmx.de>
- <20260724025959.142826-3-W_Armin@gmx.de>
- <BN9PR12MB514668975E87D570F50B2D91F7A82@BN9PR12MB5146.namprd12.prod.outlook.com>
- <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de>
- <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
- <11976ed3784675ad241646287a909286a42675a8@intel.com>
- <3ef68773-e07e-437a-98fb-a3c5fc08539c@gmx.de>
- <62d7da838e7042df8456e76190db792093065b57@intel.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <62d7da838e7042df8456e76190db792093065b57@intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+ASUS WMI management methods share a single firmware/EC mailbox that is
+not re-entrant. Concurrent evaluations from ACPI notify, sysfs, HID
+callers (hid-asus, asus-armoury) and debugfs can trigger nested SMIs or
+corrupt the mailbox.
 
-On 16-Sep-26 09:16, Jani Nikula wrote:
-> On Wed, 16 Sep 2026, Armin Wolf <W_Armin@gmx.de> wrote:
->> Am 15.09.26 um 14:31 schrieb Jani Nikula:
->>
->>> On Tue, 15 Sep 2026, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
->>>> GPU people heads up!!
->>>>
->>>> On Wed, 2 Sep 2026, Armin Wolf wrote:
->>>>
->>>>> Am 01.09.26 um 23:30 schrieb Deucher, Alexander:
->>>>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
->>>>>>> b/drivers/gpu/drm/amd/amdgpu/Kconfig
->>>>>>> index 12e4a41bf1f0..50305630f533 100644
->>>>>>> --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
->>>>>>> +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
->>>>>>> @@ -30,9 +30,7 @@ config DRM_AMDGPU
->>>>>>>         # ACPI_VIDEO's dependencies must also be selected.
->>>>>>>         select INPUT if ACPI
->>>>>>>         select ACPI_VIDEO if ACPI
->>>>>>> -     # On x86 ACPI_VIDEO also needs ACPI_WMI
->>>>>>> -     select X86_PLATFORM_DEVICES if ACPI && X86
->>>>>> The change below makes sense, but this one looks like it should remain
->>>>>> unless X86_PLATFORM_DEVICES is handled some other way?
->>>>>>
->>>>>> Alex
->>>>> AFAIK the dependency on X86_PLATFORM_DEVICES was only necessary because
->>>>> ACPI-WMI depended on it in the past.
->>>>> By now ACPI-WMI neither depends on X86_PLATFORM_DEVICES or X86 anymore.
->>>> Hi all,
->>>>
->>>> Could more GPU people besides Alex take a look on this. I'd want to make
->>>> progress with this series within this cycle but would prefer to have Acks
->>>> from GPU side.
->>> I share the same concern with Alex. It seems to me we could now end up
->>> with x86 configurations without X86_PLATFORM_DEVICES, which handle
->>> e.g. backlight on a lot of platforms.
->>>
->>> I think the safer option might be to go for:
->>>
->>> 	depends on X86_PLATFORM_DEVICES || !X86
->>>
->>> in all of the cases that select/depend on X86_PLATFORM_DEVICES in drm.
->>>
->>> The alternative is to find out, and handle the fallout, if any.
->>>
->>>
->>> BR,
->>> Jani.
->>
->> Alright, should i leave the original "select X86_PLATFORM_DEVICES if ..." statements
->> as-is or should is change them to "depends on X86_PLATFORM_DEVICES || !X86" everywhere?
-> 
-> There are some places that depends on X86_PLATFORM_DEVICES. I think it's
-> almost always a mistake to have some places select and some places
-> depends on, and select should anyway be used with care. I'd go for
-> depends on.
+This series serializes every ASUS_WMI_MGMT_GUID evaluation through a
+global mutex, then drops the old per-device wmi_lock that only covered
+WLAN rfkill hotplug.
 
-I'm a bit late to the party here, sorry.
+The mutex is static because asus_wmi_evaluate_method() is exported and
+callers outside asus-wmi have no struct asus_wmi. Fixes points at the
+original shared evaluate helper rather than the later export, so stable
+backports are not limited to kernels that carry that export.
 
-Note that X86_PLATFORM_DEVICES is an option which enables / disables
-a menu and does nothing more.
+Patch 1 introduces asus_wmi_evaluate_method_locked() and routes method3,
+method5, method_buf and show_call through it.
 
-Enabling it or depending on it by itself does nothing.
+Patch 2 removes the now-redundant wmi_lock and the pass-through
+asus_rfkill_wlan_ops.
 
-The select used to be there since it must be selected to be able
-to select ACPI_WMI (which is no longer the case after this series).
+Link: https://github.com/OpenGamingCollective/asusctl/issues/328
 
-To depends on in XE was probably copy pasted from the existing
-select-s and then changed to a depends and already was a completely
-no-op since depending on ACPI_WMI was enough as that itself
-dependend on ACPI_WMI.
+Marco Scardovi (2):
+  platform/x86: asus-wmi: Serialize WMI method evaluations with a mutex
+  platform/x86: asus-wmi: Remove redundant per-device wmi_lock and
+    duplicate rfkill ops
 
-As for X86_PLATFORM_DEVICES being needed for some backlight
-interfaces, depending on it by itself does not result in those
-interfaces being there. That requires enabling the actual drivers
-providing those interfaces.
+ drivers/platform/x86/asus-wmi.c | 67 +++++++++++----------------------
+ 1 file changed, 23 insertions(+), 44 deletions(-)
 
-And I don't think that the GPU drivers should start depending
-on those since that will become very unyielding.
-
-TL;DR: I believe Armin's original patch is fine and this is
-a welcome cleanup / simplification of the DRM drivers Kconfig
-bits.
-
-Regards,
-
-Hans
-
-
+-- 
+2.55.0
