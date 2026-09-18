@@ -1,654 +1,205 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF271917CD;
-	Fri, 18 Sep 2026 16:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789747252; cv=none; b=hSMquWa1YVvmgDkLXV4FmEf9RdvKl/c/rG2Cd7JbgQzmFwNUjoe9inN5dUKcdauiJ5rwzhj7BSD5tzeA9fu+9mOdbTSegKxs7PWxy4WsVUJ0eJ7pCbBNYfjGJ7A/xBOztvHy5//z1FEsHX6NBSPgoh7vVGFNUNmM4zigOZyRmYM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789747252; c=relaxed/simple;
-	bh=FSQm6w4b9m3ofub0JYp8UXU95YtMeWTfUcF1vwVOSHU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ix28+EIO7bBo/OZLH+ACLSd0sRwmZUJIz9L6J98SlTQk5SDpq+J3I2HIeS7NTpwu0dao5OhIn9hRqtC/aKpc7ki3hXwLUOwvAFgUifVT6arT8V1f8AW6aHX++vDKNEqI4RhHANmS52ElbZgWCGeCv15Wxg3fziUXVX5CTiHLNKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lU9VJEYm; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688D64F68DD
+	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 16:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789747690; cv=fail; b=hf4Y+SQhIvc+9E6P+KzKMdJV0ZP9fOSXIWI+WLtgFTUEi7Y3plz2gCYD0yPzysMfTNOEHJd31H7Bf1GOskKSwzUpSw55AI562OQ/4FKU8tenPsfkTpa2PUqgtlHJLWP9+k+v85Yn/kTwRl2t9H7rBAf+XjOC3UqavUde+cv31ys=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789747690; c=relaxed/simple;
+	bh=d4VQVnPusHODURe6vXl7webckjO+yZHgHXFbpM2FYxk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ndMkKsdcXTlSW6iFAOAFIDNc/RkqyoS6Z22f42YEmm74C5yaDE23boWnfR33bVab7+u/dIbqhxU4qraAHeZ1l41Ci4Twvkwv9EVWu0kCG6xDAATAsLxokODccG9u84mQprRvYiYGj4Lq/fZKVH3syOjRDZ5sPHliIy1/YFv47+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NkTOz+hn; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lU9VJEYm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NkTOz+hn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789747249; x=1821283249;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=FSQm6w4b9m3ofub0JYp8UXU95YtMeWTfUcF1vwVOSHU=;
-  b=lU9VJEYmZyH8XI9spGnWtacdWqpGZ11ByzfL4scv2oBRQN8i7OX9X90h
-   p4ZPsjuuq0HgdKMpEsAkiBbFbsaJ7R7HckXH3bD63Qoq4iorZt3yCpI0I
-   +P+V8sOsvA/9krmdnijlLCI3+3MZ4fdlL2bUIVF829xiWXNodJC/zIOuv
-   95LMwpGiIkKz4IslB2bXUeqsw5DT/gztdx6IBzLiB7Mqn9zbDPgHKws0Z
-   mTLHoUcmP22zEbO9npyB5CaGSUYYkkWhBYajNEzaDfisLwdi3CGqSr8nv
-   jLwTVHSoJOf82BnUFFR60jQPsnxay9ruCL7w3kphcOcJcNta3EfOQZ4AE
+  t=1789747688; x=1821283688;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=d4VQVnPusHODURe6vXl7webckjO+yZHgHXFbpM2FYxk=;
+  b=NkTOz+hnGDs4j277Oj/NybEuzwJqkTtgFu/OVBgzcIjZCaSGcu1Jyg3E
+   WneVlK70o5HZTQa+rTjIPgYMr0qEMo4sIqB/QM+2NJAJLYZVUEL+OmGYk
+   3y2FpXg/RTJ4ThmMJVl576S9nWsUOw2Mdr+VhBYi5sIR4z0YRX414zhpQ
+   UkbtKSyK9f9XVs/J5MOP72zW7/cEemNs3E2gG6jmwDjZhbAlMvO7vizc3
+   Bmzo63WAheNxophrfiOf2fvIjm9LmvF18NvW4W8ZM5DCU7FFZAQJqtfEi
+   dHWj1O23X4cGPv3J7xJYOGbEJfClMzl9T2FepX/HS8fYNwq3ftfNRWMvM
    Q==;
-X-CSE-ConnectionGUID: rQm1WBxEQBCxLB7awz9v+A==
-X-CSE-MsgGUID: OTe6Qm3hRhW49jFMx7SQyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100927692"
+X-CSE-ConnectionGUID: P27DEddlTIOyU9kAqFgARA==
+X-CSE-MsgGUID: n5jfoa4DSxq/MYrbejg1bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100929425"
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="100927692"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:00:48 -0700
-X-CSE-ConnectionGUID: qgefCOn4SauI0XcNotEPIA==
-X-CSE-MsgGUID: guFoRF8eRc6CkbPf9plbgg==
+   d="scan'208";a="100929425"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:08:07 -0700
+X-CSE-ConnectionGUID: le6OyN9xSk+lpYP3SY36rA==
+X-CSE-MsgGUID: Wc/ThTLmSdqeVH/yNxOr1w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="271784137"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:00:45 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 18 Sep 2026 19:00:42 +0300 (EEST)
-To: Maurizio Casciano <mauriziocasciano7@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, Mathias Nyman <mathias.nyman@intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/2] platform/x86: Add Cherry Trail XMM7260 power
- driver
-In-Reply-To: <20260826132403.3345072-3-mauriziocasciano7@gmail.com>
-Message-ID: <5e841545-42c0-bae4-1b3d-84d9e4955c0f@linux.intel.com>
-References: <20260826132403.3345072-1-mauriziocasciano7@gmail.com> <20260826132403.3345072-3-mauriziocasciano7@gmail.com>
+   d="scan'208";a="2917616"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa013.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:08:08 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Fri, 18 Sep 2026 09:08:06 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46 via Frontend Transport; Fri, 18 Sep 2026 09:08:06 -0700
+Received: from DM5PR21CU001.outbound.protection.outlook.com (52.101.62.3) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Fri, 18 Sep 2026 09:08:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kUEdgA/gIrRqUKtceICdYSJD/h4QDyeV3hbpkJ5wj7Lssn8+HH63xTMcb3Sw35wCBJlhBbxrx+LKWhvzq1M7DGVAD6OXaVqFYsknO55t+n5VedN4VMaiaKOmLF0m1EmWwFi+GWJ634EVzRA/yRqGKrpE7t5dw1zfAmUjYZESvkn+Q7AcVebQOaA4PgJljuwLzwsIYENHB46OT4jRw1k0FOqK4qviMruz7oGKntfjZakw69/eM+22jFt2E+Xs6aOKL2SHige3ezjpp8PlrexVmXk2ixjQ/6rw9LbXcDk/gVkGmIgcN5Aj6d7+aBgFeJeRnMrgynv3fw5gLe6VxZ0FRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/cT0RDUemQoEJ0yl1Dpidg/WNqYkzxuQLBO/IRvDS1w=;
+ b=hOKqQZdW4GcxphaH1q4ivc424KVxB3zWwYs3orbGMmb7e3fXizx5U8IUPKsiT8gZveWbc4ig1/0OGg4ew/uYYfpJvohoFXOVKLwkH5WvYryP3t9NOr18WbjfYnxDt6XTP4rhnhI3DGx9DDbEwDBQ/+6P98bmC2OLQZEglwrTW7qrJa4Bil/DlCZFNd89eIBaE7BDcptQoDnj5btPg1iuYfhKQwE6y+sng1xRlbvVCLCKtH46bCn4d8PzB6UAvJ/FHOE8iO7vk1i+c6QNHQsJNcOqWp/pXEdks+kpkfQdtslpku/Noc7H8h6AXw6GkmAK6HkfIxAvQnoZUQERaqNtRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA0PR11MB7187.namprd11.prod.outlook.com (2603:10b6:208:441::12)
+ by MW5PR11MB5882.namprd11.prod.outlook.com (2603:10b6:303:19e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.13; Fri, 18 Sep
+ 2026 16:07:55 +0000
+Received: from IA0PR11MB7187.namprd11.prod.outlook.com
+ ([fe80::be96:3f58:953d:6565]) by IA0PR11MB7187.namprd11.prod.outlook.com
+ ([fe80::be96:3f58:953d:6565%4]) with mapi id 15.21.0428.011; Fri, 18 Sep 2026
+ 16:07:54 +0000
+Date: Fri, 18 Sep 2026 12:07:37 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
+	<matthew.brost@intel.com>, <thomas.hellstrom@linux.intel.com>,
+	<airlied@gmail.com>, <simona@ffwll.ch>, <david.e.box@linux.intel.com>,
+	<anoop.c.vijay@intel.com>, <badal.nilawar@intel.com>,
+	<matthew.d.roper@intel.com>, <james.ausmus@intel.com>,
+	<karthik.poosa@intel.com>
+Subject: Re: [PATCH v10 06/20] drm/xe/vsec: Do not register BMG PMT for VF
+Message-ID: <aq1hyU7wKLzdLkI3@intel.com>
+References: <20260918131751.2408883-22-michael.j.ruhl@intel.com>
+ <20260918131751.2408883-28-michael.j.ruhl@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260918131751.2408883-28-michael.j.ruhl@intel.com>
+X-ClientProxiedBy: SI1PR02CA0019.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::15) To IA0PR11MB7187.namprd11.prod.outlook.com
+ (2603:10b6:208:441::12)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR11MB7187:EE_|MW5PR11MB5882:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5971af48-1c3a-4588-b664-08df159eff32
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|1800799024|376014|366016|22082099003|18002099003|56012099006|4143699003|11063799006|10067099003;
+X-Microsoft-Antispam-Message-Info: PqYYeQw1Ow8G4OIq3YA8xVTtSfiTOGYZocLDL8q240sNdUd5bSfU+JQGIsc3kfW1iHKEVec9OXJDSy82ztfVevg7mn+8nS8LyfR7FzuMBkzrcLRhoUsan5Vk2wgBqGwVHITf1KALv3RY8+Ivrmz6q7/toKgin2UDDMQhQ7ptnbAeCAoXCN6kDunOY7954DQtybRS2JbO/4NjgB2NWdsBtdgQDrRCNe1AUElYqcMR8DiwW8JdoI9c/yDzmjmClDhAVlB6S1Y2LY0nLSEfXUA+NJ8WOoFMZ3VTD9r2AIi3sEDM1JEEng0IWIdHimlT8D70h3QIVrquhiLOQgCMPAAG7Gfob95GdZBC4xfI4pkRlX8vN8lFlZx4wy9HucgYUWpCVeM+9TqYj7j3qT/PKmHf8jyU1uJoz7FDbrFVW3zhKw5SfMs35uydRlCDE8lYOatl64GoeI6IBAPeXINDL1/yjqDykVvUdCSoc0kaDK+BziZxESA9Uz2tuqx/tO6LZA1Uw0vjU8CmI2/93Zeehr70XJzEmhRF4vjZknHp3nQa+0OM2DuJn6OvK+Y2sje6Tf08S2ac3e4lOTgAXuQrU3XYSVHeFI+1bImRy1EgwKkeq4eStEmV9iOo+yEIW947Rve6rFVEJSGxJ+THeiDoYSFB+BVfqR+05gEm0BXlE6I2hlo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7187.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(366016)(22082099003)(18002099003)(56012099006)(4143699003)(11063799006)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nsG5OVKAdZmiqmPc1wLcZRg7mlgWBScfGuHHYOsWl8JIkgqGx9WYBw5YaJpw?=
+ =?us-ascii?Q?FSi23lOh07ldFEAz0ZGcPVnF5wVuXcZCtYKyyHu0p4eyztK0F04XERYdD8ym?=
+ =?us-ascii?Q?Ci06h3pao/p3yVkOxKdM0D2hc3iuSWxOBsQ2XXwvRKjH6E87lVe4INTe+on2?=
+ =?us-ascii?Q?i8PM+4rflkKbrZmcNYvR4ZUqkK0TcGceoARtMC23xKYjEFSBEWYY396rrWf/?=
+ =?us-ascii?Q?no62mgpWAYyBzWVWtQdOusr8npRVGOVMP780iVk5L3N9fJqT++gKW8QuMvGX?=
+ =?us-ascii?Q?4C4UfRLVkT9jdu2V21kV1xaP99pYzEn7MIjlWaPuiFiQS24eNnjd6TbwOoL3?=
+ =?us-ascii?Q?pM7dFgPqToYA7+Lw1O2h3YH5XURgZxsbR0Q2F3niklpQYUISCUvyCqNO026q?=
+ =?us-ascii?Q?K5T49rQsIiXYLx+G2im5T7oARQmSfrr6khCU2+y8V72Q2PkcQiJY+VqoMa9J?=
+ =?us-ascii?Q?4y6hsbeUVoJL4gO9JtIFoFCJH//qyEBiFYudJalX6XzE3fpEbpOk9+dtyzfl?=
+ =?us-ascii?Q?lun5/ysbp7zynrOM12JZgNJa0F4JxEJkTCHQwR/HYDLF9Aa+MpcBaG3J51Mt?=
+ =?us-ascii?Q?mWPAiQTRpXFY2WXNrEYiViOrUko6JQNNw7qPDmtHMinW/ubbvPnQL4NupMYw?=
+ =?us-ascii?Q?+DmUfi3q2mZcOX7xZt9IP8Pa2J5uU1zeyu9j44LjEIMrQzSKBzpnwQgFNlVu?=
+ =?us-ascii?Q?+8aC2MAFc/3owyM1rmQms79Nr0TUbslnSl05vbitZz7hfrIRVSjLOJj7iKim?=
+ =?us-ascii?Q?A/maZ00LOlyIF8wX/MeXz6IIq45Co5IvsUURXziJTJVO6tG694YIh3dhF4NN?=
+ =?us-ascii?Q?Y6Xqacu8LDSmGw0UNrIGrP55j6wCxdXMu3bcD9aVKIgXTPaz19VsqnXEkuRn?=
+ =?us-ascii?Q?A61npA3e7EuZ/2Iyfg9vxwA+XgnemAgN7Xt41UMmi4H5X2hXx3cHmXZW4uTX?=
+ =?us-ascii?Q?RPGghPSXQh0r3R1+9AImjzXVfV/58I5ffpN2CG9AsS9C0P5cmYcvjcuAxcaD?=
+ =?us-ascii?Q?Nx72cz86Z3MbYFQOD75/ZEE79luq96Yqt6rQ1yxdWuaoThn7wkIsbIoGBaA9?=
+ =?us-ascii?Q?dcB3HXvXIgT74vEWKwGsvw1szdGPXMFHOlNx6Cw6J5/MBIYceud3cky6Y1oJ?=
+ =?us-ascii?Q?Iip8VJiQZR5c5aKZdMR53jq8XRSGcVzkWANL+DfAD3bp+ny0QD0ucvOYRFCw?=
+ =?us-ascii?Q?8xG5CeZajj+fFReaa++6OIKi7ZzvHBQl14uMM1YCqL6syeTRcY5anr5Zy+Rd?=
+ =?us-ascii?Q?GQFxdDqJc2eDFwdtORZiPeqG9YCxo950vdtVJs8oas+FdlVCi4kA57eUW2k5?=
+ =?us-ascii?Q?5nqK7lGludoz7ln7JHMksyi7XHlgKefvcUza0nhfObXLClGnjsVwOadCoth4?=
+ =?us-ascii?Q?KXEyTy6N3rjS4zNy91uA/ffumjgDYqzyVPfMwS55tiad8A/w+qdiuwXzkStM?=
+ =?us-ascii?Q?ZLZ6EDhoZhXDIDJOCYxQ2Y+R3ZuXx9/AjkK8yVHh2C3dieMJIueObcp1uKkU?=
+ =?us-ascii?Q?7kPsfQlBfpHKKr/E5m/vMmlUA6+MjPKzAVuyq9gGOnaxIi3k+QAjpp3WNtgF?=
+ =?us-ascii?Q?xS9KZQJTujRhs8Eogw7PUf5esU9T6RZd51aYjwvpKnED8sa9mLQgr5k/SlE4?=
+ =?us-ascii?Q?RKK+b620ByR1vHHjfsH6LlXuLJMK+fMvos4TqOW4IYil7V6LHBxsH8uPZbnT?=
+ =?us-ascii?Q?L++f6vLz39KzycFaJId3UdaTXONepTdw4yEmWaYE48LUdz1eKWVtgaIszgBH?=
+ =?us-ascii?Q?vnJDmecUDg=3D=3D?=
+X-Exchange-RoutingPolicyChecked: qHbotrMVnrckJS9TpgwMuiHg672pFsJgQidIyZixxRp1q6FzMvyQcmoEKsCsTHenqHan/f7i6Outl7sw78skdB2t4qTgkoF9COAt3ysdHlipP40tat2ZVqL/8ZymTgjfkDh0gW6wwjmz2Sq+1gF29ba0q3XMFqaB1h482QC2dOaAFaQtUej1wMF5xw3fbAGQY66Yl4PbTEhcuoSaLcAsE5sBxjuXO7lE7OlWxs+KYVQc4zfRw0TFDaj7wZAcpo/Zx8sUvFazcCQ+zDoWDY/Kv6G+dv+R0nP2cvj9PyppEtUaKINFnjWor8D6L7nEpu5nuB0qAAjcTEng5baCiaYTNw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5971af48-1c3a-4588-b664-08df159eff32
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7187.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2026 16:07:54.7155
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4WihH3zjws/6MbmF4XtySbfeZSPta53Re9ZFxgJzfNH6K8HdPIlAPd+FRK4m7lzbxgCtP3jqOUXGGtEhPhKVNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5882
+X-OriginatorOrg: intel.com
 
-On Wed, 26 Aug 2026, Maurizio Casciano wrote:
+On Fri, Sep 18, 2026 at 06:17:57AM -0700, Michael J. Ruhl wrote:
+> BMG PMT is not supported for VF nodes.
+> 
+> If IS_SRIOV_VF() is true, do NOT register with PMT.
+> 
+> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-> The Lenovo Yoga Book YB1-X91L exposes its XMM7260 modem as an
-> INT34D0 ACPI device and connects it to the Cherry Trail xHCI SSIC
-> port. The modem needs an ACPI _DSM and PMIC power sequence before its
-> USB boot function can switch to the MBIM runtime function.
-> 
-> Add a DMI-scoped platform driver which performs that sequence, holds
-> xHCI runtime PM during enumeration and retries the boot-device status
-> request until MBIM appears or the enumeration window expires. The
-> firmware interface and PMIC data come from the Yoga Book ACPI tables;
-> the sequencing model is based on Intel's GPL-2.0 modem-control code.
-> 
-> The driver depends on the preceding xHCI SSIC restore quirk: without
-> that quirk the controller cannot reliably enumerate the modem after
-> setup or power transitions.
-> 
-> Link: https://github.com/jekhor/yogabook-linux-android-kernel/blob/574bae692716f1b14093497bfab8a007fe8e460b/drivers/staging/modem_control/mcd_acpi.c
-> Link: https://github.com/jekhor/yogabook-linux-android-kernel/blob/574bae692716f1b14093497bfab8a007fe8e460b/drivers/staging/modem_control/mcd_pmic.c
-> Link: https://github.com/jekhor/yogabook-linux/blob/96acd46c5a03565a114a0c6602734bb02717639a/devices/YB1-X91L/acpi/DSDT.dsl
-> Signed-off-by: Maurizio Casciano <mauriziocasciano7@gmail.com>
-> Assisted-by: LLM sparse
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+
 > ---
->  MAINTAINERS                            |   1 +
->  drivers/platform/x86/intel/Kconfig     |  16 +
->  drivers/platform/x86/intel/Makefile    |   1 +
->  drivers/platform/x86/intel/cht_modem.c | 418 +++++++++++++++++++++++++
->  4 files changed, 436 insertions(+)
->  create mode 100644 drivers/platform/x86/intel/cht_modem.c
+>  drivers/gpu/drm/xe/xe_vsec.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 24ca91ce5d86..ac39ab76f7c6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -29578,6 +29578,7 @@ Q:	https://patchwork.kernel.org/project/platform-driver-x86/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
->  F:	drivers/platform/olpc/
->  F:	drivers/platform/x86/
-> +F:	drivers/platform/x86/intel/cht_modem.c
->  F:	include/linux/platform_data/x86/
+> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+> index a9baf0bfe572..481bcbcc6372 100644
+> --- a/drivers/gpu/drm/xe/xe_vsec.c
+> +++ b/drivers/gpu/drm/xe/xe_vsec.c
+> @@ -149,6 +149,8 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
+>  	u32 offset;
+>  	int ret;
 >  
->  X86 PLATFORM UV HPE SUPERDOME FLEX
-> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-> index 2900407d6095..0c81fe46c105 100644
-> --- a/drivers/platform/x86/intel/Kconfig
-> +++ b/drivers/platform/x86/intel/Kconfig
-> @@ -115,6 +115,22 @@ config INTEL_CHTDC_TI_PWRBTN
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called intel_chtdc_ti_pwrbtn.
+> +	xe_assert(xe, !IS_SRIOV_VF(xe));
+> +
+>  	ret = xe_guid_decode(guid, &mem_region, &offset);
+>  	if (ret)
+>  		return ret;
+> @@ -157,9 +159,6 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
 >  
-> +config INTEL_CHT_MODEM
-> +	tristate "Intel Cherry Trail ACPI modem power driver"
-> +	depends on ACPI
-> +	depends on INTEL_SOC_PMIC_CHTWC
-> +	depends on USB
-> +	depends on USB_XHCI_PCI
-> +	help
-> +	  This driver controls the firmware power sequence for Intel XMM
-> +	  modems connected to the Cherry Trail xHCI SSIC port and described
-> +	  by the INT34D0 ACPI device. Currently this supports the Lenovo
-> +	  Yoga Book YB1-X91L.
-> +
-> +	  Build this driver into the kernel when the modem must be powered
-> +	  before the built-in xHCI controller probes. If built as a module,
-> +	  it will be called intel-cht_modem.
-> +
->  config INTEL_CHTWC_INT33FE
->  	tristate "Intel Cherry Trail Whiskey Cove ACPI INT33FE Driver"
->  	depends on X86 && ACPI && I2C && REGULATOR
-> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-> index 138b13756158..5ceeccd75c36 100644
-> --- a/drivers/platform/x86/intel/Makefile
-> +++ b/drivers/platform/x86/intel/Makefile
-> @@ -32,6 +32,7 @@ intel-target-$(CONFIG_INTEL_VSEC)		+= vsec.o
->  intel-target-$(CONFIG_INTEL_BYTCRC_PWRSRC)	+= bytcrc_pwrsrc.o
->  intel-target-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= bxtwc_tmu.o
->  intel-target-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= chtdc_ti_pwrbtn.o
-> +intel-target-$(CONFIG_INTEL_CHT_MODEM)		+= cht_modem.o
->  intel-target-$(CONFIG_INTEL_CHTWC_INT33FE)	+= chtwc_int33fe.o
->  intel-target-$(CONFIG_X86_ANDROID_TABLETS)	+= crystal_cove_charger.o
->  intel-target-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= mrfld_pwrbtn.o
-> diff --git a/drivers/platform/x86/intel/cht_modem.c b/drivers/platform/x86/intel/cht_modem.c
-> new file mode 100644
-> index 000000000000..30665b660f0c
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/cht_modem.c
-> @@ -0,0 +1,418 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Intel Cherry Trail ACPI modem power driver
-> + *
-> + * Copyright (C) 2008, 2013 Intel Corporation
-> + * Copyright (C) 2026 Maurizio Casciano
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/bitops.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/dmi.h>
-
-Do you miss something from Kconfig?
-
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/usb.h>
-> +#include <linux/uuid.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define CHT_MODEM_DSM_REVISION		0
-> +#define CHT_MODEM_DSM_POWER_OFF		1
-> +#define CHT_MODEM_DSM_RESET		3
-> +
-> +/* ACPI's MCD0001 PMIC package for the XMM7260_CONF_3 configuration. */
-> +#define CHT_MODEM_PMIC_HID		"INT34D3"
-> +#define CHT_MODEM_PMIC_CTRL_REG		0x6e29
-> +#define CHT_MODEM_PMIC_CTRL_MASK	GENMASK(1, 0)
-> +#define CHT_MODEM_PMIC_CTRL_ON		BIT(0)
-
-Add include for BIT() and GENMASK()
-
-> +#define CHT_MODEM_PMIC_POWER_DELAY_US	20000
-> +
-> +#define PCI_DEVICE_ID_INTEL_CHT_XHCI	0x22b5
-> +#define CHT_MODEM_USB_VENDOR_ID		0x8087
-> +#define CHT_MODEM_USB_BOOT_PRODUCT_ID	0x07ef
-> +#define CHT_MODEM_USB_MBIM_PRODUCT_ID	0x0911
-> +#define CHT_MODEM_STATUS_TRIGGER_DELAY	(50 * HZ)
-> +#define CHT_MODEM_STATUS_RETRY_DELAY	(5 * HZ)
-> +#define CHT_MODEM_ENUMERATION_TIMEOUT	(90 * HZ)
-
-Why are the is jiffies? You should define them in msecs or so and convert 
-while giving them as input to something that takes jiffies.
-
-Make sure to add the include for the msecs_to_jiffies().
-
-Also add the unit into the define's name
-
-> +
-> +static const guid_t cht_modem_dsm_guid =
-> +	GUID_INIT(0xac340cb7, 0xe901, 0x45bf,
-> +		  0xb7, 0xe6, 0x2b, 0x34, 0xec, 0x93, 0x1e, 0x23);
-> +
-> +struct cht_modem {
-> +	struct device *dev;
-> +	struct regmap *pmic_regmap;
-> +	struct pci_dev *xhci;
-> +	struct delayed_work trigger_status_work;
-> +	struct delayed_work release_xhci_work;
-> +	/* Protects powered and serializes firmware operations. */
-> +	struct mutex lock;
-> +	bool xhci_runtime_held;
-> +	bool powered;
-> +};
-> +
-> +struct cht_modem_usb_state {
-> +	bool boot;
-> +	bool runtime;
-> +	int status_ret;
-> +};
-> +
-> +static const struct dmi_system_id cht_modem_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X91L"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
-> +static int cht_modem_evaluate_dsm(struct cht_modem *modem, u64 function)
-> +{
-> +	union acpi_object params[4] = {
-> +		{
-> +			.buffer = {
-> +				.type = ACPI_TYPE_BUFFER,
-> +				.length = sizeof(cht_modem_dsm_guid),
-> +				.pointer = (u8 *)&cht_modem_dsm_guid,
-> +			},
-> +		},
-> +		{
-> +			.integer = {
-> +				.type = ACPI_TYPE_INTEGER,
-> +				.value = CHT_MODEM_DSM_REVISION,
-> +			},
-> +		},
-> +		{
-> +			.integer = {
-> +				.type = ACPI_TYPE_INTEGER,
-> +				.value = function,
-> +			},
-> +		},
-> +		{
-> +			.package = {
-> +				.type = ACPI_TYPE_PACKAGE,
-> +				.count = 0,
-> +				.elements = NULL,
-> +			},
-> +		},
-> +	};
-> +	struct acpi_object_list input = {
-> +		.count = ARRAY_SIZE(params),
-
-Add include.
-
-> +		.pointer = params,
-> +	};
-> +	acpi_status status;
-> +
-> +	/* These firmware functions perform an action without returning data. */
-> +	status = acpi_evaluate_object(ACPI_HANDLE(modem->dev), "_DSM", &input,
-> +				      NULL);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err(modem->dev, "_DSM function %llu failed: %s\n", function,
-
-Add include.
-
-> +			acpi_format_exception(status));
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cht_modem_set_pmic_power(struct cht_modem *modem, bool on)
-> +{
-> +	unsigned int value = on ? CHT_MODEM_PMIC_CTRL_ON : 0;
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(modem->pmic_regmap, CHT_MODEM_PMIC_CTRL_REG,
-> +				 CHT_MODEM_PMIC_CTRL_MASK, value);
-> +	if (ret)
-> +		dev_err(modem->dev, "failed to set modem PMIC power: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static void cht_modem_release_xhci_runtime(struct cht_modem *modem)
-> +{
-> +	if (!modem->xhci_runtime_held)
-> +		return;
-> +
-> +	pm_runtime_put(&modem->xhci->dev);
-> +	modem->xhci_runtime_held = false;
-> +	dev_info(modem->dev,
-> +		 "released xHCI runtime hold after modem enumeration window\n");
-> +}
-> +
-> +static int cht_modem_check_usb_device(struct usb_device *udev, void *data)
-> +{
-> +	struct cht_modem_usb_state *state = data;
-> +	u16 product;
-> +	u16 status;
-> +
-> +	if (le16_to_cpu(udev->descriptor.idVendor) !=
-> +	    CHT_MODEM_USB_VENDOR_ID)
-
-Fits to one line.
-
-> +		return 0;
-> +
-> +	product = le16_to_cpu(udev->descriptor.idProduct);
-
-Add include.
-
-> +	if (product == CHT_MODEM_USB_MBIM_PRODUCT_ID) {
-> +		state->runtime = true;
-> +		return 1;
-> +	}
-> +
-> +	if (product != CHT_MODEM_USB_BOOT_PRODUCT_ID)
-> +		return 0;
-> +
-> +	state->boot = true;
-> +	state->status_ret = usb_get_std_status(udev, USB_RECIP_DEVICE, 0,
-> +					       &status);
-> +	return 1;
-> +}
-> +
-> +static void cht_modem_trigger_status_work(struct work_struct *work)
-> +{
-> +	struct cht_modem *modem =
-> +		container_of(to_delayed_work(work), struct cht_modem,
-
-Add include.
-
-> +			     trigger_status_work);
-> +	struct cht_modem_usb_state state = { };
-> +
-> +	mutex_lock(&modem->lock);
-
-Use guard() and return directly without gotos.
-
-> +	if (!modem->powered || !modem->xhci_runtime_held)
-> +		goto out;
-> +
-> +	usb_for_each_dev(&state, cht_modem_check_usb_device);
-> +	if (state.runtime) {
-> +		dev_info(modem->dev, "XMM7260 MBIM runtime interface detected\n");
-> +		goto out;
-> +	}
-> +
-> +	if (state.boot) {
-> +		if (state.status_ret && state.status_ret != -ENODEV &&
-> +		    state.status_ret != -ESHUTDOWN)
-> +			dev_warn(modem->dev,
-> +				 "XMM7260 boot-interface GET_STATUS failed: %d\n",
-> +				 state.status_ret);
-> +		else
-> +			dev_info(modem->dev,
-> +				 "triggered XMM7260 boot-interface GET_STATUS\n");
-
-Will this spam logs for what is "normal" behavior?
-
-Perhaps convert the if/else to switch/case if possible.
-
-> +	}
-> +
-> +	/* Retry until the runtime interface appears or the hold expires. */
-> +	mod_delayed_work(system_dfl_wq, &modem->trigger_status_work,
-> +			 CHT_MODEM_STATUS_RETRY_DELAY);
-> +out:
-> +	mutex_unlock(&modem->lock);
-> +}
-> +
-> +static void cht_modem_release_xhci_work(struct work_struct *work)
-> +{
-> +	struct cht_modem *modem =
-> +		container_of(to_delayed_work(work), struct cht_modem,
-> +			     release_xhci_work);
-> +
-> +	cancel_delayed_work(&modem->trigger_status_work);
-> +	mutex_lock(&modem->lock);
-> +	cht_modem_release_xhci_runtime(modem);
-> +	mutex_unlock(&modem->lock);
-> +}
-> +
-> +static int cht_modem_hold_xhci_runtime(struct cht_modem *modem)
-> +{
-> +	modem->xhci = pci_get_device(PCI_VENDOR_ID_INTEL,
-> +				     PCI_DEVICE_ID_INTEL_CHT_XHCI, NULL);
-> +	if (!modem->xhci)
-> +		return -EPROBE_DEFER;
-> +
-> +	/*
-> +	 * The XMM7260 first enumerates as 8087:07ef and takes roughly 48
-> +	 * seconds to re-enumerate as the 8087:0911 MBIM modem. Keep xHCI in
-> +	 * D0 across that window; otherwise SSIC link training stops in RxDetect.
-> +	 */
-> +	pm_runtime_get_noresume(&modem->xhci->dev);
-> +	modem->xhci_runtime_held = true;
-> +	mod_delayed_work(system_dfl_wq, &modem->release_xhci_work,
-> +			 CHT_MODEM_ENUMERATION_TIMEOUT);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct regmap *cht_modem_get_pmic_regmap(struct device *dev)
-> +{
-> +	struct acpi_device *adev;
-> +	struct device *pmic_dev;
-> +	struct regmap *regmap;
-> +
-> +	adev = acpi_dev_get_first_match_dev(CHT_MODEM_PMIC_HID, NULL, -1);
-> +	if (!adev)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	pmic_dev = get_device(acpi_get_first_physical_node(adev));
-
-Please move the variable declaration here (as per the long comment in 
-cleanup.h) and use __free(put_device).
-
-> +	acpi_dev_put(adev);
-> +	if (!pmic_dev)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	regmap = dev_get_regmap(pmic_dev, NULL);
-> +	if (!regmap) {
-> +		put_device(pmic_dev);
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +	}
-> +
-> +	if (!device_link_add(dev, pmic_dev, DL_FLAG_AUTOREMOVE_CONSUMER)) {
-> +		put_device(pmic_dev);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	put_device(pmic_dev);
-> +	return regmap;
-> +}
-> +
-> +static int cht_modem_power_on(struct cht_modem *modem)
-> +{
-> +	int ret = 0;
-> +
-> +	mutex_lock(&modem->lock);
-
-guard() + direct return without goto.
-
-> +	if (!modem->powered) {
-> +		ret = cht_modem_set_pmic_power(modem, true);
-> +		if (ret)
-> +			goto out;
-> +
-> +		usleep_range(CHT_MODEM_PMIC_POWER_DELAY_US,
-> +			     CHT_MODEM_PMIC_POWER_DELAY_US + 1000);
-> +		/* MRST also cycles the SSIC pull-down/pull-up state around MDON. */
-> +		ret = cht_modem_evaluate_dsm(modem, CHT_MODEM_DSM_RESET);
-> +		if (!ret) {
-
-Please reverse the logic and return error directly, the current code flow 
-is very confusing as it hides the else branch is doing error handling / 
-rollback. Using guard() will make this easy for you.
-
-> +			modem->powered = true;
-> +			dev_info(modem->dev,
-> +				 "powered on and holding xHCI for SSIC enumeration\n");
-> +		} else {
-> +			cht_modem_set_pmic_power(modem, false);
-> +		}
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&modem->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static void cht_modem_power_off(struct cht_modem *modem)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&modem->lock);
-> +	if (modem->powered) {
-> +		ret = cht_modem_evaluate_dsm(modem, CHT_MODEM_DSM_POWER_OFF);
-> +		if (!ret)
-
-Convert to guard and handle errors first to make the code easier to 
-follow.
-
-> +			ret = cht_modem_set_pmic_power(modem, false);
-> +		if (!ret)
-> +			modem->powered = false;
-
-
-
-> +	}
-> +	mutex_unlock(&modem->lock);
-> +}
-> +
-> +static int cht_modem_probe(struct platform_device *pdev)
-> +{
-> +	struct cht_modem *modem;
-> +	int ret;
-> +
-> +	if (!dmi_check_system(cht_modem_dmi_table))
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * INT34D0 advertises functions 0 and 1 only, despite also implementing
-> +	 * the power-on function used below.
-> +	 */
-> +	if (!acpi_check_dsm(ACPI_HANDLE(&pdev->dev), &cht_modem_dsm_guid,
-> +			    CHT_MODEM_DSM_REVISION,
-> +			    BIT(CHT_MODEM_DSM_POWER_OFF)))
-> +		return -ENODEV;
-> +
-> +	modem = devm_kzalloc(&pdev->dev, sizeof(*modem), GFP_KERNEL);
-> +	if (!modem)
-> +		return -ENOMEM;
-> +
-> +	modem->dev = &pdev->dev;
-> +	modem->pmic_regmap = cht_modem_get_pmic_regmap(&pdev->dev);
-> +	if (IS_ERR(modem->pmic_regmap))
-
-Add include.
-
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(modem->pmic_regmap),
-> +				     "failed to get Whiskey Cove PMIC regmap\n");
-
-Please use braces for multi-line constructs.
-
-> +
-> +	mutex_init(&modem->lock);
-
-devm_mutex_init() + don't forget to add error handling.
-
-> +	INIT_DELAYED_WORK(&modem->release_xhci_work,
-> +			  cht_modem_release_xhci_work);
-> +	INIT_DELAYED_WORK(&modem->trigger_status_work,
-> +			  cht_modem_trigger_status_work);
-> +	platform_set_drvdata(pdev, modem);
-> +
-> +	ret = cht_modem_hold_xhci_runtime(modem);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "failed to hold Cherry Trail xHCI runtime PM\n");
-> +
-> +	ret = cht_modem_power_on(modem);
-> +	if (ret) {
-> +		cancel_delayed_work_sync(&modem->release_xhci_work);
-> +		cht_modem_release_xhci_runtime(modem);
-> +		pci_dev_put(modem->xhci);
-> +		modem->xhci = NULL;
-
-Why is this needed?
-
-Just return ret directly here and remove the extra else.
-
-> +	} else {
-> +		mod_delayed_work(system_dfl_wq, &modem->trigger_status_work,
-> +				 CHT_MODEM_STATUS_TRIGGER_DELAY);
-> +	}
-> +
-> +	return ret;
-
-After the change mentioned above, this can be just:
-
-return 0;
-
-> +}
-> +
-> +static void cht_modem_remove(struct platform_device *pdev)
-> +{
-> +	struct cht_modem *modem = platform_get_drvdata(pdev);
-> +
-> +	cancel_delayed_work_sync(&modem->trigger_status_work);
-> +	cancel_delayed_work_sync(&modem->release_xhci_work);
-> +	mutex_lock(&modem->lock);
-> +	cht_modem_release_xhci_runtime(modem);
-> +	mutex_unlock(&modem->lock);
-
-Why doesn't this and probe's rollback match? probe calls 
-cht_modem_release_xhci_work() and this open codes the same?
-
-> +	cht_modem_power_off(modem);
-> +	pci_dev_put(modem->xhci);
-> +}
-> +
-> +static void cht_modem_shutdown(struct platform_device *pdev)
-> +{
-> +	struct cht_modem *modem = platform_get_drvdata(pdev);
-> +
-> +	cancel_delayed_work_sync(&modem->trigger_status_work);
-> +	cancel_delayed_work_sync(&modem->release_xhci_work);
-> +	cht_modem_power_off(modem);
-> +}
-> +
-> +static const struct acpi_device_id cht_modem_acpi_ids[] = {
-> +	{ "INT34D0" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, cht_modem_acpi_ids);
-> +
-> +static struct platform_driver cht_modem_driver = {
-> +	.driver = {
-> +		.name = "intel-cht-modem",
-> +		.acpi_match_table = cht_modem_acpi_ids,
-> +	},
-> +	.probe = cht_modem_probe,
-> +	.remove = cht_modem_remove,
-> +	.shutdown = cht_modem_shutdown,
-> +};
-> +
-> +static int __init cht_modem_init(void)
-> +{
-> +	return platform_driver_register(&cht_modem_driver);
-> +}
-> +subsys_initcall(cht_modem_init);
-> +
-> +static void __exit cht_modem_exit(void)
-> +{
-> +	platform_driver_unregister(&cht_modem_driver);
-> +}
-> +module_exit(cht_modem_exit);
-> +
-> +MODULE_DESCRIPTION("Intel Cherry Trail ACPI modem power driver");
-> +MODULE_LICENSE("GPL");
+>  	guard(mutex)(&xe->pmt.lock);
+>  
+> -	if (!xe->soc_remapper.set_telem_region)
+> -		return -ENODEV;
+> -
+>  	/* indicate that we are not at an appropriate power level */
+>  	if (!xe_pm_runtime_get_if_active(xe))
+>  		return -ENODATA;
+> @@ -186,6 +185,9 @@ static enum xe_vsec get_platform_info(struct xe_device *xe)
+>  	if (xe->info.platform > XE_BATTLEMAGE)
+>  		return XE_VSEC_UNKNOWN;
+>  
+> +	if (IS_SRIOV_VF(xe) && (xe->info.platform == XE_BATTLEMAGE))
+> +		return XE_VSEC_UNKNOWN;
+> +
+>  	return vsec_platforms[xe->info.platform];
+>  }
+>  
+> -- 
+> 2.43.0
 > 
-
--- 
- i.
-
