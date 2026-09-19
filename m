@@ -1,418 +1,294 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010058.outbound.protection.outlook.com [40.93.198.58])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012050.outbound.protection.outlook.com [52.103.2.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A517F2D595B;
-	Sat, 19 Sep 2026 07:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E256D3054C7;
+	Sat, 19 Sep 2026 08:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789804140; cv=fail; b=kIB3xDIrN7jgRYLBxLBQXWOJFU04g+jRG7V7NtKcRX192KIEGKv8jqQLRvz/RHeaDrIKMxBx+0lhZKKJuYhIjoAkc/2PAAGGPSDatOXRE61PDfpZN1CV2Xpd7mRwaBcJ1dlAlBANZ0KmVsFzCjVt62/+zIrvehMDrIZatSFwRI8=
+	t=1789807312; cv=fail; b=p1pUBP68M2+Dhxohf4DgE2S/aJ2CJrT5o4pyzJmukp49hX0fHco2pBTbFA6da26hxueUr0MPZJB/lZQIQQ768G0nlKwQlmxK3tGe3qJdIuBXeGnhCAvUXac+FwNe7y/N6HHVo/rTtAsK3OTQ+/THKJq+HJcbOI97FiFZUY9CSlQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789804140; c=relaxed/simple;
-	bh=djFWuCX8MM2YvFc4r/yLesTaEP/hfWuDI9I21eriiEM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S/eLr6raCTC6lypBSQ8yAuFMp68ny4z2XtyIRa9Xxcfbj3xUWpbquSLLX50SLgo4+J6MduZk/CD+P9s5YN6PYfAry7CZ2LfpBPHgypl55WFf68OLecFz6joQKsOTizBSoCRadYMR4wwcYcnJ9Lt1tyYBzPizd/AH81g3dFX4QH4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T520Sxju; arc=fail smtp.client-ip=40.93.198.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1789807312; c=relaxed/simple;
+	bh=SwZRwh0Pif6ykx0iH610jiIuIzdB29JIN5gltIKjZEs=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=oNGnQDFRRk5Wi5KA52yw4OidpbJJxw8iqSj/+0MllX2YPBJQGLpE0t7S6/jk8rbK5uMoJSxZefZUuxxqqK449AZaiRKEPL1wFHEhPh/vFFmPBkLrDfIddgVnRygWIijH9oEMq3fFJ+BAIyzj0nVg49PoRE34Qgmhw3T8QZmeiZI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=Y3+wmx8l; arc=fail smtp.client-ip=52.103.2.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T520Sxju"
+	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="Y3+wmx8l"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Py4UkUjO3k/nPZy++ZvKvfLBydvFj/dyokUO/TmQD+nfeIh9gm17HQIMPzV4AidQOEOi9MWQRKjcc4LI9wI+0CfQiC7ewyuwREfKoOrjw9iaCcQtMjm1scwNCQzvBd1XHeRmv7hoouzNEDAxXmpGcqhMaF6ayibY6xIZKwjxMQBoDd6xFuNVJj2El6OxxnKF/HCbohFKs/rLz6lXKpxMn9Ku0ZuDiMlZxodnUKZKYPPsUuu1cTKx58+zUOXRVZ6LSSi8PH7Y5d4JZ7J368klDYhYtjuKlPeKAPFntJ/AGABfDAFt3tA9y+ZU3Ux9ob2zuT1QWdPxXN9j8pWNXGIpqA==
+ b=qGTT+PI0poHzn6l9kwMDJ0kBJDXYAYHZ3AI/G7wRWJSpLCYjTO6uHWPPdzweYOpHyd7mikzYrwq5iRu45fTyzWdvZdQfeCX532zPR5j9eHpFTThG34X0eFt1/9wAgFYDtqpxC2YjAh+Th/IixcNlki7Yz1XdOIjQ+l+Ex5MfZakzyinjiBwXl66yxmnvTX+idpjQwJhja/dKAUtfbjogyuq6I5yAUfAckyBm5YduKJIrXEb/XeYsd5HfRBRcZLE1THZcdZp+hGPAVpjYci929rmuVV2VSHqR5Qxw9wHdqjhCVhj/jXj4Fmx5aTUf40fnBM1sWCmc7nuDSMs4xS9jmQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Pc0tLr+23qYaUqHIrmIuecm3UauFOHp5UsGeAvCeDlE=;
- b=eBHvRKXFPuSnJPa2jlBWZKsHZ6Y33pTZUFadSTwnilw1UvFUWOWU3le/mogj4x/QmMXeDUXENi8chQdlyr9OKuO/7EK6AEdIi2US3zaKBPwnGvq4TiCFAPwwdV4Y4Y3ZwenjXuTqO6dxszuUyRYI4J74Gd8kN5glDa4E5wI94UfCMRe/HMVOGOBBWVgDdYeEUGN4iROL9qHTW+i8Q0BpJFGMt0PooNT6CTcYhuoPGQ8ke+s6nWxqHa4wmJUqsZ/TKCCPoGzWJhZ4YdihKXsdFTerMATtCRYLqPyFAesSM57jzi6Dm339SLTf8aYmp+2GKRp2uZEiPbZnVpIWwIi0eA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=4KGXa/kJkbjRcUo2on0alYpeKIW/AABLQQ8Ovty9j7g=;
+ b=ojxD+LY6cz7hP4UC/LGz/Vsg5d0B9Kvb5pO626S+tJ+U8wdYBLf29nqHhhuKUhhwOr+AA0IQT4XrBRTNcG2aRepQC6jHh8qYxPTZ4BUG/+jSHH6g9vVoPOHGnl3f81YUYTL14mGMR6iqp/9xYh3YJJM8EmD81C/XNyuUFTZfRW8XhTnNPpa6DV2LsCFakItZ0gl56cBarXavVBjUAB91E5I1Xm5xluMhar0HS7y91veVRa0gfA/TbpThrJKQZQxDNTlrYYs85JGdkYFsRLYaxeFP5IVhAiO5eYT0Vj4nF5uKwZ1HoPCINDuSeCdyP+HkewVpUclOjNtWv66CJ/rc2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pc0tLr+23qYaUqHIrmIuecm3UauFOHp5UsGeAvCeDlE=;
- b=T520Sxju0uQ6GJPvqIuZnhpKzsGD+KPM4nDNHEN1ZBvFP3TylPkPwBihAMNh4m5Iu0hdSx8sVxS0L1/KHwpeDNDT/6eutE2OcoKpEf/NUkROOVWVEtrFCTudZjFQ9KJbFPQ8A750uDBHYSkgEubrqqK/mRZ5cHqW44xIG2TRpGE=
-Received: from PH7PR17CA0068.namprd17.prod.outlook.com (2603:10b6:510:325::12)
- by IA0PR12MB8255.namprd12.prod.outlook.com (2603:10b6:208:404::21) with
+ bh=4KGXa/kJkbjRcUo2on0alYpeKIW/AABLQQ8Ovty9j7g=;
+ b=Y3+wmx8lnWEXub+j5Bnw8bT/cMYtBb0KV6nihGV1xZnGzITKrJhpatUEhVrjXb7YxEBUFsQaCUW7Is5akayfoiD4VGXLfII0KXGZUDghRLMfjin7SRG1Cp5HZPzky3lHlsNG+OyVPWom+dlzZIR9XRQKgLpl0kkbNgx+C/3D4IzBLlfUmd3uzrmNqgN5p6jyMCEahiJCkb9gaCOZFYktFY4WX5ya2UBqA3G2uy+cMKLLCo5xIQflg/zEdfxEkLMTpwEOuNfW+TuI3Uby58tCcEXH+u4B7A/hp4nBC8GSAV9LMAI1Fj/mpKzRaYrMb/jcr6iJ0UYxQqfStJrcci3wJg==
+Received: from SN6PR19MB2303.namprd19.prod.outlook.com (2603:10b6:805:56::19)
+ by MN0PR19MB5850.namprd19.prod.outlook.com (2603:10b6:208:37a::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.13; Sat, 19 Sep
- 2026 07:48:51 +0000
-Received: from SA2PEPF00003AEB.namprd02.prod.outlook.com
- (2603:10b6:510:325:cafe::ad) by PH7PR17CA0068.outlook.office365.com
- (2603:10b6:510:325::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.9 via Frontend Transport; Sat, 19
- Sep 2026 07:48:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SA2PEPF00003AEB.mail.protection.outlook.com (10.167.248.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.451.8 via Frontend Transport; Sat, 19 Sep 2026 07:48:50 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Sat, 19 Sep
- 2026 02:48:48 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>, Mario Limonciello
-	<superm1@kernel.org>
-Subject: [PATCH v6 3/3] platform/x86/amd/hsmp: Document and expose client telemetry table in UAPI
-Date: Sat, 19 Sep 2026 13:18:18 +0530
-Message-ID: <20260919074818.2541775-4-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260919074818.2541775-1-muralidhara.mk@amd.com>
-References: <20260919074818.2541775-1-muralidhara.mk@amd.com>
+ 2026 08:41:48 +0000
+Received: from SN6PR19MB2303.namprd19.prod.outlook.com
+ ([fe80::805c:7f80:c69f:876a]) by SN6PR19MB2303.namprd19.prod.outlook.com
+ ([fe80::805c:7f80:c69f:876a%5]) with mapi id 15.21.0428.011; Sat, 19 Sep 2026
+ 08:41:48 +0000
+From: Marco Giunta <marco_giunta@outlook.it>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Hans de Goede <hansg@kernel.org>
+Cc: Ike Panhc <ikepanhc@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Giunta <marco_giunta@outlook.it>
+Subject: [PATCH] platform/x86: ideapad-laptop: Report camera switch as SW_CAMERA_LENS_COVER
+Date: Sat, 19 Sep 2026 10:41:35 +0200
+Message-ID:
+ <SN6PR19MB23039910DD1918BEE3825BAFFC862@SN6PR19MB2303.namprd19.prod.outlook.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI1PEPF000008CE.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:298:1::42a) To SN6PR19MB2303.namprd19.prod.outlook.com
+ (2603:10b6:805:56::19)
+X-Microsoft-Original-Message-ID:
+ <20260919084135.36559-1-marco_giunta@outlook.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AEB:EE_|IA0PR12MB8255:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27b8cac4-78f7-4c44-94e5-08df1622722e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: SN6PR19MB2303:EE_|MN0PR19MB5850:EE_
+X-MS-Office365-Filtering-Correlation-Id: d5350ee8-5093-4604-6662-08df1629d770
+X-MS-Exchange-SLBlob-MailProps:
+	ScCmN3RHayHq8QFbWW6Ra03gxaeZK6u4ni1jDADZfp76rC6lBIEK3v4tCYQbOHyT2QsWV0lJlNYnFUkDs3oywhxKs6gloMHgFK7nvsio9yDRETlhfyNYuzL/vFb/cRGd6BQPnu3Oo1hr3nkxvyTGKBK+0FeVR+oWUnOnv/TL/gCYZ+htNvhX5xeH4Cf68ZmftsvT3YOZphczb381GfuB+kk+9ZEi/YkeTvjHbcelK8JiJpolERWr0OwsYb9KtbgiZ1/bFP06pKgpKRDYT2EcrQvsCDH7CXXT1fUu9mDNyMiDpe3ds7+IuPNwbNcFFg2ee+t/Vwy1uR3ZCOQrm+u5ipKsR7SLdIzNovPi3aynP2Qi7PDcdBwJaCEcXjcO/gK6fpbBNZS8i86MjbXZoyHuNgjguU7DRSCru8dW9I8svSn3Z9a4g9K5QYVJr+2JGzX/05TjwM7QNKddjQrMC2YJgyCFseZB9w2k2nhjZQFsqm+d8Rb0Q40lm28oH04g7nxpYWN3juAEP7p5cqnTYdmXAgMbqt9wnG2qN1EYFJ8LyI9n1swZx1A6ma00RzoC/gPYQ6Ja+VaV3TUp0tZPTTvJAJcnjaru+vPYU+Q/91sAZqjzsEE6m4ijXLMe2xwDRJNhhwf/FZjtiR5NmwlKw9f97OdXmHdJfSUcd320Zfkb6Nq+mZ8tben6XRLLZvgu/U5XECeSlUlNkMwkkdD7LtyzONiq7okXue2vsOOVux1xSJQ=
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|1800799024|82310400026|23010399003|376014|10067099003|11063799006|5023799004|6133799003|22082099003|18002099003|56012099006|13003099007;
+	BCL:0;ARA:14566002|15080799012|23021999003|5072599009|5062599005|24021099003|25010399006|19110799012|8060799015|55001999006|51005399006|41001999006|440099028|3412199025|12091999003|40105399003|2607281247196008|1710799026;
 X-Microsoft-Antispam-Message-Info:
-	xaK6iHHjTOmzn+JAeZOsRvqpnCqnFAawFJHCmBBtl5GDwXDuRZXCJpEs1z2XEcwLADs3V44y66DTFyPQghtDhhfUg44k0oUgI80BTJbxkppZbSSwiK/KwPWhUbgFkFlIxmjESQ2mz2/3OoJLa+ocUbfgLBy0YsoIU4oXOjmtM8QHOlsWUnJ5EjLUN36RjqyG+BKzOt5im04gk7OMG72atSVLiB3c3P2dWXTAD4rXPcVF+5F7RddAAneZ6jJHnSG8cdmIK3axmMjYhlRd4huQTUP15hqJaazzAfQUScPUAPlYnUdZiXbZLfvzsiZElNBC5oc9/U1ehs41yEwuCeCfdNFWCRRB1Qe9Honqvb8sgh7T/6CNMXl+NQ4f0qwtiZ4ARYpavMRwjmi2T16KZufrC7oGgMwwKIAwFU0pHiLgA8IGn+Bjx8CSXyupuhEG4r6SQ2jon+zpBk9RygOWMvRrXVdNcR44QjnZnEW2PyrT9rSfMctPWAy4n29AXOj3IWdxCUZ0W27ataxiYcQtMPPc5uND4iHU+qVl+sjKXKRy8lAXFm6KdOvcWjam3dzXE23zOyZD19YX7TIe9lO07MNAdUh1syNTFvaP/A+xXrJnnooosUQVXPkUw8UFPTX1h3RO/NZvsgKE69nzromweeBBN1RBb+EA4dU1RmcViv1Uhs4iWizkVt7og2yB0TmImXlgviku7qnWS7lkif7RAhScuw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(82310400026)(23010399003)(376014)(10067099003)(11063799006)(5023799004)(6133799003)(22082099003)(18002099003)(56012099006)(13003099007);DIR:OUT;SFP:1101;
+	=?us-ascii?Q?jtKHA0Vb7FFCmQ5QX3hoDRl1eVFCscL59AIVI5nU61vpAUFBipDk4Cu01bMV?=
+ =?us-ascii?Q?Jd1UxIoXw/DDLpeAnzeV6o4iQZTKKiiXywPhvOVrnkzEBu4LYgdgA6w16W1h?=
+ =?us-ascii?Q?OX3c9tQJU0MGXo84wPXNr436d04O1MeaooO4FceuWeOxXDwmZKfGmmSvGUgs?=
+ =?us-ascii?Q?ajdzPtPxNIKKUxEMbYBIVKUsqm/40sntnmkog1KElY5ALIYW0d5no8rhsW1A?=
+ =?us-ascii?Q?12tk1ucCVm9N0243OVOXqz2xaEVJ0NiB/FAye0RK/FZ4brMle+8wdd0M47vO?=
+ =?us-ascii?Q?2rEtkQnMVuldrucHo4d45mG72LLjpr8nePLwqls2F50rxAGlI4ZJXJ3TmoY6?=
+ =?us-ascii?Q?Zkosth6+xyPOxDi1vON0xMSwEq40r2rYCe8z1pzyo4Q4DzETgYffv6Jo5CFk?=
+ =?us-ascii?Q?7Ds0PfFkU95kVZ50wC0QhwIk8uECGZPqayANHWD3CnI5tCvK4lEeZqkYA6jA?=
+ =?us-ascii?Q?5iZhxS8ppvbyg2/zuKLxkTRYkRg5dVXK/oiTjD7EpzBV1Hu8ETwMfkZdRejl?=
+ =?us-ascii?Q?NwV6hMD57YyI5Sfw3Gl5LEfAyZL51cO1bslYHthtoUBBY6WhqRjA40gpeJMH?=
+ =?us-ascii?Q?MkGSi/YJXrKrNtUUj6AIuT3Z9QUXOYh9Pls7RUEzMw5VDQ7YgbnIxsCn9fQ8?=
+ =?us-ascii?Q?3uG5evhOi4YGDk4q5Ls/Zr+R2IZG41k7lDTxZo0UUvl7pU3YPB5IkdfUEb3N?=
+ =?us-ascii?Q?5UYChrHXLbpj1mJcSgeh2oGPsPrKWpbFjvuSoSa+K0o35du0YrmKRd0t9nXc?=
+ =?us-ascii?Q?9tfseXgjn0Texbj4/jakqxoYSb3gBbiZc8AUuXS/jCH0W6HXJlVR7f0vZPU+?=
+ =?us-ascii?Q?+8hPEF/xIAWTbCQteJErywFsNBxvEgS7KpAmLVEsVM/LkZ9yxgZmQ7e/mXLS?=
+ =?us-ascii?Q?pC6aOEzx5vYvPwk3ekDfm3ClFXRaWHAowMHmSXFoNNAJ6BV2HObMXhAl8aeP?=
+ =?us-ascii?Q?/UFiBEYscgJg2pxqsaGg/ULeBjJnv3oOPWegWRgaHLb/XZCRnJifpZ8iHqf1?=
+ =?us-ascii?Q?8o/qgVT8kCJE/ZnGyISr2hmDb/l7h2EZM4j03xvqy/fJpydo+qbfqIh2qMXH?=
+ =?us-ascii?Q?ZSOn61z1fX4px1uYGjJfiq9XK8o/FA=3D=3D?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	SZ8YseVWWMNbNct0XkoI8I1VeoiW6EQ0hVbb/K2gn2qGK7HNRSb0i0u4NbIHuepB8d8yAErWcnlZ7Sr7ymmPEuTO9kTzhpqmNuxPzAWdnCvcnDgwU0NhzV4fN90p6WcCEyIF63cBC5IJqACMW/1O7qOi0vBwqtZLnNA6Ld/AySKkNKSyoJaSo5vXcqHYCZ5LZQzkV8N7zB/BzooTGYlW78ntIDVjtIpt7hfnDqABFpvNRElroBQ9u9sWYVGaeLX4s7P9ySQnIEGclUxCtG6N//y4kJJ/IJdCxkEcAYDqhDjDJDTGPB+xb/FPjGFJDC3EWvkLOOl9v61977sph9pE/ZRUpwqaTlKlb+CNPBpCfh+Wbwc5JagnvH6lS9Von55vC6omPY9gcw6vHN3h/6di/O9a5j8vI6gUmuZDeVXtLfPBU2lDs+hkqVmwVahVP0Wr
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2026 07:48:50.9619
+	=?us-ascii?Q?vyy6dbRa7p2S7bqNpuBl98X/UE1K7Cd/AfedhIpB+CU0VzmqSM/2dzd1nla/?=
+ =?us-ascii?Q?0p6c1ZqVzcXg77Nv/s1yMkasIblVJwsqljgeJacNTX09VS5XVczua5Qaul9Z?=
+ =?us-ascii?Q?nqO3iZBFjO1GQDNPFc7pKD3te/2WL/UHnDBpc94YT+nQCZJXIGF01TVQ/h5V?=
+ =?us-ascii?Q?H17iqXGS/LWlXsxSnUUN4kbjqziLwvNPBIp/ovPT4S8aLCvo4HqPBZ0GKf5U?=
+ =?us-ascii?Q?8FjDvIsi2euOn8H1uA6cexC6oA3jVX3T9ooErFDv8uqwGfiMltsJ9n2eFgJd?=
+ =?us-ascii?Q?Vd/GyFp0F+oR+N5v9Wa0NQe1JyIN36sUUIvyIFQTaFjj9TFgUQGdMooZqd9K?=
+ =?us-ascii?Q?iAgSgxqlseX21rz6NYGRfjCJ/Jf86qOXVQJrWbHl9C5kZKd8u6/UkW/ST/Vu?=
+ =?us-ascii?Q?hTkCWUvwVSiZDKeqVpRfqaSLBOl+GykXsytg7B4jXthDDMEUvf+eQmHPHJKU?=
+ =?us-ascii?Q?L1Rzwhj+1mgBf8+P3RJRTJA0bWi2HWnhONKr8FfEFkjZAavPkcUUYDnLbJoO?=
+ =?us-ascii?Q?QU8AYGVy5UBYBrodweckEUwbkus8Tq2GyVVB3COMkSSIba4a8/2IoXvqmihZ?=
+ =?us-ascii?Q?8dMpisAfp9qOXiuuwLVet+a54TQA1eWTwt/xCwB5V57F0St28MGsgMEQCVuz?=
+ =?us-ascii?Q?hvpbawobgbmvBzaJT/xpnEc3H85y9e0IQ4+3rqpVcn7DHXbap1NLcaUo7T+Q?=
+ =?us-ascii?Q?IAKPW1OagH8rwZlQPLowD8Lspt6RYib/LZRfzOt+151hovjKIJS/nsA29QHG?=
+ =?us-ascii?Q?UBx1PUzaq+fMbHmANJs6OCCvfAwyNTwWVPvVuL+Gr5IhHHX6INoPS8mjFq3h?=
+ =?us-ascii?Q?k9JAvPhprabSy6AMJGBUrBYnVvLWvCk1ztjFHPUexH+4zV+InRK0muYVGlSY?=
+ =?us-ascii?Q?6ZXY1GV6vmEEXB6L2d9Q8uEpRQUdjbEZDNJkDcPxlLbCZtjC2WY6XbwOQPzV?=
+ =?us-ascii?Q?NWL6l/jmyqK4rzXxL2Z7AJPijGZm89IxN9bP4bX3GtZWGQil6x6PksBuL/Pt?=
+ =?us-ascii?Q?ygeGRko5chn/0dKBuAAqeHYXEpI586Wcl7FzC0kPnWw46OB1sYUqPXDuSp1E?=
+ =?us-ascii?Q?NXfvD6vKsYhKk7y9e7hcqWIL0HGxfJUB0TYY5R1CTEpHAF92uyRd22p02sbb?=
+ =?us-ascii?Q?r6iDv+qDyh0i2FHzREqTJGq9/DNObKFlP3sjqvXYiGoaMtaN7vyUw8u6jwIu?=
+ =?us-ascii?Q?QrMgZf8LmgoVXYrxAYyiwFLBSzSPtYp0ZLY4Xvwl4AT4CuslObuRaoBcIPzI?=
+ =?us-ascii?Q?+pqNkxIe3dSBM9hk0wwf7+hVOha7XJs5prVulQiQBwL2gz4nTvH6GhvCPNrj?=
+ =?us-ascii?Q?CjLl7azPBOhP1OLhS6FvedhA/hQmTNtOyd3tvXeVxDNVv9VsG/oZfWO1uPq5?=
+ =?us-ascii?Q?92OwoFhHeLWKbaIkA3M6eQ3rwaDP?=
+X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5350ee8-5093-4604-6662-08df1629d770
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR19MB2303.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2026 08:41:48.1694
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27b8cac4-78f7-4c44-94e5-08df1622722e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AEB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8255
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR19MB5850
 
-Add struct hsmp_telemetry_table_rm to the UAPI header, describing the
-Ryzen Master SMC telemetry table (table version 5, as reported by
-HSMP_CLIENT_GET_METRICS_TABLE_VER) returned by
-HSMP_CLIENT_GET_METRICS_TABLE on the Family 1Ah client models.
+On certain 2025 Lenovo laptops, such as the Yoga Pro 7 14ASP10 and Legion
+Pro 7 16AFR10H, a switch on the side disables the camera. This is handled
+by the firmware, which also sends event 0x0d (camera disabled) or 0x0c
+(camera enabled) through the WMI event GUID handled with
+ideapad_wmi_context_fn_keys. These events are currently reported as
+KEY_UNKNOWN.
 
-Point amd_hsmp.rst at struct hsmp_telemetry_table_rm instead of
-duplicating the layout in prose. The Public PPR for the model in use
-remains the reference for units and encodings.
+Other Lenovo laptops expose a similar camera switch through a separate WMI
+GUID, which lenovo-wmi-camera reports as SW_CAMERA_LENS_COVER since
+commit d98bf6a6ed61 ("platform/x86: lenovo-wmi-camera: Use
+SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS"). That driver does not
+bind on these laptops, so do the same here: as the switch state cannot be
+read from the firmware, register a separate input device with the switch
+on the first event, and report the state carried by each event.
 
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
 ---
- Documentation/arch/x86/amd_hsmp.rst  |  14 ++
- arch/x86/include/uapi/asm/amd_hsmp.h | 257 +++++++++++++++++++++++++++
- 2 files changed, 271 insertions(+)
+Notes:
 
-diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-index b95f09945193..c483c68dcfad 100644
---- a/Documentation/arch/x86/amd_hsmp.rst
-+++ b/Documentation/arch/x86/amd_hsmp.rst
-@@ -221,9 +221,23 @@ The following IOCTLs are defined:
-   ``sizeof(struct hsmp_metric_table)``.  Later version metrics table
-   layout is documented in the Public PPR.
+* I considered a couple of alternatives to the approach in this patch:
+
+  1.  Simply map 0x0c and 0x0d to KEY_CAMERA_ACCESS_ENABLE/DISABLE:
+
+      { KE_KEY,	0x0c | IDEAPAD_WMI_KEY, { KEY_CAMERA_ACCESS_ENABLE } },
+      { KE_KEY,	0x0d | IDEAPAD_WMI_KEY, { KEY_CAMERA_ACCESS_DISABLE } },
+
+      similar to the touchpad off/on hkey events (66/67) this driver emits
+      after the firmware has toggled the touchpad state. However, HUTRR72
+      describes these hkey events as asserting a camera access state for
+      the host to apply, rather than reporting one the firmware has
+      already applied. Furthermore, lenovo-wmi-camera moved away from
+      these hkey events in favor of SW_CAMERA_LENS_COVER in the quoted
+      commit, which is arguably the closest relevant precedent.
+    
+  2.  Ignore these events like the firmware-handled FnLock events:
+
+				{ KE_IGNORE,	0x0c | IDEAPAD_WMI_KEY },
+				{ KE_IGNORE,	0x0d | IDEAPAD_WMI_KEY },
+
+      This fixes the KEY_UNKNOWN issue, but userspace gets no information.
+    
+  Overall, in the end I copied the approach of the lenovo-wmi-camera
+  driver. Kindly let me know if there are other/better solutions.
+    
+* Unlike the touchpad, whose state this driver reads with VPCCMD_R_TOUCHPAD
+  at probe, on resume and on each event, the camera switch state is only
+  available in EC-private fields, and the two tested laptops even use
+  different ones. Hence the lenovo-wmi-camera approach: the switch appears
+  on the first event, and a change made while suspended is not reported,
+  leaving the state wrong until the switch is toggled again.
+
+* For reference, on KDE Plasma 6.7.5, using the Legion's touchpad toggle
+  button shows an OSD, but nothing on a SW_CAMERA_LENS_COVER change or if
+  sending KEY_CAMERA_ACCESS_ENABLE/DISABLE events. I am not sure whether
+  this is simply a case of "not implemented yet" or if I misunderstood how
+  these events are supposed to be used to communicate with userspace.
+  Please feel free to correct me here.
+  
+Best regards,
+Marco
+---
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 56 ++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+
+diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+index 207368f5d489..c354b5d71399 100644
+--- a/drivers/platform/x86/lenovo/ideapad-laptop.c
++++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+@@ -178,6 +178,7 @@ struct ideapad_private {
+ 	struct ideapad_rfk_priv rfk_priv[IDEAPAD_RFKILL_DEV_NUM];
+ 	struct platform_device *platform_device;
+ 	struct input_dev *inputdev;
++	struct input_dev *camera_switch_idev;
+ 	struct backlight_device *blightdev;
+ 	struct ideapad_dytc_priv *dytc;
+ 	struct dentry *debug;
+@@ -1410,10 +1411,43 @@ static int ideapad_input_init(struct ideapad_private *priv)
+ 	return err;
+ }
  
-+  The Family 1Ah client models carry their own telemetry table instead,
-+  described in `Family 1Ah client telemetry table`_ below.
++static int ideapad_camera_switch_init(struct ideapad_private *priv, bool covered)
++{
++	struct input_dev *idev;
++	int err;
 +
- The ioctl would return a non-zero on failure; you can read errno to see
- what happened. The transaction returns 0 on success.
++	idev = input_allocate_device();
++	if (!idev)
++		return -ENOMEM;
++
++	idev->name = "Ideapad Camera Switch";
++	idev->phys = "ideapad/input1";
++	idev->id.bustype = BUS_HOST;
++	idev->dev.parent = &priv->platform_device->dev;
++
++	input_set_capability(idev, EV_SW, SW_CAMERA_LENS_COVER);
++	input_report_switch(idev, SW_CAMERA_LENS_COVER, covered);
++	input_sync(idev);
++
++	err = input_register_device(idev);
++	if (err) {
++		input_free_device(idev);
++		return err;
++	}
++
++	priv->camera_switch_idev = idev;
++	return 0;
++}
++
+ static void ideapad_input_exit(struct ideapad_private *priv)
+ {
+ 	input_unregister_device(priv->inputdev);
+ 	priv->inputdev = NULL;
++
++	if (priv->camera_switch_idev) {
++		input_unregister_device(priv->camera_switch_idev);
++		priv->camera_switch_idev = NULL;
++	}
+ }
  
-+Family 1Ah client telemetry table
-+=================================
-+On the Family 1Ah client models, ``HSMP_CLIENT_GET_METRICS_TABLE`` (05h)
-+returns the Ryzen Master SMC telemetry table, table version 5 as
-+reported by ``HSMP_CLIENT_GET_METRICS_TABLE_VER`` (04h). This is the
-+Telemetry Table RM layout, defined as ``struct hsmp_telemetry_table_rm``
-+in amd_hsmp.h. The driver copies the table out without interpreting it.
-+
-+See the telemetry table chapter of the AMD Public PPR for the model in
-+use for the units and encodings of its fields.
-+
- More details on the interface and message definitions can be found in chapter
- "7 Host System Management Port (HSMP)" of the respective family/model PPR
- eg: https://docs.amd.com/v/u/en-US/55898_B1_pub_0_50
-diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-index 9641e5977c2e..8929dc5975bc 100644
---- a/arch/x86/include/uapi/asm/amd_hsmp.h
-+++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-@@ -816,4 +816,261 @@ enum hsmp_client_message_ids {
- 	HSMP_CLIENT_MSG_ID_MAX,
- };
+ static void ideapad_input_report(struct ideapad_private *priv,
+@@ -1422,6 +1456,19 @@ static void ideapad_input_report(struct ideapad_private *priv,
+ 	sparse_keymap_report_event(priv->inputdev, scancode, 1, true);
+ }
  
-+#define HSMP_TELEMETRY_RM_MAX_CCX		4
-+#define HSMP_TELEMETRY_RM_CORES_PER_CCX	12
-+#define HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE	8
-+#define HSMP_TELEMETRY_RM_NPU_BUSY_DOMAINS	3
-+#define HSMP_TELEMETRY_RM_OC_DOMAINS		5
-+#define HSMP_TELEMETRY_RM_OC_SUBDOMAINS	5
-+#define HSMP_TELEMETRY_RM_OC_GUARDBANDS	3
++static void ideapad_camera_switch_report(struct ideapad_private *priv, bool covered)
++{
++	if (!priv->camera_switch_idev) {
++		if (ideapad_camera_switch_init(priv, covered))
++			dev_warn(&priv->platform_device->dev,
++				 "Failed to register camera switch input device\n");
++		return;
++	}
 +
-+/* Firmware packs this table to a 4-byte boundary */
-+#pragma pack(push, 4)
++	input_report_switch(priv->camera_switch_idev, SW_CAMERA_LENS_COVER, covered);
++	input_sync(priv->camera_switch_idev);
++}
 +
-+/*
-+ * struct hsmp_telemetry_table_rm_iod - I/O die counters for RM telemetry.
-+ *
-+ * Accumulator (*_acc) fields are monotonic counters; consumers derive
-+ * deltas across two snapshots and normalise by accumulation_counter.
-+ */
-+struct hsmp_telemetry_table_rm_iod {
-+	__u32 accumulation_counter;
+ static void ideapad_input_novokey(struct ideapad_private *priv)
+ {
+ 	unsigned long long_pressed;
+@@ -2312,6 +2359,15 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+ 			break;
+ 		}
+ 
++		/*
++		 * Camera switch, handled by the firmware:
++		 * 0x0c camera enabled, 0x0d camera disabled
++		 */
++		if (data->integer.value == 0x0c || data->integer.value == 0x0d) {
++			ideapad_camera_switch_report(priv, data->integer.value == 0x0d);
++			break;
++		}
 +
-+	/* SET VOLTAGES */
-+	__u64 vddcr_set_voltage;
-+	__u64 vddcr_soc_set_voltage;
-+	__u64 vddcr_npu_set_voltage;
-+	__u64 vddcr_lp_set_voltage;
-+	__u64 vddcr_gfx_set_voltage;
-+	__u64 vdd_misc_set_voltage;
-+
-+	/* TELEMETRY VOLTAGES */
-+	__u64 vddcr_telemetry_voltage;
-+	__u64 vddcr_soc_telemetry_voltage;
-+	__u64 vddcr_npu_telemetry_voltage;
-+	__u64 vddcr_lp_telemetry_voltage;
-+	__u64 vddcr_gfx_telemetry_voltage;
-+	__u64 vdd_misc_telemetry_voltage;
-+
-+	/* TELEMETRY POWERS */
-+	__u64 vddcr_telemetry_power;
-+	__u64 vddcr_soc_telemetry_power;
-+	__u64 vddcr_npu_telemetry_power;
-+	__u64 vddcr_lp_telemetry_power;
-+	__u64 vddcr_gfx_telemetry_power;
-+	__u64 vdd_misc_telemetry_power;
-+
-+	/* THROTTLERS - FAST PPT */
-+	__u32 fppt_fused_limit;
-+	__u32 fppt_max_irm_limit;
-+	__u32 fppt_max_pbo_limit;
-+	__u32 fppt_limit;
-+	__u64 fppt_value_acc;
-+	__u32 fppt_residency_acc;
-+
-+	/* THROTTLERS - SLOW PPT */
-+	__u32 sppt_fused_limit;
-+	__u32 sppt_max_irm_limit;
-+	__u32 sppt_max_pbo_limit;
-+	__u32 sppt_limit;
-+	__u64 sppt_value_acc;
-+	__u32 sppt_residency_acc;
-+
-+	/* THROTTLERS - SPL */
-+	__u32 spl_fused_limit;
-+	__u32 spl_max_irm_limit;
-+	__u32 spl_max_pbo_limit;
-+	__u32 spl_limit;
-+	__u64 spl_value_acc;
-+	__u32 spl_residency_acc;
-+
-+	/* THROTTLERS - TDC VDDCR */
-+	__u32 tdc_vddcr_fused_limit;
-+	__u32 tdc_vddcr_max_irm_limit;
-+	__u32 tdc_vddcr_max_pbo_limit;
-+	__u32 tdc_vddcr_limit;
-+	__u64 tdc_vddcr_value_acc;
-+	__u32 tdc_vddcr_residency_acc;
-+
-+	/* THROTTLERS - TDC VDDCR SOC */
-+	__u32 tdc_vddcr_soc_fused_limit;
-+	__u32 tdc_vddcr_soc_max_irm_limit;
-+	__u32 tdc_vddcr_soc_max_pbo_limit;
-+	__u32 tdc_vddcr_soc_limit;
-+	__u64 tdc_vddcr_soc_value_acc;
-+	__u32 tdc_vddcr_soc_residency_acc;
-+
-+	/* THROTTLERS - TDC VDDCR NPU */
-+	__u32 tdc_vddcr_npu_fused_limit;
-+	__u32 tdc_vddcr_npu_max_irm_limit;
-+	__u32 tdc_vddcr_npu_max_pbo_limit;
-+	__u32 tdc_vddcr_npu_limit;
-+	__u64 tdc_vddcr_npu_value_acc;
-+	__u32 tdc_vddcr_npu_residency_acc;
-+
-+	/* THROTTLERS - TDC VDDCR LP */
-+	__u32 tdc_vddcr_lp_fused_limit;
-+	__u32 tdc_vddcr_lp_max_irm_limit;
-+	__u32 tdc_vddcr_lp_max_pbo_limit;
-+	__u32 tdc_vddcr_lp_limit;
-+	__u64 tdc_vddcr_lp_value_acc;
-+	__u32 tdc_vddcr_lp_residency_acc;
-+
-+	/* THROTTLERS - TDC VDDCR GFX */
-+	__u32 tdc_vddcr_gfx_fused_limit;
-+	__u32 tdc_vddcr_gfx_max_irm_limit;
-+	__u32 tdc_vddcr_gfx_max_pbo_limit;
-+	__u32 tdc_vddcr_gfx_limit;
-+	__u64 tdc_vddcr_gfx_value_acc;
-+	__u32 tdc_vddcr_gfx_residency_acc;
-+
-+	/* THROTTLERS - EDC VDDCR */
-+	__u32 edc_vddcr_fused_limit;
-+	__u32 edc_vddcr_max_irm_limit;
-+	__u32 edc_vddcr_max_pbo_limit;
-+	__u32 edc_vddcr_limit;
-+
-+	/* THROTTLERS - THERMAL */
-+	__u32 thm_fused_limit;
-+	__u32 thm_limit;
-+	__u64 thm_value_acc;
-+	__u32 thm_residency_acc;
-+	__u32 prochot_residency_acc;
-+	__u64 gfx_temp_acc;
-+	__u64 soc_temp_acc;
-+	__u32 p3t_fused_limit;
-+	__u64 p3t_value_acc;
-+
-+	/* POWER */
-+	__u64 system_power_acc;
-+	__u64 apu_power_acc;
-+	__u64 dgpu_power_acc;
-+	__u64 npu_power_acc;
-+
-+	/* FREQUENCIES */
-+	__u64 fclk_freq_eff_acc;
-+	__u64 memclk_freq_eff_acc;
-+	__u64 lclk_freq_eff_acc;
-+	__u64 gfxclk_freq_eff_acc;
-+	__u64 socclk_freq_eff_acc;
-+	__u64 vclk_freq_eff_acc;
-+	__u64 vpeclk_freq_eff_acc;
-+	__u64 aieclk_freq_eff_acc;
-+	__u64 npuhclk_freq_eff_acc;
-+
-+	/* BANDWIDTH */
-+	__u64 dram_read_bandwidth;
-+	__u64 dram_write_bandwidth;
-+
-+	/* ACTIVITY MONITORS */
-+	__u64 gfx_busy_acc;
-+	__u64 vcn_busy_acc;
-+	__u64 npu_busy_acc[HSMP_TELEMETRY_RM_NPU_BUSY_DOMAINS];
-+
-+	/* STT (Skin Temperature Tracking) */
-+	__u32 stt_min_limit;
-+	__u64 stt_apu_hot_spot_temp_acc;
-+	__u64 stt_hs2_hot_spot_temp_acc;
-+	__u32 stt_apu_temp_limit;
-+	__u64 stt_apu_skin_temp_acc;
-+
-+	/* RESIDENCIES - per-CCX CPU off */
-+	__u64 cpu_off_residency[HSMP_TELEMETRY_RM_MAX_CCX];
-+
-+	/* DF P-STATES */
-+	__u32 fclk_freq_table[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+	__u32 uclk_freq_table[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+	__u32 ddr_rate_table[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+	__u8  df_pstate_source[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+
-+	/* SYSTEM */
-+	__u8  gfx_disabled;
-+	__u8  spare2[3];
-+	__u32 gfxclk_fmax;
-+	__u8  cclk_core_fuse_enable[HSMP_TELEMETRY_RM_MAX_CCX][HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+	__u8  cclk_core_enabled[HSMP_TELEMETRY_RM_MAX_CCX][HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+	__u32 cclk_fmax[HSMP_TELEMETRY_RM_MAX_CCX][HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+
-+	/* OVERCLOCK CAPABLE */
-+	__u8  cpu_precise_and_direct_oc_capable;
-+	__u8  gfx_precise_and_direct_oc_capable;
-+	__u8  pbo_basic_oc_capable;
-+	__u8  pbo_advanced_oc_capable;
-+	__u8  pbo_nitro_oc_capable;
-+	__u8  memory_and_fabric_oc_capable;
-+	__u8  misc_oc_capable;
-+	__u8  extreme_cold_oc_capable;
-+	__u8  down_config_control_capable;
-+	__u8  spare0[3];
-+
-+	/* OVERCLOCK STATUS */
-+	__u32 fit_limit_scalar;
-+	__u8  ln2_enabled;
-+	__u8  cpu_precise_and_direct_oc_enabled;
-+	__u8  gfx_precise_and_direct_oc_enabled;
-+	__u8  spare1[2];
-+	__s8  psm_guardband[HSMP_TELEMETRY_RM_OC_DOMAINS]
-+			   [HSMP_TELEMETRY_RM_OC_SUBDOMAINS]
-+			   [HSMP_TELEMETRY_RM_OC_GUARDBANDS];
-+	__s32 core_power_limit_offset;
-+	__u32 max_freq_offset[HSMP_TELEMETRY_RM_OC_DOMAINS];
-+
-+	__u64 npu_temp_acc;
-+	__u64 df_pstate_residency_acc[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+	__u32 cclk_fboost;
-+
-+	/* PMF */
-+	__u32 pmf_fast_apu_ppt_limit;
-+	__u64 pmf_fast_apu_ppt_value_acc;
-+	__u32 pmf_fast_apu_ppt_residency_acc;
-+
-+	__u32 pmf_slow_apu_ppt_limit;
-+	__u64 pmf_slow_apu_ppt_value_acc;
-+	__u32 pmf_slow_apu_ppt_residency_acc;
-+
-+	__u32 pmf_fast_spm_limit;
-+	__u64 pmf_fast_spm_value_acc;
-+	__u32 pmf_fast_spm_residency_acc;
-+
-+	__u32 pmf_slow_spm_limit;
-+	__u64 pmf_slow_spm_value_acc;
-+	__u32 pmf_slow_spm_residency_acc;
-+
-+	__u32 spare3[5];
-+};
-+
-+/*
-+ * struct hsmp_telemetry_table_rm_ccx - Per-CCX core counters for RM telemetry.
-+ *
-+ * Arrays are sized for the maximum cores per CCX; use the
-+ * cclk_core_enabled[] mask in struct hsmp_telemetry_table_rm_iod to tell
-+ * which entries are valid.
-+ */
-+struct hsmp_telemetry_table_rm_ccx {
-+	__u64 core_c0[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+	__u64 core_cc6[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+	__u64 core_freq[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+	__u64 core_freq_eff[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+	__u64 core_temp[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+	__u64 core_power[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+};
-+
-+/**
-+ * struct hsmp_telemetry_table_rm - Top-level RM telemetry table.
-+ * @iod: I/O die counters and per-rail/per-throttler/SYSTEM telemetry.
-+ * @ccx: Per-CCX core counters, one entry per CCX.
-+ *
-+ * Layout of the table returned by HSMP_CLIENT_GET_METRICS_TABLE on the
-+ * Family 1Ah client (Models 80h-8Fh and E0h-E3h), reported as table
-+ * version 5 by HSMP_CLIENT_GET_METRICS_TABLE_VER. Units are
-+ * firmware-defined; see the AMD HSMP/Ryzen Master SMC spec. Spare
-+ * fields are firmware padding and must be preserved.
-+ */
-+struct hsmp_telemetry_table_rm {
-+	struct hsmp_telemetry_table_rm_iod iod;
-+	struct hsmp_telemetry_table_rm_ccx ccx[HSMP_TELEMETRY_RM_MAX_CCX];
-+};
-+
-+#pragma pack(pop)
-+
- #endif /*_ASM_X86_AMD_HSMP_H_*/
+ 		/* 0x02 FnLock, 0x03 Esc */
+ 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+ 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+
+base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
 -- 
-2.34.1
+2.55.0
 
