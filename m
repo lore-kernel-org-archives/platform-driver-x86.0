@@ -1,144 +1,108 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CB3375ADF
-	for <platform-driver-x86@vger.kernel.org>; Sat, 19 Sep 2026 06:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFA331A555;
+	Sat, 19 Sep 2026 07:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789798283; cv=none; b=SjUCshzjAJp8MehWEwyq5pV3sLdGy0GLm9tG735c877ryQG0AbiptuxcD2K0Ylfiqa//bUVjfl21W+7HsbZb2k+kcSJoULxnufIi5GRF+10/Hz/Pfdw5y49XkvzOQnBhW34DsR8yyhhutQC+V/bLho9q/8Hn1knP33puwcmZjbg=
+	t=1789801463; cv=none; b=F6z3M3173cC4meoKiuAbvWVbiFi8FCXdjB8mby0o3Y/HEpubjsmiAVhWYHujTBdVeFphxgo5zWd1rpn7J+wYPVshBO6LwpyOnQ2aCIb57apYv1VxRt4Qq0QrxxLWFAxQMgSaXRfdjV/PZ7Qaezo1B1UXHzTODxeK+CcQRUPz34k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789798283; c=relaxed/simple;
-	bh=lwcvsGM7dkF7romeMnX3Ds75/0ZlM0UvamxerXT9LbA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jc5jQgPzSg2+hMbpVtEVdkIsHhp0Z2Mi/R+KJfWrfA/gmj/IIRgiRvZ6exv5VnVZsVR3SNDvy7vqALY7BuGEUCBlop7UHFjjimAGYAnes0/MJ0rROZnVZDnApifYjRbFsgGwBMMiEkezd3NfRiVvDS4C25mfJaOtsITvjz0m9Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uh6Atq+H; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789801463; c=relaxed/simple;
+	bh=C3ikIsOLwRVgLFdJ1s6aULu9a9sldfXr5ccQyoo7LBc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m7vy3Buqv/4+iGn9fOj/EoU9htngj82JpKXwdYAIZUmL9Ikw5HkrxZOA2t7wJfksnVt1Jg4LYv0FTq1ny1+gojRPurLNsq/Zhb+WiWbaln8Tqcr8TelohRXDLAvMflATWR6bKSWL/jPyZN3phoCc1FlxvZIYSZIWLiF8VC7BUkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4j/14QT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uh6Atq+H"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b965f447cso11741125e9.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 23:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789798280; x=1790403080; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Wzv5spbilUO1qSlslWoXOyl5RLYwHziQsHbiWKOWqZ0=;
-        b=Uh6Atq+HTmmPQ8WVekaEkCIekTTuRWPtOpnha3hf2CkpKiIGzivqKtbYwUegyZWNct
-         LkFtvu/85nlr2r1+D1steBNiVBU0KW3S8mMmPgl4b7fB+RVVULF9/IK+8BOelZvB/bT1
-         U5ZjlUBEaUclJKxwBgm8W1FxCdnHOjaqFEsu0t42jlrXuthmr21q88jHgnstb/n/hfmB
-         LSIyuKQz2P/n3BiZINOb63bUHTksrqs72ECXZ5bdrtXqSxqLSGZmEFnDyEfEQVjFyj4c
-         GN++ech6YB2l4GtQj1+j7RSoS5keexlycup7R+xjG/w2DmYIngW1mWdFLo2FHMEhg13W
-         PHBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789798280; x=1790403080;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Wzv5spbilUO1qSlslWoXOyl5RLYwHziQsHbiWKOWqZ0=;
-        b=eq8mO+2+YDc/7zC8JYu2medeQP/LDrvuQIOmVu0vbe/zfJEPX3gSs1sKyXOtDCEyKI
-         IMWt6m4vYic/d4P5mPT09QJlj1XSyl6960MwEdqhnrXNGUftTdlclHevZu9/DNBLjBc9
-         eR+zQe+w+mcLjeVaBG3R15RGND49UniZaIYo00m6+QvsqH8fR10lYoii8zk/gfioGcLe
-         9HuoxHF+7C7AygFQrP7rjY4+/0mHNIemk9EX7DMobTkgwCxvBDoIIm1BC7Hao0i98FhP
-         YdpgRmSlFV1pCBdIpciV5wFplox0xl5+BeoDVl87i2fFFSzQb2PG5KURgneeSQ67DEj6
-         cypw==
-X-Forwarded-Encrypted: i=1; AKwUvBykGzqP4/XfjR4YHYwzs92670Q4tMH8mz+k/HKtHqeMyJq7MojZnKUnnGTgmijFSayuAwek0q6i74GMeWPGW2uNg8BT@vger.kernel.org
-X-Gm-Message-State: AFuF++naXxHtTnKsYMSLRo2L0EEkQu0St3jB4fmNX+Q+NY0jsufQYqVr
-	O2a4lGJV/N8CT7cTqrxuBZnaNQCrVtJf4kwIvNrfPWWYPyGGlxF72Dm/
-X-Gm-Gg: AYBFou2goX/Qxd7hsm4D8dIHXKCPce5aVm7tK2PBqgTHje0besZ/eaBJ77FOl9c09mB
-	3nLFY3S3asEI+j1B8PEs+y/F/ijovk0g6vGzMpyBoOaLh1VQI0bOc+os8YOB38FUd/tMHuiTpbG
-	TLbEd6cc3D+wHhyZdn5IsAGimjN+y3BeibB2IJ5wU0pNWplLeDRRklfchDnzN3O4+NnnI8reWR5
-	Q+01l7Paknl/dnY3Gk3xCkjB4YgHyvOP6eDYbno2DMkLpdnFTXrh0nJCpOBujSGy4efp6W99Wnj
-	97p0D/2HH0odGSzJoCV1nAt2wQ37sART4+P2kJQrtBXOdh7TJ96LkjDWlEIOWQNRdZg9YyOVHLJ
-	zoimdqUsjAo/pVwabow+n0m0LTuGFdubCzSyee4apN9WbFVeusHq4oRUvJrk3unvwOtUeUutcXB
-	Mb3bkXp5oEzZ4V41OQngYyMQ/oFJHamuB5SN65LBOuZLHdFNhyY2TElAiukV2O5nf1yHOk12lnx
-	MokogwdX2S4O5KryVZSLocJbnopEYm31zKNMwAu+cLoCjPrXMiX
-X-Received: by 2002:a05:600c:6211:b0:49c:fa20:cbfb with SMTP id 5b1f17b1804b1-49fc5728f84mr58855245e9.18.1789798280343;
-        Fri, 18 Sep 2026 23:11:20 -0700 (PDT)
-Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fcd1026f4sm52016675e9.8.2026.09.18.23.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Sep 2026 23:11:19 -0700 (PDT)
-From: Muhammad Bilal <meatuni001@gmail.com>
-To: Jorge Lopez <jorge.lopez2@hp.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Muhammad Bilal <meatuni001@gmail.com>
-Subject: [PATCH v3] platform/x86: hp-bioscfg: remove dead bounds check in audit_log_entries_show
-Date: Sat, 19 Sep 2026 11:11:08 +0500
-Message-ID: <20260919061108.87240-1-meatuni001@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4j/14QT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A001F000FF;
+	Sat, 19 Sep 2026 07:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789801461;
+	bh=C3ikIsOLwRVgLFdJ1s6aULu9a9sldfXr5ccQyoo7LBc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=c4j/14QTWkl2iVIIQ2IkMuIRC7gpLTDAGevyaBKzUqPJofq1h3AyjACd0z+beIksz
+	 LZA0QgaH9EQh468MPkyVG8r4dhafKtg31cYnOZ/VG8rG94oJjiUxkuhcyU6AL5pUDb
+	 Ogj+NMxQfBeCzLGD41GoHC6tdOFRQGuy0/WLAz9oWn6eT9uIIvVwWzVbg4hmpOSvTv
+	 g8ilNnrBeNWRPLjsafaSjWBDnGANEO8PS22idEXRWWR7U+OGWb2LMpRBYaehmKD0aN
+	 StUs7QQHLnRkhgia4igFIHteV5GPFNjJWnH6Expm7MVgKsi3TTkNIW8AamQu8OfMVC
+	 Shw7Wo1JFDH2A==
+Message-ID: <51d363ff-5ff2-471c-825f-a70b677c5d1c@kernel.org>
+Date: Sat, 19 Sep 2026 09:04:15 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] dt-bindings: media: i2c: st,vd55g1: Move allOf:
+ after required:
+To: Peter Marshall <pm@petermarshall.ca>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+ Sylvain Petinot <sylvain.petinot@foss.st.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+References: <20260918221705.323510-1-pm@petermarshall.ca>
+ <20260918221705.323510-2-pm@petermarshall.ca>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <20260918221705.323510-2-pm@petermarshall.ca>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-audit_log_entries_show() checks "count * LOG_ENTRY_SIZE > PAGE_SIZE"
-prior to entering the loop. Because "count" is already bounded to fit
-within PAGE_SIZE, the inner loop check "(LOG_ENTRY_SIZE * i) > PAGE_SIZE"
-can never be reached and is dead code.
+On 19/09/2026 00:16, Peter Marshall wrote:
+> Update this binding to follow the ordering convention of
+> example-schema.yaml which places allOf: after required:. No functional
+> change.
 
-Remove the redundant inner bounds check and eliminate the unnecessary
-"else" block after "break" to clean up the loop control flow.
+We don't do such changes, allOf with ref is placed correctly.
 
-Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
----
-Resending v3 2/2 unchanged: the previous attempt reached the list with
-a corrupted hunk (header/diffstat didn't match the body), which is
-what "patch: **** malformed patch at line 65" was. No content change
-from the previous v3, this is a clean re-generation of the same diff.
-
-Changes in v3:
-  - Remove the dead inner loop check completely instead of adjusting
-    the boundary arithmetic, as noted by Ilpo Järvinen.
-  - Remove the redundant else block after break.
-
-Changes in v2:
-  - None for this patch; resubmitted as part of the v2 series.
-
-Link: https://lore.kernel.org/r/20260803143037.93105-1-meatuni001@gmail.com [v1]
-Link: https://lore.kernel.org/r/20260812111829.172273-1-meatuni001@gmail.com [v2]
----
- .../x86/hp/hp-bioscfg/surestart-attributes.c   | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-index b57e42f..d689ee8 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-@@ -90,17 +90,15 @@ static ssize_t audit_log_entries_show(struct kobject *kobj,
- 					   HPWMI_SURESTART,
- 					   audit_log_buffer, 1, 128);
- 
--		if (ret < 0 || (LOG_ENTRY_SIZE * i) > PAGE_SIZE) {
--			/*
--			 * Encountered a failure while reading
--			 * individual logs. Only a partial list of
--			 * audit log will be returned.
--			 */
-+		/*
-+		 * Encountered a failure while reading individual logs.
-+		 * Only a partial list of audit log will be returned.
-+		 */
-+		if (ret < 0)
- 			break;
--		} else {
--			memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
--			buf += LOG_ENTRY_SIZE;
--		}
-+
-+		memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
-+		buf += LOG_ENTRY_SIZE;
- 	}
- 
- 	return i * LOG_ENTRY_SIZE;
--- 
-2.43.0
-
+Best regards,
+Krzysztof
