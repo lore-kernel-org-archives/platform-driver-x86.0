@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFA331A555;
-	Sat, 19 Sep 2026 07:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD6736F8F0;
+	Sat, 19 Sep 2026 07:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789801463; cv=none; b=F6z3M3173cC4meoKiuAbvWVbiFi8FCXdjB8mby0o3Y/HEpubjsmiAVhWYHujTBdVeFphxgo5zWd1rpn7J+wYPVshBO6LwpyOnQ2aCIb57apYv1VxRt4Qq0QrxxLWFAxQMgSaXRfdjV/PZ7Qaezo1B1UXHzTODxeK+CcQRUPz34k=
+	t=1789801590; cv=none; b=LYiviOidSRGCgb+lzEkPpFJOLTST8tx9HPWGWuvtqfejk9bKMQSMdyhqaLGnkZzKHMONIa6B0O31vWQpkWP8GUzBUyIcBPFfItfg6qPR6tnquXn6e38CP7CoJGQc8kW2iz9Wdb802jhxrzBMneVPudX6XBAlMQkzFxWNiuoebvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789801463; c=relaxed/simple;
-	bh=C3ikIsOLwRVgLFdJ1s6aULu9a9sldfXr5ccQyoo7LBc=;
+	s=arc-20240116; t=1789801590; c=relaxed/simple;
+	bh=CKnRo2L5ruTnRuYUGbPUHxC+CRCzGwLLo6hRb8BzuUw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m7vy3Buqv/4+iGn9fOj/EoU9htngj82JpKXwdYAIZUmL9Ikw5HkrxZOA2t7wJfksnVt1Jg4LYv0FTq1ny1+gojRPurLNsq/Zhb+WiWbaln8Tqcr8TelohRXDLAvMflATWR6bKSWL/jPyZN3phoCc1FlxvZIYSZIWLiF8VC7BUkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4j/14QT; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=TiwoQzGea4lMPwpAhCCC/Qw58MDCgu8vhekRTDTt8mLYsQPLFTwI8V/BP/HevlRUDXwTix7SDj0fMTXm1J17RJVRR1x8BXQRv4h/yZ5PgDShQeeYafl3Cijv4BJeHylMhS1CHAJko9azR4oCynp10gYGAxlYZnOGw2n4mMM82wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2UpMNQB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4j/14QT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A001F000FF;
-	Sat, 19 Sep 2026 07:04:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2UpMNQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 994621F000FF;
+	Sat, 19 Sep 2026 07:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789801461;
-	bh=C3ikIsOLwRVgLFdJ1s6aULu9a9sldfXr5ccQyoo7LBc=;
+	s=k20260515; t=1789801586;
+	bh=/8+6lA/+MmGMiGw2NXATI/t1AKiDDA8JtVUJlxNBu1I=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=c4j/14QTWkl2iVIIQ2IkMuIRC7gpLTDAGevyaBKzUqPJofq1h3AyjACd0z+beIksz
-	 LZA0QgaH9EQh468MPkyVG8r4dhafKtg31cYnOZ/VG8rG94oJjiUxkuhcyU6AL5pUDb
-	 Ogj+NMxQfBeCzLGD41GoHC6tdOFRQGuy0/WLAz9oWn6eT9uIIvVwWzVbg4hmpOSvTv
-	 g8ilNnrBeNWRPLjsafaSjWBDnGANEO8PS22idEXRWWR7U+OGWb2LMpRBYaehmKD0aN
-	 StUs7QQHLnRkhgia4igFIHteV5GPFNjJWnH6Expm7MVgKsi3TTkNIW8AamQu8OfMVC
-	 Shw7Wo1JFDH2A==
-Message-ID: <51d363ff-5ff2-471c-825f-a70b677c5d1c@kernel.org>
-Date: Sat, 19 Sep 2026 09:04:15 +0200
+	b=N2UpMNQBTk5S5Fv1Swg8wtKBtN0KP6INau24ihdfa2/gGRx1RcvRet3kaDra0x7w3
+	 rR6msojBGT43tJt8igXOSoTNGVOFvYQeu8+th9bJEhdhYa5x+UFqBo0x0Bo7mhEI3P
+	 cFB48WuZzyQXxsxCpVtl+OIEsAmpD3kof6kTTi+PuQVmsAtnNOdFgp4/10vCUQo+6j
+	 omxo4IlUbia8sjOpGpKMX8vkpslPZD47tuXApYTuIb22IjFV48WnWyFLgTFYQhjLqk
+	 cIN2GnrY1uFctQgKSLDBUC0Q36jbswKmEBDuXF8egMaQogL8UnfygAfUrhhiPKHdCC
+	 emIpQoQRnHm8A==
+Message-ID: <c7ca685f-3b1f-422f-b7bf-d79af544fea3@kernel.org>
+Date: Sat, 19 Sep 2026 09:06:20 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/11] dt-bindings: media: i2c: st,vd55g1: Move allOf:
- after required:
+Subject: Re: [PATCH 02/11] media: dt-bindings: i2c: vd55g1: Add vd55g0
+ compatible
 To: Peter Marshall <pm@petermarshall.ca>,
  Sakari Ailus <sakari.ailus@linux.intel.com>,
  Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -47,7 +47,7 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>
 References: <20260918221705.323510-1-pm@petermarshall.ca>
- <20260918221705.323510-2-pm@petermarshall.ca>
+ <20260918221705.323510-3-pm@petermarshall.ca>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -93,16 +93,39 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  K9bCVaboTA2T77QYkRcRJYSsO1alGX0ome/hMLD1daXlkrNUp1HWa3K4iytLRXjCSIorWiGs
  n+q3krnpXu3TFkA8qtOFZMdnIiFuiq1yLT8hptsV5xh1TA2nsVvSYiaCr3q4s4BKjS/KrLDb
  qoxzw8ISjdUp4pA85vb6YLCmb39NgidD+7PmAr65lBNveIFynTgsja1rRQ4=
-In-Reply-To: <20260918221705.323510-2-pm@petermarshall.ca>
+In-Reply-To: <20260918221705.323510-3-pm@petermarshall.ca>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 19/09/2026 00:16, Peter Marshall wrote:
-> Update this binding to follow the ordering convention of
-> example-schema.yaml which places allOf: after required:. No functional
-> change.
+>    reg:
+>      maxItems: 1
+> @@ -101,6 +104,21 @@ required:
+>  allOf:
+>    - $ref: /schemas/media/video-interface-devices.yaml#
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: st,vd55g0
+> +    then:
+> +      properties:
+> +        port:
+> +          properties:
+> +            endpoint:
+> +              properties:
+> +                link-frequencies:
+> +                  items:
+> +                    minimum: 375000000
 
-We don't do such changes, allOf with ref is placed correctly.
+So this explains why you wanted to move the allOf. Just squash both patches.
+
+> +
+>  unevaluatedProperties: false
+>  
+>  examples:
+
 
 Best regards,
 Krzysztof
