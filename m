@@ -1,37 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234811F16B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7D71A9F8C;
 	Sat, 19 Sep 2026 05:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789795029; cv=none; b=W+yFOaLznlOYyNcclbJMKHfP6uAibVAYylV8qA0Md6/N4ssFUVSZiIof2X+fv2eucv1t03Urw2hyM7CVby/kFRGW/ZVUa1CGWOuH6sNLYa6OTtgUp8UM1V86fxkGvCP8++VryY9W6kExIKGs8IgN1h4dQlHVmnTGH2kbicmH94U=
+	t=1789795030; cv=none; b=E+7Nuw8fzDowKXN88tYhs3MVOVDwr2boYReahmGMKACIBK5aGl8S4EOUC6CxkssBH6uXKTsbd4nGmc63jGUpg4WUkiletUAC4NmhhTfOTdRBbYzmNbHTYSLv/pz/KTQYnELP71ZYEbGHLlRARDqZHXe7COqLjI3NypD7EOWBnBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789795029; c=relaxed/simple;
-	bh=58jcbRHoJwGO44DVTHlayDzZlj5mJDPRX1fcemLOiXE=;
+	s=arc-20240116; t=1789795030; c=relaxed/simple;
+	bh=Iagbc3S9oK8i9XuKMVv5zjfuJ//dsM4mtS+LkoO1SKY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R/O9FZd8ZrlzY62oV57liM0/63KPVaN3+5onk0PYjlWB4qsW6va/PBj0webbInrbg+ffm73bjeJTlpcDbV5rRbe6Um2cTOY/5IYQs2rEgxszluznlyRGLqRAb0ZwA5RMxJZJ6PxtRtjw/3oTJQfnSSyR9sD84Rdz/Yiql6VwRtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HyftP24G; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=tqC4Yt5j7N9c4G2Uzxw9mjWu6HZXbhNMcRgOlWgBnnc2Ke/w/xGS3L2Zv6bKXAfJ5O7spHF9YxsYs77ptvMQmJL6AMi/qRDWITh3Em0kIypMuEqr3cvOTMFOccV89S3l7OlKVCzDfYE0Gh4CD92GNk1tGWyADe20BNzUtn5x+QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=VDca79gl; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HyftP24G"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="VDca79gl"
 Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 09B7D82DBA;
+	by disroot.org (Postfix) with ESMTP id 3820182BD3;
 	Sat, 19 Sep 2026 07:17:05 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id JNjMKAx-554b; Sat, 19 Sep 2026 07:17:04 +0200 (CEST)
+ id CAulc7qoPqtV; Sat, 19 Sep 2026 07:17:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1789795024; bh=58jcbRHoJwGO44DVTHlayDzZlj5mJDPRX1fcemLOiXE=;
+	t=1789795024; bh=Iagbc3S9oK8i9XuKMVv5zjfuJ//dsM4mtS+LkoO1SKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HyftP24G2mhyLtCN9tWkwPSY2uOrNtuXJ2HmFESaQ0Ttp8hFvklEpTARGPaV4OwEV
-	 nGYK66MQkeVYeL2HJV1z8XcYq7yCn2RHWTJ6AyoAB9Z09vznaNBIbfH9GRThpUS+vx
-	 MFK4uzRmcy94HBE4wCHGXfmDVvtuqXC/QB5dEE3f/RjEiMN3j9n+QRk/soxSSiEwhz
-	 YHF0TejPJxfiE3qpXzhX5xCOkg6A2mNf7dRWrz4+K/WwS4af6pEsSGc4ovtr9YHbVF
-	 MZYycATfJMSkd5ukp4xj4Vgf66zg0SRgvT/ymThjf/1lJDSKtOc4OAxy4jQnXaWmb4
-	 Do/+DpefTcW4w==
+	b=VDca79gljJe9wXPi59wfxPRA80gcJHVPn1gFFQwwXukAAgCY6m+UCq1jRSWpEYjHE
+	 Gvhz+yUA0FJ0DRXr0uj4ASN0fwZeKmaCel8FC8vJHMpJK8sPwSb4qH6Xm4wMxnRQ6v
+	 c4sKkc/Ten6XMMOcN0BmpySIvmsubnmdPxchA6fZMBNVZ14Qr9BE02dohwFZQ6q6or
+	 FA6RQTi7/5UdOYoTze6jpdYlMNvC4opKIcBDPul4aZzvkFGVm2uuH36H7Bddbya+RP
+	 o5bTcNDUdplC2P0Y3e5cCQdKWW+sWJniW8fYhP9kWJ7AKJjhZH03NPuhRKfp+aGnSu
+	 mMy6eAOHfEBng==
 From: Marco Scardovi <scardracs@disroot.org>
 To: ilpo.jarvinen@linux.intel.com
 Cc: scardracs@disroot.org,
@@ -41,11 +41,11 @@ Cc: scardracs@disroot.org,
 	linux-kernel@vger.kernel.org,
 	luke@ljones.dev,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 0/1] platform/x86: asus-armoury: add power limits quirk for G614FM
-Date: Sat, 19 Sep 2026 07:16:16 +0200
-Message-ID: <cover.1789794282.git.scardracs@disroot.org>
-In-Reply-To: <2ac49a94-be85-1a2f-a43a-a376d2545a01@linux.intel.com>
-References: <20260828065904.11355-1-scardracs@disroot.org> <2ac49a94-be85-1a2f-a43a-a376d2545a01@linux.intel.com>
+Subject: [PATCH v2 1/1] platform/x86: asus-armoury: add power limits quirk for G614FM
+Date: Sat, 19 Sep 2026 07:16:17 +0200
+Message-ID: <4d561b599712eeb483c2d1f7c042827c6f8c8719.1789794282.git.scardracs@disroot.org>
+In-Reply-To: <cover.1789794282.git.scardracs@disroot.org>
+References: <2ac49a94-be85-1a2f-a43a-a376d2545a01@linux.intel.com> <cover.1789794282.git.scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -54,32 +54,58 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
+Add a power limits quirk entry for the ASUS G614FM laptop.
+The limits are extracted from the device's ThrottleGear XML
+configuration.
 
-thanks for the review.
-
-While working on some other models it gets tangled with the EXACT_MATCH
-in this one too and did not notice. Some models contains both the "base"
-version (like G614FM) and a minor upgraded version (like G614FM2 or
-G614FM4: it's not that the case but we'll use it as reference): these
-models have, sometimes, different Wattages on CPU/GPU so we can't use
-the DMI_MATCH for these, as the 2/4 models would end up inside the
-base model incorrectly.
-
-Changes since v1:
-- Use DMI_MATCH() instead of DMI_EXACT_MATCH()
-- Place the entry with the other G614 models
-- Fix indentation and field order to match neighbouring entries
-- Set requires_fan_curve, as on the other G614 quirks
-
-Link for v1:
-https://lore.kernel.org/all/20260828065904.11355-1-scardracs@disroot.org/
-
-Marco Scardovi (1):
-  platform/x86: asus-armoury: add power limits quirk for G614FM
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+---
 
  drivers/platform/x86/asus-armoury.h | 32 +++++++++++++++++++++++++++++
  1 file changed, 32 insertions(+)
 
+diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+index 0e301d663..efb4dc66e 100644
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -1988,6 +1988,38 @@ static const struct dmi_system_id power_limits[] = {
+ 			.requires_fan_curve = true,
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G614FM"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 30,
++				.ppt_pl1_spl_max = 120,
++				.ppt_pl2_sppt_min = 65,
++				.ppt_pl2_sppt_def = 140,
++				.ppt_pl2_sppt_max = 165,
++				.ppt_pl3_fppt_min = 65,
++				.ppt_pl3_fppt_def = 140,
++				.ppt_pl3_fppt_max = 165,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 15,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 65,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 75,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "G614FP"),
 -- 
 2.55.0
