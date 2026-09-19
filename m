@@ -1,65 +1,63 @@
 Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1599627466A
-	for <platform-driver-x86@vger.kernel.org>; Sat, 19 Sep 2026 06:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0090F28B4FD
+	for <platform-driver-x86@vger.kernel.org>; Sat, 19 Sep 2026 06:04:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789797658; cv=none; b=EyexMhUQNTd5TIzhHLw2w+sSYTLOzrna2wiUjD4pe0eATIOsVbrTbPBH9Qm2caJgCEYewtkzV7cdxZ9iyqyB6+d7Dl9tEB4zKFdiq1D9hATbpCpjXYeqQWnXKEsL+X01/rFLic6dZkQ296QQuHcYmL7yT/onUtjzSySdYsyOar8=
+	t=1789797857; cv=none; b=h84eOzckQlpL0GiEaSCSPwDPO2FrSoZ9KnmTtlOP+xqD+DYmJvXuIDSfAzlDUnh8NSWnt0HYLs8AMOrO/RDZzDNGHVdqdk4+5FT6z8/+wc1jeRfcvqVaFUQ8ApDSkZKue5gnEksTWKuhSyeUzMPtZx++yLXJ8nlO42M3/2NYwvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789797658; c=relaxed/simple;
-	bh=Jy5TaLrwRqkwt1UO+ssRNusHMelPmB+dJLFY0YgEd2w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2lxTcKxTyZwv+syGr/vFQyhkFjQMW0Ige2gdgQmr3+eYBJErUq3mWX/a6Nuv/8S+sfHL4C33bUwrKE+A3hCD+erkzr9aIqES4f8oYgRq5Rh3U3K7XpqqLAOVaWKfbjBdY9SAq7uCMiRBML4ZrEmzYoj8DeclLCJQFgWKnGTWao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1xGSEwq; arc=none smtp.client-ip=74.125.225.76
+	s=arc-20240116; t=1789797857; c=relaxed/simple;
+	bh=2abGaog2uqm3CvTy296rYjCgN0jQjGmwjbL3PyoEbNI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eifVNcGyUUOvYZ1k+PtgNqJ7R0JA18V6BsNezAVSQX4SlysVbxG/8JlaoAtC7I1W0KZMykBrigkGJm18zZ66kiuBdSaX3uvPJJHSLYSgOEv/u34EEbkXyUR4ljkwCr9Tv7lbSXtJf+7CpGU4xuw5nNxRj5tMld5U0Qatk+LXt3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTFy+bsF; arc=none smtp.client-ip=74.125.225.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1xGSEwq"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-48434392b02so1081846f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 23:00:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTFy+bsF"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4834977ae75so745181f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Sep 2026 23:04:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789797655; x=1790402455; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pMviqo4XEkPwNRzdFDIqATmDkxn/o8ifOVjJBWoYCzQ=;
-        b=R1xGSEwq2VEZ8A9e+m6LrHHkVkkR0ZsdGuZZ/jOQNKibDBXBKT1rKQhXfBJuTgHp3R
-         IyWmj9+fsRzTaoMjeLY1Sfpjjsz7hztfvgGPjHiIBvPD9IuMRiiZchgWz6xp/vEspDZN
-         B/+JGvJYBPiFsxhVqPNZLJwRHHVAe1ZiItrRGCQIBPC/bPOZm8/ctaSYrtKa0COk9fPQ
-         3lJN7i6KFuDnmQYWhWXiRGwxcBgg48Suh2kLK6t5PZZVi1qrRptQXNueRJ1KyHFGTScJ
-         Bt7Klo5Jq8Bnf/mATPeGQzutF6OIuWox/oI8YWzKyylKtYUHnKwyiCyCgHPd5O41txyL
-         MZrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789797655; x=1790402455;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1789797854; x=1790402654; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=pMviqo4XEkPwNRzdFDIqATmDkxn/o8ifOVjJBWoYCzQ=;
-        b=eYbicPMB4h9iftgoxOXr2Jx3Xq0JVaUr8AbrNpOpZxie1kI9ZwYkYxLuiYF5JhxQyj
-         ic6f4q9i+fTUbd0sHISFOd7T4r6xTE+NIRnGR3j14rU/EsLRKOROOmimG6C8wiWk6W5F
-         9V5bojTwjk3rxILw7EiWnXNhcSCg7lRBpHbm9xTsp5FKOWto4Th1poDjjAH+7VgZ2Zqs
-         jEeiWEERJybov4bbfnp67tEqUfFWCdAE6kcpFY+e2bR4pk8dyclnzUzIbptJhGAKdewe
-         mL4g5lTCUd2HflyvG+8P1UiORxpwiW+x7oZvEHdC+MXTGBnhDPe1SG0+3vYKn64UTTUf
-         aV8Q==
-X-Forwarded-Encrypted: i=1; AKwUvBxG3r4Sov24UvNhXOTJybhEc+hI+xt7AwWbEFh6MoA4l7DVrqOYJRu6OJugkJc0cJHeD2yCFE5PmVGZQ2ZtJbjaG/CK@vger.kernel.org
-X-Gm-Message-State: AFuF++l0bTn4qc0imx3n9jCjxOS3cbrtxPT8+xzmbUA+KWfEGmWm0Q4x
-	qAFv5CwKFDGofjr8ikmYKk3qCiDL/5DmElJg4AWZK/NyWJHeJ3YewJn9
-X-Gm-Gg: AYBFou1v62OyXrsnCzUgfRDaToiaNOIPkuV50hbNCb1oGFBqGbJbpsJTGcEiijBSWMV
-	Ys5W7AySowTYuXn/jSHO9K9DkzokWHwM1Kncg1tPJ7hkdG05umcTGvok/NJjhd3Ec/GFxuUC+Ys
-	N9UD00An7EMxD8zdjnz8KWkACgmNpDQ3y3DYUnAgIsqc827AzO/cYjMV24MuEn0TB+oFB22UG+D
-	M+DdNxkCrFaODuKYOWQyjzH3ieZsTGQh13Au4SF86z7PdCvIyOUZO2oh0ZzlES7EztYQM4adyC0
-	rFC0d30wXB2yzCgMWg+fps3GdyRz5MkaOYMsxuSWu+uBwJpDy9Ki66lt7Gfnz0FhHtnJGj1vHZu
-	JxvKCOPFbkPXt1hq90BFoQGoSehQrjpF2dgbNlwqvag7yapalDykQZmkQkpsBBsqtZ0JPJwFWsr
-	RvYuyc3+wr28bwQakrqtkXSb+/nbH5Gcq3UkZ32e9al2iZPIiIQVHuHNsROKxG1uAgj9T0XALB2
-	RBvLqyaMLkmsHMMkIkKOmTU8qkpqqQ8wMp3fNb+sy4SI6FbZmE=
-X-Received: by 2002:a05:6000:2010:b0:487:27f9:82b with SMTP id ffacd0b85a97d-48727f90b71mr525893f8f.32.1789797655106;
-        Fri, 18 Sep 2026 23:00:55 -0700 (PDT)
+        bh=7s4lYPPXaaFtdkMffgNQedRCzhSo5j6VQxz7Xg5Segg=;
+        b=CTFy+bsFkFQFWgrUlXjKRAqQK7Z29bioSZduLEMLlTdeEnx2qDpHylcATWRh8kGTRG
+         nl92ARU7XicyWJexcwU8gfIPWNzeqRNYoh0iS1wbjz02cKX0FGhhNIB/uK5DXm7q6uSz
+         hiMHU3iI/I1/+r8vwHYaM7fij6JaAZVYPxjzh4tAXH1c2AKZk8nYpqzJ9HpNDgvMg1BB
+         DsgU7/jtSl1vJAmS+CGGrDA8y3wefwr/sBDv0xH+/Fx2WRca+/KNb0ML28mr9yvieucO
+         OA99DP+itGJC97hP5HOHfNDJFHCEh3QKHP0lhHhjS3s+lybcTmbNEz1d+vJsv6rv0haN
+         b29g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789797854; x=1790402654;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7s4lYPPXaaFtdkMffgNQedRCzhSo5j6VQxz7Xg5Segg=;
+        b=iHbz+WPkDFq40olIDSzEmVC5YsuBqk67mOhKhCId5w4wsr4FwcCpsuUH7pfpALhZD/
+         s38i31xUhJe3ZZpST1f+2IZ6wCTbZYAuPeDu+PjpgHlPFGbuOHhFF+qU6WSLJxvbnYJj
+         bJ+R0CllJtMYY85jvx32vxTL64gQzVDoNFeAQdci7WTi85Dl6+W0DhTkIzijoU2CGpnZ
+         LwxoAaOLCW6wbiZcqIp+neBFfahXKlyHlt28iijpERIq3TmgMyNyM8qFPl5bAhxgFMGJ
+         MMsIbJUrFpU5wb7ELOUmaD6b7fROp+GgVbkGUmpNdjg6qrhW4cQbOSah0Gx/vi1LttQE
+         +L+w==
+X-Forwarded-Encrypted: i=1; AKwUvBxDD23NSrvSY5/23K6OW68jlh++XTUFI23YMup377g8wW0IXR1tmP1UEiSpS+Xg9fSUbSHu0+eRE3QqyEnSBqoVNJty@vger.kernel.org
+X-Gm-Message-State: AFuF++k0P6jnhj+rPfkBSME6pOY8PfHXGkSK5G/Flnu/5u8MoB0N3gM4
+	fN+MyKGY28RQfe/Uu4nmTDfi+rm1sFWqmzA0AxcQJfDcda98Fs8A+uym
+X-Gm-Gg: AYBFou3BvaJeqTuDWPGToWLLLuDEjF/ZfCBhusDuq3aVIzRNXlgg1o0/J3zN6ojAObd
+	IkKLoLT3BF4ZM+i1a7+5Qe/Pd4atVOvUmUBeJbX/wjToDJoXwjLkZW4VCWN26I5afROhsBvtA09
+	9JgnsOA4JTdpuEknpN/CcKk/8UykzIka0s+YXQM5YNTFOAxJyUlmk5VKZIA0uPBuL4NV6IR186F
+	2zrVEBn4myn4IYID5toKHOqFT7XlnIPxeb+EwexfnRkUwh/HbhkBaLZVdCBb0CvaU9c5OlL303h
+	XyhUIG+Ea/IKAPz/EhRmLqhDGFP8Yl1WaboJvsompdM9DETi1O5ZZli75ieK/F1+gk53LOHO1jr
+	YJkQw1+OSO+kcWDQAvzP7fLXvsTzjPsSitJ3mZxqWuks0FT8C+vf6a03aVsRxneCkqDFHXute3z
+	MPucH3B+EeY2IE3REu8pCFYPceyRv4MeWlBofmzIwxgbtqmPop8Y7f+axlED77BPwVParoPm0nN
+	JTAVln9op0V9Imf0xLI1wHjWBkJqtpPfZJIM8ZybtyIhB00MiTj
+X-Received: by 2002:a05:600c:8709:b0:49d:870:7a69 with SMTP id 5b1f17b1804b1-49fc573514bmr117200795e9.12.1789797854220;
+        Fri, 18 Sep 2026 23:04:14 -0700 (PDT)
 Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4872456301dsm4891022f8f.18.2026.09.18.23.00.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fc56aab7csm81576745e9.1.2026.09.18.23.04.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Sep 2026 23:00:54 -0700 (PDT)
+        Fri, 18 Sep 2026 23:04:13 -0700 (PDT)
 From: Muhammad Bilal <meatuni001@gmail.com>
 To: Jorge Lopez <jorge.lopez2@hp.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -68,14 +66,11 @@ Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org,
-	Muhammad Bilal <meatuni001@gmail.com>,
-	Josh Snyder <josh@code406.com>
-Subject: [PATCH v4] platform/x86: hp-bioscfg: fix 16-byte heap overflow for empty auth token
-Date: Sat, 19 Sep 2026 11:00:37 +0500
-Message-ID: <20260919060037.84602-1-meatuni001@gmail.com>
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH v2] platform/x86: hp-bioscfg: fix OOB read in hp_get_integer_from_buffer() on unaligned input
+Date: Sat, 19 Sep 2026 11:04:04 +0500
+Message-ID: <20260919060404.85742-1-meatuni001@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <9d60ef62-a53c-bb13-ff6a-0a195cf2f6f3@linux.intel.com>
-References: <9d60ef62-a53c-bb13-ff6a-0a195cf2f6f3@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -85,80 +80,85 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-hp_calculate_security_buffer() special-cases an empty authentication
-string and returns a fixed 4 bytes (sizeof(u16) * 2). But
-hp_populate_security_buffer() does not special-case that same input:
-for any authentication string that does not start with BEAM_PREFIX,
-including the empty string, it always builds "UTF_PREFIX +
-authentication" and converts the result to UTF-16, writing a 2-byte
-length header plus 2 bytes per character of "<utf-16/>" (9 characters),
-20 bytes total, regardless of how long "authentication" itself is.
+hp_get_integer_from_buffer() aligns the read pointer before dereferencing
+it:
 
-The caller, hp_set_attribute(), sizes its kmalloc() buffer using
-hp_calculate_security_buffer()'s return value, so for an empty
-authentication token it allocates 4 bytes for the security area but
-hp_populate_security_buffer() then writes 20 bytes into it, causing a
-16-byte heap buffer overflow.
+  int *ptr = PTR_ALIGN((int *)*buffer, sizeof(int));
 
-The authentication token used here is the current admin/setup
-password, which is an empty string by default until one is
-configured. Any write to a writable BIOS attribute while no admin
-password has been set reaches this path.
+When *buffer is not 4-byte aligned, PTR_ALIGN() advances ptr forward by
+1-3 bytes to reach the next aligned address. The bounds check that
+follows does not account for that advance:
 
-Fix by removing the special-case early return for an empty string in
-hp_calculate_security_buffer(). The generic calculation that follows
-already accounts for the UTF_PREFIX correctly, which naturally yields
-the same 20 bytes that hp_populate_security_buffer() writes for an empty
-string, avoiding duplicate logic for special cases.
+  if (*buffer_size < sizeof(int))
+          return -EINVAL;
 
-Fixes: b2715aa2e135 ("platform/x86: hp-bioscfg: spmobj-attributes")
-Reported-by: Josh Snyder <josh@code406.com>
-Closes: https://lore.kernel.org/platform-driver-x86/20260402-hp-bioscfg-overflow-v1-1-6985f8c9e67c@code406.com/
+This only confirms 4 bytes remain from the original *buffer, not from
+the aligned ptr. If *buffer is unaligned and *buffer_size is between 4
+and (pad + 3) bytes, *(ptr++) reads up to 3 bytes past the end of the
+buffer.
+
+*buffer_size is also under-decremented on every call, aligned or not:
+
+  *buffer_size -= sizeof(int);
+
+*buffer is advanced to the aligned, post-read position, but
+*buffer_size only accounts for the 4 bytes of the integer itself, not
+the alignment padding skipped to reach it. Each unaligned read leaves
+*buffer_size overstating the true remaining space by the pad amount,
+an error that compounds across repeated calls against the same buffer
+(hp_get_common_data_from_buffer() calls this in a sequence), making
+later bounds checks against *buffer_size progressively less reliable.
+
+Compute the padding explicitly, check for it, and account for it when
+advancing *buffer_size, so the pointer and the remaining-length count
+stay consistent with each other.
+
+Also switch ptr from "int *" to "u32 *", matching the type of the
+output parameter it's really standing in for, and size everything off
+sizeof(*ptr)/sizeof(*integer) instead of the bare "int" type name.
+
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
 Cc: stable@vger.kernel.org
 Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
-Changes in v4:
-  - Straight re-generation against current mainline: v3 was written
-    against a tree state that had a duplicate "authlen = strlen(...)"
-    assignment (one copy meant to be removed, one meant to survive),
-    which current mainline does not have. That mismatch is why Ilpo
-    needed "special trickery" to apply v3, and why the manually-applied
-    result ended up with no authlen assignment at all (reported by
-    kernel test robot). The v3 diff itself was fine, as Ilpo confirmed
-    ("authlen is not uninitialized, so only the early return should be
-    dropped"); this is that same one change, regenerated from scratch
-    against the actual current tree so it applies cleanly without manual
-    intervention.
-
-Changes in v3:
-  - Remove the special-case return entirely instead of adjusting its
-    formula, avoiding code duplication as suggested by Ilpo Järvinen.
-  - Credit Josh Snyder who previously noted this approach.
-
 Changes in v2:
-  - None for this patch; resubmitted as part of the v2 series.
+  - Use sizeof(*ptr)/sizeof(*integer) instead of bare sizeof(int), and
+    change ptr from "int *" to "u32 *" to match *integer's type, per
+    Ilpo Järvinen's review.
 
-Link: https://lore.kernel.org/r/20260803143037.93105-1-meatuni001@gmail.com [v1]
-Link: https://lore.kernel.org/r/20260812111829.172273-1-meatuni001@gmail.com [v2]
-Link: https://lore.kernel.org/r/20260818191120.38556-2-meatuni001@gmail.com [v3]
+Link: https://lore.kernel.org/r/20260824225610.18471-2-meatuni001@gmail.com [v1]
 ---
- drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-index 4d94e48..abf8ce2 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-@@ -47,9 +47,6 @@ size_t hp_calculate_security_buffer(const char *authentication)
- 		return sizeof(u16) * 2;
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 309634c..f59957e 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -38,15 +38,19 @@ struct kobj_attribute common_display_langcode =
  
- 	authlen = strlen(authentication);
--	if (!authlen)
--		return sizeof(u16) * 2;
--
- 	size = sizeof(u16) + authlen * sizeof(u16);
- 	if (!strstarts(authentication, BEAM_PREFIX))
- 		size += strlen(UTF_PREFIX) * sizeof(u16);
+ int hp_get_integer_from_buffer(u8 **buffer, u32 *buffer_size, u32 *integer)
+ {
+-	int *ptr = PTR_ALIGN((int *)*buffer, sizeof(int));
++	u32 *ptr = PTR_ALIGN((u32 *)*buffer, sizeof(*ptr));
++	u32 pad = (u8 *)ptr - *buffer;
+ 
+-	/* Ensure there is enough space remaining to read the integer */
+-	if (*buffer_size < sizeof(int))
++	/*
++	 * Ensure there is enough space remaining to read the integer,
++	 * including any padding PTR_ALIGN() introduced to reach it.
++	 */
++	if (*buffer_size < pad + sizeof(*ptr))
+ 		return -EINVAL;
+ 
+ 	*integer = *(ptr++);
+ 	*buffer = (u8 *)ptr;
+-	*buffer_size -= sizeof(int);
++	*buffer_size -= pad + sizeof(*integer);
+ 
+ 	return 0;
+ }
 -- 
 2.43.0
 
