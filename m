@@ -1,36 +1,36 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4386F30F927;
-	Sat, 19 Sep 2026 05:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459D52C17A3;
+	Sat, 19 Sep 2026 05:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789795821; cv=none; b=FoU7rZZehOWPP/OkmBDy4KH7R78IiHuexFGyv5eydU97DUGqfNvx2wlpL6o0RmXZsRNlyP+C1HfsXbbcjMcEhJ9adopkM+MjrfqW/UU9HdXx3iBOAViImSgo0vdmK8VyaKDG4W0tf3Jn/UMHvi8akT3Fj1N8hakyo6JTvAhUWY8=
+	t=1789795836; cv=none; b=EwCzKXIEdyA3d7wSeakGerM85m71cwjMbjHVIzbF4xSdp/041P5gth+MYZ4/r9Luw+RVZg96Xaj8Uij8otFQx+w14u8z4lF11mk5wadnFANpoUa7q6qeekLGWeLGPlFAzyEy/oIGoa/1xdtKa6QB0CIaDuAL038sAplFN3bs1sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789795821; c=relaxed/simple;
-	bh=quJW+LmrZG3fAKqMKYuSVlbqfF8dp7eaEnPwshIbx+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDNjcXYlplBzBDQVHS5aAm0Y5jQefQTCbPwIrZe5VzpKPcqTOyC6eNETq85HP+iQByY2uvzXvF4hlWfx6GBfKcNrE0IXHCjWPXI9FrAU3P2KHihoT40lFFab1j8m0K647/hyJbh/X37bEMbY6h+H/ubF3i1veFMM8aZvS0Eo5yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=EIjZrSOT; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1789795836; c=relaxed/simple;
+	bh=lQ9yfMA9hP5yHacaffa3wfIJEJ3nqjToWmL/wuSkNVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nS78PPdTvZALc14T9TMwVeOT4lKcqzb3/SSdXPChJ64P4EzzHH0wi8Y4xIP+c5NJoZXUXETIPhyY6WhDFhqWWnvwqhqZIjex3mp3ocvMSWEZPds6du7dAzKVSHRLSUWSSbKLLMV51KqIMi8wHfjxMabndLo0p0o02KghaQrAB8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=NQYUONUc; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="EIjZrSOT"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="NQYUONUc"
 Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id E73F38101F;
-	Sat, 19 Sep 2026 07:30:16 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 522728101F;
+	Sat, 19 Sep 2026 07:30:33 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id mn51gvusGSud; Sat, 19 Sep 2026 07:30:16 +0200 (CEST)
+ id W1QOLK4OyBea; Sat, 19 Sep 2026 07:30:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1789795816; bh=quJW+LmrZG3fAKqMKYuSVlbqfF8dp7eaEnPwshIbx+Q=;
+	t=1789795832; bh=lQ9yfMA9hP5yHacaffa3wfIJEJ3nqjToWmL/wuSkNVs=;
 	h=From:To:Cc:Subject:Date;
-	b=EIjZrSOT2pRXykC8TKrNzJMvLNvdFRtDADPVzTFTyildZStp5jNGzYDq3RPc9jI55
-	 klKoURQj0dz1q9ASpY6qZScRe6fr7DJEHeUYS1slPjMLowwXzcoUzDc+qTz4OhYK31
-	 /sk+In+oUEPlwZV0C+h97soGBwrA9WnL1HH53SQhak71TbMZPyR6p8Ty6d6Bx8eFXu
-	 3WwKlDMt721gN4zLxXhvLP0BjTOJRtLbXpcR0fR5eHgBkhAk3KoR1cr5k55zFFtC/a
-	 8Y071QGPIFL/SMJphH5jlgfF5/VkPvkr5VBa83rb8tAg3DiasT5WcgYwJDtE1A0+O5
-	 /VQYxeF3XteAw==
+	b=NQYUONUcsTKWKoFoKMcyAECNnVq1TCVn+spCjDauzJ5zkp4jp7709hEIAQ7Gjupml
+	 25xAXwCMPWDCIwieQyz2leTB+DndBo2JfdIUWEXkHgAHGPtMZFGtY/LMF8kioIPnAw
+	 8m9283swCNWZaR9tcUCtIjmZL3ZhYk/j28KRP5KochVUDKloESJqg/eirJRTUoWkZC
+	 IkBP2KdeM3al72/uB7CamJAWWFSvXZTzOVF1jzjsUPchq2ESFGU/2b0czu4/3pb05g
+	 aWsg4XNPMzs/dwpctZ596BkVXlQumnHZN52cXcfuTcu35Trf/oAoA9nhTY3/J5y2RM
+	 0fyVQdVOjcK3Q==
 From: Marco Scardovi <scardracs@disroot.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Hans de Goede <hansg@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Hans de Goede <hansg@kernel.org>,
 	Corentin Chary <corentin.chary@gmail.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-armoury: add power limits quirk for FA608UP
-Date: Sat, 19 Sep 2026 07:30:00 +0200
-Message-ID: <20260919053000.24293-1-scardracs@disroot.org>
+Subject: [PATCH] platform/x86: asus-armoury: add power limits quirk for G713QR
+Date: Sat, 19 Sep 2026 07:30:16 +0200
+Message-ID: <20260919053016.24335-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,53 +50,35 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-add power limits quirk entry for ASUS FA608UP laptop.
+add power limits quirk entry for ASUS G713QR laptop.
 The limits are extracted from the device's ThrottleGear XML configuration.
 
 Signed-off-by: Marco Scardovi <scardracs@disroot.org>
 ---
- drivers/platform/x86/asus-armoury.h | 31 changes(+/-)
- 1 file changed, 31 insertions(+), 0 deletions(-)
+ drivers/platform/x86/asus-armoury.h | 13 changes(+/-)
+ 1 file changed, 13 insertions(+), 0 deletions(-)
 
 --- a/drivers/platform/x86/asus-armoury.h
 +++ b/drivers/platform/x86/asus-armoury.h
-@@ -749,6 +749,37 @@
- 			},
+@@ -1056,6 +1056,19 @@
+ 			.requires_fan_curve = true,
  		},
  	},
 +		{
 +			.matches = {
-+				DMI_MATCH(DMI_BOARD_NAME, "FA608UP"),
++				DMI_MATCH(DMI_BOARD_NAME, "G713QR"),
 +			},
 +			.driver_data = &(struct power_data) {
 +				.ac_data = &(struct power_limits) {
-+					.nv_dynamic_boost_max = 15,
-+					.nv_dynamic_boost_min = 10,
-+					.nv_temp_target_max = 87,
-+					.nv_temp_target_min = 75,
-+					.ppt_pl1_spl_max = 90,
++					.ppt_pl1_spl_max = 80,
 +					.ppt_pl1_spl_min = 15,
-+					.ppt_pl2_sppt_max = 90,
-+					.ppt_pl2_sppt_min = 35,
-+					.ppt_pl3_fppt_max = 90,
-+					.ppt_pl3_fppt_min = 35,
-+				},
-+				.dc_data = &(struct power_limits) {
-+					.nv_temp_target_max = 87,
-+					.nv_temp_target_min = 75,
-+					.ppt_pl1_spl_def = 45,
-+					.ppt_pl1_spl_max = 65,
-+					.ppt_pl1_spl_min = 15,
-+					.ppt_pl2_sppt_def = 54,
-+					.ppt_pl2_sppt_max = 65,
-+					.ppt_pl2_sppt_min = 35,
-+					.ppt_pl3_fppt_max = 65,
-+					.ppt_pl3_fppt_min = 35,
++					.ppt_pl2_sppt_max = 80,
++					.ppt_pl2_sppt_min = 15,
 +				},
 +			},
 +		},
  	{
  		.matches = {
- 			DMI_MATCH(DMI_BOARD_NAME, "FA608WI"),
+ 			DMI_MATCH(DMI_BOARD_NAME, "GA401Q"),
 -- 
 2.55.0
