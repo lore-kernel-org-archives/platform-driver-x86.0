@@ -1,59 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC137083C;
-	Sat, 19 Sep 2026 05:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057A3A0B05;
+	Sat, 19 Sep 2026 05:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789795117; cv=none; b=YCX2EJ/Ns98S8bZbUyx51n9K13MxPhLaFa9I+O8owlA4Fex2wwhPhuV0gUfooeVsYXayn3BUZ509fvlswAgCDoz3woYa7W6bkfgHDM6ijTkPtSvfZRVngaD9w0V/UxyiP04ynPUoNztUsaL5SY+MVKqEM3p559Ss2NVaEEGG33E=
+	t=1789795788; cv=none; b=TDHiMMs6PCy+J6z1FqpjskhStCnS32XwIcG9ugssKUjR8a14DtFMFXw6WmVdthfu4lOJ88T0ZlrFUQNh7Tb+Hg1yd++Q06H9oCtfw0dw1dkZHBAwUFhQwqcqH0L4U2wsyhyl2id+FCaUCTTdScB3TtXYOG4qpuX3JS1YfccojZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789795117; c=relaxed/simple;
-	bh=a8qdtL7EWICimlI1nt2nXMPjAaA3O6GDY2kFEuzOOqA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=dbhJ5u+k+NG3i/CBlIRF3sR6hvsYpPazGL3YowaE7E5TX/HnZybN7appg6afOq1G13VHhBK2GYKqUP36EdgD9jJVOfLBAaCqi++pLt7enmCePb6C13ehe3UZByw5j1vcJEm0G9gE6kg5Papr5J42S5LAdJR9d8FK+nXr0RWNiL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+XISzl9; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789795788; c=relaxed/simple;
+	bh=0SGaHccmm4ibXWSb/5TRhO9LUaNsTZRlvdF0gsyjlgQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qaFEZ2jVn3nMS6/aXoI3SrwdRk2W4DSAWs43+Y7kScIOpE6XaRSm/JNiH93aj/FK45VU4Mg1L2TJ4HAisK48/NNUzp8WFikCaF4yFFDhAm2ssDgeddFb82QIgXmhbw5xeVxMRK07GvrXV6kqWV9VBMz0PgUsuFesZEuYPTJVfsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=A/XNoxrU; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+XISzl9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789795114; x=1821331114;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=a8qdtL7EWICimlI1nt2nXMPjAaA3O6GDY2kFEuzOOqA=;
-  b=R+XISzl9JLNjj7yhjC4hbmIVhvjgBUJ9CAm/L5rfo695Tt8y7RCdrHea
-   +XmJx9Oa0O9k2vZktZI31WlbkRmUiKR1RC6AuasS5YyDmVdP68sfjUKzc
-   NKh+bbadosRxUEj/TLvALo2abgLITw2Y+F7NsiwA/R6Wo0TC0jJbxEAur
-   fgczlO2aTvMqUEgbKGamGuK93/y1zC/az6/PdodlUd7itmoiI9MY9YK5d
-   QkELkVzOUjBzC7D1hFSMBoh2SgWdEdx+eZw1VR+JKsdwVjo8wN4Bc0qdS
-   2TzjPq1czBQonNuf2wXhIJZBHiFMHhkNqdv1igiO6sk79zCJiatC/vwcG
-   Q==;
-X-CSE-ConnectionGUID: kFQUX324SaiVT/+CK+bcUg==
-X-CSE-MsgGUID: /QvL04KiSyOP2pssRZCvDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="100996810"
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="100996810"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 22:18:34 -0700
-X-CSE-ConnectionGUID: zVqK4maSTgmqONh6odSF3A==
-X-CSE-MsgGUID: R3XfW6M4RIiPStawKauQ4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="268422215"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO xpardee-desk.intel.com) ([10.125.109.168])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 22:18:33 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="A/XNoxrU"
+Received: from mail01.layka.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 9B05980DC8;
+	Sat, 19 Sep 2026 07:29:44 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id yOeq7WyUnqoc; Sat, 19 Sep 2026 07:29:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1789795784; bh=0SGaHccmm4ibXWSb/5TRhO9LUaNsTZRlvdF0gsyjlgQ=;
+	h=From:To:Cc:Subject:Date;
+	b=A/XNoxrUoWjIF4Dcj6nqkqTxL+hAbCyi6HHOtICHi/DDKCfOYkLitFuTUKB+3kpL1
+	 m+YnHIZze5C3Hfxaw2RWmqfMd9+/K1iNxOBAwLbBY7p4b8DOFHseew5KUolx3Pu+ey
+	 1ITFheK4bkWA4n+vwLr8Gb7qNB3K+BTTBPKin1LXpI9xg7GIOUuAlFCN6H92JCEmkp
+	 HEwU6FyrXR9fY5QgBje3K3YOTo2YqjysfQk08newrESnGwjIEQ8AYGzHhpJS0Vkb5l
+	 Y06YXBjfEqcUcF+EVQ9/7DxXMzr6Ug7AeVlAtVlfmoFI9xNpiIVNm/9zES6stAyVqZ
+	 r3/0o+6lF6rVw==
+From: Marco Scardovi <scardracs@disroot.org>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Denis Benato <denis.benato@linux.dev>,
+	Luke Jones <luke@ljones.dev>,
+	Corentin Chary <corentin.chary@gmail.com>,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/pmc: Fix stale NVL PCD-S S0ix_LPM telemetry constants
-Date: Fri, 18 Sep 2026 22:18:28 -0700
-Message-ID: <20260919051830.565240-1-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: asus-armoury: add power limits quirk for FA608PM
+Date: Sat, 19 Sep 2026 07:29:13 +0200
+Message-ID: <20260919052913.24147-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,56 +50,51 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Nova Lake PCD-S S0ix_LPM telemetry layout changed. The PCD-S telemetry
-GUID was changed to reflect the layout change, per the client GUID
-revision rule.
+add power limits quirk entry for ASUS FA608PM laptop.
+The limits are extracted from the device's ThrottleGear XML configuration.
 
-nvl_pcds_d3_status_1_map[] was correctly updated, but two companion
-constants were never updated to match:
-
- 1. NVL_PCDS_NUM_S0IX_BLOCKER (core.h) is 71 instead of the actual
-    number of blk == 1 entries across nvl_pcds_blk_maps.
-
- 2. PCDS_LPM_REQ_GUID (nvl.c) is still 0x01091102. It was never
-    bumped to 0x01091103 to reflect the S0ix_LPM telemetry metadata
-    layout change.
-
-Both constants describe the same S0ix_LPM/blocker telemetry region
-for PCD-S, so fix them together in one change.
-
-Fixes: 41354f4c8a79 ("platform/x86/intel/pmc: Add Nova Lake support to intel_pmc_core driver")
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
 ---
- drivers/platform/x86/intel/pmc/core.h | 2 +-
- drivers/platform/x86/intel/pmc/nvl.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/asus-armoury.h | 29 changes(+/-)
+ 1 file changed, 29 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index b4c7399f8369d..e55164e5807fd 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -323,7 +323,7 @@ enum ppfear_regs {
- #define NVL_LPM_LIVE_STATUS_OFFSET		0x1760
- #define NVL_LPM_NUM_MAPS			15
- #define NVL_PCDH_NUM_S0IX_BLOCKER		107
--#define NVL_PCDS_NUM_S0IX_BLOCKER		71
-+#define NVL_PCDS_NUM_S0IX_BLOCKER		70
- #define NVL_PCHS_NUM_S0IX_BLOCKER		54
- #define NVL_PCDS_PMC_LTR_RESERVED		0x1bac
- #define NVL_PCDH_BLK_REQ_OFFSET			53
-diff --git a/drivers/platform/x86/intel/pmc/nvl.c b/drivers/platform/x86/intel/pmc/nvl.c
-index 8dabf2511dd9d..1ed02332dbfce 100644
---- a/drivers/platform/x86/intel/pmc/nvl.c
-+++ b/drivers/platform/x86/intel/pmc/nvl.c
-@@ -14,7 +14,7 @@
- /* PMC SSRAM PMT Telemetry GUIDS */
- #define PCDH_LPM_REQ_GUID 0x01093101
- #define PCHS_LPM_REQ_GUID 0x01092101
--#define PCDS_LPM_REQ_GUID 0x01091102
-+#define PCDS_LPM_REQ_GUID 0x01091103
- 
- /*
-  * Die Mapping to Product.
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -713,6 +713,35 @@
+ 			},
+ 		},
+ 	},
++		{
++			.matches = {
++				DMI_MATCH(DMI_BOARD_NAME, "FA608PM"),
++			},
++			.driver_data = &(struct power_data) {
++				.ac_data = &(struct power_limits) {
++					.nv_dynamic_boost_max = 15,
++					.nv_dynamic_boost_min = 10,
++					.nv_temp_target_max = 87,
++					.nv_temp_target_min = 75,
++					.ppt_pl1_spl_max = 100,
++					.ppt_pl1_spl_min = 45,
++					.ppt_pl2_sppt_max = 115,
++					.ppt_pl2_sppt_min = 60,
++					.ppt_pl3_fppt_max = 135,
++					.ppt_pl3_fppt_min = 80,
++				},
++				.dc_data = &(struct power_limits) {
++					.nv_temp_target_max = 87,
++					.nv_temp_target_min = 75,
++					.ppt_pl1_spl_max = 68,
++					.ppt_pl1_spl_min = 35,
++					.ppt_pl2_sppt_max = 71,
++					.ppt_pl2_sppt_min = 36,
++					.ppt_pl3_fppt_max = 74,
++					.ppt_pl3_fppt_min = 70,
++				},
++			},
++		},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "FA608UM"),
 -- 
-2.43.0
-
+2.55.0
