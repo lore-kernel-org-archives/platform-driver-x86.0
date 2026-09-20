@@ -1,359 +1,310 @@
-Received: from sender5-op-o15.zoho.com (sender5-op-o15.zoho.com [165.173.182.15])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010000.outbound.protection.outlook.com [52.103.20.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B64D471CED;
-	Sun, 20 Sep 2026 19:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.182.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307ED244667;
+	Sun, 20 Sep 2026 20:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.0
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789933539; cv=pass; b=KtCKF3WffnpDoofcxanH2uNgCPjEQieNdMcOWo7d475OKwxYHNz2/GZ4jC/X3iiOgZNyXO1MfKRDu12yEgGwnmJy7+oZpAlXrjlrLxRE2bfcREotWfUrIdkGnxKeymWuaxJHxM1EdfjCB9PGTaW63L0r9aAvbjMz9EbHN/An9Do=
+	t=1789936112; cv=fail; b=eM1owjRlK81NYsgcyRcKnOo1dxidZduONFvv/BQ/ptfNFC+LO+eGUBDiiOO4xFk3YxFoMfvHItoT1KSjAiTDtmaER8w1Swf6z9z2Sv5ASebOnxcXHkYMmBEysCyHvwjKW3xcczfNZgqhEOP33fM61jIx+Hb23xx5R9ZcusRPKfA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789933539; c=relaxed/simple;
-	bh=5u8zaxPREYZxlq84Fkr7UzG0gA1V2a5MvJVVd04e+Bk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eN9nOTY9KiAF/uMrTT+mgvxlgS++OG19P111Shzc8I11SMwEXo8O0kPSeBM24SQYlMEm2/UvktJZyW/2HZBf4pF931cdOB2wNBhDCwFGkOgoEXWyDWzqxAJazLtUsz+ini/Ztz3bPcuC/ELW8ASVMJR0TsQP1cFSK9UTdtXnA0o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=ONCh1drJ; arc=pass smtp.client-ip=165.173.182.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	s=arc-20240116; t=1789936112; c=relaxed/simple;
+	bh=KFQ6xxo6iS+KeFuqXqFeLxjHBzu8xw1q6f6oq5XLtcI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=PC6YZw0UJYDph8l1GLCRVQB9sAFg/P00Hm+SGTrrwcDMPamWgX+ue9Ng5Hed0UyEGUuQgLZaTjOt2Tibv+1jOG2FCpNtsp+DWoGx2foWsZd67EOJTf9GOTpDbdmigWn/HS1OFQXGCO+1XezWoxApYIl4ALtqQpKpEw9KoS9G6w8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=qQ8hZg/J; arc=fail smtp.client-ip=52.103.20.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="ONCh1drJ"
-ARC-Seal: i=1; a=rsa-sha256; t=1789933289; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=gmLC1VQOcAI+77m5QhnhhkpC2ur+szOw8SvrEH+GfegLZGuGTC2TM2MCh/+o+69+P3KUW9AlfX8veHZmnkq+0ApJSKrlphB8kmJzKEMLoLJdkKjkYgzEacA8qFbCefvC/w0fTKSM3PXuFN/KMpsT7oiIJtOKX1HxL9aJRZrdBac=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1789933289; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=rsOlzcBi+bit3bNNiL4SBRxL2dg7cwN2NXcGIs1niS8=; 
-	b=kWNOoO9BTzYsCDVPYtPVzLqkTsjiU8Iar4NP4kOOKJTceBeeuTdB6EUa/dlFzoGjoqJ2NbGzJyHvHsPCGKklAXP3X+1Owe1puY3ITHwp3ISU86TlIFL6F759iE1m+0L2NxTXcw37+lGfT3XvbvKfB+r4lsBY+okwdA/kBq23Wwc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789933289;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=rsOlzcBi+bit3bNNiL4SBRxL2dg7cwN2NXcGIs1niS8=;
-	b=ONCh1drJZ9biPsCT1kXWz/GIxrghm0X7fTLc1ZgDyTRTA7Paab6c2pvLUO33wtt5
-	owaY2gK5IF0u53m3k0t8dp4gCsy3V8FZ3ThTYkpZXEmV9aajZajHOKhrxAMLoxBNEsG
-	F/891wz9jmS1nus0OW99V6Gy5S8/LplrSb7CTY/UbhMmvU4MkmWlTyc0A7bNIcVp9ut
-	MbpyfoJUsjRT2ZUVCDL8X6Q9pJJw7ssSrsph0SLnS6/i/43JrieK6Cg4ejPR4nS2Z2n
-	0ro7Gg28UcmkltrYSBN/DgCzjusFeJAWwtDBGFVxrYfDjXLZbA76jofAHwqtxX83oRC
-	LE23zY0PNw==
-Received: by smtp.zohomail.com with SMTPS id 1789933287945171.018860174824;
-	Sun, 20 Sep 2026 12:41:27 -0700 (PDT)
-From: Rong Zhang <i@rong.moe>
-Date: Mon, 21 Sep 2026 03:40:27 +0800
-Subject: [PATCH v7 13/13] platform/x86: ideapad-laptop: Fully support auto
- keyboard backlight
+	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="qQ8hZg/J"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aVHlB/i/w+IkXqcVLh4k86Apr17FIkVZg6e891i7R8JTSNqZtpNYOgiB/ysaKYL+V7sQhMHd0Ai75cusUmTsXIMi9DhOQQ7egQLErk7xpM/351dwx2cXNd1CqoQYu+oa1GTpP1MCYu0WpJ8oNbxAD5kMBfB8YoXgdm9NghDxhfLd7Oxd2cmRKVhJYgLI/Z7YClk+KmaocbYYywgmQdJc3MGiAyZKaSIoj0NqstkRHbrbqymvZ4hFK8JrmZidFozeZAlt0np7tnjt60ceFVVrT5wXTQpv/eQLPZQZMB/PzhB4z/+hUWBzJh6VyogTJriNXJbZKgrv8sHXjWhk44I2Mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pIqGSKVuPxHgqh9/xigk+MGy+DFGjhH62W77G64hi3Y=;
+ b=bAaQ5uIXBMQOBTZOsuI8BhID6UE279TQKvoAmHW9O8nxHZbY7C0KLXXm7eIeoKK5s3C2fsCcIcth4groc7ysKGYsZ2nej5VeRM17ADm4OthBaftJlNTHgsWneHwRwulcsVuWRADkghIJ1PnZhg4eno39SY+go/ozwFU/SOaBhjk5Gdw4Jb+v6tISxYarqDY4hcrCE1eyjnfxi8g2klN5QQQPhnN7rUVIB2KZWB5MAxYEX0cfvsyEeBwfcfa/4gRORcRiHYJjNyU1G4wlzjm41qYwctmYadTuYHEfJo9fTeH2q7741vgixnrhpmU/q9y7ehd5QS7AXNzIWCxTbmiS0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pIqGSKVuPxHgqh9/xigk+MGy+DFGjhH62W77G64hi3Y=;
+ b=qQ8hZg/Julr67iXoRWzxRVQMula+uJHMGrEJWz0aDO/cdc73eCgL6rqeOw3TbXahTNLWUf2UajCsN0pA15/TOkC9rkz6veRj3JXFlE7neE6gE6XT4uLE2Z4gJ96+o266wTABdWxLr5Vs+c8HMoA2gFepca7Hf/4U6pJARngAqwrvApNBRo6/neoQS0D/qWHB/18TtnCJ37WzV8H+mZD+6waWAgL7H2jIwvnD8ovD82sWG/lEPCyTTBp0+RdsmNb4+mNAFMjATn9Q4NJ2xeA0+TjaSSLnaEujm06IfteXmHl7OuF2r9bd/nUvYK24toaXd8rI1E3AcWfsRwvBigRRGg==
+Received: from SN6PR19MB2303.namprd19.prod.outlook.com (2603:10b6:805:56::19)
+ by SA1PR19MB4927.namprd19.prod.outlook.com (2603:10b6:806:1aa::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Sun, 20 Sep
+ 2026 20:28:27 +0000
+Received: from SN6PR19MB2303.namprd19.prod.outlook.com
+ ([fe80::805c:7f80:c69f:876a]) by SN6PR19MB2303.namprd19.prod.outlook.com
+ ([fe80::805c:7f80:c69f:876a%5]) with mapi id 15.21.0428.014; Sun, 20 Sep 2026
+ 20:28:27 +0000
+From: Marco Giunta <marco_giunta@outlook.it>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Hans de Goede <hansg@kernel.org>
+Cc: Huang Wei <huangwei@kylinos.cn>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Ike Panhc <ikepanhc@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Giunta <marco_giunta@outlook.it>
+Subject: [PATCH v2] platform/x86: ideapad-laptop: Report camera switch as SW_CAMERA_LENS_COVER
+Date: Sun, 20 Sep 2026 22:28:15 +0200
+Message-ID:
+ <SN6PR19MB2303E25270E1A460ABC76EA3FC852@SN6PR19MB2303.namprd19.prod.outlook.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI3PEPF00004EA8.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:298:1::44c) To SN6PR19MB2303.namprd19.prod.outlook.com
+ (2603:10b6:805:56::19)
+X-Microsoft-Original-Message-ID:
+ <20260920202815.13811-1-marco_giunta@outlook.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260921-leds-trigger-hw-changed-v7-13-fe3cdb6dec51@rong.moe>
-References: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe>
-In-Reply-To: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe>
-To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
- =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Ike Panhc <ikepanhc@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, 
- Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar <vsankar@lenovo.com>, 
- linux-leds@vger.kernel.org, netdev@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- chrome-platform@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
- Rong Zhang <i@rong.moe>
-X-Mailer: b4 0.17-dev-1f2f7
-X-ZohoMailClient: External
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR19MB2303:EE_|SA1PR19MB4927:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a02bc31-f1fa-476f-c66c-08df1755b9c8
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|12121999013|23021999003|15080799012|25010399006|55001999006|41001999006|24021099003|51005399006|8060799015|5072599009|19110799012|5062599005|40105399003|2607281247196008|12091999003|1602099012|10035399007|3412199025|440099028|4302099013|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bMb+gzXXJ48E1vih7x+N/ATszHsLEGpezJ1860ds3fVgmTtBNgfjU+CmRaqe?=
+ =?us-ascii?Q?pfkJIu/7lVkytTgxCUKl2KFVsV14zEMAqotOWW60zJgrkwrYdjVaNuWJGp2a?=
+ =?us-ascii?Q?PPgKIDYtIIsiYjRm3v/Y7cbSJM7YAy6bR1uzDSsoZXqTXrCtZ7JXM6FzA8IT?=
+ =?us-ascii?Q?kf774CKVEvzfjP8XHg0ZmqA9wO7Lb/z0+sKb2c2x61TF1V4QVIw/4yd1yxls?=
+ =?us-ascii?Q?ps9ByuV6NCrOcnLJ957AP3LbLTeqbrZvSYDgKeuxM10UqXQnUu+P/3d+K2/c?=
+ =?us-ascii?Q?JwcH2AZkT4+6tqwLI9DMmClI/NIzKTTF7H9Y9Ts5H38sO8q3kdMLoncLl7Nr?=
+ =?us-ascii?Q?y/YwJfZCYZ9q2InRCUzbWJN08QuxhQizP4QQ/JLat+20U0HzaOjnL1GVw6Um?=
+ =?us-ascii?Q?q/++c2nk/FqLGMqg4t6FrNhCVKULZ8YjWhUt24ceDXaklo9NlfcGk/XcM+i6?=
+ =?us-ascii?Q?sCoBXE/RvsM+Zssv4CeUmtMDgKIxQjqYJtxGS5YKF33+h3v57Ok8caNPDe7p?=
+ =?us-ascii?Q?0ZQBNvJ1k1taJRqTmJb5cIdv3aTdcGbbd1/4KoFVf0XyO389/4Ju/JUhkECj?=
+ =?us-ascii?Q?6rjK2rFTk+RIsFY02DfnQW9EKTDkF0rfBtQ7HJ21NftHeKJyDd+tz9mFLtti?=
+ =?us-ascii?Q?aqJJQRSxn5hVGsoiJ8xRIC3Mr3DCOevKDDRqshuEDb3ZyjmHoWg3b57GfP8a?=
+ =?us-ascii?Q?KC9zhe7quBYROceicRjMJMkYMXGqyG3h8IL/Yp2aQHgbL1xY42Vwu1QPBEv8?=
+ =?us-ascii?Q?F5PT9B0IlOy+f03XGqsRa+Wuf4x5sII/0ysUEeYEev+ZuAGjHqtX86goHHhN?=
+ =?us-ascii?Q?ouUHl/zSu3KuxEfQNE4CKblC/7AOMtr4tWNKmbiuqhtWJ2WXWHqbsFiKoJaF?=
+ =?us-ascii?Q?IQvgMYNE1R2GNN5tz2BRW9sZ4wzhhm7L0xU4zlVuUv+j1Et6EUNxvEaMV/Wh?=
+ =?us-ascii?Q?nV/TafyfbSgT39U6xJzATzvC2ivEC5Dqwfl7v9oedjJpQMELhC46RN+HBT1b?=
+ =?us-ascii?Q?wXUyj1TUXurnxDoV87oRT/rx91mopeZWvDeWz+BbndwbQ+OcZYcG6XwzzDCN?=
+ =?us-ascii?Q?y9hQe7xO1PHD+84ea7Fj0gH32dEXYgvmArG4zqNegAPjOpGqHRq1BJn1tz2h?=
+ =?us-ascii?Q?qQ8WOu8Ss+BF4Rf5skl+qvZUOm+EMlm3UOEBqcp3BefjdtsB6ThFWMA4Sc9S?=
+ =?us-ascii?Q?XUk0BWReg9djDZEqrNnOEL05wCiyko/iUCP0Mw=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hZh0Y7AZ3FpEEBcj3UEkuQ4jnu4cXd7FVzcd3sbeDw8Jm59BBN+dNH2IpCYs?=
+ =?us-ascii?Q?JEMgCWL4awR0X4VrQgi8MibMBFsxS+1Lxb/KYbN1y7ttjIX5QBVxm9MxIyuU?=
+ =?us-ascii?Q?0RMMkTjIIdr/Bq6dte5Fyzxl3ihPgMIlPEYulwewfkh+lqDRd5tYD8N3Xkd/?=
+ =?us-ascii?Q?Y717iHV3tcmX/IiN/jX+Oi4FlgAGqBBffrlFLUOCwzX7neehlWqxKtt5796c?=
+ =?us-ascii?Q?85CFt4X6R29cSykYR86hSwoDFGxXYdseqDkeXJjMqmibNUObPgOIa4YWHttV?=
+ =?us-ascii?Q?OA3clkSD+OX9+Ocrwy2AWsZOr85sczUfh31v8z33yYAO2m2LwmjEfs+PQy0E?=
+ =?us-ascii?Q?7zl/oQrqAtr/ga7P5HkMBppauZB6ghBcMH1j4NTIuBIGgTvoIWcGVDsPB5VL?=
+ =?us-ascii?Q?DNqUb6KGvz9c0OjyvD/3Lo1apkWoZkfXCn+Jsm1aZ1WY7fsXYjeZovw8CURA?=
+ =?us-ascii?Q?ViBuyp0z7GDl8qxg6PuzrZkzEQJMHjRL1qTFwJQY0xHsW9kUlEaS3PdfTVDe?=
+ =?us-ascii?Q?OQtjnB7G3ZUpqse9ljtpdGOZzR7caWxiwR9AXRYFxZMG8XhEsB4Do+gzQfvF?=
+ =?us-ascii?Q?gdSWhDJaUBAYijkakM86VSvmlLy/kbejzuuE4j69D6Or7HwiCiLErXhEDdR/?=
+ =?us-ascii?Q?0NO8xiRFrJ8ehadiJXdKDJiNlhNuxJTfq9c+4Vvydu5OxrpfjarBrLXnZG6Y?=
+ =?us-ascii?Q?yhti2xwdpbfmPHU/o2/OCbquGt1ffhosxDmysKKDPx7POGqYRRyie63mZ8E2?=
+ =?us-ascii?Q?SJdkpZnfeOGzsYw7DGzcvrTqvYY5kZxhh97gGBY0V46hwlK34MmcOxJ2TgNL?=
+ =?us-ascii?Q?gDqQA4BtF/cfPYG79kId9f2e8HsU2cxKjLz3pS11Yyy8PtU0mxPDikxtrW93?=
+ =?us-ascii?Q?MsMFJkCbsCMd9Y18+XWMW7a5cNO7eM4hS6PzcZnm+D997KcfZpZiEneKmapt?=
+ =?us-ascii?Q?v9aPe+9++0OSOMdppq+9VXfBTgktYXf075e8PitaafhYC4DDYqVNjMPbFVMl?=
+ =?us-ascii?Q?B8roAsZgLM8RXJR41q1Mx0kM5o/ETRQkyvSPQwi5LoREt0bCaQ8IVwlalY3J?=
+ =?us-ascii?Q?BMi1+zsvypicaWjxJrB61xOmQwoF84m1Jw32BRxU50V3Inu46Jq1vpTc7+7H?=
+ =?us-ascii?Q?7mgoSSgtgzdjcBu/YHihKaMd/GmanTgLetsCT+Y0MG6YkWy8ocBHU9UpfX4s?=
+ =?us-ascii?Q?ZMZ9WY2zIJ7kW42qbslRBV6Rh04vixA8WRPHmJuBoi4vNcSJS7tWFkWcsDzv?=
+ =?us-ascii?Q?hpL+9QgVnPyfLRKgiMMy7BuPAGr8FlOpPT/ZLFAfpMnrvK/27e2QpOhItzdj?=
+ =?us-ascii?Q?EiHwp0oqiPspVBJJn0pmRQ62lfRyfBIkE+drCNI0B2Xo+LKS2qaThfI33v3n?=
+ =?us-ascii?Q?4/6pLeXZWALYwGDayB+1TnsNwuGW?=
+X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a02bc31-f1fa-476f-c66c-08df1755b9c8
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR19MB2303.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2026 20:28:27.1663
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR19MB4927
 
-Currently, the auto brightness mode of keyboard backlight maps to
-brightness=0 in LED classdev. The only method to switch to such a mode
-is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
-is a multiplexed brightness value; writing 0 simply results in the
-backlight being turned off.
+On certain 2025 Lenovo laptops, such as the Yoga Pro 7 14ASP10 and Legion
+Pro 7 16AFR10H, a switch on the side disables the camera. This is handled
+by the firmware, which also sends event 0x0d (camera disabled) or 0x0c
+(camera enabled) through the WMI event GUID handled with
+ideapad_wmi_context_fn_keys. These events are currently reported as
+KEY_UNKNOWN.
 
-With brightness processing code decoupled from LED classdev, we can now
-fully support the auto brightness mode. In this mode, the keyboard
-backlight is controlled by the EC according to the ambient light sensor
-(ALS).
+Other Lenovo laptops expose a similar camera switch through a separate WMI
+GUID, which lenovo-wmi-camera reports as SW_CAMERA_LENS_COVER since
+commit d98bf6a6ed61 ("platform/x86: lenovo-wmi-camera: Use
+SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS"). That driver does not
+bind on these laptops, so do the same here: as the switch state cannot be
+read from the firmware, register a separate input device with the switch
+on the first event, and report the state carried by each event.
 
-To utilize this, a private hardware control trigger "ideapad-auto" is
-added, with the event handling procedure calling the
-led_trigger_notify_hw_control_changed() interface to activate/deactivate
-the private trigger according to the current LED trigger state. To align
-with LEDS_BRIGHTNESS_HW_CHANGED, the driver neither depends on
-LEDS_TRIGGERS_HW_CHANGED nor selects it.
-
-Meanwhile, block brightness changes on exit to prevent the side effect
-of LED device unregistration when the private trigger is active from
-resetting the brightness to zero, so that the state of auto mode can
-retain among boots.
-
-Acked-by: Ike Panhc <ikepanhc@gmail.com>
-Signed-off-by: Rong Zhang <i@rong.moe>
+Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
 ---
-Changes in v7:
-- Rename the offloaded() callback to hw_offloaded() (thanks Lee Jones)
+Changes in v2:
 
-Changes in v6:
-- Simplify the auto mode state preservation logic by converting
-  `priv->kbd_bl.initialized' into a tristate integer
+* Add lockdep_assert_held(&ideapad_shared_mutex) and a comment at the top
+  of ideapad_camera_switch_report() to document and check that the WMI
+  notify path is serialized through ideapad_shared_mutex (suggested by
+  Huang Wei)
+* Replace dev_warn() with dev_warn_once() in
+  ideapad_camera_switch_report() so that a persistent registration failure
+  does not log a warning on every toggle (suggested by Huang Wei)
 
-Changes in v4:
-- Add missing #include (Thanks Ilpo Järvinen)
-- Remove needless code alignment (ditto)
-- Address concerns from Sashiko
-  - Do not notify the LED trigger core when the registration of the
-    private trigger has failed
-  - https://sashiko.dev/#/patchset/20260719-leds-trigger-hw-changed-v3-0-5fb55722e36e@rong.moe?part=11
+Link to v1: https://lore.kernel.org/platform-driver-x86/SN6PR19MB23039910DD1918BEE3825BAFFC862@SN6PR19MB2303.namprd19.prod.outlook.com/
 
-Changes in v3:
-- Address concerns from Sashiko
-  - Fix a race condition in ideapad_kbd_bl_led_cdev_brightness_set()
-  - Fix trigger re-registration of ideapad_kbd_bl_auto_trigger
-  - https://sashiko.dev/#/patchset/20260618-leds-trigger-hw-changed-v2-0-c28c44053cf3%40rong.moe
-- Make registration failures of ideapad_kbd_bl_auto_trigger non-fatal
+Notes (copied verbatim from v1, to keep the context easily accessible):
+
+* I considered a couple of alternatives to the approach in this patch:
+
+  1.  Simply map 0x0c and 0x0d to KEY_CAMERA_ACCESS_ENABLE/DISABLE:
+
+      { KE_KEY,	0x0c | IDEAPAD_WMI_KEY, { KEY_CAMERA_ACCESS_ENABLE } },
+      { KE_KEY,	0x0d | IDEAPAD_WMI_KEY, { KEY_CAMERA_ACCESS_DISABLE } },
+
+      similar to the touchpad off/on hkey events (66/67) this driver emits
+      after the firmware has toggled the touchpad state. However, HUTRR72
+      describes these hkey events as asserting a camera access state for
+      the host to apply, rather than reporting one the firmware has
+      already applied. Furthermore, lenovo-wmi-camera moved away from
+      these hkey events in favor of SW_CAMERA_LENS_COVER in the quoted
+      commit, which is arguably the closest relevant precedent.
+    
+  2.  Ignore these events like the firmware-handled FnLock events:
+
+			{ KE_IGNORE,	0x0c | IDEAPAD_WMI_KEY },
+			{ KE_IGNORE,	0x0d | IDEAPAD_WMI_KEY },
+
+      This fixes the KEY_UNKNOWN issue, but userspace gets no information.
+    
+  Overall, in the end I copied the approach of the lenovo-wmi-camera
+  driver. Kindly let me know if there are other/better solutions.
+    
+* Unlike the touchpad, whose state this driver reads with VPCCMD_R_TOUCHPAD
+  at probe, on resume and on each event, the camera switch state is only
+  available in EC-private fields, and the two tested laptops even use
+  different ones. Hence the lenovo-wmi-camera approach: the switch appears
+  on the first event, and a change made while suspended is not reported,
+  leaving the state wrong until the switch is toggled again.
+
+* For reference, on KDE Plasma 6.7.5, using the Legion's touchpad toggle
+  button shows an OSD, but nothing on a SW_CAMERA_LENS_COVER change or if
+  sending KEY_CAMERA_ACCESS_ENABLE/DISABLE events. I am not sure whether
+  this is simply a case of "not implemented yet" or if I misunderstood how
+  these events are supposed to be used to communicate with userspace.
+  Please feel free to correct me here.
+  
+Best regards,
+Marco
 ---
- drivers/platform/x86/lenovo/Kconfig          |   1 +
- drivers/platform/x86/lenovo/ideapad-laptop.c | 119 ++++++++++++++++++++++++---
- 2 files changed, 109 insertions(+), 11 deletions(-)
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 59 ++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index 516594993073..a97852b0b228 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -16,6 +16,7 @@ config IDEAPAD_LAPTOP
- 	select INPUT_SPARSEKMAP
- 	select NEW_LEDS
- 	select LEDS_CLASS
-+	select LEDS_TRIGGERS
- 	help
- 	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
- 	  rfkill switch, hotkey, fan control and backlight control.
 diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index b57c4f18d0ea..db03c0c9e497 100644
+index 207368f5d489..0066638ee332 100644
 --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
 +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -15,6 +15,7 @@
- #include <linux/bug.h>
- #include <linux/cleanup.h>
- #include <linux/compiler.h>
-+#include <linux/container_of.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -32,6 +33,7 @@
- #include <linux/platform_device.h>
- #include <linux/platform_profile.h>
- #include <linux/power_supply.h>
-+#include <linux/printk.h>
- #include <linux/rfkill.h>
- #include <linux/seq_file.h>
- #include <linux/string_choices.h>
-@@ -226,7 +228,10 @@ struct ideapad_private {
- 		bool ymc_ec_trigger       : 1;
- 	} features;
- 	struct {
--		bool initialized;
-+		int initialized; /*  0: initializion pending/ongoing/failed
-+				  * >0: initializion finished
-+				  * <0: unregisteration ongoing/finished
-+				  */
- 		int type;
- 		struct led_classdev led;
- 		unsigned int last_hw_brightness;
-@@ -1716,14 +1721,68 @@ static int ideapad_kbd_bl_led_cdev_brightness_set(struct led_classdev *led_cdev,
- {
- 	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
- 
-+	/*
-+	 * When unregistering: It must be the side effect of LED unregistration
-+	 * when our private trigger is active. We've set LED_RETAIN_AT_SHUTDOWN
-+	 * to retain led_cdev brightness level. To do the same for auto mode,
-+	 * gate changes and return early.
-+	 *
-+	 * It's needless to gate changes when initializing, as there may be a
-+	 * time margin between sysfs attribute creation and state change.
-+	 */
-+	if (unlikely(priv->kbd_bl.initialized < 0))
-+		return 0;
-+
- 	return ideapad_kbd_bl_brightness_set(priv, brightness);
+@@ -178,6 +178,7 @@ struct ideapad_private {
+ 	struct ideapad_rfk_priv rfk_priv[IDEAPAD_RFKILL_DEV_NUM];
+ 	struct platform_device *platform_device;
+ 	struct input_dev *inputdev;
++	struct input_dev *camera_switch_idev;
+ 	struct backlight_device *blightdev;
+ 	struct ideapad_dytc_priv *dytc;
+ 	struct dentry *debug;
+@@ -1410,10 +1411,43 @@ static int ideapad_input_init(struct ideapad_private *priv)
+ 	return err;
  }
  
-+static int ideapad_kbd_bl_auto_trigger_activate(struct led_classdev *led_cdev)
++static int ideapad_camera_switch_init(struct ideapad_private *priv, bool covered)
 +{
-+	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
++	struct input_dev *idev;
++	int err;
 +
-+	return ideapad_kbd_bl_hw_brightness_set(priv, KBD_BL_AUTO_MODE_HW_BRIGHTNESS);
++	idev = input_allocate_device();
++	if (!idev)
++		return -ENOMEM;
++
++	idev->name = "Ideapad Camera Switch";
++	idev->phys = "ideapad/input1";
++	idev->id.bustype = BUS_HOST;
++	idev->dev.parent = &priv->platform_device->dev;
++
++	input_set_capability(idev, EV_SW, SW_CAMERA_LENS_COVER);
++	input_report_switch(idev, SW_CAMERA_LENS_COVER, covered);
++	input_sync(idev);
++
++	err = input_register_device(idev);
++	if (err) {
++		input_free_device(idev);
++		return err;
++	}
++
++	priv->camera_switch_idev = idev;
++	return 0;
 +}
 +
-+static bool ideapad_kbd_bl_auto_trigger_hw_offloaded(struct led_classdev *led_cdev)
-+{
-+	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
-+
-+	guard(mutex)(&priv->kbd_bl.mutex);
-+
-+	return priv->kbd_bl.last_hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS;
-+}
-+
-+static struct led_hw_trigger_type ideapad_kbd_bl_auto_trigger_type;
-+
-+static struct led_trigger ideapad_kbd_bl_auto_trigger = {
-+	.name = "ideapad-auto",
-+	.trigger_type = &ideapad_kbd_bl_auto_trigger_type,
-+	.activate = ideapad_kbd_bl_auto_trigger_activate,
-+	.hw_offloaded = ideapad_kbd_bl_auto_trigger_hw_offloaded,
-+};
-+
-+static bool ideapad_kbd_bl_auto_trigger_registered;
-+
-+static void ideapad_kbd_bl_notify_hw_control(struct ideapad_private *priv,
-+					     unsigned int hw_brightness)
-+{
-+	bool hw_control, last_hw_control;
-+
-+	if (!ideapad_kbd_bl_auto_trigger_registered || priv->kbd_bl.type != KBD_BL_TRISTATE_AUTO)
-+		return;
-+
-+	hw_control = hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS;
-+	last_hw_control = priv->kbd_bl.last_hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS;
-+
-+	if (hw_control != last_hw_control)
-+		led_trigger_notify_hw_control_changed(&priv->kbd_bl.led, hw_control);
-+}
-+
- static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
+ static void ideapad_input_exit(struct ideapad_private *priv)
  {
- 	int hw_brightness, brightness;
- 
--	if (!priv->kbd_bl.initialized)
-+	if (unlikely(priv->kbd_bl.initialized <= 0))
- 		return;
- 
- 	guard(mutex)(&priv->kbd_bl.mutex);
-@@ -1739,6 +1798,8 @@ static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
- 	if (priv->kbd_bl.last_hw_brightness == hw_brightness)
- 		return;
- 
-+	ideapad_kbd_bl_notify_hw_control(priv, hw_brightness);
+ 	input_unregister_device(priv->inputdev);
+ 	priv->inputdev = NULL;
 +
- 	priv->kbd_bl.last_hw_brightness = hw_brightness;
++	if (priv->camera_switch_idev) {
++		input_unregister_device(priv->camera_switch_idev);
++		priv->camera_switch_idev = NULL;
++	}
+ }
  
- 	led_classdev_notify_brightness_hw_changed(&priv->kbd_bl.led, brightness);
-@@ -1751,9 +1812,11 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- 	if (!priv->features.kbd_bl)
- 		return -ENODEV;
+ static void ideapad_input_report(struct ideapad_private *priv,
+@@ -1422,6 +1456,22 @@ static void ideapad_input_report(struct ideapad_private *priv,
+ 	sparse_keymap_report_event(priv->inputdev, scancode, 1, true);
+ }
  
--	if (WARN_ON(priv->kbd_bl.initialized))
-+	if (WARN_ON(priv->kbd_bl.initialized > 0))
- 		return -EEXIST;
- 
-+	priv->kbd_bl.initialized = 0;
++static void ideapad_camera_switch_report(struct ideapad_private *priv, bool covered)
++{
++	/* The WMI notify path is serialized through ideapad_shared_mutex */
++	lockdep_assert_held(&ideapad_shared_mutex);
 +
- 	err = devm_mutex_init(&priv->platform_device->dev, &priv->kbd_bl.mutex);
- 	if (err)
- 		return err;
-@@ -1771,6 +1834,24 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- 
- 	switch (priv->kbd_bl.type) {
- 	case KBD_BL_TRISTATE_AUTO:
-+		priv->kbd_bl.led.max_brightness = 2;
++	if (!priv->camera_switch_idev) {
++		if (ideapad_camera_switch_init(priv, covered))
++			dev_warn_once(&priv->platform_device->dev,
++				      "Failed to register camera switch input device\n");
++		return;
++	}
 +
-+		if (!ideapad_kbd_bl_auto_trigger_registered) {
-+			dev_warn(&priv->platform_device->dev,
-+				 "Cannot provide LED trigger %s for keyboard backlight\n",
-+				 ideapad_kbd_bl_auto_trigger.name);
++	input_report_switch(priv->camera_switch_idev, SW_CAMERA_LENS_COVER, covered);
++	input_sync(priv->camera_switch_idev);
++}
++
+ static void ideapad_input_novokey(struct ideapad_private *priv)
+ {
+ 	unsigned long long_pressed;
+@@ -2312,6 +2362,15 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+ 			break;
+ 		}
+ 
++		/*
++		 * Camera switch, handled by the firmware:
++		 * 0x0c camera enabled, 0x0d camera disabled
++		 */
++		if (data->integer.value == 0x0c || data->integer.value == 0x0d) {
++			ideapad_camera_switch_report(priv, data->integer.value == 0x0d);
 +			break;
 +		}
 +
-+		priv->kbd_bl.led.flags |= LED_TRIG_HW_CHANGED;
-+		priv->kbd_bl.led.trigger_type = &ideapad_kbd_bl_auto_trigger_type;
-+		priv->kbd_bl.led.hw_control_trigger = ideapad_kbd_bl_auto_trigger.name;
-+
-+		/* Hardware remembers the last brightness level, including auto mode. */
-+		if (hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS)
-+			priv->kbd_bl.led.default_trigger = ideapad_kbd_bl_auto_trigger.name;
-+
-+		break;
- 	case KBD_BL_TRISTATE:
- 		priv->kbd_bl.led.max_brightness = 2;
- 		break;
-@@ -1791,17 +1872,17 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- 	if (err)
- 		return err;
- 
--	priv->kbd_bl.initialized = true;
-+	priv->kbd_bl.initialized = 1;
- 
- 	return 0;
- }
- 
- static void ideapad_kbd_bl_exit(struct ideapad_private *priv)
- {
--	if (!priv->kbd_bl.initialized)
-+	if (priv->kbd_bl.initialized <= 0)
- 		return;
- 
--	priv->kbd_bl.initialized = false;
-+	priv->kbd_bl.initialized = -1;
- 
- 	led_classdev_unregister(&priv->kbd_bl.led);
- }
-@@ -2620,17 +2701,30 @@ static int __init ideapad_laptop_init(void)
- {
- 	int err;
- 
-+	err = led_trigger_register(&ideapad_kbd_bl_auto_trigger);
-+	if (err) {
-+		pr_warn("Failed to register LED trigger %s: %d\n",
-+			ideapad_kbd_bl_auto_trigger.name, err);
-+	} else {
-+		ideapad_kbd_bl_auto_trigger_registered = true;
-+	}
-+
- 	err = ideapad_wmi_driver_register();
- 	if (err)
--		return err;
-+		goto err_ledtrig;
- 
- 	err = platform_driver_register(&ideapad_acpi_driver);
--	if (err) {
--		ideapad_wmi_driver_unregister();
--		return err;
--	}
-+	if (err)
-+		goto err_wmi;
- 
- 	return 0;
-+
-+err_wmi:
-+	ideapad_wmi_driver_unregister();
-+err_ledtrig:
-+	if (ideapad_kbd_bl_auto_trigger_registered)
-+		led_trigger_unregister(&ideapad_kbd_bl_auto_trigger);
-+	return err;
- }
- module_init(ideapad_laptop_init)
- 
-@@ -2638,6 +2732,9 @@ static void __exit ideapad_laptop_exit(void)
- {
- 	platform_driver_unregister(&ideapad_acpi_driver);
- 	ideapad_wmi_driver_unregister();
-+
-+	if (ideapad_kbd_bl_auto_trigger_registered)
-+		led_trigger_unregister(&ideapad_kbd_bl_auto_trigger);
- }
- module_exit(ideapad_laptop_exit)
- 
+ 		/* 0x02 FnLock, 0x03 Esc */
+ 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+ 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
 
+base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
 -- 
 2.55.0
 
