@@ -1,140 +1,146 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010035.outbound.protection.outlook.com [52.103.10.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7686F3749F0;
-	Sun, 20 Sep 2026 10:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F168B3C9EF1
+	for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2026 15:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.181
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789901907; cv=fail; b=Ac44bmFW4guDYBKv6jv16wUXUJeG3xyED1TRnyKsFF5EtZLh9vUFJ5AwNsgGkJaaODDbHssy/U6ljatrc0fRG3UIRcKxO3JDv4yrEDtpiKcFgjbqTa8uNsXL2/czJzhZQeQURYBKUj5rs79KufqToLmVBlQgi+Iz0yaDA6QGJe0=
+	t=1789917336; cv=pass; b=VZ3eBg2b6nL7tIGxbrFgVEv/ld6hUQan58rou89yR2MxcNMoXwvUOtHqypeYAx3ifNcxMrB3Sq1y2rnAaIoBBIM9ZT9fyVleFWsZnMqb31MxI4bcT8a1rqqiY9syqdnUZwlSf4L25vjwLWAKLEWxp3q1CiQP1I2Dxcp8VxEBbrA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789901907; c=relaxed/simple;
-	bh=arI3AUyjm6hN/oxZwQZc3hj77nak9OqlfTBbiAaxIQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jn0yG7T+4UylOsESrGCUrwPmAVZjCg1RKMwuw2cMYyWOaztsRfDd5qsrDxI60eKTbKyFrZakEGCSk/lwI3uVR/PUIZMYwExIFEw2Afc+TnRJByZJaMT7hrvwhNi+xblODWKsBN3eUCbIOsJCAUoX20kkKhuYPPj75SOfv1O3Wxw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=eqGoGfDc; arc=fail smtp.client-ip=52.103.10.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
+	s=arc-20240116; t=1789917336; c=relaxed/simple;
+	bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=LWAIKoF6CKA83wPhFxfoK8io3u+kyvWPudT3WA7e62i4DlSWVANcRbwYAezHq4oPn4wiP4gDyNx3KNubxoyQY8R7RpZ86XvGCwuXfjrM6bjxaFqATg1vIjBAxcU27cmVSdtFoFBo1SXtwRSIWTsUk3d3Ivk9xEetyfbUyYtU9wU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Icwqyh6R; arc=pass smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="eqGoGfDc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vp5ZUmZNxAMJY11NkCDohoOYe022fBU+JqYrT6eaVtNzVuXyQhrjyEq0fXN2+H+n5s3KxNEd3IPXLPK68EHMrEillFEDX030tocCSc0WFmw1XG61zRkd+RhIgeqa8WQVIpVs46TbhwS6ZOM88IZtD7EsqeHUUWbaWBP2y1BCQc6ERRa2fO/62DiUAoIdiehbuJDKiyohx7p6MBcC1l5hr0+QBJBSiAzva8P9lupegfmZnbxCBGSFAOGLw2ZJ/UEkpVMgU+EBGLQRzpE8ovgZXDwgw9fLn37F5KrVFBbE0mnIOw9kXos+5uCEhXQhX3wdKQ3Uht/4ATebhMp3anU2tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=arI3AUyjm6hN/oxZwQZc3hj77nak9OqlfTBbiAaxIQ0=;
- b=uNkFwj+2ta9RQLxVu1sxFZJsqCaWMkqvoEKfdH4D0PWmrLoI0gnO3G1NN932YCWQeMlwdDt6ddxD9hxIb6ZBjudOLyWYebMr/WO7AizaB158fW0MQAFql+nr3a9fFdm84L+NTYqFn6sLVE5wtsquw2IvPTMLIV+uI5Fo7/6Vs4coW4CbUyqhJeHlyHy2y2wz274H7iz8c+9E6aDbBZU8ZnyObcOLe1/oRpXVX/SdrRVvf23gSS1sy/RCdxuJFvQOEY4mecpgU51CF2XinDAGB1jPVKDpFA6E4LZIV9TpA1gvrRBhkJU8zbRR7egTTYACzZiz57va56PP3RLJ8vuSvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=arI3AUyjm6hN/oxZwQZc3hj77nak9OqlfTBbiAaxIQ0=;
- b=eqGoGfDcJYtxEQS+4CL01RFe8t/tyakzm03CAXf4dMpxOcHdQubnKlUt79ANnG0Ceh+6H/boPPmamTbCT7QMnMTW6qVnySNBRiJ3wk8o2UalUcJXRMRC66mKbYT8K7ny6euHfKhHkX1qAyXSSX+7u003Gey8hKSYJ/5Ly3STfyvvuqJmEu2kl8Am/qE8f3Eph1J98gZ7Kq9mkSLlt0V5cc9iN4dzHkulQG6PLIPbaVGAeD4yiDxdLafJvCORzkY12sRdHPWdZjPgzsHeY+P4ni9OgCrqn59qPuBdkGEevVkNv5iZe3bAX+sI35UNk3b0/ML+2hHUY1+eW7RTKZyq8Q==
-Received: from SN6PR19MB2303.namprd19.prod.outlook.com (2603:10b6:805:56::19)
- by PH0PR19MB997337.namprd19.prod.outlook.com (2603:10b6:510:3b1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Sun, 20 Sep
- 2026 10:58:24 +0000
-Received: from SN6PR19MB2303.namprd19.prod.outlook.com
- ([fe80::805c:7f80:c69f:876a]) by SN6PR19MB2303.namprd19.prod.outlook.com
- ([fe80::805c:7f80:c69f:876a%5]) with mapi id 15.21.0428.014; Sun, 20 Sep 2026
- 10:58:24 +0000
-From: Marco Giunta <marco_giunta@outlook.it>
-To: huangwei@kylinos.cn
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	marco_giunta@outlook.it,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Report camera switch as SW_CAMERA_LENS_COVER
-Date: Sun, 20 Sep 2026 12:58:14 +0200
-Message-ID:
- <SN6PR19MB23034E1EECFAD1E64657AA21FC852@SN6PR19MB2303.namprd19.prod.outlook.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260920102902.989025-1-huangwei@kylinos.cn>
-References: <20260920102902.989025-1-huangwei@kylinos.cn>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI2PEPF00000B82.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:298:1::415) To SN6PR19MB2303.namprd19.prod.outlook.com
- (2603:10b6:805:56::19)
-X-Microsoft-Original-Message-ID:
- <20260920105814.6740-1-marco_giunta@outlook.it>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Icwqyh6R"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4b28d9537bcso1447238b6e.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2026 08:15:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789917334; cv=none;
+        d=google.com; s=arc-20260327;
+        b=nAkXUZ6Nk+0XB7RQp1hvktI5BmDgwiAinmrhRPjeiXDOyockhDA1fxmhu9Xl0luwns
+         r1u+7LHbLbd8MagCLySIg8lvt6hS4pIcjIteNmQwSas7CpEEdfRFNiUm/SXjrZzX/FdF
+         G2C+HZog5u6YCM/IrXHS3JJCI1dD54tUHGTvSdVTWkVjW1Y7wrvQtluii2mcK2qqkfbI
+         JGw85MPzdXQEEG1q3/2PzPlR+dU5m+N2qHF+pmANydNriKxPlm83dcv3xMDvuvRuNEre
+         R8qecKexb5ozHObEq3GNFAnmdiiyAtzZqZkqHnfFQXVa/7odp+iMn85YDD0mDM05gpdI
+         wJ0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
+        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
+        b=dxWj8XFIrn6xaGbxAHAmTTT5P604lhsaoFCmVbyJlhg21afYBECltFaOjEkz0elVWp
+         qFmHhZqBZyiX9/gDmLIS7o6jW7mWe16NuxatNWqVNiCVLwjc1HHxAP8TR5EsGbqmVvZo
+         yQc5xB/y6sYnVqypzyy4HEqYYD7wibpBJxphZRsmOIIUrAKz5PzhuqkfhVYrn3ACBBSZ
+         Ajym69Wi7/yxLAq3pDEqX74VxphKg490CoQCRcB6EG6s78Kxzy/z2VGgUUx/ygRu6/+x
+         NoH7InPgX2HKMjauwVsHjjb/8CBP1vSmGwgGbTkFH6rSwQgSWV869YKHsePERQgUQD+Z
+         F0jg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789917334; x=1790522134; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
+        b=Icwqyh6RT+QA6T2rzAGQrAC+CHToMcBie+56dbM2x2mAme1vT08ksBxsLUf5WFVuTK
+         p/n9pXC+yUX2OelH0/E2dbOcq0g2A5cPjy+4i3JyiK7a3ZpeJ7mrl6dxTnJatPiVoFNr
+         I0uRgZF0XQ4XpoOA7NA8xR32M7uP/o/9Y1YV/B3oMh4M7xWXHdJgiSe2JhVekvQRK9XD
+         50ovwJgEdlXpP2eAW2X77pL3QAqRQuBAnuc/JkzElg0awgGf7EZ4+9KA63zQJMyk6R4b
+         utVRjB71PjcLnDJ7LXllDTm7nbNoBYZSaprMxzF759+isCyMS3MWDThdlcoGN/r84zRY
+         ui6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789917334; x=1790522134;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
+        b=K6hYQmJZUerXMnsJbW4B5Xe+gdStszEIXN8ZCNioTTWTOCzAvOrhhLDl32O+s1pxjJ
+         Ri133V3KBJJoFVHduhra1bVTFDf4UuozNXo4UNjWMjYpGS4cN5VbMyVO5ygukyC6BdrM
+         BPuerFbSOcv+wgysbDmFJ+GRkVO030Tur/8THiFvwDGCdGNsD7ivEfDXWD1R0RE8ux97
+         WPE45CzNFQQny3GloSPpa4N6ARoewtbGuyhBGRqZAtW1+scPyq3F9DoS6713OM38QpF2
+         gtjo8J/G64skqeHLtAqbu3LuRcQ5GugzUOFY38ra5+2KtpHyjRCk2eN18kbQsg5r+fHg
+         O9Tg==
+X-Gm-Message-State: AFuF++lgg7NcIwS5i/Rj7qBisQUlIFy2VRt5UBcuNzVOcc1xfFlDWy6K
+	Ih2uV6fON17bJZ2urCtzy0pcGms5nuS6jOjhggI5iwZSp5zYuohpDMqjj9v6Urk+gracFiVHqxd
+	NedXfUESoN2ZsdgttNWpNrjiVc9vJenWplbFX
+X-Gm-Gg: AYBFou3ZAle6hboy//CMnvviIIcE5LWEOUhBZhYxYGVd4IJMF6bczYgmZX73D/Ytko1
+	wfff/oIgKgrC8gu+EMB6lHVZ1oD8QASa9x0/0plcf67NHOstwQ/vZo8U2gq37dxvyNCBnpaLwoo
+	Em1Gv2K2S/d991kM8gG3V7nV8K8F49ttHFGUZnFoxx+NiubfnirRuTY3F0DKXr0Y+rN22MTcmMX
+	ZAeTlnGuJ/YgNO7ZnfAQ65fZjD5vCsPdBQYu5zRtCTb4EOotZAQ6Pp2VpgwC97V4pu8CaNPoQX4
+	p9NHvOMO9tKOVagrAnKz2xinX2uKo7CJgMiEYpuzb/tYxW5vypBUksqLzL8JsX6q2/7eosegOFH
+	xfb4+tW0CAg/o
+X-Received: by 2002:a05:6808:6d8e:b0:4b8:4703:db8a with SMTP id
+ 5614622812f47-4cb69b98d68mr10643228b6e.19.1789917333824; Sun, 20 Sep 2026
+ 08:15:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR19MB2303:EE_|PH0PR19MB997337:EE_
-X-MS-Office365-Filtering-Correlation-Id: b463a3fb-6293-4eb1-a407-08df17061745
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|23021999003|15080799012|5072599009|25010399006|51005399006|19110799012|8060799015|24021099003|55001999006|3412199025|440099028|40105399003|2607281247196008|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fFJa/RsPFBR4xApd7hEgxyUD7vzNa1laeYYZlli0+Xi0+rish9OJM0ZS7ZZe?=
- =?us-ascii?Q?w23WVZddzJCYPvnNMLQH3TPiOq4hkjzF27ZMmKeisIDwC4bbwr/fv1iQ++I6?=
- =?us-ascii?Q?150yc1tEsusYWV07kB8QAR+pjoXQNCFn6sIIkvZLnuZn6oOSny9gAukduQ+u?=
- =?us-ascii?Q?o7JUjYDUVQsBPQrYoXgUaG2XBrMfSCCp+cF/YmP5C3iw+Lu2KrU1U1Vft/+5?=
- =?us-ascii?Q?QGFycvdOY2JNskSGzIEhq5t6MJMdadM28Wg2YdWqAEfyS3PsgqgQZgm7zETi?=
- =?us-ascii?Q?GQ6wXRda93O9xEFnPCbbd+/33hzjx0U2E6XZS+u6GAgvgmVHN/zsbYHCQzxT?=
- =?us-ascii?Q?bhknR2qRHMaqtvj4iqEmf2ulmZpbyyD4+xxAd8Wv6ivt7T9NPXpbLXpA7STj?=
- =?us-ascii?Q?oVkHynDBZ4SQhktim/6IXvy2lJZUqnOPcOtHXuPwogVewWZobXILMpL3j4Ir?=
- =?us-ascii?Q?iyS419lPl7RJuf1vFwozDRvBj5X7mkfjo3nEj7p9ajaN8AcMuIQ/4PhpljZn?=
- =?us-ascii?Q?96ZNhQ4sm8dHzzLDVdER+ARHC01ko4yc6zY2rJd/R4zzsUGvOLmQo+vHfURz?=
- =?us-ascii?Q?VpiDCwGeAa6nX+NtKePDkJWVbHEAU+yQefCapf2uWyN3U5jciGoE1JZNn30S?=
- =?us-ascii?Q?LiSE2nP0iXBA/SLGlRbpnQ8i9U3/89LpsIyF/jnuMLnssCFkyCub8rQJtjNR?=
- =?us-ascii?Q?PXEp/Zkzla4B6sllEK+80W6DC1NK1CtJ9YP2MU4IUqCjUcmVvDLrj3ePmn63?=
- =?us-ascii?Q?KslSU/vYV0oJ0/B5J1OwSQbm3mv8QN8/8WEOZjKo6kXAmB+Knb3H072TPj0T?=
- =?us-ascii?Q?R3lZYSYIxtVKzt4zGDPv2CfcWumkLtzQhxnwoM2ROOhMtVJeSjlmw0O/5DYp?=
- =?us-ascii?Q?+yeCBtTb7HwzrLKWa7NenYL2wLtRMcxje/A0eaNs8FZ9KNYPrZ2O84OUyQ2q?=
- =?us-ascii?Q?00JtT8Ed5mFVLSxBv91FtusiLq8X0GidsFLgp1y162WUmn0b7zcSV7kA9M6A?=
- =?us-ascii?Q?hawQ?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jqGkpl9Xq7IcqTO/A+zbIJoC2pweMstzKwkbA1IFeFW2vHpHx9DQFYs1bsoR?=
- =?us-ascii?Q?YBfFP5CZm3cEktMVjxJ5d3+qBFSrsyHP8xGekPoSu/4ITjlAUvhx3TJlgJi9?=
- =?us-ascii?Q?J4MG+UZLVbZhRo0QG5y7wJlT8zPy8KOMVOwm3VGGuUvaz2sKQOmxmVlPSXuZ?=
- =?us-ascii?Q?ZhYzw2/FwSaLMAWv0qsHYYsDbkedaIgYtuAgQqpYBe6dqstK/Km30AsgqDHj?=
- =?us-ascii?Q?P/nb5riHEazCEXIbPlP/YYb43tqPD0H3LNZmmrhhZIQFm5tiJkKXVsmVslFV?=
- =?us-ascii?Q?DWNQnn5yuvMSMGOWTEmW+LEIhZ71d/0DpQv1D1w2PovKoQwv5OPZYk0hyUCR?=
- =?us-ascii?Q?SMldq/ksnZ2LeJx7NRD/sDkNtRW8CPRvLyeOcFDQyWXP0qmgxlhzfgrtW7FQ?=
- =?us-ascii?Q?0VxnGj8OWx8O2EuuaWOd1EyJdx9g2fTvgUzlsjX+2+XJHqPdpii+tKYjhi32?=
- =?us-ascii?Q?Q4tEcLe0OAKki4VEOYgj5x25d/3vXnB/7ecdpdBS4AFlOGQygKzv/usljYuK?=
- =?us-ascii?Q?vLj5bdiDuJ8TYH0KwNM7rpGGodCf7Yk+AmJRSAPg01P/TZyt6mZmf2jOT51U?=
- =?us-ascii?Q?t1DbzPG9GVFAsgUc3/Bsil0Fdj2DSf/V1QOQonJWHMAwXB/031ZvgYLsOisO?=
- =?us-ascii?Q?eR+bCaMHmZkpc0lcNjttQlTFAoBgmgatuqurEVs3T2OkrCtWhIWiMMWKNu0G?=
- =?us-ascii?Q?TRnLk//XYV3IBpAY3Tgx8SixAJRpi2E5f5Xm+LTk+XHdqaCcEvT2a3nyuw9Z?=
- =?us-ascii?Q?3+6KY2tEwf096lHjIVCk0WpFOykm8AXdKuGYOQ5RNfxEJWmZEw6vJpe0pR/J?=
- =?us-ascii?Q?KvSFmwoQ8yRT/GKu9KzCEp6sAofZkEpjqmIoiNMik4qgZMzzGQA9s+XcMtVR?=
- =?us-ascii?Q?KOL264zd3nOfa2E+EdYAi8/+TC6TWZamxMnJbQjQb64Z8Vp9cjEbWtuw4zvy?=
- =?us-ascii?Q?rO7bdRTiUBSogREbrlIMEc6EktnCocHvIIIsaf2aJq5bKJYqkBvJG4oSmpfj?=
- =?us-ascii?Q?rSPomZXhIg8XCe4MjrVlSyshQYHpsLvsOujhy1hhZsloplj0sKDXIpcUG5zW?=
- =?us-ascii?Q?0jEO/Y+QyXwWIPTvgu3DMANromkBNEHe5QYWSW6TpP1NuPBfhgZ95DTkz0Mk?=
- =?us-ascii?Q?Xl9q2XW1aPTO8OcTm7B6TKJFg+Lz/vm1nzvLsKUhzcntSUzj+9fsLHgg7/ZM?=
- =?us-ascii?Q?7gWioD6DNsObRhjTM2QfZ8//08hXd8rcRNZOB5hxXJZGQt1Ut9wlm3WYt16q?=
- =?us-ascii?Q?H1hMaF6KQoy9BgUYU75X7tEjskBh/pE6GF7YmIv0+d1uYL3z0F35q+Voxa/D?=
- =?us-ascii?Q?gLaCzi3nrmbNCbYEehWoms5c1+EPgLgJiAAc3iXivqvqsX2K99AL02cyvbe6?=
- =?us-ascii?Q?kWjkM+278kliTjICeJlyGE1rN73g?=
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: b463a3fb-6293-4eb1-a407-08df17061745
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR19MB2303.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2026 10:58:24.2956
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB997337
+From: "Dan Z. Bonomo" <d.z.bonomo@gmail.com>
+Date: Sun, 20 Sep 2026 09:14:57 -0600
+X-Gm-Features: AcwNN1U7Ph_xWQvFErd8UTWH-xee-XmaMh2Vgz4qS9qVQiSe0V7kuRg6KA2NInc
+Message-ID: <CAAkqa_bGiUUkTC8M5sQVyL3FGwsEBRkcYKhSMRi92gP_1Dq3VA@mail.gmail.com>
+Subject: System76 Pangolin (Phoenix) needs delay_suspend=1 for working s2idle resume
+To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Huang,
+Hey folks,
 
-Thanks, that settles both points. I will add
-lockdep_assert_held(&ideapad_shared_mutex) with a short comment at the top
-of ideapad_camera_switch_report(), and replace dew_warn() with
-dev_warn_once().
-I'll send a v2 either later today or within the next few days.
+I had Claude take a look into why suspend wasn't working for me and it
+ran into a note in the kernel's amd_pmc driver that asked me to report
+this:
 
-Marco
+"amd_pmc AMDI0009:00: Delaying suspend by 2.5s because delay_suspend=3D1.
+If this solves problems on your machine, please report this whole line to:
+platform-driver-x86@vger.kernel.org so it can be automatically detected
+as affected in the future.
+System Vendor: "System76" Product Name: "Pangolin" Product Family: "Phoenix=
+"
+Board Vendor: "System76" Board Name: "Pangolin"
+"
+
+Here's info on my system:
+
+Laptop: System76 Pangolin (pang13)
+BIOS: APX928_V00.01_T0008ASY1_ms
+CPU: AMD Ryzen 7 7840U (Phoenix)
+Kernel: 7.1.5-76070105-generic (Pop!_OS 24.04)
+Sleep mode**: s2idle only (no S3 available)
+
+A summary of the problem:
+
+Without `delay_suspend=3D1`, suspending via s2idle results in the system be=
+coming
+completely unresponsive on resume. The power button (short press), lid
+switch, and
+keyboard produce no wake event. The only recovery is a 10-second power
+button hold
+(hard power-off).
+
+This also manifested as a secondary symptom: rapid suspend/resume
+cycling when the
+lid was closed. The system would suspend, wake spuriously (EC in a
+broken state),
+see the lid closed, re-suspend, and repeat =E2=80=94 causing the screen to
+flicker on and
+off in a loop and draining the battery.
+
+
+The fix I applied:
+echo 'options amd_pmc delay_suspend=3D1' > /etc/modprobe.d/amd-pmc-fix.conf
+update-initramfs -u
+
+So far so good, it seems to have fixed the suspend issue and I haven't
+seen it stuck in a monitor off-on loop since then either.
+
+Hopefully this helps smooth things over for other Pangolin owners out there=
+!
+
+Thanks a lot,
+
+Dan Bonomo
