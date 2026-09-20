@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779621C84A2;
-	Sun, 20 Sep 2026 10:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F77F1D130E;
+	Sun, 20 Sep 2026 10:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789900268; cv=none; b=gp6rMg7IOoNCueSjLHUPquuq0aAWLL0X4XEFkv0tq/3wUfdQ+5sGj26wSYpjXlutUn//Vu6PL+UFMKq59Eyfi+zMb42LlSiaoJu0E3VgN1k/sGCa3EGggBXV/jVOWJNuCbxSymbaUVn3YI44aMYtXs5FQpw+QEbiLCaho51GS+o=
+	t=1789900526; cv=none; b=cHnVNVXIKH2qO2D7MxIYdwtt0y06MUV2eNyh3Ai8KfvX7iG9dq1WKu01Xwo0cBsOuTqE6zGiFAywxHeiyjEKL8wTAWeLFz+oVaIkPA3YkLTQHOKJiaNx1huIKzZQYr7uSXROWk8ho25zS2vY4KcK+ITKFASDFqHrOTCCR6Wi/qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789900268; c=relaxed/simple;
-	bh=bV5pgsM5t3O+8DvlLoBGaMdQrxZ2V8X3oC/YkNqn4CU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e+HvZRuXrtpt2VB4nacErz557/OjbpaHsj0PGepuIwq7GVJ5r0TRix+xQDZyiCwBt0Eojtn1qPlrd239xGHt3jeF9z0K4RWAHn6HxZhm/Q/F97H3Q6qHdrAQk8cB3+tnE8/ch8zQt11xk+72j9wtieWbkyKXf9ABs8urgN4GB2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6SDOMxw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789900526; c=relaxed/simple;
+	bh=Fyw5JMLw28dvJTtO2NynmGcMCOJjg53gtdJpI0MhQT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XSshYxX5LU1ToMCN4fDhOjHT4HKvHOB1iAlGdhhwfS+KU1wjznJHAWHCYJywko+zTfbDmdUOFPHz6/cHmmPWCY9zoH2Rzubs0BnNshcGiaItEiUB3HWYvYJH5Du2aNb9An+ufnzrRpM73M2dvCU0K5ZJ4xYcyd7kQhaVVDCaGuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+rjJgCI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6SDOMxw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B3C1F000FF;
-	Sun, 20 Sep 2026 10:31:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+rjJgCI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6542C1F000FF;
+	Sun, 20 Sep 2026 10:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789900265;
-	bh=lxhA0eACSdWo4aOttrFwtziIlarFVMJZSAckjMYOgiw=;
+	s=k20260515; t=1789900524;
+	bh=kdoiBNhba33kdp0HKlvqcqx5AWRomZp7kn5VJlFyHrI=;
 	h=From:To:Cc:Subject:Date;
-	b=K6SDOMxw/a2pttRIlbfaAE5lTsioQT6vViKMILGR8VsTKchwXJ+EnbdDyGvycu7/x
-	 Vl0XVyLWvfq5ynOdvz3txiPB/7O/2SA00vXNlXi76GHmYVLGLFx90XPVHZHQ63B028
-	 XuTwEPtK0wHrk+7Eb8+ZKAdxSKBiGLQdZ67AFT9XXQA9R9n1rEjGXusYpmuAE9Ca2X
-	 zzXxPjt+Nmf8hKJ4DYHaeguy1LHOwzLnAo+MOEkomkWISTp7DwsJBLDOvpdzhCm//r
-	 Sg/0+1dC5bDB6SrNH/NYxNWbrLUjiLNMAS+glubsQeuaqe7z2UCYFOtb8ITnoAgabr
-	 Bzjcmu/PdFnoQ==
+	b=k+rjJgCI8QDYqQ4DvpHangOCbQSgRB0txpvP1neEoKWF/kpB/QsOh5Z+0o92QBju/
+	 jFg5Mi62fJlDcoKX9TQb7ywc0JcGSBWlH7k4sPkCrr4yO338bLHhCJ0/o8l4I01TZW
+	 MmH0CQhFM8gZBIwg4ynHOQfhqxZbY7BVwrU0k/alTM7ZmET3LAO1+1/mTNre7zY8r7
+	 TfHOy851aiWx6gxnREdD4DKZKH97TFMXfeqh/4CLatEHDu0lHHoT8aaJIzJ8xI6Uwx
+	 ymtOta68k1E2rVE94If14PWBtetusnQDavdToxnuuJU6nhOGXf+SigdeEdPBvRcXi+
+	 rJ+4o57PgV5IQ==
 From: Thorsten Blum <blum@kernel.org>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	"Derek J. Clark" <derekjohn.clark@gmail.com>,
@@ -33,9 +33,9 @@ To: Mark Pearson <mpearson-lenovo@squebb.ca>,
 Cc: Thorsten Blum <blum@kernel.org>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: think-lmi: Use snprintf() in new_password_store()
-Date: Sun, 20 Sep 2026 12:30:36 +0200
-Message-ID: <20260920103035.281573-2-blum@kernel.org>
+Subject: [PATCH] platform/x86: think-lmi: Use sysfs_emit() in pending_reboot_show()
+Date: Sun, 20 Sep 2026 12:35:18 +0200
+Message-ID: <20260920103518.281843-2-blum@kernel.org>
 X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -43,42 +43,29 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1590; i=blum@kernel.org; h=from:subject; bh=bV5pgsM5t3O+8DvlLoBGaMdQrxZ2V8X3oC/YkNqn4CU=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFnrt55mXRlsPUeJ94XvNJUZea5XsxvkP79Z/f7opkXb1 hn0TTuxsaOUhUGMi0FWTJHlwawfM3xLayo3mUTshJnDygQyhIGLUwAmkmXIyPB23vxcnhWzH4YI iOTMu8z1wd9tSsB2oc/+mpKcx3Z1/hdl+MPdzFN/bcPqE37vHCuUVltw9dTFvHJK7X3IUeq7480 5Rl4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=942; i=blum@kernel.org; h=from:subject; bh=Fyw5JMLw28dvJTtO2NynmGcMCOJjg53gtdJpI0MhQT4=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFnrtz3bOf3kZrU9b6MDo9LrdKrfhryZs2PCJu4Vmd1SR 1Y9n1z+vKOUhUGMi0FWTJHlwawfM3xLayo3mUTshJnDygQyhIGLUwAmonOI4X9i+U/3TgvmpMTX L0zkqxT28V98MyPA31lW/cnKmylHH0gx/M/YnfJKT8mtfeMxw4Tr39w8NvCemOIa8Jb7/C9GF46 NnzgA
 X-Developer-Key: i=blum@kernel.org; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
 
-While the current code works correctly, replace unbounded sprintf()
-calls with the safer snprintf() in new_password_store() to follow secure
-coding best practices.
+Replace sprintf() with sysfs_emit() in pending_reboot_show().
+sysfs_emit() is preferred for formatting sysfs output because it
+provides safer bounds checking.
 
 Signed-off-by: Thorsten Blum <blum@kernel.org>
 ---
- drivers/platform/x86/lenovo/think-lmi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/platform/x86/lenovo/think-lmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-index a0e3fa766e37..3ddc1f5cec19 100644
+index 3ddc1f5cec19..7b319601662a 100644
 --- a/drivers/platform/x86/lenovo/think-lmi.c
 +++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -487,16 +487,16 @@ static ssize_t new_password_store(struct kobject *kobj,
- 		/* Special handling required for HDD and NVMe passwords */
- 		if (setting == tlmi_priv.pwd_hdd) {
- 			if (setting->level == TLMI_LEVEL_USER)
--				sprintf(pwd_type, "uhdp%d", setting->index);
-+				snprintf(pwd_type, sizeof(pwd_type), "uhdp%d", setting->index);
- 			else
--				sprintf(pwd_type, "mhdp%d", setting->index);
-+				snprintf(pwd_type, sizeof(pwd_type), "mhdp%d", setting->index);
- 		} else if (setting == tlmi_priv.pwd_nvme) {
- 			if (setting->level == TLMI_LEVEL_USER)
--				sprintf(pwd_type, "udrp%d", setting->index);
-+				snprintf(pwd_type, sizeof(pwd_type), "udrp%d", setting->index);
- 			else
--				sprintf(pwd_type, "adrp%d", setting->index);
-+				snprintf(pwd_type, sizeof(pwd_type), "adrp%d", setting->index);
- 		} else {
--			sprintf(pwd_type, "%s", setting->pwd_type);
-+			snprintf(pwd_type, sizeof(pwd_type), "%s", setting->pwd_type);
- 		}
+@@ -1281,7 +1281,7 @@ static const struct kobj_type tlmi_pwd_setting_ktype = {
+ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 				   char *buf)
+ {
+-	return sprintf(buf, "%d\n", tlmi_priv.pending_changes);
++	return sysfs_emit(buf, "%d\n", tlmi_priv.pending_changes);
+ }
  
- 		ret = tlmi_opcode_setting("WmiOpcodePasswordType", pwd_type);
+ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
