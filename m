@@ -1,146 +1,99 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F168B3C9EF1
-	for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2026 15:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789917336; cv=pass; b=VZ3eBg2b6nL7tIGxbrFgVEv/ld6hUQan58rou89yR2MxcNMoXwvUOtHqypeYAx3ifNcxMrB3Sq1y2rnAaIoBBIM9ZT9fyVleFWsZnMqb31MxI4bcT8a1rqqiY9syqdnUZwlSf4L25vjwLWAKLEWxp3q1CiQP1I2Dxcp8VxEBbrA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789917336; c=relaxed/simple;
-	bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=LWAIKoF6CKA83wPhFxfoK8io3u+kyvWPudT3WA7e62i4DlSWVANcRbwYAezHq4oPn4wiP4gDyNx3KNubxoyQY8R7RpZ86XvGCwuXfjrM6bjxaFqATg1vIjBAxcU27cmVSdtFoFBo1SXtwRSIWTsUk3d3Ivk9xEetyfbUyYtU9wU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Icwqyh6R; arc=pass smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A562D97A6;
+	Sun, 20 Sep 2026 18:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789930697; cv=none; b=KbbyOzZuTfGfRs52CabY48tVuxQ6shRoovSZWfAw5fjqDfsfofD7pnHLIYXP/OmP0HKBuTB8eeUobcU+Nqk33aPa8GoSXTf9eFmVBEcYfaX1NWXuRJkV1oW+/EXbVg5PPb6nw0ule8D4li5BvjzKaKdBXHBOFL5cXJlMT35cnvk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789930697; c=relaxed/simple;
+	bh=sfvZxEMgovNZnn4twPZMIQd92MJ8XyCf4scs8NDanlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PGdEJ2n9C21ho81OtYdTouwoYNuQmmLOyfATMtBRtZuk54japk1TBLMM9DoAQ9GMqaoFVZxUQr2lqAS3wki/m5Y/f2AGRyZVsBdDKpQXtNqx8hrPWKOcqyC4+fMbyxK9UYOOAiDJiI3xQPHIdswGRwojPyAgBLqfxAfenrAKfhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=LyjSjPlq; arc=none smtp.client-ip=46.62.234.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Icwqyh6R"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4b28d9537bcso1447238b6e.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2026 08:15:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789917334; cv=none;
-        d=google.com; s=arc-20260327;
-        b=nAkXUZ6Nk+0XB7RQp1hvktI5BmDgwiAinmrhRPjeiXDOyockhDA1fxmhu9Xl0luwns
-         r1u+7LHbLbd8MagCLySIg8lvt6hS4pIcjIteNmQwSas7CpEEdfRFNiUm/SXjrZzX/FdF
-         G2C+HZog5u6YCM/IrXHS3JJCI1dD54tUHGTvSdVTWkVjW1Y7wrvQtluii2mcK2qqkfbI
-         JGw85MPzdXQEEG1q3/2PzPlR+dU5m+N2qHF+pmANydNriKxPlm83dcv3xMDvuvRuNEre
-         R8qecKexb5ozHObEq3GNFAnmdiiyAtzZqZkqHnfFQXVa/7odp+iMn85YDD0mDM05gpdI
-         wJ0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:dkim-signature;
-        bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
-        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
-        b=dxWj8XFIrn6xaGbxAHAmTTT5P604lhsaoFCmVbyJlhg21afYBECltFaOjEkz0elVWp
-         qFmHhZqBZyiX9/gDmLIS7o6jW7mWe16NuxatNWqVNiCVLwjc1HHxAP8TR5EsGbqmVvZo
-         yQc5xB/y6sYnVqypzyy4HEqYYD7wibpBJxphZRsmOIIUrAKz5PzhuqkfhVYrn3ACBBSZ
-         Ajym69Wi7/yxLAq3pDEqX74VxphKg490CoQCRcB6EG6s78Kxzy/z2VGgUUx/ygRu6/+x
-         NoH7InPgX2HKMjauwVsHjjb/8CBP1vSmGwgGbTkFH6rSwQgSWV869YKHsePERQgUQD+Z
-         F0jg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789917334; x=1790522134; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
-        b=Icwqyh6RT+QA6T2rzAGQrAC+CHToMcBie+56dbM2x2mAme1vT08ksBxsLUf5WFVuTK
-         p/n9pXC+yUX2OelH0/E2dbOcq0g2A5cPjy+4i3JyiK7a3ZpeJ7mrl6dxTnJatPiVoFNr
-         I0uRgZF0XQ4XpoOA7NA8xR32M7uP/o/9Y1YV/B3oMh4M7xWXHdJgiSe2JhVekvQRK9XD
-         50ovwJgEdlXpP2eAW2X77pL3QAqRQuBAnuc/JkzElg0awgGf7EZ4+9KA63zQJMyk6R4b
-         utVRjB71PjcLnDJ7LXllDTm7nbNoBYZSaprMxzF759+isCyMS3MWDThdlcoGN/r84zRY
-         ui6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789917334; x=1790522134;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Mgud08gkPxQ4NnmvGTXskBie38O82h+Pa0pzGaRLVXA=;
-        b=K6hYQmJZUerXMnsJbW4B5Xe+gdStszEIXN8ZCNioTTWTOCzAvOrhhLDl32O+s1pxjJ
-         Ri133V3KBJJoFVHduhra1bVTFDf4UuozNXo4UNjWMjYpGS4cN5VbMyVO5ygukyC6BdrM
-         BPuerFbSOcv+wgysbDmFJ+GRkVO030Tur/8THiFvwDGCdGNsD7ivEfDXWD1R0RE8ux97
-         WPE45CzNFQQny3GloSPpa4N6ARoewtbGuyhBGRqZAtW1+scPyq3F9DoS6713OM38QpF2
-         gtjo8J/G64skqeHLtAqbu3LuRcQ5GugzUOFY38ra5+2KtpHyjRCk2eN18kbQsg5r+fHg
-         O9Tg==
-X-Gm-Message-State: AFuF++lgg7NcIwS5i/Rj7qBisQUlIFy2VRt5UBcuNzVOcc1xfFlDWy6K
-	Ih2uV6fON17bJZ2urCtzy0pcGms5nuS6jOjhggI5iwZSp5zYuohpDMqjj9v6Urk+gracFiVHqxd
-	NedXfUESoN2ZsdgttNWpNrjiVc9vJenWplbFX
-X-Gm-Gg: AYBFou3ZAle6hboy//CMnvviIIcE5LWEOUhBZhYxYGVd4IJMF6bczYgmZX73D/Ytko1
-	wfff/oIgKgrC8gu+EMB6lHVZ1oD8QASa9x0/0plcf67NHOstwQ/vZo8U2gq37dxvyNCBnpaLwoo
-	Em1Gv2K2S/d991kM8gG3V7nV8K8F49ttHFGUZnFoxx+NiubfnirRuTY3F0DKXr0Y+rN22MTcmMX
-	ZAeTlnGuJ/YgNO7ZnfAQ65fZjD5vCsPdBQYu5zRtCTb4EOotZAQ6Pp2VpgwC97V4pu8CaNPoQX4
-	p9NHvOMO9tKOVagrAnKz2xinX2uKo7CJgMiEYpuzb/tYxW5vypBUksqLzL8JsX6q2/7eosegOFH
-	xfb4+tW0CAg/o
-X-Received: by 2002:a05:6808:6d8e:b0:4b8:4703:db8a with SMTP id
- 5614622812f47-4cb69b98d68mr10643228b6e.19.1789917333824; Sun, 20 Sep 2026
- 08:15:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="LyjSjPlq"
+Received: from relay15 (localhost [127.0.0.1])
+	by relay15.grserver.gr (Proxmox) with ESMTP id B143C3FA87;
+	Sun, 20 Sep 2026 18:58:05 +0000 (UTC)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay15.grserver.gr (Proxmox) with ESMTPS id C11F43EAA3;
+	Sun, 20 Sep 2026 18:58:04 +0000 (UTC)
+Received: from t14.cm.kolding.net (unknown [IPv6:2a05:f6c5:43c3:0:71d:3f4c:4885:3ab1])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 162341FDA07;
+	Sun, 20 Sep 2026 21:58:03 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1789930683;
+	bh=vrklPTZvPch2HnTPGrV3N7W7mx20cwZeHxYrVl82fUI=; h=From:To:Subject;
+	b=LyjSjPlqFldIC0E32tvr9hIKAT+iNUV6Vw29ysw8/7Q1LLD8lXIuFTkExH7LF4Y4T
+	 zkvGqxynXYV1lNriTQAXjeM7Uz6fExi7YUE6jVBHqlFoZdj7qtmFbE+7qQP1RC0aGb
+	 pbaxReBckFml45XC+EIxCcqFr5aE3ZdKK6wVjtFLdOL1/lOfH35Z9ca0hfbthAozSn
+	 BUSde8QqeL/2dzN501M+MrQphQF43yBF10TrG5fDWYsVgzuDANwwPHZHgk0RPQZ5a0
+	 7NB7oq4PutwXz0KbS9qe8YO2/mq+ywGZ518sP/RdQItEb3ziNAKtMJojSZrjqiZhNp
+	 uy1XsPQN6B2fw==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c5:43c3:0:71d:3f4c:4885:3ab1) smtp.mailfrom=lkml@antheas.dev smtp.helo=t14.cm.kolding.net
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Antheas Kapenekakis <lkml@antheas.dev>,
+	Tiago Silva <tiago.paulo@live.com>
+Subject: [PATCH v1] platform/x86: ayaneo-ec: Add AYANEO 2S charge control
+Date: Sun, 20 Sep 2026 20:57:59 +0200
+Message-ID: <20260920185759.3426627-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Dan Z. Bonomo" <d.z.bonomo@gmail.com>
-Date: Sun, 20 Sep 2026 09:14:57 -0600
-X-Gm-Features: AcwNN1U7Ph_xWQvFErd8UTWH-xee-XmaMh2Vgz4qS9qVQiSe0V7kuRg6KA2NInc
-Message-ID: <CAAkqa_bGiUUkTC8M5sQVyL3FGwsEBRkcYKhSMRi92gP_1Dq3VA@mail.gmail.com>
-Subject: System76 Pangolin (Phoenix) needs delay_suspend=1 for working s2idle resume
-To: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <178993068357.1664346.17705031083463011378@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-Hey folks,
+The AYANEO 2S uses the same EC fan interface as the AYANEO 2 and
+additionally supports charge limiting. Add an exact match ahead of the
+broader AYANEO 2 match so the charge-control quirk is selected.
 
-I had Claude take a look into why suspend wasn't working for me and it
-ran into a note in the kernel's amd_pmc driver that asked me to report
-this:
+Reported-by: Tiago Silva <tiago.paulo@live.com>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/ayaneo-ec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-"amd_pmc AMDI0009:00: Delaying suspend by 2.5s because delay_suspend=3D1.
-If this solves problems on your machine, please report this whole line to:
-platform-driver-x86@vger.kernel.org so it can be automatically detected
-as affected in the future.
-System Vendor: "System76" Product Name: "Pangolin" Product Family: "Phoenix=
-"
-Board Vendor: "System76" Board Name: "Pangolin"
-"
+diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
+index 41a24e091248..81dac81262e7 100644
+--- a/drivers/platform/x86/ayaneo-ec.c
++++ b/drivers/platform/x86/ayaneo-ec.c
+@@ -76,6 +76,13 @@ static const struct ayaneo_ec_quirk quirk_ayaneo3 = {
+ };
+ 
+ static const struct dmi_system_id dmi_table[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO 2S"),
++		},
++		.driver_data = (void *)&quirk_charge_limit,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
 
-Here's info on my system:
-
-Laptop: System76 Pangolin (pang13)
-BIOS: APX928_V00.01_T0008ASY1_ms
-CPU: AMD Ryzen 7 7840U (Phoenix)
-Kernel: 7.1.5-76070105-generic (Pop!_OS 24.04)
-Sleep mode**: s2idle only (no S3 available)
-
-A summary of the problem:
-
-Without `delay_suspend=3D1`, suspending via s2idle results in the system be=
-coming
-completely unresponsive on resume. The power button (short press), lid
-switch, and
-keyboard produce no wake event. The only recovery is a 10-second power
-button hold
-(hard power-off).
-
-This also manifested as a secondary symptom: rapid suspend/resume
-cycling when the
-lid was closed. The system would suspend, wake spuriously (EC in a
-broken state),
-see the lid closed, re-suspend, and repeat =E2=80=94 causing the screen to
-flicker on and
-off in a loop and draining the battery.
+base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
+-- 
+2.55.0
 
 
-The fix I applied:
-echo 'options amd_pmc delay_suspend=3D1' > /etc/modprobe.d/amd-pmc-fix.conf
-update-initramfs -u
-
-So far so good, it seems to have fixed the suspend issue and I haven't
-seen it stuck in a monitor off-on loop since then either.
-
-Hopefully this helps smooth things over for other Pangolin owners out there=
-!
-
-Thanks a lot,
-
-Dan Bonomo
