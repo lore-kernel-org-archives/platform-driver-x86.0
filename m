@@ -1,187 +1,146 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013049.outbound.protection.outlook.com [40.107.159.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f42.google.com (mail-pz2-f42.google.com [74.125.228.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1870F342510;
-	Mon, 21 Sep 2026 09:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789982454; cv=fail; b=O6Uq/p6DR+N4kXzy5e6bq7lnREWn/Zp6EKH19Z5Spv+J9yZa2MSFQfsUHKPX8KmZO8LUtfZ2IysGWO/9/RwBcbAlntYzFukaZuJqdhavV/rwH6Rslb5vCznuaz1kVaEHXsb63JrqSctB1RZpoFNhvLtqia1KmFA5TDoEORwOLhI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789982454; c=relaxed/simple;
-	bh=7GwmM5cPBLTo+N65myFjInKOEFVUXD1vmns9F7XYeLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VsauVnztvMXYrt7t4aUKFkCabiS7mVej2DVv1+isr3fRHIA4v6Fj4mLdAXNPB65rHHblfbLfC26lmp9Xy+XQ4C4aVrqchnFXdfb0Sh/1D70MYx/w8SqmQv9m3hM81VBOB/O95e4bMjc1kHVI56fBAgzTv9xkAGUV2d7Ukkavumc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RCPIZGp7; arc=fail smtp.client-ip=40.107.159.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E481B47ACDA
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 09:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789983241; cv=none; b=QMAWKX5VUGReF8+I9h0PSDq2Cul7KlrRvbPukzjXE3zr8Jr86MQsBakkFkaCJ/10kHd3e2IJ07taYEdIg974SYum38q5he928wR8wqcTd14aF2llAvPMkNMhI/GG0IAUOR1c1c7tPxdy1/6ek/pfPQzTL/p3mMqn4E8lPTjJUeY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789983241; c=relaxed/simple;
+	bh=XN3wD/6iJbpsCLQ3BC9IBxI/UKlc9BPOHOZWc3v6tGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RM9koXBsrBQYjrgjDEOTu3JF9Hl4NcVDTONRwq4pnOSxQVdtRkmDudPZNv6z/4wRNKQf+vlHigwA64nMh2J+gEwUAPFW/kPrabhRFJM0pLIqZuSYmNLDSw5LYLjqyDPQxvPEWU0S/RHL/FaqKBzF7WNl34zQUVDybJ8rUbWFl54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jE8mMlAv; arc=none smtp.client-ip=74.125.228.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RCPIZGp7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CbvurdRTOmN6uo5AIGtL3Ljusb//SgYeb5J2piouYoM80YuX/iwCDay5XLaf180DecXswRVyLoCs5l7tj9cGlJUCvcSzkO4YLLfTTNhc1soz2tpGJS06x6ObTU447RFCb9DO+WGs8PjMVw2l7Og83GgCbDBKZzvzU0CmvxesTdtPXLBlblFuORzcuwLuAwsEZ3Z9sH0bW4BGpFsLOCywn98cpteKbUyDHf8S6xtBfFjORqkbw1DxN8hX9wpDJ28XIRqxluE8tgYAhm914RJvNdHQjwUJp7Up9bYVbdC4tET/ecNPysHaM3SBitc7d6ZXGs8x6UR323Wif6O0BbZZBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=My5lgTSy9n5Td+RlMXuK3Bw4gUPuIKXOpb94zt63xZY=;
- b=BqmQ5CiRqLpQfqNWNmnjuUZ/YQg0sQFDqSdFqFXeSNENpWQY5J74TkIDmJKlWYXoJmaGx3omR2FtLEhoqrIAjCFdbOhQcBpNBaAdFqznSjXl43HQFKgzM/geFNP6IKyYKDAH5gjoX6woVtUdOvXh8+oG+Xnz6dUhLl2qSTnlYJhtt/gSsGNGlwq21rd8rIJDRE0uVcPC+QX1ObGL9vcYB/4sbi1ntyRUH2c3NZONPknjaw068Mx1iT6lPegD69Z8cAXr6F2pPk2fA4mxMVX4vap+RYNdzKq6MgKTxTJIyVPD84GJptWRNbjCyadS9pQK2GrXgusj7UqGuoirMIqjjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 164.130.1.60) smtp.rcpttodomain=petermarshall.ca smtp.mailfrom=foss.st.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=foss.st.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=My5lgTSy9n5Td+RlMXuK3Bw4gUPuIKXOpb94zt63xZY=;
- b=RCPIZGp7A5WT8JXI5wc5R4ZSd1xGCAm1Dind/zFBBEfNCYZavF6B/I55ZQ7VNYHdxaceLlXAKOE2i2ppNoAjjJVza9Eegn6egzzcDAmobF2ST8da4VDJjPFj1x9dlHwe6URqMv/6hzqxkTYvOq6I8BK2Jf244bhHgA661PCUyPsRZXsfBVTjQs0STAKcnGmUVAHg/6quIBYzKkbCGfhCmoLKMsGZHFwvTqA7gjsbMbjz1bs135hvFAyh0Rs0Qc4Pspd2O8dIh5PTZp4mQIhrv97qUEhEWnQGCepUKqSK/b+9JbCYjKYJnI0B5jpADPf1UUtJ8DG1zVi3t8sE1zJ7lA==
-Received: from GV3P280CA0034.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:9::31) by
- AS4PR10MB6112.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:584::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.428.15; Mon, 21 Sep 2026 09:20:48 +0000
-Received: from WA1PEPF00009B3E.eurprd05.prod.outlook.com
- (2603:10a6:150:9:cafe::6f) by GV3P280CA0034.outlook.office365.com
- (2603:10a6:150:9::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.16 via Frontend Transport; Mon,
- 21 Sep 2026 09:20:48 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
- smtp.mailfrom=foss.st.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=foss.st.com;
-Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
- designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
- client-ip=164.130.1.60; helo=smtpO365.st.com;
-Received: from smtpO365.st.com (164.130.1.60) by
- WA1PEPF00009B3E.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.451.8 via Frontend Transport; Mon, 21 Sep 2026 09:20:47 +0000
-Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
- (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Mon, 21 Sep
- 2026 11:26:35 +0200
-Received: from [10.130.78.67] (10.130.78.67) by STKDAG1NODE2.st.com
- (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Mon, 21 Sep
- 2026 11:20:46 +0200
-Message-ID: <0bb08d07-bd06-4adb-851b-6b45d296b328@foss.st.com>
-Date: Mon, 21 Sep 2026 11:20:50 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jE8mMlAv"
+Received: by mail-pz2-f42.google.com with SMTP id d2e1a72fcca58-86e6d007703so2287067b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 02:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789983239; x=1790588039; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=I3HW33qzxdGN9L2D3gidyxoorUQE5ncddhmxh8u52Cw=;
+        b=jE8mMlAvtBe9TGkrEzS6U/M0+iespgMyxlU25zlYD2ftCsGyCRSCD6jaTB2719kNS/
+         qQPk+mPp6UUACPUIPdi5L6Xh5CuS3qGBjQVp2ulp+5J0rPB57TrxRBtU2seSBMoAvJYv
+         rGzhKu/0NNc8HqLrMAEEzYt0CVWiDMVoFA2zhyMu55k9+Se+Nvunyr0M0bfnWsiztZY1
+         cnMyYY8TMpbrdPIwUJWhyWK4NMnI1IhMqCWmZab8PfYp5ozp/IEH77i/lVSYl81JAAJl
+         EVCVyXOJcgktkdbNwRbOLHMIq5s17zjDbVdExuiZUP77Hr3b9jGhNjqUs2ZMSCNEg+UY
+         /Glw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789983239; x=1790588039;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=I3HW33qzxdGN9L2D3gidyxoorUQE5ncddhmxh8u52Cw=;
+        b=RM9eWes4Obz78/g1otsX2SP1GNIizUs2vyugx+2+PbHsEFWELFdnKpBldXg4SNseyu
+         O4NV+VsRg7AKZfwnaQ5iJbXTWwJXZi2wtplhAOgJ9L9Qne4krLy/FVJcXloxy1tCfC9o
+         n49HfInab7ocL6PCSJmZ76fDfbYatsuXY0CghPQAsZzjiOO8gQeeRc4Uv5aScd5770Lf
+         B61dsmtShseVM7UPbwXZuC1bo4GF2WmrSvcMe70FhyZyvAPwgXpV1wqXFd5YhHzm+d6Y
+         5duSMQsu71IluTFFEWE6kRKJ68tuPk5HysdTQiRx0ex9n+XO4Pvckd/wuKOU4ykgQFAt
+         k/dA==
+X-Gm-Message-State: AFuF++lKdUnZdIcE8HcqmPiHUe8KnTnZUdcp6h+I4SYrNHrsbD1ef5rJ
+	xG8mPTM1w1Xe3C6tfCAblke2R+1xsuKtyv7xIIfmWywmdeFB1JuWqGcS
+X-Gm-Gg: AYBFou3wzzolTMZBc/HvEhOU2YnjzxQWCEGWhpB5I5j8PdhwLCfAFcoSBKSSmJGfLs/
+	pG5lsAQdt85YP2XkDvO+fhRRivAgGpv2Vpzv5yY/tUDZ2txR1tZfHoT+oH4nYmHLP5ku/K3bOmX
+	TDpmg3qwmnlLthfI+2iihvsW/QuBGvYD0lxMKXrT83OzMceBAOX+1bw7CSwE8L/DI9yCeB2/k+9
+	cYQlJdfTJ3kwA1XWTGFaE2OvtQUH2bDFGykvENez6/16tbBEP0Y68OB2JFfv/ri6nMwV+5L3EkY
+	TRndn6Mek7EjSwd/DhALMg5doS5Ek25woRBeuWGFFfIT1n0ysFdrtjjmatvicCtTMuVpRkqn8Ts
+	boGVkVsGcOXO6sbUAbq/L4l6IxK/6rW+yXHWsxPtxzzyIU8W80gHNFJ/r8miy/5mMK+24Iabv35
+	wqU4IpxVFVVFyZtWThRRLeRNs4cvFFW+spr8X/g7FgppcNNh8goSSOWCwoxdblLx7AkiuYQsjmX
+	U83JguUAO8Xe5GJLEuGbWhQx3Lmb5cYHbU=
+X-Received: by 2002:a05:6300:85:b0:3dd:a006:ed94 with SMTP id adf61e73a8af0-3dda006ee05mr11552164637.42.1789983239113;
+        Mon, 21 Sep 2026 02:33:59 -0700 (PDT)
+Received: from localhost.. (59-124-112-186.hinet-ip.hinet.net. [59.124.112.186])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc72ae72a38sm3127884a12.5.2026.09.21.02.33.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2026 02:33:58 -0700 (PDT)
+From: chipang_kao <prozac2734@gmail.com>
+X-Google-Original-From: chipang_kao <chipang_kao@asus.com>
+To: hansg@kernel.org,
+	bryan.odonoghue@linaro.org,
+	ilpo.jarvinen@linux.intel.com,
+	W_Armin@gmx.de
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] platform: Enable ACPI WMI and ASUS WMI driver for ARM64
+Date: Mon, 21 Sep 2026 17:33:39 +0800
+Message-ID: <20260921093339.261306-1-chipang_kao@asus.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2384d8f5-106c-4cbd-a119-62d923725bf7@kernel.org>
+References: <2384d8f5-106c-4cbd-a119-62d923725bf7@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/11] media: i2c: st-vd55g1: Genericize driver and add
- VD55G0 support
-To: Peter Marshall <pm@petermarshall.ca>, Sakari Ailus
-	<sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sylvain Petinot <sylvain.petinot@foss.st.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Dan Scally <dan.scally@ideasonboard.com>,
-	"Hans de Goede" <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
-References: <20260918221705.323510-1-pm@petermarshall.ca>
-Content-Language: en-GB
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <20260918221705.323510-1-pm@petermarshall.ca>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ENXCAS1NODE2.st.com (10.75.128.138) To STKDAG1NODE2.st.com
- (10.75.128.133)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: WA1PEPF00009B3E:EE_|AS4PR10MB6112:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2624fe8-8579-4a55-2d5e-08df17c19f4b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|7416014|376014|23010399003|1800799024|10067099003|56012099006|6133799003|22082099003|18002099003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	vyAA2Im70NKqoMVlcIxtvWdmIkwExbWpbkzoqVFqN/3EY9FcBfusXcUsfFR7Wx6zGHO+/qPvXVawtVKQEMRG++B/6TEaHvbUleBBCxojPp1uHOQopBnPHeBUvGjg5dmVV7J/RAHtuY+ArmAQT55G0vGUHc1AUTSBCxLXbb/LOlUZsMW/lCU26IcsNzrUBCG/OXKPW3KlwBLobb+9Tk4C+jOaRDheZ6eyoWAvpFyzxuBRm6K5xZrV3rU5FRhO92oD7qfrdba9ji3Xjy6/IU1MVbc6kr7RO3Y5FY8rKD2cczVwGE4AHpwedCnEJ52chWWh7271OwqGCEZIqFdC0uH6W7/s2Z4GDj5pqT4Vg36prkIcZA/bGgwyoea5o6GSXD4wrK9kqEtXVbsNJN89BGlkKA28m7aBD0qmJUmW1GBlurASnEKfLAuE/h68K81sDG2RUX4krPRiHotN40DzK+t96Q2FQbkNlY9yVNz3ruVk+Zgm4qxYkiZuB2kOt7gK/hRhPqJE7eEPlDKVjIT387WFm9yqOAuNEjL+3eXZgeKU1XvSf72qosxmJPYpBBIkGLHB77XTHwgsQwlR3P0mu0nGzrip6ZtIophYmFBkHO+L0UBIwKEbthek5XMS/Rf9c1cfqQ4Klwzp/FepSmzJDoiF90IjNtJvsbKTrCzCUDjE5s+GDpMtuuq26UvnIQdbDPqbClTvPlk+wLJ1ichAzOF46g==
-X-Forefront-Antispam-Report:
-	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(7416014)(376014)(23010399003)(1800799024)(10067099003)(56012099006)(6133799003)(22082099003)(18002099003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	p7rytmSyaKXTpPJZUKkBKBiKL3QtucUpNWH7NsFSEnwoltnIUCMyun/gmf6/sIEirCF0cTrVkl+/NNzSb533G4iZKkoq0M9zYoDB88Yu5evwVBQA7NejaWxh7++wqqKBwjs+FB5Eyl947DbtWHPBNWpViK5Cvu6nNljhecNP9nTkKm+VKBir3ejLjOgcUREpJtvSeQdgGM/PfpWXhuLVx8xNAxH7mr/GycAFpZcuvqhPsrrLvuqrWxTwF93R29yTrRNs01WQ4wsFmCQugkCHPTidcQGxRcyrwlW/8s1smEyWYMuHJJCBDBCKTTL7q9yk9mHsmGQAoM+oMAGa+P7GNyuI1B/z2//ihRZaWfIYehIGr8pqiaXScs9dZnIlmELN0HWVlMr1WvbScfFKCw6ikw7+Fe7AWsbnnp4R7xeZ5sNtnoajMassEft2VjyCV7RX
-X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 09:20:47.7415
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2624fe8-8579-4a55-2d5e-08df17c19f4b
-X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	WA1PEPF00009B3E.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR10MB6112
 
-Hi Peter,
+Hi Bryan, Hans,
 
-Thank you for your work.
+Thanks for the review and valuable feedback.
 
-Le 19/09/2026 à 00:16, Peter Marshall a écrit :
-> This patch series refactors the STMicroelectronics VD55G1 and VD65G4 image
-> sensor driver (vd55g1) to abstract sensor differences and adds support for
-> the VD55G0 monochrome sensor.
-
-I read through your patches more closely, and I still think this is not
-the best approach. So for the driver refactoring this will be a NAK for
-me. I'll gladly take the ACPI parts though.
-
-Sergey is currently working on bringing the vd55g0 downstream driver in
-upstream, which I find a better approach. Not sure if you're working
-together, if not I recommend getting in touch as it may suit your needs ?
-
+> On Thu, 17 Sep 2026 15:30:00 +0100, Bryan O'Donoghue <bryan.odonoghue@linaro.org> wrote:
+> Thanks, but there's already a series to this effect under discussion:
+>   https://lore.kernel.org/all/20260724025959.142826-1-W_Armin@gmx.de/
 > 
-> The VD55G0 is used as the IR face ID sensor in devices such as the
-> Microsoft Surface Pro 9, where it is found under ACPI HID `SMO55F0`. It
-> features a native resolution of 644 x 604 pixels and differs from later
-> variants in the family in several ways:
+> I only now notice the second patch is not covered by Armin's series.
+> But this duplicates Kconfig entries.
 > 
-> * It uses a different native resolution and register addresses mapping,
->   requiring specification of generational feature differences.
-> * It lacks support for spatial and temporal HDR.
-> * It requires an exposure duty cycle limit to keep the illuminator current
->   within safe levels.
-> 
-> Tested on a Microsoft Surface Pro 9 (an Intel IPU6 platform with ACPI
-> HID "SMO55F0") running kernel 7.2.0 (changes cherry-picked) and libcamera
-> 0.7.0. Builds successfully on linux-media next.
-> 
-> Key changes from the previous series:
-> * The vd55g1 module is grown to support the extra hardware instead of
->   replacing it with a completely new driver.
-> * The driver now includes a builtin patch array. External firmware loading
->   is no longer required.
-> * Lower-level error messages are demoted to the debug level to keep kernel
->   logs clean and actionable.
-> * Hardware registers are now fully abstracted, so operational logic never
->   needs to touch a raw CCI address.
-> * Changes are broken into logical steps to improve clarity and make
->   bisection possible.
-> * Rebased against linux-media next.
-> 
-> Peter Marshall (11):
->   dt-bindings: media: i2c: st,vd55g1: Move allOf: after required:
->   media: dt-bindings: i2c: vd55g1: Add vd55g0 compatible
->   media: ipu-bridge: Add VD55G0 to the list of supported sensors
->   platform/x86: int3472: Add VD55G0 supply GPIO mapping
->   media: i2c: st-vd55g1: Default to illuminator on GPIO 1
->   media: i2c: st,vd55g1: Handle virtual firmware graph endpoints
->   media: i2c: st-vd55g1: Clean up module error reporting
->   media: i2c: st-vd55g1: Unify frame timing calculations
->   media: i2c: st-vd55g1: Abstract sensor models, revisions, and features
->   media: i2c: st-vd55g1: Use indirect hardware register addressing
->   media: i2c: st-vd55g1: Support VD55G0 global-shutter image sensor
-> 
->  .../bindings/media/i2c/st,vd55g1.yaml         |   34 +-
->  MAINTAINERS                                   |    1 +
->  drivers/media/i2c/vd55g1.c                    | 1667 +++++++++++++----
->  drivers/media/pci/intel/ipu-bridge.c          |    2 +
->  drivers/platform/x86/intel/int3472/discrete.c |   18 +
->  5 files changed, 1394 insertions(+), 328 deletions(-)
-> 
+> I suppose the best approach would be to split drivers/platform/x86/Kconfig 
+> into two and source the generic one here.
 
--- 
-Regards,
-Benjamin
+Thanks for pointing out Armin's series and the Kconfig duplication issue.
+I had review Armin's series and make sure not to duplicate work. Regarding 
+the driver location/Kconfig split, I agree that avoiding Kconfig duplication 
+is necessary, and moving/refactoring the driver directly under platform/wmi 
+(as Hans suggested below) seems to be the cleanest path forward.
 
+> On Fri, 18 Sep 2026 09:38:04 +0200, Hans de Goede <hansg@kernel.org> wrote:
+> Yes ACPI / WMI is used on some ARM64 laptops, but AFAIK all of
+> those are currently still booting through Devicetree since
+> the current generation ARM64 laptops is missing various info Linux
+> needs in the ACPI tables. So for a fully functional system 
+> Devicetree is necessary.
+> ...
+> Questions:
+> 1. Has this been tested on an actual Asus ARM64 laptop or other
+>    ARM64 device? 
+> 2. On which laptop/device model ?
+> 3. How was this tested, how was the laptop booted; and does booting
+>    it this way lead to loosing any other functionality
+> 4. Were any other kernel patches used during testing?
+
+Regarding Hans's questions:
+
+1. Yes, this has been tested on an actual ASUS ARM64 laptop.
+2. This specific model has not been publicly released yet, so I
+   cannot disclose the exact model name or marketing designation
+   at this stage. However, it is an upcoming ARM64 platform 
+   featuring ACPI firmware.
+3. The laptop was booted natively via ACPI firmware (UEFI). To
+   verify the WMI functionality without modifying the base
+   distribution kernel, we built and tested the modules (`wmi.ko`,
+   `asus-wmi.ko`, and `asus-nb-wmi.ko`) out-of-tree and loaded
+   them using `insmod`. The driver successfully bound to the WMI
+   devices exposed by the ACPI tables and functioned as expected.
+4. No additional kernel patches were required. Note that we have
+   dropped patch 1/2 from this series because Armin's patch series
+   already removes the X86 dependency from drivers/platform/wmi/Kconfig.
+   Since Armin's series is currently under discussion and not yet
+   merged, our v2 will focus solely on moving the ASUS drivers to
+   drivers/platform/wmi/asus/ while depending on the WMI updates.
+
+> As for patch 2/2 I think that if we want this the driver should
+> simply be moved to platform/wmi .
+
+I agree with moving the driver to drivers/platform/wmi instead of 
+duplicating it under drivers/platform/arm64. I will address this in v2 
+patch.
+
+Best regards,
+Chipang
