@@ -1,65 +1,65 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012069.outbound.protection.outlook.com [52.101.53.69])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013025.outbound.protection.outlook.com [40.107.201.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D714E7817;
-	Mon, 21 Sep 2026 17:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DF84AEBC5;
+	Mon, 21 Sep 2026 17:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790011640; cv=fail; b=JFTkSyUxLvnQWGtkNIJc723rqPw6OdCzM6ZigzOFtX92dhPLdKxPE0u+tYIVcJUOzyolb11VEhhYK2vBv0OfKYoo5GTyaOYi8nOofxIDoRsz/oO1gb2578E8sIWGAM18/IquLuEhcGLU8x1ZdMZS/lzv2S5jS9uxp4ZhESx0I8I=
+	t=1790011664; cv=fail; b=TFLbV7XQnPLYtTCpFPThj+Swf5obp95Hc33zEsarDiLKZWoOnHnR0kveZZkxpAr0Ky6x2hXTaa4lIJa2Cu/Qcp58tddFOEhZjVI7O2DJ66ASJvZc829Y2/jhWTDmSrPefcwO99MMYfIKlq8nv8TXEDGcmKQn/jieqIg+iB/nMCI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790011640; c=relaxed/simple;
-	bh=BCumN4lkEFWTCdRoWjqvVzlfZ8x8uOfwFSeW6rIqMTo=;
+	s=arc-20240116; t=1790011664; c=relaxed/simple;
+	bh=mMruqVBlu4vqoKRJFjV45jyv7AAJM+uCT9jwfbhEFp8=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fVznJcp12BQBRM97QuxuyN3iW/HOtYA91v8s65WOnjKXGzCboHsI+kWGBI4E44o4U86Dw20m64DM4J6UU7c0Q87v16FsocB6oiw4b4ubm9x/NnzMMHCo7XeJL7qlJkhU9qGoP0dWjRunog9uWpmrIcIuogoPMT5ZAMoPBasBzTw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=d3K8zx2v; arc=fail smtp.client-ip=52.101.53.69
+	 Content-Type:MIME-Version; b=nbwYZ4u3HDqu7h+tuw3dJJtpBjfZQa1AX57e1aXr2jxP+97z1V1OfTAjNKzpFIZ5KOvNyLOWLJpcXGnTnS5/0vpjFoPZH5R6Pz589UN9pOjA06Y97E+sQWbxbdofcqCX9bjrg7Zj5dwwMUrMNUujHhQNhr49+P2iuu44/3DLifc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b/mLYZNT; arc=fail smtp.client-ip=40.107.201.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="d3K8zx2v"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b/mLYZNT"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ObVGrnqyrK+cNact+dIzLsQFtLHTcOjcm7RHFdPYuh/O3uhUQSqMpSZTpgGufojhNjw0pgDv81cdA+OjLBlOH3imfRrUuyaqVY+KM1X4kjXyvFualPhTqm5a4JOziqMapDLjDwmddfcKaYKaoXBSsGGnyBe7x7rA2mHulOpBNps1ydqNV1X/pqX2r+9F1LqJGI1Qa8drudJBYXm8J1pLBi5CFUP+Qf0mHSQHIoCmnsEdmmzzCUApb522gg+p1HuZRobCZilZSbPxfJBxPoLsd/sviuQ5sfA8evCNEwWSTRN0Tedqd+LuUAybD+zYc11KQD7EyPbjDPjBeBVmAnL0/A==
+ b=DMqNgCsQDQxQkD18eXV+OXTHT+d5SxOQWWFWzWReMD35BC8t1e2AXCHv/+3a5HE6Dv/kIby/NY7eR8Xk+2N2EZnYfgvVRgmAzSLFjvDA17RQhsQra2aRf/40tOR8mxdDOPc0OazZqpxhH+sTJmt533McBKnn2cMZH2obsMozY7yeaOwILo4i0qbsyoobR+FdND7reUUwZ8JmATC55OmTwmONpVq+kkvS4IAHSgyhjQVLFrtfsmmXgfkrBaxiQ0d49NwkYAf8jgFXnqNVUeC4H3MBjTHIGA0Wv4JJ4BBMNbf87lvwEZ+tNiImmHOcCCaD/UMqdIzR4Vkn3Sv4LSeZ2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fz44fuSX3mV0g1c5ieGGS2gx+DIIXUpZazVaiyxwT4g=;
- b=MTB3YDMpglYRBm08endqm/DKv7p8OIPyw4bccvN+pgSjJi89xO/MkTI4DPCRz3kQ74YjWnfFVS0Fg1Ve3QWPwcHv+o+9wfNJwfLAqxifEcD2kgoXCc1wQkcO2+Khl26YY4WeBCnY+h0/Zb/n/XpDS5hY7OjE4t4buKqwmjaWhUPfAAXs72GOjwrXt8g+6X7lvLenfn5adLQigwg5yyPBJ8gMAWJI4YrMCnGDSJ85C3Z3JCaRPicM9z1WwTgBZxchQb2TstLZ8L9fhKlDo3VzNnrlAXzj8a7yt+ztpPAcPchEP+ko29HYQERyuctm3V8AgB0joXPOpNcL3g1W3n1gEA==
+ bh=FPGjR93wA5KteZfx/6OpByIwiRF4PerRV/DH16vq5iA=;
+ b=vTifb3UVOJjqeaw64263R7PI8GRcATlVZplzcShgssav6/AwU8pjRVtsxf8xhgWqw0feGLgzRI3OVE5D2lh4CRSFq0PMmcE6SaMRK9//ozKakR8q736fl6eAw3+hKjziuc+V+3LNquVMe1wI3Aad3C8IsnycSevjZCIcnaBZmZ7cD3EtooRMXAjzXM1gtnJCPAGEJrsCiNqTHf+U7NwolmKrkL1m3htjdXTJ3ycza6HSQJ7p1yVl0ktaZzZyOSAzIE0JrP+iJIykgMj404lOBMBSMv9wspBANQxoQqu97WHw5p92cXX6qrwSXx4QTvsrJIrEO0PegxtCYqsZbVpviQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fz44fuSX3mV0g1c5ieGGS2gx+DIIXUpZazVaiyxwT4g=;
- b=d3K8zx2vlzP+SRvJXT1o2uGzz1z2Ev0oHBpoG7kss2PY0s9SjfquCv8k2ecZMKPC9kKFGUKKLX2rjm+fCrGpleBguURnW5+/4xlGyAir/bhhFs2mOhQ8cTWZeQGHFnHtSH4ntWl1sDN6AnVZi3OhJ6uoTfXzoxOghfAgVx/D1e0=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ bh=FPGjR93wA5KteZfx/6OpByIwiRF4PerRV/DH16vq5iA=;
+ b=b/mLYZNT/D27+wCcmex9rpiLEnQaAGhOhF5lyNBS5Y38j/0Yu6rPsM4mph78qMwmuUQIiQZygqZ1wJwqDv7ow+fmxKG3dL5HQJDH0pXL9MAriv8/neIXACnxFm3LZrH64wYjaJCsNU9F7twB7nATvh9b1i6zJkiWCUr5AEYFC7A=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
- by DM4PR12MB7525.namprd12.prod.outlook.com (2603:10b6:8:113::10) with
+ by SA6PR12MB999202.namprd12.prod.outlook.com (2603:10b6:806:450::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
- 2026 17:27:14 +0000
+ 2026 17:27:39 +0000
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0428.015; Mon, 21 Sep 2026
- 17:27:14 +0000
-Message-ID: <8ce34344-4d09-4fe9-b356-101cb4d3679d@amd.com>
-Date: Mon, 21 Sep 2026 12:27:13 -0500
+ 17:27:39 +0000
+Message-ID: <669e9561-987a-45c6-9d5e-b551fbfd0cb7@amd.com>
+Date: Mon, 21 Sep 2026 12:27:37 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] platform/x86/amd: hfi: Fix out-of-bounds reads when
- parsing ranking data
+Subject: Re: [PATCH 3/3] platform/x86/amd: hfi: Rely on ACPI enumeration
+ instead of a dummy device
 Content-Language: en-US
 To: Hans de Goede <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
  <platform-driver-x86@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+ open list <linux-kernel@vger.kernel.org>
 References: <20260921170411.1149960-1-mario.limonciello@amd.com>
- <20260921170411.1149960-3-mario.limonciello@amd.com>
+ <20260921170411.1149960-4-mario.limonciello@amd.com>
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20260921170411.1149960-3-mario.limonciello@amd.com>
+In-Reply-To: <20260921170411.1149960-4-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9P223CA0030.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:806:26::35) To PH8PR12MB6914.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA9P223CA0004.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:806:26::9) To PH8PR12MB6914.namprd12.prod.outlook.com
  (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -68,146 +68,127 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|DM4PR12MB7525:EE_
-X-MS-Office365-Filtering-Correlation-Id: c821fcee-b019-4bdd-356f-08df180593e9
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|SA6PR12MB999202:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2de3ef11-c245-487d-2b65-08df1805a296
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|56012099006|10067099003|4143699003|11063799006|22082099003|18002099003;
+	BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|18002099003|22082099003|56012099006|11063799006|4143699003|10067099003|3023799007;
 X-Microsoft-Antispam-Message-Info:
-	DyxuYFzl7XAfXapDtugV2XPlglGd7LA+zasLXxja4weVpV0sb/ELoOiKx3Or2EjWzHSLu7FZ/U/U4P6wTtcSw1sM/6JEDjJCG/fFmbPb3HC5Xg1fBqdAAUegDgVAhKLAw6onxZyiXs43UvLWH0j0tYP1Pg8sbkEYsqMszN+2Tubr/s+jLHcTh+aMolJ79l54gp0b7X/ABvcsuV0wwl4Cqoeh5cbHwb1nBv27vBHOKsKb0d+z+NLEHx3z5d/Nbql2/m44XTQ+1tgmCCG/DbuSsgqaYAXxKvrZ6ialMGlG8clZVu5lhTl1DjNDPzEngn6E4RzgQ/8l2l5pz51xSbAzuBjyv7z02axvqDJKTlInDK8oCus4wEUzCMuP+p8psqaA+7lqVF5xBgXIUFa6pvwA4kiCPS+fKLtnsgjsKIxMD9vkhvkFivijukXJPRwo3pUTU8n3f8DmuZZs24l/qrEzRM6NrRRVotMuu0W2plfY2ouCehrNBCyGGJ+F3wawiqq+vQUNyS2Bh897nxSPneAFcQJZ3FD+tUfBBFWu3Rwk7b1EjhFIj35RGJ5luIlXsvNsTIiHqi81NkStmnR2iw8h4A5iqPeupiT0ljLDDpueJg0=
+	A0cYlrtOWSlqlWo1P1r9w8nXBHINq2AQwUd0wvJiwsIUrNRfvoDp1AG2JYyM+7RXaCt+Uzo5WTe/luHV+RGHSQY7xwAIUTSZDfX4bh9QJoROFX/A1XUdg2ogJFIrCWbdnAZWI7fzGZ1uLmdMlkZml+kGOGd0iWsWQky33FdO1RnJvgfn9Q+B5jWx7PznLEmdZ7+5syBqZh6LSMH9IObXiYcBUPMohrXt1iJJv8Nxp1Jc12A3wGqweWjVutYMtAtGjd2yLhA/8U1JokKMeg9aE+vpkze+CtfLKC2rr1IpBPQJuKgh96qgkcC7f8z4ux2oPAW+RZW8bq0Ye0GC45ToH8aV/b91FQIarWLKaJqzIXGh0oEb1djqr9JWOvYNi5nZYZO9qAW3zvhNakwzHWmMPrqzBSRFjzvvmNBxaruMEOJTg1Gxz0eZlc6Z15bg8oNDK4YyyrIxXKpM5WTG8hXnQd8VNX6noMTiOvXJx6V18KXLzVAVLWuKJXoSqXrQmQndTdJV7gRuhE8i3KIrO+4Mq0TEFWQ1X19fOJ8GPP3nB5ClDWc9vmss9IjEEGajFLOlqLKsyDwf+7WHmJitV50wyY058J0r5EKhL5uI2hR4L+M=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(56012099006)(10067099003)(4143699003)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(18002099003)(22082099003)(56012099006)(11063799006)(4143699003)(10067099003)(3023799007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M0tEaUUrUlZjMC8rZjFVTmZJQW41NlRvRlhoSGlLMnd2VE5xNTRzOVB2MEdI?=
- =?utf-8?B?RVdMRFY4b0VwN0l0emozK2FsMTBkdmw3TGQ3UE5BUWFtNXFUazBHTlM5RXF0?=
- =?utf-8?B?aG4rL3B5clo2anQ0ZVQrYXRuZnU5NUsyMlVxY3V0S29EWjllK253akFkaUUx?=
- =?utf-8?B?VUx3YUxMSnlEbktuaENjTXpES0tlc3ZzR3g0dnU5MnpwNC9DRnd0NEQyclEv?=
- =?utf-8?B?cG9hd0NGOWQ3dVNtZkJOOUozWjdEaDd5aVpTV0hiWm03aHh0aEk1NUFVeGVD?=
- =?utf-8?B?UXYxdFI5N1orWDlsSVdPRUdsVHJSUGl6SEpBWVVtRkkyZzlwYXQzT2FBUmIx?=
- =?utf-8?B?SlBNM1B0UWZBWk1iTGtCQXd0bFNnZ0YwckFXejVWdHErWnA0TjV4NG1SbkFy?=
- =?utf-8?B?bVdlSjlmbzhzY05kbHJPK0ZXR3g1U0JtN25XanZ3bmhMTE84T0x2MU9HTU1r?=
- =?utf-8?B?NmFtYXpXdXlIcUdEWjZtV0N5dVBJc2VUMnNISHRYeHRJL3BvM0s2Syt3NVov?=
- =?utf-8?B?Z2lFNm5iOEdyVUwwbGljektDNUNway9RTWszRXIrczVEZUUvZXJGSVVYd250?=
- =?utf-8?B?QWpaOGQrVWpwNUpyZExNMHp2MHYxdjRlL09kUnNNaUppSWh2NWdsQjlaNDgz?=
- =?utf-8?B?OG9nMEdKMnpLVmMrblZQZVVRelNmeHBtcDJJRmxSekZYSkw3cjVLWEtWcjJQ?=
- =?utf-8?B?MURLV3l4cC9qUDgvV2dZaURXY3VQM1FxeWh3U3NBRnpmQ3poNjV3WDQrdURF?=
- =?utf-8?B?VFVkQUdxSG9MOFB2c1JZYWJiUXF3L0xzM2tyTmVOMEdtd3dxNXgyT1NSTzJ0?=
- =?utf-8?B?N3RYNHhEOXgwcHNMYitBWGtidHRXektrNm4yTER3T2E4bDlWUTZOamcyT0Fh?=
- =?utf-8?B?VnA5djZWbnNYcUZsZXlCWFlhOHprZVArQm16SmRzVCs3Y3g3eEZra1krcWFY?=
- =?utf-8?B?OVFvb1pOOUpXcldta2ZrVDJxVmRDOWtncGxneVZ4c20wYnJ1NFB4NzBaVVNh?=
- =?utf-8?B?aGZYQ1lLd2Rxbzcxc2pDbDU3U2ExNWJ6Z0orSW56aGRlODlNU2YvREdiR2xZ?=
- =?utf-8?B?M1ZySU4vMHkyVzBpdk15ZmJJQzFrSGxJaFhVdDVnQlY5T3FkYVZCajlDZDZ1?=
- =?utf-8?B?UUF5WHRvbFRUNW5IblYxNkpBYWpSN0dYQllQdzhkQmprTloyRTErWmJNQ1hY?=
- =?utf-8?B?Umx0dVh6VUwyaWU1OEJyaWxrU3dmQk5WT2V4QWQ5cWxQTTh2QXZyWWRmSXZK?=
- =?utf-8?B?bi9sbGFCbFBaUUJ1K3F2L1ZPOHJyYWxOM3BpZWR3NXB5eURvTXpIQklpbjdE?=
- =?utf-8?B?SkVVelQ3aEY2dWF3K0srTEJmOGE4YVZCSmJJK1BzWW4rREhJckJ5QTQ4NS9F?=
- =?utf-8?B?TVZ4SnZEaFdkbFE5a0l0Zkp1QjVkWGt4ZWFmd1FodmxYNzNuUlYxSGxnRUR1?=
- =?utf-8?B?SUVBNnF2RG1MSEwxRUxHZ2dnN2lWamNyaE5ZU2lQSTdLM0FDUy9MZ0U1Vko5?=
- =?utf-8?B?RnpmZWVQWFBzVFhHbG0rVGxNUDdrRlJMaW5RNm5MRFRmV0M0bGhlMHVkb0Rs?=
- =?utf-8?B?M2ZUVkpXMno4bCtCQVF6c2dKeWdlamU2WTQwVzlKaWhHczI2SmtSZWF4bW5w?=
- =?utf-8?B?T0d2ZHJTOTkycjhrMGRXd0VnM2N6dGF5WXM1Vk9KdVVORmlGbUZCWE5QaXV0?=
- =?utf-8?B?U3FncWFUMGUzMU5MSjFQS25HWXcra3BGRHhUS3V0ZVBaKzlDUlBoWCtGUFZY?=
- =?utf-8?B?Tkc4cXIyb25EL1AzaG1ZL2g0N3BmYk4rY3VtNG11akhwSlVvUms0cFJiYkRV?=
- =?utf-8?B?RlZTNmhPWjRoNUQ3cVJMMTlINWlrVWFtWDkrNlI4aFZmTG1wWGxHQnBnNWcw?=
- =?utf-8?B?dFRyN2dLVUU4NzNRdXJXUHFlYW0rWG94RmF0UHFqQU0ydXFmdVgvdEswY0Rz?=
- =?utf-8?B?VHpYNlJuRE91bXYyaU4zY2NxRUVPTktUWS9FNVdyWmpQRVNDZmVTK3FBSUQ4?=
- =?utf-8?B?S3poQnM1SzNSR3haYUtjU3FhV2Y5ZkRKTGRnSktWVERCVFlEWVMyRDE4VUlS?=
- =?utf-8?B?b2lDZEJyME5NRWkxS2F6UGthYUVvMi9URWg2K3ZOQlgzazB5c1FUNldvMGtC?=
- =?utf-8?B?T2U0alNzbVFhZnZGT1JWNVY1enh0VlBkOU9UK3FQdkNEVk1kdk5nMyt1Nitr?=
- =?utf-8?B?bGdmcVJhNGlNdnpxRzgrb3RwS1VSTW1lL0dyZVliazhZaGV6STJTNWh2OGpt?=
- =?utf-8?B?RFErdVBISEVFeG8ydTdjRndJNUdGL3pSbjV6bXFEYnkrRjM2TWtsczFZQkpY?=
- =?utf-8?B?WmM0QlFnT2lzSWJwbHNLbmpremNQNUVjeDJQODZrS2djaG9zdi9EQT09?=
+	=?utf-8?B?czhBQW9sR2syY0hBL2hSMFVhcFAyNWhPZEdabVQ1OW1OdTRyb0hWQklsK1hY?=
+ =?utf-8?B?YzhHeU5iYmI1OWVMTFYwU1plbzRWdXIwMVJmZnhQUHpjbU5TS0YrdHY1b3R4?=
+ =?utf-8?B?MGxEdFdqRGVkYjdnNTZYWGN6eWNCSXl2eCt5RnpkUUdrMExJSVR2VWhLNVdn?=
+ =?utf-8?B?eEVVQTBadUd4R3Q0YzBnbWVOSXZvczE2ZWtmTW44b0ZSbjJ6QjZBUXprMTVm?=
+ =?utf-8?B?enVNM3BSREZzRXFiZzRHdWlLRTNEZE9pYjRlNFl0aFBXNHo5SnJnUlhjWFhp?=
+ =?utf-8?B?ZDhtOURtVGYyZVAyVTZpQTF4KzZWVTR0VTB0VTFWM000SnFyU3dZTGY1VjJx?=
+ =?utf-8?B?SjdXblU3V2lnc0VGNGJGdjJ5WWhkdXJ3djl4VmRhcnhiazRwbTM3cHVjaG5G?=
+ =?utf-8?B?Sjg1c3JGYjlaU01XOWJoclBwWU9vbENaRWd6RFVzMGZzYnB1MjdnNTUrekFl?=
+ =?utf-8?B?cXlFNzRBcUVLY1dsdERrZmkxRVR0TldSOWRZeDhHN3dmbjR3VU0xeGdhQjdV?=
+ =?utf-8?B?ZUZvS21od2szWXFOVi9FbnVWdzNDdGduVmR2bldnSCtUUEpkMjBycTc2RE1T?=
+ =?utf-8?B?RWZWQVdLMFpOU3FmWE9kanRpR0t2c2g1aEQybUtGcThBUkFKY0Y3eFpTbFlr?=
+ =?utf-8?B?eERGOVVSbXM0TytIbk5MaDVrZGNjMVR0dzNjUXMrK2VWZ2hnUE9IZmZYY1BD?=
+ =?utf-8?B?NmlqOG1ZRGdQNnpJU3lOWjRkS05MVTlnRm16bHNaYytOTExnUDNqckcxVURp?=
+ =?utf-8?B?bGdrUk9ZMWIzMWh2VkVpVFBWcUZEZUVVNFV1dGpLbmEwVGx3a3MwcGwrQXk0?=
+ =?utf-8?B?dkJxWVBmQytpQ1RxTlRnZlhveU9HNjZRYzFTOW56QmpzeGZzcWQwZFlIWkY0?=
+ =?utf-8?B?alRNSm15SnFWT0RpanA5ZGZtR25lUHBDaDRGNGpRcUp2RnlidGhPSHRGc2sw?=
+ =?utf-8?B?V3NVR1NaWVQ5WGpUY0hBNUVHb0lDekpWWVAzckJ3WTZTVkhtTThSbUZJbUs0?=
+ =?utf-8?B?NCtnV2VLNDh0QS9iL3M3R1hnOUN6R21ab0dzRFBPT1YyN0czMk1EU21KMjlU?=
+ =?utf-8?B?U3RORURjaE1OMHRPZll0OWw4T2FGdVZrTS9FOHRyVkxjYjRvRVFSdklySG5Q?=
+ =?utf-8?B?blkrbkUwcThQTzdTYXF5UWt3MG9hdmFDcEV6aGdYa2NPSUovdmRqaUp0SFQz?=
+ =?utf-8?B?cnZlU29UZEVTUjdpbCtNUGw2WHZJZ0N4Tm4xQmV1TWlySWNuM29MMjd3Rit5?=
+ =?utf-8?B?elFNdXR0ajBYTjQ5VGtOWVV6U3lOdmpSMHkxQkhGZ3A2NzJlZzB6VTc4emUy?=
+ =?utf-8?B?QjFwM0hKelgrQ2ZQZFRFNGZhS3NWRStCeUVIU3NaUEdYamYwMmZGMk9VR01F?=
+ =?utf-8?B?WkR0NjZURVg3b3d5WWl5RU5vRm1mOWFEUWcrQS9Pd2EwYTIvWkxldGorVFZ6?=
+ =?utf-8?B?MDFDZHBRT1V0Y3h3SEZmaGtIdU9HK0hvN2M2OVpTMGZnM2VQREhGMkxQRVlN?=
+ =?utf-8?B?TXQwMXBCOVRFZ0ljUThCRXc0cVlMRW5nVXhkMU1zT1BYbmVEV0JxMFFQTjgw?=
+ =?utf-8?B?QURIMVAzakg5c1R5VEphNXIxOUZqL1g3RjI3L3djMDBsSVBOajNiekFSR0xP?=
+ =?utf-8?B?ZDNFRmhqUDR0YUtRYjE1L2Q0V1plUmdCR1FGY25vYXlReWViVjFpeklqRzFw?=
+ =?utf-8?B?YU4xb0V2VHllUGtuVEVieUxFaVFRQUFFWXVUcm8rWlZXdy80SWExamszcERy?=
+ =?utf-8?B?OWdUcVFadUVmbjU3TitORExpb0tqQ0M5eXIvWXhLY0pKNmtwSGxiVzdNS2tJ?=
+ =?utf-8?B?TSt2QWZzUUZ3azZhb1J2L0M0SVY0WXB2czVoTWw0QVgyMjZRVXlKQUZzMnVS?=
+ =?utf-8?B?Uy9Qd0p3a0dGaGx5UjNvVzdDVGFINE9PUU95U1Z0bUVXREdQRGdqd2pUQzZk?=
+ =?utf-8?B?OUJMQTYycE11ZG0wcmIyWmozWE0wLzljRGNYaFlMOWhZM2dLS3NZYXY4UGJQ?=
+ =?utf-8?B?SFZqYzlWK08rWFZQUjFiZFlkVFNzekpwTjBmTGtnK0ZSNWZPNExEWVMwYXVp?=
+ =?utf-8?B?ZU1ISm1yM1psbHdMZWdUN0h4WmhqM1Z2U1B6WFR0eUxVWnM1dndnK3M1L2RL?=
+ =?utf-8?B?UWQwbnlKZmZXZGpxRlB2N2JFVjY1TlFqbFY5dHppWlkwTFR4Yi9CYzV0RnFK?=
+ =?utf-8?B?YWR1TW5ZR2NSSUxabDFBckw1TkZCTjlTbjV5LzFjd2JSZGlPelRuWm84cERm?=
+ =?utf-8?B?WExnd2FpN1RTblpTODVHYlFBNXNBbDc0QWYxejdyRUl4cmVMcUYzY2o3TWFn?=
+ =?utf-8?B?WnZQeVB0cGlPWGlNOGZwWHZkVEs0b3dZTzhmZHA0cEVlSnZPa0h4dz09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c821fcee-b019-4bdd-356f-08df180593e9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2de3ef11-c245-487d-2b65-08df1805a296
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 17:27:14.6951
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 17:27:39.3329
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SuaF4oJcxyVL7WeGaHuXgYPkAGT4Q1qNj3Y5KUtXdRRvK1TuTeVA81bQT8KU3g379RN3NHZMqrqJgdaTfK4tuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7525
+X-MS-Exchange-CrossTenant-UserPrincipalName: kP0N0RiVSGMwz9dUfzh0pvlp2+BYxj8COLOJTWjjbvaA6q40kzie7sfvDl3AFwSookyUbyNisNvZCm+4TaD7Ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR12MB999202
 
 
 
 On 9/21/26 12:04, Mario Limonciello wrote:
-> amd_hfi_fill_metadata() parses CPU core ranking data out of the
-> firmware-provided PCC shared memory but trusts two values it should not:
+> amd_hfi_init() manually registers a platform device with
+> platform_device_register_simple() before registering the driver.  This
+> device has no ACPI companion, so when amd_hfi_probe() runs for it the
+> acpi_match_device() check fails and probe returns -ENODEV.
 > 
->   - n_bitmaps is used to bound the outer loop that reads the APIC ID
->     bitmaps from table_data[], but it is never validated against the size
->     of the shared memory region (pcct_ext->length).  A firmware-supplied
->     count larger than the region reads past the end of table_data.
+> The driver already advertises an ACPI match table, so the ACPI subsystem
+> enumerates the real AMDI0104 device and binds it to the driver.  The
+> manually created device therefore serves no purpose: it never binds and
+> lingers as an unbound platform device, wasting memory and cluttering the
+> device tree.
 > 
->   - When resolving the base of the ranking data for a processor, the
->     pointer is shifted by an extra "i * nr_class" term, where i is the
->     current bitmap index.  The per-processor offset is already applied
->     through apic_index, which uses the running count of active processors
->     (apic_start).  The extra shift compounds for every logical processor
->     beyond the first bitmap (APIC ID >= 32), reading out of bounds.
+> Drop the manual platform_device_register_simple() and the device that
+> tracked it, and rely solely on ACPI enumeration.  The CPU feature gating
+> in amd_hfi_init() is retained so the driver is only registered on
+> supported hardware.
 > 
-> Both result in out-of-bounds reads that can corrupt the ranking metrics,
-> oops, or otherwise destabilise the system.
-> 
-> Reject an n_bitmaps value that would not fit within the shared memory
-> region, and drop the bogus "i * nr_class" term so the ranking data is
-> addressed only through its correct per-processor offset.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: d4e95ea7a78e ("platform/x86: hfi: Parse CPU core ranking data from shared memory")
 > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 Reported-by: Sashiko <sashiko-bot@kernel.org>
 Closes: 
-https://sashiko.dev/#/bug/linux-bc92228c-d783-4b4b-af53-d40a346c4b05> ---
->   drivers/platform/x86/amd/hfi/hfi.c | 20 ++++++++++++++++----
->   1 file changed, 16 insertions(+), 4 deletions(-)
+https://sashiko.dev/#/bug/linux-8791990d-979b-4901-81b0-a8c6fdb67c7a> ---
+>   drivers/platform/x86/amd/hfi/hfi.c | 9 ---------
+>   1 file changed, 9 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> index e1c776b71f3e6..6d1d3b6c28a97 100644
+> index 6d1d3b6c28a97..a923345dd1cf6 100644
 > --- a/drivers/platform/x86/amd/hfi/hfi.c
 > +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -20,6 +20,7 @@
->   #include <linux/module.h>
->   #include <linux/mailbox_client.h>
->   #include <linux/mutex.h>
-> +#include <linux/overflow.h>
->   #include <linux/percpu-defs.h>
->   #include <linux/platform_device.h>
->   #include <linux/smp.h>
-> @@ -168,6 +169,21 @@ static int amd_hfi_fill_metadata(struct amd_hfi_data *amd_hfi_data)
->   		return -EINVAL;
->   	}
+> @@ -39,8 +39,6 @@
 >   
-> +	/*
-> +	 * The bitmaps enumerating the APIC IDs occupy the first n_bitmaps
-> +	 * words of table_data.  Reject a firmware-provided count that would
-> +	 * push those reads past the end of the shared memory region.
-> +	 */
-> +	if (struct_size(amd_hfi_data->shmem, table_data, amd_hfi_data->shmem->n_bitmaps) >
-> +	    pcct_ext->length) {
-> +		dev_err(amd_hfi_data->dev, "invalid number of bitmaps: %u\n",
-> +			amd_hfi_data->shmem->n_bitmaps);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* The ranking data for each processor follows the bitmaps */
-> +	u32 *table = amd_hfi_data->shmem->table_data + amd_hfi_data->shmem->n_bitmaps;
-> +
->   	for (unsigned int i = 0; i < amd_hfi_data->shmem->n_bitmaps; i++) {
->   		u32 bitmap = amd_hfi_data->shmem->table_data[i];
+>   #define AMD_HETERO_CPUID_27	0x80000027
 >   
-> @@ -192,10 +208,6 @@ static int amd_hfi_fill_metadata(struct amd_hfi_data *amd_hfi_data)
->   			info = per_cpu_ptr(&amd_hfi_cpuinfo, cpu_index);
->   			apic_index = apic_start * info->nr_class * 2;
->   			for (unsigned int k = 0; k < info->nr_class; k++) {
-> -				u32 *table = amd_hfi_data->shmem->table_data +
-> -					     amd_hfi_data->shmem->n_bitmaps +
-> -					     i * info->nr_class;
+> -static struct platform_device *device;
 > -
->   				info->amd_hfi_classes[k].eff = table[apic_index + 2 * k];
->   				info->amd_hfi_classes[k].perf = table[apic_index + 2 * k + 1];
->   			}
+>   /**
+>    * struct amd_shmem_info - Shared memory table for AMD HFI
+>    *
+> @@ -540,12 +538,6 @@ static int __init amd_hfi_init(void)
+>   	    !cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS))
+>   		return -ENODEV;
+>   
+> -	device = platform_device_register_simple(AMD_HFI_DRIVER, -1, NULL, 0);
+> -	if (IS_ERR(device)) {
+> -		pr_err("unable to register HFI platform device\n");
+> -		return PTR_ERR(device);
+> -	}
+> -
+>   	ret = platform_driver_register(&amd_hfi_driver);
+>   	if (ret)
+>   		pr_err("failed to register HFI driver\n");
+> @@ -556,7 +548,6 @@ static int __init amd_hfi_init(void)
+>   static __exit void amd_hfi_exit(void)
+>   {
+>   	platform_driver_unregister(&amd_hfi_driver);
+> -	platform_device_unregister(device);
+>   }
+>   module_init(amd_hfi_init);
+>   module_exit(amd_hfi_exit);
 
