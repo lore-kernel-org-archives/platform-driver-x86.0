@@ -1,498 +1,178 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBCE45D19E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 09:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF943ED5DA;
+	Mon, 21 Sep 2026 10:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789984265; cv=none; b=Jk6YnwPpK+QLQ3DbLfikb7VMLlgWNQZNcTJ3X6agk5iADFUCDzDTd6KrTMmpMGEyGaQKNjjAz0bIwv34vEw9iWMXnKhgoWysrTqVn/GUp7zES5mX9VdsbUqnSod5NYCAi66LtxUFzW90P3bqVLOggayrPol2TVHExurNMwoQL5U=
+	t=1789985781; cv=none; b=UdrbqSmf24FuOfDArAXSoNyNi9Mm1tDJfaXVxrb4MhrY69M2T+eyeKgXs9uK2Hq9XnwL14MjRg+ZbmdBfFMzjCV/IgzD+xSntdcppAnAPsVzPFomyXsNZ6BSkm21WmxmLKtQw/jOX3NF/oH4JAaL1UdTSn6bLildZ/bWlru1oHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789984265; c=relaxed/simple;
-	bh=cZ0O2E+eJdI33nUm8Co5Q6+X3F1m9O6WsXviD5CAOoo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZYpV94o80jytODA1NAgApdbINkDJpMY8WW3+XXl8ieXEKmfHvDEHM3ucjwWWZb7r2ap51Cpf6x4DrOV7VuL6ZByFd7FssFbwE9Xfr00smHkK07FUEavt3DPk27d/+F1NVMOiuw+NLoJbP/y2VlYL4uDxRYoARGoOc54bmfHxItA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6DekRhI; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789985781; c=relaxed/simple;
+	bh=+zxue4XundghdAhPo6uXDnd8g8TTcWgJPx7kZ0TNY3Q=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=RXUsvi7YIOjf+44MchgaJYYcIttU1VX0LrZINKJmNjWEirCH4Ky3GQyFrE9gD/JdMDsBnbbMt0PN4vfz65EDTjzseN+CMyjUf8Yxov3LZNX41SiCcb0bByWY+NjAgsuwVddgy+7JQSFRCpW2BK8AiEOMhXpfTEFmqBEMnjbTtp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PYJb/e/k; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6DekRhI"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2caced6038eso24279365ad.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 02:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789984263; x=1790589063; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2F4CK2PTrv6qOUar6yzK/p6Y6e6mva4yc9+tBH2wH3A=;
-        b=D6DekRhINF1myGt08T3YCWP+VXHuXI95PGMXttixFWgf/VmEqQyLRAlZJVSVbqYON+
-         kNYvc+h49JUHJhBaUSHfYzF1Muo3ISqzgp+9jnyGGL0lnVLgNyZAhgJR7nRpz3BkdfMa
-         qBzAWXs7x8R44WS7SD6Hg2xArKaQ9Gxw8Dj+DbUsVkYid+ZUyu2QOYD8vQCskNTspWeF
-         AGZQJRGft4rtomIxKdTYVIk0A+BSItjkppe3NTkMoF2vZltbXuffyh4rCFJINwyG7AWB
-         NKNKmffZ/X+OxbcDPut0/xEcVEF/I9f44V9VYRapVHUb81MZwpH03zMoCdmWCeYulCcv
-         DiWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789984263; x=1790589063;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2F4CK2PTrv6qOUar6yzK/p6Y6e6mva4yc9+tBH2wH3A=;
-        b=hy1yliYWnm1C2AohInExGWwc7040igKEZT4OR6aneLLRU9MUSRwoqdR/wQ8QB0LKFa
-         OXGKnOGkfMuZ4WxbsDp0tbvBHlYY4V5D9c6B/1nG7vqnZP42Jv0gymQXlvixA1/qL5kQ
-         ZdOxdWabQU+C28O4uMqfVZ4ik1S5SuEs6CblJgVBosh3eW7yN0V1VWk6sofSBlzrDwFM
-         oGqGSXPgOEWCjen17r49aiaa7QRW+/9wShMDItzQ6cNFsGt7fL87rKf9d/6hOr1KSePP
-         LmcfOPwgFEpj0WvCv0j2C7Ym4aZPTTEPgaM4nxOf/MHCTMPKlxZqhU1VAuX3vKmkqJ6W
-         QRQw==
-X-Forwarded-Encrypted: i=1; AKwUvBzvaCAVio84A+K0KF9ZI9GAzGTbPx9noZKqDVX3h5t13Ax0Ly586sFcTRs/iIVqI3DM/HCS73zf0Qt7rW6KFNr+0n4E@vger.kernel.org
-X-Gm-Message-State: AFuF++mf70Q9i7FM5lual+h+3K+Z5hx+9Mk2g61I4cKY+MJp4wTnNNp3
-	YcBcGEIvyf4homMArWA8UHj4JVm8FESeXW1vhG1bmATyejMpvxF0h65e
-X-Gm-Gg: AYBFou3Z6LP8Cn+aFn9dy8F0cmU76IXzIUuwnykhSkUvthcI3gVGBmTokHdorf6Trla
-	aFMK7bpczWrFDYHSMfqn1oZEwOo3ZO8kYTe/CYo+yijIUVnEWBj32C6IkeyyfBoGviv5cAp/9mw
-	taIe3aOy5WB5L6ZJOM1nV93aEi9JyrGjLIk9cA4vCL/Yoq8v3Mhs8QCCdSLcmhBBWMZJFNCY7ll
-	dTnQOOBNkvKB78TgQ+wg0pgKQIrHg6sJWKB6+/Fm/iJf8VUi1EqPNff/wOs5TSJ77tYkDq+EiCS
-	oKtLz5QL+wd3mFnD7zZ1anBQGM5IQLJZYAFO4ypAz30/k6qh+tSUu5zWTPlf+ncTQvCiXI3/oA1
-	AglxWK46spCUSsxMvpnvlwEWXzdJMHkxGO32GhFG7zxamh4zGANkdNhslKp1lSnnJLRe18F9ThI
-	l3X88nf7IVY+u+jbA0SAwfjfr/mabzPTBnLkMJRf+KOCOrD/8NTWh3CDca0Vpc5+z/xduhFkJa2
-	iuGTim5XVMrEax2axRvp2qAHNWNWuZ64YM=
-X-Received: by 2002:a17:903:2f03:b0:2d7:1858:1d96 with SMTP id d9443c01a7336-2dd9c7c2906mr159974055ad.7.1789984262990;
-        Mon, 21 Sep 2026 02:51:02 -0700 (PDT)
-Received: from localhost.. (59-124-112-186.hinet-ip.hinet.net. [59.124.112.186])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ddc17ba45fsm31317095ad.50.2026.09.21.02.50.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2026 02:51:02 -0700 (PDT)
-From: chipang_kao <prozac2734@gmail.com>
-X-Google-Original-From: chipang_kao <chipang_kao@asus.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	W_Armin@gmx.de
-Cc: corentin.chary@gmail.com,
-	luke@ljones.dev,
-	denis.benato@linux.dev,
-	jprvita@gmail.com,
-	scardracs@disroot.org,
-	bryan.odonoghue@linaro.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chipang_kao <chipang_kao@asus.com>
-Subject: [PATCH v2] platform/wmi: Move ASUS platform drivers from x86 to wmi/asus
-Date: Mon, 21 Sep 2026 17:48:42 +0800
-Message-ID: <20260921094941.261599-1-chipang_kao@asus.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2384d8f5-106c-4cbd-a119-62d923725bf7@kernel.org>
-References: <2384d8f5-106c-4cbd-a119-62d923725bf7@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PYJb/e/k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1789985777; x=1790590577; i=markus.elfring@web.de;
+	bh=rm1HAeTC6ZoT91AJryEGO7FwwoHM06nAbPC2un7vNcY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PYJb/e/k8BQVsQD/vlYxbvz0KGoFAznedGYWo0b+rdLoicTS5L5eSc5Z9EDldUMh
+	 kE7Wnzit/wHJvEwHPXDbOSgeeSs4aNRzbWRBWv2x0mEJ0NIBtZ//zFdsRE43eAe9o
+	 EXYCr7KkxjSSFUgPI3mQGUTFe7IdbQ3uRUna2Ymz6j5i4amJoL3hGec2XjI0TGzFg
+	 /Fb+uLvE5n76CoFOAK8swY5h3fTF7jZQY9cLlPE5O9U/WZeQuWORkEIDivB+FUlNP
+	 kWheEC7VlYfYAYREwOdbsmxvloUzWQPMAH9sfGO+jd0fsEv1gmNj/9ljng4ru5OYY
+	 OX5knnFxk7jv4JSr9A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N4N9I-1wk5cY0hPi-014I9n; Mon, 21
+ Sep 2026 12:10:36 +0200
+Message-ID: <cdb67eed-9e75-4310-ae4f-21ca67f20bd2@web.de>
+Date: Mon, 21 Sep 2026 12:10:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Guangshuo Li <lgs201920130244@gmail.com>,
+ platform-driver-x86@vger.kernel.org, Bao Cheng Su <baocheng.su@siemens.com>,
+ Benedikt Niedermayr <benedikt.niedermayr@siemens.com>,
+ Hans de Goede <hansg@kernel.org>, Henning Schild
+ <henning.schild@siemens.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,
+ Tobias Schaffner <tobias.schaffner@siemens.com>
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ kernel-janitors@vger.kernel.org
+References: <20260921075312.120983-1-lgs201920130244@gmail.com>
+Subject: Re: [PATCH] platform/x86: simatic-ipc: fix platform device leak on
+ registration failure
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260921075312.120983-1-lgs201920130244@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MY4LaKt3evXalICs3hy3fcoAgp8/XVPYVf56eH1SBBQoo7IH/ZD
+ sfzZvqpp96G/9Q824tcGX8KV3IIkiIY0vC2rD7lt7bgLl2IVb7AtZguCkFoDezkn1dnsZIv
+ U6AkXnHWUNmMCyzazcx09Q3nLrULYZl7xAvLwMSy+1OzbrVj9GrPs0TVSm8fS5QWM3cCa4L
+ cjSOnzyOcltiP2+A3AImA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:UaiRR6+Cqf4=;5ei02D9rpHpQ1N/jb+VfPw5LmC8
+ k1iT5gPFfy6hLao70WbykuhDp0RCMaOsyBVq1xquCQwNWAZz2AoNOvMGnZDDjgQWM73CTQd9q
+ abwUQig5jRkDZpPyEgc16c4S5ZeZAeqxvxOIC2mekz9uS3FO84F2zGKN6Eo9qcZhzQglfG2IM
+ u/e/FZkdxPsjTZO/32/SHez1l5kyxOqOj/8UEMLx4WploZDZwfh1v7zcESYmP2vqhA78ajd+2
+ r/Ok/MTEubkYMhd5XD6E27I5DsqjVqttIsB5Xv8zZo1ihy17vi50AnSQhoOzkbQau4Er+7z07
+ KVwSsWRv1HrKAEE78Jwxj1hQi0Aqs+IAeNpaIL+9IKRLEeJKwcZR7RiYsb63o8vsd3WnF8cy7
+ I7oFa2PkPe2WlanzN2HBFtKkmvPqFAQt2b0PQTrr7aNfkIPnsfLDgI7PtndffD1rQ+8615CiJ
+ rDkdsTjrTpT+aoWFEX75281Q3ZHtIkZ31S0kf9a330wmROjXNzPpi/WuGzd3SteyYfCYoRt7M
+ XLTB74rK7/1/upoIoVmQX3s6axDSgHSVVlQzmHMJXPITukTeFZK9O8rpk2uJw/FN4Q9LotqHg
+ vD8qzoPnDFRzwQBDowP5Gh0Hxdl0OcXfFUBpg9JkWYC11YzXH+OphCrlRvCe+9onFNd8sPu+s
+ 96l4HsxopZfrR0ky5QoTR1Irmzf+R7ez+lr0eqA3RURmkPLvxqbWQPcZqE63ZGcLxBwcSblRK
+ pw+kzA2h//PTywlBMT9sPWwevtGeWlbjtT1ZydIk6ra+MsjByxyHXwSedUYeSJ94loMX1Dkpu
+ jkvrkeO04Rc51jYeo9k/UXmQlYOiVaX10ejcOUMGIDyUGEXn0EsIPopQ69eurmyeZmCOy5/3a
+ yxVKRMrEERgELIhSQVaRnjwyd1tuyO+q089zlRMuIwujnymeiskwruMMG7jTaVfSYoRkt0Wyu
+ UN+ngXCmMt9yl3JLso6zouIRhALMZxa+wP3qc7Re0dOaJqb1Cnmmht73pT6LRkuSkCTI/zSFu
+ gXjz4hVx0T2jfB/BI/3T+NYpADXgbQOI0K0FwuOdwYDSEm7WqrL+FsXdSEVSSuqeMMfzpLhKU
+ uMrKYH/o9FryrrxlQgP1kzSDDvzlRAfYrc/WFNDo8y5SRZXdAwt4n8VdWeZFG2eV/b0IwT7Cr
+ 33QAY3oLIbTnuipbWVAQ1T1jbqjJFZgNGfP6WsOxvAfGuFBJdUbSE6vQ/+iq5x31qD+iSyKz7
+ Uo7D1dx8j6iDOA2vLZdh+tpGfv87qziwGyWFfU+m7FYhK9ZCLW1/io04DT4MEzeJ1t4kf4v9U
+ LE/4f8tcwHgJ/22dZ6SPVqr3mYKiNnU6FUD5mGVHlGxk9Me3qMOCw4PM7enVA1atIG0LVJ2wU
+ MiTM539UcrJniOgl3TU8LPGcwGrMVO1GYoLYg3FkSaUhJRxCiqcs/B0rjfOPpFW2j0kMhMUGQ
+ wF9PHXWW2acM2ucvCYSx5oxh6L2HRJB3iO3HLc7b8p2xV2Ak/p8VklpSQD1U5iaFcynPMbj2Q
+ ykgs8tesSd7858XCYB8RabQr3ut+Y66IuypiO9Ki0r4Gixa/7UdVKPKGpfk2CelGKPG7FTO65
+ LZFRpDv7S4OwLGL8dEYE/b1PorxIkQOIdBFZH2MOudytp0bqYeVKmRObMnIhxIEup40DMsjeH
+ 2dLD+KndZRoSKTyBGXMtg3aAT4bIwwsq6HADT5Acc5f4KrU8p1PGfVm7oieAErm0yi2O7YLmd
+ +Ixp4iLGDectSAS84TZUTJkAw1P6n/BKI5yfOwvVNA/xLKND/8Rl2FFlGZG0CxaP5+oqJiMLj
+ 9+6T4IoHTRuUJrdD7y1iKhxQKeH213dCT96aQnb6HiEUEHcVXfoDenyKkM94durwGtPPe0H9U
+ m/UsnDgfcfUJPJslmsDMRylF9rnMuwvyl7DoTpimt1aNmadwCSR4gT0Or5cTHCU1MzJGS1FjU
+ LkQAJn+3692sWA+oi71BNi+VzbMyifQNIHtrtdWXa4yg5kwhl5SONukD7yPQyp5hhYVmVttr5
+ /jhOwwMZQZmJkfM0lYs4GP5533RUQMKYWxqIBSzApWXb7zWElBaEPc2OUG0h9H+1MyhXtP6DG
+ hDqdw3uMqRLNM2Cg00pihsUzUW6/ocy+o8g088OOlM79CwV82hRA9HK8OeixPDTtI65fCCoF9
+ gVVPf5t+xydvWSj1Y/wDsKWvMVAPdFhmWyrH1gHz9oM6cWmsnYsS2Tc9DZM/zCMPFluQ2doLe
+ miOzKFeyHP0agJ9lEz02uDYFTOB94gqPo80KjeepjWSCYOuIlm5u05Dy4/hOG+eqeShQdSxNE
+ tYJvEGN6Om0728vFsHpmZtbKpgGuB40prB3beKMSp6G/4M8jGTPrC37Clkquyx4hD47MVNhCx
+ tZgJ/SRC3OPwnh9LJ7dcH4JtnxcIDpfwusuSzi0lQLarPWJooPkhTcTygswd51vCrz96fORKn
+ gGByiqVHqLwPBV4dB+Hr2bnzCGHfVhZI5WGrEBs9bkmp+hYeExtluRA7g9cKlGkJXgmSHuxr0
+ gnu/JdVYr7KzVqhHm92nlB88hdKYjojAivtcUXT+aVVnjriGpd1+Wbc09OJ0FEbtT+/IiZQlJ
+ 4l5edTjTszz0akgUIPk9+3QX6z7XSOSVtit6ljX76yBDTCk+xGF0vyBAqVlV5p1/1EMovi6vm
+ j8bgC/JXn/qxSdQk7NR0e1WGXVN4R4kDEvqG9KWxqum5HA2y1jBLxGyjbO8maQjfB9D8V7m4y
+ XCV58KggUV48BlgWmGBoVa3wVbEQQXxK/AhgZrjADqyMbDIpOMCHMoFSjBfxt7gurBWQM1OQK
+ IGsvBDz7aHuHTLdg5eR1Z9iRyLUuPI+1DI+vJbr0eXK27zQSI98fRk7svflKtn2c9Es12Hrfa
+ lTGKd+d1Oyr54JjUE+74plq6a5CeVH4dy0cmDzA132B8TCggQP+p0P7eDRXtVFyDBBiFu589c
+ DfacaCyLVZLtEQvAbEBwNnom8Chkxz4/72p0ZSTJ5c+yci5v+W3DDB9x4IIfGHdscEHR2P9s9
+ TcwN0rb72j9WkSSfgy1X8bRLjoPubR/pxm5PGpZEWlCicwFrKTIlwnsAtaNgOvpzBpauLSszr
+ 6z3Fh4XeZKrey0TsZY0L3rykdnaLy52gABY7tdxK6uZquz5BQ4ukX7HimNO5riPAcaNmEGFke
+ 8FJA+wPzGgJ+H5tYQPasGslX6nK3kDcgAnsZ029jyXP4DWIFZ0I44sL1XUdbxsHHmhOH+ZKr4
+ EtXhuJLCdt1xPE6fUDYG5/eS15S1ygyv59bqB4R98JD2OTDEPGPtXZWhrfu1RuAN3lDVMmZVe
+ EvqtxHLL2IB3M+Eu8QiN/pAVGLNpdcjV8Z6Eawds5iPAqqBDnFHrZCb0mGakjJjkZ7ZZpdTRw
+ kDyiuEW3Qn+u+Nq3HOHCxUVlIs1uDLcAKI24omZwwwlkuINeskMTXhKq8Uqk+Dm+4AlKQpWrh
+ QM9JE7O6wUbk3mIz6BAcsWOLr8uXGPoXwN0LjN29R669Zd/Bwxrn+CGuVlHP+ALavqS78braa
+ ccrELM8oA3I/3+b+v7VSQwv0Sw3Gq2MVKHnl7wXx2CIaMVfo1YoKk+wHescPRQJJkK8+/Dx44
+ 7ppz3f2K3/XZqVCIrF4Dj1LHcG/Zb27H4anKIXGr51B6VeI/c3J52umF7L5S6KrbTel5EsvTk
+ xtG5Wb6g7TCXPos0FXs7rsK7ffhTZjEFpNN2qcE+k4a6gqXXfaJDhNzxs0LLPwY7p2A3pztY/
+ Yqc3AIBP34PxHiczeO5JJEkYR+0b9T3v2nC7SEcQyA/CaT9MMcin4LRLt9T5TC579sbVP0gEt
+ X7vva06DyKfeUQOieYgUquT3MhbPQqk8DMYBfk4Mb/JkQVIU2EEtxj3Rx6fyb83AsFo4kGttq
+ IR2VCFYGas9ai07LsA/Gv9eFFeWSz4JH0a11Xc3q01qXg81zDkiVlhSsI/vuybTMSdEylD+tZ
+ 2cUXc5YlZ8W0LOwBX9kp18OzBckCCrD9uk/1gyp3ntGGuXkxHrVOiJF6csw0BMAUkdutCdY2j
+ UKeGNarW7B3wGfFG5plOwhM1Sqr4GOw5kvlr+9AXpD6uG0+V8XwdUUK/D+75Adn5zxH9fz+hC
+ waEr4w/I1xiRjXwTjflOI0GioW61HxnbLFQexYovDmNTt9dhiVmrHtDbdVQo1pCvj5joWLm3d
+ XDS5Gf6BZDa6ToFZ+7dG5v5jo8VeUZrncaMv08RLgl+aIK0eXBlqqm+0iqlYwDLyQu/iBFYz+
+ TFmUSiSEVJPaoXAOqR3hngj6FIt2NyrbnbbjHNMm+4oLFlHjOS3R2IQHhUL587xBeg8Ia/WRE
+ NZBwsmO0TTsX4aCmKyDDcf6Gs7CRUnhWwwAwkeZA4MF9w0cg4Ccfh+JEquKNdbECw5nukegT/
+ EaOu1smHGpoOjhGJfePbK0eNWWPRck0BHnuN3PtU/udBPKkn4gTJCd+79/OScwSlPE70jX0Vx
+ 3nTgODLVojPrqkH6vHcVLMd/b13FUo7qDwCYccyrXR1r6BNwm0eGscdT31tAhMhVHi05eTmCF
+ AtrXXyeNEgEidaooT9YbH/lIOBJhRjs+M5vCIGMRZjNBxwlSNBvFNp6zizZ3qO7JgW1wRTesb
+ fNO08M8d4coUfCzjN39VxKHsZu7nW8wd/ECTDu4J8fgGg3ZTWGH70YXUju5QzV+3z4mOaUblX
+ aFBMnJYN3U/QKBl+J6HHdzEbmMdjs1oQ/rVEKeb+Nkt8seVbmgJXmIsLMmMc1jL6uAvWOQ96D
+ sn7xsWvvjyqgPV+cXrCvpwWDp6xy28jYJ3SUmYJik7tK7iAJVyL8qrHAVmZG8ieKwQpTZIZu8
+ Z5rhUXzkOtN/+r7COHkuJ78XzD5+rKFYKZgR4+Vffu8tx62W76Vfshurpg0+18W5RzA4gsbL7
+ Uy/JELpO9ynskqPcSzMeBTtx6Wc4mppG/B6MorVlS5I5f39NE83fJYoVRd9mUBddnyElMNBcC
+ 4GocJvaa8O9kkYExjNLN2zXngvnfqcRGiv4eJCKR1T4k2ECGD2hGWl8GoSe15AZ7KHi1kcpBY
+ e3OS6mqIP0SikHED87iYCcsRVxGY3S+1QzP3pGBUcImxxbJm+TMgKnpnSqwVX9M7Hy+r5l23/
+ BcdoRBnNnhJKUFH+Y38G0bb6N7jbZ9SiyU5LDB3kSHxtr9W3df0y0I1ushmteLfdj3lHwKWxv
+ WIb28ClQYTI3iw/LQ1brokXHVJL3NyJkCTiDGCDUQeVOt5wDgSI2ug3NwL++06XoEYLnUkw7T
+ 9xDLcrxgEPTHZWZVCzIODNX6lEDv2kshNW3RJkqztgup53aOs5AcFETdL7SvDxou/5eryAsZ0
+ xUWQmkr+YebFXH1eoXyP1vdxwKp7LLUwoypwtyKnDd7Dsfv3qWsy3Q1s9zDy1LOwwts2I5Zh2
+ By+r2WpWTlveHL981jN9wJpWFQrTIhUBc7YehRWE8me9qALsmAKH8zyrIWIYDEZteLzZUBtim
+ r66lO1kyRdrHY7KXFMhtO8D5TISEq6mmoNj8xCQQsSnGGZCaIbop1NZogyCu7PA19jEl+D6n5
+ Z4wP7Oyqf1Rk29GtGCx+fEoS8PXqprkJNZ3v8ofulZbsLmRyT+l8LO7k3JDDNKqsH6wqA9+tb
+ A5RTVSzt+dG0nm/Tzi5OEnJT5iEnyDfRNenN5v48Zn9nXqJeR7A/TrlmERRG3PcE/4w8fh3cV
+ SfLNjj0cEXxQu0KUSMV/eCoypruzKXlIpY9YWf1MBhWJ6ttCx0OYHEJowyd/7/NRh13u4Lyve
+ UoTlGH4SEjyqTNj/6HZ04siaANZatfevff3rVbN3IKbiYORGzsWgxk3lXTkWFQ85gp7/+vQaa
+ muHNMx2v8dCKMZmW42esdrqeQ3AGlPRJT+oMIlB8Bmcl8mB0MC3yvV3rH8KGOKF65n0fV1fYW
+ fQR8rzu7vnGIYNsCIwO3vvPSL1nV0VDy/4wzy1oT6pJfWkI7I6yDe9QYBpxja/gwJda5JWxs5
+ sYGDk+oAF6rAidlMo8rXOksR5SVVCDwgxdIQulVKicNixkzBaFgnD3rzi72RUWeA3X3aEeqxL
+ TMAM7rPKsGdYCfZd/Qo0jlJKXR0YxSQlvfNmNBE/5dYSFds2awir53RTdHDzgUzJtZNKtfvgn
+ DwaHwSdwj7G38bsXld3lpTTLcw8lP68dJa9d0B4jyEfolD99DmbGuhGgexvLNyDD2ue8ABCe2
+ 4e3CAXbJQvcqerliSo/Cdcs33MM10wyR89LgPm4vuiUBqzpuldppRc6SEh/u2rKf1tkNGAMjJ
+ A=
 
-ASUS WMI and related platform drivers currently reside under
-drivers/platform/x86/. However, with ARM64 devices utilizing ACPI WMI
-interfaces, maintaining these drivers exclusively under x86 creates
-unnecessary architectural restrictions and Kconfig duplications.
+=E2=80=A6
+> +++ b/drivers/platform/x86/siemens/simatic-ipc.c
+=E2=80=A6
+> @@ -118,8 +119,11 @@ static int register_platform_devices(u32 station_id=
+)
+>  			platform_device_register_data(NULL, pdevname,
+>  				PLATFORM_DEVID_NONE, &platform_data,
+>  				sizeof(struct simatic_ipc_platform));
+> -		if (IS_ERR(ipc_batt_platform_device))
+> -			return PTR_ERR(ipc_batt_platform_device);
+> +		if (IS_ERR(ipc_batt_platform_device)) {
+> +			ret =3D PTR_ERR(ipc_batt_platform_device);
+> +			ipc_batt_platform_device =3D NULL;
+> +			goto err_unregister;
+> +		}
+=E2=80=A6
 
-To allow ARM64 architectures to build and utilize ASUS WMI drivers
-cleanly:
-1. Relocate all ASUS platform drivers and headers from
-   drivers/platform/x86/ to drivers/platform/wmi/asus/.
-2. Create dedicated Kconfig and Makefile under
-   drivers/platform/wmi/asus/ and source them in
-   drivers/platform/wmi/Kconfig and Makefile.
-3. Update drivers/platform/x86/Kconfig to remove duplicated entries
-   and source the unified WMI-based ASUS configuration.
+How do you think about to avoid duplicate checks and variable resets
+in such a function implementation?
 
-No functional code logic changes are introduced in this patch; this is
-a pure code relocation and build infrastructure refactoring.
-
-Signed-off-by: chipang_kao <chipang_kao@asus.com>
----
-
-Changes in v2:
-- Relocated ASUS platform drivers from drivers/platform/x86/ to
-  drivers/platform/wmi/asus/ to eliminate Kconfig duplication and
-  architectural restrictions for ARM64 platforms.
-- Dropped patch 1/2 from the original series as CONFIG_ACPI_WMI
-  dependency changes are covered by Armin's WMI refactoring series.
-- Updated MAINTAINERS file to reflect the new path.
-
- MAINTAINERS                                   |   6 +-
- drivers/platform/wmi/Makefile                 |   1 +
- drivers/platform/wmi/asus/Kconfig             | 123 ++++++++++++++++++
- drivers/platform/wmi/asus/Makefile            |  12 ++
- .../platform/{x86 => wmi/asus}/asus-armoury.c |   0
- .../platform/{x86 => wmi/asus}/asus-armoury.h |   0
- .../platform/{x86 => wmi/asus}/asus-laptop.c  |   0
- .../platform/{x86 => wmi/asus}/asus-nb-wmi.c  |   0
- .../{x86 => wmi/asus}/asus-tf103c-dock.c      |   0
- .../{x86 => wmi/asus}/asus-wireless.c         |   0
- drivers/platform/{x86 => wmi/asus}/asus-wmi.c |   0
- drivers/platform/{x86 => wmi/asus}/asus-wmi.h |   0
- drivers/platform/x86/Kconfig                  | 117 -----------------
- 13 files changed, 139 insertions(+), 120 deletions(-)
- create mode 100644 drivers/platform/wmi/asus/Kconfig
- create mode 100644 drivers/platform/wmi/asus/Makefile
- rename drivers/platform/{x86 => wmi/asus}/asus-armoury.c (100%)
- rename drivers/platform/{x86 => wmi/asus}/asus-armoury.h (100%)
- rename drivers/platform/{x86 => wmi/asus}/asus-laptop.c (100%)
- rename drivers/platform/{x86 => wmi/asus}/asus-nb-wmi.c (100%)
- rename drivers/platform/{x86 => wmi/asus}/asus-tf103c-dock.c (100%)
- rename drivers/platform/{x86 => wmi/asus}/asus-wireless.c (100%)
- rename drivers/platform/{x86 => wmi/asus}/asus-wmi.c (100%)
- rename drivers/platform/{x86 => wmi/asus}/asus-wmi.h (100%)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cc3cae2e378b..25e4030e24b9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4124,7 +4124,7 @@ M:	Denis Benato <denis.benato@linux.dev>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- W:	https://asus-linux.org/
--F:	drivers/platform/x86/asus*.c
-+F:	drivers/platform/wmi/asus/asus*.c
- F:	drivers/platform/x86/eeepc*.c
- 
- ASUS TF103C DOCK DRIVER
-@@ -4132,7 +4132,7 @@ M:	Hans de Goede <hansg@kernel.org>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
--F:	drivers/platform/x86/asus-tf103c-dock.c
-+F:	drivers/platform/wmi/asus/asus-tf103c-dock.c
- 
- ASUS ROG RYUJIN AIO HARDWARE MONITOR DRIVER
- M:	Aleksa Savic <savicaleksa83@gmail.com>
-@@ -4144,7 +4144,7 @@ ASUS WIRELESS RADIO CONTROL DRIVER
- M:	João Paulo Rechi Vita <jprvita@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
--F:	drivers/platform/x86/asus-wireless.c
-+F:	drivers/platform/wmi/asus/asus-wireless.c
- 
- ASUS WMI HARDWARE MONITOR DRIVER
- M:	Ed Brindley <kernel@maidavale.org>
-diff --git a/drivers/platform/wmi/Makefile b/drivers/platform/wmi/Makefile
-index 2feff94a5594..305f4688324f 100644
---- a/drivers/platform/wmi/Makefile
-+++ b/drivers/platform/wmi/Makefile
-@@ -6,6 +6,7 @@
- 
- wmi-y			:= core.o marshalling.o string.o
- obj-$(CONFIG_ACPI_WMI)	+= wmi.o
-+obj-$(CONFIG_ASUS_WMI) += asus/
- 
- # Unit tests
- obj-y			+= tests/
-diff --git a/drivers/platform/wmi/asus/Kconfig b/drivers/platform/wmi/asus/Kconfig
-new file mode 100644
-index 000000000000..f7caf1450a5d
---- /dev/null
-+++ b/drivers/platform/wmi/asus/Kconfig
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Asus Platform Specific Drivers
-+#
-+
-+config ASUS_LAPTOP
-+	tristate "Asus Laptop Extras"
-+	depends on ACPI
-+	select LEDS_CLASS
-+	select NEW_LEDS
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	depends on INPUT
-+	depends on RFKILL || RFKILL = n
-+	depends on ACPI_VIDEO || ACPI_VIDEO = n
-+	select INPUT_SPARSEKMAP
-+	help
-+	  This is a driver for Asus laptops, Lenovo SL and the Pegatron
-+	  Lucid tablet. It may also support some MEDION, JVC or VICTOR
-+	  laptops. It makes all the extra buttons generate standard
-+	  ACPI events and input events, and on the Lucid the built-in
-+	  accelerometer appears as an input device.  It also adds
-+	  support for video output switching, LCD backlight control,
-+	  Bluetooth and Wlan control, and most importantly, allows you
-+	  to blink those fancy LEDs.
-+
-+	  For more information see <http://acpi4asus.sf.net>.
-+
-+	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
-+
-+config ASUS_WIRELESS
-+	tristate "Asus Wireless Radio Control Driver"
-+	depends on ACPI
-+	depends on INPUT
-+	select NEW_LEDS
-+	select LEDS_CLASS
-+	help
-+	  The Asus Wireless Radio Control handles the airplane mode hotkey
-+	  present on some Asus laptops.
-+
-+	  Say Y or M here if you have an ASUS notebook with an airplane mode
-+	  hotkey.
-+
-+	  If you choose to compile this driver as a module the module will be
-+	  called asus-wireless.
-+
-+config ASUS_ARMOURY
-+	tristate "ASUS Armoury driver"
-+	depends on ASUS_WMI
-+	select FW_ATTR_CLASS
-+	help
-+	  Say Y here if you have a WMI aware Asus machine and would like to use the
-+	  firmware_attributes API to control various settings typically exposed in
-+	  the ASUS Armoury Crate application available on Windows.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called asus-armoury.
-+
-+config ASUS_WMI
-+	tristate "ASUS WMI Driver"
-+	depends on ACPI_WMI
-+	depends on ACPI_BATTERY
-+	depends on INPUT
-+	depends on HWMON
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	depends on RFKILL || RFKILL = n
-+	depends on HOTPLUG_PCI
-+	depends on ACPI_VIDEO || ACPI_VIDEO = n
-+	depends on SERIO_I8042 || SERIO_I8042 = n
-+	select INPUT_SPARSEKMAP
-+	select LEDS_CLASS
-+	select NEW_LEDS
-+	select ACPI_PLATFORM_PROFILE
-+	help
-+	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
-+	  Asus Notebooks).
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called asus-wmi.
-+
-+config ASUS_WMI_DEPRECATED_ATTRS
-+	bool "BIOS option support in WMI platform (DEPRECATED)"
-+	depends on ASUS_WMI
-+	default y
-+	help
-+	  Say Y to expose the configurable BIOS options through the asus-wmi
-+	  driver.
-+
-+	  This can be used with or without the asus-armoury driver which
-+	  has the same attributes, but more, and better features.
-+
-+config ASUS_NB_WMI
-+	tristate "Asus Notebook WMI Driver"
-+	depends on ASUS_WMI
-+	help
-+	  This is a driver for newer Asus notebooks. It adds extra features
-+	  like wireless radio and bluetooth control, leds, hotkeys, backlight...
-+
-+	  For more information, see
-+	  <file:Documentation/ABI/testing/sysfs-platform-asus-wmi>
-+
-+	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
-+	  here.
-+
-+config ASUS_TF103C_DOCK
-+	tristate "Asus TF103C 2-in-1 keyboard dock"
-+	depends on ACPI
-+	depends on I2C
-+	depends on INPUT
-+	depends on HID
-+	depends on GPIOLIB
-+	help
-+	  This is a driver for the keyboard, touchpad and USB port of the
-+	  keyboard dock for the Asus TF103C 2-in-1 tablet.
-+
-+	  This keyboard dock has its own I2C attached embedded controller
-+	  and the keyboard and touchpad are also connected over I2C,
-+	  instead of using the usual USB connection. This means that the
-+	  keyboard dock requires this special driver to function.
-+
-+	  If you have an Asus TF103C tablet say Y or M here, for a generic x86
-+	  distro config say M here.
-+
-+
-diff --git a/drivers/platform/wmi/asus/Makefile b/drivers/platform/wmi/asus/Makefile
-new file mode 100644
-index 000000000000..0cee8db2d9d8
---- /dev/null
-+++ b/drivers/platform/wmi/asus/Makefile
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for linux/drivers/platform/wmi/asus
-+# Asus Platform-Specific Drivers
-+#
-+
-+obj-$(CONFIG_ASUS_LAPTOP)	+= asus-laptop.o
-+obj-$(CONFIG_ASUS_WIRELESS)	+= asus-wireless.o
-+obj-$(CONFIG_ASUS_ARMOURY)	+= asus-armoury.o
-+obj-$(CONFIG_ASUS_WMI)		+= asus-wmi.o
-+obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
-+obj-$(CONFIG_ASUS_TF103C_DOCK)	+= asus-tf103c-dock.o
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/wmi/asus/asus-armoury.c
-similarity index 100%
-rename from drivers/platform/x86/asus-armoury.c
-rename to drivers/platform/wmi/asus/asus-armoury.c
-diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/wmi/asus/asus-armoury.h
-similarity index 100%
-rename from drivers/platform/x86/asus-armoury.h
-rename to drivers/platform/wmi/asus/asus-armoury.h
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/wmi/asus/asus-laptop.c
-similarity index 100%
-rename from drivers/platform/x86/asus-laptop.c
-rename to drivers/platform/wmi/asus/asus-laptop.c
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/wmi/asus/asus-nb-wmi.c
-similarity index 100%
-rename from drivers/platform/x86/asus-nb-wmi.c
-rename to drivers/platform/wmi/asus/asus-nb-wmi.c
-diff --git a/drivers/platform/x86/asus-tf103c-dock.c b/drivers/platform/wmi/asus/asus-tf103c-dock.c
-similarity index 100%
-rename from drivers/platform/x86/asus-tf103c-dock.c
-rename to drivers/platform/wmi/asus/asus-tf103c-dock.c
-diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/wmi/asus/asus-wireless.c
-similarity index 100%
-rename from drivers/platform/x86/asus-wireless.c
-rename to drivers/platform/wmi/asus/asus-wireless.c
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/wmi/asus/asus-wmi.c
-similarity index 100%
-rename from drivers/platform/x86/asus-wmi.c
-rename to drivers/platform/wmi/asus/asus-wmi.c
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/wmi/asus/asus-wmi.h
-similarity index 100%
-rename from drivers/platform/x86/asus-wmi.h
-rename to drivers/platform/wmi/asus/asus-wmi.h
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 957034f39e4e..257404b3fd44 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -213,123 +213,6 @@ config APPLE_GMUX
- 	  graphics as well as the backlight. Currently only backlight
- 	  control is supported by the driver.
- 
--config ASUS_LAPTOP
--	tristate "Asus Laptop Extras"
--	depends on ACPI
--	select LEDS_CLASS
--	select NEW_LEDS
--	depends on BACKLIGHT_CLASS_DEVICE
--	depends on INPUT
--	depends on RFKILL || RFKILL = n
--	depends on ACPI_VIDEO || ACPI_VIDEO = n
--	select INPUT_SPARSEKMAP
--	help
--	  This is a driver for Asus laptops, Lenovo SL and the Pegatron
--	  Lucid tablet. It may also support some MEDION, JVC or VICTOR
--	  laptops. It makes all the extra buttons generate standard
--	  ACPI events and input events, and on the Lucid the built-in
--	  accelerometer appears as an input device.  It also adds
--	  support for video output switching, LCD backlight control,
--	  Bluetooth and Wlan control, and most importantly, allows you
--	  to blink those fancy LEDs.
--
--	  For more information see <http://acpi4asus.sf.net>.
--
--	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
--
--config ASUS_WIRELESS
--	tristate "Asus Wireless Radio Control Driver"
--	depends on ACPI
--	depends on INPUT
--	select NEW_LEDS
--	select LEDS_CLASS
--	help
--	  The Asus Wireless Radio Control handles the airplane mode hotkey
--	  present on some Asus laptops.
--
--	  Say Y or M here if you have an ASUS notebook with an airplane mode
--	  hotkey.
--
--	  If you choose to compile this driver as a module the module will be
--	  called asus-wireless.
--
--config ASUS_ARMOURY
--	tristate "ASUS Armoury driver"
--	depends on ASUS_WMI
--	select FW_ATTR_CLASS
--	help
--	  Say Y here if you have a WMI aware Asus machine and would like to use the
--	  firmware_attributes API to control various settings typically exposed in
--	  the ASUS Armoury Crate application available on Windows.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called asus-armoury.
--
--config ASUS_WMI
--	tristate "ASUS WMI Driver"
--	depends on ACPI_WMI
--	depends on ACPI_BATTERY
--	depends on INPUT
--	depends on HWMON
--	depends on BACKLIGHT_CLASS_DEVICE
--	depends on RFKILL || RFKILL = n
--	depends on HOTPLUG_PCI
--	depends on ACPI_VIDEO || ACPI_VIDEO = n
--	depends on SERIO_I8042 || SERIO_I8042 = n
--	select INPUT_SPARSEKMAP
--	select LEDS_CLASS
--	select NEW_LEDS
--	select ACPI_PLATFORM_PROFILE
--	help
--	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
--	  Asus Notebooks).
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called asus-wmi.
--
--config ASUS_WMI_DEPRECATED_ATTRS
--	bool "BIOS option support in WMI platform (DEPRECATED)"
--	depends on ASUS_WMI
--	default y
--	help
--	  Say Y to expose the configurable BIOS options through the asus-wmi
--	  driver.
--
--	  This can be used with or without the asus-armoury driver which
--	  has the same attributes, but more, and better features.
--
--config ASUS_NB_WMI
--	tristate "Asus Notebook WMI Driver"
--	depends on ASUS_WMI
--	help
--	  This is a driver for newer Asus notebooks. It adds extra features
--	  like wireless radio and bluetooth control, leds, hotkeys, backlight...
--
--	  For more information, see
--	  <file:Documentation/ABI/testing/sysfs-platform-asus-wmi>
--
--	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
--	  here.
--
--config ASUS_TF103C_DOCK
--	tristate "Asus TF103C 2-in-1 keyboard dock"
--	depends on ACPI
--	depends on I2C
--	depends on INPUT
--	depends on HID
--	depends on GPIOLIB
--	help
--	  This is a driver for the keyboard, touchpad and USB port of the
--	  keyboard dock for the Asus TF103C 2-in-1 tablet.
--
--	  This keyboard dock has its own I2C attached embedded controller
--	  and the keyboard and touchpad are also connected over I2C,
--	  instead of using the usual USB connection. This means that the
--	  keyboard dock requires this special driver to function.
--
--	  If you have an Asus TF103C tablet say Y or M here, for a generic x86
--	  distro config say M here.
--
- config AYANEO_EC
- 	tristate "Ayaneo EC platform control"
- 	depends on DMI
--- 
-2.43.0
-
+Regards,
+Markus
