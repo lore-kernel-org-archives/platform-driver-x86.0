@@ -1,186 +1,106 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012066.outbound.protection.outlook.com [40.107.209.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f43.google.com (mail-pz2-f43.google.com [74.125.228.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6150E471CE8
-	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 14:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790001484; cv=fail; b=KxxrBcnQCdSMZH755bfJjqNtqQWZbok6ljq76sTvltv5by66TetEgKblSh9DHLro2bHedfu/kzx3Jz8r0Zk6tyHg+Pzz8xwBI19f6EMfL3OgivCib23zxwFBmdsH2OqIXV6h+6DJdD41gRh9PHAvQ0OM+St9QJr8RDOt4i6HkOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790001484; c=relaxed/simple;
-	bh=P6vdFKa6N7PBRWJFNpgwOV7NQY7OD6DkLACV/ewhbvY=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MMvy8NgF3hX3bY/oisaK3Rb2ZkG3jjKnCevfiUgORXntI20YtuIkuLmBT2lQxN3BHw0fx/N3rSwGl0JcJcQS7NqOBCEnojicN1g5GCGtdwt9iVw9A+VyvZK6eTfhnMikvD3+F2D0hO4bp4/UsbMUzgQmaq2IFcphXt5Pbk3byiw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pALbZKdh; arc=fail smtp.client-ip=40.107.209.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD314A68A2
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 14:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790001784; cv=none; b=g6e4kGoIgjJrqZ6sd6vWfzr8/L37x+Wj7RmbWf1/Cck4uKr4ujn5yebBbq4w+0SXnH+g6ATdYQtHc7tR9vJslc70eEY3I2BqU0RnuwdveYvoYN7qaCL6vShB0B5WgUkuJFPNhoMtbuPb9ylPlXiIK9/DPWZ1IhqBpwsy6MtZJ78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790001784; c=relaxed/simple;
+	bh=ee6NNdwpIoJbHKA0a/AD9u5PEHXwKj964nGJAAW3SH4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fIMKFhRqbNWMdiUxb5oWSHBf3BQ4rPhPolilfbsRPZSFE/wHeYsRB45YXh1mgxTi820llgJ8v3erTG5nwvhkH96nrLUd51OjNJa/nGIBrCD74My2C4nRRwJbyJjmfN7ssSS1hys0lP59C6nDTRHstNeXAWSIKma0CIW0Mu+mcVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqbeFuiC; arc=none smtp.client-ip=74.125.228.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pALbZKdh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UjBStoM5+84pPI1k+qjjRV/qcofHTJa9HjUaSBKYpUjQeZ1BhRjlG1ad7EG645ohxB8cLqFfvfk/MlKRhkuxIkK4gKZEUQLujjwV+kb6USl87X8V2gIGpG92K/xnPtHqq9KuvyosbrRAoOpwDpvawQHuFFUn5tRxxjKoBxDRfSBJRRJVVMa55AwI5Ng1P1F6AwAJDz/6nJ1z3zgx7owt7JttvZ8p24whIVi4kLYkCNx6xi1UwGGFswceNFm3KjSGr/wVMJr9SV7r0vDDp4YWl++jEY6+Wa1jc9RHX59X7venJaMzNJ4UoRJcXMxtXKbkKvQno8hT/nD1DTPalI/xaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r8eVKxN3iXR0pIYOrRvb6mG1DM4+/0WkL0wvwSjtoqA=;
- b=f3KJkaR0LtMNvA1ZAg3SqxEXNLXOfOFWger4X2rXGKDV1Eq5C+t12pAZvYZje93lh6Ly0Pv1ohnhn7E08Qr+1FOjli+mwEl6ZXKrtPtn+PPJhl1hMkwi/onh96HZ4L2iMABs20R6ICwDpW7/L3nf8NaUFLzOBC8hDEmQjGchc2hyGKnl9s/DG25US9PFtIbxC9RukkwsOb5NXw3aQw32fN9WMVvt62Jk53MjWJ5NBlOTSQ1xUW7I5PzRCjwBQ25WXf29Ho/tlpvaDkXFd9+6lzcJYKIOBpA9L2gZr2eydLFy3K3zSNAeXMMy+cO4hw3g2AA1dGU57PlmdLm96q908A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r8eVKxN3iXR0pIYOrRvb6mG1DM4+/0WkL0wvwSjtoqA=;
- b=pALbZKdhmISRLr5rfe3Q9bJc1dTgp5Yn4a1t2hkjjuWk3TYslV+0W30b4NDlc8+hxDz5YuzIKX+gIvM67hJxeDbf2Kd5R9kC6wY0NuKGvZtDyE2WHiVlg5z3ByQJAB+qrNWsUcfAIZNR5YIr+axki0syluRyINZX6eCDxm2082Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
- by DS8PR12MB315725.namprd12.prod.outlook.com (2603:10b6:8:447::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
- 2026 14:37:59 +0000
-Received: from PH8PR12MB6914.namprd12.prod.outlook.com
- ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
- ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0428.015; Mon, 21 Sep 2026
- 14:37:59 +0000
-Message-ID: <526ac22c-653a-4c5f-8a80-654845c5c3cb@amd.com>
-Date: Mon, 21 Sep 2026 09:37:57 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: System76 Pangolin (Phoenix) needs delay_suspend=1 for working
- s2idle resume
-Content-Language: en-US
-To: "Dan Z. Bonomo" <d.z.bonomo@gmail.com>,
- platform-driver-x86@vger.kernel.org
-References: <CAAkqa_bGiUUkTC8M5sQVyL3FGwsEBRkcYKhSMRi92gP_1Dq3VA@mail.gmail.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAAkqa_bGiUUkTC8M5sQVyL3FGwsEBRkcYKhSMRi92gP_1Dq3VA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0012.namprd04.prod.outlook.com
- (2603:10b6:806:f2::17) To PH8PR12MB6914.namprd12.prod.outlook.com
- (2603:10b6:510:1cb::21)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqbeFuiC"
+Received: by mail-pz2-f43.google.com with SMTP id d2e1a72fcca58-86b90133ae8so2209151b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 07:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790001782; x=1790606582; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ee6NNdwpIoJbHKA0a/AD9u5PEHXwKj964nGJAAW3SH4=;
+        b=AqbeFuiCjU1Z+KffyMiRh8sQuC9I2hgq2u4T1lSTcLdrgP+0pKhDPO+i/+UokhXt0c
+         NkZPID4wtxHd1Tqg3RdRLybgPcdnXHzDHGjWxY6a25pjUCctVtMdvu5+nhPuNw5XcjLT
+         ewcOePPwt68bcg6j8hV9e4jufUTdg1QcB2f18MvILeeF4qlu6wy2YlQwQV6gYUvYae5V
+         f5L6Ry6TSXACqnHZiW81mJJh+4WPHdCRtC7EUCofIgJLQNh/bELw/1Bm+JExTBKJpNNJ
+         e6dLEk9FNFPIDVpoeO0QaZg3AFUXOHrElcVeF8R9kvqld4zEUtIGNC1UyvL9RtLE64g3
+         22Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790001782; x=1790606582;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ee6NNdwpIoJbHKA0a/AD9u5PEHXwKj964nGJAAW3SH4=;
+        b=x5xHXf2ffDHaxV8tUo5juNCflq8ZRxHzCdHhBBPzxsR+ijQSaP1B7MG0aqpdS5TUS3
+         14j/VT5C9To31z03bbQ/lP8OEbyXXw6SnitEc+AExcYB+OPbOu1DNUKLsR0F/KQkn1b6
+         7E8NjFGlh0yR7JUJmiH8w6jmRgYC61eCJhkcBF9s73JG/6Lb4+Lft8II6vnQVb1ZS3u0
+         J1BEnc8QOQXD1L2qYT7elWmZ7bJGTapOProZRbtdqJebTnG5Yp+Uyc/0kDMyLnvXig8g
+         ARpab54oQfZKF3tmcrH+OE4th9N882tZAFlpDZCLaIY3AFshuyPsoAMtCCqcPoA7lgja
+         WwCw==
+X-Forwarded-Encrypted: i=1; AKwUvBwKZwQ9qpgS48PMdgySonT4QvNP3G61/ojIAohL3SpmbpCsX4anF2j0F1CaRNdfA4nawsoFJnWESY/0ZBqzXXIHa0X3@vger.kernel.org
+X-Gm-Message-State: AFuF++naXA+R2Y7Q9X140t2dxdfKrhxz7aoIspsca7PdxVRt7S/sVqrE
+	8RO1B2DVqfxLKTa6S0F88K+r3zdhbxdTfI6z69HHWtQtJoFiVZkVkgf/GFri1W90
+X-Gm-Gg: AYBFou0aAR29T3xiAxoJhkZmQ8CUk0shywQFtGlSgQwZFKe7v1q8JIpAseFDpMSn7zK
+	b5l2psJbzsQuaw5bNv7clEfeYzQP14aI6mHudvRfqAr0G7eZLARRGx4zTXKrO6Qa6xmUFIqqOgB
+	ltM+wqntQ/xIegbaOFAmrjerwP3wZ/09cWTKYicpv60hXyuXFa9QlY+5WCaV8tj0Lgsb63Qp8MU
+	fh4ex8G9RgscztXEV9eHMIXfKGb9q2dALXxMlJxtqa2YRcqvinUe8SqzMrLdeg2lzBIRIfAm/r5
+	t4opncO/zHIUqwjRPUykHhkRtCkive/kH+10+HOz+j8MoHVzJzptAzkcUmP8p5nCYMurxlwIcdL
+	1NJ3yIllNzdZ2bb20rxX1sm0+eiEsidt8on3xsmefYfc6gxilldg5rM7RemxviwlsJN+3Cm4fKZ
+	FN8S6YM1SjKR+XG5yOqoBs3gBODRmM1RKXcfyYfkWKt7m1WDTkLTj8E96sO1fwfPwobucJLTYwu
+	+1xZ+aW1Np7r89eDpwLC05B1srXL87B2gVRzsjwU2yvZjC/VWC+yA==
+X-Received: by 2002:a05:6a20:3949:b0:3d3:adbf:7784 with SMTP id adf61e73a8af0-3dd8c41a806mr15005040637.25.1790001782204;
+        Mon, 21 Sep 2026 07:43:02 -0700 (PDT)
+Received: from LAPTOP-ULBIJHFK (59-124-193-167.hinet-ip.hinet.net. [59.124.193.167])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc72acd26c6sm3704120a12.3.2026.09.21.07.42.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2026 07:43:01 -0700 (PDT)
+From: Chipang_Kao <prozac2734@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	W_Armin@gmx.de
+Cc: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	denis.benato@linux.dev,
+	jprvita@gmail.com,
+	scardracs@disroot.org,
+	bryan.odonoghue@linaro.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/wmi: Move ASUS platform drivers from x86 to wmi/asus
+Date: Mon, 21 Sep 2026 22:43:07 +0800
+Message-ID: <20260921144307.467-1-prozac2734@gmail.com>
+X-Mailer: git-send-email 2.55.0.windows.5
+In-Reply-To: <ee3735b5-6f56-4b88-a582-5bb0aaf3eda8@kernel.org>
+References: <ee3735b5-6f56-4b88-a582-5bb0aaf3eda8@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|DS8PR12MB315725:EE_
-X-MS-Office365-Filtering-Correlation-Id: e2e7709c-84cb-4eef-1a46-08df17edeecb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|23010399003|1800799024|10067099003|56012099006|22082099003|18002099003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	bk+kRuuWcGIRYYt4Iqf2UG+UqUDl0kXonHXYZo3bxlqbun/703DmsAAE+Hp4e9jHvKMThpdpoNkyDQhuQ38NLn0TW3DE1Az9jY7EpUlh15KYvaaS830KY/sqkw+AhzDK3GQ/Kt4VSuC8qGih6r0vF16TUy8nvPKnaT3E+oCTDKS6jBJMfC2RfEtI36uwltbrbd/pmpU4jYnc7ZfnYJH3T5e4V64AC8mjLJRRzyfasH0GPneYM2CYkdu95P2v6Nixq0gVTVfvopPrPm3DCwXYz8sFDqtynglY/6H+iVPsxiAoXC6Gzg/VB8L6/ej/xkZoPDQAeEuCjEMr/JKeG11BF/5lgtmW1ZuHEOxN8VX2lfg7MistN5IBUnBqNPiKSzkKIUKxPocOJ3+3yrxIE+/LeHgYCwFDiJ51EAJrMDKYFpex5dkdv93PbDOfEXS498rtn79ozclkuVRof/XakFxR/vtkw4SOiL89buEpMia6fKQQlX/AQ6IM1SaXbJw072+dXVMv2f0JivpSEFkZGJM8m3CAfJPQmaG1rKR/4o58Q+nWATZzWxXejgcwGkPrSjFUvkEBleV6kjpqYUImuyEthEXgpIj1Lgg4yTf0GSJgDb4U630VPm+/QoC0Z7ZzHpu9
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(23010399003)(1800799024)(10067099003)(56012099006)(22082099003)(18002099003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V1kxNDNMZjl4TFU3Y01NUjlXSEl0R0RiUXVyMGxuTzRCaUdvN1d5M2diMk5B?=
- =?utf-8?B?cVlWVFZiRXZwWU5vajcxUVk2MnZLckJ5SDZ0VzVqUy9KcWRISVBoek5FMjU1?=
- =?utf-8?B?OGhpNG9uK0xCYnhoY241ZHNZZTZHTkRmeUxuT3RpRDhQWEdRRUxJcFRSRlBa?=
- =?utf-8?B?Y2Q2SEE2UEVrTXIvS205OE93dWdEMVBaQ3REQ1pQRGViM0pmZHlpTTZvcW1L?=
- =?utf-8?B?VC9wNjZNa3luMW1vZWN5N0ZrVktZZWwzQVFPaXVMMnZjcnh6ZXdlT3ZkUXdj?=
- =?utf-8?B?Q1k3SE0zWlVBYXFnL1gzQ1czZEdWWU5EQnVtY2tXZE9kSlNRVjAxY3htZWl3?=
- =?utf-8?B?U1RHb3Z5MG9HZmNIcC9lR0FYTVQrbUV5dW5wdm9KMnlIQ1VCVDBDZlJRTWh6?=
- =?utf-8?B?V015emI2eGhadmxPbjFQQVdTVTJPS0JMZTBiVGRUOSt2cEp3ZmVGNWhpcmlu?=
- =?utf-8?B?UWRUWTFxb1F3YzVuV1JmdG11aDZqTWxTdlJBaG9MVVdXbC9MQmxKVTd1bVRu?=
- =?utf-8?B?VHZnN2sxZjhJdTVIVkI0WlRDcW02TFprdERiMUJnYzRpbkJsVlRRb3cwaEZK?=
- =?utf-8?B?dDVhTlgzZHhYU1FQdWRaVXBPck9lTXdVRlB1NHEray9ZR01kaHdwM29wajBX?=
- =?utf-8?B?RnJzd255aHB2VHVvQytGcWhYeXhMUWFrOWNnbE5hT3VLTElHN2V3YU5HRld4?=
- =?utf-8?B?YXNtRUp3b2lqWmtmTjhmSVlCWFRVNzE1NWdxRVd3OTYvc2NVWkFjbjJXNUpr?=
- =?utf-8?B?NzZCM09TOEVML0paWnFnLzBpVTA5K3ZzbTNRdUxhMy9UdXVPNk9Jai9wOTgy?=
- =?utf-8?B?R2RLQkNzNmxKS3F2SFkwdFR6dUFHdFZ0UnBJdTYzbnBVc2swc1lTUytxSEhK?=
- =?utf-8?B?RGdpNFMrM1RVZFVvNE1PMVBaR3ExS25pL0tLcVp0N1ZmM2o0akdORGtaZWJY?=
- =?utf-8?B?aE9qZVdiUXpFZHBKSCtQK2ZOY3BZTEpRdU5EWHNWUVovdkhlM016bTJzbGpL?=
- =?utf-8?B?TFBuS2tsdmkvTVhuRnZySFUzSXdpNisvbWo3NVFlRy9mK2RZVnpqZFYreG5X?=
- =?utf-8?B?KzZ1ZnFlYStTVDk2amFwL0dmbW5yWGtFL1lqL201SnluRzhTZFErNWxiQlg2?=
- =?utf-8?B?OHYrZGNWNlFJK29HT1BkUEtwNDVpS21uWkIwOEpsRHJZSU5WOVJrTzVZcW9Z?=
- =?utf-8?B?dzFCTVFoMEh2NXlIV0w2em9tbXpYSFdrZUYrVG5EMEFFS01xbzhxcjBLUXFR?=
- =?utf-8?B?NnRVNFBHZVcvekhtSW9GYU9xc3lKOGliTkViV0phZk1JU044akhxNnNSd05k?=
- =?utf-8?B?eVgzMnFsUXJ2T0cvUjJRR3EwdEU5bklpYlFLY3JDSjNodjZCOCs5OWgwekxZ?=
- =?utf-8?B?U1pXUmNGS25lUHI1Zm1UWVB3cFhmWi9RSnpaTVpyVVpjVGhZbHhrc3BJUzM1?=
- =?utf-8?B?cjgwbXFKcGxxLzJXQ3F1eVlhTkZ2Zkd2d1JYSVZndEdYQjJzN2h4cTE2Z0lQ?=
- =?utf-8?B?THlrL2lTcWdsbVNJYWZVY01QNElKenlWZ3NWcFl2RXNPRlIzWjhqQnRTUWpO?=
- =?utf-8?B?WFgxVUd6c3hvUnp4RHBnMTVUUUo4dXAzK1piemlYZFlZRFhWaUc1K2pVZmYr?=
- =?utf-8?B?SHZqYnEwVDhtNEpoWUd6NWcwOTczVDNITFJXbTFZazNFR2FrT3ZNUlNuL01F?=
- =?utf-8?B?MU96RDJ2VFJ1K1VkcTBPeTA4MmVkZGo4aWMwWVVneWJoUXJ1YnliSVgvRzVW?=
- =?utf-8?B?T1dFMzhFd3czVGhvNlZITmNVS25tQ0RGVnNzdTUrM0puZTV2cmx4YUl2Ympt?=
- =?utf-8?B?alpzUE4ya21hWXdDRkhpWlZtM2VvQjM2KzBOeUQ0MEtDbTJORWtiTWpQRFRK?=
- =?utf-8?B?Z0ozdDd0RkJSL3JqbkhkR1VDa1dURmdDeDFPb1F4RUZjRmROS2d0c01SMlFR?=
- =?utf-8?B?SUxUQ0xrS3NjZkJlakZ4bFdaMG5IZHloVkQrSDIwQmVnaTRKY0VRWTFZdUtt?=
- =?utf-8?B?M1hWTTR5OStBRzRKTW1VYzd6RDBGdXJFSWZyQk5ERVYzSmRva0JjeGtFVmoz?=
- =?utf-8?B?Ui8rZVVXMHlNWnpNcUdSMHZWK1Mya0l0R29XcG4zNlRKVWNDMldvdytKUDBY?=
- =?utf-8?B?N2wwQ1FoaXhCSXhLVXczZ0YxMi80akg5QWxONE81Vyt2TGdDSldpY1B4bzdM?=
- =?utf-8?B?VVdTTnRXVWRaMU0yMEM1MEFvU0xUSDB2cHJvZDJCaTZCcHA2L2M3cll2S3E2?=
- =?utf-8?B?bE9FMnhPMytRSUcwL252ZE93RXFYYzZpZUFQcmduZ2YzSnoyM2NoV2g1OE5H?=
- =?utf-8?Q?Xq/afsyfBbVnjv3yxR?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2e7709c-84cb-4eef-1a46-08df17edeecb
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 14:37:59.2664
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L1aex8ysZrwEAjoOw4IiHVgar6SpJU21AqoY2sMhZ3qsWa9CLFxVq1vucVPg95ddAjBYcHDqjODZA3ET9n3IRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS8PR12MB315725
+Content-Transfer-Encoding: quoted-printable
 
-On 9/20/26 10:14, Dan Z. Bonomo wrote:
-> Hey folks,
-> 
-> I had Claude take a look into why suspend wasn't working for me and it
-> ran into a note in the kernel's amd_pmc driver that asked me to report
-> this:
-> 
-> "amd_pmc AMDI0009:00: Delaying suspend by 2.5s because delay_suspend=1.
-> If this solves problems on your machine, please report this whole line to:
-> platform-driver-x86@vger.kernel.org so it can be automatically detected
-> as affected in the future.
-> System Vendor: "System76" Product Name: "Pangolin" Product Family: "Phoenix"
-> Board Vendor: "System76" Board Name: "Pangolin"
-> "
-> 
-> Here's info on my system:
-> 
-> Laptop: System76 Pangolin (pang13)
-> BIOS: APX928_V00.01_T0008ASY1_ms
-> CPU: AMD Ryzen 7 7840U (Phoenix)
-> Kernel: 7.1.5-76070105-generic (Pop!_OS 24.04)
-> Sleep mode**: s2idle only (no S3 available)
-> 
-> A summary of the problem:
-> 
-> Without `delay_suspend=1`, suspending via s2idle results in the system becoming
-> completely unresponsive on resume. The power button (short press), lid
-> switch, and
-> keyboard produce no wake event. The only recovery is a 10-second power
-> button hold
-> (hard power-off).
-> 
-> This also manifested as a secondary symptom: rapid suspend/resume
-> cycling when the
-> lid was closed. The system would suspend, wake spuriously (EC in a
-> broken state),
-> see the lid closed, re-suspend, and repeat — causing the screen to
-> flicker on and
-> off in a loop and draining the battery.
-> 
-> 
-> The fix I applied:
-> echo 'options amd_pmc delay_suspend=1' > /etc/modprobe.d/amd-pmc-fix.conf
-> update-initramfs -u
-> 
-> So far so good, it seems to have fixed the suspend issue and I haven't
-> seen it stuck in a monitor off-on loop since then either.
-> 
-> Hopefully this helps smooth things over for other Pangolin owners out there!
-> 
-> Thanks a lot,
-> 
-> Dan Bonomo
-
-Before going down this path, can you please try using this patch instead?
-
-https://lore.kernel.org/platform-driver-x86/20260914141734.2703545-1-mario.limonciello@amd.com/
+=0D
+> Thank you for your answers and this all sounds good to me.=0D
+=0D
+> Based on this I've no objections against this series.=0D
+=0D
+> Regards,=0D
+=0D
+=0D
+Hi Hans,=0D
+=0D
+Please ignore this v2 patch. Only asus-armoury.c, asus-wmi.c, and asus-nb-w=
+mi.c are =0D
+WMI-based drivers. I will move only the pure WMI-based drivers into wmi/asu=
+s folder, =0D
+and follow up with [PATCH v3] shortly.=0D
+=0D
+=0D
+Best regards,=0D
+Chipang Kao=
