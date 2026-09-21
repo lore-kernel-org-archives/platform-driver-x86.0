@@ -1,90 +1,186 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f43.google.com (mail-pj2-f43.google.com [74.125.227.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED8F340DB0;
-	Mon, 21 Sep 2026 04:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4167C3C819B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 07:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789966070; cv=none; b=B5JFopY0CKogfZDmrmHU1mp8PBG4NbY2AAw7Bgio8HPxHwPOM8WTQXGF3jXpoYavnaTqtBR3sj/91YY1c+FtPW8HprCqgDeRK8hp2kbWtHyMhHEQBj+zKryoDBMBCIwvqMIhY+opuPc1UeQKP9AVVLWdnJ6p/pay2+Z70sTeFZE=
+	t=1789977205; cv=none; b=rOSSkLJ6Avcln1zXcMDkxzNQOcXJ9p7pY0N+eWBnXukE7BetRGb+RyoQsNRi6Inb0VIjGFqLQquQ8/QnOaMKovTpU4+PA40q+pdjArMJV3V4SWZ0uV4pOq2ALLPQ+ZkCZKDT9F8GIxU3gRs6BwM/86vU5RlOur7PqBUdhYO03sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789966070; c=relaxed/simple;
-	bh=q6E6Ld8Z3mcHO1z35NHzzplEC7L/2Swizx8XRiUMcIc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=guQOaKcolmmY5tnl1ScAkGHgDS19xHvZeqEH9c9O5RknPtpsm/0qHHHGzCypkjiE7ifLpSbJURiNUGXa6Ow7hf45QBdY2JPDa5MRGY7k99yt2WNoxmVhH/hR2Nvv9TKxiSNPmEocjqB7Ao60DP/BrjsCY34KqEpctjxkVtKmj7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wL2Huj4l; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1789977205; c=relaxed/simple;
+	bh=9jVvDTNMlifeWHalrehEJ9MSMBp7ROdLwpLKuSgTo60=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QiVXul73U4Z/nYBs82lDJOv72dI0D7rvMdn32jCpnnWgwLPBGTNgsfAs+wepQ4+x9zfb47ydyxlzp55NXYhF61OKpdCe6wa7GDYRbriwtDaulhzySkkXmkLMMmzb2KTnKCacm0Kz910cydoN7DR85ooCAaDDXBVXhWrztbjOchw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=adPkZDyu; arc=none smtp.client-ip=74.125.227.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wL2Huj4l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=CSA49u37rYqAYETDO3RGaZh9F9F6Wuj6Kr47OrcbxQ4=; b=wL2Huj4lIhJE9vPy6XnXkvYnBH
-	YT4iTMxWazEw6RBIeo2PdHCjKc7his1JTzxwvwA4QYM95YgRQSqWQMUi3RAK1Tqnn+M3C9wJwNO5o
-	/mzqcHKQOw4eJWcaa+VV9I0maLfjphjlZbQSJyxmrGTODiwvT0sNq/Pcsy+prfiSwdUHeZ9wlU1GT
-	4LiuzjMlrbC3dcqY2npUn3AilPgkXMPDCsRlwughBIFlXz5ENcg4omrdmrPwfIhSrJApbK9vJwKTi
-	enYxZ39u0CvAh83Q3DYihvkMbMTb283enr4LcMnld/3d17IItGCeHHB3J/87mhcebB3fIfdvBaAFP
-	EiBU1YcA==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8VwR-00000000r5X-1IeQ;
-	Mon, 21 Sep 2026 04:47:47 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Jithu Joseph <jithu.joseph@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ashok Raj <ashok.raj.linux@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adPkZDyu"
+Received: by mail-pj2-f43.google.com with SMTP id 98e67ed59e1d1-396ccafb752so2189290a91.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 00:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789977203; x=1790582003; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XL6pKrFrkkzHRuFW00rA0h4XTY4p2ooSEMR1SrVlXM0=;
+        b=adPkZDyuQBkAi9YeL/0AzuuADoZeEjtZUdrZwEoGF7xvzd0XyNwW2QJFX+ELYhEAzC
+         nqRUrRzFXjfmVGZYLobkL+5gqJ2zfhqzFLitlYPZIJlEMW00kS0JhFsOkVD6ZqSq+tO7
+         imS3jCLqoMAxRC3KqUe2OWzpZfNOmUC4bK2TxugfmHx9h3iFeTkkM7Qm09WqNcOwX2jV
+         Lh2rz0oqusL2jZ31VYeSuOOcgXG/mkrWdl6IanfcFi2Y6vsOleirwR16lXdxaQ34Y3KL
+         3/RZEtmUclPxOjZYAOnaHtCn8zsHJfIg7GrxHc64aNULi5VZTbFQUQ1hxvmK90nYktlB
+         Uo7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789977203; x=1790582003;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XL6pKrFrkkzHRuFW00rA0h4XTY4p2ooSEMR1SrVlXM0=;
+        b=XlxzBceZlpYrljuZvRlhiWfxykJSGbcNl/mU8ONQOZ8XBFCsvFBvz9VICEVqBO+CWS
+         bEZ3QDVGupgJ7+AcStc4rZoWyNNyn0+cncIbragvlcWbAmMNd0ea/vAGZYxUqVXiJbgt
+         IbBy30qWW8Kea4+FRrXcal0Sm13FJLRSTNKrNJSgtIqjv+i6sIniMhQNSjA1lLlVvxFC
+         2K6cnyNGxglYwJQrhzkBBVVtUYT5rzZmdHDaofPshXsXaYy+WDgwWuQxDDKe3EkMs9rN
+         kSjUtWxQWVRcSZRxIAcUpDdHqkEKt0PQK7VQdz2BjgyD0Pb7Ki+bPI22Z2OFpGjDBqs2
+         9OHg==
+X-Forwarded-Encrypted: i=1; AKwUvBwWpm+uD8Hi4M7Lk3dG7BnqQG8+UI/N8rwAaJQAyrfSXVJiqPA8+ILuezbRrgfH2HLdSI3vvmesa+3cL6jyTY9+r0T2@vger.kernel.org
+X-Gm-Message-State: AFuF++kSkLHkT7PRRYtId4wXas7F0cpKgoBMdRnYwA4XKvkYrDZ6R6Ay
+	kApaDIleS8UWR4TxIWDcaNxcZx1RywnmynsSv2nRVOauVVWdBQNgJt6p
+X-Gm-Gg: AYBFou04IDiaPjsnQmS+ghdmUrbxE6pUxfwV/mbvJb6ajmSTNble7rM3hs/68RAnMWJ
+	AjvN+LmOzsNbInYxUkRwDpX9CQHxql3TMpyGZGhdfdAgx9TF0LAuvrXy9p2V4ZsPsFJUdi/Vmmp
+	epun2h6aSpdaaEWL8G2OJ9NOaWO9CGP1EEv/za6rzI7GfkDhbIeYx48KcfQCIoXs00Dskp7R77c
+	e4NVkXjT2D9RuwmuqyOCLIH/pvO+m6fTXAeoyWPFoalXJgPTqgsVK53UX+2lPJ2bDgQvYEjy/jz
+	s9FUMoMkDn1VgnvU9jEMaePdXz9cKQGL2aKAyzBu9GaQa+P3pJDMIfzOn3BsSgRQiUbGzHbQP3T
+	mq1Vzk/gj8CrbaD9+MIOF1AWog38uvKTCceGp1l4X53QIPns/4vD3mpWD7VU7sN9falSZPfFF/1
+	gWAtxn7i/VCLsgtcVLdvh906C+1HcD2D/c3HI77wUDI5jSEZg1YCnGRA==
+X-Received: by 2002:a17:90b:17c5:b0:39d:ecc8:73b1 with SMTP id 98e67ed59e1d1-39e54df9c06mr20858242a91.7.1789977203496;
+        Mon, 21 Sep 2026 00:53:23 -0700 (PDT)
+Received: from lgs.. ([2001:250:5800:1002::de93])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e6bd191aesm13132465a91.0.2026.09.21.00.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2026 00:53:23 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: Bao Cheng Su <baocheng.su@siemens.com>,
+	Benedikt Niedermayr <benedikt.niedermayr@siemens.com>,
+	Tobias Schaffner <tobias.schaffner@siemens.com>,
+	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Henning Schild <henning.schild@siemens.com>,
 	platform-driver-x86@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] Documentation/ABI: IFS: use literal blocks for commands
-Date: Sun, 20 Sep 2026 21:47:45 -0700
-Message-ID: <20260921044746.94316-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.55.0
+	linux-kernel@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: simatic-ipc: fix platform device leak on registration failure
+Date: Mon, 21 Sep 2026 15:53:12 +0800
+Message-ID: <20260921075312.120983-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use literal blocks for console I/O to separate it from the
-surrounding text. Otherwise the lines run together, without any
-clear break before or after the commands.
+register_platform_devices() creates multiple platform devices using
+platform_device_register_data(), but returns directly when a later
+platform device registration fails.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+If LED or watchdog platform device registration fails, previously
+registered platform devices are left registered. Since module init
+failure does not invoke the module exit cleanup path, these platform
+devices remain allocated and their backing platform_object memory is
+leaked.
+
+Unregister successfully created platform devices on registration failure
+paths to restore the missing cleanup.
+
+The issue was identified by a static analysis tool I developed and
+confirmed by manual review.
+
+Fixes: dd123e62bded ("platform/x86: simatic-ipc: add main driver for Siemens devices")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
 ---
-Cc: Jithu Joseph <jithu.joseph@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Ashok Raj <ashok.raj.linux@gmail.com>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org
+ drivers/platform/x86/siemens/simatic-ipc.c | 40 ++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 6 deletions(-)
 
- Documentation/ABI/testing/sysfs-platform-intel-ifs |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
---- linux-next-20260918.orig/Documentation/ABI/testing/sysfs-platform-intel-ifs
-+++ linux-next-20260918/Documentation/ABI/testing/sysfs-platform-intel-ifs
-@@ -10,8 +10,10 @@ Description:	Write <cpu#> to trigger IFS
- 		Note that the test is per core. The cpu# can be
- 		for any thread on the core. Running on one thread
- 		completes the test for the core containing that thread.
--		Example: to test the core containing cpu5: echo 5 >
--		/sys/devices/virtual/misc/intel_ifs_<N>/run_test
-+		Example: to test the core containing cpu5::
-+
-+		  echo 5 > /sys/devices/virtual/misc/intel_ifs_<N>/run_test
-+
- Devices:	all
+diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
+index 7039874d8f11..9bf8b2d8248c 100644
+--- a/drivers/platform/x86/siemens/simatic-ipc.c
++++ b/drivers/platform/x86/siemens/simatic-ipc.c
+@@ -92,6 +92,7 @@ static int register_platform_devices(u32 station_id)
+ 	u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
+ 	u8 battmode = SIMATIC_IPC_DEVICE_NONE;
+ 	char *pdevname;
++	int ret;
+ 	int i;
  
- What:		/sys/devices/virtual/misc/intel_ifs_<N>/status
+ 	for (i = 0; i < ARRAY_SIZE(device_modes); i++) {
+@@ -118,8 +119,11 @@ static int register_platform_devices(u32 station_id)
+ 			platform_device_register_data(NULL, pdevname,
+ 				PLATFORM_DEVID_NONE, &platform_data,
+ 				sizeof(struct simatic_ipc_platform));
+-		if (IS_ERR(ipc_batt_platform_device))
+-			return PTR_ERR(ipc_batt_platform_device);
++		if (IS_ERR(ipc_batt_platform_device)) {
++			ret = PTR_ERR(ipc_batt_platform_device);
++			ipc_batt_platform_device = NULL;
++			goto err_unregister;
++		}
+ 
+ 		pr_debug("device=%s created\n",
+ 			 ipc_batt_platform_device->name);
+@@ -139,8 +143,11 @@ static int register_platform_devices(u32 station_id)
+ 				pdevname, PLATFORM_DEVID_NONE,
+ 				&platform_data,
+ 				sizeof(struct simatic_ipc_platform));
+-		if (IS_ERR(ipc_led_platform_device))
+-			return PTR_ERR(ipc_led_platform_device);
++		if (IS_ERR(ipc_led_platform_device)) {
++			ret = PTR_ERR(ipc_led_platform_device);
++			ipc_led_platform_device = NULL;
++			goto err_unregister;
++		}
+ 
+ 		pr_debug("device=%s created\n",
+ 			 ipc_led_platform_device->name);
+@@ -153,8 +160,11 @@ static int register_platform_devices(u32 station_id)
+ 				KBUILD_MODNAME "_wdt", PLATFORM_DEVID_NONE,
+ 				&platform_data,
+ 				sizeof(struct simatic_ipc_platform));
+-		if (IS_ERR(ipc_wdt_platform_device))
+-			return PTR_ERR(ipc_wdt_platform_device);
++		if (IS_ERR(ipc_wdt_platform_device)) {
++			ret = PTR_ERR(ipc_wdt_platform_device);
++			ipc_wdt_platform_device = NULL;
++			goto err_unregister;
++		}
+ 
+ 		pr_debug("device=%s created\n",
+ 			 ipc_wdt_platform_device->name);
+@@ -169,6 +179,24 @@ static int register_platform_devices(u32 station_id)
+ 	}
+ 
+ 	return 0;
++
++err_unregister:
++	if (ipc_wdt_platform_device) {
++		platform_device_unregister(ipc_wdt_platform_device);
++		ipc_wdt_platform_device = NULL;
++	}
++
++	if (ipc_led_platform_device) {
++		platform_device_unregister(ipc_led_platform_device);
++		ipc_led_platform_device = NULL;
++	}
++
++	if (ipc_batt_platform_device) {
++		platform_device_unregister(ipc_batt_platform_device);
++		ipc_batt_platform_device = NULL;
++	}
++
++	return ret;
+ }
+ 
+ static void request_additional_modules(u32 station_id)
+-- 
+2.43.0
+
