@@ -1,104 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8152D4AEBC0;
-	Mon, 21 Sep 2026 15:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC463B961A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 15:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790003092; cv=none; b=sZC2F+bD6/Ikd0LNKnprmxzGd2LAaXnkDOaJynOij5Uoalreed8H1D6VwCEsq5cbUR5RkLlX9YcoNjnB5/hdJbk9GjZ8nyArgMF4QXvCMCwnBTXUQkV7A2k7OpjxoS9cBX8KbkrgIIsOjRshF/ETmnFmAuN9unwQH1W94EyF6E0=
+	t=1790003106; cv=none; b=ejTGF5MuVl3xYGbcGRT1/XRzoELBsFTcLpCoYA3pqGv/pfOxHhDcAVkmz3JSt2vkkkOnFGjhe0BDXtajG4UOcLC2zIAkMuSWVW6B2BVyo5J2gIwo6IhyAjLL8IsSs8YSt3bacwa+06L0jMK4dTvIwLJnAbPDVIrdmRcWW9+yfAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790003092; c=relaxed/simple;
-	bh=l/0uyKU0j3b0Hsy81D9q5ChbY1r6ifLPmD5MUXhvpTA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F6NiyUbPGhXAwBbtauMH7P0htgwEE9K0T/6REhnNh1I27EdWY4W3CLDwn86dsl7MKHFhXPMb1OP4ZepngPk4Ss0LZ7ozGqxgx0lrabXWjkY2Ro0oL0STkSR2Bt7Dzkwa1Rjoj5QABqTdXLEyOv4QvYfovfLvNYt/v28l7zpcabI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZX5i8G/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790003106; c=relaxed/simple;
+	bh=w5ruA24afrPSuUvZGgkVOlOvNB/a3e0IW+RkrjQiytc=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=noA9Y/FK2+cXKoRZ1qqIMHoxE9hAueD1Gu+xijVbHg+iBbXSaLOYseH38UMK1EBr2mdsYq9Vx6edNmNAZhYKsCKCl6B4UHy7GqQdjasB+hogyupF/id5RGH/9UYvUQ2PWGxfM9zmXXCDvxJzbbryMFUZxqSey84BoyxHOI0J7K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MCU+cMaR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZX5i8G/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76BD41F000FF;
-	Mon, 21 Sep 2026 15:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790003083;
-	bh=tAJAA4AFmdQlgFZh/bqseoiGcQUpdjeeINGyxieAAC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bZX5i8G/jLPmpFFX18pebpYaJ+3hk2ULfAyNRSO9zNSsv7IwyXOKLqcTtQq7ED3IS
-	 IzyIO3tQhFARJ1KhrYGDz/T0cAbaNUNh3BVinvldQ2Mfh7Fri3ao3Y9WwOHUAeRvnh
-	 mz9KYlj6TCmkSS/D8ZgbabmEJtwOq+Vv4FbQnNWSdAuAvSwfjKe1Zd7lYSGEUgoV0M
-	 lPFa1pDpFOlvNF+2yKb03NjHgTVV+a0LjovuHE8Dgv72nA0lLw534i3aLd8rt9PifO
-	 xOj5EoPtKvlgbiCARdTZhpbYdXC729BdMy/HOYu9GRg3Gdc/4gyRvxLeWX9mN7I0MN
-	 rLYhG5jpApXtQ==
-Date: Mon, 21 Sep 2026 17:04:40 +0200
-From: krzk@kernel.org
-To: Guangshuo Li <lgs201920130244@gmail.com>
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, 
-	Perry Yuan <perry.yuan@amd.com>, platform-driver-x86@vger.kernel.org, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-	stable@vger.kernel.org, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH] platform/x86/amd/hfi: fix platform device leak on init
- failure
-Message-ID: <arFHhgygVBlggeA6@quoll>
-References: <20260921082609.244774-1-lgs201920130244@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MCU+cMaR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 62C89C2BCB8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 15:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1790003105;
+	bh=w5ruA24afrPSuUvZGgkVOlOvNB/a3e0IW+RkrjQiytc=;
+	h=From:To:Subject:Date:From;
+	b=MCU+cMaRbuDmDpuVMTs2zhFunrWwFdExZz+Cfjjg0MYEvo3Wznky0PCsf+IKJXSnh
+	 k96PGwEQOKCq7MFMgdaT2DJeoB1UgsmSehA3+vSwc4fW0S6rUdLaEyOlWH06kqhfrV
+	 6hkOqa0jfJIEPfdMoAva42SeN9sB/69NPRlVXu9Qhi8KOrneaiVdToBg9lYjfd/nbp
+	 T0C/A2SeieRuCaJ9LYnifvusn/Rz1e3oJLWMoOYxOIaSu0OToACiHSf61hcmo29VbP
+	 Y5FwEiebDuXGIG7vRPH6VR3+BwWgPT+bXbhnhVyuAXkipDUyECTASr/Ck6M79mz3jR
+	 DW5Uev4QHs0qA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 26285C4160E; Mon, 21 Sep 2026 15:05:05 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 222044] New: hp-wmi: Mute and mic-mute LEDs not supported on HP
+ Laptop 15-fc0xxx (board 8DC9)
+Date: Mon, 21 Sep 2026 15:05:04 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: neonblade018@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression attachments.created
+Message-ID: <bug-222044-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260921082609.244774-1-lgs201920130244@gmail.com>
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222044
 
-On Mon, 21 Sep 2026 16:26:09 +0800, Guangshuo Li wrote:
-> amd_hfi_init() registers the HFI platform device before registering
-> the platform driver. If platform_driver_register() fails, the function
-> returns the error without unregistering the already registered platform
-> device.
-> 
-> Since the failed init path does not run amd_hfi_exit(), the platform
-> device remains registered and its reference is never dropped, preventing
-> the associated platform object from being released.
-> 
-> Unregister the platform device when platform driver registration fails
-> to properly unwind the successful device registration.
-> 
-> The issue was identified by a static analysis tool I developed and
-> confirmed by manual review.
-> 
-> Fixes: 5d902ee5609a ("platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
-> ---
->  drivers/platform/x86/amd/hfi/hfi.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+            Bug ID: 222044
+           Summary: hp-wmi: Mute and mic-mute LEDs not supported on HP
+                    Laptop 15-fc0xxx (board 8DC9)
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: neonblade018@proton.me
+        Regression: No
 
+Created attachment 310897
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310897&action=3Dedit
+Hardware, DMI, and WMI diagnostics
 
-You sent multiple independent patches, to multiple independent
-subsystems. The amount of these patches clearly suggest this was
-AI generated and most likely not tested.
+Hardware Environment:
+- Laptop: HP Laptop 15-fc0xxx
+- Motherboard DMI: 8DC9
+- Subsystem ID: 103c:8dc9
+- BIOS Version: F.25
+- Audio Codec: Realtek ALC236 (103c:8dc9)
+- Kernel: 7.2.6-zen2-1-zen x86_64
 
-More importantly, you sent all this work without properly organizing
-relevant patches into patchsets. This makes reviewing difficult
-and might cause multiple reviewers to address the same issue.
-Replying to the entire set is impossible and requires handling each
-patch independently, instead of applying or discarding the set.
-Maintainers also won't see the bigger picture of your work. Quite
-worrying.
+Problem Description:
+The speaker mute LED (F5) and microphone mute LED (F8) work under Windows, =
+but
+remain unlit under Linux when toggled.
 
-This is on the verge of hostile patch: bomb us with so many
-contributions, we won't be able to handle them in efficient manner,
-like responding ONCE to ask you to slow down.  Considering all this
-is untested and LLM generated, I have even more doubts whether this
-should be considered for review.
+Diagnostic Summary:
+1. Ruled out ALSA/HDA codec control:
+   - The LEDs are electrically decoupled from the Realtek ALC236 codec.
+   - Standard ALC236 quirks and direct hda-verb coefficient writes (node 0x=
+20,
+verbs 0x500/0x400 on indices 0x0b, 0x19, 0x34) return value =3D 0x0 with no
+effect on the LEDs.
 
-Please read kernel documentation BEFORE posting more work. It will
-explain you how to identify subsystems, how to organize your work per
-subsystem, how to document usage of LLM and how what you should not
-do if this was posted in a good faith.
+2. Input and ACPI Event Status:
+   - Keypresses are properly received by the input subsystem (KEY_MUTE and
+KEY_MICMUTE).
+   - acpi_listen shows that F5/F8 emit standard button events accompanied by
+WMI event notifications:
+       button/mute MUTE 00000080 00000000 K
+       wmi PNP0C14:01 00000080 00000000
+       button/micmute MICMUTE 00000080 00000000 K
+       wmi PNP0C14:01 00000080 00000000
 
-Best regards,
-Krzysztof
+3. WMI & Driver Status:
+   - Both the HP BIOS event GUID (5FB7F034-2C63-45E9-BE91-3D44E2C707E4) and
+command GUID (95F24279-4D7B-4334-9387-ACCDC67EF61C) exist under
+/sys/devices/platform/PNP0C14:01/wmi_bus/.
+   - The hp-wmi driver instantiates the hotkey virtual input device, but do=
+es
+not register any LED class devices under /sys/class/leds/ for this board
+revision.
 
+Request:
+Please add support/quirk mapping for HP board ID 8DC9 (subsystem 103c:8dc9)=
+ in
+hp-wmi to control the Embedded Controller mute and mic-mute LEDs.
 
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
