@@ -1,95 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A14489FC0;
-	Mon, 21 Sep 2026 13:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65373E451B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 14:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789998216; cv=none; b=fEbPbKYSU0849hlHaL1I+ewzdfVD3/VBEEYoED6fCCuMYJ+V2tsVglALWn8VFIi1IOJTzokGFwKrwSHE4dfwlgn+5z/Kmc6+bFo3mVQQh0Mm8g+e/uY1NiFigxgyKqQ9hWibt3uXOQmZ4qztffU4WYqpjxMSVHGBJfCrkXAjiPY=
+	t=1790000431; cv=none; b=AtzXC8t1UVanhQq4PQpWkCbEJ+VRYQ1VO5k5muyNSKGIMqS99ootN/fXvBlVmjEd8b3eyj3quXvSR2OjY1jVGgb78n9blNWGdHgTJT0qheRzq1OyWo57QpiGvkw0Iyumlv0K/wM1u4Lsj0HcqKZJ4JdbtAxviN39WTe7S3TBU0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789998216; c=relaxed/simple;
-	bh=z6GXpVUOIolbv6op5mUTLouphlPpgs+Daf5RUJl/7Ss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bRktQC7kNo3EcDHU+w+seHIXP0DzIbPWd0K6kvMSXySj0MzMwOPBRNjZPVOXxkMscG6BWtFtuL/5i/3wLlZTbXmrrMnjyIGlH1JTwO6VTlX2oB3yd4Vzqy/c1N3XDvHPCdbyTyufbe/PefoGoI3UYOGD75KRYCknowt7Tr5pLmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ofXNvX/J; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790000431; c=relaxed/simple;
+	bh=szyxgT213FDrOEeabKctEzuETUuQgamgiwFysz7h+mE=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OQs5JItrG9dtjGCrXALMKQoaN3Nou0TW/1wUVA3u93nxqsTJ+9kFa4lBm+8E3sLWH6lroKuxIjKx3a/p4GFxWjUiFLoB6enSd0QzAUdb0Gr9MOZ2kq9cSBqWpY2nyvfBLoLPuTJ2MCxE2oTL0vUPyYbXMgEXUP9LQ7N+qdf8TuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kq3JqUiQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ofXNvX/J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91BE1F000FF;
-	Mon, 21 Sep 2026 13:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789998215;
-	bh=OPMCj1O9GfQ79/EIaX3D3WpPzFtAZfDF8PGCRQy9UUU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ofXNvX/JK+qywD6hx7nOICFrThBZGiRyFK7rNxsuXeik+RkXTY2s4+RaLRuIOixH8
-	 agzKLey2VFfZKVRLGOejjFSuPCBJyiIVpFjdnpTdx9EQ9sF0iYgntKvdxxlzeEFbJY
-	 o7bMA2yTxRnKPscZObENvK5ibwnTyqz3RNZ/IWVZhoDwSvIBxxXR+q7/vdcqMpgOh1
-	 0AwZikH6gGn8nMJRanzqejxb8PiFc3+qHKqKv/I8Znd3l5Vf/T9rdQwesrRDnKcppq
-	 MKrwzmjso3w3tUVPYsxajLbgNsMFSkb14Svy/kkiQ+qDBfdHHkW6UmqmR9e4u2JzML
-	 gXm7xXCM+Dtxg==
-Message-ID: <ebdcd24a-dbca-4195-a9f1-ba224596b7d7@kernel.org>
-Date: Mon, 21 Sep 2026 08:43:32 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kq3JqUiQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8958AC2BCB3
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 14:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1790000430;
+	bh=szyxgT213FDrOEeabKctEzuETUuQgamgiwFysz7h+mE=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=kq3JqUiQdDsG2J/2laPtJvsZPdH4l5AWU927pIyMAUKlAobLrikPJYiG8WYJr4a2J
+	 KLV7WxyJB6wdkkKc4uwIAXta7+nHUKuXYMpWj7HLU32jBIVxq+qIPSg1QV+ZuhI8L0
+	 aFbSlCcNxQ0iGkn5wcBxktRQWiwH7rVs62Ff+JRJ2iAxEpQCYbPPyQpFa8Zr+pQ5aB
+	 khyYefIR14+nJWbXgMnys5DKwXTjjWcqjnIyWXueEFNB+ELcIXe3Fvsnhv6X5DZxjS
+	 iwRsGBw8SirzA8BODWkz20LWKhaORjwzAo+htvVYSh64Qyn/bCFMErgG3kONMRJ9c/
+	 QO8r814KwirJw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 660C2C433E1; Mon, 21 Sep 2026 14:20:30 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221893] amd_pmc - Last suspend didn't reach deepest state on HP
+ ProBook 445 14 G11 (AMD Ryzen 7 7735U)
+Date: Mon, 21 Sep 2026 14:20:30 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status
+Message-ID: <bug-221893-215701-nxpCiolMu1@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221893-215701@https.bugzilla.kernel.org/>
+References: <bug-221893-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/hfi: fix platform device leak on init
- failure
-Content-Language: en-US
-To: Guangshuo Li <lgs201920130244@gmail.com>, Perry Yuan
- <perry.yuan@amd.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20260921082609.244774-1-lgs201920130244@gmail.com>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260921082609.244774-1-lgs201920130244@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221893
 
+Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
 
-On 9/21/26 03:26, Guangshuo Li wrote:
-> amd_hfi_init() registers the HFI platform device before registering
-> the platform driver. If platform_driver_register() fails, the function
-> returns the error without unregistering the already registered platform
-> device.
-> 
-> Since the failed init path does not run amd_hfi_exit(), the platform
-> device remains registered and its reference is never dropped, preventing
-> the associated platform object from being released.
-> 
-> Unregister the platform device when platform driver registration fails
-> to properly unwind the successful device registration.
-> 
-> The issue was identified by a static analysis tool I developed and
-> confirmed by manual review.
-> 
-> Fixes: 5d902ee5609a ("platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> ---
->   drivers/platform/x86/amd/hfi/hfi.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> index e0ebcb0c4acd..449aad914ad1 100644
-> --- a/drivers/platform/x86/amd/hfi/hfi.c
-> +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -530,8 +530,10 @@ static int __init amd_hfi_init(void)
->   	}
->   
->   	ret = platform_driver_register(&amd_hfi_driver);
-> -	if (ret)
-> +	if (ret) {
->   		pr_err("failed to register HFI driver\n");
-> +		platform_device_unregister(device);
-> +	}
->   
->   	return ret;
->   }
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|NEW                         |NEEDINFO
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
