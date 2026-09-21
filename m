@@ -1,70 +1,69 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010021.outbound.protection.outlook.com [52.101.193.21])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010043.outbound.protection.outlook.com [40.93.198.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F036A4E1C74;
-	Mon, 21 Sep 2026 17:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE574E36D2;
+	Mon, 21 Sep 2026 17:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790010271; cv=fail; b=STwjZm+c+ePFaPXl9qGQuq8Pb5Oi8y0NaNh7362/tLUTGvOCM1GyVMKnGtwvJKLUC3z2/ez+vMpPJUAT1PM/e9Bx5EWLQy7p7xH+vnaRSQtNZk40bKf7NZ4TbOtjJwgJq0SzUiTW0I/s6+LWOwy0o4E1UQo9OtYZ6xsYXzO+5D4=
+	t=1790010273; cv=fail; b=Ox0IPozuSN1XqitAEmNs17jyZfvlR4V7VkAArp3V3o8adeNVuGlPZiHEfKg/ZD76sRvk/NvanYKGwkTGlV5OMuO+lVoWTY7fMLjLjGJCZBy0aWBrqrOyRW1Do6GpfZqRKynRshvxMxF354p7IVfgJAfxwb/4BfjUXJsMfBgArHY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790010271; c=relaxed/simple;
-	bh=+u8UcEgTkgYCiTqqqGVs7bN0CuIB87LAhRqXmAPD5T8=;
+	s=arc-20240116; t=1790010273; c=relaxed/simple;
+	bh=yAAMxBL9bsBuJXOElc7+abhpFf88Gp+Nr6OUJOfp0q0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MgZLzJ/N9kPdaPgnsat6gpayemOqNUwSAz2XL8QlUAGR7lUHCEBoJcF7UD3zumwitO/wuh6+qUrKcxjRv4R+otCRpnI/vfcgzzcHnFVb56muhlB4ksRGzH5GVpyjo48lR++hkYT3EqZyHpgFeTL0VydCgYddfgtK3Rx91cDe3OU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TDMmfHuQ; arc=fail smtp.client-ip=52.101.193.21
+	 MIME-Version:Content-Type; b=SsWNra0+hD9zyKh3h0O/fCt/twpeMiipu5D1Iru1eWYfdBPSCwuyTqAdM5mknMGh56w4lT4zRn3bqUvxCkoE/uZuhpGEeoTU51x9KPiy/4d/crSHghGfdkcmdQ0TOpe0YSRHya70gIZPGnePYA7LtPIGNq7ZVIyEwYNrj/lHH2A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=afyY9MIV; arc=fail smtp.client-ip=40.93.198.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TDMmfHuQ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="afyY9MIV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bRUa7UcU77nSTDeONF9GDpE23l3kLYsQfRlW1dY35nfNpvl1W1a2zM3LE92IJCOqcBF8miiNiJ5BhQ4MF/w0TJPxLUGQ24Cxx5B5JyucGXqX8YPqMnfzuiFSRvwwbV47bNKpB1ufYh+szWRzv/dXSaSrb/YoQH0YlkYspLu0030FdUIqd9323Vk8nQQSREd91Cj2fek3sthCUgA/6i+8OD0oq6ZYoeQJ6YkiLeuBkcDoTW+YS1I8NDMmA/zY4R3K/q6/hD0wJ48JT0VaBfkTfoIGNn8WTOVTrBwOLH059Kwi1LCBzsYh88NH4eX7QPzqHW7dHQbzSsk5JS1wwlyAPg==
+ b=npZrdxggqx99gFO1KqDbMMyLMLW5TlUIYy8Ng37xIt3rMmggNZNeVvrgidgwxIVT9AtgWacdCisWfR3hCBr326pHUNYVbiyDq3PA4NtWOmAEDKDw4lcQEdIJz3rEyMLbbDTuIcQ2xW5eanSF6ismva0RQUyCc+GXzS6mAsvDJ0AWeNwiok0Dql+39qUfb2D9nTQjsuonc82xAyu+Ysgf7Wbn9SCuRkmPFuBP7akkr3Ojl20bZEw4jzOXnksLK0Y8mUw8wN3qy7V8+CfGexbKkjkcSCFm4T7f33ahANUqPUnMHa3r7bf6fstgxc7I/9Bi81a9rQ3WD673wP7Ef44UOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r9JHZjZBpQ+ufRHGqm4IZgKASICpZ3cp3vvmvlGUEQ8=;
- b=u179wcDFiaxstyGFhkyWG8yCH/mFHZzn7N/nGqzxiYr5Vq0VM/oylmq2nsvYdySfQMI4san/KfXT1Vr2ajDBcizPsePeONhQ8tg8uQMMooDx2ZfCsGxpX430ZiDtwWlluO5iFoR6deddjQE1LWIi0IrVrxC+2rs4zIEUlO4301Tb+VHBfVQ0PhOsUWOjRyfs7ys7agydZD2iMOY3FdvKfw0FiOUqV0BkU0fT28hC1sZbJ++4YsCoRze6r2SbFHgXNr4SHu/CJzYzYSZ3WwLg2p6WgA5dFm+g+5gX8OriO9mFCIgg4CcR9lykLWik4C0DwYbg9tKtlNxbGdakr6KYaA==
+ bh=tgGIzoeOK+dOH51m/c8vT3Lt2ALRGvxcue9XFiJAnik=;
+ b=T2vdHH9geFcTRrUpxG1WQXEqbMhlW2a7q8NX5QBGFHIaOAy6avmRMO8YAg8//MZDOG9MWZj0Sd7SxU3+TQSM1i6qHVaClAuNMFcQZk//0+gzxW7Wnoz3mP8QbbT4XDuQ03rYrGKkqoaLX1qBpjcWlLfCX9I63YZMnD/+1ijiE6vaOz7PbZiHJyLUrEJMFS7YUrxyqchpT8kjWPKx/QRC8hC9oxaI9AYK0kwFbQiCQW2ty8tvQM3utri8CRn7f2U1dJlRrjYGPH17tGVTLeaZ0fWKDC3gmtNZehqDOjvowyWrk7zVqnN0r1+eYStv1T2JvTMAj/ubEmGfI/WttpmFWw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9JHZjZBpQ+ufRHGqm4IZgKASICpZ3cp3vvmvlGUEQ8=;
- b=TDMmfHuQA9Vp5Pgij+4+Z/k8M9+eUSPGzkvEWiD5/2VOoupB4VyUJF1rD1xzjCBn9TyhqrFMvmXeqAj9ffT9vPALuLv5pjtg0WMviQtIPWX52U8mzZIUqdnb6JkLiEn5nZzeDFNqwvd2NNnFphuZIb3JwPICWEymkv3u8OanWEE=
-Received: from PH8P221CA0007.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:2d8::25)
- by LVUPR12MB999185.namprd12.prod.outlook.com (2603:10b6:408:3a3::20) with
+ bh=tgGIzoeOK+dOH51m/c8vT3Lt2ALRGvxcue9XFiJAnik=;
+ b=afyY9MIV9U1VK9UryzjaDIEJQTTdZOIZCzZldHqL9nMkTpBbBN+3wY3qjg2zxMnX82eIhyrYyuTgLpLJH/ug2pq1fQ/5bnC5IWCtsBW5W3el+GpyXRGgXIlxPVF4GPvdvY2fWmGztziYFdoTjVmuq39n6F4KD8+8SgHuuArAiNk=
+Received: from PH2PEPF00003849.namprd17.prod.outlook.com (2603:10b6:518:1::66)
+ by PH7PR12MB6562.namprd12.prod.outlook.com (2603:10b6:510:212::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
- 2026 17:04:27 +0000
-Received: from SA2PEPF00003AE8.namprd02.prod.outlook.com
- (2603:10b6:510:2d8:cafe::63) by PH8P221CA0007.outlook.office365.com
- (2603:10b6:510:2d8::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.16 via Frontend Transport; Mon,
- 21 Sep 2026 17:04:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
+ 2026 17:04:29 +0000
+Received: from SA2PEPF00003AE4.namprd02.prod.outlook.com
+ (2a01:111:f403:f90f::5) by PH2PEPF00003849.outlook.office365.com
+ (2603:1036:903:48::3) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.11 via Frontend Transport; Mon,
+ 21 Sep 2026 17:04:29 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SA2PEPF00003AE8.mail.protection.outlook.com (10.167.248.8) with Microsoft
+ SA2PEPF00003AE4.mail.protection.outlook.com (10.167.248.4) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.451.8 via Frontend Transport; Mon, 21 Sep 2026 17:04:27 +0000
+ 15.21.451.8 via Frontend Transport; Mon, 21 Sep 2026 17:04:28 +0000
 Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
  satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Mon, 21 Sep 2026 12:04:25 -0500
+ 15.2.2562.49; Mon, 21 Sep 2026 12:04:26 -0500
 From: Mario Limonciello <mario.limonciello@amd.com>
 To: Hans de Goede <hansg@kernel.org>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
 	<ilpo.jarvinen@linux.intel.com>
 CC: "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
 	<platform-driver-x86@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>, Mario Limonciello
-	<mario.limonciello@amd.com>, <stable@vger.kernel.org>
-Subject: [PATCH 1/3] platform/x86/amd: hfi: Fix a use-after-free when unloading the driver
-Date: Mon, 21 Sep 2026 12:04:09 -0500
-Message-ID: <20260921170411.1149960-2-mario.limonciello@amd.com>
+	<linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH 3/3] platform/x86/amd: hfi: Rely on ACPI enumeration instead of a dummy device
+Date: Mon, 21 Sep 2026 12:04:11 -0500
+Message-ID: <20260921170411.1149960-4-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260921170411.1149960-1-mario.limonciello@amd.com>
 References: <20260921170411.1149960-1-mario.limonciello@amd.com>
@@ -80,85 +79,86 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE8:EE_|LVUPR12MB999185:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78c5cbc0-0794-4e7f-0177-08df1802651a
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE4:EE_|PH7PR12MB6562:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1b37aa5-15b3-4d00-df7d-08df180265a4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700016|23010399003|1800799024|376014|10067099003|18002099003|22082099003|56012099006|11063799006;
+	BCL:0;ARA:13230040|23010399003|36860700016|1800799024|82310400026|376014|3023799007|10067099003|11063799006|56012099006|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	I3qtmDbG68tGH1JISmIJ92UoUbt8zSQkSOIqnPMW8YHx8kz+SnbtNpEM+w/qI//3sqMxEyA7e/imxvP991ya6SmJNPpxet75iRHQyNhzWWwIyves+mfeA80xDXf4rKpR/7XPFky+aYQaybu+K+xdBxk8z7jEuhg8C35theQk10vFXstZY88jHxXh3uH9VQk9j3DkB6RdAHH41rncHGxKfWBxvu6fx6yRWy+u5Vx2Lodo0kf6Ied2tsI3rmEwW6UhnfyPSrJhX7u3NR16BzGrO/hZUl2ANtmjUTBzmP4byPuG+lsLqP+z9EIHpUs6F4bc39sw+4SkWDWATftvKPpoQiJsvSr2EbbF3lNAfI364KRBo1oT4y+dwEhy8FleFEmdyPq1aUDkrqO6hVGYa9jniAEwDecDLUYdBVl9rvx/KAsMzGASSpuZC0C20zwzUlaPath8s0kCK4mo9c6TX+X/hfXrEAB99fRw4/rt+FGpRdE8yrdE/tIxfWAVEnHcf6pbSDyOtDDV3pblVWA5OvJ67uAsC6FYICXV3EH3No8rRgqmpHQhtvSh6ncSgzaxO5j9IFH2sifuTUrC+CcQ32fOCLqOKpNBgWEfQNe9KJS+sCZVcZHyaxjpWybta1015Vas1JCCOIplZT4KtZ3AyM/aey0QLWj/hEiPrftpbX+oW0M9Y/R7d+DwVQThkaxckwzk
+	ZOlqEolz73UfJOjN47OzLKNqTpn6Dd8COv3cJCPol4R6CTFWN1rr0xXDDxAicysMrbs8Gl9fdRMm9MKv6ZcxXq7DL8lwuBTFh8bFyr4IryYOMRnR7z9b3nkWkKfxOhbgkTzYslEgmVthT+pLzFkSWxqYxPR8DOVgXVs2E/7yfgmUnpLulbKiRnwwKh+BGNIWnnUNSGKzAFa2i42qxmukDH4mSfqBrRv5pfj3x5FbZsJl/1UZyjwG/pKwpY31/mg124164Jci94jfiql8mqNV8EZC1MbPGudhz103eaxg5HOJAojxhZU6ITRB34FtrPt+IeCIDU/iY+w8hapSvrKsu9smBByHJ1dB3hHjeEGiGMqNfMGr/UADkyybdPBBvCYJVb36F506nswaZ5rVHjU7WcgkrNBe7RsKCpLeAIn4rTRREgNU34GK0bpvdpY68Evf4uvAVrvYWSBMgpFYK+CA3aIeu1+WCjmgEQH84Y8cp45N7gWw9cV6cDK/IR//rKQiRovW8erG+xSifQvXgITLQUhzh86q3KFfIEp5gt3DYFOTv3a6+33H/UblJJTzrw9fXwmP1TByegxMUYogrGCbxuDKCF0uTTf9JG+ytgYQCl5V73felNVD5VuelxhloySeELnfL4UmnFmiD0wvXAFT5+L+Y1iEJAdiPyOIVN3V6e1tWVFRBguv39gTAxo5MuGJ7tI00D8VWot83bCkweJDzQ==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(23010399003)(1800799024)(376014)(10067099003)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(1800799024)(82310400026)(376014)(3023799007)(10067099003)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	pgtg8gPEZ44sq6FbkMYPB8ziM+rWawHrPavg2D3GQAsZ0kkt9wblBA1ybgrIaJ3JJoWqZyJkpLXLdWkT5v6hv1zrVjAb38NUxUKqyZBPkbUF4tcGI0SVJ24a25Twf2Ggv7ugM3N5rD/TF9PeXzhdU7bxr8rspTCHJMjmowN3u5r/3PS5fPVtzTzv3nQJM1CuQQyWg5RkJnLAV1sH2jfgGpkHP7OPNMUgQXWpBnSC8qlsBE11zNf9etJVdCrHcyIjwYLlQvXxttH7T4OKU9zyIbumwGf8AIExlRsbEH8G5HRQATnhAB3h3CWD499WidQcrrQSMp5wz6hY4nUihYsWM1OJAY1XsYl1YBUUrwF2CbSIASTyGWcmSOf9xrTL4FXhydPhibQYTZQ+Onhbxx9+7NvMdWOltjd66OjKMNYBhS364tYcLeHh+BpLGE2ig/h8
+	QsMc36ODo57INowZAQxEgRM2Ijju0iLEV6F+xKXtBjVQH1lZDKDb1MfXtjEqRnKdO+VA0CVBQFbgpigIp2/mW4mHGrdxr7kp9aMHQ1CJSicr6SDL8GlbataoAMZJB2E0TC+lE6e4BHhMqZ1Km/0TX2vZ5pFzqNWyzllvyNYjeoBVE6ZQONkQ/2QUzUgcjnhwhvhI2CNpJMvSM843LgX0pYVELCHEVZNEEU4TOlkGFLotG9udGH2Iff8kVuP/EPTWCHF0LKzgsocwOaIFjNAlbsnX7o9SCWyWru9y3x0k4ONnFMxgbMHp7G+okyjlducRG5ET333wG0ajkS/cvEVP+b9JDVhT28dSZlVgdA23Qa6VG5AMbxE55efs1bSzUtfKpqrIrAj0cBSQQO42dkwft2aAxFgWaJdEHcv4fFp31k+AZVqIetykNlEBkIvNSJSV
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 17:04:27.4451
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 17:04:28.3581
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78c5cbc0-0794-4e7f-0177-08df1802651a
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1b37aa5-15b3-4d00-df7d-08df180265a4
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AE8.namprd02.prod.outlook.com
+	SA2PEPF00003AE4.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LVUPR12MB999185
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6562
 
-amd_hfi_probe() registers CPU hotplug callbacks with
-cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, ...) and schedules the static
-sched_amd_hfi_itmt_work work item, but amd_hfi_remove() tears down
-neither.  The dynamically assigned hotplug state returned by
-cpuhp_setup_state() is discarded, so cpuhp_remove_state() can never be
-called, and the pending work is never cancelled.
+amd_hfi_init() manually registers a platform device with
+platform_device_register_simple() before registering the driver.  This
+device has no ACPI companion, so when amd_hfi_probe() runs for it the
+acpi_match_device() check fails and probe returns -ENODEV.
 
-After the module is unloaded and its memory is freed, any subsequent CPU
-hotplug event or execution of the scheduled work dereferences the stale
-callback and work function pointers, resulting in a use-after-free and
-kernel panic.
+The driver already advertises an ACPI match table, so the ACPI subsystem
+enumerates the real AMDI0104 device and binds it to the driver.  The
+manually created device therefore serves no purpose: it never binds and
+lingers as an unbound platform device, wasting memory and cluttering the
+device tree.
 
-Store the hotplug state returned by cpuhp_setup_state() and, on removal,
-call cpuhp_remove_state() to unregister the callbacks and
-cancel_work_sync() to flush the scheduled work before the module memory
-goes away.
+Drop the manual platform_device_register_simple() and the device that
+tracked it, and rely solely on ACPI enumeration.  The CPU feature gating
+in amd_hfi_init() is retained so the driver is only registered on
+supported hardware.
 
-Cc: stable@vger.kernel.org
-Fixes: bb20421c05fc ("platform/x86: hfi: Add online and offline callback support")
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/platform/x86/amd/hfi/hfi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/platform/x86/amd/hfi/hfi.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-index e0ebcb0c4acde..e1c776b71f3e6 100644
+index 6d1d3b6c28a97..a923345dd1cf6 100644
 --- a/drivers/platform/x86/amd/hfi/hfi.c
 +++ b/drivers/platform/x86/amd/hfi/hfi.c
-@@ -76,6 +76,8 @@ struct amd_hfi_data {
- 	struct amd_shmem_info	*shmem;
+@@ -39,8 +39,6 @@
  
- 	struct dentry *dbgfs_dir;
-+
-+	int cpuhp_state;
- };
+ #define AMD_HETERO_CPUID_27	0x80000027
  
+-static struct platform_device *device;
+-
  /**
-@@ -244,6 +246,8 @@ static void amd_hfi_remove(struct platform_device *pdev)
+  * struct amd_shmem_info - Shared memory table for AMD HFI
+  *
+@@ -540,12 +538,6 @@ static int __init amd_hfi_init(void)
+ 	    !cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS))
+ 		return -ENODEV;
+ 
+-	device = platform_device_register_simple(AMD_HFI_DRIVER, -1, NULL, 0);
+-	if (IS_ERR(device)) {
+-		pr_err("unable to register HFI platform device\n");
+-		return PTR_ERR(device);
+-	}
+-
+ 	ret = platform_driver_register(&amd_hfi_driver);
+ 	if (ret)
+ 		pr_err("failed to register HFI driver\n");
+@@ -556,7 +548,6 @@ static int __init amd_hfi_init(void)
+ static __exit void amd_hfi_exit(void)
  {
- 	struct amd_hfi_data *dev = platform_get_drvdata(pdev);
- 
-+	cpuhp_remove_state(dev->cpuhp_state);
-+	cancel_work_sync(&sched_amd_hfi_itmt_work);
- 	debugfs_remove_recursive(dev->dbgfs_dir);
+ 	platform_driver_unregister(&amd_hfi_driver);
+-	platform_device_unregister(device);
  }
- 
-@@ -494,6 +498,7 @@ static int amd_hfi_probe(struct platform_device *pdev)
- 				amd_hfi_online, amd_hfi_offline);
- 	if (ret < 0)
- 		return ret;
-+	amd_hfi_data->cpuhp_state = ret;
- 
- 	schedule_work(&sched_amd_hfi_itmt_work);
- 
+ module_init(amd_hfi_init);
+ module_exit(amd_hfi_exit);
 -- 
 2.55.0
 
