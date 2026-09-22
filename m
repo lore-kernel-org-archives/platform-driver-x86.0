@@ -1,148 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11148548548;
-	Tue, 22 Sep 2026 12:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3404549389
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 13:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790081429; cv=none; b=roEWxC8IgqCZ2ISln8rHBpOTfMaVlE0PK0wz+WLE6mt1GjxsNiziHMrraBDQ3v+ug/HLk2qXKh4x800vUIaFvdw0EELmCbUehj0hE74vdkERlPPMqk140flsYa09V2+v9Y5W2cr3OI7YOgy/hpKnv7i2FBA615zuB52PFw2oyV8=
+	t=1790084643; cv=none; b=KXVMDj7oUUXHH1nL/xVdD/QB8b7bt0JPaFnNZqWl7fNrzszdNOAvtUdW9PAh9mXa6I7jkq5oMZ6wG8wHAgwYOPECH5UgLBjYavTgAmoMy0wPfKwgWW9k5UiHPnPwj73JP7NMEu43JbjZv5e1CCT4D1gid0S0KOMyytponUHTr08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790081429; c=relaxed/simple;
-	bh=8UCgto53PpbzKbL4qGPd2JQxwKoYO+AmuFHXUf/Lc5w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fxbTS+6O6uFHaiJDjh/GA++SqdBAxTCTdxzn1avrVs90bsX9u0Jh7m+l5KBihpIEUJQbZmrpTZnl+bamiETFxv9cyVY/jLfy/+qXBJcYCqNEozIShkhZQz2pvS5lOCnnhStYAwXJcW3AHV+ShHYmLWe+Ji9/f2zTgygBDftRHiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ax6rctVO; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790084643; c=relaxed/simple;
+	bh=31egPXj2j/BGbIOQBP8Z7QtXbzZhDbH6D6zuskHrWtk=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=jQtnog7yw4RSIyk3VPd/5LwbH0vNLZnzbhWmmvryZk4axZCWRrSyel09E6d0srI0RTbg2/YeR/+HjMOlDZLsAtpiqlBHNkO9JTV+vXprSohRGHshGoOvw/jlhcWdhNDi9n/klaPuw13g/CPl0ZWwBqY1eSIGA9E4pfIL+pb4hgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=r+AuLfYK; arc=none smtp.client-ip=83.166.143.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ax6rctVO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790081427; x=1821617427;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=8UCgto53PpbzKbL4qGPd2JQxwKoYO+AmuFHXUf/Lc5w=;
-  b=Ax6rctVOwLVHpuCnqfq+X2GqjzZu9ctTsnH1GvoTImEAokMJYVY4yLKL
-   F80AncHDCrrhF6+Y/EdeoknPQVnAogqfCD1fqAnzou5gJNraOhorMnp1h
-   2zB5woPyLowTQqPkqNeO/2unmmA8BdZ7xxspu7UCiYHV2U/Rk4ugCKGOX
-   7QYFOSx5OSc4YkIMZ/jZOkfd4bRkBTNWfViQaOuICXXdrJvLkh9bvTani
-   zMkps2v9bKK3ZjPsoLksRJR/vzzJchI6BeUQ4pjUCqvNRde/CzXArad2R
-   45l+TW4OvuF3Qjw+XeTQrihD2wrYQYHw22grRldLlaAn8JNJeg60TtN+Q
-   A==;
-X-CSE-ConnectionGUID: 1nLUxBF7TdujDtedbosO/g==
-X-CSE-MsgGUID: JMmZL8DxRKazWsXAv12liw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11912"; a="94509504"
-X-IronPort-AV: E=Sophos;i="6.27,116,1787036400"; 
-   d="scan'208";a="94509504"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 05:50:26 -0700
-X-CSE-ConnectionGUID: HkEa0gd0RZ+cnyIro7LRgQ==
-X-CSE-MsgGUID: ymEdX1ORQUutXFOq6Y/9Ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,116,1787036400"; 
-   d="scan'208";a="272319629"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.80])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 05:50:14 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 22 Sep 2026 15:50:07 +0300 (EEST)
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-cc: Linux ACPI <linux-acpi@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@kernel.org>, 
-    linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
-    Ilias Apalodimas <ilias.apalodimas@linaro.org>, linux-efi@vger.kernel.org, 
-    Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-    "Joerg Roedel (AMD)" <joro@8bytes.org>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    David Rhodes <david.rhodes@cirrus.com>, 
-    Richard Fitzgerald <rf@opensource.cirrus.com>, 
-    Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-    linux-sound@vger.kernel.org, Shenghao Ding <shenghao-ding@ti.com>, 
-    Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>, 
-    Sen Wang <sen@ti.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>, 
-    Venkata Prasad Potturu <venkataprasad.potturu@amd.com>, 
-    Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-    Cezary Rojewski <cezary.rojewski@intel.com>, 
-    Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
-    Bard Liao <yung-chuan.liao@linux.intel.com>, 
-    Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
-    Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
-    Binbin Zhou <zhoubinbin@loongson.cn>, 
-    Andreas Noever <andreas.noever@gmail.com>, 
-    Mika Westerberg <westeri@kernel.org>, 
-    Yehezkel Bernat <YehezkelShB@gmail.com>
-Subject: Re: [PATCH v1 05/17] platform/x86: yogabook: Switch to use
- acpi_bus_get_primary_device()
-In-Reply-To: <1973238.CQOukoFCf9@rafael.j.wysocki>
-Message-ID: <5d1b4f76-6cb4-385c-016c-4753c3f046cf@linux.intel.com>
-References: <7995179.EvYhyI6sBW@rafael.j.wysocki> <1973238.CQOukoFCf9@rafael.j.wysocki>
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="r+AuLfYK"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hq1XR4BBbzWhF;
+	Tue, 22 Sep 2026 15:43:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790084631; bh=RJoBPDlszCcvVSnAG6V8rA21h9Mhjj0xFtE07rELrFU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=r+AuLfYKtqnPJWy4h4dkOPBSPrZgV6N3kn25je5ay6yJhvhvd+5hkS2geCQ/D56DJ
+	 D/Wxs/l3EqBSP3wPedhEScymdIpzp1xSDS8nS66m9J6Ao+DX+WWasiWHdH1hNqW2Gk
+	 4Db+JCi1zmCt7hQz8aCiTIB6Us6NQ+8/32TOhUKg=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hq1XQ3kcbz45v;
+	Tue, 22 Sep 2026 15:43:50 +0200 (CEST)
+Message-ID: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+Date: Tue, 22 Sep 2026 15:43:49 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1309644265-1790081383=:1233"
-Content-ID: <4fd4f1cf-4cbd-5eb8-1a79-0891e6bcc942@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Content-Language: en-US
+From: Fourhundred Thecat <400thecat@ik.me>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+Subject: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD, (Strix
+ Point) when more than 16 logical CPUs are online
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Feedback-ID: :7a1e2bd6e41c997:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-1309644265-1790081383=:1233
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <bd368910-f979-56c9-1934-b22a9abc6ee9@linux.intel.com>
+On a Lenovo ThinkPad P16s Gen 4 AMD (Ryzen AI 9 HX PRO 370, Strix 
+Point), s2idle enters sleep normally but the machine can never be woken 
+again and has to be force-powered-off. The trigger is the number of 
+online logical CPUs: with all 24 threads online the failure is 100% 
+reproducible, and limiting the kernel to 16 CPUs makes suspend/resume 
+work reliably.
 
-On Mon, 21 Sep 2026, Rafael J. Wysocki wrote:
+This platform has no S3 at all, so s2idle is the only suspend mode 
+available.
 
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->=20
-> Replace acpi_get_first_physical_node() that is slated for removal
-> with acpi_bus_get_primary_device() that takes a reference to the
-> device it is about to return.
->=20
-> This addresses a potential use-after-free that may occur if the
-> device returned by acpi_get_first_physical_node() is removed right
-> after dropping its ACPI companion's physical_node_lock in that
-> function.
->=20
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/platform/x86/lenovo/yogabook.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/yogabook.c b/drivers/platform/x8=
-6/lenovo/yogabook.c
-> index 1a4b2ab1f35d..8a91d440724b 100644
-> --- a/drivers/platform/x86/lenovo/yogabook.c
-> +++ b/drivers/platform/x86/lenovo/yogabook.c
-> @@ -353,13 +353,13 @@ static int yogabook_wmi_probe(struct wmi_device *wd=
-ev, const void *context)
->  =09=09goto error_put_devs;
->  =09}
-> =20
-> -=09data->kbd_dev =3D get_device(acpi_get_first_physical_node(data->kbd_a=
-dev));
-> +=09data->kbd_dev =3D acpi_bus_get_primary_device(data->kbd_adev);
->  =09if (!data->kbd_dev || !data->kbd_dev->driver) {
->  =09=09r =3D -EPROBE_DEFER;
->  =09=09goto error_put_devs;
->  =09}
-> =20
-> -=09data->dig_dev =3D get_device(acpi_get_first_physical_node(data->dig_a=
-dev));
-> +=09data->dig_dev =3D acpi_bus_get_primary_device(data->dig_adev);
->  =09if (!data->dig_dev || !data->dig_dev->driver) {
->  =09=09r =3D -EPROBE_DEFER;
->  =09=09goto error_put_devs;
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Hardware
+--------
 
---=20
- i.
---8323328-1309644265-1790081383=:1233--
+   DMI product name    21RXS07D00
+   DMI system version  ThinkPad P16s Gen 4 AMD
+   BIOS                LENOVO R2XET40W (1.20), 05/26/2026
+   CPU                 AMD Ryzen AI 9 HX PRO 370 w/ Radeon 890M
+   CPU family          26, microcode 0xb204037
+   Topology            12 cores / 24 threads
+                       4x Zen5  (core_id 0-3)
+                       8x Zen5c (core_id 8-15)
+
+   ACPI: PM: (supports S0 S5)
+   Low-power S0 idle used by default for system suspend
+   /sys/power/mem_sleep -> [s2idle]      (no "deep"; DSDT has no _S3_)
+
+
+Kernel
+------
+
+   6.18.51 x86_64, gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+   Custom monolithic build, no loadable module support.
+
+   Relevant config:
+     CONFIG_NR_CPUS=32
+     CONFIG_SUSPEND=y, CONFIG_ACPI_SLEEP=y
+     CONFIG_AMD_PMC=y, CONFIG_AMD_PMF=y, CONFIG_PINCTRL_AMD=y
+     CONFIG_DRM_AMDGPU=y, CONFIG_DRM_ACCEL_AMDXDNA=y
+     CONFIG_THINKPAD_ACPI=y, CONFIG_ACPI_EC=y
+
+
+Reproducer
+----------
+
+   # echo mem > /sys/power/state
+
+The system suspends cleanly. The ThinkPad power LED then shows the EC's 
+slow breathing pattern, i.e. the ACPI LPS0 _DSM entry path ran and the 
+EC considers the system asleep.
+
+It never wakes again. Tried, with no effect:
+
+   - opening the lid
+   - any key on the internal keyboard
+   - short press of the power button
+   - clicking a USB mouse, with power/wakeup set to "enabled" on both
+     the device (3-2) and its xHCI root hub (usb3)
+
+The machine is also not reachable over the network while in this state, 
+so it is not a case of resuming with a dead display. The only recovery 
+is a ~10 s power button hold.
+
+Wake sources are armed. From /proc/acpi/wakeup:
+
+   XHC1  S3  *enabled   pci:0000:c5:00.4
+   XHC0  S3  *enabled   pci:0000:c7:00.0
+   XHC3  S3  *enabled   pci:0000:c7:00.3
+   XHC4  S3  *enabled   pci:0000:c7:00.4
+   NHI0  S3  *enabled   pci:0000:c7:00.5
+   NHI1  S3  *enabled   pci:0000:c7:00.6
+   LID   S4  *enabled   platform:PNP0C0D:00
+   SLPB  S3  *enabled   platform:PNP0C0E:00
+
+and platform/i8042/serio0 power/wakeup is "enabled".
+
+
+Bisect
+------
+
+The regression was introduced by raising CONFIG_NR_CPUS:
+
+   CONFIG_NR_CPUS=16   suspend/resume works
+   CONFIG_NR_CPUS=32   suspend enters, never wakes    (100% reproducible)
+
+Booting the *same* CONFIG_NR_CPUS=32 kernel with nr_cpus=16 on the 
+command line also works. So the trigger is the number of online logical 
+CPUs at suspend time, not anything else in the build.
+
+NR_CPUS=16 is of course wrong for this CPU -- it silently leaves 8 of 
+the 24 threads unused -- so this is a workaround, not a fix.
+
+At nr_cpus=16 the kernel brings up every core's primary thread plus only 
+the Zen5 SMT siblings:
+
+   cpu0-3     core_id 0-3     Zen5   primary threads
+   cpu4-11    core_id 8-15    Zen5c  primary threads
+   cpu12-15   core_id 0-3     Zen5   SMT siblings
+   (absent)   core_id 8-15    Zen5c  SMT siblings
+
+The 8 CPUs that are absent in the working configuration are exactly the 
+SMT siblings of the 8 Zen5c cores. I have not yet narrowed down whether 
+the threshold is exactly 17 CPUs or specifically the Zen5c siblings; I 
+can bisect nr_cpus= further if that is useful.
+
+
+Ruled out
+---------
+
+None of these had any effect (still hangs with all 24 CPUs online):
+
+   initcall_blacklist=amd_pmf_driver_init
+   initcall_blacklist=amdxdna_pci_driver_init
+   runtime unbind of amdxdna, amd-pmf and tpm_tis before suspending
+
+
+Possibly relevant
+-----------------
+
+After a *successful* suspend/resume at nr_cpus=16:
+
+   /sys/power/suspend_stats/success         1
+   /sys/power/suspend_stats/total_hw_sleep  0
+   /sys/power/suspend_stats/last_hw_sleep   0
+   /sys/power/suspend_stats/max_hw_sleep    18446744073709551615
+
+so no hardware sleep residency is recorded even in the configuration 
+that works. It may be that the working case simply never reaches 
+hardware s0i3, and that the failure appears only once the SoC does enter 
+it. I could not confirm this: this build has CONFIG_DEBUG_FS=n and 
+CONFIG_PM_DEBUG=n, so I have no /sys/kernel/debug/amd_pmc/s0ix_stats and 
+no /sys/power/pm_test. I can rebuild with those enabled and re-run 
+whatever you would like to see.
+
+Also, the 21RX series has no entry in the fwbug_list DMI table in 
+drivers/platform/x86/amd/pmc/pmc-quirks.c; the Lenovo entries there stop 
+at the 2021-era ThinkPads and some 2023 IdeaPads.
+
+Happy to run further tests, bisect nr_cpus= to the exact threshold, or 
+provide full dmesg, ACPI tables or the kernel config.
+
+Thanks,
