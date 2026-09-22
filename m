@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF12B4915AF;
-	Tue, 22 Sep 2026 18:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FA9494809;
+	Tue, 22 Sep 2026 18:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790102001; cv=none; b=sdtV8XQvXMCJM2xHbK3vfwwrRu4mLkbpuAgOX3Ah6qz7mT99pezJfYCm/5FYgrgmWguxkwty/1azkE7Cs77xyIecX2oVJm4rPKEu5xIY/2yfUoYjozW2b0zyR4aDuJJWM9riatrsu8xrR5wHRwrHdXqRj/yTkWmkFcvbZ6lTgDM=
+	t=1790102002; cv=none; b=o5Cw26fjRqczwB157J4a3XTBiY/Z3aEXJzOsucsex/enlZ85hy3nJd9SvY2Ly/ML0yBL6YHQr9BMOTVDSKqNi7ztjVko1DkBpiigwZYLnHzrtpTFOTIp5w86CZH+OwvCSKnpqOc2yJyYsLiRibfbAL9c5Hw9KU+IF1sp967mrT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790102001; c=relaxed/simple;
-	bh=TKLJqwOdfqdczTZY63mKSLHqDkP1wnzAjiDjiaAxGBc=;
+	s=arc-20240116; t=1790102002; c=relaxed/simple;
+	bh=XNY5cqhovtfO0VevlMS7pV1QbAxZrJbMrLg0DPVdyog=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pSVCYanveoY6dAb1SyvilT378R8jhdsaCIPH9fz70PyUGNhbpFXMxshyS/z9ukT4o2R7yFaywbpRJEk3b6rThx5c6qKQW9r2op4JP342Ixit97YXssGkemMMhHWyyXdAdIdvCOPaEoZ2PNtHSTgHFjilo/3tYUdcWWc9Y41FwKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hjosn7EI; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=G/aQ0ce3ccqKuiB2pWNZ0PNnGPD/52Tkx3Z7P6MePC1YWqzREPiu2B5InHB0OEQLm4Xkpu9E/DF4OPVjIoEg9NmNvrzOREINvlpn6suG6Y6vOnOglZqihylUg+uvJTC6AzqBiv/Ixurj+WnL8pSLt0oQWB78fU3gY9IdK1kciaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4i3Q9ze; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hjosn7EI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4i3Q9ze"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790102000; x=1821638000;
+  t=1790102001; x=1821638001;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TKLJqwOdfqdczTZY63mKSLHqDkP1wnzAjiDjiaAxGBc=;
-  b=Hjosn7EIm2RRZpSECkkEo9TWu99EXCV4SIUWoflmUhaOX5EH5JHVXbPO
-   342ORCaZWm0/HYtDJvAW6O+hU65xtopPIg6HoO8b29+9jwpT3qGyzlCVC
-   RFi35ZbFu8LHhULAicdKdURwrC9AzqLL71pLyO1ghMbceEE7vxupIzC15
-   6C0WWt7ANNINKxj4H04ahTzibQKPD2wQHHxjq43MzQYW7Wy1PhwC08BE4
-   x/Z0zpnFD5yne7di8YTQosvY2julh1qdwcJjXsUnv+drdY3/p/HlGiAZs
-   ibebjqyHUw/2Zzld1fB2URGvicS4yC0XZTQ6AvZVstKCJItHyj4vt+HH0
-   A==;
-X-CSE-ConnectionGUID: neujAO7jRuinZ6/BwMJ7EA==
-X-CSE-MsgGUID: SGWsfOngQYWHzX5HzRCAOw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="94564897"
+  bh=XNY5cqhovtfO0VevlMS7pV1QbAxZrJbMrLg0DPVdyog=;
+  b=l4i3Q9zeD8g2oGPw1OT5XYJ6hZQZbTQab47G4uuIBUfif7HMMQIZzT5c
+   UMqlHPkOtNS1BMBgg91LzgECOdLobZOHHJW5yILozNNzXBSaFejRRczYL
+   qDbueoTRRYV4alLGEI4RcQpAXs37xEg+PaOEsZ08YngYTo/YFHZOja7VS
+   e1I9OxrzEt/cbPg5/2X++e5azyvMq/kyU7TEtFp74vufSqAdGVg6ikTpk
+   lku7QXZOYX/+7ak70pdqSYRhy16/OtlvfQpHcaCsxomGBaAJlaomZ2ahO
+   tmmPr5m6WZzlJmdCiOFn4rPDmN8XMwOrMqcSM/ymchY2vW6xfrJtYVOzD
+   w==;
+X-CSE-ConnectionGUID: WPO/fqW2SS6ihX4ZWZMacw==
+X-CSE-MsgGUID: STRgjMI5ROmZ8HtOzoJtSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="94564899"
 X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
-   d="scan'208";a="94564897"
+   d="scan'208";a="94564899"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 11:33:16 -0700
-X-CSE-ConnectionGUID: B0lNkeUbRPywwyFbxzT6nw==
-X-CSE-MsgGUID: vEBiotfzQEOySuYus6PpnQ==
+X-CSE-ConnectionGUID: TqY4/thwQF66/iwRK7buhw==
+X-CSE-MsgGUID: eDPVsGvaTe6MUxSlW2EIcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
-   d="scan'208";a="271827990"
+   d="scan'208";a="271827993"
 Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
   by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 11:33:15 -0700
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -51,9 +51,9 @@ To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 07/10] platform/x86/intel/tpmi: Drop unused arg from tpmi_set_control_base()
-Date: Tue, 22 Sep 2026 11:33:08 -0700
-Message-ID: <20260922183311.3783010-8-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v1 08/10] platform/x86/intel/tpmi: Do not assume TPMI is enumerated from PCI
+Date: Tue, 22 Sep 2026 11:33:09 -0700
+Message-ID: <20260922183311.3783010-9-sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260922183311.3783010-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <20260922183311.3783010-1-sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -65,43 +65,92 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-tpmi_set_control_base() takes the device for its devm_ioremap() from
-tpmi_info->tpmi_dev, so the auxiliary device argument is unused. Remove
-it.
+The init path converts the enumerating device into a pci_dev without
+checking and always registers the OOBMSM package to PCI device mapping.
+That works today because TPMI is only enumerated from a PCI VSEC
+capability, but ACPI based enumeration is being worked on and the device
+it enumerates from is not a PCI device.
 
-No functional change.
+Do both only for a PCI device. The bus number read from the pci_dev is a
+fallback that tpmi_process_info() overwrites with the value reported by
+the TPMI_INFO feature, so there is nothing to do without a pci_dev. The
+mapping stored by intel_vsec_set_mapping() is looked up by pci_dev and
+cannot be consumed by another enumeration method, and calling it anyway
+would fail the probe with -ENODEV.
+
+While here, stop describing intel_tpmi_info as holding the TPMI devices
+of one PCI device.
+
+No functional change for PCI enumerated TPMI.
 
 Co-developed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- drivers/platform/x86/intel/vsec_tpmi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel/vsec_tpmi.c | 28 +++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
-index f3cd8aa30af0..f1dfe2b23c9c 100644
+index f1dfe2b23c9c..f96b94ba29f8 100644
 --- a/drivers/platform/x86/intel/vsec_tpmi.c
 +++ b/drivers/platform/x86/intel/vsec_tpmi.c
-@@ -565,8 +565,7 @@ static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
- 	}
- }
- 
--static void tpmi_set_control_base(struct auxiliary_device *auxdev,
--				  struct intel_tpmi_info *tpmi_info,
-+static void tpmi_set_control_base(struct intel_tpmi_info *tpmi_info,
- 				  struct intel_tpmi_pm_feature *pfs)
+@@ -119,7 +119,7 @@ struct intel_tpmi_pm_feature {
+  *			can find them again, for example during PCI error
+  *			recovery.
+  *
+- * Stores the information for all TPMI devices enumerated from a single PCI device.
++ * Stores the information for all TPMI devices of one TPMI instance.
+  */
+ struct intel_tpmi_info {
+ 	struct intel_tpmi_pm_feature *tpmi_features;
+@@ -742,7 +742,8 @@ static int tpmi_fetch_pfs_header(struct intel_tpmi_pm_feature *pfs, u64 start, i
+ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
  {
- 	void __iomem *mem;
-@@ -809,7 +808,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+-	struct pci_dev *pci_dev = to_pci_dev(vsec_dev->dev);
++	struct pci_dev *pci_dev = dev_is_pci(vsec_dev->dev) ?
++				  to_pci_dev(vsec_dev->dev) : NULL;
+ 	struct intel_tpmi_info *tpmi_info;
+ 	u64 pfs_start = 0;
+ 	int ret, i;
+@@ -755,7 +756,14 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 	tpmi_info->parent = vsec_dev->dev;
+ 	tpmi_info->feature_count = vsec_dev->num_resources;
+ 	tpmi_info->resource = vsec_dev->resource;
+-	tpmi_info->plat_info.bus_number = pci_dev->bus->number;
++
++	/*
++	 * Seed the bus number from the enumerating device. It is only a
++	 * fallback, tpmi_process_info() replaces it with the value the
++	 * TPMI_INFO feature reports.
++	 */
++	if (pci_dev)
++		tpmi_info->plat_info.bus_number = pci_dev->bus->number;
+ 
+ 	tpmi_info->tpmi_features = devm_kcalloc(&auxdev->dev, tpmi_info->feature_count,
+ 						sizeof(*tpmi_info->tpmi_features),
+@@ -801,10 +809,16 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 			if (ret)
+ 				return ret;
+ 
+-			ret = intel_vsec_set_mapping(&tpmi_info->plat_info,
+-						     tpmi_info->parent);
+-			if (ret)
+-				return ret;
++			/*
++			 * The mapping is looked up by pci_dev, so it is only
++			 * meaningful for PCI enumerated TPMI instances.
++			 */
++			if (pci_dev) {
++				ret = intel_vsec_set_mapping(&tpmi_info->plat_info,
++							     &pci_dev->dev);
++				if (ret)
++					return ret;
++			}
  		}
  
  		if (pfs->pfs_header.tpmi_id == TPMI_CONTROL_ID)
--			tpmi_set_control_base(auxdev, tpmi_info, pfs);
-+			tpmi_set_control_base(tpmi_info, pfs);
- 	}
- 
- 	tpmi_info->pfs_start = pfs_start;
 -- 
 2.43.0
 
