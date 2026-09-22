@@ -1,338 +1,164 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa2-f35.google.com (mail-oa2-f35.google.com [74.125.231.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E973B6C05;
-	Tue, 22 Sep 2026 18:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790102909; cv=pass; b=BIl6HEvp0a6XqLhE7I+Qsv24/jFt4AgC1ZVp5tiSlwRy9ImlLxEuKNq5DZ37LdPNeHgbCMli6nvF2pbXZJadaG4XmdeB2UejVGNb3HSn9fM1vozl51is/B3a5cqvGmxeaoa5uvC7Y6Br5kzTSHpl9rQrg3gxnuuRn1KZX6S7iBk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790102909; c=relaxed/simple;
-	bh=uBPFKAzLxDrfoIyfJ0VD/LA0IQKdJ//1oc9XxCkHg1Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=GSult9jI4tyYOVGF+okkmlOtNnK51uDwzzgbHB/I9OKp4BLgKCzHmbZC9GKKgIkUSG1fI6tkcwQzbd0udvMXl7g07IamBDHT90bRuslfQE07U7nh42pTY6bGhe0Cz4fCelCI4F//3JYYe6+j0Wnn+pbkoHrA6DBAy94xPPfRvs8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=V39onfdR; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CFB3CC315
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 19:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.99
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790104998; cv=none; b=ARbLDqtiUgB8yLv4K5u7aWrqSNob2gUspIj+TuZX3d4LPuqgDUvM01jcnzTyqscWo1xdj0UG5t5ZIpZGeavo+mIjp9RFvxXOOTL+9YYBQoxFuxFRXsveuDxaQe0Mz1eikSkObdUUsMp8zPIvxKa/fiSKAEO2373ayXTiAOqL5Fk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790104998; c=relaxed/simple;
+	bh=GCrd6HP1YqVVD2Shlp0bMzCJrut+8ZJ/wxofmulhorQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nA3SctSrdsw7eAznWAIKbBL6+Dr+qYL1kg2syZRMUBcOHtpXFTRWEoDbTSvdrVCQlth+lx0HKC+3npuY3QYWmtj6XqHMfwzO9dLKYhu9TZD8LqPV2/KTBdetq1DwMXwTQlvmdgZuE9sNYVnSq4Nn29yBPD0w/Xj5MxMBviz4v5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lT7LlU0G; arc=none smtp.client-ip=74.125.231.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="V39onfdR"
-ARC-Seal: i=1; a=rsa-sha256; t=1790102888; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=E1MEIJbu0Z6M8Fkc8+kev2LbjbKrLMHpYRwjZnXJQnB0PwDCpEgwfBDxI3/mY6DGwg/6aZD/5GnmV7VDr/6YINFELGk57lLL0nnIhEvidmyaj28xo3um0Abdh3eHlvlKXFs4FANzRffH0LdUXc+k2xAeg0I+7WVi45J0tRuHWzk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1790102888; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=gFO6OKVdECYcID8G1vWbNV5+f4EgEUBXLONhqy6tga8=; 
-	b=jXQqE9icDFdW+AOehgp9RYk+v3Dzum+D1Usb1I/aMkIK5zgWNiz+IA9uz8OYWQU1JEWBpbpDtiYg9wcGR936jiZZAFH9XA/RUOqtn8jIxbYYrnRRw7eGfHDNoLLYmB5B8E5wHnt7Z49tkgQ+fdHm+JbfrG9mqmTlG5UJxxCUfa0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1790102888;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=gFO6OKVdECYcID8G1vWbNV5+f4EgEUBXLONhqy6tga8=;
-	b=V39onfdRnvANfYS5ripd0GE+3qaChaQkxhvUyX8gP/yBmZs1qupcUEjUORs7MWYi
-	U+rbOCiEBsvJUNO9phdE38kdmvpZUH7wGtc1uDsgWkYzo4nCjhNOgH4D2P+UexP+Mvo
-	Isa2RLMTX/jI8zFrjKuL4oXSH+FBUJfhFSNbtJm8wUYMgK9aCQ3bAE1pQeKIbI/rKxO
-	kvnQr+OQ6c2byeti5tqlMkdmfC6VR4CCXn9auK2h8IehRmwEYdnqSqtf4KsIRCyLNly
-	fIeSG7JsXhCDkO/7zpL/qDdC4dfwcNxi3s0YzxRIjflWWQS2f7YEyuwrVV2O/McAT7E
-	SyxaBV4jVA==
-Received: by smtp.zohomail.com with SMTPS id 1790102885465814.0831108184503;
-	Tue, 22 Sep 2026 11:48:05 -0700 (PDT)
-Date: Wed, 23 Sep 2026 02:47:57 +0800
-From: Rong Zhang <i@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
- Marco Giunta <marco_giunta@outlook.it>
-CC: "Derek J . Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>, Huang Wei <huangwei@kylinos.cn>,
- Ike Panhc <ikepanhc@gmail.com>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-kernel@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_platform/x86=3A_ideapad-laptop=3A?=
- =?US-ASCII?Q?_Report_camera_switch_as_SW=5FCAMERA=5FLENS=5FCOVER?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <5997344f-b3ff-4694-9563-762061295a57@app.fastmail.com>
-References: <d867a4f6b798809776164542972e68d724f29fd5.camel@rong.moe> <SN6PR19MB2303278926469783FA99824CFC842@SN6PR19MB2303.namprd19.prod.outlook.com> <9be0971e7f84162bc57e01eb4cde508ed15e3096.camel@rong.moe> <048278d5-8c58-415f-890a-3ca45f3d31c9@app.fastmail.com> <271a88b113a0734b150d5a0d812c4c6e2a6418e3.camel@rong.moe> <63afee899ccf13730af1b6b281c528ecdfa568c3.camel@rong.moe> <5997344f-b3ff-4694-9563-762061295a57@app.fastmail.com>
-Message-ID: <22C70C72-1C43-4777-AD11-D5A6EA85A0F1@rong.moe>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lT7LlU0G"
+Received: by mail-oa2-f35.google.com with SMTP id 586e51a60fabf-48f2b0b12d4so226054fac.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 12:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790104993; x=1790709793; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=vP5cScwKB/SRV52FulCQsVGt9v1UGZg+U5ZCK2dz35Y=;
+        b=lT7LlU0GJs5rAhItnoiXp5A8VTWVWXW7zjKXD60XtirridtazMHxS7a5uWHpH0LkS4
+         qbpDSlpg2MT7E+qkxMUFkMQ6QH2TcJTY0OSgxsjIhvq7riTbEMVC6xw3677qs+3n6ptq
+         YqGxUL0GgvXZ9zfDX6ggTrTJAKJs4v52Lup93UJ/SSeVOsVvCU3C+i+c2HSsB8v7uxWI
+         vvUTAuqi2yi3dhwEdXkMEMyRkIs0CUxjvYey0wNpaI8E8cRTTpU3+ThhWALPAVPnCTsv
+         dXWg4Dk6hfsdeCpT4d9AOmPXBdQRJmOLTKlD8j9+xrYg0n50oyVmgtG07kGmeB+hQQNp
+         k15g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790104993; x=1790709793;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vP5cScwKB/SRV52FulCQsVGt9v1UGZg+U5ZCK2dz35Y=;
+        b=oM6S9OEPM7YoAEI4xTnbvDLa2/Ik1o9S/5yZ5ScL8Dj1b4w0rbzDNq8iyWXhkc7Osa
+         0T/VKd14gfgT+OrFgf1ZUNc4IMjlPMhV1dcsWF0ZgbvnKEm7jmQgeVlWBQcCjZkGdAH/
+         AeaUXxeTYKklzcNglRYkdu8Vsc4u34v78+mFKqtmHAudg08a+1CsH3Fd4f4GipOL1o0Z
+         BGX3LR+K0Xm7+pZJxw8gyAysVc2YhOTwTSI/U9nIDwfxmaXwDFV+OAOyJuoXboZHAVai
+         pf5NHcpGti63wHD0ACM7+1f1bPg/WXWN2Jr0y9a51WGOiJiS1S342IKOwwut+nuU/LYQ
+         yxdw==
+X-Forwarded-Encrypted: i=1; AKwUvBwaIlinkt6yV0O5IFLM3+TVsnRLbd+G1pWtYK60NJij4nIptsYSZ8/XD7pPslWsIUiA7tacFLeZjILwzgABHnhgXXrT@vger.kernel.org
+X-Gm-Message-State: AFuF++mZXUnDTfeL3zfPTldj+VK/+GbtCJLTU5SEaC2h5/680v1zl9PM
+	B51g3psFBNnjAzjRP835s4mk4LkYFdvWX3X0YTNut2r0t3jfka2T5VIg
+X-Gm-Gg: AYBFou3SK6fcJ9wwTzYWk+f0uo9ygAiUIeJpV8yEpLCY3i0XLR+seAJ+QI7QXcz28f+
+	SrlYKAKfJvhErHKUI8V3XcF7vMgjLJJ51NPApBDX0hDDBy4OfDrYIy3ZaG0vw27ZLITkUuucnJ2
+	P/Geh2F/HDmKsevrRPXJtDrK46eUS1W0o+dZ2l6UxQgAPKFR5ltqtWL40SzW1fFzeO+9uPYtrg5
+	9DA2RPx1FPggyRnBO2bzrFJUf+je+nHCvJTrGu6+MQeBsk+O5KRDoYKKEwL1J+190/qcOgtd8Tw
+	kq3YEiY4g5ma7DjLmkQ3c3f+d3LG9aLKvGCCYSJqCTtPmdOlSPE3FdLRNdCq9pELyEo7sQsCLQA
+	zrg6T3u7EKIu+8lHbrTpjhx/V+QyJiv2ps+TUqGj5If3AtWDMlsHdgFClDDJhhSsClTDHVMpp15
+	mWO87W9phPavpifL9qKCtZH3m4jy3L0RSfcyMnMWDBtE2eFpcKWNUTASeKRAFE46LAN3Dh7j2C2
+	q8Ec/yGFyoFeb0/F9ctYlaDrVrJ
+X-Received: by 2002:a05:6870:392c:b0:475:a1ec:9613 with SMTP id 586e51a60fabf-49089d46c42mr664002fac.21.1790104993400;
+        Tue, 22 Sep 2026 12:23:13 -0700 (PDT)
+Received: from localhost ([35.11.35.209])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4908e66112asm489416fac.9.2026.09.22.12.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 12:23:12 -0700 (PDT)
+From: sjunhyuk1@gmail.com
+To: linux-usb@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [BUG] HP OMEN Transcend 14 (board 8E41): GPU power ceiling on 65W USB-C charger is non-deterministic across sessions (25W vs ~65W)
+Date: Tue, 22 Sep 2026 15:23:12 -0400
+Message-ID: <20260922192312.40607-1-sjunhyuk1@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Mark,=20
+Reporting a non-deterministic GPU power ceiling on a 65W USB-C charger,
+in case it's useful alongside other recent reports of EC/PD-controller
+firmware state issues (Legion Pro 7 16IAX10H, ASUS Vivobook K3605ZV).
+I'm not certain this belongs to USB Type-C / UCSI rather than hp-wmi,
+so I've sent it to both lists; happy to be redirected.
 
-Thanks for your information=2E=20
+System
+------
+Model:  HP OMEN Transcend Gaming Laptop 14-fb1013dx (B94GQUA#ABA)
+Board:  8E41
+BIOS:   F.05 (confirmed latest via fwupd/LVFS)
+GPU:    NVIDIA GeForce RTX 5060 Laptop GPU, VBIOS 98.06.2A.80.62
+Driver: NVIDIA Open 610.57.04
+Kernel: 7.2.5-3 (Arch, Omarchy)
 
+Symptom
+-------
+On the OEM-rated 65W USB-C charger, nvidia-smi's "Current Power Limit"
+lands on either 25.00W or ~60-65W depending on the boot/reconnect
+session, and stays fixed at whichever value for the rest of that
+session. A 140W charger reliably gives 50W (VBIOS default TGP);
+battery-only reliably gives 40W. Confirmed under gpu_burn 100% load in
+both 65W-charger outcomes:
 
-=E4=BA=8E 2026=E5=B9=B49=E6=9C=8823=E6=97=A5 GMT+08:00 01:32:41=EF=BC=8CMa=
-rk Pearson <mpearson-lenovo@squebb=2Eca> =E5=86=99=E9=81=93=EF=BC=9A
-> Hi Rong
->=20
-> On Tue, Sep 22, 2026, at 12:42 PM, Rong Zhang wrote:
-> > Hi Mark,
-> >
-> > On Tue, 2026-09-22 at 23:58 +0800, Rong Zhang wrote:
-> >> Hi Mark,
-> >>=20
-> >> On Tue, 2026-09-22 at 11:52 -0400, Mark Pearson wrote:
+  25W outcome:  24.7-25.5W draw, clock unstable 200-500MHz
+  65W outcome:  59.4-64.9W draw, clock stable 1630-1860MHz
 
-[=2E=2E=2E]
-=20
-> >> > I'm way behind on my emails and trying to get through my inbox a bi=
-t=2E=2E=2Eso apologies if I've missed subtleties as I skim read this a bit
-> >> >=20
-> >> > Reading the internal spec - there are some WMI calls I can see that=
- return C status:
-> >> > LENOVO_OTHER_METHOD (GUID dc2a8805-3a8c-41ba-a6f7-092e0089cd3b)
-> >> > Get CV DSP Camera Shutter Status - Input ID 0x00200000 - returns 0 =
-(closed) or 1 (open)
-> >> > Get Normal Camera Shutter Status - Input ID 0x00201000 - returns 0 =
-(closed) or 1 (open)
-> >> >=20
-> >> > I can't find the Utility GUIDs mentioned at all I'm afraid=2E Is th=
-e above useful?
-> >>=20
-> >> Thanks for the information=2E It's useful! I will cross-check with th=
-e DSL
-> >> code of the correlated WMI method=2E
-> >
-> > I just checked a DSDT dump from 83JR [1], and it does implement
-> > 0x00200000!
-> >
-> > In detail, LENOVO_CAPABILITY_DATA_00 exposes 0x00200000 as
-> > valid+read+write conditionally, while LENOVO_OTHER_METHOD can be used =
-to
-> > get/set the camera shutter=2E
-> >
-> > Still, I have three questions=2E Could you kindly check the internal
-> > specification and shed some light?
-> >
-> > What's the difference between "CV DSP Camera Shutter" and the "Normal"
-> > one? I guess the former is a firmware switch while the latter is a
-> > hardware switch, am I correct?
-> >
-> The Normal ID is new and was just added in the latest version of the spe=
-c=2E
-> It's possible it is on a not-released platform yet=2E
-> As a note - the 'Normal" entry is get only=2E
+Which outcome a given session lands on appears session-scoped, not a
+fixed hardware fault: the same physical charger, same port, same
+cable produces either result depending on boot/reconnect history.
 
-Got it=2E The latter being get-only really makes it sound like a hardware =
-switch=2E But yeah, we will see when the relevant platform is released=2E
+Ruled out
+---------
+- Kernel version: same kernel (7.2.5-3-omarchy) produced both the 25W
+  and 65W outcomes on different boots.
+- Battery charge state: tested 0%, 79%, 98%, 100% within one boot
+  session, all still 25W.
+- BIOS setting/update: F.05 confirmed latest via fwupd/LVFS; no
+  relevant USB-C/adapter option in BIOS setup.
+- ucsi_acpi driver presence: blacklisted it entirely, then re-ran the
+  known-bad trigger (hot-swap the charger while powered on) - still
+  landed on 25W. So the driver being loaded/unloaded is not itself
+  the deciding factor.
+- HP WMI GPU boost flags (commandtype 0x21/0x22 under command
+  HPWMI_GM in hp-wmi.c, the CTGP/PPAB fields of struct
+  victus_gpu_power_modes): wrote a read-only probe module issuing
+  only the 0x21 GET across all four power states (battery/25W/65W/
+  140W-triggered-50W). Raw response was byte-identical (00 01 01 57)
+  in every state.
+- HP WMI legacy "Smart Adapter" query (commandtype 0x0F under command
+  HPWMI_READ; not defined in mainline hp-wmi.c's enum
+  hp_wmi_commandtype, but present in a third-party Windows tool as a
+  "smart power adapter status" query): also GET-only, also
+  byte-identical (05 1c 1c 0d) between the 25W and 65W states.
 
->=20
-> Afraid my hooks into the Yoga and Legion team are still quite new and we=
-'re figuring out some of the pieces needed at the moment :)
-> The WMI spec seems to cover a lot of different platforms that I've not h=
-ad much experience with too=2E
->=20
-> > The device does not implement LENOVO_CAPABILITY_DATA_01 at all=2E Is i=
-t
-> > possible to determine its existence programmatically using
-> > LENOVO_CAPABILITY_DATA_00? Missing the former is fatal in the current
-> > lenovo-wmi-capdata and lenovo-wmi-other implementations, resulting in
-> > both driver non-functional=2E We need a programmatic way to tolerate i=
-ts
-> > non-existence so that we can bind the two drivers via the component
-> > framework in any case=2E
-> >
-> It should be under CAPABILITY DATA_00, at least from what I'm seeing (pa=
-sting a table in text=2E=2E=2E=2E):
->=20
-> CV DSP Camera Shutter
-> uint32 IDs //0x00200000
-> uint32 Capability // 7 :by project
-> bit 2: 0: not support SetFeatureValue(), 1: support SetFeatureValue()
-> bit 1: 0: not support GetFeatureValue(), 1: support GetFeatureValue()
-> bit 0: 0: not support CV DSP Camera Shutter, 1: support CV DSP Camera Sh=
-utter
-> uint32 DefaultValue // 0 : by project
->=20
-> Normal Camera Shutter Status
-> uint32 IDs //0x00201000
-> uint32 Capability // 3 :by project
-> bit 2: 0: not support SetFeatureValue(), 1: support SetFeatureValue()
-> bit 1: 0: not support GetFeatureValue(), 1: support GetFeatureValue()
-> bit 0: 0: not support Normal Camera Shutter Status, 1: support Normal Ca=
-mera Shutter Status
-> uint32 DefaultValue // 1 : by project
+Workarounds found
+------------------
+1. Full poweroff, physically unplug/replug the charger, then power
+   on. Reliably restores ~65W in testing so far (recovers even from a
+   25W-clamped state). An OS reboot alone, with the charger left
+   connected, does not help; nor does hot-swapping the charger while
+   powered on (that's actually the known trigger for landing on 25W).
 
-While the information is also useful, it seems that I didn't express the q=
-uestion well in the last reply=2E Sorry for causing the misunderstanding=2E
+2. Live driver reload with no reboot:
+       sudo modprobe -r ucsi_acpi && sudo modprobe ucsi_acpi
+   From a ~50W "in-between" state reached via a hot-swap, this
+   recovered to 65W in 2/2 attempts within a few seconds. From the
+   classic 25.00W clamp, it did not help in 2/2 attempts. A
+   battery-only control (40W, no charger) showed no change either
+   way, suggesting the effect is specific to USB-C PD renegotiation
+   rather than a general power-limit reset - but it is clearly not a
+   general substitute for (1).
 
-I was asking about:
+Separately, this board also reproduces the NPCF ACPI-binding issue
+described in NVIDIA/open-gpu-kernel-modules#1162 (Power Management
+Object stays N/A, Dynamic Boost above the 50W base TGP never
+activates) - confirmed via acpidump/iasl decompile, same topology and
+field structure as reported there for board 8D40. That explains why
+>50W boost never works here, but Power Management Object reads N/A in
+both the 25W and 65W states, so it doesn't explain this particular
+25W/65W split.
 
-Is it possible to determine the existence of LENOVO_CAPABILITY_DATA_*01* u=
-sing *00*?
+Full write-up with raw capture data:
+https://claude.ai/artifact/WDAN76AWk1JpW49ZSGc2Cr
 
-Full story:
-
-The two drivers (wmi-capdata and wmi-other) make a strong assumption that =
-both 00 and 01 must be present=2E Missing anyone causes the two drivers non=
--functional=2E
-
-Some platforms stub 01=2E The two drivers still work properly on these pla=
-tforms, as the WMI GUID of 01 is still there=2E
-
-Some platforms don't support 01 at all, but somehow forgot to stub it=2E T=
-he two drivers become non-functional in this case=2E It's easy to fix as th=
-e WMI GUID of 01 is still there, too=2E I've sent a series to fix that (it =
-hasn't received any review yet, hint hint ;-P), see https://lore=2Ekernel=
-=2Eorg/all/20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong=2Emoe/
-
-Not until the last reply did I realize that 01 could be completely missing=
-=2E Unfortunately, it becomes very tricky as the use of wmi_has_guid() is s=
-trongly discouraged, so we need to figure out an approach to determine the =
-existence of 01 using other capability data, e=2Eg=2E 00=2E
-
->=20
-> > There is an WMI query in the DSDT dump that looks like
-> > LENOVO_CAPABILITY_DATA_03=2E What is it?
-> >
-> No idea - my spec sheet doesn't have 03 defined=2E
-> Scanning through my doc I'm not spotting anything that looks like a matc=
-h for WQC either
-
-Fine, it's not a big deal=2E I am just curious about how many capability d=
-ata GUIDs have been defined=2E
-
-Thanks,
-Rong
-
->=20
-> Mark
->=20
->=20
-> > [1]: I never have such a device=2E I got the dump when fixing
-> > https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D221065
-> >
-> > Appendix (DSDT snippet):
-> >
-> >                     Device (GZFD)
-> >                     {
-> >                         Name (_HID, "PNP0C14" /* Windows Management=20
-> > Instrumentation Device */)  // _HID: Hardware ID
-> >                         Name (_UID, "GMZN")  // _UID: Unique ID
-> > [=2E=2E]
-> > /* This is LENOVO_OTHER_METHOD=2E */
-> >                         Method (WMAE, 3, NotSerialized)
-> >                         {
-> >                             Local0 =3D Arg1
-> >                             CreateDWordField (Arg2, Zero, SIDS)
-> >                             CreateDWordField (Arg2, 0x04, SVAL)
-> > [=2E=2E]
-> >                             If ((Arg1 =3D=3D 0x11))
-> >                             {
-> > [=2E=2E]
-> > /* Get 0x00200000=2E */
-> >                                 If ((SIDS =3D=3D 0x00200000))
-> >                                 {
-> >                                     Local0 =3D ^^PCI0=2ELPC0=2EEC0=2ED=
-CSS /*=20
-> > \_SB_=2EPCI0=2ELPC0=2EEC0_=2EDCSS */
-> >                                     Return (Local0)
-> >                                 }
-> > [=2E=2E]
-> >                             }
-> >
-> >                             If ((Arg1 =3D=3D 0x12))
-> >                             {
-> > [=2E=2E]
-> > /* Set 0x00200000=2E */
-> >                                 If ((SIDS =3D=3D 0x00200000))
-> >                                 {
-> >                                     Local0 =3D ToInteger (SVAL)
-> >                                     ^^PCI0=2ELPC0=2EEC0=2EDCSS =3D Loc=
-al0
-> >                                     Return (Zero)
-> >                                 }
-> >                             }
-> > [=2E=2E]
-> >                         }
-> > /* The device has no LENOVO_CAPABILITY_DATA_01=2E */
-> >
-> > /* Is this something like LENOVO_CAPABILITY_DATA_03? */
-> >                         Method (WQC3, 1, NotSerialized)
-> >                         {
-> >                             If ((Arg0 =3D=3D Zero))
-> >                             {
-> >                                 Return (Buffer (0x10)
-> >                                 {
-> >                                     /* 0000 */  0x01, 0x00, 0x00, 0x00=
-,=20
-> > 0x01, 0x00, 0x00, 0x00,  // =2E=2E=2E=2E=2E=2E=2E=2E
-> >                                     /* 0008 */  0x10, 0x27, 0x00, 0x00=
-,=20
-> > 0xDC, 0x05, 0x00, 0x00   // =2E'=2E=2E=2E=2E=2E=2E
-> >                                 })
-> >                             }
-> >                         }
-> > [=2E=2E]
-> > /* This is LENOVO_CAPABILITY_DATA_00=2E */
-> >                         Name (CPD0, Buffer (0x0C)
-> >                         {
-> >                              0x00                                     =
- =20
-> >       // =2E
-> >                         })
-> >                         CreateDWordField (CPD0, Zero, C0ID)
-> >                         CreateDWordField (CPD0, 0x04, C0CP)
-> >                         CreateDWordField (CPD0, 0x08, C0DV)
-> >                         Method (WQC0, 1, NotSerialized)
-> >                         {
-> >                             If ((Arg0 =3D=3D Zero))
-> >                             {
-> >                                 Return (Buffer (0x0C)
-> >                                 {
-> >                                     /* 0000 */  0x00, 0x00, 0x05, 0x04=
-,=20
-> > 0x07, 0x00, 0x00, 0x00,  // =2E=2E=2E=2E=2E=2E=2E=2E
-> >                                     /* 0008 */  0x00, 0x00, 0x00, 0x00=
- =20
-> >                          // =2E=2E=2E=2E
-> >                                 })
-> >                             }
-> >
-> >                             If ((Arg0 =3D=3D One))
-> >                             {
-> > /* 0x00200000 is exposed conditionally=2E */
-> >                                 C0ID =3D 0x00200000
-> >                                 C0DV =3D Zero
-> >                                 If ((^^PCI0=2ELPC0=2EEC0=2ECVSP =3D=3D=
- One))
-> >                                 {
-> >                                     C0CP =3D 0x07
-> >                                 }
-> >                                 Else
-> >                                 {
-> >                                     C0CP =3D Zero
-> >                                 }
-> >                             }
-> >
-> >                             Return (CPD0) /* \_SB_=2EGZFD=2ECPD0 */
-> >                         }
-> > [=2E=2E]
-> >                     }
-> >
-> > Thanks,
-> > Rong
-> >
-> >>=20
-> >> >=20
-> >> > When I get a chance I'll check this out on a Legion platform I have=
- that has this switch and confirm=2E=2E=2E=2Ebut it might take a little whi=
-le=2E
-> >>=20
-> >> Take your time and don't worry :-)
-> >>=20
-> >> Thanks,
-> >> Rong
-> >>=20
-> >> >=20
-> >> > Mark
+Happy to gather more diagnostics (EC register snapshots, more repro
+counts, anything else useful) if that would help narrow this down.
