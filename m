@@ -1,205 +1,469 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328414A012B;
-	Tue, 22 Sep 2026 19:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5244A6CD4;
+	Tue, 22 Sep 2026 19:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790105898; cv=none; b=Gryjg/EaSvDsokN1Xh4tFnulE0Db4Qjo5EaRLG5w+2EB4X6+2o9GqrcvZE/DiNv6vCORUX0VX4PF+cy5PxGyFMDRxwRacSiBCEz7a6xniMjApbMZWUyRWTxvm1B7ydxuf9w8NTkn9rCF3s1ocemj+QUL/BnWW3SW133GFiXE8Rw=
+	t=1790106902; cv=none; b=j5bevIWPgu70n0Ar8rmMFtmKKKhejxxW9pkvrGVN8IMF5+lyqyF90ADYCGMQDxcCKJruFIPXHQzOQwyAdRm9XGiWMNxwQKTmvg2IKZbKmoOkddt5Sv86R41Sydz8wGeYDiYi3xpSsG4ft015wDv74O7gu7t+QzTlP1rQNhaUCH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790105898; c=relaxed/simple;
-	bh=3og3JaCcSdik6JmXB0MyEfciJO4/lJBnX9Cf+yIyuvE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aTSJmor9CPC3K2tTaaxpAI8RVYfhp00k4EFGU8PgnfgONhPtuvB2iIDT5zvCNS3+CQKRSrBfvZmYkJDBklq3+ghkT4H/LRT3PmoYMDqt7EpfqCLS/BDx61yQQCi2vuUn5t3WmH1aHLy24zyUGV8LV/cd7FDUiw80cKVtqi8viHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KVCZTWBy; arc=none smtp.client-ip=212.227.15.19
+	s=arc-20240116; t=1790106902; c=relaxed/simple;
+	bh=ufBMvIgdqLrOUQ6lbrSaf7PWlvvqVxHqUtDs7rns+jE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OblWiBAvs4om3KG0gN4FEQsF0Mbs1kGwev6S6oTv1nvljgAzxyY2Cdm/MXJ7wxjmeXMrzHiB4nN5/nshLjGCPCUp96Ky7LscmGnwHGs9jQIBRRamEobRDfavwJYgYxl1MIS3TEDDSkvaiogiKtchLCNvZBqRdxwwp1w6K+ZGR/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=NgRZs9j7; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KVCZTWBy"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="NgRZs9j7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1790105894; x=1790710694; i=w_armin@gmx.de;
-	bh=GFram7GaOn4z2X6Ucvce8Iihdk0IK4EYXufnwpD8VQE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=KVCZTWBy0BMJUi5iQ5cgXqnTqnm5myL/VAg/7KtdfE8EbxaI1PBgWhBLZhMjrfj/
-	 IvLfwl99FTJZcWUc+slbq7mGIR64AA0twNWVfX9HoDYDo/RgWmxzdV/pohaLNtMhR
-	 vjuIxs+tPnMGgmZlj1eC3pTPgMFelmMBbJBl3QfQdj5oEXRPuR+L79NBSiHa6PFzQ
-	 YS3/divFi57d2fxNe5vz0wfa9D2EvQaHvQ2sGgrNAHMb10UXh5FRBK3gdMyMY621t
-	 uPqX++trYAmhD4HkRt+uhryue5Ha/EwWqEI3efydwa6xx0vZ7JUR3ssRH/zOhnWm6
-	 x1p6idJ+x7paYcJNJg==
+	s=s31663417; t=1790106868; x=1790711668; i=w_armin@gmx.de;
+	bh=AU9VlnKBv17qB9XzXj9ZrtQZ10FyGswWTOycJVL/zlg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=NgRZs9j7LgyDajdIH/VExB3WgcYTLf12PhjtRzcxgjdctLqzbWHk1KfCYncItiGd
+	 QTeuqNpAB1GxikkG3RgRYfy1BmgxizMZx6U+MDUzUuwR7mG6VrTgZuhg8AXeb/0oY
+	 6RTu2jsLya9pgYvfzn+5OYZdGTMWBCBrM26iQ0yQYZ8LM+dscioPjSzgrW8G1RZw4
+	 zL9nYNeFRX6bB8pxRCfrekJsKKGq0w/cJx4n8QZf6VbOXaUX3GleWqkJWH2qqPdtl
+	 wq0HuYNo+6eQfTu198M48GjG/T8ldoxitTuTisMwNKzOexljB4/f++lOV/5/jrWWZ
+	 uZN6PxrG7NtOE3FWGQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1McH9i-1wd3t33Btc-00aVQc; Tue, 22
- Sep 2026 21:38:13 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-wmi-aio: Use named defines for event types
-Date: Tue, 22 Sep 2026 21:38:04 +0200
-Message-ID: <20260922193809.4801-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.55.0
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M9nxn-1x63lJ2hhF-0082ii; Tue, 22
+ Sep 2026 21:54:28 +0200
+Message-ID: <a66138d0-31d5-4dcf-bab6-2948d9cd68d4@gmx.de>
+Date: Tue, 22 Sep 2026 21:54:25 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] platform/wmi: Move ASUS platform drivers from x86 to
+ wmi/asus
+To: chipang_kao <prozac2734@gmail.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev,
+ scardracs@disroot.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, chipang_kao <chipang_kao@asus.com>
+References: <2384d8f5-106c-4cbd-a119-62d923725bf7@kernel.org>
+ <20260922032157.120188-1-chipang_kao@asus.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260922032157.120188-1-chipang_kao@asus.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Jsad90VGFbPgEv3txL6Td3XKcnNbmiSx/AKoTX6EcIDm48gKOGZ
- 00hbAnKuv9GGgHKYTMy+A6yyq4YlfCNq3tmcR5+b53ugPjWpmN21p5u7PJt69331dIw1Jnf
- p2BtjD45pmQFGnxHXZnRxcIyqhcngiy6d5UYM/iUZvHB0hJoPHcLnoHv9undLC3cEvIabAh
- E8P2+53OGds3zukGons0Q==
+X-Provags-ID: V03:K1:7QYp6PvXE8dsk8Ia9EuJlk/EitEWBJgmZXDR/2mEKkTf4neONzP
+ FB85u7Gl2XdIShLDDaXRl5XpPPX6yvOWpWby5jPvlu2SVHqepx2m2jUGubAN7XwX08LfeVt
+ 0501lbN1niPTDcAgqRwxX3X5b2mexMXxTj9ff/FN8N99lzNIyxmyyYq0X/uFxc6TR+aPLcK
+ /0dAfo0/U8Frea/NgJdDw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/FnaOYXnLpw=;Oo021wn+62/mAOeSN5A5mLw91qA
- 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
- 4hk3We8nTyLFCx5JlqUDwLYNku/QsmLqs7Q==
+UI-OutboundReport: notjunk:1;M01:P0:aoOWQCgjpus=;5BHmKs6eLgCAc8DB0BRes37AZc5
+ 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
+ NmCst2095v+DowkhKF8TmM440g==
 
-There exist two types of events recognized by this driver:
-single hotkey events (0x0000) and sequences of hotkey events (0x000F).
-Until now both literals are used without a named define, making it
-harder to understand their meaning.
+Am 22.09.26 um 05:21 schrieb chipang_kao:
 
-Fix this by using named defines for both event types.
+> ASUS WMI and related platform drivers currently reside under
+> drivers/platform/x86/. However, with ARM64 devices utilizing ACPI WMI
+> interfaces, maintaining these drivers exclusively under x86 creates
+> unnecessary architectural restrictions and Kconfig duplications.
+>
+> To allow ARM64 architectures to build and utilize ASUS WMI drivers
+> cleanly:
+> 1. Relocate all ASUS WMI-based drivers and headers from
+>     drivers/platform/x86/ to drivers/platform/wmi/asus/.
+> 2. Create dedicated Kconfig and Makefile under
+>     drivers/platform/wmi/asus/ and source them in
+>     drivers/platform/wmi/Kconfig and Makefile.
+> 3. Update drivers/platform/x86/Kconfig to remove duplicated entries
+>     and source the unified WMI-based ASUS configuration.
+>
+> No functional code logic changes are introduced in this patch; this is
+> a pure code relocation and build infrastructure refactoring.
 
-Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-wmi-aio.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Hi,
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-aio.c b/drivers/platform/x=
-86/dell/dell-wmi-aio.c
-index 8849ad93480b..42c0032991d2 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-aio.c
-+++ b/drivers/platform/x86/dell/dell-wmi-aio.c
-@@ -32,10 +32,13 @@ struct dell_wmi_aio_data {
- 	struct mutex input_lock;
- };
-=20
-+/* A hot key was pressed or an event occurred */
-+#define DELL_AIO_EVENT_TYPE_SINGLE	0x0000
-+/* A sequence of hot keys was pressed */
-+#define DELL_AIO_EVENT_TYPE_SEQUENCE	0x000F
-+
- struct dell_wmi_event {
- 	__le16	length;
--	/* 0x000: A hot key pressed or an event occurred
--	 * 0x00F: A sequence of hot keys are pressed */
- 	__le16	type;
- 	__le16	event[];
- } __packed;
-@@ -68,10 +71,14 @@ static bool dell_wmi_aio_event_check(const struct wmi_=
-buffer *buffer)
- 	event =3D buffer->data;
- 	length =3D le16_to_cpu(event->length);
- 	type =3D le16_to_cpu(event->type);
--	if ((type =3D=3D 0 || type =3D=3D 0xf) && length >=3D 2)
--		return true;
-=20
--	return false;
-+	if (type !=3D DELL_AIO_EVENT_TYPE_SINGLE && type !=3D DELL_AIO_EVENT_TYP=
-E_SEQUENCE)
-+		return false;
-+
-+	if (length < 2)
-+		return false;
-+
-+	return true;
- }
-=20
- static void dell_wmi_aio_notify(struct wmi_device *wdev, const struct wmi=
-_buffer *data)
-=2D-=20
-2.55.0
+i am two minds about moving the Asus WMI drivers to drivers/platform/wmi/a=
+sus,
+because in my mind drivers/platform/wmi contains only code necessary for p=
+roviding
+access to ACPI-WMI objects. AFAIK the Asus WMI drivers are client drivers =
+using the
+WMI APIs to access WMI objects, not host drivers providing WMI objects.
 
+Maybe moving the drivers to drivers/platform/asus would be better?
+
+Thanks,
+Armin Wolf
+
+> Signed-off-by: chipang_kao <chipang_kao@asus.com>
+> ---
+>
+> Changes in v3:
+> - Refined the file relocation scope to target ONLY pure WMI-based
+>    platform drivers (asus-wmi, asus-nb-wmi, and asus-armoury).
+> - Retained non-WMI x86 platform drivers (such as asus-laptop,
+>    asus-wireless, and asus-tf103c-dock) under drivers/platform/x86/.
+> - Updated drivers/platform/wmi/asus/Kconfig and Makefile to only build
+>    and export the relocated WMI components.
+> - Dropped patch 1/2 from the original series as CONFIG_ACPI_WMI
+>    dependency updates are handled by Armin's WMI refactoring series.
+>
+> Changes in v2:
+> - Relocated ASUS platform drivers from drivers/platform/x86/ to
+>    drivers/platform/wmi/asus/ to eliminate Kconfig duplication and
+>    architectural restrictions for ARM64 platforms.
+> - Updated MAINTAINERS file to reflect the new path.
+>
+>   MAINTAINERS                                   |  1 +
+>   drivers/platform/wmi/Kconfig                  |  1 +
+>   drivers/platform/wmi/Makefile                 |  1 +
+>   drivers/platform/wmi/asus/Kconfig             | 64 +++++++++++++++++++
+>   drivers/platform/wmi/asus/Makefile            |  9 +++
+>   .../platform/{x86 =3D> wmi/asus}/asus-armoury.c |  0
+>   .../platform/{x86 =3D> wmi/asus}/asus-armoury.h |  0
+>   .../platform/{x86 =3D> wmi/asus}/asus-nb-wmi.c  |  0
+>   drivers/platform/{x86 =3D> wmi/asus}/asus-wmi.c |  0
+>   drivers/platform/{x86 =3D> wmi/asus}/asus-wmi.h |  0
+>   drivers/platform/x86/Kconfig                  | 58 -----------------
+>   drivers/platform/x86/Makefile                 |  3 -
+>   12 files changed, 76 insertions(+), 61 deletions(-)
+>   create mode 100644 drivers/platform/wmi/asus/Kconfig
+>   create mode 100644 drivers/platform/wmi/asus/Makefile
+>   rename drivers/platform/{x86 =3D> wmi/asus}/asus-armoury.c (100%)
+>   rename drivers/platform/{x86 =3D> wmi/asus}/asus-armoury.h (100%)
+>   rename drivers/platform/{x86 =3D> wmi/asus}/asus-nb-wmi.c (100%)
+>   rename drivers/platform/{x86 =3D> wmi/asus}/asus-wmi.c (100%)
+>   rename drivers/platform/{x86 =3D> wmi/asus}/asus-wmi.h (100%)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cc3cae2e378b..2e4fa6812093 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4124,6 +4124,7 @@ M:	Denis Benato <denis.benato@linux.dev>
+>   L:	platform-driver-x86@vger.kernel.org
+>   S:	Maintained
+>   W:	https://asus-linux.org/
+> +F:	drivers/platform/wmi/asus/asus*.c
+>   F:	drivers/platform/x86/asus*.c
+>   F:	drivers/platform/x86/eeepc*.c
+>  =20
+> diff --git a/drivers/platform/wmi/Kconfig b/drivers/platform/wmi/Kconfig
+> index d62f51ff3b7f..acce8e9b7264 100644
+> --- a/drivers/platform/wmi/Kconfig
+> +++ b/drivers/platform/wmi/Kconfig
+> @@ -33,5 +33,6 @@ config ACPI_WMI_LEGACY_DEVICE_NAMES
+>   	  the same GUID to fail in some corner cases.
+>  =20
+>   source "drivers/platform/wmi/tests/Kconfig"
+> +source "drivers/platform/wmi/asus/Kconfig"
+>  =20
+>   endif # ACPI_WMI
+> diff --git a/drivers/platform/wmi/Makefile b/drivers/platform/wmi/Makefi=
+le
+> index 2feff94a5594..305f4688324f 100644
+> --- a/drivers/platform/wmi/Makefile
+> +++ b/drivers/platform/wmi/Makefile
+> @@ -6,6 +6,7 @@
+>  =20
+>   wmi-y			:=3D core.o marshalling.o string.o
+>   obj-$(CONFIG_ACPI_WMI)	+=3D wmi.o
+> +obj-$(CONFIG_ASUS_WMI) +=3D asus/
+>  =20
+>   # Unit tests
+>   obj-y			+=3D tests/
+> diff --git a/drivers/platform/wmi/asus/Kconfig b/drivers/platform/wmi/as=
+us/Kconfig
+> new file mode 100644
+> index 000000000000..75b6dd45af66
+> --- /dev/null
+> +++ b/drivers/platform/wmi/asus/Kconfig
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Asus Platform Specific Drivers
+> +#
+> +
+> +config ASUS_ARMOURY
+> +	tristate "ASUS Armoury driver"
+> +	depends on ASUS_WMI
+> +	select FW_ATTR_CLASS
+> +	help
+> +	  Say Y here if you have a WMI aware Asus machine and would like to us=
+e the
+> +	  firmware_attributes API to control various settings typically expose=
+d in
+> +	  the ASUS Armoury Crate application available on Windows.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called asus-armoury.
+> +
+> +config ASUS_WMI
+> +	tristate "ASUS WMI Driver"
+> +	depends on ACPI_WMI
+> +	depends on ACPI_BATTERY
+> +	depends on INPUT
+> +	depends on HWMON
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	depends on RFKILL || RFKILL =3D n
+> +	depends on HOTPLUG_PCI
+> +	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
+> +	depends on SERIO_I8042 || SERIO_I8042 =3D n
+> +	select INPUT_SPARSEKMAP
+> +	select LEDS_CLASS
+> +	select NEW_LEDS
+> +	select ACPI_PLATFORM_PROFILE
+> +	help
+> +	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
+> +	  Asus Notebooks).
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called asus-wmi.
+> +
+> +config ASUS_WMI_DEPRECATED_ATTRS
+> +	bool "BIOS option support in WMI platform (DEPRECATED)"
+> +	depends on ASUS_WMI
+> +	default y
+> +	help
+> +	  Say Y to expose the configurable BIOS options through the asus-wmi
+> +	  driver.
+> +
+> +	  This can be used with or without the asus-armoury driver which
+> +	  has the same attributes, but more, and better features.
+> +
+> +config ASUS_NB_WMI
+> +	tristate "Asus Notebook WMI Driver"
+> +	depends on ASUS_WMI
+> +	help
+> +	  This is a driver for newer Asus notebooks. It adds extra features
+> +	  like wireless radio and bluetooth control, leds, hotkeys, backlight.=
+..
+> +
+> +	  For more information, see
+> +	  <file:Documentation/ABI/testing/sysfs-platform-asus-wmi>
+> +
+> +	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
+> +	  here.
+> +
+> +
+> diff --git a/drivers/platform/wmi/asus/Makefile b/drivers/platform/wmi/a=
+sus/Makefile
+> new file mode 100644
+> index 000000000000..8daa5ebff89f
+> --- /dev/null
+> +++ b/drivers/platform/wmi/asus/Makefile
+> @@ -0,0 +1,9 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for linux/drivers/platform/wmi/asus
+> +# Asus Platform-Specific Drivers
+> +#
+> +
+> +obj-$(CONFIG_ASUS_ARMOURY)	+=3D asus-armoury.o
+> +obj-$(CONFIG_ASUS_WMI)		+=3D asus-wmi.o
+> +obj-$(CONFIG_ASUS_NB_WMI)	+=3D asus-nb-wmi.o
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/wmi/=
+asus/asus-armoury.c
+> similarity index 100%
+> rename from drivers/platform/x86/asus-armoury.c
+> rename to drivers/platform/wmi/asus/asus-armoury.c
+> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/wmi/=
+asus/asus-armoury.h
+> similarity index 100%
+> rename from drivers/platform/x86/asus-armoury.h
+> rename to drivers/platform/wmi/asus/asus-armoury.h
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/wmi/a=
+sus/asus-nb-wmi.c
+> similarity index 100%
+> rename from drivers/platform/x86/asus-nb-wmi.c
+> rename to drivers/platform/wmi/asus/asus-nb-wmi.c
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/wmi/asus=
+/asus-wmi.c
+> similarity index 100%
+> rename from drivers/platform/x86/asus-wmi.c
+> rename to drivers/platform/wmi/asus/asus-wmi.c
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/wmi/asus=
+/asus-wmi.h
+> similarity index 100%
+> rename from drivers/platform/x86/asus-wmi.h
+> rename to drivers/platform/wmi/asus/asus-wmi.h
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 957034f39e4e..68cf99de415d 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -253,64 +253,6 @@ config ASUS_WIRELESS
+>   	  If you choose to compile this driver as a module the module will be
+>   	  called asus-wireless.
+>  =20
+> -config ASUS_ARMOURY
+> -	tristate "ASUS Armoury driver"
+> -	depends on ASUS_WMI
+> -	select FW_ATTR_CLASS
+> -	help
+> -	  Say Y here if you have a WMI aware Asus machine and would like to us=
+e the
+> -	  firmware_attributes API to control various settings typically expose=
+d in
+> -	  the ASUS Armoury Crate application available on Windows.
+> -
+> -	  To compile this driver as a module, choose M here: the module will
+> -	  be called asus-armoury.
+> -
+> -config ASUS_WMI
+> -	tristate "ASUS WMI Driver"
+> -	depends on ACPI_WMI
+> -	depends on ACPI_BATTERY
+> -	depends on INPUT
+> -	depends on HWMON
+> -	depends on BACKLIGHT_CLASS_DEVICE
+> -	depends on RFKILL || RFKILL =3D n
+> -	depends on HOTPLUG_PCI
+> -	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
+> -	depends on SERIO_I8042 || SERIO_I8042 =3D n
+> -	select INPUT_SPARSEKMAP
+> -	select LEDS_CLASS
+> -	select NEW_LEDS
+> -	select ACPI_PLATFORM_PROFILE
+> -	help
+> -	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
+> -	  Asus Notebooks).
+> -
+> -	  To compile this driver as a module, choose M here: the module will
+> -	  be called asus-wmi.
+> -
+> -config ASUS_WMI_DEPRECATED_ATTRS
+> -	bool "BIOS option support in WMI platform (DEPRECATED)"
+> -	depends on ASUS_WMI
+> -	default y
+> -	help
+> -	  Say Y to expose the configurable BIOS options through the asus-wmi
+> -	  driver.
+> -
+> -	  This can be used with or without the asus-armoury driver which
+> -	  has the same attributes, but more, and better features.
+> -
+> -config ASUS_NB_WMI
+> -	tristate "Asus Notebook WMI Driver"
+> -	depends on ASUS_WMI
+> -	help
+> -	  This is a driver for newer Asus notebooks. It adds extra features
+> -	  like wireless radio and bluetooth control, leds, hotkeys, backlight.=
+..
+> -
+> -	  For more information, see
+> -	  <file:Documentation/ABI/testing/sysfs-platform-asus-wmi>
+> -
+> -	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
+> -	  here.
+> -
+>   config ASUS_TF103C_DOCK
+>   	tristate "Asus TF103C 2-in-1 keyboard dock"
+>   	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index 872ac3842391..0bacd55f2fce 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -33,9 +33,6 @@ obj-$(CONFIG_APPLE_GMUX)	+=3D apple-gmux.o
+>   # ASUS
+>   obj-$(CONFIG_ASUS_LAPTOP)	+=3D asus-laptop.o
+>   obj-$(CONFIG_ASUS_WIRELESS)	+=3D asus-wireless.o
+> -obj-$(CONFIG_ASUS_ARMOURY)	+=3D asus-armoury.o
+> -obj-$(CONFIG_ASUS_WMI)		+=3D asus-wmi.o
+> -obj-$(CONFIG_ASUS_NB_WMI)	+=3D asus-nb-wmi.o
+>   obj-$(CONFIG_ASUS_TF103C_DOCK)	+=3D asus-tf103c-dock.o
+>   obj-$(CONFIG_EEEPC_LAPTOP)	+=3D eeepc-laptop.o
+>   obj-$(CONFIG_EEEPC_WMI)		+=3D eeepc-wmi.o
