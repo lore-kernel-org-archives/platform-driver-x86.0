@@ -1,76 +1,70 @@
-Received: from mail-oi2-f43.google.com (mail-oi2-f43.google.com [74.125.231.235])
+Received: from mail-yx2-f13.google.com (mail-yx2-f13.google.com [74.125.224.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB2A522696
-	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 21:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473A5495AD6
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 00:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790112751; cv=none; b=sntMZci7Ni0tOUEVgzbJKAqp4d91tNEqnIVR2RcUmXjAESBux8JSOx0+oKYAjAScpwAywtXMevWHekJX54lI/0XK9tjAcQIjFgeLrMihB0THT4XJwkjzK1htDsLIUbSkKYZk1JM21NHTp42yMaSAmmex/9hZxXyxeWGueD3S9c0=
+	t=1790121607; cv=none; b=kE4cuhNFgYebR7ENCLbTSRqrvJdecqUL1KkPl/GVJsQVi6gKhMdy8rAkVxvSg8zzk1sg8Dkl265q3V+lWWFXtsM797F7O5KIdT5XcvLRgDHSCmX6jm2EnNG18jmdZY3goHzaSXLwJTlMDE0+BvYsu0JiQkLbB7e+soLJ+DqKTh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790112751; c=relaxed/simple;
-	bh=2WvlPAIbOGzbHSxW451eh2EWgHCeMfyZm2VVp4rH9Fo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tTSx0jCcr4uT7bs6kzCG2LLnKALAQpXeGfMIxjxgneBhBZQoJVBwU3Gl6z3zTd9Pfs0zJAezYZgg9GfbeoAGhtDyEepf84sYNhpHqmY+3uZrGPU+rPmCTsA4n5w0agEetIZUgClyKBRlwqglpNJ2ux6OWyRDrBkO81XoJ9jWM9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/VYMqbZ; arc=none smtp.client-ip=74.125.231.235
+	s=arc-20240116; t=1790121607; c=relaxed/simple;
+	bh=U7GvpQhbtLaoHs/lFWHGlyijPugSbuv7vZx6NLI3cJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r6Qp5qQDs5ceLPtnKomLX3I1s2TY5Nc5iZN6NXMPlFIkfkKKOsVWSVLF0At7IWZiE+cKWkzkdetKpS45DjLov6QwMTLVOzWZZrGL8qHRf6mOkFUCW8/Eh5YIwSVfUHf87HOkoZhufp8iubaKTSAcUqhrpD37cj/bSJXDUJT9DRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KhpNkNIo; arc=none smtp.client-ip=74.125.224.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/VYMqbZ"
-Received: by mail-oi2-f43.google.com with SMTP id 46e09a7af769-8137b129131so307116a34.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 14:32:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhpNkNIo"
+Received: by mail-yx2-f13.google.com with SMTP id 00721157ae682-85d45ae011cso6655687b3.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 17:00:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790112739; x=1790717539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=QDHhaSJenqoO/XxOlzKnAhXngtK3EcH5UtYe0wHr2pQ=;
-        b=O/VYMqbZaieVBBW2hYUtA9maSTNTZCqIsRdEiVvUQmhD0AS+RjN+57nDZMC5fnmVXX
-         xn4LOMA0GHSCNJGm+4ayNdAQwGNzaPEwiQI1MhT1Lm7fl5RW1UJKFtVPz4SAY/Fa7sTv
-         ydTssnVoyQFgGglKGG6gey4motxa/zNudQPmeUIj0faS4218VF5a2qF6ZphyEo0RRt27
-         pV0uMgfiUsjZ+GccbAtKgk+b+9DgB89BKTiAQQTHKeLZ+gz+2ql+mL2DyFTprX73utnE
-         nwH7CsUR2CPNFAUAX+pzj617+vtjKDMfxLEzu5IGJ2MAW3UNl4A2cjtQnYlguLhK731N
-         1XhQ==
+        d=gmail.com; s=20251104; t=1790121605; x=1790726405; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IZHLM5NymYYAKNdO5FStoNLYHnA84bC8gfsPczmDe5k=;
+        b=KhpNkNIoLj+0HmvyGaIs+/tc3ATDtHQQIvdHPcyxhspVUXqk/8bOg9Hl2UHGkw38yR
+         vFhHE6iUh76D1tFsxFEgeFf/b26DPlDy5h5kDYigXZ15b0hnEPwz8fPWitMN5GIHEyFb
+         rrldrpW8cbpiEXcqIHTsvKu0VzkhXQke0njiGX2vW2O/odXtHiXcpbBbbeYXDYdURi6h
+         EKArKbgqBN72VIDdltOb4Ni0lzR5FLLLKMiG2ezvDyZ+hdi6r3Yu3Tj0Bi29SI0VgIuX
+         6p2UAQBI5aqGDZ5Ye5SocxuFrGSENdRdj9yxyhCjTsIMkwbdsPZJ304F2aT6lc7+kR65
+         6DUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790112739; x=1790717539;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=QDHhaSJenqoO/XxOlzKnAhXngtK3EcH5UtYe0wHr2pQ=;
-        b=ezag5Irg0g8PV09c/ypGCK13CHLgOD9BqJ6Jhw/Qn8v4Xnven/esJEMOrl89rUUilg
-         0uT9TK4fGGkVFYVzbQP0ttFegIdnyYnqFY07hE59iKEva7qUXZjT7jaowfxCYIQgiuu6
-         tORjOCD7RVnY8SQJoyVXnCYKan53rzTgwnQa7ETqhOHfJ+IU0LGFa104CyfUvBa4LafP
-         iUFL53VG4ao0dbL9V1bGKGIfxOiNK09uTbS8tJCBs97JMbPdc70/PQNft/oWtlf3g6QV
-         Hxoif3Gst3QIE8cZ15BqDxw1gnPVaRABn9oID67EfPJZ/69d2pSihJMinPQY1r1bs8hG
-         JpWg==
-X-Forwarded-Encrypted: i=1; AKwUvBzOU6NegzUw0+TWI3NeBd36vZHRVXwBML1+tBaIYJlZ1iuvT30f+2WnNmq0wwEBi6hDuMeNLPgPJOKhuw1b1yH9wYUP@vger.kernel.org
-X-Gm-Message-State: AFuF++ng584p4SK8JZVs2x9n12eHE7VulcuC1wpNqNf7aru3gPMToqB4
-	XOaiUv5r4fJsO/pzYJ5nrd4DohH3lxIjrRpBt5nzzICU2POoYAvKADfIFnwb1EH/MIo=
-X-Gm-Gg: AYBFou2XgHIceVpG6wpdR5XNr8nq+nCeK/hMywZ5P5JPhSQTx3CLnMD2oMt1ION0Jlj
-	XvxqUCjEWrCUxkugcbdlkJU05ODzFN8sX9nynDzVsq/g54HASqb7dWAeUPf1EeARHTiBPvU7WX8
-	YrjN2lq/++D8XptKlxozekLlab+h+RsWmFwLqS3rM/8LAORlBHvFA3PgNG6BWYGpN0JkxpU8A3X
-	Dd4adlAJvnxbhH7b9YS94pkFSqiCXHfM9UgGwMIKcgszuozS8tx9hsd1AQVOJcwv8OIpiJvmL9E
-	LAehVUp00+LaDpNBlZtjBxgmsatUrigfDeq8XaH1dqar8Rh/CxgpMAlcbfEgDtjoixIsX2PSzCE
-	o29LxytNhePwR+bDmT+qBKG1L4WJEHIJpPD8mXfo3J9lUDZPNbP9UZzxKiWN3SXQ9IX+CDzKxoU
-	mnp61XRkC8Z8I6yJFvy7AQVOVlFHXTS5F5xTQ/z6GdtJOj+sID1B50O73guETF2LFQWyomTP1W0
-	442pU0k55GomUbq
-X-Received: by 2002:a05:6830:2b2b:b0:801:6bec:ff18 with SMTP id 46e09a7af769-815f007097emr1057735a34.2.1790112739471;
-        Tue, 22 Sep 2026 14:32:19 -0700 (PDT)
-Received: from localhost ([35.11.35.209])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-816044c858bsm947461a34.19.2026.09.22.14.32.18
+        d=1e100.net; s=20260707; t=1790121605; x=1790726405;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IZHLM5NymYYAKNdO5FStoNLYHnA84bC8gfsPczmDe5k=;
+        b=kGquXcS3fiFWW7xcU5d6a4LZ5kCjKj0wRm/vw0n67KWYe1cTchTWSnkU15x5rpQB+7
+         kVulrVeZGOeILkhgbV5MV4OucEyLCjS4rHlvT37YLOjvKLfkgRr6DYlhGAADH9OFNyac
+         GDKzaCM7QWzLSPNR4wz9qVZMAJZFlTNUVk49uBxDQiTYQ13E54fLKgt7Z6yhvSB7K8Ai
+         HU5aKn4FTBFLOgg739SOMv4cf7mNoSxbIEZQwloTJlKz6VzVJRs0emdCA3G6n8oPwcS6
+         EMna3GUZ5hnFVe/kZuG79IW8PVN7XJ1vVqYoEm/AR6Ct3Am39apiTmUK7XTXVno2cM8Q
+         8YMw==
+X-Gm-Message-State: AFuF++loPGfbSxUkwqd+9/vHgnfQv9w3L6fZVpd6fH8Rm0WLuMD+Kz1+
+	XL0HIPGUjH4FOkaqbHzdwtxNSUUy/uE26sDycyF7/52WwGAIyvY0tSFfQHWp
+X-Gm-Gg: AYBFou3c5dofzxpw9TiPMWpu1fgmAqARgF7DjkQyLQJmUU7KbZ8dSnog2s24teOr1DW
+	7IYAq+vQr8RMsVCaEXg5f1fKYSxYvqSr3twdjsg+lfDsGsS9NRU85JOqb2+a7zsai5F5RP1bKQ3
+	uJ1hB95Os6ZvZpPfxVFAcQVBSfkQLEdQBJ7Ye52xr6nnRAHSiug7PdouPCR/FYQH8qSOCZAMwO/
+	aMzW7qQcMosKwmGCgdqLecA1ZNs0m5ptlZYLfc5iJvdyuSw6L1nOnYjRI0uWaNCwOzirOumZkGb
+	KlIHOQZuTAEbezUkg6lt5K74qPS12V5dusbLXqTtMMtvRrx73cpBjN4ogbARRv3GODFB6NZmCFF
+	obzzPLfM2hcz5Ifj5pGaQc+0jEcS1v1l1+ZyZR0bqufvTwo4FdVMyI7+CgXpvGL8YzzANe7/Jqj
+	BfovDRE9dWShnz+wqZOt7l+82Pt7vmhceYAjnMDA33w3XLkM27/6xr8mOOw2utmM675v0=
+X-Received: by 2002:a05:690c:87:b0:89a:63bc:8ca with SMTP id 00721157ae682-8a45c45fe6bmr5719237b3.84.1790121605262;
+        Tue, 22 Sep 2026 17:00:05 -0700 (PDT)
+Received: from 3511.attlocal.net ([2600:1702:7a3e:17b0::3c])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8a4662b8293sm3850407b3.29.2026.09.22.17.00.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 14:32:19 -0700 (PDT)
-From: sjunhyuk1@gmail.com
-To: linux-usb@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [BUG] HP OMEN Transcend 14 (board 8E41): GPU power ceiling on 65W USB-C charger is non-deterministic across sessions (25W vs ~65W)
-Date: Tue, 22 Sep 2026 17:32:18 -0400
-Message-ID: <20260922213218.5334-1-sjunhyuk1@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260922192312.40607-1-sjunhyuk1@gmail.com>
-References: <20260922192312.40607-1-sjunhyuk1@gmail.com>
+        Tue, 22 Sep 2026 17:00:04 -0700 (PDT)
+From: Arav Verma <svav2021@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arav Verma <svav2021@gmail.com>
+Subject: [PATCH v4 1/2] platform/x86: intel: wmi: Use sysfs_emit in sbl-fw-update
+Date: Tue, 22 Sep 2026 18:59:53 -0500
+Message-ID: <20260923000002.1799245-1-svav2021@gmail.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,41 +73,32 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Important correction to my earlier report: I ran the same charger
-through HP's OMEN Gaming Hub on Windows (same laptop, dual-boot) and
-found this is very likely *intended* HP behavior, not a bug:
+Modernize firmware_update_request_show by replacing legacy
+sprintf() call with sysfs_emit. When altering string,
+corrected format specified from %d to %u to match u32 type of
+target variable.
 
-  "Performance settings are overridden by system defaults while using
-  battery or a low-power AC adapter. Connect a compatible AC adapter
-  to restore normal system performance."
+Signed-off-by: Arav Verma <svav2021@gmail.com>
+---
+v4: Added missing Signed-off-by tag.
+v3: Resending as v3 due to git send-email formatting error, no code changes have been made.
 
-HP's own first-party software explicitly classifies the 65W charger
-as a "low-power AC adapter" and documents that it intentionally
-overrides performance down. So the 25W ceiling itself is apparently
-by design, not a fault.
+ drivers/platform/x86/intel/wmi/sbl-fw-update.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-More importantly: **it also reproduces on Windows.** Same laptop,
-same 65W charger, Windows test session: 25W ceiling from cold boot,
-OMEN Gaming Hub's presence/absence made no difference, and the full
-poweroff+physical-unplug/replug workaround that reliably restored
-65W on Linux did *not* recover it on Windows in this test (stayed at
-25W for a 60-second FurMark run, 60/60 samples). So my claim that "I
-don't see this at all under Windows" was wrong - apologies for the
-bad data point.
+diff --git a/drivers/platform/x86/intel/wmi/sbl-fw-update.c b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
+index 62c9c7f1842ba..cfef71f4f3284 100644
+--- a/drivers/platform/x86/intel/wmi/sbl-fw-update.c
++++ b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
+@@ -61,7 +61,7 @@ static ssize_t firmware_update_request_show(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	return sprintf(buf, "%d\n", val);
++	return sysfs_emit(buf, "%u\n", val);
+ }
+ 
+ static ssize_t firmware_update_request_store(struct device *dev,
+-- 
+2.47.3
 
-What's still odd, and still possibly Linux/kernel-relevant: on Linux,
-the same 65W charger sometimes lands on ~65W instead of the
-(apparently intended) 25W, non-deterministically across boots/
-reconnects, and stays fixed at whichever value for the rest of that
-session. If 25W is the intended default for this adapter class, the
-~65W outcome looks like an unintended bypass of HP's low-power-
-adapter policy rather than a "fix" - I just don't yet know whether
-that bypass happens on Windows too (only tested one Windows boot
-session so far, which stayed at 25W throughout).
-
-So the interesting question is probably no longer "why is this
-laptop sometimes clamped to 25W" (looks intended) but "what makes
-the negotiated result non-deterministic instead of consistently
-matching HP's stated policy" - which could still be something in the
-UCSI/PD negotiation path. Sorry for the noise, and thanks for reading
-this far.
