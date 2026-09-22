@@ -1,106 +1,129 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx2-f13.google.com (mail-yx2-f13.google.com [74.125.224.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B8247C106;
-	Tue, 22 Sep 2026 06:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790057242; cv=none; b=Exlfud+67tp0f3wg4w1x84+fwF20pbPNoUDiG0OelEPectw1t0zHoOBwrqRMst9H98hnOPPa2WGhLuthAJK3jf4PCQ9JX5CNst9r+44XIG15xkKN5g1ysY9+lizau2KDIvlqA3ghq9zqVGuKStrU3IVci9h2zXhQhmnTcAJsHKs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790057242; c=relaxed/simple;
-	bh=a2HIyQTUPGerAKK4KAQO5LxPEq1Q8QzWIgJhmWSrADc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=oCxk4qtTuZOgko2dAbmhUHJ362vRQd3BVCJrKfgnsyPRsf1lu6uFEvtb+DctVTZTJF6qx3jTbSO82B/HzRTasA43xSoRNCdbPxr/BKugHY0asMh57C6KOdTUPv6fRD6AOUOvi0cBqzqo8NzpU1UZPANTXt5QpmA/iTZuR9QONcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Ee/wrjoq; arc=none smtp.client-ip=113.46.200.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979414CDA0E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 06:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790058367; cv=pass; b=pFkrhAWRo4yIwL7vMS/bvio2WH5Y8psBcnf2Es5sL9htkqCcRZQSqVhwS+p3m2Ot6GOO5eytu0M8G+6aMZ/s2CKJ9U5MYDf7jYLQerX5YE7ISAWGyAwV840KN9sM0PH4nMGabgOpd9xsbGykn/1xMGMzX5qG3uRUtQco5FqEAs0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790058367; c=relaxed/simple;
+	bh=NWlgqNLKweH3ATk1geLVbMIqFIA0/0ejdghv0i1bg1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tgMOaOKpFZvwd9CsZUgC3HAbHqiXDNd7yEKymZrpkHOIshOT1OglhUWDlJgkhuT+0tYtJRMfbLY41LvL+J0MmJA5LQrEOSkrC1meU1fuDL4xftLA9gKIRNzVXiRc2D3jnE+5bQ98ZwEmgLR0W5dD+LkG0YX7XA8Ndgs/NZf3m0o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DOzihiQj; arc=pass smtp.client-ip=74.125.224.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Ee/wrjoq"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=aInSbDS30ifoUmnc/fUpkyf8/+8QUMzPPs2qqKBSlX8=;
-	b=Ee/wrjoqSFYP8zBYhNu5w3jqjS6jExtcX3HaT7hT0uCzGwRpFupGftWHBERtLfm9OtJy/fygn
-	E5/Ye4VELn6Uuw6hEUgrQ21+ZLAi6Qm/UdYR5LgSVpF2qgmQ3nnmpfl0DSKvvV1Wunacm8ENvz2
-	Xo0fKsc+HiFcEG7ju9V5WpU=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4hpq8p1t10z1prN4;
-	Tue, 22 Sep 2026 13:56:10 +0800 (CST)
-Received: from whupemk200014.china.huawei.com (unknown [7.152.185.79])
-	by mail.maildlp.com (Postfix) with ESMTPS id CA75140537;
-	Tue, 22 Sep 2026 14:07:13 +0800 (CST)
-Received: from [10.174.179.24] (10.174.179.24) by
- whupemk200014.china.huawei.com (7.152.185.79) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Tue, 22 Sep 2026 14:07:10 +0800
-Subject: Re: [PATCH v1 02/17] ACPI: amba: Switch to use
- acpi_bus_get_primary_device()
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Linux ACPI
-	<linux-acpi@vger.kernel.org>
-CC: LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Mika Westerberg
-	<mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, <linux-efi@vger.kernel.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Joerg
- Roedel (AMD)" <joro@8bytes.org>, Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede
-	<hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=c3=a4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>, David
- Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald
-	<rf@opensource.cirrus.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, <linux-sound@vger.kernel.org>, Shenghao Ding
-	<shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, Baojun Xu
-	<baojun.xu@ti.com>, Sen Wang <sen@ti.com>, Vijendar Mukunda
-	<Vijendar.Mukunda@amd.com>, Venkata Prasad Potturu
-	<venkataprasad.potturu@amd.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Cezary Rojewski <cezary.rojewski@intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, Bard Liao
-	<yung-chuan.liao@linux.intel.com>, Kai Vehmanen
-	<kai.vehmanen@linux.intel.com>, Pierre-Louis Bossart
-	<pierre-louis.bossart@linux.dev>, Binbin Zhou <zhoubinbin@loongson.cn>,
-	Andreas Noever <andreas.noever@gmail.com>, Mika Westerberg
-	<westeri@kernel.org>, Yehezkel Bernat <YehezkelShB@gmail.com>
-References: <7995179.EvYhyI6sBW@rafael.j.wysocki>
- <3362405.5fSG56mABF@rafael.j.wysocki>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <7eeeb332-ece6-4396-5871-91ece6d6f18e@huawei.com>
-Date: Tue, 22 Sep 2026 14:07:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOzihiQj"
+Received: by mail-yx2-f13.google.com with SMTP id 00721157ae682-85d43ac6089so27247147b3.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2026 23:26:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790058357; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ae4WiBd4Za+BQEzBa9ECCNl4KwIBsyLP9lWztP7+CGc3fzC97TYc7forDAO2olhUyn
+         ykDXy4S6uwTi50IkaiIZPAGkUi29igWYSqLPHT5bsCWfwVuWMjHgx0ckNJK4wYNF2kqU
+         b+1H82zhNAktXcKTtjLnf9C5X0n5GhpcdndC8QNsZAdO2uSh1Zgdv1mmRE0xo1ww3uVO
+         jXNH7cnRItZ1ZZrG/ACTUQVZcXfJZ3Jb7QvAdW9DlFlZEtk8kLppoK4xxgrpGAlfkGFZ
+         ZWRDgXrHeKVaRddU+SDc49GbeOmu7biwnV8Qy/wR9b1SGllXDvWyb3pKvGtLRJUlB3Tz
+         ENzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=E+nJqAVEVSsrZdHd6yhOuTvFgC2p55IdzmRHZTpxGUs=;
+        fh=j7vVZNkrpqlD9p+G7mwDvVP6m//0Oz1UPAyamWIsQ0M=;
+        b=k6wr19+p9XABrwS+9qXnWWPEvleKpkYzc0Kjg4RODZRek9BciOqbZUZ7JYNVJR3ZmA
+         A3ZMBnPfOVBvjnvo/i90+NUdl4hq/7ZAgSvig0KQ/QvjYD15enpmOGIDOQddLcKYhUHV
+         TYNZTtkI8gMNmaX1qXF0FwoE8C8IVk3uNKeqLSchoK+32mF7N7raO7MeTk4a2U644BiY
+         K8zRvZBzcMO938rRGyC40kWshGe8nG46ykEMVSFjy6fR60GfGZU1VESU6xh8A81p9KP0
+         w66PIxTKyKR+vV4r3mA7J74EMWQAig/KbCefdv1nfRz2yTh9k8egaIZinXcviMqRLww3
+         pPyA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790058357; x=1790663157; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=E+nJqAVEVSsrZdHd6yhOuTvFgC2p55IdzmRHZTpxGUs=;
+        b=DOzihiQjXLcJm6qn4b+5VvGgcptfWoDu7cL3i6R9uTLueh0OVXRSlxOj7KtD4f1J4d
+         1MzKAIY2zpavA+hc0nLxtp50gX6zdzyuvDMCuaPUl94rD5HzYAW6320pdNmYGfasP+M9
+         tNhDiOTlteUvOAVlVy1CDTXPox6q/z1YYpAMIy2qiKU/URtS4WGHakzITp/ExFxVy3eC
+         qCPyu4EDQLJo9m9eh/cejwGZ8vwXOtt+5RrdoITQFrOqVQ5AfA4sngw6y1viLhBcKI4M
+         /JVoSPoIGW+AexoRPFu/+BCxayYkRkpKXZH/FvCiRMKmlOTQzvqB2dpSKygjWt3jtGEj
+         lI5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790058357; x=1790663157;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=E+nJqAVEVSsrZdHd6yhOuTvFgC2p55IdzmRHZTpxGUs=;
+        b=sYLjnuLMrE8D0nlyIwij5r3hWhjS3egVbAkubvt/XH3mb3FciJ1QQvC4JKv1lHMZV+
+         QPDjqakyE/FFbd/Kqc14/LEF59ti2qc0gkwgeCc+JiZXaFAuay7Wm7z2DuirHxJcfd4i
+         XLDNrinvUdIKBLYlJNdwSfh08Crh4FiPlA3gR7y0PnfIUhhgLEmt7udMdmFbpHJGry9h
+         2RtCv3Rhp8FhZOCMU5AjoKAnSTjzB7fMYkjqTam55XZd8RTD4We16QeGnYPU7zbJ31HO
+         3ErbBMaKgr1zSaPT0OF5z2MABunjOWiqEtr3Krromkn8tI7Eeht8mbQ3Tl4ko6Qnmw7G
+         XAoA==
+X-Forwarded-Encrypted: i=1; AKwUvBw6UsavIKJiGch7CsE4hR/pHQvCD1N+Osjx2+5rYQc/iJEJmOY1vmiwS5HSapsSr61jhbb3daRRkwlovtEkY6QCwY0l@vger.kernel.org
+X-Gm-Message-State: AFuF++lp3GhD5Ia/czqTzK8MjHjp1y9/w78ORiln1bF/+lOiVTP6RO6T
+	UfbKYS3gMr/0BjzbCA2jWlF8wnRuxuuoBbciIQ3S7aNkNhMcYvts1RdoQDrZAS2VIiYluHgQgNg
+	ecL+kHLRCO2WPjFOozxItUoqkHn4ba0Y=
+X-Gm-Gg: AYBFou0Tu6pEGku1thix/mG0cF5GNKfbh2UapqWG/RJZtYpB3wE8Wr7i7qC1YjJY/76
+	t6L4yhwYJUfY/Z/pmWw9/9+f1DHYFQ6Ae1gXQA3DB79YAkjC1we+MEpGAwfItXeZlOqlHwZuOpQ
+	V5Q6ICbuCwla+DsTFwowSCzwPa+ayfq3SFjnye22sy/jaK+i+pJRMf8sIj14s+cyTXqJP0fRH5y
+	hRvjKo9/5qhEpK0DYIk9zoQngPoDJxEDUdkWQWvymvcr0RSJHxDMmY2K7NDax3q13wHrzUfSHXV
+	4ece4TafQY16pYNzpqG3EYWqU+RpaebAvmDL5f14PyaIysPGYfNkdNWF+nsmYMeM8iU1Hw==
+X-Received: by 2002:a05:690e:43c5:b0:671:471b:b94e with SMTP id
+ 956f58d0204a3-6717fccee36mr3255064d50.39.1790058357330; Mon, 21 Sep 2026
+ 23:25:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <3362405.5fSG56mABF@rafael.j.wysocki>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- whupemk200014.china.huawei.com (7.152.185.79)
+References: <20260921082609.244774-1-lgs201920130244@gmail.com>
+ <arFKFmkpldopUIMI@quoll> <89bd2593-e0ef-4b9b-8c9b-833aff327a3e@kernel.org>
+ <CANUHTR91qqHtCbaFHSqcMa8eZuD7EnTqyFSfDMwX=LsiMiHoEA@mail.gmail.com> <20260922030548.GDarHwjL6ocubz8Lzp@fat_crate.local>
+In-Reply-To: <20260922030548.GDarHwjL6ocubz8Lzp@fat_crate.local>
+From: Guangshuo Li <lgs201920130244@gmail.com>
+Date: Tue, 22 Sep 2026 14:25:43 +0800
+X-Gm-Features: AcwNN1ViMdpAb4FKUbrVTSa-026gbS39xDlV0FFXJxS0Xg4qeiM5sdxARfwH7qw
+Message-ID: <CANUHTR8qLrArRSgBrtzbeqnqiOsXNUXsXQ4Lxsta8HOUoxGsqA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86/amd/hfi: fix platform device leak on init failure
+To: Borislav Petkov <bp@alien8.de>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Perry Yuan <perry.yuan@amd.com>, linux-kernel@vger.kernel.org, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, platform-driver-x86@vger.kernel.org, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	stable@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
+	Hans de Goede <hansg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2026/9/22 3:46, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> 
-> Replace acpi_get_first_physical_node() that is slated for removal
-> with acpi_bus_get_primary_device() that takes a reference to the
-> device it is about to return.
-> 
-> This addresses a potential use-after-free that may occur if the
-> device returned by acpi_get_first_physical_node() is removed right
-> after dropping its ACPI companion's physical_node_lock in that
-> function.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->   drivers/acpi/arm64/amba.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+Hi Borislav,
 
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
+On Tue, 22 Sept 2026 at 11:06, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Tue, Sep 22, 2026 at 10:11:36AM +0800, Guangshuo Li wrote:
+> > We apologize for the pressure this caused to the community. We will be
+> > more careful about organizing patches by subsystem, preparing proper
+> > patchsets, and following the kernel contribution guidelines before
+> > sending future work.
+>
+> If you're wondering how to really help the community, try to review and test
+> some patches you see on the ML. Whatever you choose - there's no shortage of
+> patches. You can even let your AI run on them and see what it catches.
+>
+> This would be a lot more helpful than only dumping patches on people and
+> waiting for review.
+>
+> Thx.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
 
-Thanks
-Hanjun
+Thanks for the suggestion.
+
+Best regards,
+Guangshuo
