@@ -1,100 +1,144 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED285475341
-	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 17:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95721477E4B;
+	Tue, 22 Sep 2026 18:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790099509; cv=none; b=gpcyr6InMatJHn+VPEsi01B96UPa/7KJdaip5jtMngB+ej1a3TqpKi3ISYkAhEpi0Qh3oKzxMfOo+4lND7jfljEBEPE7vJRrmD7uH0nCOWnHInLTHkIcw5h1eM5uyhYFhMYqnL6K2vUeUtcmHobBmqQ185rvcZTu1FgHvujRiAI=
+	t=1790101046; cv=none; b=fsJrroR+u/BgTI3rmjxln5YlF+LBu4nutTZFOXnJOjD38nTbkKGz/9xjShaddw0VhAQgGqxpIOOBkZ+Vxuit8Z9vWQGQens5RKvjEzsb8zdFCVV+jwtoUcK+gGnzmYrk9wLkcN6nHjU9/zwsgYeAH3msnHG23Ij05RKB6wjAfm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790099509; c=relaxed/simple;
-	bh=EbP1v3Oa6Pp3U3S6vdLzzYTTcSx5iO6uWXxoR5VqFYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kJDFuqMUzKtl7kE0LTnGg049RWd9s0tDX61Z+sPrCoFr5OdcVg4yNnGsMLmtePjYBHmFWi1omYqld/T6MwyOi25BHgsHCP3x++nWy+VlnIx2hsvxVx/zYqrmMd1+1ueSfZFUWIldbVqmDWTq6s61nznkyW+AZCe3QQ9twW0jRY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4ur/msL; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790101046; c=relaxed/simple;
+	bh=/G/YfJ6rB6LEW/WopurgG8R5skWktphFDj2LkgLNapM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Vh6KuTs5jqof5aEyQpPwpTVW7zqxdCvuij3Xyl547pbwCOv/lnS1PbmGhImWIVYhkJzfCWzXL2/vJS9lTK1KNoAjfLD8ATULRadR2piE4hGrmTvBNxiuKFtEnA6+RR50g64KGfc90jsdwgy74YTaHv+iAoa80qNSbWm4G36ZgDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=XESz2AgD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TyJtunZN; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4ur/msL"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912d8239so515765e9.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 10:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790099505; x=1790704305; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=EbP1v3Oa6Pp3U3S6vdLzzYTTcSx5iO6uWXxoR5VqFYM=;
-        b=T4ur/msLvaIvLk1TDYJtusmbXGtVSgX+6zHarAzlEKJzmwcgkHjf5tt0izYJqx/G87
-         iR5LLMMPup68k08zxxYu+R2EQTMiseF9Gt3P0F6HvWja0A69sXpwzKMIouOLG1YFrbM1
-         RXBkFq+u349ag8qGr2ADCUjXK50cKnpCgXi35AEdNMGxrGsWmaGk2R4Ib3dUEE5yOu1n
-         X/Mq6XVCrV75EVPZUBZPUJgn8NLgow1aiMluLhbxOTCh+yws4GflGI+GLUZwzV1EtCMO
-         4Rc+ny2RHizoi8ORV6zweprezCyFGxsA6KGdSuT49HitXDzVKNF9ZRzy2Uswjr/U8/Au
-         k+hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790099505; x=1790704305;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=EbP1v3Oa6Pp3U3S6vdLzzYTTcSx5iO6uWXxoR5VqFYM=;
-        b=s+/ErLG7hlQLuK0UYZOrdlK5kqAiHq+oJR2Xp8n8g5k1rDd1UW5oMg+VUiQEEICzEm
-         g+KP2Lj0+/rCD9UAz/AQHELWaa5415YDgHSn2mV6yTxw2kf+3vLwDZ5jJ3ARerLv+Ahh
-         Wj9SIvmqSSUA9E8ECyg0doIGuDgSA6V/X99UBn1wiqpyZ+GVj/sSmkRlkX3sGjUjnDEf
-         CqEEGXHDlMX4dRUp3K4CpTSIWfG2e2UFKqVur0Ov2/GGPVCa9Z/Itn09TiF5b0gUAXxs
-         D7OHDezKDUGgJhQ0daodYsUM/Lsahmwdo1+MNlpjsiaqRiMWIMsNkQINhyRB8fdQmUxf
-         MtVg==
-X-Forwarded-Encrypted: i=1; AKwUvBzAZ+kk0bYBOzuYTJdumxb3gqZzfzf6OVAdeHiTt8sYLZCYDLZ8I4xgn5gbP7Hp+/NBR3dz3mWTdKunyB2eHJdwdeBt@vger.kernel.org
-X-Gm-Message-State: AFuF++kA4tCkIKCW0uzZ0GMr6enSh/E+ukduoevRCAiH4PlYxvuYDAAf
-	Y+tMjJaryfljf1pVTDTmkQRPEh48si08C9m3dyGb+y1UAUCPxJGpEjMx27cKQOwOT+U=
-X-Gm-Gg: AYBFou3V0D/20Ej7QUYbFyk3/gMsxzaJcwOsnRuP2vvrYLY4ueozLXY7PbPwsDUaDcw
-	wc5nYvYy4uf5A/dZPGfFkiyNT7c1BsyCg71UURXuOkuleVOZ995tkGXELdrNdlnsD/0M90HgLha
-	0KmIdo4WOJOth18oDbPaYW9l78PSDQpBbA58IkLYfI5c02AonfLObszpgHy0kKagBW0MlkptBzo
-	0QOS2z5JGaXVHmmhbzP8Mjva3RIegIqYqPQ+bY+vYY7J+QtKNujl9uBRl0RdZSRW3Er1nTQ01DA
-	TkZF3WdSpWTfjRxm6Cj51Es/bPOw5Jslsq1aRgnxugAiu0fhXaUEDK3qJwUAKH2lzO4gSobSU0j
-	9xR8+uEYn4El8AzLvuk+xZKt7Snw6i9BWI1xMZJUtItEchQlkQ4C0BZGrWM+V82QNLNeoiqyIhZ
-	6muwtehXXq3DQVmf0oiCIxsr5Vms6oIg9kswsjkDr8iVvfh8J9yZRtn3PWi0zzXvZ3cxj/nV02+
-	v0BUqk=
-X-Received: by 2002:a05:600c:83cd:b0:49c:fa21:1c86 with SMTP id 5b1f17b1804b1-49fc573fa97mr180249605e9.27.1790099504457;
-        Tue, 22 Sep 2026 10:51:44 -0700 (PDT)
-Received: from localhost.localdomain ([94.252.75.113])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-49fde18555bsm8294835e9.2.2026.09.22.10.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 10:51:44 -0700 (PDT)
-From: Oleg Keri <okerixx@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Abel Vesa <abelvesa@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v4 3/3] arm64: dts: qcom: glymur-lenovo-yoga-slim7x: add the embedded controller
-Date: Tue, 22 Sep 2026 19:51:34 +0200
-Message-ID: <179009949426.334909.8218450300346111724@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260922165737.260443-4-okerixx@gmail.com>
-References: <20260922165737.260443-4-okerixx@gmail.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="XESz2AgD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TyJtunZN"
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id DDFF57A007E;
+	Tue, 22 Sep 2026 14:17:23 -0400 (EDT)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Tue, 22 Sep 2026 14:17:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1790101043;
+	 x=1790187443; bh=hQ7N9KYkGtvR5wvEPZv8VeoVlJ0R80Ho3X4PvHB+6VY=; b=
+	XESz2AgDJjYsTHnr/2R4Cb+OoNBVlDPi+DER76jTwEU/ujG3juf0gYnOdLbnsqik
+	/c4qik76/wfF2XgbiRzGK8GAbKPK4KsiT5dFchSBQwUrHGThX3s30q3FcHH3WP0t
+	j66dxDtfMFUrfZkeayyldBZy9wbTWFSSNF2SzC8rYVU4irk1jghQWPntPJLiN49v
+	A2eQhhoImZvQn4DhTPuI39pIf1f5WYKZV28B99w6gqxiIGVPYWC01iHseNt8E7hO
+	c4MCJBEjrACgp1IwnqMCUfZKI54NJNrb+QoUwHePsB+Mik0KbVHRL7Hu9S71Joy+
+	kYOVsiuMLAuZRb3RWQhbDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790101043; x=
+	1790187443; bh=hQ7N9KYkGtvR5wvEPZv8VeoVlJ0R80Ho3X4PvHB+6VY=; b=T
+	yJtunZNYdVXIsh3FNe73FAqCldFaFHygm8gk29sqQ6XAyn2EKa5aUl6ABuQWXlaL
+	R6HKfzDEvk3f8TuRDIfBvqoVkREK1oqDsmZXidiMUVJpwtwxjd5I+3PcLBAtoLyj
+	psRydYSk5+Pk3NnAMA52Ecrjz/orfBOxYQ9GhYweheLmt8esCNQnojkiUZZTZdYb
+	q6uQCxraL28a9aCehRh4nopGZUi2iCwbW72i8o+Lu+WiwbAVFb1sev96FzgLcE7W
+	/gvkkhZ3g54qh31QzpomFdeipKx/RjTHFzipmFF3+zjgl6fyCjNFyNLsQ78CJ5kP
+	tEH/e/tNsYOEAzgE4j7Dg==
+X-ME-Sender: <xms:MsayakUsdNgfCZRUo1oKKUxCuNKI1BUCehR0sBEeryWGEG0JTdadzQ>
+    <xme:MsayajarZwqGECW7FHNcV6ha6G4zxDDc76j09--yyIgO2V7W2btW438BKcqBUgqVZ
+    w39SPgOAS2yYGpiImZU_otvk9hdzgUE74SsmMP47llggDNQJRnEBX1P>
+X-ME-Proxy-Cause: dmFkZTE18frdKp5g5RvUpf3vYbGWNW/GN5hKp9ux+K5VcXKoZw5EF1H7EUZ89bLUl+54a+
+    RLDqYop5s8Eg8NyHZDpcsHv0BF9WqiDtZmqcxcfuuR6VxDnckl/2WEjD/H7iqjtCZMNmsD
+    6umHlZAgwIrAJDjqNeKU7KQDZ3a37zBAzblr1AOFnW6Rag2VRLK9azoIT8lA3kAexTl7eE
+    tSg1mygM3Dldczg9JF5kvA3Hi8OHoro70ZFMP4Z2pQLio+nWa/dv7QJgAI0jOP8YiqB7Xa
+    QQtPELCoPvDliGDVFUb1AbcbKm9fBP9/CQhBxJQ9GSygFnoAe4LkNZHLQPsh/wXMofQLDG
+    V0pVqAoW1GjjpdbY8137QcIw1tGZtrDA77gHga1ZTGxtob7oJf0dHpCnWUXM7jeofb8RDd
+    Fla8LyF8mCqg/jufA+24xY+Rk06uyztVB/4EP+R2GdvBQIWJ0c1ld9deZI9fNVSyZiqx1o
+    POSB10xYpdQGURaE9qz47OPweytKAf1nvJ0sHfFkQ7KxZs37+hg6R9p0CD8hKeTm3cVnrT
+    XpZRSdL5vCN0TP+BBGL5G0B9fkjL0y5HlI+MhHRJlxy99d9EDBOpPLLPB17LGkmasoz3SN
+    AThp0iqqLxeCn/wqJpt1mhOuFK4OK2nyqlTT57+pDowcSSpwG5PamjmWZtCA
+X-ME-Proxy: <xmx:M8ayanqbWXONlJ0kgFIwMYZIVPWXK3bQTfjVzbs9WmXdXP5ygdufIQ>
+    <xmx:M8ayarrsNzQFGoP4v15v9aE5Bd32N_nUdl8VrjA-eA-i7NuNvR-wFQ>
+    <xmx:M8ayaq11NSpdP5Xjk4CI4ayY2aHayrChqKVfjxBVcta1S4NPCYA1uQ>
+    <xmx:M8ayapGGsGLht1ujcITaVVYVX-vql3diNyatdooYW7f3zQN5SUIQ5w>
+    <xmx:M8ayasHdjoDOtxFwprdjwgVCNUGkMBZbXYfu1naxRgLZmaZIGag-QiXZ>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id AD6D62C00067; Tue, 22 Sep 2026 14:17:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Aki4E40nKIBZ
+Date: Tue, 22 Sep 2026 14:17:02 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, "Peng Fan" <peng.fan@nxp.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Message-Id: <05c50d6a-e3fa-4ab5-afc4-7c13a792b2ef@app.fastmail.com>
+In-Reply-To: <20260919130829.3041568-1-peng.fan@oss.nxp.com>
+References: <20260919130829.3041568-1-peng.fan@oss.nxp.com>
+Subject: Re: [PATCH] platform/x86: yogabook: use assign_bit()/change_bit() where
+ applicable
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Konrad reviewed this patch on v3 [1], a few hours before v4 went out;
-the patch is unchanged since, so the tag applies here:
+On Sat, Sep 19, 2026, at 9:08 AM, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> Convert open-coded if/else with set_bit/clear_bit to the assign_bit and
+> change_bit APIs.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/platform/x86/lenovo/yogabook.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/yogabook.c 
+> b/drivers/platform/x86/lenovo/yogabook.c
+> index 1a4b2ab1f35d..f4c99508c6e7 100644
+> --- a/drivers/platform/x86/lenovo/yogabook.c
+> +++ b/drivers/platform/x86/lenovo/yogabook.c
+> @@ -120,10 +120,7 @@ static void yogabook_toggle_digitizer_mode(struct 
+> yogabook_data *data)
+>  	if (test_bit(YB_SUSPENDED, &data->flags))
+>  		return;
+> 
+> -	if (test_bit(YB_DIGITIZER_MODE, &data->flags))
+> -		clear_bit(YB_DIGITIZER_MODE, &data->flags);
+> -	else
+> -		set_bit(YB_DIGITIZER_MODE, &data->flags);
+> +	change_bit(YB_DIGITIZER_MODE, &data->flags);
+> 
+>  	/*
+>  	 * We are called from the ACPI core and the driver [un]binding which 
+> is
+> @@ -136,10 +133,8 @@ static irqreturn_t yogabook_backside_hall_irq(int 
+> irq, void *_data)
+>  {
+>  	struct yogabook_data *data = _data;
+> 
+> -	if (gpiod_get_value(data->backside_hall_gpio))
+> -		set_bit(YB_TABLET_MODE, &data->flags);
+> -	else
+> -		clear_bit(YB_TABLET_MODE, &data->flags);
+> +	assign_bit(YB_TABLET_MODE, &data->flags,
+> +		   gpiod_get_value(data->backside_hall_gpio));
+> 
+>  	schedule_work(&data->work);
+> 
+> -- 
+> 2.51.0
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Looks good to me.
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
-[1] https://lore.kernel.org/all/69636cb8-5867-42db-a8fb-aa8b2d9301e2@oss.qualcomm.com/
+Mark
