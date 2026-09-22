@@ -1,89 +1,159 @@
-Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6101347C0EE
-	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 11:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C82453E2FF
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 12:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790078399; cv=none; b=SkrlLkVUg0/+wXifqtP7b4s/6RYI9jiv0nuBA46pedhZeJdvR7m2dkO4cCGrSfr1qeKh9Z+EWdgdCRiAfHcVhOFvfL2l3C/DCvc0B4XxrL55tVlWD5z/fzRgUVxXTAYXpYVJ5NSmuVZBTc6PPw0tzkRBuZkOYBMJK/bInTlvoiU=
+	t=1790078628; cv=none; b=YTQEtRQGNtb1YQYlit4oZXQFfFPEVnRp+5RdIZaowMDDpjaN4Q9/47jj6D4xqQbtO8wnWcQdHgKsEa63caCKsDYlcxcemA+sWI4nwwVbe6GLM56s3ienenoDgB2EOKOIxcSRh5gh+0+RenJJUA8d+ekA5RO0l3Nb6XG9dMkGvDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790078399; c=relaxed/simple;
-	bh=A3cfgSSjM7zT5+N6SC7mBOZftfLAvGW04DIU1iyvdUY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BCGePvpiRe1ceUhffTkvKcpBi/AmZ/s4hRMMw6l1dWGqgF2hWRJTv3GMnbWg/1zyNeBJjEeq0FM9bw010HQgZeZfq3fztBgrqAUbl0VSi2qXnzIoRw4DKFOqAx62GEcG/DViRrbGNgXPAFAKYDkVM3Nyz/1O88BEAliKgJxNc30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CWvJ/yq3; arc=none smtp.client-ip=74.125.228.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790078628; c=relaxed/simple;
+	bh=SZCXlrQAryWhTDqNuUadzwglBxE2aUkKuezLoH0aDRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h0HHMG8qEjgBXSpVEQnNDMLESxUXo7R/WB3atMKGtITtjxHScqNJ88H2kPuUheFB5HQcayAkcdpOyrv9KqCcuweFWQ6fuYJ0tssx+bXEzSVKKM35SkrNiCetGghwD3KigyBBKHAKMW5Urb0AnNSlcUdRaOHitFMnjw33iDh20mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XGIYyFF6; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=BgAdJlHE; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWvJ/yq3"
-Received: by mail-pz2-f12.google.com with SMTP id 41be03b00d2f7-cc1cebcb8d7so1259119a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 04:59:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XGIYyFF6";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="BgAdJlHE"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68MBPhkN134476
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 12:03:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7a776RgZFeskGxVekBSZFf3BASD5Wked69cTCRkftEw=; b=XGIYyFF6dsfvo/OU
+	YLl/mPQe/Z9bzqgu4v0+bXeQ0CJd2miuxkagDmzl/TfuBjcBy+Z99sOY+bjtFM5s
+	Lbz/Xf8mxKHyTBYtmHvGxKhXrUx/caCOuqMVt25HIuZi4BRXhfJNEJc8IaBov7f6
+	uFc9CRghMAdywstpZ2eb7qfZzN5U4FwdssqDJn8/WJrw/tYhtzS1RtvHax5dLoos
+	e5kf0/CR/KcjLZYmg1lmRnzL/rjR8PlQfNOMkB5tzOamiqPsj8J9uyZUIAQLA9Y6
+	/HKqC/4/pcFVBFvPj1ujY9lRgKL5EUQTccV1ODfAnsJ2TaAXDs48gejNjzDgrUP0
+	arvSqA==
+Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com [209.85.160.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gujkj9s08-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 12:03:44 +0000 (GMT)
+Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-45f00527132so236482fac.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 05:03:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790078398; x=1790683198; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=A3cfgSSjM7zT5+N6SC7mBOZftfLAvGW04DIU1iyvdUY=;
-        b=CWvJ/yq3JP269/AApB6OIfLaCMBeiGrMGK1Y58VcJdJFdNQ+SVxgAIas0NbjFR2For
-         2ZPJodbtUPBpxiCchYwos4RiVJ0BKnr7dx7sYcCmg0HXziWJwKpo2Wq6ua5/GaW7v66c
-         lGVWZEXugGSEnSkpGz4MkzY8CYNTygvSNRgNJ2vJ5s+t/k5avmCgw08XghB7QvOw9C6h
-         GvpzWkt66oLiDiSCvqjEAcMOGvOh5RBe5qp5UHqIE92J2aB75fo/19K6VFAy7bkcA0l3
-         vXEP3IEbMB5WEmcXTyMAwfGJRasddDOJ8aK3J3FIaol+M85gEcEht+xRRZ44cOU9LDNa
-         5kow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790078398; x=1790683198;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=oss.qualcomm.com; s=google; t=1790078624; x=1790683424; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=A3cfgSSjM7zT5+N6SC7mBOZftfLAvGW04DIU1iyvdUY=;
-        b=K8KH9c6y9p3s+FmJRdJBFgmBhnog0Hp7OsvJxS1GZzm2Lbhsm+m+2XrjQjO5utLZXd
-         TCXyRGif6OtUQ8jJtPwFhVYeqaRxryPbp6PB+nd5vGqW2m3C84AJ8lIixSTyhxNEf3uM
-         30gEctemzU4mRjMmgj5eKaeh5XBFJ9sOAUWONDW47QbxCkokNOYxwjmYx2VYs2qPoLLj
-         OWPLfdceOYNsFSQcjStVe5Syext0f0lsBW0gDNLj9ArBDCYVDBARjDGt5F7TMBARTuOy
-         oGbRfYOkRuQCOyxdVlvSZOw668NKFGf7XtCK8lCNB0C+kn+haFO2UIZ970tlxcTD/ENt
-         7FaA==
-X-Forwarded-Encrypted: i=1; AKwUvBx8OnWHY/pOOTjV5snLivFZVfmVVoM5CWB72kUXRYAEXIiIlyVDGVf7tU6p6mCLRPm7GEClVbPD8YikRl3EDLmEKc90@vger.kernel.org
-X-Gm-Message-State: AFuF++mZZcNdEDi9kq0m8JJU0iCiV9R9hIYT7H+7meppL8GNvjuuM1tg
-	KlbRM/rbeheHP2aHW95iCNuUCGcVMpMbK9euSCxWtbubHRyuQb2D4frg
-X-Gm-Gg: AYBFou1KJRGOnbXjkQ1sfYiUzY1Qy+u4RAIAwlgQIV25n6kXwxNJsCiQ0mMznXAJyfN
-	jh6ybXQX967BcqdXu5cVkOYwzYSj9oVAyVmCjwPbwCrP3d/6ihww+73gGmu791Ki0Ug3hN5mnx6
-	ZzwV6AwI4z1KgLUt1m2XfIg8hdJZcXJ5b0+vnc2xjJA0c6P50DLlg/CN71l2oEgfgJGiEshDL55
-	4YD6LRRK/biGDC0TFnRJiAmIXq1yxjXAgIhJXJOBSi7OZUzyZJQP6imcKigjSCI9JNLIij9hYhv
-	w3g0qvYHEuvka7aUSrtv/juA22fjYhff+TCPllb/TuPt+d1AVPf2wFbn4NuHqrRg4/pKAcvFVz7
-	eUyDscwaMA32op3tbMlfxtrtm18ClHbueKmPpX2M6gj0N/lrhziujwPhuJcHwom1PLninh4/bWs
-	hOObyWACgwmoXVoqDLsBu43W3E6ea1mpoV3+Cm0PnvAxXuUdXQtZ6h0OSo6maCcqUak7MOvQ==
-X-Received: by 2002:a17:90a:d008:b0:3a0:797b:443e with SMTP id 98e67ed59e1d1-3a0797b4639mr38937a91.3.1790078397173;
-        Tue, 22 Sep 2026 04:59:57 -0700 (PDT)
-Received: from [127.0.1.1] ([240e:b8f:977f:f400:ec2a:b15e:fef8:70a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a06e5cdb48sm3050144a91.17.2026.09.22.04.59.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 04:59:56 -0700 (PDT)
-From: Liang Haowen <nbg2974@gmail.com>
-To: Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Denis Benato <denis.benato@linux.dev>,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>, Derek J. Clark <derekjohn.clark@gmail.com>
-Subject: Re: Placement of ASUS Aura and platform/x86 ASUS files relocation
-Date: Tue, 22 Sep 2026 11:59:51 -0000
-Message-Id: <202609221855.ReplyIlpo.lhw@gmail.com>
-In-Reply-To: <7b4c6859-aed8-6117-5d80-1ad1f1470260@linux.intel.com>
-References: <0ca263c3-7885-4a5c-bfe5-0e8e4d189666@linux.dev>
- <e0882d84-f5ea-44a8-881f-4095129e4d2d@gmx.de>
- <c26da468-9a5a-46c1-8dbd-1784b69b3c73@linux.dev>
- <8e8168cd-4f6b-41e0-81c5-5d7b07b1df13@gmx.de>
- <7b4c6859-aed8-6117-5d80-1ad1f1470260@linux.intel.com>
+        bh=7a776RgZFeskGxVekBSZFf3BASD5Wked69cTCRkftEw=;
+        b=BgAdJlHEET0Zey4poWZlccsZ6t9o3sp2Hx6+OcU9SiQDPxiD1gHWTwG7Nv2Z9ciNFb
+         /E/3UHlUU5lcLzqrrAY14RLj+BNGNE4zpy88eWg0G5a7WJ1Nw43M32FH7zVGI7GAObbu
+         XZE0sqMBscy7WPt6AxAG0VlyO4H4a1kqMQCCQL+toQil+CWSHA6w9igeZzbZKSBW1Z1h
+         U0IHDzEhjVYUMSMwtxStcoyGa25r+RAf5VF6gkUIYJMFBkAm8SH4V0DxC4FnA9lPG8R7
+         nPfxK9fpHajBBO13JHqC9bgCO0zBKQYwA5ZNKSwY0/eU4U6ZO0Rl01FJRlsN0g+xm7i7
+         ObbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790078624; x=1790683424;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7a776RgZFeskGxVekBSZFf3BASD5Wked69cTCRkftEw=;
+        b=ph+GqqIl6kj8CJNk18IAubZa+YXkDkhdoCa0UU3ihewbSj/K8mgR2uxe56czQhPoNb
+         kFZWQMlnK6u/kDJv1mLTErhiT/DrvxqF2lqPt23IL1K+9AzpKEmnnrxoNVo8v0kPOZ8m
+         wqyaIU8kZ4oZftDSJp+zLmApnpnWQijb7o0VQXoJrhBpH8bBVDF5AJKR8AHc43Cy/HBy
+         Zxcqct2eyzm2J6TCwG5AAXRDyYZsezs0UnEE58+q4h/Rrgedvg6LQjpyV0ocCWnURQWR
+         e6ITlJnV6hgbwrvSVX5z9m0AdP9l2F90lPzgBIFsEBh+dfLWbhjOP8tMyqZ0Hq8J5oZp
+         rTog==
+X-Forwarded-Encrypted: i=1; AKwUvBziq7kyjoBXbM+jm0zHO1gkmy1DrZFCjVD3suI1AAX3XtX5Vj8HDQeFLzOsPSHQU5n+NOLdBvP3cTGbu216Q6hmixOq@vger.kernel.org
+X-Gm-Message-State: AFuF++mSqBGOy6WwQJ0UK452xXEMPl5gBXS9hBRWGv7Ggau/ewHvYPjo
+	7AWB1Fegg6LW56QRvO0ModH7RAKVtdogeV8vcbU2vNH2g5aI5MrU8kc6Vw9q/wFGQMGuUGoqtL2
+	rpupJG72chbhVcM+NifWZQvsJxZwB0TX16fMSAAezIE7+hamLnP9zKNxJmS20Gx1Ukz8wKfHGQl
+	IX
+X-Gm-Gg: AYBFou12/T0lby0UEtz+C3Foa64tglBUJ0lCfRg7qL3/PoLr3CyenbSZTlI/BRKxzkW
+	PoIs9xoTtL1Bm21LzeHIN2tHCsg95X0wafZLh2yRC4AqztkjJpmYFO1V20JvJYn81Kf62ZBwkQ6
+	gSvYtW3j4vXf4j4llVSAD6RDAUZX7x7AB2WRPYYateB/Hz6BEIpnKP/n6D758a3Z2m8etTo6xxb
+	ScHeiSMZs81tlB+1ftMrFPLmV/GWvv90efz45FpY7HKymScIM89KdzmByTCV/7oXkzpot2BkVWW
+	c+0qk1pBPif2F1jIv9YD037dJ0IOQBzP4gBLP1f5TrxnzG1nf/LWyFTi3rVb82L+5RLw2vuA6q3
+	2amCJB+iriO7Z1qC8/A+PeA==
+X-Received: by 2002:a4a:e205:0:b0:6c7:76c8:1a6d with SMTP id 006d021491bc7-6ca971e9d72mr10228111eaf.0.1790078623753;
+        Tue, 22 Sep 2026 05:03:43 -0700 (PDT)
+X-Received: by 2002:a4a:e205:0:b0:6c7:76c8:1a6d with SMTP id 006d021491bc7-6ca971e9d72mr10228055eaf.0.1790078623189;
+        Tue, 22 Sep 2026 05:03:43 -0700 (PDT)
+Received: from [192.168.202.12] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2a9f1895ddsm54692066b.9.2026.09.22.05.03.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Sep 2026 05:03:42 -0700 (PDT)
+Message-ID: <69636cb8-5867-42db-a8fb-aa8b2d9301e2@oss.qualcomm.com>
+Date: Tue, 22 Sep 2026 14:03:39 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: glymur-lenovo-yoga-slim7x: add
+ the embedded controller
+To: Oleg Keri <okerixx@gmail.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abel Vesa <abelvesa@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+References: <20260921144953.15113-1-okerixx@gmail.com>
+ <20260921144953.15113-4-okerixx@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260921144953.15113-4-okerixx@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 3U8yOoy0YXIFvyuHD1YsFXQPhQCneU8w
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIyMDE3NCBTYWx0ZWRfX9eg2/pElQA5H
+ LxpipWuHqPYADEDVF+wgI5sZuHbnOLlR0ReaE9VKQ2SVYnzrpvlrddl869QNKqT362NuU8sqwny
+ mMNTYnTgyWXNiUp78lxwJ08QRrE6hB5+jOyi2hRW8djrTl+lOBxV7Jm+QHvjmJN/Ur+K0fkRTLj
+ rkjWEk+ssgCMcZlm8TV1dY/xZe2+P23YDD9L7FGw2pnOAtVuVBlGY4sXnqw5YV3ScjUHGpfh4p7
+ tZgzWqR7qO/3TEsL36ffANPmvybcA0bR/wQ+dziOUgjD40iFBW1iaUt7lDlOe6Hfn5hysQUmyDA
+ dLVWAv4Gme/+Rb8NZo27o3AfZgojzHbWoiWL+yrz1gyom1B/P0j1B7qOTsQunle5t3yZSj0/wCo
+ 4SkK51i47PdLDdHr+K7ERnoHkBQYhEJODN8UjcTHO/CXAqb3kCeWjKgHynz9CCyYX3kOp06CTrQ
+ xRxFUnWiNMPpdiLVang==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIyMDE3NCBTYWx0ZWRfX3QFhbvGnliWB
+ yosym/lKvPqeFZXaqjm6ekbW4ImS60nLXDd1MUCyyFSiTtD5SGKDnVLZ7btxdq94NQ7pe0J3Q17
+ 91Xsk2zJ9r5wGGZUtz6T0djG2gPHPDE=
+X-Authority-Analysis: v=2.4 cv=SuAFe/O0 c=1 sm=1 tr=0 ts=6ab26ea0 cx=c_pps
+ a=nSjmGuzVYOmhOUYzIAhsAg==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=cXQzEVsWzZF_LJZYrIMA:9 a=QEXdDO2ut3YA:10
+ a=1zu1i0D7hVQfj8NKfPKu:22
+X-Proofpoint-ORIG-GUID: 3U8yOoy0YXIFvyuHD1YsFXQPhQCneU8w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-22_01,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0 phishscore=0
+ malwarescore=0 priorityscore=1501 adultscore=0 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609220174
 
-Good to have this settled, thanks.
+On 9/21/26 4:49 PM, Oleg Keri wrote:
+> Describe the Compal embedded controller on I2C at address 0x70. It
+> provides the board thermistors, the battery cell voltages and the CPU fan
+> speed, and drives the keyboard backlight. Its interrupt line is TLMM
+> gpio66, falling edge, for which the file already carries a pin state.
+> 
+> That state leaves the pin without a bias. gpio66 has no external pull
+> and floats when the EC is not driving it, which shows up as a steady
+> stream of spurious edges; the vendor ACPI tables describe the same pin
+> as GpioInt(Edge, ActiveLow, Exclusive, PullUp). Enable the pull-up.
+> 
+> Signed-off-by: Oleg Keri <okerixx@gmail.com>
+> ---
 
-For completeness from the Arion side: the ROG STRIX Arion enclosure
-driver is unaffected by this. It is a USB mass-storage device with no
-WMI and no ACPI platform device, and the LED part is going through
-drivers/leds per Armin's earlier suggestion (an RFC is on linux-leds
-now). The piece of Denis' shared Aura interface work that matters
-here is the SCSI transport helper our driver would consume, which
-stays under drivers/scsi; only a WMI-based shared interface layer
-would land under drivers/platform/wmi/asus/ per your mail. So
-nothing Arion-related should end up under platform/asus/.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
