@@ -1,186 +1,339 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D7B4E01E4;
-	Tue, 22 Sep 2026 10:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0413A4F3910;
+	Tue, 22 Sep 2026 10:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790073056; cv=none; b=lFUC1jtGv9pS2CzKuhwamBZdSdnSxlylXz17zxVGzSxit+av0Ba52B5Ygz5dDkYy8VJTihZvCch+chzhTwKpDsCWRNot1ehQse8DBYxNLMFtHV95Ls1zeYBxJdWjhiWTVN2su7YhSUwi7eo//y+IBduIGna5OGWue470hztGMdY=
+	t=1790073153; cv=none; b=P//TrPA5Ia44AbdVzXkGCVxAsII1xc8mkecu+ZmrIZ+6N43ZRlKgd31M3ZrkWbDwdSHS5iI7TOZHBcRs+oQ8ILSUID5gRYq204CEMipttP1AjII6KVe/L03serE2danni9/+O7Ysg3/XSM4/pgpHZO578EhfmdAttbROoyl7fpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790073056; c=relaxed/simple;
-	bh=rVx1Ga7x8BB7Zg2M0CRdnA2F5rr3KdLyeWxelvYMHFw=;
+	s=arc-20240116; t=1790073153; c=relaxed/simple;
+	bh=3wihw53mvV9xSKP4qNXhX2ITmWd3i4U+AEJGswnXnyE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRAoKkVzf2KrlhQJTd7IsNXZOX3Y7/uoyZC9+H8nuAKa3kjgUtmBHwcjFvoo0u4pATvqgCGejHHxxGS69YXyc74QdpYw/z0yWUaH7kkePkajyLmd33F2NT9LBUshOvaJaQE+lUMDnzlBjwD51iGp41PjDRbH0LS5Em6KHbxxcHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hGyJckl7; arc=none smtp.client-ip=192.198.163.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bnl+Cdp8LzsE3ViOBTDxaWZSCtNAqCnyZW6fDpYexbBAfNJnn1jP7SZVxDBkVmyk6W6gDF2iSHyxh08EQdyyptHnuQ6/3KmcvFSBa7ijLsghD64DPKPK9mbzp5optX21+Vt324YACDKXy/O97RlJPoaSZ0o7x6kN2xixBriUhpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4jBiKun; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hGyJckl7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790073055; x=1821609055;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rVx1Ga7x8BB7Zg2M0CRdnA2F5rr3KdLyeWxelvYMHFw=;
-  b=hGyJckl7aR5SfL1JGMOxLqVVa/bZ0uWBGxzp76MYQjv0xaAczdyTSwnf
-   o4PaBWUf8tet30Wcxn0pGHclh14TS7bhCX/nM1+KjqOD3ZEPv6rHztGEZ
-   rR64HCVQZ3h3IUPcSStjtIwVKsP7zr4VwZc929QN1yYGRUR/JvQhPON3Y
-   +YXT0XFtYl4LwSRyHTfEpZOIPfkBfgzhZN04TeeScSMh8G9Malh6AMmoS
-   YoBNn7Nxy+joQaglRABjlu99AVG2CobDSnKEPRZxnZxp/NjdoVDgPkd6d
-   fLPmBP8pfdHVFHtvckcxZs03TM5Qc/AgMwJDWwQhy0RGGEiNUn2Q4qEV+
-   A==;
-X-CSE-ConnectionGUID: 7aRFEUObRoiYSLNCHl5Y6A==
-X-CSE-MsgGUID: v+4Tl/rwQ+evX+AWrUQrZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11912"; a="1164185"
-X-IronPort-AV: E=Sophos;i="6.27,116,1787036400"; 
-   d="scan'208";a="1164185"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa116.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 03:30:53 -0700
-X-CSE-ConnectionGUID: Kz5491BaRBSQ0kKLpKPzIg==
-X-CSE-MsgGUID: bONz6f9cQtSVZtD98Mi9kQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,116,1787036400"; 
-   d="scan'208";a="4062790"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa012.fm.intel.com with ESMTP; 22 Sep 2026 03:30:50 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1008)
-	id 1ACFC99; Tue, 22 Sep 2026 12:30:45 +0200 (CEST)
-Date: Tue, 22 Sep 2026 12:30:45 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Maximilian Luz <luzmaximilian@gmail.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4jBiKun"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B8E1F000FF;
+	Tue, 22 Sep 2026 10:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790073151;
+	bh=TrJCmrObzSEJi7DC2sVoycOuekBqjj3yhMcHjE+0ZTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=L4jBiKunYYt8Z4gcHfSrkzoh+lR/pgsTD71c8ZxJ2LJBT2tkwVH+UQ/7A4pG+i7ET
+	 diSp8/LBHJ5obnJ+5YRxIOd3A+fvVMKVfUakos/4FvWDf/YY9dNS9l5/vL5FwnNUel
+	 Qfugx6r8hVLqpSiokWwYr7MRGaWT+3RaULdfLOKNO1HwWI61mpNS99Hv9zq+Yav8cS
+	 kDot+rONGlutBmkU3OiDFIll87AjHI0jVXZGDf8CkuSn98xTiOp5uvpaOGVHZU5J7Z
+	 ZdYBbegRHMAWXrd9IC950iFOJ5JPYRbCrPn7w00eh/LQlL7ANejgCk29PJMdFRFwlV
+	 kuFI+7R2RaYSg==
+Date: Tue, 22 Sep 2026 11:32:24 +0100
+From: Lee Jones <lee@kernel.org>
+To: Rong Zhang <i@rong.moe>
+Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, brgl@kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	driver-core@lists.linux.dev
-Subject: Re: [PATCH v8 3/5] drm/xe/i2c: use
- device_create_managed_software_node()
-Message-ID: <arJY1TMBIZCy8E7n@black.igk.intel.com>
-References: <20260716-swnode-remove-on-dev-unreg-v8-0-5c2b8cc38c28@oss.qualcomm.com>
- <20260716-swnode-remove-on-dev-unreg-v8-3-5c2b8cc38c28@oss.qualcomm.com>
+	Ike Panhc <ikepanhc@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	Vishnu Sankar <vsankar@lenovo.com>, linux-leds@vger.kernel.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 04/12] leds: trigger: Add offloaded() callback and
+ provide trigger_may_offload attribute
+Message-ID: <20260922103224.GD2730113@google.com>
+References: <20260902-leds-trigger-hw-changed-v6-0-55693cd78877@rong.moe>
+ <20260902-leds-trigger-hw-changed-v6-4-55693cd78877@rong.moe>
+ <20260910150535.GG1051768@google.com>
+ <cdecf33094742331552a4b86d43673cdf1590bf2.camel@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260716-swnode-remove-on-dev-unreg-v8-3-5c2b8cc38c28@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cdecf33094742331552a4b86d43673cdf1590bf2.camel@rong.moe>
 
-On Thu, Jul 16, 2026 at 02:31:38PM +0200, Bartosz Golaszewski wrote:
-> This driver intentionally uses the fine-grained approach to creating
-> platform devices. It assigns a software node as the primary firmware
-> node of the device it creates. Ahead of improving the reference counting
-> of platform device software nodes, switch to using
-> device_create_managed_software_node(). This way, we create a dynamic
-> software node whose life-time is tied to the device to which it's
-> assigned.
+On Fri, 11 Sep 2026, Rong Zhang wrote:
+
+> Hi Lee,
 > 
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-
-What happened to this one? I can see the commit 0f485f88656a
-("drm/xe/i2c: use device_create_managed_software_node()"), but not the
-code change?
-
-There is no revert and there are no other commits touching this part
-of the driver, so it's as if the patch was never actually applied?
-
-Thanks,
-
-> ---
->  drivers/gpu/drm/xe/xe_i2c.c | 22 ++++++++--------------
->  drivers/gpu/drm/xe/xe_i2c.h |  1 -
->  2 files changed, 8 insertions(+), 15 deletions(-)
+> Thanks for your review.
 > 
-> diff --git a/drivers/gpu/drm/xe/xe_i2c.c b/drivers/gpu/drm/xe/xe_i2c.c
-> index 3d80eafb9a1318996d10db11e14af4cfde07ba55..af6e973e5e68125a9c006bb646447ca6e377a6e6 100644
-> --- a/drivers/gpu/drm/xe/xe_i2c.c
-> +++ b/drivers/gpu/drm/xe/xe_i2c.c
-> @@ -93,13 +93,8 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
->  {
->  	struct pci_dev *pci = to_pci_dev(i2c->drm_dev);
->  	struct platform_device *pdev;
-> -	struct fwnode_handle *fwnode;
->  	int ret;
->  
-> -	fwnode = fwnode_create_software_node(xe_i2c_adapter_properties, NULL);
-> -	if (IS_ERR(fwnode))
-> -		return PTR_ERR(fwnode);
-> -
->  	/*
->  	 * Not using platform_device_register_full() here because we don't have
->  	 * a handle to the platform_device before it returns. xe_i2c_notifier()
-> @@ -107,10 +102,14 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
->  	 * platform_device_register_full() is done.
->  	 */
->  	pdev = platform_device_alloc(adapter_name, pci_dev_id(pci));
-> -	if (!pdev) {
-> -		ret = -ENOMEM;
-> -		goto err_fwnode_remove;
-> -	}
-> +	if (!pdev)
-> +		return -ENOMEM;
-> +
-> +	ret = device_create_managed_software_node(&pdev->dev,
-> +						  xe_i2c_adapter_properties,
-> +						  NULL);
-> +	if (ret)
-> +		goto err_pdev_put;
->  
->  	if (i2c->adapter_irq) {
->  		struct resource res;
-> @@ -123,8 +122,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
->  	}
->  
->  	pdev->dev.parent = i2c->drm_dev;
-> -	platform_device_set_fwnode(pdev, fwnode);
-> -	i2c->adapter_node = fwnode;
->  	i2c->pdev = pdev;
->  
->  	ret = platform_device_add(pdev);
-> @@ -135,8 +132,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
->  
->  err_pdev_put:
->  	platform_device_put(pdev);
-> -err_fwnode_remove:
-> -	fwnode_remove_software_node(fwnode);
->  
->  	return ret;
->  }
-> @@ -144,7 +139,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
->  static void xe_i2c_unregister_adapter(struct xe_i2c *i2c)
->  {
->  	platform_device_unregister(i2c->pdev);
-> -	fwnode_remove_software_node(i2c->adapter_node);
->  }
->  
->  /**
-> diff --git a/drivers/gpu/drm/xe/xe_i2c.h b/drivers/gpu/drm/xe/xe_i2c.h
-> index 425d8160835f4648891ff75f2a9c06284241710e..b28229f056c5a664e1d41dc0cc1978782fe1c2f1 100644
-> --- a/drivers/gpu/drm/xe/xe_i2c.h
-> +++ b/drivers/gpu/drm/xe/xe_i2c.h
-> @@ -30,7 +30,6 @@ struct xe_i2c_endpoint {
->  };
->  
->  struct xe_i2c {
-> -	struct fwnode_handle *adapter_node;
->  	struct platform_device *pdev;
->  	struct i2c_adapter *adapter;
->  	struct i2c_client *client[XE_I2C_MAX_CLIENTS];
+> On Thu, 2026-09-10 at 16:05 +0100, Lee Jones wrote:
+> > On Wed, 02 Sep 2026, Rong Zhang wrote:
+> > 
+> > > There are multiple triggers implementing hardware control. However, the
+> > > LED trigger core doesn't really know the hardware control (offloaded)
+> > > state since the coordination is done directly between the trigger and
+> > > the LED driver. It can only assume private triggers as offloaded and
+> > > generic ones as not offloaded.
+> > > 
+> > > Add an offloaded() callback so that triggers can report their offloaded
+> > > states to the LED trigger core. When unimplemented, it defaults to true
+> > > for private triggers and false for generic ones to keep the current
+> > > behavior unchanged.
+> > > 
+> > > With that, provide a new attribute "trigger_may_offload", so that
+> > > userspace can determine:
+> > > 
+> > > - if the LED device supports hardware control (supported => visible)
+> > > - which trigger is the hardware control trigger selected by the LED
+> > >   device
+> > > - if the trigger is selected ("<foo_trigger>")
+> > > - if the trigger is offloaded ("[foo_trigger]")
+> > > 
+> > > Note: the documentation describes the attribute as "returning a list"
+> > > despite the LED core currently only supports one hardware control
+> > > trigger per LED device. This is intentional to make the attribute
+> > > extensible in the future without breaking userspace.
+> > > 
+> > > Acked-by: Ike Panhc <ikepanhc@gmail.com>
+> > > Signed-off-by: Rong Zhang <i@rong.moe>
+> > > ---
+> > > Changes in v6:
+> > > - Update Date: and KernelVersion: for the document of
+> > >   /sys/class/leds/<led>/trigger_may_offload
+> > > 
+> > > Changes in v3:
+> > > - Rearrange the series so that the code using the offloaded() callback is
+> > >   introduced before the driver implementation (thanks Thomas Weißschuh)
+> > > - Reword documentation (ditto)
+> > > - Adopt guard() and lockdep (ditto)
+> > > - Adopt __led_trigger_is_hw_controlled() from newly-integrated PATCH 1
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-class-led | 22 ++++++++++++++++++++++
+> > >  Documentation/leds/leds-class.rst         | 20 ++++++++++++++++++++
+> > >  drivers/leds/led-class.c                  | 22 ++++++++++++++++++++++
+> > >  drivers/leds/led-triggers.c               | 30 ++++++++++++++++++++++++++++++
+> > >  drivers/leds/leds.h                       |  2 ++
+> > >  include/linux/leds.h                      |  1 +
+> > >  6 files changed, 97 insertions(+)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
+> > > index d4c918cc11a1..e3605fc55fa8 100644
+> > > --- a/Documentation/ABI/testing/sysfs-class-led
+> > > +++ b/Documentation/ABI/testing/sysfs-class-led
+> > > @@ -78,6 +78,28 @@ Description:
+> > >  		(which would often be configured in the device tree for the
+> > >  		hardware).
+> > >  
+> > > +What:		/sys/class/leds/<led>/trigger_may_offload
+> > 
+> > *_to_hw?
 > 
-> -- 
-> 2.47.3
+> ACK.
+> 
+> > 
+> > > +Date:		September 2026
+> > > +KernelVersion:	7.4
+> > > +Contact:	linux-leds@vger.kernel.org
+> > > +Description:
+> > > +		Names and states of triggers that may be offloaded to hardware.
+> > > +		Such triggers are also called "hardware control trigger" in some
+> > > +		context.
+> > > +
+> > > +		Only exists when the LED supports trigger offload.
+> > > +
+> > > +		Reading this file returns a list of triggers that are capable to
+> > > +		be offloaded. The optional brackets around the trigger name
+> > > +		indicate the state of the current trigger:
+> > > +
+> > > +		- `foo_trigger`: the trigger is not selected.
+> > > +		- `<foo_trigger>`: the trigger is selected, but falls back to
+> > > +		  software blink for some reason (e.g., incompatible trigger
+> > > +		  parameters)
+> > > +		- `[foo_trigger]`: the trigger is selected and offloaded to
+> > > +		  hardware.
+> > > +
+> > >  What:		/sys/class/leds/<led>/inverted
+> > >  Date:		January 2011
+> > >  KernelVersion:	2.6.38
+> > > diff --git a/Documentation/leds/leds-class.rst b/Documentation/leds/leds-class.rst
+> > > index 3913966cfdac..2d41a6db602c 100644
+> > > --- a/Documentation/leds/leds-class.rst
+> > > +++ b/Documentation/leds/leds-class.rst
+> > > @@ -242,6 +242,9 @@ ops and needs to declare specific support for the supported triggers.
+> > >  
+> > >  With hw control we refer to the LED driven by hardware.
+> > >  
+> > > +A sysfs attribute `trigger_may_offload` is provided for userspace to
+> > > +query supported triggers and their states.
+> > > +
+> > >  LED driver must define the following value to support hw control:
+> > >  
+> > >      - hw_control_trigger:
+> > > @@ -298,6 +301,15 @@ LED driver must implement the following API to support hw control:
+> > >                  Returns a pointer to a struct device or NULL if nothing
+> > >                  is currently attached.
+> > >  
+> > > +LED trigger should implement the following API to indicate hw control:
+> > > +    - offloaded:
+> > 
+> > hw_offloaded?
+> 
+> ACK.
+> 
+> > 
+> > > +                return a boolean indicating if the trigger is currently
+> > > +                offloaded to hardware.
+> > > +
+> > > +                If a trigger doesn't implement this callback, the default
+> > > +                value will be true for private triggers and false for generic
+> > > +                ones.
+> > > +
+> > >  LED driver can activate additional modes by default to workaround the
+> > >  impossibility of supporting each different mode on the supported trigger.
+> > >  Examples are hardcoding the blink speed to a set interval, enable special
+> > > @@ -311,6 +323,14 @@ the end use hw_control_set to activate hw control.
+> > >  A trigger can use hw_control_get to check if a LED is already in hw control
+> > >  and init their flags.
+> > >  
+> > > +Alternatively, a private trigger can be implemented along with the LED driver if
+> > > +the LED's hardware control doesn't fit any generic trigger. To associate the
+> > > +private trigger with the LED classdev, their `trigger_type` must be the same. To
+> > > +declare that the private trigger provides hardware control for the associated
+> > > +LED classdev, set the `hw_control_trigger` string to the trigger's name. Since
+> > > +both the LED classdev and the private trigger are in the same LED driver, it's
+> > > +not necessary for them to coordinate via `hw_control_*` callbacks.
+> > > +
+> > >  When the LED is in hw control, no software blink is possible and doing so
+> > >  will effectively disable hw control.
+> > >  
+> > > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> > > index 39cc2f3ea63f..7e571bd1de5b 100644
+> > > --- a/drivers/leds/led-class.c
+> > > +++ b/drivers/leds/led-class.c
+> > > @@ -96,8 +96,30 @@ static const struct bin_attribute *const led_trigger_bin_attrs[] = {
+> > >  	&bin_attr_trigger,
+> > >  	NULL,
+> > >  };
+> > > +
+> > > +static DEVICE_ATTR_RO(trigger_may_offload);
+> > > +static struct attribute *led_trigger_attrs[] = {
+> > > +	&dev_attr_trigger_may_offload.attr,
+> > > +	NULL
+> > > +};
+> > > +
+> > > +static umode_t led_trigger_is_visible(struct kobject *kobj,
+> > 
+> > Why doesn't all of this live in the triggers file as well?
+> 
+> The current revision only exports trigger_may_offload() to coordinate the
+> two files (led-class.c and led-trigger.c).
+> 
+> If we had to move led_trigger_is_visible() into led-triggers.c, the
+> trigger_may_offload and led_trigger_attrs must be moved as well. Due to
+> the movement, we would have to export led_trigger_attrs and
+> led_trigger_is_visible() to fill led_trigger_group.
+> 
+> in short, moving led_trigger_is_visible() requires exporting more
+> symbols.
+> 
+> To make things tidier, how about moving led_trigger_group and
+> led_trigger_bin_attrs into led-triggers.c as well? In this manner we only
+> need to export led_trigger_group, and the #ifdef block here is
+> eliminated. What do you think?
+
+Sounds sensible.
+
+> > 
+> > > +				      struct attribute *attr,
+> > > +				      int idx)
+> > > +{
+> > > +	struct device *dev = kobj_to_dev(kobj);
+> > > +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> > > +
+> > > +	if (attr == &dev_attr_trigger_may_offload.attr)
+> > > +		return led_cdev->hw_control_trigger ? attr->mode : 0;
+> > > +
+> > > +	return attr->mode;
+> > > +}
+> > > +
+> > >  static const struct attribute_group led_trigger_group = {
+> > >  	.bin_attrs = led_trigger_bin_attrs,
+> > > +	.attrs = led_trigger_attrs,
+> > > +	.is_visible = led_trigger_is_visible,
+> > >  };
+> > >  #endif
+> > >  
+> > > diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> > > index 804a04b326c4..de17a8bbb4d4 100644
+> > > --- a/drivers/leds/led-triggers.c
+> > > +++ b/drivers/leds/led-triggers.c
+> > > @@ -42,6 +42,10 @@ static bool __led_trigger_is_hw_controlled(struct led_classdev *led_cdev)
+> > >  	if (!led_cdev->trigger)
+> > >  		return false;
+> > >  
+> > > +	if (led_cdev->trigger->offloaded)
+> > > +		return led_cdev->trigger->offloaded(led_cdev);
+> > > +
+> > > +	/* Otherwise assume private triggers as always offloaded. */
+> > 
+> > s/as/are/
+> 
+> ACK.
+> 
+> > 
+> > >  	return led_cdev->trigger->trigger_type;
+> > >  }
+> > >  
+> > > @@ -341,6 +345,32 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(led_trigger_set_default);
+> > >  
+> > > +ssize_t trigger_may_offload_show(struct device *dev,
+> > > +				 struct device_attribute *attr, char *buf)
+> > > +{
+> > > +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> > > +	struct led_trigger *trig;
+> > > +	bool hit, offloaded;
+> > > +	int len;
+> > > +
+> > > +	guard(mutex)(&led_cdev->led_access);
+> > > +	guard(rwsem_read)(&led_cdev->trigger_lock);
+> > > +
+> > > +	trig = led_cdev->trigger;
+> > > +
+> > > +	offloaded = __led_trigger_is_hw_controlled(led_cdev);
+> > > +	hit = offloaded || (trig && !strcmp(led_cdev->hw_control_trigger, trig->name));
+> > > +
+> > > +	/* [offloaded] <active_but_not_offloaded> inactive */
+> > 
+> > Why do they have to live in different 'containers'?
+> 
+> The comment might be somewhat misleading...
+> 
+> An LED device can never have an offloaded trigger and an active-but-not-
+> offloaded trigger at the same time. The comment just demonstrates how the
+> output might look like.
+> 
+> The output is multiplexed to help userspace determine two things in one
+> read:
+> 
+> - The name of the LED device's hardware control trigger
+> - The state of the said trigger
+> 
+> That being said, if the complexity is undesired, it's OK to convert the
+> attribute into a dumb one that only returns the plain name of the
+> hardware control trigger. In this manner we will need to provide an
+> additional attribute to expose the offloaded state. This can be achieved
+> by adopting the attribute "offloaded" from netdev into led-triggers.c.
+> What do you think?
+
+My job is just to make you think about the problem.  I have no strong
+opinion one way or the other.  You are currently the expert of the code
+you are engineering.  What do YOU think?
 
 -- 
-heikki
+Lee Jones
