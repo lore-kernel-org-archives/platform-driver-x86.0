@@ -1,134 +1,100 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EBD49363D;
-	Tue, 22 Sep 2026 17:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED285475341
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 17:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790098581; cv=none; b=Mf3sLXIBusJUlWb2BezsmVWaoMhApFD+33c1kafFlwEuG3eyIKiqrt88FVNNcJzGJ/8EMa+Q1wzNQzuw5f9p/emvYUilUPLYQsLNkqb39QhRyufMIhVo+ffaMdTrK8kfgqnwLhH0phXaOrSZ5q7mf2OH0jJTW2wXY6gSZ37CSGo=
+	t=1790099509; cv=none; b=gpcyr6InMatJHn+VPEsi01B96UPa/7KJdaip5jtMngB+ej1a3TqpKi3ISYkAhEpi0Qh3oKzxMfOo+4lND7jfljEBEPE7vJRrmD7uH0nCOWnHInLTHkIcw5h1eM5uyhYFhMYqnL6K2vUeUtcmHobBmqQ185rvcZTu1FgHvujRiAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790098581; c=relaxed/simple;
-	bh=prctDNlE5adZ9L/DjMylwleky2/BsMcTpLemAxyD18Y=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=kSBd9uQUTN/LWNCjNUQDFD48kOcOsiSNGODBgOiuCTnzD8wn9T+/iqJCfHmsqxCm2rCHDETvFWslFmFkd2LrSR8YfGRflIuJKYIV5SdmvTQVrCa49SFw4aUeAluAf6hph52xjQepXV3vWz6+iXaYFmQUugwMUxHMioXpp1y41dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Tk3Ry4un; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mbVAmMys; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1790099509; c=relaxed/simple;
+	bh=EbP1v3Oa6Pp3U3S6vdLzzYTTcSx5iO6uWXxoR5VqFYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kJDFuqMUzKtl7kE0LTnGg049RWd9s0tDX61Z+sPrCoFr5OdcVg4yNnGsMLmtePjYBHmFWi1omYqld/T6MwyOi25BHgsHCP3x++nWy+VlnIx2hsvxVx/zYqrmMd1+1ueSfZFUWIldbVqmDWTq6s61nznkyW+AZCe3QQ9twW0jRY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4ur/msL; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Tk3Ry4un";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mbVAmMys"
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 8FE947A006B;
-	Tue, 22 Sep 2026 13:36:19 -0400 (EDT)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Tue, 22 Sep 2026 13:36:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1790098579;
-	 x=1790184979; bh=wavFuDeuFdsEiTZxKJ4EgtzANxA9BvdiVVy33hl1kyg=; b=
-	Tk3Ry4unKyNIkTlq5Ae04i3GnPcEUA3rCmHyRFk0uQ6S4k36CGhYm1fP++nuRvss
-	PqMxgKFLKdNy47L6rppYPQDEcnYSUnw4xqwOa9d/zD1oeinQ+cYja/5oQpu6kuNZ
-	i1PqWov3qjAbjeMKVCQql1Eq6q6C/9LOnYIXM+mcfSxQsYfRGxk1oHrnS6kj4fr3
-	Hsg67VuJ4DLCQSlOvHpvqPqfRiDEQoHt/ZtU7fvN7/3yVbFNQn8pZah+BqPQrRyX
-	4bL/LTkJbh5lntVCNYZhSs/vQjjuETXK3rZpz3sZyn25Fc4DsGPwUhqbIIljBFKD
-	A4eYSbi8JygTZ802JJUkgw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790098579; x=
-	1790184979; bh=wavFuDeuFdsEiTZxKJ4EgtzANxA9BvdiVVy33hl1kyg=; b=m
-	bVAmMysac3tkTw1TAGhM1UWwgTcHb65Dug+wT7fYEHXJv3n+mIjx1OANh4J6JxLM
-	b9QRBxyXYEmdTTDXmXGETSC/QCzGpRJWXpMM/MD7QZIM/fpHI2NvCbxOLEJm2F6C
-	LW/u+t5ixdpSyNjxCz3hmRNtV9Q21doGKsmWJqMcmYU+RRell6zeStf9M2vid0yW
-	0olBn5bV8UQjWailX2gbbdVVRHnoS01K+I59cf1Z1aeAGIFl9HW04CWA9wfIqcJe
-	5pDafPNKVAxxPlmx98G9zhFo73yJJn9I/W0XGpa8l4BSqIhsQ9e9ixIWVhmF36c3
-	nnvvKm8A5qF7+VqPBwPnQ==
-X-ME-Sender: <xms:k7yyavKRKMicXpLObpRA2vBQiA3yX_8OLmmaFVcHrmW36kSo0zxCxg>
-    <xme:k7yyat9jDO-Ry-SFUjG3PV38LKtE_hPYpS7PLs8bUavcrmOPN6ub6KHU2vHBYIqoY
-    hfboibbMsbtanOcy009PYB0s3Ibf1BVjoRZTUVdPbxJbj6cfjFtOP1n>
-X-ME-Proxy-Cause: dmFkZTFtA1kQSVSq2mwSLVMa1zHnKYK/vuqt+w7fW/EoN1X+AYhpAf7aTwssQJW8vYY8Xq
-    WNiJkZzaRDaC34QqQgsjF7gj71VX9D/gpvbJHkHuEep3LJ+Yn3hEJJs2ITMJbA4HWDF0zB
-    CDa3qgrmiThMvppEYbLm2dpm6PkruroWEqmKYEmurpWYKi6wD47GQhvUcvt9xtgN2yWQH5
-    lZXYIfmPbafcK6Mr/Ww+135pk0WXmYAcZiPGB5U0tf/9qnYxAsrxquJgqEoyqRpXIm/g+S
-    +s1aUJAz1WgzNk7T3OVhBJn5xeJoUUMm+kuyiSGu5kvmya4t3expGHwWu3QhwQmaTxQhln
-    8gPf/IIQ1bLhpBwYP7wunblj3zCuKK9g3x8P6ThyuupdPIySOm0s4SQq4+9zYByjaW+680
-    WCwPquU6I11YSkn8IuzhCg0S82FpXm/U42Kjw7rE5te6PHvvQJHImDxMV7D3DiprEDfY2p
-    u7AqqC5SJux8JRroEo+lb26vY+EvtzkesVLAmq5hJwHwtayWJBaW7cVFHv1ET9UAIojTlR
-    1vGGQcYNmizN/Wg4WNX9nZT8dywfNrlJI0Q1uIrt/Dn0FqKDYvTM2vPd/I+eBZNj5Iuaxd
-    Maf9iq2xnJv14h3NDqsy7/VE8FtCXkF7yHWp/VEgbJovLqYSxsN7q/BXaVhQ
-X-ME-Proxy: <xmx:k7yyattw72I0Vw-RpQDi0CzgT7siioM6oujbIKy2YaUBa3x0NHqN9w>
-    <xmx:k7yyaovTCTJ24Exm1-YqGoANsYcc1fuy_IF4bUSG_NzQFmIGukuAoA>
-    <xmx:k7yyajDQpZsgD41Rb-Jn9VJoIKV0ti9kKyzB14PxpFYmtsif5K8Vvw>
-    <xmx:k7yyaqMylFnYJ-He7s7jTcBhXg6Gykd9d_N6ZomFVUQsGsaqVZEgnw>
-    <xmx:k7yyavwJKruSjnQTtlrYWUCEw0cBM9hcT96aEKXiTnjOUTdEoLt19Dmt>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 4FF9B2C00067; Tue, 22 Sep 2026 13:36:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4ur/msL"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912d8239so515765e9.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 10:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790099505; x=1790704305; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=EbP1v3Oa6Pp3U3S6vdLzzYTTcSx5iO6uWXxoR5VqFYM=;
+        b=T4ur/msLvaIvLk1TDYJtusmbXGtVSgX+6zHarAzlEKJzmwcgkHjf5tt0izYJqx/G87
+         iR5LLMMPup68k08zxxYu+R2EQTMiseF9Gt3P0F6HvWja0A69sXpwzKMIouOLG1YFrbM1
+         RXBkFq+u349ag8qGr2ADCUjXK50cKnpCgXi35AEdNMGxrGsWmaGk2R4Ib3dUEE5yOu1n
+         X/Mq6XVCrV75EVPZUBZPUJgn8NLgow1aiMluLhbxOTCh+yws4GflGI+GLUZwzV1EtCMO
+         4Rc+ny2RHizoi8ORV6zweprezCyFGxsA6KGdSuT49HitXDzVKNF9ZRzy2Uswjr/U8/Au
+         k+hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790099505; x=1790704305;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=EbP1v3Oa6Pp3U3S6vdLzzYTTcSx5iO6uWXxoR5VqFYM=;
+        b=s+/ErLG7hlQLuK0UYZOrdlK5kqAiHq+oJR2Xp8n8g5k1rDd1UW5oMg+VUiQEEICzEm
+         g+KP2Lj0+/rCD9UAz/AQHELWaa5415YDgHSn2mV6yTxw2kf+3vLwDZ5jJ3ARerLv+Ahh
+         Wj9SIvmqSSUA9E8ECyg0doIGuDgSA6V/X99UBn1wiqpyZ+GVj/sSmkRlkX3sGjUjnDEf
+         CqEEGXHDlMX4dRUp3K4CpTSIWfG2e2UFKqVur0Ov2/GGPVCa9Z/Itn09TiF5b0gUAXxs
+         D7OHDezKDUGgJhQ0daodYsUM/Lsahmwdo1+MNlpjsiaqRiMWIMsNkQINhyRB8fdQmUxf
+         MtVg==
+X-Forwarded-Encrypted: i=1; AKwUvBzAZ+kk0bYBOzuYTJdumxb3gqZzfzf6OVAdeHiTt8sYLZCYDLZ8I4xgn5gbP7Hp+/NBR3dz3mWTdKunyB2eHJdwdeBt@vger.kernel.org
+X-Gm-Message-State: AFuF++kA4tCkIKCW0uzZ0GMr6enSh/E+ukduoevRCAiH4PlYxvuYDAAf
+	Y+tMjJaryfljf1pVTDTmkQRPEh48si08C9m3dyGb+y1UAUCPxJGpEjMx27cKQOwOT+U=
+X-Gm-Gg: AYBFou3V0D/20Ej7QUYbFyk3/gMsxzaJcwOsnRuP2vvrYLY4ueozLXY7PbPwsDUaDcw
+	wc5nYvYy4uf5A/dZPGfFkiyNT7c1BsyCg71UURXuOkuleVOZ995tkGXELdrNdlnsD/0M90HgLha
+	0KmIdo4WOJOth18oDbPaYW9l78PSDQpBbA58IkLYfI5c02AonfLObszpgHy0kKagBW0MlkptBzo
+	0QOS2z5JGaXVHmmhbzP8Mjva3RIegIqYqPQ+bY+vYY7J+QtKNujl9uBRl0RdZSRW3Er1nTQ01DA
+	TkZF3WdSpWTfjRxm6Cj51Es/bPOw5Jslsq1aRgnxugAiu0fhXaUEDK3qJwUAKH2lzO4gSobSU0j
+	9xR8+uEYn4El8AzLvuk+xZKt7Snw6i9BWI1xMZJUtItEchQlkQ4C0BZGrWM+V82QNLNeoiqyIhZ
+	6muwtehXXq3DQVmf0oiCIxsr5Vms6oIg9kswsjkDr8iVvfh8J9yZRtn3PWi0zzXvZ3cxj/nV02+
+	v0BUqk=
+X-Received: by 2002:a05:600c:83cd:b0:49c:fa21:1c86 with SMTP id 5b1f17b1804b1-49fc573fa97mr180249605e9.27.1790099504457;
+        Tue, 22 Sep 2026 10:51:44 -0700 (PDT)
+Received: from localhost.localdomain ([94.252.75.113])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-49fde18555bsm8294835e9.2.2026.09.22.10.51.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 10:51:44 -0700 (PDT)
+From: Oleg Keri <okerixx@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Abel Vesa <abelvesa@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v4 3/3] arm64: dts: qcom: glymur-lenovo-yoga-slim7x: add the embedded controller
+Date: Tue, 22 Sep 2026 19:51:34 +0200
+Message-ID: <179009949426.334909.8218450300346111724@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260922165737.260443-4-okerixx@gmail.com>
+References: <20260922165737.260443-4-okerixx@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AmQBxS_KcYz3
-Date: Tue, 22 Sep 2026 13:35:59 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Thorsten Blum" <blum@kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: 
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <b699ec3f-9708-48fa-a7cf-2f6e0d08be61@app.fastmail.com>
-In-Reply-To: <20260920103035.281573-2-blum@kernel.org>
-References: <20260920103035.281573-2-blum@kernel.org>
-Subject: Re: [PATCH] platform/x86: think-lmi: Use snprintf() in new_password_store()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Sep 20, 2026, at 6:30 AM, Thorsten Blum wrote:
-> While the current code works correctly, replace unbounded sprintf()
-> calls with the safer snprintf() in new_password_store() to follow secure
-> coding best practices.
->
-> Signed-off-by: Thorsten Blum <blum@kernel.org>
-> ---
->  drivers/platform/x86/lenovo/think-lmi.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/think-lmi.c 
-> b/drivers/platform/x86/lenovo/think-lmi.c
-> index a0e3fa766e37..3ddc1f5cec19 100644
-> --- a/drivers/platform/x86/lenovo/think-lmi.c
-> +++ b/drivers/platform/x86/lenovo/think-lmi.c
-> @@ -487,16 +487,16 @@ static ssize_t new_password_store(struct kobject 
-> *kobj,
->  		/* Special handling required for HDD and NVMe passwords */
->  		if (setting == tlmi_priv.pwd_hdd) {
->  			if (setting->level == TLMI_LEVEL_USER)
-> -				sprintf(pwd_type, "uhdp%d", setting->index);
-> +				snprintf(pwd_type, sizeof(pwd_type), "uhdp%d", setting->index);
->  			else
-> -				sprintf(pwd_type, "mhdp%d", setting->index);
-> +				snprintf(pwd_type, sizeof(pwd_type), "mhdp%d", setting->index);
->  		} else if (setting == tlmi_priv.pwd_nvme) {
->  			if (setting->level == TLMI_LEVEL_USER)
-> -				sprintf(pwd_type, "udrp%d", setting->index);
-> +				snprintf(pwd_type, sizeof(pwd_type), "udrp%d", setting->index);
->  			else
-> -				sprintf(pwd_type, "adrp%d", setting->index);
-> +				snprintf(pwd_type, sizeof(pwd_type), "adrp%d", setting->index);
->  		} else {
-> -			sprintf(pwd_type, "%s", setting->pwd_type);
-> +			snprintf(pwd_type, sizeof(pwd_type), "%s", setting->pwd_type);
->  		}
-> 
->  		ret = tlmi_opcode_setting("WmiOpcodePasswordType", pwd_type);
+Konrad reviewed this patch on v3 [1], a few hours before v4 went out;
+the patch is unchanged since, so the tag applies here:
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Mark
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+[1] https://lore.kernel.org/all/69636cb8-5867-42db-a8fb-aa8b2d9301e2@oss.qualcomm.com/
