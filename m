@@ -1,72 +1,72 @@
-Received: from flow-b4-smtp.messagingengine.com (flow-b4-smtp.messagingengine.com [202.12.124.139])
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7114544D4F;
-	Tue, 22 Sep 2026 15:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA5247FB0C;
+	Tue, 22 Sep 2026 15:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790091309; cv=none; b=a5/RBiPjZUfsT8zoWH4J7U3ROSiKgo9wiTu1JJKqP8xUurvbzh34d3WaqzKOdUB65G32S3X1u0I6tqyi3poRylB7EdOADAPpEL3HC52rdV2t7isEoZQQ755v6ZhMnF9QNg9XhC7fKu6kiAka0fvhcHSpOeMgMtMLks16MOGwR6w=
+	t=1790092355; cv=none; b=mQeLI2lkt97AY2MfPN8EFvsWJ4OS42t7wznzvsx+iFQA3iHarRedHrFsds5iysNx/Egdgm10jba+/1Y99aMFRBo+BZSWaMxy2fEaG7qTN0h38jm29fg/VbqCCj5GO9tkJdYjgSDfKNHeynVOpAowUHeZ/44QZmNexNjjVLKg2xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790091309; c=relaxed/simple;
-	bh=xHBu+r3dPsHMvUdUQo0Eq1m5mecQ/NelcsTIYE5piBk=;
+	s=arc-20240116; t=1790092355; c=relaxed/simple;
+	bh=7/Tjl+wHObiPm2kkzTTIJd3tE4ti74m7Z2pSZ8OW67k=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=TIapcTeRSyYI+i2RyTQ2WisMngRj6iUsGKJpimhmCe8o3OCpebrcQkFQGQwRtv8i45b75ZZOkFgktZI5ypNnu1J2bbCk/mobBMuKELulyxtL8nGRjqfFhn5Bjju6RGdkUa8LCmOv8/rmndNUzaiMuo21KEqKHk8+6tRgXtVpsLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=vBHFQdAT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Pob5rp9K; arc=none smtp.client-ip=202.12.124.139
+	 Subject:Content-Type; b=lQ+95LsZIa6eNa9R7aCzYmzSaXyDdhyKnux/G2wgkAM0rHu+CIaiOhYtTs2m1a2wSQ9VGUHD1X21Ei91JGKcberVkBCJPYyMJ++dpZBffXxs1/WGJmyq48rDr2Js6pKlBSKIq5dPX9x9VVMD8L2zGSOASYvUT6LY2I6FzfDWRHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=MHm7Bvkk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cYqXR1aI; arc=none smtp.client-ip=202.12.124.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="vBHFQdAT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pob5rp9K"
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="MHm7Bvkk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cYqXR1aI"
 Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailflow.stl.internal (Postfix) with ESMTP id A43E81300129;
-	Tue, 22 Sep 2026 11:35:06 -0400 (EDT)
+	by mailfout.stl.internal (Postfix) with ESMTP id 4C17E1D00018;
+	Tue, 22 Sep 2026 11:52:32 -0400 (EDT)
 Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Tue, 22 Sep 2026 11:35:06 -0400
+  by stl-compute-04.internal (MEProxy); Tue, 22 Sep 2026 11:52:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1790091306;
-	 x=1790098506; bh=k+BJAVmqueRCG6zFCjOD7Eq+W4AZN/slK53nkPTLIzw=; b=
-	vBHFQdATih6l3N7u8kgSaG6ewsD9JgZ06Ng97KLBVVY4J8D6jacpdSiKK+4im8ZS
-	u9VmgAQFMskN57E4t27jHM2UV5j47xEyHitSw055TIgRMzVNfsIbjzSjZ39uZntv
-	YCu/MCU1Q7yPSzNqZVJm5lwm4dADXHwy4KvQTuYP1EInG+nzTh/diV/dVqg96DRP
-	ix8w4/cUUajZ/PV/H3udbOLDTh+JP0ZaMtjGlmHsGQRLVDb2CFP/X8MH1+eRhG99
-	2QZnArTu/ZlbZknU5sE369648aFsvw8DjACMUSh0KoZ8z9jcAL81cgznOSvYSd+j
-	ssMfR4wN5CIcYXWKgDz5Uw==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1790092352;
+	 x=1790178752; bh=UXviWuIws5x/Vj10Z/JcnmznT9pgc/2qjRgyWUn/3y4=; b=
+	MHm7BvkkXmmHO8lPb5BPyUjdcZyQiCgswmlJYd8Mztmm/N7Fxv0joEzQcngtCDz7
+	kwd82vDxpE7b8uatLkDAwnOGX9PzVbd5d7ws7L/e2O7KFZwo07wIjbax6bqCUlTb
+	UrZ5Gn+sDc1mY/MFO4vCYdteX7Kg+GXsG2Pi33bYBwx8QYQwaq84gbPfw7Fp0RmR
+	cUh+/rrXBTAdVKjAHfeovIyT9WiyOL87Mishe9aIcdnJGoq6CI7jAveATxkkVGYi
+	URkxQ16Mp4fLBh7lJtYIke5b6ymMbuc9VASczx1BwXRbObplQ3FBx7qb3JPs+E2j
+	jyngYRrMvo5oMeZ6MYThHg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790091306; x=
-	1790098506; bh=k+BJAVmqueRCG6zFCjOD7Eq+W4AZN/slK53nkPTLIzw=; b=P
-	ob5rp9KchqWFsAfq23R+f5NbH/N973omlKPujuzR8A5vBpVsppAzP7k2aakuEsUM
-	dFFLYXhuzzk7Y9AzU9HQGE5NnzoBT6oZM7NWLByxyKKIYejQ+kvmaeNYNHQMCbs/
-	iUVxP+nXDO9oEEWlWoWzxuAYAHNF/tsYmxjmywFMlwkGG7EIYUuN1lCv8qjoDvnr
-	MfWyjDHsdvmFsrJw9q2U8xWy8GteZM/Ex+RvIm4XQmrWiGhUYSYmBjK5pglA4byh
-	gFuyun2S1I6Fuih79yVBUZQ+T116X54O3DxYr6g3OT9+qCQfqB47C4SGeY5qaKJ8
-	6s7nMEh93TuY+ecCimQcA==
-X-ME-Sender: <xms:KKCyam5WgE9ZpY9gXIKLrQngKI2iwNYixA0jfDSr3poQ1N3ET7muhQ>
-    <xme:KKCyaqt0QhS6pQbLBzJVoOJ5hsa19arMRnxx-Qj92ufAF2HPh8Edmiovpn7HEt9QH
-    J74_WyVPC6vRxYuyp1-_d_vI43rh55Oox7D1mGNH9-RWurLMbe_PKRn>
-X-ME-Proxy-Cause: dmFkZTFtO50sYQ5HQ9vqA43bq7Ik43gKK49C4hRnAlX9A2NcSc1pEt79yROnVZUKyvBN/Q
-    PLC8lg14plyO8t93JRmwyuiDu+rSsldUqLFoRsqyyuw9x476BiFA1TJU/iKokRtmSagGho
-    OOZcJCjyQPV1KsVkjZ/gVJdN71ywnrTmwTP9R9Thti3rf06sti9s+JYTC7CXXrspT9q17P
-    zWokE2QYleDx84Xfx9mxpv3xUm5tz8HTKlWamE31/WQbKz22J+mgtXwqR1TS+0EQnuAwYN
-    HL/qx7PGCVOuHBlM8MEJ2N5l4Ooh5pzkmkzmyY5lfAg3Mf/gsytQ7H3AAtIg+LMWZSZFPg
-    7gGBz57Ll3xeJ3dlJj2ooyr7GnRfU0bw3vJ380NbqVLpjBwF5VPInv5bmQpDYD3xVISide
-    F2xq26yalJCzsRfL5A9vA3YMUmHrY741Sp54Y+W71Y3JyBJrPyjbdGUOlzQ599SqoFtdZU
-    kfdCxY4rTHRJqN3xNybcSpmYV2eX8cItJZyvos+ScMdOsZKukpimy3H5NpEAxLtQruJIkS
-    espiz3yptdMvF/YFSjkfprbH93NBPLmJSvB44uQdeM/VP3AvBIfpprI8W4Bl5RSnsm+XEo
-    rAQDJLlULngYuKc1Lp4bKXB7lQ8I7D6WYvr1ZiqFH9YYELj8UbIEVskfuVsg
-X-ME-Proxy: <xmx:KKCyalSdRU9aYYdTZPvOHzfhOe4tMxxJ7yQhCudtGndj_4Rx2UUw2g>
-    <xmx:KKCyahrX-BtlUl3tsOEfwfODrvx-BVtC0m7q13SfBKJfNzFXuARHWg>
-    <xmx:KKCyarqRoDPJ8S7eNSjdk6YKVfzMq2S6b66tkn2oojiaJ9jHh_tXeA>
-    <xmx:KKCyau39fxPH69-2x3g1g77GvHn-TFzVkDG_TsZihIhwUce3RgNqJA>
-    <xmx:KqCyapS2ftzfib71AW2ALWop8XvH1ivIDUWl6S2DCU4uM3zT4Rc63xGx>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790092352; x=
+	1790178752; bh=UXviWuIws5x/Vj10Z/JcnmznT9pgc/2qjRgyWUn/3y4=; b=c
+	YqXR1aItojHM3BzanYb8S88e8lE1U5lqI+F9mpMLytO8wbdUqW1wsqs4KDkI6sUt
+	MbvsX6eD2asduUrGvJnplDvCCySn8BT4ZQPqGOIR+QFik15z95oymv1z8QNaEOOu
+	dZAJ2vPjiT2748AkFXZTJpq8l5xaZFDwjuIlp2B5DfidrRoFLGxK2i1jggfBOPAd
+	WPsFlXQwhHTvdalK1eriFMRAMEPs/YYpTcSAs3zLWfaWztWkNWRA3EZr+/9m8wnn
+	7UN9/vHGWzDAOGjqUF6yr6+UEwqsFac+E9WReuUXz6tCsR3+HRdf0h0MpO8i/v7+
+	D6s0WG5ScIIBSk0hmGuvQ==
+X-ME-Sender: <xms:PqSyaq2H5DxUC9D9AV33KhKkB9RSeMtqcJpYjL4XwWbxl38YsY0n2w>
+    <xme:PqSyan4GPjRfxf1yI_QUonHBtTQZscXvwwSyR4ngNy7h-r8w77bytP2y_m6N0AJ7q
+    3v6G4e_NaPAtKdDzoqgjrtxU0NC39qem9OLtOeBJVJZkbMP-bl_99RN>
+X-ME-Proxy-Cause: dmFkZTFyjw9/lBukhlsnOvBUoZS40agPxwtYe6+7ntFR7u40e337hgt0diFlKmdQMBOkPh
+    aZg73N4qsArmKAduQXCk505vtu9ddwNf4GLO9uiMK/wMV7U/ZM6eaAMrYXOA4oHNwtzdm7
+    a8ciTzxvj+/7fVrItO033dshz47UpQ6C10E+P1pEIOzAh3+avYVOwMoCEAWKgvrvgb0a78
+    qxuqDi4muXiDG7CrnLQfhvuA/XJdJa/rHWOTVZA5RNpXmT4bUR8rzwBtJnfHdaPkPLStQO
+    yiY1aQ+vuXAffWaXqaHs/xtnJ6vucywo2fqfq2fvxsb/Lr5Y0A5UKSDMPOW6214hTCWrik
+    ubE6aRdDv37+UfqNPQ2IxSWsum8ys/iquDXFe+ktQ3x7hZ1geeCAz3brAGpSlK2eWV+SIj
+    uXE4RM3ZN/rUAoTI56Qg9iS8KqHqLhPynhN/z4r8iHjCaWTJU7Zhxx6af7xoupFC2ZLq1p
+    q7rTVYXViRVfWj6t5rwOvDJ0qVbyd7PqWDeo3AR+BGPPkUDGwttlGuBpz4U9kZC/Wl8ki3
+    3VBH6jhxdRZ+aMdK5JQkT0elQODtg/hb47bZW30RDq0cZ2rfRN+eziRqqOigbcb9Gu1YUZ
+    7ROMpxT36/oLi3OXCSYebDMSIv4Wm326iX/jEsxhiNFzySMqJbUq1Y5bv2hw
+X-ME-Proxy: <xmx:P6Syah2H2DH0iRCO7RGwmExMF58nQC1bVM3AxmF3HytTSbBej5xUGA>
+    <xmx:P6Syakp8He_DUX9jI9HsC21y5XsgBFDzdKW8JNVEvbvcb5lLpqIMLQ>
+    <xmx:P6SyamWgFoEKkm-jP7zYr5X1UsUFKbKk9o_vScEjx1yZ3cSiq79N8g>
+    <xmx:P6SyaloKTu6wNY8JlYZ6mE6ERs4n2DDD8walPVGURXr9UEVm1HheXg>
+    <xmx:QKSyahBg5PclyyOb_C1i0wduJ5uJ5L8YDchQ0ccVlNttZd1YRk_koDJB>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 647182C00067; Tue, 22 Sep 2026 11:35:04 -0400 (EDT)
+	id C2EB12C00067; Tue, 22 Sep 2026 11:52:30 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -74,93 +74,281 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AVcutaJy7ROZ
-Date: Tue, 22 Sep 2026 11:34:44 -0400
+X-ThreadId: Ah5D1kAduVmc
+Date: Tue, 22 Sep 2026 11:52:10 -0400
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Mika Westerberg" <mika.westerberg@linux.intel.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Hanjun Guo" <guohanjun@huawei.com>,
- "Sudeep Holla" <sudeep.holla@kernel.org>,
- linux-arm-kernel@lists.infradead.org, "Ard Biesheuvel" <ardb@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- linux-efi@vger.kernel.org, "Will Deacon" <will@kernel.org>,
- "Robin Murphy" <robin.murphy@arm.com>, "Joerg Roedel" <joro@8bytes.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
+To: "Rong Zhang" <i@rong.moe>, "Marco Giunta" <marco_giunta@outlook.it>
+Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>, "Huang Wei" <huangwei@kylinos.cn>,
+ "Ike Panhc" <ikepanhc@gmail.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>,
- "David Rhodes" <david.rhodes@cirrus.com>,
- "Richard Fitzgerald" <rf@opensource.cirrus.com>,
- "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- linux-sound@vger.kernel.org, "Shenghao Ding" <shenghao-ding@ti.com>,
- "Kevin Lu" <kevin-lu@ti.com>, "Baojun Xu" <baojun.xu@ti.com>,
- "Sen Wang" <sen@ti.com>, "Vijendar Mukunda" <Vijendar.Mukunda@amd.com>,
- "Venkata Prasad Potturu" <venkataprasad.potturu@amd.com>,
- "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>,
- "Cezary Rojewski" <cezary.rojewski@intel.com>,
- "Peter Ujfalusi" <peter.ujfalusi@linux.intel.com>,
- "Bard Liao" <yung-chuan.liao@linux.intel.com>,
- "Kai Vehmanen" <kai.vehmanen@linux.intel.com>,
- "Pierre-Louis Bossart" <pierre-louis.bossart@linux.dev>,
- "Binbin Zhou" <zhoubinbin@loongson.cn>,
- "Andreas Noever" <andreas.noever@gmail.com>,
- "Mika Westerberg" <westeri@kernel.org>,
- "Yehezkel Bernat" <YehezkelShB@gmail.com>
-Message-Id: <b4c3aab6-2ce2-41ee-a1ef-3e53234a5213@app.fastmail.com>
-In-Reply-To: <1973238.CQOukoFCf9@rafael.j.wysocki>
-References: <7995179.EvYhyI6sBW@rafael.j.wysocki>
- <1973238.CQOukoFCf9@rafael.j.wysocki>
-Subject: Re: [PATCH v1 05/17] platform/x86: yogabook: Switch to use
- acpi_bus_get_primary_device()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+ linux-kernel@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Message-Id: <048278d5-8c58-415f-890a-3ca45f3d31c9@app.fastmail.com>
+In-Reply-To: <9be0971e7f84162bc57e01eb4cde508ed15e3096.camel@rong.moe>
+References: <d867a4f6b798809776164542972e68d724f29fd5.camel@rong.moe>
+ <SN6PR19MB2303278926469783FA99824CFC842@SN6PR19MB2303.namprd19.prod.outlook.com>
+ <9be0971e7f84162bc57e01eb4cde508ed15e3096.camel@rong.moe>
+Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Report camera switch as
+ SW_CAMERA_LENS_COVER
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 21, 2026, at 3:48 PM, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->
-> Replace acpi_get_first_physical_node() that is slated for removal
-> with acpi_bus_get_primary_device() that takes a reference to the
-> device it is about to return.
->
-> This addresses a potential use-after-free that may occur if the
-> device returned by acpi_get_first_physical_node() is removed right
-> after dropping its ACPI companion's physical_node_lock in that
-> function.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/platform/x86/lenovo/yogabook.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/yogabook.c 
-> b/drivers/platform/x86/lenovo/yogabook.c
-> index 1a4b2ab1f35d..8a91d440724b 100644
-> --- a/drivers/platform/x86/lenovo/yogabook.c
-> +++ b/drivers/platform/x86/lenovo/yogabook.c
-> @@ -353,13 +353,13 @@ static int yogabook_wmi_probe(struct wmi_device 
-> *wdev, const void *context)
->  		goto error_put_devs;
->  	}
-> 
-> -	data->kbd_dev = get_device(acpi_get_first_physical_node(data->kbd_adev));
-> +	data->kbd_dev = acpi_bus_get_primary_device(data->kbd_adev);
->  	if (!data->kbd_dev || !data->kbd_dev->driver) {
->  		r = -EPROBE_DEFER;
->  		goto error_put_devs;
->  	}
-> 
-> -	data->dig_dev = get_device(acpi_get_first_physical_node(data->dig_adev));
-> +	data->dig_dev = acpi_bus_get_primary_device(data->dig_adev);
->  	if (!data->dig_dev || !data->dig_dev->driver) {
->  		r = -EPROBE_DEFER;
->  		goto error_put_devs;
-> -- 
-> 2.51.0
+Hi Rong
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+On Tue, Sep 22, 2026, at 8:18 AM, Rong Zhang wrote:
+> Hi Marco,
+>
+> On Mon, 2026-09-21 at 21:00 +0200, Marco Giunta wrote:
+>> Hi Rong,
+>>=20
+>> Thank you so much for your detailed reply and the much improved patch.
+>>=20
+>> Let me immediately go on record and say that, apart from a small addi=
+tion
+>> to the SMI driver and one line in ideapad-laptop, I am mostly active =
+in
+>> the sound system, and therefore consider myself a platform/x86 newbie.
+>> So I really appreciate you sharing your knowledge here.
+>>=20
+>> > > * I considered a couple of alternatives to the approach in this p=
+atch:
+>> > >=20
+>> > >   1.  Simply map 0x0c and 0x0d to KEY_CAMERA_ACCESS_ENABLE/DISABL=
+E:
+>> > >=20
+>> > >       { KE_KEY,	0x0c | IDEAPAD_WMI_KEY, { KEY_CAMERA_ACCESS_ENABL=
+E } },
+>> > >       { KE_KEY,	0x0d | IDEAPAD_WMI_KEY, { KEY_CAMERA_ACCESS_DISAB=
+LE } },
+>> > >=20
+>> > >       similar to the touchpad off/on hkey events (66/67) this dri=
+ver emits
+>> > >       after the firmware has toggled the touchpad state. However,=
+ HUTRR72
+>> > >       describes these hkey events as asserting a camera access st=
+ate for
+>> > >       the host to apply, rather than reporting one the firmware h=
+as
+>> > >       already applied.
+>> > >=20
+>> >=20
+>> > Well, it really doesn't matter how the specification says; what mat=
+ters
+>> > is how devices in reality do: whenever the HID Usage Table doesn't =
+define
+>> > a usage for hardware/firmware to report the already-applied value b=
+ut
+>> > defines a usage for notifying the host to apply a specific value, a=
+ lot
+>> > of devices will emerge, using the latter even when the former is
+>> > intended.
+>> >=20
+>> > For example, many USB Audio Class devices come with volume control
+>> > buttons or knobs. Some of them tune the volume themselves as well as
+>> > emitting Volume Increment/Decrement HID events.
+>> >=20
+>> > In this case, the audio stack, in response to the HID events,
+>> > intentionally overrides the volume set by hardware, effectively
+>> > synchronizing the hardware and software volume value.
+>> >=20
+>> > The pattern has become so common that many devices like that also
+>> > implement an internal timeout mechanism. They only set the volume
+>> > themselves when reaching the timeout with no UAC volume control req=
+uest
+>> > received.
+>> >=20
+>> > IOW, it doesn't matter whether the hardware/firmware has done its j=
+ob as
+>> > long as the subsequent software control is harmless. That's why we =
+can
+>> > safely use KEY_TOUCHPAD_ON/OFF even if the firmware has toggled the
+>> > touchpad state. They cause the desktop environment to mask/unmask
+>> > touchpad input, which is essentially a no-op (thus a safe operation=
+) when
+>> > the firmware has already disabled/enabled the touchpad.
+>> >=20
+>> > Fundamentally speaking, using KEY_CAMERA_ACCESS_ENABLE/DISABLE is a=
+lso
+>> > OK. It's just...
+>> >=20
+>> > > Furthermore, lenovo-wmi-camera moved away from
+>> > >       these hkey events in favor of SW_CAMERA_LENS_COVER in the q=
+uoted
+>> > >       commit, which is arguably the closest relevant precedent.
+>> >=20
+>> > ...relatively new and isn't widely used compared to SW_CAMERA_LENS_=
+COVER.
+>> >=20
+>> > Thus, I agreed that using SW_CAMERA_LENS_COVER is a better approach=
+ as it
+>> > aligns with other drivers' behavior. The patch seems over-engineered
+>> > though, see below.
+>>=20
+>> This seems pretty reasonable to me, I figured that a single standard =
+was
+>> hard to enforce and also not strictly needed in practice (the "harmle=
+ss
+>> no-op" argument above).
+>> I was mostly wondering about certain discussions I saw online while d=
+oing
+>> research for this patch of people arguing that such a no-op should be
+>> avoided, see e.g.:
+>> https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/merge_requests=
+/181
+>
+> Thanks for the context. I didn't know the behavior of GNOME as I use K=
+DE
+> Plasma, whose behavior is unmask/mask touchpad events on
+> KEY_TOUCHPAD_ON/OFF.
+>
+>>=20
+>> Still, your point that userspace duplicating an action already applie=
+d by
+>> the hardware is common practice, and fine as long as it is harmless, =
+makes
+>> perfect sense to me. So overall I have no objections to your reasonin=
+g here.
+>>=20
+>> > >=20
+>> > >   2.  Ignore these events like the firmware-handled FnLock events:
+>> > >=20
+>> > > 			{ KE_IGNORE,	0x0c | IDEAPAD_WMI_KEY },
+>> > > 			{ KE_IGNORE,	0x0d | IDEAPAD_WMI_KEY },
+>> > >=20
+>> > >       This fixes the KEY_UNKNOWN issue, but userspace gets no inf=
+ormation.
+>> > >=20
+>> > >   Overall, in the end I copied the approach of the lenovo-wmi-cam=
+era
+>> > >   driver. Kindly let me know if there are other/better solutions.
+>> > >=20
+>> > > * Unlike the touchpad, whose state this driver reads with VPCCMD_=
+R_TOUCHPAD
+>> > >   at probe, on resume and on each event,
+>> > >=20
+>> >=20
+>> > At least for the input device, the synchronization on probe or on r=
+esume
+>> > does not matter, as no input event is emitted due to !send_events.
+>>=20
+>> Good point, I was conflating stuff.
+>>=20
+>> > > the camera switch state is only
+>> > >   available in EC-private fields, and the two tested laptops even=
+ use
+>> > >   different ones. Hence the lenovo-wmi-camera approach: the switc=
+h appears
+>> > >   on the first event, and a change made while suspended is not re=
+ported,
+>> > >   leaving the state wrong until the switch is toggled again.
+>> >=20
+>> > So the difference compared to the lenovo-wmi-camera approach is only
+>> > about when and how the input device is registered.
+>> >=20
+>> > On recent models, the firmware neither emits VPCCMD_R_TOUCHPAD nor
+>> > toggles the touchpad. It leaves the job to software by emitting WMI=
+ key
+>> > event 0x29, which is converted to KEY_TOUCHPAD_TOGGLE via ideapad_k=
+eymap.
+>> > It'd be tidier to take that approach and reuse the existing input d=
+evice.
+>> > Sparse keymap supports KEY_SW, so it's viable to map the two WMI ev=
+ents
+>> > to SW_CAMERA_LENS_COVER with appropriate switch value.
+>>=20
+>> This makes a lot of sense to me. I appreciate the simplicity of this
+>> approach.
+>>=20
+>> Part of the reason why I initially adopted the "separate input device"
+>> approach was this comment from
+>> drivers/platform/x86/dell/dell-wmi-privacy.c:
+>>=20
+>> /*
+>>  * Unlike keys where only presses matter, userspace may act
+>>  * on switches in both of their positions. Only register
+>>  * SW_CAMERA_LENS_COVER if it is actually there.
+>>  */
+>
+> Hmm, this makes some sense. Ideally we should prevent exposing
+> SW_CAMERA_LENS_COVER unless it's there. I wonder, if the capability is
+> declared in LENOVO_UTILITY_DATA? AFAIK, LENOVO_UTILITY_EVENT (8FC0DE0C-
+> B4E4-43FD-B0F3-8871711C1294) shares the same ACPI device as
+> LENOVO_UTILITY_DATA (CE6C0974-0407-4F50-88BA-4FC3B6559AD8). The former=
+'s
+> driver is ideapad-laptop, while latter's driver is lenovo-wmi-hotkey-
+> utilities.
+>
+>    [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),=20
+> Description("Lenovo Utility Key Press Event"),=20
+> guid("{8fc0de0c-b4e4-43fd-b0f3-8871711c1294}")]
+>    class LENOVO_UTILITY_EVENT : WMIEvent {
+>      [key, read] string InstanceName;
+>      [read] boolean Active;
+>      [WmiDataId(1), read, Description("Lenovo Utility Press key=20
+> Event")] uint32 PressTypeDataVal;
+>    };
+>  =20
+>    [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),=20
+> Description("LENOVO_UTILITY_DATA class"),=20
+> guid("{ce6c0974-0407-4f50-88ba-4fc3b6559ad8}")]
+>    class LENOVO_UTILITY_DATA {
+>      [key, read] string InstanceName;
+>      [read] boolean Active;
+>  =20
+>      [WmiMethodId(1), Implemented, Description("Utility 3.1 function i=
+s=20
+> Support or the function Version")] void GetIfSupportOrVersion([in,=20
+> Description("Control type")] uint32 datatype, [out, Description("0 is=20
+> not support 1,2,3...version")] uint32 Data);
+>      [WmiMethodId(2), Implemented, Description("Utility 3.1 Set featur=
+e=20
+> function ")] void SetFeature([in, Description("Control type")] uint32=20
+> featuretype, [out, Description("Control result 0 is success 1,2,3...is=20
+> failed")] uint32 Data);
+>      [WmiMethodId(3), Implemented, Description("Utility 3.2 Set featur=
+e=20
+> function ")] void SetFeatureEx([in] uint32 IDs, [in] uint32 Value,=20
+> [out, Description("result 0 is success 1,2,3...is failed")] uint32 Ret=
+);
+>    };
+>
+>
+> I just checked several DSDT tables from different devices (they don't
+> have camera switches though). The ACPI device is usually \_SB.WMIU. The
+> former's=C2=A0WMI event is usually implemented by \_SB.WMIU._WED, whil=
+e the
+> latter's WMI methods are usually implemented by \_SB.WMIU.WMSK. There =
+may
+> be some capabilities defined in the first WMI method, and the WMI event
+> may also reveal some details in EC query handling.
+>
+> Could you dump the ACPI tables of the two devices and attach the acpid=
+ump
+> files in your reply?
+>
+> As you've said, "the camera switch state is only available in EC-priva=
+te
+> fields, and the two tested laptops even use different ones." Could you
+> elaborate it as well? Such information may be helpful when cross-
+> referencing ACPI tables.
+>
+
+I'm way behind on my emails and trying to get through my inbox a bit...s=
+o apologies if I've missed subtleties as I skim read this a bit
+
+Reading the internal spec - there are some WMI calls I can see that retu=
+rn Camera shutter status:
+LENOVO_OTHER_METHOD (GUID dc2a8805-3a8c-41ba-a6f7-092e0089cd3b)
+Get CV DSP Camera Shutter Status - Input ID 0x00200000 - returns 0 (clos=
+ed) or 1 (open)
+Get Normal Camera Shutter Status - Input ID 0x00201000 - returns 0 (clos=
+ed) or 1 (open)
+
+I can't find the Utility GUIDs mentioned at all I'm afraid. Is the above=
+ useful?
+
+When I get a chance I'll check this out on a Legion platform I have that=
+ has this switch and confirm....but it might take a little while.
+
 Mark
