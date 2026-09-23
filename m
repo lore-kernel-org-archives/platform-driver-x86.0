@@ -1,344 +1,1994 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010035.outbound.protection.outlook.com [52.101.201.35])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE75484254;
-	Wed, 23 Sep 2026 16:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790182755; cv=fail; b=ip0V6lOyLXBg+S8vVXFMYElYTmEiXlhIYZAlPQNDidqVezORqyILzfQ2hNaitTjiDtg9LP0/oXDKQzsNQxd7T1ueecbl5PwT2d8kFnnxB9fpBFyOeTmOy0paRGrbDzMcI7ehZRbFJ9+vQzmKDZF6FmU462hrI1iJneItXZI00Wo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790182755; c=relaxed/simple;
-	bh=InHNNAsu60aScPiwUas2mRg+KxhYhblhq6q0meoHT10=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=s30JY52f+yFgsFuM4mqu9h9Qp5pfnv3cWWFUz8J+V3BHLF5ih2NjoTdFy+IrW2Tp5ZPWHTy8iLbyFS6GqoIjiAkZUFTOKmyDUdKUqxSSl94jg/q+Ezw0UWfpjTI/KrYEnRXkzrvf4P2gVFF+HCiGQaXMnSabll/ZI2Oab6ydDxw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2xwTlFD2; arc=fail smtp.client-ip=52.101.201.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FEA40F75D;
+	Wed, 23 Sep 2026 17:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790185065; cv=none; b=G1kNZnTgifJ0hr0I2Rk8rtnjK9BJg7i2pGWKEJZhULKiSjwAsZOEOs2DMkmJtr26k0SVNkilW+Ps+9Zn8qERo1OK1xEKjiXU3kwA0T4punSqUOBlM1cDV4XJd4FuGC6MLNVDLwBHPJpFaWcDO0V+H+SnnGhbhaPaEuW0iyav/+8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790185065; c=relaxed/simple;
+	bh=uk1riq0CcS0i6QUl6g36+WEkrLDSo3ynvZqQ0EFMFkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YPlL4UpdXpQD0vPN+19Xam5YzwAqkxEBzjjsfayIG56cTyHc8eN02OmcQHmEA9GTlb9TBxrck2JneTV3QftYx0PVQ98IP2WFEwXzEaLUt+HJBAxjZ1NJzUswbJQGwgo9qwEnMIT9+TujD/bywkJNJJ2DVQEj3hEWYNE4OMJh/zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oFVjWnao; arc=none smtp.client-ip=192.198.163.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2xwTlFD2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QyyY8xYcH7epHMFzbw1p/p+/p+jcc9uUPnhXNUF8pbKl6Uyx0+qhQb9FitjUqKhZ9zWohIAZ15EIWTh/LK2HQV1Vhcdr8U+d1xTksGMwhQGnzGBLw7AnkgG7x1tDWS/BA/gv2A29FtJbvtXmonzljq3k53BpSibCIq8CWtOrhXIgSsv8z0F7utFYLgqrNoDVGUEghskn4htG79vMROpqsnPWun0pmPDB11qVdF1f3oPIZwV1mR4GKjMi2eD0YM1zuIVpIQvHSJhGHFp+1FUJLU3TTvnyPtcUfDBRa4lfhv9VMFcav1urXsRpJ2bQPgfgMhqk14Vgby8xFUzLpL3q1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6tB9xfPxVQPxQeahf+giJ2euEZLWhnio++i0pwDcBxo=;
- b=uy42f9L9+tMtbyvE3v8XLCgqi4tyau0EHX2XkFyOpEYww8NixW81LJ1nq/uAyRxdx0AhmApn/ODl6WP84F8saC++ZJxMIRdrvkSyACJhjo36vP2evLwmEHTBKfKITG3+Z5KbyeGJdyqtMqgizHs+Ilc7QZm+Ug4CbupeQUnHAGJ47p+bJ4NRvGTYERL4EAXJHKmGiEjPT2M7tTqCXyEW2FmVrc1QY9yiVZIwMt5p8ujDwIZO/i0gBRayJBLZ2A49njesKFuWK0yK6prMGgR0GzAbLSJTdXyAgj8NUJqsTdLalwMxI/NhB+AvdrEsZl3cD4cQvyWwkNtVYNy0gx5WRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6tB9xfPxVQPxQeahf+giJ2euEZLWhnio++i0pwDcBxo=;
- b=2xwTlFD2AyChGntw8rBLWoivHmx4e5IFTVYQhMgmU7OvAKL4vtQAmhaI9PWpJewfdCOjRbVKmOWH7VIJFql4N+sGkCsSkFEoJIKJehOeb7ldmTEMjj4Yfd133jDp3/WTCOBVZkQRGX14Rgjxmk1gCe+1+O4EzCBQAKYXacnj+V0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW4PR12MB6921.namprd12.prod.outlook.com (2603:10b6:303:208::8)
- by LV9PR12MB9830.namprd12.prod.outlook.com (2603:10b6:408:2ec::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.14; Wed, 23 Sep
- 2026 16:59:10 +0000
-Received: from MW4PR12MB6921.namprd12.prod.outlook.com
- ([fe80::cbf7:e2db:1d37:c83b]) by MW4PR12MB6921.namprd12.prod.outlook.com
- ([fe80::cbf7:e2db:1d37:c83b%5]) with mapi id 15.21.0451.014; Wed, 23 Sep 2026
- 16:59:09 +0000
-Message-ID: <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
-Date: Wed, 23 Sep 2026 11:59:06 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
- (Strix Point) when more than 16 logical CPUs are online
-Content-Language: en-US
-To: Fourhundred Thecat <400thecat@ik.me>, platform-driver-x86@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com, rafael@kernel.org
-References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
- <8a5bef53-cae4-4aa6-a657-d11a6831d2b2@amd.com>
- <7962670b-168e-020e-b55f-c9ea49483f6b@ik.me>
- <bb82702c-6902-491a-8eae-2b90cd8c5c5a@amd.com>
- <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
- <55854916-292a-40ae-8421-1a784785d899@amd.com>
- <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
- <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
- <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
- <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
- <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
- <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH2PR08CA0002.namprd08.prod.outlook.com
- (2603:10b6:610:5a::12) To MW4PR12MB6921.namprd12.prod.outlook.com
- (2603:10b6:303:208::8)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oFVjWnao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790185058; x=1821721058;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uk1riq0CcS0i6QUl6g36+WEkrLDSo3ynvZqQ0EFMFkc=;
+  b=oFVjWnaoE+D9H30pcboZC+N17LxORyBGT58iwFZs+jJsT+59sJYEB5cE
+   vSlW7H/AzwBycGeetvM0P3DfFP3iD1fUvlu+G1e43kP+M9h5eOgTTl+IM
+   kG1VoZr1J9RX49s3n6T+QfmNOqJ4vvLfNyZLq0j78i9G2V6XzpQPjLPMW
+   vjQn/DGSmEOad2jc733DdJH7pppmRLflCY830cWOn3midPMzhUG7AjbF2
+   Nb2W6+37T2iOihnPNaCOEn8Da43Af1iBO3GzkFp+0hcP9hPD2vtmhYbTr
+   LM7BCdBzsQVFSkoJ0oZWUP4cORkKU6KB/LzZxS3s9Bzd5UaFGVtJOb+pv
+   A==;
+X-CSE-ConnectionGUID: 7sbGJ5hBT8aswBfamWgV0Q==
+X-CSE-MsgGUID: 6Y7SeTf8Q2u+xe7NCcjsfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="1412636"
+X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
+   d="scan'208";a="1412636"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa115.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 10:37:36 -0700
+X-CSE-ConnectionGUID: 7zWq+JHiQw6dbfQpoM7mIQ==
+X-CSE-MsgGUID: 3McLmK6AR/K6RZLTBcZXoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
+   d="scan'208";a="270208830"
+Received: from soc-pf446t5c.clients.intel.com (HELO [10.24.80.90]) ([10.24.80.90])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 10:37:35 -0700
+Message-ID: <1bf1c3bd-2273-4f6e-a49c-de9f3dbf4e65@linux.intel.com>
+Date: Wed, 23 Sep 2026 10:37:35 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR12MB6921:EE_|LV9PR12MB9830:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5cf4fdd6-9c6f-435e-1f97-08df1993fc25
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|3023799007|6133799003|10067099003|56012099006|11063799006|5023799004|4143699003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	UFU8dkYRfqeF2ylbVol/xSKa/JE/girSVJACRgRcJB7/fRi5N8WvIMt2JIdFt3o7lLpI+TKHF7AsuMzW3cSD84idrYNSwTKXaub2/1v08OeK+d41oVfRaRIw9a14PK+0ejfLNA1D/Z5m+CA9kZlTai2hrA0qgkkfocJzsPtXWVmWv//Bj+OyKVLj6p2FFxFFtpgMbf8pcRgnyl14CMXgC73nP0DGIaOVsQC8YK3OI2gltATYsRNT4BzHWFDfgYOZszjDm44eOAYUIn/siCtZtQaPo+am+sc/PbaZOCv1/neWjV4/wqTdImWI+eyKBs3V4aHewtylHrNVVhhdcw5btWup8lPICgdXCwSLlwphwuNM3EMatnj7fmRCg37OQqBZwWsDtVrc8C6QQyxDSCZUYRGW/rcYyLI8Y8QkEZ8o2yLaxqsJw4yxC/tCTzYmD1mCEdqrwpHlDRaSE1tRnO279UPzBFd1bTx8wRoZYJSD/5dXCQ+jUZuLNFhwKyy1dS0JI0LiH8TtUmeAQXFM6RP8BxTMbNZyxCFaqYMmeeg2xFkknUHXLOEQOj3w/Eb3h5yxjUUCfcXebeTRsprNYiBx+nKUXAT7TO0KimOj4Ui/x8f2ugqxxFQmJ2F9cdqKR36gAHyuhjfZbvwNN8jNFguezz5bpMhFZaNnGYAsGuQKrZQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB6921.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(3023799007)(6133799003)(10067099003)(56012099006)(11063799006)(5023799004)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dXJQQ0VPbEpNUTRFSWViRkVOOGFDQWxHL3NNQ3E3V1liQk5ZODVXMTd1cnVV?=
- =?utf-8?B?OHRDY0gzelNzcGttV2tnUFkvNVBQSzJwRjRwRTdHU1BscHBrSnNyTE1kWk5i?=
- =?utf-8?B?RFlDdG5PR2VlUUR0VndVeTVIcXJPLzExR0JhdlNkeW1RUzZ0c0NXUFpFWGtS?=
- =?utf-8?B?dzRtRjVndndVOG5HRy9kcTl2VEE1aVIwdzI3Z3JjdEtvRko4WVR5YjFPK3pu?=
- =?utf-8?B?TktxQW02cHUyVVl3dUovWDE2ZlNnYXhPY21QeEVuRW9UQUFCZk5yUUN6Mlp0?=
- =?utf-8?B?QlFXOUs4dGhhamdDR0VERVcyY01ONXJPUVRFZzBkM1JMZGF3UnAxVmdKaHFo?=
- =?utf-8?B?K3hJbHFyYWp5aTdpdytia3ovTFVHVlhUQzN6OWVVdXc3Ly9ZMW85OXRrRzVy?=
- =?utf-8?B?Q25vUGFsN0M5R29ncHFETUU4RXNhaE1sOGk1eXhYLytNKzFDVzdBN21xSUQ3?=
- =?utf-8?B?Q21TYk9aNFFnYjN1eUY4Ukx2ZUpPUkxoRERULzg3NGlwRHdJRzA0Mmt5UWIv?=
- =?utf-8?B?cVYxeVVITjBvcUsybncvRzJ3VXBSdWJxNVF6bGw5MGpRc3pReU1hOGlKdnJQ?=
- =?utf-8?B?WC83S3dLM0VFZFBmMHVFTEVXaDZNTGJyRjVYdTZEL3VyVmxPa0JSL04xUm16?=
- =?utf-8?B?SFR4eEJsYjVRU21kSTFzdDBYaDUxOHUyUjdPV2lJRGVqZUdoWVRyREtyODNu?=
- =?utf-8?B?SGRmMFZZUnpVQ1oyTVMrT0dxYllZNzNWWkg5Yk5nc3MvM0lLcWZQU01sd2Js?=
- =?utf-8?B?WHF0U3ZBNGZwZzE3bWtDTFJhUWpmVDBIN1ZZTmVlU2ZqS2JRZzBlSlBhKzZG?=
- =?utf-8?B?VTFQaUhpNkQvK0NFN0JMekRYVnVLVURDaHJDWkludW9UanhrQUVpaUhuaVdS?=
- =?utf-8?B?dUhtWjB1QmplMVBvd3FKcnVybjJlNGhDTkpQNkNTUXpMNGhCcGZvT0V5WW5N?=
- =?utf-8?B?RmxyZXhrdmYxQVRXRVF2SnpWR3Zja0tFL1hORVpHaUJGV2tJRUFaTVh3ak9I?=
- =?utf-8?B?QUh1ekFZZGFGRWlqN0pYOFpncWpsRWt3U0tTTzFnelBUdlVDMTV1N3RnYTBv?=
- =?utf-8?B?VHZZK0ZJZVVTbWswTVFibzBKNGZVVG03VHdxM2UvSG1oWDRBU09IL2pHYTNK?=
- =?utf-8?B?WS93RHVGS1NSUE5pRVF3WDM0cTJhUkE2NGtLR0lBd2pCVjJTNzdJZElCMC9p?=
- =?utf-8?B?anp4NGtNYmlsaSt3MjJ1dlJrNkVwUWVUdm9qdVEvZTI0R09WQmY4bmQvcmdY?=
- =?utf-8?B?dUpIckkxRHYrWmUwK2xzdHFzd3Z4Z1J3Ny9YaW5pWHh5Q0YrRnd3MFZEU1g5?=
- =?utf-8?B?S2RnVDIrVHppSkg4bHpSN1N4QjdUUmNmVHNHT3gwZ2lqd2tUTXhYTFg5WDhz?=
- =?utf-8?B?TG5tSkdPWjg4TEFhVEs2enRtSXJrdjF6Rko2WTNyTENnM0hNc3M1UXlneXdX?=
- =?utf-8?B?dmlRaHZOdUJ5akp6RXBNM0NlaHJaZjU4Y0RYalJLM0taN3dXTnRYNWlBN0Vt?=
- =?utf-8?B?WCtWTk5DYklUYUxCYnBuNnNCNm5OVUVyeGpIN1kzMWo0WkNLWDd5Z3AzWHFF?=
- =?utf-8?B?MXRqam84cUg1cUNkelZMdDN5aWNtTHFqUUx1cmdBd1ZRRmNSRC9lbWtvdm1w?=
- =?utf-8?B?RUdTNC80SENCUGlJM3IvQjRORzdNSWU4bjNCcXVaaHFwZFVFS21MRWhsNGNw?=
- =?utf-8?B?TFJXRVZLcmd5WGNwV3RXeWt3OUo4bmFPVjRUbXBZQU9Edmx2TmhUQmVHVWsx?=
- =?utf-8?B?KzdXMHZwRGdJaTlaSFBhVlE1YWtPK3crQjcyNnV6ZTBtUnFpOWhVYjcrMkM0?=
- =?utf-8?B?ekRDMW9pdCt3dGV5YWYrYlRhK1VhQ2QwZTFyVEpvR2R3NDRNNkE1aHd0T3Vn?=
- =?utf-8?B?WHlqSzdvRXoyUkJ0UHAyNUo4b1ZvSTZyQXY0ak4zSjRRWlhBWllYVWVaeThN?=
- =?utf-8?B?Q21vbEpHS2R3T2JKYVlzUFp2K2F6VVRmUVB3dEtJVUVoOHdQWFNLeTJFYmpj?=
- =?utf-8?B?cVRTTmRwQTBtcU04cmJESmk4QlhGR1VHK1dpcWlWbWcrUFh1RGd0ZXNUTkRk?=
- =?utf-8?B?YXlyVHhBTHYydERWVlhFU1NPM1BPQXh0bWNVajFGUXpObVRxTVoxdXpiMGtM?=
- =?utf-8?B?TVM4NGxNakRCWnFwVFVYYy9HZVVPTzlBd3k4R05zQUJ5L2lhRmJ6WW5MQmNs?=
- =?utf-8?B?T3VtS0ZhL211NGppemtFbTA2OTlMK052N0ZqMy9XZ3V6ay9DNFZXQ1R1dGpY?=
- =?utf-8?B?ajJuWkNXSjRNRWUzQjdRUDUvWkhrTWpiRlV2V2FLL3N5VVhENVJYL1ErTmY5?=
- =?utf-8?B?ekVMKytndTRObXhJdkpIVGdBWkswenB4QjlYMVFnMjNmeXlHdEtwZz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cf4fdd6-9c6f-435e-1f97-08df1993fc25
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB6921.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 16:59:09.3437
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1A8PkihiMh8MS8AUW0Bs0TDmfeBx7sJrj6aEDJAgwCxEAhXiq+/jgy63E0cgU+KUrUSYfCCGBDqjaqugajipHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR12MB9830
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 10/10] platform/x86/intel/tpmi: Split off the PCI VSEC
+ enumeration
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>, David E Box <david.e.box@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@intel.com>,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20260922183311.3783010-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20260922183311.3783010-11-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <a32a80d9-7d09-1302-9a0c-35bf99c9b5b7@linux.intel.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <a32a80d9-7d09-1302-9a0c-35bf99c9b5b7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
-On 9/23/26 11:54, Fourhundred Thecat wrote:
-> On 2026-09-23 18:41, Mario Limonciello wrote:
->>
->>
->> On 9/23/26 11:37, Fourhundred Thecat wrote:
->>> On 2026-09-23 18:20, Mario Limonciello wrote:
->>>>
->>>>
->>>> On 9/23/26 11:15, Mario Limonciello wrote:
->>>>>
->>>>>
->>>>> On 9/23/26 11:12, Fourhundred Thecat wrote:
->>>>>> On 2026-09-23 16:36, Mario Limonciello wrote:
->>>>>>>
->>>>>>>
->>>>>>> Some other thoughts that might be the root cause based on other 
->>>>>>> historical issues.
->>>>>>>
->>>>>>> 1) Have you changed TPM policy or Pluton policy in BIOS setup? 
->>>>>>> What did you change it from and to.
->>>>>>> 2) Have you enabled a storage security password?  If you disable 
->>>>>>> it does it help this issue?
->>>>>>> 3) Do you have WWAN in your device?  If you disable it does it help?
->>>>>>> 4) Does booting with `amd_iommu=off` help?
->>>>>>
->>>>>> 4) amd_iommu=off
->>>>>>
->>>>>> Yes, that fixes it. With amd_iommu=off and all 24 CPUs online, 
->>>>>> suspend/ resume works reliably.
->>>>>>
->>>>>> So this is not really a CPU count problem. nr_cpus=16 was only 
->>>>>> masking an IOMMU interaction. But narrowing it further was 
->>>>>> surprising: neither of the IOMMU's two functions is responsible on 
->>>>>> its own. All of the following were run with all 24 CPUs online, 
->>>>>> and I verified in each case that the parameter actually took effect:
->>>>>>
->>>>>>    amd_iommu=off            IOMMU off entirely WAKES
->>>>>>    intremap=off             IR off, DMA remapping on no wake
->>>>>>    iommu=pt                 DMA passthrough, IR on no wake
->>>>>>    amd_iommu_intr=legacy    legacy GA mode, IR on, DMA on no wake
->>>>>>
->>>>>> Verification for each:
->>>>>>
->>>>>>    intremap=off           /proc/interrupts went from 58 IR- lines 
->>>>>> to 0,
->>>>>>                           and irq 1 (i8042) is no longer IR-IO-APIC.
->>>>>>                           iommu still enabled, domain type 
->>>>>> Translated.
->>>>>>    iommu=pt               "iommu: Default domain type: Passthrough 
->>>>>> (set via
->>>>>>                           kernel command line)", all 40 PCI 
->>>>>> devices in
->>>>>>                           identity domains, IR still on (58 IR- 
->>>>>> lines).
->>>>>>    amd_iommu_intr=legacy  "AMD-Vi: Virtual APIC enabled" no longer 
->>>>>> printed,
->>>>>>                           only "AMD-Vi: Interrupt remapping enabled".
->>>>>>
->>>>>> So only disabling the IOMMU outright helps. Turning off interrupt 
->>>>>> remapping alone, bypassing DMA translation alone, or dropping out 
->>>>>> of vAPIC/GA mode all still hang.
->>>>>>
->>>>>> The CPU dependency is still there on top of that. With the IOMMU 
->>>>>> enabled, nr_cpus=16 works and 24 CPUs hangs. Offlining cpu16-23 by 
->>>>>> hotplug after booting with all 24 does not help; the CPUs have to 
->>>>>> never be brought up. cpu16-23 here are the second SMT thread of 
->>>>>> the eight Zen5c cores (APIC ids 17,19..31).
->>>>>>
->>>>>> Both conditions appear to be required: the IOMMU enabled, and more 
->>>>>> than 16 CPUs brought up at boot. Either one alone is fine.
->>>>>>
->>>>>>
->>>>>> 1) TPM / Pluton policy
->>>>>>
->>>>>> Current values:
->>>>>>
->>>>>>    TpmSelection            = DiscreteTPM2.0   (possible: 
->>>>>> DiscreteTPM2.0;PlutonTPM2.0)
->>>>>>    PlutonSecurityProcessor = Disable
->>>>>>    SecurityChip            = Enable
->>>>>>
->>>>>> The TPM that binds is a discrete STMicro part, tpm0 -> STM0925:00.
->>>>>>
->>>>>> I did change this. As I recall I disabled Microsoft Pluton, which 
->>>>>> moves the TPM selection off the PlutonTPM2.0 default onto the 
->>>>>> discrete part, so Enable -> Disable for Pluton and PlutonTPM2.0 -> 
->>>>>> DiscreteTPM2.0 for the selection. I will confirm the exact 
->>>>>> original values in setup. I have not yet tested whether restoring 
->>>>>> the Pluton default changes the behaviour, since the IOMMU result 
->>>>>> looked more promising.
->>>>>>
->>>>>>
->>>>>> 2) Storage security password
->>>>>>
->>>>>> None enrolled. HardDiskPasswordControl=Disable, and the HDD, NVMe, 
->>>>>> Admin, System and Power-on authentication slots all report 
->>>>>> is_enabled=0. BlockSIDAuthentication=Enable is the only non- 
->>>>>> default setting in that area. Nothing to disable, so nothing to test.
->>>>>>
->>>>>>
->>>>>> 3) WWAN
->>>>>>
->>>>>> Yes: Quectel [1eac:1007] at 0000:c4:00.0, attached over MHI, 
->>>>>> exposing wwan0. Its power/wakeup is enabled. Not yet tested with 
->>>>>> WirelessWANAccess disabled in BIOS.
->>>>>>
->>>>>>
->>>>>> so please suggest which test I should do next, now that we have 
->>>>>> more info
->>>>>
->>>>> Of your above the most likely cause is PlutonSecurityProcessor = 
->>>>> Disable.  Please try to re-enable that and then try with IOMMU 
->>>>> enabled.
->>>>
->>>> BTW - what version of amd-s2idle didn't flag this?  I am surprised, 
->>>> we had a check for this that /should/ have failed prerequisites.
->>>
->>> Tested, and it does not help.
->>>
->>>    PlutonSecurityProcessor  Disable -> Enable
->>>    TpmSelection             DiscreteTPM2.0 -> PlutonTPM2.0
->>>    SecurityChip             Enable -> Active
->>>
->>> With those set, IOMMU enabled, no IOMMU boot parameters and all 24 
->>> CPUs online, the machine still does not wake.
->>
->> That's interesting.  We'll have to see what the report shows if it's 
->> not the Pluton setting.
->>
->>>
->>> Worth noting what that test also covers: with Pluton selected the TPM 
->>> presents through the CRB interface (MSFT0101:00, status=15), and this 
->>> kernel has CONFIG_TCG_CRB=n. So during that suspend Linux had no TPM 
->>> driver bound at all -- no /sys/class/tpm, no /dev/tpm0, and the 
->>> discrete STM0925 was gone from the platform bus. Previously tpm_tis 
->>> was bound to STM0925:00. So this rules out the tpm_tis driver as a 
->>> factor as well as the Pluton policy.
->>>
->>> Current state of what is ruled out, all with the IOMMU enabled and 24 
->>> CPUs online:
->>>
->>>    amd_pmf                  initcall_blacklist=amd_pmf_driver_init no 
->>> wake
->>>    amdxdna (NPU)            
->>> initcall_blacklist=amdxdna_pci_driver_init no wake
->>>    TPM driver               no driver bound at all (Pluton/CRB, no 
->>> CONFIG_TCG_CRB)  no wake
->>>    Pluton policy            Pluton enabled, PlutonTPM2.0 no wake
->>>    interrupt remapping      intremap=off (verified: 0 IR- lines) no wake
->>>    DMA remapping            iommu=pt (verified: Passthrough, 
->>> identity) no wake
->>>    vAPIC / GA mode          amd_iommu_intr=legacy (verified) no wake
->>>
->>> The only two things that let it wake are amd_iommu=off with all 24 
->>> CPUs, or the IOMMU enabled with nr_cpus=16. Offlining cpu16-23 by 
->>> hotplug after booting with all 24 does not work; they have to never 
->>> be brought up.
->>
->> No.  nr_cpus=16 wasn't a pass.  Don't treat it as such.  You didn't 
->> get to HW sleep.  Let's please not conflate changing NR CPUs.  Let's 
->> figure out what's wrong with all CPUs enabled and IOMMU enabled, and 
->> then peel it back if you need to turn off CPUs.
->>
->>>
->>> I am rebuilding now with CONFIG_DEBUG_FS, CONFIG_PM_DEBUG, 
->>> CONFIG_DYNAMIC_DEBUG and CONFIG_AMD_MP2_STB so I can run amd-s2idle 
->>> and send you the report from the working nr_cpus=16 configuration.
->>
->> So you didn't run it yet?  I thought you said it failed.
->>
+On 9/22/2026 1:19 PM, Ilpo Järvinen wrote:
+> On Tue, 22 Sep 2026, Kuppuswamy Sathyanarayanan wrote:
 > 
->  > No.  nr_cpus=16 wasn't a pass.  Don't treat it as such.  You didn't get
->  > to HW sleep.  Let's please not conflate changing NR CPUs.
+>> Everything the TPMI driver does once the PFS table has been located is
+>> independent of how the TPMI MMIO region was discovered, from walking the
+>> PFS to creating the per feature devices. Only the entry point is VSEC
+>> specific and it is now reduced to filling in the arguments of
+>> intel_tpmi_init().
+>>
+>> Move the enumeration independent code to a new intel-tpmi_common module
+>> and leave the auxiliary driver binding to the "intel_vsec.tpmi" device
+>> created by the Intel VSEC driver in vsec_tpmi.c. The code is moved as
+>> is, apart from a stray blank line and a typo in a comment that are fixed
+>> in passing.
+>>
+>> tpmi_common.h exposes what an enumeration method needs, which is
+>> intel_tpmi_init(), intel_tpmi_deinit() and struct intel_tpmi_info. The
+>> structure is a complete type because the enumeration method allocates it
+>> and is expected to extend it with its own data. The PFS, TPMI_INFO and
+>> feature state layouts stay private to tpmi_common.c, only the hardware
+>> parsing touches them.
+>>
+>> CONFIG_INTEL_TPMI_COMMON is a hidden symbol selected by the enumeration
+>> method, in the same way as CONFIG_INTEL_TPMI_POWER_DOMAINS. The TPMI
+>> client API is now exported by intel-tpmi_common, so the client drivers
+>> depend on that module instead of intel-vsec_tpmi. That is what allows a
+>> second, non PCI enumeration method to be added later without the client
+>> drivers knowing which one is loaded.
+>>
+>> No functional change.
+>>
+>> Co-developed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>> ---
+>>  MAINTAINERS                              |   1 +
+>>  drivers/platform/x86/intel/Kconfig       |   4 +
+>>  drivers/platform/x86/intel/Makefile      |   1 +
+>>  drivers/platform/x86/intel/tpmi_common.c | 829 ++++++++++++++++++++++
+>>  drivers/platform/x86/intel/tpmi_common.h |  52 ++
+>>  drivers/platform/x86/intel/vsec_tpmi.c   | 836 +----------------------
+>>  6 files changed, 895 insertions(+), 828 deletions(-)
+>>  create mode 100644 drivers/platform/x86/intel/tpmi_common.c
+>>  create mode 100644 drivers/platform/x86/intel/tpmi_common.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 3a19da74d00c..40ea7921ed8b 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13522,6 +13522,7 @@ M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>>  L:	platform-driver-x86@vger.kernel.org
+>>  S:	Maintained
+>>  F:	Documentation/ABI/testing/debugfs-tpmi
+>> +F:	drivers/platform/x86/intel/tpmi_common.[ch]
+>>  F:	drivers/platform/x86/intel/vsec_tpmi.c
+>>  F:	include/linux/intel_tpmi.h
+>>  
+>> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+>> index 2900407d6095..ea6dc7b50d90 100644
+>> --- a/drivers/platform/x86/intel/Kconfig
+>> +++ b/drivers/platform/x86/intel/Kconfig
+>> @@ -209,11 +209,15 @@ config INTEL_SMARTCONNECT
+>>  config INTEL_TPMI_POWER_DOMAINS
+>>  	tristate
+>>  
+>> +config INTEL_TPMI_COMMON
+>> +	tristate
+>> +
+>>  config INTEL_TPMI
+>>  	tristate "Intel Topology Aware Register and PM Capsule Interface (TPMI)"
+>>  	depends on INTEL_VSEC
+>>  	depends on X86_64
+>>  	select INTEL_TPMI_POWER_DOMAINS
+>> +	select INTEL_TPMI_COMMON
+>>  	help
+>>  	  The Intel Topology Aware Register and PM Capsule Interface (TPMI),
+>>  	  provides enumerable MMIO interface for power management features.
+>> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+>> index 138b13756158..d2c63a136e51 100644
+>> --- a/drivers/platform/x86/intel/Makefile
+>> +++ b/drivers/platform/x86/intel/Makefile
+>> @@ -40,6 +40,7 @@ intel-target-$(CONFIG_INTEL_PUNIT_IPC)		+= punit_ipc.o
+>>  # TPMI drivers
+>>  intel-target-$(CONFIG_INTEL_PLR_TPMI)		+= plr_tpmi.o
+>>  intel-target-$(CONFIG_INTEL_TPMI_POWER_DOMAINS)	+= tpmi_power_domains.o
+>> +intel-target-$(CONFIG_INTEL_TPMI_COMMON)	+= tpmi_common.o
+>>  intel-target-$(CONFIG_INTEL_TPMI)		+= vsec_tpmi.o
+>>  
+>>  # Intel Uncore drivers
+>> diff --git a/drivers/platform/x86/intel/tpmi_common.c b/drivers/platform/x86/intel/tpmi_common.c
+>> new file mode 100644
+>> index 000000000000..0db766309529
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/intel/tpmi_common.c
+>> @@ -0,0 +1,829 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Enumeration independent part of the Intel TPMI driver
+>> + *
+>> + * Copyright (c) 2026, Intel Corporation.
+>> + * All Rights Reserved.
+>> + *
+>> + * The TPMI (Topology Aware Register and PM Capsule Interface) provides a
+>> + * flexible, extendable and PCIe enumerable MMIO interface for PM features.
+>> + *
+>> + * For example Intel RAPL (Running Average Power Limit) provides a MMIO
+>> + * interface using TPMI. This has advantage over traditional MSR
+>> + * (Model Specific Register) interface, where a thread needs to be scheduled
+>> + * on the target CPU to read or write. Also the RAPL features vary between
+>> + * CPU models, and hence lot of model specific code. Here TPMI provides an
+>> + * architectural interface by providing hierarchical tables and fields,
+>> + * which will not need any model specific implementation.
+>> + *
+>> + * The TPMI specification defines a PFS (PM Feature Structure) table.
+>> + * This table is present in the TPMI MMIO region. Each TPMI PM feature
+>> + * has one entry in the PFS with a unique TPMI ID and its access details.
+>> + *
+>> + * The names of the devices created for the PM features start with the
+>> + * "intel_vsec.tpmi-" prefix which is followed by a specific name of the
+>> + * given PM feature (for example, "intel_vsec.tpmi-rapl.0").
+>> + *
+>> + * The device nodes are create by using interface "intel_vsec_add_aux()"
+>> + * provided by the Intel VSEC driver.
+>> + */
+>> +
+>> +#include <linux/align.h>
+>> +#include <linux/array_size.h>
+>> +#include <linux/auxiliary_bus.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/debugfs.h>
+>> +#include <linux/cleanup.h>
 > 
-> Agreed, I will drop it from the framing.
+> Alphabetic order.
 > 
-> That does leave a gap in my own data which I should close: I never 
-> measured whether amd_iommu=off reaches hardware sleep either. I only 
-> recorded total_hw_sleep=0 for the nr_cpus=16 case and did not check the 
-> counter after an amd_iommu=off resume. If that is also 0 then nothing on 
-> this machine has ever reached s0i3, and the wake failure is a second- 
-> order effect rather than the thing to chase. I will measure it.
+>> +#include <linux/delay.h>
+>> +#include <linux/intel_tpmi.h>
+>> +#include <linux/intel_vsec.h>
+>> +#include <linux/io.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/module.h>
+>> +#include <linux/notifier.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/security.h>
+>> +#include <linux/sizes.h>
+>> +#include <linux/string_helpers.h>
 > 
-> I would also like to confirm the counter is meaningful here before 
-> drawing conclusions from it. max_hw_sleep reads 18446744073709551615, 
-> which looks like an unpopulated value, so total_hw_sleep=0 may be a 
-> reporting gap rather than a real zero. With CONFIG_DEBUG_FS and 
-> CONFIG_AMD_MP2_STB in the new build I can read /sys/kernel/debug/ 
-> amd_pmc/s0ix_stats directly instead of inferring it from suspend_stats.
-
-I don't care about max_hw_sleep.  It's a hardcoded value.
-
-https://docs.kernel.org/admin-guide/abi-testing.html#abi-sys-power-suspend-stats-max-hw-sleep
-
+> Please check you've the includes for the stuff you're using, I'll mention 
+> some below but might miss one or two.
 > 
->  > So you didn't run it yet?  I thought you said it failed.
+> Some/most of the code comments below may be better done in own patches on 
+> top of this patch as this seems to be mostly moving existing code around.
+> It would keep this easier to review (patches only moving code around can 
+> usually be checked using diff-of-diffs to find unwanted code changes, I 
+> do use it frequently to review move changes).
 > 
-> Correct, I have not run amd-s2idle yet. 
 
+Sure. I will fix them in v2.
 
-That should have been your first debugging step.
+>> +
+>> +#include "tpmi_common.h"
+>> +
+>> +/**
+>> + * struct intel_tpmi_pfs_entry - TPMI PM Feature Structure (PFS) entry
+>> + * @tpmi_id:	TPMI feature identifier (what the feature is and its data format).
+>> + * @num_entries: Number of feature interface instances present in the PFS.
+>> + *		 This represents the maximum number of Power domains in the SoC.
+>> + * @entry_size:	Interface instance entry size in 32-bit words.
+>> + * @cap_offset:	Offset from the PM_Features base address to the base of the PM VSEC
+>> + *		register bank in KB.
+>> + * @attribute:	Feature attribute: 0=BIOS. 1=OS. 2-3=Reserved.
+>> + * @reserved:	Bits for use in the future.
+>> + *
+>> + * Represents one TPMI feature entry data in the PFS retrieved as is
+>> + * from the hardware.
+>> + */
+>> +struct intel_tpmi_pfs_entry {
+>> +	u64 tpmi_id:8;
+>> +	u64 num_entries:8;
+>> +	u64 entry_size:16;
+>> +	u64 cap_offset:16;
+>> +	u64 attribute:2;
+>> +	u64 reserved:14;
+>> +} __packed;
+> 
+> Add include for __packed.
+> 
+>> +
+>> +/**
+>> + * struct intel_tpmi_pm_feature - TPMI PM Feature information for a TPMI ID
+>> + * @pfs_header:	PFS header retireved from the hardware.
+>> + * @vsec_offset: Starting MMIO address for this feature in bytes. Essentially
+>> + *		 this offset = "Address" from VSEC header + PFS Capability
+>> + *		 offset for this feature entry.
+>> + *
+>> + * Represents TPMI instance information for one TPMI ID.
+>> + */
+>> +struct intel_tpmi_pm_feature {
+>> +	struct intel_tpmi_pfs_entry pfs_header;
+>> +	u64 vsec_offset;
+>> +};
+>> +
+>> +/**
+>> + * struct tpmi_info_header - CPU package ID to PCI device mapping information
+>> + * @fn:		PCI function number
+>> + * @dev:	PCI device number
+>> + * @bus:	PCI bus number
+>> + * @pkg:	CPU Package id
+>> + * @segment:	PCI segment id
+>> + * @partition:	Package Partition id
+>> + * @cdie_mask:	Bitmap of compute dies in the current partition
+>> + * @reserved:	Reserved for future use
+>> + * @lock:	When set to 1 the register is locked and becomes read-only
+>> + *		until next reset. Not for use by the OS driver.
+>> + *
+>> + * The structure to read hardware provided mapping information.
+>> + */
+>> +struct tpmi_info_header {
+>> +	u64 fn:3;
+>> +	u64 dev:5;
+>> +	u64 bus:8;
+>> +	u64 pkg:8;
+>> +	u64 segment:8;
+>> +	u64 partition:2;
+>> +	u64 cdie_mask:16;
+>> +	u64 reserved:13;
+>> +	u64 lock:1;
+>> +} __packed;
+>> +
+>> +/**
+>> + * struct tpmi_feature_state - Structure to read hardware state of a feature
+>> + * @enabled:	Enable state of a feature, 1: enabled, 0: disabled
+>> + * @reserved_1:	Reserved for future use
+>> + * @write_blocked: Writes are blocked means all write operations are ignored
+>> + * @read_blocked: Reads are blocked means will read 0xFFs
+>> + * @pcs_select:	Interface used by out of band software, not used in OS
+>> + * @reserved_2:	Reserved for future use
+>> + * @id:		TPMI ID of the feature
+>> + * @reserved_3:	Reserved for future use
+>> + * @locked:	When set to 1, OS can't change this register.
+>> + *
+>> + * The structure is used to read hardware state of a TPMI feature. This
+>> + * information is used for debug and restricting operations for this feature.
+>> + */
+>> +struct tpmi_feature_state {
+>> +	u32 enabled:1;
+>> +	u32 reserved_1:3;
+>> +	u32 write_blocked:1;
+>> +	u32 read_blocked:1;
+>> +	u32 pcs_select:1;
+>> +	u32 reserved_2:1;
+>> +	u32 id:8;
+>> +	u32 reserved_3:15;
+>> +	u32 locked:1;
+>> +} __packed;
+>> +
+>> +/*
+>> + * The size from hardware is in u32 units. This size is from a trusted hardware,
+>> + * but better to verify for pre silicon platforms. Set size to 0, when invalid.
+>> + */
+>> +#define TPMI_GET_SINGLE_ENTRY_SIZE(pfs)							\
+>> +({											\
+>> +	pfs->pfs_header.entry_size > SZ_1K ? 0 : pfs->pfs_header.entry_size << 2;	\
+> 
+> * sizeof(u32) instead of shift?
+> 
+>> +})
+>> +
+>> +/* Used during auxbus device creation */
+>> +static DEFINE_IDA(intel_vsec_tpmi_ida);
+> 
+> Include.
+> 
+>> +
+>> +static BLOCKING_NOTIFIER_HEAD(tpmi_notify_list);
+>> +
+>> +int tpmi_register_notifier(struct notifier_block *nb)
+>> +{
+>> +	return blocking_notifier_chain_register(&tpmi_notify_list, nb);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(tpmi_register_notifier, "INTEL_TPMI");
+> 
+> Include.
+> 
+>> +
+>> +int tpmi_unregister_notifier(struct notifier_block *nb)
+>> +{
+>> +	return blocking_notifier_chain_unregister(&tpmi_notify_list, nb);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(tpmi_unregister_notifier, "INTEL_TPMI");
+>> +
+>> +struct oobmsm_plat_info *tpmi_get_platform_data(struct auxiliary_device *auxdev)
+>> +{
+>> +	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+>> +
+>> +	return vsec_dev->priv_data;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(tpmi_get_platform_data, "INTEL_TPMI");
+>> +
+>> +int tpmi_get_resource_count(struct auxiliary_device *auxdev)
+>> +{
+>> +	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+>> +
+>> +	if (vsec_dev)
+>> +		return vsec_dev->num_resources;
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(tpmi_get_resource_count, "INTEL_TPMI");
+>> +
+>> +struct resource *tpmi_get_resource_at_index(struct auxiliary_device *auxdev, int index)
+>> +{
+>> +	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+>> +
+>> +	if (vsec_dev && index < vsec_dev->num_resources)
+>> +		return &vsec_dev->resource[index];
+>> +
+>> +	return NULL;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(tpmi_get_resource_at_index, "INTEL_TPMI");
+>> +
+>> +/* TPMI Control Interface */
+>> +
+>> +#define TPMI_CONTROL_STATUS_OFFSET	0x00
+>> +#define TPMI_COMMAND_OFFSET		0x08
+>> +#define TMPI_CONTROL_DATA_VAL_OFFSET	0x0c
+>> +
+>> +/*
+>> + * Spec is calling for max 1 seconds to get ownership at the worst
+>> + * case. Read at 10 ms timeouts and repeat up to 1 second.
+>> + */
+>> +#define TPMI_CONTROL_TIMEOUT_US		(10 * USEC_PER_MSEC)
+>> +#define TPMI_CONTROL_TIMEOUT_MAX_US	(1 * USEC_PER_SEC)
+> 
+> Include for *_PER_*
+> 
+>> +
+>> +#define TPMI_RB_TIMEOUT_US		(10 * USEC_PER_MSEC)
+>> +#define TPMI_RB_TIMEOUT_MAX_US		USEC_PER_SEC
+>> +
+>> +/* TPMI Control status register defines */
+>> +
+>> +#define TPMI_CONTROL_STATUS_RB		BIT_ULL(0)
+>> +
+>> +#define TPMI_CONTROL_STATUS_OWNER	GENMASK_ULL(5, 4)
+> 
+> Add include.
+> 
+>> +#define TPMI_OWNER_NONE			0
+>> +#define TPMI_OWNER_IN_BAND		1
+>> +
+>> +#define TPMI_CONTROL_STATUS_CPL		BIT_ULL(6)
+>> +#define TPMI_CONTROL_STATUS_RESULT	GENMASK_ULL(15, 8)
+>> +#define TPMI_CONTROL_STATUS_LEN		GENMASK_ULL(31, 16)
+>> +
+>> +#define TPMI_CMD_PKT_LEN		2
+>> +#define TPMI_CMD_STATUS_SUCCESS		0x40
+>> +
+>> +/* TPMI command data registers */
+>> +#define TMPI_CONTROL_DATA_CMD		GENMASK_ULL(7, 0)
+>> +#define TPMI_CONTROL_DATA_VAL_FEATURE	GENMASK_ULL(48, 40)
+>> +
+>> +/* Command to send via control interface */
+>> +#define TPMI_CONTROL_GET_STATE_CMD	0x10
+>> +
+>> +#define TPMI_CONTROL_CMD_MASK		GENMASK_ULL(48, 40)
+>> +
+>> +#define TPMI_CMD_LEN_MASK		GENMASK_ULL(18, 16)
+>> +
+>> +/* Mutex to complete get feature status without interruption */
+>> +static DEFINE_MUTEX(tpmi_dev_lock);
+>> +
+>> +static int tpmi_wait_for_owner(struct intel_tpmi_info *tpmi_info, u8 owner)
+>> +{
+>> +	u64 control;
+>> +
+>> +	return readq_poll_timeout(tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET,
+>> +				  control, owner == FIELD_GET(TPMI_CONTROL_STATUS_OWNER, control),
+>> +				  TPMI_CONTROL_TIMEOUT_US, TPMI_CONTROL_TIMEOUT_MAX_US);
+>> +}
+>> +
+>> +static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int feature_id,
+>> +				    struct tpmi_feature_state *feature_state)
+>> +{
+>> +	u64 control, data;
+>> +	int ret;
+>> +
+>> +	if (!tpmi_info->tpmi_control_mem)
+>> +		return -EFAULT;
+>> +
+>> +	mutex_lock(&tpmi_dev_lock);
+> 
+> Please use guard to avoid unlock related gotos.
+> 
+>> +
+>> +	/* Wait for owner bit set to 0 (none) */
+>> +	ret = tpmi_wait_for_owner(tpmi_info, TPMI_OWNER_NONE);
+>> +	if (ret)
+>> +		goto err_unlock;
+>> +
+>> +	/* set command id to 0x10 for TPMI_GET_STATE */
+>> +	data = FIELD_PREP(TMPI_CONTROL_DATA_CMD, TPMI_CONTROL_GET_STATE_CMD);
+>> +
+>> +	/* 32 bits for DATA offset and +8 for feature_id field */
+>> +	data |= FIELD_PREP(TPMI_CONTROL_DATA_VAL_FEATURE, feature_id);
+>> +
+>> +	/* Write at command offset for qword access */
+>> +	writeq(data, tpmi_info->tpmi_control_mem + TPMI_COMMAND_OFFSET);
+>> +
+>> +	/* Wait for owner bit set to in-band */
+>> +	ret = tpmi_wait_for_owner(tpmi_info, TPMI_OWNER_IN_BAND);
+>> +	if (ret)
+>> +		goto err_unlock;
+>> +
+>> +	/* Set Run Busy and packet length of 2 dwords */
+>> +	control = TPMI_CONTROL_STATUS_RB;
+>> +	control |= FIELD_PREP(TPMI_CONTROL_STATUS_LEN, TPMI_CMD_PKT_LEN);
+>> +
+>> +	/* Write at status offset for qword access */
+>> +	writeq(control, tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET);
+>> +
+>> +	/* Wait for Run Busy clear */
+>> +	ret = readq_poll_timeout(tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET,
+>> +				 control, !(control & TPMI_CONTROL_STATUS_RB),
+>> +				 TPMI_RB_TIMEOUT_US, TPMI_RB_TIMEOUT_MAX_US);
+>> +	if (ret)
+>> +		goto done_proc;
+>> +
+>> +	control = FIELD_GET(TPMI_CONTROL_STATUS_RESULT, control);
+>> +	if (control != TPMI_CMD_STATUS_SUCCESS) {
+>> +		ret = -EBUSY;
+>> +		goto done_proc;
+>> +	}
+>> +
+>> +	/* Response is ready */
+>> +	memcpy_fromio(feature_state, tpmi_info->tpmi_control_mem + TMPI_CONTROL_DATA_VAL_OFFSET,
+>> +		      sizeof(*feature_state));
+>> +
+>> +	ret = 0;
+>> +
+>> +done_proc:
+>> +	/* Set CPL "completion" bit */
+>> +	writeq(TPMI_CONTROL_STATUS_CPL, tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET);
+>> +
+>> +err_unlock:
+>> +	mutex_unlock(&tpmi_dev_lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +int tpmi_get_feature_status(struct auxiliary_device *auxdev,
+>> +			    int feature_id, bool *read_blocked, bool *write_blocked)
+>> +{
+>> +	struct intel_tpmi_info *tpmi_info = dev_get_drvdata(auxdev->dev.parent);
+>> +	struct tpmi_feature_state feature_state;
+>> +	int ret;
+>> +
+>> +	ret = tpmi_read_feature_status(tpmi_info, feature_id, &feature_state);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*read_blocked = feature_state.read_blocked;
+>> +	*write_blocked = feature_state.write_blocked;
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, "INTEL_TPMI");
+>> +
+>> +struct dentry *tpmi_get_debugfs_dir(struct auxiliary_device *auxdev)
+>> +{
+>> +	struct intel_tpmi_info *tpmi_info = dev_get_drvdata(auxdev->dev.parent);
+>> +
+>> +	return tpmi_info->dbgfs_dir;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(tpmi_get_debugfs_dir, "INTEL_TPMI");
+>> +
+>> +static int tpmi_pfs_dbg_show(struct seq_file *s, void *unused)
+>> +{
+>> +	struct intel_tpmi_info *tpmi_info = s->private;
+>> +	int locked, disabled, read_blocked, write_blocked;
+>> +	struct tpmi_feature_state feature_state;
+>> +	struct intel_tpmi_pm_feature *pfs;
+>> +	int ret, i;
+>> +
+>> +	seq_printf(s, "tpmi PFS start offset 0x:%llx\n", tpmi_info->pfs_start);
+>> +	seq_puts(s, "tpmi_id\t\tentries\t\tsize\t\tcap_offset\tattribute\tvsec_offset\tlocked\tdisabled\tread_blocked\twrite_blocked\n");
+> 
+> Add include for these calls.
+> 
+>> +	for (i = 0; i < tpmi_info->feature_count; ++i) {
+>> +		pfs = &tpmi_info->tpmi_features[i];
+>> +		ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
+>> +		if (ret) {
+>> +			locked = 'U';
+>> +			disabled = 'U';
+>> +			read_blocked = 'U';
+>> +			write_blocked = 'U';
+>> +		} else {
+>> +			disabled = feature_state.enabled ? 'N' : 'Y';
+>> +			locked = feature_state.locked ? 'Y' : 'N';
+>> +			read_blocked = feature_state.read_blocked ? 'Y' : 'N';
+>> +			write_blocked = feature_state.write_blocked ? 'Y' : 'N';
+>> +		}
+>> +		seq_printf(s, "0x%02x\t\t0x%02x\t\t0x%04x\t\t0x%04x\t\t0x%02x\t\t0x%016llx\t%c\t%c\t\t%c\t\t%c\n",
+>> +			   pfs->pfs_header.tpmi_id, pfs->pfs_header.num_entries,
+>> +			   pfs->pfs_header.entry_size, pfs->pfs_header.cap_offset,
+>> +			   pfs->pfs_header.attribute, pfs->vsec_offset, locked, disabled,
+>> +			   read_blocked, write_blocked);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +DEFINE_SHOW_ATTRIBUTE(tpmi_pfs_dbg);
+>> +
+>> +#define MEM_DUMP_COLUMN_COUNT	8
+>> +
+>> +static int tpmi_mem_dump_show(struct seq_file *s, void *unused)
+>> +{
+>> +	size_t row_size = MEM_DUMP_COLUMN_COUNT * sizeof(u32);
+>> +	struct intel_tpmi_pm_feature *pfs = s->private;
+>> +	int count, ret = 0;
+>> +	void __iomem *mem;
+>> +	u32 size;
+>> +	u64 off;
+>> +	u8 *buffer;
+>> +
+>> +	size = TPMI_GET_SINGLE_ENTRY_SIZE(pfs);
+>> +	if (!size)
+>> +		return -EIO;
+>> +
+>> +	buffer = kmalloc(size, GFP_KERNEL);
+> 
+> Please use __free() and move var declaration here.
+> 
+>> +	if (!buffer)
+>> +		return -ENOMEM;
+>> +
+>> +	off = pfs->vsec_offset;
+>> +
+>> +	mutex_lock(&tpmi_dev_lock);
+> 
+> guard()
+> 
+>> +
+>> +	for (count = 0; count < pfs->pfs_header.num_entries; ++count) {
+>> +		seq_printf(s, "TPMI Instance:%d offset:0x%llx\n", count, off);
+>> +
+>> +		mem = ioremap(off, size);
+>> +		if (!mem) {
+>> +			ret = -ENOMEM;
+>> +			break;
+> 
+> With the cleanup.h in use, this can return directly.
+> 
+>> +		}
+>> +
+>> +		memcpy_fromio(buffer, mem, size);
+>> +
+>> +		seq_hex_dump(s, " ", DUMP_PREFIX_OFFSET, row_size, sizeof(u32), buffer, size,
+>> +			     false);
+>> +
+>> +		iounmap(mem);
+>> +
+>> +		off += size;
+>> +	}
+>> +
+>> +	mutex_unlock(&tpmi_dev_lock);
+>> +
+>> +	kfree(buffer);
+>> +
+>> +	return ret;
+>> +}
+>> +DEFINE_SHOW_ATTRIBUTE(tpmi_mem_dump);
+>> +
+>> +static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t len, loff_t *ppos)
+>> +{
+>> +	struct seq_file *m = file->private_data;
+>> +	struct intel_tpmi_pm_feature *pfs = m->private;
+>> +	u32 addr, value, punit, size;
+>> +	u32 num_elems;
+>> +	void __iomem *mem;
+>> +	int ret;
+>> +
+>> +	size = TPMI_GET_SINGLE_ENTRY_SIZE(pfs);
+>> +	if (!size)
+>> +		return -EIO;
+>> +
+>> +	u32 *array __free(kfree) = NULL;
+>> +	ret = parse_int_array_user(userbuf, len, (int **)&array);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	num_elems = *array;
+>> +	if (num_elems != 3)
+>> +		return -EINVAL;
+>> +
+>> +	punit = array[1];
+>> +	addr = array[2];
+>> +	value = array[3];
+>> +
+>> +	if (!IS_ALIGNED(addr, sizeof(u32)))
+>> +		return -EINVAL;
+>> +
+>> +	if (punit >= pfs->pfs_header.num_entries)
+>> +		return -EINVAL;
+>> +
+>> +	if (addr >= size)
+>> +		return -EINVAL;
+>> +
+>> +	guard(mutex)(&tpmi_dev_lock);
+>> +
+>> +	mem = ioremap(pfs->vsec_offset + punit * size, size);
+>> +	if (!mem)
+>> +		return -ENOMEM;
+>> +
+>> +	writel(value, mem + addr);
+>> +
+>> +	iounmap(mem);
+>> +
+>> +	return len;
+>> +}
+>> +
+>> +static int mem_write_show(struct seq_file *s, void *unused)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static int mem_write_open(struct inode *inode, struct file *file)
+>> +{
+>> +	return single_open(file, mem_write_show, inode->i_private);
+>> +}
+>> +
+>> +static const struct file_operations mem_write_ops = {
+>> +	.open           = mem_write_open,
+>> +	.read           = seq_read,
+>> +	.write          = mem_write,
+>> +	.llseek         = seq_lseek,
+>> +	.release        = single_release,
+>> +};
+>> +
+>> +static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
+>> +{
+>> +	char name[64];
+>> +	int i;
+>> +
+>> +	snprintf(name, sizeof(name), "tpmi-%s", dev_name(tpmi_info->parent));
+> 
+> Prefer scnprintf() over snprintf() so that snprintf() could eventually be 
+> removed. The difference doesn't matter since you're not using the return 
+> value.
+> 
+>> +	tpmi_info->dbgfs_dir = debugfs_create_dir(name, NULL);
+>> +
+>> +	debugfs_create_file("pfs_dump", 0444, tpmi_info->dbgfs_dir, tpmi_info, &tpmi_pfs_dbg_fops);
+>> +
+>> +	for (i = 0; i < tpmi_info->feature_count; ++i) {
+>> +		struct intel_tpmi_pm_feature *pfs;
+>> +		struct dentry *dir;
+>> +
+>> +		pfs = &tpmi_info->tpmi_features[i];
+>> +		snprintf(name, sizeof(name), "tpmi-id-%02x", pfs->pfs_header.tpmi_id);
+>> +		dir = debugfs_create_dir(name, tpmi_info->dbgfs_dir);
+>> +
+>> +		debugfs_create_file("mem_dump", 0444, dir, pfs, &tpmi_mem_dump_fops);
+>> +		debugfs_create_file("mem_write", 0644, dir, pfs, &mem_write_ops);
+>> +	}
+>> +}
+>> +
+>> +static void tpmi_set_control_base(struct intel_tpmi_info *tpmi_info,
+>> +				  struct intel_tpmi_pm_feature *pfs)
+>> +{
+>> +	void __iomem *mem;
+>> +	u32 size;
+>> +
+>> +	size = TPMI_GET_SINGLE_ENTRY_SIZE(pfs);
+>> +	if (!size)
+>> +		return;
+>> +
+>> +	mem = devm_ioremap(tpmi_info->tpmi_dev, pfs->vsec_offset, size);
+>> +	if (!mem)
+>> +		return;
+>> +
+>> +	/* mem is pointing to TPMI CONTROL base */
+>> +	tpmi_info->tpmi_control_mem = mem;
+>> +}
+>> +
+>> +/*
+>> + * The TPMI IDs are sparse, so the unused entries are left NULL and are
+>> + * rejected by the caller like any other unsupported feature.
+>> + */
+>> +static const char * const intel_tpmi_names[] = {
+>> +	[TPMI_ID_RAPL]		= "tpmi-rapl",
+>> +	[TPMI_ID_PEM]		= "tpmi-pem",
+>> +	[TPMI_ID_UNCORE]	= "tpmi-uncore",
+>> +	[TPMI_ID_SST]		= "tpmi-sst",
+>> +	[TPMI_ID_PLR]		= "tpmi-plr",
+>> +};
+>> +
+>> +static const char *intel_tpmi_name(enum intel_tpmi_id id)
+>> +{
+>> +	if (id >= ARRAY_SIZE(intel_tpmi_names))
+>> +		return NULL;
+>> +
+>> +	return intel_tpmi_names[id];
+>> +}
+>> +
+>> +static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+>> +			      struct intel_tpmi_pm_feature *pfs,
+>> +			      u64 pfs_start)
+>> +{
+>> +	struct intel_vsec_device *feature_vsec_dev;
+>> +	struct tpmi_feature_state feature_state;
+>> +	struct resource *res, *tmp;
+>> +	const char *name;
+>> +	int i, ret;
+>> +
+>> +	ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * If not enabled, continue to look at other features in the PFS, so return -EOPNOTSUPP.
+>> +	 * This will not cause failure of loading of this driver.
+>> +	 */
+>> +	if (!feature_state.enabled)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	name = intel_tpmi_name(pfs->pfs_header.tpmi_id);
+>> +	if (!name)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	feature_vsec_dev = kzalloc_flex(*feature_vsec_dev, resource, pfs->pfs_header.num_entries);
+> 
+> Include.
+> 
+>> +	if (!feature_vsec_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	feature_vsec_dev->num_resources = pfs->pfs_header.num_entries;
+>> +	res = feature_vsec_dev->resource;
+>> +
+>> +	for (i = 0, tmp = res; i < pfs->pfs_header.num_entries; i++, tmp++) {
+>> +		u64 entry_size_bytes = pfs->pfs_header.entry_size * sizeof(u32);
+>> +
+>> +		tmp->start = pfs->vsec_offset + entry_size_bytes * i;
+>> +		tmp->end = tmp->start + entry_size_bytes - 1;
+>> +		tmp->flags = IORESOURCE_MEM;
+> 
+> Include.
+> 
+>> +	}
+>> +
+>> +	feature_vsec_dev->dev = tpmi_info->parent;
+>> +	feature_vsec_dev->priv_data = &tpmi_info->plat_info;
+>> +	feature_vsec_dev->priv_data_size = sizeof(tpmi_info->plat_info);
+>> +	feature_vsec_dev->ida = &intel_vsec_tpmi_ida;
+>> +
+>> +	/*
+>> +	 * intel_vsec_add_aux() is resource managed, no explicit
+>> +	 * delete is required on error or on module unload.
+>> +	 * feature_vsec_dev and res memory are also freed as part of
+>> +	 * device deletion.
+>> +	 *
+>> +	 * "name" must outlive the auxiliary device, as the auxiliary bus
+>> +	 * stores the pointer rather than a copy of the string.
+>> +	 */
+>> +	return intel_vsec_add_aux(tpmi_info->tpmi_dev, feature_vsec_dev, name);
+>> +}
+>> +
+>> +static int tpmi_create_devices(struct intel_tpmi_info *tpmi_info)
+>> +{
+>> +	int ret, i;
+>> +
+>> +	for (i = 0; i < tpmi_info->feature_count; i++) {
+>> +		ret = tpmi_create_device(tpmi_info, &tpmi_info->tpmi_features[i],
+>> +					 tpmi_info->pfs_start);
+>> +		/*
+>> +		 * Fail, if the supported features fails to create device,
+>> +		 * otherwise, continue. Even if one device failed to create,
+>> +		 * fail the loading of driver. Since intel_vsec_add_aux()
+>> +		 * is resource managed, no clean up is required for the
+>> +		 * successfully created devices.
+>> +		 */
+> 
+> IMO, this could become a function comment instead (maybe with a minor 
+> wording tweaks).
+> 
+>> +		if (ret && ret != -EOPNOTSUPP)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#define TPMI_INFO_BUS_INFO_OFFSET	0x08
+>> +#define TPMI_INFO_MAJOR_VERSION		0x00
+>> +#define TPMI_INFO_MINOR_VERSION		0x02
+>> +
+>> +static int tpmi_process_info(struct intel_tpmi_info *tpmi_info,
+>> +			     struct intel_tpmi_pm_feature *pfs)
+>> +{
+>> +	struct tpmi_info_header header;
+>> +	void __iomem *info_mem;
+>> +	u64 feature_header;
+>> +	int ret = 0;
+>> +
+>> +	info_mem = ioremap(pfs->vsec_offset, pfs->pfs_header.entry_size * sizeof(u32));
+>> +	if (!info_mem)
+>> +		return -ENOMEM;
+>> +
+>> +	feature_header = readq(info_mem);
+>> +	if (TPMI_MAJOR_VERSION(feature_header) != TPMI_INFO_MAJOR_VERSION) {
+>> +		ret = -ENODEV;
+>> +		goto error_info_header;
+>> +	}
+>> +
+>> +	memcpy_fromio(&header, info_mem + TPMI_INFO_BUS_INFO_OFFSET, sizeof(header));
+>> +
+>> +	tpmi_info->plat_info.package_id = header.pkg;
+>> +	tpmi_info->plat_info.bus_number = header.bus;
+>> +	tpmi_info->plat_info.device_number = header.dev;
+>> +	tpmi_info->plat_info.function_number = header.fn;
+>> +
+>> +	if (TPMI_MINOR_VERSION(feature_header) >= TPMI_INFO_MINOR_VERSION) {
+>> +		tpmi_info->plat_info.cdie_mask = header.cdie_mask;
+>> +		tpmi_info->plat_info.partition = header.partition;
+>> +		tpmi_info->plat_info.segment = header.segment;
+>> +	}
+>> +
+>> +error_info_header:
+>> +	iounmap(info_mem);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int tpmi_fetch_pfs_header(struct intel_tpmi_pm_feature *pfs, u64 start, int size)
+>> +{
+>> +	void __iomem *pfs_mem;
+>> +
+>> +	pfs_mem = ioremap(start, size);
+>> +	if (!pfs_mem)
+>> +		return -ENOMEM;
+>> +
+>> +	memcpy_fromio(&pfs->pfs_header, pfs_mem, sizeof(pfs->pfs_header));
+>> +
+>> +	iounmap(pfs_mem);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#define TPMI_CAP_OFFSET_UNIT	1024
+>> +
+>> +/**
+>> + * intel_tpmi_init() - Bring up a TPMI instance
+>> + * @tpmi_info:	Caller allocated and zeroed state of the TPMI instance
+>> + * @tpmi_dev:	Device representing the TPMI instance. Owns the devm
+>> + *		allocations and parents the TPMI feature devices
+>> + * @parent:	Device the TPMI instance was enumerated from
+>> + * @resource:	Array of @feature_count MMIO resources, one per PFS entry
+>> + * @feature_count: Number of entries in @resource
+>> + *
+>> + * Walk the PFS of the TPMI instance described by @resource, register the
+>> + * debugfs interface and create a device for each supported PM feature.
+>> + *
+>> + * Return: 0 on success, negative errno otherwise.
+>> + */
+>> +int intel_tpmi_init(struct intel_tpmi_info *tpmi_info, struct device *tpmi_dev,
+>> +		    struct device *parent, struct resource *resource, int feature_count)
+>> +{
+>> +	struct pci_dev *pci_dev = dev_is_pci(parent) ? to_pci_dev(parent) : NULL;
+>> +	u64 pfs_start = 0;
+>> +	int ret, i;
+>> +
+>> +	tpmi_info->tpmi_dev = tpmi_dev;
+>> +	tpmi_info->parent = parent;
+>> +	tpmi_info->feature_count = feature_count;
+>> +	tpmi_info->resource = resource;
+>> +
+>> +	/*
+>> +	 * Seed the bus number from the enumerating device. It is only a
+>> +	 * fallback, tpmi_process_info() replaces it with the value the
+>> +	 * TPMI_INFO feature reports.
+>> +	 */
+>> +	if (pci_dev)
+>> +		tpmi_info->plat_info.bus_number = pci_dev->bus->number;
+>> +
+>> +	tpmi_info->tpmi_features = devm_kcalloc(tpmi_info->tpmi_dev, tpmi_info->feature_count,
+>> +						sizeof(*tpmi_info->tpmi_features),
+>> +						GFP_KERNEL);
+>> +	if (!tpmi_info->tpmi_features)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < tpmi_info->feature_count; i++) {
+>> +		struct intel_tpmi_pm_feature *pfs;
+>> +		struct resource *res;
+>> +		u64 res_start;
+>> +		int size, ret;
+>> +
+>> +		pfs = &tpmi_info->tpmi_features[i];
+>> +
+>> +		res = &tpmi_info->resource[i];
+>> +		if (!res)
+>> +			continue;
+>> +
+>> +		res_start = res->start;
+>> +		size = resource_size(res);
+>> +		if (size < 0)
+>> +			continue;
+>> +
+>> +		ret = tpmi_fetch_pfs_header(pfs, res_start, size);
+>> +		if (ret)
+>> +			continue;
+>> +
+>> +		if (!pfs_start)
+>> +			pfs_start = res_start;
+>> +
+>> +		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset * TPMI_CAP_OFFSET_UNIT;
+>> +
+>> +		/*
+>> +		 * Process TPMI_INFO to get PCI device to CPU package ID.
+>> +		 * Device nodes for TPMI features are not created in this
+>> +		 * for loop. So, the mapping information will be available
+>> +		 * when actual device nodes created outside this
+>> +		 * loop via tpmi_create_devices().
+>> +		 */
+>> +		if (pfs->pfs_header.tpmi_id == TPMI_INFO_ID) {
+>> +			ret = tpmi_process_info(tpmi_info, pfs);
+>> +			if (ret)
+>> +				return ret;
+>> +
+>> +			/*
+>> +			 * The mapping is looked up by pci_dev, so it is only
+>> +			 * meaningful for PCI enumerated TPMI instances.
+>> +			 */
+>> +			if (pci_dev) {
+>> +				ret = intel_vsec_set_mapping(&tpmi_info->plat_info,
+>> +							     &pci_dev->dev);
+>> +				if (ret)
+>> +					return ret;
+>> +			}
+>> +		}
+>> +
+>> +		if (pfs->pfs_header.tpmi_id == TPMI_CONTROL_ID)
+>> +			tpmi_set_control_base(tpmi_info, pfs);
+>> +	}
+>> +
+>> +	tpmi_info->pfs_start = pfs_start;
+>> +
+>> +	dev_set_drvdata(tpmi_info->tpmi_dev, tpmi_info);
+>> +
+>> +	/*
+>> +	 * Allow debugfs when security policy allows. Everything this debugfs
+>> +	 * interface provides, can also be done via /dev/mem access. If
+>> +	 * /dev/mem interface is locked, don't allow debugfs to present any
+>> +	 * information. Also check for CAP_SYS_RAWIO as /dev/mem interface.
+>> +	 */
+>> +	if (!security_locked_down(LOCKDOWN_DEV_MEM) && capable(CAP_SYS_RAWIO))
+>> +		tpmi_dbgfs_register(tpmi_info);
+>> +
+>> +	ret = tpmi_create_devices(tpmi_info);
+>> +	if (ret) {
+>> +		debugfs_remove_recursive(tpmi_info->dbgfs_dir);
+>> +		return ret;
+>> +	}
+>> +
+>> +	blocking_notifier_call_chain(&tpmi_notify_list, TPMI_CORE_INIT, tpmi_info->tpmi_dev);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(intel_tpmi_init, "INTEL_TPMI");
+>> +
+>> +/**
+>> + * intel_tpmi_deinit() - Tear a TPMI instance down
+>> + * @tpmi_info:	State of the TPMI instance, as passed to intel_tpmi_init()
+>> + *
+>> + * The TPMI feature devices and the devm allocations are released by the
+>> + * device core when the TPMI device goes away.
+>> + */
+>> +void intel_tpmi_deinit(struct intel_tpmi_info *tpmi_info)
+>> +{
+>> +	blocking_notifier_call_chain(&tpmi_notify_list, TPMI_CORE_EXIT, tpmi_info->tpmi_dev);
+>> +
+>> +	debugfs_remove_recursive(tpmi_info->dbgfs_dir);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(intel_tpmi_deinit, "INTEL_TPMI");
+>> +
+>> +MODULE_IMPORT_NS("INTEL_VSEC");
+>> +MODULE_DESCRIPTION("Intel TPMI core support");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/platform/x86/intel/tpmi_common.h b/drivers/platform/x86/intel/tpmi_common.h
+>> new file mode 100644
+>> index 000000000000..dd4bbe517e1c
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/intel/tpmi_common.h
+>> @@ -0,0 +1,52 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Intel TPMI core interface for TPMI enumeration methods
+>> + *
+>> + * Copyright (c) 2026, Intel Corporation.
+>> + * All Rights Reserved.
+>> + */
+>> +
+>> +#ifndef _TPMI_COMMON_H_
+>> +#define _TPMI_COMMON_H_
+>> +
+>> +#include <linux/intel_vsec.h>
+>> +
+>> +struct intel_tpmi_pm_feature;
+>> +
+>> +/**
+>> + * struct intel_tpmi_info - TPMI information for all IDs in an instance
+>> + * @tpmi_features:	Pointer to a list of TPMI feature instances
+>> + * @feature_count:	Number of TPMI of TPMI instances pointed by tpmi_features
+>> + * @pfs_start:		Start of PFS offset for the TPMI instances in this device
+>> + * @plat_info:		Stores platform info which can be used by the client drivers
+>> + * @tpmi_control_mem:	Memory mapped IO for getting control information
+>> + * @dbgfs_dir:		debugfs entry pointer
+>> + * @resource:		Array of feature_count MMIO resources, one per PFS entry
+>> + * @tpmi_dev:		Device this TPMI instance is bound to. It backs the devm
+>> + *			allocations, holds this structure as its driver data and
+>> + *			the TPMI feature devices are created under it.
+>> + * @parent:		Device this TPMI instance was enumerated from. It names
+>> + *			the debugfs directory and becomes intel_vsec_device::dev
+>> + *			of every TPMI feature device, so that the enumerating bus
+>> + *			can find them again, for example during PCI error
+>> + *			recovery.
+>> + *
+>> + * Stores the information for all TPMI devices of one TPMI instance.
+>> + */
+>> +struct intel_tpmi_info {
+>> +	struct intel_tpmi_pm_feature *tpmi_features;
+>> +	int feature_count;
+>> +	u64 pfs_start;
+>> +	struct oobmsm_plat_info plat_info;
+>> +	void __iomem *tpmi_control_mem;
+>> +	struct dentry *dbgfs_dir;
+>> +	struct resource *resource;
+>> +	struct device *tpmi_dev;
+>> +	struct device *parent;
+>> +};
+>> +
+>> +int intel_tpmi_init(struct intel_tpmi_info *tpmi_info, struct device *tpmi_dev,
+>> +		    struct device *parent, struct resource *resource, int feature_count);
+>> +void intel_tpmi_deinit(struct intel_tpmi_info *tpmi_info);
+>> +
+>> +#endif /* _TPMI_COMMON_H_ */
+>> diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
+>> index 3274a24152ed..053fe0f58641 100644
+>> --- a/drivers/platform/x86/intel/vsec_tpmi.c
+>> +++ b/drivers/platform/x86/intel/vsec_tpmi.c
+>> @@ -1,21 +1,10 @@
+>>  // SPDX-License-Identifier: GPL-2.0-only
+>>  /*
+>> - * Driver to enumerate TPMI features and create devices
+>> + * Enumerate TPMI features from a PCI VSEC structure
+>>   *
+>>   * Copyright (c) 2023, Intel Corporation.
+>>   * All Rights Reserved.
+>>   *
+>> - * The TPMI (Topology Aware Register and PM Capsule Interface) provides a
+>> - * flexible, extendable and PCIe enumerable MMIO interface for PM features.
+>> - *
+>> - * For example Intel RAPL (Running Average Power Limit) provides a MMIO
+>> - * interface using TPMI. This has advantage over traditional MSR
+>> - * (Model Specific Register) interface, where a thread needs to be scheduled
+>> - * on the target CPU to read or write. Also the RAPL features vary between
+>> - * CPU models, and hence lot of model specific code. Here TPMI provides an
+>> - * architectural interface by providing hierarchical tables and fields,
+>> - * which will not need any model specific implementation.
+>> - *
+>>   * The TPMI interface uses a PCI VSEC structure to expose the location of
+>>   * MMIO region.
+>>   *
+>> @@ -29,827 +18,18 @@
+>>   * This TPMI driver will bind to the TPMI auxiliary device object created
+>>   * by the Intel VSEC driver.
+>>   *
+>> - * The TPMI specification defines a PFS (PM Feature Structure) table.
+>> - * This table is present in the TPMI MMIO region. The starting address
+>> - * of PFS is derived from the tBIR (Bar Indicator Register) and "Address"
+>> - * field from the VSEC header.
+>> - *
+>> - * Each TPMI PM feature has one entry in the PFS with a unique TPMI
+>> - * ID and its access details. The TPMI driver creates device nodes
+>> - * for the supported PM features.
+>> - *
+>> - * The names of the devices created by the TPMI driver start with the
+>> - * "intel_vsec.tpmi-" prefix which is followed by a specific name of the
+>> - * given PM feature (for example, "intel_vsec.tpmi-rapl.0").
+>> - *
+>> - * The device nodes are create by using interface "intel_vsec_add_aux()"
+>> - * provided by the Intel VSEC driver.
+>> + * The starting address of the PFS table in the TPMI MMIO region is derived
+>> + * from the tBIR (Bar Indicator Register) and "Address" field from the VSEC
+>> + * header by the Intel VSEC driver, which passes the result on as the
+>> + * resources of the auxiliary device. Everything that happens from there on
+>> + * is enumeration independent and lives in tpmi_common.c.
+>>   */
+>>  
+>> -#include <linux/align.h>
+>> -#include <linux/array_size.h>
+>>  #include <linux/auxiliary_bus.h>
+>> -#include <linux/bitfield.h>
+>> -#include <linux/debugfs.h>
+>> -#include <linux/cleanup.h>
+>> -#include <linux/delay.h>
+>> -#include <linux/intel_tpmi.h>
+>>  #include <linux/intel_vsec.h>
+>> -#include <linux/io.h>
+>> -#include <linux/iopoll.h>
+>>  #include <linux/module.h>
+>> -#include <linux/notifier.h>
+>> -#include <linux/pci.h>
+>> -#include <linux/security.h>
+>> -#include <linux/sizes.h>
+>> -#include <linux/string_helpers.h>
+>> -
+>> -/**
+>> - * struct intel_tpmi_pfs_entry - TPMI PM Feature Structure (PFS) entry
+>> - * @tpmi_id:	TPMI feature identifier (what the feature is and its data format).
+>> - * @num_entries: Number of feature interface instances present in the PFS.
+>> - *		 This represents the maximum number of Power domains in the SoC.
+>> - * @entry_size:	Interface instance entry size in 32-bit words.
+>> - * @cap_offset:	Offset from the PM_Features base address to the base of the PM VSEC
+>> - *		register bank in KB.
+>> - * @attribute:	Feature attribute: 0=BIOS. 1=OS. 2-3=Reserved.
+>> - * @reserved:	Bits for use in the future.
+>> - *
+>> - * Represents one TPMI feature entry data in the PFS retrieved as is
+>> - * from the hardware.
+>> - */
+>> -struct intel_tpmi_pfs_entry {
+>> -	u64 tpmi_id:8;
+>> -	u64 num_entries:8;
+>> -	u64 entry_size:16;
+>> -	u64 cap_offset:16;
+>> -	u64 attribute:2;
+>> -	u64 reserved:14;
+>> -} __packed;
+>> -
+>> -/**
+>> - * struct intel_tpmi_pm_feature - TPMI PM Feature information for a TPMI ID
+>> - * @pfs_header:	PFS header retireved from the hardware.
+>> - * @vsec_offset: Starting MMIO address for this feature in bytes. Essentially
+>> - *		 this offset = "Address" from VSEC header + PFS Capability
+>> - *		 offset for this feature entry.
+>> - *
+>> - * Represents TPMI instance information for one TPMI ID.
+>> - */
+>> -struct intel_tpmi_pm_feature {
+>> -	struct intel_tpmi_pfs_entry pfs_header;
+>> -	u64 vsec_offset;
+>> -};
+>> -
+>> -/**
+>> - * struct intel_tpmi_info - TPMI information for all IDs in an instance
+>> - * @tpmi_features:	Pointer to a list of TPMI feature instances
+>> - * @feature_count:	Number of TPMI of TPMI instances pointed by tpmi_features
+>> - * @pfs_start:		Start of PFS offset for the TPMI instances in this device
+>> - * @plat_info:		Stores platform info which can be used by the client drivers
+>> - * @tpmi_control_mem:	Memory mapped IO for getting control information
+>> - * @dbgfs_dir:		debugfs entry pointer
+>> - * @resource:		Array of feature_count MMIO resources, one per PFS entry
+>> - * @tpmi_dev:		Device this TPMI instance is bound to. It backs the devm
+>> - *			allocations, holds this structure as its driver data and
+>> - *			the TPMI feature devices are created under it.
+>> - * @parent:		Device this TPMI instance was enumerated from. It names
+>> - *			the debugfs directory and becomes intel_vsec_device::dev
+>> - *			of every TPMI feature device, so that the enumerating bus
+>> - *			can find them again, for example during PCI error
+>> - *			recovery.
+>> - *
+>> - * Stores the information for all TPMI devices of one TPMI instance.
+>> - */
+>> -struct intel_tpmi_info {
+>> -	struct intel_tpmi_pm_feature *tpmi_features;
+>> -	int feature_count;
+>> -	u64 pfs_start;
+>> -	struct oobmsm_plat_info plat_info;
+>> -	void __iomem *tpmi_control_mem;
+>> -	struct dentry *dbgfs_dir;
+>> -	struct resource *resource;
+>> -	struct device *tpmi_dev;
+>> -	struct device *parent;
+>> -};
+>> -
+>> -/**
+>> - * struct tpmi_info_header - CPU package ID to PCI device mapping information
+>> - * @fn:		PCI function number
+>> - * @dev:	PCI device number
+>> - * @bus:	PCI bus number
+>> - * @pkg:	CPU Package id
+>> - * @segment:	PCI segment id
+>> - * @partition:	Package Partition id
+>> - * @cdie_mask:	Bitmap of compute dies in the current partition
+>> - * @reserved:	Reserved for future use
+>> - * @lock:	When set to 1 the register is locked and becomes read-only
+>> - *		until next reset. Not for use by the OS driver.
+>> - *
+>> - * The structure to read hardware provided mapping information.
+>> - */
+>> -struct tpmi_info_header {
+>> -	u64 fn:3;
+>> -	u64 dev:5;
+>> -	u64 bus:8;
+>> -	u64 pkg:8;
+>> -	u64 segment:8;
+>> -	u64 partition:2;
+>> -	u64 cdie_mask:16;
+>> -	u64 reserved:13;
+>> -	u64 lock:1;
+>> -} __packed;
+>> -
+>> -/**
+>> - * struct tpmi_feature_state - Structure to read hardware state of a feature
+>> - * @enabled:	Enable state of a feature, 1: enabled, 0: disabled
+>> - * @reserved_1:	Reserved for future use
+>> - * @write_blocked: Writes are blocked means all write operations are ignored
+>> - * @read_blocked: Reads are blocked means will read 0xFFs
+>> - * @pcs_select:	Interface used by out of band software, not used in OS
+>> - * @reserved_2:	Reserved for future use
+>> - * @id:		TPMI ID of the feature
+>> - * @reserved_3:	Reserved for future use
+>> - * @locked:	When set to 1, OS can't change this register.
+>> - *
+>> - * The structure is used to read hardware state of a TPMI feature. This
+>> - * information is used for debug and restricting operations for this feature.
+>> - */
+>> -struct tpmi_feature_state {
+>> -	u32 enabled:1;
+>> -	u32 reserved_1:3;
+>> -	u32 write_blocked:1;
+>> -	u32 read_blocked:1;
+>> -	u32 pcs_select:1;
+>> -	u32 reserved_2:1;
+>> -	u32 id:8;
+>> -	u32 reserved_3:15;
+>> -	u32 locked:1;
+>> -} __packed;
+>> -
+>> -/*
+>> - * The size from hardware is in u32 units. This size is from a trusted hardware,
+>> - * but better to verify for pre silicon platforms. Set size to 0, when invalid.
+>> - */
+>> -#define TPMI_GET_SINGLE_ENTRY_SIZE(pfs)							\
+>> -({											\
+>> -	pfs->pfs_header.entry_size > SZ_1K ? 0 : pfs->pfs_header.entry_size << 2;	\
+>> -})
+>> -
+>> -/* Used during auxbus device creation */
+>> -static DEFINE_IDA(intel_vsec_tpmi_ida);
+>> -
+>> -static BLOCKING_NOTIFIER_HEAD(tpmi_notify_list);
+>> -
+>> -int tpmi_register_notifier(struct notifier_block *nb)
+>> -{
+>> -	return blocking_notifier_chain_register(&tpmi_notify_list, nb);
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(tpmi_register_notifier, "INTEL_TPMI");
+>> -
+>> -int tpmi_unregister_notifier(struct notifier_block *nb)
+>> -{
+>> -	return blocking_notifier_chain_unregister(&tpmi_notify_list, nb);
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(tpmi_unregister_notifier, "INTEL_TPMI");
+>> -
+>> -struct oobmsm_plat_info *tpmi_get_platform_data(struct auxiliary_device *auxdev)
+>> -{
+>> -	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+>> -
+>> -	return vsec_dev->priv_data;
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(tpmi_get_platform_data, "INTEL_TPMI");
+>> -
+>> -int tpmi_get_resource_count(struct auxiliary_device *auxdev)
+>> -{
+>> -	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+>> -
+>> -	if (vsec_dev)
+>> -		return vsec_dev->num_resources;
+>> -
+>> -	return 0;
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(tpmi_get_resource_count, "INTEL_TPMI");
+>> -
+>> -struct resource *tpmi_get_resource_at_index(struct auxiliary_device *auxdev, int index)
+>> -{
+>> -	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+>> -
+>> -	if (vsec_dev && index < vsec_dev->num_resources)
+>> -		return &vsec_dev->resource[index];
+>> -
+>> -	return NULL;
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(tpmi_get_resource_at_index, "INTEL_TPMI");
+>> -
+>> -/* TPMI Control Interface */
+>> -
+>> -#define TPMI_CONTROL_STATUS_OFFSET	0x00
+>> -#define TPMI_COMMAND_OFFSET		0x08
+>> -#define TMPI_CONTROL_DATA_VAL_OFFSET	0x0c
+>> -
+>> -/*
+>> - * Spec is calling for max 1 seconds to get ownership at the worst
+>> - * case. Read at 10 ms timeouts and repeat up to 1 second.
+>> - */
+>> -#define TPMI_CONTROL_TIMEOUT_US		(10 * USEC_PER_MSEC)
+>> -#define TPMI_CONTROL_TIMEOUT_MAX_US	(1 * USEC_PER_SEC)
+>> -
+>> -#define TPMI_RB_TIMEOUT_US		(10 * USEC_PER_MSEC)
+>> -#define TPMI_RB_TIMEOUT_MAX_US		USEC_PER_SEC
+>> -
+>> -/* TPMI Control status register defines */
+>> -
+>> -#define TPMI_CONTROL_STATUS_RB		BIT_ULL(0)
+>> -
+>> -#define TPMI_CONTROL_STATUS_OWNER	GENMASK_ULL(5, 4)
+>> -#define TPMI_OWNER_NONE			0
+>> -#define TPMI_OWNER_IN_BAND		1
+>> -
+>> -#define TPMI_CONTROL_STATUS_CPL		BIT_ULL(6)
+>> -#define TPMI_CONTROL_STATUS_RESULT	GENMASK_ULL(15, 8)
+>> -#define TPMI_CONTROL_STATUS_LEN		GENMASK_ULL(31, 16)
+>> -
+>> -#define TPMI_CMD_PKT_LEN		2
+>> -#define TPMI_CMD_STATUS_SUCCESS		0x40
+>> -
+>> -/* TPMI command data registers */
+>> -#define TMPI_CONTROL_DATA_CMD		GENMASK_ULL(7, 0)
+>> -#define TPMI_CONTROL_DATA_VAL_FEATURE	GENMASK_ULL(48, 40)
+>> -
+>> -/* Command to send via control interface */
+>> -#define TPMI_CONTROL_GET_STATE_CMD	0x10
+>> -
+>> -#define TPMI_CONTROL_CMD_MASK		GENMASK_ULL(48, 40)
+>> -
+>> -#define TPMI_CMD_LEN_MASK		GENMASK_ULL(18, 16)
+>> -
+>> -/* Mutex to complete get feature status without interruption */
+>> -static DEFINE_MUTEX(tpmi_dev_lock);
+>> -
+>> -static int tpmi_wait_for_owner(struct intel_tpmi_info *tpmi_info, u8 owner)
+>> -{
+>> -	u64 control;
+>> -
+>> -	return readq_poll_timeout(tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET,
+>> -				  control, owner == FIELD_GET(TPMI_CONTROL_STATUS_OWNER, control),
+>> -				  TPMI_CONTROL_TIMEOUT_US, TPMI_CONTROL_TIMEOUT_MAX_US);
+>> -}
+>> -
+>> -static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int feature_id,
+>> -				    struct tpmi_feature_state *feature_state)
+>> -{
+>> -	u64 control, data;
+>> -	int ret;
+>> -
+>> -	if (!tpmi_info->tpmi_control_mem)
+>> -		return -EFAULT;
+>> -
+>> -	mutex_lock(&tpmi_dev_lock);
+>> -
+>> -	/* Wait for owner bit set to 0 (none) */
+>> -	ret = tpmi_wait_for_owner(tpmi_info, TPMI_OWNER_NONE);
+>> -	if (ret)
+>> -		goto err_unlock;
+>> -
+>> -	/* set command id to 0x10 for TPMI_GET_STATE */
+>> -	data = FIELD_PREP(TMPI_CONTROL_DATA_CMD, TPMI_CONTROL_GET_STATE_CMD);
+>> -
+>> -	/* 32 bits for DATA offset and +8 for feature_id field */
+>> -	data |= FIELD_PREP(TPMI_CONTROL_DATA_VAL_FEATURE, feature_id);
+>> -
+>> -	/* Write at command offset for qword access */
+>> -	writeq(data, tpmi_info->tpmi_control_mem + TPMI_COMMAND_OFFSET);
+>> -
+>> -	/* Wait for owner bit set to in-band */
+>> -	ret = tpmi_wait_for_owner(tpmi_info, TPMI_OWNER_IN_BAND);
+>> -	if (ret)
+>> -		goto err_unlock;
+>> -
+>> -	/* Set Run Busy and packet length of 2 dwords */
+>> -	control = TPMI_CONTROL_STATUS_RB;
+>> -	control |= FIELD_PREP(TPMI_CONTROL_STATUS_LEN, TPMI_CMD_PKT_LEN);
+>> -
+>> -	/* Write at status offset for qword access */
+>> -	writeq(control, tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET);
+>> -
+>> -	/* Wait for Run Busy clear */
+>> -	ret = readq_poll_timeout(tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET,
+>> -				 control, !(control & TPMI_CONTROL_STATUS_RB),
+>> -				 TPMI_RB_TIMEOUT_US, TPMI_RB_TIMEOUT_MAX_US);
+>> -	if (ret)
+>> -		goto done_proc;
+>> -
+>> -	control = FIELD_GET(TPMI_CONTROL_STATUS_RESULT, control);
+>> -	if (control != TPMI_CMD_STATUS_SUCCESS) {
+>> -		ret = -EBUSY;
+>> -		goto done_proc;
+>> -	}
+>> -
+>> -	/* Response is ready */
+>> -	memcpy_fromio(feature_state, tpmi_info->tpmi_control_mem + TMPI_CONTROL_DATA_VAL_OFFSET,
+>> -		      sizeof(*feature_state));
+>> -
+>> -	ret = 0;
+>> -
+>> -done_proc:
+>> -	/* Set CPL "completion" bit */
+>> -	writeq(TPMI_CONTROL_STATUS_CPL, tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET);
+>> -
+>> -err_unlock:
+>> -	mutex_unlock(&tpmi_dev_lock);
+>> -
+>> -	return ret;
+>> -}
+>> -
+>> -int tpmi_get_feature_status(struct auxiliary_device *auxdev,
+>> -			    int feature_id, bool *read_blocked, bool *write_blocked)
+>> -{
+>> -	struct intel_tpmi_info *tpmi_info = dev_get_drvdata(auxdev->dev.parent);
+>> -	struct tpmi_feature_state feature_state;
+>> -	int ret;
+>> -
+>> -	ret = tpmi_read_feature_status(tpmi_info, feature_id, &feature_state);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	*read_blocked = feature_state.read_blocked;
+>> -	*write_blocked = feature_state.write_blocked;
+>> -
+>> -	return 0;
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, "INTEL_TPMI");
+>> -
+>> -struct dentry *tpmi_get_debugfs_dir(struct auxiliary_device *auxdev)
+>> -{
+>> -	struct intel_tpmi_info *tpmi_info = dev_get_drvdata(auxdev->dev.parent);
+>> -
+>> -	return tpmi_info->dbgfs_dir;
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(tpmi_get_debugfs_dir, "INTEL_TPMI");
+>> -
+>> -static int tpmi_pfs_dbg_show(struct seq_file *s, void *unused)
+>> -{
+>> -	struct intel_tpmi_info *tpmi_info = s->private;
+>> -	int locked, disabled, read_blocked, write_blocked;
+>> -	struct tpmi_feature_state feature_state;
+>> -	struct intel_tpmi_pm_feature *pfs;
+>> -	int ret, i;
+>> -
+>> -
+>> -	seq_printf(s, "tpmi PFS start offset 0x:%llx\n", tpmi_info->pfs_start);
+>> -	seq_puts(s, "tpmi_id\t\tentries\t\tsize\t\tcap_offset\tattribute\tvsec_offset\tlocked\tdisabled\tread_blocked\twrite_blocked\n");
+>> -	for (i = 0; i < tpmi_info->feature_count; ++i) {
+>> -		pfs = &tpmi_info->tpmi_features[i];
+>> -		ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
+>> -		if (ret) {
+>> -			locked = 'U';
+>> -			disabled = 'U';
+>> -			read_blocked = 'U';
+>> -			write_blocked = 'U';
+>> -		} else {
+>> -			disabled = feature_state.enabled ? 'N' : 'Y';
+>> -			locked = feature_state.locked ? 'Y' : 'N';
+>> -			read_blocked = feature_state.read_blocked ? 'Y' : 'N';
+>> -			write_blocked = feature_state.write_blocked ? 'Y' : 'N';
+>> -		}
+>> -		seq_printf(s, "0x%02x\t\t0x%02x\t\t0x%04x\t\t0x%04x\t\t0x%02x\t\t0x%016llx\t%c\t%c\t\t%c\t\t%c\n",
+>> -			   pfs->pfs_header.tpmi_id, pfs->pfs_header.num_entries,
+>> -			   pfs->pfs_header.entry_size, pfs->pfs_header.cap_offset,
+>> -			   pfs->pfs_header.attribute, pfs->vsec_offset, locked, disabled,
+>> -			   read_blocked, write_blocked);
+>> -	}
+>> -
+>> -	return 0;
+>> -}
+>> -DEFINE_SHOW_ATTRIBUTE(tpmi_pfs_dbg);
+>> -
+>> -#define MEM_DUMP_COLUMN_COUNT	8
+>> -
+>> -static int tpmi_mem_dump_show(struct seq_file *s, void *unused)
+>> -{
+>> -	size_t row_size = MEM_DUMP_COLUMN_COUNT * sizeof(u32);
+>> -	struct intel_tpmi_pm_feature *pfs = s->private;
+>> -	int count, ret = 0;
+>> -	void __iomem *mem;
+>> -	u32 size;
+>> -	u64 off;
+>> -	u8 *buffer;
+>> -
+>> -	size = TPMI_GET_SINGLE_ENTRY_SIZE(pfs);
+>> -	if (!size)
+>> -		return -EIO;
+>> -
+>> -	buffer = kmalloc(size, GFP_KERNEL);
+>> -	if (!buffer)
+>> -		return -ENOMEM;
+>> -
+>> -	off = pfs->vsec_offset;
+>> -
+>> -	mutex_lock(&tpmi_dev_lock);
+>> -
+>> -	for (count = 0; count < pfs->pfs_header.num_entries; ++count) {
+>> -		seq_printf(s, "TPMI Instance:%d offset:0x%llx\n", count, off);
+>> -
+>> -		mem = ioremap(off, size);
+>> -		if (!mem) {
+>> -			ret = -ENOMEM;
+>> -			break;
+>> -		}
+>> -
+>> -		memcpy_fromio(buffer, mem, size);
+>> -
+>> -		seq_hex_dump(s, " ", DUMP_PREFIX_OFFSET, row_size, sizeof(u32), buffer, size,
+>> -			     false);
+>>  
+>> -		iounmap(mem);
+>> -
+>> -		off += size;
+>> -	}
+>> -
+>> -	mutex_unlock(&tpmi_dev_lock);
+>> -
+>> -	kfree(buffer);
+>> -
+>> -	return ret;
+>> -}
+>> -DEFINE_SHOW_ATTRIBUTE(tpmi_mem_dump);
+>> -
+>> -static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t len, loff_t *ppos)
+>> -{
+>> -	struct seq_file *m = file->private_data;
+>> -	struct intel_tpmi_pm_feature *pfs = m->private;
+>> -	u32 addr, value, punit, size;
+>> -	u32 num_elems;
+>> -	void __iomem *mem;
+>> -	int ret;
+>> -
+>> -	size = TPMI_GET_SINGLE_ENTRY_SIZE(pfs);
+>> -	if (!size)
+>> -		return -EIO;
+>> -
+>> -	u32 *array __free(kfree) = NULL;
+>> -	ret = parse_int_array_user(userbuf, len, (int **)&array);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -
+>> -	num_elems = *array;
+>> -	if (num_elems != 3)
+>> -		return -EINVAL;
+>> -
+>> -	punit = array[1];
+>> -	addr = array[2];
+>> -	value = array[3];
+>> -
+>> -	if (!IS_ALIGNED(addr, sizeof(u32)))
+>> -		return -EINVAL;
+>> -
+>> -	if (punit >= pfs->pfs_header.num_entries)
+>> -		return -EINVAL;
+>> -
+>> -	if (addr >= size)
+>> -		return -EINVAL;
+>> -
+>> -	guard(mutex)(&tpmi_dev_lock);
+>> -
+>> -	mem = ioremap(pfs->vsec_offset + punit * size, size);
+>> -	if (!mem)
+>> -		return -ENOMEM;
+>> -
+>> -	writel(value, mem + addr);
+>> -
+>> -	iounmap(mem);
+>> -
+>> -	return len;
+>> -}
+>> -
+>> -static int mem_write_show(struct seq_file *s, void *unused)
+>> -{
+>> -	return 0;
+>> -}
+>> -
+>> -static int mem_write_open(struct inode *inode, struct file *file)
+>> -{
+>> -	return single_open(file, mem_write_show, inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations mem_write_ops = {
+>> -	.open           = mem_write_open,
+>> -	.read           = seq_read,
+>> -	.write          = mem_write,
+>> -	.llseek         = seq_lseek,
+>> -	.release        = single_release,
+>> -};
+>> -
+>> -static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
+>> -{
+>> -	char name[64];
+>> -	int i;
+>> -
+>> -	snprintf(name, sizeof(name), "tpmi-%s", dev_name(tpmi_info->parent));
+>> -	tpmi_info->dbgfs_dir = debugfs_create_dir(name, NULL);
+>> -
+>> -	debugfs_create_file("pfs_dump", 0444, tpmi_info->dbgfs_dir, tpmi_info, &tpmi_pfs_dbg_fops);
+>> -
+>> -	for (i = 0; i < tpmi_info->feature_count; ++i) {
+>> -		struct intel_tpmi_pm_feature *pfs;
+>> -		struct dentry *dir;
+>> -
+>> -		pfs = &tpmi_info->tpmi_features[i];
+>> -		snprintf(name, sizeof(name), "tpmi-id-%02x", pfs->pfs_header.tpmi_id);
+>> -		dir = debugfs_create_dir(name, tpmi_info->dbgfs_dir);
+>> -
+>> -		debugfs_create_file("mem_dump", 0444, dir, pfs, &tpmi_mem_dump_fops);
+>> -		debugfs_create_file("mem_write", 0644, dir, pfs, &mem_write_ops);
+>> -	}
+>> -}
+>> -
+>> -static void tpmi_set_control_base(struct intel_tpmi_info *tpmi_info,
+>> -				  struct intel_tpmi_pm_feature *pfs)
+>> -{
+>> -	void __iomem *mem;
+>> -	u32 size;
+>> -
+>> -	size = TPMI_GET_SINGLE_ENTRY_SIZE(pfs);
+>> -	if (!size)
+>> -		return;
+>> -
+>> -	mem = devm_ioremap(tpmi_info->tpmi_dev, pfs->vsec_offset, size);
+>> -	if (!mem)
+>> -		return;
+>> -
+>> -	/* mem is pointing to TPMI CONTROL base */
+>> -	tpmi_info->tpmi_control_mem = mem;
+>> -}
+>> -
+>> -/*
+>> - * The TPMI IDs are sparse, so the unused entries are left NULL and are
+>> - * rejected by the caller like any other unsupported feature.
+>> - */
+>> -static const char * const intel_tpmi_names[] = {
+>> -	[TPMI_ID_RAPL]		= "tpmi-rapl",
+>> -	[TPMI_ID_PEM]		= "tpmi-pem",
+>> -	[TPMI_ID_UNCORE]	= "tpmi-uncore",
+>> -	[TPMI_ID_SST]		= "tpmi-sst",
+>> -	[TPMI_ID_PLR]		= "tpmi-plr",
+>> -};
+>> -
+>> -static const char *intel_tpmi_name(enum intel_tpmi_id id)
+>> -{
+>> -	if (id >= ARRAY_SIZE(intel_tpmi_names))
+>> -		return NULL;
+>> -
+>> -	return intel_tpmi_names[id];
+>> -}
+>> -
+>> -static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+>> -			      struct intel_tpmi_pm_feature *pfs,
+>> -			      u64 pfs_start)
+>> -{
+>> -	struct intel_vsec_device *feature_vsec_dev;
+>> -	struct tpmi_feature_state feature_state;
+>> -	struct resource *res, *tmp;
+>> -	const char *name;
+>> -	int i, ret;
+>> -
+>> -	ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	/*
+>> -	 * If not enabled, continue to look at other features in the PFS, so return -EOPNOTSUPP.
+>> -	 * This will not cause failure of loading of this driver.
+>> -	 */
+>> -	if (!feature_state.enabled)
+>> -		return -EOPNOTSUPP;
+>> -
+>> -	name = intel_tpmi_name(pfs->pfs_header.tpmi_id);
+>> -	if (!name)
+>> -		return -EOPNOTSUPP;
+>> -
+>> -	feature_vsec_dev = kzalloc_flex(*feature_vsec_dev, resource, pfs->pfs_header.num_entries);
+>> -	if (!feature_vsec_dev)
+>> -		return -ENOMEM;
+>> -
+>> -	feature_vsec_dev->num_resources = pfs->pfs_header.num_entries;
+>> -	res = feature_vsec_dev->resource;
+>> -
+>> -	for (i = 0, tmp = res; i < pfs->pfs_header.num_entries; i++, tmp++) {
+>> -		u64 entry_size_bytes = pfs->pfs_header.entry_size * sizeof(u32);
+>> -
+>> -		tmp->start = pfs->vsec_offset + entry_size_bytes * i;
+>> -		tmp->end = tmp->start + entry_size_bytes - 1;
+>> -		tmp->flags = IORESOURCE_MEM;
+>> -	}
+>> -
+>> -	feature_vsec_dev->dev = tpmi_info->parent;
+>> -	feature_vsec_dev->priv_data = &tpmi_info->plat_info;
+>> -	feature_vsec_dev->priv_data_size = sizeof(tpmi_info->plat_info);
+>> -	feature_vsec_dev->ida = &intel_vsec_tpmi_ida;
+>> -
+>> -	/*
+>> -	 * intel_vsec_add_aux() is resource managed, no explicit
+>> -	 * delete is required on error or on module unload.
+>> -	 * feature_vsec_dev and res memory are also freed as part of
+>> -	 * device deletion.
+>> -	 *
+>> -	 * "name" must outlive the auxiliary device, as the auxiliary bus
+>> -	 * stores the pointer rather than a copy of the string.
+>> -	 */
+>> -	return intel_vsec_add_aux(tpmi_info->tpmi_dev, feature_vsec_dev, name);
+>> -}
+>> -
+>> -static int tpmi_create_devices(struct intel_tpmi_info *tpmi_info)
+>> -{
+>> -	int ret, i;
+>> -
+>> -	for (i = 0; i < tpmi_info->feature_count; i++) {
+>> -		ret = tpmi_create_device(tpmi_info, &tpmi_info->tpmi_features[i],
+>> -					 tpmi_info->pfs_start);
+>> -		/*
+>> -		 * Fail, if the supported features fails to create device,
+>> -		 * otherwise, continue. Even if one device failed to create,
+>> -		 * fail the loading of driver. Since intel_vsec_add_aux()
+>> -		 * is resource managed, no clean up is required for the
+>> -		 * successfully created devices.
+>> -		 */
+>> -		if (ret && ret != -EOPNOTSUPP)
+>> -			return ret;
+>> -	}
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -#define TPMI_INFO_BUS_INFO_OFFSET	0x08
+>> -#define TPMI_INFO_MAJOR_VERSION		0x00
+>> -#define TPMI_INFO_MINOR_VERSION		0x02
+>> -
+>> -static int tpmi_process_info(struct intel_tpmi_info *tpmi_info,
+>> -			     struct intel_tpmi_pm_feature *pfs)
+>> -{
+>> -	struct tpmi_info_header header;
+>> -	void __iomem *info_mem;
+>> -	u64 feature_header;
+>> -	int ret = 0;
+>> -
+>> -	info_mem = ioremap(pfs->vsec_offset, pfs->pfs_header.entry_size * sizeof(u32));
+>> -	if (!info_mem)
+>> -		return -ENOMEM;
+>> -
+>> -	feature_header = readq(info_mem);
+>> -	if (TPMI_MAJOR_VERSION(feature_header) != TPMI_INFO_MAJOR_VERSION) {
+>> -		ret = -ENODEV;
+>> -		goto error_info_header;
+>> -	}
+>> -
+>> -	memcpy_fromio(&header, info_mem + TPMI_INFO_BUS_INFO_OFFSET, sizeof(header));
+>> -
+>> -	tpmi_info->plat_info.package_id = header.pkg;
+>> -	tpmi_info->plat_info.bus_number = header.bus;
+>> -	tpmi_info->plat_info.device_number = header.dev;
+>> -	tpmi_info->plat_info.function_number = header.fn;
+>> -
+>> -	if (TPMI_MINOR_VERSION(feature_header) >= TPMI_INFO_MINOR_VERSION) {
+>> -		tpmi_info->plat_info.cdie_mask = header.cdie_mask;
+>> -		tpmi_info->plat_info.partition = header.partition;
+>> -		tpmi_info->plat_info.segment = header.segment;
+>> -	}
+>> -
+>> -error_info_header:
+>> -	iounmap(info_mem);
+>> -
+>> -	return ret;
+>> -}
+>> -
+>> -static int tpmi_fetch_pfs_header(struct intel_tpmi_pm_feature *pfs, u64 start, int size)
+>> -{
+>> -	void __iomem *pfs_mem;
+>> -
+>> -	pfs_mem = ioremap(start, size);
+>> -	if (!pfs_mem)
+>> -		return -ENOMEM;
+>> -
+>> -	memcpy_fromio(&pfs->pfs_header, pfs_mem, sizeof(pfs->pfs_header));
+>> -
+>> -	iounmap(pfs_mem);
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -#define TPMI_CAP_OFFSET_UNIT	1024
+>> -
+>> -static int intel_tpmi_init(struct intel_tpmi_info *tpmi_info, struct device *tpmi_dev,
+>> -			   struct device *parent, struct resource *resource,
+>> -			   int feature_count)
+>> -{
+>> -	struct pci_dev *pci_dev = dev_is_pci(parent) ? to_pci_dev(parent) : NULL;
+>> -	u64 pfs_start = 0;
+>> -	int ret, i;
+>> -
+>> -	tpmi_info->tpmi_dev = tpmi_dev;
+>> -	tpmi_info->parent = parent;
+>> -	tpmi_info->feature_count = feature_count;
+>> -	tpmi_info->resource = resource;
+>> -
+>> -	/*
+>> -	 * Seed the bus number from the enumerating device. It is only a
+>> -	 * fallback, tpmi_process_info() replaces it with the value the
+>> -	 * TPMI_INFO feature reports.
+>> -	 */
+>> -	if (pci_dev)
+>> -		tpmi_info->plat_info.bus_number = pci_dev->bus->number;
+>> -
+>> -	tpmi_info->tpmi_features = devm_kcalloc(tpmi_info->tpmi_dev, tpmi_info->feature_count,
+>> -						sizeof(*tpmi_info->tpmi_features),
+>> -						GFP_KERNEL);
+>> -	if (!tpmi_info->tpmi_features)
+>> -		return -ENOMEM;
+>> -
+>> -	for (i = 0; i < tpmi_info->feature_count; i++) {
+>> -		struct intel_tpmi_pm_feature *pfs;
+>> -		struct resource *res;
+>> -		u64 res_start;
+>> -		int size, ret;
+>> -
+>> -		pfs = &tpmi_info->tpmi_features[i];
+>> -
+>> -		res = &tpmi_info->resource[i];
+>> -		if (!res)
+>> -			continue;
+>> -
+>> -		res_start = res->start;
+>> -		size = resource_size(res);
+>> -		if (size < 0)
+>> -			continue;
+>> -
+>> -		ret = tpmi_fetch_pfs_header(pfs, res_start, size);
+>> -		if (ret)
+>> -			continue;
+>> -
+>> -		if (!pfs_start)
+>> -			pfs_start = res_start;
+>> -
+>> -		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset * TPMI_CAP_OFFSET_UNIT;
+>> -
+>> -		/*
+>> -		 * Process TPMI_INFO to get PCI device to CPU package ID.
+>> -		 * Device nodes for TPMI features are not created in this
+>> -		 * for loop. So, the mapping information will be available
+>> -		 * when actual device nodes created outside this
+>> -		 * loop via tpmi_create_devices().
+>> -		 */
+>> -		if (pfs->pfs_header.tpmi_id == TPMI_INFO_ID) {
+>> -			ret = tpmi_process_info(tpmi_info, pfs);
+>> -			if (ret)
+>> -				return ret;
+>> -
+>> -			/*
+>> -			 * The mapping is looked up by pci_dev, so it is only
+>> -			 * meaningful for PCI enumerated TPMI instances.
+>> -			 */
+>> -			if (pci_dev) {
+>> -				ret = intel_vsec_set_mapping(&tpmi_info->plat_info,
+>> -							     &pci_dev->dev);
+>> -				if (ret)
+>> -					return ret;
+>> -			}
+>> -		}
+>> -
+>> -		if (pfs->pfs_header.tpmi_id == TPMI_CONTROL_ID)
+>> -			tpmi_set_control_base(tpmi_info, pfs);
+>> -	}
+>> -
+>> -	tpmi_info->pfs_start = pfs_start;
+>> -
+>> -	dev_set_drvdata(tpmi_info->tpmi_dev, tpmi_info);
+>> -
+>> -	/*
+>> -	 * Allow debugfs when security policy allows. Everything this debugfs
+>> -	 * interface provides, can also be done via /dev/mem access. If
+>> -	 * /dev/mem interface is locked, don't allow debugfs to present any
+>> -	 * information. Also check for CAP_SYS_RAWIO as /dev/mem interface.
+>> -	 */
+>> -	if (!security_locked_down(LOCKDOWN_DEV_MEM) && capable(CAP_SYS_RAWIO))
+>> -		tpmi_dbgfs_register(tpmi_info);
+>> -
+>> -	ret = tpmi_create_devices(tpmi_info);
+>> -	if (ret) {
+>> -		debugfs_remove_recursive(tpmi_info->dbgfs_dir);
+>> -		return ret;
+>> -	}
+>> -
+>> -	blocking_notifier_call_chain(&tpmi_notify_list, TPMI_CORE_INIT, tpmi_info->tpmi_dev);
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -static void intel_tpmi_deinit(struct intel_tpmi_info *tpmi_info)
+>> -{
+>> -	blocking_notifier_call_chain(&tpmi_notify_list, TPMI_CORE_EXIT, tpmi_info->tpmi_dev);
+>> -
+>> -	debugfs_remove_recursive(tpmi_info->dbgfs_dir);
+>> -}
+>> +#include "tpmi_common.h"
+>>  
+>>  static int tpmi_probe(struct auxiliary_device *auxdev,
+>>  		      const struct auxiliary_device_id *id)
+>> @@ -886,6 +66,6 @@ static struct auxiliary_driver tpmi_aux_driver = {
+>>  
+>>  module_auxiliary_driver(tpmi_aux_driver);
+>>  
+>> -MODULE_IMPORT_NS("INTEL_VSEC");
+>> +MODULE_IMPORT_NS("INTEL_TPMI");
+>>  MODULE_DESCRIPTION("Intel TPMI enumeration module");
+>>  MODULE_LICENSE("GPL");
+>>
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
