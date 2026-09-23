@@ -1,158 +1,215 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EB22D6E64;
-	Wed, 23 Sep 2026 16:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790181131; cv=pass; b=BiTbVVZP7Sbjk5rFlIOwgjKeKD7O99+qyhgCn7h8kXqS2wAkSwgAJNVWe9HxQQTaGj3MRqyGUN2B5ABfPnlPjcYouSFUc5mSqofBwLokWX6tFfaoX171LdMIkbHY4bis45F6f2vVG114Rb/lDGImMwvZPwb4hF81D91K6fpiPqE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790181131; c=relaxed/simple;
-	bh=7x6cDF+Xord7yzm7rGJJDlUElrL8QR9rKweILD194d8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eEqb+EGN65CMsIZOqcXF8Zvk1VfRUVr5gBBccCOpayn5kp8QsekTGh33MTjM19k+SAmCyo3WPVyR+taUJ78oI/ikBGRpgXxWsW4t7S4c2OowlhbMdsoseo+E0AO/4zKoeTVy+DAEchTNkkn7jY3P1CfAG67gI5FtrHgPQPji+sc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=fqutHMH9; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933ED54B1CC
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 16:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790181471; cv=none; b=ZrcjIk/wilN18yxgcNGaHZdk9g7WajogJE+XxE9aPOS4VtcfEGUqbyZHgcoTqzbrY/dXB6bVTix9ATJI+9d89SqpQ78zYA8ZwAUCyPnhBWfejbrkrrERJZ3lmNqjYNFa7KfGenFER1s2O0L7Rzm5CRq5ZY5FsN7y4I49zIty5qc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790181471; c=relaxed/simple;
+	bh=DvOBvmf3i9d0qazlC+gSfDsS6HTLcH4jFpLzfJhbyak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gS7hzeqC+us55M3tc00cOUsy/GNh4wZlaBAXPBqbzr3tpIbbFYuvYILCmF7MZoCy8mSmyZmfZ8QiWlVCOJkjC+aZe873cdhr0Is81jmhvre5++anV/MN4cMUvB44ngt8KKSf4sVgltGRHKeWC+tKOoBjgXE2HLY8L55ib+X/NA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=qzWr+Psd; arc=none smtp.client-ip=185.125.25.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="fqutHMH9"
-ARC-Seal: i=1; a=rsa-sha256; t=1790181109; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=FP41fuEwQc9IIfWXCIQn/pAw5R9HUoxugJNQrb5gC1fsRyl0/CtrTCqvTgAfO2OTrgYdW8jZ19/nrq2WeyNfPSZqaOkLCHdWpjc3Q0Rx4zU7/syWlJ+TVxM9IAjWMXuPbJT0Irgfdjc3TRcvBKBpBQ4juPn/k0lufIsZVQiNLFE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1790181109; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=986ZG3NHXh2Pt6li61dBFsMEeDrEvFTCznj2iLWOQsA=; 
-	b=WuwNSMMreIjcY3+EcuxaNqjAaVxkrr7lnERj3O501XBfDP9prRzuoC1K6UG+vfqnFgguJXb5PS1+6dDTUfc2o98BObpgux5jhldTQnOKImJj3bK/Gh6slY9HZ7VGzs62dYYZtXTIFUlfZjX0WHY5cjIV45FLL1ng22zdXSj/V70=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1790181109;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=986ZG3NHXh2Pt6li61dBFsMEeDrEvFTCznj2iLWOQsA=;
-	b=fqutHMH9tgxsIfxnm2IYYXMw/RzRqyJl3gz+WbPZgveF46AfjVM+tZyumU0mi0Vo
-	vE4EciYtCwgFOsuxgJwg0dNAbphXQgDvcWpStfzDdczGZCFwCIipCM4jAlzUbTo2RrE
-	hsi/KsU2xvh//H1Bkl1c6Zz83NCS1SRvjGEWgZLUgNSUvcrMPFTgS6bMn8p48+IU8M5
-	pqisBP2Wz2ArXOWYSMImdAKWN5rMVh9dpS6XlTVjp1DmR+HNO0bqPKmFhGYPU9QU4FS
-	jemmSO7KiYKGeVIcJJb2HILNrb+XjbSPI4f6onYUpXkZ2dcZm/VM/cMwEdb/LN2MpZG
-	6s/hrAwSoQ==
-Received: by smtp.zohomail.com with SMTPS id 1790181108290212.98926038722982;
-	Wed, 23 Sep 2026 09:31:48 -0700 (PDT)
-From: Rong Zhang <i@rong.moe>
-Date: Thu, 24 Sep 2026 00:31:27 +0800
-Subject: [PATCH v3] platform/x86: ideapad-laptop: Report camera switch as
- SW_CAMERA_LENS_COVER
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="qzWr+Psd"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hqjLN2lLmzQV7;
+	Wed, 23 Sep 2026 18:37:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790181452; bh=WzYrD6M9e+6T9ByAAb5pPZdEdxbdhl/mlZLEk1jdN34=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qzWr+PsdsvqdfxkfHFufA+7nrLK7t6jhHbnfqY+K2sXlrUgB2sCJYmaDTkkRul7Vp
+	 /Pfjp+yY9pp8Px2LHt6a3YFX8AHSQr5pn7ox1DI+GPSNugXGiOeUAzK9f6X1C2CSWG
+	 qizRODcIlhJJ3m/uUZ0VXi5cdXtvycWKrE03YKBg=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hqjLL6MZYzJXJ;
+	Wed, 23 Sep 2026 18:37:30 +0200 (CEST)
+Message-ID: <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
+Date: Wed, 23 Sep 2026 18:37:29 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260924-ideapad-laptop-camera-sw-v3-1-922ea6a9fff4@rong.moe>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMSw6CQBBF0a2QGluJyCfoVgyDovshRRQ6XfhJC
- Hu3leEZ3LuSISqMLtlKES81naeE4pCRG2S6gdUnU1Pluau9JEKCeL5LWObATh6Iwvbmc9mgrKu
- iOx1BKQ8RvX7+62u7257dCLf8frRtXzpltQV8AAAA
-X-Change-ID: 8511c6da-ideapad-laptop-camera-sw-948e4653b20e
-To: Ike Panhc <ikepanhc@gmail.com>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Marco Giunta <marco_giunta@outlook.it>, Huang Wei <huangwei@kylinos.cn>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Rong Zhang <i@rong.moe>
-X-Mailer: b4 0.17-dev-1f2f7
-X-ZohoMailClient: External
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <8a5bef53-cae4-4aa6-a657-d11a6831d2b2@amd.com>
+ <7962670b-168e-020e-b55f-c9ea49483f6b@ik.me>
+ <bb82702c-6902-491a-8eae-2b90cd8c5c5a@amd.com>
+ <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
+ <55854916-292a-40ae-8421-1a784785d899@amd.com>
+ <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
+ <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
+ <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+Content-Language: en-US
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-On certain 2025 Lenovo laptops, such as the Yoga Pro 7 14ASP10 and Legion
-Pro 7 16AFR10H, a switch on the side disables the camera. This is handled
-by the firmware, which also sends event 0x0d (camera disabled) or 0x0c
-(camera enabled) through the WMI event GUID handled with
-ideapad_wmi_context_fn_keys. These events are currently reported as
-KEY_UNKNOWN.
+On 2026-09-23 18:20, Mario Limonciello wrote:
+> 
+> 
+> On 9/23/26 11:15, Mario Limonciello wrote:
+>>
+>>
+>> On 9/23/26 11:12, Fourhundred Thecat wrote:
+>>> On 2026-09-23 16:36, Mario Limonciello wrote:
+>>>>
+>>>>
+>>>> Some other thoughts that might be the root cause based on other 
+>>>> historical issues.
+>>>>
+>>>> 1) Have you changed TPM policy or Pluton policy in BIOS setup?  What 
+>>>> did you change it from and to.
+>>>> 2) Have you enabled a storage security password?  If you disable it 
+>>>> does it help this issue?
+>>>> 3) Do you have WWAN in your device?  If you disable it does it help?
+>>>> 4) Does booting with `amd_iommu=off` help?
+>>>
+>>> 4) amd_iommu=off
+>>>
+>>> Yes, that fixes it. With amd_iommu=off and all 24 CPUs online, 
+>>> suspend/ resume works reliably.
+>>>
+>>> So this is not really a CPU count problem. nr_cpus=16 was only 
+>>> masking an IOMMU interaction. But narrowing it further was 
+>>> surprising: neither of the IOMMU's two functions is responsible on 
+>>> its own. All of the following were run with all 24 CPUs online, and I 
+>>> verified in each case that the parameter actually took effect:
+>>>
+>>>    amd_iommu=off            IOMMU off entirely                     WAKES
+>>>    intremap=off             IR off, DMA remapping on               no 
+>>> wake
+>>>    iommu=pt                 DMA passthrough, IR on                 no 
+>>> wake
+>>>    amd_iommu_intr=legacy    legacy GA mode, IR on, DMA on          no 
+>>> wake
+>>>
+>>> Verification for each:
+>>>
+>>>    intremap=off           /proc/interrupts went from 58 IR- lines to 0,
+>>>                           and irq 1 (i8042) is no longer IR-IO-APIC.
+>>>                           iommu still enabled, domain type Translated.
+>>>    iommu=pt               "iommu: Default domain type: Passthrough 
+>>> (set via
+>>>                           kernel command line)", all 40 PCI devices in
+>>>                           identity domains, IR still on (58 IR- lines).
+>>>    amd_iommu_intr=legacy  "AMD-Vi: Virtual APIC enabled" no longer 
+>>> printed,
+>>>                           only "AMD-Vi: Interrupt remapping enabled".
+>>>
+>>> So only disabling the IOMMU outright helps. Turning off interrupt 
+>>> remapping alone, bypassing DMA translation alone, or dropping out of 
+>>> vAPIC/GA mode all still hang.
+>>>
+>>> The CPU dependency is still there on top of that. With the IOMMU 
+>>> enabled, nr_cpus=16 works and 24 CPUs hangs. Offlining cpu16-23 by 
+>>> hotplug after booting with all 24 does not help; the CPUs have to 
+>>> never be brought up. cpu16-23 here are the second SMT thread of the 
+>>> eight Zen5c cores (APIC ids 17,19..31).
+>>>
+>>> Both conditions appear to be required: the IOMMU enabled, and more 
+>>> than 16 CPUs brought up at boot. Either one alone is fine.
+>>>
+>>>
+>>> 1) TPM / Pluton policy
+>>>
+>>> Current values:
+>>>
+>>>    TpmSelection            = DiscreteTPM2.0   (possible: 
+>>> DiscreteTPM2.0;PlutonTPM2.0)
+>>>    PlutonSecurityProcessor = Disable
+>>>    SecurityChip            = Enable
+>>>
+>>> The TPM that binds is a discrete STMicro part, tpm0 -> STM0925:00.
+>>>
+>>> I did change this. As I recall I disabled Microsoft Pluton, which 
+>>> moves the TPM selection off the PlutonTPM2.0 default onto the 
+>>> discrete part, so Enable -> Disable for Pluton and PlutonTPM2.0 -> 
+>>> DiscreteTPM2.0 for the selection. I will confirm the exact original 
+>>> values in setup. I have not yet tested whether restoring the Pluton 
+>>> default changes the behaviour, since the IOMMU result looked more 
+>>> promising.
+>>>
+>>>
+>>> 2) Storage security password
+>>>
+>>> None enrolled. HardDiskPasswordControl=Disable, and the HDD, NVMe, 
+>>> Admin, System and Power-on authentication slots all report 
+>>> is_enabled=0. BlockSIDAuthentication=Enable is the only non-default 
+>>> setting in that area. Nothing to disable, so nothing to test.
+>>>
+>>>
+>>> 3) WWAN
+>>>
+>>> Yes: Quectel [1eac:1007] at 0000:c4:00.0, attached over MHI, exposing 
+>>> wwan0. Its power/wakeup is enabled. Not yet tested with 
+>>> WirelessWANAccess disabled in BIOS.
+>>>
+>>>
+>>> so please suggest which test I should do next, now that we have more 
+>>> info
+>>
+>> Of your above the most likely cause is PlutonSecurityProcessor = 
+>> Disable.  Please try to re-enable that and then try with IOMMU enabled.
+> 
+> BTW - what version of amd-s2idle didn't flag this?  I am surprised, we 
+> had a check for this that /should/ have failed prerequisites.
 
-Other Lenovo laptops expose a similar camera switch through a separate WMI
-GUID, which lenovo-wmi-camera reports as SW_CAMERA_LENS_COVER since
-commit d98bf6a6ed61 ("platform/x86: lenovo-wmi-camera: Use
-SW_CAMERA_LENS_COVER instead of KEY_CAMERA_ACESS"). That driver does not
-bind on these laptops, so map the WMI events to SW_CAMERA_LENS_COVER as
-well via sparse keymap KE_SW.
+Tested, and it does not help.
 
-Unfortunately, there is no programmatic way to determine the current
-state on the mentioned devices until the next relevant WMI key event.
-Therefore, no switch event is emitted on probe or resume, intentionally
-leaving the default (0, i.e., no covered) or the last state unchanged,
-and let the first relevant WMI key event to correct it. This should
-fulfill the requirement of using the switch events to show an OSD.
-AFAIK, no userspace software queries its state via EVIOCGBIT(EV_SW).
+   PlutonSecurityProcessor  Disable -> Enable
+   TpmSelection             DiscreteTPM2.0 -> PlutonTPM2.0
+   SecurityChip             Enable -> Active
 
-The above behavior is basically the same as lenovo-wmi-camera, except
-that SW_CAMERA_LENS_COVER is always exposed even on devices with no
-camera switch. It's because, again, there is no programmatic way to
-determine the switch's existence on the mentioned devices. Doing so
-should be harmless as long as no switch event is emitted and eliminates
-the need to dynamically register an additional input device at run time
-like lenovo-wmi-camera does. Even if a userspace program does query the
-switch's state via EVIOCGBIT(EV_SW), the returned state will always be 0
-(not covered), which is the correct state on unsupported devices.
+With those set, IOMMU enabled, no IOMMU boot parameters and all 24 CPUs 
+online, the machine still does not wake.
 
-Co-developed-by: Marco Giunta <marco_giunta@outlook.it>
-Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
-Tested-by: Marco Giunta <marco_giunta@outlook.it>
-Signed-off-by: Rong Zhang <i@rong.moe>
----
-Changes in v3:
-- Take over the patch from Marco Giunta as discussed in
-  https://msgid.link/SN6PR19MB2303278926469783FA99824CFC842@SN6PR19MB2303.namprd19.prod.outlook.com
-- Map the relevant WMI key events via the ideapad_keymap instead of
-  creating a dedicated input device at run time
-- Remove Reviewed-by: Huang Wei <huangwei@kylinos.cn> as the methodology
-  has changed, please review again
-- Link to v2: https://patch.msgid.link/SN6PR19MB2303E25270E1A460ABC76EA3FC852@SN6PR19MB2303.namprd19.prod.outlook.com
+Worth noting what that test also covers: with Pluton selected the TPM 
+presents through the CRB interface (MSFT0101:00, status=15), and this 
+kernel has CONFIG_TCG_CRB=n. So during that suspend Linux had no TPM 
+driver bound at all -- no /sys/class/tpm, no /dev/tpm0, and the discrete 
+STM0925 was gone from the platform bus. Previously tpm_tis was bound to 
+STM0925:00. So this rules out the tpm_tis driver as a factor as well as 
+the Pluton policy.
 
-Changes in v2:
-- Add lockdep_assert_held(&ideapad_shared_mutex) and a comment at the top
-  of ideapad_camera_switch_report() to document and check that the WMI
-  notify path is serialized through ideapad_shared_mutex (suggested by
-  Huang Wei)
-- Replace dev_warn() with dev_warn_once() in
-  ideapad_camera_switch_report() so that a persistent registration failure
-  does not log a warning on every toggle (suggested by Huang Wei)
-- Link to v1: https://patch.msgid.link/SN6PR19MB23039910DD1918BEE3825BAFFC862@SN6PR19MB2303.namprd19.prod.outlook.com
----
- drivers/platform/x86/lenovo/ideapad-laptop.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Current state of what is ruled out, all with the IOMMU enabled and 24 
+CPUs online:
 
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index 8213524504ee..3e91cc1df6c2 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -1365,6 +1365,18 @@ static const struct key_entry ideapad_keymap[] = {
- 	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
- 	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
- 
-+	/*
-+	 * WMI switches
-+	 *
-+	 * Some devices come with physical switches. Whenever a switch is
-+	 * toggled, an WMI event is emitted to inform the software about the
-+	 * switch's latest state.
-+	 */
-+
-+	/* Camera switch */
-+	{ KE_SW,	0x0c | IDEAPAD_WMI_KEY, .sw = { SW_CAMERA_LENS_COVER, 0 } },
-+	{ KE_SW,	0x0d | IDEAPAD_WMI_KEY, .sw = { SW_CAMERA_LENS_COVER, 1 } },
-+
- 	{ KE_END },
- };
- 
+   amd_pmf                  initcall_blacklist=amd_pmf_driver_init 
+no wake
+   amdxdna (NPU)            initcall_blacklist=amdxdna_pci_driver_init 
+no wake
+   TPM driver               no driver bound at all (Pluton/CRB, no 
+CONFIG_TCG_CRB)  no wake
+   Pluton policy            Pluton enabled, PlutonTPM2.0 
+no wake
+   interrupt remapping      intremap=off (verified: 0 IR- lines) 
+no wake
+   DMA remapping            iommu=pt (verified: Passthrough, identity) 
+no wake
+   vAPIC / GA mode          amd_iommu_intr=legacy (verified) 
+no wake
 
----
-base-commit: fe2ec83746e501645709761605c2464a44fd2929
-change-id: 8511c6da-ideapad-laptop-camera-sw-948e4653b20e
+The only two things that let it wake are amd_iommu=off with all 24 CPUs, 
+or the IOMMU enabled with nr_cpus=16. Offlining cpu16-23 by hotplug 
+after booting with all 24 does not work; they have to never be brought up.
 
-Thanks,
-Rong
+I am rebuilding now with CONFIG_DEBUG_FS, CONFIG_PM_DEBUG, 
+CONFIG_DYNAMIC_DEBUG and CONFIG_AMD_MP2_STB so I can run amd-s2idle and 
+send you the report from the working nr_cpus=16 configuration.
 
