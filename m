@@ -1,70 +1,94 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f43.google.com (mail-pz2-f43.google.com [74.125.228.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5587C2FE042
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 12:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D677E41B8CA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 12:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790167672; cv=none; b=SAgIbn1r6bLAWDWNXav+iNhFlXvNWuqEAptFe5fSVyeeEmQM8gwkRfhtWOANhKxYRWWySNl4a5d6Qz5wYRS+PX5D8WZdYNl226wkWpi/KH2pvr3oOsjFkOfta5iYoOfcGrLxcMZF2APQUV3LSNxrVFd48FsHQJ17Km8B9JTxbFw=
+	t=1790168387; cv=none; b=L0e894WAgrqPkfH936i+7o4LJhp7XKDmMV/UJ5J6cKDmcboOD7x/rUGa/au8j1Id7DPbXN+EPLqHMTRqqNZOmlWXp4kaL2ZlYIApAgU55znLlLPkbYyjVU4S3T3AWVWYbOGvD0lH0oy37xLelLpZsu7IVHMtrnhYnoHOjJn8NjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790167672; c=relaxed/simple;
-	bh=PR+nkjgFdt8KW6rr8XD5p6NJuf14I9FUk5rQR1VxrDM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sozX3gt/YRnhBHtCPRrWbdFlF+2qX9HXF2HLu0igQLf/1bDXUAH7Jfh8i2bAAhcRQuZoAFFEfhQ/86FSd+2LMAmAWIgFwonOm1ZBNJEXMD5lO2BscFWiOuKPZTKYqQyuZyPyer0qKj3sj7xPFKrumYDP55GTxpBO9fc5FoD98Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=b3gao8F5; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1790168387; c=relaxed/simple;
+	bh=TD4XUS6zybk9U61zmSU3P1MtmpnLFgJQ/bxrTRjLYS4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=og9lCTr7Pj4/Td4uJF+4dUc1HFyqRf3POR1AM+iTrMQobmDBEhiaeGO7PIfayLS72uJmOXdX8emuy3NYCEZuTlHG89+KEYDUyep6QXhwsOAy20bXaV5HKLPNhlumcw+R3XGsT5gLFqFixxQig7QZ6Dk17Icqin5KEyLfVrDElCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ExbRk1dA; arc=none smtp.client-ip=74.125.228.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="b3gao8F5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1790167660; x=1790426860;
-	bh=h208NgNTT6F/Gu/lzps/mjSZZNGTomju5YIHK8oJk1I=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=b3gao8F5lXrdkoHz5AaD2qyn5ogR39ZHBdHOUuJG9PznVchBHL7aJIVWLVuRZ9BTz
-	 hGZ0/SsbwwSSn5WW+r0sqRjH7kajM1YUwxcocqOOlg+8eZBiUc6uY1QR3FA7Qi4sr1
-	 VSUL9VS6sw26e3afQ4DzASMTGmObC73/v8VWpCgSlRNZQWqYXfsN9ErTKDBAme3EW8
-	 g7cnDmwGUIpGnNi5wbQRmDhF/WCzdp/F3jz4Tu5kNmyW/spRDITbcIyIyqBfqR1Asc
-	 GENnCymBUSuCDr6z9hrSmyMDk8w16AHFjbWA6ti/CFXOfw1BiWIbnzQuqeB1l+cGD8
-	 X+clPUXcvxO5g==
-Date: Wed, 23 Sep 2026 12:47:36 +0000
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: Daniel Scally <dan.scally@ideasonboard.com>, Jakob Berg Jespersen <dev@berg.pm>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] media: i2c: ov13858: add regulator, clock and reset GPIO handling
-Message-ID: <20260923124728.73609-1-lsa.uz@pm.me>
-In-Reply-To: <20260831130312.26296-1-lsa.uz@pm.me>
-References: <20260831130312.26296-1-lsa.uz@pm.me>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: 2af9a1462b0c1966d6ffaf05df5b540a8953904a
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExbRk1dA"
+Received: by mail-pz2-f43.google.com with SMTP id d2e1a72fcca58-8692a856865so402716b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 05:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790168385; x=1790773185; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=TD4XUS6zybk9U61zmSU3P1MtmpnLFgJQ/bxrTRjLYS4=;
+        b=ExbRk1dAAwSwEyE1ABuYIA3J7px1iQ3y8sgN4c3A3x9VvkpPneNRe7j1a02xN06kTd
+         3NBFUXuLhbMomg2yaP5kfVEh4NSrYiXZNZN4wz/rp/O32PsRDqtSgVx/ZdN4euRUoh76
+         Hc8E9sAlA/J+y+NMSVgkqfz0NXh34QvyFThXtwB72dZKvhAqpf7yB3J9pH0WuqQxRmh0
+         7vPAzKIoVx13fdGxbufi7yMs21w4Jq10dv9osF3eYmQnbNORGmVB7fQ+K6J4zBTsQyE3
+         cGTWUswr8vpcoXALR7QnjlbxfD2z+ILqus3S9QIh0FU5qDyrdlvUJX7c4CdmrOLtUmzY
+         Dghg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790168385; x=1790773185;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TD4XUS6zybk9U61zmSU3P1MtmpnLFgJQ/bxrTRjLYS4=;
+        b=LlVKkh4dSh5mMlzrLf0l8r8vu12PjMpsYELsjAz/eysdH6Rctm7+1GWc/IqWMojBjm
+         FrofsmjmdPbWIkJvZcmkIJfB610Zbs9Ss73PciweVfQkub5SDicyLJqjFzPK5RrYRFe0
+         k9zkXmvKIKn7oW43u/Y6QOGEwOwlU3+Xurd0SFpgONy5xLXt/8rSOU2Kn5uET1Fssj53
+         6WQggW8fR/llvaWOTGbGX7PIAIU1Hkofj3cNGf1GVOKNIpBDg8rXJkvgcHb7ZeChi1N3
+         hqxQ0xV+3FgAbsUcAPIuEIBS3kquBO6HB8zImB6x4bK++GKZINolaZr3aahxuv2ykMtj
+         EE0A==
+X-Forwarded-Encrypted: i=1; AKwUvBzxqB25czQOJHI4tXaaF4mD9XBtX7oUjbgPDMx83mqnjEg13qDrdw99tuOv9fddaXBjYTtCvgh2cj2iy8x1jsm0HVaV@vger.kernel.org
+X-Gm-Message-State: AFuF++kLgzUcAmFRajIIduWSE3FKl9CG4NLxfG4FUlRaBotRaZMOsb+s
+	DABUNI8wKgmOe/wz5njBX0guDj8Ad5FQ1eEYo+fFIQAL6EChAl/MgOHU
+X-Gm-Gg: AYBFou1Nd1Xo5Pcb+FMPD08RJq/PG1s6ebPYxUpsyL3MP2ZuegBHbravlNp5jVhBkav
+	FNboTfzvzppFOfOCBD13WLQ5awGApoH6pxQppJ6PVbIUnXYYJfWKhNyToiK40RWETDl3AT2vj6p
+	GvjG83Zm0HeXlns0K69qvKB32SnwNhMpymTh4lNMtNHj067vRby95jbEFnb5AD0Gq9vEsVFCCws
+	3rKZKXyGpWYizCJemTC52kvbD0ubNXRAHpJA0UYn2LEBfA+2TvkS4Bs59hmFVnjA5geb7UsldcN
+	HmfqxlCO0/YMvFPt7mkzhQJRVJCOwYiPxV5RZqMOvB1VpLzs66BBczqMBe2Sqif4Njhum9QVsDj
+	tYEBhXJNpci515nbDB0wKvIjQqZ48uKFQR1bFaBSQoriJHhJ0sFbScP3MdrwTSxhGQIm4kcMPy5
+	O7cgZY+GPxCjlCBDucU0E7WJD+jUickLwoy9KLD5gMYhvMFPw6KkUfPLvAV1/GFSe+MkyREQ==
+X-Received: by 2002:a05:6a00:4214:b0:87c:3650:6f29 with SMTP id d2e1a72fcca58-87d1ba9e55bmr1912460b3a.42.1790168384696;
+        Wed, 23 Sep 2026 05:59:44 -0700 (PDT)
+Received: from [127.0.1.1] ([240e:b8f:977f:f400:ec2a:b15e:fef8:70a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-87d1cfbfd6esm1171555b3a.20.2026.09.23.05.59.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2026 05:59:44 -0700 (PDT)
+From: Liang Haowen <nbg2974@gmail.com>
+To: Denis Benato <denis.benato@linux.dev>,
+ Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-leds@vger.kernel.org, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Martin K. Petersen <mkp@kernel.org>,
+ linux-scsi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
+ Hans de Goede <hansg@kernel.org>, Derek J. Clark <derekjohn.clark@gmail.com>,
+ Marco Scardovi <scardracs@disroot.org>, Ahmed Yaseen <yaseen@ghoul.dev>
+Subject: Re: [RFC v7 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
+ for ROG NVMe enclosures
+Date: Wed, 23 Sep 2026 12:59:36 -0000
+Message-Id: <202609240122.ReplyDenis.lhw@gmail.com>
+In-Reply-To: <52904b48-a5fa-4872-b9bf-a05b1b7bdea2@linux.dev>
+References: <52904b48-a5fa-4872-b9bf-a05b1b7bdea2@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-A ping, two weeks on:
+Hi Denis,
 
-  https://lore.kernel.org/linux-media/20260831130312.26296-1-lsa.uz@pm.me/
+Thanks for the context.
 
-It still applies to media/next at aedd77ea81, checked today, and builds
-there clean under W=3D1. Nothing in the patch itself has changed.
+I have read Marco's Dynamic Lighting class series (PR #17). The
+direct frame and palette interfaces map cleanly onto what the Arion
+needs: its colour tables are just small RGB frames, and the
+enclosure firmware effects map onto the class effect controls. I
+will coordinate with him on using it for the LED side, on top of
+the verified SCSI handling this series carries.
 
-One line below the scissors has gone out of date, in the patch's favour. It
-says this needs POWER1 GPIO support in int3472 to be useful on this machine=
-.
-That landed: discrete.c now maps INT3472_GPIO_TYPE_POWER1 to "dvdd", so the
-rail is a registered regulator here rather than a dummy, and the dependency
-the patch declared is no longer open.
-
-With the patch applied the sensor identifies, the driver binds, and
-v4l2-compliance reports 46 of 46, 0 failed. That run carried this patch, th=
-e
-gain cap and the flip controls together, since all three touch this driver.
-
-Sergey
-
+On the open review items: the next revision will isolate the DMA
+buffer into its own cacheline (a real issue on non-coherent
+architectures, as the bot notes), and I will take the time to get
+the full pass right instead of rushing again.
