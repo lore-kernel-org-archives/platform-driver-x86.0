@@ -1,110 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0FF49482D;
-	Wed, 23 Sep 2026 10:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE1649B5A7;
+	Wed, 23 Sep 2026 10:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790160113; cv=none; b=kfa9clEK0xruXYs5ZzWjrwy5dH2LfayQGUXqbI3lViuR2kbGNn46yA9u0UZ52uNQtFcRS425tJ3yyOAf98DGy7RrSoimNTGZV7Kjl0cMpE5XMrInxMwvLG3kZebvh2EWTKSLCiUiXUOxcxpRbqJ9Lz8Z6u3oF5crWe0I9snbbvU=
+	t=1790160379; cv=none; b=nhgW23bK1a4clbQ3wh7xceIOOxaTYMKrub03AMXhcLFiAGqYgxBWYi0Vg1AY6tHKFDKs6OCmxhJsPYjV3ae7uHifmietEpNtCt63ZrSnjyHM27b9rDhmX58wTxIpOqwQ5gpUgq467CGBsS89o9LMGR57+JQmsnOD1yJGZrOiOjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790160113; c=relaxed/simple;
-	bh=ct2Yxd6Pwb6wJQGDaDkNSWm2xACRUao6jBghy3Rxpo8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pnGPE/gdwUl3D7TGtds8rpRUrDrEmc/f5y7oNxZpW45EwlK7ITS8thBrgWwqnPHGLMrMJgaclBJ4gJuR3Enj9R1hOHsa8h9/spQy8ve+a8pFGzQmWJ++Fooic1EeB1fqgs5FoRTo3qBqQRIj7mTwWpHL3PKaz2x/trJvuQ8I5co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nHxBj2eN; arc=none smtp.client-ip=192.198.163.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790160379; c=relaxed/simple;
+	bh=zDpAXKywWj0CeIgSPsdqwqYzEKxLMJzvx/VQ6zhQi5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcFepxDihJCww8jpI30VQVuSMRCZxtji1KsdkP1CtY4AknhPtZQrd9cf/Lqfmrij5KBjfOmukR/0chACt5px6yzyDUVJLZY+QYoA/3m+aM8VJmvmchuJ4k7RdiwiqJQrU3BlptKEbs63mbXHCm3WyCj8ln4FNNzwuggKyUXpoT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9wwoWf7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nHxBj2eN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790160101; x=1821696101;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ct2Yxd6Pwb6wJQGDaDkNSWm2xACRUao6jBghy3Rxpo8=;
-  b=nHxBj2eNmyds7NR8GKecNHB5jRPCXjJ/6TEVIPM7kajalQczq+Wu85p8
-   P60JGCnis8TPg1xtM7CyeRx/2KC820mYHUFwQy25FCuxWt0h/OBXNR5g3
-   cI+lYp5zyP5Bt2tiGu2BswCLrkQ97vrehi1p9SF0alAtSLwUqbLiESd/R
-   InqoHzD+2/d+UxaEOSSYQxh2lwJzbLeDdrUqgPp3+dSgsI5lSf8zN6hIR
-   pReBgL4Z2UEl8bxoQ0tn+Id+Ev50wcQ1jvG14TqeUDHE89ru+a6iYO3kF
-   W7ph4kqVkLCAZMbuJgWCfIuyGAf8U4zuSD0+ZmgfKvlxySOYoRVSNEvhF
-   Q==;
-X-CSE-ConnectionGUID: efyTlCreRluAcZ5Vk4nfIg==
-X-CSE-MsgGUID: YTT5STjvQCimnRFRzOwW8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="1356685"
-X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
-   d="scan'208";a="1356685"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa114.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 03:41:36 -0700
-X-CSE-ConnectionGUID: Ju1AiwyyS0Ko+5L/1UwU9w==
-X-CSE-MsgGUID: p+Gh/wKeSbKl6XnkHPzDxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
-   d="scan'208";a="4644288"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 03:41:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 23 Sep 2026 13:41:27 +0300 (EEST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9wwoWf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC9A01F000FF;
+	Wed, 23 Sep 2026 10:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790160364;
+	bh=avQvkl7s471m9YzAiZ0aOxUkynPxRjA0cpoopenOUeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=g9wwoWf77TbsWX9wRO/ihI0CejOz4hXcaxSvPUFrGvt3SzGZM7ccxod1AuHJ3zvE7
+	 Xaa3xPMJ3KRa33s48tnWNdKZ+K1NgetlUh9qYEUlNhQqbCwjs6LABeef079KpnA6gC
+	 IwGP8FHwnYh3xbOIz72QiRLH+mrk9qloMvy5igKRJHIDG41tzeJR6BxOUeOkiFxL6P
+	 qLorL4EvkMDxVRS8F8dY2bVFY7Assrx8rr9QkTldrbtO/8/X7ePU5rMxAvr/eNM234
+	 PN8fF6kNvK7LjxpwQLBn7rB+l+u4On5nKjECcoM9fk6xtCwJRx/8BU37pHYnMqZnix
+	 hFUiN6SGOUKqw==
+Date: Wed, 23 Sep 2026 11:45:59 +0100
+From: Lee Jones <lee@kernel.org>
 To: Liang Haowen <nbg2974@gmail.com>
-cc: linux-leds@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-    Pavel Machek <pavel@kernel.org>, "Martin K . Petersen" <mkp@kernel.org>, 
-    linux-scsi@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Denis Benato <denis.benato@linux.dev>, 
-    Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>
-Subject: Re: [RFC v7 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
+Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
+	"Martin K . Petersen" <mkp@kernel.org>, linux-scsi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC v7 1/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
  for ROG NVMe enclosures
-In-Reply-To: <20260923103015.2365773-1-nbg2974@gmail.com>
-Message-ID: <d6cd20f2-dbad-58c5-d356-b9d1fa97ea44@linux.intel.com>
+Message-ID: <20260923104559.GF3864833@google.com>
 References: <20260923103015.2365773-1-nbg2974@gmail.com>
+ <20260923103015.2365773-2-nbg2974@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260923103015.2365773-2-nbg2974@gmail.com>
 
 On Wed, 23 Sep 2026, Liang Haowen wrote:
 
-> Hello,
+> ASUS ROG external NVMe enclosures (ROG STRIX Arion, USB 0b05:1932) are
+> plain USB mass-storage devices with no HID interface: the Aura LEDs
+> hang off an ENE controller driven by vendor SCSI commands on the same
+> LUN as the disk. The enclosure has 4 independently addressable LEDs,
+> verified on hardware.
 > 
-> v7, as its own thread, addressing Lee's review of v6.
+> Register a scsi_device_handler matched by INQUIRY (vendor "ROG",
+> model "ESD-S1C"); it does not claim the sdev (sd keeps owning the
+> disk) and exposes each LED as a multicolor LED class device,
+> /sys/class/leds/asus-arion-0-0-0-0::led-0 through led-3. The
+> H:C:T:L part of the sdev name keeps the names unique when more than
+> one enclosure is connected, with its colons flattened to dashes. The
+> color section stays empty, since multicolor LEDs enumerate their
+> palette via multi_intensity, and the four identical zones use the
+> function name with a "-N" ordinal, as the naming section in
+> Documentation/leds/leds-class.rst asks for.
+> 
+> Protocol: a 16-byte vendor CDB (opcode 0xec, 'A' 'S' signature,
+> register index, argument count in cdb[13]). MODE 0x8021 (Static) must
+> be written first in every sequence or the device ignores it; colours
+> go to 0x8160 + 3 * led and 0x8100 + 3 * led (3 bytes, order R, B, G;
+> both tables are written because firmware revisions pull from one or
+> the other); APPLY 0x80a0 takes 0x01 to apply and 0xaa to save.
+> 
+> The CDB cannot go through scsi_execute_cmd(): it sizes the command
+> via scsi_command_size(opcode), which maps vendor opcode 0xec to
+> 10 bytes, so cdb[13] is dropped and the device silently ignores the
+> write (GOOD status, no error). The request is built with
+> scsi_alloc_request() instead, which initializes the scsi_cmnd parts a
+> passthrough needs (command buffer, lengths, rcu head), with cmd_len
+> forced to 16, mirroring what SG_IO does from userspace.
+> 
+> brightness_set only caches the colour and marks the LED in a per-zone
+> dirty mask under a spinlock; led_mc_calc_color_components() runs under
+> that lock too, because it writes the shared subled_info array and
+> trigger events call led_set_brightness() without the led_access lock
+> that serializes sysfs stores. A single work item per zone then
+> snapshots the mask and colours and runs one ENE sequence for all
+> pending LEDs (MODE, colour slots, APPLY, SAVE). Funneling every
+> update through one work item keeps the sequences from interleaving
+> between concurrent LED updates and batches multi-LED updates into a
+> single APPLY/SAVE. A re-queued run with nothing pending returns
+> before touching the device, so it cannot wear the flash with a
+> pointless SAVE, and the lock keeps a colour write from being
+> reordered after its dirty bit on weakly ordered architectures.
+> 
+> This is the monolithic out-of-tree version as verified on hardware;
+> the Kconfig/Makefile/MAINTAINERS wiring lands with the agreed split
+> into a SCSI transport helper and a shared ASUS Aura LED interface.
+> 
+> Signed-off-by: Liang Haowen <nbg2974@gmail.com>
+> ---
+>  drivers/leds/rgb/leds-asus-aura-scsi.c | 392 +++++++++++++++++++++++++
+>  1 file changed, 392 insertions(+)
+>  create mode 100644 drivers/leds/rgb/leds-asus-aura-scsi.c
 
-No, you didn't address Lee's comments but only a small part of them. :-(
+Many (if not all?) of my review comments from v6 still stand.
 
-Please slow down so you've time to address all feedback properly and 
-double check before the next submission you've addressed all feedback 
-you've received, not just part of it.
-
-In case you think there's a comment where the reviewer is wrong, do not 
-just silently ignore reviewer comments but engage by explaining why you 
-think the patch is fine as is.
+I will not be reviewing this submission.
 
 -- 
- i.
-
-> Changes since v6:
-> 
-> - The driver moved to drivers/leds/rgb/, where the other multicolor
->   LED drivers live.
-> 
-> - The series is submitted with git send-email this time, so the
->   patch format is the standard one.
-> 
-> The SCSI device handler attachment is unchanged; why it is a device
-> handler at all, and what the in-tree split should look like, is the
-> open discussion in the v6 thread.
-> 
-> Everything else is unchanged from v6: the hardware description, the
-> scsi_device_handler that does not claim the sdev, the multicolor LED
-> interface, the protocol handling and the known caveats (manual
-> attach until the split lands; SAVE on every update writes the
-> enclosure flash, wear uncharacterized; NULL-parent LED registration
-> to avoid the sdev reference cycle).
-> 
-> Liang Haowen (1):
->   leds: asus-aura-scsi: Add ASUS Aura RGB LED driver for ROG NVMe
->     enclosures
-> 
-> 
-
+Lee Jones
