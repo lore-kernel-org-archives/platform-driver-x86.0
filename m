@@ -1,309 +1,363 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013066.outbound.protection.outlook.com [40.93.196.66])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B89151CF69;
-	Wed, 23 Sep 2026 12:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711FF49DBBB;
+	Wed, 23 Sep 2026 12:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790167341; cv=fail; b=uGzXR1K3ob/hFSiDA4RuI70RiFxU3HzGaMkjxNdvvW2c/urppsfWaLgYY1m/V8BoeDhdIqJRT0BglmuKVsqXnrEJ/De88ZG7NPcXMRofe/rhY3hSG8v0cewMM8v5hf9eQx3r3UGTPsthwbbosGG4vFXqxPEg81BP770w0qlV2b0=
+	t=1790167527; cv=pass; b=Qta6e9diQrMc8hCJ6jqGAGxhOI4AVc1w6yI7YDlL48HqWqGZI2L9OT1I7GUQ3BrGmcKlGj8C/67bPk7k8dHjNb0fh21HePzS3g+YOK5JXxdA7ECmtPN+V6FWIDWNGp6PLg6dv9nlrSaQAi7+k58qANEHXJ5akdUeeZUEpnJj05s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790167341; c=relaxed/simple;
-	bh=DoMFyxMqnibiEjq++DExCOUa7e9XGzI8MdjcAtPjC5g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TvUaeNowtnoEKtQEElpvbk444gdtDxpUI7CxVYNtdG9q0lxjmqvBCGrzYHuaMFQXLKrh1WhGCBjspoKuPYQhj9gSsR1NKGaeWmtHJ2bEl7T0MHBYszGaabpE2bggzzshB6xEsld5JZFnu2GnGZya/8ewiY/XHP05Lji8Y2RSTYU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b5AWQJRw; arc=fail smtp.client-ip=40.93.196.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1790167527; c=relaxed/simple;
+	bh=jj1AOuCIcxY/zK8x6QtMFcibXeLxM3qQRNS7n+GW1hw=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=HntyQXhFvTno4H8cu2lUG3r1xouWM6CVQfToEsZWoHcnMr3XqXRcafYRTxaUYXgYuXRu4m0c2j9pHCR+bzoS7L3IsgFRls2i5E3z21d1Yfek+6RpWaTJnPdRWytWw6BDIPb6Zm+EqbHkM3mK/mGxQDHSPsZ85YGzYZ3Zm1frzeQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=Ai4VAzoH; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b5AWQJRw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AyL4CnpJ9HaS8+YtMc3evR/Fzn85M8V5kUBjQgP455ggDNNnESbje8iLQR8KpCPIVzjIiuzkaFXEEMnLIhbqiPFuNbqLybiJh+0QgWa/vx2ug+haaH9eHKpRtbHkUblscKrU2YJOAKt24TSx/cWwGyDLrtB9aUUve1v9b1yIhqi4PnfDTz+8iGb54VZLKOtkQ7Q3Ot4uuMS9r5q893EtCB5p7GXLVq3XLTr6lrEv7lE+zcFXXc+TUUiDg8DGjLA8XL9wKcPOj2JjGS5gG7s450E9uki+HwAqwxqqqcOKc3745/YDGmmOyJuiI6ka4M89VZd3t+LgDX0mK1hPoAezUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uVg6vXBv1V3Rpd36bNRXVAQ4Ug436JMLWnh6NdgOjLI=;
- b=cW71c8nnPMQfy2CLngsp+Kfprf9L3ShZbJJ4wXAeZnkq2Qio6l9flgsBkgpeAumvbDGoJqKGU8RTJZQFKKS4IMG5PPKmSkSj9Sgd0+33LMDmwv/nayZUyDSj92X4dZsivX3Ob590/zui0LXH4qhR9yTO7/ugiKP+mcuUiq9yPUjhHybbGz5Jc+t8LHa/PzOJtHtruHVHJsA1tNJ7l0CxaDgNfmXQ9136ikQdL5z1I8H+K1Eg9mfY2ICNqXZt/8LIYjilEi4U1vj75HGKzWx2vIcBvEGVuM6VactnmTo8JZFXhSt7Fz7u7n2GqSBHlwMLRsyOUmfcUf2hODDPkcz8Tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uVg6vXBv1V3Rpd36bNRXVAQ4Ug436JMLWnh6NdgOjLI=;
- b=b5AWQJRwjX3TDH89mh6Jm/p5x6rBy4xtUWe1G1w+JRSTjP+1v8KY7yfWPZgK9wd7cGBkrYu2sRWrRYKOLn5zMusCzt0HWfhleEZuyIrX2hc7+J9pedrhh8Jdf+Y753i9T485f4DtVycWs3p3VV0Fbkqh2I3R+ZAT2KIDpTMqr4E=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
- by DS7PR12MB8232.namprd12.prod.outlook.com (2603:10b6:8:e3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.14; Wed, 23 Sep
- 2026 12:42:02 +0000
-Received: from PH8PR12MB6914.namprd12.prod.outlook.com
- ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
- ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0451.014; Wed, 23 Sep 2026
- 12:42:02 +0000
-Message-ID: <bb82702c-6902-491a-8eae-2b90cd8c5c5a@amd.com>
-Date: Wed, 23 Sep 2026 07:41:58 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
- (Strix Point) when more than 16 logical CPUs are online
-Content-Language: en-US
-To: Fourhundred Thecat <400thecat@ik.me>, platform-driver-x86@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com, rafael@kernel.org
-References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
- <8a5bef53-cae4-4aa6-a657-d11a6831d2b2@amd.com>
- <7962670b-168e-020e-b55f-c9ea49483f6b@ik.me>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <7962670b-168e-020e-b55f-c9ea49483f6b@ik.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN0P221CA0028.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:208:52a::16) To PH8PR12MB6914.namprd12.prod.outlook.com
- (2603:10b6:510:1cb::21)
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="Ai4VAzoH"
+ARC-Seal: i=1; a=rsa-sha256; t=1790167500; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nweW1TdROckMimZPqz5KfxcMs+yqWWIiji/92FJqLvzokpIyEkoP7DilWV18d13OuTSRy3xI6AhxnZbJhWqM2k/1k20qb7DqaO42KXRxatqZI2aqW4EwKtIExELTyY2+9U/RjrIqtJ4PXxblYrdHnBxXdj7G1FDApfsjdE9R2lQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1790167500; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ETmeRL9mexlf/VtcVrEkv+CMo3bzi/q4xz4aXyPSUEs=; 
+	b=mkY7qkOoSWn2wXzJeoaXKw7Xio4NI2o26BIKZyx2Ul1mzzxTNhYB4ojMDeLPEg9nwCF1hcLU4e/w+8hP910dDn/UtRvi5BaFdsoHZs/U21qFry0yCag64ubl4mRjMccuyDVQKCSjfv1Rhya4XKjQY7+areP+OBB2rEaigPTCLsY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1790167500;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=ETmeRL9mexlf/VtcVrEkv+CMo3bzi/q4xz4aXyPSUEs=;
+	b=Ai4VAzoHokkctz3nR/hJQ5zRaUW6DmrDRYgsAiAI2UI26t3AXoi1M2QiIuLBYMXF
+	9PRLtE0IUTHwQ364YbuQ51dw7CR+ZiUZpzuH6LgkSl6LIC8SH6MqMDr3E4QbnHPTWP2
+	2iy8xc+KQKJ8lFupZ463mbOfPhnn3+Q+2fP1NahST+0Ymo08TVTNFlpukzDCHEM/AKP
+	kBLgrjXN7KukvlNL2ZMpbSlsUuXzRItjkW4ksGMcZ2JPJSYICjRfNzIkPQ/ZLBKXXDn
+	5LOWzXa4gWZQS6q75UsUDq1yVXLWnnkoSq1pLQkt6fxXguwUv23slzF1mOy1E8VFyIX
+	1WADcK6BSg==
+Received: by smtp.zohomail.com with SMTPS id 1790167499115216.26734243271835;
+	Wed, 23 Sep 2026 05:44:59 -0700 (PDT)
+Message-ID: <356cc2817ce72c4f2d7b4f623ae73b979d314ac8.camel@rong.moe>
+Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Report camera switch
+ as SW_CAMERA_LENS_COVER
+From: Rong Zhang <i@rong.moe>
+To: Marco Giunta <marco_giunta@outlook.it>
+Cc: derekjohn.clark@gmail.com, hansg@kernel.org, huangwei@kylinos.cn, 
+	ikepanhc@gmail.com, ilpo.jarvinen@linux.intel.com,
+ linux-kernel@vger.kernel.org, 	mpearson-lenovo@squebb.ca,
+ platform-driver-x86@vger.kernel.org
+In-Reply-To: <SN6PR19MB230365BE74C6A502EBB4F35DFC822@SN6PR19MB2303.namprd19.prod.outlook.com>
+References: <22C70C72-1C43-4777-AD11-D5A6EA85A0F1@rong.moe>
+	 <SN6PR19MB230365BE74C6A502EBB4F35DFC822@SN6PR19MB2303.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Sep 2026 20:39:53 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|DS7PR12MB8232:EE_
-X-MS-Office365-Filtering-Correlation-Id: 51825e5a-1963-4fa6-2645-08df197010ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|11063799006|56012099006|6133799003|10067099003|4143699003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	TJIp3GvRGEZ/5tYxi4Cmlm4zpdYuBYxqfKnA/xFSfmSrMI2kqU1f+8JphIcurPPl9eAc7kpfsJ7/oGnFwOMPn6p6Ooys8qanvcgasMUcDO/v2LugKtji42yj6SNxI/dByw5YuahhtIC07QaTl2DO83aoqEaeyoxuUDQejui4XyhPYRUb1rGHLvHat0ReoQWu7o72bjmL8HHijO7BmVlGFB7RDJATAGFoEDRo36MJPbQrLvt6o0zR7GqWS+nbeW6ptKD2FK/Yty+UQSAcEc+Y/eG2tiLad+pt2AP+kcKhhOjRBWNFPWVkS1H9Xr4yjnWMOTEzLdN1MymO8juMNzeiJfCEGIV4w64mwAf7sGNcLpnBf4CUJjl63lhIgyp9D/NzPWAMAn1cfzL8x+YjOVcs7z+IUqE7TcKyC6ZcQy9ah59TZePsYtTDwcN70LACmTHV9Fq7KMstB0ECjqGC7F0iazGyS3e94j/PADfgMvL8QDgSNz2nrbK4lQAkYzZlcOzRuk+G8LJLggdJzRBC2sHNTYRXm/tP155VTHN9SsQiSrDVku8iX510AIax/7owk3Fh43CyV2oFAIkGcWZdGhttR0vcOkOw6YY86VqqnQX82EtECERDc4k0XStmHmvlU78zQSNxUkZpYDO7FcitqGmMxGX7ndRbLmUZGjU5aFiOzcw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(11063799006)(56012099006)(6133799003)(10067099003)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?d3FyTmFyblYra3Y4aU1FREVPemtuRlFSUmsyN1k2b3ZYMlh1a01MYjhJRDU3?=
- =?utf-8?B?Tzh1NFB0dHRRcG5PbGxUcnd3OStsd2lJVzdKTVBYV0JlT2IvNzdkempMNFkr?=
- =?utf-8?B?blhsWXVBT2l3VDZYYS9UNnJzOTRaaHd3VFNyd1pzRDRmVVJPa09INGJoeU9a?=
- =?utf-8?B?a0tRb2s0WDhjQ3ozLzBiWWxnUk16bTJoN0xCUUUwMG9aS3FhRDlOZUh3bFR0?=
- =?utf-8?B?Ty94aVRicVp6QlU0bkNlWTRIbWtZOEVJUEZrVTRwYmhiellrdCt3NmVxUGlL?=
- =?utf-8?B?THl4a1p0S2VQU1ZXbFlqd1lydHhwT2E0M1poRVJQd2RKTWZJR0pxRm44bXpR?=
- =?utf-8?B?UU9xMTJyM2k4VmNxVGY2c09YaGR3SVlvTFJmYVFxNWxsZTViTS9ubDEwbzJ4?=
- =?utf-8?B?K25uWlZXRzZpUVFZcGxEMFU3dTRpOHhoMVhHVFVUaHNPTG5ITXQ0blRHbll6?=
- =?utf-8?B?YS9BVHRUV1RQMUxjelhQRk5jcUxOMWJJMnpzeTZ6V0V3UTV1N2tscTBXNlk2?=
- =?utf-8?B?Ti9LdkdvbXFnMDdnL3ZKYzYyR0hMQkNFeXJVUFBwU0dKaExEMkNsTDJReDJE?=
- =?utf-8?B?TWVXOVA5ZkI2eUxkL0R4R2VwT3ljN1hRZFV0L0Z4eUl1MmRaUnRpS0Q3aHpP?=
- =?utf-8?B?c0FYcmdPZjM4SEplL3I4NkZ2eHhvbFYrVjZKMGRMQWE1UkJ5U3hvRGdwa0Uv?=
- =?utf-8?B?eWM5dnNrRkRzcExON1BxdE9JdEswUW9ldmh2eHBvVUhFZkdqQjNQdzIvR1d5?=
- =?utf-8?B?VXRRdmtnWTI0OVYyaW92WGNSV0h4cjA0enZ4cWtMelJhT0xhQVA2MFZvM2JO?=
- =?utf-8?B?WTA4N2hobHVaeWdNY0VDOFJGQXVTV01CVjFqc0RsWWJudWprUU83aWhxQ1p6?=
- =?utf-8?B?REV0ejgvZVVmb3p5UlpUbEk4Ni92OUpPVU5WZjlKR1BTOU9LZHhocUNjR1ho?=
- =?utf-8?B?RTZjY3ZTZ0xVa1g2VFJ1R0QyK09PSDdqaWtZVzFlZnBhcWlPUFFZdUNhZys3?=
- =?utf-8?B?NlkrYXdGUUpkeU5TSjBkdzdLNHQ5QTFJR3g4UUV5MjB0V1V3dE42YUREQ01v?=
- =?utf-8?B?V0tkdjA1NXpRSHMyZEFhZTIybWtrVmZEemZHdC9VZWZFNVJacWhHR2JKQjRG?=
- =?utf-8?B?NjFNY3JCN0JMdGpOQ0RrU2tqdFEzUkJTK25QR0k2TGV3bXFWTitsaW52RlVO?=
- =?utf-8?B?bUJyWlBUQWRYMDB0aHgrN1RlS2JuNld4cDBJN0hZRytrYlNIRVk3WDdGRHZD?=
- =?utf-8?B?VUwwU0RBT2NiTTlUZnBPcVZWemxmQ0N5UkI1b0xTSmRSOHg1c2QyTkhFRSsr?=
- =?utf-8?B?ZGRkbjdybDRzQzhhOXN3QThOOGVISDZENnFnMHhhT2JEdmJra1lKRFFxTkJk?=
- =?utf-8?B?NFBuNGtEenpSbm01Tm4zWW1sVFUvQ1RjRm83dnBxNmNDMXJXb3dJL1dxUTJR?=
- =?utf-8?B?WlMvUWVIZ2J5TUdtR1pFSVJ0U0xNQ2FFWVVoNnQ1Qk12UU0vQW1kRURnTzBX?=
- =?utf-8?B?eUtQM0piYzVGUDJqL01qNVRYenlxU0dVZGgxWUwvdUJxaklTUXpqRDdpVVlu?=
- =?utf-8?B?VjdkMnRWeVdmS3ZYdGduWEx5ditzOEN2RWtVZ2hqdVNBdHpEcjlMUHFvWkdl?=
- =?utf-8?B?bXloVUhaVHAwNXpZcmY1YjVkcnZXTXk4YjJZeE9lZUVxNWhEdTA1UFBHUGNk?=
- =?utf-8?B?UlRQRjJBS1ZGRWFzVnhocjdiaStoc04rTFcrQ2E2Vk5tZkw3ZHRjMjU5elNH?=
- =?utf-8?B?bkZpS2xYZjZmZUJZOFE0bWczVU52QjJ5bi9QWUkrU3FzTlJGK2t6UjBHTG40?=
- =?utf-8?B?K3oza2tVcEhSemFtNUdJUGxsUnpnZjBLWHdKY0pkR3dvMFQ4bEVYbVl5VmxH?=
- =?utf-8?B?MXIwZVIyNllRL1ptd3JobDYxcjIrV0F5UVJJNmROUjEvWkR0bFpFK1d0MEMv?=
- =?utf-8?B?SEJBejJZN1dMUCtKdnlLWVorMjdKRUpTcCs1QXI2U1NPdTZQM2xnczJ0Skcv?=
- =?utf-8?B?NHhER3Z6UnFpM1Zubkg1VFpDQXVUZkVORzNaNVpiUVJ5a0lkekhybFpwWXVY?=
- =?utf-8?B?R1BscFdaY2xjWVo3M0FFem9CUTgvWW55N3FtcmFRdWVyZ2MwODAvQjdzNjht?=
- =?utf-8?B?TU11UjNtWDFEUHBmQlE5T1kxdTllaVROdHdaL0JkTDVTTmNoTHUrSmNKWVZ3?=
- =?utf-8?B?V2FrYkxReEttRG9CWEIwa00vNHkvME82SGJkQnhwdVZUTm9OZzhEbWRoamxT?=
- =?utf-8?B?N2NZTkprRnFURmM0YXdSaWVWSnZzUXU3MnRSRUdtQWVpY1FLWU5CRU9VejJG?=
- =?utf-8?B?WXhMMGgvWkVsdXl0SDJzTW50MXVJSVZXd21GQzNOeEM2WUhOZzBlUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51825e5a-1963-4fa6-2645-08df197010ae
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 12:42:01.8764
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HBUzXelGk4i6Vjjbi5LKBVB/Ss9aWQj+zNq5oXRtb8evgt/98HhzBDtNSslUI1BJ8hU6Fl43+rPmXoC+ukD7Lg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8232
+User-Agent: Evolution 3.56.2-10+b1 
+X-ZohoMailClient: External
 
+Hi Marco,
 
+Thanks for the detailed information.
 
-On 9/23/26 00:58, Fourhundred Thecat wrote:
-> On 2026-09-22 16:47, Mario Limonciello wrote:
->>
->>
->> On 9/22/26 08:43, Fourhundred Thecat wrote:
->>> Hi,
->>>
->>> On a Lenovo ThinkPad P16s Gen 4 AMD (Ryzen AI 9 HX PRO 370, Strix 
->>> Point), s2idle enters sleep normally but the machine can never be 
->>> woken again and has to be force-powered-off. The trigger is the 
->>> number of online logical CPUs: with all 24 threads online the failure 
->>> is 100% reproducible, and limiting the kernel to 16 CPUs makes 
->>> suspend/resume work reliably.
->>>
->>> This platform has no S3 at all, so s2idle is the only suspend mode 
->>> available.
->>>
->>>
->>> Hardware
->>> --------
->>>
->>>    DMI product name    21RXS07D00
->>>    DMI system version  ThinkPad P16s Gen 4 AMD
->>>    BIOS                LENOVO R2XET40W (1.20), 05/26/2026
->>>    CPU                 AMD Ryzen AI 9 HX PRO 370 w/ Radeon 890M
->>>    CPU family          26, microcode 0xb204037
->>>    Topology            12 cores / 24 threads
->>>                        4x Zen5  (core_id 0-3)
->>>                        8x Zen5c (core_id 8-15)
->>>
->>>    ACPI: PM: (supports S0 S5)
->>>    Low-power S0 idle used by default for system suspend
->>>    /sys/power/mem_sleep -> [s2idle]      (no "deep"; DSDT has no _S3_)
->>>
->>>
->>> Kernel
->>> ------
->>>
->>>    6.18.51 x86_64, gcc (Debian 12.2.0-14+deb12u1) 12.2.0
->>>    Custom monolithic build, no loadable module support.
->>>
->>>    Relevant config:
->>>      CONFIG_NR_CPUS=32
->>>      CONFIG_SUSPEND=y, CONFIG_ACPI_SLEEP=y
->>>      CONFIG_AMD_PMC=y, CONFIG_AMD_PMF=y, CONFIG_PINCTRL_AMD=y
->>>      CONFIG_DRM_AMDGPU=y, CONFIG_DRM_ACCEL_AMDXDNA=y
->>>      CONFIG_THINKPAD_ACPI=y, CONFIG_ACPI_EC=y
->>>
->>>
->>> Reproducer
->>> ----------
->>>
->>>    # echo mem > /sys/power/state
->>>
->>> The system suspends cleanly. The ThinkPad power LED then shows the 
->>> EC's slow breathing pattern, i.e. the ACPI LPS0 _DSM entry path ran 
->>> and the EC considers the system asleep.
->>>
->>> It never wakes again. Tried, with no effect:
->>>
->>>    - opening the lid
->>>    - any key on the internal keyboard
->>>    - short press of the power button
->>>    - clicking a USB mouse, with power/wakeup set to "enabled" on both
->>>      the device (3-2) and its xHCI root hub (usb3)
->>>
->>> The machine is also not reachable over the network while in this 
->>> state, so it is not a case of resuming with a dead display. The only 
->>> recovery is a ~10 s power button hold.
->>>
->>> Wake sources are armed. From /proc/acpi/wakeup:
->>>
->>>    XHC1  S3  *enabled   pci:0000:c5:00.4
->>>    XHC0  S3  *enabled   pci:0000:c7:00.0
->>>    XHC3  S3  *enabled   pci:0000:c7:00.3
->>>    XHC4  S3  *enabled   pci:0000:c7:00.4
->>>    NHI0  S3  *enabled   pci:0000:c7:00.5
->>>    NHI1  S3  *enabled   pci:0000:c7:00.6
->>>    LID   S4  *enabled   platform:PNP0C0D:00
->>>    SLPB  S3  *enabled   platform:PNP0C0E:00
->>>
->>> and platform/i8042/serio0 power/wakeup is "enabled".
->>>
->>>
->>> Bisect
->>> ------
->>>
->>> The regression was introduced by raising CONFIG_NR_CPUS:
->>>
->>>    CONFIG_NR_CPUS=16   suspend/resume works
->>>    CONFIG_NR_CPUS=32   suspend enters, never wakes    (100% 
->>> reproducible)
->>>
->>> Booting the *same* CONFIG_NR_CPUS=32 kernel with nr_cpus=16 on the 
->>> command line also works. So the trigger is the number of online 
->>> logical CPUs at suspend time, not anything else in the build.
->>>
->>> NR_CPUS=16 is of course wrong for this CPU -- it silently leaves 8 of 
->>> the 24 threads unused -- so this is a workaround, not a fix.
->>>
->>> At nr_cpus=16 the kernel brings up every core's primary thread plus 
->>> only the Zen5 SMT siblings:
->>>
->>>    cpu0-3     core_id 0-3     Zen5   primary threads
->>>    cpu4-11    core_id 8-15    Zen5c  primary threads
->>>    cpu12-15   core_id 0-3     Zen5   SMT siblings
->>>    (absent)   core_id 8-15    Zen5c  SMT siblings
->>>
->>> The 8 CPUs that are absent in the working configuration are exactly 
->>> the SMT siblings of the 8 Zen5c cores. I have not yet narrowed down 
->>> whether the threshold is exactly 17 CPUs or specifically the Zen5c 
->>> siblings; I can bisect nr_cpus= further if that is useful.
->>>
->>>
->>> Ruled out
->>> ---------
->>>
->>> None of these had any effect (still hangs with all 24 CPUs online):
->>>
->>>    initcall_blacklist=amd_pmf_driver_init
->>>    initcall_blacklist=amdxdna_pci_driver_init
->>>    runtime unbind of amdxdna, amd-pmf and tpm_tis before suspending
->>>
->>>
->>> Possibly relevant
->>> -----------------
->>>
->>> After a *successful* suspend/resume at nr_cpus=16:
->>>
->>>    /sys/power/suspend_stats/success         1
->>>    /sys/power/suspend_stats/total_hw_sleep  0
->>>    /sys/power/suspend_stats/last_hw_sleep   0
->>>    /sys/power/suspend_stats/max_hw_sleep    18446744073709551615
->>>
->>> so no hardware sleep residency is recorded even in the configuration 
->>> that works. It may be that the working case simply never reaches 
->>> hardware s0i3, and that the failure appears only once the SoC does 
->>> enter it. I could not confirm this: this build has CONFIG_DEBUG_FS=n 
->>> and CONFIG_PM_DEBUG=n, so I have no /sys/kernel/debug/amd_pmc/ 
->>> s0ix_stats and no /sys/power/pm_test. I can rebuild with those 
->>> enabled and re-run whatever you would like to see.
->>>
->>> Also, the 21RX series has no entry in the fwbug_list DMI table in 
->>> drivers/platform/x86/amd/pmc/pmc-quirks.c; the Lenovo entries there 
->>> stop at the 2021-era ThinkPads and some 2023 IdeaPads.
->>>
->>> Happy to run further tests, bisect nr_cpus= to the exact threshold, 
->>> or provide full dmesg, ACPI tables or the kernel config.
->>>
->>> Thanks,
->>
->> Try this patch.
->>
->> https://lore.kernel.org/all/20260826171537.4167367-1- 
->> Vishal.Badole@amd.com/
-> 
-> I don't see how that patch is relevant to my issue or my kernel version 
-> 6.18. There is no cluster code in lib/group_cpus.c and the patch cannot 
-> be applied.
-> 
-> My report is about the machine never leaving s2idle when more than 16 
-> CPUs are online.
+On Wed, 2026-09-23 at 13:17 +0200, Marco Giunta wrote:
+> Hi Rong & Mark,
+>=20
+> thanks a lot for the impressively detailed and informative replies
+> (as always). Here's an update from me.
+>=20
+> 1. overall I changed my mind regarding the conditional switch registratio=
+n.
+> I no longer really see it as particularly problematic in practice; as Ron=
+g
+> said earlier, in practice it's mostly a theoretical concern given the
+> typical userspace usage of this switch.
+>=20
+> I do agree that if we can find a smart way to filter for switch presence
+> based on a good criterion, like a suitable wmi method, it would
+> definitively be an improvement to patch v3. And I also appreciate that
+> gaining a better understanding of these issues may improve other lenovo
+> drivers. Finally, in general, I am certainly not trying to stifle the
+> useful discussion going on here; what I'm trying to say is: as far as the
+> camera switch patch is concerned, I am perfectly fine with the simple
+> approach of v3 (at least for now, we can add more complexity later IMO).
 
-Re-reading your email I don't think it will help.
+Agreed. More comments below.
 
-Running CONFIG_NR_CPUS less than the physical number of CPUs is 
-effectively the same as booting with physical number of CPUs and then 
-offlining them.  We've found some problems with offlining cores breaking 
-s2idle and it being fixed by that patch.
+>=20
+> 2. here https://github.com/marco-giunta/lenovo-acpi-dump you can find
+> all raw & decompiled ACPI tables and bmof files from both my yoga and my
+> legion. Feel free to ask for more data.
 
-But your issue is different I see; you don't even get to HW sleep ever.
+Good job. They are exactly what I want to cross-check with. They'll also
+be useful when I develop future patches for lenovo-wmi-*.
 
-Can you please share your amd-s2idle report?
+>=20
+> 3. Let me clarify what I meant when I said that the yoga and the lenovo
+> handle the switch differently (and more generally report some highlights
+> from the above files).
+>=20
+> The yoga's SSDT2 table contains:
+>=20
+> Device (WMIU)
+> {
+>     Name (_HID, "PNP0C14" /* Windows Management Instrumentation Device */=
+)  // _HID: Hardware ID
+>     Name (_UID, "LSK20")  // _UID: Unique ID
+>     Name (LSKE, 0x02)
+>     Name (_WDG, Buffer (0x3C)
+>     {
+>         /* 0000 */  0x74, 0x09, 0x6C, 0xCE, 0x07, 0x04, 0x50, 0x4F,  // t=
+.l...PO
+>         /* 0008 */  0x88, 0xBA, 0x4F, 0xC3, 0xB6, 0x55, 0x9A, 0xD8,  // .=
+.O..U..
+>         /* 0010 */  0x53, 0x4B, 0x01, 0x02, 0x21, 0x12, 0x90, 0x05,  // S=
+K..!...
+>         /* 0018 */  0x66, 0xD5, 0xD1, 0x11, 0xB2, 0xF0, 0x00, 0xA0,  // f=
+.......
+>         /* 0020 */  0xC9, 0x06, 0x29, 0x10, 0x44, 0x41, 0x01, 0x00,  // .=
+.).DA..
+>         /* 0028 */  0x0C, 0xDE, 0xC0, 0x8F, 0xE4, 0xB4, 0xFD, 0x43,  // .=
+......C
+>         /* 0030 */  0xB0, 0xF3, 0x88, 0x71, 0x71, 0x1C, 0x12, 0x94,  // .=
+..qq...
+>         /* 0038 */  0xD0, 0x00, 0x01, 0x08                           // .=
+...
+>     })
+>=20
+> so GUID 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 on device WMIU, event (0x08)
+> with notify value 0xD0, no surprises here.
+>=20
+> Its _WED method is:
+>=20
+> Method (_WED, 1, NotSerialized)  // _Wxx: Wake Event, xx=3D0x00-0xFF
+> {
+>     If ((Arg0 =3D=3D 0xD0))
+>     {
+>         Return (PSD1) /* \PSD1 */
+>     }
+> }
+>=20
+> so "notify" =3D "return PSD1". Then below:
+>=20
+> Scope (\_SB.PCI0.LPC0.EC0)
+> {
+> ...
+>     Method (_Q29, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x00-0xFF
+>         {
+>             If ((\_SB.PCI0.LPC0.EC0.COSD =3D=3D 0x02))
+>             {
+>                 PSD1 =3D 0x0C
+>             }
+>             ElseIf ((\_SB.PCI0.LPC0.EC0.COSD =3D=3D Zero))
+>             {
+>                 PSD1 =3D 0x0D
+>             }
+>=20
+>             Notify (\_SB.WMIU, 0xD0) // Hardware-Specific
+>         }
+> }
+>=20
+> So the camera on/off 0x0c/0x0d events are sent based on the COSD memory
+> register in the EC.
+>=20
+> This COSD variable is never referred to again anywhere else in the ACPI t=
+ables.
+
+Then we can't query the switch's state via WMI on the Yoga.
+
+>=20
+> On the Legion:
+>=20
+> Device (WMIU)
+>     {
+>         Name (_HID, "PNP0C14" /* Windows Management Instrumentation Devic=
+e */)  // _HID: Hardware ID
+>         Name (_UID, "LSK20")  // _UID: Unique ID
+>         Name (_WDG, Buffer (0x3C)
+>         {
+>             /* 0000 */  0x74, 0x09, 0x6C, 0xCE, 0x07, 0x04, 0x50, 0x4F,  =
+// t.l...PO
+>             /* 0008 */  0x88, 0xBA, 0x4F, 0xC3, 0xB6, 0x55, 0x9A, 0xD8,  =
+// ..O..U..
+>             /* 0010 */  0x53, 0x4B, 0x01, 0x02, 0x0C, 0xDE, 0xC0, 0x8F,  =
+// SK......
+>             /* 0018 */  0xE4, 0xB4, 0xFD, 0x43, 0xB0, 0xF3, 0x88, 0x71,  =
+// ...C...q
+>             /* 0020 */  0x71, 0x1C, 0x12, 0x94, 0xD0, 0x00, 0x01, 0x08,  =
+// q.......
+>             /* 0028 */  0x21, 0x12, 0x90, 0x05, 0x66, 0xD5, 0xD1, 0x11,  =
+// !...f...
+>             /* 0030 */  0xB2, 0xF0, 0x00, 0xA0, 0xC9, 0x06, 0x29, 0x10,  =
+// ......).
+>             /* 0038 */  0x44, 0x41, 0x01, 0x00                           =
+// DA..
+>=20
+>             })
+>=20
+> Same 8fc0... GUID, same [0xD0, 0x00, 0x01, 0x08] sequence. Then:
+>=20
+> Method (_WED, 1, NotSerialized)  // _Wxx: Wake Event, xx=3D0x00-0xFF
+>     {
+>         If ((Arg0 =3D=3D 0xD0))
+>         {
+>             Return (LSKD) /* External reference */
+>         }
+>     }
+>=20
+> But here this LSKD variable is written to with different logic. The relev=
+ant
+> EC query handler is:
+>=20
+> Method (_QDF, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x00-0xFF
+>     {
+>         P80B =3D 0xDF
+>         Sleep (0x05)
+>         LSKD =3D Zero
+>         If ((LSKV !=3D Zero))
+>         {
+>             LSKD =3D LSKV /* \_SB_.PCI0.LPC0.EC0_.LSKV */
+>             If ((LSKD =3D=3D 0x02)){}
+>             If ((LSKD =3D=3D 0x03)){}
+>             LSKV =3D Zero
+>         }
+>=20
+>         Notify (WMIU, 0xD0) // Hardware-Specific
+>         Notify (GZFD, 0xE8) // Hardware-Specific
+>     }
+>=20
+> so there are no assignments of 0x0c/0x0d like on the Yoga: the EC itself
+> writes the event code into LSKV (a byte at offset 0x1F of the ERAX region=
+,
+> SystemMemory 0xFEEC2400), and the AML only copies it to LSKD and clears
+> the mailbox.
+>=20
+> The constants therefore appear to live in the EC firmware rather than
+> in the ACPI tables, and no AML-visible object keeps the switch state,
+> unlike COSD on the Yoga (which is at least readable in principle, even if
+> nothing else reads it).
+>=20
+> Overall, the firmware appears to work differently internally, and I wasn'=
+t
+> able to find a common interface that a driver could use for this without
+> resorting to per-model EC details (see below), though I may be missing
+> something.
+>=20
+> 4. Unless I'm missing something, the IDs Mark mentioned don't really appl=
+y
+> here.
+>=20
+> 0x00201000 does not appear anywhere in either machine's tables - consiste=
+nt
+> with Mark's point that this ID is new; both of my devices were released i=
+n
+> 2025.
+>=20
+> 0x00200000 appears a few times in SSDT2 (yoga)/SSDT5 (legion) in contexts=
+ that
+> look unrelated (bitmask arithmetic in DYTC on the Yoga, and in the GPS
+> method on the Legion), plus once in the Yoga's capability data, see below=
+.
+>=20
+> LENOVO_OTHER_METHOD is implemented on both machines as \_SB.GZFD.WMAE
+> (object "AE" in the GZFD _WDG, flags 0x02 =3D method). Since the MOF
+> declares GetFeatureValue as WmiMethodId(17), the relevant branch is
+> Arg1 =3D=3D 0x11, the same one as in Rong's 83JR snippet. As far as I can
+> tell neither machine handles the two shutter IDs there: the Yoga has logi=
+c
+> to dispatch based on device/feature bytes (and covers device 0 features
+> 0x02 and 0x08, device 4 feature 0x03, and device 8 feature 0x01); instead
+> the Legion compares whole IDs and its device-0 list goes from
+> 0x001F0000 straight to 0x00210000. Unhandled IDs return Zero in both
+> cases, which, if 0 means "closed", would make those IDs report a closed
+> shutter regardless of the switch position. I would appreciate a second
+> opinion on this reading, though.
+>=20
+> As for the capability data, the Yoga implements LENOVO_CAPABILITY_DATA_00=
+,
+> defined in the bmof as
+>=20
+> [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("LEN=
+OVO CAPABILITY DATA 00"), guid("{362a3afe-3d96-4665-8530-96dad5bb300e}")]
+> class LENOVO_CAPABILITY_DATA_00 {
+>   [key, read] string InstanceName;
+>   [read] boolean Active;
+>   [WmiDataId(1), read, Description(" IDs.")] uint32 IDs;
+>   [WmiDataId(2), read, Description("Capability.")] uint32 Capability;
+>   [WmiDataId(3), read, Description("Capability Default Value.")] uint32 D=
+efaultValue;
+> };
+>=20
+> This object is implemented in the acpi tables with GUID
+> 362A3AFE-3D96-4665-8530-96DAD5BB300E, object id "B0", as WQB0 -> GCD0,
+> which returns the three dwords of each element of the CD00 package.
+> CD00 enumerates the feature IDs in ascending order, and includes
+>=20
+>     { 0x001F0000, Zero, Zero },
+>     { 0x00200000, Zero, Zero },
+>     { 0x00210000, Zero, Zero },
+>=20
+> while other entries in the same table have capability values such as
+> 0x07, 0x09, 0x05, 0x03 and One. If the capability field is the bitmask
+> from Mark's table, this would mean the CV DSP Camera Shutter is enumerate=
+d
+> but declared as not supported on this model. (and again there is no
+> 0x00201000 entry)
+
+Just checked the SSDT2 table of Yoga, and I found the implementation of
+WMIU very similar to my device (ThinkBook 14 G7+ ASP). Mine has no
+0x00200000 package though, which makes some sense as it has a passive
+shutter that physically covers the camera.
+
+Perhaps the Yoga Pro 7 14ASP10 was developed in the direction of
+supporting 0x00200000, but the dev team eventually removed it before
+releasing.
+
+>=20
+> The Legion's capability data (same 362a... GUID) is built by WQA9 from
+> hardcoded buffers rather than from a package, and has no entry for
+> 0x00200000 at all.
+
+Then we can't query the switch's state via WMI on the Legion.
+
+>=20
+> So while these interfaces look like the right way to expose
+> SW_CAMERA_LENS_COVER conditionally on firmware that implements them
+> (like on the 83JR platform), they do not seem usable on these two models.
+
+Agreed.
+
+>=20
+> 5. I have basically no experience parsing WMI data and very little with
+> ACPI tables in general. Please feel free to correct me! And in general
+> take the above with a pinch of salt.
+> I hope the linked files will prove more useful than me in this regard.
+
+Your interpretation is well done and impressive!
+
+In conclusion, I agreed that we should take the simple approach, i.e.,
+exposing KEY_SW unconditionally. If we see a report for a 0x00200000-
+capable device, we can add support for it then. For the time being, let's
+focus on what we have first.
+
+>=20
+>=20
+> Thanks again for your work on this, I am learning a lot from this thread.
+
+Thanks a lot for your help, too.
+
+I will submit my patch with your C-d-b, S-o-b, and T-b.
 
 Thanks,
+Rong
+
+>=20
+> Best regards,
+> Marco
