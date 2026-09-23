@@ -1,212 +1,259 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19012010.outbound.protection.outlook.com [52.103.23.10])
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6573052E07A;
-	Wed, 23 Sep 2026 13:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790169117; cv=fail; b=AC66dxS1nZdi48sImCvNCQy40GFxN67yT0FayvPRFpG1pM5YSbKUunrTTQP9N5EOFD/WABF5v30KSBxA11p5RNJpoZRSkuxrJwiSzijRNKXFx2YdD0SPj3QyRyhVbKWsrEX+OP2m0KX1CK8lF5x+uMQkB/EHMZDqFIvXWbjpLwA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790169117; c=relaxed/simple;
-	bh=oIVQsfU8kEaozWdfV8LSMDiEh7uhpLDDp8u1thXueF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VvK7qXsTi4UvrX4VNSVvTwfbHlJZIy/6PFy95bSqkVSTA1fjrkALnZIHyHYRzL5V+YxHQPSvkkxdbY/lQ5zLQGOC5Sh20MPaNBZQMA50bCiXng0cy5mg/qud/ffLnD/Zzxbszw5Qm0U+LY0Mx+kaqIfuFs1/wJtEFE5A2I1yHeM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=NQ2gapKr; arc=fail smtp.client-ip=52.103.23.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258294D17AE
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 13:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790171507; cv=none; b=HcQciIyNXql92lUpaD12EGiopmhwUDlEZEZ7N5xkj/7DyVE55VqId/5G7bibpX75fjTxOFWQK2gmueRuLCrL1UYljcB/7n42UZLwobhc0bh8hTgY1PmAY/p3zLfqVpzqNykDIZtSGz4IrKCbkJcekZM0B94/CmaXdjmtI8mRmnU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790171507; c=relaxed/simple;
+	bh=QJvsQU6R/f2DXPR5LVyyCKBNrKQPmE7ySouv2t4vRqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jotLwFVFk6YkaWZFp95z9ffZ68j5bvlKHxGm/ox9Fha8qydM0GCFw9kwTeFnu2abZKV4+ipNi66xhLDH9AapmLkuAIk0WOhDAYQu7CIKZClMlo2pG4y/cm1+B0utLXtk4BAAtlpEUIVkI3hw0lR3+h0m8vzRGEQle3YTz80tnu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=2zkcAzUs; arc=none smtp.client-ip=45.157.188.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="NQ2gapKr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p+JzE69aHVm9i8SXvQmoSzxrggAp3F/6eaSoaPgnK3Fo5UpNcRnLpJVenpM7ifPlTeQEMNU29xccNbUuE1ztiXOlxOJZXyhA0yMboId4g95np8o8Bng8ezw7EWf9SY4wc3pRA+6hvmb+iUMMBEvJeBrZDuLDt49s6iV53d4bcZpdAAwwsnuqFIR886UVU6BRrXOY9E8zEYNxC2eVuGu5Dd/HoaQUopx1u1za/KYxFbc1XyDdJ7IgHUZlWpDvNNR0Rk4NonvGg+97EYom17ckljDrnUuo7AJbgy+51cg23SWoQfZm33SBSPcv6NNlAa6BvHm5m2bvpS1QT/9vHjLTjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XZd6fZdNdb5ukGaZl7HeAynNgx5bmGy7kVes5DAc8No=;
- b=yDNc7iG7p371cDR1rL2G/bmi/G5rMa7QJytsYChgxouMCArBaO6+H2OfPihe+ZMmB8SC0DTcojm3Vn2qXdpzagg/BM7HyMd8/MGsjLsiTHib9S5uu+V5NNQwPGeA5tUnQ9mp46SAQTgR9tZ2PfoY7ahrexleqyM0HvO37ucUjw5R9ax+jhDztzrsDCW+Cqp6wpodUVfmtxHR0ayH87Chb19A53Xkaij5FWAtnvZns1tBXwVJfr9OIoZZbbw9U2uimoWB8Ki34ZmKIQP5DPenLjHweogPX0tayO3dzRJx6ZU32ks8yf++MvxAtby620HxISoSuiiK0UhPFrZP7FcSbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XZd6fZdNdb5ukGaZl7HeAynNgx5bmGy7kVes5DAc8No=;
- b=NQ2gapKrNJZxDeGBkbp+RcNh2B4U1PdkO7XFyzn6RLvwGZ+eGDCiX5RkK02SQaFvNcLA3CT9H71rM1WYIwPwOeCSVU82UVdrV0MB3jT7Z+vjV87KEvB4TiIK6Xbh5067UTecCA02F1zuP51ZXHOIzzWFsMqQLX3gEVWKSvxNYn6bDhYB0+/1fG6GL1SxX8+DzUP7dzWqJLJpWR8WRV/wSNh0EpPXHZcljSpLNOynZcbwOiEG1vmnvWlqUJOMf3OtYKaZr1t1OkVCpDzz0foCBBz8Fz5NpfrY55EXJSCyJeFBEizfFLkRXEVRtCjY1QlZb063T1mHkVYGzAMIGxVY0Q==
-Received: from SN6PR19MB2303.namprd19.prod.outlook.com (2603:10b6:805:56::19)
- by CH6PR19MB677206.namprd19.prod.outlook.com (2603:10b6:610:30a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.17; Wed, 23 Sep
- 2026 13:11:50 +0000
-Received: from SN6PR19MB2303.namprd19.prod.outlook.com
- ([fe80::805c:7f80:c69f:876a]) by SN6PR19MB2303.namprd19.prod.outlook.com
- ([fe80::805c:7f80:c69f:876a%5]) with mapi id 15.21.0451.012; Wed, 23 Sep 2026
- 13:11:50 +0000
-From: Marco Giunta <marco_giunta@outlook.it>
-To: i@rong.moe
-Cc: derekjohn.clark@gmail.com,
-	hansg@kernel.org,
-	huangwei@kylinos.cn,
-	ikepanhc@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	marco_giunta@outlook.it,
-	mpearson-lenovo@squebb.ca,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Report camera switch as SW_CAMERA_LENS_COVER
-Date: Wed, 23 Sep 2026 15:11:39 +0200
-Message-ID:
- <SN6PR19MB2303D1D68AF234EBC6C95113FC822@SN6PR19MB2303.namprd19.prod.outlook.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <356cc2817ce72c4f2d7b4f623ae73b979d314ac8.camel@rong.moe>
-References: <356cc2817ce72c4f2d7b4f623ae73b979d314ac8.camel@rong.moe>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0200.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:6a::11) To SN6PR19MB2303.namprd19.prod.outlook.com
- (2603:10b6:805:56::19)
-X-Microsoft-Original-Message-ID:
- <20260923131139.45247-1-marco_giunta@outlook.it>
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="2zkcAzUs"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hqdg11XfmzSH3;
+	Wed, 23 Sep 2026 15:51:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790171501; bh=WS4jcvzpqxg71bF+Bfy8wYjQd41zZyHny97Qq5ztGyk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=2zkcAzUso0EgZYF+QhOV/qShP1pHEN/1dROJOxdiU4H4HRTSBtvFbuB0QCahlufp/
+	 A/zIQS2bPvbYPRaOxSK521jVG+svYhfLq9EUkkD2OvMpcLUJNd2w8a3NIAUaGeg130
+	 j2q57d7GKjF22bYbhoEXuViCAXx8Xed8NxMSFzUQ=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hqdfz58c8zVqw;
+	Wed, 23 Sep 2026 15:51:39 +0200 (CEST)
+Message-ID: <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
+Date: Wed, 23 Sep 2026 15:51:38 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR19MB2303:EE_|CH6PR19MB677206:EE_
-X-MS-Office365-Filtering-Correlation-Id: b67d7b9d-adbf-407b-4d86-08df19743a2d
-X-MS-Exchange-SLBlob-MailProps:
-	znQPCv1HvwUXBahuwteIkQeW30lJPuxOwO3pf6IWOGyOI28cUKxQy3cLVGoSnEseeVzbQb1/Lm1EN8dWo9H32DOSMoUdnmODAlUTUyQAHn1tj5gAvRzmgqC9FK99CeGzH6FUd7YO/QOTQCbW5ggeEU3AnfbZW8sjM2ShHWW+5NchPMAqXqp2JYdmHHRNcN6KT6GN3Qyg2OFo0pQBL6HHEg40M4tHDaB++CHDg1Y7d58kwCkeIcSCMFhL/Enx9bbACzV0R9qg6aA6yHLt9B5vcG+W/0ccfVbY/eCNEUz9VgWkDbqwYkFHBX6ZInscRy3HphtCRQON+TcTLFtZ2PKUIghMoZZrl9SznhLRyCSj75cownyrQCjC+7ise2OUcUnIFbdse2vsL6V/whn0DDCf8x4F0vYDw6vBPCk6+0OLkuKzcYn+cfev8YlIXVVWPrbroVOXIe8fD4bapy0jQC+RSVUHIpx+YU2wVm74g8X+1bk+CEnJ0MiZtA/honBr7zJNSZ2q3fVryesG4wnoxjJ0vQrsfE08r6zrHqT6sQK3eWoY6W8wY8yEEgbvXgCpAsraLamla1MNPDeWY1boY1e+Gp9LhoBbDpQazlGrQy+jJYAEpO+hqPRuTluPickcjlWWi8oJ9JFVgpcWGUY7pL9UqV86ASDa0Cc9VQCoRgO6I7BsFZwoIotiQLIAUqZyVHWoRt99WM1czCwUlMhfaSvp7qgwIyztp5/TMph5N6NpVsTLfFDJeCX2xeFEJk1SBEXCN8ZavKv5aTI=
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|23021999003|51005399006|25010399006|19110799012|12121999013|8060799015|55001999006|24021099003|15080799012|5072599009|40105399003|12091999003|10035399007|2607281247196008|56899033|3412199025|440099028|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ui36LqqjG5pBzcB4G0Us9CHhZolm+osvQ+eJXXBMK0b8UXmKUQwBV1zB8w0/?=
- =?us-ascii?Q?nJpJHxpy6LCKrNge70wzOhLgCtwuKaHSSgQSUpeUlCICNZW8Cym+rnQU9DJT?=
- =?us-ascii?Q?gF3vLxZ+C6iUS7ZRCobUthYoFSL7Rm4mSNZHCmClOBHu62jjPWNZsAa4pBpR?=
- =?us-ascii?Q?ELPCcR9D9YU+NOxQXm82GK9uULTYA2R1xgszSKGlH4wg2CJ7tB1M76f/xRBN?=
- =?us-ascii?Q?Rt9o4/XrW0xfjwgyv2WPOvmtv4nRxzEVgEzOy95yeEtkdlT+3lARn2JbE+Q2?=
- =?us-ascii?Q?Gq2FwXwqcyHxisHfcImASWycqktoSD6gazSfAGDzIrKvbnhyqv5hj10PEnyk?=
- =?us-ascii?Q?kUOtAPoS/NQrt1yPoHEcoRCr/JbbA5hgaU60JnkjxeabaasXfhEQZcQLY8aV?=
- =?us-ascii?Q?FSluoB6k3SB+BmOqidC2s4LWtFwjBUR2i8zH+naZqcl1EJe77uVXs68JdSD1?=
- =?us-ascii?Q?mqE45fmsLo58jn2Puh0b0qn6rtLBJetmI2T+ZQbLsoz38tC2iZ53Jo8pkkSL?=
- =?us-ascii?Q?ZytJZc5dhowf2FFQyu1+wFJL0fNZuU3jN4N2noGYU4Hk9QQcyJSk8agZNXUt?=
- =?us-ascii?Q?o7HBoXiR/M2nYfb9Eb7u9x7Ktp62hGk2BwDatbWfVWPKsqIAVrk7kC7Oy79S?=
- =?us-ascii?Q?dOCh8k8Il198db37WYf5doQ+gAJGY31VvH6PgFPtIbCZApGg9D8Pg7KFL3Pz?=
- =?us-ascii?Q?HNAfopI6H/3E0EJgzPYkAD9Znmm00STEJENmo1mqq4uBIKDKGEXfxRVkrbIS?=
- =?us-ascii?Q?Mr3gP6Zx/W5PCP//5XOS+Ugn71M0X1grkf/Oh6VFzNEkeR388Xm6WZzmnKKK?=
- =?us-ascii?Q?V+xrZ526ANLn/u3HzOoMB9OCvAccVnG2nlHsm5i0maoFl+wLTGfZxVP5tz21?=
- =?us-ascii?Q?3o9Nvz2oce7Wsf/uC1HFO7ow3Ojc2yQVWeNGZXmafRItFGK44Sc+B4349Kod?=
- =?us-ascii?Q?vik55C9KQvMIgbxOgBLP6SeqB5PBN1xzWc76xll1ftby5XGp90Xf+GACDgoc?=
- =?us-ascii?Q?P0Vl8gjCTOlsFiHTdu/i25T3W5AEKAXUfJlP86DisHb2uBc=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gqBHxD5i/vP/yk4dyvjNce/3pS8aB7kOALCRKhwTkm00wEi7Woc+Hrpz7Xu8?=
- =?us-ascii?Q?LhOl7B8A3cCOr5mLPyiQC8TE8dpWYnwYD3pXspxBTGzA1kYkoZ89PR8gbuoc?=
- =?us-ascii?Q?IeaId5skTETUUfgJ+TDzCpL9pbstCmvCtK0TQUm5PzdesNFrf6HFGXn8EDtf?=
- =?us-ascii?Q?HWpS2MrzXlkTUeP7Mgf7ezpgzB4meevNMRu1u1i5oljcWYLF0G2G19ybwJUr?=
- =?us-ascii?Q?xx96Q35QR2SFC0XiFvAlrMwwNBb+8NMT0sOMW4LM6Os7DaD9JuXO+V1OnYfx?=
- =?us-ascii?Q?pa+Nj3TirWhhZrRyMsleT/2hQCIM0/956ZXeOosQl2nlyuE+u3pGgwvCg7wA?=
- =?us-ascii?Q?VU7m4HKtwxx6N+8DtoF8GFEgpHfASVGsGtGkDzXEvliFqqkSpj/rGZJX6bKU?=
- =?us-ascii?Q?ewWnVistkSK/pUF4+fhokbkVWWwTwpsPkTjBg14m5mjjYaz4DiKpKp5dZjAb?=
- =?us-ascii?Q?bMuAl+LvXsf/Pg6SyJltojR3TGr5QXuFYRsQpCdqtTL48RGvB9nmqhADSX24?=
- =?us-ascii?Q?TSVgr0WXf2KqDoOPEQkXIfeY9Psw0y6P5Ct64EF/MbeSxBdyP/Kb7molKN9w?=
- =?us-ascii?Q?eq4mm8mLbXoqiUqJUHIBvBLOwAGReEs5TExFL9q0KIClAmKeM1ZLBc/+wExw?=
- =?us-ascii?Q?XH9m4LSPYjfjWuFAER5YUYVmUKShzdFh6uEx73RrFNDVTgScMMM8LWueMsEo?=
- =?us-ascii?Q?L9D97mNpYJuOmlyU4JzAKH8WCcBT5H9R1LOtzHWjQB4jEhc39htbh+/rfvFN?=
- =?us-ascii?Q?Q4ZC8aOomJpf3mo5bTaczwBQ9Vn4MKZMK4opHyV1PYxyvzTdhLJjTy/2k0mI?=
- =?us-ascii?Q?EdNg2rM/qHJ51dQm++kJeJ1gOHmTr14nbqqNh0BU8RPIr6U1D0riZ0VraouM?=
- =?us-ascii?Q?A75AZDIynXPNrxCcK8LtCmDURrDxqFBoHNvZW9lku9KbxJqmUD4kp8OavVg7?=
- =?us-ascii?Q?p95m4aNqkNus6/vFhNsl1fP//IjfQTE6rC37M4VWNOK+IvvNPGcAkpSPm23y?=
- =?us-ascii?Q?7eGiovrgP3bC992+NhOxdQGeIW9VRySvt8crQh2cGaA4p2GotxIHPT5LvQVy?=
- =?us-ascii?Q?4LxbKVpsrzIY1aWbyI3R4EMqmpYQUjyOEjxt4ILsF61YyLIwaqeVJ5BtYWSO?=
- =?us-ascii?Q?Yips9IpnFdyw7F/5PlIid7hLC23h3dv+PbiIi9cTNJ3BDJZvxmI9AIa9jWoj?=
- =?us-ascii?Q?180IsKwWU01FeBUzxiHIRbpkxjni/L/T3b6oD9Hb61+qnJz7Jd+vXmkB3ou7?=
- =?us-ascii?Q?qp0Vy42c7myKIh3af+ztFFRq8pFEJAQsnhG4ZJFvGbIfKC2sMLA1kk9vAfRA?=
- =?us-ascii?Q?ha7RP9AvuOMfs+UXtJZ0IBVhwsGag71iaLYU8kzc+Pm+caVsqGr4wZrXR4Xh?=
- =?us-ascii?Q?NY5S5kMRWCnuzBOerqNxSX5I971f?=
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: b67d7b9d-adbf-407b-4d86-08df19743a2d
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR19MB2303.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 13:11:50.7139
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH6PR19MB677206
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <8a5bef53-cae4-4aa6-a657-d11a6831d2b2@amd.com>
+ <7962670b-168e-020e-b55f-c9ea49483f6b@ik.me>
+ <bb82702c-6902-491a-8eae-2b90cd8c5c5a@amd.com>
+Content-Language: en-US
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <bb82702c-6902-491a-8eae-2b90cd8c5c5a@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-Hi Rong,
-
-> >
-> > 1. overall I changed my mind regarding the conditional switch registration.
-> > I no longer really see it as particularly problematic in practice; as Rong
-> > said earlier, in practice it's mostly a theoretical concern given the
-> > typical userspace usage of this switch.
-> >
-> > I do agree that if we can find a smart way to filter for switch presence
-> > based on a good criterion, like a suitable wmi method, it would
-> > definitively be an improvement to patch v3. And I also appreciate that
-> > gaining a better understanding of these issues may improve other lenovo
-> > drivers. Finally, in general, I am certainly not trying to stifle the
-> > useful discussion going on here; what I'm trying to say is: as far as the
-> > camera switch patch is concerned, I am perfectly fine with the simple
-> > approach of v3 (at least for now, we can add more complexity later IMO).
+On 2026-09-23 14:41, Mario Limonciello wrote:
 > 
-> Agreed. More comments below.
-
-Nice. Mark, any thoughts on this?
-
 > 
-> >
-> > 2. here https://github.com/marco-giunta/lenovo-acpi-dump you can find
-> > all raw & decompiled ACPI tables and bmof files from both my yoga and my
-> > legion. Feel free to ask for more data.
+> On 9/23/26 00:58, Fourhundred Thecat wrote:
+>> On 2026-09-22 16:47, Mario Limonciello wrote:
+>>>
+>>>
+>>> On 9/22/26 08:43, Fourhundred Thecat wrote:
+>>>> Hi,
+>>>>
+>>>> On a Lenovo ThinkPad P16s Gen 4 AMD (Ryzen AI 9 HX PRO 370, Strix 
+>>>> Point), s2idle enters sleep normally but the machine can never be 
+>>>> woken again and has to be force-powered-off. The trigger is the 
+>>>> number of online logical CPUs: with all 24 threads online the 
+>>>> failure is 100% reproducible, and limiting the kernel to 16 CPUs 
+>>>> makes suspend/resume work reliably.
+>>>>
+>>>> This platform has no S3 at all, so s2idle is the only suspend mode 
+>>>> available.
+>>>>
+>>>>
+>>>> Hardware
+>>>> --------
+>>>>
+>>>>    DMI product name    21RXS07D00
+>>>>    DMI system version  ThinkPad P16s Gen 4 AMD
+>>>>    BIOS                LENOVO R2XET40W (1.20), 05/26/2026
+>>>>    CPU                 AMD Ryzen AI 9 HX PRO 370 w/ Radeon 890M
+>>>>    CPU family          26, microcode 0xb204037
+>>>>    Topology            12 cores / 24 threads
+>>>>                        4x Zen5  (core_id 0-3)
+>>>>                        8x Zen5c (core_id 8-15)
+>>>>
+>>>>    ACPI: PM: (supports S0 S5)
+>>>>    Low-power S0 idle used by default for system suspend
+>>>>    /sys/power/mem_sleep -> [s2idle]      (no "deep"; DSDT has no _S3_)
+>>>>
+>>>>
+>>>> Kernel
+>>>> ------
+>>>>
+>>>>    6.18.51 x86_64, gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+>>>>    Custom monolithic build, no loadable module support.
+>>>>
+>>>>    Relevant config:
+>>>>      CONFIG_NR_CPUS=32
+>>>>      CONFIG_SUSPEND=y, CONFIG_ACPI_SLEEP=y
+>>>>      CONFIG_AMD_PMC=y, CONFIG_AMD_PMF=y, CONFIG_PINCTRL_AMD=y
+>>>>      CONFIG_DRM_AMDGPU=y, CONFIG_DRM_ACCEL_AMDXDNA=y
+>>>>      CONFIG_THINKPAD_ACPI=y, CONFIG_ACPI_EC=y
+>>>>
+>>>>
+>>>> Reproducer
+>>>> ----------
+>>>>
+>>>>    # echo mem > /sys/power/state
+>>>>
+>>>> The system suspends cleanly. The ThinkPad power LED then shows the 
+>>>> EC's slow breathing pattern, i.e. the ACPI LPS0 _DSM entry path ran 
+>>>> and the EC considers the system asleep.
+>>>>
+>>>> It never wakes again. Tried, with no effect:
+>>>>
+>>>>    - opening the lid
+>>>>    - any key on the internal keyboard
+>>>>    - short press of the power button
+>>>>    - clicking a USB mouse, with power/wakeup set to "enabled" on both
+>>>>      the device (3-2) and its xHCI root hub (usb3)
+>>>>
+>>>> The machine is also not reachable over the network while in this 
+>>>> state, so it is not a case of resuming with a dead display. The only 
+>>>> recovery is a ~10 s power button hold.
+>>>>
+>>>> Wake sources are armed. From /proc/acpi/wakeup:
+>>>>
+>>>>    XHC1  S3  *enabled   pci:0000:c5:00.4
+>>>>    XHC0  S3  *enabled   pci:0000:c7:00.0
+>>>>    XHC3  S3  *enabled   pci:0000:c7:00.3
+>>>>    XHC4  S3  *enabled   pci:0000:c7:00.4
+>>>>    NHI0  S3  *enabled   pci:0000:c7:00.5
+>>>>    NHI1  S3  *enabled   pci:0000:c7:00.6
+>>>>    LID   S4  *enabled   platform:PNP0C0D:00
+>>>>    SLPB  S3  *enabled   platform:PNP0C0E:00
+>>>>
+>>>> and platform/i8042/serio0 power/wakeup is "enabled".
+>>>>
+>>>>
+>>>> Bisect
+>>>> ------
+>>>>
+>>>> The regression was introduced by raising CONFIG_NR_CPUS:
+>>>>
+>>>>    CONFIG_NR_CPUS=16   suspend/resume works
+>>>>    CONFIG_NR_CPUS=32   suspend enters, never wakes    (100% 
+>>>> reproducible)
+>>>>
+>>>> Booting the *same* CONFIG_NR_CPUS=32 kernel with nr_cpus=16 on the 
+>>>> command line also works. So the trigger is the number of online 
+>>>> logical CPUs at suspend time, not anything else in the build.
+>>>>
+>>>> NR_CPUS=16 is of course wrong for this CPU -- it silently leaves 8 
+>>>> of the 24 threads unused -- so this is a workaround, not a fix.
+>>>>
+>>>> At nr_cpus=16 the kernel brings up every core's primary thread plus 
+>>>> only the Zen5 SMT siblings:
+>>>>
+>>>>    cpu0-3     core_id 0-3     Zen5   primary threads
+>>>>    cpu4-11    core_id 8-15    Zen5c  primary threads
+>>>>    cpu12-15   core_id 0-3     Zen5   SMT siblings
+>>>>    (absent)   core_id 8-15    Zen5c  SMT siblings
+>>>>
+>>>> The 8 CPUs that are absent in the working configuration are exactly 
+>>>> the SMT siblings of the 8 Zen5c cores. I have not yet narrowed down 
+>>>> whether the threshold is exactly 17 CPUs or specifically the Zen5c 
+>>>> siblings; I can bisect nr_cpus= further if that is useful.
+>>>>
+>>>>
+>>>> Ruled out
+>>>> ---------
+>>>>
+>>>> None of these had any effect (still hangs with all 24 CPUs online):
+>>>>
+>>>>    initcall_blacklist=amd_pmf_driver_init
+>>>>    initcall_blacklist=amdxdna_pci_driver_init
+>>>>    runtime unbind of amdxdna, amd-pmf and tpm_tis before suspending
+>>>>
+>>>>
+>>>> Possibly relevant
+>>>> -----------------
+>>>>
+>>>> After a *successful* suspend/resume at nr_cpus=16:
+>>>>
+>>>>    /sys/power/suspend_stats/success         1
+>>>>    /sys/power/suspend_stats/total_hw_sleep  0
+>>>>    /sys/power/suspend_stats/last_hw_sleep   0
+>>>>    /sys/power/suspend_stats/max_hw_sleep    18446744073709551615
+>>>>
+>>>> so no hardware sleep residency is recorded even in the configuration 
+>>>> that works. It may be that the working case simply never reaches 
+>>>> hardware s0i3, and that the failure appears only once the SoC does 
+>>>> enter it. I could not confirm this: this build has CONFIG_DEBUG_FS=n 
+>>>> and CONFIG_PM_DEBUG=n, so I have no /sys/kernel/debug/amd_pmc/ 
+>>>> s0ix_stats and no /sys/power/pm_test. I can rebuild with those 
+>>>> enabled and re-run whatever you would like to see.
+>>>>
+>>>> Also, the 21RX series has no entry in the fwbug_list DMI table in 
+>>>> drivers/platform/x86/amd/pmc/pmc-quirks.c; the Lenovo entries there 
+>>>> stop at the 2021-era ThinkPads and some 2023 IdeaPads.
+>>>>
+>>>> Happy to run further tests, bisect nr_cpus= to the exact threshold, 
+>>>> or provide full dmesg, ACPI tables or the kernel config.
+>>>>
+>>>> Thanks,
+>>>
+>>> Try this patch.
+>>>
+>>> https://lore.kernel.org/all/20260826171537.4167367-1- 
+>>> Vishal.Badole@amd.com/
+>>
+>> I don't see how that patch is relevant to my issue or my kernel 
+>> version 6.18. There is no cluster code in lib/group_cpus.c and the 
+>> patch cannot be applied.
+>>
+>> My report is about the machine never leaving s2idle when more than 16 
+>> CPUs are online.
 > 
-> Good job. They are exactly what I want to cross-check with. They'll also
-> be useful when I develop future patches for lenovo-wmi-*.
-
-Thanks, I'm happy to contribute this data (I assume no one has assembled
-a general database of this stuff)
-
-> Then we can't query the switch's state via WMI on the Yoga.
-> Then we can't query the switch's state via WMI on the Legion.
-
-yeah, that leaves only the v1/v2 approach as feasible for a conditional
-registration AFAICT. If a maintainer prefers that, it's easy to revert
-to the older patch, but my guess is that the simplified v3 is overall
-preferable.
-
-> > 5. I have basically no experience parsing WMI data and very little with
-> > ACPI tables in general. Please feel free to correct me! And in general
-> > take the above with a pinch of salt.
-> > I hope the linked files will prove more useful than me in this regard.
+> Re-reading your email I don't think it will help.
 > 
-> Your interpretation is well done and impressive!
-
-Thanks, I spent the last few days studying acpi and wmi documentation/code
-to be able to parse these files.
-
+> Running CONFIG_NR_CPUS less than the physical number of CPUs is 
+> effectively the same as booting with physical number of CPUs and then 
+> offlining them.  We've found some problems with offlining cores breaking 
+> s2idle and it being fixed by that patch.
 > 
-> In conclusion, I agreed that we should take the simple approach, i.e.,
-> exposing KEY_SW unconditionally. If we see a report for a 0x00200000-
-> capable device, we can add support for it then. For the time being, let's
-> focus on what we have first.
+> But your issue is different I see; you don't even get to HW sleep ever.
 > 
-> >
-> >
-> > Thanks again for your work on this, I am learning a lot from this thread.
+> Can you please share your amd-s2idle report?
 > 
-> Thanks a lot for your help, too.
+> Thanks,
 
-Happy to help.
-I'll make sure to CC you for future pd/x86 patches targeting the Legion.
+Booting with all 24 CPUs and then offlining cpu16-23 via
+/sys/devices/system/cpu/cpuN/online before suspending does NOT help: the
+machine still never wakes. Only booting with nr_cpus=16 works. The CPUs 
+have to never
+be brought up at all.
 
-> 
-> I will submit my patch with your C-d-b, S-o-b, and T-b.
-> 
+cpu16-23 here are the second SMT thread of the eight Zen5c cores
+(APIC ids 17,19..31). With nr_cpus=16 the kernel brings up every core's
+primary thread plus only the four Zen5 siblings.
 
-Looking forward to that. And don't forget to cc Huang, so they can offer
-their reviewed-by for v3 as well.
+On the amd-s2idle report: I cannot produce one for the failing
+configuration. The machine never resumes, so the script never gets to
+write its output, and there is no pstore to recover it from.
 
-Best regards,
-Marco
+Or did you mean to generate the report in the working nr_cpus=16 boot ?
+
+also, I should explain that I am on a sysvinit system with no systemd, 
+so the script's journal-based log collection will not work. Is there a 
+dmesg or logfile fallback, or should I capture the kernel log separately 
+and attach it?
+
+
+
