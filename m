@@ -1,104 +1,148 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [185.125.25.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1B64963C8;
-	Wed, 23 Sep 2026 15:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26C4519DE7
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 16:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790176304; cv=none; b=QnzehvpY7VDYONuC1ZElnR5J+ZN0o84mSDC+R5UybRvEwaCXsVA9hCCjMvMdVAFyU/t3711XuXVdJg24srhlpa1cPOPcJOMFEZjBmU4zNn2oHcvfeqD6GjS8OsWOuj+ilSZe2ZuENyYKECpz5L8+7F0n6MUEkM2QqxCzT35ukhE=
+	t=1790179958; cv=none; b=GowzNk0OLBsgFg7Y86SeYrDyQ7sawA+fiQOOb9lkANtPlT1HawfOQ93G1bi3mtkepNh9c6GpnlGLzbi363tST4/0aCdtPvf6qjlhCs0X8DPn2NrVCDEiN5Ij7N7Vc9Bg2QMbwMpjnJIVyUNxVr+d4YZtRpYRNZPupWPjdNeLmvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790176304; c=relaxed/simple;
-	bh=aBa1zViSf6k5lnn2CjYpnYIfK45SjV7yAKpjdT8bzPI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z3aM/F8f/iJjqz4nWbMD4BRdaUGRA3lhcI5SsW9MRpip3UYZVqaiCsMk4+QuXJWqJKQy3NCMBl0g6WTurru/QcLfuyxN7qwftwGmJLRRfUU42pBIFfhAFt1E0oWD2u8Bitl+1/AVdTb3+aL54qTsXv+gokb5ax9K03AkqleiDX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HO7hLa+k; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1790179958; c=relaxed/simple;
+	bh=QVRkVOfaiAaz44hWSyMNXAs1YY7za1tYBtsfQe+l/Sw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kVnhH9a/ZaCJaVwSRDHoFqlt3292CDfu0TL9xRftzR+Bqcf7er+mjS0zLR8xvwrUQZzFc+w7mhioKrDHCWjlSOFNa0xk8nuH6n4j2empF6Nvh/GAykT5cYAJsdNvuj7rr4X7f1CxqgqDmjbIRA9p6nd7t741wM8KEOMSPaVMDBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=BWtdFELl; arc=none smtp.client-ip=185.125.25.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HO7hLa+k"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 9B5ED8103C;
-	Wed, 23 Sep 2026 17:11:38 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id WYmLkaiFmclZ; Wed, 23 Sep 2026 17:11:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1790176298; bh=aBa1zViSf6k5lnn2CjYpnYIfK45SjV7yAKpjdT8bzPI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HO7hLa+k9q5VNF3swfPpi2OLVT0BVUOnm6uo1y++POUfGlMTJBjjw2+h2DG/aWfXb
-	 Gu+AlMdCmmOB63bJMseFRa7CElaDkUW8kk1L8xQKni8JAAHSmwgtjyvbuhC8PvP8KM
-	 TPR8B8axaVteKcfjXk97M8BzL0RyyhBlL/udsBvhYoyLhCh1twP7SDRhXUuyO1EM5m
-	 q0HHR+GXJVyTmpO941yD3FAdthSb+fzLjUuDUMWvSkxF7xjrWo0zhZvUoPn/bf8ttd
-	 dNfYtvPjQS8/rHZmSizyuerHQAuGbpGvYbxLrkgADw7aVLQoKJ6BYU+wqEUTYXLAlB
-	 vcGgj1n+Jr1Aw==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Denis Benato <denis.benato@linux.dev>,
- Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
- Liang Haowen <nbg2974@gmail.com>
-Cc: linux-leds@vger.kernel.org, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>, "Martin K.  Petersen" <mkp@kernel.org>,
- linux-scsi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
- Hans de Goede <hansg@kernel.org>,
- "Derek J.  Clark" <derekjohn.clark@gmail.com>,
- Ahmed Yaseen <yaseen@ghoul.dev>
-Subject:
- Re: [RFC v7 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver for ROG
- NVMe enclosures
-Date: Wed, 23 Sep 2026 17:11:24 +0200
-Message-ID: <UuqOxFagT_OBL0l5ZYtfKg@disroot.org>
-In-Reply-To: <202609240122.ReplyDenis.lhw@gmail.com>
-References:
- <52904b48-a5fa-4872-b9bf-a05b1b7bdea2@linux.dev>
- <202609240122.ReplyDenis.lhw@gmail.com>
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="BWtdFELl"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hqhnN2MXmzC3P;
+	Wed, 23 Sep 2026 18:12:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790179944; bh=ZZHQkFZ/58BYBDbsKEOS2Yja3lC3oLSuz94c0LtL1TA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BWtdFELleEQ+flULKvAY4AVnR4jh4gxuq5/RrvKBZ7+AGEbZMLkU3k+Ezk8JbczTd
+	 Lp0LYwQykcblr6i2DKLr7ckxNo8MBKLAcnINrpw649xsbyBA/s2FubuHw49jqYvwEN
+	 cDZ3wACebRhJ66fD0pQED4fXvwL35KpkEJFHmVIo=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hqhnM1jw8zjN8;
+	Wed, 23 Sep 2026 18:12:23 +0200 (CEST)
+Message-ID: <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
+Date: Wed, 23 Sep 2026 18:12:22 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <8a5bef53-cae4-4aa6-a657-d11a6831d2b2@amd.com>
+ <7962670b-168e-020e-b55f-c9ea49483f6b@ik.me>
+ <bb82702c-6902-491a-8eae-2b90cd8c5c5a@amd.com>
+ <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
+ <55854916-292a-40ae-8421-1a784785d899@amd.com>
+Content-Language: en-US
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <55854916-292a-40ae-8421-1a784785d899@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-In data mercoled=C3=AC 23 settembre 2026 14:59:36 Ora legale dell=E2=80=99E=
-uropa centrale,=20
-Liang Haowen ha scritto:
-> Hi Denis,
->=20
-> Thanks for the context.
->=20
-> I have read Marco's Dynamic Lighting class series (PR #17). The
-> direct frame and palette interfaces map cleanly onto what the Arion
-> needs: its colour tables are just small RGB frames, and the
-> enclosure firmware effects map onto the class effect controls. I
-> will coordinate with him on using it for the LED side, on top of
-> the verified SCSI handling this series carries.
->=20
-> On the open review items: the next revision will isolate the DMA
-> buffer into its own cacheline (a real issue on non-coherent
-> architectures, as the bot notes), and I will take the time to get
-> the full pass right instead of rushing again.
+On 2026-09-23 16:36, Mario Limonciello wrote:
+> 
+> 
+> Some other thoughts that might be the root cause based on other 
+> historical issues.
+> 
+> 1) Have you changed TPM policy or Pluton policy in BIOS setup?  What did 
+> you change it from and to.
+> 2) Have you enabled a storage security password?  If you disable it does 
+> it help this issue?
+> 3) Do you have WWAN in your device?  If you disable it does it help?
+> 4) Does booting with `amd_iommu=off` help?
 
-Hi everyone,
+4) amd_iommu=off
 
-as for now please consider the new interface as a far from done one: it has
-basic functions and works good on my laptop but, that means it is tested
-only on my device using kernel 7.2.y. If you have time and want to test it
-out/give feedbacks they are more than welcomed (tbh I've yet to address
-these given by @Dereck due to personal reasons but I promise I'll work
-on them too asap).
+Yes, that fixes it. With amd_iommu=off and all 24 CPUs online, 
+suspend/resume works reliably.
 
-@Liang if you look into it there is a basic version of SCSI for your device
-using the new interface: if you want to look at it feel free to do so/sugge=
-st
-changes: I'll probably drop it in a future rebase to make the patchset
-smaller (then again I'll have to do countless threads here in lore for leds=
-,=20
-hid, wmi, etc etc etc so it will take months).
+So this is not really a CPU count problem. nr_cpus=16 was only masking 
+an IOMMU interaction. But narrowing it further was surprising: neither 
+of the IOMMU's two functions is responsible on its own. All of the 
+following were run with all 24 CPUs online, and I verified in each case 
+that the parameter actually took effect:
 
-Best regards,
-Marco
+   amd_iommu=off            IOMMU off entirely                     WAKES
+   intremap=off             IR off, DMA remapping on               no wake
+   iommu=pt                 DMA passthrough, IR on                 no wake
+   amd_iommu_intr=legacy    legacy GA mode, IR on, DMA on          no wake
+
+Verification for each:
+
+   intremap=off           /proc/interrupts went from 58 IR- lines to 0,
+                          and irq 1 (i8042) is no longer IR-IO-APIC.
+                          iommu still enabled, domain type Translated.
+   iommu=pt               "iommu: Default domain type: Passthrough (set via
+                          kernel command line)", all 40 PCI devices in
+                          identity domains, IR still on (58 IR- lines).
+   amd_iommu_intr=legacy  "AMD-Vi: Virtual APIC enabled" no longer printed,
+                          only "AMD-Vi: Interrupt remapping enabled".
+
+So only disabling the IOMMU outright helps. Turning off interrupt 
+remapping alone, bypassing DMA translation alone, or dropping out of 
+vAPIC/GA mode all still hang.
+
+The CPU dependency is still there on top of that. With the IOMMU 
+enabled, nr_cpus=16 works and 24 CPUs hangs. Offlining cpu16-23 by 
+hotplug after booting with all 24 does not help; the CPUs have to never 
+be brought up. cpu16-23 here are the second SMT thread of the eight 
+Zen5c cores (APIC ids 17,19..31).
+
+Both conditions appear to be required: the IOMMU enabled, and more than 
+16 CPUs brought up at boot. Either one alone is fine.
 
 
+1) TPM / Pluton policy
 
+Current values:
+
+   TpmSelection            = DiscreteTPM2.0   (possible: 
+DiscreteTPM2.0;PlutonTPM2.0)
+   PlutonSecurityProcessor = Disable
+   SecurityChip            = Enable
+
+The TPM that binds is a discrete STMicro part, tpm0 -> STM0925:00.
+
+I did change this. As I recall I disabled Microsoft Pluton, which moves 
+the TPM selection off the PlutonTPM2.0 default onto the discrete part, 
+so Enable -> Disable for Pluton and PlutonTPM2.0 -> DiscreteTPM2.0 for 
+the selection. I will confirm the exact original values in setup. I have 
+not yet tested whether restoring the Pluton default changes the 
+behaviour, since the IOMMU result looked more promising.
+
+
+2) Storage security password
+
+None enrolled. HardDiskPasswordControl=Disable, and the HDD, NVMe, 
+Admin, System and Power-on authentication slots all report is_enabled=0. 
+BlockSIDAuthentication=Enable is the only non-default setting in that 
+area. Nothing to disable, so nothing to test.
+
+
+3) WWAN
+
+Yes: Quectel [1eac:1007] at 0000:c4:00.0, attached over MHI, exposing 
+wwan0. Its power/wakeup is enabled. Not yet tested with 
+WirelessWANAccess disabled in BIOS.
+
+
+so please suggest which test I should do next, now that we have more info
