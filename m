@@ -1,148 +1,118 @@
-Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B654341DEEC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 17:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D671421249;
+	Wed, 23 Sep 2026 17:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790185603; cv=none; b=b07cbX2IriAhmOwGPfOQdw5771W/LWsUNxrFsIAfvt4qrCTrOMy9EQegCBOYP9vK8EvejWPf9gfV/EzIfGsUiuzkSJ4i3xA1bkgaL4eetpsoW7XY9jaFv41ETII3l9LNQhAkbUSR3g358wqWOFc6+TennHfs8/2WK2zJ5aJVP0Y=
+	t=1790185683; cv=none; b=KG0wiRxSXA7ev+qH4j+iPtniMM2Z0bTpcWCwXa0H0BFEIKjDpetnawElFCbzYzzLDrGdHA+oDiTUpR19G1fTfbehWJsx9wIbKcCc07LikDPcRIyVDG0nddiPLv/0bmlfr7OWhog2LYt63bCBine+u9Nhg/iEG077J/JI4KduUAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790185603; c=relaxed/simple;
-	bh=pKShmDVqStSX7rWs9+GfQqRrXJb3K11WmiirlUbxU4I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B3ghOmjoxreQ/qrB93s0yg5B5Vnlfha/icsvn29OkFpm4Ba05ReRqE+X37W8Q24NYcnGKCFngp3yBcgzi8swGj8gMQhYqaB+2lHKx6ET1ZAFkZmsvySmSafl+9zuTogpcJ2bbSYXwcQEZddTDH2M8yWj/NpOfzBSy9xjWk8V0vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZr4HKbH; arc=none smtp.client-ip=74.125.228.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790185683; c=relaxed/simple;
+	bh=riplQy8/WnhZZ7ILalB+sn+R8h17rFxq/GfL5ZSUZD4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Fu74dTto6X/U58OVn28I/SM1RqCQ+Joe5RwncF1ZTrc4h81iiGLgbIIJ5A41UcEvTsvd63q5h3a3HihgQ3jMYYR7IDaX1UwnhKmf/2JOzbmPmuckrMEPytgIhOvkdz6rlOYoCvgjv7uF0PJLACgCCgiZSl5kUETGpjsTzKuY/Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPxRm3kW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZr4HKbH"
-Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c29d33431c8so161050666b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 10:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790185600; x=1790790400; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=3t4X/MajhkMQ+hwNOwBD1gS+C+r4SW5/5xpUj3WzyoA=;
-        b=kZr4HKbHVXMEftd3Vm2TJNqEiq9p5pITwZIAOP33pBdeKRwFrnweE+lQ1s8lrnN4dc
-         imIyZZ9rhxigPzjPjwP7YFCn3dh472bzZLFbpeEL6MHqKQBb4w0fUK6CktyEoJZX/ZCe
-         tDf5N1fJBmO9+JvtK9zMAWohbiPNbAu8mS+QijzsUCZJF/UHCl7Fd0Mx8l41Xde7faq9
-         7DMDDFy0GJoaaaV4dUQ17IATGiro0z6vxMIfm991se6e3GSMWAI/CVTlghmOkMJcpjbO
-         Ohmgl9BBxYhrz1evoewFxLVyHDZ1ZQP6XirwgI7MLXGmAv+kjiY+ZoSxl4o+pBUJNhQb
-         8Z3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790185600; x=1790790400;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=3t4X/MajhkMQ+hwNOwBD1gS+C+r4SW5/5xpUj3WzyoA=;
-        b=JxjxPESA5QfcOj0oGAmCLHQS4LAfaVg/0GcAxz36P9rauPL+d5vMzxzsPKFxPXRMwl
-         D1P54WxRPMEmIiLrj+a9DYZurb9BsSGpjhq1oQBfg0bRb3ahsY/BvnbRHAstM2S2Jpj1
-         XUIq18iuGDxMcvd4drdXWdy5R6sH+6k9Ba4/Bm1unovIaeLfn5NIKJyEGXUzicaXiFRZ
-         iz8i6B+QJlIRIYIQwYhEvEgKhqcpMW36hq89FKQ9mntpAxB9kWvAfX2Z+qjMfC9XG0oc
-         msO7qNO5YZRcZAQkZE0QL6KO1h4EM2IE/7AoTvbIAoiAVqfKJN7YFvJZA6JJCRJwD/RM
-         78NQ==
-X-Gm-Message-State: AFuF++nrzX4h83YFUfnPP43L240hry0Kvd3Ccq2di6fjINEiW1tskbCE
-	Xhwpw757MZHeAKK02NdMLKG1HHgnG2dkvWo0mKAWNwIPro1thXILcMQ=
-X-Gm-Gg: AYBFou3iOIY8zlqnME8EAjAZ9weSoAZXUhq4SiOUxO4d+2tMytJ+jERDvvvNB1bCSBO
-	Af/VLsCQTmMEN3JpAU1mKd4Mgo3QJ85QdKZp7fhWh14+q1VvF391wWJ8j8iL5v/NKBKIw8KNgnI
-	6Cr6Tj/olMJmTegfO4x06wgc0lP1o0oVPrasB8nzpM6JFA0TNJMlY1UR8FKsaE+292biQ1hnS/d
-	Yz0aX34NE5WqX8ggL/Td7XaEM9m5PfCL2XBATVtCq1l9+d/V+YMFT5tBVmi79exxC1Yz3ngpiQz
-	YESs6FIKfJ4NWDdPRkEyi5Y+XpDQzr5Np6+tmoryTDqDMKrZV/8CJK8sN463pT5D8OWvueq9qeb
-	wLkLuIewmXozGyzZnL2mPmqIg9b4P80DPlEB+FaBMiOyq7PAHQzjn6qFTswmICbGhjFS0927xhm
-	DI/mDkLkgyL+27qngdu7+ichqkKMgTfxi/5BOYp0R7yGCqSgLfUlrsXhYgyihYQ2No5Cu2ZDJYG
-	gQ=
-X-Received: by 2002:a17:907:1b20:b0:c29:5021:f6f8 with SMTP id a640c23a62f3a-c2aae329a1fmr257657966b.36.1790185599745;
-        Wed, 23 Sep 2026 10:46:39 -0700 (PDT)
-Received: from okuroshi-laptop ([154.47.21.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2aae6ecd17sm167185266b.63.2026.09.23.10.46.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2026 10:46:39 -0700 (PDT)
-From: Artem Maksimov <okuroshioffc@gmail.com>
-To: jorge.lopez2@hp.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Artem Maksimov <okuroshioffc@gmail.com>
-Subject: [PATCH] platform/x86: hp-bioscfg: Support allocations of larger data
-Date: Wed, 23 Sep 2026 20:46:33 +0300
-Message-ID: <20260923174633.12163-1-okuroshioffc@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPxRm3kW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BCA70C2BCF4;
+	Wed, 23 Sep 2026 17:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1790185682;
+	bh=riplQy8/WnhZZ7ILalB+sn+R8h17rFxq/GfL5ZSUZD4=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=EPxRm3kWYiWGSCwAwLOPbKxSqN9iBrae/SjP3HaKg0dK/DHsUJ2OhsTwhTb8j9LhI
+	 RqWBx15hJ5qxd5EEDV0ln8mMomIEYEd007PoQX0LG1x50+UtT80VsaPS6TXlQlP6hH
+	 qyPUOrc1RWtTPIySoujelAGfaG0rY/oAHQvypXWV9sTFtkEE7bylS1jha4feTUaYaH
+	 wziZP6FkBzzFoGYLLBn5Rhzyz3H04OTDol7xxb9jn4S9EYwo4BGYPyk3vvz90BTwMd
+	 D2EvtRkyiQ8T27fR69muDDCDNvFDqfG0ukzXYhZuqUoOvTIsyHQYI/RpFaB4QQAOMb
+	 VT1baH18mda8A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9691C98304;
+	Wed, 23 Sep 2026 17:48:02 +0000 (UTC)
+From: Nikolay Plastinin via B4 Relay <devnull+plaztininikolai.gmail.com@kernel.org>
+Date: Thu, 24 Sep 2026 01:48:02 +0800
+Subject: [PATCH] platform/x86: asus-nb-wmi: add tablet mode quirk for ROG
+ Flow X13 GV302X
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260924-gv302-tablet-v1-1-a45dd3a383f1@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDSyMT3fQyYwMj3ZLEpJzUEt1UI/NUY0NjA2ODZBMloJaCotS0zAqwcdG
+ xtbUASuQIq14AAAA=
+X-Change-ID: 20260924-gv302-tablet-e27e313030c4
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nikolay Plastinin <plaztininikolai@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1790185681; l=1659;
+ i=plaztininikolai@gmail.com; s=20260924; h=from:subject:message-id;
+ bh=2Ot8n3jSdiE6fRQ5ST3n0effn8wymsxPkZc37Zl9lIQ=;
+ b=hLVuMgt3i8l2f6hoP50JFAsMhtLPwpCbVCWpiYsD5qHTxs+srgktibcl4J+Loi7tXdpcN6ZGt
+ NwSFp2xSTjRCBVKcj5cipRsI3uM3UlFJHAi124wJJLofyIr3J/qGD/J
+X-Developer-Key: i=plaztininikolai@gmail.com; a=ed25519;
+ pk=bmHrETa14IbiLNkJSoiLqUMni+IeSFwhOSDM4vVFN4s=
+X-Endpoint-Received: by B4 Relay for plaztininikolai@gmail.com/20260924
+ with auth_id=1052
+X-Original-From: Nikolay Plastinin <plaztininikolai@gmail.com>
+Reply-To: plaztininikolai@gmail.com
 
-Memory allocation for ordered_list_data and string_data
-can fail if contiguous physical memory is fragmented or insufficient.
-Switch from kzalloc_objs to kvzalloc_objs to fall back to
-visually/virtually contiguous memory (vmalloc) when
-physically contiguous allocation fails.
+From: Nikolay Plastinin <plaztininikolai@gmail.com>
 
-Signed-off-by: Artem Maksimov <okuroshioffc@gmail.com>
+The 2023 ROG Flow X13 (GV302X*) is a 360-degree convertible like the
+GV301, but the existing "GV301" DMI entry does not match it, so the
+driver does not register SW_TABLET_MODE and the desktop does not switch
+to tablet mode when the screen is folded back.
+
+With asus_nb_wmi.tablet_mode_sw=3 (lid-flip-rog) the "Asus WMI hotkeys"
+input device reports SW_TABLET_MODE on every fold and unfold, so apply
+quirk_asus_tablet_mode to GV302X* too. Apart from the tablet switch this
+quirk is the same as quirk_asus_unknown, which these models get today.
+
+DMI product name of the tested machine: "ROG Flow X13 GV302XV_GV302XV".
+
+Tested on GV302XV.
+
+Signed-off-by: Nikolay Plastinin <plaztininikolai@gmail.com>
 ---
- .../x86/hp/hp-bioscfg/order-list-attributes.c         | 11 ++++++++---
- .../platform/x86/hp/hp-bioscfg/string-attributes.c    | 11 ++++++++---
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-index 5bf8d40bdf81..80ac15435a18 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-@@ -98,8 +98,13 @@ int hp_alloc_ordered_list_data(void)
- {
- 	bioscfg_drv.ordered_list_instances_count =
- 		hp_get_instance_count(HP_WMI_BIOS_ORDERED_LIST_GUID);
--	bioscfg_drv.ordered_list_data = kzalloc_objs(*bioscfg_drv.ordered_list_data,
--						     bioscfg_drv.ordered_list_instances_count);
-+
-+	if (!bioscfg_drv.ordered_list_instances_count)
-+		return -EINVAL;
-+	bioscfg_drv.ordered_list_data =
-+			kvzalloc_objs(*bioscfg_drv.ordered_list_data,
-+						bioscfg_drv.ordered_list_instances_count);
-+
- 	if (!bioscfg_drv.ordered_list_data) {
- 		bioscfg_drv.ordered_list_instances_count = 0;
- 		return -ENOMEM;
-@@ -438,6 +443,6 @@ void hp_exit_ordered_list_attributes(void)
- 	}
- 	bioscfg_drv.ordered_list_instances_count = 0;
- 
--	kfree(bioscfg_drv.ordered_list_data);
-+	kvfree(bioscfg_drv.ordered_list_data);
- 	bioscfg_drv.ordered_list_data = NULL;
- }
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-index f3dfba270f7e..095201004d87 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-@@ -101,8 +101,13 @@ static const struct attribute_group string_attr_group = {
- int hp_alloc_string_data(void)
- {
- 	bioscfg_drv.string_instances_count = hp_get_instance_count(HP_WMI_BIOS_STRING_GUID);
--	bioscfg_drv.string_data = kzalloc_objs(*bioscfg_drv.string_data,
--					       bioscfg_drv.string_instances_count);
-+
-+	if (!bioscfg_drv.string_instances_count)
-+		return -EINVAL;
-+	bioscfg_drv.string_data =
-+			kvzalloc_objs(*bioscfg_drv.string_data,
-+					bioscfg_drv.string_instances_count);
-+
- 	if (!bioscfg_drv.string_data) {
- 		bioscfg_drv.string_instances_count = 0;
- 		return -ENOMEM;
-@@ -390,6 +395,6 @@ void hp_exit_string_attributes(void)
- 	}
- 	bioscfg_drv.string_instances_count = 0;
- 
--	kfree(bioscfg_drv.string_data);
-+	kvfree(bioscfg_drv.string_data);
- 	bioscfg_drv.string_data = NULL;
- }
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index da1ddd601..3b0f3346d 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -503,6 +503,16 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_tablet_mode,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ROG FLOW X13",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			/* Match GV302X* */
++			DMI_MATCH(DMI_PRODUCT_NAME, "GV302X"),
++		},
++		.driver_data = &quirk_asus_tablet_mode,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUS ROG FLOW X16",
+
+---
+base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
+change-id: 20260924-gv302-tablet-e27e313030c4
+
+Best regards,
 -- 
-2.53.0
+Nikolay Plastinin <plaztininikolai@gmail.com>
+
 
