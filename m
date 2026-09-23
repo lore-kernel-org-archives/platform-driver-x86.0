@@ -1,109 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f41.google.com (mail-pz2-f41.google.com [74.125.228.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFED547F783;
-	Wed, 23 Sep 2026 10:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4940748C3F3
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 10:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790158493; cv=none; b=Ebn6bmIvX33QugBmNYnJHBaoawECJ2jYKVAjtOXFBICTsGSYVXMESfeGN936rohdYAn9TFEPzkB2GfIuVMIIqbcGqrJoEUVixUPzldhypdH+jhOWLcMMwfFWD5PYmUXQ/WbQH50f1YveQm5cWYCagt2GiFs/T5VUvZSU8iJ+Cwg=
+	t=1790159437; cv=none; b=c5yhNOzdZRArglUDKUm2WMqN+WsFJO3khaK8L35DWYz1/fRsQOlraqtgCT+kHPGM5JZxUtdOsjoajRkjFxjcq3d6TswgcfGbj6T8l1pTLbyJ5BlkTtng60INsLEns0oYM02ZdsDZoXeJUJGjzOKGbeMyuS1uIVp905cKDbY77rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790158493; c=relaxed/simple;
-	bh=OQs67cdVg2c1m+XU1/vr6nXu2CSt7D/HdSsrachOq+o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O87Qt7Q4zdWsfsBlV56ftWrU+9xn/ey0p7pN4yyoMzihMjK6OYlnaAl9saeA1h1sRSFmlf02usmE7qKdu5rBn/IdcKYf4FXlpn4fpOKmgxJKiDng/mjhxViXquHGxRXOtsEJecZG/nJgBSKT7yc/ATng8X7wuWnbb4sxKvTgbOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5Trspfu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790159437; c=relaxed/simple;
+	bh=4A2rVpCglcElPTI0FX/kZ2D+r2RLsiom+HOo0azm9N8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sKOziio133cLVmxtvTzfFzkXrZjD+w32OVy0zAObCootp95QSJDfmJKyE2DcV7dtPtGGjCZYBcX0S6RcWMAAzXCYTaAypYHytpX+SUlgPVMvHEWHdMdO6F1qcWOlYjNv81eZL+cZbbBh/aqqQbs+/lQnJH1idWnvF9AayynyJa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BFfhvlb2; arc=none smtp.client-ip=74.125.228.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5Trspfu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E8971F00899;
-	Wed, 23 Sep 2026 10:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790158477;
-	bh=S+/NkK/2JKzL6JPHeEE9Dg80nXCZn6rhh0cERna0HR8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=R5TrspfuZHpohCAvzctDW3zJMwVhe45RuelDh4lcUCeY8Y8SpQbP30jxQgoijkGkv
-	 PQSoqATWOhcFog5V0AakmnUVsxDFjTHKlzKwVJoDwrn0GkGlOVRNd+l7q2F1oRQEV3
-	 xTlasXYyi7Gqku1LLdbPkr/Quv6XHx5fVaIh+EmCjHbN60RUFBgn34nSgg/Ny9dZyr
-	 FAY2LlFCEad15prhKxsWNXEWq6FnZqozvG87df8qWugYfYJmJhJ/uPJpodupUkTYmo
-	 rZNwSAq/LwyDt0unWXhanbgD0w3H5yP+2WCZGiDkv398GVOwNC7b6zC8Yyqlxs+O+i
-	 B9pZ/kjuCVv6Q==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 23 Sep 2026 12:14:15 +0200
-Subject: [PATCH v3 3/3] arm64: dts: qcom: glymur-zenbook-a16: Add Embedded
- Controller
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFfhvlb2"
+Received: by mail-pz2-f41.google.com with SMTP id d2e1a72fcca58-86efece610cso399201b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 03:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790159422; x=1790764222; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=SJQcE+RNdWTQ/Zw3ZZ29eF8rBGAX/7jKIXho5Hbkepo=;
+        b=BFfhvlb2YkH3g09h5WLKDhAtqLoJ8CVC+uUPhVIx1QFLiUIfMAkqttQJc+ZteSS1QY
+         ggf79iexq7eT7FdAFJ8zJZQonnPRm09xH2dSgkwcEsu0HDz7v7a7Vtpth5wr83IusWhp
+         iBlc5rLC1cyneu8QUKYgx0vDSCkXCx4qrhgQ+tvLGjyHrJmtQLt/C+9PNQ6OS01XaKOD
+         /hJrwFdR59ESMo3ZUa72OqZ2XHZRLHVGAwN3v2VW/KnY+1UpHGepu7x18ywm09xwfF/h
+         OM117WKmsJMvSLq7SyVKQdiXq9Eyeb05KNVmIw4rWTuhN04OKbguUwz8G/UoaobFnVIq
+         CYQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790159422; x=1790764222;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=SJQcE+RNdWTQ/Zw3ZZ29eF8rBGAX/7jKIXho5Hbkepo=;
+        b=U/J7cpGySA8uy3vo0Sc8xa2ZqQ3b7RMUdOnT6rWK+zodpnT6PVMZLgJ3eJXxdq0WVv
+         vupfbxrAY2Itpe9zdl9hP+/0VtozbHwdFLQgjJ0ZUlMkHnSr4YTEow51IEqkwUa3jUzn
+         rCHTJM3NfVqqd0rqpGeNzNEFU0FdAIqAegy2Q94JQajprzEi6+bnXiA7cAzYANd8l7nn
+         ZbvQvmARW+eUAdW8yZcisfcV+PEencR0XwuzGxcouULiKIYjMu9LDp7uwrGbBcN2vY3E
+         Pss2KcNwpqxy0zLiHXQhBlhUE6QBgtV+2RCa+VcxwQ9rRUCkApcdZ4Jk6yvDr1HjfUAB
+         kO8g==
+X-Forwarded-Encrypted: i=1; AKwUvBwDpEN9vijVuJDIdVkkZLXORZ8Ge91aZaJJCCFL21UIlvubap7jrzvoYJ47H43+nwx5XX3wG9WQpY4WdyDMWhqQ9wkk@vger.kernel.org
+X-Gm-Message-State: AFuF++kqHOgWQZCxapMBUjbnLQItvlTr3mcHYoewDPNaa7PakmaUrmDc
+	NPJnsdzTlAY3+Ocesk1OkY8vqkLgX2V0/VXqpkiteEgSyKPKrpKyT70ih+sxM2FdiJc=
+X-Gm-Gg: AYBFou3rKVB0NrC/UiAYntjP+oLZvDpJyNPM9da+RwaFSDoVfzwLB7zcOCNaR6vtGLu
+	QbnI/Y7+uFEroC6EwArY47QAqIDp1YMqnUfigkmzfjbFUVIQzJk+WYJhNPUPVg6Uyp2WRiBlXpG
+	mCdkdbPQ8ggTcvN2hdZ7c8OtLWNsYu1zV/DDmUdZW2MxC5kbIGSrk+Zj88PtykSXcMeCnUNM2Xx
+	aNXaWgdmZqDgLLJi8/Jhsiiyi733THdLMh7kDLgef7Gzo+Jo1u2Jtjc1R7GMnBP4t/b7FDR1mcx
+	br2Dw0/TuLuHMl8VLIjrNyeg3u96ySEVzYrCd4bHV1UQcOHDRWPHLDr2nyXc1krxe8KhxggyaNQ
+	c5x0NM/C1k4Ocytzac4obRkopckB9cHuuQP2HVim1BKe+4hjRu0h0P2Zgu+byqLIu9KSJ3tVMet
+	vTl2b2cnEG2Y+5LEqFmkxknqhgeXAlyKU5S2H73cwSJWUsk3ucF4PAzPlhDYA7oP3BzpPgdVNfM
+	FlVVvHmP+94FNUl
+X-Received: by 2002:a05:6a00:1489:b0:86b:b308:b926 with SMTP id d2e1a72fcca58-87d1a2bf425mr2002629b3a.14.1790159421340;
+        Wed, 23 Sep 2026 03:30:21 -0700 (PDT)
+Received: from ROGZephyrusG16Air ([240e:b8f:977f:f400:ec2a:b15e:fef8:70a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-87d1d5c1f21sm1048685b3a.32.2026.09.23.03.30.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2026 03:30:20 -0700 (PDT)
+From: Liang Haowen <nbg2974@gmail.com>
+To: linux-leds@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	"Martin K . Petersen" <mkp@kernel.org>,
+	linux-scsi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Denis Benato <denis.benato@linux.dev>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Subject: [RFC v7 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver for ROG NVMe enclosures
+Date: Wed, 23 Sep 2026 18:30:14 +0800
+Message-ID: <20260923103015.2365773-1-nbg2974@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260923-topic-asus_ec-v3-3-2bf3bb9da879@oss.qualcomm.com>
-References: <20260923-topic-asus_ec-v3-0-2bf3bb9da879@oss.qualcomm.com>
-In-Reply-To: <20260923-topic-asus_ec-v3-0-2bf3bb9da879@oss.qualcomm.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Guenter Roeck <linux@roeck-us.net>, Bjorn Andersson <andersson@kernel.org>, 
- Abel Vesa <abelvesa@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Abel Vesa <abel.vesa@oss.qualcomm.com>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790158456; l=1353;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=nLdf2OOt7FPP8Nr17CHbfj2mxUwBBufE3w9vuYqYo80=;
- b=AMVYQxbqKElaBrEzri+din2Lz0e8pTAWLl9k0LNnlsJqL0SUp1jUFQqubszdc+a8Oz/MnRoEg
- S1G7Wqvc9iuBBsbdgW16B+PoFvqqqa7xIzwqt5dUVpUu1MVWdB49IeG
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Hello,
 
-The Glymur-based Zenbook A16 features an Embedded Controller running
-custom ASUS firmware (which is loosely based on the reference Qualcomm
-Hamoa EC one with a lot of modifications). It provides keyboard
-backlight control, additional temperature sensor readouts, fan speed
-monitoring and a number of miscellaneous functions.
+v7, as its own thread, addressing Lee's review of v6.
 
-Describe it.
+Changes since v6:
 
-Reviewed-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- .../boot/dts/qcom/glymur-asus-zenbook-a16-ux3607oa.dts    | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+- The driver moved to drivers/leds/rgb/, where the other multicolor
+  LED drivers live.
 
-diff --git a/arch/arm64/boot/dts/qcom/glymur-asus-zenbook-a16-ux3607oa.dts b/arch/arm64/boot/dts/qcom/glymur-asus-zenbook-a16-ux3607oa.dts
-index 40433dc2d6cf..d3356fcd25f0 100644
---- a/arch/arm64/boot/dts/qcom/glymur-asus-zenbook-a16-ux3607oa.dts
-+++ b/arch/arm64/boot/dts/qcom/glymur-asus-zenbook-a16-ux3607oa.dts
-@@ -670,8 +670,19 @@ &i2c9 {
- 
- 	status = "okay";
- 
--	/* EC subdevice @ 0x5b */
--	/* EC @ 0x76 */
-+	embedded-controller@76 {
-+		compatible = "asus,zenbook-a16-ux3607oa-ec";
-+		reg = <0x76>;
-+
-+		interrupts-extended = <&tlmm 66 IRQ_TYPE_EDGE_FALLING>;
-+
-+		pinctrl-0 = <&ec_int_n_default>;
-+		pinctrl-names = "default";
-+
-+		#thermal-sensor-cells = <1>;
-+
-+		wakeup-source;
-+	};
- };
- 
- &i2c10 {
+- The series is submitted with git send-email this time, so the
+  patch format is the standard one.
+
+The SCSI device handler attachment is unchanged; why it is a device
+handler at all, and what the in-tree split should look like, is the
+open discussion in the v6 thread.
+
+Everything else is unchanged from v6: the hardware description, the
+scsi_device_handler that does not claim the sdev, the multicolor LED
+interface, the protocol handling and the known caveats (manual
+attach until the split lands; SAVE on every update writes the
+enclosure flash, wear uncharacterized; NULL-parent LED registration
+to avoid the sdev reference cycle).
+
+Liang Haowen (1):
+  leds: asus-aura-scsi: Add ASUS Aura RGB LED driver for ROG NVMe
+    enclosures
 
 -- 
 2.55.0
