@@ -1,240 +1,215 @@
-Received: from mail-oi2-f35.google.com (mail-oi2-f35.google.com [74.125.231.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5D041169F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 05:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.231.227
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790139682; cv=pass; b=CD2gkpPnZmSb33N3WlrLFxL8qu2BIuc4sKU+ONj54b4esfNfeeOI//1EvdO0rmlrMeNcxZF6uMZ0o93Iug0FiZvukMhVKJkprr1kl3wDxpEyrWEuSXCAJYjgm0+pEhN4DLzqDUCF/xEmvaP7NxBLz9+YsG+xhL9SocsG19AArHs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790139682; c=relaxed/simple;
-	bh=VaTQ0YbR4J1XE64Y2Zx/iJej5LoqYmr2rAZ8s8R7enI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MjCyImEa0+ZpwiLSeic5iqMdyH1swz40pJqxcPT2SSX/IS+auXlryYfdbRmPrfwXqVO0CGt9eNJ5aQpHWnZ43u36W9RTOQmNFX5FVPwPpvue6c7ew7zzhIPdUcWrIc9V3lrlyq3Ma2K1al9iNZLvZ4AeDjFGsIYuNPDhyJzqwVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rY2Waihv; arc=pass smtp.client-ip=74.125.231.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD23F428830
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 05:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790143133; cv=none; b=PZzBrbCVfvuGkqOyZNHdPB2ZKN7TatFmY5V8R8JviEH6vX+GYDZpERlJXQPZjpLgIB3jp0G5rVWGnWtoyRX808FkJ2Jt6kPAylvVEJ+TiAVcOu6JUElB9V2blkVqO6MLWDWTFMqqF/e3TApv/Qj5heVt/dyzzkxvgzJ26yd3IaA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790143133; c=relaxed/simple;
+	bh=bjsW+evgoxtyC2kwD5ngm3ZGrGYe6bhP/oC6Xxo7dhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iI9K+9RLTcnuxVdasbqiCwcuK7my+uDRA0ZfbQxgqNN6VMvlcfIcxsHghB00UOOlLpvhYvgK8c6O3Hatcg9tu2fqcDZdN6uSSUNMLJik+CsJlIqCrPX6JV/hIaFK/P78U4QAgcocN2+XRXze+kMvCoesnISi/hrC5pkk1K1RJVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=rfNSM4gc; arc=none smtp.client-ip=84.16.66.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rY2Waihv"
-Received: by mail-oi2-f35.google.com with SMTP id 46e09a7af769-8055dcba0a5so147072a34.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2026 22:01:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790139679; cv=none;
-        d=google.com; s=arc-20260327;
-        b=SDZYUMHctrpUs4DVRv7ic3aKiiKveEj4NZ9D2aXhB95/PfjNapBQp2UZZtT3Kni+Fm
-         +jzs6BTcWQtJ6zgenXz7aZAHgXABGfIVb5IBhvbA/y6kdZ3pxmyhGyT/8LcV1ERQkw1K
-         vl09/4SHu/9ATxJOzS5jZeUPLZ1wVDscVoLOdD3Lu3wVW62n5qfPIOlJE5oadhcT/WS5
-         DT3yugNZ488EXtXcnV909VHfVHs+g/BncJ5ePRqxYeFFEXJ00yd8oZDp0+RUqHdMEfzy
-         3IFFq0Iw6lz+9T3xfVFg8CfQZ9S4RSdHW+i8Gi3V5WsNGf2FyOFxbU02aJoFua0QHbQm
-         FI9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=s9t+pGf5Jdws57vhvMQ8eJxDP4MEnxA9XvPVPFGvtB4=;
-        fh=AtfPKZN1B0PAXPsh6MyuaBNJdz9BZZEsbgdem4hymYk=;
-        b=EoPi1BCobObOJnQW0bf4mHVYEcqPS0n7VXUVyP6LVM8LEWlSaocxxEOv2Llc9p32S8
-         8CBfZ2XVLaxW8tuMwf8zPprI4SR049TdFfcZ/GAl2I1W1EE7hJYQOzf35D63xbtV4ape
-         6mYyFuBPKTQDVWJpzGvttQTtEOmxtnkDO7OA5dYrhD2R5tVsPLhac4d7AsdnZumyWOBl
-         bmdGvKrWeA/KbO0QYWRX9NJVb2YoHSI80KsRf2WQxRSGFge0p5/CrDdLNz0VR4nYGLpQ
-         tWQzV7d9L9HND+OYrFWHqXomtOfPN1ktXGEFvFrZ6MXiK/EZEXlVyjBjcxlRENe362hh
-         MZQA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790139679; x=1790744479; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=s9t+pGf5Jdws57vhvMQ8eJxDP4MEnxA9XvPVPFGvtB4=;
-        b=rY2WaihvHCYF1qUiD+VnCqVNCZ2Y0inQVHQV+3AVW6i37Ax12cWxIKhOXGARWUiDhB
-         Q6nYXucxPjRCrY23nY6EnihXhN9KpYZ1lUO9pH/ls+Xn6wVVoWRc79NlN4t1TMkXp8T2
-         QR6M+ZMGKekkJCIReAudzMeJWzREVI4pW7EykFtOtzdGRuLE6oIzWT7Y2g95rc+35Ppt
-         8FLn2/ozAJBqhEtQu6NmJVJgRik+NQlQ1BS3S5QmfKSV4uf4iKpRpPbscbrJzT722/wM
-         2ta68cgsXRfYnk7P92fUKZqGN+AjDBrSU6ImLvBwtT3vtiUu9LSwm8rnaGi3lVU3l1g0
-         He/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790139679; x=1790744479;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=s9t+pGf5Jdws57vhvMQ8eJxDP4MEnxA9XvPVPFGvtB4=;
-        b=m5sV/AnKxpbRjZWtCQwbxSb/nq1Mg9GknRxZ4xBC7eRhfRlq5wU6R/WjKcGMC0Xtn8
-         lTJstat19peSGpJ4ZwS2nQobLy+hZeuab4ZyKgrg0p+9N3VOVD5Cty6X6rFLdpEuwbLY
-         jjdJhkMkE3lnr55LbKSSykAMtUrRzxb+MJhgFaQycqbc6Olylf+2xvAv1tBUgXXxwHn/
-         LzcpaNmDT5NeClG+0t4zD6mIip5zdDqHrsPZ0i7aVS6qJiRj2DNHwTh+H+VcHlilWByE
-         2X02JEQ3Mjo+P/GDkkc0H4Kw7IfqxX8OdPGZkDM98wr4OwDZAMA9NidABvFZoHj0wWr3
-         6Tbg==
-X-Forwarded-Encrypted: i=1; AKwUvBxACM3jnBouzmDvOM22vsZLtuhMOAh7faGnt25lCRzuw5aCsRGTiUyWZ9CSmyvdFUoSzSYZWV68okqDbVefRdaWu8Pz@vger.kernel.org
-X-Gm-Message-State: AFuF++mLFIeajA4l3HAcB3kyPXRBJunfI19K0sZhTxUQUKpLiu7aETwO
-	UUDcIKvz/dXVkI0IJ3hQ0sMwUJwNf+oq9Odbdwz4bZhyodu5doNdncS2N9uybswEvUOt7ggWUsA
-	2FY0vTd3r6t9eEa+vD4tM2VcD7mTqwW0=
-X-Gm-Gg: AYBFou1kQNnFO1IOLOxeaUB9U5pU4GOW6ShvxdNOVM43n/h/6RKBGqYabH86KLxpJ/M
-	cWpOYdSjUb1IMc/fHqQxHSEiqr4AOJb3cT1T9kmA1ZjtGo1AS3Rhe1CgBDb4MtzS5bZnf8jEK3w
-	IBR9xDxosLXrWa1U+N+3q/elmtM1KSoHue/k7y4UhRtV87/HD8HSTBiY9ytZRxzCBX5Fcm7pseU
-	UQ1OTu4y25zEM37rFki4XoFerBhN/CGVDDYOiJXXuwObOYrWUKk2pEROixO4nFw2N3pnomD/lGb
-	RjC58IGa6Bxya/c8RVOCDMvUoTGS9Z2iQmAv1LHGmZA4NXfUe+O1r/jkqyrKZ+veqw==
-X-Received: by 2002:a05:6830:2105:b0:814:fd96:b005 with SMTP id
- 46e09a7af769-815fa7a3aa8mr1368055a34.10.1790139679573; Tue, 22 Sep 2026
- 22:01:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="rfNSM4gc"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hqR9F58Wkz1tD;
+	Wed, 23 Sep 2026 07:58:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790143121; bh=oJHvayelPIincoQBlhkjSZyMOzAsNnkQN/uvUZ6pPhk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rfNSM4gcX+5UYR4FaN22/hr1Vfah5/45b5t7+zlD6sxpPnE7Ug68mBn363bS+uw59
+	 SOBQiHDml9uV4Xr4XIlGyfsevUJJc0mydv56ud0dlH0cFZT1IxtdQsNFaG60aMxslW
+	 bO+CqPJt9NM/OnY55EPfjTC6bHF4a323cnskHz90=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hqR9D3lQgzBSY;
+	Wed, 23 Sep 2026 07:58:40 +0200 (CEST)
+Message-ID: <7962670b-168e-020e-b55f-c9ea49483f6b@ik.me>
+Date: Wed, 23 Sep 2026 07:58:40 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260724025959.142826-1-W_Armin@gmx.de> <20260724025959.142826-3-W_Armin@gmx.de>
- <BN9PR12MB514668975E87D570F50B2D91F7A82@BN9PR12MB5146.namprd12.prod.outlook.com>
- <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de> <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
- <11976ed3784675ad241646287a909286a42675a8@intel.com> <3ef68773-e07e-437a-98fb-a3c5fc08539c@gmx.de>
- <62d7da838e7042df8456e76190db792093065b57@intel.com> <06550473-63c2-4a3e-a5ad-7e23d7b6b050@kernel.org>
- <d696d85c44930d2124054ce11a06d3096c0db04a@intel.com> <CADnq5_PT7s6ixTqDSwe9ai9tUQa04z7UnwhMn7bo7CcsH5Qf0w@mail.gmail.com>
- <154fc984-5c29-4a23-ab8b-736471f419a1@gmx.de>
-In-Reply-To: <154fc984-5c29-4a23-ab8b-736471f419a1@gmx.de>
-From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Date: Wed, 23 Sep 2026 07:01:07 +0200
-X-Gm-Features: AclHuK9iIINoALCOYPcubT5-e7bSzbMlB0XgN7hLaVHol59ylJMeoZCRLCs4o-M
-Message-ID: <CAMeQTsZw8P+__EXsUSW8G6LONN85HPwmG1+zQXwpmHEC=npWyw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from nvidia_wmi_ec_supported()
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Alex Deucher <alexdeucher@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux@weissschuh.net" <linux@weissschuh.net>, "rafael@kernel.org" <rafael@kernel.org>, 
-	"lenb@kernel.org" <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"Koenig, Christian" <Christian.Koenig@amd.com>, "airlied@gmail.com" <airlied@gmail.com>, 
-	"simona@ffwll.ch" <simona@ffwll.ch>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, 
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>, 
-	"joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, 
-	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net" <tursulin@ursulin.net>, 
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
-	"matthew.brost@intel.com" <matthew.brost@intel.com>, 
-	"thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>, 
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+Content-Language: en-US
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <8a5bef53-cae4-4aa6-a657-d11a6831d2b2@amd.com>
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <8a5bef53-cae4-4aa6-a657-d11a6831d2b2@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-On Tue, Sep 22, 2026 at 9:57=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 18.09.26 um 15:03 schrieb Alex Deucher:
->
-> > On Fri, Sep 18, 2026 at 7:01=E2=80=AFAM Jani Nikula <jani.nikula@linux.=
-intel.com> wrote:
-> >> On Fri, 18 Sep 2026, Hans de Goede <hansg@kernel.org> wrote:
-> >>> Hi,
-> >>>
-> >>> On 16-Sep-26 09:16, Jani Nikula wrote:
-> >>>> On Wed, 16 Sep 2026, Armin Wolf <W_Armin@gmx.de> wrote:
-> >>>>> Am 15.09.26 um 14:31 schrieb Jani Nikula:
-> >>>>>
-> >>>>>> On Tue, 15 Sep 2026, Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel=
-.com> wrote:
-> >>>>>>> GPU people heads up!!
-> >>>>>>>
-> >>>>>>> On Wed, 2 Sep 2026, Armin Wolf wrote:
-> >>>>>>>
-> >>>>>>>> Am 01.09.26 um 23:30 schrieb Deucher, Alexander:
-> >>>>>>>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> >>>>>>>>>> b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> >>>>>>>>>> index 12e4a41bf1f0..50305630f533 100644
-> >>>>>>>>>> --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> >>>>>>>>>> +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> >>>>>>>>>> @@ -30,9 +30,7 @@ config DRM_AMDGPU
-> >>>>>>>>>>          # ACPI_VIDEO's dependencies must also be selected.
-> >>>>>>>>>>          select INPUT if ACPI
-> >>>>>>>>>>          select ACPI_VIDEO if ACPI
-> >>>>>>>>>> -     # On x86 ACPI_VIDEO also needs ACPI_WMI
-> >>>>>>>>>> -     select X86_PLATFORM_DEVICES if ACPI && X86
-> >>>>>>>>> The change below makes sense, but this one looks like it should=
- remain
-> >>>>>>>>> unless X86_PLATFORM_DEVICES is handled some other way?
-> >>>>>>>>>
-> >>>>>>>>> Alex
-> >>>>>>>> AFAIK the dependency on X86_PLATFORM_DEVICES was only necessary =
-because
-> >>>>>>>> ACPI-WMI depended on it in the past.
-> >>>>>>>> By now ACPI-WMI neither depends on X86_PLATFORM_DEVICES or X86 a=
-nymore.
-> >>>>>>> Hi all,
-> >>>>>>>
-> >>>>>>> Could more GPU people besides Alex take a look on this. I'd want =
-to make
-> >>>>>>> progress with this series within this cycle but would prefer to h=
-ave Acks
-> >>>>>>> from GPU side.
-> >>>>>> I share the same concern with Alex. It seems to me we could now en=
-d up
-> >>>>>> with x86 configurations without X86_PLATFORM_DEVICES, which handle
-> >>>>>> e.g. backlight on a lot of platforms.
-> >>>>>>
-> >>>>>> I think the safer option might be to go for:
-> >>>>>>
-> >>>>>>     depends on X86_PLATFORM_DEVICES || !X86
-> >>>>>>
-> >>>>>> in all of the cases that select/depend on X86_PLATFORM_DEVICES in =
-drm.
-> >>>>>>
-> >>>>>> The alternative is to find out, and handle the fallout, if any.
-> >>>>>>
-> >>>>>>
-> >>>>>> BR,
-> >>>>>> Jani.
-> >>>>> Alright, should i leave the original "select X86_PLATFORM_DEVICES i=
-f ..." statements
-> >>>>> as-is or should is change them to "depends on X86_PLATFORM_DEVICES =
-|| !X86" everywhere?
-> >>>> There are some places that depends on X86_PLATFORM_DEVICES. I think =
-it's
-> >>>> almost always a mistake to have some places select and some places
-> >>>> depends on, and select should anyway be used with care. I'd go for
-> >>>> depends on.
-> >>> I'm a bit late to the party here, sorry.
-> >>>
-> >>> Note that X86_PLATFORM_DEVICES is an option which enables / disables
-> >>> a menu and does nothing more.
-> >>>
-> >>> Enabling it or depending on it by itself does nothing.
-> >>>
-> >>> The select used to be there since it must be selected to be able
-> >>> to select ACPI_WMI (which is no longer the case after this series).
-> >>>
-> >>> To depends on in XE was probably copy pasted from the existing
-> >>> select-s and then changed to a depends and already was a completely
-> >>> no-op since depending on ACPI_WMI was enough as that itself
-> >>> dependend on ACPI_WMI.
-> >>>
-> >>> As for X86_PLATFORM_DEVICES being needed for some backlight
-> >>> interfaces, depending on it by itself does not result in those
-> >>> interfaces being there. That requires enabling the actual drivers
-> >>> providing those interfaces.
-> >>>
-> >>> And I don't think that the GPU drivers should start depending
-> >>> on those since that will become very unyielding.
-> >>>
-> >>> TL;DR: I believe Armin's original patch is fine and this is
-> >>> a welcome cleanup / simplification of the DRM drivers Kconfig
-> >>> bits.
-> >> Your explanation makes sense, thanks.
-> > Yeah, sounds good.  Thanks!
-> >
-> > Alex
->
-> Nice, i suppose we can apply this series as-is then?
+On 2026-09-22 16:47, Mario Limonciello wrote:
+> 
+> 
+> On 9/22/26 08:43, Fourhundred Thecat wrote:
+>> Hi,
+>>
+>> On a Lenovo ThinkPad P16s Gen 4 AMD (Ryzen AI 9 HX PRO 370, Strix 
+>> Point), s2idle enters sleep normally but the machine can never be 
+>> woken again and has to be force-powered-off. The trigger is the number 
+>> of online logical CPUs: with all 24 threads online the failure is 100% 
+>> reproducible, and limiting the kernel to 16 CPUs makes suspend/resume 
+>> work reliably.
+>>
+>> This platform has no S3 at all, so s2idle is the only suspend mode 
+>> available.
+>>
+>>
+>> Hardware
+>> --------
+>>
+>>    DMI product name    21RXS07D00
+>>    DMI system version  ThinkPad P16s Gen 4 AMD
+>>    BIOS                LENOVO R2XET40W (1.20), 05/26/2026
+>>    CPU                 AMD Ryzen AI 9 HX PRO 370 w/ Radeon 890M
+>>    CPU family          26, microcode 0xb204037
+>>    Topology            12 cores / 24 threads
+>>                        4x Zen5  (core_id 0-3)
+>>                        8x Zen5c (core_id 8-15)
+>>
+>>    ACPI: PM: (supports S0 S5)
+>>    Low-power S0 idle used by default for system suspend
+>>    /sys/power/mem_sleep -> [s2idle]      (no "deep"; DSDT has no _S3_)
+>>
+>>
+>> Kernel
+>> ------
+>>
+>>    6.18.51 x86_64, gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+>>    Custom monolithic build, no loadable module support.
+>>
+>>    Relevant config:
+>>      CONFIG_NR_CPUS=32
+>>      CONFIG_SUSPEND=y, CONFIG_ACPI_SLEEP=y
+>>      CONFIG_AMD_PMC=y, CONFIG_AMD_PMF=y, CONFIG_PINCTRL_AMD=y
+>>      CONFIG_DRM_AMDGPU=y, CONFIG_DRM_ACCEL_AMDXDNA=y
+>>      CONFIG_THINKPAD_ACPI=y, CONFIG_ACPI_EC=y
+>>
+>>
+>> Reproducer
+>> ----------
+>>
+>>    # echo mem > /sys/power/state
+>>
+>> The system suspends cleanly. The ThinkPad power LED then shows the 
+>> EC's slow breathing pattern, i.e. the ACPI LPS0 _DSM entry path ran 
+>> and the EC considers the system asleep.
+>>
+>> It never wakes again. Tried, with no effect:
+>>
+>>    - opening the lid
+>>    - any key on the internal keyboard
+>>    - short press of the power button
+>>    - clicking a USB mouse, with power/wakeup set to "enabled" on both
+>>      the device (3-2) and its xHCI root hub (usb3)
+>>
+>> The machine is also not reachable over the network while in this 
+>> state, so it is not a case of resuming with a dead display. The only 
+>> recovery is a ~10 s power button hold.
+>>
+>> Wake sources are armed. From /proc/acpi/wakeup:
+>>
+>>    XHC1  S3  *enabled   pci:0000:c5:00.4
+>>    XHC0  S3  *enabled   pci:0000:c7:00.0
+>>    XHC3  S3  *enabled   pci:0000:c7:00.3
+>>    XHC4  S3  *enabled   pci:0000:c7:00.4
+>>    NHI0  S3  *enabled   pci:0000:c7:00.5
+>>    NHI1  S3  *enabled   pci:0000:c7:00.6
+>>    LID   S4  *enabled   platform:PNP0C0D:00
+>>    SLPB  S3  *enabled   platform:PNP0C0E:00
+>>
+>> and platform/i8042/serio0 power/wakeup is "enabled".
+>>
+>>
+>> Bisect
+>> ------
+>>
+>> The regression was introduced by raising CONFIG_NR_CPUS:
+>>
+>>    CONFIG_NR_CPUS=16   suspend/resume works
+>>    CONFIG_NR_CPUS=32   suspend enters, never wakes    (100% reproducible)
+>>
+>> Booting the *same* CONFIG_NR_CPUS=32 kernel with nr_cpus=16 on the 
+>> command line also works. So the trigger is the number of online 
+>> logical CPUs at suspend time, not anything else in the build.
+>>
+>> NR_CPUS=16 is of course wrong for this CPU -- it silently leaves 8 of 
+>> the 24 threads unused -- so this is a workaround, not a fix.
+>>
+>> At nr_cpus=16 the kernel brings up every core's primary thread plus 
+>> only the Zen5 SMT siblings:
+>>
+>>    cpu0-3     core_id 0-3     Zen5   primary threads
+>>    cpu4-11    core_id 8-15    Zen5c  primary threads
+>>    cpu12-15   core_id 0-3     Zen5   SMT siblings
+>>    (absent)   core_id 8-15    Zen5c  SMT siblings
+>>
+>> The 8 CPUs that are absent in the working configuration are exactly 
+>> the SMT siblings of the 8 Zen5c cores. I have not yet narrowed down 
+>> whether the threshold is exactly 17 CPUs or specifically the Zen5c 
+>> siblings; I can bisect nr_cpus= further if that is useful.
+>>
+>>
+>> Ruled out
+>> ---------
+>>
+>> None of these had any effect (still hangs with all 24 CPUs online):
+>>
+>>    initcall_blacklist=amd_pmf_driver_init
+>>    initcall_blacklist=amdxdna_pci_driver_init
+>>    runtime unbind of amdxdna, amd-pmf and tpm_tis before suspending
+>>
+>>
+>> Possibly relevant
+>> -----------------
+>>
+>> After a *successful* suspend/resume at nr_cpus=16:
+>>
+>>    /sys/power/suspend_stats/success         1
+>>    /sys/power/suspend_stats/total_hw_sleep  0
+>>    /sys/power/suspend_stats/last_hw_sleep   0
+>>    /sys/power/suspend_stats/max_hw_sleep    18446744073709551615
+>>
+>> so no hardware sleep residency is recorded even in the configuration 
+>> that works. It may be that the working case simply never reaches 
+>> hardware s0i3, and that the failure appears only once the SoC does 
+>> enter it. I could not confirm this: this build has CONFIG_DEBUG_FS=n 
+>> and CONFIG_PM_DEBUG=n, so I have no 
+>> /sys/kernel/debug/amd_pmc/s0ix_stats and no /sys/power/pm_test. I can 
+>> rebuild with those enabled and re-run whatever you would like to see.
+>>
+>> Also, the 21RX series has no entry in the fwbug_list DMI table in 
+>> drivers/platform/x86/amd/pmc/pmc-quirks.c; the Lenovo entries there 
+>> stop at the 2021-era ThinkPads and some 2023 IdeaPads.
+>>
+>> Happy to run further tests, bisect nr_cpus= to the exact threshold, or 
+>> provide full dmesg, ACPI tables or the kernel config.
+>>
+>> Thanks,
+> 
+> Try this patch.
+> 
+> https://lore.kernel.org/all/20260826171537.4167367-1-Vishal.Badole@amd.com/
 
-Sorry I'm a bit late here, but for the gma500 part:
-Acked-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+I don't see how that patch is relevant to my issue or my kernel version 
+6.18. There is no cluster code in lib/group_cpus.c and the patch cannot 
+be applied.
 
->
-> Thanks,
-> Armin Wolf
->
-> >> BR,
-> >> Jani.
-> >>
-> >>
-> >> --
-> >> Jani Nikula, Intel
+My report is about the machine never leaving s2idle when more than 16 
+CPUs are online.
+
