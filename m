@@ -1,616 +1,397 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA7E4570FE;
-	Wed, 23 Sep 2026 09:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071D9431A34;
+	Wed, 23 Sep 2026 09:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790156747; cv=none; b=Ul2rVm+FKapzVSMjLo1N2sxdOg1jXpaEIJGVpN6+xkYDjRbJuZ6w0v1vFk4qkSgLadSz9tfZXEl0BolY3tMDsdZuiy6y683dlvm6XixBhiU3nJWz0VMhBzoK+mYNvTL75jDZ7zLJqueHy3K+iA513GGr68YvV9JTHBdF4LJiRo8=
+	t=1790157171; cv=none; b=RiOBFf2J802qSaU5YDGGGTyCb9Kw+G7kIYgjvQ8aQtN7t3kKtp8d+mGbp9zq3KbI8GQqlRgJs5q3u2C1tTfn9HEqxnImKqoBO1hK3/RP3yatNdSoDAVAlupFBNd6EkRmISDyhJ9qD0MvWWYT7cGHTn0nI17TSvULu/IaimprCiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790156747; c=relaxed/simple;
-	bh=hkaxi53CxLEOGRJkhlYGKiyQ0iIv4+coLz3qKfWTPio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pqo9psy4CHJWdrWLCiMmiJ69KgQ2r15DnENamzm3dya/+TW6vXgDClhhuv+M42K7a6/UhUztDn4cturycn2c+9ywLpP38mt3YY8CYVdjpDI043lrVFr8YEU23EBjAOslcGbAVG3Xie2ehJ+P2L+rWoFklE2XrTPUov8emSTOpU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gam6tHlu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790157171; c=relaxed/simple;
+	bh=UxCGGn311cc2Jvhrqzk3QSy05GadeZY5xWaQDoN9nc8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=anqgQSAnWI3VV68BZoXPx41BMTZ7CF5r3QeTvVQFGSvy9HZNVSnUMxYJQ0fyqG1zWywOLnLhxz31frage0b089Z1bqJ5gmKYg62JowYpQ9g6bx0OvYZ5SRgq/H7YFRW+QjKghPh/kgD8xB0IKXjVbMxRXS3bkNeLIQRG7+MhdVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZBED21fs; arc=none smtp.client-ip=192.198.163.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gam6tHlu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2051F000FF;
-	Wed, 23 Sep 2026 09:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790156744;
-	bh=J53wD1icBeDv0iyttZN6dt86cTmTzLUsmup7bkDO9N0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gam6tHluSV2mjm+sU3lpay8M8VdbjiurXUMoUpoDV09pA3wdAqCEVmvWwRgBA121n
-	 SympuvLgIhWs6Ye6rxS6QDfM8Zk6iiLPgYDMx5miA93x2ogrx7ysD6s41ykL3fDRhE
-	 LwhOjL88j5mtaICyquGFAU+RYjM5c6eQAgWCCCkE5CKex4Wx4Oe6v2UGGBkFpD5HCI
-	 +MiWFks342SlaT37pb8bNxmJ5ZVVfXYkNFTPurDqOUb0vVK8x/cIdHcP3ue3fzGmXD
-	 rAT94vsrVilHKLpM5HhWBni9syjVCqvxUCcjAKh5WUqmOF5V9ehjqvJarKEEMr0+NT
-	 o9DGZom/A7FWA==
-Date: Wed, 23 Sep 2026 10:45:39 +0100
-From: Lee Jones <lee@kernel.org>
-To: Liang Haowen <nbg2974@gmail.com>
-Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
-	"Martin K. Petersen" <mkp@kernel.org>, linux-scsi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH RFC v6 1/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED
- driver for ROG NVMe enclosures
-Message-ID: <20260923094539.GA3864833@google.com>
-References: <202609162200.RFCv6-0.lhw@gmail.com>
- <202609162200.RFCv6-1.lhw@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBED21fs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790157169; x=1821693169;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=UxCGGn311cc2Jvhrqzk3QSy05GadeZY5xWaQDoN9nc8=;
+  b=ZBED21fsstg24E6uytI+Cn0Hb3pvAULyXkjs8sWaIi94yukFafP6Wlui
+   hh8ihP9enmoOnuQl0kOd2yNvM+oh6eIUS/Qc8+WxwhWfQwifcaCK8/9Qh
+   Bg/ribSkuxtJQ6NAsR7VIOTWV+X1FxbirobpI4RgFCGBvMs2bVeC4Yixo
+   000eYkcXVAjFrIOCZH6zhmxfIcQESrs5tyxdmkzji7Yy24I1y8Aw5tMnF
+   SMLOq64TnfIy3qRug7MqMlRxcg3pHwbZP6A+Qf1KuzmjPcDaOxllAALjv
+   Y3kPrDYHylebD5CYFBB8qJkaa9jXQ1voTtpDjWovwvXs5Ky5CQiv8OXqM
+   g==;
+X-CSE-ConnectionGUID: uMFZYxYGSoi6m6tvCN2fVg==
+X-CSE-MsgGUID: 45uYYh+QRQWViFX5WcLfRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="1328812"
+X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
+   d="scan'208";a="1328812"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by fmvoesa116.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 02:52:48 -0700
+X-CSE-ConnectionGUID: zPE61t1KSd+4FNxCHXyBOg==
+X-CSE-MsgGUID: P1GSw+kbSlO0Pbmc9k/9Lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
+   d="scan'208";a="4812662"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 02:52:45 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 23 Sep 2026 12:52:41 +0300 (EEST)
+To: Denis Benato <denis.benato@linux.dev>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Hans de Goede <hansg@kernel.org>, 
+    Corentin Chary <corentin.chary@gmail.com>, Luke Jones <luke@ljones.dev>, 
+    busybox11 <busybox11th@gmail.com>, Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH v2 1/2] platform/x86: asus-armoury: let attribute groups
+ decide their own visibility
+In-Reply-To: <20260923004706.41256-2-denis.benato@linux.dev>
+Message-ID: <89fb00c7-9fbf-c567-f081-5ae831f8915a@linux.intel.com>
+References: <20260923004706.41256-1-denis.benato@linux.dev> <20260923004706.41256-2-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202609162200.RFCv6-1.lhw@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 16 Sep 2026, Liang Haowen wrote:
+On Wed, 23 Sep 2026, Denis Benato wrote:
 
-> From: Liang Haowen <nbg2974@gmail.com>
-> Date: Wed, 16 Sep 2026 21:20:00 +0800
-> Subject: [PATCH RFC v6] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver for
->  ROG NVMe enclosures
-
-What patch format is this?  How did you submit it?
-
-> ASUS ROG external NVMe enclosures (ROG STRIX Arion, USB 0b05:1932) are
-> plain USB mass-storage devices with no HID interface: the Aura LEDs
-> hang off an ENE controller driven by vendor SCSI commands on the same
-> LUN as the disk. The enclosure has 4 independently addressable LEDs,
-> verified on hardware.
+> mini_led_mode, gpu_mux_mode and dgpu_disable are created by ad-hoc
+> conditional blocks in asus_fw_attr_add() which must be manually tracked
+> by the error and exit paths; those paths also re-probe WMI to know which
+> groups were actually created.
 > 
-> Register a scsi_device_handler matched by INQUIRY (vendor "ROG",
-
-If the SCSI DH the right approach here?
-
-I only see references to it in the SCSI subsystem and only in its own
-dedicated driver.  This is all very unusual.
-
-> model "ESD-S1C"); it does not claim the sdev (sd keeps owning the
-> disk) and exposes each LED as a multicolor LED class device,
-> /sys/class/leds/asus-arion-0-0-0-0::led-0 through led-3. The
-> H:C:T:L part of the sdev name keeps the names unique when more than
-> one enclosure is connected, with its colons flattened to dashes. The
-> color section stays empty, since multicolor LEDs enumerate their
-> palette via multi_intensity, and the four identical zones use the
-> function name with a "-N" ordinal, as the naming section in
-> Documentation/leds/leds-class.rst asks for.
+> Give every attribute group its own .is_visible() callback: all groups
+> are created unconditionally through the common loop and sysfs hides the
+> unsupported ones entirely. The plain group macros now gate their
+> visibility on the WMI presence of their device, the
+> ASUS_ATTR_GROUP_BOOL() and ASUS_ATTR_GROUP_ENUM() macros declare groups
+> backed by a device ID resolved at probe time, and the power tunable
+> macros are additionally gated on the platform limits defining a max
+> value, replacing the special-casing in asus_fw_attr_add() and with it
+> is_power_tunable_attr().
 > 
-> Protocol: a 16-byte vendor CDB (opcode 0xec, 'A' 'S' signature,
-> register index, argument count in cdb[13]). MODE 0x8021 (Static) must
-> be written first in every sequence or the device ignores it; colours
-> go to 0x8160 + 3 * led and 0x8100 + 3 * led (3 bytes, order R, B, G;
-> both tables are written because firmware revisions pull from one or
-> the other); APPLY 0x80a0 takes 0x01 to apply and 0xaa to save.
+> The dgpu_disable attribute now goes through the same resolved device ID
+> scheme as mini_led_mode and gpu_mux_mode, storing the device ID to use
+> in asus_armoury.dgpu_disable_dev_id instead of always operating on
+> ASUS_WMI_DEVID_DGPU.
 > 
-> The CDB cannot go through scsi_execute_cmd(): it sizes the command
-> via scsi_command_size(opcode), which maps vendor opcode 0xec to
-> 10 bytes, so cdb[13] is dropped and the device silently ignores the
-> write (GOOD status, no error). The request is built with
-> scsi_alloc_request() instead, which initializes the scsi_cmnd parts a
-> passthrough needs (command buffer, lengths, rcu head), with cmd_len
-> forced to 16, mirroring what SG_IO does from userspace.
+> No functional change is intended.
 > 
-> brightness_set only caches the colour and marks the LED in a per-zone
-> dirty mask under a spinlock; led_mc_calc_color_components() runs under
-> that lock too, because it writes the shared subled_info array and
-> trigger events call led_set_brightness() without the led_access lock
-> that serializes sysfs stores. A single work item per zone then
-> snapshots the mask and colours and runs one ENE sequence for all
-> pending LEDs (MODE, colour slots, APPLY, SAVE). Funneling every
-> update through one work item keeps the sequences from interleaving
-> between concurrent LED updates and batches multi-LED updates into a
-> single APPLY/SAVE. A re-queued run with nothing pending returns
-> before touching the device, so it cannot wear the flash with a
-> pointless SAVE, and the lock keeps a colour write from being
-> reordered after its dirty bit on weakly ordered architectures.
-> 
-> This is the monolithic out-of-tree version as verified on hardware;
-> the Kconfig/Makefile/MAINTAINERS wiring lands with the agreed split
-> into a SCSI transport helper and a shared ASUS Aura LED interface.
-> 
-> Signed-off-by: Liang Haowen <nbg2974@gmail.com>
+> Signed-off-by: Denis Benato <denis.benato@linux.dev>
 > ---
->  drivers/leds/leds-asus-aura-scsi.c | 392 +++++++++++++++++++++++++++++
-
-Shouldn't this live in drivers/leds/rgb ?
-
->  1 file changed, 392 insertions(+)
->  create mode 100644 drivers/leds/leds-asus-aura-scsi.c
+>  drivers/platform/x86/asus-armoury.c | 280 +++++++++++-----------------
+>  drivers/platform/x86/asus-armoury.h | 124 +++++++++---
+>  2 files changed, 213 insertions(+), 191 deletions(-)
 > 
-> diff --git a/drivers/leds/leds-asus-aura-scsi.c b/drivers/leds/leds-asus-aura-scsi.c
-> new file mode 100644
-> index 0000000..4e039bd
-> --- /dev/null
-> +++ b/drivers/leds/leds-asus-aura-scsi.c
-> @@ -0,0 +1,392 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * ASUS Aura RGB over SCSI for ROG external NVMe enclosures
-> + * (e.g. ROG STRIX Arion, USB 0b05:1932).
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index 2d5ca75bc727..7812e93734b8 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -94,6 +94,7 @@ struct asus_armoury_priv {
+>  
+>  	u32 mini_led_dev_id;
+>  	u32 gpu_mux_dev_id;
+> +	u32 dgpu_disable_dev_id;
+>  
+>  	bool requires_fan_curve;
+>  };
+> @@ -110,11 +111,6 @@ static struct fw_attrs_group fw_attrs = {
+>  	.pending_reboot = false,
+>  };
+>  
+> -struct asus_attr_group {
+> -	const struct attribute_group *attr_group;
+> -	u32 wmi_devid;
+> -};
+> -
+>  static void asus_set_reboot_and_signal_event(void)
+>  {
+>  	fw_attrs.pending_reboot = true;
+> @@ -458,6 +454,12 @@ static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
+>  		return -ENODEV;
+>  	}
+>  }
+> +
+> +static bool mini_led_mode_group_visible(struct kobject *kobj)
+> +{
+> +	return asus_armoury.mini_led_dev_id;
+> +}
+> +
+>  ASUS_ATTR_GROUP_ENUM(mini_led_mode, "mini_led_mode", "Set the mini-LED backlight mode");
+>  
+>  static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
+> @@ -471,8 +473,8 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
+>  	if (err)
+>  		return err;
+>  
+> -	if (armoury_has_devstate(ASUS_WMI_DEVID_DGPU)) {
+> -		err = armoury_get_devstate(NULL, &result, ASUS_WMI_DEVID_DGPU);
+> +	if (asus_armoury.dgpu_disable_dev_id) {
+> +		err = armoury_get_devstate(NULL, &result, asus_armoury.dgpu_disable_dev_id);
+>  		if (err)
+>  			return err;
+>  		if (result && !optimus) {
+> @@ -502,6 +504,12 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
+>  	return count;
+>  }
+>  ASUS_WMI_SHOW_INT(gpu_mux_mode_current_value, asus_armoury.gpu_mux_dev_id);
+> +
+> +static bool gpu_mux_mode_group_visible(struct kobject *kobj)
+> +{
+> +	return asus_armoury.gpu_mux_dev_id;
+> +}
+> +
+>  ASUS_ATTR_GROUP_BOOL(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
+>  
+>  static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+> @@ -538,7 +546,8 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+>  	}
+>  
+>  	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
+> -		err = armoury_set_devstate(attr, disable ? 1 : 0, NULL, ASUS_WMI_DEVID_DGPU);
+> +		err = armoury_set_devstate(attr, disable ? 1 : 0, NULL,
+> +					   asus_armoury.dgpu_disable_dev_id);
+>  		if (err)
+>  			return err;
+>  	}
+> @@ -547,7 +556,13 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+>  
+>  	return count;
+>  }
+> -ASUS_WMI_SHOW_INT(dgpu_disable_current_value, ASUS_WMI_DEVID_DGPU);
+> +
+> +static bool dgpu_disable_group_visible(struct kobject *kobj)
+> +{
+> +	return asus_armoury.dgpu_disable_dev_id;
+> +}
+> +
+> +ASUS_WMI_SHOW_INT(dgpu_disable_current_value, asus_armoury.dgpu_disable_dev_id);
+>  ASUS_ATTR_GROUP_BOOL(dgpu_disable, "dgpu_disable", "Disable the dGPU");
+>  
+>  /* Values map for eGPU activation requests. */
+> @@ -695,6 +710,12 @@ static ssize_t egpu_enable_possible_values_show(struct kobject *kobj, struct kob
+>  {
+>  	return armoury_attr_enum_list(buf, ARRAY_SIZE(egpu_status_map));
+>  }
+> +
+> +static bool egpu_enable_group_visible(struct kobject *kobj)
+> +{
+> +	return armoury_has_devstate(ASUS_WMI_DEVID_EGPU);
+> +}
+> +
+>  ASUS_ATTR_GROUP_ENUM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
+>  
+>  /* Device memory available to APU */
+> @@ -771,6 +792,12 @@ static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_at
+>  {
+>  	return armoury_attr_enum_list(buf, ARRAY_SIZE(apu_mem_map));
+>  }
+> +
+> +static bool apu_mem_group_visible(struct kobject *kobj)
+> +{
+> +	return armoury_has_devstate(ASUS_WMI_DEVID_APU_MEM);
+> +}
+> +
+>  ASUS_ATTR_GROUP_ENUM(apu_mem, "apu_mem", "Set available system RAM (in GB) for the APU to use");
+>  
+>  /* Define helper to access the current power mode tunable values */
+> @@ -782,6 +809,44 @@ static inline struct rog_tunables *get_current_tunables(void)
+>  	return asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC];
+>  }
+>  
+> +/**
+> + * has_valid_limit - Checks if a power-related attribute has a valid limit value
+> + * @name: The name of the attribute to check
+> + * @limits: Pointer to the power_limits structure containing limit values
 > + *
-> + * USB mass-storage device, no HID; the ENE LED controller is driven via
-> + * vendor SCSI commands. Matched by INQUIRY (vendor "ROG", model "ESD-S1C"),
-> + * does NOT claim the sdev (sd keeps owning the disk).
+> + * This function checks if a power-related attribute has a valid limit value.
+> + * It returns false if limits is NULL or if the corresponding limit value is zero.
 > + *
-> + * The Arion exposes 4 independently addressable LEDs (verified on hardware):
-> + * each is a multicolor LED class device (asus-arion-<H-C-T-L>::led-0..led-3,
-> + * unique per enclosure). A colour change writes that LED's slot only:
-> + * EFFECT 0x8160 + 3*led, DIRECT 0x8100 + 3*led (3 bytes, byte order R, B, G),
-> + * then APPLY (0x01) and SAVE (0xaa). MODE (0x8021 = Static) is written first
-> + * in every sequence; skipping it makes the device ignore the whole sequence.
-> + *
-> + * Scheduling: brightness_set (LED core fast path) caches the colour and
-> + * marks the LED in a per-zone dirty mask under a spinlock; a single work
-> + * item per zone snapshots the mask and colours, then runs one ENE
-> + * sequence for all pending LEDs (MODE once, colour slots, APPLY, SAVE).
-> + * Funneling every update through that one work item also serializes the
-> + * sequences: the MODE/colour/APPLY/SAVE chain must never interleave
-> + * between concurrent LED updates. The snapshot makes re-queued runs with
-> + * nothing left to do return before touching the device, so a re-queue
-> + * cannot wear the flash with a pointless SAVE, and the lock keeps a
-> + * colour write from being reordered after its dirty bit on weakly
-> + * ordered architectures.
-> + *
-> + * CDB length: scsi_execute_cmd() sizes the CDB via COMMAND_SIZE(opcode),
-> + * which maps vendor opcode 0xec to 10 bytes. The ENE protocol uses a 16-byte
-> + * CDB with the data length in cdb[13], so scsi_execute_cmd() drops cdb[13]
-> + * and the device silently ignores the write. ene_write() therefore mirrors
-> + * scsi_execute_cmd() on top of scsi_alloc_request() and forces cmd_len = 16
-> + * (what SG_IO does from userspace).
-> + *
-> + * Attach manually until a notifier lands:
-> + * echo asus_aura > /sys/block/sdX/device/dh_state
+> + * Return: true if the attribute has a valid limit value, false otherwise
 > + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/bits.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/string.h>
-> +#include <linux/leds.h>
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/blk_types.h>
-> +#include <linux/blkdev.h>
-> +#include <linux/blk-mq.h>
-> +#include <linux/workqueue.h>
-> +#include <scsi/scsi.h>
-> +#include <scsi/scsi_cmnd.h>
-> +#include <scsi/scsi_device.h>
-> +#include <scsi/scsi_dh.h>
-
-Alphabetical.
-
-> +#define ARION_INQ_VENDOR	"ROG"
-> +#define ARION_INQ_MODEL		"ESD-S1C"
-> +
-> +#define ENE_OPCODE		0xec
-> +#define ENE_REG_MODE		0x8021	/* AuraMode value: Static=1, Breathe=2, ... */
-> +#define ENE_REG_APPLY		0x80a0
-> +#define ENE_REG_COLORS		0x8160	/* + 3*led, 3 bytes per LED, order R,B,G */
-> +#define ENE_REG_COLORS_DIRECT	0x8100	/* + 3*led, same layout */
-
-Not sure these comments make things any clearer?
-
-> +#define ENE_APPLY		0x01
-> +#define ENE_SAVE		0xaa
-> +#define ENE_MODE_STATIC		1
-> +#define ENE_CDB_LEN		16
-> +#define ENE_RGB_LEN		3
-> +#define ENE_TIMEOUT		(10 * HZ)
-
-Isn't 10s a lifetime?
-
-> +
-> +/*
-> + * Verified on hardware: the enclosure has 4 independently settable LEDs.
-> + * (The colour table reserves 16 slots; only the first 4 drive anything.)
-> + */
-
-Do we really need to know about the trial and error during development?
-
-> +#define ARION_NUM_LEDS		4
-> +
-> +struct asus_aura_led {
-> +	struct asus_aura_zone	*zone;
-
-Is 'zone' SCSI terminology?
-
-> +	int			index;
-> +	struct mc_subled	subled[3];
-> +	u8			rgb[ENE_RGB_LEN];
-> +};
-> +
-> +struct asus_aura_zone {
-> +	struct scsi_device	*sdev;
-> +	struct asus_aura_led	leds[ARION_NUM_LEDS];
-> +	spinlock_t		lock;	/* protects dirty and cached colours */
-> +	u8			dirty;	/* bit i: led i needs a colour write */
-
-What does dirty even mean in this context?  I suggest the nomenclature
-needs improvement.
-
-If you make this an LED-level attribute, you can remove the faux
-LED indexing.
-
-> +	struct work_struct	work;
-> +};
-> +
-> +static void ene_build_cdb(u8 *cdb, u16 reg, u8 arg_count)
+> +static bool has_valid_limit(const char *name, const struct power_limits *limits)
 > +{
-> +	memset(cdb, 0, ENE_CDB_LEN);
-> +	cdb[0] = ENE_OPCODE;
-
-Would defining these offsets make sense?
-
-Nicer to read if they have a name.
-
-> +	cdb[1] = 'A';
-> +	cdb[2] = 'S';
-> +	cdb[3] = (reg >> 8) & 0xff;
-> +	cdb[4] = reg & 0xff;
-> +	cdb[13] = arg_count;
+> +	u32 limit_value = 0;
+> +
+> +	if (!limits)
+> +		return false;
+> +
+> +	if (!strcmp(name, ATTR_PPT_PL1_SPL))
+> +		limit_value = limits->ppt_pl1_spl_max;
+> +	else if (!strcmp(name, ATTR_PPT_PL2_SPPT))
+> +		limit_value = limits->ppt_pl2_sppt_max;
+> +	else if (!strcmp(name, ATTR_PPT_PL3_FPPT))
+> +		limit_value = limits->ppt_pl3_fppt_max;
+> +	else if (!strcmp(name, ATTR_PPT_APU_SPPT))
+> +		limit_value = limits->ppt_apu_sppt_max;
+> +	else if (!strcmp(name, ATTR_PPT_PLATFORM_SPPT))
+> +		limit_value = limits->ppt_platform_sppt_max;
+> +	else if (!strcmp(name, ATTR_NV_DYNAMIC_BOOST))
+> +		limit_value = limits->nv_dynamic_boost_max;
+> +	else if (!strcmp(name, ATTR_NV_TEMP_TARGET))
+> +		limit_value = limits->nv_temp_target_max;
+> +	else if (!strcmp(name, ATTR_NV_BASE_TGP) ||
+> +		 !strcmp(name, ATTR_NV_TGP))
+> +		limit_value = limits->nv_tgp_max;
+> +
+> +	return limit_value > 0;
 > +}
-> +
-> +/*
-> + * scsi_execute_cmd() with cmd_len forced to 16. scsi_alloc_request()
-> + * initializes the parts of the scsi_cmnd a passthrough needs (zeroed
-> + * cmnd, cmd_len = MAX_COMMAND_SIZE, sense_len, rcu head, retries);
-> + * a raw blk_mq_alloc_request() does none of that.
 
-And you're telling us this because?
-
-Was there a decision based off of this?  Please elaborate.
-
-> + */
-> +static int ene_write(struct scsi_device *sdev, u16 reg,
-> +		     const void *data, u8 arg_count)
-
-Data is a terrible variable name.
-
-It's also odd that we're passing back read-data in a write() function!
-
-> +{
-> +	struct request *rq;
-> +	struct scsi_cmnd *scmd;
-> +	u8 cdb[ENE_CDB_LEN];
-> +	int ret;
-> +
-> +	ene_build_cdb(cdb, reg, arg_count);
-> +
-> +	rq = scsi_alloc_request(sdev->request_queue, REQ_OP_DRV_OUT, 0);
-> +	if (IS_ERR(rq))
-> +		return PTR_ERR(rq);
-> +
-> +	if (arg_count) {
-
-When is this not true?
-
-> +		ret = blk_rq_map_kern(rq, (void *)data, arg_count, GFP_NOIO);
-> +		if (ret)
-> +			goto out;
-> +	}
-> +
-> +	scmd = blk_mq_rq_to_pdu(rq);
-> +	scmd->cmd_len = ENE_CDB_LEN;
-> +	memcpy(scmd->cmnd, cdb, ENE_CDB_LEN);
-> +	scmd->allowed = 1;
-> +	rq->timeout = ENE_TIMEOUT;
-> +	rq->rq_flags |= RQF_QUIET;
-> +
-> +	blk_execute_rq(rq, true);
-> +	ret = scmd->result;
-
-I have no idea what any of this means.  I'd need a SCSI person to help here.
-
-> +out:
-> +	blk_mq_free_request(rq);
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Sleepable: runs on the system workqueue. One ENE sequence for every LED
-> + * marked in the dirty mask. The mask and colours are snapshotted under the
-> + * zone lock: asus_aura_set() may run concurrently on another CPU, and the
-> + * lock keeps a colour write from being reordered after its dirty bit on
-> + * weakly ordered architectures. A colour cached while this runs requeues
-> + * the work and is picked up by the next sequence.
-> + */
-> +static void asus_aura_zone_work(struct work_struct *work)
-> +{
-> +	struct asus_aura_zone *zone =
-> +		container_of(work, struct asus_aura_zone, work);
-> +	struct scsi_device *sdev = zone->sdev;
-> +	u8 rgb[ARION_NUM_LEDS][ENE_RGB_LEN];
-> +	u8 apply = ENE_APPLY;
-> +	u8 save = ENE_SAVE;
-> +	u8 mode = ENE_MODE_STATIC;
-> +	unsigned long flags;
-> +	u8 pending;
-> +	int i, ret;
-> +
-> +	spin_lock_irqsave(&zone->lock, flags);
-> +	pending = zone->dirty;
-> +	zone->dirty = 0;
-> +	for (i = 0; i < ARION_NUM_LEDS; i++)
-> +		memcpy(rgb[i], zone->leds[i].rgb, ENE_RGB_LEN);
-> +	spin_unlock_irqrestore(&zone->lock, flags);
-> +
-> +	/*
-> +	 * schedule_work() while this function runs requeues it, and the
-> +	 * pending colour may already have been consumed above; the requeued
-> +	 * run then has nothing to do. Return before touching the device:
-> +	 * SAVE writes its flash.
-> +	 */
-> +	if (!pending)
-> +		return;
-
-All of the above is pointless if (zone->dirty == 0), so why not move
-this check to the top and skip all of it?
+This is a plain move, right? Can you move it in a preparatory patch to 
+cut the extra churn from what is already a very complicated diff.
 
 > +
-> +	if (!scsi_device_online(sdev))
-> +		return;
+>  /* Simple attribute creation */
+>  ASUS_ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2\n",
+>  			    "Show the current mode of charging");
+> @@ -819,103 +884,35 @@ ASUS_ATTR_GROUP_ROG_TUNABLE(nv_tgp, "nv_tgp", ASUS_WMI_DEVID_DGPU_SET_TGP,
+>  ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_DGPU_BASE_TGP,
+>  				  "Read the base TGP value");
+>  
+> -/* If an attribute does not require any special case handling add it here */
+> -static const struct asus_attr_group armoury_attr_groups[] = {
+> -	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
+> -	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
+> -	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
+> -	{ &dgpu_power_state_attr_group, ASUS_WMI_DEVID_DGPU_POWER_STATE },
+> -	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
+> -
+> -	{ &ppt_pl1_spl_attr_group, ASUS_WMI_DEVID_PPT_PL1_SPL },
+> -	{ &ppt_pl2_sppt_attr_group, ASUS_WMI_DEVID_PPT_PL2_SPPT },
+> -	{ &ppt_pl3_fppt_attr_group, ASUS_WMI_DEVID_PPT_PL3_FPPT },
+> -	{ &ppt_apu_sppt_attr_group, ASUS_WMI_DEVID_PPT_APU_SPPT },
+> -	{ &ppt_platform_sppt_attr_group, ASUS_WMI_DEVID_PPT_PLAT_SPPT },
+> -	{ &nv_dynamic_boost_attr_group, ASUS_WMI_DEVID_NV_DYN_BOOST },
+> -	{ &nv_temp_target_attr_group, ASUS_WMI_DEVID_NV_THERM_TARGET },
+> -	{ &nv_base_tgp_attr_group, ASUS_WMI_DEVID_DGPU_BASE_TGP },
+> -	{ &nv_tgp_attr_group, ASUS_WMI_DEVID_DGPU_SET_TGP },
+> -
+> -	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
+> -	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
+> -	{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
+> -	{ &panel_od_attr_group, ASUS_WMI_DEVID_PANEL_OD },
+> -	{ &panel_hd_mode_attr_group, ASUS_WMI_DEVID_PANEL_HD },
+> -	{ &screen_auto_brightness_attr_group, ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS },
+> +static const struct attribute_group *armoury_attr_groups[] = {
+> +	&mini_led_mode_attr_group,
+> +	&gpu_mux_mode_attr_group,
+> +	&egpu_connected_attr_group,
+> +	&egpu_enable_attr_group,
+> +	&dgpu_disable_attr_group,
+> +	&dgpu_power_state_attr_group,
+> +	&apu_mem_attr_group,
 > +
-> +	/* Mode first: without it the device ignores the whole sequence. */
-> +	ret = ene_write(sdev, ENE_REG_MODE, &mode, 1);
+> +	&ppt_pl1_spl_attr_group,
+> +	&ppt_pl2_sppt_attr_group,
+> +	&ppt_pl3_fppt_attr_group,
+> +	&ppt_apu_sppt_attr_group,
+> +	&ppt_platform_sppt_attr_group,
+> +	&nv_dynamic_boost_attr_group,
+> +	&nv_temp_target_attr_group,
+> +	&nv_base_tgp_attr_group,
+> +	&nv_tgp_attr_group,
+> +
+> +	&charge_mode_attr_group,
+> +	&boot_sound_attr_group,
+> +	&mcu_powersave_attr_group,
+> +	&panel_od_attr_group,
+> +	&panel_hd_mode_attr_group,
+> +	&screen_auto_brightness_attr_group,
+>  };
 
-Are we sure it is safe to pass stack variables (like 'mode', 'apply',
-'save', and 'rgb') to 'blk_rq_map_kern()'?  Stack memory is not DMA-safe
-and will cause issues with VMAP_STACK.  Should we allocate a DMA-safe
-bounce buffer in 'struct asus_aura_zone' instead?
+This looks much better.
 
-> +	if (ret)
-> +		goto err;
-> +
-> +	for (i = 0; i < ARION_NUM_LEDS; i++) {
+Now can you also add the terminating NULL to the array and try to use 
+sysfs_create/remove_groups() so you can eliminate the create, rollback, 
+and remove loops... I suggest you do it on top of this patch as this 
+change is already quite complicated and logically 
+sysfs_create/remove_group() -> sysfs_create/remove_groups() is a separate 
+transition.
 
-for (int leds = 0; ...
-
-> +		if (!(pending & BIT(i)))
-
-zone->leds[led]->pending ?
-
-> +			continue;
-> +
-> +		ret = ene_write(sdev, ENE_REG_COLORS + i * ENE_RGB_LEN,
-> +				rgb[i], ENE_RGB_LEN);
-
-Use 100-chars to unwrap some of these.
-
-> +		if (ret)
-> +			goto err;
-> +
-> +		/*
-> +		 * Cover the DIRECT colour set too; some firmware revisions
-> +		 * pull from 0x8100 instead of 0x8160.
-> +		 */
-> +		ret = ene_write(sdev, ENE_REG_COLORS_DIRECT + i * ENE_RGB_LEN,
-> +				rgb[i], ENE_RGB_LEN);
-> +		if (ret)
-> +			goto err;
-> +	}
-> +
-> +	ret = ene_write(sdev, ENE_REG_APPLY, &apply, 1);
-
-Are these variables even used?
-
-> +	if (ret)
-> +		goto err;
-> +
-> +	/*
-> +	 * The change only takes effect after SAVE (0xaa). NOTE: saving on
-> +	 * every brightness change writes flash each time; revisit for wear
-> +	 * once confirmed.
-> +	 */
-> +	ret = ene_write(sdev, ENE_REG_APPLY, &save, 1);
-> +	if (ret)
-> +		goto err;
-> +
-> +	return;
-> +err:
-> +	dev_err(&sdev->sdev_gendev,
-> +		"asus_aura: colour update failed: %d\n", ret);
-
-Shouldn't we be telling the caller than there was an error?
-
-> +}
-> +
-> +/* Non-blocking LED callback (LED core fast path). Cache colour, defer SCSI. */
-> +static void asus_aura_set(struct led_classdev *cdev,
-> +			  enum led_brightness brightness)
-
-Un-wrap.
-
-> +{
-> +	struct led_classdev_mc *mc = lcdev_to_mccdev(cdev);
-> +	struct asus_aura_led *led =
-> +		container_of(mc, struct asus_aura_led, mc_cdev);
-
-Un-wrap.
-
-Etc.
-
-> +	struct asus_aura_zone *zone = led->zone;
-> +	unsigned long flags;
-> +
-> +	/*
-> +	 * led_mc_calc_color_components() writes the shared subled_info
-> +	 * array. The LED core serializes sysfs stores with led_access,
-> +	 * but trigger events call led_set_brightness() without it, so
-> +	 * computing and copying the components under the same lock keeps
-> +	 * a trigger-driven update and a sysfs store from reading a mix of
-> +	 * each other's colours.
-> +	 */
-> +	spin_lock_irqsave(&zone->lock, flags);
-> +	led_mc_calc_color_components(mc, brightness);
-> +	/* ENE colour register byte order is R, B, G. */
-> +	led->rgb[0] = led->subled[0].brightness;
-> +	led->rgb[1] = led->subled[2].brightness;
-> +	led->rgb[2] = led->subled[1].brightness;
-> +	zone->dirty |= BIT(led->index);
-> +	spin_unlock_irqrestore(&zone->lock, flags);
-
-This is all very claustrophobic.  Can you space some of these out in groups?
-
-Other places too.  Nicely spaced out code is easier to parse.
-
-> +
-> +	schedule_work(&zone->work);
-> +}
-> +
-> +static int asus_aura_register_led(struct asus_aura_zone *zone, int index)
-> +{
-> +	struct asus_aura_led *led = &zone->leds[index];
-> +	struct led_classdev *cdev = &led->mc_cdev.led_cdev;
-> +	char hctl[32];
-> +	int ret;
-> +
-> +	led->zone = zone;
-> +	led->index = index;
-> +
-> +	led->subled[0].color_index = LED_COLOR_ID_RED;
-> +	led->subled[1].color_index = LED_COLOR_ID_GREEN;
-> +	led->subled[2].color_index = LED_COLOR_ID_BLUE;
-> +	led->mc_cdev.num_colors = 3;
-> +	led->mc_cdev.subled_info = led->subled;
-> +
-> +	/*
-> +	 * Include the sdev's H:C:T:L: every enclosure gets its own SCSI
-> +	 * host, so the names stay unique when more than one is connected.
-> +	 * With a static name the LED core would register the second
-> +	 * enclosure's LEDs under renamed nodes (asus-arion::led-0_1),
-> +	 * which is the wrong device identity. The names are per-attachment,
-> +	 * like sd X letters, and userspace is expected to enumerate.
-> +	 *
-> +	 * dev_name() renders the sdev as H:C:T:L; the extra colons would
-> +	 * break the devicename:color:function scheme userspace parses LED
-> +	 * class names with, so they are flattened to dashes. The color
-> +	 * section stays empty (these are multicolor LEDs, the palette is
-> +	 * enumerated via multi_intensity), and the four identical zones
-> +	 * get the function name with a "-N" ordinal, like the
-> +	 * Documentation/leds/leds-class.rst naming section asks for.
-> +	 */
-> +	strscpy(hctl, dev_name(&zone->sdev->sdev_gendev), sizeof(hctl));
-> +	strreplace(hctl, ':', '-');
-> +	cdev->name = kasprintf(GFP_KERNEL, "asus-arion-%s::led-%d", hctl, index);
-> +	if (!cdev->name)
-> +		return -ENOMEM;
-> +	cdev->max_brightness = 255;
-> +	cdev->brightness_set = asus_aura_set;
-> +
-> +	led_mc_calc_color_components(&led->mc_cdev, cdev->brightness);
-> +
-> +	/*
-> +	 * Register with NULL parent: parenting the LED to the sdev takes a
-> +	 * device reference, which blocks the sdev's final release on unplug,
-> +	 * which is what calls scsi_dh_release_device() -> our .detach() that
-> +	 * unregisters the LEDs. That reference cycle leaked the LED nodes and
-> +	 * the module refcount on every hot-unplug.
-> +	 */
-> +	ret = led_classdev_multicolor_register(NULL, &led->mc_cdev);
-> +	if (ret)
-> +		kfree(cdev->name);
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Unregister the LED devices before cancelling the work: unregistering
-> + * removes the sysfs attributes, so no new brightness_set can schedule the
-> + * zone work afterwards, and it waits for in-flight sysfs callbacks.
-> + * Cancelling first would leave a window where a brightness write requeues
-> + * the work after cancel_work_sync() returned, and the work would then run
-> + * on freed memory.
-> + */
-> +static void asus_aura_release(struct asus_aura_zone *zone, int num_leds)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < num_leds; i++)
-> +		led_classdev_multicolor_unregister(&zone->leds[i].mc_cdev);
-> +	cancel_work_sync(&zone->work);
-> +	for (i = 0; i < num_leds; i++)
-> +		kfree(zone->leds[i].mc_cdev.led_cdev.name);
-> +	kfree(zone);
-> +}
-> +
-> +static int asus_aura_attach(struct scsi_device *sdev)
-> +{
-> +	struct asus_aura_zone *zone;
-> +	int i, ret;
-> +
-> +	if (strncmp(sdev->vendor, ARION_INQ_VENDOR, strlen(ARION_INQ_VENDOR)) ||
-> +	    strncmp(sdev->model, ARION_INQ_MODEL, strlen(ARION_INQ_MODEL)))
-> +		return SCSI_DH_DEV_UNSUPP;
-> +
-> +	zone = kzalloc_obj(*zone, GFP_KERNEL);
-> +	if (!zone)
-> +		return SCSI_DH_NOMEM;
-> +	zone->sdev = sdev;
-> +	spin_lock_init(&zone->lock);
-> +	INIT_WORK(&zone->work, asus_aura_zone_work);
-> +
-> +	for (i = 0; i < ARION_NUM_LEDS; i++) {
-> +		ret = asus_aura_register_led(zone, i);
-> +		if (ret) {
-> +			asus_aura_release(zone, i);
-
-Shouldn't asus_aura_register_led unwind itself on failure?
-
-> +			return SCSI_DH_NOMEM;
-> +		}
-> +	}
-> +
-> +	sdev->handler_data = zone;
-> +	return SCSI_DH_OK;
-> +}
-> +
-> +static void asus_aura_detach(struct scsi_device *sdev)
-> +{
-> +	struct asus_aura_zone *zone = sdev->handler_data;
-> +
-> +	if (!zone)
-> +		return;
-> +	asus_aura_release(zone, ARION_NUM_LEDS);
-> +	sdev->handler_data = NULL;
-> +}
-> +
-> +static struct scsi_device_handler asus_aura_dh = {
-> +	.name	= "asus_aura",
-> +	.module	= THIS_MODULE,
-
-Are you sure this isn't handled for you by the subsystem?
-
-> +	.attach	= asus_aura_attach,
-> +	.detach	= asus_aura_detach,
-> +};
-> +
-> +static int __init asus_aura_init(void)
-> +{
-> +	return scsi_register_device_handler(&asus_aura_dh);
-> +}
-> +
-> +static void __exit asus_aura_exit(void)
-> +{
-> +	scsi_unregister_device_handler(&asus_aura_dh);
-> +}
-> +
-> +module_init(asus_aura_init);
-> +module_exit(asus_aura_exit);
-> +
-> +MODULE_DESCRIPTION("ASUS Aura RGB over SCSI for ROG NVMe enclosures (per-LED)");
-> +MODULE_AUTHOR("Liang Haowen");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.55.0
-> 
-> 
+>  	for (i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
+> -		if (!armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
+> -			continue;
+> -
+> -		/* Always create by default, unless PPT is not present */
+> -		should_create = true;
+> -		name = armoury_attr_groups[i].attr_group->name;
+> -
+> -		/* Check if this is a power-related tunable requiring limits */
+> -		if (ac_rog_tunables && ac_rog_tunables->power_limits &&
+> -		    is_power_tunable_attr(name)) {
+> -			limits = ac_rog_tunables->power_limits;
+> -			/* Check only AC: if not present then DC won't be either */
+> -			should_create = has_valid_limit(name, limits);
+> -			if (!should_create)
+> -				pr_debug("Missing max value for tunable %s\n", name);
+> -		}
+> -
+> -		if (should_create) {
+> -			err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
+> -						 armoury_attr_groups[i].attr_group);
+> -			if (err) {
+> -				pr_err("Failed to create sysfs-group for %s\n",
+> -				       armoury_attr_groups[i].attr_group->name);
+> -				goto err_remove_groups;
+> -			}
+> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
+> +					 armoury_attr_groups[i]);
+> +		if (err) {
+> +			pr_err("Failed to create sysfs-group for %s\n",
+> +			       armoury_attr_groups[i]->name);
+> +			goto err_remove_groups;
+>  		}
+>  	}
+>  
+>  	return 0;
+>  
+>  err_remove_groups:
+> -	while (i--) {
+> -		if (armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
+> -			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
+> -					   armoury_attr_groups[i].attr_group);
+> -	}
+> -	if (asus_armoury.gpu_mux_dev_id)
+> -		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
+> -err_remove_mini_led_group:
+> -	if (asus_armoury.mini_led_dev_id)
+> -		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
+> -err_remove_file:
+> +	while (i--)
+> +		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
+> +				   armoury_attr_groups[i]);
+>  	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
+>  err_destroy_kset:
+>  	kset_unregister(asus_armoury.fw_attr_kset);
+> @@ -1182,17 +1138,9 @@ static void __exit asus_fw_exit(void)
+>  {
+>  	int i;
+>  
+> -	for (i = ARRAY_SIZE(armoury_attr_groups) - 1; i >= 0; i--) {
+> -		if (armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
+> -			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
+> -					   armoury_attr_groups[i].attr_group);
+> -	}
+> -
+> -	if (asus_armoury.gpu_mux_dev_id)
+> -		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
+> -
+> -	if (asus_armoury.mini_led_dev_id)
+> -		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
+> +	for (i = ARRAY_SIZE(armoury_attr_groups) - 1; i >= 0; i--)
+> +		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
+> +				   armoury_attr_groups[i]);
 
 -- 
-Lee Jones
+ i.
+
