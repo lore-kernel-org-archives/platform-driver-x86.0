@@ -1,547 +1,91 @@
-Received: from mail-pj2-f16.google.com (mail-pj2-f16.google.com [74.125.227.144])
+Received: from mta0.migadu.com (out-35.mta0.migadu.com [91.218.175.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EE251AED0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 12:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F66281724
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 12:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790165931; cv=none; b=tIlvzqNuN6NyVAf8C+hfBm/mr9R6lKv19Di4NnYI5LrOzq+hz56wNXDS9xaY0MoMRHuCFTyb+rM0onG7jk16lU14LQFrQZN1kk7Pyr9f+S9FjOYSB7nwZboQUEUzrK93jY0xPwklCCE53rrjEHO6H0sofpV8NqSnMXZ1fY+/oko=
+	t=1790166174; cv=none; b=dRFxg2hwQNWP7BJgZYOI3LBqRY0nr+w5voym0s9f7YCPPwjKb7G4Esl7NMxz7Q+WgP6K5AuJPe07KhzumM55bdXS44Br4X9llBm9rUiUCwJOKxxs+0oPiZMPPDgpPVMRJCbZzj78wUkYguVDJFQoIszq62UjORI/TsQTAFNvG9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790165931; c=relaxed/simple;
-	bh=3XGjLvCXI58pE2GkmSSj/qJFPrLP4o/RZ3ZKkKZ7d5k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a6O2/VZK4+bSTeNboNhAbUuFZQXeORPRPLFrYON8TWmPnYhV2MhKUQjz9e546Mv4R4yOyMCI6WKv+UbfhmVRkj7mSltLoqGxDrBo7wc4rXx3DuRtobBw5YxMKfOZLoS+uPwcWux4gy4FXICyPcfdobvP+Ip46UitFDNJ1tUsjvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hYZkU2EM; arc=none smtp.client-ip=74.125.227.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790166174; c=relaxed/simple;
+	bh=Ti41zF+THtwv0JgUjuQNie+gLsggjY+88BQZXaD0uww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FSZf4ogzP9psYJY/4scoJE2WuzU1u2vwK+z3nhDBzE21z6WkGc6GvJWwhDzlY/Iudjde9SNSSN2Q4Mh8HuCJeFIBlmR3cFF82eIfDgMohyD5IuMqmuwW9kjpmEwYX12UfeIhZDoJdwahaocAtGXmBCqUsJYt0cpRp0uyOpUgg2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H90HUVDn; arc=none smtp.client-ip=91.218.175.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYZkU2EM"
-Received: by mail-pj2-f16.google.com with SMTP id 98e67ed59e1d1-396ccd78e6eso319040a91.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 05:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790165929; x=1790770729; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=9cuWBhRzzxTiwhwxFxvBviW289+8Lt8E5TxpE0opblY=;
-        b=hYZkU2EMxAISWznhRDjrKrxzs9H+JdwJMiW7NZm1UabJvZSwYf6F6Ho35GoYTUXWOP
-         uaODP7vPBuPK83WzT9dpOwQNbHYXo4SHBDkq3f2QJtKLVcXGj4/r3vIuG306ypt3O8Tu
-         6nUu81vHzqvV5zGXtG3u8EF6LoBOW8hwvtivUix1ylGjPmz4iYFd6kpIzbL1eEgx4EzR
-         VE4LU7r6D7HBBNSz09KJM2vIDerOQB3Cpap+spWR4wpfCx7KBllL0jFLd8PYxofModmo
-         VcVvOUrM8TW8wLcCrOsnkRsYeE7Bo10cS8i9u/6qwuRFZj1ky23QlS/SznvctHQGGMuE
-         dueQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790165929; x=1790770729;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=9cuWBhRzzxTiwhwxFxvBviW289+8Lt8E5TxpE0opblY=;
-        b=zXTRnEHnwaQgn/zISYLJscQ1vtLz0/nimksdFlOmf6ty19KEtkOCt7+VD9M+1FIHFm
-         K9muZrHMEn4Fk6OgZ6J6xx1LYBG2UFN9gpNxFo0t2g6jAxF0jume86/KZPOsEWfZLpN7
-         EipHdf+QCRcY+WqHaREyxsKvd2ZRLtvB2db4w74VT4R9tldUnLsDjGf2Ly9c6QH3djTU
-         nNTWAOTMkHff1wWsgpVS+gRW3t5fTJfPXgB927hrcchD+PfJLxIusftGtCofZWDAxtcM
-         xGEBUOCR2NnNG1zYQXtKDMzMuzQg+4wONatBAmeXqPttsrmxEMvPoncsJUh3dFNZIHNn
-         vzUg==
-X-Forwarded-Encrypted: i=1; AKwUvBynX0w0ziLiotUA+IBzlSewQky1m6dGt3AC4s+qpiEo0YuYLk8kGtJgKleEVq34qIBj+TF0u5AUYKBYtHFvdjvA76UG@vger.kernel.org
-X-Gm-Message-State: AFuF++n9GL9wLQNF3CjRVrjgRwemtUUFzbqeGrNHL923hTAvdeG8yCl6
-	OXbC/VVZtjU4vODBnc9v+MN30cZz58SS4zNz9mpkdt+pjhtmM/4OLULZ
-X-Gm-Gg: AYBFou0cy/S5M7lKneTSBLNo96T2ZPkWhcXm3FvHgZOXbjP+XQ9N1/N2ePbn4AppI/g
-	9uh1vUNn4IRJ7UrDhcc2nx1Lt3YsFMZgT6RelWMxBWAdB7e5MSNKJgYL/OOe0Do6iyFXcIY1KKj
-	4sPbRBcHAUVVwoN1uRPml8WPCdit+bpycJPre5g9zsyRPfvpeAzA+MukF7sjv/vn7kMCJFPKwQ6
-	MAnG1lCiovffI+O/YLT+7eTHuPVOyV39W35Mvw0/sZuwZQan2fpE9zsuuwBFThqKm+9+TVwrhtd
-	sxmaL1RZobmXK9qTvlA3lynrWKeI5mu5zB++uHBdwvIqieVyyIsXk/DnpzIRJEb9HOOOztvs43N
-	vc0YTFI1UPeusyvcxwW+OYSf1M+h7p3IYU58Zi0ux3M3Zzlzt2iJvtwHtwOKwiNV0Fnk3V5KF5r
-	m2V98TwHvxflkQIT0bO+naGvKm7ypgCclqC41AYaxyT/UpHsL1f4KXQbzEMNCkxKFriKItljT42
-	OZ3tg==
-X-Received: by 2002:a17:90b:4408:b0:39e:3d38:7ef1 with SMTP id 98e67ed59e1d1-3a07e48cbbcmr1523302a91.10.1790165928221;
-        Wed, 23 Sep 2026 05:18:48 -0700 (PDT)
-Received: from ROGZephyrusG16Air ([240e:b8f:977f:f400:ec2a:b15e:fef8:70a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a07dbc013fsm5867255a91.5.2026.09.23.05.18.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2026 05:18:47 -0700 (PDT)
-From: Liang Haowen <nbg2974@gmail.com>
-To: linux-leds@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	"Martin K . Petersen" <mkp@kernel.org>,
-	linux-scsi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Denis Benato <denis.benato@linux.dev>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Subject: [RFC v8 1/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver for ROG NVMe enclosures
-Date: Wed, 23 Sep 2026 20:18:32 +0800
-Message-ID: <20260923121832.2613187-2-nbg2974@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260923121832.2613187-1-nbg2974@gmail.com>
-References: <20260923121832.2613187-1-nbg2974@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H90HUVDn"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=Ti41zF+THtwv0JgUjuQNie+gLsggjY+88BQZXaD0uww=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790166170; v=1; x=1790770970;
+ b=H90HUVDn/dGEscIWdxdtaPdTO3CMeI48oKVVPxNyH1Gn4vD4QlKBqfrfsb+eTfR+36i4G887
+ Ka2wuMC2OAOwZAMn8ybR+2/zwkbvY9BMX0rkK/QeQZKmOnNBa26C45dImaJLNHhisykXytlYkOx
+ jGgciibdDUgvAN3kpnLlsZYY=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 4504f534dee3e307;
+	Wed, 23 Sep 2026 12:22:49 +0000
+X-Mizu-Trace-ID: 4504f534dee3e307
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <da2c36f3-cc44-445f-a2ed-b2019ccdeb36@linux.dev>
+Date: Wed, 23 Sep 2026 14:22:49 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] platform/wmi: Move ASUS platform drivers from x86 to
+ wmi/asus
+To: chipang_kao <prozac2734@gmail.com>, W_Armin@gmx.de, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: corentin.chary@gmail.com, luke@ljones.dev, scardracs@disroot.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <202609221954.123456@gmx.de>
+ <20260923082923.154732-1-chipang_kao@asus.com>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260923082923.154732-1-chipang_kao@asus.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-ASUS ROG external NVMe enclosures (ROG STRIX Arion, USB 0b05:1932) are
-plain USB mass-storage devices with no HID interface: the Aura LEDs
-hang off an ENE controller driven by vendor SCSI commands on the same
-LUN as the disk. The enclosure has 4 independently addressable LEDs,
-verified on hardware.
 
-Register a scsi_device_handler matched by INQUIRY (vendor "ROG",
-model "ESD-S1C"); it does not claim the sdev (sd keeps owning the
-disk) and exposes each LED as a multicolor LED class device,
-/sys/class/leds/asus-arion-0-0-0-0::led-0 through led-3. The
-H:C:T:L part of the sdev name keeps the names unique when more than
-one enclosure is connected, with its colons flattened to dashes. The
-color section stays empty, since multicolor LEDs enumerate their
-palette via multi_intensity, and the four identical zones use the
-function name with a "-N" ordinal, as the naming section in
-Documentation/leds/leds-class.rst asks for.
+On 9/23/26 10:29, chipang_kao wrote:
+> Hi Armin, Hans, and all,
+>
+> Thank you for the feedback, Armin!
+>
+> I completely agree that separating WMI core infrastructure from WMI client
+> drivers makes logical sense. The reason v3 relocated the drivers to
+> drivers/platform/wmi/asus/ was based on Hans's earlier suggestion to use the
+> WMI subsystem hierarchy. However, Armin's point about keeping client drivers in
+> a brand-specific directory like drivers/platform/asus/ also provides a very
+> clean, cross-architecture solution for all ASUS platform drivers.
+>
+> Regarding the background: yes, the RTX Spark is indeed our target platform.
+> ASUS plans to provide user-space applications on Ubuntu to control platform
+> features via the WMI interface. During our bring-up on ARM64, we found that no
+> ASUS WMI modules were currently available for this architecture due to the
+> existing x86 Kconfig restriction. This patch series aims to enable
+> cross-architecture WMI support to address this gap.
 
-Protocol: a 16-byte vendor CDB (opcode 0xec, 'A' 'S' signature,
-BE16 register index, argument count in byte 13), modelled by
-struct ene_cdb. MODE 0x8021 (Static) must be written first in every
-sequence or the device ignores it; colours go to 0x8160 + 3 * led
-and 0x8100 + 3 * led (3 bytes, wire order R, B, G; both tables are
-written because firmware revisions pull from one or the other);
-APPLY 0x80a0 takes 0x01 to apply and 0xaa to save.
+So my intuition about RTX Spark having those was spot on...
 
-The CDB cannot go through scsi_execute_cmd(): it sizes the command
-via scsi_command_size(opcode), which maps vendor opcode 0xec to
-10 bytes, so byte 13 is dropped and the device silently ignores the
-write (GOOD status, no error). scsi_execute_cmd() also offers no way
-to override the derived length. The request is therefore built with
-scsi_alloc_request(), which initializes the scsi_cmnd parts a
-passthrough needs, with cmd_len set to the CDB size, mirroring what
-SG_IO does from userspace. A 5 s timeout and a single retry-less
-quiet submission cover the register writes.
+Very good to know. Once those drivers are compiled for arm64
+we should be able to reuse the whole asusctl software to get
+the driver control every hardware that is there.
 
-The write payload is copied into a per-device buffer before it is
-mapped with blk_rq_map_kern(), so no stack memory is ever mapped for
-DMA (VMAP_STACK).
+> I am happy to go with either path (wmi/asus/ vs. platform/asus/). Hans, Armin,
+> what would be the preferred target directory before I prepare [PATCH v4]?
+>
+> Best regards,
+> Chipang Kao
 
-brightness_set only caches the colour and marks the LED pending
-under a spinlock; led_mc_calc_color_components() runs under that
-lock too, because it writes the shared subled_info array and
-trigger events call led_set_brightness() without the led_access lock
-that serializes sysfs stores. A single work item per enclosure then
-snapshots the pending LEDs and runs one ENE sequence for all of
-them. Funneling every update through one work item keeps the
-sequences from interleaving between concurrent LED updates and
-batches multi-LED updates into a single APPLY/SAVE. A re-queued run
-with nothing pending returns before touching the device, so it
-cannot wear the flash with a pointless SAVE, and the lock keeps a
-colour write from being reordered after its pending flag on weakly
-ordered architectures.
+Thanks for taking care of this move: it was planned but with no
+product in my hands I decided to postpone this.
 
-This is the monolithic out-of-tree version as verified on hardware;
-the Kconfig/Makefile/MAINTAINERS wiring lands with the agreed split
-into a SCSI transport helper and a shared ASUS Aura LED interface.
-
-Signed-off-by: Liang Haowen <nbg2974@gmail.com>
----
- drivers/leds/rgb/leds-asus-aura-scsi.c | 388 +++++++++++++++++++++++++
- 1 file changed, 388 insertions(+)
- create mode 100644 drivers/leds/rgb/leds-asus-aura-scsi.c
-
-diff --git a/drivers/leds/rgb/leds-asus-aura-scsi.c b/drivers/leds/rgb/leds-asus-aura-scsi.c
-new file mode 100644
-index 0000000..eaba968
---- /dev/null
-+++ b/drivers/leds/rgb/leds-asus-aura-scsi.c
-@@ -0,0 +1,388 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * ASUS Aura RGB over SCSI for ROG external NVMe enclosures
-+ * (e.g. ROG STRIX Arion, USB 0b05:1932).
-+ *
-+ * USB mass-storage device, no HID; the ENE LED controller is driven via
-+ * vendor SCSI commands on the disk's LUN. Matched by INQUIRY (vendor
-+ * "ROG", model "ESD-S1C"); the sdev is not claimed, sd keeps owning the
-+ * disk. Attach manually until the SCSI side agrees on an in-tree hook:
-+ * echo asus_aura > /sys/block/sdX/device/dh_state
-+ *
-+ * Each of the 4 LEDs is a multicolor LED class device,
-+ * /sys/class/leds/asus-arion-<H-C-T-L>::led-0..led-3. A colour change
-+ * writes only that LED's slots in the ENE colour tables, then applies
-+ * and saves; MODE must precede every sequence or the device ignores
-+ * it. The register layout is described by struct ene_cdb.
-+ *
-+ * brightness_set (LED core fast path) only caches the colour and marks
-+ * the LED pending under a spinlock; a single work item per enclosure
-+ * snapshots all pending LEDs and runs one ENE sequence for them. One
-+ * work item also serializes the sequences against each other: the
-+ * MODE/colour/APPLY/SAVE chain must never interleave between
-+ * concurrent LED updates.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/blk-mq.h>
-+#include <linux/blk_types.h>
-+#include <linux/blkdev.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/string.h>
-+#include <linux/workqueue.h>
-+#include <scsi/scsi.h>
-+#include <scsi/scsi_cmnd.h>
-+#include <scsi/scsi_device.h>
-+#include <scsi/scsi_dh.h>
-+
-+#define ARION_INQ_VENDOR	"ROG"
-+#define ARION_INQ_MODEL		"ESD-S1C"
-+
-+/* The colour table has 16 slots; 4 of them drive LEDs. */
-+#define ARION_NUM_LEDS		4
-+
-+/* ENE register map (BE16 on the wire). */
-+#define ENE_REG_MODE		0x8021	/* 1 = Static selects the colour tables */
-+#define ENE_REG_APPLY		0x80a0	/* 0x01 = apply, 0xaa = apply and save */
-+#define ENE_REG_COLORS_EFFECT	0x8160	/* colour table, 3 bytes per LED */
-+#define ENE_REG_COLORS_DIRECT	0x8100	/* second table some firmware uses */
-+
-+#define ENE_MODE_STATIC		1
-+#define ENE_APPLY		0x01
-+#define ENE_SAVE		0xaa
-+
-+/* The colour tables are R, B, G on the wire; the subleds are R, G, B. */
-+#define ENE_WIRE_R		0
-+#define ENE_WIRE_B		1
-+#define ENE_WIRE_G		2
-+#define ENE_RGB_LEN		3
-+
-+/*
-+ * Vendor CDB: opcode, 'A''S' signature, register, argument count in
-+ * byte 13. scsi_execute_cmd() cannot be used for it, see the commit
-+ * message.
-+ */
-+struct ene_cdb {
-+	u8		opcode;
-+	u8		sig[2];
-+	__be16		reg;
-+	u8		reserved[8];
-+	u8		arg_count;
-+	u8		pad[2];
-+} __packed;
-+
-+static_assert(sizeof(struct ene_cdb) == 16);
-+
-+struct asus_aura_led {
-+	struct led_classdev_mc	mc_cdev;
-+	struct mc_subled	subled[ENE_RGB_LEN];
-+
-+	/* Cached colour, consumed by the work item. */
-+	u8			rgb[ENE_RGB_LEN];
-+	bool			pending;
-+
-+	struct asus_aura	*aura;
-+};
-+
-+struct asus_aura {
-+	struct scsi_device	*sdev;
-+	struct asus_aura_led	leds[ARION_NUM_LEDS];
-+
-+	/* Serializes the cached colours and pending flags. */
-+	spinlock_t		lock;
-+	struct work_struct	work;
-+
-+	/* DMA-safe staging buffer, the only memory ever mapped for DMA. */
-+	u8			tx[ENE_RGB_LEN];
-+};
-+
-+static int ene_write_reg(struct asus_aura *aura, u16 reg,
-+			 const u8 *tx, u8 len)
-+{
-+	struct scsi_device *sdev = aura->sdev;
-+	struct request *rq;
-+	struct scsi_cmnd *scmd;
-+	struct ene_cdb cdb = {
-+		.opcode		= 0xec,
-+		.sig		= { 'A', 'S' },
-+		.reg		= cpu_to_be16(reg),
-+		.arg_count	= len,
-+	};
-+	int ret;
-+
-+	rq = scsi_alloc_request(sdev->request_queue, REQ_OP_DRV_OUT, 0);
-+	if (IS_ERR(rq))
-+		return PTR_ERR(rq);
-+
-+	/*
-+	 * Stack memory is not DMA-safe (VMAP_STACK), so the payload is
-+	 * copied into the per-device buffer first.
-+	 */
-+	memcpy(aura->tx, tx, len);
-+	ret = blk_rq_map_kern(rq, aura->tx, len, GFP_NOIO);
-+	if (ret)
-+		goto out;
-+
-+	scmd = blk_mq_rq_to_pdu(rq);
-+	scmd->cmd_len = sizeof(cdb);
-+	memcpy(scmd->cmnd, &cdb, sizeof(cdb));
-+	scmd->allowed = 1;
-+	rq->timeout = 5 * HZ;
-+	rq->rq_flags |= RQF_QUIET;
-+
-+	blk_execute_rq(rq, true);
-+
-+	/* GOOD status is zero in the fields we care about. */
-+	ret = scmd->result ? -EIO : 0;
-+out:
-+	blk_mq_free_request(rq);
-+	return ret;
-+}
-+
-+static void asus_aura_work(struct work_struct *work)
-+{
-+	struct asus_aura *aura =
-+		container_of(work, struct asus_aura, work);
-+	u8 rgb[ARION_NUM_LEDS][ENE_RGB_LEN];
-+	bool pending[ARION_NUM_LEDS];
-+	bool any = false;
-+	unsigned long flags;
-+	int ret;
-+
-+	/*
-+	 * Fast path without the lock: if nothing is pending, return
-+	 * before touching the device. A colour arriving right after
-+	 * the check re-queues this work, so nothing is lost.
-+	 */
-+	for (int i = 0; i < ARION_NUM_LEDS; i++) {
-+		if (READ_ONCE(aura->leds[i].pending)) {
-+			any = true;
-+			break;
-+		}
-+	}
-+	if (!any)
-+		return;
-+
-+	/* Snapshot the cached colours and clear the pending flags. */
-+	spin_lock_irqsave(&aura->lock, flags);
-+	for (int i = 0; i < ARION_NUM_LEDS; i++) {
-+		pending[i] = aura->leds[i].pending;
-+		aura->leds[i].pending = false;
-+		memcpy(rgb[i], aura->leds[i].rgb, ENE_RGB_LEN);
-+	}
-+	spin_unlock_irqrestore(&aura->lock, flags);
-+
-+	if (!scsi_device_online(aura->sdev))
-+		return;
-+
-+	/* Mode first: without it the device ignores the sequence. */
-+	ret = ene_write_reg(aura, ENE_REG_MODE,
-+			   &(u8){ ENE_MODE_STATIC }, 1);
-+	if (ret)
-+		goto err;
-+
-+	for (int i = 0; i < ARION_NUM_LEDS; i++) {
-+		if (!pending[i])
-+			continue;
-+
-+		/*
-+		 * Both colour tables are written: firmware revisions
-+		 * pull from either of them.
-+		 */
-+		ret = ene_write_reg(aura, ENE_REG_COLORS_EFFECT + i * ENE_RGB_LEN,
-+				    rgb[i], ENE_RGB_LEN);
-+		if (ret)
-+			goto err;
-+
-+		ret = ene_write_reg(aura, ENE_REG_COLORS_DIRECT + i * ENE_RGB_LEN,
-+				    rgb[i], ENE_RGB_LEN);
-+		if (ret)
-+			goto err;
-+	}
-+
-+	ret = ene_write_reg(aura, ENE_REG_APPLY, &(u8){ ENE_APPLY }, 1);
-+	if (ret)
-+		goto err;
-+
-+	/* The change only takes effect after a save. */
-+	ret = ene_write_reg(aura, ENE_REG_APPLY, &(u8){ ENE_SAVE }, 1);
-+	if (ret)
-+		goto err;
-+
-+	return;
-+
-+err:
-+	/*
-+	 * This runs detached from the LED core, which has no error
-+	 * channel for brightness_set. The write is dropped and logged
-+	 * ratelimited; the LED keeps the last successfully applied
-+	 * colour until the next user update.
-+	 */
-+	dev_err_ratelimited(&aura->sdev->sdev_gendev,
-+			    "asus_aura: colour update failed: %d\n", ret);
-+}
-+
-+/* Non-blocking LED callback (LED core fast path). Cache colour, defer SCSI. */
-+static void asus_aura_set(struct led_classdev *cdev,
-+			  enum led_brightness brightness)
-+{
-+	struct led_classdev_mc *mc = lcdev_to_mccdev(cdev);
-+	struct asus_aura_led *led =
-+		container_of(mc, struct asus_aura_led, mc_cdev);
-+	struct asus_aura *aura = led->aura;
-+	unsigned long flags;
-+
-+	/*
-+	 * led_mc_calc_color_components() writes the shared subled_info
-+	 * array. Sysfs stores are serialized by the LED core, but
-+	 * trigger events call led_set_brightness() without that lock,
-+	 * so compute and cache under the aura lock.
-+	 */
-+	spin_lock_irqsave(&aura->lock, flags);
-+
-+	led_mc_calc_color_components(mc, brightness);
-+
-+	led->rgb[ENE_WIRE_R] = led->subled[0].brightness;
-+	led->rgb[ENE_WIRE_B] = led->subled[2].brightness;
-+	led->rgb[ENE_WIRE_G] = led->subled[1].brightness;
-+	led->pending = true;
-+
-+	spin_unlock_irqrestore(&aura->lock, flags);
-+
-+	schedule_work(&aura->work);
-+}
-+
-+static int asus_aura_register_led(struct asus_aura *aura, int index)
-+{
-+	struct asus_aura_led *led = &aura->leds[index];
-+	struct led_classdev *cdev = &led->mc_cdev.led_cdev;
-+	char hctl[32];
-+	int ret;
-+
-+	led->aura = aura;
-+
-+	led->subled[0].color_index = LED_COLOR_ID_RED;
-+	led->subled[1].color_index = LED_COLOR_ID_GREEN;
-+	led->subled[2].color_index = LED_COLOR_ID_BLUE;
-+	led->mc_cdev.num_colors = ENE_RGB_LEN;
-+	led->mc_cdev.subled_info = led->subled;
-+
-+	/*
-+	 * The sdev's H:C:T:L keeps the names unique when more than one
-+	 * enclosure is connected; with a static name the LED core would
-+	 * register a second enclosure's LEDs under renamed nodes
-+	 * (asus-arion::led-0_1), the wrong device identity. The colons
-+	 * are flattened to dashes, the color section stays empty
-+	 * (multicolor, palette via multi_intensity) and the four
-+	 * identical zones take a "-N" ordinal, as
-+	 * Documentation/leds/leds-class.rst asks for.
-+	 */
-+	strscpy(hctl, dev_name(&aura->sdev->sdev_gendev));
-+	strreplace(hctl, ':', '-');
-+	cdev->name = kasprintf(GFP_KERNEL, "asus-arion-%s::led-%d", hctl, index);
-+	if (!cdev->name)
-+		return -ENOMEM;
-+
-+	cdev->max_brightness = 255;
-+	cdev->brightness_set = asus_aura_set;
-+
-+	led_mc_calc_color_components(&led->mc_cdev, cdev->brightness);
-+
-+	/*
-+	 * NULL parent: a device reference on the sdev would block its
-+	 * final release on unplug, which is what calls detach() to
-+	 * unregister the LEDs. The cycle leaked nodes and the module
-+	 * refcount on every hot-unplug.
-+	 */
-+	ret = led_classdev_multicolor_register(NULL, &led->mc_cdev);
-+	if (ret)
-+		kfree(cdev->name);
-+	return ret;
-+}
-+
-+/*
-+ * Unregister the LEDs before cancelling the work: unregistering removes
-+ * the sysfs attributes, so no new brightness_set can schedule the work
-+ * afterwards. Cancelling first would leave a window where a brightness
-+ * write requeues the work after cancel_work_sync() returned.
-+ */
-+static void asus_aura_release(struct asus_aura *aura, int num_leds)
-+{
-+	for (int i = 0; i < num_leds; i++) {
-+		led_classdev_multicolor_unregister(&aura->leds[i].mc_cdev);
-+		kfree(aura->leds[i].mc_cdev.led_cdev.name);
-+	}
-+
-+	cancel_work_sync(&aura->work);
-+	kfree(aura);
-+}
-+
-+static int asus_aura_attach(struct scsi_device *sdev)
-+{
-+	struct asus_aura *aura;
-+	int ret;
-+
-+	if (strncmp(sdev->vendor, ARION_INQ_VENDOR, strlen(ARION_INQ_VENDOR)) ||
-+	    strncmp(sdev->model, ARION_INQ_MODEL, strlen(ARION_INQ_MODEL)))
-+		return SCSI_DH_DEV_UNSUPP;
-+
-+	aura = kzalloc_obj(*aura, GFP_KERNEL);
-+	if (!aura)
-+		return SCSI_DH_NOMEM;
-+
-+	aura->sdev = sdev;
-+	spin_lock_init(&aura->lock);
-+	INIT_WORK(&aura->work, asus_aura_work);
-+
-+	for (int i = 0; i < ARION_NUM_LEDS; i++) {
-+		ret = asus_aura_register_led(aura, i);
-+		if (ret) {
-+			asus_aura_release(aura, i);
-+			return SCSI_DH_NOMEM;
-+		}
-+	}
-+
-+	sdev->handler_data = aura;
-+	return SCSI_DH_OK;
-+}
-+
-+static void asus_aura_detach(struct scsi_device *sdev)
-+{
-+	struct asus_aura *aura = sdev->handler_data;
-+
-+	if (!aura)
-+		return;
-+
-+	asus_aura_release(aura, ARION_NUM_LEDS);
-+	sdev->handler_data = NULL;
-+}
-+
-+static struct scsi_device_handler asus_aura_dh = {
-+	.name	= "asus_aura",
-+	.module	= THIS_MODULE,
-+	.attach	= asus_aura_attach,
-+	.detach	= asus_aura_detach,
-+};
-+
-+static int __init asus_aura_init(void)
-+{
-+	return scsi_register_device_handler(&asus_aura_dh);
-+}
-+
-+static void __exit asus_aura_exit(void)
-+{
-+	scsi_unregister_device_handler(&asus_aura_dh);
-+}
-+
-+module_init(asus_aura_init);
-+module_exit(asus_aura_exit);
-+
-+MODULE_DESCRIPTION("ASUS Aura RGB over SCSI for ROG NVMe enclosures");
-+MODULE_AUTHOR("Liang Haowen");
-+MODULE_LICENSE("GPL");
--- 
-2.55.0
-
+Best regards,
+Denis
