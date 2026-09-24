@@ -1,181 +1,171 @@
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazolkn19011035.outbound.protection.outlook.com [52.103.39.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B5535B65D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 05:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790228181; cv=none; b=CsWx+MzCfBlZH2G9tTFNtzkZmLvRrOwnhuS393udjV8VCzYJ66pzkeQ42FddNuoQZwXAWPKodp06TyuV6F5UYePD8jqE1BcbhWdVV0QUDfTBFNMKaITaJnp3iWhJdvv9D9Hh4e8VuW1AAQ+Oo5v0Dblfr0DQEV93E1Db6j9L4gU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790228181; c=relaxed/simple;
-	bh=LNQ6/cxi1/RiLFN1o9CBtzzPi9Abau/Eed0WKkToToM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fi69CHF4KNuRnA4Sk/VaZwmlj6c/WL4B384oczVjgVxLMrQygIkRUoCEb+4wfZleADWvurQ+VSa9SecX+SrFT64Mj/LvlnBUkJYyKg3LhVAK2maGvB9TeeyClC0AfNP2N+zX6kdNe58BLEU7u8TYnO9yQYLUtWBcehhN25qTwl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=2E+gFHzX; arc=none smtp.client-ip=45.157.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC73330B07;
+	Thu, 24 Sep 2026 07:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.39.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790233592; cv=fail; b=SMShT6GefF1MTHiwwMwAZwm62vZjkBLDgJdpZb/ykFgyzl8Fm9QqRTPgaE3JWnQ5F7PTQ3rwljlWiFJp/X9biDnqxR5O4YL7P3l+D6spJGFXx0eV9iDAwu/lIXlm+DbVnC1cHzbY4A3a1uS/+/P4KIoRcTJDIvvAnrEOuJ0FV7I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790233592; c=relaxed/simple;
+	bh=Rc0hywfZccWaiBoqwXexYml0oiRi+7A+uq6sibzNJOs=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=r9EZAefZEG0KYTl5+zo8orv+xcCm5TocLxIx0IujnKssyEPuRMBjbop1JPjq/y8KqytPeX3tclIm0gfH+HFl/islS4tazKQ30MCB4t37r8f8E0GowK6Xp5BmfPClfvK6Qq3cUlLjoWh9n+pS7afhKw9HLeNoVDdc5HDAm+kkdnQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=u31j+B+i; arc=fail smtp.client-ip=52.103.39.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="2E+gFHzX"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hr2ct2YldzH6H;
-	Thu, 24 Sep 2026 07:36:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
-	t=1790228174; bh=9Kyz/rTPJQ9RhsttYivOqfj/H4Czdnx83Wb1MtyABdA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=2E+gFHzX0/10BKmG5ZkjGMrtO9MbHodUxUvchSGUKWdNGj7EpxmWr7Utb6pbDjS0O
-	 +pNPehGh223Fr7g+O34tTY6oYUr0kq+e6Df/I3q/HD6HFgC/lGWl3L2lgz/ttxL9vX
-	 xIigYCQAPS5Ed+0G/pgQQD//oROE1Wp5n8BhXOGY=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hr2cs1rLfz4TS;
-	Thu, 24 Sep 2026 07:36:13 +0200 (CEST)
-Message-ID: <da547f98-8bb0-ae1d-ded1-28fde8a64b46@ik.me>
-Date: Thu, 24 Sep 2026 07:36:12 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="u31j+B+i"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SRpWREFL1c1oSakeyqnBU6+D8NeXr4ZHCCZstWakbdI2iAZj/03CMZU11fdtmlWLmTjzNWAUZSDkOFh+jMX6A0bMa3lx06yijPmn0cYfaUge164Tc3aqZW6k4c0QH43HUx/4mLUatMptu5LCryhbrlUHL83xJOU8dzKFU9LUbImh0rUW37Nv6Y3o9GQkwhvBxE6CvhvlIfSfK5Rno5wH9NiQRvJuidjybb5tPT+zQRG//3/AzNgO4Jw4u+9aQ5LTH4cwj0zFzT2fgGIufDbQ6YnD/Ys42a10j/3RVd8etgMn9nItnGH0f2AlADCJ3IrF2PdJH3YUQpe03JTaxX/RlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Rc0hywfZccWaiBoqwXexYml0oiRi+7A+uq6sibzNJOs=;
+ b=GBWsSdfzVOlMAN+78Nzn1fsxzpaNOkc7KXw6pjC6o1BjuKltoLxpDaI6ggjOGANe6wvG9mtiKqtuKOUubc2zasgTL6JxF6tcXzSIaQE0XT5c8zhOVNDnJ8R4Yuy5I+tad46IZna+9cpsDIgsumRcQTRZ+zTtRVRlLQgFirmrJPzju00EP9VY4xr4LPN1fp3c+hnyumWypccNOmewjggHoOpeFWI+ipCWNIjo/eRyvlAIXM5jjF1CNaVX2lV+TUU+1mnJQLUMHRUmuuYIdQiUrjQ9A5jyTkjmwgVc/ljdr8ZGTr+T5JVF+SytVubZS5yEEprak0DZSZgHR+fCfuY0FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rc0hywfZccWaiBoqwXexYml0oiRi+7A+uq6sibzNJOs=;
+ b=u31j+B+iS5Q2kQdqVLXXv1ncYImZazirOjgK3eaZf/Z7mCHe0QRcZKmflNYnh8vn1l7jtHLwJcu3a4QCYjGc0F73Cl+0hvYU9LrN3Nhqfvactb6grciP/Xfu9AR0ZEPYzz7jo32YhZzUKKl3TmDNOHCXSH1vqos5JbgmLyM1COsYh851cRwL+fsLpTiAK9umM9bKlggfU5v1RgFW7qdPNDZvXvypFUYjXedtDPv3B0v0OIQpt3GCXZAF4CYxH0ErVL4hX+Z4MvkZRGsVHG1N2jbmX+u8DFSlGiLjW8s0CUxzn73ewvSEgyD8jkoSIhV2d+NVCSSLutMqzDN3nmGw8g==
+Received: from DU0P192MB2938.EURP192.PROD.OUTLOOK.COM (2603:10a6:10:59a::18)
+ by GV2P192MB2016.EURP192.PROD.OUTLOOK.COM (2603:10a6:150:c0::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.15; Thu, 24 Sep
+ 2026 07:06:20 +0000
+Received: from DU0P192MB2938.EURP192.PROD.OUTLOOK.COM
+ ([fe80::e7fb:34b2:28d5:999c]) by DU0P192MB2938.EURP192.PROD.OUTLOOK.COM
+ ([fe80::e7fb:34b2:28d5:999c%6]) with mapi id 15.21.0451.014; Thu, 24 Sep 2026
+ 07:06:19 +0000
+From: Daniel Chadwick <d.chadwick2508@outlook.com>
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>, Bin Du <bin.du@amd.com>
+CC: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: ASUS ROG Flow Z13 GZ302EA OV13B10 support on AMD ISP4
+Thread-Topic: ASUS ROG Flow Z13 GZ302EA OV13B10 support on AMD ISP4
+Thread-Index: AQHdS/LRHozrWTalV0qBVFKOilWxzg==
+Date: Thu, 24 Sep 2026 07:06:19 +0000
+Message-ID:
+ <DU0P192MB2938FCCF40E122682A04305581812@DU0P192MB2938.EURP192.PROD.OUTLOOK.COM>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0P192MB2938:EE_|GV2P192MB2016:EE_
+x-ms-office365-filtering-correlation-id: e6ee7202-3571-478e-6dd2-08df1a0a55a4
+x-ms-exchange-slblob-mailprops:
+ znQPCv1HvwUXBahuwteIkQeW30lJPuxOlZvQwFS2QWxVtv6+VjOgxDJR874HS6XWZyvFO529pv2EOn5Oje+/tEq4I/J1e/2tp7U8x6CEJcD1IS/Yf/JLbJrBkf+2NEiciakW9n4ujDDvg3QoPpB6PswN5jOiY+7BjiHMBuMUKcLt9dR1oLHNjaPMmFlyOZFQtOKPSz3nv9TlAg+f/Obt8EvQgpJoOcCSjfV7d5BmakS82F3Guefa8zCcT8sKSmjzHraMf6DPVqm4E83CqQ0uL4tYdpHjhXmlB4BgDk9NksKsdpBwOvSTeHYfKEyQFJwFzAcmrKhtuqqXuhjjMe1LW3zo7LyEhabGcLCFqnNt7Tuiyerpng8FVjgxeL1HRATjtNmf0T/eapUlIt4sqwxDHr8EURnuLfQq4L1Beo5ogjbjw1t8nHiaXiMPSP8e8UYCScK1ijvGrN7WBhkQ3OpJTLYwAZDZrpdwUEVqO2rHZ7TMRNGgvf1xbxovr8ptqDXuI14znGwTXTPIFOazKfp/eRVZ9iWJMZEVCpHgcLbM2A55EudHhWskkxoaH2xVjU7VEGnQNC80Z3V4Xe6xmsDGgLaWZldCIkd8v8aLrK3L+X4UkmJGoBcUPrqC+OKdtliFn8zVTWtIQENhO8MqzYaB1ZSL4XOeaugDBk83/3k7wu9bI//Ks6bdzZHTj7hY8uDBqv/KvnI9dOo3FfZ/31UeH2isMuZ/e5We4snPEVELtRiXd2kP2XCIlg/f9JguN3ZBkEVvRfSZk20=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799012|8060799015|39105399006|41001999006|31061999003|37011999003|8062599012|4140399003|15080799012|24071999003|25010399006|15030799006|25031999004|20031999006|24021099003|102099032|440099028|3412199025|2607281247196008|40105399003;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?O6m49vLJyqigYMqzKsFEaWMlsMopp98FU5+mgVPR2/cFTEo/KL4b36xAjg?=
+ =?iso-8859-1?Q?YRKIzc66Cy6bTI/tZgAfMSxFnkKhf5bYS9UkHLPKaNreod/elHue8oti/T?=
+ =?iso-8859-1?Q?eo1uwAdqfUrXiot7XzcZPtieEjgz0JU5msXH9rUgai27e/+DLA2QUOmivt?=
+ =?iso-8859-1?Q?lHpe4y0e29p4m/GXLnlkhCSvy581pFV53h+eCILkv9FyvEjTm63l81wlM/?=
+ =?iso-8859-1?Q?9AKptXNTLm6WM3QrkCdy2Ej6Br/sO3nLNH1EB+HjiYOq1ZbJ8dWwgD0NPY?=
+ =?iso-8859-1?Q?3a9kmBzun1mCwg29ms5dCXSyonM88YWRtb1eNPj5Og+fFeNZYMlflDTpM8?=
+ =?iso-8859-1?Q?1ZfNha1aXy57Yso7j91a3ydlvIHHFB8/H+rV3RF+C+sxWhZeaVu9FBmx65?=
+ =?iso-8859-1?Q?E2MVpHn3iTvn4lRFhTaRVoATFBIg54rQT/APR3YZ0MIl46OwvwE2jpIKdI?=
+ =?iso-8859-1?Q?GVUUuNiCgdW1iFpw+2SsINZ7bgepgiz++mkTqYnW/OGeh6oKd8eZC1JZ4p?=
+ =?iso-8859-1?Q?cOEFOvjl723mwhYVEGozp2XQ2C53SWEP2FupxGbhf1xIbmz3Iu2Cgyvv9k?=
+ =?iso-8859-1?Q?SYOIkSsJACBUnBX3PA5ZgnIdt2nhctoKam4XsnRh6Mz1TNtuonjR0sDxpQ?=
+ =?iso-8859-1?Q?EkpteXEAqcZzi+DAHgqFvebNuWbSyvQIgGIYls1gJwe6UI9cV8NOc0MI4M?=
+ =?iso-8859-1?Q?5bRtUWF+r1FSVgNAy+SdFT9jG8j7EbDPa0d7l8DvBY277n2dU2gf6Qki1n?=
+ =?iso-8859-1?Q?z3VFr6Qd9rTts9dMSRMhuy0+n7R5lDBYyBG2ser9hWD9qfexD60haZzHPC?=
+ =?iso-8859-1?Q?JSlzY+OG+2bdjYOYX+QCvUmlCwhpabee8wY6ek2c+drViBRT0SlJcZyHOo?=
+ =?iso-8859-1?Q?tSadAkWYw2lkFzTF20rdQNe26Awo82XhsVO58kdmjo3wc3Dx5zr+3dXLzj?=
+ =?iso-8859-1?Q?KXHUjCEZJ9uv9dqTLUHyckhZoPH2gTxSmeWCxmSjY1l3ID7Cwox7BwMy2A?=
+ =?iso-8859-1?Q?9VoydfZNAvKb15LgRxy4sMU8FOA58RKo+Yq3626Oi8zPh+Z8yhFMRjYfJc?=
+ =?iso-8859-1?Q?15SQmNkxSpvlbFhIMgHhO5JwS0KQsIGCYAyje1whJDb9MCMMSbZb7pFoxb?=
+ =?iso-8859-1?Q?3D4CLYYW4gwPS9Vv4rE6TZbyetZd1mU+WZgojwRdiuaxyAWSLx?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?l9WkDxyQ+FOkQHihKOkTq5oucXXgdnqagEbJB0+YI5fFTOrL8hD49mZO3e?=
+ =?iso-8859-1?Q?p2yPf9RpizrjFpsLygxtmneVJ19FdDEJVmycLFee4KmY8nxkSMi1BZait8?=
+ =?iso-8859-1?Q?jAzHr2Y/dZ/Iqe9jaXTN7UZy+K1hXOwZuZ8ut0UuJ5Ts5m9nV+NXx5co58?=
+ =?iso-8859-1?Q?Dex8uGTrU1Kl232CKUxz/WMACniotEjloq8OTJmO6TuEe6xIm9igmmHjFa?=
+ =?iso-8859-1?Q?NlcRIbnys0pJGh++SVkPv27LF8xgTt5lkTsH3i+C7y4RJ+8OLmAq5mgKlo?=
+ =?iso-8859-1?Q?0WM6MY6WpU4VylJD0X0pYk5L5c//F8M8wqbMT7bif0Jgv1gMJYJhuv0+QV?=
+ =?iso-8859-1?Q?+ADYytzfOGa7zRKHlIUn+En+EaSt7aNnBDHDs8QYoKMRDm7ygPbnia2eRf?=
+ =?iso-8859-1?Q?S5u2NQRPgaVUXeZCHHUTEWbPoFFuFwM92Fy7u5OxF4v6siFmjuIAFVSv78?=
+ =?iso-8859-1?Q?OO5B6PvaAIIzP7coENE6sJOFWTY2qAQjv4dEp4buT6z+t+DbRULWkqbiuK?=
+ =?iso-8859-1?Q?UaUD51Dy42OLRxtiQ/81PtX73VeB/I38uVdzcZ4axh2uO27gac+0b82bTh?=
+ =?iso-8859-1?Q?J+GLOWx3hDaDKSF/y1MWhGmoP122GmguQd31kW+m/OJlbMsltPBJmXAuam?=
+ =?iso-8859-1?Q?G5L5ESBDaNm+amihzBgpd8AFIxEZpejfHj+Ry6QUxviHJ/CAvk2Lt71opV?=
+ =?iso-8859-1?Q?aYQcLSfY9ZitUfQmunrlOPc2dE8Qpm1SocB7EJQGqoOzc9W75/oS6PVDDo?=
+ =?iso-8859-1?Q?gRd+S1HDSC4bx9GIDhflSWyS5KD+Q0jrjLPjv/9SPNHyH8IeoHYT6ir0Xo?=
+ =?iso-8859-1?Q?CARAhIkj13Zi7XhXTSq90X1uSLe5vUJk2GXsMhMujeEycf8OtXuNrdgySI?=
+ =?iso-8859-1?Q?iLzN2l3yvGE17u+2g9LHBGLDb82Z8bFoWWtdpj0zZH97ObpyTBn0zskvSv?=
+ =?iso-8859-1?Q?Rm84EYlSmCb9yKHv4DDBx8e+jk11K6ROfEUO0pDIWhRQ/SPPvRclQODfqL?=
+ =?iso-8859-1?Q?y8CgBqWu8e+5B4+9QrF8n6fJ9ZJ0DIJ3+iOzocUllMq4/t7OgzljTnQ0+F?=
+ =?iso-8859-1?Q?CLU4lEVX9ehGkZwvIriWkWX9MGvLsIIWELe4AAFfVEl8j1uaURUHs5/QzJ?=
+ =?iso-8859-1?Q?4+XDSUUqfADzuHAc1VTmCOetJUAD8lSGM5D8yhI90/rVD5h1u4sMpNUVBb?=
+ =?iso-8859-1?Q?OIdKrtfZIfqV56FdSYhFKpDO4BRhcKe3VGOX6BVBqwqSRDi1zgCtcRgQ3X?=
+ =?iso-8859-1?Q?ClQveskBnLpFq6gBuOyAiQej+cbVIAi4tBt4B+1tX48CRE7MaCHeXYVq31?=
+ =?iso-8859-1?Q?6OAudHyp8zDZIPcsStOfDLgszfPXpnXhCuR4NQGcZKJmE+fwNBV8qlaSdt?=
+ =?iso-8859-1?Q?Ek1FjL2eO3WyN5MMa+SRvoOrQa1H13xUUd3bNa1Y+aEn0AYTFsxSOGVFPE?=
+ =?iso-8859-1?Q?yDk48WbxhikdCRmB?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
- (Strix Point) when more than 16 logical CPUs are online
-To: Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com, rafael@kernel.org
-References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
- <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
- <55854916-292a-40ae-8421-1a784785d899@amd.com>
- <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
- <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
- <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
- <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
- <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
- <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
- <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
- <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
- <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
- <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
- <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
- <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
- <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
- <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
- <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
- <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
- <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
- <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
-Content-Language: en-US
-From: Fourhundred Thecat <400thecat@ik.me>
-In-Reply-To: <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
-X-Infomaniak-Routing: alpha
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0P192MB2938.EURP192.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6ee7202-3571-478e-6dd2-08df1a0a55a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2026 07:06:19.8668
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2P192MB2016
 
-On 2026-09-23 23:10, Mario Limonciello wrote:
-> On 9/23/26 15:48, Fourhundred Thecat wrote:
->> the bug reproduces on 7.3-rc4.
->>
->> Built 7.3-rc4 from the torvalds snapshot, migrated my 6.18.51 config 
->> with make olddefconfig, IOMMU enabled, all 24 CPUs online, no IOMMU 
->> boot parameters. Same result: the machine suspends and never wakes, 
->> forced power off required.
->>
->> Both attempts recorded by the same script, neither produced a resume 
->> block:
->>
->>    === 2026-09-23T22:15:02 BEFORE
->>    cmdline:     (6.18.51, no iommu parameters)
->>    cpus online: 0-23
->>    iommu:       ivhd0
->>    ff_rt_clk:   0
->>    S0ix Entry Time: 0 / Exit Time: 0 / Residency Time: 0
->>    suspending with +30s alarm
->>
->>    === 2026-09-23T22:39:06 BEFORE
->>    cmdline:     (7.3.0-rc4, no iommu parameters)
->>    cpus online: 0-23
->>    iommu:       ivhd0
->>    ff_rt_clk:   0
->>    S0ix Entry Time: 0 / Exit Time: 0 / Residency Time: 0
->>    suspending with +30s alarm
->>
->> Both used a programmed RTC wakealarm at +30s and were left untouched 
->> for several minutes.
->>
->> Relevant details of the 7.3-rc4 build, so this is not a configuration 
->> difference:
->>
->>    CONFIG_AMD_IOMMU=y, CONFIG_IOMMU_PT=y, CONFIG_IOMMU_PT_AMDV1=y
->>    CONFIG_NR_CPUS=24, CONFIG_MODULES not set
->>    CONFIG_DEBUG_FS=y, CONFIG_PM_DEBUG=y, CONFIG_DYNAMIC_DEBUG=y
->>    CONFIG_AMD_MP2_STB=y, CONFIG_X86_MSR=y, CONFIG_DMIID=y
->>    CONFIG_LOG_BUF_SHIFT=20, CONFIG_RANDSTRUCT_NONE=y
->>    kernel is not tainted, builds with zero warnings
->>
->> Only 243 config lines differ between my 6.18.51 and 7.3-rc4 configs. 
->> Both commits you pointed me at are present in 7.3-rc4: rtc-cmos uses 
->> platform_get_irq_optional(), and iommu/amd carries the "No ACPI device 
->> matched UID" check. As on 6.18, that FW_BUG message does not appear 
->> here either.
->>
->> Two things worth noting about the 7.3 build specifically. The new 
->> IOMMU page table layer is in use (CONFIG_IOMMU_PT / IOMMU_PT_AMDV1 
->> replacing CONFIG_IOMMU_IO_PGTABLE), so that rework does not change the 
->> outcome. And AMD_PMF and DRM_ACCEL_AMDXDNA are not compiled into 
->> either kernel - DRM_ACCEL and AMD_SFH_HID are both off in my config - 
->> so neither driver is involved in any of these results at all, which is 
->> a stronger statement than the initcall_blacklist tests I reported 
->> earlier.
->>
->> Where that leaves things. With the IOMMU enabled and all 24 CPUs, on 
->> both 6.18.51 and 7.3-rc4:
->>
->>    lid switch, internal keyboard, power button, USB mouse with wakeup
->>    armed, and a programmed ACPI RTC alarm        all fail to wake
->>
->>    intremap=off, iommu=pt, amd_iommu_intr=legacy  all still hang
->>    pm_test freezer / devices / platform           all pass
->>    PC6 and CC6 enabled per amd-s2idle             yes
->>
->>    amd_iommu=off                                  wakes normally,
->>                                                   Last S0i3 Status 
->> Success,
->>                                                   13.3s residency,
->>                                                   pm_wakeup_irq 9
->>
->> Since it fails identically on 6.18 and 7.3 there is no working kernel 
->> version to bisect against. The only variable that changes the outcome 
->> is whether the IOMMU is enabled, and secondarily whether more than 16 
->> CPUs are brought up at boot.
-> 
-> To me this still feels like a BIOS bug.  I wouldn't discount the 
-> possibility that think-lmi didn't apply a setting properly or something 
-> like that.
-> 
-> Can you please try to manually go into your BIOS and reset BIOS default 
-> settings?  Does it reproduce with IOMMU left on?
-
-I did another test:
-
-I bootet latest Debian live CD image before touching the BIOS, and it 
-reproduces.
-
-Debian live, kernel 7.1.12+deb14-amd64 #1 SMP PREEMPT_DYNAMIC Debian 
-7.1.12-1 (2026-08-28). Stock distro kernel with modules, systemd and 
-udev, every device driver bound, distro defaults throughout, nothing of 
-mine involved except the BIOS settings. echo mem > /sys/power/state 
-suspends and never wakes. Forced power off required, same as always.
-
-So my custom kernel configuration is not the cause.
-
-That now leaves three kernels reproducing it:
-
-   6.18.51    my build, minimal config
-   7.3-rc4    my build, migrated config
-   7.1.12     stock Debian live image, distro config
-
-I will do the BIOS defaults reset next, as you asked.
-
-
-
+Hi Pratap and Bin,=0A=
+=0A=
+I'm working on enabling the rear camera on an ASUS ROG Flow Z13 GZ302EA (Ry=
+zen AI Max+ 395 / Strix Halo) under Linux.=0A=
+=0A=
+The rear sensor is exposed by ACPI as OMNI13B1 (\_SB_.CAMB / OV13B family).=
+ Fedora's current ov13b10 driver already recognises the OMNI13B1 ID, but th=
+e sensor remains unbound and no rear ISP4 capture/media graph is created.=
+=0A=
+=0A=
+I've compared the current AMD ISP4 platform configuration with this machine=
+ and also analysed ASUS's official GZ302EA Windows camera packages (V11.04.=
+02.1159 and V11.04.02.950). Those packages confirm ACPI\OMNI13B1 -> sensorO=
+V13B.sys and include an OV13B_3001_ROG_SRX.atb board profile, but the profi=
+le's electrical fields are opaque and don't provide enough validated inform=
+ation to reproduce the board configuration safely in Linux.=0A=
+=0A=
+The remaining information I haven't been able to establish reliably is:=0A=
+- ISP4 CSI port / lane mapping=0A=
+- I2C adapter mapping (the sensor address appears to be 0x10, but I have no=
+t treated that as verified)=0A=
+- sensor/ISP GPIOs and polarity=0A=
+- clock source=0A=
+- power rails and sequencing=0A=
+- any OV13B10-specific ISP firmware/profile requirements=0A=
+=0A=
+The existing OV05C10 platform configuration appears to supply this kind of =
+information in software because it isn't present in ACPI, and the earlier I=
+SP4 review discussion also mentioned the GZ302EA/OV13B10 case.=0A=
+=0A=
+Would you be able to share the correct GZ302EA/OV13B10 platform configurati=
+on, GPIO table, or point me to where these values should come from? I'm hap=
+py to implement and test the Linux support and can provide ACPI dumps, the =
+ASUS INF/profile metadata, logs, and test results if useful.=0A=
+=0A=
+I have the physical GZ302EA available for testing, so I can validate patche=
+s directly and capture frames once the pipeline is safely instantiated.=0A=
+=0A=
+Thanks,=0A=
+Daniel Chadwick=
