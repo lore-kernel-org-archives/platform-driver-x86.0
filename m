@@ -1,200 +1,162 @@
-Received: from sender6-op-o12.zoho.com (sender6-op-o12.zoho.com [165.173.180.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DD03D3485;
-	Thu, 24 Sep 2026 11:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790250660; cv=pass; b=Kpit87sSIBY7gw4bUN9u+CLJE/QSMr08uHK9oPBcLJkK+bCPiFtf51QeDjbKVrqSEasW3f7XqP/YkK+7n5AXbZJhMQnNGfowGDTX2BsBw1Ueu6vN9VO/EKyCoyhr3I10Wyy6SYxiX+1TWd7TLogD2dwJ/wVe5Uj8XH0nJecnRRc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790250660; c=relaxed/simple;
-	bh=eBaHN3Y/BWFH+RYMTiSSRGuCI4fa0Na4sl/rx/lOdY8=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=JZT8yX7APl8SOVr/PDgokorMysOL46rrGZps5RILUpghiabpYfL7m0L1oZGwpIPm75Kv4tKLSIQ9o/Gee6+Bc25ngNpGoA4u/pBpJ/s3WONXl1FocP1cFB0dtyV0Nc7w81BzYk8L3ldI0g2bWBi8M/PgCpvSvyKTUHX9rrAjywM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=WudqXkQ9; arc=pass smtp.client-ip=165.173.180.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF32C3AD515
+	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 11:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790250986; cv=none; b=SG8pVD5aBkZx8NO/bhzsI4xOGzIDIGi5LDh2QJnV1vWZj4tAwoA3YevHud5TfkCU7T5OMv4JS33lcW4fXJmDOn9dlrZd3DPVoUpasItgG/J3K4cRW+mlZDdORpK4xnnqIt6ydI0b3M5ka4VkTyIHNXNffsa48xBBk/UbZJWPcy0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790250986; c=relaxed/simple;
+	bh=+Z8ZTpGEfHWM4q/zUbV7kqxbu5dhULZPNJ7diN0yJeM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NPcIhqtzvW3QAg610tEpti7CntUzMzXGGqxfc+k6ArBW0J9TD7VwoogSIsCmqmHOTqyLCbdqchckqYNva1U5O1Jw8Lkc5JqytEfpxPrGC2Uvu8a64liW1FkJICs1ZmpuOakqJbeQsS9A+fU+t6XEoXmmuMXwTxXwsVQGPRvuZB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h5ZLCRs6; arc=none smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="WudqXkQ9"
-ARC-Seal: i=1; a=rsa-sha256; t=1790250640; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=MZi9eX2mkZ7Ir+vzqlkr3lBL5Ts7hiTYHYSILke34zTmx2D1NUQ4PMHr2r5GCGy4AZ4zCjuzg2eaKXUDTaRh6Po4baSJvQUoeXjBAmNzaSoxONVvGqDXmX8PyyUDG3t1Mp3blUSEwYTg+QN+JKDXBwLECF+sSXn1rXYi1/vF4QI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1790250640; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=szzgQ9yx9ieaZGMbPDCWaI5C0qscCyhncAmiXOLJGFY=; 
-	b=ikUv3BZ1z/3dZXfjQ85ZqEdB60OzBktdFa5qMiaphpxh01qjsOCDuQgbLGkVEbzisazS3xfhDvhxD6NkIdGFufV2yQmGHCIsosHBpBnmjDPITm528WzoIKAeGb7/lRVmGU2RxNabV/wfoRLd65v/WavuvfIt1uA2RBc3psJyLCY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1790250640;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=szzgQ9yx9ieaZGMbPDCWaI5C0qscCyhncAmiXOLJGFY=;
-	b=WudqXkQ99Bj2XjUhJrGbSvpYwLyKg546DsNAx51VDSDr53ku4Q/T2wtn7gMeaSF+
-	10CfPxFYJxQx30Hk5AyOkp29UgtNdLyNoHH6lH+DgkSPhezixkryp2QYJ/QNOkKobOU
-	U0HOUL95eGFTaFsKF1VSU55uCq+4WSTf88eG1lSl9uTNlfxHGFOT8XzVnuqfWtFKVEU
-	+b5onmeaG3t14SHk43zlQJtttiHBmWpj3ocmuP/fIoaMLYJLlkOvAPYXTlnwc2sOPhN
-	7HuTT6Xxik7KwHVPkdt/+c1/skg5t1AqKU52eqcLyYGTrxro/Lk22AGbQDEyLgJuhIw
-	FJzBchHbrw==
-Received: by smtp.zohomail.com with SMTPS id 179025063891131.335288653322777;
-	Thu, 24 Sep 2026 04:50:38 -0700 (PDT)
-Message-ID: <607266787ef89717b9c70fd86cc882761060dc00.camel@rong.moe>
-Subject: Re: [PATCH v7 08/13] leds: trigger: netdev: Implement
- hw_offloaded() callback
-From: Rong Zhang <i@rong.moe>
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
- <linux@weissschuh.net>,  Benson Leung <bleung@chromium.org>, Guenter Roeck
- <groeck@chromium.org>, Marek =?ISO-8859-1?Q?Beh=FAn?=	 <kabel@kernel.org>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Ike Panhc
- <ikepanhc@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar
- <vsankar@lenovo.com>, 	linux-leds@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, 	platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260924085316.GB331088@google.com>
-References: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe>
-		 <20260921-leds-trigger-hw-changed-v7-8-fe3cdb6dec51@rong.moe>
-		 <20260924085316.GB331088@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 19:47:29 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5ZLCRs6"
+Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-39b9184fa80so1341961a91.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 04:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790250984; x=1790855784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6rBh57CQ8oC/XCjJGNJlSdgV/jpJp4/g95+Pgh7fgMA=;
+        b=h5ZLCRs6jcFxfdHs0UkadGQfBABZyDwEnK4TozYKXLU6/zW8U4asodHIcDM93ayRmh
+         fOk+5W4D3u/hx0OSE7LRQso0yJbV1c2/lFGLAc4h8DlBmSOHNuAsei8P1Utx77azJApm
+         0YsArrhXipVvZwFaSzBoMFjq0LqkKIXyMiPJg69tEzvYZGGmAqGLhISvpDPOzimYWVLY
+         66lwsgjpJBXEGSBxjTfFWFKEwk61yMLJuCD/oOhSW3sULIGb5WJAdQW39Ym5aIje8UYN
+         6bR4ubLQftFgfrVvkvf2hNklDctaWJHD7T3HFwt7L3Tt8EcV3ArPytWPXTChIeIHL1ea
+         wBrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790250984; x=1790855784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6rBh57CQ8oC/XCjJGNJlSdgV/jpJp4/g95+Pgh7fgMA=;
+        b=0B2KPAfD7jkYWYbuG0QBIXnRFSbFJ2flW3Zk7Yr/2+mgY0mjHECD/YLRICUMpDYOwy
+         j2v0HVSXRlEY7RAIk1DWz+RZe8UNZxFK98+/EaryD+MgHc9D6qAC+mEpD+kiFu+TM5Zr
+         X10YBdw4eUqNPmpf4DQspxF6LVoZzJXmDaF6iJJ4mXxm5jaPOwg4YyHCQPz32gI3r15M
+         5ZbsukaPh4p2dQ08xb0yy1ZjI0cF6T6Pw+mLGXKfXbDDV1aiqlA94Y2GQyDpUcjy3tp/
+         6Se45C83MmyC9D1FzSG0NNnsDhCVNYesiTE7F+tSPmc4pkdMPMwKFTzFfghcAsQlDumG
+         YS6g==
+X-Forwarded-Encrypted: i=1; AKwUvBygF4AjJVhd+gL+FI8AUyEd0Jri+QTQiSO1zTgfF5d1YJ/NiJPNCW1OALStwX32r0QB1f4ejmfKNKh7N7/uTpC6gtjP@vger.kernel.org
+X-Gm-Message-State: AFuF++nX7SxAmqWK1KmT25mrW3XLcojAPdSCdLVacsCzZ9eyAX5dh5Vh
+	x1nsCtyGhmBRmodj4CF7qL5mPupnod4wn3dVYS3+nR6B9Qy25+Pf+HfDMh8T/BruYNftHQ==
+X-Gm-Gg: AYBFou2jd6Xy7mBSevTULzbF6vzCUCNUsJtf5QyVXeai1/JDMUzdret2x6EukUfte+x
+	ho3HyTWmxtj06Uv2pxY4pqDnElsum3EmJp0bO97Fz6HXFD4ldmvEz3+CQNXd3DWYEWqrzM8eTIg
+	ZJ5z/ZxKRD0y43QeTOmOECBcCcYaPq13Q+mk6Z6ZltNeGloqJnV8GtcFUhIS5XpHfhgA0+73WgN
+	GnOTKu7juGWOZLb0kecXbbdfMxd9zb03gJnemp9IWRzKIDn4W43fKcxhRnJNQ2IdGNVxXevUJqs
+	rUFjkFHh7dnGVOH9ohW6kvEpw/2SHTvDOhWcxKz/RSoQ3QjshRZF7aHpk/CD4wT0Hw/KJNO8/AA
+	Kv1xb5MdbgdccVT0CjQ9QMFKUb9DQYTaVKSg6dM72Y5QN90I+ptaJltkoFFR5dewhaXJh3fKfyx
+	LagpZ/vcVhufkP3qqMEgfEoMoCAjqUuEemG/YHdi48ufcVkZ5n7f6SsQ==
+X-Received: by 2002:a17:90b:5807:b0:3a0:8050:2ec5 with SMTP id 98e67ed59e1d1-3a0985be2fcmr1751949a91.12.1790250984098;
+        Thu, 24 Sep 2026 04:56:24 -0700 (PDT)
+Received: from lgs.. ([2001:250:5800:1002::de93])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a097663fd0sm4598745a91.9.2026.09.24.04.56.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 04:56:23 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: Bao Cheng Su <baocheng.su@siemens.com>,
+	Benedikt Niedermayr <benedikt.niedermayr@siemens.com>,
+	Tobias Schaffner <tobias.schaffner@siemens.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Henning Schild <henning.schild@siemens.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] platform/x86: simatic-ipc: fix platform device leak on registration failure
+Date: Thu, 24 Sep 2026 19:56:17 +0800
+Message-ID: <20260924115617.1578309-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Lee,
+register_platform_devices() registers the battery, LED, and watchdog
+platform devices in sequence. If LED registration fails, the battery
+device remains registered. If watchdog registration fails, the LED and
+battery devices remain registered.
 
-Thanks for your review.
+These failure paths leave successful platform_device_register_data()
+calls without the matching platform_device_unregister() calls.
 
-On Thu, 2026-09-24 at 09:53 +0100, Lee Jones wrote:
-> --- checkpatch.pl: clean (0 issues) ---
->=20
-> On Mon, 21 Sep 2026, Rong Zhang wrote:
->=20
-> > "netdev" can run in hardware control according to hardware capabilities
-> > and trigger options.
-> >=20
-> > Implement hw_offloaded() callback to provide its hardware control state
-> > to the LED core, and document the relation between the custom
-> > "offloaded" attribute and the generic "trigger_may_offload_to_hw"
-> > attribute.
-> >=20
-> > The callback mimics how the existing "offloaded" attribute does, i.e.,
-> > locklessly reads hw_control, as it's just a hint and don't need to be
-> > accurate.
-> >=20
-> > Acked-by: Ike Panhc <ikepanhc@gmail.com>
-> > Signed-off-by: Rong Zhang <i@rong.moe>
-> > ---
-> > Changes in v7:
-> > - Rename the offloaded() callback to hw_offloaded() (thanks Lee Jones)
-> > - Rename the trigger_may_offload attribute to
-> >   trigger_may_offload_to_hw (ditto)
-> >=20
-> > Changes in v3:
-> > - Do not deprecate netdev's "offloaded" attribute (thanks Thomas
-> >   Wei=C3=9Fschuh)
-> > - Document the relation between the custom "offloaded" attribute and th=
-e
-> >   generic "trigger_may_offload" attribute (ditto)
-> > ---
-> >  Documentation/ABI/testing/sysfs-class-led                | 3 +++
-> >  Documentation/ABI/testing/sysfs-class-led-trigger-netdev | 3 +++
-> >  drivers/leds/trigger/ledtrig-netdev.c                    | 8 ++++++++
-> >  3 files changed, 14 insertions(+)
-> >=20
-> > diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/=
-ABI/testing/sysfs-class-led
-> > index 123e3a15b7d6..ea113fed10ef 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-led
-> > +++ b/Documentation/ABI/testing/sysfs-class-led
-> > @@ -101,6 +101,9 @@ Description:
-> >  		- `[foo_trigger]`: the trigger is selected and offloaded to
-> >  		  hardware.
-> > =20
-> > +		The "netdev" trigger also provides a custom attribute to
-> > +		indicate its state, see `/sys/class/leds/<led>/offloaded`.
-> > +
-> >  What:		/sys/class/leds/<led>/inverted
-> >  Date:		January 2011
-> >  KernelVersion:	2.6.38
-> > diff --git a/Documentation/ABI/testing/sysfs-class-led-trigger-netdev b=
-/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-> > index ed46b37ab8a2..203ea58396ed 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-> > +++ b/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-> > @@ -75,6 +75,9 @@ Description:
-> >  		If 1, the LED blinking in requested mode is offloaded to
-> >  		hardware.
-> > =20
-> > +		LED trigger core also provides a generic attribute for this
-> > +		purpose, see `/sys/class/leds/<led>/trigger_may_offload_to_hw`.
-> > +
-> >  What:		/sys/class/leds/<led>/link_10
-> >  Date:		Jun 2023
-> >  KernelVersion:	6.5
-> > diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigg=
-er/ledtrig-netdev.c
-> > index 5b4e92c14dbb..60409f054e22 100644
-> > --- a/drivers/leds/trigger/ledtrig-netdev.c
-> > +++ b/drivers/leds/trigger/ledtrig-netdev.c
-> > @@ -798,10 +798,18 @@ static void netdev_trig_deactivate(struct led_cla=
-ssdev *led_cdev)
-> >  	kfree(trigger_data);
-> >  }
-> > =20
-> > +static bool netdev_trig_hw_offloaded(struct led_classdev *led_cdev)
-> > +{
-> > +	struct led_netdev_data *trigger_data =3D led_get_trigger_data(led_cde=
-v);
-> > +
-> > +	return trigger_data->hw_control;
->=20
-> How sure are we that trigger_data can NEVER be NULL?
+Add an unwind ladder to unregister previously registered platform
+devices in reverse order before returning the registration error.
 
-The hw_offloaded() callback is protected by led_cdev->trigger_lock, see
-__led_trigger_is_hw_controlled().
+The issue was identified by a static analysis tool I developed and
+confirmed by manual review.
 
-trigger_data is set in the trigger's activate() callback, which is
-protected by led_cdev->trigger_lock.
+Fixes: dd123e62bded ("platform/x86: simatic-ipc: add main driver for Siemens devices")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+---
+v2:
+  - Use an unwind ladder to unregister previously registered platform
+    devices in reverse order, as suggested by Dan Carpenter.
 
-trigger_data is cleared in led_trigger_set() when removing the current
-trigger, which is, again, protected by led_cdev->trigger_lock.
+ drivers/platform/x86/siemens/simatic-ipc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-When CONFIG_LEDS_TRIGGERS=3Dn, the code is not built.
+diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
+index 7039874d8f11..4a4509fc9263 100644
+--- a/drivers/platform/x86/siemens/simatic-ipc.c
++++ b/drivers/platform/x86/siemens/simatic-ipc.c
+@@ -92,6 +92,7 @@ static int register_platform_devices(u32 station_id)
+ 	u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
+ 	u8 battmode = SIMATIC_IPC_DEVICE_NONE;
+ 	char *pdevname;
++	int ret;
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(device_modes); i++) {
+@@ -139,8 +140,10 @@ static int register_platform_devices(u32 station_id)
+ 				pdevname, PLATFORM_DEVID_NONE,
+ 				&platform_data,
+ 				sizeof(struct simatic_ipc_platform));
+-		if (IS_ERR(ipc_led_platform_device))
+-			return PTR_ERR(ipc_led_platform_device);
++		if (IS_ERR(ipc_led_platform_device)) {
++			ret = PTR_ERR(ipc_led_platform_device);
++			goto err_unregister_batt;
++		}
+ 
+ 		pr_debug("device=%s created\n",
+ 			 ipc_led_platform_device->name);
+@@ -153,8 +156,10 @@ static int register_platform_devices(u32 station_id)
+ 				KBUILD_MODNAME "_wdt", PLATFORM_DEVID_NONE,
+ 				&platform_data,
+ 				sizeof(struct simatic_ipc_platform));
+-		if (IS_ERR(ipc_wdt_platform_device))
+-			return PTR_ERR(ipc_wdt_platform_device);
++		if (IS_ERR(ipc_wdt_platform_device)) {
++			ret = PTR_ERR(ipc_wdt_platform_device);
++			goto err_unregister_led;
++		}
+ 
+ 		pr_debug("device=%s created\n",
+ 			 ipc_wdt_platform_device->name);
+@@ -169,6 +174,14 @@ static int register_platform_devices(u32 station_id)
+ 	}
+ 
+ 	return 0;
++
++err_unregister_led:
++	if (ledmode != SIMATIC_IPC_DEVICE_NONE)
++		platform_device_unregister(ipc_led_platform_device);
++err_unregister_batt:
++	if (battmode != SIMATIC_IPC_DEVICE_NONE)
++		platform_device_unregister(ipc_batt_platform_device);
++	return ret;
+ }
+ 
+ static void request_additional_modules(u32 station_id)
+-- 
+2.43.0
 
-If the trigger is currently inactive, the callback cannot be called.
-
-Therefore, it can never be NULL when we reach here.
-
-Note that the trigger's DEVICE_ATTR_RO(offloaded) makes the same
-assumption, too.
-
-Thanks,
-Rong
-
->=20
-> > +}
-> > +
-> >  static struct led_trigger netdev_led_trigger =3D {
-> >  	.name =3D "netdev",
-> >  	.activate =3D netdev_trig_activate,
-> >  	.deactivate =3D netdev_trig_deactivate,
-> > +	.hw_offloaded =3D netdev_trig_hw_offloaded,
-> >  	.groups =3D netdev_trig_groups,
-> >  };
-> > =20
-> >=20
-> > --=20
-> > 2.55.0
-> >=20
