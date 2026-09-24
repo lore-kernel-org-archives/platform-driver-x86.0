@@ -1,128 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B731C4A4835;
-	Thu, 24 Sep 2026 21:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE434EB85E
+	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 21:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790286048; cv=none; b=EincZp9QMEe3GMMr86IC9005/kK+a1Sgu8itWH+PdbTTBQ9CiuqGtXz/AYodr/1Dk8CKstbQR5yhbiNT0lQNM2/9cOf/jF6niiY8i8MQOrsEpvbh/jux/aIIB1iyMA69b6u5qg8TrZF5pO6CKvsDWuisHZEiUBT4PjIFGURWXF0=
+	t=1790286797; cv=none; b=pIBSngrvH+bA7o5VmbmjrBj3LwJRTPhbDtL1y5xDpDA7pQcfr2z78o77eO1qi3YsnDfkMAYEgaMpg6V6S8AOXflmYir80gsw/caWuLUdjJdx3MjiyOC1Q8SEXbgqZfqC/MUhlPhMSNrFzikAoE2iQUi6gp2vr7C7xra5c1yfB8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790286048; c=relaxed/simple;
-	bh=DW/CE+/4qoKr6/uFDQyBY4COZ2q1DL267pDd1nb4ij8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uDSuB+kydcOyWih0mjwmOOkU9m+8juO2xNDGHqEaFiSSJXO9gRnNPlJ2Idqh5hpNxZddaRoD5xIIhhAbKoVXrHtRMC9BWP8aujoK8UF/XigmDZFToGByrMkyiyNx1W0vKqAjIvxbq5amHKyqxtZwQXX2MkU5DcqkvrBC3F7vRVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F/hZ+6lT; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790286797; c=relaxed/simple;
+	bh=wUqMujLgG/ATUODYjLIuP7EXNqWn7rMgrL/D2IHZ4OA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=f3yX4tiSNq27BTgDrmWb4QWcLsnATh7G4PCruhyLf4mQldtZhU8rFIg1wkdC7OMLrC+McmKwUo4bP7xhzN8w45J34OMC+Wo5dhK5I+slZfZmhiEjfmW4d4hC9GOltWI8EFSd3VJVqNEXel7RFgVz8/29DK1vywfErnvTxtyaF4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FYrXMKfF; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F/hZ+6lT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790286046; x=1821822046;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=DW/CE+/4qoKr6/uFDQyBY4COZ2q1DL267pDd1nb4ij8=;
-  b=F/hZ+6lTIOsfBFbsmZDwLjnnagiIe2AbOJf5TsEQcPI6c0tvW3/m10Zu
-   PGWR7ARAt6KeM2pplqzKMQ1RhNGXxnnNDonLzL15NUfvoR1LFQngjLInj
-   UmElrTjRnBwUaRuTMDPrbzQ4d/+K6w0K5aLL5yT+DdV13JIRbrjgsLdY2
-   Wr5wX3ygXdTsIZ52+YyJ0NAS8QWx9yeLF6pntbYIrfT+VnAz+y8jc8SYV
-   kY9EhVj2GE5KfeLeYFBhWEFdCmesfaNVagA4wlgrBcvdzjw107n917uom
-   weKnUm/pnpqa2+/4TYTr3h3M/fXSndTGOFkVmRs589iKPC8uq3BQc9zmh
-   Q==;
-X-CSE-ConnectionGUID: 9Juup015R3yjBg2EBk/Hkw==
-X-CSE-MsgGUID: LNun8qzGSgK/lHU8FViSvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="93791741"
-X-IronPort-AV: E=Sophos;i="6.27,121,1787036400"; 
-   d="scan'208";a="93791741"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 14:40:44 -0700
-X-CSE-ConnectionGUID: 1zeS7PRIT7m/Yebz3J576A==
-X-CSE-MsgGUID: sRGNLYr2RpGXMuT8sQfw+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,121,1787036400"; 
-   d="scan'208";a="277320460"
-Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 14:40:44 -0700
-Message-ID: <edcf0b3a043400ce40e1bd7841003f8319542407.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] platform/x86/intel: power-domains: Handle failed
- init in tpmi_get_power_domain_mask()
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Kristen Carlson Accardi <kristen.c.accardi@intel.com>, Hans de Goede
-	 <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 24 Sep 2026 14:40:44 -0700
-In-Reply-To: <20260924193625.1830526-3-kristen.c.accardi@intel.com>
-References: <20260924193625.1830526-1-kristen.c.accardi@intel.com>
-	 <20260924193625.1830526-3-kristen.c.accardi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FYrXMKfF"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49cd4ba9f68so3026565e9.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 14:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790286790; x=1790891590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=wUqMujLgG/ATUODYjLIuP7EXNqWn7rMgrL/D2IHZ4OA=;
+        b=FYrXMKfFuAhNF5aCQVPp9k70aZHLhA5y5y7FHJxEF4Cgx16UZb8Wh570H78iixISQc
+         VpF1eAnRuohAFSDR7cUU3I+zypSleeCnUiIzME1/76SDe+P8HBxG12VgJpzaufB07scV
+         sSopUoV1c6a+0C0jcWF11L5O+3mh4/MoITbUH9W6RhvlCP6aiKuEbiH6MF13cxRyYSjx
+         8oUO6wtI+N0XmO13bsw9XePdvAUAHS0Orr57nO5pnBYb3lVuU423CENcCI+DEz4td3kj
+         bm86dLsuIUEhJCUT7fEUCYQr5w+M9VsV+FSOXNcgS3YGNubtD/bRUReRMZ9jTvH6hyHf
+         qj1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790286790; x=1790891590;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=wUqMujLgG/ATUODYjLIuP7EXNqWn7rMgrL/D2IHZ4OA=;
+        b=bN1DRiDgacXD5n6Lep25xxgpWlB3o/IbYTSq7XHcBNyWokHrHq5AnpRJ/vMGODjs0S
+         ESPZrRx20zfYCl5ex4DIu81K/w8tBpUECSU3ZFUlG3l5ob2vaTmKfq4r1KfgdTXoaf7Z
+         3RckrWriSGmcrV37QXyDSq7avi2KEPPmN27EIuRY169+CJtp/IocTXYMKq1t/fxKwXEV
+         WlFJXSFZpwEAg8exVVwEhaXrJa6HqSK81EX49EXG0yx8J4cVh/yd3+Uyh1WfpNqdL567
+         lPXDw7IPcRl5QxjeEclgw7WzEiz/WOaPSZ72IyFPTakzAjZXl3bGe0UYH5ELZFgwcq6P
+         Rx1g==
+X-Forwarded-Encrypted: i=1; AKwUvBwW58wLbryUllfwZ7BKhiKcFQ05WJSXUE9TxYxfs9wMPx3FN7XCD1Y0bdJvyl/ekFoXrC0eQ/4Ii+BO3L3Petokkm9k@vger.kernel.org
+X-Gm-Message-State: AFuF++loB4qG9dLKCk5mnW0tMboT+3fxQ6OXG/HseilEZw+jsUIqPXAe
+	KjyxwmTtmAyFQZPNNzx4+Zvatmj30/tU49Z0zE4Hc7H4UdknZ7JJewf1L7tc/Y70JC0=
+X-Gm-Gg: AYBFou0tcmqFUZY8kMpfFggX0BBYJRR7xJk9sTB2gYb3AxgGuTsrtQAzjXJfdy2pvfS
+	bY0gETBcYdFGWh9puNa1niEbrkS9HvFI5Y8LpYW87h6wGSccgjYuRtDMnSGz/Eq4LUbsQS4kZtw
+	zMaU+6SsB+FIZkCYIPdx0ae+bw0jrbRjQzGdb70b29JsiP8GtxxCEvONYliKDdjBxZTcAZ1MY7Q
+	yrXAsE4LkbDzUm1T98HPpxNBQVRIdTB8E6+gp/RtjIrE2ldMlDuVaKA5lbPgraLq/e0Mpyl98Aj
+	PYgvXUuYmZrov9okPq+y+6QxgZNbHux83DLNmTAdM2wINkFFAW/SoBsOwgWgeh7tGgW6Xs2r431
+	nP3FX3p2zTKbL6wDxJyx6OLiFfMt4p0JKclg0KB2mmJRnFqygV4O1qiciP5JLB4wuT7Cs8Ytvjb
+	bnGs3SSkjO6yfwoqqQaku4JkoUvaNrJSwjkkKqymbOiUe8QmHQVHfQ0Iy8Q2Eu6iKOOWVERx4B/
+	xSZ67ybeZ6Cpf6IQ1DkdQtfK/j8ltxQutQgTugl+DQqz+e52yLnB0y4yF7NBCYAHMzMIxuPMOCK
+	Llqc6jlJyfzkV1i7+g==
+X-Received: by 2002:a05:600c:8484:b0:49c:fe46:7219 with SMTP id 5b1f17b1804b1-49fe66d8135mr63220665e9.20.1790286790425;
+        Thu, 24 Sep 2026 14:53:10 -0700 (PDT)
+Received: from 1Z10 (mob-176-245-31-160.net.vodafone.it. [176.245.31.160])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ff1419498sm991635e9.3.2026.09.24.14.53.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 14:53:09 -0700 (PDT)
+From: Maurizio Casciano <mauriziocasciano7@gmail.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] platform/x86: Describe Yoga Book haptics and audio resources
+Date: Thu, 24 Sep 2026 23:53:06 +0200
+Message-ID: <20260924215306.930909-1-mauriziocasciano7@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260829225729.395270-1-mauriziocasciano7@gmail.com>
+References: <20260829225729.395270-1-mauriziocasciano7@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2026-09-24 at 12:36 -0700, Kristen Carlson Accardi wrote:
-> tpmi_init() returns early on CPU models that are not in tpmi_cpu_ids,
-> before tpmi_power_domain_mask is allocated. When the driver is built
-> in, the exported tpmi_get_power_domain_mask() remains callable after
-> the failed init. It returns NULL then only because it indexes the
-> NULL
-> array at offset 0 for the zeroed per-CPU data. If cpuhp_setup_state()
-> fails, the error path frees the array but leaves the pointer set, so
-> the helper would return a pointer into freed memory.
->=20
-> Nothing in the tree calls tpmi_get_power_domain_mask() today, so this
-> is hardening rather than a fix for a reachable bug. Return NULL when
-> the array was not allocated, and clear the pointer wherever it is
-> freed, as the previous patch does for domain_die_map.
->=20
-> Assisted-by: LLM
-> Signed-off-by: Kristen Carlson Accardi <kristen.c.accardi@intel.com>
+Hi Hans,
 
-    Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+This v3 series has been pending since August 30. It incorporates Dmitry's
+feedback by describing the RT5677 GPIOs with a codec-attached software node
+and reprobes the codec after attaching it. The series remains unchanged.
 
-> ---
-> =C2=A0drivers/platform/x86/intel/tpmi_power_domains.c | 9 +++++++++
-> =C2=A01 file changed, 9 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
-> b/drivers/platform/x86/intel/tpmi_power_domains.c
-> index ea51fc56297d..d89b9894c42a 100644
-> --- a/drivers/platform/x86/intel/tpmi_power_domains.c
-> +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-> @@ -139,6 +139,13 @@ cpumask_t *tpmi_get_power_domain_mask(int
-> cpu_no)
-> =C2=A0	cpumask_t *mask;
-> =C2=A0	int index;
-> =C2=A0
-> +	/*
-> +	 * When built in, this stays callable after tpmi_init()
-> failed
-> +	 * before allocating the array.
-> +	 */
-> +	if (!tpmi_power_domain_mask)
-> +		return NULL;
-> +
-> =C2=A0	if (cpu_no >=3D num_possible_cpus())
-> =C2=A0		return NULL;
-> =C2=A0
-> @@ -256,6 +263,7 @@ static int __init tpmi_init(void)
-> =C2=A0
-> =C2=A0free_domain_mask:
-> =C2=A0	kfree(tpmi_power_domain_mask);
-> +	tpmi_power_domain_mask =3D NULL;
-> =C2=A0
-> =C2=A0	return ret;
-> =C2=A0}
-> @@ -265,6 +273,7 @@ static void __exit tpmi_exit(void)
-> =C2=A0{
-> =C2=A0	cpuhp_remove_state(tpmi_hp_state);
-> =C2=A0	kfree(tpmi_power_domain_mask);
-> +	tpmi_power_domain_mask =3D NULL;
-> =C2=A0	kfree(domain_die_map);
-> =C2=A0	domain_die_map =3D NULL;
-> =C2=A0}
+Please let me know if any further changes or testing are needed.
+
+With Best Regards,
+Maurizio Casciano
