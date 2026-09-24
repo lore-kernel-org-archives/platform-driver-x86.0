@@ -1,108 +1,96 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B051C477E2E
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 12:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D324F1A6814;
+	Thu, 24 Sep 2026 12:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790251219; cv=none; b=YHkcCPDXPB8JZwoRUXnhq8+nGoZEzA1O4QSH62TYKo0l6ndlvOmyHGdlWlR0aEXpYdVtson8OwMgLQyRY728kqrns7bYmwSOMQzx59aMn2OJE3wm+FtUKjxu2cagdlVKwghyBUUcF4Y9dGrJyeGxXthy062tPFWtKINLVaYBWq4=
+	t=1790252736; cv=none; b=VEr69Uhg/IF6yAOF8KOlDOBzbGwWH5CoWZBPvitKV+bT1KtxSGjq1HT04nxT312XfRnHmbIvQIotFUshFmkMFv8Ad7BFe11caenB1idw4FPoiu7+bkisaRlWSmLQfI5V3sElfugvkeLQXlAMTAMqwy3Cw8e8E1Hp2+ExYa0dv1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790251219; c=relaxed/simple;
-	bh=J6nno5Y+Nv4ZJ8xMncCY49LKHkGy/vKwQRGCxQSr7xw=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=WtEhnT5C0/xeWUKgECswVMfkYL4ahwO7evbDGpapQMJ0I30RqKDr9xrdYHpUE/iCOb7pNjFeszL/hvQbFoa0X1PLZZOH9Nzn7RJhaKf1GKj4JB+HtctCRgZ4AaeQrJ3DJVH7FKJm67NNYPesgMN5hYaQYdpeftq0rGeRbMjT+wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qz9ahSz6; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790252736; c=relaxed/simple;
+	bh=mkZ+/fEwSs8YWPIqqniDFLFkK5dYF53u9loFzm82MN4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gT30g2TpDDJN2lKDpLVN+wNNbTAjlEnr3HDMjwUP+Jm+ZF2rr7U15mx+TZkBupxQeJxQgbsK/g6Qmgui3v5br9fyy7c8sYoyBZIODndwGkb5HNh+0z7BookUiFa4TpsNBozAADs1wDgkKZNpKAMYeB7xo7PhGGcLJJMV/C5GGnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKtPE3Be; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qz9ahSz6"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-3115c4451c8so596626eec.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 05:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790251216; x=1790856016; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type:date
-         :to:from:subject:message-id:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=JqbjpHsZvLxuDuXa0a1cBTU8FOKAon5Sln1OXlXpRyE=;
-        b=qz9ahSz6ubIQeH3ixs0fiimS0gLYLgFRvKdAuMY1+1Z4dNUw3DQR/VUQ6RBPCrKSJx
-         A8fHyf9aI7U8fpcCBYttpqLJarb/VdYU5CyoE6zDXZyzdFx3uL+zv71Zo8aGp6JLm5eR
-         hgpGEXR2EAPB+kwggZomSqapKeee6bcxbQflBXbRtZqoG8Qigcou9hexTTQfv7bsEJyH
-         m9cKBX754m+Nddk0pnfpDrQRx+uFN15UigArsFQlNA+irQ1YVlP86DvjeSl22+Q2ozdL
-         l0a9PQkyJKBfQOooN2mhEm40B0a6xe8B/p0MJn3DsK6znih05wG7+w9+UvWrbv7cjvRv
-         5tcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790251216; x=1790856016;
-        h=mime-version:user-agent:content-transfer-encoding:content-type:date
-         :to:from:subject:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=JqbjpHsZvLxuDuXa0a1cBTU8FOKAon5Sln1OXlXpRyE=;
-        b=LPK59D2H9NMQInEt7Vc58KmIUzZKsBvtHclbeqSlyjTfVeahC0b8jNpf6HHv0VY+8Y
-         Lnna6rrpnd5SIq39v6mugAEQtaBV6BKMVvIai/TtsvUBIKmX7JivaQ+j1LGV6/tOsA0M
-         WWv2KhD8S8sgekjWgX5HXkQo8rr5LBDQKmiMtnhZYpZ+swhi+wyrGXRumr3viFnbvkRD
-         jaTl55s7pCRlLzuM4S8r62pbjET6FP33JLSfj8bs9jv4xo8vr5jVuAqENh+UjR45VyEt
-         ARBHcpJkvuAlbTHJIXYzMTaAw+yxa1zBTOEymuBbDYL+Gn2v7JrUOOlJL6zUTUkJejVI
-         +xYw==
-X-Gm-Message-State: AFuF++kM+WrPiFIgpQimwvD7igU/2AV/r2MsE0PQotbcSjr23dTw6TuI
-	4kbL2CeJmfzvIb/pqrtKP4DSgZxRcXS+VlmgLRUerhm2t/mLe9cHneWStcuC2w==
-X-Gm-Gg: AYBFou1R+cCdX9JFPuEX49mGqIFKOt1bxmOTuN0dFLv6XSyOh7Ol+0Bz+Zjy/nEgwmv
-	FQeL/yHqvMAGuFLHlkvvhXDChLbJtWA0SQEYyu1ykLrWacpB5gQ+mgy1Neuw5QTC2sTQA70J/fq
-	gZfTnngaqgXp+OydFJzrhhHcyh2h7MSiNfqdjUqS1Rh3qBjtYudvRERximBo+wvF0G9+422WhQ3
-	117GYyuBgQvcHQN6WQu0gaw0FeeJRSAY1tv2L6u0ZYc2koTp1RR7wpURJhhrsMbmvyeWSMank7B
-	ObI1ssN+W0DcUYoy1yTsCYR8nDFGW26zj4yLEGT6rb3ToGXKYHYe3QgtR6CYR/yJvA40PlaUjP2
-	S4/A7VZJy8Vd8auAzIwLocGVVv9iEBb8cEoKbGXjvSk/RkCDXqBf2zSQdJBOmcZPBRmct1pBT3K
-	Wqj+qj1w2YG8DU/ZfB/wmYa3OsVfMBDMhoWXy28ZHk5iyB1KFh2Fku+dnjZq/HlVcPR2v3kvNWo
-	zFYunmMcueM5QVnrmsDeZznCvYUpsXqU97GCLHJBL1x7HEWZPnlpWvG/uPR
-X-Received: by 2002:a05:693c:6205:b0:333:75a5:10d8 with SMTP id 5a478bee46e88-340068719b6mr1709209eec.27.1790251216147;
-        Thu, 24 Sep 2026 05:00:16 -0700 (PDT)
-Received: from ?IPv6:2409:40f3:10cb:40e1:409c:45f8:1bb8:1dec? ([2409:40f3:10cb:40e1:409c:45f8:1bb8:1dec])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33e96952605sm13973692eec.22.2026.09.24.05.00.13
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 05:00:15 -0700 (PDT)
-Message-ID: <da17da33edc92ca4a33a760ac05815a46c767844.camel@gmail.com>
-Subject: [RFC] acer-wmi: add Aspire A715-79G WMI GUIDs and EC fan profile
- support
-From: Muhammed Anas <muhammedanaspaika@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Date: Thu, 24 Sep 2026 17:30:10 +0530
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKtPE3Be"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D311F000FF;
+	Thu, 24 Sep 2026 12:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790252734;
+	bh=5sX7O3Pnj+aY/dkYnHDMVzgGGk9MOx3gJVPX6DokO8A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=GKtPE3Bepbg0FpimPIlzjmm/xwig6iO65YdhslFBEIyhcKC5qooxUPGBCTJPNUMqT
+	 bj5DKkljB7YfOM3aMV7tvGRX/8y6xUWDB26Y3VneyP95KvoFdtux9cuSDbb4DHnUn+
+	 F+Y1y5/5uYS7fKIBp5KdsmJZ1zTV+SygErEQ1YmaB9ws3spCL1NwhR+8quRho0lYzG
+	 941Z77g9D4fe5tTRasSlV3OHLZ0qIdd3ga0RMHWb6tTprmhmRRSOHcRJXEnaUboStN
+	 dxk2TtI15MIFjlR/ZIIm116UyBmbwlpjv/yuYuMugqhppw2kVmqFWtMS8tJE1Z5ICH
+	 dikMgSS4iB8tA==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+ =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Ike Panhc <ikepanhc@gmail.com>, Rong Zhang <i@rong.moe>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, 
+ Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar <vsankar@lenovo.com>, 
+ linux-leds@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ chrome-platform@lists.linux.dev, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe>
+References: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe>
+Subject: Re: (subset) [PATCH v7 00/13] leds: Add support for
+ hardware-initiated hardware control trigger transition
+Message-Id: <179025272986.499136.14712876777665893306.b4-ty@b4>
+Date: Thu, 24 Sep 2026 13:25:29 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.16-dev-ad80c
 
-Hi all,
+On Mon, 21 Sep 2026 03:40:14 +0800, Rong Zhang wrote:
+> Some laptops can tune their keyboard backlight according to ambient
+> light sensors (auto mode). This capability is essentially a hardware
+> control trigger. Meanwhile, such laptops also offer a shrotcut for
+> cycling through brightness levels and auto mode. For example, on
+> ThinkBook, pressing Fn+Space ("shortcut") cycles keyboard backlight
+> levels in the following sequence:
+> 
+> [...]
 
-The Acer Aspire A715-79G (ITE 8222 EC) exposes Acer WMI GUIDs
-ABBC0F6B/ABBC0F6C/ABBC0F6D which are absent from acer-wmi's device
-table, so the driver does not bind. Consequence on Linux: the EC
-stays in its default (quiet) thermal profile and the fans never spin
-automatically at idle (60-75 C); on Windows they are presumably
-activated by the NitroSense driver via the EC profile command
-(unverified).
+Applied, thanks!
 
-Reverse-engineering of the platform (DSDT + register experiments)
-shows the EC selects its fan profile through the \_SB.WMI SCMD ACPI
-method:
-  SCMD(0x69, BIT(profile-1)) with profile numbers 1-4 mapping to bit
-  values 1/2/4/8: 1=3Dquiet 2=3Dbalanced 3=3Dperformance 4=3Dgaming
-Setting a profile at boot restores automatic fan control (verified on
-7.1.13 and 7.2.5: ~2700 RPM idle, ramps under heavy sustained
-all-core load; partial-core loads do not move the fan on any profile).
+[01/13] leds: class: Always protect brightness_show() with led_access
+        commit: 6887f40dadb5a263de1d9e4b5517400c08089d35
+[02/13] leds: trigger: Move led_trigger_is_hw_controlled() to the right place
+        commit: 7879d6277485697cf37eb3c1b89ce260d8c67e4f
+[03/13] leds: class: Remove hardware control trigger when writing brightness
+        commit: 96b4ddd6d2d8c645d672f1f26130685d9f40cf2f
+[04/13] leds: trigger: Move led_trigger_group to the right place
+        commit: 43b83e7462e8e9b96e14262c0b6aa739f01c38f7
+[05/13] leds: trigger: Add hw_offloaded() callback and provide trigger_may_offload_to_hw attribute
+        commit: 8e04e5382aa989ae9a36dc0cb3f3c90347d5607f
+[06/13] leds: cros_ec: Implement hw_offloaded() trigger callback
+        commit: b366a50d39d13f8230f959b457abcaeba1e7d121
+[07/13] leds: turris-omnia: Implement hw_offloaded() trigger callback and declare hw_control_trigger
+        commit: f5005c7cec7d4cff58f25442ed6dfca56e42b16d
+[08/13] leds: trigger: netdev: Implement hw_offloaded() callback
+        commit: 072e0e799bc6b3909afc8fd7fac750b31e37b438
+[09/13] leds: trigger: Enforce strict checks in led_trigger_is_hw_controlled()
+        commit: 7b9a609575615a3ba18a31a95282e756e34bd506
+[10/13] leds: trigger: Add led_trigger_notify_hw_control_changed() interface
+        commit: 05b4738b0078f7d6f154f68068a11c8a0635e9df
 
-Proposal:
-1. Add the three GUIDs to acer_wmi_id_table[] in
-   drivers/platform/x86/acer-wmi.c.
-2. On probe (or via platform_profile), select the EC profile so stock
-   kernels control the fans automatically.
+--
+Lee Jones [李琼斯]
 
-Full evidence and a runnable reference module live here:
-  https://github.com/ancxanas/acer-ec (docs/reverse-engineering.md)
-
-Happy to test patches.
-
---=20
-Muhammed Anas <muhammedanaspaika@gmail.com>
