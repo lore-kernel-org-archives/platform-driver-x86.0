@@ -1,72 +1,185 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFEB4219E9;
-	Thu, 24 Sep 2026 07:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678383FDC06;
+	Thu, 24 Sep 2026 08:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790233605; cv=none; b=Z9R51TElmIl3FsHcxc8/5KAaMjMS55e3H62BIxCY4xWsazfqb/rEqTFTtmc5TJ5nBbtBHTI7PJTK3VeyVPq6W1TOsbMe6NR01Mp3zFbsOJ1xy9HniIb7NPjxy99rLqvZMwNObr6orkcPUSkczZkyYcaHaWx22Fch36KyVl2roRo=
+	t=1790239037; cv=none; b=PBvpsZs47Q+UNuJGNgO33p80gOMuBGRva87dtxA25gsqAduFAMNzRd4e4Ze44X8BSpsXwH9/VEMJ5/qIvnRV/rVOox5/IegpfIcdzbZ9vclw4UX9/Lkna7jBLiDtVqzpTBI4gBairIpRqh0l+eD4/+0YoIEJi3mg+NA28KxzCrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790233605; c=relaxed/simple;
-	bh=tpu+RoSvDtPIZOdlhkoeWl5ETON7wH9mUnM8AFFM9pQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eE+6/G3i+07Jd1dX9D4GpKHGxIEuS+x7/0EpWRuE7Fnompl9nvbUlCmgCtQqweFQrUY+Ja2cGYN/gl23dS5ugEhD/7Y2+OoFn49AqWjRZw6vuOnoKLaztcEcaBy1pLY8NFmv3XY8j2TUdd9m4jC9JrPpWL7zlYq+uJ0Gt2Xzy6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 747b5600b7e611f19a56ed5b684f684d-20260924
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:762c49ff-bf26-48f6-bc52-06977b7399f3,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:7db8b62,CLOUDID:ff7dc93e0ae167d3821109917e24c446,BulkI
-	D:nil,BulkQuantity:0,SF:81|82|83|102|136|850|865|898,TC:nil,Content:0|15|5
-	0|99,EDM:5|-100,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 747b5600b7e611f19a56ed5b684f684d-20260924
-X-User: huangwei@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <huangwei@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 131384972; Thu, 24 Sep 2026 15:06:24 +0800
-From: Huang Wei <huangwei@kylinos.cn>
+	s=arc-20240116; t=1790239037; c=relaxed/simple;
+	bh=r/vBo1dv/pEBxUbQ9g7cwJrRcatBAi11+dXpZWCqjS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PE3PJpfm6T9EWytS3YsLEHfH/yT8QtK1HTtafMDmFP1+7Wxo3F8xrDlcBJCVwFwNGyIHRCCvvZqt4LmkWNufFKYABWhptPZ1NsIlV7142rGw3Wnf7HJL2vDaf1i0sEowOxDuh0qoZHVQvhpjwalz4d2HrrpZP3Y6EqbXO8Fpsuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8BxRoPW; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8BxRoPW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E9901F000FF;
+	Thu, 24 Sep 2026 08:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790239036;
+	bh=9dNpIiCngfqS48fDbzhesrqx5NrLounR6SeZVDzxP8s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=n8BxRoPWmSo9uf+mopPXmF9iAKyVgVre1+tPUkxjhxcD4AzQ6b0oF0OMFVb82h2n9
+	 p1s79k+rFIUQ2BmwgLqu+i9LQkKiMpjvRjfoKgTXDohRp+0sF+60oIRvwCCMnN7xl+
+	 XevS1thLE2eO4fD5mB8k5ylTFf7kXaUNC4CTPKU16429Nm33GMPNkQDI7yfQZso+xM
+	 l+WuFJhRc6CyPHfqtptjzvLljEKgjbp2Ovd5dpXBpYvblvFi8az97xbsF53OpHftn2
+	 qKz5tMP83HAYOm4okEy8zxQqvnhMGMTIE6JPFR0bClf/CeUGY1CcD59ud1dled8xY+
+	 g+vbo9+Hx+Qcg==
+Date: Thu, 24 Sep 2026 09:37:09 +0100
+From: Lee Jones <lee@kernel.org>
 To: Rong Zhang <i@rong.moe>
-Cc: Marco Giunta <marco_giunta@outlook.it>,
-	Ike Panhc <ikepanhc@gmail.com>,
+Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
 	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	huangwei@kylinos.cn
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: Report camera switch as SW_CAMERA_LENS_COVER
-Date: Thu, 24 Sep 2026 15:06:18 +0800
-Message-Id: <20260924070618.3600611-1-huangwei@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260924-ideapad-laptop-camera-sw-v3-1-922ea6a9fff4@rong.moe>
-References: <20260924-ideapad-laptop-camera-sw-v3-1-922ea6a9fff4@rong.moe>
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ike Panhc <ikepanhc@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	Vishnu Sankar <vsankar@lenovo.com>, linux-leds@vger.kernel.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v7 02/13] leds: trigger: Move
+ led_trigger_is_hw_controlled() to the right place
+Message-ID: <20260924083709.GA331088@google.com>
+References: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe>
+ <20260921-leds-trigger-hw-changed-v7-2-fe3cdb6dec51@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260921-leds-trigger-hw-changed-v7-2-fe3cdb6dec51@rong.moe>
 
-Hi Rong,
+--- checkpatch.pl: clean (0 issues) ---
 
-The v3 looks good - the KE_SW mapping is the right shape for this and
-the entries match everything we worked through in the thread. Putting
-them under a dedicated "WMI switches" section at the end of the
-keymap is a nice touch, and it's good to see Marco's Tested-by
-carried along with the handover.
+On Mon, 21 Sep 2026, Rong Zhang wrote:
 
-Reviewed-by: Huang Wei <huangwei@kylinos.cn>
+> Currently led_trigger_is_hw_controlled() is placed at led-class.c, which
+> is not an right place as it falls into the triggers namespace and does
+> triggers stuff.
+> 
+> Move it into led-triggers.c, and split it into locked and unlocked
+> variant for convenience.
+> 
+> Fixes: b819dc7d8fb2 ("leds: core: Report ENODATA for brightness of hardware controlled LED")
+> Acked-by: Ike Panhc <ikepanhc@gmail.com>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+> Changes in v3:
+> - New patch in the series, the dependency of the following patches
+> ---
+>  drivers/leds/led-class.c    | 10 ----------
+>  drivers/leds/led-triggers.c | 19 +++++++++++++++++++
+>  include/linux/leds.h        |  8 ++++++++
+>  3 files changed, 27 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 4259533dafa1..7110bfbe3b83 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -27,16 +27,6 @@ static LIST_HEAD(leds_lookup_list);
+>  
+>  static struct workqueue_struct *leds_wq;
+>  
+> -static bool led_trigger_is_hw_controlled(struct led_classdev *led_cdev)
+> -{
+> -#ifdef CONFIG_LEDS_TRIGGERS
+> -	guard(rwsem_read)(&led_cdev->trigger_lock);
+> -	return led_cdev->trigger && led_cdev->trigger->trigger_type;
+> -#else
+> -	return false;
+> -#endif
+> -}
+> -
+>  static ssize_t brightness_show(struct device *dev,
+>  		struct device_attribute *attr, char *buf)
+>  {
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index b1223218bda1..bf2543538ed0 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -7,9 +7,11 @@
+>   * Author: Richard Purdie <rpurdie@openedhand.com>
+>   */
+>  
+> +#include <linux/cleanup.h>
+>  #include <linux/export.h>
+>  #include <linux/kernel.h>
+>  #include <linux/list.h>
+> +#include <linux/lockdep.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/device.h>
+>  #include <linux/timer.h>
+> @@ -33,6 +35,23 @@ trigger_relevant(struct led_classdev *led_cdev, struct led_trigger *trig)
+>  	return !trig->trigger_type || trig->trigger_type == led_cdev->trigger_type;
+>  }
+>  
+> +static bool __led_trigger_is_hw_controlled(struct led_classdev *led_cdev)
+> +{
+> +	lockdep_assert_held(&led_cdev->trigger_lock);
+> +
+> +	if (!led_cdev->trigger)
+> +		return false;
+> +
+> +	return led_cdev->trigger->trigger_type;
 
-Thanks,
-Huang Wei
+How does this not cause a compiler warning?
+
+This needs to be evaluated properly.
+
+> +}
+> +
+> +bool led_trigger_is_hw_controlled(struct led_classdev *led_cdev)
+> +{
+> +	guard(rwsem_read)(&led_cdev->trigger_lock);
+> +	return __led_trigger_is_hw_controlled(led_cdev);
+> +}
+> +EXPORT_SYMBOL_GPL(led_trigger_is_hw_controlled);
+> +
+>  ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+>  			  const struct bin_attribute *bin_attr, char *buf,
+>  			  loff_t pos, size_t count)
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index a515f075c29a..46ad2e03e1c6 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -534,6 +534,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev);
+>  int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trigger);
+>  void led_trigger_remove(struct led_classdev *led_cdev);
+>  
+> +bool led_trigger_is_hw_controlled(struct led_classdev *led_cdev);
+> +
+>  static inline void led_set_trigger_data(struct led_classdev *led_cdev,
+>  					void *trigger_data)
+>  {
+> @@ -584,6 +586,12 @@ static inline int led_trigger_set(struct led_classdev *led_cdev,
+>  }
+>  
+>  static inline void led_trigger_remove(struct led_classdev *led_cdev) {}
+> +
+> +static inline bool led_trigger_is_hw_controlled(struct led_classdev *led_cdev)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline void led_set_trigger_data(struct led_classdev *led_cdev) {}
+>  static inline void *led_get_trigger_data(struct led_classdev *led_cdev)
+>  {
+> 
+> -- 
+> 2.55.0
+> 
+
+-- 
+Lee Jones
