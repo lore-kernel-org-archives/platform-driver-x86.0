@@ -1,108 +1,181 @@
-Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDCE17A314
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 05:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790227905; cv=pass; b=EOB0Oucc17yq6pGCOGgHqIgUXIlG1cMauX5JBttLMtEdtuweZZEVo8+W/g5ahsv/sGHdHGuMrM14RUbBmKZNHX4HKIilbfh7mQSYUKz26MfLbJzfsObGBdMuSahKKZquFUT+eaSDFh9y9PhF655wXOqxspOjsqt2dbpKvA5SV0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790227905; c=relaxed/simple;
-	bh=OnT1j0gF55TZq8gmDZO0CcJ6lH9dlv7EE1MvVq0Lt6U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nOEE2GEa+qdyTvo5cPpwnJC82QB3E/QrouY80/sKBUpPWEtqHJdQakkllyCAgyC9I2WDNd1Csz1e62AVusyOPwo8H7RM4MZVuQMod7MLXO4dlip8ODwQVNKcjNdQX8PsRbHqMkxTZlGLPHApluGfBGFI+nKWB9uaewqwFFQyyds=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ec4Y0yNV; arc=pass smtp.client-ip=74.125.228.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B5535B65D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 05:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790228181; cv=none; b=CsWx+MzCfBlZH2G9tTFNtzkZmLvRrOwnhuS393udjV8VCzYJ66pzkeQ42FddNuoQZwXAWPKodp06TyuV6F5UYePD8jqE1BcbhWdVV0QUDfTBFNMKaITaJnp3iWhJdvv9D9Hh4e8VuW1AAQ+Oo5v0Dblfr0DQEV93E1Db6j9L4gU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790228181; c=relaxed/simple;
+	bh=LNQ6/cxi1/RiLFN1o9CBtzzPi9Abau/Eed0WKkToToM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fi69CHF4KNuRnA4Sk/VaZwmlj6c/WL4B384oczVjgVxLMrQygIkRUoCEb+4wfZleADWvurQ+VSa9SecX+SrFT64Mj/LvlnBUkJYyKg3LhVAK2maGvB9TeeyClC0AfNP2N+zX6kdNe58BLEU7u8TYnO9yQYLUtWBcehhN25qTwl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=2E+gFHzX; arc=none smtp.client-ip=45.157.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ec4Y0yNV"
-Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c254f5603a0so240681266b.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Sep 2026 22:31:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790227903; cv=none;
-        d=google.com; s=arc-20260327;
-        b=pHKjzrFfrtD+LYqLqfv8gsDrAR7eMOpFp4djWlYzy1nJ1MzQhPGhXiu3rFkmSh2Nf8
-         0oxZQS42dq74Zp4BERLlUqM+SwV2FOjAQiXzN3ZimWg70QgWmmHPrS3XKwX6dDayjHfT
-         Iz9iCBtGRC37QhjaTyKZWRdxLX9rkDwVnXCvGn4X7hWJKe6c/4JG+4X52xhnd3xPzyQ6
-         B8t4qubqdSulDke593be1lwefP8gIs40XKdbErRfQw0u6D8JPff0UF+hcaf7Z9l02WlJ
-         3G59LuYTeu2cw+1ucbUWT+hgdrmmxNm1YybBVcnSkpXrqoOhyRwacpKd3P9t2A1hKTew
-         qB8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=OnT1j0gF55TZq8gmDZO0CcJ6lH9dlv7EE1MvVq0Lt6U=;
-        fh=2yH1GT0cYPNtG1FW1o+NdiNIbW/gtOUQXZRyB0hQ64w=;
-        b=VkcQOTkkwth/lehZCxx+h1REuYR5wiGwXsiAoUav0KeycpHy5cLOe8Wt6yIh4a7SLj
-         vV9///GoBzSnA0OFc9KykIiwa4b95pazDfFan3+3C+4pQxP6TPxf82Uxhb2sHUWa4W8X
-         PkzuTQXGJ5MSwiZsP8wgUFtmz4q4BAT8XDh7raSlYovR7oMjzjmZSPDz8X5VzVO88sY4
-         t8CeblP6FqmT7K4mEBP7AEY4Uy3VCBDOvz0K44aMWe9MJHxYQZilxE/wU5AIHEWFe2cJ
-         BNEi62sfsmGbBYV4M9oTvGttGG44cfKWsNnwM9jPIrfnF2pHZSFNpO2WYIEs+IMaViuP
-         5woQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790227903; x=1790832703; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=OnT1j0gF55TZq8gmDZO0CcJ6lH9dlv7EE1MvVq0Lt6U=;
-        b=Ec4Y0yNVIuqjN4CltJ710c5Y58NRLWNH3ym2uvNg7Mv1/1Uj06/Xq4E6PeeMJvwyNk
-         /Qg3aTEqllqNutlzA+9CyegcOEPM7XmfkblOWMnc75hxmaQeoMzzrFqCiD5bNdLVuqCf
-         7cxBz3hHgt31I5IwUyy6M62Tq1ZDmsYUl8eBWhw8rkukXk6Zz07U89sr2xZ3XRkNsWQj
-         j6+FPdGHGG6lMBdmTHP4MUlJNoP1LdamX84HrPWkVYliDtAG8NUSLq961MBjrjojyDJg
-         VBcAs5oufQ3kGZy4rjR9y9QvfnBKipVquZPdOZ4hyOieC9t6oagtwGWDDZrobueucOZb
-         QlZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790227903; x=1790832703;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OnT1j0gF55TZq8gmDZO0CcJ6lH9dlv7EE1MvVq0Lt6U=;
-        b=WRsepq1CXNXGDtOWz9ukxxeymt8e0c0zP8ocmJXVDOCkUqUqLbm1NnY20xwc61E9vG
-         JSrRUEc6K3GRCLCBQeuxvsYQl3p6/o/kVFUAymlcxqqssb7GXS/EduNtyrLvoHS5ASDv
-         Y7mljlyH4gG+zuwvxtUD3s52S9OToT/1xdMKz5gImwIUjLQ0PwEAu9Dk/WH2uAQm+9Wb
-         gsCdZCK0c6jdoI18oHxH2HI0VbLvPwrtMQcH0U5/brFgERjVp80cGPNEGXRlnkeFv+hy
-         q6ZxB1NDXgKUcW5sfdh03HprfSjjDwXHPwEHTfhY4x7ciokfvXku7DuH6SQOoziLU23k
-         5RXQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxS0ztG0VExBCVzSB7Mo2EhYi2Ji2mivvKPrENYyV0+NLnzQggwl2k1dfVfGl+T7H8QuvIYk8nPU/Uc17aPigiZaPF2@vger.kernel.org
-X-Gm-Message-State: AFuF++k+q5nXYizSJAwb159Ys0F+rYombR6KxNpXG09hrUhRwYz2j0/e
-	9fU0vbE54ZXwdW7l87d5u/5NtEDXaeOF6q0T54T48izFtTTsFQa2TZRDcNsYpqnOCq3r+PihuYt
-	NjIaTwMQzMEwNRmO+3g4Di9H/XptN+cs=
-X-Gm-Gg: AYBFou285fIUTcdgLZMSoD3o2adax34tP2R2eCJghNNgg22CK9qFArG00QL+4qzuwO9
-	dKDK71TWSV3u8VzGk4t8Ddxzn33G8RtYmdO1Ul64zYk20s7euq9fj93w4WkFNU4yvnMLa/v6oHd
-	PSvuiqgrNn787CmSde+B0MUaSoRehSGlpk2LYM85KMa5fEOW1EuV0D2ick+EMiAYxRsHzsglj4b
-	IZKt27CoReN090C9siXe7kPjXfeOW4w2iM8nGy6UNcdQY4nNFOj+l+RqFsMYgXhNt5cMb/Gacqr
-	ByBXYqM7UgNdsJAsn0Jlre50lYSOaEgWKYDW9mruXLiiFcdKPmPdSy/oB5bnC0FOnWaeZYE6KHx
-	QifqiN8cUJds=
-X-Received: by 2002:a17:907:9603:b0:c26:2a2:b91d with SMTP id
- a640c23a62f3a-c2ac23db836mr101945666b.6.1790227902600; Wed, 23 Sep 2026
- 22:31:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="2E+gFHzX"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hr2ct2YldzH6H;
+	Thu, 24 Sep 2026 07:36:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790228174; bh=9Kyz/rTPJQ9RhsttYivOqfj/H4Czdnx83Wb1MtyABdA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=2E+gFHzX0/10BKmG5ZkjGMrtO9MbHodUxUvchSGUKWdNGj7EpxmWr7Utb6pbDjS0O
+	 +pNPehGh223Fr7g+O34tTY6oYUr0kq+e6Df/I3q/HD6HFgC/lGWl3L2lgz/ttxL9vX
+	 xIigYCQAPS5Ed+0G/pgQQD//oROE1Wp5n8BhXOGY=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hr2cs1rLfz4TS;
+	Thu, 24 Sep 2026 07:36:13 +0200 (CEST)
+Message-ID: <da547f98-8bb0-ae1d-ded1-28fde8a64b46@ik.me>
+Date: Thu, 24 Sep 2026 07:36:12 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260924-gv302-tablet-v1-1-a45dd3a383f1@gmail.com>
-In-Reply-To: <20260924-gv302-tablet-v1-1-a45dd3a383f1@gmail.com>
-From: =?UTF-8?B?0J3QuNC60L7Qu9Cw0Lkg0J/Qu9Cw0YHRgtC40L3QuNC9?= <plaztininikolai@gmail.com>
-Date: Thu, 24 Sep 2026 13:31:31 +0800
-X-Gm-Features: AclHuK9ID68yXpk8yW-_xVM6S7qoHJoqGYfZL8hMoFlRtkmEuF3_JCoIEGlOQHM
-Message-ID: <CAEbFrdhw7q6VC=dCnX7BoUW6ufwnbk+xrCyzfGbg_+zUneP=4Q@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: add tablet mode quirk for ROG
- Flow X13 GV302X
-To: plaztininikolai@gmail.com
-Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
+ <55854916-292a-40ae-8421-1a784785d899@amd.com>
+ <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
+ <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
+ <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+ <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
+ <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
+ <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
+ <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
+ <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
+ <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
+ <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
+ <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
+ <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
+ <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
+ <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
+ <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
+ <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
+ <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
+ <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+Content-Language: en-US
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-=D1=87=D1=82, 24 =D1=81=D0=B5=D0=BD=D1=82. 2026=E2=80=AF=D0=B3. =D0=B2 01:4=
-8, Nikolay Plastinin via B4 Relay
-<devnull+plaztininikolai.gmail.com@kernel.org>:
-This patch was prepared with the help of an AI assistant (Assisted-by: LLM)=
-;
-I reviewed it and tested it on my GV302XV. Happy to resend with the tag
-if preferred.
+On 2026-09-23 23:10, Mario Limonciello wrote:
+> On 9/23/26 15:48, Fourhundred Thecat wrote:
+>> the bug reproduces on 7.3-rc4.
+>>
+>> Built 7.3-rc4 from the torvalds snapshot, migrated my 6.18.51 config 
+>> with make olddefconfig, IOMMU enabled, all 24 CPUs online, no IOMMU 
+>> boot parameters. Same result: the machine suspends and never wakes, 
+>> forced power off required.
+>>
+>> Both attempts recorded by the same script, neither produced a resume 
+>> block:
+>>
+>>    === 2026-09-23T22:15:02 BEFORE
+>>    cmdline:     (6.18.51, no iommu parameters)
+>>    cpus online: 0-23
+>>    iommu:       ivhd0
+>>    ff_rt_clk:   0
+>>    S0ix Entry Time: 0 / Exit Time: 0 / Residency Time: 0
+>>    suspending with +30s alarm
+>>
+>>    === 2026-09-23T22:39:06 BEFORE
+>>    cmdline:     (7.3.0-rc4, no iommu parameters)
+>>    cpus online: 0-23
+>>    iommu:       ivhd0
+>>    ff_rt_clk:   0
+>>    S0ix Entry Time: 0 / Exit Time: 0 / Residency Time: 0
+>>    suspending with +30s alarm
+>>
+>> Both used a programmed RTC wakealarm at +30s and were left untouched 
+>> for several minutes.
+>>
+>> Relevant details of the 7.3-rc4 build, so this is not a configuration 
+>> difference:
+>>
+>>    CONFIG_AMD_IOMMU=y, CONFIG_IOMMU_PT=y, CONFIG_IOMMU_PT_AMDV1=y
+>>    CONFIG_NR_CPUS=24, CONFIG_MODULES not set
+>>    CONFIG_DEBUG_FS=y, CONFIG_PM_DEBUG=y, CONFIG_DYNAMIC_DEBUG=y
+>>    CONFIG_AMD_MP2_STB=y, CONFIG_X86_MSR=y, CONFIG_DMIID=y
+>>    CONFIG_LOG_BUF_SHIFT=20, CONFIG_RANDSTRUCT_NONE=y
+>>    kernel is not tainted, builds with zero warnings
+>>
+>> Only 243 config lines differ between my 6.18.51 and 7.3-rc4 configs. 
+>> Both commits you pointed me at are present in 7.3-rc4: rtc-cmos uses 
+>> platform_get_irq_optional(), and iommu/amd carries the "No ACPI device 
+>> matched UID" check. As on 6.18, that FW_BUG message does not appear 
+>> here either.
+>>
+>> Two things worth noting about the 7.3 build specifically. The new 
+>> IOMMU page table layer is in use (CONFIG_IOMMU_PT / IOMMU_PT_AMDV1 
+>> replacing CONFIG_IOMMU_IO_PGTABLE), so that rework does not change the 
+>> outcome. And AMD_PMF and DRM_ACCEL_AMDXDNA are not compiled into 
+>> either kernel - DRM_ACCEL and AMD_SFH_HID are both off in my config - 
+>> so neither driver is involved in any of these results at all, which is 
+>> a stronger statement than the initcall_blacklist tests I reported 
+>> earlier.
+>>
+>> Where that leaves things. With the IOMMU enabled and all 24 CPUs, on 
+>> both 6.18.51 and 7.3-rc4:
+>>
+>>    lid switch, internal keyboard, power button, USB mouse with wakeup
+>>    armed, and a programmed ACPI RTC alarm        all fail to wake
+>>
+>>    intremap=off, iommu=pt, amd_iommu_intr=legacy  all still hang
+>>    pm_test freezer / devices / platform           all pass
+>>    PC6 and CC6 enabled per amd-s2idle             yes
+>>
+>>    amd_iommu=off                                  wakes normally,
+>>                                                   Last S0i3 Status 
+>> Success,
+>>                                                   13.3s residency,
+>>                                                   pm_wakeup_irq 9
+>>
+>> Since it fails identically on 6.18 and 7.3 there is no working kernel 
+>> version to bisect against. The only variable that changes the outcome 
+>> is whether the IOMMU is enabled, and secondarily whether more than 16 
+>> CPUs are brought up at boot.
+> 
+> To me this still feels like a BIOS bug.  I wouldn't discount the 
+> possibility that think-lmi didn't apply a setting properly or something 
+> like that.
+> 
+> Can you please try to manually go into your BIOS and reset BIOS default 
+> settings?  Does it reproduce with IOMMU left on?
+
+I did another test:
+
+I bootet latest Debian live CD image before touching the BIOS, and it 
+reproduces.
+
+Debian live, kernel 7.1.12+deb14-amd64 #1 SMP PREEMPT_DYNAMIC Debian 
+7.1.12-1 (2026-08-28). Stock distro kernel with modules, systemd and 
+udev, every device driver bound, distro defaults throughout, nothing of 
+mine involved except the BIOS settings. echo mem > /sys/power/state 
+suspends and never wakes. Forced power off required, same as always.
+
+So my custom kernel configuration is not the cause.
+
+That now leaves three kernels reproducing it:
+
+   6.18.51    my build, minimal config
+   7.3-rc4    my build, migrated config
+   7.1.12     stock Debian live image, distro config
+
+I will do the BIOS defaults reset next, as you asked.
+
+
+
