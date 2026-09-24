@@ -1,149 +1,184 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC2E4137A8
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 18:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CA84A260B;
+	Thu, 24 Sep 2026 18:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790273059; cv=none; b=I72mvXLMVwfBvr8dmHUwyWr3CqOMlbox4BKN2M3n4Kbbs8VlNpElJh6RrFaGGu1r7fZnDdDJlpziAZcPgfme7bJHbZuObTMSexQF5IAln96sFVzL4ijsKPTbfzvvm/TrOklCr3o4smTrc+1GpxPWFZhRdf3R9mmWMxhIQkH+yvY=
+	t=1790274240; cv=none; b=uB+lxgj80QmPW9E52VPLhpkCMonZxtJd4Ks/FfuAL4MujCEDbO4U5sKnfZ6c3D+NT94l0Bhgk6ZNndcGZxlH40JBqjWBSYnjg+gk5ikMxCXHlMjmMAD/ZE+sDcMy+D/rkn6vzTpuLwHC3aoG+3E24RbpEv+/Wi3tXQWPGRbsLlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790273059; c=relaxed/simple;
-	bh=y7PL0+ejjyHGcnok7ngTGhIV4WHYWuQR9i0Pn0Z9nR8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WrLbN4icR6k/REBW4r6iN0kx4PUhtBmM7eXaRKBQII0SCjJ8O7CXc0fQD1IGfPhqqx4FGWVFO//fv3CvTpWzoPp4SXsAb1Z02237wpAUE/GbUWyFQNrLR5KcjG3nDWzuyer32LlGd8dTUcQ1yU/7c1YzYGzIDUZzHJ04x2tZvPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuWAQ0Hy; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790274240; c=relaxed/simple;
+	bh=ikGedobOvwz1lNfQIzMR2wgpjnhV10nMaIkwSDRV3Tk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jQ3jVjAscOcZUII0gRQephGZyUzGGTA3aOprozT2J6DvjxjeInIjzheLBcEcNHkJbxOdpZMTy3x+71r9z7bhtN7pSndCLgagQxdf333Pj48+VyjNgmlepwjgzODDTPaclRxUSuPDx2MnKKndpr6a+j0JAbNNLTWh1Wg6iypT30g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FoXOhVgV; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuWAQ0Hy"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c2946aa0d5aso186209466b.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 11:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790273056; x=1790877856; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=8ZaSVO+SF6MEByvXtiNZMR9/TYrsAkgI1sYilat2LtQ=;
-        b=MuWAQ0HyO144YjPCnNEPhO39lRH+EK2CCiHkS2HHTlJEuTpToT3q2pzYDLi/znwRPW
-         gpMN57KKXWivPsxe5Mf5Jc8dqR5lj41L+HH8LvR6qIXadM5FGFdCnWbnbzxU5xYHMcOf
-         RvxU9f8Q63v6zQyh/CAnzDoHE0v8OAIgIQSkOtW2pV8d15tburpy9Fuc7xohb92c9mhf
-         RazyWXt8TPqBZAAulmhR5UnEGIOXvFvxDm1uxNF/uQvt1jR7zrG1uTd4xah2r+2foTtR
-         UxYJitxk+AvGqAUv+RMRmig45/5/f/AcR/IS/LFMk7fQ2kmk8z6L73KdkUGmpmN+acpg
-         87qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790273056; x=1790877856;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=8ZaSVO+SF6MEByvXtiNZMR9/TYrsAkgI1sYilat2LtQ=;
-        b=1OT+TNfi4Yw3G9arlPfzENvM4MqJaOf9fMZdaDZ7bKeaK1rPhJvNSoaVZ7T8QQbJOR
-         vRSvki971O/0sXEbkJo7rtD7Hhca690gVsp0YxMQl8GIcMwi10Mc5MoMUhhbRUXa/89W
-         PHPwAEHuBtiiarxvCJEcu56BiwG+54iPyJ2uiJ1L7AQ/zXkTuxPXcpC6/NL+oySy5V5r
-         +yr7KbOq6lA+ZsUx4oYp2wrQw1Q3AKgjxhBjW7bznMf4LZGzXqEVxhghGRdWyUMWCbiK
-         MX9KzSO79Q4ssdonYI2s0Q8/J7OrfHF1xAeEH4UzQwMTSb4LC3j4kcsXlxKJaoofa/0S
-         kMAg==
-X-Gm-Message-State: AFuF++lvQiKwcB0ordZ7XgWaQSyfC2HEw9EJm7m+D4MUJzSgb3jf9x24
-	afZhtlSpcYgH3FW+q4QVNUuDc4NprvqNf956W8JTHN+BZYoRvKuIOwU=
-X-Gm-Gg: AYBFou2x799Lzje/O8iD15delphChjCsMZkXpM6NJhZxoOj6rdZCkAv6PkRDtEYZGUR
-	raJQaDO6j5RhWf2TY0m624hnYFVGH/JMgOhUc7kVly50rEFU/MInISFFH6aV/sNkL3UPg2elQqa
-	2c0PZfv93cLr/gRkDruucA/kCJL1i7ZALphfdV/dj0EO98hd2VREQ9WB1Xxnp9lxcNCDy+RHl/t
-	GvhdugdJx8I4jJAEtdmU4z501bed22CYvhSDghCcJhMxRP18AYmZg6zEp0gQk9UFsK/Tky0NyLw
-	Cit83sllt3oYvcQubKk+Fbgs8I/IB1DzgKIygt0RkmXSe4jZyguN3Krmg0aSHhA4ddEES1mgUjv
-	0mmiE2bRawOwT6H69SHXet3MyIW5ga1FTF92OMunTtvgW9+A63BUQngKv0ZHGK4+8r+E62Man1t
-	ss/kNelOVWr5Y+Af+9YEC9Z8JrFscJAsEm1jA5kWG5ycnZ2dIfhSbhAqq2/05Hca/jqoN9xN/mh
-	FxK
-X-Received: by 2002:a17:907:6ea9:b0:c29:42ad:acd0 with SMTP id a640c23a62f3a-c2ac23a733fmr314809466b.30.1790273055386;
-        Thu, 24 Sep 2026 11:04:15 -0700 (PDT)
-Received: from okuroshi-laptop ([169.150.245.5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2aae6610a6sm336715966b.39.2026.09.24.11.04.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 11:04:14 -0700 (PDT)
-From: Artem Maksimov <okuroshioffc@gmail.com>
-To: Jorge Lopez <jorge.lopez2@hp.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FoXOhVgV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790274238; x=1821810238;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ikGedobOvwz1lNfQIzMR2wgpjnhV10nMaIkwSDRV3Tk=;
+  b=FoXOhVgVf+/rLOkoDAHp7XY6aGZbSxpsbYt0o5ZwIn03GWcEcY3QTDy8
+   /hJvmUoeZLNcO/O6f2Lo5QfHFvRePE4wAb7yP8f197EQWMpzLdjRs6/hG
+   7DIebJm9vp9jxwkVpMQlQOi1WmFrlKr1WrwGuCoTH/moomBsAlL700gZb
+   U4sZfIPJP4yehaVX8LPpR4XJ3LxNBK0N5FbG+4NUrbPX0/fWCt5nWRECj
+   G1S7cEmQmxoRPc/uVWHTmXVdUhjFrvJ+P6MiQLHezcE0qG7UAqhAC8SLM
+   haFl1nt/+gJtqY4gh6Lmo34cwqBrTlseMEbRHWMBGlSEl3qj1gDGWGK0a
+   g==;
+X-CSE-ConnectionGUID: H5ZjLCplSmKYVvPa8GI7tg==
+X-CSE-MsgGUID: ndZ6rjGtT6CSgDFtPFxqSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="91164251"
+X-IronPort-AV: E=Sophos;i="6.27,121,1787036400"; 
+   d="scan'208";a="91164251"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 11:23:44 -0700
+X-CSE-ConnectionGUID: mzOBtqURTzmoZQqqMXhrHQ==
+X-CSE-MsgGUID: K6CmSXopQgKWldH+qlVnQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,121,1787036400"; 
+   d="scan'208";a="272229906"
+Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 11:23:45 -0700
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Artem Maksimov <okuroshioffc@gmail.com>
-Subject: [PATCH] platform/x86: hp-bioscfg: support large bios data
-Date: Thu, 24 Sep 2026 21:03:41 +0300
-Message-ID: <20260924180341.34064-1-okuroshioffc@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	David E Box <david.e.box@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/19] Decouple PCI and auxbus details from Intel TPMI driver
+Date: Thu, 24 Sep 2026 11:23:22 -0700
+Message-ID: <20260924182342.212709-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Memory allocation for ordered_list_data and string_data
-can fail if contiguous physical memory is fragmented or insufficient.
-Switch from kzalloc_objs to kvzalloc_objs to fall back to
-virtually contiguous memory when physically contiguous
-allocation fails.
+Hi All,
 
-Signed-off-by: Artem Maksimov <okuroshioffc@gmail.com>
----
- .../x86/hp/hp-bioscfg/order-list-attributes.c         | 11 ++++++++---
- .../platform/x86/hp/hp-bioscfg/string-attributes.c    | 11 ++++++++---
- 2 files changed, 16 insertions(+), 6 deletions(-)
+This series is a no functional change refactor of the TPMI driver
+(vsec_tpmi.c). It separates the code that does not care how TPMI was
+discovered from the code that does.
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-index 5bf8d40bdf81..80ac15435a18 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-@@ -98,8 +98,13 @@ int hp_alloc_ordered_list_data(void)
- {
- 	bioscfg_drv.ordered_list_instances_count =
- 		hp_get_instance_count(HP_WMI_BIOS_ORDERED_LIST_GUID);
--	bioscfg_drv.ordered_list_data = kzalloc_objs(*bioscfg_drv.ordered_list_data,
--						     bioscfg_drv.ordered_list_instances_count);
-+
-+	if (!bioscfg_drv.ordered_list_instances_count)
-+		return -EINVAL;
-+	bioscfg_drv.ordered_list_data =
-+			kvzalloc_objs(*bioscfg_drv.ordered_list_data,
-+						bioscfg_drv.ordered_list_instances_count);
-+
- 	if (!bioscfg_drv.ordered_list_data) {
- 		bioscfg_drv.ordered_list_instances_count = 0;
- 		return -ENOMEM;
-@@ -438,6 +443,6 @@ void hp_exit_ordered_list_attributes(void)
- 	}
- 	bioscfg_drv.ordered_list_instances_count = 0;
- 
--	kfree(bioscfg_drv.ordered_list_data);
-+	kvfree(bioscfg_drv.ordered_list_data);
- 	bioscfg_drv.ordered_list_data = NULL;
- }
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-index f3dfba270f7e..095201004d87 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-@@ -101,8 +101,13 @@ static const struct attribute_group string_attr_group = {
- int hp_alloc_string_data(void)
- {
- 	bioscfg_drv.string_instances_count = hp_get_instance_count(HP_WMI_BIOS_STRING_GUID);
--	bioscfg_drv.string_data = kzalloc_objs(*bioscfg_drv.string_data,
--					       bioscfg_drv.string_instances_count);
-+
-+	if (!bioscfg_drv.string_instances_count)
-+		return -EINVAL;
-+	bioscfg_drv.string_data =
-+			kvzalloc_objs(*bioscfg_drv.string_data,
-+					bioscfg_drv.string_instances_count);
-+
- 	if (!bioscfg_drv.string_data) {
- 		bioscfg_drv.string_instances_count = 0;
- 		return -ENOMEM;
-@@ -390,6 +395,6 @@ void hp_exit_string_attributes(void)
- 	}
- 	bioscfg_drv.string_instances_count = 0;
- 
--	kfree(bioscfg_drv.string_data);
-+	kvfree(bioscfg_drv.string_data);
- 	bioscfg_drv.string_data = NULL;
- }
+TPMI is discovered today through a PCIe VSEC capability, with the PFS
+table address computed relative to a PCI BAR. BARs are relocatable at
+runtime by resource rebalancing, hot plug or error recovery, which ties
+a platform wide register window to the lifecycle of one PCI function
+and to an address an untrusted VMM can influence. That is a concern in
+secure VM environments like TDX.
+
+Newer Intel platforms will support ACPI table based TPMI enumeration.
+The related ACPI spec is not public yet, so this series prepares the
+driver ahead of it. Several places in vsec_tpmi.c assume the
+enumerating device is a PCI device, or reach through a struct
+intel_vsec_device just to get at a struct device, and neither holds
+for an ACPI backend.
+
+The series comes in four parts.
+
+Patch 1 is a standalone cleanup. The feature device name was built in an
+on-stack buffer and handed to the auxiliary bus, which stores the
+pointer without copying the string.
+
+Patches 2 to 8 each remove one PCI or intel_vsec_device dependency and
+leave the code in place, so they are small and can be read on their own.
+
+Patches 9 and 10 do the split. tpmi_probe() and tpmi_remove() become
+intel_tpmi_init() and intel_tpmi_deinit(), which is the interface an
+enumeration backend implements against, and the enumeration independent
+code moves to a new intel-tpmi_common module. That leaves vsec_tpmi.c
+with just the auxiliary driver binding to the "intel_vsec.tpmi" device
+created by the Intel VSEC driver.
+
+Patches 11 to 19 are code improvements to tpmi_common.c. Some of them
+come from Ilpo's review of v1. Others were suggested by Andy in an
+internal review of this series, and since they touch the same code I
+have included them here as well. Each patch carries a Suggested-by tag
+for whoever suggested it.
+
+They are separate patches on top of the move in patch 10, as Ilpo asked,
+so that patch 10 stays a pure code move and can still be reviewed with a
+diff-of-diffs against the original vsec_tpmi.c. Each of them does one
+thing to tpmi_common.c and nothing else.
+
+Tested on a GNR platform. TPMI feature enumeration, the debugfs
+interface and the client drivers behave as before.
+
+Changes since v1:
+ - Added patches 11 to 19, from Ilpo's review of v1 and Andy's internal
+   review. Patches 1 to 10 are unchanged and carry the Reviewed-by tags
+   they collected.
+ - Patch 11: include the headers tpmi_common.c uses directly instead of
+   relying on other headers to pull them in, drop the redundant io.h and
+   sort the block.
+ - Patch 12: turn TPMI_GET_SINGLE_ENTRY_SIZE() into a function, so the
+   u32 to byte conversion reads as a multiply by sizeof(u32), the
+   statement expression goes away and the argument is evaluated once.
+ - Patch 13: take tpmi_dev_lock with guard() in
+   tpmi_read_feature_status() and drop the unlock label.
+ - Patch 14: use __free(kfree) and guard() in tpmi_mem_dump_show() so the
+   ioremap() failure can return from the loop.
+ - Patch 15: build each TPMI control mailbox word in one expression.
+ - Patch 16: use DEFINE_SHOW_STORE_ATTRIBUTE() for the mem_write debugfs
+   file.
+ - Patch 17: scnprintf() instead of snprintf().
+ - Patch 18: declare the loop counters in their loops.
+ - Patch 19: make the device creation policy a comment on
+   tpmi_create_devices() and split the condition it described.
+
+This series is based on v7.3-rc1.
+
+Kuppuswamy Sathyanarayanan (19):
+  platform/x86/intel/tpmi: Use static strings for the feature device
+    names
+  platform/x86/intel/vsec: Pass a struct device to
+    intel_vsec_set_mapping()
+  platform/x86/intel/tpmi: Remove unused vsec_dev from
+    intel_tpmi_pm_feature
+  platform/x86/intel/tpmi: Get tpmi_info directly from the parent device
+  platform/x86/intel/tpmi: Keep the feature resources in intel_tpmi_info
+  platform/x86/intel/tpmi: Describe a TPMI instance by its two devices
+  platform/x86/intel/tpmi: Drop unused arg from tpmi_set_control_base()
+  platform/x86/intel/tpmi: Do not assume TPMI is enumerated from PCI
+  platform/x86/intel/tpmi: Split out enumeration independent init and
+    exit
+  platform/x86/intel/tpmi: Split off the PCI VSEC enumeration
+  platform/x86/intel/tpmi: Include the headers tpmi_common.c relies on
+  platform/x86/intel/tpmi: Turn TPMI_GET_SINGLE_ENTRY_SIZE() into a
+    function
+  platform/x86/intel/tpmi: Use guard() for tpmi_dev_lock in the status
+    read
+  platform/x86/intel/tpmi: Use scope based cleanup in the memory dump
+  platform/x86/intel/tpmi: Build the TPMI control words in one
+    expression
+  platform/x86/intel/tpmi: Use DEFINE_SHOW_STORE_ATTRIBUTE() for
+    mem_write
+  platform/x86/intel/tpmi: Use scnprintf() to build the debugfs names
+  platform/x86/intel/tpmi: Declare the loop counters in their loops
+  platform/x86/intel/tpmi: Describe the device creation policy on the
+    function
+
+ MAINTAINERS                              |   1 +
+ drivers/platform/x86/intel/Kconfig       |   4 +
+ drivers/platform/x86/intel/Makefile      |   1 +
+ drivers/platform/x86/intel/tpmi_common.c | 824 +++++++++++++++++++++++
+ drivers/platform/x86/intel/tpmi_common.h |  52 ++
+ drivers/platform/x86/intel/vsec.c        |   7 +-
+ drivers/platform/x86/intel/vsec_tpmi.c   | 822 +---------------------
+ include/linux/intel_vsec.h               |   5 +-
+ 8 files changed, 900 insertions(+), 816 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/tpmi_common.c
+ create mode 100644 drivers/platform/x86/intel/tpmi_common.h
+
 -- 
-2.53.0
+2.43.0
 
