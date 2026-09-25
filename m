@@ -1,340 +1,349 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C9C440A26
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 18:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFEC4BD7BF
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 18:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790362138; cv=none; b=e0SP4y4n4tBc2m6NNo7OxQfzYbuDSuNRj60MSGk5hw2Mq+cjAQwEPyCnImWlmTzhlReRmmHjKSx/GqTBwfnZX7CtBv9mKMEM/Vk341ahtJlfhLIuQf3avFLl9YgjHLz11GAjt87+SRHt3wznydcTGKtGBJ9AecvJ9krjblAEUa8=
+	t=1790362444; cv=none; b=eEGuAR6GPJ4tK456yMQrZUfnvCgCZTif1f0ulq3WCvhaBfDryD5e7S7jmF17caAtc42E0cOFOD4Ua1W4wroGJ1jsZSmEP8nwXHYta+yAFhPc7lbtGXdP98eYesm781mZeNSD76qtELOcJgzLFGH6qMZBF+BBxzzBKPzi7ghoc5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790362138; c=relaxed/simple;
-	bh=X08H0OSq7MAXRMtWVx+2yXFWbe9mOdvCXV0iWxhQd/4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=mQroqHbWvQ5yviAnMgPQLCbQS9rExy+R/TJRZfs+7O8Wq+WsDplf8GZZFpJlVZfN8zQXmtV4L91jMZplQ0mBLYGiPzUWSECvnRgG+L6O6RXxzHG3VaZrfnhzPGIgQoEZr3JzuX3uaP+9xhicg9Dx02YSIsgdZbDwI1W4af2RSzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=L+X+u3S9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=r+C6jzGC; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1790362444; c=relaxed/simple;
+	bh=usaKw8fyOMLJ62ZswWZE9zU3pW4mGtmG0kmvZHsKDrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hiTpjN9NF/6uom3x57K/bZ6lznOvzO3IBkaU43WGmf7lyEh1itLH/RsvvnaAJscJxGqej8mpA1Ng4Fhrrtl05zqwvOAfZHTNutnqOWssh25siPwUS5rWpdQ3mp2IqoUtMcSUpK/7LwLyd9zjUqBVQwSGv3MTxQIT+1V/NR2iYPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=AAbMhFUn; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="L+X+u3S9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r+C6jzGC"
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfout.stl.internal (Postfix) with ESMTP id 2FAA61D000D1;
-	Fri, 25 Sep 2026 14:48:55 -0400 (EDT)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Fri, 25 Sep 2026 14:48:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1790362135;
-	 x=1790448535; bh=1MdsHn8JEIJV+qqX6hiOIDRBqcglntrFyPwq7blHJlI=; b=
-	L+X+u3S9DEKIb96D2KDt6jRhGoXBdUx26yd8pO11HxFkXo35useDa6Eph91MV4wU
-	0KLHBVQZ5Y5eDYUnMsVbQ91fPMX3S5noD5k33qribIeO4CMyTDNpGHfzw/yp7K1j
-	SYHzsup01Voof6/VwLy+zN3KtDz4D7dYELQo0Fm3Wotv7/Q8j1P09mYJsMDZBk9i
-	DEn6Aendv2pzo3gBjyx3wBy1HXou4wVboEk/vbSTiOnMoVTd1EdJ1eMSiuzPghgQ
-	iUpsfENktgjhbNHIqDOZTRFbSCCo8zG2yFniwMBojrO84g04ntdtjJGLzFoIO7K7
-	xBm0qJKrfzw5fUZcGt7O1A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790362135; x=
-	1790448535; bh=1MdsHn8JEIJV+qqX6hiOIDRBqcglntrFyPwq7blHJlI=; b=r
-	+C6jzGCjeYFP9lJljskg5Rhq1HpzZW0mTr+cKUkoBCo6MGO2rZPYcfRNTjezPSzg
-	aKkUFXaIl9OBc+rbjTqjnJgWjqVVkn9N+r936H4L6ecTZb9d9sErJkiC3uMM8Ru2
-	kiG12ekpISvjwin55/k4TvLW9mepVLPVjpxBBv2wmKzLlx3ictUBC65AAjdwIqiu
-	08GjrUEByggTh+G6ivrNyJgAbO3ivDSuFGU/O+W65qprzgRBYYcNymt7qjTsiD4/
-	QzGggtfBDuZE9ZsPLVprEDTXzLaaa9HkDdrEJqdzctgzsz17+/oOeB3DdATVmOUB
-	TfPQxwAB2mkxo6/A9zkDg==
-X-ME-Sender: <xms:FsK2amFHXRDJyMQKq4Uq31fkmu7kfKshHlugomB51ee08GfYTTmhpw>
-    <xme:FsK2aiJe04ypBkKxWfpKAmw5FYMQQhvICsZNHUwiLs20Q3i2mtKv-nDAjdJJI18uc
-    2v4NqiHEJQRWCLOe1fJy4NIApX9m0dGdu2o6OakXRWjYMTVHP5e44ap>
-X-ME-Proxy-Cause: dmFkZTEq4tf8P8WothA4UcM99Z6cEbuPPVNOZVS/PBlTebQnwVMETOd5CMLsux4Ei5n0eY
-    G/Zj5tI2oORUUrxjyoOjPS/NS0FlTA3eMVVkUAsLPy5SiOJ1kYwNeWyl5I1m5fYzE0sl9p
-    /iyC6ceNongRQxisfEg8bW0q8TS5VGLvcc1I8gWV8DrrmDX+ORogLL7oSo5lrKU/GLhCsO
-    KbCTmJNWErgu8nuBJ0hR/FyQB/m100iovu6/36SMJLwrXyk6vpKOwlO57iQO5gx4wBe5U0
-    pPnerqE3l8QP2HvJhJsPyt5875xGMwoWdV3usb4hWQYTgx0Wbc1wkJ3NzMoiEvFcZbqHpz
-    3GIGkT9Pi0nlAygDh/AyC2aAV1ysbw7bitwQ2p26zoldT4VB91VBgtFuFo31qIgLX0LmVE
-    HMgAftvBSwNBFFbv2JJnbUk3VKXvXH8WbKv6yeSqhcT2w7WlvQvQ37Aysbj5d3R2j6I+xf
-    zlg47ARqFrN8+5Fcn0Mb3qCR/lIlLCIXYg+mIJNy5tqroIZUh43kx/WnrNo9boAVfpPl95
-    BAJ1esUQAFDoMODDR0kZfBs+J6g9NYJduPWPVrQ+xxPC9m5Wxf0ADybNgiNemQu4OmWQ3/
-    ol4zKrvF2ii6mqCFxiG8hsEnBPvGdEIxB6cH9uqOBunr/AaFOTbmRi8bPoPg
-X-ME-Proxy: <xmx:F8K2ansIVDKzfYjacXr4fJpuew-P0rOnxIZLf8hDLawa-fkaiioUZA>
-    <xmx:F8K2aih-F7vs_3HFPiVA9r640Gn7hhzEE7LEVL9n5d1XUZQ8UeiF-g>
-    <xmx:F8K2aqoCEzXO5cwc9_oNN3MsSADREdRXw4BUKT_hyoI5sGgzAJelpQ>
-    <xmx:F8K2anvZnRz2-XebVrr0O5KoJGfafAV5mdafNQdAfHD8d1aI3no3-A>
-    <xmx:F8K2avJisX-NUEcEhmEOP3zWhXDBeY_Y5G9OtviILoNivYR98QU4BViA>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id D48852C0006C; Fri, 25 Sep 2026 14:48:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="AAbMhFUn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1790362423; x=1790967223; i=w_armin@gmx.de;
+	bh=OnUWNo4D9SwUC2B+pY4OrdlC+LT1MwrlTbkFmXhk7BI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=AAbMhFUnWdVHejV7AhWgCGN/2ynLN9zfMK/KDCUpCgST3bSITwENkUUuxp0iZChJ
+	 JjKAWfv8Fiun1lqaQ3JQtd1RtfbPrzRnfc/e5KtNqRSdYXzkggYWwyiBbG37HYTaH
+	 1vnV/CZNOc26iGd/+P+/1z10gT8EcT/RFC6SEJUHhyPz3dMhAmC3uk9AtLHn0jxie
+	 shJCFYOIyzkJx1qCDwxEhkuTl0+Iv3PSXi1uzH/5vrLmgW38vh4hgQm4JN7IAVPUs
+	 kVGn4K/rwc9905G6yteZxghKQ1fJJSNFvGOOsNxdn7hDc9XbH8g9A+q5KFHUu4VF/
+	 VsB1P7d6Vui6hSG8iw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MHoN2-1wvNj737oM-00E3wR; Fri, 25
+ Sep 2026 20:53:43 +0200
+Message-ID: <f0407ed1-3b8f-4285-8349-926edf80e54f@gmx.de>
+Date: Fri, 25 Sep 2026 20:53:42 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AofVpfDJIkHw
-Date: Fri, 25 Sep 2026 14:48:34 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Armin Wolf" <W_Armin@gmx.de>
-Cc: "Prasanth Ksr" <prasanth.ksr@dell.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, Dell.Client.Kernel@dell.com,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Message-Id: <3eb32163-6c02-4d2a-9f45-d46c73329199@app.fastmail.com>
-In-Reply-To: <39972b87-3ace-4e91-b7e1-59d8d656dc67@gmx.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 5/7] platform/x86: think-lmi: Initial ThinkLMI v2
+ driver
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: prasanth.ksr@dell.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ derekjohn.clark@gmail.com, Dell.Client.Kernel@dell.com,
+ platform-driver-x86@vger.kernel.org
 References: <mpearson-lenovo@squebb.ca>
  <20260925160047.2063361-1-mpearson-lenovo@squebb.ca>
- <20260925160047.2063361-3-mpearson-lenovo@squebb.ca>
- <39972b87-3ace-4e91-b7e1-59d8d656dc67@gmx.de>
-Subject: Re: [RFC PATCH 2/7] platform/x86: think-lmi: think-lmi driver to load v1 or v2
-Content-Type: text/plain
+ <20260925160047.2063361-6-mpearson-lenovo@squebb.ca>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260925160047.2063361-6-mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:nWhdGfWdt9Mpl2nU1zZqQVuOQJKT32z5Zm+Up168U/NKofTlmLD
+ gOjdRxNbLr3q0shdkOEqJq3dYyjjpULIGAvjHvRKWUfQYim8ScQFRZadpZhaDxJpQwn8pur
+ H6ciegcw9VLphHtmtpWCWrhcE8uYsDMG7bhiCYSgdaeG7QeWk/ztyqUMREHlrnGgv5LUxxY
+ Rm9vHJBHSG+zm/xkdD8BA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:R9NaZUfsTwc=;OmGPQXxUEuqkh6VKSKKVFmzEugl
+ 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
 
-On Fri, Sep 25, 2026, at 2:40 PM, Armin Wolf wrote:
-> Am 25.09.26 um 18:00 schrieb Mark Pearson:
->
->> More preparation for think-lmi-v2 driver.
->>
->> Create think-lmi driver that will be able to determine if v1 or v2
->> driver should be used.
->>
->> Add main GUIDs into think-lmi.h file
->
-> Wouldn't it be easier if think-lmi-v1 simply checks if TLMI_V2_BIOS_SETTING_GUID
-> exists during probe and simply aborts if that happens to be the case?
->
-Hmmm....good point. That would be simpler.
-I tried something like that early on but I can't remember why I bailed on it. I'll take a second look.
+Am 25.09.26 um 18:00 schrieb Mark Pearson:
 
-Mark
-
-> Thanks,
-> Armin Wolf
+> Lenovo Thinkpad, Thinkstation and ThinkCenter are moving to a new common
+> WMI implementation.
 >
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->>   drivers/platform/x86/lenovo/Makefile       |  1 +
->>   drivers/platform/x86/lenovo/think-lmi-v1.c | 36 +++-----
->>   drivers/platform/x86/lenovo/think-lmi.c    | 99 ++++++++++++++++++++++
->>   drivers/platform/x86/lenovo/think-lmi.h    |  6 ++
->>   4 files changed, 120 insertions(+), 22 deletions(-)
->>   create mode 100644 drivers/platform/x86/lenovo/think-lmi.c
->>
->> diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/lenovo/Makefile
->> index 98a3baa45fa6..c404cff99d35 100644
->> --- a/drivers/platform/x86/lenovo/Makefile
->> +++ b/drivers/platform/x86/lenovo/Makefile
->> @@ -4,6 +4,7 @@
->>   # Lenovo x86 Platform Specific Drivers
->>   #
->>   obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
->> +obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->>   obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi-v1.o
->>   obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->>   
->> diff --git a/drivers/platform/x86/lenovo/think-lmi-v1.c b/drivers/platform/x86/lenovo/think-lmi-v1.c
->> index e215e86e3db7..26a62e1a709b 100644
->> --- a/drivers/platform/x86/lenovo/think-lmi-v1.c
->> +++ b/drivers/platform/x86/lenovo/think-lmi-v1.c
->> @@ -34,7 +34,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->>    * Returns: "Item,Value"
->>    * Example: "WakeOnLAN,Enable"
->>    */
->> -#define LENOVO_BIOS_SETTING_GUID "51F5230E-9677-46CD-A1CF-C0B23EE34DB7"
->> +#define LENOVO_BIOS_SETTING_GUID TLMI_V1_BIOS_SETTING_GUID
->>   
->>   /*
->>    * Name: SetBiosSetting
->> @@ -233,6 +233,7 @@ static const char * const level_options[] = {
->>   };
->>   static struct think_lmi tlmi_priv;
->>   static DEFINE_MUTEX(tlmi_mutex);
->> +static bool tlmi_initialised;
->>   
->>   static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct kobject *kobj)
->>   {
->> @@ -1818,13 +1819,17 @@ static int tlmi_analyze(struct wmi_device *wdev)
->>   	return ret;
->>   }
->>   
->> -static void tlmi_remove(struct wmi_device *wdev)
->> +void tlmi_v1_remove(struct wmi_device *wdev)
->>   {
->> -	tlmi_release_attr();
->> -	device_unregister(tlmi_priv.class_dev);
->> +	if (tlmi_initialised) {
->> +		tlmi_release_attr();
->> +		device_unregister(tlmi_priv.class_dev);
->> +		tlmi_initialised = false;
->> +	}
->>   }
->> +EXPORT_SYMBOL(tlmi_v1_remove);
->>   
->> -static int tlmi_probe(struct wmi_device *wdev, const void *context)
->> +int tlmi_v1_initialise(struct wmi_device *wdev, const void *context)
->>   {
->>   	int ret;
->>   
->> @@ -1832,23 +1837,11 @@ static int tlmi_probe(struct wmi_device *wdev, const void *context)
->>   	if (ret)
->>   		return ret;
->>   
->> -	return tlmi_sysfs_init();
->> +	ret = tlmi_sysfs_init();
->> +	tlmi_initialised = true;
->> +	return ret;
->>   }
->> -
->> -static const struct wmi_device_id tlmi_id_table[] = {
->> -	{ .guid_string = LENOVO_BIOS_SETTING_GUID },
->> -	{ }
->> -};
->> -MODULE_DEVICE_TABLE(wmi, tlmi_id_table);
->> -
->> -static struct wmi_driver tlmi_driver = {
->> -	.driver = {
->> -		.name = "think-lmi",
->> -	},
->> -	.id_table = tlmi_id_table,
->> -	.probe = tlmi_probe,
->> -	.remove = tlmi_remove,
->> -};
->> +EXPORT_SYMBOL(tlmi_v1_initialise);
->>   
->>   MODULE_AUTHOR("Sugumaran L <slacshiminar@lenovo.com>");
->>   MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
->> @@ -1856,4 +1849,3 @@ MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>");
->>   MODULE_DESCRIPTION("ThinkLMI Driver");
->>   MODULE_LICENSE("GPL");
->>   
->> -module_wmi_driver(tlmi_driver);
->> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
->> new file mode 100644
->> index 000000000000..da1e54dab2d1
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo/think-lmi.c
->> @@ -0,0 +1,99 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * Think LMI BIOS configuration supprt driver
->> + *
->> + * Copyright(C) 2025 Lenovo
->> + *
->> + */
->> +
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/errno.h>
->> +#include <linux/fs.h>
->> +#include <linux/types.h>
->> +#include <linux/wmi.h>
->> +#include "think-lmi.h"
->> +
->> +#define THINKLMI_DEVICE(guid, version)		\
->> +	.guid_string = (guid),			\
->> +	.context = &(const unsigned int){version}
->> +
->> +static int use_version;
->> +module_param(use_version, int, 0444);
->> +MODULE_PARM_DESC(use_version, "Force use of version (1 or 2)");
->> +
->> +static int tlmi_version;
->> +static bool tlmi_initialised;
->> +
->> +static void tlmi_remove(struct wmi_device *wdev)
->> +{
->> +	switch (tlmi_version) {
->> +	case 1:
->> +		tlmi_v1_remove(wdev);
->> +		break;
->> +	case 2:
->> +		pr_err("Not yet implemented\n");
->> +	}
->> +}
->> +
->> +static int tlmi_probe(struct wmi_device *wdev, const void *context)
->> +{
->> +	int ret, ver;
->> +
->> +	if (tlmi_initialised)
->> +		return 0;
->> +
->> +	ver = *((const unsigned int *)context);
->> +
->> +	/* Until support is complete - we're going to ignore V2 */
->> +	if (!use_version && ver == 2) {
->> +		pr_info("TLMI version 2 detected but ignored as support not ready\n");
->> +		return 0;
->> +	}
->> +
->> +	/* Force use of version if requested */
->> +	if (use_version && use_version != ver) {
->> +		pr_info("Ignoring version %d as requested\n", ver);
->> +		return 0;
->> +	}
->> +
->> +	tlmi_version = ver;
->> +
->> +	switch (tlmi_version) {
->> +	case 1:
->> +		ret = tlmi_v1_initialise(wdev, context);
->> +		break;
->> +	case 2:
->> +		pr_err("Not yet implemented\n");
->> +		return -EOPNOTSUPP;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +	if (ret)
->> +		return ret;
->> +	tlmi_initialised = true;
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct wmi_device_id tlmi_id_table[] = {
->> +	{ THINKLMI_DEVICE(TLMI_V1_BIOS_SETTING_GUID, 1) },
->> +	{ THINKLMI_DEVICE(TLMI_V2_BIOS_SETTING_GUID, 2) },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(wmi, tlmi_id_table);
->> +
->> +static struct wmi_driver tlmi_driver = {
->> +	.driver = {
->> +		.name = "think-lmi",
->> +	},
->> +	.id_table = tlmi_id_table,
->> +	.probe = tlmi_probe,
->> +	.remove = tlmi_remove,
->> +};
->> +
->> +MODULE_AUTHOR("Mark Pearson <mpearson-lenovo@squebb.ca>");
->> +MODULE_DESCRIPTION("ThinkLMI Support Driver");
->> +MODULE_LICENSE("GPL");
->> +
->> +module_wmi_driver(tlmi_driver);
->> diff --git a/drivers/platform/x86/lenovo/think-lmi.h b/drivers/platform/x86/lenovo/think-lmi.h
->> index 017644323d46..31359879629e 100644
->> --- a/drivers/platform/x86/lenovo/think-lmi.h
->> +++ b/drivers/platform/x86/lenovo/think-lmi.h
->> @@ -12,6 +12,9 @@
->>   #define TLMI_LANG_MAXLEN       4
->>   #define TLMI_INDEX_MAX        32
->>   
->> +#define TLMI_V1_BIOS_SETTING_GUID "51F5230E-9677-46CD-A1CF-C0B23EE34DB7"
->> +#define TLMI_V2_BIOS_SETTING_GUID "4B79FBA6-FFD4-41B6-8EA8-E81CDA0F5FC3"
->> +
->>   /* Possible error values */
->>   struct tlmi_err_codes {
->>   	const char *err_str;
->> @@ -137,4 +140,7 @@ struct think_lmi {
->>   	const struct tlmi_cert_guids *cert_guid;
->>   };
->>   
->> +void tlmi_v1_remove(struct wmi_device *wdev);
->> +int tlmi_v1_initialise(struct wmi_device *wdev, const void *context);
->> +
->>   #endif /* !_THINK_LMI_H_ */
+> This driver adds initial support for the new implementation, allowing
+> attributes to be read and modified.
+>
+> Certificate based authentication is not implemented in this
+> version.
+>
+> think-lmi is updated to use this driver if supported by the HW and
+> requested by the user.
+>
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+>   drivers/platform/x86/lenovo/think-lmi-v2.c | 960 +++++++++++++++++++++
+>   drivers/platform/x86/lenovo/think-lmi.c    |   9 +-
+>   drivers/platform/x86/lenovo/think-lmi.h    |  59 ++
+>   3 files changed, 1025 insertions(+), 3 deletions(-)
+>   create mode 100644 drivers/platform/x86/lenovo/think-lmi-v2.c
+>
+> diff --git a/drivers/platform/x86/lenovo/think-lmi-v2.c b/drivers/platform/x86/lenovo/think-lmi-v2.c
+> new file mode 100644
+> index 000000000000..5bc0a349c5fb
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo/think-lmi-v2.c
+> @@ -0,0 +1,960 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Think LMI V2 BIOS configuration driver
+> + *
+> + * Copyright(C) 2026 Lenovo
+> + * Distributed under the GPL-2.0 license
+> + */
+> +
+
+...
+
+> +/* Get password settings from BIOS */
+> +static int tlmi_get_pwd_settings(void)
+> +{
+> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	const union acpi_object *obj;
+> +	acpi_status status;
+> +
+> +	if (!tlmi_priv.can_get_password_settings)
+> +		return -EOPNOTSUPP;
+> +
+> +	status = wmi_query_block(LENOVO_BIOS_ACCESS_DATA_GUID, 0, &output);
+
+Big NACK from my side, this function is deprecated and scheduled for removal.
+
+If i understand correctly the core drivers needs two WMI GUIDs, one for discovering
+settings and one for operating on those settings. Please use the component framework
+to link those two together by register a component for the data GUID and a component
+master for the method GUID.
+
+This also allows you to use the modern buffer-based WMI API, so you can leave ACPI
+behind when writing this driver.
+
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	obj = output.pointer;
+> +	if (!obj)
+> +		return -ENOMEM;
+> +
+> +	if (obj->type != ACPI_TYPE_PACKAGE) {
+> +		kfree(obj);
+> +		return -EIO;
+> +	}
+> +
+> +	tlmi_priv.pwdcfg_v2.password_state = obj->package.elements[0].integer.value;
+> +	tlmi_priv.pwdcfg_v2.minlen = obj->package.elements[1].integer.value;
+> +	tlmi_priv.pwdcfg_v2.maxlen = obj->package.elements[2].integer.value;
+> +	tlmi_priv.pwdcfg_v2.strong_password = obj->package.elements[3].integer.value;
+> +	tlmi_priv.pwdcfg_v2.supported_encodings = obj->package.elements[4].integer.value;
+> +	tlmi_priv.pwdcfg_v2.supported_keyboard = obj->package.elements[5].integer.value;
+> +	tlmi_priv.pwdcfg_v2.hdd_user_password = obj->package.elements[6].integer.value;
+> +	tlmi_priv.pwdcfg_v2.hdd_master_password = obj->package.elements[7].integer.value;
+> +	tlmi_priv.pwdcfg_v2.nvme_user_password = obj->package.elements[8].integer.value;
+> +	tlmi_priv.pwdcfg_v2.nvme_master_password = obj->package.elements[9].integer.value;
+> +	tlmi_priv.pwdcfg_v2.deploy_mode = obj->package.elements[10].integer.value;
+> +	tlmi_priv.pwdcfg_v2.sys_mgr_pwd_ctrl = obj->package.elements[11].integer.value;
+> +	tlmi_priv.pwdcfg_v2.power_on_pwd_ctrl = obj->package.elements[12].integer.value;
+> +	tlmi_priv.pwdcfg_v2.storage_pwd_ctrl = obj->package.elements[13].integer.value;
+> +	tlmi_priv.pwdcfg_v2.sys_mgr_setup_ctrl = obj->package.elements[14].integer.value;
+> +
+> +	if (WARN_ON(tlmi_priv.pwdcfg_v2.maxlen >= TLMI_PWD_BUFSIZE))
+> +		tlmi_priv.pwdcfg_v2.maxlen = TLMI_PWD_BUFSIZE - 1;
+> +
+> +	tlmi_priv.pwd_admin = tlmi_create_auth(SVP, "bios-admin");
+> +	if (tlmi_priv.pwdcfg_v2.password_state & TLMI_SVP_PWD)
+> +		tlmi_priv.pwd_admin->pwd_enabled = true;
+> +
+> +	tlmi_priv.pwd_power = tlmi_create_auth(POP, "power-on");
+> +	if (tlmi_priv.pwdcfg_v2.password_state & TLMI_POP_PWD)
+> +		tlmi_priv.pwd_power->pwd_enabled = true;
+> +
+> +	tlmi_priv.pwd_system = tlmi_create_auth(SMP, "system");
+> +	if (tlmi_priv.pwdcfg_v2.password_state & TLMI_SMP_PWD)
+> +		tlmi_priv.pwd_system->pwd_enabled = true;
+> +
+> +	tlmi_priv.pwd_hdd = tlmi_create_auth(HDD1, "hdd");
+> +	tlmi_priv.pwd_hdd->index = 1;
+> +	if (tlmi_priv.pwdcfg.ext.hdd_user_password ||
+> +	    tlmi_priv.pwdcfg.ext.hdd_master_password) {
+> +		tlmi_priv.pwd_hdd->pwd_enabled = true;
+> +		if (tlmi_priv.pwdcfg.ext.hdd_master_password)
+> +			tlmi_priv.pwd_hdd->index =
+> +				ffs(tlmi_priv.pwdcfg.ext.hdd_master_password) - 1;
+> +		else
+> +			tlmi_priv.pwd_hdd->index =
+> +				ffs(tlmi_priv.pwdcfg.ext.hdd_user_password) - 1;
+> +	}
+> +
+> +	tlmi_priv.pwd_nvme = tlmi_create_auth(NVME1, "nvme");
+> +	tlmi_priv.pwd_nvme->index = 1;
+> +	if (tlmi_priv.pwdcfg.ext.nvme_user_password ||
+> +	    tlmi_priv.pwdcfg.ext.nvme_master_password) {
+> +		tlmi_priv.pwd_nvme->pwd_enabled = true;
+> +		if (tlmi_priv.pwdcfg.ext.nvme_master_password)
+> +			tlmi_priv.pwd_nvme->index =
+> +				ffs(tlmi_priv.pwdcfg.ext.nvme_master_password) - 1;
+> +		else
+> +			tlmi_priv.pwd_nvme->index =
+> +				ffs(tlmi_priv.pwdcfg.ext.nvme_user_password) - 1;
+> +	}
+> +
+> +	kfree(obj);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tlmi_analyze(struct wmi_device *wdev)
+> +{
+> +	int i, ret;
+> +
+> +	if (wmi_has_guid(LENOVO_BIOS_CONFIGURATION_GUID))
+> +		tlmi_priv.can_set_bios_settings = true;
+> +	if (wmi_has_guid(LENOVO_BIOS_ACCESS_DATA_GUID))
+> +		tlmi_priv.can_get_password_settings = true;
+> +	if (wmi_has_guid(LENOVO_BIOS_ACCESS_GUID)) {
+> +		tlmi_priv.can_set_bios_password = true;
+> +		tlmi_priv.certificate_support = true;
+> +	}
+
+This should be used to determine which components the component master wants
+to bind to, as some of them seem to be optional.
+
+Using wmi_has_guid() will not work for duplicated GUIDs, so we need a new function
+here. I can write a patch that adds:
+
+	bool wmidev_exists(const char *guid);
+
+You could then carry this patch with this patch series.
+
+Thanks,
+Armin Wolf
+
+> +
+> +	/*
+> +	 * Try to find the number of valid settings of this machine
+> +	 * and use it to create sysfs attributes.
+> +	 */
+> +	for (i = 0; i < TLMI_SETTINGS_COUNT - 1; ++i) {
+> +		tlmi_priv.setting[i] = NULL;
+> +		ret = tlmi_setting(wdev, i);
+> +		if (ret)
+> +			goto fail_clear_attr;
+> +	}
+> +
+> +	/* Probe and create password setting structure */
+> +	ret = tlmi_get_pwd_settings();
+> +	if (ret)
+> +		goto fail_clear_attr;
+> +
+> +	return 0;
+> +
+> +fail_clear_attr:
+> +	for (i = 0; i < TLMI_SETTINGS_COUNT; ++i) {
+> +		if (tlmi_priv.setting[i])
+> +			tlmi_release_setting(tlmi_priv.setting[i]);
+> +	}
+> +	kfree(tlmi_priv.pwd_admin);
+> +	kfree(tlmi_priv.pwd_power);
+> +	kfree(tlmi_priv.pwd_system);
+> +	kfree(tlmi_priv.pwd_hdd);
+> +	kfree(tlmi_priv.pwd_nvme);
+> +
+> +	return ret;
+> +}
