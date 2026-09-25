@@ -1,161 +1,108 @@
-Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546591A9F84
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 03:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09C83B0592
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 07:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790306435; cv=none; b=kVGcWL9ZjswWMsAQGJW41I1BjhDTlue0eKrC4j6pKxvOZvHBNlYsB9EXfPly8M44JaoScTCflAkdXEcpt5SpR2wD1PISZWNkBWr/mi0jjDnuRQ4HLEr6M7DngMA19XrGmdlzW0fC8RF/ZLOB6aLAlWEEDiWtKP00TbzfhCYFvmg=
+	t=1790319955; cv=none; b=obd2uWOlYq/wx2/35q0Q1DbvvGNmMNrE+dYKtdXLcA9F0sEYN+/9KtyAU5MW2kgr002TaMU00tGnZHGkGUvN5NwsP5VwtqoLn8a8CM382tJLJm8Gh52pJ13JEaXXNaUlhkgaGJiYFNc6sfKSfVFU7lp+bDHalrRMS7KEZR9US94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790306435; c=relaxed/simple;
-	bh=ZJf+JShVktOxWNIkQh2BjsSQvRmw1spd0qq76xt9bF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=By1pc1GHmVSTJBdiS4edVAYwglfFsRCgHVDke7EUeEwZwnGjp8LPM+7PUJhC0bAe7gdEjVm3nV6tarOt1oJNnUxUBW+EfHfTdmlDd1G2vCCtSX/Br2WE3Q48XlAGXe2FTGb6qEzmj2VySG2T6VFmFu6fW/EB7QMTr9Er0aYSzXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n+JzoQx+; arc=none smtp.client-ip=74.125.229.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790319955; c=relaxed/simple;
+	bh=nhesPjFvoW76FDZ7bEI+kbqKwbJDEEFfJlmizuXgtOw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ehqJ2Jnb6PuGFBPv2BOFfcX2SIR2+d7O0/kWTFNk37zHLupTEVE9bK+NBjnLzX9lD8CyUe6HACECoT0QoHarfaDYOumaqs8L4RxcFUYcr/H6EMi7KiyizaJkMoZtz+90VStkH5do8FjwaO/ckMK8CRIpnUuqLzhb5GDtp4pZxKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=Wy7tvNgU; arc=none smtp.client-ip=83.166.143.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+JzoQx+"
-Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-341d0522b4dso124599eec.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2026 20:20:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790306433; x=1790911233; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oLWyQJ000YJbN/yXuhq9LAU6RRH3ViLzBHEd7qrKzUM=;
-        b=n+JzoQx+dAjLcI5p21lniXj0q6FeNKm8onYnK39lqJXGJ+NZhAU1CmuffqV9FYcnXu
-         Nf4wdJ1y4tO1ggD1STCJesMupNc8n5QumKXVTzvhFxMyYdZCZSqgiVmEITe5rzsuV27H
-         n0m5a+S2s2l4+aYW4MucRwdg4cnt7XMZyQrGvhWf0EbdSgD78qXN67VwM4ApLpqsge03
-         7KVEvxDgbytJsohuqHpkkqlsrE6RywMZuQ75iuELkaoFMy/8CUeAZ6dWB4P+prdSRn1v
-         cH0skalNB3O4PKlf5wt1ycnjA8DCjBavTvk/Td7nbKcgx+yOlu6Y/rZ+Y5doew9iJxNb
-         ODPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790306433; x=1790911233;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=oLWyQJ000YJbN/yXuhq9LAU6RRH3ViLzBHEd7qrKzUM=;
-        b=IuSyI5EwHYwDhhPHWLAHPPqMW7uxlDj0eqCAtxNjQd7Tr9oTdKESryp46vac0YNamt
-         7w+/T2OWx1emDu/ILaBm8fg2b0P6CtAaiHkW1wiaYAYn1hjY2dTMv8RRfPpCXjhTesPE
-         FvwDqmv6mKuRyDqONiXHcRJ2jQEUUFeI/vbXKn68HMtFKoZrVDT3fyZGUeXQrkxBn1oi
-         4+USB/6ddyc0vmDrcypKuLLSONw1BIIyb2fNq/plLhdZ+OUBrB4qu6WiOqbRiesVSxl/
-         Q3t80OFOaFhlvsG4ZNc9sAq7g1ObuyIXvlJ3XpHq3/VbcLoltqVeU2R/da2QckUq/WTg
-         5qJw==
-X-Gm-Message-State: AFuF++mkwRIxV1qvkMG4G6CgGI/UYLMVP0nA7v7m4etCS5lQsvWL+cDk
-	/Ki5Jq4ZmgSL7TbJX/TPW6HId8tG+igoIaavTlxIP9hx6xooLfYgx2pV
-X-Gm-Gg: AYBFou0+YoPlR1RqktSfTXBZzSG52pR2E8tZwtkxOycTnjHbmTTVVf2aY5aZuLADGCa
-	ALMdaDzflcVaZSbBXx8XvXAW9IVt3pvGh+3bi/DRP0AfGvnUnPvBwsnpvdA7rUVHr6ftrwt5PfN
-	+ZyXEER04J5Up7uRta+FKI9Ooc9lOSw298SdeGPoG2VTRGR4UnXxASWH/L0SAMVqP3QNvyKZV0K
-	Oobati3uItoGMLpHkN8vsbgbCtDa5Zx5aJ7B0oQ4gcNq2S1HJ17jZbgAjfVZI+kaR/0FSAElK3F
-	ZxSu+qfSm+t57z0SeJwQERnBwZy0iL51WLarAC/VmXSx3DJY93AZgWF2vy7Vh05rmpmVLTJyTdA
-	YCCE4tUGGgXGr3JxhN4rJlE1IJXH/lYPscgYXUqAKWZoSvlUZVcKmsGhZAAzF2BJItMMz9k8nYk
-	QEsAd40ab20LyJvgl7XdsuByJ6dOaUZq9nhdyHPAsjzwtzNA+C5eGkXRlEvWwstH+0Vi7Y1oT8r
-	6vsRZAG5YWsqOa/hS3taIn7+UkaSNw+yMwf7Q==
-X-Received: by 2002:a05:693c:3697:b0:33b:eadd:9013 with SMTP id 5a478bee46e88-3400151f9b5mr3573191eec.6.1790306433251;
-        Thu, 24 Sep 2026 20:20:33 -0700 (PDT)
-Received: from tutebook.tail57d09c.ts.net ([2803:9800:a0a8:8014:618c:a663:bfd0:635e])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3414407c548sm2603948eec.8.2026.09.24.20.20.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 20:20:32 -0700 (PDT)
-From: TuteMthCD <matias.civadda2342001@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: bitland-mifs-wmi: Fix profile handling on Redmi Book Pro 14 2022
-Date: Fri, 25 Sep 2026 00:20:01 -0300
-Message-ID: <20260925032001.111062-1-matias.civadda2342001@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="Wy7tvNgU"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hrhYg1gJCzCfF;
+	Fri, 25 Sep 2026 09:05:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790319943; bh=SANosIQfS9VpLzZYXOYAVknD82NtPdMJVQcK9zSydXI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wy7tvNgUMuO2Z00gC2684Xj71Ho6F3X71wVvDJldghRadr2kfLTM9qIFkA6+s1Df8
+	 ZTGsrKKAdJ4Yg4b4JA2lKYxMxlohMh0rxJmepwbaAcdkbGZ3IC2T6BsUNjrjVRuM8y
+	 8HsiytK0U5CB2MmNCJPx8bRSgB8Akmx6zeVusjC8=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hrhYd6lPFz8k1;
+	Fri, 25 Sep 2026 09:05:41 +0200 (CEST)
+Message-ID: <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
+Date: Fri, 25 Sep 2026 09:05:41 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
+ <55854916-292a-40ae-8421-1a784785d899@amd.com>
+ <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
+ <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
+ <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+ <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
+ <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
+ <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
+ <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
+ <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
+ <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
+ <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
+ <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
+ <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
+ <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
+ <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
+ <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
+ <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
+ <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
+ <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+Content-Language: en-US
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-On the TIMI Redmi Book Pro 14 2022 (board TM2107), the firmware returns
-the current platform profile at byte offset 2 of the WMI response.
-The driver instead reads offset 4, which remains zero in the observed
-responses. Consequently, profile reads report balanced even after
-selecting another mode.
+resolved by resetting BIOS to factory defaults
 
-The generic performance capability check also requires a barrel-jack
-power supply. This blocks performance selection on this USB-C-only
-machine.
+after that, I tried painstakingly to enable/disable one by one
 
-Add an exact DMI match for this model to read the profile from offset 2
-and require external power without the barrel-jack restriction.
+The cause is two BIOS settings, and the reason it took so long to find 
+is that they are independently sufficient:
 
-Tested on physical Redmi Book Pro 14 2022 hardware (TM2107),
-BIOS RMARB4B0P1010, running Linux 7.2.6-zen2-1-zen.
+   AmdVt (AMD virtualization)        Disable  -> breaks s2idle wake
+   PlutonSecurityProcessor           Disable  -> breaks s2idle wake
 
-Assisted-by: Codex:GPT-6
-Signed-off-by: TuteMthCD <matias.civadda2342001@gmail.com>
----
- drivers/platform/x86/bitland-mifs-wmi.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+Either one alone is enough. Both must be enabled for the machine to 
+resume. The full matrix, all with the IOMMU enabled and 24 CPUs online:
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index 3a373184519d..c132902bc5f8 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -14,6 +14,7 @@
- #include <linux/dev_printk.h>
- #include <linux/device.h>
- #include <linux/device/devres.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
- #include <linux/init.h>
-@@ -38,6 +39,17 @@
- #define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
- #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
- 
-+static const struct dmi_system_id bitland_tm2107_table[] = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Redmi Book Pro 14 2022"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2107"),
-+		},
-+	},
-+	{}
-+};
-+
- enum bitland_mifs_operation {
- 	WMI_METHOD_GET	= 250,
- 	WMI_METHOD_SET	= 251,
-@@ -195,13 +207,18 @@ static int laptop_profile_get(struct device *dev,
- 		.function = WMI_FN_SYSTEM_PER_MODE,
- 	};
- 	struct bitland_mifs_output result;
-+	u8 mode;
- 	int ret;
- 
- 	ret = bitland_mifs_wmi_call(data, &input, &result);
- 	if (ret)
- 		return ret;
- 
--	switch (result.data[0]) {
-+	/* TM2107 returns the profile in byte 2 instead of byte 4. */
-+	mode = dmi_check_system(bitland_tm2107_table) ?
-+		result.reserved2 : result.data[0];
-+
-+	switch (mode) {
- 	case WMI_PP_BALANCED:
- 		*profile = PLATFORM_PROFILE_BALANCED;
- 		break;
-@@ -229,6 +246,10 @@ static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *da
- 	struct bitland_mifs_output output;
- 	int ret;
- 
-+	/* TM2107 only requires external power, including USB-C. */
-+	if (dmi_check_system(bitland_tm2107_table))
-+		return power_supply_is_system_supplied() > 0 ? 0 : -EOPNOTSUPP;
-+
- 	/* Full-speed/performance mode requires DC power (not USB-C) */
- 	if (!power_supply_is_system_supplied())
- 		return -EOPNOTSUPP;
--- 
-2.55.0
+   AmdVt      Pluton     result
+   Enable     Disable    no wake
+   Disable    Enable     no wake
+   Disable    Disable    no wake
+   Enable     Enable     wakes normally
 
+I had both disabled.
+It also explains the confusing bisect: when I tested AmdVt=Enable with 
+everything else at my settings it still hung, and when I tested 
+Pluton=Enable with everything else at my settings it still hung, so I 
+eliminated both. Each test only showed the setting was not necessary; 
+neither showed it was not sufficient. With two independent triggers 
+those observations are both true at once and single-setting elimination 
+gives nothing.
+
+So amd_iommu=off and nr_cpus=16 were both masking this rather than 
+telling us anything about the kernel.
+
+this is clearly a Lenovo BIOS bug. should this be reported to them ?
+
+thank you for your help !
