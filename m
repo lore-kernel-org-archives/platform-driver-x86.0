@@ -1,63 +1,63 @@
-Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D5E4FC8C5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB704FC8CC
 	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 21:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790371004; cv=none; b=AYOSu91JcRQ5pNSI/Q5SLId8spolLSAoL3x3GvIwlCAbrTKatOjIYwluLzivMFnNi7B/E+Kv9RV41MnW0aa585RvPdZbIcY2ZWrivAzM2LDU5l4Kf0PGpNgZzAv5EkLNJHfqvFqdCNwDWkiF6hkXxIKgrwDUvVOdvbfrTQyh9ys=
+	t=1790371005; cv=none; b=PtSGR1x2K3iUHLwhJbBaxc4U/sBaHuqzjSBpXafrVfuofbeq8UpkY7QEd0SuAYIdtCdq8Z1tLoXAmNuyUi+EX1vzvkFAXrYEqgDE8OKoD0wW2043s9+t0HbeCwQ8b2gdz7X6pvlvhsjlGErPynIrJPCDkf8QG9q+YzEzWTSISNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790371004; c=relaxed/simple;
-	bh=AW7GmJbvvUZLv/S3aozdsexkzu3edregCAMjxYRowE8=;
+	s=arc-20240116; t=1790371005; c=relaxed/simple;
+	bh=VcJEB/8zZf8xb25bTZV+ZLD4X01lT7TB13axe+Sd/J8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=abw10WAn+0qbbIlISD4McQwfXNvaxeWJYqxgmk6PWBByCONXH/GT3MlnHqbsiOTLo5XI8m+XykWZvTEJEUiczciXn8nB+vQplYARMXdzYeYWBvlw9/pLY9jcbBDK4JXGdVwQD3d+TZGtiYj/yQAKpq5XJLrbnrHoGRjEqR811fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ECTrJ3Bp; arc=none smtp.client-ip=74.125.225.99
+	 MIME-Version; b=sOqGq8leZzxgNojNB3rZQYhL+D+El6ALjmO8P7w650JpEiBv5VDUK2YaBILqB89vtpNyWxh3Cv/D6ldtgxFPUaw1sRSsjMet3Mj8WQXm7awvfDrqLGWzcLa7BhbZAvmZqxnxpp9GlzBmhmjPMU4HCr5fsClECTUIep5QXDjKYu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnAkwPG2; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ECTrJ3Bp"
-Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-4888129c46eso589869f8f.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnAkwPG2"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48586861639so578232f8f.0
         for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 14:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790371000; x=1790975800; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790371001; x=1790975801; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=0OpiJYgEy2fH0EKJHkY2bvSEZYmp9XcXhKKG0UR6cbc=;
-        b=ECTrJ3Bph+G1OdgMECUHzQy8XUfkZRQdpH0st22kO+bdFlwX5IJjoPRjvtDULRkxac
-         lFszwQ9GSEclvRVGImCk6/nYUFtBE5OobCwmRyoLz+uWDjZcq/6mDXMVbudX33yGCYes
-         RFIKB+f5VNsIkp5Hiq1wYhMCi/HOF2vfeLPW4r2eNAeEOuB/G0Ic7vI0NSrw8CQopYUK
-         2X8zj/pJT2U6SabUdRa06ZGRrmvlbqZd5RQthZn1+ydDrPTpIy8vg6D9B7JcKUt2g1vF
-         cXS/d7CY/nVR0BvtYyj0bXK6TMH91uoZmAbSkwuYoQWXcMCC5n/Q2jXJM5ctXZw4eIiX
-         zBmw==
+        bh=+p5rx6TkxGynRT5wM8/9aAou6XuDMc/agUIyGKPsW5A=;
+        b=dnAkwPG209KNo5DC7sn8Y/qAKEi7gubM7VATqtxBgsts4jU1cxjx2jvOhKdDPX20nN
+         3BXEIbAz++n7AUjjAX+cPjfzTxT7pwBQOT4ZcgZdCBBbvAlahvB8WeXR0llp/+e/tv6X
+         2OubAu70KLrBC9UorXqJfdZvKjGZfI2D0lMte9CsTHzG1seWZv0C357CURPWKeAqqNPR
+         /pDgmfKb5CAa9rMsFJA5t/4hC5zKme3YXFLFjlJW5fQh9b3PtNzqBJWPgXLeLV1/ChWe
+         DdjidG17pfA4QLkkLw8ZFmnydPGLQ5bx9ek9g4Xx92QEE5i5+a2ioW9hIjKGwmKwMESw
+         qmJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790371000; x=1790975800;
+        d=1e100.net; s=20260707; t=1790371001; x=1790975801;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0OpiJYgEy2fH0EKJHkY2bvSEZYmp9XcXhKKG0UR6cbc=;
-        b=0oH+rnx8SskJPF4pAfhtouvFD3tLwA15soVSvIK+cwh8b4TFBrlvea9G407/cYSigq
-         A5PFSCXCOx8ETiMQHLYeHKDQcxiNM1plE5f5UJQbknoYzQXJaH6hvGhbvLUxwuk5Fpla
-         N7gFSzTzo2Yy7PpkasWEhbS7VsxarQJale0NprARjQ/SJ4FczPrjPv4Ca1pWsD4mKXFZ
-         bScQ+shBVthqm5nU2z2LBg9SSWNgOze84PqlUESrFSJqOeYh+rVFr2feqoe3bZGOCWkJ
-         b2OCTGZX8cXtmrFXFe9pD95V4hRYlCzxw2cmrDzKVOoMCN1ev9wS9JjXw74bSP9zmfph
-         rjxQ==
-X-Gm-Message-State: AFuF++n2z9KZBmNU2s5TVznnltLZkZEvTaqGRPEij3hdYaJrrvXgsP2v
-	deo1jNn9UOoriklAPUmVghn/PMWkmPE7q+GSQDgOnNdhnEatxEHU7uoU
-X-Gm-Gg: AYBFou3PGUKUewD6VOrjcJO/h8O+VRuhIkjxlreVn7AdRIfiKn3ZQINJYLy5R4HZZea
-	3enkOwF4yg0PUe2sYs1aNYhZiWEdq+nvAhB2cUiW5yeHgwHG37ZFqtkJOCkrwAVll3wi+qWO9oM
-	BtC1+JkP0D1g1spqxwZhDSEPg8VyocyAt71l06VcXq8KL2E25Td5GeynBQVrNvhT4yg6Jsm6c6q
-	ms1+9o8x0JkRawfX8Gia9AtVEGcb07T2bhWvePLAanwvVVvthZVbjw5+MJxgxUsoP4AOB+RjWce
-	st7T/ua+qmObcnePyBu28XN7gQOouWfSWok99T4OF1KHJQAzmJB13tsePHCtlWV09/97rTFLm7S
-	qgbXMQZSfYJi66Z8QLd08zSifRxKNlCkYkpCDMv9NfqVWHnooMuM3Hrl+enm67ovTpL9EKDwF+q
-	rZVlRjOWmW+1Sno+inajfGGyyCEQesj1l1sSnb4ej4F04JzlvTbpjA0xDlFxnXsR+3jK4bnb32V
-	ByljFm/FA==
-X-Received: by 2002:a05:6000:2489:b0:488:800b:11f3 with SMTP id ffacd0b85a97d-488800b1336mr6029083f8f.49.1790371000248;
+        bh=+p5rx6TkxGynRT5wM8/9aAou6XuDMc/agUIyGKPsW5A=;
+        b=IeYDn5iNyzw7346f1SoARrxL2kT44+MDjlusbA/tg+jMIKx7mpBTiRY/HY4UqFkQrW
+         FKLhpKBzpNGlUaZzG2VkDfvN0cnoT4Whb1AZbvmNQs8gbEHjr2l6F2vpK20me4mXOXoN
+         lTvn/NlhHfnnIgfeyviCKTqR7TmEpb8HipIce3H8K2oznh0ttHFvu1kGBwVJS35Yi2iY
+         XKujXscRJjlYstCnlWj1CUJFPIIzz8rHVHGx0kdnZEg1mnVgQozJrLoSZxh+Wl/snHqY
+         0FWoS2ec3kZo9WGns58kjFaHYUY0pAYb0n5YDshGSj+HzfBIXJcfhz+2ihkt80XUOIpp
+         2Ehg==
+X-Gm-Message-State: AFuF++kvfFQ63weCkACJYECocQHQDwpqNKH/Q/kkW/K8Gbq9XePHkofN
+	5nnkv+4ORlXdYaY4JFPRkzWlbqXmIwxfz6wIsOhJdVw68g+iBydCja+1
+X-Gm-Gg: AYBFou2v4idSY716/14mRfISgf0ACsR707LuHDXRHdRiSShbvgUZnqADAq7LDJlnKOw
+	gtxN5w5tBU2ghX1ZdQrHTaGZOeA7NK7oNcvwmcOYZc9ETKF88vXR4bK0DrKnzH2T1N9r71azvG8
+	eT9699/pS1Sp1prI0tVLd6fbrGpvniynB4W2XAhKr6/HrAzqvL/s2b+k3IfLxfyvya7dY0PgXxA
+	t3chIT1WrZm0qh3NJdfmu+206nOUlKjkV3Q6HMFqVzHvjhHedpn48NTzItlHT3U02usOFjl3qJW
+	LBpn3RiG5PT+S9qIJAqM1iG6Kz4IALFB+CkWPrRQBxCxhiw9JZ3cmF9vDW/7WcLKx3FBQywH+cr
+	ZN+FaMwFSIKChZqZ8J3hXiXlD/9uOwCKsfUTbxGHKlgbUW40oh3eNVxcH6gOM07OFdWbr8Ycaku
+	+Z4kBpt0WTLC3mUEgxaTYfATh+fGpf2pscs8sZC75AdvnrIWh2ZlsaUyNpbyTa5SSgo4QYXrDx+
+	yqGIVuycg==
+X-Received: by 2002:a05:6000:25fb:b0:487:25:71c7 with SMTP id ffacd0b85a97d-488716b96cemr14060679f8f.12.1790371000904;
         Fri, 25 Sep 2026 14:16:40 -0700 (PDT)
 Received: from localhost.localdomain ([2a0a:ef40:1479:f801:b8e7:18fe:7039:e475])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a570sm9271781f8f.13.2026.09.25.14.16.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a570sm9271781f8f.13.2026.09.25.14.16.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2026 14:16:39 -0700 (PDT)
+        Fri, 25 Sep 2026 14:16:40 -0700 (PDT)
 From: Mohamed Jouini <amad3v@gmail.com>
 To: Armin Wolf <W_Armin@gmx.de>,
 	Hans de Goede <hansg@kernel.org>,
@@ -65,9 +65,9 @@ To: Armin Wolf <W_Armin@gmx.de>,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Mohamed Jouini <amad3v@gmail.com>
-Subject: [PATCH 2/3] platform/x86: uniwill-laptop: Add platform profile support
-Date: Fri, 25 Sep 2026 22:16:34 +0100
-Message-ID: <20260925211635.1422516-3-amad3v@gmail.com>
+Subject: [PATCH 3/3] platform/x86: uniwill-laptop: Map the screen rotation key
+Date: Fri, 25 Sep 2026 22:16:35 +0100
+Message-ID: <20260925211635.1422516-4-amad3v@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260925211635.1422516-1-amad3v@gmail.com>
 References: <20260925211635.1422516-1-amad3v@gmail.com>
@@ -79,237 +79,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The EC exposes the three firmware power modes (BIOS "office", "balance"
-and "turbo") in EC_ADDR_MANUAL_FAN_CTRL. The ACPI tables name BIT(4) TBME
-and BIT(7) UFME and only evaluate those two bits; writing the register
-makes the EC apply the whole mode: mode LED colour, NVIDIA Dynamic
-Boost/TPP limits (DBAP/ETPP) and the _Q88 mode-change notification.
-
-Expose the modes as low-power/balanced/performance platform profiles on
-the PCSpecialist Recoil 16 AMD and handle the mode key: the EC only
-cycles the mode itself until the OS sets one, afterwards it just reports
-UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, so notify userspace if the EC
-already switched and cycle the profile otherwise.
+The PCSpecialist Recoil 16 AMD / TUXEDO Stellaris 16 Gen7 chassis has an
+"Sc" key next to F12, meant to rotate the lay-flat screen by 180 degrees.
+It reports WMI event 0xD0, which is currently reported as KEY_UNKNOWN.
+Map it to KEY_ROTATE_DISPLAY.
 
 Signed-off-by: Mohamed Jouini <amad3v@gmail.com>
 ---
- drivers/platform/x86/uniwill/uniwill-acpi.c | 133 +++++++++++++++++++-
- 1 file changed, 132 insertions(+), 1 deletion(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 3 +++
+ drivers/platform/x86/uniwill/uniwill-wmi.h  | 3 +++
+ 2 files changed, 6 insertions(+)
 
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index beba5a76a..0932e5937 100644
+index 0932e5937..f99c5e9ac 100644
 --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -39,6 +39,7 @@
- #include <linux/mutex.h>
- #include <linux/notifier.h>
- #include <linux/platform_device.h>
-+#include <linux/platform_profile.h>
- #include <linux/pm.h>
- #include <linux/printk.h>
- #include <linux/regmap.h>
-@@ -184,6 +185,15 @@
- #define FAN_MODE_HIGH			BIT(5)
- #define FAN_MODE_BOOST			BIT(6)
- #define FAN_MODE_USER			BIT(7)
-+/*
-+ * Firmware power modes (BIOS "office/balance/turbo"). The ACPI tables name
-+ * BIT(4) TBME and BIT(7) UFME and only evaluate those two bits; the values
-+ * below are exactly what the EC itself stores when the mode button is pressed.
-+ */
-+#define PERF_MODE_MASK			(FAN_MODE_USER | FAN_MODE_HIGH | FAN_MODE_TURBO)
-+#define PERF_MODE_OFFICE		(FAN_MODE_USER | FAN_MODE_HIGH)
-+#define PERF_MODE_BALANCE		FAN_MODE_HIGH
-+#define PERF_MODE_TURBO			(FAN_MODE_HIGH | FAN_MODE_TURBO)
+@@ -519,6 +519,9 @@ static const struct key_entry uniwill_keymap[] = {
+ 	/* Reported when the user wants to toggle the webcam */
+ 	{ KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE,              { KEY_UNKNOWN }},
  
- #define EC_ADDR_PWM_1			0x075B
- 
-@@ -369,6 +379,7 @@
- #define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT	BIT(12)
- #define UNIWILL_FEATURE_AC_AUTO_BOOT		BIT(13)
- #define UNIWILL_FEATURE_USB_POWERSHARE		BIT(14)
-+#define UNIWILL_FEATURE_PERFORMANCE_MODES	BIT(15)
- 
- enum usb_c_power_priority_options {
- 	USB_C_POWER_PRIORITY_CHARGING = 0,
-@@ -418,6 +429,8 @@ struct uniwill_data {
- 	struct notifier_block nb;
- 	struct mutex usb_c_power_priority_lock; /* Protects dependent bit write and state safe */
- 	enum usb_c_power_priority_options last_usb_c_power_priority_option;
-+	struct device *ppdev;
-+	enum platform_profile_option last_profile;	/* last profile read or written */
++	/* Reported when the user wants to rotate the (lay-flat) screen by 180 degrees */
++	{ KE_KEY,       UNIWILL_OSD_ROTATE_SCREEN,              { KEY_ROTATE_DISPLAY }},
++
+ 	{ KE_END }
  };
  
- struct uniwill_battery_entry {
-@@ -602,6 +615,7 @@ static bool uniwill_writeable_reg(struct device *dev, unsigned int reg)
- 	case EC_ADDR_LIGHTBAR_AC_GREEN:
- 	case EC_ADDR_LIGHTBAR_AC_BLUE:
- 	case EC_ADDR_BIOS_OEM:
-+	case EC_ADDR_MANUAL_FAN_CTRL:
- 	case EC_ADDR_TRIGGER:
- 	case EC_ADDR_RGB_RED:
- 	case EC_ADDR_RGB_GREEN:
-@@ -643,6 +657,7 @@ static bool uniwill_readable_reg(struct device *dev, unsigned int reg)
- 	case EC_ADDR_LIGHTBAR_AC_GREEN:
- 	case EC_ADDR_LIGHTBAR_AC_BLUE:
- 	case EC_ADDR_BIOS_OEM:
-+	case EC_ADDR_MANUAL_FAN_CTRL:
- 	case EC_ADDR_PWM_1:
- 	case EC_ADDR_PWM_2:
- 	case EC_ADDR_SUPPORT_2:
-@@ -682,6 +697,7 @@ static bool uniwill_volatile_reg(struct device *dev, unsigned int reg)
- 	case EC_ADDR_SECOND_FAN_RPM_2:
- 	case EC_ADDR_BAT_ALERT:
- 	case EC_ADDR_BIOS_OEM:
-+	case EC_ADDR_MANUAL_FAN_CTRL:
- 	case EC_ADDR_PWM_1:
- 	case EC_ADDR_PWM_2:
- 	case EC_ADDR_SUPPORT_2:
-@@ -2168,6 +2184,110 @@ static int uniwill_battery_init(struct uniwill_data *data)
- 	return devm_battery_hook_register(data->dev, &data->hook);
- }
+diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h b/drivers/platform/x86/uniwill/uniwill-wmi.h
+index b25b2f312..1b6f650c4 100644
+--- a/drivers/platform/x86/uniwill/uniwill-wmi.h
++++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+@@ -117,6 +117,9 @@
  
-+static int uniwill_platform_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+
-+	return 0;
-+}
-+
-+static int uniwill_platform_profile_get(struct device *dev, enum platform_profile_option *profile)
-+{
-+	struct uniwill_data *data = dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, EC_ADDR_MANUAL_FAN_CTRL, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Same decision as the firmware's PMSC method */
-+	switch (value & (FAN_MODE_USER | FAN_MODE_TURBO)) {
-+	case FAN_MODE_USER:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case FAN_MODE_TURBO:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	default:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	}
-+
-+	WRITE_ONCE(data->last_profile, *profile);
-+
-+	return 0;
-+}
-+
-+static int uniwill_platform_profile_set(struct device *dev, enum platform_profile_option profile)
-+{
-+	struct uniwill_data *data = dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		value = PERF_MODE_OFFICE;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		value = PERF_MODE_BALANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		value = PERF_MODE_TURBO;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	/* The EC applies the mode (LED, power limits, ACPI notifications) itself */
-+	ret = regmap_update_bits(data->regmap, EC_ADDR_MANUAL_FAN_CTRL, PERF_MODE_MASK, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	WRITE_ONCE(data->last_profile, profile);
-+
-+	return 0;
-+}
-+
-+static const struct platform_profile_ops uniwill_platform_profile_ops = {
-+	.probe = uniwill_platform_profile_probe,
-+	.profile_get = uniwill_platform_profile_get,
-+	.profile_set = uniwill_platform_profile_set,
-+};
-+
-+static int uniwill_platform_profile_init(struct uniwill_data *data)
-+{
-+	if (!uniwill_device_supports(data, UNIWILL_FEATURE_PERFORMANCE_MODES))
-+		return 0;
-+
-+	data->ppdev = devm_platform_profile_register(data->dev, DRIVER_NAME, data,
-+						     &uniwill_platform_profile_ops);
-+	if (IS_ERR(data->ppdev))
-+		return PTR_ERR(data->ppdev);
-+
-+	return uniwill_platform_profile_get(data->ppdev, &data->last_profile);
-+}
-+
-+/*
-+ * The EC only cycles the mode on its own until the OS sets a mode once; after
-+ * that the button just reports UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE. Handle
-+ * both cases: if the EC already switched, only notify userspace, otherwise
-+ * cycle the profile ourselves.
-+ */
-+static void uniwill_platform_profile_button(struct uniwill_data *data)
-+{
-+	enum platform_profile_option before = READ_ONCE(data->last_profile), now;
-+
-+	msleep(100);	/* give the EC time to apply its own switch, if any */
-+
-+	if (!uniwill_platform_profile_get(data->ppdev, &now) && now != before)
-+		platform_profile_notify(data->ppdev);
-+	else
-+		platform_profile_cycle();
-+}
-+
- static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action, void *dummy)
- {
- 	struct uniwill_data *data = container_of(nb, struct uniwill_data, nb);
-@@ -2239,6 +2359,12 @@ static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action
- 			return NOTIFY_DONE;
+ #define UNIWILL_OSD_WEBCAM_TOGGLE		0xCF
  
- 		return notifier_from_errno(uniwill_notify_kbd_led(data, 4));
-+	case UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE:
-+		if (uniwill_device_supports(data, UNIWILL_FEATURE_PERFORMANCE_MODES)) {
-+			uniwill_platform_profile_button(data);
-+			return NOTIFY_OK;
-+		}
-+		fallthrough;
- 	default:
- 		mutex_lock(&data->input_lock);
- 		sparse_keymap_report_event(data->input_device, action, 1, true);
-@@ -2375,6 +2501,10 @@ static int uniwill_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = uniwill_platform_profile_init(data);
-+	if (ret < 0)
-+		return ret;
++/* "Sc" key next to F12 on the PCSpecialist Recoil 16 / Stellaris 16 Gen7 */
++#define UNIWILL_OSD_ROTATE_SCREEN		0xD0
 +
- 	return uniwill_input_init(data);
- }
+ #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED	0xF0
  
-@@ -2797,7 +2927,8 @@ static struct uniwill_device_descriptor pcs_recoil16_amd_descriptor __initdata =
- 		    UNIWILL_FEATURE_SECONDARY_FAN |
- 		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
- 		    UNIWILL_FEATURE_AC_AUTO_BOOT |
--		    UNIWILL_FEATURE_USB_POWERSHARE,
-+		    UNIWILL_FEATURE_USB_POWERSHARE |
-+		    UNIWILL_FEATURE_PERFORMANCE_MODES,
- };
- 
- static int phxtxx1_probe(struct uniwill_data *data)
+ struct device;
 -- 
 2.55.0
 
