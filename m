@@ -1,120 +1,82 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-07.mail-europe.com (mail-07.mail-europe.com [37.187.220.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03E0479885
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 21:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4665E480DC8;
+	Fri, 25 Sep 2026 21:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.187.220.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790372026; cv=none; b=PRBSNmOCexXEdvDskGvsVlhILb5w3N8r3vY1DzCwzfGD6goLZuh/zc6tibI+wCZ9WQXh3tz8kqQOXdkjm2nnuxM/tJPqPhwLN4vtJh6c7WOK92aW0vq9oFZ3cuKl8+3Cc4Rc0Tx3B1KcMqG6tyP0NkQ4UxRHwYfA9f03i2wUGPc=
+	t=1790373279; cv=none; b=AP44BYNeT61cYr+MKxLG2UVH+ycLfkFLnYd8OsF6DyJFxpncRLx/50oVOD6+9FpG3krTbz4WgKpbdAwmkUCZGXMSXSXALukDc1p4Ytpqoc+nU2K+veLGl8lvEWQSu5X0hNkBa5S/6ybOnFpZPqvm73FbLusOwZv4zTuql+ZUSgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790372026; c=relaxed/simple;
-	bh=0zBTQ42ozAXedGB+g8hLFnDwWMR9NHhVhkh1N02kpBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nrI1Q4fmBLErhEBPTzV9qrG2VJSc5/OxWA27ceT0VJAUGrPMFlDLgwil63+EPYxwkJwCWPNm4XcFjJQ2qVkMmfcjIh+hzXmpJxiPwOHbS/joh0Ei4Gzo/rPy6kMS4HFx4HnxI8iRnPKKEKLOgo8b4g10NgcfrMcQCv4rOhagrmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LPU6Oxok; arc=none smtp.client-ip=74.125.225.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790373279; c=relaxed/simple;
+	bh=dh5D3G836DUj2lo2Ng6i8fYgw0FVBnlELE3fvOwftbE=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Z9kxQxj9wCWfCHM/YEtKYeBLFxmp6jdQybGdIoorF2Ao2zKnXQkisaJMw1aB2zuUxKw5wK51hojV95dSEYFaPZO9X+ct/+69fJE0uSzOiGmJ1TbAovbiNH2jvxlMSijdsqbyQjT+TCBL+udVyonRQc0bQMXVvldEkYTHSJXbSSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net; spf=pass smtp.mailfrom=ironrobin.net; dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b=RfY4ixGe; arc=none smtp.client-ip=37.187.220.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ironrobin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPU6Oxok"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49b912d3920so9997295e9.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 14:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790372023; x=1790976823; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mNPnuIQqoJSa2LnLqWG9FoS2zB4ik0+5Qc4IWxEH1U0=;
-        b=LPU6OxokPeJl+KQO/kCqu/9DqIuIevWy/GJoosZFvzY0RtSdMV6WTTGEWmNO7ha1+x
-         wfVgWDsJlJW1ABybLLOqCxfO9oDVTCXjjd+Yr2ZOh7dbRqJDDmwq8WA5j2IgR5LoiKiJ
-         LrODCXd/dTfkgvSOOgiaTunEqccY5Wdm651vNXpjcnJrU7NRF2E1kHE2B2jgpykuqQXY
-         k8T4BFocbOUY+zMGfkOIsLlGSsdSea0Wwi3kaQ7H/SkAo2Dl7rte2bCE5gGV9IyWwgKb
-         xzd1m0U/zQ6eTnvHIoWaLqZvJS6B8xSn9Csq/yj3rowTjHsw7XEOpUf0YXuLG/D0UKSl
-         Wr8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790372023; x=1790976823;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=mNPnuIQqoJSa2LnLqWG9FoS2zB4ik0+5Qc4IWxEH1U0=;
-        b=0zAIIqe1klwhftGmJQUQkTB87yvba+dTO+dLI/kjPB8ZpdZcz1p0Q6mneBXu+nYc6V
-         pvZEbjkzz/Fq+fD8rwUajbACFwKe6WO48fQ0985J4a40rBvi0HqE3SEORR0N1tvx3pJq
-         7cJSRVx5ARoQLwMjKmXoxa3avEielsOR3wF5t3nCRAKbqXWtsrcw5iHCpvU01IEVttTu
-         ZUvx+ke/5aJO4v2jQqEoDzEVqKq9QL6BH2qV8YdQsmlDbfihNKCWcAR5IchkblyO2nDD
-         +XAnljGhVtjGWW0lWhYSm45/2//wGyneZ6woWi+G6KiaC/FZCrlHFRmgYQv9jOWfsn3+
-         rpDg==
-X-Forwarded-Encrypted: i=1; AKwUvBzV0THEWtwlM7987x+bwunEXkCBmFSJsix7zzkRHRL7Ox9O4Gk/Oe/ElUSgzJw0ihfy9EqAkExUnzf27/xKsiYWtctN@vger.kernel.org
-X-Gm-Message-State: AFuF++lGu2x6gSiDYGi8r+G7XH7cxIM1zkW9GDzMgnVFRRvAfjof0rhK
-	WjetaUC0yKrdIA2ImEYhd88IedBlilQRElxrzMJLvj6HaILGZRMBEBD3
-X-Gm-Gg: AYBFou3PhOJUWERRuk9RLaXtIzOLf+VHtpeq08nY2gRa2KOVYIgv48dSlSIugzmoJeR
-	/UTpzOYAisIwqKnLT9cww08qYW2pVbVtYUKkuyUGIAEuGZrOaxTmOxOkhku+B5uU+J7SGrWwx6p
-	fAddvQ3jwQ+DqjOkHvo3knlKPT74QF6QCYq31hSfZnRQU20ZlNwFYiWv4gZmtIyvYE0RjTPYxlO
-	E1wwpyV30rt2hmSpt6AZxnpNqwswMCzMtA7NnfGBetvDdJvCdKn7oO5ubRr4MDjEPLbr4exJdJF
-	jDXBdzbJCPdTcN7fddVo8zSX4GdieIRNhwrqe2ohSvVjn79YvA7ZX1JiZIhdQbYyM2D72ZFHeBy
-	fy3Z9cdACMFtG55q2plOAAoojJDvE0CeoYpIu7Bogz2Zch+J8LCczwufZtTF/E0/K5kLJykuYB+
-	ouTmPZFfBHZg3Sgzp6RP+oVURVe6dwXir7ZGdGAad8b32pKZ0n7UNTa2Lo41npZ6MXHYfA3qa97
-	KhdCQ54lIdA8daiAk8ZJLhaPIkxfzHfEux8GT1Wkcakgm6v+Uq7WB6vzYPuaQzR7OEyq9sJubZn
-	3HCsz2uubwQsH/48iWHS7Q==
-X-Received: by 2002:a05:600c:3486:b0:49f:f9d4:674d with SMTP id 5b1f17b1804b1-49ff9d4695dmr4184105e9.13.1790372022809;
-        Fri, 25 Sep 2026 14:33:42 -0700 (PDT)
-Received: from archlinux ([2a02:1808:c3:5607:5610:f477:1142:290b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a35fb05sm10843696f8f.20.2026.09.25.14.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2026 14:33:42 -0700 (PDT)
-From: Patryk Pilichowski <pat.pilichowski@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	hansg@kernel.org
-Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Patryk Pilichowski <pat.pilichowski@gmail.com>
-Subject: [PATCH] platform/x86: msi-wmi: Fix hotkeys dropped with vendor backlight
-Date: Fri, 25 Sep 2026 23:33:33 +0200
-Message-ID: <20260925213333.198058-1-pat.pilichowski@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b="RfY4ixGe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ironrobin.net;
+	s=protonmail3; t=1790373265; x=1790632465;
+	bh=ErF7CfE2J2KkQtLXok6mhVam2RRVJtrfwuAWVpvttw8=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=RfY4ixGeeqbIgW6Ps5HNNRwWQZQqaalQsPRQOqylEjHFYYveDPqWbsT3BbT2PCukC
+	 dgMI/3XcBWhOAnpvkdY46YmmULKBza51EHpecGYZ96jOdFTuvdWlpmpzQe14+izML+
+	 Keb+IrMyQWfxHVVeJTcvux4IPv/mnp+iDZARYNgj0jbo9hGFNXn+ZWTQy55dzw0aGh
+	 7Sxfr3NzuHM3XDdsvkyHWVC91/6Gws0ZiFLUWMDJOM2nOX/2Iwvha9cUv2VrzcPRh7
+	 y5VrRbPg2MgTzdkinVz4pUIDfcmxhgiSnuvU5YRokqid/CUanlQrznSOiD6144W2J2
+	 hsBABMSZnHIzg==
+Date: Fri, 25 Sep 2026 21:54:20 +0000
+To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Clover <alex@ironrobin.net>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Steev Klimaszewski <threeway@gmail.com>, platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Lenovo ThinkPad X13s embedded controller support
+Message-ID: <20260925215358.33417-1-alex@ironrobin.net>
+Feedback-ID: 54785507:user:proton
+X-Pm-Message-ID: 5c58b5ca42a24e4d87b2ec8efb1ab51cb726a9f6
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Commit dee82409a883 ("platform/x86: msi-wmi: Reformat
-msi_wmi_notify()") turned the condition for reporting a hotkey into
-an early return, but only negated the brightness key comparisons,
-not the backlight check. As a result, when the driver registers its
-own backlight device, all WMI hotkeys are now dropped, instead of all
-of them being reported as before.
+Add support for the embedded controller found in the Lenovo ThinkPad X13s.
 
-Restore the original behavior: only drop the brightness keys, and
-only when brightness is handled by the ACPI video driver.
+The X13s EC uses an I2C command transport similar to the ThinkPad T14s EC,
+but its event, keyboard backlight, and power-management interfaces differ
+enough to warrant a separate driver.
 
-This was found by code inspection. It is not tested on hardware that
-uses the vendor backlight; on an MSI Katana 15 B13VFK (no vendor
-backlight) hotkey handling is unchanged.
+The EC event interrupt is provided by GPIO103. GPIO176 is a separate
+host-controlled power-state signal used during low-power transitions. The
+driver follows the EC command and GPIO sequencing described by the X13s
+ACPI DSDT and defers EC event queries during suspend until the I2C
+controller is available again on resume.
 
-Fixes: dee82409a883 ("platform/x86: msi-wmi: Reformat msi_wmi_notify()")
-Signed-off-by: Patryk Pilichowski <pat.pilichowski@gmail.com>
----
- drivers/platform/x86/msi-wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This initial series provides EC transport and power-management support,
+wake handling, and keyboard-backlight control. Other EC events have been
+left for follow-up work rather than exposing unverified input mappings.
 
-diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-index c9db750fe5..05c35133a1 100644
---- a/drivers/platform/x86/msi-wmi.c
-+++ b/drivers/platform/x86/msi-wmi.c
-@@ -236,9 +236,9 @@ static void msi_wmi_notify(union acpi_object *obj, void *context)
- 	}
- 
- 	/* Brightness is served via acpi video driver */
--	if (key->type == KE_KEY &&
--	    (backlight || (key->code == MSI_KEY_BRIGHTNESSUP ||
--			   key->code == MSI_KEY_BRIGHTNESSDOWN)))
-+	if (key->type == KE_KEY && !backlight &&
-+	    (key->code == MSI_KEY_BRIGHTNESSUP ||
-+	     key->code == MSI_KEY_BRIGHTNESSDOWN))
- 		return;
- 
- 	pr_debug("Send key: 0x%X - Input layer keycode: %d\n", key->code, key->keycode);
--- 
-2.55.0
+This follows earlier X13s EC work by Konrad Dybcio and Steev Klimaszewski.
+
+Development was assisted by an LLM, including analysis of the decompiled
+X13s ACPI DSDT and review of the resulting implementation. The resulting
+behavior was verified against the hardware.
+
+This series is based on Linux v7.3-rc4.
+
+The series has been tested on a Lenovo ThinkPad X13s, including keyboard
+backlight control and firmware-driven brightness changes, s2idle
+suspend/resume, keyboard-backlight state restoration, and wake from EC
+events.
+
+The binding passes dt_binding_check. The X13s DTB has also been validated
+against the binding, and the driver builds cleanly with W=3D1.
+
+Clover (3):
+  dt-bindings: embedded-controller: Add Lenovo ThinkPad X13s EC
+  platform: arm64: Add Lenovo ThinkPad X13s EC driver
+  arm64: dts: qcom: sc8280xp-x13s: Add embedded controller
 
