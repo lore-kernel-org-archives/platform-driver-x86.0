@@ -1,299 +1,140 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7C340BCB8
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 20:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258EB4F55D9
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 20:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790367922; cv=none; b=Q0ltKmSgrx/cvQdgOGwENa5JmTUrE5sgmYqxrYBjJRG6l+lK4KY273MULa5M51gbFsHvZiuj+iRzsYJ9MJYhM1DNXxsYRQ9RVnU0pDoGuZwkmyD5fRtStUmJzCbq9PajnW5uZu3c0t7wgLSrp0g82LUBnQzX1X997kumx/ibh0Y=
+	t=1790369580; cv=none; b=cm7iT3pUST1R7UYtjH3WsIJXLfl9JzukOehm4mhUgWNYhxUIf3CkSn9T0ofJGifiSUzaa21J753qV0Am/kj01tlFZWIHiYh68Xg2ioYtR7YplKLcLUA11ZTahe4RbLTNPN21YiSf4u6nrLL2W/LmlbKqIgavVLwuab6uLAlRicQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790367922; c=relaxed/simple;
-	bh=g0hVY7HOFVV23IEgOnRtUk6IT6oLr3dTzb/jFdwAcuk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=TmKbkJ1ELvi3NXdI54FXpsjpkGvYtxzfTG+pcbM5izNjrWlpmVGHR72dH5s5iFHQIFINH9av1Yqp6ROYxk3ynOpi0YwFbgVSs1m9msdFH1ZvyIVWgXHYDrenIQ4eeST2vJf9IJpIyUVPmtynqARw5KTurOedVpErVl6eaElD5RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R540Njkg; arc=none smtp.client-ip=74.125.225.141
+	s=arc-20240116; t=1790369580; c=relaxed/simple;
+	bh=V3+yZT6YgVYUQdzB9TmvQNwHwQAuLA6xbe0leH+6ANM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IrOSNZLYe8e3eHa9aalCJ51GCPmlYrj7vxDXMu1e+eudUaZShvvQ8h3Xe8w3szDOk4STopfY6Nhhy/IWn/TB9lOnOErCAQQwMbMo+/MqVgnqYb5IwSXRDG+PrTQa/I0o1yFQS9+1lmfuSY70h6XhSJOJdmcxpLa88ItEGz91bIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lxudg0PB; arc=none smtp.client-ip=74.125.229.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R540Njkg"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e7bcb94d3so9797425e9.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 13:25:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lxudg0PB"
+Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-3427493501eso354796eec.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 13:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790367918; x=1790972718; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id
-         :references:in-reply-to:user-agent:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=+EhjDRqgMFuOqk3fKJz4pK2LGkkC9j6uC32F2tKgXCY=;
-        b=R540NjkgeNbkpc9c9U4kPjyO3+/PUKQdesIjGrJj+jQ+h/sLZTiVvokQyZwq7cxBXl
-         11XoYlhUoPLE8OUBUnzujCnDIblYzhePct3DC5LrroBGOFkmAm4fpBPIAjmEEmsJCzmi
-         1uqLFbYroUJ7NX7ngJC2nwdZ1fQDszXq9vfv7K/IfZslNTYTpRIQpF+b+b+qBBeI4D9c
-         pi0lPE3Xbc8D8RH86ZUrt71x3hK/GtghCRdBUMzXP08oEBZLX0Z5vYNez+Nrjm7X8/Hq
-         ljYYibjezmxEJ/U9KLCXOWC0FX0tGJWPRHxZhlVYXPbs/av0nNe0B9Khiqgtqrfy38/D
-         +nhA==
+        d=gmail.com; s=20251104; t=1790369577; x=1790974377; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=3hILfYSx6Rwo5N+DFRo2zikr7W+nhdamltoaH7/MZZ8=;
+        b=Lxudg0PBKwp3TkGFWH+jnoPkEYXRPzkBciKOhNDAdWp+8FspFJZllz99/+7RAVml0i
+         piwFFRPrPFvWgxL3MXp+p8mqJdjP3RXnylD36IvLR6VSsQnI0mjswWOYJYNRmKPLAAEh
+         nxMVPw7Vv4C+w8U+VY6GHgaPFEfKheJFwCv5clXkiPy594UNtJxQ+HDdUwF52ZW+8mIO
+         N/EbZucLx+4hkNnrHdr0ArtuuBOGOYOgZ79KIF7+te107j/Hl/k1ozzUqwKwF8J//cKZ
+         GKnYXx1rUhJC8ZO23BFUjLKdL4UJxcq3Dj5UetFh86ERg01Px+kFTONXh2//9Od5fvh1
+         dZFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790367918; x=1790972718;
-        h=content-transfer-encoding:content-type:mime-version:message-id
-         :references:in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+EhjDRqgMFuOqk3fKJz4pK2LGkkC9j6uC32F2tKgXCY=;
-        b=RtKs+PCcWG34QDIoByZlj+Gjy8T5v5HULp3Qz7BvDA5r47NJv5D3cJuu5o4mxu8Bsy
-         iRPfng6S8Hz7QZ5Pp1fBNci2pBgTn5FQKs9D3v3LPVhkMMZMijqxBfG1YtxEniARfStr
-         j1E4D+ftHLxfbrUZwus6v7RkVt/bHLqo8MBFgXEyk2XRJ7s5ksGwQ/n55fIjS+KW5pCn
-         gSULnbBtRixn3QqMky1Vkuj4aY1wqith2XvNBy320SOmbZOYdHAHgU8kipGULYdRxVPa
-         2A8Gz81phrA15Uih7iMHInwhs7hRpLu9t05ie8e34ooGHRGJAbupJB1PGCRzzjunutvF
-         HyTQ==
-X-Gm-Message-State: AFuF++n+XxEmK6YI9V7Zl/BeyY9nYdCSGZV0vWsa78/yJ+4LzYdX9cn3
-	hyBaOfFJ3V3C5vMOaMke6UuciRORPIvykrdcw8NoE//k1ryTfNcgwwd1
-X-Gm-Gg: AYBFou11y0XNUv5qQaQk0ccLHE/kVB67ROqSSEQUVqMnaIajf8tlmwgM9B86lBoXrjj
-	KCIXg2gJHUno66+r1fTtM0ZyjlHAngrcI8pod6ETf6nG5ZJB5syo8K7wM0NMTGNVQm6ryXQe9Ff
-	xA1q8PjmTzUzPs0JiR63VrKNworiRLb+KIANLac5aIXsAUHDit7leNbKMXekT6lY8GgKOZTgej6
-	5+V8h9S1Xkw5MajJtfS7MOXYKgT/n9Wtpehg6F+H7fLpgk6ooYqF4gVCchR9xrJVOBI9yEl6l1Q
-	S9TDkQFp14M0Sm6KarvkeqJaj+SFvNFWpMal6S+f8j3IHImzOSPn4MAXTCufwny7UGJezZNCmk1
-	WsJKKUmq7vTlDDzNSG4COmz0J0mPGLZYzqXf9QR4wGHN2xnu8HummcNnPlMo+HFoOeIxF/nweSj
-	W+tpXQl5iF2dcCbhMYD7eYXcbVhRWwrFh9SDgajAg6blVdjwWt5lAzBe2SDGcEAANp6dcbvdWMu
-	BLP/1UcyoH+vDmYSDtjrX1+MqREqw==
-X-Received: by 2002:a05:600c:4745:b0:49d:10d6:fd55 with SMTP id 5b1f17b1804b1-49fe66abd7fmr126919825e9.1.1790367918415;
-        Fri, 25 Sep 2026 13:25:18 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([2a02:b027:8010:c8cb:8c00:ceff:fe09:4e05])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fef6186a6sm73781625e9.4.2026.09.25.13.25.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Sep 2026 13:25:17 -0700 (PDT)
-Date: Fri, 25 Sep 2026 22:25:13 +0200
-From: Denis Benato <benato.denis96@gmail.com>
-To: Bartu Alev <bartualev@gmail.com>, linux-kernel@vger.kernel.org
-CC: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Luke D . Jones" <luke@ljones.dev>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1=5D_platform/x86=3A_asus-wmi=3A?=
- =?US-ASCII?Q?_add_TUF_keyboard_RGB_readback_support?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20260925200744.129714-1-bartualev@gmail.com>
-References: <20260925200744.129714-1-bartualev@gmail.com>
-Message-ID: <27BF6C3B-C341-4122-B1E9-F540345C29F6@gmail.com>
+        d=1e100.net; s=20260707; t=1790369577; x=1790974377;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=3hILfYSx6Rwo5N+DFRo2zikr7W+nhdamltoaH7/MZZ8=;
+        b=14kSZFcOr7p7yDLtDG/UprIps3gjwJoLG3YpR8EL05tmdCzdR/DWBZvBSp66f9l4JQ
+         weijgi88bfbicJ6MBrKo8luz4jLXeoEn+Ww86A5i8NLbDVIDaN+24rwA8PgpRtko1ivC
+         VjDgZqGYvc5x14shxcZnW8uzOrNW/xjkJDJwzczFhn/Zh3j7B8DmSh/ZUFGTH8gAiJoe
+         ogtlSr/0lXZsVteAHDvbm9lw4+BlcUkpjS47uxuYBlIv4iIXAbr9kepnMKmwop06Zkcq
+         lEk4WBxKjjEPeaK5evNKRdZL8HBHaCxgYCTjH7UEvSf1T20fSSVKOmUjQ7AZXYFnkcCg
+         1X/g==
+X-Forwarded-Encrypted: i=1; AKwUvBwaokTBTTWC39HljE6eZmsqHyxYEriZ8S8I95wxDZHGm10I9+O5HwEFhE5syZBnI3CQj8Csy1pV9Xzsp15YtteKebvW@vger.kernel.org
+X-Gm-Message-State: AFuF++krCzg01w8Alt65V7qpVlXlOA+eh17fn5/c6Kyzh43vqHvhwYOU
+	Rxe3XSJfozqV9IrvT3FHHS+3F8dzPhpWRIaEv6Z6buR/5XGwtPLVCtG+
+X-Gm-Gg: AYBFou0hJx3WwyAEvnn0x+6eBsubykcWtfq4OSARKJfx3QLQYCWD2l2M4wFjWFbgBak
+	5U8ut2cjQJkeyVVQRypvvTPd6HaxCO1lgXeuVybVqb+3FSZHx4YhQVf2cpTzEjIm93Y1zQtMAAe
+	5k2KJHbOcYmkYyNtv/NkqH2OBGaRlgfsDds0cCtBuxNWcoV4eFwpyN2sjrEE/8LKip9qZI5XKEV
+	ae9GptTiWsZXwhd6Hfug4sthjJsb7jIxaCjXS+vbZzQntKZtz3siGZHw1rQ4IiINBqfKvlav47J
+	nZ/3xv+ANqL2ej75JIX88bfH2jMBoogiD/C+ahbXBwAIewm4YVpIlo8EAuXPWMP/mTj3pA9tkDz
+	UnpUCg6gflKXOaQLcMXcGH066xA/8o92qJXEjBnEumveBXWxhDZhrv8Q6YRa85Tkwk5s6Wqe5rb
+	j+olCKG5LB+8ukVVT1/CQS+to4s/ivs3qdmkjzYKPzxmaIQ1Flg1wXYl5dnGEGf97erFIYIbPF0
+	zNIj8iFCPBdcO08jV3eDspO+bltSeS2mxBLDMTU
+X-Received: by 2002:a05:7301:dd97:b0:341:8e9e:28f6 with SMTP id 5a478bee46e88-34273946002mr1097965eec.41.1790369576952;
+        Fri, 25 Sep 2026 13:52:56 -0700 (PDT)
+Received: from CP-Notebook (host8.181-2-204.telecom.net.ar. [181.2.204.8])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34141d2fe4bsm8673833eec.4.2026.09.25.13.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 13:52:56 -0700 (PDT)
+From: Ciro Pedrini <ciro.pedrini@gmail.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Ciro Pedrini <ciro.pedrini@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Add OMEN board 8A17 thermal profile support
+Date: Fri, 25 Sep 2026 17:52:26 -0300
+Message-ID: <20260925205226.883724-1-ciro.pedrini@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Il 25 settembre 2026 22:07:44 CEST, Bartu Alev <bartualev@gmail=2Ecom> ha s=
-critto:
->TUF Gaming laptops support setting keyboard RGB lighting modes and
->power states via kbd_rgb_mode and kbd_rgb_state, but both attributes
->are currently write-only (DEVICE_ATTR_WO)=2E Consequently, userspace
->utilities have no way to query the active hardware configuration=2E
->
->Add readback support by querying the TUF status device ID 0x0010005B
->through the WMI DSTS method=2E On supported platforms, this evaluates the
->ACPI DSDT method EC0=2EKBLS(), which returns a 16-byte status buffer
->containing the active lighting mode, RGB color channels, effect speed,
->and power-state bitmask=2E
->
->Introduce kbd_rgb_read_status() to retrieve and validate the KBLS
->buffer=2E Convert kbd_rgb_mode and kbd_rgb_state to DEVICE_ATTR_RW=2E Map=
- the
->hardware speed codes (0xe1, 0xeb, 0xf5) to their sysfs indices (0, 1, 2)=
-=2E
->Since the status buffer reports the active state rather than an action
->command, emit a synthetic leading '1' to maintain format symmetry with
->the input format expected by userspace=2E
->
+The HP OMEN 17-ck1xxx (board 8A17) isn't in omen_thermal_profile_boards,
+so hp-wmi uses the generic thermal profile query. The firmware only
+stores that value and never acts on it, so the EC stays in its default
+mode and the CPU is held at 45 W whatever profile is selected.
 
-1 or 0 is for immediate vs save to flash=2E=2E=2E Which one of the two is =
-the reported one?
+The board uses the OMEN interface (mode byte at EC 0x95, thermal policy
+v1) and also needs the timed profile quirk: without it, the EC drops
+back to the default mode about two minutes after each profile change.
 
->Additionally, relabel the fourth field in kbd_rgb_state_index from
->"keyboard" to "shutdown"=2E When the interface was originally introduced,
->the purpose of BIT(7) was unknown and noted as having no effect=2E In
->hardware, this bit gates whether the keyboard LED remains powered during
->the ACPI S5 sequence=2E Relabeling it accurately reflects its
->actual hardware behavior=2E
->
+Add 8A17 to omen_thermal_profile_boards and
+omen_timed_thermal_profile_boards.
 
-Good finding=2E
+With this, all three profiles work and sustained package power under
+load goes from 45 W to 56-79 W.
 
-This however goes in its own=2Epatch with an appropriate Fixes tag=2E
+Cc: stable@vger.kernel.org
+Assisted-by: Claude:claude-opus-5-5
+Signed-off-by: Ciro Pedrini <ciro.pedrini@gmail.com>
+---
 
+Notes:
+    Tested on 7.2.7, whose OMEN profile code matches for-next. Without the
+    timed quirk, EC 0x63 counts down from about 120 after each profile
+    write, and at zero the EC resets 0x95 to 0x30.
+    
+    8A13, 8A14, 8A16 and 8A18 appear in the same DSDT. 8A18 is in the OMEN
+    list but not the timed one, so it may have the same two-minute
+    fallback. I can't test it.
+    
+    I used an AI assistant (Claude) for the ACPI analysis and to draft this
+    message. I tested the change on my machine and reviewed everything.
 
->Assisted-by: GLM-5=2E3
->Signed-off-by: Bartu Alev <bartualev@gmail=2Ecom>
->---
->- Tested on ASUS TUF Gaming A15 (FA507NV) running Linux 7=2E2=2E6
->
-> drivers/platform/x86/asus-wmi=2Ec            | 87 ++++++++++++++++++++--
-> include/linux/platform_data/x86/asus-wmi=2Eh |  3 +
-> 2 files changed, 84 insertions(+), 6 deletions(-)
->
->diff --git a/drivers/platform/x86/asus-wmi=2Ec b/drivers/platform/x86/asu=
-s-wmi=2Ec
->index a65090429ca7=2E=2E36eff5adac52 100644
->--- a/drivers/platform/x86/asus-wmi=2Ec
->+++ b/drivers/platform/x86/asus-wmi=2Ec
->@@ -1046,7 +1046,58 @@ static ssize_t gpu_mux_mode_store(struct device *d=
-ev,
-> static DEVICE_ATTR_RW(gpu_mux_mode);
-> #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
->=20
->+static int kbd_rgb_read_status(u8 data[16])
->+{
->+	int err;
->+
->+	err =3D asus_wmi_evaluate_method_buf(ASUS_WMI_METHODID_DSTS,
->+					   ASUS_WMI_DEVID_TUF_RGB_STATUS,
->+					   0, data, 16);
->+
->+	if (err)
->+		return err < 0 ? err : -ENODEV;
->+
->+	/* DUBF[0] is a constant 1 set by the AML: anything else is not KBLS */
->+	if (data[0] !=3D 1)
->+		return -ENODEV;
->+
->+	return 0;
->+}
->+
-> /* TUF Laptop Keyboard RGB Modes ***************************************=
-*******/
->+static ssize_t kbd_rgb_mode_show(struct device *dev,
->+				 struct device_attribute *attr,
->+				 char *buf)
->+{
->+	u8 data[16] =3D {};
->+	u32 speed;
->+	int err;
->+
->+	err =3D kbd_rgb_read_status(data);
->+	if (err)
->+		return err;
->+
->+	/* Map hardware speed codes back to sysfs index:
->+	 * 0xe1 -> 0 (slow), 0xeb -> 1 (normal), 0xf5 -> 2 (fast)
->+	 */
->+	switch (data[5]) {
->+	case 0xe1:
->+		speed =3D 0;
->+		break;
->+	case 0xeb:
->+		speed =3D 1;
->+		break;
->+	case 0xf5:
->+		speed =3D 2;
->+		break;
->+	default:
->+		speed =3D 1;
->+		break;
->+	}
->+
->+	return sysfs_emit(buf, "1 %d %d %d %d %d\n",
->+			  data[1], data[2], data[3], data[4], speed);
->+}
-> static ssize_t kbd_rgb_mode_store(struct device *dev,
-> 				 struct device_attribute *attr,
-> 				 const char *buf, size_t count)
->@@ -1099,7 +1150,7 @@ static ssize_t kbd_rgb_mode_store(struct device *de=
-v,
->=20
-> 	return count;
-> }
->-static DEVICE_ATTR_WO(kbd_rgb_mode);
->+static DEVICE_ATTR_RW(kbd_rgb_mode);
->=20
-> static DEVICE_STRING_ATTR_RO(kbd_rgb_mode_index, 0444,
-> 			     "cmd mode red green blue speed");
->@@ -1115,14 +1166,38 @@ static const struct attribute_group kbd_rgb_mode_=
-group =3D {
-> };
->=20
-> /* TUF Laptop Keyboard RGB State ***************************************=
-*******/
->+static ssize_t kbd_rgb_state_show(struct device *dev,
->+				  struct device_attribute *attr,
->+				  char *buf)
->+{
->+	u8 data[16] =3D {};
->+	u8 flags;
->+	int err;
->+
->+	err =3D kbd_rgb_read_status(data);
->+	if (err)
->+		return err;
->+
->+	/*
->+	 * data[6] power-state bitmask:
->+	 * BIT(1) boot, BIT(3) awake, BIT(5) sleep, BIT(7) shutdown
->+	 */
->+	flags =3D data[6];
->+
->+	return sysfs_emit(buf, "1 %d %d %d %d\n",
->+			  !!(flags & BIT(1)),
->+			  !!(flags & BIT(3)),
->+			  !!(flags & BIT(5)),
->+			  !!(flags & BIT(7)));
->+}
-> static ssize_t kbd_rgb_state_store(struct device *dev,
-> 				 struct device_attribute *attr,
-> 				 const char *buf, size_t count)
-> {
->-	u32 flags, cmd, boot, awake, sleep, keyboard;
->+	u32 flags, cmd, boot, awake, sleep, shutdown;
-> 	int err;
->=20
->-	if (sscanf(buf, "%d %d %d %d %d", &cmd, &boot, &awake, &sleep, &keyboar=
-d) !=3D 5)
->+	if (sscanf(buf, "%d %d %d %d %d", &cmd, &boot, &awake, &sleep, &shutdow=
-n) !=3D 5)
-> 		return -EINVAL;
->=20
-> 	if (cmd)
->@@ -1135,7 +1210,7 @@ static ssize_t kbd_rgb_state_store(struct device *d=
-ev,
-> 		flags |=3D BIT(3);
-> 	if (sleep)
-> 		flags |=3D BIT(5);
->-	if (keyboard)
->+	if (shutdown)
-> 		flags |=3D BIT(7);
->=20
-> 	/* 0xbd is the required default arg0 for the method=2E Nothing happens =
-otherwise */
->@@ -1146,10 +1221,10 @@ static ssize_t kbd_rgb_state_store(struct device =
-*dev,
->=20
-> 	return count;
-> }
->-static DEVICE_ATTR_WO(kbd_rgb_state);
->+static DEVICE_ATTR_RW(kbd_rgb_state);
->=20
-> static DEVICE_STRING_ATTR_RO(kbd_rgb_state_index, 0444,
->-			     "cmd boot awake sleep keyboard");
->+			     "cmd boot awake sleep shutdown");
->=20
-> static struct attribute *kbd_rgb_state_attrs[] =3D {
-> 	&dev_attr_kbd_rgb_state=2Eattr,
->diff --git a/include/linux/platform_data/x86/asus-wmi=2Eh b/include/linux=
-/platform_data/x86/asus-wmi=2Eh
->index b5ed8c83ace1=2E=2Ea6eb8f8cf159 100644
->--- a/include/linux/platform_data/x86/asus-wmi=2Eh
->+++ b/include/linux/platform_data/x86/asus-wmi=2Eh
->@@ -161,6 +161,9 @@
-> /* TUF laptop RGB power/state */
-> #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
->=20
->+/* TUF laptop RGB keyboard status */
->+#define ASUS_WMI_DEVID_TUF_RGB_STATUS	0x0010005B
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-State versus status=2E=2E=2E Uhm=2E=2E=2E
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 7ab81ce5f..76f489d5d 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -207,7 +207,7 @@ static const char * const omen_thermal_profile_boards[] = {
+ 	"886B", "886C", "88C8", "88CB", "88D1", "88D2", "88F4", "88F5", "88F6",
+ 	"88F7", "88FD", "88FE", "88FF",
+ 	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
+-	"8A15", "8A18", "8A42", "8A43",
++	"8A15", "8A17", "8A18", "8A42", "8A43",
+ 	"8BAD",
+ 	"8E41",
+ };
+@@ -226,7 +226,7 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
+  * "balanced" when reaching zero.
+  */
+ static const char * const omen_timed_thermal_profile_boards[] = {
+-	"8A15", "8A42",
++	"8A15", "8A17", "8A42",
+ 	"8BAD",
+ };
+ 
 
->+
-> /* Bootup sound control */
-> #define ASUS_WMI_DEVID_BOOT_SOUND	0x00130022
->=20
+base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
+-- 
+2.55.0
 
-Hi,
-
-Thanks for this!
