@@ -1,73 +1,73 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE6C423EBA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 16:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896504E06D2
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 16:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790352074; cv=none; b=Yxb3cA84MQr/bD9zURKKxvLDCjUwwfZoEPFNcv3QtYCzEND711pDmX+z+wAU0q3gjrUeBocH4dHmeG3EQP4haA9/uozyrITyn+emuHhsPFl6+80SYtsKH5/XCL/ib4kAI1PZBikb1fKbf/TJz3WgY5QCMlgBHT9JhhhRvz5W0x0=
+	t=1790352076; cv=none; b=qY+UIkC8mgtPqaCVet5TseRR6k4s6cmLMILI1S94pJjrf9xETEg2ayojUD41P6rUQB1FgK+3g+auziLq/GmaWywnWS3AQ560s8qHnf13X3sKXpAPZX13YuVedDpJgd/0xRkifZi+yH02g0XRieKx8YQaJEzwA5DCvcvycLVD5dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790352074; c=relaxed/simple;
-	bh=9afkvubOz18LHtF1BuW6suiYxV/PEHEmT4VezTlmj68=;
+	s=arc-20240116; t=1790352076; c=relaxed/simple;
+	bh=EuXZBMFhOjnyUpWBsU8j36nNckggbOYify0Nw+7Zqxg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zef5YrZS9TKVmK+4RVqXcUePwjnCJF/Y4MW4mQg+mv6pr7tH6T5151VSkea/ME9y6FP6qNH7q5vy6oWn7s68WdbROa5CrUlsAG73xcRFNSTLco8Iux3iHEK/tswFCLFDLXe2yL4N/ZqrEgAxQIEcpDqlkrn9aFrx56yu0MApLCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=qQkljqyK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=R3ll+uVW; arc=none smtp.client-ip=202.12.124.158
+	 MIME-Version; b=UCz8/8M2+zsHGH2BU4C9gIH+azMPBYyMavbt4+DkqlRHctt/Qt+9kna+jE9StFTOPEAr1IPbj0PiqcX0BDHFZPqCLAfLHiDMdARmQoXHP0QGF0elwqMa5vned2ER2lOAH5jn/obMN5sb7MrH6NH0/vCxBULoYlH0jfT7k52kK+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=lJZKU/ey; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PxMUDJEQ; arc=none smtp.client-ip=202.12.124.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="qQkljqyK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R3ll+uVW"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id E59C57A0140;
-	Fri, 25 Sep 2026 12:01:10 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="lJZKU/ey";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PxMUDJEQ"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id 02F821D0004E;
+	Fri, 25 Sep 2026 12:01:12 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 25 Sep 2026 12:01:11 -0400
+  by phl-compute-04.internal (MEProxy); Fri, 25 Sep 2026 12:01:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1790352070; x=
-	1790438470; bh=hPURyTjuVW9/3dqtL5hT7RHB0zQl3FSn53U76VoG8KI=; b=q
-	QkljqyK5G8ft4GT/9YqMEh6d0qyN+QReUQR/66QVAgoZzZBcluOpfQqN3/vTSpYT
-	Uz78hL9ubE3KQiahptE6qxz6FLAfMNBZ3PHKJW3KNSe3I6V8RJX2dHhceeRJ262P
-	hnkCddOFv7xevfg85bQK3ycyqB73jRPS2lrNAdbLpNZ6a4WCo5R8H+ba5uoY4ITy
-	JK3kVnHEc+XqqhR3KytNK4FhKoksqtlKCkHw9ulSdxA7js3NExZ2J6HBwM1eKbFi
-	+55VkTdwb1h72eqL+Gjk6c7RCR8Td0F5QLnAux2KiMlmsf1Oy/V2Y4mnWxFsPLwh
-	LTiS+nD9mzOGet9DxTy7w==
+	:reply-to:subject:subject:to:to; s=fm2; t=1790352072; x=
+	1790438472; bh=045UL+sehXbCCvqmN7upf1pB5Gm5JxphRScFV/D4680=; b=l
+	JZKU/eyql+nQQbr8f3X3iJ6FaiIx7KKliZhkJjraDi6b9lO3OfHczsCxpMI4OSd1
+	/qUzlWMNXwKqkhcVIVpH2feQ+hMMdne7eZUHed3FUxc+eTaHBd4uVsS/F2p55l24
+	01l7Jmb4rEwJoSYJxVhGOBkAeJJbiPkyMd+mReolNMTwBc3+XmTGHM1fW26AG9va
+	ZjBcsQQCjWaDrmaxt534RZjEYPFBWz27hcee3QYU615OG8j5cdyaLFIjXHvk8SxA
+	R7a5rDvT/mgBa1Yp+3tIR39fYTTLE82kr8nS+ZC2JUTNm6LBhhxYwWKWDqWWn+wO
+	HzYwLEgqMsnFdXGDWa14Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1790352070; x=1790438470; bh=h
-	PURyTjuVW9/3dqtL5hT7RHB0zQl3FSn53U76VoG8KI=; b=R3ll+uVWpOKYvy3ZM
-	VXCTjh7BWbq1gS+4FeIy06YWJ3ooWFXGovQRZKT/jhMUUi6W2XhwDFTmQ8pORV7s
-	oleFdSEp9JzPR1I4HxoFxDw0ahWHBQctc7pjBOjWSrUUprXLTeBhuXOvRBY8E9YB
-	rWnLwqt8r3f3s02ncXzJT9+AjxVFei5MMxTaa806KifeuEYkQalVZ+Z9+toG5cfq
-	bazg6USDmD53z/iG+M5hguFD6cJOdELFlYcFLRNFCVLcOxr/fz75KU9qyEr5npmH
-	zXHyV+JPxyHwW2QUxG3ZWa0pa6C/ytTaOrvQIYp6cdFOdOTFjK+szRsoCRbC7GeY
-	ZSL+g==
-X-ME-Sender: <xms:xpq2al3ZyLcJiJ7zeNHtbYjcrXnlKQzl3LAlCz82PxJZn-VorI-e3w>
-    <xme:xpq2amE4czDLLSLRxKKNKDSNS1cwGeqeSTwawoB7-EHWNn849nsEc-0zicsN8CYPu
-    z4n3U50wFct1ZGYMaOM6m6J6Kmi3TNdH87nriEqaIlnk8fl6tuuO781>
-X-ME-Received: <xmr:xpq2asi1YGXyqcfqr75Blnk3Z3qvNh7zr8m93gkrKnuzR8sY4G_9W5ESd69jAr-vPRf75T3JeLFZcscgnxA>
-X-ME-Proxy-Cause: dmFkZTFeznFHdzKYyGHmAqc0l5i7XZM9PfQP0JIdLDlKu9DooSJb4nyFJ8AM8iqC0bx8Ob
-    v30yj+KXSN6UV7v0Y6v9ZrkDmhxSk8pOtpowAsvdd1+MOOqlN/JB05gRuk1yRxbqvChovT
-    1XhZjVQ6ziAgxLWFW/UfWDUBRNkmsSWq3pjGTLvGmTRljZQgkidKO131rztyQVCJx5falM
-    uq0QGaanXoBXi7RpeZJHYTPClVp0hOY7tAXEjkn/wSmO090y5Qv4ZQE0Mlr62h2HClazYk
-    VGJASFTcYRtvAiKrPh4AnNzI5m6b+GHle9lEwL1lvx7s4bgmAgwVDNbiuxDGT6dKp2O0Of
-    wTjlWUNUQbG9Oih427DkrpV40HcTTZ+CmK0jK4uqS5/dWUqtwIExqfk4h/du9gn7vqIL2l
-    F8ipjE4D3/E8RbRjEikoeypdqttGscGCZuGedktDmaXavQDxpFM6VnkYydJDZKMXQSWF9U
-    fz/T7o+E7Q62+ecE1UkyUxgP11Nn7MNVqGGb48QrdshARfSZYfgEvyyuz6s8+vax2lWDoQ
-    92a9taTTk+0OxhZcyTLrgOXv3guL3h3T94Xz0HWAjW2Is4abO3Fc277RijTzart4TPxsLX
-    PlXuOgRomxVVUZ6OgnOoG9DT2v4HY/q8MyTRK0zOLLAs+Q7TIWhlNbkvOPbw
-X-ME-Proxy: <xmx:xpq2ahAUl_L2jGU-e_wTy3R-e1Ixnq2U0NMsyVh4L7qr7a5FoEjoYg>
-    <xmx:xpq2amQ73echrPS37EPmQji0FJDNe2osenl90IHgB4jzO1n9d95H_A>
-    <xmx:xpq2auUBcidrLAZmdFzqWVFKdhiCwYrKjmPBVEG-7uvdSWRbbbI1Pw>
-    <xmx:xpq2andheBW2nsSd6wmjV3bzT_3MJiBDjJX8KeKmbDgajzx44QCKxg>
-    <xmx:xpq2atoO9TsAWDqjtdgbXeIClbzgl5tgWi-kVqIULmVSrx8WJUmHln62>
+	:x-me-sender:x-sasl-enc; s=fm1; t=1790352072; x=1790438472; bh=0
+	45UL+sehXbCCvqmN7upf1pB5Gm5JxphRScFV/D4680=; b=PxMUDJEQBLXnK+nte
+	xUtmKB8MudWivRtSXH0ndWS5r/YtsqunjppTmt/bsEXDMCgW1lFUIVl9YQWBCIvK
+	rPNuMzKW/axJWhpGn5WgFPR2M/QOrPFQXa0RN/l30QMS8eKJikP7l3XmGs23fvL6
+	L5GjVuKUxOtMWB5dCxDXBBN2bw0bZ1yx2+HhOSUgN3x4HiErZ3lKTnENxOx6Q5MM
+	FCJN1Hl9GSfUYD0aagjTctXIVpuUK0kRW82pMbM4sYgeNBBceU6H8wVnJuUvJ28M
+	C9nPKQl/gTQILjisVWUv2zlZwnZnjlG9Fu8YrXWsTrd3+mJ30g9/OFpvDU3Quo5D
+	QZzsQ==
+X-ME-Sender: <xms:yJq2auubc17_WxTg3T4lVsf7vg1kV7VEzBGOFZ7zL284OtSDpxiMmg>
+    <xme:yJq2atei2xCtUQHkw5pckcC246obrJz_QhbqeqBij1rn4vPYiSon1pr0bWspRzw07
+    ZRQldo8rY7u2tOIY_mGTmZtuoS1_O5ZDP7GXnvs9ase4FPoHYHlZfXT>
+X-ME-Received: <xmr:yJq2agYORDqoHn5eeyiG9-aj5KcnyJlF5nyxpF4BhH3u4_r5EhCwubC65S2yEkOC5-UO_ME2kRjEu6w6Mk4>
+X-ME-Proxy-Cause: dmFkZTEliJhTBRg9lQYVfrbho/aTtMDkPejvbmTmjDgNCYJvC7nGcUgZtcOKftwwdHjufo
+    Ip8uoljJ1AZtBe57UI1AqDdCnpm04rh4qHP6ko6Llv+NQM8fR5QAS+LMHN1sbGanN28E+H
+    Zvey9bTFefXNWOjnfEChbqb5joXAqF0MsVcRJ9hXK2K7GXvrJ/6OUdYICG7uZhZCV6Qv9T
+    gTfcldajsfkQZ4+ewJcg5LSe92IUYbyDsI7p8ElE7bI+TM8HQ3CcarBNl6TqP3NeEnZVzH
+    HxNaeHlFMLVci/Ip4XKXcTrD7jzQST9YVizB8W+6RwoQlRQFmq2F5pokef8oLbiitlmNAq
+    fFIFnEt1WlnCDjfcroAKa56cdCISEAIQSbRv0WQj+roqoYUE5KJJf/LqDe/TTiI0Ym2nbp
+    AJjhOjFUD4PbnycZ/6ac0RLrXpzu6uZQArv+VYxXVsXk+8TDZjtpG8oGGPSUdAJ62wb3VH
+    aZZP8KfQQ20l/gcr6RxUIQ+51Do1yoyL+v76eSeUMEOH6zITQ1favU0Qoj84xaxyMKpXvs
+    rDpN7SGC5m9rZKRT2fnZqdm0ZUgONFN8Cp8BevEjVI6DA0LPFvYvI35H8oO3ermsoqEBPw
+    JG4LHkp86hsjj8Ay2Blwh9o18IGj/63j8BArncMqpiN21v9b+ixJnwjtYA+w
+X-ME-Proxy: <xmx:yJq2anZa0_V39w5B_tPO1dF1hikOt9ylAH2h5OXplmmzTIsc4Mpy9A>
+    <xmx:yJq2atLYzsnmgwfj0D-mQSGQdnezoqQiF6QokFtR4SjAe2HhjKR-gA>
+    <xmx:yJq2arvdKvSI04xWJXG7x8eYb0pB0UecD7I260ucW79BDNSNTRrh9g>
+    <xmx:yJq2apU_-JK4_wxPnAf6AG1C8ds8gbLggJZV8fid6DysQRKBMouNSA>
+    <xmx:yJq2arhurWYT8LRfYeYLcfSmHkpynmIr0wDAwK0cLzzdI3uY_bdxku6_>
 Feedback-ID: ibe194615:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 25 Sep 2026 12:01:09 -0400 (EDT)
+ 25 Sep 2026 12:01:11 -0400 (EDT)
 From: Mark Pearson <mpearson-lenovo@squebb.ca>
 To: mpearson-lenovo@squebb.ca
 Cc: prasanth.ksr@dell.com,
@@ -77,9 +77,9 @@ Cc: prasanth.ksr@dell.com,
 	derekjohn.clark@gmail.com,
 	Dell.Client.Kernel@dell.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [RFC PATCH 2/7] platform/x86: think-lmi: think-lmi driver to load v1 or v2
-Date: Fri, 25 Sep 2026 12:00:30 -0400
-Message-ID: <20260925160047.2063361-3-mpearson-lenovo@squebb.ca>
+Subject: [RFC PATCH 3/7] platform/x86: wmi: Use common WMI string functions
+Date: Fri, 25 Sep 2026 12:00:31 -0400
+Message-ID: <20260925160047.2063361-4-mpearson-lenovo@squebb.ca>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260925160047.2063361-1-mpearson-lenovo@squebb.ca>
 References: <mpearson-lenovo@squebb.ca>
@@ -92,237 +92,262 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-More preparation for think-lmi-v2 driver.
+The WMI buffer 'string' handling needed for ThinkLMI v2 is done in the same
+way as on the Dell systems (I suspect this may be common on Windows).
 
-Create think-lmi driver that will be able to determine if v1 or v2
-driver should be used.
+Move the populate_string_buffer and calculate_string_buffer functions into
+the WMI core module so they can be used by other WMI drivers.
 
-Add main GUIDs into think-lmi.h file
+The implementation in WMI core has a bit more error checking, as it can be
+less certain that the inputs will be good.
+
+Modify the Dell modules to use the new interface and take advantage of
+the error checking.
 
 Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 ---
- drivers/platform/x86/lenovo/Makefile       |  1 +
- drivers/platform/x86/lenovo/think-lmi-v1.c | 36 +++-----
- drivers/platform/x86/lenovo/think-lmi.c    | 99 ++++++++++++++++++++++
- drivers/platform/x86/lenovo/think-lmi.h    |  6 ++
- 4 files changed, 120 insertions(+), 22 deletions(-)
- create mode 100644 drivers/platform/x86/lenovo/think-lmi.c
+ drivers/platform/wmi/core.c                   | 49 +++++++++++++++++++
+ .../dell/dell-wmi-sysman/biosattr-interface.c | 16 ++++--
+ .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 -
+ .../dell-wmi-sysman/passwordattr-interface.c  | 24 ++++++---
+ .../x86/dell/dell-wmi-sysman/sysman.c         | 40 ---------------
+ include/linux/wmi.h                           |  3 ++
+ 6 files changed, 82 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/lenovo/Makefile
-index 98a3baa45fa6..c404cff99d35 100644
---- a/drivers/platform/x86/lenovo/Makefile
-+++ b/drivers/platform/x86/lenovo/Makefile
-@@ -4,6 +4,7 @@
- # Lenovo x86 Platform Specific Drivers
- #
- obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
-+obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi-v1.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+index 5a2ffcbab6af..c50362365366 100644
+--- a/drivers/platform/wmi/core.c
++++ b/drivers/platform/wmi/core.c
+@@ -25,6 +25,7 @@
+ #include <linux/kernel.h>
+ #include <linux/limits.h>
+ #include <linux/module.h>
++#include <linux/nls.h>
+ #include <linux/platform_device.h>
+ #include <linux/rwsem.h>
+ #include <linux/slab.h>
+@@ -98,6 +99,54 @@ MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
  
-diff --git a/drivers/platform/x86/lenovo/think-lmi-v1.c b/drivers/platform/x86/lenovo/think-lmi-v1.c
-index e215e86e3db7..26a62e1a709b 100644
---- a/drivers/platform/x86/lenovo/think-lmi-v1.c
-+++ b/drivers/platform/x86/lenovo/think-lmi-v1.c
-@@ -34,7 +34,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  * Returns: "Item,Value"
-  * Example: "WakeOnLAN,Enable"
-  */
--#define LENOVO_BIOS_SETTING_GUID "51F5230E-9677-46CD-A1CF-C0B23EE34DB7"
-+#define LENOVO_BIOS_SETTING_GUID TLMI_V1_BIOS_SETTING_GUID
+ #define dev_to_wblock(__dev)	container_of_const(__dev, struct wmi_block, dev.dev)
  
- /*
-  * Name: SetBiosSetting
-@@ -233,6 +233,7 @@ static const char * const level_options[] = {
- };
- static struct think_lmi tlmi_priv;
- static DEFINE_MUTEX(tlmi_mutex);
-+static bool tlmi_initialised;
- 
- static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct kobject *kobj)
- {
-@@ -1818,13 +1819,17 @@ static int tlmi_analyze(struct wmi_device *wdev)
- 	return ret;
- }
- 
--static void tlmi_remove(struct wmi_device *wdev)
-+void tlmi_v1_remove(struct wmi_device *wdev)
- {
--	tlmi_release_attr();
--	device_unregister(tlmi_priv.class_dev);
-+	if (tlmi_initialised) {
-+		tlmi_release_attr();
-+		device_unregister(tlmi_priv.class_dev);
-+		tlmi_initialised = false;
-+	}
- }
-+EXPORT_SYMBOL(tlmi_v1_remove);
- 
--static int tlmi_probe(struct wmi_device *wdev, const void *context)
-+int tlmi_v1_initialise(struct wmi_device *wdev, const void *context)
- {
- 	int ret;
- 
-@@ -1832,23 +1837,11 @@ static int tlmi_probe(struct wmi_device *wdev, const void *context)
- 	if (ret)
- 		return ret;
- 
--	return tlmi_sysfs_init();
-+	ret = tlmi_sysfs_init();
-+	tlmi_initialised = true;
-+	return ret;
- }
--
--static const struct wmi_device_id tlmi_id_table[] = {
--	{ .guid_string = LENOVO_BIOS_SETTING_GUID },
--	{ }
--};
--MODULE_DEVICE_TABLE(wmi, tlmi_id_table);
--
--static struct wmi_driver tlmi_driver = {
--	.driver = {
--		.name = "think-lmi",
--	},
--	.id_table = tlmi_id_table,
--	.probe = tlmi_probe,
--	.remove = tlmi_remove,
--};
-+EXPORT_SYMBOL(tlmi_v1_initialise);
- 
- MODULE_AUTHOR("Sugumaran L <slacshiminar@lenovo.com>");
- MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
-@@ -1856,4 +1849,3 @@ MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>");
- MODULE_DESCRIPTION("ThinkLMI Driver");
- MODULE_LICENSE("GPL");
- 
--module_wmi_driver(tlmi_driver);
-diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-new file mode 100644
-index 000000000000..da1e54dab2d1
---- /dev/null
-+++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -0,0 +1,99 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Think LMI BIOS configuration supprt driver
-+ *
-+ * Copyright(C) 2025 Lenovo
-+ *
++ * Utility functions common to multiple WMI drivers
 + */
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/errno.h>
-+#include <linux/fs.h>
-+#include <linux/types.h>
-+#include <linux/wmi.h>
-+#include "think-lmi.h"
-+
-+#define THINKLMI_DEVICE(guid, version)		\
-+	.guid_string = (guid),			\
-+	.context = &(const unsigned int){version}
-+
-+static int use_version;
-+module_param(use_version, int, 0444);
-+MODULE_PARM_DESC(use_version, "Force use of version (1 or 2)");
-+
-+static int tlmi_version;
-+static bool tlmi_initialised;
-+
-+static void tlmi_remove(struct wmi_device *wdev)
++/**
++ * wmi_populate_string_buffer() - populates a string buffer
++ * @buffer: the start of the destination buffer
++ * @buffer_len: length of the destination buffer
++ * @str: the string to insert into buffer
++ */
++ssize_t wmi_populate_string_buffer(char *buffer, size_t buffer_len, const char *str)
 +{
-+	switch (tlmi_version) {
-+	case 1:
-+		tlmi_v1_remove(wdev);
-+		break;
-+	case 2:
-+		pr_err("Not yet implemented\n");
-+	}
-+}
++	u16 *length, *target;
++	int ret;
 +
-+static int tlmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	int ret, ver;
-+
-+	if (tlmi_initialised)
-+		return 0;
-+
-+	ver = *((const unsigned int *)context);
-+
-+	/* Until support is complete - we're going to ignore V2 */
-+	if (!use_version && ver == 2) {
-+		pr_info("TLMI version 2 detected but ignored as support not ready\n");
-+		return 0;
-+	}
-+
-+	/* Force use of version if requested */
-+	if (use_version && use_version != ver) {
-+		pr_info("Ignoring version %d as requested\n", ver);
-+		return 0;
-+	}
-+
-+	tlmi_version = ver;
-+
-+	switch (tlmi_version) {
-+	case 1:
-+		ret = tlmi_v1_initialise(wdev, context);
-+		break;
-+	case 2:
-+		pr_err("Not yet implemented\n");
-+		return -EOPNOTSUPP;
-+	default:
++	if (!str || !buffer)
 +		return -EINVAL;
-+	}
-+	if (ret)
++
++	length = (u16 *)buffer;
++	target = length + 1;
++	ret = utf8s_to_utf16s(str, strlen(str), UTF16_HOST_ENDIAN,
++			      target, buffer_len - sizeof(u16));
++	if (ret < 0)
 +		return ret;
-+	tlmi_initialised = true;
 +
-+	return 0;
++	if ((ret * sizeof(u16)) > U16_MAX)
++		return -ERANGE;
++
++	*length = ret * sizeof(u16);
++	return sizeof(u16) + *length;
 +}
++EXPORT_SYMBOL_GPL(wmi_populate_string_buffer);
 +
-+static const struct wmi_device_id tlmi_id_table[] = {
-+	{ THINKLMI_DEVICE(TLMI_V1_BIOS_SETTING_GUID, 1) },
-+	{ THINKLMI_DEVICE(TLMI_V2_BIOS_SETTING_GUID, 2) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, tlmi_id_table);
++/**
++ * wmi_calculate_string_buffer() - determines size of string buffer for use with BIOS communication
++ * @str: the string to calculate based upon
++ *
++ */
++size_t wmi_calculate_string_buffer(const char *str)
++{
++	if (!str)
++		return -EINVAL;
 +
-+static struct wmi_driver tlmi_driver = {
-+	.driver = {
-+		.name = "think-lmi",
-+	},
-+	.id_table = tlmi_id_table,
-+	.probe = tlmi_probe,
-+	.remove = tlmi_remove,
-+};
++	/* u16 length field + one UTF16 char for each input char */
++	return sizeof(u16) + strlen(str) * sizeof(u16);
++}
++EXPORT_SYMBOL_GPL(wmi_calculate_string_buffer);
 +
-+MODULE_AUTHOR("Mark Pearson <mpearson-lenovo@squebb.ca>");
-+MODULE_DESCRIPTION("ThinkLMI Support Driver");
-+MODULE_LICENSE("GPL");
-+
-+module_wmi_driver(tlmi_driver);
-diff --git a/drivers/platform/x86/lenovo/think-lmi.h b/drivers/platform/x86/lenovo/think-lmi.h
-index 017644323d46..31359879629e 100644
---- a/drivers/platform/x86/lenovo/think-lmi.h
-+++ b/drivers/platform/x86/lenovo/think-lmi.h
-@@ -12,6 +12,9 @@
- #define TLMI_LANG_MAXLEN       4
- #define TLMI_INDEX_MAX        32
+ /*
+  * GUID parsing functions
+  */
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+index c2dd2de6bc20..611c6fac3f66 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+@@ -62,8 +62,16 @@ int set_attribute(const char *a_name, const char *a_value)
  
-+#define TLMI_V1_BIOS_SETTING_GUID "51F5230E-9677-46CD-A1CF-C0B23EE34DB7"
-+#define TLMI_V2_BIOS_SETTING_GUID "4B79FBA6-FFD4-41B6-8EA8-E81CDA0F5FC3"
-+
- /* Possible error values */
- struct tlmi_err_codes {
- 	const char *err_str;
-@@ -137,4 +140,7 @@ struct think_lmi {
- 	const struct tlmi_cert_guids *cert_guid;
- };
+ 	/* build/calculate buffer */
+ 	security_area_size = calculate_security_buffer(wmi_priv.current_admin_password);
+-	a_name_size = calculate_string_buffer(a_name);
+-	a_value_size = calculate_string_buffer(a_value);
++	a_name_size = wmi_calculate_string_buffer(a_name);
++	if (a_name_size < 0) {
++		ret = a_name_size;
++		goto out;
++	}
++	a_value_size = wmi_calculate_string_buffer(a_value);
++	if (a_value_size < 0) {
++		ret = a_name_size;
++		goto out;
++	}
+ 	buffer_size = security_area_size + a_name_size + a_value_size;
+ 	buffer = kzalloc(buffer_size, GFP_KERNEL);
+ 	if (!buffer) {
+@@ -76,11 +84,11 @@ int set_attribute(const char *a_name, const char *a_value)
  
-+void tlmi_v1_remove(struct wmi_device *wdev);
-+int tlmi_v1_initialise(struct wmi_device *wdev, const void *context);
+ 	/* build variables to set */
+ 	start = buffer + security_area_size;
+-	ret = populate_string_buffer(start, a_name_size, a_name);
++	ret = wmi_populate_string_buffer(start, a_name_size, a_name);
+ 	if (ret < 0)
+ 		goto out;
+ 	start += ret;
+-	ret = populate_string_buffer(start, a_value_size, a_value);
++	ret = wmi_populate_string_buffer(start, a_value_size, a_value);
+ 	if (ret < 0)
+ 		goto out;
+ 
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+index 5278a93fdaf7..3f912109c55a 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+@@ -188,10 +188,8 @@ int set_bios_defaults(u8 defType);
+ void exit_bios_attr_set_interface(void);
+ int init_bios_attr_set_interface(void);
+ int map_wmi_error(int error_code);
+-size_t calculate_string_buffer(const char *str);
+ size_t calculate_security_buffer(const char *authentication);
+ void populate_security_buffer(char *buffer, const char *authentication);
+-ssize_t populate_string_buffer(char *buffer, size_t buffer_len, const char *str);
+ int set_new_password(const char *password_type, const char *new);
+ int init_bios_attr_pass_interface(void);
+ void exit_bios_attr_pass_interface(void);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+index e586f7957946..b95b64e354c0 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+@@ -64,9 +64,21 @@ int set_new_password(const char *password_type, const char *new)
+ 
+ 	/* build/calculate buffer */
+ 	security_area_size = calculate_security_buffer(wmi_priv.current_admin_password);
+-	password_type_size = calculate_string_buffer(password_type);
+-	current_password_size = calculate_string_buffer(current_password);
+-	new_size = calculate_string_buffer(new);
++	password_type_size = wmi_calculate_string_buffer(password_type);
++	if (password_type_size < 0) {
++		ret = password_type_size;
++		goto out;
++	}
++	current_password_size = wmi_calculate_string_buffer(current_password);
++	if (current_password_size < 0) {
++		ret = current_password_size;
++		goto out;
++	}
++	new_size = wmi_calculate_string_buffer(new);
++	if (new_size < 0) {
++		ret = new_size;
++		goto out;
++	}
+ 	buffer_size = security_area_size + password_type_size + current_password_size + new_size;
+ 	buffer = kzalloc(buffer_size, GFP_KERNEL);
+ 	if (!buffer) {
+@@ -79,17 +91,17 @@ int set_new_password(const char *password_type, const char *new)
+ 
+ 	/* build variables to set */
+ 	start = buffer + security_area_size;
+-	ret = populate_string_buffer(start, password_type_size, password_type);
++	ret = wmi_populate_string_buffer(start, password_type_size, password_type);
+ 	if (ret < 0)
+ 		goto out;
+ 
+ 	start += ret;
+-	ret = populate_string_buffer(start, current_password_size, current_password);
++	ret = wmi_populate_string_buffer(start, current_password_size, current_password);
+ 	if (ret < 0)
+ 		goto out;
+ 
+ 	start += ret;
+-	ret = populate_string_buffer(start, new_size, new);
++	ret = wmi_populate_string_buffer(start, new_size, new);
+ 	if (ret < 0)
+ 		goto out;
+ 
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index 51d25fdc1389..c70ce5aa5ff2 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -29,46 +29,6 @@ struct wmi_sysman_priv wmi_priv = {
+ static const char * const reset_types[] = {"builtinsafe", "lastknowngood", "factory", "custom"};
+ static int reset_option = -1;
+ 
+-
+-/**
+- * populate_string_buffer() - populates a string buffer
+- * @buffer: the start of the destination buffer
+- * @buffer_len: length of the destination buffer
+- * @str: the string to insert into buffer
+- */
+-ssize_t populate_string_buffer(char *buffer, size_t buffer_len, const char *str)
+-{
+-	u16 *length = (u16 *)buffer;
+-	u16 *target = length + 1;
+-	int ret;
+-
+-	ret = utf8s_to_utf16s(str, strlen(str), UTF16_HOST_ENDIAN,
+-			      target, buffer_len - sizeof(u16));
+-	if (ret < 0) {
+-		dev_err(wmi_priv.class_dev, "UTF16 conversion failed\n");
+-		return ret;
+-	}
+-
+-	if ((ret * sizeof(u16)) > U16_MAX) {
+-		dev_err(wmi_priv.class_dev, "Error string too long\n");
+-		return -ERANGE;
+-	}
+-
+-	*length = ret * sizeof(u16);
+-	return sizeof(u16) + *length;
+-}
+-
+-/**
+- * calculate_string_buffer() - determines size of string buffer for use with BIOS communication
+- * @str: the string to calculate based upon
+- *
+- */
+-size_t calculate_string_buffer(const char *str)
+-{
+-	/* u16 length field + one UTF16 char for each input char */
+-	return sizeof(u16) + strlen(str) * sizeof(u16);
+-}
+-
+ /**
+  * calculate_security_buffer() - determines size of security buffer for authentication scheme
+  * @authentication: the authentication content
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index d723e4b1cafb..eeb9a97ec465 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -83,6 +83,9 @@ acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, const struct
+ 
+ u8 wmidev_instance_count(struct wmi_device *wdev);
+ 
++size_t wmi_calculate_string_buffer(const char *str);
++ssize_t wmi_populate_string_buffer(char *buffer, size_t buffer_len, const char *str);
 +
- #endif /* !_THINK_LMI_H_ */
+ /**
+  * struct wmi_driver - WMI driver structure
+  * @driver: Driver model structure
 -- 
 2.43.0
 
