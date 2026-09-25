@@ -1,50 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C4D47C10B;
-	Fri, 25 Sep 2026 08:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD5D3A2576;
+	Fri, 25 Sep 2026 08:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790326226; cv=none; b=lJzfbvdVW+b0XiIMiJJrwdABlAw4brQo8g5BxGOt9VPv6jeNPirreqmj8yaS3gEeXXCJ2nPRh93onzfMS28+ghb+A7qKnbRcmT6oHpOhbNltUPHOymcJcOzALbzuPmsVwvwpO5Z5ECQQD+Bfw5nyUV1WShT+2awnVGSnuMyqQq0=
+	t=1790326291; cv=none; b=rivw2fm5ZnOWEyajqGaRUoag8czKxsVxBGc6lZM1bmnn8NlDEV4KByPKGFb6EYamjYaGcW0A8hDKwW3Bw5akSaUTdvJ9YooV1kfCqpyG547x0xjYEOr8vsV3GEfYL5U8ctjNuK5mJP0kJ+HdRMXz90upC/UiREmjKDSA459beSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790326226; c=relaxed/simple;
-	bh=ZrqQea9QfkZIfeOp+G1ykf1/KoVZrNbjpHZRRBgZypo=;
+	s=arc-20240116; t=1790326291; c=relaxed/simple;
+	bh=3wm6TUr+tZUOPwnofkBwSc153ql4UOBJK8YjoL01jks=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MKs1mSXa6Aj0vhbQcbYSLD4CRmliHuNxMh1aFx2t0r69K2l1RWoiArlV/k8XR3JOdBqtScRPUr60BXzK0wFSEu/OaUZjGQd6gnVS3ZaQ9KLaAHyk6vsLSZLYQ3m9GNT+a31mLTOv1BYfW7myjFLXduJh5xR8vNI7/rqEatkaRdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bmprr1Yw; arc=none smtp.client-ip=198.175.65.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTnEIws9K4+DEnaqCy6bL7bbKwhro1/0jmnwgjYG8xJSKUgDSSlxWZZRbsN5Q0XVOEwM8SgIDsgKlGfk1QUmvN76yrUazfBuYjbpjLA3S0i1/T3TrI2LLcr3XbBaY5kaLABgUTM69b1TapDoHqDAmXZVNGVHH43JMfJweYyPeMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cDQQf6qI; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bmprr1Yw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cDQQf6qI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790326222; x=1821862222;
+  t=1790326288; x=1821862288;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ZrqQea9QfkZIfeOp+G1ykf1/KoVZrNbjpHZRRBgZypo=;
-  b=Bmprr1YwnQZRRgwpJpURgtrJQJ8jTJe6L0UDKEn6ztUnGh62jMYyirph
-   /c5L44pg1L62zjNf5m+VbiJgPDTbW6u90D4cVFdtZdVm6PiVsNQyUx46N
-   aRG4UbLENbkzFe73VgovtN/yLJFoKbiiUokfAdIdOhlP+SIcJgJDhENxS
-   ifDBc80VLZMvzVlwuBk2L5vGyJX3UuFYxZJzy7FLHumgikYqcREhHtapB
-   qbDwJrX9n0fGKIecoTbzaW7324zD8bFuIQgS3wfNvkOBtBQkQGWLEv4Vf
-   PXdrLot3sPBsdckFm6ujNuXfV/R9PS5+tl9kN2nKjccwPxa9deWsQvRtZ
-   w==;
-X-CSE-ConnectionGUID: zy88QQKYQema1TACp1DC9A==
-X-CSE-MsgGUID: LwLGJ/ePQ/eQEUtOwO42nQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="107490046"
+  bh=3wm6TUr+tZUOPwnofkBwSc153ql4UOBJK8YjoL01jks=;
+  b=cDQQf6qIxtrnZiMiBCAr3mzwylDkMnIpmvnHq9AZma276R5dCKDW3pC4
+   T/KtM2cSjIEvKkiOjGq2L9s1BT6wxT632IMH56C6vN5Ty184OgT8BUc19
+   INAxAAowDYVMrIHpHYkwD1LiwX6ij3GHjgUm7syT39YtwW498B4PI+Fmp
+   rZzQfx2GzJe4xR2C+qQhGbZ6fsnBvXBbQRBRmLggqJ94ZPVD6875f3BWz
+   LWcmQX2j+TWW/Aqw7L4NKuWqH7uSVeFG/TcLdrM2z93iXuh32z5YIEp4a
+   WxSm+bmRDlH/WvsKPxSS5U/vTrCdV4cDEzT1e4605PkO5w1mQ6QfNoUYI
+   A==;
+X-CSE-ConnectionGUID: eHK0jaHIQ26N7dwwlIPJVQ==
+X-CSE-MsgGUID: FhretcEuR4y+a+TEO3gvMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="90149509"
 X-IronPort-AV: E=Sophos;i="6.27,122,1787036400"; 
-   d="scan'208";a="107490046"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 01:50:19 -0700
-X-CSE-ConnectionGUID: +tmOa1deSK6kvpaIvTS51Q==
-X-CSE-MsgGUID: Eip1mKhXQWyde3+uEpgK1A==
+   d="scan'208";a="90149509"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 01:51:24 -0700
+X-CSE-ConnectionGUID: tTBcGD5gS06zv6Op1u528g==
+X-CSE-MsgGUID: XtE7K6PSShuE3ACHVpwfMA==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,122,1787036400"; 
+   d="scan'208";a="273502300"
 Received: from hrotuna-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.84])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 01:50:16 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 01:51:21 -0700
 Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 29189121BA5;
-	Fri, 25 Sep 2026 11:50:16 +0300 (EEST)
-Date: Fri, 25 Sep 2026 11:50:16 +0300
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 06AC4121BA5;
+	Fri, 25 Sep 2026 11:51:21 +0300 (EEST)
+Date: Fri, 25 Sep 2026 11:51:21 +0300
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
 To: Ruslan Koreev <koreev.r@gmail.com>
@@ -54,11 +56,10 @@ Cc: benjamin.mugnier@foss.st.com, sylvain.petinot@foss.st.com,
 	linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
 	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
 	Peter Marshall <pm@petermarshall.ca>
-Subject: Re: [PATCH 3/4] media: i2c: vd55g1: Add ACPI support for the Lenovo
- TBE20A1 HID
-Message-ID: <arY1yBWSAD-6IkQD@kekkonen.localdomain>
+Subject: Re: [PATCH 4/4] media: staging/ipu7: Add monochrome pixel formats
+Message-ID: <arY2CULvwXGyVvH_@kekkonen.localdomain>
 References: <20260924171820.1179823-1-koreev.r@gmail.com>
- <20260924171820.1179823-4-koreev.r@gmail.com>
+ <20260924171820.1179823-5-koreev.r@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,92 +68,33 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260924171820.1179823-4-koreev.r@gmail.com>
+In-Reply-To: <20260924171820.1179823-5-koreev.r@gmail.com>
 
 Hi Ruslan,
 
-Thanks for the set.
-
-On Thu, Sep 24, 2026 at 08:18:19PM +0300, Ruslan Koreev wrote:
-> The IR camera of the Lenovo ThinkPad X1 Carbon Gen 14 is an ST VD55G1
-> enumerated by ACPI as TBE20A1, connected to the Intel IPU7 with one
-> CSI-2 lane and powered through an INT3472 discrete device. Match the
-> HID and take the sensor version from the match data, as for OF. Only
-> the analog supply is switchable on this platform; vcore and vddio are
-> always on and fall back to dummy regulators.
+On Thu, Sep 24, 2026 at 08:18:20PM +0300, Ruslan Koreev wrote:
+> The CSI-2 receiver already accepts MEDIA_BUS_FMT_Y10_1X10 but the video
+> nodes offer no pixel format for it, and MEDIA_BUS_FMT_Y8_1X8 is not
+> accepted at all, so a monochrome sensor cannot stream through the IPU7:
+> the ST VD55G1 IR camera of the Lenovo ThinkPad X1 Carbon Gen 14 only
+> produces Y8 and Y10 and no configuration can be negotiated for it.
 > 
-> On these platforms the CSI-2 endpoint is a software node that
-> ipu-bridge attaches to the sensor device when the IPU driver probes,
-> which can happen after the sensor driver has been bound. Defer probing
-> instead of failing when there is no endpoint yet, as the other sensor
-> drivers used with the IPU bridge do and as v4l2_fwnode_endpoint_parse()
-> itself does for a missing endpoint.
+> Add the GREY, Y10 and Y10P pixel formats, mapped to the RAW8, RAW16
+> and RAW10 frame formats like their Bayer counterparts, and accept
+> MEDIA_BUS_FMT_Y8_1X8 on the CSI-2 receiver with the RAW8 data type.
+> ipu7_isys_is_bayer_format() treats every raw code as Bayer, so the mono
+> codes take the raw path in the CSI-2 cropping code; leave them alone in
+> ipu7_isys_convert_bayer_order(), which otherwise warns about them. The
+> two parts belong together: with the mono codes exposed but not excluded
+> there, any crop offset on a mono stream triggers the warning.
 > 
-> Tested on a ThinkPad X1 Carbon Gen 14 (Core Ultra X7 358H, IPU7),
-> streaming 804x704 through libcamera.
+> Tested with the VD55G1 on that laptop: libcamera negotiates Y8 and
+> streams 804x704 at 58 fps, and Y10 and Y10P stream with plain V4L2.
 
-Please describe here what the patch does; most of the above goes to the
-cover letter.
-
-I'd split the endpoint handling changes into a separate patch, too.
-
-> 
-> Signed-off-by: Ruslan Koreev <koreev.r@gmail.com>
-> ---
->  drivers/media/i2c/vd55g1.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
-> index 6f458f611..64889c35d 100644
-> --- a/drivers/media/i2c/vd55g1.c
-> +++ b/drivers/media/i2c/vd55g1.c
-> @@ -1903,10 +1903,9 @@ static int vd55g1_parse_dt(struct vd55g1 *sensor)
->  
->  	endpoint = fwnode_graph_get_endpoint_by_id(dev_fwnode(sensor->dev),
->  						   0, 0, 0);
-> -	if (!endpoint) {
-> -		dev_err(sensor->dev, "Endpoint node not found\n");
-> -		return -EINVAL;
-> -	}
-> +	if (!endpoint)
-> +		return dev_err_probe(sensor->dev, -EPROBE_DEFER,
-> +				     "waiting for fwnode graph endpoint\n");
-
-I'd drop the check here and return v4l2_fwnode_endpoint_alloc_parse()'s
-return value in vd55g1_check_csi_conf(). Then -EPROBE_DEFER is returned
-when appropriate.
-
->  
->  	ret = vd55g1_check_csi_conf(sensor, endpoint);
->  	fwnode_handle_put(endpoint);
-> @@ -2084,6 +2083,13 @@ static const struct of_device_id vd55g1_dt_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(of, vd55g1_dt_ids);
->  
-> +static const struct acpi_device_id vd55g1_acpi_ids[] = {
-> +	/* Lenovo ThinkPad X1 Carbon Gen 14 IR camera, Intel IPU7 */
-
-No need for such a comment here, I think it's enough it's documented in the
-IPU bridge.
-
-> +	{ "TBE20A1", (kernel_ulong_t)&vd55g1_versions[0] },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, vd55g1_acpi_ids);
-> +
->  static const struct dev_pm_ops vd55g1_pm_ops = {
->  	SET_RUNTIME_PM_OPS(vd55g1_power_off, vd55g1_power_on, NULL)
->  };
-> @@ -2092,6 +2098,7 @@ static struct i2c_driver vd55g1_i2c_driver = {
->  	.driver = {
->  		.name  = "vd55g1",
->  		.of_match_table = vd55g1_dt_ids,
-> +		.acpi_match_table = vd55g1_acpi_ids,
->  		.pm = &vd55g1_pm_ops,
->  	},
->  	.probe = vd55g1_probe,
+Can you try doing this with the ipu6 driver instead? We're about to drop
+the ipu7 staging driver after some smallish number of kernel releases.
 
 -- 
-Kind regrds,
+Regards,
 
 Sakari Ailus
