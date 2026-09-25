@@ -1,121 +1,87 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163291DDF0;
-	Fri, 25 Sep 2026 12:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E12848124E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 12:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790340131; cv=none; b=StG6+Ps6ZvkJqbLs/afkXYAwEfz6SHu0wN0Dfxi5YoldsXm4hhBRst0iPB+b0c7k/cZ8SFLM2yTbolbTRATkEBDnrZlccpWlA6NT8KnudCMErzaDJ6RPMs4TiJQXjKGgPZQvMbC242tfcW3pr+1+roRAvgppNvEdz24oTpYa6JY=
+	t=1790340330; cv=none; b=rq+VXzcT2YnJa6aj7mPIpyiHULItGlhBQ/kpgj/gadaAbYNAqBNSxiJPPim0+K1yVcE2oCIMFE9KF9qzDYAALcT9EXQiHT2m+KgoiZsZIalR/6dR2xl/2NCxudVAPRzEOmwaeNK+i08U2g6YD0dcmno7Y7VCIjKe25xG5y70PY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790340131; c=relaxed/simple;
-	bh=q4QS4UE3at3YzFmXewffE5SIQq54qBpHCXi2+KEP1r4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gRiJpAlF4/wAbi+fXgnuAHTSXe0l5yVYwlbkv19E5Ka24rggGv2a0juZX1rMQrxVuHU6zvGjiLWrPnGptaSzxnFmBnBkbA7TUmNcyk8g0lOrsEyaF0+BrzJA2K6wJWbklNAdMVv9Z0qmos3sTSZJZfjTeQNHInpwwwvQzKnAl1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=hQSNA8OW; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1790340330; c=relaxed/simple;
+	bh=gFBgM+h9vwcAXQ6IgQ/0PgarYfhdhOwkRrgF8syo4DI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=GKWDGejQS8TQBBglbbbZOzdl6iZ6Za6nhC+7Aygt6Gz8s7B0xZ6fu6ZJfCMJQ13Hkn4nuXnYn5WSlD6cqZAHX7TRY6JHaesxiy3rXiOyzFo/75s1OUsgXXiTNSCdaxh3A43faM82QRQYE+n7C13bx1J9tTAGtcWBiFTv0FCBoU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QHLo4fYc; arc=none smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="hQSNA8OW"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8571382D29;
-	Fri, 25 Sep 2026 14:42:00 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id POdwVJKzNGET; Fri, 25 Sep 2026 14:41:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1790340119; bh=q4QS4UE3at3YzFmXewffE5SIQq54qBpHCXi2+KEP1r4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hQSNA8OW/YLPq6fjpTGbXWiKzr6o1DgQqHdX8KlK4tteXES+59Ov34VRB64nr/0Q3
-	 hPiCysBvI3Vlq1Rh2qVU+XyVw7C4htcNuH6aX6gwHq5WUk/hRUBaOgtCzhkE23/WlD
-	 oqQw2yw78m9u7dzAR+Ly4DqXb9B1bSf6xPqBI+yazrQJ0WTDhzogU5cGsYwakOfVFo
-	 Ig1MMIFocEHvbaQuWzsfGHnhoODd3Ix3ROunObfoAajpm8PvXMcDj/5JhtnH1pfmio
-	 uzM9AlN8de2fMLJDbeAa1yf7peooYjrJmN4rCusJ6Qkw0dx4xZnLLHUnGPTxDRfzHE
-	 gV07a7kG0uonw==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Denis Benato <denis.benato@linux.dev>,
- Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
- Liang Haowen <nbg2974@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHLo4fYc"
+Received: by mail-pj2-f13.google.com with SMTP id d9443c01a7336-2d90ba1d807so5763775ad.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 05:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790340328; x=1790945128; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=gFBgM+h9vwcAXQ6IgQ/0PgarYfhdhOwkRrgF8syo4DI=;
+        b=QHLo4fYcFsBEw9KbqWriFiq6l5h2ytJpyfWWWRCT0YBu3lf5BmBYRdGRSV7LHGt5e6
+         fNrCXTOFvt/YINk6tPX3GsYO3Amp6agEgMuLImfug0TOS8heV+q+tIMkdP41KcKoRtOs
+         f42K5ycJcQdEQWPXaguOV4nHTNP+fJ+Lnh334Q84IgEx9QPNMBRphpRdnwJQDEX6jD8k
+         dR3FxrQB72zqfOU+eqxpPiBDzLdVSAgQOOjQm4T1BGSTLTmeb4IuwUnU5C39h+2YgK1I
+         gYbn5p60uo8UmYjoe9GVSZuP+4ukDGq4yRzDys7Ne1tMxiDGODLh+/M6dTv0zEXqLbn2
+         FriA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790340328; x=1790945128;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gFBgM+h9vwcAXQ6IgQ/0PgarYfhdhOwkRrgF8syo4DI=;
+        b=KS+7Qm/Zp+YCpz2QUYvi9GiGOxQe9xDrNcEsNVijZwHGApPz48LHyO8IZPkTrt7hdt
+         j4HfFVc3kGcDaUbUNSqcRQtNatinaKCqrM0GXXUv0Sgncn/bX5Z3dVUVSqn1xn8EfH97
+         ioYs8/ZeoSMY3zHetTbTgsF3bgsKhuvp7dRiW0xHNIhzP2A2Egf9FzIEh0evWeQ+qJPz
+         3xacXsvEISMpL0/6+DzQAfxQRmXWepDxAMBxgFgvzpaxTLhQK5E1s1IDFf1wF6vwhn0N
+         serDSVzSHp2bZyXNJagNVYWjBJwD1onut+gNz7gIrvIZdE6WoKgiSUHPmG3k0oo9MoII
+         9JZQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzPjXruIU+NmUyW0HmGvXqISze6883Vhs0S2u9P2JxC9GTPqic7Ydfe+WqCgUrGqUeCahDxcg/ezBFlesaLY8n/Snj4@vger.kernel.org
+X-Gm-Message-State: AFuF++n6Wfo4c4IvlOj8Avhuq+IUKYITzG0lwyoyxoGcZTlpl/EfW/DR
+	DwsbOd6Cmwh5f8zQYdzOcfO5sOfEGHEMRUxenIOJJEv8vzNt98DmdpRO
+X-Gm-Gg: AYBFou1qLnwtxb6NTcONXSOg7YHOawLzMvYRF98EajC/IlSpAdnrzojhikZWDI1/hZ6
+	2z+i2V4RYdV2o+gzOHATcJ4al8p/lAR0xd36iZqpZvSfRwBaGuPSdtg1o9fQrEmH++xfk60ZqFl
+	5XBEiJf5pgjBjEdhT60QvtVh/bGuwFBwYjAG5XSBYS8WDprJxB5qcdR54iPP3VTeUFwT4tAB3dL
+	98Q7JDdvFILzyfem2YHPfHg4XaFZPNsxO/Ane4KG8NSJrzd9aJLw+QtwiIrlOlHm9keAwacsb5R
+	QF8/weUey/38rT0D956ZVoHrl1XnMZBtNuAI3Te8Cg/oiOSXsCeXycAdlYfhlh+elowdnIrdK5T
+	K77jir0dVpD/RApCZkNqvEcvun0meqYEc5bfPYThiLvq6XJsU8vMWZv+EkoAN11Meg0+JWHPp7/
+	TmQv+mugjAYY4y5vwg9IiQ8uRjBqhD2dETfCuufJRC95TfKWAD+NugXZkXGMW/X38XQSJmiw==
+X-Received: by 2002:a17:902:d582:b0:2df:98b4:c294 with SMTP id d9443c01a7336-2df98b4cb7fmr9983615ad.61.1790340327930;
+        Fri, 25 Sep 2026 05:45:27 -0700 (PDT)
+Received: from [127.0.1.1] ([240e:b8f:977f:f400:ec2a:b15e:fef8:70a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2df913dfea3sm9261685ad.14.2026.09.25.05.45.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 05:45:27 -0700 (PDT)
+From: Liang Haowen <nbg2974@gmail.com>
+To: Marco Scardovi <scardracs@disroot.org>,
+ Denis Benato <denis.benato@linux.dev>,
+ Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: linux-leds@vger.kernel.org, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>, "Martin K.  Petersen" <mkp@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Martin K. Petersen <mkp@kernel.org>,
  linux-scsi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
  linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
- Hans de Goede <hansg@kernel.org>,
- "Derek J.  Clark" <derekjohn.clark@gmail.com>,
- Ahmed Yaseen <yaseen@ghoul.dev>
-Subject:
- Re: [RFC v7 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver for ROG
- NVMe enclosures
-Date: Fri, 25 Sep 2026 14:41:46 +0200
-Message-ID: <mTEVQW_BRQmYsDDsTddE2A@disroot.org>
-In-Reply-To: <202609251958.ReplyMarco.lhw@gmail.com>
-References:
- <UuqOxFagT_OBL0l5ZYtfKg@disroot.org> <202609251958.ReplyMarco.lhw@gmail.com>
+ Hans de Goede <hansg@kernel.org>, Derek J. Clark <derekjohn.clark@gmail.com>,
+ Marco Scardovi <scardracs@disroot.org>, Ahmed Yaseen <yaseen@ghoul.dev>
+Subject: Re: [RFC v7 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
+ for ROG NVMe enclosures
+Date: Fri, 25 Sep 2026 12:45:18 -0000
+Message-Id: <202609252118.ReplyMarco2.lhw@gmail.com>
+In-Reply-To: <mTEVQW_BRQmYsDDsTddE2A@disroot.org>
+References: <UuqOxFagT_OBL0l5ZYtfKg@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-In data venerd=C3=AC 25 settembre 2026 14:22:03 Ora legale dell=E2=80=99Eur=
-opa centrale,=20
-Liang Haowen ha scritto:
-> Hi Marco,
->=20
-> I went through your SCSI version in PR #17 against what the hardware
-> told us while developing this series. The class layout fits the
-> device well: the ENE mode register is the hardware effect offload,
-> and direct streaming as table write + apply-without-save matches
-> what the controller does.
->=20
-> A few things our hardware testing can add:
->=20
-> - ene_write() maps the caller's buffer with blk_rq_map_kern(); your
->   call sites pass stack buffers (colors[12] in direct_write). That
->   is the VMAP_STACK DMA issue Lee caught in my v8: the payload needs
->   a DMA-safe buffer in the device struct.
->=20
-> - asus_aura_brightness_set_blocking() will never run on the current
->   LED core: brightness_set_blocking is superseded by the fast-path
->   brightness_set there, verified with a test module on 7.2. The
->   callback to use is brightness_set plus deferred work.
->=20
-> - The firmware effect numbers from register probing here are
->   1 Static, 3 Strobe, 4 the rainbow flow (all verified on device);
->   2 looks like Breathing but was not confirmed. Your mapping sends
->   Spectrum Cycle to 4 and Rainbow to 5: on this enclosure 4 is the
->   rainbow flow, so those two need on-device confirmation, and
->   mode 0 for OFF is plausible but unverified.
->=20
-> - If the class core serializes the ops with led_access, sysfs ops
->   cannot race each other, but trigger events reach the LED core
->   without that lock, so a trigger-driven brightness update can
->   still interleave with an ops sequence. The device ignores a
->   sequence that loses its leading MODE write; one work item owning
->   the sequence, like in this series, closes that too.
->=20
-> The 12-byte block write to both colour tables in one go is verified
-> working, so your direct_write shape is fine once the buffer is
-> DMA-safe.
->=20
-> Whatever survives your rebase, the verified SCSI core in this series
-> is yours to reuse; happy to rebase my side onto the class once it
-> settles.
+Hi Marco,
 
-Hi Liang,
-
-I've read your mail: as said on github I've dropped both scsi and tuf as
-I don't own any of these: I'll leave them to you and voidvore. If you find
-my pieces of code useful in any way feel free to pick them up and implement
-them in your code (please don't add me as co-author as I would not be able =
-to=20
-test or maintain the code in the long run): as soon as it will be stable=20
-enough I'll proceed to post it here in lore too.
-
-Marco
-
-
-
+Understood, and thanks for leaving the SCSI side with us. I'll pick
+up the dynamic class integration shape from your dropped version
+and rebase the LED side onto the class once it settles; no
+co-authorship, noted. When the SCSI driver is stable I'll post it
+against your class here on lore.
