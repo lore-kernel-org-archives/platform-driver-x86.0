@@ -1,119 +1,213 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010035.outbound.protection.outlook.com [52.101.193.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B01471D0B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 12:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790341025; cv=none; b=vE+G+iJaAqq0P7rxr6HFvGXm00CONS+IY5jG4i51omiQVRBY+IkDFA7wKTQfngx95YRis4b/KSyxO5U1BsGQqwD8WInjvsBoX44xR3AUrWPXp9LgNmPDSnNTzMED0TPmXZL5mq93JOmhID/iq7G8j5jkwzehGDMJaYIFUx54Cac=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790341025; c=relaxed/simple;
-	bh=Ojbh+rpmbTerjzkOkZrZx99fvYmAHgItmgKQe1gUMkY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L09DQvvbgLPIsc6oaOchRynApE39YgEC+KYiYbmzTZ3MWvxkFGxYgwZ7qHEE8rXafTaEbQgTpiAkWbSnld69h3a4mkLUBDhtTdA+YMTxtxupxF2rg0eEaQSDnB1NCO2ayJqIF9ZhTHmB5iPUTPIZeBSmH2a7XXS1BoGZ4FR9liE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dqW4FNCY; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BAF4A262F;
+	Fri, 25 Sep 2026 13:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790343055; cv=fail; b=oT2ogCpL2nBgck3MUCrHQ8Jnp6tf/2LZhnlQtcZCGXa+3BbZbQXJmWJMyPBZdJINU9RIlMpUkDjk22aBwA4jDGcN8YwFkh9uc9rySt3R1f6FUiINDiYjyZ7L1FjIT68cdpm6ypAAra5l0FSGmHVdDpQNx+8cAJtTtTcugf1H+ts=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790343055; c=relaxed/simple;
+	bh=l4pa2k2Xv53SOCh2sXxg+sy4okzt/pF2DJa3AB3AOyA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=O+AFXPhFfqZvlc/9x2JUiACD0/1HR0VsHX6KatrLqzaL8gujd+YlE/IZRVJH9cMu8wI4ejt2Zp9mXqg2DNANe9fEs9k3kWESoq4+Z2x6Ck+thkmTrgoi7WRXFbCyLi7iJrDUWhd8R6IJuSmyOiqeViNTOu2I9kcmLpjWWq3bj1Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=q7ROoENz; arc=fail smtp.client-ip=52.101.193.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqW4FNCY"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-488615e6cfcso854320f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 05:57:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790341023; x=1790945823; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KNUur+VAO5XL0t2pFH3iSgJjQ7R0M85XRXolYcgZ57k=;
-        b=dqW4FNCYPpoR2PziurXcOz/D2AhaX3GJBJKppRxjnR1ONAx/tdIx2SGkQplzLGZcnM
-         WeyAji3GBNL/1eVWvOQnrKQbtbRRHctP3o/OvbrJvzaefPDWuzVxqmyqJwUkQjwUHe/y
-         dmhh3IE5XVVSXPd+XkWYA2tEOxFzMF++MMb9aMB9HeGgGjnMkinkybVm5Gms/p6DmDqt
-         ekTQZ6MErK3x2m9sJNwBMKHYnrNVskXTmGwKOFy2+0KqlcRm1achxuA2/vm1eFDoSKvB
-         8QSxKcKLMkrPie598BkwFgUoEC366HAEyPSJethwgU8w/6qwUS0rECJ+nIA32U1+WJOj
-         1SQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790341023; x=1790945823;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=KNUur+VAO5XL0t2pFH3iSgJjQ7R0M85XRXolYcgZ57k=;
-        b=nHvODlt0m2AC54EZhbLkwaIiRuxYtX9pv6Lvh4Jnqd6cDUUbpFiCRBGqhgU9jW5UIP
-         UbEfoesPxoHi5I8sqhXMbdYvB6m7QOPSYrJn7ECYHQZrs9ZbcpiU9R5hkCc5Hn88ut7j
-         cNLyEl1SSOO8pxDE4yGxJpJYXgvJuataQla2Hql2nEldKBrqm2K0kgO8arf1WYX4lZTQ
-         w9TXft9jX9jDzhMxQoGn8LE/Ky6Iz0MJTEWp5rFSnOwTbwDSjZusOAuFuZWO5+IwLWaH
-         tgOznIQC5rBlALUsNwGSqUlpXCUoSlUc62sXkMFsBn8nUhtWX0liTwv8xZ0WQbeSLsZA
-         39sg==
-X-Gm-Message-State: AFuF++lIYvkLfPUHJn2BNXDIi9fLyMjQmrX0iH3ujdlN4X9HY4m/fQAy
-	zGGu6G2KEdr4wJ/J1vTLwf+rAlcqBY90goE22d6GnctgDJPAMRuuqPiB
-X-Gm-Gg: AYBFou1ylQmJ1rFtKRcDQn9J9gnwASLXKa14GlyVodZhOXtCfzKAgh+65FF5WVdPDMM
-	JZ1bXnEjRb5wdS+MvChWPgiDZv5fO3Yi2c/zQq1FMS7BvR1/IEvbBIeeksgmV9zgY+TqvyMfv2A
-	MXy/pHcP7p5XoVjMoJY4ZOKO0YBcW3COwIn7+zASsnT0HyXwhhvtCVI2VOOnippNXg+JBdqgU5u
-	uRC9ON6DpfGF8Wz/MI8ygXNYeYrDWV88pRL0W//k72S7dRFPSmQry6JWx9p2Idb77Tu2nGK6C4L
-	XVbrWGDug+Age4A993Tq5dcbEN3NoRcdnUwVak1U4f9DVqQttml6j7oBBrJ3n67BFYvXOI1OUGz
-	QJtGMr06RG+3qcWu1bT4zdO4kjHqYKbpasECoUtgv3ndtMz19Si2YCK3K5rNDfwKwkplP5870dT
-	cNdB3fjSCwhmHDwQkvLmN8URX8R6EpmPxFACLp/yjR4scby3PspVJYdE12fhTD5InZ2Io4tD63D
-	84/EzXzF7JzPHKjiyUkf5UaKCz1nX96kHU7ytbGfvzVPdB79z9LMPcn7wlPYccEtNky+bUGl1LB
-	WkmAAGIyOPkNh9i1St2NUMt41lZ9uwLw4+A9K3JJ3L1T
-X-Received: by 2002:a05:6000:4b0d:b0:487:3c8:9675 with SMTP id ffacd0b85a97d-488716aef48mr11226216f8f.8.1790341022604;
-        Fri, 25 Sep 2026 05:57:02 -0700 (PDT)
-Received: from archlinux.cern.ch (ppilicho-1.dyndns.cern.ch. [2001:1458:202:228::101:284])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a349fa1sm10016698f8f.8.2026.09.25.05.57.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2026 05:57:02 -0700 (PDT)
-From: Patryk Pilichowski <pat.pilichowski@gmail.com>
-To: teackot@gmail.com,
-	hansg@kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Patryk Pilichowski <pat.pilichowski@gmail.com>
-Subject: [PATCH] platform/x86: msi-ec: Add MSI Katana 15 B13VFK EC firmware
-Date: Fri, 25 Sep 2026 14:56:28 +0200
-Message-ID: <20260925125628.69826-1-pat.pilichowski@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="q7ROoENz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PiWjt+8llc1078hr6pZlnkyrYgle3XJ1TzfbXqdFoD2FQAR2bqCykdF17obfoiWapBbbP7E6P3gVpK29l4ua8VYW+KWRqEKg76TzrSdVfwbmYvG+nHdRdwF/T7ufwB4Au5Ai447D0CW+Xnej3/GaEpqk0oHFDB6D5QCSqAvvkdsUezMnYUyeQPBBRgYe2m+C1jmO238QHQmjphwGW7bFZPIHsG4FH0LQfdVMJ0ftCdxZByIn214Fzdmv0FRB+vdB8mjOKBGEW1iXGgQqrsseSCIM0fTjfHeVBQxyihLYw0u35GPibkJjDIaVBM5v3/jV1nd+cmi+lkDRBJYTltofXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TIok69anpBg4QWpUnek+BCocRcrkejdSBli9usgJKoA=;
+ b=gcJox41HXxE6ZiRHRQXCX8tIKLLy2omZwUwhFXozflBrPoOI7LmYm88lITb9EqRtrIGJsdxvOKRAHWKAw3bYz1hGfOf9zAUKNaKpsyPSb1bHOKhihLqNdrMSEbnh8zaVxLoug7YbvxjuD1B5bBnd6resAfWShkNbDezHUzJYHjLeq2fgnIOO5U424xbII7M1Db82j966UCTPacUOTlZ5dJyc1EQsf+61m+CVt4OcyhWln4wxV2kMwZw8cMc1JK1yik+Nrsl3K6Jo3schltpzA8B7LW6Njyb74AiN9bcm/34Sl8otk5N5TGOvNdRNs4Xl46/HBbl14aJbbyrsk4QbMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TIok69anpBg4QWpUnek+BCocRcrkejdSBli9usgJKoA=;
+ b=q7ROoENzJBNTPMwPHbrNt5n2a7hxcTVCXXwS/1hO+c3/XBBhrPOtMuEgF/r5nu3xbW5yxtNrWIkl9KjMdDGQHQ5v7acxtpeB6cr+u59mtvOq350TrMwhyS9qtyiRznz0i+jyEliamemUwjrFgz6JNpv/TVtLPjgnxPrYPgQ09Wo=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by CYXPR12MB9425.namprd12.prod.outlook.com (2603:10b6:930:dc::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.18; Fri, 25 Sep
+ 2026 13:30:50 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0451.014; Fri, 25 Sep 2026
+ 13:30:47 +0000
+Message-ID: <b2e13400-d1b7-4a9f-b7bc-a2d1dc7a4912@amd.com>
+Date: Fri, 25 Sep 2026 08:30:45 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+Content-Language: en-US
+To: Fourhundred Thecat <400thecat@ik.me>, platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <55854916-292a-40ae-8421-1a784785d899@amd.com>
+ <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
+ <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
+ <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+ <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
+ <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
+ <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
+ <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
+ <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
+ <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
+ <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
+ <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
+ <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
+ <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
+ <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
+ <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
+ <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
+ <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
+ <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+ <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH2PR07CA0044.namprd07.prod.outlook.com
+ (2603:10b6:610:5b::18) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|CYXPR12MB9425:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e97b33c-26ee-4013-713a-08df1b09356a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|22082099003|10067099003|56012099006|6133799003|11063799006|18002099003|4143699003|5023799004;
+X-Microsoft-Antispam-Message-Info:
+	HpSqO6sYfQRQo+lzKtFSimKPa8dpj08HlKpYhx02f/HOErHb7WT9iJo5Amn9/R2nmr47fHspP5Zc9Xs23xpRUv4zVU2NcCfvbm2N4/WtbyiVzyhUs09oofzlqhjJrBEKU+BrnfVm8vulkQSM21OZequKrDxKZD45PiVr9dqTVnUfKRerhYsQfyt+WfQUOuGHuKSiZd7pGyxcEqFBwbta5lYIShuGGldNw9NOa8L10PM2agnY8kQ+XmbQfiO5/5sVOA3eVkpQswrBT4WZp+3Z2NDUdzVueAdNBdUoiswWmr62nyjngiYBtC9clvY2ylRDnZz9Tr2iUMJBvM61iIwN8mpORCXHAx3z7+H/FmfIWuW/J4ai5TFAfI+Q8ht/h0ucVupeo+CasRls7rBCR23US0ZDSUW5Ad9r1dNaH+sLa//3Ly9Fvock/xYhxdrlv2D9chqCVUANr6YIpwDh8aw8F/Z2YZjcAqpU19J0vmv76bWB1R7H/+OWl/EYvF69aEFjPw9rnaRMRJe3DdcDOoL7aqiEQyj+R1bCrM9lMlTNIrl27UReuxejsgqMnKmxhDYkkze3kuj1PQNmBgB0XXiOPbWfWA6WWRwjQU0FWXBOlJHlThHiAD3KjqolpXF4wofBUKZ/lfzuB5Hjxw1Xy/86vyKXfJkFw5GTRMUR3QMjskU=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(22082099003)(10067099003)(56012099006)(6133799003)(11063799006)(18002099003)(4143699003)(5023799004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eWJ4RnpPbmxRZlNnS2s4bXFkTWJUZms1enQ5dGFwa3FvOGxHZlhxWk9yMUdH?=
+ =?utf-8?B?Y1psb0ZjbVp6Y3BpK09ZbndaL0Z6YkhncjgvNzk3Ylhiei9ySzMyS2lFQStM?=
+ =?utf-8?B?NFFCWWhvR1R6Z3ZaWGtwNWNWUDJaNGtxWU8wNlhXeTQ4cGk3Q2ZvMHYwY3dF?=
+ =?utf-8?B?c3FhdVFoZURQQ3lLRnBUSkxOV01JblZGV0lTVGptRFNza0pqczR6WlBKenZs?=
+ =?utf-8?B?MEZzNEtKRmlJR1lodkIvTXJqaDFqOTlEZHVSTk1LdzRDa01nUU9BMzJMWS9I?=
+ =?utf-8?B?YTF5N0tqbTJGMzRjRzdxbGVVb1pFeGZWSzZDSGQxdFd5bG41RFdpTzJ5K2Nu?=
+ =?utf-8?B?bjUrdEpwNVVpS0FGbFVaSzJMaWx3aDlObUVJY2YyaVpNazJBbjJnZXJXcDE4?=
+ =?utf-8?B?Qkw2bGNZNTcvV21VYTJ3emRhZnlJTndMRHRESGxrT2VLbXBzZGVKQmdKbXgw?=
+ =?utf-8?B?NHlncmFzeTVqUWJFTXZrdTI3NHR1bkV4QkFCRHA0eWNWVlRBSDllOXBMZ2pX?=
+ =?utf-8?B?R2Z4bFYwdFZNT3NNSStoYnNGeWdEUTRidHFoQXNvT0p2U1A2dkx4aW1ZbENv?=
+ =?utf-8?B?SitBNWlXUDJxNVg5U0RXWEVrd29wV01HcnBwL04xbERIazBjcFV5WGNEMzJX?=
+ =?utf-8?B?ZWtHVXVVK1NOQ1c0LzBRdCtaVUJxcllvTG1sR3Z0R0lmWFBKbVhKUHZja2Js?=
+ =?utf-8?B?WEtubEhWQlVrbHA0a0V6QXV3RUptb3BBKzR1eGV3ZGR5RjAxckdaRUJFSG5T?=
+ =?utf-8?B?QjlLb3Jhd1JnNkFJWlJadGFNa0VFemdGbzZnR0t4UkVwOVdFWGsxbkpPN244?=
+ =?utf-8?B?RHN1bVA2T1FCVkh6Qm1oNGxLR3JKQVd5THROUjF2OGVCcC82M1hkUVBPZWlt?=
+ =?utf-8?B?K1lhZGVSU2pUT1ZYL09oSExSekJ6OVROSGx2ZjRDMnZpTjd2QVJZQVYrYjdK?=
+ =?utf-8?B?aGNiZ29DVXlneXF6SUJPaWt3eEtVVVFuejdMelJlLytKZGdWaFdjYzAwUkMx?=
+ =?utf-8?B?U01RVVlQUW1xTmV0TitCcWxwQmdnNzhETFZvR0orT3dGN3RGWCtBUm9sNU5j?=
+ =?utf-8?B?RXpEcDZqQm9mVzdrY003QlRFeXkySUxUYUhpZjFFZ0RySmllU3RGRFRyR2NB?=
+ =?utf-8?B?ZlR0dnF4dXBScDNWamFYbnBJYVlyYmRMN0tKYmh6TkxPOGo1Q3BDOHNlVDZW?=
+ =?utf-8?B?OTc0SGZON0w1dElaekd2WFJrVDVwbVN6RWQzczYyMHh2TzFZMSs3N2JNQTdM?=
+ =?utf-8?B?MXVyMjVCNVdhcUNqMFFjdzE3VjZNNXBWcWhZWmVOcDdQMzJ1elQ1Y2gvdkY2?=
+ =?utf-8?B?b1dDSkpJVHcrSGJ3MSttWlNzcWV3RDB0RnN2WVdjZ0lSWk45TVFzSDJYSnVZ?=
+ =?utf-8?B?cWdyc2E5MjJDcjZob0duTzQ1L29nWnRIYkF1dlVuM1VlRlYzTWtqRVl5M2gr?=
+ =?utf-8?B?SG1NQkFndmFEUEtrb1NhMEJod1U1UTRqYnAvVWs5Y0VZNUd5Y0FMajFZM0FP?=
+ =?utf-8?B?am1sSE91SHJJZUVUZ1dGMndIamlnZ0VHNDVSVm5GbCtxQW1nd0VLa1czQ3pZ?=
+ =?utf-8?B?Wm5wbU1rNkF4Z0paVXd4OGNGcVY4b0RqaFFrV2JEN2N3elVKSkFOTmdqbEJx?=
+ =?utf-8?B?OVNyczh4YmZSSTVpUWtHNzB0NkQyaWhobVE0R2NaZDBMOUNLVGgwMjQrR1cz?=
+ =?utf-8?B?WW9OWWlBQkZPbksrdEVrZnVRblBqYXFOYjR2U3BLMGI4T1ZVU2E3QU9WQjc1?=
+ =?utf-8?B?NFc4OExSMkU3MGpWMnpsNk9iTzY0RlFhL3ZPaHppQndXUTVnNlJWUjZmVGx1?=
+ =?utf-8?B?Yk1LOE5HOVJXNmMrMUljTS93ZUI5TEJKVGxRa1NJdTJCTmJueWliNGpmc3Zl?=
+ =?utf-8?B?TmFtdEtsZXo1ZnhweVNkcERPN2ZDUHZWSVdQVytRVlA0N2dNMSt6eS9lMENX?=
+ =?utf-8?B?VkZzczJoVGxCQ0ZRano5T2ZMeHhZdXE1OVphUXRyN0g5WGd2T0hiN20xNDNq?=
+ =?utf-8?B?VnlEaENUdmlYTjJHL1RNaDNBaDMxcjl6MlhWTzk0LzcvR2w2YW1wUkxsVU92?=
+ =?utf-8?B?UHBIUWxmZGsvdzI3SS8xeDdtRzhXNTFLVUw3WlRqWmI2cHdvVmhweVdZMG1V?=
+ =?utf-8?B?YWJCWVBDMHBvUGp6SS8xSU9mSjdDY2FBODU4RkFVK2FLWklpcitId2p6RlFn?=
+ =?utf-8?B?eThtd3Q5Z2xqbWZ3Z0liMVdna2xPSncxMzFPQWJZN1ErS29wNERWaVJDenFY?=
+ =?utf-8?B?L3J6ZVFvNHRVVHZsUHhzYUVuMkk4dkJuNTRDSjhiSlVMM0ozbVA5YzhNNk5W?=
+ =?utf-8?B?U0drUUU1RUZMdG9idGhBYzBiYXVXbWZQK21DOTE5WEZmb2NWb2tsQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e97b33c-26ee-4013-713a-08df1b09356a
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2026 13:30:47.6762
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: edXxHv4IY+AJUdHkPG9ncCovC6C13+0WHskUzokM1IKJXRbcPUoj+WMP+ImdMiQiejXGCrCqdLBwytyihjb6xw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9425
 
-Add the EC firmware string '1585EMS1.115' to ALLOWED_FW_10. This
-enables battery charge thresholds on the MSI Katana 15 B13VFK
-(MS-1585).
 
-The out-of-tree msi-ec driver groups this firmware with 1582EMS1.107
-and 1583EMS1.109, which are already in ALLOWED_FW_10. An independent
-report for the same model and firmware confirms the same charge
-control encoding.
 
-Tested on MSI Katana 15 B13VFK with EC firmware 1585EMS1.115:
-writing charge_control_end_threshold updates EC register 0xd7 as
-expected (80 -> 0xd0, 100 -> 0xe4). With AC connected and the
-battery at 87%, the battery was charging with the threshold at 100;
-writing 80 stopped charging ("Not charging"). Charging resumes 10%
-below the end threshold, which matches charge_control_start_threshold.
-Keyboard backlight (0xd3) and cooler boost (0x98) also match this
-configuration.
+On 9/25/26 02:05, Fourhundred Thecat wrote:
+> resolved by resetting BIOS to factory defaults
+> 
+> after that, I tried painstakingly to enable/disable one by one
+> 
+> The cause is two BIOS settings, and the reason it took so long to find 
+> is that they are independently sufficient:
+> 
+>    AmdVt (AMD virtualization)        Disable  -> breaks s2idle wake
+>    PlutonSecurityProcessor           Disable  -> breaks s2idle wake
+> 
+> Either one alone is enough. Both must be enabled for the machine to 
+> resume. The full matrix, all with the IOMMU enabled and 24 CPUs online:
+> 
+>    AmdVt      Pluton     result
+>    Enable     Disable    no wake
+>    Disable    Enable     no wake
+>    Disable    Disable    no wake
+>    Enable     Enable     wakes normally
+> 
+> I had both disabled.
+> It also explains the confusing bisect: when I tested AmdVt=Enable with 
+> everything else at my settings it still hung, and when I tested 
+> Pluton=Enable with everything else at my settings it still hung, so I 
+> eliminated both. Each test only showed the setting was not necessary; 
+> neither showed it was not sufficient. With two independent triggers 
+> those observations are both true at once and single-setting elimination 
+> gives nothing.
+> 
+> So amd_iommu=off and nr_cpus=16 were both masking this rather than 
+> telling us anything about the kernel.
 
-Link: https://github.com/BeardOverflow/msi-ec/issues/185
-Signed-off-by: Patryk Pilichowski <pat.pilichowski@gmail.com>
----
- drivers/platform/x86/msi-ec.c | 1 +
- 1 file changed, 1 insertion(+)
+Well this is a great outcome.  Would you mind opening a pull request to 
+amd-debug-tools and adding a case to this to test for this issue?  That 
+would help anyone else that encounters this in the future and save us 
+effort drilling down again.
 
-diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
-index 566dfc73c..6d6a797ee 100644
---- a/drivers/platform/x86/msi-ec.c
-+++ b/drivers/platform/x86/msi-ec.c
-@@ -825,6 +825,7 @@ static struct msi_ec_conf CONF9 __initdata = {
- static const char * const ALLOWED_FW_10[] __initconst = {
- 	"1582EMS1.107", // GF66 11UC
- 	"1583EMS1.109", // Pulse GL66 12UEK
-+	"1585EMS1.115", // Katana 15 B13VFK
- 	NULL
- };
- 
+You should be able to add a new check that verified the value of these 
+BIOS settings using the think-lmi driver sysfs interface.
+My thought on the logic would be something like this:
 
-base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
--- 
-2.55.0
+1) Check whether think-lmi directory exists, skip the check if it doesn't.
+2) Check whether both of those attributes exist.  If they don't, skip 
+the check.
+3) Check the values of both of those attributes.  If there is a failure 
+report it.  If it's a pass report it.
 
+It can generally apply to all Lenovo systems that offer these settings 
+then (It's more likely a "generic" BIOS bug).
+
+> 
+> this is clearly a Lenovo BIOS bug. should this be reported to them ?
+
+Before you report this to them, can you diff some acpidumps from the two 
+changes that break things?
+
+I would have "expected" that turning off this AmdVt BIOS option stopped 
+the IVRS table from being created, but that seems not to be the case.
+
+I just wonder if we should be keying off anything else in Linux for this 
+case to avoid the issue.
