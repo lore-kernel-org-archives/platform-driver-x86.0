@@ -1,181 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f39.google.com (mail-pz2-f39.google.com [74.125.228.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C007332EBB;
-	Fri, 25 Sep 2026 11:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836CE40B6FC
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 12:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790334239; cv=none; b=lXs7Ee8aDqigHQvA+Wu1dLT0XVZT0sEqPIDV6nvN9M1ZkVlLyzwyGYxoSMRlLQyW/LYIcRsqu6/4NnfCT+7wE1xgS49iSAe3KRTDClqIzV54k6rkgB2Jnva+4pj2NAdFGpCn3X/k/Fe2RNNpafegRCmyaKis1Hq4JJxHq62byuI=
+	t=1790338937; cv=none; b=Tw7P5NyLmdrq9zaiiGMZNGHXsTOJQ13jZXbMGIiC400p73pEM4Flg3z7w3T2DE+Q/SO/ByjYRB5eB94AalznUkvuQoT7U34dvN/+egSCSugMxTMUKRamAKSCfReEnZ7kiS36L2+DFT1P7RrH+p1k6xH5TOU9kK9fmv+W6aTML/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790334239; c=relaxed/simple;
-	bh=nXQnIlYNwBU1e8HetIwjFEmHHHz4OIEgbg1vGVK4Ns4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Tw0EFT71h1c0L9rxj7aggVYs9RpV2nAmkP3x4krHae/fwOd3OndCgZagWMkykGiHN+3vV+6sa0hhLFHdpPHtuAO2+YBKWzmLJB9aDBHSQzWhxd7iiRk/zAJdPVEm8p8FwOchMvZVlTL335Vp0Eyv+6CLozj3uSpm03B3QFMa+sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TcwEUEtc; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790338937; c=relaxed/simple;
+	bh=s/PvtkNVZ4YIzTo0qHBPvGUkdcNJ0VSkXZVSnkH2sMo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=qafA+Az44Hi4smP70ZJ75f07J7qrbSQuFbp1tTjki4rzvrVIeRgDczjOvKVaINNtnjwh9J+3vv+3TCq9L+SSVhPH+BqUn9PpLA1bpj6sb199GPg7O3ZhKADKiFDllSFiCQXSNSdsBhNjFjMTvhC59j7OWRTjy5DNdqpu30m+mcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nz5ctX+J; arc=none smtp.client-ip=74.125.228.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcwEUEtc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790334238; x=1821870238;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=nXQnIlYNwBU1e8HetIwjFEmHHHz4OIEgbg1vGVK4Ns4=;
-  b=TcwEUEtcqpm+TRNNqqVevyrY78wD40A4krlD5h5/DEG2QhWo53nsl8KD
-   041X1LFMA5rNdIedr7LtfAyoV8dAvfRIs6zVnPS9Oo2gJJ1RTwK1bP7vN
-   T254mChpyLF6pI+N5La5I6FSVXzImrUY8BVCP9ab5V4ka+1o5yhqZlWmk
-   X63qFsIFDXynzs3hflbb7EkXYqXzSZMPk4p685E+7cOvUVZRzukpbih7J
-   eEsh0ykcQuzbVgZkspF4gEh9exyy4bF4UVu1ir9IZzkIhSLP0301lxMuU
-   OPEwmNMLTBZeziUfIhQF1/3Uq8fU4W+naiNFO5YXF+cK+cokyeOk+2iY3
-   A==;
-X-CSE-ConnectionGUID: UI66HF0ITz2MmmseXrjpSA==
-X-CSE-MsgGUID: oPHy5y8GQZybqX7cQmOyOA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="89982436"
-X-IronPort-AV: E=Sophos;i="6.27,122,1787036400"; 
-   d="scan'208";a="89982436"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 04:03:58 -0700
-X-CSE-ConnectionGUID: 8tQhNSLuTQeN9tn0rTv30g==
-X-CSE-MsgGUID: aoiTU67JQR6BEDKShx4+Uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,122,1787036400"; 
-   d="scan'208";a="272438369"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.131])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 04:03:56 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 25 Sep 2026 14:03:53 +0300 (EEST)
-To: TuteMthCD <matias.civadda2342001@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: bitland-mifs-wmi: Fix profile handling on
- Redmi Book Pro 14 2022
-In-Reply-To: <20260925032001.111062-1-matias.civadda2342001@gmail.com>
-Message-ID: <6467163f-8978-1c20-c7f4-360a3762edcc@linux.intel.com>
-References: <20260925032001.111062-1-matias.civadda2342001@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nz5ctX+J"
+Received: by mail-pz2-f39.google.com with SMTP id 41be03b00d2f7-cc7901f7971so119245a12.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 05:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790338936; x=1790943736; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=uwHCeFBiFb/S6cPK4uw5VdO3mz9Lko0oibblDJPiB/Y=;
+        b=nz5ctX+J3OVKx9MQBql1lE5Qn2CiS7jpv2Q0gsc2lC8rBtTZv8dmYJbXctRn0iZfW8
+         yAGJXiJccGPyrSUenWrhoyhh2RGMNpaTfxwBU24+/LZvQnCFQYLw7ppah3SHy1zc7Ygm
+         tLxPEBtplx7u3yn/+WcTu6zsNAfrjp8cKEqJ/srcsijmfAbtXOxThmzuSFxQH1oK0yyx
+         hEBJ1ex1u+rcKTwQ+gz7fR8ltZJYXJMGOT1XISNV53BcNyylkbQVMiS8UlKdxjY6IZPf
+         VJ+U6Rvp8pgbtfHlj4jxlQVF4s7WTORAodC1XpAlgZ1wkI1ni7P7zZIe1BJ2fxuIuru8
+         Z5xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790338936; x=1790943736;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=uwHCeFBiFb/S6cPK4uw5VdO3mz9Lko0oibblDJPiB/Y=;
+        b=mGOPNAzeyj1g4aPhOAtimaF9EHBVlyril1Y7y4hgx7lWINXRd9uqtcB6/8QIW+ou76
+         VRqV5KGrtCqevGk/OCSq+f9e30qUCMOfWOyBEE8PPIGI1x8qat0e+xEol3XTL5VQczAa
+         k/Jbd2R50oFPPMwPbIGLFqTiWFKs4N4Y89hwYBk4IRarYtmm84rIS+3+Zd3HfFFzTaG/
+         peDiM+VAk/BlQBuR1ccX4C+4MWV5N6OJKMatKr/L1Ic8JV6opBqqP4zdpLwW9m0+/X+q
+         DIH0GCUkjT783YjO4hPszUPHBNO9T62SkabatQ0+9u3q7kzZOY93EQe0q18uV2qrcE6A
+         m7xg==
+X-Forwarded-Encrypted: i=1; AKwUvBxSHEeUy/7MsxnyWTP99gBRNYK1Mj7pcalq1m+TaGJGQfXMa2S4J/3KCRoVQPTqmx+vbOtLabt3bzB2u55opfTQ6Zu3@vger.kernel.org
+X-Gm-Message-State: AFuF++mD3uQ8BD6tCFKf6I0Ms5wpkcYauM7xtUvLkCkbYCL/7vL6cLNK
+	ignZ4XmwGG/MxSQdeLYzRNdnfgQxaW+napgpDbovh5kJP/FjEE8d8jgd
+X-Gm-Gg: AYBFou2zRpnfHUubwF0SjRVKuyKvcZFpwW87QVgf73zmJH78Tux0UtXHwtqLXHkryVh
+	yVLcvWDaY4kDW7VhkMEtFSR3g5PuJr8WW9HeCxNl8fknD4YH9W14wDjUD35hbv70JJt38qHkACo
+	6Oo5W0bYBXggZcgWVlC9/Klm21H0vhkw02HXEg8loYkBUoZUi1ifXVOLtC73Pvzft30Jfbvz4/f
+	vMwb5cTAS9AJ2LuXVVTrXwuUetGONboiqj/S3NshQgOQdOnmJZgODyZ6gHY4bMa+PtcLykZO7vH
+	mXGoC3wzWPfd6XMZaIHcjfLF0LxbYOFVWpWYcpRlHaEWC90FbdwyfOguq6Zay9MBQN4nrsoss6j
+	YQZ9LZRkyqeC2RW/xCxoqwNmEmHyAv5p6WzrqjpYY8ok/i32po7vbrmXfoXWay1U+SFf/LGhqqp
+	h4zYdLGikCawkGoJ3Dui3zWmfXHP84PvEbDmglZMljX58THQuvb1qjSfPSKrfsQVOl1qLxI3QKl
+	Zfpjnlt
+X-Received: by 2002:a17:90a:38e4:b0:3a0:b223:6830 with SMTP id 98e67ed59e1d1-3a0b2236c1dmr1533648a91.7.1790338931135;
+        Fri, 25 Sep 2026 05:22:11 -0700 (PDT)
+Received: from [127.0.1.1] ([240e:b8f:977f:f400:ec2a:b15e:fef8:70a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0b9feddd0sm1229303a91.2.2026.09.25.05.22.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 05:22:10 -0700 (PDT)
+From: Liang Haowen <nbg2974@gmail.com>
+To: Marco Scardovi <scardracs@disroot.org>,
+ Denis Benato <denis.benato@linux.dev>,
+ Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-leds@vger.kernel.org, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Martin K. Petersen <mkp@kernel.org>,
+ linux-scsi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
+ Hans de Goede <hansg@kernel.org>, Derek J. Clark <derekjohn.clark@gmail.com>,
+ Marco Scardovi <scardracs@disroot.org>, Ahmed Yaseen <yaseen@ghoul.dev>
+Subject: Re: [RFC v7 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
+ for ROG NVMe enclosures
+Date: Fri, 25 Sep 2026 12:22:03 -0000
+Message-Id: <202609251958.ReplyMarco.lhw@gmail.com>
+In-Reply-To: <UuqOxFagT_OBL0l5ZYtfKg@disroot.org>
+References: <UuqOxFagT_OBL0l5ZYtfKg@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 25 Sep 2026, TuteMthCD wrote:
+Hi Marco,
 
-> On the TIMI Redmi Book Pro 14 2022 (board TM2107), the firmware returns
-> the current platform profile at byte offset 2 of the WMI response.
-> The driver instead reads offset 4, which remains zero in the observed
-> responses. Consequently, profile reads report balanced even after
-> selecting another mode.
-> 
-> The generic performance capability check also requires a barrel-jack
-> power supply. This blocks performance selection on this USB-C-only
-> machine.
-> 
-> Add an exact DMI match for this model to read the profile from offset 2
-> and require external power without the barrel-jack restriction.
-> 
-> Tested on physical Redmi Book Pro 14 2022 hardware (TM2107),
-> BIOS RMARB4B0P1010, running Linux 7.2.6-zen2-1-zen.
-> 
-> Assisted-by: Codex:GPT-6
-> Signed-off-by: TuteMthCD <matias.civadda2342001@gmail.com>
+I went through your SCSI version in PR #17 against what the hardware
+told us while developing this series. The class layout fits the
+device well: the ENE mode register is the hardware effect offload,
+and direct streaming as table write + apply-without-save matches
+what the controller does.
 
-Please see Documentation/process/submitting-patches.rst for how to 
-properly sign off your submissions and what it means.
+A few things our hardware testing can add:
 
-> ---
->  drivers/platform/x86/bitland-mifs-wmi.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-> index 3a373184519d..c132902bc5f8 100644
-> --- a/drivers/platform/x86/bitland-mifs-wmi.c
-> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -14,6 +14,7 @@
->  #include <linux/dev_printk.h>
->  #include <linux/device.h>
->  #include <linux/device/devres.h>
-> +#include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/hwmon.h>
->  #include <linux/init.h>
-> @@ -38,6 +39,17 @@
->  #define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
->  #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
->  
-> +static const struct dmi_system_id bitland_tm2107_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Redmi Book Pro 14 2022"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2107"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +
->  enum bitland_mifs_operation {
->  	WMI_METHOD_GET	= 250,
->  	WMI_METHOD_SET	= 251,
-> @@ -195,13 +207,18 @@ static int laptop_profile_get(struct device *dev,
->  		.function = WMI_FN_SYSTEM_PER_MODE,
->  	};
->  	struct bitland_mifs_output result;
-> +	u8 mode;
->  	int ret;
->  
->  	ret = bitland_mifs_wmi_call(data, &input, &result);
->  	if (ret)
->  		return ret;
->  
-> -	switch (result.data[0]) {
-> +	/* TM2107 returns the profile in byte 2 instead of byte 4. */
-> +	mode = dmi_check_system(bitland_tm2107_table) ?
-> +		result.reserved2 : result.data[0];
+- ene_write() maps the caller's buffer with blk_rq_map_kern(); your
+  call sites pass stack buffers (colors[12] in direct_write). That
+  is the VMAP_STACK DMA issue Lee caught in my v8: the payload needs
+  a DMA-safe buffer in the device struct.
 
-You claimed above you tested this patch but how is that possible as this 
-patch will not even compile???
+- asus_aura_brightness_set_blocking() will never run on the current
+  LED core: brightness_set_blocking is superseded by the fast-path
+  brightness_set there, verified with a test module on 7.2. The
+  callback to use is brightness_set plus deferred work.
 
-Did AI just make up the claim you've tested the patch? Letting AI make 
-claims on your behalf that you did things which are not true is misusing 
-community's goodwill and trust, and totally unwanted behavior! Please 
-don't do that again.
+- The firmware effect numbers from register probing here are
+  1 Static, 3 Strobe, 4 the rainbow flow (all verified on device);
+  2 looks like Breathing but was not confirmed. Your mapping sends
+  Spectrum Cycle to 4 and Rainbow to 5: on this enclosure 4 is the
+  rainbow flow, so those two need on-device confirmation, and
+  mode 0 for OFF is plausible but unverified.
 
-Next time, please properly test the very patch you're sending and review 
-it yourself before hitting the send button. Do not mindlessly send patches 
-that are AI generated, we don't want unfiltered AI output to be sent to 
-us.
+- If the class core serializes the ops with led_access, sysfs ops
+  cannot race each other, but trigger events reach the LED core
+  without that lock, so a trigger-driven brightness update can
+  still interleave with an ops sequence. The device ignores a
+  sequence that loses its leading MODE write; one work item owning
+  the sequence, like in this series, closes that too.
 
-In addition, any patch you're submitting to platform drivers list should 
-be based on top of for-next or review-ilpo-next branch in the pdx86 repo, 
-not some random other tree (if that's the explanation for the 
-inconsistencies here).
+The 12-byte block write to both colour tables in one go is verified
+working, so your direct_write shape is fine once the buffer is
+DMA-safe.
 
-> +
-> +	switch (mode) {
->  	case WMI_PP_BALANCED:
->  		*profile = PLATFORM_PROFILE_BALANCED;
->  		break;
-> @@ -229,6 +246,10 @@ static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *da
->  	struct bitland_mifs_output output;
->  	int ret;
->  
-> +	/* TM2107 only requires external power, including USB-C. */
-> +	if (dmi_check_system(bitland_tm2107_table))
-> +		return power_supply_is_system_supplied() > 0 ? 0 : -EOPNOTSUPP;
-> +
->  	/* Full-speed/performance mode requires DC power (not USB-C) */
->  	if (!power_supply_is_system_supplied())
->  		return -EOPNOTSUPP;
-> 
-Variations like the ones you have in this patch should be covered using a 
-struct in .driver_data in a generic dmi table, not some device specific 
-table.
-
-You probably should also add depends on DMI.
-
--- 
- i.
-
+Whatever survives your rebase, the verified SCSI core in this series
+is yours to reuse; happy to rebase my side onto the class once it
+settles.
