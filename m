@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF153630BF;
-	Fri, 25 Sep 2026 18:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6B13B8959
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 18:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790360343; cv=none; b=cfMhSGUttzkeIDJ5cS225L3g9ykBqlau2ZOdpmZ/gm+8HjayQIa0OzbXox/hbjwr0B4XNV5mjHghTH8D52VvHsOKJ1nf7T42dkAZ8v57AwZCCOmqRS847Kp/ZdxVaP0AdQOPFO9JN/10/no19JnvmeQEGfGnz60BG1DmokV+M2Y=
+	t=1790361423; cv=none; b=fMKLvoq+a2mXLY3+dsyDGuko/xTh6E7csMFaavde+hZ2UXV0RkmLA6DGZO7lSx31Anr4uIoYlkX/qH2Xxx4dAhcy38STRoMfa3Jk9arfwvWUERq2hlM3s8YD5OwU4JGrN6rJsH7uEcjer3eAEHkxfPoRgpvnoTYbuc/ZnCynpwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790360343; c=relaxed/simple;
-	bh=Mtr9DHf6qb1fuQ568oJxyjTxnFBxnm/CsRZQgJ9QX60=;
+	s=arc-20240116; t=1790361423; c=relaxed/simple;
+	bh=uj47Z3s9cpv7dqFOvHNiYSi5nsn108BDEov0Iv57LRQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K6wHoy8PoyzwRc5DPuIBNRSBxC/MlldYXcTATUZn8Zg4WOV8zUU2t8XxzS363kM2QmGIQMdD+xvovhq1fOVm/Xi46zSUNwb+Lvv2khAsq58I9e1JQO2EqDUFokwTDtr9t0K/c4+hTBy8noh2SxBi8fH/Ek+HsKViwgQZrLCSuoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Y6nJ877/; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=Ycrr1iZLC+AEkMgMRmYmL2FloeikE6wSrDxlznIkOsUSBs7gKzgeQZ/JGAv2eTHbQKQ6i/kVnmzxU35P12HxW5eByCo2OxFoj7DQQJSiCHnPhIfKhYzEU/OhQboJi4l+1fclWfLT/GzuJ669KvIWgYW0Chy/ocW4jfGZgI14Lnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=trricEHX; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Y6nJ877/"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="trricEHX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1790360331; x=1790965131; i=w_armin@gmx.de;
-	bh=Vu0rI6okVm1NIQeznTGwsmmjbRciEIOkuS4p8BG+mow=;
+	s=s31663417; t=1790361414; x=1790966214; i=w_armin@gmx.de;
+	bh=rT+qmyx+0E59DwDIY8iAziexcqneAP2VVurNeet2Yag=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=Y6nJ877/h9h00qAuRfI0cw3kVGiP2oEInT3f7cBbv6tZaQ/sQsAwy6XSKb9dCpTP
-	 FJdGAwWxjVPLJ28ojSsQ4j3iOSDdHPA768+vfFMahy7BN6jNp6KH2soFVYz8Gz7PY
-	 MQoLkO8HL8aYbTOmxON5sbRa7fXv/ic3gZVJXo0TLAlTV8DTzJeu3u6+e9m000UsY
-	 iy2xFSX/bx8FIB3D2dYGa9YpbT6VFd919z2yJmtRY7cbfsljYzhFqLsgYOjg8LIwS
-	 NkIQVw0KIeXzl/0Gfy90KkrkJFmUXYfxC6C8AZ2WBQw9nXxkWK74aq01DdE3kN3I6
-	 a8A8OwdeVTr/dfdegQ==
+	b=trricEHXKW9mQ51Mf9HM4+1GlhVmU5FAk9k8r8iWEPfQ+97tCwTTm4NpG3xN12GI
+	 6yTVnDS5T+dchcKahqQOg18IIWmq+dP4W9ExYQ+4r01HBKGvACQNlekCjKs7gbkaa
+	 R2xfghKssBGxPBgHZfBnpqvwDx/aJ81ZOFtflDWCjoXRG4VzA+ylbmywXR0RmKBM8
+	 dzR1XgaWUqI/P2obaMNzZYEN+6xCBINwPkZkme2EV91W09x46Bac1mS510OtXmgEM
+	 XiWHxygiUTQGPtTQ6y4p5EILzPY3yEdPIv0rssCU3qUXFBeXAoB7ScGqB8eu20sMV
+	 c6MZRK17kKagAtLliA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmULr-1wSH3D3ivx-00jHiQ; Fri, 25
- Sep 2026 20:18:50 +0200
-Message-ID: <341b9495-0b42-4c94-bdf5-41e8ca525ac0@gmx.de>
-Date: Fri, 25 Sep 2026 20:18:49 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MfpSl-1wYt2N2pr7-00h2nd; Fri, 25
+ Sep 2026 20:36:54 +0200
+Message-ID: <9ea1a4fe-5ce9-46f6-8347-85c951ad1060@gmx.de>
+Date: Fri, 25 Sep 2026 20:36:52 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,243 +43,425 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: bitland-mifs-wmi: Fix profile handling on
- Redmi Book Pro 14 2022
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- TuteMthCD <matias.civadda2342001@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20260925032001.111062-1-matias.civadda2342001@gmail.com>
- <6467163f-8978-1c20-c7f4-360a3762edcc@linux.intel.com>
+Subject: Re: [RFC PATCH 3/7] platform/x86: wmi: Use common WMI string
+ functions
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: prasanth.ksr@dell.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ derekjohn.clark@gmail.com, Dell.Client.Kernel@dell.com,
+ platform-driver-x86@vger.kernel.org
+References: <mpearson-lenovo@squebb.ca>
+ <20260925160047.2063361-1-mpearson-lenovo@squebb.ca>
+ <20260925160047.2063361-4-mpearson-lenovo@squebb.ca>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <6467163f-8978-1c20-c7f4-360a3762edcc@linux.intel.com>
+In-Reply-To: <20260925160047.2063361-4-mpearson-lenovo@squebb.ca>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nv4D2qug8oP8yysB+LYrZnZPJPtEOyUbS/+dTOWqHuVBNx2hNgP
- n8/kIh2c10bJYD39gxIHWnzIs26jVM0yhCVcHsdV24kdumiuZBriqSAi6YeOHiriuGYkVxa
- 1Wq8EmsiiRLzVj1lPXCdAkswfR4/NCdZAHzFOFQFMlykdDPuMhqKuh+k6/hFUNFPV4C7GE8
- NBef4XOlSACkVhSm6vcNQ==
+X-Provags-ID: V03:K1:WovnqYmgqxZGeGi6vHW3ZDxA8icP2vQdUBWi6FLd1nAWjMGRi3o
+ i+FQ402yU+tTnvG2LkV7vLbsj5vAK1eN4FwU2MsI+TFmXftlc+VXr6VElbvBBEprEJU8/Hm
+ b4BxACb077btqFp55Zb7CjpqMF9gapmvvE+L3dxZc9y/cjeFxg7hsdBw1sK/OlJgaE1JNj7
+ WHBMKVtb9kgdFfL2cIHXA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2OLoGvl1tjQ=;QZ53uQKltFkHCKuLlxr5d2whRmF
- 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
- ne0o7pUbmzvjRjJYg==
+UI-OutboundReport: notjunk:1;M01:P0:TdytuIugY6s=;89flZSvxHnSH+jHWh2Et7dbn0X6
+ 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
+ m+IZ9OWAZNoOM5ldw==
 
-Am 25.09.26 um 13:03 schrieb Ilpo J=C3=A4rvinen:
+Am 25.09.26 um 18:00 schrieb Mark Pearson:
 
-> On Fri, 25 Sep 2026, TuteMthCD wrote:
+> The WMI buffer 'string' handling needed for ThinkLMI v2 is done in the s=
+ame
+> way as on the Dell systems (I suspect this may be common on Windows).
 >
->> On the TIMI Redmi Book Pro 14 2022 (board TM2107), the firmware returns
->> the current platform profile at byte offset 2 of the WMI response.
->> The driver instead reads offset 4, which remains zero in the observed
->> responses. Consequently, profile reads report balanced even after
->> selecting another mode.
->>
->> The generic performance capability check also requires a barrel-jack
->> power supply. This blocks performance selection on this USB-C-only
->> machine.
->>
->> Add an exact DMI match for this model to read the profile from offset 2
->> and require external power without the barrel-jack restriction.
->>
->> Tested on physical Redmi Book Pro 14 2022 hardware (TM2107),
->> BIOS RMARB4B0P1010, running Linux 7.2.6-zen2-1-zen.
->>
->> Assisted-by: Codex:GPT-6
->> Signed-off-by: TuteMthCD <matias.civadda2342001@gmail.com>
-> Please see Documentation/process/submitting-patches.rst for how to
-> properly sign off your submissions and what it means.
+> Move the populate_string_buffer and calculate_string_buffer functions in=
+to
+> the WMI core module so they can be used by other WMI drivers.
 >
->> ---
->>   drivers/platform/x86/bitland-mifs-wmi.c | 23 ++++++++++++++++++++++-
->>   1 file changed, 22 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform=
-/x86/bitland-mifs-wmi.c
->> index 3a373184519d..c132902bc5f8 100644
->> --- a/drivers/platform/x86/bitland-mifs-wmi.c
->> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
->> @@ -14,6 +14,7 @@
->>   #include <linux/dev_printk.h>
->>   #include <linux/device.h>
->>   #include <linux/device/devres.h>
->> +#include <linux/dmi.h>
->>   #include <linux/err.h>
->>   #include <linux/hwmon.h>
->>   #include <linux/init.h>
->> @@ -38,6 +39,17 @@
->>   #define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
->>   #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
->>  =20
->> +static const struct dmi_system_id bitland_tm2107_table[] =3D {
->> +	{
->> +		.matches =3D {
->> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
->> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Redmi Book Pro 14 2022"),
->> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2107"),
->> +		},
->> +	},
->> +	{}
->> +};
->> +
->>   enum bitland_mifs_operation {
->>   	WMI_METHOD_GET	=3D 250,
->>   	WMI_METHOD_SET	=3D 251,
->> @@ -195,13 +207,18 @@ static int laptop_profile_get(struct device *dev,
->>   		.function =3D WMI_FN_SYSTEM_PER_MODE,
->>   	};
->>   	struct bitland_mifs_output result;
->> +	u8 mode;
->>   	int ret;
->>  =20
->>   	ret =3D bitland_mifs_wmi_call(data, &input, &result);
->>   	if (ret)
->>   		return ret;
->>  =20
->> -	switch (result.data[0]) {
->> +	/* TM2107 returns the profile in byte 2 instead of byte 4. */
->> +	mode =3D dmi_check_system(bitland_tm2107_table) ?
->> +		result.reserved2 : result.data[0];
-> You claimed above you tested this patch but how is that possible as this
-> patch will not even compile???
+> The implementation in WMI core has a bit more error checking, as it can =
+be
+> less certain that the inputs will be good.
 >
-> Did AI just make up the claim you've tested the patch? Letting AI make
-> claims on your behalf that you did things which are not true is misusing
-> community's goodwill and trust, and totally unwanted behavior! Please
-> don't do that again.
->
-> Next time, please properly test the very patch you're sending and review
-> it yourself before hitting the send button. Do not mindlessly send patch=
-es
-> that are AI generated, we don't want unfiltered AI output to be sent to
-> us.
->
-> In addition, any patch you're submitting to platform drivers list should
-> be based on top of for-next or review-ilpo-next branch in the pdx86 repo=
-,
-> not some random other tree (if that's the explanation for the
-> inconsistencies here).
+> Modify the Dell modules to use the new interface and take advantage of
+> the error checking.
 
-Additionally the problem might partially be solved by patches inside the
-for-net tree.
+Why not replace populate_string_buffer() with wmi_string_from_utf8s()?
+Additionally calculate_string_buffer() will fail for characters that requi=
+re
+two UTF16 code points.
 
-Can you share the output of acpidump on your machine? Some machines use
-a different platform profile mapping.
+I suggest that you replace calculate_string_buffer() with:
+
+	struct_size_t(struct wmi_string, chars, strlen(str) * 2 + 1);
+
+This way each string can safely occupy up to two UTF16 codepoints, with on=
+e
+being used for the NUL termination.
+
+You can then determine the true size of the WMI string from the return val=
+ue:
+
+	struct_size_t(struct wmi_string, chars, ret + 1);
 
 Thanks,
 Armin Wolf
 
->> +
->> +	switch (mode) {
->>   	case WMI_PP_BALANCED:
->>   		*profile =3D PLATFORM_PROFILE_BALANCED;
->>   		break;
->> @@ -229,6 +246,10 @@ static int bitland_check_performance_capability(st=
-ruct bitland_mifs_wmi_data *da
->>   	struct bitland_mifs_output output;
->>   	int ret;
->>  =20
->> +	/* TM2107 only requires external power, including USB-C. */
->> +	if (dmi_check_system(bitland_tm2107_table))
->> +		return power_supply_is_system_supplied() > 0 ? 0 : -EOPNOTSUPP;
->> +
->>   	/* Full-speed/performance mode requires DC power (not USB-C) */
->>   	if (!power_supply_is_system_supplied())
->>   		return -EOPNOTSUPP;
->>
-> Variations like the ones you have in this patch should be covered using =
-a
-> struct in .driver_data in a generic dmi table, not some device specific
-> table.
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+>   drivers/platform/wmi/core.c                   | 49 +++++++++++++++++++
+>   .../dell/dell-wmi-sysman/biosattr-interface.c | 16 ++++--
+>   .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 -
+>   .../dell-wmi-sysman/passwordattr-interface.c  | 24 ++++++---
+>   .../x86/dell/dell-wmi-sysman/sysman.c         | 40 ---------------
+>   include/linux/wmi.h                           |  3 ++
+>   6 files changed, 82 insertions(+), 52 deletions(-)
 >
-> You probably should also add depends on DMI.
->
+> diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+> index 5a2ffcbab6af..c50362365366 100644
+> --- a/drivers/platform/wmi/core.c
+> +++ b/drivers/platform/wmi/core.c
+> @@ -25,6 +25,7 @@
+>   #include <linux/kernel.h>
+>   #include <linux/limits.h>
+>   #include <linux/module.h>
+> +#include <linux/nls.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/rwsem.h>
+>   #include <linux/slab.h>
+> @@ -98,6 +99,54 @@ MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
+>  =20
+>   #define dev_to_wblock(__dev)	container_of_const(__dev, struct wmi_bloc=
+k, dev.dev)
+>  =20
+> +/*
+> + * Utility functions common to multiple WMI drivers
+> + */
+> +
+> +/**
+> + * wmi_populate_string_buffer() - populates a string buffer
+> + * @buffer: the start of the destination buffer
+> + * @buffer_len: length of the destination buffer
+> + * @str: the string to insert into buffer
+> + */
+> +ssize_t wmi_populate_string_buffer(char *buffer, size_t buffer_len, con=
+st char *str)
+> +{
+> +	u16 *length, *target;
+> +	int ret;
+> +
+> +	if (!str || !buffer)
+> +		return -EINVAL;
+> +
+> +	length =3D (u16 *)buffer;
+> +	target =3D length + 1;
+> +	ret =3D utf8s_to_utf16s(str, strlen(str), UTF16_HOST_ENDIAN,
+> +			      target, buffer_len - sizeof(u16));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if ((ret * sizeof(u16)) > U16_MAX)
+> +		return -ERANGE;
+> +
+> +	*length =3D ret * sizeof(u16);
+> +	return sizeof(u16) + *length;
+> +}
+> +EXPORT_SYMBOL_GPL(wmi_populate_string_buffer);
+> +
+> +/**
+> + * wmi_calculate_string_buffer() - determines size of string buffer for=
+ use with BIOS communication
+> + * @str: the string to calculate based upon
+> + *
+> + */
+> +size_t wmi_calculate_string_buffer(const char *str)
+> +{
+> +	if (!str)
+> +		return -EINVAL;
+> +
+> +	/* u16 length field + one UTF16 char for each input char */
+> +	return sizeof(u16) + strlen(str) * sizeof(u16);
+> +}
+> +EXPORT_SYMBOL_GPL(wmi_calculate_string_buffer);
+> +
+>   /*
+>    * GUID parsing functions
+>    */
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interfac=
+e.c b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+> index c2dd2de6bc20..611c6fac3f66 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+> @@ -62,8 +62,16 @@ int set_attribute(const char *a_name, const char *a_v=
+alue)
+>  =20
+>   	/* build/calculate buffer */
+>   	security_area_size =3D calculate_security_buffer(wmi_priv.current_adm=
+in_password);
+> -	a_name_size =3D calculate_string_buffer(a_name);
+> -	a_value_size =3D calculate_string_buffer(a_value);
+> +	a_name_size =3D wmi_calculate_string_buffer(a_name);
+> +	if (a_name_size < 0) {
+> +		ret =3D a_name_size;
+> +		goto out;
+> +	}
+> +	a_value_size =3D wmi_calculate_string_buffer(a_value);
+> +	if (a_value_size < 0) {
+> +		ret =3D a_name_size;
+> +		goto out;
+> +	}
+>   	buffer_size =3D security_area_size + a_name_size + a_value_size;
+>   	buffer =3D kzalloc(buffer_size, GFP_KERNEL);
+>   	if (!buffer) {
+> @@ -76,11 +84,11 @@ int set_attribute(const char *a_name, const char *a_=
+value)
+>  =20
+>   	/* build variables to set */
+>   	start =3D buffer + security_area_size;
+> -	ret =3D populate_string_buffer(start, a_name_size, a_name);
+> +	ret =3D wmi_populate_string_buffer(start, a_name_size, a_name);
+>   	if (ret < 0)
+>   		goto out;
+>   	start +=3D ret;
+> -	ret =3D populate_string_buffer(start, a_value_size, a_value);
+> +	ret =3D wmi_populate_string_buffer(start, a_value_size, a_value);
+>   	if (ret < 0)
+>   		goto out;
+>  =20
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h=
+ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> index 5278a93fdaf7..3f912109c55a 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> @@ -188,10 +188,8 @@ int set_bios_defaults(u8 defType);
+>   void exit_bios_attr_set_interface(void);
+>   int init_bios_attr_set_interface(void);
+>   int map_wmi_error(int error_code);
+> -size_t calculate_string_buffer(const char *str);
+>   size_t calculate_security_buffer(const char *authentication);
+>   void populate_security_buffer(char *buffer, const char *authentication=
+);
+> -ssize_t populate_string_buffer(char *buffer, size_t buffer_len, const c=
+har *str);
+>   int set_new_password(const char *password_type, const char *new);
+>   int init_bios_attr_pass_interface(void);
+>   void exit_bios_attr_pass_interface(void);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-inte=
+rface.c b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface=
+.c
+> index e586f7957946..b95b64e354c0 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+> @@ -64,9 +64,21 @@ int set_new_password(const char *password_type, const=
+ char *new)
+>  =20
+>   	/* build/calculate buffer */
+>   	security_area_size =3D calculate_security_buffer(wmi_priv.current_adm=
+in_password);
+> -	password_type_size =3D calculate_string_buffer(password_type);
+> -	current_password_size =3D calculate_string_buffer(current_password);
+> -	new_size =3D calculate_string_buffer(new);
+> +	password_type_size =3D wmi_calculate_string_buffer(password_type);
+> +	if (password_type_size < 0) {
+> +		ret =3D password_type_size;
+> +		goto out;
+> +	}
+> +	current_password_size =3D wmi_calculate_string_buffer(current_password=
+);
+> +	if (current_password_size < 0) {
+> +		ret =3D current_password_size;
+> +		goto out;
+> +	}
+> +	new_size =3D wmi_calculate_string_buffer(new);
+> +	if (new_size < 0) {
+> +		ret =3D new_size;
+> +		goto out;
+> +	}
+>   	buffer_size =3D security_area_size + password_type_size + current_pas=
+sword_size + new_size;
+>   	buffer =3D kzalloc(buffer_size, GFP_KERNEL);
+>   	if (!buffer) {
+> @@ -79,17 +91,17 @@ int set_new_password(const char *password_type, cons=
+t char *new)
+>  =20
+>   	/* build variables to set */
+>   	start =3D buffer + security_area_size;
+> -	ret =3D populate_string_buffer(start, password_type_size, password_typ=
+e);
+> +	ret =3D wmi_populate_string_buffer(start, password_type_size, password=
+_type);
+>   	if (ret < 0)
+>   		goto out;
+>  =20
+>   	start +=3D ret;
+> -	ret =3D populate_string_buffer(start, current_password_size, current_p=
+assword);
+> +	ret =3D wmi_populate_string_buffer(start, current_password_size, curre=
+nt_password);
+>   	if (ret < 0)
+>   		goto out;
+>  =20
+>   	start +=3D ret;
+> -	ret =3D populate_string_buffer(start, new_size, new);
+> +	ret =3D wmi_populate_string_buffer(start, new_size, new);
+>   	if (ret < 0)
+>   		goto out;
+>  =20
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/driver=
+s/platform/x86/dell/dell-wmi-sysman/sysman.c
+> index 51d25fdc1389..c70ce5aa5ff2 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> @@ -29,46 +29,6 @@ struct wmi_sysman_priv wmi_priv =3D {
+>   static const char * const reset_types[] =3D {"builtinsafe", "lastknown=
+good", "factory", "custom"};
+>   static int reset_option =3D -1;
+>  =20
+> -
+> -/**
+> - * populate_string_buffer() - populates a string buffer
+> - * @buffer: the start of the destination buffer
+> - * @buffer_len: length of the destination buffer
+> - * @str: the string to insert into buffer
+> - */
+> -ssize_t populate_string_buffer(char *buffer, size_t buffer_len, const c=
+har *str)
+> -{
+> -	u16 *length =3D (u16 *)buffer;
+> -	u16 *target =3D length + 1;
+> -	int ret;
+> -
+> -	ret =3D utf8s_to_utf16s(str, strlen(str), UTF16_HOST_ENDIAN,
+> -			      target, buffer_len - sizeof(u16));
+> -	if (ret < 0) {
+> -		dev_err(wmi_priv.class_dev, "UTF16 conversion failed\n");
+> -		return ret;
+> -	}
+> -
+> -	if ((ret * sizeof(u16)) > U16_MAX) {
+> -		dev_err(wmi_priv.class_dev, "Error string too long\n");
+> -		return -ERANGE;
+> -	}
+> -
+> -	*length =3D ret * sizeof(u16);
+> -	return sizeof(u16) + *length;
+> -}
+> -
+> -/**
+> - * calculate_string_buffer() - determines size of string buffer for use=
+ with BIOS communication
+> - * @str: the string to calculate based upon
+> - *
+> - */
+> -size_t calculate_string_buffer(const char *str)
+> -{
+> -	/* u16 length field + one UTF16 char for each input char */
+> -	return sizeof(u16) + strlen(str) * sizeof(u16);
+> -}
+> -
+>   /**
+>    * calculate_security_buffer() - determines size of security buffer fo=
+r authentication scheme
+>    * @authentication: the authentication content
+> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+> index d723e4b1cafb..eeb9a97ec465 100644
+> --- a/include/linux/wmi.h
+> +++ b/include/linux/wmi.h
+> @@ -83,6 +83,9 @@ acpi_status wmidev_block_set(struct wmi_device *wdev, =
+u8 instance, const struct
+>  =20
+>   u8 wmidev_instance_count(struct wmi_device *wdev);
+>  =20
+> +size_t wmi_calculate_string_buffer(const char *str);
+> +ssize_t wmi_populate_string_buffer(char *buffer, size_t buffer_len, con=
+st char *str);
+> +
+>   /**
+>    * struct wmi_driver - WMI driver structure
+>    * @driver: Driver model structure
