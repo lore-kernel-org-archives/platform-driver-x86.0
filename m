@@ -1,181 +1,116 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2333C819B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 20:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1114FECF0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 21:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790369679; cv=none; b=SVooh5N047/Zb/vwOKT3ZifWCZH3xEpl39Ab/sXlTZo17KRHVq/9Nh+rtwxONiosjHqzDXh4BCWOKVG7L31rl/lPilQYR8gGlE2laVc+D9CeZONsGkb9e1Aizq8TwZPx+bC6mOrJcQbp0P6hZlIsJ3fivGR9l59wJufTJdrvWhM=
+	t=1790371002; cv=none; b=RpzjjYRtpChxWet5Mp6N3uXUOKB27ei/KpeG7ivP6Goa/gELXt5CzcXZXAqT5RttXUZ5qlEIDIFvc5NTN78B0OL3OyXScCO5PKqx1/8ifD2lc9nYLQBINnN+s/M/1jtezsXwNns4cYPZ7mUcdvcTxS87o5jJJomhjrgSvT3ARGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790369679; c=relaxed/simple;
-	bh=Bbx+4n3p+7GX469kg+UnBWBy+29hV7oQDAWSfAZ/fB8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=oOGDtTyww5gpuPx5WcIijFcA6hh/XJSmw5huHb8Kwn5Ph+xS7YC3Ld4doFOtV//v/4BANEJ7wf2alCMkDDkHjmKyB6yW+r8XeUquqQksu5dmRAjAgZyWTzroI2ITTtI6vu0v4XAX109K+7EPLmLAhpcVYoBpvz1MRHeJOT6tU8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=A6YMoQG/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NVLQ/uZo; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1790371002; c=relaxed/simple;
+	bh=ajX1sR3WcRugeisr5BSZJX76rL+ZzuRg6NSY3TmwZ7o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s4I6oA5/cPJFaO0C4DzARXylf1LlI0Zo3rBMLD9LgDFpnNgA1sAh4szlqo2hh+5Xh17y6JRkeKboRShOGq9ouIj80E5+xgKwlfWHIyd65SeCqx2aqrVWaRAqZndj1SPyi3xF24GdAe9kdC1ZxnAj2AmA3FmVTwz45dG7cSL1kPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QE+qMiKD; arc=none smtp.client-ip=74.125.225.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="A6YMoQG/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NVLQ/uZo"
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfout.stl.internal (Postfix) with ESMTP id 910731D000B1;
-	Fri, 25 Sep 2026 16:54:36 -0400 (EDT)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Fri, 25 Sep 2026 16:54:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1790369676;
-	 x=1790456076; bh=E0ZXFQHVScU52TAzsg7GPoFR5v1BLgafJWJ7PWGaPQ0=; b=
-	A6YMoQG/aY0ZdehIa9isP43KTadDyLCe7CHznDUjHr+aIzTpHYTNhCumUPtNvftZ
-	Ss5G8vLUJsXi1FO+o1Zz26XYOPpJJIAdw8cER/k503nqhwc0bAPpCExhSFH5B30r
-	xl0Xnz2lzqM1aK3I5kqOypjZ+O9l8NVA6Gi5anVjq4urV/MZusUPsaRtAugGrn0c
-	R9wTMKR74/Qj+vTQ/uZwtdPUfmh+0z5dJBp4uO2geQP+YA2utzoaaCtA21SyEc4V
-	AFmUDvudsgVvqVCSLIyeUVOxEUITGPE+qp6jPWeNICoKJyoIx2124D1XfuPL0Fyl
-	PcAygg/hr/EPfs7x9OsI2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790369676; x=
-	1790456076; bh=E0ZXFQHVScU52TAzsg7GPoFR5v1BLgafJWJ7PWGaPQ0=; b=N
-	VLQ/uZoTcMR/nNe2XmB6PAFmOJGBqRJni0PHEWjaP1eyNnTWXD3rj9hJL12FG90A
-	GI6hdkqhCF4QL3d7ugMiZ48HrsjVjS7TA3S5FLelq7u7ebwHDMtvbT1WBR9Th43/
-	BxQGdMacGH+1XwcQAHa7mQRuN/DJieffdZG5tKcxDlJJRqUVB/lAQXRJYaPeJqDt
-	NlU0tcC3PjZG1xH4HN0JUhMx3KJABWj+AJHvfepZqfMBcCLSJIRyHA59Rx2eJUjW
-	NwClkElZWOa22LewABSwUZCLc06PXV84yD7v10DQ3lFOC8A2TYfhY56puVKCpTnk
-	l/eXzjgpnmTz9wL50YwOw==
-X-ME-Sender: <xms:i9-2anjubH3-MIugsAaObJUc1refhYHnBs6bSuVUOoR_1WTq6pstOA>
-    <xme:i9-2au0s0AfcWx9pfhFzLuYtPuI42gLMvmo5hRkd3_sSzL4wVsX6k-jN_HYdxfl9_
-    rEroj7N4tNVMNRH5LhduHPWwaQFwMi1Yfp9FzBUoM856vwV7MiHoHuR>
-X-ME-Proxy-Cause: dmFkZTFuUTuuWL6f3GJhBpOd98IIp74ARIDi0HGGJa92+wi+aV57Ioe07nC9MjYuerAU4/
-    yhW6key1td3aJXCMZdtRCM2PFlaXil/CO/CAxTIpn4oI5/s4MQaNIFNwFZ3fSmfnQUsjxu
-    ZQVXLVYxxQ2qJDFs66bU7nQkjzDwJcQwJaR040Hah2k2iwqcidCG6AtZRn7/G5bvIAjt9E
-    5FEZ3vHiYptGsxPtoPNAaqlY++RdXLI+dOKb6R9eaGupPg3A4sjQ/lHMGwpK3G/xIns6Ys
-    C+diHPx+LNSXe82FevRF4y9SgveYkoYcPeiuzkqV6gKgmW0vZAfIb4VIMJo2UTo8LluPLH
-    cV372SC2WL3+WDlfUyxxRS4CS3e2MjQebK9N28bpirTiZtyTKDALNobBaDFDHxRlLDRzpR
-    gFhoPOggOaPW3op5+hCjJ4Dlb/jyHmLtl3HvnZToqQXqMTm5KWOBhTGn9QhY8O3G5SWBuL
-    ah0mVTcyz5CNc7XIwl6z4PBHvRQ6kH6pDFLyTW7WYGjbFRW2sisnmeeAznp3yUvyimcwnU
-    MZjcPEqL1DQ8IPXa/zUHlLgOa03HuOhxE6RJjM/ZkCU0JblD8uiLyLG2nQ9HQW0T4SVy+C
-    S4mZvuoq98eN+FnyFVOIi2e012V3T0bbMOetoVqC7desUt8hh47cJ9MSo+Iw
-X-ME-Proxy: <xmx:i9-2atLa-LnCM5Go01H5EgJWulCfnguKuEavQtXVHEIbC0ONY-kDJg>
-    <xmx:i9-2ajM3c-vTRpBQSso0tN-bCOGfbFxO0VQg7W0xkuY-p8L6_OhwLg>
-    <xmx:i9-2almuhFTHwVrh9RuJUCcjvHX4N0c9-CAhBUE3WgdyilWUGwRK-g>
-    <xmx:i9-2av4sl6fs_2S4vCj6E6RfLvG_tRELVjUTUJ0NduOdjBGgH_kmRw>
-    <xmx:jN-2arHvo0pgZCRMY4FYqLiWVqvOAlDazklwgg3BZvHEJOmFU25zkB6v>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 761662C0006F; Fri, 25 Sep 2026 16:54:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QE+qMiKD"
+Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-4888129c46eso589861f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 14:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790370999; x=1790975799; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=neN1Kc42Y7T0Zlr2RHBkewVlwgt7GUHRIZZhfwmmzUM=;
+        b=QE+qMiKDtG0z5HZpaWnWWSFy8+ljNQdxNaWpfQnlN+iMMopomfZq+t5o6JwuzwUFYh
+         EY6we6J4mUevoKZXvVri9evQrrgVcL2ZE+IqPNO2eAUbLd3AQ6lQwS7t+BJGW+1ZlWfj
+         ShT0o/nb/udvKbyukEa8FuegZvLk3bLwzYdknlB3c2BDREzOHdpNM2xmHaMF/KlSySHn
+         G6v27ZjTBAHxQc3++aCgKGM54XWg/ex3k57M3vvFWKk6/3OnAqg8X6p1nkyyRsTAD9tU
+         tuSmqdXY7/bmf8Vfbj2rVBwjwQzb64Q5+JlmKHVwP+AUE/M3s85ulK3znk1qgZ5+7XhC
+         GPXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790370999; x=1790975799;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=neN1Kc42Y7T0Zlr2RHBkewVlwgt7GUHRIZZhfwmmzUM=;
+        b=2vxWdu1U3adPS37fgw16D0YT3VTu6RQbxC1hWe28l4Mau2hy0TkjwdGQrt45JZLtE5
+         tDiJnaNERXphIowTXyu8As3tzlVNVi8LxOwiT+HDbpINS2NiZ4aWBpxlyAcLOQUjaF0V
+         +C2qs88vwuHX2Q5+irAtbw3BMu3OExxN5lX0EAV6LgDBl8/ufP1CrIWKDgEZqMlXZ88t
+         jm1ObcwZWAAiPKi3TzYyrteia5FYfKKpRbklilBsV/EFLNBlGy342Iw189XWbCDbjtJI
+         iFxSYha/kljnJ1Kl7quY5s8RSx9nOKnvfa/4F/I7k0qUSGN3u6qkcVG5w8oAiTq6+LrW
+         BtjQ==
+X-Gm-Message-State: AFuF++lNi0eEFQMCtdl9+tdl9gP4BQruVkpld5UK3Y/SY6KRB3MXI4TF
+	gKrsFVkkkRfF/kq70HGwmhyBSJXngfwGio5lo6+g7YEFlWkzEhbssdPqTir3x89I
+X-Gm-Gg: AYBFou20ZdYOzW40FQ44Bds426BX+Lp4i+WDCmze2emKNUhucIF0d74C92+0hZcGp08
+	bGlWNPVwQQvS0wTDuhJ2R7Tj+ktPI1lfOXtX483qOQltFdlSuisnSnusZvqxkvvk9hpyrQZYer2
+	V4KEK6XbqAXCJL6Y9YAjfVbV7nXWpbSxHwzv7672UJY9tNuUpyF8LtIY+TjcSfzQjoBwfK77wyZ
+	B+czt4VwqlQ05vYdIF5Ns9pm63i9XJNXpKzBYpFm4H9LxCZvgP7leC/P6U+yJ+QI9KNUYyLC7xD
+	twKmGLfOI77J2JePcc0winLCVBpUeMKthbw9VriGWh8okhmUM34p1mdRh98cj4525/731JoPFKd
+	8kmiMtf/CGi3Rdy3ido7HFGEaSC5FXdumwjzY0vJtuFA6VBmNz8fBQNKQjaU1HzckSn9QBAt8Q9
+	1nFBDDNiD6875mAjYO4bg4sw7SaQa0dN2XvLtYFt8Jq4Nq9fbI4xtCEVm7CC7cIwQ0Jrgu7w0oy
+	3BDaQVMOA==
+X-Received: by 2002:a05:6000:490e:b0:488:8437:b8b7 with SMTP id ffacd0b85a97d-4888437bab3mr2644343f8f.7.1790370998794;
+        Fri, 25 Sep 2026 14:16:38 -0700 (PDT)
+Received: from localhost.localdomain ([2a0a:ef40:1479:f801:b8e7:18fe:7039:e475])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a570sm9271781f8f.13.2026.09.25.14.16.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 14:16:38 -0700 (PDT)
+From: Mohamed Jouini <amad3v@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mohamed Jouini <amad3v@gmail.com>
+Subject: [PATCH 0/3] platform/x86: uniwill-laptop: Support the PCSpecialist Recoil 16 AMD
+Date: Fri, 25 Sep 2026 22:16:32 +0100
+Message-ID: <20260925211635.1422516-1-amad3v@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AcGzoZcWswFR
-Date: Fri, 25 Sep 2026 16:54:14 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Armin Wolf" <W_Armin@gmx.de>
-Cc: "Prasanth Ksr" <prasanth.ksr@dell.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Dell.Client.Kernel@dell.com,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Message-Id: <c60ba808-6de2-44d9-a730-417d9ca04fa0@app.fastmail.com>
-In-Reply-To: <B8915D67-6B93-43F9-9A6D-F9AFF3E55A27@gmail.com>
-References: <mpearson-lenovo@squebb.ca>
- <20260925160047.2063361-1-mpearson-lenovo@squebb.ca>
- <20260925160047.2063361-6-mpearson-lenovo@squebb.ca>
- <f0407ed1-3b8f-4285-8349-926edf80e54f@gmx.de>
- <f0c68763-7960-458f-8a82-f5761ea61890@app.fastmail.com>
- <B8915D67-6B93-43F9-9A6D-F9AFF3E55A27@gmail.com>
-Subject: Re: [RFC PATCH 5/7] platform/x86: think-lmi: Initial ThinkLMI v2 driver
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 25, 2026, at 4:05 PM, Derek J. Clark wrote:
-> On September 25, 2026 12:00:24 PM PDT, Mark Pearson 
-> <mpearson-lenovo@squebb.ca> wrote:
->>Thanks Armin
->>
->>On Fri, Sep 25, 2026, at 2:53 PM, Armin Wolf wrote:
->>> Am 25.09.26 um 18:00 schrieb Mark Pearson:
->>>
->>>> Lenovo Thinkpad, Thinkstation and ThinkCenter are moving to a new common
->>>> WMI implementation.
->>>>
->>>> This driver adds initial support for the new implementation, allowing
->>>> attributes to be read and modified.
->>>>
->>>> Certificate based authentication is not implemented in this
->>>> version.
->>>>
->>>> think-lmi is updated to use this driver if supported by the HW and
->>>> requested by the user.
->>>>
->>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>> ---
->>>>   drivers/platform/x86/lenovo/think-lmi-v2.c | 960 +++++++++++++++++++++
->>>>   drivers/platform/x86/lenovo/think-lmi.c    |   9 +-
->>>>   drivers/platform/x86/lenovo/think-lmi.h    |  59 ++
->>>>   3 files changed, 1025 insertions(+), 3 deletions(-)
->>>>   create mode 100644 drivers/platform/x86/lenovo/think-lmi-v2.c
->>>>
->>>> diff --git a/drivers/platform/x86/lenovo/think-lmi-v2.c b/drivers/platform/x86/lenovo/think-lmi-v2.c
->>>> new file mode 100644
->>>> index 000000000000..5bc0a349c5fb
->>>> --- /dev/null
->>>> +++ b/drivers/platform/x86/lenovo/think-lmi-v2.c
->>>> @@ -0,0 +1,960 @@
->>>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>>> +/*
->>>> + * Think LMI V2 BIOS configuration driver
->>>> + *
->>>> + * Copyright(C) 2026 Lenovo
->>>> + * Distributed under the GPL-2.0 license
->>>> + */
->>>> +
->>>
->>> ...
->>>
->>>> +/* Get password settings from BIOS */
->>>> +static int tlmi_get_pwd_settings(void)
->>>> +{
->>>> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->>>> +	const union acpi_object *obj;
->>>> +	acpi_status status;
->>>> +
->>>> +	if (!tlmi_priv.can_get_password_settings)
->>>> +		return -EOPNOTSUPP;
->>>> +
->>>> +	status = wmi_query_block(LENOVO_BIOS_ACCESS_DATA_GUID, 0, &output);
->>>
->>> Big NACK from my side, this function is deprecated and scheduled for removal.
->>>
->>> If i understand correctly the core drivers needs two WMI GUIDs, one for 
->>> discovering
->>> settings and one for operating on those settings. Please use the 
->>> component framework
->>> to link those two together by register a component for the data GUID 
->>> and a component
->>> master for the method GUID.
->>>
->>> This also allows you to use the modern buffer-based WMI API, so you can 
->>> leave ACPI
->>> behind when writing this driver.
->>>
->>
->>OK - good to know. As a note, I suspect the original driver will need updating here too.
->>
->>For "use the component framework to link those two together" - is there an example or documentation you can recommend as a reference for doing this?
->>
->
-> Mark,
-> We do this in lenovo-wmi-other/capdata.
-> - Derek
->
-Perfect - thanks!
-Mark
+The PCSpecialist Recoil 16 AMD is a rebadged TUXEDO Stellaris 16 Gen7 AMD
+(board X6FR57TY), which the driver does not match today because of the
+different DMI vendor and board name.
+
+Patch 1 adds it, using the percentage charge limit rather than the
+charging profiles: on this firmware the "balanced" profile does not limit
+charging, while EC_ADDR_CHARGE_CTRL does and is reported by _BST.
+
+Patch 2 adds platform profile support for the three firmware power modes
+("office", "balance", "turbo") in EC_ADDR_MANUAL_FAN_CTRL, and handles the
+mode key. Writing the mode makes the EC apply it fully (mode LED, NVIDIA
+Dynamic Boost/TPP limits, _Q88 notification). It is only enabled for the
+Recoil 16 for now, but the same register layout is probably present on
+other Uniwill models.
+
+Patch 3 maps the "Sc" key (WMI event 0xD0) to KEY_ROTATE_DISPLAY.
+
+Tested on the Recoil 16 AMD (BIOS N.1.39PCS10), with the driver from
+this series built against 7.2.6: platform profile from
+power-profiles-daemon and the mode key (LED colour and GPU power limits
+follow), the Sc key, Fn lock and Super key lock, hwmon, the charge limit
+attribute, and the AC auto-boot / USB powershare attributes (read only).
+With the same changes on top of the 7.2 driver, charging also stopped at
+the configured limit with _BST reporting "Not charging".
+
+Mohamed Jouini (3):
+  platform/x86: uniwill-laptop: Add PCSpecialist Recoil 16 AMD
+  platform/x86: uniwill-laptop: Add platform profile support
+  platform/x86: uniwill-laptop: Map the screen rotation key
+
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 155 ++++++++++++++++++++
+ drivers/platform/x86/uniwill/uniwill-wmi.h  |   3 +
+ 2 files changed, 158 insertions(+)
+
+
+base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
+-- 
+2.55.0
+
