@@ -1,61 +1,63 @@
-Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
+Received: from mail-wr2-f42.google.com (mail-wr2-f42.google.com [74.125.225.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1114FECF0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 21:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780F64FB9C4
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 21:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790371002; cv=none; b=RpzjjYRtpChxWet5Mp6N3uXUOKB27ei/KpeG7ivP6Goa/gELXt5CzcXZXAqT5RttXUZ5qlEIDIFvc5NTN78B0OL3OyXScCO5PKqx1/8ifD2lc9nYLQBINnN+s/M/1jtezsXwNns4cYPZ7mUcdvcTxS87o5jJJomhjrgSvT3ARGU=
+	t=1790371003; cv=none; b=EKWq6hVADSSc6diSl5Fgxh2uE786+kSRsITA2BrO9cxjA3NrSvb3mtj/4RDmgTzmfyoQpJ51qK8q76i0vPMCA4tj24D3NMyqP/uhkb2ssHwm4j+/EqrypF/LvnxqOVx7mC1AtBQhPHThcHcUoJHhR7b2h8UtfDiAFpZRT2ihgFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790371002; c=relaxed/simple;
-	bh=ajX1sR3WcRugeisr5BSZJX76rL+ZzuRg6NSY3TmwZ7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s4I6oA5/cPJFaO0C4DzARXylf1LlI0Zo3rBMLD9LgDFpnNgA1sAh4szlqo2hh+5Xh17y6JRkeKboRShOGq9ouIj80E5+xgKwlfWHIyd65SeCqx2aqrVWaRAqZndj1SPyi3xF24GdAe9kdC1ZxnAj2AmA3FmVTwz45dG7cSL1kPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QE+qMiKD; arc=none smtp.client-ip=74.125.225.99
+	s=arc-20240116; t=1790371003; c=relaxed/simple;
+	bh=j1V0Ff0coyQcTLI3CpAzGM60yze7t0TzabVn96CgoWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nZQtr3MVD+rHrgut2olptIVy+EsUSMsTAb+VQz9b/X3xUVHUBtaRBa9CI7zn8MNyisfbtoswiP6s8F19+V/btgsotMz3Nqp5Bw2j16RqQ460/tF/PI/5CbvveHSU1KcNe7b9p75y1kghoQx/BnjJoiZNEAD+b+mZ+fBwoZYJny0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JVseaeAv; arc=none smtp.client-ip=74.125.225.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QE+qMiKD"
-Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-4888129c46eso589861f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 14:16:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVseaeAv"
+Received: by mail-wr2-f42.google.com with SMTP id ffacd0b85a97d-4888598e4f9so178364f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 14:16:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790370999; x=1790975799; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=neN1Kc42Y7T0Zlr2RHBkewVlwgt7GUHRIZZhfwmmzUM=;
-        b=QE+qMiKDtG0z5HZpaWnWWSFy8+ljNQdxNaWpfQnlN+iMMopomfZq+t5o6JwuzwUFYh
-         EY6we6J4mUevoKZXvVri9evQrrgVcL2ZE+IqPNO2eAUbLd3AQ6lQwS7t+BJGW+1ZlWfj
-         ShT0o/nb/udvKbyukEa8FuegZvLk3bLwzYdknlB3c2BDREzOHdpNM2xmHaMF/KlSySHn
-         G6v27ZjTBAHxQc3++aCgKGM54XWg/ex3k57M3vvFWKk6/3OnAqg8X6p1nkyyRsTAD9tU
-         tuSmqdXY7/bmf8Vfbj2rVBwjwQzb64Q5+JlmKHVwP+AUE/M3s85ulK3znk1qgZ5+7XhC
-         GPXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790370999; x=1790975799;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1790371000; x=1790975800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=neN1Kc42Y7T0Zlr2RHBkewVlwgt7GUHRIZZhfwmmzUM=;
-        b=2vxWdu1U3adPS37fgw16D0YT3VTu6RQbxC1hWe28l4Mau2hy0TkjwdGQrt45JZLtE5
-         tDiJnaNERXphIowTXyu8As3tzlVNVi8LxOwiT+HDbpINS2NiZ4aWBpxlyAcLOQUjaF0V
-         +C2qs88vwuHX2Q5+irAtbw3BMu3OExxN5lX0EAV6LgDBl8/ufP1CrIWKDgEZqMlXZ88t
-         jm1ObcwZWAAiPKi3TzYyrteia5FYfKKpRbklilBsV/EFLNBlGy342Iw189XWbCDbjtJI
-         iFxSYha/kljnJ1Kl7quY5s8RSx9nOKnvfa/4F/I7k0qUSGN3u6qkcVG5w8oAiTq6+LrW
-         BtjQ==
-X-Gm-Message-State: AFuF++lNi0eEFQMCtdl9+tdl9gP4BQruVkpld5UK3Y/SY6KRB3MXI4TF
-	gKrsFVkkkRfF/kq70HGwmhyBSJXngfwGio5lo6+g7YEFlWkzEhbssdPqTir3x89I
-X-Gm-Gg: AYBFou20ZdYOzW40FQ44Bds426BX+Lp4i+WDCmze2emKNUhucIF0d74C92+0hZcGp08
-	bGlWNPVwQQvS0wTDuhJ2R7Tj+ktPI1lfOXtX483qOQltFdlSuisnSnusZvqxkvvk9hpyrQZYer2
-	V4KEK6XbqAXCJL6Y9YAjfVbV7nXWpbSxHwzv7672UJY9tNuUpyF8LtIY+TjcSfzQjoBwfK77wyZ
-	B+czt4VwqlQ05vYdIF5Ns9pm63i9XJNXpKzBYpFm4H9LxCZvgP7leC/P6U+yJ+QI9KNUYyLC7xD
-	twKmGLfOI77J2JePcc0winLCVBpUeMKthbw9VriGWh8okhmUM34p1mdRh98cj4525/731JoPFKd
-	8kmiMtf/CGi3Rdy3ido7HFGEaSC5FXdumwjzY0vJtuFA6VBmNz8fBQNKQjaU1HzckSn9QBAt8Q9
-	1nFBDDNiD6875mAjYO4bg4sw7SaQa0dN2XvLtYFt8Jq4Nq9fbI4xtCEVm7CC7cIwQ0Jrgu7w0oy
-	3BDaQVMOA==
-X-Received: by 2002:a05:6000:490e:b0:488:8437:b8b7 with SMTP id ffacd0b85a97d-4888437bab3mr2644343f8f.7.1790370998794;
-        Fri, 25 Sep 2026 14:16:38 -0700 (PDT)
+        bh=HqQR45PgbfT7V9sVuIzFCMVeJwigG0afJ6PK7q1+V8c=;
+        b=JVseaeAvCU7+S7+GtG4TyNWiaHUXDehIIPzuwYKxNVmBWLtUI0b5b0OcN1tRGhwkDv
+         xocwgR5dUYWSWegx5LX5mzcD/TYrAtJqpUGNzzin44otDaHjpIxiGAy7i7vJRt3sixJg
+         mczb97m5B/qL+iun7Jh1CVKqEQCs2Ct115UeNMroA85cL5Egt349+SeNyCOldloSbiy2
+         DB/Su2IS9BDjreMekI0VUWdWOo/IfPXRgO46sYLLAsDCn46rafVjyuLvo6iuOUjrLid0
+         89vwSpFmsKIFQjPqYZsvR1DWdqU+qnET6bGt7NEyjjCGCvSk2vwWAd+LodZ8KaVRcQvO
+         Ka+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790371000; x=1790975800;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=HqQR45PgbfT7V9sVuIzFCMVeJwigG0afJ6PK7q1+V8c=;
+        b=mSCalRlA8ly9+P0/Qw91lyQEp/3iA4viHO+i4J+wOese1k07PhHTwEfsDR2V02CFym
+         gP6Y/2HUEnvFN+UGDY1JMOS0eTQ4b+PxZvzWY0NCzNx18E4msejUPupZujQrsMaN6XT8
+         XYAxQhvsr8Weu+iHDTOVMjOodSxiVnewFZHr+WT94W9Tj1esJcdnzBJYR0CyikPgXxL7
+         kljdtSKkMQU7/4/60KfbRH0gcqWLfK0Z8Wal+dxBpowDTG9IWkBsFGQpwnR9OUh6oywt
+         Ra/3GdTL/TPcdh+Mxw/h/ZAEZQNgS3IIelFnmkovQdgVSBiTMs7wRrdgrSXCpUwTLeLu
+         olhw==
+X-Gm-Message-State: AFuF++m0cRqxGJjCDyH6sNsFR5jXBwcu9Cte1UwXEfpFhAjtQ/vZZzdl
+	BvvWgYNV1F0xU2lCreFSE7jR4jafJ2wWB//s5uo753pECW+AlBmhxVf77SLuxA==
+X-Gm-Gg: AYBFou3PtqkxaVX6XcN5nfhVM438j/ZmjPzDSYQQmydK6zsusNOowURGkGALRI6E415
+	2Z8Udsx90E5OQaQ8ONk5v31UD0YEDKEY6n4BtoYNMFnzkVOz5fhicz6xgZbtOfLcQSfpww0sJy4
+	7+YvNdQoT1NPws8fuTnpq18y6qjY5huDQxg3g5sr+yNPAHanR+i5NMvI3wZgOJ7i50VUp3GZmYe
+	EIAzcZfCOMNxmX5KekX+/AVTwWXZnnvrL1lX80r/NrLRCCzbTtlQf2pjR0vzVD15qsFIamoEukf
+	gBEUPaxcoBNkQB67tTus2arS2rkHdHUFu7KokfhIFiV0viNnIiiiJDDKJpJRfb3WRqE6eHd5AVv
+	iq6TKCAfqNs7s2C7ncYQqhjPEQY6Wh6SPYY7aGm6DFUzRY36exovznLUVOnobElTfvXiCOHO4L6
+	unrXQdZOuMGlt9dIM8FT5HwAMImqQsrKFK9jghvw0NC3FTDJdmOrIirBQQAuIr/hUmKv9zPxrXa
+	RLrn8HS2g==
+X-Received: by 2002:a05:6000:290e:b0:487:27f9:837 with SMTP id ffacd0b85a97d-4887170f426mr13064121f8f.44.1790370999654;
+        Fri, 25 Sep 2026 14:16:39 -0700 (PDT)
 Received: from localhost.localdomain ([2a0a:ef40:1479:f801:b8e7:18fe:7039:e475])
         by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a570sm9271781f8f.13.2026.09.25.14.16.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2026 14:16:38 -0700 (PDT)
+        Fri, 25 Sep 2026 14:16:39 -0700 (PDT)
 From: Mohamed Jouini <amad3v@gmail.com>
 To: Armin Wolf <W_Armin@gmx.de>,
 	Hans de Goede <hansg@kernel.org>,
@@ -63,10 +65,12 @@ To: Armin Wolf <W_Armin@gmx.de>,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Mohamed Jouini <amad3v@gmail.com>
-Subject: [PATCH 0/3] platform/x86: uniwill-laptop: Support the PCSpecialist Recoil 16 AMD
-Date: Fri, 25 Sep 2026 22:16:32 +0100
-Message-ID: <20260925211635.1422516-1-amad3v@gmail.com>
+Subject: [PATCH 1/3] platform/x86: uniwill-laptop: Add PCSpecialist Recoil 16 AMD
+Date: Fri, 25 Sep 2026 22:16:33 +0100
+Message-ID: <20260925211635.1422516-2-amad3v@gmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260925211635.1422516-1-amad3v@gmail.com>
+References: <20260925211635.1422516-1-amad3v@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -76,41 +80,61 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 The PCSpecialist Recoil 16 AMD is a rebadged TUXEDO Stellaris 16 Gen7 AMD
-(board X6FR57TY), which the driver does not match today because of the
-different DMI vendor and board name.
+but reports sys_vendor "PCSpecialist" and board name "X6FR57TY", so the
+existing entry does not match it.
 
-Patch 1 adds it, using the percentage charge limit rather than the
-charging profiles: on this firmware the "balanced" profile does not limit
-charging, while EC_ADDR_CHARGE_CTRL does and is reported by _BST.
+Use the Stellaris 16 Gen7 AMD feature set, but with the percentage charge
+limit instead of the charging profiles: on this firmware the "balanced"
+profile does not limit charging (the battery still charges to full),
+whereas the ACPI _BST method reads EC_ADDR_CHARGE_CTRL (CGLM) and reports
+the "charge limiting" state bit while it is set to 1-99. Setting
+charge_control_end_threshold to 90 on a full battery switches the
+reported status from "Full" to "Not charging", and charging stops at 90%.
 
-Patch 2 adds platform profile support for the three firmware power modes
-("office", "balance", "turbo") in EC_ADDR_MANUAL_FAN_CTRL, and handles the
-mode key. Writing the mode makes the EC apply it fully (mode LED, NVIDIA
-Dynamic Boost/TPP limits, _Q88 notification). It is only enabled for the
-Recoil 16 for now, but the same register layout is probably present on
-other Uniwill models.
+Signed-off-by: Mohamed Jouini <amad3v@gmail.com>
+---
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Patch 3 maps the "Sc" key (WMI event 0xD0) to KEY_ROTATE_DISPLAY.
-
-Tested on the Recoil 16 AMD (BIOS N.1.39PCS10), with the driver from
-this series built against 7.2.6: platform profile from
-power-profiles-daemon and the mode key (LED colour and GPU power limits
-follow), the Sc key, Fn lock and Super key lock, hwmon, the charge limit
-attribute, and the AC auto-boot / USB powershare attributes (read only).
-With the same changes on top of the 7.2 driver, charging also stopped at
-the configured limit with _BST reporting "Not charging".
-
-Mohamed Jouini (3):
-  platform/x86: uniwill-laptop: Add PCSpecialist Recoil 16 AMD
-  platform/x86: uniwill-laptop: Add platform profile support
-  platform/x86: uniwill-laptop: Map the screen rotation key
-
- drivers/platform/x86/uniwill/uniwill-acpi.c | 155 ++++++++++++++++++++
- drivers/platform/x86/uniwill/uniwill-wmi.h  |   3 +
- 2 files changed, 158 insertions(+)
-
-
-base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index eeead0159..beba5a76a 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -2787,6 +2787,19 @@ static struct uniwill_device_descriptor tux_featureset_4_nvidia_descriptor __ini
+ 		    UNIWILL_FEATURE_USB_POWERSHARE,
+ };
+ 
++static struct uniwill_device_descriptor pcs_recoil16_amd_descriptor __initdata = {
++	.features = UNIWILL_FEATURE_FN_LOCK |
++		    UNIWILL_FEATURE_SUPER_KEY |
++		    UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_GPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN |
++		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
++		    UNIWILL_FEATURE_AC_AUTO_BOOT |
++		    UNIWILL_FEATURE_USB_POWERSHARE,
++};
++
+ static int phxtxx1_probe(struct uniwill_data *data)
+ {
+ 	unsigned int value;
+@@ -3268,6 +3281,14 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
+ 		},
+ 		.driver_data = &tux_featureset_4_nvidia_descriptor,
+ 	},
++	{
++		.ident = "PCSpecialist Recoil 16 AMD",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "PCSpecialist"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6FR57TY"),
++		},
++		.driver_data = &pcs_recoil16_amd_descriptor,
++	},
+ 	{
+ 		.ident = "TUXEDO Stellaris 16 Gen7 Intel",
+ 		.matches = {
 -- 
 2.55.0
 
