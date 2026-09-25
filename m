@@ -1,170 +1,164 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010023.outbound.protection.outlook.com [40.93.198.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AF74E80B7;
-	Fri, 25 Sep 2026 19:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.23
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790364780; cv=fail; b=bCAZTHPR8u0l1o3t7/TP+FFAlU7PCX3f5pSfhrdxyz1GrJI4LNaX+1CMG9qOCPQaIdJ8s0LjxhU/dxIzygT7TXjzaaMNjRCK8jo5x1zFDzfzyUJk0fUtXMoONhhKAaXmsRvUWz9h55bb6mcnQeI2PT0c1RSTtcRMb3pRUl8r0Rs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790364780; c=relaxed/simple;
-	bh=gwBfw4RTtJm09rX+VnGTYxPRBHdXnRtGIFx54vammMQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W/ZJSxVUx9faNsb6mRCQWcfwNqPVRCsIHpFVIIPtQ8MPEbOO4LXaqgfz4We9/ivVUG/8Xpij7TIOmAvV1MBJiJ9VgcxFOYoVrD1cUrKmzk2SH2o3Z0BuUODvVInYsW6EG6BbOH6Hj/sPExnHQ2gbyFlmIABFv+BLUDVcVqxrb1I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ag9JGe+n; arc=fail smtp.client-ip=40.93.198.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F603456DE5
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 19:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790365524; cv=none; b=uifHthzyCo8dTaox+x3rYIkp0CpLwMVTUkmy+ViDuDfdcB5WRl+RObYEKNLxjawcIPGxryDvnWcnlScp8uR9f11GmbIXZbbmrgrqw4dMvSV/WLB9iKc5XBMoqBQ3YlcC05GyAXAYCtxaMqUI43xuVI11vLANwUjTcI4SGXktCRo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790365524; c=relaxed/simple;
+	bh=DqTT+AgNC8GkL2FYVXCwLzqAXTrl0cGMSGWREvIxuOI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kNxmD6XbZ22ypj81OSN07h0B6YxWQZyqwR32HDDIay13sYovwAi+LO9HaFcjrvUuYcm0gPSwPgwROliXYMPkev94cJMm05UZIPM/AI0eBLNMTzOAnA9xUYrMMaYzAYZHDvUUiBdfdAqXu210NFVToktcgkQC2pPSKnwNMW4iAHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJCiSmeR; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ag9JGe+n"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b9H6FEhudlFWUlHbeA/CPRPepNEU6iN9DJY/j9CW13c5m3GFTresrx47DkwSPmxzKOlYcdoL44QM8PxXqcIIs2p0FnmUbch6hESF6hN/fGSBVE5WmCk1hP+PVOeUfyRjR7s+BboH2D0WMPIMEUhOujsQLmEuqWqojgEPEpW4KADyKu3d1cdRFPGfVZ5ihX+TW/YepLrIyNCDrE8QlRx/1K9ziVml4jK9hUsZHfafDBzCI1gXI/GIh8CbyRgiLA60B14mGtZ7/EwDcvGUrlYPeF70leZp3/kWlx0W8IVvbHdJWb+3hirhcWKH6TRBjIwbsuPEvGcXkVP9EUYbR/ch/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ifMTDqhxicc4SKsCICK05NFF8auVUzH17T5mQCg/HlQ=;
- b=Z3iUH5RB0wC2cR5VHSaeyQmQjOTzeC9GxiQ2RFaQj36fwR3k1M9UuH26Je8KQH5bKGiq4YBqSOthhlYElA2jjj8I6rJU4e3WnzK7r0jEu07vtxiQSwKF6+i7B+hwKQ7MeY1n2idjdySJhda8EokOEYdoLWVrxivNX+hp3yiyp10hdiaaF1mOBcWwCTplcc0B/PSlyGS/58ybqbA4CsiHAPEELHSkMR2e75ekFcWIp7Z6n0VA9xI0u7tfH/v+6ZJ7QkkbVSGyLRUjKFWmH3A7YRkTJUaleJeByITI98T2wY6JzwjikMYBXVj+9zPyoYGbvNYbN15AGbW4XPh9UsyaRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ifMTDqhxicc4SKsCICK05NFF8auVUzH17T5mQCg/HlQ=;
- b=ag9JGe+novNW3FBaAkkC1kCGm4PVHQZHKQaS2MIuYKQkv4yt6cdW5bDr/E5RtN+O4C+4c4FnAeBCTV8nX4Q9cei01Mz40YcekXt6Li09tADbPUGJWCP2LDPenhchAT1CRTXhFeYBV+gRYV+27V+1RyXGAGCEb+TMwQXeiybfNr7Brw5UGHI//LxLEVySelWmGxCIxZBs05Apq0fIUv5zFVgydEVGVIdSmH0KSNcFZaDt/I+DtfgdsKllQDL3iRo5P2YAxzuuV8FmvwbwBuGxU+Rmk/Z51Gbsn6HQkORX+aRLfxXgdS+1xzMQQ+fNkS3ps6ina4HRVs14LeGh6qP4JA==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com (2603:10b6:408:20c::21)
- by SJ0PR12MB7475.namprd12.prod.outlook.com (2603:10b6:a03:48d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.18; Fri, 25 Sep
- 2026 19:32:45 +0000
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286]) by LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286%5]) with mapi id 15.21.0451.014; Fri, 25 Sep 2026
- 19:32:45 +0000
-From: Yury Norov <ynorov@nvidia.com>
-To: Matthew Garrett <mjg59@srcf.ucam.org>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJCiSmeR"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c20ce3c118aso195917866b.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 12:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790365522; x=1790970322; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=VZ0Ynd0dcBFAAuLycdGPDDj0ISpvrRpLcRrTrN/I9bc=;
+        b=hJCiSmeRKMKnELDMhYNo84BNeBjYUjN2NeHVVzrgvz7kKn3WHTF3vyBsQ5uFJBkdMt
+         irYVYCOSj9pkk52Y2ZznutZlXcmJLQ6xTC5LlRKJpSEJXE0xYSxKuHbZWwVZT5tTMBky
+         Zusx2SB9tXBlZiBNQmK8bV9uKORoEZvxw1tOoa/V52XX5gKaquFHqlfLVl3YJGUKlIvW
+         Esm5m5Ph8T8RwZUX7u39o/BTcOPTrqSvstHmTMmHICid91BdZB9mS+DAylfHVxdJRYKO
+         vM6+hBaovH5/CzDQCRDZCfIQerL2TLQRagquHSSMxEs9P7waG1Yli91xl8r0jNwDji1j
+         tT3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790365522; x=1790970322;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=VZ0Ynd0dcBFAAuLycdGPDDj0ISpvrRpLcRrTrN/I9bc=;
+        b=x61TkPq7bDJc1zdNEBOO1EiZ7oIG8s7zLIP3S8LN+JtGY7iigElav2trJEILvAt4Fo
+         biCx1Mh8V0IWmJoliNGR/fqQDpb9abQ67HnZGiI3fXENDuJgpKgrYIyq4KEGZfJS2lcj
+         XKN+htrrC3k2vS7Xk0B8qOXHYJbsJt3DxqSG5glNkSubshmjxi3jBPc+Mx1Vq8c0CPV+
+         DYQ7fyxIe6XLQ3m5GCNfp5CcZRpELEhQIMU8iWxdof7vZ07Rv+xNqI8EX+67yAiiyHVO
+         4qjk2wPynNITYoN/GTt+tvbrbTlgyMSSLVLchKRCBK3Yy+LNK2BvHRMyooPdHshrtvzc
+         kNUg==
+X-Gm-Message-State: AFuF++mse3H0Yl1DuOfTkPMGA8enP9e4oN1gkKd0HcYBtPSH4ny02KqL
+	dY+BhrGmtWCHTj3WC5qRHcpyRDtNkXvZE3GglMXr4WJXmjknGbrc9u0=
+X-Gm-Gg: AYBFou2096r90swKpnJ/ZeZAf6OlUnRiA/aGH2scdayMQcBWf4L6cBSbzMZ7vNlksDG
+	Nv4aVm6/umDoqtJQZxhgIZPHjofWHaT4bdaGvkk21VbsmOHIIAWtPE5dS2uRpPNIlqnUDhc08EV
+	8Zh44DODdqIqTSAfj5mbiioFFI5Pkxv0GXq0wVkMx7ispLcH0yNJ604Tq9KDj0/l6bsecBHN9fB
+	RH5xW1T8YE/ZrYjMJ9Ld4PeI8ndtHsdGaxWwjpnUwpo7N+6yTF23hv0f48L8eUWxzLzLUcQW+e5
+	meGE7daplGz/F7JTNXWBl7YZ8pPVyhlVkdy+PuV9MEq7KBom/gpIuQFSHkLdJpdygeB+RGfZEPu
+	HF2vNJ+fO0e24eMej1tZua1kPfb9i/k60AaiY5saKB1Ch2du0UkxkNmpLmyWV6qKPmNbNUGNxPu
+	1o+KT3L9yuh2Utm4r0rt36PmqUAiSlM0SB5VGW6oGTW0JXn3UPtbdN3AcgQnGloT0x/oPOcpNP9
+	U2XwL4=
+X-Received: by 2002:a17:907:daa:b0:c25:f7dc:2d9 with SMTP id a640c23a62f3a-c2ac23815a1mr612064266b.26.1790365521464;
+        Fri, 25 Sep 2026 12:45:21 -0700 (PDT)
+Received: from okuroshi-laptop ([185.229.191.71])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2ae782a2d2sm162896766b.61.2026.09.25.12.45.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 12:45:21 -0700 (PDT)
+From: Artem Maksimov <okuroshioffc@gmail.com>
+To: Jorge Lopez <jorge.lopez2@hp.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org (open list)
-Cc: Yury Norov <ynorov@nvidia.com>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH 2/2] platform/x86: dell-laptop: Fix token-based keyboard brightness readback
-Date: Fri, 25 Sep 2026 15:32:39 -0400
-Message-ID: <20260925193239.248779-3-ynorov@nvidia.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Artem Maksimov <okuroshioffc@gmail.com>
+Subject: [PATCH] platform/x86: hp-bioscfg: Support allocation bios vars
+Date: Fri, 25 Sep 2026 22:44:54 +0300
+Message-ID: <20260925194454.6850-1-okuroshioffc@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260925193239.248779-1-ynorov@nvidia.com>
-References: <20260925193239.248779-1-ynorov@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0337.namprd13.prod.outlook.com
- (2603:10b6:208:2c6::12) To LV3PR12MB9356.namprd12.prod.outlook.com
- (2603:10b6:408:20c::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR12MB9356:EE_|SJ0PR12MB7475:EE_
-X-MS-Office365-Filtering-Correlation-Id: a886b361-9345-4ac5-c44f-08df1b3bc60e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|23010399003|1800799024|56012099006|10067099003|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	hI9gwCEeV6Fz38VcHzrOjqJqLgOqIqXuLWMGpM4VfpRjO9r6dqg4PMZKo823gxo167rcQWHbKoZq3cmCyIK7R2KdYcW3LAQ71WS2N+ITevPPFawjpVY/1KGlqRYw9hhIrqhP1+sTrW6CYzyrbgch3T+E2Qr1zwHpzAblU8RLxeCF1o2hvlM1ZJP1AZc1eU19njcPg6H8xV/YR6EsSKil1hwAaagpcffnaC2+gJV+vbVtI4je2HxtX8O7y3aPp98JBsaWZqu9ejp+oEBUPbwZ2ScDfkxDzNbqTpWZJgWxbT7tl2jhPt7ba/CQ6NgY0Z8w3KiJeKewlctAciDJUgYDIUjRsEa1DhAdGT99XGy55wiOc3KqVtWEQ/ws/W/e9wMpH2b7JpoQAZZ2iFb2iwT0+vVmpz3CJK+iBCcWtMjOIukLmE/41QaMUI/E28/ie43xNXKLF766AGDtjMsg8an8E62dNc6WeJs14vSQXuBmccBSyGaPMJBtx4yhvgRN1f/FlTThYDCu/Fry14l2BbUCGTbZl4NkK3oXR1wNzgTBHJiKdHc1PB1mfRA8lD7nrh3EAIn2oQ6BacrSP3BnEHKhc/laLY2g3f1+S97Y2YzFzRDCE/S4J3W9PR0CuCO7GbzElgTakqafcUlIdOJ1wiWeVBj/eWSEFm9nDJRzKNRuh74=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(23010399003)(1800799024)(56012099006)(10067099003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9gfhJDcpL1Ha/1LVJ1BtaSEhSriEzJWtMgA3+hpjWLg5FvbSSpnxU0pp0ueu?=
- =?us-ascii?Q?ZmQul80gucm8l4ANt5JOUcdq1L/odFuyJOgIDJGhPTclZTYXJgdQfduo0LxE?=
- =?us-ascii?Q?52VuSuyvPSHoQg6NTnx3R4LOwZDxjHsIEvEeTg0T/GlLS/excyhzjVGDQHbN?=
- =?us-ascii?Q?kKUVC9rV5f3xTJIIak1D9MTeDxaNBJ9hP1c3vnD+SiUHWPSB9X4SE1I6ekXF?=
- =?us-ascii?Q?kLXiQMQSE/UAbq+bDcTxNdGsS6y58OP8KQm4NXFPz1aZlGEoJwbraOEmfkLq?=
- =?us-ascii?Q?yQ9NqR20xhElGT3IyFeMwyfa+kPQzYSTc0BK63qIE96QF3PTWiHPVNDR1Dj3?=
- =?us-ascii?Q?feqpz/E/mB1XylqddWFAs5SlgBHbH/PGjSQXB0zkQ1NL37Ni8NOysBCF/hI/?=
- =?us-ascii?Q?8SFnKTao0e21mKm7lTsimLz6mlzoTcTNzroK0FrDRJcUBp3SSKk+JVcCsVpV?=
- =?us-ascii?Q?/b0goTSvkpqgssptb+Pl1Cqxj1ztGb3BetB7ohzaod4fJoHNe6vVu+NUNytW?=
- =?us-ascii?Q?unhMT2N2YNZ3wgqnsUde/kCVZlfjZekJhsdhfObIyJXml0dzX/3uxfpbFvH+?=
- =?us-ascii?Q?WTLWgA3wJExZ8PEIPPysKNlXtk9SW1YNJkzI3+zR7FqZZpOIQUMf93Om+nSC?=
- =?us-ascii?Q?JFDpSnTxvlCvbCrkrj3PJzjR7hDKCLQ/Gubfc4Yeq4mQLIkFf2VDGO5vqdZW?=
- =?us-ascii?Q?Ta7NwtOvA5rgyODiHzqw+HZ6JIqIAqtaJe7gSk+tlfDeBrkUwQXt7jAArvs6?=
- =?us-ascii?Q?3Z6sw8LnMR/1brETAzyDQ5/TAsRSwHUs8gu2iqfP2RtmdmxJvkAQf3y7cThM?=
- =?us-ascii?Q?Ag+ShAkwkOATkbMAxbgZod64IZrY/VGLdi4aD9qF3Ap6uUGCZJK9o54RwG5H?=
- =?us-ascii?Q?iBF0kjMykOKWqm8RgY0PC9YZTukuWjUgzTaQkdX1wp2YYY+MknafNus4nDpX?=
- =?us-ascii?Q?H2TcEl2/7VMYbfh80zJ38z9awfbS6kE7AeEW9JfFB60SSqj6WYFHnfjDfZY7?=
- =?us-ascii?Q?Qj6vSvgF+H8tTCTYACu4pvt0CwgUJETwRIg+hxAamUsyoOWhnQd8ePXMHbcT?=
- =?us-ascii?Q?rvAG2N78cFBJFTRNSfBXGyLPnYhVE+fySE2te9+mAzA9ZX7o7UfIWxKkl8gq?=
- =?us-ascii?Q?//9OtEyfVBMjkk1ADrWY+aGvRcTJH9DVr1cUqn1YZrqNM2NnbKChn0RZ/mX/?=
- =?us-ascii?Q?TPjP7yoa2VWFN60wMlb1PGsTVrQ2u6crB4ImnpyficXTKkn6cL/lnBFlsg+X?=
- =?us-ascii?Q?9Oqhh0Q4Fe8A+qsVJN+UQOLfS31dV7i19kiyjFdpqkqc21OqLrVZpww+zNK1?=
- =?us-ascii?Q?MMhYc70fjon0Uc396BYs7PDLPcKvoltnHgp8sCgIgmZi7QRcQ3uGqqwAISez?=
- =?us-ascii?Q?iB/VH+DUHRW4vUfHdYQaz3eXwFtyX1YbxMH5hab5CK/hJ79n0uWYkUs2BrQc?=
- =?us-ascii?Q?bq2wzo07ZsU5HlJ2LwzfcrY7wz/vDkbBBwehmgPw2lVugd1/PZZTyD1sRcjo?=
- =?us-ascii?Q?QXqggolwlKUp48V7yN922hLfnaHRy2ClzwgrBumUuKF+Zz21GubHXXA8W5ar?=
- =?us-ascii?Q?cT/cGghngyPV54V4R1ybEsm/qk4zhJyEl+ne1q2fnC73EvOYdFjtnS1g+Vpw?=
- =?us-ascii?Q?d7HhvP/xqd+Gn3gRBhp2Gt0rNcloUVDomKINFPRUMkJ0nTAimJ9yVVgDsfTu?=
- =?us-ascii?Q?cc4vNIREOonceMET7APAgNvvjvczn9VBEmAZGMiswuAu1DY/?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a886b361-9345-4ac5-c44f-08df1b3bc60e
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9356.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2026 19:32:45.0637
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wj7mpASK/Aj71rmDejl1RBijjcjR/G0dUfbZD+3TtWOGGs9zu76dchjPXVp5G5qSAqmAOwVtP2bBH8jXdf4+7A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7475
+Content-Transfer-Encoding: 8bit
 
-kbd_get_first_active_token_bit() returns an index into kbd_tokens, while
-LED brightness is an ordinal among the supported tokens. These differ
-when supported token bits are not consecutive starting at bit 0.
+On HP systems with a large number of BIOS
+attribute instances, the kzalloc_objs()
+allocation in hp_alloc_ordered_list_data() and
+hp_alloc_string_data() can fail when physical
+memory is fragmented, leaving the driver
+unable to register those attributes.
 
-Count the supported token bits below the active token with hweight16()
-to recover its zero-based brightness ordinal.
+The same failure mode was already fixed for enumeration_data in
+hp_alloc_enumeration_data() by commit 916727cfdb72 ("platform/x86:
+hp-bioscfg: Support allocations of larger data"), reported on HP
+Z2 Tower G9 and Z4 G5 Workstation systems:
 
-Return zero directly when ret == 0: token bit 0 has no supported tokens
-below it, so its brightness ordinal is zero.
+  https://bugs.debian.org/1127612
 
-Signed-off-by: Yury Norov <ynorov@nvidia.com>
+order-list-attributes.c and string-attributes.c use
+the identical allocation pattern and are still affected.
+Apply the same fix: fall back to kvzalloc_objs()/kvfree()
+instead of kzalloc_objs()/kfree(), and return -EINVAL
+early when the instance count is zero.
+
+Link: https://bugs.debian.org/1127612
+Signed-off-by: Artem Maksimov <okuroshioffc@gmail.com>
 ---
- drivers/platform/x86/dell/dell-laptop.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ .../x86/hp/hp-bioscfg/order-list-attributes.c         | 11 ++++++++---
+ .../platform/x86/hp/hp-bioscfg/string-attributes.c    | 11 ++++++++---
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index 03d3bb70b0d1..55fd48222e5e 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -2003,7 +2003,6 @@ static const struct attribute_group *kbd_led_groups[] = {
- static enum led_brightness kbd_led_level_get(struct led_classdev *led_cdev)
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+index 5bf8d40bdf81..80ac15435a18 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -98,8 +98,13 @@ int hp_alloc_ordered_list_data(void)
  {
- 	int ret;
--	u16 num;
- 	struct kbd_state state;
- 
- 	if (kbd_get_max_level()) {
-@@ -2018,13 +2017,10 @@ static enum led_brightness kbd_led_level_get(struct led_classdev *led_cdev)
- 
- 	if (kbd_get_valid_token_counts()) {
- 		ret = kbd_get_first_active_token_bit();
--		if (ret < 0)
--			return 0;
--		for (num = kbd_token_bits; num != 0 && ret > 0; --ret)
--			num &= num - 1; /* clear the first bit set */
--		if (num == 0)
-+		if (ret <= 0)
- 			return 0;
--		return ffs(num) - 1;
-+		/* Brightness is the active token's rank among supported tokens. */
-+		return hweight16(kbd_token_bits & GENMASK(ret - 1, 0));
+ 	bioscfg_drv.ordered_list_instances_count =
+ 		hp_get_instance_count(HP_WMI_BIOS_ORDERED_LIST_GUID);
+-	bioscfg_drv.ordered_list_data = kzalloc_objs(*bioscfg_drv.ordered_list_data,
+-						     bioscfg_drv.ordered_list_instances_count);
++
++	if (!bioscfg_drv.ordered_list_instances_count)
++		return -EINVAL;
++	bioscfg_drv.ordered_list_data =
++			kvzalloc_objs(*bioscfg_drv.ordered_list_data,
++						bioscfg_drv.ordered_list_instances_count);
++
+ 	if (!bioscfg_drv.ordered_list_data) {
+ 		bioscfg_drv.ordered_list_instances_count = 0;
+ 		return -ENOMEM;
+@@ -438,6 +443,6 @@ void hp_exit_ordered_list_attributes(void)
  	}
+ 	bioscfg_drv.ordered_list_instances_count = 0;
  
- 	pr_warn("Keyboard brightness level control not supported\n");
+-	kfree(bioscfg_drv.ordered_list_data);
++	kvfree(bioscfg_drv.ordered_list_data);
+ 	bioscfg_drv.ordered_list_data = NULL;
+ }
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+index f3dfba270f7e..095201004d87 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+@@ -101,8 +101,13 @@ static const struct attribute_group string_attr_group = {
+ int hp_alloc_string_data(void)
+ {
+ 	bioscfg_drv.string_instances_count = hp_get_instance_count(HP_WMI_BIOS_STRING_GUID);
+-	bioscfg_drv.string_data = kzalloc_objs(*bioscfg_drv.string_data,
+-					       bioscfg_drv.string_instances_count);
++
++	if (!bioscfg_drv.string_instances_count)
++		return -EINVAL;
++	bioscfg_drv.string_data =
++			kvzalloc_objs(*bioscfg_drv.string_data,
++					bioscfg_drv.string_instances_count);
++
+ 	if (!bioscfg_drv.string_data) {
+ 		bioscfg_drv.string_instances_count = 0;
+ 		return -ENOMEM;
+@@ -390,6 +395,6 @@ void hp_exit_string_attributes(void)
+ 	}
+ 	bioscfg_drv.string_instances_count = 0;
+ 
+-	kfree(bioscfg_drv.string_data);
++	kvfree(bioscfg_drv.string_data);
+ 	bioscfg_drv.string_data = NULL;
+ }
 -- 
 2.53.0
+
