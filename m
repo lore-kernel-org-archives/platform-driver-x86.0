@@ -1,108 +1,158 @@
-Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09C83B0592
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 07:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C4D47C10B;
+	Fri, 25 Sep 2026 08:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790319955; cv=none; b=obd2uWOlYq/wx2/35q0Q1DbvvGNmMNrE+dYKtdXLcA9F0sEYN+/9KtyAU5MW2kgr002TaMU00tGnZHGkGUvN5NwsP5VwtqoLn8a8CM382tJLJm8Gh52pJ13JEaXXNaUlhkgaGJiYFNc6sfKSfVFU7lp+bDHalrRMS7KEZR9US94=
+	t=1790326226; cv=none; b=lJzfbvdVW+b0XiIMiJJrwdABlAw4brQo8g5BxGOt9VPv6jeNPirreqmj8yaS3gEeXXCJ2nPRh93onzfMS28+ghb+A7qKnbRcmT6oHpOhbNltUPHOymcJcOzALbzuPmsVwvwpO5Z5ECQQD+Bfw5nyUV1WShT+2awnVGSnuMyqQq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790319955; c=relaxed/simple;
-	bh=nhesPjFvoW76FDZ7bEI+kbqKwbJDEEFfJlmizuXgtOw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ehqJ2Jnb6PuGFBPv2BOFfcX2SIR2+d7O0/kWTFNk37zHLupTEVE9bK+NBjnLzX9lD8CyUe6HACECoT0QoHarfaDYOumaqs8L4RxcFUYcr/H6EMi7KiyizaJkMoZtz+90VStkH5do8FjwaO/ckMK8CRIpnUuqLzhb5GDtp4pZxKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=Wy7tvNgU; arc=none smtp.client-ip=83.166.143.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
+	s=arc-20240116; t=1790326226; c=relaxed/simple;
+	bh=ZrqQea9QfkZIfeOp+G1ykf1/KoVZrNbjpHZRRBgZypo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKs1mSXa6Aj0vhbQcbYSLD4CRmliHuNxMh1aFx2t0r69K2l1RWoiArlV/k8XR3JOdBqtScRPUr60BXzK0wFSEu/OaUZjGQd6gnVS3ZaQ9KLaAHyk6vsLSZLYQ3m9GNT+a31mLTOv1BYfW7myjFLXduJh5xR8vNI7/rqEatkaRdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bmprr1Yw; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="Wy7tvNgU"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hrhYg1gJCzCfF;
-	Fri, 25 Sep 2026 09:05:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
-	t=1790319943; bh=SANosIQfS9VpLzZYXOYAVknD82NtPdMJVQcK9zSydXI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Wy7tvNgUMuO2Z00gC2684Xj71Ho6F3X71wVvDJldghRadr2kfLTM9qIFkA6+s1Df8
-	 ZTGsrKKAdJ4Yg4b4JA2lKYxMxlohMh0rxJmepwbaAcdkbGZ3IC2T6BsUNjrjVRuM8y
-	 8HsiytK0U5CB2MmNCJPx8bRSgB8Akmx6zeVusjC8=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hrhYd6lPFz8k1;
-	Fri, 25 Sep 2026 09:05:41 +0200 (CEST)
-Message-ID: <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
-Date: Fri, 25 Sep 2026 09:05:41 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bmprr1Yw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790326222; x=1821862222;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZrqQea9QfkZIfeOp+G1ykf1/KoVZrNbjpHZRRBgZypo=;
+  b=Bmprr1YwnQZRRgwpJpURgtrJQJ8jTJe6L0UDKEn6ztUnGh62jMYyirph
+   /c5L44pg1L62zjNf5m+VbiJgPDTbW6u90D4cVFdtZdVm6PiVsNQyUx46N
+   aRG4UbLENbkzFe73VgovtN/yLJFoKbiiUokfAdIdOhlP+SIcJgJDhENxS
+   ifDBc80VLZMvzVlwuBk2L5vGyJX3UuFYxZJzy7FLHumgikYqcREhHtapB
+   qbDwJrX9n0fGKIecoTbzaW7324zD8bFuIQgS3wfNvkOBtBQkQGWLEv4Vf
+   PXdrLot3sPBsdckFm6ujNuXfV/R9PS5+tl9kN2nKjccwPxa9deWsQvRtZ
+   w==;
+X-CSE-ConnectionGUID: zy88QQKYQema1TACp1DC9A==
+X-CSE-MsgGUID: LwLGJ/ePQ/eQEUtOwO42nQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11915"; a="107490046"
+X-IronPort-AV: E=Sophos;i="6.27,122,1787036400"; 
+   d="scan'208";a="107490046"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 01:50:19 -0700
+X-CSE-ConnectionGUID: +tmOa1deSK6kvpaIvTS51Q==
+X-CSE-MsgGUID: Eip1mKhXQWyde3+uEpgK1A==
+X-ExtLoop1: 1
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.84])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2026 01:50:16 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 29189121BA5;
+	Fri, 25 Sep 2026 11:50:16 +0300 (EEST)
+Date: Fri, 25 Sep 2026 11:50:16 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Ruslan Koreev <koreev.r@gmail.com>
+Cc: benjamin.mugnier@foss.st.com, sylvain.petinot@foss.st.com,
+	dan.scally@ideasonboard.com, mchehab@kernel.org, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Peter Marshall <pm@petermarshall.ca>
+Subject: Re: [PATCH 3/4] media: i2c: vd55g1: Add ACPI support for the Lenovo
+ TBE20A1 HID
+Message-ID: <arY1yBWSAD-6IkQD@kekkonen.localdomain>
+References: <20260924171820.1179823-1-koreev.r@gmail.com>
+ <20260924171820.1179823-4-koreev.r@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
- (Strix Point) when more than 16 logical CPUs are online
-To: Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com, rafael@kernel.org
-References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
- <4d377d87-c2d3-5541-53af-68c9d67daa72@ik.me>
- <55854916-292a-40ae-8421-1a784785d899@amd.com>
- <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
- <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
- <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
- <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
- <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
- <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
- <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
- <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
- <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
- <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
- <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
- <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
- <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
- <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
- <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
- <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
- <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
- <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
-Content-Language: en-US
-From: Fourhundred Thecat <400thecat@ik.me>
-In-Reply-To: <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260924171820.1179823-4-koreev.r@gmail.com>
 
-resolved by resetting BIOS to factory defaults
+Hi Ruslan,
 
-after that, I tried painstakingly to enable/disable one by one
+Thanks for the set.
 
-The cause is two BIOS settings, and the reason it took so long to find 
-is that they are independently sufficient:
+On Thu, Sep 24, 2026 at 08:18:19PM +0300, Ruslan Koreev wrote:
+> The IR camera of the Lenovo ThinkPad X1 Carbon Gen 14 is an ST VD55G1
+> enumerated by ACPI as TBE20A1, connected to the Intel IPU7 with one
+> CSI-2 lane and powered through an INT3472 discrete device. Match the
+> HID and take the sensor version from the match data, as for OF. Only
+> the analog supply is switchable on this platform; vcore and vddio are
+> always on and fall back to dummy regulators.
+> 
+> On these platforms the CSI-2 endpoint is a software node that
+> ipu-bridge attaches to the sensor device when the IPU driver probes,
+> which can happen after the sensor driver has been bound. Defer probing
+> instead of failing when there is no endpoint yet, as the other sensor
+> drivers used with the IPU bridge do and as v4l2_fwnode_endpoint_parse()
+> itself does for a missing endpoint.
+> 
+> Tested on a ThinkPad X1 Carbon Gen 14 (Core Ultra X7 358H, IPU7),
+> streaming 804x704 through libcamera.
 
-   AmdVt (AMD virtualization)        Disable  -> breaks s2idle wake
-   PlutonSecurityProcessor           Disable  -> breaks s2idle wake
+Please describe here what the patch does; most of the above goes to the
+cover letter.
 
-Either one alone is enough. Both must be enabled for the machine to 
-resume. The full matrix, all with the IOMMU enabled and 24 CPUs online:
+I'd split the endpoint handling changes into a separate patch, too.
 
-   AmdVt      Pluton     result
-   Enable     Disable    no wake
-   Disable    Enable     no wake
-   Disable    Disable    no wake
-   Enable     Enable     wakes normally
+> 
+> Signed-off-by: Ruslan Koreev <koreev.r@gmail.com>
+> ---
+>  drivers/media/i2c/vd55g1.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
+> index 6f458f611..64889c35d 100644
+> --- a/drivers/media/i2c/vd55g1.c
+> +++ b/drivers/media/i2c/vd55g1.c
+> @@ -1903,10 +1903,9 @@ static int vd55g1_parse_dt(struct vd55g1 *sensor)
+>  
+>  	endpoint = fwnode_graph_get_endpoint_by_id(dev_fwnode(sensor->dev),
+>  						   0, 0, 0);
+> -	if (!endpoint) {
+> -		dev_err(sensor->dev, "Endpoint node not found\n");
+> -		return -EINVAL;
+> -	}
+> +	if (!endpoint)
+> +		return dev_err_probe(sensor->dev, -EPROBE_DEFER,
+> +				     "waiting for fwnode graph endpoint\n");
 
-I had both disabled.
-It also explains the confusing bisect: when I tested AmdVt=Enable with 
-everything else at my settings it still hung, and when I tested 
-Pluton=Enable with everything else at my settings it still hung, so I 
-eliminated both. Each test only showed the setting was not necessary; 
-neither showed it was not sufficient. With two independent triggers 
-those observations are both true at once and single-setting elimination 
-gives nothing.
+I'd drop the check here and return v4l2_fwnode_endpoint_alloc_parse()'s
+return value in vd55g1_check_csi_conf(). Then -EPROBE_DEFER is returned
+when appropriate.
 
-So amd_iommu=off and nr_cpus=16 were both masking this rather than 
-telling us anything about the kernel.
+>  
+>  	ret = vd55g1_check_csi_conf(sensor, endpoint);
+>  	fwnode_handle_put(endpoint);
+> @@ -2084,6 +2083,13 @@ static const struct of_device_id vd55g1_dt_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, vd55g1_dt_ids);
+>  
+> +static const struct acpi_device_id vd55g1_acpi_ids[] = {
+> +	/* Lenovo ThinkPad X1 Carbon Gen 14 IR camera, Intel IPU7 */
 
-this is clearly a Lenovo BIOS bug. should this be reported to them ?
+No need for such a comment here, I think it's enough it's documented in the
+IPU bridge.
 
-thank you for your help !
+> +	{ "TBE20A1", (kernel_ulong_t)&vd55g1_versions[0] },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, vd55g1_acpi_ids);
+> +
+>  static const struct dev_pm_ops vd55g1_pm_ops = {
+>  	SET_RUNTIME_PM_OPS(vd55g1_power_off, vd55g1_power_on, NULL)
+>  };
+> @@ -2092,6 +2098,7 @@ static struct i2c_driver vd55g1_i2c_driver = {
+>  	.driver = {
+>  		.name  = "vd55g1",
+>  		.of_match_table = vd55g1_dt_ids,
+> +		.acpi_match_table = vd55g1_acpi_ids,
+>  		.pm = &vd55g1_pm_ops,
+>  	},
+>  	.probe = vd55g1_probe,
+
+-- 
+Kind regrds,
+
+Sakari Ailus
