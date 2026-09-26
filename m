@@ -1,140 +1,260 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072C03644C4
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 16:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED2729AB1A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 18:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790441447; cv=none; b=kUPmWwD3jcsjaoEXyr9gI9m+9X+XEekc1btKTiMkwjwZZJayKkGjINcLHFoR+akvvrvp7kXh0DVk6iPx/2Y5iiWownk0tsIKFrnSucSIONDp2wAtezXV98EmzzINunV86w+L4U73UL77HfVf4CYWZQLw8RvQA+lkKjLTY5X1WCg=
+	t=1790447391; cv=none; b=eUqlb4QbXfOiFn/iLaLB7MopPj+sBKx99y5dccUa5nFYsuVYHjwiCtX+KECx3qZa9pFsvClGowfLvNwyyUTvb7alv/SUBACSGtPo4sLids/MKhmO5zDumyvc74MIzpU4zXQ++5PoalhZ0mlOFm1Xl49aKDSulzDb7dw+Ijtjy4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790441447; c=relaxed/simple;
-	bh=9ToSpazp9szOS3s71KT/NZ2ANqsW0n9CU2Ous0H+GYs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E6xRuOTbZMQYJF0VlRn18SvjRnG1ZYKjQPVy4R6w/L6fPEAFGQmGQFW0uapN0G6ZIBsz3BnkXPG7aRK0ZZJTcvhFEjjC18vmauChAB2teV122cu0Y1q/3OEWjUUJVlSwvpSJaspjoLrFv3x41ZglZaCKVhMp2PQqhh5A/CZ7Ta0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQKGBqo/; arc=none smtp.client-ip=74.125.225.140
+	s=arc-20240116; t=1790447391; c=relaxed/simple;
+	bh=GYYkxdsqA9IOszTyIJpe5/gKgcitrLgq+lC0i609rOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S2ceAmR4vVG0aOJYLqAMadqH9VaQJmGUa49ctNq6LPA/VjMkkJ78ceQ8UCuvzSmA8o2m6SUaun99wBfen6+UNS1EV+TyJ5PdBbJ0+ITpvWkVTlXHH3lHEFPh79w1R4AzDLaLYkvF0LHs53Knu/yxuW90izREH8kI7aAhzRe2NtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6g2DD/6; arc=none smtp.client-ip=209.85.160.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQKGBqo/"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ce364488dso5046955e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 09:50:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6g2DD/6"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-46556b9e02cso1220787fac.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 11:29:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790441444; x=1791046244; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=AbvG6DpwILpGJJJKu/S8pOrc1OBCr3aRWelSEGRwlP4=;
-        b=IQKGBqo/Et254JfPIRx+7iiDuOAlZ5kaWeRVzMaumbWuFzcbkW9EFZ+1cqxvi5XuWR
-         g8qaP3gitUPxfoqrsjjxkMHZoKxqVFfkZIyVPTD9iJMrKe0TSak+SHTM1rT92y71RG2o
-         Og8GNTzHWqutgZl5SsabdnWego4M8cghVY9SNjOOCmxmZeSPGrIAp8QcroRBLCowcuwJ
-         YUe2dxKTJ/cbTMfFw+amu31xn9P51zIj8HRjTkbh6L6880zzxGKTpbCKZM/sYWOiIq4M
-         TsIiWj53h/4ndrDeaZmC4NNdA1iDCqL3d3A4HLPlwOw27tjYGbEzOtZfuZ/NWGdpc3s9
-         +tdw==
+        d=gmail.com; s=20251104; t=1790447388; x=1791052188; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rfzsmIxXLWNZ4YNn3nfLndjooAshaJxKXBcH7abjIWk=;
+        b=U6g2DD/6wQV0/2neHMks0htv6Tf0n4ASV5xICBKRqzYezKCvcABGT8AE+DDpyVf2Lq
+         URcRhN4FKJp8p+D4VA2/HI64OPJbfOkMGXVFpdPb3Wz9gU2QvyDeMaiZ5ik6mc41oGl3
+         HbOhjc9Hzvhk1NN6HkO+Vxhwbf2WDArWIofzfrOauqSpBvy/QTyhLqOUsNOWgDeYMw4G
+         UaHilzr2mY3zg9XQJl19m9KBdClfROKSZBZsOOEva4hOdlh6RHzifNlkG0cgHFqxKQGP
+         Sgmi6NFnOrKTHb2eTGRe6OtsGzJoMdLvPsXOg4Kgf0HUearB2hhHjePZOmo4hfaJnAn1
+         pGVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790441444; x=1791046244;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1790447388; x=1791052188;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=AbvG6DpwILpGJJJKu/S8pOrc1OBCr3aRWelSEGRwlP4=;
-        b=QUzo5X7WnpSd/dqGAi20eP9dk4Btp8sOqi+94WArICBSe+gUBQllV9Lx0ntvxzbxCT
-         lWSjYG7WAszzVDhe/LpCdDFjLuCkEH1eerRgj/PxEDJuaQ98DnD9HVznNsFofYgbKMy5
-         0CkT3HlVZLv2WeO6fRa3LDzScLRxhuExrJCn2YizdiFslwbB69wjcLE9n67tq7msZEpr
-         MkGmuAvc+4jOGfIV8UsreMDa/+Iuh4nWoT0kZNyvLRkobhxRP56Of/EllakpbyNoR/KU
-         PQEuuJg8spkQ6f5udqaPWW9AVsJbGwfj8nFxce0h6PunqJvMixOXSnlHuZmpkBQSpFPG
-         wH7A==
-X-Gm-Message-State: AFuF++mLRJwl1w5aMiCgHeybTaSAbzlpY2fWodGAOfAsubrUQbv7tWXB
-	vyhljKZdnnuCE9hRoQP80SXxhWrFAHIkeO4fLQf3oRoghe3TsljhSy24
-X-Gm-Gg: AYBFou3JDE8SetVo5fRp57435ESdMG6sqVGfOnqdxjLc6QWdDpbZx+bu49+KbbvvQGg
-	S6DVQ+9CmG1FmMP2cghBzqm4x+bb9rFiByKdJ81SdoVvzOLJb+tp8tXqqTJvcFlJhteCXU05fbn
-	fhoqE3h+AFpV6CRFG3wLM+TSGFScSsshH7dkKSQ+ghYvNAP9DN7EWl7ZoUnKRMfh8Qbo3sFXqX2
-	oPC1K/gRypBlax4xsdH3ENku6SXN6+5hX/JqKDUNRUE3tYNvz6Fw+JzDcJ7lZtYX8xp2Ze1pxOb
-	IFbJFB31ipG2L5/BHB9/QzIZJ9I3lH0/0fmGo7fvj8MIScZciKt/ORYv8RZIePy0hgDxtq2+RL3
-	Tde4TrdL0CMddS0kK4w+gFzGIc5ha7+IKbIoKDbdiIv1AYhs+WKbXnnwbXv3zN8a83oNxAfyKgo
-	p8rT76rndQCSx9uG6c0nte1/5N8bbKVXKD5XIjLUd3Np6HQy6tKIlLGQoXAYNVR+oMe5agPvIZt
-	is8ohkWX6J4wTWvZgFLEmm2q4R0exk/VvVSQcXlcFPMXG4bBv1ueteUPKT9Zb6Ux+GMct4zlwVR
-	UKhKJlXbrdlOWVW8UyzGg3kpu3+A8S02aWnqzMmVQFHO+s9MBH7wf+ZhKu8X4BU/dsdKBotFNja
-	VPdSqKQ==
-X-Received: by 2002:a05:600c:1d04:b0:49e:63cc:6324 with SMTP id 5b1f17b1804b1-49fe66d0606mr157730645e9.6.1790441444032;
-        Sat, 26 Sep 2026 09:50:44 -0700 (PDT)
-Received: from archlinux (2a02-8440-558a-f56e-f3da-b3f7-00de-4b6b.rev.sfr.net. [2a02:8440:558a:f56e:f3da:b3f7:de:4b6b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ff285550asm90422895e9.3.2026.09.26.09.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2026 09:50:43 -0700 (PDT)
-From: Patryk Pilichowski <pat.pilichowski@gmail.com>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Patryk Pilichowski <pat.pilichowski@gmail.com>
-Subject: [PATCH] platform/x86: msi-wmi: Ignore WMI events for keys also handled by atkbd
-Date: Sat, 26 Sep 2026 18:50:34 +0200
-Message-ID: <20260926165034.94254-1-pat.pilichowski@gmail.com>
-X-Mailer: git-send-email 2.55.0
+        bh=rfzsmIxXLWNZ4YNn3nfLndjooAshaJxKXBcH7abjIWk=;
+        b=DxI54xflId7+r4VBhd6EYd3lPF6gtxV4pMetEA/eV1pwgjrj1Hp8EQJbD8vaXeJ/6i
+         2gLbWhyd1mXhzN+ZTjIniWTk0bQ3BuFoQxhYkg2149yo1+FnoHlI+FHNyxNHhe4/Z4M9
+         yriahxKwMNTdkZvBReMfFFn3BIxnT718pnxw6YHvIhiwUJ3x3MgpTAosAZaBCGbYv/Fz
+         t7pNAJGoJMZFVADku9Gh6te6f8XDAkweul5vrOCU3cOCCjtpKcjeJUThLOu+gRC3AT3/
+         a3Z32TWQf25/jVFTYcNCnt1GTMZAGdZvYw34pJB6cezsA7Ke37tsV6XfTAH9YsT74s3f
+         Unag==
+X-Forwarded-Encrypted: i=1; AKwUvBxTGNRU1Ulr57HIlo+7cN3Pp9JofEPK+exoPAvHQM2vMPGzQDOVsSH2Zd/Is858lZQQKhWknHL+ckvGMcobfvrrlVVT@vger.kernel.org
+X-Gm-Message-State: AFq9FYI9NK5jhkqbz50oyxG1Dn/R/2byxUBWD5e4MrZndenYEXEhGpi5
+	7ZDQ/Wsqd0aPlfiJNj/8DPbwdSz4LsqnfHAvaU0JJoiG/XINfgKxoQHF
+X-Gm-Gg: AYBFou37+wy9O33JTPXh6RVpkXjgou7Qh7M5vEnto1HjkLfHt2dTutlDDtdd/tWSSyO
+	G3QegHpk/2O/jabSmn0lzwUVghqKg8U9is0dDK8H2OFnSRFn3UP6RziSH2mBF8dOESRE5U9QFMM
+	GSuW/S6OnaOWbW40VoDWcWDnYOUhHQ44CKl9nZJZzs7rLpY4fqxA1JiZOusuDbJjfsS11/hHW5g
+	cnwUu126jfrOWsbQj2Zl/ZSVftgsQoiRoQzvvJD5i2Peo5UF3wy+uqMcd4LNayr/lmdljg/+n5C
+	+lKmfKXEW9NW5n6omfr4ymzgi1n+dnTlBn+oKll2IVj28PDDfULuW8uV8/6Nv5MvOm2S76A2Aj0
+	aJIyorF8H8ih7aQPXounxelHsw9ZB/uexkxlfAfe3DHxCkhDaWaNwPLfwuQkW9W3ZlzPglpVbyz
+	dHwISySIG7X2/7i5N7f2s1sxACO5fNM+HVWs38ifhmwb6+qGGRVxTD3jXKpppFxse+E88uQqz/r
+	MS90vNqChUNvFSiv4bQZ9NP/Mj2CR2wGtCqXUd9sT8xJRhkZpXtxedKI6VzmnIJR7EklcM6j31z
+	lJlQqvM0nsgaSZFwvXkpEAVqC2XyMRBZ5U5rONCuulbE28vHlueUupJ2oVk=
+X-Received: by 2002:a05:6870:2417:b0:462:e12e:c561 with SMTP id 586e51a60fabf-491e9301751mr6610599fac.4.1790447388417;
+        Sat, 26 Sep 2026 11:29:48 -0700 (PDT)
+Received: from ?IPV6:2603:80a0:3900:aa00:abba:f323:b886:8886? ([2603:80a0:3900:aa00:abba:f323:b886:8886])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-49335c784a1sm4808792fac.10.2026.09.26.11.29.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Sep 2026 11:29:46 -0700 (PDT)
+Message-ID: <049f2564-3ef2-433e-9206-be44b7885d7b@gmail.com>
+Date: Sat, 26 Sep 2026 13:29:43 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+To: Fourhundred Thecat <400thecat@ik.me>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
+ <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+ <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
+ <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
+ <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
+ <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
+ <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
+ <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
+ <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
+ <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
+ <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
+ <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
+ <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
+ <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
+ <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
+ <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
+ <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+ <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
+ <b2e13400-d1b7-4a9f-b7bc-a2d1dc7a4912@amd.com>
+ <66bbe070-36d9-d854-f0ba-a350634713db@ik.me>
+Content-Language: en-US
+From: Mario Limonciello <superm1@gmail.com>
+Autocrypt: addr=superm1@gmail.com; keydata=
+ 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
+In-Reply-To: <66bbe070-36d9-d854-f0ba-a350634713db@ik.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On MSI notebooks, several keys generate a WMI event through the Wind
-event GUID in addition to a regular AT keyboard event. Their event
-codes are not in the keymap, so every press logs "Unknown key
-pressed".
+> Captured acpidumps for all three configurations. Your hunch was right 
+> that the IVRS table is still created with AmdVt disabled, but it is not 
+> identical - and the difference looks like the actual mechanism.
 
-These keys already work through the AT keyboard, so mark their WMI
-codes as KE_IGNORE, as is already done for the MSI Claw. On models
-where a code does not also produce a keyboard event, the event is
-already dropped, so the only change there is that the log
-message goes away.
+OK.  That makes a lot of sense for this issue now.
 
-The Wind event GUID is not specific to the MSI Wind. It is present in
-17 of 18 MSI notebooks in the linuxhw ACPI dump collection (2012 to
-2024), with the same _WED structure. The codes are shared across
-models too: the volume keys on the tested notebook send the same codes
-as the MSI Claw (0x21, 0x32).
+> 
+> Summary, all with the IOMMU enabled and 24 CPUs online:
+> 
+>    config          IVinfo      IVRS len   IVMDs   MSFT0201 in IVRS 
+> MSFT0201 ACPI dev   SSDTs
+>    both enabled    0x00203043  0x216      3       yes                yes 
+>                  29
+>    AmdVt off       0x00203041  0x1F6      2       yes                yes 
+>                  29
+>    Pluton off      0x00203043  0x216      3       yes                NO 
+>                  28
+> 
+> AmdVt off changes two things. The IVinfo word loses bit 0x2, the 
+> DmaRemap bit you already parse at offset 36. And the table is 32 bytes 
+> shorter because one IVMD disappears:
+> 
+>    both enabled:
+>      IVMD DeviceId=0060 Flags=07 Start=0x7D900000 Len=0x100000
+>      IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
+>      IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
+> 
+>    AmdVt off:
+>      IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
+>      IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
+> 
+> DeviceId 0x0060 is MSFT0201:
+> 
+>    AMD-Vi: ivrs, add hid:MSFT0201, uid:1, rdevid:0x60
+> 
+> and Flags 0x07 is unity mapped with read and write. So disabling AMD 
+> virtualization removes Pluton's unity mapped DMA region from IVRS, while 
+> the device is still declared in IVRS, still present as an ACPI device, 
+> and still attached to iommu group 0:
+> 
+>    platform MSFT0201:00: Adding to iommu group 0
+> 
+> That would leave Pluton's DMA translated with nothing mapped for it, 
+> which fits every observation: it only breaks with the IOMMU enabled, 
+> amd_iommu=off is the only thing that fixes it, and neither intremap=off 
+> nor iommu=pt helps, since iommu=pt gives other devices identity domains 
+> but the IVMD is how firmware asks for one for this device specifically.
+> 
+> Pluton off is a different failure. The IVRS is byte identical to the 
+> working case, IVMD 0060 included, but one SSDT is gone and with it the 
+> MSFT0201 ACPI device. Your existing check already catches that case 
+> correctly:
+> 
+>    found_iommu=True  found_acpi=False
+>    -> IOMMU is misconfigured: missing MSFT0201 ACPI device
+> 
+> The AmdVt case is the one that slips through. In check_iommu():
+> 
+>    if not found_ivrs_dmar and not found_ivrs_msft0201:
+> 
+> with AmdVt off, found_ivrs_dmar is False because bit 0x2 is cleared, but 
+> found_ivrs_msft0201 is True, so the and makes it pass and the tool 
+> reports "IOMMU properly configured" on a machine that cannot be woken.
+> 
+> So to answer your question about keying off something else: yes, and I 
+> think the signal is "IVRS declares an ACPI HID device but provides no 
+> IVMD covering its device id". That needs no vendor attributes and no DMI 
+> matching. The device id sits 3 bytes before the HID string in the type 
+> 0xF0 entry, and IVMDs are subtable types 0x20/0x21/0x22 with the device 
+> id at entry offset 4:
+> 
+>    devid = struct.unpack_from("<H", data, data.find(b"MSFT0201") - 3)[0]
+>    off = 48
+>    while off + 4 <= len(data):
+>        length = struct.unpack_from("<H", data, off + 2)[0]
+>        if length == 0:
+>            break
+>        if data[off] in (0x20, 0x21, 0x22):
+>            if struct.unpack_from("<H", data, off + 4)[0] == devid:
+>                mapped = True
+>                break
+>        off += length
+> 
+> I checked this against all three dumps: it reports mapped for both- 
+> enabled and Pluton-off, and unmapped for AmdVt-off. Note that it would 
+> contradict test_check_iommu_no_dma_protection_BUT_msft0201, which 
+> currently asserts that MSFT0201 in IVRS is an acceptable substitute for 
+> pre-boot DMA protection, so whether to change that semantic is your call.
+> 
+> I am happy to send you the three acpidumps, with the extracted and 
+> disassembled tables and a record of the BIOS settings each was taken under.
+> 
+> Beyond that I have to stop here. This has taken the better part of a 
+> week, a lot of forced power cycles, and around $700 in LLM tokens 
+> working through it, and I am out of time and energy to take it further. 
+> The machine works now with AMD virtualization and Pluton enabled, which 
+> is a perfectly acceptable outcome for me.
+> 
+> Everything I found is in this thread, and I hope the IVRS observation is 
+> useful to you or to whoever picks it up. Thanks for the help getting 
+> here - the amd-s2idle tool, the pointer to e9f850ba66cd, and the 
+> suggestion to reset the BIOS were all what moved it forward.
+> 
+> 
+I've opened up a PR that should hopefully adjust the tool against your 
+failure cases.  Would you be able to confirm this against your system?
 
-Tested on an MSI Katana 15 B13VFK: Fn (0x0b), mic mute (0x19),
-settings (0x1d), mute (0x23) and Bluetooth (0x78) no longer log
-unknown key messages, and the keys keep working through atkbd.
+https://github.com/superm1/amd-debug-tools/pull/58
 
-Link: https://github.com/linuxhw/ACPI/tree/d6d30c6ef6f4/Notebook/MSI
-Assisted-by: Claude:claude-opus-5-5
-Signed-off-by: Patryk Pilichowski <pat.pilichowski@gmail.com>
----
- drivers/platform/x86/msi-wmi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-index c9db750fe5..6c798f6177 100644
---- a/drivers/platform/x86/msi-wmi.c
-+++ b/drivers/platform/x86/msi-wmi.c
-@@ -46,6 +46,12 @@ enum msi_scancodes {
- 	WIND_KEY_WLAN		= 0x5f,	/* Fn+F11 Wi-Fi toggle */
- 	WIND_KEY_TURBO,			/* Fn+F10 turbo mode toggle */
- 	WIND_KEY_ECO		= 0x69,	/* Fn+F10 ECO mode toggle */
-+	/* MSI Notebook keys that use Wind GUID */
-+	WIND_KEY_FN_NB		= 0x0b,
-+	WIND_KEY_MICMUTE_NB	= 0x19,
-+	WIND_KEY_SETTINGS_NB	= 0x1d,
-+	WIND_KEY_MUTE_NB	= 0x23,
-+	WIND_KEY_BLUETOOTH_NB	= 0x78,
- 	/* MSI Claw keys */
- 	CLAW_KEY_VOLUMEDOWN	= 0x21,
- 	CLAW_KEY_CENTER		= 0x29,	/* MSI M-Center main menu */
-@@ -66,6 +72,13 @@ static struct key_entry msi_wmi_keymap[] = {
- 	{ KE_IGNORE, WIND_KEY_CAMERA,		{KEY_CAMERA} },
- 	{ KE_IGNORE, WIND_KEY_WLAN,		{KEY_WLAN} },
- 
-+	/* These MSI Notebook keys work without WMI. Ignore them to avoid double keycodes */
-+	{ KE_IGNORE, WIND_KEY_FN_NB },
-+	{ KE_IGNORE, WIND_KEY_MICMUTE_NB },
-+	{ KE_IGNORE, WIND_KEY_SETTINGS_NB },
-+	{ KE_IGNORE, WIND_KEY_MUTE_NB },
-+	{ KE_IGNORE, WIND_KEY_BLUETOOTH_NB },
-+
- 	/* These are unknown WMI events found on MSI Wind */
- 	{ KE_IGNORE, 0x00 },
- 	{ KE_IGNORE, 0x62 },
--- 
-2.55.0
-
+If it doesn't work, can you please send me the acpidumps and I'll adjust.
