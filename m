@@ -1,121 +1,142 @@
-Received: from mail-wr2-f34.google.com (mail-wr2-f34.google.com [74.125.225.98])
+Received: from mail-qk2-f40.google.com (mail-qk2-f40.google.com [74.125.230.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F3540DB5B
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 11:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.98
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790422011; cv=none; b=KqGQfFiBxPWtBFQD053iPjiej8S51ykqFUnSrpbqdJNUwYGkyj1mVmYQ4jojeZT+kHRN6b81uWcrBDUAIS8GgFqAY2PX3ph5U9l+cvpdeN8X2eZNuNGJQag4FZqdRDQte7FKIUy/6LAijYgSxr6fmD0bocLGNd02Tf3zko7BlPI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790422011; c=relaxed/simple;
-	bh=1009E+OV49y9ei1QpwSQlS0Y23MikCdVe5F5Y36Ggls=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=Ho0yDbVtKn+l9YCF3IuOMw8v31+uZoMJC5FSCsYAuAixz/7ZnvHjNB24NpsYQTy/dU/K7OlYCLBwwEliRyox3dRmUnDtO4/PilB1fZ2oeGkStdpG+w3I6pk737wVZx7EqZwXU0MrjbiJsPupGNl/jzUzPNzipz3O4rbxCb2w30A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QTph+3Su; arc=none smtp.client-ip=74.125.225.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B91227EA7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 11:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.232
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790423022; cv=pass; b=JS0Rl0WSTRjJteMxTgCCDC8ceILoUwdPnZJ8BntlTaIfhtbHK8gLIRWjP5sMxgdO8Tov8Ihmz6ITuj5MabJHQnQDM0d6J/0Ik8NTFywSGt0j4S8qr+nAlUoFMOojZV/8rlCSniye+7NMHNiFGqDEVCstJm6I3DywQOocb1TBZ2g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790423022; c=relaxed/simple;
+	bh=T+fx8/RqtzB0nTU+tN4sHoveOh3UGYdLdkX/OaWdtE0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=af2q5GBSVXomfrJhBm54DzwFz62C5PGX5UDC2FcCJEhWR0JpmeTdkhl9eUEOT6rkH2R2APRT7cIShPSdLo2WDozZlkxBcIBGmtd9MEDxM0ZubmgZN364j5BPlubHb7SMARp7Yz/qxE/QJUQRtkH613ZhxCn44kJoj9upjaWVF5g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eWhvWOMi; arc=pass smtp.client-ip=74.125.230.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTph+3Su"
-Received: by mail-wr2-f34.google.com with SMTP id ffacd0b85a97d-48884b0219bso418634f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 04:26:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWhvWOMi"
+Received: by mail-qk2-f40.google.com with SMTP id d75a77b69052e-5332b66b660so3009321cf.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 04:43:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790423020; cv=none;
+        d=google.com; s=arc-20260327;
+        b=MA0SKKqec76eHGSJJIM/BBXQIYSzhAppV2qM42KA96BCWP6c0SbRbgfiJVB3ZwOUpV
+         /UnOdAn2TJXZO2zF3yCwkGRYMkabwklxKA5SMarj95VcAnbkSh7zSog6oFJljzxWJ3Bm
+         IMUMELBTvOO+sogknzxeu5usNJyzvbK0HrMx/67q8gfUzVZ0M68mS3XPieyxuDUDPIRm
+         c4u0hbm6p3wpww7jUU9B7loYTEVrcHcbWGXd7LB31PO/SeWs9xFOxFtnks2hNDA1AXlG
+         jxXTp9gP4gDyV1JFz1t8bdNQsysqw+MG9+3+27AqDLfjnBp28jyNeehzhwZ54At+Jq/8
+         xOKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=T+fx8/RqtzB0nTU+tN4sHoveOh3UGYdLdkX/OaWdtE0=;
+        fh=Q/pg7w9gdQOJlvjcJNQbn7593oi52x2y8lOnVMD8i+w=;
+        b=VMMaX3OL0bXCAwXEbg0n/iz89ezEhJcCKzy2A6xOZuarxVbZEwSAhMKEMATa6CPjZ5
+         TKkforBvpnZFsvK1k0ZatfuNkanftoUOMJEErNCFGbEAoD9PLmkujYooJP00mSMABRNF
+         8u+BjbgJURbUan6MIrz/nV24MmUgcy/pu9E3t5xr7YSOboj6VuI1o+9cuJK+GnAuiGeb
+         /g2DFdvGSIS8nBlr60jeqD72GonGNy5ByGYR689VibhWQGSeXowwEN45UaRZsgS2l7HN
+         r8+oJNI8Verx/TldvVQAqDLJ63AL7zHngj0ZWGYnpz+WDjMdsCDbrg2r5ZY7Oi4QUI9L
+         XAVg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790422007; x=1791026807; darn=vger.kernel.org;
-        h=content-type:mime-version:date:subject:reply-to:cc:to:from
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=sHPaExtfhluSdFU0L46Z8nZGmiV0E/2V9Ek+p9fDWZM=;
-        b=QTph+3SuY9X7QpKZJF7A9o1vCffV/4nZPtqS4DhbpLFWPasGqyYny19CSHrNVUf0J2
-         0xH7Wl7Alb0y6OMhsnyXOahXX5gwPTWP396rxgw7LtkI+I4xXu+0ZB4MtGqvevEoOikh
-         jOj8P+dOftkdpfBZpVnLMN3QWgNRdKuckVOqi9PtXR3BqfXI+kBjCMraEBcBt1gt23dD
-         QuRkqDvGcJPxplqCkTFFiGjdWCZ9rWJ0kPHIaM20WfXA0fRDjdUd+Irvc4IIzL1m/F3P
-         jwKIp3juqwY+vyet6p79W7yv2LfIbpbF11ytnF2gEs85yAXdmqt5xveLw8k5jWehxppZ
-         jUIQ==
+        d=gmail.com; s=20251104; t=1790423020; x=1791027820; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=T+fx8/RqtzB0nTU+tN4sHoveOh3UGYdLdkX/OaWdtE0=;
+        b=eWhvWOMiibs1LNcWIWg1F3Y1uPb1y2HH0x+BBhyHaZX54lr3+Z/f1Det+vsI+bZHmn
+         FwYhKuFVEhbklYW0gbGf1uqZq+E1fyJyNUR4GxkrZXSJ3dAMH/91/4rd4cF4oxPR58Rj
+         milnKOZQt9oeHf168wnqOAJfmCPKfUGAMXtGb/RsTArnKGEtGD59m1phW+3t0E5FwWVd
+         hJrhGSXimJZ9Gue9FoUJa1PLTAzPUaEPT4uXUqBlQnRrKwxTkPDjZVgaY4Xdn+WvK0wj
+         6wKi0fpQazadAIDfkoLdVwZljdGHHLiCCeRfte4TrFzzuMrWl5HdffJQIfO3dBctkMZH
+         Jaew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790422007; x=1791026807;
-        h=content-type:mime-version:date:subject:reply-to:cc:to:from
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=sHPaExtfhluSdFU0L46Z8nZGmiV0E/2V9Ek+p9fDWZM=;
-        b=BQ1urxn7vuua9zbeq5PFmvwq++xVjl8Be/KaCRW3x6MQ2KdHdFkQKOE9vy7T4b8rDg
-         kGX1S/5ELqWJE/NJbmgmJmpMUD9aCO/MWBUiqNhax75+bkR4SCT4S5mP1swpKsgbcp/Q
-         /GupavDUI0DcJ3gb7+jmaqKt1V4lemYCdcdmU11Ye3tkpzVijMGsj0d3RYnQlJVxMd5N
-         BEXaE7SQVJmdSv9ztJULtFit3OOtCtAPOA934ZWG8VwPHyjLx7xO6SjVV4AsLnITuI1K
-         42ojxyFVthCnx0bwiDK4a32SS7nN+dQr3D2Q03sl6/XRXvcxHznQOgc5wnx11OtNwCxU
-         twTA==
-X-Gm-Message-State: AFq9FYLiCJQp6cNcpZ4IwijtjcVZFRdzj2olmDbPmN7U0AjH3jyaRLT0
-	A7A2oAuJbIFraechkKE09SNmJfdECbs36T0mzyCIoQkJW23r64COnHtipWpjeA==
-X-Gm-Gg: AYBFou1WFSic3HpmHDkSIjzLtyzJ8ScczYZGSmqRNpnnANKnxDwl8XKg3Yj5R3JujGj
-	21TA+Yzuk/UZEUL20adlyy/S7wEG/fX1r13Egij7kwEpvdF+gUQeIpQYDJKygw+nVknbQv2cNhz
-	HkJorKFuiQmJkFAIq88oRBl3KJ+b/9m2V1OFYjCYGu14SdP/4b9UX86B/ZKgg/S8LxXLtvYUA8n
-	P7FBBlAisz99fkAawHSUHP5DVYLTn5G7iKhckndgOn+gf3y9VUqjLBnWF1uw3Bj5y3SfdXbznkp
-	X56AEJ0XVLzAKohbwwVzae0tXvr7ZgURuNZK2VJltWRUoxctmj26wxiprDkTusA99wLk9PcIGMI
-	S6ro08QyPDDkqrUCL1lUZK0mlu057rGAvpuJfvwKOi44SvBUHY85grxRWRLnRqWG+G93Mnowb/U
-	a84X2tmRMRy9lxtOWY1lQnfeauteJUl9NRj5cbgBLxPpYFzSaDec4NnRxzPIx8+WBrTgEO4aIdO
-	89yNoHIUR+v3EnYadGFxD16+czEvJ+iORgu3djSnXc=
-X-Received: by 2002:a05:6000:4a1d:b0:487:1470:52d9 with SMTP id ffacd0b85a97d-4887d9fa527mr8926154f8f.3.1790422007420;
-        Sat, 26 Sep 2026 04:26:47 -0700 (PDT)
-Received: from bugreport.eml (211.red-79-146-43.dynamicip.rima-tde.net. [79.146.43.211])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a84205esm13310130f8f.37.2026.09.26.04.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2026 04:26:47 -0700 (PDT)
-Message-ID: <6ab7abf7.09148f95.17f923.ff4b@mx.google.com>
-From: calvitohq@gmail.com
-To: linux-acpi@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Reply-To: soytucalvitofavorito@icloud.com
-Subject: [BUG] ACPI battery: BAT1 status "Not charging" and capacity frozen at 99% while discharging (ASUS TUF A16 FA608UMI)
-Date: Sat, 26 Sep 2026 13:25:00 +0200
+        d=1e100.net; s=20260707; t=1790423020; x=1791027820;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=T+fx8/RqtzB0nTU+tN4sHoveOh3UGYdLdkX/OaWdtE0=;
+        b=1KlUiHIbu8s6eunG9T5/X7Bv4FUxr2Yg2enBnbjYX/MTKYYGRnQFSnIWGjIflPai1R
+         cEWMTq+ixhndR94utr5V5ryWLx8u/KWIF/SKOWQU3Ylwkb3fAmjUfjtlPgBXMr3nr79D
+         UJY4NU+1D+1XiNp1fE3RCez/2x3tz04PFzREEnTLpcIr8DoWB8QJAVpBmJhKixV53Q1h
+         MtHUpjdMb3YYaHOyxNnRByFKvOekjPozR0fjg8dWIAfcLbYibzMkJ5IWXLPGLDUDhE+0
+         7JKCZKiGnlPCjw7yJYqLnu5GDB34G8NqV0YycOzv5j1dX4Nv823J7kXEZ8aQtfchSpPC
+         Xvsw==
+X-Gm-Message-State: AFuF++mwzbdJbzeNnqKDLuu0aJNK9W5oPYjQ9g5DLpT/9o143jZik4kh
+	bURsEr6aQzXVLg6xsu2XjlBFFlmj/kZE9diQqZKhbWF0tA9sxM3R49O95NDlaIR0eOeRF59UslX
+	HespdsUizXJ0CNcPDM/W/FWv+9+hdHO/k4MF6cl0xAA==
+X-Gm-Gg: AYBFou0T7BMzUX7VlEhf4ZlLVgUR2Nx0IrpNBvc2zhq8XFAZP9rAWoY0Xu62Dz1F5uY
+	VeLl442MfLx4QgNvBzRaPjSXHhaRXIPybdGL4n+HDpe7p+6K43Qw0wdiTga8sXwR1V+bwpoj9kW
+	H4DM6YWWfBLo/fVOWnhzEeZbQ/UeDjfAVVxQra7H/xpzpmdzE1dGYHL9Roz7+EDfxxh5giKa2f1
+	iuy8zRph52s7WVmFRnQQgynDfr1eUgIY2z6B84GzSa8ciOBp1doIGPvez+ivuaJ6mNORLWx9Tex
+	BaRd1xoFh+knmwv9pk+5SSIGLnMi9Skm9gGrypRYSddI/XzmgI968cTohmiZa1GhM1j30KPD/6w
+	3mGwn4/T1UF+jIVNMrdhvoRNIE2VxYDrVZb/QBJDeow0WBnZUh8nUn4c/7QiK7kr0u3pmAMBOlu
+	y4HWJO
+X-Received: by 2002:a05:622a:480d:b0:533:2d9b:4ff6 with SMTP id
+ d75a77b69052e-5332d9b52b6mr10836471cf.42.1790423020210; Sat, 26 Sep 2026
+ 04:43:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Leo Korotkevich <essacult@gmail.com>
+Date: Sat, 26 Sep 2026 14:43:28 +0300
+X-Gm-Features: AclHuK9zYRADLJXYC00IhNN_Ye59kgdqRhqJgeI8N_DPbSF3CsDCcOPa2JBk6yE
+Message-ID: <CAEOLtbAPmMKTeigagR85YxjGprsoy70SorkF1WB10FbDWbkYcw@mail.gmail.com>
+Subject: ASUS GU605CX / 285H: recurring freezes across kernels and power sources
+To: platform-driver-x86@vger.kernel.org
+Cc: luke@ljones.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hello,
 
-On an ASUS TUF Gaming A16 (FA608UMI), running on battery, the ACPI
-battery reports status "Not charging" and the capacity stays frozen at
-99% even though the battery is actively discharging (~11 W measured via
-current_now). Expected status while on battery is "Discharging".
+I saw this related 285H/PMC discussion:
+https://www.spinics.net/lists/platform-driver-x86/msg65594.html
 
-Hardware:
-- DMI: ASUS TUF Gaming A16, product FA608UMI (1.0), board FA608UMI
-- CPU: AMD Ryzen 7 260 w/ Radeon 780M Graphics
+I have a potentially related ASUS GU605CX case: Core Ultra 9 285H
+(family 6/model 197/stepping 2), BIOS 311, microcode 0x122, RTX 5090
+Laptop. The latest freeze was on September 25 with CachyOS
+7.2.7-1-cachyos, Niri and NVIDIA open 615.71.09.
 
-Software:
-- Distro: Bazzite (Fedora 44 atomic)
-- Kernel: 7.2.4-ogc3.1.fc44.x86_64
+The screen/clock froze and keyboard, mouse and VT switching stopped
+responding; lid movement still changed panel illumination. The journal
+ends at 17:51:26 EEST without a nearby panic, OOM, Xid, MCE or NVMe
+timeout.
 
-Symptom:
-With AC offline (ACAD/online=0), repeated reads give a stable (not
-oscillating) "Not charging":
+I have experienced recurrent freezes across releases of Ubuntu, Fedora
+and CachyOS, different kernels/BIOS versions, Xorg/Wayland,
+dGPU-only/Dynamic-Hybrid modes and performance profiles. I also tried
+GRUB modprobe.blacklist=i915; freezes continued. Regular overnight
+freezes occur on a stationary desk without cable movement. They have
+occurred with the OEM ASUS charger and Lenovo/Dell adapters with
+different voltage/power ratings; exact specifications were not recorded.
+Fedora artifacts establish an earlier silent freeze on 6.18.4, BIOS 306,
+NVIDIA 580.119.02. I have no known-good kernel or established 7.2
+regression. Separately diagnosed OOM and graphics-recovery incidents are
+excluded.
 
-  /sys/class/power_supply/BAT1/status       -> "Not charging" (stable)
-  /sys/class/power_supply/BAT1/capacity     -> 99 (frozen; no change over ~40 min)
-  /sys/class/power_supply/BAT1/current_now  -> 617000 (~0.62 A, ~11 W drain)
-  /sys/class/power_supply/BAT1/charge_now   -> 4379000 (frozen)
-  /sys/class/power_supply/BAT1/charge_full  -> 4424000
+The current downstream kernel loads out-of-tree NVIDIA modules. Its
+post-freeze boot has taint 4608 (W/O), including an i915 VBT warning;
+that is not freeze-time evidence.
 
-UPower consequently reports state "fully-charged", percentage 99% and a
-bogus "time to empty", so the desktop shows no meaningful percentage
-while actually discharging.
+Three retained Fedora boots report BERT "Skipped 1 error records" / "Total
+records found: 1", but their raw payloads were not saved. Severity and
+contents are unknown. A separate MCE followed a clean warm reboot, not an
+established freeze. The fatal SoC/PMC blobs in bug 221923 belong to the
+GU605CW reporter, not my laptop:
+https://bugzilla.kernel.org/show_bug.cgi?id=221923
 
-This looks related to the existing report for the ASUS Vivobook 18
-M1807HA (Launchpad bug 2152185), where status oscillates between
-"Discharging"/"Not charging" while on battery due to inconsistent ACPI
-_BST values. Here it is stuck rather than oscillating.
+Some freezes coincided with USB-C plug movement, but it is not a
+necessary trigger. The last recorded profile before the latest freeze
+was Performance; deliberate reconnection and brief profile/EPP tests did
+not reproduce them.
 
-dmesg shows:
-  ACPI: battery: Slot [BAT1] (battery present)
-  ACPI: battery: new hook: ASUS Battery Extension
+Bounded collectors now preserve future BERT/pstore, rare MCE/RAS events,
+a heartbeat and power-supply uevents. No new freeze has been captured
+yet.
 
-I suspect this needs a DMI-matched quirk in drivers/acpi/battery.c to
-force "Discharging" when no AC supply is online, as suggested in that
-earlier report.
+Which additional evidence would help ASUS/PMC maintainers distinguish
+these cases, and is there a supported route to decode a future Intel
+crashlog? Sanitized excerpts are available.
 
-I have the DSDT/SSDT (acpidump) available if needed, and I'm happy to
-test patches.
-
-Thanks,
-Marco
-
+Thank you.
