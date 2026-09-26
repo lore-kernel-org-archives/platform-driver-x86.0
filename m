@@ -1,153 +1,240 @@
-Received: from mail-lr2-f35.google.com (mail-lr2-f35.google.com [74.125.230.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F621E7660
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 03:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA012F9DA1
+	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 04:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790392626; cv=none; b=KaRhbbuSp0GWXZtOhPbH/L1zXEGRamyDFYwcWKzOfXm7jqtsONudP6RPoNiDABsP+AgJF0huVvRyEWG3XvD+GX0LlTZXjL410QZHmU5231OTAIbwKSDy7ZUWj3NCu5+DjvkrwM9GrfmFLayNZTWgfnF+/s5ViWCc+7Tz3A7eaa8=
+	t=1790396027; cv=none; b=OrjHbTlxScf5waGk3n7OmXGPskQEwxHKejSmETSOX780enLsOLX1FRFjiQQGLv11rQlukWE/ip2s9k6Zg64ug47AW6tf74itFtPH8qNiAtyGDOjWL8H59SOj6PNNaPSU/RQvZWFdlhvxov0ux2CaGOas0wyKLopJvcw6qy2QSNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790392626; c=relaxed/simple;
-	bh=phknDJXD1KlqoZHqZ5ocEhqcTX7mgaI53rUlpuJRH1I=;
-	h=Message-ID:Date:MIME-Version:To:Cc:Subject:From:Content-Type; b=Itpz6Mr+VNVmTtw/sThNWgwYRdXf4FuQBdoDXwlDbRrxqkMec7QfPItUe3pLm9DwgxuEjZEDKsx8CvMZTs/O4tH1hA52UZlVuHOp3G4RijCipWwo6BMetUAOO56AmDJluwzP1aUjwDZ+9HTinAeKLSlccA4FT4bDIEOou6rftOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JDphLuzh; arc=none smtp.client-ip=74.125.230.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790396027; c=relaxed/simple;
+	bh=dZTixQQwFD5sG1UHiJiGYRYfvrxCW8KwqDULWaS0RZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ustQuLudn5o2HNLQGmp3/kuIosKxJ+rOqci/opLma+6IahMYa+7VfMj+yOdHflOL/5XZNJs2Ibq6KdGonZKJLSvPGr62Rl2wlW1LQH7uwmKrb5D+WjgxED7boEp15onr4KSxG8O2t1PJw4l5hox2UOrr9Vnrcn7pc5geRiRPzq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=p1u2J4GV; arc=none smtp.client-ip=83.166.143.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDphLuzh"
-Received: by mail-lr2-f35.google.com with SMTP id 38308e7fff4ca-3a65680ea30so6989791fa.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 20:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790392623; x=1790997423; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:from:content-language
-         :subject:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=q9o9fUdFoS9dQFqXio0ki/Kh4RtXh0+/vyhCM0NKki0=;
-        b=JDphLuzhVL9kxTSxvc75BLBlcy6+AQyrPwQus7mthm1W/PhxHyPZDWszApTa10m5dQ
-         nDcyg74F/th+yx+B0PdTqGmH2BuJiG4ryDcKnlm57HS5ny9kJS8lg52fA4VOV9yw5MAn
-         amueCjFQTR4K/AAT6oeF7izPYPYvQQjc6N0kjwvCYPfksnFe6BnP1oSvaca2+2R/qD1I
-         zeaWwg4G4DEGu+x3Wm6IjYtuCTveTwi3LtEbaEGr1KhnKXYkgjQSWiC0CQmXBUq0/EGK
-         +/MgIFuUlH5FQWRWdGLLfkCPphVP4X+oYZw1EW90rWFCke2csonvaheyO9dxxyrs4f+T
-         EYTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790392623; x=1790997423;
-        h=content-transfer-encoding:content-type:from:content-language
-         :subject:cc:to:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=q9o9fUdFoS9dQFqXio0ki/Kh4RtXh0+/vyhCM0NKki0=;
-        b=ZhLjBEfqmTWscw1Z/iWBUxj0B8fn0vfeh8IdYMCCnF9veuCPA0aTmBOys51K7yLMYs
-         T5uR/nDMDet2JDlUDnVH8uEikcvjWhXvxTcWN1OBgqyfIBNjeM9zys9e1uzH6tHfcAS0
-         Mmp7YiumckHmANMh0/8/p/oyXND+FCGVAS6xKT8tK2v4ZQ0lSzOmdR5qf6O8E5B0nqhH
-         FK3hCNQH+PqGHT0NWvQE6+7s5yc2knS4IdmU3ohdxn1Db28Y2TEM5oyBcQiJMUEe3VUE
-         +y3OYw8Uku/nnF5idjG0Vza3A1820THreL1u4De8lyV0WauO/EbuNWOuRpGNEHxKe9f8
-         aGXQ==
-X-Gm-Message-State: AFuF++mTr/5Fq6NIga2knA5rK3UlJL+03BT39PvgX23cGUqI7k1Q/EDi
-	1DTM9jp+bTcPmT9M3NI7EpR2TqGcxZgKN3CbpylGYthHyKIsihgyX4xa
-X-Gm-Gg: AYBFou3vLnoIWVwiR+ZaDLYEn8qgb1ZIPXdMGhwXsSJcQntA9ZWrBIk9tuzVoepK8yq
-	XLXti4EZrCKx5madmjVkIjRsdMVFrIOPUcXBZZvZsQG9ALoTdTjFFovdKsddTy70bJJdmeaRZrM
-	xSNd/xm6STs1A0K1Z5vIuZ4JlC2YW3EvLAZw6a/lkOmgp0b/0BnlsggZvLJTvb2qVn4WyaCDcha
-	xcfUCEHe9aLQwtyAVvzB7FqvDI8VV9IzMjN195oegxWCyVZyIq7RjyMLe524krlieNeJ/F+PADa
-	JRamJdFmaK4KhwHXan9AGVqxfoi3xTZ55Fj+nqwhdYyopAK/HT2Qg5m7/5UJY+Yf2+Xj1VvH8OW
-	k66PYfdKwdLr2W0rxR1IoCxVlYdyiP3hHyIKoiHxh14312vpfyIgDjOksavIaganzwpIXIcHBe5
-	XFzu9pFP6yqV9F0oRVMafwbfzQRUyntxNN8EQ0h+88DqdElzQ95eLAj85Gt1qWtVm0kJLB+p3Bs
-	oh+mdptdIReq3p4FnTDICxsnctLAZM4v+kTM7hM51tLIABm3w==
-X-Received: by 2002:a2e:bc04:0:b0:3a3:7681:6d6a with SMTP id 38308e7fff4ca-3a64c7b73d2mr10278121fa.19.1790392622865;
-        Fri, 25 Sep 2026 20:17:02 -0700 (PDT)
-Received: from [10.132.90.172] ([176.15.202.27])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3a64b581741sm10597841fa.9.2026.09.25.20.17.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Sep 2026 20:17:02 -0700 (PDT)
-Message-ID: <46b1ac40-053a-498c-84b8-00aab55a8c82@gmail.com>
-Date: Sat, 26 Sep 2026 10:17:01 +0700
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="p1u2J4GV"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hsDhZ75F2zBc0;
+	Sat, 26 Sep 2026 06:13:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790396014; bh=bY1UkuqzRv8r8dxuJWff4KeFA+qBT8ziWq7lBmDh/fc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p1u2J4GVrfMOuX2hqObW6X0oG4k8H7FqLrVfMSI3ZQq3nsxUYvwV1U2IdDx+P4CqH
+	 9fhFq60UUbWk+Sulc1s2WAMJAOsgyeKOfcO5dFf9JMvOJmBZVoE1T716+Hf0HI1o/v
+	 Te9W3qWI9RlPTLBNZrZBhc2hF2Qpu6cPNTDdoW3I=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hsDhY4jK6zjxw;
+	Sat, 26 Sep 2026 06:13:33 +0200 (CEST)
+Message-ID: <66bbe070-36d9-d854-f0ba-a350634713db@ik.me>
+Date: Sat, 26 Sep 2026 06:13:33 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Mingyou Chen <qby140326@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: bitland-mifs-wmi: wrong platform_profile values on REDMI Book Pro 16
- 2025
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
 Content-Language: en-US
-From: Aleksey Irlik <aleksejirlik@gmail.com>
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <f872d7e0-79f6-911a-b0c0-639c58e780f3@ik.me>
+ <66dee9c5-ad66-4bd7-982c-c5694d806cf2@amd.com>
+ <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+ <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
+ <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
+ <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
+ <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
+ <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
+ <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
+ <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
+ <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
+ <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
+ <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
+ <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
+ <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
+ <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
+ <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
+ <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+ <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
+ <b2e13400-d1b7-4a9f-b7bc-a2d1dc7a4912@amd.com>
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <b2e13400-d1b7-4a9f-b7bc-a2d1dc7a4912@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Feedback-ID: :2997a34c1a6c8c6:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-Hi,
+On 2026-09-25 15:30, Mario Limonciello wrote:
+> 
+> 
+> On 9/25/26 02:05, Fourhundred Thecat wrote:
+>> resolved by resetting BIOS to factory defaults
+>>
+>> after that, I tried painstakingly to enable/disable one by one
+>>
+>> The cause is two BIOS settings, and the reason it took so long to find 
+>> is that they are independently sufficient:
+>>
+>>    AmdVt (AMD virtualization)        Disable  -> breaks s2idle wake
+>>    PlutonSecurityProcessor           Disable  -> breaks s2idle wake
+>>
+>> Either one alone is enough. Both must be enabled for the machine to 
+>> resume. The full matrix, all with the IOMMU enabled and 24 CPUs online:
+>>
+>>    AmdVt      Pluton     result
+>>    Enable     Disable    no wake
+>>    Disable    Enable     no wake
+>>    Disable    Disable    no wake
+>>    Enable     Enable     wakes normally
+>>
+>> I had both disabled.
+>> It also explains the confusing bisect: when I tested AmdVt=Enable with 
+>> everything else at my settings it still hung, and when I tested 
+>> Pluton=Enable with everything else at my settings it still hung, so I 
+>> eliminated both. Each test only showed the setting was not necessary; 
+>> neither showed it was not sufficient. With two independent triggers 
+>> those observations are both true at once and single-setting 
+>> elimination gives nothing.
+>>
+>> So amd_iommu=off and nr_cpus=16 were both masking this rather than 
+>> telling us anything about the kernel.
+> 
+> Well this is a great outcome.  Would you mind opening a pull request to 
+> amd-debug-tools and adding a case to this to test for this issue?  That 
+> would help anyone else that encounters this in the future and save us 
+> effort drilling down again.
+> 
+> You should be able to add a new check that verified the value of these 
+> BIOS settings using the think-lmi driver sysfs interface.
+> My thought on the logic would be something like this:
+> 
+> 1) Check whether think-lmi directory exists, skip the check if it doesn't.
+> 2) Check whether both of those attributes exist.  If they don't, skip 
+> the check.
+> 3) Check the values of both of those attributes.  If there is a failure 
+> report it.  If it's a pass report it.
+> 
+> It can generally apply to all Lenovo systems that offer these settings 
+> then (It's more likely a "generic" BIOS bug).
+> 
+>>
+>> this is clearly a Lenovo BIOS bug. should this be reported to them ?
+> 
+> Before you report this to them, can you diff some acpidumps from the two 
+> changes that break things?
+> 
+> I would have "expected" that turning off this AmdVt BIOS option stopped 
+> the IVRS table from being created, but that seems not to be the case.
+> 
+> I just wonder if we should be keying off anything else in Linux for this 
+> case to avoid the issue.
 
-on a REDMI Book Pro 16 2025 the platform_profile support of
-bitland-mifs-wmi does not work: reading the profile fails and writing
-"balanced" is silently ignored by the firmware.
+Captured acpidumps for all three configurations. Your hunch was right 
+that the IVRS table is still created with AmdVt disabled, but it is not 
+identical - and the difference looks like the actual mechanism.
 
-Hardware / software:
-   DMI:     XIAOMI REDMI Book Pro 16 2025
-   BIOS:    RMAAR6B0P0808 (01/30/2026)
-   Kernel:  7.2.6 (CachyOS), driver source identical to mainline
-   Charger: USB-C PD (the machine has no barrel jack)
+Summary, all with the IOMMU enabled and 24 CPUs online:
 
-Symptoms:
-   - "platform_profile: Failed to get profile for handler bitland-mifs-wmi"
-     on every read of /sys/firmware/acpi/platform_profile (EINVAL).
-   - After switching to low-power, writing "balanced" returns success
-     but the profile stays low-power; power-profiles-daemon gets stuck in
-     power-saver until reboot.
-   - "balanced-performance" / "performance" always fail with EOPNOTSUPP
-     while on AC.
+   config          IVinfo      IVRS len   IVMDs   MSFT0201 in IVRS 
+MSFT0201 ACPI dev   SSDTs
+   both enabled    0x00203043  0x216      3       yes                yes 
+                 29
+   AmdVt off       0x00203041  0x1F6      2       yes                yes 
+                 29
+   Pluton off      0x00203043  0x216      3       yes                NO 
+                 28
 
-Raw WMI calls (via acpi_call, \_SB.PC00.WMID.WMAA 0 1 <buf>):
-   GET 0x08 (SYSTEM_PER_MODE) right after boot:
-     {0x00, 0x80, 0x00, 0x08, 0x09, 0x00, ...}   -> mode 0x09
-   GET 0x13 (SYSTEM_AC_TYPE):
-     {0x00, 0xe0, 0x00, 0x00, 0x00, ...}         -> status 0xE0, unsupported
+AmdVt off changes two things. The IVinfo word loses bit 0x2, the 
+DmaRemap bit you already parse at offset 36. And the table is 32 bytes 
+shorter because one IVMD disappears:
 
-Firmware analysis (SSDT21, method WMAA; DSDT, method Q_EC.NTDP):
+   both enabled:
+     IVMD DeviceId=0060 Flags=07 Start=0x7D900000 Len=0x100000
+     IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
+     IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
 
-   GET 0xFA00/0x0800 only ever returns 2, 3, 4, 9 or 0x0A.
+   AmdVt off:
+     IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
+     IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
 
-   SET 0xFB00/0x0800 accepts FUN3 in 2..10; FUN3 == 0 or 1 matches no
-   branch and is dropped, but SGER = 0x8000 (success) is still returned:
+DeviceId 0x0060 is MSFT0201:
 
-       ElseIf (((FUN3 > One) && (FUN3 < 0x05)))   // 2,3,4 -> QFAN
-       ElseIf ((FUN3 == 0x09))                    // -> QFAN
-       ElseIf ((FUN3 == 0x0A))                    // -> QFAN
-       (5..8 go to SMMD/SMMT instead)
+   AMD-Vi: ivrs, add hid:MSFT0201, uid:1, rdevid:0x60
 
-   The mode is passed to Intel DTT via NTDP -> ODV1:
-       0x09 (and default) -> ODV1 = 0
-       0x03               -> ODV1 = 1
-       0x02, 0x0A         -> ODV1 = 2
-       0x04               -> ODV1 = 4
+and Flags 0x07 is unity mapped with read and write. So disabling AMD 
+virtualization removes Pluton's unity mapped DMA region from IVRS, while 
+the device is still declared in IVRS, still present as an ACPI device, 
+and still attached to iommu group 0:
 
-   So on this model the values appear to be:
-       2    quiet
-       9    balanced (firmware default after boot)
-       3    performance
-       4    full speed
-       0x0A low-power variant (same DTT policy as quiet)
+   platform MSFT0201:00: Adding to iommu group 0
 
-   whereas the driver uses BALANCED = 0, PERFORMANCE = 1, QUIET = 2,
-   FULL_SPEED = 3. Consequences:
-     - 0x09 at boot is unknown to laptop_profile_get() -> -EINVAL;
-     - "balanced" writes 0 and "balanced-performance" writes 1, both 
-ignored;
-     - "performance" writes 3, which is actually the performance mode, not
-       full speed; full speed (4) is unreachable.
+That would leave Pluton's DMA translated with nothing mapped for it, 
+which fits every observation: it only breaks with the IOMMU enabled, 
+amd_iommu=off is the only thing that fixes it, and neither intremap=off 
+nor iommu=pt helps, since iommu=pt gives other devices identity domains 
+but the IVMD is how firmware asks for one for this device specifically.
 
-   Also, bitland_check_performance_capability() requires
-   SYSTEM_AC_TYPE == 2 (barrel jack). This function is not implemented in
-   this firmware (status 0xE0, data 0), so the performance profiles can
-   never be selected, even on AC.
+Pluton off is a different failure. The IVRS is byte identical to the 
+working case, IVMD 0060 included, but one SSDT is gone and with it the 
+MSFT0201 ACPI device. Your existing check already catches that case 
+correctly:
 
-The semantic labels of 3/4/0x0A are inferred from the DTT mapping above,
-not from vendor documentation. I have not checked whether other Bitland
-based models use the 0..3 encoding; if they do, this probably needs a
-per-model (DMI) value table.
+   found_iommu=True  found_acpi=False
+   -> IOMMU is misconfigured: missing MSFT0201 ACPI device
 
-I can provide full acpidump output and test patches.
+The AmdVt case is the one that slips through. In check_iommu():
 
-Thanks,
-Aleksey Irlik
+   if not found_ivrs_dmar and not found_ivrs_msft0201:
+
+with AmdVt off, found_ivrs_dmar is False because bit 0x2 is cleared, but 
+found_ivrs_msft0201 is True, so the and makes it pass and the tool 
+reports "IOMMU properly configured" on a machine that cannot be woken.
+
+So to answer your question about keying off something else: yes, and I 
+think the signal is "IVRS declares an ACPI HID device but provides no 
+IVMD covering its device id". That needs no vendor attributes and no DMI 
+matching. The device id sits 3 bytes before the HID string in the type 
+0xF0 entry, and IVMDs are subtable types 0x20/0x21/0x22 with the device 
+id at entry offset 4:
+
+   devid = struct.unpack_from("<H", data, data.find(b"MSFT0201") - 3)[0]
+   off = 48
+   while off + 4 <= len(data):
+       length = struct.unpack_from("<H", data, off + 2)[0]
+       if length == 0:
+           break
+       if data[off] in (0x20, 0x21, 0x22):
+           if struct.unpack_from("<H", data, off + 4)[0] == devid:
+               mapped = True
+               break
+       off += length
+
+I checked this against all three dumps: it reports mapped for 
+both-enabled and Pluton-off, and unmapped for AmdVt-off. Note that it 
+would contradict test_check_iommu_no_dma_protection_BUT_msft0201, which 
+currently asserts that MSFT0201 in IVRS is an acceptable substitute for 
+pre-boot DMA protection, so whether to change that semantic is your call.
+
+I am happy to send you the three acpidumps, with the extracted and 
+disassembled tables and a record of the BIOS settings each was taken under.
+
+Beyond that I have to stop here. This has taken the better part of a 
+week, a lot of forced power cycles, and around $700 in LLM tokens 
+working through it, and I am out of time and energy to take it further. 
+The machine works now with AMD virtualization and Pluton enabled, which 
+is a perfectly acceptable outcome for me.
+
+Everything I found is in this thread, and I hope the IVRS observation is 
+useful to you or to whoever picks it up. Thanks for the help getting 
+here - the amd-s2idle tool, the pointer to e9f850ba66cd, and the 
+suggestion to reset the BIOS were all what moved it forward.
+
+
