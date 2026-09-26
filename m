@@ -1,88 +1,80 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7E33E172F;
-	Sat, 26 Sep 2026 12:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFF52459E1;
+	Sat, 26 Sep 2026 15:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790424830; cv=none; b=DSxGu6gocffFVrcB2F7hPrQIu7TxWbHbNb+iZbZgt8ycA8DtbfPr7ZmnsTkXTg6VPCX9BOjHGQIzcxU66TkAv1emPbbFDxVH0hgOYhfT3LFN3mnzLbZcOVsBg43A1Wj9LK/xS41fFc82e8Znr/3PiQcS/gY7KHEsFm0skY9BQqo=
+	t=1790437261; cv=none; b=PqmuFnzg9GklgHfyB+TvWdZrhM/O2Yv+8yOOPXNybRWxDX3wOcw2R4LWqlbkICIAvGrb988n7+eLeFzzF0gWxyejNIljzbcB5kDDHUzpcSL0SqNX4c17L6MF5qiOaqpUTv0QTdkLdxCOWqXZsXQ3Lvzh4teHztyBkT6GzdmKjzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790424830; c=relaxed/simple;
-	bh=coy66B4h9bPVMLFrnm1ncohjxZfe6XeN23wu0jiXsOE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FaJzKujBhC7A+OE9z2FduP9c5aMOJkrexTimsIuS0SlmZeVEIDm7NYTTCisKAFQdTFy7zaIf2rPPiRG9vI+mtX2V37ZR4YmpalAaGRkh76+DoUjUq8bTE2yR+VbkgVTRn2fFTOGlT5qEMIa2RhnbvOOXXRwNNJO92PjeGypNKoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gouEGYUU; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1790437261; c=relaxed/simple;
+	bh=QRIkbTcsdJCyt2wiOKaoqvt1nEcoFrhglVg+khuM7nc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RcXUhcnS5s2FVq0516l7J7KLloOWtue47g7OI494JZ8DC2H43BRFcxi2RQIgWMtB7x4Wp4qavx2cBfGkzoqKqyS54wbSov9Q3RSYwOtFyD2n7iRrl6UB/lpjHvMmVboXBvmQlLGwJwUmvfjnZDBZeBdHEdkywqT+sL6hIdRKn6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=jG8z1S9d; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gouEGYUU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Pf
-	Q+eUGvS5YGA/VscR/3oNIajPr36RjH9P3BCUg6xzQ=; b=gouEGYUUXLSogCO3Vq
-	y8PvQsp8mE/Sw0PYpK9dBT5mgoQcsgupVmByKOxj2VevlCRQl1K/ghhwE94427oB
-	XpulkpK0WtSRuG8U1YVr1fgMaUwBQZYudLHCe/45dCjKniXTQt4ociVOn1NyPR1B
-	9sEEeJ+nX90Lz1Px6p3VL7yXc=
-Received: from pc.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD338nKtrdqfXOcAw--.9011S2;
-	Sat, 26 Sep 2026 20:12:59 +0800 (CST)
-From: Jiale Yao <yaojiale02@163.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andres Salomon <dilinger@queued.net>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Paul Fox <pgf@laptop.org>,
-	Dan Carpenter <error27@gmail.com>,
-	Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
-	Hyun Kwon <hyun.kwon@xilinx.com>,
-	dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Jiale Yao <yaojiale02@163.com>
-Subject: [PATCH 0/3] debugfs: Reserve space for string terminators
-Date: Sat, 26 Sep 2026 20:12:47 +0800
-Message-Id: <20260926121250.3258285-1-yaojiale02@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="jG8z1S9d"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0D558408B3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1790437259; bh=25nhOm8z5BXPzVRdplIVnQQpz8wmASuadILxUCunVu0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=jG8z1S9dAXfBqDYCZmQ/Y84NmF7Vtn0XN2m9pfgi+RTP70LU9HrVFE6oKdeG7QYFL
+	 KmmLwUAl4V0+oNk0Pab0YoeTd1g49aM1PUyPvGNNCOYtIZd4pUztPeyrf7rJMwtRBg
+	 ZJ4y3HV0ftbNaDVPAqbmAHZM7aF08ZYdIQSXqHi3JaEfncpgGBpTNoHe8GlFmr3EzH
+	 1FIsKhUbzI8zTYVfQw7cQBcT8oBs/+JLLe87kbFC19hMaFpvU2u3TQ0QjgNU5C+5Vc
+	 Gq2gSLqHM8C0ZjvAqSE/ROSv2OEyfS4WCFMJwykBJoGam5WRyJanwVWE8jpAwwdR1d
+	 dgt3/oLDelVIQ==
+Received: from localhost (unknown [IPv6:2601:280:4600:814::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 0D558408B3;
+	Sat, 26 Sep 2026 15:40:59 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, Jithu Joseph
+ <jithu.joseph@intel.com>, Hans de Goede <hdegoede@redhat.com>, Tony Luck
+ <tony.luck@intel.com>, Ashok Raj <ashok.raj.linux@gmail.com>, Ilpo
+ =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, Shuah Khan
+ <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation/ABI: IFS: use literal blocks for commands
+In-Reply-To: <20260921044746.94316-1-rdunlap@infradead.org>
+References: <20260921044746.94316-1-rdunlap@infradead.org>
+Date: Sat, 26 Sep 2026 09:40:58 -0600
+Message-ID: <871pag3trp.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD338nKtrdqfXOcAw--.9011S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWruFWrtw1kCF1fKw15Gw1fCrg_yoWfurg_Z3
-	s5Krn7Jwn7Xws3Za42yFnFyrWSkFWaqF18Xwn8trySqry3JFyrAFs8WwnrGw4xWFs5Ar9r
-	Gr9FqrWfZry3WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRKF4EDUUUUU==
-X-CM-SenderInfo: x1dryxhdohiji6rwjhhfrp/xtbC7wtoomq3tssfmAAA3J
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The same boundary mistake appears in three debugfs write handlers. Each
-handler has a zero-initialized buffer and allows a user write to fill the
-entire buffer. That overwrites the only NUL terminator before the input
-is parsed with sscanf(), strsep(), or strcasecmp(), which can then read
-beyond the end of the buffer.
+Randy Dunlap <rdunlap@infradead.org> writes:
 
-The write paths are independent, so the fixes are split by file and can
-be applied separately. Each patch reserves one byte for the terminating
-NUL while preserving the normal input size for that handler.
+> Use literal blocks for console I/O to separate it from the
+> surrounding text. Otherwise the lines run together, without any
+> clear break before or after the commands.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> ---
+> Cc: Jithu Joseph <jithu.joseph@intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Ashok Raj <ashok.raj.linux@gmail.com>
+> Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: linux-doc@vger.kernel.org
+>
+>  Documentation/ABI/testing/sysfs-platform-intel-ifs |    6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
-Jiale Yao (3):
-  platform/olpc: Reserve space for a string terminator
-  wifi: ath12k: Reserve space for a string terminator
-  dmaengine: xilinx: dpdma: Reserve space for a string terminator
+Applied, thanks.
 
- drivers/dma/xilinx/xilinx_dpdma.c                   | 2 +-
- drivers/net/wireless/ath/ath12k/debugfs_htt_stats.c | 2 +-
- drivers/platform/olpc/olpc-ec.c                     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
--- 
-2.34.1
-
+jon
