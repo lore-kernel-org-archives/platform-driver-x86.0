@@ -1,132 +1,264 @@
-Received: from mail-05.mail-europe.com (mail-05.mail-europe.com [85.9.206.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A2939EF0B
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 19:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.206.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44B64A1E19
+	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 20:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790452511; cv=none; b=Cq09TtJSop9P+6XL5yD2FnTBWaq/LWXSHN4ToIf8CCw1TYhujIpYgbMO545H9XiSr5lrMr5uzRij0ON2cw+wmnnCOLPKrnmrp4jD6i8qdlPXC7hxVZ8r94oHmtvbgKFVi1FbPjJ5hl77gkvcUBmOgLH1G8lyyGr9e6JrDQmw4LU=
+	t=1790456257; cv=none; b=QT2LOxJ1MWXZtvMbNq0Q7CcoRxrxv3eCQL/xTGdSdxT0dM5Cycact1FP4Dhx9dPh0gNmmSLsWotFSnJObhuis9fYedcjLvjnbT4plfuhWIBjSwfCRSVSzGbtOtCUGjt2DRZ2CfOvzvrsDDSwreLz0m/r+nvJBMzkGM2ce9jnCuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790452511; c=relaxed/simple;
-	bh=zMBdzxqLEEqeeDLck7SD5iTs89vD4211AK1HsDvvX5o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GyAGAc72eKGWG1OdKbJB9cw8OW6ru6ETS3bHCNGCWneJGMb3apJtW2o/G8gg1YFSusnA3t3xG5F7HJQcNgqLK67BpIkyDaq1+9pX/HAVfuivCDhXuj9jiBU8yF0HwJfkSqlxzMOg/ztyMny+IzPTuvXD3+lq7CmZBZsTj3W4Mxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net; spf=pass smtp.mailfrom=ironrobin.net; dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b=YFpr1bc3; arc=none smtp.client-ip=85.9.206.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ironrobin.net
+	s=arc-20240116; t=1790456257; c=relaxed/simple;
+	bh=l+UzgOYppY7wUAz5A2mp+yrmMwp2bebocJKaoqgjSIU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lyJgwBFbfeqWtCVi1nYvjQCwlIptgHIO6xGPljrMC0iY7jo/d6cmXalYOM+yUBqki3qYFemLcbeqjRDuc7rKwwykdz+tvArUDKdXN2+9Ml0EDQgx6cdHRUBFnUAyYOvnQJhk5hRcG+HIWAzxqOGA8tsq5ddRYh+MNFmIDAKyuEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m/EvPhYV; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b="YFpr1bc3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ironrobin.net;
-	s=protonmail3; t=1790452499; x=1790711699;
-	bh=zMBdzxqLEEqeeDLck7SD5iTs89vD4211AK1HsDvvX5o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=YFpr1bc3q4YUL1IJ+IPt2ALZ9U58oiAQaGa6z88epHWJPxRaj7eHWClTU1a5DcdzG
-	 SvcnLzcYeekffQQhJ/to24iZDsc0cdrwJGjFvR39Rtd+HUgxp0uA9PL8lly6loO9UJ
-	 OSVWhvU7G2p2vSovbbmdv1d9m7acTUoxyRaeoSlZ/3NSQ12sGkDZSgzq4Mk8SRURfK
-	 s6CtzzfoDeyC20DEhyQH8yB85O+Qli5qlOPTOqlUgc3NM7B/mZmBOYHxAEm4rlmm4s
-	 AZ3nQSJBQAeyCpkcuHTKx3wlOmMwEGWEQMc3lTxzgI2BBEwRpH5ho8Ob3X3aSN7AuS
-	 lfOxtdKeJ2RZg==
-Date: Sat, 26 Sep 2026 19:54:56 +0000
-To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Clover <alex@ironrobin.net>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Steev Klimaszewski <threeway@gmail.com>, platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] arm64: dts: qcom: sc8280xp-x13s: Add embedded controller
-Message-ID: <20260926195415.5995-4-alex@ironrobin.net>
-In-Reply-To: <20260926195415.5995-1-alex@ironrobin.net>
-References: <20260926195415.5995-1-alex@ironrobin.net>
-Feedback-ID: 54785507:user:proton
-X-Pm-Message-ID: 564dd1b5405d90cf35a5037f134a9b374380bed7
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/EvPhYV"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49b912d37b6so10054455e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 13:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790456252; x=1791061052; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=lN8UAI9hgS6HzuP4chYNM7rdx1cds91JaxQTcGZxKa4=;
+        b=m/EvPhYVVeHc3us51gbYvWVw4QazFwmC8Z7T+EYiM7SihMvDHobXkI43dm7QJCgSZw
+         IIhpFio5t0HVX/yvQdZgSuqwS+Bksgwh9mse79e/WFiVgIUUVKGD7BvHUxOuLH4ciMlP
+         DjrgF/pTlajMQ1LvjaimqjC8OIXWI8mFAQeYa2+oAnDmw+IPRgdYC28gwNvdZnw2Ta/d
+         oazl0fMk2MxmVg7i5LOhPy+9SsYTPZhu/O8m8uwo+cZ7CZvJ6itnqw/H6s+nNSLNzgkf
+         3Gz9t29AzNC/SfnJ7AJZDXeCES8fSK8tbTS2+yAxZ9byHQ+yqfNW4dhH9ljv7hFEQZgi
+         rX6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790456252; x=1791061052;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lN8UAI9hgS6HzuP4chYNM7rdx1cds91JaxQTcGZxKa4=;
+        b=uIKuLZwGmo0iCFl69c18hsq15uXglYZ85AEh546vp9JZCHArQEo9faTPxzA6nyUIJW
+         38bkrGBFhAI6m3LN4DeD4xMflrLVW/Rlc+LVw9FRO0OLRR3prHkMWlJjtFvs9yNVV1rp
+         OvBsG5eCkB4jAXlUeBwWfJD79M6GAgG6QwlJUpiDGxkGAYWjSni0nJUBj39SS+/IbF9Q
+         wPZysLhy3dr/EuhwuoTfI+FOptdRe1ZqJk/bwE6w6/c9d1VbnEzh4YZ7GeqpQzPJYo+a
+         cy/KAofxr9Yam5lpB1obNYhYnUZrNEJAXrrRhfhquvA9i5zEXH5CwtHlngGA+Hq4xCQN
+         6Q5A==
+X-Forwarded-Encrypted: i=1; AKwUvBzqxA+5XoWagEaPGjiwzf5L/BP5CD2AADqyhTuagWljiIZ9xaTBTdxtxqndiVxceSyoFtnav5u059O0DPXd3MIY5ceW@vger.kernel.org
+X-Gm-Message-State: AFuF++nXe/+Lr6mGbSLew+8a9zX61chCaeL2+JFshYk3Wg+LJJ5ea5c3
+	n9dTD908lo1i/3TZO8Zzdn8eYe+Hod6S7ZBDcymC2tZJboGCIkQaKPqP
+X-Gm-Gg: AYBFou1HacQJ5vinM0kpHy6FGzK3SICOxh342HJW7jmKkja4lllQdnrr4jCu1bRz7i4
+	GbEV45gfR7RPWZfqoXthLtTX17UlF/KwHeGw9eNEo3G3wloxXdNg6P9O10qgrXpPzVURGhU9RlW
+	bYxzqqCnAT1ysbbhBwmFszQ4B1fiXVDryC16MQD5Mhl6gY7zHrZe7A2PH54HuLXU0I8Kq7/ZsV2
+	2n47IrsW3Azrmfl31TPelJ+nMY6KfvJWf7+PaGBCsVkL13Mq6d4iYRKZjnl/zzVuC6UXeHAXop2
+	Hh1lOxqltScQIk0FAWm0QnAwp2qXXJbo+qNSGjEMAUZUOgaWkR+60SzmkIv5/TS3lTKUIUfFUT8
+	0rTmuG9Zn4s8Kk0IFmEnkiDP0dPuw8Co4SbPKsBMNQ8E7OTC9dXtxVqt7i/V8gr8lbx27evcGkJ
+	q2/Z1thHvDG97Iev6iMZsVH4gZm2lPrjB4B2ylRaLYp/FTTSqVLWYdF77WYxKJM4Pr+LT18vpB+
+	OIcvRZa/Vmj/IV0ZV8BOPd/VXn/fdYv14gFYZFyzikFZGRIEhci
+X-Received: by 2002:a05:600c:4685:b0:49f:fd2d:23c7 with SMTP id 5b1f17b1804b1-49ffd2d25bcmr38526845e9.27.1790456252577;
+        Sat, 26 Sep 2026 13:57:32 -0700 (PDT)
+Received: from fedora ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0018e6dcbsm1734845e9.6.2026.09.26.13.57.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Sep 2026 13:57:32 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: Jorge Lopez <jorge.lopez2@hp.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Muhammad Bilal <meatuni001@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH 2/2] platform/x86: hp-bioscfg: fix heap OOB read and non-ASCII truncation in hp_get_string_from_buffer()
+Date: Sun, 27 Sep 2026 01:56:55 +0500
+Message-ID: <20260926205708.384308-2-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260926205708.384308-1-meatuni001@gmail.com>
+References: <20260926205708.384308-1-meatuni001@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Enable the embedded controller at address 0x28 on i2c8, with GPIO103 as
-its falling-edge event interrupt and wake source.
+hp_get_string_from_buffer() has three problems.
 
-Configure the QUP8 bus on GPIO43 and GPIO44 with 2 mA drive strength and
-pull-ups, matching the working firmware-established pin configuration.
+First, the loop that counts how many characters will need
+backslash-escaping uses the same variable as both the accumulator and
+the loop bound, so once an escape character is found near the end of
+the valid range the loop keeps going past the buffer's true character
+count, reading out of bounds.
 
-Configure GPIO103 as an input without overriding its existing pull
-configuration. Describe GPIO176 as the separate active-high power-state
-output and configure it initially high with bias disabled.
+Second, the bounds check 'if (*buffer_size < src_size)' runs after
+src has already stepped over the 2-byte length prefix, so if
+*buffer_size equals src_size, reading src_size bytes reads 2 bytes
+past the end of the input buffer. The pointer and remaining size are
+then advanced using the escape-inflated count rather than the actual
+number of bytes consumed, desyncing subsequent property parsers.
 
-Assisted-by: LLM
-Signed-off-by: Clover <alex@ironrobin.net>
+Third, found during review of the fix for the first two:
+utf16s_to_utf8s() takes src by value, so the real UTF-16-to-UTF-8
+conversion it performs never reaches dst. A second loop immediately
+overwrites dst by re-walking the same src position and copying each
+UTF-16 code unit with a truncating cast (dst[i] = *src), escaping
+'\\', '\r', '\n', '\t' and turning '"' into '\''. Any character above
+0x7f is truncated to its low byte instead of being encoded, so the
+function is ASCII-only in practice. For example, given the
+two-character UTF-16 string 'eA' with the first character U+00E9
+(e-acute), the function currently writes the two raw bytes 0xe9 0x41
+into dst, an invalid, truncated sequence, instead of the three bytes
+0xc3 0xa9 0x41, the correct UTF-8 encoding of U+00E9 followed by 'A'.
 
+Fix all three by keeping the true character count separate from the
+escape-inflated one, checking *buffer_size against the full prefix
+plus string length before reading, and replacing the redundant
+conversion with a real one: convert into a fixed-size scratch buffer
+with utf16s_to_utf8s(), then escape that UTF-8 into dst with
+string_escape_mem(). The scratch buffer is sized to MAX_BUFF_SIZE
+rather than to src_size, since src_size comes straight from the WMI
+buffer and dst_size is MAX_BUFF_SIZE at every caller in this file.
+
+string_escape_mem() has no flag that escapes only a backslash without
+also touching '"', so this depends on a separate patch that adds
+ESCAPE_BACKSLASH to string_escape_mem(). ESCAPE_SPACE together with
+ESCAPE_BACKSLASH escapes '\\', '\f', '\n', '\r', '\t' and '\v'; '\v'
+and '\f' were not escaped before, matching Ilpo's comment that this
+was likely an oversight rather than intentional. The existing
+substitution of '"' for '\'' is kept as an explicit strreplace()
+afterward, since string_escape_mem() has no substitution concept and
+switching '"' handling to backslash-escaping was ruled out in review.
+
+string_escape_mem()'s return value can exceed the destination size
+when the input does not fit, so the NUL terminator position is
+clamped to dst_size - 1 before use; writing dst[<return value>] = 0
+unconditionally would reintroduce a heap OOB write of exactly the
+kind this patch fixes.
+
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Cc: stable@vger.kernel.org
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/a=
-rch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-index 218573a97785b04528854b03a99c837558a33c1e..1b875809773dac3bb0d1dafb1c9=
-bb41a88f5027f 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-@@ -806,6 +806,25 @@ &i2c4 {
- =09};
- };
-=20
-+&i2c8 {
-+=09clock-frequency =3D <400000>;
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 78 ++++++++------------
+ 1 file changed, 31 insertions(+), 47 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 309634c..82c228c 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -12,6 +12,7 @@
+ #include <linux/kernel.h>
+ #include <linux/printk.h>
+ #include <linux/string.h>
++#include <linux/string_helpers.h>
+ #include <linux/wmi.h>
+ #include "bioscfg.h"
+ #include "../../firmware_attributes_class.h"
+@@ -55,72 +56,55 @@ int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_
+ {
+ 	u16 *src = (u16 *)*buffer;
+ 	u16 src_size;
+-
+-	u16 size;
+-	int i;
++	u16 orig_size;
++	char utf8_buf[MAX_BUFF_SIZE];
++	int utf8_len;
+ 	int conv_dst_size;
++	int escaped_len;
+ 
+ 	if (*buffer_size < sizeof(u16))
+ 		return -EINVAL;
+ 
+-	src_size = *(src++);
+-	/* size value in u16 chars */
+-	size = src_size / sizeof(u16);
++	src_size = *src;
+ 
+ 	/* Ensure there is enough space remaining to read and convert
+ 	 * the string
+ 	 */
+-	if (*buffer_size < src_size)
++	if (*buffer_size < sizeof(u16) + src_size)
+ 		return -EINVAL;
+ 
+-	for (i = 0; i < size; i++)
+-		if (src[i] == '\\' ||
+-		    src[i] == '\r' ||
+-		    src[i] == '\n' ||
+-		    src[i] == '\t')
+-			size++;
++	src++;
++	/* size value in u16 chars */
++	orig_size = src_size / sizeof(u16);
+ 
+ 	/*
+-	 * Conversion is limited to destination string max number of
+-	 * bytes.
++	 * Convert from UTF-16 to UTF-8 into a scratch buffer first, then
++	 * escape the result into dst. utf16s_to_utf8s() is capped at
++	 * sizeof(utf8_buf) regardless of orig_size: orig_size comes
++	 * straight from the WMI buffer, and dst_size is MAX_BUFF_SIZE at
++	 * every caller in this file.
+ 	 */
+-	conv_dst_size = size;
+-	if (size >= dst_size)
+-		conv_dst_size = dst_size - 1;
++	utf8_len = utf16s_to_utf8s(src, orig_size, UTF16_HOST_ENDIAN,
++				   utf8_buf, sizeof(utf8_buf));
 +
-+=09pinctrl-0 =3D <&i2c8_default>;
-+=09pinctrl-names =3D "default";
-+
-+=09status =3D "okay";
-+
-+=09embedded-controller@28 {
-+=09=09compatible =3D "lenovo,thinkpad-x13s-ec";
-+=09=09reg =3D <0x28>;
-+=09=09interrupts-extended =3D <&tlmm 103 IRQ_TYPE_EDGE_FALLING>;
-+=09=09power-state-gpios =3D <&tlmm 176 GPIO_ACTIVE_HIGH>;
-+=09=09pinctrl-0 =3D <&ec_int_n>, <&ec_power_state>;
-+=09=09pinctrl-names =3D "default";
-+=09=09wakeup-source;
-+=09};
-+};
-+
- &i2c11 {
- =09clock-frequency =3D <400000>;
-=20
-@@ -1571,6 +1590,21 @@ cam_rgb_default: cam-rgb-default-state {
- =09=09};
- =09};
-=20
-+=09ec_int_n: ec-int-n-state {
-+=09=09pins =3D "gpio103";
-+=09=09function =3D "gpio";
-+=09=09input-enable;
-+=09=09/* Preserve firmware pull configuration; no bias override. */
-+=09};
-+
-+=09ec_power_state: ec-power-state {
-+=09=09pins =3D "gpio176";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-disable;
-+=09=09output-high;
-+=09};
-+
- =09edp_reg_en: edp-reg-en-state {
- =09=09pins =3D "gpio25";
- =09=09function =3D "gpio";
-@@ -1591,6 +1625,13 @@ i2c4_default: i2c4-default-state {
- =09=09bias-disable;
- =09};
-=20
-+=09i2c8_default: i2c8-default-state {
-+=09=09pins =3D "gpio43", "gpio44";
-+=09=09function =3D "qup8";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-pull-up;
-+=09};
-+
- =09i2c11_default: i2c11-default-state {
- =09=09pins =3D "gpio18", "gpio19";
- =09=09function =3D "qup11";
++	conv_dst_size = dst_size - 1;
++	escaped_len = string_escape_mem(utf8_buf, utf8_len, dst, conv_dst_size,
++					ESCAPE_SPACE | ESCAPE_BACKSLASH, NULL);
++	if (escaped_len > conv_dst_size)
++		escaped_len = conv_dst_size;
++	dst[escaped_len] = 0;
+ 
+ 	/*
+-	 * convert from UTF-16 unicode to ASCII
++	 * string_escape_mem() has no equivalent of the original quote
++	 * substitution; keep turning '"' into a plain single quote instead
++	 * of escaping it, to match existing behaviour.
+ 	 */
+-	utf16s_to_utf8s(src, src_size, UTF16_HOST_ENDIAN, dst, conv_dst_size);
+-	dst[conv_dst_size] = 0;
+-
+-	for (i = 0; i < conv_dst_size; i++) {
+-		if (*src == '\\' ||
+-		    *src == '\r' ||
+-		    *src == '\n' ||
+-		    *src == '\t') {
+-			dst[i++] = '\\';
+-			if (i == conv_dst_size)
+-				break;
+-		}
+-
+-		if (*src == '\r')
+-			dst[i] = 'r';
+-		else if (*src == '\n')
+-			dst[i] = 'n';
+-		else if (*src == '\t')
+-			dst[i] = 't';
+-		else if (*src == '"')
+-			dst[i] = '\'';
+-		else
+-			dst[i] = *src;
+-		src++;
+-	}
++	strreplace(dst, '"', '\'');
+ 
+-	*buffer = (u8 *)src;
+-	*buffer_size -= size * sizeof(u16);
++	*buffer += sizeof(u16) + src_size;
++	*buffer_size -= sizeof(u16) + src_size;
+ 
+-	return size;
++	return escaped_len;
+ }
+ 
+ int hp_get_common_data_from_buffer(u8 **buffer_ptr, u32 *buffer_size,
+-- 
+2.43.0
 
