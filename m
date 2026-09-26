@@ -1,107 +1,125 @@
-Received: from mail-ed2-f35.google.com (mail-ed2-f35.google.com [74.125.228.99])
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DB128CF5D
-	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 00:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.99
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790382812; cv=pass; b=dCa3OWOO7FHASo3OreYtePVBopR3vSA66ldt8J9DoIUc+3S9OvbBW5udUmMTfeCSmwfrOn2eoCK545dj2Vv/tx0iu6mGysVuZYq6MCd/VSE22917azqROu5Ysb6dhlvBexFCGXxvs/D4tp3yOYjfgroWUaTqOZoIS9JOOAji4Iw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790382812; c=relaxed/simple;
-	bh=mVxMWetFn7wHYMZOTdurI52wh0zu/kj3fyTO5UelA0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=StfnP3ambgw7aV321Q4xi2AeudtdRkAVOCEPXgmekJMXBNiJweuXCp0CyDTA4ejo5LEJcG+2lmgYdAkntrZv2Gx3+8KFNPO7i44DucM/nbez/QzLzhLdrHFbNO6El8eO9yF8YfnQX8jeAxcoeAMy2h6Gih86Qq8yPsojASmlYWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fcoOVwCQ; arc=pass smtp.client-ip=74.125.228.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C192EEE62
+	for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 00:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790384303; cv=none; b=QwvvBM/gVYQ4yAG3On0XWnWsiBXMXWKFVz2QWNsYSc2y99+g+MW1BBdKxT8ha+g89aIPoksccAi2glfdfWYQQHgOmFi+0yCWDIvw/oHGsLQ+RohQ4Fbr8ZWeKXsj6vuxr1iAzy8PF+VysNPBgrmckRBmSFyg/rMdhQh9s+PTR4Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790384303; c=relaxed/simple;
+	bh=HPr8/2EtAeRAkpW50wA3FXIhEB229L1oWQntdtEa/N0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N2zPkk31V2aey5S7OSF1fAH1MRN7pZ95kkcKfJh9SmlA/+RMHOz1J/lyZz4X/LchSs3T8Uhdc0D4uA3XjvF5evAu1gOwvDR3n/98WVqWrCMu1scRtFs6Rcy465ETwTCVChhcwB3BlLGAGcTmuMjP7MZONwipd1iGtarUuDEMubw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UEQq3Ypf; arc=none smtp.client-ip=74.125.225.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fcoOVwCQ"
-Received: by mail-ed2-f35.google.com with SMTP id 4fb4d7f45d1cf-6a9a2b95b72so2475516a12.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 17:33:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790382809; cv=none;
-        d=google.com; s=arc-20260327;
-        b=rsjEyTiAD+K4uc8t1dEPdptGdYT3mPDVYMmpVVHGfMMBBUVAvLyZ7wlJe8VRp3QH5p
-         zKIdE6i5bpo+trNlEQuUUKPVkbTnlFvDqpdvpVosFaKdp71IUHrej+JKoD94vz0QSi93
-         CwP5V6UhViVleJnqtBjRSKweV5tINODnak363P7tPQPZvEdnq/ff8ywl8UxSk62k0NRv
-         MteninAZOGwtR4+iZpdqvvG13sozhHagQZlvTHOsdL8YMthDu+2xMkdgYSnYP7tPTxId
-         d+RS86x9Uwq3AjIw+1qwZ5H9dJklstZmL96+IvzqIL+cBIvkWsj2zwsgosbfIYCy+Xx/
-         tNfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=mVxMWetFn7wHYMZOTdurI52wh0zu/kj3fyTO5UelA0E=;
-        fh=8FhIueiaeZZGAVhOekgHmbmbo/Npgbr3iuGW1Yj6FS4=;
-        b=b8vvyLmhvOoZGLb146bZPq141/J5h8D1muhauTB83SawRYwMDxEgagZNcFL1OOR1nR
-         nP1LI0WbIyjzcZMt/tj2c+sAtSkyLgHFKe3fdQcY9pCIyPi82YktcO7Yk6RV3bm/QIGc
-         P2CGPo/O1oG84V/joLUtnQF/SgF4uHoiq7Ku3z7PKlX49U2kzpR/AHxQiVBKvJD0zVAN
-         2jePAHRGSibuVsmoNsk2X99wxAqglYPLQPxEmsMb5Aq4sK2rGpZ6/rpKKvnbo85Iyv0b
-         ERRDHWISoXiYXRY5QOPJc6k7tGcfxp86i7TJbM7Up987/EjyWY/De7BeO7yyYi714EUB
-         qgQA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEQq3Ypf"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4843cedd129so794078f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2026 17:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790382809; x=1790987609; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=mVxMWetFn7wHYMZOTdurI52wh0zu/kj3fyTO5UelA0E=;
-        b=fcoOVwCQM8RwuRa6WV5AaxjDkchYZ90euGMxSq9O6x0Zn9pfbR65UF8/qtScGS+Vt/
-         RwxQwqjWMDQo82Qv/dQoo+LnE0JZJ30n2BMQ+ICPr8vGAwQl9pahcZo0toV2jgCMrWRn
-         LWicHgOE9ULsjwp7oRI+iTf6WN0iNm0pbAl0R1TBAANRDORzWefQb58Mc7TTmo0iQGLD
-         6RTc1KCFJ92xV3ggb91AADHD8dq+pzvgVC9wpLSz284r+RQw0UVIZfJra0xv3vqR1RWA
-         OhO1Q94+h52WkgtI1w/XDua9NAls2cbqakvMisXq/DwIP84mhe5SakpZhVlH3jNemKnh
-         fRHQ==
+        d=gmail.com; s=20251104; t=1790384300; x=1790989100; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=8uSW8OZsYMIZFbWWsjbfvd+eNMCgy9dlKRXhhKSm1DA=;
+        b=UEQq3YpfarkfetrkVv+0KYrJLbfQfmPwE5lovfZo1ABJg6qxn+8JP7Uu+dcOjY8GbW
+         OUWozJ8rJAJ2G7RIraiSCT/btLbWsKDSc26hWlBOKp0rzD6gKOXBSp4mwK7u7FUKYSzz
+         st+zIhA1u5zICyOkXaJGGemKUVqvlQmWvcdduDjZqDKNfptvSEAeiFq12z62jjV2YPl2
+         6HReHUoIQFvK4i7V5OfP3gfoOpdIsEl4GHPzb90HzpX8iZ59s+uB24HtPheeaEqzgWCA
+         RkWD9JBGWl2Y+WmruRmtH5p1M5rfHCiSYQp2qRFKmG/wWMezkrlj8BfeTav2/LfDHBI5
+         7WEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790382809; x=1790987609;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=mVxMWetFn7wHYMZOTdurI52wh0zu/kj3fyTO5UelA0E=;
-        b=Z6/87uBE4/Jgjlif4SCdT2IHqxsICkVVqP47SnjWDys7HLd40nKXQY01UrV6Kp+lHp
-         bo/FBRD7fAFz8V90T/lbxkrD43A4mBFYeEfol0S4nXo2uJ0YugH5XYWfdui4LA/h0KzG
-         BVr9h+hysS7QyrqFQzTAZwrYexB1VSZN/LBJFbliyRp9fmhMZ1e3m08ryGLzIQUBsqNu
-         dJh9P7rMerAEcLCLNh97JPbSqODd9Fq/vykTKU5904s9hW6F4pHrm1NsAURcOOyPdGXo
-         oYHPpTgegRJSlWA4wfYU66ISJoAjyv7lBvwQoJwMyoKmQ/G8kj3qI/RI6TC8IvBuX5zT
-         BbTQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwf3NESzo85+eC8UDON3wQ++gOKuChgcrdbGHVudPaX8j9pnmeJiZkhH6afjDIkaDVYTSD1KmhFcSNU++fAhQc+Akyw@vger.kernel.org
-X-Gm-Message-State: AFuF++lxmCAZwZjCBeMkDCP4G5WWWcixiXigNgI9X4MZdTfIaUBCHQgH
-	g5pgHaHBPNgomqC7BTZEfnMIOm+IxfXIDqR1NR9CpVXfjY5UhUrhhjGO4HE7mj1JOVyr4m08+Hm
-	xytShgF8QV6Ct17qKt+rBK3AJW03bTJ1uSkZhBiY=
-X-Gm-Gg: AYBFou1BV502aDAbbCq0MQ9QFoEggNagjF+gPJf8rAT8SrOgWxMc3qu2GtC1EwMVUw6
-	AP/kOts/3jY5xAByX4VIRQbJD5a3O7q8wTzHmYTE/nE8pUK/vBHlW5fOLQ05Q1lCwomXuhKTDEP
-	vZZ2rl6keTPwDv0wSo/M5k0F2fltwuTuhUsDluzKrXe6o948MMbsl3/b9pYRzVeklq2TgPijQgO
-	9J42XdmLWkyi4wT/QxeM7mu+nuB1opKx8lTW3cUALR1EyyvMPfTNXTxlH686kHKkUNGJbVtZ4up
-	zZRSypFg+08oo1+qi+JXDT2/P0f+N3VycqLrA5X/aiw6NhIby0AzuJmvGwK1qExqr6Btb829t2u
-	BoZY2DOq/W9wKqp8=
-X-Received: by 2002:a05:6402:438e:b0:6a9:a2b9:5907 with SMTP id
- 4fb4d7f45d1cf-6aac8f40c5cmr5939968a12.4.1790382808799; Fri, 25 Sep 2026
- 17:33:28 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1790384300; x=1790989100;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=8uSW8OZsYMIZFbWWsjbfvd+eNMCgy9dlKRXhhKSm1DA=;
+        b=s5rVh3iaVlvY0vLQt1dPoqTpbPeUDyshe+ydTa7FvWuduTYrzlUHEtaxA+3463xI78
+         nhVWpKE20DXfaUqtST6Nw2CkVklDya8vSEFhd5GsVZi2Z26NM0pMUEkSdka4HfyKp1/v
+         6g7jf12WXW41WfvFA7K24hpRMolluocKcEoxHHAVf6+58/wUL5YpUmApYfIVs3JyjLH9
+         qyJvWQIxYXDsYl2O0SZoCG/b9BtV2Dd2RAAwTsshgmarfQommhodkdnd8fc4NIOjvp1f
+         tdTFOyQ2mZp+no3k+fPq60Zr9jKTQl93WZVzJRq6g9wKU56XMwn+j1W02kPiWL3PggJh
+         ArRg==
+X-Gm-Message-State: AFuF++mHYjL7UJyhdS7GHLQKIGWRe/bz4L03nrLTkf+fW+b5Hg5YQekY
+	aTYklMTijwP6JUavvi1bseg9vAYfP5mT2a8rFcDMT6YtXoWrSstU1eOlSVKVDgNMjvgg8g==
+X-Gm-Gg: AYBFou0/5lxN56NsLP6NsYvaYn+7eOy3emPewUljoslDCZS80S2uEg25niZMyABx4dZ
+	SkGM0jgJEifCeARbQQl9HP0IMjQUKcGOcTPKgoOSX0F/0oKF+GM2E7jMrPHYVDQ+ldwTPm8H35l
+	6zPRhe3spqWNBAzeGbxPpFx6JG1FSOrVXeHGwuCHFJHa0mocCfchusIajNg4n+2S9i5jI2v2wzf
+	o7mdHLuQ/mKEb/J5OaAO8qUKfzyOwlSAKgG73WuEsqc1N9g9b8sZCT/x4XoNrQ0t0zPxNXOVQQE
+	P/CR+N4uqxLpv70PBO/pcVOltZpFBAWv7n2+XxDF3Dh2Id8gX3e9fA/t2BUF93ZRKbiedWc0Khd
+	5gJgjXGu/FQRIjE+yIuJnLOIRu2xf15z6Hb+e+sR6mQzQDK6lJQZ+U61Zlj32SnfQNxHcyMRtvS
+	h65zRhwBujVG6pC7fcIWff7knWAGbD7ehw4i/PItt/qFtwFYdPabeNh1jfOP7k
+X-Received: by 2002:a05:6000:490b:b0:487:27f6:a4ce with SMTP id ffacd0b85a97d-488828c8ad6mr4522670f8f.30.1790384300031;
+        Fri, 25 Sep 2026 17:58:20 -0700 (PDT)
+Received: from ASUS ([85.105.252.11])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a638sm10195890f8f.9.2026.09.25.17.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 17:58:19 -0700 (PDT)
+From: Bartu Alev <bartualev@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <benato.denis96@gmail.com>,
+	Bartu Alev <bartualev@gmail.com>
+Subject: [PATCH v2 0/2] platform/x86: asus-wmi: Fix TUF keyboard shutdown naming and add RGB readback
+Date: Sat, 26 Sep 2026 03:56:23 +0300
+Message-ID: <20260926005625.171560-1-bartualev@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260925200744.129714-1-bartualev@gmail.com>
+References: <20260925200744.129714-1-bartualev@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260925211635.1422516-1-amad3v@gmail.com> <20260925211635.1422516-3-amad3v@gmail.com>
- <0b2b863f-d12a-4b1f-93a3-45a42f3ef503@gmx.de>
-In-Reply-To: <0b2b863f-d12a-4b1f-93a3-45a42f3ef503@gmx.de>
-From: Am Dev <amad3v@gmail.com>
-Date: Sat, 26 Sep 2026 01:33:16 +0100
-X-Gm-Features: AclHuK-7P8_fYd7hP59PmdOe7E2rXevYQIH5oEtq_S2IggwuoZjtBW3VLgWpGgU
-Message-ID: <CADfX_O26ViKw2bF-uft-sj26Hi4hDdy4Y+=-dcV+f3s1sQnpLw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] platform/x86: uniwill-laptop: Add platform profile support
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 26 Sept 2026 at 00:54, Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Nice work, but AFAIK the whole fan control/platform profile complex needs a bit more
-> work before we can enable this feature. Can we skip this patch for now?
+This series fixes the historical misnomer of the TUF keyboard
+shutdown power-state flag and adds sysfs readback support for the
+TUF RGB mode and power states.
 
-Sure, I will drop it from v2. When you get to the fan control / platform
-profile work, I am happy to test on the Recoil 16.
+Patch 1 relabels the fourth state field of kbd_rgb_state_index from
+"keyboard" to "shutdown": BIT(7) gates the keyboard backlight during
+the ACPI S5 power-off sequence (A/B verified on FA507NV: bit set =
+keyboard lights up white at power-off, clear = dark shutdown).
 
-Thanks,
-Mohamed
+Patch 2 adds readback support via DSTS 0x0010005B, which evaluates
+the DSDT method EC0.KBLS() and returns the live EC RAM state as a
+16-byte buffer (mode, R/G/B, speed, power flags). Both kbd_rgb_mode
+and kbd_rgb_state become readable.
+
+Re: the cmd field question raised during review of v1 - the KBLS
+buffer carries no command byte. "Immediate (0xb3) vs save (0xb4)" is
+a property of the write verb, consumed by the SMM handler; neither
+the EC firmware nor the ERM2 mirror retains it, and both verbs result
+in the same applied state (verified by writing with cmd=0 and cmd=1
+and reading back identical semantics). The leading '1' in the output
+is therefore synthetic, chosen as the canonical input form so that
+readback round-trips with what userspace writes.
+
+Changes in v2:
+- Split into a 2-patch series:
+  * patch 1: isolated naming fix with a Fixes: tag for -stable
+  * patch 2: the readback feature
+- Renamed the new DEVID to ASUS_WMI_DEVID_TUF_RGB_READBACK to avoid
+  confusion with ASUS_WMI_DEVID_TUF_RGB_STATE.
+- Documented the synthetic cmd field in the patch 2 commit message
+  and here.
+
+
+Bartu Alev (2):
+  platform/x86: asus-wmi: fix TUF keyboard power state shutdown naming
+  platform/x86: asus-wmi: add TUF keyboard RGB readback support
+
+ drivers/platform/x86/asus-wmi.c            | 87 ++++++++++++++++++++--
+ include/linux/platform_data/x86/asus-wmi.h |  3 +
+ 2 files changed, 84 insertions(+), 6 deletions(-)
+
+-- 
+2.55.0
+
