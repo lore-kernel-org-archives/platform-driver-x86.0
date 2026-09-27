@@ -1,129 +1,164 @@
-Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CE326E71E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 27 Sep 2026 01:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790473240; cv=none; b=mCfncfdjB6TaLqv6ieayhKukdAwuXubFVJiX4lZix8b6OzzCClZdCxWo92T9mYZbpyM0ZtZwCIk3G+zuGphXVcTiWKm2WN/GMEwoazmsLZNpWazzVNMmTXqHgkVB9lMZt1PGU07wmxjQDOI/iqICLms5MNvIpadG+2WM6tZHQFI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790473240; c=relaxed/simple;
-	bh=np1+UTDQL2ZRl08AEqQ1unEzN5csDoYIz3INoUK+B2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WQPE10Y8G4vdquVZMdTRRuVMbiurqmS/GqGnFtF9eSwbJlsOzU8DbMqy61/B92W6OOA5aCmvKHn7PvAsB+W+0YRTrVN9TbSUyne2+4cNEpIejc7FuzFjswovUaCKzVGGqvCqqT9PDES8xGQxXeYwT+um4AYRPOhrf9FjERnUwF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwOSN0gi; arc=none smtp.client-ip=74.125.225.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5271228E0F;
+	Sun, 27 Sep 2026 03:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790478130; cv=pass; b=K+B8QKRjTfCdzd++uFdtpn/DkGTebbKV4Z5sDIQaoui3RYnx/M8Or6A8rwy3un+N5IufJWG+DevTBbvmB7H2yCd1ML3/S8RiKCR+OuOuqUKJjo7X91nKWkhBFwVGORGGbBgQP9jpRCwiczhAlsYLOpdE9TwuTWKRohfI0uHsTxI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790478130; c=relaxed/simple;
+	bh=M6Al3tJSkYdadZYm5i9oNpl26qO/JcIlQcd0axEW8Uk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=mkuq5PtgeY90bTHOWTias/38gZbjHS1GcZilGQmadrpfGyh1ijlGDnYVm4Pux0g3DxV3OP6h1wyA50bb3DTCwegCNipeJE2m30BYMU561h1VwzLKSBFPgpKH6VA8KyCe0o4hpu8yvjyokKr4mtfymrM5AfTbfKf5EqrWg9EelZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=WQ7CPJr5; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwOSN0gi"
-Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-48879d4fd8aso1082664f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2026 18:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790473236; x=1791078036; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=GDYuY7ezdVWq8b8O/Y4mNf/nduIcrzSrBVm3+9ayIgA=;
-        b=JwOSN0gixqlGCa0Tk9vcfdx/3W48CtzjcNriL+lCWshMOf3HJ7Mn/Y2ruRxS4/vkM/
-         h3oXJNgnazmVk5e7wMvz5Gn9ZHUbIvVxJ7lasIRW12iNR6GJncQDvtN7JKjrb8ojDwAe
-         cAo2L9U9bH4Mgz0y/u5olrPnsDiH06vUN9Nf6hNzBeX6BD5nXlVpp9Ruapw07+Qsw4Hi
-         sEYgldL24rFcGrTFvdhJkW6aJTdQ90ZE6K/AV80LBIigMr4eB2BY0MJqcY0syrUshgfV
-         HZfpJIeQK/602wRjJ9kGfg+USQXclGbn4cyOKkIVO0OuX+X5pQuo+C40J8ssEZpLC+cg
-         oi9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790473236; x=1791078036;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=GDYuY7ezdVWq8b8O/Y4mNf/nduIcrzSrBVm3+9ayIgA=;
-        b=Kl8nzwYuKyCLLK0BdwJj1fwVvxysiyPMvYWluqFFww09OQorJmWhD+ZnmXanIHhoDB
-         zQf6LgB1oGSGWy+e6ywEBgw+H9jqVfzXIc+QJHGkuUFjev6v0+m4UItlXb+hVMm8Nk6I
-         3sskT7t2SlTR2vUeYr8a4/EjQH2eWxO3npquSK8x8yQuGL6wPor5pTst6uxcfowYZWRL
-         vgLB3mMSLb65gJvh5jYg+CH8Hg/wGFZ+2HNCdYte4qig6MzFAq4c2yQkoM9oj5hMv2FZ
-         5WVkLrn1mpzAjqGoqfNoIMVFDey9uZIqnoEZam3qy/U7xy8vfFmkZR+Nt9w7tlYhulsf
-         1kJw==
-X-Gm-Message-State: AFuF++mTKxMK1W/hq2xyPQTUPtVpxVBrxTZ0JO/yzdLt/9VGvROaDyvL
-	w1iHGOCThT5X0rnxbmeJeXZDO34GoMRQAB7ytcTnD6wYN/6O5UxiWsZh22ZI1Q==
-X-Gm-Gg: AYBFou13r4GmmbJPVGC0l2Kei9kJRev+yGH8oVD2+wMM82nrRnerLZbM9qlQnHWqfA6
-	qY1po/lmc69PlG6lkBcwghBWAaVf8EFKIFGY7hZjUqMPZHSgnZo0UWwqZ21/3sfaTVePowd510u
-	QXYx4wWeZBCFpVkTambrFWedrVS/H8j+ELhHTCadncSxkuygr/G4XeVjZ6dLG1sF+6hAtOqCYZx
-	5NdC2O9XCnf4e0s+XTY/5CYwxXZSek+GQf0A2j7vMAukZ3QMz8bx5Eci6Zss4nUf82bOqcEuBxz
-	oxRHZu2dkn/u4UWRpL1r6T+MiEUzBbLOXiF5lcbhNC+t/bisZNA5OzYESrmxukbyMKxS1XaoF5U
-	3MGNh8eZo2upCMGSXd0+faJvQgml1eU9GoYJ4W2fLrXUxccdoZJnlFizpVy36tG3Coj/OPb7eP4
-	jL0hUgcQGHEvUSUDFYxA55rCjxshHtAIQ+VWRN/uNgTDwF7gatihcXNocjU8zg2DVHaLpCLxac6
-	baAwWBy3Q==
-X-Received: by 2002:a05:600c:4689:b0:49f:fe48:d171 with SMTP id 5b1f17b1804b1-49ffe48d27amr38924965e9.35.1790473236417;
-        Sat, 26 Sep 2026 18:40:36 -0700 (PDT)
-Received: from localhost.localdomain ([2a0a:ef40:1479:f801:b8e7:18fe:7039:e475])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fee9203f0sm114736595e9.1.2026.09.26.18.40.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2026 18:40:36 -0700 (PDT)
-From: Mohamed Jouini <amad3v@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mohamed Jouini <amad3v@gmail.com>
-Subject: [PATCH v2 2/2] platform/x86: uniwill-laptop: Map the screen rotation key
-Date: Sun, 27 Sep 2026 02:40:31 +0100
-Message-ID: <20260927014031.3465252-3-amad3v@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260927014031.3465252-1-amad3v@gmail.com>
-References: <20260927014031.3465252-1-amad3v@gmail.com>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="WQ7CPJr5"
+ARC-Seal: i=1; a=rsa-sha256; t=1790478120; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=k2uMdp+EeQmmg+KzzyCZjqBt1dttGGNdcFeq/QGCJs2PEJTW4XGprNNFIUgMY1SY7aG72+9xLK730wgPjOTKNw62B9L7fMYWCMoWQCTYxAZmQjIYJaVtv+525vJKM1vmA5VqRYytJE7RsCl910MF5lNUwmQ5bl5R9lgCibiEdXQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1790478120; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=uCFcO0wTrMm3SxGJTzduXVXmAZQ1xhvtC793IWYLU2o=; 
+	b=eskzKeUK9N88wEAm/2FKu+z/N0KHQlL8Y1UBEs6U7SQyWmmH/RY9a0eG9NET5+7UGH3XuZPw1KOm4+nMSTFdAR9B+Nfllh2QZXtPYSjxjzuAi5QVFusEdb2ZN4QUbMegITv3j385yLMUWrGGoMRXeHWUlFUVwsTo7maROM5FX58=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1790478120;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=uCFcO0wTrMm3SxGJTzduXVXmAZQ1xhvtC793IWYLU2o=;
+	b=WQ7CPJr5seIIGCzxK0EUncoI5xIZt8J77+l5xr6fE7td+S7GDSDexyFX05400k+I
+	0rs1231ACofkPpZxJsaQVhbWO+/+jZYaoraTT5hNWdBmFpPHk5Ind4k1TOZfYyRq8uN
+	x2mBfVPi49PEFPjRqXBLmc4hD8Q5ooqem+9Fw2APtcu1X0eZCxo2b1oWEVGrlqBcGGW
+	XHE/6hysjxJO+E1JTDcJaliC7KRhn96yrz1RR9u6eVS5haBHyzdyOabj64xG2RiSdMU
+	bQmwrj80tmUyXZYRnmDP6X7KSYh4w6GsaHDR5GPuSsigEQT22O0DRzmZaLxgSPtO86K
+	6AH40CMF8g==
+Received: by smtp.zohomail.com with SMTPS id 1790478118056127.13666599785586;
+	Sat, 26 Sep 2026 20:01:58 -0700 (PDT)
+Date: Sun, 27 Sep 2026 11:01:50 +0800
+From: Rong Zhang <i@rong.moe>
+To: Navon John Lukose <navonjohnlukose@gmail.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>
+CC: Hans de Goede <hansg@kernel.org>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Armin Wolf <W_Armin@gmx.de>, Charles <hanker007@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_0/9=5D_platform/?=
+ =?US-ASCII?Q?x86=3A_lenovo-wmi-=7Bother=2Ccap?=
+ =?US-ASCII?Q?data=2Chelpers=7D=3A_Improve_robustness_on_buggy_firmware?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20260926210415.3465939-1-navonjohnlukose@gmail.com>
+References: <20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe> <20260926210415.3465939-1-navonjohnlukose@gmail.com>
+Message-ID: <E2EDCF4A-09BB-4FE7-9E67-5086401C0848@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-The PCSpecialist Recoil 16 AMD / TUXEDO Stellaris 16 Gen7 chassis has an
-"Sc" key next to F12, meant to rotate the lay-flat screen by 180 degrees.
-It reports WMI event 0xD0, which is currently reported as KEY_UNKNOWN.
-Map it to KEY_ROTATE_DISPLAY.
+Hi Navon,
 
-Signed-off-by: Mohamed Jouini <amad3v@gmail.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
----
-Changes in v2:
-- Added Reviewed-by. tuxedo-drivers (4.24.0) has no entry for event 0xD0
-  in its Uniwill keymap; there it only reaches the "Unknown code" debug
-  message.
+Thanks a lot for your test=2E=20
 
- drivers/platform/x86/uniwill/uniwill-acpi.c | 3 +++
- drivers/platform/x86/uniwill/uniwill-wmi.h  | 3 +++
- 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index 7d39e97fa..2f440925d 100644
---- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -506,6 +506,9 @@ static const struct key_entry uniwill_keymap[] = {
- 	/* Reported when the user wants to toggle the webcam */
- 	{ KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE,              { KEY_UNKNOWN }},
- 
-+	/* Reported when the user wants to rotate the (lay-flat) screen by 180 degrees */
-+	{ KE_KEY,       UNIWILL_OSD_ROTATE_SCREEN,              { KEY_ROTATE_DISPLAY }},
-+
- 	{ KE_END }
- };
- 
-diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h b/drivers/platform/x86/uniwill/uniwill-wmi.h
-index b25b2f312..1b6f650c4 100644
---- a/drivers/platform/x86/uniwill/uniwill-wmi.h
-+++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
-@@ -117,6 +117,9 @@
- 
- #define UNIWILL_OSD_WEBCAM_TOGGLE		0xCF
- 
-+/* "Sc" key next to F12 on the PCSpecialist Recoil 16 / Stellaris 16 Gen7 */
-+#define UNIWILL_OSD_ROTATE_SCREEN		0xD0
-+
- #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED	0xF0
- 
- struct device;
--- 
-2.55.0
+=E4=BA=8E 2026=E5=B9=B49=E6=9C=8827=E6=97=A5 GMT+08:00 05:04:15=EF=BC=8CNa=
+von John Lukose <navonjohnlukose@gmail=2Ecom> =E5=86=99=E9=81=93=EF=BC=9A
+> Tested on a Yoga Pro 7 14IAH10 (83KF, BIOS QGCN35WW)=2E Neither mainline
+> nor the series binds here=2E This firmware has no
+> LENOVO_CAPABILITY_DATA_01 in _WDG at all, so no component ever
+> registers for that match and lwmi_om_master_bind() never runs=2E Skippin=
+g
+> the match for GUIDs the firmware doesn't declare fixes it:
+>=20
+> diff --git a/drivers/platform/x86/lenovo/wmi-capdata=2Ec b/drivers/platf=
+orm/x86/lenovo/wmi-capdata=2Ec
+> index 805e36ef7=2E=2Ed64520be1 100644
+> --- a/drivers/platform/x86/lenovo/wmi-capdata=2Ec
+> +++ b/drivers/platform/x86/lenovo/wmi-capdata=2Ec
+> @@ -76,11 +76,13 @@ enum lwmi_cd_type {
+>  #define LWMI_CD_TABLE_ITEM(_type)		\
+>  	[_type] =3D {				\
+>  		=2Ename =3D #_type,			\
+> +		=2Eguid =3D _type##_GUID,		\
+>  		=2Etype =3D _type,			\
+>  	}
+> =20
+>  static const struct lwmi_cd_info {
+>  	const char *name;
+> +	const char *guid;
+>  	enum lwmi_cd_type type;
+>  } lwmi_cd_table[] =3D {
+>  	LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_00),
+> @@ -166,6 +168,14 @@ void lwmi_cd_match_add_all(struct device *master, s=
+truct component_match **match
+>  		if (lwmi_cd_table[i]=2Etype =3D=3D LENOVO_FAN_TEST_DATA)
+>  			continue;
+> =20
+> +		/*
+> +		 * Some firmware does not declare every capdata GUID at all, in
+> +		 * which case no component would ever register for it and the
+> +		 * master could never bind=2E
+> +		 */
+> +		if (!wmi_has_guid(lwmi_cd_table[i]=2Eguid))
+> +			continue;
 
+This was exactly what I did in the earlier revision while I was introducin=
+g the support for capdata00 and capdata_fan=2E
+
+The wmi_has_guid() approach was eventually replaced by the sub-component a=
+pproach, because the use of the former is strongly discouraged=2E
+
+In the next revision I am going to convert capdata01 into a sub-component,=
+ too=2E In this manner some heavy and complex work in the series will becom=
+e needless and can be simplified=2E While the sub-component approach itself=
+ is complex, we've had the infrastructure to make it work=2E Therefore wiri=
+ng it up should be a trivial work=2E
+
+Mark, Derek,
+
+Do you know if there is any way to determine the existence of capdata01 us=
+ing capdata00?=20
+
+> +
+>  		component_match_add(master, matchptr, lwmi_cd_match,
+>  				    (void *)&lwmi_cd_table[i]=2Etype);
+>  		if (IS_ERR(*matchptr))
+> diff --git a/drivers/platform/x86/lenovo/wmi-other=2Ec b/drivers/platfor=
+m/x86/lenovo/wmi-other=2Ec
+> index e6c8f6bcf=2E=2Eb196e9926 100644
+> --- a/drivers/platform/x86/lenovo/wmi-other=2Ec
+> +++ b/drivers/platform/x86/lenovo/wmi-other=2Ec
+> @@ -1704,6 +1704,8 @@ static int lwmi_other_probe(struct wmi_device *wde=
+v, const void *context)
+>  	lwmi_cd_match_add_all(&wdev->dev, &master_match);
+>  	if (IS_ERR(master_match))
+>  		return PTR_ERR(master_match);
+> +	if (!master_match)
+> +		return -ENODEV;
+> =20
+>  	return component_master_add_with_match(&wdev->dev, &lwmi_om_master_ops=
+,
+>  					       master_match);
+>=20
+> With that on top (built out of tree against 7=2E2=2E5), lenovo_wmi_other
+> binds and exposes fan1 and fan4 (min 1500/1800, max 5100/5400, input
+> matching the EC tach fields)=2E fanX_target pins both fans, 0 hands them
+> back to the firmware curve, and out-of-range writes get -EINVAL=2E With
+> the change above:
+>=20
+> Tested-by: Navon John Lukose <navonjohnlukose@gmail=2Ecom>
+
+Good to know fan control works on your device=2E
+
+Thanks,
+Rong
