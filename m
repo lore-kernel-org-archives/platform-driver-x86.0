@@ -1,173 +1,179 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012068.outbound.protection.outlook.com [40.93.195.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEC24E9C35;
-	Mon, 28 Sep 2026 16:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790611481; cv=none; b=g8mGQ9cwL3twn0Ty4JX4ADBab9hqYS5cjkp0IrRtEfXei4L6bHtHH11pKgStVBsoIHcXFh7yEmwJXkIOAWFxJbeRmQDZbItamTpL/GvfOLJbCxoYcd0xo/afrUrvZespIaTjb8AbcuCAuv0lyG1vJJJEJhu097GnDc1ork+ZbtU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790611481; c=relaxed/simple;
-	bh=kLAEqDfcOEQkYPaPET7sqGm5ZgtB69lUgsMpgvGJVuI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=l9eTsWuy/fj+6Kd+u2ii7Y6jxEJqwQNSHsYauO0yKyTU7ymMVQhHaT07UiioEQty2S68FfvLw5ygCd5lJEbhrpaoZM0uQcFy2lHbOmaE8pqeSl0+DOlmqv52/NKnHO7j7hIK+K7/MqOKV11mOkgeYXNlxUkymbCpfaKBLSqz0Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=AHuv0fKJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NDzFJj3d; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB6118DB26;
+	Mon, 28 Sep 2026 16:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790611772; cv=fail; b=AEY4eLp0ofKSseKq8BgiWpBnZSZwEKYzK2h0WN0tnJQAA/nzaMMfTymbq4yHeyXuV/XzN3nNXAvAjisSJs3TdVNtdXon2WHUS9nI6MWflALmBvjK9pxeZYcSmwt9awNmVxOhgZ4ZnmCE+HDMV2DPHTFOLG3GG7DqZdNNuzT3qXI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790611772; c=relaxed/simple;
+	bh=Hv1HdoM8Abvf6gFi2Kj5cuQZ6JsGEp1Fz6hZ7Bp0AX4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jJ8bbtrMwTTMnaZtAOPGPsTMWj0N9b8wlLPrcJFX0dDXJtIJSySDPThlSoar9uKGchpmF8e68zrFLRoMK/yPP0qW+vSk2tPbheHNeNgUa5PzLEQyOWtSBtwvLtXq9sjkN+RNkIPhC9GykvrM5xH+M2H+gk/SXDJ7/pWMjStL5TI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LtSra+v2; arc=fail smtp.client-ip=40.93.195.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="AHuv0fKJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NDzFJj3d"
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfout.phl.internal (Postfix) with ESMTP id A7D18EC01A7;
-	Mon, 28 Sep 2026 12:04:35 -0400 (EDT)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Mon, 28 Sep 2026 12:04:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1790611475;
-	 x=1790697875; bh=FBClQ+EexY9feoQdkCK7Xc+PSc1xhp686fs+Ui5fngQ=; b=
-	AHuv0fKJwTyUYX7rBzg0V3CKKGPTw1642PxJ5dALtySm/LFcLRCRKg8J8FKzLK/2
-	qSMUoW2uxuSlBQHRD6hTYhu02GfgrfqV9FIBjMr0I++l1jLSU6zwmaYLN08ep1Jm
-	c8v7/LHJ+0Tvo/n0AyeSsmn/YGnz7sZvYFEeyBRQuP7kNkPDvAaAn5Vr/ePyMckS
-	VLKuiSTBzUNtt/K+QhlTG69luoq5Zr9CyCJxohBNWsix5gimxS//ES4ZBBBZXIh2
-	PR7yThXflvvsPC4Loz7rzsX0+Eec8MAv/uuN4Fb1mPhYFpC3c/QYRQh+I3OVofil
-	tY9D4Q6sGZMNfDyOxDq6ug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790611475; x=
-	1790697875; bh=FBClQ+EexY9feoQdkCK7Xc+PSc1xhp686fs+Ui5fngQ=; b=N
-	DzFJj3dejjgO8Lf4JMBff9ODhbd4f+mWdpTBQNj78qUeX4ozzQ3I7nK4pze42vu+
-	NMKi67mG6ao5EPqYz+uP2s+7UpWWR5cGiwjG9+bRIqcDU/gAcqAAMeiBSUMOnN34
-	eAjGd4Y8KLmeM9DHF1T6VRrHipHq3hOgTk1AQfkRMftFtzRM2HxkORmlqiN3oJtT
-	2nndAoVYsW69LLFKkKGKDdtkhWMz+pCPkaZtcJ07dYhD1n/Iq82yZMZLsOPmQVCs
-	Y17I3Kfu32J+Zl9OtDrFvzBnHZ+1ptG6AO35FdXl1AJFLo+yY8tFO48WuX8KYNYz
-	1BFQ10+cZfHRb8DF07k0Q==
-X-ME-Sender: <xms:E5C6ajZxKFhSzv_Y-vUOMYErkw1gHJvlEs5cYLTPrfwWX5NjfpBoxQ>
-    <xme:E5C6atOLRewmywHRv-qsfB7468p_syT5YjtarZMW8e4_-c_XtFwp12UAijYyR71Kd
-    qxGLGDUemc1lSvmenXWhPWz-Dzelttux36a8RqwkKra2qDiutOwFILQ>
-X-ME-Proxy-Cause: dmFkZTFMvyW5IyQ+AiVUIx/VcIGi15l0kCSJVcp2PvhquDuHMkTPJtvqAiJiH3hTIG8zch
-    nKHcOFC/KQwBSQubL/cIHDt7G4qoDTZgKx0caURUc0XxiG7U/24+fHx4EutLyBfn4D45Jr
-    ac2Vc+gKgx7QP4ck89tG6FBH3c+O5vwdHeH7z3mOY5bwOcGR9GvmyYp7EfcnYH0USlUAxO
-    DdORm1w743S11FTH8Xyhu+T8TTe24S0NfGRYVQQkts0ExV2W3JeZPr0KmXWEQldjK0d4p4
-    ZwjwzeIKjl98pvNeGQ2xyWa2/TIXTWCYnsyRxeDSWyh1ZTkO4bog1WnfWotUXZukWuCKnM
-    3ZbI5GXGiPBmwqd9oL9LO+tW9YaMXl7tP3L7MRO6U4fq0kgxhQLfx6fFt1TC6aVPoNyUEX
-    gmlBonyInsOraauYG9hxDb4e+iB0TIIkORGuUgWZSP8vl5g8w3UURoIfkGufnIvP1J9+TO
-    9gv0Dre684faX4OcTDbz8VRlYdCar1AqJK/64N9d8Xju7HUZWrbohmCQ1ZqyFo1x61JenN
-    b51pr9Q88BUzOQVQDjsD8ZkR5KBuMoALOZZouofbcrgAylWt6vivLPATJs6K3bQDv2yc9G
-    nd+DvhfQeB1bL/GHEhebrAlkoCmukhUfImuUT6Cw9ElPEBCYerAU6ZV+C8DA
-X-ME-Proxy: <xmx:E5C6aj7S3Q0Ef15LU_AO4fNaBgRwnE5_8jLVCFekGGso4ABEcJw-ew>
-    <xmx:E5C6alcfSj8fIpkKmi4na2OvmtpYrZAfvo4bxj8oxwgDfUkYuyOG_g>
-    <xmx:E5C6au66kVSAaeP7HmQnz0kn8KIhkL6y4hnoPlJzpw3ppzECXTIfQA>
-    <xmx:E5C6aq9s29e48mFZXYrV1GedwthOa_U01z4NZNamNDLxSKD6DzbApA>
-    <xmx:E5C6apncGMCBlSdwoevlAfXqFH8JTyRHdeI_8f6WXMpwVxXhJJOBA13C>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 2848F2C00071; Mon, 28 Sep 2026 12:04:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LtSra+v2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Uj/RfQ2DcczkyuficRGSbyvpSLQQbfnN9r3PVb/tkrTOiNeAxyvtllD6YIPOEEU7DNc615XzfUFHrf+w98QicD3NBK5tk8/E1S10QHLU+hjuy6bmdTrgIEQ4B3d6h9CEI0JiNxXBcbUHL6VSPprWp6HSaNxOE/a2gkGcgiGhk5eEt9mXbTBsTBKiKSpq7hBhHBGbVkF6bDIgdH4t4iLh51rrmm6fqZNkM/OuMf7OpQQhRN7pMAWBhGNm529LPrFWXNOLMb2V+uBAHqHo+8DwVi/pMut+jfojuGb6OBOFtoh7F55VRssi8Dkm+peG2rv4A29mq4xpZqWeEuESbFMABQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GxcvQ+f9zzfaj2Cnf7TRiYJjYADSeoVH1r87Xqdcs34=;
+ b=IurEJrNAGDlxJ+d1cDrTI+dBg3oQXC8FJiK5APLLBHw2vFmiie2haMDeICn/jjokR1b6IBGCrQoQStGbL0ae8pAthHy0rrASSsNcYPzVmPVQ5PtyglH1j3XuDATpmkW/0wWYrxzIJwIgqfcHj0kTgvspTt0qCN/uwNsI/d0v4YMvN4vCso3HKYyisHutsz3WXaf3rCDI8Bq68WkJvq5sgnuBf/Vtj2owMIGy8WKKrNXaXmBkiwHox+WBtFGs3gByUD+Ee68pDC3Fr9ZrStm6YOZRk3EbDyGMoCtpL1mYCFDEy/vl6VQ/Y5eZD7MwJ7fvNSHS52vlwgemoGMzH9MM1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GxcvQ+f9zzfaj2Cnf7TRiYJjYADSeoVH1r87Xqdcs34=;
+ b=LtSra+v2X1c5H+TtK+2DNJ9gAKUhJA6Zy+hEAajSp8HHIqG6MoQCh0DJ7l9R4O8TPHk5uOBmgwyxyDQgqI75motfAqpo1aPSf/AlQGjxK0N+SGYHGTk0PV8i/xtr4m68W53ioPvGh5Ivn3EB/vIb0S2/fUiKDF4BBfOWSmjfBC0=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by CH3PR12MB8880.namprd12.prod.outlook.com (2603:10b6:610:17b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.24; Mon, 28 Sep
+ 2026 16:09:21 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0451.022; Mon, 28 Sep 2026
+ 16:09:19 +0000
+Message-ID: <20c15bb0-abf3-4a34-86e5-712f8f131acb@amd.com>
+Date: Mon, 28 Sep 2026 11:09:16 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86/amd/pmc: Add Thinkpad L14 Gen3 (21C5) to
+ quirk_s2idle_bug
+Content-Language: en-US
+To: Bruno BOI <bruno.boi@bobtopus.eu>, Shyam-sundar.S-k@amd.com,
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260928160607.679319-1-bruno.boi@bobtopus.eu>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20260928160607.679319-1-bruno.boi@bobtopus.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0252.namprd13.prod.outlook.com
+ (2603:10b6:208:2ba::17) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AroOoK2VWtDw
-Date: Mon, 28 Sep 2026 12:04:14 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rong Zhang" <i@rong.moe>,
- "Navon John Lukose" <navonjohnlukose@gmail.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>
-Cc: "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Armin Wolf" <W_Armin@gmx.de>, Charles <hanker007@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <9789f452-d7eb-4f1e-8a13-7335332193a7@app.fastmail.com>
-In-Reply-To: <E2EDCF4A-09BB-4FE7-9E67-5086401C0848@rong.moe>
-References: <20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe>
- <20260926210415.3465939-1-navonjohnlukose@gmail.com>
- <E2EDCF4A-09BB-4FE7-9E67-5086401C0848@rong.moe>
-Subject: Re: [PATCH 0/9] platform/x86: lenovo-wmi-{other,capdata,helpers}: Improve
- robustness on buggy firmware
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|CH3PR12MB8880:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00c1a39f-71fa-4a30-24d5-08df1d7ad9e9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|13003099007|10067099003|11063799006|56012099006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	dFjoF+MpIoN3MMxc1g34+2F3QrnKIEtwmuyl13oHtyElB3hjrJ0A5mJG3xBp+nIm7ClRsz7SihjAB8RKGaFvQbYVnUab0iMYw/0vKtnXaOWmkC0oOi+QcUFHga9c4Nbkz0btqW5TjLA7K4nczceScOI15zg3cGdNCHe1zdBQj+Q1MxOVzHs/RaSJxpGUpJU01eRBZBEVtsoxiHyN2+EyBEsxlxaCIRvMxwrhPNfe24IkcmecP9Kjq8xxbI+EQyGG0+8BnfvItgvwgiVEYl2ikiwwpYDZ855u4F+qLsVXWPWjjwsAI2oPSF81BxmIvpUWUUqp3zoQqNCFIVGCmdT1c9Ql175lYXVH//+3yzq4ndx6XEGKgLfWLz42D92MYTgq/4IcHpCKIjfiifDhba/zPggU7+LQX9f6ztFAmLc8y/cGTbnVSXBdh9eT7wVS32DGKUY6nEy/TVKFVF6RAyZC36YE+AXK5IJXGeZ6zAHdOucMVCmtt3J3YWVkNNjnAXQZCjb98KpfkCuuFldkLpNrjGcx9VF+PM07HenORIXvvXXwGV5ixx6xaPWvgr6zMoZ7cZpgwj1zsILYG2lf4K+ZdTijfhEv1KcpyFDgFfHdZSs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(13003099007)(10067099003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?KzlxNHFzODhvRU5KcTlXRDF6dFp1ODN5Y0lLTVcxekNzazFWODBNdmRVRmhO?=
+ =?utf-8?B?Umd4VlQvUU9hSjJyUDFnczlZSG1ZV2szV1pWV0ZPcDJ4OEIydSs0TWRlM1Yv?=
+ =?utf-8?B?RDY4bEFRNlY4Qms1R2ZYM1FMOC9wWDBCMzBIMjJRelhremVOU0FQU1pyc0R0?=
+ =?utf-8?B?MjJYc2ZWZWpVYTdTYzRKNFVoOGVuaXMyNDZhdkY2V3RLck96NTNJVDlFdHpD?=
+ =?utf-8?B?UzJLYitTTFFraHRvdnh5SVVrWEJJRG14R0xDL3ZoM0NONFkrc2FyV05DWEll?=
+ =?utf-8?B?eFpsWW1vcTlBQWY3RGtXK3NEcnpRNmZiTXhXam4xS2o2bFBKZGtRbElZZkNY?=
+ =?utf-8?B?WS81aU5OWHRhdWRKTFpnSVpuQ1lSbTNWMmVJTGpUMGxOaUs3eXZpclpSdy9J?=
+ =?utf-8?B?UUFhSkVJMmxPcmRjMUdWaEkzdDFwbk0zYmpwRzIwOHZ4bWc0K2VsVkRzd0VN?=
+ =?utf-8?B?cUl4cEYzaFpOR1VUaXRFNytXZWJORmhsNWJRKzk1YlExU2dGWTNFb1JUUFFl?=
+ =?utf-8?B?Wktkb0w0ZHdlSjdQZG8vZTdUdUlGVkV3RVZHUkpqSVowZHBWNnBmeTFCUkJy?=
+ =?utf-8?B?aWswSks5TTdVRzVhMlhHamRQVmUrOVdLQk1VVzByZzhmY0xVenNDVEVubDZF?=
+ =?utf-8?B?azBaSk9MSTBmTUtXQTlUOXBFdlZKamxpUHpWNGtPRElNOENuOWRielpQWUhv?=
+ =?utf-8?B?N0t3TUhmSndQUjYzdHJlYXRQb0pqc1dsZ0FGREFvcUtrVnlqSytmQzRvUFNI?=
+ =?utf-8?B?Nkk5Y2RqaEQ5R0dFa1Nkd0FmRVhMRnZBdUlFUGRseVR0cFlOQUl2WTFwZU1j?=
+ =?utf-8?B?WTg5cUsrbzlTVVJUNFFpd2NwZEpxa1ZwbDhORjBnbDVCTERac2VYd3UzbGZT?=
+ =?utf-8?B?eS9oVGRPL3R6ZWxPeWZ5b1ZUY2xhaGR6U3VvLzJBcERjV2I1b0FQanZycS9C?=
+ =?utf-8?B?RmliWDNSWXVDd2lHeDVGTFVPYkFoYW0rODFrcVlmV2JYV05QWXJJV0w3MDhr?=
+ =?utf-8?B?cUZwTWtaY3VsZmMvWVNCdW5JdmV3MmtuQkw4RG5GUGlYTVJNaTIxQlFyb3B4?=
+ =?utf-8?B?SXhrUlZDampGYnR2Mm1qaGM0Slp2Y3h4Vmd6S3R2Tzd5QjJqemVseFVtQ01S?=
+ =?utf-8?B?elhJZm03VnpMT0w4eHR1b29wZ25DeGUrbmVXdWZPMUVWNGxYUEpGQWhtOXk0?=
+ =?utf-8?B?dFYxOGp4WlJCN2E5RmpUcm5yU3BBNzVQZ0ljU05CaUQxYW9STnUrWmZOdmor?=
+ =?utf-8?B?UzZQMjE3ZFJKekJwL1diSFdadHNmdlNvQUZXVXZLSHJSeGlBUDlDY1JWNWcx?=
+ =?utf-8?B?UGxMaGNIZ01ybUVwamV5dWg4Nk1tMGcvVjYrbHJtbk9tQWhxV1JlYy9iREdD?=
+ =?utf-8?B?ZnBmRlo0aW1jRkdvTVp1TmRLWUR4Sm5xWDZtME9aK1F1M211NUFqc0dxSnor?=
+ =?utf-8?B?UTI5aTFQYzd2V2E1QVQ0UjU2dk9XY3pyNW9SbXJYUW5EdERReC9IK09Sand4?=
+ =?utf-8?B?UUo5RTVCcHBYa2s4ajZxSDI0U1FkeHppckpMMGhFN2xsZjkxai9wenlwdG9r?=
+ =?utf-8?B?YXplWGRObi9RK1lQbGtrUWlPVzlqSXVlOUphZmp3bnE5ekVCV2Q1UmZ2WUd0?=
+ =?utf-8?B?SXd3dGxrdFlLYlcyQTNjVE03YUdpN0lUZkN6R3BNR2ticFphYU1PT2g2dFhR?=
+ =?utf-8?B?S282cDhYWms2WVhFY0ZrcWlMSDNBTFdCQ29MM2NVUjR4TjVSSWN0YlBxaWJm?=
+ =?utf-8?B?L3VPZzkxeXVlQjRnZ01LRXhaSXVncUloRW0vSmRaZ2RlaGQ0NnZxelRhNE5V?=
+ =?utf-8?B?bGpRNldyWUpheS84bURJTFN5Ny9aRFA3YU5oZnp4UjFFZlltbEZ6VTN6S1JN?=
+ =?utf-8?B?cDFPR3JzalBuY3BxaTM5RFJ4WVNHdU9mRlprY21JRDdNT0c1UzhzTnBOV0NK?=
+ =?utf-8?B?SDRGQnhLVFVXMmdJUzlodG5IUnpOTXphRGhIbm0vMU5mU2lSU2taSDAyRDVL?=
+ =?utf-8?B?ZUNuSXJpcHZtNmNTSmFTZ3JrU3IwdnplMnZCNEpxanVNcmdxV2hlMEJQSkQz?=
+ =?utf-8?B?UFFDY2hDZ2FnNTZYL2FEelowR2xmSFZ4R2J0V1FjTGdjTm5wOUd6cmppNmln?=
+ =?utf-8?B?NEVMa0FaaTcxQnJOSENQUFpIRjlBK0szem9mSW1pTUZEVlVSVHBMUG9DazY4?=
+ =?utf-8?B?NWNXQUlEQWFYZUM1MHV0QWticFpUaUxEY0dWSWZIMWNTVlVzeUJPMk0wRkJX?=
+ =?utf-8?B?RWlQQWpjUVdIdTRyemdzU2FjTFlXSjJRdTVtQ1p3am9xVkEvQlJYRHVHWTU0?=
+ =?utf-8?Q?oZMVvyzOrrqDeDqzkt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00c1a39f-71fa-4a30-24d5-08df1d7ad9e9
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2026 16:09:19.2236
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 01ApV1sHuntCbMkoNYeTFl56GgKrLV8Tda6/9YK3davwPJNiM+1DgFdDcrQo6cQxCVzqok3C1ujGXKTeJXJEcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8880
 
 
 
-On Sat, Sep 26, 2026, at 11:01 PM, Rong Zhang wrote:
-> Hi Navon,
->
-> Thanks a lot for your test.=20
->
->
-> =E4=BA=8E 2026=E5=B9=B49=E6=9C=8827=E6=97=A5 GMT+08:00 05:04:15=EF=BC=8C=
-Navon John Lukose=20
-> <navonjohnlukose@gmail.com> =E5=86=99=E9=81=93=EF=BC=9A
->> Tested on a Yoga Pro 7 14IAH10 (83KF, BIOS QGCN35WW). Neither mainline
->> nor the series binds here. This firmware has no
->> LENOVO_CAPABILITY_DATA_01 in _WDG at all, so no component ever
->> registers for that match and lwmi_om_master_bind() never runs. Skippi=
-ng
->> the match for GUIDs the firmware doesn't declare fixes it:
->>=20
->> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/plat=
-form/x86/lenovo/wmi-capdata.c
->> index 805e36ef7..d64520be1 100644
->> --- a/drivers/platform/x86/lenovo/wmi-capdata.c
->> +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
->> @@ -76,11 +76,13 @@ enum lwmi_cd_type {
->>  #define LWMI_CD_TABLE_ITEM(_type)		\
->>  	[_type] =3D {				\
->>  		.name =3D #_type,			\
->> +		.guid =3D _type##_GUID,		\
->>  		.type =3D _type,			\
->>  	}
->> =20
->>  static const struct lwmi_cd_info {
->>  	const char *name;
->> +	const char *guid;
->>  	enum lwmi_cd_type type;
->>  } lwmi_cd_table[] =3D {
->>  	LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_00),
->> @@ -166,6 +168,14 @@ void lwmi_cd_match_add_all(struct device *master=
-, struct component_match **match
->>  		if (lwmi_cd_table[i].type =3D=3D LENOVO_FAN_TEST_DATA)
->>  			continue;
->> =20
->> +		/*
->> +		 * Some firmware does not declare every capdata GUID at all, in
->> +		 * which case no component would ever register for it and the
->> +		 * master could never bind.
->> +		 */
->> +		if (!wmi_has_guid(lwmi_cd_table[i].guid))
->> +			continue;
->
-> This was exactly what I did in the earlier revision while I was=20
-> introducing the support for capdata00 and capdata_fan.
->
-> The wmi_has_guid() approach was eventually replaced by the=20
-> sub-component approach, because the use of the former is strongly=20
-> discouraged.
->
-> In the next revision I am going to convert capdata01 into a=20
-> sub-component, too. In this manner some heavy and complex work in the=20
-> series will become needless and can be simplified. While the=20
-> sub-component approach itself is complex, we've had the infrastructure=20
-> to make it work. Therefore wiring it up should be a trivial work.
->
-> Mark, Derek,
->
-> Do you know if there is any way to determine the existence of capdata0=
-1=20
-> using capdata00?=20
->
-Note that I can see I'm afraid
+On 9/28/26 11:06, Bruno BOI wrote:
+> The Thinkpad L14 Gen3 with DMI product name 21C5 is affected by the same
+> s2idle resume stall as the already listed 21C6 variant: resuming from
+> s2idle blocks for several seconds before the kernel resumes.
+> 
+> DMI_MATCH() performs substring matching, so a "21C5" entry also covers
+> SKUs such as 21C5S05800. Add the 21C5 model to the existing
+> quirk_s2idle_bug table.
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=222070
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221273
+> Signed-off-by: Bruno BOI <bruno.boi@bobtopus.eu>
+> ---
+> Changes in v2: resent with the correct sender address; the patch
+> content is unchanged from v1.
+>   drivers/platform/x86/amd/pmc/pmc-quirks.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
 
-I'm guessing the patch Armin posted on my thread "[RFC PATCH 5/7] platfo=
-rm/x86: think-lmi: Initial ThinkLMI v2 driver" to check if it exists won=
-'t help here?
+Mark,
 
-Mark
+Since it uses prefixes rather than a new entry how would you feel about:
+
+DMI_MATCH(DMI_PRODUCT_NAME, "21C"),
+
+On the 21C6 existing entry.
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> index 74ddf1d..c3fabc9 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> @@ -246,6 +246,15 @@ static const struct dmi_system_id fwbug_list[] = {
+>   			DMI_MATCH(DMI_PRODUCT_NAME, "21C6"),
+>   		}
+>   	},
+> +	/* https://bugzilla.kernel.org/show_bug.cgi?id=221273 */
+> +	{
+> +		.ident = "Thinkpad L14 Gen3",
+> +		.driver_data = &quirk_s2idle_bug,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "21C5"),
+> +		}
+> +	},
+>   	/* https://gitlab.freedesktop.org/drm/amd/-/issues/4434 */
+>   	{
+>   		.ident = "Lenovo Yoga 6 13ALC6",
+
