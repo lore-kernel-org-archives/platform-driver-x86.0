@@ -1,69 +1,68 @@
-Received: from mail-ej2-f43.google.com (mail-ej2-f43.google.com [74.125.228.171])
+Received: from mail-ej2-f42.google.com (mail-ej2-f42.google.com [74.125.228.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A034DD3D3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 15:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325014E2F2B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 15:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790609954; cv=none; b=O6tqdJA+phvchDZE728cU/6treWHbcZiJs9wCIndkxRl5BgQkhSQXlD+VeRS/3NckoTS+uva1aa/8n1AGn76jjazftzoIVJbxoDYOwk5a25JASpBuYCt0wPzTv6TCwKZjIw1BZe3qmP/Pt7vOByX8IbwtJ2YhOlnH7Hth8t1F0g=
+	t=1790610224; cv=none; b=pbeEwqs7UUdKcCSC6DuDQ7BfySQa/MMZL2UqCk3hranZDM2YXofMtDgvO0qLqZFPHbjNAohgooJvZemZQRG1irl91e/rauBvS/8mu/TkXMHNaOVMLW5/tBxNFxvrF80BeFZVPn+uP3fCk2gVkFN+2fpKYHl1IRkYw5hQ3PoY41M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790609954; c=relaxed/simple;
-	bh=n1yrVw6CbTk+e2yXLvZ8PmrFY/8j/hWiTX1+fz0ByQg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pdx005IeMhpOiRRRRD1A8+HnDeNIcAdTcwBlEd0mD8IHTRXhha4C6oz9TRQJN88K9+42Kil92HBA7wqjZEimQxlpb7jU3NA+AKhdVl0o7XnVYdyNjrznTPfKTAgnXPDKOXet8W9vtt3dEc1r8LoXaUqYZvaIdA9+7D7r8ffiCLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miget.com; spf=pass smtp.mailfrom=miget.com; dkim=pass (1024-bit key) header.d=miget.com header.i=@miget.com header.b=DilsuCrN; arc=none smtp.client-ip=74.125.228.171
+	s=arc-20240116; t=1790610224; c=relaxed/simple;
+	bh=fdvGTm0XJB7apiFO4dy/nRHYvecWmvWH+2/zLv7ZxOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dhRNPbW99XcxXGvWgWv7xvQ4S0SkT6C0gi9SKXyetYroC/rRvG4r91lwXCjEJmit31DHlVZUMsQ3WspsXrvYmJg0M0JK5tPKtJAx9qApF7KYeIYv2QNcfn/T341oKAgUIOEpbKP6exSxi9I1+lsA6vV+BhR8Um6BM2MSKy9Z+40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miget.com; spf=pass smtp.mailfrom=miget.com; dkim=pass (1024-bit key) header.d=miget.com header.i=@miget.com header.b=AhFV3pww; arc=none smtp.client-ip=74.125.228.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miget.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miget.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=miget.com header.i=@miget.com header.b="DilsuCrN"
-Received: by mail-ej2-f43.google.com with SMTP id a640c23a62f3a-c2af7721e4aso406688766b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 08:39:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=miget.com header.i=@miget.com header.b="AhFV3pww"
+Received: by mail-ej2-f42.google.com with SMTP id a640c23a62f3a-c2afe9fa8e0so304977166b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 08:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=miget.com; s=google; t=1790609951; x=1791214751; darn=vger.kernel.org;
+        d=miget.com; s=google; t=1790610221; x=1791215021; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=kWvYSe8kW5lJCuL2xTq1KXQt5geh1d6a3q69HD71LA0=;
-        b=DilsuCrNECn7/AOaQjCXOh9zdgegGHhfKcd7hL3aRvEQc+npOX2dfuKfc1eR4rSOip
-         AVu0QvroETCkSqsfrrlV2iR8Bu85Xr+7tcOi+okqUApcRF7HxTs3ahgiVLY8yJixHkW5
-         o9CgzinNNuwJjKxhsi0Cu5KX0e5pEWPDWkWp4=
+        bh=MwfP8o6zwIYW3W/+Z/SliTtN4CfWDbHolfBtqGrp/gU=;
+        b=AhFV3pwwDg+GGPtVHiRfGae2tNoGPrEg+TfzBRVpAflE8Jsf+ulhdnZsP/jNI/B1uR
+         6/8z4TfSbWK5UKgS/av4jBqo9AWNyBh3UzULugPD4PMXNZ55qAuumVgvQS55rfwLLZal
+         E3bTSRMUv/6mfAEs9PzanxkBu3HFck+T9c9LQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790609951; x=1791214751;
+        d=1e100.net; s=20260707; t=1790610221; x=1791215021;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=kWvYSe8kW5lJCuL2xTq1KXQt5geh1d6a3q69HD71LA0=;
-        b=QqW5gPs1UdyNi1i9F3DhGoLKJV8OwpeWmo0khxEKDmsd+qUnE7lkAT97j0flUTgzho
-         a+3LFFXoDHYtBVKH3GeHeMJ/LKatZcahANi4w6FkBaGn0gNaq8JcpBx6aO7nkxHOc+Xj
-         ug35Mn9uZC7Egq4P8x7Zv+iqh4QD6xvbVrEkEOUY4H0zp+v1V1CecfbgUL8xM6kJgsQa
-         00U+0agIApCG6pRr1Yj9FzM6WyDdACHgps7bELp0PVbIpQf4H1AXFCNrT6XkwLz8kv2T
-         Je2XT3+3haTXo32YYc6NzsR/GhrdxDjSz+LR1qpm3AiaBNYuvQWotTOos4i+GnzxKdyj
-         JsnQ==
-X-Gm-Message-State: AFuF++lE8JYmhCaIg67T0qZuNx8kJOCcFWEuBSZzgvLGRy86GN017gU8
-	01RE9WsCn7RmTtajIpm4COtS3jhTlNQhdLfuI1sZOdkLW6Ji/QXbdlTw+r4ih1t3FSQ=
-X-Gm-Gg: AYBFou060hCLDh0ResDtAeWpQDwHugic/t+OPy0f0N7QFn9MBDLn7eRhYbIdmma25DU
-	tEK+VScY+DI5Q9NhESxWuoyBlmYtoKlQRo5v18HVJfj1DApBLFKpxrars1rPApD3ClCvpK6ymo0
-	UiQt+6dNRLfMYbQL8Zkh90oIP3dhzBeSEsjYcU+LAn+qgij2l9b4tIFK25YnDcZ8nof8ssU+7E9
-	zmUbQkaJerWL6KDMD652UyQFFoyqbptlbsk0yC4kLnV7pSr5IrlGGn1XLoyg3I+Z0sZoso4gm/N
-	/vZWDkKznveQ16g7apWxXsUeVnD/04GvoIzK25xy7kpUEliStF9XqM7lSvXigwLyWc953swHYBh
-	0CGi/BhDhFs0fRyWDhjZAZXx06plY2OxGUpYslVtGO0zLtWyQ0oo9TQHeNmI0mMzUDViCvsjDbw
-	kQIc/wu4gjCrDR1fcq2mnI2hO2Y5su52lcsEy3eY23t6xVIia6VlsgwGI73+Mj7Lz5AqcPtoX8j
-	FO9dY+PHrlMcd6zG6HhF8uur7LEeF0=
-X-Received: by 2002:a17:907:db18:b0:c21:180c:d82d with SMTP id a640c23a62f3a-c2ac242d173mr1174805466b.20.1790609950732;
-        Mon, 28 Sep 2026 08:39:10 -0700 (PDT)
+        bh=MwfP8o6zwIYW3W/+Z/SliTtN4CfWDbHolfBtqGrp/gU=;
+        b=kNTzyNnsPJbFoykabylp03nkzaP5dI8YGpQtI+kUkjizxsACnhI6cDteLjM6oidS5j
+         KzbRRuGIQiS7Rqw9qaHdvyVz0etYqxWNL9h3LKRNgvxiHNKFVy9eDGNW40uoh7X2Twf8
+         5bnxhPTLxrbyI2S/SOFvlqyKIMCQLluU1ll+6lwvw0AnahfR3PeItEil2v/kMcNxTnoF
+         BRQzBxF0KiJw8uyyoMrOJlTkAfClsRJI7QwVOIrzpTOZyS43ceVajUkTKVTO2ud3Uya/
+         J7UOXRIzGuRDLqlqjegLy8W0xOdMWR/UZRkKefDlExcPwMw5F1UquWVwBxlU4Cg8EiZl
+         hT/g==
+X-Gm-Message-State: AFuF++lJUgEDsghR1JsHLkx2MYO2T57taKfxdp2+mvT0IW407F4PK/UV
+	ae4Au7UCJZUQIbbx4nyPF47MvyiJYtva+SWYrKv/MF4u1+I6NIVylWO1p8zDe6Kgb/Q=
+X-Gm-Gg: AYBFou00QzbcbsaYWNxBIZSPNxwhS9ns0525zx0y03XRxqIssT8NnIRdrb5+EPsjcpb
+	6jJ+Z4prn5vCap7YxdIc759uYHt5H/DAaPLuy52Up42HV47cGNXk29uxL12MKnadjDaqRezPPIT
+	aiKhGG9ndOQqHt+4GAO7RSYOsXQSbtX4VGfQJGoZF+ezeCCPeGZaUYNCp393bBtpaUqbV1pvvgi
+	OxrvGAki/lZxpMOLadNhZ2JQAfHnC8wCRPSyHtzKHHCVTk5n0OKmLTmZzPNt1wksbXJ2RkUiaJy
+	RNkJvETwJkiUzXrtvfWhUf0HqKCRnBYhzcYCmIeb73/CQ5Ei4E+oxXWNBrNsQTd8+x+1G/xY6Pm
+	MQN2xLZx+oltROd9t3llbLdnyJ0ny97kY0/rLZAiCjfaPTJKNBSt3y4spWQvMgMdOp348Mcryzx
+	0xZbLK8OJMdtI/sWACKr4YvH065PJslUAa/9CLi//K3RZ/VpP75uIb7yU00Jn4iAZPQYyMlaoAW
+	SWJ1Skuj0SsDhFdrecx
+X-Received: by 2002:a17:907:f497:b0:c25:8fdf:5d with SMTP id a640c23a62f3a-c2ac2395ae9mr1101349166b.13.1790610221319;
+        Mon, 28 Sep 2026 08:43:41 -0700 (PDT)
 Received: from xia (user-31-175-132-26.play-internet.pl. [31.175.132.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2af70056bbsm415974066b.49.2026.09.28.08.39.09
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2ae757857bsm490538766b.24.2026.09.28.08.43.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 08:39:10 -0700 (PDT)
+        Mon, 28 Sep 2026 08:43:40 -0700 (PDT)
 From: Chris Taraszka <chris@miget.com>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Chris Taraszka <chris@miget.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH] platform/x86: bitland-mifs-wmi: Add Xiaomi Book Pro 14 platform profile values
-Date: Mon, 28 Sep 2026 17:39:02 +0200
-Message-ID: <20260928153902.139956-1-chris@miget.com>
+	Armin Wolf <W_Armin@gmx.de>
+Subject: [PATCH] platform/x86: bitland-mifs-wmi: Only check the function id of GET responses
+Date: Mon, 28 Sep 2026 17:43:37 +0200
+Message-ID: <20260928154337.154969-1-chris@miget.com>
 X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -73,173 +72,67 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Xiaomi Book Pro 14 firmware (BIOS XMAPT4B0P0909) implements
-SystemPerMode with its own values. Its WMAA SET handler only acts on
-0x02-0x0a and silently ignores 0 and 1, and GET returns one of 0x02,
-0x03, 0x04, 0x09 or 0x0a. With the generic values:
+Commit 23cc56f6dea6 ("platform/x86: bitland-mifs-wmi: Detect failed
+function calls") rejects every response whose function id does not
+match the request.
 
- - balanced (0) and balanced-performance (1) are no-ops,
- - performance (3) selects the firmware's balanced mode,
- - reading the profile fails with -EINVAL whenever the firmware is in
-   0x04, 0x09 or 0x0a, which it often is after boot. The failed read also
-   makes bitland_mifs_wmi_suspend() abort system suspend.
+The Xiaomi Book Pro 14 firmware (BIOS XMAPT4B0P0909) only fills in the
+function id for GET operations. Its SET handlers clear the output buffer
+and set only the return code, so a successful SystemPerMode SET returns
 
-The values were identified from the WMAA method in the firmware's SSDT
-and by setting each one through WMAA on AC and reading the resulting
-sustained package power limit from intel-rapl-mmio:
+  00 80 00 00 ...
 
-  0x02  18 W  (quiet)
-  0x03  37 W  (balanced)
-  0x09  45 W
-  0x04  58 W  (performance)
-  0x0a  18 W
+instead of 00 80 00 08. The new mode is applied, but the driver returns
+-ENOMSG, so every platform profile change is reported as failed:
 
-Map low-power, balanced, balanced-performance and performance to 0x02,
-0x03, 0x09 and 0x04 on this model. The driver never sets 0x0a, which is
-only reached through the firmware's own mode cycling, so report it as
-low-power.
+  Failed to write to acpi_platform_profile: Error writing
+  '/sys/firmware/acpi/platform_profile': No message of desired type
 
+SET callers pass no output buffer and do not use the response, so only
+validate the echoed function id when the caller asks for the output.
+
+Fixes: 23cc56f6dea6 ("platform/x86: bitland-mifs-wmi: Detect failed function calls")
 Cc: Armin Wolf <W_Armin@gmx.de>
-Cc: Mingyou Chen <qby140326@gmail.com>
 Signed-off-by: Chris Taraszka <chris@miget.com>
 ---
 
 Notes:
+    This is the separate fix mentioned in "[PATCH] platform/x86:
+    bitland-mifs-wmi: Add Xiaomi Book Pro 14 platform profile values".
+    
+    All SET handlers in this firmware's WMAA method behave the same way:
+    only the GET handlers set the function id field. 23cc56f6dea6 is only in
+    pdx86 for-next so far, so no stable Cc.
+    
     Tested on the Xiaomi Book Pro 14 on AC with bitland-mifs-wmi from pdx86
-    for-next plus this patch, loaded on v7.3-rc5: all four profiles apply
-    through power-profiles-daemon and the firmware mode and PL1 follow
-    (0x03/37 W, 0x02/25 W, 0x04/56 W). The same mapping on v7.3-rc4/rc5
-    without the for-next changes was also tested on battery and across
-    s2idle suspend/resume, with the profile restored on resume.
-    
-    This explains the -EINVAL behind my earlier "platform/x86:
-    bitland-mifs-wmi: Don't abort suspend when platform profile access
-    fails" (sent 2026-09-11): the profile read failed because of the unknown
-    mode values. That patch is still useful as a safety net.
-    
-    Note that on for-next each profile change still reports -ENOMSG even
-    though the firmware applies it: this firmware's SET handlers leave the
-    function id in the response at 0, which 23cc56f6dea6 ("platform/x86:
-    bitland-mifs-wmi: Detect failed function calls") rejects. I'll send a
-    separate fix for that.
+    for-next plus this patch and the Xiaomi profile values patch, loaded on
+    v7.3-rc5: every profile change through power-profiles-daemon succeeds,
+    where before each one failed with -ENOMSG despite being applied.
 
- drivers/platform/x86/bitland-mifs-wmi.c | 56 +++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 4 deletions(-)
+ drivers/platform/x86/bitland-mifs-wmi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index dd1648b7de77..4a8e5b4e7853 100644
+index dd1648b7de77..f4817b59dcac 100644
 --- a/drivers/platform/x86/bitland-mifs-wmi.c
 +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -14,6 +14,7 @@
- #include <linux/dev_printk.h>
- #include <linux/device.h>
- #include <linux/device/devres.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
- #include <linux/init.h>
-@@ -79,6 +80,29 @@ enum bitland_mifs_power_profile {
- 	WMI_PP_FULL_SPEED	= 3,
- };
- 
-+/*
-+ * The Xiaomi Book Pro 14 firmware uses its own SystemPerMode values and
-+ * ignores the ones above. Sustained package power limits (PL1) measured
-+ * on AC are noted next to each mode.
-+ */
-+enum bitland_mifs_xiaomi_power_profile {
-+	WMI_PP_XIAOMI_QUIET		= 0x02,	/* 18 W */
-+	WMI_PP_XIAOMI_BALANCED		= 0x03,	/* 37 W */
-+	WMI_PP_XIAOMI_PERFORMANCE	= 0x04,	/* 58 W */
-+	WMI_PP_XIAOMI_SMART		= 0x09,	/* 45 W */
-+	WMI_PP_XIAOMI_QUIET_ALT		= 0x0a,	/* 18 W */
-+};
-+
-+static const struct dmi_system_id bitland_mifs_xiaomi_pp_dmi_table[] = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Xiaomi Book Pro 14"),
-+		},
-+	},
-+	{ }
-+};
-+
- enum bitland_mifs_event_id {
- 	WMI_EVENT_RESERVED_1		= 1,
- 	WMI_EVENT_RESERVED_2		= 2,
-@@ -161,6 +185,7 @@ struct bitland_mifs_wmi_data {
- 	struct device *hwmon_dev;
- 	struct device *pp_dev;
- 	enum platform_profile_option saved_profile;
-+	bool xiaomi_pp;
- };
- 
- static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
-@@ -213,6 +238,27 @@ static int laptop_profile_get(struct device *dev,
- 	if (ret)
- 		return ret;
- 
-+	if (data->xiaomi_pp) {
-+		switch (result.data[0]) {
-+		case WMI_PP_XIAOMI_QUIET:
-+		case WMI_PP_XIAOMI_QUIET_ALT:
-+			*profile = PLATFORM_PROFILE_LOW_POWER;
-+			break;
-+		case WMI_PP_XIAOMI_BALANCED:
-+			*profile = PLATFORM_PROFILE_BALANCED;
-+			break;
-+		case WMI_PP_XIAOMI_SMART:
-+			*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+			break;
-+		case WMI_PP_XIAOMI_PERFORMANCE:
-+			*profile = PLATFORM_PROFILE_PERFORMANCE;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		return 0;
-+	}
-+
- 	switch (result.data[0]) {
- 	case WMI_PP_BALANCED:
- 		*profile = PLATFORM_PROFILE_BALANCED;
-@@ -272,22 +318,22 @@ static int laptop_profile_set(struct device *dev,
- 
- 	switch (profile) {
- 	case PLATFORM_PROFILE_LOW_POWER:
--		val = WMI_PP_QUIET;
-+		val = data->xiaomi_pp ? WMI_PP_XIAOMI_QUIET : WMI_PP_QUIET;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
--		val = WMI_PP_BALANCED;
-+		val = data->xiaomi_pp ? WMI_PP_XIAOMI_BALANCED : WMI_PP_BALANCED;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
- 		ret = bitland_check_performance_capability(data);
- 		if (ret)
- 			return ret;
--		val = WMI_PP_PERFORMANCE;
-+		val = data->xiaomi_pp ? WMI_PP_XIAOMI_SMART : WMI_PP_PERFORMANCE;
- 		break;
- 	case PLATFORM_PROFILE_PERFORMANCE:
- 		ret = bitland_check_performance_capability(data);
- 		if (ret)
- 			return ret;
--		val = WMI_PP_FULL_SPEED;
-+		val = data->xiaomi_pp ? WMI_PP_XIAOMI_PERFORMANCE : WMI_PP_FULL_SPEED;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-@@ -699,6 +745,8 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- 		return input_register_device(drv_data->input_dev);
+@@ -189,11 +189,14 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+ 		return -EIO;
  	}
  
-+	drv_data->xiaomi_pp = dmi_check_system(bitland_mifs_xiaomi_pp_dmi_table);
++	if (!output)
++		return 0;
 +
- 	/* Register platform profile */
- 	drv_data->pp_dev = devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_data,
- 							  &laptop_profile_ops);
++	/* Some firmware only echoes the function id for GET operations */
+ 	if (result->function != input->function)
+ 		return -ENOMSG;
+ 
+-	if (output)
+-		memcpy(output, result, sizeof(*output));
++	memcpy(output, result, sizeof(*output));
+ 
+ 	return 0;
+ }
 
 base-commit: fe5030c8cc7156223f48530e9b49aa87c0305bcd
 -- 
