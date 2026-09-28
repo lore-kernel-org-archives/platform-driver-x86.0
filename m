@@ -1,47 +1,45 @@
-Received: from mta-65-226.siemens.flowmailer.net (mta-65-226.siemens.flowmailer.net [185.136.65.226])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85AC449B11
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 13:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB8F4DA9DD;
+	Mon, 28 Sep 2026 14:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790602331; cv=none; b=ekj4+f0G96wlId3XaX/0kg8xEA0yKeeygd6B7C1b+xuyiznlc4+6uyL90pdqVTDgjQZ1ij5sDdJVv2b42KvP/LRiT/OA/SdeEjsjknmC8Mjk25vaYOxTblp1DNKhmWaN3ccFEsuoTRBj3WdZtEzAdmYH3wVGsCALGBmdWUXcP90=
+	t=1790607175; cv=none; b=hITYvkHzpcqGKRG2eRaySNuMRO1pEJl2aAPQbDhPoc26Keg4Atjz0FHE/EYHWABif98BgIigeIlmGB5Wu7RtzVJ/l3dqaq0vBny85SLRdusF0EI0QmHj0fY/gysXvI5JAU5VJO9Pm0KyPTS1LyADNglfWLgj594zq0gREWHnhVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790602331; c=relaxed/simple;
-	bh=cRBiTAX8sUcFRk5xwhqKvWV37dgGuNWlRNcie5a2MCU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KFZl+15yVx7ZNnbTA1cPJqEWOcxPVgYH41EQcOMy1Ud15OuDLNPR/3dzKUvK+YrvVOM9udi1q7JWeO9tymBtouLM1Hl/7eUyn5hbvVmGTJOb+ceOP2/p1UiJETwO9mOcLNvEiD6dK6v3zbEt43pKHdSxHWztcm1Cp+7ffQH7nC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.b=CHeIT+jQ; arc=none smtp.client-ip=185.136.65.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1790607175; c=relaxed/simple;
+	bh=UK9vZCiOqB7sk6Kg3Zl89deyHumgB7ltsBKk1BcFN9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j8IjSpNIP8l7nuw3Kh/y3I2De46+qgUxFFYJ0Htyw6StqtBQPBAYZLTdmEQNF9cKfWs5fm2EKP7E0z50Xu8KSzZ3KaP1kzPJHC6Lu1gdcmNonpWR0sj4gqny0jzx5Lr5kN9fD6O0AoqkDkks2Nz06fb2N2yiTZTSPvAiCRPmwUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBNfZrXJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.b="CHeIT+jQ"
-Received: by mta-65-226.siemens.flowmailer.net with ESMTPSA id 20260928133157bd11fa79bf000207cc
-        for <platform-driver-x86@vger.kernel.org>;
-        Mon, 28 Sep 2026 15:31:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=benedikt.niedermayr@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=qgiJK1A/bzYz7KUdCuSnEMBXjiHNUiMcAAe7ng8RjSA=;
- b=CHeIT+jQsFPJfq+D/oKWWwjLWE8c2teszUPpK9z06anCvdV5kvYaxhy8PpDxpRbpQ7J8Yk
- foHWhj0UR5MtN8N/O+tVQ6FMCYsynvDHlNHYPWDi+lG6xhhy4szW9fS0s135FfIa4prpfXXE
- sMXxOlEszAHR0s50fIPCdNdyDhOppUbgL4npfYx/u0BodSOOMGDSWBmK24PHdFE75xiTAhjS
- okNOtzYhN/68T2DwVa1Qtuq89rdCDFkcTCUvkAE2VNCJOIAPcLfhWkkZAC8JQn9PjCbqxTJq
- h5TUnya1F1KjcU0o9bwgexwORA6evucQeASRZ6n3j7LbxmaqRvnVQ/BA==;
-From: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
-To: andi.shyti@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: baocheng.su@siemens.com,
-	tobias.schaffner@siemens.com,
-	linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86/siemens: simatic-ipc: add fan monitoring support for BX-59A
-Date: Mon, 28 Sep 2026 15:31:56 +0200
-Message-ID: <20260928133156.817479-3-benedikt.niedermayr@siemens.com>
-In-Reply-To: <20260928133156.817479-1-benedikt.niedermayr@siemens.com>
-References: <20260928133156.817479-1-benedikt.niedermayr@siemens.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBNfZrXJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B391F000FF;
+	Mon, 28 Sep 2026 14:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790607174;
+	bh=7OG8mKM3HIqF4/4n3d6/Cn4qbfvPJXAe2w6ruSGlb/4=;
+	h=From:To:Cc:Subject:Date;
+	b=bBNfZrXJufzZo8QKJo7ZIudugXSZyZkHYUQuJnwy4+stVV8lr7GsIPkomyie9nO2P
+	 zRtVvJbRYVzkFOXl0UP/Xhz7ZHDs5CluRkuqxafN/sFauckepMmUCXY5gbnhnGtgJF
+	 w1wWTeLmndNHaX5TxPT6i0xTaC4ZjroOH4WG4NI9G3/QxJSfRrY2Jo8XA2iPBlb8yC
+	 1UPNlwi9/txnMC3tXomL6T8EEaIzxGmT1rrAJZnWcMjznPkW3svehlWi34WpojuHxi
+	 +ww+yNzJIuT9tQ+vOKc8MfmSZTa6x3LD/kmFILToJO3IqBO8ukCBkD84LBl/aWPjkp
+	 wM6Q9KSJj3vQA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Karl Mehltretter <kmehltretter@gmail.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Pan Chuang <panchuang@vivo.com>,
+	Kees Cook <kees@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/mellanox: mlxbf-tmfifo: fix building with CONFIG_SMP=n
+Date: Mon, 28 Sep 2026 16:52:42 +0200
+Message-ID: <20260928145249.3177085-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,73 +47,41 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1323861:519-21489:flowmailer
 
-Some fans on the BX59-A are connected to the ADT7475 fan controller
-which is connected to the NCT6126D Super I/O chip's SMBus interface
-(supported by the i2c-nct6126 driver).
+From: Arnd Bergmann <arnd@arndb.de>
 
-Other fans on the BX59-A are connected to the NCT6126Ds hwmon interface
-which is controlled by the nct6775 driver.
+spinlock_t is an empty struct, which makes ARRAY_SIZE() on an
+array of them undefined:
 
-This patch enables the required drivers.
+drivers/platform/mellanox/mlxbf-tmfifo.c: In function 'mlxbf_tmfifo_virtio_synchronize_cbs':
+include/linux/array_size.h:11:38: error: division by zero [-Werror=div-by-zero]
+   11 | #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
+      |                                      ^
+drivers/platform/mellanox/mlxbf-tmfifo.c:1146:25: note: in expansion of macro 'ARRAY_SIZE'
+ 1146 |         for (i = 0; i < ARRAY_SIZE(fifo->spin_lock); i++) {
+      |                         ^~~~~~~~~~
 
-Signed-off-by: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
+Open-code the size of the array here as is done explicitly elsewhere.
+
+Fixes: 961d62a3c153 ("platform/mellanox: mlxbf-tmfifo: implement synchronize_cbs()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/platform/x86/siemens/simatic-ipc.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
-index 7039874d8f11..132a899c8752 100644
---- a/drivers/platform/x86/siemens/simatic-ipc.c
-+++ b/drivers/platform/x86/siemens/simatic-ipc.c
-@@ -33,7 +33,7 @@ static const struct dmi_system_id simatic_ipc_whitelist[] = {
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index d67215df7371..dc4060c720f8 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -1143,7 +1143,7 @@ static void mlxbf_tmfifo_virtio_synchronize_cbs(struct virtio_device *vdev)
+ 	unsigned long flags;
+ 	int i;
  
- static struct simatic_ipc_platform platform_data;
- 
--#define SIMATIC_IPC_MAX_EXTRA_MODULES 2
-+#define SIMATIC_IPC_MAX_EXTRA_MODULES 5
- 
- static struct {
- 	u32 station_id;
-@@ -53,10 +53,10 @@ static struct {
- 		{ "emc1403", NULL }},
- 	{SIMATIC_IPC_IPC227G,
- 		SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227G,
--		{ "nct6775", "w83627hf_wdt" }},
-+		{ "nct6775", "w83627hf_wdt", NULL }},
- 	{SIMATIC_IPC_IPC277G,
- 		SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227G,
--		{ "nct6775", "w83627hf_wdt" }},
-+		{ "nct6775", "w83627hf_wdt", NULL }},
- 	{SIMATIC_IPC_IPC277E,
- 		SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227E, SIMATIC_IPC_DEVICE_227E,
- 		{ "emc1403", NULL }},
-@@ -71,19 +71,19 @@ static struct {
- 		{ "emc1403", NULL }},
- 	{SIMATIC_IPC_IPCBX_39A,
- 		SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_BX_39A,
--		{ "nct6775", "w83627hf_wdt" }},
-+		{ "nct6775", "w83627hf_wdt", NULL }},
- 	{SIMATIC_IPC_IPCPX_39A,
- 		SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_BX_39A,
--		{ "nct6775", "w83627hf_wdt" }},
-+		{ "nct6775", "w83627hf_wdt", NULL }},
- 	{SIMATIC_IPC_IPCBX_21A,
- 		SIMATIC_IPC_DEVICE_BX_21A, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_BX_21A,
- 		{ "emc1403", NULL }},
- 	{SIMATIC_IPC_IPCBX_56A,
- 		SIMATIC_IPC_DEVICE_BX_59A, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_BX_59A,
--		{ "emc1403", "w83627hf_wdt" }},
-+		{ "emc1403", "w83627hf_wdt", NULL }},
- 	{SIMATIC_IPC_IPCBX_59A,
- 		SIMATIC_IPC_DEVICE_BX_59A, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_BX_59A,
--		{ "emc1403", "w83627hf_wdt" }},
-+		{ "i2c-nct6126", "nct6775", "adt7475", "emc1403", "w83627hf_wdt"  }},
- };
- 
- static int register_platform_devices(u32 station_id)
+-	for (i = 0; i < ARRAY_SIZE(fifo->spin_lock); i++) {
++	for (i = 0; i < 2; i++) {
+ 		spin_lock_irqsave(&fifo->spin_lock[i], flags);
+ 		spin_unlock_irqrestore(&fifo->spin_lock[i], flags);
+ 	}
 -- 
-2.43.0
+2.53.0
 
