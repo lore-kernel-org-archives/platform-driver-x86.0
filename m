@@ -1,222 +1,377 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua2-f12.google.com (mail-ua2-f12.google.com [74.125.226.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94793B71A1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 06:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370F536F8E9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 06:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.226.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790577447; cv=none; b=ILxK9JXvQuUYi9M1tDPUPd/CnpfXUP1lcU5wGBCuYsr9kXCryr2JVPEvJh4nxEHdjqh8WaywxV5cTBNV3R7G6NZhuIr3uYtLyQZ9+999zjb+rUIO0wstmBMw1zjg9omLAQQ2Ln5EqcUkPRDu6JVDwU+OsYtdCnNH5ZqU0t7tj8E=
+	t=1790578182; cv=none; b=ETH+bniUc1ZWS1TskzUvetUui3KVks7euChDRoxvTeNoUonmhGDx46hGtU8/qVUsGyMtomUQr+Gvzm62eR6xu1IKR4fssAcUdF51O571SVizBsR4GnzhIN9QCL3onIUiWQT1QaZUi1rBa2kRoQbkH4tONv6hfDrG8tiMBHf8r6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790577447; c=relaxed/simple;
-	bh=QI+ToQia8MP6u/kd83sS0akMU5phWxNIb71stmnOyYg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=G2Xf6ArPEFgcxa35pU5Demye+kZrL9vzB4+TBEVuxHs+zRhwNPMfJwd+DrdCTrZQ7jO8rCT6+U8eB26XbtHIZzfI7WFVMVr69Cm7DIh0YUAspQx5GCZ76MQkWHOrCKSehE5OUlPMR/t5nJ7thuPNIaV+2L7eVMWBiFHYh73trAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FxS4oH1G; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=AOG1YkZ/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1790578182; c=relaxed/simple;
+	bh=QyPkaLVei5yR2Z/4twuIycirH7HuAo+N4abNDpttkfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ps8QVmHXAMIqn8OxQta0aqNWXo90p8IwnOMSvhNQqdpxYy9WmTb9UStHPvVZSCOl7lbuFHsP1Xs8iFqOSiMed8sdL7Gd6+4HJgX56aolPUGQNBPTLt1ndXnxbD937Faq6b8Nyrqw3NkOiFVfXHPX4H5UPuTAy4yDAMy2s1sgWMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7aAMb0c; arc=none smtp.client-ip=74.125.226.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FxS4oH1G";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="AOG1YkZ/"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68RLsNFB2429400
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 06:37:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qsSb261InHJwYCIPG3xNrH6mPBScw42FNvSA8U9479w=; b=FxS4oH1G977jPv0I
-	Gx/Xxdq7QqkeW3e/wcZL5xGQP3fJnCxImL2k86e3lDb43M4LrP78zqk3IqGFIQN3
-	FUbF7UHGXT2yz+ox6mq86E/EQGRORMXxR9mes/PXtc72svUXui/H1NguIP4nrMXE
-	73DI1+pmbw9BrpThDSQ0Ihs1P1o8I+Nu6bmF/47bJnbIKVzXpLBjhKXU7dNh/k0B
-	tcXNnRgM8tY7kFueZLwayG9o/l13qRTHRHE9y/emSEN8LlYFcM0m9Npdc9ocCllE
-	ixgBmb2rQqn22zmT6GDTd9MU3zw+41y1yjbUshLWGx/S2Ug8/M21gPy8qrW5GQKx
-	lscCOA==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gx77jvq7w-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 06:37:24 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2dfb24dfedfso11267065ad.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 27 Sep 2026 23:37:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7aAMb0c"
+Received: by mail-ua2-f12.google.com with SMTP id a1e0cc1a2514c-982dd15d169so1680217241.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 27 Sep 2026 23:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1790577444; x=1791182244; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=qsSb261InHJwYCIPG3xNrH6mPBScw42FNvSA8U9479w=;
-        b=AOG1YkZ/HoF9jkif7OAhTx4LlnBmuqs4t3P6Deg+caBK1iQsbzUe36g/JBlG9tFR+z
-         k0nXH0+C1R4NmP2z8aGdWSK/1CsTjcJs1rxC7P8Xwi2xSL9W98eYIZsuOqQkQMaIBJqP
-         VgPTvby9OJ74cTK4rQ7nvPg2yBhbYlSEapi51osQzpIGnNo3lJ8NEIjfRv0/6NZbQqsW
-         7EVqx7gkg8NZiNsmMv3eIYWfP6qOCMMXmSjxHzs/eTQZo6nSMcfky+VqpEg8d2jOOvIk
-         +veYBJVzF3slgIcp+Iz/BFcebyBLrtGZa0mL3MeRvA1nE0P+Kdn5HPAhq6GTuzdJuHIY
-         lakg==
+        d=gmail.com; s=20251104; t=1790578180; x=1791182980; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=jlXzJVUfhTz5P1BiBtR2RSw8kerRuIevFT30L5kQNGw=;
+        b=j7aAMb0cmD+kpk9e2P4j7rge/xVcgtzv5ssVTciGpntQXgBcXSLg1ednHm21RG45BA
+         3uzdjOCZsWRnHNHIxJM0yV2MXYx1bF9YWlipzXrZNHUPiszorGP2xsvkpkY7XuZ5ZxDS
+         679wr/nxKitttfhsgu2B3vdtuTX0HHEKQWb4bu0VfA3Tu6z84D3XdoYBM23W8FWxyoMp
+         2j+hqNiOxd/qoxIh9nby4rosPklmZMzhonEpuz5B9ZbDXOAKIP1E5GsTH906QrOJlcHi
+         k4EVdl1fbNuAwrSjgEsr0NsC+V3iDTck3rhmSyhWgDANHOsW/gKbTxBuoNHWHgHlCQxx
+         TdRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790577444; x=1791182244;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qsSb261InHJwYCIPG3xNrH6mPBScw42FNvSA8U9479w=;
-        b=g8OccovOkxooIpolqas2NtzguQR99oVTLptdwrTfx0qkA13LXrkdNiHRGqALdEAPZR
-         1xH9Fwp68CFmzzXqhI7tfs2qnmM55mNSFQbdtcRBCHf0i6t7T7MEL9SO0o143ykPSzEK
-         lr0iB4vmC9pIrxX2QxcZhf5AnqEC+oUqYCdTV9PCo7pb6e3ksbJFl7RePzlcky8jgiUj
-         GVHzeVspgv+CqUM9my0XIPz1sW2VAe85GKns+ytVTjv4KVglScai/PXQkW73sO9KL6Je
-         ozyrTxmL4RH1sSQaHt5U0wk3E71nsyzeJwt7mVfmNcXDUs6NNh1LYj8cdmVvYE/eq655
-         YkUA==
-X-Forwarded-Encrypted: i=1; AKwUvBw5jECccMnaO7bHcOgQmUtomKmu6jOmnRlWY/SJKWRAeZEXly5/sb2elvaJRxsdXnxNLMbYP/5KLCnWtyaRORy29yaU@vger.kernel.org
-X-Gm-Message-State: AFq9FYLDKyyINy5JeGMzpY7QyYTZ0p6xWbyLoV75T05XYAsvNcySfLkr
-	ra3ltEeLolHMSTJpJ1qwcfQ9UmOdxclZUxOj2QDkSlhO0Jpe50E1Sx5t4diMMep4eO/xgOY4l+b
-	IRqz9B9L+QuhfnT0PhqUwrqW481TqlRrCRSr1ETEbZZ74RF9/OrQ/HysF6Xr3UrGjcvdjRti1Ex
-	2t
-X-Gm-Gg: AYBFou3KLhtUzOGS9HPxSCyopNf5+SwtgoPZv4NuxCOOt00eEOYJx4lnSVtbSoMl3fx
-	gLplyQZeVl6g2xNsP6YlDZWBwgI20IjgIAubXNc7gTMMvoeQtlYip86fAlrn/pD80VwT/C/TJPL
-	vG+QywD4er0WSIADZCwb2ALVMvSU321EJjnKom7s6FTKVv6ltFad01k6SYLd2hTS83w07tmSi3m
-	5RIluJSR6S6GPwAXqrMFfMzcrZjOt9Rg6wI9oXYjlCyvm51ZLTsuZaAaYGWSPXPi7XbP9azFbKH
-	i8EfqY54f4KvERZV77tg64RhrJp892Jdwu8tdCMmLPuNiAYIUadZBQViB+RQMS+mMvo7vH/eMMr
-	G8V0aQKNNZhDx2XlNMZY1IVcvMzhn56NKTRMaMZNSqWNjaZgWsjqZeeSRsYyiu5XWeCJujrewyd
-	nSR8PKTSIsBEV9
-X-Received: by 2002:a17:902:c411:b0:2e2:b624:54b7 with SMTP id d9443c01a7336-2e2b62454f2mr3161815ad.17.1790577444097;
-        Sun, 27 Sep 2026 23:37:24 -0700 (PDT)
-X-Received: by 2002:a17:902:c411:b0:2e2:b624:54b7 with SMTP id d9443c01a7336-2e2b62454f2mr3161655ad.17.1790577443626;
-        Sun, 27 Sep 2026 23:37:23 -0700 (PDT)
-Received: from hu-ajainp-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2df91468978sm35292685ad.79.2026.09.27.23.37.18
+        d=1e100.net; s=20260707; t=1790578180; x=1791182980;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=jlXzJVUfhTz5P1BiBtR2RSw8kerRuIevFT30L5kQNGw=;
+        b=AvmmbAfB/B4e054c3BmSgM3Ev99tfu/6Tjj1tRtqLpvEbAnxh5oQfK3tfUnBHrRW4l
+         MHkUZ7+9z2psJWOzbQJ6boNBRxZRxf7A0Ro2XKqiCpAT4ljUXE2jl9k4h9CG3X0O/B91
+         kQ5jna3s8lKa1wlwWmsyMgpXhdLRvJKy+7Ck+xP28N0bVAucmk5xmo50b/ODYqDdHUWB
+         Nh3wd55vu9k1OAsZ3oWEBj4s/DpRsxrBXuE7uqKcjI6KLGVJToWpeD+UOyYXuG3nexUH
+         +AZsk4Hk/RJiwzB2jlC17avqYbvsUzILNAzFiIU12CDEsUcWEX/2pX74dtFYHpjdAu2c
+         jdiw==
+X-Forwarded-Encrypted: i=1; AKwUvBz7jTYdGkiFQtNbkEICDWjtuN/Mp/Aa/B+sesSDZAyJGbeuvkBKyxm2st2ksfu8r3Q4MGWcyQKQfD+U9vA7EcMk3O2d@vger.kernel.org
+X-Gm-Message-State: AFuF++nRB9xrthCaomp3k7iMQjRTxqoyl1G/OXSOna+V5JH5ws1mA0JF
+	+LMl/4DlL/MKKL/IbYZmuFojhj7NVcm9Gu90zJm+/XzcMD1gc+qZ9F92
+X-Gm-Gg: AYBFou0ZYzRNYGEspvdj/zTFZxqUEf6hnJDWPIwg8OrN9Zm5dZzhkKL14+R2QQPsbl0
+	YEVGMsGWH/xcaCjXoXlEcHLCVyeImm+ElSZflaxwk1Og7yk3rMh5GxtW20hQdQx3rCoBN3BgSWV
+	Ks/o4ptrTanN6MXcocjJ4krqdM5OCzs4eBvOBS4S/DwC28lth34Rw6SMbUiHWihUOD8Z61Co6ab
+	n9ckD+rKEfzU/HLKZDFHD7Z2Cb8PNAQEOoLExdGd3U9oxK/9AIVTmhx9X7ja8nNTZEVePJllHbH
+	x3W2PFBYO47UUa5K3Yb0VEdm2pJTzkckwavM109Oi9LoKUDsdJCP/88bK1MAyBQQJoSss4u7c5m
+	Su2VgAu+RAy7Qy5MoaGSKps5vBYWdwzuj8udwJw460WGgUMFUR7Bvfj17ihPuuKCToQPqC7KTx/
+	XYZaT15aw/3htxW3UMksGa9zScX0FQkTfVpw/iBlHmRz0TZ+KV4BodtfsFHPJUnnN9FNIql2ThS
+	YGKAhK5C1sTFr4Bv2MMnV5hY6i59hAdNJteWg==
+X-Received: by 2002:a05:6102:534a:b0:7b4:7095:fe15 with SMTP id ada2fe7eead31-7b470960932mr1035043137.24.1790578179972;
+        Sun, 27 Sep 2026 23:49:39 -0700 (PDT)
+Received: from tutebook.tail57d09c.ts.net ([2803:9800:a0a8:8014:618c:a663:bfd0:635e])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7b398ee8b75sm8404923137.2.2026.09.27.23.49.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2026 23:37:22 -0700 (PDT)
-From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-Date: Mon, 28 Sep 2026 12:06:39 +0530
-Subject: [PATCH 3/3] arm64: dts: qcom: glymur: Add EC thermal zones
+        Sun, 27 Sep 2026 23:49:38 -0700 (PDT)
+From: TuteMthCD <matias.civadda2342001@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: W_Armin@gmx.de,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: bitland-mifs-wmi: Fix TM2107 profile handling
+Date: Mon, 28 Sep 2026 03:49:18 -0300
+Message-ID: <20260928064918.80526-1-matias.civadda2342001@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260928-ec_thermistor_support-v1-3-d9c1bae4cd0d@oss.qualcomm.com>
-References: <20260928-ec_thermistor_support-v1-0-d9c1bae4cd0d@oss.qualcomm.com>
-In-Reply-To: <20260928-ec_thermistor_support-v1-0-d9c1bae4cd0d@oss.qualcomm.com>
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790577422; l=1735;
- i=anvesh.p@oss.qualcomm.com; s=20260313; h=from:subject:message-id;
- bh=QI+ToQia8MP6u/kd83sS0akMU5phWxNIb71stmnOyYg=;
- b=rSY1Bc0j5c2uzgLJKbMOCKAE9QpQLXbHxWxWf7elUCbFkfzBDWl0SO8aucNaTGaFb8IdpFztv
- x7X/HWQLc8aC+j7ArEtrGkyhZhkXrol1Zt1aG6VbtF5zzALfmQJT5OG
-X-Developer-Key: i=anvesh.p@oss.qualcomm.com; a=ed25519;
- pk=8o9EG7gkPe2Er9y9UVCx8MTdcFCwU8Pa54hBZPuduXE=
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI4MDAyNiBTYWx0ZWRfX/qVwjyZo9sGA
- HjhkorvtwUcViz1VSBsl6lqzgnAW7WN6Uk9a9sWPPj8zNczp8wa00zeH1kNZ7ZyXZQLNpyXrIFJ
- bdLOmkKOZsrnt0t93yZ9Fe36ktDnhFE=
-X-Proofpoint-GUID: iA6J8MGw4_hIeF3ZCyCertupgv0QKXih
-X-Proofpoint-ORIG-GUID: iA6J8MGw4_hIeF3ZCyCertupgv0QKXih
-X-Authority-Analysis: v=2.4 cv=J8U/fwnS c=1 sm=1 tr=0 ts=6aba0b24 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
- a=EUspDBNiAAAA:8 a=qPkBp05oCMIUEZk5slIA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI4MDAyNiBTYWx0ZWRfX6FQl2ZXFVKL1
- op3F4MUZLX/E7PGDl8c+jCIPsmISzv/Vs8YVTCQjz+0WHQN1dF1fxOp1Ku5ps+K77tI7FpLrrf9
- Z1vRifS20Mr3DwobNeNoxOfOMEr8PAlYpFIkaykJT5U69/ujSG/q2bFJOlx/Qz4Mz2d2ca3Vfjr
- niz1TJKsgRud4KUW51aJb0J1g+CqwAe88Oc2eem8zWxmQB5wg3f7VdGti1XudZrH9+f1OqVyHtU
- PxO04yEoqTnMT2yYmd/UWxtvJtSlNajXPVpbMa1MTUO4yYyJ11IK/Q1Q4jlMhsn1E0CKzjHI8uC
- x7pW1mZw8bUoVDDMClQefRjD8leN/64TOzuJbizxniMaoTtYGYS0efNeMqyg83hZE2VPpSw06eP
- erRETKHaPIOKdq0FU1/vdU7ewWV00nH5/xtq5ipIYK+SG5fofEsY2lNZ6inGRxC9pEd2KcRgk6m
- Jopbh5gwMVhzaWvYbBw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-26_05,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 spamscore=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1015 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609280026
+Content-Transfer-Encoding: 8bit
 
-Add support for back cover, keyboard, and SoC thermal zones through
-temperature sensors hosted on the EC for Glymur and Mahua CRDs.
+On the TIMI Redmi Book Pro 14 2022 (TM2107), the MIFS WMI response uses
+a different layout from the one currently assumed by the driver.
+This causes profile reads to fail or report an incorrect profile.
 
-Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+The response contains a 30-byte OutData field followed by a 16-bit
+Reserved field. On this model, the profile value is returned in
+OutData[2], while the return code is stored in the trailing 16-bit
+field.
+
+Selecting the modes in GCommandCenter and reading the WMI response
+on this machine yielded the following values:
+
+0: performance
+1: balanced
+2: quiet
+
+Handle this model through DMI-specific driver_data, normalize its
+response layout, and map its profile values correctly. Expose only
+the three supported profiles.
+
+Require external power for performance mode, including the original
+USB-C charger, matching the behavior observed in GCommandCenter.
+Skip the adapter-type query on this model.
+
+Build-tested against pdx86/for-next with W=1. Built and tested on
+Linux 7.2.7-zen1-1-zen on a Redmi Book Pro 14 2022 (TM2107).
+Verified profile switching, performance selection with the USB-C
+charger connected, and rejection while running on battery.
+
+Link: https://lkml.iu.edu/2608.2/00163.html
+Fixes: dc1ec4fa86b2 ("platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver")
+Assisted-by: LLM
+Signed-off-by: TuteMthCD <matias.civadda2342001@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/glymur-crd.dtsi | 45 +++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+Changes since v1:
+- Rebased on pdx86/for-next.
+- Use a generic DMI table with per-model driver_data.
+- Add the DMI dependency.
+- Normalize the response layout before validating the return code
+  and function ID.
+- Correct the profile mapping using observations from GCommandCenter.
+- Expose only the three supported profiles.
 
-diff --git a/arch/arm64/boot/dts/qcom/glymur-crd.dtsi b/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
-index e27c697e3170..571c98124a40 100644
---- a/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
-+++ b/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
-@@ -594,10 +594,12 @@ &i2c9 {
+The previous version was mistakenly based on the commit used by my
+local Linux distribution instead of pdx86/for-next. Sorry for the
+confusion.
+
+I also collected WMI response data on Windows while switching profiles
+in GCommandCenter. I can share those results if useful.
+
+v1: https://lore.kernel.org/20260925032001.111062-1-matias.civadda2342001@gmail.com/
+
+ drivers/platform/x86/Kconfig            |   1 +
+ drivers/platform/x86/bitland-mifs-wmi.c | 135 +++++++++++++++++-------
+ 2 files changed, 97 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 45f15f93afa7..e3351ee1dd43 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -116,6 +116,7 @@ config GIGABYTE_WMI
+ config BITLAND_MIFS_WMI
+ 	tristate "Bitland MIFS (MiInterface) WMI driver"
+ 	depends on ACPI_WMI
++	depends on DMI
+ 	depends on HWMON
+ 	depends on INPUT
+ 	depends on LEDS_CLASS
+diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+index dd1648b7de77..29e365b54c84 100644
+--- a/drivers/platform/x86/bitland-mifs-wmi.c
++++ b/drivers/platform/x86/bitland-mifs-wmi.c
+@@ -14,6 +14,7 @@
+ #include <linux/dev_printk.h>
+ #include <linux/device.h>
+ #include <linux/device/devres.h>
++#include <linux/dmi.h>
+ #include <linux/err.h>
+ #include <linux/hwmon.h>
+ #include <linux/init.h>
+@@ -131,6 +132,58 @@ struct bitland_mifs_output {
+ 	u8 data[28];
+ } __packed;
  
- 	status = "okay";
- 
--	embedded-controller@76 {
-+	ec: embedded-controller@76 {
- 		compatible = "qcom,glymur-crd-ec", "qcom,hamoa-crd-ec";
- 		reg = <0x76>;
- 
-+		#thermal-sensor-cells = <1>;
++/* TM2107 places the return code after the function ID and payload. */
++struct bitland_mifs_output_tm2107 {
++	__le16 function;
++	u8 data[28];
++	__le16 return_code;
++} __packed;
 +
- 		interrupts-extended = <&tlmm 66 IRQ_TYPE_EDGE_FALLING>;
- 
- 		pinctrl-0 = <&ec_int_n_default>;
-@@ -955,6 +957,47 @@ right_tweeter: speaker@0,1 {
- 	};
- };
- 
-+&thermal_zones {
-+	ec-back-cover {
-+		polling-delay = <10000>;
-+		thermal-sensors = <&ec 2>;
-+
-+		trips {
-+			trip-point0 {
-+				temperature = <90000>;
-+				hysteresis = <5000>;
-+				type = "hot";
-+			};
-+		};
-+	};
-+
-+	ec-keyboard {
-+		polling-delay = <10000>;
-+		thermal-sensors = <&ec 1>;
-+
-+		trips {
-+			trip-point0 {
-+				temperature = <90000>;
-+				hysteresis = <5000>;
-+				type = "hot";
-+			};
-+		};
-+	};
-+
-+	ec-soc {
-+		polling-delay = <10000>;
-+		thermal-sensors = <&ec 0>;
-+
-+		trips {
-+			trip-point0 {
-+				temperature = <90000>;
-+				hysteresis = <5000>;
-+				type = "hot";
-+			};
-+		};
-+	};
++struct bitland_mifs_quirks {
++	const enum platform_profile_option *profiles;
++	size_t num_profiles;
++	bool return_code_at_end;
++	bool skip_ac_type_check;
 +};
 +
- &remoteproc_soccp {
- 	firmware-name = "qcom/glymur/soccp.mbn",
- 			"qcom/glymur/soccp_dtb.mbn";
++static const enum platform_profile_option bitland_profiles[] = {
++	[WMI_PP_BALANCED] = PLATFORM_PROFILE_BALANCED,
++	[WMI_PP_PERFORMANCE] = PLATFORM_PROFILE_BALANCED_PERFORMANCE,
++	[WMI_PP_QUIET] = PLATFORM_PROFILE_LOW_POWER,
++	[WMI_PP_FULL_SPEED] = PLATFORM_PROFILE_PERFORMANCE,
++};
++
++/* Values observed after selecting each mode in GCommandCenter. */
++static const enum platform_profile_option tm2107_profiles[] = {
++	[0] = PLATFORM_PROFILE_PERFORMANCE,
++	[1] = PLATFORM_PROFILE_BALANCED,
++	[2] = PLATFORM_PROFILE_LOW_POWER,
++};
++
++static const struct bitland_mifs_quirks bitland_default_quirks = {
++	.profiles = bitland_profiles,
++	.num_profiles = ARRAY_SIZE(bitland_profiles),
++};
++
++static const struct bitland_mifs_quirks bitland_tm2107_quirks = {
++	.profiles = tm2107_profiles,
++	.num_profiles = ARRAY_SIZE(tm2107_profiles),
++	.return_code_at_end = true,
++	.skip_ac_type_check = true,
++};
++
++static const struct dmi_system_id bitland_mifs_dmi_table[] = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Redmi Book Pro 14 2022"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2107"),
++		},
++		.driver_data = (void *)&bitland_tm2107_quirks,
++	},
++	{}
++};
++
+ struct bitland_mifs_event {
+ 	u8 event_type;
+ 	u8 event_id;
+@@ -154,6 +207,7 @@ struct bitland_fan_notify_data {
+ 
+ struct bitland_mifs_wmi_data {
+ 	struct wmi_device *wdev;
++	const struct bitland_mifs_quirks *quirks;
+ 	struct mutex lock;		/* Protects WMI calls */
+ 	struct led_classdev kbd_led;
+ 	struct notifier_block notifier;
+@@ -180,6 +234,17 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+ 
+ 	struct bitland_mifs_output *result __free(kfree) = out_buf.data;
+ 
++	if (data->quirks->return_code_at_end) {
++		const struct bitland_mifs_output_tm2107 *raw = out_buf.data;
++		struct bitland_mifs_output normalized = {
++			.return_code = raw->return_code,
++			.function = raw->function,
++		};
++
++		memcpy(normalized.data, raw->data, sizeof(normalized.data));
++		*result = normalized;
++	}
++
+ 	switch (le16_to_cpu(result->return_code)) {
+ 	case WMI_RETURN_CODE_SUCCESS:
+ 		break;
+@@ -202,6 +267,7 @@ static int laptop_profile_get(struct device *dev,
+ 			      enum platform_profile_option *profile)
+ {
+ 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	const struct bitland_mifs_quirks *quirks = data->quirks;
+ 	struct bitland_mifs_input input = {
+ 		.operation = cpu_to_le16(WMI_METHOD_GET),
+ 		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
+@@ -213,22 +279,10 @@ static int laptop_profile_get(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	switch (result.data[0]) {
+-	case WMI_PP_BALANCED:
+-		*profile = PLATFORM_PROFILE_BALANCED;
+-		break;
+-	case WMI_PP_PERFORMANCE:
+-		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
+-		break;
+-	case WMI_PP_QUIET:
+-		*profile = PLATFORM_PROFILE_LOW_POWER;
+-		break;
+-	case WMI_PP_FULL_SPEED:
+-		*profile = PLATFORM_PROFILE_PERFORMANCE;
+-		break;
+-	default:
++	if (result.data[0] >= quirks->num_profiles)
+ 		return -EINVAL;
+-	}
++
++	*profile = quirks->profiles[result.data[0]];
+ 	return 0;
+ }
+ 
+@@ -241,6 +295,10 @@ static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *da
+ 	struct bitland_mifs_output output;
+ 	int ret;
+ 
++	/* TM2107 accepts its USB-C charger, without an AC type query. */
++	if (data->quirks->skip_ac_type_check)
++		return power_supply_is_system_supplied() > 0 ? 0 : -EOPNOTSUPP;
++
+ 	/* Full-speed/performance mode requires DC power (not USB-C) */
+ 	if (!power_supply_is_system_supplied())
+ 		return -EOPNOTSUPP;
+@@ -263,47 +321,40 @@ static int laptop_profile_set(struct device *dev,
+ 			      enum platform_profile_option profile)
+ {
+ 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	const struct bitland_mifs_quirks *quirks = data->quirks;
+ 	struct bitland_mifs_input input = {
+ 		.operation = cpu_to_le16(WMI_METHOD_SET),
+ 		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
+ 	};
++	size_t i;
+ 	int ret;
+-	u8 val;
+ 
+-	switch (profile) {
+-	case PLATFORM_PROFILE_LOW_POWER:
+-		val = WMI_PP_QUIET;
+-		break;
+-	case PLATFORM_PROFILE_BALANCED:
+-		val = WMI_PP_BALANCED;
+-		break;
+-	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+-		ret = bitland_check_performance_capability(data);
+-		if (ret)
+-			return ret;
+-		val = WMI_PP_PERFORMANCE;
+-		break;
+-	case PLATFORM_PROFILE_PERFORMANCE:
++	for (i = 0; i < quirks->num_profiles; i++) {
++		if (profile == quirks->profiles[i])
++			break;
++	}
++	if (i == quirks->num_profiles)
++		return -EOPNOTSUPP;
++
++	if (profile == PLATFORM_PROFILE_BALANCED_PERFORMANCE ||
++	    profile == PLATFORM_PROFILE_PERFORMANCE) {
+ 		ret = bitland_check_performance_capability(data);
+ 		if (ret)
+ 			return ret;
+-		val = WMI_PP_FULL_SPEED;
+-		break;
+-	default:
+-		return -EOPNOTSUPP;
+ 	}
+ 
+-	input.payload[0] = val;
++	input.payload[0] = i;
+ 
+ 	return bitland_mifs_wmi_call(data, &input, NULL);
+ }
+ 
+ static int platform_profile_probe(void *drvdata, unsigned long *choices)
+ {
+-	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+-	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+-	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
+-	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++	struct bitland_mifs_wmi_data *data = drvdata;
++	size_t i;
++
++	for (i = 0; i < data->quirks->num_profiles; i++)
++		set_bit(data->quirks->profiles[i], choices);
+ 
+ 	return 0;
+ }
+@@ -659,6 +710,7 @@ static int bitland_notifier_callback(struct notifier_block *nb,
+ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
+ {
+ 	struct bitland_mifs_wmi_data *drv_data;
++	const struct dmi_system_id *dmi_id;
+ 	enum bitland_wmi_device_type dev_type =
+ 		(enum bitland_wmi_device_type)(unsigned long)context;
+ 	struct led_init_data init_data = {
+@@ -674,6 +726,11 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
+ 
+ 	drv_data->wdev = wdev;
+ 
++	drv_data->quirks = &bitland_default_quirks;
++	dmi_id = dmi_first_match(bitland_mifs_dmi_table);
++	if (dmi_id)
++		drv_data->quirks = dmi_id->driver_data;
++
+ 	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
+ 	if (ret)
+ 		return ret;
 
+base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
 -- 
-2.34.1
+2.55.0
 
