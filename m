@@ -1,382 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012070.outbound.protection.outlook.com [52.101.53.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B3437A843;
-	Mon, 28 Sep 2026 12:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790597697; cv=none; b=fq/vNvXe0GNSXtZKQ6dOgOVXzyZjNIi2Hv8gUTiR3NV3V/z48nR/GjMXPo3mtrtKvedYuyBFamt0kui37yqfe7Z2EvNIhTZCcfeL56DgxgfGVt/IUhn0QO6J49xzlRVD4O8uEKEWdtnGdZurk1ZjytQ80FLaGx28blHDaZVaHQs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790597697; c=relaxed/simple;
-	bh=Tw3CZkCliOCfLQ1syvy6zxLXShbdpMWWf7IdvtU6FPY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mbCKEluDYnpCPIoDt5NhY1mnbDrK/FXQnWZ9O7FEkzgmptUQX0Yhsn30tgJ+zxVlw3g0luyqIAQdewHTNOfZUVnTVPIv50C0W9QhpV68vCrjfYHlOh1hIAX9OhqbBn62nihlm7R9qfJA3VsRXrhHELuGo6y8cAPBJBi00/hcGi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mqt86eZP; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2943CF218
+	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 12:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790600297; cv=fail; b=eq/kMJHpu4Io7nKrHtVg6fm1PWAxEzekWdJFBXyB8M7gXMELAFYBm/qHzh7zlRh0HiJDw7xss5Z40fmC2tlGhjhlI1+OIRLIigexpiMuk7yalLsMApYOcoxgp/zhmSxsnLoRYujqvnIkZ93D46UNHf2f2l9GrA1uOCdyanJqxWA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790600297; c=relaxed/simple;
+	bh=TFectt8s6nxnwPnNH3+X3ddwmHmzqhBcPUzqP8wSet8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gOVkf7dctu2ArVGidB9yeV8ZsYj5WHr4i14mG0tB/ES0b5Wyum8w0ciPb0QV003P3EloVKQy+gapuvHYY+00n32Qn37l4hVrdsDrxBpbXTdLiGzOD8A58preL1ZaM8mGDD2wTt2otHQR67zjghtAhru3l5IytzzvOARrM2fkYW4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qtUMiG3U; arc=fail smtp.client-ip=52.101.53.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mqt86eZP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790597696; x=1822133696;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Tw3CZkCliOCfLQ1syvy6zxLXShbdpMWWf7IdvtU6FPY=;
-  b=Mqt86eZP5CqQpu9x0uuWl4+Gs5SyKSTyOLTd0F6t60lTk9wh7T7+47mS
-   3vkUghtAO2K07Vpe1F05CO+6CMbZ+G6UJapifcgHNp//T9rd2rtYyEN3S
-   4BXgzjmCYsiWkA+f1LEyqHSYXLtbanO4nCf04sOGfUA+aD2XYeU76vq3R
-   JFN5siuh5TzTDQKVITCCUiuQIXRKjMShVvRbYgIR9wTba8qVU0x+8xy02
-   Ahkf/WAaV/sCXtR4ntp13fbdcYS8zu9niWx+RtIz3XlBEyQ1pbxnhaA66
-   A8YBIhPamAmjRHRg06VtJlZZUstKu4b7ea5nLj63za6fOjvMTWrfBt8iP
-   Q==;
-X-CSE-ConnectionGUID: KQt/lMK5TtGGJMoTwfs5Kg==
-X-CSE-MsgGUID: TL8B3poCSKKKD9eqzp1/UA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="100627342"
-X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="100627342"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 05:14:55 -0700
-X-CSE-ConnectionGUID: 6a24gDSiTGuMDSTAOfjfcw==
-X-CSE-MsgGUID: SyzGaz1QSlqEONsYktBFfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="278235616"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.109])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 05:14:53 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 28 Sep 2026 15:14:48 +0300 (EEST)
-To: TuteMthCD <matias.civadda2342001@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, W_Armin@gmx.de, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: bitland-mifs-wmi: Fix TM2107 profile
- handling
-In-Reply-To: <20260928064918.80526-1-matias.civadda2342001@gmail.com>
-Message-ID: <96e4c5f6-cca2-256f-88bb-c9db9dac3dfd@linux.intel.com>
-References: <20260928064918.80526-1-matias.civadda2342001@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qtUMiG3U"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SCpMe7Wh8wTfb3SdznTuUJfE6WJtIRiURT7YwYyRcrp8hfBkM1fCUeSm0OzOxJ3IybS6x/fVxDgzCfe/5igSYJObChK4Gfsb83D4d1TUNb2ISFDnv2Pe5MWbVTM8CorNP0/jzyzuxFHYYFJqTWE1CR1JtfmFt6jK/T3ktLenmuJgspWzG4rC+upkFPO35o3rjO1+azdhIUFTuMLRul9Ml/18VSxyfN0cpQ52lY2iUKtcW8cYChy8pDH1MYG4MDneI/n9ptDUsMD0jwRAuo3DFkzzi5qdeoC8yYMFdJM6/f28eIcjEs8sOMY1N4k4hC4GLl0U8bbWbfzuDTbK3e9Dlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bZRq3DRmH/4BqI6scVl6CfFrxupvvvjnq5URAmsoAMU=;
+ b=jaOm5xMv8HPSH5nfKWbblkTK5DUzt+B/abpFX/cQGdObalPvvDjpvLipWRCI1uNwQUI7toQXt3Si5dYtx3FReFUnw8N7BS+JGZA8uqLpnqAkuo04VYkORWl0lmLbljpcKJ8Cu429hYbuncqxSY1wK215FwvkC6XYsRlj2fhxEBqgiSkPFRLEhStXtbI4QZOtuXxBoKwNnC8JTR3RkWvX4jb2b4s2wO6woDee85IhWG1kQ9fPzhAlHMXAdUpsr0KzsGRkqNgsdqiHni3TPiyhoIgjcjqK9oBsNT5Io8Lz944+QjmefK4PMNHbd0OvBxL8FKyFjY1N5E+ufWeaDxXlFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bZRq3DRmH/4BqI6scVl6CfFrxupvvvjnq5URAmsoAMU=;
+ b=qtUMiG3Ui9wlNHb9VSkmSnc6Jj2+ceoet4GzXembfsh/QbhgyRGXzv3lAloDSFpAfxj52yhJ8Vr4vNETX5sdbpTKkSH0Qvr9/g4igk01+vbO2fxR8iXlJ9l5LMAyzEgq3FJ45aPIvDWPgN/77z2UNOMumLIGholO2DGnGVLZOFI=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by MW3PR12MB4346.namprd12.prod.outlook.com (2603:10b6:303:58::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.23; Mon, 28 Sep
+ 2026 12:58:12 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0451.022; Mon, 28 Sep 2026
+ 12:58:12 +0000
+Message-ID: <a26d6b46-ef3e-41c8-a542-cf866e6c60c8@amd.com>
+Date: Mon, 28 Sep 2026 07:58:09 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: amd/pmc
+Content-Language: en-US
+To: Karsten Wiese <fzuuzf@googlemail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <CAM=nh0S9e1+_U4WGR92HwOrNC2h2xYb6eKvgN5_skg-vvbSbqQ@mail.gmail.com>
+ <d8d7a246-00f4-42a5-881f-66839eb6b302@amd.com>
+ <CAM=nh0SB5uhsqGyH9v_1N1oZsv94SmrJTqWi_0YVbULgY-c_aw@mail.gmail.com>
+ <c733990f-844c-4ba5-85fa-a0dad627ecad@amd.com>
+ <CAM=nh0QY9-G2PJKpyrXe+h1FHvc1pv6v0-AKgPuMRQC=QtbRZQ@mail.gmail.com>
+ <CAM=nh0RbdpmEbKxyfbk1JNEjT0iXmBKMyJuxf0TRNwywHVOLHA@mail.gmail.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CAM=nh0RbdpmEbKxyfbk1JNEjT0iXmBKMyJuxf0TRNwywHVOLHA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR03CA0007.namprd03.prod.outlook.com
+ (2603:10b6:610:b0::12) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|MW3PR12MB4346:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2f4f6497-f5f0-41ac-2182-08df1d602737
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|22082099003|18002099003|11063799006|56012099006|10067099003|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	xGX1q3G1dxu3/zstbD7XG1zXaYWvpsDdZrrh1Y3Y8vB9tAwt/m2TAjQnRkViVYhH6LlfXu0/6QBwSn+cZETuCOuBPq1YBwZA1+j/M2IJdO2HbETz+2yVUxzTBsN6yNbGtRRWwnyk2cfX23lR2LYmk/rEcRtMgrAtdWC+2XZzw1JF8yLnCewiEktZ+WskpsaoLURTJg0HVSw9olIzegUsfTm4rq4vjsvZL4+uoMYY/FporG1G8o0vXKns1WKHV+CPWfUYFHR2Jqs7MRrSGAA4o7sk2Eg2i0h7BQKYnLVYeFKDE3hlLf1X5SVwgN3jDywtpc7HDsgIkffJlS+e2A6P3npy/ty4fuCmEv/lT6lTFSE/1sII2wxIqg5shchqNlcXCHpO6gYBUaJUYRfH6R9xvJAPpK6bYkxSZOUWIJxLVVIbOl8LbLvXPVdj02+cYVRtPZXihM5z7UAcXp7eQ7z5TNhtsbq0JdPHC4t3btdW2Uue8OolXGh6BA+kxZ6a7GYfU4EF2dz4n3a8WCrmA7PhJogoDXaVDltlENi77/3dtA2759mooPkpcHgWqSRuqDiBxB4T18Je+kds5DcJjLcL01+d0zvg201HjHOyN65ENUxOACVwbPGJD0tfa6SVcngWJgiazbuvATl/xSWNIyatdJ3l0cpSzUrI8i9/XdRXPEk=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(22082099003)(18002099003)(11063799006)(56012099006)(10067099003)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RytrUFRROGlVT2R4VlNGenphTjZ0bm1PWEpHNGNkU1ozMjY4UnBvWmc0d0Zt?=
+ =?utf-8?B?aHphcWUxR0hEZ0V3NTVhc0x6d3RDRmJCcEpXRUhNc1pVU3N3U1NPa3NiTUhL?=
+ =?utf-8?B?bEwwakcyaENiS3RKRlRzaEJydEFzK0FjQUZZRHVmOUd3YytvcVpyQkRJZXVH?=
+ =?utf-8?B?UUFWWVNjYmdNT3gyMzIxOGFwOUlJQVhsalZRMSsyRXlHN0M5N3RRak9JU0pl?=
+ =?utf-8?B?cERLZ2JqOWwvYnE2L2UzQ2RYck1LVi9Ick4zSXc5eGxzNUZSMmRvOVFkMGdH?=
+ =?utf-8?B?R3lPU1p1NktxOExyTjBNei9NcFpmVk50dHE5S0h1SEV4ZW80RTdLOThHcFZh?=
+ =?utf-8?B?ZG8vSHh5dnFURWZETnI2dWg2NFYzSzdIVmtIc2lsSG55VUF6MDBhaXNoekRT?=
+ =?utf-8?B?SVlQNE5LN3E2R0ttanNSYnBDQjlaWnNLYjYwSGdhakdoV0RjQ1g5bVFUL0JM?=
+ =?utf-8?B?QTAzN0FJSm5kVDlSb2tFTjdOQlgyR2w2T1ZmVzBkNjRycjJxR2V4Yy9EcStu?=
+ =?utf-8?B?NUN2YjNoSXg1WVJJeGM0NE16WU1OVFdwc0RrZ04yNnNqS1Q1OHFKL1ZkY1l2?=
+ =?utf-8?B?eEdrT0laR1pyN3l0S29ETlArUnRZV3FoM0tCQUtRNGpFVjVpRlNHN25hajRY?=
+ =?utf-8?B?OC9jV3VQUlNoZ3RCWDJVdEJZS3dLMkp2bHg4VXJObWxXMzZmOVE5Lzd3SkZ4?=
+ =?utf-8?B?UDhXWXA0K295bDgyOFBkYi9JU0RWeW9iNm5ITWxWNVBqTGR1VHpPRG1TUGFp?=
+ =?utf-8?B?Y2RFSjFxcm1hcUVQWVRNMmpQNDZ0ZjhRU1lFaFdmTDVMV1NuSk05L0pva0c3?=
+ =?utf-8?B?U2pYQ1l2My80Q0o1QXZURTJXRXpQclo5RElHNENrK0hxRHFUb1FhTFNrNlB1?=
+ =?utf-8?B?ajBBREhha3Zkay9oN2JwNkVFeFdEWnhOVWJiamJCWmM2ZWhtZFZRQlJmMDVw?=
+ =?utf-8?B?ZVVGV2FDZmx6bTM3L1hkWHk4eFpYVHNaaVpJaGlCdGJ1NlJDdVNiZkxZblZ6?=
+ =?utf-8?B?L3NDV250UWhjOGJzQldaUkw4S1d1QXlmcjY3bmtZQytzQkVzTjNzVVVzejZC?=
+ =?utf-8?B?VmIwUW5LOFhWYzJXM0FGekUzYXJENEUwOEpqZEJpd1VzOE54YTVCTCtKMlVh?=
+ =?utf-8?B?Yno1aVVyL291TWxoTUZKOVBHQ0s2MktBZDV5eUh6S2prcWV2NVJpUkpDRG04?=
+ =?utf-8?B?bEllT0tEVG43THE2M2s3VHExWnFCaHRIREEwbDEvQzdjT1hFcW8rZW4rTEhl?=
+ =?utf-8?B?bWxlYlorS3k5U1UwMGRZaGVHczUzQlgvTUFEc0ZCZ1J1eVNjVXBsQUVZQXU5?=
+ =?utf-8?B?NzZiSDZYV2dsdzc3VXFyaDNjMGx6and3ZTJ6U3A3WnVZOXpxRVkxQzRneDht?=
+ =?utf-8?B?N2U1dTFsTmI2UHBPQW8ydHNDUUtjZ0p5dmpPR2RleVduZjZNeFpwS0I0c1hi?=
+ =?utf-8?B?bEJLMkplcUpvTGV1UjdPWlQ5MlY2eUNlbi9PYVh3Y0xqTTNKYzhqL1I5dWlJ?=
+ =?utf-8?B?T2dEd0V2eTN1ckxlSXZxK3ZRazRYb2lhZTVsd2VRbHlUNzJ3TzJTUlRnVnFU?=
+ =?utf-8?B?VmtDYnB2RXB5RHdQYVlSdU14YWpvaTB2YUhra293dUpYazB6Z29kZlZuRDd3?=
+ =?utf-8?B?L3dsSU4wbXlibEo1bU1LU0RGZGZRQWtLb2pWZHdSS2wvcTAzN1NpWUtYU3hh?=
+ =?utf-8?B?eXgvdVE3VEZUQnh4c2p3UnRQcXBocWR6T2xES3J5RXFRMVdmR3RocXJlalhU?=
+ =?utf-8?B?QTU2dkt6YVYyVzVPUU1GSUF2ZzdxRlFDL05HL0lUUGZLOGJVYlJzamNrYzVk?=
+ =?utf-8?B?MHpuUkhkTTVKNkk5TkpqQ2kzQjhpZTV4YWthYVJsUTRBeWs5RnQrclJIei9N?=
+ =?utf-8?B?Lyt2Tk1aeHMrRnorM1FoSXNiUHJOK2VjVXlOZnkzZkxaSEQ0ZS9mY0pBOWRi?=
+ =?utf-8?B?REN5VTUxaHQ3UnNrM3BmY2o5eGx6WkVIVUI3YUNLNTlCTVhoR1B5VVFKeHZH?=
+ =?utf-8?B?Qy9MNVhKZWpOTElPMWNwb0E0bHRZUTFQcmtPOXlTS2ZDT2RlMUdubHljSWt3?=
+ =?utf-8?B?N3VDM1NUalB5S2RkMENrMFNtK1NiOXI3ejRNUmExYkZuYkFCcHZZNUZXckZM?=
+ =?utf-8?B?UnRZNG1yRlhEL09zNnZ3eGtxN2FhcTdIZVhROExyY0dnWTFjdXNaaURlcXBP?=
+ =?utf-8?B?bTBLMlhLQlpyVEhCODM2b1FsZVI4MUppWmxVRkFvY3RwQWg4VjNlQXdzYVFQ?=
+ =?utf-8?B?Vlo0enMyUUY4ekc2L0hzSGZ2OVJoZE1wRmo5Sjh2eCswUFNLL1UxV0VDMExX?=
+ =?utf-8?Q?Kf3H3CriwLn1ycIwYG?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f4f6497-f5f0-41ac-2182-08df1d602737
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2026 12:58:12.3333
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jpPnoBVACv0YB9HhYUjSs0pe5mUae7039r8CMx2zkzihEabkmzjGY+5JW3cAq568IV3RTVSw/0JX5OInAyr0ZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4346
 
-On Mon, 28 Sep 2026, TuteMthCD wrote:
 
-> On the TIMI Redmi Book Pro 14 2022 (TM2107), the MIFS WMI response uses
-> a different layout from the one currently assumed by the driver.
-> This causes profile reads to fail or report an incorrect profile.
-> 
-> The response contains a 30-byte OutData field followed by a 16-bit
-> Reserved field. On this model, the profile value is returned in
-> OutData[2], while the return code is stored in the trailing 16-bit
-> field.
-> 
-> Selecting the modes in GCommandCenter and reading the WMI response
-> on this machine yielded the following values:
-> 
-> 0: performance
-> 1: balanced
-> 2: quiet
-> 
-> Handle this model through DMI-specific driver_data, normalize its
-> response layout, and map its profile values correctly. Expose only
-> the three supported profiles.
-> 
-> Require external power for performance mode, including the original
-> USB-C charger, matching the behavior observed in GCommandCenter.
-> Skip the adapter-type query on this model.
-> 
-> Build-tested against pdx86/for-next with W=1. Built and tested on
-> Linux 7.2.7-zen1-1-zen on a Redmi Book Pro 14 2022 (TM2107).
-> Verified profile switching, performance selection with the USB-C
-> charger connected, and rejection while running on battery.
-> 
-> Link: https://lkml.iu.edu/2608.2/00163.html
-> Fixes: dc1ec4fa86b2 ("platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver")
-> Assisted-by: LLM
-> Signed-off-by: TuteMthCD <matias.civadda2342001@gmail.com>
 
-As mentioned earlier, this sign off is not enough. You should use your 
-real name to signoff the patch, not some nick.
-
-> ---
-> Changes since v1:
-> - Rebased on pdx86/for-next.
-> - Use a generic DMI table with per-model driver_data.
-> - Add the DMI dependency.
-> - Normalize the response layout before validating the return code
->   and function ID.
-> - Correct the profile mapping using observations from GCommandCenter.
-> - Expose only the three supported profiles.
+On 9/28/26 06:14, Karsten Wiese wrote:
+> Am Mi., 16. Sept. 2026 um 22:30 Uhr schrieb Karsten Wiese
+> <fzuuzf@googlemail.com>:
+>>
+>> Am Mi., 16. Sept. 2026 um 22:05 Uhr schrieb Mario Limonciello
+>> <mario.limonciello@amd.com>:
+>>>
+>>>
+>>>
+>>> On 9/16/26 15:04, Karsten Wiese wrote:
+>>>>> * What issue were you having before?
+>>>> The system would hang on suspend to RAM infinitely. Sometimes it
+>>>> suspended, but the fan kept spinning.
+>>>>
+>>>>> * Was it a problem on every single time, or just sometimes?
+>>>> Sometimes it would hang on the first try, sometimes it survived some
+>>>> suspend_to_ram/resume cycles.
+>>>> When the fan kept spinning, I woke it up and suspended it immediately again.
+>>>> It never survived more than 2 weeks with some 3 cycles daily.
+>>>>
+>>>>> * What is the new behavior with that module parameter in place?
+>>>> 17 days without the fan keeping spinning or the system hanging on
+>>>> suspend to ram.
+>>>> Followed by restarting into a newer kernel.
+>>>>
+>>>>> * What BIOS version do you have?
+>>>> MDCN30WW
+>>>>   From september 2023. Should update.
+>>>>
+>>>
+>>> Yes; before we pick up the quirk, can you please try to update to see if
+>>> it helps?
+>>
+>> The latest BIOS Readme doesn't sound like updating helped:
+>> -- Excerpt start --
+>> Summary of changes
+>> ==================
+>> General Information:
+>>
+>> MDCN40WW:
+>> BIOS Notification    :
+>> 1. Fixed
+>>    1) None.
+>> 2. Add
+>>    1) None.
+>>
+>> 3. Modified
+>>    1) Optimize network related logic.
+>>    2) Enhancement to address security vulnerability LEN-198949.
+>>
+>>
+>>
+>> EC Notification    :
+>> 1. Fixed
+>>    1) None.
+>>
+>> 2. Add
+>>    1) None.
+>>
+>> 3. Modified
+>>    1) Modify the combination keys of fn which fix some key may been hold.
+>> -- Excerpt end --
+>>
+>> No Windows on the Laptop, will take some.
 > 
-> The previous version was mistakenly based on the commit used by my
-> local Linux distribution instead of pdx86/for-next. Sorry for the
-> confusion.
+> No more suspend to ram / wake up issues noticed.
+> Quirk not necessary for BIOS MDCN40WW.
+> Bios installation on linux from dissected update.exe worked fine.
 > 
-> I also collected WMI response data on Windows while switching profiles
-> in GCommandCenter. I can share those results if useful.
-> 
-> v1: https://lore.kernel.org/20260925032001.111062-1-matias.civadda2342001@gmail.com/
-> 
->  drivers/platform/x86/Kconfig            |   1 +
->  drivers/platform/x86/bitland-mifs-wmi.c | 135 +++++++++++++++++-------
->  2 files changed, 97 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 45f15f93afa7..e3351ee1dd43 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -116,6 +116,7 @@ config GIGABYTE_WMI
->  config BITLAND_MIFS_WMI
->  	tristate "Bitland MIFS (MiInterface) WMI driver"
->  	depends on ACPI_WMI
-> +	depends on DMI
->  	depends on HWMON
->  	depends on INPUT
->  	depends on LEDS_CLASS
-> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-> index dd1648b7de77..29e365b54c84 100644
-> --- a/drivers/platform/x86/bitland-mifs-wmi.c
-> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -14,6 +14,7 @@
->  #include <linux/dev_printk.h>
->  #include <linux/device.h>
->  #include <linux/device/devres.h>
-> +#include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/hwmon.h>
->  #include <linux/init.h>
-> @@ -131,6 +132,58 @@ struct bitland_mifs_output {
->  	u8 data[28];
->  } __packed;
->  
-> +/* TM2107 places the return code after the function ID and payload. */
-> +struct bitland_mifs_output_tm2107 {
-> +	__le16 function;
-> +	u8 data[28];
-> +	__le16 return_code;
-> +} __packed;
-> +
-> +struct bitland_mifs_quirks {
-> +	const enum platform_profile_option *profiles;
-> +	size_t num_profiles;
-> +	bool return_code_at_end;
-> +	bool skip_ac_type_check;
-> +};
-> +
-> +static const enum platform_profile_option bitland_profiles[] = {
-> +	[WMI_PP_BALANCED] = PLATFORM_PROFILE_BALANCED,
-> +	[WMI_PP_PERFORMANCE] = PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-> +	[WMI_PP_QUIET] = PLATFORM_PROFILE_LOW_POWER,
-> +	[WMI_PP_FULL_SPEED] = PLATFORM_PROFILE_PERFORMANCE,
-> +};
-> +
-> +/* Values observed after selecting each mode in GCommandCenter. */
-> +static const enum platform_profile_option tm2107_profiles[] = {
-> +	[0] = PLATFORM_PROFILE_PERFORMANCE,
-> +	[1] = PLATFORM_PROFILE_BALANCED,
-> +	[2] = PLATFORM_PROFILE_LOW_POWER,
-> +};
-> +
-> +static const struct bitland_mifs_quirks bitland_default_quirks = {
-> +	.profiles = bitland_profiles,
-> +	.num_profiles = ARRAY_SIZE(bitland_profiles),
-> +};
+> Thanks
 
-It's bit weird to call normal list of profiles quirks, when this is more 
-of a info structure.
-
-> +static const struct bitland_mifs_quirks bitland_tm2107_quirks = {
-> +	.profiles = tm2107_profiles,
-> +	.num_profiles = ARRAY_SIZE(tm2107_profiles),
-> +	.return_code_at_end = true,
-> +	.skip_ac_type_check = true,
-> +};
-> +
-> +static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Redmi Book Pro 14 2022"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2107"),
-> +		},
-> +		.driver_data = (void *)&bitland_tm2107_quirks,
-> +	},
-> +	{}
-> +};
-> +
->  struct bitland_mifs_event {
->  	u8 event_type;
->  	u8 event_id;
-> @@ -154,6 +207,7 @@ struct bitland_fan_notify_data {
->  
->  struct bitland_mifs_wmi_data {
->  	struct wmi_device *wdev;
-> +	const struct bitland_mifs_quirks *quirks;
->  	struct mutex lock;		/* Protects WMI calls */
->  	struct led_classdev kbd_led;
->  	struct notifier_block notifier;
-> @@ -180,6 +234,17 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
->  
->  	struct bitland_mifs_output *result __free(kfree) = out_buf.data;
->  
-> +	if (data->quirks->return_code_at_end) {
-> +		const struct bitland_mifs_output_tm2107 *raw = out_buf.data;
-> +		struct bitland_mifs_output normalized = {
-> +			.return_code = raw->return_code,
-> +			.function = raw->function,
-> +		};
-> +
-> +		memcpy(normalized.data, raw->data, sizeof(normalized.data));
-> +		*result = normalized;
-
-This still feels hackish. Maybe convert the variations into offsets in the 
-info structure. You can still preserve the structs and use offsetof() to 
-extra the offset out of them into the info struct.
-
-> +	}
-> +
->  	switch (le16_to_cpu(result->return_code)) {
->  	case WMI_RETURN_CODE_SUCCESS:
->  		break;
-> @@ -202,6 +267,7 @@ static int laptop_profile_get(struct device *dev,
->  			      enum platform_profile_option *profile)
->  {
->  	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	const struct bitland_mifs_quirks *quirks = data->quirks;
->  	struct bitland_mifs_input input = {
->  		.operation = cpu_to_le16(WMI_METHOD_GET),
->  		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
-> @@ -213,22 +279,10 @@ static int laptop_profile_get(struct device *dev,
->  	if (ret)
->  		return ret;
->  
-> -	switch (result.data[0]) {
-> -	case WMI_PP_BALANCED:
-> -		*profile = PLATFORM_PROFILE_BALANCED;
-> -		break;
-> -	case WMI_PP_PERFORMANCE:
-> -		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-> -		break;
-> -	case WMI_PP_QUIET:
-> -		*profile = PLATFORM_PROFILE_LOW_POWER;
-> -		break;
-> -	case WMI_PP_FULL_SPEED:
-> -		*profile = PLATFORM_PROFILE_PERFORMANCE;
-> -		break;
-> -	default:
-> +	if (result.data[0] >= quirks->num_profiles)
->  		return -EINVAL;
-> -	}
-> +
-> +	*profile = quirks->profiles[result.data[0]];
-
-Just create a local variable for the profile index so you don't need to 
-read it twice from data[] and the naming will make the code more readable.
-
---
- i.
-
->  	return 0;
->  }
->  
-> @@ -241,6 +295,10 @@ static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *da
->  	struct bitland_mifs_output output;
->  	int ret;
->  
-> +	/* TM2107 accepts its USB-C charger, without an AC type query. */
-> +	if (data->quirks->skip_ac_type_check)
-> +		return power_supply_is_system_supplied() > 0 ? 0 : -EOPNOTSUPP;
-> +
->  	/* Full-speed/performance mode requires DC power (not USB-C) */
->  	if (!power_supply_is_system_supplied())
->  		return -EOPNOTSUPP;
-> @@ -263,47 +321,40 @@ static int laptop_profile_set(struct device *dev,
->  			      enum platform_profile_option profile)
->  {
->  	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	const struct bitland_mifs_quirks *quirks = data->quirks;
->  	struct bitland_mifs_input input = {
->  		.operation = cpu_to_le16(WMI_METHOD_SET),
->  		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
->  	};
-> +	size_t i;
->  	int ret;
-> -	u8 val;
->  
-> -	switch (profile) {
-> -	case PLATFORM_PROFILE_LOW_POWER:
-> -		val = WMI_PP_QUIET;
-> -		break;
-> -	case PLATFORM_PROFILE_BALANCED:
-> -		val = WMI_PP_BALANCED;
-> -		break;
-> -	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-> -		ret = bitland_check_performance_capability(data);
-> -		if (ret)
-> -			return ret;
-> -		val = WMI_PP_PERFORMANCE;
-> -		break;
-> -	case PLATFORM_PROFILE_PERFORMANCE:
-> +	for (i = 0; i < quirks->num_profiles; i++) {
-> +		if (profile == quirks->profiles[i])
-> +			break;
-> +	}
-> +	if (i == quirks->num_profiles)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (profile == PLATFORM_PROFILE_BALANCED_PERFORMANCE ||
-> +	    profile == PLATFORM_PROFILE_PERFORMANCE) {
->  		ret = bitland_check_performance_capability(data);
->  		if (ret)
->  			return ret;
-> -		val = WMI_PP_FULL_SPEED;
-> -		break;
-> -	default:
-> -		return -EOPNOTSUPP;
->  	}
->  
-> -	input.payload[0] = val;
-> +	input.payload[0] = i;
->  
->  	return bitland_mifs_wmi_call(data, &input, NULL);
->  }
->  
->  static int platform_profile_probe(void *drvdata, unsigned long *choices)
->  {
-> -	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> -	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +	struct bitland_mifs_wmi_data *data = drvdata;
-> +	size_t i;
-> +
-> +	for (i = 0; i < data->quirks->num_profiles; i++)
-> +		set_bit(data->quirks->profiles[i], choices);
->  
->  	return 0;
->  }
-> @@ -659,6 +710,7 @@ static int bitland_notifier_callback(struct notifier_block *nb,
->  static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
->  {
->  	struct bitland_mifs_wmi_data *drv_data;
-> +	const struct dmi_system_id *dmi_id;
->  	enum bitland_wmi_device_type dev_type =
->  		(enum bitland_wmi_device_type)(unsigned long)context;
->  	struct led_init_data init_data = {
-> @@ -674,6 +726,11 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
->  
->  	drv_data->wdev = wdev;
->  
-> +	drv_data->quirks = &bitland_default_quirks;
-> +	dmi_id = dmi_first_match(bitland_mifs_dmi_table);
-> +	if (dmi_id)
-> +		drv_data->quirks = dmi_id->driver_data;
-> +
->  	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
->  	if (ret)
->  		return ret;
-> 
-> base-commit: f475845eaf3d749114a63270bf2efea459e14dd2
-> 
+That's great to hear, I love when we can discard quirks like this :)
