@@ -1,177 +1,120 @@
-Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5384F052B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 19:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CB74F68B2
+	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 20:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790625167; cv=none; b=UFKCutfTa8KQRQvhpt2GDV0bKaRGUwRYPGRusdR5PJNDFDz7fibnYAD8d6OnwywBc6V9P4btZSc2aFXdz/anRzuHAN0PtGzEdpj1fG8+UlS3jTK8TRRSl3BxZ2q7RQrXG9U1RNpJFlXeMB2pHrOowgJagbfWJ58Fh0UcCmxJpXM=
+	t=1790625813; cv=none; b=QysHGsIX5eqV/L3eS5AYlfhs5kHzc7RIfknKn9sIDxgJ/v7Je2KyAGpCysK8+BldCV6j2vHya5v7fJt/AsryGKBFsWQKA5nfd0efXI3CATK28YzYmmAnpw4Re88D7ma3NHhkqy/zY+jyQNq0YPH7dqZWdSm1g7Vd1dXCvD0qZDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790625167; c=relaxed/simple;
-	bh=FTFVY4LJSlBMUY/FEld8hN6bCc4348a28Oei6Yt4Qoo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mQVLwX1hu7GeECJjyZhVEv+HfU/rZBeyO/Df53DP97mIWUPFZN2VgKQKl9HKiAt+fC3/0uRQtAKCt/GoytziK6Z4xTtxap10xDSUz78g09QqarYaobOoV/6pnb04x2piA9/XvDzgMeDAq4wcQ+5Izz0/5uNlnkHMebtio+DhZTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlQ72UZW; arc=none smtp.client-ip=74.125.225.99
+	s=arc-20240116; t=1790625813; c=relaxed/simple;
+	bh=e79APqvYPYxLoCGsyadc7ocTHlw1rax0P3YjVlJP9aw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hu1yyeO2eoopmzd7XA2H4RHBWHhT9SYBk9UaPCeqgMMgb3V6E1drtOfFv5rLoCb8Kq/hUvc84Zt+c75WGSxXh/20qG47JaMc8wjMrF8BfUf8lmnMZ3BCpR5UNDT6LmWmlJnIVGeOqRmhLP/exYVTvRcRv+X83dBFUuOUQf0UiR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jhwxdpee; arc=none smtp.client-ip=74.125.225.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlQ72UZW"
-Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-48877905b89so393652f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 12:52:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jhwxdpee"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e83a388f8so26293385e9.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 13:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790625161; x=1791229961; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=9nE0ky2uir3ZbtbsE6y1/dKsaMUepowe2tawAEc50Fw=;
-        b=MlQ72UZW1MkenJ1oowCz/3d8Ifkq7Ai7xvZA0t3F06BrpWi0Vq7iDRvlQ0w5u7KIG2
-         NwbDxbDM/bYCBoUWpyqqIo/R1033gK8/iBNSdeqlGtx31Ol2d86SFewM0AT13U1nvfiq
-         53S3CYynmdcXuWaDrbkFWZBLvu4cU+BYE7anK2coyFGcgHtFXwJomvMXTwGF5TAeVNwj
-         iIr0dbNG3T9TnVesyDFrXVWVbd57EDI5/CXlnL7e3OyZgRkAPnfp08yanj8HyauSnuyw
-         hoQK1aYpth8pTYVf3TQf7Wy7YyBzqmU64PrIKTu+O3thqWfkvayRuSOX3l49R2nnb7xy
-         cYlQ==
+        d=gmail.com; s=20251104; t=1790625810; x=1791230610; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CViBSPtF4LBYd0VEUs46UXkR40K1KrpVeCYIgI+4SRY=;
+        b=JhwxdpeejmUWvh3medXcyG14siz1WJ5edbK23U5KTXeIQLhj1cmVqsM5u51jnMUPdK
+         I/haRMc+kvuL68gOabf8rKM/zpq4ZVF+pmYY3jHWHbfFIhFKcYbKagvbVfwquGrZLsCY
+         JBk54NpC/EEH7ELoZYjQT5lq4CAJQkYjKu7ijETpHzk3oUkbBTJjNdYg/qNaHwboV6Fb
+         f5Jo9CgLsc8yJ7dAbOsWJuegC72DG6Tm0L8KdqmnFYYQB8gdPcaq+dI6kar5BJ9rOgg0
+         zJdrY0MdG+MyNzq6sYuXtuRmhdkWL8K4K3wVQwIB7+G/gAs4AZ2bsMAcUN8xPVFEfaBC
+         gUhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790625161; x=1791229961;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=9nE0ky2uir3ZbtbsE6y1/dKsaMUepowe2tawAEc50Fw=;
-        b=NE5QIGJKRG4ek1Gr3ZQ/+2kU2lbeaGMDd4YRNzLQEM0uX72Q+DCObwvISjJfJUrsQJ
-         42fmCpAGzItLknsm0j+eZswMWnXuWT9QdHe4JbHRKMx5PwuB98djnz8UPvb0r8Xt6Ai+
-         p5Km+EabJD+NJOQATQJ4Z99X9Tp6t8gd+CCOmJ6a315pwA2nOHre/K2pdItwSnjxhG58
-         VTbG+pzwyNkSi+xk7uoN0Ttw3QeRs5j4BmwSz4UnmrDRX8UsgCWkJ6pso9efaYVqP/0Q
-         OoMng2wevRDRxgTKqOKQpa84vwDvl1gew8xwuYaMX2d4Ov9Zf4W4T4ybJU4jOJh4Fzj8
-         ieXQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxo6aju72JIPHorClZLz9srHXPiqT1lBEuPlWLqncsMYDA0mUKgCMXQ4MfWdX302bX0zvcFWWNZCDNzUqrc3FU9EPyq@vger.kernel.org
-X-Gm-Message-State: AFuF++lzTS3E8zppiteZc09CCeYGqrlAAebwiLPyyqiNu0MbLq3dkyJw
-	aHH8HjBmbYFZ/ac5yrC1e3zywWBcHB1yd0V1VQTtac4utb8HeI0hwUdl
-X-Gm-Gg: AYBFou3vuiDWk7eE7B+bPD7X5Y2QCvusR6Xn8nhrtzeTfE6js+OjkuMJAwBsZT2WetY
-	nl4rnDlVZNtAuNw/WHUnZ3+fIhVaNy0gm2Rhk4omeBq/Hk3e83KUaLmR6LGKz1e9rKKusEbeLiN
-	7dSTHHZUPGAaaF8mlShb2/NcOgWrGlSm7oSZ+a5SsBdn+OotTLGXnA63JWJ6pEnUUrX8OLi5Jci
-	GcHHJ+LTVnl5s4I1tmmBOyUwZgsyXe1c4g+1FRYKrIS4HlatTW9iS68ZIFtODwwoJ1OhCGjog2X
-	zLJQ7G/EnN4XzfhsoRVSzaiO9GiPalqjXwLuyQettRj6PbBbt82ACVhpxMM5t10jFKBCGSndZf6
-	H8v/mTKgc8NX5FFqlKeLNuR+e7PgU8eQDDUbJ0psqJw27ygXbvL1ekfjjeAQR4GHOqUGmxPEW7K
-	i2lVJYwAMCGyqKdlTrPC+l1nsiQc5v6TJCMidwaEzigIXKtvW9JYExD+5TrQU0xfwHylw7fLuCc
-	wT9hcTbd8kJfEaOPqjD
-X-Received: by 2002:a05:600c:8b38:b0:4a0:b6e:b844 with SMTP id 5b1f17b1804b1-4a00b6ebc3fmr26077875e9.1.1790625160463;
-        Mon, 28 Sep 2026 12:52:40 -0700 (PDT)
-Received: from lima-kdev.local ([85.100.66.184])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a00c130538sm22768995e9.4.2026.09.28.12.52.38
+        d=1e100.net; s=20260707; t=1790625810; x=1791230610;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=CViBSPtF4LBYd0VEUs46UXkR40K1KrpVeCYIgI+4SRY=;
+        b=nyGEjf4+BoGO0DX41L5ftYH5kjvDAmtJVszIy78IF78tghChhXdVIAL9veVztIhkfd
+         xVomKOgQlnaSittPcBx6QWBr2y3GztwWBS7zSs07yNWYnQphRlxpvPzde+7nFtwD/hSo
+         gvZoyCR1sLXgS8HdJlAj5HKkT//kUuzch4aGqF7LXzU1tsQB65c7DMGj3st/Z4C1SQ3I
+         CUtN+oplimhHLKJByBLuVccmp8+cQKvGqR8QTEb6DdJ/DoP12FdQfT9Yi0Ctaikmjh4h
+         tD1w2lyT7aFc+99yHG5uZHMfF4iL6YJ3S51W7Pcsjhwh/usch99KD4EEKth+d4lr+NFd
+         rQUg==
+X-Forwarded-Encrypted: i=1; AKwUvByETH1PzvLdbc8lSdoNkP47BK99jtge2YqNq+NQQgTQ68pZUKdKzGhljjsvoGiBPGSvXKFEblzEhOvD6C3A4FfHakcG@vger.kernel.org
+X-Gm-Message-State: AFuF++nKn66HkLWt7pjohEcOHqS77qYBpcMCUpJd2qdniQMyAL2tWuk1
+	IJJ5KHV5QytxxOp+xaQHWOVIR+KZJAtOkzgXEdyABolbCtGqA8IPuqaW
+X-Gm-Gg: AYBFou3YNAWfSFO7XZpEEF9yjXaGcb2wc8AgbWT3umyOjiof+RNiv4bnH7FjyFdCbcT
+	PyfyM3WUAgn34Dk16A9idynBTuAvEYGz4UUEoEP+qHPhnuowgbaCD79OIAla1Z4B1UxBG6BoPzW
+	dkeQf3zENouYrX0cJbido4H7WjBRCF3+SD2OZ5mJrMFc4/A78mSM8PDz4U/Zgwp8ojWC4g0M0ua
+	HfpXboiKb6negLG7Lb8h1hWXGUlqDMMaOlfcOQv7PWB/2NJB9vPuTRJvI/G+k7YT9kUuqPE7x7U
+	258wuAjrf8UInf4TKEsS9K4c/uG+bidzL8YAP+67NVZFlcyH+e7vHbo+mGqEZkYZh3zIJFjRS4n
+	Rw60J5Pi7311HBXr8eiLgRjCWmycAPHVN1GXBL2JWHkeecfx+ttzPiagRmp0OVdj+zyByaHrPv/
+	RSDz8CaoopHfzNmqnhmYLsFe0gwRllf3GuIeLAu/wOf/PHy4IJu68EcgiWeboWb4gKW42rsweNb
+	y1KUi18IgQlo0E8tNQp6sYTsWmJoeA8PDAWw5Xn5SeEorrX0ZUV
+X-Received: by 2002:a05:600c:1389:b0:49f:dcc8:c735 with SMTP id 5b1f17b1804b1-49fe66f4c7dmr234761645e9.18.1790625809613;
+        Mon, 28 Sep 2026 13:03:29 -0700 (PDT)
+Received: from fedora ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a00c0730a8sm26506625e9.0.2026.09.28.13.03.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 12:52:40 -0700 (PDT)
-From: Kayra Cizmeci <kayracizmeci@gmail.com>
-To: tim.c.chen@linux.intel.com,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: KPrateek.Nayak@amd.com,
-	Vishal.Badole@amd.com,
-	klaus.kusche@computerix.info,
-	linux-kernel@vger.kernel.org,
-	mario.limonciello@amd.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
+        Mon, 28 Sep 2026 13:03:29 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: Jorge Lopez <jorge.lopez2@hp.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	platform-driver-x86@vger.kernel.org,
-	ricardo.neri@intel.com,
+	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org,
-	x86@kernel.org,
-	yu.c.chen@intel.com,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] sched/cache: Honor asym packing over cache aware scheduling on hybrid system
-Date: Mon, 28 Sep 2026 22:52:31 +0300
-Message-ID: <20260928195232.61319-1-kayracizmeci@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <221f8b0345328c4b26b65daff4d3eec56a32b06d.1790617047.git.tim.c.chen@linux.intel.com>
-References: <221f8b0345328c4b26b65daff4d3eec56a32b06d.1790617047.git.tim.c.chen@linux.intel.com>
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH v2 0/3] platform/x86: hp-bioscfg: string buffer and password fixes
+Date: Tue, 29 Sep 2026 01:03:15 +0500
+Message-ID: <20260928200318.63383-1-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Helloooo Tim,
+This series addresses string buffer issues and password validation
+in the hp-bioscfg driver.
 
-> A regression was reported on an AMD Ryzen AI HX 370 running a cache
-> intensive Clang full-LTO link. The little cores run at a much lower
-> frequency (3.3 GHz vs 5.1 GHz) and have only half of the L3 cache
-> (8 MB vs 16 MB), so pinning such a task to the little-core LLC hurts
-> twice, and full-LTO builds slow down dramatically compared to
-> pre-cache-aware-scheduling kernels.
+Patch 1 fixes bounds checking, prescan OOB read, and character count
+accounting in hp_get_string_from_buffer().
 
-> Asym packing and cache aware scheduling express conflicting placement
-> strategy. Asym packing wants a task to run on the highest priority CPU,
-> whereas cache aware scheduling wants to co-locate the tasks of a process
-> on one LLC regardless of the priority of CPUs in that LLC.
+Patch 2 replaces the truncating manual conversion loop with a two-stage
+conversion: utf16s_to_utf8s() into a scratch buffer followed by
+string_escape_mem().
 
-> When asym packing tries to migrate task to an empty
-> core that has higher priority than source cpu, let asym packing win.
-> Moving tasks to a higher performing idle core will buy more
-> performance than cache co-location.
+Patch 3 fixes validate_password_input() returning positive
+INVALID_BIOS_AUTH (0x0E), which caused userspace writes of
+out-of-range passwords to appear successful.
 
+All patches tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.7).
 
-> +static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int src_cpu);
-> +
->  /*
->   * Check if task p can migrate from source LLC to
->   * destination LLC in terms of cache aware load balance.
-> @@ -10847,6 +10849,10 @@ static enum llc_mig can_migrate_llc_task(struct lb_env *env,
->  	if (cpu < 0 || cpus_share_cache(src_cpu, dst_cpu))
->  		return mig_unrestricted;
->  
-> +	/* Prioritize asym packing over cache awareness */
-> +	if (sched_asym(env->sd, dst_cpu, src_cpu))
-> +		return mig_unrestricted;
-> +
->  	/* skip cache aware load balance for too many threads */
->  	if (invalid_llc_nr(grp, p, dst_cpu) ||
->  	    exceed_llc_capacity(grp, dst_cpu)) {
-> @@ -12043,6 +12049,15 @@ static inline bool llc_balance(struct lb_env *env, struct sg_lb_stats *sgs,
->  	    sgs->group_misfit_task_load)
->  		return false;
->  
-> +	/*
-> +	 * On asym packing domains, if the destination CPU
-> +	 * has higher priority than all CPUs in the source group,
-> +	 * prioritize asym packing.
-> +	 */
-> +	if ((env->sd->flags & SD_ASYM_PACKING) &&
-> +	    sgs->group_asym_packing)
-> +		return false;
-> +
->  	/*
->  	 * Skip cache aware tagging if nr_balanced_failed is sufficiently high.
->  	 * Threshold of cache_nice_tries is set to 1 higher than nr_balance_failed
-> @@ -13458,12 +13473,12 @@ static int need_active_balance(struct lb_env *env)
->  {
->  	struct sched_domain *sd = env->sd;
->  
-> -	if (alb_break_llc(env))
-> -		return 0;
-> -
->  	if (asym_active_balance(env))
->  		return 1;
->  
-> +	if (alb_break_llc(env))
-> +		return 0;
-> +
->  	if (imbalanced_active_balance(env))
->  		return 1;
- 
-Hope I could test this. But I don't really have hardware for it :-(.
+Changes in v2:
+ - Split hp_get_string_from_buffer() fixes into two logical patches
+   (bounds/OOB reads and UTF-8 conversion rewrite), as reviewed by
+   Ilpo Järvinen.
+ - Dropped lib/string_helpers patch: pass "\\\r\n\t" to string_escape_mem()
+   with existing flags (ESCAPE_SPACE | ESCAPE_SPECIAL) to escape the four
+   characters without altering quotes, as reviewed by Andy Shevchenko.
+ - Added password validation errno fix as patch 3/3.
 
-Regardless tho.
+Muhammad Bilal (3):
+  platform/x86: hp-bioscfg: fix OOB reads in hp_get_string_from_buffer()
+  platform/x86: hp-bioscfg: fix non-ASCII truncation in
+    hp_get_string_from_buffer()
+  platform/x86: hp-bioscfg: return -ERANGE from
+    validate_password_input()
 
-Let's say when entering can_migrate_llc_task(), dst_cpu is CPU0, while src_cpu is CPU1.
-And CPU0 has a bigger asym_prio than CPU1. No SMT. When entering can_migrate_llc_task() and sched_asym()
-from there sched_use_asym_prio() returns true without checking if the core is fully idle or not.
-And sched_asym_prefer() comes back true too, so sched_asym() returns true and, we just returned mig_unrestricted.
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 77 ++++++-------------
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c  |  6 +-
+ 2 files changed, 27 insertions(+), 56 deletions(-)
 
-I could be missing something, If I'm not tho is that on purpose? If it is, the last paragraph needs to change
-since it says that "asym packing tries to migrate task to an empty core" and after that "higher performing idle core"
-
-Thanks,
-Kayra
-
+-- 
+2.55.0
