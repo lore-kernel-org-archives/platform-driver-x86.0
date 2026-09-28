@@ -1,81 +1,89 @@
-Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
+Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B733D9540
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 19:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5384F052B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 19:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790622550; cv=none; b=AkaS7v0GkxNtZYh/RL7enXP9z1Pv23xiouyaB7No4kxleVLY4Pvuub44kVQro57eHmEGCHtSolJI7j8+JKzROlXnoJ2HDrG/JbGQyBkoofZvwmlMK9bvaRKEaZpelmffyflNKm0yK5Urc11T/pU2W9sZeO1GgsFvLdpkvKe2rC8=
+	t=1790625167; cv=none; b=UFKCutfTa8KQRQvhpt2GDV0bKaRGUwRYPGRusdR5PJNDFDz7fibnYAD8d6OnwywBc6V9P4btZSc2aFXdz/anRzuHAN0PtGzEdpj1fG8+UlS3jTK8TRRSl3BxZ2q7RQrXG9U1RNpJFlXeMB2pHrOowgJagbfWJ58Fh0UcCmxJpXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790622550; c=relaxed/simple;
-	bh=xHFb53dA9B0lCNvw12Z78nkIOzlWJGPGhlIDf1Flt9k=;
+	s=arc-20240116; t=1790625167; c=relaxed/simple;
+	bh=FTFVY4LJSlBMUY/FEld8hN6bCc4348a28Oei6Yt4Qoo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iDnQXa1nYw2PJKuVw3MN0Jngri5N8yD8YUZQpdZMSdxL/d7DXG6g/f/tIM0nj23Ml7JPEXrlTixe4i3BCUXjPTgQe9CPIKWmUCWwbZKDvbjiLw8Cu452wXGLed0+xF7+9ZqBOF+wxbPiPoI9YQGeR8TcvNefAiHnap/LwpmpOAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UValHkP6; arc=none smtp.client-ip=74.125.228.12
+	 MIME-Version; b=mQVLwX1hu7GeECJjyZhVEv+HfU/rZBeyO/Df53DP97mIWUPFZN2VgKQKl9HKiAt+fC3/0uRQtAKCt/GoytziK6Z4xTtxap10xDSUz78g09QqarYaobOoV/6pnb04x2piA9/XvDzgMeDAq4wcQ+5Izz0/5uNlnkHMebtio+DhZTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlQ72UZW; arc=none smtp.client-ip=74.125.225.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UValHkP6"
-Received: by mail-pz2-f12.google.com with SMTP id 41be03b00d2f7-cc1ab16a9adso162725a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 12:09:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlQ72UZW"
+Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-48877905b89so393652f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 12:52:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790622549; x=1791227349; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790625161; x=1791229961; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xHFb53dA9B0lCNvw12Z78nkIOzlWJGPGhlIDf1Flt9k=;
-        b=UValHkP6VtTjlZqz4bevENih9HiEyd5aEFgDnKty+j0yH5h4JsSkqsvz1MZZDfwcuj
-         oMGzf+dgwO91vnWh4Q0G/6XcuyeWuHS8GG7XXbp53JDcGWnAYV8ISxAHA9IIaZjDRW3f
-         kSYasRLqyWIrIAjw0j+Zlv4YCXZZmxmJtKkHdE+ROYzccZIkSbDsFGWjgtT1v0urvRc7
-         eA141vZiEEIxeFpROqSqCwEOPRehpHYxaJcQmuchTo8ZibBZfBtUhVPwO4hVOW0SmnfC
-         sSE1Zmd7UmVXUzbnXHVkeCW/3jWTtLdiUTtVKbTx5otTJ6hyH6tWm/2t5OxyBXIj4YHF
-         Kx6A==
+        bh=9nE0ky2uir3ZbtbsE6y1/dKsaMUepowe2tawAEc50Fw=;
+        b=MlQ72UZW1MkenJ1oowCz/3d8Ifkq7Ai7xvZA0t3F06BrpWi0Vq7iDRvlQ0w5u7KIG2
+         NwbDxbDM/bYCBoUWpyqqIo/R1033gK8/iBNSdeqlGtx31Ol2d86SFewM0AT13U1nvfiq
+         53S3CYynmdcXuWaDrbkFWZBLvu4cU+BYE7anK2coyFGcgHtFXwJomvMXTwGF5TAeVNwj
+         iIr0dbNG3T9TnVesyDFrXVWVbd57EDI5/CXlnL7e3OyZgRkAPnfp08yanj8HyauSnuyw
+         hoQK1aYpth8pTYVf3TQf7Wy7YyBzqmU64PrIKTu+O3thqWfkvayRuSOX3l49R2nnb7xy
+         cYlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790622549; x=1791227349;
+        d=1e100.net; s=20260707; t=1790625161; x=1791229961;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xHFb53dA9B0lCNvw12Z78nkIOzlWJGPGhlIDf1Flt9k=;
-        b=mttTfG2obQz4GPS8A7J/2oBSN+VsRNC8wtMm2Y8JvTbq1Jm2BolucwSyw041xIVUaK
-         qdu0flO0SkZHfjS5KmrsMO1ZokYZ9jfq9GXkuUiHPVvjnFxPzVsnaEZmofHmoC/6BOCN
-         UXZra0meIqR1EmLK8OUgB3wiR+hhYZN2DzN1Taz0wFxTUD9jifz9ohgAbf0IsypP5g6B
-         KXy2hh+SP13nbI9UZ5dLQ+bQSWZfQ+PP17l2+H46kT4vnXARmIbUWhP3j5MObkPNsk5W
-         BBcR7sZiTyFZipOr9w7VEjh5ZWFcSKf6fCX6nznva2K+uS8REHhYUs26u21mQ5faEIaS
-         qPfg==
-X-Forwarded-Encrypted: i=1; AKwUvBz1OGC3SgARfwHw1bf9oT+I65aPMuUPMUlLynpRbThnY1m7mo/uWhIJypYOw6rgQ2blDf2Wu4zNW9SJO94HEHIF7ynP@vger.kernel.org
-X-Gm-Message-State: AFuF++l0c7iFnL4m//WCwDZmbpg2itukIU6/tOXGwO1LrfcMnGZLeF5N
-	yQ71W6pkGcN16kHln4TMkG1DJ9slhNmuMVQAquOTW5sV1SvW9Emu6nOW
-X-Gm-Gg: AYBFou1g7WbJKQG1K/e4O95CK9V5jOpOfcByeXovl0HgQLb6FcCrDOUS26gFUxyap6d
-	6tJon9nHvQLmkT9U1Qxndas9/dvt++40/H8GP1TPAG6nFzgTJBXVQtXfv5OYKz9u8AX09F6KdfH
-	hZ42gGjHYxhcvykL0GyzNjIOuemnuczQbsAk2ErE9k0RPCSGgEojjgtMr9/c1lGrXlMkatBuXXs
-	a9TKu5EBAqLK402p3ro3ToJ3PkHBPVwTwFObbvcB9k87G01aojObYeF5Vd1zs1CPfQzB9Qx1Ki/
-	UUwuM2CcRecHfzdSs42vaxHEQCsfukQ2XJ+v3KBPeDwmtoFZX3IwvXisqsegafgZpd6NtlcdknA
-	qupaluBWc1HGjeOMxgDk98WDkNVtQRw2iPNzJJ4/aauORy93WtXPqxb0ChjRT8DwI5quuZlD5Mf
-	+zIEedeSr3cZMy2c9W+pr7ocn+Rb5ssPTbv37gDytonqxpYBvLv6xsGXtlQ9AKs9Iwt8bKTYQuJ
-	PvG8tYfPppe3SKuDBpQLCXcTOUessWMuAFBsqdLZY8vT+9vrNsIZeoLBlrA3JQhWc/7OgzbDOxd
-	PWu6n8nCNKgp5LW86t8=
-X-Received: by 2002:a05:6a00:4707:b0:87d:4b87:4170 with SMTP id d2e1a72fcca58-87e98992637mr12189037b3a.1.1790622548857;
-        Mon, 28 Sep 2026 12:09:08 -0700 (PDT)
-Received: from cachyos-aura ([45.112.148.109])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-87fe82ebc55sm4528211b3a.4.2026.09.28.12.09.04
+        bh=9nE0ky2uir3ZbtbsE6y1/dKsaMUepowe2tawAEc50Fw=;
+        b=NE5QIGJKRG4ek1Gr3ZQ/+2kU2lbeaGMDd4YRNzLQEM0uX72Q+DCObwvISjJfJUrsQJ
+         42fmCpAGzItLknsm0j+eZswMWnXuWT9QdHe4JbHRKMx5PwuB98djnz8UPvb0r8Xt6Ai+
+         p5Km+EabJD+NJOQATQJ4Z99X9Tp6t8gd+CCOmJ6a315pwA2nOHre/K2pdItwSnjxhG58
+         VTbG+pzwyNkSi+xk7uoN0Ttw3QeRs5j4BmwSz4UnmrDRX8UsgCWkJ6pso9efaYVqP/0Q
+         OoMng2wevRDRxgTKqOKQpa84vwDvl1gew8xwuYaMX2d4Ov9Zf4W4T4ybJU4jOJh4Fzj8
+         ieXQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxo6aju72JIPHorClZLz9srHXPiqT1lBEuPlWLqncsMYDA0mUKgCMXQ4MfWdX302bX0zvcFWWNZCDNzUqrc3FU9EPyq@vger.kernel.org
+X-Gm-Message-State: AFuF++lzTS3E8zppiteZc09CCeYGqrlAAebwiLPyyqiNu0MbLq3dkyJw
+	aHH8HjBmbYFZ/ac5yrC1e3zywWBcHB1yd0V1VQTtac4utb8HeI0hwUdl
+X-Gm-Gg: AYBFou3vuiDWk7eE7B+bPD7X5Y2QCvusR6Xn8nhrtzeTfE6js+OjkuMJAwBsZT2WetY
+	nl4rnDlVZNtAuNw/WHUnZ3+fIhVaNy0gm2Rhk4omeBq/Hk3e83KUaLmR6LGKz1e9rKKusEbeLiN
+	7dSTHHZUPGAaaF8mlShb2/NcOgWrGlSm7oSZ+a5SsBdn+OotTLGXnA63JWJ6pEnUUrX8OLi5Jci
+	GcHHJ+LTVnl5s4I1tmmBOyUwZgsyXe1c4g+1FRYKrIS4HlatTW9iS68ZIFtODwwoJ1OhCGjog2X
+	zLJQ7G/EnN4XzfhsoRVSzaiO9GiPalqjXwLuyQettRj6PbBbt82ACVhpxMM5t10jFKBCGSndZf6
+	H8v/mTKgc8NX5FFqlKeLNuR+e7PgU8eQDDUbJ0psqJw27ygXbvL1ekfjjeAQR4GHOqUGmxPEW7K
+	i2lVJYwAMCGyqKdlTrPC+l1nsiQc5v6TJCMidwaEzigIXKtvW9JYExD+5TrQU0xfwHylw7fLuCc
+	wT9hcTbd8kJfEaOPqjD
+X-Received: by 2002:a05:600c:8b38:b0:4a0:b6e:b844 with SMTP id 5b1f17b1804b1-4a00b6ebc3fmr26077875e9.1.1790625160463;
+        Mon, 28 Sep 2026 12:52:40 -0700 (PDT)
+Received: from lima-kdev.local ([85.100.66.184])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a00c130538sm22768995e9.4.2026.09.28.12.52.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 12:09:08 -0700 (PDT)
-From: Navon John Lukose <navonjohnlukose@gmail.com>
-To: Rong Zhang <i@rong.moe>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Charles <hanker007@gmail.com>,
+        Mon, 28 Sep 2026 12:52:40 -0700 (PDT)
+From: Kayra Cizmeci <kayracizmeci@gmail.com>
+To: tim.c.chen@linux.intel.com,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: KPrateek.Nayak@amd.com,
+	Vishal.Badole@amd.com,
+	klaus.kusche@computerix.info,
+	linux-kernel@vger.kernel.org,
+	mario.limonciello@amd.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] platform/x86: lenovo-wmi-{other,capdata,helpers}: Improve robustness on buggy firmware
-Date: Tue, 29 Sep 2026 00:39:01 +0530
-Message-ID: <20260928190901.1369497-1-navonjohnlukose@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <55927121-62DB-43D7-B1BD-19519A775659@rong.moe>
-References: <20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe> <20260926210415.3465939-1-navonjohnlukose@gmail.com> <E2EDCF4A-09BB-4FE7-9E67-5086401C0848@rong.moe> <9789f452-d7eb-4f1e-8a13-7335332193a7@app.fastmail.com> <55927121-62DB-43D7-B1BD-19519A775659@rong.moe>
+	ricardo.neri@intel.com,
+	stable@vger.kernel.org,
+	x86@kernel.org,
+	yu.c.chen@intel.com,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] sched/cache: Honor asym packing over cache aware scheduling on hybrid system
+Date: Mon, 28 Sep 2026 22:52:31 +0300
+Message-ID: <20260928195232.61319-1-kayracizmeci@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <221f8b0345328c4b26b65daff4d3eec56a32b06d.1790617047.git.tim.c.chen@linux.intel.com>
+References: <221f8b0345328c4b26b65daff4d3eec56a32b06d.1790617047.git.tim.c.chen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -84,13 +92,86 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A correction to my earlier report. This firmware does declare
-LENOVO_CAPABILITY_DATA_01 in _WDG (object B1, 55 instances), but there
-is no WQB1 method. The WMI core drops the block with "WQB1 data block
-query control method not found" and never creates a device, so the
-register-on-WMI-error and stub detection patches in this series never
-run here. LENOVO_DISCRETE_DATA (B2) is declared without a WQB2 in the
-same way.
+Helloooo Tim,
 
-Making capdata01 a sub-component should cover this machine. I'll test
-the refreshed series here when it is posted.
+> A regression was reported on an AMD Ryzen AI HX 370 running a cache
+> intensive Clang full-LTO link. The little cores run at a much lower
+> frequency (3.3 GHz vs 5.1 GHz) and have only half of the L3 cache
+> (8 MB vs 16 MB), so pinning such a task to the little-core LLC hurts
+> twice, and full-LTO builds slow down dramatically compared to
+> pre-cache-aware-scheduling kernels.
+
+> Asym packing and cache aware scheduling express conflicting placement
+> strategy. Asym packing wants a task to run on the highest priority CPU,
+> whereas cache aware scheduling wants to co-locate the tasks of a process
+> on one LLC regardless of the priority of CPUs in that LLC.
+
+> When asym packing tries to migrate task to an empty
+> core that has higher priority than source cpu, let asym packing win.
+> Moving tasks to a higher performing idle core will buy more
+> performance than cache co-location.
+
+
+> +static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int src_cpu);
+> +
+>  /*
+>   * Check if task p can migrate from source LLC to
+>   * destination LLC in terms of cache aware load balance.
+> @@ -10847,6 +10849,10 @@ static enum llc_mig can_migrate_llc_task(struct lb_env *env,
+>  	if (cpu < 0 || cpus_share_cache(src_cpu, dst_cpu))
+>  		return mig_unrestricted;
+>  
+> +	/* Prioritize asym packing over cache awareness */
+> +	if (sched_asym(env->sd, dst_cpu, src_cpu))
+> +		return mig_unrestricted;
+> +
+>  	/* skip cache aware load balance for too many threads */
+>  	if (invalid_llc_nr(grp, p, dst_cpu) ||
+>  	    exceed_llc_capacity(grp, dst_cpu)) {
+> @@ -12043,6 +12049,15 @@ static inline bool llc_balance(struct lb_env *env, struct sg_lb_stats *sgs,
+>  	    sgs->group_misfit_task_load)
+>  		return false;
+>  
+> +	/*
+> +	 * On asym packing domains, if the destination CPU
+> +	 * has higher priority than all CPUs in the source group,
+> +	 * prioritize asym packing.
+> +	 */
+> +	if ((env->sd->flags & SD_ASYM_PACKING) &&
+> +	    sgs->group_asym_packing)
+> +		return false;
+> +
+>  	/*
+>  	 * Skip cache aware tagging if nr_balanced_failed is sufficiently high.
+>  	 * Threshold of cache_nice_tries is set to 1 higher than nr_balance_failed
+> @@ -13458,12 +13473,12 @@ static int need_active_balance(struct lb_env *env)
+>  {
+>  	struct sched_domain *sd = env->sd;
+>  
+> -	if (alb_break_llc(env))
+> -		return 0;
+> -
+>  	if (asym_active_balance(env))
+>  		return 1;
+>  
+> +	if (alb_break_llc(env))
+> +		return 0;
+> +
+>  	if (imbalanced_active_balance(env))
+>  		return 1;
+ 
+Hope I could test this. But I don't really have hardware for it :-(.
+
+Regardless tho.
+
+Let's say when entering can_migrate_llc_task(), dst_cpu is CPU0, while src_cpu is CPU1.
+And CPU0 has a bigger asym_prio than CPU1. No SMT. When entering can_migrate_llc_task() and sched_asym()
+from there sched_use_asym_prio() returns true without checking if the core is fully idle or not.
+And sched_asym_prefer() comes back true too, so sched_asym() returns true and, we just returned mig_unrestricted.
+
+I could be missing something, If I'm not tho is that on purpose? If it is, the last paragraph needs to change
+since it says that "asym packing tries to migrate task to an empty core" and after that "higher performing idle core"
+
+Thanks,
+Kayra
+
