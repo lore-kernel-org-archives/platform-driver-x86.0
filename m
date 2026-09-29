@@ -1,88 +1,159 @@
-Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19010022.outbound.protection.outlook.com [52.103.7.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D1852BE22
-	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 16:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790699637; cv=none; b=gqd7fzZ5aNfyd+zAl2z40wW2M3oJKTEfFfpXcXlwypO+58xzD8XsWzugXJXUd1Nu0lvyfG1KyKJraw/zHlVZTzxmwoBrAZH3XTQoVo7K97NmcxGfCfyG+3iNQ3/xNau/EUbKqZrbr6hMuKmt/AdnQjut+MaKs7HutvgJ0C9WPZ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790699637; c=relaxed/simple;
-	bh=dE6mRWx2T0gb0Lonp1XJbF84cgeLN2z625cxUjDsFVA=;
-	h=Cc:To:Subject:Date:From:Message-Id:Mime-Version:Content-Type; b=P+oWDTvMyItR5lPRskcc+PxmDVU9QExiLv9r2/ut7jJhuZHVB/rk+6BsbXr56t1tnQfyH+2GjYx6kU4zJWkp6F+zE4O+xIN2drzrzHOQn1gGJ4jRoQfR+teuD2QB2rEjqZ81XI3z27Qtwfhf8vaml/B7gRP17gkK52vP/4724kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fJgvkVJi; arc=none smtp.client-ip=209.127.230.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8534E3245;
+	Tue, 29 Sep 2026 16:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790701135; cv=fail; b=TYfx14b5Qmgwn7xOX5jS73iPUhSXoONd6Px53u9P9tT9Kh+SoHVydTBu/gmZb2v8dSTjmp6W5wJWzPDLHghjmzcrDNxC7QdDICkIVtVMVqUkqniqfjSp027tSU7Ur0o91oU0oDcMHLDVFuSUikTbh7PNsGHSOkT7LRl5ezvCDhE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790701135; c=relaxed/simple;
+	bh=idpxnuu0zqgxe6lW40rKM8LJIUV+VXSJAlGfy4sAFoQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AnSdrgdZOtgUd3FoqyzfDx7IpZiWUK9LMnrDNmhDFKbibj8X3Don2hhXsWGtEkvdyeqlzdEt0I0TdUj9ALBl8otgcIrZo+muUGsH0iKiCphpMaKs/75zjh9XqnQao5JiVG/WtMcnWZS/OyxrOH9jhudgu/X/QJLIfkp/FzYqlQA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=Ri2OmGQo; arc=fail smtp.client-ip=52.103.7.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fJgvkVJi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1790699516; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=X9o+2/Ax/kfeSEtGR9Uwqu9diBOxx2zKNjv4SBV/Gd8=;
- b=fJgvkVJiPoutQveVcB9nrXKBDdH5Njo7xj3qkCB6m8TL7JO39lTMCYISy1Xsfq6lzMPxXv
- NlSNvpsnXTBk9fNTep0HhCLyB6Hsog52PwTIHtOVdnkhCSveywwkb9yGsVC+QqTWS7bHDm
- 0TF6JoCHO1dCVYhKWasPYStmyrh98dg9bwOzPNk01ahtanNToxtjyocbEswNKLJOd/4/kF
- 1YUozvCFT4Knqn/Q1lJKhBDIxAtnJ+fmvro41rM9qfApKyRolC/BFLwW4aNfIRzKAJySMz
- UI+0kQO0zEBc1BTONO+tjGWS7p5e+OT39cbuPAthgysu7UYuxwgQ5oXeYE/maA==
-X-Original-From: Guixiong Wei <weiguixiong@bytedance.com>
-Content-Transfer-Encoding: 7bit
-Cc: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>, 
-	<rafael.j.wysocki@intel.com>, <platform-driver-x86@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <wangyijia.yeah@bytedance.com>, 
-	"Guixiong Wei" <weiguixiong@bytedance.com>, <stable@vger.kernel.org>
-X-Mailer: git-send-email 2.50.1
-To: <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86/intel-uncore-freq: Continue restoring limits on resume
-Date: Wed, 30 Sep 2026 00:31:34 +0800
-X-Lms-Return-Path: <lba+26abbe7fa+f5574e+vger.kernel.org+weiguixiong@bytedance.com>
-From: "Guixiong Wei" <weiguixiong@bytedance.com>
-Message-Id: <20260929163133.14326-2-weiguixiong@bytedance.com>
+	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="Ri2OmGQo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UFhEG//G6Eg/LmQNBCJIvHVRXKrbM6DxfeyRg5lYPrFu8G9Yv6s3APc+qZlmt+EfHTQGO3V+xDBE/KLkjwP4F2bSI0yTkDvQijG6rwD8LbQFxC4yY0AkHKHTHA1QNV+zDshevrvmghmrTOWIkzK/bGrF3SLm1D4H2kVBHqtiSeW6qIUcxfm9aQyZsz1tOqJYERHfjHySfSARt60CaymDgKPvRSxbN7PVLxubwi6+wR83hLoXTk7dEwErw58EaN1kC+KyfqG2qS0TpHgzszRm+MtonQYEjA0UXeOr+zQURNqRf4SaIr1T1BchtG0Aq29uc+4AEzII2P/TQMeBTeEMWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=idpxnuu0zqgxe6lW40rKM8LJIUV+VXSJAlGfy4sAFoQ=;
+ b=TwZvr4uybmgP0KkxKcaufSXfCTT9xU4MF00gJ1E2Y0dyDJBhjHYWtg05tQffCY4GSPu0L0Mi6hsGAEWbOvEuno0ashdDUtiA7IbPtX1fXVLq3Pu1lDCZ/H27JOUktFSTEmjf0AmDKTynxdAtrsWzgzlpc8hRb0H8IQ3QtRwqDPe8Hu/UQA4fIy3zpA+qUbcQMJjPXtmtZogEljVXJE30YSqNNL3/+a1E+cWYkek/pQ1/n0lmtZA6vC8xVjneo9gRDnxWQ4GcF1ZUI7E+VqA1y1gVPBHzA55Egq/NweHf3LzPR/whKlalWoOlBwlCotlpaOkwSIGbY+yFqQzWtv2M7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=idpxnuu0zqgxe6lW40rKM8LJIUV+VXSJAlGfy4sAFoQ=;
+ b=Ri2OmGQoG0eLZj4hynurNfrn9HDfknJKfjU9aF5M3NyO2RrDK8DDdb29qI02lSPQMM8Sm7eA3s/o1Twf+x/JvjUbcG5f4OJG5nOOv4ii+7QAg8Uj7ZhaN6tyql8W4SyAnqVz6qo9N4EI8Y98cDA1JFaJhXeBhSvHPodBCwFe5L15Fs6IoaXMc8h8YA+G8wGnOfm3SLUxT2p/PXcsjN6YTKfDDvzjss7lJ3+ReaaH0zIle/H6KOPLWRJGwsbF2bgDwnN5j+Ut6vNF3Q8IymIHGoqDjZqKqms6sMEDfPvPCODRaQTgvP37pSmPpKkt6d1PjQTyw5E11VxccJzBEjUmkw==
+Received: from SN6PR19MB2303.namprd19.prod.outlook.com (2603:10b6:805:56::19)
+ by DM4PR19MB5932.namprd19.prod.outlook.com (2603:10b6:8:6b::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.451.24; Tue, 29 Sep 2026 16:58:51 +0000
+Received: from SN6PR19MB2303.namprd19.prod.outlook.com
+ ([fe80::805c:7f80:c69f:876a]) by SN6PR19MB2303.namprd19.prod.outlook.com
+ ([fe80::805c:7f80:c69f:876a%5]) with mapi id 15.21.0451.026; Tue, 29 Sep 2026
+ 16:58:51 +0000
+From: Marco Giunta <marco_giunta@outlook.it>
+To: zekaixie37@gmail.com
+Cc: derekjohn.clark@gmail.com,
+	hansg@kernel.org,
+	ikepanhc@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	mpearson-lenovo@squebb.ca,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add PrintScreen key on ThinkBook 14 G8+ IPH
+Date: Tue, 29 Sep 2026 18:58:40 +0200
+Message-ID:
+ <SN6PR19MB23031D5BA941FFCF348AE620FC8C2@SN6PR19MB2303.namprd19.prod.outlook.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260929154023.89492-1-zekaixie37@gmail.com>
+References: <20260929154023.89492-1-zekaixie37@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI1PEPF000008D5.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:298:1::430) To SN6PR19MB2303.namprd19.prod.outlook.com
+ (2603:10b6:805:56::19)
+X-Microsoft-Original-Message-ID:
+ <20260929165840.35318-1-marco_giunta@outlook.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR19MB2303:EE_|DM4PR19MB5932:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce4b61c5-090f-4c31-827b-08df1e4aef09
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|19110799012|260925184616899003|51005399006|8060799015|23021999003|24021099003|55001999006|15080799012|25010399006|4140399003|440099028|3412199025|2607281247196008|40105399003|30101999006;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4E1trTHyJTSuMrWjU6TuGekJ10RDf3nC1zfHtPD6YGbKRRFfFfjMz2rUeiPG?=
+ =?us-ascii?Q?iYKRuC6JPrEwDwjDwOlVwGGNwxy1EUt5hyGSLuw7/4Y7lEhTJ8QFOTGsyl0M?=
+ =?us-ascii?Q?D30C9Pn0+E1bigE0JS8NfYBbeGs5qkLHvnPLlrx3Gjmsxhm17T/Q9ZexxNAf?=
+ =?us-ascii?Q?LOiUnXgDtk0oVLx4GHyBukToRe9+8E2sSw2mdzaDFj7PKl4b7aysDISA6jYH?=
+ =?us-ascii?Q?b7YhYtqCrugRixzTBR7ZqQpV1oymhczhtBiN19z9QY05Ho2n5vkfVLb9dHeJ?=
+ =?us-ascii?Q?TqgMAnABXy1hTBTy4gGtbXVUMryI39T4QLBzXqpbiKwvZsNafqBtlYZul9MC?=
+ =?us-ascii?Q?wSnyM5UxBMaNmLkilIjcHGPjHHauni6Cj2bIkaE/8wqAV1Ah/Gw8eax/qzNs?=
+ =?us-ascii?Q?hw6I5MZw/Ebii4RQ0FjLF0Lg+n/sh/CCEvCyqYfMXVVTWuwRcyGBAsHYb3Mw?=
+ =?us-ascii?Q?CJfPsFMLXjKoMAVl5z48MChkTwF/1g0+9f2MZVb8Q8aERSF6XYxIBudraD8d?=
+ =?us-ascii?Q?6S6/twmA5g7tKnC+zULPPtY9WR3CGmtWRi91Jy+Ikz+CNayo3Ga3nsciolAm?=
+ =?us-ascii?Q?0eZZ9qowuRtI0rNs17HErFeTBMEFzbxwiea84RcpeDgO1iVEWu48fJxAhKyE?=
+ =?us-ascii?Q?Xp+b82Ab/sRxuvtl23Qt7aDDKJiu2JaEQYPVg0dBttTRMtZj93RojnI70DKZ?=
+ =?us-ascii?Q?8vcHdEk95fmmZjaplpONN80GQJ9LRFMPzTcjKviM8IHKyjZYAbFY4m5es9vh?=
+ =?us-ascii?Q?iOpUDjaAfH/4GRRYRLB4oQRomv30JTkqlfd2veLUCfWvNAiSL82iPP075TKa?=
+ =?us-ascii?Q?b15yh3I1AeAi6M/49QmC2Do67Y2lc9iTZ6jmSQuP5eg9QM0wQyBhUSsoKfcr?=
+ =?us-ascii?Q?mKSBq8EdKBJwg/nFwclzKxz9cf4dx3nVMWFvlu14MxL4VGHTj2ddSRzmeTGf?=
+ =?us-ascii?Q?YrQgamNdGn1EdEzeRdIYwfG2Uf8rqgXk51RHX9pA+sXHsdnR6+m3zBxxvYyb?=
+ =?us-ascii?Q?kXb8?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?INb/YN9DtyWz92wXNKRk99xIxGIEJok+AOIhTFKAf1e9JfiYlp0tp9IjbDd/?=
+ =?us-ascii?Q?ApjJZj8w0kbvpxHw2AH+dVXjH6gOuZjnfYTs/41X6nUOV7/bMz+4w4Xm0782?=
+ =?us-ascii?Q?OEn5/5G0EihTJizt+hawvScvzjy3WchSswJ4kqL9p7e786Pem753JaIlU8hO?=
+ =?us-ascii?Q?BzSLL9NNMt3yb7k5fI+7bdwRQZK2ruRg2ivP6uxnofpEflmKMfuPjpH4f+pl?=
+ =?us-ascii?Q?9JjmGBbQq6narkGTLm61H/Pbn1IqG5tTIK5uJ+CzNn9EoQorHDz8dJs6twRj?=
+ =?us-ascii?Q?FLL2wTkAIxnmQDg9S61k1FopsB5TWDoy87P9OGYPheJlFmqpjxLq8JNX0zn+?=
+ =?us-ascii?Q?+vLypI7qJCbPZxpjm3sb2M7ubfvTc+m0OeWDpFhdt5hLNLddAjANa0q5fGfI?=
+ =?us-ascii?Q?2GGK1kgOgtmKBY3kskaAmL3OCAQUS6kYdKmAn0sAXt3t9VdNINGyEA2G4f2w?=
+ =?us-ascii?Q?xCFrNKbbU23xJbo1e5rKXbOGA7Q08nlFpSr2qPoDFDW7qRrvvL9vgYbjrvRw?=
+ =?us-ascii?Q?VUdesIPUbJUnh4E0D3R2EuP5jO1bTMiZ6FXkFeA9v1SjvGelCnOYcCHPmYQT?=
+ =?us-ascii?Q?xKOtuy0ojuT02FMAN9trqQ/WxXmH+8zpkDrqLvnpbEwA71IoJBq1tE7W1unU?=
+ =?us-ascii?Q?7Fbs9gUP/1Jckw8L4/D0nQA6DmKUpg1avrjO/iJEGXsBkclVH7lE10nUhruG?=
+ =?us-ascii?Q?G2fHLAZDWY0j+Sj/OEJ5adzCrBi0F7Z229YtwYt3uz5egx+oIh+WpKHZdUKy?=
+ =?us-ascii?Q?foQ5eQ2Bd3x9jRHcxF7Kwozw+k/Oa0uNiTEWKTg8zuPEZFEYNVECHbDpAHfP?=
+ =?us-ascii?Q?NEI7GwuNbwUiwRqlRRQbpcwsDhXB4a7Ol/1uJTwzWw+ShZDUaOERhzmAeyid?=
+ =?us-ascii?Q?djkMVLuLISFFTXYv+eMHFcHC5uDUWGFI5mr6+ExHS83Y/oyM2NlZVKH5CRrh?=
+ =?us-ascii?Q?bHQ/U4ZVgrB2lIwFuEMx4fwkVDpYYF5XxLG4iRqfFBGx81P3OxecTNhBNn0S?=
+ =?us-ascii?Q?7UOklzXQ0kGeWeUpoU5n2aqrp3dhKWkbUhqZ0tRmhhiOxtvIgi2hW5XBZFvB?=
+ =?us-ascii?Q?HKizsdKxY+JPAZI0LkHtDTvRFQHTo6dUNqfx3pNE9m7LsPazI8dPIBX6+S+A?=
+ =?us-ascii?Q?7H8FLjujzSbwIhkBgPtnHkZ+IeWYRnt/YMUXSr1SVR17WLUe7hH0lQx2DKXO?=
+ =?us-ascii?Q?9hR/YwCcFDJcfCkUkKwpbx7oEth2m0haoiWkpGg9xHsskFs9ZlihYtJOz3gT?=
+ =?us-ascii?Q?bf9Yrs4M7Otb8oWj/LJ+BqcReimvEEBJhsz4tjMiw1t/dJaDleuNs7XLl/CP?=
+ =?us-ascii?Q?PS8fQjbhxUOJER6NdPxLwJU+TKUbweZnFKbGMnRAKy8V4IUKfi63xg7TF3Ui?=
+ =?us-ascii?Q?OpdygQrzxlV/w7YjmBAoT1EDW+zE?=
+X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce4b61c5-090f-4c31-827b-08df1e4aef09
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR19MB2303.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2026 16:58:51.0079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR19MB5932
 
-The PM notifier iterates over every uncore frequency instance to restore
-user-configured MSR_UNCORE_RATIO_LIMIT values after resume. Entries that
-have never been configured legitimately have stored_uncore_data set to
-zero.
+Hi Zekai,
 
-The refactoring that split common and enumeration code changed the
-iteration from active control CPUs to all allocated instances. It also
-changed the skip for an invalid or unconfigured entry from continue to
-return, causing that entry to terminate the entire restore operation.
+Note that scancode 0x148 is already mapped in mainline: see commit
+bc39af8c2c43 ("platform/x86: ideapad-laptop: Map Smart Connect hotkey to
+KEY_LINK_PHONE"). Your patch seems to be based on an older tree.
 
-On a multi-package or multi-die system, configuring only a later instance
-therefore leaves its limit unrestored after suspend, hibernation, or
-restore if an earlier entry is invalid or unconfigured.
+That commit came from my two 2025 machines, a Yoga Pro 7 14ASP10 and a
+Legion Pro 7 16AFR10H. On both, the F11 key shows a symbol with a laptop,
+a tablet and a smartphone, and the user manual says it starts the Lenovo
+Smart Connect app, so the event is mapped to KEY_LINK_PHONE.
 
-Use continue to skip only the current entry and restore all remaining
-configured instances.
+I had a look at the ThinkBook 14 G8 user guide (I could not find the G8+
+IPH variant specifically, though), and there F10 is the screenshot
+selection tool, while F11 carries the same laptop/tablet/smartphone symbol
+as on my machines.
+Since your commit message describes the key as Fn+F11, I suspect
+the event you recorded actually comes from the Smart Connect key rather
+than from the screenshot selection tool key, in which case KEY_LINK_PHONE
+is already what mainline reports for it.
 
-Fixes: dbce412a7733 ("platform/x86/intel-uncore-freq: Split common and enumeration part")
-Cc: stable@vger.kernel.org
-Tested-by: Yijia Wang <wangyijia.yeah@bytedance.com>
-Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
----
- drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In any case, if you do end up mapping a PrintScreen key in this driver,
+note that KEY_SYSRQ is the magic SysRq key rather than a screenshot key;
+KEY_PRINT, or KEY_SELECTIVE_SCREENSHOT as used for 0x04 and 0x2d if the
+key opens a snipping tool, would seem more appropriate.
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-index 667f2c8b9594a..c44e7e38cae25 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-@@ -211,7 +211,7 @@ static int uncore_pm_notify(struct notifier_block *nb, unsigned long mode,
- 			struct uncore_data *data = &uncore_instances[i];
- 
- 			if (!data || !data->valid || !data->stored_uncore_data)
--				return 0;
-+				continue;
- 
- 			wrmsrq_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT,
- 				      data->stored_uncore_data);
--- 
-2.50.1 (Apple Git-155)
+Best regards,
+Marco
