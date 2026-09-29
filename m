@@ -1,167 +1,111 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pz2-f38.google.com (mail-pz2-f38.google.com [74.125.228.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3524F3D47DA;
-	Tue, 29 Sep 2026 14:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752CD3D3008
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 15:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790693075; cv=none; b=h7UOYMlzZAp+DjMIhdkoRm/2WHV3KcLj0gXi4UqOuXgM3ibF2PoXRwVKbXFrqDyJBOJ5hq2Q6VnxUgds6KHa0dty5dVeONarumZWwEbWDjrT3PwkV7foMN3TLJmUA5SnPeXVXqk/uQS9gslR7se94rRCLcu12NSS69tqZvGNQRk=
+	t=1790696430; cv=none; b=GC8CtaxupHAlkvPYksdCk/Djb8EUrfKVdiFjbIqgWNDSKrgRpHdIRrv3aV54NV/4XWcjcinJUtBJZulu0XAGSbSIVa4DRRIGZ5CCAXnFDje2ZuAwSxeSc7RzIu/woML47ujdZ6wcYmyWiE+KZruj2bYg9U1dwdDLjYCgomIS980=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790693075; c=relaxed/simple;
-	bh=IBivVthD/Ugs6+e9U2MOvI4k1mQbfDqv4RyAKNSKTok=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a6VXee63Fsd8NAEFKPScRKJdI+RjXYcFjR76d1AEYCHXlXzooEtOA4MdGnWKXcDtNttoFfu7yQQaOY/tOIZaGfJCVuETaZEYYb/e/oFYms97x61FlBu195XIl2YPr4wdYPpFCEKJBNm+nd6of8AcmKTrSGDpM4GN9qu0T9y//sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HsyNOqIL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kcbJtTWw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=A+V53BaP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vH5vAmfl; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1790696430; c=relaxed/simple;
+	bh=mH0jZwfkHRJ/f29fgMIPF22P1sLjDotROPwF1ZstbgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N7QtTeGprDZUE9qUjahu1e98g84xvJqnV5zdikTVijiok5angptoTe7aUct+bQXtjPtbrDLmR8/U/pE/n9thHWdRPJFG+QGKWTQu2MOmFNnfVRzG6s70I+c/Z+uRSnRiV8O9i4kvPZHqA3dm70dbSLUiNoPx4L4j8QvgNiyI+Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ja/b3UN/; arc=none smtp.client-ip=74.125.228.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HsyNOqIL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kcbJtTWw";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="A+V53BaP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vH5vAmfl"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BC17021D20;
-	Tue, 29 Sep 2026 14:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1790693056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YILb/eLgFyt3BW9U3MzwkC5amjY5rBbHrDWNoL5EAGo=;
-	b=HsyNOqILQHuPvpxJXvxaHajvIxE04B6AU6CAFEP/MHUkNRbyldugk3D6K3HudxMlRqoW12
-	JOORELwX/96kCam0deFqXlfBN2QVDjH/oKOSGBq8ZdSNzzsm7FWCccSiJpiLj6KsDRtVOB
-	MltIvy21zTUP1bX9hJEK0EdxQ6EbJSw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1790693056;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YILb/eLgFyt3BW9U3MzwkC5amjY5rBbHrDWNoL5EAGo=;
-	b=kcbJtTWwfzCABmFI8ItuisGt4roWB76CcoD/x0Jj2FQN/GwBKA7akGb1baZiQwrjdITIky
-	gw6/Fs+R9av2jOBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1790693052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YILb/eLgFyt3BW9U3MzwkC5amjY5rBbHrDWNoL5EAGo=;
-	b=A+V53BaPm9ZrUzV/V0uEwhwIYW4vTQKqJyR8EQxhpr2CkdQnVWOWSS/qN9hQM29CKpgk8j
-	jNl8mW9a/C7tRvCsLAT5ouGWAs8sqC824rs0lsRnBfB8W2Vkz9Q+B0o0zMsXjwi10d8apY
-	kS1RmNhSRyVTix2F00009KYY1WVtfZc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1790693052;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YILb/eLgFyt3BW9U3MzwkC5amjY5rBbHrDWNoL5EAGo=;
-	b=vH5vAmfl9nGd/kah3RnT6+O6S8dcfUHOJEQMpaYox6EoyBUQfDUe3KpuP8ihrTmM2rme75
-	0NU4iNvYnxpBKCAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A9C1133F1;
-	Tue, 29 Sep 2026 14:44:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uFQ6EbzOu2oRbwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 29 Sep 2026 14:44:12 +0000
-Date: Tue, 29 Sep 2026 16:44:12 +0200
-Message-ID: <87tsn8yv5v.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Stefan Binding <sbinding@opensource.cirrus.com>
-Cc: Takashi Iwai <tiwai@suse.de>,	Ilya Pavlukhin <i.pavluhin@ya.ru>,	Takashi
- Iwai <tiwai@suse.com>,	Jaroslav Kysela <perex@perex.cz>,	David Rhodes
- <david.rhodes@cirrus.com>,	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,	Len Brown <lenb@kernel.org>,	Hans
- de Goede <hansg@kernel.org>,	Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,	linux-acpi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Add support for the bass speakers of Lenovo Yoga Slim 7 Carbon 14ACN6
-In-Reply-To: <764f8a2d-c949-4297-bb26-af0ba791f331@opensource.cirrus.com>
-References: <20260920092808.17234-1-i.pavluhin@ya.ru>
-	<87a4p02xxs.wl-tiwai@suse.de>
-	<764f8a2d-c949-4297-bb26-af0ba791f331@opensource.cirrus.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ja/b3UN/"
+Received: by mail-pz2-f38.google.com with SMTP id d2e1a72fcca58-88272e1d069so1947615b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 08:40:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790696429; x=1791301229; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=e1NH6lS9ZrNrd0d1hVfQFU/u7ZfW1VWDSDy434/8Djw=;
+        b=ja/b3UN/AwTtivYeaxzJI6I4mcgnN+EiRtwUaEhfUiE8bp+usNEi1af404K0AzJc8V
+         cl6+WjBSlAdyedwPs7sMq0EgWO99OZ/IsqHyxxUIj/CGrfuDoR3mQOmRv+2HaAuKY0Sw
+         06HbF3XlyJuSJwWjvep84riHLlifQANpVnQ05ZHYx4vjNMyaxPEafe1e3cES69Q5qOcd
+         EdXT3nC5qO6GM2pA7cXypGOJCxjdpuE+VxVXn99IOu1oq4rxiuvW68b5/m3ZEnKU4FLe
+         sJBexnF3NzDJ8ABjYgdx6+I2HvOKB61fZeC7jcdZxEeY62QXp2Sng0fm4UofXsM/3/ho
+         HaAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790696429; x=1791301229;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=e1NH6lS9ZrNrd0d1hVfQFU/u7ZfW1VWDSDy434/8Djw=;
+        b=XLdLo9mivihNpjNhnKtthq27bTEytQh6Zo7LKd7+c8v4QEw0t1bCpHt5iwSH1H8VkX
+         SiGdNmTrh9/BkjuTTQEcGg96f7ZV9EcfVc9BL4FPvN0ZYaDDdqeg245Z/bYSdfjcgaNo
+         y9UnyLjzzNK5+GipX3bXLnSQpqSRw9U+4lC32F2V86Fm+Ye1UdPBOTmrzEzuO365BLaG
+         yv5UB+sGCK+dS627k1J//SdFnUhT6vZIArJ5SSoNm8SCOflc68nCSKr0qRSF6jIoV2tH
+         pXafhh45smKO4NW+hg/si+id6OfgMA/QDUc4TeaRMmjyIxWA9+II6QtT4LAzpG60GzUr
+         zp9Q==
+X-Gm-Message-State: AFuF++lyY1YkQq8eqVZG9rHWLW3XC+ikzf2wRGKwr6JctpRdibS05Ndt
+	1DhS7NqPtIBexlT2lVyKTWIaT6Y9aULALNm7v2Fcz3iIPJolNJpEYvHIeGq+MmK5cz/78G92
+X-Gm-Gg: AYBFou2dJYnYqSRBRyV3EyV+l0CN7M40oYaGABUIZRlUlDl4/pVHG8Pik2yetw4Nun2
+	uT+QOqF3SZOh2uuNpbwhwb3edZlaYeTbKCo70Xg7Yxt88Y4y3K/QhLl1NtOLGLVaHlYZsRrRmBM
+	+icuCzyb3D/Dwxg4awz3CbylOt546cRIugHFpHvTi6RyzrzQAsLZV1DTg2UELec1J6+z4hWZsrT
+	h4hb+8cH3nkqEcMl4uL2GMYArbqoqzuzKynLSfsnw4w8hr6HVbsjwu/CecMWA+PCTWK0dyDWcQp
+	NnBtAMFB9e9Em9TEAqivOpbGAOImpL3oYIHOip5/UHGf79/mF3DpbxB2ntfpQCpJQswieALw4Al
+	d/wCkbDTmxb4en9i7tEWE45oP2O2ZHxiu5e9PtVy8hSYaKeTh1ESkhw1FEqhwtsFrY+JC5TRUKy
+	ADIl+OOaCiffkqZtBww0/82ArPmXvpTZe3Brph0WaVAxDQqnXuLRMiIqFD54z+ZtP1J3luVrhkA
+	TeWUnqPceKoWafdgNxjUVL4V3T96hDxBXis6Pw=
+X-Received: by 2002:a05:6a00:4fd3:b0:881:3f4e:4ae4 with SMTP id d2e1a72fcca58-8813f4ea2c3mr9376150b3a.53.1790696428794;
+        Tue, 29 Sep 2026 08:40:28 -0700 (PDT)
+Received: from zawanix-thinkbook.lan2.zerozawa.top ([2404:c140:1f09:d6e:d9fd:40a6:7730:7869])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8868b412116sm163851b3a.19.2026.09.29.08.40.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Sep 2026 08:40:28 -0700 (PDT)
+From: Zekai Xie <zekaixie37@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca,
+	ikepanhc@gmail.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	derekjohn.clark@gmail.com,
+	linux-kernel@vger.kernel.org,
+	Zekai Xie <zekaixie37@gmail.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: Add PrintScreen key on ThinkBook 14 G8+ IPH
+Date: Tue, 29 Sep 2026 23:40:23 +0800
+Message-ID: <20260929154023.89492-1-zekaixie37@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[ya.ru];
-	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,ya.ru,suse.com,perex.cz,cirrus.com,opensource.cirrus.com,kernel.org,linux.intel.com,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 29 Sep 2026 16:30:42 +0200,
-Stefan Binding wrote:
-> 
-> On 29/09/2026 10:45, Takashi Iwai wrote:
-> > On Sun, 20 Sep 2026 11:28:04 +0200,
-> > Ilya Pavlukhin wrote:
-> >> The Lenovo Yoga Slim 7 Carbon 14ACN6 (82L0, Ryzen 5000) has four
-> >> speakers. The two tweeters are driven directly by the ALC287, the two
-> >> bass speakers by a pair of CS35L41 amplifiers on I2C. On Linux only
-> >> the tweeters work [1].
-> >>
-> >> The amplifiers are described by ACPI HID CLSA0102, without _DSD, in a
-> >> single node with both I2C addresses, the same way as CLSA0100/CLSA0101
-> >> on the Legion 7. Patches 1-3 add CLSA0102 next to them. The Windows
-> >> Cirrus driver configures CLSA0102 with an external speaker supply, so
-> >> external boost is used.
-> >>
-> >> Patch 4 adds the codec quirk. The ALC287 only clocks the I2S bus to the
-> >> amplifiers while pin 0x17 is enabled, and the BIOS marks that pin as
-> >> unconnected.
-> >>
-> >> Tested on a Yoga Slim 7 Carbon 14ACN6 (BIOS H5CN42WW) with all four
-> >> speakers playing. The DSP firmware (cs35l41-dsp1-spk-prot-17aa3856*)
-> >> is not in linux-firmware yet. For testing it was taken from the Lenovo
-> >> Windows driver package (tuning "Lenovo-S760-17AA383D"). Without it the
-> >> driver falls back to the default spk-prot firmware.
-> >>
-> >> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215632
-> >>
-> >> Ilya Pavlukhin (4):
-> >>   ACPI: scan: Add CLSA0102 to the serial bus ignore list
-> >>   platform/x86: serial-multi-instantiate: Add CLSA0102
-> >>   ALSA: hda: cs35l41: Add support for CLSA0102
-> >>   ALSA: hda/realtek: Add quirk for Lenovo Yoga Slim 7 Carbon 14ACN6
-> > I can take the series, but before that, I'd like hear a confirmation
-> > from Cirrus people.
-> 
-> Looks all OK to me.
-> I'm going to send up firmware to linux-firmware for this laptop shortly.
+The Fn+F11 (PrintScreen) key on the Lenovo ThinkBook 14 G8+ IPH
+(21VG) reports WMI scancode 0x48 (0x148 with the WMI key bit set),
+which has no entry in ideapad_keymap[], so userspace only receives
+KEY_UNKNOWN:
 
-Thanks for confirmation.
+  Event: type 4 (EV_MSC), code 4 (MSC_SCAN), value 148
+  Event: type 1 (EV_KEY), code 240 (KEY_UNKNOWN), value 1
 
-Now I applied all patches to sound git tree for-next branch.
+Map it to KEY_SYSRQ so the key produces the Print keysym as labelled.
 
+Assisted-by: LLM
+Signed-off-by: Zekai Xie <zekaixie37@gmail.com>
+---
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Takashi
+diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+index 8213524..4cae65c 100644
+--- a/drivers/platform/x86/lenovo/ideapad-laptop.c
++++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+@@ -1364,6 +1364,8 @@ static const struct key_entry ideapad_keymap[] = {
+ 	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+ 	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+ 	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
++	/* PrintScreen (Fn+F11) on ThinkBook 14 G8+ IPH (21VG) */
++	{ KE_KEY,   0x48 | IDEAPAD_WMI_KEY, { KEY_SYSRQ } },
+ 
+ 	{ KE_END },
+ };
+-- 
+2.55.0
+
