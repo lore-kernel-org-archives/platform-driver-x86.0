@@ -1,178 +1,263 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012022.outbound.protection.outlook.com [40.107.200.22])
+Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22272E8DEB;
-	Tue, 29 Sep 2026 02:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.22
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790648538; cv=fail; b=oQn3OOoQ25svDl7540T2sIP/bbU8L9oRHw6yGLWvyNDqooW5zhhPxjS/8F3n+SfxsWm4AaiqeJEcYVwG+6NHovWX4gxCOIAo2l6cYZdxF0wGS/EatPk/m0Nai1/b45BuUrPXMlZjeQ4g5mjNmQuwbIf5C1/qEf1Z+5PToDFnorw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790648538; c=relaxed/simple;
-	bh=92rLKxw2U06xP2AIT8EaIotV1UaXG8OZ/8gVBuFuNbA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ekUmS5HHBpKgILYwfm2mGgV/4Jon7KCWh+EOprA2eWRngvf0VU42ERFzvOFbXjIVeebWonIpkQhxQ5aA9gMoxCAfgIGcdW+ePpv40ShVejNVU/Eu7NpoEFjRu2i8poJrDPItvibAbs4VUi9rCa/RG3LlVpKZBs0LGqY3EEJFYd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y1fE7czX; arc=fail smtp.client-ip=40.107.200.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377CB3AFB13
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 05:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790660592; cv=none; b=kyJVar/QPrs3VLT9PNSUNSitQ/O0JrtNYCe8eG45JPUWPSxwwXNXothlrtejMgzcvakYzKXrRUgsLsBw3T60y8TKie7eKibx4uGFtT/HuA5KcZwVoaDp70XLjtf3CWxfC97z3gv/b0Q09+62mDeKMVY1fL7F36pWIW/vRdjqg78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790660592; c=relaxed/simple;
+	bh=QO1bAAXGza0YRcAMcJ9FO0AfkSi4REdp9rC2//JuW0Q=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=VI7gjBeFgQYeoz3aF42f9UiZVBZzDDQTBk4KheyI3vRpmPNQN0z1BG5izlSzjn3ukV3aOHOBr7fKQo6VcdkN2R1Z7QgcBeM6FLIG7C0DbYPm4VWRc5ltVSjzf0g+pfC0NMOGzcYx+w//qiP3aDP0TVfpZ1WJ1ZtZrNwRvxV5CBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=JZwUhXKZ; arc=none smtp.client-ip=45.157.188.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y1fE7czX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EQtKXyrt0N0TrUJeaybD9dKJv1+GU8uoXU93HHwdYrSgN8ikxQLq1nBXufmEgOuP9zBxleGk3hhv5cB/WkPuUluSHIqdq1Yf5ZAB3Mlagpc3YoHtjumN2QCU8OIzVesvhDDGqzUyu9m0boRHI2+tQMu3j5evLnyhTi6qVHKzGq1Z3uiQtIIr8JkzD2LfUw2QWC8Q95nX70/7B2OeXKW28TBrRrVgPT691nhDB6+QBBcO2lo7vVgyKyjiiERMc/vUnhVjozI7Is1YlWpMJkIvSRvhuzVifI41O5qiX8oCyQFZogkK+LT57PMdv2QIkEiDRWAdEswbEap5ykY50utE2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LlRPg4RKfK3982MX+UdDr12Wb9APNc2E/BVx3iFraNc=;
- b=pNm03PiF6g7NX2dkghsLv2xhGNtGo97pC6doP5Q+9g1QgqK2kyPmA3RJ2lUlyax3w9UllZBLGIIWwdU0uWQKfdbU1Z6+THYqjks2qtHvWq+qYa7Xhak0F4qcaLzQJXlOvoBqcHHjgK4tlvEKKgG/wESaTiDfvBt5EW8Q0soQQSB3INucEh+mZsQZxMm+HUVap/ef3MbVL+0AnnfDlDTQOL+N57GM4pCmIQyp2FVr5MOQ63o2GrEhPBOW52qcZM66iU9FamCfx7fogZlKiwsbH03vlqofc1HFLDi2nEL45FPlBhS1PXBnRC8HAGdC7OkMtqLLIY48forW658CtojBeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LlRPg4RKfK3982MX+UdDr12Wb9APNc2E/BVx3iFraNc=;
- b=y1fE7czXS83BciwtJKrkMZ7998W0npJt7x155DkiUAOo/IZT/adPfqf0lM34QMUatqtLo7XHItMSfIOkprxuH5FRQPtEL8dBqfg3PM8d3M9hm9osEOSqwpTz7R3Tt+wathtSiP6eg6jaMVVyJWchz4kJiZh8Wq+GcOflQm6LKFg=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB7747.namprd12.prod.outlook.com (2603:10b6:8:138::20)
- by BN5PR12MB9488.namprd12.prod.outlook.com (2603:10b6:408:2a9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.24; Tue, 29 Sep
- 2026 02:22:13 +0000
-Received: from DS0PR12MB7747.namprd12.prod.outlook.com
- ([fe80::2ef2:e88:4708:b589]) by DS0PR12MB7747.namprd12.prod.outlook.com
- ([fe80::2ef2:e88:4708:b589%5]) with mapi id 15.21.0451.022; Tue, 29 Sep 2026
- 02:22:13 +0000
-Message-ID: <ce21e203-f4b8-46cb-9530-88c5c3bc9159@amd.com>
-Date: Tue, 29 Sep 2026 10:22:08 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: ASUS ROG Flow Z13 GZ302EA OV13B10 support on AMD ISP4
-To: Daniel Chadwick <d.chadwick2508@outlook.com>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <DU0P192MB2938FCCF40E122682A04305581812@DU0P192MB2938.EURP192.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Bin Du <Bin.Du@amd.com>
-In-Reply-To: <DU0P192MB2938FCCF40E122682A04305581812@DU0P192MB2938.EURP192.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TPYP295CA0045.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:7::6)
- To DS0PR12MB7747.namprd12.prod.outlook.com (2603:10b6:8:138::20)
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="JZwUhXKZ"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hv6XP3KhYzFF1;
+	Tue, 29 Sep 2026 07:43:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1790660581; bh=dvETfYJflINewuQWUq1MdW8eCadeWiiL+WvPn9S6R2s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JZwUhXKZ08Zzer2L72LDe6QNy8y+ZhIKNSc7abYn6zqkE9g3ZID9vT8U4nwp7F1No
+	 CAYxPt817r5SEc09W/F5QuyMa2WWKerq+26kD3slFE+qydEew6BHOqJyV08Jxpvxcq
+	 PNpdcKhY4WNdZBfvr40Otsv2WrVlODX/UmMaCmUY=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hv6XN0dlfzg6L;
+	Tue, 29 Sep 2026 07:43:00 +0200 (CEST)
+Content-Type: multipart/mixed; boundary="------------wyBJ01OzDf0yGDNEeeuf2asw"
+Message-ID: <cbcb15b6-b576-a6be-f190-9014ec02a805@ik.me>
+Date: Tue, 29 Sep 2026 07:43:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7747:EE_|BN5PR12MB9488:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e84ca63-191e-4872-bed4-08df1dd078b9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|10067099003|56012099006|6133799003|18002099003|11063799006|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	TiA9Hd9FkRqFPV2oUmdtuEmw0ugJeEpTjwhmPmOEUyBU3i4SXjZ2AwuZ3KPrFD9PHEOLQLrXFAZu/drCWpaiKp6BB9XD8NJ7jDJ5WwZtSx1dWYO4arTMyqB0TP25yP9H1FROjGXcSaU4F9qbWDhtJDNScFQ1zSCrW9e8G3w1WgUrAoscEC90lOjcuNrncDEDaN82vclQ9zt1ZZ1r7Hmf8ZbokAO3ib2n6ZKFm1Feab4MCVYK3/Nqd/NgpelwOhcsFMYyDkjRM1hnEtz03R8bJslVHnx6g+6Ai0P47M7BUmrONOtKOzSiZojk4meUL9j8gfDkvbqWWX+fu+lnanfuC8K1kZ+bxYDJxtFB61HY5g2jOot2Ue9hQBh+lTvEdeH6205GoOdAqGwaFdyuYakMNBhDeDJBhpn1QLQbmbWEN1n7XlFwle74GhFanpqQBdRg+ujn53abAEsEyqZed15C6Y6mydBaz/z+8yph1nxzop7MFt7KftVW6S3KN9X2HDr9FndvfyJPR+JvnSXei7opWEpCLfxnVXLZnW792jombF8O1LUYrdHRtlA+Fnmcs2T4OEMV6WHhF/EPDQibKWcg4Bv3QO5hCtsZRAWfywYWNTLWBTYG76Fi+wRaQ0BteHLtyCpX/rzDdPHvSVcOpSEDvNhTbcnnBOsO3rYoIxfYsQs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7747.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(10067099003)(56012099006)(6133799003)(18002099003)(11063799006)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ynh4Q3VmUXZGOW5aT3VxUHc1aDBWWHFhRG9yeG91eTg0cVRBc2xyUkRBbmk2?=
- =?utf-8?B?Ri8rS2tFK2piRDQ5RzFJNmxidEVPL0oybDFPYjEwMy92TzQ5MDU4bGlmNnB0?=
- =?utf-8?B?ZXd3MWFIQTJNZStpWEU3TTNJbWZCakxsM1hHOVRxbVM4a05lSEp0NHVZOWFP?=
- =?utf-8?B?L0hBb2pUcHJlZ3BOVXRJSWV5TTZVT1pOV3p1Tk92ZS9oKzVCT2VTZC9hQW1T?=
- =?utf-8?B?NVlDMzdMallrcVV2dzlCRVoxMXMwMlc1OXVCZ0MxS2VLOWxwVGtsekFMWDV6?=
- =?utf-8?B?c2RrTzN0aDVGNG9Wb0lpTy9sOEcwUjNhbXd5bXhLdjJzeUkrZytOTjlrOWpX?=
- =?utf-8?B?TlM3YWZjc0FaSmR1UU5NU3NlaDB5QnN4V0ptTFNZbnBUMmFRYmxxNFZDQlcy?=
- =?utf-8?B?SlZHVVViNmN6TUtnOEJ0R3B1a3Vvai9xQ2ozZXc2OVN0UlNPVmhER3huRUtx?=
- =?utf-8?B?UjlNTXd5blVOSk1VbWR5NEtDRVppREJqRzR3QU5tMTBDbW5Nc3dlNXgyOS9Y?=
- =?utf-8?B?cEc2aW8ySFdMWmU2b3VxU2JqWDhNb0ltZkRMcGZZTmZGWEdFQVZYWlpvcUUv?=
- =?utf-8?B?c3FMa3habm4wYjNrd1FFcUlDSUw0cHJIWXhkaWt5MUV4dURZZlNOa2g4RDFF?=
- =?utf-8?B?SGVGd0lhcWVIMkRybjdja01kTldEUFMrSUkxNkdaSEl5ZmdaN2M2MXBucm1n?=
- =?utf-8?B?Ull6SXV2UFk5U3E1bVVSZE4yTzE1SHZmTURBM2JPYXNiWVdkRDRaVWh0S1FK?=
- =?utf-8?B?aXliMG1aZVBzYWZ4NnZCWnFVVHpQUTF6aGJCa010d3YzdHVyV3Z3bTRzTVR3?=
- =?utf-8?B?aEtQZlphaDJNODhmOVVySlN1RU1sRi95YWNRUWRRNEVtWEw1cVAwOWN6Nnp2?=
- =?utf-8?B?K2kvWmc4SjUyLyt6bVk3d0duOUhUcVRsZTdlaStybWo2ajk5d2NFMU5DSWJw?=
- =?utf-8?B?ODhHamU4cTdRQW5KM1FFenR2c290TzdkS2EwN0VTUEErM1VnNVZsV2Z2b3J5?=
- =?utf-8?B?QThWaWFNWDJ2RWg2QjFvY0FIWGs5anZ2S28ybXBBVkdKekRGZHRBR3c0YmtS?=
- =?utf-8?B?RGxOT00vdlZKbjduQmxwVitsZWhPM3FDeklZWlJ5NE4zWWlRUEkwQ3RqSm5P?=
- =?utf-8?B?SWNVdEc5WE5ZN3lqL3JvaW5PeDQ1blN4NGc1cmJaamhVNGFEOGFXelV2V0Fn?=
- =?utf-8?B?ZGV3L0xuNzlqeGpobm55MngzRzE1emNaMEEvTys0elFMR0E4VXVtQUV2NG1t?=
- =?utf-8?B?dSt4UkI3Mk42eWZ6UUMvRi9Pa0IxY09aUXF0bWN2K21oeWo5ZFJBNU1uYXdK?=
- =?utf-8?B?eEdkZ1R5UnRNSmhpeHRnUWVkOFlRU0d3dnAwTXNTWWJYMTY0cXBSRTlaWFZr?=
- =?utf-8?B?bG5jRm9oQlpsOGQyTmZ5UjFJQWZiMTFMeDlzSjlSZDZYZDBJOXIvTlZySmk1?=
- =?utf-8?B?SDBwYjViT0NHOHRDKzI0RE9pRFRySGNsRUFHTHluRDVqTTF5TXN3MHVmczha?=
- =?utf-8?B?QmVqVGVRTlFrSzUrMWxibWxqbFoxU1ZNME9aUTdiSUhWTFE2OU1DT3FpUTFn?=
- =?utf-8?B?aWdVSnFYNUJ4RnNsaEdUQmora2FaQWFCOXZuRkJZZ3FyWWxVbldxd0J5MlpJ?=
- =?utf-8?B?aFFyL1Zpc2VOYXVHNXVjNmsrYlk5N0cyUnBxWnBqdGw3YzZuZ0VlelhRQjRD?=
- =?utf-8?B?SUFFRnpjeEJGN3FQOWIycTlsR2hQeFNQZituMmhuL3VRTEthM1NBM25ienIw?=
- =?utf-8?B?MlJNUWtObU5icFAxT1ZMUFFnazhKdENqV1R4enNkSHUwOGs0bGRDMHI3SnVQ?=
- =?utf-8?B?a2VxMkNKUnk2cjM0ZjdML3pmTXZvbGw2cjlTRWdFZkFhMjRjMU5DYnNJcXJn?=
- =?utf-8?B?MW1BOE1na3ZhNmI4TW8vVGNSS005djBqalM4MmtEbDlGNzN1NDU4V0NIcStT?=
- =?utf-8?B?RVdjSDZQdFZ2T1J6dUZ4RVZjNXpxYVZDR1dreGQ0MmpYTlhXRElCNm9TY0JP?=
- =?utf-8?B?YWZvRnFScnJtTzNVYlZNbEMrTEcvbXUvRGRyRTdPaWVOU2kxTTB5d1VVTXZV?=
- =?utf-8?B?ZkhCN2tFUm5Eb3NGNm5tTGcvYmxzYW9WcnlwMGpXVGc4SU1QcURBaGRCMCtG?=
- =?utf-8?B?WTArV3IzSW82bXd3Y0dXdi96blhRMUNOc2JIOWZzRlA0RUNmV0RvTXRFeklO?=
- =?utf-8?B?YVptVzR6YUFhRkt5ajJlOVdhRHI3dVc2eUpXcjd4Uk9PeFVENmVIQkxUUU9T?=
- =?utf-8?B?a2dxeXNjcHBEOW13ZG9SOVJITmRvdXE0Nkk2Zk0ra2huV1BTRG9yTjlkQjRO?=
- =?utf-8?Q?xXv/n1O5ZPYiU0FFn6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e84ca63-191e-4872-bed4-08df1dd078b9
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7747.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2026 02:22:13.0192
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iuayGsUATFeapklwwDtw2/Vc8H5TLhO/uAkUT3kgGC7cc65nnggdY2FZKGJVOh2C
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN5PR12MB9488
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
+ (Strix Point) when more than 16 logical CPUs are online
+To: Mario Limonciello <superm1@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, rafael@kernel.org
+References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
+ <0bb77796-790f-44db-b4cc-e4742ed1b2d0@amd.com>
+ <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
+ <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
+ <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
+ <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
+ <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
+ <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
+ <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
+ <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
+ <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
+ <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
+ <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
+ <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
+ <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
+ <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
+ <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
+ <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
+ <b2e13400-d1b7-4a9f-b7bc-a2d1dc7a4912@amd.com>
+ <66bbe070-36d9-d854-f0ba-a350634713db@ik.me>
+ <049f2564-3ef2-433e-9206-be44b7885d7b@gmail.com>
+Content-Language: en-US
+From: Fourhundred Thecat <400thecat@ik.me>
+In-Reply-To: <049f2564-3ef2-433e-9206-be44b7885d7b@gmail.com>
+Feedback-ID: :a4f77f7b9345814:ham:c07166f4469634d
+X-Infomaniak-Routing: alpha
 
-Hi Daniel,
+This is a multi-part message in MIME format.
+--------------wyBJ01OzDf0yGDNEeeuf2asw
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thanks for reaching out and for the detailed investigation.
-
-The current upstream AMD ISP4 support is specific to the HP ZBook Ultra
-G1a 14-inch Mobile Workstation PC, and no other models are supported at
-this time. Per the current management direction, we are not planning new
-AMDISP4 platform enablement work.
-
-We are working toward making the ISP4 driver sensor-agnostic. Until that
-work is completed and upstreamed, we do not plan to add support for
-another platform or sensor combination, including the GZ302EA with OV13B10.
-
-Therefore, we are not able to provide a validated GZ302EA/OV13B10
-platform configuration or GPIO table at this stage.
-
-Thank you for your understanding and for offering to help with testing.
-
-Regards,
-Bin
-
-
-On 9/24/2026 3:06 PM, Daniel Chadwick wrote:
+On 2026-09-26 20:29, Mario Limonciello wrote:
+>> Captured acpidumps for all three configurations. Your hunch was right 
+>> that the IVRS table is still created with AmdVt disabled, but it is 
+>> not identical - and the difference looks like the actual mechanism.
 > 
-> Hi Pratap and Bin,
+> OK.  That makes a lot of sense for this issue now.
 > 
-> I'm working on enabling the rear camera on an ASUS ROG Flow Z13 GZ302EA (Ryzen AI Max+ 395 / Strix Halo) under Linux.
-> 
-> The rear sensor is exposed by ACPI as OMNI13B1 (\_SB_.CAMB / OV13B family). Fedora's current ov13b10 driver already recognises the OMNI13B1 ID, but the sensor remains unbound and no rear ISP4 capture/media graph is created.
-> 
-> I've compared the current AMD ISP4 platform configuration with this machine and also analysed ASUS's official GZ302EA Windows camera packages (V11.04.02.1159 and V11.04.02.950). Those packages confirm ACPI\OMNI13B1 -> sensorOV13B.sys and include an OV13B_3001_ROG_SRX.atb board profile, but the profile's electrical fields are opaque and don't provide enough validated information to reproduce the board configuration safely in Linux.
-> 
-> The remaining information I haven't been able to establish reliably is:
-> - ISP4 CSI port / lane mapping
-> - I2C adapter mapping (the sensor address appears to be 0x10, but I have not treated that as verified)
-> - sensor/ISP GPIOs and polarity
-> - clock source
-> - power rails and sequencing
-> - any OV13B10-specific ISP firmware/profile requirements
-> 
-> The existing OV05C10 platform configuration appears to supply this kind of information in software because it isn't present in ACPI, and the earlier ISP4 review discussion also mentioned the GZ302EA/OV13B10 case.
-> 
-> Would you be able to share the correct GZ302EA/OV13B10 platform configuration, GPIO table, or point me to where these values should come from? I'm happy to implement and test the Linux support and can provide ACPI dumps, the ASUS INF/profile metadata, logs, and test results if useful.
-> 
-> I have the physical GZ302EA available for testing, so I can validate patches directly and capture frames once the pipeline is safely instantiated.
-> 
-> Thanks,
-> Daniel Chadwick
+>>
+>> Summary, all with the IOMMU enabled and 24 CPUs online:
+>>
+>>    config          IVinfo      IVRS len   IVMDs   MSFT0201 in IVRS 
+>> MSFT0201 ACPI dev   SSDTs
+>>    both enabled    0x00203043  0x216      3       yes                
+>> yes                  29
+>>    AmdVt off       0x00203041  0x1F6      2       yes                
+>> yes                  29
+>>    Pluton off      0x00203043  0x216      3       yes                
+>> NO                  28
+>>
+>> AmdVt off changes two things. The IVinfo word loses bit 0x2, the 
+>> DmaRemap bit you already parse at offset 36. And the table is 32 bytes 
+>> shorter because one IVMD disappears:
+>>
+>>    both enabled:
+>>      IVMD DeviceId=0060 Flags=07 Start=0x7D900000 Len=0x100000
+>>      IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
+>>      IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
+>>
+>>    AmdVt off:
+>>      IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
+>>      IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
+>>
+>> DeviceId 0x0060 is MSFT0201:
+>>
+>>    AMD-Vi: ivrs, add hid:MSFT0201, uid:1, rdevid:0x60
+>>
+>> and Flags 0x07 is unity mapped with read and write. So disabling AMD 
+>> virtualization removes Pluton's unity mapped DMA region from IVRS, 
+>> while the device is still declared in IVRS, still present as an ACPI 
+>> device, and still attached to iommu group 0:
+>>
+>>    platform MSFT0201:00: Adding to iommu group 0
+>>
+>> That would leave Pluton's DMA translated with nothing mapped for it, 
+>> which fits every observation: it only breaks with the IOMMU enabled, 
+>> amd_iommu=off is the only thing that fixes it, and neither 
+>> intremap=off nor iommu=pt helps, since iommu=pt gives other devices 
+>> identity domains but the IVMD is how firmware asks for one for this 
+>> device specifically.
+>>
+>> Pluton off is a different failure. The IVRS is byte identical to the 
+>> working case, IVMD 0060 included, but one SSDT is gone and with it the 
+>> MSFT0201 ACPI device. Your existing check already catches that case 
+>> correctly:
+>>
+>>    found_iommu=True  found_acpi=False
+>>    -> IOMMU is misconfigured: missing MSFT0201 ACPI device
+>>
+>> The AmdVt case is the one that slips through. In check_iommu():
+>>
+>>    if not found_ivrs_dmar and not found_ivrs_msft0201:
+>>
+>> with AmdVt off, found_ivrs_dmar is False because bit 0x2 is cleared, 
+>> but found_ivrs_msft0201 is True, so the and makes it pass and the tool 
+>> reports "IOMMU properly configured" on a machine that cannot be woken.
+>>
+>> So to answer your question about keying off something else: yes, and I 
+>> think the signal is "IVRS declares an ACPI HID device but provides no 
+>> IVMD covering its device id". That needs no vendor attributes and no 
+>> DMI matching. The device id sits 3 bytes before the HID string in the 
+>> type 0xF0 entry, and IVMDs are subtable types 0x20/0x21/0x22 with the 
+>> device id at entry offset 4:
+>>
+>>    devid = struct.unpack_from("<H", data, data.find(b"MSFT0201") - 3)[0]
+>>    off = 48
+>>    while off + 4 <= len(data):
+>>        length = struct.unpack_from("<H", data, off + 2)[0]
+>>        if length == 0:
+>>            break
+>>        if data[off] in (0x20, 0x21, 0x22):
+>>            if struct.unpack_from("<H", data, off + 4)[0] == devid:
+>>                mapped = True
+>>                break
+>>        off += length
+>>
+>> I checked this against all three dumps: it reports mapped for both- 
+>> enabled and Pluton-off, and unmapped for AmdVt-off. Note that it would 
+>> contradict test_check_iommu_no_dma_protection_BUT_msft0201, which 
+>> currently asserts that MSFT0201 in IVRS is an acceptable substitute 
+>> for pre-boot DMA protection, so whether to change that semantic is 
+>> your call.
+>>
+>> I am happy to send you the three acpidumps, with the extracted and 
+>> disassembled tables and a record of the BIOS settings each was taken 
+>> under.
+>>
+>> Beyond that I have to stop here. This has taken the better part of a 
+>> week, a lot of forced power cycles, and around $700 in LLM tokens 
+>> working through it, and I am out of time and energy to take it 
+>> further. The machine works now with AMD virtualization and Pluton 
+>> enabled, which is a perfectly acceptable outcome for me.
+>>
+>> Everything I found is in this thread, and I hope the IVRS observation 
+>> is useful to you or to whoever picks it up. Thanks for the help 
+>> getting here - the amd-s2idle tool, the pointer to e9f850ba66cd, and 
+>> the suggestion to reset the BIOS were all what moved it forward.
+>>
+>>
+> I've opened up a PR that should hopefully adjust the tool against your 
+> failure cases.  Would you be able to confirm this against your system?
 
+I am not able to test anything anymore. I have erased the debugging 
+setup that I had on my laptop, and reinstalled it clean. I no longer 
+have the claude history and the debugging tools. And I cannot do it 
+without claude (nothing we did made any sense to me)
+
+> https://github.com/superm1/amd-debug-tools/pull/58
+> 
+> If it doesn't work, can you please send me the acpidumps and I'll adjust.
+
+but hopefully you can make sense of the attached  acpidumps
+
+thank you,
+--------------wyBJ01OzDf0yGDNEeeuf2asw
+Content-Type: application/x-xz; name="ivrs-only.tar.xz"
+Content-Disposition: attachment; filename="ivrs-only.tar.xz"
+Content-Transfer-Encoding: base64
+
+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
+p+axxGf7AgAAAAAEWVo=
+
+--------------wyBJ01OzDf0yGDNEeeuf2asw--
