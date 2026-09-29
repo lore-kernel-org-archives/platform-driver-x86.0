@@ -1,328 +1,177 @@
-Received: from mail-pz2-f37.google.com (mail-pz2-f37.google.com [74.125.228.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF0250EBFE
-	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 13:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C9A52CCD9
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 13:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790689568; cv=none; b=evWGGLtIGZ4/T4sNIU+wg2wxeAPsbx9+vuiZGaqUydMM67Lt6Cw2t9OzR0fmLD65ksxVkLHFIPl+2PjQ8iXxtLnPD4g064tLpQdT/aftwHOYoqCUoh5Qs7s8UycswVYZDYsu04ptke5rY0zeJVYDBAABWPjYcReFE0rXIrwXAYc=
+	t=1790690068; cv=none; b=cdYsBAtd1yRuooVHlbvmZoOW1dtqV5El2plyIOaX/ikufu1vT7B0MGf59z8O69pBBR+3D5MwLXOVyqKLG1UjrxwR4OVTLrT+Wphb5X4s4fzc3rLQJjvI+up88YfgGFy+1A3uuR9GvqVRQJ6nlVMbr2TpPXTGVQRcjPs8TSOO8Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790689568; c=relaxed/simple;
-	bh=eYx8y5ArjSRGGYgz+qVnh5swqspfKas+1pG2xeEzlYQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q3UmuZOEJJj5zSR4vdN9kRfVW2u6cvejabAv3YLxcqBSh7d7RaIMweR+87dyMjTmYdBEd1ScR5GmOUR9/PItGFKIQAj6r4Ri0ObnKATTz9jaXEUZtXtqdrQpfJEFAmgN3CMTuVma6qNQ6n5sMJedu/JfYCdT8+8arB5Yu7uXRTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJewiFFN; arc=none smtp.client-ip=74.125.228.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790690068; c=relaxed/simple;
+	bh=2kkUUFp0qagaU/gKBiglRLEWrZQHJpp5922EOC53ExQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R4PCkol5FRirv8JqobhfLJlL5egUJ4JftEoSBAvVz+6yKjWFq/3+YOEPPKDOnArOts5aT/dGpzfhVFoJmnm+5e9yrEKLr8E2bg5ZEJXiTjP8a2cvjsQiRt3j5g6FJwTdil37uSBStvMs1kF7RKgX1LAjpF+8+Iu9LUkEEdk9nDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZxtttK78; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=OzlNcmzq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJewiFFN"
-Received: by mail-pz2-f37.google.com with SMTP id 41be03b00d2f7-cc7cc70890fso218117a12.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 06:46:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZxtttK78";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="OzlNcmzq"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68TCqeLx611496
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 13:54:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lvd7lu4mno/Z990JhVXgfPPLfxZWBbM2OSjnR4iGsbs=; b=ZxtttK78tsI17zTa
+	oEMJjOXzY8l8UNNCrtK0HnDa3Ic7phPrwafncq7VjFwgEK5geFUzG1IrrLtE2KWR
+	52NUIha3IJNOjid4b8nAmxUwQDsJxJ9fM8TXXUCf3++3MQVeaDOQrXsQqHUafRqr
+	PLG7XAwvtFXEHHCKlZkQi6kEWDI2kc3dn+phUkoiN6io7AtJ6rC2E7Sq8rRJ8KJq
+	yIcrYdP32yZAN/maK/ULIYicqJ/RJsUnPyHE/kGGDtcw7AICqkqMD6xKpr9/k4Qt
+	EV65Sx/dU/OdvsWbzc/RxRQfIQ00ECAN9BJQAKYIXJn9FpPuk8NReg9pNlKw0yvn
+	rmsMzA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h00s4udf5-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 13:54:26 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-939fc317691so77437185a.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 06:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790689566; x=1791294366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Thel4Lv+biW9cQBcaK1vEOmT3BJPIN3J3BTQhPf+Owg=;
-        b=aJewiFFNQ0emOH6T4sBggbFOXOqjYF+hDHKsay2LM3HRoUFoFVeuyk0b8qHAinjXpd
-         sAZ+pRQzNX/iz2BxEVbmstgsIstZsTsSTR9GYJA9JtDwuHE8Jdb6nxii2218J2etrdZB
-         2ayHmmfuBVcm/MDEFAd7YfA/GjNFH8b+p9hZA1+5Juqk9w/3VogkwanoG3syYzTTcao/
-         QWhChLlwi4l98K8r2vO1mbxOhZ+NBtLfz1mjD58mkpm1y3BoUjNALToisuK2trUU3b83
-         6IdAZcXTAl/mdrTHNMnlnQrvv4MplGSjNgSeN4t52Dzv0FvVey/G+m4e1bSv14ZIg8j4
-         B+ZA==
+        d=oss.qualcomm.com; s=google; t=1790690065; x=1791294865; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lvd7lu4mno/Z990JhVXgfPPLfxZWBbM2OSjnR4iGsbs=;
+        b=OzlNcmzq3Skx+AeVpBPSJETB1DaqzV7Tn3r3Kd8GcVw3c1tPSuLFdZjtFDjzHFc9z4
+         MnHABAUIfVCnkee0EroYZXIsdFthra69y2ATPp8SH/Ilt+8ur+4mMsjP2BZA2Yv+q4g7
+         urgZty//o7qepoGM0pRBVxpqNyFDVI9Tem2qB2cjV/F4ZdGmB/0zuyLpYBi4PGPM2Wgi
+         txzNUS942G2MOIRXgrFNvnMgrkExqeVjN0Q3DiSOlOkptTzt5sGWuFmDwcR5uT0hWn3P
+         hidUMAphNlSmFjB8r3/+IunuXdEvCPI/1qAIq9O5pT5WvIxx8PyHRtUrlj+YyLD62eNH
+         YuEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790689566; x=1791294366;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Thel4Lv+biW9cQBcaK1vEOmT3BJPIN3J3BTQhPf+Owg=;
-        b=Q8Iju89VzaDx2Xp0gWgScMJp/J482FdxN3mn5AjSn2Zd3zqvhWZTw616kxY0qaKUvc
-         VRDabcpe5Scm8rETaiA0Z3Mk17LPClUqfIlZFN0rSez3LD21WazWctOj7bjrhg3AZeYI
-         C1IVKw/RI8lWZKCBUFQNSUj87QoPB7+dXUdZM5lkDGCQo4nSexJzcsq3zg+dUKTjWiFD
-         9EU4+LE5bRFX4abiN0VDxqYM4r7XKvF2etpv4njx1nRc1RiiqPVasCfYFvuKYIGCfGQ8
-         YmBaZTgHCnzoi791E84oV2MsvsEX5ST/57TBDLMRSCLe1dBWjZFFPhPG8xtCThpbJHK4
-         WTfw==
-X-Forwarded-Encrypted: i=1; AKwUvBzpOd8uUip/Q2/HGgAtQeMI9lbl4exhoz5LZw+T9T7Bdnv8TVnrJ6HUbKYrG/fQIym2YGCyU6GsGceaFCUgtMIFKpAu@vger.kernel.org
-X-Gm-Message-State: AFuF++mYK6DXXYBA3OxwkHV9bpx9nkPXKH0bavsQdy7/BTL1ot5vgpaV
-	xkaxR+DfPJf83yREukx7btIDHaMHHS3rTt1CsB9iEaQnFJVMKZrDEgJt
-X-Gm-Gg: AYBFou0KnD1p0aEvRa5J1+X6tQeDj/FV/jWclmck3UGWTYWd+2VZ7DMsfebHLNR/KKP
-	fKfGwv/dWKWtpLlZnjfkstWpCULl4L1c/yI774cVjhksrJaMazjkN/Cfxnr7xEkrt4j6C8bI2he
-	Iav+MMPs5RumYUmVG4k626eQtmTdwP6Ft0W0yyftw7HLH/dJQjOsXoxCQeg4F04zR00tV+LbrNE
-	dPj6DUUwBpiW/D0CEFQa1RUNwa2P+poSgJS+RK0RwK/Rja5f54nAVyjJh1erqBiEoZCibijloQy
-	Nn5XawwWJLQ1HFsNApB8gj7yQANo2fceXDnNc79RdrZw4AVxfkDoBN4fa4LuOJcHGKT/WxYjalE
-	CTWUGlZKK60uB+c/mY/g6t1+Fhvf8un1JXxkPzXDzUu+Q1NDibZTsjGi6uqOPy51UWj6DE7d4ua
-	bO6wSgADS1JzBWCeFjQAnsoHUHD/iSJBQwupwK04enEDkc2weEnXzZ
-X-Received: by 2002:a05:6a21:4784:b0:3dd:a195:fa23 with SMTP id adf61e73a8af0-3de0e9cf9ecmr14510186637.72.1790689566176;
-        Tue, 29 Sep 2026 06:46:06 -0700 (PDT)
-Received: from qby-nixos-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-885defd736csm919555b3a.8.2026.09.29.06.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 06:46:05 -0700 (PDT)
-From: Mingyou Chen <qby140326@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: KentoNion <kento@kekto.ru>,
-	platform-driver-x86@vger.kernel.org,
-	ted eric <ericted8810@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	linux-kernel@vger.kernel.org,
-	Chris Taraszka <chris@miget.com>,
-	Matias Civadda <matias.civadda2342001@gmail.com>,
-	=?UTF-8?q?=E9=AB=98=20=E4=BF=8A=E6=96=87?= <btx342@gmail.com>,
-	powerfullz <wleizc7319@gmail.com>,
-	=?UTF-8?q?=E5=AD=99=20=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
-	=?UTF-8?q?Milo=C5=A1=20Vlku?= <vlku.milos.fun@gmail.com>,
-	Rsplwe <i@rsplwe.com>,
-	Bozhen Peng <bozhenpeng93@gmail.com>,
-	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH v6 5/5] platform/x86: bitland-mifs-wmi: Add per-machine ops table
-Date: Tue, 29 Sep 2026 13:45:03 +0000
-Message-ID: <20260929134503.17249-6-qby140326@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260929134503.17249-1-qby140326@gmail.com>
-References: <20260929134503.17249-1-qby140326@gmail.com>
+        d=1e100.net; s=20260707; t=1790690065; x=1791294865;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lvd7lu4mno/Z990JhVXgfPPLfxZWBbM2OSjnR4iGsbs=;
+        b=KuibVcT6MUt4G6afsxJdZe2IZFGAqblJW0pB9P28Hw5t9LiB1WA6k3PiyZROsDMHuw
+         gJGEtzcLaWJJHcm8FJ7NNdTEHbsPNJJUk+Un0Qr6b7tVMAIxL4HmsWP1XvZQWmtmWTwQ
+         mkWoU4qJk+mss2Mvmvm2bAzE8aJvf6HnBGSvba9OXObINEzLj3ob5p/3kBHdVk4cAPDl
+         I8GMGjPCcmwmjAYQC2Dpst1rslueC1zuf5yUUW2MHQqKV+ZXdSSRKQ/4Lx5b9ljI7xvA
+         cmu2mICL3ZBkd9z90/LlOKETRrRFv2TriF96Wi3XGAsu4FTdv3/+YcGMvoeGgDT2h97B
+         X21A==
+X-Forwarded-Encrypted: i=1; AKwUvBz+OjRA6mm+ILnHkPkvqKyQzsDfJsYH+jYceKtSBYEwHt63izcLcotuJrHE09apoWh9UhxPfbqnyT67zaag5U+NkdjK@vger.kernel.org
+X-Gm-Message-State: AFuF++kkdlwscXiSwDZhiNxj5Hxa7Dm4zqT+P8XX00Fsh8fTjWyWYfh/
+	3rHqRupht/4V62yTVnPsI+Z4aJZ++OIxGgnwALi5/6CPTQ8bAPtQVad77HA/qnslo1umkIAGN6S
+	VqO2uFOU+vFUO1oZtc8p9scH0Ty+vrssTV92XzyYQE3xAOFQY4HEclrtHNcjELhdjOZudIgKqUg
+	l7
+X-Gm-Gg: AYBFou06Snva+h61uVI/lMQbV1UdYgkjcric/euh0Iw0Qdjb12QhvfeBcHKLvIeNYeK
+	oZrj5nddh9l82k//2rpQExbqTJQTP6wvuvX7foISNwXTgWLSHsQtKxxmsymwuQORKwodMdSsLLt
+	reD7+aFWPpVIOUmbCg42bGHCM38P/bxFS4RVa63Xc/B62YgBnCm+Ic+bOE5O3VZXOPSHG21T/fk
+	RoLmbFGY1z0E/e7Ai2Fh/eX/JmunPsWFHg2k2e2oKhEUk027rDKcJ9V6FvHLvpwF9hd0rCejAVE
+	okpU3NS1L3rZJ0puBGBhE8VX32kol5HL6joKPfQnLWYM47GZYPO94k/JVHmhztl6l3YC/50gqVD
+	iJqIZAsKVepCjCOj/TWviyQ==
+X-Received: by 2002:a05:620a:1a15:b0:939:9205:4d78 with SMTP id af79cd13be357-93c43d40617mr2603508685a.3.1790690065133;
+        Tue, 29 Sep 2026 06:54:25 -0700 (PDT)
+X-Received: by 2002:a05:620a:1a15:b0:939:9205:4d78 with SMTP id af79cd13be357-93c43d40617mr2603504885a.3.1790690064613;
+        Tue, 29 Sep 2026 06:54:24 -0700 (PDT)
+Received: from [192.168.202.12] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b9e873f45esm1414207e87.82.2026.09.29.06.54.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Sep 2026 06:54:23 -0700 (PDT)
+Message-ID: <3aa4a96f-76b4-4961-8c9f-4eb099016a01@oss.qualcomm.com>
+Date: Tue, 29 Sep 2026 15:54:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: sc8280xp-x13s: Add embedded
+ controller
+To: Alex Robinson <alex@ironrobin.net>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Steev Klimaszewski <threeway@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260928222056.10044-1-alex@ironrobin.net>
+ <20260928222056.10044-4-alex@ironrobin.net>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260928222056.10044-4-alex@ironrobin.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI5MDA1NSBTYWx0ZWRfX4+b3bg5ghytS
+ ReY9cXUzX5Ov9s+dhzzq66kvVc24HaaFZIbP0OB/0GVuleegOuHw1imWZjXg9Qlu14+RoR/z8pu
+ gOPwdDjRkOxGTojsXYvagdbXX9L+jxs=
+X-Authority-Analysis: v=2.4 cv=ALbfqNVA c=1 sm=1 tr=0 ts=6abbc312 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=USHUXImS27okXdFuVjEA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI5MDA1NSBTYWx0ZWRfX+i7AZq8kk+MQ
+ 5tu8Ayw9zdKpCn2bvQP/UpOGzhmUgYRvFoSYPzFlOQW1UBb3dzr5QXNproaqRFPHvEtxCCHHJvQ
+ fmQHooi6TNOS8x/JWEA9QbH9WFKjHqn/HqDyyrbBxUooGC0Z1/pvco60AWBPuJ7XpYQiKI1RCQT
+ yC+yXkuf2f5L03afdkiYmbYc99teWnxRFB4pqY3vIGn3qeRz+oHiV0pTRewXAlylS+WB7YQa3He
+ MogkCBW2Fbt+bwrXXKQKZITM25RFlDRN/pfy7lhCWYHT+tw96nfzdqfTlbBm3s6Zi38tMNkeWoh
+ ZJqUM4dCSCWTP7xwXYmgWdMgOtqI+MSzj8rpGENVWdwtSSd311lUXtYf8JzI6ooW00Vkrtlfctt
+ IRJJXBunW2gdeCVba8u30XlPWvP7sEvZpMRz4sr8dD0OP26Tg5oiZTuCMvvIdHP1w04I/a8xrrS
+ bkC/vRsorDTGhSc96Nw==
+X-Proofpoint-GUID: E4bh-4FYsgZ3uBPK3C7f3RU56jK1dhxM
+X-Proofpoint-ORIG-GUID: E4bh-4FYsgZ3uBPK3C7f3RU56jK1dhxM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-29_04,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 spamscore=0 clxscore=1015 suspectscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609290055
 
-The MIFS WMI interface is shared by several Bitland ODM laptops which
-differ in the layout of the performance mode values of
-WMI_FN_SYSTEM_PER_MODE and in the capability checks.
+On 9/29/26 12:21 AM, Alex Robinson wrote:
+> Enable the embedded controller at address 0x28 on i2c8, with GPIO103 as
+> its falling-edge, wake-capable event interrupt.
+> 
+> Configure the QUP8 bus on GPIO43 and GPIO44 with 2 mA drive strength and
+> pull-ups, matching the working firmware-established pin configuration.
+> 
+> Configure GPIO103 as an input without overriding its existing pull
+> configuration. Describe GPIO176 as the separate active-high power-state
+> output and configure it initially high with bias disabled.
 
-Introduce a machine ops table to support multiple machine families
-without sprinkling model checks over the driver:
+Most of this commit message is unnecessary and repeats the contents
+of the diff, please direct the clanker to:
 
-struct bitland_mifs_ops {
-        const char *name;
-        const struct bitland_profile_mode_map *mode_map;
-        int (*check_performance_capability)(
-                struct bitland_mifs_wmi_data *data);
-        bool has_full_speed;
-};
+Documentation/process/submitting-patches.rst
 
-The default ops instance keeps the current Bitland behavior, so this
-change is a pure refactor without any functional changes.
+[...]
 
-Signed-off-by: Mingyou Chen <qby140326@gmail.com>
----
- drivers/platform/x86/bitland-mifs-wmi.c | 108 +++++++++++++++++++-----
- 1 file changed, 86 insertions(+), 22 deletions(-)
+> +	ec_int_n: ec-int-n-state {
+> +		pins = "gpio103";
+> +		function = "gpio";
+> +		input-enable;
+> +		/* Preserve firmware pull configuration; no bias override. */
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index df317aa6f555..d092bf07b7f7 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -12,6 +12,7 @@
- #include <linux/bits.h>
- #include <linux/container_of.h>
- #include <linux/dev_printk.h>
-+#include <linux/dmi.h>
- #include <linux/device.h>
- #include <linux/device/devres.h>
- #include <linux/err.h>
-@@ -84,6 +85,50 @@ enum bitland_mifs_power_profile {
- 	WMI_PP_FULL_SPEED	= 3,
- };
- 
-+struct bitland_mifs_wmi_data;
-+
-+/*
-+ * Value layout of WMI_FN_SYSTEM_PER_MODE.
-+ */
-+struct bitland_profile_mode_map {
-+	u8 balanced;
-+	u8 performance;
-+	u8 quiet;
-+	u8 full_speed;
-+};
-+
-+static const struct bitland_profile_mode_map bitland_mode_map = {
-+	.balanced	= WMI_PP_BALANCED,
-+	.performance	= WMI_PP_PERFORMANCE,
-+	.quiet		= WMI_PP_QUIET,
-+	.full_speed	= WMI_PP_FULL_SPEED,
-+};
-+
-+static int bitland_pp_check_capability(struct bitland_mifs_wmi_data *data);
-+
-+/*
-+ * Machine-specific operations. The MIFS WMI interface is shared by
-+ * several Bitland ODM laptops which differ in the layout of the
-+ * performance mode values and in the capability checks.
-+ */
-+struct bitland_mifs_ops {
-+	const char *name;
-+	const struct bitland_profile_mode_map *mode_map;
-+	int (*check_performance_capability)(struct bitland_mifs_wmi_data *data);
-+	bool has_full_speed;
-+};
-+
-+static const struct bitland_mifs_ops bitland_ops = {
-+	.name = "Bitland",
-+	.mode_map = &bitland_mode_map,
-+	.check_performance_capability = bitland_pp_check_capability,
-+	.has_full_speed = true,
-+};
-+
-+static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-+	{}
-+};
-+
- enum bitland_mifs_event_id {
- 	WMI_EVENT_RESERVED_1		= 1,
- 	WMI_EVENT_RESERVED_2		= 2,
-@@ -165,6 +210,7 @@ struct bitland_mifs_wmi_data {
- 	struct input_dev *input_dev;
- 	struct device *hwmon_dev;
- 	struct device *pp_dev;
-+	const struct bitland_mifs_ops *ops;
- 	enum platform_profile_option saved_profile;
- };
- 
-@@ -207,37 +253,35 @@ static int laptop_profile_get(struct device *dev,
- 			      enum platform_profile_option *profile)
- {
- 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	const struct bitland_profile_mode_map *map = data->ops->mode_map;
- 	struct bitland_mifs_input input = {
- 		.operation = cpu_to_le16(WMI_METHOD_GET),
- 		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
- 	};
- 	struct bitland_mifs_output result;
-+	u8 mode;
- 	int ret;
- 
- 	ret = bitland_mifs_wmi_call(data, &input, &result);
- 	if (ret)
- 		return ret;
- 
--	switch (result.data[0]) {
--	case WMI_PP_BALANCED:
-+	mode = result.data[0];
-+	if (mode == map->quiet)
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+	else if (mode == map->balanced)
- 		*profile = PLATFORM_PROFILE_BALANCED;
--		break;
--	case WMI_PP_PERFORMANCE:
-+	else if (mode == map->performance)
- 		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
--		break;
--	case WMI_PP_QUIET:
--		*profile = PLATFORM_PROFILE_LOW_POWER;
--		break;
--	case WMI_PP_FULL_SPEED:
-+	else if (mode == map->full_speed)
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
--		break;
--	default:
-+	else
- 		return -EINVAL;
--	}
-+
- 	return 0;
- }
- 
--static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *data)
-+static int bitland_pp_check_capability(struct bitland_mifs_wmi_data *data)
- {
- 	struct bitland_mifs_input input = {
- 		.operation = cpu_to_le16(WMI_METHOD_GET),
-@@ -268,47 +312,52 @@ static int laptop_profile_set(struct device *dev,
- 			      enum platform_profile_option profile)
- {
- 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	const struct bitland_profile_mode_map *map = data->ops->mode_map;
- 	struct bitland_mifs_input input = {
- 		.operation = cpu_to_le16(WMI_METHOD_SET),
- 		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
- 	};
- 	int ret;
--	u8 val;
-+	u8 mode;
- 
- 	switch (profile) {
- 	case PLATFORM_PROFILE_LOW_POWER:
--		val = WMI_PP_QUIET;
-+		mode = map->quiet;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
--		val = WMI_PP_BALANCED;
-+		mode = map->balanced;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
--		ret = bitland_check_performance_capability(data);
-+		ret = data->ops->check_performance_capability(data);
- 		if (ret)
- 			return ret;
--		val = WMI_PP_PERFORMANCE;
-+		mode = map->performance;
- 		break;
- 	case PLATFORM_PROFILE_PERFORMANCE:
--		ret = bitland_check_performance_capability(data);
-+		ret = data->ops->check_performance_capability(data);
- 		if (ret)
- 			return ret;
--		val = WMI_PP_FULL_SPEED;
-+		mode = map->full_speed;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
- 
--	input.payload[0] = val;
-+	input.payload[0] = mode;
- 
- 	return bitland_mifs_wmi_call(data, &input, NULL);
- }
- 
- static int platform_profile_probe(void *drvdata, unsigned long *choices)
- {
-+	struct bitland_mifs_wmi_data *data = drvdata;
-+
- 	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
- 	set_bit(PLATFORM_PROFILE_BALANCED, choices);
- 	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
--	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+
-+	if (data->ops->has_full_speed)
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
- 
- 	return 0;
- }
-@@ -706,6 +755,19 @@ static int bitland_notifier_callback(struct notifier_block *nb,
- 	return NOTIFY_OK;
- }
- 
-+static void bitland_detect_ops(struct bitland_mifs_wmi_data *data)
-+{
-+	const struct dmi_system_id *id;
-+
-+	id = dmi_first_match(bitland_mifs_dmi_table);
-+	if (id)
-+		data->ops = id->driver_data;
-+	else
-+		data->ops = &bitland_ops;
-+
-+	dev_dbg(&data->wdev->dev, "Detected machine ops: %s\n", data->ops->name);
-+}
-+
- static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct bitland_mifs_wmi_data *drv_data;
-@@ -730,6 +792,8 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- 
- 	dev_set_drvdata(&wdev->dev, drv_data);
- 
-+	bitland_detect_ops(drv_data);
-+
- 	if (dev_type == BITLAND_WMI_EVENT) {
- 		/* Register input device for hotkeys */
- 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
--- 
-2.55.0
+Please find that value (read it back at boot) and place it here
 
+> +	};
+> +
+> +	ec_power_state: ec-power-state {
+> +		pins = "gpio176";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +		output-high;
+
+Drop this line and assert the state in the driver as necessary
+
+Konrad
