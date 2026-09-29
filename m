@@ -1,205 +1,181 @@
-Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A0D2DEA68
-	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 05:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEE03E3152
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 06:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790661452; cv=none; b=ZTCWzrTJ053wal19/hZEEucWfHoFPyEPWBvUFOhROhSnIs3tgNibYWSFgq8adiLDAVcvb3EXmGvQDRT/uAICoTrFVQwuZP+MOMYoIdiCrPkP+nOV1nZCxfv36ZQIu6dWRJjKKq8N4wXee/mg3ATBGXTYR4MtHlVeJuM3eVDpwiE=
+	t=1790664863; cv=none; b=MDt+nB7ADLUzwNfNRsXt5590yoK4BZQ+6w7hMfS/sWwj/q+TUSI9Yoy6totrbz00NQgxHCIvR5n7MzvZhgdEHkIdGHOvdprgEkSvOfXEELZSR9Yfz2m4kcasomdlS4DkxFy1phZ0lN9fuFdUl/xQ4HBT+/zSgler3rODqKg8qAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790661452; c=relaxed/simple;
-	bh=6azpNqFRekD9LpLaNdDoW7yNrn/I6/u0TnD7cSz6ynw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DcPELMaz4H2Qde/UBd16xg6ats+PEYcUqEi8vSKQ9I3yjMLF8871Ojs/gBkzkGShOsPwvS6eshONqSmUWIPUeA+GfzeqXYBQ7bq1L0xBLrHquwKMk/9wACjRPFg5Y3Wage1crKp2OAMyFedQBaXQAZ1XExlJL9B/Rz+SAoZr0C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=uNFF5+GX; arc=none smtp.client-ip=185.125.25.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
+	s=arc-20240116; t=1790664863; c=relaxed/simple;
+	bh=4AILTySd7UOFbCLB2VpbZnitKDnzSXWz3qknFH1+qvg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LTlHQohPMzJ3Bo+7XER1mKQA6qDnA6cT2bfhYo69S4GG8hklrhCg+YaZxR4M9TAeDEwmF8aEiU3iKXk/UdHZVZGSVGwmoraE9Qr4NXdU37rPkyp7ReKWIwjVIXtOpog9vzmmNkea1Cr+keiDzXndLpjVkl3TuRqNONfr0FdJ+QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XpnS3THU; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=OR2OwpGB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="uNFF5+GX"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hv6s25P3YzQhV;
-	Tue, 29 Sep 2026 07:57:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
-	t=1790661446; bh=kPTBk2j5EWQ6HuwaBvGytrSlKKAowUQKET1MpG8OJOE=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=uNFF5+GXqwGatxu6V3L9diNjCwnTkEgvnW4Nc4txyAR1hZ7xeQLtO41fbDOIKt3Gr
-	 fxolYq/8aqrMnfViiNmypMsYwRaxeqtdkhD8kj2Br83amgvDQTk2t7OUXSB68fwWx9
-	 7XLBGpeovcz5PpfCH9exfCMrSWVxoQrFEa9f0KWI=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hv6s12YqtzTHf;
-	Tue, 29 Sep 2026 07:57:25 +0200 (CEST)
-Message-ID: <edd73c8b-904e-077a-6e77-0348f4ca5aa7@ik.me>
-Date: Tue, 29 Sep 2026 07:57:26 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XpnS3THU";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="OR2OwpGB"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68T47A5Y2126506
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 06:54:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	nptFMILb3QxNzc5p1LDXj34HfvgxYdfHtBcXmYZumTI=; b=XpnS3THUvae9pZLm
+	5796AtzrKqWYV44rc46ERAsi0BZLg3saJ1J87xBvwPC2ulwMW4BE4eXMc/pFckEj
+	/iKzpysOtbznLfGY7+gIh8a3Up6d6VhMKydLh//MTXkEABDzXpWcSgfLggTeWg8Y
+	T1OhFu3jUnTZPIUloDnNCuMTpwoYBYwWefFka26WVHOtkpqZ/4lLve1peuIuvjPW
+	d92e3HxoHralQT5yCn+1ZaJKO9xe5HIaPilUCDm/SzSZ8kE6IKOo2/O1dDwDsEnG
+	UrxIEOyybNxPs2hAVxvtjUcIwYPjhyBlXvGuw2P4zDGpUbg1H8Fswu3HHOSomgfQ
+	IDAuyQ==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h02mn98ka-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 06:54:21 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cc4ac5feaa4so2098241a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Sep 2026 23:54:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1790664861; x=1791269661; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=nptFMILb3QxNzc5p1LDXj34HfvgxYdfHtBcXmYZumTI=;
+        b=OR2OwpGB/HqfLgX44YoSoIxHeqOYK+WpNj1fdS3wbtuREpP+E3P0g9Wo32IQBjMJw1
+         qrdby+t1qypJLn7sIgY8G2x+WNA08Mv/jHantuH2ytWG+H9w9kC6mBCxSasHCa6jOi0T
+         HBtjyjab+cqv7LVoQIOYiAHIQMxmGzk4S9M061zRYA55cedVyCQeZ0tgfMyPjRf/ry7I
+         KBcJ8zvDKgK7YR7VsJvH0axcA86pqMtMIiNg+sxcikYzvXRI4uv0yjbWazNK8WsYQaKj
+         xZyoPn6zIJeuqEZQpvnezWxEaYVpl9Iw8YMBbWvQChw8d990kd8Wepor9xutwl8XCql+
+         gE/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790664861; x=1791269661;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=nptFMILb3QxNzc5p1LDXj34HfvgxYdfHtBcXmYZumTI=;
+        b=f58RDUNiRdwtWUSsbnQWuqLTGW4w3PBMuWyCWxmGPoMrPtk2ovB4hQQHztjt+Hc7b1
+         I+KR5hXiLr4ZpZRoOYRLcPbHd4c/3GXItVfNRKeUBJl40ylR6hhbgCFf0T+E4cpemQkx
+         ODxljt7auEx+qU4MSHR3xo+x5gTOg7n0TotfoINp1l+WNRHFwV5nFsq2vH8QPq8f5hSR
+         8aICI1IjXO9DExm8wvck/cjcb8/3duPZcumOo6Zb7EhQzx1Jav1740XdEdiGRk6ykvEo
+         Ir70FH4623nWI6YzQrsvuYWAzziHVVTgAcZKAmZMLPkw2Z+So8saIMsfggxEBlJZvT7t
+         rLIw==
+X-Forwarded-Encrypted: i=1; AKwUvBybR+2h7eDUmr5boIF8So9LC43it4Uct0EY/bPR/ll/4Hmbe10JBm1nEvNvrgDtGOOWH40EtwGR5sqW8D7uF4E0gCME@vger.kernel.org
+X-Gm-Message-State: AFuF++lP1/NNGmqfem0m/H4SgLV3uQ9cKIE5oMCbvEAp2rexW3VHvqWe
+	BK7WBihVbZFiIt89qh7qQPd/0osF9tVrwnb9hfaRi88zqZPP6t489ZZPS5nzy80mGzpGru7NXSu
+	VPxjCOxa8EqeMLak4hXruFxYJGJNlcD60f7/fiFygxT3gN6z7FBjQAVv/q8p+kA0POlYwSU6hfR
+	yD
+X-Gm-Gg: AYBFou1jtNEuOU8BjkveAZQGieMjymh8o2qggy4CYhuzh6nxYvTWuxHQ8cqEGXvTZPs
+	Zis9EYD+4XRGhG4U9e3755ucvcFyMwMj7tfmhA/j+INCCBg3NrVrYIKCV8dxk31xTo/saPIkXb9
+	yuRtvnv0Ebf9iSgtTjKPUiIyPdeQeA1M2pIy2Fi4AAt1M6d/eWYbbgElVs1xy+ZUJCGj1vnd5wb
+	+uVzCL2A4zOKllOQTxbhqxpKmd4GJOP1KqLAhHO46nJIg0a+OkAuq+Xp4oyQW+khGkKK0L0JhEx
+	NX5CQcVuw/UA8VvVPrmr/J9pBqSJld6U8evBoR21bw1qy9YN5JLIqOphc49faR7EFeMHP4wEqR2
+	SsDI0p8JRWAKIrVp1ZyxHcYefZ8H49Hw+fSf/OU3EnFQPFZgpKCkm/776Z4L1p5GTidtMSyIuOe
+	ChOIkzuiWRRuL7
+X-Received: by 2002:a05:6a20:c784:b0:3dd:85a8:4c58 with SMTP id adf61e73a8af0-3de0e73a73bmr14325979637.31.1790664860882;
+        Mon, 28 Sep 2026 23:54:20 -0700 (PDT)
+X-Received: by 2002:a05:6a20:c784:b0:3dd:85a8:4c58 with SMTP id adf61e73a8af0-3de0e73a73bmr14325957637.31.1790664860412;
+        Mon, 28 Sep 2026 23:54:20 -0700 (PDT)
+Received: from [10.79.116.124] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc78773acfasm5579201a12.0.2026.09.28.23.54.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Sep 2026 23:54:19 -0700 (PDT)
+Message-ID: <41953b98-571e-482f-aea1-6c3ff78f09d2@oss.qualcomm.com>
+Date: Tue, 29 Sep 2026 12:24:13 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [BUG] s2idle: unrecoverable sleep on ThinkPad P16s Gen 4 AMD,
- (Strix Point) when more than 16 logical CPUs are online
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] platform: arm64: qcom-hamoa-ec: Switch fan profile
+ based on power supply state
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20260728-ec_add_more_commands-v1-0-771abd65ee1a@oss.qualcomm.com>
+ <20260728-ec_add_more_commands-v1-3-771abd65ee1a@oss.qualcomm.com>
+ <cf04c613-ed91-4929-aaf6-421fe9bb7ab4@oss.qualcomm.com>
+ <1612b46d-1291-4593-b24e-464ba2a180ed@oss.qualcomm.com>
+ <872897af-6357-460e-9aa0-158eda22aa43@oss.qualcomm.com>
+ <579939eb-92b5-45a8-b782-8e79a4366a8e@oss.qualcomm.com>
 Content-Language: en-US
-From: Fourhundred Thecat <400thecat@ik.me>
-To: Mario Limonciello <superm1@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com, rafael@kernel.org
-References: <82329b33-ba2d-ee43-d444-5fdc14af1bce@ik.me>
- <eafbba40-a10f-6a7f-54e6-b14d59ad1525@ik.me>
- <99dcb462-5045-4fa7-9f6b-ee0f13ff96ab@amd.com>
- <4a161dd5-4dfe-81f4-e4d8-ba9d3280c25a@ik.me>
- <6d7773c8-0dc5-4e11-8bbb-088289dd508b@amd.com>
- <a5611ca8-b28d-4102-0caa-542fc162758a@ik.me>
- <60a5c26c-8fe2-477f-b576-2a18d8b6394d@amd.com>
- <fc70f3b0-6ac5-7ac9-dca8-595b65785718@ik.me>
- <b29e9341-70cb-4201-99fc-ef307dd10fa5@amd.com>
- <aab50dd0-5141-bded-0b58-0f01ae9621d5@ik.me>
- <c42ab776-6fa9-4e8e-acae-fa921a5ac108@amd.com>
- <0d1686e8-a50e-6f3b-2923-a0eca6ab4271@ik.me>
- <b6015026-fe8c-4823-ad39-c630350c0cc1@amd.com>
- <c58f84c7-bfe6-58db-cad5-6859e96a7daf@ik.me>
- <afb1949a-8465-cfc8-bddb-bc27783af223@ik.me>
- <8f06af84-c0fb-4d24-8868-bf16a1678b4a@amd.com>
- <3a080b50-6396-bf8f-2e70-011b85c15fe2@ik.me>
- <b2e13400-d1b7-4a9f-b7bc-a2d1dc7a4912@amd.com>
- <66bbe070-36d9-d854-f0ba-a350634713db@ik.me>
- <049f2564-3ef2-433e-9206-be44b7885d7b@gmail.com>
- <cbcb15b6-b576-a6be-f190-9014ec02a805@ik.me>
-In-Reply-To: <cbcb15b6-b576-a6be-f190-9014ec02a805@ik.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+In-Reply-To: <579939eb-92b5-45a8-b782-8e79a4366a8e@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Feedback-ID: :a4f77f7b9345814:ham:c07166f4469634d
-X-Infomaniak-Routing: alpha
+X-Authority-Analysis: v=2.4 cv=X9fHu2Te c=1 sm=1 tr=0 ts=6abb609d cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
+ a=G7NnfM6ISWE-AksYWssA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-GUID: Zz1m5rCiWP0Ti5CjT8sHYlF0c3h1y-n8
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI5MDAyNyBTYWx0ZWRfX3LXcGEZMDvTa
+ JV5AcmGmbmJBrQrNbYjUsmxN27PZi+4DyjKj//9c3fimeNCObedU5umcpqhn3dLmF/xLplaPH+7
+ stYTr7rW2vGoM0g1R8suyCF55qVX9H0=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI5MDAyNyBTYWx0ZWRfX05WDqJM0jMLF
+ xN9rFT35D/pYv13tOPiu6zGN0ovw8pged94XY/4tEOyX12l8EwxVfrExivrWyism5tedXaTHilp
+ x759PkiMeMetY3AzLgoimr78VkaAx0Nn/nwevNN4PFM/dd468jTXhA266CsN2zVVWEhQCRiGEXS
+ OfIQ7iu3kLqQawgmn4tEFoU6u7hNA2RhGBbvKxUD1/mBx1eTcUO8mZF/X2/FpFtS7+zPjOnqN4C
+ fkasAikd9f1qLX47c+56TGQOQ4a18cDbVmzY7iVCuxmlKU04fJMFMgcL8g5YQZjkf5Y9kPBgbtk
+ sAW8DLUK7cULtHztQq2WIjfTOC+RE3bp+NePs5LUV/oveGwMwno2XNnSBs4c5sLe4K7g7WEZ+fG
+ waFkS2MsMRhLtYGRFfmCGUTBvM+gL1p3g0vu+MB/YdAr7/gLgPeC2AZfESQnrsUTMQqcEzYTVyy
+ Y8pUSxBnQQApIg40N1Q==
+X-Proofpoint-ORIG-GUID: Zz1m5rCiWP0Ti5CjT8sHYlF0c3h1y-n8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-29_02,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 impostorscore=0 phishscore=0 clxscore=1015 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609290027
 
-On 2026-09-29 07:43, Fourhundred Thecat wrote:
-> On 2026-09-26 20:29, Mario Limonciello wrote:
->>> Captured acpidumps for all three configurations. Your hunch was right 
->>> that the IVRS table is still created with AmdVt disabled, but it is 
->>> not identical - and the difference looks like the actual mechanism.
->>
->> OK.  That makes a lot of sense for this issue now.
->>
->>>
->>> Summary, all with the IOMMU enabled and 24 CPUs online:
->>>
->>>    config          IVinfo      IVRS len   IVMDs   MSFT0201 in IVRS 
->>> MSFT0201 ACPI dev   SSDTs
->>>    both enabled    0x00203043  0x216      3       yes yes 
->>>                  29
->>>    AmdVt off       0x00203041  0x1F6      2       yes yes 
->>>                  29
->>>    Pluton off      0x00203043  0x216      3       yes NO 
->>>                  28
->>>
->>> AmdVt off changes two things. The IVinfo word loses bit 0x2, the 
->>> DmaRemap bit you already parse at offset 36. And the table is 32 
->>> bytes shorter because one IVMD disappears:
->>>
->>>    both enabled:
->>>      IVMD DeviceId=0060 Flags=07 Start=0x7D900000 Len=0x100000
->>>      IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
->>>      IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
->>>
->>>    AmdVt off:
->>>      IVMD DeviceId=C507 Flags=08 Start=0x6B400000 Len=0x20000
->>>      IVMD DeviceId=C100 Flags=08 Start=0x6B1F5000 Len=0x28000
->>>
->>> DeviceId 0x0060 is MSFT0201:
->>>
->>>    AMD-Vi: ivrs, add hid:MSFT0201, uid:1, rdevid:0x60
->>>
->>> and Flags 0x07 is unity mapped with read and write. So disabling AMD 
->>> virtualization removes Pluton's unity mapped DMA region from IVRS, 
->>> while the device is still declared in IVRS, still present as an ACPI 
->>> device, and still attached to iommu group 0:
->>>
->>>    platform MSFT0201:00: Adding to iommu group 0
->>>
->>> That would leave Pluton's DMA translated with nothing mapped for it, 
->>> which fits every observation: it only breaks with the IOMMU enabled, 
->>> amd_iommu=off is the only thing that fixes it, and neither 
->>> intremap=off nor iommu=pt helps, since iommu=pt gives other devices 
->>> identity domains but the IVMD is how firmware asks for one for this 
->>> device specifically.
->>>
->>> Pluton off is a different failure. The IVRS is byte identical to the 
->>> working case, IVMD 0060 included, but one SSDT is gone and with it 
->>> the MSFT0201 ACPI device. Your existing check already catches that 
->>> case correctly:
->>>
->>>    found_iommu=True  found_acpi=False
->>>    -> IOMMU is misconfigured: missing MSFT0201 ACPI device
->>>
->>> The AmdVt case is the one that slips through. In check_iommu():
->>>
->>>    if not found_ivrs_dmar and not found_ivrs_msft0201:
->>>
->>> with AmdVt off, found_ivrs_dmar is False because bit 0x2 is cleared, 
->>> but found_ivrs_msft0201 is True, so the and makes it pass and the 
->>> tool reports "IOMMU properly configured" on a machine that cannot be 
->>> woken.
->>>
->>> So to answer your question about keying off something else: yes, and 
->>> I think the signal is "IVRS declares an ACPI HID device but provides 
->>> no IVMD covering its device id". That needs no vendor attributes and 
->>> no DMI matching. The device id sits 3 bytes before the HID string in 
->>> the type 0xF0 entry, and IVMDs are subtable types 0x20/0x21/0x22 with 
->>> the device id at entry offset 4:
->>>
->>>    devid = struct.unpack_from("<H", data, data.find(b"MSFT0201") - 3)[0]
->>>    off = 48
->>>    while off + 4 <= len(data):
->>>        length = struct.unpack_from("<H", data, off + 2)[0]
->>>        if length == 0:
->>>            break
->>>        if data[off] in (0x20, 0x21, 0x22):
->>>            if struct.unpack_from("<H", data, off + 4)[0] == devid:
->>>                mapped = True
->>>                break
->>>        off += length
->>>
->>> I checked this against all three dumps: it reports mapped for both- 
->>> enabled and Pluton-off, and unmapped for AmdVt-off. Note that it 
->>> would contradict test_check_iommu_no_dma_protection_BUT_msft0201, 
->>> which currently asserts that MSFT0201 in IVRS is an acceptable 
->>> substitute for pre-boot DMA protection, so whether to change that 
->>> semantic is your call.
->>>
->>> I am happy to send you the three acpidumps, with the extracted and 
->>> disassembled tables and a record of the BIOS settings each was taken 
->>> under.
->>>
->>> Beyond that I have to stop here. This has taken the better part of a 
->>> week, a lot of forced power cycles, and around $700 in LLM tokens 
->>> working through it, and I am out of time and energy to take it 
->>> further. The machine works now with AMD virtualization and Pluton 
->>> enabled, which is a perfectly acceptable outcome for me.
->>>
->>> Everything I found is in this thread, and I hope the IVRS observation 
->>> is useful to you or to whoever picks it up. Thanks for the help 
->>> getting here - the amd-s2idle tool, the pointer to e9f850ba66cd, and 
->>> the suggestion to reset the BIOS were all what moved it forward.
->>>
->>>
->> I've opened up a PR that should hopefully adjust the tool against your 
->> failure cases.  Would you be able to confirm this against your system?
-> 
-> I am not able to test anything anymore. I have erased the debugging 
-> setup that I had on my laptop, and reinstalled it clean. I no longer 
-> have the claude history and the debugging tools. And I cannot do it 
-> without claude (nothing we did made any sense to me)
-> 
->> https://github.com/superm1/amd-debug-tools/pull/58
->>
->> If it doesn't work, can you please send me the acpidumps and I'll adjust.
-> 
-> but hopefully you can make sense of the attached  acpidumps
-> 
-> thank you,
 
-looks like my previous email bounced because .tar.xz attachment
-so I have uploaded the file here:
 
-https://www.swisstransfer.com/dl/01a0ebbb-a094-725c-b9f1-8a8ba0d1da11
+On 9/21/2026 5:53 PM, Konrad Dybcio wrote:
+> On 8/19/26 7:19 AM, Anvesh Jain P wrote:
+>>
+>>
+>> On 7/30/2026 11:51 AM, Anvesh Jain P wrote:
+>>>> Is being on a (powerful) charger a prerequisite for entering this profile?
+>>>> Currently plugging in a 5W charger would trigger the switch as well.
+>>>>
+>>>> Should this instead be exposed as a fan profile for userspace?
+>>>>
+>>>> Konrad
+>>> Fair point — power_supply_is_system_supplied() only checks mains
+>>> presence, not charger wattage, so even a 5W charger triggers the "best
+>>> performance" profile. And exposing this via platform_profile instead of
+>>> an automatic AC/battery switch would let userspace make the call
+>>> instead. Will check on the feasibility of making this possible.
+>> Even at 5W we're still not battery-constrained, so best performance
+>> still makes sense, it's about wall power vs battery, not wattage. And I
+>> don't think userspace needs control over this either, it's just an
+>> automatic fan curve pick, not a performance setting users would want to
+>> tune themselves.
+> 
+> I believe fan profile control is very much within the expected
+> feature scope of a personal computer..
+> 
+> Konrad
+
+Fan-profile control need not be user-facing, since it is only a
+thermal-management policy.
+-- 
+Best Regards,
+Anvesh
+
