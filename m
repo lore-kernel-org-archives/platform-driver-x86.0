@@ -1,109 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail-24422.protonmail.ch (mail-24422.protonmail.ch [109.224.244.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076513D5661;
-	Tue, 29 Sep 2026 18:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5DC50B8CB;
+	Tue, 29 Sep 2026 19:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790707586; cv=none; b=WeQtQyalFWhilMbJGHoBFhQN6cuF5efJK5lO8CgEv9yBfAGy3yjPoFbtjsq172EFFjPzK/R9lZXCd/hpjogJfwjkpIK7Pd23DIsVXHAkF1/jdpqaZpybesHlfqcL3SpXRZwPuRtcyXI+QuJVIenoxRw5bT4Liw3Fgolh88Q/s7Q=
+	t=1790710190; cv=none; b=uUcZkiTgRq3qGq4JwumgU5wCbNuCNjGwZlNteUpzklp0o0OkCk9YXTD728PAVp2mU/NDeEy0oy5GBRwIIkbytTh85M6UJhosyA41Vk3Qvb8EgHrehQ1DmQGUSJRbCbUmSyqNcpqWb/DbqAnUxDyhCkEuUZpEYVztakX2ObbofUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790707586; c=relaxed/simple;
-	bh=qQ0lffp+SG62vr/DVXvAlZcQhAoJ5fcbKCSvj9Ov/RY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r65hdD0VdYFc6rkOCOw9i+Xf4yaWqETybskaYQvgK8r3fcQzwu5IDusSnel1sFuM1IgZ+CGyK55ACb6wpEurH+MLG18zAHw49fmlNbB7DdTykSI3SjoNBC2o/4edKs3YNf/lbolKeRgopfYKcYtH1fVlFnWJWWQ4ffql7ynoZw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y5qIHnd7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790710190; c=relaxed/simple;
+	bh=3z78U6ewUrt+RGwoXgbE78coGKF5z18YOLvbHXnXIUg=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qZFGXZluHHDr7idZJi8DTcgdWheFD5PbuV6YYDI76ID9sjXlYpEIUhYGSSobgDKybKKG5p1Y2JW24PoT6ViQS4IG43DNh0VoZTbD9Q7W795QuqBEBicsmEcwiV66S87Z3jaSST2Xl3KB/fBXuWXXDocqk4RskGp8tYIEZEu1jRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net; spf=pass smtp.mailfrom=ironrobin.net; dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b=BolzSXhn; arc=none smtp.client-ip=109.224.244.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ironrobin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y5qIHnd7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25BB61F000FF;
-	Tue, 29 Sep 2026 18:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790707584;
-	bh=GNBP1B5ElGW/DnEs/JpWQBDvoFFLmyeNzTzUB9qB/Ro=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Y5qIHnd72D+dXyes8qI9UbjisMK2FQV7LUxMa1hlBSsy8IsjpRtwsaDCNh1Mrl6eD
-	 aycixNE8OjVphXGEDaXeFM2w0AldoMC/5zKnDMbCUvdnCiThaKs92dlkhV5/5XGkj5
-	 XCOJO2gFouqiVRUB4ZpODLQuKNhTVmvqOV6Ipl9lwPE/Grju3ePqB/fokK+bk7E19d
-	 wut3FjwaVonhQKAopL+oUIi0EQD8XBNB9H0rU2Xp0AfYy/u9TEaTqO62NngFUaWp/C
-	 WV1bSorXCIZvHfCzUcQc2oMpREd1PK9lSjIpKJQlJSizSD6fA06Jxso8cASp3EEuTH
-	 CFTRODSdvPtTA==
-Message-ID: <206e75ee-7133-4fd8-964d-1e507002f6cb@kernel.org>
-Date: Tue, 29 Sep 2026 13:46:22 -0500
+	dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b="BolzSXhn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ironrobin.net;
+	s=protonmail3; t=1790710178; x=1790969378;
+	bh=z33BuqQYyeNmXMvblMjr2WqewbZtIRphsrRoxB31ueY=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=BolzSXhnKIF5z1zkiiYykw5YuJOsZgYk4VjfTEWI9X36hT5xXHID4X7imFfU4vFM1
+	 fa86JeN+BhYBXsOQZlIr1g9QHm3UMmJgRnIHVasCRCwYUdQB+MasNkc/Ayf1nZfIZ0
+	 2nf+9wqNh1rHGFZfkgJ9d9TSdzm7bZU7ZH604Wfpyq4QrLVei3J++CjpwaZBuGE2bJ
+	 2JHWA8qvFHO1/UXN+/ZL9Ud39hFJNwlpSXAmfVw6fsrFuriP5mNQUQLLzwkPhorr/I
+	 Nq2+UcgotYe0AG5ftMkTYS0Wqp3468hMw4kY1TBBQss9ZMZJdmtqBGaUyoHCuGz315
+	 pXXe88c2F/dbg==
+Date: Tue, 29 Sep 2026 19:29:32 +0000
+To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Alex Robinson <alex@ironrobin.net>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Steev Klimaszewski <threeway@gmail.com>, platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] Lenovo ThinkPad X13s embedded controller support
+Message-ID: <20260929192908.16507-1-alex@ironrobin.net>
+Feedback-ID: 54785507:user:proton
+X-Pm-Message-ID: f570a8012b5df92eb02247b46633b3ea7669892c
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmc: Add spurious_8042 to ASUS ROG Flow
- Z13 GZ302EA
-Content-Language: en-US
-To: Matthew Schwartz <matthew.schwartz@linux.dev>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede
- <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260929181655.26105-1-matthew.schwartz@linux.dev>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260929181655.26105-1-matthew.schwartz@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Add Device Tree support for the ThinkPad X13s embedded controller,
+providing keyboard-backlight control and firmware-driven brightness
+notifications. Its event, backlight and power-management interfaces
+differ from the T14s EC and require a separate driver.
 
+EC wakeup remains disabled by default because lid closure can trigger
+an unwanted wakeup and no selective event mask is known. Userspace can
+enable wakeup when desired. Other EC event mappings remain outside the
+scope of this series.
 
-On 9/29/26 13:16, Matthew Schwartz wrote:
-> The ASUS ROG Flow Z13 (GZ302EA/GZ302EAC) wakes up from suspend-to-idle
-> without any user input. With PM debug messages enabled, each unexpected
-> wakeup shows the EC raising IRQ1 at the same time as the ACPI SCI:
-> 
->    PM: Triggering wakeup from IRQ 9
->    PM: Triggering wakeup from IRQ 1
->    ACPI: EC: Query(0xa3) started
->    ACPI: PM: Wakeup after ACPI Notify sync
-> 
-> EC query 0xa3 only notifies the battery of a status change, which
-> happens when it transitions between Charging and Full while on AC.
-> The ACPI core correctly treats that as a non-wakeup event and cancels
-> the SCI wakeup, but the IRQ1 wakeup remains pending and resumes the
-> system. i8042 debugging confirms that the keyboard controller has no
-> data at that point ("Interrupt 1, without any data").
-> 
-> The detachable keyboard on this device is a USB device, so disabling
-> the i8042 wakeup source does not result in any functional loss. With
-> serio0 wakeup disabled, the same battery event is processed during
-> suspend-to-idle and the system stays asleep.
-> 
-> Add the spurious_8042 quirk for it. The GZ302EAC reports sys_vendor
-> "ASUS" while the GZ302EA reports "ASUSTeK COMPUTER INC.", so match on
-> "ASUS" and on the "GZ302EA" board name to cover both models.
-> 
-> Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+This follows earlier X13s EC work by Konrad Dybcio and Steev Klimaszewski.
+Development was assisted by an LLM, including analysis of the X13s ACPI
+DSDT and review of the implementation.
 
-Good analysis of this issue.  It sounds like the right direction for 
-this problem.
+Changes in v4:
+- Set GPIO103 bias-pull-up explicitly, based on its firmware-inherited
+  configuration measured at pinctrl probe before Linux claimed or
+  configured the pin. CTL offset 0x67000 read 0x00000003 (pull field 3).
+  The temporary measurement instrumentation is not included.
+- Remove output-high from the GPIO176 pinctrl state. The driver already
+  requests GPIOD_OUT_HIGH at probe and controls the line during sleep.
+- Restore the suspend brightness snapshot only if it was successfully
+  captured during that suspend, avoiding restoration of a stale value.
+- Use FIELD_MODIFY(), validate brightness against the LED maximum, and
+  simplify transfer error handling and selected mutex-protected paths.
+- Include linux/ratelimit.h explicitly and adjust conditional formatting.
+- Shorten commit messages to focus on rationale rather than the diff.
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Changes in v3:
+- Disable EC wakeup by default without disabling runtime IRQ handling.
+- Retain wakeup-source as a description of hardware capability.
+- Remove the Kconfig help text's claim of wake support.
 
-> ---
->   drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> index 09a30f333759..ff5c90510c0c 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> @@ -143,6 +143,14 @@ static const struct dmi_system_id fwbug_list[] = {
->   			DMI_MATCH(DMI_BOARD_NAME, "RC73YA"),
->   		}
->   	},
-> +	{
-> +		.ident = "ASUS ROG Flow Z13 GZ302EA",
-> +		.driver_data = &quirk_spurious_8042,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUS"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "GZ302EA"),
-> +		}
-> +	},
->   	/* https://bugzilla.kernel.org/show_bug.cgi?id=218024 */
->   	{
->   		.ident = "V14 G4 AMN",
+Changes in v2:
+- Make backlight snapshots and EC power-management operations best-effort.
+- Save firmware- and software-selected brightness in the EC and restore
+  the EC-saved brightness on lid open.
+- Process deferred events after the normal resume brightness restore.
+- Add QUP8 pin configuration verified on hardware and fix DT node ordering.
+
+Testing:
+- Confirmed GPIO103's firmware-inherited pull-up on a ThinkPad X13s using
+  a vanilla kernel with temporary probe-time instrumentation.
+- Verified that all three v4 patches apply in order to Linux v7.3-rc4
+  without the separate PCI workaround.
+- Earlier v2 hardware testing covered keyboard-backlight control,
+  firmware brightness changes, s2idle, lid-close/open brightness
+  restoration, and EC wake events. Those results are historical and do
+  not establish validation of the complete v4 series or default-off
+  wakeup policy. Full v4 build and runtime validation remain outstanding.
+
+Earlier series:
+https://lore.kernel.org/all/20260925215358.33417-1-alex@ironrobin.net/
+
+Alex Robinson (3):
+  dt-bindings: embedded-controller: Add Lenovo ThinkPad X13s EC
+  platform: arm64: Add Lenovo ThinkPad X13s EC driver
+  arm64: dts: qcom: sc8280xp-x13s: Add embedded controller
+
+base-commit: 93f51579e7df248780214094418f205253383cc5
 
