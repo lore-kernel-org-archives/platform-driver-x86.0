@@ -1,119 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf2-f13.google.com (mail-lf2-f13.google.com [74.125.229.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF1A34040D;
-	Tue, 29 Sep 2026 09:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF0E3DDDBE
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 09:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790673283; cv=none; b=G9b3z0idKt4R47G2FFE+fiPdJtGYXuLlaEsVGoWM1eFgapJexzKVBbrb3Kocvso2R/zYY1KIVeeusiCdCLTdawZ7IsuR3knQTa71SBE3hdmF1Fw9/UweAPHNnBfRYgpHJjo+q6R8r6mBnuD+YOwFeIfcq0p8dmJqd46IVP3zgR0=
+	t=1790673790; cv=none; b=R96JP6rC7lROFs7aTXl3JbrgrC0CQzQwXvsM6JgUxDEYikhxYwq38PrnAMBpP46UBkFUQdQVEZS6MyE4kBQNHcKdHd7rS+woJiSnjSnir8c6RnG24tGwhgt4Cwl4FRSqaXwv9GVz/ZnRp/ya4/+hhGxZx9NBbPlc3EJUzqgSWh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790673283; c=relaxed/simple;
-	bh=fgOENj9nO/C2FXtpT/dXggQEwjVxY+miBZ6vFnueYH4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=HqEMGMI91zUE4+O5jJhe+y/G5hoc4Dsh9B0ak8e9OAnp+XUly2G1xz2IpBSWGSisVLvEB7AIYZOIlnp8ePL+6KgkQ6neGkNl1YgibSLvLYMs/AMTanL7S+fYbF0vDuEW9tpbtj8Vg+BlqrLKim0lhg5Ip25nlPZqKQi0hNwQd50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A7Qsc1DH; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790673790; c=relaxed/simple;
+	bh=Yvv4offk/A3nngbeY4OC0TNI33ABSFCQo9LNH+QTLbc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d4CQXvYcaJeGf1lGitxMZHBZMdWtMaG9yYYKpYUz+RR/DEKoAsLs7RTBljUV3C/5zpvN01mJmdagSdYLkDpXffNCp+MOe7bYnwsnJxdyR8SX3a4QE5ZwZPnB74Owo/WbQ21ifZL9sJNeMQOqfZs7S0SWNIR26uSMCk2YYbsTiVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Srj2A525; arc=none smtp.client-ip=74.125.229.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A7Qsc1DH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790673277; x=1822209277;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fgOENj9nO/C2FXtpT/dXggQEwjVxY+miBZ6vFnueYH4=;
-  b=A7Qsc1DHz0XFF5v94zcB6RpTTVG6idws4N4pST2PieGohWJY+IsH94AB
-   z0LPrA+LDOB5ToCOIdktm3HpjKiVN4jjkr0TLMyUoTA64gevuKt+Nx0yl
-   lMyzUJ34tpm858xe2sjvZMwwSkTYnnPy1EMBB7w3ZDRe3Jn7EYksSNUdA
-   vEMDO3SmhaGLJirkP+yn5ibW9KHMuJCxltQwbRSEqCQbI9Nb4XiIniyZq
-   Ruvyb0Xw32S363J8KIdKHlDi8z1L1/vOOVyobbDUEw2eHOAYBYks+bM2I
-   dWFLZgJ2aOn2vscLo1KgND2V6gmnlmvdz3lIb3XmXJoZpFPKPG8nFE4HM
-   A==;
-X-CSE-ConnectionGUID: 2iZCPJv/Q6+Xwkm12OPDFA==
-X-CSE-MsgGUID: 76om3XQ2TjOy7gZVPE+lJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="90516461"
-X-IronPort-AV: E=Sophos;i="6.27,130,1787036400"; 
-   d="scan'208";a="90516461"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2026 02:14:32 -0700
-X-CSE-ConnectionGUID: 24bGlgs5Rsi5PNuK8hF1cg==
-X-CSE-MsgGUID: 4uW5VFGMQUu6PxZAu/RdKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,130,1787036400"; 
-   d="scan'208";a="303270957"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2026 02:14:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 29 Sep 2026 12:14:25 +0300 (EEST)
-To: Matias Civadda <matias.civadda2342001@gmail.com>, 
-    Chris Taraszka <chris@miget.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
-    Mingyou Chen <qby140326@gmail.com>
-Subject: Re: [PATCH] platform/x86: bitland-mifs-wmi: Add Xiaomi Book Pro 14
- platform profile values
-In-Reply-To: <595cf557-e386-4ca3-b8ea-2ce7fe160018@gmail.com>
-Message-ID: <622041b8-6ace-4fdf-43b5-5427ba0d88d6@linux.intel.com>
-References: <20260928153902.139956-1-chris@miget.com> <5430348c-8ff3-c31a-927f-321b2cf94883@linux.intel.com> <CAAcRvKNrRMb44p-v0-wiWQx8QiToYyKCoCzXvVku-o0RGTxEgQ@mail.gmail.com> <595cf557-e386-4ca3-b8ea-2ce7fe160018@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Srj2A525"
+Received: by mail-lf2-f13.google.com with SMTP id 2adb3069b0e04-5b8e6ec4dd4so2996041e87.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 02:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790673779; x=1791278579; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Yvv4offk/A3nngbeY4OC0TNI33ABSFCQo9LNH+QTLbc=;
+        b=Srj2A525OvevwTMHidJmtVDgHePcc17wpKwTu3gLwrb0ogJezUQQllSydx7z9+OkLK
+         qlNt7iHCr6Jgbbx5wxUppI9iDnF2fskOU1exXyqmQg3P/y7EtA4+VTudflh1HqzmaPTl
+         4YbWc08UwAFSWExy2EQzjv+79EDGG2MBWX8KAFseIK3QHT4/bwmxsLa4bQsxBZEj2Ez+
+         Be3i9IOJN5f1LGWkqByA7lWOhRxh6waKXf1tMC2aiNBs2wOv0t4BUqq2dumdGP2ajxEB
+         eoPN5DXT9nuKoGHrHlpGuelrA8b7nv/I2oV2s27eyMq4zGGhkuTYYsHirG8ws8Fx1/1b
+         0gFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790673779; x=1791278579;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Yvv4offk/A3nngbeY4OC0TNI33ABSFCQo9LNH+QTLbc=;
+        b=xT6BB78PW+YUyWK3d4acDh6ZEhAl6rVU8ynOk3LBdSiExVRpgRpLwHKEHHfGx4ul8W
+         2OGVDVlIC/GdQxwULpL2cFXu7KjuVQBd7IZQDWLWW7yi5W7q14sh5z+nssyhLbhclOHB
+         yVtjyqmxONsrrLUf90oE+bd6E46zn6jRetdWdhMvXW+0kZV4LQyrDUf/CnaqTrMs109T
+         kQzglz9jC8CQc/xV2H9K3O9dAMpRcNFuSXYN4Kg+69JzTX/DhmZMoj/WXLyrRtJaZTK2
+         0X0Dwd1ohRbBvOlG85/tK40OyVFW1/QHr5KUqgo799sbuewkyj0Se4UQeB9x4jQm4TOK
+         VcbQ==
+X-Forwarded-Encrypted: i=1; AKwUvByi98eHfKcCm5R8YZBYDd7x68P/pBLz9CiumAyk5Xzt3F5DSkFQS+wNZ/KQXjEsbnIaEeUF5zTFP0ZQhX8qi6yA3B5T@vger.kernel.org
+X-Gm-Message-State: AFq9FYLJwRaq2PMb7z/z+yW742E/S7mAR1rOn9oRNO8FhFyJqCXP4p83
+	Cd4qoiskIEqqbmULgkLxeAzw7MO1Ikh6ZgFbKvn8X4Qhi2KNitkBKDSI76SYOYRpJu+wkljO
+X-Gm-Gg: AYBFou3djvtNofdJVT9uD0tspO6tuYsarRc4/+sD6FD4sqmfhM18Hf1X9yInh0hoAgg
+	bwp3+8vvqZhsLnmQz0KBPwHn5573/I0GO4+hovJYeX5m7k7JMpgNCy/lq9Un4Ue+V4iVghqGCHX
+	vxOCCn9dKmAIVDYgEzess3wQJV1z0UB4+85CLy5azV+Uaas3Rf/1SKFN/3OnpinyVXzwty7zEUW
+	Wxsb7jrpDbQPM5zGBfUpDc83Qkt1HKh2ydp6aDuGQ41WoWePhLPvqzKnV75pKvoTVwglVQfRtB+
+	5HbfLT1l09Gio581EyBO1vKbQ/BuOaRPHM+Cw1m8FgELX0JZj9ayGigAsOr88QCYG/dyTr62imy
+	pXtHNlY+Fm78KGY1GCGcUf2YNJ6bJ/dOOoQK7TzDLq3kCPWOaVzFkAMnIYtelBKtkWY1QFIDQ3L
+	ecD5rsXqyqfglFBY5Q9sf4aYKG79VXRQlybdLkt7lTkmLqi6ZEiQPjBN1YHeUlBMkWkxPONCdTF
+	jq8KNCNbtQ=
+X-Received: by 2002:a05:6512:3096:b0:5b8:ef88:d56b with SMTP id 2adb3069b0e04-5b8ef88d614mr3358193e87.18.1790673778535;
+        Tue, 29 Sep 2026 02:22:58 -0700 (PDT)
+Received: from quietus.tail91f8a6.ts.net ([169.40.47.10])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b9d826f9fbsm1262160e87.12.2026.09.29.02.22.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Sep 2026 02:22:58 -0700 (PDT)
+From: Ruslan Koreev <koreev.r@gmail.com>
+To: sakari.ailus@linux.intel.com
+Cc: benjamin.mugnier@foss.st.com,
+	sylvain.petinot@foss.st.com,
+	dan.scally@ideasonboard.com,
+	mchehab@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	linux-media@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	pm@petermarshall.ca,
+	Ruslan Koreev <koreev.r@gmail.com>
+Subject: Re: [PATCH 4/4] media: staging/ipu7: Add monochrome pixel formats
+Date: Tue, 29 Sep 2026 12:22:38 +0300
+Message-ID: <20260929092238.1765758-1-koreev.r@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <arY2CULvwXGyVvH_@kekkonen.localdomain>
+References: <arY2CULvwXGyVvH_@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-FYI,
+Hi Sakari,
 
-There are a few more of these in the queue:
+On Fri, Sep 25, 2026 at 11:51:21AM +0300, Sakari Ailus wrote:
+> Can you try doing this with the ipu6 driver instead? We're about to drop
+> the ipu7 staging driver after some smallish number of kernel releases.
 
-https://patchwork.kernel.org/project/platform-driver-x86/patch/20260826132924.179614-1-kento@kekto.ru/
-https://patchwork.kernel.org/project/platform-driver-x86/patch/fb4e0678-3028-463e-8a8c-1b680e40c4ee@gmail.com/
+I wasn't aware the ipu6 driver had grown IPU7 support, my base was
+7.3-rc5. Tested now on next-20260924 with the ipu6 driver and patches
+1-3, the vd55g1 one reworked as you suggested: the sensor probes,
+ipu-bridge connects both cameras, libcamera streams Y8 804x704 at 58 fps
+from the VD55G1, and Y10 and Y10P stream with plain V4L2. So this patch
+is not needed there; I'll drop it in v2.
 
-The first one is a bit messy, as it adds some keys as well (which should 
-have been in a separate patch).
-
-And some more in Mingyou's redmi-wmi merge series's last patch:
-
-https://patchwork.kernel.org/project/platform-driver-x86/patch/20260816100813.300450-7-qby140326@gmail.com/
-
-The profile mode abstraction in that series seems not general enough 
-though so the generalization work we've discussed is still necessary and 
-should be used as a base for that series.
-
---
- i.
-
-On Mon, 28 Sep 2026, Matias Civadda wrote:
-
-> Hi Chris,
-> 
-> No problem, your proposal works for me. Please CC me when you send
-> the series so I can test the shared changes and base my TM2107 v3
-> on your generic patch.
-> 
-> Thanks,
-> Matias
-> 
-> > Thanks, makes sense.
-> > 
-> > Matias, one thing I ran into when trying your generic part on the
-> > Xiaomi Book Pro 14: its values are sparse (0x02, 0x03, 0x04, 0x09,
-> > 0x0a) and 0x02 and 0x0a both mean low-power. With a profile array
-> > indexed by the firmware value, the unused slots read back as
-> > PLATFORM_PROFILE_LOW_POWER (0), and the reverse lookup for low-power
-> > finds index 0, which this firmware ignores.
-> > 
-> > So I'd suggest {value, profile} pairs for the shared part. I have that
-> > as a standalone patch on pdx86/for-next, with only the profile table
-> > in the quirk struct, so your response layout and AC check handling
-> > would go on top in your TM2107 patch. If that works for you I'll send
-> > it as v2 together with the Xiaomi entry, and you can base your v3 on
-> > it. If you'd rather own the generic patch, that's fine too, I'll
-> > rebase the Xiaomi part on yours.
-> > 
-> 
-
--- 
- i.
-
+Ruslan
