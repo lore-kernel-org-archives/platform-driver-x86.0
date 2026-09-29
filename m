@@ -1,74 +1,297 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550AA4CEE7D;
-	Tue, 29 Sep 2026 08:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164FD4E4304;
+	Tue, 29 Sep 2026 09:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790672168; cv=none; b=o+Npyxmf/+5fMq4Bch+i1DWSGERdNKeuJaq8hy7DDJzJA/lXd5kTYb9FTlCvf/39Dcx11GqwEBEjH2ZCkPdG6J5Kc1OC9QDZfYobzWW4ah84blh1PPDnmggDBVVKchMgHLvq649Pq7RjtoXTUTa70SAFMt5oTYsVzH4YMUfpDa4=
+	t=1790672542; cv=none; b=Kwq7s1/+TqFz4YVlMl7lUJXtLbOC8Jb7LsqwhlsHKpU85rDseJqIGKWvqvqEPNThznKH2UNN38+zuz/C7VuC7JpCH/x6lSYRS2roG/1IxmuwrAGr2HxGF9ozAVLKeDjCSDvh9OqnR9zPivIYxJ6Lkmk1arLtCswBof1g8yYWLxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790672168; c=relaxed/simple;
-	bh=Wlr6Ck5qkAXtsNSbnxM4Ie4bBba+SvgH5A67csbm1rU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HTd3KM5OWfDe81BJCGG4WQNAePpQITTbw6IiUctg7DVUoPyU3pGW/CZ/Tr2EAucXNz42YuvKg0FnFQGFhRXcy3JyFsas2Oy8dXtsLSw3BBTbI0dO2s5fUJ38u52HyLtR9/DgxzdpderH0897nw+N5LPedzooXIsajo6spNAB/xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpishqdH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790672542; c=relaxed/simple;
+	bh=IuNTPS/pgW79O2tFI9zTWhxQc6oNc4Pi9KFm6spx+is=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=aL9pUKgUFsI2KYjRAYeLuk3Tjvqk2EJJELnqyEDdRYUWW0xm9Qb+GQVKtBkU3YkYGsvgHiPOPaeTdTLQkoIen/lB6Fu7rK6F0fE+grvV67xM7R8HovaM3rbz/ulV1Lvrm0hVpu5rmvqMHnN495xJVBKX9yiI22Te51C8+ly7IJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZFgPRPD; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpishqdH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D426D1F000FF;
-	Tue, 29 Sep 2026 08:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790672166;
-	bh=7QHmZFu5AjcefqG2JmVDN7pKC0y+L+QE+qbkqBsW44s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=PpishqdHfiXkM/arBIoQF7tm9UuMc96dFC3aP451S143Df8WyW9GZCIW7kbEdDN+F
-	 /iTB+Md7GaG2ea2ZZT51Vc3fx+lYkVa+WXqsFjC7hGdr99WyzH8qo2DvPWTTNtmhDS
-	 4O1KbkuxP0tC7NyrwuauQPHg0x8ZCzG7fp+BZQ1GlNEwMKTRTDyFF3eK1GE5YTape5
-	 Nd14sv0VolkenjKIrzD13QQxmoNQb8x9krjUCXCnxx/8p5Qt4WL85uuONFXs6L/FV5
-	 pUEsdT/EcvAuFsX1eEKk9wGo8NhaoLNS96cNHmYdJr/oqmHBHMeo/7mUKiMzPayNsb
-	 /Z9WWP8Jct8Jg==
-Date: Tue, 29 Sep 2026 10:56:03 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: glymur: Add EC thermal zones
-Message-ID: <20260929-cherry-seal-of-current-bc1b5c@quoll>
-References: <20260928-ec_thermistor_support-v1-0-d9c1bae4cd0d@oss.qualcomm.com>
- <20260928-ec_thermistor_support-v1-3-d9c1bae4cd0d@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZFgPRPD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790672535; x=1822208535;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IuNTPS/pgW79O2tFI9zTWhxQc6oNc4Pi9KFm6spx+is=;
+  b=TZFgPRPDDcH5Q6NfcaVkE9dn902uF6tjRTyoxCIH4INPZ0UsdjZmLoO2
+   vcI7dvWXTCe8bJyzl4FFd5hIRhD8HlBL+coDOxBZI7Bte7MlDnJXF5+uQ
+   qkDGiLG/DZk+ihP2Jju7AcdaIsMWCf/hsSBAkyWDcuNNj/+zg/4GoSaXC
+   fWcCYTG9a8KB4+KcxXLNT1G9zGMEhS+cp/6PHDEy71eMZIIo0vHrpo97N
+   J6Iw4Cyt+olMQSc6OMAFxEYS9Kyye8gejEea2JbUEBPFeKEQoHsJnrvZ2
+   VDQrQ1ptRZAdKvqmAIvCwVUZ3BiexyDxkZ455h9nz/h7/oMU2s3I+j9Jb
+   g==;
+X-CSE-ConnectionGUID: QC36Wf0OR2mPTfXkcoD93w==
+X-CSE-MsgGUID: PGHHsMeSQ1u4hz7I3nY8Kw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11919"; a="113171398"
+X-IronPort-AV: E=Sophos;i="6.27,130,1787036400"; 
+   d="scan'208";a="113171398"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2026 02:02:10 -0700
+X-CSE-ConnectionGUID: yPXCpkEJSQufRszkNJwMTQ==
+X-CSE-MsgGUID: MgGkyf9RTGuH5XB6II6UUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,130,1787036400"; 
+   d="scan'208";a="313262758"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2026 02:02:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 29 Sep 2026 12:02:02 +0300 (EEST)
+To: Mingyou Chen <qby140326@gmail.com>
+cc: W_Armin@gmx.de, foxido@foxido.dev, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, nika@nikableh.moe, 
+    platform-driver-x86@vger.kernel.org, vlku.milos.fun@gmail.com, 
+    i@rsplwe.com, wolf109909@outlook.com, rahulbheda131313@gmail.com
+Subject: Re: [PATCH v5 5/6] platform/x86: bitland-mifs-wmi: Add per-machine
+ ops table
+In-Reply-To: <20260816100813.300450-6-qby140326@gmail.com>
+Message-ID: <17fbfcf4-c235-170b-c0ea-ad48b24e3eb9@linux.intel.com>
+References: <20260816100813.300450-1-qby140326@gmail.com> <20260816100813.300450-6-qby140326@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260928-ec_thermistor_support-v1-3-d9c1bae4cd0d@oss.qualcomm.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Sep 28, 2026 at 12:06:39PM +0530, Anvesh Jain P wrote:
-> Add support for back cover, keyboard, and SoC thermal zones through
-> temperature sensors hosted on the EC for Glymur and Mahua CRDs.
+On Sun, 16 Aug 2026, Mingyou Chen wrote:
+
+> The MIFS WMI interface is shared by several Bitland ODM laptops which
+> differ in the layout of the performance mode values of
+> WMI_FN_SYSTEM_PER_MODE and in the capability checks.
 > 
-> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> Introduce a machine ops table to support multiple machine families
+> without sprinkling model checks over the driver:
+> 
+> struct bitland_mifs_ops {
+>         const char *name;
+>         const struct bitland_profile_mode_map *mode_map;
+>         int (*check_performance_capability)(
+>                 struct bitland_mifs_wmi_data *data);
+>         bool has_full_speed;
+> };
+> 
+> The default ops instance keeps the current Bitland behavior, so this
+> change is a pure refactor without any functional changes.
+> 
+> Signed-off-by: Mingyou Chen <qby140326@gmail.com>
 > ---
->  arch/arm64/boot/dts/qcom/glymur-crd.dtsi | 45 +++++++++++++++++++++++++++++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
->
+>  drivers/platform/x86/bitland-mifs-wmi.c | 89 +++++++++++++++++++------
+>  1 file changed, 67 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+> index 81dad2b65f4f..17792d8b7c29 100644
+> --- a/drivers/platform/x86/bitland-mifs-wmi.c
+> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
+> @@ -78,6 +78,46 @@ enum bitland_mifs_power_profile {
+>  	WMI_PP_FULL_SPEED	= 3,
+>  };
+>  
+> +struct bitland_mifs_wmi_data;
+> +
+> +/*
+> + * Value layout of WMI_FN_SYSTEM_PER_MODE.
+> + */
+> +struct bitland_profile_mode_map {
+> +	u8 balanced;
+> +	u8 performance;
+> +	u8 quiet;
+> +	u8 full_speed;
+> +};
+> +
+> +static const struct bitland_profile_mode_map bitland_mode_map = {
+> +	.balanced	= WMI_PP_BALANCED,
+> +	.performance	= WMI_PP_PERFORMANCE,
+> +	.quiet		= WMI_PP_QUIET,
+> +	.full_speed	= WMI_PP_FULL_SPEED,
+> +};
 
-It does not look like you tested the DTS against bindings. Please run
-'make dtbs_check W=1' (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
-Maybe you need to update your dtschema and yamllint. Don't rely on
-distro packages for dtschema and be sure you are using the latest
-released dtschema.
+Hi,
 
-Best regards,
-Krzysztof
+This approach seems not generic enough to cover all the variations (see 
+the recent submissions).
+
+I suggest you take a look at those patches once they get the next version 
+of the generalized framework out and review it to make sure it abstract 
+on the correct level so we don't have to immediately broaded the scope.
+
+I'd prefer to get the redmi merge done separately from the generalization 
+of the performance profiles. If the merge depends on the generalization 
+(my impression is that it does because of the patch 6), we should try to 
+finish that first and them do the merge on top of it.
+
+
+Also, dropping redmi-wmi first and adding support back in a later change 
+is not acceptable as it creates a black hole where an unlucky bisect 
+could land to.
+
+> +static int bitland_pp_check_capability(struct bitland_mifs_wmi_data *data);
+> +
+> +/*
+> + * Machine-specific operations. The MIFS WMI interface is shared by
+> + * several Bitland ODM laptops which differ in the layout of the
+> + * performance mode values and in the capability checks.
+> + */
+> +struct bitland_mifs_ops {
+> +	const char *name;
+> +	const struct bitland_profile_mode_map *mode_map;
+> +	int (*check_performance_capability)(struct bitland_mifs_wmi_data *data);
+> +	bool has_full_speed;
+> +};
+> +
+> +static const struct bitland_mifs_ops bitland_ops = {
+> +	.name = "Bitland",
+> +	.mode_map = &bitland_mode_map,
+> +	.check_performance_capability = bitland_pp_check_capability,
+> +	.has_full_speed = true,
+> +};
+> +
+>  enum bitland_mifs_event_id {
+>  	WMI_EVENT_RESERVED_1		= 1,
+>  	WMI_EVENT_RESERVED_2		= 2,
+> @@ -163,6 +203,7 @@ struct bitland_mifs_wmi_data {
+>  	struct input_dev *input_dev;
+>  	struct device *hwmon_dev;
+>  	struct device *pp_dev;
+> +	const struct bitland_mifs_ops *ops;
+>  	enum platform_profile_option saved_profile;
+>  };
+>  
+> @@ -193,6 +234,7 @@ static int laptop_profile_get(struct device *dev,
+>  			      enum platform_profile_option *profile)
+>  {
+>  	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
+> +	const struct bitland_profile_mode_map *map = data->ops->mode_map;
+>  	struct bitland_mifs_input input = {
+>  		.reserved1 = 0,
+>  		.operation = WMI_METHOD_GET,
+> @@ -200,32 +242,29 @@ static int laptop_profile_get(struct device *dev,
+>  		.function = WMI_FN_SYSTEM_PER_MODE,
+>  	};
+>  	struct bitland_mifs_output result;
+> +	u8 mode;
+>  	int ret;
+>  
+>  	ret = bitland_mifs_wmi_call(data, &input, &result);
+>  	if (ret)
+>  		return ret;
+>  
+> -	switch (result.data[0]) {
+> -	case WMI_PP_BALANCED:
+> +	mode = result.data[0];
+> +	if (mode == map->quiet)
+> +		*profile = PLATFORM_PROFILE_LOW_POWER;
+> +	else if (mode == map->balanced)
+>  		*profile = PLATFORM_PROFILE_BALANCED;
+> -		break;
+> -	case WMI_PP_PERFORMANCE:
+> +	else if (mode == map->performance)
+>  		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
+> -		break;
+> -	case WMI_PP_QUIET:
+> -		*profile = PLATFORM_PROFILE_LOW_POWER;
+> -		break;
+> -	case WMI_PP_FULL_SPEED:
+> +	else if (mode == map->full_speed)
+>  		*profile = PLATFORM_PROFILE_PERFORMANCE;
+> -		break;
+> -	default:
+> +	else
+>  		return -EINVAL;
+> -	}
+> +
+>  	return 0;
+>  }
+>  
+> -static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *data)
+> +static int bitland_pp_check_capability(struct bitland_mifs_wmi_data *data)
+>  {
+>  	struct bitland_mifs_input input = {
+>  		.operation = WMI_METHOD_GET,
+> @@ -252,6 +291,7 @@ static int laptop_profile_set(struct device *dev,
+>  			      enum platform_profile_option profile)
+>  {
+>  	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
+> +	const struct bitland_profile_mode_map *map = data->ops->mode_map;
+>  	struct bitland_mifs_input input = {
+>  		.reserved1 = 0,
+>  		.operation = WMI_METHOD_SET,
+> @@ -259,42 +299,46 @@ static int laptop_profile_set(struct device *dev,
+>  		.function = WMI_FN_SYSTEM_PER_MODE,
+>  	};
+>  	int ret;
+> -	u8 val;
+> +	u8 mode;
+>  
+>  	switch (profile) {
+>  	case PLATFORM_PROFILE_LOW_POWER:
+> -		val = WMI_PP_QUIET;
+> +		mode = map->quiet;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+> -		val = WMI_PP_BALANCED;
+> +		mode = map->balanced;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+> -		ret = bitland_check_performance_capability(data);
+> +		ret = data->ops->check_performance_capability(data);
+>  		if (ret)
+>  			return ret;
+> -		val = WMI_PP_PERFORMANCE;
+> +		mode = map->performance;
+>  		break;
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+> -		ret = bitland_check_performance_capability(data);
+> +		ret = data->ops->check_performance_capability(data);
+>  		if (ret)
+>  			return ret;
+> -		val = WMI_PP_FULL_SPEED;
+> +		mode = map->full_speed;
+>  		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> -	input.payload[0] = val;
+> +	input.payload[0] = mode;
+>  
+>  	return bitland_mifs_wmi_call(data, &input, NULL);
+>  }
+>  
+>  static int platform_profile_probe(void *drvdata, unsigned long *choices)
+>  {
+> +	struct bitland_mifs_wmi_data *data = drvdata;
+> +
+>  	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+>  	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+>  	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
+> -	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+> +
+> +	if (data->ops->has_full_speed)
+> +		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+>  
+>  	return 0;
+>  }
+> @@ -717,6 +761,7 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
+>  		return -ENOMEM;
+>  
+>  	drv_data->wdev = wdev;
+> +	drv_data->ops = &bitland_ops;
+>  
+>  	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
+>  	if (ret)
+> 
+
+
+--
+ i.
 
