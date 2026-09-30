@@ -1,530 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D8A4D5963
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 13:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790773505; cv=fail; b=B3+e/ahMMBABsHxl+rfbpmB7R22OEsGgrfuYZmJTtR2hl17lzqC+ue6OZqSS4DVUUNF/qypACNgo1Wo8tePcuz/nntd+NlSUEf6/iavi7EOT3kCRcQ711oHamsP5HNc6Rjhovd7StgHvCGl3cp6pzUX4NK4N16zaL/zOZ0XZd4M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790773505; c=relaxed/simple;
-	bh=k4AHXjaVZp8IxRSDryuoRNtMzvhKWoLaQsW6asG4sGA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=slZjaeWdJ7vL+we+Z9cQHGf4c/OUr/pvUb6B9vCziTRy2xx27FJ5uOmIFNaPHmr/wM0pmq3GLDrAbBS4Up3ihi4ulMb5wE7zh50Scph0+Y0PEUeyO6NTAEr7HqbjTH/9xunzDVVHkqktk+02jRJLx5sZIHVkYv3o1NWoeCILYzw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQQ0wp0t; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E3951CF65
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 14:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790777935; cv=none; b=V3R36qZ/lDe8qfrUJVAxokRrEJDYiMqCS7YqdEyz7Gg2chz52LUdK/hZKTDaVtXTROlul5lE+7A07FDA/c7Qpk0mX5H4sxN8n6nQs2sxzkMnYnu2JCy8LmLjYvjKmPA7laLtvTKAD3nnjy26rUKwvCPv7fdW527cr/Dh9RGs8+M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790777935; c=relaxed/simple;
+	bh=Zm8g3oz3CixIaRv7oE5kxbGfu8YwCAXLueO/nrs5VlU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ObDIHVairiPBA3NBZJPOgkFa1arYW2c3Qd7G08dLMI+A5OxvuB2UVhdjSZGGlpVPk1jzQrjTyW2+Qs6XMfr9tUcnmhpKDlBvS/d2fv3qGvKeCQyTFQaSTP9V6X2qsMMwqtZqkf/+jWBVovAE+NBZT2iFWxOZTzZJy7pfFRFb7Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nVof+tCL; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Yub9wDrk; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQQ0wp0t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790773499; x=1822309499;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=k4AHXjaVZp8IxRSDryuoRNtMzvhKWoLaQsW6asG4sGA=;
-  b=eQQ0wp0t++pcLe3hA1eFfk6id1HnkJOkhvrSjmY6bov+wiKWzCT0PL6I
-   bPl/AyF1p05fMFkgwWwyUc9Xccyy2XZComgs3UNPCwuArBvZHGWFgTQfQ
-   dPLS8QkQeArO2VHQa6Rd87ocUvEqPzZKB8frq/G1AjiHqaHLf3xVjFxVg
-   Ce2TM6dAhtjJHk1qtoba5i2y4M35m6FZWNo8SyLQh33VHaP68I9tiI9p1
-   66mGU+esV4EnSnDNGQqi5IJqXozcQjlvre7RtVAtd2CTCk/OT9kRg3F+9
-   sho/lq2jkv85DTL3Wad1HkIUulF6dLsQd4kvlCI5DWEwN0eiOp3qHxPWp
-   g==;
-X-CSE-ConnectionGUID: 4ZlHJi2FTOuQXIrmsiY1rw==
-X-CSE-MsgGUID: VOhyse9cQJ2eQxuGXmeEdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11920"; a="113296015"
-X-IronPort-AV: E=Sophos;i="6.27,132,1787036400"; 
-   d="scan'208";a="113296015"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2026 06:04:54 -0700
-X-CSE-ConnectionGUID: GrIt2wt9TC+YL3cXYu8d6w==
-X-CSE-MsgGUID: 2nOSEopQTfaEsdprsz7QfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,132,1787036400"; 
-   d="scan'208";a="279481599"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2026 06:04:54 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Wed, 30 Sep 2026 06:04:53 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49 via Frontend Transport; Wed, 30 Sep 2026 06:04:53 -0700
-Received: from BN8PR05CU002.outbound.protection.outlook.com (52.101.57.30) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Wed, 30 Sep 2026 06:04:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lwnJuLtnWn2VgtahS7O1hILFfSpNuA4XdHYtxUBPwAzsBgfeovvkwUWuuTPP2nYn9Lfwhk+c3/GQYkAIpbAi6NR7X8U3LwahqFTCV1XQib8yg/9K7qK91pI+0JRjocombQobbCo941EsSVOMizvaEd6KtYmysDpG7lwR/U1XXZ+sLs746uOaXUzGFj+LuX9FoLKTScLTvQubtJgJaFJAlkO2SZXbiesLWL2hndwfaa5w8WHCJu3GcKsXBJ2RipB+p+H33D899N0rqY584yA4cn0SpBSYGVjyMNfl+x6vOvcfVSj1A/8EAamBaG5+LMk+ICvu916h1awZNProtp5z7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zc7iIezNbVEhTbxoboctex5IuiXXvdSV4jEdWHpO6yQ=;
- b=Npz8LqEhd/g19IbWLUazg5LioUE07MUWlpOmSm7w5G6pkpFZcZ7OXFrYSHgAZdqD2gvmSdBLIlWagt9sUsL7LB5klgUgeXddqmKT7K7OfFUmQxBbuG2ldMh1j9DMuW6sWJVwxU5SgwrrScEgUeTXo2wwFsN2IsnpMDO4GJD3hHXjCu2ptRu8XviLFPh5gKACg8uq9jjzMd2EyUZuKVJa/m8R8AuhsB7Ec2az/C+vDF+4vl3Kb5wHsT1WdjEocmFIfsQY9+mjtv68Q3t2hCzxTjkPLqvFUQocxFyyoK1T4xA15ohPlg/Xs18Ce+syyFwCpLp9eCswVn8I3zIGDlQPWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB7192.namprd11.prod.outlook.com (2603:10b6:8:13a::22)
- by DM4PR11MB6018.namprd11.prod.outlook.com (2603:10b6:8:5e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.26; Wed, 30 Sep
- 2026 13:04:49 +0000
-Received: from DS0PR11MB7192.namprd11.prod.outlook.com
- ([fe80::c747:a502:4a7f:f5bb]) by DS0PR11MB7192.namprd11.prod.outlook.com
- ([fe80::c747:a502:4a7f:f5bb%4]) with mapi id 15.21.0472.015; Wed, 30 Sep 2026
- 13:04:48 +0000
-Date: Wed, 30 Sep 2026 09:04:28 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-CC: "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "intel-xe@lists.freedesktop.org"
-	<intel-xe@lists.freedesktop.org>, "hansg@kernel.org" <hansg@kernel.org>,
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, "Brost,
- Matthew" <matthew.brost@intel.com>, "thomas.hellstrom@linux.intel.com"
-	<thomas.hellstrom@linux.intel.com>, "airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>, "david.e.box@linux.intel.com"
-	<david.e.box@linux.intel.com>, "Vijay, Anoop C" <anoop.c.vijay@intel.com>,
-	"Nilawar, Badal" <badal.nilawar@intel.com>, "Roper, Matthew D"
-	<matthew.d.roper@intel.com>, "Ausmus, James" <james.ausmus@intel.com>,
-	"Poosa, Karthik" <karthik.poosa@intel.com>
-Subject: Re: [PATCH v11 17/20] drm/xe/vsec: Support late bind fw information
-Message-ID: <ar0I3Nu-a7ZeMMZX@intel.com>
-References: <20260923181115.2514193-22-michael.j.ruhl@intel.com>
- <20260923181115.2514193-39-michael.j.ruhl@intel.com>
- <aryLbyn1nW5CysJC@intel.com>
- <CH3PR11MB0461495FC2ECED12A6574C8102C18B2@CH3PR11MB046149.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CH3PR11MB0461495FC2ECED12A6574C8102C18B2@CH3PR11MB046149.namprd11.prod.outlook.com>
-X-ClientProxiedBy: SI1PR02CA0037.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::13) To IA0PR11MB7187.namprd11.prod.outlook.com
- (2603:10b6:208:441::12)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nVof+tCL";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Yub9wDrk"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68UE0B4i3283827
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 14:18:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=7bpTUMb3ODR4fZWLx9HiLu
+	8A5gFtV2lcsTUwtO9Pqao=; b=nVof+tCLqQBe7mXow4oTRma/zpt2zBN+ytou5j
+	d8R2DOwcoTGwIHvYAG39TDHTTV+8k3ocZ3041Wvr7NmCyVz+xwLHwbrZW2C0LCti
+	iUwMJS52KtrY3vzYoa5kTtDJBDQD9G2y25ofDpgCzshs8V028dHWPcSAbD0nVBhC
+	jdpmjQhfYJScAWlglHma3pdCP7YC5ydlTvf8ceaq9bGaIAjWsqvSLjjtr9fry0zs
+	r5h/Hx+J88DPQyiKbzGR6SiKZSO/ZkW2L/r6AACAXeGDr/mY2597J/ovcigEZT6Z
+	kc7/9fwF2bccNiY5no0WavLdFvKv5Fw3x8V1XcxPcUmDm/1Q==
+Received: from mail-ua1-f71.google.com (mail-ua1-f71.google.com [209.85.222.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h0tkn2ntj-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 14:18:41 +0000 (GMT)
+Received: by mail-ua1-f71.google.com with SMTP id a1e0cc1a2514c-9806756ea40so3916608241.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 07:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1790777920; x=1791382720; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=7bpTUMb3ODR4fZWLx9HiLu8A5gFtV2lcsTUwtO9Pqao=;
+        b=Yub9wDrk6l4srXeqWmXJTQ73x/J372FbdhyeMUY2oF+DHlb7iSkQ7Vac00MTw+1DLS
+         qPZ3VIVJQ3D+zDtEcL6KgHaah2+QIXDRMTKydCZ0hyzPthhtB5cEYEW5HwoFFy99SCtB
+         tw7Fff3t6Y0AIsjmT8eigteM+hNCGrpa5lEJmn3sRFpWeWkfmsdkjHxsKg9tNEqKxD7+
+         ugGogAnKum/PsT8u5neiGZb2jpmf+5dv2HRpkHEZH9IbA8lEh6mDX+dVhb6q8Cldi8hR
+         TALup3+n4xWBOcqqwUpHz4C0V18lu+jUmYeLBeV44n5AcW1zMsn5qmLAPtfrQ5oyTDAE
+         HZZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790777920; x=1791382720;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=7bpTUMb3ODR4fZWLx9HiLu8A5gFtV2lcsTUwtO9Pqao=;
+        b=i5ylD6WTpO3krqC4G0C46Wa+DX1rELw1/Hfn89PztGbOhJVkgbbBlpbhS/IPvbYPKo
+         CYTh1eTVuDt3aR6ZcdxXJNKAEhlYJ4NzwgHE+CDDwP0GrN+7+Q2NRIHFNsfSBW5/9hwt
+         6Bib8enwu+HjrPrwtdHGSRQ6nxNh0v5Bsz1if33NDAkF2o+sLQT0daany0k62NEh4u1h
+         n+G95Cs2AQFtP0xOklRmUUhDJBDQ4OlGAWzxWU1qyaG8Z0GPDcQKFTNjSKht8jAlxSc1
+         rlonn8VVY2PICaMM/4kdBSO+hPM5QXg9q46RA6oRLSxeg3JLeW2gxgDf0RPGBRQoF2Ay
+         meTg==
+X-Forwarded-Encrypted: i=1; AKwUvBzFnMnShz/kh6sTMyfG0rV52CmCGaE3/QQ4o4FjYAm4GjYGYfo6P3nyeVVGlnbp0lT8+UBXDuUSgoUQX7P0XPNeKa+I@vger.kernel.org
+X-Gm-Message-State: AFq9FYJdLFF4hye3/RPPCvRe13kl5EjnUIziSKfoMdFxrKKtUnn7rJYv
+	5ub40gcy2/eaOKlg5nP8qOQldjWre88Zd2oFJniPqLCyDnEeqQFthjlowYQylxTiQaBMwW/mMUj
+	G372s4S8sOdz+qUSzolVEQVZ0zJGN97xIzJ4+RDkhbAsdkYdHhVNhWQgJUuAfXlwxjOgzwSK1aM
+	90
+X-Gm-Gg: AYBFou0Ih2DrjU2zir5ExVuB3EBysloFX+K3sRRWd4BY3rFQXFlKee3WXShcFJiBc6Z
+	KziqsQnhBBzC3b2Ugwv1o4dbrwebFv8T5h8K1LeiQvR6xsWxMiUuCIbS4MXmLFd4srKepq7a0+0
+	MmXaJ+5NbGEIPamGEBaznYEzC2l6zvsim4SPm5GkBP+ZGWQ4vX3DekKoO/I11MzA4+rxP2TQKw9
+	6oXDlRe5nI0GL90MuZvOgDmy8R+3MxHa6xySWME4hdbSPi4579/BPp6uApzzgFNTBXxnXgp/X/S
+	9ozCW95vBx3Usw/rvfhECS/g41HO8meW6VGmsZVISTU2GqUy54wN5vt5SYNSpFtolvLz8HReW3q
+	44Zf2vjZI
+X-Received: by 2002:a05:6102:26c2:b0:7a7:19aa:8a89 with SMTP id ada2fe7eead31-7be749844damr395652137.36.1790777920164;
+        Wed, 30 Sep 2026 07:18:40 -0700 (PDT)
+X-Received: by 2002:a05:6102:26c2:b0:7a7:19aa:8a89 with SMTP id ada2fe7eead31-7be749844damr395629137.36.1790777919567;
+        Wed, 30 Sep 2026 07:18:39 -0700 (PDT)
+Received: from [127.0.1.1] ([188.27.161.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a01e6607f4sm2469335e9.11.2026.09.30.07.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2026 07:18:38 -0700 (PDT)
+From: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Date: Wed, 30 Sep 2026 17:18:36 +0300
+Subject: [PATCH] platform/arm64: qcom-hamoa-ec: Disable the SCI IRQ during
+ suspend
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB7192:EE_|DM4PR11MB6018:EE_
-X-MS-Office365-Filtering-Correlation-Id: aa2f0995-d441-4703-b84e-08df1ef36729
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|376014|366016|4143699003|10067099003|11063799006|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: BQXzNJ6iOUp7sqSdx+DBOOjUGmgMVcI7Dy2+5QJKqvzgxcjtgggnAvNoprkaTAoHODQrLIqJHqT8jABg1I4MLpcwiDPtAq9jZrOjUZNi7w0a4J/nLHTSmMR96nwKtMqr5UlnEYYtxEU6ilW2XhoJwYp1XK9EHX6mATHyOqTNN5hwTL9K1iMPSBTo6SY+zh5CkJqMN64MdSQOaEDoeVOhJ7cWAGNa8cwYsEWixXp2ZaV5mu43zzBtAH3CPaMukAj1vjtpOWjCDsit0gH8iz+ODues9J9xGWrbsE/UYqKhTNphjZNMKfRkoTNDnSCCW/BdUNe1hE2q4tyDLw8FiAoIYxzpdB5KHWXR4kj7xC8P3Oa5udF9eMDX8MqtmiQgAUHbPClT2XbsJrneVddkYlTr8MYhOggHGifQLrS2ATOs5mIICBwPPBRxGuhWtxbFpHuga+Qb8aaDbe8q5rlhn+QXJ/Rz6HPjRiB5Bvv/Pv4R6CQUjovMSYPWCjjXP3cwqDMJYYZ4aA7XkgiJvwGfEy4aqfXSDkQXqGaQmH/7MyItb2THsXxpPeer1REHtEDcAXxK2T+Mx8ScHg6OFUL1AFIyJyq1ILzrYw5Zsn78mTtrgwuXmM1O304NQkL0bLjAbjij29Mz3SluZBmOOV5kuvJ7zxR3v5oiWSwCE+3sxYBH8IE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7192.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(376014)(366016)(4143699003)(10067099003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0Hqmb3hcWGOZXXGBubWYlsn4mVEtJT+/JmotO56W5CpmTvIsKjELj0RlwsIB?=
- =?us-ascii?Q?mR10SgEZ3Zr1K2BoUWiU58+69QgbQc4Azql0YNAI7cUq9IDICjj2I1jlFuW/?=
- =?us-ascii?Q?Oopmb2mfZ/nTL3O+eXdvPamGVmxW4mUjw/Ti4DM/Aja7x3TZ8jIey9ilPeZs?=
- =?us-ascii?Q?YXLNfgcHDqSCApW09wssbMWVfWh2rR3cFnOx4rCK+7c0grAxa8BGzwqMWGgU?=
- =?us-ascii?Q?ND6ZtJ24n11VtezZNLYyEHkadYkfmh7ET/j/EHYb13zbz0MakoSfBcGesACY?=
- =?us-ascii?Q?rxpORx7a6VopBpt0UrhreMkfTGlsS868VwtwCmAmjOpmweN6+UINZcwgT0rS?=
- =?us-ascii?Q?oozKsCuzzzo/SUFsQ68CjIUgW3zVAunl7fx8BAkga45EVB5vlVQ9uSbIPlIV?=
- =?us-ascii?Q?b1EGEq/myED97pYNF/lOxoP+ETstpSmzdMWvNJDWQSIVkSnzarVZ02CWiYXV?=
- =?us-ascii?Q?m/+BWy2SrkXHM/1rjwYpKI7sLby6OdT2BX9JDH8HC6EnhucQ6yOszMjrPctR?=
- =?us-ascii?Q?y4bMe5pEfNDJUhpxoNnnuo0AVSeujXHOJ7mHKcrTGVX9YSfR53DiMyzZOt4v?=
- =?us-ascii?Q?FUF5Ae1j44+qIjKq2lJH041gM40CY8ZAcoefTvlx0NVGSmQxoRfR4oCa7RCL?=
- =?us-ascii?Q?OlmV5Vz3wDMMzlSqgOIhwM5WeltU4xDQ3FKriycYeToegvcg0Hk3cXpPZcet?=
- =?us-ascii?Q?JomkqwJt2nBxox3BWiDkSy+h/uIepo1MFloVJ0Bofc13IXDP24w7cAjgdakj?=
- =?us-ascii?Q?ksX0BVn5RP5G9ctlWLVSBvYOE5sPQb6k2lWrbmmqWJCAtt7fWNfqE/itsOZK?=
- =?us-ascii?Q?ov+WuHb1UPZfocMi2NjNxUYGUrnL3VUgC9DkZuhOQAWozOl5wMPfM1q+deJY?=
- =?us-ascii?Q?SHFKGjLGhw/JnKcIisrOTh+QiYlrAmD6SVQ7XmP9gxFuThlYIReTrh8lt89D?=
- =?us-ascii?Q?nTASO71khWcIZpKYXjpWhSMYTjObBiepswfKprb97iwfIHksMRr9VUwMffkB?=
- =?us-ascii?Q?KdSbfPwBndyrm9vIPk3Izf9JsNa4LOHOo/EKh0OXIuU3X/8+JtcTjC5a4G3D?=
- =?us-ascii?Q?9TlLfSTmFezuzVq+TpYBtgEWw4gFPvol/4lOkp7+eiBG+3xVfW08wnKHU14n?=
- =?us-ascii?Q?cxkRiD1niX63t27DvGx0SuooXx4E4A4lc/d/yvglqZ/8u1cg1A85d3rZJ39r?=
- =?us-ascii?Q?81l1sqyS59YnXxFONRbAD1Ojhj267teDJ4KvrhlHxft865Dk0zH/ffYQk6Lk?=
- =?us-ascii?Q?KKzvYqg1k7de5bbfRDwUzS+JL/l8JkhnURJwHgKs9IO/8kWo4FPVD4hy7bBk?=
- =?us-ascii?Q?yrTst2/MvlzhUQXw4Egh5mttxcONceFNYtDj9CO72ynGOpofopo/J89M6rgr?=
- =?us-ascii?Q?K/PqfZcbMXqGwIRCg6+stgCDVyzBtaN/5k1zRLAClGYL8En/VGNhRm8ZUE/g?=
- =?us-ascii?Q?sTFbIHeMWxjLI2e885m7FkQeQE4nHjzrZ+yk/Rhz7abQqKOMku4X/OqibT1B?=
- =?us-ascii?Q?UmLOy0tCG0v93DdNGgnA78vH0qoB3bAEbX9ev7dMRNyRpqqv1Un65MFkvdBH?=
- =?us-ascii?Q?iYuvK6t7PPW6Ygy6w0/DfKyN+shF9+WzsefREEfxgYQO/Gv8Dnj+bslHtabB?=
- =?us-ascii?Q?yd+FzrowRPjrf75MbIWBKWzfOsu53Jg1YJzbxIRsZIFwTwOJ0LIJtMw8zd72?=
- =?us-ascii?Q?x9LXkrfWctQKkkMtpuiEKMz19zG+NIr98rSiIF0c7RTvpqKmkN916mdiGEBX?=
- =?us-ascii?Q?yPwqgSVTvnM9xemRCSps/ayhFB07gO8=3D?=
-X-Exchange-RoutingPolicyChecked: BP4iCaziGXWTdJyoRKNrepPrXf8gsH5s4iPR3zbB5XAz6ITXAWDOsULV1WsIFZEt6MTIq840v3gTsg+ZD9dK7ifVONjtVmCDKTVEdL5GL0inV30YKcDjrnpYnb4eLcsjspx0SU+QOUZtIE28rZgAD5MtLjowiD3azNApHebSsDyThIq7BVGXd99wZSRF3R5FdIKVRYAp/Ss7Rg0tKuh9KNj6+L+nEL4A3VQ0N/I5+1q2UFMk97AgnEECulMAWVSLHdBxgiNad9jD3HGI0K3S9yGY0GKTlM6Swz6zPwti1Vd4vq2dvr6cHZ7diMPXRnM5qUQmXqMqvB6XzCsTi4iDLw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa2f0995-d441-4703-b84e-08df1ef36729
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7187.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 13:04:48.6957
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mkveFwffS0WYbUm1yEdJw3QBOhtIHUY81RsLrZjQrkGt3LOZYFs+i7GWOQc/RFu2W3QgO8coD00ARBHcJWDW5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6018
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260930-qcom-hamoa-ec-suspend-irq-v1-1-ad82713c8d11@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIADsavWoC/yXMQQqDMBBA0avIrB2IqQTaq4iLOJnqFEw0U0tBv
+ HtTXb7F/zsoZ2GFR7VD5o+opFjQ1BXQ5OPIKKEYrLHO3G8GV0ozTn5OHplQN104BpS8Yutaaxr
+ yYXAEpV8yP+V7vrv+sm7Di+n9H8Jx/ACFJCDpfQAAAA==
+X-Change-ID: 20260930-qcom-hamoa-ec-suspend-irq-464201cadb6c
+To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
+        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
+        Hans de Goede <hansg@kernel.org>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Maya Matuszczyk <maccraft123mc@gmail.com>, linux-arm-msm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abel Vesa <abel.vesa@oss.qualcomm.com>
+X-Mailer: b4 0.16-dev-0e65f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2266;
+ i=abel.vesa@oss.qualcomm.com; h=from:subject:message-id;
+ bh=Zm8g3oz3CixIaRv7oE5kxbGfu8YwCAXLueO/nrs5VlU=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBqvRo9FA4yIVKJXL+Kzp0rMyPHbfKar6YpEERZP
+ szziYSGNCKJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCar0aPQAKCRAbX0TJAJUV
+ VjzOEACy4OimnPkZlHgRrvsZT8P4bvWbQmur/vPBuYj3aU3aG4Fqm/xtVP4T2qqWmNloud6hAGY
+ 0Z0RnZKny+IUQxeJRAYwm3lbX1cdsE7DScC/k0jfv2npAu0YCQE0WWE8DXpY8zSWa4VN/0bj6BY
+ xm6eCHa4VHy+OCmerHb61cltJu6QSG8wBGoqcCxOpTWMwP9Zh1xtYqglHPtXGgYLA6Iy/KWU0NE
+ tGhoisF95+75SnuR60QoyPlZ6a7Nps9211QMQpvof5rOhvj/bvvwUdqJ/33WTB+3YQVChAjBtfo
+ 8sAR2lrhNDD8k3MHtVXgr+HELIZ25+Xm1cQ+eNecwL78jTQCgbBkdUM9K01pmLmm89d5UsuheVf
+ BvhXl9z1Ntvi+jK9KYeoDAY7coMM5shguT5eVOHaHcV9YigSt8RLaFhBlXUE9Hvo1fD4p9jy1dh
+ NUl0w7aXHC+KBjPCaGU3552mLCrbNjZLXjrwPEpzbqIgaF4hHMveXlCpNdY/vDEM03sBNV1gAoL
+ Bj0n9nlDNdr1B46jTwtzujI8OZBHXhabWVIAKBv5CkprWnZtk76rOVRxETmcHN58YsTM4DwY89Y
+ +roMQasY4nWOMCpzjHMPZwKxPzNQCm6vDGaCcItisGBnYizivGwXZz7YSUSFr7/f9JIabt32DBJ
+ 3+GZcHfQP44IsWA==
+X-Developer-Key: i=abel.vesa@oss.qualcomm.com; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+X-Authority-Analysis: v=2.4 cv=CKy/zhrD c=1 sm=1 tr=0 ts=6abd1a41 cx=c_pps
+ a=KB4UBwrhAZV1kjiGHFQexw==:117 a=EiYrS7xXfcF7w+nkr41hpQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
+ a=EUspDBNiAAAA:8 a=qH2p2g-4CMqcrQuKSa8A:9 a=QEXdDO2ut3YA:10
+ a=o1xkdb1NAhiiM49bd1HK:22
+X-Proofpoint-ORIG-GUID: NYzqWrQiWMbxyscI7xSln-OpOVpdgBMA
+X-Proofpoint-GUID: NYzqWrQiWMbxyscI7xSln-OpOVpdgBMA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTMwMDA1NiBTYWx0ZWRfX3IwCZaIEIxJ5
+ 9yXmzdmTvK4KDm4CUm6ALvY9LBa24t9Qf7DTlwy5BzB9dEghxod02ySAFs9Ayg7dJGYTaaUdwzt
+ 1bqNbbrksgqWI8a6mu9jtm29UKuL84zuj62OQ8bMFs4GmC2VrkRvqh8YpR077IUZq6DnhS5R3dT
+ 8tuQ0dg95pjdJuYPpzZ7tHwFCf5D2hm+WZWb/7w8zmJXdwtwUZFQMb3tDBA0tikvE9UOhlPmJ7z
+ drwnE0XPgyuLKWxMXXbhhma5pcNZkSRA4dLBJMmNSaK/Va4CjkmQBxzsnW9Yr/Jt4ShzOz0aZDV
+ +IZmLskBoh1oOkN0XknxDcmPZobBwUBMamj13vINKttr8LbwrfZS+WFHMBPxJlHLmIImMakrS/i
+ yl43jM9zzYuJ3hfKPEP+t1L2czEl6b3BXTjhw5lmt/OWuU4puexHJNPN6G8evkUDQgGV2G5amGj
+ /6GyWCeme+UX0rilsww==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTMwMDA1NiBTYWx0ZWRfXyBZrckBVMOjJ
+ PVcXSSnhMr9mmi6lAJ4PYYUxvEANwKO6ht4lIk01hAHS9KcGxCwUzY/Wixr1YxHClaJ9y1nkW5X
+ SyvSDD/Ra0REGcwQxonWy/zOqEYUCGM=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-30_03,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 adultscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ phishscore=0 spamscore=0 malwarescore=0 suspectscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609300056
 
-On Wed, Sep 30, 2026 at 08:57:34AM -0400, Ruhl, Michael J wrote:
-> >-----Original Message-----
-> >From: Vivi, Rodrigo <rodrigo.vivi@intel.com>
-> >Sent: Wednesday, September 30, 2026 12:09 AM
-> >To: Ruhl, Michael J <michael.j.ruhl@intel.com>
-> >Cc: platform-driver-x86@vger.kernel.org; intel-xe@lists.freedesktop.org;
-> >hansg@kernel.org; ilpo.jarvinen@linux.intel.com; Brost, Matthew
-> ><matthew.brost@intel.com>; thomas.hellstrom@linux.intel.com;
-> >airlied@gmail.com; simona@ffwll.ch; david.e.box@linux.intel.com; Vijay,
-> >Anoop C <anoop.c.vijay@intel.com>; Nilawar, Badal
-> ><badal.nilawar@intel.com>; Roper, Matthew D <matthew.d.roper@intel.com>;
-> >Ausmus, James <james.ausmus@intel.com>; Poosa, Karthik
-> ><karthik.poosa@intel.com>
-> >Subject: Re: [PATCH v11 17/20] drm/xe/vsec: Support late bind fw information
-> >
-> >On Wed, Sep 23, 2026 at 11:11:32AM -0700, Michael J. Ruhl wrote:
-> >> CRI FW is loaded on power on.  Because of this, access to the FW cannot
-> >> be done until it is running.
-> >>
-> >> Update the XE PMT probe and access to check for late bind devices,
-> >> verify, and wait for the appropriate FW state before probe or access.
-> >>
-> >> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> >
-> >We do need this patch. One potential but unlikely corner case is the suspend
-> >while this worker is waiting... might be worth investigating, but I'm not
-> >holding/blocking on that:
-> 
-> I take the xe_runtime_get() before setting up the worker.  Once the worker completes successfully,
-> I do the _put.
-> 
-> Can a suspend happened in this case?
+EC SCI events require I2C transfers to retrieve the event information.
+During system resume, an SCI interrupt can be delivered before the I2C
+controller is ready to handle transfers, resulting in failed event reads:
 
-it cannot runtime suspend (think d3hot/d3cold), but it can still system suspend (think s2idle/s3/s4)
+  geni_i2c a84000.i2c: error turning SE resources:-13
+  qcom-hamoa-ec 3-0076: Failed to read EC SCI Event: -13
 
-> 
-> >Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> 
-> Thank you!
-> 
-> m
-> >
-> >> ---
-> >>  drivers/gpu/drm/xe/xe_device.c       |   4 +-
-> >>  drivers/gpu/drm/xe/xe_device_types.h |   5 ++
-> >>  drivers/gpu/drm/xe/xe_vsec.c         | 129 ++++++++++++++++++++++++++-
-> >>  drivers/gpu/drm/xe/xe_vsec.h         |   2 +-
-> >>  4 files changed, 134 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/xe/xe_device.c
-> >b/drivers/gpu/drm/xe/xe_device.c
-> >> index 3ec950606e67..a2c8c7909688 100644
-> >> --- a/drivers/gpu/drm/xe/xe_device.c
-> >> +++ b/drivers/gpu/drm/xe/xe_device.c
-> >> @@ -1053,7 +1053,9 @@ int xe_device_probe(struct xe_device *xe)
-> >>  	if (err)
-> >>  		goto err_unregister_display;
-> >>
-> >> -	xe_vsec_init(xe);
-> >> +	err = xe_vsec_init(xe);
-> >> +	if (err)
-> >> +		goto err_unregister_display;
-> >>
-> >>  	xe_debugfs_register(xe);
-> >>
-> >> diff --git a/drivers/gpu/drm/xe/xe_device_types.h
-> >b/drivers/gpu/drm/xe/xe_device_types.h
-> >> index e08348a95b28..8f5cc5d65419 100644
-> >> --- a/drivers/gpu/drm/xe/xe_device_types.h
-> >> +++ b/drivers/gpu/drm/xe/xe_device_types.h
-> >> @@ -7,6 +7,7 @@
-> >>  #define _XE_DEVICE_TYPES_H_
-> >>
-> >>  #include <linux/pci.h>
-> >> +#include <linux/workqueue.h>
-> >>
-> >>  #include <drm/drm_device.h>
-> >>  #include <drm/drm_file.h>
-> >> @@ -488,6 +489,10 @@ struct xe_device {
-> >>  		struct mutex lock;
-> >>  		/** @pmt.base_offset: device specific base offset */
-> >>  		u64 base_offset;
-> >> +		/** @pmt.work: support late-bind probe */
-> >> +		struct delayed_work work;
-> >> +		/** @pmt.retry_count: late-bind probe retry */
-> >> +		u32 retry_count;
-> >>  	} pmt;
-> >>
-> >>  	/** @soc_remapper: SoC remapper object */
-> >> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-> >> index 0f6e3be520c0..5384fef5e5ac 100644
-> >> --- a/drivers/gpu/drm/xe/xe_vsec.c
-> >> +++ b/drivers/gpu/drm/xe/xe_vsec.c
-> >> @@ -3,6 +3,7 @@
-> >>  #include <linux/bitfield.h>
-> >>  #include <linux/bits.h>
-> >>  #include <linux/cleanup.h>
-> >> +#include <linux/delay.h>
-> >>  #include <linux/errno.h>
-> >>  #include <linux/intel_vsec.h>
-> >>  #include <linux/module.h>
-> >> @@ -18,6 +19,7 @@
-> >>  #include "xe_mmio.h"
-> >>  #include "xe_platform_types.h"
-> >>  #include "xe_pm.h"
-> >> +#include "xe_sysctrl.h"
-> >>  #include "xe_vsec.h"
-> >>
-> >>  #include "regs/xe_pmt.h"
-> >> @@ -173,6 +175,14 @@ enum capability {
-> >>  	WATCHER,
-> >>  };
-> >>
-> >> +/*
-> >> + * Late bind will delay 100msec for up to 20 seconds
-> >> + */
-> >> +#define VSEC_LATE_BIND_DELAY_MSEC	100
-> >> +#define VSEC_LATE_BIND_RETRY		200
-> >> +
-> >> +static void cri_late_bind_probe(struct xe_device *xe);
-> >> +
-> >>  static int bmg_guid_decode(u32 guid, int *index, u32 *offset)
-> >>  {
-> >>  	u32 record_id = FIELD_GET(GUID_RECORD_ID, guid);
-> >> @@ -281,6 +291,48 @@ static int xe_guid_decode(u32 guid, int *index, u32
-> >*offset)
-> >>  	return -ENODEV;
-> >>  }
-> >>
-> >> +static void cri_late_bind_probe_work(struct work_struct *work)
-> >> +{
-> >> +	struct xe_device *xe = container_of(work, struct xe_device,
-> >pmt.work.work);
-> >> +
-> >> +	if (xe_sysctrl_is_oobmsm_fw_ready(xe)) {
-> >> +		cri_late_bind_probe(xe);
-> >> +		xe_pm_runtime_put(xe);
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	xe->pmt.retry_count++;
-> >> +
-> >> +	/* wait up to 20 seconds */
-> >> +	if (xe->pmt.retry_count == VSEC_LATE_BIND_RETRY) {
-> >> +		drm_warn(&xe->drm, "PMT probe: Late Binding failed to
-> >complete\n");
-> >> +		xe_pm_runtime_put(xe);
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	if (!schedule_delayed_work(&xe->pmt.work,
-> >msecs_to_jiffies(VSEC_LATE_BIND_DELAY_MSEC)))
-> >> +		xe_pm_runtime_put(xe);
-> >> +}
-> >> +
-> >> +static bool wait_for_fw(struct xe_device *xe)
-> >> +{
-> >> +	int retries = VSEC_LATE_BIND_RETRY;  /* wait up to 20 secs */
-> >> +
-> >> +	if (xe->info.platform != XE_CRESCENTISLAND)
-> >> +		return true;
-> >> +
-> >> +	while (retries--) {
-> >> +		if (xe_sysctrl_is_oobmsm_fw_ready(xe))
-> >> +			return true;
-> >> +
-> >> +		msleep(VSEC_LATE_BIND_DELAY_MSEC);
-> >> +	}
-> >> +
-> >> +	drm_warn(&xe->drm, "Late Binding failed to complete\n");
-> >> +
-> >> +	return false;
-> >> +}
-> >> +
-> >>  /**
-> >>   * xe_pmt_telem_read - Given a device and a PMT GUID, read data into a
-> >buffer
-> >>   * @dev: valid Xe device
-> >> @@ -343,6 +395,11 @@ int xe_pmt_telem_read(struct device *dev, u32
-> >guid, u64 *data, loff_t user_offse
-> >>  		goto dev_exit;
-> >>  	}
-> >>
-> >> +	if (!wait_for_fw(xe)) {
-> >> +		ret = -ENODATA;
-> >> +		goto runtime_exit;
-> >> +	}
-> >> +
-> >>  	scoped_guard(mutex, &xe->pmt.lock) {
-> >>  		/* set SoC re-mapper index register based on GUID memory
-> >region */
-> >>  		xe->soc_remapper.set_telem_region(xe, mem_region);
-> >> @@ -350,6 +407,7 @@ int xe_pmt_telem_read(struct device *dev, u32 guid,
-> >u64 *data, loff_t user_offse
-> >>  		memcpy_fromio(data, telem_addr, count);
-> >>  	}
-> >>
-> >> +runtime_exit:
-> >>  	xe_pm_runtime_put(xe);
-> >>
-> >>  dev_exit:
-> >> @@ -397,6 +455,10 @@ static int xe_pmt_read_reg(struct device *dev, u32
-> >guid, u32 *reg, u32 offset)
-> >>  	disc_addr += inst + offset;
-> >>
-> >>  	xe_pm_runtime_get(xe);
-> >> +	if (!wait_for_fw(xe)) {
-> >> +		ret = -ENODATA;
-> >> +		goto runtime_exit;
-> >> +	}
-> >>
-> >>  	scoped_guard(mutex, &xe->pmt.lock) {
-> >>  		xe->soc_remapper.set_telem_region(xe,
-> >CRI_IDX_TELEM_DISCOVERY);
-> >> @@ -404,6 +466,7 @@ static int xe_pmt_read_reg(struct device *dev, u32
-> >guid, u32 *reg, u32 offset)
-> >>  		*reg = readl(disc_addr);
-> >>  	}
-> >>
-> >> +runtime_exit:
-> >>  	xe_pm_runtime_put(xe);
-> >>
-> >>  dev_exit:
-> >> @@ -434,6 +497,10 @@ static int xe_pmt_write_reg(struct device *dev, u32
-> >guid, u32 reg, u32 offset)
-> >>  	disc_addr += inst + offset;
-> >>
-> >>  	xe_pm_runtime_get(xe);
-> >> +	if (!wait_for_fw(xe)) {
-> >> +		ret = -ENODATA;
-> >> +		goto runtime_exit;
-> >> +	}
-> >>
-> >>  	scoped_guard(mutex, &xe->pmt.lock) {
-> >>  		xe->soc_remapper.set_telem_region(xe,
-> >CRI_IDX_TELEM_DISCOVERY);
-> >> @@ -441,6 +508,7 @@ static int xe_pmt_write_reg(struct device *dev, u32
-> >guid, u32 reg, u32 offset)
-> >>  		writel(reg, disc_addr);
-> >>  	}
-> >>
-> >> +runtime_exit:
-> >>  	xe_pm_runtime_put(xe);
-> >>
-> >>  dev_exit:
-> >> @@ -477,12 +545,46 @@ static enum xe_vsec get_platform_info(struct
-> >xe_device *xe)
-> >>  	return vsec_platforms[xe->info.platform];
-> >>  }
-> >>
-> >> +static void cri_late_bind_probe(struct xe_device *xe)
-> >> +{
-> >> +	struct intel_vsec_platform_info *info;
-> >> +	struct device *dev = xe->drm.dev;
-> >> +	enum xe_vsec platform;
-> >> +
-> >> +	platform = get_platform_info(xe);
-> >> +	if (platform != XE_VSEC_CRI)
-> >> +		return;
-> >> +
-> >> +	info = &xe_vsec_info[platform];
-> >> +	if (!info->headers)
-> >> +		return;
-> >> +
-> >> +	guard(mutex)(&xe->pmt.lock);
-> >> +
-> >> +	info->priv_data = &xe_cri_pmt_cb;
-> >> +	xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
-> >> +
-> >> +	intel_vsec_register(dev, info);
-> >> +}
-> >> +
-> >> +static void vsec_disable_late_bind_work(void *arg)
-> >> +{
-> >> +	struct xe_device *xe = arg;
-> >> +
-> >> +	/*
-> >> +	 * If the queued work is canceled, the runtime reference needs to be
-> >> +	 * released here.
-> >> +	 */
-> >> +	if (disable_delayed_work_sync(&xe->pmt.work))
-> >> +		xe_pm_runtime_put(xe);
-> >> +}
-> >> +
-> >>  /**
-> >>   * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
-> >>   * interface
-> >>   * @xe: valid xe instance
-> >>   */
-> >> -void xe_vsec_init(struct xe_device *xe)
-> >> +int xe_vsec_init(struct xe_device *xe)
-> >>  {
-> >>  	struct intel_vsec_platform_info *info;
-> >>  	struct device *dev = xe->drm.dev;
-> >> @@ -490,11 +592,11 @@ void xe_vsec_init(struct xe_device *xe)
-> >>
-> >>  	platform = get_platform_info(xe);
-> >>  	if (platform == XE_VSEC_UNKNOWN)
-> >> -		return;
-> >> +		return 0;
-> >>
-> >>  	info = &xe_vsec_info[platform];
-> >>  	if (!info->headers)
-> >> -		return;
-> >> +		return 0;
-> >>
-> >>  	switch (platform) {
-> >>  	case XE_VSEC_BMG:
-> >> @@ -504,12 +606,26 @@ void xe_vsec_init(struct xe_device *xe)
-> >>
-> >>  	case XE_VSEC_CRI:
-> >>  		xe->pmt.base_offset = CRI_PMT_OFFSET;
-> >> +
-> >> +		xe->pmt.retry_count = 0;
-> >> +		INIT_DELAYED_WORK(&xe->pmt.work,
-> >cri_late_bind_probe_work);
-> >> +
-> >> +		xe_pm_runtime_get_noresume(xe);
-> >> +		if (!xe_sysctrl_is_oobmsm_fw_ready(xe)) {
-> >> +			schedule_delayed_work(&xe->pmt.work,
-> >> +
-> >msecs_to_jiffies(VSEC_LATE_BIND_DELAY_MSEC));
-> >> +			return devm_add_action_or_reset(xe->drm.dev,
-> >> +
-> >	vsec_disable_late_bind_work,
-> >> +							xe);
-> >> +		}
-> >> +
-> >>  		info->priv_data = &xe_cri_pmt_cb;
-> >>  		xe->soc_remapper.set_telem_region(xe,
-> >CRI_IDX_TELEM_DISCOVERY);
-> >>  		break;
-> >>
-> >>  	default:
-> >> -		break;
-> >> +		drm_err(&xe->drm, "Unsupported platform: %u\n", platform);
-> >> +		return 0;
-> >>  	}
-> >>
-> >>  	/*
-> >> @@ -517,5 +633,10 @@ void xe_vsec_init(struct xe_device *xe)
-> >>  	 * resources.
-> >>  	 */
-> >>  	intel_vsec_register(dev, info);
-> >> +
-> >> +	if (platform == XE_VSEC_CRI)
-> >> +		xe_pm_runtime_put(xe);
-> >> +
-> >> +	return 0;
-> >>  }
-> >>  MODULE_IMPORT_NS("INTEL_VSEC");
-> >> diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
-> >> index a25b4e6e681b..c4a1e2fc67d8 100644
-> >> --- a/drivers/gpu/drm/xe/xe_vsec.h
-> >> +++ b/drivers/gpu/drm/xe/xe_vsec.h
-> >> @@ -9,7 +9,7 @@
-> >>  struct device;
-> >>  struct xe_device;
-> >>
-> >> -void xe_vsec_init(struct xe_device *xe);
-> >> +int xe_vsec_init(struct xe_device *xe);
-> >>  int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t
-> >user_offset, u32 count);
-> >>
-> >>  #endif
-> >> --
-> >> 2.43.0
-> >>
+Keep SCI interrupt handling disabled across system sleep so that EC
+events are processed only while the I2C controller is available. This
+prevents event reads from racing with the controller's suspend and
+resume transitions.
+
+Fixes: 5c44f48e91de ("platform: arm64: Add driver for EC found on Qualcomm reference devices")
+Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+---
+ drivers/platform/arm64/qcom-hamoa-ec.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
+index 4d2ad042a7f8..d34afd901324 100644
+--- a/drivers/platform/arm64/qcom-hamoa-ec.c
++++ b/drivers/platform/arm64/qcom-hamoa-ec.c
+@@ -331,17 +331,28 @@ static const struct thermal_cooling_device_ops qcom_ec_thermal_ops = {
+ static int qcom_ec_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
++	int ret;
+ 
+-	return i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
+-					 EC_MODERN_STANDBY_EXIT);
++	ret = i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
++				      EC_MODERN_STANDBY_EXIT);
++	enable_irq(client->irq);
++
++	return ret;
+ }
+ 
+ static int qcom_ec_suspend(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
++	int ret;
+ 
+-	return i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
+-					 EC_MODERN_STANDBY_ENTER);
++	/* Keep SCI reads from racing the I2C controller's system sleep. */
++	disable_irq(client->irq);
++	ret = i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
++				      EC_MODERN_STANDBY_ENTER);
++	if (ret)
++		enable_irq(client->irq);
++
++	return ret;
+ }
+ 
+ static int qcom_ec_probe(struct i2c_client *client)
+
+---
+base-commit: 6c2cb8b8b843d216ab549b678a0d8831c43153e0
+change-id: 20260930-qcom-hamoa-ec-suspend-irq-464201cadb6c
+
+Best regards,
+--  
+Abel Vesa <abel.vesa@oss.qualcomm.com>
+
