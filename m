@@ -1,130 +1,116 @@
-Received: from mail-dy2-f41.google.com (mail-dy2-f41.google.com [74.125.229.41])
+Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283A4196C7C
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 05:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22657330307
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 05:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790744784; cv=none; b=BHKDGySVQqH05sKxpCkFCGI9Sha6jDfifwZ+GnhqFxo6YPIynvc7jeQfHOM+cnBqvfqQ8ASduWJBnAOVeeZRUiVsITVv0IIyf9tIWxzZI0RCQA4CRf+9QKy0N3pADIoUMx8hoDOHNAU7Bi0c55AbnCC/Fnh2qhwkFWY+11E5F2s=
+	t=1790745214; cv=none; b=uYQydkfg98Bhh7GvoUH4WzY2m+M0xTZO74JMrHj/8l/gOsmaF8LADl7AnNOg9021BLsrPaTk2koyHRA7HuHfpHNDr6HPWFKSuX+i0+5xoOyo50X4K7DudaSsrr95kQa6KRBgPJeYv264aGM3qmiX+dzJqp7ypOLa+42jE3u/+PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790744784; c=relaxed/simple;
-	bh=zYSUmldqZNFN7H3/a5usElfEPj3ThsKq72A1iZOzhBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZWsIf6H+mqar0iZ7VPlaEngak3ZaDpr2DMQKDt+YeU+qLrvOodp0p8Cj0AMqLrz3TCfNXXnPuhSXC5isrrqji4PSFjfNgUX1i6R2r9XJrH+kNGVdUgyAAvxU3Buo1ZpHA3xx9hWbeZy0y4laBNhJWFhNFtz25IPaEOXOHkWyuYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WerGsb2v; arc=none smtp.client-ip=74.125.229.41
+	s=arc-20240116; t=1790745214; c=relaxed/simple;
+	bh=MypcxZlDJd+r7SofOnuSEe+Q+SDR8+gy+W2gDGm+htI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qWV4Um1pYpHQmi4IPn8qVfRyGJd6/YVOhf61Yhj2nzEhjHlWmq9xzfkX1fY6fhMwH2h9WUogx7Z7w8v2luwVERfz2kgBmoSycw9XSX8N1O5HTH4AU9YNQeP0i4DKGT5p/HzsPBYDElxMKgYJ2wuw0n2L2MQNWpaiV11SY7cGePs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZaF26YjB; arc=none smtp.client-ip=74.125.225.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WerGsb2v"
-Received: by mail-dy2-f41.google.com with SMTP id 5a478bee46e88-34bffc8105eso972494eec.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 22:06:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZaF26YjB"
+Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-4843971bdd0so626334f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 22:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790744782; x=1791349582; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=sAgL0Mi0+sX1VGlcOpnZQYafcet3pBZW3SXrknQHEys=;
-        b=WerGsb2vgJFYwiDL0Dh05AiSvxmcpVlD3EnLzAs3mlxh6PH4jJHORbxGXNGTBvCkRM
-         6/q987R7t8rCTDWyubF2d12SdZHnrrgfeiEvZeQVevDacRY2cim3TzvHlQ4pF8Sr5ev2
-         kCc+TrNw4+zYUX+G/lUUJltkQEsC3y6FWeVhwppMMAH6OPgDJQ61wNOQ4fPoyMI9lC/J
-         oBj2I9gSgFJX4fVa2JCl9P7Dd0oe6yr17r84VIC+kJOkiEiMDMaf5RpdjHDhFJGlvTtY
-         Cc0fCC94K0ZaYpWXUmqkgUWRXdOQfHCAodCXVdSPuRP/xoHyVZP1XKWJryoBQcXJsg3j
-         JSIQ==
+        d=gmail.com; s=20251104; t=1790745211; x=1791350011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=+c4qh3TxeW41f6Urn6eqBomxhi1RyxqZL+PP0oFbtfA=;
+        b=ZaF26YjBt5Tf/Urlb2fYs5tk03xGtB3BHGKJFDGiWK/Ka5s/QlKBoY0KoPnJiDYOjl
+         eGELlzxatMebJa68buj5kVv7/7tycHuzILBYZ2fZf0gjLH76W10IjH143CVhf7hku/Od
+         QxxK4kvkO4thY+4LeyfMs09wCczdpZHXDA9JUVvhsR9lceYGf5A0y2+fgXHZCfnyDVEn
+         gM6La1pqqJ2oRhK7jrBs+YRQE9M2B/dzh5JvV/OCbvp2STYr3mHCq7sKL3584XIiuJ1S
+         abXtjqYzusLnHCnuo/d3V0Aaox8bJDuwlJpTms2UOS2VdOrsETQcX6PIqxAA/73UvvFP
+         cOYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790744782; x=1791349582;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=sAgL0Mi0+sX1VGlcOpnZQYafcet3pBZW3SXrknQHEys=;
-        b=NmmSxnNXOiaUNeRR3zTLMX1O2tFkIeNA7IKdKjZw/xjQBUoE/aqeyKHqh5yvbbYElz
-         3WmSJE01jFtfPbotWDeg1pibmLbeMx+SaR44yH/y50RkOMaV5WnnvWYU2d8D8vRlQnhG
-         AnUvSYwfB9IVU//PTwV1SbOKza63d94y/oyHHUbWHLFjq5SaVR6QfsBybhxyyrb/UAPk
-         9ZRZM38ig94dZXgw2seyqkKafTyClr3FwEbFznDCVksRwraXjrb00fjlnCnaBo6njnww
-         Q4H4DNocMToWhL/hU82isyVQbCYzByrnt7WbErVD/pXCPTfa13unqPziztDDeR01SkDm
-         cMjQ==
-X-Forwarded-Encrypted: i=1; AKwUvByYrVFiLnlAlGGscgoSWTsQLa+8/7nOMjKRJRuC2bD2dhf8gprNa3L7NapL+XW60SANvrZ7e1xZAJdj2BOA0O670i44@vger.kernel.org
-X-Gm-Message-State: AFq9FYLFbKudY77mwp90VG5ECJv6zatAbRV7mudmawHWMu32CEZfv0+k
-	ykb2N+8B+V2difQycUVh9LRqetH7TrZDYLDjxKt18KYkv6l67Tq3Xm6A
-X-Gm-Gg: AYBFou3yjqKmbVTcSdszOOBoQrVRRfBnUACtuSEb9SssCk2a5cEBwqv9rSS+I4Fc5oX
-	pLz5bwFp30zxsy661g8oHTAs5pjYMAaUqkT14XjXhdtzFTHTksReRTd+fEGZR7VJ7S1sl/zyviS
-	dkODzsTHkTcSD97eTPqGwUIyXb7uaGKWXZaXSLNnVJs0jSG9db4mEhqYzOqwAxKnjlJSaD+tXTT
-	V1P3eXQ3qQUcUmZeeFLXontej7hTYlgYuOlb2tUrXjTkM8ZAkiyuhwhgeyEtB+XF5gs20V4jqXU
-	z02Kj5e2JgtKNjyem0Q1VFlo10vEIEyaNZjhcY6mbK/jJo2aFuTBTFwGUSatv636+PS7wk6Pml5
-	otWuG3cOMlvJZIqP+we829gzm7uQkkt0ugyPgpTr85DTswmESq/sWQ4pyvrJmt61qNBifCJCI9T
-	W1iDQX7JoRnafOF2LHYFk/g6i270g1YmAl+vuDeMqTq9C31OV2icF515PxRezHj5yl5QH7PXl5c
-	2V5Om3tlXCT5JFGKmdfUlEG0D4XPsSEqtcRSlac
-X-Received: by 2002:a05:7301:92a:b0:33c:e9d:6d49 with SMTP id 5a478bee46e88-34ce170a6d3mr413680eec.39.1790744781935;
-        Tue, 29 Sep 2026 22:06:21 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:101a:5ce6:a15e:d8ca])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34cf22f97cdsm959454eec.1.2026.09.29.22.06.20
+        d=1e100.net; s=20260707; t=1790745211; x=1791350011;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=+c4qh3TxeW41f6Urn6eqBomxhi1RyxqZL+PP0oFbtfA=;
+        b=VdNf0uxlvRck5QaQC+52bDtmx4kDctHe4uMPbuoysSn02Kdw+nqqqbSOrkEHkAIaE+
+         nvzxsHZcGBVpBzCbJVSyYz1iTgrU6b2liTIEms0TAeuej5/t6vs7M1jcPGSPklT6XWjc
+         Prb4xcNZRUBT/jlak2YOlea5lFTw9vCbko+0LccioHAOiWf8NJUD4WCfAVF3hYxnB3Be
+         TIF2RMC2xHSB3bozrI+Wiezdhf1IMKwUbXMLJxOBFB+cyc74CO1+XiCS4qOyjNFZBY0S
+         jIqltpnLl8fajqGHhMfYjzQX6x/gmnlF03C4E+Jnbph75v22JuwUR3r7XjfIwhyx+CA9
+         9sJQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxfCh8DfPgw8aJWaRKr8eQ6GxytbPstm95qcNI5nfBtGhCBjXRbY52uC4XqJ98YHq/+w1KFsWNio3QQT8xVkCPcCHWG@vger.kernel.org
+X-Gm-Message-State: AFuF++mxW2TFMdtCNXAbhgTMn3ZeWb1kMvDjgdSBd8dd0hDvee0+THVc
+	YgeYGOf+oL5G2Qa5jGshqSAtlAdgf5LwcRPm0O64XPxnIqNwdxNs2sSr
+X-Gm-Gg: AYBFou0l7jsByWnj/9L3A5DiKnHzqperTN+htUFWWNoXfkFsxKD7S1ffzpqJUNesyiF
+	DAecuSqERs/aUQ7++BHi24mGkgEjI3N35x3emCalDR3qZ9gBY5OEUciU2F9C+0bxGhtLTp+hkFH
+	EifF/Wt5CqHtOk7bkFMzRGtxYWUjXhxrucFZnSgPT96mnAdRkHB811h7cN1i4yoKxd99mhMzrAk
+	lcgiVcNzUepKfLyM7VXigpUgNF5GBmHOeLHcWNTz/cUsEa97aTSGw6j3P1apHXezA7FWTVTO3n4
+	f1Q1ahokc1yZvKMaa9aUoieQjahcqkLhhRjWCyXL9gon8+nP/1hZbTMenoQzzkCBN84jJJ5ZmnH
+	Ej9sbEPCBPJCUgSg8mP8dAJ4Hk2qFsuow/mmnLvFYJaINv+NpcTTCGfty2Wd0D1HSo/qdeZ/uiH
+	Z/b5p/05dcXr2WODq3W3jEL6toBqaBDL65hlYtNSWTJ80KQagprNFn3iUGTNffmktGQawYlW1pY
+	/kxh9zQuNIZY+DZSirF
+X-Received: by 2002:a05:600d:82e5:b0:4a0:1a3:bf6 with SMTP id 5b1f17b1804b1-4a01ab4f1abmr2284165e9.0.1790745211216;
+        Tue, 29 Sep 2026 22:13:31 -0700 (PDT)
+Received: from lima-kdev.local ([85.100.66.184])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0174d8738sm36542285e9.2.2026.09.29.22.13.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 22:06:20 -0700 (PDT)
-Date: Tue, 29 Sep 2026 22:06:18 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Hans de Goede <hansg@kernel.org>, Nitin Joshi <nitjoshi@gmail.com>, 
-	platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] platform/x86: thinkpad_acpi: convert mutex_lock() to
- guard(mutex)
-Message-ID: <aryYOI92NRUGT-4F@google.com>
-References: <20260806061925.625482-1-dmitry.torokhov@gmail.com>
- <15bd7fc2-ea2c-95fe-330f-6dcb005239c9@linux.intel.com>
+        Tue, 29 Sep 2026 22:13:30 -0700 (PDT)
+From: Kayra Cizmeci <kayracizmeci@gmail.com>
+To: tim.c.chen@linux.intel.com
+Cc: KPrateek.Nayak@amd.com,
+	Vishal.Badole@amd.com,
+	justinstitt@google.com,
+	kayracizmeci@gmail.com,
+	klaus.kusche@computerix.info,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	mario.limonciello@amd.com,
+	mingo@redhat.com,
+	morbo@google.com,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	peterz@infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	ricardo.neri@intel.com,
+	stable@vger.kernel.org,
+	x86@kernel.org,
+	yu.c.chen@intel.com
+Subject: Re: [PATCH] sched/cache: Honor asym packing over cache aware scheduling on hybrid system 
+Date: Wed, 30 Sep 2026 08:13:27 +0300
+Message-ID: <20260930051327.206529-1-kayracizmeci@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <7790ab6c5da3aeac42f6878f0a167c6cddebb354.camel@linux.intel.com>
+References: <7790ab6c5da3aeac42f6878f0a167c6cddebb354.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <15bd7fc2-ea2c-95fe-330f-6dcb005239c9@linux.intel.com>
 
-Hi Ilpo,
+> Are you saying that we should update the first chunk to add an env->idle check
+> to match the asym_packing migration pre-requisite? Like below?
 
-On Tue, Sep 15, 2026 at 02:33:27PM +0300, Ilpo Järvinen wrote:
-> On Wed, 5 Aug 2026, Dmitry Torokhov wrote:
-> 
-> > Convert straightforward mutex_lock() and mutex_unlock() usages for
-> > hotkey_mutex, tpacpi_inputdev_send_mutex, kbdlight_mutex, lcdshadow_dev
-> > lock, and dytc_mutex to guard(mutex) and scoped_guard(mutex) helpers
-> > from linux/cleanup.h.
-> > 
-> > This improves code readability and ensures that mutexes are
-> > automatically released when exiting their respective scopes.
-> > 
-> > Assisted-by: Antigravity:gemini-3.6-flash
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> Hi,
-> 
-> I've now applied this patch 1 into the review-ilpo-next branch. I 
-> converted the newly added mutex_lock/unlock() pair in hotkey_poll_setup() 
-> while at it but it would have been nice if you'd have made them a series 
-> instead and done that for me as there was unclear dependency between the 
-> input_device_enabled() change and this one because of the newly added 
-> mutex_lock/unlock() pair. Hopefully the next time. :-)
-> 
-> Patch 2 seems contested and changes behavior without telling upfront. And 
-> a return value change shouldn't be hidden into otherwise mechanical 
-> conversion patch like that anyway. The change is generally good otherwise
-> so please resend it once the return value thing is addressed.
+> @@ -10847,6 +10849,10 @@ static enum llc_mig can_migrate_llc_task(struct lb_env *env,
+>  	if (cpu < 0 || cpus_share_cache(src_cpu, dst_cpu))
+>  		return mig_unrestricted;
+ 
+> +	/* Prioritize asym packing over cache awareness */
+> +	if (env->idle && sched_asym(env->sd, dst_cpu, src_cpu))
+> +		return mig_unrestricted;
+> +  
 
-Sorry about this, that was my oversight and not an intentional change. I
-reverted to reporting '0' even if something fails inside of
-brightness_get().
+> I think this is a valid point.
 
-> 
-> Sashiko complains about the strscpy() placement in patch 3 and that looks 
-> valid concern to me.
+Yeah. :>.
 
-Fixed up as well. I just sent out updated series.
+Thaks,
+Kayra
 
-Thanks.
+> Tim
 
--- 
-Dmitry
