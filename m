@@ -1,152 +1,169 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012022.outbound.protection.outlook.com [40.93.195.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD69750C287
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 14:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790778238; cv=none; b=Fq48AzoFdHD3h4jYeNtPJHkazFtla/YEzHBW/4A07KMrSxbkcZYTFBkmLGhkGT54H7r60sFk40NDcDTmmB+/RrW5wM9UataOOU7FLbUUxCTQLF1+/J3ZL50l60lU42G1W3N8sA8USfryCxCpCJThnDsRKoxEHSOVH/oi9kfcbss=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790778238; c=relaxed/simple;
-	bh=ljNGBp4IFC5/vH2B1soisqS2RsIGB88Aj7oUyA6gHH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rH5vpuMbtRu4DhCwCxBPlE6Mr5MLM9uO5H8a/y80GfDREXnU+50wwM7Rtnl0EuIR7VwMhJnR2d9inuxWbKu4ILBiWb+zMJLtcDrRVIJFBO36N5IxQGZ7DbXiD9NctaAIZej590hipZlm34Qnf8ZTUPzrKB5YpRXgAmsquLvD5NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=c7tTdA3m; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ksQhpyC1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F6851A726
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 17:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790789091; cv=fail; b=HUoyUfANyMTEGynLBLA4+1x6q2FHBEu43u0YSm/Wy/WshSHrkl3rexViSRNPKz1jC88MA7qqUN3oMfR9xC//X89nuPDh+oQ2tf2oqWCDGSN9XGXxSpWwvl0HqsKYkM0J/fZm1DymS4gmrH9Tk1zPqIJW9woGyDj6m49ldBm6i18=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790789091; c=relaxed/simple;
+	bh=yFgs7nWa4I65bnfh4sSyD0RhIYbzd0qvAbZhzUZfv40=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D0W55twcIEnxDGZBzhWZD3QVHR9cRMn9vI8tYbgEb4ffx0kigriPc+e6PHPvxW0tLM4ugYzi7p6lq2qklPiOVDlAU7i5bcmGu2yKPKX01P5wYPYuD472q6fOhAqXsB0Vx56Tt3Gp4INY6/7/YscDYoewzg1HMP7M3cqI5fnk3YA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SitvpUN/; arc=fail smtp.client-ip=40.93.195.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="c7tTdA3m";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ksQhpyC1"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68UE04cN2970762
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 14:23:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=It/I7bqJvS/GZFBfLizAbt75
-	7ur5ymNP07ts+oGXT5M=; b=c7tTdA3mD/CnWZ9IGSeWLodmuO3veRo1jHRv4RSk
-	sOllNiw3AkPJMayA+GVn6H2QbYnv4wxklLiu3HSxFe/EK4KbsmEh0ODO+w43h7Hy
-	kj8jRXgu4of2rqHzs8gy7d/JT61Oj0vkwO/9G2PDdY5vrIbSzZqpYqYatX27r7LS
-	qy7tlrOhYfnosxRtqK37axr21WoK0O/+y6rK8ykIvS5i4A6FSU3V90EausW9R96N
-	wB+XPmYcGHahP7ss1E7z9z4OB0Nx2S129ttNQ43j67atedhWVShVQBG9hZmpwHLW
-	WX8h/TkSk6DTF8wwLTirNgK+tSJug6JRmg2ce6r4p54dSw==
-Received: from mail-ua1-f71.google.com (mail-ua1-f71.google.com [209.85.222.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h0rhek8ra-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 14:23:33 +0000 (GMT)
-Received: by mail-ua1-f71.google.com with SMTP id a1e0cc1a2514c-986ea272f77so417317241.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 07:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1790778212; x=1791383012; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=It/I7bqJvS/GZFBfLizAbt757ur5ymNP07ts+oGXT5M=;
-        b=ksQhpyC1ZD2uW6u4FL8ws/28WG1n0DGOqrlrlD7yfI0XCQbwPI3FC17ybH1mgaOwXT
-         /EKjQbh5nbFuUEQ9FZR2RG9aHoHmAUSQomf7zdlaIUR5AsqzkafOpkHLehww1PHK5bEB
-         0eSW3MGzN/6gnBGrh1v8SIkETR0yQ/TyJ3kYQOkj5eNZkAVnwydZg5KDCQVl7VRGCx+O
-         1upRlpWvcr3l81hRJQK/uF0lOISWB2fdeueihahD8ZhTmIIMwrp+9zn+sErLR//p6TO8
-         itPKYqsKOVMP2Ar20BYpehwxNwy8fHwcfFUxMKSDltoytGQsK4URWCqIR9cXkkER0gWt
-         bSyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790778212; x=1791383012;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=It/I7bqJvS/GZFBfLizAbt757ur5ymNP07ts+oGXT5M=;
-        b=smk+vO1VY7IMXfkGYcMaVzcjVv8IgzLZrihTVEB/uNf3k2SXbQ/UWJY9BDQgMsgGi/
-         1E0p8cgAA+34TGHVw6MPCZyTJui8GJtqysJWTB0IUliuW7ENhXdABjPqRtPzBM8Z4US/
-         eSOYohl9TMNJb0PChXaXF7lxfsD78dlVkzwZ9q7rEh2Zs80yg68P5cqwbGgUB8Nm91fT
-         0Lu5dgtqX9ftWztP+t9hQmWTYuRYvaIHQEtrLWu3V4kcoTGilJwLPz250H3PyOjmg37w
-         lU326BVn436MfrV0OAd84TaSG9q5WcWhPjqgO693c13yFpAgGIDHOlR7/lz0v2L7nT4l
-         +lVQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwfz5i3dsgvbr40UfyFRHuTDZ8zh9VQhwmsyrZi8t0lw9BpQs+e2PcItg31CAj4HUodGxJxXILcpqG/oJmSw5F9lYar@vger.kernel.org
-X-Gm-Message-State: AFq9FYLAPgyqPRgC0z/0v6UT5L3eVQE0eys8NSxeb8+BN63slBc0birh
-	F88AGmEm3cE/sTASQZ3GJdmohqrId71w6bu82UL1oPAT1m7Rt/Oe05K1wAXWBwkVzLnslrflyXM
-	eCupKb6+7TCSXBH7a6fWkRwfWg3ySTWNe9V8DqRHQF2TPuDqMToHFFqUnPd5LBwgnTltbUxrWsx
-	pU
-X-Gm-Gg: AYBFou0jSMxkE+054Gg5GzGArldRlXxnevHaSKrqjDuhOKOPdNW0x7yUief4qjN5HDV
-	JgdquxnKv2VuzC9izEilBusXWjx93EQ0+MO83v/rMKs03mSojgUWxYehs+PwRuSSm3miaVQwYo0
-	wFIn4brzZfvD6QNcYYKedCT1ycF+qfLheDIrIsgEwxfmbnA02VRS5gUQp2BRavYPDW9r859fj1e
-	KBol5xD3FWjMqfwg2RFGaRZPq+WOj3iDWu6snBbcpZ+PIZkwFKYti2cHqeWuLEs4MIMU/ZSIOwC
-	7di5w379hyqj8L1FghhYKLL0QButpPlEMTfKRoNEgVg5guVd8uwCfAJkYO6WzHs2v3AYTf4zKR0
-	9398sIAjNrgzI+Zo=
-X-Received: by 2002:a05:6102:942:b0:7a8:1817:278e with SMTP id ada2fe7eead31-7be72cb250cmr274241137.20.1790778212343;
-        Wed, 30 Sep 2026 07:23:32 -0700 (PDT)
-X-Received: by 2002:a05:6102:942:b0:7a8:1817:278e with SMTP id ada2fe7eead31-7be72cb250cmr274233137.20.1790778211869;
-        Wed, 30 Sep 2026 07:23:31 -0700 (PDT)
-Received: from oss.qualcomm.com ([188.27.161.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a01e657287sm3171965e9.7.2026.09.30.07.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2026 07:23:31 -0700 (PDT)
-Date: Wed, 30 Sep 2026 17:23:29 +0300
-From: Abel Vesa <abel.vesa@oss.qualcomm.com>
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Hans de Goede <hansg@kernel.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Maya Matuszczyk <maccraft123mc@gmail.com>, linux-arm-msm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/arm64: qcom-hamoa-ec: Disable the SCI IRQ
- during suspend
-Message-ID: <p4dagzkkmltv2e3uckgndnxmbp6tq4twt6vb6akd4dumyuhusp@kukxl673zmjp>
-References: <20260930-qcom-hamoa-ec-suspend-irq-v1-1-ad82713c8d11@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SitvpUN/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=O1DfVuYFMwjD8sJNL/YpdAeg4QOp+spwl+QWaCIBznQnBitL80xHrbu/hgqEWpDXDhc5Iw8yUTj70YGzoOXitC8xGIqYfP40jqbQWlsQJJ5KO9cloxyoYw3WKKa8NMJ45fR3DrgsFGizTG9NHS2qjfgVzZfvYij78eGSQZ4POz4dmUwCq4m5eEzpoi8TXR7Eto+ffhQMjmMm5goRqxobu5ozvqOkrmTghXCpN55dFtV7+haOgqbYioRcp4m3zVRxuVk9QfP9+N3qKuDLUBLOXQhPovZ2eiWcoIpodDowQY0NlfDCmgcWINnI1BVbA7MF1XqDgu+4GJ8CwLpQ5y/C0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MkpuPhS6EKqN1cWTwmRFWij2P/eEPdNOcl2bk3MWGik=;
+ b=XJARokUKAGyYRmP8ecVazxiLeE2uNaagvCr7H1uaWqzd4j2NbAy/Fa8yi63z0oqBtUSVawaB6kKLORUmuHliLqJ6x+HxDLnPC5lKoaKcqAUEy4knm13IcKWydhB+kA6NSmCyDwIZNLpqxCt0+oUCiwQ92DoGdPhD+wQWzM1NANGVZcomUwWjTsy+qPe2j2pp3L2BRKH9zYK+Ke8QEqPYrT9cEuZ9po4E8l6VjI2z2BCGd116lTfH74uYQuMRzWkQxxNCWffkW6eI1K2xqVGpgy0TF1Fay3s6JGO0v0htorCuwu2adacbnN83RFErsGdBV2mvEkGytQqSXw3tye1KFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MkpuPhS6EKqN1cWTwmRFWij2P/eEPdNOcl2bk3MWGik=;
+ b=SitvpUN/qwUYB55QVBn5+Hy9FFjtftNxfCM8YUQ7aJ39KZbt5yQV6SzRoIctNoOhlWUP9fpqqG2vfvfA3QLrQxSCwUonkZ9AWElGgOV6mT+VTlh+vZRx6Cl1ej5guLyLoSBP308C1mEp5eWrMBALvwOODRUakFqnsI9x5wUMMcI=
+Received: from LV3P220CA0011.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:234::12)
+ by IA1PR12MB6329.namprd12.prod.outlook.com (2603:10b6:208:3e5::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.15; Wed, 30 Sep
+ 2026 17:24:40 +0000
+Received: from BN7PEPF000000A5.namprd05.prod.outlook.com
+ (2603:10b6:408:234:cafe::a0) by LV3P220CA0011.outlook.office365.com
+ (2603:10b6:408:234::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.16 via Frontend Transport; Wed,
+ 30 Sep 2026 17:24:40 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN7PEPF000000A5.mail.protection.outlook.com (10.167.245.229) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.472.14 via Frontend Transport; Wed, 30 Sep 2026 17:24:40 +0000
+Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Wed, 30 Sep
+ 2026 12:24:37 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
+	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v2] platform/x86/amd/pmf: Fix ACPI buffer validation in APTS path
+Date: Wed, 30 Sep 2026 22:54:04 +0530
+Message-ID: <20260930172404.3506849-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260930-qcom-hamoa-ec-suspend-irq-v1-1-ad82713c8d11@oss.qualcomm.com>
-X-Proofpoint-GUID: DQH_nCmyhIwTgLwkFqbA_MsVCk6nK7YE
-X-Proofpoint-ORIG-GUID: DQH_nCmyhIwTgLwkFqbA_MsVCk6nK7YE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTMwMDA1NyBTYWx0ZWRfXzwysz7fm71Oz
- cfuEaW+245AuenkhKaBEJDCz6SPbv2DEge1aOdpY67kXhObUI3v58q2OGpb1e1Rv0b2pRlAs4nL
- VUqbP+LlnvVJmQLmC3bbYsSCEZxycHlDMaXbYNIh8RkF3F1JGXnSCNyp/RbsgZaoKfLHUJbZQhX
- jL1gaEvoA9WQm9hYAt+TBUr/YzEI4kIZ0aBXueqR2UPq5GwNyPJKx1qoCX7CSEOjNrvzZNiLE3c
- cP/HRnw9/PTIibHOcda0kk0YrCJ8ImEFGuMeqlBEQrzrbDwdXXVuIGt3Q/df78L/EoTkQ2a3NfM
- y056A0aXqWccLuLWOwSBYFxkmPOn3sQqbv8SFNH5tioYruutcmWG/zMKIyQ36BAlVf9as1qmDbw
- Wjb2kdEQbt6zNh8Y1Q/9NMs7dqWvR3s824jalbqRTbWLjfdKvQWkrmP7r8mgR/RHYREmWVYa7uB
- aHEKHVMVw9aWHmVEpiw==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTMwMDA1NyBTYWx0ZWRfX4P7GvJgOrIvt
- mNV2F2i6qzNAiUTIfCpYWXEOHCCO58E8t9w3JElEzld6v4EX4k6r8W2J+yV5idXZOcmi5reyP4W
- oFNAqcNtE3HndE8CoEpu+s0I8cxhS6E=
-X-Authority-Analysis: v=2.4 cv=Tu1zFzXh c=1 sm=1 tr=0 ts=6abd1b65 cx=c_pps
- a=KB4UBwrhAZV1kjiGHFQexw==:117 a=EiYrS7xXfcF7w+nkr41hpQ==:17
- a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
- a=EUspDBNiAAAA:8 a=Ga34Rj3xoGKA-2XpnBgA:9 a=CjuIK1q_8ugA:10
- a=o1xkdb1NAhiiM49bd1HK:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-30_03,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 malwarescore=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609300057
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN7PEPF000000A5:EE_|IA1PR12MB6329:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1e351f2-ef7b-49af-a832-08df1f17b5cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|82310400026|376014|1800799024|36860700016|10067099003|56012099006|11063799006|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	1R8DSfTNWqOWpVBDO/YFMF1hEKl7kNjicBZvWEOhqX7USCyW4jJikyB1XPBm6XK3tnywhI/1UaWLRTdk/xD8/EPKJDPYkbMGQRRvLIBa2cqZheLSxG6BKC+PnREopxquXWx5qs9TCBhVLqL23MGDqPCl0q6L9xvxJnqbh+WxuQywGZQZU94IZlWgK5A8hV45PCmC1zuHYyb0cNkMxfZ1tw0smwVuhvFOArM8vX43iNhwXMYbcZQvCceAV0PveHeRKPmp6yCxXX1zudIhDQiG78PtIw/yRMDGKD/OpGO2YVF5IWPdADxjlNXIsfHc8rbDC50u5WZNozl2nXhNjBOxmdCULKkG+a7zDxeuU7nmwinmwXpjaXhpNJO655dPUlMqfvtROEzKsA60V8SzF21xZUXtLHZLRcFDSVUyrtffHib0CoaRLVGI31sM/1dqcRD5Lgo6Ptx40wHG6lYHOzRLUmtu23vMQs8+wTyai7hQwrPR15o4bVAEF3kPKTTdvkXETJ1cW4AgUNsKz9hkTr0ZYR9hqzZkfU2xXG5tcRQEhugSCkwypuf5W0+2j+5dkcI6fcYAsA9vhGe5GfTJKS83XzUx6SSI3Hpv2khSd5Co6DcDvUPMQba0AFJucNL1SSWVHBFWBrBeKJ3q/e9cPdI8TqiXC03tRqCvcop7YEcJlg7jFgkxsmayOkP1++cv6KuOdrEkijL2RqOWDhm7uNvmmg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(376014)(1800799024)(36860700016)(10067099003)(56012099006)(11063799006)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	Rv5igefLGod6eP79ATiOgqir2yOzwFQZi6WAhgBHfiC8oF8LHS4jx1GpUSXWFq8iuivGtDPZsk+0BQZ0FEBSRBdesBM5VJxcZrdQD1HNqV1tNKFpqN7kfI1FXjaw8C67QbS6V29HfwPa1QfyLyXUTwRVAGof/sGUSiV7AjFcYtfjrybl3TqtNYe3pfOeqCmKPvKm7V/Cz+jIO8baMHyOOrrEqbuJ1EYqoIWfDLR8u5z1M0HYdu6/6VI8A5psmK5+/Was6HiFle+zziuCnfkccdrIWQA7ohbThjR8+NvetyKtA2Ibi8Vv+nSOeusaHFQX4G//MopGj51w7Vysw3LoJDWZJu9LRcjc6jgAy5LieiTgYSoKwpLfd6T0nGhoM8lsKkfRAMLiPcDB9Ot3eW/JmlbPc+r/YsD51hTy5BROWUdI6dovfzfMr48+NHdUlmKJ
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 17:24:40.4192
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1e351f2-ef7b-49af-a832-08df1f17b5cb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN7PEPF000000A5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6329
 
-On 26-09-30 17:18:36, Abel Vesa wrote:
-> EC SCI events require I2C transfers to retrieve the event information.
-> During system resume, an SCI interrupt can be delivered before the I2C
-> controller is ready to handle transfers, resulting in failed event reads:
-> 
->   geni_i2c a84000.i2c: error turning SE resources:-13
->   qcom-hamoa-ec 3-0076: Failed to read EC SCI Event: -13
-> 
-> Keep SCI interrupt handling disabled across system sleep so that EC
-> events are processed only while the I2C controller is available. This
-> prevents event reads from racing with the controller's suspend and
-> resume transitions.
-> 
-> Fixes: 5c44f48e91de ("platform: arm64: Add driver for EC found on Qualcomm reference devices")
-> Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+apts_if_call_store_buffer() reads a u16 size from info->buffer.pointer
+without checking that it is non-NULL and at least 2 bytes long, so a
+short or NULL firmware buffer can cause an out-of-bounds read.
+apmf_if_call_store_buffer() checked the length but not the pointer.
 
-Urgh, messed up the Subject line.
+Add a helper, amd_pmf_if_verify_buffer(), that rejects a NULL pointer or
+a buffer smaller than the 2-byte header, and call it from both paths, so
+the check is done consistently.
 
-Will fix it in v2.
+Fixes: 3eecb434d7f2 ("platform/x86/amd/pmf: Add support to get sps default APTS index values")
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+v2:
+ - Add a helper function for NULL pointer and buffer validation. Reuse it in
+   apmf_if_call_store_buffer() and apts_if_call_store_buffer().
+
+ drivers/platform/x86/amd/pmf/acpi.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+index 3d94b03cf794..efad01a4ed27 100644
+--- a/drivers/platform/x86/amd/pmf/acpi.c
++++ b/drivers/platform/x86/amd/pmf/acpi.c
+@@ -50,6 +50,16 @@ static union acpi_object *apmf_if_call(struct amd_pmf_dev *pdev, int fn, struct
+ 	return buffer.pointer;
+ }
+ 
++static int amd_pmf_if_verify_buffer(struct amd_pmf_dev *pdev, union acpi_object *info)
++{
++	if (!info->buffer.pointer || info->buffer.length < 2) {
++		dev_err(pdev->dev, "buffer pointer is NULL or too small\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int apmf_if_call_store_buffer(struct amd_pmf_dev *pdev, int fn, void *dest, size_t out_sz)
+ {
+ 	union acpi_object *info;
+@@ -66,11 +76,9 @@ static int apmf_if_call_store_buffer(struct amd_pmf_dev *pdev, int fn, void *des
+ 		goto out;
+ 	}
+ 
+-	if (info->buffer.length < 2) {
+-		dev_err(pdev->dev, "buffer too small\n");
+-		err = -EINVAL;
++	err = amd_pmf_if_verify_buffer(pdev, info);
++	if (err)
+ 		goto out;
+-	}
+ 
+ 	size = *(u16 *)info->buffer.pointer;
+ 	if (info->buffer.length < size) {
+@@ -138,6 +146,10 @@ static int apts_if_call_store_buffer(struct amd_pmf_dev *pdev,
+ 		goto out;
+ 	}
+ 
++	err = amd_pmf_if_verify_buffer(pdev, info);
++	if (err)
++		goto out;
++
+ 	size = *(u16 *)info->buffer.pointer;
+ 	if (info->buffer.length < size) {
+ 		dev_err(pdev->dev, "buffer smaller than header size %u < %zu\n",
+-- 
+2.34.1
+
