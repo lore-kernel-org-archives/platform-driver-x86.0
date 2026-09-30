@@ -1,304 +1,171 @@
-Received: from mta0.migadu.com (out-1.mta0.migadu.com [91.218.175.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.st.icloud.com (st-2002i-snip4-11.eps.apple.com [57.103.78.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FF03C3C11
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 22:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ADF3E9580
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 22:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.78.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790805720; cv=none; b=YHqC1phyJC+nMBM5rOP0/LXVjKeXSXBNORRgQYgzl8Xwzsk2tiUeI5Yqs/TvRx3V2UIcNUqkDs6zBpc29aV1hzP25LnFi5nTE8PWMuv4v/44AKEDIvEAWrwQjvH/gTJDuwzvvDznfjpsKuV7z9VYqi3KiqpDU1HZEVoUH50YYcg=
+	t=1790807218; cv=none; b=qK9ojynJ22deQjg0aHzNUuVDX41eyBjvO7GuoQOI+O8RPXAqvKV5PYDXGBgK7q885+Qw+9YCcaUa/M6LB8gcKtREHyKoFZzkzWnQCpDVOSku0QGcgvu8Z4weTwT3GtSaamkI/O4+0TXFvnCBsApl7NnX5iz9TfvcMxY45ibi4es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790805720; c=relaxed/simple;
-	bh=jTaStd3+0ew72+ffXTT1sChu/gNIAwqoQJW8VrkxEfU=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=lIDVUqTSzoqk3J0HJhbx//ojvP+jTrJEaoRVL0yuRR/V4Nw6ozIIgm+H1oAi2i9UyWrFuy6TQfVyXDcwinUVdJZbXhnB/UU99H6P0U4m0Ixs9MxbW+W03jxLVWswrhHRx0GTWl6WHzR3zf8L4p7qCCr8CC1rfGdYjETn3LjNXsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X4kPveZj; arc=none smtp.client-ip=91.218.175.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790807218; c=relaxed/simple;
+	bh=hmEdMg6wTnd34APfEfu5j/0oYZY/XEIo7DobIEh6zug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N0aC7mcqSzgPxvImdoVmjv2yeW4af/fW3hmpZakUS3oszYjfFQEUdIzDlwxBeWLfOet65cMmiaw4V4jrBvAfX5yFhnsNnISlU/7tAhcJOSbhbMGMoqmbFSVQ/SUA46DTh/I1Y5G5V5yQXz8go0HE8GvZdZ8mHQXEwUJjlxeVhgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brough.org; spf=pass smtp.mailfrom=brough.org; dkim=pass (2048-bit key) header.d=brough.org header.i=@brough.org header.b=CQXqvMK7; arc=none smtp.client-ip=57.103.78.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brough.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brough.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X4kPveZj"
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=jTaStd3+0ew72+ffXTT1sChu/gNIAwqoQJW8VrkxEfU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790805712; v=1; x=1791410512;
- b=X4kPveZj7YL3YeeWLcvKuVNNrvCWpZlR7Wjdywb8lBQvBfNGFzruqDfGzmUuIszxJhS5zUzN
- 2carOn5cd7u1He+zJbjhJalW/v4xyHxrMqrAz1wx+UYljUmQPgojVtiPEYXW2+kCJsnmFUN7Cyw
- +rZ2k3/ygLsirai7sMnJBRcs=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id de2e50cb399fccd8;
-	Wed, 30 Sep 2026 22:01:41 +0000
-X-Mizu-Trace-ID: de2e50cb399fccd8
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (2048-bit key) header.d=brough.org header.i=@brough.org header.b="CQXqvMK7"
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-10-percent-0 (Postfix) with ESMTPS id 7EE541800548;
+	Wed, 30 Sep 2026 22:26:53 +0000 (UTC)
+X-ICL-RepId: 01a0f46d-8573-7e4c-8e3e-9f51fa919291
+X-ICL-Out-Info: HUtFAUMHWwJACUgATUQeDx5WFlZNRAJCTQhLBUMEXRxIDlYCWwdLVxQEElwfUwpcMFsKXBhQAxwfSx8TC1NWUAJWDVQFGQRAFxkKUFAGWhIYXBRcUFgeRhJWDV0JGRhGXlAbXwJCDxwTVhUTHUMZDysISgRDB0UCXgslEwlTVlACVg1UBRkEQBcZFVoJClcAQAtOA1QEWwBCC04GXRlaCkgKQANYGlofGlYKVwxZK1ACVg1UBRkEQBcHWEcURw4PE0wLRwJaNFYfVBlaAw==
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=brough.org; s=sig1; t=1790807215; x=1793399215; bh=Ik3YPnPwNm4KQVJBOqdf88VvdIj/yJ6gOH3tmGf/EYQ=; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:x-icloud-hme; b=CQXqvMK7UAh37BVDsuuZ82hJAgWSxtkeYhj/CwLbiVDfZ6Lwkp2Zet1ad4tttmYYG+Dnt9UBsH30+J5jpNwBogshKlZDHKHPQhhkfuo/CV4P0EykHOEXTXtNM8zv5hEScN/vTXvuYYctbazuU7nHweguEUZk4+Z80mQjbYMV5KM2f4Ipu6FikX29yVEU8DYeS+U1q8kk/nTO1DKWQFTIzHrnnZ/N9UcuGZTvuR11dX1eAYaLtqpdiDy5SYameA7P/YZuhpz1is4+oMkskWKqZ66kB0WBtVXNX7SPEIsa/5jUKj10DAccMbNqCBfGCXbViWy5iXqx0VsNT8AtnoOg9A==
+mail-alias-created-date: 1646594351620
+Received: from jb-desktop (unknown [17.156.216.30])
+	by p00-icloudmta-asmtp-us-east-1a-10-percent-0 (Postfix) with ESMTPSA id C9D8E180016B;
+	Wed, 30 Sep 2026 22:26:51 +0000 (UTC)
+From: Jordan Brough <jordan@brough.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Henrik Rydberg <rydberg@bitmath.org>
+Cc: Jordan Brough <jordan@brough.org>,
+	chrome-platform@lists.linux.dev,
+	ibm-acpi-devel@lists.sourceforge.net,
+	linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 0/3] hwmon: (applesmc) add charge_control_end_threshold support
+Date: Wed, 30 Sep 2026 16:26:32 -0600
+Message-ID: <20260930222650.1883805-1-jordan@brough.org>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 30 Sep 2026 22:01:41 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: "Ilya Gladyshev" <ilya.gladyshev@linux.dev>
-Message-ID: <ff47014b7b55c9b6219c52c02d112ac65e20b39d@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v6 2/5] platform/x86: bitland-mifs-wmi: Merge the
- function  of redmi-wmi into the bitland driver
-To: "Mingyou Chen" <qby140326@gmail.com>, "=?utf-8?B?SWxwbyBKw6RydmluZW4=?="
- <ilpo.jarvinen@linux.intel.com>, "Hans de Goede" <hansg@kernel.org>
-Cc: "KentoNion" <kento@kekto.ru>, platform-driver-x86@vger.kernel.org, "ted
- eric" <ericted8810@gmail.com>, "Armin Wolf" <W_Armin@gmx.de>,
- linux-kernel@vger.kernel.org, "Chris Taraszka" <chris@miget.com>, "Matias
- Civadda" <matias.civadda2342001@gmail.com>,
- "=?utf-8?B?6auYIOS/iuaWhw==?=" <btx342@gmail.com>, "powerfullz"
- <wleizc7319@gmail.com>, "=?utf-8?B?5a2ZIOiqiemTrQ==?="
- <wolf109909@outlook.com>, "=?utf-8?B?TWlsb8WhIFZsa3U=?="
- <vlku.milos.fun@gmail.com>, "Rsplwe" <i@rsplwe.com>, "Bozhen Peng"
- <bozhenpeng93@gmail.com>, "Nika Krasnova" <nika@nikableh.moe>, "Musaev
- Ibragim" <atomicus.xyz@gmail.com>
-In-Reply-To: <20260929134503.17249-3-qby140326@gmail.com>
-References: <20260929134503.17249-1-qby140326@gmail.com>
- <20260929134503.17249-3-qby140326@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Info-Out: v=2.4 cv=Np/cssdJ c=1 sm=1 tr=0 ts=6abd8cae
+ cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
+ a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=gFGppuTrAAAA:8
+ a=3KJn3nblrUCwOSVLmvsA:9 a=QEXdDO2ut3YA:10 a=_Y0xhhAoguY4gwfEQMhp:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTMwMDA5MSBTYWx0ZWRfX4kTtyWo45inW
+ ZKuMuSqHwF0HMBtKGMuyS0k+gGO3i3p4jcBfyB+m0PS0KDuyd6oR2q3mhWJG0UAthNmXtVTC1dS
+ Bxd1vx4tD1o+kYqg+3Tq3PTFbk79ysOLr2dixehCaosjBtemRQLtiAVDItKGE+KadahBrP+0hnZ
+ u3hKBGrAi2ZFM0te26zh06oFafqYyBCVvLF74HBL6pXYN9oBZpIpkgUGA4CImn6irdww0JkLMlL
+ tIvnJXz9UWCrjCyuGB1WzBBZ3mhGDZP9Y8pX5GyrMDjaENJIz66LKHG//LPafv76ltM1X1GC9gy
+ +wrVgBllZufzmFSUVWqYkBdBfDUSwT/zsmCfTytYwdh/f3SMc4Jbj/dLabFu4s=
+X-Proofpoint-GUID: Ma3gpkMd9Du3364tovKf4jTfmQzGwxXq
+X-Proofpoint-ORIG-GUID: Ma3gpkMd9Du3364tovKf4jTfmQzGwxXq
+X-JNJ: AAAAAAABiS5yuYAq9u12fjzs8oQBYVjKUij4JSpuJom/DzWsqS5bePJkXTwavM57wDHNibPbIcti86nuffyH/zUyXoUpgz+zUsuGkXaZ7qVrLkISF0uNzM8PyzA2Q3L3+uvqA/QPCHIRk0GBRFSchrrIbcwWq26CYFt5aru9TjPMw5cKmMN0Twr4fbLZamK7uX4yEbRSucrJ8uYCvDFI9wrAYepj+Bt0Hcjlz5XhNy/hUrm5FEV+Uq7us129niXyKvshXyov6YV056wBipxhlfxFQnSZHDkpC4ODZTOstj0BupXQOgXd6uncck8mzmjbN9/FlYGWCsLUdlRM2HDCSp8IcH2bwr6VhKRZYw7ikCBPPLsIcN2V+RvcsisvK19MTjU9t/xYB8GUB3/e4TW+tQ4NNh2oAHbngtWZM7gG/5PBHNs5YuGjYnPHF7fHFAFo8wACSLIQzWiR2VeUq21FUHk2m7x68t5/SkNjVMFLcaBdQm8QbwmyJKG2LhSHPWkWr720frM0SdrQskPUR7r1YdMwIeDLVPZOWtEYpBMEiBK52yp4Z5t+FnpLTCK3eGksiro5h66wn/0YX9HoXDhJp7gmb8fQ4vaIuSDyYErGHKIx9PBuiSW3HbcfoEOdxamJbvMffEntUzkXAzriXlTwPOhKn6JOhy3trIfjC4pnJZMfM4dSHZxfO4CCPiOcYBwyQhLFGK6GfkQM8ukQ7Q9J3p533uq1GvTsI2MF3UFtfCk2mPn1XZWN8KgeraxKcr3eETqASRMX4lDp+013vs8zykp4MNtqwTScP0I+hkUKVgCgHEo2gusmyWgvpY71Vdyr3+NGt2Fdmly65wpn0ti1ePG0rZPWrfgw6BWNYAlx4qV1+Q7yEuKw7RhjzHuIzsWs742XGupdtQJbvy3dS0Hz+OJdRi2KI7Qy3DIzSuFbGutsl88l1TAoCMt43gJhfib5Yk21tyLTSLv6lIor3WNM6YLMtwWOH3c
+ vTYhrNjUJLylUp2FOXHed+0aSMeEaJ5l9eVxUkWteXxlAACX8zM1GAxL6KPfo1IAfy4dMgdxX771dsMWrlN3Cxe2yeFyX2ci5yI5BJokyQU4raz5TzTmmUORGcmBhqeCZuHKsF0/ns2fkGxeXN/DieaxN/dugqghPifjFwakdlTm22q3fdXcSCrmYnybLqXJVfb7dBrPIIM1eggfyj0CctD9uBUs/lvHOcLXiEzLC9AJtD3nWjM8zOQ0uYTy0U1kfjjFoo/H5qiULCq6JAPluat92tB+DlBS9UqZBJQ8fFad1/K8TZeQBo+VGsTrGb9cDyIzMT0LopaTiOVSutta77bR51ZuBdnfLbWxYS3oAKMAIUuYHH3eESoI9eOuQB7XdhgmNrA/c8nobnOtyw1P1MNrjK6xyPvOTrZaOELo7hzxpgIYz8cc=
 
-On 9/29/26 16:45, Mingyou Chen wrote:
-> The bitland-mifs-wmi and legacy redmi-wmi drivers both attempt to bind
-> to the same WMI GUID (46C93E13-EE9B-4262-8488-563BCA757FEF). This
-> overlap causes a device registration conflict, preventing one of the
-> drivers from loading properly depending on the module initialization
-> order.
-> > Merge the event handling logic from redmi-wmi into bitland-mifs-wmi. =
-By
-> handling both device layouts within a single driver, we eliminate the
-> GUID ownership conflict.
-> > Tested-by: Nika Krasnova <nika@nikableh.moe>
-> Signed-off-by: Mingyou Chen <qby140326@gmail.com>
-> ---
->   drivers/platform/x86/bitland-mifs-wmi.c | 139 ++++++++++++++++-------=
--
->   1 file changed, 96 insertions(+), 43 deletions(-)
-> > diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platfo=
-rm/x86/bitland-mifs-wmi.c
-> index dd1648b7de77..e1a81e89856e 100644
-> --- a/drivers/platform/x86/bitland-mifs-wmi.c
-> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -35,6 +35,11 @@
->   #include <linux/units.h>
->   #include <linux/wmi.h>
->   > +#define BI_HOTKEY_CODE(id, low, high) \
-> +	(((u32)(high) << 24) | ((u32)(low) << 16) | ((u32)(id) << 8) | WMI_EV=
-ENT_TYPE_HOTKEY)
-> +
-> +#define AI_KEY_VALUE_MASK    BIT(8)
-> +
->   #define DRV_NAME		"bitland-mifs-wmi"
->   #define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
->   #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
-> @@ -607,18 +612,59 @@ static const struct attribute *const laptop_attrs=
-[] =3D {
->   ATTRIBUTE_GROUPS(laptop);
->   >   static const struct key_entry bitland_mifs_wmi_keymap[] =3D {
-> -	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
-> -	{ KE_KEY, WMI_EVENT_CALCULATOR_START, { KEY_CALC } },
-> -	{ KE_KEY, WMI_EVENT_BROWSER_START, { KEY_WWW } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_J, { KEY_RESERVED } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_F, { KEY_RESERVED } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_0, { KEY_RESERVED } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_1, { KEY_RESERVED } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_2, { KEY_RESERVED } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_3, { KEY_RESERVED } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_4, { KEY_RESERVED } },
-> -	{ KE_IGNORE, WMI_EVENT_FN_5, { KEY_RESERVED } },
-> -	{ KE_END, 0 }
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_OPEN_APP, 1, 0), { KEY_PROG1 } },
-> +
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_CALCULATOR_START, 1, 0), { KEY_CAL=
-C } },
-> +
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_BROWSER_START, 1, 0), { KEY_WWW } =
-},
-> +
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_J, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_F, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_0, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_1, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_2, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_3, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_4, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_5, 0, 0), {} },
-> +
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_2, 0, 0), { KEY_SELECTIVE=
-_SCREENSHOT } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_3, 0, 0), { KEY_ALL_APPLI=
-CATIONS } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(0x1b, 0, 0), { KEY_CONFIG } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(0x1b, 1, 0), { KEY_CONFIG } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_1, 1, 0), { KEY_SWITCHVID=
-EOMODE } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_REFRESH_RATE, 0, 0), { KEY_REFRESH=
-_RATE_TOGGLE } },
-> +
-> +	/* AI button has code for each position */
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_5, 1, 0), { KEY_ASSISTANT } },
-> +
-> +	{ KE_KEY, BI_HOTKEY_CODE(0x19, 1, 0), { KEY_ASSISTANT } },
-> +
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0x80), {} },
+This series adds charge_control_end_threshold to the applesmc driver for
+Intel MacBooks, using the power_supply extension API.
 
-Sorry, I missed this in my previous email.
+Some of these machines have an SBS battery (drivers/acpi/sbs.c), which,
+unlike battery.c, has no battery hook mechanism. Patch 2 moves the hook code
+into a helper that both drivers use, and patch 3 adds the applesmc support.
+Patch 1 is the acpi_ prefix rename of the existing hook functions that Rafael
+asked for; it is separate because it touches 18 callers in other subsystems.
 
-0x00800501 -> BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0),
-probably a typo?
+The series is based on linux-pm's bleeding-edge branch (4c18627a1dfb). Patch
+3 depends on patch 2, so the series would need to go in through the ACPI
+tree with an ack from the hwmon side, or I can resend patch 3 once patches 1
+and 2 are in, whichever is easier.
 
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 5, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x0a, 0), {} },
-> +
-> +	/* Xiaomi G Command Center */
-> +	{ KE_KEY, BI_HOTKEY_CODE(0x0a, 1, 0), { KEY_VENDOR } },
-> +
-> +	/* OEM preset power mode */
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 1, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 2, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 3, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 4, 0), {} },
-> +
-> +	/* Fn Lock state */
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FNLOCK_STATE, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FNLOCK_STATE, 1, 0), {} },
+Changes in v3 (thanks to Rafael for the review):
+- Patch 1 is new: acpi_ prefix for the exported hook functions, with their
+  callers updated.
+- Patch 2:
+  - Renamed battery_hook.c to battery_hooks.c, built only when ACPI_BATTERY
+    or ACPI_SBS is, through a hidden ACPI_BATTERY_HOOKS symbol that both
+    select.
+  - Renamed the struct and the new functions as suggested, exported the new
+    functions in the ACPI_BATTERY_HOOKS namespace, used mutex guards and
+    updated the file header.
+  - battery_hook_exit() is gone, so hooks now stay registered across a
+    reload of battery.ko or sbs.ko.
+- Patch 3:
+  - BFCL is only written when the SMC has the key, and the BCLM write is read
+    back, at the suggestion of Michal Szpakowski, whose MacBookPro13,1 has no
+    BFCL.
+  - No BFCL margin at a limit of 100.
+  - The lower limit of 20 is conservative: 20 works and 10 is not accepted
+    on the hardware I tried, but I did not find the exact floor. I am happy
+    to change it.
+  - Dropped the applesmc_hooked_battery tracking and the mutex in
+    applesmc_bat_get_property().
+  - The hook is only registered when CONFIG_ACPI_BATTERY_HOOKS is reachable.
 
-These keys are reported as KEY_FN_ESC in the current redmi-wmi driver
-(commit e0d6312578e1fd03738fc2ac8ac21c8bd84e965e), so those mappings
-(and other from that commit) in bitland-mifs-wmi should be updated.
+Testing:
+- MacBookAir6,2 (SBS battery), on an earlier revision: limits from 20 to 100
+  match the SMC keys, charging stops at the limit, repeated module reloads
+  caused no errors, and the threshold was unchanged after a suspend/resume.
+- MacBookPro13,1 (SBS battery, no BFCL), by Michal Szpakowski, before the
+  acpi_ rename: valid limits read back exactly, invalid ones are rejected,
+  applesmc reload and an acpi-sbs unbind/rebind re-attach the attribute, and
+  charging stops at the limit.
+- Lenovo ideapad FLEX 4-1480 (Control Method battery, ideapad_laptop), on
+  Fedora's 7.2.7 kernel with the series applied on top (a rebase of the
+  patches, not this exact tree): the ideapad_laptop hook registers and its
+  charge_types attribute appears on BAT1, charge_types can be read and
+  written back unchanged, 25 battery unbind/bind cycles re-attach it each
+  time, and unloading and reloading ideapad_laptop removes and re-adds it.
+  There were no warnings in dmesg. That kernel did not have lockdep
+  enabled.
+- Built and linked with ACPI_BATTERY and ACPI_SBS as y/m/n and applesmc as
+  y/m, and an x86 allmodconfig build of the touched files with W=1 shows no
+  warnings; each patch builds on its own.
+- Applies with git am on linux-pm bleeding-edge, and with git am --3way on
+  hwmon-next.
 
-Cc'ing the commit author, who highlighted those issues during the v1
-review. Please see his other comments in [1] (and don't forget to cc
-the reviewers on future submissions [2]).
+Link: https://lore.kernel.org/r/20260918175052.85461-1-jordan@brough.org [v2]
+Link: https://lore.kernel.org/r/20260913231410.416922-1-jordan@brough.org [v1]
 
-[1]: https://lore.kernel.org/all/178444076601.4076.16818759313258005640@g=
-mail.com/
-[2]: https://docs.kernel.org/process/submitting-patches.html#respond-to-r=
-eview-comments
 
-> +	/* Fn+`/1/2/3/4 */
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_F, 1, 0), { KEY_F13 } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_0, 1, 0), { KEY_F14 } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_1, 1, 0), { KEY_F15 } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_2, 1, 0), { KEY_F16 } },
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_3, 1, 0), { KEY_F17 } },
-> +
-> +	{ KE_END }
->   };
->   >   static void bitland_notifier_unregister(void *data)
-> @@ -736,12 +782,35 @@ static int bitland_mifs_wmi_probe(struct wmi_devi=
-ce *wdev, const void *context)
->   				       &drv_data->notifier);
->   }
->   > +static void bitland_mifs_wmi_report_key(struct wmi_device *wdev, u=
-32 payload)
-> +{
-> +	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(&wdev->dev);
-> +	struct key_entry *entry;
-> +	bool autorelease =3D true;
-> +	int value =3D 1;
-> +
-> +	entry =3D sparse_keymap_entry_from_scancode(data->input_dev, payload)=
-;
-> +	if (!entry) {
-> +		dev_dbg(&wdev->dev, "Unknown WMI hotkey with payload 0x%08x\n", payl=
-oad);
-> +		return;
-> +	}
-> +
-> +	/* AI key quirk */
-> +	if (entry->keycode =3D=3D KEY_ASSISTANT) {
-> +		value =3D !(payload & AI_KEY_VALUE_MASK);
-> +		autorelease =3D false;
-> +	}
-> +
-> +	guard(mutex)(&data->lock);
-> +	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease=
-);
-> +}
-> +
->   static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
->   				    const struct wmi_buffer *buffer)
->   {
-> -	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(&wdev->dev);
->   	const struct bitland_mifs_event *event =3D buffer->data;
->   	struct bitland_fan_notify_data fan_data;
-> +	u32 payload;
->   	u8 brightness;
->   >   	/* Validate event type */
-> @@ -758,24 +827,13 @@ static void bitland_mifs_wmi_notify(struct wmi_de=
-vice *wdev,
->   		blocking_notifier_call_chain(&bitland_notifier_list,
->   					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
->   					     &brightness);
-> -		break;
-> +		return;
->   >   	case WMI_EVENT_PERFORMANCE_PLAN:
->   		blocking_notifier_call_chain(&bitland_notifier_list,
->   					     BITLAND_NOTIFY_PLATFORM_PROFILE,
->   					     NULL);
-> -		break;
-> -
-> -	case WMI_EVENT_OPEN_APP:
-> -	case WMI_EVENT_CALCULATOR_START:
-> -	case WMI_EVENT_BROWSER_START: {
-> -		guard(mutex)(&data->lock);
-> -		if (!sparse_keymap_report_event(data->input_dev,
-> -						event->event_id, 1, true))
-> -			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
-> -				 event->event_id);
-> -		break;
-> -	}
-> +		return;
->   >   	/*
->   	 * The device has 3 fans (CPU, GPU, SYS),
-> @@ -783,6 +841,14 @@ static void bitland_mifs_wmi_notify(struct wmi_dev=
-ice *wdev,
->   	 */
->   	case WMI_EVENT_CPU_FAN_SPEED:
->   	case WMI_EVENT_GPU_FAN_SPEED:
-> +		/* Redmi refresh rate toggle quirk */
-> +		if (event->event_id =3D=3D WMI_EVENT_CPU_FAN_SPEED &&
-> +		    event->value_low =3D=3D 0 && event->value_high =3D=3D 0) {
-> +			payload =3D BI_HOTKEY_CODE(WMI_EVENT_REFRESH_RATE, 0, 0);
-> +			bitland_mifs_wmi_report_key(wdev, payload);
-> +			return;
-> +		}
-> +
->   		if (event->event_id =3D=3D WMI_EVENT_CPU_FAN_SPEED)
->   			fan_data.channel =3D 0;
->   		else
-> @@ -793,27 +859,14 @@ static void bitland_mifs_wmi_notify(struct wmi_de=
-vice *wdev,
->   		blocking_notifier_call_chain(&bitland_notifier_list,
->   					     BITLAND_NOTIFY_HWMON,
->   					     &fan_data);
-> -		break;
-> -
-> -	case WMI_EVENT_AIRPLANE_MODE:
-> -	case WMI_EVENT_TOUCHPAD_STATE:
-> -	case WMI_EVENT_FNLOCK_STATE:
-> -	case WMI_EVENT_KBD_MODE:
-> -	case WMI_EVENT_CAPSLOCK_STATE:
-> -	case WMI_EVENT_NUMLOCK_STATE:
-> -	case WMI_EVENT_SCROLLLOCK_STATE:
-> -	case WMI_EVENT_REFRESH_RATE:
-> -	case WMI_EVENT_WIN_KEY_LOCK:
-> -		/* These events are informational or handled by firmware */
-> -		dev_dbg(&wdev->dev, "State change event: id=3D%d value=3D%d\n",
-> -			event->event_id, event->value_low);
-> -		break;
-> +		return;
->   >   	default:
-> -		dev_dbg(&wdev->dev, "Unknown event: id=3D0x%02x value=3D0x%02x\n",
-> -			event->event_id, event->value_low);
->   		break;
->   	}
-> +
-> +	payload =3D get_unaligned_le32(buffer->data);
-> +	bitland_mifs_wmi_report_key(wdev, payload);
->   }
->   >   static const struct wmi_device_id bitland_mifs_wmi_id_table[] =3D=
-=20{
+Jordan Brough (3):
+  ACPI: battery: add acpi_ prefix to the battery hook API
+  ACPI: battery: add unified battery hook mechanism for ACPI and SBS
+    batteries
+  hwmon: (applesmc) add charge_control_end_threshold support
+
+ drivers/acpi/Kconfig                         |   5 +
+ drivers/acpi/Makefile                        |   1 +
+ drivers/acpi/battery.c                       | 166 +------------------
+ drivers/acpi/battery_hooks.c                 | 159 ++++++++++++++++++
+ drivers/acpi/sbs.c                           |   8 +-
+ drivers/hwmon/Kconfig                        |   1 +
+ drivers/hwmon/applesmc.c                     | 146 ++++++++++++++++
+ drivers/platform/x86/asus-wmi.c              |   4 +-
+ drivers/platform/x86/ayaneo-ec.c             |   2 +-
+ drivers/platform/x86/dell/dell-laptop.c      |   4 +-
+ drivers/platform/x86/dell/dell-wmi-ddv.c     |   2 +-
+ drivers/platform/x86/fujitsu-laptop.c        |   4 +-
+ drivers/platform/x86/huawei-wmi.c            |   4 +-
+ drivers/platform/x86/lenovo/ideapad-laptop.c |   4 +-
+ drivers/platform/x86/lenovo/thinkpad_acpi.c  |   4 +-
+ drivers/platform/x86/lenovo/wmi-other.c      |   4 +-
+ drivers/platform/x86/lg-laptop.c             |   4 +-
+ drivers/platform/x86/msi-ec.c                |   4 +-
+ drivers/platform/x86/oxpec.c                 |   2 +-
+ drivers/platform/x86/samsung-galaxybook.c    |   3 +-
+ drivers/platform/x86/samsung-laptop.c        |   4 +-
+ drivers/platform/x86/system76_acpi.c         |   4 +-
+ drivers/platform/x86/toshiba_acpi.c          |   4 +-
+ drivers/platform/x86/uniwill/uniwill-acpi.c  |   2 +-
+ drivers/power/supply/cros_charge-control.c   |   2 +-
+ include/acpi/battery.h                       |  16 +-
+ 26 files changed, 367 insertions(+), 196 deletions(-)
+ create mode 100644 drivers/acpi/battery_hooks.c
+
+
+base-commit: 4c18627a1dfbfe537580f831e60218644c94ce12
+-- 
+2.56.0
+
