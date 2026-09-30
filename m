@@ -1,215 +1,310 @@
-Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2035349CF3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 05:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385AE13C908
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 05:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790744511; cv=none; b=onG/zfICRLtDpsPkAg5JRegig5ymJzYcsy9kgNzYd5vo+6ZJ99G31kcJHgBPII1KmnjcJCnWNyjPBTt/Sa8fFmSMgZx8HsQ01AHl7P+ZhkSZtgQp8GxlpB60/CLMkS2kHoUkCm1Nz3K5wro6HreJEMQ44aBQzrAJiDDPXF+Qgcs=
+	t=1790744580; cv=none; b=MHPK2Rj67UZJHyTHgHZzcPbddJJIZ1R8cd7Gz6sxc16ZDzjeCUSSEHSmt/YMI3qxtNnlaF+cAbyqouKO3siyKReT39EfI7olV3shHKQ9RqPUgODcz1T4nF2pg0ceaTKs9QZfLixpIUGFJv+IMSEF1vSjZr/Iaa3avAyGfoLx4q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790744511; c=relaxed/simple;
-	bh=Wj6fEXUo2kKp8r2C5A0yqiHnwm8Zped/Gi+sUjz73zI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Po8xODqB9E6OUJ9Kzhhg9cKnsA5Eoc34ea0prSr+9vN+9zupQAo8mMEaSAVs2tooz+vrmCAfT7ni7U/Es51CBiT/c5HLJTME/xQOijW1BJinnrP26LekRlsoeVnWNpfj42Q7KAukaoDZBLde1rA6NiwjUYqzfkJ6fTxrgIutJfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n4ydRHCI; arc=none smtp.client-ip=74.125.229.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790744580; c=relaxed/simple;
+	bh=aa5m/7BK7/DbTvlCizArErjlcAXnc5ec7jWXk2pJ/iU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TMypM6lm6rqicx82tmGctls/s9Cbiac9MrtHSRoC9AfigIizTkBFWE2cQycndE6uxAq6lh+sNAPlR3eInJ2wkRljOHQrTLM7sjxWJAx+qHsG58rSc8TrFL+hzI204Iz3IXMEo2NNOP7XgflzqsuLLv83fhBYh8nRq7DZbu53420=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XXHPYJ6F; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=dubEktmD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4ydRHCI"
-Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-341d0522b4dso7552389eec.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 22:01:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XXHPYJ6F";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="dubEktmD"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68TNPkNV2011459
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 05:02:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qkg6ZsioMZw6EFu9fkXHTIgiUwtXNeSZKmXw0kdl0wo=; b=XXHPYJ6FeDHCsKs/
+	gTUZP0A8B7VEKvxP3/ZQGrMcRXiqJma6U6+0a/4UEXZA0tZePMhR+iRHKNDFiyVg
+	n6qigTH4VHX6L7APsHkzod0dTpR3Yu0H+of2UFG2Djj0yoazkdJY8U4deJT8Q4hP
+	LIvrlHDOwI/8brieRCU0HU01XTWNdak+F11htJRuWD9wzXbkvKTZDzEKTLPMv1jh
+	lP8KCFVTsOcy90kUEEbEwhNFRXwUqB6UyTLj6x7DZuzn6aBxoisjefLP5ej15iiK
+	8bXA/T6czpOtTnNCeNO8VoVmCkSzHlgFLnK0xPiR0vLX3Q2p75L2vlUK1iZmqyz+
+	OA5Hmg==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h0j0ejfj1-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 05:02:57 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2e2e064b7a6so3219225ad.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 22:02:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790744509; x=1791349309; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=z1Yx/ERGrvzLNDM/aln7d4fjkG8qSALCIn2H16VCKuo=;
-        b=n4ydRHCIqCAsw1K+lzIlYNKLFXdoS8AAhQJ42GK2+qhP7+YxcB2nrvDndTJ35xhkyX
-         nUKtZKENfdR8ps31gPFAfVchFhWqWHSecrB7V0Fv+8YJYQEoEUginNZgC9mre2+ceL3a
-         rnXOy5Tzgcwqlpz2qlrCJZRVIU3lvVweiTC9Od2zHGkXiQ3jIHbLwAGK7RFip+5jVGdV
-         9Rr9mQlBDmzVsoOQbPvKoyYJKEp+ZutbMmF2yFco8oaxVm5pC4wP+1HjqolF7vERGoQj
-         XbRQo53ETRX5Qv5F8PpUILKR6Qy0OkCiXUzzVFEanz0uGf2VLLaEEDVPdLqcDB9+AvXv
-         EjKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790744509; x=1791349309;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=oss.qualcomm.com; s=google; t=1790744577; x=1791349377; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=z1Yx/ERGrvzLNDM/aln7d4fjkG8qSALCIn2H16VCKuo=;
-        b=svcFfXMVWvtjyB7IBAeKIzAtC7oJGazR7nlO8j8W8b26RP5DIJPYKyWdqCifXhpp/n
-         aCHAN/B9KCEiA+UsIo74fyClRTb2cTyWivUPaqyW7T8DKnK7A7Di7ajdWTQhbKxN6rzo
-         NS74BLtr4XviQ6ui4syHDg+16rKRtI8XGukQqJfD1lKKcrfEXecGwo9CHfJtRR5nWK1t
-         lRh9cMOz8w9AJ0YVp4M3POu7IOrn3dn9uICCAeuAcsZrwF2KhoHwfSZh644pv8XOamS4
-         N/83BKYufU1u4bWV8BGL4iyamyNbPlR3gVkFQPrF2czjUzgfXdIlAI0bBVVY8lZ0BC0D
-         murg==
-X-Forwarded-Encrypted: i=1; AKwUvBzdF989oumqeNV1S1vNpkE8CQ6GS4tKtC0m56OmMx4IhY04KwkRzSPOCZ3JINcmmP5hndMYAhwp3Oe1PV1Vlfy2w0/e@vger.kernel.org
-X-Gm-Message-State: AFq9FYIz58zOQ1e2bXdMHMZP9f9edf9W3W/2rI9JEggZQB1IWOLwWXIv
-	EZcx1syITd2HcMHcegnJpTunQs1dSV1wvOyhkU5jX1SfNqrgqjt34aI+
-X-Gm-Gg: AYBFou1KAc5Polc+THBjyOdwIpmbvIyqCxrvy/YZCDsa9ITuaOWa752FajyL6RM4MRd
-	OnIYLlqIoQG0cRKDVIvWdzsD3OqrCIs1zQRwGO4k8FobcJKJNXnm9Kkmg1hpWrQxrpZyu/cIt3Y
-	MzoiSoGXa3siuGfW2p9IAxak8RcG2HeD99QRPyBo6CcJn0pjcivaPbhXw6pakfUox6eJ7VVnpBY
-	WNmxduneWheEcQ9U0W0qLPwli+Lr4Ty6yqxah5zv9HHqW9OzIqMR0qebST68bWpe+Cp+oJ6cBYr
-	rYspx/J4qJtYix3prfIrVA7fNK7NYocqBOkDcHclxYvnT2w0E2SiElAOs6QH1jUjqBFdUJCjcxt
-	LDp5ZPifJCJ6Kx91BpjZO7pUCk3ecUdXsUcvb1GI1XV61mOSCyXU9tiqCpKDM7dgcZKB8ZlB0Sf
-	NIqufgGlHJPojnNgwsBMkhCAVtwuSXrwV4rK5Od2rc9i5mIVTWvaHDnfDfKxQ3mtYTwOK7nD8Mc
-	D7nxsHZWXndPtqXARqLVQurJakmuaOTr6EQTSaqeg/eq0nAMUiFNLt07gUZqX8=
-X-Received: by 2002:a05:7301:1522:b0:33c:19bc:d8d2 with SMTP id 5a478bee46e88-34cdd0af6c7mr481285eec.31.1790744508699;
-        Tue, 29 Sep 2026 22:01:48 -0700 (PDT)
-Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:101a:5ce6:a15e:d8ca])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34cf613b0c4sm778125eec.28.2026.09.29.22.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 22:01:47 -0700 (PDT)
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Tue, 29 Sep 2026 21:59:11 -0700
-Subject: [PATCH v2 2/2] platform/x86: thinkpad_acpi: use __free(kfree) for
- automatic cleanup
+        bh=qkg6ZsioMZw6EFu9fkXHTIgiUwtXNeSZKmXw0kdl0wo=;
+        b=dubEktmDVSYFkT/ko8QB7z3KkMfqH1OTx7Xa+OzOGxI1BA4O2FAYcfJiY+VYNWgLwl
+         ZudxVVAGLuWbQ/bQoJ33QwerQo0yjfFV0MdDs7G6DaT7xPQI0kTWqnyO/6XgQOtY4mPb
+         //Yy4K1/qCWtIF/1ScLcxMMdjG/MY1+LT9PXUc9M6helcaXnNMwAmCDjXVK7I3DQlCLz
+         8/w/ckFfenYni1320JBTbfFeMoIunSyF2XPwHtiAEFJ8srVOP2vf7iEOfu9znDQj/THV
+         ujIMw7BUYp0f21h3I6OcgHvmIwe+b6GRf4nzkLIKsnJ3wZgkH4vnshXZE1LCopZPMoT1
+         qqKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790744577; x=1791349377;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=qkg6ZsioMZw6EFu9fkXHTIgiUwtXNeSZKmXw0kdl0wo=;
+        b=vTQUV58fie5CZpEHjRxUBiKMKHF3jozkBOZDdKvg9t1DDFctYJXRM7QlegOv+LNMuQ
+         CeMTSXL2Xckm73HiK9LTX/x4FPw4Vb8+PaUuIcuFEV6Y0bzHNR+gCiapmE3kmaVLcu7Z
+         FLXxjgiXz2q5mCrBJOMn0tnTvkt2q7UUeRz6gHfFBpYIWQK99IXiWNex4PfmOnmwdSOL
+         eLgZwf/KOcScJfFZHYMQ+xbj8o72eJOKXBKSXIqyQoieWc4TI5RsL6/25HIUB6hr9ch/
+         ckMyu7qd8/nO3YeAUThGk64nH/9lZnMkxHOMeZOtKaLpr88bp17NhH/dNMx1ULothabF
+         bddA==
+X-Forwarded-Encrypted: i=1; AKwUvBx1nDEkOFjFP+kK5wjlHBQ9gVkk6aEkpin0TGVm9CHcHLDABMswAqhDQaebtoyA6yP8BD/5P1X9jUeMntVkPLRNTxFl@vger.kernel.org
+X-Gm-Message-State: AFq9FYJQyNmajIbANWvZ4ucOX9X/SttRZneAd73GC0hNitHLy7nkhT69
+	aMcWqiRZmIsgADFtS4IuDOzx5O/ExuxYCDc3hwzKMDT18CIM6RCu2fU9CALXyb5mxBvmmR9/A7g
+	kDYlM3r7EaVRrdHERmJI47fbfnZ7LVhBQ8wWxyRSFe5hTBD0oxXbKarkDxuLDuzuB1Grc3c5A7V
+	ht
+X-Gm-Gg: AYBFou1ZphNF9RdiCA9WmbIX9iRH9JazXwbqSIibH6hP5zHOasqSscq9DYyka98LXQV
+	l2HSRFSYkE3BXeeUmKGIh0idMcHd4NBhafl6uJJ4Usw4gy8OxCbUSyYJL8P5a5Umh5CEjrC5NUK
+	DxjKoNP2p4NJd7IPgJvXKMaWvMa0fFMrJmyZG6y8OdigQcyIJXu7+uEIDVYdBicN1miI2UDF5uQ
+	KEliCx9NfTQ1M/ZXtt5Q0M8rji11zau2L7dg2DULB1I3wliiK1N0+c65vM5wraPl4/5GCrMfoE4
+	J2FGbUrVUNI5rvEsiTnLctv8WF0ZXU4/Ja8SbpqSyWdDe6B25ctVre9lXB6qP7jywpCZY3b7U2t
+	ZabIR1hfcJ/pKjK1FMkF6XPEBVKYa
+X-Received: by 2002:a17:903:22c5:b0:2e2:bf06:25f3 with SMTP id d9443c01a7336-2e2e4b4b833mr2228615ad.38.1790744577027;
+        Tue, 29 Sep 2026 22:02:57 -0700 (PDT)
+X-Received: by 2002:a17:903:22c5:b0:2e2:bf06:25f3 with SMTP id d9443c01a7336-2e2e4b4b833mr2228205ad.38.1790744576104;
+        Tue, 29 Sep 2026 22:02:56 -0700 (PDT)
+Received: from [192.168.31.121] ([152.57.6.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e2e5bd5c67sm758105ad.48.2026.09.29.22.02.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Sep 2026 22:02:54 -0700 (PDT)
+Message-ID: <362c6465-66ac-4ed7-9e7e-f75f31b32dd8@oss.qualcomm.com>
+Date: Wed, 30 Sep 2026 10:32:47 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] platform: arm64: qcom-hamoa-ec: Add thermistor
+ sensors
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring
+ <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20260928-ec_thermistor_support-v1-0-d9c1bae4cd0d@oss.qualcomm.com>
+ <20260928-ec_thermistor_support-v1-2-d9c1bae4cd0d@oss.qualcomm.com>
+ <c15405f3-db75-410d-045b-996db4f83110@linux.intel.com>
+Content-Language: en-US
+From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+In-Reply-To: <c15405f3-db75-410d-045b-996db4f83110@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260929-thinkpad-acpi-cleanup-v2-2-88e176953a4b@gmail.com>
-References: <20260929-thinkpad-acpi-cleanup-v2-0-88e176953a4b@gmail.com>
-In-Reply-To: <20260929-thinkpad-acpi-cleanup-v2-0-88e176953a4b@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Nitin Joshi <nitjoshi@gmail.com>, platform-driver-x86@vger.kernel.org, 
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>
-X-Mailer: b4 0.17-dev-6c14f
+X-Authority-Analysis: v=2.4 cv=cqgOAF4i c=1 sm=1 tr=0 ts=6abc9802 cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZE6J5AxZF9eTCMsEPEnAuA==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
+ a=EUspDBNiAAAA:8 a=qvRe1xnp1C8EnQCzoIkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-GUID: TGCOALk7PQ8rVUCg0ETcZ-PAXhZ46Aqj
+X-Proofpoint-ORIG-GUID: TGCOALk7PQ8rVUCg0ETcZ-PAXhZ46Aqj
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTMwMDAxOSBTYWx0ZWRfX+NLKGL/aDp8B
+ BcVWfw5jfg4jnncVK6WamldoeN1ley1l0jEgZKoaQe59B9XTaIgGmFkXAzzQqEj4zNYru9cGBcU
+ 6bhMacFECrtxKDndTwnk8usq/0k2aHY=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTMwMDAxOSBTYWx0ZWRfXzgO6YawnlVAn
+ Ehh3U019fp3l2jCB4va6xQ7CkjCEToNZldSllotfX068655CA7mVwk5v1y6L0IOIDSXHVSAmKSO
+ eJ5dMI1Mub5RTZNETQ0qb+mdZQJCnwQ3Ha4yBnLtvdOlmVFlVw2zgr6PmDlay/7CxK8bTLD2tQD
+ zPCTt/2RQayRCITeQIpK/XoNWoEBFGp3ciVsYv5YZXdixJ0z9VY3sdeFsFqX+OVLbUKgCChUc3E
+ EskaeZNVPjB2QXlSh6c4QHnmagBWWlgJG5l+TCCYef7sZl71FWo/+PrJTF1vqHUzay62VBm3s6V
+ BBMgObF1h85UvX+MrqcOgj6e/3h3VgyzSh5IauSQbp9+3jZvW3hNrWZy/M/Aa4jhqipWFGxFLtq
+ VEftZt9IO68MzcSH8ZiyCV0pXlCqMbAPcllv5J8tP0Y+P4yGRkWwtmXHO+s24ZIRI/X+LGR5EY9
+ T0dTjQlPMX3uZjWvQLQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-29_05,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 clxscore=1015 adultscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609300019
 
-Use __free(kfree) for local pointer allocations in
-dispatch_proc_write(), tpacpi_evaluate_bcl(), and auxmac_init().
 
-This ensures automatic memory cleanup when exiting function scope and
-removes explicit kfree() calls on exit paths.
 
-Assisted-by: LLM
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Tested-by: Ali Ahmet Memiş <aliamemis@disroot.org>
-Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 42 ++++++++++-------------------
- 1 file changed, 14 insertions(+), 28 deletions(-)
+On 9/29/2026 1:05 PM, Ilpo Järvinen wrote:
+> On Mon, 28 Sep 2026, Anvesh Jain P wrote:
+> 
+>> The Qualcomm embedded controller has exclusive access to multiple onboard
+>> thermistors programmatically discoverable through the
+>> EC_THERMAL_CAPABILITIES command. The temperature values are reported in
+>> degree Celsius through the EC_THERMISTOR_TEMP_CMD.
+>>
+>> Register these thermistors with the thermal framework by adding support to
+>> the EC_THERMISTOR_TEMP_CMD and convert it to millidegree units as required
+>> by the thermal framework.
+>>
+>> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+>> ---
+>>  drivers/platform/arm64/qcom-hamoa-ec.c | 74 ++++++++++++++++++++++++++++++++++
+>>  1 file changed, 74 insertions(+)
+>>
+>> diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
+>> index 4d2ad042a7f8..acf3d7f53026 100644
+>> --- a/drivers/platform/arm64/qcom-hamoa-ec.c
+>> +++ b/drivers/platform/arm64/qcom-hamoa-ec.c
+>> @@ -16,16 +16,19 @@
+>>  #include <linux/pm.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/thermal.h>
+>> +#include <linux/unaligned.h>
+>>  
+>>  #define EC_SCI_EVT_READ_CMD	0x05
+>>  #define EC_FW_VERSION_CMD	0x0e
+>>  #define EC_MODERN_STANDBY_CMD	0x23
+>> +#define EC_THERMISTOR_TEMP_CMD	0x29	/* + thermistor_id (0-6) selects thermistor 1-7 */
+>>  #define EC_FAN_DBG_CONTROL_CMD	0x30
+>>  #define EC_SCI_EVT_CONTROL_CMD	0x35
+>>  #define EC_THERMAL_CAP_CMD	0x42
+>>  
+>>  #define EC_FW_VERSION_RESP_LEN	4
+>>  #define EC_THERMAL_CAP_RESP_LEN	3
+>> +#define EC_THERMISTOR_TEMP_RESP_LEN	3
+>>  #define EC_FAN_DEBUG_CMD_LEN	6
+>>  #define EC_FAN_SPEED_DATA_SIZE	4
+>>  
+>> @@ -39,6 +42,7 @@
+>>  #define EC_MAX_FAN_CNT		2
+>>  #define EC_FAN_NAME_SIZE	20
+>>  #define EC_FAN_MAX_PWM		255
+>> +#define EC_MAX_THERMISTOR_CNT	7
+>>  
+>>  enum qcom_ec_sci_events {
+>>  	EC_FAN1_STATUS_CHANGE_EVT = 0x30,
+>> @@ -64,6 +68,7 @@ struct qcom_ec_thermal_cap {
+>>  #define EC_THERMAL_FAN_CNT(x)		(FIELD_GET(GENMASK(1, 0), (x)))
+>>  #define EC_THERMAL_FAN_TYPE(x)		(FIELD_GET(GENMASK(4, 2), (x)))
+>>  #define EC_THERMAL_THERMISTOR_MASK(x)	(FIELD_GET(GENMASK(7, 0), (x)))
+>> +#define EC_THERMISTOR_PRESENT(mask, id)	((mask) & BIT(id))
+>>  	u8 fan_cnt;
+>>  	u8 fan_type;
+>>  	u8 thermistor_mask;
+>> @@ -81,6 +86,12 @@ struct qcom_ec {
+>>  	struct qcom_ec_thermal_cap thermal_cap;
+>>  	struct qcom_ec_version version;
+>>  	struct i2c_client *client;
+>> +	struct qcom_ec_thermal_zone *ec_tz;
+>> +};
+>> +
+>> +struct qcom_ec_thermal_zone {
+>> +	struct qcom_ec *ec;
+>> +	u8 thermistor_id;
+>>  };
+>>  
+>>  static int qcom_ec_read(struct qcom_ec *ec, u8 cmd, u8 resp_len, u8 *resp)
+>> @@ -183,6 +194,43 @@ static int qcom_ec_thermal_capabilities(struct device *dev)
+>>  	return 0;
+>>  }
+>>  
+>> +/*
+>> + * EC Thermistor Temperature (cmd 0x29 + thermistor_id, id 0-6 selects
+>> + * thermistor 1-7):
+>> + *
+>> + * Read Response:
+>> + * ----------------------------------------------------------------------
+>> + * | Offset	| Name		| Description				|
+>> + * ----------------------------------------------------------------------
+>> + * | 0x00	| Byte count	| Number of bytes in response (=2)	|
+>> + * ----------------------------------------------------------------------
+>> + * | 0x01 (LSB)| Temperature	| Signed 16-bit, unit of 0.1 degC,	|
+>> + * | 0x02 (MSB)|		| range -40..+125 degC			|
+>> + * ----------------------------------------------------------------------
+>> + */
+>> +static int qcom_ec_thermistor_get_temp(struct thermal_zone_device *tz, int *temp)
+>> +{
+>> +	struct qcom_ec_thermal_zone *ec_tz = thermal_zone_device_priv(tz);
+>> +	struct qcom_ec *ec = ec_tz->ec;
+>> +	u8 resp[EC_THERMISTOR_TEMP_RESP_LEN];
+>> +	s16 raw;
+>> +	int ret;
+>> +
+>> +	ret = qcom_ec_read(ec, EC_THERMISTOR_TEMP_CMD + ec_tz->thermistor_id,
+>> +			   EC_THERMISTOR_TEMP_RESP_LEN, resp);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	raw = (s16)get_unaligned_le16(&resp[1]);
+>> +	*temp = raw * 100;
+> 
+> MILLIDEGREE_PER_DECIDEGREE?
+> 
+> Make sure you have the include for it if changing to it.
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct thermal_zone_device_ops qcom_ec_thermistor_ops = {
+>> +	.get_temp = qcom_ec_thermistor_get_temp,
+>> +};
+>> +
+>>  static irqreturn_t qcom_ec_irq(int irq, void *data)
+>>  {
+>>  	struct qcom_ec *ec = data;
+>> @@ -376,6 +424,32 @@ static int qcom_ec_probe(struct i2c_client *client)
+>>  	if (ret < 0)
+>>  		return dev_err_probe(dev, ret, "Failed to read thermal capabilities\n");
+>>  
+>> +	if (ec->thermal_cap.thermistor_mask) {
+>> +		ec->ec_tz = devm_kcalloc(dev, EC_MAX_THERMISTOR_CNT, sizeof(*ec->ec_tz),
+>> +					 GFP_KERNEL);
+>> +		if (!ec->ec_tz)
+>> +			return -ENOMEM;
+>> +
+>> +		for (i = 0; i < EC_MAX_THERMISTOR_CNT; i++) {
+>> +			struct qcom_ec_thermal_zone *ec_tz = &ec->ec_tz[i];
+>> +			struct thermal_zone_device *tzd;
+>> +
+>> +			if (!EC_THERMISTOR_PRESENT(ec->thermal_cap.thermistor_mask, i))
+>> +				continue;
+>> +
+>> +			ec_tz->ec = ec;
+>> +			ec_tz->thermistor_id = i;
+>> +
+>> +			tzd = devm_thermal_of_zone_register(dev, i, ec_tz, &qcom_ec_thermistor_ops);
+>> +			if (IS_ERR(tzd)) {
+>> +				ret = PTR_ERR(tzd);
+>> +				if (ret != -ENODEV)
+> 
+> I'd prefer ret == -ENODEV check + continue.
+> 
+>> +					dev_warn(dev, "Failed to register thermistor%u zone: %d\n",
+>> +						 i, ret);
+>> +			}
+>> +		}
+>> +	}
+>> +
+>>  	if (ec->thermal_cap.fan_cnt == 0) {
+>>  		dev_warn(dev, FW_BUG "Failed to get fan count, firmware update required\n");
+>>  		return 0;
+>>
+>>
+>
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 645df773fe63..93fc69a7dd63 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -891,7 +891,6 @@ static ssize_t dispatch_proc_write(struct file *file,
- 			size_t count, loff_t *pos)
- {
- 	struct ibm_struct *ibm = pde_data(file_inode(file));
--	char *kernbuf;
- 	int ret;
- 
- 	if (!ibm || !ibm->write)
-@@ -899,16 +898,15 @@ static ssize_t dispatch_proc_write(struct file *file,
- 	if (count > PAGE_SIZE - 1)
- 		return -EINVAL;
- 
--	kernbuf = memdup_user_nul(userbuf, count);
-+	char *kernbuf __free(kfree) = memdup_user_nul(userbuf, count);
- 	if (IS_ERR(kernbuf))
- 		return PTR_ERR(kernbuf);
--	ret = ibm->write(kernbuf);
--	if (ret == 0)
--		ret = count;
- 
--	kfree(kernbuf);
-+	ret = ibm->write(kernbuf);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return count;
- }
- 
- static const struct proc_ops dispatch_proc_ops = {
-@@ -6711,26 +6709,21 @@ static const struct backlight_ops ibm_backlight_data = {
- static int __init tpacpi_evaluate_bcl(struct acpi_device *adev, void *not_used)
- {
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
- 	acpi_status status;
--	int rc;
- 
- 	status = acpi_evaluate_object(adev->handle, "_BCL", NULL, &buffer);
- 	if (ACPI_FAILURE(status))
- 		return 0;
- 
--	obj = buffer.pointer;
-+	union acpi_object *obj __free(kfree) = buffer.pointer;
- 	if (!obj || obj->type != ACPI_TYPE_PACKAGE) {
- 		acpi_handle_info(adev->handle,
- 				 "Unknown _BCL data, please report this to %s\n",
- 				 TPACPI_MAIL);
--		rc = 0;
--	} else {
--		rc = obj->package.count;
-+		return 0;
- 	}
--	kfree(obj);
- 
--	return rc;
-+	return obj->package.count;
- }
- 
- /*
-@@ -11075,24 +11068,23 @@ static int auxmac_init(struct ibm_init_struct *iibm)
- {
- 	acpi_status status;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
- 
- 	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
--
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
--	obj = buffer.pointer;
--
--	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
-+	union acpi_object *obj __free(kfree) = buffer.pointer;
-+	if (!obj || obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
- 		pr_info("Invalid buffer for MAC address pass-through.\n");
--		goto auxmacinvalid;
-+		strscpy(auxmac, "unavailable", sizeof(auxmac));
-+		return 0;
- 	}
- 
- 	if (obj->string.pointer[AUXMAC_BEGIN_MARKER] != '#' ||
- 	    obj->string.pointer[AUXMAC_END_MARKER] != '#') {
- 		pr_info("Invalid header for MAC address pass-through.\n");
--		goto auxmacinvalid;
-+		strscpy(auxmac, "unavailable", sizeof(auxmac));
-+		return 0;
- 	}
- 
- 	if (strncmp(obj->string.pointer + AUXMAC_START, "XXXXXXXXXXXX", AUXMAC_LEN) != 0)
-@@ -11100,13 +11092,7 @@ static int auxmac_init(struct ibm_init_struct *iibm)
- 	else
- 		strscpy(auxmac, "disabled", sizeof(auxmac));
- 
--free:
--	kfree(obj);
- 	return 0;
--
--auxmacinvalid:
--	strscpy(auxmac, "unavailable", sizeof(auxmac));
--	goto free;
- }
- 
- static struct ibm_struct auxmac_data = {
+Thanks for the review. I will use MILLIDEGREE_PER_DECIDEGREE from
+<linux/units.h> for the temperature conversion. I will also change the
+thermal-zone registration handling to continue explicitly on -ENODEV and
+warn about other errors.
 
 -- 
-2.56.0.rc1.315.gc6ed9934b7-goog
+Best Regards,
+Anvesh
 
