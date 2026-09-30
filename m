@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083375208A9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF445208AF;
 	Wed, 30 Sep 2026 17:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790789389; cv=none; b=pkMODAvCaktIutpy2MamJnCXUz4iOK1P0o6x5aQIC67BXkmlMkCISkDQOXlH4BTBm9C0rDAo166KYLJ7pJ40HzBCiWAyIPQ1q/0ImsnsXmPSCYnc42DB1172N7pJZ3gHePxIJodf4YJmEQEVKSqY3kREFeOAwP2C+39x5QIMM78=
+	t=1790789390; cv=none; b=tPFjY7dSotnb4k3lXprHzSEyqlgGepMR9BYHWOQQNsOKXvKISEMwd4CF+NOHAVpeOGyBySbHtEoVmP7QMl/oiMJ3lX3CnbZEiXONpKkFtVx3tNeDZj7C4L6g5IeV6o0MZ33q4ZJpSbZ9+RDqzN2kQjB6/n8HkhQx1rpXrNP64Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790789389; c=relaxed/simple;
-	bh=a3+/FEKCkqtYjrcy2pJ7QwvFGw3RJ2DGOnScz6FFgsM=;
+	s=arc-20240116; t=1790789390; c=relaxed/simple;
+	bh=4Irtm5rYJihdan89cqRdjSiW3tTtNJL9SYjBo9SpmSg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gJvNhOGxO4Zq/ofIpHS5WlEWSkF4St+cyfksR6OsZGkIwBOwQXNN/f+DOgqY1kbKqbAWQ+AO6IJ+f7avCQv04FDmcvkELNIwSetKCzwC0N6Yay6YBSKP9rLNePPIpDVGZWDjU80XzklLZ3LftmT15i/l57oVucYIi35jpx52mPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iiR1+gIB; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version; b=J9k5XIO7a+BN7TWMFiYnuyDVtizgOuP5to4rd73cAgs1VWjLmbqKSsfE0P4GGRz1hChipuH1pV1n/HiqfY7ar+BlEjL+W2Fs05umWQZLSXN64qHSoXlcc9MxZhMTtiIGEMzFRnvnCLFbE3EK7wvUCb/aGYHgXtmAlBnnCSZfv/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FU9sUPcJ; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iiR1+gIB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FU9sUPcJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790789388; x=1822325388;
+  t=1790789389; x=1822325389;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=a3+/FEKCkqtYjrcy2pJ7QwvFGw3RJ2DGOnScz6FFgsM=;
-  b=iiR1+gIBi/56B5H9k8szYmm/hsghbz55p7DLI5cWUNc4kZ5Q9neEaMrf
-   TxpOTeGKW2MRvGQExBilsYfpGGZxGL6Pj6CejJ9LTgfPyQX5T/plMjkqG
-   NqZOIj3X6zZVYXiXR9r63n9juZc8IizexoZelcZGyrr9LJhJ/IxUqTOMd
-   UV6PCHAazOkfIQ/DHRQuQXoHG9ydQZ7kBXB95jWnzz2BgS8S//uGmlsvi
-   GKCmJUebLtmxJTIU+aHbUf2jG51QzXr+k8ya9oxdx8HhItp+hIGBDPGtS
-   oHwENAoz2zEDcVXqJcHQO54JKjcX1pW96zONFr3zzTlrBlMCXaQ0nL3it
+  bh=4Irtm5rYJihdan89cqRdjSiW3tTtNJL9SYjBo9SpmSg=;
+  b=FU9sUPcJlifolCWNRct67RRsOaNm6xNEsH9N2O7xTdto3RpZg0OA752W
+   QdnsWPVQ4OG36HHDmi/SPcoMP0r2d5dnq7SdRZQppEn3X51Jm1ttI8mct
+   R5badEucCGEDGEjfUe8/RrVfhysfcBQFjmZQRogWxlrGfi0lIODVyc8py
+   H6+K07OK6YrMDmfweJciBCj//zMAS0SZIn5v7X5d3J3DzmrkZ/VnUCTsc
+   Mxgik21Y/RKuyOxuyukp1evC0HiYAiZmIjRgPSxoJ0jPeVbaDML1OsMgF
+   VibnqA58xLh5A7F2KN+265iW1tDo67FIUYaIhovX9SjWAqVMV32KZ2RP2
    w==;
-X-CSE-ConnectionGUID: QfB1cKWaS7Cdv8H7KTnt2A==
-X-CSE-MsgGUID: OGkctriYQDaHZOtnCiREiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11921"; a="91632084"
+X-CSE-ConnectionGUID: GolUwK9SQme157yXeVttMw==
+X-CSE-MsgGUID: soxT1b6fTDiGxzBLOajG3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11921"; a="91632083"
 X-IronPort-AV: E=Sophos;i="6.27,133,1787036400"; 
-   d="scan'208";a="91632084"
+   d="scan'208";a="91632083"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
   by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2026 10:29:35 -0700
-X-CSE-ConnectionGUID: dKIgnIIfQVWWS9LxubqFHQ==
-X-CSE-MsgGUID: dI/NyJQ4RDK/lDYrmDUJrQ==
+X-CSE-ConnectionGUID: dRjj9QTvROGg+espUZnMjg==
+X-CSE-MsgGUID: izO3f6AzRkGiejp1IG7wQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,133,1787036400"; 
-   d="scan'208";a="278959432"
+   d="scan'208";a="278959435"
 Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
   by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2026 10:29:35 -0700
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -51,9 +51,9 @@ To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 15/20] platform/x86/intel/tpmi: Build the TPMI control words in one expression
-Date: Wed, 30 Sep 2026 10:29:12 -0700
-Message-ID: <20260930172918.743656-16-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v3 16/20] platform/x86/intel/tpmi: Use DEFINE_SHOW_STORE_ATTRIBUTE() for mem_write
+Date: Wed, 30 Sep 2026 10:29:13 -0700
+Message-ID: <20260930172918.743656-17-sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260930172918.743656-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <20260930172918.743656-1-sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -65,57 +65,66 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Both mailbox words in tpmi_read_feature_status() are assembled as an
-assignment followed by an or-assign of a second field, even though
-neither value is used in between. Build each of them in a single
-expression, so that a word and the fields it is made of read as one
-thing.
+The mem_write debugfs file open handler and file_operations are written
+out by hand, which is what DEFINE_SHOW_STORE_ATTRIBUTE() exists for. Use
+it, and rename the write callback to mem_write_write() to match the name
+the macro derives.
 
-The two comments on the command word described one value between them, so
-fold them together as well.
-
-No functional change intended.
+The other two files in this driver already come from
+DEFINE_SHOW_ATTRIBUTE(), so this also gives mem_write the
+.owner = THIS_MODULE that the open coded file_operations was missing.
 
 Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- drivers/platform/x86/intel/tpmi_common.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/platform/x86/intel/tpmi_common.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/tpmi_common.c b/drivers/platform/x86/intel/tpmi_common.c
-index 5332d30aac6c..a91938024d09 100644
+index a91938024d09..b4d361f0ec44 100644
 --- a/drivers/platform/x86/intel/tpmi_common.c
 +++ b/drivers/platform/x86/intel/tpmi_common.c
-@@ -279,11 +279,12 @@ static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int featu
- 	if (ret)
- 		return ret;
+@@ -432,7 +432,8 @@ static int tpmi_mem_dump_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(tpmi_mem_dump);
  
--	/* set command id to 0x10 for TPMI_GET_STATE */
--	data = FIELD_PREP(TMPI_CONTROL_DATA_CMD, TPMI_CONTROL_GET_STATE_CMD);
+-static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t len, loff_t *ppos)
++static ssize_t mem_write_write(struct file *file, const char __user *userbuf, size_t len,
++			       loff_t *ppos)
+ {
+ 	struct seq_file *m = file->private_data;
+ 	struct intel_tpmi_pm_feature *pfs = m->private;
+@@ -484,19 +485,7 @@ static int mem_write_show(struct seq_file *s, void *unused)
+ {
+ 	return 0;
+ }
 -
--	/* 32 bits for DATA offset and +8 for feature_id field */
--	data |= FIELD_PREP(TPMI_CONTROL_DATA_VAL_FEATURE, feature_id);
-+	/*
-+	 * Set command id to 0x10 for TPMI_GET_STATE, with the feature id 32
-+	 * bits into the DATA offset, +8 for the feature_id field.
-+	 */
-+	data = FIELD_PREP(TMPI_CONTROL_DATA_CMD, TPMI_CONTROL_GET_STATE_CMD) |
-+	       FIELD_PREP(TPMI_CONTROL_DATA_VAL_FEATURE, feature_id);
+-static int mem_write_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, mem_write_show, inode->i_private);
+-}
+-
+-static const struct file_operations mem_write_ops = {
+-	.open           = mem_write_open,
+-	.read           = seq_read,
+-	.write          = mem_write,
+-	.llseek         = seq_lseek,
+-	.release        = single_release,
+-};
++DEFINE_SHOW_STORE_ATTRIBUTE(mem_write);
  
- 	/* Write at command offset for qword access */
- 	writeq(data, tpmi_info->tpmi_control_mem + TPMI_COMMAND_OFFSET);
-@@ -294,8 +295,8 @@ static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int featu
- 		return ret;
+ static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
+ {
+@@ -517,7 +506,7 @@ static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
+ 		dir = debugfs_create_dir(name, tpmi_info->dbgfs_dir);
  
- 	/* Set Run Busy and packet length of 2 dwords */
--	control = TPMI_CONTROL_STATUS_RB;
--	control |= FIELD_PREP(TPMI_CONTROL_STATUS_LEN, TPMI_CMD_PKT_LEN);
-+	control = TPMI_CONTROL_STATUS_RB |
-+		  FIELD_PREP(TPMI_CONTROL_STATUS_LEN, TPMI_CMD_PKT_LEN);
+ 		debugfs_create_file("mem_dump", 0444, dir, pfs, &tpmi_mem_dump_fops);
+-		debugfs_create_file("mem_write", 0644, dir, pfs, &mem_write_ops);
++		debugfs_create_file("mem_write", 0644, dir, pfs, &mem_write_fops);
+ 	}
+ }
  
- 	/* Write at status offset for qword access */
- 	writeq(control, tpmi_info->tpmi_control_mem + TPMI_CONTROL_STATUS_OFFSET);
 -- 
 2.43.0
 
