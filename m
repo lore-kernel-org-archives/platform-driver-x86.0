@@ -1,63 +1,65 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013050.outbound.protection.outlook.com [40.107.201.50])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010065.outbound.protection.outlook.com [52.101.201.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8001B51AFF0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 17:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECEF3644C1;
+	Wed, 30 Sep 2026 17:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790789155; cv=fail; b=ECj+h6zMXF2otfiigpVnrRJdzLU/cxEVavo7/gP8+PnndOvfoCK8/+A/SxJQf6JjMfpSiCVvTAwsGBC8NinNvRPmlic+XoKBkusHwLZIiQJkgeOo7zkD00j5UJW68XjjQkChesfM42f3kyL4YQVUMw87bqPBpLuEms5WfJVF6VU=
+	t=1790789312; cv=fail; b=ZU7p5QL7qTACaW2+LbYkU7d8nhCVCCabUX3VBGwiVQeZU/c2DWDd/kqHNN8Ohr07VGB06sTGQ6Qk8UnkM+zpo7XVghi1gf5uwINo3rzbh4oNfozXwDHiYKJJ5sITsgMe/ujjCo1kciO/Vti8CWdAN14fXmwJRvUDrTqx3VuSv4w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790789155; c=relaxed/simple;
-	bh=5Uv7bSIDZE5kcdiN4EGG1PyTBmucRo/1ImONiOphvYA=;
+	s=arc-20240116; t=1790789312; c=relaxed/simple;
+	bh=UpAgQYZd9yC6xY0WTrfU86OuMS/0yfrGHjR8kYIN4oY=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=t3sLBOKWb6VM91xzQbt26Yd99c1cZaRB74AEhqNLBwAirnNSx7LkRpFv0AOml/Ss1/zF7qRkrP2lU2WtEJUuqe6gwlF22aOve19+KAwZVWpQB2t99GBOjtIIYLBET4V5E07TyDMSBX3BStl1mBl02axdh1pXv6zcGzc5mUc+83s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lSU6HNZK; arc=fail smtp.client-ip=40.107.201.50
+	 Content-Type:MIME-Version; b=Dfdqm0suvJKdMIFghbNYseKRw+i9TTYYzMsQo8vbpOqn0RS4O8JL7Fv3bDKeZd13iHRt/2/hvnosDZbWHun6VWHNuID+QG5jcJtZUuIzOChl1GsvDG6ir4wYFjtuPgNnuBixMkNfj28ngR9YW1fD0s4AcdxJ9s67Xvt4qS3FkM0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TzSgYh3b; arc=fail smtp.client-ip=52.101.201.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lSU6HNZK"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TzSgYh3b"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fVxm3Ni5K6eX8MlwpS47tKPRlcXslXZjgjeVrapgTPt1w224cqpCUX/oAaCvl7ymIgqi3qSRuzCmawyCjeGt13my3Boazt3waZy6xTdFSi6ugdY987Va4wE6QIvZR0vq8bHD4WWp1VtYTzNNnfSx99MbylmcE4dfu4r6K6gew+l906v2POWVKI7k9vH3KcFNodrUwEzFHZeCk81EH1bmqo7dUjZafAVWKltpttkysiw2bZO0iwTmYPLpY57+vu/WnO3dCRVlPHghKfyH9KSUEg3oGGcf1whiuuL4lZa0SI/y7nTGw1h0YOLTm/SxTkFmLT+4XSgfqo2p+bp2FG8oLw==
+ b=jubn/JyVx95d4jEKorebyWFKz1cnxmM7yvLuelX38wgy0TNTfWFoufZYme2l5bIeFT6cAIHFk/SuMxhzbC7SI6jr6YcmA33KtRpR+nroIAC2x3mhYUi+ixJT/aCY/a/P7/qO+6wy1L9qokH/yW0534yCzx9NNxBOm2/hNkf4aOFlkfK1qwWFntRSSGgL9SOe2PxyUvmNbsMXxzUr4jGUVdrY0UU/7EG8ywZIOBcTx/CLHWrT8ZDItxWZw9LZO8bJytYqEn2Q8B+r9tf2c0bvdKDgr2oE2phv0bLOZ+xHd0KmXH1peI0GvboXiduFK/AIQnp6hfBepOqOuVPmp3+XsQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MMANJQPs9saL2hOLXQaVmCqfKizAi13AdplTvn2EGCQ=;
- b=dp9Zvx/XXY9FDazxZKLlvJ31e8eDCZAr74MFZRaOYgdPD/9opJFP9HvQqI8n9BViKokruzdrKRZ5UQIH8H3AloD+8sFwZb64AhU8xoB/AftHJe6LWMwnZnAybyRtt7DoE12hmHKP9o673rlxCCuoDZkaOsxsDXnxN9EZ4hYCDBiSk4EeJRCZtH9kVp8jpF57cVTl8oYjvUk3+gA80GeQ/5TG7Ltr0qDncXkSR6LK3RMxGIaQdGeaU1/wPJHdhkYyLbL1wbFMTaM5zuE0osVmK80tu7MM9VfRZb1ZdOIXcUqdPT4ouocIS4MabZX/ySw4yCaQBIh3sb0UNejBDt8xhQ==
+ bh=0tBX372vpEzX0dHzkH/Dvi5IILxzi6UZ9gwyXFjqtqQ=;
+ b=A3Isrlin3fINwilvkEYZamFEZJ4HT4GlG7a+CUdd/SLkCxoIzULc3HZ5HaTxrkmmw2YcYy1LR2xUiOh2ujY5glXanc9gQjkO7GrczfNSLPrTILS4lEZjzVulIlqRENS7hNFzudOy9e7n7mrvHtGGjTh5MAQfb7qGJzOHs6c7P0/T80oAReVoFEbwAvRrH6pdp8zNMJPe0/QACOdAPMlBiCW1WJ7lApJ+OODqphnNmNqJ10tZZ2Rh1KBOKGTqk7YFLbL1qQYnIeG5JSojtRmYdhHVOY/+bAJEiM0+Iqbcvpw1A/wrwBXdUsCb5PycFL5bFkIex9K9kapUIwXkOrPXog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MMANJQPs9saL2hOLXQaVmCqfKizAi13AdplTvn2EGCQ=;
- b=lSU6HNZKWnaiRNOVYur2ZOZQZKB/e1GDzAxJhxCzwQ8sBTGjKGPHecQqrjppsqOiG5OcWpmc/gKvPxO/dM5Wpp92ry9IEFAJlWNOXbFu5Ig+H3MUS8cfNToq7yGSjx3JrOoKMnIgKE4DQ9/s1M5j5mOC9CGC6tPzZv1bBlQA/Fs=
+ bh=0tBX372vpEzX0dHzkH/Dvi5IILxzi6UZ9gwyXFjqtqQ=;
+ b=TzSgYh3bOP/nJ2CtHivNgPQVekk7NEAnBIW/VJlRTmHIG31xmAiBTSJaocYC8g1uPx5WQXuv7m/h2zabJ6EkCGTvQ7SwQAqI0J/AuWyWhqJqzwj0OCWjVY5hRxS8hCHNrcZQpxJhJKFqAbv4kd7Y2SO2XL1E0NPv7LSiXOKoMto=
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH7PR12MB6717.namprd12.prod.outlook.com (2603:10b6:510:1b0::20)
  by CY1PR12MB9673.namprd12.prod.outlook.com (2603:10b6:930:104::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.15; Wed, 30 Sep
- 2026 17:25:47 +0000
+ 2026 17:28:24 +0000
 Received: from PH7PR12MB6717.namprd12.prod.outlook.com
  ([fe80::3b23:bb4a:e507:c6ff]) by PH7PR12MB6717.namprd12.prod.outlook.com
  ([fe80::3b23:bb4a:e507:c6ff%7]) with mapi id 15.21.0451.024; Wed, 30 Sep 2026
- 17:25:46 +0000
-Message-ID: <972dde29-309c-4c4c-b27a-8dafee1eadf6@amd.com>
-Date: Wed, 30 Sep 2026 22:55:35 +0530
+ 17:28:23 +0000
+Message-ID: <7c8cb2b9-b44a-4f91-93eb-daa55a498384@amd.com>
+Date: Wed, 30 Sep 2026 22:58:16 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix ACPI buffer validation in APTS
- path
-To: Mario Limonciello <mario.limonciello@amd.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20260929160241.1718067-1-Shyam-sundar.S-k@amd.com>
- <455753cb-8b38-42e0-837f-a8b8fd33093d@amd.com>
+Subject: Re: [PATCH 0/5] platform/x86/amd/pmf: Clean up undesirable function
+ outlining
+To: Rong Zhang <i@rong.moe>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Sanket Goswami <Sanket.Goswami@amd.com>,
+ "Mario Limonciello (AMD)" <superm1@kernel.org>, patil.reddy@amd.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260901-amd-pmf-fix-outlining-v1-0-b54ff94d3d45@rong.moe>
+ <d3ed3f2ac2e8ed960e0bc9b86d4732a75f1464e7.camel@rong.moe>
 Content-Language: en-US
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <455753cb-8b38-42e0-837f-a8b8fd33093d@amd.com>
+In-Reply-To: <d3ed3f2ac2e8ed960e0bc9b86d4732a75f1464e7.camel@rong.moe>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN5P287CA0004.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:262::6) To PH7PR12MB6717.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5PR01CA0101.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:1d1::6) To PH7PR12MB6717.namprd12.prod.outlook.com
  (2603:10b6:510:1b0::20)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -67,110 +69,137 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH7PR12MB6717:EE_|CY1PR12MB9673:EE_
-X-MS-Office365-Filtering-Correlation-Id: d14c0ad3-4817-4f80-5ffa-08df1f17dcd7
+X-MS-Office365-Filtering-Correlation-Id: 29c25ab6-1cbf-4ac7-e196-08df1f183a7c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|4143699003|11063799006|10067099003|56012099006|18002099003|22082099003;
+	BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|4143699003|11063799006|10067099003|56012099006|6133799003|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	2L9UkFuz2zDxkWj/hb484UJyOKJmLn8fTRyojC+XU9+6D20wJ5Ey+Wmk1Gfb59RoDgFMgzvCFcj6tvm1LxTc2+wlDnbSJVDexAZjxHX7tRhf5Zw3jGGFgEvO5bk6Ebnlvr93vn4WXZHYYd31idXUVpW55/lEUKvC70eo9s7SrsD5jnsVG0bO92yvaRpgvO8hZDBFUQXbbqI+F2gcYWAQ3j64ZuNRB4UuYpfyLx3PQI+PCd78lDa/vHmbkypX6EIwz3klmrEF4lwvMuEvY5FyXxuCVCTpnHZKwl8jzt7dwdAi9wI8bLV4K3zdMJQB3pubIdHP6wIswYy5aYa8MrMNT+7LhFcV+OYuPxfQGRRS0/ZUZed9PXjrJ49aUZWvVZo5gCVHJASTdhtAFWhPRc8/shLOBEa/we8dMBLo3KhJZ1NU22xvolcUpqE9JVTVLXVUnCqkT3/38KUKOa67w2vRJ+jH95jbVFpzL83UG5y3W0ul01BUrJRqDogb6RypHXNr+1VGDemRNoIhMj1bWOooUv5h4b1szAfJ97D0uQzxiF6G9g+eISksR3/OkNQH88RURlb7KI/dSwhSk8rmGnyBPVHKOuN0D9MI/eUYKRo4u20L995W5263Z2D15rHq57j/udzcx98rokZNG3yhkmtNQ4QEyQhDeF6gRMVqGyR5DAU=
+	2hOIylV3qz4pLG8UE2PRj65cMpo19bgtdTU82f2GMtrRo4qkwZ1osfkjRhq1KEpVrRRE2RrlpKonOtvocgIU0O+yP0QkAHUMgdfDrfYQ00l6trVc/w4VBc5H88I2C4McS+1FUhJxEZZHjgGaUiiFCj7SiZQLYRrzvHNObH/WOQi3BB2G29pgpkT6wcw0Lf32RsWeYQmL/xLTTGfYb0Ci7ngqo6GDLnUaBVXmk2zuFuFLhQzcf9XfAbwpoMut8EwuzevjM/4hUtkWAo07BthjfIXXV0RLtb37VFneVsd0Dpnia4rhmWPNNBqCzeWze+wwdjJUaV68AGu+WEFWsx0pjRvDY68ZHNCX5kMrDXUZ/Ft07J37RxiPLoMceJfBwz7VmVc3e/8Pf5O8VpyE0C/vuWPWsB45Kejxi8uaxMBcsarA85zUwErS4hoK7QDBRelXAV1pMomXu8H/BuuKBJwlgNQizGWH8zKEYvLit45zlOndM4SL9xj8AaV60lqmigygKlWgvQX53yaOMcbJQQLpslkUOktNrJYw9f8q/0H/iCFNlSL/RXIfT6ZxH1J6wRXvt3RJUwqGogi4yeLqBV1uWXX4VNbZW/d/Oo0cStOxYgs7S4UKvWEDAOtkgvjN7SggPZMZ8rYdD9BcgQR7/M/5mklKqoiUi8XLY7KgR2AQwYo=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6717.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(4143699003)(11063799006)(10067099003)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6717.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(4143699003)(11063799006)(10067099003)(56012099006)(6133799003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SzNlUmtGNmQzKzkrN1kwb2s2cGpSV1VRc3hqRnhBV2lUdkl2cjRJbHRkc1dC?=
- =?utf-8?B?NWl1RnhlaXZ1TjY1QkUxVHhnQnE1TDRWUEx2ZmV3MjNGTFlLOTRKMzIzckVx?=
- =?utf-8?B?dU1WK2JwSXZJWFJhanFpd0VDeElOa3JBZURLeDFDNGwvQnk2S3Z0WmcyMTIw?=
- =?utf-8?B?ZW5WTE9xOWlHcGtvUnc0anAyRU9uYmR1MDJodkpZUUU0dVlZbnA5Zm1RVk9I?=
- =?utf-8?B?djAyOG9JblZEc0pZcExmR2tUbjhwU2sveitkdUtjVlFUdVB2cGxpdVBwOUdu?=
- =?utf-8?B?RG8vZVBseGVBNHMySVlSbnU4SFBKOFplN0lJTk55SHBXQmZ5c0E1eXJnUzdU?=
- =?utf-8?B?UnR4L1lWL1NZQUt0ZjJGK2YwRWZqZzB5ZDhBNVZFckpVaENWR0xtMk9TT3pB?=
- =?utf-8?B?OFlRZnRMY1ZaaVY5S2hlb2ZyZkc3TWJQTU9PTzQ4QWhuWDNiU09IRTVocGh2?=
- =?utf-8?B?UlJNcjAzdWVPU2pYMCtwV096TXkvYVpjamtOTlBvOElGRUxLdVhXa3JCY0tW?=
- =?utf-8?B?YUtuc0Z6eDZTZHNTRitOdzlYdDVCM1dPclVNdWZuWHIwM0lJYmNXcVdsQ2ty?=
- =?utf-8?B?clJCc0tyUDh4OTU3RWdPa1EveUFOeWRNTTVBMEs3OHpzSWpEZHFPbWhsRFk3?=
- =?utf-8?B?dEYyRXRLbm0wdzhOVEo5L2M5QnErcmdrMWRkVVowcG9DcDdqYURNbWdwV00v?=
- =?utf-8?B?N09XRWkyMTMxdWZlOG4rUEluZDh0bFpJaFFaUVJFaFk4c2FTM2dKd0VSNGM1?=
- =?utf-8?B?TDBJMlBkWFBnd2NaS2NhVEZ3cTVTTWYveFU4bTBhK2w1cW42aUtjajNWZ2Qw?=
- =?utf-8?B?Zk1pM2huZUp5UGpXby9qY0JvK05rY2hoeDYxMXBBd0ZzanlkNnYrQWYwZHlL?=
- =?utf-8?B?OHdqa0FpbnpSTU5CY0JmTzZvNngxTE5kRU9OdGZkV3hpS2ZkM0xONXRoL1VV?=
- =?utf-8?B?aGhYaG5oT2VGb3JjNyt4RlE5UmtTT3VURktHZWRTMFdudEJweDk0RkgvTWc3?=
- =?utf-8?B?ZXQxWm5CZXhjcnZ4Zm5YbzhXZThhcjZ5ZkNqZVdQdk9JUkR5Z2NBNjFnTjlN?=
- =?utf-8?B?a0Vqdk8yYS9MdGhsYW4yUkdEdWNYWDFNZmhHbytHR2RuOW84aU1hZUtQb3JK?=
- =?utf-8?B?MkMzd0RBd1c1WVBuSzNKL290NU5qdURRd2JUTEd4Ty9TT2FtTVNmYTVYYkNv?=
- =?utf-8?B?Q2Jnb3BXM0VWbEZxTit6NHprUXRMU09RQmNQMDh6WmorN1RoaHJ1SmEwd25R?=
- =?utf-8?B?LzllZ294RnZHbk5aS1RaZ2lkaUExdVpFTnB3SWllUmVCWHJzNHRhNll5ZlNL?=
- =?utf-8?B?Y042THF6cGUwV0V5RUNzVS96dUNIWW9RR1JIYWtsMDJMd0U2NlRzakpEUFZ2?=
- =?utf-8?B?MGhlY0dmQXljLzI5dkIvQzVXaXdONHFSRHY0TnBROTVaOHFyRnVtTjJvYUVM?=
- =?utf-8?B?dk5OQUgzdCsvYm1wSDM3WkZVR2hlZjJZYjdaVFRhMk12ZUtGdmY2dklYdFo4?=
- =?utf-8?B?RWhqbWdhSks3WTZaSUJjcjhRZXRqYTZOZmxabDAzYUhZSi9yQmRIejdTRHgw?=
- =?utf-8?B?S1Vwbjc2d2xmY0dCMEZWVkRjTWJSQUFWL1oycXUzcDRURHNSb09DMURWK3FR?=
- =?utf-8?B?SmhxS2dnNndMeFVYb2svYU9qWVNOamtSR0k3QytoR1pNSnk3bDZIVksvNy9J?=
- =?utf-8?B?R0ZBWnhkYTFkc0c4RTlIbkkvd05Qc1g3V1BEdVNEMVI5Y1M0aDJXUW5UdTdu?=
- =?utf-8?B?N21RV2kvTk1EQXBVL3poVEVmcXM4SC9CN2k1akFycUlTYmR2b09ab3BzMWc3?=
- =?utf-8?B?YXJmUFdOWS9zaExpZkZlVVd4a1JzU1Y0TVE1Y3J4cXVpeHRjR0ZCTEVmcWlR?=
- =?utf-8?B?SElqMzhBTDVHTmZwdnhCQUpqZkI0ZEx6UUJEeUdsUk5nbFViNVBKQmxHeHlG?=
- =?utf-8?B?Yjl1MForekV1ZXB2cmdrQzFvSEZQRXk1d1lnOEZQZXNkeWlwc1pYZy95cUNJ?=
- =?utf-8?B?dmFQM3VSRkZCY2ZXVDZmYlVSR09lNU5iaTRBM2cxcWFpcDVQYjhiZW01WXhW?=
- =?utf-8?B?Mjl4WTFwNjlOcmZXZ2VkK0VuNWU4aE5FZ08xNlZhWDg5N0ltMCtzVjB2ZHN2?=
- =?utf-8?B?RVJVNnFpVE9iV05EbmlPZHZDd2lBOW5JUWlNZHpmNEQwdUtMODhKNkNaWUpj?=
- =?utf-8?B?YUEyN3NGNFV5Mk5nSkc1TVY3TWlqZ2JsWjdGbFh3djBxZW1xOXJrK0ZYN05l?=
- =?utf-8?B?ZXJndXR3aW5UekFDeU1BTUJpM2lMWCt5VmF5aDJ6d2JtTGVtNitGYXdBSmVU?=
- =?utf-8?Q?eIt91ZGZBUpnc2YvY8?=
+	=?utf-8?B?MUltcEwwN3JHeUt5eHNsU3VrdFZ5OEl6UWtyenhsZDhyb0xsZ3BucnErMUE2?=
+ =?utf-8?B?bE9Bc1Q2Q2w1eGdVQnV6QndLNFc4U0RVaC9tVTkrTXFpZDlVNVArYWNTMFpq?=
+ =?utf-8?B?NENJbENQd3RUazd2bCsxUnVGeG9wazd6WTFRTEJiMUs4L2xzeGN3YjRvOFVF?=
+ =?utf-8?B?OSsvVEE2NG5PNDY5akNHSXRXS2NGSlkrMEVPaG54bWtlWlJLRjU5ZmtOSnVN?=
+ =?utf-8?B?UWxOdDZTV2U5ZGh5MnF1SFdsaWg3Tno2cjh0WjFrdWVpTUozWGw4M01vSkty?=
+ =?utf-8?B?U3pHWlUzL2lsZTBXQzhYUDV6cExxVERia2lJRFRzclRNSVRvRVdmS0VDYjZU?=
+ =?utf-8?B?NUZEL3ZCanpDOUo3dFhpc3FweCtHQVU1dWZ6OWNia2s4cWRydk0rNkJGNDBk?=
+ =?utf-8?B?cWRrMWlhUUp5cmN5MmVDckdKUUhick44emZtWTlONUU4czNWdVdrT2pMcVYr?=
+ =?utf-8?B?RW4yOHprVUt1cy9zeXY3V2s1VG5PeFdTMDViZysxbVNmcWxvdHBSVDZocXp5?=
+ =?utf-8?B?YWF4NEsxTzlTcFN6SDJZUk94TFkxeDRKb215RDlZMWFibHF4Tzl2THJGcklz?=
+ =?utf-8?B?T3hYOWxUMk9DK0MvNFNIQXlQSTZlNHVHd2xuUkZJdG9xZUY3WnlPYXkwZEox?=
+ =?utf-8?B?ejBZZGk4c1Ixa2VHd1UwK1dvSU14aGRoZCtmMzM5UlNCZHAwUmJOcEY2WVJz?=
+ =?utf-8?B?OEw0aWs0b0lvZlNNMHFTRmhuRlZyQ254U2wrOWg0SnNCZjFEQWdQbGVERUZu?=
+ =?utf-8?B?UGtXMDgrV3FtZFBmRHBDV3lYLzE0N0wwcGRuVnp1U0szVlFNOWs5dngzRmlZ?=
+ =?utf-8?B?cHpHNTVRRFNHcVRoRXdRQjcxL0Fhdm53ZWtwUVoycWNPV2JKYWJKdnREWXdW?=
+ =?utf-8?B?REduV0dBZ0pFUFdkSm9UTUNBdWFQWmgvMkdZU2h1aExVZ2RReEtGUHRXQS81?=
+ =?utf-8?B?c1NPb1M0QWowRkJOSURTREpESzhYamVQbXk4R1lxOEIwRkNoRmN3dk9DQnFR?=
+ =?utf-8?B?ZEV6alFyN0FCVStIWFprUUhWUVFVRk1WS2ZycnNsVFFic2pyZU5yVGkyTzVW?=
+ =?utf-8?B?S3VWRjVhaDN6bGlMQ3YwNlFyNHZYT0pZYXFXTUhLSDRtSENwbzNYN281THFJ?=
+ =?utf-8?B?czhoaGVVTnZxN05GTEFsTDZETGJpVytGUjRScHkwVVdneE5GQkZZbnYzeGU1?=
+ =?utf-8?B?bi92SVpta3Joa281eGd1aWh6QWZzQVIzRmFCVVJ2dExJM0R6bjJ3ZlNVY0d6?=
+ =?utf-8?B?MUp3ZW9MUTRaaGdzalNwK1lPcy9vVFgvNEZOc2YxcUdLM2h6MDVGU2xXbXpu?=
+ =?utf-8?B?K2I3b3BwVkRYc1Fhd2NBd2dOaGNxOEkybFlkQVQ3SFc3V1YvRFF5TnhQbVlP?=
+ =?utf-8?B?WThQTzQ0Zy9UOUZnUEJyYVlPdjF0T0Z4VUVmQ1FMTWZ1ZXI4MndLRCtlbjU0?=
+ =?utf-8?B?RFhkS0Z3Z1BwYStiKy94NG5IeHFlUmh2b2pCTUZ5Zk1ndDNTanJEZVpERGRo?=
+ =?utf-8?B?RGFoTlRhdUhsMXdsdjEzMjRrU0xXcXh6eWlOU2d2RVIydlJyRDM4RHJXU2sz?=
+ =?utf-8?B?UzhtUjRibDhCdW52aTArMjlOeXhkMmlqT2pxWE9rVFF3RjFoNWtwRlQxT3l1?=
+ =?utf-8?B?dWtEYzZ6MG1lUHBHbVZmOEtER3l5a3QxdUUzWFZySFBYRXNFNWpNMnM4dC9u?=
+ =?utf-8?B?Y0tQTTBCeDlKWFhUTXU3T0oyeDE5U0hoVEtiYlVXOFZwM2Y2dWp3a3lRWmpn?=
+ =?utf-8?B?MHR1bUJYRkc3YlR4Qm95RTFUY3RrRHRtMXRiaVRCK2U4QnFXbnkzdi9wVGo5?=
+ =?utf-8?B?aHYyaEdtdFhDd1NHRC94T3VPSnJsbzNHK3gvcGR1cCs3a0JiL2cySk5SaDEx?=
+ =?utf-8?B?MzE3ajhUSHo2UVB4TkZMQk95MitxOGY1V2dwK0JDY0l2c2F5dC9iQXdhOVVh?=
+ =?utf-8?B?NTJMeXhHc1l0UHpoZndsYkJPMFR2eDJGRHE5TWtOWDY4NE1uZ2pESytwRG1x?=
+ =?utf-8?B?SU5ZUGpNZm84MUpvQTJxZ1lBaURudGpMUnF0N3BURFNZTVExV2lwS2kyYi96?=
+ =?utf-8?B?dEQvZWJFNDRCSmFZWklBSDBWMGZXc2NNYXJ5WU9oWXZSejU0c2lSdndHVFVE?=
+ =?utf-8?B?SXg2WFVrTDhIUXo3R05kTWdTd01pdnZFOERrWnR3dkYrQ2JtblVXdXkzTWpT?=
+ =?utf-8?B?bERra3BGQm1JVmtZMVVoZGlncmNPQWVTREl4em9JRnlCbFM0bDMrZEhNN2Yz?=
+ =?utf-8?B?c1AvUVBPZXR5T3B4ZjJXaGRjSlJxV21ObjB4Wmk2cFcrYWg0NnVrNFJJVVZv?=
+ =?utf-8?Q?c4t/ecwloHGiAe/fM0?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d14c0ad3-4817-4f80-5ffa-08df1f17dcd7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29c25ab6-1cbf-4ac7-e196-08df1f183a7c
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6717.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 17:25:46.5321
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 17:28:23.6953
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Arh7Wa9MEzkIrwTcAje8ItI+8+BAaZMIWVFVkOt3MVsyJ1Ocfhv8j+m5/y9sW06ROex0SgM4sp8yROuPWc1JEw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: T8S9eYfaaHWUBkeHlGYbQdoLb7+ZQgKxbHZDyNJr4c4Uh2St8iONA3d1TnPw8Kw6zo8NBAKX0GtaqOyBvgR1Xw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9673
 
 
 
-On 29-09-2026 23:12, Mario Limonciello wrote:
+On 19-09-2026 20:48, Rong Zhang wrote:
+> Hi all,
 > 
-> 
-> On 9/29/26 11:02, Shyam Sundar S K wrote:
->> apts_if_call_store_buffer() reads a u16 size from info->buffer.pointer
->> without checking it is non-NULL and holds at least 2 bytes, so a short
->> or NULL firmware buffer causes an out-of-bounds read. Guard the access
->> and return -EINVAL before the dereference.
+> On Tue, 2026-09-01 at 23:02 +0800, Rong Zhang wrote:
+>> The amd-pmf driver is notably bloated due to undesirable function
+>> outlining and linkage. Simple and dump helper functions as well as
+>> wrappers should really be static inline functions instead of global ones
+>> from the very beginning, or else they are prone to the overhead of
+>> function outlining and linkage, which bloats themselves and their
+>> callers.
 >>
->> Fixes: 3eecb434d7f2 ("platform/x86/amd/pmf: Add support to get sps default APTS index values")
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> ---
->>   drivers/platform/x86/amd/pmf/acpi.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
+>> The series converts all these helper functions and wrappers into static
+>> inline functions, and shrink the module (!CONFIG_AMD_PMF_DEBUG &&
+>> CONFIG_AMD_PMF_UTIL_SUPPORT) size by 1472 Bytes (GCC 16 -O2):
 >>
->> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
->> index 3d94b03cf794..c820a5da77ba 100644
->> --- a/drivers/platform/x86/amd/pmf/acpi.c
->> +++ b/drivers/platform/x86/amd/pmf/acpi.c
->> @@ -138,6 +138,12 @@ static int apts_if_call_store_buffer(struct amd_pmf_dev *pdev,
->>           goto out;
->>       }
->>   +    if (!info->buffer.pointer || info->buffer.length < 2) {
->> +        dev_err(pdev->dev, "buffer pointer is NULL or too small\n");
->> +        err = -EINVAL;
->> +        goto out;
->> +    }
->> +
->>       size = *(u16 *)info->buffer.pointer;
->>       if (info->buffer.length < size) {
->>           dev_err(pdev->dev, "buffer smaller than header size %u < %zu\n",
+>>       text       data        bss      total filename	(before)
+>>      26810      31672       2768      61250 amd-pmf.ko
+>>
+>>       text       data        bss      total filename	(after)
+>>      26046      30964       2768      59778 amd-pmf.ko
+>>
+>> As for CONFIG_AMD_PMF_DEBUG && CONFIG_AMD_PMF_UTIL_SUPPORT builds, the
+>> module size is shrunk by 1187 Bytes:
+>>
+>>       text       data        bss      total filename	(before)
+>>      34593      45500       2784      82877 amd-pmf.ko
+>>
+>>       text       data        bss      total filename	(after)
+>>      33988      44918       2784      81690 amd-pmf.ko
+>>
+>> This should also optimize the performance a little bit theoretically,
+>> though it's probably not very important on modern hardware anyway.
+>>
+>> Signed-off-by: Rong Zhang <i@rong.moe>
 > 
-> I think it would be a good idea to be consistent with apmf_if_call_store_buffer().
-> 
-> Either add the NULL check to apmf_if_call_store_buffer() or only use the bound check in apts_if_call_store_buffer().
-> 
-> Would a helper they both call make sense?
+> Gentle ping.
 
-Agree. I sent a revision with a helper function.
+Thank you for your contribution. Series looks good to me and I did a sanity on couple of
+platforms as well.
+
+Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
 Thanks,
 Shyam
+
+> 
+> Thanks,
+> Rong
+> 
+>> ---
+>> Rong Zhang (5):
+>>       platform/x86/amd/pmf: Inline !AMD_PMF_DEBUG stub
+>>       platform/x86/amd/pmf: Inline simple helper functions of Core Layer
+>>       platform/x86/amd/pmf: Inline simple helper function of SPS Layer
+>>       platform/x86/amd/pmf: Inline simple helper function of Smart PC TA interfaces
+>>       platform/x86/amd/pmf: Inline wrappers of ap{mf,ts}_if_call_store_buffer()
+>>
+>>  drivers/platform/x86/amd/pmf/acpi.c |  76 +-----------------
+>>  drivers/platform/x86/amd/pmf/core.c |  22 ------
+>>  drivers/platform/x86/amd/pmf/pmf.h  | 150 +++++++++++++++++++++++++++++++-----
+>>  drivers/platform/x86/amd/pmf/spc.c  |  15 ----
+>>  drivers/platform/x86/amd/pmf/sps.c  |   5 --
+>>  5 files changed, 131 insertions(+), 137 deletions(-)
+>> ---
+>> base-commit: 9ffed84a24d60ec506d8961fe138f0baa92fdbd0
+>> change-id: 6f1861db-amd-pmf-fix-outlining-204546e884cf
+>>
+>> Thanks,
+>> Rong
 
