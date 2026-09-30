@@ -1,79 +1,90 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lf2-f12.google.com (mail-lf2-f12.google.com [74.125.229.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FB0327C08
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 01:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB2229992B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2026 01:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790733281; cv=none; b=E1Uqdrki3lLL9PDWkbIYghpAlr4v1wf7PJVk7rROY/ABM7BN4NB6RzWzHmh5iEF7ZMYLwsGHZEurvx5zdCb1hyxcaZyCUEN6W8UK6pGNqKb+6/hVj/SL5aat0RZ2K9yWs5k306Ckur+cPqG6J3M8B5kf+puGJmpPGq0AeA58w28=
+	t=1790733492; cv=none; b=V/XgK1lh2+IMfK1qsD7jWNfAooL5nrzu7fDQ+52CKlfspsbYHYQSeD4g7N8pG8TdYXYfF4P8OaXAXMhHKBxenIH7G2P47zcyLnoz/H7oOvvRnXBHh6hX2VZhuijiV32djwl5wNamVsFeNRbXutGQA/N0WBKK5ZaN6FLlWECF7YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790733281; c=relaxed/simple;
-	bh=22EAsRtIugCfhz8Or01nJdxLPEtPClXMezlZkuUu8nQ=;
+	s=arc-20240116; t=1790733492; c=relaxed/simple;
+	bh=upTA6b+ISAdaYmRHMvqHLX3cvwXVoURxqHCS3QMWDuo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nxi2My6o2jFEUbnvT2iIU+ByBBJnjd4mPs4KTsHi6qsZ8XxqgYqSfmbwVyiEE5b5Hi7J+HC/lltJDboyHc8/9+JnltQxusRaHa0MXjE2AsFYnhpoCoKe8/X3dsMVrsk+G7bhXreG/TX0674K2tNpP9Z0BA6YdzmLmlnOm/dKxSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMwvgBIH; arc=none smtp.client-ip=209.85.208.177
+	 MIME-Version; b=lN6NWvdYF3Tjcm57YuVwyUuXwhnOmXXNG/RT/vW3rDtKjic+MetNJZHlZ+IMJk65WdJT0eMSFIsutqfIt7I6OjS6Hy03sy/XwEbU1G7oil77zgnfeKScD3+edZmloinGZe740ECAgxHs1cilXeapJcny9XsGLCzHN6TBe/JY1Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJetreYe; arc=none smtp.client-ip=74.125.229.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMwvgBIH"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3a76ac0bdafso7206941fa.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 18:54:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJetreYe"
+Received: by mail-lf2-f12.google.com with SMTP id 2adb3069b0e04-5ba3e27d525so74811e87.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2026 18:58:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790733278; x=1791338078; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790733489; x=1791338289; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=89ZecEDPkVxdgfsZnGb4glnfiTdHK0W7K/z1VS8tLk0=;
-        b=jMwvgBIHDI7N2ckgImodf/JjyRvyjVqsJNmQALqdLPva55m/2Kk2L+86/bo1TZLOhJ
-         UbDdKR8n3iki4El2hQrAWxjsuU785sfBICUzR6GvoWzctD5/ZrWhVkjC9g+I4OBodzMh
-         Mrkqdn2qGH+SRxywjEGqBiYgnUjGu3FGdJPiFZzTZ1Zx5yGXPERFdi6lYVmddE8zkh7a
-         /hj5D9JOqvw/LS6Mr4N2zZz6G8HtNd0mCqrAno6ciE/5l649uHzQ/L0jT7RrWvF/cUk8
-         IcxvLsEbkUmCR5EU0cHcO4SfoOtJKKk9htqzJAUjzygTO7zCPPF0kIrzQ1zbLc/Q5yOa
-         NddA==
+        bh=OSXObVSJjkgBIuTWTnU+6eeTHwWMHYD0oSzvFJkg21s=;
+        b=hJetreYem+LxKLlbroTdCSjmJt9PMh6Sq4BOJHnn4cAYJ0KSvQTijrfPL5/jPGKfGg
+         JgxII3DQT7e3mtRvl6covbZjUj1sQIklHx2DuRQy9UAqZe31LE7cK11NHMv5CfSAAp9e
+         wYeD7b1+EzKzgz3ATlFie0fdQ+uMFoS/BxP9Wd9/DfkKya6KtGolp6mqKd+lPKbvHnrv
+         twAemS43lizsmiUfVUyqN6I7LtkgEruIrF2hSchpH212ROVfH1tUwBHbWADtitoub4hy
+         oi9HwhMuTVWlSoqqBU+gkoHzYa5nxtiHypI/hAXdrSAu8WU+tF+DVfur0xZQp/JE2CwR
+         aTjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790733278; x=1791338078;
+        d=1e100.net; s=20260707; t=1790733489; x=1791338289;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=89ZecEDPkVxdgfsZnGb4glnfiTdHK0W7K/z1VS8tLk0=;
-        b=IGVrNOaxXcFzDv578didZ/nn+Yu/ezycc1oQ2Bif2uya2FPRvO/FaiJVKUp/T3xsVn
-         SeaTJfw6UGVuEKWlmrTYBn712EdO2UAtFvUOKfZYg1AGCmidi4FNZDJLIv2NfAr+kkix
-         GKhmbNFYZp/7cQwr0HvXfTN+Gm4IoafBEcU7dhPA2Q3nLdyuL+CqVHjwQcAvWoOmcyDi
-         273POmg51UiOGcmSxl2det3zW4emmLZKCCN+n0+mp287gR3Bur8gSVDJ2kRROEOjLRrs
-         ottcuxzbzdVQiosa21nyoIHqKqoDY/12sIfANw7aMC1r+dgGD2PF3PLL8zjDNF4GTd4B
-         IgcQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwaj30kjHDHzYXBzA1MiokjpzU26HddfZmnopcjmKXnKzo96yKAeLvAeAWkT9AJH2/YYNv/BJ2doyVK5MsCGTVH+Kzo@vger.kernel.org
-X-Gm-Message-State: AFq9FYK/dstYqNeF3V/yu8VPJ3QY42hDZXC6ZNliWo0JiQ9TYMR/64iH
-	ugUUiZcZ3VEYoag2r4JXIpYG2hvZxzINyVlaNV71Lp/D2Yyix/NW2g5/
-X-Gm-Gg: AYBFou2xbXRT7AAuhCvfDrAL97AhK5dAkQYvONzES6UEzNsP7ty0WrnoA91T5iwv7V5
-	9BjozH2RpckCM6mx3T1LIF+4vVGE64a8XjE7d3Sj+BE4XXRe+g+C/DfCMwAtPJilcv3A01kml3L
-	PtLEjXs/4/WSspnBrqR8Wz0Uor1K5e0PLAiMPLvibdk0uQhPtJWSVWBN5QMC2SAxBXxe+zXj8a4
-	l4cvJYcxk6KI5rkayP6UdRCj4p85B2dZnJMC1E4huGfTyNFsxLBtMNCsy6Zy4hqPri3dTKTQvia
-	0LNZFEBZ8VMKXBFJL6WjyBzij5yUKdN0jtCTerkKjbx+W8vUulgi4EwSYm8WX2ZV61yMir5y99D
-	wnWElqcl6oYbZvzrTZiaewaTkkTDexqVwf2ngDAaqTF7wIB+MXn+2Gv+DtB11rHTgjgpQnl2pB5
-	fpXXeLN7GIzsUwUqycvu3OB1r6seszc3w+Hepm4AQ58JFmo7fyERWaMi0vDnXaas8q0WGZorhH5
-	lTWZQwOFwDswfbxIUI+AU00Yfp+VnPas5bgK/z8MUDDq65KCfWVNsBKAXeuANK/g16A
-X-Received: by 2002:a2e:a902:0:b0:3a7:635c:d56c with SMTP id 38308e7fff4ca-3a7791d7277mr62711fa.7.1790733278024;
-        Tue, 29 Sep 2026 18:54:38 -0700 (PDT)
+        bh=OSXObVSJjkgBIuTWTnU+6eeTHwWMHYD0oSzvFJkg21s=;
+        b=M1FhbsOQn5jMlwEd9bFk3JfzMbWkX4d0nO1pUp4FS+nUfdBoZWy19zPoInoAvpMknx
+         IMc/pIqpqDuEbd00Ru/w9qQXKrZSIiYBDIgyrdGg0ZFeAV71LQL5+TSzhAbApG/O97bu
+         titOnp6u1/8ftJ11c+t7SSr6ymysKy5B+wO9ieTOv46XNUw6IOvDNO7keJLgZcrn8D/K
+         ek1A4v3n6XakAv+eHMELFVIBTDMmDtGHBtvD+jQXQnzvO0cpNrs8966+zc97SUUXwxUK
+         4yJTkNYXy3OM1pPipWJmkGCesIlRz+JtNWpsUZb8Oa1Pbn8uRGoPwk2JUa2QDg/p5gLE
+         FbpA==
+X-Forwarded-Encrypted: i=1; AKwUvBwbI8DTZp35g4agrLjpTcP+8GS4UqyxCHbq5EVQ4I8nPuaomf1LD01TIcR5HS9t+uGqSd2rrCNsbE5cyjHwSc3mWFiK@vger.kernel.org
+X-Gm-Message-State: AFq9FYJsOPF7IDcOeBWsAmjeoZneMEz94D5yHoDLxbZcwdhnTac/JZAt
+	d5vWLY9Mh6zHJDLYeZb93t0df5RfPNMnx89w+1kc/SrPT8TZRPg+x4OC
+X-Gm-Gg: AYBFou0x4ctrsQBZ3dYDCjL0Ik8GN1QKf+7JEapT7LxjjiqRX1kqnGvRXfVWrdeYWYz
+	mmcXWDQOOOau/XxjRFyHHKs6hoHafcvuJsLbnF0zJJg+i7gwWCXByoJcFl18HH9zRUvy9Wama3P
+	8lQBY1JpOatOMG2r/r818WKuu9p7ovH9YCCBRPc5+0ZAK10GRhW/aVekpIk+yy08s5ZOXSWyGLx
+	HTQ4dltTNcNLWzy9DGhlMoUcO/IOgo2ZXot5pgq1Fi4GPmdWTn8yfMSLSWVImjabSXcJ1MVaCvy
+	SJc99sAb3FhJdjPxm7Y+a5o5mW9Qm69cClTbfDuvJJKVuNoOM1uQrfNPm1C8AzPPgqv1/E+LXIx
+	VR7V2/6mPydgTzY6H93BtZKLBI8vPNYPiY+AeHX/qUG0DhVeJrhHnH7mZxIRxWMramKeik1/YuQ
+	A1Kafoql8tti0bAKasXvYpnGRpTU0jF0OLia+nYKz7STQDhbi098HeI75AeogLtw3DHKqnyDk21
+	3SMi1wzQUToBeUbGmO0hV11aoO9CHqX7LXRZc9gQm6K041oRhUsrt7ckPyfgN75kYJb
+X-Received: by 2002:a05:6512:159c:b0:5b8:f8f9:e080 with SMTP id 2adb3069b0e04-5ba3bcb67bamr436973e87.26.1790733488684;
+        Tue, 29 Sep 2026 18:58:08 -0700 (PDT)
 Received: from wildarch.lan ([109.72.228.33])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ba3b867f6asm347507e87.75.2026.09.29.18.54.37
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ba3fb75e76sm5690e87.0.2026.09.29.18.58.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 18:54:37 -0700 (PDT)
+        Tue, 29 Sep 2026 18:58:07 -0700 (PDT)
 From: Anton Karasev <uselessfire@gmail.com>
-To: W_Armin@gmx.de,
-	martiya.ar@gmail.com,
-	platform-driver-x86@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org,
+To: qby140326@gmail.com
+Cc: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	qby140326@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org
-Subject: Re: [BUG] Redmi Book Pro 16 2024 platform_profile write fails on Linux 7.1.7
-Date: Wed, 30 Sep 2026 04:54:36 +0300
-Message-ID: <20260930015436.3095516-1-uselessfire@gmail.com>
+	ilya.gladyshev@linux.dev,
+	foxido@foxido.dev,
+	W_Armin@gmx.de,
+	kento@kekto.ru,
+	ericted8810@gmail.com,
+	chris@miget.com,
+	matias.civadda2342001@gmail.com,
+	btx342@gmail.com,
+	wleizc7319@gmail.com,
+	wolf109909@outlook.com,
+	vlku.milos.fun@gmail.com,
+	i@rsplwe.com,
+	bozhenpeng93@gmail.com,
+	nika@nikableh.moe
+Subject: Re: [PATCH v6 2/5] platform/x86: bitland-mifs-wmi: Merge the function of redmi-wmi into the bitland driver
+Date: Wed, 30 Sep 2026 04:58:06 +0300
+Message-ID: <20260930015806.3111929-1-uselessfire@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <3b58a0ae-f050-4dd5-80f6-bf2cdfc20318@gmx.de>
-References: <CAM-sYPpgNU+tmfHKWg0KHfVF8f-K8oaNvfYwj-vaUGsEvf1tjg@mail.gmail.com> <3b58a0ae-f050-4dd5-80f6-bf2cdfc20318@gmx.de>
+In-Reply-To: <20260929134503.17249-3-qby140326@gmail.com>
+References: <20260929134503.17249-1-qby140326@gmail.com> <20260929134503.17249-3-qby140326@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -82,54 +93,108 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Armin,
+Hi,
 
-I have the same machine as Martiya (Redmi Book Pro 16 2024, DMI
-XIAOMI / TM2309, BIOS RMAMT6B0P0B0B, which is the latest BIOS Xiaomi
-publishes for this model). In case it is useful to have it on the list,
-here is its full acpidump (all tables, acpidump -o):
+On a Xiaomi Redmi Book Pro 16 2024 (DMI: XIAOMI / TM2309, BIOS
+RMAMT6B0P0B0B) the display-switch key sends payload 0x00000101 -- the
+short form. The merged keymap in this patch only carries the long one:
 
-  https://bugzilla.kernel.org/attachment.cgi?id=310971
+  { KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_1, 1, 0), { KEY_SWITCHVIDEOMODE } },
 
-What the tables say about the Mifs interface on this BIOS, and what I
-verified on the machine:
+With WMI_EVENT_RESERVED_1 = 1 and WMI_EVENT_TYPE_HOTKEY = 1 that expands
+to 0x00010101, so on this model the key produces no input event at all:
+sparse_keymap_entry_from_scancode() finds nothing and the event is
+dropped.
 
-- The method is \_SB.PC00.WMID.WMAA, in the SSDT with OEM Table ID
-  XMCC1806. It implements only command 0x08 (GET and SET), 0x0a
-  subcommand 5, and 0x10 (GET subcommands 1-3, SET subcommand 2 only).
-  Other command IDs answer 0xE000, including WMI_FN_SYSTEM_AC_TYPE,
-  which your "Treat WMI_FN_SYSTEM_AC_TYPE as optional" patch now
-  handles; unhandled subcommands mostly return status 0.
+redmi-wmi has exactly the same gap; it is being fixed there by
 
-- The SET branches set only the return code and leave the function id
-  at 0; only the GET branches fill it in. So on this BIOS "Detect failed
-  function calls" reports every SET as failed with -ENOMSG, although the
-  firmware applies it -- the same as Chris reported for the Xiaomi Book
-  Pro 14 in "Only check the function id of GET responses". Verified with
-  the for-next driver built for 7.2.7: every profile write failed with
-  -ENOMSG while the EC mode changed; with Chris's patch on top, all of
-  them succeed.
+  https://lore.kernel.org/platform-driver-x86/20260928221417.37875-1-ilya.gladyshev@linux.dev/
 
-- The mode values are not the Bitland ones. SET of 0x08 stores the value
-  in the EC register QFAN as is, and NTDP in the DSDT maps QFAN to the
-  DPTF variable \_SB.ODV1: 0/1 balanced (ODV1 0), 2 quiet (2), 3
-  performance/Turbo (1), 4 full speed/Geek (4). With your two patches
-  the AC type check now passes on AC, and the value "performance" writes
-  (3) happens to be Turbo here; "balanced-performance" writes 1, which is
-  balanced, and after Fn+K to balanced (QFAN 1) platform_profile reads
-  back balanced-performance. On battery performance is still refused by
-  power_supply_is_system_supplied(), although the firmware accepts Turbo
-  there.
+which I tested on this machine: with that patch the key reports
+KEY_SWITCHVIDEOMODE and the desktop reacts to it. If this series lands as
+is, that fix is lost again for this model. The equivalent here would be
+one more line:
 
-- Command 0x10 is the battery interface on this firmware (subcommand 2
-  is the 80 % charge protection), which makes the existing kb_mode
-  attribute dangerous: writing "fixed" to it turns charge protection off.
-  Verified on the machine.
+  { KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_1, 0, 0), { KEY_SWITCHVIDEOMODE } },
 
-I have put the details, including the test results, in a reply to
-[PATCH v6 5/5] of the redmi-wmi merge series, since that is where the
-per-machine table is being discussed. I am happy to test patches on
-this model.
+Note that the keymap already carries both forms for the settings key
+(0x1b with low 0 and low 1), so the two forms are already known to the
+driver; the display-switch key is simply missing its short variant.
+
+While tracing this firmware, two more payloads showed up that neither
+driver handles: 0x00000901 and 0x00010901. They are not key presses. The
+EC echoes back the Caps Lock LED state that the host itself has just set
+-- the third byte carries the new state (1 = on, 0 = off), the same
+scheme as the Fn Lock events at 0x00000701 / 0x00010701. Verified by
+switching between windows with per-window keyboard layouts, which changes
+the LED without anyone touching the key: the events still arrive,
+200-500 ms after the LED change. On a system where Caps Lock switches the
+keyboard layout, each of them ends up in the "Unknown WMI hotkey"
+dev_dbg path. If you agree they are just an echo, KE_IGNORE would
+silence them:
+
+  { KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_CAPSLOCK_STATE, 0, 0), {} },
+  { KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_CAPSLOCK_STATE, 1, 0), {} },
+
+Two more things about how this patch treats events from this firmware.
+The observations below were made on 7.2.7, with redmi-wmi owning the
+event GUID and a local build of bitland-mifs-wmi bound only to the
+method GUID, reading the EC registers while doing it; what this patch
+would do is from reading it. The ACPI references are to the SSDT with
+OEM Table ID XMCC1806 (\_SB.PC00.WMID) and to the DSDT.
+
+1. Fn+K. This firmware never sends WMI_EVENT_PERFORMANCE_PLAN (0x0f);
+   QV20(1, 0x0f) is not called anywhere in its tables. A mode change is
+   reported as event 0x16 with the new EC mode (register QFAN) in
+   value_low: the Fn+K query handler in the DSDT (_Q24) calls
+   QV20(1, 0x16) and then NTDP(QFAN), and the MIFS SET of
+   WMI_FN_SYSTEM_PER_MODE in WMAA sends the same QV20(1, 0x16) after
+   writing QFAN. EV20 fills value_low only for QFAN 1..4, so after a SET
+   of 0 -- what the default Bitland map writes for balanced -- the event
+   is 0x00001601.
+
+   This patch maps 0x16 with value_low 1..4 to KE_IGNORE, has no entry
+   for 0x00001601, and calls platform_profile_notify() only for 0x0f.
+   So after Fn+K userspace is told nothing: the EC mode and the DPTF
+   policy applied by thermald --adaptive change, and so does the value
+   read back from platform_profile, but power-profiles-daemon keeps the
+   old profile. That is already the case today; in my test PPD stayed
+   on balanced while the EC ran in Turbo. But redmi-wmi at least reports
+   KEY_PERFORMANCE for these events, as it reports KEY_KBDILLUMTOGGLE
+   and KEY_FN_ESC for the backlight and Fn Lock events. With this patch
+   they all become KE_IGNORE, so userspace gets neither a key nor a
+   profile notification.
+
+   Treating 0x16 as a profile change -- value_low 0..4, including
+   0x00001601 -- and calling platform_profile_notify() for it would
+   close the gap. It would also fire after the driver's own writes,
+   because the SET sends the same event: when userspace writes the
+   profile through bitland-mifs-wmi right after Fn+K, two 0x16 events
+   arrive 0.2-1 s apart. That is harmless.
+
+2. Keyboard backlight (F10). On this model the event's value_low
+   cycles 0x00 -> 0x05 -> 0x0a -> 0x80 -> 0x00: off, dim with the BIOS
+   idle timeout, bright with the idle timeout, bright and always on.
+   The EC keeps the same state as 1 / 2 / 4 / 8, and EV20 translates
+   it into value_low. In this patch
+   BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0x80) is 0x80000501,
+   while the firmware (and redmi-wmi's 0x00800501) has 0x80 in
+   value_low. All four KBD_BRIGHTNESS entries are unreachable anyway:
+   notify() returns for WMI_EVENT_KBD_BRIGHTNESS before the keymap
+   lookup, so the KEY_KBDILLUMTOGGLE that redmi-wmi reports today is
+   gone. That early path passes value_low (0, 5, 10 or 128) to
+   led_classdev_notify_brightness_hw_changed() for an LED with
+   max_brightness 3, and on this BIOS the LED has nothing behind it,
+   because WMAA does not implement WMI_FN_RGB_KB_BRIGHTNESS (0x12) and
+   answers 0xE000.
+
+The full acpidump of this machine is attached to the bug:
+https://bugzilla.kernel.org/attachment.cgi?id=310971
+
+Details, traces and the exact verification steps for the key events:
+https://bugzilla.kernel.org/show_bug.cgi?id=222062
+
+I am happy to test patches on this model.
 
 Thanks,
 Anton Karasev
