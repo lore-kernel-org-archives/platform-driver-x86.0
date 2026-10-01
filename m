@@ -1,112 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B4052ED3B;
-	Thu,  1 Oct 2026 21:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D03345ED4;
+	Thu,  1 Oct 2026 22:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790888564; cv=none; b=DITy98o15ldoUWE3Y2fVUbbrbIHl1USWv1jJXZ66FDp1WcUIBwKNveE0SYY4NpeZT149ofVZmOcYIf/Cj8iYVmvu31g9gaZbLzjn48kk80XKdi3No1kSzdz5SVesv8cSworlYsZ6177fwaoqjjKJNmzrW2EswRC0p0c+LJiygKQ=
+	t=1790892244; cv=none; b=J9OPhhiN2IBAxNoinUH3Ec2Xk+Nk5wVtx03cZCyIpMK5lfpP1LMiCw1AoKAUxLBnFzstFrZ3hGj2m30EXXSCQJtpBp3cManRATV3Vnfx+0TAIoi+KRzyzmsPr0iBESvJVFa2AV/0S4rkM1FS5jaPgbmeTqOmOO9um4JfH53IHPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790888564; c=relaxed/simple;
-	bh=DtYisai9+Bf47pVvSLNTI4cMptPMeWjcc4WBJ6DBuEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cuhj5hqf5n6iF+bK2IqTXCV9BjomI3JDkezKUs0WBPTwDl4jf7mOD1uYXJneiGSOBaZy9sHED5lcdpMMtUVra+5/Hyg7l6PpYaz12Os15MpJUIlDPdLr2ZSD4WsfhLrI5Iit3sR3GqBGPVWpIA/tlqiHIAeZNqPunJ8iaxislEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F9uRir3+; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1790892244; c=relaxed/simple;
+	bh=AaqA5fX2akCAlJWHbihGsXcccdQSzdobI+ZWIFUMTac=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=LCwHyqb1QgKy2pFnGHKDZ2FdLhJ7GXHGJjzcMJTv2sHh3IvwfLYoyoLElfF6izqpzXGnDhmLvCt0hC8J/PP3rV+wR8eXMzqxiIp9hUv6nVDs4NMP6XBExuUcfBN0Jdf68T3vPhnHuxXV8xB+frpuCNv6WT5bidu2cgGhnpqSFmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PbihvGa3; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F9uRir3+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PbihvGa3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790888562; x=1822424562;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DtYisai9+Bf47pVvSLNTI4cMptPMeWjcc4WBJ6DBuEU=;
-  b=F9uRir3+OWqFWSAztFOeDdSr8c5LS7VJW09vLY0HmQLewuh3MzrJXOiG
-   w5J67KTdyqq5J8FBrJvCQTUm7c8ynYp/+j3h3UTXdEpIhgcWmcHaJ6YTR
-   hgFIOH8k/ZvT1cPSPYLRDVOwExKnpHI/BGPPppWRfvewr8lI/XspddVxH
-   rdvY09K7/I/g/M9HclXBWxrkJcZ1E1X0vTlEfSfhpKdMc4mKvx+FkYU8R
-   oaGtY//92FOwA8PrwQGvH0FELmHENYwG8RPFK+TTKo3d+Jyjtr9xMkZBU
-   90ikhDnc1Dx0yKhmqEQkmBwNDinQ4TcPV5bnCswDHcX7J/7ibSsHNu2qC
-   w==;
-X-CSE-ConnectionGUID: 7jVq1ltHRvSHPHbNocFwyQ==
-X-CSE-MsgGUID: BAOrSJNfRuaKXR8bxMpUfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="90717355"
+  t=1790892242; x=1822428242;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AaqA5fX2akCAlJWHbihGsXcccdQSzdobI+ZWIFUMTac=;
+  b=PbihvGa3HqKJZjeYtzd3IcHzbTm9y2vCtTUAe9jsYfM6/rD1bSp7Sh5y
+   AARnuAmbrp/NRBBZRofyVYXpwZ9JLerNFaN9kAx6NUaRyAOVgnNMgcnaf
+   n79pH3Ec4qVLkfSbPJSd7LvL44TFDUE5uuPoGFsEuyumt9RBpk3ByUKpM
+   zxxuVwsk610SVwFAnSV+hwOb/IBGamx6Lo7UO29OAKLIkg2soU7JFQpP/
+   Ndf0vzLwyYm1dXuuzFX4/Fv+TUe6aUdGKzRjpmbY1U4f/pNDz29tvPV8S
+   71HCLmXVMqY+hy4AJMk0LIVwdjQJjGbO+sQpCEoqRP4YtNvX/GgQyhnGK
+   g==;
+X-CSE-ConnectionGUID: BFaRniU0RnaWURnahxWZ/w==
+X-CSE-MsgGUID: ZETNB4xzQDOfPFY1GikBtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="91684101"
 X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
-   d="scan'208";a="90717355"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 14:02:41 -0700
-X-CSE-ConnectionGUID: yLe01Mr2Tn+jcrX/q+5MRw==
-X-CSE-MsgGUID: m0N3FDksQi2gfAGmrnIdbA==
+   d="scan'208";a="91684101"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 15:04:02 -0700
+X-CSE-ConnectionGUID: IGU8XJUBRk6tt94psPjqUw==
+X-CSE-MsgGUID: Ar/Tk+tfTQueZmV353LiLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
-   d="scan'208";a="304035200"
-Received: from soc-pf446t5c.clients.intel.com (HELO [10.24.80.90]) ([10.24.80.90])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 14:02:40 -0700
-Message-ID: <f94db4f6-78e8-43c2-ad0b-b2854a51d115@linux.intel.com>
-Date: Thu, 1 Oct 2026 14:02:40 -0700
+   d="scan'208";a="276206241"
+Received: from debox1-desk4.jf.intel.com ([10.54.77.98])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 15:04:01 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: ilpo.jarvinen@linux.intel.com,
+	david.e.box@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	rodrigo.vivi@intel.com,
+	michael.j.ruhl@intel.com,
+	ayaz.siddiqui@intel.com,
+	syed.abdul.muqthyar.ahmed@intel.com,
+	intel-xe@lists.freedesktop.org,
+	hansg@kernel.org
+Subject: [PATCH 0/3] platform/x86/intel/pmt: Fix crashlog regressions and add completion uevent
+Date: Thu,  1 Oct 2026 15:03:45 -0700
+Message-ID: <20261001220351.1592138-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 19/20] platform/x86/intel/tpmi: Declare the loop
- counters in their loops
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- David E Box <david.e.box@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260930172918.743656-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20260930172918.743656-20-sathyanarayanan.kuppuswamy@linux.intel.com>
- <ar6iqgYsCZG7oTnL@ashevche-desk.local>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <ar6iqgYsCZG7oTnL@ashevche-desk.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+This series adds a uevent so userspace can find out when an Intel PMT
+crashlog is available without polling. It also fixes two regressions
+from the v7.1 vsec rework that prevent the crashlog path from being
+used at all.
 
-On 10/1/2026 11:12 AM, Andy Shevchenko wrote:
-> On Wed, Sep 30, 2026 at 10:29:16AM -0700, Kuppuswamy Sathyanarayanan wrote:
->> Declare the loop counters in the for statements that use them, so that
->> they are scoped to their loops.
->>
->> In tpmi_create_device() this also replaces the tmp cursor, which moved
->> in step with the counter, with res[i].
->>
->> No functional change intended.
-> 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> 
-> ...
-> 
->> -	for (i = 0; i < tpmi_info->feature_count; ++i) {
->> +	for (int i = 0; i < tpmi_info->feature_count; ++i) {
-> 
-> While at it, I would also move to post-increment. The pre-increment is not so
-> usual in the kernel and might rise additional question "why?".
-> 
-> ...
-> 
->> -	for (i = 0; i < tpmi_info->feature_count; i++) {
->> +	for (int i = 0; i < tpmi_info->feature_count; i++) {
-> 
-> Ah, we have even inconsistency in the style used for the loop iterator
-> advancing.
-> 
+Patches 1 and 2 are fixes, tagged for stable:
 
-Agreed. Three of the loops use pre-increment and the rest use
-post-increment. I will switch them all to post-increment in this patch
-in the next version.
+ - Patch 1 fixes a NULL pointer dereference on any read of a crashlog
+   sysfs data file. Commit 353042d54d82 ("platform/x86/intel/vsec:
+   Switch exported helpers from pci_dev to device") started using
+   entry->ep->dev, but only telemetry entries allocate an endpoint.
 
-Thanks for the review.
+ - Patch 2 fixes an inverted return value test of
+   intel_vsec_walk_header() in intel_vsec_get_features(). On devices
+   without DVSEC/VSEC capabilities that describe their features through
+   device_data, probe fails with -ENODEV and the auxiliary devices it
+   created are torn down again.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Patch 3 is the new feature. It emits a KOBJ_CHANGE uevent on the
+crashlog<x> device when a completed crashlog is found at probe, or when
+a manually triggered capture completes. The event carries
+INTEL_PMT_CRASHLOG_EVENT=3DPRESENT and INTEL_PMT_CRASHLOG_COMPLETE=3D1, and
+the ABI documentation is updated to match.
+
+The fixes are sent together with the feature because patch 3 cannot be
+tested without them. Crashlog data cannot be read without patch 1.
+Upcoming hardware with crashlog support has no DVSEC/VSEC capabilities
+and describes its features through device_data, so it hits the bug
+fixed by patch 2. Patches 1 and 2 do not depend on patch 3 and can be
+applied to the fixes branch on their own if preferred.
+
+Testing: the series was tested in an emulated (QEMU) environment,
+covering both the probe-time uevent with a completed crashlog present
+and the uevent after a manual trigger completes. Hardware with this
+crashlog support is available, but testing on it is still pending.
+
+David E. Box (3):
+  platform/x86/intel/pmt: Fix NULL dereference when reading crashlog
+    data
+  platform/x86/intel/vsec: Fix inverted walk_header() test in
+    get_features()
+  platform/x86/intel/pmt: Notify userspace when crashlogs complete
+
+ .../ABI/testing/sysfs-class-intel_pmt         | 14 ++++
+ drivers/platform/x86/intel/pmt/class.c        |  4 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     | 84 ++++++++++++++++++-
+ drivers/platform/x86/intel/vsec.c             |  2 +-
+ 4 files changed, 99 insertions(+), 5 deletions(-)
+
+
+base-commit: 72d3fcf802c45d00b300f25b848a93c3a2bd7c7e
+--=20
+2.43.0
 
