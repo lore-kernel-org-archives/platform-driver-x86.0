@@ -1,62 +1,62 @@
-Received: from mail-pz2-f41.google.com (mail-pz2-f41.google.com [74.125.228.41])
+Received: from mail-pz2-f37.google.com (mail-pz2-f37.google.com [74.125.228.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DB94F96D4
-	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2026 16:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA8F4F5E09
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2026 16:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790958856; cv=none; b=ADFn0bQkYmfoYxCwAY180SvMWN2jHvBKSSyKVMEoop0LGu6sc5jjRmqpuHnO3v7PQofvZbO31STyIWAPhRWSGNkmPNsRCuew47M9z95mNvggAE2/4M2iAPfNZ3X2IQhjvnNUe+QIgrMm7HroA74LmghBxcOb3Mu9PwI7srMkPN4=
+	t=1790958859; cv=none; b=Nax0LtFt7pNSQLWOkEUnlaZd2ybnCC7Fl9Fxk91yMAD5gcNl9BnZOZbhItCnk79o/vI45XtGjnyweepjVfHN/IvGfdQ0TuGbSsinpqDSHO6wacZy9wF8AGE9Og1vUXA0b3H2kGf8AqwffQpprTeG2R99Ev3Ut7W1TjV+lZ4mj8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790958856; c=relaxed/simple;
-	bh=0eK0rZW+Bb/wgQko0hLrGoTCtS96mFKwLCxqAk5ubl0=;
+	s=arc-20240116; t=1790958859; c=relaxed/simple;
+	bh=VoN9LZYARNtj3K7W/qeZWGG2+FgDrivkgZiIN5ARaEw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ggIJHYAr4D/UylvDRdP5iQgDY5zHoE3Bke2o29Wio3+Kk7RekbZo8rEDIWi30urKyNTE6IdLEjZuA/WIIMUKTgo1ZyFN/LXED4bC75COyn3/39sD/HatfpCoobIS1kqFN+DbCk9/aIy7y2xVCGEUUwwCoBse2k//2mBd9AKTiXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0AElWIK; arc=none smtp.client-ip=74.125.228.41
+	 MIME-Version; b=NSEoLN2mvCMebcrUzr5nUwqAyUJRAJM0bIO8eZKpzHRTavLVp/PwSCSRCQQKpegwYYY/YSpji2rAiinwUMMBWXHeZRTefrNt1vqMwNdm6ikioeAEMnXecc44ltld7IenqiBJVJ/osxie7BBhShIFg5Avt4348wobEVkC1vlc+PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eiYTdiwM; arc=none smtp.client-ip=74.125.228.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0AElWIK"
-Received: by mail-pz2-f41.google.com with SMTP id d2e1a72fcca58-85469e25400so3295820b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Oct 2026 09:34:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiYTdiwM"
+Received: by mail-pz2-f37.google.com with SMTP id d2e1a72fcca58-88826f3ff80so1057177b3a.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Oct 2026 09:34:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790958854; x=1791563654; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790958857; x=1791563657; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=gPmxwiXeVlIKKgR8njqiI8v8S5H7LLeX96HR5dBYRSk=;
-        b=S0AElWIKOPeV0u1yhooqFtFbuEM6VXaWuRTRuB7nvEoJX8TjAbf6vpfQzXqNm8sJ7n
-         W9LpMdpc2yTuPSJa3fV0eiPndecj+fKtPbeLlV4uyUZXpL2ZeGyRW/IcavvhNZ7+ibnr
-         VoaPQVBhM2E0EqnW9z7dKctqhhC52DU+zmc1ckw0E824CVU9X974mOT3Ibzj2H/GYq8j
-         yCN/7aUffcXjo3W87NWKvL/m3L4fMczjpdCgCCw2nneYsNsy8WXl2OWmvbT0hDxVRF8C
-         /SejVpkbFdbRBAd+ZHGyx1Gy7tTNVIC7wrHoki6jDTvIazLyARTM7sN5vBZCuDevuOuo
-         Bzjw==
+        bh=X7E5pOjdiR1yz0d6QZ9BdcaXjT8yEwjeuav+vuRWBi0=;
+        b=eiYTdiwMVb4ztS0iN6qFKzFK4jer8xCchxdsPbGoxYWTofrhZrxaf8Odvdm6SGMRli
+         y0z9tgfZrelgqxArIzOr04oyCUFX3b6PkxvIUIXUmVLVg1PxCLPAGN0FasLAOaVSCXyq
+         whvwve34LwwPPG9OeYi+LWgN8tYK+QYWZE8j+st1mChH2HC9Uy/CigHz9+2mBXnjnwIK
+         Huq3ic7zNW0V4Y1wanqFbvlrFHHWANvkDTO5hggPBQDiwK6KDetzYsaGxdXFiX3P1LsY
+         qDemGor/pG2Lr/M05zea6J/xcac0jF5ojuuOp/G5IUNVaXJ8F8FfwppPidW7xruzJtSn
+         FuKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790958854; x=1791563654;
+        d=1e100.net; s=20260707; t=1790958857; x=1791563657;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gPmxwiXeVlIKKgR8njqiI8v8S5H7LLeX96HR5dBYRSk=;
-        b=lWOPerI19AiGHtoDsbOT+WdHQuOR4LdGuL6Fq5ANb6LptXDURIukwq7mJf8acjGhIX
-         a8ZJjISmvyG/Ah8D/7o2YM1bSTN+2nTTuJz9+vFJYSltJQNI51G8KRPrc86VdTwxmGmB
-         s4zjFmBJRh7H7IAvhifnpD1AZIlC13ywCSb8MSUUfYFhQyGTx/18+6/s0sUKh9XsQuyv
-         dEmYcMCvPyogFhOXYPA8HecvoB3z6BUy+dTcCvG7L6M852r2lk1QVY7/ykqiz3EoIFtf
-         lMBkmGI3Z74ZXVt1sSPW6x6B49QOLjOqNnnUzZrYvfDvOE1Ckdviizek410o6Tx/clyE
-         v7+Q==
-X-Gm-Message-State: AFuF++kMIuD2hXkA8pARk56VpkIVmTCin2h21mSoOaWQvKdSxVVkcZ1E
-	lYTy1NYmMW7YwqVbgCmh61LneoX7xwq1G/PrkPrY6xKJ0F2K+6HvsxHN
-X-Gm-Gg: AYBFou1uIy07tkj7IPvNY/eLm3/KaeiM2pc2BHaJIMO6us9s6/oXjasTKr3uF4HtO1n
-	IWA/+pclrDtVQM8LPjUaKLq7UkS2wU+Y/AE6ao396WevgeU767oHt2q5WY72ZY7VXM3O4KIhnFf
-	tJLES2bZk1jQJkKJt1RW2hQklxMBmBDo0j+1MqApOMoMAdWBa5/BDTs+CMpB76vGchgMn/krofX
-	rci1R1O8zPZvEGDqLHu8ugRZsPv70tGWQUa8TVlF5YEqCeOLSd5syta7eULo0SYZ2jTVctFVZtP
-	iENacr5Zh+qcu0yRyuoa+le6ulOlVi3aYH4NDHTUTLKspu48FVfARhS/uybMiWgTxIjqiUoTGrj
-	kCLlBxa535jx55bO86LBYzusJgzUPpwcDJ0ucaaqLwMttfPPVrCy4fiovFXOif7u518Uzw+kWoo
-	40XRZE3K1OQU46ta3ASu3kPlvuZpoWkiJrpYTU++LEZme2ZMtuF2DlPILpX5bFhiKoV3I=
-X-Received: by 2002:a05:6a00:2883:b0:874:705d:f63d with SMTP id d2e1a72fcca58-88af4e2f1ecmr3326787b3a.31.1790958854332;
-        Fri, 02 Oct 2026 09:34:14 -0700 (PDT)
+        bh=X7E5pOjdiR1yz0d6QZ9BdcaXjT8yEwjeuav+vuRWBi0=;
+        b=EHeDoF8kB7Tv0P+S7W1kGtF1tmd8wnKqKBZqoaE5sQ6vDWpF6VAZWgQbBKZlHiqPoq
+         jOhtTO/z9OQbtEdDqx9tHLmuNNL1SQUvycyZXGjPOCoCN483hfI3QILz2Ka185oVF640
+         J6ewoq42qTC2Q/oL9CqyrVUbd1q3rm2SeSJ8+3kLHLb426i4jKgGaPyNqpU4a0jR8G1k
+         vk24rR5KxsTWEvnRu+MP+z/INLf8BhW4Npcb14GSmmtrUCytAjM8AoCcUUuLSZ+J5wEr
+         7yH9hUAayMLZykPLMmpRBluZYKT+tDz46C2PK3TO6uJRJC8xi/bZxkt56xV4lCPzCsFF
+         4zvQ==
+X-Gm-Message-State: AFuF++lj2DnE7au4DUzS+RJcgtryf7HNvT44XZ43oA33vdR1KBjo6nfL
+	y4cd1X1AopX2iHOdemk9Fd3upjOrbICrUImJAMM52E9C4QWkj+KSNfp9
+X-Gm-Gg: AYBFou3KzogzyfTN9cZaCP7w+r23c5YyazTOQFmKrcqaT8GpeV4lsA8zOaHMCFCdVLN
+	l5BexpqiaI76usq8iJriQE9Rqs2JcUeM8VrhbuQu4JNFkvmqAT//SJpVTNAGt4Zl9eqkQMuKebE
+	9wueiKc4IglAxdOne1H6YwO11JuWbkPg3xZ1b/wNP5pMTTi88SBTqbVnGSLh45qphO/O4fGYv+f
+	biqE6BeQKouTYDZ4tr0jFJvcYfOICJ0uMB7TTesrunVCU+GM4/Akeodtu1+rNdFR4+E1XTbmKeP
+	dqeo2N96gv0a3IiFH848NGN4sSvnxr16JbS4jxGEz0DzEVpLLm6kEnpeLLebTMtnkdoJCZK9o7r
+	Jo8C/S4BKPFK+P6xESPFuf8xmu+PUGJmeAkiOFhBGSHCj23aD4wBDqrzcgA/b5J5dKWZa7yUyam
+	Umz7ZqFqSNjy+la49e24mKhaA8rAwdRhOq83EB+GfZg07+AJGuWNODve74hEC45IKIjunQ
+X-Received: by 2002:a05:6a00:238b:b0:881:c881:96e8 with SMTP id d2e1a72fcca58-88af4b47075mr3177893b3a.23.1790958857251;
+        Fri, 02 Oct 2026 09:34:17 -0700 (PDT)
 Received: from TC-LAPTOP.lan ([99.30.92.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-88b0968b6absm1135149b3a.2.2026.10.02.09.34.12
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-88b0968b6absm1135149b3a.2.2026.10.02.09.34.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2026 09:34:13 -0700 (PDT)
+        Fri, 02 Oct 2026 09:34:16 -0700 (PDT)
 From: Thierry Chatard <tchatard@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	v.vitovt@gmail.com,
 	dmanresa@gmail.com,
 	Thierry Chatard <tchatard@gmail.com>
-Subject: [PATCH v12 5/9] platform/x86: int3472: tps68470: add static clock consumer support
-Date: Fri,  2 Oct 2026 09:33:46 -0700
-Message-ID: <20261002163350.1248431-6-tchatard@gmail.com>
+Subject: [PATCH v12 6/9] platform/x86: int3472: tps68470: use a common always-on VIO regulator init_data
+Date: Fri,  2 Oct 2026 09:33:47 -0700
+Message-ID: <20261002163350.1248431-7-tchatard@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261002163350.1248431-1-tchatard@gmail.com>
 References: <20261002163350.1248431-1-tchatard@gmail.com>
@@ -87,76 +87,71 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On some platforms a sensor's ACPI _DEP does not list the INT3472 device,
-so for_each_acpi_consumer_dev() misses that sensor and never registers its
-tps68470-clk consumer entry, leaving the sensor without its MCLK.
+The surface_go and intel_nvl board data define byte-identical VIO
+regulator init_data (1.8006 V, apply_uV, always_on). Replace both with a
+single shared common_tps68470_vio_reg_init_data so new boards with the
+same requirement can reuse it instead of duplicating the definition.
 
-Add optional n_clk_consumers/clk_consumers fields to the board data. When
-set, probe builds the tps68470-clk platform data from that static list
-instead of walking the ACPI consumers. Boards that leave the fields unset
-keep using the existing ACPI traversal.
+No functional change.
 
 Assisted-by: LLM
 Signed-off-by: Thierry Chatard <tchatard@gmail.com>
 ---
- drivers/platform/x86/intel/int3472/tps68470.c | 19 ++++++++++++++++---
- drivers/platform/x86/intel/int3472/tps68470.h |  8 ++++++++
- 2 files changed, 24 insertions(+), 3 deletions(-)
+ .../x86/intel/int3472/tps68470_board_data.c   | 21 +++++++------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-index 9161a656f..a11afb323 100644
---- a/drivers/platform/x86/intel/int3472/tps68470.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470.c
-@@ -187,9 +187,22 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
- 		return dev_err_probe(&client->dev, -ENODATA,
- 				     "No board-data found for this model\n");
+diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+index c53542465..c2ec802fc 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
++++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+@@ -75,8 +75,12 @@ static const struct regulator_init_data surface_go_tps68470_vcm_reg_init_data =
+ 	.consumer_supplies = int347a_vcm_consumer_supplies,
+ };
  
--	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
--	if (n_consumers < 0)
--		return n_consumers;
-+	if (board_data->n_clk_consumers) {
-+		clk_pdata = devm_kzalloc(&client->dev,
-+					 struct_size(clk_pdata, consumers,
-+						     board_data->n_clk_consumers),
-+					 GFP_KERNEL);
-+		if (!clk_pdata)
-+			return -ENOMEM;
-+		clk_pdata->n_consumers = board_data->n_clk_consumers;
-+		for (i = 0; i < board_data->n_clk_consumers; i++)
-+			clk_pdata->consumers[i] = board_data->clk_consumers[i];
-+		n_consumers = board_data->n_clk_consumers;
-+	} else {
-+		n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
-+		if (n_consumers < 0)
-+			return n_consumers;
-+	}
+-/* Ensure the always-on VIO regulator has the same voltage as VSIO */
+-static const struct regulator_init_data surface_go_tps68470_vio_reg_init_data = {
++/*
++ * Common always-on VIO regulator init_data. Its voltage must match VSIO;
++ * boards using the TPS68470 I2C pass-through that need this exact setting
++ * can share this instead of defining their own.
++ */
++static const struct regulator_init_data common_tps68470_vio_reg_init_data = {
+ 	.constraints = {
+ 		.min_uV = 1800600,
+ 		.max_uV = 1800600,
+@@ -123,7 +127,7 @@ static const struct tps68470_regulator_platform_data surface_go_tps68470_pdata =
+ 		[TPS68470_CORE] = &surface_go_tps68470_core_reg_init_data,
+ 		[TPS68470_ANA]  = &surface_go_tps68470_ana_reg_init_data,
+ 		[TPS68470_VCM]  = &surface_go_tps68470_vcm_reg_init_data,
+-		[TPS68470_VIO] = &surface_go_tps68470_vio_reg_init_data,
++		[TPS68470_VIO] = &common_tps68470_vio_reg_init_data,
+ 		[TPS68470_VSIO] = &surface_go_tps68470_vsio_reg_init_data,
+ 		[TPS68470_AUX1] = &surface_go_tps68470_aux1_reg_init_data,
+ 		[TPS68470_AUX2] = &surface_go_tps68470_aux2_reg_init_data,
+@@ -339,15 +343,6 @@ static const struct regulator_init_data intel_nvl_tps68470_vcm_reg_init_data = {
+ 	.consumer_supplies = ovti13b1_vcm_consumer_supplies,
+ };
  
- 	cells = kzalloc_objs(*cells, TPS68470_WIN_MFD_CELL_COUNT);
- 	if (!cells)
-diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
-index 3bbaade96..68303e6fa 100644
---- a/drivers/platform/x86/intel/int3472/tps68470.h
-+++ b/drivers/platform/x86/intel/int3472/tps68470.h
-@@ -12,12 +12,20 @@
- #define _INTEL_SKL_INT3472_TPS68470_H
- 
- struct gpiod_lookup_table;
-+
-+struct tps68470_clk_consumer;
- struct tps68470_regulator_platform_data;
- 
- struct int3472_tps68470_board_data {
- 	const char *dev_name;
- 	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
- 	const struct software_node *tps68470_gpio_swnode;
-+	/*
-+	 * Optional static clock consumers, used in place of the ACPI _DEP
-+	 * traversal on platforms where a sensor's _DEP omits the INT3472.
-+	 */
-+	unsigned int n_clk_consumers;
-+	const struct tps68470_clk_consumer *clk_consumers;
- 	unsigned int n_gpiod_lookups;
- 	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+-/* Ensure the always-on VIO regulator has the same voltage as VSIO */
+-static const struct regulator_init_data intel_nvl_tps68470_vio_reg_init_data = {
+-	.constraints = {
+-		.min_uV = 1800600,
+-		.max_uV = 1800600,
+-		.apply_uV = true,
+-		.always_on = true,
+-	},
+-};
+ static const struct regulator_init_data intel_nvl_tps68470_vsio_reg_init_data = {
+ 	.constraints = {
+ 		.min_uV = 1800600,
+@@ -364,7 +359,7 @@ static const struct tps68470_regulator_platform_data intel_nvl_tps68470_pdata =
+ 		[TPS68470_CORE] = &intel_nvl_tps68470_core_reg_init_data,
+ 		[TPS68470_ANA]  = &intel_nvl_tps68470_ana_reg_init_data,
+ 		[TPS68470_VCM]  = &intel_nvl_tps68470_vcm_reg_init_data,
+-		[TPS68470_VIO] = &intel_nvl_tps68470_vio_reg_init_data,
++		[TPS68470_VIO] = &common_tps68470_vio_reg_init_data,
+ 		[TPS68470_VSIO] = &intel_nvl_tps68470_vsio_reg_init_data,
+ 	},
  };
 -- 
 2.53.0
