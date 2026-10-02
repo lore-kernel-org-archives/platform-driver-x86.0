@@ -1,234 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05397471CF8;
-	Fri,  2 Oct 2026 11:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790939216; cv=none; b=fxTneuWXFsCfwP7g4qlOpz7K1WNqT3IkQX1subfmEySSSlcVvzO8LDER26FJl2UQ/yTzzHsq9jG/9HmoVlPtso8PKf6nq7nbz2M8ld5qny2VH1dlSWg56SMGSxiekzeCuGDaU4HDNE2a8epSwqkDTv/V6XOgOhT8l6ayRA8JOE0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790939216; c=relaxed/simple;
-	bh=iVs/6MWO+8q0fKTudkDlTIGtM1VvF7ZOENUVyUx0evs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=p0zEt3Rl4iBkNv59XS1SAepMl/4Q+lVL7t39lM3VQHimMyeA452raSX3GIavc42ha2lnMnoV1LXL4pyWHE02KCyEobSJiFxyHTHoY12XxncieBMbSp98JM35GccwDkSYpFe5B3tODvnYAebireZeaNG1RocEeqs6GVYHByDz8+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rq724k8A; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB324379C4A;
+	Fri,  2 Oct 2026 12:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790945001; cv=fail; b=qd88L8DtewKNbp5bLUfBCFIFcImWvR9730MzsLM+WVD2s8HhdCxBAf3P7yLIeUxDG3rYBZSwDihEC58JL7pMlVu/kVqqB7beKWMLk3HbCNafche2WzQ4N/EEg0/fYPT7r2x5wJGyzA32V1i2hbbwW+Jqf0bHNydoL8yYtg/FFTQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790945001; c=relaxed/simple;
+	bh=lCWdmIYmJvgNBYZqTnUIXbUzBl9C0MXTdV+jCHK8lGU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PoGVhion2DPwEyBun45ObF8RHQZA9ES7EBtWps+D2aEZO1jsClIe+guCvN3iC2UVtQov1QwMSCfEYLNmBAFLjlYAVYoVrpQ0C2bzLrz9KMOOE3HHg2ppbZopDKlpCs1vHOWY4J4z+sCqfctYVNXaG7kLe3Q/rbyrDFlohbXrmY4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JgJmqYox; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rq724k8A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JgJmqYox"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790939214; x=1822475214;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=iVs/6MWO+8q0fKTudkDlTIGtM1VvF7ZOENUVyUx0evs=;
-  b=Rq724k8AaYXkD0Z4+arBJ/gPlo/GYjgNcyCt06G5w1GlSfIh7UsNqNOj
-   aYq0PUoHb34a10HCzLPaJTvDgZewi3iKpIZQeMKNlY1iOHXkOE3MuTSJT
-   essOnLjN56VOyeQN1LSfWgBS4HAJ/648szFHWeV0BLBwxSljuncqJoHEH
-   Dp3stbhVVxy5zi3HpD1uv4Uu8eKSDwjmI+2F/yGl3n3F/89J14AFu0cSD
-   DFfRikLm9APtEgRSVYbxspyYM+cFInrByo6D+IsCGS5eSfAdaQ31YBH4S
-   xFnpAbECXRhr3UUqyUNjZ7hlOFpkwKNodmj7BjKeIFP5WVTZNojnCCm0A
-   Q==;
-X-CSE-ConnectionGUID: 0KuiyQSMTJW9zqbje96M4w==
-X-CSE-MsgGUID: pztQ6TGORM63mnogYbo+RQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="90840779"
+  t=1790945000; x=1822481000;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=lCWdmIYmJvgNBYZqTnUIXbUzBl9C0MXTdV+jCHK8lGU=;
+  b=JgJmqYoxLeOB4Fj3zJ4BL6hRatbpkB01Hvrr5T5LeofDcFIopFwL4+wp
+   l7hVqWH46RFUgWbF7G/tWXfyXP1yma+2lXAp5t8sMLgcQnZV6rmJhU0hM
+   AatAFWCYAmqXDh+jkBLEYguaj31NP05CsYVPp8JPpKvOTA+j7ZANhbmJ5
+   7Y+86KxtTugZTPB1Tq0rODGQiil6ze4BBeLFXzy0cnhaOBppHH45BsiqK
+   EKNCL9uTn2SzxxOgQNwsAAuu7dROTl+TpSBcHbwfljXP50K6aO0BctPRp
+   zRXTSd6O9JFMTjuC+m8nS8UCXJh2RQ534TAqJEoi0MMFmQWTov2OBzkip
+   w==;
+X-CSE-ConnectionGUID: 8C8vhmxWTUqtw+oX1DjEuQ==
+X-CSE-MsgGUID: l9p0fZHIR8yuhbLjriF6hg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="95523342"
 X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
-   d="scan'208";a="90840779"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 04:06:53 -0700
-X-CSE-ConnectionGUID: QgNatFWjTVWtaEFzHzuunQ==
-X-CSE-MsgGUID: 7jABSax3Tsy0UNm4lm3j2g==
+   d="scan'208";a="95523342"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 05:43:19 -0700
+X-CSE-ConnectionGUID: YTZAOi6+SR2QEwflnkj4Kw==
+X-CSE-MsgGUID: +5QTbHcWTyyRjaN+JibLAw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
-   d="scan'208";a="252607"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.243])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 04:06:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 2 Oct 2026 14:06:40 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Alex Deucher <alexdeucher@gmail.com>, 
-    Jani Nikula <jani.nikula@linux.intel.com>, 
-    Hans de Goede <hansg@kernel.org>, 
-    "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "linux@weissschuh.net" <linux@weissschuh.net>, 
-    "rafael@kernel.org" <rafael@kernel.org>, 
-    "lenb@kernel.org" <lenb@kernel.org>, 
-    "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-    "Koenig, Christian" <Christian.Koenig@amd.com>, 
-    "airlied@gmail.com" <airlied@gmail.com>, 
-    "simona@ffwll.ch" <simona@ffwll.ch>, 
-    "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-    "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-    "patrik.r.jakobsson@gmail.com" <patrik.r.jakobsson@gmail.com>, 
-    "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, 
-    "mripard@kernel.org" <mripard@kernel.org>, 
-    "tzimmermann@suse.de" <tzimmermann@suse.de>, 
-    "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, 
-    "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, 
-    "tursulin@ursulin.net" <tursulin@ursulin.net>, 
-    "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
-    "matthew.brost@intel.com" <matthew.brost@intel.com>, 
-    "thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>, 
-    "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>
-Subject: Re: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
- nvidia_wmi_ec_supported()
-In-Reply-To: <154fc984-5c29-4a23-ab8b-736471f419a1@gmx.de>
-Message-ID: <1ff7a529-15bb-e166-5bf1-3dad34119bcd@linux.intel.com>
-References: <20260724025959.142826-1-W_Armin@gmx.de> <20260724025959.142826-3-W_Armin@gmx.de> <BN9PR12MB514668975E87D570F50B2D91F7A82@BN9PR12MB5146.namprd12.prod.outlook.com> <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de> <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
- <11976ed3784675ad241646287a909286a42675a8@intel.com> <3ef68773-e07e-437a-98fb-a3c5fc08539c@gmx.de> <62d7da838e7042df8456e76190db792093065b57@intel.com> <06550473-63c2-4a3e-a5ad-7e23d7b6b050@kernel.org> <d696d85c44930d2124054ce11a06d3096c0db04a@intel.com>
- <CADnq5_PT7s6ixTqDSwe9ai9tUQa04z7UnwhMn7bo7CcsH5Qf0w@mail.gmail.com> <154fc984-5c29-4a23-ab8b-736471f419a1@gmx.de>
+   d="scan'208";a="304203425"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 05:43:19 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Fri, 2 Oct 2026 05:43:18 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49 via Frontend Transport; Fri, 2 Oct 2026 05:43:18 -0700
+Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.52) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Fri, 2 Oct 2026 05:43:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bdDWqkvDR7C9hrWsbeYmMX4c+SDE+j/2hXnkR7FDeb9PtAz+ycG1NfcrNJ/9OuT7PPgvMJfAy/O9TeAGSz/n2jxxoL1GHDNmzmOMR+B15vwcOV3Gv3UIaskqRbspAwilAZj9IyPee2HeHuEoLs0gaVUuptgr6rQeVTNJ3Qe5E8efMC9veaF/4C6/GSui0vYkzZo6C0HuGThWDP+yjV+R5vmR8Y/78SfAFd1gYmV4dQcmzuNb8h4Gk0kWZweqaFoIXCPZF9i3+u/4P3qXKo+8I5kDiQOVLq2WbQiY8AoM+RHC0pKnvJcPFb7TDegpdeBhKvuhB5Mrh6O3j8KWTBnd8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M6U4fBkGRHm5iXIYHmZPlYvq7vOUab9qlHXrIU9KF6Y=;
+ b=Q/glVl+GEFSZLe8ZKU9130Ve5TY3/V6v/aikmndii6pDMNYBDBYnsTMYGbZVTluBLQtv4WP2M6+sOQ45OPKr030Xvpt9T+EkTXPS29EG6asa19UaWCAefkHRVFTfW4k++MY9a/A26u/7SaWFIrviEPKcin+a8dW5YVrcDOZ7mtpT5SQ6sppIKH4omkcQnjPmBbwlx8wDZFEVjciY0Mkgc191BgIws77h9uDkyrbOzOaIWFmzTu1PGt1jP0Djzf9gEpmtUvrZwRG94zTjozL8gCrOJiLAHORzd6mVVLNMsmw2JuS2jBYTQ2nJBJMogs87IMsVH7r727IpincRbrOUaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CH3PR11MB046149.namprd11.prod.outlook.com
+ (2603:10b6:610:367::19) by LV8PR11MB8534.namprd11.prod.outlook.com
+ (2603:10b6:408:1f7::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.15; Fri, 2 Oct
+ 2026 12:43:16 +0000
+Received: from CH3PR11MB046149.namprd11.prod.outlook.com
+ ([fe80::7c3f:5300:19c4:b823]) by CH3PR11MB046149.namprd11.prod.outlook.com
+ ([fe80::7c3f:5300:19c4:b823%6]) with mapi id 15.21.0472.016; Fri, 2 Oct 2026
+ 12:43:16 +0000
+From: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To: "David E. Box" <david.e.box@linux.intel.com>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>, "Siddiqui, Ayaz A"
+	<ayaz.siddiqui@intel.com>, "Muqthyar Ahmed, Syed Abdul"
+	<syed.abdul.muqthyar.ahmed@intel.com>, "intel-xe@lists.freedesktop.org"
+	<intel-xe@lists.freedesktop.org>, "hansg@kernel.org" <hansg@kernel.org>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 1/3] platform/x86/intel/pmt: Fix NULL dereference when
+ reading crashlog data
+Thread-Topic: [PATCH 1/3] platform/x86/intel/pmt: Fix NULL dereference when
+ reading crashlog data
+Thread-Index: AQHdUfDK3gfLc439Pk2pzeQ3Z8J+mLbqMFiQ
+Date: Fri, 2 Oct 2026 12:43:16 +0000
+Message-ID: <CH3PR11MB04614953E9398FF44E0BABE0F3C1892@CH3PR11MB046149.namprd11.prod.outlook.com>
+References: <20261001220351.1592138-1-david.e.box@linux.intel.com>
+ <20261001220351.1592138-2-david.e.box@linux.intel.com>
+In-Reply-To: <20261001220351.1592138-2-david.e.box@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB046149:EE_|LV8PR11MB8534:EE_
+x-ms-office365-filtering-correlation-id: b3c39b87-ab02-4e06-2915-08df2082baf9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|23010399003|1800799024|366016|376014|11063799006|4143699003|10067099003|56012099006|38070700021|18002099003|22082099003|921020;
+x-microsoft-antispam-message-info: 6eHKlnscRPV+vwMdta38L9m2axbNsKJabGyfFHMG2MA6vv+1BfskJxhg1D4CNOZB8lFREdDuIgIXL2rPuD3EKuXfAYrxyQcJwC6rx2VdOPv75BUskVOk0HaPk017x8X1hE3JEOBjhFsZmH++VoW1mw1TWDzLVaVW8zYLw0ETEr9+f/llfNHLpsKtskhUo5451AeLiOCVIhdUAti89W5l9fH1VI4sN8KCSJ4fys6BeATnhd3RcaUz0gAQof6Sd0qd0sAFVYn5mlErFqrl58kkUmZki31K9Mv2vtB5YMo9dk1sNxgJffK5qUImxJ7HL9kB6lai4pHkEO2KrKzEbaX/yp+i08cer7VCG1lLDmI/br0wx+70Z8eNuKZPi4XwP/EhB8WKOUGIV9T/xJYQyZxio9ZnxwIpYfq6UqMFgKvUioY3xILGTG2genfB2Y7fcAhodwhpoMLj+ACImKxay88trtPoaZuW8h1j1F9nH436oS0CEhos6LIOig7lJSyD30uiPOg2tqjpft2iskuae7g+v/y4XF20w3EzGjVvUtB97EuE9FVV8LxVriShr3PPjOQ2my3mliIXaGVWZ6lDQpW8jDJAwAv1Iq/l7ixXs9BxChPnlABxYzfyAFqck3/xvNoY2I+h5TI/13gK+rBG+5opdjzDOBuFYvxFc201IaLijLZ7BVt+vx4Sr0dPnUzzjZOKmerKQzh0AaU8rXqkdcl6v4KLto5UkvrL4oyQi8taxkBQzvb7/HWtZBPC9T6K6eiS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB046149.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(376014)(11063799006)(4143699003)(10067099003)(56012099006)(38070700021)(18002099003)(22082099003)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?fOgoftBLuATyol+cNJYqfMKJ2CFzRE4NkQ0v62mEziK7IeLyCHPJNLcqRlR7?=
+ =?us-ascii?Q?+73LoPOuc/t0RdooSQ6Dw6Zbwi3pYasR5PJ4xiJ6XufVmNMmn5ZMl203I15a?=
+ =?us-ascii?Q?iQjJo3M2u3S7EZw8XILsIUNCTAyAXegsGC5yeWgTCWMWWsoloFEPIxKc22vt?=
+ =?us-ascii?Q?3qrR6VKon9oek8wiTEwSRlNl5u422biRAuseQ0k2J/trKm6TZ59PwskVn2sj?=
+ =?us-ascii?Q?W499wRkYqcC4HS3ioVuTm7eHEeT5Z90NbdwOGQ/2sl2AUOnTM/ihimZWtXz1?=
+ =?us-ascii?Q?5op66Q1wCyoJ/LueL15V8SIsYOYb/OaHOQYGAgS51lppH/a0k0eSSXapMsn1?=
+ =?us-ascii?Q?4YVcOtfFUFON/nIVY3Y9jxoSpbayy1146xr4EGUgk66zixs7vjkXL4ZhFzhk?=
+ =?us-ascii?Q?GwgV0hJ+Md+tQFqhQFNxmG7iIZNxWbjRNCbSnI7CC+ghnfJ6eL+KyXP6yyxx?=
+ =?us-ascii?Q?yRXXpCSQoyiDFnrEyQJzL4FG4HnU+HMDDOal3pMhiBgP+dtLOaZEZo6AyWbH?=
+ =?us-ascii?Q?2kpSidghw9q9EUPi+bPE0qI8ODKhDx41QrRpDAw4afdJ4hXWkzW0ybOW/ACl?=
+ =?us-ascii?Q?4VNb37nEi8FcUs7tZqhwWVPx2WjTBXDENa4ufpTYdm3VpK2Q4oXmq0j/JsMc?=
+ =?us-ascii?Q?7BI4vdRrlv9An4RChWNSveThuPJKMz4MCFmoGMd06Lk7vyaAzP415e945mZD?=
+ =?us-ascii?Q?NuxUArOwvvJy6Od5uOFAP0lSSDvku1ajt71Y/xpNQg8gRsaHv3JgH/PeFxBs?=
+ =?us-ascii?Q?EGUBBDeIdWr3M1pA6suLfYVcVAslTPCkN4xesXtWRuy5FxYcDR7D4ZVxLfkF?=
+ =?us-ascii?Q?r3eXyukkMZPD2EtkL+8hAZV9z8enx8fxXO6VZ0VIelfvjE1DOW26vKzUd+p+?=
+ =?us-ascii?Q?L/sL4RUFLAMePenZd1RFtPn6O8b+wQk/z9UMXTvCvUhgsO7MdfUtQNAxH2Ai?=
+ =?us-ascii?Q?UcDA25Xdybhr3BUFQuEE32Na+sVB5AxtPWdwe221vCqm+DVCl32Jnq7A+Bup?=
+ =?us-ascii?Q?1hkDmj2TctNtDe2bBGUNxRM5o/TYA8ZjMyxvEpxca93wdFpLnKGO9WpooiMQ?=
+ =?us-ascii?Q?YBhERp9uiyeWWYehmSo0VZmqQptVCCN6Wi/mah+KyTxEJ/19/cLQOqCOCiar?=
+ =?us-ascii?Q?F/2hgo1jID952QJxYVHYRVLMNyVZDDkch84t8L/kQSut0p9Fjfhj/uOtiFx0?=
+ =?us-ascii?Q?gdzhCWlP685KaHf9yj72GOpfA1WhNqdS+mYD3aQ3exJCmCjcBGMRHvUj+b02?=
+ =?us-ascii?Q?9HYp8y6bVLq6cmc+22QlQ0yTgzki74Kjk8+NcmnjK36QHMrakj8zR362ITqu?=
+ =?us-ascii?Q?IEvF2ys+/tJXeBQixn9f8LEvIQT9UzxbNffs6WucGozs9wuHWhnHEsuwwfXb?=
+ =?us-ascii?Q?5BSnu4NvPkQkWtyQkvS4N6CY8bjMn4FpzXEjknIji3uMKdvsTJFQip/F9ZdJ?=
+ =?us-ascii?Q?0ETYo1yu/ATbNRHNQL6Gc+zUWmuwuoXjuMfR8dwg4QbYPJTf9NnYdxTH3BlM?=
+ =?us-ascii?Q?G9jjOR6iQWgPR2s0NCJI2eZiQ5oURlYJjPGMDkAeRtW5dTjfF0AFXoWFpmWb?=
+ =?us-ascii?Q?DvcV/oOPZhQjIkVwpRZZnj4CN0i5cbg4spQOwUMInRRx3jtL5svg+E8E8Udm?=
+ =?us-ascii?Q?17Pc8oDORuy4Bl7JH8iIAi3WpqQxHLFgfzEarei8nbZgG5g64nUIrP1fiJXk?=
+ =?us-ascii?Q?nCcSnRo2FSwgDdEpJE//awi/Yospu+X31qJjMQ+tFt/DzDuXTL9i+zX4gHOv?=
+ =?us-ascii?Q?GVoWPbFvkw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-2070456929-1790935925=:1156"
-Content-ID: <75628c1c-0bd3-f8c4-b5a1-0f09ab6ce72d@linux.intel.com>
+X-Exchange-RoutingPolicyChecked: y0UJtoBzxciZojLW9WswgZHCXVypqImb6/0w4yBmwSrMAE2emaHhld/IIe8BKb5Crgtb2aSaDjJPDbePEA7BOuVyFv26j26fDIZLypziIhNf66Rk11H1IHHYX0HqNmDCnk5tQ1/AkoDCxQ8pOzdkJztdYxR8WgsqKF2CHImMAnxG/S+zM5CqhvgHltHaWpJar2rDLbuKKqQHsadBRAIqbTVONhR/UDbVSyjBrRnxQy5RHwzUtVFPfK4Xl54+w5l6QvODIYBj61zm4+g0NXxT5SOp3iOXIOjmAZQCXzUTukJ1mzB0ab+3wWZNW7VwHXGwni6GeeiYK6sl5PKju7WEOA==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB046149.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3c39b87-ab02-4e06-2915-08df2082baf9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2026 12:43:16.4594
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uAULExFO5O4wi1vmnPYlyrWM+tvygsk5RsDkoCDXlRJYppcPtgEJx/812PLX5OdVU86bKypkf2Ryi+hGEUepdMA2w4wsyired4nW+9zdxzw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8534
+X-OriginatorOrg: intel.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+>-----Original Message-----
+>From: David E. Box <david.e.box@linux.intel.com>
+>Sent: Thursday, October 1, 2026 6:04 PM
+>To: ilpo.jarvinen@linux.intel.com; david.e.box@linux.intel.com; linux-
+>kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; Vivi, Rodrigo
+><rodrigo.vivi@intel.com>; Ruhl, Michael J <michael.j.ruhl@intel.com>; Sidd=
+iqui,
+>Ayaz A <ayaz.siddiqui@intel.com>; Muqthyar Ahmed, Syed Abdul
+><syed.abdul.muqthyar.ahmed@intel.com>; intel-xe@lists.freedesktop.org;
+>hansg@kernel.org
+>Cc: stable@vger.kernel.org
+>Subject: [PATCH 1/3] platform/x86/intel/pmt: Fix NULL dereference when
+>reading crashlog data
+>
+>Commit 353042d54d82 ("platform/x86/intel/vsec: Switch exported helpers
+>from
+>pci_dev to device") changed intel_pmt_read() to pass entry->ep->dev to
+>pmt_telem_read_mmio() in place of entry->pcidev. entry->ep is only
+>allocated by the telemetry namespace's pmt_add_endpoint() hook. Crashlog
+>entries never get one, so any read() of a crashlog sysfs data file
+>dereferences a NULL pointer.
+>
+>Use the intel_vsec_device parent device instead. The PMT class device is a
+>child of the auxiliary device, so derive it the same way
+>intel_pmt_attr_visible() does. This is the same device telemetry stored in
+>ep->dev, so behavior for telemetry and any read_telem() callback is
+>unchanged.
+>
+>Fixes: 353042d54d82 ("platform/x86/intel/vsec: Switch exported helpers fro=
+m
+>pci_dev to device")
+>Cc: stable@vger.kernel.org
+>Assisted-by: LLM
+>Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>---
+> drivers/platform/x86/intel/pmt/class.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+>diff --git a/drivers/platform/x86/intel/pmt/class.c
+>b/drivers/platform/x86/intel/pmt/class.c
+>index d0ab8e33c62a..b69c79785d9c 100644
+>--- a/drivers/platform/x86/intel/pmt/class.c
+>+++ b/drivers/platform/x86/intel/pmt/class.c
+>@@ -90,6 +90,8 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
+> 	struct intel_pmt_entry *entry =3D container_of(attr,
+> 						     struct intel_pmt_entry,
+> 						     pmt_bin_attr);
+>+	struct device *dev =3D kobj_to_dev(kobj);
+>+	struct intel_vsec_device *ivdev =3D
+>auxdev_to_ivdev(to_auxiliary_dev(dev->parent));
+>
+> 	if (off < 0)
+> 		return -EINVAL;
+>@@ -100,7 +102,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj=
+,
+> 	if (count > entry->size - off)
+> 		count =3D entry->size - off;
+>
+>-	count =3D pmt_telem_read_mmio(entry->ep->dev, entry->cb, entry-
+>>header.guid, buf,
+>+	count =3D pmt_telem_read_mmio(ivdev->dev, entry->cb, entry-
+>>header.guid, buf,
+> 				    entry->base, off, count);
 
---8323328-2070456929-1790935925=:1156
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <09d346bc-de98-fbe2-c9e5-d57da5cc6f1a@linux.intel.com>
+Hi Ilpo, David,
 
-On Tue, 22 Sep 2026, Armin Wolf wrote:
+My patch:
 
-> Am 18.09.26 um 15:03 schrieb Alex Deucher:
->=20
-> > On Fri, Sep 18, 2026 at 7:01=E2=80=AFAM Jani Nikula <jani.nikula@linux.=
-intel.com>
-> > wrote:
-> > > On Fri, 18 Sep 2026, Hans de Goede <hansg@kernel.org> wrote:
-> > > > Hi,
-> > > >=20
-> > > > On 16-Sep-26 09:16, Jani Nikula wrote:
-> > > > > On Wed, 16 Sep 2026, Armin Wolf <W_Armin@gmx.de> wrote:
-> > > > > > Am 15.09.26 um 14:31 schrieb Jani Nikula:
-> > > > > >=20
-> > > > > > > On Tue, 15 Sep 2026, Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.=
-intel.com>
-> > > > > > > wrote:
-> > > > > > > > GPU people heads up!!
-> > > > > > > >=20
-> > > > > > > > On Wed, 2 Sep 2026, Armin Wolf wrote:
-> > > > > > > >=20
-> > > > > > > > > Am 01.09.26 um 23:30 schrieb Deucher, Alexander:
-> > > > > > > > > > > diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > > > > > > > > > b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > > > > > > > > > index 12e4a41bf1f0..50305630f533 100644
-> > > > > > > > > > > --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > > > > > > > > > +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > > > > > > > > > @@ -30,9 +30,7 @@ config DRM_AMDGPU
-> > > > > > > > > > >          # ACPI_VIDEO's dependencies must also be
-> > > > > > > > > > > selected.
-> > > > > > > > > > >          select INPUT if ACPI
-> > > > > > > > > > >          select ACPI_VIDEO if ACPI
-> > > > > > > > > > > -     # On x86 ACPI_VIDEO also needs ACPI_WMI
-> > > > > > > > > > > -     select X86_PLATFORM_DEVICES if ACPI && X86
-> > > > > > > > > > The change below makes sense, but this one looks like i=
-t
-> > > > > > > > > > should remain
-> > > > > > > > > > unless X86_PLATFORM_DEVICES is handled some other way?
-> > > > > > > > > >=20
-> > > > > > > > > > Alex
-> > > > > > > > > AFAIK the dependency on X86_PLATFORM_DEVICES was only
-> > > > > > > > > necessary because
-> > > > > > > > > ACPI-WMI depended on it in the past.
-> > > > > > > > > By now ACPI-WMI neither depends on X86_PLATFORM_DEVICES o=
-r X86
-> > > > > > > > > anymore.
-> > > > > > > > Hi all,
-> > > > > > > >=20
-> > > > > > > > Could more GPU people besides Alex take a look on this. I'd=
- want
-> > > > > > > > to make
-> > > > > > > > progress with this series within this cycle but would prefe=
-r to
-> > > > > > > > have Acks
-> > > > > > > > from GPU side.
-> > > > > > > I share the same concern with Alex. It seems to me we could n=
-ow
-> > > > > > > end up
-> > > > > > > with x86 configurations without X86_PLATFORM_DEVICES, which h=
-andle
-> > > > > > > e.g. backlight on a lot of platforms.
-> > > > > > >=20
-> > > > > > > I think the safer option might be to go for:
-> > > > > > >=20
-> > > > > > >     depends on X86_PLATFORM_DEVICES || !X86
-> > > > > > >=20
-> > > > > > > in all of the cases that select/depend on X86_PLATFORM_DEVICE=
-S in
-> > > > > > > drm.
-> > > > > > >=20
-> > > > > > > The alternative is to find out, and handle the fallout, if an=
-y.
-> > > > > > >=20
-> > > > > > >=20
-> > > > > > > BR,
-> > > > > > > Jani.
-> > > > > > Alright, should i leave the original "select X86_PLATFORM_DEVIC=
-ES if
-> > > > > > ..." statements
-> > > > > > as-is or should is change them to "depends on X86_PLATFORM_DEVI=
-CES
-> > > > > > || !X86" everywhere?
-> > > > > There are some places that depends on X86_PLATFORM_DEVICES. I thi=
-nk
-> > > > > it's
-> > > > > almost always a mistake to have some places select and some place=
-s
-> > > > > depends on, and select should anyway be used with care. I'd go fo=
-r
-> > > > > depends on.
-> > > > I'm a bit late to the party here, sorry.
-> > > >=20
-> > > > Note that X86_PLATFORM_DEVICES is an option which enables / disable=
-s
-> > > > a menu and does nothing more.
-> > > >=20
-> > > > Enabling it or depending on it by itself does nothing.
-> > > >=20
-> > > > The select used to be there since it must be selected to be able
-> > > > to select ACPI_WMI (which is no longer the case after this series).
-> > > >=20
-> > > > To depends on in XE was probably copy pasted from the existing
-> > > > select-s and then changed to a depends and already was a completely
-> > > > no-op since depending on ACPI_WMI was enough as that itself
-> > > > dependend on ACPI_WMI.
-> > > >=20
-> > > > As for X86_PLATFORM_DEVICES being needed for some backlight
-> > > > interfaces, depending on it by itself does not result in those
-> > > > interfaces being there. That requires enabling the actual drivers
-> > > > providing those interfaces.
-> > > >=20
-> > > > And I don't think that the GPU drivers should start depending
-> > > > on those since that will become very unyielding.
-> > > >=20
-> > > > TL;DR: I believe Armin's original patch is fine and this is
-> > > > a welcome cleanup / simplification of the DRM drivers Kconfig
-> > > > bits.
-> > > Your explanation makes sense, thanks.
-> > Yeah, sounds good.  Thanks!
-> >=20
-> > Alex
->=20
-> Nice, i suppose we can apply this series as-is then?
+[PATCH v11 01/20] platform/x86/intel/pmt: complete pcidev to device update
 
-Hi all,
+Fixes this issue in a slightly different way... (uses entry->dev rather tha=
+n entry->pcidev).
 
-I don't see anyone opposing this anymore and the discussion has died down=
-=20
-so I took this into the review-ilpo-next branch.
+David,
 
-If somebody still feels there's something wrong with this, please let me=20
-know soonish.
+In my patch I have also updated the intel_pmt_get_features() function to us=
+e the
+entry->dev value (rather than entry->ep->dev).
 
---=20
- i.
---8323328-2070456929-1790935925=:1156--
+I think the ep->dev is for Telemetry access, and "features" is a general us=
+age?
+
+Should the _get_features stay entry->ep->dev?  or is entry->dev "more corre=
+ct"?
+
+Thanks
+
+Mike
+
+> 	return count;
+>--
+>2.43.0
+
