@@ -1,280 +1,312 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBDD3FE359;
-	Thu,  1 Oct 2026 22:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790892248; cv=none; b=XwSJoYigjpo3YHddpccFrkTR8aCl+T4gHgLAZ4WgNDqP0aXt+B1fj8OlMyo2K6k6Bcxv2zEqi4Iyc8pDmkRlJBcq8p7yxbF38gm3WgTRDOOmapsACdFcc9pDA4FEwlvrBYwHjE7yAjp1VJz6cSLeRh2Q7QQN8JRDgPL/0JetC74=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790892248; c=relaxed/simple;
-	bh=CMaYmjvXutgM8mqzQofYQp/0qRYlf5oKXmw6GOHm0/M=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VUq1pd4Nj2NxF2/PbjInuTWIF73Z2BGnY4vogX+iDy79RClNLWWqiIpcr6w9Ar3tI0B220sOy/K8CD1Yypfsaby6Y2kbY5dCwbkEUbA8Zji5CADe0z/DEDoW5RtcUDG3+sBzbNIDeMkPouC+Ew2xlHDUTjf2wmFvkTvFBq/5tIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n5QnDSVl; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FDA21ABBB
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2026 00:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790900330; cv=pass; b=bZZzjBcQ8xZVYb39bLWUZvd/NvSNBBczhlEwOLd+JQSCsm3aGJoBoNzMjszwlG4r1yKHMeBS/BiI9XKckYyX9CchGtBjRnsRZFbZEXoNvPa2fIJX8uKM3dFHBAgkCFb9bfG2gdKq864trZLtQ7k3LvEhcsOxUXSa/ggJ+NRj3E0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790900330; c=relaxed/simple;
+	bh=6sbu0sY8fAfvoxnypyvSnMCkfcYxT0uZkAsuQHDBdqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tEHpGeWy9K7vM71PI5CbgjgKKJ1fW+bto01R5xcGqgc6Ilc5yDqtuKafc0ZTbqoX+29WeSy2+JeOfQ7hf/MZYBW/wkRfZXKPbcQpMGQk+fpZg4oag/R0HNqoOaWgvrlU/qKv95zCLHtjQmwEwG08kwphCj0gxE8QH1OpPq+17Aw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZGUd2q2N; arc=pass smtp.client-ip=74.125.82.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n5QnDSVl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790892247; x=1822428247;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=CMaYmjvXutgM8mqzQofYQp/0qRYlf5oKXmw6GOHm0/M=;
-  b=n5QnDSVlxzV89J4QZ+fwnNmLD+nTXc2VlUhu71HCW6+NM42J6qmDZce/
-   3yly2kyK2jsQd7Fq18hxgPYlsMmiPWzRH8YDLNo0HH00cPWRCTXBEdviz
-   bw6adNY2/JBtYU+0g+D0nkW4SxKOkicEZdeSmHmGpv2tVK+XEVRfYvAJ/
-   ubXw7r2Ll8WuhYxXLPhxUr56z3hC1Qd7krgKJ5jgtzkFco162XuwiDRCw
-   wlDICaRhB/jceTMHECPg0pHHLsmdink057oEyK+NZ+tEz8DiKH2l5o8UD
-   wXZoOYxhKxx17E5emmuWOaqiYThtFSSiLgv7L+VZpxNa/B/0jJk8afQ2w
-   w==;
-X-CSE-ConnectionGUID: nx3zPpTkQbepbFxVS8Dk0w==
-X-CSE-MsgGUID: /3kJvS7CQxCMdWLF3CwR+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="91684110"
-X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
-   d="scan'208";a="91684110"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 15:04:03 -0700
-X-CSE-ConnectionGUID: NMOPUDzHRFyFMcwOn84O+w==
-X-CSE-MsgGUID: cAhOxqHRQMOaL5WZDCpbYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,135,1787036400"; 
-   d="scan'208";a="276206253"
-Received: from debox1-desk4.jf.intel.com ([10.54.77.98])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2026 15:04:02 -0700
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	david.e.box@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	rodrigo.vivi@intel.com,
-	michael.j.ruhl@intel.com,
-	ayaz.siddiqui@intel.com,
-	syed.abdul.muqthyar.ahmed@intel.com,
-	intel-xe@lists.freedesktop.org,
-	hansg@kernel.org
-Subject: [PATCH 3/3] platform/x86/intel/pmt: Notify userspace when crashlogs complete
-Date: Thu,  1 Oct 2026 15:03:48 -0700
-Message-ID: <20261001220351.1592138-4-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261001220351.1592138-1-david.e.box@linux.intel.com>
-References: <20261001220351.1592138-1-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGUd2q2N"
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-3410209aa6aso784979eec.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Oct 2026 17:18:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790900328; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ELm76vB3bOpcNIGt6j4MmSN0D+xf+D+Fn/BozwRq4+mStHyTsHOECpFpXAUlEjhkfN
+         PcWC6bRJf8X+gX6yZSVdSDGuJWNwvytd+NWuEmEhe30orHEeIW7dlw5YehSq1mRtvrBJ
+         C4vjJBTvNELLJFSCCtuREUUPijRqq6Af+mkKWv8p5tyNkhQZbkhAOWMON9J413R8Flbx
+         obzmho+fM3gsqo/z9yIODR9AwgMWRI4Yb8XR9C1xA4WFoBT5cehEZv2rwglA3C/z4x0r
+         LzjbsXXPRfu2P/np7vGnYscART21vtqJOYABK3LQGbGz/wbeenpbaosw6jSkmz3ti9DR
+         cMhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=U+gjR5d9LLILgvkbyeqJF1PEcd50LLSKmsqYOAIF/7I=;
+        fh=TGPR/bHWRZ8qNjX7TClg0MwtcSnG9zZ1wVzRdBzYe8o=;
+        b=ftm5g9CInW2pLQxmDNDVhNitYPkn4cekU4qMTAZgTvrDX+MFne7JezS//ogkk/GZNP
+         H7LafNn2ToeQVC+JB2rzE7TbrtPRiV9AILEsu6NMp2j8PHRfgv/P7jU8bkUQR3psQE8l
+         Dv16Hz9bVb9mHgFbq72ZCnoITz2ezkcu+LW5YNNo+igp7X6zCfOUTV7vfsSekApiodgk
+         XVpZSvKH2mRi2EQvw6+szbunmwFrH/sLb/hOgWHIYCbaMKl6vGGxB7h613id07Dz0tXp
+         +zMK/JTnkRWY+Qx3r1ysuZmRSb7LDj/UMEDqmuZIAhlEjhMs+pT1A3skCBUzpcyZW0Ei
+         L1Tw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790900328; x=1791505128; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=U+gjR5d9LLILgvkbyeqJF1PEcd50LLSKmsqYOAIF/7I=;
+        b=ZGUd2q2NAopP3dNLjqH/et03XtbSgoY7G+++oT4lzDfgEHLPgM/GASwbVHBvHLl54O
+         qF1u8PXeGytf1uqoiqJwztQm8xZYfQdept3wBPz1PaaEZpwBtV8zbxgUTHd4yyqdb0x5
+         FqjjfFmAmFX0OwA943fK2I3xt1n6zY2QrUc7xo+hu7Dl9EQNFpyYetymgXDKMJFwULAp
+         yRuHxK4FzMYUr1Xtlzil5hTNcnqOCNMsOKog+IdsrFqGPu3h9v9AAH+YE0p1X8SxoiuX
+         DNCittCI41FsRbhQaeEAAiGmENLdDsPQiAvTg+8vvF6f7hghbGxAdQoMSS1WiwXMVE+u
+         wKIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790900328; x=1791505128;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=U+gjR5d9LLILgvkbyeqJF1PEcd50LLSKmsqYOAIF/7I=;
+        b=MDxWkHhsXf5KxefvA8bXQrkb1yAWgRMCQ10vd5ow/GNE9Niuni3vZflXneOmv1iqfL
+         Vdy5lTIlwlKo9HpdZfPFfyZCtppugqTAAttNJ/3DICpAzkw5Va1zs6pgW3LcvwJCuwLt
+         FKGK4LupyYHfdS8bUPEnaQmPOAq8WT0kqggy4v72/eL4Qewe3n8p1musgas6Ls+E3oBx
+         dNQrbHC6+h9LH5T7HzNKMhCgI5HuGygAbdgM1KsxPRdBJkhOI1BKpG0Ge/LyUwprG9N6
+         cVOoBe35sZKRRwNY2L+L6VWg7le0dkgVk0lqCX5NxpZ8gg6e3c1HPfjDmXNonFKpT6Go
+         hkWg==
+X-Forwarded-Encrypted: i=1; AKwUvByzlIViBhec2sww14xylODHFF+FeMIpYQGC/AsS57ZA8LQNBworIOVJCLMXzoG9C/74ZEHxfcz4x3BQzKerlxjTbf+5@vger.kernel.org
+X-Gm-Message-State: AFuF++nOqtZX46nyqXzPdJqoPeJT3RSahAL7esC4GS7wZMoWXbsR+3WF
+	pty1yA4Ut7vZf8fT6rhnM7ToIQboqjKve1xXaK5dSlS9GGM+xFE2vTIzh6hpDwRoWZ3vh9WZKmj
+	I5cHvZWB7iYM7MxNTIYto4pUUMtvVUro=
+X-Gm-Gg: AYBFou2swcebBpaBgNRi/PmwSByoTfHi1LEZbw4LYSFmr0mfl4tvplu8go6qthCIFuH
+	RRw5e2w81JoMDhWP+TUEJ8/1LUMSNBkjy9tX3AjwKpj855OAoXu8gEtJ2GUNHuB6dIUIjLliTsy
+	9i3GwsX2BrrfyYUtY/RAG+le8b8c6g3bRG1Qyu1zCrEuBXjiBfOAhrALsmpmJ4W2oYSpt50sqqd
+	BLR2aCxJeEIEhUP0Thd0SZ7O2HMD04nao6pK11b2HcuxljgOyLW57SmXVS7cCzEmD9c7YH8Ug51
+	1FTgJsQTNJRLmHUpUZdFuW5077rS2lvFVfXsn3OvpSuhKuOO9sn2Bf7rbyHfi6SgXzJ455UyTrI
+	ih1eC+OkcVO1sacDmdLxlSIyxjWSxP5SWkqu3pnE=
+X-Received: by 2002:a05:7023:a56:20b0:148:ece:8cc3 with SMTP id
+ a92af1059eb24-14dd1c5188fmr4180886c88.24.1790900327522; Thu, 01 Oct 2026
+ 17:18:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260929134503.17249-1-qby140326@gmail.com> <20260929134503.17249-6-qby140326@gmail.com>
+ <20260930015058.3076905-1-uselessfire@gmail.com>
+In-Reply-To: <20260930015058.3076905-1-uselessfire@gmail.com>
+From: =?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>
+Date: Fri, 2 Oct 2026 02:18:34 +0200
+X-Gm-Features: AclHuK82qn9R_xwvmj6KBKMulEpb6kdbCvJRMp-Gm_dzPivtA15vWJx4VT7oIT4
+Message-ID: <CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com>
+Subject: Re: [PATCH v6 5/5] platform/x86: bitland-mifs-wmi: Add per-machine
+ ops table
+To: Anton Karasev <uselessfire@gmail.com>
+Cc: qby140326@gmail.com, ilpo.jarvinen@linux.intel.com, hansg@kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	W_Armin@gmx.de, ilya.gladyshev@linux.dev, foxido@foxido.dev, kento@kekto.ru, 
+	ericted8810@gmail.com, chris@miget.com, matias.civadda2342001@gmail.com, 
+	btx342@gmail.com, wleizc7319@gmail.com, wolf109909@outlook.com, i@rsplwe.com, 
+	bozhenpeng93@gmail.com, martiya.ar@gmail.com, aleksejirlik@gmail.com
+Content-Type: multipart/mixed; boundary="000000000000da9bfa065cd0799a"
+
+--000000000000da9bfa065cd0799a
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-A crashlog may already be complete when the driver binds, or it may
-complete asynchronously after userspace requests a manual trigger.
-Userspace otherwise has to poll to discover that data is ready.
+Hi Anton,
 
-Emit a KOBJ_CHANGE uevent on the per-instance crashlog device when a
-completed log is found at probe. After a manual trigger, poll the
-completion bit at 100 ms intervals for up to 5 seconds and emit the same
-event when capture completes. The event carries two environment
-variables:
+> The Pro 14 2024 (TM2307) is built on the same platform (Xiaomi's
+> downloads for both, the BIOS included, are filed under one platform
+> name, N56N57) and may behave the same; I cannot verify that.
 
-  INTEL_PMT_CRASHLOG_EVENT=3DPRESENT
-  INTEL_PMT_CRASHLOG_COMPLETE=3D1
+I have a TM2307 (XIAOMI / "Redmi Book Pro 14 2024", BIOS RMAMT4B0P0B0B
+06/10/2025, bios_release and ec_firmware_release both 1.11 -- the same
+releases you report for the TM2309). It matches your machine on every
+point you listed, checked against the ACPI tables:
 
-Initialize the work items before the device's sysfs attributes are
-exposed, and disable and drain them during removal.
+- Same method and table: \_SB.PC00.WMID.WMAA in the SSDT with OEM Table
+  ID XMCC1806.
+- Same commands implemented: 0x08 (GET and SET), 0x0a, and 0x10 (GET
+  subcommands 1-3, SET subcommand 2 only). Everything else answers
+  0xE000, including 0x0d, 0x13, 0x14 and 0x16. A GET of 0x0a echoes
+  FUN3 back and answers 0x8000 whatever the subcommand, as you saw.
+- NTDP maps QFAN to ODV1 identically: 3 -> 1, 2 -> 2, 4 -> 4, 5 -> 5,
+  6 -> 6, and everything else -- so 0 and 1 -- to 0.
+- SET fn8 writes the value into QFAN as is, with 5 and 7 going to SMMD
+  instead.
+- The SET branches never fill in the function id. All five FUTR
+  assignments in WMAA are in the GET branch. So "Detect failed function
+  calls" returns -ENOMSG for every SET here too, and Chris's "Only check
+  the function id of GET responses" is needed on this board as well.
+- 0x10 subcommand 2 is the LONL charge-protection bit here too: SET sets
+  bit 0 for the value 1 and clears it for anything else, reporting
+  0x8000 either way. So "echo fixed > kb_mode" is 0x10/2 with value 0
+  and turns charge protection off on this machine as well. Agreed that
+  kb_mode must not be exposed on these boards.
 
-Document the new uevent in the sysfs-class-intel_pmt ABI file.
+One place where I think the data differs, and it matters for the entry.
 
-Assisted-by: LLM
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- .../ABI/testing/sysfs-class-intel_pmt         | 14 ++++
- drivers/platform/x86/intel/pmt/crashlog.c     | 84 ++++++++++++++++++-
- 2 files changed, 95 insertions(+), 3 deletions(-)
+Your table lists 0 and 1 together as balanced. That is right for ODV1 --
+NTDP maps both to 0, same as here -- but they are not interchangeable at
+the EC fan level on this board.
 
-diff --git a/Documentation/ABI/testing/sysfs-class-intel_pmt b/Documentatio=
-n/ABI/testing/sysfs-class-intel_pmt
-index ed4c886a21b1..c0b0d123afdf 100644
---- a/Documentation/ABI/testing/sysfs-class-intel_pmt
-+++ b/Documentation/ABI/testing/sysfs-class-intel_pmt
-@@ -66,6 +66,20 @@ Description:
- 		can be determined from an XML file of specified GUID for the
- 		parent device.
-=20
-+What:		/sys/class/intel_pmt/crashlog<x>
-+Date:		October 2026
-+KernelVersion:	7.4
-+Contact:	David Box <david.e.box@linux.intel.com>
-+Description:
-+		When a crashlog device is probed with a completed crashlog
-+		already present, or a manual trigger completes, the driver emits
-+		a KOBJ_CHANGE uevent for that crashlog<x> device.
-+
-+		The following uevent environment variables are added:
-+
-+		INTEL_PMT_CRASHLOG_EVENT=3DPRESENT
-+		INTEL_PMT_CRASHLOG_COMPLETE=3D1
-+
- What:		/sys/class/intel_pmt/crashlog<x>/crashlog
- Date:		October 2020
- KernelVersion:	5.10
-diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x=
-86/intel/pmt/crashlog.c
-index f936daf99e4d..21e8e2199bdc 100644
---- a/drivers/platform/x86/intel/pmt/crashlog.c
-+++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -12,12 +12,14 @@
- #include <linux/cleanup.h>
- #include <linux/intel_vsec.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- #include <linux/overflow.h>
-+#include <linux/workqueue.h>
-=20
- #include "class.h"
-=20
-@@ -113,6 +115,9 @@ struct crashlog_entry {
- 	struct intel_pmt_entry		entry;
- 	struct mutex			control_mutex;
- 	const struct crashlog_info	*info;
-+	struct work_struct		uevent_work;
-+	struct delayed_work		uevent_poll_work;
-+	u8				uevent_poll_tries;
- };
-=20
- struct pmt_crashlog_priv {
-@@ -120,6 +125,9 @@ struct pmt_crashlog_priv {
- 	struct crashlog_entry	entry[];
- };
-=20
-+#define PMT_CRASHLOG_UEVENT_POLL_MS		100
-+#define PMT_CRASHLOG_UEVENT_POLL_MAX_TRIES	50
-+
- /*
-  * I/O
-  */
-@@ -227,6 +235,47 @@ static void pmt_crashlog_set_rearm(struct crashlog_ent=
-ry *crashlog)
- 	pmt_crashlog_rmw(crashlog, crashlog->info->control.rearm, true);
- }
-=20
-+static void pmt_crashlog_uevent_fn(struct work_struct *work)
-+{
-+	struct crashlog_entry *crashlog =3D
-+		container_of(work, struct crashlog_entry, uevent_work);
-+	char *envp[] =3D {
-+		"INTEL_PMT_CRASHLOG_EVENT=3DPRESENT",
-+		"INTEL_PMT_CRASHLOG_COMPLETE=3D1",
-+		NULL,
-+	};
-+
-+	if (crashlog->entry.kobj)
-+		kobject_uevent_env(crashlog->entry.kobj, KOBJ_CHANGE, envp);
-+}
-+
-+static void pmt_crashlog_uevent_poll_fn(struct work_struct *work)
-+{
-+	struct crashlog_entry *crashlog =3D
-+		container_of(to_delayed_work(work), struct crashlog_entry,
-+			     uevent_poll_work);
-+	guard(mutex)(&crashlog->control_mutex);
-+
-+	/* A newer trigger_store() re-armed us; that cycle owns the notification =
-*/
-+	if (delayed_work_pending(&crashlog->uevent_poll_work))
-+		return;
-+
-+	if (pmt_crashlog_complete(crashlog)) {
-+		schedule_work(&crashlog->uevent_work);
-+		return;
-+	}
-+
-+	if (++crashlog->uevent_poll_tries < PMT_CRASHLOG_UEVENT_POLL_MAX_TRIES)
-+		schedule_delayed_work(&crashlog->uevent_poll_work,
-+				      msecs_to_jiffies(PMT_CRASHLOG_UEVENT_POLL_MS));
-+}
-+
-+static void pmt_crashlog_notify_pending(struct crashlog_entry *crashlog)
-+{
-+	if (pmt_crashlog_complete(crashlog))
-+		schedule_work(&crashlog->uevent_work);
-+}
-+
- /*
-  * sysfs
-  */
-@@ -423,7 +472,19 @@ trigger_store(struct device *dev, struct device_attrib=
-ute *attr,
- 	if (pmt_crashlog_complete(crashlog))
- 		return -EEXIST;
-=20
-+	/*
-+	 * Only now are we actually starting a fresh crash: any stale poll
-+	 * cycle left over from a prior trigger can be dropped safely, since
-+	 * pmt_crashlog_complete() above proved it carried no unresolved
-+	 * completion. Non-sync: uevent_poll_fn() takes this same mutex, so
-+	 * cancel_delayed_work_sync() here could deadlock against it.
-+	 */
-+	cancel_delayed_work(&crashlog->uevent_poll_work);
-+
- 	pmt_crashlog_set_execute(crashlog);
-+	crashlog->uevent_poll_tries =3D 0;
-+	schedule_delayed_work(&crashlog->uevent_poll_work,
-+			      msecs_to_jiffies(PMT_CRASHLOG_UEVENT_POLL_MS));
-=20
- 	return count;
- }
-@@ -551,6 +612,9 @@ static void pmt_crashlog_remove(struct auxiliary_device=
- *auxdev)
- 	for (i =3D 0; i < priv->num_entries; i++) {
- 		struct crashlog_entry *crashlog =3D &priv->entry[i];
-=20
-+		/* Disable, not cancel: a racing trigger_store() must not re-arm */
-+		disable_delayed_work_sync(&crashlog->uevent_poll_work);
-+		disable_work_sync(&crashlog->uevent_work);
- 		intel_pmt_dev_destroy(&crashlog->entry, &pmt_crashlog_ns);
- 		mutex_destroy(&crashlog->control_mutex);
- 	}
-@@ -572,15 +636,29 @@ static int pmt_crashlog_probe(struct auxiliary_device=
- *auxdev,
- 	auxiliary_set_drvdata(auxdev, priv);
-=20
- 	for (i =3D 0; i < intel_vsec_dev->num_resources; i++) {
--		struct intel_pmt_entry *entry =3D &priv->entry[priv->num_entries].entry;
-+		struct crashlog_entry *crashlog =3D &priv->entry[priv->num_entries];
-+		struct intel_pmt_entry *entry =3D &crashlog->entry;
-+
-+		/* init before dev_create() exposes trigger sysfs to userspace */
-+		INIT_WORK(&crashlog->uevent_work, pmt_crashlog_uevent_fn);
-+		INIT_DELAYED_WORK(&crashlog->uevent_poll_work,
-+				  pmt_crashlog_uevent_poll_fn);
-+		crashlog->uevent_poll_tries =3D 0;
-=20
- 		ret =3D intel_pmt_dev_create(entry, &pmt_crashlog_ns, intel_vsec_dev, i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			cancel_delayed_work_sync(&crashlog->uevent_poll_work);
-+			cancel_work_sync(&crashlog->uevent_work);
- 			goto abort_probe;
--		if (ret)
-+		}
-+		if (ret) {
-+			cancel_delayed_work_sync(&crashlog->uevent_poll_work);
-+			cancel_work_sync(&crashlog->uevent_work);
- 			continue;
-+		}
-=20
- 		priv->num_entries++;
-+		pmt_crashlog_notify_pending(crashlog);
- 	}
-=20
- 	return 0;
---=20
-2.43.0
+There is no tachometer to read (0x0d unimplemented, and no tach byte
+anywhere in EC RAM), so I measured cooling rate instead. Heat the package
+to 80 C, drop the load, hold QFAN fixed, and record how far the package
+temperature falls over a fixed 150 s window. PL1 and PL2 both pinned to
+35 W so the ramp is identical between runs, any fan daemon stopped, run
+order shuffled, QFAN read back every sample.
 
+  QFAN  n  mean drop  sd    range        end temp  skin TSR3/TSR4
+  0     4  15.2 C     1.48  13.0-17.0 C  63-67 C   49-52 / 50-52 C
+  1     4  29.5 C     1.12  28.0-31.0 C  50-52 C   44-46 / 41-42 C
+
+From the same 80 C start at the same power, mode 1 sheds about twice the
+heat, and the two ranges do not overlap. The skin sensors say the same
+thing independently: the chassis ends 8-10 C hotter after a mode 0 run,
+so the heat is staying in the machine rather than being exhausted.
+
+Caveats, since this is a proxy and not an RPM reading: n=3D4 per mode; the
+shuffle happened to put three mode-0 runs together and heat soak is
+visible within them (16 -> 15 -> 13 C as the skin climbs), which is
+inside the quoted sd; and a time-to-threshold metric I also recorded did
+not separate the two modes at all, so the fixed-window drop is the only
+thing I am claiming. Raw per-run CSV attached if you want to check it.
+
+So I would suggest an entry for these boards uses balanced =3D 1 rather
+than 0. Same policy, different fan behaviour -- and 0 is exactly what the
+current bitland_ops map writes for platform_profile "balanced", which is
+how this started for me: fans effectively idle until the EC's own ~100 C
+threshold.
+
+Happy to test patches on TM2307.
+
+Thanks,
+Milos
+
+On Wed, Sep 30, 2026 at 3:51=E2=80=AFAM Anton Karasev <uselessfire@gmail.co=
+m> wrote:
+>
+> Hi,
+>
+> Data for the per-machine table from a Xiaomi Redmi Book Pro 16 2024
+> (DMI: sys_vendor "XIAOMI", board_name "TM2309"; BIOS RMAMT6B0P0B0B,
+> bios_release and ec_firmware_release 1.11), the same model as in
+> Martiya's report. RMAMT6B0P0B0B (August 2025) is the latest BIOS Xiaomi
+> publishes for this model, so this is what an entry would be written
+> against. Its values match neither the Bitland defaults nor the Redmi map
+> proposed in v5 6/6. The full acpidump is attached to bugzilla 222062:
+> https://bugzilla.kernel.org/attachment.cgi?id=3D310971
+> The WMI method is \_SB.PC00.WMID.WMAA in the SSDT with OEM Table ID
+> XMCC1806; QFAN and NTDP are in the DSDT.
+>
+> Mode values
+> -----------
+>
+> WMAA stores the value written with WMI_FN_SYSTEM_PER_MODE in the EC
+> register QFAN as is (5 and 7 go to a separate register, SMMD, instead),
+> and NTDP in the DSDT maps QFAN to the DPTF variable \_SB.ODV1 (odvp1 in
+> sysfs) that thermald --adaptive uses to pick the policy from the GDDV:
+>
+>   QFAN   meaning                          ODV1
+>   0, 1   balanced (Fn+K sets 1)           0
+>   2      quiet                            2
+>   3      performance ("Turbo")            1
+>   4      full speed ("Geek")              4
+>
+> GET returns QFAN for 1..4 and 0 otherwise (so 0 after a SET of 0).
+> Fn+K on this model cycles 1 -> 3 -> 2.
+>
+> I tested this with a local build that maps low-power/balanced/
+> performance to 2/1/3: power-profiles-daemon power-saver, balanced and
+> performance give odvp1 2, 0 and 1, and thermald loads the matching GDDV
+> targets (PL1 limits, TCC offset), both on AC and on battery.
+>
+> On the DMI match: the v5 6/6 match on sys_vendor "Redmi"/"TIMI" would
+> not cover this machine, and performance =3D 0 from that map is balanced
+> here. The REDMI Book Pro 16 2025 in Aleksey's report also has
+> sys_vendor "XIAOMI" but uses different values, so an entry for this
+> model has to match board_name "TM2309". The Pro 14 2024 (TM2307) is
+> built on the same platform (Xiaomi's downloads for both, the BIOS
+> included, are filed under one platform name, N56N57) and may behave the
+> same; I cannot verify that.
+>
+> Capability checks
+> -----------------
+>
+> a) Performance on AC and on battery. WMI_FN_SYSTEM_AC_TYPE is not
+>    implemented on this BIOS, so with Armin's "Treat
+>    WMI_FN_SYSTEM_AC_TYPE as optional" the capability check passes on
+>    AC. The write itself is still reported as failed here, though:
+>    WMAA's SET branches set only the return code and leave the function
+>    id at 0 (only the GET branches fill it in), so "Detect failed
+>    function calls" (23cc56f6dea6 in for-next) returns -ENOMSG for every
+>    SET on this BIOS, although the firmware applies it -- the same as
+>    Chris reported for the Book Pro 14. I checked it with the for-next
+>    version of the driver built for 7.2.7: every write of low-power,
+>    balanced and performance failed with -ENOMSG while QFAN changed to
+>    2, 0 and 3; with Chris's "Only check the function id of GET
+>    responses" on top, all of them succeed.
+>    On battery, power_supply_is_system_supplied() still refuses
+>    performance, although the firmware supports Turbo on DC: Fn+K
+>    reaches it on battery, the GDDV has a DC Turbo target, and writing 3
+>    on battery works (odvp1 1, thermald applies the DC Turbo limits).
+>
+> b) Full speed. The firmware does not validate the mode at all. Writing
+>    4 was accepted and applied (odvp1 4, thermald loads the Geek targets;
+>    on AC the PL1 ramped towards the 90 W Geek maximum) both on battery
+>    and on a 100 W USB-C PD charger, while Fn+K never offers full speed
+>    in either case. It is not a charger thing either: with the stock
+>    140 W USB-C charger (the EC register ADPW then reads 140, and GET of
+>    command 0x10, subcommand 3, would report the adapter as not below
+>    140 W) Fn+K still cycles only 1 -> 3 -> 2. So on this model full
+>    speed is never offered by the vendor's own key, and whether it is
+>    exposed has to be decided by the driver; the firmware will not stop
+>    it.
+>
+> Commands that are not implemented, and one that is dangerous
+> ------------------------------------------------------------
+>
+> On this BIOS WMAA implements only command 0x08 (GET and SET), 0x0a
+> subcommand 5, and 0x10 (GET subcommands 1-3, SET subcommand 2 only).
+> Other command IDs answer 0xE000, among them everything else the driver
+> uses: 0x09 (gpu_mode), 0x0d (fan speeds), 0x12 (keyboard brightness),
+> 0x13 (AC type), 0x14 (fan_boost) and 0x16 (CPU temperature).
+> Unhandled subcommands of 0x0a and 0x10 mostly return status 0, and a
+> GET of 0x0a answers 0x8000 whatever the subcommand. The hwmon device,
+> the kbd_backlight LED, gpu_mode and fan_boost therefore have nothing
+> behind them on this machine; probing support at probe time would avoid
+> exposing them.
+>
+> kb_mode is worse than unsupported. kb_mode_store() sends command 0x10
+> (WMI_FN_RGB_KB_MODE) with the mode in the first payload byte. On this
+> firmware command 0x10 is the battery interface, and subcommand 2 is the
+> charge protection (bit 0 of the EC register LONL, 80 % limit; reportedly
+> what Xiaomi's Windows tools toggle): WMAA sets the bit only for the
+> value 1 and clears it for anything else. "echo fixed > kb_mode" is
+> therefore 0x10/2 with value 0. I verified on this machine that it
+> silently turns off charge protection -- LONL goes from 0x31 to 0x00, the
+> charge limit in the EC goes from 80 back to 100 and the battery, which
+> had been held at 80 %, starts charging again -- while the firmware
+> reports success (0x8000). That was on 7.2.7, whose driver does not check
+> the reply; with 23cc56f6dea6 the write returns -ENOMSG instead, but
+> protection is off all the same. I think kb_mode must not be exposed on
+> these machines.
+>
+> Once the generic profile table has settled I can send a patch with the
+> entry for this model and the kb_mode fix on top of it, and I am happy to
+> test patches in the meantime.
+>
+> Thanks,
+> Anton Karasev
+
+--000000000000da9bfa065cd0799a
+Content-Type: text/csv; charset="US-ASCII"; name="qfan-tm2307-mode0-vs-mode1.csv"
+Content-Disposition: attachment; filename="qfan-tm2307-mode0-vs-mode1.csv"
+Content-Transfer-Encoding: base64
+Content-ID: <f_muq7rg070>
+X-Attachment-Id: f_muq7rg070
+
+ZHJvcF9jLGhlYXRfcyxtb2RlLHBlYWtfYyxwaGFzZSxzZWNvbmRzX3RvX2NvbGQsc2tpbl9UU1Iz
+LHNraW5fVFNSNCxza2luX1RTUjcsc2tpbl9UU1JBLHRfZW5kX2MsdF9zdGFydF9jLHdpbmRvd19z
+DQozMC4wMCwyMC4yLDEsODEuMCxjb29sZG93biwxLjAzLDQ2LDQyLDQ1LDM5LDUxLjAsODEuMCwx
+NTANCjI5LjAwLDE1LjMsMSw4MC4wLGNvb2xkb3duLDEuMDMsNDUsNDEsNDQsMzgsNTEuMCw4MC4w
+LDE1MA0KMTYuMDAsMTkuMywwLDgwLjAsY29vbGRvd24sMy4wOSw1Miw1MSw1MCw0OCw2NC4wLDgw
+LjAsMTUwDQoxNS4wMCwxLjAsMCw4MC4wLGNvb2xkb3duLDEuMDQsNTIsNTIsNTAsNDgsNjUuMCw4
+MC4wLDE1MA0KMTMuMDAsMS4wLDAsODAuMCxjb29sZG93biwxLjA0LDUyLDUyLDUwLDQ5LDY3LjAs
+ODAuMCwxNTANCjI4LjAwLDEuMCwxLDgwLjAsY29vbGRvd24sMS4wMyw0Niw0Miw0NCw0MCw1Mi4w
+LDgwLjAsMTUwDQozMS4wMCwyNy43LDEsODEuMCxjb29sZG93biwxLjAzLDQ0LDQxLDQyLDM4LDUw
+LjAsODEuMCwxNTANCjE3LjAwLDIwLjYsMCw4MC4wLGNvb2xkb3duLDMuMTEsNDksNTAsNDgsNDcs
+NjMuMCw4MC4wLDE1MA0K
+--000000000000da9bfa065cd0799a--
