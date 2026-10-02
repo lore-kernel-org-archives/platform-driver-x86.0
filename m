@@ -1,105 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mail-4318.protonmail.ch (mail-4318.protonmail.ch [185.70.43.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5768320A37;
-	Fri,  2 Oct 2026 13:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6794E4C2C;
+	Fri,  2 Oct 2026 15:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790948179; cv=none; b=MU+dUMl+03iCMYlcS0OeEeCjB83pcv4Ajd7HOs+66lWkj3p3fjVQltOKTT9tZBhsjpAEgPmv3meKPOQ+lDf5klvre7D9paKVPcdzgDQg4/W9U1xxGqUn1dIBR5764oONCzLWFrV7VXHe6kyQMpxWWFVjMDA0ynoe+DGW2DXPnC0=
+	t=1790955785; cv=none; b=lDEPy7apyP6/3yljJ3oDcUUIzFtNVBxgyqODhLv6+TZBH4WpM//1xttlhDpyNmmwMrUTrcXQ4kLAwSDmjm6dGHVhCNd+Gu1a4e9yOH5NPoxsKrOAqLEEvoehWgEWiFWEiJl40JX3qFeHReOhpBkjGunkbL8YGEfNP/HTYvQVheY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790948179; c=relaxed/simple;
-	bh=oVB4ufbEkYzESgslDpgbjnVym36UXWbMieaHW+tXggU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hNPAaB13L6PHCifDCbPsh5NqNTyjsmPueZbXXr8vyqcE+JMZbl2j1UQhskpfmZNB3rZJqAHN5OjESlyZ0gDqyb1UzcAKvAWGLLGcZoMIZBh8wsQzEeOQ+47a4TKxOmYEdiSrHFu587Oeg2V5SKjAxoYQOmAKaOcNxCLVQ+GZzXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q3IXYKCh; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1790955785; c=relaxed/simple;
+	bh=pwFQuhlI8NnLNGRFebd1hncDfW78pQJ7ee3vDwSUBbs=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OUYJI07ZebmYU+YQYImkYk2wgus/EjX2qgqTOoTMQqBonlKiCJMMBNEsn9PwiuYcw5Obug4eg5MMvSnIG6Mw1JmPSF7eZA2jFNoGkD0xZWhho306K1E76NnsarkUmFZvYp8T/UIECrHO7mIzzd8KG6wVSQgGdDKEruUP04FrOEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net; spf=pass smtp.mailfrom=ironrobin.net; dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b=o6pBIYJD; arc=none smtp.client-ip=185.70.43.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ironrobin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q3IXYKCh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790948178; x=1822484178;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oVB4ufbEkYzESgslDpgbjnVym36UXWbMieaHW+tXggU=;
-  b=Q3IXYKChChT1hcejxoe/kNn0Qhhto29nEQQ9oRR6hS2QPhuLwRO3d+FJ
-   lJh6ofJGhTWl5Ba1M5WJVwVLTCBj97H8IxPYb61aZjQoyYUjzHTEk5ANQ
-   7KvOAS5OPjeNgun0wgvWpWS7o4DhWkv+h0klNYMZmcpD/4tuudr6LVhVK
-   7Nc6u3ewdVx8PG0Kj5O2GFIwJoEspcwgU0tiTpinexPrVyTgP9gFz4Fzt
-   YBGrSIrA+vVXX0B1qNwiEPpeq3pFXbdm17P8uXpWVJI5N4Q4OLQAaclbU
-   8ePNWxxnLz3J2qqvx4NLWX25xEegBgeM21j6aDOYXxvl//CDV3hZJnRnT
-   w==;
-X-CSE-ConnectionGUID: Ez22S+EjTjC9PBwG/NUaoQ==
-X-CSE-MsgGUID: v8hIsrQrR7ey49waQijUjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11923"; a="91733172"
-X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
-   d="scan'208";a="91733172"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 06:36:17 -0700
-X-CSE-ConnectionGUID: T37TKfLEQvyRFK8qymIqcg==
-X-CSE-MsgGUID: MoRKytjXQq2BppHk0n4mlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
-   d="scan'208";a="305753277"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.188])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 06:36:13 -0700
-Date: Fri, 2 Oct 2026 16:36:11 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Thierry Chatard <tchatard@gmail.com>
-Cc: linux-kernel@vger.kernel.org, hansg@kernel.org, lee@kernel.org,
-	platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	djrscally@gmail.com, dan.scally@ideasonboard.com,
-	linux-media@vger.kernel.org, mchehab@kernel.org,
-	sakari.ailus@linux.intel.com, jacopo.mondi@ideasonboard.com,
-	nicholas@rothemail.net, v.vitovt@gmail.com, dmanresa@gmail.com
-Subject: Re: [PATCH v11 4/9] platform/x86: int3472: tps68470: move Windows
- MFD setup below the device-type switch
-Message-ID: <ar-zSxE7drHMn7eg@ashevche-desk.local>
-References: <20260930214321.600863-1-tchatard@gmail.com>
- <20260930214321.600863-5-tchatard@gmail.com>
+	dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b="o6pBIYJD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ironrobin.net;
+	s=protonmail3; t=1790955773; x=1791214973;
+	bh=EeqTU+LlTy6G1qbpluX2g5EBlu1Dkl7hQ2X+SG+KLNE=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=o6pBIYJDwLtC9aGN1ZeClrNl3LOKgB3gY3UwiwMPwpz+oSrt1Gdk/Xy8IJFDkbw+Q
+	 RJRE9ArHYQOXvrqdlNAHNCiZN2LNeR2lM4khyQiX2gjFy1lDeiANhLnHc9aclFp7F2
+	 HOTh0hGsOVxhGtLoJNDiPtqZqaQlvnK+84GOnmGSFT3e0weHpdYotBoMmomtTobSyE
+	 b7vaiytPSwV5u5bEgyQ1dZ5XDw+ZcXlTzSWrEjhdfs7k69YO6NNr8+FtCDtrjBpyGL
+	 bP062lbb+zFfnWpd/Xa4Y9nC7wY8DVzuASDmdppcsbjiemczyvY+znRb2DcpNEcF4G
+	 iGjavOy6OYHTw==
+Date: Fri, 02 Oct 2026 15:42:48 +0000
+To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Alex Robinson <alex@ironrobin.net>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Steev Klimaszewski <threeway@gmail.com>, platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] Lenovo ThinkPad X13s embedded controller support
+Message-ID: <20261002154231.31376-1-alex@ironrobin.net>
+Feedback-ID: 54785507:user:proton
+X-Pm-Message-ID: 946905ba5b7717f0c693640c99d0c57bd5d0515d
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260930214321.600863-5-tchatard@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 30, 2026 at 02:43:16PM -0700, Thierry Chatard wrote:
-> The Windows path looks up the board data, builds the tps68470-clk
-> platform data and registers the MFD cells; none of this is needed for the
-> ChromeOS path, which registers its own cells. Move that handling out of
-> the switch and let the ChromeOS case return directly, so the Windows-only
-> work is no longer done for ChromeOS and the function reads top to bottom.
-> 
-> While moving the code, use a local struct device *dev to shorten the many
-> &client->dev references, and return -ENODATA (rather than -ENODEV) when no
-> board data matches this machine, to distinguish it from a missing device.
-> 
-> No functional change for either path.
+Add Device Tree support for the ThinkPad X13s embedded controller,
+providing keyboard-backlight control and firmware-driven brightness
+notifications. Its event, backlight and power-management interfaces
+differ from the T14s EC and require a separate driver.
 
-> Assisted-by: Claude Code:claude-opus-4-8
+EC wakeup remains disabled by default because lid closure can trigger
+an unwanted wakeup and no selective event mask is known. Other EC event
+mappings remain outside the scope of this series.
 
-Assisted-by: LLM
+This follows earlier X13s EC work by Konrad Dybcio and Steev Klimaszewski.
+Development was assisted by an LLM, including analysis of the X13s ACPI
+DSDT and review of the implementation.
 
-> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
+Changes in v5:
+- Replace the private suspended/access-blocked flag and deferred-event
+  handling with IRQ quiescing and LED class suspend/resume helpers.
+- Flush pending LED brightness restoration before re-enabling the EC
+  event IRQ, so pending lid events are handled afterwards.
+- Preserve the EC lid-restore brightness during PM blanking/restoration.
+- Update the LED brightness cache on lid-open restoration without a
+  hardware-change notification, avoiding a spurious backlight OSD.
+  Retain notifications for firmware-driven changes such as Fn+Space.
+- Include dev_printk.h directly for device logging helpers.
+- Leave the binding and DTS unchanged from v4.
 
-...
+Changes in v4:
+- Set GPIO103 bias-pull-up explicitly, based on its firmware-inherited
+  configuration measured at pinctrl probe before Linux claimed or
+  configured the pin. CTL offset 0x67000 read 0x00000003 (pull field 3).
+  The temporary measurement instrumentation is not included.
+- Remove output-high from the GPIO176 pinctrl state. The driver already
+  requests GPIOD_OUT_HIGH at probe and controls the line during sleep.
+- Restore the suspend brightness snapshot only if it was successfully
+  captured during that suspend, avoiding restoration of a stale value.
+- Use FIELD_MODIFY(), validate brightness against the LED maximum, and
+  simplify transfer error handling and selected mutex-protected paths.
+- Include linux/ratelimit.h explicitly and adjust conditional formatting.
+- Shorten commit messages to focus on rationale rather than the diff.
 
->  	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
->  	if (IS_ERR(regmap)) {
-> -		dev_err(&client->dev, "Failed to create regmap: %ld\n", PTR_ERR(regmap));
-> +		dev_err(dev, "Failed to create regmap: %ld\n", PTR_ERR(regmap));
+Changes in v3:
+- Disable EC wakeup by default without disabling runtime IRQ handling.
+- Retain wakeup-source as a description of hardware capability.
+- Remove the Kconfig help text's claim of wake support.
 
-This is unrelated to the patch. It belongs to a separate change.
-Same for the similar cases below.
+Changes in v2:
+- Make backlight snapshots and EC power-management operations best-effort.
+- Save firmware- and software-selected brightness in the EC and restore
+  the EC-saved brightness on lid open.
+- Process deferred events after the normal resume brightness restore.
+- Add QUP8 pin configuration verified on hardware and fix DT node ordering.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Testing:
+- Confirmed GPIO103's firmware-inherited pull-up on a ThinkPad X13s using
+  a vanilla kernel with temporary probe-time instrumentation.
+- Verified that all three v5 patches apply in order to Linux v7.3-rc4
+  without the separate PCI workaround and reproduce the current EC
+  source files byte-for-byte.
+- Earlier v2 hardware testing covered keyboard-backlight control,
+  firmware brightness changes, s2idle, lid-close/open brightness
+  restoration, and EC wake events. Those results are historical and do
+  not establish validation of the complete v5 series or its revised PM
+  handling. No v5 build or runtime validation was performed while
+  preparing this submission directory.
 
+Earlier series:
+https://lore.kernel.org/all/20260925215358.33417-1-alex@ironrobin.net/
+
+Alex Robinson (3):
+  dt-bindings: embedded-controller: Add Lenovo ThinkPad X13s EC
+  platform: arm64: Add Lenovo ThinkPad X13s EC driver
+  arm64: dts: qcom: sc8280xp-x13s: Add embedded controller
+
+base-commit: 93f51579e7df248780214094418f205253383cc5
 
