@@ -1,64 +1,64 @@
 Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D252D3EC689
-	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2026 19:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C273E8331
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2026 19:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790968510; cv=none; b=Flobg0l8w+dW3zgVqTf7yjlJpYFCdVXKzu0NpFAlpI+vuPX8QljvbfGcJbX1yZmFonv+hJNFNylW3wM7NZa2dzr9wXdX8ItPGmpKqmcXJnorcXcaH+1jT3Jj9pdegcbr37UKx4wVMDRKiy5QxwgpcDiyLRcYsBc2ozYpsvljLNc=
+	t=1790968514; cv=none; b=l4OETQzNVk3e0lwJq+4lo6sP877j0DbVBa6BnJ8djACm0ZlnBowsVJt6x2iEXnlw38SxbvQp/zC8WV8f+6Ag8oNCLG7DARYasUxoRnZt5mmq9b7YaxfcwcE0dkX75z9pSs+rMZ9xdcU22U8qGI6wZAgtS+XzXpISdDC0c0FKEJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790968510; c=relaxed/simple;
-	bh=i9bU91CtXK+5JLjU4w54dq0UieND0jN/3nVvEZHlzjE=;
+	s=arc-20240116; t=1790968514; c=relaxed/simple;
+	bh=sNrM9JNYurmnU2j2C+GnCb0f+NAvtRnOB2X+iTI/DO4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=liwCvxetZ2OeLIRw5xo6VaFFWOkkGW0cGOmV+t4fIPoEcA3rgMNkOfYdQM4YOkm7NHX+MAc5UlT4KRtbuXeAeJZssRJxCFeOoFCyoW/XlziwhmZK5vTGgwwOgRp/Z8rY1tZeWlnoHF8/kjNX6gRLsoKPR7xjMTw624KDxkzSuHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDuqXnkn; arc=none smtp.client-ip=74.125.225.141
+	 MIME-Version; b=EwsbNL5PHAyGye3WOU/H3DUGAzO7AKj7M3RCzI5j0V9saNgXDiQkcr6vxjRAKRpZhaUT7qmbc8XxQXHFTqSnbivMQbVQpI6B0rndPy4YEockaf+Wyw8k6kvYtFR0ZsP8fqjAH2NA/hZwK6e0w+3DVgMVZa44ZqZpaEwdyt/w50U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRVUEJ4t; arc=none smtp.client-ip=74.125.225.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDuqXnkn"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49ff9642c57so965295e9.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Oct 2026 12:15:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRVUEJ4t"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49fe8bf173aso1146225e9.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Oct 2026 12:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790968507; x=1791573307; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790968510; x=1791573310; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=r0anUkPzflkC5QgxWMGEWOtHrCLaMZ6h/PTr3/CKEwI=;
-        b=XDuqXnknLaO8OXc9k78c62zKF4HJ//50i6j9m+HyV1sVbiBIZlWYBHWFWuabCFSNuF
-         ekSM6Qa+ujIIpfZ3wlCrXThv5uZpYoypW8Sc7NoFW2WqfA0EY6Wjx+3fs16ZSnUFp4vf
-         ggYbsXRWuYOaFxmUi1JRzhc/ahtUWQtJ7SlawQke3KfmmCXudGec2gitpZRBgi0wSSiN
-         7KRIV8SqADVV7ZEGZ+qNbEomlKCrz85h6JjvpNRtY4dZ5KEwEacQ7qoAbMCCyxqvS8fB
-         n5BwAyYaUQ432IFikiZfQO+jZKwOf1r8iqElm1Zu3IEl39KK1P8WUa066h/W8wEkxGmF
-         iA/Q==
+        bh=6HrdlYlMCSCW8XF9JagParMEQEfvUPQkj8VTEtDRKxI=;
+        b=CRVUEJ4tkOPojwu7GOPspl7KASD7LvJqS7Du30wOvV+nA7bSFqvGbx724jgpvyB0I0
+         wRGsZVt+hLVgy+lUY7oWlNHIwE2bM/LVw0oX8AHULff+/5Em6QDByScmjsJluEWIlfEb
+         0dNCUgJew/uRo9ngfKWm2BBRDIopzs91YbSDUklWbvXq8mofT0nN9cncNjsjbL6rcbEJ
+         oO8ag07oQ6EqLJkzp0Y3r+hu8LTulgLhjB7rQlFwKWb+KGnFJIdcr0DztpPBkMZ9+b95
+         VnH0CGPLBjnLFajLJp4UTKUxLrhIPpOSdswYlKIeAouLJOIzTGdiZWvlz6cQ9rH2sdRr
+         +Lwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790968507; x=1791573307;
+        d=1e100.net; s=20260707; t=1790968510; x=1791573310;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=r0anUkPzflkC5QgxWMGEWOtHrCLaMZ6h/PTr3/CKEwI=;
-        b=SOBQMKo0/Z9smz63sP+X1hHecCj2mLb/IF+ZxUKqgUNHdsdcqohsA3ORdoW8r8vuNV
-         oIuHznv/lwFf1zdRl2Q36+QwXIaWaE3yZ6Ng6q7xdbyQp9M99Clex4wkP3fjxsXXZqDE
-         TVkyyYJUhQufsU6RCXmOpKwh21yuRfp5ttF9P16ArOrDBDI4XezkR6jUyvj72kb7kY2f
-         NWCNFIvhRxK824qPAhsEyJEKviQf/UBwca12v1eAU1PTOiGivPY7KTxjUSXkQrVN/7ZD
-         GdbXJrZvc1BntRLv+5NUOPsr67XybzPuVA4toK2fAnv+79m9fhL97HMZMLq31XvVQw52
-         jY6A==
-X-Forwarded-Encrypted: i=1; AKwUvBzf2Wo/yPq5jKp2vkUDj8d7QQD1Ti/Jpp8LgWgPU3qzn2nDAbxULeLiYtJGgZ2eOTPuqo2jmBTUXGAB2LEt2/HKNpeI@vger.kernel.org
-X-Gm-Message-State: AFuF++mX/pG1gHgdcC/o4+0IiQodVPxU6Rxr6KA7IcvM5qVTXqAslhf+
-	9c81SrSWfmP/1ZJ5JSf7qe8G40E8rjgpyh+ZB1HDm8Mvh36MphjMhqxm
-X-Gm-Gg: AYBFou0NLtkEzRg5BaUuWGET1Q8rdRf5da1huyaockJSmv/299trcRYgV98OB5T3K/V
-	M4fSJZ6o0LvPm/LmCgLuc9kEop2jNUsokjFU28G/0qf3MASTPK0QttKbIW0wDOA938duWxiqMMn
-	hr5BmvP2YFCOQxzFxjudYAoQgHfi1DLBGD+caFzMWrnvyTxrwYSI6B43PYHb7UK4f/qKvgYXzcw
-	Vgn9aoG8f7F5hkWhtP458ta1M5UdqYTGOLLXc9S1kRveb3sxHRYX2bF/2JoVK8ysgQd2sDdqcJ2
-	c4a6IExZ5FRAFwWRc3zxzEdTqkYzVLOuu5JXttnM0u8MFApErU0eyxvPu1K5KvlHFYae1JNnBOG
-	epvgx+W4eSBnUcI3VXQB3J3cYhn3WxaHDVWeb8LolYyC3NzopeOeUbveNfYXLLVWVG8YEw56InA
-	vwY+JeuZBcBbdlTtYgrZ2SUYgFmutazd4z8l/MQ3l9Tr7cfUZW1IXGmls4C2IGH/0LPEGQht/Rn
-	XdLnXgau3MrZAFs9NEYT2uD5W3re5XI2WGMbYeDR2TiU4ZQ6ewD
-X-Received: by 2002:a05:600c:3e19:b0:49b:8f5e:51fb with SMTP id 5b1f17b1804b1-4a027534b98mr63059155e9.3.1790968506897;
-        Fri, 02 Oct 2026 12:15:06 -0700 (PDT)
+        bh=6HrdlYlMCSCW8XF9JagParMEQEfvUPQkj8VTEtDRKxI=;
+        b=GauOp0YsQlFqpwp+TREO1qsYmnuF6PzpAOk4abD6JDARt0fB6UVd0JTgqLaS/c74kW
+         VGAxJGfOLylfAj8hAlKp6iBDVZ2IMKVUPA7Td5uAFSF8SkYLa97acr9otKjR5AaterYJ
+         XXtnJew1mprxkELC0Y7qQdMGftsxaZXd5lzOIvfH35vIew/l5nTOkTZkPuzG2hvYcw8q
+         iAzvH4THKapgFzS38mSgBV//ei4kyU4vSi4orNjGePJ3ys5Pin8ede7yOLrKFkqdAaYK
+         w3cHw9ggPUSVWsbdsZ5h9BMpua9MuIQ6NkbuuYAjKMangFiTVRlKXDiqgK97g2lLBJT7
+         tYYA==
+X-Forwarded-Encrypted: i=1; AKwUvBzZvkTt0I7LyqI7mS4BYzTHj/Hc46js/9731nZ07FGtT15dYU7iCbyI6vcxOUgq6t5I5giyeSH0VZ5CawKALS8qkH9j@vger.kernel.org
+X-Gm-Message-State: AFuF++l2VQdYuklxK8wBBvcwqwW9uBI1bhiGGED2YzZ3Lk9HaL6j3UcY
+	sXV4eWP+ufPrLi4iyhWcWpXJWLzxYGqtNx2wrAgV+7FeGGfTAviIcDIy0ub+BVUMvrk=
+X-Gm-Gg: AYBFou1/O55BYgm/y38Ttqwz2+eimkMEPDqDJjnjkJuIo+ao+d7lgNWqyuQLz5T2/py
+	56m7lLvUr0+GZyM0MfQ0oKBbKFhes3wx9HbhNj8AtS24G+1xM5ZdmI1FUN+a+2xYjc7XjDxBrf3
+	t72AlGCvspQq/FiJhbRpbEpLfSRRfGzsP00O1MX1OzFADowDhEDLz+UYaijeP5CtQP9ZKoy8hmi
+	8oi5IZRsEM8lWYk/+Ra3lOZF23BnE0sKn95SUNmgfWb19Ie/Op6c9igm6M+go9tJMvDz3mP0DNt
+	JNEvIK3yCrYFd3PALfCYwoJxVDsbGMX+9gz9DHkzA9uuUbHg0eXSmBDYplnvnrqUY+aMnBPa1dt
+	b7GkwUzD/V6Vai8CQlBND4jO9nfj+STQvf4iB3PVzjn4/SrrmwNn5k6cx1zZVddPvTIV+KJE5+z
+	ViI8YhUZSTutLS6DdEBBGL8O2DBBvkXxBqWGK6EmfEw14vj62czkFpq6QLLL/ijW5o55NX1asMp
+	SQjGMNn2uXprsEfuNyQB4ai7Xa+Njv3xp2R/6JBdxmoHEqXwi0g
+X-Received: by 2002:a05:600c:5303:b0:4a0:1c10:1419 with SMTP id 5b1f17b1804b1-4a027597b34mr60410315e9.26.1790968509994;
+        Fri, 02 Oct 2026 12:15:09 -0700 (PDT)
 Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0e1afbc44sm81151145e9.4.2026.10.02.12.15.03
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0e1afbc44sm81151145e9.4.2026.10.02.12.15.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2026 12:15:06 -0700 (PDT)
+        Fri, 02 Oct 2026 12:15:09 -0700 (PDT)
 From: Muhammad Bilal <meatuni001@gmail.com>
 To: Jorge Lopez <jorge.lopez2@hp.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -67,11 +67,10 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Muhammad Bilal <meatuni001@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v4 4/9] platform/x86: hp-bioscfg: allow clearing current_password
-Date: Sat,  3 Oct 2026 00:14:29 +0500
-Message-ID: <20261002191434.58529-5-meatuni001@gmail.com>
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH v4 5/9] platform/x86: hp-bioscfg: fix off-by-one in password length check
+Date: Sat,  3 Oct 2026 00:14:30 +0500
+Message-ID: <20261002191434.58529-6-meatuni001@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261002191434.58529-1-meatuni001@gmail.com>
 References: <20261002191434.58529-1-meatuni001@gmail.com>
@@ -83,63 +82,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ABI documents echo "" > current_password as the way to end a
-session, but validate_password_input() rejects an empty string when
-min_password_length is nonzero. The password stays cached, and since
-the previous patch the write also fails with -E2BIG.
+current_password and new_password hold MAX_PASSWD_SIZE bytes including
+the NUL, but validate_password_input() accepts a password of exactly
+MAX_PASSWD_SIZE characters when the firmware limits allow it.
+strscpy() then truncates it and fails with -E2BIG, which
+store_password_instance() ignores, so the write reports success with a
+truncated password stored.
 
-Skip the length check for an empty current_password so the write
-clears it.
+For example, with a max_password_length of 64 or more, writing 64
+characters succeeds but only 63 are stored.
 
-Before the previous patch the write returned 1 on an HP EliteBook 840
-G2 (min_password_length is 8) but cleared nothing.
+Reject lengths of MAX_PASSWD_SIZE or more.
 
 Compile tested only.
 
 Fixes: 8646a3b5ee3a ("platform/x86: hp-bioscfg: passwdobj-attributes")
-Cc: stable@vger.kernel.org
 Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
 Changes in v4:
  - New patch
 
- .../platform/x86/hp/hp-bioscfg/passwdobj-attributes.c    | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-index 3f4c45d9b..f0551b455 100644
+index f0551b455..a2f50ecbe 100644
 --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
 +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-@@ -60,7 +60,8 @@ int hp_get_password_instance_for_type(const char *name)
- 	return -EINVAL;
- }
+@@ -74,7 +74,7 @@ static int validate_password_input(int instance_id, const char *buf,
+ 	if (is_current && !length)
+ 		return 0;
  
--static int validate_password_input(int instance_id, const char *buf)
-+static int validate_password_input(int instance_id, const char *buf,
-+				   bool is_current)
- {
- 	int length;
- 	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
-@@ -69,6 +70,10 @@ static int validate_password_input(int instance_id, const char *buf)
- 	if (length > 0 && buf[length - 1] == '\n')
- 		length--;
- 
-+	/* An empty current_password clears the session password */
-+	if (is_current && !length)
-+		return 0;
-+
- 	if (length > MAX_PASSWD_SIZE)
+-	if (length > MAX_PASSWD_SIZE)
++	if (length >= MAX_PASSWD_SIZE)
  		return -E2BIG;
  
-@@ -97,7 +102,7 @@ static int store_password_instance(struct kobject *kobj, const char *buf,
- 		id = get_password_instance_id(kobj);
- 
- 		if (id >= 0)
--			ret = validate_password_input(id, buf_cp);
-+			ret = validate_password_input(id, buf_cp, is_current);
- 	}
- 
- 	if (!ret) {
+ 	if (password_data->min_password_length > length ||
 -- 
 2.43.0
 
