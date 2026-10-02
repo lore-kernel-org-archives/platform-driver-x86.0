@@ -1,81 +1,81 @@
-Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
+Received: from mail-dl2-f12.google.com (mail-dl2-f12.google.com [74.125.229.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FDA21ABBB
-	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2026 00:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10B245020
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2026 00:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.140
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790900330; cv=pass; b=bZZzjBcQ8xZVYb39bLWUZvd/NvSNBBczhlEwOLd+JQSCsm3aGJoBoNzMjszwlG4r1yKHMeBS/BiI9XKckYyX9CchGtBjRnsRZFbZEXoNvPa2fIJX8uKM3dFHBAgkCFb9bfG2gdKq864trZLtQ7k3LvEhcsOxUXSa/ggJ+NRj3E0=
+	t=1790902310; cv=pass; b=W0BCW+TnHcgOr0Z1a+oS12Gg3eQcfgH6ijhm2D2KTApbdHkneHiAGV0OW7SLBYkVY+F4QQsSXA95trALEgd70G74Fwf2UYF0VXFczw1ttcrl83uzJ53/pzsC3ecLRvx/hz0DVwofdNu95TqtfMUXG4Dg/kNyi7sc2BKJ0iXycoM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790900330; c=relaxed/simple;
-	bh=6sbu0sY8fAfvoxnypyvSnMCkfcYxT0uZkAsuQHDBdqg=;
+	s=arc-20240116; t=1790902310; c=relaxed/simple;
+	bh=9QQqHOadwXuusF7gU35Z6uz7wb0aFhZEe5rXnNisqoI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tEHpGeWy9K7vM71PI5CbgjgKKJ1fW+bto01R5xcGqgc6Ilc5yDqtuKafc0ZTbqoX+29WeSy2+JeOfQ7hf/MZYBW/wkRfZXKPbcQpMGQk+fpZg4oag/R0HNqoOaWgvrlU/qKv95zCLHtjQmwEwG08kwphCj0gxE8QH1OpPq+17Aw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZGUd2q2N; arc=pass smtp.client-ip=74.125.82.181
+	 To:Cc:Content-Type; b=bIn75ppvI+KITO5B4Q+Xb3bCWoSoLim3I9Aq03JbjLdQbq0nTpmdIG9NAKnji2KM9hermuPx7yCBE6kASiw9YOK9TIeTTliNsQnjGC9gd0+ELmZ78ZQipGiZfIa+TbBOJMw3JeOx5mWZGm9WKPvbW4nQ4QfpKt6CBuheG58G7Gk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DGlBSW6t; arc=pass smtp.client-ip=74.125.229.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGUd2q2N"
-Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-3410209aa6aso784979eec.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Oct 2026 17:18:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790900328; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGlBSW6t"
+Received: by mail-dl2-f12.google.com with SMTP id a92af1059eb24-142dd046b87so5645405c88.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Oct 2026 17:51:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790902308; cv=none;
         d=google.com; s=arc-20260327;
-        b=ELm76vB3bOpcNIGt6j4MmSN0D+xf+D+Fn/BozwRq4+mStHyTsHOECpFpXAUlEjhkfN
-         PcWC6bRJf8X+gX6yZSVdSDGuJWNwvytd+NWuEmEhe30orHEeIW7dlw5YehSq1mRtvrBJ
-         C4vjJBTvNELLJFSCCtuREUUPijRqq6Af+mkKWv8p5tyNkhQZbkhAOWMON9J413R8Flbx
-         obzmho+fM3gsqo/z9yIODR9AwgMWRI4Yb8XR9C1xA4WFoBT5cehEZv2rwglA3C/z4x0r
-         LzjbsXXPRfu2P/np7vGnYscART21vtqJOYABK3LQGbGz/wbeenpbaosw6jSkmz3ti9DR
-         cMhg==
+        b=MSddVnrJhoa9XZnkCvs/k3IyazV6ksaFD3gNzMysp8aqeGioOhinGiAQ3VpzGr6bcm
+         IZ3+bb2EL3fMidSbU3xrWJu1okDH28LPR4dBzSbbdraaonkZ6uB8IvDjuUaq5Lq6zJ11
+         7npj5x8ut7edyWsTPR1b3D5SKTBimcg34JoeZwQX4vKjPdHwh+57SamfU3IHeaXArsgy
+         wzsrQJ+YdR3Tgs0XjxH8S6AL1+/yVu+Y+CCqI10+CGx4Oso30kSMyhifOHR5rziY54EZ
+         tD0NQ6roQXYuT411kbLIMJsxLAcwNPyvq+GWCbhG9nEFK+3eVfIu9ylPRnTOtHAcF7Yc
+         nRvg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=U+gjR5d9LLILgvkbyeqJF1PEcd50LLSKmsqYOAIF/7I=;
-        fh=TGPR/bHWRZ8qNjX7TClg0MwtcSnG9zZ1wVzRdBzYe8o=;
-        b=ftm5g9CInW2pLQxmDNDVhNitYPkn4cekU4qMTAZgTvrDX+MFne7JezS//ogkk/GZNP
-         H7LafNn2ToeQVC+JB2rzE7TbrtPRiV9AILEsu6NMp2j8PHRfgv/P7jU8bkUQR3psQE8l
-         Dv16Hz9bVb9mHgFbq72ZCnoITz2ezkcu+LW5YNNo+igp7X6zCfOUTV7vfsSekApiodgk
-         XVpZSvKH2mRi2EQvw6+szbunmwFrH/sLb/hOgWHIYCbaMKl6vGGxB7h613id07Dz0tXp
-         +zMK/JTnkRWY+Qx3r1ysuZmRSb7LDj/UMEDqmuZIAhlEjhMs+pT1A3skCBUzpcyZW0Ei
-         L1Tw==;
+        bh=sE/CuYpD2omdv56O8W5E92PUkQBPf5btg8nJi2MeDfM=;
+        fh=4sYtVjLJBnrEE4r4ZH11p4l6Rpif/Xkj85BG3wxqs9M=;
+        b=XIRCxRzOKPgAtfIVjUoyoH7a74YTmcLmYgL3j2mgncg8WntvXJcez2ttvmyylJVX40
+         d9FgrFifQwPFy0ckRGDO9dEgBHA6VQ8Q8ZQBnEDVffDMMIOjFyja1AVrP+2YpSHaTlix
+         ubmtYoZEeSDYdV9s959OwIGkP+C/uB2TR0Y7V86Xa3ZOdq9kduKQqsBySfrwoh2RivUn
+         xbRzQNUqTPPd/Jcj6pS22s34l1KUpM5HWFgjHDzApmfQFIFWatfCQRaw3qUJCKX8a1eC
+         xG/xV9MH/iybHh6rlQ34P2JIATpI9OMvGsDkqB0izCmrQ7/uAybgQr1Bq+QvzZjZAmC4
+         w/qw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790900328; x=1791505128; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790902308; x=1791507108; darn=vger.kernel.org;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=U+gjR5d9LLILgvkbyeqJF1PEcd50LLSKmsqYOAIF/7I=;
-        b=ZGUd2q2NAopP3dNLjqH/et03XtbSgoY7G+++oT4lzDfgEHLPgM/GASwbVHBvHLl54O
-         qF1u8PXeGytf1uqoiqJwztQm8xZYfQdept3wBPz1PaaEZpwBtV8zbxgUTHd4yyqdb0x5
-         FqjjfFmAmFX0OwA943fK2I3xt1n6zY2QrUc7xo+hu7Dl9EQNFpyYetymgXDKMJFwULAp
-         yRuHxK4FzMYUr1Xtlzil5hTNcnqOCNMsOKog+IdsrFqGPu3h9v9AAH+YE0p1X8SxoiuX
-         DNCittCI41FsRbhQaeEAAiGmENLdDsPQiAvTg+8vvF6f7hghbGxAdQoMSS1WiwXMVE+u
-         wKIQ==
+        bh=sE/CuYpD2omdv56O8W5E92PUkQBPf5btg8nJi2MeDfM=;
+        b=DGlBSW6tbtzm8scziDGC/fo36r5objBX3C7/2/p/rD54/k+e06GxRfeUvRoK8UfWqW
+         bLS6V1X4yDLuUUU/N47Jk00H7ciXYSmw9GjYP3YSZFVWlZFhAPNU0ahEq2kLSMBZAEAA
+         QmTYcnKs2rFSEJPv6VueJRRXPLlbrVRbw4Q9hvo6cj6uHt2cbCuB1IbzrjGAEjQn91Xb
+         9INTCTyT1xL0jKtkoUJhKMCy4bzcznRDVmE0h7yMx6NbvNw2XYxoEuMmyGNjeF2xehIU
+         Q93GL8RxAY0+8Yss0tyt2F0Oxamk4E4OIlFLzeBydvfyawPSXlzxwfKRJJtR63GXwkLM
+         RqOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790900328; x=1791505128;
+        d=1e100.net; s=20260707; t=1790902308; x=1791507108;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=U+gjR5d9LLILgvkbyeqJF1PEcd50LLSKmsqYOAIF/7I=;
-        b=MDxWkHhsXf5KxefvA8bXQrkb1yAWgRMCQ10vd5ow/GNE9Niuni3vZflXneOmv1iqfL
-         Vdy5lTIlwlKo9HpdZfPFfyZCtppugqTAAttNJ/3DICpAzkw5Va1zs6pgW3LcvwJCuwLt
-         FKGK4LupyYHfdS8bUPEnaQmPOAq8WT0kqggy4v72/eL4Qewe3n8p1musgas6Ls+E3oBx
-         dNQrbHC6+h9LH5T7HzNKMhCgI5HuGygAbdgM1KsxPRdBJkhOI1BKpG0Ge/LyUwprG9N6
-         cVOoBe35sZKRRwNY2L+L6VWg7le0dkgVk0lqCX5NxpZ8gg6e3c1HPfjDmXNonFKpT6Go
-         hkWg==
-X-Forwarded-Encrypted: i=1; AKwUvByzlIViBhec2sww14xylODHFF+FeMIpYQGC/AsS57ZA8LQNBworIOVJCLMXzoG9C/74ZEHxfcz4x3BQzKerlxjTbf+5@vger.kernel.org
-X-Gm-Message-State: AFuF++nOqtZX46nyqXzPdJqoPeJT3RSahAL7esC4GS7wZMoWXbsR+3WF
-	pty1yA4Ut7vZf8fT6rhnM7ToIQboqjKve1xXaK5dSlS9GGM+xFE2vTIzh6hpDwRoWZ3vh9WZKmj
-	I5cHvZWB7iYM7MxNTIYto4pUUMtvVUro=
-X-Gm-Gg: AYBFou2swcebBpaBgNRi/PmwSByoTfHi1LEZbw4LYSFmr0mfl4tvplu8go6qthCIFuH
-	RRw5e2w81JoMDhWP+TUEJ8/1LUMSNBkjy9tX3AjwKpj855OAoXu8gEtJ2GUNHuB6dIUIjLliTsy
-	9i3GwsX2BrrfyYUtY/RAG+le8b8c6g3bRG1Qyu1zCrEuBXjiBfOAhrALsmpmJ4W2oYSpt50sqqd
-	BLR2aCxJeEIEhUP0Thd0SZ7O2HMD04nao6pK11b2HcuxljgOyLW57SmXVS7cCzEmD9c7YH8Ug51
-	1FTgJsQTNJRLmHUpUZdFuW5077rS2lvFVfXsn3OvpSuhKuOO9sn2Bf7rbyHfi6SgXzJ455UyTrI
-	ih1eC+OkcVO1sacDmdLxlSIyxjWSxP5SWkqu3pnE=
-X-Received: by 2002:a05:7023:a56:20b0:148:ece:8cc3 with SMTP id
- a92af1059eb24-14dd1c5188fmr4180886c88.24.1790900327522; Thu, 01 Oct 2026
- 17:18:47 -0700 (PDT)
+        bh=sE/CuYpD2omdv56O8W5E92PUkQBPf5btg8nJi2MeDfM=;
+        b=y9SFvjHB4J+WW7M85qAkEnbV/NNZLQMOyJ6EszQyT51hmHl8sZ0haoFk+t+0cuIB3g
+         t+Bj4HijwCNhViaZ9/cotR/Y++CJEorJ30413eM9/Qx3wZMqV2IV8gzJzc2I/k6TFrlt
+         4By6PxwQUF7xQCWpIe0fLMdEqP00KwDHhM+QJKhRetqfelhFbHIjmeSNVj+jRLn85Xda
+         hiAVjY3hTIxMlXb/IuQDicXrpkrz58y+8Rd8/VqsFlbuK5ARLEn+fek6TNDW3syxco1f
+         f82qe5pLM3qHAll1aDUhcLZWOTlBkU9EFcY2Ol/SQSOf19vHq8p8e/tIdt8s5QMKoyAl
+         7Wag==
+X-Forwarded-Encrypted: i=1; AKwUvByVy4V3x+s7SmYn8Rxr+DGGLQwA/aHU18X2qaFJQ4g5EspWiRVjEZutQfHxZdZJ29rJVyMUR4lLPPdqoaSja8fub/XU@vger.kernel.org
+X-Gm-Message-State: AFuF++m8P2mBhRV1bWaVExGGuqf6xifwbL1zkQ+n19CNwIofUeceZlZh
+	0X0GsMWeD8KuX0woHBv7+N5lktaB2zi/5ru/45LDp4F2VyJNE0t9B/Su0623wPYaBwSbSd7XsaE
+	2Fyzh4jGM8AXQ1/c0C8M4Tio8L+JP8Ro=
+X-Gm-Gg: AYBFou1TjB5/9any97PYCV4GGe9wNvJsBZA04LLhUn2W6cZG+Zq4RThv/YFFSOp6661
+	a1lHrl9KyBOw8z1oiIl6fKYQkYnDIIUYV41fuaqGv7HoV+sWQnCpweQTXdXhJToItzjgp/nK1PQ
+	/cmfKFZZnoyPkWondmjnEGIPIsOPtX7aAvNnWb/pGoU2jyc/ecjFwPlQyOg13cYYG+xr0/twT1C
+	/K0v52ihD2Lch9OYPx7WAAyidX9KpN7KeqPuTohVSUxtQn3aV7CEYkqDRrNnCvOq7tR+zY3Jf+1
+	Khy05nzY0RdtyN7Ms8C/yjHKFnMO6OcQ4FaTvIaW8IpwSzx29EHNWXOxEpxF9I3oixlW8aIys5r
+	H/XEA9gayhgmeRvOfO2pSWN7Dq1v5EZu1Xmyfiho=
+X-Received: by 2002:a05:7022:b053:20b0:143:8865:cc7 with SMTP id
+ a92af1059eb24-14f5b51545dmr1167883c88.21.1790902307643; Thu, 01 Oct 2026
+ 17:51:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -83,12 +83,12 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260929134503.17249-1-qby140326@gmail.com> <20260929134503.17249-6-qby140326@gmail.com>
- <20260930015058.3076905-1-uselessfire@gmail.com>
-In-Reply-To: <20260930015058.3076905-1-uselessfire@gmail.com>
+ <20260930015058.3076905-1-uselessfire@gmail.com> <CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com>
+In-Reply-To: <CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com>
 From: =?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>
-Date: Fri, 2 Oct 2026 02:18:34 +0200
-X-Gm-Features: AclHuK82qn9R_xwvmj6KBKMulEpb6kdbCvJRMp-Gm_dzPivtA15vWJx4VT7oIT4
-Message-ID: <CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com>
+Date: Fri, 2 Oct 2026 02:51:35 +0200
+X-Gm-Features: AclHuK8cR2FAAtPPVrY8Kiipfv2sKqbjaHguEsz76PnmybJp07-9EQAMJkpjaMY
+Message-ID: <CAObHBTxHQDfVH8Su1DLABtC5uUsAGBBk=KvcCOvtTs5gMGamnA@mail.gmail.com>
 Subject: Re: [PATCH v6 5/5] platform/x86: bitland-mifs-wmi: Add per-machine
  ops table
 To: Anton Karasev <uselessfire@gmail.com>
@@ -98,215 +98,115 @@ Cc: qby140326@gmail.com, ilpo.jarvinen@linux.intel.com, hansg@kernel.org,
 	ericted8810@gmail.com, chris@miget.com, matias.civadda2342001@gmail.com, 
 	btx342@gmail.com, wleizc7319@gmail.com, wolf109909@outlook.com, i@rsplwe.com, 
 	bozhenpeng93@gmail.com, martiya.ar@gmail.com, aleksejirlik@gmail.com
-Content-Type: multipart/mixed; boundary="000000000000da9bfa065cd0799a"
+Content-Type: multipart/mixed; boundary="000000000000e0cfcc065cd0ef84"
 
---000000000000da9bfa065cd0799a
+--000000000000e0cfcc065cd0ef84
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Anton,
+Follow-up to my own mail: I have now run those values rather than only
+reading them out of the tables.
 
-> The Pro 14 2024 (TM2307) is built on the same platform (Xiaomi's
-> downloads for both, the BIOS included, are filed under one platform
-> name, N56N57) and may behave the same; I cannot verify that.
+Built current pdx86 for-next with Chris's GET-only function-id change
+and balanced 1 / quiet 2 / performance 3 / full speed 4 on top. All four
+profiles apply and read back correctly, checked against the EC register
+each time:
 
-I have a TM2307 (XIAOMI / "Redmi Book Pro 14 2024", BIOS RMAMT4B0P0B0B
-06/10/2025, bios_release and ec_firmware_release both 1.11 -- the same
-releases you report for the TM2309). It matches your machine on every
-point you listed, checked against the ACPI tables:
+  low-power            -> QFAN 2
+  balanced             -> QFAN 1
+  balanced-performance -> QFAN 3
+  performance          -> QFAN 4
 
-- Same method and table: \_SB.PC00.WMID.WMAA in the SSDT with OEM Table
-  ID XMCC1806.
-- Same commands implemented: 0x08 (GET and SET), 0x0a, and 0x10 (GET
-  subcommands 1-3, SET subcommand 2 only). Everything else answers
-  0xE000, including 0x0d, 0x13, 0x14 and 0x16. A GET of 0x0a echoes
-  FUN3 back and answers 0x8000 whatever the subcommand, as you saw.
-- NTDP maps QFAN to ODV1 identically: 3 -> 1, 2 -> 2, 4 -> 4, 5 -> 5,
-  6 -> 6, and everything else -- so 0 and 1 -- to 0.
-- SET fn8 writes the value into QFAN as is, with 5 and 7 going to SMMD
-  instead.
-- The SET branches never fill in the function id. All five FUTR
-  assignments in WMAA are in the GET branch. So "Detect failed function
-  calls" returns -ENOMSG for every SET here too, and Chris's "Only check
-  the function id of GET responses" is needed on this board as well.
-- 0x10 subcommand 2 is the LONL charge-protection bit here too: SET sets
-  bit 0 for the value 1 and clears it for anything else, reporting
-  0x8000 either way. So "echo fixed > kb_mode" is 0x10/2 with value 0
-  and turns charge protection off on this machine as well. Agreed that
-  kb_mode must not be exposed on these boards.
+All three power-profiles-daemon profiles work as well, so the desktop
+slider works end to end on TM2307.
 
-One place where I think the data differs, and it matters for the entry.
+Two things fell out of that:
 
-Your table lists 0 and 1 together as balanced. That is right for ODV1 --
-NTDP maps both to 0, same as here -- but they are not interchangeable at
-the EC fan level on this board.
+- Without Chris's change every one of those writes fails with -ENOMSG
+  here, exactly as you described, and with it all of them succeed. So
+  that is a Tested-by from a second board if it is useful.
 
-There is no tachometer to read (0x0d unimplemented, and no tach byte
-anywhere in EC RAM), so I measured cooling rate instead. Heat the package
-to 80 C, drop the load, hold QFAN fixed, and record how far the package
-temperature falls over a fixed 150 s window. PL1 and PL2 both pinned to
-35 W so the ramp is identical between runs, any fan daemon stopped, run
-order shuffled, QFAN read back every sample.
+- No machine-specific capability check is needed on this one.
+  WMI_FN_SYSTEM_AC_TYPE is unimplemented, Armin's work reports that as
+  -EOPNOTSUPP, and bitland_pp_check_capability() already treats that as
+  "skip the check". The stock one is fine as-is.
 
-  QFAN  n  mean drop  sd    range        end temp  skin TSR3/TSR4
-  0     4  15.2 C     1.48  13.0-17.0 C  63-67 C   49-52 / 50-52 C
-  1     4  29.5 C     1.12  28.0-31.0 C  50-52 C   44-46 / 41-42 C
-
-From the same 80 C start at the same power, mode 1 sheds about twice the
-heat, and the two ranges do not overlap. The skin sensors say the same
-thing independently: the chassis ends 8-10 C hotter after a mode 0 run,
-so the heat is staying in the machine rather than being exhausted.
-
-Caveats, since this is a proxy and not an RPM reading: n=3D4 per mode; the
-shuffle happened to put three mode-0 runs together and heat soak is
-visible within them (16 -> 15 -> 13 C as the skin climbs), which is
-inside the quoted sd; and a time-to-threshold metric I also recorded did
-not separate the two modes at all, so the fixed-window drop is the only
-thing I am claiming. Raw per-run CSV attached if you want to check it.
-
-So I would suggest an entry for these boards uses balanced =3D 1 rather
-than 0. Same policy, different fan behaviour -- and 0 is exactly what the
-current bitland_ops map writes for platform_profile "balanced", which is
-how this started for me: fans effectively idle until the EC's own ~100 C
-threshold.
-
-Happy to test patches on TM2307.
+So the TM2307 entry comes out as just a mode map plus a DMI match.
+Attached, against the v9 ops table and checkpatch-clean, in case it is
+useful to have in hand while you write the TM2309 one. I will resend it
+properly once that series settles -- posting it now mainly so the values
+sit somewhere concrete, and Mingyou can fold it straight into v10 if
+that is easier than carrying a separate patch.
 
 Thanks,
 Milos
 
-On Wed, Sep 30, 2026 at 3:51=E2=80=AFAM Anton Karasev <uselessfire@gmail.co=
-m> wrote:
->
-> Hi,
->
-> Data for the per-machine table from a Xiaomi Redmi Book Pro 16 2024
-> (DMI: sys_vendor "XIAOMI", board_name "TM2309"; BIOS RMAMT6B0P0B0B,
-> bios_release and ec_firmware_release 1.11), the same model as in
-> Martiya's report. RMAMT6B0P0B0B (August 2025) is the latest BIOS Xiaomi
-> publishes for this model, so this is what an entry would be written
-> against. Its values match neither the Bitland defaults nor the Redmi map
-> proposed in v5 6/6. The full acpidump is attached to bugzilla 222062:
-> https://bugzilla.kernel.org/attachment.cgi?id=3D310971
-> The WMI method is \_SB.PC00.WMID.WMAA in the SSDT with OEM Table ID
-> XMCC1806; QFAN and NTDP are in the DSDT.
->
-> Mode values
-> -----------
->
-> WMAA stores the value written with WMI_FN_SYSTEM_PER_MODE in the EC
-> register QFAN as is (5 and 7 go to a separate register, SMMD, instead),
-> and NTDP in the DSDT maps QFAN to the DPTF variable \_SB.ODV1 (odvp1 in
-> sysfs) that thermald --adaptive uses to pick the policy from the GDDV:
->
->   QFAN   meaning                          ODV1
->   0, 1   balanced (Fn+K sets 1)           0
->   2      quiet                            2
->   3      performance ("Turbo")            1
->   4      full speed ("Geek")              4
->
-> GET returns QFAN for 1..4 and 0 otherwise (so 0 after a SET of 0).
-> Fn+K on this model cycles 1 -> 3 -> 2.
->
-> I tested this with a local build that maps low-power/balanced/
-> performance to 2/1/3: power-profiles-daemon power-saver, balanced and
-> performance give odvp1 2, 0 and 1, and thermald loads the matching GDDV
-> targets (PL1 limits, TCC offset), both on AC and on battery.
->
-> On the DMI match: the v5 6/6 match on sys_vendor "Redmi"/"TIMI" would
-> not cover this machine, and performance =3D 0 from that map is balanced
-> here. The REDMI Book Pro 16 2025 in Aleksey's report also has
-> sys_vendor "XIAOMI" but uses different values, so an entry for this
-> model has to match board_name "TM2309". The Pro 14 2024 (TM2307) is
-> built on the same platform (Xiaomi's downloads for both, the BIOS
-> included, are filed under one platform name, N56N57) and may behave the
-> same; I cannot verify that.
->
-> Capability checks
-> -----------------
->
-> a) Performance on AC and on battery. WMI_FN_SYSTEM_AC_TYPE is not
->    implemented on this BIOS, so with Armin's "Treat
->    WMI_FN_SYSTEM_AC_TYPE as optional" the capability check passes on
->    AC. The write itself is still reported as failed here, though:
->    WMAA's SET branches set only the return code and leave the function
->    id at 0 (only the GET branches fill it in), so "Detect failed
->    function calls" (23cc56f6dea6 in for-next) returns -ENOMSG for every
->    SET on this BIOS, although the firmware applies it -- the same as
->    Chris reported for the Book Pro 14. I checked it with the for-next
->    version of the driver built for 7.2.7: every write of low-power,
->    balanced and performance failed with -ENOMSG while QFAN changed to
->    2, 0 and 3; with Chris's "Only check the function id of GET
->    responses" on top, all of them succeed.
->    On battery, power_supply_is_system_supplied() still refuses
->    performance, although the firmware supports Turbo on DC: Fn+K
->    reaches it on battery, the GDDV has a DC Turbo target, and writing 3
->    on battery works (odvp1 1, thermald applies the DC Turbo limits).
->
-> b) Full speed. The firmware does not validate the mode at all. Writing
->    4 was accepted and applied (odvp1 4, thermald loads the Geek targets;
->    on AC the PL1 ramped towards the 90 W Geek maximum) both on battery
->    and on a 100 W USB-C PD charger, while Fn+K never offers full speed
->    in either case. It is not a charger thing either: with the stock
->    140 W USB-C charger (the EC register ADPW then reads 140, and GET of
->    command 0x10, subcommand 3, would report the adapter as not below
->    140 W) Fn+K still cycles only 1 -> 3 -> 2. So on this model full
->    speed is never offered by the vendor's own key, and whether it is
->    exposed has to be decided by the driver; the firmware will not stop
->    it.
->
-> Commands that are not implemented, and one that is dangerous
-> ------------------------------------------------------------
->
-> On this BIOS WMAA implements only command 0x08 (GET and SET), 0x0a
-> subcommand 5, and 0x10 (GET subcommands 1-3, SET subcommand 2 only).
-> Other command IDs answer 0xE000, among them everything else the driver
-> uses: 0x09 (gpu_mode), 0x0d (fan speeds), 0x12 (keyboard brightness),
-> 0x13 (AC type), 0x14 (fan_boost) and 0x16 (CPU temperature).
-> Unhandled subcommands of 0x0a and 0x10 mostly return status 0, and a
-> GET of 0x0a answers 0x8000 whatever the subcommand. The hwmon device,
-> the kbd_backlight LED, gpu_mode and fan_boost therefore have nothing
-> behind them on this machine; probing support at probe time would avoid
-> exposing them.
->
-> kb_mode is worse than unsupported. kb_mode_store() sends command 0x10
-> (WMI_FN_RGB_KB_MODE) with the mode in the first payload byte. On this
-> firmware command 0x10 is the battery interface, and subcommand 2 is the
-> charge protection (bit 0 of the EC register LONL, 80 % limit; reportedly
-> what Xiaomi's Windows tools toggle): WMAA sets the bit only for the
-> value 1 and clears it for anything else. "echo fixed > kb_mode" is
-> therefore 0x10/2 with value 0. I verified on this machine that it
-> silently turns off charge protection -- LONL goes from 0x31 to 0x00, the
-> charge limit in the EC goes from 80 back to 100 and the battery, which
-> had been held at 80 %, starts charging again -- while the firmware
-> reports success (0x8000). That was on 7.2.7, whose driver does not check
-> the reply; with 23cc56f6dea6 the write returns -ENOMSG instead, but
-> protection is off all the same. I think kb_mode must not be exposed on
-> these machines.
->
-> Once the generic profile table has settled I can send a patch with the
-> entry for this model and the kb_mode fix on top of it, and I am happy to
-> test patches in the meantime.
->
-> Thanks,
-> Anton Karasev
-
---000000000000da9bfa065cd0799a
-Content-Type: text/csv; charset="US-ASCII"; name="qfan-tm2307-mode0-vs-mode1.csv"
-Content-Disposition: attachment; filename="qfan-tm2307-mode0-vs-mode1.csv"
+--000000000000e0cfcc065cd0ef84
+Content-Type: application/octet-stream; name="0001-tm2307-ops-entry.patch"
+Content-Disposition: attachment; filename="0001-tm2307-ops-entry.patch"
 Content-Transfer-Encoding: base64
-Content-ID: <f_muq7rg070>
-X-Attachment-Id: f_muq7rg070
+Content-ID: <f_muq8xglt0>
+X-Attachment-Id: f_muq8xglt0
 
-ZHJvcF9jLGhlYXRfcyxtb2RlLHBlYWtfYyxwaGFzZSxzZWNvbmRzX3RvX2NvbGQsc2tpbl9UU1Iz
-LHNraW5fVFNSNCxza2luX1RTUjcsc2tpbl9UU1JBLHRfZW5kX2MsdF9zdGFydF9jLHdpbmRvd19z
-DQozMC4wMCwyMC4yLDEsODEuMCxjb29sZG93biwxLjAzLDQ2LDQyLDQ1LDM5LDUxLjAsODEuMCwx
-NTANCjI5LjAwLDE1LjMsMSw4MC4wLGNvb2xkb3duLDEuMDMsNDUsNDEsNDQsMzgsNTEuMCw4MC4w
-LDE1MA0KMTYuMDAsMTkuMywwLDgwLjAsY29vbGRvd24sMy4wOSw1Miw1MSw1MCw0OCw2NC4wLDgw
-LjAsMTUwDQoxNS4wMCwxLjAsMCw4MC4wLGNvb2xkb3duLDEuMDQsNTIsNTIsNTAsNDgsNjUuMCw4
-MC4wLDE1MA0KMTMuMDAsMS4wLDAsODAuMCxjb29sZG93biwxLjA0LDUyLDUyLDUwLDQ5LDY3LjAs
-ODAuMCwxNTANCjI4LjAwLDEuMCwxLDgwLjAsY29vbGRvd24sMS4wMyw0Niw0Miw0NCw0MCw1Mi4w
-LDgwLjAsMTUwDQozMS4wMCwyNy43LDEsODEuMCxjb29sZG93biwxLjAzLDQ0LDQxLDQyLDM4LDUw
-LjAsODEuMCwxNTANCjE3LjAwLDIwLjYsMCw4MC4wLGNvb2xkb3duLDMuMTEsNDksNTAsNDgsNDcs
-NjMuMCw4MC4wLDE1MA0K
---000000000000da9bfa065cd0799a--
+RnJvbTogTWlsb8WhIFZsa3UgPHZsa3UubWlsb3MuZnVuQGdtYWlsLmNvbT4KRGF0ZTogVGh1LCAy
+IE9jdCAyMDI2IDAyOjQ1OjAwICswMjAwClN1YmplY3Q6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBi
+aXRsYW5kLW1pZnMtd21pOiBBZGQgWGlhb21pIFJlZG1pIEJvb2sgUHJvIDE0CiAyMDI0CgpUaGUg
+WGlhb21pIFJlZG1pIEJvb2sgUHJvIDE0IDIwMjQgKGJvYXJkIFRNMjMwNykgc3BlYWtzIHRoZSBz
+YW1lIE1JRlMKV01JIGludGVyZmFjZSBidXQgZW5jb2RlcyBXTUlfRk5fU1lTVEVNX1BFUl9NT0RF
+IGRpZmZlcmVudGx5IGZyb20gdGhlCkJpdGxhbmQgZGVmYXVsdC4KCldNQUEgKFNTRFQgd2l0aCBP
+RU0gVGFibGUgSUQgWE1DQzE4MDYpIHdyaXRlcyB0aGUgdmFsdWUgaGFuZGVkIHRvCldNSV9GTl9T
+WVNURU1fUEVSX01PREUgc3RyYWlnaHQgaW50byB0aGUgRUMgcmVnaXN0ZXIgUUZBTiwgYW5kIE5U
+RFAgaW4KdGhlIERTRFQgbWFwcyBRRkFOIG9udG8gdGhlIERQVEYgdmFyaWFibGUgT0RWMToKCiAg
+UUZBTiAgbWVhbmluZyAgICAgICAgICAgICAgICAgIE9EVjEKICAxICAgICBiYWxhbmNlZCAgICAg
+ICAgICAgICAgICAgMAogIDIgICAgIHF1aWV0ICAgICAgICAgICAgICAgICAgICAyCiAgMyAgICAg
+cGVyZm9ybWFuY2UgICAgICAgICAgICAgIDEKICA0ICAgICBmdWxsIHNwZWVkICAgICAgICAgICAg
+ICAgNAoKMCBpcyBub3QgYSBtb2RlLiBOZWl0aGVyIHRoZSBmbjggZ2V0dGVyIG5vciB0aGUgRm4r
+ZmFuIGhvdGtleSBoYW5kbGVyCmVudW1lcmF0ZXMgaXQsIGFuZCB3cml0aW5nIGl0IGxlYXZlcyB0
+aGUgRUMgd2l0aCBubyBmYW4gY3VydmUgYXQgYWxsOgptZWFzdXJlZCBvdmVyIGEgZml4ZWQgMTUw
+IHMgd2luZG93IGZyb20gdGhlIHNhbWUgODAgQyBzdGFydCBhdCB0aGUgc2FtZQpwaW5uZWQgcG93
+ZXIgbGltaXQsIHRoZSBwYWNrYWdlIHNoZWQgMTUuMiBDIChzZCAxLjQ4LCBuPTQpIGF0IFFGQU4g
+MAphZ2FpbnN0IDI5LjUgQyAoc2QgMS4xMiwgbj00KSBhdCBRRkFOIDEsIHdpdGggbm8gb3Zlcmxh
+cCBiZXR3ZWVuIHRoZQp0d28gcmFuZ2VzLCBhbmQgdGhlIGNoYXNzaXMgc2Vuc29ycyBlbmRlZCA4
+LTEwIEMgaG90dGVyLiBUaGUgZGVmYXVsdApiaXRsYW5kX21vZGVfbWFwIHNlbmRzIDAgZm9yIFBM
+QVRGT1JNX1BST0ZJTEVfQkFMQU5DRUQsIHdoaWNoIGlzIHRoZQpwcm9maWxlIHBvd2VyLXByb2Zp
+bGVzLWRhZW1vbiBzZWxlY3RzIGF0IGV2ZXJ5IGJvb3QuCgpObyBtYWNoaW5lLXNwZWNpZmljIGNh
+cGFiaWxpdHkgY2hlY2sgaXMgbmVlZGVkLiBUaGlzIGZpcm13YXJlIGRvZXMgbm90CmltcGxlbWVu
+dCBXTUlfRk5fU1lTVEVNX0FDX1RZUEUsIGFuZCBzaW5jZSBjb21taXQgIkRldGVjdCBmYWlsZWQK
+ZnVuY3Rpb24gY2FsbHMiIHRoYXQgaXMgcmVwb3J0ZWQgYXMgLUVPUE5PVFNVUFAsIHdoaWNoCmJp
+dGxhbmRfcHBfY2hlY2tfY2FwYWJpbGl0eSgpIGFscmVhZHkgdHJlYXRzIGFzICJza2lwIHRoZSBj
+aGVjayIuCgpUZXN0ZWQgb24gVE0yMzA3IChCSU9TIFJNQU1UNEIwUDBCMEIgMDYvMTAvMjAyNSwg
+Ymlvc19yZWxlYXNlIGFuZAplY19maXJtd2FyZV9yZWxlYXNlIDEuMTEpOiBhbGwgZm91ciBwcm9m
+aWxlcyBhcHBseSBhbmQgcmVhZCBiYWNrCmNvcnJlY3RseSwgdmVyaWZpZWQgYWdhaW5zdCB0aGUg
+RUMgcmVnaXN0ZXIsIGFuZCB0aGUgdGhyZWUKcG93ZXItcHJvZmlsZXMtZGFlbW9uIHByb2ZpbGVz
+IHdvcmsuCgpTaWduZWQtb2ZmLWJ5OiBNaWxvxaEgVmxrdSA8dmxrdS5taWxvcy5mdW5AZ21haWwu
+Y29tPgotLS0KRGVwZW5kcyBvbiAiW1BBVENIIHY5IDUvNl0gcGxhdGZvcm0veDg2OiBiaXRsYW5k
+LW1pZnMtd21pOiBBZGQKcGVyLW1hY2hpbmUgb3BzIHRhYmxlIiBhbmQgb24gQ2hyaXMncyAiT25s
+eSBjaGVjayB0aGUgZnVuY3Rpb24gaWQgb2YKR0VUIHJlc3BvbnNlcyIgLS0gd2l0aG91dCB0aGUg
+bGF0dGVyIGV2ZXJ5IFNFVCBvbiB0aGlzIGZpcm13YXJlIHJldHVybnMKLUVOT01TRywgYmVjYXVz
+ZSBXTUFBIGZpbGxzIGluIHRoZSBmdW5jdGlvbiBpZCBvbmx5IG9uIEdFVCByZXNwb25zZXMuCgog
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvYml0bGFuZC1taWZzLXdtaS5jIHwgMjkgKysrKysrKysrKysr
+KysrKysrKysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9iaXRsYW5kLW1pZnMtd21p
+LmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9iaXRsYW5kLW1pZnMtd21pLmMKLS0tIGEvZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvYml0bGFuZC1taWZzLXdtaS5jCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L2JpdGxhbmQtbWlmcy13bWkuYwpAQCAtOTcsNiArOTcsMjEgQEAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBiaXRsYW5kX3Byb2ZpbGVfbW9kZV9tYXAgYml0bGFuZF9tb2RlX21hcCA9IHsKIAkuZnVs
+bF9zcGVlZCA9IFdNSV9QUF9GVUxMX1NQRUVELAogfTsKIAorLyoKKyAqIFhpYW9taSBSZWRtaSBC
+b29rIFBybyAxNCAyMDI0IChUTTIzMDcpLiBXTUFBIHdyaXRlcyB0aGUgdmFsdWUgc3RyYWlnaHQK
+KyAqIGludG8gdGhlIEVDIFFGQU4gcmVnaXN0ZXIsIHdoaWNoIGVudW1lcmF0ZXMgMS00OyAwIGlz
+IG5vdCBhIG1vZGUgYW5kCisgKiBsZWF2ZXMgdGhlIEVDIHdpdGhvdXQgYSBmYW4gY3VydmUuCisg
+Ki8KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYml0bGFuZF9wcm9maWxlX21vZGVfbWFwIHJlZG1pX3Rt
+MjMwN19tb2RlX21hcCA9IHsKKwkuYmFsYW5jZWQgPSAxLAorCS5wZXJmb3JtYW5jZSA9IDMsCisJ
+LnF1aWV0ID0gMiwKKwkuZnVsbF9zcGVlZCA9IDQsCit9OworCiBzdGF0aWMgaW50IGJpdGxhbmRf
+cHBfY2hlY2tfY2FwYWJpbGl0eShzdHJ1Y3QgYml0bGFuZF9taWZzX3dtaV9kYXRhICpkYXRhKTsK
+IAogLyoKQEAgLTExOCw4ICsxMzMsMjAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBiaXRsYW5kX21p
+ZnNfb3BzIGJpdGxhbmRfb3BzID0gewogCS5oYXNfZnVsbF9zcGVlZCA9IHRydWUsCiB9OwogCitz
+dGF0aWMgY29uc3Qgc3RydWN0IGJpdGxhbmRfbWlmc19vcHMgcmVkbWlfdG0yMzA3X29wcyA9IHsK
+KwkubmFtZSA9ICJSZWRtaSBCb29rIFBybyAxNCAyMDI0IiwKKwkubW9kZV9tYXAgPSAmcmVkbWlf
+dG0yMzA3X21vZGVfbWFwLAorCS5jaGVja19wZXJmb3JtYW5jZV9jYXBhYmlsaXR5ID0gYml0bGFu
+ZF9wcF9jaGVja19jYXBhYmlsaXR5LAorCS5oYXNfZnVsbF9zcGVlZCA9IHRydWUsCit9OworCiBz
+dGF0aWMgY29uc3Qgc3RydWN0IGRtaV9zeXN0ZW1faWQgYml0bGFuZF9taWZzX2RtaV90YWJsZVtd
+ID0geworCXsKKwkJLyogWGlhb21pIFJlZG1pIEJvb2sgUHJvIDE0IDIwMjQgKi8KKwkJLm1hdGNo
+ZXMgPSB7CisJCQlETUlfTUFUQ0goRE1JX1NZU19WRU5ET1IsICJYSUFPTUkiKSwKKwkJCURNSV9N
+QVRDSChETUlfQk9BUkRfTkFNRSwgIlRNMjMwNyIpLAorCQl9LAorCQkuZHJpdmVyX2RhdGEgPSAo
+dm9pZCAqKSZyZWRtaV90bTIzMDdfb3BzLAorCX0sCiAJe30KIH07CiAK
+--000000000000e0cfcc065cd0ef84--
