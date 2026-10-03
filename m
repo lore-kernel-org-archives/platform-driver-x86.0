@@ -1,100 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89307243956;
-	Sat,  3 Oct 2026 20:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6876C253340
+	for <platform-driver-x86@vger.kernel.org>; Sat,  3 Oct 2026 20:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791058498; cv=none; b=NgJcFW35tKwRwo9QyaCI5mLOcju1qcAwHyC1eeUV3B0fI0mLxfbZReGZlD67ToG7ftCdd6g7JzIwmdNErU4WHS/q2CWLCeOopB41oF3OgVXdWwmDEVR3l4MZ0cjxaVaj/bDqgkLEE8aZEEX1elwpZB1N0ocEWI5DjanjvAF4rxQ=
+	t=1791058917; cv=none; b=ZEYeDvZWtge9k+TIJC5ut918WIdx7WLQW0gKgBU4pQij6YVBR8BzYpzFwaep56zD4iBTxhGMzYks/DG17UKw31NI49e6Zq64bAI39I65lY6F/yahpBWiCQVRlP191FFNQLUr+t4Xfc902mNIvJPe01Xt61KejgdXKLsWxq+KGkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791058498; c=relaxed/simple;
-	bh=NSqc6QBhN3exxXHfH8Tav6Imgr0hJESeC+/6AgzrzrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u84sG77L6n+Z8+yA/n8v7ehPpBFga4LbYkKMphlZZSpKya5DhvH1ZTEBqGl10ZDB/bjC1ztqitRjDDitQD2gPs9pwl983IdSZZW+g/6dyWk8dQdiseObEvlX55IKdmLYLZmCG76Nz5PoFtiUAwEaE7SrxJsEsk2znTUEcD8s3Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q5F+IhIO; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1791058917; c=relaxed/simple;
+	bh=2u34eksTJWhirfi4M5VyDEfsUceCwd7uw1Xs3JVyAls=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KCQcQ1uq4AwEJbw3d9DGpFK161SUyJIxO3H+3A16odpDubShNgoHwORcEqLjmxVlV++FEBYYQiw+lpdRcUPAbyzlDWBBHDUw+dCZMVlBmC/Cl4MeIhSR5WFL9Lp8kWyIXoapY7Us+7qwG3NRK5L2q9bT+kBFUjc2IE/UIpbyg4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKfEU408; arc=none smtp.client-ip=74.125.225.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q5F+IhIO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791058497; x=1822594497;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NSqc6QBhN3exxXHfH8Tav6Imgr0hJESeC+/6AgzrzrU=;
-  b=Q5F+IhIOFs2MspTCPDAHog3zOZZ/oOWnjlCeDsIEZ7+KNZKIB3UOzZld
-   gSovnT+vjtN/t8X0/7O1N7Cs4jExcWJx0TdxxPGMou+JpfCIwH7ge4nSj
-   3j5uDKKr1ssLlS04kE3KzqvMqa4vOl1LcZKBevm84fZFLCkTcjp5toKRK
-   CK3pSvHLVFtncjhEP7NvzMc+trOxXptCAkRe2LWAmdXmRpydfgBk1qDeo
-   WXsgmxdmMlSLgQ+ClqshfRpjK5hqDYxs0hp7HnRIazXBP2iGIeIvxUk4M
-   55zSz9BqHiPoKW6m4893PfAaGgmw4dCk+HA2/vqHnY0gDlKcF/SWqB5Lw
-   A==;
-X-CSE-ConnectionGUID: dyAMKkz2TSOEGNcWQdtIiA==
-X-CSE-MsgGUID: XIj8Ya1TRLOj6mj3L4D09Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11924"; a="90816665"
-X-IronPort-AV: E=Sophos;i="6.27,138,1787036400"; 
-   d="scan'208";a="90816665"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2026 13:14:56 -0700
-X-CSE-ConnectionGUID: f5mP1bFsSLqhZNHsyPD1JA==
-X-CSE-MsgGUID: xTvsdTMURy2jTFm7GKjGhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,138,1787036400"; 
-   d="scan'208";a="280234090"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.78])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2026 13:14:54 -0700
-Date: Sat, 3 Oct 2026 23:14:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Muhammad Bilal <meatuni001@gmail.com>
-Cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v4 1/9] platform/x86: hp-bioscfg: fix OOB reads in
- hp_get_string_from_buffer()
-Message-ID: <asFiO0hjqzGdmAMn@ashevche-desk.local>
-References: <20261002191434.58529-1-meatuni001@gmail.com>
- <20261002191434.58529-2-meatuni001@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKfEU408"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f6350f91so220407f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Oct 2026 13:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791058914; x=1791663714; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=C75l2wsXWFqHqj6w9JaZEjjSQbkyybpKUQfglyD3Zx0=;
+        b=mKfEU408/R4DQSr3VCjM6QQXSSJwVHffiYXis2+lY/1tniotMiUiAmH14YG4yJRfqR
+         yC8OCyWxQprr2RlXdyhOdF6Q2A/qWXnjZQXQOOOdWbzjtPQGaji5fW2ZQXzglCrMibig
+         b1rQEIxHVLdxLllUGECEbObYSKuF3qXHSH64JFNWr0N6yhSp8GtbP0T4NgBMkjryxH3/
+         ncqBznGkC7vR2wcN/0xIs6cPF4s7NmvbKtad+XFJhP2GNlDn7JDpaucf1gec1BrIho1m
+         1k21WqO7ta7ECKB+ukoq5YPcDrNW6yEZ6JuUb9lf4desHXdbndYlwcgxLIWgbeFSp6aN
+         SmYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791058914; x=1791663714;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=C75l2wsXWFqHqj6w9JaZEjjSQbkyybpKUQfglyD3Zx0=;
+        b=EcT7ZtzTem4b8ObA2HYJXNgUshqQ7RjTs5R5RLzxrCVVmAZA2lHEkcLrRVggZhGHGS
+         Yr5g7TvQQJ5yqeSTyRIaURXzo5dXjoJ9iUfcL29t8foirLwuncKMwV6etT0x9j5B8nV+
+         XzPIswNYO8DPU82U/GJj1KYM0is3ZHaKTSq2jAE3sD3/AlAmlVyOd4muclNExu3z18n4
+         xYGcuJrQ2XZYQCYZ2kbNvNFgMn/Y1w+pTNuKhTL9FVRiQPEJgpvkmoYhMHl74bHbKYpy
+         fjXauXoJK2LWkMxoKQvUwhh+OmgvBQpdhV4ugpfll7aO0gvf16Yc7kM0NoS47ka/+a6B
+         tUcg==
+X-Forwarded-Encrypted: i=1; AKwUvByz2I7zBMnhM+17EVuLqKJZjEdciV5zVMgFJG+TFGLhtU7SLjVTTbOYYA+vavGq1gAiNT/OzAghFMhT6d0fnaqSf3Cr@vger.kernel.org
+X-Gm-Message-State: AFq9FYJEZRMI6EaaxGf0ZmkJWqGBELONzMqQUAJIK/yYH6s3+DkSYfBK
+	SaooTPSp/GMI6NCdnQ41gcafkb40cc+RAGfME6n/P4hEM//M5Mx4AQLU
+X-Gm-Gg: AYBFou3qRkDNZ55/rtBFDFkM2HPiuWocmuKhcJPZgfa2sbD6tLzdVBJp4rh5Nw9ghYG
+	X7crPzszA0A39MVtqU39DqUKbSEoO/yD8iS2rJZ6N/5WXXUj0gHFAisZXlDSnEf91tldTMs9a6u
+	qbTmA7xqQx1E0zVAeXv5AxrWbiMG6Vp2E824QfV1mswLlulaLk48cB5mwdfbp9M6/ejVM+VLGP+
+	luISSiwiylyRc4oAI9Ozz06Pmb6X4vF39LE9FOjAK9Zd4YSIyXZ+nXA6n6gFkcFa/GgknjcIDln
+	U138FqsM/m7i5sP6RjtfogMr1uLlTlbm4oYuZ1BspRDMKVjy/0bWtWfcglwLGS6DVplXz3e2Zlr
+	eFXjOco16wd1vJRWFFzGGqe4TtjbgPWjSIwB11kFkgTIz1YikQVAcOKMqKPaLYUEK+sIlVsb6Lv
+	dXWtzylE4CVFKp4K6qbuT4Iy7rZQ+O0tHK3szBJIIvRdoRKZOGaDmPGHhQylU3fYwFcrW9HRjBo
+	d44BQPLCvFw9oYY
+X-Received: by 2002:a05:6000:4905:b0:48c:50db:30bb with SMTP id ffacd0b85a97d-48c50db37b2mr1760785f8f.26.1791058913464;
+        Sat, 03 Oct 2026 13:21:53 -0700 (PDT)
+Received: from localhost.localdomain ([94.252.75.11])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-48b380facfesm15083316f8f.23.2026.10.03.13.21.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Oct 2026 13:21:52 -0700 (PDT)
+From: Oleg Keri <okerixx@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Abel Vesa <abelvesa@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH v5 0/3] platform/arm64: Lenovo Yoga Slim 7x Gen 11 embedded controller
+Date: Sat,  3 Oct 2026 22:21:40 +0200
+Message-ID: <20261003202143.4697-1-okerixx@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261002191434.58529-2-meatuni001@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 03, 2026 at 12:14:26AM +0500, Muhammad Bilal wrote:
-> The escape prescan loop uses 'size' as both its bound and its
-> accumulator, so each escape character found extends the loop and
-> reads past the end of src[].
-> 
-> Use the original u16 count as the loop bound. Also include the 2-byte
-> length prefix in the bounds check, pass the u16 count instead of the
-> byte count to utf16s_to_utf8s(), and advance the buffer by the bytes
-> actually consumed instead of the escape-inflated count.
-> 
-> Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.7).
+The Lenovo Yoga Slim 7x Gen 11 is a Qualcomm Snapdragon X2 Elite (glymur)
+laptop. It carries a Compal EF06 embedded controller on I2C at address
+0x70, which is the only source on this machine for the board thermistors,
+the fan tachometer, the keyboard backlight, Fn-lock, and the mic-mute
+and airplane-mode keys.
 
-...
+Patch 1 documents the binding, patch 2 adds the driver, patch 3 adds the
+node to the board.
 
-> -	/* Ensure there is enough space remaining to read and convert
-> -	 * the string
-> +	/* Ensure there is enough space remaining for the length prefix
-> +	 * just read plus the string data it describes.
->  	 */
+Why one driver
+--------------
 
-/*
- * While at it, fix the comment style for
- * multi-line comments. You can use this example.
- */
+The automated review of v2 asked for the hwmon part to become an
+auxiliary driver under drivers/hwmon/. The hwmon channels, the LED and
+the input device all sit behind one command mailbox and one interrupt,
+so the driver stays in one file, like huawei-gaokun-ec,
+lenovo-thinkpad-t14s and qcom-hamoa-ec next to it. It is documented
+under Documentation/ABI only.
 
+Notes
+-----
+
+Fan speed is reported but not controlled, deliberately - the EC enforces no
+thermal floor over a manual setpoint. Patch 2 has the measurement.
+
+Tested on a Lenovo Yoga Slim 7x Gen 11 (DMI 83QR, "Yoga Slim 7 14Q8Y11").
+
+Changes in v5:
+- Patch 2: drop the battery cell voltages. They live in an EC bank shared
+  with other EC activity, and 43-79% of reads failed the signature check
+  across runs; retries, a cache and a stale window only hid that.
+- Patch 2: fn_lock had the polarity inverted: 1 left the multimedia keys
+  primary and the Fn-lock LED off. SCUK bit 7 selects the multimedia keys
+  and bit 5 turns the LED off, as the vendor ACPI FNUS method reports it;
+  1 now means F1..F12, as documented and as in ideapad-laptop.
+- Patch 2: FIELD_MODIFY() for the backlight level; notify fn_lock when
+  the EC toggles it on Fn+Esc; Kconfig help updated; the ABI entry dated
+  October 2026 for 7.5.
+- Patch 3: pick up Reviewed-by from Konrad and Abel.
+- Link to v4: https://lore.kernel.org/all/20260922165737.260443-1-okerixx@gmail.com/
+
+Changes in v4:
+- Patch 2, after Ilpo's review: the missing includes added where the
+  symbols are used; the cache and stale periods defined in milliseconds
+  with the unit in the name and converted to jiffies at the call;
+  lockdep_assert_held() in the command path every EC access goes
+  through; each EC read checked right after the call; ARRAY_SIZE() for
+  the cell loop; MILLIDEGREE_PER_DEGREE from units.h; braces on the
+  multi-line returns; the ABI entry dated September 2026 for 7.4.
+- Patch 2: the i2c id was 20 characters, the size of i2c_device_id.name,
+  leaving no room for the terminator; now "slim7x-gen11-ec".
+- Patch 2: symbol prefix renamed from yoga_ec to slim7x11_ec, naming the
+  machine like the driver does. No user-visible name changes.
+- Link to v3: https://lore.kernel.org/all/20260921144953.15113-1-okerixx@gmail.com/
+
+Changes in v3:
+- Add the board DT node as patch 3. It was posted on its own [1], and a
+  node cannot be merged before its binding (Konrad).
+- Add the "Why one driver" section above.
+- Patch 2: name the driver after the module, and the i2c id after the
+  compatible.
+- Patch 2: spell out both SCUK bits the Fn-lock toggle moves instead of
+  the 0xa0/0x5f masks.
+- Patch 2: return -ENODATA for a thermistor reading of 0, as probe already
+  treats 0 as "not fitted".
+- Patch 2: ten tries for a cell-voltage sample instead of thirty.
+- Patch 2: include what is used directly, devm_mutex_init(), comment the
+  mutex, fix the address in MODULE_AUTHOR, say in the commit message that
+  results cannot be matched to commands.
+- Link to v2: https://lore.kernel.org/all/20260908183403.2107-1-okerixx@gmail.com/
+
+Changes in v2:
+- Patch 2: drop #include <linux/mod_devicetable.h>; <linux/i2c.h> already
+  provides both of_device_id (via linux/of.h) and i2c_device_id (via
+  linux/device-id/i2c.h), and the header is on its way out.
+  Reported-by: Uwe Kleine-Koenig <u.kleine-koenig@baylibre.com>
+- Patch 2: add "depends on INPUT" to EC_LENOVO_YOGA_SLIM7X_GEN11; the driver
+  registers an input device unconditionally, so a config with INPUT=n did
+  not link.
+- Patch 1: pick up Conor Dooley's Acked-by.
+- Link to v1: https://lore.kernel.org/all/20260908091752.5508-1-okerixx@gmail.com/
+
+[1] https://lore.kernel.org/all/20260914082950.9393-1-okerixx@gmail.com/
+
+Oleg Keri (3):
+  dt-bindings: embedded-controller: add Lenovo Yoga Slim 7x Gen 11 EC
+  platform/arm64: add Lenovo Yoga Slim 7x Gen 11 EC driver
+  arm64: dts: qcom: glymur-lenovo-yoga-slim7x: add the embedded
+    controller
+
+ .../sysfs-driver-lenovo-yoga-slim7x-gen11-ec  |  22 +
+ .../lenovo,yoga-slim7x-gen11-ec.yaml          |  56 ++
+ MAINTAINERS                                   |   8 +
+ .../dts/qcom/glymur-lenovo-yoga-slim7x.dts    |  12 +-
+ drivers/platform/arm64/Kconfig                |  23 +
+ drivers/platform/arm64/Makefile               |   1 +
+ .../arm64/lenovo-yoga-slim7x-gen11-ec.c       | 547 ++++++++++++++++++
+ 7 files changed, 667 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec
+ create mode 100644 Documentation/devicetree/bindings/embedded-controller/lenovo,yoga-slim7x-gen11-ec.yaml
+ create mode 100644 drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c
+
+
+base-commit: f0406245cb9855e6318335a8a223551354291a46
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.55.0
 
