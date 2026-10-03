@@ -1,77 +1,74 @@
-Received: from mail-pz2-f3.google.com (mail-pz2-f3.google.com [74.125.228.3])
+Received: from mail-pj2-f11.google.com (mail-pj2-f11.google.com [74.125.227.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1162363090
-	for <platform-driver-x86@vger.kernel.org>; Sat,  3 Oct 2026 10:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987873905EC
+	for <platform-driver-x86@vger.kernel.org>; Sat,  3 Oct 2026 10:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791021878; cv=none; b=tn2aNi9sbYEqRnOqqHKZ3s/x3VU0eEPYM/g546XsYKNszdvsXeBX8r2+vWBdfifFtTQeMkooG00Yi1+GcNwGHbpGRPg183kNNPES82/gIjvc8h78LOxzWY1fCSqw66yZsSDt29C7T5O3sVG4rzLSXOs6g5Bx0bOW1oX3JxWK2k8=
+	t=1791022808; cv=none; b=eAPILESiAo72zSTQaUEXUDOOhzkJydos9Lbqy7CVpoXnzQyeImLBoN6Te7w+BrNYyS1QArObXMZgyrzpUFJaAtoznlj8/DUvLziBejPaH176IcLN3kLhePI6HWrBUojmnqxdlPKKs8Y1Lq/WBfoMGqwBQM9dPADbnyNz5xQYnqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791021878; c=relaxed/simple;
-	bh=O4fhyAKEtLoyIjrYd1doUUUlI2ZyKNVlzH5Eu6cpoZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lyEIsrRmWdiBsTmxbUOoH3LjnfagSABilRArnFcnFgrq71VzNx80l+SzBFSyJ5Db7RQFyG1hlxdmAzPrjsuBjuYr3BVghe1mtYOr1Ql88vxXaT0cEPmiojJCPKbJdj4tIii9K99TOKEtlqdfBE2Ta74ZXEz8uV9a4FGqo6D184E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mP5aWTLn; arc=none smtp.client-ip=74.125.228.3
+	s=arc-20240116; t=1791022808; c=relaxed/simple;
+	bh=kgmg6SoIB/3yUf8ADJjOq9BtOHqc5NPV6pK4yi3t5dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MzvZajBW/oMjnvHqYsuc2KaY0l/dDmJY7+rymcTyp59TI34lSAioYaDNM+uzTg31HI/8hH/SV3r2E4Ko+lgdAdVnqtjlQ6vyo8amZkrvmxa8chk6CDw7D6fxvLr/g7z/e1XOA4k6e4lCE/r6fTs1f4tEdsDQE+WY8O1Xs/9pFLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJNikCHv; arc=none smtp.client-ip=74.125.227.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mP5aWTLn"
-Received: by mail-pz2-f3.google.com with SMTP id 41be03b00d2f7-cc78c03d45cso34342a12.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Oct 2026 03:04:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJNikCHv"
+Received: by mail-pj2-f11.google.com with SMTP id 98e67ed59e1d1-38de693676dso206082a91.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Oct 2026 03:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791021876; x=1791626676; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=IHYEahD+HEjWATdVIsFuXWmcHH7Pn8DgotCON/mJvLc=;
-        b=mP5aWTLnUR4giJM0Wv+HQ7BDprXNG94S/a7TP4df6Ec8WVyp9GUIpGtgoAnev18yKL
-         CxRLIO6PfLMhDMRZDEsB4WwBNnrYRIbs5TUJ3oE/6clu8IqGxqM3vInJ0aQUi8UwYOUy
-         uq0zzijuUJOTk4LjTreBroCMX6a+IKLrLrYawIreVhwLrGRBjdNO8GPtXz2hOfUKZxGD
-         nFnmtjDdEJoo1R4VUHEHTon6TEjyLC3Bsvc6oCBxYyuYnRLBXU/DswcPaZtpf4cz+6Qd
-         xubFuHv7O9u/PDDSn/afKff+Kkfpp6Rrr2bshC0V7shtGU8DCBMUvLfCbo4V2mnXAxDK
-         afZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791021876; x=1791626676;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1791022807; x=1791627607; darn=vger.kernel.org;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IHYEahD+HEjWATdVIsFuXWmcHH7Pn8DgotCON/mJvLc=;
-        b=PxLpBfXHsHd8wqBPRQmNXq2r0RRZJeVpkmSM2lTkwrwhM9smWwuGfd3LJW9m0MD0ZB
-         wRDLHnTTpuWEaqYSnphyo/4kqz3BlWDaewTw8F7sPI+QwlMaxGHxV5OAqirb9/wLkezE
-         MDKqAs9YgBV7VGO1pfOMJV0o5qPWFoGphl7k3FNReWt3RHLQWO4e5V3xxA+rOn2GZINn
-         T352Jw1Iedfb2yWvnHErV2o6tfxnAMBOJNA8ap/5+jwqNMjpTO0MgIc61+RJRK95Pha1
-         u6lWy2wyc+olDDMjgl88LQFW4+AiO5DGVHAGJ6AEbADfNH9PP3mGVNYLMxcraOMsPkYq
-         J0mQ==
-X-Forwarded-Encrypted: i=1; AKwUvByuM0gR/1nKp4cPZMCEQaOZi/OpsUl3qBlWaXhzx21J0KgjbqSRXeFzpOvW7VUrY2IBFGfnpG0HGUyCswpBnfsPAqGQ@vger.kernel.org
-X-Gm-Message-State: AFuF++laO52zAaZZaOq4/x6DflotGroD1ZnTijw7tWjXkqKNCRz9LjoR
-	moJdUioLu8P3g+syCfMgq5Sia5ujXCmmPJFA8KZ8VoPuXNDcc+AhqZ5O
-X-Gm-Gg: AYBFou1lYgXQO+w31oEwatjDjWu388cpdGXWIqSMLNRYMvAHUkbEV1Tn+cH9gDGbvkN
-	HaN66I63DwahEA2+R9TgLzDGEr5Ijoh8d61S5tB8VBMLfRkoVpLILihIZGVZ3rz4aOzR/VmMPkh
-	+rragzm38HHqZvSDnup77N2YuU/OpJDQig8p4bDL1b/5hfdQaXsLEIaARePWuWY1lp4UXUVh9Y1
-	pZplcZ9Obs9nuDX0RHvzX1pzBuJ0I3wX5ZcEO1Ubu7vkrUFQCUCl+V/nQaKdTz8xD+2leQ6/CpW
-	aCOjNCsqSDk+n9MbWlH4PTDQ/Zo9/3elGlMhqv7FUpYbL3aUckACjkNYrzavrtfw1fuUG0Z5l74
-	NHQ33q5N54U8K4XQItJzkXhWU5Qr3V9gAqMnzepjWtnaODDZ9W/m9+wCl86pmkqA4B096x8faMn
-	FCYIHVT01AAUDFm7C/q2FrB2LRUBq1gDKmvBIyHAu/Yjbg5ypA/57FqRboz6KEOfUVXrQEjBEXv
-	tM=
-X-Received: by 2002:a05:6a00:b50:b0:874:708d:b62f with SMTP id d2e1a72fcca58-88c628f240bmr1630063b3a.27.1791021875942;
-        Sat, 03 Oct 2026 03:04:35 -0700 (PDT)
+        bh=VRcw9YKb16RzMyTdR3AGPddXtl++CfcN70A3BsA75lk=;
+        b=GJNikCHvm/hgN4JYL/J5VdoFhDKnIsauSpAq10ZWfSNBcACmzoOe7oNx2+a0KDp2P5
+         0rejilcAKW2Nw3kUtNocBy/WFVPbJz7xwaLQ15rbgZqJgcFp5mP4S7TrDo1u6ApCb4Xl
+         6lmSXv1RWQ9nARipivTLHQxxWXEtdoM5NMbh95P4gc8KMUMPhFR1uQioK7RraL+HL0nR
+         cH+r1y3LThXHnoNQ0vfmS/0Y6tJibAcv5nSqFth949zQOdXTm784XTGRyYUMqBR0O5ew
+         t/QNdUySYUqy4mKcIYLfPdPzSe7ZlmbumnMX9ALYSHopMi25I2whRbfNVp6LfLGF70OD
+         O8rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791022807; x=1791627607;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=VRcw9YKb16RzMyTdR3AGPddXtl++CfcN70A3BsA75lk=;
+        b=j+k0w16IUpOz14KtiubG9L1A7tkhbIUJLWsTEt2rcKMuPbUHUZKg8ENHNb+wwOWfxI
+         QqvTXc5hptMTdLdMgnguI1+G74/nmNyYrmShLJ0fqvaNbUO5V2AI8t3MSifReesT6bfZ
+         XnxernjKxYwfnR0DuCxolFQzyxGorVUDVsb/5NIphNEP03MYjU1dPv1SoxAwlknHBdTi
+         NLbEfucVDtWoA9jl1UiPGgE9Kadqk1/fSe4f0FtYT5++V3VvimLVrb1QF8W+zjlW1jlq
+         4W18GcLGTnhVfO8xvauiZVJrVBfNLFv0mInbWpAssu9/W9UYzQ46qVR+iyjewUhRZWKu
+         ZLfw==
+X-Forwarded-Encrypted: i=1; AKwUvBwCRDmNywBpZ98BEaOS+OIRNqPDEr4MUQojWd8y90vNGIlNranCG5kGiwYbP+3MeqaGx5JY7yYIJGlWjgzkDEaYYlor@vger.kernel.org
+X-Gm-Message-State: AFq9FYJHPAhcXZtnILvOFJxfjPAGaC34F1zzxFDBHNW4ZMe/lgrRo446
+	tkjpd4/3cBbE2BMWx2sfyhtFQZ6VYwJoDzFjm7Qvm3VJrCEx70dEtGHARlWYx57HXOLUAQ==
+X-Gm-Gg: AYBFou2Q1f1NrlEK5t4dzeHVbGTbH2vSo3WruyYF0qYYqeTa4tw3ZmhvsU7Kl4E/KVp
+	DFwsktsKBgVbcFsQjFUcmLvNxnMz4jxFT+R25Nx+aLGML0XXoEanIvFV3ECYZBRV9hcOQO44dyl
+	JSPB6jM8TgfpQJHKZDRyk8T/hIi/4S/CWA3lrMje4xfcyyuflOsKJJo8XusopJQMKgfsQGefwoM
+	sPymrFxWPfGoi/ehxswN4PBhvKFns98PxU/Gp3IIYfrmTjPqpzQDmMV6b49qEWeas3ejP/O6+pS
+	/utCkyUEuxRixmoBP4BMJuTRxcQlqF694QXERj/TBkt4KekUEDA+v+ByxOhiFkZdz5hvLRgWmoY
+	JvbcXi5GAA7gFHtZUlvDNXLPXuziLMxOPEDY1IJ/RAH+iqPKvZYgCEhgOZdxbEvVTDfsjLXARsq
+	9kwa7JFOPy8FUMbf8TkQmVwJzQfwOMGpeNh62yMbTEFv1MIvuQ2ojuRRQPSTlTrHL/dy1J/cDQ5
+	47+BfIIyaKzig==
+X-Received: by 2002:a17:90b:3b4f:b0:3a7:9413:cfae with SMTP id 98e67ed59e1d1-3a79413ddb8mr898253a91.42.1791022806861;
+        Sat, 03 Oct 2026 03:20:06 -0700 (PDT)
 Received: from ThinkPad ([240e:46d:7b20:7df:1ddc:2f29:f17a:97e4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-88caf6b0bfdsm376019b3a.29.2026.10.03.03.04.30
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a78e61386csm2539110a91.17.2026.10.03.03.20.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Oct 2026 03:04:35 -0700 (PDT)
-Date: Sat, 3 Oct 2026 18:04:05 +0800
+        Sat, 03 Oct 2026 03:20:06 -0700 (PDT)
+Date: Sat, 3 Oct 2026 18:19:50 +0800
 From: Qiling Zhu <kmatzkaczor244@gmail.com>
-To: Ruslan Koreev <koreev.r@gmail.com>
-Cc: sakari.ailus@linux.intel.com, benjamin.mugnier@foss.st.com, 
-	sylvain.petinot@foss.st.com, dan.scally@ideasonboard.com, mchehab@kernel.org, 
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-media@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Marshall <pm@petermarshall.ca>
-Subject: Re: [PATCH v2 0/4] Lenovo ThinkPad X1 Carbon Gen 14 IR camera: ST
- VD55G1 on Intel IPU7
-Message-ID: <asDSmOu2NMD_SFnr@ThinkPad>
-References: <20260929092700.1776966-1-koreev.r@gmail.com>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Derek J. Clark" <derekjohn.clark@gmail.com>, platform-driver-x86@vger.kernel.org, 
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [BUG] thinkpad_acpi: intermittent boot hang in hotkey_poll_setup on
+ ThinkPad X1 Carbon Gen 14
+Message-ID: <asDVVtAXt8YVbZ3C@ThinkPad>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,97 +77,83 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260929092700.1776966-1-koreev.r@gmail.com>
 
-Hi Ruslan,
+Hi,
 
-I did some more testing and checked the saved logs from my original
-next-20260928 tests. The VD55G1 failure appears to be intermittent.
+I am seeing an intermittent boot hang in thinkpad_acpi hotkey polling
+on a Lenovo ThinkPad X1 Carbon Gen 14 (machine type 21V8A028CD).
 
-Today I managed to boot the original next-20260928 + v1 patches 1-3
-kernel into a state where the VD55G1 probed successfully again.
-`cam -l` showed both cameras:
+I originally encountered this while testing linux-next kernels for an
+unrelated camera issue.
 
-  1: Internal front camera (\_SB_.LNK0)
-  2: Internal front camera (\_SB_.LNK1)
+The problem has occurred with at least:
 
-I then ran the libcamera test you provided:
+  next-20260928
+  next-20261002
 
-  timeout 30 cam -c '\_SB_.LNK1' -C5 -s width=804,height=704
+When it happens, boot stalls and many udev/modprobe tasks end up blocked
+in async_synchronize_cookie_domain(). One of the blocked tasks had the
+following relevant stack:
 
-The camera was configured as 804x704 R8, but when capture started the
-same I2C failure appeared:
+  hotkey_poll_setup [thinkpad_acpi]
+  hotkey_inputdev_open [thinkpad_acpi]
+  input_open_device
+  kbd_connect
+  ...
+  tpacpi_pdriver_probe [thinkpad_acpi]
+  ...
+  thinkpad_acpi_module_init [thinkpad_acpi]
 
-  i2c_designware i2c_designware.1:
-    i2c_dw_handle_tx_abort: lost arbitration
-  i2c_designware i2c_designware.1: controller timed out
-  vd55g1 i2c-TBE20A1:00: Sensor reset failed -110
+The failure is intermittent. The same kernel can sometimes boot
+successfully, while another boot hangs.
 
-The IPU6 ISYS path then reported stream stop/close timeouts and failed
-to start Intel IPU6 CSI2 2 with -110.
+I tested two workarounds:
 
-I also checked my saved logs from the original testing. They contain
-both successful and failed boots of the same kernel build and command
-line.
+1. Blacklisting thinkpad_acpi allows the machine to boot normally.
 
-In successful boots, the media graph contained:
+2. More importantly, keeping thinkpad_acpi enabled but building the
+   same kernel with only
 
-  vd55g1 1-0010
-    -> Intel IPU6 CSI2 2
-    -> Intel IPU6 ISYS Capture 16
-    -> /dev/video16
+     # CONFIG_THINKPAD_ACPI_HOTKEY_POLL is not set
 
-and /dev/video16 advertised GREY, Y10 and Y10P.
+   also makes boot reliable in my testing.
 
-In failed boots, the sensor failed during probe with the same sequence:
+For example, with next-20261002 I built two otherwise equivalent
+kernels:
 
-  i2c_designware i2c_designware.1:
-    i2c_dw_handle_tx_abort: lost arbitration
-  i2c_designware i2c_designware.1: controller timed out
-  vd55g1 i2c-TBE20A1:00: Sensor reset failed -110
-  vd55g1 i2c-TBE20A1:00:
-    probe with driver vd55g1 failed with error -110
+  CONFIG_THINKPAD_ACPI=m
+  CONFIG_THINKPAD_ACPI_HOTKEY_POLL=y
 
-This seems to explain my earlier results: sometimes the I2C failure
-happens during probe, so LNK1 never appears; sometimes probe succeeds
-and the media graph is created, but the same failure can occur later
-when streaming starts.
+and
 
-I checked the basic sensor power sequence during failing probes:
+  CONFIG_THINKPAD_ACPI=m
+  # CONFIG_THINKPAD_ACPI_HOTKEY_POLL is not set
 
-  - INT3472:01-vana is enabled during probe
-  - the active-low VD55G1 reset GPIO is deasserted
-  - INT3472:01-clk is prepared/enabled at 19.2 MHz
+The first configuration can intermittently hang during boot. With only
+HOTKEY_POLL disabled, the machine boots normally into KDE/Wayland and
+thinkpad_acpi is loaded:
 
-The "Sensor reset failed" message above is reached while
-vd55g1_wait_state() is polling the sensor over I2C after reset has
-already been deasserted.
+  thinkpad_acpi 196608 0
 
-I also tried forcing i2c_designware.1 runtime PM to "on". In another
-test I prevented vd55g1 from probing at boot, waited until the system
-had been up for more than 10 seconds, and then loaded the module
-manually. Neither changed the failure.
+The usual ThinkPad hotkeys I have tried also still appear to work
+normally with HOTKEY_POLL disabled.
 
-I rebuilt the saved next-20260928 + v1 patches 1-3 source tree and can
-reproduce the problem there. I also see the same probe failure on
-next-20261002 with the v2 changes already present in linux-next. So at
-this point this does not look like a v1/v2 or
-next-20260928/next-20261002 regression.
+A normal Arch Linux 7.2.8-arch1-2 kernel boots reliably on the same
+machine.
 
-For completeness, I also ran into a separate intermittent boot hang in
-thinkpad_acpi hotkey polling while doing these tests. Disabling
-CONFIG_THINKPAD_ACPI_HOTKEY_POLL makes boot reliable, but does not fix
-the VD55G1 I2C failure, so I currently believe the two issues are
-unrelated.
+This therefore appears to be specifically related to the
+thinkpad_acpi hotkey polling path rather than thinkpad_acpi as a whole.
 
-Have you seen this intermittent arbitration loss on your X1 Carbon Gen
-14, either during probe or when starting the VD55G1 stream? Is there
-anything about the BIOS/firmware or I2C setup on your test machine that
-would be useful for me to compare?
+The issue is intermittent, so I have not yet bisected it to a specific
+commit. I still have persistent journal logs from both successful and
+failed boots, and can provide complete task stacks or test additional
+debug patches if useful.
 
-I have complete kernel logs from successful-probe, failed-probe, and
-successful-probe/failed-stream boots, as well as the saved media
-topology, if useful.
+Hardware:
+
+  Lenovo ThinkPad X1 Carbon Gen 14
+  Machine type: 21V8A028CD
+  Intel Core Ultra 7 356H / Panther Lake
 
 Thanks,
 Qiling Zhu
