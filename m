@@ -1,201 +1,88 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AB22882AB
-	for <platform-driver-x86@vger.kernel.org>; Sat,  3 Oct 2026 22:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD58233936F
+	for <platform-driver-x86@vger.kernel.org>; Sat,  3 Oct 2026 22:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791065255; cv=none; b=t3R5LThjmjwS1kyZ9kWRZagmCIUGCjwqJWujvOq5th2tyUTjBlZ5ODZYUlnZp//i05DeCS/VlvJVMs5V/G5TrgnsTUNYY6EzZtBup0nCEOiBwZZ0VMtu0k9HE0Qu4EfalVdxpLokGM5hnZnGi4iWKezRHD6867VynKvhJ81GDmo=
+	t=1791067583; cv=none; b=hJOFZQwH/c8mxb0KuInZzVVXPGU9J2b7nnV3f4I/laKXWyPqm206QUwaEnPf5+SEvHZWnZVv/QyUX8aS8C/UyRcaz1IwJ6FKqUPUqGmFk2BlmjCm5BvX795N5+6ZPCcUiWPAmU52T1Bm0zBLFeoD2P1IJ8lYPdobpWKY4VfhLZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791065255; c=relaxed/simple;
-	bh=wNt5RXQgaGTgkq4JGxWl54lQqBM8IU3v5NoGU/Th9YE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fh53WotEJLyNI+cu1S6LJ/eC+RiS6cKkvN8+kp84ByLSnWyDr/XQZknrfQzo3UcKgflP8uE83UihLJZ0jqGjEMJok1/TCs/WsI1c7LwqTtJfER7ionqcQlUZxN4m0cNPHKdJICgQdg60IGyyUvxWu9aD2BNFDrbp7RutvblLsUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQl4qTCE; arc=none smtp.client-ip=74.125.225.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791067583; c=relaxed/simple;
+	bh=gFL4h/Akh1s5XIZgxn9bdFR02pSm0EnKizn7VQqLu/o=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ehgbJqC69Ua47knJx8gGuLo1woHdJkXG6KVa02RkCvs/Ztdeu8BYvQLEyNK675hAbHyQUzfxGCAxDjCGEfAYJ/O8WvCqulQLopKmppb0AUbEvG+5YqEyLok3mHFjJIFC3czRlf5tCtmDLz4zeMn8CoFalmMoqLw26PvltODcd9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=kHt7eAgX; arc=none smtp.client-ip=212.27.42.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQl4qTCE"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-4a09e2d0f7dso4882145e9.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Oct 2026 15:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791065252; x=1791670052; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=vrcQD0fG5yzGP1DmVTEJix1v2RysWyPw2gcDP05uFGA=;
-        b=nQl4qTCEiXwqd/qAYk2rI5J0EW0RaWm7A8/9Ke+7ZikGCVuOoCSejnbeGvpakculS1
-         X5HJvD6uM8xq/fMK3TD1beRL1Hyat8L/o7KdYvAFXj12mHdrCU0D11dz+ZrKaCrUXf9+
-         SUfbfLUkd3eC2s6TU9pI6gsoF/Pu3rTnjyk7oPiMIe+ePrFVAVLKbheykY6pI9d0SMIO
-         oOFDChuVvbhes8xSQ75RiMQFf1fDwloi4zTqJmzKtm5YAl2i0zgPXu5Axrfmx+w+7ER5
-         E/PyYMzRCrmqNDjyDJ2M63RikWexdEiwVkPrYkYEqvgdJZZH5+Qve2qhMA7zQyptNV/O
-         RtXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791065252; x=1791670052;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=vrcQD0fG5yzGP1DmVTEJix1v2RysWyPw2gcDP05uFGA=;
-        b=N8Mnz0fQoP4BNJCIY/JEncKEqTaAZIislhSYy+ISH9WLD/t4n7mMQ2ZSCvT7fOWMoc
-         +Qum1RWNTy1IFG2l2FwhTGBCg3dxy7h5B/JZlhtSLTNoVltnUTm7s5h3q60Btr8z4f9g
-         I5Dp7pY+t/4+Pbe9iDN7rPH2E2m7NHRkGG6Yhj741AqgDeMo9wSFTd1ci+22PLU9Rfma
-         syNZaYm/hl1hAj9CnPibApafZDvDh+ibIySGnFgUcjApQxiyk44g5p6xtIZqHu0Y5SCz
-         w9Y2X8y6jw7xkeO81cV9uHMRPUZj9OXVZ5znwRwtvj4PKeW217KLdJZMgju+eUjr8nf5
-         5fDw==
-X-Forwarded-Encrypted: i=1; AKwUvBz0TJ32kN/HUIR80BXh2kcgUMPtlJYDjGHPQfjZ2gSyYadjwcsS+/fdYTAUSXyfmJ2XPNKz2ePn1UVMOaJtYKLbFD5V@vger.kernel.org
-X-Gm-Message-State: AFuF++moUW/qRCvoomnr/fVW2Fjx/dURhmjWKXLwJAwrFg1SSDrS5VcV
-	SXMvsrEoDLrzu4m+ObwgNFm/OuddG/4+FMtEYXJRuxyihXJAKifhym9wetP2zNPJ+n8=
-X-Gm-Gg: AYBFou0xgC1oKvSdRUiN3UReVc9cdBV3O3+Pwm1v5fadZFpKyzFN3eZvhZ4e7/DC5VR
-	s0UBnyASyqUW0dirkEcOezrgD7LyqXuT1ApzxRpJ1HjSsrf6bZXJSINE8uSPPycAIW+WJCCIWkF
-	u3e64DeHPCmm11pDSeuIaH9SRfRDU17zg2RgmvKgUMx8o+1z8bpTERf6USqVAc6r9VzdRsvpJRk
-	pr1OkPZy4WKil3ZVUyD2kZa8eBdGHc+7l7AVx5hlzjuuEQiomp4b7QXmrfH92/PixzH8o7z/62B
-	4FY2cqVhRUz1C6mxlqvHdLSRv2YRbOnkCligRw13oGJ7jrwuVK9pU9YdVPKia47Vj+XpmuVHOLj
-	hSqXv2PwyJjGG6MpV0i423tt4csIMw0pU2Mc15pkYkZH/XdLgI880E+UZb9FLh3j0SQV7vzY8d2
-	IWPnEkd1Nq1jbbxRoJcgoskLQ7IzpvvS52EjOfgV8icb9WF+/SsRtvPkHqHAHolk2eOqY8zS9eB
-	4xH1tE2HD+SH2L5L9cnHG8+h/WneWuk6VT+56S0LYQXPQ==
-X-Received: by 2002:a05:600c:46cc:b0:4a0:1a7f:2ab7 with SMTP id 5b1f17b1804b1-4a027542cbbmr112974325e9.10.1791065252059;
-        Sat, 03 Oct 2026 15:07:32 -0700 (PDT)
-Received: from gentoo.netbird.selfhosted (vmi3588025.contaboserver.net. [169.58.107.97])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0394e6c5asm157392735e9.2.2026.10.03.15.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Oct 2026 15:07:30 -0700 (PDT)
-From: Vovan Nikolaevich <vov4ik533@gmail.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>
-Cc: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-wmi: Add user-status LED support
-Date: Sun,  4 Oct 2026 01:06:53 +0300
-Message-ID: <20261003220653.123909-1-vov4ik533@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="kHt7eAgX"
+Received: from smtp1-g21.free.fr (smtp1-g21.free.fr [212.27.42.1])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 99F684D75D
+	for <platform-driver-x86@vger.kernel.org>; Sun,  4 Oct 2026 00:46:10 +0200 (CEST)
+Received: from [IPV6:2a02:842a:8223:5500:67a9:282d:5e8b:7454] (unknown [IPv6:2a02:842a:8223:5500:67a9:282d:5e8b:7454])
+	(Authenticated sender: julien.robin28@free.fr)
+	by smtp1-g21.free.fr (Postfix) with ESMTPSA id 18051B00548;
+	Sun,  4 Oct 2026 00:45:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1791067563;
+	bh=gFL4h/Akh1s5XIZgxn9bdFR02pSm0EnKizn7VQqLu/o=;
+	h=Date:To:Cc:From:Subject:From;
+	b=kHt7eAgXxePobb9N8MeZqrUpN9iis9EYQ6ZNz9UeUtTwS4UI+IA35zq3dl4nytHz4
+	 QwXcyzYE2QMOC9C+Q3j9VRoeGK5h13HiQBDFrZyMaELpmb0ZxwwQ9MRxYpGgjvRmx+
+	 b8+kF9lFrc94OXShJ9IqBv2eeIGZokLo4i4sOkx6166DHIcQG4mVnwRIsMOqhL/6n3
+	 DNYd/iuSMyLYfPg1LD+cf3jQkllbfZ0brRwiyELzs19rbmw0UX7e4t4sRk6i9Ms1B/
+	 Qd7GrCvteF73rc6cZxCaktm6fuEfHCMAFX0Njude4kmTZBsz2Ihvf/6a79u9no03Q7
+	 EVsbIIOIp+B1A==
+Message-ID: <965dd816-dd66-4318-be8d-330a40209f67@free.fr>
+Date: Sun, 4 Oct 2026 00:45:58 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: platform-driver-x86@vger.kernel.org,
+ Krishna Chomal <krishna.chomal108@gmail.com>
+Cc: Suryansh Singh <technosfan14@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+From: Julien ROBIN <julien.robin28@free.fr>
+Subject: hp_wmi: Unknown EC layout for board 8C9C
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Some ASUS laptops expose a user-status LED through WMI DEVID 0x00040019.
-On the tested ExpertBook B5402 this is the orange user-status indicator
-used, among other things, as an "in a meeting" signal. DSTS reports
-presence and the current state, and DEVS 0/1 switches the LED off and on.
-The official ASUS userspace controls the same binary WMI capability and
-applies any Auto/Busy/Off policy in userspace; this driver exports only
-the physical LED.
+Hi there, I got the following message into my dmesg log:
 
-Register a binary LED class device when a state read succeeds. A
-successful read is used instead of asus_wmi_dev_is_present() because
-some firmware returns ASUS_WMI_UNSUPPORTED_METHOD (0xFFFFFFFE) for
-this DEVID, and that value still has the DSTS presence bit set.
+hp_wmi: Unknown EC layout for board 8C9C. Thermal profile readback will be disabled. Please report this to platform-driver-x86@vger.kernel.org
 
-The LED is named ":status": LED_FUNCTION_STATUS describes the binary
-on/off state, the device name is omitted since the LED is not tied to
-another kernel device, and the colour is left out because it is only
-verified to be orange on the tested model.
+I may help a little bit here, as two years ago I did the initial work to get fan speed reading and setting, and thermal profiles for the HP Victus 16s-1034nf (8C9C) which I'm still using. Nice to see new people added new things above this! I hope the "victus_s" naming scheme I introduced to differentiate from previous driver behavior when adding support to the Victus 16s-1034nf didn't turn to be inconsistent with added models names using the same behavior since then.
 
-The WMI interface and firmware behavior across public ASUS DSDT tables
-were investigated, and the LED class naming and patch were developed
-and reviewed, with LLM assistance.
+With nbfc-linux and ec_probe monitor command, I managed to check again EC offsets/registers meaning for this 8C9C laptop (currently running BIOS F.17 11/18/2025). 
 
-The same WMI LED support was built and runtime-tested by the author as
-a local patch against gentoo-kernel-7.2.8 on an ASUS ExpertBook
-B5402CBA (BIOS B5402CBA.314), including physical LED on/off validation.
-This upstream version was additionally build-tested against the current
-platform-drivers-x86 for-next branch.
+0xAE offset is related to thermal profile, it shows 3 possible values:
+ - 0x00 when in performance mode (while HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE = 0x01)
+ - 0x01 when placed in balanced or low-power modes,
+ - 0x02 when the laptop CPU power limits are back to default / fallback state: turns out this happens when an HPWMI_FAN_COUNT_GET_QUERY hasn't been played during the last 120 seconds. See hp_wmi_get_fan_count_userdefine_trigger() function.
 
-Assisted-by: LLM
+However when the 0xAE register value is at 0x02, playing an HPWMI_FAN_COUNT_GET_QUERY makes the 0xAE register back to its previous mode (and CPU power limits are set accordingly). So when value is 0x02, the previous value is kept (and may be restored from) somewhere else, but it doesn't seem to be from any other EC register. Even worse, when going to performance mode, HPWMI_SET_PERFORMANCE_MODE command is applying HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE = 0x01 which cause the 0xAE register to go to 0x00, so the logic of this EC register is different from what existed for others models (where the EC register value was the same as the one provided by the HPWMI_SET_PERFORMANCE_MODE query).
 
-Signed-off-by: Vovan Nikolaevich <vov4ik533@gmail.com>
----
- drivers/platform/x86/asus-wmi.c            | 37 ++++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 38 insertions(+)
+Because of these sudden changes about EC registers behavior, I wasn't sure insisting on direct reading into EC registers was still going to be a sustainable approach for reading back thermal profile on this new kind of laptop. Facing BIOS updates, or tiny changes between similar models, may even cause such approach to break without warnings. It would also need people adding similar laptops to ensure 0xAE is still the right EC register to read, and double check the values are behaving the same. Which is why at startup, I preferred the mode to be initially set to balanced: to both cleanly ensure and say back which mode is enabled, without relying on risky tricks.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 711f59c1aa62..7cb954c22db3 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -263,6 +263,7 @@ struct asus_wmi {
- 	struct led_classdev micmute_led;
- 	struct led_classdev mute_led;
- 	struct led_classdev camera_led;
-+	struct led_classdev user_status_led;
- 	struct workqueue_struct *led_workqueue;
- 	struct work_struct tpd_led_work;
- 	struct work_struct wlan_led_work;
-@@ -2085,6 +2086,24 @@ static int camera_led_set(struct led_classdev *led_cdev,
- 	return err < 0 ? err : 0;
- }
- 
-+static enum led_brightness user_status_led_get(struct led_classdev *led_cdev)
-+{
-+	struct asus_wmi *asus;
-+
-+	asus = container_of(led_cdev, struct asus_wmi, user_status_led);
-+	return asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_USER_STATUS_LED);
-+}
-+
-+static int user_status_led_set(struct led_classdev *led_cdev,
-+			       enum led_brightness brightness)
-+{
-+	int state = brightness != LED_OFF;
-+	int err;
-+
-+	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_USER_STATUS_LED, state, NULL);
-+	return err < 0 ? err : 0;
-+}
-+
- static void asus_wmi_led_exit(struct asus_wmi *asus)
- {
- 	scoped_guard(spinlock_irqsave, &asus_ref.lock)
-@@ -2096,6 +2115,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
- 	led_classdev_unregister(&asus->micmute_led);
- 	led_classdev_unregister(&asus->mute_led);
- 	led_classdev_unregister(&asus->camera_led);
-+	led_classdev_unregister(&asus->user_status_led);
- 
- 	if (asus->led_workqueue)
- 		destroy_workqueue(asus->led_workqueue);
-@@ -2228,6 +2248,23 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 			goto error;
- 	}
- 
-+	/*
-+	 * Gate on a successful state read rather than asus_wmi_dev_is_present():
-+	 * some firmware returns ASUS_WMI_UNSUPPORTED_METHOD (0xFFFFFFFE) for
-+	 * this DEVID, which still has the DSTS presence bit set.
-+	 */
-+	if (asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_USER_STATUS_LED) >= 0) {
-+		asus->user_status_led.name = ":" LED_FUNCTION_STATUS;
-+		asus->user_status_led.max_brightness = 1;
-+		asus->user_status_led.brightness_get = user_status_led_get;
-+		asus->user_status_led.brightness_set_blocking = user_status_led_set;
-+
-+		rv = led_classdev_register(&asus->platform_device->dev,
-+					   &asus->user_status_led);
-+		if (rv)
-+			goto error;
-+	}
-+
- 	if (asus->oobe_state_available) {
- 		/*
- 		 * Disable OOBE state, so that e.g. the keyboard backlight
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index be4d2873ffc9..b2f54d865689 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -54,6 +54,7 @@
- #define ASUS_WMI_DEVID_LED5		0x00020015
- #define ASUS_WMI_DEVID_LED6		0x00020016
- #define ASUS_WMI_DEVID_MICMUTE_LED		0x00040017
-+#define ASUS_WMI_DEVID_USER_STATUS_LED		0x00040019
- #define ASUS_WMI_DEVID_MUTE_LED	0x0004001C
- 
- /* Disable Camera LED */
+But despite this personal opinion, for the 8C9C, playing an HPWMI_FAN_COUNT_GET_QUERY, and guessing the current mode is performance mode (0x01) when 0xAE register says 0x00, and differentiating balanced and low-power modes when 0xAE register value is 0x01, may probably be done by looking at victus_s_gpu_thermal_profile_get(), as prepared into platform_profile_victus_s_get_ec(): I see that Krishna Chomal had this idea. As I'm a beginner into kernel development I prefer let you decide whether it's reliable enough, and/or worth the effort.
 
-base-commit: fe5030c8cc7156223f48530e9b49aa87c0305bcd
--- 
-2.55.0
+In case you need me to do some tests and gather more information feel free to ask me!
+Adding Cc to Suryansh Singh as I see recent related work to this EC reading offset of thermal profile on another Victus laptop, in case it helps having a better overview on this.
 
+Best regards,
+Julien ROBIN
+
+PS:
+Others identified EC offsets for my 8C9C by the way:
+
+ - 0x8F register value is 0x00 unless performance mode has been enabled. It may be related to GPU gpu_ctgp_enable being set to true, in which case the register value goes to 0x04.
+As opposed to 0xAE register, which may fallback to its default value when hp-wmi driver isn't active for more than 120 seconds, 0x8F register keeps its value. This may be tested more deeply if needed.
+
+ - 0x8A, 0x8B and 0xFF registers are reflecting CPU power limits. 0x8B and 0xFF registers show the same values which are equal to "PPT LIMIT SLOW" from RyzenAdj, while 0x8A register show the value that appears in both "PPT LIMIT FAST" and "STAPM LIMIT" from RyzenAdj.
+
+ - 0xB0 register is showing CPU temperature in celsius, 0xB4 is showing GPU temperature celsius, 0xB2 and 0xA7 registers also seems to give measured temperatures in celsius but it doesn't seem to be CPU nor GPU.
+
+ - 0x11 and 0x14 register are linked to target fan speed; values are 0x12 at default fan speed mode (with "fan always on" enabled into the BIOS, otherwise 0x00), and values are 0x3A when maximum fan speed is enabled. It's not showing actual measured values, as during fan speed acceleration or deceleration, values aren't moving at all.
