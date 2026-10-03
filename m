@@ -1,159 +1,204 @@
-Received: from mail-pj2-f11.google.com (mail-pj2-f11.google.com [74.125.227.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987873905EC
-	for <platform-driver-x86@vger.kernel.org>; Sat,  3 Oct 2026 10:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1382175A8A;
+	Sat,  3 Oct 2026 13:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791022808; cv=none; b=eAPILESiAo72zSTQaUEXUDOOhzkJydos9Lbqy7CVpoXnzQyeImLBoN6Te7w+BrNYyS1QArObXMZgyrzpUFJaAtoznlj8/DUvLziBejPaH176IcLN3kLhePI6HWrBUojmnqxdlPKKs8Y1Lq/WBfoMGqwBQM9dPADbnyNz5xQYnqY=
+	t=1791033467; cv=none; b=dzExDGj3HIPb8NRKsDVINI1oprjIIcReE8ffapTvvCBpLkpU96w9hUZTeVU9g7yA4ljJ6pNmiT6OpnHUgqYNCWm727/ILO3cXmaAXhDufCGbavQ7ApjSjFB32cG6ZKsR4LWn3XYjdH/5LOACFEeYxi04359h7+bMpj4pHS/hGjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791022808; c=relaxed/simple;
-	bh=kgmg6SoIB/3yUf8ADJjOq9BtOHqc5NPV6pK4yi3t5dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MzvZajBW/oMjnvHqYsuc2KaY0l/dDmJY7+rymcTyp59TI34lSAioYaDNM+uzTg31HI/8hH/SV3r2E4Ko+lgdAdVnqtjlQ6vyo8amZkrvmxa8chk6CDw7D6fxvLr/g7z/e1XOA4k6e4lCE/r6fTs1f4tEdsDQE+WY8O1Xs/9pFLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJNikCHv; arc=none smtp.client-ip=74.125.227.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791033467; c=relaxed/simple;
+	bh=WtrnOYPfoCIVycA33AV23kjL/1nSMC2IR2IcPofxGjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q84JIWNqpfnJSu84Vp76zB/AudUcyd7ZHbG1UKZvradYSJGpvT3NwsujJJb3AoFEj4hOrhfbxeVW/UJ7XcGrnM9zpZ6s8s2TNOLMBRKV0I1hA9CIL0Jt9f68rrXMQtQmXRdXMwqfa1IB4q4X9ALGEkRJ9Kwqda5S/eIObNyiFq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAN/rVvg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJNikCHv"
-Received: by mail-pj2-f11.google.com with SMTP id 98e67ed59e1d1-38de693676dso206082a91.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Oct 2026 03:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791022807; x=1791627607; darn=vger.kernel.org;
-        h=content-disposition:content-type:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VRcw9YKb16RzMyTdR3AGPddXtl++CfcN70A3BsA75lk=;
-        b=GJNikCHvm/hgN4JYL/J5VdoFhDKnIsauSpAq10ZWfSNBcACmzoOe7oNx2+a0KDp2P5
-         0rejilcAKW2Nw3kUtNocBy/WFVPbJz7xwaLQ15rbgZqJgcFp5mP4S7TrDo1u6ApCb4Xl
-         6lmSXv1RWQ9nARipivTLHQxxWXEtdoM5NMbh95P4gc8KMUMPhFR1uQioK7RraL+HL0nR
-         cH+r1y3LThXHnoNQ0vfmS/0Y6tJibAcv5nSqFth949zQOdXTm784XTGRyYUMqBR0O5ew
-         t/QNdUySYUqy4mKcIYLfPdPzSe7ZlmbumnMX9ALYSHopMi25I2whRbfNVp6LfLGF70OD
-         O8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791022807; x=1791627607;
-        h=content-disposition:content-type:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VRcw9YKb16RzMyTdR3AGPddXtl++CfcN70A3BsA75lk=;
-        b=j+k0w16IUpOz14KtiubG9L1A7tkhbIUJLWsTEt2rcKMuPbUHUZKg8ENHNb+wwOWfxI
-         QqvTXc5hptMTdLdMgnguI1+G74/nmNyYrmShLJ0fqvaNbUO5V2AI8t3MSifReesT6bfZ
-         XnxernjKxYwfnR0DuCxolFQzyxGorVUDVsb/5NIphNEP03MYjU1dPv1SoxAwlknHBdTi
-         NLbEfucVDtWoA9jl1UiPGgE9Kadqk1/fSe4f0FtYT5++V3VvimLVrb1QF8W+zjlW1jlq
-         4W18GcLGTnhVfO8xvauiZVJrVBfNLFv0mInbWpAssu9/W9UYzQ46qVR+iyjewUhRZWKu
-         ZLfw==
-X-Forwarded-Encrypted: i=1; AKwUvBwCRDmNywBpZ98BEaOS+OIRNqPDEr4MUQojWd8y90vNGIlNranCG5kGiwYbP+3MeqaGx5JY7yYIJGlWjgzkDEaYYlor@vger.kernel.org
-X-Gm-Message-State: AFq9FYJHPAhcXZtnILvOFJxfjPAGaC34F1zzxFDBHNW4ZMe/lgrRo446
-	tkjpd4/3cBbE2BMWx2sfyhtFQZ6VYwJoDzFjm7Qvm3VJrCEx70dEtGHARlWYx57HXOLUAQ==
-X-Gm-Gg: AYBFou2Q1f1NrlEK5t4dzeHVbGTbH2vSo3WruyYF0qYYqeTa4tw3ZmhvsU7Kl4E/KVp
-	DFwsktsKBgVbcFsQjFUcmLvNxnMz4jxFT+R25Nx+aLGML0XXoEanIvFV3ECYZBRV9hcOQO44dyl
-	JSPB6jM8TgfpQJHKZDRyk8T/hIi/4S/CWA3lrMje4xfcyyuflOsKJJo8XusopJQMKgfsQGefwoM
-	sPymrFxWPfGoi/ehxswN4PBhvKFns98PxU/Gp3IIYfrmTjPqpzQDmMV6b49qEWeas3ejP/O6+pS
-	/utCkyUEuxRixmoBP4BMJuTRxcQlqF694QXERj/TBkt4KekUEDA+v+ByxOhiFkZdz5hvLRgWmoY
-	JvbcXi5GAA7gFHtZUlvDNXLPXuziLMxOPEDY1IJ/RAH+iqPKvZYgCEhgOZdxbEvVTDfsjLXARsq
-	9kwa7JFOPy8FUMbf8TkQmVwJzQfwOMGpeNh62yMbTEFv1MIvuQ2ojuRRQPSTlTrHL/dy1J/cDQ5
-	47+BfIIyaKzig==
-X-Received: by 2002:a17:90b:3b4f:b0:3a7:9413:cfae with SMTP id 98e67ed59e1d1-3a79413ddb8mr898253a91.42.1791022806861;
-        Sat, 03 Oct 2026 03:20:06 -0700 (PDT)
-Received: from ThinkPad ([240e:46d:7b20:7df:1ddc:2f29:f17a:97e4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a78e61386csm2539110a91.17.2026.10.03.03.20.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Oct 2026 03:20:06 -0700 (PDT)
-Date: Sat, 3 Oct 2026 18:19:50 +0800
-From: Qiling Zhu <kmatzkaczor244@gmail.com>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, platform-driver-x86@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [BUG] thinkpad_acpi: intermittent boot hang in hotkey_poll_setup on
- ThinkPad X1 Carbon Gen 14
-Message-ID: <asDVVtAXt8YVbZ3C@ThinkPad>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAN/rVvg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 638301F0089B;
+	Sat,  3 Oct 2026 13:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791033465;
+	bh=IzbNPOia8VMKvzs9m7iStPmTfA5edKy5GnhybPACNJg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=CAN/rVvgMSKtbA1KsHN4RGBkEoftMGFQkGSEnSQs+8AEVSkBCWecWeksf/WYsl1JG
+	 vex0FEYYejEF5KBKQs3a3h2WUWTGlrypAHO0jB7GcWDeXS+D/+znTX6DKUfidRG83X
+	 KItpx2EQPp7inJx6IFStH8dZ+eMtoE7P8nu9DjRFIQNUe6U/ssysH7A+cXRlIPm4Ai
+	 uS0zxXdr9FMT2JNfL9NgSa4w/DxjAmkHiv17gFyFjuKU7FUXI5TNUC3F06nl6tEBlE
+	 3czGY7wygWYhTxNlVL3QeN/Tvv2nfFHUwj7QHwOyoenvU3RvYpzPX68Qt38Q5OaCdO
+	 N3Jr4jT5uXPxg==
+Message-ID: <d3d70595-4fa3-47d1-8f2c-aa44862cc242@kernel.org>
+Date: Sat, 3 Oct 2026 15:17:39 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] media: Consolidate AtomISP v2 PCI IDs in the
+ pci_ids.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Jani Nikula <jani.nikula@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-pci@vger.kernel.org
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20261002094813.856439-1-andriy.shevchenko@linux.intel.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20261002094813.856439-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-I am seeing an intermittent boot hang in thinkpad_acpi hotkey polling
-on a Lenovo ThinkPad X1 Carbon Gen 14 (machine type 21V8A028CD).
+On 2-Oct-26 11:43, Andy Shevchenko wrote:
+> We have a few drivers using same pair of the PCI IDs across the kernel and
+> there seems more to go, consolidate AtomISP v2 PCI IDs in pci_ids.h database.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I originally encountered this while testing linux-next kernels for an
-unrelated camera issue.
+Thanks, patch looks good to me:
 
-The problem has occurred with at least:
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
-  next-20260928
-  next-20261002
+Regards,
 
-When it happens, boot stalls and many udev/modprobe tasks end up blocked
-in async_synchronize_cookie_domain(). One of the blocked tasks had the
-following relevant stack:
+Hans
 
-  hotkey_poll_setup [thinkpad_acpi]
-  hotkey_inputdev_open [thinkpad_acpi]
-  input_open_device
-  kbd_connect
-  ...
-  tpacpi_pdriver_probe [thinkpad_acpi]
-  ...
-  thinkpad_acpi_module_init [thinkpad_acpi]
 
-The failure is intermittent. The same kernel can sometimes boot
-successfully, while another boot hangs.
+> ---
+> 
+> Assuming that media subsystem is the main beneficiary I think it is the best
+> to route it via that tree. For others (i915, PCI, PDx86), please Ack if you
+> are agree.
+> 
+>  drivers/gpu/drm/i915/display/intel_display_power.c   |  6 +++---
+>  drivers/platform/x86/intel/atomisp2/pm.c             |  6 +++---
+>  drivers/staging/media/atomisp/pci/atomisp_internal.h |  2 --
+>  drivers/staging/media/atomisp/pci/atomisp_v4l2.c     | 10 +++++-----
+>  include/linux/pci_ids.h                              |  2 ++
+>  5 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_display_power.c b/drivers/gpu/drm/i915/display/intel_display_power.c
+> index 2e534ddb7347..ee2c59b72b4a 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display_power.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display_power.c
+> @@ -2086,9 +2086,9 @@ static void assert_ved_power_gated(struct intel_display *display)
+>  static void assert_isp_power_gated(struct intel_display *display)
+>  {
+>  	static const struct pci_device_id isp_ids[] = {
+> -		{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x0f38)},
+> -		{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x22b8)},
+> -		{}
+> +		{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ISP_BYT) },
+> +		{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ISP_BSW) },
+> +		{ }
+>  	};
+>  
+>  	drm_WARN(display->drm, !pci_dev_present(isp_ids) &&
+> diff --git a/drivers/platform/x86/intel/atomisp2/pm.c b/drivers/platform/x86/intel/atomisp2/pm.c
+> index ad1f99140962..f3dee0e58f62 100644
+> --- a/drivers/platform/x86/intel/atomisp2/pm.c
+> +++ b/drivers/platform/x86/intel/atomisp2/pm.c
+> @@ -121,9 +121,9 @@ static UNIVERSAL_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend,
+>  			    isp_pci_resume, NULL);
+>  
+>  static const struct pci_device_id isp_id_table[] = {
+> -	{ PCI_VDEVICE(INTEL, 0x0f38), },
+> -	{ PCI_VDEVICE(INTEL, 0x22b8), },
+> -	{ 0, }
+> +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ISP_BYT) },
+> +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ISP_BSW) },
+> +	{ }
+>  };
+>  MODULE_DEVICE_TABLE(pci, isp_id_table);
+>  
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_internal.h b/drivers/staging/media/atomisp/pci/atomisp_internal.h
+> index 5a69580b8251..1a05fc331557 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_internal.h
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_internal.h
+> @@ -37,7 +37,6 @@
+>  	(((isp)->media_dev.hw_revision & ATOMISP_HW_REVISION_MASK) == \
+>  	 ((rev) << ATOMISP_HW_REVISION_SHIFT))
+>  
+> -#define ATOMISP_PCI_DEVICE_SOC_BYT	0x0f38
+>  /* MRFLD with 0x1178: ISP freq can burst to 457MHz */
+>  #define ATOMISP_PCI_DEVICE_SOC_MRFLD	0x1178
+>  /* MRFLD with 0x1179: max ISP freq limited to 400MHz */
+> @@ -45,7 +44,6 @@
+>  /* MRFLD with 0x117a: max ISP freq is 400MHz and max freq at Vmin is 200MHz */
+>  #define ATOMISP_PCI_DEVICE_SOC_MRFLD_117A	0x117a
+>  #define ATOMISP_PCI_DEVICE_SOC_ANN	0x1478
+> -#define ATOMISP_PCI_DEVICE_SOC_CHT	0x22b8
+>  
+>  #define ATOMISP_PCI_REV_MRFLD_A0_MAX	0
+>  #define ATOMISP_PCI_REV_BYT_A0_MAX	4
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+> index 476fe143a591..ab8727a806bf 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+> @@ -1239,7 +1239,7 @@ static int atomisp_pci_probe(struct pci_dev *pdev, const struct pci_device_id *i
+>  		}
+>  		isp->hpll_freq = HPLL_FREQ_1600MHZ;
+>  		break;
+> -	case ATOMISP_PCI_DEVICE_SOC_BYT:
+> +	case PCI_DEVICE_ID_INTEL_ISP_BYT:
+>  		isp->media_dev.hw_revision =
+>  		    (ATOMISP_HW_REVISION_ISP2400
+>  		     << ATOMISP_HW_REVISION_SHIFT) |
+> @@ -1284,7 +1284,7 @@ static int atomisp_pci_probe(struct pci_dev *pdev, const struct pci_device_id *i
+>  		isp->dfs = &dfs_config_merr;
+>  		isp->hpll_freq = HPLL_FREQ_1600MHZ;
+>  		break;
+> -	case ATOMISP_PCI_DEVICE_SOC_CHT:
+> +	case PCI_DEVICE_ID_INTEL_ISP_BSW:
+>  		isp->media_dev.hw_revision = (ATOMISP_HW_REVISION_ISP2401
+>  						 << ATOMISP_HW_REVISION_SHIFT);
+>  		isp->media_dev.hw_revision |= pdev->revision < 2 ?
+> @@ -1487,12 +1487,12 @@ static const struct pci_device_id atomisp_pci_tbl[] = {
+>  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ATOMISP_PCI_DEVICE_SOC_MRFLD_1179)},
+>  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ATOMISP_PCI_DEVICE_SOC_MRFLD_117A)},
+>  	/* Baytrail */
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ATOMISP_PCI_DEVICE_SOC_BYT)},
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ISP_BYT) },
+>  	/* Anniedale (Merrifield+ / Moorefield) */
+>  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ATOMISP_PCI_DEVICE_SOC_ANN)},
+>  	/* Cherrytrail */
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ATOMISP_PCI_DEVICE_SOC_CHT)},
+> -	{0,}
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ISP_BSW) },
+> +	{ }
+>  };
+>  MODULE_DEVICE_TABLE(pci, atomisp_pci_tbl);
+>  
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 63774ae2bf71..0693e4532a68 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2732,6 +2732,7 @@
+>  #define PCI_DEVICE_ID_INTEL_HDA_HSW_3	0x0d0c
+>  #define PCI_DEVICE_ID_INTEL_HDA_BYT	0x0f04
+>  #define PCI_DEVICE_ID_INTEL_SST_BYT	0x0f28
+> +#define PCI_DEVICE_ID_INTEL_ISP_BYT	0x0f38
+>  #define PCI_DEVICE_ID_INTEL_8257X_SOL	0x1062
+>  #define PCI_DEVICE_ID_INTEL_82573E_SOL	0x1085
+>  #define PCI_DEVICE_ID_INTEL_82573L_SOL	0x108f
+> @@ -2787,6 +2788,7 @@
+>  #define PCI_DEVICE_ID_INTEL_VMD_201D	0x201d
+>  #define PCI_DEVICE_ID_INTEL_HDA_BSW	0x2284
+>  #define PCI_DEVICE_ID_INTEL_SST_BSW	0x22a8
+> +#define PCI_DEVICE_ID_INTEL_ISP_BSW	0x22b8
+>  #define PCI_DEVICE_ID_INTEL_DH89XXCC_LPC_MIN	0x2310
+>  #define PCI_DEVICE_ID_INTEL_DH89XXCC_LPC_MAX	0x231f
+>  #define PCI_DEVICE_ID_INTEL_82801AA_0	0x2410
 
-I tested two workarounds:
-
-1. Blacklisting thinkpad_acpi allows the machine to boot normally.
-
-2. More importantly, keeping thinkpad_acpi enabled but building the
-   same kernel with only
-
-     # CONFIG_THINKPAD_ACPI_HOTKEY_POLL is not set
-
-   also makes boot reliable in my testing.
-
-For example, with next-20261002 I built two otherwise equivalent
-kernels:
-
-  CONFIG_THINKPAD_ACPI=m
-  CONFIG_THINKPAD_ACPI_HOTKEY_POLL=y
-
-and
-
-  CONFIG_THINKPAD_ACPI=m
-  # CONFIG_THINKPAD_ACPI_HOTKEY_POLL is not set
-
-The first configuration can intermittently hang during boot. With only
-HOTKEY_POLL disabled, the machine boots normally into KDE/Wayland and
-thinkpad_acpi is loaded:
-
-  thinkpad_acpi 196608 0
-
-The usual ThinkPad hotkeys I have tried also still appear to work
-normally with HOTKEY_POLL disabled.
-
-A normal Arch Linux 7.2.8-arch1-2 kernel boots reliably on the same
-machine.
-
-This therefore appears to be specifically related to the
-thinkpad_acpi hotkey polling path rather than thinkpad_acpi as a whole.
-
-The issue is intermittent, so I have not yet bisected it to a specific
-commit. I still have persistent journal logs from both successful and
-failed boots, and can provide complete task stacks or test additional
-debug patches if useful.
-
-Hardware:
-
-  Lenovo ThinkPad X1 Carbon Gen 14
-  Machine type: 21V8A028CD
-  Intel Core Ultra 7 356H / Panther Lake
-
-Thanks,
-Qiling Zhu
