@@ -1,60 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B974318BB3;
-	Mon,  5 Oct 2026 18:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27C1318BB3;
+	Mon,  5 Oct 2026 18:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791224666; cv=none; b=rV3w6EMXUf1bw3fmqs8MJsPoW9vaj6+YsOHxSfXmKYrlYe34JXiOKhJ7R8KbD/9lVFiM9mSNznoxqP1SlmT05rJS3NqS683kddJuTJU3Q1kOyY24WbB3WMUSA5W8gNt9iAb45V++oyyXsVnMNycwN4ounNs0ObS9Nem4RZxqLwM=
+	t=1791224673; cv=none; b=KHmmpp5MqKlvSGgqLtM+943eKJ0bdI2YlYu4WCtpdZILvyoOUwI6qlD2CxBRFjd80btT3Ek0+U5wuSuU/h4dR6O2X/dFkBJZlI/wJ8796Of5Adu+uU51Iq37qCiNfbti+6BkT5B0KrUod7zy1sT7aAnWR0YpU6izwl8fQMhgfOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791224666; c=relaxed/simple;
-	bh=v1No7/7xP3oCnDjg3vRi26xoVNzYshHKSpKpiCOmrF0=;
+	s=arc-20240116; t=1791224673; c=relaxed/simple;
+	bh=0PyK0mjNM+4nKHA0ytcrCVl6CHgfHjRDtLgO3Qu8vpo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oztiwU+uqyxQAkJTAihllwAsSksPJsr9JxFGEyBbaQTLoIlOWphSkbXgq32KVA9qkAJ7/3S7X+w/83kxWRHtYY+Pid+gh9Pdr23fdExqfE9TAZn7Mjmc8PjSvUDj/vMUq7dgoMywx9LNWrsVnqNmnAHPlU+pp4Kzah/d1O9XU1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FwsujXHE; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=PaiTlZDuMV2Ukd+X/8wNn+kXLKco7g7WcRmJxyhWoRgKLt5UCKu5ELuNW97x++xzf+5FspuQBTM58MkBg87Y6In2xDU7IE4xCe4yJ0JX6t+N+itVZTtrmsnS5/xyX/F0cODSeEzLjenXBYXWZCRH/kw1lCbT9zBgR56sLKaKQpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZ2LeL2x; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FwsujXHE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZ2LeL2x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791224665; x=1822760665;
+  t=1791224672; x=1822760672;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=v1No7/7xP3oCnDjg3vRi26xoVNzYshHKSpKpiCOmrF0=;
-  b=FwsujXHE/RIyN0oscGxoVr+nhHZlBYiwUosQCwXvpCbYRk1PzDAKyXUM
-   BrKxeITDSglD5kNVDI4uBHf61dHWGdBk/fOEjTYDceC0k9Dcwa89dlBKn
-   Ys7w1dmn7IMUE7GVZtb6EFm4EcwjN4AH1NMsqi5hgIGD9+bE2Bbt8dc04
-   72+I4nxgjq4Gjw2EQaSLw0yGCDo5qxwMIx/XhAkPdF+lN26pEqdPQ64Es
-   e1cgtTU7ilmK3EleW7yUKzRReQV4bGoF/Xo4R9maAbJLwxrEem22isWo/
-   1k7NdB1JEsJfda+gv9wr81dT2BQyJSV4yIwoCSWNhDwojTMXEOwdGIptW
-   Q==;
-X-CSE-ConnectionGUID: iOnlWXIQSLKJ4KzuYiq3aw==
-X-CSE-MsgGUID: P3NnarliRx2vWBbi6DmrHw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="91928456"
+  bh=0PyK0mjNM+4nKHA0ytcrCVl6CHgfHjRDtLgO3Qu8vpo=;
+  b=WZ2LeL2x5pN45JXBDk95QOfVxV0i8yHHD+ceiaMMVsiNqCtoAhbmUpNc
+   +kwiDyw5NxsPnFeT6ObAq25+bsSokoFaBzxpwmS4pY8G+gW2Oz2sKvO8f
+   twR0Zw9eLQRxM8irTw/hsoaug+qoQE/OhHAdw2AWwc0KhwViTb5Jfy2it
+   8VUMZIMT01XouaqaNqzXkQzzzhivUZowTzT2qZXGBaktnO9C++nnKNv3P
+   oMexU4DI0QvuDpICuNpAiItAhZoeE4DgvHBWHtLA8IGiIKvDi0mWCiYU2
+   AKmo/uA1LVvPiifNfq7KbOkrSPQ7qKKLy2y0qhQPRlht/UVv+8b3Ebwgx
+   g==;
+X-CSE-ConnectionGUID: v5UtDl1xSKiKvBkurWPSVw==
+X-CSE-MsgGUID: peBDjV1ES8iwFrkEnV0S6Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="101226413"
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="91928456"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:24 -0700
-X-CSE-ConnectionGUID: onlipcN6SaScxnuS/pcflA==
-X-CSE-MsgGUID: IZ9FJuOGR6KwKaRt0rCoyA==
+   d="scan'208";a="101226413"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:32 -0700
+X-CSE-ConnectionGUID: Dmkq/DGNS8ivVoPjrUm4ZA==
+X-CSE-MsgGUID: FExX/YOvR2e7cIUor4oxIg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="276996806"
+   d="scan'208";a="306396351"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.199])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:21 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:29 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
- platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260919130829.3041568-1-peng.fan@oss.nxp.com>
-References: <20260919130829.3041568-1-peng.fan@oss.nxp.com>
-Subject: Re: [PATCH] platform/x86: yogabook: use assign_bit()/change_bit()
- where applicable
-Message-Id: <179122465469.34664.12803535950843817399.b4-ty@b4>
-Date: Mon, 05 Oct 2026 21:24:14 +0300
+To: jlee@suse.com, hansg@kernel.org, Justin Vargas <justinyvar@gmail.com>
+Cc: W_Armin@gmx.de, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260920053918.1888-1-justinyvar@gmail.com>
+References: <20260920053918.1888-1-justinyvar@gmail.com>
+Subject: Re: [PATCH v4] platform/x86: acer-wmi: Add support for Acer Nitro
+ ANV15-51
+Message-Id: <179122466377.34664.13721419819742452894.b4-ty@b4>
+Date: Mon, 05 Oct 2026 21:24:23 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,10 +63,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sat, 19 Sep 2026 21:08:28 +0800, Peng Fan (OSS) wrote:
+On Sun, 20 Sep 2026 01:39:18 -0400, Justin Vargas wrote:
 
-> Convert open-coded if/else with set_bit/clear_bit to the assign_bit and
-> change_bit APIs.
+> The Acer Nitro ANV15-51 uses the Predator V4 WMI interface for thermal
+> profile handling, hardware monitoring and fan control, but has no quirk
+> entry, so none of these features are available.
+> 
+> Add a quirk entry for this model.
+> 
+> Note that this machine does not support the turbo thermal profile:
+> writing PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware with
+> -EIO. The four remaining profiles work as expected.
+> 
+> [...]
 
 Thank you for your contribution, it has been applied to my local
 review-ilpo-next branch. Note it will show up in the public
@@ -81,8 +88,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: yogabook: use assign_bit()/change_bit() where applicable
-      commit: 2f666d27bc230a1908c7f4606f104f061300f2a7
+[1/1] platform/x86: acer-wmi: Add support for Acer Nitro ANV15-51
+      commit: 71019d2a13e0766ca174846e68dc5c0bde2e6494
 
 --
  i.
