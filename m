@@ -1,196 +1,246 @@
 Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA3937FF46
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 21:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53F0415F07
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 23:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791235423; cv=pass; b=Mxq8Piurnko/3tngh+ED/9Hh0HYHJheE5ytb5x5u05b5xsLQTgpv4UkKSmCfupwNX8dm9ksnA42RALcIxabzjN5OHowp2x2h13E/cUvvoFa5XwO+uQT7/Oo6fbHwVjp7E9GbDaIn8/ByO1MV5QzT9FekDiQh62yo1vavC8Q3U2w=
+	t=1791244316; cv=pass; b=kj1k5MnZapRqRk8WrnpTq6wAebG0JY3zSU45KWxVH1yaUfUxsJnYB68soLn7ILbfIQcN1nhHefy+PhQKzieU77rSVboc2+Sh+CbjUBAXr2oqp6t2kGTm2hAh6RSEKHo9NTBc68ziy+7W1TpGkM+fr72fdtDU15bzk2Ev/KQ04w0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791235423; c=relaxed/simple;
-	bh=lKtNfmVxy6PnM08awUrBMfdT2M+Ze5BiielD1CHkFvk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=conSK9PDJO3GQWyFiEKT83BVvN0IeJaQz9hEN+HtoVp6hThSXIY/hhB6SFWS5hE7xmrHddERatZrfn0Vb3HhzCPedqGfiFUwkXHlHeVZ81F8oh3b4jfcGpCn29qAMyG0mrPOKWJAfx+RBw/xEBnT5+r0pvrrTVoPYR6LNpNWUTI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FnnRnjXN; arc=pass smtp.client-ip=74.125.229.42
+	s=arc-20240116; t=1791244316; c=relaxed/simple;
+	bh=nyDp+1ApeI5wi6DcLZIDQVHhSQiPQ/FBwW9Pktuu1Pg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gsV1VMDhcEgBv4PNl3vP5okjvAMgf4GlfJntyV4k0aA2wAGcSKys/FO7yUdq53j9Kd3hixTVG6dogjJG8nSEmNli+gR2hE4+yCaQlZCNZNvDJ6aAJUDiKTnhrNt2aza1NbJ8/7NGgiL1NDmgdOcFFfeKrdrWKAP4FdFF4i+aDHU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0R6sE/i; arc=pass smtp.client-ip=74.125.229.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnnRnjXN"
-Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-35118a5991dso1298446eec.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Oct 2026 14:23:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791235421; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0R6sE/i"
+Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-3510b42f4e3so2400764eec.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Oct 2026 16:51:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791244314; cv=none;
         d=google.com; s=arc-20260327;
-        b=NH5qMeMugFWVe7h/anC2SobGnV4fTVu2xRTQrU6cnTLgzadP88zQi/WDTE8h93y9sL
-         pD2l+YEEg4j0vSjEGaDhOmDbw5vc7/YYHJ8BOIWULLZQpMS42QJEjsc6UnCIjOgXHcYw
-         MINKGPMMpkF+zrU6Ua24k+c9GwbOXgt+yTx0SWjvD8Z/kMBZUEiV9IInVhkJa1Tki1CJ
-         WAgkV49JPGEn48BjGXFPGJkemfE1TCq5+2ECJuCUpchYCTaIdQh5OVIHhmeVlm15PNJk
-         r9v1Y6rY2gKFc94Kd6/yif9/202dh/up6YwtEcYC7Y22rqxk6t52/Ql3C5Tt4LS157wk
-         X48g==
+        b=BC60r/jxqixbot+PaI53moeWIREW3o/M9DpkEfrlpg8+lVpjOp+3+nr474MEo3wajb
+         7rHW0Smfg4c/U77UGeGDDVos33jpB56IO+JNnz+GMHZ7DvfLgDbTJnnQ6xDKAMDgivbb
+         CJOS/Mds0Ufl9o43KWCv6kBWMdGv9SF+XWw6YXKQg6VzQkVQ0zeLYpcqFzd0nUUz5ymp
+         1cirYvUGNAjiji7iI36WsQmb6IPHbbNWYo4fzgeCrpLUh+ThYFlpbFPMaRUx0zLTNgCY
+         gC1CidkIbtWt2P4dIz1fx0bd3HKM4JG1K1Csj5YyLYTgk82s8F6JIgnGYw+1SovRplxw
+         ta1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=+BMsm8vxGskhN0Hd8cdAfO0SjPkALEVFiwdvrxqaZWI=;
-        fh=cD6bYjLkkiNFNApBqzDxNrc8JODElmP07PHrXbdNJ64=;
-        b=Yi22MtwPn5HwWaJQovKMO90G5+zngIGXlTIY7eZHxYnzaA+yYMIAHiDAqmBvLi6ZN2
-         W1wxzOjYtAo7wjptHp4hC9Ei2ISEbtlSZxZe3eRo4PsbzDhSmT+QPMMrhoqkrz8IoYYQ
-         /u9I10Kg3EWQ+rFa1SytnSTRC15i6JfrkBpuldx5MkAhrVCnWHE+6hGNq/B4XtQ3de0T
-         bsPbMQAm3iQotGJqbEZYtxNWEGIr/cxguod0OJoWkuFyEfwJWH+iR5raQ1baB9/8YYdT
-         J4wFEqY/+qMeymuEZUfNWrmICjYFgUqGiF1QLpERH07+GgW9qZP1w/5TNHJCIwyPZ3Vb
-         iu3A==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ebxkckus4SoJ9SY/+EfYZcfaC4btVU9QwtZLBx86cuA=;
+        fh=xmqmSRivmPg27lCkE9ixQ3qk5r3U2d2cqi1UC3dAqnA=;
+        b=chQ/B3wpZ/KkQcaT2h+wvvnLmbPk5WOYGb9QV9mL1ADE8vTy007D7bpFz4sulE1MyU
+         bjS46Vqb89Cnee+WAmPazqedSTKWCLRoRYfhk4Ua0r7ZUcqG1JWU3febXVxW0SI9huz9
+         abWvZnOQ5QbFRnap+QWWycgbP/xPT1SCuZbesHJec7Jo3zNjQgkUcahY0dqi8UElltSZ
+         YnZ8MDIrlfa6JRSlgnPppaHmewij3QNs8UtBUS5F130yvulHuEVcQXYJhL5MP1KsuMq8
+         5paf72KSjIYoJau6chUn/9W58lenqXggLTH9xDzjhyR2lZIV3oIS5DvdTLIP1ZLYtf/6
+         4REA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791235421; x=1791840221; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+BMsm8vxGskhN0Hd8cdAfO0SjPkALEVFiwdvrxqaZWI=;
-        b=FnnRnjXNausk+trqCQkL2dvONA684455VH4RQJ97im0b5ZPv2EhyYxlafi+//+ZS9q
-         CiKxz36j/9JTGgO7eIGsXDyqinf6Rf8OV08L55BqUTcRYNpMNzsFP6q7suSmPSLqoMoC
-         UlvmBvaIzvN9ql5q4/3HoENUwBLyW3F1PwadtxDoRRmL7A41AcQPVmOK02m9Rs21Rcgb
-         N8lYHQqLibgolABawpz2PDprxrqs41URqynKrmr5KibciHKwX4FMSYm5gffshWqYl00H
-         neFG9za0aE9F1JOQoj1mz0BXwJvW3tsOKNsnsRAwOTiktvgPkrIWOVTMBpQh/XqH/5ha
-         sE9Q==
+        d=gmail.com; s=20251104; t=1791244314; x=1791849114; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ebxkckus4SoJ9SY/+EfYZcfaC4btVU9QwtZLBx86cuA=;
+        b=F0R6sE/ii6VSlWVokZLye1c/v4sGJNgFQcqIFIxEanMtmPBDKLpKbNVA6+B12sSL5l
+         sG/rDcB0eFOKeB8JH5ovjUgm7eMGW+Vi7WGCJrked7vbgaU0kiirbRn5VEWX8Me4SglW
+         3uUXY0kxth+AYb0eNs7217HjbdZP0Fdu6wy4pbogxHlJiI8Dqtvhsb6HXRvoLEpkxrBm
+         hYDBoEYZKehcvfqSSsHDDgS8KEDmLvBBEkPqYwNX3W5Rtg0ejfIaMQQjuyQ3uekm+aZy
+         1Nvl2Gz0OXDlHEHKQ9eNg9sAFiLP73WUxpfHRfCMO9cRURu0yaUftWkqRKL4s+Z31+4j
+         ebpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791235421; x=1791840221;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=+BMsm8vxGskhN0Hd8cdAfO0SjPkALEVFiwdvrxqaZWI=;
-        b=olGB32RP2B1J6J4dnn6CEQpoI3EclnifLME6No7KoeI5WMA4qdd3hsknQdKlVv2+E3
-         WPOSkQHYwZugNL+Uc1IJcA3aLykqv+f/QjEsDFXZj18GXkw4vBWCuYGSHLg+2H1yDiCJ
-         6lX04j/hNegvzJrQ08m39Y9OmFQlNwzFpG4gi+yv3HW0tav0/YAKQ7KvuZqh/ggZKHTZ
-         93XqmGaC9WEX6Ldcyut0IUAMo9VsRNAjAGQJd/zR44K+IEKSKLKLGcPbrIjh3SNDnTlN
-         4nG1j3Sa/kEG6VW33cNmwEjng6ne3k6DflYpB+7iJ8W8XPtLRZ5VOXyuEYxlk9jN5+8b
-         4yqA==
-X-Forwarded-Encrypted: i=1; AKwUvBy+m3DgUI2zRpDOWGAVMu78GyTeARk66aCdL55QV2iVKTrqsVqeyeQASmAZm2qgG6SqH06+cysUi5Hgwf0iZ2Y8OYy9@vger.kernel.org
-X-Gm-Message-State: AFuF++lQ4/IG6f2Qmrp6QZdiHeC2k5f8pLMF6YqMKY4I5BQMmmy8Gta5
-	0Volm1rfJxCXAufiU4yO+92bj0IYsJfBdI2txa0+9h5XOsAjolCRAJw9OZwAx9QbT6Zc/07tS8S
-	w4gffsTbaOjx15EERQMd0Mah3/fZ3V6o=
-X-Gm-Gg: AYBFou2jGygdFazVrqR0uoBQZZTQ5QYGvHncMtUFgKstYt/OA2mMhQAW963UP4HAe42
-	r8coGNOp7HwED08mwDm6TEyXElto6F00Gzvj3Q7o+y3HOjT+2+JuO8ikm8oKrbWXXruwjVObZYn
-	Vv7gHSsF2xr1zRa5UZDosB6/e4rc6aBApIZzu83avdqoma9+BFyTUWBuoHxrxzgAnY0NqoSCSW7
-	+8W5MWottW6CGzhE5dFc/qSmVnATsy4HxiHzn5xUlz7nGbEAaiKRA6VBX7i8jgeAeP65cpKSyvB
-	N14xkqb6zJ1qpfbaq2NHAF5ZI6sK2/cYde7x9or4afkDqrH199tSCDK8DD2lnkA3n77vNGBv3eK
-	/NjxP8R3VbujBxWgIfSpwf0RDdonbMQIAN92tgqX+
-X-Received: by 2002:a05:7301:6192:20b0:351:1f6c:2adc with SMTP id
- 5a478bee46e88-3511f6c3fa8mr8573268eec.35.1791235421007; Mon, 05 Oct 2026
- 14:23:41 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1791244314; x=1791849114;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ebxkckus4SoJ9SY/+EfYZcfaC4btVU9QwtZLBx86cuA=;
+        b=Jzkn/wqWE1z4kth9Mns9NFyo3PqJqOlPVErq53ZQtH86keg5IBel3u2xpSN4zxhDYH
+         CiPNG1aNqVX2i4lf8ZxQX4d4n50Jb23yGl4K6CPxBUpBLV0WBtSLkk2fF5a8AhJ8z10U
+         DR2rkjPcz5tuOyAy16G7KquFE6hdVeZYHS30ALNExPnh9to0+HI/bJoF5Jm01hmemvQU
+         mtVU0zlilLjJKqZFoF6DcAUkiGJboTJBiepkX+KXVxEvsrPqH+64dbw/obHgwI5Q8nwa
+         W3cKsFkf1txvQW+pAXTIri+jnEgUIA87UXeJeOr27RIED4YaSjKKmaA0eCpj4H/LfbBN
+         L7Bw==
+X-Forwarded-Encrypted: i=1; AKwUvBxAPVAV2TibR9k1ZFbztAC/ssKSIK5kNPZ3ehzd6c/Ygh7w9+GNMLE8JbVjU3pCI1xKgWEaba1ByDOFN+RxkDEjZbp9@vger.kernel.org
+X-Gm-Message-State: AFuF++muoDb6CPDr7ONDDg8/c4rG44rqNEwwzaz5WQ79DTXljQJUsa6U
+	DU6Tbi/xLGkJcZ4uFCN9oyOofDjnyrCLrJJcFbeL2dIkB3JjHBRULAueW8jyMb56XJwXdo7cfrv
+	XbGpapGC0KQcITxo08Ri9WZcaf8Ksmog=
+X-Gm-Gg: AYBFou2BhiGN68u5I/LXUaWTSBkRSHM5ybfKJGx7SVIAV8r0kG//GtX7tBPJqn8Q2x2
+	H5xt2LfRjN1ySAv7zLA5si9z9khjv4yhHHBee6iogblwDIToD+uqwcm3Zygk7z9eKQzYh6aQpfv
+	tqs56pGNgcRQjTtTJzP29mY2B9xeUxoeP/P0k0b1516w/xPbRUVo66QtSr7MWhN2uwIiw3EuU4L
+	okEuMHE2enzxgfJuR5mOA+GFhMl68weuEUsWB3cOZtxt4rx24hGLFbZdJHAxtKJka3uSG1rMp0g
+	IVxghJKw8zdkHCww28q2s1p+pPUzJJSSj8/rqwkCRY7hYG0C2v+esj/P4xxfRycHeJUxkElgjlJ
+	l7Di0Gkge9r//kDrqS7y8oKP7+8mLR0lpf93icRYIGQSOkE3m57AVw1GQhF8SCEIrhKi9SVDYeP
+	QUFQM=
+X-Received: by 2002:a05:7300:e5c2:b0:341:3ca2:de2d with SMTP id
+ 5a478bee46e88-34f15077edfmr14853912eec.6.1791244313787; Mon, 05 Oct 2026
+ 16:51:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
+In-Reply-To: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
 From: Angel <angellindo@gmail.com>
-Date: Mon, 5 Oct 2026 16:23:04 -0500
-X-Gm-Features: AclHuK9Z7s602mcUDHL6s_E2f36vm8zCtPPCuSnS67fsZBsYjidhjuOavzFm7LE
-Message-ID: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
-Subject: [REPORT] Kaby Lake-H (MacBookPro14,3): package C-state stuck at PC3
- on Linux, macOS reaches PC10
+Date: Mon, 5 Oct 2026 18:51:16 -0500
+X-Gm-Features: AclHuK-GqWmUZhpqnL1jubDmX5Hw_DlLPiAed4QMWX1gEvgQXKjozYhgmnoZhqc
+Message-ID: <CACiNov6n4Sr4nkAnTXJ9ZmMz022KebfAM8Hf2JV_EZ+KVa9THg@mail.gmail.com>
+Subject: Re: [REPORT] Kaby Lake-H (MacBookPro14,3): package C-state stuck at
+ PC3 on Linux, macOS reaches PC10
 To: linux-pm@vger.kernel.org, rafael@kernel.org, 
 	artem.bityutskiy@linux.intel.com
 Cc: rajneesh bhardwaj <irenic.rajneesh@gmail.com>, xi.pardee@linux.intel.com, hansg@kernel.org, 
 	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+One more data point and two clarifications after sending.
 
-On a MacBookPro14,3 the package never goes deeper than PC3 on Linux,
-while macOS on the same unit and the same firmware reaches PC10. I have
-ruled out the usual suspects and would like advice on what else can
-keep the package out of PC6 on KBL-H / SPT-H.
+PCIe L1 substates
+-----------------
+- The Wi-Fi root port 00:1c.0 has its L1 PM Substates capability
+  hidden by firmware: a stale block at 0x200 with a null header and
+  the support bits cleared, not linked from the capability chain.
+  00:1b.0 (NVMe) links it and has L1.1/L1.2 enabled on both ends.
+- The OS has no ASPM control here (FADT), so Linux cannot enable it.
+- Per Apple's IOPCIFamily source, pci-aspm-default =3D 0x102 on the
+  Wi-Fi is ASPM L1 + Clock PM, which Linux already sets, and
+  IOPCIFamily only enables L1SS when both ends expose it.
+So missing Wi-Fi L1SS is probably not the cause. This is an
+inference: I have no config space dump of that port from macOS.
 
-Hardware and software
----------------------
-- MacBookPro14,3, i7-7820HQ (Kaby Lake-H), HD 630 + Radeon Pro 560
-- PCH: 100-series PCH-H (SPT-H), PMC 8086:a121
-- Apple EFI 529.140.2.0.0, SMC 2.45f5, Thunderbolt NVM 41.5
-- Linux 7.2.5 (distro kernel), intel_idle (native tables,
-  use_acpi=N), intel_pstate with HWP
-- gmux switched to the iGPU; the Radeon is unpowered by the gmux
-  (or unbound with its root port in D3hot, see below)
+Clarifications to the questions
+-------------------------------
+- Q1/Q2: the stock module (CNP map) exposes neither pll_status nor
+  the MPHY gating file on this machine, and the SPT code has no deny
+  reason register. Is there an SPT-H equivalent of CNP's SLP_S0_DBG,
+  or ModPHY/PLL gating registers worth reading on SPT?
+- Q3: in the SPT PPFEAR map bits 13 and 21 are RSVD (SPD/SPE in the
+  CNP map). On SPT-H, do they correspond to the extra PCIe
+  controllers? Which IPs must be power gated to reach PC10?
 
-A/B: macOS vs Linux, same machine, same firmware
-------------------------------------------------
-macOS 13.7.8, idle, display on, "powermetrics --samplers
-cpu_power,gpu_power", 6 x 10 s (means):
-  PC10 80.8 %, PC6 2.5 %, PC3 0.06 %, i915 DC6 97 %, PSR 99 %,
-  package 0.19 W (powermetrics energy-model estimate, not RAPL)
+See also: https://github.com/Dunedan/mbp-2016-linux/issues/24
+(MacBookPro13,x users reported higher idle power on Linux than on
+macOS).
 
-Linux, idle, turbostat, 10 s samples:
-  awake, display on:      PC3 58-71 %, PC6..PC10 0, PkgWatt 4.0-4.2 W
-  s2idle (5 min sleeps):  PC3 98.5-98.8 %, PC6..PC10 0
+Thanks
 
-Residencies are comparable; the macOS wattage is only an estimate.
-With the display off, macOS still reaches PC7-PC10, and with a USB
-disk active on the Thunderbolt xHCI (PEG link up, no ASPM) it still
-reaches PC6/PC7. So firmware does not forbid deep package states.
+On Mon, Oct 5, 2026 at 4:23=E2=80=AFPM Angel <angellindo@gmail.com> wrote:
+>
+> Hi,
+>
+> On a MacBookPro14,3 the package never goes deeper than PC3 on Linux,
+> while macOS on the same unit and the same firmware reaches PC10. I have
+> ruled out the usual suspects and would like advice on what else can
+> keep the package out of PC6 on KBL-H / SPT-H.
+>
+> Hardware and software
+> ---------------------
+> - MacBookPro14,3, i7-7820HQ (Kaby Lake-H), HD 630 + Radeon Pro 560
+> - PCH: 100-series PCH-H (SPT-H), PMC 8086:a121
+> - Apple EFI 529.140.2.0.0, SMC 2.45f5, Thunderbolt NVM 41.5
+> - Linux 7.2.5 (distro kernel), intel_idle (native tables,
+>   use_acpi=3DN), intel_pstate with HWP
+> - gmux switched to the iGPU; the Radeon is unpowered by the gmux
+>   (or unbound with its root port in D3hot, see below)
+>
+> A/B: macOS vs Linux, same machine, same firmware
+> ------------------------------------------------
+> macOS 13.7.8, idle, display on, "powermetrics --samplers
+> cpu_power,gpu_power", 6 x 10 s (means):
+>   PC10 80.8 %, PC6 2.5 %, PC3 0.06 %, i915 DC6 97 %, PSR 99 %,
+>   package 0.19 W (powermetrics energy-model estimate, not RAPL)
+>
+> Linux, idle, turbostat, 10 s samples:
+>   awake, display on:      PC3 58-71 %, PC6..PC10 0, PkgWatt 4.0-4.2 W
+>   s2idle (5 min sleeps):  PC3 98.5-98.8 %, PC6..PC10 0
+>
+> Residencies are comparable; the macOS wattage is only an estimate.
+> With the display off, macOS still reaches PC7-PC10, and with a USB
+> disk active on the Thunderbolt xHCI (PEG link up, no ASPM) it still
+> reaches PC6/PC7. So firmware does not forbid deep package states.
+>
+> What was ruled out (PC6..PC10 stayed at 0 in every case)
+> --------------------------------------------------------
+> - i915: eDP pipe disabled, no display power domain references left
+>   (i915_power_domain_info). DC5 is entered (~1/s), DC6 never.
+>   My guess, not verified: DC6 =3D 0 is a consequence of the package
+>   veto, not its cause. Also 0 with DPMS off.
+> - Radeon: unpowered via gmux (iGPU mode), or amdgpu unbound with
+>   runtime PM so that the PEG0 root port is in D3hot; measured awake
+>   and in s2idle.
+> - Thunderbolt: both root ports' devices removed, root ports in D3hot;
+>   awake and in s2idle. Forcing L1 on the PEG/TB links did nothing.
+> - LTR: LTR_IGNORE =3D 0x1fbdf written to PMC PWRM+0x30C (all IPs
+>   ignored), awake and during s2idle, restored afterwards.
+> - Combined: Radeon off, TB removed, T1/xHCI idle, DPMS off, rfkill,
+>   LTR_IGNORE, all at once. SMBus unbound in s2idle: no change.
+> - IRTL (MSR 0x60B-0x60D, 0x633-0x635): lowering them only removes
+>   states (with all IRTLs below 61 us even PC3 disappears), so the
+>   factory values are not the limit.
+> - MSR 0xE2 =3D 0x40000008 on all CPUs: package limit C10, lock bit
+>   clear.
+> - intel_idle without _CST (use_acpi=3DN); cpuidle shows C10 (MWAIT
+>   0x60) taking most of the core idle time.
+> - acpi_osi=3DDarwin: no change.
+> - apple_set_os: the EFI stub already calls it on MacBookPro14,3
+>   (declares "Mac OS X 10.9"), so that path is already taken.
+>
+> PMC
+> ---
+> intel_pmc_core picks the Cannon Point map on SPT-H; I sent a patch
+> that adds a121 to the Sunrise Point list:
+> https://lore.kernel.org/r/20261005-intel-pmc-spt-h-v1-1-78c98e4f4620@gmai=
+l.com
+>
+> With it, pch_ip_power_gating_status at idle shows PMC, OPI-DMI,
+> SPI/eSPI, XHCI, LPSS, LPC, SMB, P2SB and FUSE not power gated; SPA-SPC,
+> GBE, SATA, HDA, ISH and CSME are gated. Unbinding the Bluetooth UART
+> gates LPSS, but PC6 and SLP_S0 residency stay at 0. XHCI stays on
+> because the Apple T1 (internal USB) is kept active. I have not
+> verified that the SPT-LP PPFEAR layout is correct for SPT-H.
+>
+> Questions
+> ---------
+> 1. On KBL-H + SPT-H, besides LTR and IRTL, which platform conditions
+>    make the package stop at PC3 while all cores sit in C10? Is there
+>    a readable deny reason or status register for this?
+> 2. What should I read next: PMC registers beyond PPFEAR (ModPHY/PLL
+>    or MPHY power gating status), System Agent / uncore state, or the
+>    PEG link power state (L1 vs L2/L3)? Any debug tool that works on
+>    a production part?
+> 3. Is the SPT-LP PPFEAR map valid for SPT-H (bits 13/21 are reserved
+>    in the SPT map but SPD/SPE in the CNP map; root port 17 is the
+>    NVMe here)? Which of the IPs above are expected to stay on in
+>    an S0 idle that reaches PC10?
+> 4. Are there known Apple firmware settings that only macOS undoes
+>    (or that Linux needs to program) for PC6 on these machines?
+>
+> I can run tests on this machine and share the raw turbostat and
+> powermetrics output and register dumps.
+>
+> I used AI analysis tools to help organize the measurements and draft
+> this text; all measurements were run and checked by me.
+>
+> It's my first time collaborating, hopefully this info is of service
+> for any correction.
+>
+> Thanks,
+>
+> --
+> Ing. Angel Lindo
+> Director de Operaciones @ Ultratech
+> +507 6326-1581
+> LinkedIn
 
-What was ruled out (PC6..PC10 stayed at 0 in every case)
---------------------------------------------------------
-- i915: eDP pipe disabled, no display power domain references left
-  (i915_power_domain_info). DC5 is entered (~1/s), DC6 never.
-  My guess, not verified: DC6 = 0 is a consequence of the package
-  veto, not its cause. Also 0 with DPMS off.
-- Radeon: unpowered via gmux (iGPU mode), or amdgpu unbound with
-  runtime PM so that the PEG0 root port is in D3hot; measured awake
-  and in s2idle.
-- Thunderbolt: both root ports' devices removed, root ports in D3hot;
-  awake and in s2idle. Forcing L1 on the PEG/TB links did nothing.
-- LTR: LTR_IGNORE = 0x1fbdf written to PMC PWRM+0x30C (all IPs
-  ignored), awake and during s2idle, restored afterwards.
-- Combined: Radeon off, TB removed, T1/xHCI idle, DPMS off, rfkill,
-  LTR_IGNORE, all at once. SMBus unbound in s2idle: no change.
-- IRTL (MSR 0x60B-0x60D, 0x633-0x635): lowering them only removes
-  states (with all IRTLs below 61 us even PC3 disappears), so the
-  factory values are not the limit.
-- MSR 0xE2 = 0x40000008 on all CPUs: package limit C10, lock bit
-  clear.
-- intel_idle without _CST (use_acpi=N); cpuidle shows C10 (MWAIT
-  0x60) taking most of the core idle time.
-- acpi_osi=Darwin: no change.
-- apple_set_os: the EFI stub already calls it on MacBookPro14,3
-  (declares "Mac OS X 10.9"), so that path is already taken.
 
-PMC
----
-intel_pmc_core picks the Cannon Point map on SPT-H; I sent a patch
-that adds a121 to the Sunrise Point list:
-https://lore.kernel.org/r/20261005-intel-pmc-spt-h-v1-1-78c98e4f4620@gmail.com
 
-With it, pch_ip_power_gating_status at idle shows PMC, OPI-DMI,
-SPI/eSPI, XHCI, LPSS, LPC, SMB, P2SB and FUSE not power gated; SPA-SPC,
-GBE, SATA, HDA, ISH and CSME are gated. Unbinding the Bluetooth UART
-gates LPSS, but PC6 and SLP_S0 residency stay at 0. XHCI stays on
-because the Apple T1 (internal USB) is kept active. I have not
-verified that the SPT-LP PPFEAR layout is correct for SPT-H.
-
-Questions
----------
-1. On KBL-H + SPT-H, besides LTR and IRTL, which platform conditions
-   make the package stop at PC3 while all cores sit in C10? Is there
-   a readable deny reason or status register for this?
-2. What should I read next: PMC registers beyond PPFEAR (ModPHY/PLL
-   or MPHY power gating status), System Agent / uncore state, or the
-   PEG link power state (L1 vs L2/L3)? Any debug tool that works on
-   a production part?
-3. Is the SPT-LP PPFEAR map valid for SPT-H (bits 13/21 are reserved
-   in the SPT map but SPD/SPE in the CNP map; root port 17 is the
-   NVMe here)? Which of the IPs above are expected to stay on in
-   an S0 idle that reaches PC10?
-4. Are there known Apple firmware settings that only macOS undoes
-   (or that Linux needs to program) for PC6 on these machines?
-
-I can run tests on this machine and share the raw turbostat and
-powermetrics output and register dumps.
-
-I used AI analysis tools to help organize the measurements and draft
-this text; all measurements were run and checked by me.
-
-It's my first time collaborating, hopefully this info is of service
-for any correction.
-
-Thanks,
-
---
+--=20
 Ing. Angel Lindo
 Director de Operaciones @ Ultratech
 +507 6326-1581
