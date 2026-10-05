@@ -1,150 +1,124 @@
-Received: from sender5-op-o11.zoho.com (sender5-op-o11.zoho.com [165.173.182.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB4225F7A9;
-	Sun,  4 Oct 2026 19:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.182.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400CB2F691D
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 06:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.140
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791142318; cv=pass; b=c/9P8IKzmF/XdCAzwQNlHe9EIjjtB/mFa01FLDZNcmtBErRmttj+vJ/PoiIaxYcZ7zu1eWsManW982iviqHa+aPvtFbeYyC2AjOm7OW43EMvtLCPnIdoIlRC5fuPyF4CPdBGrL4LIxQ7qlAcWMLabD3+9sfSNwu1W8cgJvuxuco=
+	t=1791180079; cv=pass; b=eUCUWM8qjlqHiWP9hJ3hW4SGBYxwz2ai1BW9UVTvBVV6G8rEmnlv+3cVRzW3Ad2O5SDPLrC5DD7wE1awhtmKL5njkZom8Qf/WggFHGeSZh8DrcvbqO7ftR1sE53RkJlvrIplFMvloGPU4U7zx5mx9ch43qWOW1n/ooxEwv+appU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791142318; c=relaxed/simple;
-	bh=npAFeNbnUiqL5FuCr3iRamjVN1PG0m2FhKEnJ4LpgTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jcMhbY1DX0LUxs/vU9iEB/XJrYyVvXXtOW44l2dKFuhJiuxsP6aAC142Oc6O1gdhgkszgtFRDGJKXQXoWmgScrFF75W2q14kaunE0OVunsopG48hnoe1rcLUWeTdGsjjDUKZpaHSDqcP/Cvz3MdnRcM6vSXySODQQg5gbQsKgGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=J1UyGq/U; arc=pass smtp.client-ip=165.173.182.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1791180079; c=relaxed/simple;
+	bh=GTID0RY8P8IY/bjf1M1IYhmSe2KeQ6UR8ZDcIpVVyh4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=DKMV7h1YrgtFBpJz8a30IxSAUDfz3J8zQZ0bLUwKVJ7aPN4LnFNOVz0gVVCUSn0yexLSM1uZLbtAEsvaVRWvjfgehYXdENXPwLdpigu0aClXSbjdtGk7nI9lfKdIcU0oq1+6fRKfLUCmAmBvIZAmLkJTZEDYxHvf6rf1NFCnj1s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ozU4s5hs; arc=pass smtp.client-ip=74.125.230.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="J1UyGq/U"
-ARC-Seal: i=1; a=rsa-sha256; t=1791142201; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Pi/oisytCHp2YKwOVmo7zZbbepwwmwkZDZCb1EC5JWzrkyCXLlwySINedWLlGCwPVbtbBb6srsQLcQSqNUC2Uo5mLGdil22SWH4H7E58k8Gpzbi4tS8ClBLBRqLqAR5Ua012yyz7z5qq1VuA/9kj+EUicoIrWMBpZGj/l7srmk4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1791142201; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=JFR/y46AuH5zhc0c/R6tAYo9y5d3NyankY+Jgutk2ow=; 
-	b=TuepGGdR63PBpIwOlizgrHrTZyvU9DjrLKxJ6aWCpbHOwB/5lUucSX7Bbxbl0vW1pgqKy1nEIaI3Wsxs4/GR+aqEhUPYt5NoQeW/dXZ73tc9FDBCvMPXgefKmwd2JacszF2tJgElI6YAggvcEHvetpfGIwgxyTYvKkC6Ym/aQDY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791142201;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=JFR/y46AuH5zhc0c/R6tAYo9y5d3NyankY+Jgutk2ow=;
-	b=J1UyGq/UqBJBipmNwosM7o6xXgF20Kwd4Rrkfb/eAkbWvoL9/zgYXdnNxwiMf1Tt
-	/uaqa8ChNMu/M5250emqUgG861Ht8mDqzroZyf3SgAQHla9DvzBAQ1bzq1Hmh/DZ/e+
-	Pkl3f6MLkWlDs4Mu6l8x9VbQ06IJ3gP4gKGlXQx0=
-Received: by smtp.zohomail.com with SMTPS id 1791142198422180.87438797751383;
-	Sun, 4 Oct 2026 12:29:58 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 092E2180951; Sun, 04 Oct 2026 21:29:35 +0200 (CEST)
-Date: Sun, 4 Oct 2026 21:29:35 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Jordan Brough <jordan@brough.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Antheas Kapenekakis <lkml@antheas.dev>, 
-	Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Armin Wolf <W_Armin@gmx.de>, Jonathan Woithe <jwoithe@just42.net>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Ike Panhc <ikepanhc@gmail.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Matan Ziv-Av <matan@svgalib.org>, Nikita Kravets <teackot@gmail.com>, 
-	=?utf-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, Joshua Grisham <josh@joshuagrisham.com>, 
-	Jeremy Soller <jeremy@system76.com>, System76 Product Development <productdev@system76.com>, 
-	Azael Avalos <coproscefalo@gmail.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] ACPI: battery: add acpi_ prefix to the battery
- hook API
-Message-ID: <asKowO4nqSiCC58T@venus>
-References: <20260930222650.1883805-1-jordan@brough.org>
- <20260930222650.1883805-2-jordan@brough.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozU4s5hs"
+Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-91219376dd6so23030416d6.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 04 Oct 2026 23:01:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791180077; cv=none;
+        d=google.com; s=arc-20260327;
+        b=OYjgYNfLeqTDvcVCorq7Ob3yQGS8QffOXF/zKsV9oInZxdyNlVu2in0ZJTPC1pjC08
+         cDCo78quAj35JLSQxsSr9DMjat4ge6UhWzMan8b53cHimI4QLzfkIBhXo0JauFQkx+Ci
+         HxHAIlsEHWQirKfuZgMixJhZgkPiSNseTSzzQY2IihU4RD60cO3IbeEGnkXnhBSwiU2T
+         vIhTpT2lnhZPJHxj7DF2dlGZZae3B795d7QLEWflXtKMq11I4lT+zK2TDo1Ws+0iC5ZS
+         CtoeKlzzQP07/ALkaoSBH0XA+jD56OLqts/U8eVU5Bj0rZ9XlA8ycbuGnFWNz08ZdBpB
+         UQyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=Ld5/fX5W6z0SgiJe8TVQR+gFiVM3d4IWodLzS6BeG6Y=;
+        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
+        b=jhArWHG1+E8ZXwMGbCnX1YK74NVRHvqf+3nDO7oXJdrMrzl+XhbZmQafNhlOpuLC4p
+         YwC1XQSCjvf2lx8bz0Kn2PhUxKa+umFxPAtYUBKSU7WErlxLMA/JzFINgH2ThMNFedAM
+         fTNDVtBbKsMlfBTu9k4KBto6qB1gp4whJDvepAKofy06p6e332s6m5ZFI6cBYnTYEaJI
+         njcEZV5Iuck84rWdLRQ/Syu9Bm+i1vAPV4m7Ai0SHCNjCv9BKHczdH20Dlv5nsyIiPoS
+         gss7dj6kesUmXBerrjZZeGs+19T8HMj066AD/i5u0cNXO/fFXMSss/4Gzm+cCquvjGeg
+         ZMpw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791180077; x=1791784877; darn=vger.kernel.org;
+        h=content-type:to:subject:message-id:date:from:mime-version:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Ld5/fX5W6z0SgiJe8TVQR+gFiVM3d4IWodLzS6BeG6Y=;
+        b=ozU4s5hs9wV0Mopa+WZ3EbAgfKPr8txCT73q1WqWF2iNdSQBuhbdom4ssXKJCZGkEQ
+         xTulC0P56iMp+Z0OS6KdbxgHWAbSTy7vWZd5brXDpKgLNh8/Kj4jc4DvFlsB/mBviObt
+         zNoQUSYYOOFCImb0XRUDpxsPpR5KAaCuiRGbzEt01M1GAdCiIX7B8KQZK+Nsktcxq8oJ
+         SG3KqLLQizi3JobCulod+5iVl1IFVfzYD0UOZByrxrw3ZeiV4SskuOYoy/SXYx3ZmuIC
+         fyjRT4xX9yEYCyCs7I9BMf4wVF4fd4NbweUowz/vGFWyVzAc5cEJ/Q7Jxy9QJ8jAN+ZO
+         5RzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791180077; x=1791784877;
+        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ld5/fX5W6z0SgiJe8TVQR+gFiVM3d4IWodLzS6BeG6Y=;
+        b=c6TU/TxOmnWFu7PLDnS18y3G5E87MmkbBVlhhpTaIKzEQr0r45Z4vzkhtWGsyMCw7y
+         0uqGRia9btISb0fuyrW9rQMG7umomEPEnO6NYt2xi9aN45R3pYU+AD9dlzhWVBHcPtID
+         kj8mVbAmsfJD3Sn7E0ji5K6ZWnBHhSnq89jt8iWaiyPvy6Q3BuROf4IFmSnUGnNpscM0
+         7DFwabhzZKKrTrP7ksQ6YdusT6VSJZbN7rmJcwt58oiJaJQmQkAiCMeMys0ABOM/iKfz
+         JZDpGoiB97n9mCZxgII6TBe/CY8YHYOZhDqHfV1j01Hyu+fmMqdDq1jmnmc13viHDakP
+         6iqw==
+X-Gm-Message-State: AFuF++lSrcvwZ+YIV9VRUDMIEfjbIPtObqWSOYfBgYM9g64MQNUI+mHj
+	HfmO8O7SlJJIdJctV7PGkFfesr35ikyczs/0EnbrC9DKhXmXTWUgOOSj26q5GyFS+Gn1sr9jGhG
+	IFvtQQLU6NeFiPDm45QPysz8UckU/D1KXv/qEAUo=
+X-Gm-Gg: AYBFou2ZOEZqy7y6QH9JR1kgQUQcY+oQoaJS6gXAZP8aXqaXDZKW5TMEjDaNbrFRDeC
+	zjHzKkHnCZcBw9tUQR1kH04Zch/YfgdAr3kkR7h4TDhV4Kt8a2Wz7DBNT4XhqcDxKMGdYCIDuD5
+	vxZ7GlYVNvN/ny/GpNcHTbrpkIv836fwlddWpg8KV++lDSdvQVCsWyj/NAP4oQKJ4YNLJr+teLh
+	isDAUkImjz8eJIJwB257RE72HVba/51vKcuNvRtrsBXPvDT5rHaIU1knVr6F99O7Q97kD8nS3s7
+	gQ7pudhM6oePpYq5UsE4tpldGcIZaC8w1p9NLwcoZ/Amx9zrbDB6h1UBe6t147HeXBtd3TUduHL
+	0MLOLLOIsZc1mmWLLAwsESWY=
+X-Received: by 2002:a05:6214:d6f:b0:915:e732:33b4 with SMTP id
+ 6a1803df08f44-917c009e2cfmr189764566d6.19.1791180076810; Sun, 04 Oct 2026
+ 23:01:16 -0700 (PDT)
+Received: from unknown named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 5 Oct 2026 06:01:15 +0000
+Received: from unknown named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 5 Oct 2026 06:01:15 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="62rwvd636wwykjor"
-Content-Disposition: inline
-In-Reply-To: <20260930222650.1883805-2-jordan@brough.org>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-0.2.13.1.5.4/291.133.86
-X-ZohoMailClient: External
-
-
---62rwvd636wwykjor
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/3] ACPI: battery: add acpi_ prefix to the battery
- hook API
-MIME-Version: 1.0
+From: Piyush Kumar <aryanbabupiyushbabu@gmail.com>
+Date: Mon, 5 Oct 2026 06:01:15 +0000
+X-Gm-Features: AclHuK8KYHOIwrooZ356Qpe5ERx6NlVdXoIq-BbN-cD0J42bGb3MzPi-FBuXJs8
+Message-ID: <CAC604MZ_ssUJO+BFjvDXxTCt_uUGveQeH-TmrBdvJrGGBGYh9w@mail.gmail.com>
+Subject: [BUG] hp-wmi: Mute and mic-mute LEDs not supported on HP Laptop
+ 15-fc0xxx (board 8DC9)
+To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
 Hi,
 
-On Wed, Sep 30, 2026 at 04:26:33PM -0600, Jordan Brough wrote:
-> Rename battery_hook_register(), battery_hook_unregister() and
-> devm_battery_hook_register() to acpi_battery_hook_register(),
-> acpi_battery_hook_unregister() and devm_acpi_battery_hook_register(), so
-> that the exported ACPI battery hook API has a consistent namespace, and
-> update all in-tree callers.
->=20
-> No functional change.
->=20
-> Signed-off-by: Jordan Brough <jordan@brough.org>
-> ---
->  drivers/acpi/battery.c                       | 30 ++++++++++----------
->  drivers/platform/x86/asus-wmi.c              |  4 +--
->  drivers/platform/x86/ayaneo-ec.c             |  2 +-
->  drivers/platform/x86/dell/dell-laptop.c      |  4 +--
->  drivers/platform/x86/dell/dell-wmi-ddv.c     |  2 +-
->  drivers/platform/x86/fujitsu-laptop.c        |  4 +--
->  drivers/platform/x86/huawei-wmi.c            |  4 +--
->  drivers/platform/x86/lenovo/ideapad-laptop.c |  4 +--
->  drivers/platform/x86/lenovo/thinkpad_acpi.c  |  4 +--
->  drivers/platform/x86/lenovo/wmi-other.c      |  4 +--
->  drivers/platform/x86/lg-laptop.c             |  4 +--
->  drivers/platform/x86/msi-ec.c                |  4 +--
->  drivers/platform/x86/oxpec.c                 |  2 +-
->  drivers/platform/x86/samsung-galaxybook.c    |  3 +-
->  drivers/platform/x86/samsung-laptop.c        |  4 +--
->  drivers/platform/x86/system76_acpi.c         |  4 +--
->  drivers/platform/x86/toshiba_acpi.c          |  4 +--
->  drivers/platform/x86/uniwill/uniwill-acpi.c  |  2 +-
->  drivers/power/supply/cros_charge-control.c   |  2 +-
->  include/acpi/battery.h                       |  7 +++--
->  20 files changed, 50 insertions(+), 48 deletions(-)
+I am writing to report an issue where the speaker mute LED (F5) and
+mic-mute LED (F8) are non-functional under Linux on the HP Laptop
+15-fc0xxx (Motherboard DMI: 8DC9), although audio muting itself works
+fine and the LEDs function properly under Windows.
 
-I expect this to be merged via other tree:
+This issue is tracked on Kernel Bugzilla under Bug 222044.
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com> # power-supply
+Hardware Environment:
+- Laptop: HP Laptop 15-fc0xxx
+- Motherboard DMI: 8DC9
+- Subsystem ID: 103c:8dc9
+- BIOS Version: F.25
+- Audio Codec: Realtek ALC236 (103c:8dc9)
+- Kernel: 7.2.6-zen2-1-zen x86_64
 
-Greetings,
+Diagnostic Summary:
+1. ALC236 Codec Control Ruled Out:
+   Direct hda-verb coefficient writes (node 0x20, verbs 0x500/0x400 on
+indices 0x0b, 0x19, 0x34) return 0x0 with no effect on the LEDs,
+indicating the LEDs are electrically decoupled from the Realtek codec.
+2. The LEDs appear to be handled via ACPI / EC under hp-wmi, but lack
+the necessary quirk/table definitions for board ID 8DC9.
 
--- Sebastian
+Diagnostic logs and WMI/DMI details are available on the ticket.
+Please let me know if any further dumps or testing of patches are
+needed.
 
---62rwvd636wwykjor
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmrCqRsACgkQ2O7X88g7
-+poiWxAAp/QxZ6RBEAi94THiV6q0/NPtT1zDexJhTXn8VS8LlU/lpCKicyuhrLwu
-xb8L+UumNwSbonKI7J6vBgsYc0yulnfdbjgZUQmi3qKfYEX9GD3el84MlNT3OCLF
-pxXS+003OV6xbb754fLN7OnszrFpgIRHtP8pfwTEi6ah65CImiNFUWthTUN4mf4h
-gsyw2Cok5/VP6mX9vj2Q37+UAq7+68i2/vVIrVF/t79mO8T0J4EzkvP3Et893aBz
-s3PXSTDoBD+XizKL2oPzavpY/5w3g1Caf2ZHSiO/WH0WmcJnlr5TftXo8MSlVMxJ
-JWoL9cHnqFjx11pOvRUOjYdhbyIVRvWOgZQdw/lOTrCldsH4KDHjQbjGhAOvRvrr
-XK4tUDWQj+P+Auiqj8FW535zWUPOktMlzBINyklkuzfsgnv9qjTvHmjGP6XEQE8C
-7Y3MgiB+czD5L7+NiWSpRf/7/B4Ln0YeKsQgfs8tYUeY6ukyNgwcnpY/DkQ8DewO
-7WzTm3JUa2PL7dvvlhO3WprobdjKE662PWPN8y8lPD4v8sGc28zRD+sQJ0Lss9gx
-LCxBdF+D8cvz8tTdIjteH/SljVlzcP8Alcr6Sl2PNHb2XtlKd5kgpcnsNyIh0/BE
-SETzWiZDs0b74fY9ls6reAkYRCVXsBVGu6piBJtj5saqeh4om78=
-=qtJe
------END PGP SIGNATURE-----
-
---62rwvd636wwykjor--
+Best regards,
+Piyush
