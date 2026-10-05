@@ -1,124 +1,88 @@
-Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-244116.protonmail.ch (mail-244116.protonmail.ch [109.224.244.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400CB2F691D
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 06:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791180079; cv=pass; b=eUCUWM8qjlqHiWP9hJ3hW4SGBYxwz2ai1BW9UVTvBVV6G8rEmnlv+3cVRzW3Ad2O5SDPLrC5DD7wE1awhtmKL5njkZom8Qf/WggFHGeSZh8DrcvbqO7ftR1sE53RkJlvrIplFMvloGPU4U7zx5mx9ch43qWOW1n/ooxEwv+appU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791180079; c=relaxed/simple;
-	bh=GTID0RY8P8IY/bjf1M1IYhmSe2KeQ6UR8ZDcIpVVyh4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=DKMV7h1YrgtFBpJz8a30IxSAUDfz3J8zQZ0bLUwKVJ7aPN4LnFNOVz0gVVCUSn0yexLSM1uZLbtAEsvaVRWvjfgehYXdENXPwLdpigu0aClXSbjdtGk7nI9lfKdIcU0oq1+6fRKfLUCmAmBvIZAmLkJTZEDYxHvf6rf1NFCnj1s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ozU4s5hs; arc=pass smtp.client-ip=74.125.230.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCB137882B
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 07:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.116
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791184597; cv=none; b=BcJeQwQh1/F1b9LByjXBskIZJyuvz6KT1SnkhztCk/3tOFZ+lxoGEn9pzSmuMfrA8GXdPmht9M1i2heJ7JyE3Txfrm50QZp62zdNhfzIUGJJwCUXYlwMyN9AOYFzU2SYyOtN7HDMTZnQJr925JLYc0JGOJNp+qxTr1xnAt+0oD4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791184597; c=relaxed/simple;
+	bh=n7h0h5dgydDrckQxnYSgZT643NfrxWR9J0Nqx+oJG2k=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=I/7LY1enRpajzAbgMTMbUjcWhSv/RZZoLGTM5pxbmMMEBuSF83x7FStvwI0WUsmhqJlNKnTObIJaKbvZ+F82VnX4nDk4t3xzsILJnfU0i+4MRB4l4AOwuFhUnRpS8Ey4N4qXu36xdNDeb4Xk+9k2X6ikp9JmSTWQ1QBLb1JNCRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=nbv59oQA; arc=none smtp.client-ip=109.224.244.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozU4s5hs"
-Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-91219376dd6so23030416d6.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 04 Oct 2026 23:01:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791180077; cv=none;
-        d=google.com; s=arc-20260327;
-        b=OYjgYNfLeqTDvcVCorq7Ob3yQGS8QffOXF/zKsV9oInZxdyNlVu2in0ZJTPC1pjC08
-         cDCo78quAj35JLSQxsSr9DMjat4ge6UhWzMan8b53cHimI4QLzfkIBhXo0JauFQkx+Ci
-         HxHAIlsEHWQirKfuZgMixJhZgkPiSNseTSzzQY2IihU4RD60cO3IbeEGnkXnhBSwiU2T
-         vIhTpT2lnhZPJHxj7DF2dlGZZae3B795d7QLEWflXtKMq11I4lT+zK2TDo1Ws+0iC5ZS
-         CtoeKlzzQP07/ALkaoSBH0XA+jD56OLqts/U8eVU5Bj0rZ9XlA8ycbuGnFWNz08ZdBpB
-         UQyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=Ld5/fX5W6z0SgiJe8TVQR+gFiVM3d4IWodLzS6BeG6Y=;
-        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
-        b=jhArWHG1+E8ZXwMGbCnX1YK74NVRHvqf+3nDO7oXJdrMrzl+XhbZmQafNhlOpuLC4p
-         YwC1XQSCjvf2lx8bz0Kn2PhUxKa+umFxPAtYUBKSU7WErlxLMA/JzFINgH2ThMNFedAM
-         fTNDVtBbKsMlfBTu9k4KBto6qB1gp4whJDvepAKofy06p6e332s6m5ZFI6cBYnTYEaJI
-         njcEZV5Iuck84rWdLRQ/Syu9Bm+i1vAPV4m7Ai0SHCNjCv9BKHczdH20Dlv5nsyIiPoS
-         gss7dj6kesUmXBerrjZZeGs+19T8HMj066AD/i5u0cNXO/fFXMSss/4Gzm+cCquvjGeg
-         ZMpw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791180077; x=1791784877; darn=vger.kernel.org;
-        h=content-type:to:subject:message-id:date:from:mime-version:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=Ld5/fX5W6z0SgiJe8TVQR+gFiVM3d4IWodLzS6BeG6Y=;
-        b=ozU4s5hs9wV0Mopa+WZ3EbAgfKPr8txCT73q1WqWF2iNdSQBuhbdom4ssXKJCZGkEQ
-         xTulC0P56iMp+Z0OS6KdbxgHWAbSTy7vWZd5brXDpKgLNh8/Kj4jc4DvFlsB/mBviObt
-         zNoQUSYYOOFCImb0XRUDpxsPpR5KAaCuiRGbzEt01M1GAdCiIX7B8KQZK+Nsktcxq8oJ
-         SG3KqLLQizi3JobCulod+5iVl1IFVfzYD0UOZByrxrw3ZeiV4SskuOYoy/SXYx3ZmuIC
-         fyjRT4xX9yEYCyCs7I9BMf4wVF4fd4NbweUowz/vGFWyVzAc5cEJ/Q7Jxy9QJ8jAN+ZO
-         5RzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791180077; x=1791784877;
-        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Ld5/fX5W6z0SgiJe8TVQR+gFiVM3d4IWodLzS6BeG6Y=;
-        b=c6TU/TxOmnWFu7PLDnS18y3G5E87MmkbBVlhhpTaIKzEQr0r45Z4vzkhtWGsyMCw7y
-         0uqGRia9btISb0fuyrW9rQMG7umomEPEnO6NYt2xi9aN45R3pYU+AD9dlzhWVBHcPtID
-         kj8mVbAmsfJD3Sn7E0ji5K6ZWnBHhSnq89jt8iWaiyPvy6Q3BuROf4IFmSnUGnNpscM0
-         7DFwabhzZKKrTrP7ksQ6YdusT6VSJZbN7rmJcwt58oiJaJQmQkAiCMeMys0ABOM/iKfz
-         JZDpGoiB97n9mCZxgII6TBe/CY8YHYOZhDqHfV1j01Hyu+fmMqdDq1jmnmc13viHDakP
-         6iqw==
-X-Gm-Message-State: AFuF++lSrcvwZ+YIV9VRUDMIEfjbIPtObqWSOYfBgYM9g64MQNUI+mHj
-	HfmO8O7SlJJIdJctV7PGkFfesr35ikyczs/0EnbrC9DKhXmXTWUgOOSj26q5GyFS+Gn1sr9jGhG
-	IFvtQQLU6NeFiPDm45QPysz8UckU/D1KXv/qEAUo=
-X-Gm-Gg: AYBFou2ZOEZqy7y6QH9JR1kgQUQcY+oQoaJS6gXAZP8aXqaXDZKW5TMEjDaNbrFRDeC
-	zjHzKkHnCZcBw9tUQR1kH04Zch/YfgdAr3kkR7h4TDhV4Kt8a2Wz7DBNT4XhqcDxKMGdYCIDuD5
-	vxZ7GlYVNvN/ny/GpNcHTbrpkIv836fwlddWpg8KV++lDSdvQVCsWyj/NAP4oQKJ4YNLJr+teLh
-	isDAUkImjz8eJIJwB257RE72HVba/51vKcuNvRtrsBXPvDT5rHaIU1knVr6F99O7Q97kD8nS3s7
-	gQ7pudhM6oePpYq5UsE4tpldGcIZaC8w1p9NLwcoZ/Amx9zrbDB6h1UBe6t147HeXBtd3TUduHL
-	0MLOLLOIsZc1mmWLLAwsESWY=
-X-Received: by 2002:a05:6214:d6f:b0:915:e732:33b4 with SMTP id
- 6a1803df08f44-917c009e2cfmr189764566d6.19.1791180076810; Sun, 04 Oct 2026
- 23:01:16 -0700 (PDT)
-Received: from unknown named unknown by gmailapi.google.com with HTTPREST;
- Mon, 5 Oct 2026 06:01:15 +0000
-Received: from unknown named unknown by gmailapi.google.com with HTTPREST;
- Mon, 5 Oct 2026 06:01:15 +0000
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="nbv59oQA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1791184584; x=1791443784;
+	bh=dYyoCQF9ZFCDAjguiwLOlgOAnH0U0ZP897fumGJYSU8=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=nbv59oQApB+pHL8C40LNWBcgzX5kbp/mH5TJIeytY7bar43ooE59snhSxpQ3rdbe3
+	 jpV+VG3dLHP+JzEKRGeYg4DN7UBdID6k7t6kL8CFCZfmPzmyMb0LzLNBaFTXR/FBRh
+	 1Ny+dhyzS6mvRJbbUEdIp/0lsnSgv+lqRm+xRd00KpjGOyBKJEC3ysE64QvaQj7t+n
+	 1QlHcfgPSbaCYXtHQ0SJOT1y7a/frlSvyM92FDoHFyTDqYrENaa2tLfFEXz8W4RnJN
+	 HkErZjCbBHFHb/29J/9k66o3E8SXeTf9/WLmleU10N2qAwsGM90qR0zByy+gHHV9R4
+	 D5ThwKKyEirsg==
+Date: Mon, 05 Oct 2026 07:16:16 +0000
+To: Sandor Nagy <sannnagy@icloud.com>
+From: Scrimas <isma.ph@proton.me>
+Cc: Scrimas <isma.ph@proton.me>, linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, rafael@kernel.org, srinivas.pandruvada@linux.intel.com, rui.zhang@intel.com
+Subject: Re: [BUG] Lunar Lake: 400 MHz after s2idle; PL1 Tau affects reproduction and recovery
+Message-ID: <20261005071610.885801-1-isma.ph@proton.me>
+Feedback-ID: 150170229:user:proton
+X-Pm-Message-ID: 68f8f8da99dd1eb7ec41204eccfd8713f24f2453
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Piyush Kumar <aryanbabupiyushbabu@gmail.com>
-Date: Mon, 5 Oct 2026 06:01:15 +0000
-X-Gm-Features: AclHuK8KYHOIwrooZ356Qpe5ERx6NlVdXoIq-BbN-cD0J42bGb3MzPi-FBuXJs8
-Message-ID: <CAC604MZ_ssUJO+BFjvDXxTCt_uUGveQeH-TmrBdvJrGGBGYh9w@mail.gmail.com>
-Subject: [BUG] hp-wmi: Mute and mic-mute LEDs not supported on HP Laptop
- 15-fc0xxx (board 8DC9)
-To: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, 7 Sep 2026 12:00:37 -0400, Sandor Nagy wrote:
+> My ThinkPad X1 Carbon Gen 13 intermittently resumes from long s2idle
+> suspends with all eight CPUs stuck around 400 MHz.
 
-I am writing to report an issue where the speaker mute LED (F5) and
-mic-mute LED (F8) are non-functional under Linux on the HP Laptop
-15-fc0xxx (Motherboard DMI: 8DC9), although audio muting itself works
-fine and the LEDs function properly under Windows.
+Same symptom here on a different OEM and a different SKU, so this does
+not look Lenovo-specific:
 
-This issue is tracked on Kernel Bugzilla under Bug 222044.
+  Samsung Galaxy Book5 Pro 360 (NP960QHA)
+  Intel Core Ultra 7 256V (Lunar Lake), BIOS P17ALY.390.260616.03
+  Kernel 7.2.9 (CachyOS), intel_pstate active, HWP, s2idle only
+  platform_profile=3Dperformance, EPP=3Dperformance, on battery
+  PL1 34 W (MSR and MMIO), Tau 27983872 us (same value as your X1C13)
+  thermald not running
 
-Hardware Environment:
-- Laptop: HP Laptop 15-fc0xxx
-- Motherboard DMI: 8DC9
-- Subsystem ID: 103c:8dc9
-- BIOS Version: F.25
-- Audio Codec: Realtek ALC236 (103c:8dc9)
-- Kernel: 7.2.6-zen2-1-zen x86_64
+I log 60 s of turbostat and the xe GT throttle reasons after every
+resume. Over 2026-10-02..05: 13 resumes after sleeps of 1.5 h or less
+had no 400 MHz samples at all. The one resume after an 8.9 h s2idle
+had all cores at 400 MHz for the first ~9 s of the log (the log
+starts ~1 s after "PM: suspend exit"):
 
-Diagnostic Summary:
-1. ALC236 Codec Control Ruled Out:
-   Direct hda-verb coefficient writes (node 0x20, verbs 0x500/0x400 on
-indices 0x0b, 0x19, 0x34) return 0x0 with no effect on the LEDs,
-indicating the LEDs are electrically decoupled from the Realtek codec.
-2. The LEDs appear to be handled via ACPI / EC under hp-wmi, but lack
-the necessary quirk/table definitions for board ID 8DC9.
+  Busy%  Bzy_MHz  PkgTmp  GFXMHz  PkgWatt
+  16.37   400     25      400     2.38
+  73.94   400     26      400     3.23
+  49.75   400     27      400     2.87
+  ...    (6 more samples at 400 MHz, 2.8-3.2 W)
+  40.94   480     28      400     3.04
+  37.83  3557     39      400    10.57
 
-Diagnostic logs and WMI/DMI details are available on the ticket.
-Please let me know if any further dumps or testing of patches are
-needed.
+During exactly those seconds, gt0/freq0/throttle/reasons reported
+"pl1", then "none". So the package was being power-limited while
+drawing ~3 W against a 34 W PL1, at 25-28 C. That matches your
+energy-averaging hypothesis.
 
-Best regards,
-Piyush
+Ruled out on this machine:
+- ACPI _PPC: booted with processor.ignore_ppc=3D1, and scaling_max_freq
+  stayed at 4.7 GHz during the episode.
+- Thermal: package_throttle_count did not change during the window.
+
+I have not captured MSR 0x19C bits 10-11 yet.
+
+Thanks,
+Scrimas
+
