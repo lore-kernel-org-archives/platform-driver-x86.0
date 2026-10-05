@@ -1,60 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361334D9564;
-	Mon,  5 Oct 2026 18:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57C347DFA8;
+	Mon,  5 Oct 2026 18:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791224705; cv=none; b=TQ8391u1rhbZzNR3s+KvXFoexGelRSn9ITrtnwD/5yt5cKyiOaIWLU4+LsI7FidQpQ6GMpOHtjMrsZqMosZjly8nOdeofVDxla8kNRXt4yoPCE0/aPiu9zcrDqElGkJgjr8y70dy+WfQod+fMgIkOdGiDYC0PinDzqSJhZROHJA=
+	t=1791224712; cv=none; b=snAxS6m5zcixNHSEBADUID2cTDXgv/iUVJ7oTfI2j11kqMieUJs1TS4mwwWIHMFMS0w6ycyL5ShXHKiuptMVhLBhLC5SgV/GWIJKn/RQiPfk07ecuQS1naOY6HP9d5tOY+N9hxTUpQdMR5AG0hw/INrojGOVX503qWuLYAcZneQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791224705; c=relaxed/simple;
-	bh=FNQbdBQnjFVM0/YrVE+Zwfb9a6ORdXA88DXR1XbRXV4=;
+	s=arc-20240116; t=1791224712; c=relaxed/simple;
+	bh=gD3dNkqj83lwRg9ugh/QwrZ5jQPoPg1sgPigFXRg1K0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=uJ3VYp3XYtYJSNCYYR/wcRoU8iTCEDB8OpHfPygZukTggJWYEKQLZdEvxpDLGpBlIyA6Pjgp8QkQ6gpxo6aH4q4yaLy2bmO+ODfbGAXmXgVe5LGVCxSnL8ypCny0KE2Z9jvUOuNyOgZjgvdx49Kue7WwgeMZ9dBd7KPJn198Wc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LWOrg+GF; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=ZyUxnj1ahDabisoAIbFrY8p+vU/ykQKHe6wRcTynX+DnnlgT+6Yh7kPJfSXBVHMnJ7sUDzyhuSaUVCaHSphdqFB9jRhfF2zRDXqUhYZrCKWXuImO1lhXosJe92EoiiMa1Y9WmsoKsHwcA4YvFcROaKSfN21zPI25S5l41ydqYLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DOqdtJba; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LWOrg+GF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DOqdtJba"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791224704; x=1822760704;
+  t=1791224711; x=1822760711;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=FNQbdBQnjFVM0/YrVE+Zwfb9a6ORdXA88DXR1XbRXV4=;
-  b=LWOrg+GFDNUk8JpIWkzIPQoWa7s3INoBx7208ebw3ykyv8QEjB+RtCy4
-   rT7ik+6bIWwXDoT4eznH/vDI3bAaq2i72x6AgQuCza4h1waLaO67zVolD
-   CsqxvIyHqUtadBBAmE2GKmgdG+mluz3hYfxlDkiaGYPHt6voBv4ut8ov/
-   w3Ljr0ItbpbWdDVjXYvRzcXj88fdPDLhl38D8wgv+JIPcn8B5+meWCOpg
-   l+sKs5SyPvxAcKdaVc60xmw6Fa22zrOpLQIJOzaPIlHeOnyDrPzHOrgLD
-   dZQX9p+t+KRqO5RZ2ppqwp/2u7Bx+gTPTA/xJpigvXAC3UWN0TRTfM8L6
-   Q==;
-X-CSE-ConnectionGUID: bX9CviJqQuOeN1H/0sbZSg==
-X-CSE-MsgGUID: sWZGQm5+TqO1dGzsbvMrug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="91039178"
+  bh=gD3dNkqj83lwRg9ugh/QwrZ5jQPoPg1sgPigFXRg1K0=;
+  b=DOqdtJbaMZk74s9OAJyPA8fRQUsYaHZjqj1nhuMjV6DrkxKVl3dS3h8X
+   pW4JLIpx3OKdcpK6IA4BK7NR4j0/gZHN6eHsWfHHiB0xUjQpRQ1IzwM58
+   9QT5XTtnMmUQUqkLGaV4/n54B+Ku+BT0FEYyIRBEtMBLrKmND3VqDp9wR
+   UmQhc75p9zcT2RxBF5Zt1mNwdkhZfnbjt6Sa/2mAk+Tl3pMA+l+R2kkY1
+   HVNjzvAEnbeG+rlgrOnyIQUz1+7qe5Kk76fPDA+S5KeBr68y6xJbvHN3h
+   78PvUkmbbwJcFzkAJPjIlIB9mlCXzkrJEik8XTMAEKl+ZuNhAWlJko+J2
+   A==;
+X-CSE-ConnectionGUID: Qd9Gt7x5QJ+gh6o9lhTjNw==
+X-CSE-MsgGUID: EcjDftE7SZimX27uoYCXow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="91928539"
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="91039178"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:25:03 -0700
-X-CSE-ConnectionGUID: 1WaBHyBbSBaQbUdBPJVrnA==
-X-CSE-MsgGUID: JbHgK934QIqRSUbwDCXkTQ==
+   d="scan'208";a="91928539"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:25:10 -0700
+X-CSE-ConnectionGUID: C+xuqTbqQz2/Zi7ZojGusw==
+X-CSE-MsgGUID: jNteDagxQHWr9vSf7++fhQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="280628602"
+   d="scan'208";a="276996993"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.199])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:25:00 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:25:08 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, jlee@suse.com, corentin.chary@gmail.com, 
- luke@ljones.dev, denis.benato@linux.dev, 
- Justin Vargas <justinyvar@gmail.com>
-Cc: W_Armin@gmx.de, krishna.chomal108@gmail.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260921021720.5976-1-justinyvar@gmail.com>
-References: <20260921021720.5976-1-justinyvar@gmail.com>
-Subject: Re: [PATCH v2 0/3] platform/x86: Remove unused
- platform_profile_support variables
-Message-Id: <179122469490.34664.7385984222940811548.b4-ty@b4>
-Date: Mon, 05 Oct 2026 21:24:54 +0300
+To: hansg@kernel.org, Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260922193809.4801-1-W_Armin@gmx.de>
+References: <20260922193809.4801-1-W_Armin@gmx.de>
+Subject: Re: [PATCH] platform/x86: dell-wmi-aio: Use named defines for
+ event types
+Message-Id: <179122470370.34664.3354597183467215793.b4-ty@b4>
+Date: Mon, 05 Oct 2026 21:25:03 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,19 +62,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sun, 20 Sep 2026 22:17:17 -0400, Justin Vargas wrote:
+On Tue, 22 Sep 2026 21:38:04 +0200, Armin Wolf wrote:
 
-> acer-wmi, asus-wmi and hp-wmi each set a platform_profile_support flag
-> once their platform profile handler is registered, but none of them ever
-> reads it. Remove all three, one patch per driver.
+> There exist two types of events recognized by this driver:
+> single hotkey events (0x0000) and sequences of hotkey events (0x000F).
+> Until now both literals are used without a named define, making it
+> harder to understand their meaning.
 > 
-> Compile tested only, as these are pure dead-code removals.
-> 
-> v2:
->  - Extend to asus-wmi and hp-wmi, one patch per driver, as requested
->    by Ilpo.
->  - Rebase onto review-ilpo-next.
-> v1: https://lore.kernel.org/r/20260902193039.21725-1-justinyvar@gmail.com
+> Fix this by using named defines for both event types.
 > 
 > [...]
 
@@ -92,12 +84,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/3] platform/x86: acer-wmi: Remove unused platform_profile_support variable
-      commit: e38e2a7ea4d6978a39a087acb5246431d7c4febc
-[2/3] platform/x86: asus-wmi: Remove unused platform_profile_support member
-      commit: ed73d513f302cfa500c65d05e0dde5c91d5de008
-[3/3] platform/x86: hp-wmi: Remove unused platform_profile_support variable
-      commit: 69674669e5b12b2c5158d8d46ee704195d2d3461
+[1/1] platform/x86: dell-wmi-aio: Use named defines for event types
+      commit: 6b46240b96b2ebb20af5da9f27a3ffdfbe94a90d
 
 --
  i.
