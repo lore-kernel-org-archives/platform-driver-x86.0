@@ -1,61 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C896148422C;
-	Mon,  5 Oct 2026 13:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0D547CC61;
+	Mon,  5 Oct 2026 13:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791206917; cv=none; b=of0mGpD+BalD80JUhZwQXqtezar+ooxMAN4qMl11dwrRO5qExyDrN2IY1fY9weMEAjGjY1oV87IafKa9i2+RYPfqR7ywlUVz16hcbXcnSzL4aoO08WqjC1za+eqxB0xetD3KiNkWdb7KThcsfJQXj0v6yzxRAzWYHAbIDP7NnHo=
+	t=1791207687; cv=none; b=RMoK0+BiVdTPjDbaj8+L79eK7laHu6jB9q47ef/j9m7tfIE0HO+oLYTLLWvhcnR7qXqBoRU6XnUG9WDHHiEXrBIkxH+bm1hLiAoUK+5Lkzf4YxaMY2FiUHjHS3dP0qMZRLVkT55OSOQyXuL7MeSB2TVr1Db4wjALe0VkRP/sprY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791206917; c=relaxed/simple;
-	bh=LA6IZhE3Rb+EGOJa2cBrPZ/JWMp6h4v2CRmE7thuZs4=;
+	s=arc-20240116; t=1791207687; c=relaxed/simple;
+	bh=Its1uLI0Y7rFTMZltg1TOVMxLOEmgb3xiZrFUQigsE0=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EKHu/oVTGi4KzAmnHP9o33kDZ3Rq/ebM8dFom4Vw7xLTnvEMe1qeau3T0CwkUHkR2yiRTGS0Rfr6IKWEQt6OZr2bjp7hk2aU56CdSOeJ5xenpGKd7raZP00mAHuxtU1ayvi5YrAM1zavLAOGexYdeYVS0yTA1oC3IXbdY6T+gpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xf9ojWwS; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=taBKh6lBR7Kc5AFJ2LbaOLspXPSGCZ86R30yyO/PtfmYXmG+/7lLn01su4xvDQPhIiB0eB8ng2hpIcETTQFUCeWqoYmLUSyFP2VWtJ5GX9zWsTpYxzQ+gVT/yO5O17ea8tX7XFiGhdOgGHYXVmVoH0iK5u97LBrihssvVv6Laig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YNPo21cb; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xf9ojWwS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YNPo21cb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791206913; x=1822742913;
+  t=1791207686; x=1822743686;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=LA6IZhE3Rb+EGOJa2cBrPZ/JWMp6h4v2CRmE7thuZs4=;
-  b=Xf9ojWwSkFuloqKnkUG6qsAKW4rfoRntoi94tURPIl5I0VsRRAoKzex2
-   WJBM+A4S6hPJfNr9b1/UAQcDFjrvozom/reR7byKEBc8LpN+k2fhYxY5I
-   0pXmlCJIwrhrZ2Gqi2fWg5unqEHPCudqdBKSG5RXI8TO8mvYppw0q/Nli
-   +Xj+1L1GiakAUOhHWrMyJR0y9URNLSqg6HiMY4J31/o8pmN/vsVRtKsy5
-   ii0Gpj+r/Dn4VPwN/EzYGjKtlUfcXp3Iy9wFBLmK1kmmduxNZOG8VdYzx
-   4B++YP0WjJqN72QN8UNvehifU7qmjZ8KwE9FTaqTYRez7RqciguEZ7Rqo
-   A==;
-X-CSE-ConnectionGUID: pXnYqL+iQcmHcGvFPdpD7w==
-X-CSE-MsgGUID: QVfmvjNZTmmgc7PfjWsc8w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11925"; a="90826172"
+  bh=Its1uLI0Y7rFTMZltg1TOVMxLOEmgb3xiZrFUQigsE0=;
+  b=YNPo21cboTKOI+N8w22KRlDA0mwuXyMSr1VmXvwtCvqV/sk95y171IGV
+   ZRdd6cD8NE95tvvFzW7OgSbBHJe0Qdvcvcly9b21JC81pH/LqfumR8YKp
+   kk0JJZxmz9cmwG16i3+a/roKb47N3+OfFg9AGYuzdg33lyefCuyZz/WbS
+   GUIEkFOs+zx6sZFEtdwrWFYnUby8mge2tRokijXD/ds5RX/9cL8CZYbnD
+   loot88+5bXRxSZct+J+xiPRwmz4uF75RvfKXjf3lEYkh6M1y8tJOCkxOt
+   cOWF+Q79eL2vemID+piTaB9hs22NrGXZis1yOcMt73gK88gOtu3pwfPs7
+   Q==;
+X-CSE-ConnectionGUID: yTwc1wopS7yPnNmeYeDnRA==
+X-CSE-MsgGUID: mgXUBHmWRcC4jxSGnKzBCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11925"; a="117395291"
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="90826172"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 06:28:27 -0700
-X-CSE-ConnectionGUID: opLLjo6uRXigo5QvTgElrw==
-X-CSE-MsgGUID: VGcLgWKWQsaWiqJtebxxFQ==
+   d="scan'208";a="117395291"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 06:41:25 -0700
+X-CSE-ConnectionGUID: zl2w/f3/TH6eDlbSJGz8fg==
+X-CSE-MsgGUID: pvbg3saRQUCYrzbTzRrGNw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="314829811"
+   d="scan'208";a="275463252"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.199])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 06:28:24 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 06:41:21 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 5 Oct 2026 16:28:20 +0300 (EEST)
+Date: Mon, 5 Oct 2026 16:41:18 +0300 (EEST)
 To: Muhammad Bilal <meatuni001@gmail.com>
 cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
     Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
     =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
     stable@vger.kernel.org
-Subject: Re: [PATCH v4 7/9] platform/x86: hp-bioscfg: validate SPM state
- returned by firmware
-In-Reply-To: <20261002191434.58529-8-meatuni001@gmail.com>
-Message-ID: <cf163f06-b7ac-2353-a251-f678b3a5a802@linux.intel.com>
-References: <20261002191434.58529-1-meatuni001@gmail.com> <20261002191434.58529-8-meatuni001@gmail.com>
+Subject: Re: [PATCH v4 8/9] platform/x86: hp-bioscfg: NUL-terminate the SPM
+ auth token
+In-Reply-To: <20261002191434.58529-9-meatuni001@gmail.com>
+Message-ID: <ec29e795-2b9a-36de-490e-64bb843d5dc8@linux.intel.com>
+References: <20261002191434.58529-1-meatuni001@gmail.com> <20261002191434.58529-9-meatuni001@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,15 +66,24 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Sat, 3 Oct 2026, Muhammad Bilal wrote:
 
-> status_show() and update_spm_state() use the state byte from firmware
-> to index 3-entry string arrays without a range check. A value above 2
-> indexes past the arrays, and the result is printed with %s by the
-> world-readable status and key_mechanism files.
+> auth_token_store() copies the token with kmemdup(), which does not NUL
+> terminate it, but hp_calculate_security_buffer() and
+> hp_populate_security_buffer() treat it as a C string and read past the
+> allocation.
+
+Again here.
+
+If something is treated as C string later, how is it valid to prepare it 
+with kmemdup_nul()? I just don't follow that logic.
+
+Either something is a string or it isn't, which way this is?
+
+> A lone newline (echo > auth_token) is worse: kmemdup() of 0 bytes
+> returns ZERO_SIZE_PTR, which passes the NULL checks, so a later
+> attribute write calls strlen() on address 0x10.
 > 
-> For example, a state of 3 makes status treat whatever follows
-> spm_state_types[] as a string pointer.
-> 
-> Return -EIO for an out of range state.
+> Use kmemdup_nul(), which allocates one extra byte for the terminator
+> and never returns ZERO_SIZE_PTR.
 > 
 > Compile tested only.
 > 
@@ -85,38 +94,22 @@ On Sat, 3 Oct 2026, Muhammad Bilal wrote:
 > Changes in v4:
 >  - New patch
 > 
->  drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-> index 4d94e48c1..f0eb5c445 100644
+> index f0eb5c445..19f0f9f16 100644
 > --- a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
 > +++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-> @@ -118,6 +118,9 @@ static ssize_t update_spm_state(void)
->  	if (ret < 0)
->  		return ret;
+> @@ -316,7 +316,7 @@ static ssize_t auth_token_store(struct kobject *kobj,
+>  		length--;
 >  
-> +	if (data.state >= ARRAY_SIZE(spm_mechanism_types))
-
-Please add the include for this (to the .c file, I know it includes 
-bioscfg.h as is but common include handing all includes for a multi-file 
-driver is undesirable practice).
-
-> +		return -EIO;
-> +
->  	bioscfg_drv.spm_data.mechanism = data.state;
->  	if (bioscfg_drv.spm_data.mechanism)
->  		bioscfg_drv.spm_data.is_enabled = 1;
-> @@ -153,6 +156,9 @@ static ssize_t status_show(struct kobject *kobj, struct kobj_attribute
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (data.state >= ARRAY_SIZE(spm_state_types))
-> +		return -EIO;
-> +
->  	/*
->  	 * 'status' is a read-only file that returns ASCII text in
->  	 * JSON format reporting the status information.
+>  	/* allocate space and copy current auth token */
+> -	bioscfg_drv.spm_data.auth_token = kmemdup(buf, length, GFP_KERNEL);
+> +	bioscfg_drv.spm_data.auth_token = kmemdup_nul(buf, length, GFP_KERNEL);
+>  	if (!bioscfg_drv.spm_data.auth_token) {
+>  		ret = -ENOMEM;
+>  		goto exit_token;
 > 
 
 -- 
