@@ -1,125 +1,130 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omr-01.pc5.atmailcloud.com (omr-01.pc5.atmailcloud.com [103.150.252.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA8537CD45
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 08:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8327081E
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 11:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.150.252.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791187780; cv=none; b=pnJazczrIuSpxyIPcJGo2yXhGZQ0jOq74zs2Ro4l7wulTA/bgqwsigC2Iu2KEJX5fQXkrs0aErop0EBGoU7jBP7/HEMG/IH6I9ek5yWCjOCqZGJvIrUJLnMMa4NcL/AGhytdistDqJXKnHenDYyVkwkDMhLVVzNaDYdB9ClzuhE=
+	t=1791201184; cv=none; b=SciiFfPDX8Vk9op5i3kgnXLR9ICH9EITrQFDaf4c0sizFPHWUM8aOyTbeXeh03yB0cuJ6NXE0P1KwWjbcGpczTgHu9ppnDyKsc8QL/ncl4Ftrh3zW9N6xOqxzoqQK42/a+iq+cbWJO1AfcKl0uAGg7KnB/meE3WCMDt9rvUjjzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791187780; c=relaxed/simple;
-	bh=sp7moOFoU87sCpnpLRLXygO7kV5Zv5K8JRGo+3bzcNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fr7eMWrV62Dr49qsNWD95IpFH9couDmRYxyZDkWgTgvyXDdSwo/iZevEzbSTnMo/cyIkzs9KMEE3G7wgb1Q9YozcSDPf8mxnps0inzZj6PMvay4aw3rNvYZFnC7pYzvVkXgmBgCXSQlAsk0s+jyqZdWoLzcsZJ30OifJXmJOl9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WNwRMr65; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1791201184; c=relaxed/simple;
+	bh=PPd7IPjww8LdbYcm8PORqv+HAZ+W0tQkLGHjjhGkG9I=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=dK3H+mdzEWlMV2rHTn64FytKqr57ia8QR9eEC6wGgHr1FjnR2n31CUvAExOklPuE4LTHF1PrQJJtz8ey0FasdlmYFIZgxD7HfVYJmGbJSRK3Dop4ibVLH+n4p2PEzU5H5HDeW7PMskwwNTHGUbMD+Jo4G4zJjptJ56w6/kX0ZkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ozemail.com.au; spf=pass smtp.mailfrom=ozemail.com.au; dkim=pass (2048-bit key) header.d=ozemail.com.au header.i=@ozemail.com.au header.b=K5Ic1XA0; arc=none smtp.client-ip=103.150.252.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ozemail.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ozemail.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNwRMr65"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4a0286c981dso13717375e9.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Oct 2026 01:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1791187777; x=1791792577; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=F0RLBXv8GCFvA3UGkYd6Vj6CuQ4sgMyjZDG6+lIJvG0=;
-        b=WNwRMr65sSzCDbOqcWkfdFXNmq+KAQaiurLJU8dCNJJW7ct55202RdvRyzhpPKJig0
-         JP/F6nzmlZF3HH38xvyF5YiCShvaqET4UqDTT77b0Zwd8MeMtkc9xvTgE83WQCKX7VVy
-         NRlDK/CJsRnBqNyAKtXDTM7ExU56FFUvOQ2lw8C8k7FyiX5etn2v/hWfHBaPnM5sOyAy
-         PBp+435F2cZqkTpOh2wGz1PabasnOUbblXGrp911qgsx06QSgIWgeyQX8dFLFG/paBQN
-         cNgHCZ3KdnZ3yfRvWCqTJiBisa55/LQwD/TdDdsBQXfVHM/xe8nNOa3jTBoYP3oudA1J
-         h4hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791187777; x=1791792577;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=F0RLBXv8GCFvA3UGkYd6Vj6CuQ4sgMyjZDG6+lIJvG0=;
-        b=cMrDG5RqFOvW4tzgHN4/05Ea7Paz55XXmq81+t5dYLKxajR0pdiywgcF0spDO+BF3G
-         vqkiyBG/fB/IDFSJrZT7fsgAafXqCJzVZ4ShuRFlewYuno74I4s1nUyXqdLPcv4FCecM
-         l9geIX1QW+sN39YF/F/wD7p1cvDyUuociH5FqAM/IhB/+v6EzINL0gcuhuQz2mrXee0v
-         LEZACsXJBg4epF8QewaFEP+jqUc6Eea6chfJUWomFj+f8ybcsU+U5T0OWmH2VYU38mJ+
-         ea7OFuSLwQ96MYHB6HVOnoYAGC6wfHPalQf0z05PlFW26snXltmnuLl+lZl7nTGbniAM
-         nLzQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzCtL5wzrFBSmcdQN+B3HdstSSJM5zPBgxLQNN2jCcGZtFPom7mUgNb0g3g245AOdvvhdTQcZFCDx1bVkprnUGyqC00@vger.kernel.org
-X-Gm-Message-State: AFuF++nTudeZh7X59lSxoCVNY+JcASLcITM6/2/Q14L26H7lwI5oD8Mm
-	ahZIo3izZmdMeapirrjxcp0ApUIjwsy1+K5VeRq4oMcByHljg8xFbfxTksl/0Rtw9ts=
-X-Gm-Gg: AYBFou1B5tNiIMns0EeGKBsdRpqRqVE+Rtr6MO1EfO4ZOvTECqUYEh9+Fha3avkukJp
-	ueauLVNatgQO3hfVNthrGHN+IsYNBzizH3ku2JXc1VjnokA7i2qrJYxY9lpKVqf41fp6t52NvUP
-	DDdOnXdFoapvWwcx5ZZdaJeFefSvNisZTThzLqYw52qFL0tCJFo0XizVX9rVVwAzzQ5Gu4JwlHn
-	ChwL2prDjlyf2odeo5vGpeEX5FFZOL6UtCPB457rtL3m93wSSK0tV88zJQikhylCJjEyqvRyKs0
-	QdbmTdZrk/cdepyvjync+dWu+5Ng5ez95Q2YjcZKv7SzIKBcq08R6FOKgGzkteVEURrgIZyYmOO
-	BMYSY9AfUWSd9ddp3egM5ojfg1fJ4CGSGtqbQhlz7Gy4DqV55kLURJpFXzyZqReRyboFEnLWEG6
-	d6LA5bXjgT+TY9KMflpvcHaTuJj/KKX1zq1yobzAI5S45dU0kEGsPia6IC/js2aRXxNTc88ObyP
-	5yyZox1OykA
-X-Received: by 2002:a05:600c:4594:b0:4a0:22d5:908c with SMTP id 5b1f17b1804b1-4a1680eee54mr83735285e9.12.1791187777343;
-        Mon, 05 Oct 2026 01:09:37 -0700 (PDT)
-Received: from linaro.org ([2a02:2454:ff25:4f41:ec49:36a8:7075:6d05])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48c622ab326sm1850803f8f.35.2026.10.05.01.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2026 01:09:36 -0700 (PDT)
-Date: Mon, 5 Oct 2026 10:09:34 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Alex Robinson <alex@ironrobin.net>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Steev Klimaszewski <threeway@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] Lenovo ThinkPad X13s embedded controller support
-Message-ID: <asNbPjMB_Jf9PL5C@linaro.org>
-References: <20261002154231.31376-1-alex@ironrobin.net>
+	dkim=pass (2048-bit key) header.d=ozemail.com.au header.i=@ozemail.com.au header.b="K5Ic1XA0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ozemail.com.au; s=202309; h=Content-Type:Subject:From:To:MIME-Version:Date:
+	Message-ID; bh=jXe37e4k+ovVFOdK8Nbq3JMmoOlhsVJir5LqR0E9xFk=; b=K5Ic1XA0bKS7PZ
+	9t0tN+BMoaKncmNfBw0i/q+R+Ny4DLjalv/MnGUTjrdztn6JOlilJgfHYOH37Hjm9mVKn1Dh7DXqU
+	fMu0jT7C85seNN3CEAw0QmwzI43QJhFncov0Yb/k5tFPLpOOY0Jeq137OUXeS3Fgv4XhxY9BDPOgf
+	QxOXttrBt3T6QH8tuEgX4mtdLG2ovKOMx3hC75e5/i8tHI9uIJ684/E7YSy/0m7+Q7Q3qeJB5dXWn
+	gqVPj7fbor9g/Ffv0N8LK8CjmFkzhmt1AMBNnX32P9PyqtVca5l1aZLP+4MlFhozST3bPz335lz1E
+	RB0h4enSNgrlRLQ1/x7Q==;
+Received: from cmr-tmc.internal.pc5.atmailcloud.com (cmr-tmc.internal.pc5.atmailcloud.com [192.168.1.2]) 
+	by omr-01.pc5.atmailcloud.com (Exim/cmr-tmc.i-065d927f116c61df8) with ESMTPS
+	(envelope-from <jonesy@ozemail.com.au>)
+	id 1xDgsp-0000000DkCL-11e7 ;
+	Mon, 05 Oct 2026 11:29:27 +0000
+Received: from [103.164.128.250] (helo=[10.10.10.169])
+	 by cmr-tmc.i-065d927f116c61df8 with esmtpa
+	(envelope-from <jonesy@ozemail.com.au>)
+	id 1xDgsn-0000000CUn4-2VHe;
+	Mon, 05 Oct 2026 11:29:27 +0000
+Message-ID: <027ab80d-0d00-4750-af2e-c7a72db0d0c6@ozemail.com.au>
+Date: Mon, 5 Oct 2026 22:29:24 +1100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261002154231.31376-1-alex@ironrobin.net>
+User-Agent: Betterbird (Linux)
+Content-Language: en-US
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+From: Luke Jones <jonesy@ozemail.com.au>
+Subject: uniwill-laptop: Venom BlackBook Zero 14 Phantom (L360) - EC fan table
+ findings
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Atmail-Id: jonesy@ozemail.com.au
+Authentication-Results: cmr-tmc.au-east.atmailcloud.com; auth=pass smtp.auth=jonesy@ozemail.com.au
+X-atmailcloud-spam-action: 
+X-atmailcloud-route: unknown
 
-On Fri, Oct 02, 2026 at 03:42:48PM +0000, Alex Robinson wrote:
-> Add Device Tree support for the ThinkPad X13s embedded controller,
-> providing keyboard-backlight control and firmware-driven brightness
-> notifications. Its event, backlight and power-management interfaces
-> differ from the T14s EC and require a separate driver.
-> 
-> EC wakeup remains disabled by default because lid closure can trigger
-> an unwanted wakeup and no selective event mask is known. Other EC event
-> mappings remain outside the scope of this series.
-> 
-> This follows earlier X13s EC work by Konrad Dybcio and Steev Klimaszewski.
-> Development was assisted by an LLM, including analysis of the X13s ACPI
-> DSDT and review of the implementation.
-> 
-> [...]
-> Testing:
-> - Confirmed GPIO103's firmware-inherited pull-up on a ThinkPad X13s using
->   a vanilla kernel with temporary probe-time instrumentation.
-> - Verified that all three v5 patches apply in order to Linux v7.3-rc4
->   without the separate PCI workaround and reproduce the current EC
->   source files byte-for-byte.
-> - Earlier v2 hardware testing covered keyboard-backlight control,
->   firmware brightness changes, s2idle, lid-close/open brightness
->   restoration, and EC wake events. Those results are historical and do
->   not establish validation of the complete v5 series or its revised PM
->   handling. No v5 build or runtime validation was performed while
->   preparing this submission directory.
-> 
+Hi Armin,
 
-Nitpick: I assume your LLM added this bullet point(?), but for
-submitting a series upstream this is kind of like "shooting yourself in
-the foot". You haven't tested this series for 3 revisions and your LLM
-hasn't even build-tested it? Please make sure you test your submissions. :-)
+I own a Venom BlackBook Zero 14 Phantom (L360), an Australian rebrand of 
+a Uniwill Intel P-series board, and have been getting it working 
+properly on Linux (Ubuntu 26.04, kernel 7.0). Since uniwill-laptop is 
+where this belongs long-term, I wanted to share what I found in case 
+it's useful, and offer to test anything on this hardware.
 
-Thanks,
-Stephan
+Hardware:
+- DMI sys_vendor: Venom
+- DMI product/board: Venom BlackBook Zero 14 Phantom (L360)
+- DMI family: Zero Phantom
+- BIOS: N.1.10VEN00 (2023-08-08), EC firmware 1.16
+- CPU: i7-1360P, no dGPU
+- ACPI: \_SB.INOU (INOU0000) with ECRR/ECRW; UNIW0001 touchpad
+- EC 0x0740 (project ID): 0x18 (PHxPxxx); fan tables in Uniwill Control 
+Center suggest PH4PGx1/PH4PGx2
+- EC 0x078E: UNIVERSAL_FAN_CTRL and CHARGING_PROFILE bits set
+
+Findings on the RAM fan table:
+
+1. The EC ignores the custom table unless EC_ADDR_AP_OEM (0x0741) 
+ENABLE_MANUAL_CTRL (bit 0) is set. With the table written and 0x07C6 bit 
+2 set, but 0x0741 bit 0 clear, the fan stayed on the factory curve. 
+Setting bit 0 made it follow the table within ~20 s. Uniwill's Control 
+Center sets this bit while its service runs ("AP exists").
+
+2. Control Center's sequence: clear 0x07C6 bit 2, write the table, set 
+0x07C6 bit 2. 0x07C5 bit 7 (SPLIT_TABLES) is per-profile "respective" 
+CPU/GPU control and is left clear here.
+
+3. Table semantics, from Control Center 5.1's FanTable_Manager1p5 (their 
+names: TEMP_UP / TEMP_DOWN / DUTY):
+- 0x0F00+k: temperature to step up from level k to k+1 (0x0F0F = 0xFF)
+- 0x0F10+k: temperature to step down from level k to k-1 (0x0F10 unused)
+- 0x0F20+k: duty for level k, 0-200 (percent * 2)
+GPU tables are at 0x0F30/0x0F40/0x0F50 with the same layout. In Control 
+Center's JSON, row i maps as UpT -> 0x0F00+i-1, DownT -> 0x0F10+i+1.
+
+4. The EC can dump its own factory table: write the mode to 0x0F5F (1 = 
+turbo, 2 = gaming, 3 = office), then 0xFD to 0x0F5D and 0xC9 to 0x0F5E, 
+and poll until both change.
+
+5. The factory curve here starts the fan at 35 C (about 40-50% duty at a 
+50 C idle), which is the main complaint about this laptop. With a custom 
+table (off below 57 C, 100% from 87 C) it idles silently and reached 
+100% / ~7200 rpm under sustained load, peaking at 95 C.
+
+Other notes: 0x0751 reads 0x20 on this machine, which matches none of 
+Control Center's office/gaming/turbo values (0xA0/0x00/0x10). 
+EC_ADDR_CHARGE_CTRL (0x07B9) reads 0, so charge modes rather than the 
+threshold seem to be the right feature for this board, as for the 
+PH4PG31/PH4PRX1 entries.
+
+I've packaged this as an out-of-tree DKMS module and tool, so owners can 
+use it now: https://gitlab.com/ozjonesy/venom-blackbook-linux
+
+NOTES.md there has the full register map. The reverse engineering was 
+done with an AI assistant's help, but everything above was tested on the 
+hardware.
+
+Would you be interested in:
+- a DMI entry for this laptop (I can test whatever feature set you think 
+fits; hwmon readings and charge modes work through the same registers 
+your driver uses), and/or
+- fan curve support in uniwill-laptop, perhaps through the standard 
+hwmon pwm1_auto_point*_temp/_pwm attributes?
+
+I'm not a kernel developer, but I'm happy to run test builds, dump 
+registers or try patches on this machine.
+
+Thanks for the driver,
+Luke
