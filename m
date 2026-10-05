@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52242472072;
-	Mon,  5 Oct 2026 18:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32484D9915;
+	Mon,  5 Oct 2026 18:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791224689; cv=none; b=ETc7AEsXaG6IIR3t6skC+EUBOvejntsn/yB/6pFtC2nE6UQ8i3pdZLHqOjbYSbD8FQMhB+26+43xznal3A6VMiX4IUFOG8lcfIJmtGS5uYEJKtP1Mxg/CGTFteXHhuG/Yp9urqCPxfSnWGMpF0c63lK0Xp2dW3Lc9/FbG9Wivc0=
+	t=1791224696; cv=none; b=TUausS1eTJl23N2078PRSFMEDREJ5z+oQjNiD2FOjPqHG54BCuE8C/caRWFjA1t4zzwwprwIp/tPq8RCbH3wizbJGuhPRa9bg2sztMyZYkQ83IjDjSoqwtwWSYOQGu0hO8EXsEM1Af8O0TVKftndmWkPobm0GsgHjNKE3gdbqmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791224689; c=relaxed/simple;
-	bh=jPiADK2vmgBMJUkiW3hWpE+hyFb8BI6Yz+MXU3doIDM=;
+	s=arc-20240116; t=1791224696; c=relaxed/simple;
+	bh=3YlN3K6+XQIgNonbrC1Zb7Tg08xDkVAU8qA0nbplGxI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fYDh3N/U8PjlB3CpxNxLbsM2b2wgRxNL845G8G4IlsKvsuUNpGkT75zrWF8WaBsZBbJgLPWHxlORL0ig9qYqpk12+w48cFYp6tKKOkDvl9wmTjoB7kNlCuxzjk8OTjsVqbbF/wAfQJGp4UdItVQNpfDBfD/A5CONCCM0sBlkDRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q+l1xlRj; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=f0hKYMduwbnsVFJb8ywWX1KmVajXSiT3J8NpVlwvYWHBpkHLtzUSJZhZtfLjZCnpLIzMxC+Y1xui61Lc3YTAXWqVRct8CnlXurKKuxqd2lUM36TUzbOnkDUXwUPVz499zmJUVLc9rCNdTEXJgeN3/BwA7Rll6HAPeA6eMMNWzxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GiXFx/Ym; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q+l1xlRj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GiXFx/Ym"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791224688; x=1822760688;
+  t=1791224695; x=1822760695;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=jPiADK2vmgBMJUkiW3hWpE+hyFb8BI6Yz+MXU3doIDM=;
-  b=Q+l1xlRj8Lp3kQdEcTU7yiejsDd7d18vX+6tr9E5hAEIe2c27+MS9P5g
-   kcBXmT2qYmWFrYw4YsYxWxtTh6DUba3uHhvBm1LhND9couy8mCpueD0r9
-   TmlMbKCO8oZrxjpAqlUmZkbSghBZ9WeFw/wpSJnG8XMPU4g4NiW2osLEC
-   4/HxIWWTWFIzTRnJ6XZ/hS05Eg9o20C5a4ap10bO91c/xIrznpoTCAfKX
-   o+XB7QSDDFAXb9zxk6RHg3hh+tYZwioD6BqKu/jkb2Xa4BF7j9yx/5b9e
-   BykVtaOG67EE9We4oWWpn+Sh+z6Ckn9CYOPOHDAMpg+AH5dJ//VZ1SHG9
-   Q==;
-X-CSE-ConnectionGUID: dt/bAMOOQKSP1XM2ETbPOA==
-X-CSE-MsgGUID: 2jHKGiXnTBO+f7rtP20i3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="91039151"
+  bh=3YlN3K6+XQIgNonbrC1Zb7Tg08xDkVAU8qA0nbplGxI=;
+  b=GiXFx/Ymu+TtFh0RSgDo5O2Clbv3OxST/vEJ4xq5ZVIduNm3I+k1O6CA
+   1x9icKoNwqZ56YsgfZ1fSv7e+YUpSivaVwUUg5GfCbF8YjiJho6QYBYL+
+   ddsnvwgVZ0caZDGMHgZ1/31JxoqSIddgWnsVci07CMaoLlaBg3D6qZrWH
+   5XSKYG79/NYv60q/CIcsRh5F4q2M7m4RkLcsxQX0jKO4cMZBQfQ6RuPdX
+   JET4oDHhkA855RJzZ3IZevFvhjWtfrXE2CRKEnwZDB32bySIEFJ87nJyA
+   ChVyr00BbjhvCxfxgEsAayHq5ewuThJfQAQNMEKCgQAP3mtH8nq84bp74
+   w==;
+X-CSE-ConnectionGUID: K5T8Q5hjROeAAfkbz4HbmQ==
+X-CSE-MsgGUID: 5VA0kRc+S1ySC8CBqMIkIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="101226434"
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="91039151"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:48 -0700
-X-CSE-ConnectionGUID: 9WkRdMvZS+q20OeHe27WbA==
-X-CSE-MsgGUID: V8jeHRf2RBq59UYH6pKa/Q==
+   d="scan'208";a="101226434"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:55 -0700
+X-CSE-ConnectionGUID: FWB7z2EtQtCzBpwGQjjALQ==
+X-CSE-MsgGUID: dMf715ePTq+8XUJMzc0niQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="280628479"
+   d="scan'208";a="306396480"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.199])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:45 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 11:24:53 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, Thorsten Blum <blum@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260920103035.281573-2-blum@kernel.org>
-References: <20260920103035.281573-2-blum@kernel.org>
-Subject: Re: [PATCH] platform/x86: think-lmi: Use snprintf() in
- new_password_store()
-Message-Id: <179122467912.34664.6543193112965168954.b4-ty@b4>
-Date: Mon, 05 Oct 2026 21:24:39 +0300
+To: Hans de Goede <hansg@kernel.org>, 
+ Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tiago Silva <tiago.paulo@live.com>
+In-Reply-To: <20260920185759.3426627-1-lkml@antheas.dev>
+References: <20260920185759.3426627-1-lkml@antheas.dev>
+Subject: Re: [PATCH v1] platform/x86: ayaneo-ec: Add AYANEO 2S charge
+ control
+Message-Id: <179122468793.34664.17578356170651612601.b4-ty@b4>
+Date: Mon, 05 Oct 2026 21:24:47 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,11 +64,11 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sun, 20 Sep 2026 12:30:36 +0200, Thorsten Blum wrote:
+On Sun, 20 Sep 2026 20:57:59 +0200, Antheas Kapenekakis wrote:
 
-> While the current code works correctly, replace unbounded sprintf()
-> calls with the safer snprintf() in new_password_store() to follow secure
-> coding best practices.
+> The AYANEO 2S uses the same EC fan interface as the AYANEO 2 and
+> additionally supports charge limiting. Add an exact match ahead of the
+> broader AYANEO 2 match so the charge-control quirk is selected.
 
 Thank you for your contribution, it has been applied to my local
 review-ilpo-next branch. Note it will show up in the public
@@ -81,8 +81,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: think-lmi: Use snprintf() in new_password_store()
-      commit: ff29048d56ed5069c5dfcb192a5b0687d3f45869
+[1/1] platform/x86: ayaneo-ec: Add AYANEO 2S charge control
+      commit: d5c20bcc5a20f073027cef7fcf79dcc445ee37b3
 
 --
  i.
