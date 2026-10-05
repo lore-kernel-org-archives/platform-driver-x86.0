@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304004CE68B;
-	Mon,  5 Oct 2026 16:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950B34CE699;
+	Mon,  5 Oct 2026 16:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791216796; cv=none; b=Gb05jMTai4bLJmpMdzKCTuA/g0GjPtIRQs3Lg69qdOw64V1VAzhDTAnU5E7UTt+zIv/4oCf2D75mzsgM0EQxmSF+lM2IVZ6e3XF1H9RCgnyZZ98I4ff9Wi5r5JuMLW0ut3xJoBOXPtVuWRc4qpCbVbFEEze2gVLOkk9r5PWQ9oA=
+	t=1791216818; cv=none; b=q7Ydmn/v9q3qQonuhJmfGNpwDdCiyhEBZTre1A3J/hsTAnDDyrO/4jILJaZjrCmH6/XF46MB9s8qPGVkGlwLHYp5rhpVbEXQ++Q8MRtFdOZvjUB+k1fLUKD61GpODCdqQN6J3nu1jjIASyeexE/5AWRevv4SEu7Z4pND1FRPmU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791216796; c=relaxed/simple;
-	bh=BFlN/PToxk/VE3NAsLPMCQk/ZwFNCF0eI1+lJT3olCw=;
+	s=arc-20240116; t=1791216818; c=relaxed/simple;
+	bh=RWiPTusDqo5b+F+8rnMoUPS+IcS8UJao1L2pWpkLrm8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fbJD7iWcDg0BZOdv8v3xOKzUsQCWTyMYoUFs7diwy08UXxXEtlcAFiRtnhQ7XgseQpRRSGhYRWBP0Tug2GmtI5kwE/3HBs01hnnBHBNB91KwePePmt8lfwlaTIz8PhhLJS7ghRRoC75WDdr9eCkzipLTAbxSv7nQSDrY/zbFYb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePKN/B3p; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=Y3v6QjP87UP15QLVkfZbpaJllr91Y1P/xjWj601j8NfhIvQsop0XWge9N1Mx7TdrDy7YrarwvWbK592nKwQVF47/tGHBGNpah2EXO/0ThJ6sPHvuuZlyRejZ1msunicWgCYGsHwfC9oRpHqnZ4mrO6spM/MhG0d8oTl5oSERQ5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CoDUWawn; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePKN/B3p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CoDUWawn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791216787; x=1822752787;
+  t=1791216814; x=1822752814;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=BFlN/PToxk/VE3NAsLPMCQk/ZwFNCF0eI1+lJT3olCw=;
-  b=ePKN/B3pwsdH+16Rha7S4k+PY/HKURyNvKnltNP1UVVLyPMS3c+8HoCm
-   M1eMFfMCEzWDj9/Wp+4eJRgaleeeiTn1CQ/1y1h7rhwDMMUUt/uydwFHX
-   t4K5SlJrtke/FD+ykh+/iO9hv20Ycof+F45l1Eo7M20qBmSXIeQRceo9x
-   c3zgXwVInzaosL5MuDV9tK1AUmZei+Ht3+5gdymMnBdbAAI2x6GJldDyP
-   ZBWshzepzqNgZ3WRRPJUOF0jMNDMswH4oX8bTD4DkWQFWa9APhUNQrCRp
-   nwMOICFNOQM2u0todxvF6xTUMTNWO3u2NampZOiXeXilTOQqeOZsaz/Yo
+  bh=RWiPTusDqo5b+F+8rnMoUPS+IcS8UJao1L2pWpkLrm8=;
+  b=CoDUWawnAe8N1zKBinaspYaWUKLDHkHIwZxYAJnozh5ovYupCpEJ3JIh
+   ZBjfwCgdpzktz3EPzna4CAudKOUjRPx+bZqR1XL3BORsYNIU5Pv/sZavN
+   lkv281BIqdTNrjei/FjB5GFT9ceDhZ+kbOicSW/m9X0ULPYsT3DiuT17o
+   jVU2yFCljMuMiYqs/g7UP56TXK+u8J6wUFn2k8/7ggdHab/fmppLGEV7t
+   m7un6qI1qnYJtYjQA5uHFuAENFEQrvCKX9uLSNxcJe+iHgoNS8YT5JB58
+   VulSP0ThZKCPbeUVFv97FHKGUoEgxE/haGmAVa3EZPVnZNpAnPgNDPHRM
    Q==;
-X-CSE-ConnectionGUID: a7ujNOV6RISWv+6ue8zSqw==
-X-CSE-MsgGUID: J3GSHCW9RiWxQJ+E3uBDMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="113674018"
+X-CSE-ConnectionGUID: H8Pex4mfRM2xGxAhHhJEoA==
+X-CSE-MsgGUID: hlwhpqwUS0OGcYEDkeSyvQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="102472113"
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="113674018"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 09:13:00 -0700
-X-CSE-ConnectionGUID: 2rsNQYrFTt68HLg51nvPOA==
-X-CSE-MsgGUID: I73lUMGdRWKM9VCecwn1zw==
+   d="scan'208";a="102472113"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 09:13:29 -0700
+X-CSE-ConnectionGUID: 2QqM6cwiTEaMaOMID+h9TQ==
+X-CSE-MsgGUID: x//d36DuRlaV1Q+LYl446Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
-   d="scan'208";a="276402590"
+   d="scan'208";a="281645107"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.199])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 09:12:58 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 09:13:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 5 Oct 2026 19:12:54 +0300 (EEST)
+Date: Mon, 5 Oct 2026 19:13:23 +0300 (EEST)
 To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, wse@tuxedocomputers.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] platform/x86: uniwill-laptop: Report correct lightbar
- brightness
-In-Reply-To: <20260905130138.6814-2-W_Armin@gmx.de>
-Message-ID: <3e9a0a1d-5358-2a2a-808f-be6e7eb46bd0@linux.intel.com>
-References: <20260905130138.6814-1-W_Armin@gmx.de> <20260905130138.6814-2-W_Armin@gmx.de>
+cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, wse@tuxedocomputers.com, 
+    platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] platform/x86: uniwill-laptop: Fix breathing animation
+ on Intel QC
+In-Reply-To: <20260905130138.6814-4-W_Armin@gmx.de>
+Message-ID: <151f0983-9ebd-ee6e-bda9-a9158c69a8b9@linux.intel.com>
+References: <20260905130138.6814-1-W_Armin@gmx.de> <20260905130138.6814-4-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,147 +63,122 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Sat, 5 Sep 2026, Armin Wolf wrote:
 
-> The LED sysfs ABI now allows us to specify the maximum values for the
-> global brightness and the color intensity values independently. At the
-> same time the maximum brightness value reported for the lightbar (like
-> 200) does not match the real value supported by the hardware (1),
-> potentially confusing users.
-> 
-> Report the correct maximum brightness value and only use the intensity
-> values for controlling the lightbar color.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/uniwill/uniwill-acpi.c | 35 ++++++++++-----------
->  1 file changed, 16 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> index 7a2eeaec4c96..7420e1dd4716 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -398,7 +398,7 @@ struct uniwill_data {
->  	struct mutex super_key_lock;	/* Protects the toggling of the super key lock state */
->  	struct list_head batteries;
->  	struct mutex led_lock;		/* Protects writes to the lightbar registers */
-> -	u8 lightbar_max_brightness;
-> +	u8 lightbar_max_intensity;
->  	struct led_classdev_mc led_mc_cdev;
->  	struct mc_subled led_mc_subled_info[LED_CHANNELS];
->  	bool kbd_led_single_color;
-> @@ -429,7 +429,7 @@ struct uniwill_device_descriptor {
->  	unsigned int features;
->  	bool kbd_led_single_color;
->  	u8 kbd_led_max_brightness;
-> -	u8 lightbar_max_brightness;
-> +	u8 lightbar_max_intensity;
->  	/* Executed during driver probing */
->  	int (*probe)(struct uniwill_data *data);
->  };
-> @@ -1509,20 +1509,16 @@ static int uniwill_led_brightness_set(struct led_classdev *led_cdev, enum led_br
->  	unsigned int value;
->  	int ret;
->  
-> -	ret = led_mc_calc_color_components(led_mc_cdev, brightness);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	guard(mutex)(&data->led_lock);
->  
->  	for (int i = 0; i < LED_CHANNELS; i++) {
-> -		/* Prevent the brightness values from overflowing */
-> -		value = min(data->lightbar_max_brightness, data->led_mc_subled_info[i].brightness);
-> -		ret = regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], value);
-> +		ret = regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i],
-> +				   data->led_mc_subled_info[i].intensity);
->  		if (ret < 0)
->  			return ret;
->  
-> -		ret = regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[i], value);
-> +		ret = regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[i],
-> +				   data->led_mc_subled_info[i].intensity);
->  		if (ret < 0)
->  			return ret;
->  	}
-> @@ -1586,14 +1582,14 @@ static int uniwill_led_init(struct uniwill_data *data)
->  		return ret;
->  
->  	data->led_mc_cdev.led_cdev.color = LED_COLOR_ID_MULTI;
-> -	data->led_mc_cdev.led_cdev.max_brightness = data->lightbar_max_brightness;
-> +	data->led_mc_cdev.led_cdev.max_brightness = 1;
->  	data->led_mc_cdev.led_cdev.flags = LED_REJECT_NAME_CONFLICT;
->  	data->led_mc_cdev.led_cdev.brightness_set_blocking = uniwill_led_brightness_set;
->  
->  	if (value & LIGHTBAR_S0_OFF)
->  		data->led_mc_cdev.led_cdev.brightness = 0;
->  	else
-> -		data->led_mc_cdev.led_cdev.brightness = data->lightbar_max_brightness;
-> +		data->led_mc_cdev.led_cdev.brightness = 1;
->  
->  	for (int i = 0; i < LED_CHANNELS; i++) {
->  		data->led_mc_subled_info[i].color_index = color_indices[i];
-> @@ -1604,9 +1600,9 @@ static int uniwill_led_init(struct uniwill_data *data)
->  
->  		/*
->  		 * Make sure that the initial intensity value is not greater than
-> -		 * the maximum brightness.
-> +		 * the maximum intensity.
->  		 */
-> -		value = min(data->lightbar_max_brightness, value);
-> +		value = min(data->lightbar_max_intensity, value);
->  		ret = regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], value);
->  		if (ret < 0)
->  			return ret;
-> @@ -1616,6 +1612,7 @@ static int uniwill_led_init(struct uniwill_data *data)
->  			return ret;
->  
->  		data->led_mc_subled_info[i].intensity = value;
-> +		data->led_mc_subled_info[i].max_intensity = data->lightbar_max_intensity;
->  		data->led_mc_subled_info[i].channel = i;
->  	}
->  
-> @@ -2338,7 +2335,7 @@ static int uniwill_probe(struct platform_device *pdev)
->  	data->features = device_descriptor.features;
->  	data->kbd_led_single_color = device_descriptor.kbd_led_single_color;
->  	data->kbd_led_max_brightness = device_descriptor.kbd_led_max_brightness;
-> -	data->lightbar_max_brightness = device_descriptor.lightbar_max_brightness;
-> +	data->lightbar_max_intensity = device_descriptor.lightbar_max_intensity;
->  
->  	/*
->  	 * Some devices might need to perform some device-specific initialization steps
-> @@ -2685,7 +2682,7 @@ static struct uniwill_device_descriptor lapqc71a_lapqc71b_descriptor __initdata
->  		    UNIWILL_FEATURE_GPU_TEMP |
->  		    UNIWILL_FEATURE_PRIMARY_FAN |
->  		    UNIWILL_FEATURE_SECONDARY_FAN,
-> -	.lightbar_max_brightness = 36,
-> +	.lightbar_max_intensity = 36,
->  };
->  
->  static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
-> @@ -2709,7 +2706,7 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
->  		    UNIWILL_FEATURE_GPU_TEMP |
->  		    UNIWILL_FEATURE_PRIMARY_FAN |
->  		    UNIWILL_FEATURE_SECONDARY_FAN,
-> -	.lightbar_max_brightness = 200,
-> +	.lightbar_max_intensity = 200,
->  };
+> Intel NUC 9 Extreme (Queens County) devices have a separate bit
+> inside the EC_ADDR_LIGHTBAR_AC:CTRL register for enabling the
 
-Can you respin this on top of what's in the review-ilpo-next I think there 
-are now more entries to touch after Werner's descriptor splits.
-
->  /*
-> @@ -3355,8 +3352,8 @@ static int __init uniwill_init(void)
->  		device_descriptor.kbd_led_single_color = false;
->  		/* Some models only support 3 brightness levels */
->  		device_descriptor.kbd_led_max_brightness = 4;
-> -		/* Some models only support 36 brightness levels per color component */
-> -		device_descriptor.lightbar_max_brightness = 200;
-> +		/* Some models only support 36 intensity levels per color component */
-> +		device_descriptor.lightbar_max_intensity = 200;
->  		pr_warn("Enabling potentially unsupported features\n");
->  	}
->  
-> 
+Should be _
 
 -- 
  i.
 
+
+> breathing animation in s2idle mode.
+> 
+> Add support for this additional setting.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  .../ABI/testing/sysfs-driver-uniwill-laptop   |  4 +--
+>  drivers/platform/x86/uniwill/uniwill-acpi.c   | 27 ++++++++++++++-----
+>  2 files changed, 22 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> index b9b9feebe2ed..f3060aaf8a76 100644
+> --- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> +++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> @@ -35,8 +35,8 @@ KernelVersion:	6.19
+>  Contact:	Armin Wolf <W_Armin@gmx.de>
+>  Description:
+>  		Causes the integrated lightbar to display a breathing animation when the machine
+> -		has been suspended and is running on AC power. Writing "1"/"0" into this file
+> -		enables/disables this functionality.
+> +		has been suspended, is running on AC power and the lightbar brightness not zero.
+> +		Writing "1"/"0" into this file enables/disables this functionality.
+>  
+>  		Reading this file returns the current status of the breathing animation
+>  		functionality.
+> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> index 6366171c6981..e527ed7461c3 100644
+> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> @@ -165,9 +165,10 @@
+>  #define EC_ADDR_LIGHTBAR_AC_CTRL	0x0748
+>  #define LIGHTBAR_APP_EXISTS		BIT(0)
+>  #define LIGHTBAR_POWER_SAVE		BIT(1)
+> -#define LIGHTBAR_S0_OFF			BIT(2)
+> -#define LIGHTBAR_S3_OFF			BIT(3)	// Breathing animation when suspended
+> -#define LIGHTBAR_WELCOME		BIT(7)	// Rainbow animation
+> +#define LIGHTBAR_S0_OFF			BIT(2)	/* Also disables animations */
+> +#define LIGHTBAR_S3_OFF			BIT(3)	/* No breathing animation when in s2ram */
+> +#define LIGHTBAR_MODERN_STANDBY_ON	BIT(6)	/* Breathing animation when in s2idle */
+> +#define LIGHTBAR_WELCOME		BIT(7)	/* Rainbow animation */
+>  
+>  #define EC_ADDR_LIGHTBAR_AC_RED		0x0749
+>  
+> @@ -306,7 +307,7 @@
+>  #define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
+>  #define USB_C_POWER_PRIORITY		BIT(7)
+>  
+> -/* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
+> +/* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF and LIGHTBAR_MODERN_STANDBY_ON */
+>  #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
+>  
+>  #define EC_ADDR_LIGHTBAR_BAT_RED	0x07E3
+> @@ -911,12 +912,13 @@ static ssize_t breathing_in_suspend_store(struct device *dev, struct device_attr
+>  		return ret;
+>  
+>  	if (enable)
+> -		value = 0;
+> +		value = LIGHTBAR_MODERN_STANDBY_ON;
+>  	else
+>  		value = LIGHTBAR_S3_OFF;
+>  
+>  	/* We only access a single register here, so we do not need to use data->led_lock */
+> -	ret = regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, LIGHTBAR_S3_OFF, value);
+> +	ret = regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL,
+> +				 LIGHTBAR_S3_OFF | LIGHTBAR_MODERN_STANDBY_ON, value);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -934,6 +936,10 @@ static ssize_t breathing_in_suspend_show(struct device *dev, struct device_attri
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	/*
+> +	 * We only test LIGHTBAR_S3_OFF here, because LIGHTBAR_MODERN_STANDBY_ON
+> +	 * should have the exact opposite value.
+> +	 */
+>  	return sysfs_emit(buf, "%d\n", !(value & LIGHTBAR_S3_OFF));
+>  }
+>  
+> @@ -1541,7 +1547,8 @@ static struct led_trigger uniwill_lightbar_trigger = {
+>  	.trigger_type = &uniwill_lightbar_trigger_type,
+>  };
+>  
+> -#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S3_OFF | LIGHTBAR_WELCOME)
+> +#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S3_OFF | \
+> +			 LIGHTBAR_MODERN_STANDBY_ON | LIGHTBAR_WELCOME)
+>  
+>  static int uniwill_led_init(struct uniwill_data *data)
+>  {
+> @@ -1574,6 +1581,11 @@ static int uniwill_led_init(struct uniwill_data *data)
+>  		return ret;
+>  
+>  	value |= LIGHTBAR_APP_EXISTS;
+> +	if (value & LIGHTBAR_S3_OFF)
+> +		value &= ~LIGHTBAR_MODERN_STANDBY_ON;
+> +	else
+> +		value |= LIGHTBAR_MODERN_STANDBY_ON;
+> +
+>  	ret = regmap_write(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, value);
+>  	if (ret < 0)
+>  		return ret;
+> @@ -1583,6 +1595,7 @@ static int uniwill_led_init(struct uniwill_data *data)
+>  	 * running on battery power.
+>  	 */
+>  	value |= LIGHTBAR_S3_OFF;
+> +	value &= ~LIGHTBAR_MODERN_STANDBY_ON;
+>  	ret = regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGHTBAR_MASK, value);
+>  	if (ret < 0)
+>  		return ret;
+> 
