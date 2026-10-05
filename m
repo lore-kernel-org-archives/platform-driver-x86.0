@@ -1,130 +1,171 @@
-Received: from omr-01.pc5.atmailcloud.com (omr-01.pc5.atmailcloud.com [103.150.252.74])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8327081E
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 11:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.150.252.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E2647F2C8;
+	Mon,  5 Oct 2026 13:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791201184; cv=none; b=SciiFfPDX8Vk9op5i3kgnXLR9ICH9EITrQFDaf4c0sizFPHWUM8aOyTbeXeh03yB0cuJ6NXE0P1KwWjbcGpczTgHu9ppnDyKsc8QL/ncl4Ftrh3zW9N6xOqxzoqQK42/a+iq+cbWJO1AfcKl0uAGg7KnB/meE3WCMDt9rvUjjzo=
+	t=1791205250; cv=none; b=kOh88fk0xgpy1Zj3aF12sN1OnoQC4dNYyVTOkDL0cQBLHu/JokxouMbD9BBQvy0zVoS3GExoPhdi8wBLTGrhdi45KjyMnhGQF67Mku2Xs/4KeDZcFR0rylFklc5eSCVMPR0iVRzbZvb0ANwEDq/5nTZ85ovJ8K5qiOHjqWQdq54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791201184; c=relaxed/simple;
-	bh=PPd7IPjww8LdbYcm8PORqv+HAZ+W0tQkLGHjjhGkG9I=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=dK3H+mdzEWlMV2rHTn64FytKqr57ia8QR9eEC6wGgHr1FjnR2n31CUvAExOklPuE4LTHF1PrQJJtz8ey0FasdlmYFIZgxD7HfVYJmGbJSRK3Dop4ibVLH+n4p2PEzU5H5HDeW7PMskwwNTHGUbMD+Jo4G4zJjptJ56w6/kX0ZkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ozemail.com.au; spf=pass smtp.mailfrom=ozemail.com.au; dkim=pass (2048-bit key) header.d=ozemail.com.au header.i=@ozemail.com.au header.b=K5Ic1XA0; arc=none smtp.client-ip=103.150.252.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ozemail.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ozemail.com.au
+	s=arc-20240116; t=1791205250; c=relaxed/simple;
+	bh=OWzRwoTTuWQnunHy0mJCPcV646SUG8qTbfbf6Un3tCQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=g1ZTWZNwCzGhe5em7LAT1fnEzN5Wz7wuHU5vtGXmapXsN/uwOq49+TDixzci3B4iymvk6rpayEMpOtRvrC3ntMzr6XHiA8kmYt95iTH53Zv0qI67q8d4sGl4VzNPU2AxiI2O8l+rKDYlRIxOtYSLGT285ccE995h7F2S+JKZ/3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UryTw2M7; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozemail.com.au header.i=@ozemail.com.au header.b="K5Ic1XA0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=ozemail.com.au; s=202309; h=Content-Type:Subject:From:To:MIME-Version:Date:
-	Message-ID; bh=jXe37e4k+ovVFOdK8Nbq3JMmoOlhsVJir5LqR0E9xFk=; b=K5Ic1XA0bKS7PZ
-	9t0tN+BMoaKncmNfBw0i/q+R+Ny4DLjalv/MnGUTjrdztn6JOlilJgfHYOH37Hjm9mVKn1Dh7DXqU
-	fMu0jT7C85seNN3CEAw0QmwzI43QJhFncov0Yb/k5tFPLpOOY0Jeq137OUXeS3Fgv4XhxY9BDPOgf
-	QxOXttrBt3T6QH8tuEgX4mtdLG2ovKOMx3hC75e5/i8tHI9uIJ684/E7YSy/0m7+Q7Q3qeJB5dXWn
-	gqVPj7fbor9g/Ffv0N8LK8CjmFkzhmt1AMBNnX32P9PyqtVca5l1aZLP+4MlFhozST3bPz335lz1E
-	RB0h4enSNgrlRLQ1/x7Q==;
-Received: from cmr-tmc.internal.pc5.atmailcloud.com (cmr-tmc.internal.pc5.atmailcloud.com [192.168.1.2]) 
-	by omr-01.pc5.atmailcloud.com (Exim/cmr-tmc.i-065d927f116c61df8) with ESMTPS
-	(envelope-from <jonesy@ozemail.com.au>)
-	id 1xDgsp-0000000DkCL-11e7 ;
-	Mon, 05 Oct 2026 11:29:27 +0000
-Received: from [103.164.128.250] (helo=[10.10.10.169])
-	 by cmr-tmc.i-065d927f116c61df8 with esmtpa
-	(envelope-from <jonesy@ozemail.com.au>)
-	id 1xDgsn-0000000CUn4-2VHe;
-	Mon, 05 Oct 2026 11:29:27 +0000
-Message-ID: <027ab80d-0d00-4750-af2e-c7a72db0d0c6@ozemail.com.au>
-Date: Mon, 5 Oct 2026 22:29:24 +1100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UryTw2M7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791205247; x=1822741247;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OWzRwoTTuWQnunHy0mJCPcV646SUG8qTbfbf6Un3tCQ=;
+  b=UryTw2M7WB8uZwygkyvOJZmZPboFHcbRlR6ZpxlFUGc+aR6VGzOSqMUi
+   SPZu550esT+E0wq3YEwrykO2C0ud246HXSFW0uHrAYFcYyVM2h7eI4QDj
+   7w8GC856Z+Zlh1hfdSBQZY25jjo5fbc9YoCvgjf87mR6hvKLJyKe1St8l
+   tIFXe3oWk06qS0EyUSxCXu2VThK/LxwRAfRmnUcZwna552NEi7ayZ/xNF
+   FQq9ktr/Ft+OhV8mG65TAas4Ojg8/p4K98JYnHbU/VyJG7INVsK6IIjhl
+   jA3uGUOnoEqz7WTz9+CH7lJwI/8KeA3AeepfwpytQTzoe9Cxn4JsaSltr
+   Q==;
+X-CSE-ConnectionGUID: /61MIXpETbeFyVo8mkySRQ==
+X-CSE-MsgGUID: 5vDjzkoARaCu3EPd8XnV5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11925"; a="108251560"
+X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
+   d="scan'208";a="108251560"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 06:00:47 -0700
+X-CSE-ConnectionGUID: 3FayfDV2SPO2RyVABEwAzA==
+X-CSE-MsgGUID: 0z0V8M5bRG+zxcU1oLhcVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
+   d="scan'208";a="891106"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.199])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 06:00:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 5 Oct 2026 16:00:40 +0300 (EEST)
+To: Muhammad Bilal <meatuni001@gmail.com>
+cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: hp-bioscfg: fix OOB read in
+ hp_get_integer_from_buffer() on unaligned input
+In-Reply-To: <20260919060404.85742-1-meatuni001@gmail.com>
+Message-ID: <9e0d2b45-e931-bf3a-7fb8-f6fc25964cf4@linux.intel.com>
+References: <20260919060404.85742-1-meatuni001@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Content-Language: en-US
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org
-From: Luke Jones <jonesy@ozemail.com.au>
-Subject: uniwill-laptop: Venom BlackBook Zero 14 Phantom (L360) - EC fan table
- findings
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Atmail-Id: jonesy@ozemail.com.au
-Authentication-Results: cmr-tmc.au-east.atmailcloud.com; auth=pass smtp.auth=jonesy@ozemail.com.au
-X-atmailcloud-spam-action: 
-X-atmailcloud-route: unknown
+Content-Type: multipart/mixed; boundary="8323328-2092172039-1791205240=:1173"
 
-Hi Armin,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I own a Venom BlackBook Zero 14 Phantom (L360), an Australian rebrand of 
-a Uniwill Intel P-series board, and have been getting it working 
-properly on Linux (Ubuntu 26.04, kernel 7.0). Since uniwill-laptop is 
-where this belongs long-term, I wanted to share what I found in case 
-it's useful, and offer to test anything on this hardware.
+--8323328-2092172039-1791205240=:1173
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hardware:
-- DMI sys_vendor: Venom
-- DMI product/board: Venom BlackBook Zero 14 Phantom (L360)
-- DMI family: Zero Phantom
-- BIOS: N.1.10VEN00 (2023-08-08), EC firmware 1.16
-- CPU: i7-1360P, no dGPU
-- ACPI: \_SB.INOU (INOU0000) with ECRR/ECRW; UNIW0001 touchpad
-- EC 0x0740 (project ID): 0x18 (PHxPxxx); fan tables in Uniwill Control 
-Center suggest PH4PGx1/PH4PGx2
-- EC 0x078E: UNIVERSAL_FAN_CTRL and CHARGING_PROFILE bits set
+On Sat, 19 Sep 2026, Muhammad Bilal wrote:
 
-Findings on the RAM fan table:
+> hp_get_integer_from_buffer() aligns the read pointer before dereferencing
+> it:
+>=20
+>   int *ptr =3D PTR_ALIGN((int *)*buffer, sizeof(int));
+>=20
+> When *buffer is not 4-byte aligned, PTR_ALIGN() advances ptr forward by
+> 1-3 bytes to reach the next aligned address. The bounds check that
+> follows does not account for that advance:
+>=20
+>   if (*buffer_size < sizeof(int))
+>           return -EINVAL;
+>=20
+> This only confirms 4 bytes remain from the original *buffer, not from
+> the aligned ptr. If *buffer is unaligned and *buffer_size is between 4
+> and (pad + 3) bytes, *(ptr++) reads up to 3 bytes past the end of the
+> buffer.
+>=20
+> *buffer_size is also under-decremented on every call, aligned or not:
 
-1. The EC ignores the custom table unless EC_ADDR_AP_OEM (0x0741) 
-ENABLE_MANUAL_CTRL (bit 0) is set. With the table written and 0x07C6 bit 
-2 set, but 0x0741 bit 0 clear, the fan stayed on the factory curve. 
-Setting bit 0 made it follow the table within ~20 s. Uniwill's Control 
-Center sets this bit while its service runs ("AP exists").
+I don't see the explanation telling why things go wrong in the aligned=20
+case.
 
-2. Control Center's sequence: clear 0x07C6 bit 2, write the table, set 
-0x07C6 bit 2. 0x07C5 bit 7 (SPLIT_TABLES) is per-profile "respective" 
-CPU/GPU control and is left clear here.
+>=20
+>   *buffer_size -=3D sizeof(int);
+>=20
+> *buffer is advanced to the aligned, post-read position, but
+> *buffer_size only accounts for the 4 bytes of the integer itself, not
+> the alignment padding skipped to reach it. Each unaligned read leaves
+> *buffer_size overstating the true remaining space by the pad amount,
+> an error that compounds across repeated calls against the same buffer
+> (hp_get_common_data_from_buffer() calls this in a sequence), making
+> later bounds checks against *buffer_size progressively less reliable.
+>=20
+> Compute the padding explicitly, check for it, and account for it when
+> advancing *buffer_size, so the pointer and the remaining-length count
+> stay consistent with each other.
+>=20
+> Also switch ptr from "int *" to "u32 *", matching the type of the
+> output parameter it's really standing in for, and size everything off
+> sizeof(*ptr)/sizeof(*integer) instead of the bare "int" type name.
+>=20
+> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 
-3. Table semantics, from Control Center 5.1's FanTable_Manager1p5 (their 
-names: TEMP_UP / TEMP_DOWN / DUTY):
-- 0x0F00+k: temperature to step up from level k to k+1 (0x0F0F = 0xFF)
-- 0x0F10+k: temperature to step down from level k to k-1 (0x0F10 unused)
-- 0x0F20+k: duty for level k, 0-200 (percent * 2)
-GPU tables are at 0x0F30/0x0F40/0x0F50 with the same layout. In Control 
-Center's JSON, row i maps as UpT -> 0x0F00+i-1, DownT -> 0x0F10+i+1.
+This also lacks information whether this problem is actually seen to occur=
+=20
+on some real device.
 
-4. The EC can dump its own factory table: write the mode to 0x0F5F (1 = 
-turbo, 2 = gaming, 3 = office), then 0xFD to 0x0F5D and 0xC9 to 0x0F5E, 
-and poll until both change.
+--=20
+ i.
 
-5. The factory curve here starts the fan at 35 C (about 40-50% duty at a 
-50 C idle), which is the main complaint about this laptop. With a custom 
-table (off below 57 C, 100% from 87 C) it idles silently and reached 
-100% / ~7200 rpm under sustained load, peaking at 95 C.
 
-Other notes: 0x0751 reads 0x20 on this machine, which matches none of 
-Control Center's office/gaming/turbo values (0xA0/0x00/0x10). 
-EC_ADDR_CHARGE_CTRL (0x07B9) reads 0, so charge modes rather than the 
-threshold seem to be the right feature for this board, as for the 
-PH4PG31/PH4PRX1 entries.
-
-I've packaged this as an out-of-tree DKMS module and tool, so owners can 
-use it now: https://gitlab.com/ozjonesy/venom-blackbook-linux
-
-NOTES.md there has the full register map. The reverse engineering was 
-done with an AI assistant's help, but everything above was tested on the 
-hardware.
-
-Would you be interested in:
-- a DMI entry for this laptop (I can test whatever feature set you think 
-fits; hwmon readings and charge modes work through the same registers 
-your driver uses), and/or
-- fan curve support in uniwill-laptop, perhaps through the standard 
-hwmon pwm1_auto_point*_temp/_pwm attributes?
-
-I'm not a kernel developer, but I'm happy to run test builds, dump 
-registers or try patches on this machine.
-
-Thanks for the driver,
-Luke
+> ---
+> Changes in v2:
+>   - Use sizeof(*ptr)/sizeof(*integer) instead of bare sizeof(int), and
+>     change ptr from "int *" to "u32 *" to match *integer's type, per
+>     Ilpo J=C3=A4rvinen's review.
+>=20
+> Link: https://lore.kernel.org/r/20260824225610.18471-2-meatuni001@gmail.c=
+om [v1]
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platf=
+orm/x86/hp/hp-bioscfg/bioscfg.c
+> index 309634c..f59957e 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -38,15 +38,19 @@ struct kobj_attribute common_display_langcode =3D
+> =20
+>  int hp_get_integer_from_buffer(u8 **buffer, u32 *buffer_size, u32 *integ=
+er)
+>  {
+> -=09int *ptr =3D PTR_ALIGN((int *)*buffer, sizeof(int));
+> +=09u32 *ptr =3D PTR_ALIGN((u32 *)*buffer, sizeof(*ptr));
+> +=09u32 pad =3D (u8 *)ptr - *buffer;
+> =20
+> -=09/* Ensure there is enough space remaining to read the integer */
+> -=09if (*buffer_size < sizeof(int))
+> +=09/*
+> +=09 * Ensure there is enough space remaining to read the integer,
+> +=09 * including any padding PTR_ALIGN() introduced to reach it.
+> +=09 */
+> +=09if (*buffer_size < pad + sizeof(*ptr))
+>  =09=09return -EINVAL;
+> =20
+>  =09*integer =3D *(ptr++);
+>  =09*buffer =3D (u8 *)ptr;
+> -=09*buffer_size -=3D sizeof(int);
+> +=09*buffer_size -=3D pad + sizeof(*integer);
+> =20
+>  =09return 0;
+>  }
+>=20
+--8323328-2092172039-1791205240=:1173--
