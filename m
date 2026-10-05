@@ -1,201 +1,197 @@
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154262EA480
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 20:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791230452; cv=none; b=rEl+IjiujSxQtubHaDGh+vMkEC8CSCQUbBJzGRjpckeHx7Pc0Gd7Nnwoz+4aHA3NLmOCAre0z7MYCK5vclMLhRD6If7wP/aW/0RuLIYRyWGE+b93o7UVxscMkjruEpXYTxxanBoZcn/ip1Nyz0Sy3Zi/ELV437Y8bi8ybIX7r4c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791230452; c=relaxed/simple;
-	bh=b920IOGceeWflESrf7GMYBUlyalVvPpJptY85Ye9/1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bQdCAIdKEVlnLCDfyKsotPpzJE+6Kvnh5T0Zn2LjzKLnKUaoQMaFwVRT5anp3hROlA0tMdzfzuRB9suEpfEubH8zANSJw1jmoG3ahTlaPbou7d9JQXm5OQ6Anxmiy/n8k5xZ84zBKTJe+y5bN0kP0jeACWIjT/hLiTNkgAwDHGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FBWB+rrY; arc=none smtp.client-ip=74.125.82.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA3937FF46
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 21:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791235423; cv=pass; b=Mxq8Piurnko/3tngh+ED/9Hh0HYHJheE5ytb5x5u05b5xsLQTgpv4UkKSmCfupwNX8dm9ksnA42RALcIxabzjN5OHowp2x2h13E/cUvvoFa5XwO+uQT7/Oo6fbHwVjp7E9GbDaIn8/ByO1MV5QzT9FekDiQh62yo1vavC8Q3U2w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791235423; c=relaxed/simple;
+	bh=lKtNfmVxy6PnM08awUrBMfdT2M+Ze5BiielD1CHkFvk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=conSK9PDJO3GQWyFiEKT83BVvN0IeJaQz9hEN+HtoVp6hThSXIY/hhB6SFWS5hE7xmrHddERatZrfn0Vb3HhzCPedqGfiFUwkXHlHeVZ81F8oh3b4jfcGpCn29qAMyG0mrPOKWJAfx+RBw/xEBnT5+r0pvrrTVoPYR6LNpNWUTI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FnnRnjXN; arc=pass smtp.client-ip=74.125.229.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBWB+rrY"
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-15354aa70e8so5293521c88.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Oct 2026 13:00:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnnRnjXN"
+Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-35118a5991dso1298446eec.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Oct 2026 14:23:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791235421; cv=none;
+        d=google.com; s=arc-20260327;
+        b=NH5qMeMugFWVe7h/anC2SobGnV4fTVu2xRTQrU6cnTLgzadP88zQi/WDTE8h93y9sL
+         pD2l+YEEg4j0vSjEGaDhOmDbw5vc7/YYHJ8BOIWULLZQpMS42QJEjsc6UnCIjOgXHcYw
+         MINKGPMMpkF+zrU6Ua24k+c9GwbOXgt+yTx0SWjvD8Z/kMBZUEiV9IInVhkJa1Tki1CJ
+         WAgkV49JPGEn48BjGXFPGJkemfE1TCq5+2ECJuCUpchYCTaIdQh5OVIHhmeVlm15PNJk
+         r9v1Y6rY2gKFc94Kd6/yif9/202dh/up6YwtEcYC7Y22rqxk6t52/Ql3C5Tt4LS157wk
+         X48g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=+BMsm8vxGskhN0Hd8cdAfO0SjPkALEVFiwdvrxqaZWI=;
+        fh=cD6bYjLkkiNFNApBqzDxNrc8JODElmP07PHrXbdNJ64=;
+        b=Yi22MtwPn5HwWaJQovKMO90G5+zngIGXlTIY7eZHxYnzaA+yYMIAHiDAqmBvLi6ZN2
+         W1wxzOjYtAo7wjptHp4hC9Ei2ISEbtlSZxZe3eRo4PsbzDhSmT+QPMMrhoqkrz8IoYYQ
+         /u9I10Kg3EWQ+rFa1SytnSTRC15i6JfrkBpuldx5MkAhrVCnWHE+6hGNq/B4XtQ3de0T
+         bsPbMQAm3iQotGJqbEZYtxNWEGIr/cxguod0OJoWkuFyEfwJWH+iR5raQ1baB9/8YYdT
+         J4wFEqY/+qMeymuEZUfNWrmICjYFgUqGiF1QLpERH07+GgW9qZP1w/5TNHJCIwyPZ3Vb
+         iu3A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791230450; x=1791835250; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wech+go1jt9PtBuE2y8qgkBWEZG0VwPL8l43Jru5pEw=;
-        b=FBWB+rrYxiHXky3AJXXlysAsXcz7kv/YezonhkZ24Wq7H5TYgVQNfUOZ3C+v2P53Nd
-         DDPsxRa63iB31F36gUf2e+rwnGr7t3No66xDstoSGc81Tadk6waRlhsZRD55A1Mur9R4
-         7MKgIIgHyVRxO2MFTrnWS55Ebpnb1QMD9CdgEVYwdRxoUGMxcl90o8S/K0ul7qYnuKyk
-         o2opwe3ebL9Z0yp4/oaUYhVz6vaketC9t+KAofSKZFv+pBZinXfbjJM4Z+Xwo5zzI4ON
-         XAnj3nXMHO7ZYciJy25z3O+Ki0GlbrKts80l/mwTXE2QDfuIYpOj36zBLTwYcr+Dx2fx
-         mKCw==
+        d=gmail.com; s=20251104; t=1791235421; x=1791840221; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=+BMsm8vxGskhN0Hd8cdAfO0SjPkALEVFiwdvrxqaZWI=;
+        b=FnnRnjXNausk+trqCQkL2dvONA684455VH4RQJ97im0b5ZPv2EhyYxlafi+//+ZS9q
+         CiKxz36j/9JTGgO7eIGsXDyqinf6Rf8OV08L55BqUTcRYNpMNzsFP6q7suSmPSLqoMoC
+         UlvmBvaIzvN9ql5q4/3HoENUwBLyW3F1PwadtxDoRRmL7A41AcQPVmOK02m9Rs21Rcgb
+         N8lYHQqLibgolABawpz2PDprxrqs41URqynKrmr5KibciHKwX4FMSYm5gffshWqYl00H
+         neFG9za0aE9F1JOQoj1mz0BXwJvW3tsOKNsnsRAwOTiktvgPkrIWOVTMBpQh/XqH/5ha
+         sE9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791230450; x=1791835250;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20260707; t=1791235421; x=1791840221;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=wech+go1jt9PtBuE2y8qgkBWEZG0VwPL8l43Jru5pEw=;
-        b=Yr2XaUqGJ1lBBjYl8dVNXSD2XfTP9SXq26EyLflS6+3eNPniIZMKax/bBhcCMyP8wT
-         YnVdjuz6O4V3ojIRv1tkHDLaHGDqpJp7xce4CN8UUCjaspcZV0I9uM6RZrdgcccuu9M/
-         dXJYbX4S5z8VYtd7iyK6REQCwifD0RnBXQg4Esjrj2886Iy9JhQW9+a5IN//sZs58hfh
-         qsVLTcGg/AMIh/nvC7QWMuqOm9lHRVGeYEUWp54nw9ThBlUt3mdFNUIMiuEebxZ1UDNc
-         JlcjHetpkIrBJx90WSG69/ilX3EDGztn0Hgbqji/Wj6k58IjSSw013u4sPsIBvWMVEMK
-         kDoA==
-X-Gm-Message-State: AFuF++nJlBPt4LvBRr1SKR79GlO2bnJo9CknLFiFMpmTLeF/YTRHBa8S
-	ODtImT8VU1mi2RNLEWmpeBJ++9IOcv7NIAIluQ4qkDkOLK3AxwzX/Sy3
-X-Gm-Gg: AYBFou0Nce4QCYSCSC4CbZS56StroEJ/SZS76jyXT7TnAOr/4gC2yzka8CdmNcr1GDY
-	FT/kB10bMBIqfMEW34FYelVggBWbEIAyNLwVDLkw6BX42wkG8Sy0TYf2v5Enh8E97WdQZJUiU/e
-	Kf/ekFecquN9yeQaV71DaflMxJmL22g/DDnjLp5ZbFwDPbvM67HEFakNMrK9GKJcWn67T/m4U4N
-	UxKSmJo/bzUCY2/TU6ZjPPTCjkIjXg9F4rwjmnPcXPyrZ4wUlEGrfvN6tGwBUXt5Vl9iMrEqxC4
-	aNrhgSS7wcrT0TUR6JYLwoua5nQ/cDFHFtHvlEbCBwNto0+sp5LKrs3464GknnUq1ktJVyuNxzr
-	eAp9/0LVC4vg2AL2gFcyAJ97SlLto80gk4pusGHC7v0zTKXbk68rl/61B/pdkbE0pF85F9iHYcm
-	coliBq0ctTWOscOA2T7GWHGWjIEiI0flbPOElBc2KVD/FuzqldKIgk5J3TdkX+YQp83ITN5+qXM
-	Mdx61mS6/TMu8MMDJHVeTcG2MUbUJM13qRbuvt9GlE1fMVXXnALxAgVBw5u9oH4DWha
-X-Received: by 2002:a05:701b:2506:b0:143:2984:6518 with SMTP id a92af1059eb24-151c4923063mr13728104c88.39.1791230449915;
-        Mon, 05 Oct 2026 13:00:49 -0700 (PDT)
-Received: from archlinux ([2405:201:1b:20ef:de2d:6e5b:74df:ad41])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-15d816e983asm564799c88.6.2026.10.05.13.00.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2026 13:00:49 -0700 (PDT)
-Date: Tue, 6 Oct 2026 01:30:43 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: Julien ROBIN <julien.robin28@free.fr>
-Cc: platform-driver-x86@vger.kernel.org, 
-	Suryansh Singh <technosfan14@gmail.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hansg@kernel.org>
-Subject: Re: hp_wmi: Unknown EC layout for board 8C9C
-Message-ID: <asPy5Q5wNYaMzTqJ@archlinux>
-References: <965dd816-dd66-4318-be8d-330a40209f67@free.fr>
+        bh=+BMsm8vxGskhN0Hd8cdAfO0SjPkALEVFiwdvrxqaZWI=;
+        b=olGB32RP2B1J6J4dnn6CEQpoI3EclnifLME6No7KoeI5WMA4qdd3hsknQdKlVv2+E3
+         WPOSkQHYwZugNL+Uc1IJcA3aLykqv+f/QjEsDFXZj18GXkw4vBWCuYGSHLg+2H1yDiCJ
+         6lX04j/hNegvzJrQ08m39Y9OmFQlNwzFpG4gi+yv3HW0tav0/YAKQ7KvuZqh/ggZKHTZ
+         93XqmGaC9WEX6Ldcyut0IUAMo9VsRNAjAGQJd/zR44K+IEKSKLKLGcPbrIjh3SNDnTlN
+         4nG1j3Sa/kEG6VW33cNmwEjng6ne3k6DflYpB+7iJ8W8XPtLRZ5VOXyuEYxlk9jN5+8b
+         4yqA==
+X-Forwarded-Encrypted: i=1; AKwUvBy+m3DgUI2zRpDOWGAVMu78GyTeARk66aCdL55QV2iVKTrqsVqeyeQASmAZm2qgG6SqH06+cysUi5Hgwf0iZ2Y8OYy9@vger.kernel.org
+X-Gm-Message-State: AFuF++lQ4/IG6f2Qmrp6QZdiHeC2k5f8pLMF6YqMKY4I5BQMmmy8Gta5
+	0Volm1rfJxCXAufiU4yO+92bj0IYsJfBdI2txa0+9h5XOsAjolCRAJw9OZwAx9QbT6Zc/07tS8S
+	w4gffsTbaOjx15EERQMd0Mah3/fZ3V6o=
+X-Gm-Gg: AYBFou2jGygdFazVrqR0uoBQZZTQ5QYGvHncMtUFgKstYt/OA2mMhQAW963UP4HAe42
+	r8coGNOp7HwED08mwDm6TEyXElto6F00Gzvj3Q7o+y3HOjT+2+JuO8ikm8oKrbWXXruwjVObZYn
+	Vv7gHSsF2xr1zRa5UZDosB6/e4rc6aBApIZzu83avdqoma9+BFyTUWBuoHxrxzgAnY0NqoSCSW7
+	+8W5MWottW6CGzhE5dFc/qSmVnATsy4HxiHzn5xUlz7nGbEAaiKRA6VBX7i8jgeAeP65cpKSyvB
+	N14xkqb6zJ1qpfbaq2NHAF5ZI6sK2/cYde7x9or4afkDqrH199tSCDK8DD2lnkA3n77vNGBv3eK
+	/NjxP8R3VbujBxWgIfSpwf0RDdonbMQIAN92tgqX+
+X-Received: by 2002:a05:7301:6192:20b0:351:1f6c:2adc with SMTP id
+ 5a478bee46e88-3511f6c3fa8mr8573268eec.35.1791235421007; Mon, 05 Oct 2026
+ 14:23:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <965dd816-dd66-4318-be8d-330a40209f67@free.fr>
-
-On Sun, Oct 04, 2026 at 12:45:58AM +0200, Julien ROBIN wrote:
->Hi there, I got the following message into my dmesg log:
->
->hp_wmi: Unknown EC layout for board 8C9C. Thermal profile readback will be disabled. Please report this to platform-driver-x86@vger.kernel.org
+From: Angel <angellindo@gmail.com>
+Date: Mon, 5 Oct 2026 16:23:04 -0500
+X-Gm-Features: AclHuK9Z7s602mcUDHL6s_E2f36vm8zCtPPCuSnS67fsZBsYjidhjuOavzFm7LE
+Message-ID: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
+Subject: [REPORT] Kaby Lake-H (MacBookPro14,3): package C-state stuck at PC3
+ on Linux, macOS reaches PC10
+To: linux-pm@vger.kernel.org, rafael@kernel.org, 
+	artem.bityutskiy@linux.intel.com
+Cc: rajneesh bhardwaj <irenic.rajneesh@gmail.com>, xi.pardee@linux.intel.com, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
 Hi,
 
-Thanks for reporting.
+On a MacBookPro14,3 the package never goes deeper than PC3 on Linux,
+while macOS on the same unit and the same firmware reaches PC10. I have
+ruled out the usual suspects and would like advice on what else can
+keep the package out of PC6 on KBL-H / SPT-H.
 
->I may help a little bit here, as two years ago I did the initial work to get fan speed reading and setting, and thermal profiles for the HP Victus 16s-1034nf (8C9C) which I'm still using. Nice to see new people added new things above this! I hope the "victus_s" naming scheme I introduced to differentiate from previous driver behavior when adding support to the Victus 16s-1034nf didn't turn to be inconsistent with added models names using the same behavior since then.
+Hardware and software
+---------------------
+- MacBookPro14,3, i7-7820HQ (Kaby Lake-H), HD 630 + Radeon Pro 560
+- PCH: 100-series PCH-H (SPT-H), PMC 8086:a121
+- Apple EFI 529.140.2.0.0, SMC 2.45f5, Thunderbolt NVM 41.5
+- Linux 7.2.5 (distro kernel), intel_idle (native tables,
+  use_acpi=N), intel_pstate with HWP
+- gmux switched to the iGPU; the Radeon is unpowered by the gmux
+  (or unbound with its root port in D3hot, see below)
 
-First of all, thank you for sending those patches. A lot of the current
-infrastructure (fan controls/gpu power modes/etc) are built on top of
-that.
+A/B: macOS vs Linux, same machine, same firmware
+------------------------------------------------
+macOS 13.7.8, idle, display on, "powermetrics --samplers
+cpu_power,gpu_power", 6 x 10 s (means):
+  PC10 80.8 %, PC6 2.5 %, PC3 0.06 %, i915 DC6 97 %, PSR 99 %,
+  package 0.19 W (powermetrics energy-model estimate, not RAPL)
 
-As for the victus_s naming scheme, we did stick with it for a while, but
-recently there have been some efforts in removing the inconsistent
-naming [1].
+Linux, idle, turbostat, 10 s samples:
+  awake, display on:      PC3 58-71 %, PC6..PC10 0, PkgWatt 4.0-4.2 W
+  s2idle (5 min sleeps):  PC3 98.5-98.8 %, PC6..PC10 0
 
->With nbfc-linux and ec_probe monitor command, I managed to check again EC offsets/registers meaning for this 8C9C laptop (currently running BIOS F.17 11/18/2025).
->
->0xAE offset is related to thermal profile, it shows 3 possible values:
-> - 0x00 when in performance mode (while HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE = 0x01)
-> - 0x01 when placed in balanced or low-power modes,
-> - 0x02 when the laptop CPU power limits are back to default / fallback state: turns out this happens when an HPWMI_FAN_COUNT_GET_QUERY hasn't been played during the last 120 seconds. See hp_wmi_get_fan_count_userdefine_trigger() function.
->
->However when the 0xAE register value is at 0x02, playing an HPWMI_FAN_COUNT_GET_QUERY makes the 0xAE register back to its previous mode (and CPU power limits are set accordingly). So when value is 0x02, the previous value is kept (and may be restored from) somewhere else, but it doesn't seem to be from any other EC register. Even worse, when going to performance mode, HPWMI_SET_PERFORMANCE_MODE command is applying HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE = 0x01 which cause the 0xAE register to go to 0x00, so the logic of this EC register is different from what existed for others models (where the EC register value was the same as the one provided by the HPWMI_SET_PERFORMANCE_MODE query).
+Residencies are comparable; the macOS wattage is only an estimate.
+With the display off, macOS still reaches PC7-PC10, and with a USB
+disk active on the Thunderbolt xHCI (PEG link up, no ASPM) it still
+reaches PC6/PC7. So firmware does not forbid deep package states.
 
-Correct, this is an important limitation in our current approach where
-we reverse map EC read values to thermal profile parameters (provided
-by the HPWMI_SET_PERFORMANCE_MODE query), and that doesn't always cover
-it fully on all boards.
+What was ruled out (PC6..PC10 stayed at 0 in every case)
+--------------------------------------------------------
+- i915: eDP pipe disabled, no display power domain references left
+  (i915_power_domain_info). DC5 is entered (~1/s), DC6 never.
+  My guess, not verified: DC6 = 0 is a consequence of the package
+  veto, not its cause. Also 0 with DPMS off.
+- Radeon: unpowered via gmux (iGPU mode), or amdgpu unbound with
+  runtime PM so that the PEG0 root port is in D3hot; measured awake
+  and in s2idle.
+- Thunderbolt: both root ports' devices removed, root ports in D3hot;
+  awake and in s2idle. Forcing L1 on the PEG/TB links did nothing.
+- LTR: LTR_IGNORE = 0x1fbdf written to PMC PWRM+0x30C (all IPs
+  ignored), awake and during s2idle, restored afterwards.
+- Combined: Radeon off, TB removed, T1/xHCI idle, DPMS off, rfkill,
+  LTR_IGNORE, all at once. SMBus unbound in s2idle: no change.
+- IRTL (MSR 0x60B-0x60D, 0x633-0x635): lowering them only removes
+  states (with all IRTLs below 61 us even PC3 disappears), so the
+  factory values are not the limit.
+- MSR 0xE2 = 0x40000008 on all CPUs: package limit C10, lock bit
+  clear.
+- intel_idle without _CST (use_acpi=N); cpuidle shows C10 (MWAIT
+  0x60) taking most of the core idle time.
+- acpi_osi=Darwin: no change.
+- apple_set_os: the EFI stub already calls it on MacBookPro14,3
+  (declares "Mac OS X 10.9"), so that path is already taken.
 
->Because of these sudden changes about EC registers behavior, I wasn't sure insisting on direct reading into EC registers was still going to be a sustainable approach for reading back thermal profile on this new kind of laptop. Facing BIOS updates, or tiny changes between similar models, may even cause such approach to break without warnings. It would also need people adding similar laptops to ensure 0xAE is still the right EC register to read, and double check the values are behaving the same. Which is why at startup, I preferred the mode to be initially set to balanced: to both cleanly ensure and say back which mode is enabled, without relying on risky tricks.
+PMC
+---
+intel_pmc_core picks the Cannon Point map on SPT-H; I sent a patch
+that adds a121 to the Sunrise Point list:
+https://lore.kernel.org/r/20261005-intel-pmc-spt-h-v1-1-78c98e4f4620@gmail.com
 
-I am not sure how the current approach would be "risky" because we only
-derive real platform profile state from EC when we have explicitly
-identified the relevant offsets. For unknown boards, it still defaults
-to balanced for a clean start.
+With it, pch_ip_power_gating_status at idle shows PMC, OPI-DMI,
+SPI/eSPI, XHCI, LPSS, LPC, SMB, P2SB and FUSE not power gated; SPA-SPC,
+GBE, SATA, HDA, ISH and CSME are gated. Unbinding the Bluetooth UART
+gates LPSS, but PC6 and SLP_S0 residency stay at 0. XHCI stays on
+because the Apple T1 (internal USB) is kept active. I have not
+verified that the SPT-LP PPFEAR layout is correct for SPT-H.
 
-That being said, I fully agree that with BIOS updates, the offsets *may*
-shift leading to potential regressions and we should avoid this method.
+Questions
+---------
+1. On KBL-H + SPT-H, besides LTR and IRTL, which platform conditions
+   make the package stop at PC3 while all cores sit in C10? Is there
+   a readable deny reason or status register for this?
+2. What should I read next: PMC registers beyond PPFEAR (ModPHY/PLL
+   or MPHY power gating status), System Agent / uncore state, or the
+   PEG link power state (L1 vs L2/L3)? Any debug tool that works on
+   a production part?
+3. Is the SPT-LP PPFEAR map valid for SPT-H (bits 13/21 are reserved
+   in the SPT map but SPD/SPE in the CNP map; root port 17 is the
+   NVMe here)? Which of the IPs above are expected to stay on in
+   an S0 idle that reaches PC10?
+4. Are there known Apple firmware settings that only macOS undoes
+   (or that Linux needs to program) for PC6 on these machines?
 
->But despite this personal opinion, for the 8C9C, playing an HPWMI_FAN_COUNT_GET_QUERY, and guessing the current mode is performance mode (0x01) when 0xAE register says 0x00, and differentiating balanced and low-power modes when 0xAE register value is 0x01, may probably be done by looking at victus_s_gpu_thermal_profile_get(), as prepared into platform_profile_victus_s_get_ec(): I see that Krishna Chomal had this idea. As I'm a beginner into kernel development I prefer let you decide whether it's reliable enough, and/or worth the effort.
+I can run tests on this machine and share the raw turbostat and
+powermetrics output and register dumps.
 
-So, I was working on a series to fix this very issue, but now that you
-have brought it up, I think its a good time to ask you and Ilpo Järvinen
-if removing **ALL** EC offsets from this driver and relying on only WMI
-queries would be a good idea.
+I used AI analysis tools to help organize the measurements and draft
+this text; all measurements were run and checked by me.
 
-Currently, the following four EC registers have been identified in this
-driver:
-1. HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET (0x59) [READ-ONLY]:
-    Used in platform_profile_victus_s_get_ec() from params->ec_tp_offset
-    Used to reverse map the thermal profile parameter and derive the real
-    hardware state.
+It's my first time collaborating, hopefully this info is of service
+for any correction.
 
-    platform_profile_victus_s_get_ec() itself is used in two places:
-    a. thermal_profile_setup() during driver init to re-apply hardware
-       state.
-       We can remove the call here and default to Balanced
-       mode like Julien had done in an earlier commit. [2]
-       I think this is fair because the official Omen Gaming Hub software
-       on Windows does the same when re-installed.
-    b. victus_s_powersource_event() - to derive actual_profile. This
-       Julien needs to confirm - if we can avoid doing an EC read by
-       directly taking active_platform_profile, since in my opinion,
-       it should be same.
+Thanks,
 
-2. HP_OMEN_EC_THERMAL_PROFILE_OFFSET (0x95) [READ_ONLY]:
-    Used in three places:
-    a. platform_profile_victus_s_get_ec(): Already mentioned above.
-    b. platform_profile_omen_get_ec()
-    c. platform_profile_victus_get_ec()
-
-    (b) and (c) are both used in omen_powersource_event() for the same
-        reason as victus_s line as mentioned above. I think here also
-        we can fallback on the cached active_platform_profile (please
-        let me know if otherwise).
-
-3. HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET (0x62) [WRITE-ONLY]
-4. HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET (0x63) [WRITE-ONLY]
-
-(3) and (4) are both used during set_ec path of the legacy Omen line.
-However, since I do not own this type of device, I can't comment if it
-is entirely needed or not. Interesting though, this is used in only
-three devices: omen_timed_thermal_profile_boards[]. But anyway, I will
-try to contact someone who sent these patches and see if I can get their
-acpidump for more info. I have a feeling that at least *_TIMER_OFFSET
-can be removed since the delayed_workqueue would cover its use-case,
-and obviously because (afaik) the official Omen Gaming Hub does not
-document/use any EC registers and relies on WMI queries only.
-
->In case you need me to do some tests and gather more information feel free to ask me!
-
-Would it be possible for you to share your acpidump here? Not that we
-need it, but I was just curious why 8C9C needs manual triggering of CPU
-limits during power source change.
-
-Thanks.
-
-[1]: https://lore.kernel.org/platform-driver-x86/20260615091034.987029-2-radheykalra901@gmail.com
-[2]: https://lore.kernel.org/all/1c00f906-8500-41d5-be80-f9092b6a49f1@free.fr
-
->Adding Cc to Suryansh Singh as I see recent related work to this EC reading offset of thermal profile on another Victus laptop, in case it helps having a better overview on this.
->
->Best regards,
->Julien ROBIN
->
->PS:
->Others identified EC offsets for my 8C9C by the way:
->
-> - 0x8F register value is 0x00 unless performance mode has been enabled. It may be related to GPU gpu_ctgp_enable being set to true, in which case the register value goes to 0x04.
->As opposed to 0xAE register, which may fallback to its default value when hp-wmi driver isn't active for more than 120 seconds, 0x8F register keeps its value. This may be tested more deeply if needed.
->
-> - 0x8A, 0x8B and 0xFF registers are reflecting CPU power limits. 0x8B and 0xFF registers show the same values which are equal to "PPT LIMIT SLOW" from RyzenAdj, while 0x8A register show the value that appears in both "PPT LIMIT FAST" and "STAPM LIMIT" from RyzenAdj.
->
-> - 0xB0 register is showing CPU temperature in celsius, 0xB4 is showing GPU temperature celsius, 0xB2 and 0xA7 registers also seems to give measured temperatures in celsius but it doesn't seem to be CPU nor GPU.
->
-> - 0x11 and 0x14 register are linked to target fan speed; values are 0x12 at default fan speed mode (with "fan always on" enabled into the BIOS, otherwise 0x00), and values are 0x3A when maximum fan speed is enabled. It's not showing actual measured values, as during fan speed acceleration or deceleration, values aren't moving at all.
+--
+Ing. Angel Lindo
+Director de Operaciones @ Ultratech
++507 6326-1581
+LinkedIn
