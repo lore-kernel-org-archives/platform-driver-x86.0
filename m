@@ -1,201 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC49497B8A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 14:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524944968F0;
+	Mon,  5 Oct 2026 14:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791209029; cv=none; b=c0Qxdfcb4+ePgwEEEapiVM8hD0DwPoEHm2IWlF5xiC9DV15/kTMLuMmKGoLotrwPJABR4AVVx0O1Af9NnwlCPvaz/MRPbGxNMznelV67afCaAX1FRIm61wCg1ZCdJwQb2MhWRweqvCphrx5pB2JeNoztPjLCQmn6oIL8hxHkoBI=
+	t=1791209225; cv=none; b=i2DGJH/9FkFcUwKRwtZS8MruCw0rL8XoeAxVyjfRQPyyr6ZtRYB6DJ4cjziewubwFn4Y2VjrmKc92siM01QOn51orI57wY/Vm1vVniNMEvltEbUVkBzlIwmBfo6XmsN4ncPTBc5YZwh1AaUQpW3P68K7KUxbB5oTD81rovv/hwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791209029; c=relaxed/simple;
-	bh=AVeVm05CYgT5z3QKa+DfDu93k5CtY5W0HGeJLzRt1P0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T1DC+nP50fp3ls7ZJgkP/cw+ggM2TrAHqAlW7qMpQEVzAXEtDOOq5Blp27p3Twdl8U7OApffgxAtvMGvlhe+26xNOSYwsry95QzBNiL89vxisO+mzHtJjsOYR3t4NnY0is1jk2r1GrEaHX+T6Cpf2z4mN0lcqlR1YfY0ydEPEX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pn6wUe2E; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791209225; c=relaxed/simple;
+	bh=K0C7ZRKkYc5oZdVRs/GKc0PcrqSunya3jpm+B/s738A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=AgCtIZToCPJpWmmROLnKjeZ1trHTbpeIV3rRoy2Mzwkl+mxO3DhKTllhFb+A7eyQqjk4IhL8+Zk2ZkBHX7PDJ3Zeyzp4LMJOWcciX28c3qCJVs4ZWSphMOhhnnk3D/ESL4rBSat8A4dpLnwhgP8Q64frhRGwN2gtiWtn5hVOPns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODx0X0Wd; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pn6wUe2E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 667621F000FF;
-	Mon,  5 Oct 2026 14:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791209027;
-	bh=6CTPKAP6gA6C7SYgJe449H88PpZo0q1070dTL+L80oM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Pn6wUe2E5XfN1vQZTBl5iVc0q2ryhH7N5Dr0CvAbEq6sa/dZhavQXzbBMfAWK3iaV
-	 bIgGhDrQPpt56jbNIkNBWppbwAHxEji1tAWg+t4A0npPZYEGrQ7Mnf77VqoBkPxuGr
-	 ieuciQV28ssO3N3a5HNaK04Z6wVyi9q+Bb6mXgsct5/e/W4oGSuHVLLRgWMVJ4MCIr
-	 KHO8+08B5Om3dfoRtc/Hjwp5bM7f1QamcMFajz1cpC+w4cz1klxUwaZ6tpKMwD0wsW
-	 Y9Kmlg+qH4rQGygPhkBhimnpBYLD6LZ/8cdIYkfCOo0i7vkbPJdKqFhBx/DbEWGm7H
-	 3O1vH2hyaYOXQ==
-Message-ID: <c51db40a-b028-4277-bcbd-763981d5fb69@kernel.org>
-Date: Mon, 5 Oct 2026 09:03:45 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODx0X0Wd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791209223; x=1822745223;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=K0C7ZRKkYc5oZdVRs/GKc0PcrqSunya3jpm+B/s738A=;
+  b=ODx0X0WdaA06D6MFnWeBIukY2F49/IRcniZMryPY+wsggNBtRkXWxrmA
+   uvV8sav3pSmifP5KR6g6k6b0UewO1TWv1tncd4QFzN6yu3WZgQWdRvRQS
+   p4MuYEV16P2tDXv9nJVZZukOo3GTDFsLKQxaqYf0X8v5J8MVS4ecInvm1
+   01uU6Xuv5/JAiZi0dm4/AcTAFBuS6gtyLcx1xdEvHSZQIb34yKXtnpebn
+   wUN0kijx0UKgnW3sb8hapafgO0XvfPRWDYa9U9TvsYzd8BORdHMNKxduq
+   MGEAm1/UR0ikFjIasJqQjBJSD89kmG9WGrMSk0Zdet8eqfNvSEXnTy8j5
+   Q==;
+X-CSE-ConnectionGUID: N5rKgR2IStO2uAhwU4w92g==
+X-CSE-MsgGUID: eySDoEL8TRepIKEVMZ8XoQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11926"; a="108258378"
+X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
+   d="scan'208";a="108258378"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 07:07:02 -0700
+X-CSE-ConnectionGUID: vJIhLKHiQUegmUG9SptLAQ==
+X-CSE-MsgGUID: k1YgWq2ASWeeSeSx6XJYfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,142,1787036400"; 
+   d="scan'208";a="275471331"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.199])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2026 07:07:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 5 Oct 2026 17:06:57 +0300 (EEST)
+To: Aaron Erhardt <aer@tuxedocomputers.com>
+cc: Werner Sembach <wse@tuxedocomputers.com>, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 4/6] platform/x86/tuxedo: Fix keyboard LED map
+ ordering
+In-Reply-To: <20260928085448.9024-5-aer@tuxedocomputers.com>
+Message-ID: <c6592aba-a3af-f012-361f-52e29b070459@linux.intel.com>
+References: <20260928085448.9024-1-aer@tuxedocomputers.com> <20260928085448.9024-5-aer@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86/amd/pmf: Fix ACPI buffer validation in
- APTS path
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20261005072811.1378555-1-Shyam-sundar.S-k@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20261005072811.1378555-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Mon, 28 Sep 2026, Aaron Erhardt wrote:
 
-
-On 10/5/26 02:28, Shyam Sundar S K wrote:
-> apts_if_call_store_buffer() reads a u16 size from info->buffer.pointer
-> without checking it is non-NULL and at least 2 bytes long, so a short or
-> NULL firmware buffer can cause an out-of-bounds read.
+> The LED mappings in sirius_16_[iso|ansii]_kbl_map did contain a
+> flipped line that caused LEDs to turn on in the wrong order when
+> counting up the Lamp ID.
 > 
-> Add a common helper, amd_pmf_if_verify_buffer(), that validates the
-> buffer (type, NULL or short pointer, header and output size) and returns
-> the size on success. Call it from both apts_if_call_store_buffer() and
-> apmf_if_call_store_buffer().
-> 
-> Fixes: 3eecb434d7f2 ("platform/x86/amd/pmf: Add support to get sps default APTS index values")
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Fixes: cfd84b3f419b
 
-Thanks for following my suggestions.
+Please see Documentation/process/submitting-patches.rst how to format 
+the Fixes tag properly.
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+You seem to also have not carried over Werner's Reviewed-by tags to a new 
+version. Whenever you're submitting a new version of the series, collect 
+the tags given to the previous version. (Only if you've done very major
+changes to the patches, it may be warranted to not include tags given 
+earlier.)
 
+Generally, maintainer tools will only pick tags for the current version of 
+the series (err'ing to the side of caution) which is why submitters are 
+expected to do that when a new version gets posted.
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Aaron Erhardt <aer@tuxedocomputers.com>
 > ---
-> v3:
->   - Move full buffer validation (type, NULL or short pointer, header and
->     output size checks) into verify buffer helper.
+>  drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> v2:
->   - Add a helper function for NULL pointer and buffer validation. Reuse it
->     in apmf_if_call_store_buffer() and apts_if_call_store_buffer().
+> diff --git a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> index 8f1ffca0430d..2b985b030197 100644
+> --- a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> +++ b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> @@ -232,8 +232,8 @@ static const struct tux_kbl_map_entry_t sirius_16_ansii_kbl_map[] = {
+>  	{ 0x2e, { 246000,  67500, 5250 } },
+>  	{ 0x2a, { 269500,  67500, 5250 } },
+>  	{ 0x53, { 294500,  67500, 5250 } },
+> -	{ 0x55, { 311200,  67500, 5250 } },
+> -	{ 0x54, { 327900,  67500, 5250 } },
+> +	{ 0x54, { 311200,  67500, 5250 } },
+> +	{ 0x55, { 327900,  67500, 5250 } },
+>  	{ 0x56, { 344600,  67500, 5250 } },
+>  	{ 0x2b, {  31000,  85500, 5500 } },
+>  	{ 0x14, {  51500,  85500, 5500 } },
+> @@ -337,8 +337,8 @@ static const struct tux_kbl_map_entry_t sirius_16_iso_kbl_map[] = {
+>  	{ 0x2e, { 246000,  67500, 5250 } },
+>  	{ 0x2a, { 269500,  67500, 5250 } },
+>  	{ 0x53, { 294500,  67500, 5250 } },
+> -	{ 0x55, { 311200,  67500, 5250 } },
+> -	{ 0x54, { 327900,  67500, 5250 } },
+> +	{ 0x54, { 311200,  67500, 5250 } },
+> +	{ 0x55, { 327900,  67500, 5250 } },
+>  	{ 0x56, { 344600,  67500, 5250 } },
+>  	{ 0x2b, {  31000,  85500, 5500 } },
+>  	{ 0x14, {  51500,  85500, 5500 } },
 > 
->   drivers/platform/x86/amd/pmf/acpi.c | 70 +++++++++++++----------------
->   1 file changed, 30 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index 3d94b03cf794..59173bcc3750 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -50,47 +50,54 @@ static union acpi_object *apmf_if_call(struct amd_pmf_dev *pdev, int fn, struct
->   	return buffer.pointer;
->   }
->   
-> -static int apmf_if_call_store_buffer(struct amd_pmf_dev *pdev, int fn, void *dest, size_t out_sz)
-> +static int amd_pmf_if_verify_buffer(struct amd_pmf_dev *pdev,
-> +				    union acpi_object *info, size_t out_sz)
->   {
-> -	union acpi_object *info;
->   	size_t size;
-> -	int err = 0;
-> -
-> -	info = apmf_if_call(pdev, fn, NULL);
-> -	if (!info)
-> -		return -EIO;
->   
->   	if (info->type != ACPI_TYPE_BUFFER) {
->   		dev_err(pdev->dev, "object is not a buffer\n");
-> -		err = -EINVAL;
-> -		goto out;
-> +		return -EINVAL;
->   	}
->   
-> -	if (info->buffer.length < 2) {
-> -		dev_err(pdev->dev, "buffer too small\n");
-> -		err = -EINVAL;
-> -		goto out;
-> +	if (!info->buffer.pointer || info->buffer.length < 2) {
-> +		dev_err(pdev->dev, "buffer pointer is NULL or too small\n");
-> +		return -EINVAL;
->   	}
->   
->   	size = *(u16 *)info->buffer.pointer;
->   	if (info->buffer.length < size) {
-> -		dev_err(pdev->dev, "buffer smaller then headersize %u < %zu\n",
-> +		dev_err(pdev->dev, "buffer smaller than headersize %u < %zu\n",
->   			info->buffer.length, size);
-> -		err = -EINVAL;
-> -		goto out;
-> +		return -EINVAL;
->   	}
->   
->   	if (size < out_sz) {
->   		dev_err(pdev->dev, "buffer too small %zu\n", size);
-> -		err = -EINVAL;
-> -		goto out;
-> +		return -EINVAL;
->   	}
->   
-> +	return (int)size;
-> +}
-> +
-> +static int apmf_if_call_store_buffer(struct amd_pmf_dev *pdev, int fn, void *dest, size_t out_sz)
-> +{
-> +	union acpi_object *info;
-> +	int size;
-> +
-> +	info = apmf_if_call(pdev, fn, NULL);
-> +	if (!info)
-> +		return -EIO;
-> +
-> +	size = amd_pmf_if_verify_buffer(pdev, info, out_sz);
-> +	if (size < 0)
-> +		goto out;
-> +
->   	memcpy(dest, info->buffer.pointer, out_sz);
->   
->   out:
->   	kfree(info);
-> -	return err;
-> +	return size < 0 ? size : 0;
->   }
->   
->   static union acpi_object *apts_if_call(struct amd_pmf_dev *pdev, u32 state_index)
-> @@ -125,37 +132,20 @@ static int apts_if_call_store_buffer(struct amd_pmf_dev *pdev,
->   				     u32 index, void *data, size_t out_sz)
->   {
->   	union acpi_object *info;
-> -	size_t size;
-> -	int err = 0;
-> +	int size;
->   
->   	info = apts_if_call(pdev, index);
->   	if (!info)
->   		return -EIO;
->   
-> -	if (info->type != ACPI_TYPE_BUFFER) {
-> -		dev_err(pdev->dev, "object is not a buffer\n");
-> -		err = -EINVAL;
-> -		goto out;
-> -	}
-> -
-> -	size = *(u16 *)info->buffer.pointer;
-> -	if (info->buffer.length < size) {
-> -		dev_err(pdev->dev, "buffer smaller than header size %u < %zu\n",
-> -			info->buffer.length, size);
-> -		err = -EINVAL;
-> -		goto out;
-> -	}
-> -
-> -	if (size < out_sz) {
-> -		dev_err(pdev->dev, "buffer too small %zu\n", size);
-> -		err = -EINVAL;
-> +	size = amd_pmf_if_verify_buffer(pdev, info, out_sz);
-> +	if (size < 0)
->   		goto out;
-> -	}
->   
->   	memcpy(data, info->buffer.pointer, out_sz);
->   out:
->   	kfree(info);
-> -	return err;
-> +	return size < 0 ? size : 0;
->   }
->   
->   int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index)
+
+-- 
+ i.
 
