@@ -1,247 +1,159 @@
-Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53F0415F07
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Oct 2026 23:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791244316; cv=pass; b=kj1k5MnZapRqRk8WrnpTq6wAebG0JY3zSU45KWxVH1yaUfUxsJnYB68soLn7ILbfIQcN1nhHefy+PhQKzieU77rSVboc2+Sh+CbjUBAXr2oqp6t2kGTm2hAh6RSEKHo9NTBc68ziy+7W1TpGkM+fr72fdtDU15bzk2Ev/KQ04w0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791244316; c=relaxed/simple;
-	bh=nyDp+1ApeI5wi6DcLZIDQVHhSQiPQ/FBwW9Pktuu1Pg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gsV1VMDhcEgBv4PNl3vP5okjvAMgf4GlfJntyV4k0aA2wAGcSKys/FO7yUdq53j9Kd3hixTVG6dogjJG8nSEmNli+gR2hE4+yCaQlZCNZNvDJ6aAJUDiKTnhrNt2aza1NbJ8/7NGgiL1NDmgdOcFFfeKrdrWKAP4FdFF4i+aDHU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0R6sE/i; arc=pass smtp.client-ip=74.125.229.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3AD35F5ED
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 04:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791262195; cv=none; b=VeSlnDK2WRPDHxchkTsv7I05oWfzVFGBtppZgllAzetEkW/VPCcwcRDEeNKKgewjFnvaxxY2QN/umWEQJkemrKGTJNH6bnae6jBca2qGi2AOQvhQRt3Dz3OeGVag2/GLFRbDgp9yZmcL3XAv59rxwffIrYWgw9g5TXhSEW4XFO4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791262195; c=relaxed/simple;
+	bh=AuKSq5zNoEPdcTVeayPv4nEkgGoFgwVt4mAnVV9DlsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=upzRAyl/vRjOyvMC0ayxnKwG1iIhvwBDPG5q57Dz4/ZijfAgA7MHpmQKkvLPkB0Ov9TDhuZBraVcsZshLq75iiDF1hX55FAbQUJhLRX+iO4UkU6n7H5z/cjtDOzx4nHddeE68Ok++zp+yJHVEKHAwxvezYtRxaBGtcR+G5lYueI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rYSiGKkW; arc=none smtp.client-ip=74.125.82.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0R6sE/i"
-Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-3510b42f4e3so2400764eec.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Oct 2026 16:51:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791244314; cv=none;
-        d=google.com; s=arc-20260327;
-        b=BC60r/jxqixbot+PaI53moeWIREW3o/M9DpkEfrlpg8+lVpjOp+3+nr474MEo3wajb
-         7rHW0Smfg4c/U77UGeGDDVos33jpB56IO+JNnz+GMHZ7DvfLgDbTJnnQ6xDKAMDgivbb
-         CJOS/Mds0Ufl9o43KWCv6kBWMdGv9SF+XWw6YXKQg6VzQkVQ0zeLYpcqFzd0nUUz5ymp
-         1cirYvUGNAjiji7iI36WsQmb6IPHbbNWYo4fzgeCrpLUh+ThYFlpbFPMaRUx0zLTNgCY
-         gC1CidkIbtWt2P4dIz1fx0bd3HKM4JG1K1Csj5YyLYTgk82s8F6JIgnGYw+1SovRplxw
-         ta1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ebxkckus4SoJ9SY/+EfYZcfaC4btVU9QwtZLBx86cuA=;
-        fh=xmqmSRivmPg27lCkE9ixQ3qk5r3U2d2cqi1UC3dAqnA=;
-        b=chQ/B3wpZ/KkQcaT2h+wvvnLmbPk5WOYGb9QV9mL1ADE8vTy007D7bpFz4sulE1MyU
-         bjS46Vqb89Cnee+WAmPazqedSTKWCLRoRYfhk4Ua0r7ZUcqG1JWU3febXVxW0SI9huz9
-         abWvZnOQ5QbFRnap+QWWycgbP/xPT1SCuZbesHJec7Jo3zNjQgkUcahY0dqi8UElltSZ
-         YnZ8MDIrlfa6JRSlgnPppaHmewij3QNs8UtBUS5F130yvulHuEVcQXYJhL5MP1KsuMq8
-         5paf72KSjIYoJau6chUn/9W58lenqXggLTH9xDzjhyR2lZIV3oIS5DvdTLIP1ZLYtf/6
-         4REA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYSiGKkW"
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-31490970b97so173069eec.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Oct 2026 21:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791244314; x=1791849114; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1791262193; x=1791866993; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=ebxkckus4SoJ9SY/+EfYZcfaC4btVU9QwtZLBx86cuA=;
-        b=F0R6sE/ii6VSlWVokZLye1c/v4sGJNgFQcqIFIxEanMtmPBDKLpKbNVA6+B12sSL5l
-         sG/rDcB0eFOKeB8JH5ovjUgm7eMGW+Vi7WGCJrked7vbgaU0kiirbRn5VEWX8Me4SglW
-         3uUXY0kxth+AYb0eNs7217HjbdZP0Fdu6wy4pbogxHlJiI8Dqtvhsb6HXRvoLEpkxrBm
-         hYDBoEYZKehcvfqSSsHDDgS8KEDmLvBBEkPqYwNX3W5Rtg0ejfIaMQQjuyQ3uekm+aZy
-         1Nvl2Gz0OXDlHEHKQ9eNg9sAFiLP73WUxpfHRfCMO9cRURu0yaUftWkqRKL4s+Z31+4j
-         ebpg==
+        bh=YrEcoU9FcHdWMW/WvsPqp/tm10NVhSMWvPzpSIVGh4U=;
+        b=rYSiGKkW9Zg1QiIvUQZbBbwvqUxoMH1rCicktV6hbOBX6jtsUZaHzkC/xVWIVCmD9H
+         GvCDFkvBcJ+BEanOBx0cevccynvToIJBC7by63nan9UdZfGpMDOGmv/RdrfgCc4GX2tq
+         DlZDbmOcHhRIIGtfqI+kH7sHtQCdTJoAERKDViebOWXrIWBWPXGMDaJsb5ullbxvT3A0
+         Opnlu6hcRYCpzPB1q+Cq+4z80i0jsrKR1Mih8I8g+UON32iv2TFW9F9hjp2ioxWPJB03
+         cpKF9bTkV4JgnksFAvniSlgBRau41Pqwcr9SxxoZrT9lrjh7jCyX6L6yn++lcoyU21Pu
+         TdCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791244314; x=1791849114;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1791262193; x=1791866993;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ebxkckus4SoJ9SY/+EfYZcfaC4btVU9QwtZLBx86cuA=;
-        b=Jzkn/wqWE1z4kth9Mns9NFyo3PqJqOlPVErq53ZQtH86keg5IBel3u2xpSN4zxhDYH
-         CiPNG1aNqVX2i4lf8ZxQX4d4n50Jb23yGl4K6CPxBUpBLV0WBtSLkk2fF5a8AhJ8z10U
-         DR2rkjPcz5tuOyAy16G7KquFE6hdVeZYHS30ALNExPnh9to0+HI/bJoF5Jm01hmemvQU
-         mtVU0zlilLjJKqZFoF6DcAUkiGJboTJBiepkX+KXVxEvsrPqH+64dbw/obHgwI5Q8nwa
-         W3cKsFkf1txvQW+pAXTIri+jnEgUIA87UXeJeOr27RIED4YaSjKKmaA0eCpj4H/LfbBN
-         L7Bw==
-X-Forwarded-Encrypted: i=1; AKwUvBxAPVAV2TibR9k1ZFbztAC/ssKSIK5kNPZ3ehzd6c/Ygh7w9+GNMLE8JbVjU3pCI1xKgWEaba1ByDOFN+RxkDEjZbp9@vger.kernel.org
-X-Gm-Message-State: AFuF++muoDb6CPDr7ONDDg8/c4rG44rqNEwwzaz5WQ79DTXljQJUsa6U
-	DU6Tbi/xLGkJcZ4uFCN9oyOofDjnyrCLrJJcFbeL2dIkB3JjHBRULAueW8jyMb56XJwXdo7cfrv
-	XbGpapGC0KQcITxo08Ri9WZcaf8Ksmog=
-X-Gm-Gg: AYBFou2BhiGN68u5I/LXUaWTSBkRSHM5ybfKJGx7SVIAV8r0kG//GtX7tBPJqn8Q2x2
-	H5xt2LfRjN1ySAv7zLA5si9z9khjv4yhHHBee6iogblwDIToD+uqwcm3Zygk7z9eKQzYh6aQpfv
-	tqs56pGNgcRQjTtTJzP29mY2B9xeUxoeP/P0k0b1516w/xPbRUVo66QtSr7MWhN2uwIiw3EuU4L
-	okEuMHE2enzxgfJuR5mOA+GFhMl68weuEUsWB3cOZtxt4rx24hGLFbZdJHAxtKJka3uSG1rMp0g
-	IVxghJKw8zdkHCww28q2s1p+pPUzJJSSj8/rqwkCRY7hYG0C2v+esj/P4xxfRycHeJUxkElgjlJ
-	l7Di0Gkge9r//kDrqS7y8oKP7+8mLR0lpf93icRYIGQSOkE3m57AVw1GQhF8SCEIrhKi9SVDYeP
-	QUFQM=
-X-Received: by 2002:a05:7300:e5c2:b0:341:3ca2:de2d with SMTP id
- 5a478bee46e88-34f15077edfmr14853912eec.6.1791244313787; Mon, 05 Oct 2026
- 16:51:53 -0700 (PDT)
+        bh=YrEcoU9FcHdWMW/WvsPqp/tm10NVhSMWvPzpSIVGh4U=;
+        b=RMDvQfrCjU2kATpCIDIHMWkX/+XId5VI4uTrWUiLifbK262rsa3HhFXqcUKZuWpCif
+         3vdb+ZHwTkvnCDU0gr0YWt5qSwDlkk0YzuCzMM7MoJSZokR5QqhkvpfhSfm/OkM+eBrh
+         of4M38O4tadDgNkvoKIbJOcZlm+dGUScriGrFGsU9Nf6UcSroLqdVls1rK2X2D6RiHcV
+         tCn2hpq6pKvQU+U87b63TpOoigPS6hK3+013GmDQtYkviCb064NBH6qGxWrdDn7TGV/3
+         xNLgIlO0Caa7nrqxdJT9i6u54/4vtha6KvUf76fD3b6NfL8RvZPvdKMufSXL7JCZY3PO
+         RTlA==
+X-Forwarded-Encrypted: i=1; AKwUvBySB5VIDwV+FZJ6KseI34DcCO1jKapGjg4VB0cQsdRAAHXP08GhuprFsn/l3am6dn0BU9ACV9vMBwEkpSQvshuGBNUG@vger.kernel.org
+X-Gm-Message-State: AFq9FYJuxlRTArhf9SaKKB9Yg5bcgcPU9Vp1dTQr65AhnjVSazMqYj1f
+	/lTKPKVjyrad9dzTH/csCBgg7I2OI5b1wzKnoy1NFIjBhxTsu/xL8Y4l
+X-Gm-Gg: AYBFou1PFR5UVTi6EsJy6/oNl7GDDFiHLH3lT0x7hD85G05oe9q3CPS9zM32jxmNM6A
+	GxwgUm3yJxcLfDvZCoLU+eoiNfNhbzo6h4eG7qvgGwq5RypahfOrdEBUmoEuSHPeB1KAS104/Pk
+	h5BRUOZGQYNpDn9ZbDlfc5yPwfANyiOYXWlvAC9GNZGM010aW6pRe3csmgpZJ07cRP1nKH07rgH
+	/oVJ+gjWpbQrVNs8wRIcONJeQ18balovgm5Zvgs8bU+4Km0lcLFMJRcqFIq9Q4V2dgma6KkhVMh
+	fgDkf9/C3Z2V+6qgWuBRO/vhoUECiqvvGqPERDV+dL7BgXoORMGjIb8zYn1YqpSc+b20vX8OCup
+	mb9UHR+gj0BzrKahoL0G5E6msAm/Rxer9Oc1ZivR8Kg6896E6a450D8L3lkP+Clw16HTw2WcUJr
+	32ral9oKCTi64noTdiGpsQ5osQ0Hybzx8vdSn85ctD4S56JbsjMZt0OL0kaiqgXKwe4l5fQANfd
+	E2Q42TRKHP+3vpBo5e3hQM9zbBE52DpPL4ZInJ3pkgmJYbsfvO9EOz19IYO6ui8rPw=
+X-Received: by 2002:a05:693c:26cb:b0:351:4b50:4063 with SMTP id 5a478bee46e88-3514e383ee3mr193472eec.37.1791262192567;
+        Mon, 05 Oct 2026 21:49:52 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:20ef:de2d:6e5b:74df:ad41])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-35146abff39sm3568320eec.21.2026.10.05.21.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2026 21:49:52 -0700 (PDT)
+Date: Tue, 6 Oct 2026 10:19:45 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Shuwen Bao <baoshuwen2013@outlook.com>
+Cc: Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Emre Cecanpunar <emreleno@gmail.com>, 
+	Suryansh Singh <technosfan14@gmail.com>, Radhey Kalra <radheykalra901@gmail.com>, 
+	=?utf-8?B?S8O8csWfYXQgQWJheWzEsQ==?= <hello@kursatabayli.dev>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: hp-wmi: add support for OMEN 16-am2xxx
+ boards
+Message-ID: <asR9Q8Xia4ijLvXM@archlinux>
+References: <SI2PR04MB58957D08A31E56D73C751885A2862@SI2PR04MB5895.apcprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
-In-Reply-To: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
-From: Angel <angellindo@gmail.com>
-Date: Mon, 5 Oct 2026 18:51:16 -0500
-X-Gm-Features: AclHuK-GqWmUZhpqnL1jubDmX5Hw_DlLPiAed4QMWX1gEvgQXKjozYhgmnoZhqc
-Message-ID: <CACiNov6n4Sr4nkAnTXJ9ZmMz022KebfAM8Hf2JV_EZ+KVa9THg@mail.gmail.com>
-Subject: Re: [REPORT] Kaby Lake-H (MacBookPro14,3): package C-state stuck at
- PC3 on Linux, macOS reaches PC10
-To: linux-pm@vger.kernel.org, rafael@kernel.org, 
-	artem.bityutskiy@linux.intel.com
-Cc: rajneesh bhardwaj <irenic.rajneesh@gmail.com>, xi.pardee@linux.intel.com, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <SI2PR04MB58957D08A31E56D73C751885A2862@SI2PR04MB5895.apcprd04.prod.outlook.com>
 
-One more data point and two clarifications after sending.
+On Sat, Sep 19, 2026 at 09:24:25AM +0800, Shuwen Bao wrote:
+>The HP HyperX OMEN 16-am2xxx (DMI board 8F1C, 26C1 platform cycle,
+>Arrow Lake-HXR) is listed in the OMEN Command Center device
+>capability table with DisplayName "HyperX OMEN 16" and the
+>"PerformanceControl" feature, but is missing from the kernel's
+>omen_thermal_profile_boards whitelist. The thermal profile path is
+>therefore not enabled and the embedded controller keeps the CPU
+>pinned at the default frequency cap while running Linux.
+>
+>Add 8F1C to the OMEN thermal profile board list. On this platform
+>the EC firmware also arms its own thermal profile revert timer (EC
+>offset 0x63, armed with 0x5a when performance is selected) and
+>switches back to the balanced profile once it expires, so also add
+>the board to omen_timed_thermal_profile_boards in order to have the
+>driver clear the timer and set the NOTIMER|TURBO flags when
+>switching to the performance profile. Testing further showed that
+>this board uses v0 commands, so also add it to
+>omen_thermal_profile_force_v0_boards.
+>
+>Tested on a HyperX OMEN 16-am2xxx: after loading the patched hp-wmi
+>module the platform_profile interface is exposed, and switching to
+>the performance profile raises the CPU from a ~2.9 GHz (P-core) /
+>2.6 GHz (E-core) cap to ~4.8 GHz / ~4.3 GHz under a single-thread
+>load. The EC then reports the performance profile (0x31) with the
+>NOTIMER|TURBO flags set (0x62=0x06) and the revert timer cleared
+>(0x63=0x00); a plain write of the profile without those flags
+>instead arms the timer (0x63=0x5a) and the profile reverts to
+>balanced when it expires.
 
-PCIe L1 substates
------------------
-- The Wi-Fi root port 00:1c.0 has its L1 PM Substates capability
-  hidden by firmware: a stale block at 0x200 with a null header and
-  the support bits cleared, not linked from the capability chain.
-  00:1b.0 (NVMe) links it and has L1.1/L1.2 enabled on both ends.
-- The OS has no ASPM control here (FADT), so Linux cannot enable it.
-- Per Apple's IOPCIFamily source, pci-aspm-default =3D 0x102 on the
-  Wi-Fi is ASPM L1 + Clock PM, which Linux already sets, and
-  IOPCIFamily only enables L1SS when both ends expose it.
-So missing Wi-Fi L1SS is probably not the cause. This is an
-inference: I have no config space dump of that port from macOS.
+Hi Shuwen Bao,
 
-Clarifications to the questions
--------------------------------
-- Q1/Q2: the stock module (CNP map) exposes neither pll_status nor
-  the MPHY gating file on this machine, and the SPT code has no deny
-  reason register. Is there an SPT-H equivalent of CNP's SLP_S0_DBG,
-  or ModPHY/PLL gating registers worth reading on SPT?
-- Q3: in the SPT PPFEAR map bits 13 and 21 are RSVD (SPD/SPE in the
-  CNP map). On SPT-H, do they correspond to the extra PCIe
-  controllers? Which IPs must be power gated to reach PC10?
+I was working a patch[1] involving omen_timed_thermal_profile_boards[]
+and needed some diagostic info. Would you mind attaching the acpidump
+for your board 8F1C?
 
-See also: https://github.com/Dunedan/mbp-2016-linux/issues/24
-(MacBookPro13,x users reported higher idle power on Linux than on
-macOS).
+Thanks!
 
-Thanks
+[1]: https://lore.kernel.org/platform-driver-x86/asPy5Q5wNYaMzTqJ@archlinux/#m922ff6cf9a68285d2b0f64e578fd6d2d6fa573f4
 
-On Mon, Oct 5, 2026 at 4:23=E2=80=AFPM Angel <angellindo@gmail.com> wrote:
+>Signed-off-by: Shuwen Bao <baoshuwen2013@outlook.com>
+>---
+> drivers/platform/x86/hp/hp-wmi.c | 3 +++
+> 1 file changed, 3 insertions(+)
 >
-> Hi,
+>diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+>index 615b4cf6fc45..f229da54366a 100644
+>--- a/drivers/platform/x86/hp/hp-wmi.c
+>+++ b/drivers/platform/x86/hp/hp-wmi.c
+>@@ -211,6 +211,7 @@ static const char * const omen_thermal_profile_boards[] = {
+> 	"8BAD",
+> 	"8C58",
+> 	"8E41",
+>+	"8F1C",
+> };
 >
-> On a MacBookPro14,3 the package never goes deeper than PC3 on Linux,
-> while macOS on the same unit and the same firmware reaches PC10. I have
-> ruled out the usual suspects and would like advice on what else can
-> keep the package out of PC6 on KBL-H / SPT-H.
+> /* DMI Board names of Omen laptops that are specifically set to be thermal
+>@@ -220,6 +221,7 @@ static const char * const omen_thermal_profile_boards[] = {
+> static const char * const omen_thermal_profile_force_v0_boards[] = {
+> 	"8607",
+> 	"8746", "8747", "8748", "8749", "874A",
+>+	"8F1C",
+> };
 >
-> Hardware and software
-> ---------------------
-> - MacBookPro14,3, i7-7820HQ (Kaby Lake-H), HD 630 + Radeon Pro 560
-> - PCH: 100-series PCH-H (SPT-H), PMC 8086:a121
-> - Apple EFI 529.140.2.0.0, SMC 2.45f5, Thunderbolt NVM 41.5
-> - Linux 7.2.5 (distro kernel), intel_idle (native tables,
->   use_acpi=3DN), intel_pstate with HWP
-> - gmux switched to the iGPU; the Radeon is unpowered by the gmux
->   (or unbound with its root port in D3hot, see below)
+> /* DMI board names of Omen laptops that have a thermal profile timer which will
+>@@ -229,6 +231,7 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
+> static const char * const omen_timed_thermal_profile_boards[] = {
+> 	"8A15", "8A42",
+> 	"8BAD",
+>+	"8F1C",
+> };
 >
-> A/B: macOS vs Linux, same machine, same firmware
-> ------------------------------------------------
-> macOS 13.7.8, idle, display on, "powermetrics --samplers
-> cpu_power,gpu_power", 6 x 10 s (means):
->   PC10 80.8 %, PC6 2.5 %, PC3 0.06 %, i915 DC6 97 %, PSR 99 %,
->   package 0.19 W (powermetrics energy-model estimate, not RAPL)
+> /* DMI Board names of Victus 16-d laptops */
+>-- 
+>2.53.0
 >
-> Linux, idle, turbostat, 10 s samples:
->   awake, display on:      PC3 58-71 %, PC6..PC10 0, PkgWatt 4.0-4.2 W
->   s2idle (5 min sleeps):  PC3 98.5-98.8 %, PC6..PC10 0
->
-> Residencies are comparable; the macOS wattage is only an estimate.
-> With the display off, macOS still reaches PC7-PC10, and with a USB
-> disk active on the Thunderbolt xHCI (PEG link up, no ASPM) it still
-> reaches PC6/PC7. So firmware does not forbid deep package states.
->
-> What was ruled out (PC6..PC10 stayed at 0 in every case)
-> --------------------------------------------------------
-> - i915: eDP pipe disabled, no display power domain references left
->   (i915_power_domain_info). DC5 is entered (~1/s), DC6 never.
->   My guess, not verified: DC6 =3D 0 is a consequence of the package
->   veto, not its cause. Also 0 with DPMS off.
-> - Radeon: unpowered via gmux (iGPU mode), or amdgpu unbound with
->   runtime PM so that the PEG0 root port is in D3hot; measured awake
->   and in s2idle.
-> - Thunderbolt: both root ports' devices removed, root ports in D3hot;
->   awake and in s2idle. Forcing L1 on the PEG/TB links did nothing.
-> - LTR: LTR_IGNORE =3D 0x1fbdf written to PMC PWRM+0x30C (all IPs
->   ignored), awake and during s2idle, restored afterwards.
-> - Combined: Radeon off, TB removed, T1/xHCI idle, DPMS off, rfkill,
->   LTR_IGNORE, all at once. SMBus unbound in s2idle: no change.
-> - IRTL (MSR 0x60B-0x60D, 0x633-0x635): lowering them only removes
->   states (with all IRTLs below 61 us even PC3 disappears), so the
->   factory values are not the limit.
-> - MSR 0xE2 =3D 0x40000008 on all CPUs: package limit C10, lock bit
->   clear.
-> - intel_idle without _CST (use_acpi=3DN); cpuidle shows C10 (MWAIT
->   0x60) taking most of the core idle time.
-> - acpi_osi=3DDarwin: no change.
-> - apple_set_os: the EFI stub already calls it on MacBookPro14,3
->   (declares "Mac OS X 10.9"), so that path is already taken.
->
-> PMC
-> ---
-> intel_pmc_core picks the Cannon Point map on SPT-H; I sent a patch
-> that adds a121 to the Sunrise Point list:
-> https://lore.kernel.org/r/20261005-intel-pmc-spt-h-v1-1-78c98e4f4620@gmai=
-l.com
->
-> With it, pch_ip_power_gating_status at idle shows PMC, OPI-DMI,
-> SPI/eSPI, XHCI, LPSS, LPC, SMB, P2SB and FUSE not power gated; SPA-SPC,
-> GBE, SATA, HDA, ISH and CSME are gated. Unbinding the Bluetooth UART
-> gates LPSS, but PC6 and SLP_S0 residency stay at 0. XHCI stays on
-> because the Apple T1 (internal USB) is kept active. I have not
-> verified that the SPT-LP PPFEAR layout is correct for SPT-H.
->
-> Questions
-> ---------
-> 1. On KBL-H + SPT-H, besides LTR and IRTL, which platform conditions
->    make the package stop at PC3 while all cores sit in C10? Is there
->    a readable deny reason or status register for this?
-> 2. What should I read next: PMC registers beyond PPFEAR (ModPHY/PLL
->    or MPHY power gating status), System Agent / uncore state, or the
->    PEG link power state (L1 vs L2/L3)? Any debug tool that works on
->    a production part?
-> 3. Is the SPT-LP PPFEAR map valid for SPT-H (bits 13/21 are reserved
->    in the SPT map but SPD/SPE in the CNP map; root port 17 is the
->    NVMe here)? Which of the IPs above are expected to stay on in
->    an S0 idle that reaches PC10?
-> 4. Are there known Apple firmware settings that only macOS undoes
->    (or that Linux needs to program) for PC6 on these machines?
->
-> I can run tests on this machine and share the raw turbostat and
-> powermetrics output and register dumps.
->
-> I used AI analysis tools to help organize the measurements and draft
-> this text; all measurements were run and checked by me.
->
-> It's my first time collaborating, hopefully this info is of service
-> for any correction.
->
-> Thanks,
->
-> --
-> Ing. Angel Lindo
-> Director de Operaciones @ Ultratech
-> +507 6326-1581
-> LinkedIn
-
-
-
---=20
-Ing. Angel Lindo
-Director de Operaciones @ Ultratech
-+507 6326-1581
-LinkedIn
