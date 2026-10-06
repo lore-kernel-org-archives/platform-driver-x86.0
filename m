@@ -1,86 +1,51 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+Received: from mta0.migadu.com (out-23.mta0.migadu.com [91.218.175.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609A846AA8C
-	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 14:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5830F46F494
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 15:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791295224; cv=none; b=fA/aWMuZgMB0bKvXw1igX2B65l6FZqUYKzSW/eSQTtU+T9vvlhCKotlLPvsfupkm2MQrqnaehoACrogxJsIPKAIAdHK4XPkk/gtD4PcQkBpLJJTqYk0PMzLrqsuxxAyhcQJp30H4OHNxwjpR0P85NXLWqZdAtDPkIhAO0yb/eZs=
+	t=1791300624; cv=none; b=ahW62DxfVdN4FmzW/OYgykqVAFfLl8WLqe4AXLx6qUcMaJbP59emelFqgr8ketIArttOo1Us/WUa29J7lHCWaSaXIrp7+GzHcahs66ixd5Kj+HoG+3CQqM4a/uNnc7tN9grAlhaQxZIfQ9s9LAZOgz4Cpz+5xUQ/oHIBxsez/Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791295224; c=relaxed/simple;
-	bh=j1khJXtS10EkM2zMqjkvq8yhxUHcp+XWHw+FRAgq6qA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LjdgIPj3jkQw03HwE1JSjX3G1WJrTP+wHiSoF9kOgl2TV4OwKQGrReO6UaqaQtyHn6LagvHTetPB35ZBxyJvJt8LIuqiNQ0vDm4WffK4sHUj3/3HX07sS64SXq2VACo38f3iQjw1mZjgpIX7X8oIgpoVjFzyNRzes4Wm4xwvk9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOaR03sr; arc=none smtp.client-ip=74.125.225.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791300624; c=relaxed/simple;
+	bh=C84pxLYYf1AcdF5SVJ71El9O7jnOkiH92N9DdKK6uEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FF3X66BbWIPkvlWSGP3lnK2ov5GGne5EPxVBL8kUW2p9qKtmhjBgMiT2wF4NzMtrtAD/RVhgdLdol7qQKXNtkUVldb9WnfdMUSXn3h699xvd8ezabI+XhZpHnEgN1c6tAwyGNWiNVO+i9mhbHH1emMQLZRaFure4qGrPqhE8zjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jSaQQ4Ez; arc=none smtp.client-ip=91.218.175.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOaR03sr"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49c5a927a1fso1401545e9.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Oct 2026 07:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791295222; x=1791900022; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=gxIH7tVcaH4/LHoTc1gJIz3XjhP3nLsv7ZMM8u1zMVY=;
-        b=WOaR03srM4VEPcf13yoWgn9l/JyTlhaHTBgph08IiB92UYpn5AhXWEnPgzEN5g+pSP
-         DJCwc7jPbheVCsUjWhH1kah4QVN2cfbgwH6MSlMWh1UON2f7XLeuch4x+6XfEXuJ1tVj
-         8DTBE8ZGU4S/PC1WFobsGFwrYjTEXs3CvUOGBSFAJncIXbdd8Za2XNn/Kwm/7CLZqgy2
-         Eqcm6Va0EudfsDIV3mjfHJsn9XqUshl05zL9Lgxkpyq6NemFrp78W1UP8cDSY/fKXY8G
-         vgRSfCoXuSLpBRHegLrLk+k3uVqAi5GKD3/kgybLFNnSOy3/FrO/Z9mRZ5k8PfKz/B3a
-         b0Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791295222; x=1791900022;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gxIH7tVcaH4/LHoTc1gJIz3XjhP3nLsv7ZMM8u1zMVY=;
-        b=ZVg4SQTklKEdrpK5FxawBRFIwkFybt/oNiy53xJ8U1WP69P4FH/Lb3q5bsJshllmAU
-         syBNivqUPcS1UmFy89cc+Z7aLMSQoIxuzuF220zFdLZgZMLPaJ7HVirf+rzcopUF9I4Y
-         3BmdRGdJTKBn01PBinT3MVXv5cRfL4j6kINHcksnoqu6M+JF8mwHxvK/w65/MbKE3LdW
-         Ju5VXMvEY5duW7c/mVhPKCSgrvemuC4EpCDyfzaLJgUTxzabUdPnqXZ9FjOd9coqyWwD
-         Lp/CYHbKlCdJ7W6Stu5zHo3jlrOGmxbMJimzJAxFcEWnx71aV1KiAUprzIOEqAUQNto/
-         DZBg==
-X-Forwarded-Encrypted: i=1; AKwUvBxvlFLIQy92d5BNSFlPdvu/8wuGbNDDQPt6R2hdo30iB27E+f9LVuevRJQwd8bvFl+J06Ca7dqiLzpbUFyqKtp/n7Az@vger.kernel.org
-X-Gm-Message-State: AFuF++mkSLeXBMZbfuHDQSwRStYaJdC8zdKW1twY6+0jljeFihQeOAUp
-	DFR7R5dbL0P3lD/H/BzfM4wUzBeyTOSZHhwCIeW8srDc4cFYx/rUs2ar
-X-Gm-Gg: AYBFou03/HpMwJKJy3+YA56BiR/dGfl8f+hezQKJiCiLKHqDWn1SxbAo0ff6Q17gp5p
-	Fr2JKkMlusmBXaFBd4XuyvR/MY78HdH7MUhMJ71cEOm92rlOLSCruPB1GRDZ71cwvNbtJvTjetu
-	RrKaYqHEGH4keJeOEsReG9Y6pRSu0eYdQKxMYX2qSdYGQpnul+cV+UqZjiTpDR1LFvuqcWxMhk3
-	GgWB+e7VQzwqs+YcMwBrgiKDvJzxfOECgYGznfpUPjDrR9iKXRMRPlky0ZWgY60j//BFkNex2gc
-	q3QLkzJIIJm8xmVqy5/uzivhcvfVo6mTZ8OtmALf0JTWO8dHQ+ozNsEii5nsD8DOhB6Mm/y1C5j
-	/NZUim5/9Vc2wZHkqAXeXtQFTpGJfqyEReYcoUAKp+6TGlsxb+MKfm6lnpeHIzTjcgT0Teei6UK
-	9MHOTpJLJRLk8qe66m86c7Ps/VUrlQsOCH2IzuFFpPsEwbg3ji3wC58GQnk1AI1aJHgziehTNqS
-	soby9hokalrJ+2XTAQawg==
-X-Received: by 2002:a05:600c:6217:b0:4a0:1e9f:64f6 with SMTP id 5b1f17b1804b1-4a027454f31mr206690415e9.0.1791295221292;
-        Tue, 06 Oct 2026 07:00:21 -0700 (PDT)
-Received: from lima-kdev.local ([85.100.66.184])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a178ca8127sm80577255e9.2.2026.10.06.07.00.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2026 07:00:20 -0700 (PDT)
-From: Kayra Cizmeci <kayracizmeci@gmail.com>
-To: tim.c.chen@linux.intel.com
-Cc: KPrateek.Nayak@amd.com,
-	Vishal.Badole@amd.com,
-	juri.lelli@redhat.com,
-	kayracizmeci@gmail.com,
-	klaus.kusche@computerix.info,
-	linux-kernel@vger.kernel.org,
-	mario.limonciello@amd.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	platform-driver-x86@vger.kernel.org,
-	ricardo.neri@intel.com,
-	stable@vger.kernel.org,
-	vincent.guittot@linaro.org,
-	x86@kernel.org,
-	yu.c.chen@intel.com
-Subject: Re: [PATCH v2] sched/cache: Honor asym packing over cache aware scheduling on hybrid systems
-Date: Tue,  6 Oct 2026 16:59:58 +0300
-Message-ID: <20261006135959.5709-1-kayracizmeci@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <77ceef1e51b895760dc5f6c9cde985a1679545b5.1791224900.git.tim.c.chen@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jSaQQ4Ez"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=C84pxLYYf1AcdF5SVJ71El9O7jnOkiH92N9DdKK6uEQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791300619; v=1; x=1791905419;
+ b=jSaQQ4Ezyt/8CJ7hV1beRXvgCCCG2zAo8iEsUVbwT+yOthh5r1ecyuLLb5Htb1TeIIEEgqoI
+ 9mghGD5JqPupqi/BePeUb5Zd89WjP0MwLJuY3/V3F9gCJW9juYW0ythjLx9PwH1hEwJviQfNFmJ
+ r0S2xT/xg1MZ1hXPZ2U3tTzc=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 06047bbc7ae74eb4;
+	Tue, 06 Oct 2026 15:30:15 +0000
+X-Mizu-Trace-ID: 06047bbc7ae74eb4
+X-Migadu-Flow: FLOW_OUT
+Date: Tue, 6 Oct 2026 23:30:37 +0800
+From: Chen Yu <chen.yu@linux.dev>
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Chen Yu <yu.c.chen@intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Vishal Badole <Vishal.Badole@amd.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, platform-driver-x86@vger.kernel.org,
+	K Prateek Nayak <KPrateek.Nayak@amd.com>,
+	Ricardo Neri <ricardo.neri@intel.com>,
+	Kayra Cizmeci <kayracizmeci@gmail.com>, stable@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Klaus Kusche <klaus.kusche@computerix.info>
+Subject: Re: [PATCH v2] sched/cache: Honor asym packing over cache aware
+ scheduling on hybrid systems
+Message-ID: <asUT-eR9yteRmB_v@three-body>
 References: <77ceef1e51b895760dc5f6c9cde985a1679545b5.1791224900.git.tim.c.chen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -88,28 +53,84 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <77ceef1e51b895760dc5f6c9cde985a1679545b5.1791224900.git.tim.c.chen@linux.intel.com>
 
-Hi Tim,
+On Mon, Oct 05, 2026 at 11:29:53AM -0700, Tim Chen wrote:
+> Date: Mon,  5 Oct 2026 11:29:53 -0700
+> From: Tim Chen <tim.c.chen@linux.intel.com>
+> To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+> Cc: Tim Chen <tim.c.chen@linux.intel.com>, Chen Yu <yu.c.chen@intel.com>,
+>  Mario Limonciello <mario.limonciello@amd.com>, Vishal Badole
+>  <Vishal.Badole@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org,
+>  platform-driver-x86@vger.kernel.org, K Prateek Nayak
+>  <KPrateek.Nayak@amd.com>, Ricardo Neri <ricardo.neri@intel.com>, Kayra
+>  Cizmeci <kayracizmeci@gmail.com>, stable@vger.kernel.org, Vincent Guittot
+>  <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@redhat.com>, Klaus
+>  Kusche <klaus.kusche@computerix.info>
+> Subject: [PATCH v2] sched/cache: Honor asym packing over cache aware
+>  scheduling on hybrid systems
+> X-Mailer: git-send-email 2.32.0
+> 
+> A regression was reported on an AMD Ryzen AI HX 370 running a cache
+> intensive Clang full-LTO link. The little cores run at a much lower
+> frequency (3.3 GHz vs 5.1 GHz) and have only half of the L3 cache
+> (8 MB vs 16 MB), so pinning such a task to the little-core LLC
+> hurts twice, and full-LTO builds slow down dramatically compared to
+> pre-cache-aware-scheduling kernels.
+> 
+> Asym packing and cache aware scheduling express conflicting placement
+> strategies. Asym packing wants a task to run on the highest priority CPU,
+> whereas cache aware scheduling wants to co-locate the tasks of a process
+> on one LLC regardless of the priority of CPUs in that LLC.
+> 
+> When asym packing tries to migrate task to an idle core that has higher
+> priority than source cpu, let asym packing win.  Moving tasks to a higher
+> performing idle core will buy more performance than cache co-location.
+> 
+> Prioritize asym packing over LLC balancing for regular and active load
+> balancing.
+> 
+> Fixes: 23b2b5ccc45c ("sched/cache: Introduce helper functions to enforce LLC migration policy")
+> Reported-by: Klaus Kusche <klaus.kusche@computerix.info>
+> Closes: https://lore.kernel.org/lkml/2180ea5a-eb28-4152-8d4d-cd00b0c24b2e@computerix.info/
+> Suggested-by: Kayra Cizmeci <kayracizmeci@gmail.com>
+> Tested-by: Klaus Kusche <klaus.kusche@computerix.info>
+> Tested-by: Ricardo Neri <ricardo.neri@intel.com>
+> Cc: stable@vger.kernel.org # 7.2.x
+> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+> ---
+>
 
-> +	/*
-> +	 * On asym packing domains, if the destination CPU
-> +	 * has higher priority than all CPUs in the source group,
-> +	 * prioritize asym packing.
-> +	 */
-> +	if ((env->sd->flags & SD_ASYM_PACKING) &&
-> +	    sgs->group_asym_packing)
-> +		return false;
-> +
+I leveraged AI to test it on top of 7.3.0-rc2 using an emulated hybrid setup on a symmetric
+AMD Ryzen 9 8945HX (Zen 4, 16C/32T, two 32 MB L3):
 
-I think that check is redundant. group_asym_packing is set by sched_group_asym() and bunch of other stuff,
-but sched_group_asym() calls sched_asym() and sched_asym() calls sched_use_asym_prio() that has SD_ASYM_PACKING check
-inside of it.
+By hacking the AMD pstate driver and QOS to limit the L3 cache ways:
 
-Ah.. Hope I'm not missing something...
+  - LLC0 "big/fast":   CPUs 0-7,16-23, max freq 5.46 GHz, 16 L3 ways (32 MB),
+                       ITMT prefcore ranking 236
+  - LLC1 "little/slow": CPUs 8-15,24-31, max freq 3.29 GHz, 8 L3 ways (16 MB),
+                       ITMT prefcore ranking 100
 
-Reviewed-by: Kayra Cizmeci <kayracizmeci@gmail.com>
+Workload: an 8-thread pointer-chase ring (24 MB working set).
 
-Now, I'm going to grab a cup of tea. And sleep.
+This patch works as expected:
+Before the patch:
+                 cache-aware ON       cache-aware OFF
+  throughput     ~230 M/s             ~530 M/s           (-56.6%)
+  placement      6 of 8 threads       8 threads LLC0
+                 stuck on LLC1
 
 
+After the patch:
+                 cache-aware ON       cache-aware OFF
+  throughput     520.7 +- 18.3 M/s    512.9 +- 16.6 M/s   (+1.5%, noise)
+  placement      8 threads LLC0       8 threads LLC0
+
+
+Tested-by: Chen Yu <yu.c.chen@intel.com>
+
+thanks,
+Chenyu 
