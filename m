@@ -1,177 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B78649EC4C;
-	Tue,  6 Oct 2026 17:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AADD367F58;
+	Tue,  6 Oct 2026 18:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791307662; cv=none; b=GgqLEG6DvtvaElcFm+zazkMfyhm7EsDyu5uBM9oR+E9Mx6bCm65QBsEJqOLO5g+6BqwODEepg5++eMiJyQE3kJee08hVgBQleQlZiPSGF+FxBJk0P8wwDHXK/EonkC8ZMIIV21S5ul3Gq1YTfP3Dc0VXvnoOehfSyLkP9A3B+Vo=
+	t=1791311457; cv=none; b=I6KUmGt/qIFdHmrnkxv6Qwl8kRj48/cy+nceoNpVD4Yo75WlTbm2SUeOEyiLMu9DzDIz2PELJ33IYiEafusZC2PcEkPR5pekECE10RDF+SCpnfiLl7oIRB/bbQOVvSxYya8iMcpcFVYeFK0KFKqBOpzgT4MCJagABrIinqXmZpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791307662; c=relaxed/simple;
-	bh=WMv17R0J3Z7eGBZvPlXRb5kFiiqo5/opfKPcfVDpp5U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W4hen93lm4VF8D0r5dnaLc4tVGe5P4glI5aFUeQT+ZS530kTUd27/M1Tm+HiZ08Lte55ceYUclQj9CFTZM9I+OGLAipJf4UGN23xRlNd2WQ4k+itoM+qyJBDbD0f5mjS2mxE7GWKdivC5noZV/fRkaPEHpwwexOeGhAtQyXM8nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GB9w4kji; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1791311457; c=relaxed/simple;
+	bh=REslVd8WGOo+Lzm/9YD1yYd7zbn853Trsw0TSQLWZHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DwfYTHKJxIOjNvGldzNw3r8ZDgQcZXiyuEcoACY7kvMgXrFEHKrqfPnia9HxFklIW+ByHbwPtt8pp5SZUOaBsGobkAOaOrjyrftX1PZYhT1p1gNNmqjAxw7UmtLhQMP2KNR7T+CVxKf7SDLYk2xOd7E5g+SF8/1uExCVQM46Zq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bVdd/WqG; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GB9w4kji"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bVdd/WqG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791307660; x=1822843660;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=WMv17R0J3Z7eGBZvPlXRb5kFiiqo5/opfKPcfVDpp5U=;
-  b=GB9w4kjiBChpsRpS1CmyLIUidWUB0N3X8plSLFNZyLYV4uvPfMhrH5na
-   PNUzkckNpv0umBjXkumRnkLA/qIAYgXtu3Kp4nqXnSxhyfzXGMSWOHZ3c
-   Rhr2HGIQcpfP/N9iyM374yFttN/vAvpcSn7QuoAY89FPXIXg4wmcLMa3T
-   GdARajSIdItXmqGPj9Civ8mGuSNXf0+ewMY4PqaLABTPECeAsqeOQrXkM
-   yYMlAkeMGiOE4X/M/mY6y02HW2n20Yyz4cudgQZK7hUgHKOMZpxF8+sI9
-   Jm0N0yQDWWfV59eMtVlP1m1emCPSNDa2lx4s1wdPYv+SdJ4L0b29GO3T2
-   A==;
-X-CSE-ConnectionGUID: Sc/0DsH+RyamDDArlOxJ9w==
-X-CSE-MsgGUID: WclIGKAISPW66RJJUroecw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11927"; a="117528744"
+  t=1791311455; x=1822847455;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=REslVd8WGOo+Lzm/9YD1yYd7zbn853Trsw0TSQLWZHw=;
+  b=bVdd/WqGaGloEExNXKo7Uvak3lqOtEIPdn2oNtadp5zr+/MAX2+Et5+P
+   cCFr4bIyKeGvKHtTGco53o6okc2pIouvMUA71+D2LlAfBWavhLUvmE4gJ
+   JslP2NrfPgzukABZv1iFD3iz+daiNf2J4j/vLXK2GLzECHEjUmV014e3A
+   +2jT+glyuWmzSDnwbCAX9P+QnWTN/XRR6R8ZwW4Mdv7trx/57U0wgL/Jm
+   fW5XwSL87cuaY//EyrgKfD4obGR8IiOW+1ulyMyxFkV2r3SfqQGbtZLpB
+   rczvz927K8wckjyebkvBTWk8E5kROvfAiVmjWQIz8/AXl7wrhrJy9k9oe
+   w==;
+X-CSE-ConnectionGUID: VN7zbsNeRnO592/Ym8aDhg==
+X-CSE-MsgGUID: PD+2db8kQUmjXLg1est+0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11927"; a="102591584"
 X-IronPort-AV: E=Sophos;i="6.27,143,1787036400"; 
-   d="scan'208";a="117528744"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 10:27:39 -0700
-X-CSE-ConnectionGUID: DbVhI4KES7+S03g7s8TJsg==
-X-CSE-MsgGUID: xeOWG9zXRlq850fSlfl2Ew==
+   d="scan'208";a="102591584"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 11:30:54 -0700
+X-CSE-ConnectionGUID: Zz35dRvSSNqWRfENGKNtAQ==
+X-CSE-MsgGUID: +P2LACYCTpGbQ9BRT77+tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,143,1787036400"; 
-   d="scan'208";a="277333458"
-Received: from unknown (HELO [10.241.243.185]) ([10.241.243.185])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 10:27:40 -0700
-Message-ID: <7b407bbb5c0e10dae7925936e8fcf0aaa6b0c9dc.camel@linux.intel.com>
-Subject: Re: [PATCH v2] sched/cache: Honor asym packing over cache aware
- scheduling on hybrid systems
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Chen Yu <chen.yu@linux.dev>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Chen Yu <yu.c.chen@intel.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Vishal Badole	 <Vishal.Badole@amd.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, 
-	platform-driver-x86@vger.kernel.org, K Prateek Nayak
- <KPrateek.Nayak@amd.com>,  Ricardo Neri <ricardo.neri@intel.com>, Kayra
- Cizmeci <kayracizmeci@gmail.com>, stable@vger.kernel.org,  Vincent Guittot
- <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@redhat.com>, Klaus
- Kusche	 <klaus.kusche@computerix.info>
-Date: Tue, 06 Oct 2026 10:27:38 -0700
-In-Reply-To: <asUT-eR9yteRmB_v@three-body>
-References: 
-	<77ceef1e51b895760dc5f6c9cde985a1679545b5.1791224900.git.tim.c.chen@linux.intel.com>
-	 <asUT-eR9yteRmB_v@three-body>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
+   d="scan'208";a="303500243"
+Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2026 11:30:54 -0700
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	David E Box <david.e.box@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/20] Decouple PCI and auxbus details from Intel TPMI driver
+Date: Tue,  6 Oct 2026 11:30:17 -0700
+Message-ID: <20261006183037.1507007-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2026-10-06 at 23:30 +0800, Chen Yu wrote:
-> On Mon, Oct 05, 2026 at 11:29:53AM -0700, Tim Chen wrote:
-> > Date: Mon,  5 Oct 2026 11:29:53 -0700
-> > From: Tim Chen <tim.c.chen@linux.intel.com>
-> > To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.co=
-m>
-> > Cc: Tim Chen <tim.c.chen@linux.intel.com>, Chen Yu <yu.c.chen@intel.com=
->,
-> >  Mario Limonciello <mario.limonciello@amd.com>, Vishal Badole
-> >  <Vishal.Badole@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org,
-> >  platform-driver-x86@vger.kernel.org, K Prateek Nayak
-> >  <KPrateek.Nayak@amd.com>, Ricardo Neri <ricardo.neri@intel.com>, Kayra
-> >  Cizmeci <kayracizmeci@gmail.com>, stable@vger.kernel.org, Vincent Guit=
-tot
-> >  <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@redhat.com>, Klau=
-s
-> >  Kusche <klaus.kusche@computerix.info>
-> > Subject: [PATCH v2] sched/cache: Honor asym packing over cache aware
-> >  scheduling on hybrid systems
-> > X-Mailer: git-send-email 2.32.0
-> >=20
-> > A regression was reported on an AMD Ryzen AI HX 370 running a cache
-> > intensive Clang full-LTO link. The little cores run at a much lower
-> > frequency (3.3 GHz vs 5.1 GHz) and have only half of the L3 cache
-> > (8 MB vs 16 MB), so pinning such a task to the little-core LLC
-> > hurts twice, and full-LTO builds slow down dramatically compared to
-> > pre-cache-aware-scheduling kernels.
-> >=20
-> > Asym packing and cache aware scheduling express conflicting placement
-> > strategies. Asym packing wants a task to run on the highest priority CP=
-U,
-> > whereas cache aware scheduling wants to co-locate the tasks of a proces=
-s
-> > on one LLC regardless of the priority of CPUs in that LLC.
-> >=20
-> > When asym packing tries to migrate task to an idle core that has higher
-> > priority than source cpu, let asym packing win.  Moving tasks to a high=
-er
-> > performing idle core will buy more performance than cache co-location.
-> >=20
-> > Prioritize asym packing over LLC balancing for regular and active load
-> > balancing.
-> >=20
-> > Fixes: 23b2b5ccc45c ("sched/cache: Introduce helper functions to enforc=
-e LLC migration policy")
-> > Reported-by: Klaus Kusche <klaus.kusche@computerix.info>
-> > Closes: https://lore.kernel.org/lkml/2180ea5a-eb28-4152-8d4d-cd00b0c24b=
-2e@computerix.info/
-> > Suggested-by: Kayra Cizmeci <kayracizmeci@gmail.com>
-> > Tested-by: Klaus Kusche <klaus.kusche@computerix.info>
-> > Tested-by: Ricardo Neri <ricardo.neri@intel.com>
-> > Cc: stable@vger.kernel.org # 7.2.x
-> > Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> > ---
-> >=20
->=20
-> I leveraged AI to test it on top of 7.3.0-rc2 using an emulated hybrid se=
-tup on a symmetric
-> AMD Ryzen 9 8945HX (Zen 4, 16C/32T, two 32 MB L3):
->=20
-> By hacking the AMD pstate driver and QOS to limit the L3 cache ways:
->=20
-> =C2=A0 - LLC0 "big/fast": =C2=A0 CPUs 0-7,16-23, max freq 5.46 GHz, 16 L3=
- ways (32 MB),
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0ITMT prefcore ranking 236
-> =C2=A0 - LLC1 "little/slow": CPUs 8-15,24-31, max freq 3.29 GHz, 8 L3 way=
-s (16 MB),
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0ITMT prefcore ranking 100
->=20
-> Workload: an 8-thread pointer-chase ring (24 MB working set).
->=20
-> This patch works as expected:
-> Before the patch:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cache-aware=
- ON =C2=A0 =C2=A0 =C2=A0 cache-aware OFF
-> =C2=A0 throughput =C2=A0 =C2=A0 ~230 M/s =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 ~530 M/s =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (-56.6%)
-> =C2=A0 placement =C2=A0 =C2=A0 =C2=A06 of 8 threads =C2=A0 =C2=A0 =C2=A0 =
-8 threads LLC0
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0stuck on LL=
-C1
->=20
->=20
-> After the patch:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cache-aware=
- ON =C2=A0 =C2=A0 =C2=A0 cache-aware OFF
-> =C2=A0 throughput =C2=A0 =C2=A0 520.7 +- 18.3 M/s =C2=A0 =C2=A0512.9 +- 1=
-6.6 M/s =C2=A0 (+1.5%, noise)
-> =C2=A0 placement =C2=A0 =C2=A0 =C2=A08 threads LLC0 =C2=A0 =C2=A0 =C2=A0 =
-8 threads LLC0
->=20
->=20
-> Tested-by: Chen Yu <yu.c.chen@intel.com>
+Hi All,
 
-Thanks for validating the patch.
+This series is a no functional change refactor of the TPMI driver
+(vsec_tpmi.c). It separates the code that does not care how TPMI was
+discovered from the code that does.
 
-Tim
+TPMI is discovered today through a PCIe VSEC capability, with the PFS
+table address computed relative to a PCI BAR. BARs are relocatable at
+runtime by resource rebalancing, hot plug or error recovery, which ties
+a platform wide register window to the lifecycle of one PCI function
+and to an address an untrusted VMM can influence. That is a concern in
+secure VM environments like TDX.
 
->=20
-> thanks,
-> Chenyu=20
+Newer Intel platforms will support ACPI table based TPMI enumeration.
+The related ACPI spec is not public yet, so this series prepares the
+driver ahead of it. Several places in vsec_tpmi.c assume the
+enumerating device is a PCI device, or reach through a struct
+intel_vsec_device just to get at a struct device, and neither holds
+for an ACPI backend.
+
+The series comes in four parts.
+
+Patch 1 is a standalone cleanup. The feature device name was built in an
+on-stack buffer and handed to the auxiliary bus, which stores the
+pointer without copying the string.
+
+Patches 2 to 8 each remove one PCI or intel_vsec_device dependency and
+leave the code in place, so they are small and can be read on their own.
+
+Patches 9 and 10 do the split. tpmi_probe() and tpmi_remove() become
+intel_tpmi_init() and intel_tpmi_deinit(), which is the interface an
+enumeration backend implements against, and the enumeration independent
+code moves to a new intel-tpmi_common module. That leaves vsec_tpmi.c
+with just the auxiliary driver binding to the "intel_vsec.tpmi" device
+created by the Intel VSEC driver.
+
+Patches 11 to 20 are code improvements to tpmi_common.c. Some of them
+come from Ilpo's review of v1. Others were suggested by Andy in an
+internal review of this series, and since they touch the same code I
+have included them here as well. Each patch carries a Suggested-by tag
+for whoever suggested it.
+
+They are separate patches on top of the move in patch 10, as Ilpo asked,
+so that patch 10 stays a pure code move and can still be reviewed with a
+diff-of-diffs against the original vsec_tpmi.c. Each of them does one
+thing to tpmi_common.c and nothing else.
+
+Tested on a GNR platform. TPMI feature enumeration, the debugfs
+interface and the client drivers behave as before.
+
+Changes since v3:
+ - Collected Reviewed-by tags from Andy on patches 12, 14, 18 and 19.
+ - Patch 19: use post-increment in all the loops, as Andy suggested.
+ - v3: https://lore.kernel.org/all/20260930172918.743656-1-sathyanarayanan.kuppuswamy@linux.intel.com/
+
+Changes since v2:
+ - Collected Reviewed-by tags from Andy on patches 11, 13, 15, 16 and 20.
+ - New patch 18: use DEFINE_RES_MEM() for the feature resources in
+   tpmi_create_device(), as Andy asked in his review of v2 patch 18.
+ - Patch 19 (v2 patch 18): rebased on top of the new patch 18, so the
+   resource loop now assigns res[i] = DEFINE_RES_MEM(...).
+ - Patch 20 is v2 patch 19, unchanged.
+ - v2: https://lore.kernel.org/all/20260924182342.212709-1-sathyanarayanan.kuppuswamy@linux.intel.com/
+
+Changes since v1:
+ - Added patches 11 to 19, from Ilpo's review of v1 and Andy's internal
+   review. Patches 1 to 10 are unchanged and carry the Reviewed-by tags
+   they collected.
+ - Patch 11: include the headers tpmi_common.c uses directly instead of
+   relying on other headers to pull them in, drop the redundant io.h and
+   sort the block.
+ - Patch 12: turn TPMI_GET_SINGLE_ENTRY_SIZE() into a function, so the
+   u32 to byte conversion reads as a multiply by sizeof(u32), the
+   statement expression goes away and the argument is evaluated once.
+ - Patch 13: take tpmi_dev_lock with guard() in
+   tpmi_read_feature_status() and drop the unlock label.
+ - Patch 14: use __free(kfree) and guard() in tpmi_mem_dump_show() so the
+   ioremap() failure can return from the loop.
+ - Patch 15: build each TPMI control mailbox word in one expression.
+ - Patch 16: use DEFINE_SHOW_STORE_ATTRIBUTE() for the mem_write debugfs
+   file.
+ - Patch 17: scnprintf() instead of snprintf().
+ - Patch 18: declare the loop counters in their loops.
+ - Patch 19: make the device creation policy a comment on
+   tpmi_create_devices() and split the condition it described.
+
+This series is based on v7.3-rc1.
+
+Kuppuswamy Sathyanarayanan (20):
+  platform/x86/intel/tpmi: Use static strings for the feature device
+    names
+  platform/x86/intel/vsec: Pass a struct device to
+    intel_vsec_set_mapping()
+  platform/x86/intel/tpmi: Remove unused vsec_dev from
+    intel_tpmi_pm_feature
+  platform/x86/intel/tpmi: Get tpmi_info directly from the parent device
+  platform/x86/intel/tpmi: Keep the feature resources in intel_tpmi_info
+  platform/x86/intel/tpmi: Describe a TPMI instance by its two devices
+  platform/x86/intel/tpmi: Drop unused arg from tpmi_set_control_base()
+  platform/x86/intel/tpmi: Do not assume TPMI is enumerated from PCI
+  platform/x86/intel/tpmi: Split out enumeration independent init and
+    exit
+  platform/x86/intel/tpmi: Split off the PCI VSEC enumeration
+  platform/x86/intel/tpmi: Include the headers tpmi_common.c relies on
+  platform/x86/intel/tpmi: Turn TPMI_GET_SINGLE_ENTRY_SIZE() into a
+    function
+  platform/x86/intel/tpmi: Use guard() for tpmi_dev_lock in the status
+    read
+  platform/x86/intel/tpmi: Use scope based cleanup in the memory dump
+  platform/x86/intel/tpmi: Build the TPMI control words in one
+    expression
+  platform/x86/intel/tpmi: Use DEFINE_SHOW_STORE_ATTRIBUTE() for
+    mem_write
+  platform/x86/intel/tpmi: Use scnprintf() to build the debugfs names
+  platform/x86/intel/tpmi: Use DEFINE_RES_MEM() for the feature
+    resources
+  platform/x86/intel/tpmi: Declare the loop counters in their loops
+  platform/x86/intel/tpmi: Describe the device creation policy on the
+    function
+
+ MAINTAINERS                              |   1 +
+ drivers/platform/x86/intel/Kconfig       |   4 +
+ drivers/platform/x86/intel/Makefile      |   1 +
+ drivers/platform/x86/intel/tpmi_common.c | 822 +++++++++++++++++++++++
+ drivers/platform/x86/intel/tpmi_common.h |  52 ++
+ drivers/platform/x86/intel/vsec.c        |   7 +-
+ drivers/platform/x86/intel/vsec_tpmi.c   | 822 +----------------------
+ include/linux/intel_vsec.h               |   5 +-
+ 8 files changed, 898 insertions(+), 816 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/tpmi_common.c
+ create mode 100644 drivers/platform/x86/intel/tpmi_common.h
+
+-- 
+2.43.0
+
