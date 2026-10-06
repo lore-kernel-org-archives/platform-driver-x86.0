@@ -1,330 +1,159 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB263B9D9E
-	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 08:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791276848; cv=none; b=UwTWZmtQOSiNch3i7+WUCqDLIXLLNjmI1HqZf4E1AgpJdWr5bzc1L658VDVeJ6QbmWQjMYcVAgm/uH8Pi81bcnMHWH3yWZvcT9w+/SrqFdWxaBL1Fq2NPOAqUUICj+qM9KCQAzQa8C6M/SlPBUfAD5hBpJf0Q1cOM+jrQ1D43zA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791276848; c=relaxed/simple;
-	bh=pEICiCXqsvjm+RcTdBzINg+1WAhtpYv3zpVmdUVt4OI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hUafuKFacAQu5HG7LkDaa40yBEi8r2ou8K9H9aPbBs9NQCFEx59Oe7B83TlrqM8zAeriBRpbSRQK2to74IL1rqDkBl+m26Spdwk3o0o+cFwcXsXM07uMXzETe0v0UFtqCH8dRAH2+eqvqyoLmuZUvIJOQIrE+3kgNpcFZLQ7Io8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZatZWRD; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5FE385D69
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 09:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791279396; cv=pass; b=csoC/aiPixK9Dth8xW9aY2B8cyKeUTGTF+6jGaPPZsVTixDqavMMAaVfk6sEBaXXOU6FKdLtDAgRVQhqlJ5BBqTdAYRQ1zFGLpuq2vz/XuqZ2xkRIxz90Sy7LDAyVaVCSxLV1FnU1XCBUWqn/Dzz2yoLofrEPyiKd1Crj+vaFRA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791279396; c=relaxed/simple;
+	bh=JBLgczNWj2mj0B98al/nFtFr6LAZks31bcQ2W//IZHo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=f/NwzJUTobItA6/UC+7AKI7IzmgK+W0agKEB9qIBVaSGdrKaxe9fiWPBF+nRtBgdXlsiHsjHw9yAF6KFFsQo+J4e3dJL5dh1shKymg8F6Tjrjr8nrdDAdgrFbeghHYC0QfpKXDt9SSmpTBmDc7w2ZIKiundYYGZ2BYKsjCkUbdo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RNQl/xkZ; arc=pass smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZatZWRD"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-930c0f9c1b1so27087285a.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Oct 2026 01:54:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNQl/xkZ"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-88b7d853b11so1265830b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Oct 2026 02:36:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791279395; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Ec2HloPmcDgVg8oZW2BXZ4FxnCSDkIdbbQTikmuiBinpycYx7lXIhuvBSPu8zoGPBq
+         Py2lmaIDehCz1FXc0Yw8h1dGWL4fahJ1xgedKhZRt1hKYiWSc9GmVfO+AQ09IM3T/qkf
+         vms5zS1vhXSDiiYlxincsftGl+ZSaaT9N9ABggkCripGCNka9nESLFFlqGNXvkT9uuWE
+         XxI5YvZeMghzmTuPBlj3O3ajsejvE4PBXFPh/H1vd63WFauC2gRRM2hAIrkac4y6eHsI
+         VTFQGXi5pyR636gzqo0eWCgRi2wusEadyk2GnmG78NGlYfp8z1HH0+Emqyc7kHjMr6dN
+         o/6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=bQUlScN7YbIg88NUbKU0fEs42VcZXXyep0FiQ8u52iA=;
+        fh=sfHqGQOkMIZoPp6deBj4nTQnO/kzdAWeRTMsgPOKq7Y=;
+        b=WUJBL4qAZ8s8JqbYFwPeqI+sQCcYVnNmxwrVZds1h6uYaC0hF4MBLR2kTgBDGHKhxD
+         agX0aWl1RqXTdMTSZScOJyFg3kUpt5dp9Ur8vDkJPrmvqukb/RZG6eBIPzrOy7m/b+vh
+         x6WjH+h47OQeLo0t2+o328UTw9lN4XoTh6fc0wVeQ6wXdBq2l4ko1mkk9FYAHW4NHX1T
+         bHNjK/gM4oa4lgDBFs7ZhfjyTd2nF+1ar+EILpDgCboREqA0FwJ5owZrxuCX1pmWrHJE
+         y6c4aEZgo4j3fARFhuWCUnuxw+gH+3XF9jT6FW108EY/x6NBuWr8Rd//WgKzGZPJ2duC
+         ieZw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791276841; x=1791881641; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jfJXTdn8ue80wbPghLppS9dzjz3UnRYmvDs5id3wkqs=;
-        b=CZatZWRDiaYe65p/oGllJ05HoaWv/ltiV3koa8SKG3yPA4LUSIZplpCyR9tFbx/M4D
-         U8/0X94P27g5qZB98ShlNvuZqIkbjHKdbV/A2jpFDjkDVKM3Mjom3eBbpd11XVywyows
-         /+5TokSA9XTpAZ6IdyQFX1oFSQHGwKVztT2OStDbu2KBUo+5u8oxFU801WRFMDggCwiu
-         BLQxjBOb1SF/JhCSH393mAJqlZqK1RBeAdQc2FIAwEgUbBB52bv4ezeZbS8nQsH7J5/F
-         8TT6Uxbwz8uYuYUy+bPO4bTBciMOMQk/Ossff1r65AuvpgOK5TqPFNOcY/ZBCc9vV1Kx
-         l1Zw==
+        d=gmail.com; s=20251104; t=1791279395; x=1791884195; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=bQUlScN7YbIg88NUbKU0fEs42VcZXXyep0FiQ8u52iA=;
+        b=RNQl/xkZ5tgxNGS4Wr6asH9+GplRfWtaEsgVXYAn103IiXgxhIk9+5gP+hAzcRHZk0
+         5uEIXXHKUwFvOMowiARs1octKz/JGjPjCBZBDPqa5fSCn3Gn1dfHokRpMl69gtv7k9Bl
+         obLLQJNa8Z1N+GJc1+9lBfEgzqMXVUl4npGaiEVwFwaBbbID/u7SVDlIU5DKcWKG993c
+         Lc/SpK0jncenXpLeecZ6WMJBB4WZtzqOrGGHyPc4693RyFt3BpzCPZMLnw0YA9SukiXH
+         kOLCzHg0VERJ/XXRPY9xrKVIpx9ldmneNz+//iAoP3fA8vPx2WeO66oPVq/g5X15qDay
+         9Pfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791276841; x=1791881641;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jfJXTdn8ue80wbPghLppS9dzjz3UnRYmvDs5id3wkqs=;
-        b=n+rsFl3g9M5vc9yt98GEN6crwVQ41flIjp72qaFcSZEkUwEvZtiY+uflJKG40u6VBd
-         93wa3pO+1AI7X6ez95kfwk+7/l/1fEyCHf6b49sAKUSz6qZKXZFJ7FLPVE7HGAX8aeeg
-         o5b6Mf0eRoYmHhcI5OSnrF5Io5zC9CWtvgE8DC9AYaIWinTodKTm41xllXhoBV+GCIE5
-         hPF0PsZckNBY6ROwkGwc+mUdfkmo+xbT08w01OaZiMIpjtvrcivMo5HphqwzIArtgd2X
-         +RLITT597AuqlJpixsrprWDgljDQpZcamfb3o2x7GVUuBPp4sys/mqsszvo8tdNlujbb
-         FOiA==
-X-Gm-Message-State: AFuF++nWvyDPl6fop+mGy1zH/ezafNhgrMWa8mlM58ykTM7sC0jPlnsU
-	lDjeCg3ngckfkLW7YVzbm33VGa+67XomY+MTvziw6upeyV/S14tcKSxc
-X-Gm-Gg: AYBFou153aAd0yeczo/Cov2h7nLIW728jb9X98YuDZz0AG2/YWbBOVIiRcsHozn0J/V
-	ogkcba9Qkgmg6ZF0awSgtros3aRV8BBdpue8c9MNo/fgjPEn2KvjPtKBEKQPDMlWRBPmSmBdvkw
-	1y8GXE6ge7Si3XCVVd0MFEHxUCdK1h7CcwE9L2cCKh4xBRkmGae3LXmKXCoBJC6O6DN4yKqf3rC
-	bzlxckg3uKvClPFaIWoQLLN/U0zawtspQ9x7YHXim4LW0LTA/VNOT5n7yK32abRH66JTnFSW/dG
-	h1w3VcsTM0ppBYXfCoJcnCy2yXsQ07RU4kN+8ejc7qjy7q/Gl65fbyd1KZ8HVvVsC1DYm86YJV3
-	4rF5zufSI7a3tx77XsdNOcOcHztOSt/WO+8rdbQAWZn/lceaMBr177l7KUD4NliMznogfRvf439
-	uNA4Y9H/A+39qt4EkoaUXqGEcB+26BhpXsrljh0OfD33VnbRV0j6AJ21WDSxOA/pFQHP2pyZNcw
-	aIp5QQPqQFvuHN3peYP2FIhWcqR6zxd/cFFh/aIKdcY
-X-Received: by 2002:a05:620a:2625:b0:93e:5016:e3a6 with SMTP id af79cd13be357-93e8f35e939mr130199385a.26.1791276840840;
-        Tue, 06 Oct 2026 01:54:00 -0700 (PDT)
-Received: from [192.168.60.5] ([207.115.103.98])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93e7ddb4141sm316305685a.18.2026.10.06.01.53.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Oct 2026 01:54:00 -0700 (PDT)
-Message-ID: <dae242e7-fb20-46e9-abe2-12c592807d72@gmail.com>
-Date: Tue, 6 Oct 2026 16:53:56 +0800
+        d=1e100.net; s=20260707; t=1791279395; x=1791884195;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=bQUlScN7YbIg88NUbKU0fEs42VcZXXyep0FiQ8u52iA=;
+        b=gDv4/Jq7BqiJZ5JV6dzuTjbQ/upnkJGaT4Bf0H0We08PUMhFr6cHltoefxyC3f+bUa
+         Qmul9Tan69uNenpTdQRwdU+NXCo7gMXIheIAFabo20blTqJ/hzH62rAFwc0nyhfnwypM
+         CV47vYskb+0Pa6A9BME09i7hvilu5WwD/GVa8mjVOUEdqzgl0R4MiADI9N27hNoP7Fce
+         J22dnh8oBB/JzeKIx1mvzWXh+NaOzW2ZCF7iZUpCApv/Te6w3plZWmumr8ZEmjPVPBjO
+         gRqSoq19XcG2qc1VfPboahlAgNE/v7SCgkm4tu0dxAUNfi8RQQrgfc6WI2r/wJ8Qut7e
+         Mnsg==
+X-Gm-Message-State: AFuF++mLU2qsSQ7tCmidrCFm33mArkYmt0Jcpt68qCAWGjh95/zGfO/f
+	15+JLYhF6jBq9ovWKJrCzOzaqNl7x4dsP002jFETLoyrk++rGWWoY0+GRaqBSm4rgGYsrp/iXbF
+	8KKg+GYKTeLX1gCt5373D7Hqn723Hzt9EAg==
+X-Gm-Gg: AYBFou3wjsHlDbIiUiKnmRf9szN23j51mQJtYI/JR6VvFM4FdtvnD4hND68I7YYy2j0
+	VdalAcvJjny2sA2q7jEfDPsET1C6S9lE7Rr/z79d0W+phPumrMG4X74OFs9CWowntY81+SsfnBw
+	AZ/6vUEg2vV2v5xaxkbB4A6cbZjRhekeXujALxs5yZ6RY1Y5lKfZrUwlgwY+z63WzqQktuEG9dB
+	HNjVJRxG4urSp+JCI9CgG7FDaDj/tE9mbExEHRIMloTwKhg7cRCvu2Ji9s92wpPRRr5BCLmuJII
+	CbcJv6QJkLDfGII0671NBMdakfsbWkCkzjfCPMtv6+xgq6MDPUJfMGFS3iI7tH6z
+X-Received: by 2002:a05:6300:2204:b0:3de:14ad:ae8a with SMTP id
+ adf61e73a8af0-3e0d6b5537cmr9089323637.16.1791279394514; Tue, 06 Oct 2026
+ 02:36:34 -0700 (PDT)
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Tue, 6 Oct 2026 11:36:33 +0200
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Tue, 6 Oct 2026 11:36:33 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 1/1] platform/x86: panasonic-laptop: add
- platform_profile support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20260805180544.1134916-1-alexyeo362@gmail.com>
- <20260805180544.1134916-2-alexyeo362@gmail.com>
- <4a918d1e-490b-3236-b72b-ef952e11a1a3@linux.intel.com>
-Content-Language: en-US
-From: Alex Yeo <alexyeo362@gmail.com>
-In-Reply-To: <4a918d1e-490b-3236-b72b-ef952e11a1a3@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: zsanya322@gmail.com
+Date: Tue, 6 Oct 2026 11:36:33 +0200
+X-Gm-Features: AclHuK_4FiyXD6OjbTayyRzPusefFQVbKIZAvf5hjOiFkTTydkxOdph6VCyP5Gc
+Message-ID: <CAFpZVRM_A9K+6-eFy_zfC-8gE+3r7pcdhgU+3M3g_XdQ_SJdiw@mail.gmail.com>
+Subject: [RFC] bitland-mifs-wmi: optional Fullspeed and four distinct modes on
+ RedmiBook Pro 16 2024 (TM2309)
+To: platform-driver-x86@vger.kernel.org
+Cc: qby140326@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you very much for taking the time to do a review. I have sent a v2 
-to address the comments.
+Hello,
 
-v2: 
-https://lore.kernel.org/platform-driver-x86/20261006085021.853827-1-alexyeo362@gmail.com
+Thank you for your work on RedmiBook and Bitland laptop support. As a
+RedmiBook Pro 16 2024 user, I would like to suggest upstream support for
+its four distinct firmware modes, especially an optional, explicitly
+selectable Fullspeed/Geek mode. This is a proposal for consideration;
+I understand that the interface and implementation need maintainer review.
 
->>   
->> +static struct pcc_quirk quirk_cf_sr4 = {
->> +	.use_platform_profiles = true,
->> +	.platform_profiles = {
->> +		[PLATFORM_PROFILE_QUIET] =  {
-> 
-> There's extra space in all these.
+My machine is XIAOMI / TM2309, BIOS RMAMT6B0P0B0B, Intel Core Ultra 5
+125H with integrated Intel Arc graphics. I use EndeavourOS KDE and
+Linux 7.2.8-arch1-2.
 
-This has been fixed.
+I found the ongoing per-machine ops discussion, including reports for
+TM2309 and the four-mode test on TM2307:
+https://lists.openwall.net/linux-kernel/2026/10/02/8
+https://lists.openwall.net/linux-kernel/2026/10/02/47
 
->> +static int pcc_fan_mode_get(struct pcc_acpi *pcc, enum pcc_fan_mode *fan_mode)
->> +{
->> +	unsigned long long state;
->> +	acpi_status status;
->> +
->> +	status = acpi_evaluate_integer(pcc->ec_handle, "CEFM", NULL,
->> +				       &state);
-> 
-> Fits to one line.
+With a local driver workaround scoped to my model and BIOS, WMI SET
+followed by GET confirms these modes on AC power. The corresponding
+Intel DTT odvp1 value also changes:
 
-This has been applied.
+    User-facing mode    Firmware value    odvp1
+    Quiet               2                 2
+    Balanced            1                 0
+    Turbo               3                 1
+    Fullspeed / Geek    4                 4
 
->> +static int pcc_fan_mode_set(struct pcc_acpi *pcc, enum pcc_fan_mode fan_mode)
->> +{
->> +	acpi_status status;
->> +
->> +	switch (fan_mode) {
->> +	case PCC_FAN_MODE_ACTIVE:
->> +		status = acpi_execute_simple_method(pcc->ec_handle,
->> +						    "SEFM",
->> +						    PCC_ACPI_FAN_ACTIVE_MODE);
->> +		break;
->> +	case PCC_FAN_MODE_PASSIVE:
->> +		status = acpi_execute_simple_method(pcc->ec_handle,
->> +						    "SEFM",
->> +						    PCC_ACPI_FAN_PASSIVE_MODE);
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (ACPI_FAILURE(status)) {
->> +		pr_err("failed to set fan mode via SEFM\n");
->> +		return -EIO;
->> +	}
-> 
-> IMO, spreading stuff around like this just makes it harder to follow code
-> flow. And the variation is just to pass a different argument to
-> acpi_execute_simple_method() which would suggest a helper would be useful.
-> 
-> Once everything is done within the case, you can directly return from
-> those cases for simplicity.
-> 
+All four controls were verified through a local GUI, including the
+return from Fullspeed to Turbo. In this workaround, Turbo and Fullspeed
+share the power-profiles-daemon "performance" profile, and a separate
+control selects firmware mode 4. This is an experiment, not a proposed
+stable userspace ABI.
 
-This has been fixed by adding a helper function + refactor code to be 
-like the code mentioned below
+Would it be possible to cover TM2309 in the ongoing series and keep
+all four firmware modes independently selectable through an appropriate
+kernel interface? If the four platform_profile values already discussed
+are suitable, that would be preferable to maintaining a private module.
+Fullspeed should be an explicit user choice, with whatever AC and
+firmware capability checks are appropriate. I would also appreciate
+guidance on the userspace work needed to make all four choices available
+in the desktop; I understand that a kernel change alone cannot add a
+fourth KDE/power-profiles-daemon button.
 
->> +	if (ACPI_FAILURE(status)) {
->> +		pr_err("failed to set power mode via SEPL\n");
->> +		return -EIO;
->> +	}
-> 
-> Same problem here as above.
+For context, a short AC test with eight CPU SHA256 workers for six
+seconds per mode recorded MMIO PL1 limits of 45/49/75/90 W. Mean CPU
+package consumption was 18.47/43.50/42.41/46.67 W respectively. These
+are observations of adaptive policy, not requested fixed wattages or
+a benchmark demonstrating a performance gain. The power-policy result
+also depends on a separate local thermald workaround, which avoids
+initializing an MSR limit from nominal PPCC on this exact machine while
+retaining adaptive thermal policy. It should be reviewed separately.
 
-Code changes applied to this section too.
+No thermal protections were disabled. No new thermal-throttle events
+appeared during this short test. Fan RPM is unavailable through the
+tested firmware command, so I cannot claim that Fullspeed means a
+verified 100% fan speed. Reboot, suspend/resume and AC/DC transitions
+remain unverified, and I have not tested the exact current upstream
+series; this is not a Tested-by for that series.
 
->> +static int pcc_platform_profile_get(struct device *dev, enum platform_profile_option *profile)
->> +{
->> +	struct pcc_acpi *pcc = dev_get_drvdata(dev);
->> +	enum pcc_fan_mode fan_mode;
->> +	enum pcc_tdp_mode tdp_mode;
->> +	int status;
->> +
->> +	status = pcc_fan_mode_get(pcc, &fan_mode);
->> +	if (status)
->> +		return status;
->> +
->> +	status = pcc_tdp_mode_get(pcc, &tdp_mode);
->> +	if (status)
->> +		return status;
-> 
-> Please leave "status" for acpi_status and pick another name for the
-> generic return variable (I personally prefer "ret" because it doesn't
-> carry error connotation "err" does, but the latter seems to be already
-> in use by this driver, among other variable names).
+The collected measurements and local patches are available if helpful.
+If this is already covered by pending work, please point me to the
+relevant changes. Thank you for considering the suggestion and for
+advising which parts belong in the driver versus userspace.
 
-This has been applied to the whole patch.
-
->> +	for (enum platform_profile_option pp_opt = 0;
-> 
-> Move declaration to the beginning of the function.
-
-This was done.
-
-> 
->> +	     pp_opt < PLATFORM_PROFILE_LAST;
-> 
-> Please use ARRAY_SIZE() + make sure you add the include for it.
-
-This was done.
-
->> +	     pp_opt++) {
->> +		enum pcc_fan_mode profile_fan_mode =
->> +			pcc->quirks->platform_profiles[pp_opt].fan_mode;
->> +		enum pcc_tdp_mode profile_tdp_mode =
->> +			pcc->quirks->platform_profiles[pp_opt].tdp_mode;
-> 
-> Please make a local variable out of pcc->quirks->platform_profiles[pp_opt]
-> instead (with a reasonably short name).
-
-This has been done with additional refactoring to make this into a 
-pointer (as pointed out below).
-
->> +
->> +		if (!(profile_fan_mode && profile_tdp_mode))
-> 
-> This code doesn't make sense for variables that are declared as enums
-> (do not handle enums as truth values).
-
-This has been addressed by making explicit comparisons as opposed to 
-treating enums as truth values.
-
->> +static int pcc_platform_profile_set_profile(struct pcc_acpi *pcc,
->> +					    enum pcc_fan_mode fan_mode,
->> +					    enum pcc_tdp_mode tdp_mode)
->> +{
->> +	int status;
-> 
-> Change name.
-
-Changed
-
->> +
->> +	switch (tdp_mode) {
->> +	case PCC_TDP_MODE_UNLOCKED:
->> +		status = pcc_fan_mode_set(pcc, fan_mode);
->> +		if (status)
->> +			return status;
->> +
->> +		return pcc_tdp_mode_set(pcc, tdp_mode);
->> +	case PCC_TDP_MODE_LOCKED:
->> +		status = pcc_tdp_mode_set(pcc, tdp_mode);
->> +		if (status)
->> +			return status;
->> +
->> +		return pcc_fan_mode_set(pcc, fan_mode);
-> 
-> This is structurally much easier to follow than pcc_fan_mode_set() above.
-
-This has been applied to the code above.
-
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static int pcc_platform_profile_set(struct device *dev, enum platform_profile_option profile)
->> +{
->> +	struct pcc_acpi *pcc = dev_get_drvdata(dev);
->> +	struct pcc_platform_profile pcc_profile;
-> 
-> Why isn't this a pointer?
-
-This pattern and ones like it have been converted to be a pointer.
-
->> +	pcc_profile = pcc->quirks->platform_profiles[profile];
-> 
-> I'd put the assignment to the declaration line (it'll be only 91 chars
-> long and is quite boilerplately so fits well into the variable
-> declarations block, IMO)
-
-This has been done.
-
->> +	if (pcc_profile.fan_mode && pcc_profile.tdp_mode)
-> 
-> Again, those are enums but you treat them as truth values which makes
-> things harder to understand.
-
-This part was removed as this check was originally put in place to check 
-for malformed quirks (fan and TDP both need to be set). This is 
-addressed via a WARN_ON below.
-
->> +		return pcc_platform_profile_set_profile(pcc,
->> +							pcc_profile.fan_mode,
->> +							pcc_profile.tdp_mode);
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static int pcc_platform_profile_probe(void *drvdata, unsigned long *choices)
->> +{
->> +	struct pcc_acpi *pcc = drvdata;
->> +
->> +	for (enum platform_profile_option pp_opt = 0;
->> +	     pp_opt < PLATFORM_PROFILE_LAST;
->> +	     pp_opt++) {
-> 
-> Declare the enum in the function variables and put this to single line.
-
-This was done.
-
->> +		enum pcc_fan_mode fan_mode =
->> +			pcc->quirks->platform_profiles[pp_opt].fan_mode;
->> +		enum pcc_tdp_mode tdp_mode =
->> +			pcc->quirks->platform_profiles[pp_opt].tdp_mode;
->> +
->> +		if (fan_mode && tdp_mode) {
-> 
-> Same comments as with the other code.
-
-This has been converted to a pointer + do not treat enums as truth values
-
->> +			set_bit(pp_opt, choices);
->> +		} else if (fan_mode || tdp_mode) {
->> +			pr_err("error probing platform profiles: malformed quirk\n");
-> 
-> This looks a clear developer error so WARN_ON() would be more appropriate
-> than pr_err().
-
-This has been done.
-
->> +
->>   	return 0;
->>   
->>   out_platform:
->>
-> 
-> Also, this looked entirely independent of the existing code (?) so it
-> looks as if it should be make a separate platform_driver instead of trying
-> to klugde it into the existing probe. If there aren't cross references
-> besides the sharing of the private data structure, I'd just introduce it
-> as a separate struct platform_driver with a proper ID table and own probe,
-> etc.
-> 
-
-After considering this, I agree and a separate platform_driver makes a 
-lot more sense for something like this.
-
+Best regards,
+Aleksandr
