@@ -1,140 +1,203 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from smtp5-g21.free.fr (smtp5-g21.free.fr [212.27.42.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783E13F927A
-	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 12:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0F73D9DB1
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 13:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791290026; cv=none; b=ULkflOFLVZznYsM0n1KIFk65+5esH/66t34OHoe/ocUFsU66IEV6Srnvy6PRR3DtXIHpTK8UersBDBFlemAMztvg37LsS5Bm5GXGkXKysRhRN+JzUCbK0YZ9vh+2dEPTKT50X5piEdN1KE/2pm73XmtriuroBUa246uXnduTXo4=
+	t=1791294124; cv=none; b=FFxZRf0AKqkEnFJT4WLvEkk8pqswYLNoNB7mzqsrlInkvBkotJmlqjXEFtYsFwoT8LifOxpXxchR8Va1b5XRegB7Te5oiQr0tZnlaItDHOsTo/wcjiy6Q4z5Za3EdWapmfZtX3hYndtsFU5m6E+Vwu1LWK0GBtrEd99SRHPSOOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791290026; c=relaxed/simple;
-	bh=HtuoH4nLhViLCTxk/zYA5H48p9f+Dz0K+ScnypVPmDk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=i4alNflB5zbVU1vFF/A4+VzaOucPYkQ2TDtT6kosooHEEOZFEd71IudL8YZrC8s+GgNtedIVRYsa46ZqSWfeMEDDnxlag504Nyny3uV5OfwmhYJ+bG8mspvtGBWCosn5AZ/4+CW+BLKAYjcSCAYHGcTUIZsjw2BglH7XP9i8S90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=TFrdvrGF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QmnwCI54; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1791294124; c=relaxed/simple;
+	bh=ekt8N2yJIF0aI2voB2sok+y+8F61TkIgWj53GoqwfbY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I31remEb+f9G6BqtgmFRz6fezDrKJpbVx3EgjnDIsvN1b7INPZ/slBBxsNNFSCVZdybHwLtcl5r/92HTUj1aqh8SyUeWJ/a11yWXIOJkjerx6zj7Im3MXs0EKAd1HZzW+x+NzcgmLR4U77l2njBed7oFeKSYsehDqwjK1gxZpaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=RK3PNlBq; arc=none smtp.client-ip=212.27.42.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="TFrdvrGF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QmnwCI54"
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfout.phl.internal (Postfix) with ESMTP id 91863EC0923
-	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2026 08:33:37 -0400 (EDT)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Tue, 06 Oct 2026 08:33:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1791290016;
-	 x=1791376416; bh=mqtSCuR4+N3cGYr+9gY00mnCttCgXqN2cooZ0FKTPJc=; b=
-	TFrdvrGFcpWIDtzGADSxAdB2NNiNYLR9xHf5PRKOar2x5hem7JlGBz4DBMN90v0Z
-	N0mCZftL6zsc/4dCQ6qcQkCNXhYDAbME52weVU5d6Usk+4vosVoMaTY02DZcnwoA
-	FUnUTJi6GII1oL0T9rwFyTcoLE1/qNw2wAULN4qdBb2324hd0zE1L5G9NGsV2uRI
-	CM06CVQ9YQmPciKL+dLarCV9VuGG16ZYkIas+9GiQnOXqnRVARWocbwaFGCoBB5I
-	eaRLNcSvUAjR/v9w2FXq+TgPLvFKEtgC5P/FZvOWApJepyzKyAMLnnAEfAjFZQfu
-	xKfVf+pGjgLQKVSgyolOTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1791290016; x=
-	1791376416; bh=mqtSCuR4+N3cGYr+9gY00mnCttCgXqN2cooZ0FKTPJc=; b=Q
-	mnwCI54csOjnh+QzN8TLMg3wxyYTQ6J96mVLNkaVitJ9QzYuzz2uZPQQsBFXV4Wz
-	/AzL9STyfuuanhv/ZM/9pmBmXNL2gL9VYplJSsKeqfr7hndgY4eYcKPnKpnx9ZyY
-	CLjq0ePTP+nrb6kRmbBCQ6FYGGJEe8tzlrtUbLgGNsHnFNDCG4vrXRRgdyFziune
-	BF7LjVV3nX+0WnNaJOTZyUfSEWRcULnGM5U9FwnyrTvYRErAZS677lHcz6Sel+g8
-	fEHDKF5+oBrwGrcjsT5DunlxBOkG7d1RQa/CoE3VbWlYpFZl3JEkeD86tzaR4zOs
-	otJDSdxPDxZgBAkk8zLEA==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
-	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1791290016; d=squebb.ca;
-	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm3:rsa-sha256:Hf2B9Ec4H8ap0b6pak14OoOd1C/JM9LBwbFaDsngDH9Ew3W
-	VhDHZrrG6XFI6esVo/3cYKQWUrAF4eyKO5fEilNbXr8pNCs4icwBzep+PyNGihlg
-	mLaf8+9jhQ62LwlwiP7NQXi8y5r1tunbOoXXO4WBaO810ourPfPqjL/8ck1YNn2+
-	b74sUz9/A1ey5jP7NURPFgHmIZGrkg64zxLg4HbqMyyhuN1qJrikukcZJU+9sIHk
-	BbSI+Q/+D9TtggkwlCLk4yn2/rnNHnIeJtlvitpZd5gYdJrjM8lLbTx+/5Tu7Mf3
-	zKIhs5PlDpQ+mbpBV6aT04c/wjWTGhnynCbP1CA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:nUKjUpXHvFCG9h3aDv3cLpLItSa0jhWZvx1CNNBd5w0=:HtuoH4nLhViLCTxk/zYA5H48p9f+Dz0K+ScnypVPmDk=;
-X-ME-Sender: <xms:n-rEalvd81RrzVp_vor4N6DTyZ9cANASTOPWi1NnuNu8n5XS_2HZQQ>
-    <xme:n-rEapTVJxpVjf2AKgmZ7Gk5xkg8LdzM5G_naxoR0ycNU3xA8hmKAw-NqZplJ_Jj4
-    QtmQpvJhL1DOJ_JiV07us7gQa35xRosIvn-jT2cs9j0jHnKs0CdNXg>
-X-ME-Proxy-Cause: dmFkZTFHuLQoIEluWIDZy0toML7qjE6ifqILcXEDmfcfpM5Rb7zTAcwieZg7xWv3sUh7mN
-    yX/MohPTiv9v/NCoF+dyYzZcT06VUkXHqLkQAPE6DFDHE4OSTfo9SEaWhgijgpgtOU33ba
-    vtnzqohr3qoCe0ulgFFm2+GINSAoJePlJDJOrERdiiBe9/4DPhKLTp7gYC71uqqeTWi0Of
-    QYRpXM+EAP5tQ/afDERPsyoslsXlz33bzz+CuUqn8y4S5+TwxI/TGbk1KhMV1V8iwikFRA
-    ZwxYhqhJklL4S/v+vGU7me0+yIUFykuueIb+GwNqSmORRRLKkIfsZ2q6Impxwogkglgqlv
-    Obzxp41E7/TCP0U0LxXzq1A+/2mXYgkRfUp3owBnFXJvVyRWTByAC+61QLYBfsrU/S1fT1
-    uYEHro+LvFpBqH7Ax5z3PsqiUY4fWt8dIYe0gNbTUYeWSASUOGSnPInSBzJNdb/dajUZT2
-    yt5Shl3UgNtvvYqpn1Vi6mUHW9iR5vcFekWOH59aCtbRsnvPy9JHoAJrH/YUFp9EIhjLho
-    0fA+izi17Yw8V2zlxBDWKiFL3iiRbivwKHTgui/+tcEH3XBD+ScbCeXs9qkSFgMMu2rH20
-    lNmiEFkkrX3duvrNfoA/J7b/quEXnxYKPtqxGaTv5+Tnmsis8p6sQtAQKx8Q
-X-ME-Proxy: <xmx:n-rEar8X2fJTtiwXxoNdSdHVPE5TmurRRijcQ_VWHWmYyO06U8moAA>
-    <xmx:n-rEaoJsegnIap0MluVjCotyMvZRFpSYug65u6zlZZ63i9MKLJFQAQ>
-    <xmx:n-rEapv7e5O82zYOYkCtIWtbaxvzemU1avVZzcgUp2fKu_lQeevnLw>
-    <xmx:n-rEavBJhwS4Wc8Z_tX3CIHhYAPfYuPzsje4lMaZpCf8wI_btYc6LA>
-    <xmx:oOrEagxLnGWPJ7eAUQrvhclz19vwpqXs4PI3AoB-n5ToQy_JDSdCxCsj>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 5A40F2C00076; Tue,  6 Oct 2026 08:33:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="RK3PNlBq"
+Received: from [IPV6:2a02:8429:1b42:4200::30] (unknown [IPv6:2a02:8429:1b42:4200::30])
+	(Authenticated sender: julien.robin28@free.fr)
+	by smtp5-g21.free.fr (Postfix) with ESMTPSA id 54CC96013D;
+	Tue,  6 Oct 2026 15:41:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1791294112;
+	bh=ekt8N2yJIF0aI2voB2sok+y+8F61TkIgWj53GoqwfbY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RK3PNlBqFIKFGR826I5WTepgmuU07DjiiNwJjEOBuK2NnTOt/+5maFkvJtlMuD/sb
+	 51h3GhCyJBRrYdeK4uem5bGxoDRYicKHuK3yPx9LBSsq6ZancslQuzKxzborwHaVKa
+	 7oBoSzjsquIE00XF1aOXv0uyD4tjdi5qHTBZYnCoPidA2ahBN2a2PbXHAuQUw8nvpb
+	 auLJv+8SWzbdNHmmvYoyNWS+wrPnMeV5aSYXqPk1ITXMhB2BkRz51/LyLzNQjEtP/L
+	 QBx8QKDw8gX7va+6n+/3C5dp/vyYel9/6XeSY6UWfTcJoeuBK07+dDezUNAdSPl+Ap
+	 wE9JePqCcrZhA==
+Message-ID: <4ce40bdd-87b4-4ba2-bf04-01f854680151@free.fr>
+Date: Tue, 6 Oct 2026 15:41:48 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: An8UdCR2lhW-
-Date: Tue, 06 Oct 2026 08:33:15 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Thorsten Blum" <blum@kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <98bcf262-d1c6-422f-a1de-d41d41a98e97@app.fastmail.com>
-In-Reply-To: <20261005163130.20375-2-blum@kernel.org>
-References: <20261005163130.20375-2-blum@kernel.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Use bool for local is_thinkpad
- variable
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: hp_wmi: Unknown EC layout for board 8C9C
+To: Krishna Chomal <krishna.chomal108@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+ Suryansh Singh <technosfan14@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+References: <965dd816-dd66-4318-be8d-330a40209f67@free.fr>
+ <asPy5Q5wNYaMzTqJ@archlinux>
+Content-Language: fr
+From: Julien ROBIN <julien.robin28@free.fr>
+In-Reply-To: <asPy5Q5wNYaMzTqJ@archlinux>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 5, 2026, at 12:31 PM, Thorsten Blum wrote:
-> Use bool for the local is_thinkpad variable because it only stores a
-> boolean value.
->
-> Signed-off-by: Thorsten Blum <blum@kernel.org>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 1661f070c571..1082c36ae723 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -11925,7 +11925,7 @@ static int __must_check __init 
-> get_thinkpad_model_data(
+On 10/5/26 10:00 PM, Krishna Chomal wrote:
+> On Sun, Oct 04, 2026 at 12:45:58AM +0200, Julien ROBIN wrote:
+>> Hi there, I got the following message into my dmesg log:
+>>
+>> hp_wmi: Unknown EC layout for board 8C9C. Thermal profile readback will be disabled. Please report this to platform-driver-x86@vger.kernel.org
 > 
->  static int __init probe_for_thinkpad(void)
->  {
-> -	int is_thinkpad;
-> +	bool is_thinkpad;
+> Hi,
 > 
->  	if (acpi_disabled)
->  		return -ENODEV;
+> Thanks for reporting.
+> 
+>> I may help a little bit here, as two years ago I did the initial work to get fan speed reading and setting, and thermal profiles for the HP Victus 16s-1034nf (8C9C) which I'm still using. Nice to see new people added new things above this! I hope the "victus_s" naming scheme I introduced to differentiate from previous driver behavior when adding support to the Victus 16s-1034nf didn't turn to be inconsistent with added models names using the same behavior since then.
+> 
+> First of all, thank you for sending those patches. A lot of the current
+> infrastructure (fan controls/gpu power modes/etc) are built on top of
+> that.
+> 
+> As for the victus_s naming scheme, we did stick with it for a while, but
+> recently there have been some efforts in removing the inconsistent
+> naming [1].
+>
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Mark
+Thanks for the information, yes knowing the names of added models to stick the "victus_s" code parts, this naming may of course be updated and improved as soon as a clever and cleaner new behavior naming scheme is found to better differenciate them. In case behavior differences aren't due to being omen or victus laptops, but are based on clearly spotted others details (generation, CPU brand or anything else) this may help getting more inspired and less confusing names for all of these rival behaviors.
+>> With nbfc-linux and ec_probe monitor command, I managed to check again EC offsets/registers meaning for this 8C9C laptop (currently running BIOS F.17 11/18/2025).
+>>
+>> 0xAE offset is related to thermal profile, it shows 3 possible values:
+>> - 0x00 when in performance mode (while HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE = 0x01)
+>> - 0x01 when placed in balanced or low-power modes,
+>> - 0x02 when the laptop CPU power limits are back to default / fallback state: turns out this happens when an HPWMI_FAN_COUNT_GET_QUERY hasn't been played during the last 120 seconds. See hp_wmi_get_fan_count_userdefine_trigger() function.
+>>
+>> However when the 0xAE register value is at 0x02, playing an HPWMI_FAN_COUNT_GET_QUERY makes the 0xAE register back to its previous mode (and CPU power limits are set accordingly). So when value is 0x02, the previous value is kept (and may be restored from) somewhere else, but it doesn't seem to be from any other EC register. Even worse, when going to performance mode, HPWMI_SET_PERFORMANCE_MODE command is applying HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE = 0x01 which cause the 0xAE register to go to 0x00, so the logic of this EC register is different from what existed for others models (where the EC register value was the same as the one provided by the HPWMI_SET_PERFORMANCE_MODE query).
+> 
+> Correct, this is an important limitation in our current approach where
+> we reverse map EC read values to thermal profile parameters (provided
+> by the HPWMI_SET_PERFORMANCE_MODE query), and that doesn't always cover
+> it fully on all boards.
+> 
+>> Because of these sudden changes about EC registers behavior, I wasn't sure insisting on direct reading into EC registers was still going to be a sustainable approach for reading back thermal profile on this new kind of laptop. Facing BIOS updates, or tiny changes between similar models, may even cause such approach to break without warnings. It would also need people adding similar laptops to ensure 0xAE is still the right EC register to read, and double check the values are behaving the same. Which is why at startup, I preferred the mode to be initially set to balanced: to both cleanly ensure and say back which mode is enabled, without relying on risky tricks.
+> 
+> I am not sure how the current approach would be "risky" because we only
+> derive real platform profile state from EC when we have explicitly
+> identified the relevant offsets. For unknown boards, it still defaults
+> to balanced for a clean start.
+> 
+> That being said, I fully agree that with BIOS updates, the offsets *may*
+> shift leading to potential regressions and we should avoid this method.
+> 
+>> But despite this personal opinion, for the 8C9C, playing an HPWMI_FAN_COUNT_GET_QUERY, and guessing the current mode is performance mode (0x01) when 0xAE register says 0x00, and differentiating balanced and low-power modes when 0xAE register value is 0x01, may probably be done by looking at victus_s_gpu_thermal_profile_get(), as prepared into platform_profile_victus_s_get_ec(): I see that Krishna Chomal had this idea. As I'm a beginner into kernel development I prefer let you decide whether it's reliable enough, and/or worth the effort.
+> 
+> So, I was working on a series to fix this very issue, but now that you
+> have brought it up, I think its a good time to ask you and Ilpo Järvinen
+> if removing **ALL** EC offsets from this driver and relying on only WMI
+> queries would be a good idea.
+
+Personnaly I wouldn't dare removing the work from previous contributors from the kernel 😅 but if (and only if) having the laptops automatically set to balanced mode at startup is fine for everyone (so that no ones deplores not being able to recover the previous mode on startup, and calls it a regression), it sure simplifies the driver, and future work on it.
+
+> Currently, the following four EC registers have been identified in this
+> driver:
+> 1. HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET (0x59) [READ-ONLY]:
+>    Used in platform_profile_victus_s_get_ec() from params->ec_tp_offset
+>    Used to reverse map the thermal profile parameter and derive the real
+>    hardware state.
+> 
+>    platform_profile_victus_s_get_ec() itself is used in two places:
+>    a. thermal_profile_setup() during driver init to re-apply hardware
+>       state.
+>       We can remove the call here and default to Balanced
+>       mode like Julien had done in an earlier commit. [2]
+>       I think this is fair because the official Omen Gaming Hub software
+>       on Windows does the same when re-installed.
+>    b. victus_s_powersource_event() - to derive actual_profile. This
+>       Julien needs to confirm - if we can avoid doing an EC read by
+>       directly taking active_platform_profile, since in my opinion,
+>       it should be same.
+> 
+> 2. HP_OMEN_EC_THERMAL_PROFILE_OFFSET (0x95) [READ_ONLY]:
+>    Used in three places:
+>    a. platform_profile_victus_s_get_ec(): Already mentioned above.
+>    b. platform_profile_omen_get_ec()
+>    c. platform_profile_victus_get_ec()
+> 
+>    (b) and (c) are both used in omen_powersource_event() for the same
+>        reason as victus_s line as mentioned above. I think here also
+>        we can fallback on the cached active_platform_profile (please
+>        let me know if otherwise).
+
+This is what I thought too, when realizing I wasn't quite able to read it by EC at that time. If platform_profile is applied and kept cached before going to sleep or changing power source, then being able to re-apply it when needed seemed fine to me.
+I guess some OS settings and user defined preferences may automatically ask for a platform profile change under user defined circumstances (going on battery, after some fixed idle time, or anything), but I came to the conclusion that it's not causing troubles here, assuming the driver is able keep its own mode as long as not asked to change, and able to apply when a mode change is requested.
+
+> 
+> 3. HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET (0x62) [WRITE-ONLY]
+> 4. HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET (0x63) [WRITE-ONLY]
+> 
+> (3) and (4) are both used during set_ec path of the legacy Omen line.
+> However, since I do not own this type of device, I can't comment if it
+> is entirely needed or not. Interesting though, this is used in only
+> three devices: omen_timed_thermal_profile_boards[]. But anyway, I will
+> try to contact someone who sent these patches and see if I can get their
+> acpidump for more info. I have a feeling that at least *_TIMER_OFFSET
+> can be removed since the delayed_workqueue would cover its use-case,
+> and obviously because (afaik) the official Omen Gaming Hub does not
+> document/use any EC registers and relies on WMI queries only.
+> 
+
+When I looked at it at that time, I didn't find any EC register showing such behavior into my device (but of course I assumed people who implemented that on others laptops were right, their laptop were just different from mine). However if it turns out writes to these EC registers can be replaced by new WMI queries approach currently used for newer devices, it would be a win!
+
+I saw these new calls to mod_delayed_work() which have been added when setting manual or max fan speed, so that in the end, hp_wmi_get_fan_count_userdefine_trigger() get called periodically. This approach is pretty cool! And may be generalized to thermal profiles too (as it turns out, when letting fan speed to automatic, and not doing anything with platform_profiles for more than 120 seconds, CPU power limits are back to fallback until something calls hp_wmi_get_fan_count_userdefine_trigger again). Nothing urgent as (in my case) CPU power limits are just reducing a little bit after 120 seconds when not asking for max fan speed: turns out to be safe. Wasn't sure at that time if/how this device specific thing had to be settled from the hp-wmi driver, but delayed_workqueue seems to be the right way to go.
+
+>> In case you need me to do some tests and gather more information feel free to ask me!
+> 
+> Would it be possible for you to share your acpidump here? Not that we
+> need it, but I was just curious why 8C9C needs manual triggering of CPU
+> limits during power source change.
+> 
+> Thanks.
+> 
+> [1]: https://lore.kernel.org/platform-driver-x86/20260615091034.987029-2-radheykalra901@gmail.com
+> [2]: https://lore.kernel.org/all/1c00f906-8500-41d5-be80-f9092b6a49f1@free.fr
+
+Here is the acpidump of my device (hex and bin format)
+ - https://pix-server-sorel.luoss.fr/Manual/Linux/HP-WMI/HP-Victus-16-s1034nf-8C9C-BIOS-F18-2026-10-06.hex
+ - https://pix-server-sorel.luoss.fr/Manual/Linux/HP-WMI/HP-Victus-16-s1034nf-8C9C-BIOS-F18-2026-10-06.tar
+
+I have an older (F.11) BIOS version acpidump here, format seems to change a little bit, but it's hex 
+ - https://pix-server-sorel.luoss.fr/Manual/Linux/HP-WMI/Bug-Report-2024-12-12/fwts-output/acpidump.log
+
+About victus_s_powersource_event() to manually trigger CPU power limits change, I remember the problem only existed when performance mode was active, it was only about CPU power limits (not GPU) and didn't exist with any of the others modes (balanced, low-power or fallback). Maximum/excessive power limits were kept despite going from AC to battery, and I believe they also weren't restored correctly when going back on AC. On Windows with Omen Gaming Hub this seemed to be addressed by rewriting power limits on power source change. As I updated BIOS to F.18 I'll check if anything evolved about this.
+
+I'll do the tests tonight: Unloading hp-wmi driver and looking at RyzenAdj allows testing what happens when nothing is done by hp-wmi driver. But I need physical access to the device to unplug the cord, and also to put it to sleep mode, waking it up.
+I'll keep you informed of the results.
+
+> 
+>> Adding Cc to Suryansh Singh as I see recent related work to this EC reading offset of thermal profile on another Victus laptop, in case it helps having a better overview on this.
+>>
+>> Best regards,
+>> Julien ROBIN
+>>
+>> PS:
+>> Others identified EC offsets for my 8C9C by the way:
+>>
+>> - 0x8F register value is 0x00 unless performance mode has been enabled. It may be related to GPU gpu_ctgp_enable being set to true, in which case the register value goes to 0x04.
+>> As opposed to 0xAE register, which may fallback to its default value when hp-wmi driver isn't active for more than 120 seconds, 0x8F register keeps its value. This may be tested more deeply if needed.
+>>
+>> - 0x8A, 0x8B and 0xFF registers are reflecting CPU power limits. 0x8B and 0xFF registers show the same values which are equal to "PPT LIMIT SLOW" from RyzenAdj, while 0x8A register show the value that appears in both "PPT LIMIT FAST" and "STAPM LIMIT" from RyzenAdj.
+>>
+>> - 0xB0 register is showing CPU temperature in celsius, 0xB4 is showing GPU temperature celsius, 0xB2 and 0xA7 registers also seems to give measured temperatures in celsius but it doesn't seem to be CPU nor GPU.
+>>
+>> - 0x11 and 0x14 register are linked to target fan speed; values are 0x12 at default fan speed mode (with "fan always on" enabled into the BIOS, otherwise 0x00), and values are 0x3A when maximum fan speed is enabled. It's not showing actual measured values, as during fan speed acceleration or deceleration, values aren't moving at all.
+
