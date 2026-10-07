@@ -1,37 +1,37 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673634734EB;
-	Wed,  7 Oct 2026 14:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84834AA57C;
+	Wed,  7 Oct 2026 14:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791384075; cv=none; b=sdaeeC3Rl3Ie6WsGD0rv/pEn9mwBN6PML42WLOno+jg+Poij5b+ZPZQDVCxDZWHuu3UOjmL2mcBSENmBdU0YfOBwzSWwoCLrlB6MRGmg4fKLfznt9xsz3hpVwuLMOeZsvdNsrPLxFx9dwlcK8lUJ7D59qo1Ef91eFMEvFl3itJ0=
+	t=1791384076; cv=none; b=ow2J3D4QlVkroVQGpoXPgNvFFFZJbRNiFpHRRwBW/2s4D2WSrDS6evr1Xd71MqgbYEsFb8hxsQbXkXWRCmcmD07QX/ngehSiV8aFHD1C8Lhfo43B3adLvhDiSZM6Or6v9zoEkZBUWCPdEA1bFzFJUL5L0It4xpJk5meGtfptV4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791384075; c=relaxed/simple;
-	bh=aC84uxNOXN0rZTeUCjpi7jjb26F+61dQ/TCkm6u4rdA=;
+	s=arc-20240116; t=1791384076; c=relaxed/simple;
+	bh=8xqpsdXOd3uyiiUZy83XVjm83FAzfzvxanGuatUOZxE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u5Ox2JTPfMZ5TKPMH2T/7zIRHRK4tQCqM/0IVFAxMxrHFrCTbcDxRrxjex4VwEcBS0qLt+vFdxUkKS8v+8o2nV8mAHei7nHY/FikSdiEBb8Lai7B5tZh8XFkN10Dvby4zZa9+jToY8zwd8m0KKKWEo8/kaorzhd2/oakTtigFfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VskvTgpz; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=G89a4TD/iy60M1LJT383OqniA1Vv12aOpUvf5pWztZCkwe75VA29E2vBWWqJyqzdMMrVnlicr7j+dH+Vmjh1JT1oN9ej77CDkJ6bzTb0QES0dMxqKY56XOgSQNV4OITtuPEhWMq8b7utQA3WXPry60/8e1VHJOdkzZxy22CL9x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DXUbYmYD; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VskvTgpz"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DXUbYmYD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1791384068; x=1791988868; i=w_armin@gmx.de;
-	bh=muyr/LDpprVPRYm58cgnOeOOmGFpDiNz7GYD4VCjeE4=;
+	s=s31663417; t=1791384069; x=1791988869; i=w_armin@gmx.de;
+	bh=hyYsL67M700isduxhzAISd4WW3zKBw85H5e0pzSpfEE=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=VskvTgpzNvpXwsGGbTKS9cbhCmzurjco0ZLwqoGCMrJNpYIdHkAfFIPMQBPdXws5
-	 Xz0iPuyC/Rk9PikMPb5hEfuy7ndA/bBDv6Eh8WCdsievtZblEGH8A4vHqw2Nq5Pym
-	 Hi7uxQdgquqs6gwB89RxyGk+e85tVjn6DZDsQM3vJglykN0oQnCMTfP+R0upENZPC
-	 zmKtbVp7c7uUAhwDpwxHHp9q9nN4QIAEEYyYY8Xk4VWnCJyGi3PPTic0d2qYPlRPP
-	 9o7GOdBQCAcbJu3H+NEQy3gai36ezwfd67Ikje/KyLm3wCkfTzNqcqRUC8/Ow+4Op
-	 8yIDS/6Iw/+eXSQi2w==
+	b=DXUbYmYDPEGpUvxIff+RT7GJpzZBVvd5S6VHuTcFmZEv5I4HQUufNIo66W5sDS9F
+	 fDsPvxbzOawAKRIIxg2D5y/ORyhqqKwxW37HS+bGAkmOVA1Ey7zLKN98DcTY+0JEy
+	 z/Up9CpIRHNJYNXRBS5vajhIk1Y3afQfLZAA783OKe63vV/0BaGHkQuCceHzsmnm/
+	 t0Clnj6oZuONTYABDKN4wpJBFp3bzxsYVzm6oQfittNvKFPUkmCXm9FquRRxgC5Qq
+	 BYTwLfZ6iE27pySFDMzqYhJUl1bq7TV9SVip0wjhDbMN9SwyRxWE8iB9pt055/ZEq
+	 G1V02lGwr4ntI3C+HA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmlXA-1wmafa0Psk-00fUy0; Wed, 07
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRmjw-1x7Gms3Rjm-00OmYl; Wed, 07
  Oct 2026 16:41:08 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
@@ -39,9 +39,9 @@ To: hansg@kernel.org,
 Cc: wse@tuxedocomputers.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] platform/x86: uniwill-laptop: Implement rainbow animation as trigger
-Date: Wed,  7 Oct 2026 16:38:55 +0200
-Message-ID: <20261007144101.323289-3-W_Armin@gmx.de>
+Subject: [PATCH v2 3/5] platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
+Date: Wed,  7 Oct 2026 16:38:56 +0200
+Message-ID: <20261007144101.323289-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261007144101.323289-1-W_Armin@gmx.de>
 References: <20261007144101.323289-1-W_Armin@gmx.de>
@@ -52,442 +52,234 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MessoG2Yuh9lom7gkbdDR1HEW7OOB2CIQEu8gYpuOknUzlw1dbv
- osDvU4GILpyk44SvnHeZc2Xuyq4wGXnKiwiW3WP5iAwS6/8pvgZBtC4BADWXv4GZgVXTIl+
- n9Vumt9VvbAeHhrSrGp1Jw66yDFYmC+FWN1uw4siEc6aYjOgAbzumh7lWTnZjWHXZZ5FXjy
- nS01vrNO5EdRLniAEWExA==
+X-Provags-ID: V03:K1:MjKHFBlxVbX0wSs9I89VsEYtykOD9wAeCQyNAJCzotILwRLx6ze
+ V7ksY6dTGN9ha9tODrBvxJ2UQi2PIckusdfAFIgaIguzPHvgPpbbAxDY83rPOX+s7MFIFwb
+ xHDy5rQ2KLeIJLpyOJ2PSf1vrK3ChNNQz7U1wdbGNV2kyGEJpbCmqla6534t5XRQIoqEsLC
+ jiSifwg/zwNU5l6mqlmYw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pnZ+zwUTwgo=;YormrtK3du8MAz7IuQGxOEWDrFK
- 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
- =
+UI-OutboundReport: notjunk:1;M01:P0:F7DR88ZyUVM=;Nqk8K27EG/8fSYwjeOj89U6HM8B
+ flEXGZRww5QPWRnmq3JV+EwUjB69dOK8MWzqdUPlf/WRKbSN6+ftkLmCYB6JwMpBtaF7aooww
+ kxK2t4XBSnbnAUi337UjNz3ZE9Tg5G2582ReGEH0o9A/04x8RbZavlq50G4/4utJCwvg0v/6s
+ zQKxHT+340wpDBZZv5IInu5dSSbT3gDgWflCXkldPZ1mTC7xVKDFxb4u5OwApwwI/7BAD+HkO
+ KU8P3JfhPogR99yckwyIC+y/5S4moowQE7tRO89kKCR7jRWGdhXxsthJiFnSJzSknHDFMBZLp
+ vZe5HSGAopl15ixHSCVZdMeChA3sdZsScE7fjIz7dBPORm87xpg9HtlKM426KjAQYouwkMpoq
+ kWyyfPhvvk7PQzQtIQaQVwNj2RpHoDPpzaHSOT2VmRo8asSSPoqCrsmJRp+EX1fbag4YhNdb0
+ plYv5AQxjJkc9n8eraKKNP6N+Saw6Q5R//TfbK7BcOAk250swfsX2WPVsgmnpk2c/xisc80yq
+ U0wVXrE+nwI4ELukZnRS5Bh96FlNbcfmCWFerIwExDNqV82WnxP4eOkMYImiiynZrPGwF6KKg
+ 96YWaGU1hO1Su43MkQmfzKEziiilzJzXp6ALEqVYZ4DK8YEebg0Th9/iieZF66XscJ49C7R+O
+ 3XfKTLT0DANBHNlS/5lQ+6H2wFGYqDjex7eR/M/L1Bml1Akt/XIppzPR1ZsIaFdoLvmAVzq9K
+ 66vQXGynVo2w/9FpCDIgqKKjMi9L3TXffGAP5KKTfUOxeGnqUFKiemQVzvAwc8gLkhUUTPZhX
+ 73rc6jgvhabEXr8H/V8cmh4KG0Gli9JYGL+q38rEwWTs7g+v3bmZ+BDREHXYYwGeFT+etfw4v
+ hIZEP0UvZD9mblZHVmCk/JrcOSEYP3lRvXl3C6A/HfKUwjJolMm0UaD6bUF54xXJ7+5NHE4Ve
+ aHcq4peqzAxlTy2RbKa2l+Ewdl78yD13+Zv3UoDALORLtNdmVL3VlD//4+Ahhv1icPlEuD+BV
+ Yo8OEKVvNZICRrQUbQeiOPgetSSeuG7MldqESbhEnZUsuLvJGQpLpb4zO/owV5MVj2k0FLGbU
+ 140DupdynbFQV7cTiDsmn+5xYLI0BnlRxc/Git9SoKHguBq7z+hmdgYaEs5OOQFP4GIHktnoz
+ oE5ze0NBhj2m9N6EmZeyzoWb1l1HWukS8Bzi1AA4CXxpGCfv1RWvqPAmTSnP+/PwSzdJiezxr
+ FdmK6ztbZiTluINBAByOdmv5gOY/R7ujPBtsrTOInHQ4juzjTTtD46U2dc30MJJ1Gkv3TDI3F
+ 676y6MQQJ2J3/YytxplZOlw6Y3s/DLn+GgZdpax2MgRNLv+mKDgIOcY4n/UbCrDSTBc6ThEgP
+ Zdpix5rRPwGu8wlEY4eZaXASauAHaJs0TqdG8N7LyOzSSmDQJOSwE95DrirtnzRb9Tf81S3gb
+ y+tJFPq3jHvrcTprKTS6BYEIDDRi7RIBC6N/Bitz7zYz3QCUQT0TpKZ929G89N4Vmt18FTyfi
+ l8OTGJv9uBtUT70Cy8P4POa7wTzqQuxmLeOEdQ3ZnaOndj5cxXcaPAG5rV1Rz2QIxWGgP/wa9
+ HytPkXFOTSKPuTEvjVO2cOJRbPusz3sC4zJini9KDaK7sEsIJjimyRsAG8Wd7/94yoOQzzow4
+ 0YwJO3wk9g8LWaf8ZfO4yVgzG8Do6kOOyquMUuBOHM93Y5sa4FIVykOcLoxU64ceXn3HX6Wya
+ whFGfUaxWfxfKOWsO9Y/E/nbaKMgOVzCiFGuxFjfl01RXCHF9wpKNJyAqIkRPeF28ZkfpJVg2
+ ILQjnT5WR4DmG62TOLrF9VK1Wk42Bqk9jv7OPvzJQ2A/3KXJyLXFwmF0wT7uh8g3kzKavjr7O
+ uIXQ7Ba5CPONSyfVmhjpuyVm2MO4k2P88o3y5CDVmb1JKwSRUCo+DMPulQbXxP8CEdHpXBJtz
+ 8eGXUGSiWcIbUltzRxUC6CYCmPFteKdSZlYINMR6OAO5xM1tnzG73THVaquiWVkng0EhmXbp/
+ rGI1psI774YRjwlRCgjQAHVmGeSGN+nJ6dBL9OPnsRH8gu969X//bucAUFh7eQtHX1k6b3A/H
+ Ivq6X4n1BSdmd8Luf1Nm96V/lDM8HxS2wLSSfbb+qDdKCf5OqtvZzpT4tFZueGMK7YuBOCAfu
+ lRzZu2kKsQk2MTSLfdzNeTATDhCFkTfBAvbT/BovADqL1Z4eK/ao+Q7+1BQVk1+fU7IUYCpF4
+ 9qVwD3/MlUgh0OhAB+iQiaJnXoxSs/F6wqp16Pn6/NmOyb4SAje0f2oKEyQZBJwhY7JsQD/wr
+ 430ce49fm4/T11jAfkMdODg/3Ip6GKxw9UY+4dwBwN0WIhivd3XGTll/OrnTzlFxydtu9xhOO
+ ovsHCR+LOxbYxZxpn4xnAe51MZUi/BEZ8C0Nz9mM57N8wKXhtVIeAn4PQlODar0FIDAFM3STC
+ 354agBbMGcvcYAUL0R1m2y1bGiraU1IEuoq6LIbocdVmsx53TrmAjA+vnqbe1B9lSaO0736iH
+ fiSSPTZCVXgDa5NZBthSOgbYS5GmF96iCI00GYnOKlXHjeP3IMt7sjJO5yjGKXxjZSMR3itab
+ M9N28mcxdSPIC3jU6rdxurFtJ0AVAckAW9ex8TzZfk52rruDx2UYRYqj3AiqFElKuva8oy0Dy
+ U21DN3gsqWiKy5P6dD4Q1pbheBqyLebUjpL/kinZ0sHh0xPLYbToe8RGcECFBJEpRoYa7npst
+ Ms1uGGyWSTxcp+1Ox0SKqjXIM3mrWAhM+1yzjw8TeFOtWFCk05uDMdcrpFeiWkeZlINeVsOZz
+ p9bGDkHhcqg3mDliP4CnVq+KpRtiVPh3fFKyqj+QtdFP9X49TKPCwP2nbMrw3LOAPaKVOVOt6
+ zLYNKLWhh1+5UO36iPYr4TWJ24VVjPotYvsgx/DEXEdcjMurREvySvEMNU+LehRcRfyzJhmiu
+ vuKBv6vKpinXan4qiBfnfIqNLB+PmTS6gJjef2kPksL1iMKxSstIKEABMZFqTcsxRw4CtpfqI
+ 54IK/Vb6ub8xrt5Dd3GoqXjs+CDR2S9r3BJQxgznkcBFllz417MAZl/M0zN0CTPx8Py+m0to/
+ ee2DqZnHlOZA6UBngUWc5VXzak/dva2E/fhTh/+BIb2Uknk7G3yY7iS3yDkfj8pDA0Dl/fjfv
+ CtJL5wJL9zNPcX6nw6qT8q8acl3FFDhqWi5xT2blceBe9Sx2XQJ5vf8JncUkM1eb1r361BS7I
+ AT6pfpjLBaeiHGvy6F90BT0sHXW8JU7V5IDj3CuqTlxYQUw4IWagmeamsUK8RnZ96fVl+yyBp
+ Vp+GYK/ZOcwQD2P8U2Z+Qlz4k4LFmErpYDjSNX/O34iyy5p4ORr+SFt7Cw03vpmj6LM1J4q4T
+ +ak6TKfkYt6MdfXk8uqvP3ejeNVnCp9g92+omEBwiURVuTknaYtFljy1jx0FVAfktaBzJOGa+
+ 76gkL0oSaWBuiMTQUYzKp+drhhTzGocYxFWcAfUChaulaXbwzLh7cvoSQ5dvHqJF1T/vgxIs4
+ k2AcSgYCWgKdSRnv8jol5Kl6NfSJ7NiaBoEV4tHgxYc+yL4kEuzCZngHDBzj4AQlPaDjdIYEo
+ pkL/ahQny8foRqXgUZHUC+s6RWvkFqdRlEBbzRzAK27cCNPXYHLM4MtaCLp39ltgQ2HkaELYC
+ Nk73zO0O2cMAJ1KZmlLRMMLmXRzYBanNh10QIs8NUPADC8haqYMMPfQskXXJG3/iZ8n7uuNFY
+ HJV+22Yua9yW9oigkEpt7Qb8RAN8AUsmZJZEqfFubgdL9150dLte4MhCcxd6Er8TPCHt2CJBb
+ UNDVq6IED4q8zocfXKvuALHANmdKIA4S82vB6Cv9ITZvXZrwSOVuUHNC/eK81sfL1X7GoQsnN
+ vW5RAzm/GPNlhiR2/GIbfG05fjZMhRPAWZW3Ys5xsWQR2fJ5vb5vP7aXLw+mEue2U4EYKt7gF
+ 58QUgTAHa6W0mFHllo7shn5aLb2F9EuCHM7ioMbZxd0P9E2gBEWc3Am8mJe3BUbzX++WcLnDB
+ V2w7uYL4kTGt8EWD0stnDTKIDAl24C/4QYfjA983OmOhKhbi5xyLT2mDZw2gCfiy5Ckr1U8rY
+ OAB+1c7lYkVMjg2KZ87p+8nnFmHxCWg8hgV/L4zJsbIeKQMFN6CDV9nAVxSA5/wn0zpbgWG+9
+ PXOteOoUEaeVfx6imDrXE4VnalGBMLbe1WFN2XPI/lLjA7IrriK9fiW4at+KP3QtBLEVdnNbi
+ +Lg2QU1iGmuC4625AeMcFsSE0GiCwREx+Jycxtt32OL57BguSfkzwHgqVc9VUbgOl/kaESgCN
+ 5z6DDWiAsYnSdT/TQuDaawP7pa0gSrgjVRj2PwXPqfInr7OKngNpmWPMRo71lluWHKKH1XJu2
+ zCHiX+HxBQA6GlaI2CR4sZ2cvonQ2DPTzRYFYgpKA4IIYqVaR+U00bKawovAAaxDrONH2jI+c
+ QVSUB2CwHf9E5KmUb4Dan+aVM8Zn99BRPJ8G8+bkobUdyD8u1zMx6oL0kjDrQpOH8XEH9BbsN
+ Bv9+NNNxV64qALhNa42QMLfoBSnHjjTgfGnS/xUgAEze/Nm118QSSNZ6fyiO4+SlpeaUMZIpT
+ +V87PKG3IvAWFgGcPpEdbxXCOVmhDPtaERzCfN9Mc3s34eaRG1cmAab+IQYt2xrGS5xaU5onY
+ edlrNctIjkrWGGYE0DtW6OgTqNzyMYn/zvTR9gk/2iHgmqK+qaKo3i77fIoATA+KEhVIZeoAk
+ jYzBkrp978CQngEoeC6BezDZu9PAxN3+2EkdDJl9mgmBKBbtze4wpBAjoyiZ+b2UEsDgGP2oV
+ BneaacwW1fLck0MheUzUgepSgfoYszaNBtlkUCXnZnQOf/gJAoEQ/F8DsOWysynSwzgdPTYzp
+ ipLoRXjAc0TwsAynfdMMq5+sg85aL4YnbfsDEUHfP2T6mJ8jRHfbfQlxwzRuRLBAkqcfeH5t0
+ sS6ge54ey8bpA1sIm87vEc/umlFdtpf9SXxibIaTuNNIVby4tVS5aSG5SRYcY+21HZvXcdZ4a
+ tSHpITAwTu+gRzyk9uqeHqv178IjzMpNc3l1drrU9pZWqchp3s9VjBdjSUoTfzTOu+rsYZ9BX
+ gJc1HRvsSAIrf75s1qHBzee1A8GmLu3StZDdJzzZkwGw+9oc7HIDs0zHHZG265kgz02EUEBNQ
+ jqm9AodpaHeLl0zhbvx3xk1+MGj7tZdZCxwne1nplG5TzF1qMFKJzzzrkVe9hnrGov2kUjNTY
+ 7E0z0uoyqEtbSlnwu8VIl07lISCC7YrUxXN6bZp1K2Sswz56U11uFnJX/Ygl6ztqJxdwUDb5S
+ LFDhEos/ZujlyV8WjnwAp1xp8sXC2kT6jDwT+6o49GEIMeii3KOr7J8RZJObjsgZrlPt4anuL
+ g+ukjtP3MvygIgc8E/MMiS428x+ikY1yF6uxGEXLoya+pebS3CRnTNwZTYFFUbwp9UFHdpnr5
+ r97ERvNPombw1Y+yZ4yT9av8VAX8jiAorOhpOQ7SINhtQO+TXRKdcotlnHzlLzCmxZPBdPORs
+ OwSqc9F1cYzZ1QvrRV/mG73h6Ix06WkQX8Twnw7qAhy5NyJqCXYkQKINmZKJNZ4HMMxmcyuiI
+ rTVuxtggtfkP3PMoAloh9rpgjomnO3drSijIf33kwd56qdvZggS15SSAB9poGfqdYj8NhosUZ
+ e7sdWIg/u6j1j8Zpa5Dz6jepWEP3PBseK1Csw4d0rvn/XDmq7E+XS4Add+SWdhRE2f9+Fr73O
+ EJ3PZgS9yGcrr/UYZLwhquc4nj25X1XqltOdBRoj1uSKRQjH1BA4MwVgaJyniS3qmd4orOvSS
+ RpwCnAO2KdF2cB3j10xMGBIFcKaZ6s8gmMSW7RAggM9/D459o3Q08U1a/E888MMLXwVJsENe/
+ UkiCXqNwKFjD6EbGPnN1gxhXnXj+Xv13zCwlQyWrOsDI9QgHFSSkwkkchUenQhKYP8Q1V6Tjp
+ M1FieRQEjvfGT/BEPpmieI3hB2jINGXcyJn+urWn0H5YuxnPP78avp8AbRnhvKLJRJuULjFgS
+ KQfCkSvHd7AI+FOukpaWZ2WDHRY8uTtIn9AEWt3kDbX4/V8P0MzzwPff+MSlvL9YhP+iMRnK7
+ f0zS+9DiDqsdrJVYDMCM98hlArVWryesHPH3zWC+EpZcwFllXYL4ad7lx520JkdvuNf+l97n9
+ T5Jc5UpYUoUhyPDCZKO9gnQzUPgtJ01SK7IQlRkxxdHKjwEacrXQiWFCZ5Rzskwt9BmPLRiyP
+ I2e7odHhL61UTxqnFIsqRuKyJPbPmpW4tdeJo79LEYFv2vOV2gPr2nphM3cmU81QmOo6WjlpC
+ Lx3iua8Lsle4J/fiZqtlheiwl0KiEPZrxAGKkZr+6TCDUkLhrj+Byze14XP9nQjjyCSOi3oV4
+ MPCikmtdR1Hkve90EWJ1GlhrjuPxsmovQf3bcyRTTCrMnOJcwAmap7C8JSx5DNBK/DEyG2XX7
+ bWugi6zWVC98uCBncuxi62EMKbUmUSVhfGolQKY8gZ0uoQO7rweKOEjhi0AKi4wRNkky38dQH
+ SZ2FfnIQ==
 
-It turns out that some models require the lightbar to be activated
-in order to display the rainbow animation, so users have to access
-both the "rainbow_animation" sysfs attribute and the LED sysfs
-interface when enabling the rainbow animation. This can cause short
-glitches when the lightbar was previously disabled.
+Intel NUC 9 Extreme (Queens County) devices have a separate bit
+inside the EC_ADDR_LIGHTBAR_AC_CTRL register for enabling the
+breathing animation in s2idle mode.
 
-Fix this by replacing the sysfs attribute with a custom LED trigger
-called "uniwill-rainbow". Selecting this trigger will atomically
-activate the lightbar and enable the rainbow animation mode. This
-can potentially break userspace applications using the old sysfs
-attribute, but so far no such application is known to exist (yet).
+Add support for this additional setting.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- .../ABI/removed/sysfs-driver-uniwill-laptop   |  10 ++
- .../ABI/testing/sysfs-driver-uniwill-laptop   |  11 --
- .../admin-guide/laptops/uniwill-laptop.rst    |   5 +-
- MAINTAINERS                                   |   1 +
- drivers/platform/x86/uniwill/Kconfig          |   1 +
- drivers/platform/x86/uniwill/uniwill-acpi.c   | 133 +++++++++++-------
- 6 files changed, 95 insertions(+), 66 deletions(-)
- create mode 100644 Documentation/ABI/removed/sysfs-driver-uniwill-laptop
+ .../ABI/testing/sysfs-driver-uniwill-laptop   |  4 +--
+ drivers/platform/x86/uniwill/uniwill-acpi.c   | 27 ++++++++++++++-----
+ 2 files changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/ABI/removed/sysfs-driver-uniwill-laptop b/Docum=
-entation/ABI/removed/sysfs-driver-uniwill-laptop
-new file mode 100644
-index 000000000000..c226efc23b59
-=2D-- /dev/null
-+++ b/Documentation/ABI/removed/sysfs-driver-uniwill-laptop
-@@ -0,0 +1,10 @@
-+What:		/sys/bus/platform/devices/INOU0000:XX/rainbow_animation
-+Date:		November 2025
-+KernelVersion:	6.19
-+Contact:	Armin Wolf <W_Armin@gmx.de>
-+Description:
-+		Forces the integrated lightbar to display a rainbow animation when the =
-machine
-+		is not suspended. Writing "1"/"0" into this file enables/disables this
-+		functionality.
-+
-+		Reading this file returns the current status of the rainbow animation f=
-unctionality.
 diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Docum=
 entation/ABI/testing/sysfs-driver-uniwill-laptop
-index 943f92c6b561..b9b9feebe2ed 100644
+index b9b9feebe2ed..f3060aaf8a76 100644
 =2D-- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
 +++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-@@ -29,17 +29,6 @@ Description:
- 		Reading this file returns the current enable status of the touchpad tog=
-gle
+@@ -35,8 +35,8 @@ KernelVersion:	6.19
+ Contact:	Armin Wolf <W_Armin@gmx.de>
+ Description:
+ 		Causes the integrated lightbar to display a breathing animation when th=
+e machine
+-		has been suspended and is running on AC power. Writing "1"/"0" into thi=
+s file
+-		enables/disables this functionality.
++		has been suspended, is running on AC power and the lightbar brightness =
+not zero.
++		Writing "1"/"0" into this file enables/disables this functionality.
+=20
+ 		Reading this file returns the current status of the breathing animation
  		functionality.
-=20
--What:		/sys/bus/platform/devices/INOU0000:XX/rainbow_animation
--Date:		November 2025
--KernelVersion:	6.19
--Contact:	Armin Wolf <W_Armin@gmx.de>
--Description:
--		Forces the integrated lightbar to display a rainbow animation when the =
-machine
--		is not suspended. Writing "1"/"0" into this file enables/disables this
--		functionality.
--
--		Reading this file returns the current status of the rainbow animation f=
-unctionality.
--
- What:		/sys/bus/platform/devices/INOU0000:XX/breathing_in_suspend
- Date:		November 2025
- KernelVersion:	6.19
-diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Docume=
-ntation/admin-guide/laptops/uniwill-laptop.rst
-index be50b45b82ef..aaf50e3074c1 100644
-=2D-- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
-+++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-@@ -74,8 +74,9 @@ Lightbar
- The ``uniwill-laptop`` driver exposes the lightbar found on some models a=
-s a standard multicolor
- LED class device. The default name of this LED class device is ``uniwill:=
-multicolor:status``.
-=20
--See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details on =
-how to control the various
--animation modes of the lightbar.
-+The lightbar supports a separate rainbow animation mode that can be enabl=
-ed by selecting the
-+`uniwill-rainbow` LED trigger. To enable a breathing animation during sus=
-pend, see
-+Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
-=20
- Keyboard Backlight
- ------------------
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fa0571a5e479..f9dd979d0fa7 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -28106,6 +28106,7 @@ UNIWILL LAPTOP DRIVER
- M:	Armin Wolf <W_Armin@gmx.de>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/removed/sysfs-driver-uniwill-laptop
- F:	Documentation/ABI/testing/sysfs-driver-uniwill-laptop
- F:	Documentation/admin-guide/laptops/uniwill-laptop.rst
- F:	Documentation/wmi/devices/uniwill-laptop.rst
-diff --git a/drivers/platform/x86/uniwill/Kconfig b/drivers/platform/x86/u=
-niwill/Kconfig
-index d07cc8440188..f80794bdfaef 100644
-=2D-- a/drivers/platform/x86/uniwill/Kconfig
-+++ b/drivers/platform/x86/uniwill/Kconfig
-@@ -28,6 +28,7 @@ config UNIWILL_LAPTOP
- 	depends on DMI
- 	select REGMAP
- 	select INPUT_SPARSEKMAP
-+	select LEDS_TRIGGERS
- 	help
- 	  This driver adds support for various extra features found on Uniwill l=
-aptops,
- 	  like the lightbar, hwmon sensors and hotkeys. It also supports many OE=
-M laptops
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
 m/x86/uniwill/uniwill-acpi.c
-index 788bf4064d34..0fb0d267664a 100644
+index 0fb0d267664a..29d3578213c6 100644
 =2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -900,51 +900,6 @@ static ssize_t touchpad_toggle_enable_show(struct dev=
-ice *dev, struct device_att
+@@ -165,9 +165,10 @@
+ #define EC_ADDR_LIGHTBAR_AC_CTRL	0x0748
+ #define LIGHTBAR_APP_EXISTS		BIT(0)
+ #define LIGHTBAR_POWER_SAVE		BIT(1)
+-#define LIGHTBAR_S0_OFF			BIT(2)
+-#define LIGHTBAR_S3_OFF			BIT(3)	// Breathing animation when suspended
+-#define LIGHTBAR_WELCOME		BIT(7)	// Rainbow animation
++#define LIGHTBAR_S0_OFF			BIT(2)	/* Also disables animations */
++#define LIGHTBAR_S3_OFF			BIT(3)	/* No breathing animation when in s2ram =
+*/
++#define LIGHTBAR_MODERN_STANDBY_ON	BIT(6)	/* Breathing animation when in =
+s2idle */
++#define LIGHTBAR_WELCOME		BIT(7)	/* Rainbow animation */
 =20
- static DEVICE_ATTR_RW(touchpad_toggle_enable);
+ #define EC_ADDR_LIGHTBAR_AC_RED		0x0749
 =20
--static ssize_t rainbow_animation_store(struct device *dev, struct device_=
-attribute *attr,
--				       const char *buf, size_t count)
--{
--	struct uniwill_data *data =3D dev_get_drvdata(dev);
--	unsigned int value;
--	bool enable;
--	int ret;
--
--	ret =3D kstrtobool(buf, &enable);
--	if (ret < 0)
--		return ret;
--
--	if (enable)
--		value =3D LIGHTBAR_WELCOME;
--	else
+@@ -306,7 +307,7 @@
+ #define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
+ #define USB_C_POWER_PRIORITY		BIT(7)
+=20
+-/* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
++/* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF and LIGHT=
+BAR_MODERN_STANDBY_ON */
+ #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
+=20
+ #define EC_ADDR_LIGHTBAR_BAT_RED	0x07E3
+@@ -913,12 +914,13 @@ static ssize_t breathing_in_suspend_store(struct dev=
+ice *dev, struct device_attr
+ 		return ret;
+=20
+ 	if (enable)
 -		value =3D 0;
--
--	guard(mutex)(&data->led_lock);
--
--	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, LIGHT=
-BAR_WELCOME, value);
--	if (ret < 0)
--		return ret;
--
--	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGH=
-TBAR_WELCOME, value);
--	if (ret < 0)
--		return ret;
--
--	return count;
--}
--
--static ssize_t rainbow_animation_show(struct device *dev, struct device_a=
-ttribute *attr, char *buf)
--{
--	struct uniwill_data *data =3D dev_get_drvdata(dev);
--	unsigned int value;
--	int ret;
--
--	ret =3D regmap_read(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, &value);
--	if (ret < 0)
--		return ret;
--
--	return sysfs_emit(buf, "%d\n", !!(value & LIGHTBAR_WELCOME));
--}
--
--static DEVICE_ATTR_RW(rainbow_animation);
--
- static ssize_t breathing_in_suspend_store(struct device *dev, struct devi=
-ce_attribute *attr,
- 					  const char *buf, size_t count)
- {
-@@ -1258,7 +1213,6 @@ static struct attribute *uniwill_attrs[] =3D {
- 	&dev_attr_super_key_enable.attr,
- 	&dev_attr_touchpad_toggle_enable.attr,
- 	/* Lightbar-related */
--	&dev_attr_rainbow_animation.attr,
- 	&dev_attr_breathing_in_suspend.attr,
- 	/* Power-management-related */
- 	&dev_attr_ctgp_offset.attr,
-@@ -1288,8 +1242,7 @@ static umode_t uniwill_attr_is_visible(struct kobjec=
-t *kobj, struct attribute *a
- 			return attr->mode;
- 	}
-=20
--	if (attr =3D=3D &dev_attr_rainbow_animation.attr ||
--	    attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
-+	if (attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
- 		if (uniwill_device_supports(data, UNIWILL_FEATURE_LIGHTBAR))
- 			return attr->mode;
- 	}
-@@ -1537,6 +1490,59 @@ static int uniwill_led_brightness_set(struct led_cl=
-assdev *led_cdev, enum led_br
- 	return regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGHT=
-BAR_S0_OFF, value);
- }
-=20
-+static int uniwill_led_hw_control_set(struct led_classdev *led_cdev, unsi=
-gned long flags)
-+{
-+	struct led_classdev_mc *led_mc_cdev =3D lcdev_to_mccdev(led_cdev);
-+	struct uniwill_data *data =3D container_of(led_mc_cdev, struct uniwill_d=
-ata, led_mc_cdev);
-+	unsigned int value;
-+	int ret;
-+
-+	guard(mutex)(&data->led_lock);
-+
-+	if (flags)
-+		value =3D LIGHTBAR_WELCOME;
-+	else
-+		value =3D LIGHTBAR_S0_OFF;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL,
-+				 LIGHTBAR_S0_OFF | LIGHTBAR_WELCOME, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL,
-+				 LIGHTBAR_S0_OFF | LIGHTBAR_WELCOME, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* The LED is always on during hw control */
-+	led_cdev->brightness =3D flags;
-+
-+	return 0;
-+}
-+
-+static int uniwill_lightbar_trigger_activate(struct led_classdev *led_cde=
-v)
-+{
-+	return led_cdev->hw_control_set(led_cdev, 1);
-+}
-+
-+static void uniwill_lightbar_trigger_deactivate(struct led_classdev *led_=
-cdev)
-+{
-+	int ret;
-+
-+	ret =3D led_cdev->hw_control_set(led_cdev, 0);
-+	if (ret < 0)
-+		dev_err(led_cdev->dev, "Failed to stop rainbow animation: %d\n", ret);
-+}
-+
-+static struct led_hw_trigger_type uniwill_lightbar_trigger_type;
-+
-+static struct led_trigger uniwill_lightbar_trigger =3D {
-+	.name =3D "uniwill-rainbow",
-+	.activate =3D uniwill_lightbar_trigger_activate,
-+	.deactivate =3D uniwill_lightbar_trigger_deactivate,
-+	.trigger_type =3D &uniwill_lightbar_trigger_type,
-+};
-+
- #define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S=
-3_OFF | LIGHTBAR_WELCOME)
-=20
- static int uniwill_led_init(struct uniwill_data *data)
-@@ -1587,12 +1593,18 @@ static int uniwill_led_init(struct uniwill_data *d=
-ata)
- 	data->led_mc_cdev.led_cdev.max_brightness =3D 1;
- 	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
- 	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led_brigh=
-tness_set;
-+	data->led_mc_cdev.led_cdev.trigger_type =3D &uniwill_lightbar_trigger_ty=
-pe;
-+	data->led_mc_cdev.led_cdev.hw_control_trigger =3D uniwill_lightbar_trigg=
-er.name;
-+	data->led_mc_cdev.led_cdev.hw_control_set =3D uniwill_led_hw_control_set=
-;
-=20
- 	if (value & LIGHTBAR_S0_OFF)
- 		data->led_mc_cdev.led_cdev.brightness =3D 0;
++		value =3D LIGHTBAR_MODERN_STANDBY_ON;
  	else
- 		data->led_mc_cdev.led_cdev.brightness =3D 1;
+ 		value =3D LIGHTBAR_S3_OFF;
 =20
-+	if (value & LIGHTBAR_WELCOME)
-+		data->led_mc_cdev.led_cdev.default_trigger =3D uniwill_lightbar_trigger=
-.name;
-+
- 	for (int i =3D 0; i < LED_CHANNELS; i++) {
- 		data->led_mc_subled_info[i].color_index =3D color_indices[i];
-=20
-@@ -3540,17 +3552,31 @@ static int __init uniwill_init(void)
- 		pr_warn("Enabling potentially unsupported features\n");
- 	}
-=20
--	ret =3D platform_driver_register(&uniwill_driver);
-+	/*
-+	 * We cannot register the trigger inside the .probe callback of the
-+	 * platform driver, because each trigger needs a unique name.
-+	 */
-+	ret =3D led_trigger_register(&uniwill_lightbar_trigger);
+ 	/* We only access a single register here, so we do not need to use data-=
+>led_lock */
+-	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, LIGHT=
+BAR_S3_OFF, value);
++	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL,
++				 LIGHTBAR_S3_OFF | LIGHTBAR_MODERN_STANDBY_ON, value);
  	if (ret < 0)
  		return ret;
 =20
-+	ret =3D platform_driver_register(&uniwill_driver);
-+	if (ret < 0)
-+		goto err_platform;
-+
- 	ret =3D uniwill_wmi_register_driver();
--	if (ret < 0) {
--		platform_driver_unregister(&uniwill_driver);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto err_wmi;
+@@ -936,6 +938,10 @@ static ssize_t breathing_in_suspend_show(struct devic=
+e *dev, struct device_attri
+ 	if (ret < 0)
+ 		return ret;
 =20
- 	return 0;
-+
-+err_wmi:
-+	platform_driver_unregister(&uniwill_driver);
-+
-+err_platform:
-+	led_trigger_unregister(&uniwill_lightbar_trigger);
-+
-+	return ret;
++	/*
++	 * We only test LIGHTBAR_S3_OFF here, because LIGHTBAR_MODERN_STANDBY_ON
++	 * should have the exact opposite value.
++	 */
+ 	return sysfs_emit(buf, "%d\n", !(value & LIGHTBAR_S3_OFF));
  }
- module_init(uniwill_init);
 =20
-@@ -3558,6 +3584,7 @@ static void __exit uniwill_exit(void)
+@@ -1543,7 +1549,8 @@ static struct led_trigger uniwill_lightbar_trigger =
+=3D {
+ 	.trigger_type =3D &uniwill_lightbar_trigger_type,
+ };
+=20
+-#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S=
+3_OFF | LIGHTBAR_WELCOME)
++#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S=
+3_OFF | \
++			 LIGHTBAR_MODERN_STANDBY_ON | LIGHTBAR_WELCOME)
+=20
+ static int uniwill_led_init(struct uniwill_data *data)
  {
- 	uniwill_wmi_unregister_driver();
- 	platform_driver_unregister(&uniwill_driver);
-+	led_trigger_unregister(&uniwill_lightbar_trigger);
- }
- module_exit(uniwill_exit);
+@@ -1576,6 +1583,11 @@ static int uniwill_led_init(struct uniwill_data *da=
+ta)
+ 		return ret;
 =20
+ 	value |=3D LIGHTBAR_APP_EXISTS;
++	if (value & LIGHTBAR_S3_OFF)
++		value &=3D ~LIGHTBAR_MODERN_STANDBY_ON;
++	else
++		value |=3D LIGHTBAR_MODERN_STANDBY_ON;
++
+ 	ret =3D regmap_write(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, value);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1585,6 +1597,7 @@ static int uniwill_led_init(struct uniwill_data *dat=
+a)
+ 	 * running on battery power.
+ 	 */
+ 	value |=3D LIGHTBAR_S3_OFF;
++	value &=3D ~LIGHTBAR_MODERN_STANDBY_ON;
+ 	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGH=
+TBAR_MASK, value);
+ 	if (ret < 0)
+ 		return ret;
 =2D-=20
 2.55.0
 
