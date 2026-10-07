@@ -1,47 +1,47 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84834AA57C;
-	Wed,  7 Oct 2026 14:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BA94AE8B9;
+	Wed,  7 Oct 2026 14:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791384076; cv=none; b=ow2J3D4QlVkroVQGpoXPgNvFFFZJbRNiFpHRRwBW/2s4D2WSrDS6evr1Xd71MqgbYEsFb8hxsQbXkXWRCmcmD07QX/ngehSiV8aFHD1C8Lhfo43B3adLvhDiSZM6Or6v9zoEkZBUWCPdEA1bFzFJUL5L0It4xpJk5meGtfptV4E=
+	t=1791384081; cv=none; b=VlzhhkDRRT3mXF5AwoDZo++ecl/1efkYmtJu0ynAdzWoHyqdiSpZL5q6a5O6fAQUsCzznB7Ynw4worQ3gOdI+mjQzRg2vAbCviRNpuIhdcGqwMdO77MRBjyGrD/ZNJMRYn27sTDxZuS8UKGEqE0R2nFo1Zsg/lvW6TPYvtMYlkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791384076; c=relaxed/simple;
-	bh=8xqpsdXOd3uyiiUZy83XVjm83FAzfzvxanGuatUOZxE=;
+	s=arc-20240116; t=1791384081; c=relaxed/simple;
+	bh=4H6xgRL6dV0OqbxYCjqg5kWWaHae1eXf/Mrwgf5pTCI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G89a4TD/iy60M1LJT383OqniA1Vv12aOpUvf5pWztZCkwe75VA29E2vBWWqJyqzdMMrVnlicr7j+dH+Vmjh1JT1oN9ej77CDkJ6bzTb0QES0dMxqKY56XOgSQNV4OITtuPEhWMq8b7utQA3WXPry60/8e1VHJOdkzZxy22CL9x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DXUbYmYD; arc=none smtp.client-ip=212.227.15.19
+	 MIME-Version; b=gHMk77rtirkkByh9Rz19E3lPEBFZU+DQz8t3wywkcaC+m2dPFq9o4Fv4WElShAhUnfuNEgCKINGOyPH8UR7pkM68c58DNcRCn3CdagLkVQIvDGlk59/WSQE5tagVMlEmlnQJ/ba+yJwoZq4/iaDw4ewdldOpZlt2uUBlcK12D80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=chsxkptL; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DXUbYmYD"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="chsxkptL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1791384069; x=1791988869; i=w_armin@gmx.de;
-	bh=hyYsL67M700isduxhzAISd4WW3zKBw85H5e0pzSpfEE=;
+	s=s31663417; t=1791384067; x=1791988867; i=w_armin@gmx.de;
+	bh=gJpelvS0xDu4n29PMpxks/iodJ0a6+1rDJVWkY93KQ4=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=DXUbYmYDPEGpUvxIff+RT7GJpzZBVvd5S6VHuTcFmZEv5I4HQUufNIo66W5sDS9F
-	 fDsPvxbzOawAKRIIxg2D5y/ORyhqqKwxW37HS+bGAkmOVA1Ey7zLKN98DcTY+0JEy
-	 z/Up9CpIRHNJYNXRBS5vajhIk1Y3afQfLZAA783OKe63vV/0BaGHkQuCceHzsmnm/
-	 t0Clnj6oZuONTYABDKN4wpJBFp3bzxsYVzm6oQfittNvKFPUkmCXm9FquRRxgC5Qq
-	 BYTwLfZ6iE27pySFDMzqYhJUl1bq7TV9SVip0wjhDbMN9SwyRxWE8iB9pt055/ZEq
-	 G1V02lGwr4ntI3C+HA==
+	b=chsxkptLjIgaSGJLK10eBMy7dOCu7rrbacHssf5+yJI5WdAuV9ir5yVkjRnIcEmD
+	 tuJ6S87TxG+q2SP/QZjt0YFuxZxsVoeqmO561+8AcdWENI/SMLxtZYzsXQDIZFPd/
+	 1+I7PSATjLF9qG9vS7tg0Sl/bZd805SxqNgq8AUPtQIH7Xa0NW6bmhA6fprMtYaHv
+	 smsuyGYc6/zOHvrCskPYtsGqbC62KX1pVEkQI24V/94WTxmfE6fRXMiCtHHOvnwyc
+	 y2odZ8sqVFgWRZxf82Cr8Mgblf5QEYBut6Ei6j6xDpE6GXptwuLWkGqvGH/K1RQqZ
+	 WaCQQ8g1Lnsrplro0g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRmjw-1x7Gms3Rjm-00OmYl; Wed, 07
- Oct 2026 16:41:08 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N9dsV-1wa8MY2JNd-00sNKk; Wed, 07
+ Oct 2026 16:41:07 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: wse@tuxedocomputers.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
-Date: Wed,  7 Oct 2026 16:38:56 +0200
-Message-ID: <20261007144101.323289-4-W_Armin@gmx.de>
+Subject: [PATCH v2 1/5] platform/x86: uniwill-laptop: Report correct lightbar brightness
+Date: Wed,  7 Oct 2026 16:38:54 +0200
+Message-ID: <20261007144101.323289-2-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261007144101.323289-1-W_Armin@gmx.de>
 References: <20261007144101.323289-1-W_Armin@gmx.de>
@@ -52,234 +52,305 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MjKHFBlxVbX0wSs9I89VsEYtykOD9wAeCQyNAJCzotILwRLx6ze
- V7ksY6dTGN9ha9tODrBvxJ2UQi2PIckusdfAFIgaIguzPHvgPpbbAxDY83rPOX+s7MFIFwb
- xHDy5rQ2KLeIJLpyOJ2PSf1vrK3ChNNQz7U1wdbGNV2kyGEJpbCmqla6534t5XRQIoqEsLC
- jiSifwg/zwNU5l6mqlmYw==
+X-Provags-ID: V03:K1:SOMu+iEI7K/XQE6zCtzqwxsoxkfvcdjrJOxDomMm0ISlhgODXhL
+ LS3N0+8zWksmuqJ0viaYKDe5qrURV4aG4oPpl31e6fhMao2Fh9lRzb99LYIqqFMqmTSYn9z
+ e+2KeRWyTMApd65DvA6oy1O/XqVxyfe+8puJd2bf6+Xl3fuUysdwe8Q9n7mqGHBeT7P+33a
+ TIgE+5SlzBsUKzUM5wsjA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:F7DR88ZyUVM=;Nqk8K27EG/8fSYwjeOj89U6HM8B
- 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
- SZ2FfnIQ==
+UI-OutboundReport: notjunk:1;M01:P0:pVGyBDas9lU=;k0UOTefa+twBRqqp80WbryB/la1
+ 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
+ 6/l58qDNa9xmlIUcPzQt0kse7nfHY=
 
-Intel NUC 9 Extreme (Queens County) devices have a separate bit
-inside the EC_ADDR_LIGHTBAR_AC_CTRL register for enabling the
-breathing animation in s2idle mode.
+The LED sysfs ABI now allows us to specify the maximum values for the
+global brightness and the color intensity values independently. At the
+same time the maximum brightness value reported for the lightbar (like
+200) does not match the real value supported by the hardware (1),
+potentially confusing users.
 
-Add support for this additional setting.
+Report the correct maximum brightness value and only use the intensity
+values for controlling the lightbar color.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- .../ABI/testing/sysfs-driver-uniwill-laptop   |  4 +--
- drivers/platform/x86/uniwill/uniwill-acpi.c   | 27 ++++++++++++++-----
- 2 files changed, 22 insertions(+), 9 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 43 ++++++++++-----------
+ 1 file changed, 20 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Docum=
-entation/ABI/testing/sysfs-driver-uniwill-laptop
-index b9b9feebe2ed..f3060aaf8a76 100644
-=2D-- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-@@ -35,8 +35,8 @@ KernelVersion:	6.19
- Contact:	Armin Wolf <W_Armin@gmx.de>
- Description:
- 		Causes the integrated lightbar to display a breathing animation when th=
-e machine
--		has been suspended and is running on AC power. Writing "1"/"0" into thi=
-s file
--		enables/disables this functionality.
-+		has been suspended, is running on AC power and the lightbar brightness =
-not zero.
-+		Writing "1"/"0" into this file enables/disables this functionality.
-=20
- 		Reading this file returns the current status of the breathing animation
- 		functionality.
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
 m/x86/uniwill/uniwill-acpi.c
-index 0fb0d267664a..29d3578213c6 100644
+index 07b69629bb5e..788bf4064d34 100644
 =2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -165,9 +165,10 @@
- #define EC_ADDR_LIGHTBAR_AC_CTRL	0x0748
- #define LIGHTBAR_APP_EXISTS		BIT(0)
- #define LIGHTBAR_POWER_SAVE		BIT(1)
--#define LIGHTBAR_S0_OFF			BIT(2)
--#define LIGHTBAR_S3_OFF			BIT(3)	// Breathing animation when suspended
--#define LIGHTBAR_WELCOME		BIT(7)	// Rainbow animation
-+#define LIGHTBAR_S0_OFF			BIT(2)	/* Also disables animations */
-+#define LIGHTBAR_S3_OFF			BIT(3)	/* No breathing animation when in s2ram =
-*/
-+#define LIGHTBAR_MODERN_STANDBY_ON	BIT(6)	/* Breathing animation when in =
-s2idle */
-+#define LIGHTBAR_WELCOME		BIT(7)	/* Rainbow animation */
+@@ -398,7 +398,7 @@ struct uniwill_data {
+ 	struct mutex super_key_lock;	/* Protects the toggling of the super key l=
+ock state */
+ 	struct list_head batteries;
+ 	struct mutex led_lock;		/* Protects writes to the lightbar registers */
+-	u8 lightbar_max_brightness;
++	u8 lightbar_max_intensity;
+ 	struct led_classdev_mc led_mc_cdev;
+ 	struct mc_subled led_mc_subled_info[LED_CHANNELS];
+ 	bool kbd_led_single_color;
+@@ -429,7 +429,7 @@ struct uniwill_device_descriptor {
+ 	unsigned int features;
+ 	bool kbd_led_single_color;
+ 	u8 kbd_led_max_brightness;
+-	u8 lightbar_max_brightness;
++	u8 lightbar_max_intensity;
+ 	/* Executed during driver probing */
+ 	int (*probe)(struct uniwill_data *data);
+ };
+@@ -1511,20 +1511,16 @@ static int uniwill_led_brightness_set(struct led_c=
+lassdev *led_cdev, enum led_br
+ 	unsigned int value;
+ 	int ret;
 =20
- #define EC_ADDR_LIGHTBAR_AC_RED		0x0749
+-	ret =3D led_mc_calc_color_components(led_mc_cdev, brightness);
+-	if (ret < 0)
+-		return ret;
+-
+ 	guard(mutex)(&data->led_lock);
 =20
-@@ -306,7 +307,7 @@
- #define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
- #define USB_C_POWER_PRIORITY		BIT(7)
+ 	for (int i =3D 0; i < LED_CHANNELS; i++) {
+-		/* Prevent the brightness values from overflowing */
+-		value =3D min(data->lightbar_max_brightness, data->led_mc_subled_info[i=
+].brightness);
+-		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], va=
+lue);
++		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i],
++				   data->led_mc_subled_info[i].intensity);
+ 		if (ret < 0)
+ 			return ret;
 =20
--/* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
-+/* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF and LIGHT=
-BAR_MODERN_STANDBY_ON */
- #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
-=20
- #define EC_ADDR_LIGHTBAR_BAT_RED	0x07E3
-@@ -913,12 +914,13 @@ static ssize_t breathing_in_suspend_store(struct dev=
-ice *dev, struct device_attr
+-		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[i], v=
+alue);
++		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[i],
++				   data->led_mc_subled_info[i].intensity);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -1588,14 +1584,14 @@ static int uniwill_led_init(struct uniwill_data *d=
+ata)
  		return ret;
 =20
- 	if (enable)
--		value =3D 0;
-+		value =3D LIGHTBAR_MODERN_STANDBY_ON;
+ 	data->led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_MULTI;
+-	data->led_mc_cdev.led_cdev.max_brightness =3D data->lightbar_max_brightn=
+ess;
++	data->led_mc_cdev.led_cdev.max_brightness =3D 1;
+ 	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
+ 	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led_brigh=
+tness_set;
+=20
+ 	if (value & LIGHTBAR_S0_OFF)
+ 		data->led_mc_cdev.led_cdev.brightness =3D 0;
  	else
- 		value =3D LIGHTBAR_S3_OFF;
+-		data->led_mc_cdev.led_cdev.brightness =3D data->lightbar_max_brightness=
+;
++		data->led_mc_cdev.led_cdev.brightness =3D 1;
 =20
- 	/* We only access a single register here, so we do not need to use data-=
->led_lock */
--	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, LIGHT=
-BAR_S3_OFF, value);
-+	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL,
-+				 LIGHTBAR_S3_OFF | LIGHTBAR_MODERN_STANDBY_ON, value);
- 	if (ret < 0)
- 		return ret;
+ 	for (int i =3D 0; i < LED_CHANNELS; i++) {
+ 		data->led_mc_subled_info[i].color_index =3D color_indices[i];
+@@ -1606,9 +1602,9 @@ static int uniwill_led_init(struct uniwill_data *dat=
+a)
 =20
-@@ -936,6 +938,10 @@ static ssize_t breathing_in_suspend_show(struct devic=
-e *dev, struct device_attri
- 	if (ret < 0)
- 		return ret;
+ 		/*
+ 		 * Make sure that the initial intensity value is not greater than
+-		 * the maximum brightness.
++		 * the maximum intensity.
+ 		 */
+-		value =3D min(data->lightbar_max_brightness, value);
++		value =3D min(data->lightbar_max_intensity, value);
+ 		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], va=
+lue);
+ 		if (ret < 0)
+ 			return ret;
+@@ -1618,6 +1614,7 @@ static int uniwill_led_init(struct uniwill_data *dat=
+a)
+ 			return ret;
 =20
-+	/*
-+	 * We only test LIGHTBAR_S3_OFF here, because LIGHTBAR_MODERN_STANDBY_ON
-+	 * should have the exact opposite value.
-+	 */
- 	return sysfs_emit(buf, "%d\n", !(value & LIGHTBAR_S3_OFF));
- }
+ 		data->led_mc_subled_info[i].intensity =3D value;
++		data->led_mc_subled_info[i].max_intensity =3D data->lightbar_max_intens=
+ity;
+ 		data->led_mc_subled_info[i].channel =3D i;
+ 	}
 =20
-@@ -1543,7 +1549,8 @@ static struct led_trigger uniwill_lightbar_trigger =
-=3D {
- 	.trigger_type =3D &uniwill_lightbar_trigger_type,
+@@ -2366,7 +2363,7 @@ static int uniwill_probe(struct platform_device *pde=
+v)
+ 	data->features =3D device_descriptor.features;
+ 	data->kbd_led_single_color =3D device_descriptor.kbd_led_single_color;
+ 	data->kbd_led_max_brightness =3D device_descriptor.kbd_led_max_brightnes=
+s;
+-	data->lightbar_max_brightness =3D device_descriptor.lightbar_max_brightn=
+ess;
++	data->lightbar_max_intensity =3D device_descriptor.lightbar_max_intensit=
+y;
+=20
+ 	/*
+ 	 * Some devices might need to perform some device-specific initializatio=
+n steps
+@@ -2713,7 +2710,7 @@ static struct uniwill_device_descriptor lapqc71a_lap=
+qc71b_descriptor __initdata
+ 		    UNIWILL_FEATURE_GPU_TEMP |
+ 		    UNIWILL_FEATURE_PRIMARY_FAN |
+ 		    UNIWILL_FEATURE_SECONDARY_FAN,
+-	.lightbar_max_brightness =3D 36,
++	.lightbar_max_intensity =3D 36,
  };
 =20
--#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S=
-3_OFF | LIGHTBAR_WELCOME)
-+#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHTBAR_S=
-3_OFF | \
-+			 LIGHTBAR_MODERN_STANDBY_ON | LIGHTBAR_WELCOME)
+ static struct uniwill_device_descriptor lapac71h_descriptor __initdata =
+=3D {
+@@ -2737,7 +2734,7 @@ static struct uniwill_device_descriptor lapkc71f_des=
+criptor __initdata =3D {
+ 		    UNIWILL_FEATURE_GPU_TEMP |
+ 		    UNIWILL_FEATURE_PRIMARY_FAN |
+ 		    UNIWILL_FEATURE_SECONDARY_FAN,
+-	.lightbar_max_brightness =3D 200,
++	.lightbar_max_intensity =3D 200,
+ };
 =20
- static int uniwill_led_init(struct uniwill_data *data)
- {
-@@ -1576,6 +1583,11 @@ static int uniwill_led_init(struct uniwill_data *da=
-ta)
- 		return ret;
+ static struct uniwill_device_descriptor pfxnuxx_pfxluxx_phxprxx_descripto=
+r __initdata =3D {
+@@ -2777,7 +2774,7 @@ static struct uniwill_device_descriptor gmxmpxx_desc=
+riptor __initdata =3D {
+ 		    UNIWILL_FEATURE_PRIMARY_FAN |
+ 		    UNIWILL_FEATURE_SECONDARY_FAN |
+ 		    UNIWILL_FEATURE_USB_C_POWER_PRIORITY,
+-	.lightbar_max_brightness =3D 36,
++	.lightbar_max_intensity =3D 36,
+ };
 =20
- 	value |=3D LIGHTBAR_APP_EXISTS;
-+	if (value & LIGHTBAR_S3_OFF)
-+		value &=3D ~LIGHTBAR_MODERN_STANDBY_ON;
-+	else
-+		value |=3D LIGHTBAR_MODERN_STANDBY_ON;
-+
- 	ret =3D regmap_write(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, value);
- 	if (ret < 0)
- 		return ret;
-@@ -1585,6 +1597,7 @@ static int uniwill_led_init(struct uniwill_data *dat=
-a)
- 	 * running on battery power.
- 	 */
- 	value |=3D LIGHTBAR_S3_OFF;
-+	value &=3D ~LIGHTBAR_MODERN_STANDBY_ON;
- 	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, LIGH=
-TBAR_MASK, value);
- 	if (ret < 0)
- 		return ret;
+ static struct uniwill_device_descriptor phxtqxx_phxagxx_phxaqxx_phxpgxx_d=
+escriptor __initdata =3D {
+@@ -2836,7 +2833,7 @@ static struct uniwill_device_descriptor gmxzgxx_gmxt=
+gxx_ste_descriptor __initdat
+ 		    UNIWILL_FEATURE_SECONDARY_FAN |
+ 		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
+ 		    UNIWILL_FEATURE_USB_C_POWER_PRIORITY,
+-	.lightbar_max_brightness =3D 36,
++	.lightbar_max_intensity =3D 36,
+ };
+=20
+ static int gmxrgxx_probe(struct uniwill_data *data)
+@@ -2850,7 +2847,7 @@ static int gmxrgxx_probe(struct uniwill_data *data)
+=20
+ 	if (value & LIGHTBAR) {
+ 		data->features |=3D UNIWILL_FEATURE_LIGHTBAR;
+-		data->lightbar_max_brightness =3D 36;
++		data->lightbar_max_intensity =3D 36;
+ 	}
+=20
+ 	ret =3D regmap_read(data->regmap, EC_ADDR_SUPPORT_2, &value);
+@@ -2888,7 +2885,7 @@ static struct uniwill_device_descriptor gmxagxx_desc=
+riptor __initdata =3D {
+ 		    UNIWILL_FEATURE_PRIMARY_FAN |
+ 		    UNIWILL_FEATURE_SECONDARY_FAN |
+ 		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL,
+-	.lightbar_max_brightness =3D 36,
++	.lightbar_max_intensity =3D 36,
+ };
+=20
+ static struct uniwill_device_descriptor gmxxgxx_gmxpxxx_descriptor __init=
+data =3D {
+@@ -3538,8 +3535,8 @@ static int __init uniwill_init(void)
+ 		device_descriptor.kbd_led_single_color =3D false;
+ 		/* Some models only support 3 brightness levels */
+ 		device_descriptor.kbd_led_max_brightness =3D 4;
+-		/* Some models only support 36 brightness levels per color component */
+-		device_descriptor.lightbar_max_brightness =3D 200;
++		/* Some models only support 36 intensity levels per color component */
++		device_descriptor.lightbar_max_intensity =3D 200;
+ 		pr_warn("Enabling potentially unsupported features\n");
+ 	}
+=20
 =2D-=20
 2.55.0
 
