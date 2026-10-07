@@ -1,214 +1,97 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB60453A54;
-	Wed,  7 Oct 2026 08:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24AE470122;
+	Wed,  7 Oct 2026 10:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791360186; cv=none; b=pKyw7qs7SSoGqpkXZSURWsgpJDXRS9cypjOTANm7EFk1whvdzHNOonoPNVN7pupR6sK/45ZhDr+qy0arRBx0/GygBClSlW6+aoDmnYABI+PbTcoNtQRE7Do3mVK88oeY/aoAV0BIjuB44rsyCQrI3SRerosLzDmp9PhcuQj5vO0=
+	t=1791367884; cv=none; b=R70egJDpJDjyujHTvx4SaQ01JMg+stvsvqBTU6EcZWE7ggBVpdY7hY8s7pH0Vst0FnA7SingcgrGuZL2bo65HuMQ3MNuZ/BZWG6slCM2S8GKjAIiMN4R6A2UcQBWfRduyoeMkMA+MuWpjHtXGziyDyqMfdSR73/0uXeC7WgYOzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791360186; c=relaxed/simple;
-	bh=eHylS3/eKJMgXhcU3bq4izV8MOrEg0nb4R0WzkEbcPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ekiDB8bgaN/WS0niB8ComD/Jcvw3z+zXWCerIb72lkQPrI+Jz7LiRtMD2k7tawU1HkiKRV3UCoUeqtFdE4TjGaEc2ZT73LTO5PWzytsNwNK/GLa3zdMgyKJfaQujrFeTZcvx+OLpD/k8GD0DWUCSBs/wDhFb1RtoiF9OWToReOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Ye8wJRg7; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1791367884; c=relaxed/simple;
+	bh=AqLm+L3n4IQW15T8UugQRnIhFWHy32aVb9lIFK8Wzmg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=HWmOJwgJxhrAIfCLv+q8rhc0GBXx5d8YwLBgq7woJ5vKkVDEh1qwnj52qlbt/91oO8EEh3U42rYs1ZERIzjlc7FlHrwxwxMekGiGZBCqxRRL3hSqLvhaafQoocH8v3mIsAn7bz1k/Kf/mcp7UN4NrpWE1kJ/IBcfRVAuj3n69H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnnzdEMv; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Ye8wJRg7"
-Received: from aerhardt-tuxedo.buero.augsburg.tuxedo.de (business-024-134-105-141.24.134.pools.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: a.erhardt@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 9AEC52FC0093;
-	Wed,  7 Oct 2026 10:02:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1791360138;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkH0vj4qp7TLvGYdIsi3nqT07VXOvW/rPmHBBNH+cnw=;
-	b=Ye8wJRg7FOYrNpkdAnWENfqby74GVfwhL0HS3OqSDFJPhMn3wjbsyEALQaX8nRPNbjM7EC
-	gKPCoB//UpMpv59Jmy3VINqoKaK+0ovk5CVgbjmyOHvLELYnK3tkxiwyniN0SkVA7tx0LI
-	TIY3vD3jxqJfHt21PTsHmbxdUbWYhr4=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=a.erhardt@tuxedocomputers.com smtp.mailfrom=aer@tuxedocomputers.com
-From: Aaron Erhardt <aer@tuxedocomputers.com>
-To: Werner Sembach <wse@tuxedocomputers.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Aaron Erhardt <aer@tuxedocomputers.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/6] platform/x86/tuxedo: Update and extend documentation
-Date: Wed,  7 Oct 2026 10:01:51 +0200
-Message-ID: <20261007080202.81694-6-aer@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261007080202.81694-1-aer@tuxedocomputers.com>
-References: <20261007080202.81694-1-aer@tuxedocomputers.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnnzdEMv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791367875; x=1822903875;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=AqLm+L3n4IQW15T8UugQRnIhFWHy32aVb9lIFK8Wzmg=;
+  b=hnnzdEMvJRQ6gK6pXcTedXQQ317uY+0lJaPo2TCLkjXp/pw4BmljxM4d
+   5RyTxtJh5Mtn0SlDT9b351dP1Pmjn93AwHQCeOiQyOx5hokP6Eg4tFzpa
+   ikkLR5DDzqoDv1SmqmJQh8qEPKoNLx6ymA7WMJdMGEjMiBnzJcFqmtmP7
+   3SF+9a2blgK1KUQJjwrzD6bHSPklKcuWLzo80xUtahru4nOSDzBfpdi7K
+   OWgli6oVZYOmTB7/cKvKnP9I00tyDFbWaxVWol1Bd8SoAp5lORiJ9bqt2
+   oLiKGUxZTDBTAzvbYKBCOU/JrKbccSacvgrN1fpr1mN0Cy4yDJqXVu7co
+   w==;
+X-CSE-ConnectionGUID: OZ79qn/XQyGIo4kVdmF/1g==
+X-CSE-MsgGUID: 212L8BKSRsi2YXYjYIuing==
+X-IronPort-AV: E=McAfee;i="6800,10657,11927"; a="8886"
+X-IronPort-AV: E=Sophos;i="6.27,144,1787036400"; 
+   d="scan'208";a="8886"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2026 03:11:14 -0700
+X-CSE-ConnectionGUID: 9I7T9LLLSKSnYchsmh3ESA==
+X-CSE-MsgGUID: qUBe7+5NTrKXlAoKQ6yhPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,144,1787036400"; 
+   d="scan'208";a="21904"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.13])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2026 03:11:11 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 7 Oct 2026 13:11:07 +0300 (EEST)
+To: Shuwen Bao <baoshuwen2013@outlook.com>
+cc: Hans de Goede <hansg@kernel.org>, 
+    Krishna Chomal <krishna.chomal108@gmail.com>, 
+    Emre Cecanpunar <emreleno@gmail.com>, 
+    Suryansh Singh <technosfan14@gmail.com>, 
+    Radhey Kalra <radheykalra901@gmail.com>, 
+    =?UTF-8?Q?K=C3=BCr=C5=9Fat_Abayl=C4=B1?= <hello@kursatabayli.dev>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: hp-wmi: add support for OMEN 16-am2xxx
+ boards
+In-Reply-To: <SI2PR04MB58958F552F0DDCC81D90CD41A2942@SI2PR04MB5895.apcprd04.prod.outlook.com>
+Message-ID: <c2ae2ed7-c5fd-9318-386a-276802e9e7ae@linux.intel.com>
+References: <SI2PR04MB58957D08A31E56D73C751885A2862@SI2PR04MB5895.apcprd04.prod.outlook.com> <179122230394.27048.9839062081057759183.b4-ty@b4> <SI2PR04MB58958F552F0DDCC81D90CD41A2942@SI2PR04MB5895.apcprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Remove an incorrect comment about the Microsoft MacroPad reference
-implementation allegedly deviating from the spec and add more
-information about the module and some other minor improvements.
+On Wed, 7 Oct 2026, Shuwen Bao wrote:
 
-Reviewed-by: Werner Sembach <wse@tuxedocomputers.com>
-Signed-off-by: Aaron Erhardt <aer@tuxedocomputers.com>
----
- drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 51 ++++++++++++-----------
- 1 file changed, 27 insertions(+), 24 deletions(-)
+> Hi Ilpo,
+> 
+> Following Krishna's review, I have sent a v3 of this patch which moves
+> board 8F1C from the thermal profile board list to
+> hp_wmi_feature_boards[], mapped to omen_v1_legacy_board_params:
+> 
+> https://lore.kernel.org/platform-driver-x86/
+> SI2PR04MB589508E55CCCD8E26E53E4DBA2942@SI2PR04MB5895.apcprd04.prod.outlook.com/
+> 
+> Since the v2 commit is currently applied in review-ilpo-next, could you
+> please drop it from that branch and take v3 instead? Otherwise the board
+> would end up listed in both places.
 
-diff --git a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-index 2b985b030197..3e5ba524fe58 100644
---- a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-+++ b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-@@ -1,9 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  * This driver implements the WMI AB device found on TUXEDO notebooks with board
-- * vendor NB04.
-+ * vendor NB04. This enables keyboard backlight control via a virtual HID
-+ * LampArray device.
-+ *
-+ * The device will be available through the regular HID interfaces, such as
-+ * hidraw and can be used by any userspace program that implements the HID
-+ * LampArray standard.
-  *
-  * Copyright (C) 2024-2025 Werner Sembach <wse@tuxedocomputers.com>
-+ * Copyright (C) 2026 Aaron Erhardt <aer@tuxedocomputers.com>
-  */
- 
- #include <linux/dmi.h>
-@@ -488,12 +494,14 @@ static int handle_lamp_array_attributes_report(struct hid_device *hdev,
- 	struct tux_hdev_driver_data_t *driver_data = hdev->driver_data;
- 
- 	rep->lamp_count = driver_data->lamp_count;
-+
-+	// Physical dimensions of the Sirius 16 keyboard
- 	rep->bounding_box_width_in_micrometers = 368000;
- 	rep->bounding_box_height_in_micrometers = 266000;
- 	rep->bounding_box_depth_in_micrometers = 30000;
- 	/*
- 	 * LampArrayKindKeyboard, see "26.2.1 LampArrayKind Values" of
--	 * "HID Usage Tables v1.5"
-+	 * "HID Usage Tables v1.7"
- 	 */
- 	rep->lamp_array_kind = 1;
- 	// Some guessed value for interval microseconds
-@@ -547,7 +555,7 @@ static int handle_lamp_attributes_response_report(struct hid_device *hdev,
- 	rep->update_latency_in_microseconds = 100;
- 	/*
- 	 * LampPurposeControl, see "26.3.1 LampPurposes Flags" of
--	 * "HID Usage Tables v1.5"
-+	 * "HID Usage Tables v1.7"
- 	 */
- 	rep->lamp_purpose = 1;
- 	rep->red_level_count = 0xff;
-@@ -560,8 +568,8 @@ static int handle_lamp_attributes_response_report(struct hid_device *hdev,
- 		rep->input_binding = driver_data->kbl_map[lamp_id].code;
- 	} else {
- 		/*
--		 * Everything bigger is reserved/undefined, see
--		 * "10 Keyboard/Keypad Page (0x07)" of "HID Usage Tables v1.5"
-+		 * Everything bigger than 0xe8 is reserved/undefined, see
-+		 * "10 Keyboard/Keypad Page (0x07)" of "HID Usage Tables v1.7"
- 		 * and should return 0, see "26.8.3 Lamp Attributes" of the same
- 		 * document.
- 		 */
-@@ -606,10 +614,7 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
- 	u8 key_id, key_id_j, intensity_i, red_i, green_i, blue_i;
- 	int ret;
- 
--	/*
--	 * Catching misformatted lamp_multi_update_report and fail silently
--	 * according to "HID Usage Tables v1.5"
--	 */
-+	// Catch bad reports and fail silently according to "HID Usage Tables v1.7"
- 	for (unsigned int i = 0; i < rep->lamp_count; ++i) {
- 		if (rep->lamp_id[i] > driver_data->lamp_count) {
- 			hid_dbg(hdev, "Out of bounds lamp_id in lamp_multi_update_report. Skipping whole report!\n");
-@@ -624,6 +629,7 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
- 		}
- 	}
- 
-+	// Fill kbl_set_multiple_keys_in update buffer
- 	for (unsigned int i = 0; i < rep->lamp_count; ++i) {
- 		key_id = driver_data->kbl_map[rep->lamp_id[i]].code;
- 
-@@ -632,6 +638,8 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
- 		     ++j) {
- 			rgb_configs_j = &next->kbl_set_multiple_keys_in.rgb_configs[j];
- 			key_id_j = rgb_configs_j->key_id;
-+
-+			// Search for existing or empty entry
- 			if (key_id_j != 0x00 && key_id_j != key_id)
- 				continue;
- 
-@@ -691,10 +699,7 @@ static int handle_lamp_range_update_report(struct hid_device *hdev,
- 	struct lamp_rgbi_tuple_t *update_channels_j;
- 	int ret;
- 
--	/*
--	 * Catching misformatted lamp_range_update_report and fail silently
--	 * according to "HID Usage Tables v1.5"
--	 */
-+	// Catch bad reports and fail silently according to "HID Usage Tables v1.7"
- 	if (rep->lamp_id_start > rep->lamp_id_end) {
- 		hid_dbg(hdev, "lamp_id_start > lamp_id_end in lamp_range_update_report. Skipping whole report!\n");
- 		return sizeof(*rep);
-@@ -706,8 +711,8 @@ static int handle_lamp_range_update_report(struct hid_device *hdev,
- 	}
- 
- 	/*
--	 * Break handle_lamp_range_update_report call down to multiple
--	 * handle_lamp_multi_update_report calls to easily ensure that mixing
-+	 * Break handle_lamp_range_update_report call down into multiple
-+	 * handle_lamp_multi_update_report calls to ensure that mixing
- 	 * handle_lamp_range_update_report and handle_lamp_multi_update_report
- 	 * does not break things.
- 	 */
-@@ -750,15 +755,12 @@ static int handle_lamp_array_control_report(struct hid_device *hdev __always_unu
- 					    struct lamp_array_control_report_t *rep)
- {
- 	/*
--	 * The keyboards firmware doesn't have any built in controls and the
--	 * built in effects are not implemented so this is a NOOP.
--	 * According to the HID Documentation (HID Usage Tables v1.5) this
-+	 * The keyboard's firmware doesn't have any built-in controls and the
-+	 * built-in effects are not implemented so this is a NOOP.
-+	 * According to the HID Documentation (HID Usage Tables v1.7) this
- 	 * function is optional and can be removed from the HID Report
- 	 * Descriptor, but it should first be confirmed that userspace respects
--	 * this possibility too. The Microsoft MacroPad reference implementation
--	 * (https://github.com/microsoft/RP2040MacropadHidSample 1d6c3ad)
--	 * already deviates from the spec at another point, see
--	 * handle_lamp_*_update_report.
-+	 * this possibility too.
- 	 */
- 
- 	return sizeof(*rep);
-@@ -894,8 +896,8 @@ static struct wmi_driver tuxedo_nb04_wmi_tux_driver = {
- };
- 
- /*
-- * We don't know if the WMI API is stable and how unique the GUID is for this
-- * ODM. To be on the safe side we therefore only run this driver on tested
-+ * We don't know whether the WMI API is stable and how unique the GUID is for
-+ * this ODM. To be on the safe side we therefore only run this driver on tested
-  * devices defined by this list.
-  */
- static const struct dmi_system_id tested_devices_dmi_table[] __initconst = {
-@@ -933,4 +935,5 @@ module_exit(tuxedo_nb04_wmi_tux_exit);
- 
- MODULE_DESCRIPTION("Virtual HID LampArray interface for TUXEDO NB04 devices");
- MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
-+MODULE_AUTHOR("Aaron Erhardt <aer@tuxedocomputers.com>");
- MODULE_LICENSE("GPL");
+Hi,
+
+I've dropped the commit now but I'll process new patches later, not now.
+
+> Sorry for the extra churn, and thanks for your time.
+
+No problem at all, it happens all the time we need to reconsider 
+something to get things done the best way possible.
+
+Thanks.
+
 -- 
-2.43.0
+ i.
 
