@@ -1,97 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24AE470122;
-	Wed,  7 Oct 2026 10:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAA1471D0F
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Oct 2026 10:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791367884; cv=none; b=R70egJDpJDjyujHTvx4SaQ01JMg+stvsvqBTU6EcZWE7ggBVpdY7hY8s7pH0Vst0FnA7SingcgrGuZL2bo65HuMQ3MNuZ/BZWG6slCM2S8GKjAIiMN4R6A2UcQBWfRduyoeMkMA+MuWpjHtXGziyDyqMfdSR73/0uXeC7WgYOzo=
+	t=1791370476; cv=none; b=suHh0ub7hnKvqCIrSZdVD/tEgalyDtBVAMk7CnxkSrrPFxw9CzsY4v+vyNh9twsY8dNxDJ/h3vTNbpf6nsdSx/LmaM8UWH1b17NR+zD4hmXMyuCJinfGuXcQg5NA7r8L28fqBaTJxsjjaSkXvv5PQ3svwcxzzinzNfGz2Dt+8dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791367884; c=relaxed/simple;
-	bh=AqLm+L3n4IQW15T8UugQRnIhFWHy32aVb9lIFK8Wzmg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=HWmOJwgJxhrAIfCLv+q8rhc0GBXx5d8YwLBgq7woJ5vKkVDEh1qwnj52qlbt/91oO8EEh3U42rYs1ZERIzjlc7FlHrwxwxMekGiGZBCqxRRL3hSqLvhaafQoocH8v3mIsAn7bz1k/Kf/mcp7UN4NrpWE1kJ/IBcfRVAuj3n69H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnnzdEMv; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1791370476; c=relaxed/simple;
+	bh=lVL1sa32L2WhhG2u4wL0bheAxTpUNxznhSq1jWbfwhE=;
+	h=Message-ID:Date:From:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+	 References:MIME-Version:Content-Type; b=aXBmVpDgD/6D7RMyZO9Pk9o7a1Nxo60VMpVagM3tAkLqpy8781YihgE2OSQ3+FZb5Zq5N1ttsvTkfZrCIMU8A8Z+3hrZ5zkZJk9B7kb0GTC5aZlPKkPMmA9E9olhTZjxiZvx9b7d195L1klqnDXqAybuE9uxqTHTZvwEBu6lVuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=GtVNTqot; arc=none smtp.client-ip=43.163.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnnzdEMv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791367875; x=1822903875;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=AqLm+L3n4IQW15T8UugQRnIhFWHy32aVb9lIFK8Wzmg=;
-  b=hnnzdEMvJRQ6gK6pXcTedXQQ317uY+0lJaPo2TCLkjXp/pw4BmljxM4d
-   5RyTxtJh5Mtn0SlDT9b351dP1Pmjn93AwHQCeOiQyOx5hokP6Eg4tFzpa
-   ikkLR5DDzqoDv1SmqmJQh8qEPKoNLx6ymA7WMJdMGEjMiBnzJcFqmtmP7
-   3SF+9a2blgK1KUQJjwrzD6bHSPklKcuWLzo80xUtahru4nOSDzBfpdi7K
-   OWgli6oVZYOmTB7/cKvKnP9I00tyDFbWaxVWol1Bd8SoAp5lORiJ9bqt2
-   oLiKGUxZTDBTAzvbYKBCOU/JrKbccSacvgrN1fpr1mN0Cy4yDJqXVu7co
-   w==;
-X-CSE-ConnectionGUID: OZ79qn/XQyGIo4kVdmF/1g==
-X-CSE-MsgGUID: 212L8BKSRsi2YXYjYIuing==
-X-IronPort-AV: E=McAfee;i="6800,10657,11927"; a="8886"
-X-IronPort-AV: E=Sophos;i="6.27,144,1787036400"; 
-   d="scan'208";a="8886"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2026 03:11:14 -0700
-X-CSE-ConnectionGUID: 9I7T9LLLSKSnYchsmh3ESA==
-X-CSE-MsgGUID: qUBe7+5NTrKXlAoKQ6yhPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,144,1787036400"; 
-   d="scan'208";a="21904"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.13])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2026 03:11:11 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 7 Oct 2026 13:11:07 +0300 (EEST)
-To: Shuwen Bao <baoshuwen2013@outlook.com>
-cc: Hans de Goede <hansg@kernel.org>, 
-    Krishna Chomal <krishna.chomal108@gmail.com>, 
-    Emre Cecanpunar <emreleno@gmail.com>, 
-    Suryansh Singh <technosfan14@gmail.com>, 
-    Radhey Kalra <radheykalra901@gmail.com>, 
-    =?UTF-8?Q?K=C3=BCr=C5=9Fat_Abayl=C4=B1?= <hello@kursatabayli.dev>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: hp-wmi: add support for OMEN 16-am2xxx
- boards
-In-Reply-To: <SI2PR04MB58958F552F0DDCC81D90CD41A2942@SI2PR04MB5895.apcprd04.prod.outlook.com>
-Message-ID: <c2ae2ed7-c5fd-9318-386a-276802e9e7ae@linux.intel.com>
-References: <SI2PR04MB58957D08A31E56D73C751885A2862@SI2PR04MB5895.apcprd04.prod.outlook.com> <179122230394.27048.9839062081057759183.b4-ty@b4> <SI2PR04MB58958F552F0DDCC81D90CD41A2942@SI2PR04MB5895.apcprd04.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GtVNTqot"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1791370439; bh=g24TrHG4vSFzqgRrypcxpgt4JUs+URbBEdgt9SFzlyc=;
+	h=Date:From:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:References;
+	b=GtVNTqot6HLc/JxvsicDTE1XOya8aup8yZT4NZl/9beZu2r0Hq4LJ8tj/ho2tE7/Y
+	 aqJxigZ6arWo/Tpp4Eqy8WsZoB3V1SsD1NDqoQh40LxFVl7tLS5XGEQ58Sz9IbMIZ4
+	 4W+afUEgcsGfiulxVwRg9iyXZ+A/vzX8OFXZxWGQ=
+Received: from localhost ([39.144.128.134])
+	by newxmesmtplogicsvrsza73-0.qq.com (NewEsmtp) with SMTP
+	id D78096AA; Wed, 07 Oct 2026 18:53:56 +0800
+X-QQ-mid: xmsmtpt1791370436txn28ooh7
+Message-ID: <tencent_D96ED693B9D664B3CDD8943D920571929406@qq.com>
+X-QQ-XMAILINFO: NFhlv/8JdUU2fDPb69o/wz5iFm097WiZEaDlDy5XZ5MJRtskPuLk4IwWnLzu54
+	 L33Jfj/Eq/fEUiHbV3apQvAjNa/MQj4ApOvkvgrv4h9oTVQFSTJgWjRYacSAHez66uMKHlsFJswF
+	 iB2PFlLAOzqLXDvRN/sV1HaDdJu2V341Vs4TCjPtAmuA2ZdfaAgknaqFAyOXP0+zrSxFs85uRfBK
+	 0XrPW8Z1fLiO7voVwmogUMP86Pt/FUJfaZZnXuh5Kp1orURqMoyv2VSQ7DRzgfEna6CFe5xRJxBX
+	 dMvDMfHmVPELD8DsFkJrwaZztpgjfdAM0e+uyYq7JBBBMTzYV+BdKh7OmGVW6VX2f8iTAuCIgHhu
+	 zy/y863WTp5Ele5LZvVH/eHE6zutMiddbTQGrznALM6+YsxIgxJvCV7EqVO6bNrCIrYvLBCbNUkd
+	 kkQQ4KKStcHHJbyW4cDOgKNwWEgejFUhm1DNlEpZbl6F07zCp+ksGw2o+8kfz2EfpLNzq0oBRdEE
+	 RdRQCBp82eJcPYEJEzEswfknZrMJx+5dJbkDuW1I6qxoDY73saG1HzNug4BpFFb7MB0/oddEGepx
+	 PXJKErNAhgnMEq8NIl/mlPQ1oJFXmSlY6IklNmUqw3vG0Vd9z3C8a/USuFxX0VWHEBgpIatAiEF9
+	 DTbdrcHDW/UK/zlROBmM6O6O2Nuba09ySNeBj4sRduNGk8Qj1a3RtVv61HgfU5y0kbb8pxW050PK
+	 /ieR00NjVW5o+z9tF4TvRYa4BaEL8+cDzopD22G4oYfIba0HTguBC87qLjRSUknpOExvC3QkqOdo
+	 YH/HTfPb2C4LSheB/+xiat2VWX5Q4TkxTm+2whijB7/iX93TIESLMPSIK26AaryWZpCE+UNV3GdD
+	 yk9zFQYccWJeLT5L89kVlwlyvSu+ubWaY/lq3yYLt7Tpm+76NsT7TUQZF87vPrTriHw3Fktn743Z
+	 K8d6Vbz3S+4MVZ/N8fLOyVQRATmEQv7GC52/c8CKumV/1M5vD8/U6x0XZ0HnyuhV93VDVZlXHxqn
+	 Sg5T0eIQ==
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
+Date: Wed, 07 Oct 2026 18:53:55 +0800
+X-OQ-MSGID: <89a3f484dd6c50d8d1026665039026ea@qq.com>
+From: Eason <1836949523@qq.com>
+To: Yuming Sun <wolf109909@outlook.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Mingyou Chen <qby140326@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [RESEND PATCH 0/5] platform/x86: bitland-mifs-wmi: MIFS v2 firmware support (Xiaomi Book Pro 14 2026)
+In-Reply-To: <20260728180944.51356-1-wolf109909@outlook.com>
+References: <20260728180944.51356-1-wolf109909@outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 7 Oct 2026, Shuwen Bao wrote:
+Hi Yuming,
 
-> Hi Ilpo,
-> 
-> Following Krishna's review, I have sent a v3 of this patch which moves
-> board 8F1C from the thermal profile board list to
-> hp_wmi_feature_boards[], mapped to omen_v1_legacy_board_params:
-> 
-> https://lore.kernel.org/platform-driver-x86/
-> SI2PR04MB589508E55CCCD8E26E53E4DBA2942@SI2PR04MB5895.apcprd04.prod.outlook.com/
-> 
-> Since the v2 commit is currently applied in review-ilpo-next, could you
-> please drop it from that branch and take v3 instead? Otherwise the board
-> would end up listed in both places.
+I would like to add a third affected machine to this report: the REDMI
+Book Pro 14 2026 (board TM2426, Core Ultra 5 338H, Panther Lake), BIOS
+RMAPT4B0P0909 (2026-05-21), EC firmware 1.9, originally running
+7.2.8-zen1-2-zen.
 
-Hi,
+It shows the same MIFS v2 firmware behaviour you describe, and your series
+addresses the two things that make this laptop unusable for suspend today.
 
-I've dropped the commit now but I'll process new patches later, not now.
+1) Suspend (s2idle) is aborted with -EINVAL by the driver's suspend hook.
+   Every attempt ends like this:
 
-> Sorry for the extra churn, and thanks for your time.
+     PM: suspend entry (s2idle)
+     bitland-mifs-wmi B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B-4: PM: dpm_run_callback(): bitland_mifs_wmi_suspend [bitland_mifs_wmi] returns -22
+     bitland-mifs-wmi B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B-4: PM: failed to suspend: error -22
+     PM: Some devices failed to suspend, or early wake event detected
+     systemd-sleep: Failed to put system to sleep. System resumed again: Invalid argument
 
-No problem at all, it happens all the time we need to reconsider 
-something to get things done the best way possible.
+   /sys/power/suspend_stats on this machine:
 
-Thanks.
+     failed_suspend   4
+     last_failed_dev  B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B-4
+     last_failed_errno -22
+     last_failed_step suspend
+     success          0
 
--- 
- i.
+   Since then I set up a disk swap file and verified all three sleep paths
+   locally with a minimal one-file change that follows the approach of your
+   patch 1/5 (never propagate the perf-mode query error from the suspend
+   hook), applied on top of a 7.2.9 tree (Arch linux-zen packaging of 7.2.9:
+   vanilla 7.2.9 plus the zen patchset):
+
+     * s2idle works again:
+
+         PM: suspend entry (s2idle)   18:13:51
+         PM: suspend exit             18:13:57
+         /sys/power/suspend_stats: success=1, failed_suspend=0
+
+     * hibernation works and the session is restored (same boot id before
+       and after; ~63-94 s offline including firmware POST):
+
+         systemd-hibernate.service: Finished System Hibernate
+         systemd-sleep: Successfully thawed unit 'user.slice'
+
+     * closing the lid does the right thing as well, with logind configured
+       for HandleLidSwitch=suspend-then-hibernate and HibernateDelaySec=1h:
+
+         Lid closed                                 18:31:00
+         PM: suspend entry (s2idle)                 18:31:00
+         PM: suspend exit                           18:32:01
+         sleep operation 'hibernate'                18:32:02
+         PM: hibernation: hibernation exit          18:33:47
+         (same boot id before and after the whole sequence)
+
+   I am happy to send the one-file diff, the full logs and the /sys/power
+   settings, or to test a revised version of this series.
+
+2) platform_profile registration fails, exactly as in your report:
+
+     platform_profile: Failed to get profile for handler bitland-mifs-wmi
+     platform_profile: Failed to get profile for handler bitland-mifs-wmi
+     platform_profile: Failed to get profile for handler bitland-mifs-wmi
+
+   /sys/class/platform_profile does not exist, so power-profiles-daemon
+   cannot read or set any profile.
+
+The firmware side matches your analysis as well - the missing ECON symbol
+shows up 40 times during a single boot:
+
+  ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PC00.LPCB.Q_EC._STA.ECON], AE_NOT_FOUND
+  ACPI Error: Aborting method \_SB.PC00.LPCB.Q_EC._STA due to previous error (AE_NOT_FOUND)
+
+Both bitland_mifs_wmi and redmi_wmi are loaded on this machine, as in [1].
+
+One difference to the unit you tested: TM2426 does expose an ACPI lid
+device (PNP0C0D:00) and an input device "Lid Switch" with the SW_LID bit
+set (capabilities/sw = 1), so patch 4/5 may not be needed on this model.
+I have now verified that lid events do arrive here: logind logs "Lid closed."
+and performs the configured sleep action (see the sequence above). The
+firmware still reports a bogus lid state once per resume ("ACPI: button:
+[Firmware Bug]: Unexpected lid state reported by firmware"), which does not
+prevent the lid action from working.
+
+For completeness, one more observation from this board (possibly
+unrelated to MIFS): ACPI init takes about 6 seconds here. initcall_debug
+attributes it to ACPI object evaluation - e.g. 0.4-0.6 s per power
+resource, ~2.7 s in acpi_processor_driver_init and ~4.1 s in acpi_init.
+If the ECON/_STA problem is involved in that as well, I am happy to
+collect whatever data helps.
+
+I can provide further evidence (acpidump, full dmesg, DSDT disassembly of
+the WMAA method and the QFAN-related objects, longer suspend_stats) or run
+any test instructions you have. I can build and test kernels locally (the
+verification above was done with a hand-built 7.2.9 plus a 10-line diff),
+so I am also happy to test revised versions of this series, including on
+mainline, and report back.
+
+Thanks a lot for working on this - suspend being blocked was the biggest
+usability problem on this laptop.
+
+Note: the local testing and the preparation of this report were done with
+the assistance of a local AI assistant (DeepSeek Harness WebUI, deepseek-flash
+model); every command, log and result quoted above was actually executed on
+this machine and reviewed by me.
+
+Eason
+1836949523@qq.com
 
