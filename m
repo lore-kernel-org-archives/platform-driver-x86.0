@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBDC48F032
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Oct 2026 11:51:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF3B49364D
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Oct 2026 11:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791373908; cv=none; b=IEy4NvWZTT/tPHvOLDcL+mO2LtrfsIVgdHKmTcdysKcmXSn+W+GzY3hyD6HnCgwsyg9QmaLjTpxsKOWexnn/Aa9ATv9xX4YVpZbR6GCnboXvDJslcnhyIIksTCT7A6IBSCodWAWDS+aCqxI/JdxC0yHYsuhCHRsg7p5YXmUVJKE=
+	t=1791374001; cv=none; b=tJgcQWmiXbiQEr3WaNDxYCskTvi4Qu/yzgfIkmtR/e9MWVHnYKaZomcUOhKLJnqE/u3qKiWEwLX1R+OjI7VIuKS5qj7/zLmGBS8jtfoY+s6MB837mroaJJNTP7y++4N1AvOfHoGlTPqaB215coOhIa368j38I1ur/K88KyInnv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791373908; c=relaxed/simple;
-	bh=SlZPyRp6jqwat1UyMq2+HxQV0dKr6rC1FYDoydUX6Fk=;
+	s=arc-20240116; t=1791374001; c=relaxed/simple;
+	bh=PbeMOKGhDJfijroDtyb/DlycCyf/M+z6p0GhEzsUhoo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TPnbEU3PNYoF/RsuO9bNa6K+Kff/aHd4cQhq+C00hY1Ym5/2mfN0CdG+wYJUUioms80tnSshqsDg/26434a4uatONaDR5I/E5I6Cnslpl73x86I3T/z86HQrSqavHom/4sDbS1nAOqw6YLrpHcII/+ygqYjyhhiFNbNGw7mSfgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9NQVyOg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=EEOe8WdCkojJRSHnFxM4QWVDsJ7qjCJo+uPE5b7eXqKSDv2tFhwm8om6pxPcmXhjvTyQ0bUWtPeWcNqKKCjH0TYl+9cHjF9ih7XDsTY8kcVLf9RHeEkvXC2F+vMedLSYRNxy3dRCv+Fyeg3Nv8tZgoHE5Y31hm4Lr8eWrP5M8S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0eHWRB1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9NQVyOg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 53840C2BCC7
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Oct 2026 11:51:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0eHWRB1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 04EBFC2BCC7
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Oct 2026 11:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1791373908;
-	bh=SlZPyRp6jqwat1UyMq2+HxQV0dKr6rC1FYDoydUX6Fk=;
+	s=k20201202; t=1791374001;
+	bh=PbeMOKGhDJfijroDtyb/DlycCyf/M+z6p0GhEzsUhoo=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=B9NQVyOgJ+H5aV8C3UhLauCaIun1pF8aMZgO4Y3dabrF7Bm8kvdQCK2Hj0OF+dL8y
-	 9J6hFhH/y7auSISLuCBW8mIQ2kbxNGYwzSCGs9qS/7RVECwJi5l4zuu2Hn62Qowgws
-	 4ECePKVcTCJsNAnu+cpthozpqmBn5m6apcPgM2VRtJBzFN0Y1jhrCnMK40QlOyOSBd
-	 1oAWAtjJEdx66k+LRz0diNFqEznzGcsGbx7mpfDq+kAuia8Qn560+VyYB1WSkB3zxP
-	 7nprwHW5T342n4km16EDdW8lJd20PJEyDJVyAD56As28GxX2qv3sNXEaE9fjnvoUXo
-	 h1nlOvVVVv+kw==
+	b=m0eHWRB1BmHk7OiVrTebmZxiU1JkGMpP0TaXN9FJpxH57S8VIw0TEDKQWq+5evXKx
+	 offzGE2BtoDpXTfDYMoa4ljcgLOQ5TjSE51FawXlNrtkqZoShNYn2gqN+gFC4Zf2H3
+	 23sfOcRV5nG2UXMskOPw/jqcSln1Y5Mx1MR2q+VNGCOlEVZ3O+E22deKLabBkJA72f
+	 Sd1zx4vTnK7/K8ZjNlum3PCSJg4ItymftJ3XZxchGK5vubmaHpWgPVZ7weLLdQ2rwp
+	 Zl9qHbaAjg65Wzw55qNF/44yWuYmqHC6uDN56Jjte1c+1VpHGz8leiB5j+ND9qpfbR
+	 dIoWqRiJoTGSQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3EB21C4160E; Wed,  7 Oct 2026 11:51:48 +0000 (UTC)
+	id E80CEC41612; Wed,  7 Oct 2026 11:53:20 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 222102] [ASUS Vivobook F1054ZA] Keyboard backlight missing/not
  working on Fedora 44 KDE - PixArt ASUP1200:00 controller
-Date: Wed, 07 Oct 2026 11:51:48 +0000
+Date: Wed, 07 Oct 2026 11:53:20 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-222102-215701-1sed4R2Per@https.bugzilla.kernel.org/>
+Message-ID: <bug-222102-215701-fjQMmsUIKw@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-222102-215701@https.bugzilla.kernel.org/>
 References: <bug-222102-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,38 +64,40 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D222102
 
---- Comment #1 from Roberto Comandatore (roberto_comandatore_93@protonmail.=
+--- Comment #2 from Roberto Comandatore (roberto_comandatore_93@protonmail.=
 com) ---
-Distribution: Fedora Linux 44 (KDE Plasma)
-Kernel version: 7.2.8-200.fc44.x86_64
+(In reply to Roberto Comandatore from comment #1)
+> Distribution: Fedora Linux 44 (KDE Plasma)
+> Kernel version: 7.2.8-200.fc44.x86_64
+>=20
+> Description of Problem:
+> The keyboard backlight on the ASUS Vivobook F1054ZA does not turn on. The
+> sysfs interface `asus::kbd_backlight` is completely missing from
+> `/sys/class/leds/`.
+>=20
+> The keyboard and touchpad are driven by a PixArt I2C-HID controller
+> recognized as `ASUP1200:00` (HID ID 093A:200A). The kernel correctly
+> registers the keyboard functions via i2c-hid, but does not expose any
+> LampArray or LED brightness interfaces.
+>=20
+> Attempts made:
+> - Upgraded laptop BIOS to the latest version.
+> - Tested OpenRGB and VRGB (devices not found because hidraw/sysfs endpoin=
+ts
+> are missing).
+> - Loaded i2c-dev and verified Intel SMBus i801 adapter is fully active.
+> - Attempted to pass `acpi_osi=3D"Windows 2020"` and `i2c_hid.polling_mode=
+=3D0`
+> in GRUB parameters, but the HID interface for LEDs remains hidden.
+>=20
+> I am attaching the acpidump, fastfetch summary, dmesg logs, and dmidecode
+> details in a compressed archive.
+>=20
+> Cross-reference: Tracking this issue on ASUS-Linux GitLab at
+> https://gitlab.com=20
 
-Description of Problem:
-The keyboard backlight on the ASUS Vivobook F1054ZA does not turn on. The s=
-ysfs
-interface `asus::kbd_backlight` is completely missing from `/sys/class/leds=
-/`.
-
-The keyboard and touchpad are driven by a PixArt I2C-HID controller recogni=
-zed
-as `ASUP1200:00` (HID ID 093A:200A). The kernel correctly registers the
-keyboard functions via i2c-hid, but does not expose any LampArray or LED
-brightness interfaces.
-
-Attempts made:
-- Upgraded laptop BIOS to the latest version.
-- Tested OpenRGB and VRGB (devices not found because hidraw/sysfs endpoints=
- are
-missing).
-- Loaded i2c-dev and verified Intel SMBus i801 adapter is fully active.
-- Attempted to pass `acpi_osi=3D"Windows 2020"` and `i2c_hid.polling_mode=
-=3D0` in
-GRUB parameters, but the HID interface for LEDs remains hidden.
-
-I am attaching the acpidump, fastfetch summary, dmesg logs, and dmidecode
-details in a compressed archive.
-
-Cross-reference: Tracking this issue on ASUS-Linux GitLab at https://gitlab=
-.com
+Errata corrige for Asus-Linux Gitlab link:
+https://gitlab.com/asus-linux/linux-g14/-/work_items/18
 
 --=20
 You may reply to this email to add a comment.
