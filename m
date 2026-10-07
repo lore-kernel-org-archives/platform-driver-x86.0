@@ -1,81 +1,181 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazolkn19012061.outbound.protection.outlook.com [52.103.43.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379003C1A
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Oct 2026 01:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791335836; cv=none; b=HDnqZF2i1FJ52ERSUdoCo3mWrquaK9McooMZi/N+JcYXCamNsiVcLy0eENx2GZeYXWi0PGi9WF1FXMrXgJcfixRRTmAdjSyGRGbzGQNLoXfyJMFS1IuR5Q/xw4EvsCn2op/Azh7hS0aUD1dXHdPPgT4i+MuWBwifITEe9pu5xLA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791335836; c=relaxed/simple;
-	bh=CgrBZrN4ks9vBaLYSY7cJYQAbQEa5acc7cEnBZI/KNs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PDm5Jod1l1buB/EjM9l6kzKKLjQ6CaDRPYMuXooulXtugswyK0i2fs9aSVLZRWnXjBi1Zqr7V6BBacHat7QfUkHG4LUTiWnBPk/nDbnFdQlv0dBvkUbddmiIHbb6FOA/SvuEzsSf0CEicVJRM0Z6UvAuT8YCWUvFYf3qxrgU0j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=QSN3fj3r; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8D82D3A7C;
+	Wed,  7 Oct 2026 03:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791342543; cv=fail; b=aBR1Z26HvXcoP7lci2HpODLZGTo4Zz7panHbs7RMh9hu3D0ifN85kOz6V2THYijRmD2mlr8krJlsk7QnPmMW4N5wGUDPehkYERpBl2ircGj6tBhK4oq5hmSjsGJLOfQSlVAOCz6s/BogyDdOROiWYdR8vlNwJ8XG/ZbCTOsEttI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791342543; c=relaxed/simple;
+	bh=bYq0jhKLp9hgswhcR9fzusdAY1R2w4Jyy7rfz6StwMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=jrqxoqagyuuAxj0ngQF/vfpukA8deJmI2uy98hjoRyRuwdArMDnCUHBJL/QkdJDQpZHpqbvePDgvSGTornhDnV9AbdMeqeasOKoIjbrPceWDl1G3sT7sqSfb2seDMfS0jhF7Sy5kAg+FoASeXKcBdUnPbMZrTi2idMboSw7+Xqk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=MhP7F0ou; arc=fail smtp.client-ip=52.103.43.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="QSN3fj3r"
-Received: from [IPV6:2a02:842a:8223:5500:b8d2:f510:e875:a76c] (unknown [IPv6:2a02:842a:8223:5500:b8d2:f510:e875:a76c])
-	(Authenticated sender: julien.robin28@free.fr)
-	by smtp2-g21.free.fr (Postfix) with ESMTPSA id 265B32003A4;
-	Wed,  7 Oct 2026 03:17:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
-	s=smtp-20201208; t=1791335824;
-	bh=CgrBZrN4ks9vBaLYSY7cJYQAbQEa5acc7cEnBZI/KNs=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=QSN3fj3ri5wN0fY9wfTeCP4m80dnhIHzQ/fGna0o7ou4MWxsbDe2q4WYzdz1b89IC
-	 db/JkZm7erFOlEEfe7/ipElqik33RXtg1MIlLMuXIze6D7+Oie8ORNaLNr/kFpiHvY
-	 INca/o29SX9zit0VbOGYZmGxHRah6sPCAYuaKchrPAePttjt6VniBOdw8+TC9szGr8
-	 N6Durzi5BE6hI8YLmtejCVGEAB2SRGkFO6HGIBnCU7QtSZkXL8xBnKGuStrn1lM6kd
-	 DIgcMOgD0HJEFmOKVXr+PkjxgdrhoorcC3fszXD9O82xi/iragCJ6rutvfeuDTrX++
-	 7IrJqK2Jnn3TA==
-Message-ID: <f3e855cd-259f-440f-be81-d491ae3df7e3@free.fr>
-Date: Wed, 7 Oct 2026 03:17:00 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="MhP7F0ou"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wmPsMd9qQCb9ITnv7XqzbpiHJZ1/LYh0CnifXFdNiEtsrZKgd55Vq4nmW6DCeod96cjTiSOqaeKGl1A62GORRmPeAyhkuO4Tzgu9sTbfkqO1oZaCxi0odLnEMuv8ldaEor9FW1a3UFv2ajFp3SOl1P6srJ0N+3tp/74BoTI6dlyNQXGaeRLLiXMy+bgKJ5CHVHRE1DjvP4d/WUGuMEN3Sg7I92p66V1yb2Ah7X0dIPSg3ciCLuAkJQdHSNn/ThFgSxvFysGKPAWtY48X65xeuwCsXEEt8CHg0vrf7BDvVr8/A/+FSaUfgANgo6TFQUWXQz+gJuwm5SveK2u/Wbp44A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4jFUMbBwPGYu6qPEXLMTP/pLNmVYD+7FIoGX861hY/4=;
+ b=tW6gFdZiO9z5L9V7oNoiIeinH30OuKfGDV9DQlwGKrqq1KZcxqUzTYbiw5fTJTfKMYBZjN0dhQQj2p8A+QZESEV4iTEu1dUXDr3KoFzJPXPFiKLt2921FhjI/4xyk7sqy/oBnixUfeP6FjUaCRcqPZQ/uESqD85Km8LbBOkjtvCOLmCinOmaxHFj0kaOjENr346b5IbubXOaMc7ClkKexgr2dJOvZUwcQsXm87wUMYihtmkc27444Cxx90fVhOFuitv3QIfYO89u30WlfVbxzsrEDZF9kXQiAhrpRpDfHmkGFHezUbOiHL9nMiwkzE8tnFTeIQoyQd+s5Yjjrw/Mdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4jFUMbBwPGYu6qPEXLMTP/pLNmVYD+7FIoGX861hY/4=;
+ b=MhP7F0ouOfIMaoS8JFAHn9nodrtJVR/FLsdcDBkg7plyZmfwyyqSmg+wnKrYB0LZT8N3xn1hV3SNF93gPiM4lKr3XNA/rGBsBs2upb6b1fyghS4KNuxDaNIhNpbL7jqhrVSh5H3eW4yw3BzJrg89pbgNrLAiD919yPnT0fDLK7p6ngsl+TmUwOgLPMAW2cWexCyR2/3sr3oqSxBl8bNFTfM6Y+r5rPBz1uLbL4j59iyV0XF6UhBKFl8cgr5r14Q+b4gAPCcHQBf1g5kCBK8FxLI++M//5ymhJAkbNcYrxusvKCHmq04bfY9qGxTzwu5IwCLjHIB0fAqRrzmgLFpYGw==
+Received: from SI2PR04MB5895.apcprd04.prod.outlook.com (2603:1096:4:1eb::6) by
+ TYZPR04MB5853.apcprd04.prod.outlook.com (2603:1096:400:1f3::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.472.20; Wed, 7 Oct 2026 03:08:54 +0000
+Received: from SI2PR04MB5895.apcprd04.prod.outlook.com
+ ([fe80::eca5:8fa:ae90:10b9]) by SI2PR04MB5895.apcprd04.prod.outlook.com
+ ([fe80::eca5:8fa:ae90:10b9%3]) with mapi id 15.21.0472.016; Wed, 7 Oct 2026
+ 03:08:54 +0000
+From: Shuwen Bao <baoshuwen2013@outlook.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>,
+	Emre Cecanpunar <emreleno@gmail.com>,
+	Suryansh Singh <technosfan14@gmail.com>,
+	Radhey Kalra <radheykalra901@gmail.com>,
+	=?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>,
+	Shuwen Bao <baoshuwen2013@outlook.com>
+Subject: [PATCH v3] platform/x86: hp-wmi: add support for OMEN 16-am2xxx boards
+Date: Wed,  7 Oct 2026 11:08:36 +0800
+Message-ID:
+ <SI2PR04MB589508E55CCCD8E26E53E4DBA2942@SI2PR04MB5895.apcprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.53.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SE2P216CA0186.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:2c5::14) To SI2PR04MB5895.apcprd04.prod.outlook.com
+ (2603:1096:4:1eb::6)
+X-Microsoft-Original-Message-ID:
+ <20261007030836.131851-1-baoshuwen2013@outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Julien ROBIN <julien.robin28@free.fr>
-Subject: Re: hp_wmi: Unknown EC layout for board 8C9C
-To: Krishna Chomal <krishna.chomal108@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Suryansh Singh <technosfan14@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-References: <965dd816-dd66-4318-be8d-330a40209f67@free.fr>
- <asPy5Q5wNYaMzTqJ@archlinux> <4ce40bdd-87b4-4ba2-bf04-01f854680151@free.fr>
-Content-Language: en-US
-In-Reply-To: <4ce40bdd-87b4-4ba2-bf04-01f854680151@free.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SI2PR04MB5895:EE_|TYZPR04MB5853:EE_
+X-MS-Office365-Filtering-Correlation-Id: be272eb1-d955-43dc-29ab-08df242051c8
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|51005399006|23021999003|15080799012|260925184616899003|5072599009|24021099003|5062599005|25031999004|22091999003|25010399006|8060799015|19110799012|4302099013|3412199025|440099028|1602099012|40105399003|2607281247196008|10035399007|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zNxTtxf4HFHSamLF4X+7OWG+uLV8CWUytmAcvAaBv+5w+Xujmd19j+YE6ixp?=
+ =?us-ascii?Q?pHa9rMzeInBwoV5am6wQe6nah93iRcCfrczXR//EPKEHoTSkQoc/QfOkFnbO?=
+ =?us-ascii?Q?h0FGK7qLssHN26uIkR+JrF8JD8PojmhaFZxtzF00NjgoUAraxEwrIqeVEv04?=
+ =?us-ascii?Q?OZJgYLvPf4+CZXqTeA8+tYqDdYiiaP2nC3Li0nXmSQkkTne04w4jtOfzrB5k?=
+ =?us-ascii?Q?BFHX76GGhHiRWN6J8pCPryurJQn9KZUbIiZypupc/QoPZvBqgI/4hSvl61wP?=
+ =?us-ascii?Q?R9vLaCKrzqIu4v6tpgkkGnR0huSB7JdcOKBg0ZsfYmJ5+w2UUpVfnuhSPAde?=
+ =?us-ascii?Q?r0+7qWj4T3kbSzGDSaQD2xpCI+uzcpouvZ3T4m+O823XN1atqCGTu5XwGCEx?=
+ =?us-ascii?Q?3bR7E8mSqnzuYarDaZh4jQfzTP0jEuFp6IHG38zRFNUAjJ/8IGDjyTV2I4ze?=
+ =?us-ascii?Q?SorM+2ZjBNJ+56n+LB6O0Ry9GeIHTaAp0KsES4JUdyt1K/A/Pih6DuYq0YHY?=
+ =?us-ascii?Q?Tuu4bx0iARXWTQbm1B9WLv273Z+dCPSckQ0ah18/UwE2QdXacPrCCjqMB5OV?=
+ =?us-ascii?Q?+EZGSJPYDCA7U8YwbyxnW69871D4Z1drYAmN4YwSWZY9IYfNlz070GzBFHaQ?=
+ =?us-ascii?Q?kXP8+KdkRZMxl44fDwpnjjVCKZnTI/Tie4sZVfUia9jek24jhrJvqgb82yRl?=
+ =?us-ascii?Q?kyOylmicAcswMVICzpcTKGdWs+QwnzG8TcJweJEHy3q8KPnXEBBDh2TGEoYn?=
+ =?us-ascii?Q?/L4fwnSbBWM9988n3IlDPr5kYnqim9JTVa1XWH2UrB03etvD9gn3Twbk/qpr?=
+ =?us-ascii?Q?UFCd1ptWn2ekTEDahoN9TLsa1HeSj4t9xsJ/HMrclxUQ+FIEzD8fryDRgB/B?=
+ =?us-ascii?Q?JupYRhzf0FZkivqYmwkVNGpWe1O7ZB931NfuEISBJPMg1ZWlHyRfMnru4GIB?=
+ =?us-ascii?Q?Nd1A/h7fyDIEolq71OYxwH1AkjGnocXyqBr6sXU22nyt6GjkE+CjbeMFTOQl?=
+ =?us-ascii?Q?hQ/fdWA3AWXhF/KICw/Uwnnp15vSUjravS8sSXLDhE8ySlYilYZL4tlteuqQ?=
+ =?us-ascii?Q?s7uBRND6qyBlWBMvAu6XD3yH5rKnaFf98rwo0t9lY6qIwlRjpuY=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KSpOG5mGSVGr9WSb/CplUFKwsX/zr416js06gC9CHOKk+9rA3VdMcx2mLcgH?=
+ =?us-ascii?Q?cRbT7GrYkjrBYfaLhGX5hZygL2BiPAERnQFIdUI/lI2OzWVO0IWf196b/2W5?=
+ =?us-ascii?Q?13XjvUs86pvhKPW5Ni9aRWAqobO6PcJ+loWopHvjeXG03XOAi73SpNDA5ooj?=
+ =?us-ascii?Q?wk3eZ/OZ4RL6OvFgbE6Ft7MDhhD/7FSzIAAyYUjlFs+BIW4OZa1Do6aeT0/3?=
+ =?us-ascii?Q?jMit7rQk9DiFcehBoWB5b2E3f5fKgNzNt/oGsl2IA7l3DiLrb7T7/HtBuIXp?=
+ =?us-ascii?Q?dFuqpMwGCTxU0eMcKwiaRmjniq2QpabHsC+mGjgv17rUkKxyUlM4LdS5fdYs?=
+ =?us-ascii?Q?ey+6mtaUdssYSNzRUSmmUWEbew6D2tG8uFp0zpt0rn1o3KrgaNGntSOHxMLK?=
+ =?us-ascii?Q?TQNMn6IB5XtcaZSs92uBaAFI1QNxoo3dP5H5jLltzmzWNXO4Yk7sZVXHvPyh?=
+ =?us-ascii?Q?X4SONp3YEpTdmAvhfeuihPLy3MxLNTTie9yiFjTn9SwhTYOYQl68e+u1jTOw?=
+ =?us-ascii?Q?fhmrg6vw0OIhqceMCJtDrXLWi5XAqyj4QF+h8OBg1T7AcIls9lJD5P6skdYi?=
+ =?us-ascii?Q?0XcNj5m7OC8SHTEmYvMjglInrpCrK3bEYgUjEcTo+k9OfCA7y/y2sHMUBw8i?=
+ =?us-ascii?Q?EPUnveHpAd+1hQ8eBpLPQYidATO/xtuK30cJ4LNsdN6pgZWj42z6LxWJbB/O?=
+ =?us-ascii?Q?B8hsiSm8IVk0Ya8br4uHMEGfcjAMjrPRiyTiuY8J1iOiK8RrVxTNTvtV8/l9?=
+ =?us-ascii?Q?Inijkwqc58dS0jeOBBoqdrfRA3MDL4g3LsLEzuTyMORojesPGjdzI02/mAqk?=
+ =?us-ascii?Q?MWIfvvGX7eVsm64KLRLnvxBsOkMufjhGY42gbTzI/x9euPMerAqWUfRgjAp+?=
+ =?us-ascii?Q?vwOqlgY5Oxy7Dm9lcbcbP64GsTKdU1Snd2cLpv1onprrh0zksnz1Q4cChWLw?=
+ =?us-ascii?Q?ojFz9nmhYlMEmFMCOefpepuXainN4DiGulqpaKInzBii8A3cGt9C0yfS6qmW?=
+ =?us-ascii?Q?NCFRJwka3SrUOcCWzjEwVAVyT6T3Vfiybvno7n7R3SprvuYrXuc5AQpz8OUf?=
+ =?us-ascii?Q?Fw9Mys/vEXx8FHTDZBP3WBXkk7t4Pi+hhLxuzhxnNRVmSKkS39ymkAvLRl7n?=
+ =?us-ascii?Q?zcWr29bDfu+d2NBZipBFbjOyXXiy58L1MAlwlEDBZmcn0SNw4j2fPiZrz/Vn?=
+ =?us-ascii?Q?jqAs5sPu6997e1FwZ24KrNqDbdNrzH+DJgjBUFQBhTsdu3u6ei9i596O2qpy?=
+ =?us-ascii?Q?Z51YEpziwviBF/VBwJpM2ywE/qzpFKBOBCPKO1vI5qyNTDriLsPn46p0Alab?=
+ =?us-ascii?Q?FagbdLEGxcTsVkwrqAfgfDcb8Rok0U2t/pUT4F0tYN1Wmgzz1lQ+KdvaCZ+s?=
+ =?us-ascii?Q?6uJgOTR32UbYTLGvZjR6Uh08fm2dkkPAOt17IKFIObYB4yQdFaiQvM9zlLNX?=
+ =?us-ascii?Q?Q0kO68LZxGohxbYA1NFeiXNrQJWcUISFhPMj+4teXPfLdWPaRGmCug=3D=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be272eb1-d955-43dc-29ab-08df242051c8
+X-MS-Exchange-CrossTenant-AuthSource: SI2PR04MB5895.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2026 03:08:54.6125
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR04MB5853
 
-> About victus_s_powersource_event() to manually trigger CPU power limits change, I remember the problem only existed when performance mode was active, it was only about CPU power limits (not GPU) and didn't exist with any of the others modes (balanced, low-power or fallback). Maximum/excessive power limits were kept despite going from AC to battery, and I believe they also weren't restored correctly when going back on AC. On Windows with Omen Gaming Hub this seemed to be addressed by rewriting power limits on power source change. As I updated BIOS to F.18 I'll check if anything evolved about this.
-> 
-> I'll do the tests tonight: Unloading hp-wmi driver and looking at RyzenAdj allows testing what happens when nothing is done by hp-wmi driver. But I need physical access to the device to unplug the cord, and also to put it to sleep mode, waking it up.
-> I'll keep you informed of the results.
+The HP HyperX OMEN 16-am2xxx (DMI board 8F1C, 26C1 platform cycle,
+Arrow Lake-HXR) is listed in the OMEN Command Center device
+capability table with DisplayName "HyperX OMEN 16" and the
+"PerformanceControl" feature, but is missing from the kernel's
+hp_wmi_feature_boards[] list.
 
-Hi back, to complete my feedback from few hours ago: having physical access to the laptop I did the complete tests again on BIOS F.18, same behavior as BIOS F.11
+Add 8F1C to the hp_wmi_feature_boards[] list, using
+omen_v1_legacy_board_params as driver_data.
 
-About going to suspend / waking up the computer from sleep:
- - When the computer is placed to suspend mode while performance mode is active, and hp-wmi unloaded, when resuming, it's still in performance mode without having to ask for it again (even if asleep for more than 120 seconds)
- - About the 120 seconds delay before going to fallback mode, this delay is only elapsing when the computer is running. When resuming, 120 seconds are available again (even if only few seconds were left when entering suspend mode)
- - However when the computer is placed to suspend mode while max fan speed is active, when resuming the fan isn't max speed anymore.
+Tested on a HyperX OMEN 16-am2xxx (kernel 7.3.0-rc6):
+after loading the patched hp-wmi module, the platform_profile
+interface is exposed, and switching to the performance profile
+raises the CPU from a ~2.9 GHz (P-core) / 2.6 GHz (E-core) cap to
+~5 GHz / ~3.5 GHz under a multi-thread load (stress-ng). The GPU cap is
+raised to ~114W, tested with gpu_burn.
 
-About power source changes:
- - When the laptop is running on performance mode, unloading the hp-wmi driver and disconnecting the power plug let the CPU stuck to maximum/excessive power limits (60/65W in my case instead of expected reduction to 25/30W when running on battery).
- - Same thing in the other way, when the laptop is running on battery, on performance mode and CPU power limits to 25/30W, unloading hp-wmi driver and connecting the power plug let the CPU stuck to low power limits (instead of rising to 60/65W).
- - However if the power source change occurs while the computer is suspended, then when waking up, the CPU power limits are set to the right ones by the laptop itself.
- - Also, in every others modes (balanced, low-power, or fallback after 120 seconds without hp-wmi interaction), on power source changes, CPU power limits are automatically adjusted by the laptop itself.
+Suggested-by: Krishna Chomal <krishna.chomal108@gmail.com>
+Signed-off-by: Shuwen Bao <baoshuwen2013@outlook.com>
 
-So the laptop forgetting to adjust CPU power limits on power source change, only occurs in performance mode while the computer isn't suspended.
-In any other circumstance the laptop behave fine. Would be interesting to see if this strange quirk I found out by extensive testing also occurs to some others models.
+---
+v3:
+ - Switch to the hp_wmi_feature_boards[] approach instead of
+   omen_thermal_profile_boards[], as suggested by Krishna.
 
-As always, I keep available if anything more is needed!
-Thanks again for the work
+v2: https://lore.kernel.org/platform-driver-x86/SI2PR04MB58957D08A31E56D73C751885A2862@SI2PR04MB5895.apcprd04.prod.outlook.com/
+v1: https://lore.kernel.org/platform-driver-x86/SI2PR04MB589526A21FB0EF4E8ABA749CA2AB2@SI2PR04MB5895.apcprd04.prod.outlook.com/
+---
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Best regards,
-Julien
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 615b4cf6fc45..37c3e94e6819 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -343,6 +343,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8E35") },
+ 		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8F1C") },
++		.driver_data = (void *)&omen_v1_legacy_board_params,
++	},
+ 	{},
+ };
+ 
+-- 
+2.53.0
+
