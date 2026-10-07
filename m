@@ -1,47 +1,50 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03220345ED2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EE449E13F;
 	Wed,  7 Oct 2026 14:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791384082; cv=none; b=eCwSQy8RFmu6UGPsGAdT2SeSQSdNRrR9sbqExqBe467xszM88lJGDs/RBs0B8RL08Bo0rxajDneJYw9Z6Y60sw272EwD7qMnJVgq+cqm81rqNZK5VenaJ1qDOx22wi9V1kuW6iRISgYNYq1zGf0oOKKA8t9MR56L/rMWUJ0gP04=
+	t=1791384082; cv=none; b=QtzRiLjLTRyivZlA7ZraqkBnfxFYa00K3UBPYEeGEEQ94FgMkoAItPOCJeIXLJE1JuN2haxMyAQGPrWxHnzD7vd8NSanepzVqw1u/aGQJNLQnXPmCTBHap5FUQQgmdoTBTIVHN2/xxXXislt0oshK8VK6yjk1Vyd4NRFvpl6Nuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1791384082; c=relaxed/simple;
-	bh=6I8gdxYUln9THJKkh7s6Ta2T4zbEY53AKcdyU0WIgM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KEkZR1qDehUv7w6sb0b3U64WGoipo0UVYvg9gUfmF4D8J3iaIU+bhb/u9jIitgBvCY7aGSdq/HfjBxJRfsiXpjwCCbczcxVNRafp/zw70EatYwSOc+uTO51ufQZFFK7xumoSDwElPlyCoHAQdkOIUhf+fjNBAdHyWLgsolxK8qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tYr/a+Y0; arc=none smtp.client-ip=212.227.15.19
+	bh=i2Wsmnad2YBiLNNPaDxFsW7jz4ez9oDQpkoc+f9gy7I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Eb3I3RBWkd9Ls0KpJhbjj8w4a3eHT+tvZuM0gIJwaDcR8+1pecifjL/8BglzfI2nsim6ghrpBAdARiyIYHq+M5BScVBE3e0L5oMP9Drt6aPbE9Cxau1IyMxJI1x6+Drv2OvYCd9UFHmcy9AdMQWw+96Cb/0newPn4aRjKS5wTvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KtCpOEok; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tYr/a+Y0"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KtCpOEok"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1791384066; x=1791988866; i=w_armin@gmx.de;
-	bh=qSDUTDTxXYN3+8W5xPASdgxSAdzmmUDK4szfc/PTZIY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
+	s=s31663417; t=1791384069; x=1791988869; i=w_armin@gmx.de;
+	bh=kcKBwUTO4+Fg/Ey6YUO6HJnaOrhlisomcG3vV+yphP8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=tYr/a+Y0+K4QvbMPPe0BiB3Rh0t4F3i7aM0OvwSeEnTOb+L99GOkKhX2iyMObXiu
-	 CawboLvkDbH/amzuyrY0cBfiLmvUUoHzc77o+e2V7xlJBSsHnN3WbaIZbqenYL7YN
-	 CmdhzOcGfRmtpKb2n2lsliiBdvDPvp3onPnDCSZvdhEq8ajh0971fqfqZVtuGy5XU
-	 ibu3YHizYCG9wYHqRKzp+LOqy6etTTWXOJfgQ077ISH8dHKNG6r3SnPg4EcCBKhX0
-	 gEdv5AZDgAH20vxEFSCJPkQBRTx7jZJs4XGmzb/ecU0D64CcgRoQMwt66Y7KZazxw
-	 AdB3vvL5HSIADJiAfA==
+	b=KtCpOEokFLU4UesSTRb6B2cr0omEhECms1PnkCzAIKybHEtKI1TIHCffGvu3n+1/
+	 siCZY4xIsCb6pT7b6XEP5lGvaoKtMvVbFzhDeRpxMJhZMNcVJ+TGuLASS7Yd7UQpn
+	 XwH3hSjnNk7QiM2zB9drNAflrnW8FSPRn9QAH3M+FDSj12+7oSQbgmPX7OcuXex7N
+	 I0Of3DU40nK+ZFXASqNumOZiwtAa3QkNUtLnbZ7eUee8DKJb3aH6qgdv8anmlUSnl
+	 AZAGaS+2UQhBdcIbqy8wYZmfnqzBM+MRA8RCc+q5D6uyOMbobDgSiiIFR3XV0rXXp
+	 tLRskDvjvuN+8Z/chQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3lc9-1xEBiD1sTj-00CnZS; Wed, 07
- Oct 2026 16:41:06 +0200
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFKGZ-1xU9EK2E0H-002bLC; Wed, 07
+ Oct 2026 16:41:09 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: wse@tuxedocomputers.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/5] platform/x86: uniwill-laptop: Lightbar fixes
-Date: Wed,  7 Oct 2026 16:38:53 +0200
-Message-ID: <20261007144101.323289-1-W_Armin@gmx.de>
+Subject: [PATCH v2 4/5] platform/x86: uniwill-laptop: Label multicolor LEDs correctly
+Date: Wed,  7 Oct 2026 16:38:57 +0200
+Message-ID: <20261007144101.323289-5-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261007144101.323289-1-W_Armin@gmx.de>
+References: <20261007144101.323289-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,136 +52,203 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2cA7uLY/GUPKaoCalnmYxdfJtGBJrP0yJutnNcpq2VyFoM4VL2a
- wYJizR2OewvG3HKspsaePoo5l82NNGI8umf1qip3I8OwhukPZrvezzzkhecGKgLoL+3L13h
- zlMv7o+5i+Ln2koW48a3pMdsRJ6j8FG0txdQLve3GgqKG5tnIyQG62LDvYuXO9i++ua+d4A
- klW5+K67zFCK2q+wt91KA==
+X-Provags-ID: V03:K1:bsJ2cdhVeUTAbS5IB1Rg8IvbaVlNvJLjd6tQXCUl9gGjAcblJr+
+ M+w18ytXqd4LmQc6rSRrvitPVI4Zk7jmWXioLiYI0wpYfdZafYHbH0wSGp42mArv6jwAwAl
+ lPR162cXNBhLd78Z3CjblbmJNWuJToLUZOeBvKTzbxTi6BcmgUeiXfYHkU3XsSs9qZScGXT
+ YqQ6a8IEAuX3dWrLmFOZw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9nhenJXXqIA=;DJY4SV5IauCPVqavtUuKpm/cnzG
- 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
+UI-OutboundReport: notjunk:1;M01:P0:EomIpGpPzWA=;LNn5MxvG6BDkLUJeerhlZ7WWft+
+ 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
+ MDJN+xd6ksbjKnMtdtAKoHOGW6nqs=
 
-This patch series mainly deals with various issues inside the code
-responsible for controlling the lightbar on supported devices.
+The LED subsystem specifies that LEDs capable of producing arbitrary
+colors (like RGB) should label themselfs as "rgb" instead of
+"multicolor".
 
-The first patch utilizes the improved multicolor LED API to report
-the correct brightness of the lightbar to userspace. The next two
-patches fix issues discovered inside the code for controlling
-animations, while the fourth patch fixes an issue with the naming
-of the LEDs in general. The last patch also adds support for another
-variant of the Intel NUC x15 laptop kit.
+Use the "rgb" label instead of the "multicolor" label to fix
+detection by userspace applications.
 
-All patches have been tested on said Intel NUC x15 laptop and appear
-to work.
+Reported-by: Werner Sembach <wse@tuxedocomputers.com>
+Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/18
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ Documentation/admin-guide/laptops/uniwill-laptop.rst | 4 ++--
+ drivers/platform/x86/uniwill/uniwill-acpi.c          | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Changes since v1:
-- fix spelling mistake in commit message
-- rebase on for-next
-
-Armin Wolf (5):
-  platform/x86: uniwill-laptop: Report correct lightbar brightness
-  platform/x86: uniwill-laptop: Implement rainbow animation as trigger
-  platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
-  platform/x86: uniwill-laptop: Label multicolor LEDs correctly
-  platform/x86: uniwill-laptop: Extend support for the Intel NUC x15
-
- .../ABI/removed/sysfs-driver-uniwill-laptop   |  10 +
- .../ABI/testing/sysfs-driver-uniwill-laptop   |  15 +-
- .../admin-guide/laptops/uniwill-laptop.rst    |   9 +-
- MAINTAINERS                                   |   1 +
- drivers/platform/x86/uniwill/Kconfig          |   1 +
- drivers/platform/x86/uniwill/uniwill-acpi.c   | 233 +++++++++++-------
- 6 files changed, 165 insertions(+), 104 deletions(-)
- create mode 100644 Documentation/ABI/removed/sysfs-driver-uniwill-laptop
-
+diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Docume=
+ntation/admin-guide/laptops/uniwill-laptop.rst
+index aaf50e3074c1..d8ce30f10d7c 100644
+=2D-- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
++++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
+@@ -72,7 +72,7 @@ Lightbar
+ --------
+=20
+ The ``uniwill-laptop`` driver exposes the lightbar found on some models a=
+s a standard multicolor
+-LED class device. The default name of this LED class device is ``uniwill:=
+multicolor:status``.
++LED class device. The default name of this LED class device is ``uniwill:=
+rgb:status``.
+=20
+ The lightbar supports a separate rainbow animation mode that can be enabl=
+ed by selecting the
+ `uniwill-rainbow` LED trigger. To enable a breathing animation during sus=
+pend, see
+@@ -83,7 +83,7 @@ Keyboard Backlight
+=20
+ The ``uniwill-laptop`` driver supports controlling the keyboard backlight=
+ using the standard
+ LED class interface. The default name of this LED class device is ``uniwi=
+ll:white:kbd_backlight``
+-when the keyboard backlight supports only a single color, or ``uniwill:mu=
+lticolor:kbd_backlight``
++when the keyboard backlight supports only a single color, or ``uniwill:rg=
+b:kbd_backlight``
+ when the keyboard backlight supports RGB colors. The maximum intensity fo=
+r each color channel
+ in RGB mode is 50.
+=20
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
+m/x86/uniwill/uniwill-acpi.c
+index 29d3578213c6..ff07bc33c6cc 100644
+=2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -1556,7 +1556,7 @@ static int uniwill_led_init(struct uniwill_data *dat=
+a)
+ {
+ 	struct led_init_data init_data =3D {
+ 		.devicename =3D DRIVER_NAME,
+-		.default_label =3D "multicolor:" LED_FUNCTION_STATUS,
++		.default_label =3D "rgb:" LED_FUNCTION_STATUS,
+ 		.devname_mandatory =3D true,
+ 	};
+ 	unsigned int color_indices[3] =3D {
+@@ -1602,7 +1602,7 @@ static int uniwill_led_init(struct uniwill_data *dat=
+a)
+ 	if (ret < 0)
+ 		return ret;
+=20
+-	data->led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_MULTI;
++	data->led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_RGB;
+ 	data->led_mc_cdev.led_cdev.max_brightness =3D 1;
+ 	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
+ 	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led_brigh=
+tness_set;
+@@ -1810,7 +1810,7 @@ static int uniwill_rgb_kbd_led_init(struct uniwill_d=
+ata *data)
+ 		LED_COLOR_ID_BLUE,
+ 	};
+ 	struct led_init_data init_data =3D {
+-		.default_label =3D "multicolor:" LED_FUNCTION_KBD_BACKLIGHT,
++		.default_label =3D "rgb:" LED_FUNCTION_KBD_BACKLIGHT,
+ 		.devicename =3D DRIVER_NAME,
+ 		.devname_mandatory =3D true,
+ 	};
+@@ -1871,7 +1871,7 @@ static int uniwill_rgb_kbd_led_init(struct uniwill_d=
+ata *data)
+ 		return ret;
+=20
+ 	data->kbd_led_mc_cdev.led_cdev.max_brightness =3D data->kbd_led_max_brig=
+htness;
+-	data->kbd_led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_MULTI;
++	data->kbd_led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_RGB;
+ 	data->kbd_led_mc_cdev.led_cdev.flags =3D LED_BRIGHT_HW_CHANGED | LED_REJ=
+ECT_NAME_CONFLICT;
+ 	data->kbd_led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_kbd_l=
+ed_mc_brightness_set;
+ 	data->kbd_led_mc_cdev.led_cdev.brightness_get =3D uniwill_kbd_led_mc_bri=
+ghtness_get;
 =2D-=20
 2.55.0
 
