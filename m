@@ -1,58 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C733B38BC;
-	Thu,  8 Oct 2026 17:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DCC3B14C6;
+	Thu,  8 Oct 2026 17:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791481088; cv=none; b=caY/YX+gLDi7d6gi8B9elbMFvmeTK8WRrQ5Q5xrk/mv3c5w3Ak0MUjIsi3IuH3SG83FhGW09345QaEjIt3cKla+EOzg1XKkZ+Xh0j+VZ/JdsGtv4dDFzjwRu+vNOV0ghEHTbQdhuT98SMwKrYfW0lJ/klDLvv6UL9F/ofnGqP78=
+	t=1791481099; cv=none; b=j5BoCgbMxDGC+QmYQFdOlDWEkwez/6hM97ONVXjn/+xKvzktRDrtnD6OOq3Q4G60WHWgBYAgddtFBryWAadpbgLoCTou1SZa762Cr4tRxCaKQJxy2vI0+IiDi7GyYqD4OpTfBpiH7jxUl1PWKhs/LzYvizKX0X1JEQx2ZzGaPko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791481088; c=relaxed/simple;
-	bh=riJStAV1ZrL7u/qtFBeoy8jlXhojcBJiLj3Fkdb0OLg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=EyNGqziRldWklk0c9P1KuHjSJRSCX9aI+RyeSZlgcXd8q0Q6Up70de//sqQiE9BXmzX++r673QhMGTrvbHsb5CJqn478OBPn7fyZfNAP7LDL83VYnqjbtmqFOu2Eb4O6pwjPTIw79DGmgslT+zFiWhZB8jMKD+8CWtivVL6L5/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPR1Z+iu; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1791481099; c=relaxed/simple;
+	bh=qYtHttXAHlR0qS19Rqv1FhyQJd4hcKVSBJQ7u9dNS94=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=g9nEDrHI3yxF+KtGFJvfPSbEGTyUJ09UtsUJlNB2BssliMNj92mAVdSCEzDlbkTR0MxBPOQmnDG4roDpeHsDxZ12h6jmvS7k6XKY5jqr92Cr9XPVmwsW1JTVOK8HClrU/agd2bfhYUswKd/GvOOWFU/D8FDRflaom5CaZZTl1/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QStgZHl8; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPR1Z+iu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QStgZHl8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791481087; x=1823017087;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=riJStAV1ZrL7u/qtFBeoy8jlXhojcBJiLj3Fkdb0OLg=;
-  b=EPR1Z+iufNoO18DctSOqpODvFJp6Fbbrv+j8x3GWSA5xf+8n9eTQwKEr
-   8xfejpGXGbgI0rGETGtG00oUGndihECwUEsYPL/9lAsmMv31JXqrV/3EY
-   tfhI57f5g2pbB2h1au0H/vSyWdv7xJoDEvViVLFj+uo50OCQVhL66v5ti
-   BXNMSI/NzfKnF4YjQQW1Ba4M09aXW0wdo/Yuo9noXLRGVEfLFuaqeSLZp
-   hxxECs/BagrGN9eu+Vsj/ioaAISXk7C2DWHWPTUMS8d+oUwPx3Qacg7gT
-   YYvG7W4MEYowpoS7jUn+leIz4aDG2JyPH39yIQDDDiQRoKesT20KTWCFL
+  t=1791481098; x=1823017098;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=qYtHttXAHlR0qS19Rqv1FhyQJd4hcKVSBJQ7u9dNS94=;
+  b=QStgZHl8ABrF6s0rgELcRCun9khMW91pPmb3mF1KSvrSi4l/YbDWuREQ
+   JAo1lAzPT0ftPfuercWJPAK+kM9x63ifhf5D3tArQgxedO/NWzP7gpI93
+   6VQwAovd3BBrdu6hLj4qpRDm5L021oyiaaAGz2Ux4R6Y67V7CpZjllqr6
+   jqLMyzGi+Kg2uDFLDfoaXO+LDV1ehycJ5wmRevkzrV7YJtOthcV49smub
+   nXvME/SQcbA7G2G25H7vaAADlfd+MRvQVs0FiBwrYWzVvwtLsrrGfuzAF
+   jcEMSqd9Pa4WiVg0OH3xef5wgbFysZYeGzJBOwA8ZPcSlUcfLjKfiPjz6
    A==;
-X-CSE-ConnectionGUID: BRG69BlXQT2A+Cu5OoHZ6g==
-X-CSE-MsgGUID: 8ItBR7QESn6H11otrIOg3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11928"; a="383403"
+X-CSE-ConnectionGUID: ++lO+i9ETFGFF7YuDGUg/Q==
+X-CSE-MsgGUID: 9LmXsbv6R8W6hNIMDEeNew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11928"; a="279881"
 X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
-   d="scan'208";a="383403"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:07 -0700
-X-CSE-ConnectionGUID: Zdf/mokdRiWD7WC7uM+FJA==
-X-CSE-MsgGUID: IMkgg+4cTyqqTPL2A2Vx0w==
+   d="scan'208";a="279881"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:17 -0700
+X-CSE-ConnectionGUID: 2nk0g4G0RWmUVNn9tDP8Ow==
+X-CSE-MsgGUID: ohFYAAIaTWeXIUq4TpcjJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
-   d="scan'208";a="217702"
+   d="scan'208";a="1919313"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:05 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:11 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>, 
- Mohamed Jouini <amad3v@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260927014031.3465252-1-amad3v@gmail.com>
-References: <20260927014031.3465252-1-amad3v@gmail.com>
-Subject: Re: [PATCH v2 0/2] platform/x86: uniwill-laptop: Support the
- PCSpecialist Recoil 16 AMD
-Message-Id: <179148107535.29028.6844163821162089322.b4-ty@b4>
-Date: Thu, 08 Oct 2026 20:37:55 +0300
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+ Michal Simek <michal.simek@amd.com>, Jeff Johnson <jjohnson@kernel.org>, 
+ Hans de Goede <hansg@kernel.org>, Andres Salomon <dilinger@queued.net>, 
+ Thomas Gleixner <tglx@kernel.org>, Paul Fox <pgf@laptop.org>, 
+ Dan Carpenter <error27@gmail.com>, 
+ Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>, 
+ Hyun Kwon <hyun.kwon@xilinx.com>, dmaengine@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-wireless@vger.kernel.org, ath12k@lists.infradead.org, 
+ platform-driver-x86@vger.kernel.org, Jiale Yao <yaojiale02@163.com>
+In-Reply-To: <20260926121250.3258285-1-yaojiale02@163.com>
+References: <20260926121250.3258285-1-yaojiale02@163.com>
+Subject: Re: [PATCH 0/3] debugfs: Reserve space for string terminators
+Message-Id: <179148108715.29028.11629364722583143417.b4-ty@b4>
+Date: Thu, 08 Oct 2026 20:38:07 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,14 +70,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sun, 27 Sep 2026 02:40:29 +0100, Mohamed Jouini wrote:
+On Sat, 26 Sep 2026 20:12:47 +0800, Jiale Yao wrote:
 
-> The PCSpecialist Recoil 16 AMD is a rebadged TUXEDO Stellaris 16 Gen7 AMD
-> (board X6FR57TY), which the driver does not match today because of the
-> different DMI vendor and board name.
+> The same boundary mistake appears in three debugfs write handlers. Each
+> handler has a zero-initialized buffer and allows a user write to fill the
+> entire buffer. That overwrites the only NUL terminator before the input
+> is parsed with sscanf(), strsep(), or strcasecmp(), which can then read
+> beyond the end of the buffer.
 > 
-> Patch 1 adds it with the existing Stellaris 16 Gen7 AMD feature set.
-> Patch 2 maps the "Sc" key (WMI event 0xD0) to KEY_ROTATE_DISPLAY.
+> The write paths are independent, so the fixes are split by file and can
+> be applied separately. Each patch reserves one byte for the terminating
+> NUL while preserving the normal input size for that handler.
 > 
 > [...]
 
@@ -85,10 +95,12 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/2] platform/x86: uniwill-laptop: Add PCSpecialist Recoil 16 AMD
-      commit: 99ee4a2405fafe9636cb1c834cc3753ef5705041
-[2/2] platform/x86: uniwill-laptop: Map the screen rotation key
-      commit: 37dcbefbcf314ab032ee6bb7f7363c1de5e886a7
+[1/3] platform/olpc: Reserve space for a string terminator
+      commit: 4ef563af57cc48d5a9662d7c69aa4447c2cc1b2c
+[2/3] wifi: ath12k: Reserve space for a string terminator
+      (no commit info)
+[3/3] dmaengine: xilinx: dpdma: Reserve space for a string terminator
+      (no commit info)
 
 --
  i.
