@@ -1,280 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4E743F4C5;
-	Thu,  8 Oct 2026 12:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B523C3F68
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 13:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791463721; cv=none; b=NBFE2MgOF55hdNonlKlmJ5D8FHOI98AeFFOiwuaw4wlLyMWhXd5S4fxSHBodICJoHb7e+9Hli04cnMvZRWqygVzAuz07poyCRPrP48S9GlBRLFptVhPmT2qSy0khQPuP0l/Y0tWKUBqnuge61viLBnxa+6o3UR05zU/56mkplPU=
+	t=1791467795; cv=none; b=MsOfZzXaLJa3YJZGBeZlPbTIDZ/CL9EgfW5NA7uoQD2EDDFXRFAx4wusmQIO2dNxnLqCqIxBeQLzs65XB1NdzgZC9CILTkI5+tFGN+7skUCAuiYCOLYoNRZ095kPBumZ8OcQq667wN4Hs81X3EZKTL1PV20kLVmq2bSNBpSFW64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791463721; c=relaxed/simple;
-	bh=iwn1jD9kDV1xe6eLybb/VQrcDHJ1H1es07AYJEVgqw4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Cpcu9v3sPRijWALcGae4HCibfRkCiyy+VWa6bAjg1EPBH76eiqfgFtr1MxGvX8Scd4o1rxI7Ke9LsI6JmUda0L3azSoKCavPCM0QSyjn4NAZ534cROAuywxjD6qmy6uRu+zMUP4llkNcDfZ0Cia5ft6E7fUxMtMx+RKbjSZoOCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JTVP7i1Z; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1791467795; c=relaxed/simple;
+	bh=ul91BBdnztHPzdKRhvIGCGUQcgLmzyphkc+ExElWniQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VioQBim4w3KnzorSIZczvAmJmT7n7Z3+RvFAvHaqr0HxaV72LMy/5gi0PZs8QfKwg7lmLiRvgqpnCh4SMbmr2NJdfBzFMsQKxVXOPEK2uuNPAQHwt27o4+md5GTAjxTvCkD6hJZxbSYw5TMdaHNZCfgX1dY5iLgrV/T7TKSfAQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHBkSpSR; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JTVP7i1Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791463719; x=1822999719;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iwn1jD9kDV1xe6eLybb/VQrcDHJ1H1es07AYJEVgqw4=;
-  b=JTVP7i1ZWBSp6P4HrW5hFQWwl2M4alRCzVG5RaCpuBeKofqA8DAXLX8K
-   QaonSICGcAdxykkqHa6Ea2x1YxD1jCG6aWfTOWYUponntQtio8WJ1KIU+
-   79LpsODgxJHeU+sPdkvJWUF9xsbXCbbIPekmjA0sLraspi/06DmIowalM
-   prFzyXzfmwBgQNu3UKAxQIrOQnz8JzZB/vKl69nBoekKD6+MWqoF2hUis
-   tLdSnFZtUU7JRoRlBa9LFYREbCvmXV0W4wbytufBkuSDdpkRkupwxMCXu
-   F0hpBF/5Z4cfQbl/HImqKCM7w1g0HytB1GsjUDlgHboqluriabQAntSW4
-   A==;
-X-CSE-ConnectionGUID: Bk2MJj3jSj6JoVeZ//9omw==
-X-CSE-MsgGUID: FSmGdu9wTTSWyk/uiOgGGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11928"; a="122191"
-X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
-   d="scan'208";a="122191"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 05:48:38 -0700
-X-CSE-ConnectionGUID: cNVRPr48R7K08OvUOdjYsg==
-X-CSE-MsgGUID: XS2Q+eX9RaulUhHysR4esw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
-   d="scan'208";a="1791319"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 05:48:36 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 8 Oct 2026 15:48:31 +0300 (EEST)
-To: Denis Benato <denis.benato@linux.dev>, Bartu Alev <bartualev@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>, 
-    Denis Benato <benato.denis96@gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: asus-wmi: add TUF keyboard RGB
- readback support
-In-Reply-To: <c0301eb2-62b9-4dbd-ba24-3a2c40675b20@linux.dev>
-Message-ID: <570a8f23-0782-8a45-d62f-c95bb28dade9@linux.intel.com>
-References: <20260925200744.129714-1-bartualev@gmail.com> <20260926005625.171560-1-bartualev@gmail.com> <20260926005625.171560-3-bartualev@gmail.com> <c0301eb2-62b9-4dbd-ba24-3a2c40675b20@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHBkSpSR"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a140e7405dso53690935e9.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Oct 2026 06:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791467792; x=1792072592; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=0B/njFyKNbJ8SiFPGIkXaOhaJvjsNPVFgerBqPRVczc=;
+        b=EHBkSpSRqP1Rw3jY5T+5ELGDPXGrvkDA/khDxGUxazqk9OVjRuxGRTBoQyIuDMsPA8
+         jQjnhWY4csFwM9068wqLpw5B5LRKvXxvACSDobSbvzsavCcmZPsVSwbW0LZXNDe+uVH1
+         SPoYtr/qVvBGyL4CFLQ/Icqoo5CQG9S8V4+CgHFCi2ISWMl3+NzwQmvUmFpxPqfi8irt
+         Frk/Q3nt93IHbsT1iILfPBhIonas1G9tmwu5JxJSyymxy8syYBwe9lvR9xyM8F5YQDpB
+         vREyyUzv44JiClisPUMVBbzKfqL6DLH+m21OPHJiWTc/IxnSps0n7sKSTiA4HFJxlPx8
+         sUCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791467792; x=1792072592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0B/njFyKNbJ8SiFPGIkXaOhaJvjsNPVFgerBqPRVczc=;
+        b=W78djUWOJfTjg4OfC5muEURCV67pHOkd4CLNj6CuzFDtqz/dhRlW4CIWRPYlOv3y3R
+         iHQIWR7Yi0C1B9duVgpC860HzkqqDfU5Ox62mBSO/dC84sEL/rZa/A18hmPUac1kx9NO
+         s5CUXdG0D2t2mrWFpGv1XejD4lpXKpvrhelXggLTgrLI59vHN+bnlS820YobedNua3Cj
+         8/v6AdFXLqspxoshcfO0KIY4nWfaSBs5rmKM6JCI2jtZY/wPVgrhPKWBBU95lD67qafT
+         TNVCgPGK4QkP0TWGU0qf+bnl/klLBrE8aaWDc0vJ0P94hWuKPxSI8eYjXWlDjmrMFLCl
+         sNUw==
+X-Forwarded-Encrypted: i=1; AKwUvBx0+C2S2mfnH+VVLexVnAbBgIHg8iESEqwNyQJBAYocQzh11VdF2tAuFxFwHGxmEx2CGhWWw+O5tyalAo0iRP2+WTMo@vger.kernel.org
+X-Gm-Message-State: AFuF++l0DM/xjLvQStmhMh9SrpcRVTek/kC3VGq+2ivbOSO8C2rdCGYg
+	8O8Rw+3dDJmmh5+WGzhXRtjPFACBQRAmO8ajuD3kYqMnJaaMM26gDDIT
+X-Gm-Gg: AYBFou0h1KXjHY2tkDJx0xdyv1ZUrAEi1V46EHIOkKAOlmukmIH1JJOlgpcX8TFSJkz
+	tmAxaaasJCtNALOBT2OyEidngeKdXPBACgRPPFeSnLuAiVccIG4RNlSx8caYOlPWk/YoR6lDVh3
+	vtsR/DrhMHdHDMqti3b+OLJmdHa8+Ib7cK02byo9x4gPcELSlDHgPVmZCVUn1YG5lC5JC/ZxJxY
+	NzotMdFQVQHoGJ8awYzKpFb3vWpBNhOYiOfkmktYtsLBGrLlwflAYgbgPNMv3PU5ilwxT6D6pDx
+	mY7QYVkzpxuvZz8jpJwIMlQFi6hw655sNvZjZa1ETJCzcLOuAl6kPiTYShkafyAd/+mtnbxg5C1
+	uIZME1EtUqypeKDQIJWmWJB++t1nZQQHcI/gSMwEuHQQpXJGvrjWjATu/BgDMARAD+H9Sva3kZb
+	cSsYqCOpAhb1C+3I2/RCojYLOIYNkkfy9WlAaoBSkdH0uAIfHr4ehR47oH9zdwddnuuh2Eq74hi
+	w9X9UgvTQ==
+X-Received: by 2002:a05:600c:8105:b0:4a0:236c:8601 with SMTP id 5b1f17b1804b1-4a180086860mr100759835e9.0.1791467792330;
+        Thu, 08 Oct 2026 06:56:32 -0700 (PDT)
+Received: from localhost.localdomain ([2a0a:ef40:1479:f801:b8e7:18fe:7039:e475])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a184260f9asm76512765e9.0.2026.10.08.06.56.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2026 06:56:32 -0700 (PDT)
+From: Mohamed Jouini <amad3v@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Werner Sembach <wse@tuxedocomputers.com>,
+	Christoffer Sandberg <cs@tuxedo.de>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mohamed Jouini <amad3v@gmail.com>
+Subject: [PATCH v3 0/2] platform/x86: uniwill-laptop: Support the PCSpecialist Recoil 16 AMD
+Date: Thu,  8 Oct 2026 14:56:22 +0100
+Message-ID: <20261008135624.3520849-1-amad3v@gmail.com>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Sat, 26 Sep 2026, Denis Benato wrote:
-> On 9/26/26 02:56, Bartu Alev wrote:
-> > TUF Gaming laptops expose kbd_rgb_mode and kbd_rgb_state as write-only
-> > attributes (DEVICE_ATTR_WO), preventing userspace from querying the
-> > active hardware configuration.
-> >
-> > Add readback support by querying ASUS_WMI_DEVID_TUF_RGB_READBACK
-> > (0x0010005B) via the WMI DSTS method. On supported platforms this
-> > evaluates the DSDT method EC0.KBLS(), which returns a 16-byte buffer
-> > containing the active lighting mode, RGB color channels, effect speed
-> > and power-state flags.
-> >
-> > Introduce kbd_rgb_read_status() to evaluate and validate the buffer,
-> > and convert both attributes to DEVICE_ATTR_RW. Map the hardware speed
-> > codes (0xe1, 0xeb, 0xf5) to their sysfs indices (0, 1, 2).
-> >
-> > The command field is not part of the status buffer: "immediate vs
-> > save-to-flash" is a property of the write verb (0xb3/0xb4), not of
-> > readable state, and the EC mirror is updated identically by both.
-> > Readback therefore emits a synthetic leading '1' - the canonical
-> > input form userspace writes - so that output matches input.
-> >
-> > Suggested-by: Denis Benato <denis.benato@linux.dev>
-> > Signed-off-by: Bartu Alev <bartualev@gmail.com>
-> > ---
-> >  drivers/platform/x86/asus-wmi.c            | 79 +++++++++++++++++++++-
-> >  include/linux/platform_data/x86/asus-wmi.h |  3 +
-> >  2 files changed, 80 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> > index db6ee1974838..fe1dcc7701ad 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -1046,7 +1046,58 @@ static ssize_t gpu_mux_mode_store(struct device *dev,
-> >  static DEVICE_ATTR_RW(gpu_mux_mode);
-> >  #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
-> >  
-> > +static int kbd_rgb_read_status(u8 data[16])
-> > +{
-> > +	int err;
-> > +
-> > +	err = asus_wmi_evaluate_method_buf(ASUS_WMI_METHODID_DSTS,
-> > +					   ASUS_WMI_DEVID_TUF_RGB_READBACK,
-> > +					   0, data, 16);
-> > +
-> > +	if (err)
-> > +		return err < 0 ? err : -ENODEV;
-> > +
-> > +	/* DUBF[0] is a constant 1 set by the AML: anything else is not KBLS */
-> > +	if (data[0] != 1)
-> > +		return -ENODEV;
-> > +
-> 
-> -ENODEV or -ENOTSUPP ? Which one is better suited for these kind of things?
+The PCSpecialist Recoil 16 AMD is a rebadged TUXEDO Stellaris 16 Gen7 AMD
+(board X6FR57TY), which the driver does not match today because of the
+different DMI vendor and board name.
 
-If something is not there, -ENODEV is appropriate.
+Patch 1 adds it with the existing Stellaris 16 Gen7 AMD feature set.
+Patch 2 maps the "Sc" key (WMI event 0xD0) to KEY_ROTATE_DISPLAY.
 
-Unexpected comms is -EIO (-EINVAL is unfortunately often misused for 
-this but it -EINVAL is to say input parameter was wrong).
+Tested on the Recoil 16 AMD (BIOS N.1.39PCS10) with the v2 driver built
+against 7.2.7: the Sc key, the hwmon fan and temperature readings, and
+all three charging profiles. v3 only follows the descriptor rename, so
+the device gets the same feature set as in v2. Charging from below 70%,
+with the charge counted from current_now:
 
--ENOTSUPP is not a standard error code (the correct one would be 
--EOPNOTSUPP).
+  Profile    CV (4S)    per cell   stops at, of a Standard charge
+  Standard   17.405 V   4.35 V     100%
+  Long_Life  17.194 V   4.30 V     about 93%
+  Trickle    16.818 V   4.20 V     about 90%
 
-TBH, I don't really know where the line between -ENODEV and -EOPNOTSUPP 
-is. I'd personally use the latter mostly for the case where software side 
-lacks something.
+In every profile the EC then reports 100% / Full, as Armin said it
+would.
 
-In anycase, wrong errno's are endemic and hard to fix without running 
-afoul with something as they often relate also to userspace ABIs.
+Changes in v3:
+- Rebased on for-next: the Stellaris 16 Gen7 AMD feature set is now
+  gmxixxx_xxxx45xx_xxxx55xx_xxxx57xx_descriptor (Ilpo).
+- Patch 2 unchanged. On v1, TUXEDO confirmed they know of no device
+  using event 0xD0, which settles the question attached to Armin's
+  Reviewed-by:
+  https://lore.kernel.org/r/66a47248ecfa1704186274f2c245d3f5@tuxedo.de
 
-> If we go with two separate sysfs attrs you don't register the read one,
-> otherwise I am not sure.
-> 
-> > +	return 0;
-> > +}
-> > +
-> >  /* TUF Laptop Keyboard RGB Modes **********************************************/
-> > +static ssize_t kbd_rgb_mode_show(struct device *dev,
-> > +				 struct device_attribute *attr,
-> > +				 char *buf)
-> > +{
-> > +	u8 data[16] = {};
-> > +	u32 speed;
-> > +	int err;
-> > +
-> > +	err = kbd_rgb_read_status(data);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	/* Map hardware speed codes back to sysfs index:
-> > +	 * 0xe1 -> 0 (slow), 0xeb -> 1 (normal), 0xf5 -> 2 (fast)
-> > +	 */
-> > +	switch (data[5]) {
-> > +	case 0xe1:
-> > +		speed = 0;
-> > +		break;
-> > +	case 0xeb:
-> > +		speed = 1;
-> > +		break;
-> > +	case 0xf5:
+Changes in v2:
+- Patch 1 uses the existing Stellaris 16 Gen7 AMD feature set (charging
+  profiles) instead of the percentage charge limit (Armin).
+- Dropped the platform profile patch for now (Armin).
+- Added Armin's Reviewed-by to the Sc key patch.
 
-Name literals with defines. When it comes to offsets, consider if a 
-struct would be viable instead of byte array + named define index.
+v2: https://lore.kernel.org/r/20260927014031.3465252-1-amad3v@gmail.com
+v1: https://lore.kernel.org/r/20260925211635.1422516-1-amad3v@gmail.com
 
-> > +		speed = 2;
-> > +		break;
-> > +	default:
-> > +		speed = 1;
-> > +		break;
-> > +	}
-> > +
-> > +	return sysfs_emit(buf, "1 %d %d %d %d %d\n",
-> > +			  data[1], data[2], data[3], data[4], speed);
-> 
-> We had this discussion in discord so I want to update everyone reading:
-> the status returned is the current one and both cmd=0 and cmd=1 on write
-> update the current status.
-> 
-> Therefore this is an asymmetry that doesn't really need to be,
-> what if we introduce another sysfs that is RO? Ilpo?
+Mohamed Jouini (2):
+  platform/x86: uniwill-laptop: Add PCSpecialist Recoil 16 AMD
+  platform/x86: uniwill-laptop: Map the screen rotation key
 
-I'm not entirely sure what's the suggestion.
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 11 +++++++++++
+ drivers/platform/x86/uniwill/uniwill-wmi.h  |  3 +++
+ 2 files changed, 14 insertions(+)
 
-> > +}
-> >  static ssize_t kbd_rgb_mode_store(struct device *dev,
-> >  				 struct device_attribute *attr,
-> >  				 const char *buf, size_t count)
-> > @@ -1099,7 +1150,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
-> >  
-> >  	return count;
-> >  }
-> > -static DEVICE_ATTR_WO(kbd_rgb_mode);
-> > +static DEVICE_ATTR_RW(kbd_rgb_mode);
-> >  
-> >  static DEVICE_STRING_ATTR_RO(kbd_rgb_mode_index, 0444,
-> >  			     "cmd mode red green blue speed");
-> > @@ -1115,6 +1166,30 @@ static const struct attribute_group kbd_rgb_mode_group = {
-> >  };
-> >  
-> >  /* TUF Laptop Keyboard RGB State **********************************************/
-> > +static ssize_t kbd_rgb_state_show(struct device *dev,
-> > +				  struct device_attribute *attr,
-> > +				  char *buf)
-> > +{
-> > +	u8 data[16] = {};
-> > +	u8 flags;
-> > +	int err;
-> > +
-> > +	err = kbd_rgb_read_status(data);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	/*
-> > +	 * data[6] power-state bitmask:
-> > +	 * BIT(1) boot, BIT(3) awake, BIT(5) sleep, BIT(7) shutdown
-> > +	 */
-> > +	flags = data[6];
-> > +
-> > +	return sysfs_emit(buf, "1 %d %d %d %d\n",
-> > +			  !!(flags & BIT(1)),
-> > +			  !!(flags & BIT(3)),
-> > +			  !!(flags & BIT(5)),
-> > +			  !!(flags & BIT(7)));
 
-These BIT(x) should be named with defines as you clearly know what they 
-mean (I assume the _store ones too match to these so do the addition and 
-conversion in own patch).
-
-A comment like the one above is almost always an indication of a naming 
-problem that, after fixed, makes the comment totally redundant.
-
-We try to leave comments for something that is tricky, non-intuitive, or
-complex.
-
-> > +}
-> >  static ssize_t kbd_rgb_state_store(struct device *dev,
-> >  				 struct device_attribute *attr,
-> >  				 const char *buf, size_t count)
-> > @@ -1146,7 +1221,7 @@ static ssize_t kbd_rgb_state_store(struct device *dev,
-> >  
-> >  	return count;
-> >  }
-> > -static DEVICE_ATTR_WO(kbd_rgb_state);
-> > +static DEVICE_ATTR_RW(kbd_rgb_state);
-> >  
-> >  static DEVICE_STRING_ATTR_RO(kbd_rgb_state_index, 0444,
-> >  			     "cmd boot awake sleep shutdown");
-> > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> > index b5ed8c83ace1..1447c7f354bc 100644
-> > --- a/include/linux/platform_data/x86/asus-wmi.h
-> > +++ b/include/linux/platform_data/x86/asus-wmi.h
-> > @@ -161,6 +161,9 @@
-> >  /* TUF laptop RGB power/state */
-> >  #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
-> >  
-> 
-> The pre-existing one should probably be renamed to make clear
-> it's write only and it is a command... In its own patch.
-> 
-> ASUS_WMI_DEVID_TUF_RGB_CMD probably?
-> 
-> > +/* TUF laptop RGB keyboard status readback*/
-> > +#define ASUS_WMI_DEVID_TUF_RGB_READBACK	0x0010005B
-> > +
-> 
-> ASUS_WMI_DEVID_TUF_RGB_READ_STATUS ?
-> 
-> 
-> >  /* Bootup sound control */
-> >  #define ASUS_WMI_DEVID_BOOT_SOUND	0x00130022
-> >  
-> 
-
+base-commit: 98f039265e580291d5e76a11b2072541fbb1c393
 -- 
- i.
+2.56.0
 
