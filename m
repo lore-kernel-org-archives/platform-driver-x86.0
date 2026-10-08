@@ -1,60 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7C23B0AF3;
-	Thu,  8 Oct 2026 17:38:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D284A3B1EC0;
+	Thu,  8 Oct 2026 17:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791481110; cv=none; b=nV9e2MWFRoKQnH5hxcPbdrq+po6mHW5oWBsEmJw23VJphOLgv5h5B7T8J/48qcFLi1obSPa9Sx6Ynn/0SjMIuSTNPPTmcIE/Qmr++VwJw9AH8bEGoH2Ne2jYOt6Fft7LPQuh/cPMHZ8YCvYtNlxgggjfWMGdO1zTvbpgj1JbpkA=
+	t=1791481119; cv=none; b=pfh/ic4dnLdhGqXjUTjz0sokKBDem2U7780wERYosjfUyhqa30ojf9oB7ApLtBMXzaIEQfY/I8dP2Ju/6hWllkJFKvVq2B0eDoypjtky6eu6rFe1MnHrcrUAg85kLWya5dQrxXNLiS8BhNF7+V739IzTmfS5Xqhqms5BzDHbX68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791481110; c=relaxed/simple;
-	bh=iYdtJDr2Sf6ihcrwuTpipaHuJynaC5bwvtQsh5THI5c=;
+	s=arc-20240116; t=1791481119; c=relaxed/simple;
+	bh=tH8d8O42s+tzqmqItv83UbysnA84EhNZf/dJEZXmXXY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FOjtTIqVtIUXENEaJfdxJhevEjSP582veY7x2zHrxm971OJO5xcWDt9KpiPjiXLt//iubG3oGYemwxPWfMozcYDhHxNb/7MBYTW7NJLWS+S1EGlQmlWDodRHDmtdzG/qWF2MH6td3IVfqx9LDiNupYhB+Qa0oW11vrm/a88DMvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODZ+pE4K; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=OehyssvA/2+2sfb885gh8qCxHzcGtvWBD8RiD1W5KDbjCsu3PrFZYnqv10Bm18Ha9TnV9XPG0Bj9v4BDZzJssDTdYpVCh4/aCVGZ+96S5/CKVFnaOUO/XyvA3X8RGFLzLk/U3/V4Yzy+j5fNMAZUjvZK94MEUqJGsoKGLSSCMPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ICbR4MhH; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODZ+pE4K"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ICbR4MhH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791481109; x=1823017109;
+  t=1791481118; x=1823017118;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=iYdtJDr2Sf6ihcrwuTpipaHuJynaC5bwvtQsh5THI5c=;
-  b=ODZ+pE4Kp+qNe85V4OU+hjNOOvWKhK1Qp+TwubPMw7lY6vR4qhaqmXGb
-   7Y9t0qVysMkSxYBIkBvu90QI1I55CaaDLXVNL2zLh1FiA2DiZbWbNJTrt
-   sF9k9W7wYj9uYE6L59AE5eEIN6pAmzw4mPXCUW0RUWqCks6bKf09/6qTH
-   6xqOe8RDLm5aAF/cBZuBJWWiHCQ8+AHWGDSnwddODyUbreJX7MRAfK0a5
-   7RHU8X6U7QXTA/OnRRzmk9E3fLDyMWYXIStLKFBZa9SutsvSUTl83MHy/
-   WKSKrV21LoIgpTvGsn80Wa3Y9Spl5R4h6ctEsZl6uQopDJRZU4Wdljxg3
-   w==;
-X-CSE-ConnectionGUID: C0LWrYdXTPWIMf7qDhcDcg==
-X-CSE-MsgGUID: N9+3zaaYQuiN2PtxFM1DbQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11928"; a="279909"
+  bh=tH8d8O42s+tzqmqItv83UbysnA84EhNZf/dJEZXmXXY=;
+  b=ICbR4MhHZofRPp7w/kuxvyvxyBrhHS+iOMA+gSth53lxbMb+SUG1zZzh
+   Uv05XrRqNUULRQHk2CM7FSAgBkkn8vy1D3zydHAvmHyY+V5FkuIXwTzaY
+   YZtGLJtTqDgS0tffrdPbhXpwTSrme9Yoe7a6ly2vfleKs8tNvtrJNe2So
+   +ItMqdJaSB31rYGwh5kGyXzsiHP7e5UPROdJ+YuQaTiOeQ913LcSS1jpI
+   paWigMFmW38Fstu6gwUu/77RtM1j6JHNgrU6s6K13AJrL3VMUUvVhyvhW
+   Td/ylR2HLRzFNVwwjLa0BBVlbApDWyqETDJFRfGSi6B1hNr/wjYMUsA7V
+   g==;
+X-CSE-ConnectionGUID: k4+HrvgcS0qVe9Hdp/Xunw==
+X-CSE-MsgGUID: WviMO41ZQAOVcX7Q03m2JQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11928"; a="279920"
 X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
-   d="scan'208";a="279909"
+   d="scan'208";a="279920"
 Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:29 -0700
-X-CSE-ConnectionGUID: RLZ3cDlzRLqjvLlOv7Bytw==
-X-CSE-MsgGUID: toVSHJF1TY2rvbUFIL9zKw==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:37 -0700
+X-CSE-ConnectionGUID: 4BPhJrC7Qi6Pu1JAN5u98A==
+X-CSE-MsgGUID: zZPLrQnzSQSTuX3Hck16kg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
-   d="scan'208";a="1919364"
+   d="scan'208";a="1919402"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:26 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:38:35 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>, 
- Mohamed Jouini <amad3v@gmail.com>
-Cc: Werner Sembach <wse@tuxedocomputers.com>, 
- Christoffer Sandberg <cs@tuxedo.de>, platform-driver-x86@vger.kernel.org, 
+To: hansg@kernel.org, Armin Wolf <W_Armin@gmx.de>
+Cc: wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org, 
  linux-kernel@vger.kernel.org
-In-Reply-To: <20261008135624.3520849-1-amad3v@gmail.com>
-References: <20261008135624.3520849-1-amad3v@gmail.com>
-Subject: Re: [PATCH v3 0/2] platform/x86: uniwill-laptop: Support the
- PCSpecialist Recoil 16 AMD
-Message-Id: <179148109756.29028.6683547170564854080.b4-ty@b4>
-Date: Thu, 08 Oct 2026 20:38:17 +0300
+In-Reply-To: <20261007144101.323289-1-W_Armin@gmx.de>
+References: <20261007144101.323289-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2 0/5] platform/x86: uniwill-laptop: Lightbar fixes
+Message-Id: <179148110928.29028.17146158167227573018.b4-ty@b4>
+Date: Thu, 08 Oct 2026 20:38:29 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,14 +62,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Thu, 08 Oct 2026 14:56:22 +0100, Mohamed Jouini wrote:
+On Wed, 07 Oct 2026 16:38:53 +0200, Armin Wolf wrote:
 
-> The PCSpecialist Recoil 16 AMD is a rebadged TUXEDO Stellaris 16 Gen7 AMD
-> (board X6FR57TY), which the driver does not match today because of the
-> different DMI vendor and board name.
+> This patch series mainly deals with various issues inside the code
+> responsible for controlling the lightbar on supported devices.
 > 
-> Patch 1 adds it with the existing Stellaris 16 Gen7 AMD feature set.
-> Patch 2 maps the "Sc" key (WMI event 0xD0) to KEY_ROTATE_DISPLAY.
+> The first patch utilizes the improved multicolor LED API to report
+> the correct brightness of the lightbar to userspace. The next two
+> patches fix issues discovered inside the code for controlling
+> animations, while the fourth patch fixes an issue with the naming
+> of the LEDs in general. The last patch also adds support for another
+> variant of the Intel NUC x15 laptop kit.
 > 
 > [...]
 
@@ -87,10 +87,16 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/2] platform/x86: uniwill-laptop: Add PCSpecialist Recoil 16 AMD
-      commit: 99ee4a2405fafe9636cb1c834cc3753ef5705041
-[2/2] platform/x86: uniwill-laptop: Map the screen rotation key
-      commit: 37dcbefbcf314ab032ee6bb7f7363c1de5e886a7
+[1/5] platform/x86: uniwill-laptop: Report correct lightbar brightness
+      commit: de41d8b4d0dbb81c81cd99c245238d878a3e1951
+[2/5] platform/x86: uniwill-laptop: Implement rainbow animation as trigger
+      commit: 59e4e406b6c08ad41f3ad86db6d42b82d8539c12
+[3/5] platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
+      commit: 969a3bfa474e35828e142d0160f393a97d9bf0ee
+[4/5] platform/x86: uniwill-laptop: Label multicolor LEDs correctly
+      commit: 42e6b269fc1134a3fcce57539034ee496e2c1344
+[5/5] platform/x86: uniwill-laptop: Extend support for the Intel NUC x15
+      commit: 7a159a14ce0f5d5a3c2f835f39986ec5539ae374
 
 --
  i.
