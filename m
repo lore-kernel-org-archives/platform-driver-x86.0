@@ -1,128 +1,102 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831EA4DAFA5
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 15:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA033B05A5;
+	Thu,  8 Oct 2026 17:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791473406; cv=none; b=W78Fm36+jis8kvv++36J8PEIS2jSoVYKhyFRAeKd/PrJq1v4nS82r+dpoxRlwKwJ5wo3PnYDj2qXsdfiljssf1MMNwOfH4wFiF7B2dFK/+OYBnyRb04zqdS7qpFIV85EuBVsFlL5nxoa02n6S2Bgt8M3ZlAJDhMHL0cBq8l0XDc=
+	t=1791481039; cv=none; b=kBU8LPEEIjOeZJzWLfHCtHlkKZSyt9RfRaniPJwOxfw+wtyi/fGbCUEn2c/LboHY8XBjZURw3dT0qxxpqi99Adgy9XDSAjskLPbIb8H8CQ1dQL7PIjOmgpTsJoK8mdJbibY4MKT6xD3FDvg1+2Gdad9xx+lBfJWNLDo2w5bkaAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791473406; c=relaxed/simple;
-	bh=gCz2PWtG7KBVwKQQRm3tT99d6VUdlqWJU1achyn5LUY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=owc7h6Ut2T+9vOGmGbRHQKqobuIs/4trGbgVBrtJAfbW1Jz+Q0I7XqaPiAKjwolKMpWw3IkRTim00KVvbh/Qxz5HFmOuV8Q8H0SOzucZb6tA8hyyrE21rB3VTTm2T4U465o+eusHnhQrX7c9K0QsyM7mtbCoaHvMJUGFGY6BKHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B0p/j1+Z; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791481039; c=relaxed/simple;
+	bh=l9biZ42ciHgmp6AyO4QD+6TuVAF+G58zBEmMDzvB8LI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XWsjAuPdxNEtjIORfn2zRnSdVMw8jglmSKsZ28xiL2olv0nwxxoSkpJiUmL1uqMjqOsld7CuZ93Ch0L9MDRU8NRc1Q9m1tMjp62m/LLeXHe6APwMrrVxLo3kvGp34AtMQPSr3attazUmyLUUvTxnOpQ0Puut51qPp6krBz/AM+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nSRH9aSn; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0p/j1+Z"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5ba3b1199f6so3162565e87.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Oct 2026 08:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791473398; x=1792078198; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=gCz2PWtG7KBVwKQQRm3tT99d6VUdlqWJU1achyn5LUY=;
-        b=B0p/j1+ZbjvDgOjLrVcRhUa2rrgEqU0fsRi/GHc1GEf16tv+dCPoXScmv0duQ/ulBW
-         JGFE+f9gnbrWI+ar17KWRjiOEVI88sQAuWRSuaLYhAHPSgF18pfU13fyPRd5vROEe/v4
-         DxSh1G/CMhHdYOPGf8r9z8OhfXSY3Qhljqqv2Ip34hYx3NeHQcyX7ksyGBMusqxj3cy9
-         6uTcdASsxp/WLHbOOAXbXsMeipeVeNICLE49Fq68EF0TlK2XBfxdwvp5c1l5E1RDLhya
-         DeMt81Lc0FUkw7P92+JXIKZonroRzg+2BWxnt+H+bj92nM9heHXIcAZrudOz3MF4ITA/
-         mZkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791473398; x=1792078198;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gCz2PWtG7KBVwKQQRm3tT99d6VUdlqWJU1achyn5LUY=;
-        b=rZc+qGZGPqjmPRqovQjp0T9ZL58hEeiS5bmx707mG0Ovej0+8LSveIa3Qn+fKwEoC4
-         lt4ikIS8Nj/4rV+tmSdEjiiYQfjbKvgugSpVpivpvwlnV5Z0IEQrcQwxLccgZLgm7HCI
-         TLidLNazQ4fbbG8wpy80SGfgbESY1e4mFZgIxX09+tO7PDAIa42MBzMrBk/kRWmgJx9H
-         ckteXmQvPrdl+A42qKSNH8JUKuH2eWJxsT9Dt9nElLgszNA4CrupHaYiTeSo//J0xENx
-         EIJkrErwbZ0kGCtrfg4BtJkVWnIN9X1nDdyOQ2/BxmmU2LoRddNf2F0E2Yq2iIpODHC/
-         7D+Q==
-X-Gm-Message-State: AFq9FYLqg72NNH5FQDrFgR9UfAXtxj+XW8k0bcSnRXW/jcZkj8WzKtqo
-	djlonWfnCzklKeex52oqLxtryut/1SzF7LNEohmP5PyoUXx2TZOzuW5V
-X-Gm-Gg: AYBFou0w+vCapf/P8eWme8/WFS2YuaPpHVbsIlJLFMpFNITwvWcZFjKvHZcT/tAHgmU
-	EScJ3Vf28gwyRRgGA1QfDuJPpKYMAwnup6Hi/GGUuSYIlMhHFLS6vRaONxcqWd9t/0yQyPBmC0R
-	F7rsigguLCQTygOzoNzSqtVq+FZ997oIljcjI41+lkU/o1uC7XsUznJK1OAqw72DL7i2/hPkuI6
-	n3Y6gOp9sxDYPgqkAJP4qBPJyfYG/fLngEfndvk6K+EasRlXbN2Hmo7XWjk/3NDGNMUAiim21tt
-	HN68/+pkG8BDFXkN4LeETPPgVnkPj/+jfw89Ud16VI/CDE2aJX5MQNaJxXzCqd/igLPJZQZqw/B
-	C9c2q6GEWa5gB1ccQ34gBuOY9SmIL6wSQedIlKt93tUtUv2z7ec6eTk1ueRv4x2sQwxfaDDWJMz
-	wjitloqUMDpPhvfTTfdbEdQwovkuwigw13kv/xn+NLO8/dEnFcKUvuiOZnblGZzqwqx/PdRke4S
-	digCGwW5Lthht1aIX4tCdU0cl5sOPIYYelkLpjSWO7y24V0Ww68qgDdSzQMGBquxEf6
-X-Received: by 2002:a05:6512:3b9a:b0:5b6:183b:d203 with SMTP id 2adb3069b0e04-5bcd0716838mr2243596e87.42.1791473397961;
-        Thu, 08 Oct 2026 08:29:57 -0700 (PDT)
-Received: from wildarch.lan ([109.72.228.33])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5bcd3074ac2sm1383620e87.29.2026.10.08.08.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2026 08:29:57 -0700 (PDT)
-From: Anton Karasev <uselessfire@gmail.com>
-To: zsanya322@gmail.com
-Cc: platform-driver-x86@vger.kernel.org,
-	qby140326@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	W_Armin@gmx.de,
-	vlku.milos.fun@gmail.com,
-	chris@miget.com,
-	nika@nikableh.moe,
-	martiya.ar@gmail.com
-Subject: Re: [RFC] bitland-mifs-wmi: optional Fullspeed and four distinct modes on RedmiBook Pro 16 2024 (TM2309)
-Date: Thu,  8 Oct 2026 18:29:56 +0300
-Message-ID: <20261008152956.1513547-1-uselessfire@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <CAFpZVRM_A9K+6-eFy_zfC-8gE+3r7pcdhgU+3M3g_XdQ_SJdiw@mail.gmail.com>
-References: <CAFpZVRM_A9K+6-eFy_zfC-8gE+3r7pcdhgU+3M3g_XdQ_SJdiw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nSRH9aSn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791481037; x=1823017037;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=l9biZ42ciHgmp6AyO4QD+6TuVAF+G58zBEmMDzvB8LI=;
+  b=nSRH9aSnLvQlVsvTwo09Al7cfaEU24AEW/+DCG4+eq/YyPW4zbSn57Xq
+   dkwA5HpWzcgmM6H7rZweJAT2I86C2iOB7QK1t7LiNTQWjvGKmKDjG1vXl
+   Iaj+ain6MWFE8S7NbvttYV/qkpKEcXNLd9VcpPVYSvQv59wClmwD6xMCe
+   qBvhiWEVxErFu2qM/5oQIw4+LTIVReB+hIgIZW2Pj+F0fobExaLEqNlih
+   sOse8C3SSU/RhhC0XU2x5zdqIPVwAxUnGlRhIN30QvIFfwsEKmbk+OnSl
+   IhKPql8wX21ESUcjMQC1WeIw7wvbBYVDoNRDl2muwvdyZ14NjqCQBXPYe
+   g==;
+X-CSE-ConnectionGUID: OS1aQFt6Qt2dqbgkuWkYZQ==
+X-CSE-MsgGUID: ygrlrAFmQjiGVhI72kZzsQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11928"; a="299251"
+X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
+   d="scan'208";a="299251"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:37:16 -0700
+X-CSE-ConnectionGUID: fTYn7KNoTQC21Js6kQuBcg==
+X-CSE-MsgGUID: eDo21s84RFeAUzrd85oFlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
+   d="scan'208";a="428708"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 10:37:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Hans de Goede <hansg@kernel.org>, Sanket Goswami <Sanket.Goswami@amd.com>, 
+ "Mario Limonciello (AMD)" <superm1@kernel.org>, Rong Zhang <i@rong.moe>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260901-amd-pmf-fix-outlining-v1-0-b54ff94d3d45@rong.moe>
+References: <20260901-amd-pmf-fix-outlining-v1-0-b54ff94d3d45@rong.moe>
+Subject: Re: [PATCH 0/5] platform/x86/amd/pmf: Clean up undesirable
+ function outlining
+Message-Id: <179148102914.29028.5928287984821543239.b4-ty@b4>
+Date: Thu, 08 Oct 2026 20:37:09 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-Hi Aleksandr,
+On Tue, 01 Sep 2026 23:02:10 +0800, Rong Zhang wrote:
 
-I have the same machine (TM2309, BIOS RMAMT6B0P0B0B), and your values
-match mine: quiet 2, balanced 1, Turbo 3 and full speed 4, with odvp1
-2, 0, 1 and 4 [1]. Milos found the same on the TM2307, which is built
-on the same platform and BIOS family [2], and tested four distinct
-profiles there [3]. The Turbo and full speed PL1 values you saw (75 and
-90 W) are the AC maximums of the GDDV targets here as well.
+> The amd-pmf driver is notably bloated due to undesirable function
+> outlining and linkage. Simple and dump helper functions as well as
+> wrappers should really be static inline functions instead of global ones
+> from the very beginning, or else they are prone to the overhead of
+> function outlining and linkage, which bloats themselves and their
+> callers.
+> 
+> [...]
 
-As for the status: Ilpo asked that per-model entries be based on the
-generalized profile handling Chris is preparing, not on the ops table
-in Mingyou's v6-v9 patch 5 [4]. That series has not been posted yet. An
-entry for the TM2307 and TM2309 would go on top of it, and I will Cc
-you; a test on another TM2309 would help.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-On full speed: the firmware accepts mode 4 on AC and on battery without
-any check, but Fn+K never offers it on this model, even with the stock
-140 W charger. As I wrote to Milos [5], I would suggest performance =
-Turbo for the entry, since power-profiles-daemon maps its "performance"
-profile to platform_profile "performance", and full speed as max-power,
-which platform_profile_cycle() skips, so it is used only when chosen
-explicitly -- which matches what you asked for. power-profiles-daemon
-neither selects max-power nor recognises it yet (it keeps showing the
-previous profile), so for now it would be chosen by writing
-/sys/firmware/acpi/platform_profile directly. Whether max-power is the
-right place for it is up to the maintainers.
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
-One more thing for this model: please do not write to the kb_mode
-attribute. On this firmware command 0x10 is the battery interface, and
-writing "fixed" turns off the battery charge limit [1]. The patch that
-hides kb_mode there is [6]; a test on your TM2309 would help. The
-charge limit itself is the subject of a separate thread [7].
+The list of commits applied:
+[1/5] platform/x86/amd/pmf: Inline !AMD_PMF_DEBUG stub
+      commit: b8f7b92fcbd7e5801bbd18a42a9c10ef03e2ec35
+[2/5] platform/x86/amd/pmf: Inline simple helper functions of Core Layer
+      commit: c78d7b826cfc1642c78f5022b5acbf5ef09d88f9
+[3/5] platform/x86/amd/pmf: Inline simple helper function of SPS Layer
+      commit: 079cbf13340688ef697252b18bab9533acba3ecb
+[4/5] platform/x86/amd/pmf: Inline simple helper function of Smart PC TA interfaces
+      commit: ef1e7071c1f2832f3a7001be7f7c04bd872c14ae
+[5/5] platform/x86/amd/pmf: Inline wrappers of ap{mf,ts}_if_call_store_buffer()
+      commit: b21ebc6638d56f6007aff1fe93c5838dc138a364
 
-[1] https://lore.kernel.org/all/20260930015058.3076905-1-uselessfire@gmail.com/
-[2] https://lore.kernel.org/all/CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com/
-[3] https://lore.kernel.org/all/CAObHBTxHQDfVH8Su1DLABtC5uUsAGBBk=KvcCOvtTs5gMGamnA@mail.gmail.com/
-[4] https://lore.kernel.org/all/094577b3-7b96-72b6-4ef2-a5d1db457401@linux.intel.com/
-[5] https://lore.kernel.org/all/20261008-tm2307-tm2309-entry-uselessfire@gmail.com/
-[6] https://lore.kernel.org/all/20261008-bitland-kb-mode-v1-uselessfire@gmail.com/
-[7] https://lore.kernel.org/all/20261008-xiaomi-charge-limit-0x10-uselessfire@gmail.com/
+--
+ i.
 
-Thanks,
-Anton Karasev
