@@ -1,331 +1,148 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FC6378D7D
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 21:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791496340; cv=none; b=lV6OkqMjO10S5yStIsPvDERVOXmFEK4Mwlchw3Cxfu+ILAU5MHFnnxq7gcc9OsrTDUNOYkeWYFF+YBL9i08GHUibxDIlpnlsUVh+N5jdnnQIquodB0UPFaB9mzJEjb/wjvq4vjhCN9uXcjy8SvhlcaNiynnyjfuAwnt0fxClO7Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791496340; c=relaxed/simple;
-	bh=FhHUcaD8UXSzbiyTZq4K/AtVaFMkDoVaPhEfzChUsDY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=nvWmfnZrWGQmoJzv/mUx0N7mQUzMap4sQtZyZ+G5ZiYS0EtqgJxqqJCqx4AvRzoyaLbyDsXu07YbccdwbRbSOFwF3X+b3QTv28JMPBNRu/p26saRb2FTQmgrZpYvt9Nu6j1v0u5WL99VxbsdoKDz5FY1QqReLDSzqK915Y4oEc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pQKn+KYf; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B163DDAED
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 22:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791497219; cv=pass; b=MCeKvGlsQK7O7elEnD9RisbhKlZ05JiLd6Yj4tY+tDgh2YbZY71ELaFBpq4kZX7owyO6+H3Kbix9ZPYkJitPsF/lZAf84zkNL06uyK+TudDEB7e4SkXuKuhbE0VzWlqE4s6wPAvKwha4JMGJqaZ31qhTRq7CTPQ6m7r03d9J2Ac=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791497219; c=relaxed/simple;
+	bh=Mm6Mq9jowhH0uQYJlH/2hj5A+8bxYxRNe0xd8Ii43Cs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fJ+luEzugLwTE4eVEoaZTRUlbuOPEtrLQPlZIQJq982nXBIDW6OOEoV3IWmwq+QUxIKWAoGT0SGLofNehXO7xZ02fdC68o4OPxPWmRzhpl8zAMAijfXGxLuMzyQ2klP3ou6616V9T/27U2bSqhO+2t71Y41r4pKqWaMAe12DL/Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f1vkKEqe; arc=pass smtp.client-ip=74.125.82.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQKn+KYf"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48afbd2c386so2673175f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Oct 2026 14:52:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1vkKEqe"
+Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-15ea896ddc8so5253712c88.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Oct 2026 15:06:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791497217; cv=none;
+        d=google.com; s=arc-20260327;
+        b=XUHaLRb+1qaO2LhsZ/LDnbnMeTnngSfRkjy1OIygCNS92CJUVR983EPsyfFXcPRutz
+         na1sFQE10GH3iKREz7/Lvnt5zMWXBthPNKe5As0dtP+iteRtCfgFzq1JXwrvV9VANbWs
+         U0Lav2NUclxT7Jy4a8Ae3rAKUtQNv7WHcfsEU0/7cTbZ3Eo//5ZhFJ4XdsDt9kOHT3ol
+         EHWOd1vWLApLc5AB9agb0fW4xxjNZCm9dmuiy3YVcbWLVQY1RSjkah7/MhEKeOXL93wB
+         iob2jU3d2ay8rK42lhB8ovgiShwoARYtgu2bw2vsa5XEdOFHjXonw/w6kw1r8nd604TI
+         u7+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=Mm6Mq9jowhH0uQYJlH/2hj5A+8bxYxRNe0xd8Ii43Cs=;
+        fh=4CURK3yYFl2FGJmpTaID3yj+oeQVKGo2LQOk/d7qQIQ=;
+        b=Lv7/Vgct5ckPMfUFe+5PQeGNypwWLHdPIRUgkYn5w5K+nCeUYGCmwSxd04GDf9Pect
+         96Cw17hWFRx2MAIMBSd7YvE13mhbwZ5d9vJj00wWwlXSTQMOv1inXbtVSqiMBqvohc/I
+         hctkHEcU6qIxAMxcbkpEkxL+h2zlt34+DoVXubVyYocY/yRH8pX5M3Xu9nlJnztN46Fd
+         Fv+r0NAeU6wfRFitAdGsRBdBiytAg0BUhCWf7/ELx6WJfT1T4Xgdb8fmje4a+/6mWV2c
+         ndAggaP7Yi8Y7POVh5CD37kgP73o53z5jDOj5mriFuIWoVum64o7Qd0y8zLSwFDWsRMK
+         iROg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791496336; x=1792101136; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id
-         :references:in-reply-to:user-agent:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=/pDad/p1iYw8HWC/CzvqEa/trY0DbP6hqYsWT2Ny3bA=;
-        b=pQKn+KYfohZHYdKIhpQ42znbsuDIFpCuzLdT3niCwj06xbznGXVvjZOu8XgfhZvHQu
-         Ljed8qroJ5SZ4Nfwu7yn9MRwFZaVhqvhNE8d1wmkcZR16BETT3G4junF0irSBLjRuYzE
-         6KGNmTcl0oAgj1h6b2tMukuSAEmMIn0w43OjFpsPS3VA19Uef7YD/PyGwqhcRcYiUimR
-         df+uYMq9EAYnjN/4l608ARCL3leI+lWQangbIOwjYkvgq6fTWnDM8Irbj1fMeejNwXZd
-         QC0pnqImVmsU8Ssd2sx8dJJuDUcfQpg4Ax50G+mSc3u0sx7WOHRgvSllxn0XUOjrjUhd
-         Tr8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791496336; x=1792101136;
-        h=content-transfer-encoding:content-type:mime-version:message-id
-         :references:in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1791497217; x=1792102017; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/pDad/p1iYw8HWC/CzvqEa/trY0DbP6hqYsWT2Ny3bA=;
-        b=PBu8yIcvM+LASjyIbeILP+7RY4t0wLA251SzPuNuJRCeE8VZPO4pBWXJRnM6/iVIl/
-         CP76AWwfkAszZmoYv0AK5d4Hmswc7rPp8gp9As9b5xK6qYNkGajD9MPvJfK6mzZ749co
-         2K7TGrJ1V4kpYataOkt3Xc0wCvywXYtbG4bH2IpjYJHuF1qC2sEJxX2fr/EvvlDfT4HF
-         Ao5O4w1cMX8YxtljRpy2Q0CyUBOcRafvh8lBWXU/WgAoT4UsIlGeupDnZpT/ElRBKVLa
-         zj02NLqtPn7iko/vbLtrOfhJFPzggUwfhFdnwt4iQEmGqyaJTaewmkbQuWBIKg+nXm69
-         weWw==
-X-Gm-Message-State: AFq9FYJDBnRmNSj2Ig2yY7VyDRY8RZxX29wx52xweXwldqJ/fl6XyY06
-	P2m0w/iZVL/YiHPR8T8fITDMStKAFkVdTsXkbW5+3YWm27uNuE5NLY5ec7Y2CA==
-X-Gm-Gg: AYBFou29QdmYOsGACMjyZ3oewfCantttfh25CELHtZs/zPRV/Z6WOBcKDJiRqdNSI/r
-	K2/2cAUgBNLefXh7Lj9vdSGsg0gVcfR2OUbUCq3NonWNsLA/5QyTxZ7n09URDK8s0uqWsaT71y/
-	zrxxWwa4zoD/9N7k7AQ1Wjxi6YE63OXUPm12lUfIrfIBTL3Hlnj0FITKEL9eeSEA+A6UQzNifO0
-	4N6IvDU6qm6XLc0aB8kfV+k65qkg9XS0zLY88dV7UceJVQbPC2sYlKhHtuwlvL2p1vOaYLgCjPy
-	0Km1QWub0kLQwjuDYfg4QvDXJ1qBHAktvcQRYifkSBukycKcm8iJFAEgYER2rG1mM06ZdRL/jbm
-	gOBEwRy4wCM+gzeFw97hiiHvtWqqWVQhHC/eJKp0LnyTid4tJC2BGNj67yPqm/xlKtRSPctbFuk
-	zId3JYGKAWwglDZYTinv2LHi5AX85bgb4At3Ix+zL0rdWn7jQYomOaTFlxWvndxnxOfWsSeYMiR
-	v6AvgnjY77h2qP53A==
-X-Received: by 2002:a05:6000:2205:b0:48c:54c0:4cf3 with SMTP id ffacd0b85a97d-48db94b3293mr405257f8f.28.1791496336232;
-        Thu, 08 Oct 2026 14:52:16 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([2a02:b027:8013:a311:38c3:93ff:fe00:31b1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db9463a9dsm406901f8f.6.2026.10.08.14.52.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Oct 2026 14:52:15 -0700 (PDT)
-Date: Thu, 08 Oct 2026 23:52:11 +0200
-From: Denis Benato <benato.denis96@gmail.com>
-To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Denis Benato <denis.benato@linux.dev>, Bartu Alev <bartualev@gmail.com>
-CC: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_2/2=5D_platform/x86=3A_asus-wm?=
- =?US-ASCII?Q?i=3A_add_TUF_keyboard_RGB_readback_support?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <570a8f23-0782-8a45-d62f-c95bb28dade9@linux.intel.com>
-References: <20260925200744.129714-1-bartualev@gmail.com> <20260926005625.171560-1-bartualev@gmail.com> <20260926005625.171560-3-bartualev@gmail.com> <c0301eb2-62b9-4dbd-ba24-3a2c40675b20@linux.dev> <570a8f23-0782-8a45-d62f-c95bb28dade9@linux.intel.com>
-Message-ID: <2C6A459C-890A-418C-9331-D8B521B226A5@gmail.com>
+        bh=Mm6Mq9jowhH0uQYJlH/2hj5A+8bxYxRNe0xd8Ii43Cs=;
+        b=f1vkKEqet1+Rex5d2zo08YKGXcgamUj+Np1KqHjJ7UGhYY5vJUB08C+55i+THsyfaA
+         6b/dTbqZN5yhbPuMDtZAd+k1r9ZxnAB7o0TGkW89nqziQ30QnJj0UQKLBmAkvLxRUW07
+         rhmUHMHFNU4GLvn0ioeBc7j7MAe9IxYO2oPNh5a58kCjym5M2itxBvs6G+2Acq4WgGgb
+         KSZY3QYTroABtUCBiUqYNazDEb3omGBdbiAi5THDwdNqriWcU+kVb2jFJf9T7hMEz3jT
+         GZXVmlKInkwautUf76S0mxvBerrdVm+qUkjC+PL4m2bBP17icBlxN30qJt0uuQgV5PsU
+         GWMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791497217; x=1792102017;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Mm6Mq9jowhH0uQYJlH/2hj5A+8bxYxRNe0xd8Ii43Cs=;
+        b=JmaTO9TZtgb8p2xmlzZMa8dOxM5w+rGGDdYEH4ThIzbrEe4gSZrPFJXer9LDsxf9gO
+         biT7wZffTvavOAtPKyvL+P6X0YSsLeRC+FL2ViTAr9TV1K6ZDylaCJ3e8QFEWyZF+76w
+         sZTsJRtRDF0M6BNlCAlun1cSF9LgvCjoju7ox1AywmwyKGxvJH748geG+k989l9D1DCf
+         YM4V5yxCLMV0MgBLHw3kceOt0nEQj67PqYGgHb/3WLQs+19jznM/oTosAbGDpGfQTyQ5
+         uAoVjBJoCq1PdZgcBxKEl64HAEdsfPoopQAg+iv+Qf2UNkFP5cvzbWFds3dYrXAUu0yo
+         tIbA==
+X-Forwarded-Encrypted: i=1; AKwUvBwbaS3o5pLnTK4ccQnBA7YZK+2c7ItGaqDaty6FCZb7XJzssM0In6KiWLWIpfWxS+pmA9hCPNFbOkV/t6Sl4wollBE2@vger.kernel.org
+X-Gm-Message-State: AFuF++lPp425zcjXGzwEnayHMuRQMSNFZQYXMDLkPlGHjLBa9gIQ8cbS
+	Quo/Ty7NjDF4yQd6VsjFQBZkRV6weI59ZnvnrN4H6TrabA5N/3bIazQTsfCh+zdGFTFTga4itZ9
+	gNbKGDAVV4J2f8z8Wa+JJFb0eQAQv68Q=
+X-Gm-Gg: AYBFou3Ey6RbU2BqpP7CERwn6SX3f0feTPl9zwCZSewMRqYMLj5tQNuqinLutiBe7T9
+	6PT4MJqxQO/kaiotSAp6UPmK9w2ce1LEfdXX3Xo3OBsmn6jH9oYfeqV7kQTDSE0sV2Crtmra8D7
+	HNAzcHDZF2bYJKm8gZGTZntwkiCrhA4gr+GPB7QOB8hqmqqcwUaJ6MaGnVMtMzkSMJmcj5EhqSr
+	Oay80NRPU1LYHn3AxCTbGDXuMqm2NG7TZjmPNZKLKglN2M+oxIiVHL1TPzYQ0myqRgUUnsZ6yjY
+	XF+lA3efUehvZpioQIhEdSizsgOPLzLu96zoZ0vQAnm6ILU5a4Lydbw0NBhYqIfWTPCYibdySZB
+	WvZB1aw1qWXqrFLvwqpj4ZGn2EULMaXhQjOVbGCGun68ASwCj7A==
+X-Received: by 2002:a05:7022:3f0d:b0:143:3c9f:109e with SMTP id
+ a92af1059eb24-16208be0009mr8318995c88.41.1791497216698; Thu, 08 Oct 2026
+ 15:06:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20260929134503.17249-1-qby140326@gmail.com> <20260929134503.17249-6-qby140326@gmail.com>
+ <20260930015058.3076905-1-uselessfire@gmail.com> <CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com>
+ <CAObHBTxHQDfVH8Su1DLABtC5uUsAGBBk=KvcCOvtTs5gMGamnA@mail.gmail.com> <20261008-tm2307-tm2309-entry-uselessfire@gmail.com>
+In-Reply-To: <20261008-tm2307-tm2309-entry-uselessfire@gmail.com>
+From: =?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>
+Date: Fri, 9 Oct 2026 00:06:44 +0200
+X-Gm-Features: AclHuK_7edxLVp0ZmePKHkxTrJkoL11PIOzToLsoDZnlHxm62_q336927ucqfRY
+Message-ID: <CAObHBTys45jfPro1PhNBgYVzM7mozMScE56k9Mt9mirmEuCCrA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/5] platform/x86: bitland-mifs-wmi: Add per-machine
+ ops table
+To: Anton Karasev <uselessfire@gmail.com>
+Cc: qby140326@gmail.com, ilpo.jarvinen@linux.intel.com, hansg@kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	W_Armin@gmx.de, ilya.gladyshev@linux.dev, kento@kekto.ru, 
+	ericted8810@gmail.com, chris@miget.com, matias.civadda2342001@gmail.com, 
+	btx342@gmail.com, wleizc7319@gmail.com, wolf109909@outlook.com, i@rsplwe.com, 
+	bozhenpeng93@gmail.com, martiya.ar@gmail.com, aleksejirlik@gmail.com, 
+	zsanya322@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Il 8 ottobre 2026 14:48:31 CEST, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvinen@linu=
-x=2Eintel=2Ecom> ha scritto:
->On Sat, 26 Sep 2026, Denis Benato wrote:
->> On 9/26/26 02:56, Bartu Alev wrote:
->> > TUF Gaming laptops expose kbd_rgb_mode and kbd_rgb_state as write-onl=
-y
->> > attributes (DEVICE_ATTR_WO), preventing userspace from querying the
->> > active hardware configuration=2E
->> >
->> > Add readback support by querying ASUS_WMI_DEVID_TUF_RGB_READBACK
->> > (0x0010005B) via the WMI DSTS method=2E On supported platforms this
->> > evaluates the DSDT method EC0=2EKBLS(), which returns a 16-byte buffe=
-r
->> > containing the active lighting mode, RGB color channels, effect speed
->> > and power-state flags=2E
->> >
->> > Introduce kbd_rgb_read_status() to evaluate and validate the buffer,
->> > and convert both attributes to DEVICE_ATTR_RW=2E Map the hardware spe=
-ed
->> > codes (0xe1, 0xeb, 0xf5) to their sysfs indices (0, 1, 2)=2E
->> >
->> > The command field is not part of the status buffer: "immediate vs
->> > save-to-flash" is a property of the write verb (0xb3/0xb4), not of
->> > readable state, and the EC mirror is updated identically by both=2E
->> > Readback therefore emits a synthetic leading '1' - the canonical
->> > input form userspace writes - so that output matches input=2E
->> >
->> > Suggested-by: Denis Benato <denis=2Ebenato@linux=2Edev>
->> > Signed-off-by: Bartu Alev <bartualev@gmail=2Ecom>
->> > ---
->> >  drivers/platform/x86/asus-wmi=2Ec            | 79 ++++++++++++++++++=
-+++-
->> >  include/linux/platform_data/x86/asus-wmi=2Eh |  3 +
->> >  2 files changed, 80 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/platform/x86/asus-wmi=2Ec b/drivers/platform/x86=
-/asus-wmi=2Ec
->> > index db6ee1974838=2E=2Efe1dcc7701ad 100644
->> > --- a/drivers/platform/x86/asus-wmi=2Ec
->> > +++ b/drivers/platform/x86/asus-wmi=2Ec
->> > @@ -1046,7 +1046,58 @@ static ssize_t gpu_mux_mode_store(struct devic=
-e *dev,
->> >  static DEVICE_ATTR_RW(gpu_mux_mode);
->> >  #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
->> > =20
->> > +static int kbd_rgb_read_status(u8 data[16])
->> > +{
->> > +	int err;
->> > +
->> > +	err =3D asus_wmi_evaluate_method_buf(ASUS_WMI_METHODID_DSTS,
->> > +					   ASUS_WMI_DEVID_TUF_RGB_READBACK,
->> > +					   0, data, 16);
->> > +
->> > +	if (err)
->> > +		return err < 0 ? err : -ENODEV;
->> > +
->> > +	/* DUBF[0] is a constant 1 set by the AML: anything else is not KBL=
-S */
->> > +	if (data[0] !=3D 1)
->> > +		return -ENODEV;
->> > +
->>=20
->> -ENODEV or -ENOTSUPP ? Which one is better suited for these kind of thi=
-ngs?
->
->If something is not there, -ENODEV is appropriate=2E
->
->Unexpected comms is -EIO (-EINVAL is unfortunately often misused for=20
->this but it -EINVAL is to say input parameter was wrong)=2E
->
->-ENOTSUPP is not a standard error code (the correct one would be=20
->-EOPNOTSUPP)=2E
->
->TBH, I don't really know where the line between -ENODEV and -EOPNOTSUPP=
-=20
->is=2E I'd personally use the latter mostly for the case where software si=
-de=20
->lacks something=2E
->
->In anycase, wrong errno's are endemic and hard to fix without running=20
->afoul with something as they often relate also to userspace ABIs=2E
->
+Hi Anton,
 
--ENODEV it is=2E=2E=2E=2E Or -ENODATA when we can write but not read back =
-the status?
+Ran your questions on my TM2307 (kernel 7.2.9, for-next plus Chris's
+GET-only change).
 
+On battery the driver refuses balanced-performance and performance, like
+you said. But if I write the mode straight to QFAN, both 3 and 4 stick on
+battery without complaint. So same as your TM2309 - the firmware is fine
+with it and these boards don't really need the capability check.
 
->> If we go with two separate sysfs attrs you don't register the read one,
->> otherwise I am not sure=2E
->>=20
->> > +	return 0;
->> > +}
->> > +
->> >  /* TUF Laptop Keyboard RGB Modes ***********************************=
-***********/
->> > +static ssize_t kbd_rgb_mode_show(struct device *dev,
->> > +				 struct device_attribute *attr,
->> > +				 char *buf)
->> > +{
->> > +	u8 data[16] =3D {};
->> > +	u32 speed;
->> > +	int err;
->> > +
->> > +	err =3D kbd_rgb_read_status(data);
->> > +	if (err)
->> > +		return err;
->> > +
->> > +	/* Map hardware speed codes back to sysfs index:
->> > +	 * 0xe1 -> 0 (slow), 0xeb -> 1 (normal), 0xf5 -> 2 (fast)
->> > +	 */
->> > +	switch (data[5]) {
->> > +	case 0xe1:
->> > +		speed =3D 0;
->> > +		break;
->> > +	case 0xeb:
->> > +		speed =3D 1;
->> > +		break;
->> > +	case 0xf5:
->
->Name literals with defines=2E When it comes to offsets, consider if a=20
->struct would be viable instead of byte array + named define index=2E
->
->> > +		speed =3D 2;
->> > +		break;
->> > +	default:
->> > +		speed =3D 1;
->> > +		break;
->> > +	}
->> > +
->> > +	return sysfs_emit(buf, "1 %d %d %d %d %d\n",
->> > +			  data[1], data[2], data[3], data[4], speed);
->>=20
->> We had this discussion in discord so I want to update everyone reading:
->> the status returned is the current one and both cmd=3D0 and cmd=3D1 on =
-write
->> update the current status=2E
->>=20
->> Therefore this is an asymmetry that doesn't really need to be,
->> what if we introduce another sysfs that is RO? Ilpo?
->
->I'm not entirely sure what's the suggestion=2E
->
+Fn+K only ever goes 1 -> 3 -> 2. I pressed it around twenty times while
+watching QFAN and it never landed on 4. So I agree with your mapping:
+performance should be Turbo (3), and full speed should be max-power so
+nobody gets it by accident from the desktop slider.
 
-1 sysfs attribute for read and don't touch the write one since they are in=
- two different formats=2E
+You're right about the suspend problem too. My patch didn't handle a
+stale 0 at all, so it would have broken suspend the same way it did on
+the TM2426. Reading 0 as balanced makes sense. Thanks for catching that.
 
-Like one returns 4 values and one accepts 5: they are asymmetric hence my =
-suggestion=2E
+kb_mode reads back -EIO here on for-next, so your patch should hide it on
+this board as well. I haven't built your patch yet though, so that's just
+the precondition - happy to test it properly if another report helps.
 
->> > +}
->> >  static ssize_t kbd_rgb_mode_store(struct device *dev,
->> >  				 struct device_attribute *attr,
->> >  				 const char *buf, size_t count)
->> > @@ -1099,7 +1150,7 @@ static ssize_t kbd_rgb_mode_store(struct device=
- *dev,
->> > =20
->> >  	return count;
->> >  }
->> > -static DEVICE_ATTR_WO(kbd_rgb_mode);
->> > +static DEVICE_ATTR_RW(kbd_rgb_mode);
->> > =20
->> >  static DEVICE_STRING_ATTR_RO(kbd_rgb_mode_index, 0444,
->> >  			     "cmd mode red green blue speed");
->> > @@ -1115,6 +1166,30 @@ static const struct attribute_group kbd_rgb_mo=
-de_group =3D {
->> >  };
->> > =20
->> >  /* TUF Laptop Keyboard RGB State ***********************************=
-***********/
->> > +static ssize_t kbd_rgb_state_show(struct device *dev,
->> > +				  struct device_attribute *attr,
->> > +				  char *buf)
->> > +{
->> > +	u8 data[16] =3D {};
->> > +	u8 flags;
->> > +	int err;
->> > +
->> > +	err =3D kbd_rgb_read_status(data);
->> > +	if (err)
->> > +		return err;
->> > +
->> > +	/*
->> > +	 * data[6] power-state bitmask:
->> > +	 * BIT(1) boot, BIT(3) awake, BIT(5) sleep, BIT(7) shutdown
->> > +	 */
->> > +	flags =3D data[6];
->> > +
->> > +	return sysfs_emit(buf, "1 %d %d %d %d\n",
->> > +			  !!(flags & BIT(1)),
->> > +			  !!(flags & BIT(3)),
->> > +			  !!(flags & BIT(5)),
->> > +			  !!(flags & BIT(7)));
->
->These BIT(x) should be named with defines as you clearly know what they=
-=20
->mean (I assume the _store ones too match to these so do the addition and=
-=20
->conversion in own patch)=2E
->
->A comment like the one above is almost always an indication of a naming=
-=20
->problem that, after fixed, makes the comment totally redundant=2E
->
->We try to leave comments for something that is tricky, non-intuitive, or
->complex=2E
->
->> > +}
->> >  static ssize_t kbd_rgb_state_store(struct device *dev,
->> >  				 struct device_attribute *attr,
->> >  				 const char *buf, size_t count)
->> > @@ -1146,7 +1221,7 @@ static ssize_t kbd_rgb_state_store(struct devic=
-e *dev,
->> > =20
->> >  	return count;
->> >  }
->> > -static DEVICE_ATTR_WO(kbd_rgb_state);
->> > +static DEVICE_ATTR_RW(kbd_rgb_state);
->> > =20
->> >  static DEVICE_STRING_ATTR_RO(kbd_rgb_state_index, 0444,
->> >  			     "cmd boot awake sleep shutdown");
->> > diff --git a/include/linux/platform_data/x86/asus-wmi=2Eh b/include/l=
-inux/platform_data/x86/asus-wmi=2Eh
->> > index b5ed8c83ace1=2E=2E1447c7f354bc 100644
->> > --- a/include/linux/platform_data/x86/asus-wmi=2Eh
->> > +++ b/include/linux/platform_data/x86/asus-wmi=2Eh
->> > @@ -161,6 +161,9 @@
->> >  /* TUF laptop RGB power/state */
->> >  #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
->> > =20
->>=20
->> The pre-existing one should probably be renamed to make clear
->> it's write only and it is a command=2E=2E=2E In its own patch=2E
->>=20
->> ASUS_WMI_DEVID_TUF_RGB_CMD probably?
->>=20
->> > +/* TUF laptop RGB keyboard status readback*/
->> > +#define ASUS_WMI_DEVID_TUF_RGB_READBACK	0x0010005B
->> > +
->>=20
->> ASUS_WMI_DEVID_TUF_RGB_READ_STATUS ?
->>=20
->>=20
->> >  /* Bootup sound control */
->> >  #define ASUS_WMI_DEVID_BOOT_SOUND	0x00130022
->> > =20
->>=20
->
+Command 0x10 looks the same as yours: subcommand 1 reads SOH1 and 2 is
+bit 0 of LONL at 0xA4. The only difference is that subcommand 3 compares
+ADPW against 100 instead of 140. That looks like the most this board can
+take over USB-C: ADPW reads 100 with the stock 100 W charger on either
+port, still 100 with a 160 W one, and 0 on battery. The ports report USB
+PD 2.0, so no EPR. My limit is off (LONL 0, AFBC 100), SOH1 100.
 
+One more thing, since you use thermald: with int3400_thermal loaded,
+thermald --adaptive sets the MMIO PL1 from the GDDV table here too (about
+25/50/90 W), but the CPU still drew 27 W because the MSR PL1 stayed at
+28 W. Restarting thermald puts it back to 28 W; profile changes don't.
+With it opened after thermald starts, sustained load settles around 56 W
+at 101 C, and balanced at 45 W. Does your MSR PL1 also read 28 W after
+thermald starts?
+
+Happy to do the joint TM2307/TM2309 entry with you once Chris's series is
+out - either way round is fine. I'll put my Tested-by on Chris's thread
+rather than here.
+
+Thanks,
+Milos
