@@ -1,108 +1,124 @@
-Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848F318E025
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 03:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791430898; cv=none; b=Rejka1IvtFXhRffMuSiMVsZPAJuMSR8RCW8tIhcO5kA7WAuJWIENzf95D2RFCu5Fej7jSV57tgR25v4AOtibDh+fQPlp+KWrM1wP7rz366zR+5q8i33mPuQ0g+lVcsn2SooW1Qsvw3ocNDQ17mI0RQIRhpFY1Q9fjbCF1Je13JE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791430898; c=relaxed/simple;
-	bh=PFp7O61Aa4JJbIqJLJcC6k31EXyHdzSQZt/p+qTluy8=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=hqNvS30gDmL6IDdKcyVYnetWlT+QCKjmMPYAmE24sLGQ1S1Qwil9yoC/46yPXLROXJuSNcEkKqRenX2D/INOdmvcZricj+7O2irNZlLbG5/7CYMIbRfWySeztCHp+jkk06XUhFQSbEtXzsDHHPJbEasLg3MTxxsXL6WeZzwvWew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=bUekck38; arc=none smtp.client-ip=203.205.221.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABF72741B6
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 03:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791431339; cv=pass; b=PwIZLkdaySu4TB2+7QaIq9inz5C/x/rlyLB4gwbcvw6CIJtk4nH7JxOGA3nwtiUEYMV/UhsQvzYwjZCIN8xbDTZzuEaivUGS1iZBHmzMO7PYuU1ZhQ1iI3BAWFG30fSG6ctn2qsb+7LhuXYIYO3Cwv7PDPaUSHAZ8Y7ogFGHnXg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791431339; c=relaxed/simple;
+	bh=LPFU61oTqBQe4zEAKUWR6UAJEHJ7Fl8Qnrkmu7wriAc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q5mFRtcIKwkTwjq6lz5jscJEU77TZpaIkbG0kuyoJ2lrCY5t6r3WsSjhMxVZG2Zbk7uq6D3aHa2xhEhz7PQmvLugi5Hkiflb3JQxNFSNpeUIGlQWEJKmOMjuODyaTnHnz4Est/TvOd2/jvXXuVkg7B9yurncA+feXwtRoGwRBd8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e2fN53oj; arc=pass smtp.client-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="bUekck38"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1791430890; bh=PFp7O61Aa4JJbIqJLJcC6k31EXyHdzSQZt/p+qTluy8=;
-	h=From:To:Cc:Subject:Date:References:In-Reply-To;
-	b=bUekck38B+rTNTcDsPG1u+4YKjeoMBc+ZvK9big5Af3g6NnLzm7jGQC3PakEEmiWZ
-	 watIoh76AoMaOfxNFwr3Ho4sJSkD/1XactoUt6z2JaNQBs+sHyGb4eDu5AjVQ5i1EX
-	 /o8I6DEQN/kMNtIhTMupqEolOk6GStdUSYbZWWX0=
-X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
-X-QQ-XMAILINFO: OLAC/xahmq2GKWKWMOzNNVtjKYH2VdNzDAfwVjduifPL/KYNfakJb+1A8Mc6Fv
-	 mkqPxWqMEtA8ZPUrV+wspnt2tVaq7ywxjjrnsUL72cCueii1hJqcoCl6cz6IIM/YxfeUdFRKru563
-	 KIeb6vqplJklwyzTEKReqbAJhz5hdVNa5AuXyMrZJJTXwt3b25mmW9ancHzZJ00rEsKuBFXqAWrwt
-	 RZEGwylvhJuIoM3QJ/R42IHnFTY83kaIupFkqBUMuvlMSl2tPZSCgmgAtXppRjNAbDScPuNnq0Q+9
-	 kIM4b6ktwmSYyM1e76aF8QDcdjkKHfjcDIzAWpy6x0cpV/dP6Xy7kAF0SK+Uxia536goJy6NLWhO4
-	 HoLW5hTchDu6xqIKKO3QMSy+KVLcNXGFQVR8s2Lc5FUH0purTGMb6FZuSNHXIalD3GML8eLVlAEbt
-	 vhT0+HfZrxHxHbXgF/qbjUun2DJzWl+oLSATgSCGfz+ThMTH/7e4T7jzlMhe9wTYcEHSqyB8x1sJK
-	 stNKLV+G/sf4fFqgPJvJgkYBEZUr72wMYXWoHLJ/yJmSDbA7EbPMopTwwAjprGT5F9l++778oys6a
-	 TTyDWjWihTVbwN3qCBT968aSGajGjV9VHDnFjkZSq7gtI/cek08GSkKGrhyh9QNGgzBTRECwoWAiy
-	 ZFaIdxq/numGBT9cdlbXzv/jGjtMtuj8Wqpq8arz0WwgEy9wNcSmvMISc0xCjPZ+/1/xzARBtNr7G
-	 7AsV9JNoCbmcoFBfx7h8JJUqPo1A1Dz97iceguTCPa3uP9FLzauQHQYkLhYtf4pC5gmBXq1ihRIYP
-	 6Q4vP/9TeN5Je29VPTeSJ07Azu7clFdq8yu3SlvmGnScYL7p+QtcOEw0uDK6aVfZ3x7/p6vy7Jeb0
-	 X2iasxm2Xbm6cbQEcf8cUOolHbHOdemYYfOEkLibHATakRHLoL+Rd+I6IxxGPf3hltRzyiweTrapY
-	 lcxFU7a6mmUFTvJXJWgLtUaTVMbHHiEmHYhFhcbJRjkh1AFuDa+jReOERT20AkdwJkqfCAVSPOzTM
-	 /WwplLdYGuOtU1tr6XpW+NxN2oBq+e5csWH7RiLZX/nbyB1WHQyegCkpsLwoss6SGShghWgBQA9Md
-	 Ipo=
-From: "=?utf-8?B?YmlmYW5na250?=" <bifangknt@qq.com>
-To: "=?utf-8?B?QXJtaW4gV29sZg==?=" <W_Armin@gmx.de>
-Cc: "=?utf-8?B?cGxhdGZvcm0tZHJpdmVyLXg4Ng==?=" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [Hardware support request] uniwill-laptop: MECHREVO Yilong15Pro GM5HG0A keyboard backlight
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2fN53oj"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-33c2520ad38so5963836eec.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Oct 2026 20:48:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791431337; cv=none;
+        d=google.com; s=arc-20260327;
+        b=p1FECH3UMfIGIeoCv8BJ58+0IHT/xSZMfqbEJqPGyi/gucoyoR+ARAS4YSQtGDigk4
+         lVWb3UX1uQBgNBoxLqy6BAlstst8RikCHGU6kuNwBQz/PQVPcTamieRhI1UA0NyJZSPE
+         nT9J9lED9MZjdtwDXogscPh1ho5RmiEF6aCSXoz0Xsjr2f8m+vAUoJBhhV0y2+pnDQqW
+         8+v5MQp84V4ZVXFyyvZ1CEMnWm4VNYCIAw8CsD9w3gOnwa6PqsAVW587VZKIv6kBETKt
+         3t2siY6itpBmJD8nFHpXASYXFOQw3t/R17+heJ5iBq1m3z9GLfGl4Ci7Yz41hFAKZQCA
+         UB9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=c4ttmYSwUBzoQan5NiM6BdFKHOxOFt2+5WQ5DGwkjbg=;
+        fh=eDa9GDhtbJ2D3LBEXUXyVlDVRNfnAol0EPW97sOmvy8=;
+        b=XIZuoPMOdERPiioP6YRHuUbjDHUcjvw4g+JRL4keZaU7BaM3SP8krqc5o+kYvGbQL1
+         1gQ33a3+NgnYgkwti+GnXQxoG4m9+139BOB5PCjJHZqnIWrYEh+jbZ7TG3fYFobtJhqd
+         /Rj2QW9Zvw8uVlAzixNa+zIJsmRuRF5J1ukWHJjoGezvZnhHFrLouSLuZl0KSG/YsFIw
+         aSbz2BjQ5Vjta3ssJOWZ5NSBWX8he+etCiEGmOkOLboClOAyjYZveTBFLPcU77+1i8ID
+         jnBkv/mNLGT7wstH8HGmlJFCZ/HoA0o4RSK+KKF1gFePaKF18VmUZtZHM9Iw6/Xl4RjV
+         UbwA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791431337; x=1792036137; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=c4ttmYSwUBzoQan5NiM6BdFKHOxOFt2+5WQ5DGwkjbg=;
+        b=e2fN53oj5k6mvaYueIEmQHhhoiwmUA1oOpHEWB7EEVGZDBgo4lfAPEVAVrzuJ1f4rT
+         ifjGPMRRHyA40jpJ5UgiAV7Rc/175Zrgj3DijVELTQVoZsdGyNpxUO72sG9Wkt/YDBI6
+         +oobtdu5U8B2N+72uzaj3Ddv1PxxEubzKI4Gx4k78ntjFz5vKRrEOTcGCVXhQA2Ijz9r
+         Eg6t7qplaEpjut72YB6H6kBsx/l0CqY7i9hBnuZxnSVNBnAScoyPyQVDaLLcld1QZr88
+         jWblC5BBgXs2qnEdbVR1FefvBRKWe7ADOZjkAZbZcZw96h8ioegB0OSUU5mIDJPCRgy4
+         goyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791431337; x=1792036137;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=c4ttmYSwUBzoQan5NiM6BdFKHOxOFt2+5WQ5DGwkjbg=;
+        b=bA0kDZKIFVcmCCLgaaPElkMyEmDsw6dID2oMM2s883IyfHHE7jUR66fJPSLSR6zmHl
+         hbn/EsZ/bDQjsTFDpJmJnE5PnHDZ64ESRupoSI+vLgZ9UnNr88DZM8Bu1mcYOLRjwSHg
+         2pyB6ySF2lSPgNSfcQQY8JtTQWXkSUyb4V3QtUpDhf9r7fXGd8Ba2iD4SHrgL62948O/
+         0zsyy0LOXEmZlwSq03SML7m21zthYkMh7yLqvvYn8EtsrvLHoWbYs0DhYcop5ZdoJG4U
+         EnTvGHvRGk9y3w8qkvpG+7CpD8wQde5+YdqrWTXvtdY7rRA5pGe/BSsnOhQwYuNKBvtL
+         KjNA==
+X-Forwarded-Encrypted: i=1; AKwUvBxF3WjVwmcJfPgaI07mrwLusbBrTsdmJPiNdRcvEMdsCClvjLTvyTXSD9uONHLD0qIwPDs2yiGBF8AAkrrcr2d88lZb@vger.kernel.org
+X-Gm-Message-State: AFq9FYKqivboDJrf/96QQJ3H2e3/qU1RSV63uqfIk4WXxcxMtHiJv9+R
+	R8AmQ+trPZD0c+5Ovmq6is4osm1EtEUnnGeS0H+XiDgJK0MjnZZIIVDf/qUkkPV94TefHJ9qzTO
+	tnfqFyWLcKsA2Gu03hpZaFoFGkhb/PDg=
+X-Gm-Gg: AYBFou2v0tIOiYMW+yhgyoWh+lc30OeGJbqVLTDVJEr3e+UHPKyY/foMx43UQpvEDr/
+	B5QC7+hQPEs4VfaHPCsKC/21VniW8VC3dDrE8wK4PvkRt6720u14HaeT1TylQhHgD/paS/ciRkz
+	KMWA6K93F3cQROKZnDxgRZQeQOHXGrXYzUdn3QeOrFQnbU3eYGrngobRYbCFYRjiV0FfiNuykMp
+	f1nbdmpn5usi36W8APUt6wbKVF7lyQAQX53Pugzk1OVScDrlKw+u0aLwFdBj4ysyvL+dDvIE5FG
+	oiSf+JKJBnwspJtFe2Dq5ZrvM6LYHV9Cl1KOVj5W/wXEYw1OTl6HfsWKTcYsz/7wyprG+NgSMBa
+	DvRR3vS2DI/u85tgYE+jFNu+Pv+un5w190vXJaNxm4nS1T4iXRVDMtMl9W27NGHLBU0DfKqqkua
+	t5JOw=
+X-Received: by 2002:a05:7301:b06:b0:351:515b:4e85 with SMTP id
+ 5a478bee46e88-3515dd78cacmr4880547eec.16.1791431337244; Wed, 07 Oct 2026
+ 20:48:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Thu, 8 Oct 2026 11:41:29 +0800
-X-Priority: 3
-Message-ID: <tencent_D521DAA244039DBFC3919D4EFD176E383607@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <tencent_36699D13D174660E0D76C4F5EFB825D86609@qq.com>
-	<fdb4e182-d1e9-49d9-9870-1af7eb268b4e@gmx.de>
-In-Reply-To: <fdb4e182-d1e9-49d9-9870-1af7eb268b4e@gmx.de>
-X-QQ-mid: xmseza56-0t1791430889tmig3b5sp
+MIME-Version: 1.0
+References: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
+ <CACiNov6n4Sr4nkAnTXJ9ZmMz022KebfAM8Hf2JV_EZ+KVa9THg@mail.gmail.com>
+In-Reply-To: <CACiNov6n4Sr4nkAnTXJ9ZmMz022KebfAM8Hf2JV_EZ+KVa9THg@mail.gmail.com>
+From: Angel <angellindo@gmail.com>
+Date: Wed, 7 Oct 2026 22:48:19 -0500
+X-Gm-Features: AclHuK9YFkSaq6D3ioA4jsLkW7LOkMEvq6st96fcEJeANLoyJjckzhq-Ds0EBNo
+Message-ID: <CACiNov5XvayanL6SED-z1pLY9rMnyVbCdf=RyyhLXzDSLcXuVg@mail.gmail.com>
+Subject: Re: [REPORT] Kaby Lake-H (MacBookPro14,3): package C-state stuck at
+ PC3 on Linux, macOS reaches PC10
+To: linux-pm@vger.kernel.org, rafael@kernel.org, 
+	artem.bityutskiy@linux.intel.com
+Cc: rajneesh bhardwaj <irenic.rajneesh@gmail.com>, xi.pardee@linux.intel.com, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-SGVsbG8gQXJtaW4sCgpTb21lIGZvbGxvdy11cCBvYnNlcnZhdGlvbnMgZnJvbSB0aGUga2V5
-Ym9hcmQgYmFja2xpZ2h0IHRlc3Rpbmc6CgpCcmlnaHRuZXNzOgoKQWZ0ZXIgbWFudWFsbHkg
-bG9hZGluZyB0aGUgZHJpdmVyLCBLREUncyBzeXN0ZW0gdHJheSBpbml0aWFsbHkgY291bGQg
-bm90IGFkanVzdCB0aGUga2V5Ym9hcmQgYnJpZ2h0bmVzcy4KQXQgdGhhdCBwb2ludCwgc3lz
-ZnMgYW5kIFVQb3dlciBib3RoIHJlcG9ydGVkIGEgbWF4aW11bSBicmlnaHRuZXNzIG9mIDQs
-IGJ1dCBQb3dlckRldmlsIHJlcG9ydGVkIDAuClBvd2VyRGV2aWwgaGFkIHN0YXJ0ZWQgYmVm
-b3JlIHRoZSBkcml2ZXIgd2FzIGxvYWRlZC4KCkFmdGVyIHJlc3RhcnRpbmcgUG93ZXJEZXZp
-bCwgaXRzIG1heGltdW0gYnJpZ2h0bmVzcyBiZWNhbWUgNC4KSSB0aGVuIGNvbmZpcm1lZCB0
-aGF0IGJvdGggaXRzIEQtQnVzIGJyaWdodG5lc3MgY29udHJvbCBhbmQgdGhlIHN5c3RlbSB0
-cmF5IHNsaWRlciB3b3JrZWQuClRoaXMgc3VnZ2VzdHMgYSBkZXNrdG9wIHN0YXRlLXJlZnJl
-c2ggaXNzdWUgZm9sbG93aW5nIG1hbnVhbCBkcml2ZXIgbG9hZGluZy4KCkNvbG91ciBjb250
-cm9sOgoKS0RFIGluaXRpYWxseSBoaWQgaXRzIGtleWJvYXJkIGNvbG91ciBvcHRpb24gYmVj
-YXVzZSBLYW1lbGVvbiByZXBvcnRlZCB0aGUgZGV2aWNlIGFzIHVuc3VwcG9ydGVkLgpBZnRl
-ciByZWxvYWRpbmcgS2FtZWxlb24gYW5kIHJlc3RhcnRpbmcgUGxhc21hIFNoZWxsLCB0aGUg
-IkZvbGxvdyBhY2NlbnQgY29sb3IiIHN3aXRjaCBhcHBlYXJlZC4KV2l0aCB0aGUgaW5pdGlh
-bCBhY2NlbnQgY29sb3VyLCB0aGUgc3dpdGNoIGRpZCBub3QgcmVwcm9kdWNlIHRoZSBleHBl
-Y3RlZCBjb2xvdXIuCkthbWVsZW9uIHJlcG9ydHMgaXNFbmFibGVkPXRydWUgYW5kIGtleWJv
-YXJkIGJyaWdodG5lc3MgaXMgNC4KVGhlIGFjY2VudCBjb2xvdXIgaXMgUkdCIDIzMyA1OCAx
-NTQsIHdoaWxlIG11bHRpX21heF9pbnRlbnNpdHkgaXMgNTAgNTAgNTAuClRoZSBvYnNlcnZl
-ZCBtdWx0aV9pbnRlbnNpdHkgaXMgNTAgNTAgNTAuCgpLYW1lbGVvbidzIDYuNy41IHN5c2Zz
-IGJhY2tlbmQgd3JpdGVzIHRoZSAwLTI1NSBSR0IgY29tcG9uZW50cyBkaXJlY3RseSwgd2l0
-aG91dCBzY2FsaW5nIHRvIG11bHRpX21heF9pbnRlbnNpdHkuClRoZSBvYnNlcnZlZCB2YWx1
-ZXMgYXJlIGNvbnNpc3RlbnQgd2l0aCBhbGwgdGhyZWUgY29tcG9uZW50cyBiZWluZyBjbGFt
-cGVkIHRvIDUwLgpJIHRoZW4gdGVzdGVkIGFuIGFjY2VudCBjb2xvdXIgd2l0aCBhbGwgUkdC
-IGNvbXBvbmVudHMgd2l0aGluIDAtNTAuClRoZSBzYW1lIG51bWVyaWMgdmFsdWVzIGFwcGVh
-cmVkIGluIG11bHRpX2ludGVuc2l0eSwgd2l0aG91dCByZXNjYWxpbmcsIGJ1dCB0aGUgdmlz
-dWFsIGNvbG91ciBzdGlsbCBkaWQgbm90IG1hdGNoIHRoZSBkZXNrdG9wIGFjY2VudCBjb2xv
-dXIuClRoaXMgY29uZmlybXMgdGhhdCB2YWx1ZXMgd2l0aGluIHJhbmdlIGFyZSBwYXNzZWQg
-dGhyb3VnaCB1bmNoYW5nZWQ7IHZhbHVlcyBhYm92ZSB0aGUgY2hhbm5lbCBtYXhpbXVtIGFy
-ZSBjbGFtcGVkLgpLYW1lbGVvbiBuZWVkcyB0byBzY2FsZSB0aGUgMC0yNTUgY29tcG9uZW50
-cyB0byB0aGUgZGV2aWNlJ3MgMC01MCByYW5nZS4KVGhpcyBhcHBlYXJzIHRvIGJlIGEgdXNl
-cnNwYWNlIGNvbG91ci1zY2FsaW5nIGlzc3VlLgoKSW4gUGxhc21hIDYuNy41LCB0aGlzIEdV
-SSBvbmx5IG9mZmVycyBzeW5jaHJvbml6YXRpb24gd2l0aCB0aGUgZGVza3RvcCBhY2NlbnQg
-Y29sb3VyLgpJdCBkb2VzIG5vdCBwcm92aWRlIGEgc2VwYXJhdGUgY29sb3VyIHBpY2tlciBm
-b3IgdGhlIGtleWJvYXJkLgpJbmRlcGVuZGVudCBSR0IgY29sb3VycyB3b3JrIHRocm91Z2gg
-dGhlIGRyaXZlcidzIHN5c2ZzIGludGVyZmFjZSwgYXMgdmVyaWZpZWQgYnkgdGhlIHJlZCwg
-Z3JlZW4gYW5kIGJsdWUgdGVzdHMuClByb3ZpZGluZyBhIHNlcGFyYXRlIGNvbG91ciBwaWNr
-ZXIgd291bGQgYmUgYSBLREUgR1VJIGZlYXR1cmUgcmVxdWVzdC4KClRoZXNlIGNoZWNrcyB1
-c2VkIHRoZSBzYW1lIHY3LjMtcmM2IGRyaXZlciB3aXRoIGZvcmNlPTEuCktleWJvYXJkIGJy
-aWdodG5lc3MgYW5kIGluZGVwZW5kZW50IFJHQiBjb250cm9sIHdvcmsgdGhyb3VnaCBzeXNm
-cywgYW5kIGJyaWdodG5lc3MgY29udHJvbCBub3cgYWxzbyB3b3JrcyB0aHJvdWdoIEtERSdz
-IHN5c3RlbSB0cmF5LgoKVGhhbmsgeW91LgpiaWZhbmc=
+Two more data points:
 
+1. Reproduced on a stock distro kernel with nothing else running:
+   Arch Linux live ISO, 7.2.2-arch1-1, default cmdline, no out-of-tree
+   patches, no desktop, intel_idle. turbostat, 6 x 10 s per stage:
+     idle, console on:                        PC3 93-94 %, PC6..PC10
+0, PkgWatt 3.8 W
+     console blanked:                       PC3 98.8-99.0 %, PC6..PC10 0, 3.5 W
+     + amdgpu/snd_hda unbound:   PC3 98.8-99.0 %, PC6..PC10 0, 3.5 W
+   Cores sit in C7 99.6 % and GFX RC6 99 %.
+
+2. macOS on the same unit with the same firmware setting I use on
+   Linux (gmux forced to the iGPU, gpuswitch 0) reaches PC7 ~95 % at
+   ~0.2 W with a USB stick plugged in (PC10 ~80 % with nothing
+   plugged). So the forced-iGPU mode is not the cause.
+
+   Earlier I also tried, on Linux, taking all three PEG links down at
+   once (Link Disable) and putting both Thunderbolt controllers into
+   the same state macOS uses (RTPC(0) + _PS3/PCDA: Gen1, D3hot, power
+   GPIOs low). Package power dropped to ~1.7 W but PC6..PC10 stayed 0
+   in every case.
+
+Thanks,
+Angel Lindo <angellindo@gmail.com>
