@@ -1,91 +1,80 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218794E1C77
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 15:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831EA4DAFA5
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Oct 2026 15:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791473327; cv=none; b=BnHTQl6/zZWvXPxzxlj5E8SVO0Swc8LHOO1Yl4wJFHgKNSt2d1Bzzf4c878o2E4lENsbMKIvbbRgWaFZHG7obnfL6TBNJ8UWG8GdQhWmNNQ4NIww2nvJeAeTbZO/9+TXaFIfNb5pgbUAABJCk3wSCOxHDQ8eWqsSccN637uA03M=
+	t=1791473406; cv=none; b=W78Fm36+jis8kvv++36J8PEIS2jSoVYKhyFRAeKd/PrJq1v4nS82r+dpoxRlwKwJ5wo3PnYDj2qXsdfiljssf1MMNwOfH4wFiF7B2dFK/+OYBnyRb04zqdS7qpFIV85EuBVsFlL5nxoa02n6S2Bgt8M3ZlAJDhMHL0cBq8l0XDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791473327; c=relaxed/simple;
-	bh=VRDS1Wy+H3zTPbMdDug+OqDcF/r5LuM8zspUMrFtAOs=;
+	s=arc-20240116; t=1791473406; c=relaxed/simple;
+	bh=gCz2PWtG7KBVwKQQRm3tT99d6VUdlqWJU1achyn5LUY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aEnRRxdhtOVVnlz2phEdK+rcx44BerGObxU+s9mhfz5F5HNUn9OTBpQ35v2xONVP7PfkN+9v/W9fZ1cZMQOYsy/yxKbEYyCY5sMaPh3b7VC4dbH+xgAoMaKvQYFR//+d1GbqimxMUHzcKosHEc8KnRnKhystzrBk2dKSgkDhSJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8BGhbJL; arc=none smtp.client-ip=209.85.208.180
+	 MIME-Version; b=owc7h6Ut2T+9vOGmGbRHQKqobuIs/4trGbgVBrtJAfbW1Jz+Q0I7XqaPiAKjwolKMpWw3IkRTim00KVvbh/Qxz5HFmOuV8Q8H0SOzucZb6tA8hyyrE21rB3VTTm2T4U465o+eusHnhQrX7c9K0QsyM7mtbCoaHvMJUGFGY6BKHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B0p/j1+Z; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8BGhbJL"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3a9a1ed66b9so14714291fa.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Oct 2026 08:28:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0p/j1+Z"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5ba3b1199f6so3162565e87.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Oct 2026 08:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791473320; x=1792078120; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1791473398; x=1792078198; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xD0mCKhBnL1ByDRSKnyKdcT4fj0jo/q8QfY/rh5fC+Q=;
-        b=G8BGhbJLfeFqsmOAk7VtguVMtwacuFiIXBrVOm7eRYMrvBiYGn7PQeJeNJu2Ol8gef
-         vwwnnt/yVB+HFb4xbHpR5H9/Lk1/NkABFKlZUrgM+83qwBEAzmTRtWFHTdWmFnR0iH9/
-         L5RW5Hf3r5JF2M9vsnUkU7DQGOwMB1CJIWqUFYuABIS3ggoqRm88oJXHt2KyTjxdLH0x
-         /22En39VRF1YyOkzNeBRkNLalhFucM6brZS4KcS39dVoBkKf7A9FgBC1EJBG8ao+qlmg
-         8Qt3kjN6qtWfVkyCfQgjaiMZuQmlmPvIdUBweri0cIGstQhSOlz7gKdcfYA7zhXu56y/
-         mFSA==
+        bh=gCz2PWtG7KBVwKQQRm3tT99d6VUdlqWJU1achyn5LUY=;
+        b=B0p/j1+ZbjvDgOjLrVcRhUa2rrgEqU0fsRi/GHc1GEf16tv+dCPoXScmv0duQ/ulBW
+         JGFE+f9gnbrWI+ar17KWRjiOEVI88sQAuWRSuaLYhAHPSgF18pfU13fyPRd5vROEe/v4
+         DxSh1G/CMhHdYOPGf8r9z8OhfXSY3Qhljqqv2Ip34hYx3NeHQcyX7ksyGBMusqxj3cy9
+         6uTcdASsxp/WLHbOOAXbXsMeipeVeNICLE49Fq68EF0TlK2XBfxdwvp5c1l5E1RDLhya
+         DeMt81Lc0FUkw7P92+JXIKZonroRzg+2BWxnt+H+bj92nM9heHXIcAZrudOz3MF4ITA/
+         mZkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791473320; x=1792078120;
+        d=1e100.net; s=20260707; t=1791473398; x=1792078198;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xD0mCKhBnL1ByDRSKnyKdcT4fj0jo/q8QfY/rh5fC+Q=;
-        b=nmSS4a2uy1hKTzWPTH7s24hL836MmxIT8nm7ryEbYLlkrp4m8HadXvkh2qOoIduiMN
-         kegiQahg7c6D/PzOIe3zmwCTTJHLI91Wf5DpElDRctn4NDWJf/DsZ6HexVtLlnlvfvFj
-         EteIv2JX3lBUauqxKLIdb5u7uJqrvQD/CrvgnDfRRjQw1pHBZfB0Xsi2FwzyLJjGhtVQ
-         4kupvYaz/mCcZm5vCX4d1a+dIRWJQ+q/YxrsGoowTryH39ECWU7RwXfOgEt+yppjbXPc
-         DHMVqIx4SaVkKSws77HUf6ZcR6iwBUguXqw5IWgQdo/EKzcVfxfD9bxHTttoywN4yyYE
-         rrDw==
-X-Forwarded-Encrypted: i=1; AKwUvBwxcAOFqzUFBuZSMhY91riDEpit+9GIOTlFmN7TT59uBIvLjW+lb/l+gORpHXCHA1LnHm7rsrX1Vpwcv/G92IMS7pIA@vger.kernel.org
-X-Gm-Message-State: AFq9FYKUhRYxK7iCba8qqBHBfX91rHdheaudTy16MpAe7tljepcQ8gAr
-	aVbvp7kx9LMCgTNV38/YacxsXuTCsqsg8vEifeiIQNYvU7xenCrMGUFv
-X-Gm-Gg: AYBFou2XQb/wmSYbNfFUWF0+MwUAaJLxJdLCtE3hYPeCx1vcNFwX/XgD/o2FKEE5wk5
-	yLMcw2AmoD7S7satGMDOWMN/Y8Lzy89UfVv1kP76Sqhc1KFlcjH5YdcyMGba0du1GNE6nsBXqcN
-	f2GhDuJR2E4r9p7QbID2C9/jaGv8M3iZubMFzcu7+BmEI6Q7sRO8HW2TEwz9HvGOCZlRq4URyy/
-	G66yHCXwtAIbQYAvwCCPZLfmSN36gH5wYVw/p/FKDtarX8T4cljdQTSGc4f16qUummInysl8CEp
-	q1/TIdXBQ09iRaGiPpsLqwAYlrX9i+Ppf9Ss8Rh+DTO1tRBKZ1IoqT+n4pPH0Qut4ouRtwBkBUb
-	ULbxBtvLbbNDC12PB9O9oAhND9/U+aDerembRBj77rn6gcqgPJAxaKAhSxISrgIpJ53QIdrfYhU
-	UgsBAMsvJLdOmlftLpcxuvBt9HTH/+rxrT0EwL65tIdN49Vp/IACLBrxyFBtZuyP4mW/PDpmRlw
-	lqxxdfOrnJSLv8n9/O30KYbKI+Yct+HCWSDvKF4VNHR4TTp3MzTfOa2Y0T9kJk6KGLY
-X-Received: by 2002:a2e:a7c1:0:b0:3a5:d070:9fef with SMTP id 38308e7fff4ca-3a9a2c5bbbfmr13192841fa.10.1791473319681;
-        Thu, 08 Oct 2026 08:28:39 -0700 (PDT)
+        bh=gCz2PWtG7KBVwKQQRm3tT99d6VUdlqWJU1achyn5LUY=;
+        b=rZc+qGZGPqjmPRqovQjp0T9ZL58hEeiS5bmx707mG0Ovej0+8LSveIa3Qn+fKwEoC4
+         lt4ikIS8Nj/4rV+tmSdEjiiYQfjbKvgugSpVpivpvwlnV5Z0IEQrcQwxLccgZLgm7HCI
+         TLidLNazQ4fbbG8wpy80SGfgbESY1e4mFZgIxX09+tO7PDAIa42MBzMrBk/kRWmgJx9H
+         ckteXmQvPrdl+A42qKSNH8JUKuH2eWJxsT9Dt9nElLgszNA4CrupHaYiTeSo//J0xENx
+         EIJkrErwbZ0kGCtrfg4BtJkVWnIN9X1nDdyOQ2/BxmmU2LoRddNf2F0E2Yq2iIpODHC/
+         7D+Q==
+X-Gm-Message-State: AFq9FYLqg72NNH5FQDrFgR9UfAXtxj+XW8k0bcSnRXW/jcZkj8WzKtqo
+	djlonWfnCzklKeex52oqLxtryut/1SzF7LNEohmP5PyoUXx2TZOzuW5V
+X-Gm-Gg: AYBFou0w+vCapf/P8eWme8/WFS2YuaPpHVbsIlJLFMpFNITwvWcZFjKvHZcT/tAHgmU
+	EScJ3Vf28gwyRRgGA1QfDuJPpKYMAwnup6Hi/GGUuSYIlMhHFLS6vRaONxcqWd9t/0yQyPBmC0R
+	F7rsigguLCQTygOzoNzSqtVq+FZ997oIljcjI41+lkU/o1uC7XsUznJK1OAqw72DL7i2/hPkuI6
+	n3Y6gOp9sxDYPgqkAJP4qBPJyfYG/fLngEfndvk6K+EasRlXbN2Hmo7XWjk/3NDGNMUAiim21tt
+	HN68/+pkG8BDFXkN4LeETPPgVnkPj/+jfw89Ud16VI/CDE2aJX5MQNaJxXzCqd/igLPJZQZqw/B
+	C9c2q6GEWa5gB1ccQ34gBuOY9SmIL6wSQedIlKt93tUtUv2z7ec6eTk1ueRv4x2sQwxfaDDWJMz
+	wjitloqUMDpPhvfTTfdbEdQwovkuwigw13kv/xn+NLO8/dEnFcKUvuiOZnblGZzqwqx/PdRke4S
+	digCGwW5Lthht1aIX4tCdU0cl5sOPIYYelkLpjSWO7y24V0Ww68qgDdSzQMGBquxEf6
+X-Received: by 2002:a05:6512:3b9a:b0:5b6:183b:d203 with SMTP id 2adb3069b0e04-5bcd0716838mr2243596e87.42.1791473397961;
+        Thu, 08 Oct 2026 08:29:57 -0700 (PDT)
 Received: from wildarch.lan ([109.72.228.33])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3a9c13e6530sm221651fa.9.2026.10.08.08.28.38
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5bcd3074ac2sm1383620e87.29.2026.10.08.08.29.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2026 08:28:38 -0700 (PDT)
+        Thu, 08 Oct 2026 08:29:57 -0700 (PDT)
 From: Anton Karasev <uselessfire@gmail.com>
-To: Milos Vlku <vlku.milos.fun@gmail.com>
-Cc: qby140326@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
+To: zsanya322@gmail.com
+Cc: platform-driver-x86@vger.kernel.org,
+	qby140326@gmail.com,
 	hansg@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com,
 	W_Armin@gmx.de,
-	ilya.gladyshev@linux.dev,
-	kento@kekto.ru,
-	ericted8810@gmail.com,
+	vlku.milos.fun@gmail.com,
 	chris@miget.com,
-	matias.civadda2342001@gmail.com,
-	btx342@gmail.com,
-	wleizc7319@gmail.com,
-	wolf109909@outlook.com,
-	i@rsplwe.com,
-	bozhenpeng93@gmail.com,
-	martiya.ar@gmail.com,
-	aleksejirlik@gmail.com,
-	zsanya322@gmail.com
-Subject: Re: [PATCH v6 5/5] platform/x86: bitland-mifs-wmi: Add per-machine ops table
-Date: Thu,  8 Oct 2026 18:28:37 +0300
-Message-ID: <20261008-tm2307-tm2309-entry-uselessfire@gmail.com>
+	nika@nikableh.moe,
+	martiya.ar@gmail.com
+Subject: Re: [RFC] bitland-mifs-wmi: optional Fullspeed and four distinct modes on RedmiBook Pro 16 2024 (TM2309)
+Date: Thu,  8 Oct 2026 18:29:56 +0300
+Message-ID: <20261008152956.1513547-1-uselessfire@gmail.com>
 X-Mailer: git-send-email 2.56.0
-In-Reply-To: <CAObHBTxHQDfVH8Su1DLABtC5uUsAGBBk=KvcCOvtTs5gMGamnA@mail.gmail.com>
-References: <20260929134503.17249-1-qby140326@gmail.com> <20260929134503.17249-6-qby140326@gmail.com> <20260930015058.3076905-1-uselessfire@gmail.com> <CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com> <CAObHBTxHQDfVH8Su1DLABtC5uUsAGBBk=KvcCOvtTs5gMGamnA@mail.gmail.com>
+In-Reply-To: <CAFpZVRM_A9K+6-eFy_zfC-8gE+3r7pcdhgU+3M3g_XdQ_SJdiw@mail.gmail.com>
+References: <CAFpZVRM_A9K+6-eFy_zfC-8gE+3r7pcdhgU+3M3g_XdQ_SJdiw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -94,75 +83,46 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Milos,
+Hi Aleksandr,
 
-On Fri, Oct 02, 2026 at 02:18 Milos Vlku wrote:
-> It matches your machine on every point you listed, checked against the
-> ACPI tables
+I have the same machine (TM2309, BIOS RMAMT6B0P0B0B), and your values
+match mine: quiet 2, balanced 1, Turbo 3 and full speed 4, with odvp1
+2, 0, 1 and 4 [1]. Milos found the same on the TM2307, which is built
+on the same platform and BIOS family [2], and tested four distinct
+profiles there [3]. The Turbo and full speed PL1 values you saw (75 and
+90 W) are the AC maximums of the GDDV targets here as well.
 
-I checked the WMAA and NTDP points of your mail against the TM2309
-tables and every one of them matches, so one entry for both boards
-looks possible.
+As for the status: Ilpo asked that per-model entries be based on the
+generalized profile handling Chris is preparing, not on the ops table
+in Mingyou's v6-v9 patch 5 [4]. That series has not been posted yet. An
+entry for the TM2307 and TM2309 would go on top of it, and I will Cc
+you; a test on another TM2309 would help.
 
-> So I would suggest an entry for these boards uses balanced = 1 rather
-> than 0.
+On full speed: the firmware accepts mode 4 on AC and on battery without
+any check, but Fn+K never offers it on this model, even with the stock
+140 W charger. As I wrote to Milos [5], I would suggest performance =
+Turbo for the entry, since power-profiles-daemon maps its "performance"
+profile to platform_profile "performance", and full speed as max-power,
+which platform_profile_cycle() skips, so it is used only when chosen
+explicitly -- which matches what you asked for. power-profiles-daemon
+neither selects max-power nor recognises it yet (it keeps showing the
+previous profile), so for now it would be chosen by writing
+/sys/firmware/acpi/platform_profile directly. Whether max-power is the
+right place for it is up to the maintainers.
 
-Agreed. My local build already writes 1 for balanced, which is also
-what Fn+K sets; listing 0 and 1 together as balanced in my table was
-only right for ODV1. I have not repeated your measurement on the
-TM2309.
+One more thing for this model: please do not write to the kb_mode
+attribute. On this firmware command 0x10 is the battery interface, and
+writing "fixed" turns off the battery charge limit [1]. The patch that
+hides kb_mode there is [6]; a test on your TM2309 would help. The
+charge limit itself is the subject of a separate thread [7].
 
-One thing to keep in mind with balanced = 1: GET returns 0 whenever
-QFAN is not 1..4, for example while QFAN still holds the 0 written by a
-kernel with the default map. A read of 0 then maps to no profile,
-laptop_profile_get() returns -EINVAL, and bitland_mifs_wmi_suspend()
-returns that error, so suspend fails -- the same -22 that was just
-reported for the TM2426 [1]. Reading 0 as balanced avoids that.
-
-On Fri, Oct 02, 2026 at 02:51 Milos Vlku wrote:
-> - No machine-specific capability check is needed on this one.
-
-On AC, yes. But bitland_pp_check_capability() calls
-power_supply_is_system_supplied() before anything else, so on battery
-balanced-performance and performance are refused, although this
-firmware supports Turbo on battery: Fn+K reaches it, the GDDV has a DC
-Turbo target, and writing 3 on battery works on the TM2309 (odvp1 1,
-thermald applies the DC Turbo limits). Could you check the TM2307 on
-battery? If it behaves the same, these boards need no capability check
-at all.
-
->   balanced-performance -> QFAN 3
->   performance          -> QFAN 4
-
-On the TM2309 Fn+K only cycles 1 -> 3 -> 2 and never offers full
-speed, even with the stock 140 W charger, although the firmware accepts
-4 without any check. Does Fn+K on your TM2307 offer it?
-power-profiles-daemon maps its "performance" profile to platform_profile
-"performance", so putting full speed there would make the desktop's
-performance setting mean full speed, with a PL1 of up to 90 W on AC on
-the TM2309. I would rather map performance to Turbo (3) on these boards
-and offer full speed as max-power, which platform_profile_cycle() skips
-and power-profiles-daemon does not select, so it is only used when
-chosen explicitly: low-power 2, balanced 1 (0 read as balanced),
-performance 3, max-power 4, and no balanced-performance. Aleksandr
-asked for full speed as an explicit choice on the TM2309 [2]. Chris: if
-the generalized table can map max-power, that would cover it.
-
-> So that is a Tested-by from a second board if it is useful.
-
-If you reply with it to Chris's patch [3], b4 will pick it up from
-there; here it is easy to miss.
-
-Once Chris's series is out (see Ilpo's reply [4]), I would suggest a
-single entry for both boards with two DMI matches (board_name TM2307
-and TM2309): you test the TM2307 and I test the TM2309, and whoever
-sends it Cc's the other. I am happy to fold the TM2309 into your patch
-or the other way round.
-
-[1] https://lore.kernel.org/all/tencent_D96ED693B9D664B3CDD8943D920571929406@qq.com/
-[2] https://lore.kernel.org/all/CAFpZVRM_A9K+6-eFy_zfC-8gE+3r7pcdhgU+3M3g_XdQ_SJdiw@mail.gmail.com/
-[3] https://lore.kernel.org/all/20260928154337.154969-1-chris@miget.com/
+[1] https://lore.kernel.org/all/20260930015058.3076905-1-uselessfire@gmail.com/
+[2] https://lore.kernel.org/all/CAObHBTwnv+kEaFdCp+cr31HtdSo3CaRq84T8vr-Pm75yZMTHqQ@mail.gmail.com/
+[3] https://lore.kernel.org/all/CAObHBTxHQDfVH8Su1DLABtC5uUsAGBBk=KvcCOvtTs5gMGamnA@mail.gmail.com/
 [4] https://lore.kernel.org/all/094577b3-7b96-72b6-4ef2-a5d1db457401@linux.intel.com/
+[5] https://lore.kernel.org/all/20261008-tm2307-tm2309-entry-uselessfire@gmail.com/
+[6] https://lore.kernel.org/all/20261008-bitland-kb-mode-v1-uselessfire@gmail.com/
+[7] https://lore.kernel.org/all/20261008-xiaomi-charge-limit-0x10-uselessfire@gmail.com/
 
 Thanks,
 Anton Karasev
