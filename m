@@ -1,62 +1,62 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8923D3C76BB;
-	Fri,  9 Oct 2026 23:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A553CF698;
+	Fri,  9 Oct 2026 23:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791589659; cv=none; b=f3bR+tnUF/ZrWmjxwEiEX3PioZTrgopak+PBqHt3YHGZUtZxwewS8/D1Gylvm5UVXuqhW0xrfIDmkDZknHzH60jkjTJYj1RhX8XjHEjTzfJAwOdF+qC8YdY/TvsTz1MgQWiWREmEcjEgpBUvFyh9pzyYhwzj3Gb3w6XFUSfxiac=
+	t=1791590377; cv=none; b=FS2tWpznAezF/7UEM2dvtKQ9P7GJdScByvo1acnZY8e4mdAbhkJSX8wk+z43ROiPSmfuUih2nA3UcDoBUSIm636rS0CD0VEw/l5Pw02+ykmZnfTfWH/fyg7pLRLkGn7DxSMNnBrXYRjlLEBctCrmFgpKuzB8tNy5LSF3JBadfj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791589659; c=relaxed/simple;
-	bh=UfidYsMrS2AZJjq01I4nSaYvHJ0OqaRHS+Q1SPK+kjY=;
+	s=arc-20240116; t=1791590377; c=relaxed/simple;
+	bh=WNPatVzzuvKZdUZ4R5i/vvoawReUsH1sEinBqSXpmB8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vb9eeW3ks8ofu5VRkqECapuLynpU32MuOlWBanVigXVAxifdkFwSzCxTf1cImvf5a/c4wFTs3b1/KLFKt+reT/TNvLhOGMrhk5710izPQhNk7YClkGDWTIe5n55Fluak1aw6c3h4WOOZkgHNVF6AKx1EsMTcnePx/NTZirMbt1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MsFVVCGC; arc=none smtp.client-ip=192.198.163.14
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ts/5Ukxg3zNHIgrm9iIVNFwvutep+Ng2ktarCk+vhbdLh++EJc5lBwqAHBqmU5EbLcfT/aodPuAmDugy9Gx92oij+PerIGbQHWvgWidZCaYWxkGXMFopIcP++LvsaW6qfYN3/PQjDtdwNe9iB+FCiZuBWldwO0PKpJCukQAISas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MHnGbHyJ; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MsFVVCGC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MHnGbHyJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791589656; x=1823125656;
+  t=1791590377; x=1823126377;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=UfidYsMrS2AZJjq01I4nSaYvHJ0OqaRHS+Q1SPK+kjY=;
-  b=MsFVVCGCbUVToEXsESNQvmnaJt1CLPkywKDSfjSVo0Bh/LpZaBE6POSd
-   P4BxTgj8zZ7fCm9sD+90FOvqlXwMupLwYIIs+aVLzjKnuJt94lamAlp4K
-   A37nHse31YgFrDQJyWKm44XX0UdY7tUputhvKdGp8dxGlRH7mRy2o5exi
-   oNETIY92PWWp1ft/xkYjYFYfyQzGNCYm2wewDXt/xUQ47Yn78p4HyFxqr
-   nPeRDw+f+jD2qmdRG1ECItvsUvk8RiKXnNAUG/noAZKr5kKKvyjsGR4LY
-   Xv5i+lWWNiZ8eKmnIg1kTBQpvQKyXpObhRmWECC5CtAMvHlbJf4pViloF
+  bh=WNPatVzzuvKZdUZ4R5i/vvoawReUsH1sEinBqSXpmB8=;
+  b=MHnGbHyJ2q2lp22IB6zElJ5yO2fmnQu8Fo0zZkqceKPXcU+ClBCKOrs5
+   w6KMLlRLGqg+a5mAWPfsS9KS8cu+c960NjZ0yQK/h6l7abYtHVyUt5m7e
+   0sMFj4ANGm1yhUGIuKmh0+y6LFi/SbRSSGD4AUrtZ/XiTT6kZYre7iADq
+   6MMIYxCZBYyfBfU5ch67GOQQu9H32YUUjyJXrKacgPXbZkjRmwN5XSXJ1
+   R5Q6iwWU+ZGxPBbgoWXPKE5WTu1jdH3hnC4V9kCDggvlPzhSm40rBSvFD
+   Y5I8aqTICTeISObdR2gATiOcg/uBM72C43+1jruNU52pZeNoXcvFggwAa
    Q==;
-X-CSE-ConnectionGUID: VvnlDKm0S4WWHPzw7iHAoQ==
-X-CSE-MsgGUID: PKSyXF35RimNaE9d5BtisQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="402814"
+X-CSE-ConnectionGUID: 6Y/TODuGR9atc76EJvkIDA==
+X-CSE-MsgGUID: lhL5UY0bRw2eKZEjl3poKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11930"; a="403366"
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="402814"
+   d="scan'208";a="403366"
 Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 16:47:35 -0700
-X-CSE-ConnectionGUID: 4oKK7o9vQCmQyw/EmZKt+g==
-X-CSE-MsgGUID: WMvNVGbtSEmAstaxG/2NGw==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2026 16:59:36 -0700
+X-CSE-ConnectionGUID: IshxscfPSGS2BR/5Wq9dCQ==
+X-CSE-MsgGUID: of6C+tFjRISwct4T+GAwvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,149,1787036400"; 
-   d="scan'208";a="2176640"
+   d="scan'208";a="2177749"
 Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa013.fm.intel.com with ESMTP; 09 Oct 2026 16:47:33 -0700
+  by fmviesa013.fm.intel.com with ESMTP; 09 Oct 2026 16:59:34 -0700
 Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1xFKJG-000000006IO-1qmn;
-	Fri, 09 Oct 2026 23:47:30 +0000
-Date: Sat, 10 Oct 2026 07:46:53 +0800
+	id 1xFKUu-000000006Iy-09s6;
+	Fri, 09 Oct 2026 23:59:32 +0000
+Date: Sat, 10 Oct 2026 07:58:54 +0800
 From: kernel test robot <lkp@intel.com>
-To: chitranshmandhaniya@gmail.com, hansg@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ilpo.jarvinen@linux.intel.com,
+To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Chitransh_Mandhaniya@dell.com
-Subject: Re: [PATCH v2] platform/x86: dell-uart-backlight: fall back to PCH
- PWM on UART timeout
-Message-ID: <202610100706.x2lcbo7S-lkp@intel.com>
-References: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
+	Muralidhara M K <muralidhara.mk@amd.com>
+Subject: Re: [PATCH v8 1/4] platform/x86/amd/hsmp: Recognize Family 1Ah
+ client platforms and hide server-only paths
+Message-ID: <202610101031.PjgWVMZh-lkp@intel.com>
+References: <20261009061356.3234513-2-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,95 +65,58 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
+In-Reply-To: <20261009061356.3234513-2-muralidhara.mk@amd.com>
 
-Hi,
+Hi Muralidhara,
 
 kernel test robot noticed the following build errors:
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v7.3-rc6 next-20261008]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[auto build test ERROR on 6c377d19d4a5116d9bec5203aa3c6c11523e7898]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/chitranshmandhaniya-gmail-com/platform-x86-dell-uart-backlight-fall-back-to-PCH-PWM-on-UART-timeout/20261009-125401
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20261009072401.52509-1-chitranshmandhaniya%40gmail.com
-patch subject: [PATCH v2] platform/x86: dell-uart-backlight: fall back to PCH PWM on UART timeout
-config: i386-buildonly-randconfig-1000-20261010 (https://download.01.org/0day-ci/archive/20261010/202610100706.x2lcbo7S-lkp@intel.com/config)
-compiler: gcc-13 (Debian 13.3.0-16) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261010/202610100706.x2lcbo7S-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Muralidhara-M-K/platform-x86-amd-hsmp-Recognize-Family-1Ah-client-platforms-and-hide-server-only-paths/20261009-114353
+base:   6c377d19d4a5116d9bec5203aa3c6c11523e7898
+patch link:    https://lore.kernel.org/r/20261009061356.3234513-2-muralidhara.mk%40amd.com
+patch subject: [PATCH v8 1/4] platform/x86/amd/hsmp: Recognize Family 1Ah client platforms and hide server-only paths
+config: i386-buildonly-randconfig-1004-20261010 (https://download.01.org/0day-ci/archive/20261010/202610101031.PjgWVMZh-lkp@intel.com/config)
+compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261010/202610101031.PjgWVMZh-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610100706.x2lcbo7S-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202610101031.PjgWVMZh-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   drivers/platform/x86/dell/dell-uart-backlight.c: In function 'dell_pwm_fallback_register':
->> drivers/platform/x86/dell/dell-uart-backlight.c:318:16: error: cleanup argument not a function
-     318 |         struct pci_dev *gpu __free(pci_dev_put) = NULL;
-         |                ^~~~~~~
+   In file included from drivers/platform/x86/amd/hsmp/hsmp.c:25:
+>> drivers/platform/x86/amd/hsmp/hsmp.h:48:10: error: use of undeclared identifier 'acpi_gbl_FADT'
+      48 |         switch (acpi_gbl_FADT.preferred_profile) {
+         |                 ^~~~~~~~~~~~~
+   1 error generated.
 
 
-vim +318 drivers/platform/x86/dell/dell-uart-backlight.c
+vim +/acpi_gbl_FADT +48 drivers/platform/x86/amd/hsmp/hsmp.h
 
-   315	
-   316	static int dell_pwm_fallback_register(struct device *dev)
-   317	{
- > 318		struct pci_dev *gpu __free(pci_dev_put) = NULL;
-   319		struct backlight_properties props = {};
-   320		struct dell_pwm_backlight *pwm;
-   321		struct backlight_device *bl;
-   322		resource_size_t bar0;
-   323		u32 freq, duty, ctl;
-   324	
-   325		gpu = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
-   326		if (!gpu || gpu->vendor != PCI_VENDOR_ID_INTEL) {
-   327			dev_warn(dev, "No Intel GPU found, cannot fall back to PCH PWM\n");
-   328			return -ENODEV;
-   329		}
-   330	
-   331		bar0 = pci_resource_start(gpu, 0);
-   332		if (!bar0) {
-   333			dev_warn(dev, "Intel GPU BAR0 not assigned\n");
-   334			return -ENODEV;
-   335		}
-   336	
-   337		pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-   338		if (!pwm)
-   339			return -ENOMEM;
-   340	
-   341		pwm->mmio = devm_ioremap(dev, bar0 + PCH_BLC_PWM_CTL, SZ_16);
-   342		if (!pwm->mmio) {
-   343			dev_warn(dev, "Failed to ioremap PCH PWM registers\n");
-   344			return -ENOMEM;
-   345		}
-   346	
-   347		ctl  = readl(pwm->mmio);
-   348		freq = readl(pwm->mmio + (PCH_BLC_PWM_FREQ - PCH_BLC_PWM_CTL));
-   349		duty = readl(pwm->mmio + (PCH_BLC_PWM_DUTY - PCH_BLC_PWM_CTL));
-   350	
-   351		if (!(ctl & PCH_BLC_PWM_ENABLE) || freq == 0) {
-   352			dev_warn(dev, "PCH PWM not enabled by BIOS (ctl=0x%08x freq=%u)\n", ctl, freq);
-   353			return -ENODEV;
-   354		}
-   355	
-   356		pwm->max_brightness = freq;
-   357	
-   358		dev_info(dev, "Falling back to PCH PWM backlight (max=%u current=%u)\n", freq, duty);
-   359	
-   360		props.type = BACKLIGHT_PLATFORM;
-   361		props.brightness = duty;
-   362		props.max_brightness = freq;
-   363	
-   364		bl = devm_backlight_device_register(dev, "dell_uart_backlight", dev, pwm,
-   365						    &dell_pwm_backlight_ops, &props);
-   366		return PTR_ERR_OR_ZERO(bl);
-   367	}
-   368	
+    38	
+    39	/* True when the ACPI-reported PM profile indicates a client platform */
+    40	static inline bool is_client_platform(void)
+    41	{
+    42		if (!IS_ENABLED(CONFIG_ACPI))
+    43			return false;
+    44	
+    45		if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
+    46			return false;
+    47	
+  > 48		switch (acpi_gbl_FADT.preferred_profile) {
+    49		case PM_DESKTOP:
+    50		case PM_MOBILE:
+    51		case PM_TABLET:
+    52			return true;
+    53		default:
+    54			return false;
+    55		}
+    56	}
+    57	
 
 --
 0-DAY CI Kernel Test Service
