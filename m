@@ -1,270 +1,181 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAF6440638
-	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Oct 2026 12:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CBD4E36E3;
+	Fri,  9 Oct 2026 12:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791548848; cv=none; b=eUunGUedV0teWNFqc63SnGRNwaygHpK1Y6qcito3qxyo7TQ29XUh7SeMVbMFGychtNAJaNYd2eqDUvM8QXpm25Y97XFB+QSxF+Knr3cIAEPTwKcS8/YO2TFRdqCNT9i70QDTeV6m7smkPa5SMwvOHsQePQ/W7W5y4ON1xbqgODk=
+	t=1791549104; cv=none; b=NLbSl9ua56ZBcqTBq2AgExwIMrXObTSxk42nAcp7b3Ff37M+TiB2gQeTprcQv6Ioq66lKotYOjMEQlFpzSs81HQlwEqxV55d+NBGuaAstDvoAoXsaHoRs3fxJRmGAG+3spqLVU4qoHYr4n01RB0xwLxpkicyU/U0LpJEHjx2z1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791548848; c=relaxed/simple;
-	bh=yQL6vWb/BG3Uve71UO4ZlJ5qUXIek0So4bhaBdvS6dg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fb6PDobVVdusybH+N6GifeUp6yTEzgvC27x8l/w3sHkoK5RDWkL8d6HzGPtFGlCKUgLdY8Yu8HJaF+rcKg0j3ekmbjozw1iPJlod/+hDjhpAKEJjQ5r2QjwsvZEcGwOiYroKBsZHkMw114JgisEe3UeihBjCngYckJhdfHZDf7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czGq60q7; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791549104; c=relaxed/simple;
+	bh=ENHPwjJt2cGx9b4WZdj3zhIZBzV9Nv+Ho663yzalEto=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fSZANi4X/VZLzd+W0nGDtmRsBYA4uPur7TLxA3XBwZbbhQRlDXLQN6MhaF5tMS+uIB66tvnsjJeHT3Bb1bxcIq7VuD7ge+huSdajveGkP4rmuZAd+X1+UHvIDYt+Klkjde6FcguHGf5/bDph5sTAfTx8EhZ0/RL9j+oZFzbAEds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=PjGvBdkl; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czGq60q7"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-38d489b6b71so2019841a91.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Oct 2026 05:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791548837; x=1792153637; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=WZBUg/HubW0aIyjM3YpP6WQYya691V6s6+nB/N/24wI=;
-        b=czGq60q7dmlfcW1BxdSLzzLDcrQcIhvYWQ+4VwFL+4EIUtuTRU5HPIR1usfTZWjy0j
-         JvA/8aIO1ydkhn88rLl9DQsWQGK0GNk5UUGBjdBOrMZXrr2szIKXBItmcL7gX6ppa3J/
-         AjurtsLPFOH/iDO7SVL2e/HiuHz0kBw/VP1PvKbu8muXIer++5+AxXAGX283bPls1JhP
-         OguL7DM78ps4ZZ2SIMnS4lTSwqrRoZwi4WtODt1mdG0kxdhdQKMt3PNQD4RyxJSh3mxC
-         rD00RgR4k7T0hfcGOJFjDXrBxwK9amoRSBDHZSRi9r8lcH5pcau5S8qjq02vuAcTCrSc
-         k5Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791548837; x=1792153637;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=WZBUg/HubW0aIyjM3YpP6WQYya691V6s6+nB/N/24wI=;
-        b=m7nMOiazOBMhwJlup/I1x2XDMrh8+fXBJkLSrQluLFZxZVI2xUri6NlXAD2+SNzB9s
-         jkw49SWd8cJ0XgHZ2bs3chRaRt7juceZLgZWr9fAJRAY4tMAtlkAuM7/mWys/2mYnE/e
-         QmP3gTk3H/8jub/nmkcFiGzw9Ve/tUw6k/rNREO4d+yvMy0DSC2u/Pm/J/q1UHDhiU1Z
-         AWvbU83CD/yh4nTFPfvwZCevApRM9P0dC8jk4QKP5m3gsebaPMQV5qkuB+g8xkWXTK7m
-         /hfviu7cTikfWyYuc2OO2DsfgtfKF5txYoY17SXbGZcNE7ZRyjWQoTkHsVEc24H614/C
-         nNhQ==
-X-Forwarded-Encrypted: i=1; AKwUvBze/hne1BqlUnO8VlR2pQAYVlJO55hJkk9bMvc+MQ6khoH+a2aquwhd/flhrWDBhe+V7oQTCDhfRvCU73nAOABntzUt@vger.kernel.org
-X-Gm-Message-State: AFq9FYKxAxwD5jaeVez2aleXEJCKOVa15xygHdI6ziq0q6bO4DxXHTCK
-	Q/0IovFrzjjAYEqaZa9StJfgF3SSwrKdPjJkaKEl+JoAZUkzs+p3Tzd0
-X-Gm-Gg: AYBFou2KnBEFHx2DG8tAwITwkE9pReI41HAGzd8aWgkidb0noaj+dn1x5z74Hqzn7+1
-	FrZrlRSu2+ymyVPlpCK4SPVJkRX3Ixn1h+Dlw2neFqQJLuvSixxZ6YiJoC0Rjj1KWZBIhKr+TDt
-	fnO/+zoKcuvvo0aLK1I7b2pmDEUp1iM+egkCXXBE4MOr7/uZzseq/sW8wKDWRH2JI1huNVT9TQA
-	+NtJrRJaXawAMkdzKYL6UmetP8zUzpTiN5mQfYJD/vw89zICS6Ac6W0FfvOva0pgIf2ze98qVXS
-	BnSDbCf2e8DMAfEGyCBIg1bkz0y22REaV4Gckhx1a6B/uHhOjdIESgPSyOF02izpZsyAA65Bcto
-	dZ3iqJrEtc3uE/YpYZD0176FU72nhz2qyqhUypHixa7nCQ/BiquClEUzUpDGATHsedYu7SQwlOg
-	7mcYdkAZAGGcosnCKSZ7+T/WfBE0Ofwf3X1mBVUwH5Cp+iy8+DdR0JooeSCsgIvjjLaFpDLdG57
-	SUio1RGqvCsyAZHinlmgzmDoEg=
-X-Received: by 2002:a17:90b:1850:b0:3a6:d94d:e147 with SMTP id 98e67ed59e1d1-3ab3a94fffemr1391382a91.15.1791548837289;
-        Fri, 09 Oct 2026 05:27:17 -0700 (PDT)
-Received: from chitransh.. ([2401:4900:9397:bb62:5cb7:971b:ead7:8dc5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ab36f4737esm3426729a91.7.2026.10.09.05.27.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2026 05:27:16 -0700 (PDT)
-From: chitranshmandhaniya@gmail.com
-To: hansg@kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chitransh_Mandhaniya@dell.com
-Subject: [PATCH v3 2/2] platform/x86: dell-uart-backlight: fall back to PCH PWM on UART timeout
-Date: Fri,  9 Oct 2026 17:56:02 +0530
-Message-ID: <20261009122602.56624-3-chitranshmandhaniya@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261009122602.56624-1-chitranshmandhaniya@gmail.com>
-References: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
- <20261009122602.56624-1-chitranshmandhaniya@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PjGvBdkl"
+Received: from [192.168.0.43] (chfd-03-b2-v4wan-176392-cust229.vm15.cable.virginm.net [82.19.20.230])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5AAC7C2D;
+	Fri,  9 Oct 2026 14:29:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1791548977;
+	bh=ENHPwjJt2cGx9b4WZdj3zhIZBzV9Nv+Ho663yzalEto=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PjGvBdklHAL4HycDjQvVrS7csYKIfuQhzYSNgT3jrZkzc0agXKFxv6u457w5GZbKA
+	 wnZV/VAY6mWsZ0C1s+kk4I0Ps0wzR23c9TWLEXayAShSi23tbZWmgE03gtLucRRWRO
+	 /O+T4ICln/j++8BaXKYyE9mY2nonFoCkaXWVc/SI=
+Message-ID: <f7a95f64-6818-4d1d-8023-98fdcce17278@ideasonboard.com>
+Date: Fri, 9 Oct 2026 13:31:33 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: int3472: GPIO type names disagree with Intel's Windows driver
+To: Alexander Patrakov <patrakov@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org,
+ Linux Media Mailing List <linux-media@vger.kernel.org>,
+ Leif Skunberg <diamondback@cohunt.app>, Sahan Nissanka <adee.sahan@gmail.com>
+References: <CAN_LGv0qkxARw4bxO8K-1hUkWNg2ts6q50dooCB5UM5en=bo0w@mail.gmail.com>
+ <d9a37aff-3b4d-467c-825d-5473b4c1bbb4@ideasonboard.com>
+ <CAN_LGv0nBTkVmxbuK+_O1v5Z_OZqQz5LgEZdL1_37otsei36fQ@mail.gmail.com>
+Content-Language: en-US
+From: Dan Scally <dan.scally@ideasonboard.com>
+In-Reply-To: <CAN_LGv0nBTkVmxbuK+_O1v5Z_OZqQz5LgEZdL1_37otsei36fQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
+Hi Alexander
 
-Some Dell OptiPlex AIO 7410 (35W, board 01KP8D) ship with DELL0501 in
-the ACPI DSDT (status = 0x0F) even though no UART scalar board is
-physically present.  This causes acpi_video_get_backlight_type() to
-return acpi_backlight_dell_uart, which makes i915 skip registering
-intel_backlight.  The dell-uart-backlight driver then times out talking
-to the absent board and the probe fails, leaving the machine with zero
-backlight control.
+On 09/10/2026 12:25, Alexander Patrakov wrote:
+> On Fri, Oct 9, 2026 at 6:03 PM Dan Scally <dan.scally@ideasonboard.com> wrote:
+>> On 09/10/2026 04:06, Alexander Patrakov wrote:
+>>> Hi,
+>>> Why I am not sending a patch
+>>> ----------------------------
+>>>
+>>> Giving 0x0f, 0x10 and 0x11 their proper names, while 0x0b and 0x12 keep
+>>> the ones they have, means two names end up on two types each:
+>>>
+>>>     avdd   0x0b (PowerEn) and 0x10 (Avdd)
+>>>     dvdd   0x11 (Core) and 0x12 (Handshake)
+>>>
+>>> A system whose INT3472 declares both members of a pair for one sensor
+>>> would ask for two regulators supplying the same name, and the second
+>>> regulator_register() fails with -EBUSY. No type shares a default name
+>>> with another in mainline today. I do not know whether such a system
+>>> exists; Intel's 2021 build handles Core and Handshake as separate steps,
+>>> so the firmware vocabulary at least allows it.
+>>>
+>>> The ov5675 driver asks for avdd, dovdd and dvdd, and all three are
+>>> already the default names of 0x0b, 0x10 and 0x12. So I see no way to add
+>>> 0x0f and 0x11 as general types without reusing a name, whatever is done
+>>> about 0x10.
+>>
+>> Does the situation need amending? The handshake pin being modelled as a regulator named dvdd is a
+>> deliberate situation; see Hans' commit message in c5d0393272048 ("platform/x86: int3472: Add
+>> handshake pin support") for the explanation. I would think the same applies for PowerEnable (though
+>> I suppose it could also be legitimately modeled as a GPIO, but sensor driver handling of those is
+>> less consistent).
+>>
+>> Is there some sensor case you're aware of that's not working because of this problem?
+> 
+> 
+> My sensor does not work without a patch that maps 0x0f and 0x11 to
+> something that the ov5675 driver tries to enable.
 
-A BIOS update fixes this on some models (e.g. OptiPlex 7420, board
-0914RT) by setting DELL0501 _STA to 0, but Dell has not shipped a
-corrected BIOS for the 7410 even in the latest release (1.37.0,
-2026-05-28).
+Right, ok. This has always been done a little unsatisfactorily in retrospect. On a devicetree system 
+the regulators would be declared against the sensor's node with names that the driver was known to 
+expect, here we're fixing names (by passing REGULATOR_SUPPLY() entries in the regulator's init_data) 
+in what is effectively the regulator's driver and hoping that they match up to the sensor driver's 
+expectations.
 
-When the initial get_version command returns -ETIMEDOUT, fall back to
-driving the backlight through the Intel PCH PWM registers (BLC_PWM_CTL /
-BLC_PWM_FREQ / BLC_PWM_DUTY at MMIO BAR0 + 0xC8250).  The fallback
-reads the BIOS-programmed PWM frequency as max_brightness and registers
-a BACKLIGHT_PLATFORM device so that compositors (Weston, GNOME, KDE)
-pick it up normally.
+I think that what probably needs to happen, really, is for skl_int3472_register_regulator() to look 
+up its array of consumer_supplies (which maps sensor device name to regulator name) based on DMI 
+matching just as int3472_tps68470_get_board_data() does for the TPS68470 IC version of the INT3472, 
+and we can drop this idea of getting the con_id in int3472_get_con_id_and_polarity() entirely. 
+Perhaps we could provide a fall-back to the current names in the event of no DMI matching...but 
+really the goal ought to be to register the regulator with an array of consumer_supplies that mimic 
+what the devicetree bindings declare as the supply names for the sensor. You could then add 0x0f and 
+0x11 as new GPIO types that register a regulator without worrying about duplicated names.
 
-Tested on:
-  - OptiPlex AIO 7410 35W (01KP8D) -- UART times out, PCH PWM fallback
-    activates, backlight fully functional via sysfs and compositor.
-  - OptiPlex AIO 7420 35W (0914RT, old BIOS) -- same timeout and
-    fallback, backlight works.
-  - OptiPlex AIO 7420 35W (0914RT, new BIOS) -- DELL0501 absent, driver
-    not loaded, intel_backlight works natively (no regression).
+Thanks
+Dan
 
-Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
----
- .../platform/x86/dell/dell-uart-backlight.c   | 107 +++++++++++++++++-
- 1 file changed, 106 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
-index e3b7f1beda5b..3179f3a3f094 100644
---- a/drivers/platform/x86/dell/dell-uart-backlight.c
-+++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-@@ -13,10 +13,13 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/serdev.h>
-+#include <linux/sizes.h>
- #include <linux/string.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-@@ -50,6 +53,12 @@
- #define MIN_RESP_LEN			3
- #define MAX_RESP_LEN			80
- 
-+/* PCH PWM backlight registers relative to Intel GPU MMIO BAR0 */
-+#define PCH_BLC_PWM_CTL		0xC8250
-+#define PCH_BLC_PWM_FREQ	0xC8254
-+#define PCH_BLC_PWM_DUTY	0xC8258
-+#define PCH_BLC_PWM_ENABLE	BIT(31)
-+
- struct dell_uart_backlight {
- 	struct mutex mutex;
- 	wait_queue_head_t wait_queue;
-@@ -64,6 +73,11 @@ struct dell_uart_backlight {
- 	int power;
- };
- 
-+struct dell_pwm_backlight {
-+	void __iomem *mmio;
-+	u32 max_brightness;
-+};
-+
- /* Checksum: SUM(Length and Cmd and Data) xor 0xFF */
- static u8 dell_uart_checksum(u8 *buf, int len)
- {
-@@ -267,6 +281,91 @@ static const struct serdev_device_ops dell_uart_bl_serdev_ops = {
- 	.write_wakeup = serdev_device_write_wakeup,
- };
- 
-+/*
-+ * Some Dell AIO models (e.g. OptiPlex 7410) declare DELL0501 in ACPI but
-+ * have no physical UART scalar board. When the UART times out fall back
-+ * to driving the Intel PCH PWM backlight registers directly.
-+ */
-+static int dell_pwm_update_status(struct backlight_device *bd)
-+{
-+	struct dell_pwm_backlight *pwm = bl_get_data(bd);
-+	u32 duty;
-+
-+	if (bd->props.power != BACKLIGHT_POWER_ON ||
-+	    bd->props.state & BL_CORE_SUSPENDED)
-+		duty = 0;
-+	else
-+		duty = bd->props.brightness;
-+
-+	writel(duty, pwm->mmio + (PCH_BLC_PWM_DUTY - PCH_BLC_PWM_CTL));
-+	return 0;
-+}
-+
-+static int dell_pwm_get_brightness(struct backlight_device *bd)
-+{
-+	struct dell_pwm_backlight *pwm = bl_get_data(bd);
-+
-+	return readl(pwm->mmio + (PCH_BLC_PWM_DUTY - PCH_BLC_PWM_CTL));
-+}
-+
-+static const struct backlight_ops dell_pwm_backlight_ops = {
-+	.update_status  = dell_pwm_update_status,
-+	.get_brightness = dell_pwm_get_brightness,
-+};
-+
-+static int dell_pwm_fallback_register(struct device *dev)
-+{
-+	struct pci_dev *gpu __free(pci_dev_put) = NULL;
-+	struct backlight_properties props = {};
-+	struct dell_pwm_backlight *pwm;
-+	struct backlight_device *bl;
-+	resource_size_t bar0;
-+	u32 freq, duty, ctl;
-+
-+	gpu = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
-+	if (!gpu || gpu->vendor != PCI_VENDOR_ID_INTEL) {
-+		dev_warn(dev, "No Intel GPU found, cannot fall back to PCH PWM\n");
-+		return -ENODEV;
-+	}
-+
-+	bar0 = pci_resource_start(gpu, 0);
-+	if (!bar0) {
-+		dev_warn(dev, "Intel GPU BAR0 not assigned\n");
-+		return -ENODEV;
-+	}
-+
-+	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
-+
-+	pwm->mmio = devm_ioremap(dev, bar0 + PCH_BLC_PWM_CTL, SZ_16);
-+	if (!pwm->mmio) {
-+		dev_warn(dev, "Failed to ioremap PCH PWM registers\n");
-+		return -ENOMEM;
-+	}
-+
-+	ctl  = readl(pwm->mmio);
-+	freq = readl(pwm->mmio + (PCH_BLC_PWM_FREQ - PCH_BLC_PWM_CTL));
-+	duty = readl(pwm->mmio + (PCH_BLC_PWM_DUTY - PCH_BLC_PWM_CTL));
-+
-+	if (!(ctl & PCH_BLC_PWM_ENABLE) || freq == 0) {
-+		dev_warn(dev, "PCH PWM not enabled by BIOS (ctl=0x%08x freq=%u)\n", ctl, freq);
-+		return -ENODEV;
-+	}
-+
-+	pwm->max_brightness = freq;
-+
-+	dev_info(dev, "Falling back to PCH PWM backlight (max=%u current=%u)\n", freq, duty);
-+
-+	props.type = BACKLIGHT_PLATFORM;
-+	props.brightness = duty;
-+	props.max_brightness = freq;
-+
-+	bl = devm_backlight_device_register(dev, "dell_uart_backlight", dev, pwm,
-+					    &dell_pwm_backlight_ops, &props);
-+	return PTR_ERR_OR_ZERO(bl);
-+}
-+
- static int dell_uart_bl_init(struct device *dev, struct dell_uart_backlight *dell_bl)
- {
- 	u8 get_version[GET_CMD_LEN], resp[MAX_RESP_LEN];
-@@ -327,7 +426,13 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
- 	serdev_device_set_baudrate(serdev, 9600);
- 	serdev_device_set_flow_control(serdev, false);
- 
--	return dell_uart_bl_init(dev, dell_bl);
-+	ret = dell_uart_bl_init(dev, dell_bl);
-+	if (ret == -ETIMEDOUT) {
-+		dev_info(dev, "UART backlight controller not responding, trying PCH PWM fallback\n");
-+		return dell_pwm_fallback_register(dev);
-+	}
-+
-+	return ret;
- }
- 
- static struct serdev_device_driver dell_uart_bl_serdev_driver = {
--- 
-2.43.0
+The INT3472 of the
+> Lenovo Yoga Duet 7 13ITL6 declares types 0x0f, 0x10 and 0x11, plus a
+> reset and a privacy LED, and neither 0x0b nor 0x12. But I am reluctant to
+> send a patch that knowingly gives a GPIO type the wrong supply name, thus
+> spreading the mistake.
+> 
+> I have read c5d0393272048, and I accept that "dvdd" for the handshake pin
+> is a deliberate abstraction and not a claim about the pin. Type 0x10 is a
+> different case: its commit says the pin controls the DOVDD rail, the
+> constant is named INT3472_GPIO_TYPE_DOVDD, and Intel's table calls that
+> type Avdd. That one is a statement of fact, and it looks wrong.
+> 
+> Here is the whole story: Claude, initially, found that the driver
+> complains about the two unmapped GPIOs, matched that to the three
+> regulator supplies that the ov5675 driver requests (avdd, dovdd, dvdd),
+> and _arbitrarily_ assigned the two supply names that were still free to
+> the two complained-about types ("GPIO type 0x%02x unknown; the sensor may
+> not work\n"). At least it told me about the guess:
+> 
+> + * There is no 0x0b (avdd) and no 0x12 (dvdd), and the sensor needs three
+> + * rails, so 0x0f and 0x11 are taken to be the remaining two. Which of them
+> + * is avdd and which dvdd is a guess; ov5675.c enables all three together,
+> + * so the labels do not change behaviour.
+> 
+> Then I asked Claude to try harder to figure out which is which, and at
+> that point it found the table in the Windows driver. It then created a
+> patch with the mapping that follows the table, but added a DMI lookup to
+> int3472_get_con_id_and_polarity() that matches the tablet, so that it
+> could override the conflicting generic mapping of 0x10. I started
+> questioning everything, and finally got this:
+> 
+> ---
+> Your clone is at v7.3-rc6. The commit is 2a7b7652b1bb, "platform/x86:
+> int3472: Handle GPIO type 0x10 (DOVDD)", by Leif Skunberg, February 2026.
+> 
+> The commit message asserts the meaning and gives no basis for it. It says
+> the Fold's _DSM returns type 0x10 for a pin "which controls the DOVDD
+> (digital I/O power) regulator enable", and nothing about how that was
+> determined. It does not list the machine's other pins.
+> 
+> Version 1 was a quirk for that one machine. It added an entry to the
+> per-device GPIO map. Hans de Goede asked for it to be handled as a new
+> generic type instead, and for the name "dovdd". So the generalisation to
+> every machine came from review, based on a single device.
+> ---
+> ...which links to
+> https://lkml.iu.edu/hypermail/linux/kernel/2602.1/02605.html
+> 
+> So, I tried to investigate the same Fold that served as the basis for the
+> initial "dovdd" type assignment to 0x10, and Claude found that the Fold's
+> own Windows driver package contradicts this assignment: its table names
+> type 0x10 "Avdd", the same as the table in the driver for my tablet.
+> 
+> I asked Claude to fix int3472 so that I can submit a patch without adding
+> further wrong statements about avdd/dvdd/dovdd, and it flagged the risk:
+> 
+> ---
+> Renaming 0x10 to "avdd" breaks any machine whose firmware declares both
+> type 0x0b and type 0x10 for the same sensor. The driver already names
+> 0x0b "avdd", and registering two regulators for one supply name fails,
+> taking the whole INT3472 probe with it.
+> ---
+> 
+> That comes from reading the code; nobody has tested it on hardware. I am
+> not aware of any such machine, but that's only because I am not aware of
+> anything other than my Yoga tablet and the Fold.
+> 
+> Thanks,
+> Alexander Patrakov
 
