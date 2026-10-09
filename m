@@ -1,48 +1,48 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A7B39184F;
-	Fri,  9 Oct 2026 12:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2807A4DA9B2;
+	Fri,  9 Oct 2026 12:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791550570; cv=pass; b=h9oWqDJFgUcFWb1lBgvFgk5eYsOb/jv7pQOD8uryS9BkQzXRD0VFHnA669S/Q0xI8L6fXLzBl/2nUaKkKAJlTGFWspc9yawW624cxp8UbBImTZl4IVJsFaF1piry49rvf0Lgnk+xoZb5HmUow50HshGd/58KzE2kjNVJLN1/OPc=
+	t=1791550579; cv=pass; b=CGWI23GWKgBAVqXiwSpkoaqyZ0UkhFxio+0M3u6K7p2Y19019D4UGN3HxU/7HA5fYsMrRzELaCg3Ov+J2f8Y8ylVyRcyDxBu7lV6SPBrYMxAJ/Owp/rAH8gBAThiWg77ej5GE7SM6/AB5ugvsDJI1t6D3DhPTHoMmDJdyMk5zRE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791550570; c=relaxed/simple;
-	bh=LXYDadu4lRc7OkU8WAf0gDNilHRFM/rhcY7XeaoHw80=;
+	s=arc-20240116; t=1791550579; c=relaxed/simple;
+	bh=ZOeGXeEkAkv34jClDSEtnI3oR0m4n7d53FJjNZiwUI4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hHU/ZstZ+FqtMidvBNWwGw3R1PexjjdfBoflqqk0oBIvJBPhOGBYCkPLkHdXw//ZvV911Ogl+fYyNPoz4Nl2BWjQNJgQKJnkpYWu7CPhBTrD3RXOWOpW9h9Jiq5z9y2M14A/XSTDIqaXY2p4S707Q28/iyEudq8SWLZHOuYJfj0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=j1y5kHZ0; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=gh7jV9res6Fs5uo80WFFg1p1b9bDlIUPvOTfHIyn2qhjzPl4v/Ul+Fobt4TE2IZX3SJhlnqSI0ZHBsFqYkBhFsOQb3LcUtGQjDaK2tI3WTWeT4QiJmzeR2w9Ci3W6Kv3FL1/qBtS9rK+DG4HbsWIr8XWDJGglRIM8mhJBG9nMJ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=en3cCBIK; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="j1y5kHZ0"
-ARC-Seal: i=1; a=rsa-sha256; t=1791550489; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="en3cCBIK"
+ARC-Seal: i=1; a=rsa-sha256; t=1791550491; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=dY5524QD5hNDmQLbEeZviW6+i0j0KB7mJ7bCJdknMZwSXjVxZHju1z3tLbDtAnXeee+LENMkKqxdRn8E4IP/eyewhmfq5vunaKgTcmzYxCekt+gtkpQUBXGzr8aTG5kBtW89LNrPgUPIeucxu+Mzx5Cm2mYEA4Gkdm+3TqJ1FJk=
+	b=aFf+PEcMhZdr39Xx7ZlP7+oZTOdqXXTBiwAU69JuiFuaIoQt8XjV8CdpTRdsrY4J8kNFdF3zAQpsonIMexLirm692kPOTiGRj26FdF76gSGa1dhbAo8dDHXc3HodvmbG7waIxuztsokJ/5rtWC4u0wmi844wj25jiwd6M2WkOWo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1791550489; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=++tSPonXvXGQGTknReQuwY8UDCS23ifO+1Oo1yseGyY=; 
-	b=P7cNEjgmBuKlrbn6VQbgTt0rBUOLwF8dNOxopgAt8Irm9yafj1SJdC2MHV9zlLrWYZ2my1epPkCW5yGVCK9th3D1liRRSnjvTTRoKZgdZ1UKrlCeVj/Jt/tlhGE1YLe1c7Fa73K4+ArHtqk97SXFG+e/A87FIxD2mnTAVwNGkns=
+	t=1791550491; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=HvRz4woefoDbgxNylMP+yqczp1WJkIWrl7x5Gi/BnVw=; 
+	b=WzSex2x+TiwrSOGLR0gSTYqnyPeaEjPBLWZDSMmmx0t1kNhb0oWu6IJ1nEtOt0KrJfNZ5OzF1xSZB7A1DDdGBw4nr8WrGykPGz7Roov0SyNEwe7vFU10e+sDgTpgPxL5t29aqyOHIA8yuvp5xm32fKhvuyBMfLQaK9KGR0qt2sE=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791550489;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791550491;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=++tSPonXvXGQGTknReQuwY8UDCS23ifO+1Oo1yseGyY=;
-	b=j1y5kHZ0cpnYmHKX/m94ARk0H6hzekl1naUM4iEXuckxldxwFxZxP/1vgJ78xO6/
-	U1ferVGxrlHggXD1orpWbnUp+ahrRD3sQOVeuStbDQKZzwe6Th6cBUHYUNCoyPirqmP
-	pXONckde3wKjy0xih+u2qRylvByecovMCyaxb3cO/e9UEeIrDzT01BsLKSMHTLb8Wum
-	O+zwROFbaWKGkZUkBZmrjpysc4lr+bBHH/hUWIXz97+qil2vDNF/4cfimnWZ4OFn58z
-	HZehgirkwlT9QYjUCu5WjGyqsNaMYlB0JMs2edK4/KCMPxSa6M8cWucYxp/AeT4uPfx
-	OJxzgCbivA==
-Received: by smtp.zohomail.com with SMTPS id 1791550487624358.5002187382115;
-	Fri, 9 Oct 2026 05:54:47 -0700 (PDT)
+	bh=HvRz4woefoDbgxNylMP+yqczp1WJkIWrl7x5Gi/BnVw=;
+	b=en3cCBIKfiV83l3oHrorn/SXvs4t1bdqzooIEagXlg/wM31m5iPqjU2vWnCvOmOi
+	epKL9hTMDxyvzfGfUZDqbMj+4ssrd2EBlL7+qyTiu96XS3xQ0cq1Fx7FFB2DhJjEo2T
+	ySkGBShAMZfK4Ngts3WGyHLY8o1Nfwxh8fi4KVsHaNdl8HpWqfTKp9gu8kIeKLG1sGn
+	Lil4jqeqKDGXW78ICAz/Lfzr2PUFxC7JRBkMCTUT1fDUps0mjnunmH8xYvxHb6feZTr
+	o3C+8/n+sehxbUYbOpTiskCIT704gyK798KiYgSz6cSiuIWf/spl71kGiGZtyJivUzu
+	FQ5+eHb8/g==
+Received: by smtp.zohomail.com with SMTPS id 17915504902061022.9860069210005;
+	Fri, 9 Oct 2026 05:54:50 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Date: Fri, 09 Oct 2026 20:53:52 +0800
-Subject: [PATCH v2 10/12] platform/x86: lenovo-wmi-capdata: Do not match
- missing components
+Date: Fri, 09 Oct 2026 20:53:53 +0800
+Subject: [PATCH v2 11/12] platform/x86: lenovo-wmi-helpers: Adopt new WMI
+ API
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,7 +51,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261009-lwmi-wmi-new-api-v2-10-402828382679@rong.moe>
+Message-Id: <20261009-lwmi-wmi-new-api-v2-11-402828382679@rong.moe>
 References: <20261009-lwmi-wmi-new-api-v2-0-402828382679@rong.moe>
 In-Reply-To: <20261009-lwmi-wmi-new-api-v2-0-402828382679@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
@@ -66,113 +66,110 @@ Cc: Charles <hanker007@gmail.com>,
 X-Mailer: b4 0.17-dev-73bef
 X-ZohoMailClient: External
 
-Some devices do not support LENOVO_CAPABILITY_DATA_01. They either do
-not have the corresponding WMI GUID, or do not implement the query
-method.
+The new WMI API supports multiple ACPI types by converting them into a
+unified buffer that satisfies alignment and size requirements.
 
-In both cases, the WMI core does not create the corresponding WMI
-device, leaving the component master (i.e., lenovo-wmi-other) waits for
-the missing component forever.
+Adopt it to make our life easier.
 
-Identify missing components using the new wmidev_exists() interface, and
-skip adding them to the match list, so that all components in the list
-must present, fulfilling the binding requirement.
+Note that the Windows WMI-ACPI driver converts all ACPI objects into a
+common buffer format, so adopting the new API intentionally accepts more
+ACPI types as a followup of commit 465dc9da8ff6 ("platform/x86:
+lenovo-wmi-helpers: Convert returned buffer into u32").
 
-Reported-by: Navon John Lukose <navonjohnlukose@gmail.com>
-Closes: https://msgid.link/20260928190901.1369497-1-navonjohnlukose@gmail.com
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Link: https://msgid.link/9789f452-d7eb-4f1e-8a13-7335332193a7@app.fastmail.com
+Suggested-by: Armin Wolf <W_Armin@gmx.de>
+Link: https://lore.kernel.org/r/f1787927-b655-4321-b9d9-bc12353c72db@gmx.de/
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
-Changes in v2:
-- New patch in the series to solve the report made by Navon
----
- drivers/platform/x86/lenovo/wmi-capdata.c | 36 +++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+ drivers/platform/x86/lenovo/wmi-helpers.c | 61 ++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-index 79c72717ea40..6d98003539a7 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.c
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-@@ -49,6 +49,7 @@
- #include <linux/stddef.h>
- #include <linux/string.h>
- #include <linux/types.h>
-+#include <linux/uuid.h>
+diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
+index 8f5766c391eb..687caa226263 100644
+--- a/drivers/platform/x86/lenovo/wmi-helpers.c
++++ b/drivers/platform/x86/lenovo/wmi-helpers.c
+@@ -24,9 +24,10 @@
+ #include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/notifier.h>
+-#include <linux/unaligned.h>
  #include <linux/wmi.h>
  
- #include <asm/barrier.h>
-@@ -75,14 +76,19 @@ enum lwmi_cd_type {
- 	CD_TYPE_NONE = -1,
- };
- 
--#define LWMI_CD_TABLE_ITEM(_type)		\
--	[_type] = {				\
--		.name = #_type,			\
--		.type = _type,			\
-+static const struct wmi_device_id lwmi_cd_id_table[];
++#include <asm/byteorder.h>
 +
-+/* Save some .rodata space by reusing the GUID strings from the id table. */
-+#define LWMI_CD_TABLE_ITEM(_type)					\
-+	[_type] = {							\
-+		.name = #_type,						\
-+		.guid_string = lwmi_cd_id_table[_type].guid_string,	\
-+		.type = _type,						\
- 	}
+ #include "wmi-helpers.h"
  
- static const struct lwmi_cd_info {
- 	const char *name;
-+	const char *guid_string;
- 	enum lwmi_cd_type type;
- } lwmi_cd_table[] = {
- 	LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_00),
-@@ -155,24 +161,46 @@ static int lwmi_cd_match(struct device *dev, void *type)
+ /* Thermal mode notifier chain. */
+@@ -42,49 +43,33 @@ static BLOCKING_NOTIFIER_HEAD(tm_chain_head);
+  * @size: Length of the buffer.
+  * @retval: Pointer for the return value to be assigned.
   *
-  * Adds all component matches to the list stored in @matchptr for the @master
-  * device. @matchptr must be initialized to NULL.
-+ *
-+ * Missing components are not added to the match list, or else the master waits
-+ * for them forever. For some components, their existence can be determined by
-+ * querying other components, so they are handled as sub-components and thus not
-+ * matched here. For components with no existence declaration, wmidev_exists()
-+ * is used to determine their existence.
-+ *
-+ * If all components are missing, ERR_PTR(-ENXIO) is returned through @matchptr.
+- * Calls wmidev_evaluate_method for Lenovo WMI devices that return an ACPI
+- * integer. Validates the return value type and assigns the value to the
+- * retval pointer.
++ * Calls the specified WMI method for Lenovo WMI devices that return a WMI
++ * integer. Validates the return value and assigns it to @retval when it's not
++ * NULL, otherwise the return value is not validated.
+  *
+  * Return: 0 on success, or an error code.
   */
- void lwmi_cd_match_add_all(struct device *master, struct component_match **matchptr)
+ int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
+ 			  unsigned char *buf, size_t size, u32 *retval)
  {
-+	bool matched = false;
- 	int i;
+-	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+-	struct acpi_buffer input = { size, buf };
+-	acpi_status status;
+-
+-	status = wmidev_evaluate_method(wdev, instance, method_id, &input,
+-					&output);
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
+-
+-	union acpi_object *ret_obj __free(kfree) = output.pointer;
+-
+-	if (retval) {
+-		if (!ret_obj)
+-			return -ENODATA;
+-
+-		switch (ret_obj->type) {
+-		/*
+-		 * The ACPI method may simply return a buffer when a u32
+-		 * is expected. This is valid on Windows as its WMI-ACPI
+-		 * driver converts everything to a common buffer.
+-		 */
+-		case ACPI_TYPE_BUFFER:
+-			if (ret_obj->buffer.length < sizeof(u32))
+-				return -ENXIO;
+-
+-			*retval = get_unaligned_le32(ret_obj->buffer.pointer);
+-			return 0;
+-		case ACPI_TYPE_INTEGER:
+-			*retval = (u32)ret_obj->integer.value;
+-			return 0;
+-		default:
+-			return -ENXIO;
+-		}
+-	}
++	struct wmi_buffer input = {
++		.length = size,
++		.data = buf,
++	};
++	struct wmi_buffer output;
++	int ret;
++
++	if (!retval)
++		return wmidev_invoke_procedure(wdev, instance, method_id, &input);
++
++	ret = wmidev_invoke_method(wdev, instance, method_id, &input,
++				   &output, sizeof(__le32));
++	if (ret)
++		return ret;
++
++	__le32 *valp __free(kfree) = output.data;
++
++	*retval = le32_to_cpu(*valp);
  
- 	if (WARN_ON(*matchptr))
- 		return;
- 
- 	for (i = 0; i < ARRAY_SIZE(lwmi_cd_table); i++) {
-+		guid_t guid;
-+
- 		/* Skip sub-components. */
- 		if (lwmi_cd_table[i].type == LENOVO_FAN_TEST_DATA)
- 			continue;
- 
-+		if (WARN_ON(guid_parse(lwmi_cd_table[i].guid_string, &guid)))
-+			return;
-+
-+		if (!wmidev_exists(&guid))
-+			continue;
-+
- 		component_match_add(master, matchptr, lwmi_cd_match,
- 				    (void *)&lwmi_cd_table[i].type);
- 		if (IS_ERR(*matchptr))
- 			return;
-+
-+		matched = true;
- 	}
-+
-+	if (!matched)
-+		*matchptr = ERR_PTR(-ENXIO);
- }
- EXPORT_SYMBOL_NS_GPL(lwmi_cd_match_add_all, "LENOVO_WMI_CAPDATA");
- 
+ 	return 0;
+ };
 
 -- 
 2.55.0
