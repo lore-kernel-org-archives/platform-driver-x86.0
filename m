@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938DE4E433C
-	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Oct 2026 17:59:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5F027C162
+	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Oct 2026 18:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791568799; cv=none; b=aQyYtpT3QAVKclwO++JuPXMASCg56nja8D3pShLKd8lf3QftEWySzIUqVMrXeyLV3caqjsSHthnWrN0n0pdM5HjHYcIuexP1l4eEmElZN/KELwheNTAw3sN+HUibAZelBEDIJ6ZvveTvLVzq4mNVG/D6GN6csh+tm90H/U9TNgw=
+	t=1791568906; cv=none; b=rU1mIUij8vrYNfz2cYe35OgzWE/eKcvCXJUg6DKRkRcAWo4AZLPcNfpq1P+12ko0KZVCt2EVSCmbRZIL7MKZ1ius6s7NLpnnwTum8k36W24yQYwaen8myPKzLavVKEi0EVuyUJboLukr9JkhH2eIQ0UDPs0AlL2qo2Xyc9LEcoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791568799; c=relaxed/simple;
-	bh=8So8hTIhfpz/fd56jt7eRFTdNM4kLsIZBaaOLpchkOE=;
+	s=arc-20240116; t=1791568906; c=relaxed/simple;
+	bh=fUxfsZ7JP3+VaVBPu1EBAYTaGsV/cBcJLMteu1Bl/5U=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ncglHxlYGbxATppg5zKPx9m+Zo9jpWFzwCv0q81Vv4osxo9Bt3S+gOu9Kk8dAR33M15j8jpRBm35JeULx943/rco180WoHmtzNTYWzRxxEvBpKYa/0DovAcQsK47Mc4d8JxB3Tz1WItWxycUMjZh67Jcr7M6qLgp6fIaJ+KRLTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2ElnkJv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=hALCqUcV5FP60I4Yov2lziuDe6wTtJkndSCuj3qh5eD6hOKIkHcEg79d3vIlTiY4zTHPkkuezjbFVhIELsoQplqKX2QqHSYovJI1yrIsP8J2AHFvxXq3fmrcGqTuuHS3gmxK/u3ozq0JcvxL+zwz+JxZKUqaSlncV0rX1CsN1UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELUgk1Sp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2ElnkJv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 22F0AC2BCF7
-	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Oct 2026 17:59:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELUgk1Sp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 96CCDC2BCF4
+	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Oct 2026 18:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1791568799;
-	bh=8So8hTIhfpz/fd56jt7eRFTdNM4kLsIZBaaOLpchkOE=;
+	s=k20201202; t=1791568905;
+	bh=fUxfsZ7JP3+VaVBPu1EBAYTaGsV/cBcJLMteu1Bl/5U=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=T2ElnkJvlZQZyeIYBrI/OaUCzocmPffjnsQ/9Y+SCoYe2XWgkE8jb9doidz3bJuVR
-	 IAPZEFRvq6kGfgBcr+Lg7TEpLnUkrcHf11Qtl2CXTl9TMEbStoZs+rErPborh9sMPW
-	 0ui/UTZrwAFp+nIP7G+xJ2tmrbfKpFfI51i+wNUrFefpmyM1ZQg64XDfBGoXfskasH
-	 r5iwxivC7pl/tXvu6p3ZT7matoU4PiAlph9J22d9G0DwRlX40nhAHEmXFcrEJjFwjl
-	 RyBwoqGz57EAmpQZcgM6XhlVtAd8G5rWW+K6vi3h4rMKYm5fQzlEUcV4NTNZT0G6Aa
-	 6BTZQ78k89aaQ==
+	b=ELUgk1Sphob1PjSVlwf3iPdbE6GhMH+VgJ6/hAIJYO+0ANcre4QBy/t2yVlDPtR2b
+	 WndfCXvtyBxKR+2K/r92JymCPYkuhyLGLtykkKgIP5vrBOnCOiRoEqsLZYum9VouTM
+	 7Nop97HlJaLFyr8Ih/sfJxdNuvuvI668pJRlLnrx0lLTVeIdZuNS0vyNjbGldGp608
+	 ybX3Zv4Nj4c6SUo5wdLpZ91WU5T0PtjhdIlbC+Wl2c4OyHNm6LuWmdjabMlAZjPB+7
+	 vnJINklANvjPN5Qb1g/gcLkZfR1gB6xd2eqO/xqOcWxM3bndtA+jo4OzGmZrM2p52Z
+	 KlexQbrqvkQnQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id EEA0EC41612; Fri,  9 Oct 2026 17:59:58 +0000 (UTC)
+	id 7D316C41612; Fri,  9 Oct 2026 18:01:45 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 222044] hp-wmi: Mute and mic-mute LEDs not supported on HP
  Laptop 15-fc0xxx (board 8DC9)
-Date: Fri, 09 Oct 2026 17:59:58 +0000
+Date: Fri, 09 Oct 2026 18:01:45 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-222044-215701-asMk2AVKBJ@https.bugzilla.kernel.org/>
+Message-ID: <bug-222044-215701-ixWm1s0cQe@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-222044-215701@https.bugzilla.kernel.org/>
 References: <bug-222044-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,41 +64,43 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D222044
 
---- Comment #9 from Piyush (neonblade018@proton.me) ---
-A bit more technical detail on what happened during the test:
+--- Comment #10 from Piyush (neonblade018@proton.me) ---
+Adding the exact hardware IDs and technical details from the build:
 
-In the current tree, `ALC236_FIXUP_HP_DMIC` already had `.chained =3D true`
-pointing further down the fixup chain (to `ALC269_FIXUP_THINKPAD_ACPI` /
-standard HP fixup defaults). Because of this:
-1. Adding `.chained =3D true` and `.chain_id =3D
-ALC236_FIXUP_HP_MUTE_LED_MICMUTE_GPIO` directly inside `ALC236_FIXUP_HP_DMI=
-C`
-broke or orphaned the downstream chain that the driver was already followin=
-g.
-2. In the existing quirk table, our SSID (`103c:8b2f`) was mapped directly =
+- Target Machine: HP Laptop 15-fc0xxx (AMD Ryzen 5 7520U / Mendocino)
+- Codec: Realtek ALC236
+- Subsystem ID: 0x103c8dc9
+
+Regarding the fixup chain details:
+In the source tree, `ALC236_FIXUP_HP_DMIC` was already chained downstream (=
 to
-`ALC236_FIXUP_HP_DMIC`. When chaining was redirected, there was a collision
-between preserving the DMIC pin configuration (`0x12 -> 0x90a60160`) and
-pulling in both the speaker mute COEF and GPIO 0 mic-mute LED handling.
+`ALC269_FIXUP_THINKPAD_ACPI`). Simply replacing `.chain_id` with
+`ALC236_FIXUP_HP_MUTE_LED_MICMUTE_GPIO` directly inside `ALC236_FIXUP_HP_DM=
+IC`
+broke that existing downstream connection.
 
-To resolve the conflict cleanly:
-Instead of terminating or clobbering the chain at `ALC236_FIXUP_HP_DMIC`, we
-linked `ALC236_FIXUP_HP_MUTE_LED_MICMUTE_GPIO` into the chain sequence while
-keeping the pin table intact.=20
+To prevent any conflict and keep everything intact:
+We linked them sequentially so `ALC236_FIXUP_HP_DMIC` chains to
+`ALC236_FIXUP_HP_MUTE_LED_MICMUTE_GPIO`, which then preserves the rest of t=
+he
+downstream path (`ALC269_FIXUP_THINKPAD_ACPI`).
 
-Once chained through in that order:
-- `hda::mute` and `hda::micmute` registered immediately under
-`/sys/class/leds/`.
-- Both LEDs auto-bound to native kernel triggers (`[audio-mute]` and
-`[audio-micmute]`) and respond in hardware.
-- The AMD ACP6x internal digital mic array remains fully functional without=
- pin
-table regression.
+This ensures:
+1. The DMIC pin configuration (`0x12 -> 0x90a60160`) is retained.
+2. The speaker mute COEF (index 0x20) and GPIO 0 mic-mute LED handlers are
+pulled in cleanly.
 
-If you are preparing an upstream patch, making
-`ALC236_FIXUP_HP_MUTE_LED_MICMUTE_GPIO` part of that sequential chain (or
-chaining one into the other rather than replacing the existing tail) is the
-exact way to do it.
+Verification results on kernel 7.2.9:
+- `/sys/class/leds/hda::mute` and `hda::micmute` registered immediately und=
+er
+sysfs.
+- Native kernel triggers `[audio-mute]` and `[audio-micmute]` attached
+automatically without requiring any background scripts or hda-verb polling.
+- Both physical orange LEDs switch in real time with audio state toggles.
+- Digital mic array works properly via the AMD ACP6x driver.
+
+Subsystem ID `0x103c8dc9` is fully verified and ready for an upstream patch
+entry.
 
 --=20
 You may reply to this email to add a comment.
