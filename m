@@ -1,145 +1,135 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F683D3D07
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 19:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679D63546FA
+	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 21:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791661147; cv=none; b=kOepYdA7zWGZ9aad50eor/Xl1YM0evv5oQxjvSdhP8VrE5qEj/K0OxPMrZp84OF37jbu9qeJHZsw7IjZTIo2SSYku12hrgLQYXmciJPh0aAuEiSEtLtt+M0PTIrWw7dUjvuKqqEA3a8TZWkJQSog/Zjg3Wo9VeAWvmHxyfptA7s=
+	t=1791666576; cv=none; b=kz1UwS+LEteq7hanDLdY82lguFt3zDJ8Ip5nWxrT6iZtLdQ3aWnN33sfE+FaIBMH9fGd0xw0NENY5qeUGA2O0ID8ZkjOBJN4LGUtN0OiN3Z3VxLaSg/5zxC2AGilborxugyxc9xCIYNrb/xLtI1EQU7rdy9du8qmeRTm8WUQLu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791661147; c=relaxed/simple;
-	bh=xJSgGrQwuI25qcA8g6Cnc7jsjYB3w+qcq9BI4ElVklA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lyiO+kssjjkh8ssrBSL35gUWHVDxA40TLtAuC8XvMm36uGfbzTWMtqxEJCuQWbnK3tDwZ3WCFv2MfO4Sd9U4C1Re2DuI05O8phHnBuy1u98BOvQw/1sa0tXE7nOy1FI4FutJJ6IxCuOJxxyv3PRWdFGw56l3uXL+AXFRyx0Avkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r+NC1ivo; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791666576; c=relaxed/simple;
+	bh=j7KlZtfe5jtIbU4/8GQ7ubOFDSOCZbZrYJqTINu6g94=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jgHDcWjnfW/PmT4HMSBU8ooTfVNFUjqH6LFN1tF+4lBvxEXoGyKJYsOciG14q6RC2DrGT3zmz6e3r+nNI017elkwgYaGdSgxIm4qgseWK0BEvpwVfeeG7TaJDQ/iNozVUdAjQFrRRCyYF24/+G5oewlzB8FL8yjTlFoEGR8GZ7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SELOiUgM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+NC1ivo"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-48afe0081a6so445874f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 12:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791661143; x=1792265943; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=drq0VqUbZ4w1u+8VMSjh+FNqyCvJbE3ENcf7RyvcL3Y=;
-        b=r+NC1ivoRNq7HQAX2tD4f1RXvU+bGShhOKSJ13rtpKp+0ZZ6p7h4jAi6iFnk0iY9xi
-         6go3Y2j6GkVpzfpMDQhSPJ90QAkPsDcZRRTtVD5PvpuZXLibLDqN1tqgN9tF/Uk+MfK1
-         o+00/SUN6+xFVmwIh3DYEvpMjcKe7XV/lLD2vt5kdaVAYgYiGLnr9xh9Y2atRI7dta0I
-         Gl4HWVjdyoivMw6ABwWWiwDtXr7gb0lD0L1Xvsc7FCFi3flbSLtJS9D442340XLrnbnq
-         W/1pC7nDF8NhZl8V4J6QbTlBSO3Tih0JPxN3OQtc148VQLehMAYv8mYH+cgJbAVpiIHW
-         recQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791661143; x=1792265943;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=drq0VqUbZ4w1u+8VMSjh+FNqyCvJbE3ENcf7RyvcL3Y=;
-        b=SM7uLKlU1Hq1nb1jeYe0RUu2rzEOZCUqD9TYB7ImVfqOOJw3Epn2HOXp3BRTaQgv0c
-         ucD0jcVjHlvCtbTyumfSRNnZh3YRJhcojNy3htDhS2In7LS8Y15iXfbISVu7BqAPas3F
-         ooIXwtYq7b81jpb3eYwGhXaqlhbsxHQ7Aaxwr8Va+8QMGZYQzzjiEaMOPyki0u4NsLih
-         spUNbsztk2dyDIfdg2ILUVKbeOpJ5rQDVhMNzp5ITAKL5uO7lKAnbQPD2ICmQQKCXTlS
-         2Z9rgV31KEU7O22e90G2mW4OsNwAsz5+w5BvZQfdzVcHnYjB1VmxihPkTgEY8f7AB+3x
-         OKcw==
-X-Gm-Message-State: AFq9FYJOo9PZwGarbd6UIBI/FcbJnOJ3+DYENhjYHarJ4S9kn7hlPN6a
-	egxxRZlpw0I+Kz1uHSH9vPa73DuaWDvjRoaXI68upPRYNvX01NF5hbdm
-X-Gm-Gg: AYBFou2giFPm7fmh/Iqs8zrKYvBQi71JJ2a6CEoBY+sJIxQoZqHm3Fy+nzR/oCz+2Oj
-	ATPpXfObqxPIpyWQZW7oabPSSUVAmiKwgzKRniT7EX9m5x+8b+SnXTXStJnScKcZF8Y4KGz6/ZW
-	dMSPkGKsMppb6S1cpWpftOm5tO8MXiagThjiiDW+oK/QdjcUe/WVT6sPs/kAyqkuYImfw9MwnlB
-	9MVkeLsPnJcIaqfF48noTJtic3r/AbalC9hVxBSTGxlTV2gu0hAVw9KVW6avo3CGnFctZT/VtR7
-	G+n3CpSDRQm+YhdTCFJ4E3a2GwJ6jFK6yePnzRZ16rYVAbKtuG1NVWoqnmEuXBmamJogFS8rMRR
-	G0XKkSujcjKsqI1kn3fG0ERDYZrtScZYACyuyDZCSKHmE+LP73uFwdhx5qh96CPB50pqMx4QZFH
-	LzPwXknakLytBsAlFvGjyekZ/XrWofWaFvNbxbNLvCErL6oVFlXLXUp7q14Ee7ZU3DklTc5MEai
-	auqJqnPDy+axGR6evYa+BcjRlw+UU17iG2CPvTfIYs=
-X-Received: by 2002:adf:e189:0:b0:48b:efb:4a64 with SMTP id ffacd0b85a97d-48dbaaefefemr9392235f8f.37.1791661143302;
-        Sat, 10 Oct 2026 12:39:03 -0700 (PDT)
-Received: from localhost.localdomain ([67.209.128.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db94e3519sm11123224f8f.16.2026.10.10.12.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Oct 2026 12:39:03 -0700 (PDT)
-From: "Pavel Kossenko (kotekompotek)" <kotekompotek@gmail.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Pavel Kossenko (kotekompotek)" <kotekompotek@gmail.com>
-Subject: [PATCH 2/2] platform/x86: asus-laptop: Add WiMAX rfkill switch for Pegatron Lucid
-Date: Sun, 11 Oct 2026 00:38:37 +0500
-Message-ID: <20261010193837.1120-3-kotekompotek@gmail.com>
-X-Mailer: git-send-email 2.47.0.windows.2
-In-Reply-To: <20261010193837.1120-1-kotekompotek@gmail.com>
-References: <20261010193837.1120-1-kotekompotek@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SELOiUgM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 10921C2BCB9
+	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 21:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1791666576;
+	bh=j7KlZtfe5jtIbU4/8GQ7ubOFDSOCZbZrYJqTINu6g94=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=SELOiUgMeq8yIQGM4p5gzJplMeYAYYpkmMhzm7GU/mwrtHhFhWXeQtVetG81+MG07
+	 NfBf21jfXlGqo2aWzNJvpeVzKUNNp2GWbioAtoZqvz3F1CbliducgBEQp7Db9e7M5w
+	 mOfCacGLcQ7mRlz0oAXuFRbZwDwyg/SPsgH138YpM2GDWcB6D9K1+L66vTbLTjeWKz
+	 O5T2L4lrC6xxKIcfD64L6cvbERA6pFYh9FCR0A8i5rTauku5YmdgTvvc7WQbT8kFlF
+	 p59b+YFzkVxfnXpaJlj8XWq/lkLyKRGdafDrWgor++S30umMrSpCAWy0BPVO5BOQCH
+	 nVArzNg1WM/Fg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id D4C83C3279F; Sat, 10 Oct 2026 21:09:35 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221752] asus-wmi: no camera LED classdev registered on Zenbook
+ S 14 UX5406SA (micmute LED works)
+Date: Sat, 10 Oct 2026 21:09:35 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: git@turtledev.nz
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-221752-215701-z45DwGMijP@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221752-215701@https.bugzilla.kernel.org/>
+References: <bug-221752-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On the Pegatron Lucid the ATK methods ENPR and DAPR enable and disable
-a radio selected by an id. The driver exposes ids 0-2 (WLAN, Bluetooth,
-WWAN) as the pega-wlan, pega-bt and pega-wwan rfkill switches, but the
-DSDT also implements id 6, which drives GPIO27 and the EC bit WMHD:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221752
 
-  If ((Arg0 == 0x06)) { GP27 = Zero; WMHD = Zero; ALED (One) }
+git@turtledev.nz changed:
 
-The firmware leaves GPIO27 high at boot. On units fitted with an Intel
-Centrino Advanced-N + WiMAX 6250 combo card (8086:0087, subsystem
-8086:1301) this keeps the whole card in hardware RF-kill, so Wi-Fi is
-unusable even though pega-wlan is unblocked:
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |git@turtledev.nz
 
-  iwlwifi 0000:02:00.0: reporting RF_KILL (radio disabled)
+--- Comment #1 from git@turtledev.nz ---
+Same laptop here, UX5406SA with BIOS .309 (11/18/2025), Fedora 44 on
+7.2.9-200.fc44, secure boot on. Same issue, no asus::camera LED.
 
-The same card works under Windows, presumably because the vendor
-utility calls ENPR(6).
+I dumped the DSDT to see what's going on. I think it also explains why the
+set side didn't work for Jos=C3=A9 in "[PATCH v2] platform/x86: asus-wmi: f=
+ix
+camera key led on Zenbook S14".
 
-Register a "pega-wimax" rfkill switch for id 6. The rfkill core applies
-the default unblocked state on registration, which calls ENPR(6) and
-releases the card:
+0x00060079 (CAMERA_LED) just returns 0 for both DSTS and DEVS on this
+machine, so asus-wmi never registers the LED. Everything is on 0x00060078
+(CAMERA_LED_NEG).
 
-  iwlwifi 0000:02:00.0: RF_KILL bit toggled to enable radio.
+The DSTS handler for 0x00060078 reads EC register 0x50 and writes the
+result straight to the LED GPIO before returning:
 
-Assisted-by: Claude Opus 5.5
-Signed-off-by: Pavel Kossenko (kotekompotek) <kotekompotek@gmail.com>
----
- drivers/platform/x86/asus-laptop.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+    Local1 =3D ^^PC00.LPCB.EC0.ST8E (0x50, Zero)
+    If (((Local1 & One) =3D=3D One))       { Local0 =3D One }
+    ElseIf (((Local1 & 0x02) =3D=3D 0x02)) { Local0 =3D Zero }
+    If ((FSIS =3D=3D Zero)) { Local0 |=3D 0x00080000 }
+    Local0 |=3D 0x00050000
+    Local2 =3D (Local0 & One)
+    SGOV (0x00180885, Local2)
+    Return (Local0)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 8e69f02..ef4c2cc 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -192,6 +192,7 @@ MODULE_PARM_DESC(als_status, "Set the ALS status on boot "
- #define PEGA_WWAN	0x02
- #define PEGA_ALS	0x04
- #define PEGA_ALS_POWER	0x05
-+#define PEGA_WIMAX	0x06
- 
- #define METHOD_PEGA_READ	"RDLN"
- #define PEGA_READ_ALS_H	0x02
-@@ -1454,6 +1455,17 @@ static int pega_rfkill_init(struct asus_laptop *asus)
- 
- 	ret = pega_rfkill_setup(asus, &asus->wwan, "pega-wwan",
- 				PEGA_WWAN, RFKILL_TYPE_WWAN);
-+	if (ret)
-+		goto exit;
-+
-+	/*
-+	 * The firmware leaves this line asserted at boot. On units fitted
-+	 * with an Intel Centrino Advanced-N + WiMAX 6250 combo card it keeps
-+	 * the whole card in hardware RF-kill, Wi-Fi included. Registering
-+	 * the switch unblocks it by default, which calls ENPR(6).
-+	 */
-+	ret = pega_rfkill_setup(asus, &asus->wimax, "pega-wimax",
-+				PEGA_WIMAX, RFKILL_TYPE_WIMAX);
- 
- exit:
- 	if (ret)
--- 
-2.47.0.windows.2
+So a plain read is what updates the LED. Reading it after the camera key
+event, like v2 does, is enough. It's probably worth a comment in the code
+since the side effect isn't obvious.
 
+DEVS on 0x00060078 (2 =3D LED on, 3 =3D LED off) is guarded by a one-shot f=
+lag:
+
+    If ((FSIS =3D=3D One)) { Return (Zero) }
+    FSIS =3D One
+
+FSIS only gets cleared in EC0W when Arg0 =3D=3D 4 (resume from S4). So afte=
+r the
+first call each boot, every set returns 0 and does nothing. Bit 0x80000 in
+the DSTS result shows whether that first call is still available. I'd treat
+the LED as read-only on this model.
+
+Other things I noticed:
+
+- The firmware handles the privacy itself. While the camera is "off",
+  /dev/video0 still opens and streams, but every frame is a grey placeholder
+  with a crossed-out camera icon. There's no USB disconnect. The key LED
+  stays dark the whole time, since nothing does the DSTS read.
+- On S0ix entry the PEPD _DSM turns the GPIO off, and on exit it only turns
+  it back on if EC 0x50 bit1 is set. That might be related to the stuck LED
+  in the original report.
+- GPIO 0x00180885 is GPP_H_5 (INTC105D:02 pin 31). Micmute is GPP_H_4 right
+  next to it. The pad is config-locked but TX isn't, so as a workaround
+  "gpioset -c <chip> -t0 31=3D0" turns the LED on and 31=3D1 turns it off.
+
+I couldn't call WMI directly because of lockdown, so this is all from readi=
+ng
+the DSDT. I can attach the acpidump, and I'm happy to test a v3.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
