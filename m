@@ -1,86 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9355D455634
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3E02F9D85
+	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791627247; cv=none; b=qe5A5JNa05JKxxjc2u4C9mBs8D5x6/L96pHnYH2uqds1ace0gytdo8AJ7sgrYgZ6krus7Mwr3lXl4dCtXZuxStXS583eAMZzHFWBKPW2U+VktGcwaqX4sImiMrXo5RsXO6U4Zt9uc3zafSZb/jM5bf0XiZ+G3sxFQ7hwtxSN4KY=
+	t=1791627403; cv=none; b=HqAX2g+DLIsSgj39/mBHRZ6qxJwxDCY7TfosB1HSDsHrtWTAtrbMOr8Y3aU48SiJpu/QR3QXDgJKZ4bevufLbOd5irHbn0Y3hTZj8NsG3FL2QCIPuFCw1bBwOnD3CJ2ZecGn8REtZPROepZ61ogWqbBGm4hwihxcso9t0X8kRDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791627247; c=relaxed/simple;
-	bh=3nkVzUitSzxeQPqhkAjwrTP0DWvhf/d9Qf8PQ1O1n7I=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hmEa1zKXMXt33ok8t6oynItNzLI4nIwcVK72i7WaGXRDuiMNGqQw0z2wO6uLuL1ZvPsYHmkYeFaZf8OnJ1Tekzut9kKcIyQLs2pWc8COzS1jDSLrnC2q+yKDbVErLic2xoUvW7AH1BuLhYVuxSGjmRWj4DCcqYbueGik3LmiqAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E8EOoskN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1791627403; c=relaxed/simple;
+	bh=e1njbT5bJi85eZxLY/530NAqny3vA2RxrG3AcqTroqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k/f4dKYJrIXndfqs681oIhDcVojHDRhr0O1wJ+Hn0GcUv/mFGA7XWJxI9S3ByBnbiHXwlwEPbunXXQZ5igGE2DJ2wjmZ6qDE4Drg7W7q2om5Q8GqToZbaRUAzCvsc7c1yXcZb7XL4gcUfzZgA90ZibwxcvbC63Gi1dEJw1iQGvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FR1FfYT8; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E8EOoskN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EC147C2BCF7
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1791627247;
-	bh=3nkVzUitSzxeQPqhkAjwrTP0DWvhf/d9Qf8PQ1O1n7I=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=E8EOoskN4AORuQhydpWQjMHgUSmGE2ls9fxzkp7TR4/CPMPrjriTFCHFPKy+KHKRk
-	 WUah5P6UpyaJaf9PEuyoYUuslVyVgLS3f+K3FmrFhAMSEJs9ff0AZGMxbMbhAN1/33
-	 yzGLiIQcnMD2scAUamlCci0LaBRLYzT63vCbFCFnpadF/r+bZAEb9WQsbMrNJkWWVR
-	 /l9d9mTlg0tsOpCWix2xC+9ENrhcioF6pWjuWgtLIu9yRV4aaF8qCNTIS1af6eDH9u
-	 +enbZu4rJXQC5o/F64oe+ZvEvWAOQ0uMaycEIqdTFNRzwpARpytax8mwCu/75eTvA3
-	 b8W2848n4clnw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id BFF7EC3279F; Sat, 10 Oct 2026 10:14:06 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FR1FfYT8"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-49ff680331aso4242095e9.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 03:16:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791627400; x=1792232200; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=KFVRilLphheYZDM+G1ugCIoIXs4pytm2C1ieeD0EW20=;
+        b=FR1FfYT8YfmSQOC1Rkc7IdHGm8OO8r+6IwE34Ci01l39dqznbYJWn/THZWL/GkgHkL
+         GH7MkmEVQbKELGm1wgh1I+hMqp2v0bpTYlnYDDu0Qm9CJ+GcnqygjuI7Cn6OlT52SY1y
+         vKsIbpBT9vJznnJGfTx8xM+3vSCjhKGrjjwtWKyo2U/pMRuCqCv6J7AJxbdr6/FcTLdE
+         GJ/cErDO5MgQh6lfwOp0pUFkm2Sz0iub59bew6Hxt5PIihk1//4Zlr4zwGJtRp2xXlWt
+         8mSDqM1kCdhwXHIBNPNKfBcMDb6I24nQZ7GXJ5DPfw6vrq2boSCjZIC1S9rJMNsFN4HB
+         IEgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791627400; x=1792232200;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=KFVRilLphheYZDM+G1ugCIoIXs4pytm2C1ieeD0EW20=;
+        b=Y40Rf0L/zL/DCrlnNOrBwQS/Qlz5uatZQdAQ4twr31CPpxpX+geVNlp/4S7FSMEXNo
+         jCQ4Vjsfiti3J5lcjwchkWAlcr1nSfXVuJiUkjQuhKIJDWJardU1cY+UnZCGeHRvn6Zy
+         Vcls1zjBzaWCa19ou3unvmpXaGxleZomLRrUfmUYX4T+oQRtVntWbeXWORdXi9UW5QFS
+         yIQOBbnaP0s8Qiy9Dv4AkJaoOdQ2dAx2kUCx8oiAACflYf34svzm77t4N7lkr5lPTpMN
+         b54QXgjv7SHk83ZGh+vwBuM/mlEn1Eff+lOGar08nptwxqmUlHIe/7WlBEPgNDqFGMMp
+         j2Xw==
+X-Gm-Message-State: AFq9FYKH4cU8MlHc54YWePJ+sGA+Sl9/ezSt2/l51ezlVq+1SmKQiT0O
+	R6WrnY6PN+u4mIhAUp969vGWhFdeURoKKIc0kT2S1WdTmFhO0KErAL2Pt3TGjH3MDeV44DXq
+X-Gm-Gg: AYBFou0FKKtZySACwxpeZWvrRoujJyLfpKpPQUOoyGuUk5SHJAjx7GckjTezVBWyBCW
+	wV74ybeUKB39pxhdLW69QhIMpJA0ecLaZxyTyfLIQJPH8zlJSXhmq0hucOUeO2oc6IvTj6vobaq
+	BxW/hliC2PySvjansqt46o78FBUyw61KDNWTdzMZH0VG/XyT4h8rlyfVUpp+DYMDXCq6VwAKOgS
+	hswodUYP8tfAjksFRw/2Bjaxc1axhac6gjTJvpq8G8iLMNLhmfHPr545GP/PVxFBtzYrXe74rDt
+	okWwe56sSHIUMeTdwfhHosnErXX6JN0KtXukoIUBZC8AChqNbiia9NgaOTwZiiKBhfQ8UjSAMT4
+	T3Lo0zU17LD9CD9TeCdIAUqPK6zvZvx9y0RnHA0a5vpctMniU6HCCSeKVhYWw0t0YNf7Q67pCQX
+	173I0o5j9KBEi16bFdfc5YDC5hCQEQVZOyvu3qe+AoDvq+kujaRwuQOoTjpC8=
+X-Received: by 2002:a05:600c:4593:b0:4a1:7ed5:99e8 with SMTP id 5b1f17b1804b1-4a18e49bffbmr90382875e9.22.1791627400129;
+        Sat, 10 Oct 2026 03:16:40 -0700 (PDT)
+Received: from ASUS ([85.105.252.11])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db98c38f4sm9417856f8f.27.2026.10.10.03.16.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Oct 2026 03:16:39 -0700 (PDT)
+From: Bartu Alev <bartualev@gmail.com>
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 222044] hp-wmi: Mute and mic-mute LEDs not supported on HP
- Laptop 15-fc0xxx (board 8DC9)
-Date: Sat, 10 Oct 2026 10:14:06 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: zhangheng@kylinos.cn
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-222044-215701-HDlZpHoe0O@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-222044-215701@https.bugzilla.kernel.org/>
-References: <bug-222044-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Cc: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	luke@ljones.dev,
+	denis.benato@linux.dev,
+	benato.denis96@gmail.com,
+	corentin.chary@gmail.com,
+	linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartu Alev <bartualev@gmail.com>
+Subject: [PATCH v3 0/5] platform/x86: asus-wmi: TUF keyboard shutdown naming and RGB readback
+Date: Sat, 10 Oct 2026 13:15:56 +0300
+Message-ID: <20261010101601.888709-1-bartualev@gmail.com>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D222044
+This series fixes the name of the fourth TUF keyboard power state and
+makes the TUF keyboard RGB attributes readable.
 
---- Comment #11 from Zhang Heng (zhangheng@kylinos.cn) ---
--       SND_PCI_QUIRK(0x103c, 0x8dc9, "HP Laptop 15-fc0xxx",
-ALC236_FIXUP_HP_DMIC),
-+       SND_PCI_QUIRK(0x103c, 0x8dc9, "HP Laptop 15-fc0xxx",
-ALC236_FIXUP_HP_MUTE_LED_MICMUTE_GPIO),
+The fourth flag of kbd_rgb_state was labelled "keyboard" and treated as
+a no-op since it was introduced.  In hardware it gates the backlight
+during the ACPI S5 power-off sequence: with the bit set the keyboard
+lights up white while the machine powers off, with the bit clear the
+machine powers off dark.  Patch 2 renames the field and carries a Fixes
+tag for stable.
+
+The remaining patches prepare and add readback.  DSTS device 0x0010005B
+evaluates the DSDT method EC0.KBLS(), which returns a 16-byte snapshot
+of the EC's keyboard state: lighting mode, red, green and blue levels,
+animation speed, and the four power flags.  Both kbd_rgb_mode and
+kbd_rgb_state become readable and report the write format with the
+command word fixed at 1.
+
+Responses to the v2 review:
+
+Ilpo:
+- Documentation: patch 5 adds the missing ABI entries.
+- Errno: the helper already separates the cases.
+  asus_wmi_evaluate_method_buf() returns -EIO for a failed evaluation
+  and -ENODEV for an unsupported DEVID.  The readback keeps the
+  err < 0 ? err : -ENODEV normalization for the positive ACPI integers
+  that leak through, and the AML signature check returns -ENODEV as
+  well.
+- Named defines: patch 3 names the three speed codes and the four state
+  bits, and the decoding comments are gone.
+- Struct: patch 4 parses the status buffer through a packed struct.
+
+Denis:
+- DEVID naming: the write DEVID is now ASUS_WMI_DEVID_TUF_RGB_CMD
+  (patch 1) and the read DEVID is ASUS_WMI_DEVID_TUF_RGB_READ_STATUS,
+  as you suggested.
+- -ENODATA: asus_wmi_evaluate_method_buf() already returns -ENODATA for
+  empty buffers, so no extra handling was added.
+
+Provenance: the KBLS buffer layout and the speed-code semantics were
+recovered by static analysis of the EC firmware (ITE IT5570VG),
+assisted by an LLM-driven toolchain; the readback patch carries an
+Assisted-by tag.  Tested on a TUF Gaming A15 (FA507NV): the v2
+readback on kernel 7.2.6, and the S5 behaviour of the shutdown flag by
+A/B testing both values.
+
+Changes in v3, relative to v2:
+- split into five patches, one logical change each
+- renamed the write DEVID to ASUS_WMI_DEVID_TUF_RGB_CMD and the new one
+  to ASUS_WMI_DEVID_TUF_RGB_READ_STATUS, per Denis Benato
+- named the speed codes and the power state bits and dropped the
+  decoding comments
+- parse the status buffer through a packed struct
+- added the ABI documentation, with the attributes documented at their
+  real location under /sys/class/leds/asus::kbd_backlight/ and worded
+  for all laptops that expose the zonal RGB devices, not only TUF
+  models
+- added linux-api to Cc, which the earlier versions missed
+
+v2: https://lore.kernel.org/all/20260926005625.171560-1-bartualev@gmail.com/
+v1: https://lore.kernel.org/all/20260925200744.129714-1-bartualev@gmail.com/
+
+Bartu Alev (5):
+  platform/x86: asus-wmi: rename TUF RGB state DEVID to _CMD
+  platform/x86: asus-wmi: fix TUF keyboard power state shutdown naming
+  platform/x86: asus-wmi: name the TUF keyboard RGB state and speed
+    codes
+  platform/x86: asus-wmi: add TUF keyboard RGB readback support
+  Documentation/ABI: asus-wmi: document TUF keyboard RGB attributes
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |  42 ++++++
+ drivers/platform/x86/asus-wmi.c               | 123 +++++++++++++++---
+ include/linux/platform_data/x86/asus-wmi.h    |   5 +-
+ 3 files changed, 153 insertions(+), 17 deletions(-)
 
 
-Could you help test this? Because I see that your CPU platform is AMD, it m=
-ay
-not need 0x12 to be configured as DMIC. Although the previous bug 221233
-mentioned that it needs to be set, and it is the same machine as yours, this
-differs from my current understanding. I want to know whether the DMIC cann=
-ot
-be used if 0x12 is not configured as DMIC.
+base-commit: af32da41b0327b9c6a37856ba82b6760d6c8d10e
+-- 
+2.56.0
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
