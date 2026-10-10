@@ -1,79 +1,76 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964F83F12DE
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91ED43939D0
+	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791627432; cv=none; b=uiF2nrDgJke9NPcOnhapPSbSo6hAkXopUzxn1yJsvsfp0gRwQyI3a9N2zw51SmIWocxEUbhBJx32zpEQa/jpo3ziG6NHnhW8OC/e7BiOgFh2fwTR571LlyCXF+HcugN/Ez7mLKvXg3YdRYbNGRz+3YBuMB0wrf0BZXGJsL3CEHI=
+	t=1791627643; cv=none; b=dEZJv6zV7xtVyoA2W50swnTEbEMypQvSAmYbWq16/4muK2AcItC1VPLaLQ82fwkYwpAO3sf8ZjZm+OZotO6fW3x6yPMpFlslMANaoIWDs7inbotVpSaHwF7+VObeCg3jrDeOIRt/oFW4ft/Gs7sE4f/nJdd1FLZEpbdespYVG0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791627432; c=relaxed/simple;
-	bh=J6vDvjbCk7MX9LMkq+wxze1fd6NDlSnZqCj5f9c4+ho=;
+	s=arc-20240116; t=1791627643; c=relaxed/simple;
+	bh=ps/c8m/I/059ZUxB+Z7eeMHqeSozTS8ry4Tk1f7HwOg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UtvkKMQ9/K5FGZtZvNAgE0rOpsHsLUuydwLg6tsJhg1NOGbv2qzj2yR29LNa5VVlHlQlR8eJ5dkWJ8L0/jNqo9NAw3ZUQKV+JCx/IziLGRW82Pj33vJSSoICGXT2O5pwwBt1jB76ln4YBZwvAOfAEzl1wtJuKOYl0JsBeZTmSc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K+9UkMdt; arc=none smtp.client-ip=209.85.221.43
+	 MIME-Version; b=EL2t/swQYXT4hajGAwg+U2QBtEHIRSRt83XiPSPl/+SJk4Bl+8uxeHGbim//99/fMYnHB9F8/zx9WV09ib0P+t5YfkUoRAkM0U733bu+ulkyIXt62CIttzn5fldaEHMiPYk+m3V1I4e/jd0UPMipyjHwjnox7zdJGsjiLBjI4nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1vGRSs+; arc=none smtp.client-ip=74.125.82.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+9UkMdt"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-486e70f2457so224304f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 03:17:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1vGRSs+"
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-15168a20b47so369058c88.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 03:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791627423; x=1792232223; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1791627642; x=1792232442; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Pmb79NaTW27JYmEVgkO6fhUqLko5WfA8ujw653XjoMk=;
-        b=K+9UkMdtgssN7RUKlVEm7ikmSWN2s3yOAKc+5Go4e1PbOlqFF7cwQL3r7zJnLWV6To
-         N7j6YMVRHhio2Ettd7pXnu17pNVN++uYYNbXlcCt0YaU9+PgqBWZVwjTnxHJQyb1UXUi
-         kMKBUuA3K7SB46uNUzQr+Euyi6iXxt0gu9RTv+Lr7W94vrlN5LQEuUSgkCrlg8MvV0db
-         ItvFR+FAWVKQq/XKbrq1+p1Zqy8nY0GYBwGtUmHOpk1BTLHB2dbJEWs8zZjgPycKgLuq
-         YL5NVnrs78WFs2U+X8XyAuZ8FWqX89LZ+w5QW/UwERll7PURNmBTsS0gkKxyYdIGOsUS
-         PxMw==
+        bh=wa600bv2yNgaOc4w2jw/1YhMvLB2qD0tVmO6k4jww6w=;
+        b=A1vGRSs+HIeH7cuG0TJXuZsd59egpyRy7mA/qn2CUJRw9ehlEU9VWvBjFk9Fv3eLNl
+         z/eJmLttcwDRBdRuLyQaiv6NzUk/VEUciIhgqywPguGHF5l9mRyZ03V60iwN8N3vj5/b
+         p+HahFlZJEKFlzJm0yJgjuROyKV1yvgvSes9CEj+khahf1syrs/x4XIhIzJDUVAEjyLv
+         Pi7SEyzeF9Dy+8rYPWV3zy8DRuhmkAvRbi21LdRdqFuHliHEc7DZZ3zcsbedqH0i5MBi
+         f78RnSSX+XaKaIDUyBcB9jE8oHboTpDXi77+wOmVMzH4pRkyNAO7UVUcacm3gjSu0xST
+         upeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791627423; x=1792232223;
+        d=1e100.net; s=20260707; t=1791627642; x=1792232442;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Pmb79NaTW27JYmEVgkO6fhUqLko5WfA8ujw653XjoMk=;
-        b=djC9GHhsZ5FMyUXVtGGkxnlnaDk+Mln6358OZElfAsVBjuL1Y3YMTT27xAqfrWKYKm
-         lUuektKvPr3MjNdcoIxI/yQ9Ja8TRUJ+fVEQ6i9JjCmGxyqMrbzn6/PCW4iI2YxKSBVo
-         IlmC/stkK1HHxLllbLWPNT6yMjwjtKhierivlz2ZHEzzRoa0C9cpMYE9mn1t5A4QYXR+
-         pYS9AaVHeniMBHOI8DSMm0jAWAhGavsta59wj6s9Xes0eyEPaRTHm/wHIJ43pYfSxVVh
-         2hHfKvAexEa+QUdvsxCkftO8c8sKDsqp0dprz/fdGScErgimy2ySh5rh3Frmsba5Jfvv
-         EtsQ==
-X-Gm-Message-State: AFq9FYJfu9E+YFb+9gVCEbIQW1tpNtTO/xIzoE2xUMApd/531MTZTk7Q
-	btA4A6m9DOfLJC5sOt4E6X+mrB+EBaYnicrlGdMq1BM07BQiaQ1pnuGDVbrHi8Jw2/2vLKWB
-X-Gm-Gg: AYBFou0HTTFrpFoQWvUlg6p/YI8IowxKiD0Mzn5ik+8ca2wnsSauqyK212T2yjJDpq3
-	Q90YPALYTAYCv5H7n2nMytMBLEvLmGq5cQXxVNxJ0aWWbcsNN431uPBlQVZbs2VdXvcVfksjHLq
-	wWkKyLICFdPtv/WFpmufggYrm73b3rLzBk3tcHol0sNgHPfngWhm0MMIl19m4xRM3Gtl0txHHGJ
-	pb2fn5/TzRRBDHhZwbrOO0sy1214awhnGSkwbJtZKojWenOtSyAUxirKC++W7vgFjzCWqAZ7eWs
-	cPY5YCRCySPpKu6yXUnB3QklrLJTE2nrVcYkkR4iaURtcIkWWkw2iilfUUcSdKNQxyNTlgHyTE5
-	HN113/fNlaoHlEKs7T2zjIJ/GqSDYaKodkA0F3fbjaXI8UNAYdbsCSlqt7UTUN0YxbZkDKcl+YB
-	bqBfu5dijOB9IhrDqGPc/362be7vkHgyyk8ADHrfDG7NjNlz9yehmXXPvzybxK
-X-Received: by 2002:a5d:5386:0:b0:487:767:b301 with SMTP id ffacd0b85a97d-48dbacd94c0mr6289963f8f.57.1791627423442;
-        Sat, 10 Oct 2026 03:17:03 -0700 (PDT)
-Received: from ASUS ([85.105.252.11])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db98c38f4sm9417856f8f.27.2026.10.10.03.16.59
+        bh=wa600bv2yNgaOc4w2jw/1YhMvLB2qD0tVmO6k4jww6w=;
+        b=DC9XgaKLGm/7aYPFDv47X4AWm+YBaJuXKhHLXGQxdx78vejXWj+/AEnaTNxptcVWg/
+         MvO4qvZQL4IX+sEmYtOK1QnqFaiYj5zIdNNclX5UZ/3TUQKV+PowUb6+kzs+touCv5rS
+         gp8oCmBV/haGgstXtI0nG1Bgz0/kV4BkghNtJRwnOF+6MdahY74D7P6vBuDrBUchqHCk
+         +QTs1fAMirktpgyV/2O40pnTK7fb/WIgyzfQBvCMdTMCI4WKeVsQ9SLp6mJH8pdXcD2P
+         bFBp1TAAFEwnsJoAtXwaB646OW/3iFeOrCswxCkM/3LLP7HscKqBGG4hURY/Lv51Z6r/
+         lsNg==
+X-Forwarded-Encrypted: i=1; AKwUvBwGDobs8a9wpwBGZjWX0YOmdG8rsvyDMXpRs6Y8MR6J7u0jKGrolCdW685kzE+SufgbPxuSeBZKmjxjDqfBkbvlNv1A@vger.kernel.org
+X-Gm-Message-State: AFq9FYKlfD5YGzwICSU6GrBdM5F50bYHTe3iAzfN/iruMe3BTDkX1nn0
+	MntmqZDlR3+23q0yeuDOCZWionJOQo99jnS3/Y6p0S5CXrJTijjkt+a6
+X-Gm-Gg: AYBFou24TzDB29ARJFrtRwWHvcDbBoqkzRMUqHsVvIjoGUWjpwWN1zyV9snpFytb+vk
+	1v7Tn1TNK6fgfrV5q8uX+RdQRKi5n1QGLo5b9rHy3nF8iFtEVZsB3ikpouUXmkIFXcq/VwRtdvT
+	dXAxnngSqvEvsCiGCCyAe0AiNBryBqPKMOpqru0o0XMBTsttYlsWrW5UP7ym25dlQe4qfpQCibT
+	+EPshyhQufXgz/NrUh6KBqWxcawPChz3ysh+BcjgRsGOAHiiQuzwQ8+zVGcV+iK1fP9Hj/Jq3R+
+	7uzrxDaV6cKqgZCO5oPhewwVmmdaFMqFDjrL6mPCY6MitaxA9TMZBX1aWps51nzy8GNEEB3YIt6
+	HnMe0NRQSlzX+vbJSNMeItwpqaRoPCXfoYCB8Epei0JIDQ7Hksqj8kL7WCXn0TIk4Z8CYLgrpMw
+	eD41xrh+ygMREeqcDx+LlddyxzbgMv9Pf6qVxTAAtDpuSedMT4I8vrVGduCAsdHnWcWV0lzhnht
+	D+nHYLceVVbnQ7iKY7xMl+RDbw=
+X-Received: by 2002:a05:701b:231b:b0:14f:5549:c1ea with SMTP id a92af1059eb24-16a57a16d44mr6603742c88.1.1791627641303;
+        Sat, 10 Oct 2026 03:20:41 -0700 (PDT)
+Received: from chitransh.. ([2401:4900:c920:95f0:d96a:36c9:8c1e:6661])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-169a567aef5sm12429714c88.19.2026.10.10.03.20.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Oct 2026 03:17:02 -0700 (PDT)
-From: Bartu Alev <bartualev@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	luke@ljones.dev,
-	denis.benato@linux.dev,
-	benato.denis96@gmail.com,
-	corentin.chary@gmail.com,
-	linux-api@vger.kernel.org,
+        Sat, 10 Oct 2026 03:20:40 -0700 (PDT)
+From: chitranshmandhaniya@gmail.com
+To: ilpo.jarvinen@linux.intel.com
+Cc: hansg@kernel.org,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartu Alev <bartualev@gmail.com>
-Subject: [PATCH v3 5/5] Documentation/ABI: asus-wmi: document TUF keyboard RGB attributes
-Date: Sat, 10 Oct 2026 13:16:01 +0300
-Message-ID: <20261010101601.888709-6-bartualev@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261010101601.888709-1-bartualev@gmail.com>
-References: <20261010101601.888709-1-bartualev@gmail.com>
+	Chitransh_Mandhaniya@dell.com
+Subject: [PATCH v4 0/2] platform/x86: dell-uart-backlight: fall back to PCH PWM on UART timeout
+Date: Sat, 10 Oct 2026 15:50:10 +0530
+Message-ID: <20261010102012.110394-1-chitranshmandhaniya@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
+References: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -82,73 +79,43 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kbd_rgb_mode and kbd_rgb_state attributes predate their
-documentation: they were introduced as write-only interfaces and never
-received ABI entries.  The readback support now being added makes the
-omission visible, since the read format is part of the interface.
+From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
 
-Describe both attributes, their positional write formats, the write
-verbs, and the readback form.  The attributes are gated on WMI device
-presence rather than on the laptop model, and userspace tools route
-several non-TUF ASUS lines through the same devices, so the
-description says ASUS laptops that expose the WMI zonal RGB devices
-instead of claiming TUF models only.
+Some Dell OptiPlex AIO 7410 (35W) ship with DELL0501 in ACPI but no
+physical UART scalar board, leaving the machine with zero backlight
+control after the UART probe times out.
 
-Signed-off-by: Bartu Alev <bartualev@gmail.com>
----
- .../ABI/testing/sysfs-platform-asus-wmi       | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Patch 1 is a preparatory refactor that extracts the UART initialization
+sequence into dell_uart_bl_init() so the probe function can inspect its
+return value.
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index f9825c6150b5..c63e7cdaefb0 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -238,3 +238,45 @@ Description:
- 		Set if the MCU can go in to low-power mode on system sleep
- 			* 0 - False,
- 			* 1 - True
-+
-+What:		/sys/class/leds/asus::kbd_backlight/kbd_rgb_mode
-+Date:		Oct 2026
-+KernelVersion:	7.4
-+Contact:	Bartu Alev <bartualev@gmail.com>
-+Description:
-+		Controls the keyboard RGB lighting on ASUS laptops that
-+		expose the WMI zonal RGB devices (the kernel names them
-+		"TUF" for historical reasons; TUF models have them and so
-+		do some other ASUS lines).  Writes take six positional
-+		values:
-+
-+		    <cmd> <mode> <red> <green> <blue> <speed>
-+
-+		cmd is 1 to save the setting to flash or 0 to apply it for
-+		the current boot only.  mode selects the animation, with 0
-+		static; values of 9 and above 12 are sent as 10.  red,
-+		green and blue are 0 to 255.  speed is 0 (slow), 1 (normal)
-+		or 2 (fast).
-+
-+		Reads return the current hardware configuration in the same
-+		format, with the command word fixed at 1.
-+
-+What:		/sys/class/leds/asus::kbd_backlight/kbd_rgb_state
-+Date:		Oct 2026
-+KernelVersion:	7.4
-+Contact:	Bartu Alev <bartualev@gmail.com>
-+Description:
-+		Controls when the keyboard RGB backlight is lit, on the
-+		hardware that exposes kbd_rgb_mode.  Writes take five
-+		positional values:
-+
-+		    <cmd> <boot> <awake> <sleep> <shutdown>
-+
-+		cmd is 1 to save the setting to flash or 0 to apply it for
-+		the current boot only.  Each flag is 1 or 0: boot, awake
-+		and sleep enable the backlight during boot, normal
-+		operation and suspend, and shutdown keeps the backlight lit
-+		while the machine powers off (S5).
-+
-+		Reads return the current flags in the same format, with the
-+		command word fixed at 1.
+Patch 2 adds a PCH PWM fallback path: when dell_uart_bl_init() returns
+-ETIMEDOUT, the driver reads the Intel PCH BLC_PWM registers and
+registers a BACKLIGHT_PLATFORM device.
+
+v3 -> v4:
+  - Revert __free(pci_dev_put) to manual pci_dev_put() calls to fix
+    build error when CONFIG_PCI is disabled (kernel test robot)
+
+v2 -> v3:
+  - Split into two patches: preparatory refactor + fallback (Ilpo)
+
+v1 -> v2:
+  - Use SZ_16 instead of 0x10, add linux/sizes.h (Ilpo)
+  - Name BIT(31) as PCH_BLC_PWM_ENABLE (Ilpo)
+  - Fix double-space in block comment (Ilpo)
+  - Reduce devm_backlight_device_register() to fewer lines (Ilpo)
+  - Extract dell_uart_bl_init() for the normal UART backlight path (Ilpo)
+
+Chitransh Mandhaniya (2):
+  platform/x86: dell-uart-backlight: extract dell_uart_bl_init() from
+    probe
+  platform/x86: dell-uart-backlight: fall back to PCH PWM on UART
+    timeout
+
+ .../platform/x86/dell/dell-uart-backlight.c   | 158 +++++++++++++++---
+ 1 file changed, 135 insertions(+), 23 deletions(-)
+
 -- 
-2.56.0
+2.43.0
 
