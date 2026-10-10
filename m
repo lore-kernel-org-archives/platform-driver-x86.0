@@ -1,276 +1,148 @@
-Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902113806D6
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791627658; cv=none; b=EvskfWZ5mqMSo83mQjQ9ewZli+1Ag12ilnqTcoTtL/EF6wvxBc73ChJLluptAx2kkyyV3LpAVKNIkXE/pA4CwndGFoQER7yOhm/9m+j/c5R+gW10+q8CQr2Ey3CsVbIwMJ2mWU5ZvIPp3zwDHeqfLPCQ49+sn7BSHBRde6KEvIw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791627658; c=relaxed/simple;
-	bh=jR3g2LEs6PZpulT7IxU4LSKN5CIY7gOIB8OtU+If5i8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a5/z1UEoCQVzCLRvnSpXDsoKaD/uK3sLfMSJlqSFidulXzcQEeXjzsPobKewlsdzC0PbpMGx6ffupM3asa5/k45FaHBp8yKf9ZNV60UqeLQ6ecstRd4lz0HQ7XiNuOo2xq3flFchoepDKEygV5OFwEFU0+9R0Jyx6Cwq5srofak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJNJzqPV; arc=none smtp.client-ip=74.125.82.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEEE44F56D;
+	Sat, 10 Oct 2026 11:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791631436; cv=pass; b=NWOhWTMHGbwSG/qe0sIYWY8ujT0EnSJJBD5FP1Gxh07ARmbJYwFIBZCpYPm8T2BLrW4ptKriNtiSLcQ3igfo/rn5sLCllqQxmjo9muBBr68ztb9UmJ8KwgdBwNPanbdKXU9pOqkJh6SZGbc2gxVGsK+KBdkN/ERx1VbRFFI13yw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791631436; c=relaxed/simple;
+	bh=pJSOzAxuESSCHlMg0Yz+jQnIULz9WJc15TtLgcWELyM=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=R7mlMBJzBvSZ5awy6eE/Ug0/sBykJQ9q6RwjbWWpSlEzxEcdETt/Yv8c2R9k0QJMrYMe+ZGNzwnaDF8UJ4VnPCUc7kuQgAFBCWZyIkpN/j+k/iv5Aktz2Amv7Cl28MVotGZQSQbp+bUGxR7he5dlDLCPhs9pYP5j/PzzSQf0oI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=Zp4dtU/I; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJNJzqPV"
-Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-15756f82e8aso2759019c88.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 03:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791627656; x=1792232456; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=JE80p0aKkjW4uC1WzGsP+ZY/2cS53zFB3ufUOEOIpkQ=;
-        b=GJNJzqPVPTLuHSQMqX8xZEHbljz7hQ3Ho0A2r+7GrRhft8zYAHApMAUYeE9a51/Elv
-         H7MUSCH+A2bNtpS0pEyFnkJZeexVCiAExH+8Y5B/3xNNiiZ1XTZr7818DlUrC0HpUBDb
-         lpPpCM2pUcmM+1l23ip3djIFJ1lR31HR0NoXYxiaHhb3A0pDAEeIHUv2/0ymA3Iwvda3
-         pziNcO+JOm9JEnP21hnad97gDVhQ+suonbENThTnOsfV/2X3J2gHyYfe7THNMnemz9/e
-         C6zsjiwK1hzsYhVZrHiJrxeIeV0BvI5on61q3ONt+To8sCU+8awVFWvBSUFyd+iDaL6c
-         jSfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791627656; x=1792232456;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=JE80p0aKkjW4uC1WzGsP+ZY/2cS53zFB3ufUOEOIpkQ=;
-        b=08bHZWjQwBWbfz9umvj1kv2I9RlrKNp0C51GTP/v4Gdo10Muqb0fZfsXSMlAfiDauA
-         vYoVREI4JxPHW0505NbDaKbET4v6C8C64HLr5BoD8diLgOlFOJGDTdU1G1wBfRq41und
-         0lu1eciS9moHJHJaniqIYbA/ulfNFuNaCMU+rXdFJEfZajWpoKs6D+meF0duoGp6y5Ru
-         GMOL8ckyjsKQ1Na5kwGMSi/lEGLv+Y9v7m2POzeQYBzXbzdAXX1QV4P7AUE5CuNb5xu2
-         0YoGXevJLdClZAHsMUtXRklEkdzP025zFHe00CQuGVzk6WOQ/g3eJz9l4ffNf14pZzQ0
-         wrgQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwqzyJ1/ToKAYcMPTGLrRRPuQkGCU/GFDhuHKjoa3t0sGuF5E3GXlr7z8Zy+bEQCsxVCfnmWPRu8D71vB/Lc0MDCYIV@vger.kernel.org
-X-Gm-Message-State: AFq9FYL5mHhLdF7oU9GEQuTLmOtuAbBF4rkCnvggjgWfLxVg8VNtDy46
-	hLc7saauE9mjYl+c1CLeV/8lQnh4PtJPP/ePtD7shSjnohwI+V7Y+pFsaAXPlA==
-X-Gm-Gg: AYBFou3RlQ/C2ZEZc/+dkOKiigo771AoS5DxjwaQh5Ebo3jzvdd6WFNt59HULPZYLxc
-	J6K5Z19ZO/teaV2ywqfz0n7ZXOXdnlbZslT0FVy8LipuOsBXscakIaohlTAtez0DfUUe1LeFzfs
-	X7dqChFwCSQ07rXGVtwnHgymEbJcHNHJRqnXvf0HoYXvGcWGoe61fLNAyjSOd/6doDSDp4dzzWM
-	lHOzbsRnnWTvCdlySyzwku7omy+eUxLZMDziEBAGsBWc3CwNgt95eRgcIDnnxvhr3tM1XO22Egj
-	qyfk6x7Jtb/cPqtNP9DabXxTpSjIQzuD0Mjc1HQfs2jcEjUdXP7Gjq6bUZT/iI4zknDRnJg4c6y
-	MnrdLstJ5UeNqgtKAg41skkcmLlGRX9DM+HJg/k8U2L/d6mIrGpzFma1mFNC+9qoFKL262BmqvA
-	Fza0cstLsCVuOnINrUnVElwQMnJNq5Xws61y0CVz526TYglNi3JMBnToLKuvivk8bXfWx/BebX9
-	brtJXNc4/QRnlR/qxrGXQkcrMd6yUAHPmYcaA==
-X-Received: by 2002:a05:7022:5f1b:b0:16e:a290:12bc with SMTP id a92af1059eb24-16ea2b0303emr1064711c88.12.1791627656404;
-        Sat, 10 Oct 2026 03:20:56 -0700 (PDT)
-Received: from chitransh.. ([2401:4900:c920:95f0:d96a:36c9:8c1e:6661])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-169a567aef5sm12429714c88.19.2026.10.10.03.20.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Oct 2026 03:20:55 -0700 (PDT)
-From: chitranshmandhaniya@gmail.com
-To: ilpo.jarvinen@linux.intel.com
-Cc: hansg@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chitransh_Mandhaniya@dell.com,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v4 2/2] platform/x86: dell-uart-backlight: fall back to PCH PWM on UART timeout
-Date: Sat, 10 Oct 2026 15:50:12 +0530
-Message-ID: <20261010102012.110394-3-chitranshmandhaniya@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261010102012.110394-1-chitranshmandhaniya@gmail.com>
-References: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
- <20261010102012.110394-1-chitranshmandhaniya@gmail.com>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="Zp4dtU/I"
+ARC-Seal: i=1; a=rsa-sha256; t=1791631425; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=FFhLq9qX0AU02BgR+sa+07l2K0P0WkAxhpAKHsbJBtmCVcu+J4u89Ve3M4/1JiByjvSQrXUYiem6UoksA7qubW4a5iamkK/yR0YRe3BQjQ6HscWn/vrwORU0vT6yA0LAS2ybi+eHCTV1R8/FO/amdQ/UMVygZbMIAkXW/rmRogI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1791631425; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=dPQChoPlEadkoNfJGLN5purAAZBFCFsFppLh//R3MAg=; 
+	b=ByOZoOjiXe06LL5oGCaDkAK+xVYJ27lyYM2I8BBPx+/sYatshjswfvApkn4TXkujhPKPL1B7Di09jKsY9ZcQXAhFWbY7OAoIp5Ypud7MbxvJTteEbPkMB3m6OV2RhU0JVOyz5awoZdDQkWQ6tdI8XrxLYmikOh9dWmOmajrE/Oc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791631425;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=dPQChoPlEadkoNfJGLN5purAAZBFCFsFppLh//R3MAg=;
+	b=Zp4dtU/INmgT3rM+g7iWUO9WM0wGjIp5pY56OIjg+CB7Jgfe13gcGZg7xJQRJH5v
+	m46QVFlCaj5DzFcr8ZIpdavZRbrGNSEgfYI5UZcCZL5tj6s/XoFyQrjuKXLDtUUZdzi
+	C7tDpjJjyXeglqgwpdVDT/AtypwmT2BCdfnn4NEMtGRKnbP5YgV9AOh64ADttEmBiw3
+	hqKP0CastmvGNWAbReYpNOkty3ohUZn6/lHSMcE1tGEY0vehrGeuPTWdIGxuqC/ZMPI
+	wLNg3gkozXLedk0lBPSJUUsY4L/Hda6FkdhGdZ8z4bfnPBXf4x6LSkbe2qYNGypbZ05
+	iRPsaPmQBg==
+Received: by smtp.zohomail.com with SMTPS id 1791631424467426.4797389495177;
+	Sat, 10 Oct 2026 04:23:44 -0700 (PDT)
+Message-ID: <48662921e0679d4d7dc81f65f4496d4db7dcd084.camel@rong.moe>
+Subject: Re: [PATCH v2 0/5] platform/x86: uniwill-laptop: Lightbar fixes
+From: Rong Zhang <i@rong.moe>
+To: Armin Wolf <W_Armin@gmx.de>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	 <ilpo.jarvinen@linux.intel.com>, hansg@kernel.org
+Cc: wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+In-Reply-To: <3a55c989-f16e-40a5-bd2c-201d45c82c85@gmx.de>
+References: <20261007144101.323289-1-W_Armin@gmx.de>
+	 <179148110928.29028.17146158167227573018.b4-ty@b4>
+	 <3a55c989-f16e-40a5-bd2c-201d45c82c85@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 10 Oct 2026 19:18:35 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.56.2-10+b1 
+X-ZohoMailClient: External
 
-From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
+Hi Armin, Ilpo,
 
-Some Dell OptiPlex AIO 7410 (35W, board 01KP8D) ship with DELL0501 in
-the ACPI DSDT (status = 0x0F) even though no UART scalar board is
-physically present.  This causes acpi_video_get_backlight_type() to
-return acpi_backlight_dell_uart, which makes i915 skip registering
-intel_backlight.  The dell-uart-backlight driver then times out talking
-to the absent board and the probe fails, leaving the machine with zero
-backlight control.
+On Sat, 2026-10-10 at 03:22 +0200, Armin Wolf wrote:
+> Am 08.10.26 um 19:38 schrieb Ilpo J=C3=A4rvinen:
+>=20
+> > On Wed, 07 Oct 2026 16:38:53 +0200, Armin Wolf wrote:
+> >=20
+> > > This patch series mainly deals with various issues inside the code
+> > > responsible for controlling the lightbar on supported devices.
+> > >=20
+> > > The first patch utilizes the improved multicolor LED API to report
+> > > the correct brightness of the lightbar to userspace. The next two
+> > > patches fix issues discovered inside the code for controlling
+> > > animations, while the fourth patch fixes an issue with the naming
+> > > of the LEDs in general. The last patch also adds support for another
+> > > variant of the Intel NUC x15 laptop kit.
+> > >=20
+> > > [...]
+> > Thank you for your contribution, it has been applied to my local
+> > review-ilpo-next branch. Note it will show up in the public
+> > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> > local branch there, which might take a while.
+>=20
+> Thank you :)
+>=20
+> I noticed that the LED next branch contains a commit that requires trigge=
+rs
+> to implement a new callback and prints a warning if this is not the case.
 
-A BIOS update fixes this on some models (e.g. OptiPlex 7420, board
-0914RT) by setting DELL0501 _STA to 0, but Dell has not shipped a
-corrected BIOS for the 7410 even in the latest release (1.37.0,
-2026-05-28).
+Whoops, I didn't realize there was another private trigger being added
+during the same cycle.
 
-When the initial get_version command returns -ETIMEDOUT, fall back to
-driving the backlight through the Intel PCH PWM registers (BLC_PWM_CTL /
-BLC_PWM_FREQ / BLC_PWM_DUTY at MMIO BAR0 + 0xC8250).  The fallback
-reads the BIOS-programmed PWM frequency as max_brightness and registers
-a BACKLIGHT_PLATFORM device so that compositors (Weston, GNOME, KDE)
-pick it up normally.
+I have some additional review comments on the implementation of the
+private trigger. See my reply to the relevant patch.
 
-Tested on:
-  - OptiPlex AIO 7410 35W (01KP8D) -- UART times out, PCH PWM fallback
-    activates, backlight fully functional via sysfs and compositor.
-  - OptiPlex AIO 7420 35W (0914RT, old BIOS) -- same timeout and
-    fallback, backlight works.
-  - OptiPlex AIO 7420 35W (0914RT, new BIOS) -- DELL0501 absent, driver
-    not loaded, intel_backlight works natively (no regression).
+>=20
+> Should i wait till the next cycle to send a patch implementing said callb=
+ack
+> or do you want to rebase for-next onto LED next?
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202610100706.x2lcbo7S-lkp@intel.com/
+I would like to ask a similar question, too. The leds part of my series
+has been applied[1], leaving the pdx86 part waiting for further review or
+apply.
 
-Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
----
- .../platform/x86/dell/dell-uart-backlight.c   | 109 +++++++++++++++++-
- 1 file changed, 108 insertions(+), 1 deletion(-)
+Ilpo, may I ask about your preference here? Would you prefer to merge LED
+next and apply the pdx86 part[2] of my series this cycle, or prefer to
+wait until the next cycle? If the latter is preferred, should I resubmit
+the series then?
 
-diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
-index e3b7f1beda5b..15ce637442df 100644
---- a/drivers/platform/x86/dell/dell-uart-backlight.c
-+++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-@@ -13,10 +13,13 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/serdev.h>
-+#include <linux/sizes.h>
- #include <linux/string.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-@@ -50,6 +53,12 @@
- #define MIN_RESP_LEN			3
- #define MAX_RESP_LEN			80
- 
-+/* PCH PWM backlight registers relative to Intel GPU MMIO BAR0 */
-+#define PCH_BLC_PWM_CTL		0xC8250
-+#define PCH_BLC_PWM_FREQ	0xC8254
-+#define PCH_BLC_PWM_DUTY	0xC8258
-+#define PCH_BLC_PWM_ENABLE	BIT(31)
-+
- struct dell_uart_backlight {
- 	struct mutex mutex;
- 	wait_queue_head_t wait_queue;
-@@ -64,6 +73,11 @@ struct dell_uart_backlight {
- 	int power;
- };
- 
-+struct dell_pwm_backlight {
-+	void __iomem *mmio;
-+	u32 max_brightness;
-+};
-+
- /* Checksum: SUM(Length and Cmd and Data) xor 0xFF */
- static u8 dell_uart_checksum(u8 *buf, int len)
- {
-@@ -267,6 +281,93 @@ static const struct serdev_device_ops dell_uart_bl_serdev_ops = {
- 	.write_wakeup = serdev_device_write_wakeup,
- };
- 
-+/*
-+ * Some Dell AIO models (e.g. OptiPlex 7410) declare DELL0501 in ACPI but
-+ * have no physical UART scalar board. When the UART times out fall back
-+ * to driving the Intel PCH PWM backlight registers directly.
-+ */
-+static int dell_pwm_update_status(struct backlight_device *bd)
-+{
-+	struct dell_pwm_backlight *pwm = bl_get_data(bd);
-+	u32 duty;
-+
-+	if (bd->props.power != BACKLIGHT_POWER_ON ||
-+	    bd->props.state & BL_CORE_SUSPENDED)
-+		duty = 0;
-+	else
-+		duty = bd->props.brightness;
-+
-+	writel(duty, pwm->mmio + (PCH_BLC_PWM_DUTY - PCH_BLC_PWM_CTL));
-+	return 0;
-+}
-+
-+static int dell_pwm_get_brightness(struct backlight_device *bd)
-+{
-+	struct dell_pwm_backlight *pwm = bl_get_data(bd);
-+
-+	return readl(pwm->mmio + (PCH_BLC_PWM_DUTY - PCH_BLC_PWM_CTL));
-+}
-+
-+static const struct backlight_ops dell_pwm_backlight_ops = {
-+	.update_status  = dell_pwm_update_status,
-+	.get_brightness = dell_pwm_get_brightness,
-+};
-+
-+static int dell_pwm_fallback_register(struct device *dev)
-+{
-+	struct dell_pwm_backlight *pwm;
-+	struct backlight_device *bl;
-+	struct pci_dev *gpu;
-+	struct backlight_properties props = {};
-+	resource_size_t bar0;
-+	u32 freq, duty, ctl;
-+
-+	gpu = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
-+	if (!gpu || gpu->vendor != PCI_VENDOR_ID_INTEL) {
-+		pci_dev_put(gpu);
-+		dev_warn(dev, "No Intel GPU found, cannot fall back to PCH PWM\n");
-+		return -ENODEV;
-+	}
-+
-+	bar0 = pci_resource_start(gpu, 0);
-+	pci_dev_put(gpu);
-+	if (!bar0) {
-+		dev_warn(dev, "Intel GPU BAR0 not assigned\n");
-+		return -ENODEV;
-+	}
-+
-+	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
-+
-+	pwm->mmio = devm_ioremap(dev, bar0 + PCH_BLC_PWM_CTL, SZ_16);
-+	if (!pwm->mmio) {
-+		dev_warn(dev, "Failed to ioremap PCH PWM registers\n");
-+		return -ENOMEM;
-+	}
-+
-+	ctl  = readl(pwm->mmio);
-+	freq = readl(pwm->mmio + (PCH_BLC_PWM_FREQ - PCH_BLC_PWM_CTL));
-+	duty = readl(pwm->mmio + (PCH_BLC_PWM_DUTY - PCH_BLC_PWM_CTL));
-+
-+	if (!(ctl & PCH_BLC_PWM_ENABLE) || freq == 0) {
-+		dev_warn(dev, "PCH PWM not enabled by BIOS (ctl=0x%08x freq=%u)\n", ctl, freq);
-+		return -ENODEV;
-+	}
-+
-+	pwm->max_brightness = freq;
-+
-+	dev_info(dev, "Falling back to PCH PWM backlight (max=%u current=%u)\n", freq, duty);
-+
-+	props.type = BACKLIGHT_PLATFORM;
-+	props.brightness = duty;
-+	props.max_brightness = freq;
-+
-+	bl = devm_backlight_device_register(dev, "dell_uart_backlight", dev, pwm,
-+					    &dell_pwm_backlight_ops, &props);
-+	return PTR_ERR_OR_ZERO(bl);
-+}
-+
- static int dell_uart_bl_init(struct device *dev, struct dell_uart_backlight *dell_bl)
- {
- 	u8 get_version[GET_CMD_LEN], resp[MAX_RESP_LEN];
-@@ -327,7 +428,13 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
- 	serdev_device_set_baudrate(serdev, 9600);
- 	serdev_device_set_flow_control(serdev, false);
- 
--	return dell_uart_bl_init(dev, dell_bl);
-+	ret = dell_uart_bl_init(dev, dell_bl);
-+	if (ret == -ETIMEDOUT) {
-+		dev_info(dev, "UART backlight controller not responding, trying PCH PWM fallback\n");
-+		return dell_pwm_fallback_register(dev);
-+	}
-+
-+	return ret;
- }
- 
- static struct serdev_device_driver dell_uart_bl_serdev_driver = {
--- 
-2.43.0
+[1]: https://lore.kernel.org/all/179025272986.499136.14712876777665893306.b=
+4-ty@b4/
+[2]: https://lore.kernel.org/all/20260921-leds-trigger-hw-changed-v7-11-fe3=
+cdb6dec51@rong.moe/
 
+Thanks,
+Rong
+
+>=20
+> Thanks,
+> Armin Wolf
+>=20
+> > FYI [if applicable to your patch], as per Linus' policy change, also
+> > fixes are mostly routed through for-next unless the fix is for a
+> > commit introduced in the most recent cycle or is clearly a regression
+> > fix.
+> >=20
+> > The list of commits applied:
+> > [1/5] platform/x86: uniwill-laptop: Report correct lightbar brightness
+> >        commit: de41d8b4d0dbb81c81cd99c245238d878a3e1951
+> > [2/5] platform/x86: uniwill-laptop: Implement rainbow animation as trig=
+ger
+> >        commit: 59e4e406b6c08ad41f3ad86db6d42b82d8539c12
+> > [3/5] platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
+> >        commit: 969a3bfa474e35828e142d0160f393a97d9bf0ee
+> > [4/5] platform/x86: uniwill-laptop: Label multicolor LEDs correctly
+> >        commit: 42e6b269fc1134a3fcce57539034ee496e2c1344
+> > [5/5] platform/x86: uniwill-laptop: Extend support for the Intel NUC x1=
+5
+> >        commit: 7a159a14ce0f5d5a3c2f835f39986ec5539ae374
+> >=20
+> > --
+> >   i.
+> >=20
+> >=20
