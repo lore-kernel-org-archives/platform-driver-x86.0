@@ -1,209 +1,120 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E585C1F94F;
-	Sat, 10 Oct 2026 01:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1E8367B71
+	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 01:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791595339; cv=none; b=oQSPOTGl1LYlkjk2krSNozUZtFQtQ5jC9F7wwBjZlODoz0WGUQxUJvu/7Ee3UH90yY+8LBuelAdpHuU814N6YeBneic2eNg39t9W+Nsszn67/o+LXjOM3PbVpzsl3SYm2ziHDkFn+Qt/QgW+5td3HQw27m5CSyoSJIATCjM+qoc=
+	t=1791595783; cv=none; b=pIAzHU+A17pxruKv9Z+M8Pm2LtRbrG6+Z8PVFElq/VTppTBwzJXPMaasj1zsRw29j8K/LoxwVTAi+Xl5VYfqfRAqG/xhD9KQE/QRRTeDPzBCmEkB+fzy/IGf6hpVgAf973Txp2YBOeIKpaum0CfrAFDfWK5ZwkiyAV9qnodjxCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791595339; c=relaxed/simple;
-	bh=tgY2nWLiDwBcHBuuvq1BOi2kZ1mqeXtC/8Z0F629hMg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jEc/gV8A8l71xAELzDNyncOg2yem1LS0s42eOUWMIf0rccGMRQtNOo3e6EAwdDaxl/8VhTmTvXMniYPTpW4iJOy4mHrUueGGr1oNuKdfhjCiy9NR6CP7bxzXWQWygpSTQyPe7R0JN2gplsfmA2U+9sccG1kBVfg7bf7XeJ7kH1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=UiVixOSt; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1791595783; c=relaxed/simple;
+	bh=KBTgGPXwqYMTvTgguf27DJ1ah3djAKSMH1oBB+BYjq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VngSOMZiN9ncEQ6+vPSprGBetMQc0LBFPKuy23Xqu+Yw+mTPnc2IzFbKc1azpge7Ljm/m7g2oM7WJkLZa/C9h0pqYRZ/heUx3i64gLDYEybM124giTTNO3DiA2NyL5L6GegGHg1AM4jP9ixI9Z6v/bipiRKwbPOWJE6GM33mMFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BIyvOiLU; arc=none smtp.client-ip=74.125.82.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="UiVixOSt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1791595328; x=1792200128; i=w_armin@gmx.de;
-	bh=NjPFDaS2NFkJWVTfWVOECit0aMZi5hRDg2LpE320MD4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=UiVixOStJONn6ApGqParF9567fdB5DEq6f2/Dj5Pj1D3m34OZqsCbDPtynZhF+I9
-	 jGiZfXJcbzlT3dUVLfoCApEv8QHhPS/JY65dqG4GsdBD5fdZl8TwDb9tegpkXkP26
-	 RFODgPv8gt84ahH3SGbSoc6luzgACDlmTAfN206z2+TKC7eBowVWRaD05EIbZcBtU
-	 N6S/py6XWTnU+C4ZNo5xT/yb7KXxZExeoQj0Du+xy9aRjQbdTVtdQb7jxcn8m3c+i
-	 T7WraQIHgFBQekfOn+gjcsC6jZrVab1LANrZuFB8O9VpMU25Xp9SzFqEIG8+FfF0x
-	 WlUgYYCmSluj5EPGaw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4zAs-1wYQJo2WYu-00wUGK; Sat, 10
- Oct 2026 03:22:08 +0200
-Message-ID: <3a55c989-f16e-40a5-bd2c-201d45c82c85@gmx.de>
-Date: Sat, 10 Oct 2026 03:22:07 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIyvOiLU"
+Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-15168a20b47so236041c88.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Oct 2026 18:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791595782; x=1792200582; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=H3zas76OUfhL96GeojGYBzXO7tmHzkqw0ykYvlYF/R0=;
+        b=BIyvOiLUktNI4wNDChBGQQcssfi2Oz/4ct19FTXz9CsxwpdSD/lJGCFuemIE8FBabU
+         MwZLYgkTpALz4UhfmUMFV56PrWWoXJM10qYD8k/mh/mlTUJ4xKxQMHB9GgSXr7jWGc9C
+         LC0XRL78N9tvhoAIu1+Kfp4+YxVnw3cJNXjTm9K3z1yH68Brs6n076BiFRnF5vWqw4FC
+         SgQsG4+FS2yVEJI3HpHB6TPNMnrFQCRwIxaNo1y+1aMS9/cfAJrep2cDNWvvoFFkPvXl
+         nNY3SYf72YhMmulO4m/9H1X6lcW2frswjhjhYztsW4956SYMCL/Hk/TZSNTqPugRPsxF
+         LuOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791595782; x=1792200582;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=H3zas76OUfhL96GeojGYBzXO7tmHzkqw0ykYvlYF/R0=;
+        b=tT30CQymxhLwVRqvXVSuuCokodM1VHCZANveN1H+FhLN//Vh1MaF9BdKytB6eHo6eC
+         uYmj1TiIb+gUilapmctN/grrI/7rR/VusiZBW+08J7sTFTI7/VdCkl8vvZBCX4Moaaan
+         KzoPkUmlf2TAbHtO187ZjB3l5KyKcMBaLXhtM/VnmhE1rCoww8OoPYOFsBkj8Ep8HNX+
+         uG9Cn7p5ht+zdQU63Rcq0075ET+f8dBJxnoO2BCdNj/CpS8yNbBx++0QlQCE1ciG/nh6
+         1mM7E0Teu7+oZgu+IWrSNfcIFJNUeMRoQob9TNjd/vz0i7sMDmXXoFiRVOlg3jbjdlM4
+         tNPQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzBUerN0GqN2oFoOtB2YVKLOyBUaZQlhVYZkCzrpSP0Wnr/La4pC++NSydXTibsbHWMXtCoqftJ0QqhYoRQqikplnOa@vger.kernel.org
+X-Gm-Message-State: AFq9FYLTrheelCzedeAqP+KbHC3M7WcozsrQ4UJNKQh24Ppq6qW02Uky
+	jNGC9gQhEi9E2iy2/nWPzdGcOKV29frMi7LO4lV0iok5XrMn34lga3Rv
+X-Gm-Gg: AYBFou2VZWrsFSXprsHfyHewBznYUFUEMAlwuJqNoadbRJ3dinMCbNeIFapyX2k4A56
+	wDlASSuprSJ34ZDc+uB+UMCIM6oCejLxsTwlImLAQ8WvFa5leM+cY1SLqZQ8gISgG3aajoTCTm5
+	3HbrPGdN9XBMVg3Luhwb41hNU66MpfDpQyG/L1bOFFP9hd4Ye7xUG9KiLd/6WAVOVLYPsqXLnGx
+	h6IMhg8oJX35SsQ1wlNRmgHc9+BI3jYm4H2+dNKgXNPOGnIqu7hxBBfsUucoc1ypRwlc8aFrSod
+	ZKUKse53fnqdd4XJvFJYE9IdfehOJZVzT6rywnuq/WtX1B4ymZ0qWRmshFItU4xRCQ4OkaZhRmi
+	OOYJOrzaPDJABbSFaKjb7TiLFtiWqhgew4y9HeNDf0HF+FFpREFKaO1V5f3phzRtc992j/FY4fL
+	j4YXx5l0OjPDsnA5FJ7LL89K63koErKPB4qLFV8w4IgV4gI/OsnGZ03UatwYuvq3N5xEg3pRky9
+	BrPea5VjMYa/hJDu1VyW63F7Ij9LeBVW8cjoZXf
+X-Received: by 2002:a05:7022:e888:b0:168:6ad8:e89d with SMTP id a92af1059eb24-16a5dbfe727mr5007124c88.11.1791595781518;
+        Fri, 09 Oct 2026 18:29:41 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:b7ea:19aa:c6f7:8c02])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-169a567aef5sm8624343c88.19.2026.10.09.18.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Oct 2026 18:29:40 -0700 (PDT)
+Date: Fri, 9 Oct 2026 18:29:37 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Oleksii Kryvenko <diver.ua@gmail.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	Andrzej Pietrasiewicz <andrzej.p@collabora.com>, platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] thinkpad_acpi: probe deadlocks in
+ hotkey_poll_setup() (next-20261008)
+Message-ID: <asmU_fdpt0I_JQK8@google.com>
+References: <20261010002413.30007-1-krivenko@itstep.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] platform/x86: uniwill-laptop: Lightbar fixes
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- hansg@kernel.org
-Cc: wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261007144101.323289-1-W_Armin@gmx.de>
- <179148110928.29028.17146158167227573018.b4-ty@b4>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <179148110928.29028.17146158167227573018.b4-ty@b4>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6haD/SQb2iXPD1YO084IC0/pAsTqPbKhqg6iymqBcv36wbyZX+e
- q4RxbZovu0gbnQqudsB31NfuMprtS+8hOIjO4tvDEJtwgCtRec53jzc9w0WAza1ULU31fM8
- AAIH5WRhYb3IwsFeXDToDxFiLuOdfuHmYiOMWefPIriIK48kybXUGmjIIBkHuEROw4yxZOR
- utoRY2xG5/eORsAMYwQEA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:eVDgs6nt52U=;dAiZ84LIuxBIlEhxp13/38TFemu
- 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
- n65Evqn0jyFQl7NfLdvOvOGxrQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261010002413.30007-1-krivenko@itstep.org>
 
-Am 08.10.26 um 19:38 schrieb Ilpo J=C3=A4rvinen:
+Hi Oleksii,
 
-> On Wed, 07 Oct 2026 16:38:53 +0200, Armin Wolf wrote:
+On Sat, Oct 10, 2026 at 03:20:24AM +0300, Oleksii Kryvenko wrote:
+> On next-20261008, thinkpad_acpi hangs in probe on my ThinkPad
+> X9-15 Gen 1 (CONFIG_THINKPAD_ACPI_HOTKEY_POLL=y):
 >
->> This patch series mainly deals with various issues inside the code
->> responsible for controlling the lightbar on supported devices.
->>
->> The first patch utilizes the improved multicolor LED API to report
->> the correct brightness of the lightbar to userspace. The next two
->> patches fix issues discovered inside the code for controlling
->> animations, while the fourth patch fixes an issue with the naming
->> of the LEDs in general. The last patch also adds support for another
->> variant of the Intel NUC x15 laptop kit.
->>
->> [...]
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-next branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> local branch there, which might take a while.
-
-Thank you :)
-
-I noticed that the LED next branch contains a commit that requires trigger=
-s
-to implement a new callback and prints a warning if this is not the case.
-
-Should i wait till the next cycle to send a patch implementing said callba=
-ck
-or do you want to rebase for-next onto LED next?
-
-Thanks,
-Armin Wolf
-
-> FYI [if applicable to your patch], as per Linus' policy change, also
-> fixes are mostly routed through for-next unless the fix is for a
-> commit introduced in the most recent cycle or is clearly a regression
-> fix.
+>   INFO: task (udev-worker):537 blocked for more than 120 seconds.
+>    __mutex_lock.constprop.0+0x569/0xa30
+>    hotkey_poll_setup+0x50/0x110 [thinkpad_acpi]
+>    hotkey_inputdev_open+0x36/0x50 [thinkpad_acpi]
+>    input_open_device+0xa7/0x170
+>    kbd_connect+0x73/0x90
+>    input_attach_handler.isra.0+0x6f/0x90
+>    input_register_device.cold+0xd5/0x16f
+>    tpacpi_pdriver_probe+0x442/0x4a0 [thinkpad_acpi]
+>   INFO: task (udev-worker):537 is blocked on a mutex likely owned by task (udev-worker):537.
 >
-> The list of commits applied:
-> [1/5] platform/x86: uniwill-laptop: Report correct lightbar brightness
->        commit: de41d8b4d0dbb81c81cd99c245238d878a3e1951
-> [2/5] platform/x86: uniwill-laptop: Implement rainbow animation as trigg=
-er
->        commit: 59e4e406b6c08ad41f3ad86db6d42b82d8539c12
-> [3/5] platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
->        commit: 969a3bfa474e35828e142d0160f393a97d9bf0ee
-> [4/5] platform/x86: uniwill-laptop: Label multicolor LEDs correctly
->        commit: 42e6b269fc1134a3fcce57539034ee496e2c1344
-> [5/5] platform/x86: uniwill-laptop: Extend support for the Intel NUC x15
->        commit: 7a159a14ce0f5d5a3c2f835f39986ec5539ae374
->
-> --
->   i.
->
->
+> The input core calls ->open() with dev->mutex held, and since
+> d6479c25ecef ("platform/x86: thinkpad_acpi: Use
+> input_device_enabled()") hotkey_poll_setup() takes that same mutex
+> again.
+
+Thanks for the report. I posted a fix for this earlier in the original
+patch thread here:
+
+https://lore.kernel.org/all/ar1iwx_390hWw_e7@google.com/
+
+Instead of taking tpacpi_inputdev->mutex or reading dev->users directly,
+it tracks whether the input device is open via a driver-local flag
+protected by hotkey_mutex, which also keeps polling suppression working
+properly when the device is inhibited.
+
+I will send it out as a standalone patch shortly so it does not get lost.
+
+Thanks.
+
+-- 
+Dmitry
