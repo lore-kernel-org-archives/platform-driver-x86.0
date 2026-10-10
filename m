@@ -1,136 +1,155 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-106116.protonmail.ch (mail-106116.protonmail.ch [79.135.106.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326884A7C84
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 12:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC8B38911B;
+	Sat, 10 Oct 2026 14:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791636585; cv=none; b=ghIhoSB3lwXPCif+Tzg+WZ6jyyF5+m1s0DtdAJWoLolUo0/P9mD8P0WnCJS4pTM4d59tivxJPaauf5DdJq7AaJp/0x1CA5aN/gKeAcaY1NvAMZNHkGA4LBNxqg4J2qzUYk0+pYv7QFgFkjftyu/yeLub4j935VAduSjy+adjdqQ=
+	t=1791644153; cv=none; b=isJXHAK5F/t7Yyv8zamsKCTgYQV4x/xvQz1o0gpaKMPO1mlBHyW4BpG+asTk2c9JbSjmbXifNfHowzLy8bt+3DVzNEGmv8ngnfEXTqmMDE8x7Z9OX954p6d3JJvHrkQ/7wPTxchOdAOMeDhSxUNpWtej3cWQ0EuL0mrCSK2i4cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791636585; c=relaxed/simple;
-	bh=1kvBvnU1XqG+LB+Mu/IPw77rDx6+TGEn8znDEATvlDI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Eg1GmU8Veyr8A1WMXK41fPLZ5S1MBAQ8f2xwFE7/cbWmlXx4UV9mWwAWZgYF2Lstt/OqCwbXRoqkl+7icWxgDShZxuqTTQHXTgCi9+Kg1xFErcgF1s2kAZlo7chdPEvBhuHnbIz6Bhinygv+ygYbYWsbslAx7efEKfnd9Ug+k9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RoSbUdH4; arc=none smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791644153; c=relaxed/simple;
+	bh=v939NpmI9a00voLyqehleAh/iDKAshlawobhleSFu6U=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gnSa8rQD6jQphDQG2wbmj/P8UD1Yl8i6PcwVMXpaLbS3ewc/BEGLksS07p9ZkGzpPYlwZqypC5dfuvx2xXGHBGPr27vMJzFvcN9k6+afj1Uf8b7jbKhvM/EkLcG6LTooy4pnPOuL8joAnIW3pvLaOOPeq/TO0/YfahVFFmpUM6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net; spf=pass smtp.mailfrom=ironrobin.net; dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b=V2USoowJ; arc=none smtp.client-ip=79.135.106.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ironrobin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ironrobin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoSbUdH4"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1517bda04a0so227909c88.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 05:49:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791636582; x=1792241382; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=mthh0Sv1VUOW5+w7XlTGMrRo8ZjYlLW2iXmgZOV9P4Y=;
-        b=RoSbUdH4+RXXvTNxJDmJgROevcokfEtlhB+kRQDpI+mDuR9erirySRkE/TvTdTxvMv
-         g6ML8zVCrDcUP3LjLYz3g/8GVhBbeWrdDwrhmLZeUVmrfWiI/BQ7Q26qN+dkHkCPm5d2
-         Es4AlUBW4zsjfIkwjDIILA0TeyIWk/o6nKGaq1fu8+/bHVhe09Zzlw8BtP63/SLwbvX2
-         sGyx1MatHGVAxMMlYGiQR20QBF++ggBoNoW7jG/XtCXuHa9KgYFoZRW1EaXgCMJD9yKB
-         e/Q14BIPpq34wFWkxS+bRiscL9OgrORZHjpikBI93v/wiNFj8zxAYVKRZg1VwIoCyYzK
-         eOCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791636582; x=1792241382;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mthh0Sv1VUOW5+w7XlTGMrRo8ZjYlLW2iXmgZOV9P4Y=;
-        b=YSFAMb6+rTwlS+nvDq0a9GT3cikh6wqJjNqSSuLgGujv4MXdbRCE+K2f4IvFBXzbr8
-         FpxuxbtEpW3Cq0J+Pbs8biyu8oOQsIoaUqqwCKKL+ucoreWz8OYNjGLcCg28D2c1MJvS
-         qjKlEfDBNbqhfHCj+TQ6aF0LeFQENw+/f5wH3Db4MOjKiMCNy1etKK5vQvv+t9EJsHIe
-         YE65Ccxxs2/i2GMDeIeg/prgcQDtXuxFZZMgEztRCT5H5V+B49J0FceVAXUaSXUU96sI
-         wHPLC5Gt+4m9aWDiaIhFfw/SKX8EDoAidIXKm/R7jdSaRnGHPRLD7Cp1LgSvYJlc4LIG
-         6odw==
-X-Forwarded-Encrypted: i=1; AKwUvBzvvHmT85xnyeQp+UJEZLkmD7xmsCye01eQ0n+7DsNnDU1K9wk5ONkaMf4BWw8/d/XNnyQ6S2ng6psg+AfcoCcyb301@vger.kernel.org
-X-Gm-Message-State: AFq9FYLER9kcMiMCkIquyQ2x33uHJ6C+P8CvPuQ7dP4Uctorn4ZtrgLO
-	jZzep/3zxHgy2lLBlZ6fU01pAdq6TM6R2pTnJTK7rPfecJrnzr6eMqvFCXOKIA==
-X-Gm-Gg: AYBFou19C6iA+FkujouUqX364m9SHTw4MCdQKf9djYfM9oxXGa2T9jQ/+uBdGUINq5y
-	vaoS2t8I5OYGY5w0kN2U6c7c9WcUekFtGr1vRfj+S2h3Wa1SCLGpasN9bn24RN+Y70r6JlRtq56
-	33qiOSDi6FMpTnSElfuWWyjbmmbUVSNRJgUUbMWVNvl3/7esmiZx2jdFLJq8O1g+McOzoKNXrji
-	rylvlniWtpeZfCb3U3w9NUolfYAT997TuJbOfViDAXJz1kjCOJ6Ech3L/YEUWccF53T9MqDvCgw
-	J/XwPSedUIH9p1YCoLn0CB4i1ph5M5zXzWl+QVFYVApLIQPO1iTc+M04jiCjKRKQHxdMKqMML4x
-	BKNHzjbEvEC/zYRt3k00FGGqKV8mEuAKS1V1bgyQD3KQhv0RTRKRkogh5/LppkyIEmUC5ngs9Bi
-	XNcmz6sgDhqSnogz8gbN/Bd4NZNVBBe+fb09dC+UEWTgGA327+qkPdE4HqWU4je2RJrbkIbiTvh
-	LceGlAtGY18Ecv+Tv8vEoO5xpM=
-X-Received: by 2002:a05:7022:3a81:b0:14c:efa5:ee7 with SMTP id a92af1059eb24-16a5afe51b5mr6320260c88.14.1791636582095;
-        Sat, 10 Oct 2026 05:49:42 -0700 (PDT)
-Received: from chitransh.. ([2401:4900:c920:95f0:34f7:c1ca:5f91:2fb9])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-169a6021e49sm14204812c88.20.2026.10.10.05.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Oct 2026 05:49:41 -0700 (PDT)
-From: chitranshmandhaniya@gmail.com
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	rafael@kernel.org
-Cc: lenb@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chitransh_Mandhaniya@dell.com
-Subject: [PATCH v5] ACPI: video: force native backlight on Dell OptiPlex AIO 7410 35W
-Date: Sat, 10 Oct 2026 18:18:30 +0530
-Message-ID: <20261010124830.116750-1-chitranshmandhaniya@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
-References: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
+	dkim=pass (2048-bit key) header.d=ironrobin.net header.i=@ironrobin.net header.b="V2USoowJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ironrobin.net;
+	s=protonmail3; t=1791644142; x=1791903342;
+	bh=fa5JzIYwsqpMionMVxYbp1v67vMfG+bdRlbUt/kaalc=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=V2USoowJ8csXDihBUlD+hczjDdEYSXY8iXh4e1LrCkrSLhS/ny7rJ8HpZLqF5E1W4
+	 Omgi2xq7EYmax9CFuV6dFFOmf6+YGPOOxrb2fLttrsMzOMtIa9sCt1I0+lzA8l6A3n
+	 DfOIvxXNMWxfRuDppQnqaxHkkG+B9wAG4IfusDsW91VzlDjpQIZw93gO1r4zEQWAGl
+	 fgCuankXTyspqL8ImmmgfwoKC/L0epIavGQalp9l8owhuSkd04FQIiWBV5SxeQ879l
+	 0vMM03MBxp3bzB3qI8lZ8byhojc05xqaQm0h6Ld0Pav9g17qjlFdqrB1bOg3y3Ad7F
+	 qbiEzN0a8r7Hw==
+Date: Sat, 10 Oct 2026 14:55:36 +0000
+To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Alex Robinson <alex@ironrobin.net>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Steev Klimaszewski <threeway@gmail.com>, platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/3] Lenovo ThinkPad X13s embedded controller support
+Message-ID: <20261010145519.8370-1-alex@ironrobin.net>
+Feedback-ID: 54785507:user:proton
+X-Pm-Message-ID: 34815f69c52f96980c821e0f394f0119bafda55e
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
+Add Device Tree support for the ThinkPad X13s embedded controller,
+providing keyboard-backlight control and firmware-driven brightness
+notifications. Its event, backlight and power-management interfaces
+differ from the T14s EC and require a separate driver.
 
-The Dell OptiPlex AIO 7410 35W (board 01KP8D) declares DELL0501 in its
-ACPI DSDT (status = 0x0F) even though no UART scalar board is physically
-present. This causes acpi_video_get_backlight_type() to return
-acpi_backlight_dell_uart, which makes i915 skip registering
-intel_backlight. The dell-uart-backlight driver then times out talking
-to the absent board and the probe fails, leaving the machine with zero
-backlight control.
+EC wakeup remains disabled by default because lid closure can trigger
+an unwanted wakeup and no selective event mask is known. Other EC event
+mappings remain outside the scope of this series.
 
-A BIOS update fixes this on some models (e.g. OptiPlex 7420, board
-0914RT) by setting DELL0501 _STA to 0, but Dell has not shipped a
-corrected BIOS for the 7410 even in the latest release (1.37.0,
-2026-05-28).
+This follows earlier X13s EC work by Konrad Dybcio and Steev Klimaszewski.
+Development was assisted by an LLM, including analysis of the X13s ACPI
+DSDT and review of the implementation.
 
-Add a DMI quirk to force native backlight on this model so that i915
-registers intel_backlight and brightness control works out of the box.
+Changes in v6:
+- Retry failed low-power entry and exit writes once, matching the X13s
+  DSDT's two-attempt ECWS(..., 3) loop without repeating GPIO transitions
+  or changing ordinary EC writes.
+- Include linux/irq.h explicitly for irq_get_trigger_type() and
+  IRQ_TYPE_EDGE_FALLING, addressing the reported s390 build errors.
+- Carry Krzysztof Kozlowski's Reviewed-by from v3; the binding is unchanged=
+.
 
-Tested on:
-  - OptiPlex AIO 7410 35W (01KP8D, BIOS 1.37.0) -- confirmed
-    acpi_backlight=native produces working intel_backlight (raw,
-    max=96000), DMI quirk has the same effect.
-  - OptiPlex AIO 7420 35W (0914RT, BIOS 1.27.0) -- DELL0501 absent in
-    updated BIOS, intel_backlight works natively (no regression).
+Changes in v5:
+- Replace the private suspended/access-blocked flag and deferred-event
+  handling with IRQ quiescing and LED class suspend/resume helpers.
+- Flush pending LED brightness restoration before re-enabling the EC
+  event IRQ, so pending lid events are handled afterwards.
+- Preserve the EC lid-restore brightness during PM blanking/restoration.
+- Update the LED brightness cache on lid-open restoration without a
+  hardware-change notification, avoiding a spurious backlight OSD.
+  Retain notifications for firmware-driven changes such as Fn+Space.
+- Include dev_printk.h directly for device logging helpers.
+- Leave the binding and DTS unchanged from v4.
 
-Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
----
- drivers/acpi/video_detect.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v4:
+- Set GPIO103 bias-pull-up explicitly, based on its firmware-inherited
+  configuration measured at pinctrl probe before Linux claimed or
+  configured the pin. CTL offset 0x67000 read 0x00000003 (pull field 3).
+  The temporary measurement instrumentation is not included.
+- Remove output-high from the GPIO176 pinctrl state. The driver already
+  requests GPIOD_OUT_HIGH at probe and controls the line during sleep.
+- Restore the suspend brightness snapshot only if it was successfully
+  captured during that suspend, avoiding restoration of a stale value.
+- Use FIELD_MODIFY(), validate brightness against the LED maximum, and
+  simplify transfer error handling and selected mutex-protected paths.
+- Include linux/ratelimit.h explicitly and adjust conditional formatting.
+- Shorten commit messages to focus on rationale rather than the diff.
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index e3b69f876d24..1af14e04e597 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -883,6 +883,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 7770 AIO"),
- 		},
- 	},
-+	{
-+	 .callback = video_detect_force_native,
-+	 /* Dell OptiPlex AIO 7410 35W */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex AIO 7410 35W"),
-+		},
-+	},
- 
- 	/*
- 	 * Models which have nvidia-ec-wmi support, but should not use it.
--- 
-2.43.0
+Changes in v3:
+- Disable EC wakeup by default without disabling runtime IRQ handling.
+- Retain wakeup-source as a description of hardware capability.
+- Remove the Kconfig help text's claim of wake support.
+
+Changes in v2:
+- Make backlight snapshots and EC power-management operations best-effort.
+- Save firmware- and software-selected brightness in the EC and restore
+  the EC-saved brightness on lid open.
+- Process deferred events after the normal resume brightness restore.
+- Add QUP8 pin configuration verified on hardware and fix DT node ordering.
+
+Build and software testing (revised v6):
+- Rebuilt the revised power-state retry code as an ARM64 driver object
+  with W=3D1 and GCC 16.2.1, without warnings.
+- Passed 15 mocked tests using the actual write helper and PM function
+  bodies, covering success, retry-success, retry-failure, and short writes.
+  Verified attempt counts, error results, GPIO ordering, and requested
+  10 ms delays with AddressSanitizer and UndefinedBehaviorSanitizer
+  enabled. These tests verify software behavior, not physical timing.
+- Applied all three patches to clean Linux v7.3-rc4, without the separate
+  PCI workaround, using both git apply and patch -Np1 --fuzz=3D0. Both
+  produced identical source files, with no offsets or fuzz.
+- Checkpatch reported no errors; its only warnings were the generic
+  MAINTAINERS reminders (the series includes an entry).
+
+Earlier validation of unchanged DT content:
+- Before the retry change, compiled the ARM64 driver object and X13s DTB
+  with W=3D1 using GCC 16.2.1 and the package's config.aarch64 after
+  olddefconfig. The driver compiled without warnings; the DTB build
+  reported four avoid_unnecessary_addr_size warnings in sc8280xp.dtsi
+  DSI nodes outside this series.
+- Before the retry change, passed dt_binding_check for the unchanged
+  lenovo,thinkpad-x13s-ec.yaml binding and its example, and targeted
+  validation of the built X13s DTB against that binding.
+
+Hardware testing on a Lenovo ThinkPad X13s booted with revised v6,
+including the power-state retry helper:
+- Passed manual s2idle suspend/resume.
+- Passed lid-close s2idle suspend and lid-open wake.
+- Keyboard-backlight level 2 was restored correctly after both cycles.
+- Sysfs brightness reported 2 after manual resume.
+- No unexpected keyboard-backlight OSD appeared.
+- Kernel logs confirmed suspend/resume cycles at 09:29:19-09:29:36 and
+  09:35:07-09:35:29.
+- No EC, I2C, or GPIO errors appeared in the filtered logs.
+
+Additional hardware testing before the power-state retry change verified
+keyboard-backlight levels 0, 1, and 2, including physical brightness,
+and Fn+Space firmware-driven changes with correct userspace OSD
+notifications and brightness levels.
+
+Earlier series:
+https://lore.kernel.org/all/20260925215358.33417-1-alex@ironrobin.net/
+
+Alex Robinson (3):
+  dt-bindings: embedded-controller: Add Lenovo ThinkPad X13s EC
+  platform: arm64: Add Lenovo ThinkPad X13s EC driver
+  arm64: dts: qcom: sc8280xp-x13s: Add embedded controller
+
+base-commit: 93f51579e7df248780214094418f205253383cc5
 
