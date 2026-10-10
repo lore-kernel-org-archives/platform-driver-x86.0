@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A6439FCE;
-	Sat, 10 Oct 2026 01:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31682D1F40;
+	Sat, 10 Oct 2026 01:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791595014; cv=none; b=IaU9DqucDAUcHZJdv6+pOFUBIgEfR4TDFlnX3q5sQQgOR8251oEOHqvCoPAI6Y0hchAb8LF9iihuHcnEghbH7jjayY8HyDHIDOwj6V1XZx4Ve3Qj2Ieh5F/3TzLjKi/qzthlK9RIMpKu8Z4QfXpj1YvUSh3dMG4PSI5fkOdyIjs=
+	t=1791595199; cv=none; b=LxeLB655luYfBSFf1A+h34+Ecw5gGlcFa9q/FmuntrMyHqNzfWNMAobT1PnaBFKwkajdcw3LJU7BzsPlSUOxSNQsDHyxlH5KIAfh4vUl9cv5pjBh2Whwcc7xFlAEX4L4MU8v2+trfkfOMl3Wj2x1o4CKsbIvz6gfx7o7vq+QHvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791595014; c=relaxed/simple;
-	bh=93ZsJ5v8KxVS2eEGvjwbZE+PAz1+gc6tpp82ZukoRfk=;
+	s=arc-20240116; t=1791595199; c=relaxed/simple;
+	bh=GVynOQ5JCtE4yeOLACQKJj4j6Jl1gDqjfFRpBrv0ol8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YE/1rq1IPe7/d29S05VfFGaTw/kQLb/74m3zWOohsIak34NQOJDiHHjUzzHaYBXA9O6+T4/G9mDv94aqR4p1VUN/QQSUN1SO/h/ALSrh+lVCHIGcd877MCVsVl4j3sYOPGwVGA3fOFwk2aba1ZpJgSevq1IBZHbaNS1bshBI9pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KsM6col1; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=EuAELkyESVr+LE/B7i8CAr+XYLurs+OYCD4jyGnV9+xdFLw+pStcflvFeX9NJYq2L7YbplxGiRsuYyKTSpZYVy5NPI6EiQKQn638O+b4KKbeRQUjvDDU8EY4U4uz6Yvvc3g3LYp7XHFr4lwp3sPIcdNUlSzHidPMgs1KZZzhC5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jScEBBTW; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KsM6col1"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jScEBBTW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1791595010; x=1792199810; i=w_armin@gmx.de;
-	bh=wzzMGjcDRNeSveDNFt68lse9DZHdp1LglOfDJsTZJI8=;
+	s=s31663417; t=1791595186; x=1792199986; i=w_armin@gmx.de;
+	bh=uzl5kTDeeWQG5Usx/vi2k01u9k3ks6M1oyTZVIm1zTA=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=KsM6col1DCyaz7V9hS8JIbzyVqIjMBFdH293r5GL/kJJLGAoqtKuao2N8ePgY2d0
-	 y0iQfr6HTbbwlITlEm693QqJt+xshrao4ERjJ/yFJYaGb73yaOfxVSJ/Wtc0sKzjd
-	 jsq4fszlxWow91kkrbaRgrEcRJOG38taDUt2cW+/9chH5Wm0658+bwlYYIxTZZtOI
-	 MXdddldKSMZ4vHlZL0jgmHdtI1zYDXC+T3nvNsB5plvsynn9ofCGbKnr2aMnSk41o
-	 v20ubV+tfjbZxLEFNvKUfPwWDFK9LZAhUCQ+RiyGqog2m/Im4KRliuaUMgqCGJX5m
-	 nJBmtXuxg8gFIA4HdA==
+	b=jScEBBTWjgZFsfCJLWll+m7GRUhWuneMf2piJ0DelHISy4hmtSmMjSloVssipQua
+	 XgRS5LjV2KO0Sv5srgMaVT5LN3KOvl8VAWV+TiYlBCr1fZEjJLSwOUQZwJWNE1ysX
+	 IqcklGV7hguqAivAurPN12+6Jd6Dw4LZtZMGuwenlly/vy0ZZBn7KsIstVDAq/i4c
+	 hN//3Y6hoqeuEZUvMjQGccbeApozhtKM5JIr9Q3IaI8c/QOSq8zGpNNOOOvYaNJfp
+	 YPSaiMda0I1Ec+syVuOGGr2XJn09GwpGDFka0TxEtoa3ZP9W6cAimgdVUjAt03c13
+	 vBLxmglsEgdQMVdb6w==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmlXA-1wqV5I1s3S-00fVaF; Sat, 10
- Oct 2026 03:16:50 +0200
-Message-ID: <bcc471f4-bae6-4de6-a60d-7f37f5df64a9@gmx.de>
-Date: Sat, 10 Oct 2026 03:16:48 +0200
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MwfWa-1wRDtw2RIY-01601k; Sat, 10
+ Oct 2026 03:19:46 +0200
+Message-ID: <bb1e3abe-5dac-4f91-b5bf-0aac276ec68e@gmx.de>
+Date: Sat, 10 Oct 2026 03:19:45 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,7 +43,7 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/12] platform/x86: lenovo-wmi-capdata: Adopt new WMI
+Subject: Re: [PATCH v2 11/12] platform/x86: lenovo-wmi-helpers: Adopt new WMI
  API
 To: Rong Zhang <i@rong.moe>, Mark Pearson <mpearson-lenovo@squebb.ca>,
  "Derek J. Clark" <derekjohn.clark@gmail.com>,
@@ -53,110 +53,110 @@ Cc: Charles <hanker007@gmail.com>,
  Navon John Lukose <navonjohnlukose@gmail.com>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20261009-lwmi-wmi-new-api-v2-0-402828382679@rong.moe>
- <20261009-lwmi-wmi-new-api-v2-7-402828382679@rong.moe>
+ <20261009-lwmi-wmi-new-api-v2-11-402828382679@rong.moe>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20261009-lwmi-wmi-new-api-v2-7-402828382679@rong.moe>
+In-Reply-To: <20261009-lwmi-wmi-new-api-v2-11-402828382679@rong.moe>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TutMBbvWLPzlgJGmdZsh2zy1DwqF1U87RYrmGxkIk3JgoNoOc0Q
- BywExWq4nDryaJlQ0iPxvopLpGDk/hPTinWhGwZIATYABl+ARMC9LXOfxiw7EQKRoRrRmZ8
- 8qWF1aFkZXWy+WCJ0bARLll6SA61Nt+Zsf5XwcwT12bksD6HXfUBSXDdsy6S2gTsh8TKypH
- OsD2gwSoK0wGGoch9iaPg==
+X-Provags-ID: V03:K1:tHv75PcS2pDnZOwVOEpvwbYib8nD6FXMbW67AY3pooA91muUc+I
+ OZ3NZ8WUVkJ5IWk24QS4edQCiDc/KYpy7aTBoRwi1r9xQ0aovGMjZHgbdFLF9TGCQrMWnF2
+ b3sA+VZSNnSH8JSy5p0PK6TZ+UG+GA6zPxVxQpMLni2+Mw+OUYc5C0WMdFnEPEHgBP954dw
+ GMqQX/lIp9F8ssMFF7zsQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:E8eCcZAm6ao=;i0Le2bH3m8VvqNDrd71s9t1zLtC
- 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
- Uyct19vA==
+UI-OutboundReport: notjunk:1;M01:P0:24VAG1VvUnM=;3IkyWCGyEskfxj/RT3urXSv/gH+
+ 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
 
 Am 09.10.26 um 14:53 schrieb Rong Zhang:
 
@@ -165,147 +165,113 @@ Am 09.10.26 um 14:53 schrieb Rong Zhang:
 >
 > Adopt it to make our life easier.
 >
-> Note that the new WMI API only accepts a few ACPI types to conform to
-> the behavior of the Windows WMI-ACPI driver. By adopting the new API, we
-> intentionally rejects improper ACPI types instead of silently ignoring
-> them.
->
-> Meanwhile, considering that `struct_size(block, data, count * 3)' may
-> overflow when calculating `count * 3', ignore Fan Test Data with count >
-> U8_MAX instead of caping `count'.
->
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
->   drivers/platform/x86/lenovo/wmi-capdata.c | 71 ++++++++++++++---------=
-=2D-------
->   1 file changed, 32 insertions(+), 39 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platfor=
-m/x86/lenovo/wmi-capdata.c
-> index de8044ef68b8..d70fe4504fc5 100644
-> --- a/drivers/platform/x86/lenovo/wmi-capdata.c
-> +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-> @@ -628,17 +628,19 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv *pr=
-iv)
->   	}
->  =20
->   	for (idx =3D 0; idx < priv->list->count; idx++, p +=3D size) {
-> -		union acpi_object *ret_obj __free(kfree) =3D NULL;
-> +		struct wmi_buffer wbuf;
-> +		int ret;
->  =20
-> -		ret_obj =3D wmidev_block_query(priv->wdev, idx);
-> -		if (!ret_obj)
-> -			return -ENODEV;
-> -
-> -		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
-> -		    ret_obj->buffer.length < size)
-> +		ret =3D wmidev_query_block(priv->wdev, idx, &wbuf, size);
-> +		if (ret =3D=3D -ENODATA) /* The block is too short, probably stubbed.=
- */
->   			continue;
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Capdata 01 is an extension to capdata 00. */
-> +		struct capdata00 *capdata __free(kfree) =3D wbuf.data;
->  =20
-> -		memcpy(p, ret_obj->buffer.pointer, size);
-> +		memcpy(p, capdata, size);
->   	}
->  =20
->   	return 0;
-> @@ -680,43 +682,35 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv=
-)
->    */
->   static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
->   {
-> +	struct wmi_buffer wbuf;
->   	struct cd_list *list;
-> -	size_t size;
-> +	int ret, idx;
->   	u32 count;
-> -	int idx;
->  =20
-> -	/* Emit unaligned access to u8 buffer with __packed. */
->   	struct cd_fan_block {
->   		u32 nr;
->   		u32 data[]; /* id[nr], max_rpm[nr], min_rpm[nr] */
-> -	} __packed * block;
-> +	};
-
-Hi,
-
-i suggest you keep the __packed here. With this being addressed:
+> Note that the Windows WMI-ACPI driver converts all ACPI objects into a
+> common buffer format, so adopting the new API intentionally accepts more
+> ACPI types as a followup of commit 465dc9da8ff6 ("platform/x86:
+> lenovo-wmi-helpers: Convert returned buffer into u32").
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
+> Suggested-by: Armin Wolf <W_Armin@gmx.de>
+> Link: https://lore.kernel.org/r/f1787927-b655-4321-b9d9-bc12353c72db@gmx=
+.de/
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>   drivers/platform/x86/lenovo/wmi-helpers.c | 61 ++++++++++++-----------=
+=2D-------
+>   1 file changed, 23 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platfor=
+m/x86/lenovo/wmi-helpers.c
+> index 8f5766c391eb..687caa226263 100644
+> --- a/drivers/platform/x86/lenovo/wmi-helpers.c
+> +++ b/drivers/platform/x86/lenovo/wmi-helpers.c
+> @@ -24,9 +24,10 @@
+>   #include <linux/export.h>
+>   #include <linux/module.h>
+>   #include <linux/notifier.h>
+> -#include <linux/unaligned.h>
+>   #include <linux/wmi.h>
+>  =20
+> +#include <asm/byteorder.h>
 > +
-> +	ret =3D wmidev_query_block(priv->wdev, 0, &wbuf, sizeof(struct cd_fan_=
-block));
-> +	if (ret =3D=3D -ENODATA) /* The block is too short, probably stubbed. =
-*/
-> +		return 0;
+>   #include "wmi-helpers.h"
+>  =20
+>   /* Thermal mode notifier chain. */
+> @@ -42,49 +43,33 @@ static BLOCKING_NOTIFIER_HEAD(tm_chain_head);
+>    * @size: Length of the buffer.
+>    * @retval: Pointer for the return value to be assigned.
+>    *
+> - * Calls wmidev_evaluate_method for Lenovo WMI devices that return an A=
+CPI
+> - * integer. Validates the return value type and assigns the value to th=
+e
+> - * retval pointer.
+> + * Calls the specified WMI method for Lenovo WMI devices that return a =
+WMI
+> + * integer. Validates the return value and assigns it to @retval when i=
+t's not
+> + * NULL, otherwise the return value is not validated.
+>    *
+>    * Return: 0 on success, or an error code.
+>    */
+>   int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 me=
+thod_id,
+>   			  unsigned char *buf, size_t size, u32 *retval)
+>   {
+> -	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> -	struct acpi_buffer input =3D { size, buf };
+> -	acpi_status status;
+> -
+> -	status =3D wmidev_evaluate_method(wdev, instance, method_id, &input,
+> -					&output);
+> -	if (ACPI_FAILURE(status))
+> -		return -EIO;
+> -
+> -	union acpi_object *ret_obj __free(kfree) =3D output.pointer;
+> -
+> -	if (retval) {
+> -		if (!ret_obj)
+> -			return -ENODATA;
+> -
+> -		switch (ret_obj->type) {
+> -		/*
+> -		 * The ACPI method may simply return a buffer when a u32
+> -		 * is expected. This is valid on Windows as its WMI-ACPI
+> -		 * driver converts everything to a common buffer.
+> -		 */
+> -		case ACPI_TYPE_BUFFER:
+> -			if (ret_obj->buffer.length < sizeof(u32))
+> -				return -ENXIO;
+> -
+> -			*retval =3D get_unaligned_le32(ret_obj->buffer.pointer);
+> -			return 0;
+> -		case ACPI_TYPE_INTEGER:
+> -			*retval =3D (u32)ret_obj->integer.value;
+> -			return 0;
+> -		default:
+> -			return -ENXIO;
+> -		}
+> -	}
+> +	struct wmi_buffer input =3D {
+> +		.length =3D size,
+> +		.data =3D buf,
+> +	};
+> +	struct wmi_buffer output;
+> +	int ret;
+> +
+> +	if (!retval)
+> +		return wmidev_invoke_procedure(wdev, instance, method_id, &input);
+> +
+> +	ret =3D wmidev_invoke_method(wdev, instance, method_id, &input,
+> +				   &output, sizeof(__le32));
 > +	if (ret)
 > +		return ret;
+> +
+> +	__le32 *valp __free(kfree) =3D output.data;
+> +
+> +	*retval =3D le32_to_cpu(*valp);
 >  =20
-> -	union acpi_object *ret_obj __free(kfree) =3D wmidev_block_query(priv->=
-wdev, 0);
-> -	if (!ret_obj)
-> -		return -ENODEV;
-> +	struct cd_fan_block *block __free(kfree) =3D wbuf.data;
->  =20
-> -	if (ret_obj->type =3D=3D ACPI_TYPE_BUFFER) {
-> -		block =3D (struct cd_fan_block *)ret_obj->buffer.pointer;
-> -		size =3D ret_obj->buffer.length;
-> +	count =3D block->nr;
->  =20
-> -		count =3D size >=3D sizeof(*block) ? block->nr : 0;
-> -		if (size < struct_size(block, data, count * 3)) {
-> -			dev_warn(&priv->wdev->dev,
-> -				 "incomplete fan test data block: %zu < %zu, ignoring\n",
-> -				 size, struct_size(block, data, count * 3));
-> -			count =3D 0;
-> -		} else if (count > U8_MAX) {
-> -			dev_warn(&priv->wdev->dev,
-> -				 "too many fans reported: %u > %u, truncating\n",
-> -				 count, U8_MAX);
-> -			count =3D U8_MAX;
-> -		}
-> -	} else {
-> -		/*
-> -		 * This is usually caused by a dummy ACPI method. Do not return an er=
-ror
-> -		 * as failing to probe this device will result in sub-master device b=
-eing
-> -		 * unbound. This behavior aligns with lwmi_cd_cache().
-> -		 */
-> +	if (count > U8_MAX) {
-> +		dev_warn(&priv->wdev->dev,
-> +			 "too many fans reported: %u > %u, ignoring\n", count,
-> +			 U8_MAX);
-> +		count =3D 0;
-> +	} else if (wbuf.length < struct_size(block, data, count * 3)) {
-> +		dev_warn(&priv->wdev->dev,
-> +			 "incomplete fan test data block: %zu < %zu (%u fans), ignoring\n",
-> +			 wbuf.length, struct_size(block, data, count * 3), count);
->   		count =3D 0;
->   	}
->  =20
-> @@ -731,11 +725,10 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwm=
-i_cd_priv *priv)
->   	priv->list =3D list;
->  =20
->   	for (idx =3D 0; idx < count; idx++) {
-> -		/* Do not calculate array index using count, as it may be truncated. =
-*/
->   		list->cd_fan[idx] =3D (struct capdata_fan) {
->   			.id      =3D block->data[idx],
-> -			.max_rpm =3D block->data[idx + block->nr],
-> -			.min_rpm =3D block->data[idx + (2 * block->nr)],
-> +			.max_rpm =3D block->data[idx + count],
-> +			.min_rpm =3D block->data[idx + (2 * count)],
->   		};
->   	}
->  =20
+>   	return 0;
+>   };
 >
