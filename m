@@ -1,62 +1,62 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAEE353A72
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9C6369D76
+	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 10:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791627408; cv=none; b=FdD8J2Dr/qVvWRMpdn3aT4U4KVmRCZdawVLRW0prMxPJMWuDi4Bi12B4AJwVGnaamiXpT0reLuiny2n6Gx5dDwOuFVu97+MfRV/wQzeW3ZqYnzRZDFUaZbE211qIJYcPxxixlKPUsLig7LH4Hjca5M0ULq27IgxLsnASQOuEJf4=
+	t=1791627414; cv=none; b=otD3lEM4KcxtlN5eM1Cdz441Hl3sIWqDD242/zunnIYWzqTOS04qMt+topL6841igCKloo5RrqWvZzXQOrNjmmsy7JBN0cF4AdwyS8xoPsvSfZQ2X1GuUkpIlxDww39Ulgeuekkl47qj6EUp+1OqCOUIcfTfkYVYmgUt6d2UtFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791627408; c=relaxed/simple;
-	bh=sCljAVWLjKOLm7IfEi0mbyqGtrODlKofnZw7AfHjiIo=;
+	s=arc-20240116; t=1791627414; c=relaxed/simple;
+	bh=vmMrai/SZHWfjpubrhmvNZYZ2tmXfd2uKqkrZBhCMj4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k7dQTvKf98sDRjQiIh/UWy9N79N1B4bV8vkexI/SfkOb1/IG81JL5oOizVi1vBV0Hy/7GPCXSJOTcv859rLTwePMvMRckcGzPN3tIr88Qg3bHVAaDqTMgWlhMH8fE3HHDZ0sagULMCiMrgK5BNVbqC7Zz841PGR7E8I/qdf1pQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dt8UK+xY; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=rIGry3Zx37swFzp5QYwYIG/I58rpmDeFga6aP9MVkT9CzP9LaBskmTxFBV2e2pvwC0tU+NzCpcfACM6kOakecEA5oVH8NKbsyc0cnZb/wL76LS7B8obkAMY70rtc5PzH/kCrGPBt/l0/F8GyARQxU0cD0FpNIh/scF9yqm344P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ImA1fi7n; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dt8UK+xY"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4980fe6b3beso14434545e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 03:16:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImA1fi7n"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-48b060ec084so274737f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Oct 2026 03:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791627405; x=1792232205; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1791627410; x=1792232210; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=360Ah81wzUt84jPWuHxVGQCsAvtIkeDp95VvPwcByPc=;
-        b=dt8UK+xYV3af/mOP+RBdZXW+r5mO30lcCsoTNkl/rBAX+AvUjRQXK3je8El8+ZI6cS
-         xyAcGc5KU0Uelos8Y0PXkgL7jkdDR48Ef4VrFW4YChSP2Xs1J4W1bTZYNow1e8lb8kfH
-         xfmCpKIDiax9s54hmo3REjRg7R+n1Mqms75bTZ3LDlhFOdzxEdqKC+34ivCy54eYewp4
-         P6k9slgLrm5KxYwtyWlxYh/NWGXuz2Ur9E9dvws8GrDZQcm3I8o+hzoasfN/Z84vUDF/
-         P2NVlR1xieDOtwCP5oV7zkSIaAng6+34LHBHB/JKFFXjBH71SoHoGd2PP3Vy2Rn1WtLp
-         0//Q==
+        bh=yyaHXbmIQ7chKBwYcW/anldepruSkhnw3Mp3qDjouh8=;
+        b=ImA1fi7n+XdMirxe3q9Ap09ai0W6LTkCdufJd177sCP2TTuohTbROPxc3ZqxHOFEXo
+         A5oW6diohPBDWJpvhDWgLC4cg6MvJZjHZ4RopxLJUQ9T6FDSUlJkQ0knHhydUpwaP4Rg
+         7u7k/an51Oy0udCazGGS8vryd2nu/wJNzWkbdO+J6W9Y4/EdQTj+SoCw0dbQRZHcFmep
+         udCjDF1CY7uQlOxMBU9/b2mjwVa2Fjk3waikbmVKpPnprDS/loIr/o4czEfpZpvSn6xF
+         Gb7zfuvvL+2YQfDzrqHoS/zkmkBw1lzfBDosofWm5lF1OLdIgJEOJF/6ydpWsitciLNM
+         ElJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791627405; x=1792232205;
+        d=1e100.net; s=20260707; t=1791627410; x=1792232210;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=360Ah81wzUt84jPWuHxVGQCsAvtIkeDp95VvPwcByPc=;
-        b=fmK/CW630TAhnIkMRUUA4Dtt2ylPdAGTzjQCDcGU7GDbL4cR+ZS4ZEU1REc/7oCEod
-         +IgcTschbmm0gxEHmj+Qy2aUpgricgZc1W9Mcg5AFz7PWmANeenaA1DtzEulSkDZkHlo
-         UtB9XX9XNtqfhrCxDlQy2Rmk5zjjSZNgp39mYmyOm7gxWliSmuBFjxvda1cN33sFib5/
-         YOwpAyQSPx/dvVK5pKfSjdS1eekukSKV0Wje/E+MxMAiRAZELayo2maJUX/5rw7LEPnN
-         TlYQt9/o4T0a3wq0F3phSmBmB9CUjsbw7+EjWo16xx2ANV8zaElnK8XMb78FhnRqEGnj
-         Pubw==
-X-Gm-Message-State: AFq9FYILKeacgRpOiYGxnQp+PpdjWafH/NZSjxFGHGzNxudXD0Y6iuSj
-	PEE6lr8y99eV8/bVAUrLPtnUJi4VCndqixEiWHUZD8pqvRwrMXLZBWXCv4gI94UwZXTYTDG/
-X-Gm-Gg: AYBFou1u89ZGBqgGhQzcOo8gYBRRwJp3Yq4966yR2RpzVViMzeOxciUFc+Bpj6NKqHm
-	X45aTO8cM2Y6lV/fFsweNuxXXEOIs/kbI2h4jGQErw1e5gKcl7hq+WJvbVXJ5dYEGSCxa/Y3QUJ
-	iu2FJ1+gaZcAV93WrXTNszGO5JJvReE/4Pn2SagJPxlylpjcrnvBSPpXR1shnJUCRG/yCR6us1X
-	dWcFwT9Zi0+5RMEGaOskrtZAFV+mG30atMnCvP9n8Mvlu4A38Y1o/xQSx8ktxjBiXzBKWXyuE9G
-	LOLyN1tk7i5Bs+vLcp5CPmERPOybg0zm/8VRYpbHGaKRfjvLC3quFD8pn4dhJkZeXc4/LERuT0s
-	ifY6Qm8VGt+yr9ROTT5Ua0S+tkSnsgJDs8e5em6M5BA+rFwKxdOaPKVTVRQi7VwtKvFAtuW9zB9
-	+hEEqO+71fQ8B/t24xYZKzgz4xoZe0/V46ClWq2gMfRBM4EuMbSBfC33ZM7uU=
-X-Received: by 2002:a05:6000:dc2:b0:48d:659d:f8a3 with SMTP id ffacd0b85a97d-48db949033dmr6700203f8f.23.1791627405144;
-        Sat, 10 Oct 2026 03:16:45 -0700 (PDT)
+        bh=yyaHXbmIQ7chKBwYcW/anldepruSkhnw3Mp3qDjouh8=;
+        b=1jJdAVigjAPOBqdMHvh5sEdYGMTK6h+LVyT1tF2EPzC0acGzSB2+pHiX8XTg80fTrZ
+         3RJAJgUuypJOPJUqPSsSyTNaPpyRcNp94wUGTN6oLLb8E940wDDAm0Dd5b5xiGFT+Vo7
+         pZ38/zvJzerm2s73GQdOdWfUdH+n4rsnPU3PPXzmSA6iaI9KPYpZQi0j04vop53Z36vw
+         wzaozeY9dBvnGb/ahyTnRJbQhIxwbi2Ghr2y0ORFX24P6u51FKoawUYdvV1NmtHn47rf
+         e8w+/S/u6IamHejIgpptpOrxLYxiYhwFbfHrM83E89QuN0LIuEw/9Q9EkSQffY7+lTiU
+         YZ3g==
+X-Gm-Message-State: AFq9FYK41TpvxcDKwEii9kGFIopojGqcufMYYDjWbl+JPvFXpGkaHOom
+	2invkSbxMDXRnJR0vDAo9DJ2IRyxPbSaPoT4oPsGMxJWzsFoCrKgoH1xuF8zjLkUzmB2ktG3
+X-Gm-Gg: AYBFou1ySHAsesEbeiRQOzV9N21njCmUqFRuZnAvaiLfukvT1psychlTVbwSqiq1fc9
+	+AEvilJOLKjLgKS6nMLKNn5mxWNPxu93vooZZRCsatc2zs0Pu7Hsez2tI/2gdXO61FbBF366dkQ
+	0F8zh8QedOpC/39tpPnFNWKYQaI4dixgdbyVOiWTwR5GTWKVfCbcton1oQNyIRblK2Ym4O+ti6t
+	vF9yjQXFtZyhKbuNwtyE7njYv7PRY+i/0CL+w/XkJE7uA+r0Bk1RNEhSajlSzDgDIkzEP0x6IRq
+	cU5LFEoP4V/5Su9aEqD8j1O7BRMf2AKMtIieo9tgtxL4nIG2dP0NgR2oddpwXj2XznO7qzt3hoV
+	pfN0gh0LEQWTF+NYJcMDnFkk3yjmBFL2z7ew5ZyG77ThczaNk3LnBRq4Oe/69IsASxip9p7Xr3h
+	cJzgaverRmO0pkjKyJYq5sCILyH1l+qhhvWRzojJTDxH50LPJCftwWz+ElMdI=
+X-Received: by 2002:a05:6000:2f89:b0:488:89ed:4430 with SMTP id ffacd0b85a97d-48dbacdfc52mr8738925f8f.33.1791627410079;
+        Sat, 10 Oct 2026 03:16:50 -0700 (PDT)
 Received: from ASUS ([85.105.252.11])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db98c38f4sm9417856f8f.27.2026.10.10.03.16.40
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db98c38f4sm9417856f8f.27.2026.10.10.03.16.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Oct 2026 03:16:43 -0700 (PDT)
+        Sat, 10 Oct 2026 03:16:49 -0700 (PDT)
 From: Bartu Alev <bartualev@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com,
@@ -67,10 +67,11 @@ Cc: ilpo.jarvinen@linux.intel.com,
 	corentin.chary@gmail.com,
 	linux-api@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartu Alev <bartualev@gmail.com>
-Subject: [PATCH v3 1/5] platform/x86: asus-wmi: rename TUF RGB state DEVID to _CMD
-Date: Sat, 10 Oct 2026 13:15:57 +0300
-Message-ID: <20261010101601.888709-2-bartualev@gmail.com>
+	Bartu Alev <bartualev@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v3 2/5] platform/x86: asus-wmi: fix TUF keyboard power state shutdown naming
+Date: Sat, 10 Oct 2026 13:15:58 +0300
+Message-ID: <20261010101601.888709-3-bartualev@gmail.com>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261010101601.888709-1-bartualev@gmail.com>
 References: <20261010101601.888709-1-bartualev@gmail.com>
@@ -82,53 +83,61 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The pre-existing TUF RGB state DEVID (0x00100057) is a write-only
-command used with the DEVS method. Rename it to make clear it is a
-command rather than a readable state, avoiding confusion with the
-upcoming readback support.
+The fourth state flag of kbd_rgb_state_index is named "keyboard" and has
+long been treated as having no effect.  In hardware the flag, BIT(7) of
+the payload sent to the TUF RGB state device, gates whether the keyboard
+backlight stays lit while the machine powers off: with the bit set the
+keyboard lights up white during the ACPI S5 sequence, with the bit clear
+the machine powers off dark.  Verified by A/B testing both values on a
+TUF Gaming A15 (FA507NV).
 
-Suggested-by: Denis Benato <denis.benato@linux.dev>
+Rename the fourth field and its index entry from "keyboard" to
+"shutdown".  The write format is unchanged, the value is still
+positional, and the diff is two variable names and one string, so it
+backports cleanly.
+
+Fixes: 61f64515299e ("platform/x86: asus-wmi: Implement TUF laptop keyboard power states")
+Cc: stable@vger.kernel.org
 Signed-off-by: Bartu Alev <bartualev@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c            | 4 ++--
- include/linux/platform_data/x86/asus-wmi.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a65090429ca7..5adf7a289f82 100644
+index 5adf7a289f82..5cc71bfac841 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -1140,7 +1140,7 @@ static ssize_t kbd_rgb_state_store(struct device *dev,
+@@ -1119,10 +1119,10 @@ static ssize_t kbd_rgb_state_store(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 const char *buf, size_t count)
+ {
+-	u32 flags, cmd, boot, awake, sleep, keyboard;
++	u32 flags, cmd, boot, awake, sleep, shutdown;
+ 	int err;
+ 
+-	if (sscanf(buf, "%d %d %d %d %d", &cmd, &boot, &awake, &sleep, &keyboard) != 5)
++	if (sscanf(buf, "%d %d %d %d %d", &cmd, &boot, &awake, &sleep, &shutdown) != 5)
+ 		return -EINVAL;
+ 
+ 	if (cmd)
+@@ -1135,7 +1135,7 @@ static ssize_t kbd_rgb_state_store(struct device *dev,
+ 		flags |= BIT(3);
+ 	if (sleep)
+ 		flags |= BIT(5);
+-	if (keyboard)
++	if (shutdown)
+ 		flags |= BIT(7);
  
  	/* 0xbd is the required default arg0 for the method. Nothing happens otherwise */
- 	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
--			ASUS_WMI_DEVID_TUF_RGB_STATE, 0xbd | cmd << 8 | (flags << 16), 0, NULL);
-+			ASUS_WMI_DEVID_TUF_RGB_CMD, 0xbd | cmd << 8 | (flags << 16), 0, NULL);
- 	if (err)
- 		return err;
+@@ -1149,7 +1149,7 @@ static ssize_t kbd_rgb_state_store(struct device *dev,
+ static DEVICE_ATTR_WO(kbd_rgb_state);
  
-@@ -5153,7 +5153,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ static DEVICE_STRING_ATTR_RO(kbd_rgb_state_index, 0444,
+-			     "cmd boot awake sleep keyboard");
++			     "cmd boot awake sleep shutdown");
  
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
- 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
--	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
-+	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_CMD);
- 
- 	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE))
- 		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index b5ed8c83ace1..ecf8b5e6cbae 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -159,7 +159,7 @@
- #define ASUS_WMI_DEVID_TUF_RGB_MODE2	0x0010005A
- 
- /* TUF laptop RGB power/state */
--#define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
-+#define ASUS_WMI_DEVID_TUF_RGB_CMD	0x00100057
- 
- /* Bootup sound control */
- #define ASUS_WMI_DEVID_BOOT_SOUND	0x00130022
+ static struct attribute *kbd_rgb_state_attrs[] = {
+ 	&dev_attr_kbd_rgb_state.attr,
 -- 
 2.56.0
 
