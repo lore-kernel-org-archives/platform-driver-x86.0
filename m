@@ -1,356 +1,139 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050E735A395;
-	Sun, 11 Oct 2026 19:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791748387; cv=pass; b=LsUauPLF5B1qoVKUuoCWbMTgAWiJqWIUKVe4aMgnC9PQdd3KLgmcbbqQUaPJshAKSJ64t+YHT+++0KQf/d9jN9mUust8ZQm/O9aSu5EMSigjoljC682nIOT2mY3O77lrtLEeHt0KxVr4ks9R5z88IcfI4McPq6Sorv7YyhfGfZ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791748387; c=relaxed/simple;
-	bh=0wYxKFlPmNVJ4iYBf1Uloc/Hkn72LMIBKw/3/6MTdlc=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=rvPsPZDCR6Nwb/T1hDn34M7T+oDc6CGg0I2VWHgVBpFpqDqXqHXBHCU7BxUhEFDcA5w3dH8eq+V0BbeQiUzvUEzVQ/ajk4E38i/FLx6VA6rd8Ftl4dQ6MlSGllfiHmUT9QlAz0MUCLi/59eqWUpq0Vb7nIRWEyXJy35C1tcyJPI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=bBdxULdI; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2985F3E51C6
+	for <platform-driver-x86@vger.kernel.org>; Sun, 11 Oct 2026 21:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791755316; cv=none; b=Co3ZLJcIDCuQYKVGttBcNEUy4gamrMJ6efR0PnG9Wj6TNJMt0o6s89KtAIrZ7C8LMuQay4In6klA7zeQdlpYazDEMiCil3tBeqpfoKLH3EyGhAMTl3agRL/b14w4Amx0BOGzeH2gwlxEqKaSvQDcsUha3Ik8A4XbGoi82oNePHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791755316; c=relaxed/simple;
+	bh=qL56l/74i7UPnkj0GLxOV/StLiKn6Ktn+Ot7xproics=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JzYNOA/vlPeh3w83iZB7UErv0EZNPEq8xTON+CSrzClZGLyk+vu+NOkgCuNpCaDFjzFkBOHMlmQp+z4fgOvjEonMVDEraS1KoQp6ViiUBAaU4fJLj2pFPXtEPr4Zc6Ekru+a/lCJ9mD7UBPNetuZqTLUEzGX76yYayXP069ezIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org; spf=none smtp.mailfrom=thinkoid.org; dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b=x5bDV2lD; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=thinkoid.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="bBdxULdI"
-ARC-Seal: i=1; a=rsa-sha256; t=1791748375; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=XDR1jBViY8Bexr60Jm2Nwvg30tV3uYrpGvhHw5CElOJVUWTcv+bGbwczndgmoFKFTjjfxgi1Ns2L8VYhwKCWa0DY3eW2HHNNhTz5kANDJB53VVnvg1Mm2O8JIKRvTGQ8Dk9QakuRCIiX++m1FbyIw3T1hzFLlFLLnXarLFBTQuo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1791748375; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=JioO99Wy7cUGDgZKTWaXWHv12LZct4tUjuOiO/Pi0Bk=; 
-	b=j2auPcyz9faWdFrFLYhDU9wf5FtKu+bcsa2YpYuSYOafKZSLCReWP24vxaXyVygRj2aNgbi7uTa5RF2hFYanCPYGdfNVZX/sfupAxyT8Nuj/q1UvE8X90ZaAouC8RoF1boYSYU9AR0jFgT4B0DmJTfjZnmP2bYFC7hmuhJ/4KQg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791748375;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=JioO99Wy7cUGDgZKTWaXWHv12LZct4tUjuOiO/Pi0Bk=;
-	b=bBdxULdIrINqwyCkm8QYVLIjXADw2T2Oyi/ngxuO5MvWIVFABJtAEGPPiWNMwOxU
-	EGo2aDBCZly59us2llBRZGhR75qySK0VtBx/NDF+A4+s9yWHaADt8/BwXRmgkIpfroL
-	niLxPibY48rQIYKpsoh+j2feeDVXzBwZJmc2OHstXwfqiA3XPG3Fdx4yk7aUepaDJjy
-	QwyzhOI8LMNLep7P2y4FVqqK7R3hA8/FcH58j2EHXsF82dI4QdoN6ZlEkqglsrOB+c9
-	TgL/6Ygc951drTlFejW6oFRzVw4yHQ170sxEtyXCSV2tPk758Y7nOWbMjoVMb/a8sSj
-	zTn0PNA7cg==
-Received: by smtp.zohomail.com with SMTPS id 1791748374291659.8468890399357;
-	Sun, 11 Oct 2026 12:52:54 -0700 (PDT)
-Message-ID: <b31878aeb4af648106adc74efbb2d1e839f9f8ea.camel@rong.moe>
-Subject: Re: [PATCH v2 2/5] platform/x86: uniwill-laptop: Implement rainbow
- animation as trigger
-From: Rong Zhang <i@rong.moe>
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-In-Reply-To: <9087d109-d757-43bc-b80d-64df7dc9ff82@gmx.de>
-References: <20261007144101.323289-1-W_Armin@gmx.de>
-	 <20261007144101.323289-3-W_Armin@gmx.de>
-	 <035799dd461fe0e7a60564e11f10fd23eb3daabf.camel@rong.moe>
-	 <9087d109-d757-43bc-b80d-64df7dc9ff82@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 03:47:48 +0800
+	dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b="x5bDV2lD"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-5351748222cso9566171cf.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 11 Oct 2026 14:48:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thinkoid-org.20251104.gappssmtp.com; s=20251104; t=1791755312; x=1792360112; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=UFJLfz+4sRUNEqtKCFfthYjnWFBYCE3On80t62/yc6w=;
+        b=x5bDV2lDtBrgXaC5lmeZz/tTzTvLRxaUk9m1Qh5HPjizFera7HiyiVdhHLUcDodM/F
+         Ao8tUXFgbGUrsI1OYeKmTpr2JFFFOEz2RE7BCdEGnH11vsMc317Jy2e6iAxeHK5DKgge
+         mxmvgpLNL69TvCQ/us3UJvs48BRxuYACVQwLtNBw64o58nFZFZdqGtMB4Q357VWWLHRr
+         wgDkgAmpBtGeo4lJQsJXhVUy/R7bhkwt3Bx22evvRy+JrXf6tjjygovfs+BmI59wXvXp
+         RoshgizhcOwjBVqFlQSVsPieBLo/z4MNrWnitXu7qFURjPSclYaG1XLVInxNlOURd3Ld
+         BqgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791755312; x=1792360112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=UFJLfz+4sRUNEqtKCFfthYjnWFBYCE3On80t62/yc6w=;
+        b=TYRGtzfMT6HKUzD6mu10Nk4GpuWrh5K3uo3Jx/qUzKbM+51DencVLE7Lfq6eNCh7N/
+         /IVIemcPaFrsxtnpSzf0mhhoeVt6u4wk43lTvW7Z5kuk+y3TRfRGkhZOfMs+J3HqZGu/
+         AWZ9BoLnqwnSsXtk0HtgqBnp+ctnv81bpC1iSfpI6tHbQZ0Xgw2IM4TKSpx49yXAcr0y
+         WKWduFisudLT/7K6g0+p1DPTPNXB4iLLF4O1kksUTvLM7/ucswC8TppW9z4oyhK++KBh
+         KYq+eKyx62O/DmfQuxODEOIO4O3PQPQFDJxeX1p6OyFi4e/mCzAaxt7GO3eIr/sP6vS6
+         G7iw==
+X-Forwarded-Encrypted: i=1; AKwUvBwqvswkJSZmikr+0h7/zbcIwqKiJ8XCyU75LlL8YG1fqhpNI46RpaAblWIdQSJrp3yQYLiRHBjSPpAe8C4jewlH57cX@vger.kernel.org
+X-Gm-Message-State: AFq9FYJDsv6GNxd186zun8OlRZZubSqmaNjwqbJj2naQDQsjY/g54t0/
+	qkKbbwj7I9Ldj+AfkA4mRhsRDTY0DamOf1T8ovpWDpl1/8SvpLzmIElaxa2Xtzlj/ZA=
+X-Gm-Gg: AYBFou0ex0sBljdt/uJoXD82I0guryddz7zjttViF96/TM11MArl6r1X3RAmTGePN/K
+	OErNzy+pslZm+8gXr5J2dds+Ahg4hhM5fSEjD7L1EgtP8BSFKqNqvKvB7UrLIhWRGTBu6AwhIfD
+	I+q9z9CyREATCkgmxBR9O2mWNOScxRkYgr3LndOHRkpEpxPOiCZWekGbEeRenxv0d8OoI8ylM0W
+	/8ZFQvsd8FwJ3otRTbfj4o5dN11z/QHauTp1yExFMmKdJG7aO4xCHMJ1KgD74zDhj82TBaMMGJ1
+	34TjQbQBaLQyCSdg/O8ChGjXaFAWGxK/fwhPfu2P6OEPUsj3VdBZd3lUkur/S1QhwrnXMd2iBBi
+	kyYSJJ/ZlZMcxn2XsbFRDXHsdUJ7nn+wodAS7TChOrVBCwlodaefQMJgP5kAIYdljSFZbvqeBi+
+	4/bq/7EvCY3d5FQtoYeFjVSzx2RIXIF+Vsng9OFJM5JpL25MU=
+X-Received: by 2002:a05:622a:144c:b0:533:3bf7:49f0 with SMTP id d75a77b69052e-5359fa8cf25mr138217211cf.25.1791755311784;
+        Sun, 11 Oct 2026 14:48:31 -0700 (PDT)
+Received: from armok ([2605:a601:a61d:7a00::c])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5359b7ecccdsm65857371cf.30.2026.10.11.14.48.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Oct 2026 14:48:31 -0700 (PDT)
+From: Liviu Nicoara <lnicoara@thinkoid.org>
+To: Aleksandrs Vinarskis <alex@vinarskis.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Abel Vesa <abelvesa@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Abel Vesa <abel.vesa@oss.qualcomm.com>,
+	Tobias Heider <tobias.heider@canonical.com>,
+	Val Packett <val@packett.cool>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	linux-hardening@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v6 0/3] Introduce EC driver for Snapdragon X1E based Dell XPS 13 9345
+Date: Sun, 11 Oct 2026 17:35:28 -0400
+Message-ID: <20261011213528.13207-1-lnicoara@thinkoid.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261011-dell-xps-9345-ec-v6-0-2a66a364fe70@vinarskis.com>
+References: <20261011-dell-xps-9345-ec-v6-0-2a66a364fe70@vinarskis.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Armin,
+On Sun, 11 Oct 2026 19:50:07 +0200, Aleksandrs Vinarskis wrote:
+> This series adds Embedded Controller (EC) driver for Dell XPS 13 9345.
+> While EC appears to control most of device's peripherals, particular
+> driver addresses power and thermal managment issues.
 
-On Sun, 2026-10-11 at 02:52 +0200, Armin Wolf wrote:
-> Am 10.10.26 um 13:20 schrieb Rong Zhang:
->=20
-> > Hi Armin,
-> >=20
-> > On Wed, 2026-10-07 at 16:38 +0200, Armin Wolf wrote:
-> > > It turns out that some models require the lightbar to be activated
-> > > in order to display the rainbow animation, so users have to access
-> > > both the "rainbow_animation" sysfs attribute and the LED sysfs
-> > > interface when enabling the rainbow animation. This can cause short
-> > > glitches when the lightbar was previously disabled.
-> > >=20
-> > > Fix this by replacing the sysfs attribute with a custom LED trigger
-> > > called "uniwill-rainbow". Selecting this trigger will atomically
-> > > activate the lightbar and enable the rainbow animation mode. This
-> > > can potentially break userspace applications using the old sysfs
-> > > attribute, but so far no such application is known to exist (yet).
-> > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   .../ABI/removed/sysfs-driver-uniwill-laptop   |  10 ++
-> > >   .../ABI/testing/sysfs-driver-uniwill-laptop   |  11 --
-> > >   .../admin-guide/laptops/uniwill-laptop.rst    |   5 +-
-> > >   MAINTAINERS                                   |   1 +
-> > >   drivers/platform/x86/uniwill/Kconfig          |   1 +
-> > >   drivers/platform/x86/uniwill/uniwill-acpi.c   | 133 +++++++++++----=
----
-> > >   6 files changed, 95 insertions(+), 66 deletions(-)
-> > >   create mode 100644 Documentation/ABI/removed/sysfs-driver-uniwill-l=
-aptop
-> > >=20
-> > > diff --git a/Documentation/ABI/removed/sysfs-driver-uniwill-laptop b/=
-Documentation/ABI/removed/sysfs-driver-uniwill-laptop
-> > > new file mode 100644
-> > > index 000000000000..c226efc23b59
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/removed/sysfs-driver-uniwill-laptop
-> > > @@ -0,0 +1,10 @@
-> > > +What:		/sys/bus/platform/devices/INOU0000:XX/rainbow_animation
-> > > +Date:		November 2025
-> > > +KernelVersion:	6.19
-> > > +Contact:	Armin Wolf <W_Armin@gmx.de>
-> > > +Description:
-> > > +		Forces the integrated lightbar to display a rainbow animation when=
- the machine
-> > > +		is not suspended. Writing "1"/"0" into this file enables/disables =
-this
-> > > +		functionality.
-> > > +
-> > > +		Reading this file returns the current status of the rainbow animat=
-ion functionality.
-> > It'd be more helpful by documenting the removal date, version and what
-> > has replaced it.
->=20
-> True, i will write a patch to address this.
+Tested v6 on a second XPS 13 9345 (BIOS 2.14.0), on 7.2.6 with the
+PMIC5 Gen3 ADC and ADC_TM drivers and the board thermal zones [1]
+backported. The driver probes, gets all seven channels and reports to
+the EC without an error. Two observations from this unit:
 
-[..snip..]
+1. The two GPIO thermistor channels. Here AMUX3_GPIO (0x14c,
+   lpddr5_therm) reads the top of the conversion table, ~130 C, from
+   boot on, and AMUX4_GPIO (0x14d, usb_charger_left_therm) does not
+   move when a charger warms the left port. AMUX2_GPIO (0x14b) does,
+   1.6 C in three minutes, and AMUX1_GPIO (0x14a) reads a plausible
+   board temperature. Windows' ADC1.bin puts SYS_THERM1/2 on
+   0x14a/0x14b, and hamoa-pmics.dtsi in next defines those two. The
+   patch configures no PMIC GPIO for AMUX3/4, where mainline sets
+   pm8550 gpio3 and gpio4 for AMUX1/2; so either the two thermistors
+   sit on 0x14a/0x14b on this board, or AMUX3/4 want the pin
+   configuration. As it stands the EC is told the memory is at 130 C.
+   The fans did not react to that here, at idle on battery.
 
-> > > -
-> > >   static ssize_t breathing_in_suspend_store(struct device *dev, struc=
-t device_attribute *attr,
-> > >   					  const char *buf, size_t count)
-> > >   {
-> > > @@ -1258,7 +1213,6 @@ static struct attribute *uniwill_attrs[] =3D {
-> > >   	&dev_attr_super_key_enable.attr,
-> > >   	&dev_attr_touchpad_toggle_enable.attr,
-> > >   	/* Lightbar-related */
-> > > -	&dev_attr_rainbow_animation.attr,
-> > >   	&dev_attr_breathing_in_suspend.attr,
-> > >   	/* Power-management-related */
-> > >   	&dev_attr_ctgp_offset.attr,
-> > > @@ -1288,8 +1242,7 @@ static umode_t uniwill_attr_is_visible(struct k=
-object *kobj, struct attribute *a
-> > >   			return attr->mode;
-> > >   	}
-> > >  =20
-> > > -	if (attr =3D=3D &dev_attr_rainbow_animation.attr ||
-> > > -	    attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
-> > > +	if (attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
-> > >   		if (uniwill_device_supports(data, UNIWILL_FEATURE_LIGHTBAR))
-> > >   			return attr->mode;
-> > It'd be better to convert breathing_in_suspend into an LED device
-> > attribute. See led_classdev->groups.
->=20
-> We cannot do this because this field is being used by the multicolor LED =
-class.
+2. Resume. With the driver loaded, a key press wakes the machine
+   through the PMIC power key: the EC has powered the keyboard off, as
+   the comment in the driver says, and the keyboard delivers no event
+   for the key that woke the machine; instead pm8941-pwrkey reports a
+   KEY_POWER press and release at resume. With logind's default
+   HandlePowerKey=poweroff and no desktop holding the power-key
+   inhibitor, the machine shuts down right after it wakes. With the
+   inhibitor held, the resume is clean and the machine stays up, so
+   the resume command does its job. Without the driver the keyboard
+   wakes the host as an i2c-hid device and no power-key event appears.
+   Reproduced twice; GNOME and KDE take that inhibitor, so they would
+   not see it.
 
-Whoops, I didn't notice that.
+[1] https://lore.kernel.org/all/20261006185557.23016-1-lnicoara@thinkoid.org/
 
-> I can try to find a workaround for this.
-
-(+CC Lee, Pavel, linux-leds)
-
-IMO the best way to solve the dilemma is to introduce class_group for
-led-class-multicolor and led-class-flash, or else we will have to
-introduce (or have already introduced?) more workarounds for other
-drivers.
-
-For this cycle let's keep the attribute as is.
-
-[..snip..]
-
-> > > +
-> > > +static struct led_trigger uniwill_lightbar_trigger =3D {
-> > > +	.name =3D "uniwill-rainbow",
-> > > +	.activate =3D uniwill_lightbar_trigger_activate,
-> > > +	.deactivate =3D uniwill_lightbar_trigger_deactivate,
-> > > +	.trigger_type =3D &uniwill_lightbar_trigger_type,
-> > > +};
-> > > +
-> > >   #define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGH=
-TBAR_S3_OFF | LIGHTBAR_WELCOME)
-> > >  =20
-> > >   static int uniwill_led_init(struct uniwill_data *data)
-> > > @@ -1587,12 +1593,18 @@ static int uniwill_led_init(struct uniwill_da=
-ta *data)
-> > >   	data->led_mc_cdev.led_cdev.max_brightness =3D 1;
-> > >   	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
-> > >   	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led=
-_brightness_set;
-> > > +	data->led_mc_cdev.led_cdev.trigger_type =3D &uniwill_lightbar_trigg=
-er_type;
-> > > +	data->led_mc_cdev.led_cdev.hw_control_trigger =3D uniwill_lightbar_=
-trigger.name;
-> > > +	data->led_mc_cdev.led_cdev.hw_control_set =3D uniwill_led_hw_contro=
-l_set;
-> > A private trigger does not need hw_control_set, which is only meant to
-> > coordinate between different drivers, i.e., in the case when the LED
-> > device and the hardware control trigger are located at different driver=
-s.
-> >=20
-> > I've also updated the documentation in commit 8e04e5382aa9 ("leds:
-> > trigger: Add hw_offloaded() callback and provide
-> > trigger_may_offload_to_hw attribute"), quoted below:
-> >=20
-> >     Alternatively, a private trigger can be implemented along with the =
-LED
-> >     driver if the LED's hardware control doesn't fit any generic trigge=
-r. To
-> >     associate the private trigger with the LED classdev, their `trigger=
-_type`
-> >     must be the same. To declare that the private trigger provides hard=
-ware
-> >     control for the associated LED classdev, set the `hw_control_trigge=
-r`
-> >     string to the trigger's name. Since both the LED classdev and the p=
-rivate
-> >     trigger are in the same LED driver, it's not necessary for them to
-> >     coordinate via `hw_control_*` callbacks.
-> >=20
-> > I'd suggest calling uniwill_led_hw_control_set() directly from the
-> > trigger's [de]activate callbacks, just like other drivers.
->=20
-> I decided to use this callbacks in order to be able to add support for th=
-e keyboard backlight
-> animation in the future (if we someday find a device that supports this f=
-eature).
-
-The name "uniwill-rainbow" sounds irrelevant to keyboard backlight
-animation. In this case the latter needs a new private trigger with a new
-name, and it can have different [de]activate callbacks. IOW, we don't
-need hw_control_set() either.
-
-Otherwise, using hw_control_set() makes sense to me as long as the
-current name is relevant.
-
-
-
-Since I've CC'ed leds folks:
-
-Per-key lighting is becoming increasingly common for keyboard backlight.
-
-I am actually thinking about introducing LED array/matrix support to the
-leds subsystem. An LED array/matrix device is just a special LED device
-that controls all constituent LED devices, so that we can:
-
-- implement keyboard backlight animation (or LampArray autonomous mode)
-as an array/matrix hardware control trigger [1]
-- tune the lighting of the whole array/matrix at once by tuning the LED
-array/matrix device [2]
-- tune per-key lighting by tuning constituent LED devices
-- apply generic LED triggers to the whole array/matrix [1]
-- apply different generic LED triggers to different constituent LED
-devices
-- properly deconflict the above operations
-
-It definitely requires a lot of work to get things (especially locking
-and atomicity) right, but it should be very helpful for devices with per-
-key lighting once done. I believe missing proper LED array/matrix support
-was the main reason why tuxedo_nb04_wmi_ab [3] implemented a virtual
-LampArray HID device far before any userspace LampArray tool emerged.
-
-[1]: The constituent LED devices will be inoperable when a trigger is
-active on their array/matrix LED device.
-
-[2]: The leds subsystem won't emulate this. The driver must implement
-brightness_get() and brightness_set[_blocking]() for the LED array/matrix
-device.
-
-[3]: I know Texudo folks are working on adding hid-lamparray to connect
-it to the LED subsystem. I've had another independent implementation with
-HIDRAW sniff, no hid-generic dependency, autonomous mode as a trigger,
-non-RGB LampArray support, and per-key LED device support in my local
-tree, but that's another story. I will firstly push it further without
-LED array/matrix support. Then I will try to add LED array/matrix
-support, with hid-lamparray being the first user.
-
-Thanks,
-Rong
-
->=20
-> > >  =20
-> > >   	if (value & LIGHTBAR_S0_OFF)
-> > >   		data->led_mc_cdev.led_cdev.brightness =3D 0;
-> > >   	else
-> > >   		data->led_mc_cdev.led_cdev.brightness =3D 1;
-> > >  =20
-> > > +	if (value & LIGHTBAR_WELCOME)
-> > Check !LIGHTBAR_S0_OFF too?
-> >=20
-> > If the last state is LIGHTBAR_S0_OFF|LIGHTBAR_WELCOME (probably caused =
-by
-> > an outdated driver without this patch), the trigger's activate callback
-> > will be called on probe, lighting up the previously off LED. Is this
-> > intentional?
-> >=20
-> > Thanks,
-> > Rong
->=20
-> Yes, this is intentional. LIGHTBAR_WELCOME implies !LIGHTBAR_S0_OFF, some=
- devices
-> even assume this.
->=20
-> Thanks,
-> Armin Wolf
->=20
-> > > +		data->led_mc_cdev.led_cdev.default_trigger =3D uniwill_lightbar_tr=
-igger.name;
-> > > +
-> > >   	for (int i =3D 0; i < LED_CHANNELS; i++) {
-> > >   		data->led_mc_subled_info[i].color_index =3D color_indices[i];
-> > >  =20
-> > > @@ -3540,17 +3552,31 @@ static int __init uniwill_init(void)
-> > >   		pr_warn("Enabling potentially unsupported features\n");
-> > >   	}
-> > >  =20
-> > > -	ret =3D platform_driver_register(&uniwill_driver);
-> > > +	/*
-> > > +	 * We cannot register the trigger inside the .probe callback of the
-> > > +	 * platform driver, because each trigger needs a unique name.
-> > > +	 */
-> > > +	ret =3D led_trigger_register(&uniwill_lightbar_trigger);
-> > >   	if (ret < 0)
-> > >   		return ret;
-> > >  =20
-> > > +	ret =3D platform_driver_register(&uniwill_driver);
-> > > +	if (ret < 0)
-> > > +		goto err_platform;
-> > > +
-> > >   	ret =3D uniwill_wmi_register_driver();
-> > > -	if (ret < 0) {
-> > > -		platform_driver_unregister(&uniwill_driver);
-> > > -		return ret;
-> > > -	}
-> > > +	if (ret < 0)
-> > > +		goto err_wmi;
-> > >  =20
-> > >   	return 0;
-> > > +
-> > > +err_wmi:
-> > > +	platform_driver_unregister(&uniwill_driver);
-> > > +
-> > > +err_platform:
-> > > +	led_trigger_unregister(&uniwill_lightbar_trigger);
-> > > +
-> > > +	return ret;
-> > >   }
-> > >   module_init(uniwill_init);
-> > >  =20
-> > > @@ -3558,6 +3584,7 @@ static void __exit uniwill_exit(void)
-> > >   {
-> > >   	uniwill_wmi_unregister_driver();
-> > >   	platform_driver_unregister(&uniwill_driver);
-> > > +	led_trigger_unregister(&uniwill_lightbar_trigger);
-> > >   }
-> > >   module_exit(uniwill_exit);
-> > >  =20
+Liviu
