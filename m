@@ -1,157 +1,356 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF1A4519AE
-	for <platform-driver-x86@vger.kernel.org>; Sun, 11 Oct 2026 18:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050E735A395;
+	Sun, 11 Oct 2026 19:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791744058; cv=pass; b=kLrF1JdNSsx6RyUUxRA78+Q2uW3/rHj1NtXbHZhvYAUHbii9Zc0BSqCmDJajz4rUQjs5QKgxtkqCECtJQZW7zAirvDCTROtwxbsDsOVtDCF3dQ+9CAJJjK75Zh/P9TEiVyywrVuI5LBhvGn1mEni5qGlYPJlIjclVuf9G/VpY+4=
+	t=1791748387; cv=pass; b=LsUauPLF5B1qoVKUuoCWbMTgAWiJqWIUKVe4aMgnC9PQdd3KLgmcbbqQUaPJshAKSJ64t+YHT+++0KQf/d9jN9mUust8ZQm/O9aSu5EMSigjoljC682nIOT2mY3O77lrtLEeHt0KxVr4ks9R5z88IcfI4McPq6Sorv7YyhfGfZ8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791744058; c=relaxed/simple;
-	bh=ru1HcpddrF7ZhWjbyLCYjSKdq9ZS1lfVzrbw0XuDiFE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e9O9aApU4EAIdT6XgQsvFCzuYVEyFs6+YxqBzONB9eZR+fgHsBiepFakCVu4MXggRilol0VnBXRoy71oyCWsRDtt7KH1ttcwTqE9rDtDQ7fcvCdQe63K8LHstJSLsDWis/WHN3xDTddA1MdOIRvN4ziePtQJScf1KZXV+qD0NPg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1mQJNyS; arc=pass smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791748387; c=relaxed/simple;
+	bh=0wYxKFlPmNVJ4iYBf1Uloc/Hkn72LMIBKw/3/6MTdlc=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=rvPsPZDCR6Nwb/T1hDn34M7T+oDc6CGg0I2VWHgVBpFpqDqXqHXBHCU7BxUhEFDcA5w3dH8eq+V0BbeQiUzvUEzVQ/ajk4E38i/FLx6VA6rd8Ftl4dQ6MlSGllfiHmUT9QlAz0MUCLi/59eqWUpq0Vb7nIRWEyXJy35C1tcyJPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=bBdxULdI; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1mQJNyS"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6aaebeadf3cso1933631a12.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 11 Oct 2026 11:40:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791744046; cv=none;
-        d=google.com; s=arc-20260327;
-        b=lRBYzgbsi6sMDX2Ga62BfoB1zf5uxI80odwmRvG57wfJZMHPu0BXxE+n+guKjguHcr
-         IHZvEIlrgq0p9wnc1o5iOkNR/+uZTuCIGy/b1UOErSQOOPSpXKkMNNWhnLQPIgMVQW6B
-         9dYZRcnBSqV+t/mx4yAVIYv6VWmMLvCrUMFkIXnwKSqKUhsvP+A+pmv2bZyh6GYMlIu/
-         Uf5Ho7vHkn4ZsJ3xKHQPExqcF667q5ff40+TLdZ/5ruPsApLkOcL9uqIG+c+abUdbeyg
-         9zE/c8CHV9Zi0bvXhdSovBgYR+0yS08Zq70MEBO1lJaCS8l7yOc1FyCGKVNrZXbX7OSV
-         XQlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=gQfggiPo/EuM6hWbTx5HWkYsMpDudQ8VvnQ+iYehotw=;
-        fh=bmzOYLrHKWIK8iPyXrqqs3h1MJbIMsCPGF/2JBvjBMo=;
-        b=YtBK3VekCMDw1YE5YVJLn7wkO3xpU1nzGcEUdZiyEkejLMbrX1K80+/LHjA9UzuonE
-         iXZDfyI/ff1+TpOn5ZO+kD8X9DK65jGD/jAEl4mODoyMIpTIKQFVPnR0M4+wCKt4UqSM
-         6lpRt3tMFLIq/8IOlbl6H8CggozsHRuPz4afb8+tcCIbqBSt0dl/bm1t3adNM1Mg5t+8
-         p1KikXasbC3AmzwUPmui/NHg1hXiUiEj6kgeynhqFnUy0Moto9yrBlNIsPD3GFZjDdhC
-         64awuMirdPfxAoWadE3wDAT+2RyINaZo/SBqN/yBPK1JyKXVYPd3ajaDzlRckW3DDUSe
-         2qRg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791744046; x=1792348846; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=gQfggiPo/EuM6hWbTx5HWkYsMpDudQ8VvnQ+iYehotw=;
-        b=L1mQJNySaSlewL5YnVM5JaiCSNBCnwmwoBSuSX4LtwnCUiEN749tQ3JEIw9ZvMxnMo
-         O5yCmRgMHUykDdRgpVwccRP/GORjIGzdN7ZNaiKQ5MhULnNt1rWejU/1u1guN1F1FZQA
-         p/2takMmjSb4Ch0HQB4uhhE1JuWGeKDhTZxt5Cr1q2B3Olvnpiy77jPablt3fyrC61Hi
-         ztaO6wRdYK7Hkr+m0oDMQsUFME+AW/gUKbGH6t/bNtQn51ZbszKYSQGH5sE7HcAdHxOF
-         stj8kxk6/f++Ma7/oCWw/Lva6Qv1LmcFbZIfs3vVaYNau1FlYQ/+odnmnKe2+Qhi7a6R
-         /rUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791744046; x=1792348846;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gQfggiPo/EuM6hWbTx5HWkYsMpDudQ8VvnQ+iYehotw=;
-        b=yMxiMJqGsHp4Patox/30LrdLE5polwjIbJXzJiKgEYJtHdBX9baYVj2HfAUSG58j5l
-         u5617743CNbmiyN9VDIjj+wz1M3nhFYv80iGvy8UvrG8XpzOD3JRszuODUcv9sLapGtx
-         4MIVMSNoiO0QX9vOZQKHwMrsBbmjeGYiz/yE8zk5xPs3J38yHvI8pjTpV1/bsHJhmufE
-         vWqdUOxdiTMLC3JZV8m7y8nUrntPd1SrWMBTsItPaqh6v4CKLSafZmJqSQ3xl1ZMjKBb
-         O3870Zw5HP3V0I0mZypk5UV5XvoiCRNKzg8BN8y6+D54ZcuPxzNIFQnBA/vRE6uEvBRI
-         Vnlw==
-X-Forwarded-Encrypted: i=1; AKwUvBxyGwy2lX3Vm7NvOXW6TucnB76aVBvEcYVWRlvvIaWIyw0YglXqrQ5Z60klEUwKtrspYd3rTIUsl9nZkKHteGjMl0pO@vger.kernel.org
-X-Gm-Message-State: AFq9FYKO9cM9buXKj9WQWzynBuzRfVtmqbCtYHONvAWU6/MtjcMtpOpg
-	NCD3zWUF8uBYBdnvuvRxzeJOoMknbTrO4bqaDdmgl5P9vn2eMO0666iKdx+pLH2PWHIx5aPiut+
-	7cTpUYtFQ658wPdpy5fPo3kBncG9N0H8=
-X-Gm-Gg: AYBFou3Jk2+1OCz9oXCPjWlY7U4FWg1Kv/88rCCKI8Ag0zlvnnjYNqGCc2QhvvTzbFh
-	miFYbM6dPDeTHJkooGVQUEBiIPPFQv+zStNSbwQF0MJU4XalfKMFhu0s4XMVfsaw2n2x27Q+3kI
-	2Kv1wr2JKlCjwKH6DM6RTRswTXpRWxEPX5oLA/VoVOhLGYHC3NK6WhocLb7NfZIpqjgc7FvwSwo
-	f54pJBsqO5VohcrlaOCMW/omxO6X0bsvdhnQftV/o0p++XoynFyr5DpqQ+69lNZyz47BqLzhxRJ
-	R8iXMzSVs4lLktdddiUCJtyh3//puWa4VsQ8hW+ov3TClQEuZbDvHjFIw7XcdKw1YQ1Fey6vjMV
-	E6Lnh4yFIRQod4PxtgPHZk8BLxS9MggtGTKHV9R+F
-X-Received: by 2002:a17:907:3e8d:b0:c26:36c4:858e with SMTP id
- a640c23a62f3a-c31aa018731mr740472366b.25.1791744045539; Sun, 11 Oct 2026
- 11:40:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="bBdxULdI"
+ARC-Seal: i=1; a=rsa-sha256; t=1791748375; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XDR1jBViY8Bexr60Jm2Nwvg30tV3uYrpGvhHw5CElOJVUWTcv+bGbwczndgmoFKFTjjfxgi1Ns2L8VYhwKCWa0DY3eW2HHNNhTz5kANDJB53VVnvg1Mm2O8JIKRvTGQ8Dk9QakuRCIiX++m1FbyIw3T1hzFLlFLLnXarLFBTQuo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1791748375; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=JioO99Wy7cUGDgZKTWaXWHv12LZct4tUjuOiO/Pi0Bk=; 
+	b=j2auPcyz9faWdFrFLYhDU9wf5FtKu+bcsa2YpYuSYOafKZSLCReWP24vxaXyVygRj2aNgbi7uTa5RF2hFYanCPYGdfNVZX/sfupAxyT8Nuj/q1UvE8X90ZaAouC8RoF1boYSYU9AR0jFgT4B0DmJTfjZnmP2bYFC7hmuhJ/4KQg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791748375;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=JioO99Wy7cUGDgZKTWaXWHv12LZct4tUjuOiO/Pi0Bk=;
+	b=bBdxULdIrINqwyCkm8QYVLIjXADw2T2Oyi/ngxuO5MvWIVFABJtAEGPPiWNMwOxU
+	EGo2aDBCZly59us2llBRZGhR75qySK0VtBx/NDF+A4+s9yWHaADt8/BwXRmgkIpfroL
+	niLxPibY48rQIYKpsoh+j2feeDVXzBwZJmc2OHstXwfqiA3XPG3Fdx4yk7aUepaDJjy
+	QwyzhOI8LMNLep7P2y4FVqqK7R3hA8/FcH58j2EHXsF82dI4QdoN6ZlEkqglsrOB+c9
+	TgL/6Ygc951drTlFejW6oFRzVw4yHQ170sxEtyXCSV2tPk758Y7nOWbMjoVMb/a8sSj
+	zTn0PNA7cg==
+Received: by smtp.zohomail.com with SMTPS id 1791748374291659.8468890399357;
+	Sun, 11 Oct 2026 12:52:54 -0700 (PDT)
+Message-ID: <b31878aeb4af648106adc74efbb2d1e839f9f8ea.camel@rong.moe>
+Subject: Re: [PATCH v2 2/5] platform/x86: uniwill-laptop: Implement rainbow
+ animation as trigger
+From: Rong Zhang <i@rong.moe>
+To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <9087d109-d757-43bc-b80d-64df7dc9ff82@gmx.de>
+References: <20261007144101.323289-1-W_Armin@gmx.de>
+	 <20261007144101.323289-3-W_Armin@gmx.de>
+	 <035799dd461fe0e7a60564e11f10fd23eb3daabf.camel@rong.moe>
+	 <9087d109-d757-43bc-b80d-64df7dc9ff82@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 12 Oct 2026 03:47:48 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261002191434.58529-1-meatuni001@gmail.com>
-In-Reply-To: <20261002191434.58529-1-meatuni001@gmail.com>
-From: Muhammad Bilal <meatuni001@gmail.com>
-Date: Sun, 11 Oct 2026 23:40:33 +0500
-X-Gm-Features: AclHuK_PQr1apdUCLCKqAhzYay7IqnMzIHODUR1hbQE3Linc1QaibmLRagzo2j0
-Message-ID: <CADqcGBnsAO9UN9KOGtp7uHOe8Q2tTuheDrFbUOd7Cib3VbXE5g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] platform/x86: hp-bioscfg: buffer handling fixes
-To: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-10+b1 
+X-ZohoMailClient: External
 
-Hi,
+Hi Armin,
 
-I have sent v5 of this series. [1]
+On Sun, 2026-10-11 at 02:52 +0200, Armin Wolf wrote:
+> Am 10.10.26 um 13:20 schrieb Rong Zhang:
+>=20
+> > Hi Armin,
+> >=20
+> > On Wed, 2026-10-07 at 16:38 +0200, Armin Wolf wrote:
+> > > It turns out that some models require the lightbar to be activated
+> > > in order to display the rainbow animation, so users have to access
+> > > both the "rainbow_animation" sysfs attribute and the LED sysfs
+> > > interface when enabling the rainbow animation. This can cause short
+> > > glitches when the lightbar was previously disabled.
+> > >=20
+> > > Fix this by replacing the sysfs attribute with a custom LED trigger
+> > > called "uniwill-rainbow". Selecting this trigger will atomically
+> > > activate the lightbar and enable the rainbow animation mode. This
+> > > can potentially break userspace applications using the old sysfs
+> > > attribute, but so far no such application is known to exist (yet).
+> > >=20
+> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > > ---
+> > >   .../ABI/removed/sysfs-driver-uniwill-laptop   |  10 ++
+> > >   .../ABI/testing/sysfs-driver-uniwill-laptop   |  11 --
+> > >   .../admin-guide/laptops/uniwill-laptop.rst    |   5 +-
+> > >   MAINTAINERS                                   |   1 +
+> > >   drivers/platform/x86/uniwill/Kconfig          |   1 +
+> > >   drivers/platform/x86/uniwill/uniwill-acpi.c   | 133 +++++++++++----=
+---
+> > >   6 files changed, 95 insertions(+), 66 deletions(-)
+> > >   create mode 100644 Documentation/ABI/removed/sysfs-driver-uniwill-l=
+aptop
+> > >=20
+> > > diff --git a/Documentation/ABI/removed/sysfs-driver-uniwill-laptop b/=
+Documentation/ABI/removed/sysfs-driver-uniwill-laptop
+> > > new file mode 100644
+> > > index 000000000000..c226efc23b59
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/removed/sysfs-driver-uniwill-laptop
+> > > @@ -0,0 +1,10 @@
+> > > +What:		/sys/bus/platform/devices/INOU0000:XX/rainbow_animation
+> > > +Date:		November 2025
+> > > +KernelVersion:	6.19
+> > > +Contact:	Armin Wolf <W_Armin@gmx.de>
+> > > +Description:
+> > > +		Forces the integrated lightbar to display a rainbow animation when=
+ the machine
+> > > +		is not suspended. Writing "1"/"0" into this file enables/disables =
+this
+> > > +		functionality.
+> > > +
+> > > +		Reading this file returns the current status of the rainbow animat=
+ion functionality.
+> > It'd be more helpful by documenting the removal date, version and what
+> > has replaced it.
+>=20
+> True, i will write a patch to address this.
 
-Link: https://lore.kernel.org/all/20261007134711.473857-1-meatuni001@gmail.=
-com/
-[1]
+[..snip..]
 
-Thanks.
-Muhammad Bilal
+> > > -
+> > >   static ssize_t breathing_in_suspend_store(struct device *dev, struc=
+t device_attribute *attr,
+> > >   					  const char *buf, size_t count)
+> > >   {
+> > > @@ -1258,7 +1213,6 @@ static struct attribute *uniwill_attrs[] =3D {
+> > >   	&dev_attr_super_key_enable.attr,
+> > >   	&dev_attr_touchpad_toggle_enable.attr,
+> > >   	/* Lightbar-related */
+> > > -	&dev_attr_rainbow_animation.attr,
+> > >   	&dev_attr_breathing_in_suspend.attr,
+> > >   	/* Power-management-related */
+> > >   	&dev_attr_ctgp_offset.attr,
+> > > @@ -1288,8 +1242,7 @@ static umode_t uniwill_attr_is_visible(struct k=
+object *kobj, struct attribute *a
+> > >   			return attr->mode;
+> > >   	}
+> > >  =20
+> > > -	if (attr =3D=3D &dev_attr_rainbow_animation.attr ||
+> > > -	    attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
+> > > +	if (attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
+> > >   		if (uniwill_device_supports(data, UNIWILL_FEATURE_LIGHTBAR))
+> > >   			return attr->mode;
+> > It'd be better to convert breathing_in_suspend into an LED device
+> > attribute. See led_classdev->groups.
+>=20
+> We cannot do this because this field is being used by the multicolor LED =
+class.
 
-On Sat, Oct 3, 2026 at 12:14=E2=80=AFAM Muhammad Bilal <meatuni001@gmail.co=
-m> wrote:
->
-> Buffer handling fixes for hp-bioscfg.
->
-> Patches 1-2 fix hp_get_string_from_buffer(), 3-5 the password
-> handling, 6 the sysfs store paths, 7-9 SPM and integer parsing.
->
-> Changes in v4:
->  - Add patches 4-9
->
-> Changes in v3:
->  - Drop Suggested-by: Andy Shevchenko from patch 2, tidy its includes
->    and declarations (Andy)
->  - Return -E2BIG instead of -ERANGE in patch 3 (Andy)
->  - Drop a blank line in the declarations in patch 1 (Andy)
->
-> Changes in v2:
->  - Split the hp_get_string_from_buffer() fix in two (Ilpo)
->  - Drop the lib/string_helpers patch, use @only of string_escape_mem()
->    instead (Andy)
->  - Add patch 3
->
-> Muhammad Bilal (9):
->   platform/x86: hp-bioscfg: fix OOB reads in hp_get_string_from_buffer()
->   platform/x86: hp-bioscfg: fix non-ASCII truncation in
->     hp_get_string_from_buffer()
->   platform/x86: hp-bioscfg: return -E2BIG from validate_password_input()
->   platform/x86: hp-bioscfg: allow clearing current_password
->   platform/x86: hp-bioscfg: fix off-by-one in password length check
->   platform/x86: hp-bioscfg: fix heap OOB with embedded NUL in store
->     paths
->   platform/x86: hp-bioscfg: validate SPM state returned by firmware
->   platform/x86: hp-bioscfg: NUL-terminate the SPM auth token
->   platform/x86: hp-bioscfg: fix oops on short integer attribute buffer
->
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 79 ++++++-------------
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  |  2 +-
->  .../x86/hp/hp-bioscfg/int-attributes.c        |  7 +-
->  .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 20 +++--
->  .../x86/hp/hp-bioscfg/spmobj-attributes.c     |  8 +-
->  5 files changed, 51 insertions(+), 65 deletions(-)
->
-> --
-> 2.43.0
->
+Whoops, I didn't notice that.
+
+> I can try to find a workaround for this.
+
+(+CC Lee, Pavel, linux-leds)
+
+IMO the best way to solve the dilemma is to introduce class_group for
+led-class-multicolor and led-class-flash, or else we will have to
+introduce (or have already introduced?) more workarounds for other
+drivers.
+
+For this cycle let's keep the attribute as is.
+
+[..snip..]
+
+> > > +
+> > > +static struct led_trigger uniwill_lightbar_trigger =3D {
+> > > +	.name =3D "uniwill-rainbow",
+> > > +	.activate =3D uniwill_lightbar_trigger_activate,
+> > > +	.deactivate =3D uniwill_lightbar_trigger_deactivate,
+> > > +	.trigger_type =3D &uniwill_lightbar_trigger_type,
+> > > +};
+> > > +
+> > >   #define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGH=
+TBAR_S3_OFF | LIGHTBAR_WELCOME)
+> > >  =20
+> > >   static int uniwill_led_init(struct uniwill_data *data)
+> > > @@ -1587,12 +1593,18 @@ static int uniwill_led_init(struct uniwill_da=
+ta *data)
+> > >   	data->led_mc_cdev.led_cdev.max_brightness =3D 1;
+> > >   	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
+> > >   	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led=
+_brightness_set;
+> > > +	data->led_mc_cdev.led_cdev.trigger_type =3D &uniwill_lightbar_trigg=
+er_type;
+> > > +	data->led_mc_cdev.led_cdev.hw_control_trigger =3D uniwill_lightbar_=
+trigger.name;
+> > > +	data->led_mc_cdev.led_cdev.hw_control_set =3D uniwill_led_hw_contro=
+l_set;
+> > A private trigger does not need hw_control_set, which is only meant to
+> > coordinate between different drivers, i.e., in the case when the LED
+> > device and the hardware control trigger are located at different driver=
+s.
+> >=20
+> > I've also updated the documentation in commit 8e04e5382aa9 ("leds:
+> > trigger: Add hw_offloaded() callback and provide
+> > trigger_may_offload_to_hw attribute"), quoted below:
+> >=20
+> >     Alternatively, a private trigger can be implemented along with the =
+LED
+> >     driver if the LED's hardware control doesn't fit any generic trigge=
+r. To
+> >     associate the private trigger with the LED classdev, their `trigger=
+_type`
+> >     must be the same. To declare that the private trigger provides hard=
+ware
+> >     control for the associated LED classdev, set the `hw_control_trigge=
+r`
+> >     string to the trigger's name. Since both the LED classdev and the p=
+rivate
+> >     trigger are in the same LED driver, it's not necessary for them to
+> >     coordinate via `hw_control_*` callbacks.
+> >=20
+> > I'd suggest calling uniwill_led_hw_control_set() directly from the
+> > trigger's [de]activate callbacks, just like other drivers.
+>=20
+> I decided to use this callbacks in order to be able to add support for th=
+e keyboard backlight
+> animation in the future (if we someday find a device that supports this f=
+eature).
+
+The name "uniwill-rainbow" sounds irrelevant to keyboard backlight
+animation. In this case the latter needs a new private trigger with a new
+name, and it can have different [de]activate callbacks. IOW, we don't
+need hw_control_set() either.
+
+Otherwise, using hw_control_set() makes sense to me as long as the
+current name is relevant.
+
+
+
+Since I've CC'ed leds folks:
+
+Per-key lighting is becoming increasingly common for keyboard backlight.
+
+I am actually thinking about introducing LED array/matrix support to the
+leds subsystem. An LED array/matrix device is just a special LED device
+that controls all constituent LED devices, so that we can:
+
+- implement keyboard backlight animation (or LampArray autonomous mode)
+as an array/matrix hardware control trigger [1]
+- tune the lighting of the whole array/matrix at once by tuning the LED
+array/matrix device [2]
+- tune per-key lighting by tuning constituent LED devices
+- apply generic LED triggers to the whole array/matrix [1]
+- apply different generic LED triggers to different constituent LED
+devices
+- properly deconflict the above operations
+
+It definitely requires a lot of work to get things (especially locking
+and atomicity) right, but it should be very helpful for devices with per-
+key lighting once done. I believe missing proper LED array/matrix support
+was the main reason why tuxedo_nb04_wmi_ab [3] implemented a virtual
+LampArray HID device far before any userspace LampArray tool emerged.
+
+[1]: The constituent LED devices will be inoperable when a trigger is
+active on their array/matrix LED device.
+
+[2]: The leds subsystem won't emulate this. The driver must implement
+brightness_get() and brightness_set[_blocking]() for the LED array/matrix
+device.
+
+[3]: I know Texudo folks are working on adding hid-lamparray to connect
+it to the LED subsystem. I've had another independent implementation with
+HIDRAW sniff, no hid-generic dependency, autonomous mode as a trigger,
+non-RGB LampArray support, and per-key LED device support in my local
+tree, but that's another story. I will firstly push it further without
+LED array/matrix support. Then I will try to add LED array/matrix
+support, with hid-lamparray being the first user.
+
+Thanks,
+Rong
+
+>=20
+> > >  =20
+> > >   	if (value & LIGHTBAR_S0_OFF)
+> > >   		data->led_mc_cdev.led_cdev.brightness =3D 0;
+> > >   	else
+> > >   		data->led_mc_cdev.led_cdev.brightness =3D 1;
+> > >  =20
+> > > +	if (value & LIGHTBAR_WELCOME)
+> > Check !LIGHTBAR_S0_OFF too?
+> >=20
+> > If the last state is LIGHTBAR_S0_OFF|LIGHTBAR_WELCOME (probably caused =
+by
+> > an outdated driver without this patch), the trigger's activate callback
+> > will be called on probe, lighting up the previously off LED. Is this
+> > intentional?
+> >=20
+> > Thanks,
+> > Rong
+>=20
+> Yes, this is intentional. LIGHTBAR_WELCOME implies !LIGHTBAR_S0_OFF, some=
+ devices
+> even assume this.
+>=20
+> Thanks,
+> Armin Wolf
+>=20
+> > > +		data->led_mc_cdev.led_cdev.default_trigger =3D uniwill_lightbar_tr=
+igger.name;
+> > > +
+> > >   	for (int i =3D 0; i < LED_CHANNELS; i++) {
+> > >   		data->led_mc_subled_info[i].color_index =3D color_indices[i];
+> > >  =20
+> > > @@ -3540,17 +3552,31 @@ static int __init uniwill_init(void)
+> > >   		pr_warn("Enabling potentially unsupported features\n");
+> > >   	}
+> > >  =20
+> > > -	ret =3D platform_driver_register(&uniwill_driver);
+> > > +	/*
+> > > +	 * We cannot register the trigger inside the .probe callback of the
+> > > +	 * platform driver, because each trigger needs a unique name.
+> > > +	 */
+> > > +	ret =3D led_trigger_register(&uniwill_lightbar_trigger);
+> > >   	if (ret < 0)
+> > >   		return ret;
+> > >  =20
+> > > +	ret =3D platform_driver_register(&uniwill_driver);
+> > > +	if (ret < 0)
+> > > +		goto err_platform;
+> > > +
+> > >   	ret =3D uniwill_wmi_register_driver();
+> > > -	if (ret < 0) {
+> > > -		platform_driver_unregister(&uniwill_driver);
+> > > -		return ret;
+> > > -	}
+> > > +	if (ret < 0)
+> > > +		goto err_wmi;
+> > >  =20
+> > >   	return 0;
+> > > +
+> > > +err_wmi:
+> > > +	platform_driver_unregister(&uniwill_driver);
+> > > +
+> > > +err_platform:
+> > > +	led_trigger_unregister(&uniwill_lightbar_trigger);
+> > > +
+> > > +	return ret;
+> > >   }
+> > >   module_init(uniwill_init);
+> > >  =20
+> > > @@ -3558,6 +3584,7 @@ static void __exit uniwill_exit(void)
+> > >   {
+> > >   	uniwill_wmi_unregister_driver();
+> > >   	platform_driver_unregister(&uniwill_driver);
+> > > +	led_trigger_unregister(&uniwill_lightbar_trigger);
+> > >   }
+> > >   module_exit(uniwill_exit);
+> > >  =20
