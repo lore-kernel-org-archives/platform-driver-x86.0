@@ -1,148 +1,166 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE6C4349BC;
-	Sun, 11 Oct 2026 12:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB004570E4
+	for <platform-driver-x86@vger.kernel.org>; Sun, 11 Oct 2026 13:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791721159; cv=none; b=lJbFzlS+524Wywvno7fhw+hJBgMOq9wG0T2vqUAEWA+LePl1Yq82/NOt4pqoTUrTHgRu16nCOKZWsjuz6JMsjkxcLOxexYW9JSUpRS+rfmCjgDe7zjzR1mUPNV4/t1s9rFLG9XwJoQuJzyTlLdqSvkZIO29/VdjkEHGbRBkU+68=
+	t=1791727086; cv=none; b=J0h9sO4b1JCak3bV59zwamWLS9VSSJtYiO96Vs7U4mwkjng++S33lJA7LfZoAAKEmfpW2w7ii0KV7lLUGodge0Pg+Oh/WbhDfJsQYfPAkgSUjbF6xFnzxUWm3R2dg21W0MuikG5HKkWmbDelaIzgCFvUN10GXr2wP4vzLqwvzYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791721159; c=relaxed/simple;
-	bh=MbWRlKgJ2AlJCjvXVQFZwh/KRWdQd1c4H+FmNjpJzW4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xjd//Ue/ch1TIFzov4q7nRsfdRDxsIgECeqXAyJFMGl/wTIM+OlcPg2i2heN2fDtFwE2+WTofqv0zHffKE9IJ2BMPO1gJyJiRFsFOB0wrbLYZlyLN66dKL/a8Z6phFsFDDNLu1f8qJCRVQ3kQ+ZNa1tv7zOlognOfthkxO4nJ1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=V7UX0nh+; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1791727086; c=relaxed/simple;
+	bh=iy9ZZHgQpUtmWwR8tI4lZ8e+lm2lxVAZeU3WNOzQBzI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RQ1qBKbBtnRgk7ftZd+IzHVSezWnF7jIc9iK485cRe+Anv14yqsNqHpxHmRanltqYOE7551dBDd1QzdXJ58+LJEWP3HOGY/iaW6pBcmlaf1ul7xb0R2wujGjBVLO+SwMlWkLY6qK2++dEP57bvXRRp7CT7/CbJUpa1kv7GaRXjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PpSdTSde; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="V7UX0nh+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version:
-	Content-Type; bh=QCqtaZNs9+FSdR166uxtT7B6n4OGPOvF4p+wl8RQrt4=;
-	b=V7UX0nh+h2pp12s9Oqq86ZRGrhvM7D4fGA3imMv8WKi1LCAQ36z8nt5WcaCThe
-	dii7M88/A9KNw5QT1FugOxY8dts+/HqeTwcRYBeuqWKrscZLj7Fxa2QTSw0YOF+R
-	twhTJ9464/FDaYcArXHEp39S5qH/ifNCtqa6hJ+PRJU1s=
-Received: from ubuntu.. (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wA3q+t5fstquMRzDw--.32114S4;
-	Sun, 11 Oct 2026 20:18:08 +0800 (CST)
-From: Ma Ke <make_ruc2021@163.com>
-To: Shyam-sundar.S-k@amd.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	alexandre.belloni@bootlin.com,
-	mario.limonciello@amd.com
-Cc: platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PpSdTSde"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3a4cdc9025bso461363a91.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 11 Oct 2026 06:58:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791727085; x=1792331885; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=9M6enOM47AmtmwL3A50YpqJfaxKxGlislTwgMrzOxuY=;
+        b=PpSdTSdealkpZ72fYMrnNGcAB4ih6Lb0VpOzZBR70TVkUqkfBXmEo9ya248B76t8rg
+         NxwBgDx2pCvlrbDCp80bCF7tBqd+xpO4Ap+VxrghR0sPQ2tJ03cBFsktluMF0DttMKMb
+         MsSeopR87G/OzY7T8omR154X9nFlXkMrCfRQ3PRUdlths7UaTb8iPXYHoVHxlAlV4hck
+         QMtM3tLrXRGABsHDZ4davYJjSnT7/HZknSZlJWhXmkOR5v/aoG7Vkv2mqbivD+L3r/J5
+         ZgwWaeilFNAxI9xy7fblD+fMszgK5Z9Jet2ryMJmCb+BVF4zDYmuTyKTh+KQYoGI+CLZ
+         P0+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791727085; x=1792331885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=9M6enOM47AmtmwL3A50YpqJfaxKxGlislTwgMrzOxuY=;
+        b=y4CbT3nzWiprVaSGI9S0ytlLBrxfZtdj4gRcVmyra/bVIAKdR8DZtKMTHTDPyxE5J4
+         Y0GIbrHZ15jr3OUrXabNclCUyexQFJ9DrBelunFJqMrdydA9gydopep8asDDF1Jjemo3
+         wO8E6/lHO1kRBcqVcHaNAS55frk6nTtzXgUS7FOEeAFoOw2VgPoDDuAr0cQvKK3wQlew
+         mSOdqfFIaGBcuzWQ/592O7CYfBQ5sZd50gjiBlh901tu0B4zjmg/cCvT+x81b3GJybgo
+         MVwX6efpdXn39ml3iu7QpKzv79kWVwZRGyrIoAxQrQ0t3C6kyRQIhxFnJEjzlmXNUIyx
+         cbEg==
+X-Forwarded-Encrypted: i=1; AKwUvBxcjHqMIRAusrujUOLjxGMQkoSKvLUCloernp/4xJ4WzdZyHy7hF5t4Vjd9+eQvDE5gYJ60q7WOcvjz7oXWhz0vWRLs@vger.kernel.org
+X-Gm-Message-State: AFq9FYJlbrAr1uBf9YJgr7mMchMzul3IiYkC0HE+EqZ39RIRuibJYa+r
+	ED4NCD/z6rKQjHl73yI5zIIoK1rrwo0+Y8qd/bimGsFfgG1ZdbAzWFvY
+X-Gm-Gg: AYBFou3mv23ZaSRWnSLgPcvT9Ewm+lY+OfCk+XGjigP+MvudNazZgrnbczEJdcf/iL6
+	1JUsbBYGnZnDCrw4Kj4GjMM1qT/QKcGOLNjcqj+aAz0jCGKK+0WS6fqggY2fiknhFXLQvAQX+uz
+	Zh9vA7T30frbWVA5aneS/3NRpbc8AoM0fYT5JNxuBWBE5Mc6cvG90p7Tl9g27TeoWXW6AuUmrLA
+	+J0+krs7R2MumQT/FrLUo/oazRLefuj4nkIKAM42Z1Bl+8YHN61XpiyKN6i5Zqc/odX8WUuTMEW
+	azGolv5JWIPmnNGDR4VbLeppd0xshQ4RraXoPdAMyfSj/Z4LMm0UR3oI325En29YibH0ZEsfXls
+	Ks4BehWBpvU868Rbkn19zbYfw5bedyIwyBVCYnXjb0iPWQ+JI3STmoo2waia4/P4oiTTut5Lw9r
+	Q54001GFQY43FfJTMFf3ZmgTARAd2qIG6+9o6fkQoeIEtkixLNwirQPJmGTpkpm7dTltHuX86f1
+	w==
+X-Received: by 2002:a17:90b:224c:b0:3ab:b64:5893 with SMTP id 98e67ed59e1d1-3ab3ac5ecc6mr5550005a91.53.1791727084732;
+        Sun, 11 Oct 2026 06:58:04 -0700 (PDT)
+Received: from qby-nixos-laptop ([20.89.137.63])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ab371c32cesm11831648a91.16.2026.10.11.06.57.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Oct 2026 06:58:04 -0700 (PDT)
+From: Mingyou Chen <qby140326@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilya Gladyshev <ilya.gladyshev@linux.dev>
+Cc: KentoNion <kento@kekto.ru>,
+	platform-driver-x86@vger.kernel.org,
+	ted eric <ericted8810@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
 	linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	akpm@linux-foundation.org,
-	Ma Ke <make_ruc2021@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] platform/x86/amd/pmc: Fix RTC reference leak in amd_pmc_verify_czn_rtc()
-Date: Sun, 11 Oct 2026 20:17:58 +0800
-Message-ID: <20261011121759.3267678-1-make_ruc2021@163.com>
-X-Mailer: git-send-email 2.43.0
+	Chris Taraszka <chris@miget.com>,
+	Matias Civadda <matias.civadda2342001@gmail.com>,
+	=?UTF-8?q?=E9=AB=98=20=E4=BF=8A=E6=96=87?= <btx342@gmail.com>,
+	powerfullz <wleizc7319@gmail.com>,
+	=?UTF-8?q?=E5=AD=99=20=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
+	=?UTF-8?q?Milo=C5=A1=20Vlku?= <vlku.milos.fun@gmail.com>,
+	Rsplwe <i@rsplwe.com>,
+	Bozhen Peng <bozhenpeng93@gmail.com>,
+	Anton Karasev <uselessfire@gmail.com>,
+	Jame Jao <jaojame6@gmail.com>,
+	Mingyou Chen <qby140326@gmail.com>
+Subject: [PATCH v10 0/5] Merge redmi-wmi into bitland-mifs-wmi
+Date: Sun, 11 Oct 2026 21:57:43 +0800
+Message-ID: <20261011135748.11792-1-qby140326@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wA3q+t5fstquMRzDw--.32114S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF1fZrykKF15Zr1ruF4xCrg_yoW5Kr1xpa
-	yDCF15CFWDCF4UW3W7X3Wqy3WxZr42vw1UKryj9w1I9a4SqFn5JrWkCw1aqr1DA3ykCF17
-	XFZxK398ur4UG3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUf73kUUUUU=
-X-CM-SenderInfo: 5pdnvshuxfjiisr6il2tof0z/xtbC9QBNWGrLfoD17AAA3m
 
-amd_pmc_verify_czn_rtc() opens the RTC with rtc_class_open(), which
-takes both a device reference and a module reference on the RTC
-driver. The matching release is rtc_class_close(), and it is never
-called. Every return path after the device has been opened, the ones
-that return 0 as well as the ones that report an error, leaves both
-references behind, so each S0i3 suspend leaks them.
+This patch series consolidates the standalone 'redmi-wmi' driver into the
+'bitland-mifs-wmi' driver to eliminate code duplication and centralize
+the maintenance of overlapping ACPI WMI event streams.
 
-Release the reference with a __free() cleanup on the declaration,
-which covers every return path without adding labels.
+Bitland is the ODM manufacturer for various Xiaomi Redmibook models. Both
+platforms share the exact same keyboard event stream WMI GUID
+(46C93E13-EE9B-4262-8488-563BCA757FEF). While redmi-wmi previously parsed
+the 4-byte payload as a bulk u32 scancode, bitland-mifs-wmi deconstructed
+it into discrete type/id/value fields.
 
-rtc_class_close() does not accept a NULL argument, so the cleanup
-helper has to guard against one: rtc_class_open() may fail and the
-declaration still has to be cleaned up.
+Redmi operations were not contained in this patch series, future reverse
+engineering is required.
 
-Found by code review.
+This series introduce a newly reported mic-mute hotkey definition
+for Redmibooks
+and dropped the previous redmi-wmi driver.
 
-Fixes: 59348401ebed ("platform/x86: amd-pmc: Add special handling for timer based S0i3 wakeup")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ma Ke <make_ruc2021@163.com>
----
-Changes in v3:
-- Define DEFINE_FREE(rtc_class_close, ...) in include/linux/rtc.h rather
-  than locally in pmc.c, since it belongs with the API it wraps.
-  Suggested by Ilpo Järvinen.
-- Guard the cleanup against a NULL rtc_device; rtc_class_close() does not
-  handle one.
-- Move the __free() declaration to the assignment, as described in the
-  comment in <linux/cleanup.h>.
-- Cc the RTC maintainer and list, since v3 touches include/linux/rtc.h.
+I don't have a Redmi or other Bitland device. So I cannot work on the
+real device.
 
-Changes in v2:
-- Replace the added goto labels with a __free() cleanup on the
-  declaration, as suggested by Mario Limonciello and Ilpo Järvinen.
----
- drivers/platform/x86/amd/pmc/pmc.c | 5 +++--
- include/linux/rtc.h                | 2 ++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Features are working properly on my device (Lecoo Bellator N176).
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 6792aa2c6187..f96e8a358eb7 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -14,6 +14,7 @@
- #include <linux/array_size.h>
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -648,7 +649,6 @@ static int amd_pmc_wa_irq1(struct amd_pmc_dev *pdev)
- 
- static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
- {
--	struct rtc_device *rtc_device;
- 	time64_t then, now, duration;
- 	struct rtc_wkalrm alarm;
- 	struct rtc_time tm;
-@@ -664,7 +664,8 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
- 	if (pdev->major < 64 || (pdev->major == 64 && pdev->minor < 53))
- 		return 0;
- 
--	rtc_device = rtc_class_open("rtc0");
-+	struct rtc_device *rtc_device __free(rtc_class_close) =
-+		rtc_class_open("rtc0");
- 	if (!rtc_device)
- 		return 0;
- 	rc = rtc_read_next_alarm(rtc_device, &alarm);
-diff --git a/include/linux/rtc.h b/include/linux/rtc.h
-index c09fc22819d0..0f43b5027235 100644
---- a/include/linux/rtc.h
-+++ b/include/linux/rtc.h
-@@ -13,6 +13,7 @@
- #define _LINUX_RTC_H_
- 
- 
-+#include <linux/cleanup.h>
- #include <linux/types.h>
- #include <linux/interrupt.h>
- #include <linux/nvmem-provider.h>
-@@ -201,6 +202,7 @@ extern void rtc_update_irq(struct rtc_device *rtc,
- 
- extern struct rtc_device *rtc_class_open(const char *name);
- extern void rtc_class_close(struct rtc_device *rtc);
-+DEFINE_FREE(rtc_class_close, struct rtc_device *, if (_T) rtc_class_close(_T));
- 
- extern int rtc_irq_set_state(struct rtc_device *rtc, int enabled);
- extern int rtc_irq_set_freq(struct rtc_device *rtc, int freq);
+I leave the future reverse engineering work to the community.
+
+v10:
+Replace the previous "profile table" with dmi quirk table
+
+v9:
+Add the missing feature introduced in the commit
+e0d6312578e1 ("platform/x86: redmi-wmi: report EC state change events").
+
+v8:
+Correct Ilya Gladyshev's email address in the MAINTAINERS entry
+
+v7:
+Swap low bit and high bit for WMI_EVENT_KBD_BRIGHTNESS
+in bitland_mifs_wmi_keymap
+0x00800501 -> BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0),
+
+Report KEY_FN_ESC when WMI_EVENT_FNLOCK_STATE events received
+Rename the reserved names
+Use Xmas tree order in bitland_mifs_wmi_notify
+Collect the Tested-by and Reviewed-by tags
+
+v6:
+Drop the wrong Redmi ops
+
+v5:
+Correct Xiaomi DMI vendor name
+
+v4:
+Map PLATFORM_PROFILE_PERFORMANCE to wmi performance mode if the device
+doesn't support full-speed mode.
+
+Mingyou Chen (5):
+  MAINTAINERS: Add maintainer entry of bitland-mifs-wmi driver
+  platform/x86: bitland-mifs-wmi: Merge the function of redmi-wmi into
+    the bitland driver
+  platform/x86: bitland-mifs-wmi: Add Redmi mic-mute key entries
+  platform/x86: redmi-wmi: Drop redmi-wmi driver
+  platform/x86: bitland-mifs-wmi: Add quirks table
+
+ MAINTAINERS                             |   7 +-
+ drivers/platform/x86/Kconfig            |  12 -
+ drivers/platform/x86/Makefile           |   1 -
+ drivers/platform/x86/bitland-mifs-wmi.c | 290 ++++++++++++++++--------
+ drivers/platform/x86/redmi-wmi.c        | 154 -------------
+ 5 files changed, 205 insertions(+), 259 deletions(-)
+ delete mode 100644 drivers/platform/x86/redmi-wmi.c
+
+
+base-commit: 98f039265e580291d5e76a11b2072541fbb1c393
 -- 
-2.43.0
+2.55.0
 
