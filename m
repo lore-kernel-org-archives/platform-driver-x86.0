@@ -1,86 +1,107 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from mail.barrensea.org (mail.barrensea.org [198.12.121.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D237A35F165
-	for <platform-driver-x86@vger.kernel.org>; Sun, 11 Oct 2026 04:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD8C1E8332;
+	Sun, 11 Oct 2026 08:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.12.121.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791691303; cv=none; b=KM+MQl6USSCPmcUicon0gkVenOU7dSfw8KlXi8oorRVzw6c5cdN1YDeak8PqfoW6vy9vxeXyO1Xt/ajaU/3qB1T3BNjPON/2bh/ubOGZ2AUNZ3yaoVAY50uVBHqxW3E/bl6f9na80LbsnU7Hb5C/5z0qKCA/2FlQvjRW85Wap6k=
+	t=1791706805; cv=none; b=czRcc5bKsPRkeJDrzSZOMHX1KESJ1TCfB+3P4z+MDbzLjwlWxTma5cBqLcPi14ls1Rxc2jiFnKw3Y+NrNCKPqI2Gvflt2mymdjxGNu8QB54tdeJJyBEj5wVws8EqnIL3wzQq6LkGS/61BYgRS2ghl6v/Vx8NkU6tzRdBD3gz4VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791691303; c=relaxed/simple;
-	bh=4Z83Dd0KZW7MX1m8oV85pfbmhexkK2/nFAET4Hqj2LQ=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=EqfK/VJ/JQsZUoA0Jy+Ongr3zEzf6qM/EyDl8yMhjO5xdKehy1t8VLiFCEQZg4COlOjVptGILYpHWsSkjvVwwNQOSc9WupQCrf8yC9cYqGAvZwQv67KVKBmWH/tHnbvehhM/a0t/0WLhXk/Vmy6ZOxpCIKme6j5133GkphJpM+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=aqOPTYNw; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1791706805; c=relaxed/simple;
+	bh=/ctUPBIvW2H3HkD6Q4z7YVmlrHlM6NKhFmbdyR4H6QE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g6aiMI0XJQYJwEN9vv2v4wetTGpslyEA0A9MD+R/nUBCKkcA874hWrJ5GFyVbrvyF6btIONN56PpLru01O7VBLzjau+rha2swq5Wpbry++9aLCSG5tRr1RZbaD8onZYK5PDjoC/xrOkNewDDLjL7i1pj/T3TNXrCuyBUvAGwCGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=barrensea.org; spf=pass smtp.mailfrom=barrensea.org; dkim=pass (2048-bit key) header.d=barrensea.org header.i=@barrensea.org header.b=cBYC6Y3P; arc=none smtp.client-ip=198.12.121.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=barrensea.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=barrensea.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="aqOPTYNw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1791691291; bh=4Z83Dd0KZW7MX1m8oV85pfbmhexkK2/nFAET4Hqj2LQ=;
-	h=From:To:Cc:Subject:Date:References:In-Reply-To;
-	b=aqOPTYNwoI5RHCRmzd2JezQsY4957lIs5BJSIEUbhrga254SXLoISQ7ROnp9ilAuB
-	 Fn8dPsdl3fztEjDaurEhWJzXhY375f6hPsCqQe6CSo7PszpZIok1ery4mkz1O4a5XV
-	 l98yPmVyWtfV5e2tug1+dRSkenAPgUUEpfdZPGQ0=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ylTmHUqvI8+Wpn+Gzalws3A==
-X-QQ-XMAILINFO: N55iztL8edgQGuikIW7JRy+DyPTN0Hfqmmi4XdUy1a6S2DZaub21Rs7l9fwTAR
-	 DqZ2jHGmfIFZ1j6JSfcLydp8ew3Um1KF+oxetP4FRNPfoDgZFqgYrjpJwO/G0rkgaQzFU/l3jiTH2
-	 7h13Mggpwq3N3UucR7D3xiBeWKvTZ2gTGyBBHzkv4FRoMSQQtEUbYy4VuEMRdTZN7x9xIIAOC9fkj
-	 4OgwoYhUNS32qekR7/aT2Ku6B1KQbsv0VSUgSdKde/HWhQV4kApbkraeLJoJjO26c+I4ZX7NAoy8Y
-	 wNSNq+PagIDqSucj1zVISzXN2z0mPgSE96YZRoDZv7xF1xl8bDmTUYiIASZl09f1XiV+sniVYBQR3
-	 PSvk3KUn1oFky0fw9TkDqs/+iVMD/sJKk6Oj1aeSXkg9/k1GPBgnVO9MNPERoZX6jGVzHdqJr4lgh
-	 cDb0eeaSeghmY8iIhxcJRjqr6qy06uhC1qqiIpHEg7y4G21E1ZXg9O2/w+tivKURupoXNJv4TTu/z
-	 GpuTDezJZfqoPIKwgdKNtpphl7rCErypIBkFaGwQh/16qydJI/IjMiwt68IO5x28+kRHcm77VFUMG
-	 kC96OiXugnPRTzbdCPp8Jkv2BiPIpCef8BhfYq5AR4ygxd2wUo+pEds/sEtnhg9kJ2DK1qdJ5NZwX
-	 O84pXpoLa9D+RhnnjOHu1cM9Cc3rYlAPEDnRMTTN23bfzrSy7cwSU8417w1iYQo4tfaYF6gt6AWJD
-	 Oa7tNIKhnzp4NZqpSjqqtpluP77r5rWp5Dk3E5N2C0zE0oTSSbXVKMZ0LV0ETGvRHTCga9Tzb/EgU
-	 i3TCNugG8ypbCZwVOgOunnDkA0D+a9YDxULNHXMAvZiZRmmTMDwfs63wpYpv4EJTZFkgaqoibAZNO
-	 Ykczr7VhrJQ/l14OBFviuzah66iAZjkd7/1o7tUVHuEmEErEApLJFmzBvdFjjMOS6KWiZEuWyJq2h
-	 Gm20h/hq3cDgysDG2eHe0MkGeqyJhFuNMNEG+C/WEPxbWEyFyMJ524gwHBF0v/U4Pnf+W0l6pLgXX
-	 1iSiJ7wINU/p4JwZIUIicLskybICLPLMXyZ5Q/3z5U72AuPSA+vN2tg45UpgfFBi2132DdDz5KiCU
-	 0OE26mKa2K2inA==
-From: "=?utf-8?B?YmlmYW5na250?=" <bifangknt@qq.com>
-To: "=?utf-8?B?QXJtaW4gV29sZg==?=" <W_Armin@gmx.de>
-Cc: "=?utf-8?B?cGxhdGZvcm0tZHJpdmVyLXg4Ng==?=" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [Hardware support request] uniwill-laptop: MECHREVO Yilong15Pro GM5HG0A keyboard backlight
+	dkim=pass (2048-bit key) header.d=barrensea.org header.i=@barrensea.org header.b="cBYC6Y3P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=barrensea.org;
+	s=mail; t=1791706473;
+	bh=/ctUPBIvW2H3HkD6Q4z7YVmlrHlM6NKhFmbdyR4H6QE=;
+	h=From:To:Cc:Subject;
+	b=cBYC6Y3PcAa/I+CpM/njT1PCjYs2GOS5xDRoif30AtvLaVhFeX7siwJ7x8A0vR/+n
+	 OXKVIQgeKpwfR000/wasDjUZPW5Xf6dpKPmSfArjRB54E77hhKmYDfwOPAWOv6TW5+
+	 fmHXoiD4XuSgbcev5t5j5ef2h9OB/WDY5mcTNPybw9BNgOyWfZom7VdwcGFb0DrlNo
+	 OSLY1QsaSXql/m3+b/X5eLmztPagOdMXDYdiGR4gAWNxLhUEU4GMBOed15PTGH4MDv
+	 m5MfmoEmgJM2uJx6G1q/BkWRRqg0ISJafzcvgEOlQ979fKXMFv7pNWmu6kiigHbA2C
+	 EUciYhQpJEIow==
+From: Donjuanplatinum <donplat@barrensea.org>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donjuanplatinum <donplat@barrensea.org>
+Subject: [PATCH v2] uniwill: Add support for MECHREVO WUJIE Series 15 X Pro
+Date: Sun, 11 Oct 2026 16:14:21 +0800
+Message-ID: <20261011081421.38128-1-donplat@barrensea.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Sun, 11 Oct 2026 12:01:29 +0800
-X-Priority: 3
-Message-ID: <tencent_8D0E2B7612F49BB973D94868D7129175D809@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <tencent_B151EE01B6705AB1C44E1D81C38D9D4C7D07@qq.com>
- <750f97be-7d45-41b1-84e2-3fbb9229f602@gmx.de>
- <tencent_EAAEE9BC1F36ECF8E88372E7B025D0AA270A@qq.com>
-	<1720cd41-9685-4edf-9653-511c396b2302@gmx.de>
-In-Reply-To: <1720cd41-9685-4edf-9653-511c396b2302@gmx.de>
-X-QQ-mid: xmseub15-2t1791691289thwk0k67e
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-SGVsbG8gQXJtaW4sCgpUaGFuayB5b3UgZm9yIGNoZWNraW5nIHRoZSBBQ1BJIHRhYmxlcyBh
-bmQgcHJlcGFyaW5nIHRoZSBwYXRjaC4KSSBhcHByZWNpYXRlIHlvdXIgaGVscCBpbiBnZXR0
-aW5nIHRoaXMgbWFjaGluZSBzdXBwb3J0ZWQgdXBzdHJlYW0uCgpPbmUgc21hbGwgY2xhcmlm
-aWNhdGlvbiBhYm91dCBteSBuYW1lOiBJIHByZXZpb3VzbHkgc2lnbmVkIG15IGVtYWlscyBh
-cyAiYmlmYW5nIiwgYnV0IEkgd291bGQgcHJlZmVyIHRvIHVzZSAiQmkgRmFuZyIgZm9yIGF0
-dHJpYnV0aW9uLgoKVGhpcyBpcyBteSBmaXJzdCBpbnZvbHZlbWVudCBpbiBMaW51eCBrZXJu
-ZWwgZGV2ZWxvcG1lbnQsIGFuZCBJIHdvdWxkIGJlIGdyYXRlZnVsIGlmIG15IHJlcG9ydGlu
-ZyBhbmQgdGVzdGluZyBjb3VsZCBiZSBhY2tub3dsZWRnZWQgaW4gdGhlIGNvbW1pdCBtZXNz
-YWdlIGZvciB0aGUgcGF0Y2ggYWRkaW5nIHN1cHBvcnQgZm9yIHRoaXMgbW9kZWwsIHdoZXJl
-IGFwcHJvcHJpYXRlLgpZb3UgaGF2ZSBteSBwZXJtaXNzaW9uIHRvIHVzZSB0aGUgZm9sbG93
-aW5nIHRhZ3M6CgpSZXBvcnRlZC1ieTogQmkgRmFuZyA8YmlmYW5na250QHFxLmNvbT4KVGVz
-dGVkLWJ5OiBCaSBGYW5nIDxiaWZhbmdrbnRAcXEuY29tPgoKVGhlIFRlc3RlZC1ieSB0YWcg
-cmVmZXJzIHRvIG15IHRlc3Rpbmcgb2YgdGhlIG1vZGlmaWVkIGRyaXZlciB5b3UgYXR0YWNo
-ZWQsIGluY2x1ZGluZyBsb2FkaW5nIHdpdGhvdXQgZm9yY2UgYW5kIHdvcmtpbmcga2V5Ym9h
-cmQgYmFja2xpZ2h0IGNvbnRyb2wuCkkgd291bGQgYWxzbyBiZSBoYXBweSB0byB0ZXN0IHRo
-ZSBmaW5hbCBwYXRjaCBpZiB5b3UgbmVlZCBmdXJ0aGVyIGNvbmZpcm1hdGlvbi4KClRoYW5r
-IHlvdSBhZ2FpbiBmb3IgeW91ciB0aW1lIGFuZCBndWlkYW5jZS4KCkJlc3QgcmVnYXJkcywK
-QmkgRmFuZw==
+Add support for the MECHREVO WUJIE Series 15 X Pro (WUJIE
+Series-X5SP4NAG).
+
+I have tested the Uniwill features on my laptop: the RGB keyboard
+backlight works correctly and supports a maximum brightness level of 4.
+The secondary fan only starts when the system load and performance
+level increase. AC auto boot and USB powershare also work correctly.
+The Super key and CPU temperature reporting work correctly, with
+temperatures reported in millidegrees Celsius.
+
+This machine does not have an NVIDIA GPU; it uses an AMD GPU.
+
+* drivers/platform/x86/uniwill/uniwill-acpi.c: Add
+series_x5sp4nag_descriptor and DMI matching.
+
+Signed-off-by: Yifei Yao <donplat@barrensea.org>
+---
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index 7a2eeaec4c96..d0fde42c46d7 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -2712,6 +2712,19 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+ 	.lightbar_max_brightness = 200,
+ };
+ 
++static struct uniwill_device_descriptor series_x5sp4nag_descriptor __initdata = {
++	.features = UNIWILL_FEATURE_FN_LOCK |
++		    UNIWILL_FEATURE_SUPER_KEY |
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN |
++		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT |
++		    UNIWILL_FEATURE_AC_AUTO_BOOT |
++		    UNIWILL_FEATURE_USB_POWERSHARE,
++	.kbd_led_single_color = false,
++	.kbd_led_max_brightness = 4,
++};
++
+ /*
+  * The featuresets below reflect somewhat chronological changes:
+  * 1 -> 2: UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL is added to the EC firmware.
+@@ -2996,6 +3009,14 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
+ 		},
+ 		.driver_data = &tux_featureset_4_descriptor,
+ 	},
++	{
++		.ident = "MECHREVO WUJIE Series 15 X Pro",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "WUJIE Series-X5SP4NAG"),
++		},
++		.driver_data = &series_x5sp4nag_descriptor,
++	},
+ 	{
+ 		.ident = "TUXEDO InfinityBook Pro 14/15 Gen9 Intel/Commodore Omnia-Book 15 Gen9",
+ 		.matches = {
+-- 
+2.55.0
 
