@@ -1,59 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1164A6CF6;
-	Mon, 12 Oct 2026 15:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA3F4A5EA5;
+	Mon, 12 Oct 2026 15:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791820549; cv=none; b=qF5UEyHSYONWu6iRx70UaQ3AlTs+80Yo0AgLc378dNdbmk9YDTLsV+idkEXRBXHYUtkpRCg4KvDTiBHscGNBvkVt/ysuVgS+SkzSv/qYcSz6FzR+G2XaHOy/6H+7l24yv37wRilz3gLhu4SvJn9GISsyGuIBEXJxmtg/iDYrp9E=
+	t=1791820557; cv=none; b=fDNRXC6PxE0nPJM2K8zNqu0zw5gQkMEs8IzEtly9AThM4xyZ+bTVoNs5meXBelyqvcOM5jggeiUQX5bs9XYfriiTxZdO7vybiqT2Z1pftwFr9QmwN2DytsjArEAVZM2eb12cwZFHzaVXkZlAXYroM9SCovE2LMu+zVHtrqtHmKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791820549; c=relaxed/simple;
-	bh=b7C3hLkZZXq6bGDeHrp6VaM2y69O9anjrJ3/eQ61Vmo=;
+	s=arc-20240116; t=1791820557; c=relaxed/simple;
+	bh=4FmKRksIO7Bny3rPzmqieKmk9ZT0xdfNxBEHw2BnAxc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=V0Xi2MxzExVC2AK77Ic5h2l1qwS4a/UDGtfMdiIlq1GsURqY078MIOFPq4l+lNQw1sOp7rfpZPvJt3i3enZZNCYQvBiLmxd2l4sYRqYl2PYQwBlLjoRzTJ0GCDVAo0JXgyPcW6g+kp00hiYrQwpbdiVQmIdFZJW4/FmY1/8/hBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Afg7XW5R; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=dOBwjacIGfLtqcL6/UDUAQSzVlVb2m4wUW+sFC4V7OwLpNuyTLjzDFSW4oi4J2Uj44SoCY2vzwj1odRn4WtPZhwd0evI2v967e8SJyueSxoPKmJOscnLACACxnM2Cu/w2B3LzVFUgCGVDCw+gjt+P0Y/G9zTvoF5/0PuzmAZZT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UrRsszOk; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Afg7XW5R"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UrRsszOk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791820548; x=1823356548;
+  t=1791820556; x=1823356556;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=b7C3hLkZZXq6bGDeHrp6VaM2y69O9anjrJ3/eQ61Vmo=;
-  b=Afg7XW5R/VitCrcVaeWd+12jkVRCo5q3cBYvqLsZxvsnxU/51L2cFdAs
-   ODqEXQyiysrn3ifXFaZ6Z+KSZ/h0EO/1VmJZHLtJWsqjbWxcvTBEWdMth
-   oh9Oy/mK5b/ORJewQFAjas/4SBITEAiGTW57nI27xc9O2mQThfSL43Mi6
-   XbQvILx1lR8yWprmDusDWNjuAUztMY6v2n5vd9MlZ5P+4/8QLBHd2d9c7
-   ssK99pxcaNPGcNQOCk2eIUaEL/PKZ6ErYJkTjlfa3ZKzUZsZvU8tSOR4k
-   dO4fNJqPQuZ9X8iYrvjK5ax23J+IQtL79vMjBXtM41GU8v/sDHO2xOzsd
-   Q==;
-X-CSE-ConnectionGUID: IdrRlmOMS8SBLquOMnlSNA==
-X-CSE-MsgGUID: CUmKGYMDSACzlmfqUQUqnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="544980"
+  bh=4FmKRksIO7Bny3rPzmqieKmk9ZT0xdfNxBEHw2BnAxc=;
+  b=UrRsszOk9rNtXndkm/zxajuRXkRRbUtyF4OQwexjfp8HajpjaIgmPf1Q
+   PEAcFaAoUy1lo01KZynIbhSU94N1CsNagQXlruNZgEdlRFhev3axejrNc
+   eBhTucQ8uEeARM6ABoaRXwyViImm37iE88OwHZzcozIWxUJQP4hLNzbU6
+   kZ2xeTq82kXA4tWoaI9OXfTH9dJcCYaET2PO0c+mZMQ/P9s4GM5xXwjuL
+   y0HVbxF++8FMYQNvdmTwLIpHpSRRQXMffI3CG6nXjxRqELYCaBhEVqSrX
+   ElnkJ7NWRqIvZcsLyxOf16Ux9Dk1kQa7XuBfuKJP5RaBCfglafMb5Qoyr
+   g==;
+X-CSE-ConnectionGUID: A+m60B2MQi2Zhje0yGNNzg==
+X-CSE-MsgGUID: UDGRwmlxTVe3rI7AB0/utw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="417117"
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="544980"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:47 -0700
-X-CSE-ConnectionGUID: MPPzgbKaRhW8p11BSGhzvg==
-X-CSE-MsgGUID: 8ihOOmVoRFuRNKPjjf5+Ew==
+   d="scan'208";a="417117"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:56 -0700
+X-CSE-ConnectionGUID: 6nyPggpLSYymnaC9VpvNTQ==
+X-CSE-MsgGUID: TK4xHRppRUeHGNLCQgARow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="890224"
+   d="scan'208";a="908837"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:44 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:52 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>, 
+ Sibi Sankar <sibi.sankar@oss.qualcomm.com>, 
  Hans de Goede <hansg@kernel.org>, 
- Matthew Schwartz <matthew.schwartz@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260929181655.26105-1-matthew.schwartz@linux.dev>
-References: <20260929181655.26105-1-matthew.schwartz@linux.dev>
-Subject: Re: [PATCH] platform/x86/amd/pmc: Add spurious_8042 to ASUS ROG
- Flow Z13 GZ302EA
-Message-Id: <179182053649.17897.10842011478760638051.b4-ty@b4>
-Date: Mon, 12 Oct 2026 18:55:36 +0300
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Abel Vesa <abel.vesa@oss.qualcomm.com>
+Cc: Maya Matuszczyk <maccraft123mc@gmail.com>, 
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20261001-qcom-hamoa-ec-suspend-irq-v2-1-ec71a7cdec79@oss.qualcomm.com>
+References: <20261001-qcom-hamoa-ec-suspend-irq-v2-1-ec71a7cdec79@oss.qualcomm.com>
+Subject: Re: [PATCH v2] platform: arm64: qcom-hamoa-ec: Disable the SCI IRQ
+ during suspend
+Message-Id: <179182054705.17897.3149043112275162830.b4-ty@b4>
+Date: Mon, 12 Oct 2026 18:55:47 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,16 +70,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 29 Sep 2026 20:16:55 +0200, Matthew Schwartz wrote:
+On Thu, 01 Oct 2026 10:46:36 +0300, Abel Vesa wrote:
 
-> The ASUS ROG Flow Z13 (GZ302EA/GZ302EAC) wakes up from suspend-to-idle
-> without any user input. With PM debug messages enabled, each unexpected
-> wakeup shows the EC raising IRQ1 at the same time as the ACPI SCI:
+> EC SCI events require I2C transfers to retrieve the event information.
+> During system resume, an SCI interrupt can be delivered before the I2C
+> controller is ready to handle transfers, resulting in failed event reads:
 > 
->   PM: Triggering wakeup from IRQ 9
->   PM: Triggering wakeup from IRQ 1
->   ACPI: EC: Query(0xa3) started
->   ACPI: PM: Wakeup after ACPI Notify sync
+>   geni_i2c a84000.i2c: error turning SE resources:-13
+>   qcom-hamoa-ec 3-0076: Failed to read EC SCI Event: -13
 > 
 > [...]
 
@@ -88,8 +92,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/amd/pmc: Add spurious_8042 to ASUS ROG Flow Z13 GZ302EA
-      commit: 0a8ad16321411b45e49bbfb7986348790f3227c6
+[1/1] platform: arm64: qcom-hamoa-ec: Disable the SCI IRQ during suspend
+      commit: 16624ca212e67afd0bffe983d5e9600e87e321bc
 
 --
  i.
