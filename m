@@ -1,60 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B304A091C;
-	Mon, 12 Oct 2026 15:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1164A6CF6;
+	Mon, 12 Oct 2026 15:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791820537; cv=none; b=P9pnZKEUpmsj4hDIMRJQMcD8walvXWmvov4LhsAinNAw9wwwouWdrJmrNONSByw2cW0VfDhPU1Kz1kYUuL6pUR8ffmw1+Iv/J1d2XOeZXKGIuPpVRJQ/lR99KiptPBxMLeior9SJlO8NZevA/+lEv+2B7fiBhAvZP4mvOAnYH+w=
+	t=1791820549; cv=none; b=qF5UEyHSYONWu6iRx70UaQ3AlTs+80Yo0AgLc378dNdbmk9YDTLsV+idkEXRBXHYUtkpRCg4KvDTiBHscGNBvkVt/ysuVgS+SkzSv/qYcSz6FzR+G2XaHOy/6H+7l24yv37wRilz3gLhu4SvJn9GISsyGuIBEXJxmtg/iDYrp9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791820537; c=relaxed/simple;
-	bh=j/S2wVFyKe4u9vae9EYzWsW7njS4kntD9ZteLiIBYGQ=;
+	s=arc-20240116; t=1791820549; c=relaxed/simple;
+	bh=b7C3hLkZZXq6bGDeHrp6VaM2y69O9anjrJ3/eQ61Vmo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kz6aDeTScbqVZ53qnDS2XIpopIUgJeXFNRrcA/Ey5lNWmj7bsExmT1jJKxudvXo9cz2jOrLkKhr0Lzmyskxhfs8ocTqpU+VyeDsHFz2xk7xEtMFkmcr67PSSDbHFPqCbcJmN63tgJYPSbUb/CHaokaE1EfBvvYxvJC9PDr1NfVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ML9ecAhL; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=V0Xi2MxzExVC2AK77Ic5h2l1qwS4a/UDGtfMdiIlq1GsURqY078MIOFPq4l+lNQw1sOp7rfpZPvJt3i3enZZNCYQvBiLmxd2l4sYRqYl2PYQwBlLjoRzTJ0GCDVAo0JXgyPcW6g+kp00hiYrQwpbdiVQmIdFZJW4/FmY1/8/hBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Afg7XW5R; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ML9ecAhL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Afg7XW5R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791820536; x=1823356536;
+  t=1791820548; x=1823356548;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=j/S2wVFyKe4u9vae9EYzWsW7njS4kntD9ZteLiIBYGQ=;
-  b=ML9ecAhL8AyOu8edP95C9gBcsF4AUSLe7q8pJtuOQ4NXik0qWgX55aTT
-   pMZZT8odo2TIhBhPE4mpaBko+aUKMpUuaf9S+xFQeFb5rVXJXLY0XSUjk
-   UsO55TDYKrKwotq/RIGBHu1CDnSbWxG2JgKhdZX6BwiJ3Fw+oiv14bzbx
-   4SqTIBN0D8GkBAueqbCGQYxexNJrs4lVZ/VDRzbBg5jxpb867P4pQCw+w
-   UYjxd+D0hHK58bFvWYeibvK1Z817ulmJ4UXu15bw0HEWjIoP7mXf+ksu4
-   KfeNNvehUW4b30iAZFpB0fQlFpIHmru1kzseigOR8G5yjvdq6e1IkfnvT
-   g==;
-X-CSE-ConnectionGUID: pmi6bZIuTTGLuCWLq3WGIg==
-X-CSE-MsgGUID: c/c99PzqSjSS+v8Z2Snhqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="417076"
+  bh=b7C3hLkZZXq6bGDeHrp6VaM2y69O9anjrJ3/eQ61Vmo=;
+  b=Afg7XW5R/VitCrcVaeWd+12jkVRCo5q3cBYvqLsZxvsnxU/51L2cFdAs
+   ODqEXQyiysrn3ifXFaZ6Z+KSZ/h0EO/1VmJZHLtJWsqjbWxcvTBEWdMth
+   oh9Oy/mK5b/ORJewQFAjas/4SBITEAiGTW57nI27xc9O2mQThfSL43Mi6
+   XbQvILx1lR8yWprmDusDWNjuAUztMY6v2n5vd9MlZ5P+4/8QLBHd2d9c7
+   ssK99pxcaNPGcNQOCk2eIUaEL/PKZ6ErYJkTjlfa3ZKzUZsZvU8tSOR4k
+   dO4fNJqPQuZ9X8iYrvjK5ax23J+IQtL79vMjBXtM41GU8v/sDHO2xOzsd
+   Q==;
+X-CSE-ConnectionGUID: IdrRlmOMS8SBLquOMnlSNA==
+X-CSE-MsgGUID: CUmKGYMDSACzlmfqUQUqnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="544980"
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="417076"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:36 -0700
-X-CSE-ConnectionGUID: mGel5f9eQHC0QCKy61WbSw==
-X-CSE-MsgGUID: uPRMIt8eR3iDOh8ZF6bKfg==
+   d="scan'208";a="544980"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:47 -0700
+X-CSE-ConnectionGUID: MPPzgbKaRhW8p11BSGhzvg==
+X-CSE-MsgGUID: 8ihOOmVoRFuRNKPjjf5+Ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="908774"
+   d="scan'208";a="890224"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:33 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:44 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: srinivas.pandruvada@linux.intel.com, 
- Guixiong Wei <weiguixiong@bytedance.com>
-Cc: hansg@kernel.org, rafael.j.wysocki@intel.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- wangyijia.yeah@bytedance.com, stable@vger.kernel.org
-In-Reply-To: <20260929163133.14326-2-weiguixiong@bytedance.com>
-References: <20260929163133.14326-2-weiguixiong@bytedance.com>
-Subject: Re: [PATCH] platform/x86/intel-uncore-freq: Continue restoring
- limits on resume
-Message-Id: <179182052851.17897.17290819093548641057.b4-ty@b4>
-Date: Mon, 12 Oct 2026 18:55:28 +0300
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ Matthew Schwartz <matthew.schwartz@linux.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260929181655.26105-1-matthew.schwartz@linux.dev>
+References: <20260929181655.26105-1-matthew.schwartz@linux.dev>
+Subject: Re: [PATCH] platform/x86/amd/pmc: Add spurious_8042 to ASUS ROG
+ Flow Z13 GZ302EA
+Message-Id: <179182053649.17897.10842011478760638051.b4-ty@b4>
+Date: Mon, 12 Oct 2026 18:55:36 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,17 +64,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 30 Sep 2026 00:31:34 +0800, Guixiong Wei wrote:
+On Tue, 29 Sep 2026 20:16:55 +0200, Matthew Schwartz wrote:
 
-> The PM notifier iterates over every uncore frequency instance to restore
-> user-configured MSR_UNCORE_RATIO_LIMIT values after resume. Entries that
-> have never been configured legitimately have stored_uncore_data set to
-> zero.
+> The ASUS ROG Flow Z13 (GZ302EA/GZ302EAC) wakes up from suspend-to-idle
+> without any user input. With PM debug messages enabled, each unexpected
+> wakeup shows the EC raising IRQ1 at the same time as the ACPI SCI:
 > 
-> The refactoring that split common and enumeration code changed the
-> iteration from active control CPUs to all allocated instances. It also
-> changed the skip for an invalid or unconfigured entry from continue to
-> return, causing that entry to terminate the entire restore operation.
+>   PM: Triggering wakeup from IRQ 9
+>   PM: Triggering wakeup from IRQ 1
+>   ACPI: EC: Query(0xa3) started
+>   ACPI: PM: Wakeup after ACPI Notify sync
 > 
 > [...]
 
@@ -90,8 +88,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/intel-uncore-freq: Continue restoring limits on resume
-      commit: 8c1d61297a88cc7f7b2daab7b86c3e85639b46df
+[1/1] platform/x86/amd/pmc: Add spurious_8042 to ASUS ROG Flow Z13 GZ302EA
+      commit: 0a8ad16321411b45e49bbfb7986348790f3227c6
 
 --
  i.
