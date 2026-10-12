@@ -1,370 +1,197 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BD54AB1B3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 16:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791821095; cv=pass; b=nAqIcd6x1TBYFYW5OpJO39Me5Jb3UeYybZovfmcd9ixie/cky4ULr9LxyWMt/9A+05e15865Q9yC9h19Ceo+sfd02o6/3zq0uTTcP+J1LKLYrm5JZr3n2B6PO8sptE5VGoA1E83iudiAXykOYALXnajKVwuZtN1AZt2k9Ty+YJU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791821095; c=relaxed/simple;
-	bh=YDYLCLwgLcV2r5dJ9UzJ836Sq20OcLP+Wd6u1MUNL2g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TfzwBmuxz4t6ygguDeWaynjI2yg8ONZn6tKPi6Sh3/yJ5Dt2U8O/+16H1reS/7fiaasg8M5pAtDO3GH+XAcDNX5trnjMYks8AUWmRu/mVDqhFB82aAaHj/OKB72UelayXWHwgs5Ag1MJv+nTmF8gFl9Sb36qfU/EcMb4MyCVAS4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQOddmAr; arc=pass smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3144A8A39;
+	Mon, 12 Oct 2026 16:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791821464; cv=none; b=RBh94Z4sKcouGVpZPVd6Ll3r9heIDP4aOKz/ORIqGsa/CWgZW2Thjr7x7ZH0YzHXTWz2BnKjfN6uT5FSWvxfWLaLmK2fHWrOiBFTdXNlYSCONcttJDUHJaMDMbLgi9QhvviSS/1nRK0/zJ2PPu6/7mAqdk3+7mAu3QYvsC0msmA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791821464; c=relaxed/simple;
+	bh=vl/hjzRGnuiTtGumcg1CAyiR9HJs/NjVOUgWTtvJkL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N3ZdheqMBan6oiYAzmbOfHOVvO/8w4QSZRx1RiHRvsKZRgw07sxsPwAUd7VPRj0YmdF8tH/MiaMTbxbvqi7ydcb69AfCJYuPntsKV/bzzE9MU2QalO1t3A7WaweBjXZDR7RiNAux4PkDghQW6uY+wQyaM5NUfBp8ZTUhLhSkp20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0wa1mSw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQOddmAr"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3a76d1843eeso3385461fa.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 09:04:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791821089; cv=none;
-        d=google.com; s=arc-20260327;
-        b=a9ZX9IQEhBf3GOMPm+5QnUrAdu9X5k5fxJiDPhUh+f/9frUR1jLLqcCGEs/ZTB6PFg
-         8Hty8/JiFzvNdbP5jcHVp30Ff4r+r7ZCJZOytS02G/bIPJXM+Njo9ZyNeUkkVHOnwXhf
-         Y9QEfXJb9+eoLicn3c1WdZ+dWyS+RwLysy6IZEFwsc1A9LGuYvo2/xYwm++N6JnA0zgx
-         ToritM3/TPFhRqqXjiQefidfwkUI41fKYffOxI7VSHOMuJZj0znI992N9jSbJJK+77nL
-         V1GAaMScD4CZmds6TN59lXFFwJdOW1sWHDKUumJ9b6JqrkTIvDwVjwcuE6rSJjEbGnFa
-         oOuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=Ocr5oPmXQeazUfMR8PC+Ym3NuDxP5HzJs/xjAidmR/s=;
-        fh=ClWgzjGDGPtJ9NdV7X44lnMnAQLn/jzpf3m/Ewp1KpY=;
-        b=S9Y8AXJzudjPcbcwCQ+zxUD12cY9iHDncXsHu1X/CGorSdtTdGmWj9jjiJRhp6I/Gq
-         iHDP0e/ts1THMACdj7uM1iNUI4dPKEAQ44x/Ih7eaL9aoaRNNY/2DGvTfyVqNXra0FVc
-         J2FSXf6B2FQAIBQgrjipkEgI1inBPzMBysvKT3VqhT8tmDdoDLOXNqG2bS3o1EGQ70S/
-         CDxbo5epQm4O1rzpPDCLyk1ra25XQcI0DguiKG+0PDS8aTDmEe/egbTMPbrD1A7XZVn8
-         08dzswLAJcCWKbUKXsGpUazXPwOX9aZkPL6h8YdOgvLwbHRri6uteDrPt4n4Y7V43gea
-         Ao4Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791821089; x=1792425889; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Ocr5oPmXQeazUfMR8PC+Ym3NuDxP5HzJs/xjAidmR/s=;
-        b=OQOddmAr8lhzYnTXfe0M1rCRkTbDufEWLju0vIw5of/87KqC2SB3fe9QuK+U9vZfrB
-         nnDG3DUHRumlQF68nS0ygUfouIzGE9elhFBvJO5fcm8YkGieE5uEElm7GBUoAfBvkNWj
-         FCyDvvV+3gyr1KxD/j0tV/iftIVNnBH/DDPhu9MXPRhpN6fZ++JcJKTOf7r6Q2bUy6Ip
-         H5wqGxxwX51L7wzDx1y63dh6etsyg0pREo+67ILmQPwqRqZTDCXiy2hCM4XlssVA6kKu
-         KfzYR9cOGDh25l6PA5/WOOwnsJLS5SRfnN4WQ2mPXXof6sujZXCL1BHFuTH8G8RjptBa
-         1GGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791821089; x=1792425889;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Ocr5oPmXQeazUfMR8PC+Ym3NuDxP5HzJs/xjAidmR/s=;
-        b=edxmicetBCMEPpR68zH0m2Kpht9Thn12FSS6QnUPP1qsugN/s62T6q/rNeUrFdjvlW
-         gTIh+QgXwlPtwrJXfCQQeKtg/kMgVLfZtV4uCjvpRGaiX2disP/6puCCewRT8Yq5x8Wb
-         v+4GCcdThIUabLlEOd1urxqbYOfAZz2bMgGo+daaAkVNF1xmqsdMzodC918EcWoysZlM
-         EfLxdXCUDOaQW+0vxrhMmwdukEhhQVDzw629J+5ImMoDmTPLC6OMtynVz4Uifc1zizrH
-         mgWLNv+TdVXhIbY5lFNlhw+RElCfnhwZ5Xo0ibR8syWqJkMF+H98ZWGuO7P+zzNb9h+o
-         H/SQ==
-X-Gm-Message-State: AFq9FYJone2O8NvlUz/VrEg6j1gUkkuywRuI8NlyvK1T14tYKI1A/Uos
-	xKszyOm50hU3HbXSH0Z8iozSmhsuFee1CS8M3eZjBycZpgnSyibJMYVHucA0ER+1XUllI7rgvxH
-	LYBekp9pTCamaQIYfAvvFNVZK9fBbqw4=
-X-Gm-Gg: AYBFou0NJCeh179Jq+gVjekWx9NJOZgNdRAa8HMkikurQfPYOEQ55WH90Ef/52RUAkc
-	MKabNtv03mEaz2AVIImupLu4ZEOqCga6Fi0+6D+0b+AVkFZe22MFD1kAZc2bsd0h0VWADO/gxEl
-	6le+UbwXT66ZK0kb9BMnXNlYfzI0kL1scwvxbUODRhHrqd24Up9KbkS4XT7c0bflFeREb/xAQze
-	SZoklD5vf1oWdb7WoWOLD0M4/EWKgPLpbi68KUlheKBRh8uWW1s2Ycnk15efy8hT001M/KNqDYE
-	Kwhr4kUWeUCHPEqKeOfxg6taV5TJnOxvcOBuKGSa72+WkFJDC/lyi1mFGNLk2z9DGf6xAwemY4I
-	brODzfcyj4+/pNYZmtjnaikTF
-X-Received: by 2002:a05:6512:3c9f:b0:5bc:f871:2810 with SMTP id
- 2adb3069b0e04-5bcf8712b1bmr964226e87.5.1791821088977; Mon, 12 Oct 2026
- 09:04:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0wa1mSw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E10D1F0089C;
+	Mon, 12 Oct 2026 16:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791821462;
+	bh=T8t61L+WCKa76kfiPOzPjwOEc+4KwlYEFTiX3EF63ts=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=X0wa1mSwsg9gwsNFW6/V59dA+bSI5zsbJEpWGIw/xfNNySwg+T39Lc3NE1G27f5qh
+	 gY0LjW3SBBmcuFhWSN9jFuFSk6HHnhaxUVNF8ZWI2rKPyXQH2W6OIARQF5bZ39dtT4
+	 XqxEWZjRf90SUiEnpLyo0F037M0KdOnKZI2xSlB/OTKKv1MHBV5p2WAMV/BROWXYXd
+	 yVzV4SsJtbwdyHY5UP52XaelnexgqtLR4mgP3HAoc1FHRsjk11gFkSE+ubSZwOjfc1
+	 N2UXMsMprDNFFfTMDykTDar4XfVGRSSgwJyPxogf4Opo7o1cdmFIEk4rlamGbziXEI
+	 8OFbnE1EQ0T8Q==
+Message-ID: <1ab8b696-efe2-44d7-a440-bd54bd705232@kernel.org>
+Date: Mon, 12 Oct 2026 18:10:59 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPvUaSo1D+1Tvk3-4TMiXw-ScBtY8Mu0FzO7R_EG6zrjYfjYqg@mail.gmail.com>
- <asxTYBiGy6lf6-Ki@archlinux> <CAPvUaSo-ubCOCYYPadY1C23y1Fd_AAhQLuVKWRa6F1XVh6mk_Q@mail.gmail.com>
- <asz7WqGzukhkYHGD@archlinux>
-In-Reply-To: <asz7WqGzukhkYHGD@archlinux>
-From: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
-Date: Mon, 12 Oct 2026 18:04:37 +0200
-X-Gm-Features: AclHuK-V2seTwpNkcOBu-d44QWxkLWSC59kZLFIM7qJ3qYiMq67CAxjyuxLkRus
-Message-ID: <CAPvUaSrbWrBuvAi3R02xC8w8M5Yh97pVd3-+FBXLp3mPgG5cUQ@mail.gmail.com>
-Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP OmniBook
- 5 16-ag1xxx (board 8DF4)
-To: Krishna Chomal <krishna.chomal108@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, W_Armin@gmx.de
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: int3472: GPIO type names disagree with Intel's Windows driver
+To: diamondback <diamondback@cohunt.app>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Alexander Patrakov <patrakov@gmail.com>,
+ Dan Scally <dan.scally@ideasonboard.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org,
+ Linux Media Mailing List <linux-media@vger.kernel.org>,
+ Sahan Nissanka <adee.sahan@gmail.com>
+References: <CAN_LGv0qkxARw4bxO8K-1hUkWNg2ts6q50dooCB5UM5en=bo0w@mail.gmail.com>
+ <d9a37aff-3b4d-467c-825d-5473b4c1bbb4@ideasonboard.com>
+ <CAN_LGv0nBTkVmxbuK+_O1v5Z_OZqQz5LgEZdL1_37otsei36fQ@mail.gmail.com>
+ <aslsXPVJIuYRrgKv@kekkonen.localdomain>
+ <lVgzYFlB_DT3TKJryx4Et9QF3-oqL7pSNP37e4tUENOuzf7sLRLshnvAkcz1jYpd6NCOqlqowIFv1Di9Ddo2Io1_K3HC5gjylmd-kuDLJv8=@cohunt.app>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <lVgzYFlB_DT3TKJryx4Et9QF3-oqL7pSNP37e4tUENOuzf7sLRLshnvAkcz1jYpd6NCOqlqowIFv1Di9Ddo2Io1_K3HC5gjylmd-kuDLJv8=@cohunt.app>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP
-OmniBook 5 16-ag1xxx (board 8DF4)
+Hi,
 
-Hi Krishna,
+On 10-Oct-26 10:01, diamondback wrote:
+> On Saturday, October 10th, 2026 at 12:36 AM, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+>  
+>> The GPIO naming in Windows drivers is also an abstraction while Linux
+>> drivers typically use datasheet names of regulators, which are sensor
+>> specific. The handshake GPIO shouldn't exist with the regulators so it
+>> should be possible to map the rest independently of that. Changing the
+>> default mapping would also be possible, in principle, but that'd still
+>> require ensuring all sensor drivers still get the required regulators. I'm
+>> not sure it's worth it.
+> 
+> Answering Alexander's question to me from the first mail:
+> 
+> On 09/10/2026 04:06, Alexander Patrakov wrote:
+>> Leif, do you remember what it was based on, and which other GPIO
+>> types that machine's INT3472 reports?
+> 
+> It was based on inference. My notes from February only say "likely
+> DOVDD": the ov5675 driver asks for avdd, dovdd and dvdd, 0x0b and 0x12
+> already had avdd and dvdd, so 0x10 got the remaining name. v1 already
+> called it DOVDD; Hans only asked me to drop the OVTI5675 quirk entry and
+> spell the con_id "dovdd" instead of "vio". In hindsight, my commit
+> message should not have stated it so concretely.
+> 
+> What the Fold declares (from _DSM and the BIOS pin fields):
+> 
+>   INT3472:00 (\_SB.PC00.DSC0), all sensor-on value 1:
+>     0x00  reset    pin 335
+>     0x0b  PowerEn  pin 140
+>     0x10  Avdd     pin 164
+>   INT3472:01 (\_SB.PC00.DSC1): no _CRS, zero pins.
+> 
+> No 0x0f, 0x11 or 0x12. And a correction: that INT3472 is not the
+> OV5675's. The OV5675's _DEP names only the IVSC device, it uses dummy
+> regulators for all three supplies, and the supply map shows both
+> regulators going to the IR sensor:
+> 
+>   INT3472:00-avdd -> i2c-SMO55F0:00.avdd
+>   INT3472:00-dovdd -> i2c-SMO55F0:00.dovdd
+> 
+> So 0x10 on the Fold is a VD55G0 pin, not an OV5675 one.
 
-Thanks for the patch. Results below.
+Thank you for providing this information.
 
-Base and adaptation:
-I used drivers/platform/x86/hp/hp-wmi.c from stable v7.2.9, built out
-of tree against 7.2.9-2-cachyos. Your diff did not apply cleanly: hunk
-1 failed, because my hp_wmi_hwmon_is_visible() uses
-is_victus_s_thermal_profile() and hp_wmi_get_fan_speed_victus_s()
-rather than the helpers in your context lines. Hunks 2 and 3 applied
-with offsets of about -230 lines. So I made these changes by hand:
-  - declared int fan_speed in hp_wmi_hwmon_is_visible()
-  - added your pr_info() and the fan_speed variable in the non-Victus
-hwmon_fan branch
-  - added the fan_count <= 0 early return in hp_wmi_hwmon_init()
-I did NOT add the hwmon_pwm_enable check in is_visible(), since the
-early return in init already prevents hwmon registration. If you want
-me to test against a different tree, tell me which one.
+> Dan's suggestion makes sense to me
+I'm afraid that Dan's suggestion to:
 
-Test: normal boot (hp_bioscfg not blacklisted), then rmmod hp_wmi and
-insmod the patched module. Output of dmesg | grep -i -E
-"hp.wmi|WHCM|WQB|fan", showing the stock boot first and then the
-reload at about 5156 s:
+"I think that what probably needs to happen, really, is for
+skl_int3472_register_regulator() to look up its array of consumer_supplies (which
+maps sensor device name to regulator name) based on DMI matching just as
+int3472_tps68470_get_board_data() does for the TPS68470 IC version of the INT3472"
 
-[    6.453093] ACPI Error: Aborting method \_SB.WMID.WHCM ...
-(AE_AML_OPERAND_TYPE)
-[    6.655089] ACPI Error: Aborting method \_SB.WMID.WHCM ...
-(AE_AML_OPERAND_TYPE)
-[    6.857553] ACPI Error: Aborting method \_SB.WMID.WHCM ...
-(AE_AML_OPERAND_TYPE)
-[    6.857581] hp-wmi hp-wmi: Failed to apply initial fan settings: -22
-[    7.262812] hp_wmi: Registered as platform profile handler
-[    7.308567] ACPI Error: Aborting method \_SB.WMID.WQBC ...
-(AE_AML_OPERAND_VALUE)
-[    7.309182] ACPI Error: Aborting method \_SB.WMID.WQBE ...
-(AE_AML_OPERAND_VALUE)
-[ 5156.582212] hp_wmi: loading out-of-tree module taints kernel.
-[ 5156.582224] hp_wmi: module verification failed: signature and/or
-required key missing - tainting kernel
-[ 5157.203181] input: HP WMI hotkeys as /devices/virtual/input/input27
-[ 5157.614765] ACPI Error: Aborting method \_SB.WMID.WHCM ...
-(AE_AML_OPERAND_TYPE)
-[ 5158.026462] hp_wmi: Registered as platform profile handler
+Is not going to scale we are seeing many many different laptop models using
+the discrete INT3472 devices, so we really need a generic solution here and
+so far the current code has been scaling reasonable well.
 
-What I see with the patched module:
-  - "Failed to apply initial fan settings: -22" is gone.
-  - /sys/devices/platform/hp-wmi/hwmon/ does not exist any more, so
-pwm1_enable is hidden as you expected.
-  - Only one WHCM error is logged after the reload instead of three. I
-do not know which call produces it; I am guessing it is the fan count
-query.
-  - No "channel = ... | fan_speed = ..." lines appear, because no
-hwmon device is registered once fan_count <= 0, so is_visible() never
-runs. If you want to see the fan speed query result, the print would
-have to go somewhere that runs in this case. I can test a modified
-patch.
-  - WQBC/WQBE do not appear in the reload because only hp_wmi was
-reloaded (hp_bioscfg stayed loaded).
-  - The platform profile still registers with quiet balanced performance.
+The fact that currently we have a conflict between 0x0b poweren -> avdd
+and 0x10 Avdd -> dovdd is unfortunate. I would like to see 0x10 register
+the avdd regulator as per the Windows table, but that might cause
+breakage on some laptop models.
 
-Fan Always On in the BIOS was off during all my tests.
+For now the only laptop + sensor which we've seen use 0xf and 0x11 (+ 0x10)
+_DSM type GPIOs is Alexander's Lenovo Yoga Duet 7 13ITL6 with the OVTI5675
+sensor. The other laptop, diamond back's ThinkPad X1 Fold 16 Gen 1, which
+we know to use an OVTI5675 is behind a ivsc and does not claim any GPIOs at
+all.
 
-Fan behaviour, in case it is useful: on a cold boot with a 2-core
-stress-ng load, the CPU went from 46 C to 80 C in about 18 seconds
-while acpi_fan fan1_input stayed at 0 RPM (Fan Always On off). I
-stopped the test at 80 C. I can send the full log, and I can retest
-with Fan Always On enabled if you want.
+So for now I think it what should happen is:
 
-Happy to test further patches.
 
-Thanks,
-Lorenzo
+1. An int3472 driver patch renaming INT3472_GPIO_TYPE_DOVDD to
+INT3472_GPIO_TYPE_AVDD, while keeping this mapped to dovdd with a remark
+that this is mapped to dovdd for historical reasons and cannot be easily
+changed because this might break support for some laptops
 
-Il giorno lun 12 ott 2026 alle ore 17:24 Krishna Chomal
-<krishna.chomal108@gmail.com> ha scritto:
->
-> On Mon, Oct 12, 2026 at 10:08:43AM +0200, Lorenzo Collevecchio wrote:
-> >Hi Armin, Krishna,
-> >
-> >Thanks for the quick replies.
-> >
-> >acpidump:
-> >https://gist.github.com/CollevecchioLorenzo/aef5917d9775629d48618bd42cb5f5e2
-> >
-> >I booted 7.2.9-2-cachyos with modprobe.blacklist=hp_bioscfg
-> >(confirmed in /proc/cmdline; hp_bioscfg is not loaded). Counts of
-> >each message in dmesg, before and after:
-> >
-> >  WHCM AE_AML_OPERAND_TYPE:                 3 before, 3 after
-> >  "Failed to apply initial fan settings: -22": 1 before, 1 after
-> >  WQBC / WQBE AE_AML_OPERAND_VALUE:         1/1 before, 0/0 after
-> >
-> >So the WQBC/WQBE errors come from hp_bioscfg, as you suspected. The
-> >WHCM errors and the -22 are not caused by it: they still occur with
-> >hp_bioscfg blacklisted, right before "hp_wmi: Registered as platform
-> >profile handler".
-> >
-> >Windows, as you asked (Krishna):
-> >- The Windows power mode setting exists, but that is standard
-> >  Windows, i didn't check for HP specific.
-> >- Omen Gaming Hub offers a performance mode
-> >  option on this laptop.
->
-> Interesting, what choices does it offer you? Eco/Balanced/Performance?
-> Or something else?
->
-> >- The BIOS has a "Fan Always On" setting. I had it turned off
-> >
-> >Happy to test any patch or run further commands.
->
-> Can you apply the following diff and share the output of:
-> # dmesg | grep "hp_wmi"
->
-> Expected results:
-> - No "failed to apply initial fan settings: -22" in dmesg
-> - pwm1_enable should be hidden
->
-> Note:
-> - I have also added a debug print to get fan speed query result. From your
->    acpidump, it looks like a stub implementation returning all zeros buffer
->    (0 RPM) which should have made fan{1,2}_input visible but it's interesting
->    that it isn't visible; the dmesg log should help us gain more insight.
-> - All other errors in dmesg may (will) be same, as this patch isn't
->    intended to solve them.
->
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 3ec6047c0f89..ee51790549ed 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -2705,8 +2705,14 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
->                                        enum hwmon_sensor_types type,
->                                        u32 attr, int channel)
->   {
-> +       int fan_count;
-> +       int fan_speed;
-> +
->         switch (type) {
->         case hwmon_pwm:
-> +               fan_count = hp_wmi_get_fan_count_userdefine_trigger();
-> +               if (attr == hwmon_pwm_enable && fan_count <= 0)
-> +                       return 0;
->                 if (attr == hwmon_pwm_input && !hp_wmi_fan_control_supported())
->                         return 0;
->                 return 0644;
-> @@ -2715,7 +2721,9 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
->                         if (hp_wmi_get_active_fan_speed(channel) >= 0)
->                                 return 0444;
->                 } else {
-> -                       if (hp_wmi_get_fan_speed(channel) >= 0)
-> +                       fan_speed = hp_wmi_get_fan_speed(channel);
-> +                       pr_info("channel = %d | fan_speed = %d\n", channel, fan_speed);
-> +                       if (fan_speed >= 0)
->                                 return 0444;
->                 }
->                 break;
-> @@ -2931,8 +2939,13 @@ static int hp_wmi_hwmon_init(void)
->         struct device *dev = &hp_wmi_platform_dev->dev;
->         struct hp_wmi_hwmon_priv *priv;
->         struct device *hwmon;
-> +       int fan_count;
->         int ret;
->
-> +       fan_count = hp_wmi_get_fan_count_userdefine_trigger();
-> +       if (fan_count <= 0)
-> +               return 0;
-> +
->         priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->         if (!priv)
->                 return -ENOMEM;
->
->
-> >Thanks,
-> >Lorenzo
-> >
-> >
-> >
-> >
-> >Il giorno lun 12 ott 2026 alle ore 06:03 Krishna Chomal
-> ><krishna.chomal108@gmail.com> ha scritto:
-> >>
-> >> +Armin Wolf
-> >>
-> >> On Sun, Oct 11, 2026 at 06:03:25PM +0200, Lorenzo Collevecchio wrote:
-> >> >Hello,
-> >> >
-> >> >I am seeing hp-wmi fan interface failures on an HP OmniBook 5
-> >> >16-ag1xxx. This is not a gaming model.
-> >>
-> >> Hi Lorenzo,
-> >>
-> >> Thanks for reporting.
-> >>
-> >> >Hardware:
-> >> >  product_name: HP OmniBook 5 Laptop 16-ag1xxx (16-AG1002SL)
-> >> >  board_name:   8DF4
-> >> >  BIOS:         F.12, 04/10/2026 (no newer firmware listed on LVFS for
-> >> >this machine)
-> >> >  Kernel:       7.2.9-2-cachyos (also tested 6.18.55-2-cachyos-lts;
-> >> >ACPICA 20250807 vs 20260408)
-> >> >
-> >> >Symptoms:
-> >> >1. At boot, \_SB.WMID.WHCM (called via WMAA) fails three times with
-> >> >   "AE_AML_OPERAND_TYPE: Needed [Buffer/String/Package], found
-> >> >[Integer]" while resolving operands for [Index].
-> >>
-> >> This is likely due to hp-bioscfg instead of hp-wmi.
-> >>
-> >> >2. Immediately afterwards: "hp-wmi hp-wmi: Failed to apply initial fan
-> >> >settings: -22".
-> >>
-> >> Ah yes! This is because we are currently enabling fan control for ALL
-> >> devices. If you share your acpidump, I can check if we should use the
-> >> HPWMI_FAN_COUNT_GET_QUERY to decide whether to allow pwm1_enable or not.
-> >>
-> >> >3. Later: "Attempt to CreateField of length zero" in \_SB.WMID.WQBC
-> >> >and WQBE (AE_AML_OPERAND_VALUE).
-> >>
-> >> This is also likely due to hp-bioscfg. Try booting with kernel cmdline
-> >> parameter "modprobe.blacklist=hp_bioscfg" and see if these disappear.
-> >> That will help us narrow down the scope. But in any case, I think Armin
-> >> Wolf will have to help here since I am not familiar with bioscfg anyway.
-> >>
-> >> >4. hp_wmi still registers as a platform profile handler (quiet
-> >> >balanced performance).
-> >>
-> >> This is because 8DF4 is not present in any whitelists, so it takes a
-> >> fallback path and uses legacy WMI queries. Honestly, I am not sure if
-> >> platform profile should be registered for OmniBook devices. Could you
-> >> let me know if Omen Gaming Hub on Windows allows you to switch
-> >> performance modes or there is no option for this?
-> >>
-> >> >5. /sys/devices/platform/hp-wmi/hwmon/*/ contains only pwm1_enable
-> >> >(rw); there is no pwm1 and no fan1_input.
-> >>
-> >> Intended.
-> >>
-> >> * pwm1_enable - As said, this is because we are currently (incorrectly)
-> >>                  enabling fan control for all devices.
-> >> * pwm1 - Absent because manual fan control must be unavailable on this
-> >>           board.
-> >> * fan1_input - Absent because get fan speed query must be failing.
-> >>
-> >> >6. On the LTS kernel the same WHCM error repeats about every 2.2 s
-> >> >while something polls the hp hwmon device (277 times between 551 s and
-> >> >1165 s uptime).
-> >> >7. ACPI thermal: "Invalid critical threshold (-274000)" and "No valid
-> >> >trip points!" for thermal zone TSZ0.
-> >> >
-> >> >Fan behaviour:
-> >> >- acpi_fan (acpi-fan PNP0C0B, "Using Microsoft fan extensions")
-> >> >exposes fan1_input. It sometimes shows about 2400 RPM and sometimes 0
-> >> >RPM.
-> >> >- The fan works normally under Windows on the same machine.
-> >> >- I once saw the CPU around 95 C with the fan apparently stopped on
-> >> >Linux; I have not been able to reproduce it yet and am collecting a
-> >> >temperature/RPM log.
-> >> >
-> >> >I suspect the WMI query path the driver uses for fan settings is not
-> >> >implemented by this firmware, so hp-wmi should probably not attempt it
-> >> >on board 8DF4. I would be glad to test patches or provide acpidump
-> >> >output, WMI GUID listings or any other data.
-> >>
-> >> acpidump would be helpful.
-> >>
-> >> Thanks,
-> >> Krishna
-> >>
-> >> >Thanks,
-> >> >Lorenzo
++ 2 new defines for DOVDD / DVDD, resulting in (combined)
+
+#define INT3472_GPIO_TYPE_DOVDD                                 0x0f
+#define INT3472_GPIO_TYPE_AVDD					0x10
+#define INT3472_GPIO_TYPE_DVDD					0x11
+
+So this basically syncs our defines with what we've learned from
+the Windows drivers, without changing any functionality.
+   
+
+2. A patch to add mappings for the new INT3472_GPIO_TYPE_DOVDD(0x0f) and
+INT3472_GPIO_TYPE_DVDD(0x11) values to dovdd resp dvdd regulators.
+
+This one just adds new mappings so should be safe to.
+
+
+3. A patch adding an entry for the OVTI5675 to int3472_gpio_map[] to
+actually map the new INT3472_GPIO_TYPE_AVDD (0x10) the avdd (on the
+OVTI5675 only)
+
+This might cause breakage if there is a laptop not on our radar
+with a OVTI5675 sensor using 0x0b (power-enable) + 0x10 (avdd) gpio
+types at the same time. But there is only one way to find that out
+really.
+
+
+4. A patch to change the mapping of the new INT3472_GPIO_TYPE_AVDD (0x10)
+to actually be mapped to avdd and mapping INT3472_GPIO_TYPE_POWER_ENABLE
+to dvdd instead of avdd + dropping the int3472_gpio_map[] added in
+the 3th patch.
+
+Yes this undoes patch 3, the idea being that we can easily revert patch 4
+if necessary.
+
+Note patch 4 can cause 2 types of problems:
+
+1. A name-conflict in the registered regulators. This would be a real
+problem and a reason to go with a revert.
+
+2. Some sensor drivers for sensors using INT3472_GPIO_TYPE_POWER_ENABLE
+GPIOs may only check for avdd and not dvdd (*), in that case we could
+extend the regulator handling in the sensor driver instead of reverting
+patch 4.
+
+I hope any problems with patch 4 will be of the second category so
+that we can keep it around and have straight forward mappings between
+the defines and the regulator names.
+
+Regards,
+
+Hans
+
+
+
+*) I'm pretty sure we likely have a few of those, bonus points for
+checking all sensor drivers for sensors listed in
+drivers/media/pci/intel/ipu-bridge.c and pro-actively adding "dvdd"
+support if they only support "avdd" atm
+
+
+
+
+
