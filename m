@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE2B497B64;
-	Mon, 12 Oct 2026 15:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4109499F14;
+	Mon, 12 Oct 2026 15:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791817620; cv=none; b=iEPeXaF4aQpcVOOuZRUDc5fmI0NUHEXMfixFVtSPvPKE5gGsM1yPN8yIopabbG81dczXdzdT1eSMu0hY+OHhg2IhBveUKNU1s401SVFTJx9cT+ZtrX1dGEpKrdV5EaFN0gdwfTiLmY/gzZQDfFaSn5zN4XkQS3FccSWyl4CQnAQ=
+	t=1791817938; cv=none; b=sctJkkvXo/+aNPqJ2sKH1j/jE4xcAVOw5FmYFOrruTRjiqJzK2/tAqXRoFB3lxpomPgXnW6LXOScYeVkV7u34qGoAAOvG85ArkDAanuFcd0W3FW8GfqcTbzoCZKGUvBTdVlox8QWrTigObl0iXKSt/QuJBOmZJ9gpR3zPNQiCgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791817620; c=relaxed/simple;
-	bh=1lSW8vLBeVQroU6ImCcVCVnGOKSq1pzmekSby2J34gY=;
+	s=arc-20240116; t=1791817938; c=relaxed/simple;
+	bh=d4Ik5OmF8txIQXW7kr+1V3FL0GReJc55cUCuXHzQh+A=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WbWmNqzSNBlOAOgFwLY7GgW4nkuMztL9L6+Kg4KQY49E2+5ZafFdzcGPA5XMZfSuC4OW8YC2q1i5D4Ar75sh5wUPvDCn173wcVn9QMDVGEOsql5XHctetDZZhwCMYgUa4ks5E/0EzBKzJAPtZoLnn12N6phJqst0G/cxVto4Kns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PIbKLxyq; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=dcJU43GGTMmMgLyRyeLDZ2U8+agjkwCjytRew8ZQv/FoHyR5rwvITOtGcdxljP4EonuQI+2HNZ/rIXAJ5spwdARjsGrR7qhOzrPCKymjlUk/ye/OgAiQtHmrVunvGHnwBlwfHOyB2Vv3ETbpBjNe0GXfb1js1iMDQVxvKT2QWfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L70l+P+m; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PIbKLxyq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L70l+P+m"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791817618; x=1823353618;
+  t=1791817936; x=1823353936;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=1lSW8vLBeVQroU6ImCcVCVnGOKSq1pzmekSby2J34gY=;
-  b=PIbKLxyqw04ONBQNDt/Ays0rquxK7qHdlkd7dlzQamOy5Iw8KijwhTWp
-   yqI9txfS4khMJb/ePGFU6rBNYbiq1qtXRJ6hruF/7rsoX670okIrivljp
-   ACvhSxh1mfQ86dNwKu4rcXMw9swdfuLdRKh+I2YCiiJk24Y+dZWJvFxsm
-   bxfPcY5J0b4HbxqkjYGkl0FaeIfsUMXVuLun4jJlhFfM26upvQzzV8HGy
-   uVPAAGqwKA+WwZQd+vA2SbgelasWFQz1QUDlJbFo+Gqmyn4iK1G6AUgjs
-   KxyeLeMveI1fVL2a/mwGpJs0uK/t7pCu1q6w/Bg49Nq/PVFZjDd9nd6X4
-   Q==;
-X-CSE-ConnectionGUID: JwtfQx3uSrSL4Yt18TDYFQ==
-X-CSE-MsgGUID: PlDg97kETESSQcrmGqgg2w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="516252"
+  bh=d4Ik5OmF8txIQXW7kr+1V3FL0GReJc55cUCuXHzQh+A=;
+  b=L70l+P+mVOSH+JzE/hG73sgGyxvOijyzT9OPrlm4fRYS8EZSGpHQ4Mtg
+   jl2fS6kUJiay8StNw/wp3oY1v5HC7IuluCvbiN+dgyIDA8YbRG7LX3SAi
+   KxqFgwBWj9iU9spdzloh3OGsuxRuV8cfZQVWz+buM9Tsn9nG52pFxDuO0
+   7LfVgCJZNxT7okJsPRSBKjfBktCLOdz3QFL5s7hbfPbBhriJTUBDY8QmL
+   yTLZUqXDrx6wGGxdHS4tZ7vLG/BTTsKJgMnalMxFmhDuowfstgFn4k9Tb
+   6RzKKZ4i3dpVZ3ZgU3juZJkCmLvcjuclTnvZ4du+Xg0wrQdPIOg+eaocU
+   A==;
+X-CSE-ConnectionGUID: s0Dw6ZQvTJmKQ7GY+SCADA==
+X-CSE-MsgGUID: eCFmrgmFQHiYUsBEZ3omdA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="402583"
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="516252"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:06:58 -0700
-X-CSE-ConnectionGUID: 7FQscmOiSoqGe5WSWjIqZw==
-X-CSE-MsgGUID: Wg64IoQURg2wTsZomWk+QQ==
+   d="scan'208";a="402583"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:12:15 -0700
+X-CSE-ConnectionGUID: XWMRspO+RlqvDXPcpnajPQ==
+X-CSE-MsgGUID: 5ogL04JgQpGWYBbKTVH0rA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="1034221"
+   d="scan'208";a="1015207"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:06:55 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:12:12 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 Oct 2026 18:06:52 +0300 (EEST)
-To: Patryk Pilichowski <pat.pilichowski@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: msi-wmi: Ignore WMI events for keys also
- handled by atkbd
-In-Reply-To: <20260926165034.94254-1-pat.pilichowski@gmail.com>
-Message-ID: <25d919c1-87bf-3e2d-1757-96bc9391e702@linux.intel.com>
-References: <20260926165034.94254-1-pat.pilichowski@gmail.com>
+Date: Mon, 12 Oct 2026 18:12:09 +0300 (EEST)
+To: Suryansh Singh <technosfan14@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, krishna.chomal108@gmail.com, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: hp-wmi: Define known Victus S driver
+ data
+In-Reply-To: <20260927093852.161958-1-technosfan14@gmail.com>
+Message-ID: <ec244f7d-0b51-43f9-c932-2d6ea5952672@linux.intel.com>
+References: <20260927085539.96791-1-technosfan14@gmail.com> <20260927093852.161958-1-technosfan14@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,80 +61,99 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Sat, 26 Sep 2026, Patryk Pilichowski wrote:
+On Sun, 27 Sep 2026, Suryansh Singh wrote:
 
-> On MSI notebooks, several keys generate a WMI event through the Wind
-> event GUID in addition to a regular AT keyboard event. Their event
-> codes are not in the keymap, so every press logs "Unknown key
-> pressed".
+> Currently, Victus S thermal parameters use the Unknown Offset for TP
+> (Thermal Profile) from the EC offsets enum, even though there is a
+> Victus S EC Offset in the same enum.
 > 
-> These keys already work through the AT keyboard, so mark their WMI
-> codes as KE_IGNORE, as is already done for the MSI Claw. On models
-> where a code does not also produce a keyboard event, the event is
-> already dropped, so the only change there is that the log
-> message goes away.
+> This was done so because the EC layout is highly
+> variable across this lineup of laptops. The only place where the 0x59
+> offset is used is the driver data for Omen V1 models, despite it being
+> labelled as the Victus S TP offset. The name clearly doesn't relate
+> to the use case.
 > 
-> The Wind event GUID is not specific to the MSI Wind. It is present in
-> 17 of 18 MSI notebooks in the linuxhw ACPI dump collection (2012 to
-> 2024), with the same _WED structure. The codes are shared across
-> models too: the volume keys on the tested notebook send the same codes
-> as the MSI Claw (0x21, 0x32).
+> However, after some downstream searching, I have found that there is
+> a Victus S board which does have the expected EC layout corresponding to
+> the very Victus S offset itself.
 > 
-> Tested on an MSI Katana 15 B13VFK: Fn (0x0b), mic mute (0x19),
-> settings (0x1d), mute (0x23) and Bluetooth (0x78) no longer log
-> unknown key messages, and the keys keep working through atkbd.
+> Add known board parameters for the Victus S models to correctly map
+> the found board (8C99) and any others in the future, and add
+> required if-statements for platform profile options for the new
+> parameters.
 > 
-> Link: https://github.com/linuxhw/ACPI/tree/d6d30c6ef6f4/Notebook/MSI
-> Assisted-by: Claude:claude-opus-5-5
-> Signed-off-by: Patryk Pilichowski <pat.pilichowski@gmail.com>
+> Link: https://github.com/yunusemreyl/omen-space/commit/f32a76386592d1a604e574c693b323d15e978089
+> Signed-off-by: Suryansh Singh <technosfan14@gmail.com>
 > ---
->  drivers/platform/x86/msi-wmi.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  drivers/platform/x86/hp/hp-wmi.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-> index c9db750fe5..6c798f6177 100644
-> --- a/drivers/platform/x86/msi-wmi.c
-> +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -46,6 +46,12 @@ enum msi_scancodes {
->  	WIND_KEY_WLAN		= 0x5f,	/* Fn+F11 Wi-Fi toggle */
->  	WIND_KEY_TURBO,			/* Fn+F10 turbo mode toggle */
->  	WIND_KEY_ECO		= 0x69,	/* Fn+F10 ECO mode toggle */
-> +	/* MSI Notebook keys that use Wind GUID */
-> +	WIND_KEY_FN_NB		= 0x0b,
-> +	WIND_KEY_MICMUTE_NB	= 0x19,
-> +	WIND_KEY_SETTINGS_NB	= 0x1d,
-> +	WIND_KEY_MUTE_NB	= 0x23,
-> +	WIND_KEY_BLUETOOTH_NB	= 0x78,
->  	/* MSI Claw keys */
->  	CLAW_KEY_VOLUMEDOWN	= 0x21,
->  	CLAW_KEY_CENTER		= 0x29,	/* MSI M-Center main menu */
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 7ab81ce5f8d4..7851cb607c74 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -121,6 +121,13 @@ static const struct thermal_profile_params victus_s_thermal_params = {
+>  	.ec_tp_offset	= HP_EC_OFFSET_UNKNOWN,
+>  };
+>  
+> +static const struct thermal_profile_params victus_s_known_thermal_params = {
+> +	.performance	= HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE,
+> +	.balanced	= HP_VICTUS_S_THERMAL_PROFILE_DEFAULT,
+> +	.low_power	= HP_VICTUS_S_THERMAL_PROFILE_DEFAULT,
+> +	.ec_tp_offset	= HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET,
+> +};
+> +
+>  static const struct thermal_profile_params omen_v1_thermal_params = {
+>  	.performance	= HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE,
+>  	.balanced	= HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
+> @@ -164,6 +171,11 @@ static const struct hp_wmi_board_params victus_s_board_params = {
+>  	.fan_profile		= &victus_s_fan_profile_params,
+>  };
+>  
+> +static const struct hp_wmi_board_params victus_s_known_board_params = {
+> +	.thermal_profile	= &victus_s_known_thermal_params,
+> +	.fan_profile		= &victus_s_fan_profile_params,
+> +};
+> +
+>  static const struct hp_wmi_board_params omen_v1_board_params = {
+>  	.thermal_profile	= &omen_v1_thermal_params,
+>  	.fan_profile		= &victus_s_fan_profile_params,
+> @@ -316,7 +328,7 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+>  	},
+>  	{
+>  		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C99") },
+> -		.driver_data = (void *)&victus_s_board_params,
+> +		.driver_data = (void *)&victus_s_known_board_params,
+>  	},
+>  	{
+>  		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C9C") },
+> @@ -2146,10 +2158,12 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+>  	 * of these values.
+>  	 */
+>  	if (tp == victus_s_thermal_params.performance ||
+> -	    tp == omen_v1_thermal_params.performance) {
+> +	    tp == omen_v1_thermal_params.performance ||
+> +		tp == victus_s_known_thermal_params.performance) {
 
-Hi,
+Please remind me, why can't we generalize this and have to keep adding 
+numbers even if we should have the params now per board in struct so why 
+cannot we map using those numbers?
 
-This is getting increasingly hard to read as the values are not ordered. 
-And apparently grouping them by model was bogus anyway (as mentioned in 
-your changelog text).
+This is also misaligned.
 
-So my suggestion is you make a two patch series, first ordering these
-existing ones numerically and adding the values for those not having one 
-yet (please also convert 0xD0 -> 0xd0 for consistency). Then in the second 
-patch add these new entries.
+>  		*profile = PLATFORM_PROFILE_PERFORMANCE;
+>  	} else if (tp == victus_s_thermal_params.balanced ||
+> -		   tp == omen_v1_thermal_params.balanced) {
+> +			tp == omen_v1_thermal_params.balanced ||
+> +			tp == victus_s_known_thermal_params.balanced) {
 
---
+Same comments here.
+
+>  		/*
+>  		 * Since both PLATFORM_PROFILE_LOW_POWER and
+>  		 * PLATFORM_PROFILE_BALANCED share the same thermal profile
+> 
+
+-- 
  i.
 
-> @@ -66,6 +72,13 @@ static struct key_entry msi_wmi_keymap[] = {
->  	{ KE_IGNORE, WIND_KEY_CAMERA,		{KEY_CAMERA} },
->  	{ KE_IGNORE, WIND_KEY_WLAN,		{KEY_WLAN} },
->  
-> +	/* These MSI Notebook keys work without WMI. Ignore them to avoid double keycodes */
-> +	{ KE_IGNORE, WIND_KEY_FN_NB },
-> +	{ KE_IGNORE, WIND_KEY_MICMUTE_NB },
-> +	{ KE_IGNORE, WIND_KEY_SETTINGS_NB },
-> +	{ KE_IGNORE, WIND_KEY_MUTE_NB },
-> +	{ KE_IGNORE, WIND_KEY_BLUETOOTH_NB },
-> +
->  	/* These are unknown WMI events found on MSI Wind */
->  	{ KE_IGNORE, 0x00 },
->  	{ KE_IGNORE, 0x62 },
-> 
