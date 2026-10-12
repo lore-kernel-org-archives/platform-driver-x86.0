@@ -1,255 +1,156 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3529318EFF
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 08:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791792540; cv=pass; b=RoQ02A7UwhN4Hy/WiWOWHqx5B4q39BjnD4UBOM1PTzieVFJ6fTOW2V7/BEU+Nc/0/xBGEtWjCSbDlzaH5Nn3rP0/Iz74mrqftUoreDyqFbOPzW285ZAbuQnu1pMryp1Zru2Xo4Oo6ktgos+dwB6me42mcGOFHf8VMRa7F90f0Iw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791792540; c=relaxed/simple;
-	bh=9s3mrYJ7+5SgZM2v5YsLEH8BsKpU23j+dxsH+EwUIBY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k/bVhus70cNUniyrmX5+P8f2Fn3rzQ5aZDu+dfqcL69ElstvantH/21ByVWOaVKgKwhGIL5UqWNM8AHwa04dZRvCi91Bs1z8XXB1c8oGNDzYqKwrT/hLbB4RnDxZkqidCv3gma/vsMO+SYoegMI+lSoufGA6WE/mpEcdDYowqGA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cbp0jgyg; arc=pass smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9B233290F
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 08:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791795080; cv=none; b=H9TJB+dd1ZGk6E1fzZOf8kPNL0+qaQIk1AbX7Ejb0w0VZN800EuYanAGtArCy/xSBLH8E3HoFffXMC7KZMCAkA5OnewME6aZdJj3oiCivart8neLneKALTd8wxvlSUkKOeLD0YTuMjujjhlRYR/Z4+7MHrsYVCE7ZWW9w6hLLDo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791795080; c=relaxed/simple;
+	bh=IhehL1JeMkRhS5Eu2/Ne5OIAFgFNXt9XFZgZOXC7tAU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sYN6CsRlaTZVPCiSOM6T3Z4j+7xNAxz8c+8aZkvOr/6KjiHa0WZVa3qtBrSyyE2CFDyjp71WMWZkWJdGb0XRcU0hakcivGxXQpDYgsiGId2ii1kHn0PDb888uVgsCjHVV06j6CK9NWWylfxDOCOfAQkUEnS5ezMHszcggei0GtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B6dbgPlZ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=RIo++zaU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbp0jgyg"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3a97c91a941so2687711fa.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 01:08:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791792537; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Vo1NS98sgS9ryoBqLjkJ2B08kCeAK6PboqtkhK73KubsM2nS2rNz7Lrpzu5j+GrWh1
-         nU7IFQ4ISFur8SFiQ2TvrtHAnhWYxuVvUgLZPN7jVowcx1IIfURo/Az/bKLu3JWroepo
-         ssEZ5hUgQw/wrKqtvbFm71YHsjcP8WegzyCnGGCV4ks01QGInA4yP681sGDGQ5tkaApZ
-         jKBmnfcpJHHJJV1CKdKWXA2FIfWDvCaKKIUMtEht5JcbXfuFjmWMjVSYseiQmR1Z8zxs
-         /wZi/dUljk8sWwBbcQ9GUuLrG6TkCvxEOOjMkvk/wtCURORrMNjD7qCEuJ5v+PmzA2OF
-         sTcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=/Bid3bokAT8GtDHUcm91fXQib8AjiPPpst1kvF9OlyE=;
-        fh=ClWgzjGDGPtJ9NdV7X44lnMnAQLn/jzpf3m/Ewp1KpY=;
-        b=ik1KpnQwWg3d1wQ115svQ+ePs/mM63JRD5/HGl76rTqoBRmYtW66wW4/bisov/Spjv
-         bkQTRDrt7uvPIHxWDqe4U/r+B0CeBuyKYjYhC6gVd2rLA3zUgiPeTDjk7Pg8W7+HHm/w
-         lIN1A4S/CVN7w6pg/2F/pkFNYXdWtQsLrrTDqyd9ijmAmmiPsDRFy4uVsJ6jhNO6gdRB
-         fblbaZklZmFOXjN4GbGuFwM3jp0W5ndraZ63NPXOdlGA53OpltdHxN6D0WkBf9HDd5MS
-         1zcnRKyfiyGOKf1i82zWTSenj1rX51hWTH37WU9P5r+THbioDdKRVAh4glmZUWkqQAe9
-         3mJQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B6dbgPlZ";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="RIo++zaU"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69C8KHCH1779399
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 08:51:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	IhehL1JeMkRhS5Eu2/Ne5OIAFgFNXt9XFZgZOXC7tAU=; b=B6dbgPlZp/Qidban
+	ahTPC4eeXy7Vypmh4PrzosA02kgY0NB5ALirfOyGX+0NqwhTcEuKO7oh4jVnoE5R
+	mkK9rcvfdE4UhQ1zsNHK88goGYFY5gv4NSuI7qSvjwwwygUiMFMGs5SNKmvpCR5c
+	1Gtz2i8DadyvxCZVf+VuRAHvHUKX1mk2x6Fqb1j4INmzepTzd30jDmAZ/fTDwH7k
+	efRSXz6WqSxeLUkgDeaHc0ucCGpGJaFpu0mRcBMhvVWQ13Me7DpUGgfPuU2UMo3w
+	RdYc0C/lkF/BtF8yeW+tr83b5Df93Mt2u0g8j7W30CneMNI3kCKqVxNtiK3Ex0L0
+	9/fjFg==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h8udq09m2-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 08:51:18 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-5350d8a2368so3861041cf.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 01:51:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791792537; x=1792397337; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+        d=oss.qualcomm.com; s=google; t=1791795078; x=1792399878; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/Bid3bokAT8GtDHUcm91fXQib8AjiPPpst1kvF9OlyE=;
-        b=cbp0jgyg/Eti/YMH0nvU0ckfTxbzFBKYSKz9i7k4qjRTyiIut8QNojj2wiYeW0MAAh
-         AQIj4mNWZjimwfAvKB9aSa4ipT2eXOnjWVZXdmre8r32ktR3lnNBcZL1rbzPhWEdslvW
-         byxAYmo4PXgrYWFGLCzBOd/Fpg50oyuqLSTUKckJSUmCTc3VuyM8fs8q2k+pNrDV59M1
-         ErawgYWwNw8uAEyrvCpi0CKO1RWmaMH89vLBy87HqLxuIqg187oyg0qlxN52nUsj9Eov
-         KLpaHQ4CzSJg2epdwVi3fx6dpUANIKw/eVOYcBFqVTfK0BD2BEc9c2v+oAnDsObiOUK1
-         axrg==
+        bh=IhehL1JeMkRhS5Eu2/Ne5OIAFgFNXt9XFZgZOXC7tAU=;
+        b=RIo++zaUyy/AWv5DwTKhu+FCy6TDC800yPg/zenDIH85SyMDcwTq5Kp70ceViaag5a
+         pXI/34hK0TD/qIArY2vnDV9qnW0oOGcXR5UL0jwz/Wcm+uMxYoVgpi6NIC5uDasbkp2W
+         qWjd19WX7PrMi5elk6DE5tGZZ2tnbDz3ILy5reuxeugBbGVVGl8QYNaDQvan8U5a9YF3
+         DJIxOC5WTCETEgDkZNomKz2a26ZIL/nrnyZxkQMnJCQ+bW99iyth8Rj2IVtJFTBNsRh6
+         4KkUTrcYEkpEg1Vx79GJLbwDunCtgi0HnxAEa1Y0+Eds1n9VMjp7rN0CvjFcFMc9ao0c
+         FC0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791792537; x=1792397337;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=/Bid3bokAT8GtDHUcm91fXQib8AjiPPpst1kvF9OlyE=;
-        b=xGB/5eKSjtKgcxMk3nx7mo6yAxdjJmoi9nM+zS3kRJXOJfnlu/5fe965KZ3bv3uuvV
-         dAXHlJ8oO1lxc2g+N4S03iuAiouIwi9CgvSCaRBdqnFWJDHqBgbyHffZaNca25WxZ5cf
-         RtvhEJY97oo5WwckWvDGM8gAkDK5HXsYY1Ey/WE+zRaFro1UPZ+RgzeVGg8BD7tPnOzy
-         sI9lgpPdTfNgrhuBRngRd1dd5csQXDREgWVtbAH0GZBp+cpFGECCYIS0ZBeodV1CJS3L
-         Wqdsqix7ZU42erUx3cZaTWsoyjbNtQlmv1GkU6ZjOOpBgRqMTuZsmpTU940LXGKgGbWh
-         HnnA==
-X-Gm-Message-State: AFq9FYLzQ7piitb2xy0rgD596upbsMan5Pyluxk6EnmgRBSohf3vN+ig
-	fxQZMV6e3TsxRhD6gS+U3ni6nKVA8Taz5SrJjqvwz1pqcNvGHwfz5AZlIJ+BUIIA+ES17nvAOGf
-	gm3dfeU8lTcNuEJjiOM+3ZkrBwPkVZsE=
-X-Gm-Gg: AYBFou39bCaG2/oMBx3tgV0jEWhpa8z/ebIVzw7NER/9Chu8MtOJiy5F0S2TKyZdCve
-	xIJ/wlixKrllCVH2n5ANDLfecu1DzGI6G5ie0P3VrTMNxMNc/mL8BYqxNRg1GbfMIi0D/6k5+PO
-	/5Lkn8NcKPP488y4GkqeoOozg0KqyIcmp9UYUFkZBSaYCv30NeWkAvw3gdFRRV2LdkC/vzJ+g7Z
-	775CGP+laOoYnLI1m4WdYIGrI2wi0MgbGVbyMQf6kz3dZb+u37PPj1yglauZPlG2/qcoS/2Lfmu
-	WRmACkuRzbpKpvweZbluApOZyygRgLGVPwka91WASFDvwMXj54MdCGkjzGMyhaP7B6txERb6fFr
-	eATg3mUQ6B5XD
-X-Received: by 2002:a05:651c:3605:b0:3a5:cee6:9439 with SMTP id
- 38308e7fff4ca-3a9c4850930mr20579991fa.0.1791792535033; Mon, 12 Oct 2026
- 01:08:55 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1791795078; x=1792399878;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IhehL1JeMkRhS5Eu2/Ne5OIAFgFNXt9XFZgZOXC7tAU=;
+        b=UBST4HPl5omWFWe/BcMmNEER5+q1/NW1BKj5yOZwTQzVy/VRXnbgQGkVUvTRjd+nSu
+         PdQHN99Woa7GE0jOvIRM0KMajlahlT9Rn/7sZGj8ic2DdjhOXYxqCqNC0JirKbppsx0T
+         zBEiPkgtvZFiR+c77s733xZ9gUczZsUTgDIetU2U0xklA2aXXu/NCsYWzx1ZgYpGN63r
+         cQ5YgLjHe1eGocsttDd2SXuMf/lvn9sZjgZbh3TmF+NE1aUsxDWTwdnbh/n+/owK+e1i
+         WQgFOrhbizeQgPgz7XbPviGLBpaBgK5Km/WMzVtyC1EQ9lnhX8Q6nqyxL//+s8x8RPT/
+         J5JA==
+X-Forwarded-Encrypted: i=1; AKwUvBzfnz0ayQXnmUDu9pnrNEgIH9jXR3jr4utCEb6e5Bf9vLUPPUwR1rq4LcfIYnmHNTsasJeoQlc86KN5bLKxhCmc+BDD@vger.kernel.org
+X-Gm-Message-State: AFq9FYIbiAJh4N/Qu+zte29Eka8SjoYjUPQHpwD6DZUdeFM0VSNlN3pP
+	jV28fmat2bHO8ocr6TXJKSR4g1agr4GQ5BAZpvqhXDsJY9Ouuhqkah+m97hC54uYXwUGnEHWXVW
+	T4bEaKM1ZXV73heHwsnvn3L0qIP7oKc1PzqhIixqtJusyOvogirf8R3XL2JTKdu004tnWlpyQpk
+	tO
+X-Gm-Gg: AYBFou2RQAnkwuUImBW8R7XTH6m9qLPgOS8StgYTkx9sAepGlE5esFdkWmZamZJSQha
+	jKoFD/kVyjZ7gbUD7NLGVnjYpY0TpQCNTETFCVgUQmDT8DQZELEA0Hl/zuZsh3JLN5q2JiCgN2x
+	vqx2ArsAG7dz2Ix7jIXhkpwTZuPWMqUenblhAdjhUB9OHu7nNyLpv4VvnfbEF9OIp/HS2EzMLz2
+	lkDq385eVMRPzq+f5qRGP2gG2iAvkdawbjRjIGwVtsqZ/7I4f3yVtglB9cOTzmDXuQAIr8977i7
+	X9nqmz+qefXCRNwb1YC8crrJCdiDpfnyYKCxifXb1C5QiqFKpKEbPPOSEJa1bQAZQ1973ElwDNc
+	cQCHBKJ665YwHwPp6mN0A+A==
+X-Received: by 2002:a05:622a:e0cf:10b0:533:6948:3d2b with SMTP id d75a77b69052e-5359f4990d7mr118392601cf.1.1791795077692;
+        Mon, 12 Oct 2026 01:51:17 -0700 (PDT)
+X-Received: by 2002:a05:622a:e0cf:10b0:533:6948:3d2b with SMTP id d75a77b69052e-5359f4990d7mr118392331cf.1.1791795077211;
+        Mon, 12 Oct 2026 01:51:17 -0700 (PDT)
+Received: from [192.168.226.26] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c338d5b170fsm206754066b.75.2026.10.12.01.51.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Oct 2026 01:51:16 -0700 (PDT)
+Message-ID: <cf17e2ba-0510-4189-a590-00d10760b8d7@oss.qualcomm.com>
+Date: Mon, 12 Oct 2026 10:51:13 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPvUaSo1D+1Tvk3-4TMiXw-ScBtY8Mu0FzO7R_EG6zrjYfjYqg@mail.gmail.com>
- <asxTYBiGy6lf6-Ki@archlinux>
-In-Reply-To: <asxTYBiGy6lf6-Ki@archlinux>
-From: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
-Date: Mon, 12 Oct 2026 10:08:43 +0200
-X-Gm-Features: AclHuK9QIm_cyAxCJbd_dL0bCv_1RDgkPqpwV7qsRDi6PUx5VbyZNkuR62_tvDc
-Message-ID: <CAPvUaSo-ubCOCYYPadY1C23y1Fd_AAhQLuVKWRa6F1XVh6mk_Q@mail.gmail.com>
-Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP OmniBook
- 5 16-ag1xxx (board 8DF4)
-To: Krishna Chomal <krishna.chomal108@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, W_Armin@gmx.de
-Content-Type: multipart/mixed; boundary="0000000000008ff39a065da0354e"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] platform: arm64: Add Lenovo ThinkPad X13s EC
+ driver
+To: Alex Robinson <alex@ironrobin.net>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Steev Klimaszewski <threeway@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261010145519.8370-1-alex@ironrobin.net>
+ <20261010145519.8370-3-alex@ironrobin.net>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20261010145519.8370-3-alex@ironrobin.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=evJKXYpX c=1 sm=1 tr=0 ts=6acc9f86 cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=DEWFPxdonW-PBiXaBDYA:9 a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDEyMDAzNSBTYWx0ZWRfX5nJy8qs7Zx0y
+ yPj9KgTXzuOImAuT270s82FotS7CTVD0HMnfbhxVTSO+4RafMty9l/RlTL3p1ItibIcUx2moAxd
+ YN5tR73KA7Dl+oW+YW7y++qUgwLYEpI=
+X-Proofpoint-GUID: IDA--uvkjBCJO_peU_xamh353qXacITi
+X-Proofpoint-ORIG-GUID: IDA--uvkjBCJO_peU_xamh353qXacITi
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDEyMDAzNSBTYWx0ZWRfXy6J/rvfVT68g
+ /Fe9/WiyYxw1nIkGIit1sZxNVufUTETJciwoEv7xnllrn5luqGXM4GIrfEul5z8AP1Uixz9OtIZ
+ bNWaZ3ETZ/C/OBsWR0ktm0DlymAS9wDxAc4yoK4orQx+4LbSjl+v1euuvXmL1rXZvYni+SZbCDK
+ fy/RjF5V3YWn8j13wpdf0s3ESiNKnvlnN6kGDsfu+DvpinQbf++o2TfIHe5gsIuqe7HshChf0IS
+ oVuMJlLPy1c72hBzMELrQjDBd3M/frplIiaAdfyBT4Sak2TnbAsdZh8hveF486hjrHiYRdUfh5k
+ JgvXyOWW68lx+kDop3X2K0ToBuEEMT14+AOKmcXgCRLXXwB1Xia/NEks7zyONVErOR14Ug/z/VR
+ g2cPKm10uwBfCjEGmvSFu9QJHMwvxh9xFsCSG7/kPAvI+kAfoXi3VVS/KMqYVDrqNFPLruCrIdE
+ RSQgyGTfuggA36m9x4g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-12_03,2026-10-09_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0 bulkscore=0
+ phishscore=0 adultscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610120035
 
---0000000000008ff39a065da0354e
-Content-Type: text/plain; charset="UTF-8"
+On 10/10/26 4:55 PM, Alex Robinson wrote:
+> Add support for the ThinkPad X13s embedded controller to expose keyboard
+> backlight control and firmware-driven brightness changes when booting
+> with Device Tree. Its backlight, event and power-management interfaces
+> differ from the T14s EC and require separate handling.
 
-Hi Armin, Krishna,
+I think you should poke the agent some more to get:
 
-Thanks for the quick replies.
+- privacy keys (cam, mic)
+- fnlock get/set
+- thermal sensors
+- thermal trips
+- associated irq events
 
-acpidump:
-https://gist.github.com/CollevecchioLorenzo/aef5917d9775629d48618bd42cb5f5e2
+quite easily
 
-I booted 7.2.9-2-cachyos with modprobe.blacklist=hp_bioscfg
-(confirmed in /proc/cmdline; hp_bioscfg is not loaded). Counts of
-each message in dmesg, before and after:
-
-  WHCM AE_AML_OPERAND_TYPE:                 3 before, 3 after
-  "Failed to apply initial fan settings: -22": 1 before, 1 after
-  WQBC / WQBE AE_AML_OPERAND_VALUE:         1/1 before, 0/0 after
-
-So the WQBC/WQBE errors come from hp_bioscfg, as you suspected. The
-WHCM errors and the -22 are not caused by it: they still occur with
-hp_bioscfg blacklisted, right before "hp_wmi: Registered as platform
-profile handler".
-
-Windows, as you asked (Krishna):
-- The Windows power mode setting exists, but that is standard
-  Windows, i didn't check for HP specific.
-- Omen Gaming Hub offers a performance mode
-  option on this laptop.
-- The BIOS has a "Fan Always On" setting. I had it turned off
-
-Happy to test any patch or run further commands.
-
-Thanks,
-Lorenzo
-
-
-
-
-Il giorno lun 12 ott 2026 alle ore 06:03 Krishna Chomal
-<krishna.chomal108@gmail.com> ha scritto:
->
-> +Armin Wolf
->
-> On Sun, Oct 11, 2026 at 06:03:25PM +0200, Lorenzo Collevecchio wrote:
-> >Hello,
-> >
-> >I am seeing hp-wmi fan interface failures on an HP OmniBook 5
-> >16-ag1xxx. This is not a gaming model.
->
-> Hi Lorenzo,
->
-> Thanks for reporting.
->
-> >Hardware:
-> >  product_name: HP OmniBook 5 Laptop 16-ag1xxx (16-AG1002SL)
-> >  board_name:   8DF4
-> >  BIOS:         F.12, 04/10/2026 (no newer firmware listed on LVFS for
-> >this machine)
-> >  Kernel:       7.2.9-2-cachyos (also tested 6.18.55-2-cachyos-lts;
-> >ACPICA 20250807 vs 20260408)
-> >
-> >Symptoms:
-> >1. At boot, \_SB.WMID.WHCM (called via WMAA) fails three times with
-> >   "AE_AML_OPERAND_TYPE: Needed [Buffer/String/Package], found
-> >[Integer]" while resolving operands for [Index].
->
-> This is likely due to hp-bioscfg instead of hp-wmi.
->
-> >2. Immediately afterwards: "hp-wmi hp-wmi: Failed to apply initial fan
-> >settings: -22".
->
-> Ah yes! This is because we are currently enabling fan control for ALL
-> devices. If you share your acpidump, I can check if we should use the
-> HPWMI_FAN_COUNT_GET_QUERY to decide whether to allow pwm1_enable or not.
->
-> >3. Later: "Attempt to CreateField of length zero" in \_SB.WMID.WQBC
-> >and WQBE (AE_AML_OPERAND_VALUE).
->
-> This is also likely due to hp-bioscfg. Try booting with kernel cmdline
-> parameter "modprobe.blacklist=hp_bioscfg" and see if these disappear.
-> That will help us narrow down the scope. But in any case, I think Armin
-> Wolf will have to help here since I am not familiar with bioscfg anyway.
->
-> >4. hp_wmi still registers as a platform profile handler (quiet
-> >balanced performance).
->
-> This is because 8DF4 is not present in any whitelists, so it takes a
-> fallback path and uses legacy WMI queries. Honestly, I am not sure if
-> platform profile should be registered for OmniBook devices. Could you
-> let me know if Omen Gaming Hub on Windows allows you to switch
-> performance modes or there is no option for this?
->
-> >5. /sys/devices/platform/hp-wmi/hwmon/*/ contains only pwm1_enable
-> >(rw); there is no pwm1 and no fan1_input.
->
-> Intended.
->
-> * pwm1_enable - As said, this is because we are currently (incorrectly)
->                  enabling fan control for all devices.
-> * pwm1 - Absent because manual fan control must be unavailable on this
->           board.
-> * fan1_input - Absent because get fan speed query must be failing.
->
-> >6. On the LTS kernel the same WHCM error repeats about every 2.2 s
-> >while something polls the hp hwmon device (277 times between 551 s and
-> >1165 s uptime).
-> >7. ACPI thermal: "Invalid critical threshold (-274000)" and "No valid
-> >trip points!" for thermal zone TSZ0.
-> >
-> >Fan behaviour:
-> >- acpi_fan (acpi-fan PNP0C0B, "Using Microsoft fan extensions")
-> >exposes fan1_input. It sometimes shows about 2400 RPM and sometimes 0
-> >RPM.
-> >- The fan works normally under Windows on the same machine.
-> >- I once saw the CPU around 95 C with the fan apparently stopped on
-> >Linux; I have not been able to reproduce it yet and am collecting a
-> >temperature/RPM log.
-> >
-> >I suspect the WMI query path the driver uses for fan settings is not
-> >implemented by this firmware, so hp-wmi should probably not attempt it
-> >on board 8DF4. I would be glad to test patches or provide acpidump
-> >output, WMI GUID listings or any other data.
->
-> acpidump would be helpful.
->
-> Thanks,
-> Krishna
->
-> >Thanks,
-> >Lorenzo
-
---0000000000008ff39a065da0354e
-Content-Type: text/plain; charset="US-ASCII"; name="blacklist-boot.txt"
-Content-Disposition: attachment; filename="blacklist-boot.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mv4xj8h90>
-X-Attachment-Id: f_mv4xj8h90
-
-WyAgICAwLjAwMDAwMF0gQ29tbWFuZCBsaW5lOiBCT09UX0lNQUdFPS9ib290L3ZtbGludXotbGlu
-dXgtY2FjaHlvcyByb290PVVVSUQ9MWZjYWU4YzgtYzI0Yy00OTMwLWI2ZTAtMzYzMmI5ZTY2YTE1
-IHJ3IG5vd2F0Y2hkb2cgbnZtZV9sb2FkPVlFUyBzcGxhc2ggbG9nbGV2ZWw9MyB1c2Itc3RvcmFn
-ZS5xdWlya3M9b2JkYTo5MjEwOnUgbW9kcHJvYmUuYmxhY2tsaXN0PWhwX2Jpb3NjZmcKWyAgICAw
-LjAxNDg1NV0gS2VybmVsIGNvbW1hbmQgbGluZTogQk9PVF9JTUFHRT0vYm9vdC92bWxpbnV6LWxp
-bnV4LWNhY2h5b3Mgcm9vdD1VVUlEPTFmY2FlOGM4LWMyNGMtNDkzMC1iNmUwLTM2MzJiOWU2NmEx
-NSBydyBub3dhdGNoZG9nIG52bWVfbG9hZD1ZRVMgc3BsYXNoIGxvZ2xldmVsPTMgdXNiLXN0b3Jh
-Z2UucXVpcmtzPW9iZGE6OTIxMDp1IG1vZHByb2JlLmJsYWNrbGlzdD1ocF9iaW9zY2ZnClsgICAg
-Ni4xMzkwODZdIGlucHV0OiBIUCBXTUkgaG90a2V5cyBhcyAvZGV2aWNlcy92aXJ0dWFsL2lucHV0
-L2lucHV0MjMKWyAgICA2LjU0NTcxMF0gQUNQSSBFcnJvcjogQWJvcnRpbmcgbWV0aG9kIFxfU0Iu
-V01JRC5XSENNIGR1ZSB0byBwcmV2aW91cyBlcnJvciAoQUVfQU1MX09QRVJBTkRfVFlQRSkgKDIw
-MjYwNDA4L3BzcGFyc2UtNTQ1KQpbICAgIDYuNzQ5ODI0XSBBQ1BJIEVycm9yOiBBYm9ydGluZyBt
-ZXRob2QgXF9TQi5XTUlELldIQ00gZHVlIHRvIHByZXZpb3VzIGVycm9yIChBRV9BTUxfT1BFUkFO
-RF9UWVBFKSAoMjAyNjA0MDgvcHNwYXJzZS01NDUpClsgICAgNi45NTM1MjRdIEFDUEkgRXJyb3I6
-IEFib3J0aW5nIG1ldGhvZCBcX1NCLldNSUQuV0hDTSBkdWUgdG8gcHJldmlvdXMgZXJyb3IgKEFF
-X0FNTF9PUEVSQU5EX1RZUEUpICgyMDI2MDQwOC9wc3BhcnNlLTU0NSkKWyAgICA2Ljk1MzU0OF0g
-aHAtd21pIGhwLXdtaTogRmFpbGVkIHRvIGFwcGx5IGluaXRpYWwgZmFuIHNldHRpbmdzOiAtMjIK
-WyAgICA3LjM1OTcxOV0gaHBfd21pOiBSZWdpc3RlcmVkIGFzIHBsYXRmb3JtIHByb2ZpbGUgaGFu
-ZGxlcgo=
---0000000000008ff39a065da0354e--
+Konrad
