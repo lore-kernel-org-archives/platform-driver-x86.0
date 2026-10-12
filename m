@@ -1,99 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73D4476058
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 18:13:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675564C224E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 18:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791828794; cv=none; b=IoJsEIY/+kknkCRaHe1Cca+XJBAFUNNjcq4ChOpxsz6Eokb+SBvX41/OFgEE26mS46gTdjucybayiwkiQHx/4xrEvODOmrbPsSx+YFxrzVGpoTwhKHIMYb9DO/LtcwQ7zBapHURzBVyp1ZbdnjsYX5PC74k1FglYgBRUpC42ZM8=
+	t=1791829726; cv=none; b=QkzWW1QTudMVEZIA3M5z7V/BGYCpAZquIZH5USdlFp83bXBTBggLyVYwVCMP6DAQPfCXneMNVEGQvNrYr5NEPeM0ilZh8WQruhOgCsGMPbuUBVJdp5EcOJi69YiJ8lKhfgl+irGXrzL+dh0rHmbeT+ZgyllPPwQRK0Almgj64Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791828794; c=relaxed/simple;
-	bh=qYihUqXQowOU9ZYLKuiLBwFCSKqT10FUjO6tSOCCPbI=;
+	s=arc-20240116; t=1791829726; c=relaxed/simple;
+	bh=eeuJHxAGlkeiy/cVd0cZdyhkOUBK9Xe/qcok54fo4Sw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GiLhEZen5MMxI32Q0bwZehQxN7jnaPKWWL8kykhCjcbxw48FbUsPanXlLEn/LJm+GkXiKG1VTc9qU2TPMAvNeOWlXN7ZgLQ3OkVceUc0UtDsI7LgV/SbA773Yylv9Ur3gkQWs6zwLvV+ufWYN0AZQeWGgndmIuYGc0up2CijQwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0aWCuz/; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=WXfer/idGTsDH0T/6LRvB+cVJBg6TzhALbYplL1tr6wolrpQZtspbm8ogHSpMxXBqFgcjdtxVQ4Pmb+kXh9Ilcx0/KlH2UimjwXpkBt8wY46J5xUYRi0z1uPZx2MvkRPw24AeF3SeOJWqOO1F8iOUzlRWpa55lxqIMKS/F4eqMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVLLUxXY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0aWCuz/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679CF1F008A1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 18:13:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVLLUxXY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 263C01F008A4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 18:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791828793;
-	bh=Cyr/bHNMJGLzkq1DQHY5KRZ0FoizA8PV+QZEQ8qhgAg=;
+	s=k20260515; t=1791829725;
+	bh=zTwZEcqT4cuHUrLj8dCqmZcCri8FqNJ+g1r6s3P087g=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=A0aWCuz/vGIpJSDiCnXNAx4EESt1jsoESJpFVjE7YI9R1NlaefHyfvFc+zGkWR6zM
-	 Gr56Usm3rlmxlXfhO8PDHNZlR2lOWZ3i9YSkfDBIY86MO1Qem3+Hn5kKOlVRFedAlT
-	 bgxRNDEIbpPwesPkHRx8dHeylyPZ+qWd2L3m9ixQuOlko/0ys6ecTC9iUDTbdP+DMr
-	 debGdLOzv+03YzfZFMa33x5Dj2auzEvmGm8aar3oINniPgvG4hj1V+UQsrVLBkj9TW
-	 RWBAnbFbev0OicOYnNNrrdUiEJiokMvTm7nUWUikGn56WP/84CyfxdXMJ/sfy7tR5H
-	 6rY3s+b3eA+jg==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5bb7c6980f1so1520357e87.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 11:13:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzQsMP4SiVi4iSAJz/cNL05woYpyeC+fcXIdiCI5zoMgOaQuakX3KFCPxe6ELpRNaEjyewSH8WGsBXdnELkWqbdUQmG@vger.kernel.org
-X-Gm-Message-State: AFq9FYI282P5HnoDQd4DC3AIV/iN0ZFVLrOf47grHBn7hlzjP5WJGomc
-	+9W7Uvvpch9KAHAWnrzpRu8jkbFFm/B9I1ed/h86uTX8b0jmzkzPp8ld09cCb1KvN6N90RnvPGO
-	uGQYWBU3i43nXuiJaBrc2N6XT7hJl6Ho=
-X-Received: by 2002:a05:6512:3044:b0:5bc:b8b1:3e03 with SMTP id
- 2adb3069b0e04-5bcde6c25f6mr3342409e87.25.1791828791862; Mon, 12 Oct 2026
- 11:13:11 -0700 (PDT)
+	b=hVLLUxXYzkADMI4XSUUwQwKR94kEohv+2/tI3fCd64abXrWPStMN+eMtCEtFSYRkf
+	 7P7XdDKuEP2j/jE2d481u8hx5WUuSfIBLacyR2zyOhej6pfqQcMRsjjl8ZEcy7H6w4
+	 kogcCgZmrgHt/2tOqCgPrVbY8x2BgDuC01C7VjpuDyL5SJPfT4LSeV4Qp3O91ahdkR
+	 yRLzJPhMhTT3K5KfV6ENw6gdMTPqHReot/wefbwJC/KA7DpC2ru/JhicX87B0mkOKd
+	 eh2HgrxGVnOoY/bhL8T6hDK5YUyCtChNfnE7vgAZC8+jJHaWY4Q8E0JXHaMLqRD9LO
+	 Bh5uZfi4AnhuQ==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6b1a86c0316so2064626a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 11:28:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxDqtoiO2EkL6QaDfmwc4zUdDkWTes17jtmYkjEZ8Tqg85bVp+3fI/Xy2njhzklGQufzcUfoZ3RvGBBC7gBHV5+Pfkq@vger.kernel.org
+X-Gm-Message-State: AFq9FYLkxW5G/JvM91yQ7kGUm+W2q6Te0T28d/66rBi9Bzj6hppSj3CP
+	fjCXootxfSYZP2XA7mMqWpeBQ5jKL+nQW1ipBc849R0AI3IiFbhSeDuZY4jsCBAjMo5hGP8QIk1
+	WQkAp4qCD6+pTX0OVCoIHR+8Jdr32LHQ=
+X-Received: by 2002:a05:6402:51cc:b0:6b1:c2cd:dafc with SMTP id
+ 4fb4d7f45d1cf-6b1c2cde1d6mr2882683a12.20.1791829724092; Mon, 12 Oct 2026
+ 11:28:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261009072401.52509-1-chitranshmandhaniya@gmail.com>
- <20261010124830.116750-1-chitranshmandhaniya@gmail.com> <96f4dc4d-eb5c-4af2-86e4-8d10f87b3d9d@kernel.org>
-In-Reply-To: <96f4dc4d-eb5c-4af2-86e4-8d10f87b3d9d@kernel.org>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Mon, 12 Oct 2026 20:11:05 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gw0Q_OCD4-OVcJZSmHMmP3d4_0GhXDex8gGTsB=tZ61A@mail.gmail.com>
-X-Gm-Features: AclHuK8NBEXVTr0Oet1SN3N4AVDNaREBDJQxdM3dEvmpyS6iP9buBYY9vugnfGU
-Message-ID: <CAJZ5v0gw0Q_OCD4-OVcJZSmHMmP3d4_0GhXDex8gGTsB=tZ61A@mail.gmail.com>
-Subject: Re: [PATCH v5] ACPI: video: force native backlight on Dell OptiPlex
- AIO 7410 35W
-To: Hans de Goede <hansg@kernel.org>, chitranshmandhaniya@gmail.com
-Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Chitransh_Mandhaniya@dell.com
+References: <CACiNov445=gavzZY=Yz74HNMUgd2BKoYoazWFDRRsz9uhA_rfA@mail.gmail.com>
+ <CACiNov6n4Sr4nkAnTXJ9ZmMz022KebfAM8Hf2JV_EZ+KVa9THg@mail.gmail.com> <CACiNov5XvayanL6SED-z1pLY9rMnyVbCdf=RyyhLXzDSLcXuVg@mail.gmail.com>
+In-Reply-To: <CACiNov5XvayanL6SED-z1pLY9rMnyVbCdf=RyyhLXzDSLcXuVg@mail.gmail.com>
+From: Len Brown <lenb@kernel.org>
+Date: Mon, 12 Oct 2026 14:28:30 -0400
+X-Gmail-Original-Message-ID: <CAJvTdK=ydvyCLU7RCiy8hbt8kuD22z=030tKB2yczcFJ7+4aRQ@mail.gmail.com>
+X-Gm-Features: AclHuK8an2c27zHREZGv_iu_DSkxqOFc-IhGBRizCaeunuW9CJT5BW5CW5dWNqM
+Message-ID: <CAJvTdK=ydvyCLU7RCiy8hbt8kuD22z=030tKB2yczcFJ7+4aRQ@mail.gmail.com>
+Subject: Re: [REPORT] Kaby Lake-H (MacBookPro14,3): package C-state stuck at
+ PC3 on Linux, macOS reaches PC10
+To: Angel <angellindo@gmail.com>
+Cc: linux-pm@vger.kernel.org, rafael@kernel.org, 
+	artem.bityutskiy@linux.intel.com, 
+	rajneesh bhardwaj <irenic.rajneesh@gmail.com>, xi.pardee@linux.intel.com, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 12, 2026 at 4:55=E2=80=AFPM Hans de Goede <hansg@kernel.org> wr=
-ote:
->
-> Hi,
->
-> On 10-Oct-26 14:48, chitranshmandhaniya@gmail.com wrote:
-> > From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
-> >
-> > The Dell OptiPlex AIO 7410 35W (board 01KP8D) declares DELL0501 in its
-> > ACPI DSDT (status =3D 0x0F) even though no UART scalar board is physica=
-lly
-> > present. This causes acpi_video_get_backlight_type() to return
-> > acpi_backlight_dell_uart, which makes i915 skip registering
-> > intel_backlight. The dell-uart-backlight driver then times out talking
-> > to the absent board and the probe fails, leaving the machine with zero
-> > backlight control.
-> >
-> > A BIOS update fixes this on some models (e.g. OptiPlex 7420, board
-> > 0914RT) by setting DELL0501 _STA to 0, but Dell has not shipped a
-> > corrected BIOS for the 7410 even in the latest release (1.37.0,
-> > 2026-05-28).
-> >
-> > Add a DMI quirk to force native backlight on this model so that i915
-> > registers intel_backlight and brightness control works out of the box.
-> >
-> > Tested on:
-> >   - OptiPlex AIO 7410 35W (01KP8D, BIOS 1.37.0) -- confirmed
-> >     acpi_backlight=3Dnative produces working intel_backlight (raw,
-> >     max=3D96000), DMI quirk has the same effect.
-> >   - OptiPlex AIO 7420 35W (0914RT, BIOS 1.27.0) -- DELL0501 absent in
-> >     updated BIOS, intel_backlight works natively (no regression).
-> >
-> > Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
->
-> Thanks, patch looks good to me:
->
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+I applaud you for making a 9-year old laptop useful well after its
+vendor dropped software support.
 
-Applied as 7.4 material, thanks!
+Though running and debugging Linux on it would have been significantly
+more interesting 9-years ago...
+
+This platform has an AMD GPU, and MacOS is not open source.  We have
+no idea what
+levers MacOS may have pulled to allow the processor to get past PC3.
+
+You've found a way to get idle power down to 1.7W from 3.5W
+without PC6 or PC10.  Is that not enough -- are you really counting on
+the old battery in this box?
+
+In any case, the problem at hand is this box is blocked on PC6.  You
+need to get past that to get to PC10.
+
+-Len
+
+On Wed, Oct 7, 2026 at 11:48=E2=80=AFPM Angel <angellindo@gmail.com> wrote:
+>
+> Two more data points:
+>
+> 1. Reproduced on a stock distro kernel with nothing else running:
+>    Arch Linux live ISO, 7.2.2-arch1-1, default cmdline, no out-of-tree
+>    patches, no desktop, intel_idle. turbostat, 6 x 10 s per stage:
+>      idle, console on:                        PC3 93-94 %, PC6..PC10
+> 0, PkgWatt 3.8 W
+>      console blanked:                       PC3 98.8-99.0 %, PC6..PC10 0,=
+ 3.5 W
+>      + amdgpu/snd_hda unbound:   PC3 98.8-99.0 %, PC6..PC10 0, 3.5 W
+>    Cores sit in C7 99.6 % and GFX RC6 99 %.
+>
+> 2. macOS on the same unit with the same firmware setting I use on
+>    Linux (gmux forced to the iGPU, gpuswitch 0) reaches PC7 ~95 % at
+>    ~0.2 W with a USB stick plugged in (PC10 ~80 % with nothing
+>    plugged). So the forced-iGPU mode is not the cause.
+>
+>    Earlier I also tried, on Linux, taking all three PEG links down at
+>    once (Link Disable) and putting both Thunderbolt controllers into
+>    the same state macOS uses (RTPC(0) + _PS3/PCDA: Gen1, D3hot, power
+>    GPIOs low). Package power dropped to ~1.7 W but PC6..PC10 stayed 0
+>    in every case.
+>
+> Thanks,
+> Angel Lindo <angellindo@gmail.com>
+>
+
+
+--=20
+Len Brown, Intel Open Source Technology Center
