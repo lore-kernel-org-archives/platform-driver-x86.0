@@ -1,116 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83D633EB1A;
-	Mon, 12 Oct 2026 07:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791789184; cv=none; b=BB73rYO5bakN8ZwiF0es7Fm1ltDhAXOEKvWXVm3UYEfPSoj5vffg9LnItt54iSTzRmm0yXybJpfcrZ89u6tBv6FuSVVxrQXW+TBqSOpwBANgEXiuG2zeOwrjhGuTW66NIpm8Odd5q7Q9MnN7zfuXNeQvl3wZ4FGT02u6WYBLEZ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791789184; c=relaxed/simple;
-	bh=yY7FYvyH3pznj2ZBnBu3oDtQjq5p2qbLcDoRRd2NEEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WtcH4ohZrX6i6nxdykzODc0fPxLq/v8D+m29d4olq4emTKHgV0R7J+Hjzr9BVRxjmDJ7i7zedCO9BEJV2RKtq7ay+hMyTANIMfZoHCmw6M4CMi8WpdO3xkeELiXcZJjrOKbcTnV2tSe6WpJrEMTcmJNmlngTlom/y8sad8uHqkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OgnZJUgz; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3529318EFF
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 08:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791792540; cv=pass; b=RoQ02A7UwhN4Hy/WiWOWHqx5B4q39BjnD4UBOM1PTzieVFJ6fTOW2V7/BEU+Nc/0/xBGEtWjCSbDlzaH5Nn3rP0/Iz74mrqftUoreDyqFbOPzW285ZAbuQnu1pMryp1Zru2Xo4Oo6ktgos+dwB6me42mcGOFHf8VMRa7F90f0Iw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791792540; c=relaxed/simple;
+	bh=9s3mrYJ7+5SgZM2v5YsLEH8BsKpU23j+dxsH+EwUIBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k/bVhus70cNUniyrmX5+P8f2Fn3rzQ5aZDu+dfqcL69ElstvantH/21ByVWOaVKgKwhGIL5UqWNM8AHwa04dZRvCi91Bs1z8XXB1c8oGNDzYqKwrT/hLbB4RnDxZkqidCv3gma/vsMO+SYoegMI+lSoufGA6WE/mpEcdDYowqGA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cbp0jgyg; arc=pass smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OgnZJUgz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791789182; x=1823325182;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yY7FYvyH3pznj2ZBnBu3oDtQjq5p2qbLcDoRRd2NEEk=;
-  b=OgnZJUgzRV7JhVxKUcmcVqdX8X69YC/1RidFH68HPH/HM22x+WxAz/Qi
-   xa15XvYWmgOP6zdT1MtV+6LSIr3m1+Q7WJhqxprOgXFygzygTKcTRdjWn
-   fgvox8gHrt9/5oDldtECIfYm6g1aR8wMzV/wzhKpPvjvTOo6Vggve7k5S
-   BwSGgc7TsBs+N/1cn1eo3kPPbNgHJV/w3l/iBgHgDg6chnr/XnrmQxnuO
-   /gYSSQAk8z1sgWyRpSoRzqjNaBjU/ayMUUQeIBqsD/tTJ79JP2wqN1zoF
-   XU9r/z7qVDY+LngDT8iF4H808tqv3bWQmnx05+vuIKP3LMYcaBBm62rcs
-   Q==;
-X-CSE-ConnectionGUID: U39StLvjQtu07wVngHER8Q==
-X-CSE-MsgGUID: xhlRgVD1RxOsRDecLlNgqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11932"; a="363958"
-X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="363958"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 00:13:02 -0700
-X-CSE-ConnectionGUID: shkb1Eh4SD+agw/q7GVb0Q==
-X-CSE-MsgGUID: sbEVSBfYS7idPxHZg3vtZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="920325"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 12 Oct 2026 00:12:57 -0700
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xGADN-00000000B8n-2VTv;
-	Mon, 12 Oct 2026 07:12:53 +0000
-Date: Mon, 12 Oct 2026 15:12:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mingyou Chen <qby140326@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilya Gladyshev <ilya.gladyshev@linux.dev>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	KentoNion <kento@kekto.ru>, platform-driver-x86@vger.kernel.org,
-	ted eric <ericted8810@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
-	linux-kernel@vger.kernel.org, Chris Taraszka <chris@miget.com>,
-	Matias Civadda <matias.civadda2342001@gmail.com>,
-	=?utf-8?B?6auYIOS/iuaWhw==?= <btx342@gmail.com>,
-	powerfullz <wleizc7319@gmail.com>,
-	=?utf-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>,
-	=?utf-8?B?TWlsb8Wh?= Vlku <vlku.milos.fun@gmail.com>,
-	Rsplwe <i@rsplwe.com>, Bozhen Peng <bozhenpeng93@gmail.com>,
-	Anton Karasev <uselessfire@gmail.com>,
-	Jame Jao <jaojame6@gmail.com>, Mingyou Chen <qby140326@gmail.com>
-Subject: Re: [PATCH v10 5/5] platform/x86: bitland-mifs-wmi: Add quirks table
-Message-ID: <202610121535.VUNgWVii-lkp@intel.com>
-References: <20261011135748.11792-6-qby140326@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbp0jgyg"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3a97c91a941so2687711fa.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 01:08:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791792537; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Vo1NS98sgS9ryoBqLjkJ2B08kCeAK6PboqtkhK73KubsM2nS2rNz7Lrpzu5j+GrWh1
+         nU7IFQ4ISFur8SFiQ2TvrtHAnhWYxuVvUgLZPN7jVowcx1IIfURo/Az/bKLu3JWroepo
+         ssEZ5hUgQw/wrKqtvbFm71YHsjcP8WegzyCnGGCV4ks01QGInA4yP681sGDGQ5tkaApZ
+         jKBmnfcpJHHJJV1CKdKWXA2FIfWDvCaKKIUMtEht5JcbXfuFjmWMjVSYseiQmR1Z8zxs
+         /wZi/dUljk8sWwBbcQ9GUuLrG6TkCvxEOOjMkvk/wtCURORrMNjD7qCEuJ5v+PmzA2OF
+         sTcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=/Bid3bokAT8GtDHUcm91fXQib8AjiPPpst1kvF9OlyE=;
+        fh=ClWgzjGDGPtJ9NdV7X44lnMnAQLn/jzpf3m/Ewp1KpY=;
+        b=ik1KpnQwWg3d1wQ115svQ+ePs/mM63JRD5/HGl76rTqoBRmYtW66wW4/bisov/Spjv
+         bkQTRDrt7uvPIHxWDqe4U/r+B0CeBuyKYjYhC6gVd2rLA3zUgiPeTDjk7Pg8W7+HHm/w
+         lIN1A4S/CVN7w6pg/2F/pkFNYXdWtQsLrrTDqyd9ijmAmmiPsDRFy4uVsJ6jhNO6gdRB
+         fblbaZklZmFOXjN4GbGuFwM3jp0W5ndraZ63NPXOdlGA53OpltdHxN6D0WkBf9HDd5MS
+         1zcnRKyfiyGOKf1i82zWTSenj1rX51hWTH37WU9P5r+THbioDdKRVAh4glmZUWkqQAe9
+         3mJQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791792537; x=1792397337; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/Bid3bokAT8GtDHUcm91fXQib8AjiPPpst1kvF9OlyE=;
+        b=cbp0jgyg/Eti/YMH0nvU0ckfTxbzFBKYSKz9i7k4qjRTyiIut8QNojj2wiYeW0MAAh
+         AQIj4mNWZjimwfAvKB9aSa4ipT2eXOnjWVZXdmre8r32ktR3lnNBcZL1rbzPhWEdslvW
+         byxAYmo4PXgrYWFGLCzBOd/Fpg50oyuqLSTUKckJSUmCTc3VuyM8fs8q2k+pNrDV59M1
+         ErawgYWwNw8uAEyrvCpi0CKO1RWmaMH89vLBy87HqLxuIqg187oyg0qlxN52nUsj9Eov
+         KLpaHQ4CzSJg2epdwVi3fx6dpUANIKw/eVOYcBFqVTfK0BD2BEc9c2v+oAnDsObiOUK1
+         axrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791792537; x=1792397337;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=/Bid3bokAT8GtDHUcm91fXQib8AjiPPpst1kvF9OlyE=;
+        b=xGB/5eKSjtKgcxMk3nx7mo6yAxdjJmoi9nM+zS3kRJXOJfnlu/5fe965KZ3bv3uuvV
+         dAXHlJ8oO1lxc2g+N4S03iuAiouIwi9CgvSCaRBdqnFWJDHqBgbyHffZaNca25WxZ5cf
+         RtvhEJY97oo5WwckWvDGM8gAkDK5HXsYY1Ey/WE+zRaFro1UPZ+RgzeVGg8BD7tPnOzy
+         sI9lgpPdTfNgrhuBRngRd1dd5csQXDREgWVtbAH0GZBp+cpFGECCYIS0ZBeodV1CJS3L
+         Wqdsqix7ZU42erUx3cZaTWsoyjbNtQlmv1GkU6ZjOOpBgRqMTuZsmpTU940LXGKgGbWh
+         HnnA==
+X-Gm-Message-State: AFq9FYLzQ7piitb2xy0rgD596upbsMan5Pyluxk6EnmgRBSohf3vN+ig
+	fxQZMV6e3TsxRhD6gS+U3ni6nKVA8Taz5SrJjqvwz1pqcNvGHwfz5AZlIJ+BUIIA+ES17nvAOGf
+	gm3dfeU8lTcNuEJjiOM+3ZkrBwPkVZsE=
+X-Gm-Gg: AYBFou39bCaG2/oMBx3tgV0jEWhpa8z/ebIVzw7NER/9Chu8MtOJiy5F0S2TKyZdCve
+	xIJ/wlixKrllCVH2n5ANDLfecu1DzGI6G5ie0P3VrTMNxMNc/mL8BYqxNRg1GbfMIi0D/6k5+PO
+	/5Lkn8NcKPP488y4GkqeoOozg0KqyIcmp9UYUFkZBSaYCv30NeWkAvw3gdFRRV2LdkC/vzJ+g7Z
+	775CGP+laOoYnLI1m4WdYIGrI2wi0MgbGVbyMQf6kz3dZb+u37PPj1yglauZPlG2/qcoS/2Lfmu
+	WRmACkuRzbpKpvweZbluApOZyygRgLGVPwka91WASFDvwMXj54MdCGkjzGMyhaP7B6txERb6fFr
+	eATg3mUQ6B5XD
+X-Received: by 2002:a05:651c:3605:b0:3a5:cee6:9439 with SMTP id
+ 38308e7fff4ca-3a9c4850930mr20579991fa.0.1791792535033; Mon, 12 Oct 2026
+ 01:08:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261011135748.11792-6-qby140326@gmail.com>
+References: <CAPvUaSo1D+1Tvk3-4TMiXw-ScBtY8Mu0FzO7R_EG6zrjYfjYqg@mail.gmail.com>
+ <asxTYBiGy6lf6-Ki@archlinux>
+In-Reply-To: <asxTYBiGy6lf6-Ki@archlinux>
+From: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+Date: Mon, 12 Oct 2026 10:08:43 +0200
+X-Gm-Features: AclHuK9QIm_cyAxCJbd_dL0bCv_1RDgkPqpwV7qsRDi6PUx5VbyZNkuR62_tvDc
+Message-ID: <CAPvUaSo-ubCOCYYPadY1C23y1Fd_AAhQLuVKWRa6F1XVh6mk_Q@mail.gmail.com>
+Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP OmniBook
+ 5 16-ag1xxx (board 8DF4)
+To: Krishna Chomal <krishna.chomal108@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, W_Armin@gmx.de
+Content-Type: multipart/mixed; boundary="0000000000008ff39a065da0354e"
 
-Hi Mingyou,
+--0000000000008ff39a065da0354e
+Content-Type: text/plain; charset="UTF-8"
 
-kernel test robot noticed the following build errors:
+Hi Armin, Krishna,
 
-[auto build test ERROR on 98f039265e580291d5e76a11b2072541fbb1c393]
+Thanks for the quick replies.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mingyou-Chen/MAINTAINERS-Add-maintainer-entry-of-bitland-mifs-wmi-driver/20261011-215744
-base:   98f039265e580291d5e76a11b2072541fbb1c393
-patch link:    https://lore.kernel.org/r/20261011135748.11792-6-qby140326%40gmail.com
-patch subject: [PATCH v10 5/5] platform/x86: bitland-mifs-wmi: Add quirks table
-config: x86_64-randconfig-1005-20261012 (https://download.01.org/0day-ci/archive/20261012/202610121535.VUNgWVii-lkp@intel.com/config)
-compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261012/202610121535.VUNgWVii-lkp@intel.com/reproduce)
+acpidump:
+https://gist.github.com/CollevecchioLorenzo/aef5917d9775629d48618bd42cb5f5e2
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610121535.VUNgWVii-lkp@intel.com/
+I booted 7.2.9-2-cachyos with modprobe.blacklist=hp_bioscfg
+(confirmed in /proc/cmdline; hp_bioscfg is not loaded). Counts of
+each message in dmesg, before and after:
 
-All errors (new ones prefixed by >>):
+  WHCM AE_AML_OPERAND_TYPE:                 3 before, 3 after
+  "Failed to apply initial fan settings: -22": 1 before, 1 after
+  WQBC / WQBE AE_AML_OPERAND_VALUE:         1/1 before, 0/0 after
 
->> drivers/platform/x86/bitland-mifs-wmi.c:136:1: error: extraneous closing brace ('}')
-     136 | };
-         | ^
-   1 error generated.
+So the WQBC/WQBE errors come from hp_bioscfg, as you suspected. The
+WHCM errors and the -22 are not caused by it: they still occur with
+hp_bioscfg blacklisted, right before "hp_wmi: Registered as platform
+profile handler".
+
+Windows, as you asked (Krishna):
+- The Windows power mode setting exists, but that is standard
+  Windows, i didn't check for HP specific.
+- Omen Gaming Hub offers a performance mode
+  option on this laptop.
+- The BIOS has a "Fan Always On" setting. I had it turned off
+
+Happy to test any patch or run further commands.
+
+Thanks,
+Lorenzo
 
 
-vim +136 drivers/platform/x86/bitland-mifs-wmi.c
 
-   135	
- > 136	};
-   137	
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Il giorno lun 12 ott 2026 alle ore 06:03 Krishna Chomal
+<krishna.chomal108@gmail.com> ha scritto:
+>
+> +Armin Wolf
+>
+> On Sun, Oct 11, 2026 at 06:03:25PM +0200, Lorenzo Collevecchio wrote:
+> >Hello,
+> >
+> >I am seeing hp-wmi fan interface failures on an HP OmniBook 5
+> >16-ag1xxx. This is not a gaming model.
+>
+> Hi Lorenzo,
+>
+> Thanks for reporting.
+>
+> >Hardware:
+> >  product_name: HP OmniBook 5 Laptop 16-ag1xxx (16-AG1002SL)
+> >  board_name:   8DF4
+> >  BIOS:         F.12, 04/10/2026 (no newer firmware listed on LVFS for
+> >this machine)
+> >  Kernel:       7.2.9-2-cachyos (also tested 6.18.55-2-cachyos-lts;
+> >ACPICA 20250807 vs 20260408)
+> >
+> >Symptoms:
+> >1. At boot, \_SB.WMID.WHCM (called via WMAA) fails three times with
+> >   "AE_AML_OPERAND_TYPE: Needed [Buffer/String/Package], found
+> >[Integer]" while resolving operands for [Index].
+>
+> This is likely due to hp-bioscfg instead of hp-wmi.
+>
+> >2. Immediately afterwards: "hp-wmi hp-wmi: Failed to apply initial fan
+> >settings: -22".
+>
+> Ah yes! This is because we are currently enabling fan control for ALL
+> devices. If you share your acpidump, I can check if we should use the
+> HPWMI_FAN_COUNT_GET_QUERY to decide whether to allow pwm1_enable or not.
+>
+> >3. Later: "Attempt to CreateField of length zero" in \_SB.WMID.WQBC
+> >and WQBE (AE_AML_OPERAND_VALUE).
+>
+> This is also likely due to hp-bioscfg. Try booting with kernel cmdline
+> parameter "modprobe.blacklist=hp_bioscfg" and see if these disappear.
+> That will help us narrow down the scope. But in any case, I think Armin
+> Wolf will have to help here since I am not familiar with bioscfg anyway.
+>
+> >4. hp_wmi still registers as a platform profile handler (quiet
+> >balanced performance).
+>
+> This is because 8DF4 is not present in any whitelists, so it takes a
+> fallback path and uses legacy WMI queries. Honestly, I am not sure if
+> platform profile should be registered for OmniBook devices. Could you
+> let me know if Omen Gaming Hub on Windows allows you to switch
+> performance modes or there is no option for this?
+>
+> >5. /sys/devices/platform/hp-wmi/hwmon/*/ contains only pwm1_enable
+> >(rw); there is no pwm1 and no fan1_input.
+>
+> Intended.
+>
+> * pwm1_enable - As said, this is because we are currently (incorrectly)
+>                  enabling fan control for all devices.
+> * pwm1 - Absent because manual fan control must be unavailable on this
+>           board.
+> * fan1_input - Absent because get fan speed query must be failing.
+>
+> >6. On the LTS kernel the same WHCM error repeats about every 2.2 s
+> >while something polls the hp hwmon device (277 times between 551 s and
+> >1165 s uptime).
+> >7. ACPI thermal: "Invalid critical threshold (-274000)" and "No valid
+> >trip points!" for thermal zone TSZ0.
+> >
+> >Fan behaviour:
+> >- acpi_fan (acpi-fan PNP0C0B, "Using Microsoft fan extensions")
+> >exposes fan1_input. It sometimes shows about 2400 RPM and sometimes 0
+> >RPM.
+> >- The fan works normally under Windows on the same machine.
+> >- I once saw the CPU around 95 C with the fan apparently stopped on
+> >Linux; I have not been able to reproduce it yet and am collecting a
+> >temperature/RPM log.
+> >
+> >I suspect the WMI query path the driver uses for fan settings is not
+> >implemented by this firmware, so hp-wmi should probably not attempt it
+> >on board 8DF4. I would be glad to test patches or provide acpidump
+> >output, WMI GUID listings or any other data.
+>
+> acpidump would be helpful.
+>
+> Thanks,
+> Krishna
+>
+> >Thanks,
+> >Lorenzo
+
+--0000000000008ff39a065da0354e
+Content-Type: text/plain; charset="US-ASCII"; name="blacklist-boot.txt"
+Content-Disposition: attachment; filename="blacklist-boot.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mv4xj8h90>
+X-Attachment-Id: f_mv4xj8h90
+
+WyAgICAwLjAwMDAwMF0gQ29tbWFuZCBsaW5lOiBCT09UX0lNQUdFPS9ib290L3ZtbGludXotbGlu
+dXgtY2FjaHlvcyByb290PVVVSUQ9MWZjYWU4YzgtYzI0Yy00OTMwLWI2ZTAtMzYzMmI5ZTY2YTE1
+IHJ3IG5vd2F0Y2hkb2cgbnZtZV9sb2FkPVlFUyBzcGxhc2ggbG9nbGV2ZWw9MyB1c2Itc3RvcmFn
+ZS5xdWlya3M9b2JkYTo5MjEwOnUgbW9kcHJvYmUuYmxhY2tsaXN0PWhwX2Jpb3NjZmcKWyAgICAw
+LjAxNDg1NV0gS2VybmVsIGNvbW1hbmQgbGluZTogQk9PVF9JTUFHRT0vYm9vdC92bWxpbnV6LWxp
+bnV4LWNhY2h5b3Mgcm9vdD1VVUlEPTFmY2FlOGM4LWMyNGMtNDkzMC1iNmUwLTM2MzJiOWU2NmEx
+NSBydyBub3dhdGNoZG9nIG52bWVfbG9hZD1ZRVMgc3BsYXNoIGxvZ2xldmVsPTMgdXNiLXN0b3Jh
+Z2UucXVpcmtzPW9iZGE6OTIxMDp1IG1vZHByb2JlLmJsYWNrbGlzdD1ocF9iaW9zY2ZnClsgICAg
+Ni4xMzkwODZdIGlucHV0OiBIUCBXTUkgaG90a2V5cyBhcyAvZGV2aWNlcy92aXJ0dWFsL2lucHV0
+L2lucHV0MjMKWyAgICA2LjU0NTcxMF0gQUNQSSBFcnJvcjogQWJvcnRpbmcgbWV0aG9kIFxfU0Iu
+V01JRC5XSENNIGR1ZSB0byBwcmV2aW91cyBlcnJvciAoQUVfQU1MX09QRVJBTkRfVFlQRSkgKDIw
+MjYwNDA4L3BzcGFyc2UtNTQ1KQpbICAgIDYuNzQ5ODI0XSBBQ1BJIEVycm9yOiBBYm9ydGluZyBt
+ZXRob2QgXF9TQi5XTUlELldIQ00gZHVlIHRvIHByZXZpb3VzIGVycm9yIChBRV9BTUxfT1BFUkFO
+RF9UWVBFKSAoMjAyNjA0MDgvcHNwYXJzZS01NDUpClsgICAgNi45NTM1MjRdIEFDUEkgRXJyb3I6
+IEFib3J0aW5nIG1ldGhvZCBcX1NCLldNSUQuV0hDTSBkdWUgdG8gcHJldmlvdXMgZXJyb3IgKEFF
+X0FNTF9PUEVSQU5EX1RZUEUpICgyMDI2MDQwOC9wc3BhcnNlLTU0NSkKWyAgICA2Ljk1MzU0OF0g
+aHAtd21pIGhwLXdtaTogRmFpbGVkIHRvIGFwcGx5IGluaXRpYWwgZmFuIHNldHRpbmdzOiAtMjIK
+WyAgICA3LjM1OTcxOV0gaHBfd21pOiBSZWdpc3RlcmVkIGFzIHBsYXRmb3JtIHByb2ZpbGUgaGFu
+ZGxlcgo=
+--0000000000008ff39a065da0354e--
