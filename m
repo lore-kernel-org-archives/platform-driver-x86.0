@@ -1,405 +1,190 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AD02253EB;
-	Mon, 12 Oct 2026 13:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791811135; cv=pass; b=SS3uAj7DCk2BhILgw6GkB4A4jxsqsH4GiU3uPMBMr7HLsZ5TYdg9j9Z0wKiAVlB8bPZkkMi9hj1A4/H2rzWz8/CnYYvXdc5jyHo05/0+uZ9lx1XcJ6I0Wst8ozlopEHxGcs8kynQIdAkimTl+AMnrV1uKCn3fb75psW9k/5yUjo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791811135; c=relaxed/simple;
-	bh=2yhZZaOrQxsobXMDAWqu2vt1FJ0JABBZoi5ayoXNvpo=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=n7ns9Nk6U08w9dL5K6e3NNhvTNmyihYZLSX5Q5MDD2W2tY00V6rcYB4FecHZsWZXQ5pe/3obqTSz+hzYhldNwUNEcPpUN3mIhEzpIOf6BezrK+aQGi5PhmLFLzN2gIWB9Ki37DZxLIe8FZz4oDAldNXNosXpmZfFdIj/GVd48EA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=ZSWLaBkR; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6B6361DA8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 13:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791812293; cv=none; b=ZAq6+4RfXBW1ubkd9dzooJlmDRG0jiD6IBXn4iDWLzdr0c82nfDNzXB/ZlDXozTaZM8C5C4jytteR83yi/2WWubnTL3VzyjiQjbkg4dZFQQoMUNuTu373ijNL949/VqGSJ38lLEWKzfegh9lUhjN2w25/j/SwH2PTdwHpG8zYgA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791812293; c=relaxed/simple;
+	bh=9MxIQ7jZUFv8moEEopZU8pjWgsmASzzXb+xzk3tr21o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T+BawAnDixeHE1roK+jfAGX2cllscXE6d4H4qU5ac7FD1eToBb6xgEfZOl9U8rxzwid6FADno1hbDyfoJo0N0XVt4VeHZMrXDHmsRbKKSkdrLCsNtUo20dImw/Ht8lyRzcus0vaMGMmNzvzKJROaR3+H9RomfKeuCMXZ/mOkha4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqJsGssE; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="ZSWLaBkR"
-ARC-Seal: i=1; a=rsa-sha256; t=1791811122; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=A+K/0nWODc2mGNFn3BDcAZT37aIc0Pn40w2ONpPBJnglx8cjxToeWc06RxrN60B6V7cU5DrkrTbsj8pODFVwbMuacxoWh7TjCbF5+8/k+2sK75ZkLGG2jlu/D7K1/sgvTwnFcERxqeLF6Q2he4noJlzRy5tXuq89XS4WU3RftRE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1791811122; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=N6ioNyzBt/xFoPdVedoNIpQfcgtRNqWGcbASu5Y/h1Y=; 
-	b=d1gBf4hxy96tLThDCsyTMSgmGGa25xOyvFZFE8BkyW+NpYBc+gtE9zoeO+ionwTqg4DsSRGfzT2prHMJL+l9YtcECWjHnpQPeUcG70KuB2LsrBS15exvZ7jaSzbCK9uFrfhI1mD7lZfup6Oz2o1E+fl7lLU6K0ykXObHe4IYL6k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791811122;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=N6ioNyzBt/xFoPdVedoNIpQfcgtRNqWGcbASu5Y/h1Y=;
-	b=ZSWLaBkR89FjBaNvEo3jzbQdPE35ghsz7QCGMNMcnWHKiCPH2PvTwz+3EOmBS6wQ
-	i2bcZX/XpSHFgf0xty5o6cSvxVfmZTjVb5LujWlz+WzblmnwBQ7ozV+Z4Rg2Ey1YyBI
-	AhAm/ztgva/7sW5WVdIPYgRPS3eviPim0zYYbuFghE/6xu+bpKDCSb+lQnrXJZiYA6p
-	InZuXfV4xURkmhHQ5uvjaVKotcnxktMajvh8/NFc9atHj65bnYxVymVpUU72vFgQwPD
-	bY8Gyh9JSe1HUGiC1qBylQzDUhxGVCmw0yjfgGAF1gjC8Ovx6duidfiH0ZMdHR9VdR3
-	FUxqmDKKBg==
-Received: by smtp.zohomail.com with SMTPS id 1791811121347690.662621604263;
-	Mon, 12 Oct 2026 06:18:41 -0700 (PDT)
-Message-ID: <fada38eed34b0a76c7e65f702ecaed8e61ae9c1d.camel@rong.moe>
-Subject: Re: [PATCH v2 2/5] platform/x86: uniwill-laptop: Implement rainbow
- animation as trigger
-From: Rong Zhang <i@rong.moe>
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-In-Reply-To: <30de83b7-8016-4b33-9e5c-6138b32766ab@gmx.de>
-References: <20261007144101.323289-1-W_Armin@gmx.de>
-	 <20261007144101.323289-3-W_Armin@gmx.de>
-	 <035799dd461fe0e7a60564e11f10fd23eb3daabf.camel@rong.moe>
-	 <9087d109-d757-43bc-b80d-64df7dc9ff82@gmx.de>
-	 <b31878aeb4af648106adc74efbb2d1e839f9f8ea.camel@rong.moe>
-	 <30de83b7-8016-4b33-9e5c-6138b32766ab@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 21:13:32 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqJsGssE"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-38759bcd877so1099064a91.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 06:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791812292; x=1792417092; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=SfDTlgBnqxtigNlcm0sph4MMrg2IfmGLuxOuTkWPTtI=;
+        b=QqJsGssEoYpB7HDq2FvkUPUk5Tpw+D77rgRm0cBpkgslvL+pOX6otb9SzaK04wo0jX
+         bDW5+6q/uHU9kOo5/5qgMb3D4v6KMeANUcNGJMXa0Ri3tq8JFSOVLE/9SL0KiXGSdGu9
+         Vngbk2H5y9uLYemgBH9TLyBnz4PtXmBI4wv49HUbNA2LoX6gYF76MGqDrKkFh2p/IzFy
+         MYUWlt/wZVbSDOWhq6N3wU6lsJDorhbFcCTxOm4v5brj1yb//tB5+WXLSoo27n34Lfo8
+         NPsawibpqlJ7FYIN4yGJpyyhtFytr7hun3SsWpcv64r6vJyl9pQR7OpRMYqKIDiXeFb+
+         rjFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791812292; x=1792417092;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=SfDTlgBnqxtigNlcm0sph4MMrg2IfmGLuxOuTkWPTtI=;
+        b=ByPO/SWuTfx4L9kVCz9Z2B6K6UieTJh2X1SFak3qMBZfqHwFnrIpF8Rw1Wj1FPux0e
+         e13ancRxdm9thVrBbIMVBBfMuLn2/LEOn2vmHwSzossfeRfDX22wT80/q+DFuneSGS80
+         F0H6A1z9jL8gEk+cjCendotuXoizR3GsQmiLG41i2JwymHrwJZaNPq4jSx5GgvM7xIET
+         LUeCN9J6fOsRPEsRrizEnXqJ4sTRtbV1eIlkTeaYsJ7U/bBd8qKAibPLanCFQqi9/uo2
+         FBFxJ0eBmhoRocU6AYWdkoGXiFbLH7DWTCDgRoJsjEaUQ1WaCovLnnkrp/P7iPao1Wk3
+         we9A==
+X-Forwarded-Encrypted: i=1; AKwUvByu8zOfbgrKTs+LjkfNZ4yfLj+UrSunur04hJZAmeNEoUWVjnV5mYUx24WlsMFUR73mkFU7u0ldgrJFWeMxi5fMknDG@vger.kernel.org
+X-Gm-Message-State: AFq9FYK7icqdHYh4NQObYQVpEzjidFR6SQohnAEs1s7KmrSWsp60s7Dm
+	Z0Ts2YGpfJyU1pDkDTE+h8UoiuvHYU17LM4sLkM3JiSwWzwognMDDBiH
+X-Gm-Gg: AYBFou2JFB2SiRFacJAmEIJKrzsSLXOnbD2q4F0eAGzdEhddauHQgpqw5Wfoe8iogUW
+	9VA7HLDC9nWY8S40WFcx54llSDxxg7fnegR9Vk5gll5D/LtrlSrqCtezZJl1e2jxZYa+43HXOTM
+	eSL1viuUP1kON9TeAMrLFT4zgx8H1qSlNNweBdXOgNbv7+utTXEbunpM57Z7OHXFtsT59gIDARB
+	7WgF8t/cdIUBuvn8nXLl387+fch+20fsJ7NQJgSsLcLlzmBOGAy0vYcJMFar12+oqobJrZI9aQN
+	/VIGLpKMcmDHfhWHuZ2ZgjauQNElOtDa9/rBIAcmRqzH0BLXtoYNCQ5KYDjSZyUNwZTFdHQIf6R
+	2OWjk0gkhHfOYQQ1FVYCV+0i5ya7K04W+h/BUMc4PPhdkHxCIxWTKoM+RppPoDeXFRwAerGbrWf
+	Gx1SoNom1E7dd8OIjHnoc5lDHP31gSyvv7rq9WPXK6XslyyDXRh1YBDIRha3uicVusrYFtqLM=
+X-Received: by 2002:a17:90b:3a48:b0:3a4:acde:1e3b with SMTP id 98e67ed59e1d1-3ab3ab5a652mr8033661a91.13.1791812291676;
+        Mon, 12 Oct 2026 06:38:11 -0700 (PDT)
+Received: from qby-nixos-laptop ([20.89.137.63])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ab50ce9d98sm14534878a91.9.2026.10.12.06.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2026 06:38:11 -0700 (PDT)
+From: Mingyou Chen <qby140326@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilya Gladyshev <ilya.gladyshev@linux.dev>
+Cc: KentoNion <kento@kekto.ru>,
+	platform-driver-x86@vger.kernel.org,
+	ted eric <ericted8810@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	linux-kernel@vger.kernel.org,
+	Chris Taraszka <chris@miget.com>,
+	Matias Civadda <matias.civadda2342001@gmail.com>,
+	=?UTF-8?q?=E9=AB=98=20=E4=BF=8A=E6=96=87?= <btx342@gmail.com>,
+	powerfullz <wleizc7319@gmail.com>,
+	=?UTF-8?q?=E5=AD=99=20=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
+	=?UTF-8?q?Milo=C5=A1=20Vlku?= <vlku.milos.fun@gmail.com>,
+	Rsplwe <i@rsplwe.com>,
+	Bozhen Peng <bozhenpeng93@gmail.com>,
+	Anton Karasev <uselessfire@gmail.com>,
+	Jame Jao <jaojame6@gmail.com>,
+	Mingyou Chen <qby140326@gmail.com>
+Subject: [PATCH v12 0/6] Merge redmi-wmi into bitland-mifs-wmi
+Date: Mon, 12 Oct 2026 21:36:42 +0800
+Message-ID: <20261012133648.132363-1-qby140326@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Armin,
+This patch series consolidates the standalone 'redmi-wmi' driver into the
+'bitland-mifs-wmi' driver to eliminate code duplication and centralize
+the maintenance of overlapping ACPI WMI event streams.
 
-On Mon, 2026-10-12 at 00:48 +0200, Armin Wolf wrote:
-> Am 11.10.26 um 21:47 schrieb Rong Zhang:
->=20
-> > Hi Armin,
-> >=20
-> > On Sun, 2026-10-11 at 02:52 +0200, Armin Wolf wrote:
-> > > Am 10.10.26 um 13:20 schrieb Rong Zhang:
-> > >=20
-> > > > Hi Armin,
-> > > >=20
-> > > > On Wed, 2026-10-07 at 16:38 +0200, Armin Wolf wrote:
-> > > > > It turns out that some models require the lightbar to be activate=
-d
-> > > > > in order to display the rainbow animation, so users have to acces=
-s
-> > > > > both the "rainbow_animation" sysfs attribute and the LED sysfs
-> > > > > interface when enabling the rainbow animation. This can cause sho=
-rt
-> > > > > glitches when the lightbar was previously disabled.
-> > > > >=20
-> > > > > Fix this by replacing the sysfs attribute with a custom LED trigg=
-er
-> > > > > called "uniwill-rainbow". Selecting this trigger will atomically
-> > > > > activate the lightbar and enable the rainbow animation mode. This
-> > > > > can potentially break userspace applications using the old sysfs
-> > > > > attribute, but so far no such application is known to exist (yet)=
-.
-> > > > >=20
-> > > > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > > > ---
-> > > > >    .../ABI/removed/sysfs-driver-uniwill-laptop   |  10 ++
-> > > > >    .../ABI/testing/sysfs-driver-uniwill-laptop   |  11 --
-> > > > >    .../admin-guide/laptops/uniwill-laptop.rst    |   5 +-
-> > > > >    MAINTAINERS                                   |   1 +
-> > > > >    drivers/platform/x86/uniwill/Kconfig          |   1 +
-> > > > >    drivers/platform/x86/uniwill/uniwill-acpi.c   | 133 ++++++++++=
-+-------
-> > > > >    6 files changed, 95 insertions(+), 66 deletions(-)
-> > > > >    create mode 100644 Documentation/ABI/removed/sysfs-driver-uniw=
-ill-laptop
-> > > > >=20
-> > > > > diff --git a/Documentation/ABI/removed/sysfs-driver-uniwill-lapto=
-p b/Documentation/ABI/removed/sysfs-driver-uniwill-laptop
-> > > > > new file mode 100644
-> > > > > index 000000000000..c226efc23b59
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/ABI/removed/sysfs-driver-uniwill-laptop
-> > > > > @@ -0,0 +1,10 @@
-> > > > > +What:		/sys/bus/platform/devices/INOU0000:XX/rainbow_animation
-> > > > > +Date:		November 2025
-> > > > > +KernelVersion:	6.19
-> > > > > +Contact:	Armin Wolf <W_Armin@gmx.de>
-> > > > > +Description:
-> > > > > +		Forces the integrated lightbar to display a rainbow animation =
-when the machine
-> > > > > +		is not suspended. Writing "1"/"0" into this file enables/disab=
-les this
-> > > > > +		functionality.
-> > > > > +
-> > > > > +		Reading this file returns the current status of the rainbow an=
-imation functionality.
-> > > > It'd be more helpful by documenting the removal date, version and w=
-hat
-> > > > has replaced it.
-> > > True, i will write a patch to address this.
-> > [..snip..]
-> >=20
-> > > > > -
-> > > > >    static ssize_t breathing_in_suspend_store(struct device *dev, =
-struct device_attribute *attr,
-> > > > >    					  const char *buf, size_t count)
-> > > > >    {
-> > > > > @@ -1258,7 +1213,6 @@ static struct attribute *uniwill_attrs[] =
-=3D {
-> > > > >    	&dev_attr_super_key_enable.attr,
-> > > > >    	&dev_attr_touchpad_toggle_enable.attr,
-> > > > >    	/* Lightbar-related */
-> > > > > -	&dev_attr_rainbow_animation.attr,
-> > > > >    	&dev_attr_breathing_in_suspend.attr,
-> > > > >    	/* Power-management-related */
-> > > > >    	&dev_attr_ctgp_offset.attr,
-> > > > > @@ -1288,8 +1242,7 @@ static umode_t uniwill_attr_is_visible(stru=
-ct kobject *kobj, struct attribute *a
-> > > > >    			return attr->mode;
-> > > > >    	}
-> > > > >   =20
-> > > > > -	if (attr =3D=3D &dev_attr_rainbow_animation.attr ||
-> > > > > -	    attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
-> > > > > +	if (attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
-> > > > >    		if (uniwill_device_supports(data, UNIWILL_FEATURE_LIGHTBAR))
-> > > > >    			return attr->mode;
-> > > > It'd be better to convert breathing_in_suspend into an LED device
-> > > > attribute. See led_classdev->groups.
-> > > We cannot do this because this field is being used by the multicolor =
-LED class.
-> > Whoops, I didn't notice that.
-> >=20
-> > > I can try to find a workaround for this.
-> > (+CC Lee, Pavel, linux-leds)
-> >=20
-> > IMO the best way to solve the dilemma is to introduce class_group for
-> > led-class-multicolor and led-class-flash, or else we will have to
-> > introduce (or have already introduced?) more workarounds for other
-> > drivers.
->=20
-> I think we should rather use a separate device_type for multicolor/flash =
-LED devices,
-> because this allows us to inject the sysfs groups without having to intro=
-duce yet
-> another field.
+Bitland is the ODM manufacturer for various Xiaomi Redmibook models. Both
+platforms share the exact same keyboard event stream WMI GUID
+(46C93E13-EE9B-4262-8488-563BCA757FEF). While redmi-wmi previously parsed
+the 4-byte payload as a bulk u32 scancode, bitland-mifs-wmi deconstructed
+it into discrete type/id/value fields.
 
-Sounds neat. Nice inspiration!
+Redmi operations were not contained in this patch series, future reverse
+engineering is required.
 
->=20
-> Would it be acceptable if multicolor/flash LED support cannot be build as=
- a module anymore?
+This series introduce a newly reported mic-mute hotkey definition
+for Redmibooks
+and dropped the previous redmi-wmi driver.
 
-In fact, even LEDS_CLASS is tristate (though rarely built as a module
-because LEDS_TRIGGERS promotes it to bool).
+I don't have a Redmi or other Bitland device. So I cannot work on the
+real device.
 
-From my perspective, forcing LEDS_CLASS_FLASH and LEDS_CLASS_MULTICOLOR
-as bool will be too harsh for distros. We don't need to build them into
-vmlinux, as long as an internal register function with an extra
-device_type parameter is exported. We've already had several glue exports
-declared in drivers/leds/leds.h.
+Features are working properly on my device (Lecoo Bellator N176).
 
-Thanks,
-Rong
+I leave the future reverse engineering work to the community.
 
->=20
-> Thanks,
-> Armin Wolf
->=20
-> >=20
-> > For this cycle let's keep the attribute as is.
-> >=20
-> > [..snip..]
-> >=20
-> > > > > +
-> > > > > +static struct led_trigger uniwill_lightbar_trigger =3D {
-> > > > > +	.name =3D "uniwill-rainbow",
-> > > > > +	.activate =3D uniwill_lightbar_trigger_activate,
-> > > > > +	.deactivate =3D uniwill_lightbar_trigger_deactivate,
-> > > > > +	.trigger_type =3D &uniwill_lightbar_trigger_type,
-> > > > > +};
-> > > > > +
-> > > > >    #define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF |=
- LIGHTBAR_S3_OFF | LIGHTBAR_WELCOME)
-> > > > >   =20
-> > > > >    static int uniwill_led_init(struct uniwill_data *data)
-> > > > > @@ -1587,12 +1593,18 @@ static int uniwill_led_init(struct uniwil=
-l_data *data)
-> > > > >    	data->led_mc_cdev.led_cdev.max_brightness =3D 1;
-> > > > >    	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT=
-;
-> > > > >    	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwil=
-l_led_brightness_set;
-> > > > > +	data->led_mc_cdev.led_cdev.trigger_type =3D &uniwill_lightbar_t=
-rigger_type;
-> > > > > +	data->led_mc_cdev.led_cdev.hw_control_trigger =3D uniwill_light=
-bar_trigger.name;
-> > > > > +	data->led_mc_cdev.led_cdev.hw_control_set =3D uniwill_led_hw_co=
-ntrol_set;
-> > > > A private trigger does not need hw_control_set, which is only meant=
- to
-> > > > coordinate between different drivers, i.e., in the case when the LE=
-D
-> > > > device and the hardware control trigger are located at different dr=
-ivers.
-> > > >=20
-> > > > I've also updated the documentation in commit 8e04e5382aa9 ("leds:
-> > > > trigger: Add hw_offloaded() callback and provide
-> > > > trigger_may_offload_to_hw attribute"), quoted below:
-> > > >=20
-> > > >      Alternatively, a private trigger can be implemented along with=
- the LED
-> > > >      driver if the LED's hardware control doesn't fit any generic t=
-rigger. To
-> > > >      associate the private trigger with the LED classdev, their `tr=
-igger_type`
-> > > >      must be the same. To declare that the private trigger provides=
- hardware
-> > > >      control for the associated LED classdev, set the `hw_control_t=
-rigger`
-> > > >      string to the trigger's name. Since both the LED classdev and =
-the private
-> > > >      trigger are in the same LED driver, it's not necessary for the=
-m to
-> > > >      coordinate via `hw_control_*` callbacks.
-> > > >=20
-> > > > I'd suggest calling uniwill_led_hw_control_set() directly from the
-> > > > trigger's [de]activate callbacks, just like other drivers.
-> > > I decided to use this callbacks in order to be able to add support fo=
-r the keyboard backlight
-> > > animation in the future (if we someday find a device that supports th=
-is feature).
-> > The name "uniwill-rainbow" sounds irrelevant to keyboard backlight
-> > animation. In this case the latter needs a new private trigger with a n=
-ew
-> > name, and it can have different [de]activate callbacks. IOW, we don't
-> > need hw_control_set() either.
-> >=20
-> > Otherwise, using hw_control_set() makes sense to me as long as the
-> > current name is relevant.
-> >=20
-> >=20
-> >=20
-> > Since I've CC'ed leds folks:
-> >=20
-> > Per-key lighting is becoming increasingly common for keyboard backlight=
-.
-> >=20
-> > I am actually thinking about introducing LED array/matrix support to th=
-e
-> > leds subsystem. An LED array/matrix device is just a special LED device
-> > that controls all constituent LED devices, so that we can:
-> >=20
-> > - implement keyboard backlight animation (or LampArray autonomous mode)
-> > as an array/matrix hardware control trigger [1]
-> > - tune the lighting of the whole array/matrix at once by tuning the LED
-> > array/matrix device [2]
-> > - tune per-key lighting by tuning constituent LED devices
-> > - apply generic LED triggers to the whole array/matrix [1]
-> > - apply different generic LED triggers to different constituent LED
-> > devices
-> > - properly deconflict the above operations
-> >=20
-> > It definitely requires a lot of work to get things (especially locking
-> > and atomicity) right, but it should be very helpful for devices with pe=
-r-
-> > key lighting once done. I believe missing proper LED array/matrix suppo=
-rt
-> > was the main reason why tuxedo_nb04_wmi_ab [3] implemented a virtual
-> > LampArray HID device far before any userspace LampArray tool emerged.
-> >=20
-> > [1]: The constituent LED devices will be inoperable when a trigger is
-> > active on their array/matrix LED device.
-> >=20
-> > [2]: The leds subsystem won't emulate this. The driver must implement
-> > brightness_get() and brightness_set[_blocking]() for the LED array/matr=
-ix
-> > device.
-> >=20
-> > [3]: I know Texudo folks are working on adding hid-lamparray to connect
-> > it to the LED subsystem. I've had another independent implementation wi=
-th
-> > HIDRAW sniff, no hid-generic dependency, autonomous mode as a trigger,
-> > non-RGB LampArray support, and per-key LED device support in my local
-> > tree, but that's another story. I will firstly push it further without
-> > LED array/matrix support. Then I will try to add LED array/matrix
-> > support, with hid-lamparray being the first user.
-> >=20
-> > Thanks,
-> > Rong
-> >=20
-> > > > >   =20
-> > > > >    	if (value & LIGHTBAR_S0_OFF)
-> > > > >    		data->led_mc_cdev.led_cdev.brightness =3D 0;
-> > > > >    	else
-> > > > >    		data->led_mc_cdev.led_cdev.brightness =3D 1;
-> > > > >   =20
-> > > > > +	if (value & LIGHTBAR_WELCOME)
-> > > > Check !LIGHTBAR_S0_OFF too?
-> > > >=20
-> > > > If the last state is LIGHTBAR_S0_OFF|LIGHTBAR_WELCOME (probably cau=
-sed by
-> > > > an outdated driver without this patch), the trigger's activate call=
-back
-> > > > will be called on probe, lighting up the previously off LED. Is thi=
-s
-> > > > intentional?
-> > > >=20
-> > > > Thanks,
-> > > > Rong
-> > > Yes, this is intentional. LIGHTBAR_WELCOME implies !LIGHTBAR_S0_OFF, =
-some devices
-> > > even assume this.
-> > >=20
-> > > Thanks,
-> > > Armin Wolf
-> > >=20
-> > > > > +		data->led_mc_cdev.led_cdev.default_trigger =3D uniwill_lightba=
-r_trigger.name;
-> > > > > +
-> > > > >    	for (int i =3D 0; i < LED_CHANNELS; i++) {
-> > > > >    		data->led_mc_subled_info[i].color_index =3D color_indices[i]=
-;
-> > > > >   =20
-> > > > > @@ -3540,17 +3552,31 @@ static int __init uniwill_init(void)
-> > > > >    		pr_warn("Enabling potentially unsupported features\n");
-> > > > >    	}
-> > > > >   =20
-> > > > > -	ret =3D platform_driver_register(&uniwill_driver);
-> > > > > +	/*
-> > > > > +	 * We cannot register the trigger inside the .probe callback of=
- the
-> > > > > +	 * platform driver, because each trigger needs a unique name.
-> > > > > +	 */
-> > > > > +	ret =3D led_trigger_register(&uniwill_lightbar_trigger);
-> > > > >    	if (ret < 0)
-> > > > >    		return ret;
-> > > > >   =20
-> > > > > +	ret =3D platform_driver_register(&uniwill_driver);
-> > > > > +	if (ret < 0)
-> > > > > +		goto err_platform;
-> > > > > +
-> > > > >    	ret =3D uniwill_wmi_register_driver();
-> > > > > -	if (ret < 0) {
-> > > > > -		platform_driver_unregister(&uniwill_driver);
-> > > > > -		return ret;
-> > > > > -	}
-> > > > > +	if (ret < 0)
-> > > > > +		goto err_wmi;
-> > > > >   =20
-> > > > >    	return 0;
-> > > > > +
-> > > > > +err_wmi:
-> > > > > +	platform_driver_unregister(&uniwill_driver);
-> > > > > +
-> > > > > +err_platform:
-> > > > > +	led_trigger_unregister(&uniwill_lightbar_trigger);
-> > > > > +
-> > > > > +	return ret;
-> > > > >    }
-> > > > >    module_init(uniwill_init);
-> > > > >   =20
-> > > > > @@ -3558,6 +3584,7 @@ static void __exit uniwill_exit(void)
-> > > > >    {
-> > > > >    	uniwill_wmi_unregister_driver();
-> > > > >    	platform_driver_unregister(&uniwill_driver);
-> > > > > +	led_trigger_unregister(&uniwill_lightbar_trigger);
-> > > > >    }
-> > > > >    module_exit(uniwill_exit);
-> > > > >   =20
+And by the way, the no_set member in bitland_profile_entry means a
+platform profile is only report by the firmware but not available for
+set.
+
+I don't have any LLM API credits (and I don't want to order it for now),
+so I cannot run sashiko reviews. Could you share the other review comments
+to me?
+
+v12:
+Fix the issues mentioned in https://lore.kernel.org/all/20261008152647.1510152-1-uselessfire@gmail.com/ .
+Copy payload_data to output->data at bitland_mifs_wmi_call, not
+overwrite the entire struct.
+Correct the key name (Mic Mute) in the commit message of
+"platform/x86: bitland-mifs-wmi: Add Redmi mic-mute key entries"
+and my device doesn't have a FN-ESC key, so I renamed the enum variant to
+WMI_EVENT_MIC_MUTE.
+
+v11:
+Add missing return_code_at_end and accept_zero_function logic
+Fallback to balanced platform profile if resume to performance failed
+
+v10:
+Replace the previous "profile table" with dmi quirk table
+
+v9:
+Add the missing feature introduced in the commit
+e0d6312578e1 ("platform/x86: redmi-wmi: report EC state change events").
+
+v8:
+Correct Ilya Gladyshev's email address in the MAINTAINERS entry
+
+v7:
+Swap low bit and high bit for WMI_EVENT_KBD_BRIGHTNESS
+in bitland_mifs_wmi_keymap
+0x00800501 -> BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0),
+
+Report KEY_FN_ESC when WMI_EVENT_FNLOCK_STATE events received
+Rename the reserved names
+Use Xmas tree order in bitland_mifs_wmi_notify
+Collect the Tested-by and Reviewed-by tags
+
+v6:
+Drop the wrong Redmi ops
+
+v5:
+Correct Xiaomi DMI vendor name
+
+v4:
+Map PLATFORM_PROFILE_PERFORMANCE to wmi performance mode if the device
+doesn't support full-speed mode.
+
+
+
+Mingyou Chen (6):
+  MAINTAINERS: Add maintainer entry of bitland-mifs-wmi driver
+  platform/x86: bitland-mifs-wmi: Merge the function of redmi-wmi into
+    the bitland driver
+  platform/x86: bitland-mifs-wmi: Add Redmi mic-mute key entries
+  platform/x86: redmi-wmi: Drop redmi-wmi driver
+  platform/x86: bitland-mifs-wmi: Add quirks table
+  platform/x86: bitland-mifs-wmi: Fallback to balanced platform profile
+    if last performance profile is not available
+
+ MAINTAINERS                             |   7 +-
+ drivers/platform/x86/Kconfig            |  12 -
+ drivers/platform/x86/Makefile           |   1 -
+ drivers/platform/x86/bitland-mifs-wmi.c | 345 ++++++++++++++++--------
+ drivers/platform/x86/redmi-wmi.c        | 154 -----------
+ 5 files changed, 243 insertions(+), 276 deletions(-)
+ delete mode 100644 drivers/platform/x86/redmi-wmi.c
+
+
+base-commit: 98f039265e580291d5e76a11b2072541fbb1c393
+-- 
+2.55.0
+
