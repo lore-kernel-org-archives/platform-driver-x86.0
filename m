@@ -1,65 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA3F4A5EA5;
-	Mon, 12 Oct 2026 15:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83244A6885;
+	Mon, 12 Oct 2026 15:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791820557; cv=none; b=fDNRXC6PxE0nPJM2K8zNqu0zw5gQkMEs8IzEtly9AThM4xyZ+bTVoNs5meXBelyqvcOM5jggeiUQX5bs9XYfriiTxZdO7vybiqT2Z1pftwFr9QmwN2DytsjArEAVZM2eb12cwZFHzaVXkZlAXYroM9SCovE2LMu+zVHtrqtHmKA=
+	t=1791820571; cv=none; b=GN/uH6f7z8jVoST+yNOB8gaKaroPjkAmbbv1hKTNdFZsspAOmn4mK0lBsRmJHvyhhJPJ2q8c5A5eeOdaaXCmUu+2PUUkP9yNGh3Vu8TXYmzn0pioKbvoIh2xwK8nzvHYZ6mvWIwBPlOrXEDU/RMm73CLN4q7BCEXgxZkq07GJX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791820557; c=relaxed/simple;
-	bh=4FmKRksIO7Bny3rPzmqieKmk9ZT0xdfNxBEHw2BnAxc=;
+	s=arc-20240116; t=1791820571; c=relaxed/simple;
+	bh=F8TxNbzPoPpeOKAIMlDONgvTVGQu2v1xJvBOhBytrPA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dOBwjacIGfLtqcL6/UDUAQSzVlVb2m4wUW+sFC4V7OwLpNuyTLjzDFSW4oi4J2Uj44SoCY2vzwj1odRn4WtPZhwd0evI2v967e8SJyueSxoPKmJOscnLACACxnM2Cu/w2B3LzVFUgCGVDCw+gjt+P0Y/G9zTvoF5/0PuzmAZZT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UrRsszOk; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=s89LGIurxcj9mvhoPmquUATKslGQzunkSs+X3b1u9rs/HXk2arSi0sFOvJMUeWo9kuoFF8mIVtyrtK0clCpcQna8VtVNQlfTcZOb7lAtmFINGMIEv5yPEEF46XIYHm0OgVlw8oY4gbFb6ZuyJrDpCilk/UzOgqBih5ZyVE7qUmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dlrli8/w; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UrRsszOk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dlrli8/w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791820556; x=1823356556;
+  t=1791820570; x=1823356570;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=4FmKRksIO7Bny3rPzmqieKmk9ZT0xdfNxBEHw2BnAxc=;
-  b=UrRsszOk9rNtXndkm/zxajuRXkRRbUtyF4OQwexjfp8HajpjaIgmPf1Q
-   PEAcFaAoUy1lo01KZynIbhSU94N1CsNagQXlruNZgEdlRFhev3axejrNc
-   eBhTucQ8uEeARM6ABoaRXwyViImm37iE88OwHZzcozIWxUJQP4hLNzbU6
-   kZ2xeTq82kXA4tWoaI9OXfTH9dJcCYaET2PO0c+mZMQ/P9s4GM5xXwjuL
-   y0HVbxF++8FMYQNvdmTwLIpHpSRRQXMffI3CG6nXjxRqELYCaBhEVqSrX
-   ElnkJ7NWRqIvZcsLyxOf16Ux9Dk1kQa7XuBfuKJP5RaBCfglafMb5Qoyr
+  bh=F8TxNbzPoPpeOKAIMlDONgvTVGQu2v1xJvBOhBytrPA=;
+  b=dlrli8/wvbhatkTRWXqIkzTp+MOhqYSajVHTY+SEd5mmMK3cr+6KcUrD
+   KUg6vrEm9PeI0Oqhx/C0qWNMGZMoc/AaXsWghWHAE3EBtkOr2E6O4bblx
+   ZGkk6fs2nc0uJtGDtwVc1ObbRQacJL4CMT5IM5TP8miw6op0S5Vdud+A/
+   TZ2/mmRW1GSK9/BlhNrv5ThixfT862D0YGgBOKwuzBVhoOf+T5OLiwyHK
+   pHGmCf/fmUaamcCRghcFIzgf9y3vkkalJrMNpN6VldU5HIpbYQMn0JKfg
+   3T9PkWLmENw80KdPVVIf87LZr15SJHf2Hv4d7eRqyoCNwrzAM1f5PcuXo
    g==;
-X-CSE-ConnectionGUID: A+m60B2MQi2Zhje0yGNNzg==
-X-CSE-MsgGUID: UDGRwmlxTVe3rI7AB0/utw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="417117"
+X-CSE-ConnectionGUID: nnPSzgJVRuqZ2M4SG/DlQA==
+X-CSE-MsgGUID: FOOHPNTaQTOMK6SLdeBaUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="625462"
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="417117"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:56 -0700
-X-CSE-ConnectionGUID: 6nyPggpLSYymnaC9VpvNTQ==
-X-CSE-MsgGUID: TK4xHRppRUeHGNLCQgARow==
+   d="scan'208";a="625462"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:56:09 -0700
+X-CSE-ConnectionGUID: ebtEE5rbREmyhX9hYdD/XQ==
+X-CSE-MsgGUID: voR0x8qcQeW2r36sxaKJHA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="908837"
+   d="scan'208";a="970372"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:55:52 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:56:04 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>, 
- Sibi Sankar <sibi.sankar@oss.qualcomm.com>, 
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: =?utf-8?q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
  Hans de Goede <hansg@kernel.org>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Abel Vesa <abel.vesa@oss.qualcomm.com>
-Cc: Maya Matuszczyk <maccraft123mc@gmail.com>, 
- linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Qiling Zhu <kmatzkaczor244@gmail.com>, 
+ Oleksii Kryvenko <diver.ua@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev, 
  linux-kernel@vger.kernel.org
-In-Reply-To: <20261001-qcom-hamoa-ec-suspend-irq-v2-1-ec71a7cdec79@oss.qualcomm.com>
-References: <20261001-qcom-hamoa-ec-suspend-irq-v2-1-ec71a7cdec79@oss.qualcomm.com>
-Subject: Re: [PATCH v2] platform: arm64: qcom-hamoa-ec: Disable the SCI IRQ
- during suspend
-Message-Id: <179182054705.17897.3149043112275162830.b4-ty@b4>
-Date: Mon, 12 Oct 2026 18:55:47 +0300
+In-Reply-To: <20261010031827.3306077-1-dmitry.torokhov@gmail.com>
+References: <20261010031827.3306077-1-dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix deadlock in hotkey
+ input open/close
+Message-Id: <179182055606.17897.2748712319508628576.b4-ty@b4>
+Date: Mon, 12 Oct 2026 18:55:56 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,14 +70,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Thu, 01 Oct 2026 10:46:36 +0300, Abel Vesa wrote:
+On Fri, 09 Oct 2026 20:18:24 -0700, Dmitry Torokhov wrote:
 
-> EC SCI events require I2C transfers to retrieve the event information.
-> During system resume, an SCI interrupt can be delivered before the I2C
-> controller is ready to handle transfers, resulting in failed event reads:
+> Commit d6479c25ecef ("platform/x86: thinkpad_acpi: Use
+> input_device_enabled()") changed hotkey_poll_setup() to acquire
+> tpacpi_inputdev->mutex and call input_device_enabled(tpacpi_inputdev).
 > 
->   geni_i2c a84000.i2c: error turning SE resources:-13
->   qcom-hamoa-ec 3-0076: Failed to read EC SCI Event: -13
+> However, the input core already holds dev->mutex when invoking a
+> device's open() and close() callbacks. Because hotkey_inputdev_open()
+> and hotkey_inputdev_close() call into hotkey_poll_setup(), attempting to
+> acquire tpacpi_inputdev->mutex again results in an immediate
+> self-deadlock.
 > 
 > [...]
 
@@ -92,8 +95,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform: arm64: qcom-hamoa-ec: Disable the SCI IRQ during suspend
-      commit: 16624ca212e67afd0bffe983d5e9600e87e321bc
+[1/1] platform/x86: thinkpad_acpi: fix deadlock in hotkey input open/close
+      commit: 16a7b5e0e4e3ba9997658b218559fff7ac1ccfb3
 
 --
  i.
