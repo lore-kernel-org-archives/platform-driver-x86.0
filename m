@@ -1,153 +1,89 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2727A47CA6B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 10:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC97E3D9541;
+	Mon, 12 Oct 2026 11:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791799608; cv=none; b=NZUrk6O+2D5/mBuZZu/BSfOJcq8nk1qY7YK+btOqTqyJpFr77MxPsNoNOWljqK/7bX+jPwrHTN5ZABPKHOhPH0WOAYB9eGbCT400o038UF5+dt1OEErvmG9IKOHhMGFUeyXm9u8uxuKlPQ8V5gtTP/My+ATpUQtJ9yzjSb9BqL0=
+	t=1791806318; cv=none; b=I/m0nMY3zEEIqDVH408u5shMLkiDpvAWUHyxORgUwO/28/UU5P4lisjwZz44KQVPxDcWV6orQ9yUYBjelLl9Ybduqvpyyr1QHkeja3ln8V54uxTNeZ7x/bQ9zsQ0acWbrcedjFvgYCd0+RO44vEahkW7ji+xLMVfOum/YvwmZOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791799608; c=relaxed/simple;
-	bh=CyBZnoL9cID7mi6579NOEOhskoy3tNCIc6rw4QdlRHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NsKSSPvCkSek/9r7GNA4rNzILRB8FjkZm0ZIyoB1VgrOcO8Y6PhjwR71MIYI4SLj6mWf8PUWuMHNmJuHEx3HkKN2RYAWdGNci2MdAUaM2e8zw62+BqqX0Xdjb9INPIqji0CY9/mi1QOuVbxDeyjgV48G8DuEM1k2C/tkcNOM3CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAUooeAo; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791806318; c=relaxed/simple;
+	bh=dojZteJP9FwJRrGvm0N/9qsvAIDATHWlqAv67ZfOhRE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=rX4e1gAxLVSX540z6tJ3CkhE5ZiQlXic/qIQPlE8pQU1pYUt2HQJ1l2bACd8fkJspp5fz67pN3QOK5TWewa8xrnnPa7F4wULtjXcYWUomSEMhzzhA0sEQR/RRhrIj5tdI5VWz0sRIcirBWsDnUtHdTFXaDBushEZgHrYtaiaBgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HbxcTuBz; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAUooeAo"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-cd5e2d696e0so890846a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2026 03:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791799593; x=1792404393; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=oOkAEGZ38cExqY4JKO5ThXkSV4YfBritRUgr2RuPIUk=;
-        b=bAUooeAoLsJLofZbCEpsazYVHsoAcUA1bELueSB3NVdib50OvYVe7JuiuAGpsX3uVe
-         SvfbghUlkq2IxcVajJTWgMRAkiXHfnH19H0EaJpx1IhO6fDwXtw04gtkxIQrEkxwyL0I
-         11QDDnA2s5T0H2gP+hKm8NSn41dhBtwcg7oPdAosXGLVr3T4vvrkE9R6c1IEoWoiFj96
-         bhfvL4aZSSYs1WtHOWgsqD1wfL8ee6P2VcscvumD1V9pjZhM0Pr5tE+eNjJT8P147Xrz
-         IcGH8OCnAQVzPFUUlBKgzwmBnvsrOC0DlQ+lgDE1TMMQI69Pc8rAkD4FiRakq+QBG3eA
-         aOrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791799593; x=1792404393;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oOkAEGZ38cExqY4JKO5ThXkSV4YfBritRUgr2RuPIUk=;
-        b=Er093CE8bXqegZS65ZJVy6Wb0vSrTkfzkP/Irh/pELagfVyUANTmguAUdhABVdr9KA
-         alEziQOlhUTr802FVLolg3VW5SvPQq6SorSpwG86OJzlICY/i3H17oXCApF423IHULVP
-         NZN02TGGip1CyWJjXHdNcjMxvQ2lpy+ZxiEKsBSLEQG7wz6reOoFWq+pNIT88f0LnQ68
-         HNlLhkD0rRJc9wbbP8MszC434xZgWCUuKiIN6xm5z+33Nag/s1V4Wwlj8MZvJgDuO8qU
-         3Z/HJMi2AY0mKDhY5jUkmquwnuOkFcrbuafLSnbTC1VrxdaNBd2OMimAe2D9nXZn2vj+
-         D35Q==
-X-Forwarded-Encrypted: i=1; AKwUvBywwiyvCya+s6GvC9oBSiREss38y1vFVMGIT5G25ZMpLtki9GtPVdQure8xQt5XREYZfxws0RLpg638RK0PUDynL62F@vger.kernel.org
-X-Gm-Message-State: AFq9FYLKsKxXlPhPhxRDIW1DgbDarKcRWmz6yXQeoOCPrlpD3PKEMsj9
-	RwX932kRX+MkJ3U5sq9S1jaf1LPicf/Z9vS6EMFiUGH1/ELPXkSebbx3
-X-Gm-Gg: AYBFou1B7Z/CYcbiFOJ15Bz/ScxEuCKTWJTaMUbJD5wUCQ8NJv533T7BpuKg6KYy2hA
-	/SbkqpyAZedabPNvXNssb0mhbr3WgcpDTvzQSmKEuUoJE5xjWs4XsB+reWZ+yWW4be+/dKFuqto
-	/f59gdP2RNUvWliI+JR2vzoLGvk1gCNFR8nVtp/RZwicdI81pMegURu8sx/G6YBCo8odZkDHQUq
-	79tiF/i64a+Kdprt2xDwp6aoj78rECQlS0IOZOq5Vbz4adQ75LEUqEK345WNcmafyQ3Rl/5infN
-	bsbgNSD0rDo537F+pzILgdJxeIJBgdG8MMeeASKx1yXqQZ5roXtZl96dsjG1dJIHfEGUc1mvRPG
-	6tU57xExJabaxdV2HvbwtUaG5BsMRwSCOgLgLkaRwcHxKib5uj55ANMw1ghswblPOZCByDMHpkq
-	wrFfOrOvOKyiIAr8IhxzobrWf8IAsplcrOWeRVY7mnJMeUMPYMZOOfPwW33fJH6octno6Z7Q5/
-X-Received: by 2002:a05:6a21:46c5:b0:3e1:1689:1eb8 with SMTP id adf61e73a8af0-3e16baddb4amr8423622637.2.1791799593094;
-        Mon, 12 Oct 2026 03:06:33 -0700 (PDT)
-Received: from qby-nixos-laptop ([20.89.137.63])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cd3da04596dsm4074272a12.29.2026.10.12.03.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2026 03:06:32 -0700 (PDT)
-From: Mingyou Chen <qby140326@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilya Gladyshev <ilya.gladyshev@linux.dev>
-Cc: KentoNion <kento@kekto.ru>,
-	platform-driver-x86@vger.kernel.org,
-	ted eric <ericted8810@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	linux-kernel@vger.kernel.org,
-	Chris Taraszka <chris@miget.com>,
-	Matias Civadda <matias.civadda2342001@gmail.com>,
-	=?UTF-8?q?=E9=AB=98=20=E4=BF=8A=E6=96=87?= <btx342@gmail.com>,
-	powerfullz <wleizc7319@gmail.com>,
-	=?UTF-8?q?=E5=AD=99=20=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
-	=?UTF-8?q?Milo=C5=A1=20Vlku?= <vlku.milos.fun@gmail.com>,
-	Rsplwe <i@rsplwe.com>,
-	Bozhen Peng <bozhenpeng93@gmail.com>,
-	Anton Karasev <uselessfire@gmail.com>,
-	Jame Jao <jaojame6@gmail.com>,
-	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH v11 6/6] platform/x86: bitland-mifs-wmi: Fallback to balanced platform profile if last performance profile is not available
-Date: Mon, 12 Oct 2026 18:05:32 +0800
-Message-ID: <20261012100532.19612-7-qby140326@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261012100532.19612-1-qby140326@gmail.com>
-References: <20261012100532.19612-1-qby140326@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HbxcTuBz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791806316; x=1823342316;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=dojZteJP9FwJRrGvm0N/9qsvAIDATHWlqAv67ZfOhRE=;
+  b=HbxcTuBz6wfhZUySyPpmkXlchJs8X7gLZBxktg0zKrICgtIE8paTCM5r
+   w9O9Ck/ZW9gjkh+sIRcPsR8SexkGnNsfO+jmNm8xU2z25wrTpm7nxJy8W
+   Gf7j3YDlzJ2x14d2/wIkmDZ3jbqiiJdcoTBpUfYXTljN3/anmazrSvH9V
+   JP+wT1jKlpi8DX82aFeeDhC11oGvEi5xl2SQ7dUVZoan4vrduN6DBJZGV
+   8L9eM2jgPcOi6pC1CmUSiVAho3fEM6QCT1qUdzZjwHZ6S2USUqCwklemo
+   +wA0wZS7I3WO6sqm34ze7FCLpm6V8QvEaoc57aW+NWO1XE+rNXcGY20Oa
+   A==;
+X-CSE-ConnectionGUID: Naurr+cdRZapziVFuiLN7g==
+X-CSE-MsgGUID: tDVSIdo0SbObjpkl52moUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11932"; a="419413"
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="419413"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 04:58:35 -0700
+X-CSE-ConnectionGUID: 4zZUeJOUTCGvZCe3RMs3kg==
+X-CSE-MsgGUID: Ix018LGbRG2yZo/vdsmN/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="1192146"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 04:58:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 Oct 2026 14:58:30 +0300 (EEST)
+To: Huang Wei <huangwei@kylinos.cn>
+cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Add X9-14 Gen 1 to
+ non-standard thermal/fan quirk tables
+In-Reply-To: <20261012034129.2902006-1-huangwei@kylinos.cn>
+Message-ID: <b5f1c096-f10b-ee56-c3ec-e2eba4a151b1@linux.intel.com>
+References: <20260826073014.2611191-1-huangwei@kylinos.cn> <000acb24-7aef-4718-89ea-0dffd1ab34d9@app.fastmail.com> <20261012034129.2902006-1-huangwei@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-On Bitland laptops, performance profiles require an external power
-supply. If the system enters suspend in a performance profile and the AC
-adapter is unplugged while the machine is asleep, laptop_profile_set()
-fails with -EOPNOTSUPP during resume when attempting to re-apply
-saved_profile.
+On Mon, 12 Oct 2026, Huang Wei wrote:
 
-Returning an error from the resume callback simply because the power
-cable was removed during sleep is undesirable, as the device is
-otherwise
-fully functional.
+> Hi Mark,
+> 
+> Thanks for running this down with the FW team - and for the honest
+> follow-up. Dropping the patch is clearly the right call: if the X9-14
+> has its own register layout, reusing the existing quirk-table offsets
+> would just trade "thermal sensors disabled" for wrong readings, which
+> is worse.
+> 
+> The symptom the reporter hit (legacy probes reading 0x00, thermal
+> getting disabled) is still real, so I'm glad Lenovo is working on the
+> correct mapping - happy to review that series when it lands.
+> 
+> Ilpo - sorry for the churn, the patch will need to come back out of
+> your review branch.
 
-Gracefully handle this condition by falling back to
-PLATFORM_PROFILE_BALANCED
-whenever restoring the saved profile returns -EOPNOTSUPP. Update
-saved_profile accordingly and notify user space via
-platform_profile_notify() so daemons such as power-profiles-daemon stay
-in sync with the actual hardware state.
+Hi,
 
-Signed-off-by: Mingyou Chen <qby140326@gmail.com>
----
- drivers/platform/x86/bitland-mifs-wmi.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+If you want it removed, please send a revert patch as there have been 
+enough merges in between so I don't want to attempt history rewriting to 
+get it pulled.
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index d61382ad4a0b..7c950e688988 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -392,13 +392,27 @@ static int bitland_mifs_wmi_suspend(struct device *dev)
- static int bitland_mifs_wmi_resume(struct device *dev)
- {
- 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	int ret;
- 
- 	/* Skip event device */
- 	if (!data->pp_dev)
- 		return 0;
- 
-+	ret = laptop_profile_set(dev, data->saved_profile);
-+
-+	if (ret == -EOPNOTSUPP && data->saved_profile != PLATFORM_PROFILE_BALANCED) {
-+		dev_dbg(dev, "Cannot restore profile %d (likely on battery), falling back to balanced\n",
-+			data->saved_profile);
-+
-+		ret = laptop_profile_set(dev, PLATFORM_PROFILE_BALANCED);
-+		if (!ret) {
-+			data->saved_profile = PLATFORM_PROFILE_BALANCED;
-+			platform_profile_notify(data->pp_dev);
-+		}
-+	}
-+
- 	dev_dbg(dev, "Resuming, restoring profile %d\n", data->saved_profile);
--	return laptop_profile_set(dev, data->saved_profile);
-+	return ret;
- }
- 
- static DEFINE_SIMPLE_DEV_PM_OPS(bitland_mifs_wmi_pm_ops,
 -- 
-2.55.0
+ i.
 
