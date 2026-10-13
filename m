@@ -1,96 +1,44 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward102d.mail.yandex.net (forward102d.mail.yandex.net [51.250.60.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543A6542EF6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 19:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ABF549378;
+	Tue, 13 Oct 2026 21:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.60.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791921217; cv=none; b=exb7cKn11/Gf0jcS+kP+PLS4lLVOdsx6tMHyBYUgqpoqWz8WjkzqjFbsdoi23lGCauM4GIldQPtDitSzHB3kyFaNCaxyk9uZqkD94+jARhT3B51DkfUoLuFK631xY6G4UNh2j5vSyg9yGJ3mHBLRYMJLNHHKxEvp7/PfQLyrvkU=
+	t=1791926575; cv=none; b=hAT0WLmIBNmET+i74Mw0ycnM7iwr9J9pLtOUrG/2kABsmg486uNpIHDQNcRSbphMD9xA+3ALATNs2cnG0a0v60DNvvAOuhx/DUFP7+N0v6vpHrswx5y69DGa/YiTpwe6HJQUtrmtokd+MrHHlL5gc7Nf7d5xaAnw9ffmjwazSPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791921217; c=relaxed/simple;
-	bh=9X+B3VzuP6c2+GbMDzQKaInOmGWlAa6Crsdlsjiub+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rOXdKIhCmaVI4kRojfLmIpP9RNq0HTISXt/5e/9LU1XNJxEsSD2ta9h8PsaeT2PAOxv3pAbfLUEzTvxFO7YOe+h+Rj7FIPPZKA1nH1POpQeKikXDmwIrCFI0g2FOM2g2UnLqgDm/wB5paQbGgZ9dp5KDchiR2H58LK8v8mWolrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org; spf=none smtp.mailfrom=thinkoid.org; dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b=EPUCk5Vh; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=thinkoid.org
+	s=arc-20240116; t=1791926575; c=relaxed/simple;
+	bh=5xtSkDqj4IfU8/QNPAcFk2pbH//URijfWwDYonVXG1k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=efKUZQZCfbZc21JmuA0X39LntF1HNFRRg745ByMQfKO3BGuHLBAuIZLZ3cETouIBUiWS7pDW+O5NU2rn/zmHFrS9tZqxEKvy7PHo1O0z6gfXL5N/01Z3xWnAcFjZsU3CMf27OZ0+GAIHoORQbrFPMVlAIPqH+siFYtuannXWsgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=qv3ixbI3; arc=none smtp.client-ip=51.250.60.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b="EPUCk5Vh"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-917d595138fso25589646d6.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 12:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thinkoid-org.20251104.gappssmtp.com; s=20251104; t=1791921214; x=1792526014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=HcBu6oPAez1ljZeSMUFIBe+d1rm2GYp83jcwBgf/ZWA=;
-        b=EPUCk5VhzC4xZLPu5RJNFkGJNQIaQGlNdADxDxWxR//Q6VGL5HifvRB4F1j3YoqkIO
-         D997XkDKGrvbKBkYRhUaDKBlUsJKe3qweZTasPrGov7LJl6T9VnlZ/jVEL3do5ifowEv
-         KFFBa3pDn/YlhqbEdcjCbEbwnQAYj1+yfWPEn6L6CDGymP5DPD3zhoRoqvLcgCmEBvSW
-         6fqfOsaR0+AOsXCEIIGG7hdUpfMQPJ8BTW+dXRpg266MqkkZ0wmvoV7/Q2/4++21uc1S
-         vBq7Wsoi5aVZFMUOpNeRoHGu7kvF3OoQIT0d4xY1dE/HBSO7RL9fVox9wAAAgDxo/q9F
-         FSuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791921214; x=1792526014;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=HcBu6oPAez1ljZeSMUFIBe+d1rm2GYp83jcwBgf/ZWA=;
-        b=YjfP9IY4oliJ6vmUK9Mdu6R67mWOqvDsjiyixjcfkAj+5j071Cnk9b5QoC6X6Nmg/S
-         7BmI0nWh+lVd5MZZgW8rW4idRppZzmW40l7eV5mZRDweINixzH6DUNcfvKRErEC4MIH6
-         +/wFluDfw8mvEj82lQeBwKCGeGSwXpGagrVZkZbdsZ3zQK32O1/lTHLHnWDYNbGjj9Co
-         xIB0hl2JlWjr6Fum43NYOIW5kIGrtlnfDFiBDGR1qQdIWEW3wzCKnuIs5obEB1yaxA+g
-         hlN7SZ2kR3K2i8CbW4MkAyNRqvA+ol+0GJCQc0q0/ynlXGAvUvi/iZOnCls7ZwjT+Tms
-         DtBg==
-X-Forwarded-Encrypted: i=1; AKwUvBx6LDDvxF/6xavgjIjWP5XG9ndvD71pVZ2gpqS0lWFsF+7FbE7V0SivLKjdPY526ehZsEpAY6bZeTEfVXugvgCxWtBg@vger.kernel.org
-X-Gm-Message-State: AFq9FYIzbYBV2RgVImW5dfhf7bUQp4WJ5MOJsqGkTJXsova8JA053CYr
-	BWOkx8pCEk1AGriNzSfhFKUh+c1By7bwuJ6+GvT6qh2g3e+QjUGWjmxOYDWVZtRG63LAN7Aza0L
-	IiQRDeiETTg==
-X-Gm-Gg: AYBFou1gp57Jwj0BuTV4wyzpMlA6LqrNU15gyIodI2xiLMAnlWkpeyQ6h4Q1bU98c+X
-	Y7GsM0G30R/4j+qrRqEeSNem3W9l2M8RqiG/kTcoDY9eBDbcLjZFeT99yaiJtoTRIBE+wquVKtk
-	QvBSTWDp54eckVcmLYXQ768CwChGNMK9AoEFuQXOdomZ+KuPAZ94cTbW99df15uh3OEviAYO4uB
-	hmP4WQfQS/qM1D2KQiDFQJdWpyUbii84qKxiI/fMhvwCrxBc3bsPinAe0gKdU/lSF7fZXBajw6Q
-	xSncXscdOP7wzQBS206hO0P6TNbqFhZVQ2dON5K6veausgZPEJAA7W0WXduMc0GoJ01oEhXRdwX
-	6+tirobCb5a/XSxBs+V1wo9SrABhWaViXvKnsExT7Qr61pYR8ZOZNYabUXFWnmFHa5yilTVGJoR
-	mu4DS1RiizuTp3ah0oMraucjndrtesvI1sCebnZuXzgHpstD1xkyh7lRwGtAATbFA1SD1mRg==
-X-Received: by 2002:ad4:5fc9:0:b0:91b:8d12:bac9 with SMTP id 6a1803df08f44-91b8d12bb24mr93591896d6.0.1791921214109;
-        Tue, 13 Oct 2026 12:53:34 -0700 (PDT)
-Received: from localhost.localdomain ([2605:a601:a61d:7a00::11])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b97c35bfcsm33085666d6.42.2026.10.13.12.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Oct 2026 12:53:33 -0700 (PDT)
-From: Liviu Nicoara <lnicoara@thinkoid.org>
-To: Michael Burch <me@michaelburch.net>,
-	Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Abel Vesa <abelvesa@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="qv3ixbI3"
+Received: from mail-nwsmtp-smtp-production-main-54.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-54.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:6543:0:640:e955:0])
+	by forward102d.mail.yandex.net (postfix) with ESMTPS id C0E6EC00DF;
+	Wed, 14 Oct 2026 00:22:35 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-54.klg.yp-c.yandex.net (smtp) with ESMTPSA id WMbJYuQtEiE0-LJQ9bWy9;
+	Wed, 14 Oct 2026 00:22:35 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1791926555; bh=sfcmlTR7eCaZWBe1bemIwHZsXa+eE1kUcQCqsEwQKoo=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=qv3ixbI323v+9WoWM368bCJDxuKX0G04owwwcssqkg2wCWWgcYYP96nMM4BXt1UWw
+	 f5zswabM3Iotg6l9DBb13XAAxoU9swmcbvLUdvFvp3zxpVzIXwwL2k4JfnraxtaA2F
+	 /Vf7QA01cayczb9s6LaRggLfCQaSEcE/6Gw0zAsM=
+Authentication-Results: mail-nwsmtp-smtp-production-main-54.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Alexey Subbota <subbota-job@yandex.ru>
+To: platform-driver-x86@vger.kernel.org
+Cc: teackot@gmail.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
 	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Abel Vesa <abel.vesa@oss.qualcomm.com>,
-	Tobias Heider <tobias.heider@canonical.com>,
-	Val Packett <val@packett.cool>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	linux-hardening@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
-Date: Tue, 13 Oct 2026 15:53:27 -0400
-Message-ID: <20261013195327.19571-1-lnicoara@thinkoid.org>
+	Alexey Subbota <subbota-job@yandex.ru>
+Subject: [PATCH] platform/x86: msi-ec: Add MSI Creator Z16 A11UE EC firmware
+Date: Wed, 14 Oct 2026 02:22:28 +0500
+Message-ID: <20261013212228.17349-1-subbota-job@yandex.ru>
 X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261013172718.12355-1-me@michaelburch.net>
-References: <20261013172718.12355-1-me@michaelburch.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -99,32 +47,34 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 13 Oct 2026 12:27:16 -0500, Michael Burch wrote:
-> These two should be AMUX1_GPIO and AMUX2_GPIO. My unit (BIOS 2.14.0)
-> shows what Liviu reported [1]: 0x14c (lpddr5_therm) reads 130.048 C from
-> boot on, and that is the value the EC is sent.
+Add EC firmware version 1571EMS1.106 (MSI Creator Z16 A11UE) to the
+list of firmwares handled by CONF14. The EC register layout matches
+CONF14 field for field (verified against the out-of-tree msi-ec
+configuration for this firmware, where it is part of CONF_G2_10).
 
-Same here, and the ADC1 table settles what my readings left open.
-On this unit (also BIOS 2.14.0), with all four GPIO channels defined
-in one DTB on a 7.2.6 kernel:
+Tested on a Creator Z16 A11UE with this driver built against
+7.2.9: the module loads, charge_control_start_threshold and
+charge_control_end_threshold read the values set by the EC, and
+writing charge_control_end_threshold is applied and reads back.
 
-0x14a  38.6 C        0x14c  130.0 C (constant)
-0x14b  32.7 C        0x14d   34.7 C
+Assisted-by: LLM
+Signed-off-by: Alexey Subbota <subbota-job@yandex.ru>
+---
+ drivers/platform/x86/msi-ec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-A charger on the left USB-C port warmed 0x14b by 1.6 C in three
-minutes; 0x14d stayed within 0.1 C. So usb_charger_left_therm is
-AMUX2_GPIO, 0x14b, as your table says; 0x14a reads a board
-temperature and warms with the SoC.
+diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
+index 86d488047..5247c25fc 100644
+--- a/drivers/platform/x86/msi-ec.c
++++ b/drivers/platform/x86/msi-ec.c
+@@ -1134,6 +1134,7 @@ static struct msi_ec_conf CONF13 __initdata = {
+ };
+ 
+ static const char * const ALLOWED_FW_14[] __initconst = {
++	"1571EMS1.106", // Creator Z16 A11UE
+ 	"1824EMS1.108", // Raider 18 HX AI A2XWJG (MS-1824)
+ 	"182LIMS1.108", // Vector A18 HX A9WHG
+ 	"182LIMS1.111", // MSI Raider A18 HX A9WJG / Vector A18 HX A9WHG
+-- 
+2.56.0
 
-> +	sys_therm0: channel@14a {
-> +		reg = <ADC5_GEN3_AMUX1_GPIO_100K_PU(1)>;
-
-One note on the shape: hamoa-pmics.dtsi already defines
-channel@14a and channel@14b as pm8550_gpio_01 and pm8550_gpio_02,
-with gpio3 and gpio4 in high impedance for them. The EC's io-channels
-can reference those two directly; redefining the nodes in the board
-file only adds the labels, which the EC node does not need.
-
-Happy to test a v7 with the two channels moved.
-
-Liviu
