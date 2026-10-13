@@ -1,48 +1,48 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F81553FD45;
-	Tue, 13 Oct 2026 19:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F4A5293F6;
+	Tue, 13 Oct 2026 19:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791919696; cv=pass; b=eSDkNH3dINFN5F7A9XZtq1XUCGRJ6pF9uGoTvlXCESrMblYvkXfvbTDKe7B9iWhXfW412KXNFlRQxjgYIXjnGwQhty9DKosfThX3wgLp/k4mVDFOfKc0iMu8A2ljvrw2iT3V5AQrA6JtRfjv5ensn9Ks3OKEqx59iZJKE2RCpMc=
+	t=1791919706; cv=pass; b=nnpK1h8XJiStaLFiU1CfzoFp/z0JlthrAjoaEY3yP58t0NuLdOHUR2LGWTSNlRip7rGZlcKZixA6y2lA8LMrt7DTEPUvRtK38QMUy50iXkw9Z1fNvPvXFa/xpKKEgEJfU2rfvtNer38PM70sfRIbNnQDiZiGHOrGAikkZkcNRnQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791919696; c=relaxed/simple;
-	bh=OPdHYTRxAMKwJ5x9sc9T3VWr7jmnIH3F+aS5+9RWjC4=;
+	s=arc-20240116; t=1791919706; c=relaxed/simple;
+	bh=BK9zPgZ4NjnJkQUnOeM3fi3M8R+OeU0xBp5LqbrU88Q=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PfCoR0FKlKrm8zp/ZlOPLWr3EhsLl3ZfngJ16E0udqk2D+lwUY2oyRbZtzH+L8MofVe1F6i/ZN4xaCxAYq/NlXLuxwj/qPPTIAar6C7N16jQFaTpwN02RBgalFbKZv71wpgIruO7W1DtBm8qcZoRuimQWJ+cZ/lu9bMxo2nWD1s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=qZeqnbIB; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=KlbJT9GcpGp8YMEVusoJPnAibkIlBq58pe2ocVooVpDxjEsmXa/pjJkfTFafHc3DorxNQJik6Ls46GnJPAA37rcgMSxQeuK2z64PAbpfgED1qcGnU2sMkwwWUMgD9A52VF7N+hvtCUNuB7SUFm+JNdbCsO/1DSD3fUzSIdCRNpE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=XjQX4cmR; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="qZeqnbIB"
-ARC-Seal: i=1; a=rsa-sha256; t=1791919622; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="XjQX4cmR"
+ARC-Seal: i=1; a=rsa-sha256; t=1791919624; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=UAw8DauB10tHLGthDetrCPDmfuJWIoaK2Gak4rjIATet6f4/NmcYmL1lKDPgqPwfG/pUaVKstZl2u105MufGk6l7PlWxL8nC+ROM2YfEMrjm+Gof1SSFsyFILc33SEOUQvu1ggUfoBklAcA6kIY3nUAST4B0tpXGH+ZTas3buu8=
+	b=VekdCNZzg2SvWW2k64itRp25XG6+TsKcL1uW9j/WOw8nXxMPV67EmQdD3RgUM4WxP6Kof7JF34zJtj0IebNukjIoGR0vMn6tzz475Mpv0cSEKlibiv6M/S4tS5Mfwr9YzncurN1cbSz1pb0alExmrD+KmBLgwGA2PDprCwu2NTQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1791919622; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=gdsTya4Xwf6ghj7dLSQAZZMnNpsvUz00TfCufqZ4bS8=; 
-	b=HsU7VGhocJGhm1SkpCinBY0Ua6GeOSXtbxa+1Cfjc2LRQX9a4jjqlL5BRuNShjkCLz6lAvUfdBwkCilFoWQk72YRm3u16nHJgL2j1ivnAOxH/OpGRPDYLwzocFsDpYIPjVZ+F+47ZIkXPhWve+VamC5L1bb415McEJMrhQRFqJI=
+	t=1791919624; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6yk3KjRB3nrjjjf75SCpbNtXXfXfBd5qBXdFyBHV5OU=; 
+	b=k4pUu/NeEu2ngq84O3yAMCN9aAlPpVYwQyZ3OPrRtZvlB5lTjCnV4hU9fJKVQVK/gfuz7LQWnEaF2M6qsnmkLnPPglMLA5mrglbkyB52Rc4MkfruVlyuIkSghWq0KC7zPqr8A+4ikHBGn8zbKljPAwvAMMjGxLb/px1B9GzLxpA=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791919621;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1791919624;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=gdsTya4Xwf6ghj7dLSQAZZMnNpsvUz00TfCufqZ4bS8=;
-	b=qZeqnbIBHnxl5kJBFqLhknEJINEfVfyaHaJ2ywIA8YkJr9jx4nPCgR8RNI5uYc+L
-	ECu2x6vNXmKwBLS//hsBsEh/5magYY5Fp0/UpjKgpYBuFLXT2OTGH6bhYarwfr81GCo
-	xbF7i/YELgdNI76RVEbB7WWNwa2AyJpO/l8F8UnB/sQkDyz3P4YbcrfTrBVQCvLCB64
-	MBbd7bZxHFL0hGCqcFb5I7Q6NGhDFkOrYy1sL9esqDAlRmSfNXu5vKIodncS3nDScym
-	dyaMJ12y0AIe5Nre3HjayiNqMYZ08b+5mENk2fFoa0kDcxWrABoKnfsN561OPB4cjtX
-	+X3RebIemw==
-Received: by smtp.zohomail.com with SMTPS id 1791919619373463.8231147683416;
-	Tue, 13 Oct 2026 12:26:59 -0700 (PDT)
+	bh=6yk3KjRB3nrjjjf75SCpbNtXXfXfBd5qBXdFyBHV5OU=;
+	b=XjQX4cmRB9b64OcLcTlaM/tLmePcxCmi9zfgYOy5PdE3sHpWNMOnXvCYykAa0+me
+	zscUAk5tdytMGOwV36aXJlmAwwhyunyFBtFcVduqY4DmTZNK2bj5xyDs9ABn8UGTM3d
+	h0uxUzMCt+1pWRzMQ7SrDgVYRWZwh8tKZv0A/fv8bFzPlYKYQb5q0YORBEJ/vE/LcgT
+	jFR7MzrKiyzDTr7b+Rh4LYdKtohgKjio5umNuJN+cjoWlkvULeZRv700n3IE4SZPGfE
+	R51KLJ7e3C1YD6fnMjGkofNrmiqSafbZXNTAtbfKncCHHxM3JHVcDC585Aw2m5fau2O
+	XvsTnf461g==
+Received: by smtp.zohomail.com with SMTPS id 1791919621912708.0975044850209;
+	Tue, 13 Oct 2026 12:27:01 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Date: Wed, 14 Oct 2026 03:21:50 +0800
-Subject: [PATCH v3 07/12] platform/x86: lenovo-wmi-capdata: Adopt new WMI
- API
+Date: Wed, 14 Oct 2026 03:21:51 +0800
+Subject: [PATCH v3 08/12] platform/x86: lenovo-wmi-capdata: Register
+ component even on WMI error
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261014-lwmi-wmi-new-api-v3-7-e1032bed1c81@rong.moe>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20261014-lwmi-wmi-new-api-v3-8-e1032bed1c81@rong.moe>
 References: <20261014-lwmi-wmi-new-api-v3-0-e1032bed1c81@rong.moe>
 In-Reply-To: <20261014-lwmi-wmi-new-api-v3-0-e1032bed1c81@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
@@ -66,140 +66,197 @@ Cc: Charles <hanker007@gmail.com>,
 X-Mailer: b4 0.17-dev-73bef
 X-ZohoMailClient: External
 
-The new WMI API supports multiple ACPI types by converting them into a
-unified buffer that satisfies alignment and size requirements.
+Some devices do not support LENOVO_CAPABILITY_DATA_01 and define the
+query method as a stub that returns zero buffer. Unfortunately, some
+devices do not implement the stub properly, causing WMI errors
+(including ACPI errors).
 
-Adopt it to make our life easier.
+The current lenovo-wmi-* implementation enforces the binding between
+LENOVO_CAPABILITY_DATA_00+01 and LENOVO_OTHER_MODE because of a
+limitation of the device component framework. When the capdata device
+bailing out due to a WMI error, lenovo-wmi-other becomes unbound and
+unable to provide firmware-attributes or hwmon device for the other
+functional capdata device.
 
-Note that the new WMI API only accepts a few ACPI types to conform to
-the behavior of the Windows WMI-ACPI driver. By adopting the new API, we
-intentionally rejects improper ACPI types instead of silently ignoring
-them.
+Therefore, errors must be non-fatal in order not to break the
+assumptions made by the device component framework.
 
-Meanwhile, considering that `struct_size(block, data, count * 3)' may
-overflow when calculating `count * 3', ignore Fan Test Data with count >
-U8_MAX instead of caping `count'.
+Stub the capdata device by releasing the capability data list in this
+case. After that, NULL list will be passed to lenovo-wmi-other on bind.
+The latter will provide whatever is available, or unbind the components
+if nothing is available.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+A stubbed capdata device releases or skips allocating most resources,
+e.g., the capability data list and the debugfs directory. The device
+itself is only used to satisfy the component dependency of lenovo-wmi-
+other and coordinate with the latter about the absence of the capability
+data.
+
+Reported-by: Charles <hanker007@gmail.com>
+Closes: https://msgid.link/CAKtz0s8UYRQYW_0bh=0TMx47Axm-W-muEay-r3rqUBS1NHMPVw@mail.gmail.com/
 Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
 Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
-Changes in v3:
-- Leave struct cd_fan_block's __packed attribute as is (thanks Armin
-  Wolf)
+Changes in v2:
+- Replace the term "poison" with "stub" (thanks Ilpo Järvinen)
 ---
- drivers/platform/x86/lenovo/wmi-capdata.c | 70 ++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 39 deletions(-)
+ drivers/platform/x86/lenovo/wmi-capdata.c | 94 +++++++++++++++++++++++++++++--
+ 1 file changed, 90 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-index 3c09bb9e3d46..abf5ffda7163 100644
+index abf5ffda7163..71ea31482987 100644
 --- a/drivers/platform/x86/lenovo/wmi-capdata.c
 +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-@@ -626,17 +626,19 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv *priv)
- 	}
+@@ -29,6 +29,7 @@
+ #include <linux/acpi.h>
+ #include <linux/bug.h>
+ #include <linux/cleanup.h>
++#include <linux/compiler.h>
+ #include <linux/component.h>
+ #include <linux/container_of.h>
+ #include <linux/debugfs.h>
+@@ -38,6 +39,7 @@
+ #include <linux/export.h>
+ #include <linux/gfp_types.h>
+ #include <linux/limits.h>
++#include <linux/lockdep.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/mutex_types.h>
+@@ -45,6 +47,7 @@
+ #include <linux/overflow.h>
+ #include <linux/seq_file.h>
+ #include <linux/stddef.h>
++#include <linux/string.h>
+ #include <linux/types.h>
+ #include <linux/wmi.h>
  
- 	for (idx = 0; idx < priv->list->count; idx++, p += size) {
--		union acpi_object *ret_obj __free(kfree) = NULL;
-+		struct wmi_buffer wbuf;
-+		int ret;
+@@ -447,7 +450,7 @@ static const struct component_ops lwmi_cd_sub_component_ops = {
+ /*
+  * lwmi_cd*_get_data - Get the data of the specified attribute
+  * @list: The lenovo-wmi-capdata pointer to its cd_list struct.
+- * @attribute_id: The capdata attribute ID to be found.
++ * @attribute_id: The capdata attribute ID (non-zero) to be found.
+  * @output: Pointer to a capdata* struct to return the data.
+  *
+  * Retrieves the capability data struct pointer for the given
+@@ -460,7 +463,7 @@ static const struct component_ops lwmi_cd_sub_component_ops = {
+ 	{											\
+ 		u8 idx;										\
+ 												\
+-		if (WARN_ON(!list))								\
++		if (WARN_ON(!list || !attribute_id))						\
+ 			return -EINVAL;								\
+ 												\
+ 		guard(mutex)(&list->list_mutex);						\
+@@ -595,6 +598,89 @@ static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
  
--		ret_obj = wmidev_block_query(priv->wdev, idx);
--		if (!ret_obj)
--			return -ENODEV;
--
--		if (ret_obj->type != ACPI_TYPE_BUFFER ||
--		    ret_obj->buffer.length < size)
-+		ret = wmidev_query_block(priv->wdev, idx, &wbuf, size);
-+		if (ret == -ENODATA) /* The block is too short, probably stubbed. */
- 			continue;
-+		if (ret)
-+			return ret;
+ /* ======== WMI interface ======== */
+ 
++/**
++ * lwmi_cd_stub() - Stub the device by not providing any capability data
++ * @priv: lenovo-wmi-capdata driver data.
++ * @err: The occurred error.
++ *
++ * The Other Mode driver binds to both Capability Data 00 and 01. If either 00
++ * or 01 fails to probe, the Other Mode device will fail to provide fw-attr or
++ * hwmon/power_supply_ext devices for the other functional capdata device.
++ *
++ * Therefore, errors must be non-fatal in order not to break the assumptions
++ * made by the device component framework, so that the Other Mode device can
++ * provide whatever is functional.
++ *
++ * After stubbing the device, a NULL list will be passed to the Other Mode
++ * device on bind.
++ *
++ * Return: 0 if the @err is suppressed, otherwise its propagated as is.
++ */
++static int lwmi_cd_stub(struct lwmi_cd_priv *priv, int err)
++{
++	/*
++	 * No barrier is required in any possible code paths:
++	 * - called from lwmi_cd_cache(): a proper barrier has been employed
++	 * - called from lwmi_cd_fan_list_alloc_cache(): early setup does not
++	 *   require synchronization, and priv->initialized must be false
++	 */
++	bool initialized = READ_ONCE(priv->initialized);
 +
-+		/* Capdata 01 is an extension to capdata 00. */
-+		struct capdata00 *capdata __free(kfree) = wbuf.data;
- 
--		memcpy(p, ret_obj->buffer.pointer, size);
-+		memcpy(p, capdata, size);
- 	}
- 
- 	return 0;
-@@ -678,43 +680,34 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
-  */
- static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
- {
-+	struct wmi_buffer wbuf;
- 	struct cd_list *list;
--	size_t size;
-+	int ret, idx;
- 	u32 count;
--	int idx;
- 
--	/* Emit unaligned access to u8 buffer with __packed. */
- 	struct cd_fan_block {
- 		u32 nr;
- 		u32 data[]; /* id[nr], max_rpm[nr], min_rpm[nr] */
--	} __packed * block;
-+	} __packed;
- 
--	union acpi_object *ret_obj __free(kfree) = wmidev_block_query(priv->wdev, 0);
--	if (!ret_obj)
--		return -ENODEV;
-+	ret = wmidev_query_block(priv->wdev, 0, &wbuf, sizeof(struct cd_fan_block));
-+	if (ret == -ENODATA) /* The block is too short, probably stubbed. */
++	dev_warn(&priv->wdev->dev, "%s %s (%u items) due to error: %d\n",
++		 initialized ? "clearing" : "stubbing", priv->info->name,
++		 priv->list ? priv->list->count : 0, err);
++
++	/* Simply print the warning message. */
++	if (!priv->list)
++		return initialized ? err : 0;
++
++	/*
++	 * Stub the device on initialization errors.
++	 *
++	 * Note that if a transient error occurs during initialization, there is
++	 * nothing we can do to re-enable the functionalities of the Other Mode
++	 * driver even if a successful runtime notifier call making the relevant
++	 * capdata emerge, as registering functionalities without the protection
++	 * of the component framework is unsafe. Therefore, registering the
++	 * notifier for a stubbed device is meaningless, and we don't need to
++	 * distinguish transient and pernament errors during initialization.
++	 *
++	 * For runtime errors (see below), the registered functionalities
++	 * (fw-attr) become temporarily unavailable due to the unavailablilty of
++	 * the relevant capdata, and will recover after a successful runtime
++	 * notifier call.
++	 */
++	if (!initialized) {
++		devm_kfree(&priv->wdev->dev, priv->list);
++		priv->list = NULL;
++
 +		return 0;
-+	if (ret)
-+		return ret;
- 
--	if (ret_obj->type == ACPI_TYPE_BUFFER) {
--		block = (struct cd_fan_block *)ret_obj->buffer.pointer;
--		size = ret_obj->buffer.length;
-+	struct cd_fan_block *block __free(kfree) = wbuf.data;
- 
--		count = size >= sizeof(*block) ? block->nr : 0;
--		if (size < struct_size(block, data, count * 3)) {
--			dev_warn(&priv->wdev->dev,
--				 "incomplete fan test data block: %zu < %zu, ignoring\n",
--				 size, struct_size(block, data, count * 3));
--			count = 0;
--		} else if (count > U8_MAX) {
--			dev_warn(&priv->wdev->dev,
--				 "too many fans reported: %u > %u, truncating\n",
--				 count, U8_MAX);
--			count = U8_MAX;
--		}
--	} else {
--		/*
--		 * This is usually caused by a dummy ACPI method. Do not return an error
--		 * as failing to probe this device will result in sub-master device being
--		 * unbound. This behavior aligns with lwmi_cd_cache().
--		 */
-+	count = block->nr;
++	}
 +
-+	if (count > U8_MAX) {
-+		dev_warn(&priv->wdev->dev,
-+			 "too many fans reported: %u > %u, ignoring\n", count, U8_MAX);
-+		count = 0;
-+	} else if (wbuf.length < struct_size(block, data, count * 3)) {
-+		dev_warn(&priv->wdev->dev,
-+			 "incomplete fan test data block: %zu < %zu (%u fans), ignoring\n",
-+			 wbuf.length, struct_size(block, data, count * 3), count);
- 		count = 0;
- 	}
++	/*
++	 * Runtime errors are transient. Simply clear all cached data and
++	 * propagate the error.
++	 *
++	 * Since a valid attribute id is never 0 (the firmware also untilize the
++	 * fact to stub some capabilities according to platform metadata),
++	 * clearing the cached data effectively makes all attributes temporarily
++	 * unavailable until the next notifier call.
++	 */
++
++	lockdep_assert_held(&priv->list->list_mutex);
++
++	switch (priv->info->type) {
++	case LENOVO_CAPABILITY_DATA_01:
++		memset(priv->list->cd01, 0,
++		       flex_array_size(priv->list, cd01, priv->list->count));
++		break;
++	default:
++		unreachable();
++	}
++
++	return err;
++}
++
+ /**
+  * __lwmi_cd_cache() - Cache all WMI data block information locklessly
+  * @priv: lenovo-wmi-capdata driver data.
+@@ -633,7 +719,7 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv *priv)
+ 		if (ret == -ENODATA) /* The block is too short, probably stubbed. */
+ 			continue;
+ 		if (ret)
+-			return ret;
++			return lwmi_cd_stub(priv, ret);
  
-@@ -729,11 +722,10 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
- 	priv->list = list;
+ 		/* Capdata 01 is an extension to capdata 00. */
+ 		struct capdata00 *capdata __free(kfree) = wbuf.data;
+@@ -694,7 +780,7 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
+ 	if (ret == -ENODATA) /* The block is too short, probably stubbed. */
+ 		return 0;
+ 	if (ret)
+-		return ret;
++		return lwmi_cd_stub(priv, ret); /* Print the warning message. */
  
- 	for (idx = 0; idx < count; idx++) {
--		/* Do not calculate array index using count, as it may be truncated. */
- 		list->cd_fan[idx] = (struct capdata_fan) {
- 			.id      = block->data[idx],
--			.max_rpm = block->data[idx + block->nr],
--			.min_rpm = block->data[idx + (2 * block->nr)],
-+			.max_rpm = block->data[idx + count],
-+			.min_rpm = block->data[idx + (2 * count)],
- 		};
- 	}
+ 	struct cd_fan_block *block __free(kfree) = wbuf.data;
  
 
 -- 
