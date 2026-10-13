@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071A154145F;
-	Tue, 13 Oct 2026 19:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF8F541E4D;
+	Tue, 13 Oct 2026 19:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791919798; cv=none; b=JxqwxOxSbDp01YNJJ4YKcY9yzETBDQrPC6uN1tjP5gQ1wV37sCig6a5Iwq5r6djoXJd3biQH1/wjmLot73oeZ2/FZOuVryma2+767QAfiRd7AGvMNGAoQEQhFQkfsawmAs0vBHcrFmewFII+9OgFmmYmjGXUexZr3sORQno3oGY=
+	t=1791919800; cv=none; b=u2ixcBzslHa5D4x8t+Kvqpg4ZXT655B3EJJdynvj1jnv+qGPUFXsDB1WbR4rgtSebKdyMKBkjDJB57+sQjic+sh1XQIglBX1q+fuwlBKds2oBDjiCqevYxGt4ZmUSNDap5T9ZutV7tJCEPdgPAqpJkC5val4eApVk2hOoBudcv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791919798; c=relaxed/simple;
-	bh=xP6omJUzOTsdefm8xW7u8ghOXXFftXaatOunE+Cb2U8=;
+	s=arc-20240116; t=1791919800; c=relaxed/simple;
+	bh=/85pcJApOiJt8kQtXJRubP++w6Kanv0+/edmXVRkFIk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gd7Kfms2a51KnxVVTTCGBTQ9ULpoVvS+9dLbT3g+edIxQtOXRZ14J+IZakjJ3KOepSYLhPasYB2GB/1LU0OgOnLsRwTKOrWKFe5zLzJxz/pLPgOkKM8hDayZDYFaSnKG2N62uHluV3tR8vRGfmbc8tG5rGaIGJ4gjaWvu+QJf4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lu28LokD; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=aWbTobjc5WzRWY7BeMMy+yMDQItNHzBZIu70QaDsI7mvAPIBH18fHcnjcZyq3umoTJu3cxItSasgABhexBhUKyH54XnQ4QXtsajPJ8d5X0QFj/8Ssh6nvqzwWNDs1jwy5hvV0WncbO6lgeknsNtESfYvBBd0faH0gqXZaaG+twY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HGT3mqJ4; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lu28LokD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HGT3mqJ4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791919796; x=1823455796;
+  t=1791919797; x=1823455797;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xP6omJUzOTsdefm8xW7u8ghOXXFftXaatOunE+Cb2U8=;
-  b=lu28LokDtjKzH4D+7CDgvzYrboXXaFvpTxt7Vd8DtIcp/4unNrXoETrS
-   7fnhSSHwDTvQU99AUohvhQgnxZT+hoM0Im7LMdcfO7FxB9h9PS9yymcBZ
-   /BXyJlCV8jJ6x9Cbs/4ST3y3uKXGksZlS1GYyTTGelhksvnIJsfMbsFjj
-   d/hMKAzdq7buY/xLg6vsJhVMbeHsrDvgfZLYZs1auT2V2ftBE1W7sLExs
-   sogknTEg8fSIfE73SViDpAoV06ZisIfAUXlMuvOhuAQDiLpeZ/ZeTwApn
-   dzOaRGcn3dg3uQ7lhNSBGz9SzpZgj8AWQsI/q4wejc9OvMvx0tJorNqVa
-   g==;
-X-CSE-ConnectionGUID: LtfbtF0GQl22GXVYCIEXmw==
-X-CSE-MsgGUID: u5ZoVioZRuCEFSTG+F5cXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="544115"
+  bh=/85pcJApOiJt8kQtXJRubP++w6Kanv0+/edmXVRkFIk=;
+  b=HGT3mqJ4MyuMaodWTRovKlSkGWY/gS9K72+p8GmtChmkXEc5RKt14V7w
+   mwaaN9CDZqdNOJpA32ULaq7Zd7h3HVkzKCmFSNn8MKD2d9l3dOqgeoaQf
+   ZnYBV0h3lLdpLHZi6he41XQR6RCWESc+HscGDvgceH9mwZbb/4/hcRb0v
+   U1O5c/S7pfl2pCKX9RgSfsbBc1McXCWgu6yMTLpmWDUgPJMGM/hvuWXuj
+   4eRbwkhgBbiBIQ42U+ot2Ej+jpbAe+V2OCaXgfKrKifZL0Kp69pzhQT1B
+   CpSQLEoTmRO0BJunH4Bte+Bb34lSRAzl6JuWf2UzxHP3ZePmmBPNbhWtS
+   Q==;
+X-CSE-ConnectionGUID: e1A0PZsFRmysumF7HKKpjQ==
+X-CSE-MsgGUID: RUChPdCkQOOJPRsO5dx6MQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="544119"
 X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="544115"
+   d="scan'208";a="544119"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 12:29:48 -0700
-X-CSE-ConnectionGUID: 01SOE0YRRoq/lWRrb9w29A==
-X-CSE-MsgGUID: C5bxwcs3T9ekLeIC2EHF3g==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 12:29:49 -0700
+X-CSE-ConnectionGUID: ONphwuhPQm2vSKUfDkMEKQ==
+X-CSE-MsgGUID: 2g4Pb/lDS5O4y7J4DZ7Qwg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="1167665"
+   d="scan'208";a="1167673"
 Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 12:29:49 -0700
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -51,9 +51,9 @@ To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 04/20] platform/x86/intel/tpmi: Get tpmi_info directly from the parent device
-Date: Tue, 13 Oct 2026 12:29:19 -0700
-Message-ID: <20261013192935.2243291-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v5 06/20] platform/x86/intel/tpmi: Describe a TPMI instance by its two devices
+Date: Tue, 13 Oct 2026 12:29:21 -0700
+Message-ID: <20261013192935.2243291-7-sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261013192935.2243291-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <20261013192935.2243291-1-sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -65,57 +65,143 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-tpmi_get_feature_status() and tpmi_get_debugfs_dir() are called by the
-TPMI feature drivers with their own auxiliary device. Both convert the
-parent device into an intel_vsec_device and then read the driver data of
-the auxiliary device it was derived from, which is the parent device
-they started with. Read the driver data from the parent device directly.
+The intel_vsec_device pointer in intel_tpmi_info is by now only used to
+reach two devices, the device the TPMI driver is bound to and the device
+TPMI was enumerated from. Store those two directly and call them tpmi_dev
+and parent.
 
-Apart from being shorter, this drops an assumption. dev_to_ivdev() is a
-container_of(), so it only holds while the device the TPMI driver binds
-to is an auxiliary device created by the Intel VSEC driver. Another
-enumeration method binds to a different kind of device and the cast
-would hand out a bogus intel_vsec_device. The driver data is set on that
-device in either case.
+The devm allocations, the driver data and the TPMI feature devices all
+hang off tpmi_dev. The parent device names the debugfs directory, is
+recorded in every TPMI feature device so that the enumerating bus can
+find those devices again during PCI error recovery, and is the device
+intel_vsec_set_mapping() registers the mapping for.
 
-The TPMI feature devices are not affected. They remain intel_vsec_device
-instances allocated by the TPMI driver, since the auxiliary bus is how
-the feature drivers are reached and not a property of the enumeration.
+Both are assigned once during init and used everywhere below it, so
+intel_tpmi_info no longer refers to an intel_vsec_device. tpmi_to_dev()
+went away with its only user.
 
-No functional change.
+There is no functional change, tpmi_dev is &auxdev->dev and parent is
+vsec_dev->dev, which is what the affected call sites used before.
 
 Co-developed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/platform/x86/intel/vsec_tpmi.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel/vsec_tpmi.c | 29 ++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
-index fdca799f7cf9..d254dc6a4d0d 100644
+index b462fd0319e5..f3cd8aa30af0 100644
 --- a/drivers/platform/x86/intel/vsec_tpmi.c
 +++ b/drivers/platform/x86/intel/vsec_tpmi.c
-@@ -356,8 +356,7 @@ static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int featu
- int tpmi_get_feature_status(struct auxiliary_device *auxdev,
- 			    int feature_id, bool *read_blocked, bool *write_blocked)
+@@ -104,25 +104,33 @@ struct intel_tpmi_pm_feature {
+ /**
+  * struct intel_tpmi_info - TPMI information for all IDs in an instance
+  * @tpmi_features:	Pointer to a list of TPMI feature instances
+- * @vsec_dev:		Pointer to intel_vsec_device structure for this TPMI device
+  * @feature_count:	Number of TPMI of TPMI instances pointed by tpmi_features
+  * @pfs_start:		Start of PFS offset for the TPMI instances in this device
+  * @plat_info:		Stores platform info which can be used by the client drivers
+  * @tpmi_control_mem:	Memory mapped IO for getting control information
+  * @dbgfs_dir:		debugfs entry pointer
+  * @resource:		Array of feature_count MMIO resources, one per PFS entry
++ * @tpmi_dev:		Device this TPMI instance is bound to. It backs the devm
++ *			allocations, holds this structure as its driver data and
++ *			the TPMI feature devices are created under it.
++ * @parent:		Device this TPMI instance was enumerated from. It names
++ *			the debugfs directory and becomes intel_vsec_device::dev
++ *			of every TPMI feature device, so that the enumerating bus
++ *			can find them again, for example during PCI error
++ *			recovery.
+  *
+  * Stores the information for all TPMI devices enumerated from a single PCI device.
+  */
+ struct intel_tpmi_info {
+ 	struct intel_tpmi_pm_feature *tpmi_features;
+-	struct intel_vsec_device *vsec_dev;
+ 	int feature_count;
+ 	u64 pfs_start;
+ 	struct oobmsm_plat_info plat_info;
+ 	void __iomem *tpmi_control_mem;
+ 	struct dentry *dbgfs_dir;
+ 	struct resource *resource;
++	struct device *tpmi_dev;
++	struct device *parent;
+ };
+ 
+ /**
+@@ -534,14 +542,12 @@ static const struct file_operations mem_write_ops = {
+ 	.release        = single_release,
+ };
+ 
+-#define tpmi_to_dev(info)	((info)->vsec_dev->dev)
+-
+ static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
  {
--	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(auxdev->dev.parent);
--	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(&intel_vsec_dev->auxdev);
-+	struct intel_tpmi_info *tpmi_info = dev_get_drvdata(auxdev->dev.parent);
+ 	char name[64];
+ 	int i;
+ 
+-	snprintf(name, sizeof(name), "tpmi-%s", dev_name(tpmi_to_dev(tpmi_info)));
++	snprintf(name, sizeof(name), "tpmi-%s", dev_name(tpmi_info->parent));
+ 	tpmi_info->dbgfs_dir = debugfs_create_dir(name, NULL);
+ 
+ 	debugfs_create_file("pfs_dump", 0444, tpmi_info->dbgfs_dir, tpmi_info, &tpmi_pfs_dbg_fops);
+@@ -570,7 +576,7 @@ static void tpmi_set_control_base(struct auxiliary_device *auxdev,
+ 	if (!size)
+ 		return;
+ 
+-	mem = devm_ioremap(&auxdev->dev, pfs->vsec_offset, size);
++	mem = devm_ioremap(tpmi_info->tpmi_dev, pfs->vsec_offset, size);
+ 	if (!mem)
+ 		return;
+ 
+@@ -602,7 +608,6 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+ 			      struct intel_tpmi_pm_feature *pfs,
+ 			      u64 pfs_start)
+ {
+-	struct intel_vsec_device *vsec_dev = tpmi_info->vsec_dev;
+ 	struct intel_vsec_device *feature_vsec_dev;
  	struct tpmi_feature_state feature_state;
- 	int ret;
+ 	struct resource *res, *tmp;
+@@ -639,7 +644,7 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+ 		tmp->flags = IORESOURCE_MEM;
+ 	}
  
-@@ -374,8 +373,7 @@ EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, "INTEL_TPMI");
- 
- struct dentry *tpmi_get_debugfs_dir(struct auxiliary_device *auxdev)
- {
--	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(auxdev->dev.parent);
--	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(&intel_vsec_dev->auxdev);
-+	struct intel_tpmi_info *tpmi_info = dev_get_drvdata(auxdev->dev.parent);
- 
- 	return tpmi_info->dbgfs_dir;
+-	feature_vsec_dev->dev = vsec_dev->dev;
++	feature_vsec_dev->dev = tpmi_info->parent;
+ 	feature_vsec_dev->priv_data = &tpmi_info->plat_info;
+ 	feature_vsec_dev->priv_data_size = sizeof(tpmi_info->plat_info);
+ 	feature_vsec_dev->ida = &intel_vsec_tpmi_ida;
+@@ -653,7 +658,7 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+ 	 * "name" must outlive the auxiliary device, as the auxiliary bus
+ 	 * stores the pointer rather than a copy of the string.
+ 	 */
+-	return intel_vsec_add_aux(&vsec_dev->auxdev.dev, feature_vsec_dev, name);
++	return intel_vsec_add_aux(tpmi_info->tpmi_dev, feature_vsec_dev, name);
  }
+ 
+ static int tpmi_create_devices(struct intel_tpmi_info *tpmi_info)
+@@ -747,7 +752,8 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 	if (!tpmi_info)
+ 		return -ENOMEM;
+ 
+-	tpmi_info->vsec_dev = vsec_dev;
++	tpmi_info->tpmi_dev = &auxdev->dev;
++	tpmi_info->parent = vsec_dev->dev;
+ 	tpmi_info->feature_count = vsec_dev->num_resources;
+ 	tpmi_info->resource = vsec_dev->resource;
+ 	tpmi_info->plat_info.bus_number = pci_dev->bus->number;
+@@ -796,7 +802,8 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 			if (ret)
+ 				return ret;
+ 
+-			ret = intel_vsec_set_mapping(&tpmi_info->plat_info, vsec_dev->dev);
++			ret = intel_vsec_set_mapping(&tpmi_info->plat_info,
++						     tpmi_info->parent);
+ 			if (ret)
+ 				return ret;
+ 		}
 -- 
 2.43.0
 
