@@ -1,89 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9338D519E10;
-	Tue, 13 Oct 2026 19:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543A6542EF6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 19:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791921147; cv=none; b=saNl8Ca8af2Jqu3R0cJSMQl/6JmaN196VgZb0pPf+frfK9CWFuX4/r39NC8uWhiwNZyrT4ou/Ydkmac0bjRGF0XHQLmpi4iOM7HCHJhtfOXkDOl7Mj3hDcG/i+d9XSk9VCLFx1nhfbW4sV2+rXVEXPsoB4OSXPoDaJCCAowCM+k=
+	t=1791921217; cv=none; b=exb7cKn11/Gf0jcS+kP+PLS4lLVOdsx6tMHyBYUgqpoqWz8WjkzqjFbsdoi23lGCauM4GIldQPtDitSzHB3kyFaNCaxyk9uZqkD94+jARhT3B51DkfUoLuFK631xY6G4UNh2j5vSyg9yGJ3mHBLRYMJLNHHKxEvp7/PfQLyrvkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791921147; c=relaxed/simple;
-	bh=SMeDeVif0Kp6HSWLfz1gAJamJtmcWFjXPgwb6diL8o4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=agcPp1jfFpTfJFmeysndrQzvEtFZo42GqUu16EC8TQWOvCjEVHX686VW0yDVRbPGKH2OL6ttucp1GV53lexuPBxNd6TDVKuaoGlmalNjEfylrSnA5f9a8axonqXmCggxGtUpNHNaEl/PDH+nqO/LJRlafM/wlxkiBC1ipa4KXRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ne/fzR9p; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1791921217; c=relaxed/simple;
+	bh=9X+B3VzuP6c2+GbMDzQKaInOmGWlAa6Crsdlsjiub+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rOXdKIhCmaVI4kRojfLmIpP9RNq0HTISXt/5e/9LU1XNJxEsSD2ta9h8PsaeT2PAOxv3pAbfLUEzTvxFO7YOe+h+Rj7FIPPZKA1nH1POpQeKikXDmwIrCFI0g2FOM2g2UnLqgDm/wB5paQbGgZ9dp5KDchiR2H58LK8v8mWolrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org; spf=none smtp.mailfrom=thinkoid.org; dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b=EPUCk5Vh; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=thinkoid.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ne/fzR9p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791921145; x=1823457145;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SMeDeVif0Kp6HSWLfz1gAJamJtmcWFjXPgwb6diL8o4=;
-  b=ne/fzR9pQ4mjvfCnw454gVmd7bF1/UFtXf+StxoTJlHfn6CeeEuXmHKV
-   863TlqhH7YWH10NB8cJnJiYu9eX/RSteWSi9mHVE+a2OCbBgl/iWtDjye
-   kIoX9fqrTqft0v37leH/1U/pOY1U52ZHE2Mkn88M5uExrgFPOsSlCFp5S
-   XY99eI/CPSc7I4VyvoTBB1qWJTytA6DkSgpUpKlBXDH0InmEJCFd+35bh
-   o+66vErA9ZgWazzpz9APsx9pjOtWgWlR9c977rqLW6HwgfoIeN2qMnbR9
-   VWF9+JCXv/UaMaBAAXJtTOjuHLJ6Ajys0xpSWkrVkxKalfuyO4Lyd1elS
-   g==;
-X-CSE-ConnectionGUID: Ero0FfbiQ6W6WA2H+5uHKg==
-X-CSE-MsgGUID: sxfIFzHyR4WWrM8FeHIB4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="668645"
-X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="668645"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 12:52:25 -0700
-X-CSE-ConnectionGUID: 3By2UcNJQ4qm6NSdvM+oJg==
-X-CSE-MsgGUID: sp9WI9OASF2c5X+npR1N3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="1255399"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 12:52:23 -0700
-Date: Tue, 13 Oct 2026 22:52:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b="EPUCk5Vh"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-917d595138fso25589646d6.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 12:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thinkoid-org.20251104.gappssmtp.com; s=20251104; t=1791921214; x=1792526014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=HcBu6oPAez1ljZeSMUFIBe+d1rm2GYp83jcwBgf/ZWA=;
+        b=EPUCk5VhzC4xZLPu5RJNFkGJNQIaQGlNdADxDxWxR//Q6VGL5HifvRB4F1j3YoqkIO
+         D997XkDKGrvbKBkYRhUaDKBlUsJKe3qweZTasPrGov7LJl6T9VnlZ/jVEL3do5ifowEv
+         KFFBa3pDn/YlhqbEdcjCbEbwnQAYj1+yfWPEn6L6CDGymP5DPD3zhoRoqvLcgCmEBvSW
+         6fqfOsaR0+AOsXCEIIGG7hdUpfMQPJ8BTW+dXRpg266MqkkZ0wmvoV7/Q2/4++21uc1S
+         vBq7Wsoi5aVZFMUOpNeRoHGu7kvF3OoQIT0d4xY1dE/HBSO7RL9fVox9wAAAgDxo/q9F
+         FSuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791921214; x=1792526014;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=HcBu6oPAez1ljZeSMUFIBe+d1rm2GYp83jcwBgf/ZWA=;
+        b=YjfP9IY4oliJ6vmUK9Mdu6R67mWOqvDsjiyixjcfkAj+5j071Cnk9b5QoC6X6Nmg/S
+         7BmI0nWh+lVd5MZZgW8rW4idRppZzmW40l7eV5mZRDweINixzH6DUNcfvKRErEC4MIH6
+         +/wFluDfw8mvEj82lQeBwKCGeGSwXpGagrVZkZbdsZ3zQK32O1/lTHLHnWDYNbGjj9Co
+         xIB0hl2JlWjr6Fum43NYOIW5kIGrtlnfDFiBDGR1qQdIWEW3wzCKnuIs5obEB1yaxA+g
+         hlN7SZ2kR3K2i8CbW4MkAyNRqvA+ol+0GJCQc0q0/ynlXGAvUvi/iZOnCls7ZwjT+Tms
+         DtBg==
+X-Forwarded-Encrypted: i=1; AKwUvBx6LDDvxF/6xavgjIjWP5XG9ndvD71pVZ2gpqS0lWFsF+7FbE7V0SivLKjdPY526ehZsEpAY6bZeTEfVXugvgCxWtBg@vger.kernel.org
+X-Gm-Message-State: AFq9FYIzbYBV2RgVImW5dfhf7bUQp4WJ5MOJsqGkTJXsova8JA053CYr
+	BWOkx8pCEk1AGriNzSfhFKUh+c1By7bwuJ6+GvT6qh2g3e+QjUGWjmxOYDWVZtRG63LAN7Aza0L
+	IiQRDeiETTg==
+X-Gm-Gg: AYBFou1gp57Jwj0BuTV4wyzpMlA6LqrNU15gyIodI2xiLMAnlWkpeyQ6h4Q1bU98c+X
+	Y7GsM0G30R/4j+qrRqEeSNem3W9l2M8RqiG/kTcoDY9eBDbcLjZFeT99yaiJtoTRIBE+wquVKtk
+	QvBSTWDp54eckVcmLYXQ768CwChGNMK9AoEFuQXOdomZ+KuPAZ94cTbW99df15uh3OEviAYO4uB
+	hmP4WQfQS/qM1D2KQiDFQJdWpyUbii84qKxiI/fMhvwCrxBc3bsPinAe0gKdU/lSF7fZXBajw6Q
+	xSncXscdOP7wzQBS206hO0P6TNbqFhZVQ2dON5K6veausgZPEJAA7W0WXduMc0GoJ01oEhXRdwX
+	6+tirobCb5a/XSxBs+V1wo9SrABhWaViXvKnsExT7Qr61pYR8ZOZNYabUXFWnmFHa5yilTVGJoR
+	mu4DS1RiizuTp3ah0oMraucjndrtesvI1sCebnZuXzgHpstD1xkyh7lRwGtAATbFA1SD1mRg==
+X-Received: by 2002:ad4:5fc9:0:b0:91b:8d12:bac9 with SMTP id 6a1803df08f44-91b8d12bb24mr93591896d6.0.1791921214109;
+        Tue, 13 Oct 2026 12:53:34 -0700 (PDT)
+Received: from localhost.localdomain ([2605:a601:a61d:7a00::11])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b97c35bfcsm33085666d6.42.2026.10.13.12.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 12:53:33 -0700 (PDT)
+From: Liviu Nicoara <lnicoara@thinkoid.org>
+To: Michael Burch <me@michaelburch.net>,
+	Aleksandrs Vinarskis <alex@vinarskis.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 17/20] platform/x86/intel/tpmi: Use scnprintf() to
- build the debugfs names
-Message-ID: <as6L9HHCImFtGNS_@ashevche-desk.local>
-References: <20261013192935.2243291-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20261013192935.2243291-18-sathyanarayanan.kuppuswamy@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Abel Vesa <abelvesa@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Abel Vesa <abel.vesa@oss.qualcomm.com>,
+	Tobias Heider <tobias.heider@canonical.com>,
+	Val Packett <val@packett.cool>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	linux-hardening@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
+Date: Tue, 13 Oct 2026 15:53:27 -0400
+Message-ID: <20261013195327.19571-1-lnicoara@thinkoid.org>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261013172718.12355-1-me@michaelburch.net>
+References: <20261013172718.12355-1-me@michaelburch.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261013192935.2243291-18-sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 13, 2026 at 12:29:32PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> The kernel has both snprintf() and scnprintf() for formatting into a
-> fixed size buffer. The preference is to settle on scnprintf() and stop
-> adding snprintf() users, so that only one of the two remains in use.
-> 
-> Convert the two callers in tpmi_dbgfs_register(). Neither of them looks
-> at the return value, so the difference in what the two functions return
-> does not matter here.
-> 
-> No functional change intended.
+On Tue, 13 Oct 2026 12:27:16 -0500, Michael Burch wrote:
+> These two should be AMUX1_GPIO and AMUX2_GPIO. My unit (BIOS 2.14.0)
+> shows what Liviu reported [1]: 0x14c (lpddr5_therm) reads 130.048 C from
+> boot on, and that is the value the EC is sent.
 
-Okay with me, after a small discussion in previous review rounds.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Same here, and the ADC1 table settles what my readings left open.
+On this unit (also BIOS 2.14.0), with all four GPIO channels defined
+in one DTB on a 7.2.6 kernel:
 
--- 
-With Best Regards,
-Andy Shevchenko
+0x14a  38.6 C        0x14c  130.0 C (constant)
+0x14b  32.7 C        0x14d   34.7 C
 
+A charger on the left USB-C port warmed 0x14b by 1.6 C in three
+minutes; 0x14d stayed within 0.1 C. So usb_charger_left_therm is
+AMUX2_GPIO, 0x14b, as your table says; 0x14a reads a board
+temperature and warms with the SoC.
 
+> +	sys_therm0: channel@14a {
+> +		reg = <ADC5_GEN3_AMUX1_GPIO_100K_PU(1)>;
+
+One note on the shape: hamoa-pmics.dtsi already defines
+channel@14a and channel@14b as pm8550_gpio_01 and pm8550_gpio_02,
+with gpio3 and gpio4 in high impedance for them. The EC's io-channels
+can reference those two directly; redefining the nodes in the board
+file only adds the labels, which the EC node does not need.
+
+Happy to test a v7 with the two channels moved.
+
+Liviu
