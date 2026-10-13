@@ -1,33 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FBD4BD36A;
-	Tue, 13 Oct 2026 10:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999DD4DDB32
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 10:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791885888; cv=none; b=RH/h3kjqyYc84p5QhtL7r6pS1Vs/92zGBMNF+HUKudO0/WjGW6rRay6Q+25RkFI4YV4bt0XDvf788v04KBQAG9yw2gqsQ0Vy8OvWUoFD4ZgFslulVqy7cHM8cj9rQXeJrVdVOn67/2LO/7XykWt5rZztUv05zuGDXTrxcejpaGI=
+	t=1791887446; cv=none; b=cYJaWj+dAjYePu7WRt/AdF+3DKZxKwsAjqOL62KnakPOD5TKHL4PFwRYHbBCRmGI0+/jyNAb346it45DOZ/ngDHZHVbWUNcYrsLult0NH39F7cXCQGKka7ga/gPGEuwR0mREEf9WPKf8WqMf0vAoG0jnhkxREZn5zSMWeLfUzME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791885888; c=relaxed/simple;
-	bh=jpWfUBEoAPjsisHP3pSirCTH8xunSESsfKiqThVJFNs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QP9fzhBXXqu1TLB+JjtAuXau40wlFYodPdx6mn0jp0a9coMPDKo1h4W1Z/M3G/Cg0ZARiPitVcevo6GK+9zC23GvS9iCe3xOsef2AvTj1EqaBtFsMcO0Rm0uCoLDnPvD5eZUJfTx/Ev8qeNSWEkyb+0MYLJQQKBkeOXHBF18yoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkTby3WS; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791887446; c=relaxed/simple;
+	bh=s6lFgUCKWchq2Tr5iOLVIfwuMKBpkSgnVZN0RmocfQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOcTVEFN/TAoNro79pSZFVl0TAy9oqpapvarJzaLHi3DPqILRXYa5o5fz91AblpUgLCmwF0+l3xOsQrMfocJAR4cS2Pngtq5r06WR4gG/26saYqoFr8qT/hFpnFlfwto5j7M1WbHb53rJODYPVQnweC5RyJtedavcC2l23rXvsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EHjbjc67; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Jp+746cH; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkTby3WS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A9721F00899;
-	Tue, 13 Oct 2026 10:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791885886;
-	bh=k8n1G1txu9Js/gS+19Rhr8eqvftqL9g9+QRspdmDaCs=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=CkTby3WSVwrqzHAi3/0ykR9dC9FmKaZNrQTAnWnWmjcLC52zCVDjcewmLo0uU43xC
-	 FIPaWGapLVbxLmzYbPgPlB/f9SElgOxHw0SPN48HsHutuJ4jUzPRJ+tbjVpMTPIuEH
-	 z9/HQ3kGA6BBGW/RrtvjSh5l+yrv5EIjor5psob1ZYU2GJHlcYXsFQJeLxg4AeLiiQ
-	 iJYJFzEUxzHzHyQp5oFU8Ml+k1HJzlT0jAXXqwb2NGyfxZmBJh7zEhxfvLfAJhl2So
-	 W3qC1xGu0FPxQBLdvDV1mFPg0rZ1tO6ufJ71PIrf1hkkpxnFVX7P8joAl3ovGFdvuy
-	 /2pw2AMo298Dw==
-Message-ID: <87ea0d84-0122-4302-973a-05a6880cf6d8@kernel.org>
-Date: Tue, 13 Oct 2026 12:04:43 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EHjbjc67";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Jp+746cH"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69D8PxKW3907367
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 10:30:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HgwlI9xizsLKQYfDyomPoKaDb7JMV/G/kjGnCEp0kJ0=; b=EHjbjc67pHrSpEze
+	NjVuBjs7uhpk8Y+M8YKX7K6sFfeF9iMdab+h1oHODkxD6wl6SygnauoZKPV19WGg
+	9NwA1BO3N5cZPOk3Qcn1QIt11Am+iyQF7Got/DKVglgxuh/PzAEWOlMtgEUex57M
+	HO5W8AbqKrDMJeN3co0woqsGZ5gWHAcfS+fbpV/116DXkNnxsHxAnrTuaMUrFii3
+	/W9a1GcOjQMXVSwJVqkknO6K2LTalB0rzR4BBUHXyyJgefBpZOS5ZezwAWnnjwxy
+	yv4inm6WJtuut+UIHzGZ2TSZHDCufuzKUythwV0if6J4GwSc/VNm1P3PVgC/OOHy
+	sfMJ+g==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h95xqu2d7-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 10:30:44 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-93ea6b66e53so39858985a.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 03:30:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1791887444; x=1792492244; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HgwlI9xizsLKQYfDyomPoKaDb7JMV/G/kjGnCEp0kJ0=;
+        b=Jp+746cHEus5vhkr2QYXqV3IuOv0RVTiYwmt5lx380vEqk9x+Msew6XX5t8540rdfo
+         zVQdY9Uj47ZpT/zkgo8dJxJBgEqYQmVhXbpSM0KhLfOXk0/Aiffls/f237o3YnB38UEY
+         +k27PdTflMWY5blyK0IwkVEz7L6Kgij++lQKaR61qnax6Y7nUGM4s/4/ee5qLcQ+S5c7
+         n+BM6u1uDUpFxiC4vuxyOIQzsmEDgMYSCbNKBJvjTBUKHgvuiiDM6A0AVC6Qx7Oylexi
+         Fj1pK0iA4RRdj/RTDUGhhjCXmBfheY9wArOPyL0UPjiTPARZt9zab8Q/Cecif8ZGI/0b
+         Qsuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791887444; x=1792492244;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=HgwlI9xizsLKQYfDyomPoKaDb7JMV/G/kjGnCEp0kJ0=;
+        b=JXUM/r+To+PfOQw2C0kV+NYp/i8wjC2F+ubX5BHM405sS4ISYy4m03gi3aIhNVIrNN
+         iC1UgmrpgBglfhS81W5IyQ6Pl+v0j9XpstJCbezh0OXxGBio8MFw0tCKf7mfRTPxdPgj
+         2bC5c70qhPObWh+z1m8roNd3GkQeRhYDsvFja00WNuLOPnC9ouw8HPXJ51UXxQ0tKnoi
+         7M/OM+9dhsY4diSpjo7WgJE3BKc0hqgl98vdQEWyzeleRtbPk+0YpKBVbymPF8MwrPR5
+         dc/ZOakruY7ajfyVliVakTIJc54l4xeY2QE1y3eqwbMk/Av1qJPTYZy+4RICFIUM4Ggu
+         pRzg==
+X-Forwarded-Encrypted: i=1; AKwUvBzb/5vJ7gWOu5VOmYzYCSP0l+9XspwUpL/qSoUTtjjJ3cJ+SwezJkrldppC1nzpbGMMRk49TbLpc3ajnDCMutViisw1@vger.kernel.org
+X-Gm-Message-State: AFq9FYIC+s2YU8AW8Sg/o61coKhGD0i2lBk0Xe3GQTy0zPhAgKgfo+ek
+	Kn7ZoBN0SR3Mgpw2PX3JgUC/8/gHiMl3LYLJ7Y/UtPcFGaXscc5Kd3Q/v8189nlvX0+UcYXlAWQ
+	mAIVo7Y+p/rxqNL83CKZ1H8EkGsnnUQ3uQTZTh7S2PIoJJL8gDqEaLunIZebUjN/M9YDRSd02n4
+	WP
+X-Gm-Gg: AYBFou28CgPnhZhPYmYkLP0me6c07/M6yH2QCp3R98y9QrA3hLBcrLpf8d8u33AbmgP
+	9vKVhRO8568t0O+9FB0tYdNjYDZzx3AJhVHL4v+MWTEOvS3LDIicmSSZ6DL6xUzPuO+XTrW2lRz
+	Fz4Hw6hcytol+POZ3QY1fIFVI4W5QEwKzQrwSIBr273gpdkja1WTkqhzY6YlrWWPfsqS+L/4MJC
+	x6bP5urW6++Pog4jwryAEQAFHe8u3Iyc56umszpdU6VFw1RAhQ4jjE0Lj3uZ4ENb00C3S2tc96S
+	XAgjX2yh0jGFETtGLI0jbgPfmQGLeTLjM85SERT+O9dZl3RGncXrjtasmF1/gT31jUilZbmRiM0
+	W7/gFbCYJNSCE1xoXT+NAgg==
+X-Received: by 2002:a05:620a:27d6:b0:92e:6485:f640 with SMTP id af79cd13be357-93ebd224118mr2251365385a.4.1791887443613;
+        Tue, 13 Oct 2026 03:30:43 -0700 (PDT)
+X-Received: by 2002:a05:620a:27d6:b0:92e:6485:f640 with SMTP id af79cd13be357-93ebd224118mr2251358785a.4.1791887443027;
+        Tue, 13 Oct 2026 03:30:43 -0700 (PDT)
+Received: from [192.168.226.26] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c31a9a38050sm571524366b.24.2026.10.13.03.30.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Oct 2026 03:30:42 -0700 (PDT)
+Message-ID: <762978b8-72ce-4836-85f4-2cd3ee4dc5cf@oss.qualcomm.com>
+Date: Tue, 13 Oct 2026 12:30:38 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,199 +90,88 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: int3472: GPIO type names disagree with Intel's Windows driver
-From: Hans de Goede <hansg@kernel.org>
-To: diamondback <diamondback@cohunt.app>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Alexander Patrakov <patrakov@gmail.com>,
- Dan Scally <dan.scally@ideasonboard.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org,
- Linux Media Mailing List <linux-media@vger.kernel.org>,
- Sahan Nissanka <adee.sahan@gmail.com>
-References: <CAN_LGv0qkxARw4bxO8K-1hUkWNg2ts6q50dooCB5UM5en=bo0w@mail.gmail.com>
- <d9a37aff-3b4d-467c-825d-5473b4c1bbb4@ideasonboard.com>
- <CAN_LGv0nBTkVmxbuK+_O1v5Z_OZqQz5LgEZdL1_37otsei36fQ@mail.gmail.com>
- <aslsXPVJIuYRrgKv@kekkonen.localdomain>
- <lVgzYFlB_DT3TKJryx4Et9QF3-oqL7pSNP37e4tUENOuzf7sLRLshnvAkcz1jYpd6NCOqlqowIFv1Di9Ddo2Io1_K3HC5gjylmd-kuDLJv8=@cohunt.app>
- <1ab8b696-efe2-44d7-a440-bd54bd705232@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <1ab8b696-efe2-44d7-a440-bd54bd705232@kernel.org>
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: Add Microsoft Surface Laptop 8th
+ Edition
+To: Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abel Vesa <abelvesa@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maximilian Luz
+ <luzmaximilian@gmail.com>,
+        Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <jesszhan0024@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
+        Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+Cc: Rajendra Nayak <rajendra.nayak@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20261006-mahua-surface-laptop-v1-0-406fc042162a@oss.qualcomm.com>
+ <20261006-mahua-surface-laptop-v1-5-406fc042162a@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20261006-mahua-surface-laptop-v1-5-406fc042162a@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDEzMDA0MSBTYWx0ZWRfX4bYoEfjVl7NO
+ gHMrSmhG6CGjxmsqpsX5gbfesRa99tjCIAsTUYNz8Ff1eYYCkwYS7nItG7gyBdNvQHSmMZUXJOc
+ vrYAZsPdPAPe/ZdgiDMlMe9/HrhqITHP2JkXh0EMzpeUhIJ25JnTsgwDAcB7FYb+qlsi7uJLlLA
+ sIJkajkV/dgALEEWloRjNKaxV4lgqbdJLIF/LgbpEixME8Js/Cx/xiWkhXoKekuLfqRVzx9/xDd
+ 9dvni9tZXPkWkwPGpLoP86Uc3jx/bQ0CEJEwUusl6/CJmxAG5pt9LYXGDLjOr30Il8Y8wpe/sZI
+ EwCrhiCYsOivvEV46O7heaBpd8naCAfLTiRx20mO0m6QDhsaZTVgaBMtk2Qt1nJSRGVUq1nxjWH
+ LyKmkNIKfLUNbWgyz/9A3IM9ZzXvfe0nJx78C+fd+7BkM09f9IYH73Dw/ScFHuay3uDnsolLRgA
+ Zaugl6nF2Smy3tE9PBg==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDEzMDA0MSBTYWx0ZWRfX3T9fOoiMDDp2
+ DtIB1Dloj5t+/ctA8TxXcXLZuhWal2UzFe3UkrTqdonNbJqcFbjTrize/7Pml9Gx04iqhEEbOam
+ MC6Z12VJIk+hPq7zOGQNWkjG8XEwFRE=
+X-Proofpoint-ORIG-GUID: vlBzGKRZXt2SE3Cgz70Dve-8GbAIfpBd
+X-Authority-Analysis: v=2.4 cv=EP+TQFZC c=1 sm=1 tr=0 ts=6ace0854 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=1YZvB5OX3fR3yb4sgf8A:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: vlBzGKRZXt2SE3Cgz70Dve-8GbAIfpBd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-13_01,2026-10-09_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610130041
 
-Hi,
+On 10/6/26 11:50 AM, Gopikrishna Garmidi wrote:
+> Add support for the Microsoft Surface Laptop 13.8" 8th Edition, which is
+> built on the Mahua SoC. Most of the board follows the Qualcomm reference
+> design. The keyboard, fan and platform profile sit behind the Surface
+> Aggregator Module on uart22, same as on the Surface Laptop 7.
 
-On 12-Oct-26 18:10, Hans de Goede wrote:
-> Hi,
-> 
-> On 10-Oct-26 10:01, diamondback wrote:
->> On Saturday, October 10th, 2026 at 12:36 AM, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
->>  
->>> The GPIO naming in Windows drivers is also an abstraction while Linux
->>> drivers typically use datasheet names of regulators, which are sensor
->>> specific. The handshake GPIO shouldn't exist with the regulators so it
->>> should be possible to map the rest independently of that. Changing the
->>> default mapping would also be possible, in principle, but that'd still
->>> require ensuring all sensor drivers still get the required regulators. I'm
->>> not sure it's worth it.
->>
->> Answering Alexander's question to me from the first mail:
->>
->> On 09/10/2026 04:06, Alexander Patrakov wrote:
->>> Leif, do you remember what it was based on, and which other GPIO
->>> types that machine's INT3472 reports?
->>
->> It was based on inference. My notes from February only say "likely
->> DOVDD": the ov5675 driver asks for avdd, dovdd and dvdd, 0x0b and 0x12
->> already had avdd and dvdd, so 0x10 got the remaining name. v1 already
->> called it DOVDD; Hans only asked me to drop the OVTI5675 quirk entry and
->> spell the con_id "dovdd" instead of "vio". In hindsight, my commit
->> message should not have stated it so concretely.
->>
->> What the Fold declares (from _DSM and the BIOS pin fields):
->>
->>   INT3472:00 (\_SB.PC00.DSC0), all sensor-on value 1:
->>     0x00  reset    pin 335
->>     0x0b  PowerEn  pin 140
->>     0x10  Avdd     pin 164
->>   INT3472:01 (\_SB.PC00.DSC1): no _CRS, zero pins.
->>
->> No 0x0f, 0x11 or 0x12. And a correction: that INT3472 is not the
->> OV5675's. The OV5675's _DEP names only the IVSC device, it uses dummy
->> regulators for all three supplies, and the supply map shows both
->> regulators going to the IR sensor:
->>
->>   INT3472:00-avdd -> i2c-SMO55F0:00.avdd
->>   INT3472:00-dovdd -> i2c-SMO55F0:00.dovdd
->>
->> So 0x10 on the Fold is a VD55G0 pin, not an OV5675 one.
-> 
-> Thank you for providing this information.
-> 
->> Dan's suggestion makes sense to me
-> I'm afraid that Dan's suggestion to:
-> 
-> "I think that what probably needs to happen, really, is for
-> skl_int3472_register_regulator() to look up its array of consumer_supplies (which
-> maps sensor device name to regulator name) based on DMI matching just as
-> int3472_tps68470_get_board_data() does for the TPS68470 IC version of the INT3472"
-> 
-> Is not going to scale we are seeing many many different laptop models using
-> the discrete INT3472 devices, so we really need a generic solution here and
-> so far the current code has been scaling reasonable well.
-> 
-> The fact that currently we have a conflict between 0x0b poweren -> avdd
-> and 0x10 Avdd -> dovdd is unfortunate. I would like to see 0x10 register
-> the avdd regulator as per the Windows table, but that might cause
-> breakage on some laptop models.
-> 
-> For now the only laptop + sensor which we've seen use 0xf and 0x11 (+ 0x10)
-> _DSM type GPIOs is Alexander's Lenovo Yoga Duet 7 13ITL6 with the OVTI5675
-> sensor. The other laptop, diamond back's ThinkPad X1 Fold 16 Gen 1, which
-> we know to use an OVTI5675 is behind a ivsc and does not claim any GPIOs at
-> all.
-> 
-> So for now I think it what should happen is:
-> 
-> 
-> 1. An int3472 driver patch renaming INT3472_GPIO_TYPE_DOVDD to
-> INT3472_GPIO_TYPE_AVDD, while keeping this mapped to dovdd with a remark
-> that this is mapped to dovdd for historical reasons and cannot be easily
-> changed because this might break support for some laptops
-> 
-> + 2 new defines for DOVDD / DVDD, resulting in (combined)
-> 
-> #define INT3472_GPIO_TYPE_DOVDD                                 0x0f
-> #define INT3472_GPIO_TYPE_AVDD					0x10
-> #define INT3472_GPIO_TYPE_DVDD					0x11
-> 
-> So this basically syncs our defines with what we've learned from
-> the Windows drivers, without changing any functionality.
->    
-> 
-> 2. A patch to add mappings for the new INT3472_GPIO_TYPE_DOVDD(0x0f) and
-> INT3472_GPIO_TYPE_DVDD(0x11) values to dovdd resp dvdd regulators.
-> 
-> This one just adds new mappings so should be safe to.
-> 
-> 
-> 3. A patch adding an entry for the OVTI5675 to int3472_gpio_map[] to
-> actually map the new INT3472_GPIO_TYPE_AVDD (0x10) the avdd (on the
-> OVTI5675 only)
-> 
-> This might cause breakage if there is a laptop not on our radar
-> with a OVTI5675 sensor using 0x0b (power-enable) + 0x10 (avdd) gpio
-> types at the same time. But there is only one way to find that out
-> really.
-> 
-> 
-> 4. A patch to change the mapping of the new INT3472_GPIO_TYPE_AVDD (0x10)
-> to actually be mapped to avdd and mapping INT3472_GPIO_TYPE_POWER_ENABLE
-> to dvdd instead of avdd + dropping the int3472_gpio_map[] added in
-> the 3th patch.
-> > Yes this undoes patch 3, the idea being that we can easily revert patch 4
-> if necessary.
-> 
-> Note patch 4 can cause 2 types of problems:
-> 
-> 1. A name-conflict in the registered regulators. This would be a real
-> problem and a reason to go with a revert.
+[...]
 
-Thinking more about this I remembered that some HP laptops use
-both power-enable + handshake, see e.g.:
+> +&mdss_dp3_out {
+> +	data-lanes = <0 1 2 3>;
+> +	/* HBR2 channel equalization fails, limit the link to HBR */
+> +	link-frequencies = /bits/ 64 <1620000000 2700000000>;
 
-https://bugzilla-attachments.redhat.com/attachment.cgi?id=2111237
+Oops, that's no good - is there a chance this helps?
 
-Where 'INT3472:01' registers both an avdd + dvdd with the old code,
-so mapping INT3472_GPIO_TYPE_POWER_ENABLE to dvdd is going to cause
-a conflict here.
+https://lore.kernel.org/linux-arm-msm/20260622-glymur-edp-phy-v1-2-814b45089ac9@oss.qualcomm.com/
 
-ATM we have (note new fixed INT3472_GPIO_TYPE_AVDD define):
+[...]
 
-0x0b INT3472_GPIO_TYPE_POWER_ENABLE -> avdd
-0x10 INT3472_GPIO_TYPE_AVDD         -> dovdd
-0x12 INT3472_GPIO_TYPE_HANDSHAKE    -> dvdd
+> +&usb_0 {
+> +	dr_mode = "host";
 
-So new proposal for patch 4, swap the 0x0b and 0x10 mappings
-resulting in:
+OTG should work just fine on both ports
 
-0x0b INT3472_GPIO_TYPE_POWER_ENABLE -> dovdd
-0x10 INT3472_GPIO_TYPE_AVDD         -> avdd
-0x12 INT3472_GPIO_TYPE_HANDSHAKE    -> dvdd
-
-Note please also rename avdd_second_sensor to power_enable_second_sensor.
-
-This avoids any regulator name conflicts for all the supported
-existing combos, leaving only "2." below as potential problem
-with the suggested patch 4:
-
-> 2. Some sensor drivers for sensors using INT3472_GPIO_TYPE_POWER_ENABLE
-> GPIOs may only check for avdd and not dvdd (*), in that case we could
-> extend the regulator handling in the sensor driver instead of reverting
-> patch 4.
-
-And as mentioned we can fix those by extending the supply handling in
-the sensor driver.
-
-Ok, so I decided to really do my homework and just checked all
-sensor drivers listed in ipu-bridge.c and present in 7.3 (some
-or only available out of tree so far) and all of them either do
-not support any of avdd, dvdd + dovdd, or they support all of them.
-
-So I think that just swapping avdd and dovdd in the current setup
-so as to correctly map 0x10 -> INT3472_GPIO_TYPE_AVDD -> "avdd"
-is the right thing to do and that also means we can just squash
-patches 3 and 4.
-
-Since I think I've this all figured out now, let me just turn this into
-a patch-set.
-
-I'll Cc everyone on this email-thread on the patch-set.
-
-Regards,
-
-Hans
-
-
-
+Konrad
