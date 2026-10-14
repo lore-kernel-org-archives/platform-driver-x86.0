@@ -1,290 +1,778 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011051.outbound.protection.outlook.com [40.93.194.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763704AB1C3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 11:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791976528; cv=fail; b=dkxm5HwPGi2L6otxZeE/hF+AC1RTiaCFJnTLq9CadQ3BKRae8/5+WjSUzfSWV7DDmUCrToo8mx8tgXZGEA/ek18K4t82l2/GxpLmuHgCuUzMlCl85ZRCEBDtRtDKYWPxRpbw7sjJ4LrrOCB0H3uhejuquCnNOs0HV5kBy6ProZs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791976528; c=relaxed/simple;
-	bh=7VJ6FDSTPmi/D0rP8nUMlyPI363b1yVzHsaIYb7rYBQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uw15ejSoUR+fdNdhtzO8sYkE6+CfxI+nxhHI/lhXRop7U/xirsN17rTZpHEM6r/C0p50//UD7sspiNxC/O9mprsg7CwE0leRxApKl76bmvAgpw8UAdn71zWZdXmWs0z4cA/wvYmGvxCAGAw6r1KSnL49R901gBKdj4XdDXlZp28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=V0/sjGwi; arc=fail smtp.client-ip=40.93.194.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7127F4ED182;
+	Wed, 14 Oct 2026 11:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791977575; cv=none; b=qedRA26q2RtgjqihfnMfa8QScSW/6ZUoPr8xABz5VFvg5e6ACCEIPg657yvV+DrL43TPtac4P+aGFfyHE9tmEEhfm/Ri7vpF8Fo82rwgJmucCHS3LSDuCoruaIqCSuLs7a/eyDihxu3fU8/C4V1N5wjghK9eFQXqs0zjiXAnzk8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791977575; c=relaxed/simple;
+	bh=JgL0ClifhWzeZw5xGNMf8jf5gMh/4PCz9dozdoKiH3o=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pqha6HEOEJ6ZddHvZaQ/7W9Tavt/SZSoKA3oITa6o4S8IavzTPPnsNB1KC9Edys4Sq2h37cDHZ5T5V/iWT1yhRkR2yYDSBXWfhJdV4/RGRAxHJieoU6v9j0kgOPI9Y0FSgB1sgrPsl5bK8tQCTwZ1i2kMSfpp9/lEoAo3i4evBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/j2X7c8; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="V0/sjGwi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WIutX9iiny5151SEQ1T7OW5BoygBlwym7CB6Hp6hyInt876qdtFl7ATpTqLSSjVrU/JPcDBCx2GNr8ZESLOKDzVx28w/HuKR+9eojrGwl3M3rYApg1AM83VbvSDIubiC6moSfCQQwzsyTqla6YOdSYdkZYNO4qTE20cfC6WUirmz7ZUeG0yhOo62xG2wjIdHbvx4tDFROdVhL+sohZMUQHd2hsmcrHqUA6TxY9yYLuNeHEpf8/1JQLJSLJfOCk9C13hZHSQMmCdQLh37DtrSYCu7tAPSMfcvHITPVzPSkuWAbwlG7Cz7LTbp8/e6A5qWhIH1S5UpTk7KSpsCpqFOgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hMnK7QmCeKidw5x+KLj/dBTwCWwsnCD2wmBxsQf/KAo=;
- b=ffoK71cLknGtbEq2keUWuKECLaGvJwal8kNSAoGvhtQFHgWaUatz3NiQsUv2ctbZY9xz2RESteYvzy309nbLHvii+UUv5CQE/P2VGxYqcd6Ekzw4nHh8ESM+rK/f05Lq6A9b0OUyBZBppUdHwzM8fCbQzbfK0hRoKl9ZOEh4DJOwIhIePKq+MKn4MwmPxH4WqYmSqv/XNBuYs7O+EhTHPiy03x6FoR//VVNeP5r8qZTvEy5/Qc8Pd/AXaj0qClGX2/4w0nG0Qvq7oR4zdDJldV6pgB1Ux76DtEwc9Tuwq4eVtednS8npsk+m8SCZ2ojhq6CU+WgKE5LxP0CU2RmJkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hMnK7QmCeKidw5x+KLj/dBTwCWwsnCD2wmBxsQf/KAo=;
- b=V0/sjGwir9ejAq1fdS/PqDb5A6UwNZrGLRB2QxYCAi53pLYZaeKhMIZeIvFCVi0gvoT3GFgellQfhYNlw4p20gkAz/t0Ub3OY4s9QLxESNjoftlR7Sp78mqQLafWmhxfR24mGabBdp7hnoSOV/1RKcbskY4IdYrAkYgkp71xlYg=
-Received: from PH3PEPF000040A1.namprd05.prod.outlook.com (2603:10b6:518:1::52)
- by SA0PR12MB4397.namprd12.prod.outlook.com (2603:10b6:806:93::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Wed, 14 Oct
- 2026 11:15:17 +0000
-Received: from CY7PEPF000000F0.namprd05.prod.outlook.com
- (2a01:111:f403:f912::1) by PH3PEPF000040A1.outlook.office365.com
- (2603:1036:903:49::3) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.4 via Frontend Transport; Wed, 14
- Oct 2026 11:15:16 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CY7PEPF000000F0.mail.protection.outlook.com (10.167.247.148) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.522.6 via Frontend Transport; Wed, 14 Oct 2026 11:15:16 +0000
-Received: from trento15c5.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Wed, 14 Oct
- 2026 06:15:03 -0500
-From: Suma Hegde <suma.hegde@amd.com>
-To: <platform-driver-x86@vger.kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <muthusamy.ramalingam@amd.com>,
-	<NaveenKrishna.Chatradhi@amd.com>, Suma Hegde <Suma.Hegde@amd.com>,
-	"Muthusamy Ramalingam" <Muthusamy.Ramalingam@amd.com>
-Subject: [PATCH 7/8] platform/x86/amd/hsmp: Add wr_msg_id for sysfs attribute visibility
-Date: Wed, 14 Oct 2026 11:14:29 +0000
-Message-ID: <20261014111430.23156-8-suma.hegde@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20261014111430.23156-1-suma.hegde@amd.com>
-References: <20261014111430.23156-1-suma.hegde@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/j2X7c8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791977571; x=1823513571;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=JgL0ClifhWzeZw5xGNMf8jf5gMh/4PCz9dozdoKiH3o=;
+  b=O/j2X7c8//oDdJV4+qcSgTogL5u8OZ8arm+5IOeCE4Be717JfYaZDLLj
+   q7XuAcLYoKm1QCJfmlOZ8lU+ykFgq7Wf8pJXUOnxgntUfEtAcuoLciKpX
+   50mJUwmZib8aBAUgyfCZSzjQR8civ1H3pCrRUXVchnCaEWY35a7OGJHYR
+   ObC0DeUnIEIcyuoEaZGH7Ai2gYRPDRg0Uc4jsigQ4AeBVDCNJ6ANdshIt
+   KyeU7ABbtfj4vp8bEkoi8w+l4t5+ce5irNCvYaUf/zZuKniZK0BF3rJiJ
+   2JoQeinwvRP2wW5VMFYC+OQcQCY6OG5Sz3ICbeCnlMCmnus3JDYNo9GUq
+   w==;
+X-CSE-ConnectionGUID: ZEesX7Q5QkCe7G9eEgPdwg==
+X-CSE-MsgGUID: R5rYs0SrQHGt6nIJdXimXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="607353"
+X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
+   d="scan'208";a="607353"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 04:32:50 -0700
+X-CSE-ConnectionGUID: NtaTOkjpQFi+arNDSpBAIQ==
+X-CSE-MsgGUID: iucbEzg8QTqJUHtTHuf19A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
+   d="scan'208";a="1499985"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.234])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 04:32:45 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 Oct 2026 14:32:41 +0300 (EEST)
+To: Oleg Keri <okerixx@gmail.com>
+cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    Guenter Roeck <linux@roeck-us.net>, Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abelvesa@kernel.org>, 
+    linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] platform/arm64: add Lenovo Yoga Slim 7x Gen 11
+ EC driver
+In-Reply-To: <20261003202143.4697-3-okerixx@gmail.com>
+Message-ID: <32061ef6-99d4-8a1f-ad4b-e413d30f261f@linux.intel.com>
+References: <20261003202143.4697-1-okerixx@gmail.com> <20261003202143.4697-3-okerixx@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY7PEPF000000F0:EE_|SA0PR12MB4397:EE_
-X-MS-Office365-Filtering-Correlation-Id: 48922d3b-d5f3-479f-41c5-08df29e46cef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700016|23010399003|10067099003|22082099003|18002099003|11063799006|261009223027099003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	Hr+SNxwD50dB3XpBQRIPOp7VDOPt4On6lspa/WHNaX+AXCX4k6HrLWwNE5SeDW4qiZWXlaYySX9VkifwzInGhHheHbf8HGANqYt37GV1yc3xpmphfCC1hT4RUHI3rNOG3HDT6ytPtvq2TPH+qH4HMJy07yccVxmli1dorP0y8avkjAX2NOqE6vXiI4QOMKSoK56D7jMAc+A/fGfcwMg1PoqMssWmkmrrzNt4mXGfyZR1zRGm9MkINmW3OTVhe9cTglNGrHGjl9TpAfgdeMGawpZQpWVI6LNYWgQ43i8GEvXvx1puFjCIXJi0FpB5sJS5r/PwrNXxtQAimQpRvI7t16wj74xrV551aCSBVPonZ54SfnHJ81oGyDfPq9tfcmntMsSggNrEsWEw0nAgFU/hb5U3LqmSsXecVJ+7k1RTwLlBavn9dXwPUGkunH1Tu40ok3990gGjdaYYLEEZS3RDNrAK+JMcCFb/PPqOf/0KiTZyWwznV88prA1ufWJeAbvLBqGpAYmL9Gpn5awcPOrPKZ0zaoKvY1YRRYhW5Cg5sGkwPgUwbC2+EfIRaorYqLzZaLG9ePPgXYo/YE18k6xwI6PySKxuPWdWPOBLD/P/lN4Me18AlMy3Or5fJLGDAmRkFheyKM67R2pwhGY4zMbDt493QRKeFyBvqXxdS5IWUEk6TWuzQMytfBbW4KBsrlXjTymcOn8Misdv2WsA+OwoDw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700016)(23010399003)(10067099003)(22082099003)(18002099003)(11063799006)(261009223027099003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	R8I74QjHKkvgLxEAnPx/G9zvmeb7JGlszyyZTJ5lmU5R/FWBOP4ZkB8oJ5oKuNgeIXE0mgJ6D9Xcp+u0sQQcy6nr9o6C406oKKSxnjrCKc7Q75Jqf1mN/noVfJhsgM5mRpT519jz0jW4hgy8DEmgBxsiu3kFruVnAvj+JT/eZJIawwmGRVmhACUj39utGIvoCdq5uJ5KylSCDoApdODScvpic/EoVFZDtM7NCy6sDj+hzjZ/IkEPgwZW6uo/cVsEBJd/rZTrdva1k5XEf4VtJDok004Ho/Pc1vPw6f8F1w2e3MijxwO87rJC1kA6pRKByp9Bg7sHWk78T/xD2pyg+Rjoogz52jrpBliNoiEu6v8MEvaIiuUKNLiuGtPPyqJMeQLiiQjkSLNkHhzF7tLdgIizFhklHGIWix+jpOXXp3088PB06HBDRBvnw1NvpCC+
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2026 11:15:16.5960
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48922d3b-d5f3-479f-41c5-08df29e46cef
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY7PEPF000000F0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4397
+Content-Type: text/plain; charset=US-ASCII
 
-From: Suma Hegde <Suma.Hegde@amd.com>
+On Sat, 3 Oct 2026, Oleg Keri wrote:
 
-RW sysfs attributes may use different GET and SET message IDs. Add
-wr_msg_id to hsmp_sys_attr and consult it from the ACPI and platform
-is_visible helpers when deciding write mode. Add HSMP_DEV_ATTR_W for
-write-only attributes that only have a store handler.
+> The Lenovo Yoga Slim 7x Gen 11 (Qualcomm glymur / Snapdragon X2 Elite)
+> carries a Compal EF06 embedded controller on I2C at address 0x70. The
+> platform firmware describes it as an ACPI GenericSerialBus region, but the
+> machine boots from device tree, so nothing otherwise talks to it.
+> 
+> Commands are exchanged with two raw I2C block transfers: a 7 byte write to
+> register 0x02 carrying the command and up to six arguments, then a 6 byte
+> read of register 0x01 for the result, with a short delay in between before
+> the result register is valid. The EC offers no way to match a result to
+> its command; the delay is the one the vendor ACPI code uses.
+> 
+> Expose what the EC offers that the rest of the kernel does not already
+> provide:
+> 
+>   - five board thermistors as hwmon temperature channels. These are
+>     charger, CPU voltage regulator, 5 V rail and ambient sensors, not die
+>     sensors, and read considerably cooler than tsens
+>   - CPU fan speed in RPM
+>   - the keyboard backlight as an LED, off/low/high
+>   - Fn-lock as a read/write sysfs attribute, matching the ideapad-laptop
+>     interface. The EC reports Fn+Esc as an event but keeps no state of its
+>     own, so the driver owns the bit and toggles it on the key
+>   - the mic-mute and airplane-mode keys as KEY_MICMUTE and KEY_RFKILL.
+>     These reach the host only as EC events; they are not on the keyboard's
+>     HID interface and have no GPIO of their own
+> 
+> The EC signals pending events on a dedicated line, and keeps pulsing it
+> until they are read - so the queue must be drained completely on every
+> interrupt, including codes this driver ignores. Leaving one behind makes
+> the controller pulse indefinitely.
+> 
+> Fan speed is reported but not controlled. The EC accepts a manual setpoint,
+> however it enforces no thermal floor over it: with the fan pinned at
+> roughly 2000 RPM under full load the SoC rose from 69 to 91 degrees in 30
+> seconds without the EC ever overriding. Exposing pwm1_enable or fan1_target
+> would therefore let userspace overheat the machine, so neither is
+> implemented.
+> 
+> Note this is the Gen 11 machine specifically. Its EC differs from the
+> Qualcomm reference EC that the reference designs place at address 0x76,
+> which is not populated here, and so EC_QCOM_HAMOA does not drive it.
+> 
+> Signed-off-by: Oleg Keri <okerixx@gmail.com>
 
-Share the attribute initializer as HSMP_SYS_ATTR in sysfs.h. The ACPI
-and platform wrappers still differ in symbol name and socket index.
+Hi,
 
-Co-developed-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
-Signed-off-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
-Signed-off-by: Suma Hegde <Suma.Hegde@amd.com>
----
- drivers/platform/x86/amd/hsmp/acpi.c  | 26 +++++++++------
- drivers/platform/x86/amd/hsmp/plat.c  | 46 ++++++++++++++++++++++-----
- drivers/platform/x86/amd/hsmp/sysfs.h | 16 +++++++++-
- 3 files changed, 69 insertions(+), 19 deletions(-)
+A few style nits below.
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 8c3527540f8bc..df0b344e22f80 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -351,13 +351,14 @@ static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
- 	writable = !!(mode & 0200);
- 
- 	/*
--	 * File is both readable and writeable. Some platforms support only set/write operation.
--	 * Some platforms support only get/read operation. Update the file mode accordingly.
-+	 * File is both readable and writeable. Some platforms support only
-+	 * set/write, some only get/read. RW attrs may also use different
-+	 * GET/SET message IDs — gate each direction on msg_id / wr_msg_id.
- 	 */
- 	if (readable && writable) {
- 		if (is_read_msg_enabled(sock, hattr->msg_id))
- 			mode_updated |= mode & 0444;
--		if (is_write_msg_enabled(sock, hattr->msg_id))
-+		if (is_write_msg_enabled(sock, hattr->wr_msg_id))
- 			mode_updated |= 0200;
- 		return mode_updated;
- 	}
-@@ -370,7 +371,7 @@ static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
- 
- 	/* Write-only attribute */
- 	if (writable) {
--		if (is_write_msg_enabled(sock, hattr->msg_id))
-+		if (is_write_msg_enabled(sock, hattr->wr_msg_id))
- 			return mode;
- 	}
- 
-@@ -502,12 +503,17 @@ static const struct bin_attribute *hsmp_attr_list[] = {
- 	NULL
- };
- 
--#define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode)	\
--static struct hsmp_sys_attr hattr_##_name = {		\
--	.dattr = __ATTR(_name, _mode, _show, NULL),	\
--	.sock_ind = U16_MAX,				\
--	.msg_id = _msg_id,				\
--}
-+#define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode)			\
-+	HSMP_SYS_ATTR(_name, _name, _mode, _show, NULL, U16_MAX,	\
-+		      _msg_id, _msg_id)
-+
-+#define HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode) \
-+	HSMP_SYS_ATTR(_name, _name, _mode, _show, _store, U16_MAX,	\
-+		      _rd_msg_id, _wr_msg_id)
-+
-+#define HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode)			\
-+	HSMP_SYS_ATTR(_name, _name, _mode, NULL, _store, U16_MAX,	\
-+		      _msg_id, _msg_id)
- 
- HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444);
- HSMP_DEV_ATTR(prochot_status, HSMP_GET_PROC_HOT, hsmp_msg_resp32_show, 0444);
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index 2ac934d59ae64..66269bf1823c2 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -115,10 +115,15 @@ static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
- 	readable = !!(mode & 0444);
- 	writable = !!(mode & 0200);
- 
-+	/*
-+	 * RW attributes may use different GET/SET message IDs. Gate each
-+	 * direction on its own enabled-message bitmap bit via msg_id /
-+	 * wr_msg_id.
-+	 */
- 	if (readable && writable) {
- 		if (is_read_msg_enabled(sock, hattr->msg_id))
- 			mode_updated |= mode & 0444;
--		if (is_write_msg_enabled(sock, hattr->msg_id))
-+		if (is_write_msg_enabled(sock, hattr->wr_msg_id))
- 			mode_updated |= 0200;
- 		return mode_updated;
- 	}
-@@ -129,7 +134,7 @@ static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
- 	}
- 
- 	if (writable) {
--		if (is_write_msg_enabled(sock, hattr->msg_id))
-+		if (is_write_msg_enabled(sock, hattr->wr_msg_id))
- 			return mode;
- 	}
- 
-@@ -168,12 +173,37 @@ HSMP_BIN_ATTR(5, *sock5_attr_list);
- HSMP_BIN_ATTR(6, *sock6_attr_list);
- HSMP_BIN_ATTR(7, *sock7_attr_list);
- 
--#define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode, _sock_ind)	\
--static struct hsmp_sys_attr hattr_##_name##_sock_ind = {	\
--	.dattr = __ATTR(_name, _mode, _show, NULL),		\
--	.sock_ind = _sock_ind,					\
--	.msg_id = _msg_id,					\
--}
-+#define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode, _sock_ind)		\
-+	HSMP_SYS_ATTR(_name##_sock_ind, _name, _mode, _show, NULL,	\
-+		      _sock_ind, _msg_id, _msg_id)
-+
-+#define HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, _sock_ind) \
-+	HSMP_SYS_ATTR(_name##_sock_ind, _name, _mode, _show, _store,	\
-+		      _sock_ind, _rd_msg_id, _wr_msg_id)
-+
-+#define HSMP_DEV_ATTR_RW_X8(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode) \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 0); \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 1); \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 2); \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 3); \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 4); \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 5); \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 6); \
-+HSMP_DEV_ATTR_RW(_name, _rd_msg_id, _wr_msg_id, _show, _store, _mode, 7)
-+
-+#define HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, _sock_ind)	\
-+	HSMP_SYS_ATTR(_name##_sock_ind, _name, _mode, NULL, _store,	\
-+		      _sock_ind, _msg_id, _msg_id)
-+
-+#define HSMP_DEV_ATTR_W_X8(_name, _msg_id, _store, _mode) \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 0); \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 1); \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 2); \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 3); \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 4); \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 5); \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 6); \
-+HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 7)
- 
- HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 0);
- HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 1);
-diff --git a/drivers/platform/x86/amd/hsmp/sysfs.h b/drivers/platform/x86/amd/hsmp/sysfs.h
-index fb9aa63dcf820..ded0a1edf2505 100644
---- a/drivers/platform/x86/amd/hsmp/sysfs.h
-+++ b/drivers/platform/x86/amd/hsmp/sysfs.h
-@@ -21,7 +21,8 @@ struct kobject;
- struct hsmp_sys_attr {
- 	struct device_attribute dattr;
- 	u16 sock_ind;
--	u32 msg_id;
-+	u32 msg_id;	/* message ID used for read / GET enable checks */
-+	u32 wr_msg_id;	/* message ID used for write / SET enable checks */
- };
- 
- #define DDR_MAX_BW_MASK		GENMASK(31, 20)
-@@ -38,6 +39,19 @@ struct hsmp_sys_attr {
- #define to_hsmp_sys_attr(_dev_attr) \
- 	container_of(_dev_attr, struct hsmp_sys_attr, dattr)
- 
-+/*
-+ * Build one hsmp_sys_attr. Callers pick the C symbol (_var) and socket
-+ * index; msg_id is the GET/read id and wr_msg_id is the SET/write id.
-+ */
-+#define HSMP_SYS_ATTR(_var, _name, _mode, _show, _store, _sock_ind,	\
-+		      _rd_msg_id, _wr_msg_id)				\
-+static struct hsmp_sys_attr hattr_##_var = {				\
-+	.dattr = __ATTR(_name, _mode, _show, _store),			\
-+	.sock_ind = _sock_ind,						\
-+	.msg_id = _rd_msg_id,						\
-+	.wr_msg_id = _wr_msg_id,					\
-+}
-+
- ssize_t hsmp_msg_resp32_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf);
- ssize_t hsmp_ddr_max_bw_show(struct device *dev, struct device_attribute *attr,
+> ---
+>  .../sysfs-driver-lenovo-yoga-slim7x-gen11-ec  |  22 +
+>  drivers/platform/arm64/Kconfig                |  23 +
+>  drivers/platform/arm64/Makefile               |   1 +
+>  .../arm64/lenovo-yoga-slim7x-gen11-ec.c       | 547 ++++++++++++++++++
+>  4 files changed, 593 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec
+>  create mode 100644 drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec b/Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec
+> new file mode 100644
+> index 000000000000..80d01fc32abb
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec
+> @@ -0,0 +1,22 @@
+> +What:		/sys/bus/i2c/devices/*/fn_lock
+> +Date:		October 2026
+> +KernelVersion:	7.5
+> +Contact:	Oleg Keri <okerixx@gmail.com>
+> +Description:
+> +		Control fn-lock mode.
+> +
+> +			* 1 -> Switched On
+> +			* 0 -> Switched Off
+> +
+> +		When switched on, the function keys act as F1..F12 and the
+> +		multimedia functions require the Fn modifier.
+> +
+> +		The embedded controller reports the Fn+Esc key as an event but
+> +		keeps no state of its own, so this attribute is the state: the
+> +		driver toggles it when the key is pressed, and writing it takes
+> +		effect immediately. A toggle from the key is signalled with
+> +		sysfs_notify(), so the attribute can be polled.
+> +
+> +		For example::
+> +
+> +		  # echo "0" > /sys/bus/i2c/devices/9-0070/fn_lock
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> index e32e01b2a9bd..a04573749e94 100644
+> --- a/drivers/platform/arm64/Kconfig
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -90,6 +90,29 @@ config EC_LENOVO_THINKPAD_T14S
+>  
+>  	  Say M or Y here to include this support.
+>  
+> +config EC_LENOVO_YOGA_SLIM7X_GEN11
+> +	tristate "Lenovo Yoga Slim 7x Gen 11 Embedded Controller driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	depends on I2C
+> +	depends on INPUT
+> +	depends on HWMON
+> +	select NEW_LEDS
+> +	select LEDS_CLASS
+> +	help
+> +	  Say Y here to enable the EC driver for the (Snapdragon X2 Elite,
+> +	  glymur-based) Lenovo Yoga Slim 7x Gen 11 laptop. The EC provides
+> +	  thermistors and CPU fan speed as hwmon channels, and the keyboard
+> +	  backlight as an LED.
+> +
+> +	  This is the Gen 11 (glymur) machine specifically. Its EC is a Compal
+> +	  design at i2c address 0x70 and speaks a different protocol from the
+> +	  Qualcomm reference EC that the reference designs place at 0x76, so
+> +	  EC_QCOM_HAMOA does not drive it - and conversely this driver does not
+> +	  cover the X1E-based Yoga Slim 7x Gen 9.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called lenovo-yoga-slim7x-gen11-ec.
+> +
+>  config EC_QCOM_HAMOA
+>  	tristate "Embedded Controller driver for Qualcomm Hamoa/Glymur reference devices"
+>  	depends on ARCH_QCOM || COMPILE_TEST
+> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+> index 7681be4a46e9..605cca4d42a9 100644
+> --- a/drivers/platform/arm64/Makefile
+> +++ b/drivers/platform/arm64/Makefile
+> @@ -9,4 +9,5 @@ obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
+>  obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
+>  obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
+>  obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
+> +obj-$(CONFIG_EC_LENOVO_YOGA_SLIM7X_GEN11) += lenovo-yoga-slim7x-gen11-ec.o
+>  obj-$(CONFIG_EC_QCOM_HAMOA) += qcom-hamoa-ec.o
+> diff --git a/drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c b/drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c
+> new file mode 100644
+> index 000000000000..1ef11b9eeffa
+> --- /dev/null
+> +++ b/drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c
+> @@ -0,0 +1,547 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/container_of.h>
+> +#include <linux/delay.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/gfp_types.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/i2c.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kstrtox.h>
+> +#include <linux/leds.h>
+> +#include <linux/lockdep.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pm.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+> +#include <linux/units.h>
+> +
+> +#define SLIM7X11_EC_BLOCK_READ	0x01
+> +#define SLIM7X11_EC_BLOCK_WRITE	0x02
+> +#define SLIM7X11_EC_RESP_LEN	6
+> +#define SLIM7X11_EC_REQ_LEN	7
+> +
+> +#define SLIM7X11_EC_CMD_RAM_READ	0xb0
+> +#define SLIM7X11_EC_CMD_RAM_WRITE	0xb1
+> +#define SLIM7X11_EC_CMD_FAN		0x46
+> +#define SLIM7X11_EC_FAN_GET_SPEED	0x81
+> +
+> +#define SLIM7X11_EC_CMD_EVENT	0x84
+> +#define SLIM7X11_EC_EVT_MAX_DRAIN	64
+> +#define SLIM7X11_EC_EVT_FN_LOCK	0x0f
+> +#define SLIM7X11_EC_EVT_MIC_MUTE	0x18
+> +#define SLIM7X11_EC_EVT_FLIGHT_MODE	0x19
+> +
+> +#define SLIM7X11_EC_SCUK		0x1c
+> +#define SLIM7X11_EC_SCUK_MEDIA	BIT(7)
+> +#define SLIM7X11_EC_SCUK_LED_OFF	BIT(5)
+> +#define SLIM7X11_EC_SCUK_MEDIA_MASK	(SLIM7X11_EC_SCUK_MEDIA | SLIM7X11_EC_SCUK_LED_OFF)
+> +
+> +#define SLIM7X11_EC_KBLT		0x03
+> +#define SLIM7X11_EC_KBLT_LEVEL	GENMASK(1, 0)
+> +#define SLIM7X11_EC_KBLT_AUTO	3
+> +#define SLIM7X11_EC_KBLT_MAX	2
+> +
+> +#define SLIM7X11_EC_TEMP_FIRST	0x12
+> +#define SLIM7X11_EC_NUM_TEMP	6
+> +#define SLIM7X11_EC_TEMP_MAX	120
+> +
+> +struct slim7x11_ec {
+> +	struct i2c_client *client;
+> +	/* serializes all EC access */
+> +	struct mutex lock;
+> +	unsigned long temp_present;
+> +	struct led_classdev kbd_led;
+> +	u8 kblt_level;
+> +	bool kblt_restore;
+> +	struct input_dev *keys;
+> +};
+> +
+> +static int slim7x11_ec_command(struct slim7x11_ec *ec, u8 cmd, u8 arg0, u8 arg1,
+> +			       u8 resp[SLIM7X11_EC_RESP_LEN])
+> +{
+> +	u8 req[SLIM7X11_EC_REQ_LEN] = { cmd, arg0, arg1 };
+> +	int ret;
+> +
+> +	lockdep_assert_held(&ec->lock);
+> +
+> +	ret = i2c_smbus_write_i2c_block_data(ec->client, SLIM7X11_EC_BLOCK_WRITE,
+> +					     sizeof(req), req);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	usleep_range(2000, 3000);
+> +
+> +	ret = i2c_smbus_read_i2c_block_data(ec->client, SLIM7X11_EC_BLOCK_READ,
+> +					    SLIM7X11_EC_RESP_LEN, resp);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret != SLIM7X11_EC_RESP_LEN)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int slim7x11_ec_ram_read(struct slim7x11_ec *ec, u8 addr, u8 *val)
+> +{
+> +	u8 resp[SLIM7X11_EC_RESP_LEN];
+> +	int ret;
+> +
+> +	ret = slim7x11_ec_command(ec, SLIM7X11_EC_CMD_RAM_READ, addr, 0, resp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*val = resp[0];
+> +	return 0;
+> +}
+> +
+> +static int slim7x11_ec_ram_write(struct slim7x11_ec *ec, u8 addr, u8 val)
+> +{
+> +	u8 resp[SLIM7X11_EC_RESP_LEN];
+> +
+> +	return slim7x11_ec_command(ec, SLIM7X11_EC_CMD_RAM_WRITE, addr, val, resp);
+> +}
+> +
+> +static int slim7x11_ec_fan_read(struct slim7x11_ec *ec, long *rpm)
+> +{
+> +	u8 resp[SLIM7X11_EC_RESP_LEN];
+> +	int ret;
+> +
+> +	ret = slim7x11_ec_command(ec, SLIM7X11_EC_CMD_FAN, SLIM7X11_EC_FAN_GET_SPEED, 0,
+> +				  resp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*rpm = resp[0] * 100;
+> +	return 0;
+> +}
+> +
+> +static umode_t slim7x11_ec_is_visible(const void *drvdata,
+> +				      enum hwmon_sensor_types type,
+> +				      u32 attr, int channel)
+> +{
+> +	const struct slim7x11_ec *ec = drvdata;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (!(ec->temp_present & BIT(channel)))
+> +			return 0;
+> +		return 0444;
+> +	case hwmon_fan:
+> +		return 0444;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static int slim7x11_ec_read(struct device *dev, enum hwmon_sensor_types type,
+> +			    u32 attr, int channel, long *val)
+> +{
+> +	struct slim7x11_ec *ec = dev_get_drvdata(dev);
+> +	int ret;
+> +	u8 raw;
+> +
+> +	guard(mutex)(&ec->lock);
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_TEMP_FIRST + channel, &raw);
+> +		if (ret)
+> +			return ret;
+> +		if (!raw)
+> +			return -ENODATA;
+> +		if (raw > SLIM7X11_EC_TEMP_MAX)
+> +			return -EIO;
+> +		*val = raw * MILLIDEGREE_PER_DEGREE;
+> +		return 0;
+> +	case hwmon_fan:
+> +		return slim7x11_ec_fan_read(ec, val);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static const char * const slim7x11_ec_temp_labels[SLIM7X11_EC_NUM_TEMP] = {
+> +	"Charger A",
+> +	"CPU VR",
+> +	"5V rail",
+> +	"Ambient",
+> +	"Charger B",
+> +	"Thermistor 6",
+> +};
+> +
+> +static int slim7x11_ec_read_string(struct device *dev, enum hwmon_sensor_types type,
+> +				   u32 attr, int channel, const char **str)
+> +{
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		*str = slim7x11_ec_temp_labels[channel];
+> +		return 0;
+> +	case hwmon_fan:
+> +		*str = "CPU fan";
+> +		return 0;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static enum led_brightness slim7x11_ec_kbd_led_get(struct led_classdev *led)
+> +{
+> +	struct slim7x11_ec *ec = container_of(led, struct slim7x11_ec, kbd_led);
+> +	u8 raw;
+> +
+> +	guard(mutex)(&ec->lock);
+> +
+> +	if (slim7x11_ec_ram_read(ec, SLIM7X11_EC_KBLT, &raw))
+> +		return 0;
+> +
+> +	raw = FIELD_GET(SLIM7X11_EC_KBLT_LEVEL, raw);
+> +
+> +	if (raw == SLIM7X11_EC_KBLT_AUTO)
+> +		return SLIM7X11_EC_KBLT_MAX;
+> +
+> +	return raw;
+> +}
+> +
+> +static int slim7x11_ec_kbd_led_level(struct slim7x11_ec *ec, u8 level, u8 *old)
+> +{
+> +	u8 raw;
+> +	int ret;
+> +
+> +	ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_KBLT, &raw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (old)
+> +		*old = FIELD_GET(SLIM7X11_EC_KBLT_LEVEL, raw);
+> +
+> +	FIELD_MODIFY(SLIM7X11_EC_KBLT_LEVEL, &raw, level);
+> +
+> +	return slim7x11_ec_ram_write(ec, SLIM7X11_EC_KBLT, raw);
+> +}
+> +
+> +static int slim7x11_ec_kbd_led_set(struct led_classdev *led,
+> +				   enum led_brightness brightness)
+> +{
+> +	struct slim7x11_ec *ec = container_of(led, struct slim7x11_ec, kbd_led);
+> +
+> +	guard(mutex)(&ec->lock);
+> +
+> +	return slim7x11_ec_kbd_led_level(ec, brightness, NULL);
+> +}
+> +
+> +static const struct hwmon_ops slim7x11_ec_hwmon_ops = {
+> +	.is_visible = slim7x11_ec_is_visible,
+> +	.read = slim7x11_ec_read,
+> +	.read_string = slim7x11_ec_read_string,
+> +};
+> +
+> +static const struct hwmon_channel_info * const slim7x11_ec_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(temp,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL),
+> +	HWMON_CHANNEL_INFO(fan,
+> +			   HWMON_F_INPUT | HWMON_F_LABEL),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_chip_info slim7x11_ec_chip_info = {
+> +	.ops = &slim7x11_ec_hwmon_ops,
+> +	.info = slim7x11_ec_hwmon_info,
+> +};
+> +
+> +static int slim7x11_ec_fn_lock_toggle(struct slim7x11_ec *ec)
+> +{
+> +	u8 raw;
+> +	int ret;
+> +
+> +	ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_SCUK, &raw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (raw & SLIM7X11_EC_SCUK_MEDIA)
+> +		raw &= ~SLIM7X11_EC_SCUK_MEDIA_MASK;
+> +	else
+> +		raw |= SLIM7X11_EC_SCUK_MEDIA_MASK;
+> +
+> +	return slim7x11_ec_ram_write(ec, SLIM7X11_EC_SCUK, raw);
+> +}
+> +
+> +static void slim7x11_ec_report_key(struct slim7x11_ec *ec, unsigned int code)
+> +{
+> +	if (!ec->keys)
+> +		return;
+> +
+> +	input_report_key(ec->keys, code, 1);
+> +	input_sync(ec->keys);
+> +	input_report_key(ec->keys, code, 0);
+> +	input_sync(ec->keys);
+> +}
+> +
+> +static irqreturn_t slim7x11_ec_irq(int irq, void *data)
+> +{
+> +	struct slim7x11_ec *ec = data;
+> +	unsigned int i;
+> +
+> +	guard(mutex)(&ec->lock);
+> +
+> +	for (i = 0; i < SLIM7X11_EC_EVT_MAX_DRAIN; i++) {
+> +		u8 resp[SLIM7X11_EC_RESP_LEN];
+> +
+> +		if (slim7x11_ec_command(ec, SLIM7X11_EC_CMD_EVENT, 0, 0, resp))
+> +			break;
+> +		if (!resp[0])
+> +			break;
+> +
+> +		switch (resp[0]) {
+> +		case SLIM7X11_EC_EVT_FN_LOCK:
+> +			if (!slim7x11_ec_fn_lock_toggle(ec))
+> +				sysfs_notify(&ec->client->dev.kobj, NULL, "fn_lock");
+> +			break;
+> +		case SLIM7X11_EC_EVT_MIC_MUTE:
+> +			slim7x11_ec_report_key(ec, KEY_MICMUTE);
+> +			break;
+> +		case SLIM7X11_EC_EVT_FLIGHT_MODE:
+> +			slim7x11_ec_report_key(ec, KEY_RFKILL);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void slim7x11_ec_register_keys(struct slim7x11_ec *ec)
+> +{
+> +	struct device *dev = &ec->client->dev;
+> +	struct input_dev *input;
+> +	int ret;
+> +
+> +	input = devm_input_allocate_device(dev);
+> +	if (!input) {
+> +		dev_warn(dev, "no memory for the hotkey device\n");
+> +		return;
+> +	}
+> +
+> +	input->name = "Lenovo Yoga Slim 7x hotkeys";
+> +	input->phys = "lenovo-yoga-slim7x-gen11-ec/input0";
+> +	input->id.bustype = BUS_I2C;
+> +	input_set_capability(input, EV_KEY, KEY_MICMUTE);
+> +	input_set_capability(input, EV_KEY, KEY_RFKILL);
+> +
+> +	ret = input_register_device(input);
+> +	if (ret) {
+> +		dev_warn(dev, "cannot register the hotkey device: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	ec->keys = input;
+> +}
+> +
+> +static ssize_t fn_lock_show(struct device *dev, struct device_attribute *attr,
+> +			    char *buf)
+> +{
+> +	struct slim7x11_ec *ec = dev_get_drvdata(dev);
+> +	u8 raw;
+> +	int ret;
+> +
+> +	scoped_guard(mutex, &ec->lock)
+> +		ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_SCUK, &raw);
+> +
+> +	if (ret)
+> +		return ret;
+
+Please put this inside scoped_guard(). There's little reason to do 
+"optimization" like this at the cost of error handling clarity.
+
+> +
+> +	return sysfs_emit(buf, "%u\n", !(raw & SLIM7X11_EC_SCUK_MEDIA));
+> +}
+> +
+> +static ssize_t fn_lock_store(struct device *dev, struct device_attribute *attr,
+> +			     const char *buf, size_t count)
+> +{
+> +	struct slim7x11_ec *ec = dev_get_drvdata(dev);
+> +	bool enable;
+> +	u8 raw;
+> +	int ret;
+> +
+> +	ret = kstrtobool(buf, &enable);
+> +	if (ret)
+> +		return ret;
+> +
+> +	guard(mutex)(&ec->lock);
+> +
+> +	ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_SCUK, &raw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (enable)
+> +		raw &= ~SLIM7X11_EC_SCUK_MEDIA_MASK;
+> +	else
+> +		raw |= SLIM7X11_EC_SCUK_MEDIA_MASK;
+> +
+> +	ret = slim7x11_ec_ram_write(ec, SLIM7X11_EC_SCUK, raw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_RW(fn_lock);
+> +
+> +static struct attribute *slim7x11_ec_attrs[] = {
+> +	&dev_attr_fn_lock.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(slim7x11_ec);
+> +
+> +static int slim7x11_ec_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct device *hwmon;
+> +	struct slim7x11_ec *ec;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	if (!i2c_check_functionality(client->adapter,
+> +				     I2C_FUNC_SMBUS_I2C_BLOCK)) {
+
+Use just one line?
+
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "adapter does not support SMBus block transfers\n");
+> +	}
+> +
+> +	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
+> +	if (!ec)
+> +		return -ENOMEM;
+> +
+> +	ec->client = client;
+> +	i2c_set_clientdata(client, ec);
+> +
+> +	ret = devm_mutex_init(dev, &ec->lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	scoped_guard(mutex, &ec->lock) {
+> +		for (i = 0; i < SLIM7X11_EC_NUM_TEMP; i++) {
+> +			u8 raw;
+> +
+> +			ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_TEMP_FIRST + i,
+> +						   &raw);
+
+I don't know why this line in particular is split at this point, you have 
+much longer code lines below.
+
+It's generally okay to have code lines go up to 100 chars as long as one 
+doesn't hide key logic to the very end of a line. Taking advantage of that 
+is most useful to avoid breaking function calls with many args excessively 
+and other boilerplatey stuff.
+
+> +			if (ret) {
+> +				return dev_err_probe(dev, ret,
+> +						     "failed to read thermistor %u\n",
+> +						     i);
+> +			}
+> +
+> +			if (raw > 0 && raw <= SLIM7X11_EC_TEMP_MAX)
+> +				ec->temp_present |= BIT(i);
+> +		}
+> +	}
+> +
+> +	if (!ec->temp_present) {
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "no thermistor reported a usable value\n");
+> +	}
+> +
+> +	dev_dbg(dev, "thermistors present: %#lx\n", ec->temp_present);
+> +
+> +	hwmon = devm_hwmon_device_register_with_info(dev, "yoga_slim7x_ec", ec,
+> +						     &slim7x11_ec_chip_info, NULL);
+> +	if (IS_ERR(hwmon))
+> +		return PTR_ERR(hwmon);
+> +
+> +	ec->kbd_led.name = "platform::kbd_backlight";
+> +	ec->kbd_led.max_brightness = SLIM7X11_EC_KBLT_MAX;
+> +	ec->kbd_led.brightness_get = slim7x11_ec_kbd_led_get;
+> +	ec->kbd_led.brightness_set_blocking = slim7x11_ec_kbd_led_set;
+> +
+> +	ret = devm_led_classdev_register(dev, &ec->kbd_led);
+> +	if (ret) {
+> +		return dev_err_probe(dev, ret,
+> +				     "failed to register keyboard backlight\n");
+
+I don't get why you split this, you've a longer dev_err_probe() line 
+below.
+
+> +	}
+> +
+> +	if (client->irq) {
+> +		slim7x11_ec_register_keys(ec);
+> +
+> +		ret = devm_request_threaded_irq(dev, client->irq, NULL,
+> +						slim7x11_ec_irq, IRQF_ONESHOT,
+> +						"lenovo-yoga-slim7x-gen11-ec", ec);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret, "cannot request the EC interrupt\n");
+> +
+> +		scoped_guard(mutex, &ec->lock) {
+> +			for (i = 0; i < SLIM7X11_EC_EVT_MAX_DRAIN; i++) {
+> +				u8 resp[SLIM7X11_EC_RESP_LEN];
+> +
+> +				if (slim7x11_ec_command(ec, SLIM7X11_EC_CMD_EVENT, 0, 0, resp))
+> +					break;
+> +				if (!resp[0])
+> +					break;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int slim7x11_ec_suspend(struct device *dev)
+> +{
+> +	struct slim7x11_ec *ec = dev_get_drvdata(dev);
+> +
+> +	guard(mutex)(&ec->lock);
+> +	ec->kblt_restore = !slim7x11_ec_kbd_led_level(ec, 0, &ec->kblt_level);
+> +
+> +	return 0;
+> +}
+> +
+> +static int slim7x11_ec_resume(struct device *dev)
+> +{
+> +	struct slim7x11_ec *ec = dev_get_drvdata(dev);
+> +
+> +	guard(mutex)(&ec->lock);
+> +	if (ec->kblt_restore) {
+> +		ec->kblt_restore = false;
+> +		slim7x11_ec_kbd_led_level(ec, ec->kblt_level, NULL);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_SIMPLE_DEV_PM_OPS(slim7x11_ec_pm_ops, slim7x11_ec_suspend, slim7x11_ec_resume);
+> +
+> +static const struct of_device_id slim7x11_ec_of_match[] = {
+> +	{ .compatible = "lenovo,yoga-slim7x-gen11-ec" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, slim7x11_ec_of_match);
+> +
+> +static const struct i2c_device_id slim7x11_ec_i2c_id[] = {
+> +	{ "slim7x-gen11-ec" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, slim7x11_ec_i2c_id);
+> +
+> +static struct i2c_driver slim7x11_ec_driver = {
+> +	.driver = {
+> +		.name = "lenovo-yoga-slim7x-gen11-ec",
+> +		.of_match_table = slim7x11_ec_of_match,
+> +		.dev_groups = slim7x11_ec_groups,
+> +		.pm = pm_sleep_ptr(&slim7x11_ec_pm_ops),
+> +	},
+> +	.probe = slim7x11_ec_probe,
+> +	.id_table = slim7x11_ec_i2c_id,
+> +};
+> +module_i2c_driver(slim7x11_ec_driver);
+> +
+> +MODULE_AUTHOR("Oleg Keri <okerixx@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo Yoga Slim 7x Gen 11 embedded controller");
+> +MODULE_LICENSE("GPL");
+> 
+
 -- 
-2.34.1
+ i.
 
