@@ -1,86 +1,109 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A205187DE
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A302D522EF9
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791984212; cv=none; b=W1xZgnsn9LDP1hpDIblCqCQXKd1Bzi8DXFzPcxR/7RsEtdK3MFWeQn5tM/0YAp2Tdyp+JeegFnHo66L5zfzkz4KGs7uY3haWdTudEFyk39TSF5dcYatXaR9qEsu695Ep9NeDkPS+6ru/97r3Dmstr3t2lkVH9EWnJE7ZO61bj6E=
+	t=1791984613; cv=none; b=Oenb5i309auQN6Zd21RuiGGwd8NrXMYM1G9GZshVDoXMCBQO7Eyy8QrbsdHViyzaBgQU7ClR3u2h4228fh/F6PHBhb7tioGQcZeyzjrHPjmMLw8wTRmWpv6gzsf0yCw93ls73FPfd3Ew8+vVQHpy0Ud8rpWPMcvc9Py3XqPbPNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791984212; c=relaxed/simple;
-	bh=fss3Xk8AaT7MyHxdj2en2a/sx+RP2v+7z34z6RgWgKs=;
+	s=arc-20240116; t=1791984613; c=relaxed/simple;
+	bh=doXrUIwdT42lwD+d4QdKmHm+N56c6YBObxX4WBpagBg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n9rD+kFz4hN6amPwxk3cizJSQvEQnO+JeZ8eYFHnb9foaD3A9M35b9PfLeMaD0SmX+N55vkdXuOfM41JGjUYcMlgeeVKq/nF5P/Mb46Rpk2uGC7ENusEPTUS2lbm26HExUmYmcaVTCHeq8dYXAU4PIPUZWhVCgRpYOFRPaWQCHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gS/yxuRa; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=WWCpgC3FRfxC2S6xuy6abW/khrxlLgiw+oc+KozRDzK4Qd5QaYdPLF6LBxAnyVAm/EFgd4+7+Pj+y+sjmq63LtWl6LRRUfNEpEQrDYl10423tgZpiqnIwy0FM44s0tDJvLyYck7UNoIxcjPEsPo9FQRGOvFWX2R6blOFyKDy+Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XA25ccZm; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=eRnmwEo6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS/yxuRa"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-48b02b1b4cfso3894128f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 06:23:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XA25ccZm";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="eRnmwEo6"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69EAR3Y3466254
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=LZgnpAcn7mn
+	WiJsfnca2KhxPPGKIsl9W8hnUoknYsA0=; b=XA25ccZmcxyw3/MrLag62tSgtBb
+	tsqBjh1fsPQxjiznIimwm+69/fycJyuKQR8FULXyNEtOlqqRxeayEzpvEsAER8nK
+	HQa0NEFf6MYacY8bcTh0H/xLi3PMTZpsrOdWOwqLLtClq8FTr5pqlkVS6gP/Xvqg
+	gp51M3fIBzbU9q8QeRxH3V90RUg9DkD2QX53VsCetvBd9TWLRaI5fFXAWmqDczOR
+	09mg6FbwW7OGJkhrufBtigucsWSwPMkagsYwzRCCsPy9oBVV6/kZRApedVeeG7Lj
+	552uSQ6QHHPPy6tWT5Fbo8ghDrJ//nWvPQ6f1vWJJgJSdSpaM07XJJf84Tg==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ha80crp6a-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:05 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93dea1b6c89so787816185a.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 06:30:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791984205; x=1792589005; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1791984604; x=1792589404; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=rbusjqW21qM0Dw5hLkvzrsZDVC62kgDH5ejkmQuCYuE=;
-        b=gS/yxuRaTMxME4UHjYSP7ebht3+7RG4OJ6QR1xP325SrtqlwzrDVfD0LbOTZ7oHFfp
-         C2kuhoUnLe+woCZNa4gu8dFRVtGhVSTao57scFwnyA3Y34GecZwaFksUvlkeNKz2pbC6
-         1Kl0U7QoChsnghfHC4mPHcHzUVojFCkAWLZ6O3uT0423PePnioMVcVQUQBxi5qwukzdC
-         47Ts+aa6AkKTaYyWRdN/8qgOTdr+jnBvZ2CJykBPd1ItY6ISsEabqHa6mRjUTTlyOQ5l
-         2P4adJ9y1VcTBCoXhKxcwiUu2fbhGfyjjHqX6azA1sgqUFpC97Ay1TWmUo5sJ/k4pYKe
-         h3hg==
+        bh=LZgnpAcn7mnWiJsfnca2KhxPPGKIsl9W8hnUoknYsA0=;
+        b=eRnmwEo6yrRPV6tKBAnPFLTd9eIWkJnK+SaiLsQUPMa1zEF7Vk4R38np7GQlqaA/zB
+         08RK4xWe3u8i3I8RaLFIwUcFuHY1/wRGNveGVEjMb0N+d4oYqxHYnAlXhU7xWSpFuuN8
+         cDMB371Di+PkdHbRyGrbIkCl/vYH0vveXDPysja7+/Y/GEu/E6CGFXTGaBETP+1K2RPo
+         BpL8SUduZ68v36NEQ+dR81rAtM/wUSIo4AwsWYJ7XLnoNNMrf18yWoV8r1VQmhWGiYNx
+         Od2+TqyvcvvQHCiisrIIKKito/0jQC2kh465IcLw2QWdBP/Q38B1kn9QD5JY01z6DaLC
+         JNOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791984205; x=1792589005;
+        d=1e100.net; s=20260707; t=1791984604; x=1792589404;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=rbusjqW21qM0Dw5hLkvzrsZDVC62kgDH5ejkmQuCYuE=;
-        b=TyTNN3L7eWl2KtqLbBHHjAbLBu+KPTYKGUVXVe5aNMofCXugttoqYzAEDcSWXGV2+9
-         4ovBdz5SDrGjbwelBnq935I5wLcWwkwU9Rv5w8Ss+QIcJeI/3UwY7r9MYfprO/3ncgxA
-         ZmkbYyvonc1XzvFYSXbWG1XZuNcFosSwk0EWQmiWsSPy6TYhGMHwm0nQS63fqUjzBx1+
-         tmaOFOCqSZqeJmrs+AXMLBxS9cPkxgGypGEU10QhjjPlhcdKOIZs9ENhZIakvqoGNp8F
-         41QR9gw+zSqCuidI0NefL5rBqel2BvBcjE1m6GZB8JtJAO8kKcLahXzUTiGsmQ1qxb3I
-         Iovw==
-X-Forwarded-Encrypted: i=1; AKwUvBwvCoMYHpdhSzuTTTLpS6lNIYXeHP1bYIqQwETXUhozt/upv+YzStk3sgytfDeWt828Ji0MbkgJDEcmhzTDruSxcHGJ@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ7LjARE1x3frB08MEsfybYR2+QtdGuBnTddVanpFmHWVGSBbr2
-	g/NxFwMBWLvvvcdPWuLWOoY8IsAy8ovZTV2bVER/54rLnMj6ioStOT0l
-X-Gm-Gg: AYBFou0eInQ5F5sjGqQwk+0QlgVzUwRZpU/+Na2GluGj9UGuIVGyO6XQQE8TUQJqmD+
-	ZirPQH6+GXh2Yo5UYKqz0Xuv8PcNuiculTyUBIO7Wu4GGGPs8i/Kv9JuFXjf/beSg2CnfMC/zhl
-	c0uyBluLcnI+F1GGGBejxB0/Ko+lV6gCK5ecVSuU648aCcOsggdlSbe47lYiU+uiEVHSON4PUBv
-	4OrreqSiyS++9dAEbYzSL6l5MGGQP3wq3aXWVZrGeNq5gl1DKasGZiOjJYy6j9kQarDPwaIxstg
-	MJn3u7zBXZezNInWSmzGIkXBFhBULWkoIneXQjm6LT8oCyhnLHutjD6AgtwPnX0S34vKI+N0Gyl
-	F+CHF7ycMnqSJ5PLZSFxCTvFXISAHOqg4Me7A4kWO3AgRqrntcw+bHSbEb2i+deoWDTrZ82KXkG
-	rAwZ5oRHDPsKsKjCKAcueGVwvaJQJPFdWg0ka99cCkTwdw9x1eouGDqqIdEzGx5AkqJOm5T7V+u
-	FaI8ttYNc4YvQ==
-X-Received: by 2002:a05:600c:c10e:b0:4a1:93fd:913 with SMTP id 5b1f17b1804b1-4a193fd0ad6mr201833485e9.10.1791984205327;
-        Wed, 14 Oct 2026 06:23:25 -0700 (PDT)
-Received: from localhost.localdomain ([194.154.195.114])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4a1bcf69402sm782515e9.14.2026.10.14.06.23.24
+        bh=LZgnpAcn7mnWiJsfnca2KhxPPGKIsl9W8hnUoknYsA0=;
+        b=IbNh6ZA2nZ+fOhVqRp4hn0PqXwroEfiSaxRM2asTNQ/QOkEbtesHBLrRnzj8S2ufA+
+         kbqVMxFT7RmDXeUi2HXhLBXS+LAirvSVv3q9rvWs4vPQEPRsz2IXpydD18/VKOgPtd+T
+         DlgfjiRAim4fniVQiumhian+bOi6CliYiSJaJOidDtdaepjKMHQY/IXxBL0f58syRSbu
+         TwLJIjan6b9ypZ8ENtjv0oTjsOp/bRgmROqEMmiMYKXTSNmGZ4Gm1U5G8ZJkIKxBZ1jq
+         s27g1nyKY6IFj7KyGsAXcpPvdAvjsP0Ituqxq2M4iWn0b2GfiKYDIkTlREnI9TtJnm5X
+         7bjw==
+X-Forwarded-Encrypted: i=1; AKwUvBwW6SwpeqRmVxA60WEWeAwNfO+pe2xjecILQD0yufnsp39sJ+3DW7SKaYORUefrCegZIbcTNrypGG5gZOjG9bP2JJBK@vger.kernel.org
+X-Gm-Message-State: AFq9FYJRehJTtwKN6H29k1B35trBazJXWuLzXXEa1oRXLFNcQu2ZD0by
+	/XhlvR/5SiL0wvZN4iSZTCOSMSt0QNZ02+jFJtNvPOIWYrfFd82CMELQ23DCjCsZQKU9CFpjixh
+	tuZ65fu/bf1uG+wshF5USVPnODANY4B883z4Hk+1lYCZCR7IpCqZ0/si4GqAR08BxB+hyZoZpoz
+	/q
+X-Gm-Gg: AYBFou3vYHKucvpbHpk1bu0G6Jmg7uqO52/rrgdF7+Op61ETXJasVn73LZF3z9hStt/
+	JrOMM/TlYGJyyaQ5Eb0NL/YRO+n5kvS/lqJV3Ks8pAC/FiyFo7N0hhR97BEMQOdzxJintlGbnLw
+	4uZSkePOJR/KZuLoV/RWMD0GiCOtIRXOXMUNLeqGUyQ0LkQbmpayOy4gPLJqpORTmt4odKLoAXY
+	+2Hss+JaadDUtqNT93Xiyq3RaMA7zGA/pOVqic4O/QIWGq+V5yZ1iLCDNoufMbjsyKwdAoNyCWJ
+	PnF970UeOZgJRj6KuJVcSAcK1Hj2DedJy+qx/iUXrMWzmk1khuHxFKTzMA1KbtvZi5w2SUJghj3
+	ZlPHCt6qaJSSTlxiADB7r2hKgNCk=
+X-Received: by 2002:a05:620a:2719:b0:93e:c12c:43ff with SMTP id af79cd13be357-93ec12c492amr2391109085a.76.1791984604094;
+        Wed, 14 Oct 2026 06:30:04 -0700 (PDT)
+X-Received: by 2002:a05:620a:2719:b0:93e:c12c:43ff with SMTP id af79cd13be357-93ec12c492amr2391102685a.76.1791984603476;
+        Wed, 14 Oct 2026 06:30:03 -0700 (PDT)
+Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bcf552e8sm2027155e9.13.2026.10.14.06.30.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2026 06:23:24 -0700 (PDT)
-From: Oleg Keri <okerixx@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Abel Vesa <abelvesa@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH v6 2/3] platform/arm64: add Lenovo Yoga Slim 7x Gen 11 EC driver
-Date: Wed, 14 Oct 2026 15:23:14 +0200
-Message-ID: <20261014132315.4659-3-okerixx@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261014132315.4659-1-okerixx@gmail.com>
-References: <20261014132315.4659-1-okerixx@gmail.com>
+        Wed, 14 Oct 2026 06:30:02 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+To: rafael@kernel.org
+Cc: Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
+        "Derek J. Clark" <derekjohn.clark@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+        Jai Luthra <jai.luthra@ideasonboard.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Armin Wolf <W_Armin@gmx.de>, Jack Wu <jackbb_wu@compal.com>,
+        "Mario Limonciello (AMD)" <superm1@kernel.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v1 1/4] platform profile: Separate handler locking from sysfs lifetime
+Date: Wed, 14 Oct 2026 15:24:44 +0200
+Message-ID: <20261014132500.3817549-2-daniel.lezcano@oss.qualcomm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
+References: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -88,669 +111,286 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfX1RjyyBjCADmN
+ UU4VcyZ4EcK40a6l8ncB4KRxJfHEXxvSDOwsXHSTLC/P3dyuQXfKwSzQwhND8+BXNBXR83RrqUk
+ LNGH8yGVjpnU7FN8EoLx/0EY+UPAXcw=
+X-Proofpoint-GUID: PmtpYHK1OWww-Nge7k7lAtEgZ_0NgUvK
+X-Proofpoint-ORIG-GUID: PmtpYHK1OWww-Nge7k7lAtEgZ_0NgUvK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfXyyGJqlMy1AK/
+ P1q7NBg95dACAxZTTJYZ4U5lNenccnrEAVLq6BCLlMrzHjELlFrBltljfqMm7lNxQSER7zIsmuH
+ lKSMJBrk6J9uuJA6reatkhYZInd3+P/vy3RSlzPZF/RwIsoJ3o53PMil1xXTYJRdDCKoNP7JJ5P
+ ESXsPTdgImV229UW1qeZDiNJCkkRoNslR42Pqy+Ukhxxv8M2NxplquJY9vnVb0QjrVd6/tFtSvD
+ ccJGWnV/gb4KEyfMwBU+krjZEme6Q2mHSJpKYrp4X03gjgxmemWHFDo2j5RBAp3Cou1j5BvgGWY
+ Wv/rz31caecjW1TO2Uxl1rReFSEEvTIHBW24pdR0TLfrxM+xo8OUbMv7DNgbrGZRHDMFoQvaWwr
+ kULIWfC1WhTqnlNgF9cUSOCSwekotnvA+OQu/j0gClzEkkEaiX53ypw85kJ8LQYuqEC8spPcxjV
+ OEYUhYzIIaHmEJ9X+kg==
+X-Authority-Analysis: v=2.4 cv=JegpPkKV c=1 sm=1 tr=0 ts=6acf83dd cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=660iZSQnnn4A:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8 a=x8GNUdOtJ_ZxbuW7bkUA:9
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-13_01,2026-10-09_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1015 phishscore=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610140053
 
-The Lenovo Yoga Slim 7x Gen 11 (Qualcomm glymur / Snapdragon X2 Elite)
-carries a Compal EF06 embedded controller on I2C at address 0x70. The
-platform firmware describes it as an ACPI GenericSerialBus region, but the
-machine boots from device tree, so nothing otherwise talks to it.
+Registration and removal currently hold profile_lock across
+device_unregister() and sysfs_update_group(). These operations can remove
+sysfs attributes and wait for their active callbacks to finish. The
+profile read and write callbacks acquire profile_lock themselves, so a
+concurrent access can deadlock:
 
-Commands are exchanged with two raw I2C block transfers: a 7 byte write to
-register 0x02 carrying the command and up to six arguments, then a 6 byte
-read of register 0x01 for the result, with a short delay in between before
-the result register is valid. The EC offers no way to match a result to
-its command; the delay is the one the vendor ACPI code uses.
+  Removal/update path             Active sysfs callback
+  -------------------             ---------------------
+  acquire profile_lock            hold kernfs active reference
+  remove a sysfs attribute         wait for profile_lock
+  wait for its active references
 
-Expose what the EC offers that the rest of the kernel does not already
-provide:
+The removal path cannot finish until the callback returns, and the
+callback cannot return until the removal path releases profile_lock.
+This applies both to per-provider device teardown and to updates of the
+legacy aggregate attribute group.
 
-  - the board thermistors that report a value at probe, five on this
-    machine, as hwmon temperature channels. These are charger, CPU
-    voltage regulator, 5 V rail and ambient sensors, not die sensors, and
-    read considerably cooler than tsens
-  - CPU fan speed in RPM
-  - the keyboard backlight as an LED, off/low/high
-  - Fn-lock as a read/write sysfs attribute, matching the ideapad-laptop
-    interface. The EC reports Fn+Esc as an event but keeps no state of its
-    own, so the driver owns the bit and toggles it on the key
-  - the mic-mute and airplane-mode keys as KEY_MICMUTE and KEY_RFKILL.
-    These reach the host only as EC events; they are not on the keyboard's
-    HID interface and have no GPIO of their own
+Simply dropping profile_lock around these operations is insufficient.
+Aggregate operations currently discover providers through the class
+device list. A provider being unregistered could therefore still be
+selected for an aggregate read, write or cycle while its sysfs files are
+being torn down. Concurrent registrations and removals would also race
+when updating aggregate attribute visibility.
 
-The EC signals pending events on a dedicated line, and keeps pulsing it
-until they are read - so the queue must be drained completely on every
-interrupt, including codes this driver ignores. Leaving one behind makes
-the controller pulse indefinitely.
+Introduce profile_registration_lock to serialize registration, removal
+and aggregate sysfs updates. Sysfs callbacks never acquire this mutex.
+Retain profile_lock for profile operations and use it to protect an
+explicit list of handlers participating in the aggregate interface.
 
-Fan speed is reported but not controlled. The EC accepts a manual setpoint,
-however it enforces no thermal floor over it: with the fan pinned at
-roughly 2000 RPM under full load the SoC rose from 69 to 91 degrees in 30
-seconds without the EC ever overriding. Exposing pwm1_enable or fan1_target
-would therefore let userspace overheat the machine, so neither is
-implemented.
+Add a handler to that list only after device_register() succeeds. On
+removal, unlink it under profile_lock before calling device_unregister().
+Acquiring profile_lock first waits for any aggregate operation already
+using the handler to complete; unlinking prevents later aggregate
+operations from finding it. Release profile_lock before draining sysfs
+callbacks, allowing active per-provider callbacks to complete before the
+device is released. Apply the same unlink-before-unregister ordering to
+registration error cleanup.
 
-Note this is the Gen 11 machine specifically. Its EC differs from the
-Qualcomm reference EC that the reference designs place at address 0x76,
-which is not populated here, and so EC_QCOM_HAMOA does not drive it.
+Walk this list for aggregate reads, writes and profile cycling, and use
+its emptiness to determine aggregate attribute visibility. The class
+devices remain the per-provider userspace interface.
 
-Signed-off-by: Oleg Keri <okerixx@gmail.com>
+There can now be an interval between removing the last handler from the
+list and removing the aggregate attributes. Explicitly reject choices
+reads and writes during that interval: the intersection bitmap starts
+with every bit set, so an empty traversal must not advertise all profiles
+or report a successful write without updating a provider.
+
+This also establishes the locking and lifetime boundary needed to expose
+the aggregate operations through a second, firmware-independent sysfs
+interface later in the series.
+
+Assisted-by: OpenCode:gpt-6.1-sol
+Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
 ---
- .../sysfs-driver-lenovo-yoga-slim7x-gen11-ec  |  22 +
- drivers/platform/arm64/Kconfig                |  24 +
- drivers/platform/arm64/Makefile               |   1 +
- .../arm64/lenovo-yoga-slim7x-gen11-ec.c       | 530 ++++++++++++++++++
- 4 files changed, 577 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec
- create mode 100644 drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c
+ drivers/acpi/platform_profile.c | 75 ++++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec b/Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec
-new file mode 100644
-index 000000000000..80d01fc32abb
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yoga-slim7x-gen11-ec
-@@ -0,0 +1,22 @@
-+What:		/sys/bus/i2c/devices/*/fn_lock
-+Date:		October 2026
-+KernelVersion:	7.5
-+Contact:	Oleg Keri <okerixx@gmail.com>
-+Description:
-+		Control fn-lock mode.
-+
-+			* 1 -> Switched On
-+			* 0 -> Switched Off
-+
-+		When switched on, the function keys act as F1..F12 and the
-+		multimedia functions require the Fn modifier.
-+
-+		The embedded controller reports the Fn+Esc key as an event but
-+		keeps no state of its own, so this attribute is the state: the
-+		driver toggles it when the key is pressed, and writing it takes
-+		effect immediately. A toggle from the key is signalled with
-+		sysfs_notify(), so the attribute can be polled.
-+
-+		For example::
-+
-+		  # echo "0" > /sys/bus/i2c/devices/9-0070/fn_lock
-diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-index e32e01b2a9bd..de45c5e101a4 100644
---- a/drivers/platform/arm64/Kconfig
-+++ b/drivers/platform/arm64/Kconfig
-@@ -90,6 +90,30 @@ config EC_LENOVO_THINKPAD_T14S
+diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+index 79d2e92e5c28..f98ce4cda02c 100644
+--- a/drivers/acpi/platform_profile.c
++++ b/drivers/acpi/platform_profile.c
+@@ -8,6 +8,7 @@
+ #include <linux/bits.h>
+ #include <linux/cleanup.h>
+ #include <linux/init.h>
++#include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/platform_profile.h>
+ #include <linux/sysfs.h>
+@@ -15,8 +16,12 @@
+ #define to_pprof_handler(d)	(container_of(d, struct platform_profile_handler, dev))
  
- 	  Say M or Y here to include this support.
+ static DEFINE_MUTEX(profile_lock);
++/* Serialize registration and sysfs updates without blocking sysfs callbacks. */
++static DEFINE_MUTEX(profile_registration_lock);
++static LIST_HEAD(profile_handlers);
  
-+config EC_LENOVO_YOGA_SLIM7X_GEN11
-+	tristate "Lenovo Yoga Slim 7x Gen 11 Embedded Controller driver"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on I2C
-+	depends on INPUT
-+	depends on HWMON
-+	select NEW_LEDS
-+	select LEDS_CLASS
-+	help
-+	  Say Y here to enable the EC driver for the (Snapdragon X2 Elite,
-+	  glymur-based) Lenovo Yoga Slim 7x Gen 11 laptop. The EC provides
-+	  thermistors and CPU fan speed as hwmon channels, the keyboard
-+	  backlight as an LED, Fn-lock as a sysfs attribute, and the mic-mute
-+	  and airplane-mode keys.
-+
-+	  This is the Gen 11 (glymur) machine specifically. Its EC is a Compal
-+	  design at i2c address 0x70 and speaks a different protocol from the
-+	  Qualcomm reference EC that the reference designs place at 0x76, so
-+	  EC_QCOM_HAMOA does not drive it - and conversely this driver does not
-+	  cover the X1E-based Yoga Slim 7x Gen 9.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called lenovo-yoga-slim7x-gen11-ec.
-+
- config EC_QCOM_HAMOA
- 	tristate "Embedded Controller driver for Qualcomm Hamoa/Glymur reference devices"
- 	depends on ARCH_QCOM || COMPILE_TEST
-diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-index 7681be4a46e9..605cca4d42a9 100644
---- a/drivers/platform/arm64/Makefile
-+++ b/drivers/platform/arm64/Makefile
-@@ -9,4 +9,5 @@ obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
- obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
- obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
- obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
-+obj-$(CONFIG_EC_LENOVO_YOGA_SLIM7X_GEN11) += lenovo-yoga-slim7x-gen11-ec.o
- obj-$(CONFIG_EC_QCOM_HAMOA) += qcom-hamoa-ec.o
-diff --git a/drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c b/drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c
-new file mode 100644
-index 000000000000..53b0e7b325d3
---- /dev/null
-+++ b/drivers/platform/arm64/lenovo-yoga-slim7x-gen11-ec.c
-@@ -0,0 +1,530 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/container_of.h>
-+#include <linux/delay.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/gfp_types.h>
-+#include <linux/hwmon.h>
-+#include <linux/i2c.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/kstrtox.h>
-+#include <linux/leds.h>
-+#include <linux/lockdep.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pm.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
-+
-+#define SLIM7X11_EC_BLOCK_READ	0x01
-+#define SLIM7X11_EC_BLOCK_WRITE	0x02
-+#define SLIM7X11_EC_RESP_LEN	6
-+#define SLIM7X11_EC_REQ_LEN	7
-+
-+#define SLIM7X11_EC_CMD_RAM_READ	0xb0
-+#define SLIM7X11_EC_CMD_RAM_WRITE	0xb1
-+#define SLIM7X11_EC_CMD_FAN		0x46
-+#define SLIM7X11_EC_FAN_GET_SPEED	0x81
-+
-+#define SLIM7X11_EC_CMD_EVENT	0x84
-+#define SLIM7X11_EC_EVT_MAX_DRAIN	64
-+#define SLIM7X11_EC_EVT_FN_LOCK	0x0f
-+#define SLIM7X11_EC_EVT_MIC_MUTE	0x18
-+#define SLIM7X11_EC_EVT_FLIGHT_MODE	0x19
-+
-+#define SLIM7X11_EC_SCUK		0x1c
-+#define SLIM7X11_EC_SCUK_MEDIA	BIT(7)
-+#define SLIM7X11_EC_SCUK_LED_OFF	BIT(5)
-+#define SLIM7X11_EC_SCUK_MEDIA_MASK	(SLIM7X11_EC_SCUK_MEDIA | SLIM7X11_EC_SCUK_LED_OFF)
-+
-+#define SLIM7X11_EC_KBLT		0x03
-+#define SLIM7X11_EC_KBLT_LEVEL	GENMASK(1, 0)
-+#define SLIM7X11_EC_KBLT_AUTO	3
-+#define SLIM7X11_EC_KBLT_MAX	2
-+
-+#define SLIM7X11_EC_TEMP_FIRST	0x12
-+#define SLIM7X11_EC_NUM_TEMP	6
-+#define SLIM7X11_EC_TEMP_MAX	120
-+
-+struct slim7x11_ec {
-+	struct i2c_client *client;
-+	/* serializes all EC access */
-+	struct mutex lock;
-+	unsigned long temp_present;
-+	struct led_classdev kbd_led;
-+	u8 kblt_level;
-+	bool kblt_restore;
-+	struct input_dev *keys;
-+};
-+
-+static int slim7x11_ec_command(struct slim7x11_ec *ec, u8 cmd, u8 arg0, u8 arg1,
-+			       u8 resp[SLIM7X11_EC_RESP_LEN])
+ struct platform_profile_handler {
++	struct list_head node;
+ 	const char *name;
+ 	struct device dev;
+ 	int minor;
+@@ -44,6 +49,22 @@ static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
+ 
+ static DEFINE_IDA(platform_profile_ida);
+ 
++static int profile_walk_handlers(void *data,
++				 int (*fn)(struct device *dev, void *data))
 +{
-+	u8 req[SLIM7X11_EC_REQ_LEN] = { cmd, arg0, arg1 };
++	struct platform_profile_handler *handler;
 +	int ret;
 +
-+	lockdep_assert_held(&ec->lock);
-+
-+	ret = i2c_smbus_write_i2c_block_data(ec->client, SLIM7X11_EC_BLOCK_WRITE, sizeof(req), req);
-+	if (ret < 0)
-+		return ret;
-+
-+	usleep_range(2000, 3000);
-+
-+	ret = i2c_smbus_read_i2c_block_data(ec->client, SLIM7X11_EC_BLOCK_READ,
-+					    SLIM7X11_EC_RESP_LEN, resp);
-+	if (ret < 0)
-+		return ret;
-+	if (ret != SLIM7X11_EC_RESP_LEN)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int slim7x11_ec_ram_read(struct slim7x11_ec *ec, u8 addr, u8 *val)
-+{
-+	u8 resp[SLIM7X11_EC_RESP_LEN];
-+	int ret;
-+
-+	ret = slim7x11_ec_command(ec, SLIM7X11_EC_CMD_RAM_READ, addr, 0, resp);
-+	if (ret)
-+		return ret;
-+
-+	*val = resp[0];
-+	return 0;
-+}
-+
-+static int slim7x11_ec_ram_write(struct slim7x11_ec *ec, u8 addr, u8 val)
-+{
-+	u8 resp[SLIM7X11_EC_RESP_LEN];
-+
-+	return slim7x11_ec_command(ec, SLIM7X11_EC_CMD_RAM_WRITE, addr, val, resp);
-+}
-+
-+static int slim7x11_ec_fan_read(struct slim7x11_ec *ec, long *rpm)
-+{
-+	u8 resp[SLIM7X11_EC_RESP_LEN];
-+	int ret;
-+
-+	ret = slim7x11_ec_command(ec, SLIM7X11_EC_CMD_FAN, SLIM7X11_EC_FAN_GET_SPEED, 0, resp);
-+	if (ret)
-+		return ret;
-+
-+	*rpm = resp[0] * 100;
-+	return 0;
-+}
-+
-+static umode_t slim7x11_ec_is_visible(const void *drvdata, enum hwmon_sensor_types type, u32 attr,
-+				      int channel)
-+{
-+	const struct slim7x11_ec *ec = drvdata;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		if (!(ec->temp_present & BIT(channel)))
-+			return 0;
-+		return 0444;
-+	case hwmon_fan:
-+		return 0444;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int slim7x11_ec_read(struct device *dev, enum hwmon_sensor_types type, u32 attr, int channel,
-+			    long *val)
-+{
-+	struct slim7x11_ec *ec = dev_get_drvdata(dev);
-+	int ret;
-+	u8 raw;
-+
-+	guard(mutex)(&ec->lock);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_TEMP_FIRST + channel, &raw);
-+		if (ret)
-+			return ret;
-+		if (!raw)
-+			return -ENODATA;
-+		if (raw > SLIM7X11_EC_TEMP_MAX)
-+			return -EIO;
-+		*val = raw * MILLIDEGREE_PER_DEGREE;
-+		return 0;
-+	case hwmon_fan:
-+		return slim7x11_ec_fan_read(ec, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static const char * const slim7x11_ec_temp_labels[SLIM7X11_EC_NUM_TEMP] = {
-+	"Charger A",
-+	"CPU VR",
-+	"5V rail",
-+	"Ambient",
-+	"Charger B",
-+	"Thermistor 6",
-+};
-+
-+static int slim7x11_ec_read_string(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-+				   int channel, const char **str)
-+{
-+	switch (type) {
-+	case hwmon_temp:
-+		*str = slim7x11_ec_temp_labels[channel];
-+		return 0;
-+	case hwmon_fan:
-+		*str = "CPU fan";
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static enum led_brightness slim7x11_ec_kbd_led_get(struct led_classdev *led)
-+{
-+	struct slim7x11_ec *ec = container_of(led, struct slim7x11_ec, kbd_led);
-+	u8 raw;
-+
-+	guard(mutex)(&ec->lock);
-+
-+	if (slim7x11_ec_ram_read(ec, SLIM7X11_EC_KBLT, &raw))
-+		return 0;
-+
-+	raw = FIELD_GET(SLIM7X11_EC_KBLT_LEVEL, raw);
-+
-+	if (raw == SLIM7X11_EC_KBLT_AUTO)
-+		return SLIM7X11_EC_KBLT_MAX;
-+
-+	return raw;
-+}
-+
-+static int slim7x11_ec_kbd_led_level(struct slim7x11_ec *ec, u8 level, u8 *old)
-+{
-+	u8 raw;
-+	int ret;
-+
-+	ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_KBLT, &raw);
-+	if (ret)
-+		return ret;
-+
-+	if (old)
-+		*old = FIELD_GET(SLIM7X11_EC_KBLT_LEVEL, raw);
-+
-+	FIELD_MODIFY(SLIM7X11_EC_KBLT_LEVEL, &raw, level);
-+
-+	return slim7x11_ec_ram_write(ec, SLIM7X11_EC_KBLT, raw);
-+}
-+
-+static int slim7x11_ec_kbd_led_set(struct led_classdev *led, enum led_brightness brightness)
-+{
-+	struct slim7x11_ec *ec = container_of(led, struct slim7x11_ec, kbd_led);
-+
-+	guard(mutex)(&ec->lock);
-+
-+	return slim7x11_ec_kbd_led_level(ec, brightness, NULL);
-+}
-+
-+static const struct hwmon_ops slim7x11_ec_hwmon_ops = {
-+	.is_visible = slim7x11_ec_is_visible,
-+	.read = slim7x11_ec_read,
-+	.read_string = slim7x11_ec_read_string,
-+};
-+
-+static const struct hwmon_channel_info * const slim7x11_ec_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info slim7x11_ec_chip_info = {
-+	.ops = &slim7x11_ec_hwmon_ops,
-+	.info = slim7x11_ec_hwmon_info,
-+};
-+
-+static int slim7x11_ec_fn_lock_toggle(struct slim7x11_ec *ec)
-+{
-+	u8 raw;
-+	int ret;
-+
-+	ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_SCUK, &raw);
-+	if (ret)
-+		return ret;
-+
-+	if (raw & SLIM7X11_EC_SCUK_MEDIA)
-+		raw &= ~SLIM7X11_EC_SCUK_MEDIA_MASK;
-+	else
-+		raw |= SLIM7X11_EC_SCUK_MEDIA_MASK;
-+
-+	return slim7x11_ec_ram_write(ec, SLIM7X11_EC_SCUK, raw);
-+}
-+
-+static void slim7x11_ec_report_key(struct slim7x11_ec *ec, unsigned int code)
-+{
-+	if (!ec->keys)
-+		return;
-+
-+	input_report_key(ec->keys, code, 1);
-+	input_sync(ec->keys);
-+	input_report_key(ec->keys, code, 0);
-+	input_sync(ec->keys);
-+}
-+
-+static irqreturn_t slim7x11_ec_irq(int irq, void *data)
-+{
-+	struct slim7x11_ec *ec = data;
-+	unsigned int i;
-+
-+	guard(mutex)(&ec->lock);
-+
-+	for (i = 0; i < SLIM7X11_EC_EVT_MAX_DRAIN; i++) {
-+		u8 resp[SLIM7X11_EC_RESP_LEN];
-+
-+		if (slim7x11_ec_command(ec, SLIM7X11_EC_CMD_EVENT, 0, 0, resp))
-+			break;
-+		if (!resp[0])
-+			break;
-+
-+		switch (resp[0]) {
-+		case SLIM7X11_EC_EVT_FN_LOCK:
-+			if (!slim7x11_ec_fn_lock_toggle(ec))
-+				sysfs_notify(&ec->client->dev.kobj, NULL, "fn_lock");
-+			break;
-+		case SLIM7X11_EC_EVT_MIC_MUTE:
-+			slim7x11_ec_report_key(ec, KEY_MICMUTE);
-+			break;
-+		case SLIM7X11_EC_EVT_FLIGHT_MODE:
-+			slim7x11_ec_report_key(ec, KEY_RFKILL);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void slim7x11_ec_register_keys(struct slim7x11_ec *ec)
-+{
-+	struct device *dev = &ec->client->dev;
-+	struct input_dev *input;
-+	int ret;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_warn(dev, "no memory for the hotkey device\n");
-+		return;
-+	}
-+
-+	input->name = "Lenovo Yoga Slim 7x hotkeys";
-+	input->phys = "lenovo-yoga-slim7x-gen11-ec/input0";
-+	input->id.bustype = BUS_I2C;
-+	input_set_capability(input, EV_KEY, KEY_MICMUTE);
-+	input_set_capability(input, EV_KEY, KEY_RFKILL);
-+
-+	ret = input_register_device(input);
-+	if (ret) {
-+		dev_warn(dev, "cannot register the hotkey device: %d\n", ret);
-+		return;
-+	}
-+
-+	ec->keys = input;
-+}
-+
-+static ssize_t fn_lock_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct slim7x11_ec *ec = dev_get_drvdata(dev);
-+	u8 raw;
-+	int ret;
-+
-+	scoped_guard(mutex, &ec->lock) {
-+		ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_SCUK, &raw);
++	lockdep_assert_held(&profile_lock);
++	list_for_each_entry(handler, &profile_handlers, node) {
++		ret = fn(&handler->dev, data);
 +		if (ret)
 +			return ret;
 +	}
 +
-+	return sysfs_emit(buf, "%u\n", !(raw & SLIM7X11_EC_SCUK_MEDIA));
-+}
-+
-+static ssize_t fn_lock_store(struct device *dev, struct device_attribute *attr, const char *buf,
-+			     size_t count)
-+{
-+	struct slim7x11_ec *ec = dev_get_drvdata(dev);
-+	bool enable;
-+	u8 raw;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &enable);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&ec->lock);
-+
-+	ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_SCUK, &raw);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		raw &= ~SLIM7X11_EC_SCUK_MEDIA_MASK;
-+	else
-+		raw |= SLIM7X11_EC_SCUK_MEDIA_MASK;
-+
-+	ret = slim7x11_ec_ram_write(ec, SLIM7X11_EC_SCUK, raw);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(fn_lock);
-+
-+static struct attribute *slim7x11_ec_attrs[] = {
-+	&dev_attr_fn_lock.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(slim7x11_ec);
-+
-+static int slim7x11_ec_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct device *hwmon;
-+	struct slim7x11_ec *ec;
-+	unsigned int i;
-+	int ret;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_I2C_BLOCK))
-+		return dev_err_probe(dev, -ENODEV, "adapter lacks SMBus block transfers\n");
-+
-+	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-+	if (!ec)
-+		return -ENOMEM;
-+
-+	ec->client = client;
-+	i2c_set_clientdata(client, ec);
-+
-+	ret = devm_mutex_init(dev, &ec->lock);
-+	if (ret)
-+		return ret;
-+
-+	scoped_guard(mutex, &ec->lock) {
-+		for (i = 0; i < SLIM7X11_EC_NUM_TEMP; i++) {
-+			u8 raw;
-+
-+			ret = slim7x11_ec_ram_read(ec, SLIM7X11_EC_TEMP_FIRST + i, &raw);
-+			if (ret)
-+				return dev_err_probe(dev, ret, "failed to read thermistor %u\n", i);
-+
-+			if (raw > 0 && raw <= SLIM7X11_EC_TEMP_MAX)
-+				ec->temp_present |= BIT(i);
-+		}
-+	}
-+
-+	if (!ec->temp_present)
-+		return dev_err_probe(dev, -ENODEV, "no thermistor reported a usable value\n");
-+
-+	dev_dbg(dev, "thermistors present: %#lx\n", ec->temp_present);
-+
-+	hwmon = devm_hwmon_device_register_with_info(dev, "yoga_slim7x_ec", ec,
-+						     &slim7x11_ec_chip_info, NULL);
-+	if (IS_ERR(hwmon))
-+		return PTR_ERR(hwmon);
-+
-+	ec->kbd_led.name = "platform::kbd_backlight";
-+	ec->kbd_led.max_brightness = SLIM7X11_EC_KBLT_MAX;
-+	ec->kbd_led.brightness_get = slim7x11_ec_kbd_led_get;
-+	ec->kbd_led.brightness_set_blocking = slim7x11_ec_kbd_led_set;
-+
-+	ret = devm_led_classdev_register(dev, &ec->kbd_led);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to register keyboard backlight\n");
-+
-+	if (client->irq) {
-+		slim7x11_ec_register_keys(ec);
-+
-+		ret = devm_request_threaded_irq(dev, client->irq, NULL, slim7x11_ec_irq,
-+						IRQF_ONESHOT, "lenovo-yoga-slim7x-gen11-ec", ec);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "cannot request the EC interrupt\n");
-+
-+		scoped_guard(mutex, &ec->lock) {
-+			for (i = 0; i < SLIM7X11_EC_EVT_MAX_DRAIN; i++) {
-+				u8 resp[SLIM7X11_EC_RESP_LEN];
-+
-+				if (slim7x11_ec_command(ec, SLIM7X11_EC_CMD_EVENT, 0, 0, resp))
-+					break;
-+				if (!resp[0])
-+					break;
-+			}
-+		}
-+	}
-+
 +	return 0;
 +}
 +
-+static int slim7x11_ec_suspend(struct device *dev)
-+{
-+	struct slim7x11_ec *ec = dev_get_drvdata(dev);
+ /**
+  * _commmon_choices_show - Show the available profile choices
+  * @choices: The available profile choices
+@@ -306,20 +327,18 @@ static ssize_t platform_profile_choices_show(struct kobject *kobj,
+ 	int err;
+ 
+ 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+-		err = class_for_each_device(&platform_profile_class, NULL,
+-					    &data, _aggregate_choices);
++		err = profile_walk_handlers(&data, _aggregate_choices);
+ 		if (err)
+ 			return err;
+ 		if (data.count == 1) {
+-			err = class_for_each_device(&platform_profile_class, NULL,
+-						    &data, _remove_hidden_choices);
++			err = profile_walk_handlers(&data, _remove_hidden_choices);
+ 			if (err)
+ 				return err;
+ 		}
+ 	}
+ 
+ 	/* no profile handler registered any more */
+-	if (bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
++	if (!data.count || bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
+ 		return -EINVAL;
+ 
+ 	return _commmon_choices_show(data.aggregate, buf);
+@@ -384,8 +403,7 @@ static ssize_t platform_profile_show(struct kobject *kobj,
+ 	int err;
+ 
+ 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+-		err = class_for_each_device(&platform_profile_class, NULL,
+-					    &profile, _aggregate_profiles);
++		err = profile_walk_handlers(&profile, _aggregate_profiles);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -423,15 +441,13 @@ static ssize_t platform_profile_store(struct kobject *kobj,
+ 		return -EINVAL;
+ 
+ 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+-		ret = class_for_each_device(&platform_profile_class, NULL,
+-					    &data, _aggregate_choices);
++		ret = profile_walk_handlers(&data, _aggregate_choices);
+ 		if (ret)
+ 			return ret;
+-		if (!test_bit(i, data.aggregate))
++		if (!data.count || !test_bit(i, data.aggregate))
+ 			return -EOPNOTSUPP;
+ 
+-		ret = class_for_each_device(&platform_profile_class, NULL, &i,
+-					    _store_and_notify);
++		ret = profile_walk_handlers(&i, _store_and_notify);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -450,22 +466,11 @@ static struct attribute *platform_profile_attrs[] = {
+ 	NULL
+ };
+ 
+-static int profile_class_registered(struct device *dev, const void *data)
+-{
+-	return 1;
+-}
+-
+ static umode_t profile_class_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
+ {
+-	struct device *dev;
+-
+-	dev = class_find_device(&platform_profile_class, NULL, NULL, profile_class_registered);
+-	if (!dev)
+-		return 0;
+-
+-	put_device(dev);
++	guard(mutex)(&profile_lock);
+ 
+-	return attr->mode;
++	return list_empty(&profile_handlers) ? 0 : attr->mode;
+ }
+ 
+ static const struct attribute_group platform_profile_group = {
+@@ -502,8 +507,7 @@ int platform_profile_cycle(void)
+ 	int err;
+ 
+ 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+-		err = class_for_each_device(&platform_profile_class, NULL,
+-					    &profile, _aggregate_profiles);
++		err = profile_walk_handlers(&profile, _aggregate_profiles);
+ 		if (err)
+ 			return err;
+ 
+@@ -512,8 +516,7 @@ int platform_profile_cycle(void)
+ 		    profile == PLATFORM_PROFILE_LAST)
+ 			return -EINVAL;
+ 
+-		err = class_for_each_device(&platform_profile_class, NULL,
+-					    &data, _aggregate_choices);
++		err = profile_walk_handlers(&data, _aggregate_choices);
+ 		if (err)
+ 			return err;
+ 
+@@ -525,8 +528,7 @@ int platform_profile_cycle(void)
+ 					  PLATFORM_PROFILE_LAST,
+ 					  profile + 1);
+ 
+-		err = class_for_each_device(&platform_profile_class, NULL, &next,
+-					    _store_and_notify);
++		err = profile_walk_handlers(&next, _store_and_notify);
+ 
+ 		if (err)
+ 			return err;
+@@ -583,7 +585,7 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+ 		}
+ 	}
+ 
+-	guard(mutex)(&profile_lock);
++	guard(mutex)(&profile_registration_lock);
+ 
+ 	/* create class interface for individual handler */
+ 	minor = ida_alloc(&platform_profile_ida, GFP_KERNEL);
+@@ -604,6 +606,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+ 		put_device(ppdev);
+ 		goto cleanup_ida;
+ 	}
++	scoped_guard(mutex, &profile_lock)
++		list_add_tail(&to_pprof_handler(ppdev)->node, &profile_handlers);
+ 
+ 	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+ 
+@@ -614,6 +618,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+ 	return ppdev;
+ 
+ cleanup_cur:
++	scoped_guard(mutex, &profile_lock)
++		list_del(&to_pprof_handler(ppdev)->node);
+ 	device_unregister(ppdev);
+ 
+ cleanup_ida:
+@@ -636,7 +642,10 @@ void platform_profile_remove(struct device *dev)
+ 
+ 	pprof = to_pprof_handler(dev);
+ 
+-	guard(mutex)(&profile_lock);
++	guard(mutex)(&profile_registration_lock);
 +
-+	guard(mutex)(&ec->lock);
-+	ec->kblt_restore = !slim7x11_ec_kbd_led_level(ec, 0, &ec->kblt_level);
-+
-+	return 0;
-+}
-+
-+static int slim7x11_ec_resume(struct device *dev)
-+{
-+	struct slim7x11_ec *ec = dev_get_drvdata(dev);
-+
-+	guard(mutex)(&ec->lock);
-+	if (ec->kblt_restore) {
-+		ec->kblt_restore = false;
-+		slim7x11_ec_kbd_led_level(ec, ec->kblt_level, NULL);
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(slim7x11_ec_pm_ops, slim7x11_ec_suspend, slim7x11_ec_resume);
-+
-+static const struct of_device_id slim7x11_ec_of_match[] = {
-+	{ .compatible = "lenovo,yoga-slim7x-gen11-ec" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, slim7x11_ec_of_match);
-+
-+static const struct i2c_device_id slim7x11_ec_i2c_id[] = {
-+	{ "slim7x-gen11-ec" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, slim7x11_ec_i2c_id);
-+
-+static struct i2c_driver slim7x11_ec_driver = {
-+	.driver = {
-+		.name = "lenovo-yoga-slim7x-gen11-ec",
-+		.of_match_table = slim7x11_ec_of_match,
-+		.dev_groups = slim7x11_ec_groups,
-+		.pm = pm_sleep_ptr(&slim7x11_ec_pm_ops),
-+	},
-+	.probe = slim7x11_ec_probe,
-+	.id_table = slim7x11_ec_i2c_id,
-+};
-+module_i2c_driver(slim7x11_ec_driver);
-+
-+MODULE_AUTHOR("Oleg Keri <okerixx@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo Yoga Slim 7x Gen 11 embedded controller");
-+MODULE_LICENSE("GPL");
++	scoped_guard(mutex, &profile_lock)
++		list_del(&pprof->node);
+ 
+ 	ida_free(&platform_profile_ida, pprof->minor);
+ 	device_unregister(&pprof->dev);
 -- 
-2.55.0
+2.43.0
 
