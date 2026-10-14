@@ -1,98 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBD42D6E5A;
-	Wed, 14 Oct 2026 22:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DD03C3C14
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 22:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792016159; cv=none; b=cLJ61SISIPRbLZ2ogNlRcfeE7APNs5wIJ1O6Vx3HDVoK6QsaA0gLcSP/z3RlzqbQ85nR22ctn+rpoPx6AcRF2AhvszA0cGeSsvXnwJ3GW633/upecOtjDcWvbxRq2iYGa7R9xTBIggcxrZ+IbriviLH1OzILoEpWGxW/RQigZdQ=
+	t=1792017299; cv=none; b=IPs7nIfF8/jnTPvGDKnnZpJ3iTMeGwAJjYIZhoFMwq83W2o/UJ32s6OaDXfyE5RX+4WBA+d1l6nvRs54gJcmrfbtKEOqa+FS9ZvAjOeBLhiCr0yEqqRRRS7mTB+Nt/la3JRkOIH/ci23FrVaosgKJNbD8CSDhEN2VLyCT3W9164=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792016159; c=relaxed/simple;
-	bh=KiKQf58YhfqJ55SK2Fon15/aCzDyNxAQqqUSIZfY3Go=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kwsm8k7RFEX+H9Ghf1fm3p9wO3pkCyfnmtEBwn4bbejNmflRLEvykUaUV+wmL19ev+Y1NXQWbOJmUnZllnYkC7UO9nQCEriQhxUJoe5nsDN4Bexzqcv9+Smo9ceegosiCb6isUm2etRJ5Rr1ok6KIU204AEs1Wzo02HrG0n380s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7OZvvn8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1792017299; c=relaxed/simple;
+	bh=5a+04yPNR4cPN6EbCrWf4MO0vs4ksVCn/cHzIiN6KHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S0g8AE38UyydELMATt3MsIHNxk7iomovKaxYKCSgmY9Sq3+iyhcm9C02h3hHeS3FYAtKTbYM+GCAk6lltDc3i/bFLF+nMV1tkv3lSq9hWCr+tGlWGyvlaZdaORwJmtl5/TK5Z9d+u5dc91LDZjyd5zxzeTzib8DB4U9EV/zLsZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iQDnMu+1; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7OZvvn8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 76F19C2BCFC;
-	Wed, 14 Oct 2026 22:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1792016158;
-	bh=KiKQf58YhfqJ55SK2Fon15/aCzDyNxAQqqUSIZfY3Go=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Q7OZvvn8e6fuvNc1twpqKXR80t9oPytgqXSAXKaDc3pqYyDQRec+EA/DL9zG+xtmt
-	 T9XkfFn4hZ6jWKumITg09vXKSEPc+MPZYw0NQ4uRLrWUPvdmeg/LFf1Qk6yHe3QOUQ
-	 1nIvBoj+mkew1aExq8KAGN+aB5Zow6aSt5v07bhRR9YQIl6+8J5LOyt2bT/LI2MwxV
-	 p2JKEhk4BlM0R8Q9gun3l4dDd7hQRgNqi1tpEzjP0Q3go2qz7856gJeFIHg4ZY+MbR
-	 3Bs1DwIH5lxFpOG5uR0UrZ5kRRjP8ZqIitdh7QepIwmuT4auoVgv8yPErSo6wLDjPa
-	 0f1DqG9PUtTEw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E9BCC6B24;
-	Wed, 14 Oct 2026 22:15:58 +0000 (UTC)
-From: =?utf-8?q?Mert_Erdo=C4=9Fan_via_B4_Relay?= <devnull+mrterdo75.gmail.com@kernel.org>
-Date: Thu, 15 Oct 2026 01:15:41 +0300
-Subject: [PATCH v2 1/2] platform/x86: hp-wmi: Add Victus 16-d1xxx board
- 8A26 support
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iQDnMu+1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792017295; x=1823553295;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5a+04yPNR4cPN6EbCrWf4MO0vs4ksVCn/cHzIiN6KHE=;
+  b=iQDnMu+1P/s8MVK/8drUDiSn8Q4xGQtQkGPa3AbD0ekjI6Bv/d3FQV3C
+   2pLRpcxRgns/bj+c60tUgZirzj+joGL9TfhiCNa56t+h6N6EYtjtXZob4
+   CHkPHQ7nxWyjmtI/6Qj4hY905GCLh960hKWIgwcKxCdSv4HyMt7+faiCM
+   zR1V1KrfTWdtCtr7+A/AQe1JE8HFZNJDwmVKZeY36V2kFJbK0i4jMHgGf
+   rgRnC5nS90xpAoZ6nVkGjpl2NPBHH4FpVr8PsOhq9Sdsp4IDJaAbP6ilx
+   fTsnpXLoLtMObjDyy7eQeluyiEhTivmW8OPCI8eP+iCtojsxd3YGzwk/a
+   Q==;
+X-CSE-ConnectionGUID: ZDsTo96oReOUcCFbe+3fqA==
+X-CSE-MsgGUID: 0D5oGOuyQKuKE0P3+pDp7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11935"; a="666480"
+X-IronPort-AV: E=Sophos;i="6.27,158,1787036400"; 
+   d="scan'208";a="666480"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 15:34:54 -0700
+X-CSE-ConnectionGUID: V+ses/X+Rui/10tlQKab7w==
+X-CSE-MsgGUID: WFBJzqtCTYebiLvlSzu91A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,158,1787036400"; 
+   d="scan'208";a="1565657"
+Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.54.77.98])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 15:34:54 -0700
+Date: Wed, 14 Oct 2026 15:34:53 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+	hansg@kernel.org, ilpo.jarvinen@linux.intel.com, matthew.brost@intel.com, 
+	rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, airlied@gmail.com, 
+	simona@ffwll.ch, anoop.c.vijay@intel.com, badal.nilawar@intel.com, 
+	matthew.d.roper@intel.com, james.ausmus@intel.com, karthik.poosa@intel.com
+Subject: Re: [PATCH v12 01/21] platform/x86/intel/pmt: complete pcidev to
+ device update
+Message-ID: <a2ce6kxrcpuk7qytfrl5hfhtxqi2w475qkmixlylffa6kx7lny@guqekbmhjyl6>
+References: <20261013214655.3502964-23-michael.j.ruhl@intel.com>
+ <20261013214655.3502964-24-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20261015-hp-wmi-victus-8a26-v2-1-3a9e40e00e64@gmail.com>
-References: <20261015-hp-wmi-victus-8a26-v2-0-3a9e40e00e64@gmail.com>
-In-Reply-To: <20261015-hp-wmi-victus-8a26-v2-0-3a9e40e00e64@gmail.com>
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Mert_Erdo=C4=9Fan?= <mrterdo75@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1792016155; l=1146;
- i=mrterdo75@gmail.com; s=20261007; h=from:subject:message-id;
- bh=L1CH7dlpQUM4NNhDRcqjtEsJk9TWWjgNN0gDBPxarCY=;
- b=11xG9szFUV7nbSEEVY2pC/SJryjsjF31k0UFfR3IXsMvt6cUqDy5OYltf7IOJ9aJ8p2qinc0c
- GXQYbZrlQaFBv1zjlDK+vlA42PBAtqi7XRSKzJgTg9CcIo4SELJBB6g
-X-Developer-Key: i=mrterdo75@gmail.com; a=ed25519;
- pk=bUOfewdT6wnBK6cWdxYDgGaI8ee0+BwtzPbg982vJP8=
-X-Endpoint-Received: by B4 Relay for mrterdo75@gmail.com/20261007 with
- auth_id=1127
-X-Original-From: =?utf-8?q?Mert_Erdo=C4=9Fan?= <mrterdo75@gmail.com>
-Reply-To: mrterdo75@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261013214655.3502964-24-michael.j.ruhl@intel.com>
 
-From: Mert Erdoğan <mrterdo75@gmail.com>
+On Tue, Oct 13, 2026 at 02:46:54PM -0700, Michael J. Ruhl wrote:
+> The update that moved struct pci_dev usage to struct device is
+> incomplete. Only telemetry endpoints are covered.
+> 
+> Other PMT features (crashlog) are now blocked from using the callback
+> mechanism.
+> 
+> Change struct intel_pmt_entry pci_dev member to device.
+> 
+> Update callback usage to use the intel_pmt_entry rather than the
+> telemetry endpoint.
+> 
+> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Fixes: 353042d54d82 ("platform/x86/intel/vsec: Switch exported helpers from pci_dev to device")
+> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-The Victus 16-d1xxx ships with at least two DMI board names. 8A25 is
-already listed in victus_thermal_profile_boards, but 8A26 is not, so
-on those machines the driver falls back to the generic thermal policy.
-Selecting a platform profile then never issues the Victus performance
-mode WMI call (HPWMI_SET_PERFORMANCE_MODE via HPWMI_GM), and the
-firmware keeps the GPU's +15 W configurable TGP offset disabled.
+Thanks for this change. Your fix is preferable to mine, so I'll drop
+"platform/x86/intel/pmt: Fix NULL dereference when reading crashlog
+data" from my crashlog uevent series.
+  
+If you do a v13, please make it clear in the commit message that this
+fixes a NULL pointer dereference when reading crashlog data, and add
+Cc: stable@vger.kernel.org since the regression is in v7.1. Otherwise,
 
-Add 8A26 to the list so these machines use the same Victus thermal
-profile path as 8A25.
+Reviewed-by: David E. Box <david.e.box@linux.intel.com>
 
-Assisted-by: claude-opus-5-5
-Signed-off-by: Mert Erdoğan <mrterdo75@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 387f60e88..15f1e9f63 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -234,6 +234,7 @@ static const char * const omen_timed_thermal_profile_boards[] = {
- static const char * const victus_thermal_profile_boards[] = {
- 	"88F8",
- 	"8A25",
-+	"8A26",
- };
- 
- /* DMI board-specific feature data for Omen and Victus laptops. */
-
--- 
-2.56.0
-
-
+> ---
+>  drivers/platform/x86/intel/pmt/class.c     | 5 ++---
+>  drivers/platform/x86/intel/pmt/class.h     | 3 +--
+>  drivers/platform/x86/intel/pmt/discovery.c | 2 +-
+>  3 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+> index d0ab8e33c62a..402d51df834a 100644
+> --- a/drivers/platform/x86/intel/pmt/class.c
+> +++ b/drivers/platform/x86/intel/pmt/class.c
+> @@ -100,7 +100,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
+>  	if (count > entry->size - off)
+>  		count = entry->size - off;
+>  
+> -	count = pmt_telem_read_mmio(entry->ep->dev, entry->cb, entry->header.guid, buf,
+> +	count = pmt_telem_read_mmio(entry->dev, entry->cb, entry->header.guid, buf,
+>  				    entry->base, off, count);
+>  
+>  	return count;
+> @@ -286,8 +286,6 @@ static int pmt_resolve_access_pci(struct intel_pmt_entry *entry,
+>  		return -EINVAL;
+>  	}
+>  
+> -	entry->pcidev = pci_dev;
+> -
+>  	return 0;
+>  }
+>  
+> @@ -365,6 +363,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+>  	entry->guid = header->guid;
+>  	entry->size = header->size;
+>  	entry->cb = ivdev->priv_data;
+> +	entry->dev = ivdev->dev;
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+> index a0ece4fc3837..258cb460e61c 100644
+> --- a/drivers/platform/x86/intel/pmt/class.h
+> +++ b/drivers/platform/x86/intel/pmt/class.h
+> @@ -20,7 +20,6 @@
+>  #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
+>  
+>  struct device;
+> -struct pci_dev;
+>  extern struct class intel_pmt_class;
+>  
+>  struct telem_endpoint {
+> @@ -42,7 +41,7 @@ struct intel_pmt_header {
+>  
+>  struct intel_pmt_entry {
+>  	struct telem_endpoint	*ep;
+> -	struct pci_dev		*pcidev;
+> +	struct device		*dev;
+>  	struct intel_pmt_header	header;
+>  	u32			disc_header[PMT_DISC_DWORDS];
+>  	struct bin_attribute	pmt_bin_attr;
+> diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/x86/intel/pmt/discovery.c
+> index c482368bfaae..f4203d240f54 100644
+> --- a/drivers/platform/x86/intel/pmt/discovery.c
+> +++ b/drivers/platform/x86/intel/pmt/discovery.c
+> @@ -609,7 +609,7 @@ void intel_pmt_get_features(struct intel_pmt_entry *entry)
+>  
+>  	mutex_lock(&feature_list_lock);
+>  	list_for_each_entry(feature, &pmt_feature_list, list) {
+> -		if (feature->priv->parent != entry->ep->dev)
+> +		if (feature->priv->parent != entry->dev)
+>  			continue;
+>  
+>  		pmt_get_features(entry, feature);
+> -- 
+> 2.43.0
+> 
