@@ -1,83 +1,81 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A302D522EF9
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4825218A9
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791984613; cv=none; b=Oenb5i309auQN6Zd21RuiGGwd8NrXMYM1G9GZshVDoXMCBQO7Eyy8QrbsdHViyzaBgQU7ClR3u2h4228fh/F6PHBhb7tioGQcZeyzjrHPjmMLw8wTRmWpv6gzsf0yCw93ls73FPfd3Ew8+vVQHpy0Ud8rpWPMcvc9Py3XqPbPNg=
+	t=1791984615; cv=none; b=NXQKLfDnXy9Oh9B2Nl//xYaz8XqohKg5HVpukjsT1WeZcVeK7QCWvsnwus8JT7GIKviLwLN7gQzNhHgoo8N42VUuxL8jJ3G4EDLbhvzhHHC7vwRBDWrkC3KjbAxFCkmXK/4BAc3nqyHUaE8yPfJbUO+Jo5auS0SreBkwuMlO2i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791984613; c=relaxed/simple;
-	bh=doXrUIwdT42lwD+d4QdKmHm+N56c6YBObxX4WBpagBg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WWCpgC3FRfxC2S6xuy6abW/khrxlLgiw+oc+KozRDzK4Qd5QaYdPLF6LBxAnyVAm/EFgd4+7+Pj+y+sjmq63LtWl6LRRUfNEpEQrDYl10423tgZpiqnIwy0FM44s0tDJvLyYck7UNoIxcjPEsPo9FQRGOvFWX2R6blOFyKDy+Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XA25ccZm; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=eRnmwEo6; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1791984615; c=relaxed/simple;
+	bh=+yMU48ccOQTDJqcL+wYe+JjnvkSW+/MtKgVT1KqC1QI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XUC8EV7qPaSvxoFDr5cTPCX01QaqxWV7zpc2dpjG0uHQnYumHH4s+vhFs1hDdCoEHyP3CEdOMvYMcLvKVzb5/CXKH0eRLzLPLruD5QV1oSq5bYCLi8YaMdChAryR0Bdf55xch2M2M9dJxh/UvLu04QMzlHTgBSs0XjJ+HreUHtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GlnJRd80; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=F+Jl2IO4; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XA25ccZm";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="eRnmwEo6"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69EAR3Y3466254
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:05 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GlnJRd80";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="F+Jl2IO4"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69EBOsmh2515923
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=LZgnpAcn7mn
-	WiJsfnca2KhxPPGKIsl9W8hnUoknYsA0=; b=XA25ccZmcxyw3/MrLag62tSgtBb
-	tsqBjh1fsPQxjiznIimwm+69/fycJyuKQR8FULXyNEtOlqqRxeayEzpvEsAER8nK
-	HQa0NEFf6MYacY8bcTh0H/xLi3PMTZpsrOdWOwqLLtClq8FTr5pqlkVS6gP/Xvqg
-	gp51M3fIBzbU9q8QeRxH3V90RUg9DkD2QX53VsCetvBd9TWLRaI5fFXAWmqDczOR
-	09mg6FbwW7OGJkhrufBtigucsWSwPMkagsYwzRCCsPy9oBVV6/kZRApedVeeG7Lj
-	552uSQ6QHHPPy6tWT5Fbo8ghDrJ//nWvPQ6f1vWJJgJSdSpaM07XJJf84Tg==
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=WPKkYivj8JUBz6V608J8AiLTN9VSzh8FXI9
+	487Jr7wY=; b=GlnJRd803VKB8zt2rm3j33IoLgFkmEEZPHedUKVBMJV1Boaq38U
+	L4th1hQ4JO2esuvRjFaI5b7u5yWtim/p/3wzVmPQb9xAqJzrLRWpxtaQ8q/D74h1
+	hVGPR6svXiKiUr4IFxBaarVAE9XlMa8TYFweDbXlzpfOkPqPXrvUMwgOjL90zhuf
+	jsBU9Es4cYSMdhNyMcUwXeRSflNH424El/bMj222yE16+u01Owd1rFBgB9qxG5/V
+	MMaHXJ6t3AewG3UiqRHy2ucqhtR1t6Z3RhzGkUGTzLg/XQuWvKbhgMrwWIjtFrWM
+	oNlE8Fg60anK3iKiDWdcaGVtImo6Ea4qoXg==
 Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ha80crp6a-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ha4709rqb-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:05 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93dea1b6c89so787816185a.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 06:30:05 -0700 (PDT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:03 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93e92aad34aso767438885a.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 06:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1791984604; x=1792589404; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=LZgnpAcn7mnWiJsfnca2KhxPPGKIsl9W8hnUoknYsA0=;
-        b=eRnmwEo6yrRPV6tKBAnPFLTd9eIWkJnK+SaiLsQUPMa1zEF7Vk4R38np7GQlqaA/zB
-         08RK4xWe3u8i3I8RaLFIwUcFuHY1/wRGNveGVEjMb0N+d4oYqxHYnAlXhU7xWSpFuuN8
-         cDMB371Di+PkdHbRyGrbIkCl/vYH0vveXDPysja7+/Y/GEu/E6CGFXTGaBETP+1K2RPo
-         BpL8SUduZ68v36NEQ+dR81rAtM/wUSIo4AwsWYJ7XLnoNNMrf18yWoV8r1VQmhWGiYNx
-         Od2+TqyvcvvQHCiisrIIKKito/0jQC2kh465IcLw2QWdBP/Q38B1kn9QD5JY01z6DaLC
-         JNOg==
+        d=oss.qualcomm.com; s=google; t=1791984602; x=1792589402; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=WPKkYivj8JUBz6V608J8AiLTN9VSzh8FXI9487Jr7wY=;
+        b=F+Jl2IO4vh1jQDJRHPE47fgaGvpnSq84YYOf5XEqowFl0xXIw0psjAN1MarauMgG5E
+         H5qfcPe4WHpNBFUU+5ly2H3oDkFbKMUHm2x/2b0yXEozb5uD5iEspPkyJFL95mVZxDKy
+         wntu9LbH475rmiswRZ051iC2qhhRypZ+8JwbYTPNI7XRu5KqY2jtckWgozGig/L01oub
+         oVmPDB1dfsXXWqEFMM3vtStQCTUNUy6ILq1kW3XbgONv6BLQOqjlXVISlRMlK0Tcm+Qt
+         MBlh/ox1fLB6wawFmLZEts9Hgs3bZSsL+6rZFaUxh/sHu/m3ux0VvE8YYRqczu6Z3fR+
+         UIbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791984604; x=1792589404;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=LZgnpAcn7mnWiJsfnca2KhxPPGKIsl9W8hnUoknYsA0=;
-        b=IbNh6ZA2nZ+fOhVqRp4hn0PqXwroEfiSaxRM2asTNQ/QOkEbtesHBLrRnzj8S2ufA+
-         kbqVMxFT7RmDXeUi2HXhLBXS+LAirvSVv3q9rvWs4vPQEPRsz2IXpydD18/VKOgPtd+T
-         DlgfjiRAim4fniVQiumhian+bOi6CliYiSJaJOidDtdaepjKMHQY/IXxBL0f58syRSbu
-         TwLJIjan6b9ypZ8ENtjv0oTjsOp/bRgmROqEMmiMYKXTSNmGZ4Gm1U5G8ZJkIKxBZ1jq
-         s27g1nyKY6IFj7KyGsAXcpPvdAvjsP0Ituqxq2M4iWn0b2GfiKYDIkTlREnI9TtJnm5X
-         7bjw==
-X-Forwarded-Encrypted: i=1; AKwUvBwW6SwpeqRmVxA60WEWeAwNfO+pe2xjecILQD0yufnsp39sJ+3DW7SKaYORUefrCegZIbcTNrypGG5gZOjG9bP2JJBK@vger.kernel.org
-X-Gm-Message-State: AFq9FYJRehJTtwKN6H29k1B35trBazJXWuLzXXEa1oRXLFNcQu2ZD0by
-	/XhlvR/5SiL0wvZN4iSZTCOSMSt0QNZ02+jFJtNvPOIWYrfFd82CMELQ23DCjCsZQKU9CFpjixh
-	tuZ65fu/bf1uG+wshF5USVPnODANY4B883z4Hk+1lYCZCR7IpCqZ0/si4GqAR08BxB+hyZoZpoz
-	/q
-X-Gm-Gg: AYBFou3vYHKucvpbHpk1bu0G6Jmg7uqO52/rrgdF7+Op61ETXJasVn73LZF3z9hStt/
-	JrOMM/TlYGJyyaQ5Eb0NL/YRO+n5kvS/lqJV3Ks8pAC/FiyFo7N0hhR97BEMQOdzxJintlGbnLw
-	4uZSkePOJR/KZuLoV/RWMD0GiCOtIRXOXMUNLeqGUyQ0LkQbmpayOy4gPLJqpORTmt4odKLoAXY
-	+2Hss+JaadDUtqNT93Xiyq3RaMA7zGA/pOVqic4O/QIWGq+V5yZ1iLCDNoufMbjsyKwdAoNyCWJ
-	PnF970UeOZgJRj6KuJVcSAcK1Hj2DedJy+qx/iUXrMWzmk1khuHxFKTzMA1KbtvZi5w2SUJghj3
-	ZlPHCt6qaJSSTlxiADB7r2hKgNCk=
-X-Received: by 2002:a05:620a:2719:b0:93e:c12c:43ff with SMTP id af79cd13be357-93ec12c492amr2391109085a.76.1791984604094;
-        Wed, 14 Oct 2026 06:30:04 -0700 (PDT)
-X-Received: by 2002:a05:620a:2719:b0:93e:c12c:43ff with SMTP id af79cd13be357-93ec12c492amr2391102685a.76.1791984603476;
-        Wed, 14 Oct 2026 06:30:03 -0700 (PDT)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bcf552e8sm2027155e9.13.2026.10.14.06.30.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        d=1e100.net; s=20260707; t=1791984602; x=1792589402;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WPKkYivj8JUBz6V608J8AiLTN9VSzh8FXI9487Jr7wY=;
+        b=1ijxlTaJ1AIbwXOWF7JM5njShOXPgQ2NGkKeHVr2QPzYI3/zjocC6S14A1RmfWkTew
+         NXEd1FgNE4NxkL8BAbfI6oROf3ARQmKAPqV4oiA7E6t4uiXBsXu1M6TNMOw99xzYL4kX
+         +YpjoKtc3m4dTF0NEv7k7NkaU8AbCgM9Q9NWLdCC92vnnfLuN98wo22Nr4TQ4MMc+ki4
+         pyZ+SLFgFtdK8ospOMmwlmmp+z10BTTQM3PqZqJF0LO5zTno/Ion7VVZuFJtW9/ty3pI
+         b58mx6PR6Jp/YMTZkXIiDThEZ+4lo77qskDg9tB74XlvWbPpfAIn2hceGsU/gn8y+8z0
+         PZWg==
+X-Forwarded-Encrypted: i=1; AKwUvByM/9SQcVVjqYYVT5KJR003rUHvWceTQW7VnbHhuP26l3criGRYDAei7lakHL7AQEofDwCmsVmjD+MRkp3i88Oix7By@vger.kernel.org
+X-Gm-Message-State: AFq9FYK7CRuB3/i2MxRxn5spXVSC1QSyMbs9GhEvpxiD8lcudRRhswxg
+	Z/0kVJlRAatsKaDD4KBSCtXCD5UzWo4HL1VrofVYqheraV4pDhmXZN7O1oYSaazDlO7dGTgLPlz
+	A7Ykx/rkGpscva3RACdvF9OHW1CMldMIHQJ10Ru92ieJC+9qs60GtPgA+3ZvMg2NZDRurEmoPbk
+	IU
+X-Gm-Gg: AYBFou3pGNv4opu2sKmxwnqh0lXLqFnB2B2EXWi78fZ3DJipcFggixLuATLgOT799ri
+	qne19xaLLFh2gEi2qzwpkyBbnQGrEAO8l7Bh42a7d/5g7XCAanzaOrqhbfLsxLEznaQGShdpOvM
+	LLvVvKyRTIq+tRyDZ5pn50H4+vqcIdmhTxM6EGzcd/o8DlweeFC6tq1icwmAv1SYOE1ZTcCEVtv
+	tfxz3W0W4hn1VBvTJLQtUgnYhXuUcZU7xtx9D7CeF6Hd7Mn3rpPsxwY6QsOumbROnPXagemBQlY
+	9OCBS8jQNOrzQMQ4BZ6EROEI/Xvdu0DaMn54f/4eKKiFDTDkb2+q1jK1bzWocTNAPlb3WBD83Z0
+	n7bHneHwG2ITAKPdmA0hzKrcawXk=
+X-Received: by 2002:a05:620a:4493:b0:93e:592d:f5a2 with SMTP id af79cd13be357-93ebd0df023mr2426214785a.11.1791984602154;
         Wed, 14 Oct 2026 06:30:02 -0700 (PDT)
+X-Received: by 2002:a05:620a:4493:b0:93e:592d:f5a2 with SMTP id af79cd13be357-93ebd0df023mr2426208085a.11.1791984601485;
+        Wed, 14 Oct 2026 06:30:01 -0700 (PDT)
+Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bcf552e8sm2027155e9.13.2026.10.14.06.30.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 06:30:00 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
 To: rafael@kernel.org
 Cc: Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
@@ -98,12 +96,10 @@ Cc: Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 1/4] platform profile: Separate handler locking from sysfs lifetime
-Date: Wed, 14 Oct 2026 15:24:44 +0200
-Message-ID: <20261014132500.3817549-2-daniel.lezcano@oss.qualcomm.com>
+Subject: [PATCH v1 0/4] Make platform profiles firmware independent
+Date: Wed, 14 Oct 2026 15:24:43 +0200
+Message-ID: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
-References: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -111,286 +107,128 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfX1RjyyBjCADmN
- UU4VcyZ4EcK40a6l8ncB4KRxJfHEXxvSDOwsXHSTLC/P3dyuQXfKwSzQwhND8+BXNBXR83RrqUk
- LNGH8yGVjpnU7FN8EoLx/0EY+UPAXcw=
-X-Proofpoint-GUID: PmtpYHK1OWww-Nge7k7lAtEgZ_0NgUvK
-X-Proofpoint-ORIG-GUID: PmtpYHK1OWww-Nge7k7lAtEgZ_0NgUvK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfXyyGJqlMy1AK/
- P1q7NBg95dACAxZTTJYZ4U5lNenccnrEAVLq6BCLlMrzHjELlFrBltljfqMm7lNxQSER7zIsmuH
- lKSMJBrk6J9uuJA6reatkhYZInd3+P/vy3RSlzPZF/RwIsoJ3o53PMil1xXTYJRdDCKoNP7JJ5P
- ESXsPTdgImV229UW1qeZDiNJCkkRoNslR42Pqy+Ukhxxv8M2NxplquJY9vnVb0QjrVd6/tFtSvD
- ccJGWnV/gb4KEyfMwBU+krjZEme6Q2mHSJpKYrp4X03gjgxmemWHFDo2j5RBAp3Cou1j5BvgGWY
- Wv/rz31caecjW1TO2Uxl1rReFSEEvTIHBW24pdR0TLfrxM+xo8OUbMv7DNgbrGZRHDMFoQvaWwr
- kULIWfC1WhTqnlNgF9cUSOCSwekotnvA+OQu/j0gClzEkkEaiX53ypw85kJ8LQYuqEC8spPcxjV
- OEYUhYzIIaHmEJ9X+kg==
-X-Authority-Analysis: v=2.4 cv=JegpPkKV c=1 sm=1 tr=0 ts=6acf83dd cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfX7xFxeziDKFcj
+ ym5h/SpUiM8pTrGzvA8d5owfERJ8v307pVnEWfziBkqUxMqpuAVYiKUBiopDSocrsFVxJn6mSlf
+ tdhQhzj6Zx5ArmosYiLA7RGEuvBRWp2enDoobMYeMuCLQmmXt0HwZ2Oatrl8GT8azSjXFXSU/so
+ uy4Dy0Gndw4nxy1rANj07xHOOpeJp0SUSa7mKn/F+ImvOwT+GBE3u4n+k9p2FjNNDAhVAmUybY+
+ pI+wU7e6l4mnqP4cRUf8ut6rsVFPmP+/5OX2yypW+5Cxv0wvcDIgeexzZn0JXlsQ6fh5/GJhfZ6
+ AibgbdbX6Aj10ki8x/Jbjc76GneHNG9+2Kb/+qn0G3Jz1VJsauCa1nl+P3LLnOUyGhUOv7TLOHM
+ T2TsW0W2BOW8KLUoKCl6tjfQJnarNY7PD7kQXYTOu6qCYIQWXxGvA3AkgmdoAApeyB5C8VzK5Zg
+ IxuLBKjUJka+LlxoBwg==
+X-Proofpoint-GUID: xTOh0EZ30-d0N4O5UiCRaVfrDk1AY_5q
+X-Authority-Analysis: v=2.4 cv=P6avFSAu c=1 sm=1 tr=0 ts=6acf83db cx=c_pps
  a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=660iZSQnnn4A:10
  a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8 a=x8GNUdOtJ_ZxbuW7bkUA:9
- a=PEH46H7Ffwr30OY-TuGO:22
+ a=yx91gb_oNiZeI1HMLzn7:22 a=ZMhTd-B8TqveHcltUyQA:9 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-ORIG-GUID: xTOh0EZ30-d0N4O5UiCRaVfrDk1AY_5q
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfX2qJXoEhLuUL3
+ OOTNbBnXnfedeP5jghupcxs/ryMEdoHR7L2477pANd6fJI5Esliz5WxG/3TwB9ikaZ5YrYUgAOb
+ GPTubloxTgz6BOeShC8Bxaywa+W76b0=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-10-13_01,2026-10-09_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1015 phishscore=0 suspectscore=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 clxscore=1015 impostorscore=0 malwarescore=0 spamscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610140053
 
-Registration and removal currently hold profile_lock across
-device_unregister() and sysfs_update_group(). These operations can remove
-sysfs attributes and wait for their active callbacks to finish. The
-profile read and write callbacks acquire profile_lock themselves, so a
-concurrent access can deadlock:
+Make platform profile selection independent of ACPI firmware.
 
-  Removal/update path             Active sysfs callback
-  -------------------             ---------------------
-  acquire profile_lock            hold kernfs active reference
-  remove a sysfs attribute         wait for profile_lock
-  wait for its active references
+The provider API already uses struct device, profile enums and callbacks;
+it does not require an ACPI handle or firmware node. However, the core is
+built under drivers/acpi/, its Kconfig symbol depends implicitly on ACPI,
+initialization fails when ACPI is disabled, and the system-wide profile
+interface is only exposed under /sys/firmware/acpi/.
 
-The removal path cannot finish until the callback returns, and the
-callback cannot return until the removal path releases profile_lock.
-This applies both to per-provider device teardown and to updates of the
-legacy aggregate attribute group.
+This series moves the core to drivers/platform/profile/ and introduces
+CONFIG_PLATFORM_PROFILE, updating all existing provider selectors. It
+retains the tristate configuration and platform_profile module name.
+Firmware-specific discovery and profile operations remain with providers.
+The core can also be selected directly through its Kconfig prompt.
 
-Simply dropping profile_lock around these operations is insufficient.
-Aggregate operations currently discover providers through the class
-device list. A provider being unregistered could therefore still be
-selected for an aggregate read, write or cycle while its sysfs files are
-being torn down. Concurrent registrations and removals would also race
-when updating aggregate attribute visibility.
+An optional ACPI adapter obtains the legacy sysfs kobject and is linked
+into the same module. The generic core contains no ACPI types or symbols
+and initializes without ACPI support or with ACPI disabled at boot.
+The existing /sys/firmware/acpi/platform_profile and
+/sys/firmware/acpi/platform_profile_choices attributes remain available
+on active ACPI systems.
 
-Introduce profile_registration_lock to serialize registration, removal
-and aggregate sysfs updates. Sysfs callbacks never acquire this mutex.
-Retain profile_lock for profile operations and use it to protect an
-explicit list of handlers participating in the aggregate interface.
+The new system-wide interface is:
 
-Add a handler to that list only after device_register() succeeds. On
-removal, unlink it under profile_lock before calling device_unregister().
-Acquiring profile_lock first waits for any aggregate operation already
-using the handler to complete; unlinking prevents later aggregate
-operations from finding it. Release profile_lock before draining sysfs
-callbacks, allowing active per-provider callbacks to complete before the
-device is released. Apply the same unlink-before-unregister ordering to
-registration error cleanup.
+  /sys/kernel/platform_profile/choices
+  /sys/kernel/platform_profile/profile
 
-Walk this list for aggregate reads, writes and profile cycling, and use
-its emptiness to determine aggregate attribute visibility. The class
-devices remain the per-provider userspace interface.
+Both aggregate frontends use the same callbacks, handler set and profile
+semantics. The per-provider /sys/class/platform-profile/ interface is
+preserved. Notifications cover both aggregate frontends and direct
+per-provider writes. The new sysfs location is proposed ABI.
 
-There can now be an interval between removing the last handler from the
-list and removing the aggregate attributes. Explicitly reject choices
-reads and writes during that interval: the intersection bitmap starts
-with every bit set, so an empty traversal must not advertise all profiles
-or report a successful write without updating a provider.
+The first patch fixes the lock/lifetime boundary before adding another
+frontend: sysfs teardown must not drain callbacks while holding the mutex
+those callbacks need. A separate registration mutex serializes lifecycle
+changes, while a profile-lock-protected handler list determines aggregate
+membership independently of the class device's teardown state.
 
-This also establishes the locking and lifetime boundary needed to expose
-the aggregate operations through a second, firmware-independent sysfs
-interface later in the series.
+The second patch extracts the core and uses subsys_initcall_sync() so it
+initializes after ACPI and before built-in thermal and CPUFreq consumers.
+The third adds the generic aggregate interface, and the fourth documents
+the interfaces and extends maintainer coverage.
 
-Assisted-by: OpenCode:gpt-6.1-sol
-Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
----
- drivers/acpi/platform_profile.c | 75 ++++++++++++++++++---------------
- 1 file changed, 42 insertions(+), 33 deletions(-)
+Validation:
 
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index 79d2e92e5c28..f98ce4cda02c 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -8,6 +8,7 @@
- #include <linux/bits.h>
- #include <linux/cleanup.h>
- #include <linux/init.h>
-+#include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/platform_profile.h>
- #include <linux/sysfs.h>
-@@ -15,8 +16,12 @@
- #define to_pprof_handler(d)	(container_of(d, struct platform_profile_handler, dev))
- 
- static DEFINE_MUTEX(profile_lock);
-+/* Serialize registration and sysfs updates without blocking sysfs callbacks. */
-+static DEFINE_MUTEX(profile_registration_lock);
-+static LIST_HEAD(profile_handlers);
- 
- struct platform_profile_handler {
-+	struct list_head node;
- 	const char *name;
- 	struct device dev;
- 	int minor;
-@@ -44,6 +49,22 @@ static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
- 
- static DEFINE_IDA(platform_profile_ida);
- 
-+static int profile_walk_handlers(void *data,
-+				 int (*fn)(struct device *dev, void *data))
-+{
-+	struct platform_profile_handler *handler;
-+	int ret;
-+
-+	lockdep_assert_held(&profile_lock);
-+	list_for_each_entry(handler, &profile_handlers, node) {
-+		ret = fn(&handler->dev, data);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * _commmon_choices_show - Show the available profile choices
-  * @choices: The available profile choices
-@@ -306,20 +327,18 @@ static ssize_t platform_profile_choices_show(struct kobject *kobj,
- 	int err;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &data, _aggregate_choices);
-+		err = profile_walk_handlers(&data, _aggregate_choices);
- 		if (err)
- 			return err;
- 		if (data.count == 1) {
--			err = class_for_each_device(&platform_profile_class, NULL,
--						    &data, _remove_hidden_choices);
-+			err = profile_walk_handlers(&data, _remove_hidden_choices);
- 			if (err)
- 				return err;
- 		}
- 	}
- 
- 	/* no profile handler registered any more */
--	if (bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
-+	if (!data.count || bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
- 		return -EINVAL;
- 
- 	return _commmon_choices_show(data.aggregate, buf);
-@@ -384,8 +403,7 @@ static ssize_t platform_profile_show(struct kobject *kobj,
- 	int err;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &profile, _aggregate_profiles);
-+		err = profile_walk_handlers(&profile, _aggregate_profiles);
- 		if (err)
- 			return err;
- 	}
-@@ -423,15 +441,13 @@ static ssize_t platform_profile_store(struct kobject *kobj,
- 		return -EINVAL;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		ret = class_for_each_device(&platform_profile_class, NULL,
--					    &data, _aggregate_choices);
-+		ret = profile_walk_handlers(&data, _aggregate_choices);
- 		if (ret)
- 			return ret;
--		if (!test_bit(i, data.aggregate))
-+		if (!data.count || !test_bit(i, data.aggregate))
- 			return -EOPNOTSUPP;
- 
--		ret = class_for_each_device(&platform_profile_class, NULL, &i,
--					    _store_and_notify);
-+		ret = profile_walk_handlers(&i, _store_and_notify);
- 		if (ret)
- 			return ret;
- 	}
-@@ -450,22 +466,11 @@ static struct attribute *platform_profile_attrs[] = {
- 	NULL
- };
- 
--static int profile_class_registered(struct device *dev, const void *data)
--{
--	return 1;
--}
--
- static umode_t profile_class_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
- {
--	struct device *dev;
--
--	dev = class_find_device(&platform_profile_class, NULL, NULL, profile_class_registered);
--	if (!dev)
--		return 0;
--
--	put_device(dev);
-+	guard(mutex)(&profile_lock);
- 
--	return attr->mode;
-+	return list_empty(&profile_handlers) ? 0 : attr->mode;
- }
- 
- static const struct attribute_group platform_profile_group = {
-@@ -502,8 +507,7 @@ int platform_profile_cycle(void)
- 	int err;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &profile, _aggregate_profiles);
-+		err = profile_walk_handlers(&profile, _aggregate_profiles);
- 		if (err)
- 			return err;
- 
-@@ -512,8 +516,7 @@ int platform_profile_cycle(void)
- 		    profile == PLATFORM_PROFILE_LAST)
- 			return -EINVAL;
- 
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &data, _aggregate_choices);
-+		err = profile_walk_handlers(&data, _aggregate_choices);
- 		if (err)
- 			return err;
- 
-@@ -525,8 +528,7 @@ int platform_profile_cycle(void)
- 					  PLATFORM_PROFILE_LAST,
- 					  profile + 1);
- 
--		err = class_for_each_device(&platform_profile_class, NULL, &next,
--					    _store_and_notify);
-+		err = profile_walk_handlers(&next, _store_and_notify);
- 
- 		if (err)
- 			return err;
-@@ -583,7 +585,7 @@ struct device *platform_profile_register(struct device *dev, const char *name,
- 		}
- 	}
- 
--	guard(mutex)(&profile_lock);
-+	guard(mutex)(&profile_registration_lock);
- 
- 	/* create class interface for individual handler */
- 	minor = ida_alloc(&platform_profile_ida, GFP_KERNEL);
-@@ -604,6 +606,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
- 		put_device(ppdev);
- 		goto cleanup_ida;
- 	}
-+	scoped_guard(mutex, &profile_lock)
-+		list_add_tail(&to_pprof_handler(ppdev)->node, &profile_handlers);
- 
- 	sysfs_notify(acpi_kobj, NULL, "platform_profile");
- 
-@@ -614,6 +618,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
- 	return ppdev;
- 
- cleanup_cur:
-+	scoped_guard(mutex, &profile_lock)
-+		list_del(&to_pprof_handler(ppdev)->node);
- 	device_unregister(ppdev);
- 
- cleanup_ida:
-@@ -636,7 +642,10 @@ void platform_profile_remove(struct device *dev)
- 
- 	pprof = to_pprof_handler(dev);
- 
--	guard(mutex)(&profile_lock);
-+	guard(mutex)(&profile_registration_lock);
-+
-+	scoped_guard(mutex, &profile_lock)
-+		list_del(&pprof->node);
- 
- 	ida_free(&platform_profile_ida, pprof->minor);
- 	device_unregister(&pprof->dev);
+  - ARM64 built-in core with CONFIG_ACPI=n: W=1 build and sparse.
+  - x86 modular core with CONFIG_ACPI=y: W=1 object build and sparse.
+  - Full x86 kernel link and QEMU boot with lockdep and list debugging,
+    with active ACPI and with acpi=off.
+  - Firmware-less providers exercising common and hidden choices,
+    profile reads/writes, invalid input, mixed profiles, cycling,
+    partial callback failures, POLLPRI and legacy/generic shared state.
+  - Concurrent sysfs I/O with two persistent providers while a third
+    provider is registered and removed 200 times, last-provider attribute
+    removal and repeated provider module reloads.
+
+The provider API and profile names are unchanged. Aggregate writes retain
+their sequential, non-transactional behavior: a failing callback does not
+roll back providers already updated.
+
+Daniel Lezcano (4):
+  platform profile: Separate handler locking from sysfs lifetime
+  platform profile: Extract the core from ACPI
+  platform profile: Add firmware-neutral aggregate sysfs interface
+  platform profile: Document firmware-independent profile selection
+
+ .../ABI/testing/sysfs-class-platform-profile  |   2 +-
+ .../ABI/testing/sysfs-kernel-platform_profile |  30 +++
+ .../ABI/testing/sysfs-platform_profile        |   7 +-
+ .../userspace-api/sysfs-platform_profile.rst  |  41 +++-
+ MAINTAINERS                                   |   6 +
+ drivers/acpi/Kconfig                          |   3 -
+ drivers/acpi/Makefile                         |   1 -
+ drivers/cpufreq/Kconfig.x86                   |   2 +-
+ drivers/platform/Kconfig                      |  16 ++
+ drivers/platform/Makefile                     |   2 +
+ drivers/platform/profile/Makefile             |   5 +
+ drivers/platform/profile/acpi.c               |  15 ++
+ .../profile/core.c}                           | 195 +++++++++++++-----
+ drivers/platform/profile/profile.h            |  17 ++
+ drivers/platform/surface/Kconfig              |   6 +-
+ drivers/platform/x86/Kconfig                  |  10 +-
+ drivers/platform/x86/amd/pmf/Kconfig          |   2 +-
+ drivers/platform/x86/dell/Kconfig             |   4 +-
+ drivers/platform/x86/hp/Kconfig               |   2 +-
+ drivers/platform/x86/lenovo/Kconfig           |   6 +-
+ drivers/thermal/intel/int340x_thermal/Kconfig |   2 +-
+ include/linux/platform_profile.h              |   3 +
+ 22 files changed, 288 insertions(+), 89 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-platform_profile
+ create mode 100644 drivers/platform/profile/Makefile
+ create mode 100644 drivers/platform/profile/acpi.c
+ rename drivers/{acpi/platform_profile.c => platform/profile/core.c} (79%)
+ create mode 100644 drivers/platform/profile/profile.h
+
+
+base-commit: d0cd1e850e1602729dd60dc3c5fd96f80e0cdc5d
 -- 
 2.43.0
 
