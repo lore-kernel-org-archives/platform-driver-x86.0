@@ -1,354 +1,174 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1422E52CCD5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E01351FCB3;
+	Wed, 14 Oct 2026 13:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791984639; cv=none; b=faFETArMU2wdgVlshJSlgl4vpqr1VQKDcJ84PckU3T5EuwikECD8HYn79RatrW2jFywKsmE2RzDNriR4cVdczphdQctMEWCSQiEnoBw048fpHAK89wO5xaxTriQ5iTC+x5i8IsKf+QvKxzO75ww3NzPmg0AabPUCkJHX+STYvVM=
+	t=1791984738; cv=none; b=Ho2oGlNWf1MeDNn7B/gy+Uml4mNa4A0kuuXsQTYTF0JhYWoEGNnDjKjCU4rICf7ycKN1FSFSI0O+DUBlx933qMGUHrfJ2TznM7Flf8IvZXOLVt4TzeOlU4WE0wr1fqNy6nAPCbRiLwqmsVL0iM6jGr2OL1edA02JDtOq8zYRyw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791984639; c=relaxed/simple;
-	bh=Xj3poXJCAnLJwR5G0Ttzjt9Vg9CWrhjrQ/sePqt56uw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VidXnqwzTjQvDd9tb2FKue7LFIIbQobdlVK3nau1wuGtcbGnwHEG473YZ5TJbKWKBDtdxtHcLg7LLJFjq8/Xr1/v7zTSi+SyE7hN/eZi4A1M4bTWy+pFnSSSP4V2vCxgfXNRKavGYjbPd2b71Z8uWDYKiPEOip5ReREP12rTrjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B3s7TSty; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ZWW453qZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1791984738; c=relaxed/simple;
+	bh=FuajUqcomA+I0GiI1iQTV+zX9U1801Jm6NJD3vBpSKc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FLYbJzE6HOL8bZWbY+UTC1IiMcaqnbTn6PT5KqQ81HxHHc4I0NgdfpRmoETI6llUa1Uq1nX0aI22DU3CT4fueiu1Legp4Nk1bZtZVI2Kie2wsyyf0NtTARmf9Gwl4IaUVLA9te/HmtADVFANp4sx6cF0tx7WdT3naY3hEdXPZ1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=heaXZjMD; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B3s7TSty";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ZWW453qZ"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69EB2Gwk3951474
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=cAwukZPw29i
-	aC+HmN0aZTgUn1Ex9Dvm+iRL59fFTkSo=; b=B3s7TStyz29l+gCm+VHtVVvT88A
-	4BV7570GSX8hymAPG0huWNNoMn2YAxbMJBEWHrtjSgtQgdJYC+7fPW0exoPzSGqy
-	9n7ud+K8H001xvudRGWO/KNapnpN8k98tT7FkBvMN71/mXwAeFDrJPY57XeRCMN3
-	U1fItKy5U4tHbmIsNQX7SqTVXGGbxhvhZnAM1HQJIcvPSc1ErxFi0SXCPzHzYANy
-	sY6G9yt21YXifPmEH55A56XRKLmXfZvb+2RgD59bmxu0cexMhVRd5orQG0vk74vm
-	tEc000ocBbvjoVVNuZsaMlGoGFrZf1qHQsNin9fOyqVJiFBsgeJPmekZNnQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ha42p1t8u-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 13:30:30 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93ce7a85f04so918113485a.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 06:30:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1791984630; x=1792589430; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=cAwukZPw29iaC+HmN0aZTgUn1Ex9Dvm+iRL59fFTkSo=;
-        b=ZWW453qZpwcWMD8eWLoTVSYhrjBQ+6EFHW02o0TDKP+qfatewKnNGhCrcmixPgDPkB
-         qYe3YTq9fbj5K6wBgjq9LSXpLFHiFj2oYLuqQNIFfqdNK6wSdcoa3hQo8fdtIQWV55DE
-         7zkf9CkDNz+2bvAZhIwsrxE9OeAWD6Lc4FxQ//UQEnSfWOR9h3LQjLvslcOhjkUBEvkH
-         /cPyE+ikU5eDfjj24bTIURrXx/A6llmQN9GAAVsjr3dcJq8CPdmpjz1WyXhw1QdiVAgQ
-         LQ2yZKtksyPDDJwOLpguXCnKfTt8OIHtil9YWUa/9ZAmJVS0sxXsijl6PPvFi2bMG2yB
-         yG1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791984630; x=1792589430;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=cAwukZPw29iaC+HmN0aZTgUn1Ex9Dvm+iRL59fFTkSo=;
-        b=1c1LHrb5oymhxcU15q78VoS4XVMZLzULR6KgInoljV0GkPQ7msHMW83ACcPmviNDRm
-         Rw69vts9Mi/z+vgHKuvteX2mHzGbrRh2ZUCdWTqJCCIY8loO8NVAam7KFMsaAt2UvCsT
-         CJuKua1VRkwDJb05g+Wbob3ohZs6ouyVOEwljqjBRoRcEDNEtc0KLACy/l714i8741/e
-         naBAO7M1oSlJOl19Ei8/JGIuBoQdUJmPz4moVLhwafAZ7x00WMWzZKjRlkLMA/Mvk3II
-         VjdaHi+oeQtVOTACMz1WoH+18ciwysBduD5xhbarP+ezjPWHV+1vaD5YPXzgPFtXewoi
-         g/fw==
-X-Forwarded-Encrypted: i=1; AKwUvBxT40AbRU9LE7PiD2SXl4Yk3jEm7Bb2vGP6N8WtMrLJKQgyupVPQKpjxQqP5wZqyXfAbjmiySvPBFDfuUyvvlFgNn4l@vger.kernel.org
-X-Gm-Message-State: AFq9FYL1R/ynVKCLXdENhjVq67scJbbQrPYEOToxJMlotFW2ATY9TbMo
-	Q9lK2iAhFW3Q+5+uf4LrCo8gzrEvYQ6K42JGb7Ku4RchaSzzssGYa2n3mOKxOp3znvxi24VOwel
-	fnR2pfUkMdp+nHRcgpYiqvQkfvfY38L9MFm9uONGSBozjjVnIOpy4xq6JzgSv1bhmC7t40ytex/
-	xA
-X-Gm-Gg: AYBFou20lnRv5rcLCyKRTA+F9HN6S1EmZfdBCz71BbAzmHvLIDHGCFmmqG/Hq4NckdA
-	xin+eqrhE1ucbPP2q3SZn12thm1TII0m56Zew1wQx8CMyIwefpS2wRmWXYGAFh7RWORlkxmBNWY
-	4ef6cA6w556v6t3LS9nE68Nx7qFTEmSQR7P5iWzvgPp7QKPLU1mOiN+xTzGe1TgnJa/4pR3mLjJ
-	WNm3jqa2B9nqViSKSRqZzpH+IE656Fuzpo5psGml0VjpNaJtMFgDmfN2qdyd13TvDIBNNV8uOYC
-	XxTF/XW21lXjnOPaVe7UzLNUP6qSQo34FFHix9PQTlNomXDZbTahKBjv903yjxAmYn3CfEkAJHH
-	EYUcuFYFTNyhXcDFNJj8BSvEhThc=
-X-Received: by 2002:a05:620a:2a0f:b0:93b:d7a0:d9e1 with SMTP id af79cd13be357-93ebd2445b1mr2507773185a.59.1791984629623;
-        Wed, 14 Oct 2026 06:30:29 -0700 (PDT)
-X-Received: by 2002:a05:620a:2a0f:b0:93b:d7a0:d9e1 with SMTP id af79cd13be357-93ebd2445b1mr2507765785a.59.1791984629021;
-        Wed, 14 Oct 2026 06:30:29 -0700 (PDT)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bcf552e8sm2027155e9.13.2026.10.14.06.30.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2026 06:30:24 -0700 (PDT)
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-To: rafael@kernel.org
-Cc: Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        "Derek J. Clark" <derekjohn.clark@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Jai Luthra <jai.luthra@ideasonboard.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Armin Wolf <W_Armin@gmx.de>, Jack Wu <jackbb_wu@compal.com>,
-        "Mario Limonciello (AMD)" <superm1@kernel.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: [PATCH v1 4/4] platform profile: Document firmware-independent profile selection
-Date: Wed, 14 Oct 2026 15:24:47 +0200
-Message-ID: <20261014132500.3817549-5-daniel.lezcano@oss.qualcomm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
-References: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="heaXZjMD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791984729; x=1823520729;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=FuajUqcomA+I0GiI1iQTV+zX9U1801Jm6NJD3vBpSKc=;
+  b=heaXZjMD0oncR1Nua2zqRpfOudq2zNDVLFVeoIJl+hGZlQuGIOxOW/5l
+   /k00ftA/+oXjStEZP+62EGQuknyXNNXTS5KRTziWFsy4/jYvKJSoanoes
+   AZPEeRJHKClEagYf/TUFkJPG3cYHZOqvCGomm504W+EejlaCVyTHt4/wt
+   VjPIEEsLA671Mc32UB4853U+wOFupen4euaS0Z62YPwQdB94uDcBwTbc7
+   X4k5i6tqDhjI0SoDoqZ0lvIeyf9W9NbqPbASzPJxcQX4hOoP3JUKFYZ+g
+   JVcqiMH+MOyTLEWK48UBozUBu1r831Fko+76EHkZ0bwY4/GB3Wg/AMMSw
+   Q==;
+X-CSE-ConnectionGUID: zWEP6hbiQcSyd+BmS93Xdw==
+X-CSE-MsgGUID: Mv8gCXBVRNmjs4a/DUA6Gw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="761113"
+X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
+   d="scan'208";a="761113"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 06:32:08 -0700
+X-CSE-ConnectionGUID: gJ1PoZIgR4WHpozPng09gw==
+X-CSE-MsgGUID: IBXxuLwhSvq95ugJL5NHJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
+   d="scan'208";a="1399816"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.234])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 06:32:05 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 Oct 2026 16:32:01 +0300 (EEST)
+To: =?UTF-8?Q?Mert_Erdo=C4=9Fan?= <mrterdo75@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add Victus 16-d1xxx board 8A26
+ support
+In-Reply-To: <20261007-hp-wmi-victus-8a26-v1-1-8a256ac14908@gmail.com>
+Message-ID: <3d9d6f53-4a20-5124-3efc-ebdd1aa5bdb7@linux.intel.com>
+References: <20261007-hp-wmi-victus-8a26-v1-1-8a256ac14908@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfX/zy0Y5DVUtGw
- ZF/OgegS/551HqFDvM373X4sHBUvb+FZJaFvSYHM8MoHMnRqpa2X4DaCf4qTCGmXJYIV3hj1K/B
- CDacY6qu1U68rDuttB2yxCsNuFPVNbk=
-X-Proofpoint-ORIG-GUID: dxDnflu0lk2XQq1fV-b659NObJBGkDwZ
-X-Authority-Analysis: v=2.4 cv=aeb0Dhot c=1 sm=1 tr=0 ts=6acf83f6 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=660iZSQnnn4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=_glEPmIy2e8OvE2BGh3C:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=20KFwNOVAAAA:8
- a=sQUSrHfsy0YXJ0PWmfUA:9 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE0MDA1MyBTYWx0ZWRfX4e3nreG9kErK
- 9Be/w3H4FJBk6eKwQFV8yLx6o627Vt1GWTrxCKOhX+A7bXZTgeQ34hIk1wcX2AoBdiZNoETPqQc
- 4X604vW4cS/h/fXxi9bJzCVt3QsQh6na17o0GLj2LUbLbr9cuQKBgexIbnis3WgHnmB7WVrCSZz
- sfncClcIMeLgZCdky5Z7riaTixEtCal3skI+APu2tMSGCBBFDHmaERx9Vta3IxdeNUAURNc8YNE
- QVkMwT7ethmiVtrknRKCUcXVC7FVk9GW8inbuO9KI4hYebmaldUFF1FhmpwKZI2DF87fEOfkpPa
- FFyTcz+4gQ5xNj2sg42F2rxrDFOl232edD8hgsSEOUGssiDB2TcSIYDuEk5TukTuCF/0e3gApKC
- f7tP2UIN/hFwZpWuKHrks/gmfp9MNS304pPXsSxc7s3xKGOHF4oSd5CG4Z4aH8j7g5ePQDFEDj6
- lJ688H+GvmYfM7W2LvQ==
-X-Proofpoint-GUID: dxDnflu0lk2XQq1fV-b659NObJBGkDwZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-13_01,2026-10-09_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610140053
+Content-Type: multipart/mixed; BOUNDARY="8323328-1504287484-1791983861=:1157"
+Content-ID: <26324e83-1580-9eb0-7118-489f27bddd3e@linux.intel.com>
 
-Describe the firmware-neutral aggregate interface, retained ACPI
-compatibility paths and unchanged device-based provider API. Document
-hidden choices, mixed profiles and the sequential application of
-aggregate writes.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Correct the per-provider attribute reference and extend existing ACPI
-maintainer coverage to the extracted core and its interfaces.
+--8323328-1504287484-1791983861=:1157
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <e4ea1c74-e18e-b601-331b-9d55c10517e8@linux.intel.com>
 
-Assisted-by: OpenCode:gpt-6.1-sol
-Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
----
- .../ABI/testing/sysfs-class-platform-profile  |  2 +-
- .../ABI/testing/sysfs-kernel-platform_profile | 30 ++++++++++++++
- .../ABI/testing/sysfs-platform_profile        |  7 +++-
- .../userspace-api/sysfs-platform_profile.rst  | 41 ++++++++++++++-----
- MAINTAINERS                                   |  6 +++
- include/linux/platform_profile.h              |  3 ++
- 6 files changed, 77 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-platform_profile
+On Wed, 7 Oct 2026, Mert Erdo=C4=9Fan via B4 Relay wrote:
 
-diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/Documentation/ABI/testing/sysfs-class-platform-profile
-index fcab26894ec3..75e0f6e2c128 100644
---- a/Documentation/ABI/testing/sysfs-class-platform-profile
-+++ b/Documentation/ABI/testing/sysfs-class-platform-profile
-@@ -35,7 +35,7 @@ Date:		March 2025
- KernelVersion:	6.14
- Description:	Reading this file gives the current selected profile for this
- 		device. Writing this file with one of the strings from
--		platform_profile_choices changes the profile to the new value.
-+		choices changes the profile to the new value.
- 
- 		This file can be monitored for changes by polling for POLLPRI,
- 		POLLPRI will be signaled on any changes, independent of those
-diff --git a/Documentation/ABI/testing/sysfs-kernel-platform_profile b/Documentation/ABI/testing/sysfs-kernel-platform_profile
-new file mode 100644
-index 000000000000..c64a175873e2
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-platform_profile
-@@ -0,0 +1,30 @@
-+What:		/sys/kernel/platform_profile/choices
-+Date:		October 2026
-+Description:	Space-separated list of standard profiles supported across all
-+		registered platform profile providers. Profile names have the
-+		meanings documented in sysfs-class-platform-profile.
-+
-+		The file is read-only and is present while at least one provider
-+		is registered. Reading fails with EINVAL when providers have no
-+		common choices. Hidden choices may contribute to the common
-+		choices when multiple providers are registered; with a single
-+		provider only its visible choices are listed.
-+
-+What:		/sys/kernel/platform_profile/profile
-+Date:		October 2026
-+Description:	Reading returns the current profile when all providers agree,
-+		or "custom" when they have different profiles or a provider
-+		reports a custom configuration.
-+
-+		Writing a profile listed in choices applies it to all providers.
-+		"custom" cannot be written. Changes are applied sequentially;
-+		an error does not roll back providers already updated.
-+
-+		The file is read-write and is present while at least one provider
-+		is registered. It can be monitored with poll() for POLLPRI.
-+		Notifications cover successful userspace writes and changes
-+		reported by providers, for example after a firmware hotkey event.
-+
-+		On ACPI systems this interface shares its state with the legacy
-+		/sys/firmware/acpi/platform_profile interface. The interface is
-+		also available without ACPI support or with ACPI disabled.
-diff --git a/Documentation/ABI/testing/sysfs-platform_profile b/Documentation/ABI/testing/sysfs-platform_profile
-index 125324ab53a9..ee32e222af64 100644
---- a/Documentation/ABI/testing/sysfs-platform_profile
-+++ b/Documentation/ABI/testing/sysfs-platform_profile
-@@ -2,6 +2,8 @@ What:		/sys/firmware/acpi/platform_profile_choices
- Date:		October 2020
- Contact:	Hans de Goede <hdegoede@redhat.com>
- Description:	This file contains a space-separated list of profiles supported for this device.
-+		This is the ACPI compatibility interface for the system-wide
-+		/sys/kernel/platform_profile/choices attribute.
- 
- 		Drivers must use the following standard profile-names:
- 
-@@ -23,7 +25,10 @@ Description:	This file contains a space-separated list of profiles supported for
- What:		/sys/firmware/acpi/platform_profile
- Date:		October 2020
- Contact:	Hans de Goede <hdegoede@redhat.com>
--Description:	Reading this file gives the current selected profile for this
-+Description:	This interface shares its state with
-+		/sys/kernel/platform_profile/profile.
-+
-+		Reading this file gives the current selected profile for this
- 		device. Writing this file with one of the strings from
- 		platform_profile_choices changes the profile to the new value.
- 
-diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Documentation/userspace-api/sysfs-platform_profile.rst
-index 6613e188242a..37b98e5075db 100644
---- a/Documentation/userspace-api/sysfs-platform_profile.rst
-+++ b/Documentation/userspace-api/sysfs-platform_profile.rst
-@@ -1,6 +1,8 @@
--=====================================================================
--Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)
--=====================================================================
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+Platform Profile Selection
-+==========================
- 
- On modern systems the platform performance, temperature, fan and other
- hardware related characteristics are often dynamically configurable. The
-@@ -15,6 +17,21 @@ operation or towards performance.
- The purpose of the platform_profile attribute is to offer a generic sysfs
- API for selecting the platform profile of these automatic mechanisms.
- 
-+The framework is independent of the firmware interface used by a provider.
-+Drivers can implement profile selection using ACPI, an embedded controller,
-+or another platform-specific mechanism. The core does not discover providers
-+or interpret firmware descriptions.
-+
-+The system-wide interface is ``/sys/kernel/platform_profile/``, containing
-+``choices`` and ``profile`` attributes. These attributes are present while
-+at least one provider is registered. Per-provider interfaces are available
-+under ``/sys/class/platform-profile/``.
-+
-+On ACPI systems, ``/sys/firmware/acpi/platform_profile_choices`` and
-+``/sys/firmware/acpi/platform_profile`` remain available as compatibility
-+interfaces. They operate on the same providers as the system-wide interface,
-+and changes are notified through both interfaces.
-+
- Note that this API is only for selecting the platform profile, it is
- NOT a goal of this API to allow monitoring the resulting performance
- characteristics. Monitoring performance is best done with device/vendor
-@@ -52,13 +69,14 @@ Multiple driver support
- =======================
- When multiple drivers on a system advertise a platform profile handler, the
- platform profile handler core will only advertise the profiles that are
--common between all drivers to the ``/sys/firmware/acpi`` interfaces.
-+common between all drivers to the system-wide interface and its ACPI
-+compatibility interface.
- 
- This is to ensure there is no ambiguity on what the profile names mean when
- all handlers don't support a profile.
- 
--Individual drivers will register a 'platform_profile' class device that has
--similar semantics as the ``/sys/firmware/acpi/platform_profile`` interface.
-+Individual drivers register a ``platform-profile`` class device with
-+``name``, ``choices`` and ``profile`` attributes.
- 
- To discover which driver is associated with a platform profile handler the
- user can read the ``name`` attribute of the class device.
-@@ -74,7 +92,10 @@ same system. If the selected profile by individual drivers differs the
- platform profile handler core will display the profile 'custom' to indicate
- that the profiles are not the same.
- 
--While the ``platform_profile`` attribute has the value ``custom``, writing a
--common profile from ``platform_profile_choices`` to the platform_profile
--attribute of the platform profile handler core will set the profile for all
--drivers.
-+While the system-wide ``profile`` attribute has the value ``custom``, writing
-+a common profile from ``choices`` to it will set the profile for all drivers.
-+``custom`` cannot be written to the system-wide interface.
-+
-+Profile changes are applied to providers sequentially. If a provider returns
-+an error, providers updated earlier are not rolled back. Userspace can read
-+the per-provider interfaces to determine their resulting state.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8014b9f8253e..778275ff20b6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -285,10 +285,15 @@ B:	https://bugzilla.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
- F:	Documentation/ABI/testing/configfs-acpi
- F:	Documentation/ABI/testing/sysfs-bus-acpi
-+F:	Documentation/ABI/testing/sysfs-class-platform-profile
-+F:	Documentation/ABI/testing/sysfs-kernel-platform_profile
-+F:	Documentation/ABI/testing/sysfs-platform_profile
- F:	Documentation/firmware-guide/acpi/
-+F:	Documentation/userspace-api/sysfs-platform_profile.rst
- F:	arch/x86/kernel/acpi/
- F:	arch/x86/pci/acpi.c
- F:	drivers/acpi/
-+F:	drivers/platform/profile/
- F:	drivers/pci/*/*acpi*
- F:	drivers/pci/*acpi*
- F:	drivers/pnp/pnpacpi/
-@@ -296,6 +301,7 @@ F:	include/acpi/
- F:	include/linux/acpi.h
- F:	include/linux/fwnode.h
- F:	include/linux/fw_table.h
-+F:	include/linux/platform_profile.h
- F:	lib/fw_table.c
- F:	rust/helpers/acpi.c
- F:	rust/kernel/acpi.rs
-diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-index 855b28340e95..f23f9827eac6 100644
---- a/include/linux/platform_profile.h
-+++ b/include/linux/platform_profile.h
-@@ -2,6 +2,9 @@
- /*
-  * Platform profile sysfs interface
-  *
-+ * Providers may use any firmware interface or implement profiles in software.
-+ * The parent device does not need an ACPI companion or a firmware node.
-+ *
-  * See Documentation/userspace-api/sysfs-platform_profile.rst for more
-  * information.
-  */
--- 
-2.43.0
+> From: Mert Erdo=C4=9Fan <mrterdo75@gmail.com>
+>=20
+> The Victus 16-d1xxx ships with at least two DMI board names. 8A25 is
+> already listed in victus_thermal_profile_boards, but 8A26 is not, so
+> on those machines the driver falls back to the generic thermal policy.
+> Selecting a platform profile then never issues the Victus performance
+> mode WMI call (HPWMI_SET_PERFORMANCE_MODE via HPWMI_GM), and the
+> firmware keeps the GPU's +15 W configurable TGP offset disabled.
+>=20
+> Add 8A26 to the list so these machines use the same Victus thermal
+> profile path as 8A25.
+>=20
+> Before this change I enabled the cTGP offset on this machine with a
+> userspace workaround that issues the same WMI call through acpi_call
+> whenever power-profiles-daemon switches profile, and I still use that
+> workaround on my daily kernel until this is merged.
 
+First of all, thanks for the patch.
+
+For changelog text, could you please try to write only what is relevant=20
+enough to be recorded into git history (it needs to be explanation how=20
+the patch came to be but focus on what the change does and why). If you=20
+want to add extra details like this, you can put them underneath the first=
+=20
+--- line and our tools will cut that part out while the patch is being=20
+applied.
+
+> Tested on a Victus by HP Laptop 16-d1xxx (board 8A26, BIOS F.22,
+> RTX 3050 Laptop GPU) running 7.2.9, with the patched hp-wmi module
+> built out of tree, the acpi_call workaround stopped and AC connected.
+> The GPU power limit reported by nvidia-smi follows the selected
+> profile, with the same values the acpi_call workaround produces:
+>=20
+>   performance  75 W
+>   balanced     60 W
+>   quiet        30 W
+>=20
+> Unplugging and replugging AC with the performance profile selected
+> gives 20 W on battery and 75 W again on AC, again matching the
+> workaround. The power source event handler reads the profile back
+> from the EC without errors on both transitions.
+>=20
+> With the unpatched module and the workaround stopped, switching
+> between performance and balanced leaves the limit at 60 W, so the
+> change in behaviour comes from this patch.
+>=20
+> victus_thermal_profile_boards is identical in for-next and in 7.2.9,
+> so the tested change is the same one-line change as below.
+>
+> This patch was prepared with an AI coding agent (Claude Code, using
+> Claude Opus 5.5). It traced the driver's Victus code path and found
+> it sends the same WMI call as my acpi_call workaround, wrote the
+> change and this changelog, built the module and wrote the test
+> script.
+
+This and the previous paragraph too seems just unnecessary detai to=20
+recorded into git history and a bit repetitive as well.
+
+Please also check the other change similarly and send these both once=20
+you're ready in a v2 series.
+
+--
+ i.
+
+> I ran the test on the hardware and checked the results.
+>=20
+> Assisted-by: claude-opus-5-5
+> Signed-off-by: Mert Erdo=C4=9Fan <mrterdo75@gmail.com>
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
+p-wmi.c
+> index 387f60e88..15f1e9f63 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -234,6 +234,7 @@ static const char * const omen_timed_thermal_profile_=
+boards[] =3D {
+>  static const char * const victus_thermal_profile_boards[] =3D {
+>  =09"88F8",
+>  =09"8A25",
+> +=09"8A26",
+>  };
+> =20
+>  /* DMI board-specific feature data for Omen and Victus laptops. */
+>=20
+> ---
+> base-commit: 98f039265e580291d5e76a11b2072541fbb1c393
+> change-id: 20261007-hp-wmi-victus-8a26-119e000cbe86
+>=20
+> Best regards,
+> -- =20
+> Mert Erdo=C4=9Fan <mrterdo75@gmail.com>
+>=20
+>=20
+
+--=20
+ i.
+--8323328-1504287484-1791983861=:1157--
