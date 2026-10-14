@@ -1,123 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E47377AAD;
-	Wed, 14 Oct 2026 18:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F1541B8F6;
+	Wed, 14 Oct 2026 19:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792002038; cv=none; b=o6N1FveotQYw1jUB7fLcfPxKLMswJZwEXAkjlVXh0fI5pHv4S4QVLjex0Htpf1hl8wZMWGYJ2rw8tCcvyn6MFgHteVyF+mI28CRwGkSXPjJ+FRp4DPG3KWj+9J4i1RbQAmGXVT3RKEGY1imHxwTcaFypo9BWRrDPaAH1ZubmBL4=
+	t=1792004762; cv=none; b=T66qCe7Oxqk9cdoMC1UqVgxSyjoBunbAMswojSPSfnD4SShEyM8V1OtDmmwwzbptu7Vseviy0peiY+ijJ+zlixs2/llr8oNvr4akiHY04lNwcPV37BL3xyjDgnzjUxQ5qk/MKt6vZtlKs6s9iFWBrElt7j2LgFpisu2i/yWfm0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792002038; c=relaxed/simple;
-	bh=HOQd/xdM4sAke3u78emWdP9D/WXlb6Htxk91Pxg4QmQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VKDTIKDEkjxVqDoHVO9V673oOxjoX22ZfpEz2b/5eyK53wQRnzeEYJ3SHrN5fSY35g564kcpwvboJR8eMiL3QSj7u8CKgVUKLJZXWWhk0IPprANe6GO35lDT0x+kqQOrNXHnI9WowMMTVCt4H6PPtN2oK/HhrtGg5ezYyaSsgqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eeovrYGy; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1792004762; c=relaxed/simple;
+	bh=cFFwZgxIAz797KN9F08BtOyHGb4+W9+w5rCoIbeC920=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gPHnoX4Z/SUISGZ9bnKeRMVKNmYjJLxZeBmcX82isH8qdaFXruEvM+XMfbqYDdJy4i6IPwIHJlRTZ5jonMB3sJBjYY2pZM5pzRJnKVQX+PEN0zbe1U9HXX3onw25UurFpf8Ob/kOCoUEw18eBHxjtWmJDUXT+F0+gjVEruN+zak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kAteC5Qt; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eeovrYGy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792002036; x=1823538036;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HOQd/xdM4sAke3u78emWdP9D/WXlb6Htxk91Pxg4QmQ=;
-  b=eeovrYGyVr6Vz66c3XxUHpbYmQuNHNymajpdNQlAiAndxvXmnhPwpA0A
-   OMoGemBZUYVr/KzWurA/qHfLP+Ei0RWX2i7n0un/hKi1Qg/uLvn7PQ2WN
-   FeB6w9+Fcy93c9PITphAY57YdvAkOslZtd4LfSa+MQtMLVZVuFMIZgV8B
-   En6j1/GG6k2K24nf16eW+agWUidcKsDIJ6Zhi+QEaqcaIlDTw7nClJ6WF
-   BND6ltk/ki10fKUYnPgmC1TC5o/Mzwgy1FTSn2qeddrWxQIDdtRILw4a9
-   zHXoeNHa9zNU7IqUOBB+HzbmY20lDANoGOWoJnM8Oz2cQWYSM/8b8j/fq
-   Q==;
-X-CSE-ConnectionGUID: XRFSV1bER6iDvbgZrY+aQw==
-X-CSE-MsgGUID: nUH9xiFhTCuLULM4dw1O+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11935"; a="658149"
-X-IronPort-AV: E=Sophos;i="6.27,158,1787036400"; 
-   d="scan'208";a="658149"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 11:20:30 -0700
-X-CSE-ConnectionGUID: K0WeQ58XTPW9uYRLRQ1kjw==
-X-CSE-MsgGUID: RZSsfdpHRte4GH0IJu6YFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,158,1787036400"; 
-   d="scan'208";a="1517070"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.234])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 11:20:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 Oct 2026 21:20:21 +0300 (EEST)
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Guenter Roeck <linux@roeck-us.net>, Bjorn Andersson <andersson@kernel.org>, 
-    Abel Vesa <abelvesa@kernel.org>, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] platform: arm64: Add a driver for the EC found
- on ASUS Glymur machines
-In-Reply-To: <5c87c231-6c76-4363-9f4d-6c43dd63ee9f@oss.qualcomm.com>
-Message-ID: <81e7e5b7-247b-b57f-5d78-4fac468ab121@linux.intel.com>
-References: <20260923-topic-asus_ec-v3-0-2bf3bb9da879@oss.qualcomm.com> <20260923-topic-asus_ec-v3-2-2bf3bb9da879@oss.qualcomm.com> <d20f4159-de71-7e9d-46a6-5953364937cd@linux.intel.com> <5c87c231-6c76-4363-9f4d-6c43dd63ee9f@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kAteC5Qt"
+Received: from mail01.layka.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id E6A3C808E7;
+	Wed, 14 Oct 2026 21:05:58 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 6ZC3vkLDG1jv; Wed, 14 Oct 2026 21:05:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1792004758; bh=cFFwZgxIAz797KN9F08BtOyHGb4+W9+w5rCoIbeC920=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=kAteC5QtrGz/GVo1zrZ1jt4775cQVl5d1ftvY+T0NoDSV4zOscnh8BTl0wC+rvQgX
+	 qsbK367oRJ/MiK6rCJN5IwgQ3gbqlhfT3RweFbntZgsAVSMyPqdU8KbqtsQ+0nX8Ra
+	 b0HjgKGH82JkuDcjrqcx2BA591TNmeaZFEPGn/nAxApij2QUFD9QsZ+qff5hbk8Q1J
+	 suLPk5sT/9eRNrghcYBzkJKuUNDFkrywyc9h+wMGTPg6rqBFmqQ63DrKOpzWznb7Zl
+	 waPH/qt20oFHVN29mKraz7ijuBGQ/amVJRZHSqNlaGFHtWJxdq3xWhrtFWZS7RZtDX
+	 76jrYcoh97ohw==
+From: =?UTF-8?q?Ali=20Ahmet=20Memi=C5=9F?= <aliamemis@disroot.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <johannes.goede@oss.qualcomm.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Len Brown <lenb@kernel.org>,
+	Ike Panhc <ikepanhc@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Rong Zhang <i@rong.moe>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Avraham Hollander <anhollander516@gmail.com>,
+	=?UTF-8?q?Jeffrey=20W=C3=A4lti?= <jeffrey@waelti.dev>,
+	Rick <rickk1166@gmail.com>,
+	linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] ACPI: utils: Add acpi_evaluate_dsm_exclusive()
+Date: Wed, 14 Oct 2026 22:04:53 +0300
+Message-ID: <20261014190544.150093-2-aliamemis@disroot.org>
+In-Reply-To: <20261014190544.150093-1-aliamemis@disroot.org>
+References: <20261014190544.150093-1-aliamemis@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-707764721-1792002021=:1157"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-707764721-1792002021=:1157
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 Oct 2026, Konrad Dybcio wrote:
+Add an exclusive variant of acpi_evaluate_dsm() for _DSM methods that
+are known to break when interleaved with other AML.
 
-> On 10/8/26 1:28 PM, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 23 Sep 2026, Konrad Dybcio wrote:
-> >=20
-> >> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>
-> >> Some Qualcomm Snapdragon X2 Elite (Extreme)-based ASUS laptops (at
-> >> least the Zenbook A14 and A16) expose a custom, somewhat
-> >> Qualcomm reference-derived EC interface. Introduce a driver to
-> >> communicate with said EC, allowing for fan speed reporting, keyboard
-> >> backlight setting and receiving of a number of miscellaneous sideband
-> >> events.
->=20
-> [...]
->=20
->=20
-> >> +=09ret =3D asus_qcom_ec_write(ec, ASUS_QCOM_EC_RECM_OFFS, frame,
-> >> +=09=09=09=09 ASUS_QCOM_EC_RECM_FRAME_LEN);
-> >> +=09if (ret < 0)
-> >> +=09=09return ret;
-> >> +
-> >> +=09ret =3D asus_qcom_ec_read(ec, ASUS_QCOM_EC_RECM_OFFS, resp,
-> >> +=09=09=09=09ASUS_QCOM_EC_RECM_FRAME_LEN);
-> >> +=09if (ret < 0)
-> >> +=09=09return ret;
-> >> +
-> >> +=09*out =3D (count =3D=3D 2) ? get_unaligned_le16(resp) : resp[0];
-> >=20
-> > Same problem here when it comes to sparse.
-> >=20
-> > Does the ec really input be16 and output le16?
->=20
-> Yep, it really does..
+Signed-off-by: Ali Ahmet Memiş <aliamemis@disroot.org>
+---
+ drivers/acpi/utils.c    | 54 +++++++++++++++++++++++++++--------------
+ include/acpi/acpi_bus.h |  3 +++
+ include/linux/acpi.h    |  8 ++++++
+ 3 files changed, 47 insertions(+), 18 deletions(-)
 
-I suggest you mention it in a comment then, as otherwise somebody else=20
-might wonder the same thing. :-)
+diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
+index f28680424f14..32689c901564 100644
+--- a/drivers/acpi/utils.c
++++ b/drivers/acpi/utils.c
+@@ -799,23 +799,9 @@ acpi_status acpi_evaluate_reg(acpi_handle handle, u8 space_id, u32 function)
+ }
+ EXPORT_SYMBOL(acpi_evaluate_reg);
+ 
+-/**
+- * acpi_evaluate_dsm - evaluate device's _DSM method
+- * @handle: ACPI device handle
+- * @guid: GUID of requested functions, should be 16 bytes
+- * @rev: revision number of requested function
+- * @func: requested function number
+- * @argv4: the function specific parameter
+- *
+- * Evaluate device's _DSM method with specified GUID, revision id and
+- * function number. Caller needs to free the returned object.
+- *
+- * Though ACPI defines the fourth parameter for _DSM should be a package,
+- * some old BIOSes do expect a buffer or an integer etc.
+- */
+-union acpi_object *
+-acpi_evaluate_dsm(acpi_handle handle, const guid_t *guid, u64 rev, u64 func,
+-		  union acpi_object *argv4)
++static union acpi_object *
++__acpi_evaluate_dsm(acpi_handle handle, const guid_t *guid, u64 rev, u64 func,
++		    union acpi_object *argv4, bool exclusive)
+ {
+ 	acpi_status ret;
+ 	struct acpi_buffer buf = {ACPI_ALLOCATE_BUFFER, NULL};
+@@ -840,7 +826,10 @@ acpi_evaluate_dsm(acpi_handle handle, const guid_t *guid, u64 rev, u64 func,
+ 		params[3].package.elements = NULL;
+ 	}
+ 
+-	ret = acpi_evaluate_object(handle, "_DSM", &input, &buf);
++	if (exclusive)
++		ret = acpi_evaluate_object_exclusive(handle, "_DSM", &input, &buf);
++	else
++		ret = acpi_evaluate_object(handle, "_DSM", &input, &buf);
+ 	if (ACPI_SUCCESS(ret))
+ 		return (union acpi_object *)buf.pointer;
+ 
+@@ -851,8 +840,37 @@ acpi_evaluate_dsm(acpi_handle handle, const guid_t *guid, u64 rev, u64 func,
+ 
+ 	return NULL;
+ }
++
++/**
++ * acpi_evaluate_dsm - evaluate device's _DSM method
++ * @handle: ACPI device handle
++ * @guid: GUID of requested functions, should be 16 bytes
++ * @rev: revision number of requested function
++ * @func: requested function number
++ * @argv4: the function specific parameter
++ *
++ * Evaluate device's _DSM method with specified GUID, revision id and
++ * function number. Caller needs to free the returned object.
++ *
++ * Though ACPI defines the fourth parameter for _DSM should be a package,
++ * some old BIOSes do expect a buffer or an integer etc.
++ */
++union acpi_object *
++acpi_evaluate_dsm(acpi_handle handle, const guid_t *guid, u64 rev, u64 func,
++		  union acpi_object *argv4)
++{
++	return __acpi_evaluate_dsm(handle, guid, rev, func, argv4, false);
++}
+ EXPORT_SYMBOL(acpi_evaluate_dsm);
+ 
++union acpi_object *
++acpi_evaluate_dsm_exclusive(acpi_handle handle, const guid_t *guid, u64 rev,
++			    u64 func, union acpi_object *argv4)
++{
++	return __acpi_evaluate_dsm(handle, guid, rev, func, argv4, true);
++}
++EXPORT_SYMBOL_GPL(acpi_evaluate_dsm_exclusive);
++
+ /**
+  * acpi_check_dsm - check if _DSM method supports requested functions.
+  * @handle: ACPI device handle
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index e7a671dba624..e9859fdf76e8 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -66,6 +66,9 @@ bool acpi_dock_match(acpi_handle handle);
+ bool acpi_check_dsm(acpi_handle handle, const guid_t *guid, u64 rev, u64 funcs);
+ union acpi_object *acpi_evaluate_dsm(acpi_handle handle, const guid_t *guid,
+ 			u64 rev, u64 func, union acpi_object *argv4);
++union acpi_object *acpi_evaluate_dsm_exclusive(acpi_handle handle,
++			const guid_t *guid, u64 rev, u64 func,
++			union acpi_object *argv4);
+ #ifdef CONFIG_ACPI
+ bool
+ acpi_get_physical_device_location(acpi_handle handle, struct acpi_pld_info **pld);
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index ddacac812094..6a798d5bde5c 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1042,6 +1042,14 @@ static inline union acpi_object *acpi_evaluate_dsm(acpi_handle handle,
+ 	return NULL;
+ }
+ 
++static inline union acpi_object *acpi_evaluate_dsm_exclusive(acpi_handle handle,
++							     const guid_t *guid,
++							     u64 rev, u64 func,
++							     union acpi_object *argv4)
++{
++	return NULL;
++}
++
+ static inline union acpi_object *acpi_evaluate_dsm_typed(acpi_handle handle,
+ 							 const guid_t *guid,
+ 							 u64 rev, u64 func,
+-- 
+2.55.0
 
-> Ack for the other comments
->=20
-> Konrad
->=20
-
---=20
- i.
-
---8323328-707764721-1792002021=:1157--
