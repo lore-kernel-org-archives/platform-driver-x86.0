@@ -1,70 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5A0522EEF
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 21:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B527031F99C
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Oct 2026 01:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791928157; cv=none; b=XNm6oWgNkUxlCTdtU+Vt5DyGiykicvm8r4+fgaKynWeZQ9nAHKz7PzNTRgAXFo1q/FH0uq7RdKQQ3qu6R5RPRoO0BX4G55PQLzQNvqIMYjtT274NGGeLc2M+MIF9qswkP4bkioG/AVCVFdeVunUy8L3O6joOroObckwp7qg59bw=
+	t=1791942255; cv=none; b=PgzOXiLn8fxPPkamdiVr/cRgLnkeHCF3qF2PeJ1z5awSpnT3X/SDJC80ThBB0rh0pRzuFyb8A5k2RbhL7b+hOxhG7r5dRlSLEUn7KtuTgSqayS+MTstuQaEGMMW19QFLXBYadavqqZDYcftWzdFl4fz3LmpOEA/vWGa9XWTfWgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791928157; c=relaxed/simple;
-	bh=sG9hbtg6PtyroAevBi3xrSeAC6v6yYDTeZenK1u91Xs=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BwqAvjpWB+WooPiFR4j12OcUzjveLznGnuAp8uFTCxRgDSAhm6Yn0TwgiiueCjUW21KqndxDRMttBD/OIrQRC7SWeyD7PmFQ6FXmc6XrYT9X2GmDR8Afi9GsQ9A8RUPWvYdH81Kc4UYIau7kJy4TskPezblNiYR8M4lxCtiNOBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q5giSWpo; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1791942255; c=relaxed/simple;
+	bh=pZLuHo5ZWjv39EmAfep7f0DI3I6NdzNmEzWVgKx/rls=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pt/G4dANXMIs7p88391GmZ57dcH4WK1+gaUw1iYCGuC19Iampurno++Iv0MkRKLfl54g8tHCWQr0H/wMFEHE++4syiuxIli5IuCbJOUyS0SJn7qesCK+6vrHguE7hodsLcEBdH81aykCCymtub4g4hIwlUzuBZEURhCID1X0RPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=voidship.net; spf=pass smtp.mailfrom=voidship.net; dkim=pass (2048-bit key) header.d=voidship-net.20251104.gappssmtp.com header.i=@voidship-net.20251104.gappssmtp.com header.b=qkRM41ms; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=voidship.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=voidship.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q5giSWpo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791928156; x=1823464156;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=sG9hbtg6PtyroAevBi3xrSeAC6v6yYDTeZenK1u91Xs=;
-  b=Q5giSWpocmD8zHl/p6M4KVgykKWfSkutApgJkPa6ZiZrR4dPKW9/Ps/y
-   SAadQUyznM+EFjGZ/okl38EIIDCMLGCOkVsS8wpXkJ7jrCfSCxObAds+c
-   ALJdAsW1V4qiLPCK51vMkWjg/gQEUAwuuFlDNK1z2zEQooNUpocaehtqd
-   7Rf+uw9ScM/M1FsHIp48mDZzjVe3UJdNWjUEqHY03T7gWhH4VJp5xAf22
-   YOEFh6R4DpzMouPaTukJ2TKub/Hg5T1u1D/FYGj7l3e9SLyLFEt/NDdEL
-   wvOAI8Ywm9K6jS91mz12WAQX2OffzXhnp5oCOTy+y+fXnmdvvS9CB57+J
-   w==;
-X-CSE-ConnectionGUID: VkR0GiuLQ36FfyxR3uGwxw==
-X-CSE-MsgGUID: 5OQ2ZNicS7Sn3f6+misgXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="565960"
-X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="565960"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 14:47:08 -0700
-X-CSE-ConnectionGUID: fwT3Wc9DQkinXHvYvBY/Ug==
-X-CSE-MsgGUID: klXhgP4gQhiZ35RFNiXSUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
-   d="scan'208";a="1629882"
-Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 14:47:08 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	intel-xe@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=voidship-net.20251104.gappssmtp.com header.i=@voidship-net.20251104.gappssmtp.com header.b="qkRM41ms"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-5339381b46eso37667461cf.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2026 18:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=voidship-net.20251104.gappssmtp.com; s=20251104; t=1791942252; x=1792547052; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Dlj6aFpIYGfY0eqR7kOi/l3Gq5Y654XQkcpULmP78WM=;
+        b=qkRM41msFbZxLdCCQXtPBrNJXZlirtPFWl+68p+vcX4rPpYR60J3jGXOYO3gt2awAk
+         vGwDQek6LAhnthSebka1pgXWfFkR7yqaFvu/VuWe1AOlVs4GKaa9teaEX4pJAZ22lPsd
+         xfv1tdGwUZp2CbMLXnsIHvcBhUzRSQld1LxVHDtQtyaat8+Tt58vgpdGHlOfDnfB16Ei
+         GfjYfhjhFHiuknz9dNcUx+KH+G0F+XXzQPkzVQaEtf5N2QQZAln71owJ/GgTNgFbe6OP
+         5RenyIQOFhdeZwBtv0EJbrogu8HtdgbVR9P2lHunBEYpoG4Q7ingji9NU3YD6Ol7DXG3
+         b4ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791942252; x=1792547052;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Dlj6aFpIYGfY0eqR7kOi/l3Gq5Y654XQkcpULmP78WM=;
+        b=cnUrCxxKBm6nBE4+cvgsOZfZ3w+5RvLPuqkaPWUciImbon6e5thSS6AN2L2tXRD0BN
+         yOiyN6ZVClGa2UiopYAADkEA+pwUt0VS91zuenwMHq7rcxxmLKUtoaYOl4x953fzOqSs
+         JVxXrkx+WgJ3WgOlGQrE20mT8Q3wKf7ABwgvX9T+8cVRGg4nrKyjsoViHhA/JIQY/a3G
+         e0uJs/QHrDlVjxpihfGEmZzzjZ0J3CRuwXVa8DuCGooCmqXwWrFDm/0v+4r3noZMyoKR
+         elzFfBXuVlBWwpqqEsPcMzcL0Eh9g5HDmP6eAYtBxKs+veC5NYRrdk5NzzprjOa7PlI4
+         iq4g==
+X-Forwarded-Encrypted: i=1; AKwUvBxt4i/FI/goTqX/zeb6fp5x4bttCNO8jyVSTv5z7gxPU98ZT96ceVVod9YcDZiu9REa2laWXZQA8+uJsBT7h+UmkrvU@vger.kernel.org
+X-Gm-Message-State: AFq9FYJpcFDuydih32CPLnFEANMRBNYsYMAL0rniv33AKZxpESnGKrlG
+	inaGa7C7h/gw8QHYeuVEP4fk5gyXkw4SBycgM+nBgvjLEE3OdFux1LyFoBNlJd6+7tU=
+X-Gm-Gg: AYBFou2Zwg+j+pMn7NIQsQgWEDfymxfFb79U9XpVhEWLj36FgIyJFtTi5p1P5ff1bEi
+	rhAjAS4Pbzu8DnMt7Qs/bMJDWPvsE0iOjrvb25/CZTzWA1XLC/Kmqu8Nn2s1SLhBOaIlFJCJCL/
+	BsWmskmL9m76cNrisQqs4aXd9ya1ApD7frCnzHZh/hTT5clDZFbLyqu1Zd/XrH71foBMqPjw028
+	jHmuEghPziz4wsZ7vyIIpFJQIOc1xCvnGXvYEwUzoRvRIhmXja0Mvlmhd0hmNqb59xnZoIYx6G5
+	aNrB+Mke9XIg7IC4Tn/kcmNc1NAY8BONGqn+ZVeVY3xs/bD0Lu94KpvJUgYhQCu7y6bGkYXqcFq
+	z1259FZSpxnDqQLyO6PAX06VXdJXRtA8JOCrrgS7/V/z2REGSkmtfyBmqZS6hZe55H2eP5uHinT
+	LUVEiVauP3HxHgnAyUvaLM+t4lnRQmV7Mdz4N0V77qL40zpz53deT0PuQjFjvEuCS6G0zsZJpzz
+	r7x3hWiCCuHnsnK5L9PeVNT2MRrw9RHqCnrpUxc
+X-Received: by 2002:ac8:5743:0:b0:533:90df:fda3 with SMTP id d75a77b69052e-535fc8a0915mr24634181cf.50.1791942252446;
+        Tue, 13 Oct 2026 18:44:12 -0700 (PDT)
+Received: from boomzilla (dynamic-acs-24-101-237-49.zoominternet.net. [24.101.237.49])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b97c4a7d9sm40377936d6.47.2026.10.13.18.44.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 18:44:12 -0700 (PDT)
+From: Karlos Abel <kabel@voidship.net>
+To: dmitry.torokhov@gmail.com,
+	mpearson-lenovo@squebb.ca,
+	hmh@hmh.eng.br
+Cc: derekjohn.clark@gmail.com,
 	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com,
-	rodrigo.vivi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	david.e.box@linux.intel.com,
-	anoop.c.vijay@intel.com,
-	badal.nilawar@intel.com,
-	matthew.d.roper@intel.com,
-	james.ausmus@intel.com,
-	karthik.poosa@intel.com
-Subject: [PATCH v12 21/21] drm/xe/vsec: Support survivability mode for CRI
-Date: Tue, 13 Oct 2026 14:47:14 -0700
-Message-ID: <20261013214655.3502964-44-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261013214655.3502964-23-michael.j.ruhl@intel.com>
-References: <20261013214655.3502964-23-michael.j.ruhl@intel.com>
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	stable@vger.kernel.org,
+	sashiko-bot@kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Sync initial switch states
+Date: Tue, 13 Oct 2026 21:44:09 -0400
+Message-ID: <20261014014409.14579-1-kabel@voidship.net>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <98c68af25f9fc08500eb818a6d77d0d7@gmail.com>
+References: <98c68af25f9fc08500eb818a6d77d0d7@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,123 +86,61 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For survivability mode, CRI can only support access to the
-PUNIT CRASHLOG PMT function.
+hotkey_init() reports the initial switch states before registering the
+input device, but does not terminate the packet with input_sync(). Since
+input event buffers are allocated before registration, these events can
+remain queued until a later SYN_REPORT.
 
-Create a special config to support survivability mode.
+On a ThinkPad, a userspace LED update and SYN_REPORT delivered the initial
+SW_RFKILL_ALL=1 event to the rfkill input handler after registration. This
+undid a software radio block that had already been applied.
 
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Call input_sync() after reporting the initial switch states to flush the
+packet before input handlers attach. This requires the input-core fix to
+accept EV_SYN events before registration.
+
+Fixes: 0cd587735205 ("Input: preallocate memory to hold event values")
+Cc: stable@vger.kernel.org
+Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/98c68af25f9fc08500eb818a6d77d0d7@gmail.com
+Assisted-by: LLM
+Signed-off-by: Karlos Abel <kabel@voidship.net>
 ---
- drivers/gpu/drm/xe/xe_survivability_mode.c |  2 ++
- drivers/gpu/drm/xe/xe_vsec.c               | 34 +++++++++++++++++++++-
- 2 files changed, 35 insertions(+), 1 deletion(-)
+This is the companion driver change requested in the linked discussion.
+It depends on Dmitry's "Input: always accept EV_SYN in input_event()":
+https://lore.kernel.org/r/asx50uz6iafsyAd5@google.com
+The prerequisite patch ID is included below.
 
-diff --git a/drivers/gpu/drm/xe/xe_survivability_mode.c b/drivers/gpu/drm/xe/xe_survivability_mode.c
-index 45d44ebe288b..f08e76d02054 100644
---- a/drivers/gpu/drm/xe/xe_survivability_mode.c
-+++ b/drivers/gpu/drm/xe/xe_survivability_mode.c
-@@ -19,6 +19,7 @@
- #include "xe_nvm.h"
- #include "xe_pcode_api.h"
- #include "xe_printk.h"
-+#include "xe_soc_remapper.h"
- #include "xe_vsec.h"
+Validation on 3857c2fe5449 plus that core patch:
+- KUnit/UML: all six input tests pass with lockdep enabled. The two
+  regression tests fail with either the core change or the pre-registration
+  sync removed, and with both removed.
+- The tests model the driver's event sequence with a virtual input device;
+  they do not execute hotkey_init() or operate real radios.
+- The actual ThinkPad driver object builds without warnings with W=1,
+  configured both built-in and as a module (x86-64/GCC).
+- No new physical-hardware run of this pair yet.
+
+AI assistance covered the change, message, and regression validation.
+
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 1661f070c..ea8679398 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -3497,6 +3497,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		input_report_switch(tpacpi_inputdev,
+ 				    SW_TABLET_MODE, tabletsw_state);
+ 	}
++	input_sync(tpacpi_inputdev);
  
- /**
-@@ -351,6 +352,7 @@ static int enable_boot_survivability_mode(struct pci_dev *pdev)
- 
- 	xe_heci_gsc_init(xe);
- 
-+	xe_soc_remapper_init(xe);
- 	xe_vsec_init(xe);
- 
- 	if (survivability->fdo_mode) {
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index 1ed904ec1496..6d4ef9cb9f60 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -101,10 +101,26 @@ static struct intel_vsec_header *cri_capabilities[] = {
- 	NULL
- };
- 
-+static struct intel_vsec_header cri_survivability_crashlog = {
-+	.rev = 1,
-+	.length = SZ_16,
-+	.id = VSEC_ID_CRASHLOG,
-+	.num_entries = 1,
-+	.entry_size = 6,
-+	.tbir = 0,
-+	.offset = CRI_PMT_OFFSET + CRI_CRASHLOG_PUNIT_DISC_OFFSET,
-+};
-+
-+static struct intel_vsec_header *cri_survivability_capabilities[] = {
-+	&cri_survivability_crashlog,
-+	NULL
-+};
-+
- enum xe_vsec {
- 	XE_VSEC_UNKNOWN = 0,
- 	XE_VSEC_BMG,
- 	XE_VSEC_CRI,
-+	XE_VSEC_CRI_SURVIVABILITY,
- };
- 
- static struct intel_vsec_platform_info xe_vsec_info[] = {
-@@ -116,6 +132,10 @@ static struct intel_vsec_platform_info xe_vsec_info[] = {
- 		.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_CRASHLOG,
- 		.headers = cri_capabilities,
- 	},
-+	[XE_VSEC_CRI_SURVIVABILITY] = {
-+		.caps = VSEC_CAP_CRASHLOG,
-+		.headers = cri_survivability_capabilities,
-+	},
- 	{ }
- };
- 
-@@ -316,9 +336,10 @@ static void cri_late_bind_probe_work(struct work_struct *work)
- 
- static bool wait_for_fw(struct xe_device *xe)
- {
-+	struct xe_survivability *survivability = &xe->survivability;
- 	int retries = VSEC_LATE_BIND_RETRY;  /* wait up to 20 secs */
- 
--	if (xe->info.platform != XE_CRESCENTISLAND)
-+	if (xe->info.platform != XE_CRESCENTISLAND || survivability->mode)
- 		return true;
- 
- 	while (retries--) {
-@@ -534,6 +555,8 @@ static const int vsec_platforms[] = {
- 
- static enum xe_vsec get_platform_info(struct xe_device *xe)
- {
-+	struct xe_survivability *survivability = &xe->survivability;
-+
- 	if (xe->info.platform > XE_CRESCENTISLAND)
- 		return XE_VSEC_UNKNOWN;
- 
-@@ -542,6 +565,9 @@ static enum xe_vsec get_platform_info(struct xe_device *xe)
- 	     xe->info.platform == XE_CRESCENTISLAND))
- 		return XE_VSEC_UNKNOWN;
- 
-+	if (survivability->mode && xe->info.platform == XE_CRESCENTISLAND)
-+		return XE_VSEC_CRI_SURVIVABILITY;
-+
- 	return vsec_platforms[xe->info.platform];
- }
- 
-@@ -668,6 +694,12 @@ int xe_vsec_init(struct xe_device *xe)
- 		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
- 		break;
- 
-+	case XE_VSEC_CRI_SURVIVABILITY:
-+		xe->pmt.base_offset = CRI_PMT_OFFSET;
-+		info->priv_data = &xe_cri_pmt_cb;
-+		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
-+		break;
-+
- 	default:
- 		drm_err(&xe->drm, "Unsupported platform: %u\n", platform);
- 		return 0;
+ 	/* Do not issue duplicate brightness change events to
+ 	 * userspace. tpacpi_detect_brightness_capabilities() must have
+
+base-commit: 3857c2fe5449541e24afc5efdb0f81a8a8f9a3a0
+prerequisite-patch-id: f8539bd5b5201ef9795823552ba68a73b7dd6298
 -- 
-2.43.0
+2.56.0
 
