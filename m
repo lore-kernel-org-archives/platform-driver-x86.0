@@ -1,103 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948CC51C04B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 11:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8333E31A07F;
+	Thu, 15 Oct 2026 11:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792063939; cv=none; b=J8nEdb+mbDku4gsZ09j45qnsTMzQ2tUWpC2sH2WmSRUF9+UYhouie7/jdf48F39O+ixTLfbanUU4HNzIH8lQFL2iLk/HxBvSIWEupaXTMKZ4yZVwuX7oY8tpVu5y9r8NVshWtqpvT4S9UUMAg85GRRCha0HesB5Tr3A2fKhgvWc=
+	t=1792065051; cv=none; b=nsT6UcAA00M1s5doY8crVSeV1CZIS3jZwoX6mqWHu5OEFg6e5ktfsUFkPPDb4jBmjr4IZEc2nXrKKFkclfRwSZ5dH1wGYkdwNZpBRzztJ/UWT8JuallUO9/JX/EDZFJbruA1fVj6cIfbmm1dByDfPNzgRmEVmfVuXAM+aav5m1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792063939; c=relaxed/simple;
-	bh=/qTM632djo7wozLrYC0vwPo30eUKp/12hQOtYJOpW2k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DHGGjXp3OmYzXx1jK8EY3Njpb+HqbXg6fOx6GyT/IQcZMXT1JE0mK1ahWIGNubAfStAuY4XTrf5jQKclQZ+Z/5iBT4h83lZKSQARmqUhG3Vm8w+YVAVW3b+yg6jHZL/ptUZ36FTVQxUUG3VvxNMPHf/780W8EkN6ZLYPUBqCGqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUPVD4Hx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792065051; c=relaxed/simple;
+	bh=VSdHStomVn46F4ewruQ4QMhJT/fq+4WwDnwnLS9gKzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jQidKskCANqX3kYyjE4UceRtoSby4SInsDTw56DONwP6cM8wJ/F218H9tqgqaV+slJB7G9WWYsz8pF24s8SAHuQIVgBLrdLV7KYeYKJ5e3fiDG91utjztFUi1CXPbCybYKsA/2yYPsXQ6PxZqhL7uL+FcyZ9DNaHB/W7DeyKC8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUK8s7P7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUPVD4Hx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 009411F000C7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 11:32:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUK8s7P7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689D31F000C4;
+	Thu, 15 Oct 2026 11:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792063937;
-	bh=/qTM632djo7wozLrYC0vwPo30eUKp/12hQOtYJOpW2k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BUPVD4HxCLIXFFHjU8vUePl2t6xx2FOPXd8le9NfCpzSB2B50Jhso/DiHQqrJ+uMK
-	 v07GqY8xDx6QrueVa1SKsbIUSOcsbVCXV2F0i34e5gETVsxi/HWs9hTzQsxPCCnYSb
-	 /Am9dHIYtUGfm/pjKlbGzrJ6gE5TLM0wqSlVg+pIPHqwuGhI/+a3Jeyozo3z5O+2Y7
-	 gYPUPARtC245UZBJDpKejlU91GmCGhSHiujq0cLXBg8vKcYW2lRJVKn88Im9AQwasY
-	 wXpXEwXdNgC6gm5FMXYUJ2DIJoBvTu67UY7lPilecvZpphbV3nzo8F/lrHcvOfIPN9
-	 2sOcCMabTJ27w==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5bcb1f1358aso3560118e87.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 04:32:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBydlJ6sokVcb0v6Yj6PeedRzbXM5aEemG/NI55n7AbSu3p6XtGVVX53a7P8izGfVsftdfrn0AOIzaaRv43vUrSGGs/0@vger.kernel.org
-X-Gm-Message-State: AFq9FYK3uPXy5s8ieEkYfLER7UWTNInYI+rGTE6+q4PSMGXwKcXckPO0
-	fqWQ1cFLegUzX/GyqCkMrI3GSK81ZJ1ac+kqcUlPyM7f4pgV3YFWeHN3qfy2XswPCaW0Giq2aaF
-	cGzgbEuT737ktnqiJwc/WJcq1VBi5Jx8=
-X-Received: by 2002:a05:6512:10d3:b0:5b8:99b1:fa26 with SMTP id
- 2adb3069b0e04-5bcde6c08b5mr7566012e87.30.1792063935419; Thu, 15 Oct 2026
- 04:32:15 -0700 (PDT)
+	s=k20260515; t=1792065049;
+	bh=dJ4bhnxKo74R9ZM5Fm1e/unKSpya17F001qaVop7plU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=JUK8s7P7SnzLUBf/a2RN7iwciGazWHAl6KIKTZSh0ogwXl/sONhLL19yeNbCXj73U
+	 Kph3yZqY+JtINzB5/rRsBt4YdaYRMCxYibSRNUSxkkdmu/ZZ7rxXV/q9In60IzD54I
+	 h2mOf3fnsmUUevoooPcGwe31+DnXRSJPHcByif53gioY31ZOC6gDtITC1ncPwI8+ar
+	 3WCAr5FiUsfd+XbPx3Y88FId02tLGUs18oqCoj/rqia+m+ABHG+TYN4DsY/NIaynD7
+	 zrctA26cKfHMMxd3T84Y9T+erE++R17oJswtkauKi0AVriBH96kcIryCUJJB+LTTXI
+	 DW1q/6OqHovlA==
+Date: Thu, 15 Oct 2026 12:50:43 +0100
+From: Lee Jones <lee@kernel.org>
+To: Liang Haowen <nbg2974@gmail.com>
+Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
+	"Martin K . Petersen" <mkp@kernel.org>, linux-scsi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Marco Scardovi <scardracs@disroot.org>
+Subject: Re: [RFC v9 1/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
+ for ROG NVMe enclosures
+Message-ID: <20261015115043.GA1863739@google.com>
+References: <20260925134010.2815025-1-nbg2974@gmail.com>
+ <20260925134010.2815025-2-nbg2974@gmail.com>
+ <179198503855.839288.7797731903424311774@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
- <20261014132500.3817549-4-daniel.lezcano@oss.qualcomm.com> <c751e18d-57e9-4ce6-95dc-1bf53a7a4808@gmx.de>
-In-Reply-To: <c751e18d-57e9-4ce6-95dc-1bf53a7a4808@gmx.de>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Thu, 15 Oct 2026 13:30:05 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jQQsXP4v7dymuHZhy2oVjPwV9eXhqV4bGPUgMyGyUsUQ@mail.gmail.com>
-X-Gm-Features: AclHuK-MrNhF7fxhSV-bdpZ8WBZksbpNF_88y0eoYHFmpjizETXDqP6cb1yw0WU
-Message-ID: <CAJZ5v0jQQsXP4v7dymuHZhy2oVjPwV9eXhqV4bGPUgMyGyUsUQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] platform profile: Add firmware-neutral aggregate
- sysfs interface
-To: Armin Wolf <W_Armin@gmx.de>, Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>, 
-	Hans de Goede <hansg@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Jai Luthra <jai.luthra@ideasonboard.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jack Wu <jackbb_wu@compal.com>, 
-	"Mario Limonciello (AMD)" <superm1@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Kurt Borja <kuurtb@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <179198503855.839288.7797731903424311774@kernel.org>
 
-On Wed, Oct 14, 2026 at 11:31=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 14.10.26 um 15:24 schrieb Daniel Lezcano:
->
-> > The per-provider class interface is firmware-independent, but system-
-> > wide profile selection is only exposed under /sys/firmware/acpi.
+On Fri, 25 Sep 2026, Lee Jones wrote:
+
+> --- checkpatch.pl: clean (0 issues) ---
+> 
+> On Fri, 25 Sep 2026, Liang Haowen wrote:
+> 
+> > ASUS ROG external NVMe enclosures (ROG STRIX Arion, USB 0b05:1932) are
+> > plain USB mass-storage devices with no HID interface: the Aura LEDs
+> > hang off an ENE controller driven by vendor SCSI commands on the same
+> > LUN as the disk. The enclosure has 4 independently addressable LEDs,
+> > verified on hardware.
 > >
-> > Add /sys/kernel/platform_profile/{choices,profile}, sharing the existin=
-g
-> > aggregate callbacks and semantics with the legacy interface. Keep
-> > attributes hidden until a provider is registered and remove them after
-> > the last provider.
+> > Register a scsi_device_handler matched by INQUIRY (vendor "ROG",
+> > model "ESD-S1C"); it does not claim the sdev (sd keeps owning the
+> > disk) and exposes each LED as a multicolor LED class device,
+> > /sys/class/leds/asus-arion-0-0-0-0::led-0 through led-3. The
+> > H:C:T:L part of the sdev name keeps the names unique when more than
+> > one enclosure is connected, with its colons flattened to dashes. The
+> > color section stays empty, since multicolor LEDs enumerate their
+> > palette via multi_intensity, and the four identical zones use the
+> > function name with a "-N" ordinal, as the naming section in
+> > Documentation/leds/leds-class.rst asks for.
 > >
-> > Notify both aggregate frontends on profile changes. Also notify the
-> > provider class device on a direct profile write, matching its documente=
-d
-> > POLLPRI ABI. Restore aggregate visibility after a failed registration.
->
-> IMHO the aggregate sysfs interface only exists for backwards-compatibilit=
-y,
-> so i would be very happy if you could just make the associated code optio=
-nal
-> and instead teach platform-profiles-daemon to use the individual class de=
-vices
-> instead.
+> > Protocol: a 16-byte vendor CDB (opcode 0xec, 'A' 'S' signature,
+> > BE16 register index, argument count in byte 13), modelled by
+> > struct ene_cdb. MODE 0x8021 (Static) must be written first in every
+> > sequence or the device ignores it; colours go to 0x8160 + 3 * led
+> > and 0x8100 + 3 * led (3 bytes, wire order R, B, G; both tables are
+> > written because firmware revisions pull from one or the other);
+> > APPLY 0x80a0 takes 0x01 to apply; the controller also accepts 0xaa
+> > to save the state to its flash, which this driver never sends: the
+> > LED class interface is runtime state and does not promise persistence
+> > across power cycles, and a save on every update would wear the
+> > controller flash. The colour reverts to the stored default on power
+> > cycle, like any other runtime-only LED.
+> >
+> > The CDB cannot go through scsi_execute_cmd(): it sizes the command
+> > via scsi_command_size(opcode), which maps vendor opcode 0xec to
+> > 10 bytes, so byte 13 is dropped and the device silently ignores the
+> > write (GOOD status, no error). scsi_execute_cmd() also offers no way
+> > to override the derived length. The request is therefore built with
+> > scsi_alloc_request(), which initializes the scsi_cmnd parts a
+> > passthrough needs, with cmd_len set to the CDB size, mirroring what
+> > SG_IO does from userspace. A 5 s timeout and a single retry-less
+> > quiet submission cover the register writes.
+> >
+> > The write payload is copied into a per-device buffer before it is
+> > mapped with blk_rq_map_kern(), so no stack memory is ever mapped for
+> > DMA (VMAP_STACK).
+> >
+> > brightness_set only caches the colour and marks the LED pending
+> > under a spinlock; led_mc_calc_color_components() runs under that
+> > lock too, because it writes the shared subled_info array and
+> > trigger events call led_set_brightness() without the led_access lock
+> > that serializes sysfs stores. A single work item per enclosure then
+> > snapshots the pending LEDs and runs one ENE sequence for all of
+> > them. Funneling every update through one work item keeps the
+> > sequences from interleaving between concurrent LED updates and
+> > batches multi-LED updates into a single APPLY. A re-queued run
+> > with nothing pending returns before touching the device, so it
+> > cannot wear the flash with a pointless SAVE, and the lock keeps a
+> > colour write from being reordered after its pending flag on weakly
+> > ordered architectures.
+> >
+> > This is the monolithic out-of-tree version as verified on hardware;
+> > the Kconfig/Makefile/MAINTAINERS wiring lands with the agreed split
+> > into a SCSI transport helper and a shared ASUS Aura LED interface.
+> >
+> > Signed-off-by: Liang Haowen <nbg2974@gmail.com>
+> > ---
+> >  drivers/leds/rgb/leds-asus-aura-scsi.c | 404 +++++++++++++++++++++++++
+> >  1 file changed, 404 insertions(+)
+> >  create mode 100644 drivers/leds/rgb/leds-asus-aura-scsi.c
+> 
+> A driver source file without 'Kconfig' or 'Makefile' integration is dead code in
+> the tree.  Either wire it up now or hold off on submitting until the rest of the
+> pieces are ready.
 
-It is not just a matter of opinion AFAICS, the aggregate interface has
-been regarded as legacy for quite a while (see commit 778b94d7ac17
-"ACPI: platform_profile: Add support for hidden choices" for example)
-and it was retained exactly for backwards compatibility reasons IIRC.
+Also:
 
-I'm with Armin on this.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+- [Low] leds: asus-aura-scsi: undefined function kzalloc_obj() causes build failure       
+- [Low] leds: asus-aura-scsi: blk_rq_map_kern() missing required request_queue argument   
+- [Low] leds: asus-aura-scsi: strscpy() called with missing size argument
 
-Thanks!
+Was this even tested?
+
+-- 
+Lee Jones
