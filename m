@@ -1,141 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633E03F8231;
-	Thu, 15 Oct 2026 18:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FA24BAA17
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 18:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792089768; cv=none; b=fZxrNb390QfsHbH9P4MQe+FdsXw3z+aOgwobhaump5002brK7G5vfUNJnwC9YROwsg0cJ8OYstb7s6Y3qvwA4jn7xwbPqKPkkqVoAjmM17sbKwYkRtCcCFo8Z6frDj1Ln3fOEbZGQT1V5xXpbfoi9121fLO3Y5oVwdEdtgvryXg=
+	t=1792090294; cv=none; b=i0S09WOMtFgekDxPfY1s3qYh+zQ6vy6YgCqoEmaSymL5uSblmVCjsA9NoZ6vH3/f/8aaRwAMhI0YlBXVCZuYtIEhh+Vyzv3u97XK5WZ+OCUw2NEeS9HWglzN7bCM9pNT0zInDaQZKaitWEOl1JvqfsiSTs5kF+WQnu4Yuv3/BBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792089768; c=relaxed/simple;
-	bh=tDYWq06Lr0v8aO4d/FRTH+CAmRSgkd1Ug4MoqdpKYsg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FWcdTPylywntQXNJ+tiwqApJbSIz+sOCRv9MPZ39pIK/puVEweepqZX+YNXs/5qa4pfuU8JZXUvlP6wNSLyzAaT6U888mxGo0emxlpvqdrh9RuPrMD7kPKYQcQ2/M6Vhw70CTwhdCS1pIVx3aLQ30qu5yIMUh09TRA7/L80PRpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5ALtjyC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792090294; c=relaxed/simple;
+	bh=HO1HSxlzu9A5G2X9wPBaDiKRVbCJ2afCF/bqWtwhDas=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=cqSOVK1/bIX6dTEgRXrU1Qv31urdq6kYKKlR8FGA8ewmTsENwrDXhwfMj7AiRHdTZE8bNCenEdzXf/1jsmPjld25kEhf7rGXDhWWEx0RmIsMyllmvixwfYUQL3xFNEAl4U1xuvo7dqnmFVgaYhO5kJKvtZKZOCPlgiImfFUxAD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Aqv7ZblO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=K8iVxa37; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5ALtjyC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF051F000C4;
-	Thu, 15 Oct 2026 18:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792089765;
-	bh=dg/1OSkrW8sX2euc3aZ8a5bssRkph0JoeOFI3JZD560=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=D5ALtjyC68GN/mpi+ZK8E1mWTMEDomCnS/ERWCEN6bBJPQCtugUMl+B22l+1wJ87o
-	 Hf+WjNfvU8VHb/MOo35aSpSbbtiJhvFwkuvJy8SdvTs4tED3cQebluDVjjUjxXz1RV
-	 10NtAzv7C/NQEJIftkQyH6he5O0wyi7/R2K/bcps+aobJQauR6XU/5Rlvb/ksM6j/L
-	 59oVD/dzJZQhZZ9ETV4mkQ0Wny9IbBXisFIw8Uq9voEdcR0398E47anliP1+RMUf+R
-	 NcmjNIg3KkyRf2CsCMhsGMRZueAB/J4ydYChvpem9THId0Ab9GKuFOOBhOgZqJyrv/
-	 Y3fVl4kmGEfLQ==
-Message-ID: <f482b724-7217-412c-a0d9-7d8e322fcc84@kernel.org>
-Date: Thu, 15 Oct 2026 13:42:43 -0500
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Aqv7ZblO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K8iVxa37"
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfout.stl.internal (Postfix) with ESMTP id A85551D000D1
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 14:51:30 -0400 (EDT)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Thu, 15 Oct 2026 14:51:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1792090290;
+	 x=1792176690; bh=Ak/8qLCT2PjpEnH+ZxC6P3NqP2TXS/ckhKWICHxOvgU=; b=
+	Aqv7ZblO+0cPVPEaiLnbQ8QpJhd8290zA3l0wST60vrThluQxdsZj6dxqE6B+dgF
+	rdwBhI+7Pm+GKEb9RauV0y4oOnjMHVlRkrtugV7440aBvjb3mSBkuz6cG+Q83cJ5
+	CymWp/BKQBbEIgmsvNsjGtwZwYAHJnQz0qjnu3rzinDJ7Jx1sDT2Zas44i2aBHwy
+	CE+ak+UHAm5SxbhftKUWVs6rcMAlvUleE1C4AhNcN/Yd0KNZO+RCjY6FB2QgSQzy
+	cHUx/iNs5omgnfCvRUWnKYg0pSoraZDzFQ3RMAEdLZ08AMbrSlI706kTwHEDD+NB
+	V96KIEx9YB1HW8LDC63UHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792090290; x=
+	1792176690; bh=Ak/8qLCT2PjpEnH+ZxC6P3NqP2TXS/ckhKWICHxOvgU=; b=K
+	8iVxa37fp76mqum9WD7lFtWQZuxH8XgckFftkDK0xFR5nDmrceOgmg4C6WfYBK0V
+	TT9meq+3jNPEMGI1xtmwrMo/KrpO4BQCbRYlbSOEhx1De1xe9s8S9yzvh6JqyjJ7
+	X+HSpttp9BmGDe18qmkb7q48c25F7gEmmguJfcN0oENzRWAefigFcnoOOUPUk9Vf
+	OWGx50okiqdnIq16UI/54jWzJAI/yuJVS8o0xp3Vt8NvLv2IMh2mXs7KmpGSjQkC
+	sGZSxN2D+Jd6IU3A9V/hO4I7nbq7njabs+o51XSMlvn7BKkJ631p/CHYAOU82YAW
+	7bKbH3iyQ19hb1YuB/URQ==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+	action=sign d=squebb.ca a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792090290; d=squebb.ca;
+	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm3:rsa-sha256:LeAhNfpS1Xyo7H0pNcY13QpAMOBK6evXOwj6mz73L6MiFju
+	j/nFoW1qY/z6XQ4uuK4YUDpUVlJIxF/GHOQ0ptcz+Cfk9Ss5x4xPKK/sMq8tkD04
+	7aqeJFdD2V/EMXj0bjc6opxvAQRhO54YQ+801OFWTtUGkYmAxnlUj7PAZD+tjMbt
+	bt51lxwcWSGLlIXZ3sn8vZYmFZXXeJSCLw8k2NIPmPEN44a6GOhBkAXrb7vLCVC7
+	tQnTe2F6hp0+XgGwbXzLP3f4he5mnHL0obCMd9EWHI+cHf501moQ8Ugt44Xhldyd
+	LNfQtUmYDygC+x9rH4zm9dKWZQ4KjQgjgArcHiQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:icwcS713CIvdgv3vuK+D6MjjIcy6OKrWK6NTgWXlmQI=:HO1HSxlzu9A5G2X9wPBaDiKRVbCJ2afCF/bqWtwhDas=;
+X-ME-Sender: <xms:siDRaoqHhn622_yJV3Ckw2PV9-C1BdhCuWk5WYjWRZU79esxvLWU_w>
+    <xme:siDRapeF1DcjK_QfAttec-XHEToNSZYddXklKCUr54D2X0_Pmr_c8hDvLpnLYmg-Z
+    k5OW8X5SCu7VOuDsC-r53UwoF2wiTbHJ00w6gIIUJ5YiFJBpo5_zo4>
+X-ME-Proxy-Cause: dmFkZTE53mLJCWNWPmDHNOcqMbRTaWDW8YKjRyQvGoaiKC/D9+WY1ugvGuGxpIjuTxaCJl
+    eCWGV0NpTv1mTsFZOzFOz64H6B9hK6WJ1hatDkyQcD4Tqvp1Drk05Yl46YlBgvsTTRmbJf
+    hvHluibKE6T3PLcHTd1gJMWboCdio6JuLc1BW/dxOk6lrSfHXgx2bkzUqU8nvt2Lak/N7c
+    QG9cjAD4rxTzojuyzLA5gnfUA4MEAYa0xYkPn/SsyKG6boRekM7gwR+gFH1WEfGRRzQVdt
+    8Pwtwzy6q2IC088nGXZM2jG8DMPttySbWEzhI4qHCuGs4zjnLVYoIu2ZG5GI2fEbNMzyMn
+    mI267HD/AsJJO6K6CJ5QCjzkobxXOKBtDHoarzTtPVt9hUAuzotAQPSoKNRSQAE7kWk5kE
+    sCJZt19GZ5V3aSKiwbgyamfn3Nt9DWcjSS9m4ZwsUpZH9HmJY3IjFpajRH4jgQQIh4kInX
+    YT7vrGKb6vftxF9EfaMyCAaxXWYTP1OL8gW1g5XmLJSDdL3Hfj+1h3A/5qUdMS9zHYzNED
+    Mxu/rqUoxgw4OvfjUXSOXuDscvHFywXRG6yDmGAucWl4SteLA2RHhRqEJK6pUoSOhLy1Ao
+    jsfIDDjzoaBW3tsnBs7s2Ir0LRNZxhCLo4+ps+XCNF7/H831BV591R2+BJ7A
+X-ME-Proxy: <xmx:siDRanI391SV3Ij-9Lt_o8e9UxK2uaO1AQMme5UXN5sIYrwmwy962w>
+    <xmx:siDRanvu9rm7eUlPJmyhflNqXx3XZppPzWIQAICLlLaVt5UlGmzdpg>
+    <xmx:siDRakJFcP-IjAyWD3a3KCjMLWR8zVc2_oL3P5kpu0iIbMP3wp39Sw>
+    <xmx:siDRanPKU-ZXZ1D7y4A26jmeoUtU3KMj2vFRL3NwZuo85vtz7UULAQ>
+    <xmx:siDRau1OtH5RMRzqVDsnn4o2l1evxlcdQ74ls_xfzWFd2DcfUSTnzMaT>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id EDB842C0007C; Thu, 15 Oct 2026 14:51:29 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/4] platform profile: Add firmware-neutral aggregate
- sysfs interface
-Content-Language: en-US
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
- Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
- Hans de Goede <hansg@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
+X-ThreadId: AAiu7TaDoMPk
+Date: Thu, 15 Oct 2026 14:51:09 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Maximilian Luz <luzmaximilian@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Jai Luthra <jai.luthra@ideasonboard.com>,
- Greg KH <gregkh@linuxfoundation.org>, Jack Wu <jackbb_wu@compal.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pm@vger.kernel.org,
+ "Armin Wolf" <W_Armin@gmx.de>
+Cc: Charles <hanker007@gmail.com>,
+ "Navon John Lukose" <navonjohnlukose@gmail.com>,
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- Kurt Borja <kuurtb@gmail.com>
-References: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
- <20261014132500.3817549-4-daniel.lezcano@oss.qualcomm.com>
- <c751e18d-57e9-4ce6-95dc-1bf53a7a4808@gmx.de>
- <CAJZ5v0jQQsXP4v7dymuHZhy2oVjPwV9eXhqV4bGPUgMyGyUsUQ@mail.gmail.com>
- <1cba0f2a-38cd-42b2-a773-9dca5d7519e5@app.fastmail.com>
- <68128016-661b-4b78-bac1-b7e23029d8de@kernel.org>
- <CAJZ5v0gHHoJVm9o-ZzD38jWpGbAZML4AMEpSmy9C9n5TSVYppg@mail.gmail.com>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAJZ5v0gHHoJVm9o-ZzD38jWpGbAZML4AMEpSmy9C9n5TSVYppg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ linux-kernel@vger.kernel.org
+Message-Id: <4362df6c-329a-4419-8c1c-7202cf934dc4@app.fastmail.com>
+In-Reply-To: <20261014-lwmi-wmi-new-api-v3-7-e1032bed1c81@rong.moe>
+References: <20261014-lwmi-wmi-new-api-v3-0-e1032bed1c81@rong.moe>
+ <20261014-lwmi-wmi-new-api-v3-7-e1032bed1c81@rong.moe>
+Subject: Re: [PATCH v3 07/12] platform/x86: lenovo-wmi-capdata: Adopt new WMI API
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 10/15/26 13:33, Rafael J. Wysocki (Intel) wrote:
-> On Thu, Oct 15, 2026 at 8:28 PM Mario Limonciello <superm1@kernel.org> wrote:
->>
->> On 10/15/26 13:04, Mark Pearson wrote:
->>>
->>> On Thu, Oct 15, 2026, at 7:30 AM, Rafael J. Wysocki (Intel) wrote:
->>>> On Wed, Oct 14, 2026 at 11:31 PM Armin Wolf <W_Armin@gmx.de> wrote:
->>>>>
->>>>> Am 14.10.26 um 15:24 schrieb Daniel Lezcano:
->>>>>
->>>>>> The per-provider class interface is firmware-independent, but system-
->>>>>> wide profile selection is only exposed under /sys/firmware/acpi.
->>>>>>
->>>>>> Add /sys/kernel/platform_profile/{choices,profile}, sharing the existing
->>>>>> aggregate callbacks and semantics with the legacy interface. Keep
->>>>>> attributes hidden until a provider is registered and remove them after
->>>>>> the last provider.
->>>>>>
->>>>>> Notify both aggregate frontends on profile changes. Also notify the
->>>>>> provider class device on a direct profile write, matching its documented
->>>>>> POLLPRI ABI. Restore aggregate visibility after a failed registration.
->>>>>
->>>>> IMHO the aggregate sysfs interface only exists for backwards-compatibility,
->>>>> so i would be very happy if you could just make the associated code optional
->>>>> and instead teach platform-profiles-daemon to use the individual class devices
->>>>> instead.
->>>>
->>>> It is not just a matter of opinion AFAICS, the aggregate interface has
->>>> been regarded as legacy for quite a while (see commit 778b94d7ac17
->>>> "ACPI: platform_profile: Add support for hidden choices" for example)
->>>> and it was retained exactly for backwards compatibility reasons IIRC.
->>>>
->>>> I'm with Armin on this.
->>>>
->>>> Thanks!
->>>
->>> I don't think we can get rid of the legacy aggregate interface - which I think is what you and Armin are asking for? What does making it optional mean?
->>>
->>> Reading through the patch series it seemed quite reasonable to me to move it out from under ACPI but still have the old interface working. What are the alternatives?
->>>
->>> User space (and users) are still using the aggregate interface in my experience
->>>
->>> Mark
->>
->> If we want to get rid of the legacy interface eventually I think this is
->> how you can do it:
->>
->> 1) Wrap it with a boolean Kconfig.  Default to enabled.
->> 2) Add some messaging in this Kconfig that it's being removed after the
->> LTS kernel from 2028.
->> 3) Emit a pr_notice_once() or similar that it's deprecated and will be
->> removed in the future.
->> 4) Modify all (known) userspace software to stop using it.
->> 5) Wait for userspace software to tag new releases.
->> 6) Change default to disabled.
->> 7) Wait some time.
->> 7) Next LTS is declared.
->> 7) Drop kconfig and legacy code.
+
+On Tue, Oct 13, 2026, at 3:21 PM, Rong Zhang wrote:
+> The new WMI API supports multiple ACPI types by converting them into a
+> unified buffer that satisfies alignment and size requirements.
+>
+> Adopt it to make our life easier.
+>
+> Note that the new WMI API only accepts a few ACPI types to conform to
+> the behavior of the Windows WMI-ACPI driver. By adopting the new API, we
+> intentionally rejects improper ACPI types instead of silently ignoring
+> them.
+>
+> Meanwhile, considering that `struct_size(block, data, count * 3)' may
+> overflow when calculating `count * 3', ignore Fan Test Data with count >
+> U8_MAX instead of caping `count'.
+>
+
+Minor typo: caping -> capping
+
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
+> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+> Changes in v3:
+> - Leave struct cd_fan_block's __packed attribute as is (thanks Armin
+>   Wolf)
+> ---
+>  drivers/platform/x86/lenovo/wmi-capdata.c | 70 ++++++++++++++-----------------
+>  1 file changed, 31 insertions(+), 39 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c 
+> b/drivers/platform/x86/lenovo/wmi-capdata.c
+> index 3c09bb9e3d46..abf5ffda7163 100644
+> --- a/drivers/platform/x86/lenovo/wmi-capdata.c
+> +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+> @@ -626,17 +626,19 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv 
+> *priv)
+>  	}
 > 
-> That should work, but my point is rather to avoid adding another
-> aggregate interface to replace the old one and instead switch over the
-> ecosystem to the existing (and documented) class device platform
-> profile interface.
+>  	for (idx = 0; idx < priv->list->count; idx++, p += size) {
+> -		union acpi_object *ret_obj __free(kfree) = NULL;
+> +		struct wmi_buffer wbuf;
+> +		int ret;
 > 
-> The legacy aggregate one may simply be removed when everybody stops
-> using it (which may take a while and it may be moved to staging at one
-> point).
+> -		ret_obj = wmidev_block_query(priv->wdev, idx);
+> -		if (!ret_obj)
+> -			return -ENODEV;
+> -
+> -		if (ret_obj->type != ACPI_TYPE_BUFFER ||
+> -		    ret_obj->buffer.length < size)
+> +		ret = wmidev_query_block(priv->wdev, idx, &wbuf, size);
+> +		if (ret == -ENODATA) /* The block is too short, probably stubbed. */
+>  			continue;
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Capdata 01 is an extension to capdata 00. */
+> +		struct capdata00 *capdata __free(kfree) = wbuf.data;
+> 
+> -		memcpy(p, ret_obj->buffer.pointer, size);
+> +		memcpy(p, capdata, size);
+>  	}
+> 
+>  	return 0;
+> @@ -678,43 +680,34 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+>   */
+>  static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
+>  {
+> +	struct wmi_buffer wbuf;
+>  	struct cd_list *list;
+> -	size_t size;
+> +	int ret, idx;
+>  	u32 count;
+> -	int idx;
+> 
+> -	/* Emit unaligned access to u8 buffer with __packed. */
+>  	struct cd_fan_block {
+>  		u32 nr;
+>  		u32 data[]; /* id[nr], max_rpm[nr], min_rpm[nr] */
+> -	} __packed * block;
+> +	} __packed;
+> 
+> -	union acpi_object *ret_obj __free(kfree) = wmidev_block_query(priv->wdev, 0);
+> -	if (!ret_obj)
+> -		return -ENODEV;
+> +	ret = wmidev_query_block(priv->wdev, 0, &wbuf, sizeof(struct cd_fan_block));
+> +	if (ret == -ENODATA) /* The block is too short, probably stubbed. */
+> +		return 0;
+> +	if (ret)
+> +		return ret;
+> 
+> -	if (ret_obj->type == ACPI_TYPE_BUFFER) {
+> -		block = (struct cd_fan_block *)ret_obj->buffer.pointer;
+> -		size = ret_obj->buffer.length;
+> +	struct cd_fan_block *block __free(kfree) = wbuf.data;
+> 
+> -		count = size >= sizeof(*block) ? block->nr : 0;
+> -		if (size < struct_size(block, data, count * 3)) {
+> -			dev_warn(&priv->wdev->dev,
+> -				 "incomplete fan test data block: %zu < %zu, ignoring\n",
+> -				 size, struct_size(block, data, count * 3));
+> -			count = 0;
+> -		} else if (count > U8_MAX) {
+> -			dev_warn(&priv->wdev->dev,
+> -				 "too many fans reported: %u > %u, truncating\n",
+> -				 count, U8_MAX);
+> -			count = U8_MAX;
+> -		}
+> -	} else {
+> -		/*
+> -		 * This is usually caused by a dummy ACPI method. Do not return an error
+> -		 * as failing to probe this device will result in sub-master device being
+> -		 * unbound. This behavior aligns with lwmi_cd_cache().
+> -		 */
+> +	count = block->nr;
+> +
+> +	if (count > U8_MAX) {
+> +		dev_warn(&priv->wdev->dev,
+> +			 "too many fans reported: %u > %u, ignoring\n", count, U8_MAX);
+> +		count = 0;
+> +	} else if (wbuf.length < struct_size(block, data, count * 3)) {
+> +		dev_warn(&priv->wdev->dev,
+> +			 "incomplete fan test data block: %zu < %zu (%u fans), ignoring\n",
+> +			 wbuf.length, struct_size(block, data, count * 3), count);
+>  		count = 0;
+>  	}
+> 
+> @@ -729,11 +722,10 @@ static int lwmi_cd_fan_list_alloc_cache(struct 
+> lwmi_cd_priv *priv)
+>  	priv->list = list;
+> 
+>  	for (idx = 0; idx < count; idx++) {
+> -		/* Do not calculate array index using count, as it may be truncated. */
+>  		list->cd_fan[idx] = (struct capdata_fan) {
+>  			.id      = block->data[idx],
+> -			.max_rpm = block->data[idx + block->nr],
+> -			.min_rpm = block->data[idx + (2 * block->nr)],
+> +			.max_rpm = block->data[idx + count],
+> +			.min_rpm = block->data[idx + (2 * count)],
+>  		};
+>  	}
+> 
+>
+> -- 
+> 2.55.0
 
-Right totally agreed.  I was meaning userspace software should switch to 
-class interfaces not add a new aggregate one.
-
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Mark
