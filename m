@@ -1,166 +1,301 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay14.grserver.gr (relay14.grserver.gr [157.180.73.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10F74E50BC
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 08:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F744EF14C
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 09:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.180.73.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792054728; cv=none; b=uslKqLNcd1sJBI5dJkIdELw1qr9t5MoaVfPt0wKiDO3zz2zbx6JXr596MM9LQc/1RlD/na2wGFDorXW+zl76/9OgZHGhoTf3G55okOUrUgy0VpKs+7dHuxA5KlbVYt+zpWffO/lDwULgGuynPw4xtyGuoq9bAwGemwRPKGYzxw4=
+	t=1792056941; cv=none; b=OVWbklr3oP8/yoqDtVZ0xm+V+/oCHeqZDxO/TgDwu7YwV7UGtpbHfZGwzGSFoEekjUNYwt+NLdNezRBwy8fti3q6AKQiV9fm8+T2Cf6PCZBXENlASyhT+dvArGv0qZEqcI4PErA/4CsUfl29AIapgDmvHeSJ2hLFtY9MDpJ2REM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792054728; c=relaxed/simple;
-	bh=A4/JKd8Bel05nQI0APY4HDpLZlqsnNWXRk9ZTGOuc2o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TwWLG8xU8Sh/pT07ynXJX5r5VSJaD1u3hFDyShp/Uj7ZDhMUTHZFesPoO3l2dl9XzQbXKLX/HZFqvyUABvZEeUyeX4kGcmVAJPfC4Mjlt+PzzI5w70hIPjS1zz1WVN4XcsaETPDqpC6nKfdZ2dhYJEPqMxcgrLEJwAos1qoRVQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=g9yL0Acz; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=iw7m8kX/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1792056941; c=relaxed/simple;
+	bh=xobRz54SHqwDVnLrV36cs9SobC4AhSXFO8cUNw/6pjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BgX7TMLJvLbh37eQbhuqgH+dPSChcJxKB9Dk4A26Yp9AYaV/pniWxGJ/PHYaAjwMRpa1WT4CW3Ya22n1e0V6q2QI2V6XJgNCI2zzOPAbRmev0QX7EtkA4xth0GwUvXfTHaBGbEzhlJ1rcaAt7DFz7YbtzkiBY6XplAYYtCkrLKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=a+zPWdUV; arc=none smtp.client-ip=157.180.73.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="g9yL0Acz";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="iw7m8kX/"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69F6JPx6644571
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 08:58:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Vu9KbfWHprfYt8Ll8VBeV6KksXaA0Iz6M9e+WSpON4I=; b=g9yL0AczBPiS7fyO
-	KhxwwYogST3fUzB02H6TT04AfIWJyGGYjhlCFLJXBmbWeHqUsCD4akFzKT01+Zov
-	O+b/P3F8r2ND4nm3s2SDCSJ/XEQ/RefVZuPfLqrfBhvO4r9lpcQd3kdKoKrvUY77
-	kzuMlWqGB+1VI1w5O6MMkKzjGpC7/28LT8VANJ2zlhoyLukE5Mn5RxVwFaWhgmP/
-	Z++cu6pIc45bTM6LnMKBFdZ76K4G+YxZVCWnEsvVGzc1jsDIoeo1pl+PuRB7zwuW
-	oCPNpj3lBFHXFjEX4UeO8hDnDouZJCl5uB22vAy37jjHLBNNO0Xfb8y5ZFLFUov2
-	FPyCoQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hajmya4f7-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 08:58:41 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93cc50fb0d2so97768485a.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 01:58:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792054721; x=1792659521; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Vu9KbfWHprfYt8Ll8VBeV6KksXaA0Iz6M9e+WSpON4I=;
-        b=iw7m8kX/11MxeFd3fT0aZMvPt+AJylqTyMmHadMiwDd0BLwz1DKoDaUCioF525AuG9
-         mYRstbFuY5Cxn4xP5v3gdu0qxIc1OSdxtltrasMRbiBDunosKuUL7XG+h/yhGDPoiFTu
-         Qol0F78BMF67SIdBckHVM9Ii5g5FxdW9QvleHGqbKkhz3Oqwk6XBZ2Ov6wwJ6HbXPsyb
-         OycEDP6s1cc9pHDmET9/GNhGiUdv2cQwCekuEZbTlI3TuT1nJPPnjY8ttxu26TJgiFAg
-         P2kZvqYFtXDzR5txGH3YTWGJ/nMLRmnqp8xndsgiXxGsZjNeiyEIJMDKg+equ0FLYy2Y
-         PxFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792054721; x=1792659521;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Vu9KbfWHprfYt8Ll8VBeV6KksXaA0Iz6M9e+WSpON4I=;
-        b=h4SUTlDFBEqB2homW1C2p6fTa44YiTdTN0Xnk9pFYyQ+vOXShJgUUaaTAav2qDZT/I
-         T6W5vlTuE+rQP+7ZWlF3/ino19qnaOBefQhH4DB79kB4fpaLdYZLeWq1xSEnprWjf9TG
-         HpktaikFcBrRnYSAmSnFOH42MDAwAON1zosHaRKDm4UYTQprE7IhNZ5IjQoCh/WEXvpL
-         92VQ/bARLKwHACursJAxwFphA2cNr5ZJPRgZIFX8aOmvGwFix1gYLZtXX/A9BQRNBcyX
-         wK7Qb1BM1X/q2Fw5oq1NbAvhVY2HKCGNqydv51IFdQqOpvLuvnQilE0rcGGt+jz/tgTw
-         Iy1A==
-X-Forwarded-Encrypted: i=1; AKwUvBzcD1IiGrYm43voI8fEVB61BuZnw1T2lqVg1XfZy0KEZFqwJQqHNndcd8s1bnJPLWcll4eF47zQbQKzjn6xu3oX7PR5@vger.kernel.org
-X-Gm-Message-State: AFq9FYLkrJJ/ZxIcXWZaKfmGF055T5ZHfyWiNgL1P/Bv1DHH3FPAQi3l
-	VxFBhbVzVdQ+SyoTIwcpoEHaqW0QiZpywuPrnfSutgQvm/boD9LLYuAFswj9Mrd6fR2LXwVvrCq
-	leHOZeGOUhvBgvvVJxGDmJaQYbLBbwlwkzC6bLW99169UfIiwe5aocHzj6SxUJqPSrCyqhOH6Ie
-	/t
-X-Gm-Gg: AYBFou0Dt+J6Rek+5nKX4Ke7eiAmqlIuY7G2Taj3chm6xhTqaclaA99Oacgf8o2S5Vt
-	4iI4Kb24vTcKhuDb/1wI3lkErgsx6MiQzPllrdF5xHo9t590Wn+fye9clPqqTJsRyiwHN5CQa+K
-	OjUgquBHbmshGuhXgmv0E9UxTDLCxxNnCQ7gRdZjz66sciQxe6A/YP4aPe/u13vZ+JBfik9Si8p
-	qfPwwDOJsGlBWAeOc1p9Ul62Wm4I/nZhkhW3nu5DRSJNqdH9qWWgvYrJXe7uZOOf2TCzXIY3mK8
-	xzMgQy666qlAwhVYvMMkp7oOhBO8pr0wGBQ1XanfhywW7zCwpR4Qfi/cqXH32r3qHrx7mVQ3iQi
-	cHskyC97C3R+mNGoFsi1T0g==
-X-Received: by 2002:a05:620a:1a17:b0:93e:70cd:e420 with SMTP id af79cd13be357-93ebd2605bdmr3480585485a.5.1792054720677;
-        Thu, 15 Oct 2026 01:58:40 -0700 (PDT)
-X-Received: by 2002:a05:620a:1a17:b0:93e:70cd:e420 with SMTP id af79cd13be357-93ebd2605bdmr3480583685a.5.1792054720249;
-        Thu, 15 Oct 2026 01:58:40 -0700 (PDT)
-Received: from [192.168.226.26] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b2037623e4sm2226634a12.1.2026.10.15.01.58.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Oct 2026 01:58:39 -0700 (PDT)
-Message-ID: <6230bd88-98cb-42ce-ac07-188a30a8c48d@oss.qualcomm.com>
-Date: Thu, 15 Oct 2026 10:58:37 +0200
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="a+zPWdUV"
+Received: from relay14 (localhost [127.0.0.1])
+	by relay14.grserver.gr (Proxmox) with ESMTP id 5657F3EE8F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 09:35:27 +0000 (UTC)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay14.grserver.gr (Proxmox) with ESMTPS id D11CD3ED85
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 09:35:23 +0000 (UTC)
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id DEFFE1FD895
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 12:35:22 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1792056923;
+	bh=A8kEjfeOxELEAzfA6hLwjIPLBZ8G69pH3V+m07x5rv8=;
+	h=Received:From:Subject:To;
+	b=a+zPWdUVMQ34daz48+Kj7auo1r7NJ/VctoEAcpMx1iqBakvnQ2NN9druHHyNm+bto
+	 LWQeQ+D1rC6I7rEfFq1Nm1ylxcmNFvoftOU7lWt4x9y6YXzy5/Gl0pY2UBGqhoxwRM
+	 aNtruV3ZINy3viM+thI9FODHDOVzWqYOOWlerc4HqK1NHRV/RWlwigxOLuP/GtLNT5
+	 CwuL94JVIz27HSIJPtDZhy25YS55iVnAz+6Od4CyoQxD/yjsDMQCRBC16/SrbebTu5
+	 E67NX1bAJjWWSYz1IxL2bGxpXZE2sObFqxqTRzR0v8EPRWoNyT42qo92KBcCjLKYoE
+	 In655v1o1Zj9w==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.215.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pg1-f180.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-pg1-f180.google.com with SMTP id
+ 41be03b00d2f7-cc4ca696de6so2790393a12.2
+        for <platform-driver-x86@vger.kernel.org>;
+ Thu, 15 Oct 2026 02:35:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AKwUvBwEgwP3Q4ZhO/JWK136zsfTaEIihBJm7PUW68+ifXkOXqKzeSa+hDINN3KBIbuCwlilepCaJw1WIuPG+/NNvz2g98G1@vger.kernel.org
+X-Gm-Message-State: AFq9FYLLa6frq0iM5xgr+/1hBRhnNKdjnMUmqoi8KgJYeG0bi/zm/yie
+	xJP7c+Z+RV/G/eVZ1961QxK/vZkLTG7xHAemDnQBQlSBnklHNA094Dafl2DsQBjuBtE0Cc4P8cA
+	mtJ5+Yqyue6X0ZUFtQhN8S5h93usCR0M=
+X-Received: by 2002:a05:6a20:a124:b0:3b4:7e2d:a3c2 with SMTP id
+ adf61e73a8af0-3e16bd7e1e4mr15808933637.18.1792056921357; Thu, 15 Oct 2026
+ 02:35:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] dt-bindings: embedded-controller: Add ASUS Zenbook
- A16 EC
-To: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Abel Vesa <abelvesa@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20261015-topic-asus_ec-v4-0-af6305ffcb10@oss.qualcomm.com>
- <20261015-topic-asus_ec-v4-1-af6305ffcb10@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20261015-topic-asus_ec-v4-1-af6305ffcb10@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: QYiphitBIHPVvWV5pL0GCGpzrRA_WL3J
-X-Proofpoint-ORIG-GUID: QYiphitBIHPVvWV5pL0GCGpzrRA_WL3J
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE1MDAzNSBTYWx0ZWRfXxc7yvxpSnwsI
- TVG+bEpuTn1HSplkCqVG3K06Za1+w1+pzO8JJwDn2VUGWjomKsD+CVWsOjjYjB8NAwih7QaDDXx
- iYqERE1RwE8r+obvNbQ9HeRJrg9CKiA=
-X-Authority-Analysis: v=2.4 cv=TbQDJhQh c=1 sm=1 tr=0 ts=6ad095c1 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=IdPoCcsTyHqTvs3CpEwA:9 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE1MDAzNSBTYWx0ZWRfX6e7ffF0L00wI
- vOJFKVYTbmvJCi2+CjvoR1im1axVw2a+S6XCrhI19jsBt6GMigdP0oqNGiRylSX9VrYwGsxLLyG
- 9XJMpShRaAoWeMVRWiYr7PhO18eAMxxwJbQ096hYit39mqImh+iAxIk9F1Hr6TSB4D0eq3T2bKy
- l8rXJOjpRjBWlDhKSTnarzXrTp2MfiRYE9JI2lAA6h+mdKJD7+TKvlpBV1fJPrq/UvJnoRGJZuv
- zxLVFy+FcEboDpvTyzhKyUbMdvEPfEm0xV1BHPZpgQQGcIA8GgrWO8oJdS1ocBtft+lWWps3h1f
- koR0DEkEqbmJ+478wdmB0es1woxEIPcuCkLDbG9il+gL3nipNHViehbIhyXBzlDo+7k0B7HoPdM
- 1UsbIwNBPWMRY3E6rSPWlAh/OvX25JvBnebZaRi9Un2R9QlIxIQsDf1MGJvUooogE4DfyovmNrC
- jjGdbXbZMdFBz4HYBfw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-13_01,2026-10-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 impostorscore=0 phishscore=0 malwarescore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610150035
+References: <20260309205125.293148-1-lkml@antheas.dev>
+ <42275140-ecef-4878-b256-1061060d4958@amd.com>
+ <CAGwozwEmENx98qB51D89h59rb2qw66f_TJENd+W41onb5GYhfw@mail.gmail.com>
+In-Reply-To: 
+ <CAGwozwEmENx98qB51D89h59rb2qw66f_TJENd+W41onb5GYhfw@mail.gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Thu, 15 Oct 2026 11:35:08 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGD7JNuWz2D0AetacX=H95sB=mz0nnssQHs=pvmsEiKaA@mail.gmail.com>
+X-Gm-Features: AclHuK_ntr1Q1ekD39mYBHgr-YPnZwjUrvmjiRY6-Ov4BNeNHKCHXZ0LIhwFszA
+Message-ID: 
+ <CAGwozwGD7JNuWz2D0AetacX=H95sB=mz0nnssQHs=pvmsEiKaA@mail.gmail.com>
+Subject: Re: [RFC v4 0/4] platform/x86/amd: Add AMD DPTCi driver for TDP
+ control in devices without vendor-specific controls
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: W_Armin@gmx.de, sashal@kernel.org, Shyam-Sundar.S-k@amd.com,
+	derekjohn.clark@gmail.com, denis.benato@linux.dev, i@rong.moe,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <179205692316.3562173.5884550784484754780@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On 10/15/26 10:55 AM, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> Some Qualcomm Snapdragon X2 Elite (Extreme)-based ASUS laptops (at
-> least the Zenbook A14 and A16) expose a custom, somewhat
-> Qualcomm reference-derived EC interface. It allows for fan speed
-> reporting, keyboard backlight setting and receiving of a number of
-> miscellaneous sideband events.
-> 
-> Introduce a binding for that class of devices.
-> 
-> Two separate compatibles are maintained since the two laptops' ECs seem
-> to be generally alike, however assuming full compatibility with the
-> limited available information does not spark confidence.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
+On Tue, 10 Mar 2026 at 08:59, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+>
+> On Tue, 10 Mar 2026 at 03:43, Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+> >
+> >
+> >
+> > On 3/9/2026 3:51 PM, Antheas Kapenekakis wrote:
+> > > Many AMD-based handheld PCs (GPD, AYANEO, OneXPlayer, AOKZOE, OrangePi)
+> > > ship with the AGESA ALIB method at \_SB.ALIB, which accepts Function 0x0C
+> > > (the Dynamic Power and Thermal Configuration Interface, DPTCi). This
+> > > allows software to adjust APU power and thermal parameters at runtime:
+> > > sustained power limit (SPL/STAPM + skin), slow PPT, fast PPT, and the
+> > > thermal control target.
+> > >
+> > > Unlike mainstream AMD laptops, these devices do not implement vendor-
+> > > specific WMI or EC hooks for TDP control. The ones that do, use DPTCi
+> > > under the hood. For these devices, ALIB is the only viable mechanism for
+> > > the OS to adjust power limits, making a dedicated kernel driver the
+> > > correct approach rather than relying on the out-of-tree acpi_call module
+> > > or ryzenadj.
+> > >
+> > > The driver provides two layers of control:
+> > >
+> > >    * Platform profile integration (low-power / balanced / performance /
+> > >      custom), with per-device preset tunings derived from thermal envelope
+> > >      data. Selecting a non-custom profile applies values immediately and
+> > >      locks the individual tunables to read-only. The default profile is
+> > >      "custom", leaving the device at firmware defaults until userspace
+> > >      explicitly selects a profile.
+> > >
+> > >    * Four firmware-attributes tunables (ppt_pl1_spl, ppt_pl2_sppt,
+> > >      ppt_pl3_fppt, cpu_temp) that become writable in "custom" mode.
+> > >      Values are enforced against per-device limits (smin..smax), with an
+> > >      "expanded_limits" toggle that widens the range to the full hardware-
+> > >      validated envelope (min..max). A save_settings attribute controls
+> > >      whether writes commit immediately ("single") or are staged for an
+> > >      explicit bulk "save".
+> > >
+> > > On resume, the active profile or staged values are re-applied so that
+> > > suspend/resume cycles do not silently revert to firmware defaults unless
+> > > in custom and in bulk mode. In that case, defer to userspace.
+> > >
+> > > Device limits are supplied for GPD Win Mini / Win 4 / Win 5 / Win Max 2 /
+> > > Duo / Pocket 4, OrangePi NEO-01, AOKZOE A1/A2, OneXPlayer F1/2/X1/G1,
+> > > and numerous AYANEO models. The SoC table covers Ryzen 5000, 6000, 7040,
+> > > 8000, AI 9 HX 370, and the Ryzen AI MAX series.
+> > >
+> > > Tested on a GPD Win 5 (Ryzen AI MAX+ 395). Confirmed with ryzenadj -i
+> > > that committed values are applied to hardware, and that fast/slow PPT
+> > > limits are honoured under a full-CPU stress load.
+> > >
+> > > Responsible disclosure: The development of this driver is AI assisted.
+> > > This includes its writing, testing, reviewing, and readmes. The driver was
+> > > manually reviewed line by line, but there may still be small leftover
+> > > quirks. This is an RFC, not a final version. Let's push these tools to
+> > > their limits and see where it takes us.
+> > >
+> >
+> > I'll tell you where the most immediate limit is.  Humans can't review
+> > RFC changes that go in daily.
+> >
+> > Over my weekend I see multiple copies of the series in my inbox.  To me
+> > they must have obviously been garbage because you sent them so quickly
+> > instead of waiting for feedback.  So I'll delete those from my inbox and
+> > review the most recent one.
+> >
+> > That's somewhat tongue in cheek.  I know you're excited for this series,
+> > but please make sure you take time to gather and take feedback into
+> > account before posting another series.
+>
+> It's true, I've been having a bit of fun. But the series is stabilized
+> now, I don't plan to send another version soon unless I messed up
+> something.
+>
+> V3 incorporated your feedback/derek's and V4 incorporated rong's
+> feedback. V4 is minor, it is just nits.
+>
+> > Maybe you can pass this to a robot and it
+> > can give you actionable feedback, but a human sitting down and reviewing
+> > a patch series in a serious way takes time.
+>
+> I'm using this series as a testbed to make some tooling for this,
+> maybe I will post it soon.
 
-Forgot to add:
+Opus 4.6 was something. Anyway. @Mario v4 of this driver as it stands
+is pretty good for prod. Since then, I kept adding devices and
+adjusting devices based on user feedback but I did not have to touch
+the driver otherwise. It has been tested on most APUs and around 30
+device models now.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+One thing this driver does not do is AC/DC limits and it would be good
+if it did. That way presets could be pushed higher for AC but that is
+only mildly necessary for AI Max platforms. 45W is more than enough
+for all of them anyway, but we could go to 55W e.g. (after that they
+saturate so it is unnecessary strain). But the updated limits I have
+are conservative enough where it is not an issue. I also found myself
+not using the commit option, so I think it can be removed.
 
-from https://lore.kernel.org/linux-arm-msm/20260928-miniature-orthodox-ibex-d5b97f@quoll/
+The only issue with this driver is that steam maxes out TDP when you
+disable the TDP slider and as the custom limit is generic for both
+AC/DC it can strain the battery. This is an architectural issue with
+steamos manager as before steam used the _default tdp value in AMD
+sysfs but dropped the notion of default when transitioning to steamos
+manager. But this is a downstream problem unrelated to the driver
+where special DC limits could help a bit.
 
-Konrad
+This is because I heard you might be working on something similar. So
+let's prevent some duplicative work. Should I repost a cleaned up V5?
+
+Best,
+Antheas
+
+> > > Assisted-by: Claude:claude-opus-4-6
+> > >
+> > > ---
+> > >
+> > > Changes in v4:
+> > >    - Align dptc_params continuation lines to opening brace
+> > >    - Reflow all dptc_device_limits structs: expand zipped braces into
+> > >      separate .params and .profiles blocks with proper indentation
+> > >    - Extract enum dptc_save_mode from struct dptc_priv to a standalone
+> > >      declaration
+> > >    - Replace vague mutex comment with explicit list of protected members
+> > >    - Use &buf[off + 1] form for put_unaligned_le32
+> > >    - Fix misaligned '=' in ACPI in_params block
+> > >    - Factor out dptc_alib_fill_param() helper to deduplicate ALIB buffer
+> > >      construction in dptc_alib_send_one() and dptc_alib_save(); use int
+> > >      instead of size_t for element counts throughout
+> > >    - Consolidate dptc_current_value_store: single guard(mutex) instead of
+> > >      two, eliminating duplicated profile check
+> > >    - Return -EBUSY instead of -EPERM when profile is not custom
+> > >    - Add blank line after early returns for readability
+> > >    - Consolidate dptc_alib_save() call into dptc_apply_profile(), which
+> > >      now returns int; simplify dptc_pp_set() and dptc_resume() callers
+> > >    - Squash device_create formatting fix into the patch that introduced it
+> > >    - Remove bogus "AMD Ryzen AI HX 360" SoC entry (no such model exists)
+> > >    - Return -ENOENT instead of -EINVAL from dptc_alib_call() when no
+> > >      parameters are staged, matching think-lmi save_settings semantics
+> > >    - Remove bool has_staged[] array: use staged[i] == 0 as the "not
+> > >      staged" sentinel, raise expanded_min from 0 to 1 W to ensure 0 is
+> > >      never a valid user value
+> > >    - Remove unnecessary braces from if/else if/else chain in dptc_resume()
+> > >    - Drop Ryzen Z1 SoC entries: Z1 devices (Lenovo/Asus) use vendor EC/PMF
+> > >      drivers, not ALIB DPTCi
+> > >
+> > > Changes in v3:
+> > >    - Split single driver patch into 3: core driver, platform profile,
+> > >      device entries
+> > >    - Rename DRIVER_NAME from "amd_dptc" to "amd-dptc" (match subsystem
+> > >      convention for platform drivers and firmware-attributes devices)
+> > >    - Add scale field to dptc_param_desc: sysfs values in user units (W, C),
+> > >      driver multiplies by scale (1000 for mW) before sending to ALIB
+> > >    - Rename struct fields: min/smin/smax/max ->
+> > >      expanded_min/device_min/device_max/expanded_max
+> > >    - Remove comment "ALIB parameter IDs (AGESA spec Appendix E.5, Table
+> > >      E-52)"
+> > >    - Move ALIB method check after SoC/DMI validation, change pr_debug to
+> > >      pr_warn
+> > >    - Reorder local variable declaration in dptc_init (dptc after other vars)
+> > >    - Add commit subject prefix "dptc:" to all driver patches
+> > >    - Remove early-return for empty save in dptc_alib_save; let
+> > >      dptc_alib_call handle the empty case
+> > >    - Remove max_power as we do not do DC/AC validation in the driver
+> > >    - Fix Ayaneo AIR device matches to reflect their wattage, add 15W profile
+> > >      for original AIR. Cheers to the AIR Plus user who had helped tune the
+> > >      AIR Plus profile so it was correct.
+> > >
+> > > Changes in v2:
+> > >    - Use a platform_device base instead of raw inits + exit, hook into devm
+> > >      helpers referencing samsung-galaxybook
+> > >    - Add platform_profile support (low-power / balanced / performance /
+> > >      custom) with per-device energy presets; non-custom profiles lock
+> > >      tunables to read-only. We default to custom to avoid writing values
+> > >    - Reduce exposed parameters from seven to four (ppt_pl1_spl,
+> > >      ppt_pl2_sppt, ppt_pl3_fppt, cpu_temp); drop time constants and
+> > >      separate skin/STAPM limits in favour of a single SPL that sets both.
+> > >      For devices where the max tdp offers thermals that are not suitable
+> > >      for day to day use (e.g., excessive fan noise), MAX_POWER is added
+> > >    - Remove CONFIG_AMD_DPTC_EXTENDED and the "soc"/"unbound" limit tiers;
+> > >      keep only device (smin..smax) and expanded (min..max) and soc match
+> > >      (certain devices ship multiple SoCs on the same motherboard/thermal
+> > >      envelope, make sure we only hook into validated SoCs)
+> > >    - Rename "commit" attribute to "save_settings" per firmware-attributes
+> > >      ABI; rename limit_mode to expanded_limits
+> > >    - Change expanded_limits attribute type from "enumeration" to "integer"
+> > >      (min=0, max=1) since firmware-attributes has no bool type
+> > >    - Remove all global vars, limit _dev access to init and exit
+> > >    - Use u32 accessors to set values for ALIB call
+> > >    - Clean up verbose comments throughout
+> > >    - Add Ayn Loki Max / Tectoy Zeenix Pro
+> > >
+> > > V3: https://lore.kernel.org/all/20260307115516.26892-1-lkml@antheas.dev/
+> > > V2: https://lore.kernel.org/all/20260305181751.3642846-1-lkml@antheas.dev/
+> > > V1: https://lore.kernel.org/all/20260303181707.2920261-1-lkml@antheas.dev/
+> > >
+> > > Antheas Kapenekakis (4):
+> > >    Documentation: firmware-attributes: generalize save_settings entry
+> > >    platform/x86/amd: dptc: Add AMD DPTCi driver
+> > >    platform/x86/amd: dptc: Add platform profile support
+> > >    platform/x86/amd: dptc: Add device entries for handheld PCs
+> > >
+> > >   .../testing/sysfs-class-firmware-attributes   |   41 +-
+> > >   MAINTAINERS                                   |    6 +
+> > >   drivers/platform/x86/amd/Kconfig              |   15 +
+> > >   drivers/platform/x86/amd/Makefile             |    2 +
+> > >   drivers/platform/x86/amd/dptc.c               | 1271 +++++++++++++++++
+> > >   5 files changed, 1320 insertions(+), 15 deletions(-)
+> > >   create mode 100644 drivers/platform/x86/amd/dptc.c
+> > >
+> > >
+> > > base-commit: 4ae12d8bd9a830799db335ee661d6cbc6597f838
+> >
+> >
+
