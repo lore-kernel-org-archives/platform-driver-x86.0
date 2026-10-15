@@ -1,90 +1,90 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0017A55C30A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 18:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4824457E5C
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 19:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792090524; cv=none; b=buOfp4ee6nGYPiEs2xVuNDnCiLL3860VRcfBk1YxeExdf91QrvxdHkE5tlpLkSuj4xvS6Tgib4eDRikBqki1X72vLEyB1qwuDuLvqtNHulSa9dhpJlNh7UzfZs9X9vugLvFDe8CfOuXwIr09Mnu/sT5ELugY5aBM0FFKO5oI+Bw=
+	t=1792092554; cv=none; b=K+s0cinQJIdkZOGPY6oc1i3qEkyh743+qi81tD0CZCDfoJlEslP+uCsawelBnLaajUMMMUKqK4kYq4jj7WUOOq36Sk72P/KXi2eklNaRhtmYXsj3LIK7jxCB+Btx30Mb8hBc+lBP4YkOuksUYj+1X+hVIDLIT3kuZl/YjOZqR/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792090524; c=relaxed/simple;
-	bh=VRKe1XVOWIZ80XXfpgmNp6PGDZIi+vf8u3E/lMWMQSg=;
+	s=arc-20240116; t=1792092554; c=relaxed/simple;
+	bh=+YmjxjE65XqBm4GeivSGeqGBYYz3QfZNi6OJRNBe/eo=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FQZNDmAX62oTxwmXVQTdajV8mIPU4OJmssCpPWLub5K7uCBQgVeDxSJzmkfn5rmZUyqaUzf0m4fEgSXFhz7gwy7VkUagk5csAeHQFVZnJDu2Yrssh4z8l1Wygc3VFNoPxDH94KHchLadIy7+1LHDEJdANlIxJphtH2LGuInBbgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=T2NFGF4n; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aQQX226/; arc=none smtp.client-ip=202.12.124.157
+	 Subject:Content-Type; b=UBE9pSsGNo0LJ647W2mUmGpS5RjQ4QjDsFo617RJc+mB5YVGU+UjVHzwMrKdCT+0XcTWmddwfKrdU8+jF1Hw8FIwTVkpuayHSe8wNvhnTKnwuXj4b+fWZfq1i1bwc1BnY/sMtDbJj1AnbFpvTw9FAanlRsWNLdP+cFZ2EIzLad8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=mb9/aJ/j; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XjoKjG6h; arc=none smtp.client-ip=202.12.124.148
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="T2NFGF4n";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aQQX226/"
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="mb9/aJ/j";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XjoKjG6h"
 Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 0EDE27A013C
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 14:55:16 -0400 (EDT)
+	by mailfout.stl.internal (Postfix) with ESMTP id 456FB1D00159
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 15:29:12 -0400 (EDT)
 Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Thu, 15 Oct 2026 14:55:16 -0400
+  by stl-compute-04.internal (MEProxy); Thu, 15 Oct 2026 15:29:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1792090516;
-	 x=1792176916; bh=OEdjkOEW5c4cRoaBZmL7FvMiAbrODiA1B2MoWuVmFC4=; b=
-	T2NFGF4nUSggg4YF8r6ze+uzVymylRxNLVeJ6aSnYDBTqjBQO1nqnwVmPDlJAOrA
-	YFMS3eVy8ikfsjtp3yrN2tEfFSLtVPEFqAU/Jf3bZaroIr2daKVFY11V4Ak4f23f
-	6krZlasTN0YAnlmVJGeRDi/RKlXlQhSc7SHdIl4l3JiBc7qXOmuk4SUiNPSodpSB
-	xmo54cror+gWIR/iN12DiDHhxicc8av9kwUzme4bj0nmoUj2tSn5kAv6QrUy+c6O
-	EE93NAWKBJbVaLigLloKgOuoS00UE7v0o/XQwZU9AvahqI06D35EqqffhUA9xum1
-	AT2+Xg1oi2Gab2VSHaenRA==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1792092552;
+	 x=1792178952; bh=MgEbppQQTowLMQPNZSlGtjUP8SmRXolTJc2W2H+p5Sc=; b=
+	mb9/aJ/jtAbAbO/8ffWT78XXVL/gXcG6v5LmVJ169dFz20ME2Gt3bnP1XDkWMqc4
+	5zAWrQaj6vZ8QKznXFgwQIXrtg8YBF0FTsxHy0L1qmJrOPVszT718VXVupgid09k
+	7VJlXt+h9sGkN/RwJLnqkRz152ZBlSzOW6aiQ6WTI8LzjgRMBGGJvEx273WX2Mco
+	KiWD26RtvDW0+NiSfjU3Hndj8Kem1ZjtMFs4KI7d+K/SDNzIGKOy82+jgRl4GHda
+	luquPV3YDkCA9TbRswUtU+T4LNG53ivUkfJh7CCYSjSOl5unR0LNXWb1UvX+4HPK
+	WRWZ/3KUkdThHfgfvCGKXA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792090516; x=
-	1792176916; bh=OEdjkOEW5c4cRoaBZmL7FvMiAbrODiA1B2MoWuVmFC4=; b=a
-	QQX226/l0Hbc7GEDkjxm1kkvUaJNGiBmHf45exHity78cYn68+tf0knFjZFiUy7Z
-	u56KoYqqPaaS+8TXi08lIaA0gZXVfm53FzN7ygwgtSZS0BgAD//gTdR37U0wgV4P
-	yBz7u2zUGYdz6PvILTjrQb8xkX2exoFulE6QstN11SUTBaAxDfJYLKcOuWTUeYze
-	MQapPBfiodPXKgTjQb5wPpdqgG90YrD/VmxU+ZX+6qroRduX6m8v3B+zgxgxDEKn
-	x3TT6b0V15N5TYi0pdzo/Vzzap4ZIOZMuLsJjou8f1OHv8G9ZOLvhMigTQ3Gl2wa
-	0T7revDWCIn7Uu1uEHgNw==
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792092552; x=
+	1792178952; bh=MgEbppQQTowLMQPNZSlGtjUP8SmRXolTJc2W2H+p5Sc=; b=X
+	joKjG6h8zaxYfWQkcyEyfyQaSL+ZtXJ9lCBio0iiz4J3mo46FZ6f8dmsXCLGcq/u
+	jsapybtnF5TlGVDp1V3L1/pNIJnusUYEr//FNiye7rto36yQysPe+l5TeSix3zC5
+	BZ6DdBQMshx+xyRQv5slbMBrvu0/yZIvzijHG1MEuqrkggjgHJlzgvyl0dyJwmgG
+	M5cwbL8H+0Wr0tF54xdiRBakKnKzqqHMqJ+LyVxvNq/7mIVP+RFUl/lL4iUYTS1z
+	/EirggeCYTQZmLroJiC82seED3n58CuSRtY9Lj5PagVSQXNmsx/wAeRcUP/YdpEp
+	yqPMDzu3uo3FTH0UPU40Q==
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
 	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
 	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1792090516; d=squebb.ca;
+DKIM2-Signature: i=1; m=1; t=1792092552; d=squebb.ca;
 	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
 	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm3:rsa-sha256:hbBCMTmXer6oytecpD1zl2N/5yAk4HUjieJzmgYLrinrkn0
-	oSopYYaCtjnQurREUMyzrbPux86aeRGIcK3a/ecfv+pM9mYZ6H4Q2vu9BYPlsEJu
-	cqKvx5+unANx21nKM3P2CQLBPqoc/C7Oq0hc7HxiGNINbOQA0OR/fniFuAhsLomw
-	+AK7EJ7oBS2OLKtGniKmlctFDVtCN8NCLw13tANUjMZDx78MdLb2mGQI9LZyXMDK
-	w0GEFx1HpvWE0q4kKsGdgqPf/PNJeLcQ6YUQk9ITxbI7rKBtGXD/ZvBZa3Qs0zZN
-	38CxcOEApCIFX3H8SbLjqnRLliZ2+XfTffxGOmw==;
+	s=fm3:rsa-sha256:NQzXo2wN4vLYr18MftSEPOj+2JxASNWI22vTN6J+BOyBsfO
+	HvHqZkxBKNJehp1IhgREWXzPVQcHtLcDYfwunZB1eqnw3PCamnrogOdJM0Uxh8fg
+	oo/usPOMj2reJSONzbb1F5LK918pQghKicFz6WA3C4dlsNdbcJZbHHfPeyBoAVOT
+	MRRRm15Aymlq6OBlFcVTAuOT63ITvl6qS3A7NR7dqMyHVM38FO5GVXUwgGTZTh4E
+	+vbsP+G/jianFL+/QDXsY57yp+QlIQ0I/49BJEayfTj48yEyKB/btaV2M6Wv1INy
+	LWH1yn8DO5ySoEalYfzIrri/u8b/INoZMN1EXfQ==;
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
 	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
 	action=mi-m=1; hc=12;
 	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
 	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:gHj3MxgQ3hE6nalsir8l1mYSCiLB6CSFM9xo/7+RYPg=:VRKe1XVOWIZ80XXfpgmNp6PGDZIi+vf8u3E/lMWMQSg=;
-X-ME-Sender: <xms:kyHRanfqHLWLh-CmI2wROvttXMcC2KI5ZfHjjRDyhvsL5AYFqM1ucA>
-    <xme:kyHRaoCSOUv3_B7wXAOdOKn-NarnDT-TrdEsrDiwlk9rbm0uVThoOEVEZaaOvVyNe
-    k_EVFwx9oSiFoPNOa-JNbOCBs0y5BZs1iSwnAFvhbHfJosS94T6mNsP>
-X-ME-Proxy-Cause: dmFkZTFMR1FFOVl6Uwi+s+KsJt8XrSUsnWfyBxRDchOefKeEW2SPpVbIae9VP9dpRFWKfH
-    KrUrmk2huJ+n0kkNbfWFl5zmFv/8zr+iPXgS1LZpHK3tEN68cJ9a5LmZY3t4z0KdwMXJ/I
-    NU5WHQRLVwZkz0C8GbZpvvqg8p2/5OFGd7zbrnKTJcWCZDPAJ6OZWs+hjJ2V2togTLqOT3
-    h/+9zWxt+fA25zXSRoOHXdnAhtT28PoVzdpi00fwBmq04hXh5KbS7Agp1laVq0U5g7ObCS
-    9phG2uj5l9/34ltfJSQ9oU7oppcMZocxztl1GuV6OgxY/voQNfje5baiJynknvG4aycbW1
-    3yjbChiZEHXFYNAOl/ynx3+Kfh0C1or3Sc92cM1i9hQdzD7lNwQt7rsGlu6YmINVb9p9i+
-    d0r7Ywyy2c+I5+fR/1iIuVq3HfdqLVPsc7R12UN8gkAKsyohxhueIvc+YbBOKs3S8kKj0D
-    AhXeoySMJK9dA4xZkxwWzQ+MIRWNqw5C1+otEZJqN1kgQQK1O38/xKcMyfuvBtzHHHZnD1
-    vFbAw3dVXyYj7XAbMvmci2Y534lt81f/W0iClN2Vk+CLenrD7gxWH4wR7f758rKJ9Ybg7c
-    zCMDAoZ1V0ldU6xgTkC9rUgHLcUjUqsw+kKAXuzpe770ihiQUD+NI2afQX8g
-X-ME-Proxy: <xmx:kyHRahKUj0jq3qwn3_B3Rd0yI5-1LCe28xdaAf1xkO146NrAKua5kQ>
-    <xmx:kyHRara9OmMlM4oU0d3WAmQR3n5NxFy0q4kTfhEmSdys1fAORbTH_A>
-    <xmx:kyHRajCOirXRyxxzYNaqiv9qS6IsshkYVIw-GkckUkpRktEjv29oTg>
-    <xmx:kyHRalZ94nKvi7Pd3LBP7ZPPi_XyLgzOmvQw_N-tbOZkN26OQW1sWw>
-    <xmx:lCHRar0gNskaxEVAf_fKEB5BexKxOm4nbjWRQUE29WiWBv-uBWy8ca9M>
+Message-Instance: m=1; h=sha256:wr2XeiXDelh7ew3+lM+lD+npUfytm0FExKe3nm258Sg=:+YmjxjE65XqBm4GeivSGeqGBYYz3QfZNi6OJRNBe/eo=;
+X-ME-Sender: <xms:hynRalkcdBdiD3AaSwO22ZHEFio1yr_Iv2_1hygozOIpPigau_OEWA>
+    <xme:hynRarrbgnk3pEbGYfWFpAJ0jR-2rezWAt66eba8qJGuqPq-8UQjDwlbpLZ6SjV5t
+    SxZpCQDPSjJ6pbHIAFk2d_MIgcE5UxljH_NNy3v0L5UDireP4Roanzx>
+X-ME-Proxy-Cause: dmFkZTEovlw/Vkrh3GNZ6L0mqtxXQUO8t5+ngky8WawprMbGOQlpF03iZGH4yUY4zz0Hqr
+    oCgb9j4Qs3xljY7YREamUFp9luV34RlKD4IdiLJvzXzt5VV4CNe/RL9UuzIuJ8XgMnYXxR
+    31fV/hqKJSuiuGCtuS9WJr266CnhXy0vc4GUXuEgle10PReaUZT3YlSQks0vKS/wu1mz0z
+    EsUL6JJfbK+36P5Dt2aPSSxxZhSdBVsEt/wksnTOP7RRJ4yC7ro5KDbJuFWENJn7iiRKbS
+    9hHW5tAWhbuD8xqaUb0Pujje/BpAOsVJz3eWsXxarkOKQjEokHLYX44vSwCuLrfOleycD4
+    t7pb4ReyCsxn3VgUAIwEzYEIJwdh2EGY+R8djmi4wPC8zs6nbr5iFH78KquCYhkXSIlM36
+    WW+y4mKwalyWpQl+EAwLDFIFdLKGIPpmT02bCOMR8yLoYxLMFmtrZN1R0NdaLdc4vwWfM9
+    DApRm8Z6gru/Of11K0Wz/BwjhOT2VOBkw3XyV2ePwqdzSZEuVXMWQQJP3WD9TuYbU43AlY
+    dPkidCPQ5ST33R+nrWCM7qq8nloTlcubDdS92lBeZuKkLaVqnFeQ2tLiahhTPwrdzG5518
+    QWEEB/ro1tacNqcZwBH7YUOktvpRJWmq5TgxDq3Y5hkXy1HcPQ8DYbDKsL8g
+X-ME-Proxy: <xmx:hynRagUz3bG10COEdiPSdVJi9FEa8-JrIvYavu-CqaWJqgkKO4aVFQ>
+    <xmx:hynRamTS_WgCvUlWv0ghLgaZNU1tik7oGv5KysJSlVvMAPFUAQ21aQ>
+    <xmx:hynRan0dR2iJTzzu5psHaM4hNdFWftuKVEMBl0tyQqiqQiRZyx3PnQ>
+    <xmx:hynRavLRcDn_TlcmfEVU4lhQv5Yj1ktjBPdf4M1MnGvLEeJP90qMvw>
+    <xmx:iCnRaiB-KvBoY8K7dFl6ce5P8CNW1N9AAhMYwcbKoH351SBe52XFxGUz>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 9C7972C0007C; Thu, 15 Oct 2026 14:55:15 -0400 (EDT)
+	id E84A52C0007E; Thu, 15 Oct 2026 15:29:10 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -92,163 +92,143 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AkRdy0Ls-WhR
-Date: Thu, 15 Oct 2026 14:54:31 -0400
+X-ThreadId: Ao5-L1TSHHD-
+Date: Thu, 15 Oct 2026 15:28:50 -0400
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
+To: "Mario Limonciello" <superm1@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Armin Wolf" <W_Armin@gmx.de>,
+ "Daniel Lezcano" <daniel.lezcano@oss.qualcomm.com>,
+ "Hans de Goede" <hansg@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Armin Wolf" <W_Armin@gmx.de>
-Cc: Charles <hanker007@gmail.com>,
- "Navon John Lukose" <navonjohnlukose@gmail.com>,
+ "Maximilian Luz" <luzmaximilian@gmail.com>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Daniel Lezcano" <daniel.lezcano@kernel.org>,
+ "Zhang Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>,
+ "Jai Luthra" <jai.luthra@ideasonboard.com>,
+ "Greg KH" <gregkh@linuxfoundation.org>, "Jack Wu" <jackbb_wu@compal.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pm@vger.kernel.org,
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Message-Id: <ebb90b11-34d4-4e69-b8d3-5f62acd6468a@app.fastmail.com>
-In-Reply-To: <20261014-lwmi-wmi-new-api-v3-0-e1032bed1c81@rong.moe>
-References: <20261014-lwmi-wmi-new-api-v3-0-e1032bed1c81@rong.moe>
-Subject: Re: [PATCH v3 00/12] platform/x86: lenovo-wmi-{other,capdata,helpers}: Improve
- robustness on faulty firmware
+ "Kurt Borja" <kuurtb@gmail.com>
+Message-Id: <720760de-c150-4227-b78a-90d483d6cb7f@app.fastmail.com>
+In-Reply-To: <f482b724-7217-412c-a0d9-7d8e322fcc84@kernel.org>
+References: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
+ <20261014132500.3817549-4-daniel.lezcano@oss.qualcomm.com>
+ <c751e18d-57e9-4ce6-95dc-1bf53a7a4808@gmx.de>
+ <CAJZ5v0jQQsXP4v7dymuHZhy2oVjPwV9eXhqV4bGPUgMyGyUsUQ@mail.gmail.com>
+ <1cba0f2a-38cd-42b2-a773-9dca5d7519e5@app.fastmail.com>
+ <68128016-661b-4b78-bac1-b7e23029d8de@kernel.org>
+ <CAJZ5v0gHHoJVm9o-ZzD38jWpGbAZML4AMEpSmy9C9n5TSVYppg@mail.gmail.com>
+ <f482b724-7217-412c-a0d9-7d8e322fcc84@kernel.org>
+Subject: Re: [PATCH v1 3/4] platform profile: Add firmware-neutral aggregate sysfs
+ interface
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
 
-On Tue, Oct 13, 2026, at 3:21 PM, Rong Zhang wrote:
-> Some devices do not support LENOVO_CAPABILITY_DATA_01 and define the
-> query method as a stub that returns zero buffer. Unfortunately, some
-> devices do not implement the stub properly, causing WMI errors
-> (including ACPI errors). This was reported by Charles.
+On Thu, Oct 15, 2026, at 2:42 PM, Mario Limonciello wrote:
+> On 10/15/26 13:33, Rafael J. Wysocki (Intel) wrote:
+>> On Thu, Oct 15, 2026 at 8:28=E2=80=AFPM Mario Limonciello <superm1@ke=
+rnel.org> wrote:
+>>>
+>>> On 10/15/26 13:04, Mark Pearson wrote:
+>>>>
+>>>> On Thu, Oct 15, 2026, at 7:30 AM, Rafael J. Wysocki (Intel) wrote:
+>>>>> On Wed, Oct 14, 2026 at 11:31=E2=80=AFPM Armin Wolf <W_Armin@gmx.d=
+e> wrote:
+>>>>>>
+>>>>>> Am 14.10.26 um 15:24 schrieb Daniel Lezcano:
+>>>>>>
+>>>>>>> The per-provider class interface is firmware-independent, but sy=
+stem-
+>>>>>>> wide profile selection is only exposed under /sys/firmware/acpi.
+>>>>>>>
+>>>>>>> Add /sys/kernel/platform_profile/{choices,profile}, sharing the =
+existing
+>>>>>>> aggregate callbacks and semantics with the legacy interface. Keep
+>>>>>>> attributes hidden until a provider is registered and remove them=
+ after
+>>>>>>> the last provider.
+>>>>>>>
+>>>>>>> Notify both aggregate frontends on profile changes. Also notify =
+the
+>>>>>>> provider class device on a direct profile write, matching its do=
+cumented
+>>>>>>> POLLPRI ABI. Restore aggregate visibility after a failed registr=
+ation.
+>>>>>>
+>>>>>> IMHO the aggregate sysfs interface only exists for backwards-comp=
+atibility,
+>>>>>> so i would be very happy if you could just make the associated co=
+de optional
+>>>>>> and instead teach platform-profiles-daemon to use the individual =
+class devices
+>>>>>> instead.
+>>>>>
+>>>>> It is not just a matter of opinion AFAICS, the aggregate interface=
+ has
+>>>>> been regarded as legacy for quite a while (see commit 778b94d7ac17
+>>>>> "ACPI: platform_profile: Add support for hidden choices" for examp=
+le)
+>>>>> and it was retained exactly for backwards compatibility reasons II=
+RC.
+>>>>>
+>>>>> I'm with Armin on this.
+>>>>>
+>>>>> Thanks!
+>>>>
+>>>> I don't think we can get rid of the legacy aggregate interface - wh=
+ich I think is what you and Armin are asking for? What does making it op=
+tional mean?
+>>>>
+>>>> Reading through the patch series it seemed quite reasonable to me t=
+o move it out from under ACPI but still have the old interface working. =
+What are the alternatives?
+>>>>
+>>>> User space (and users) are still using the aggregate interface in m=
+y experience
+>>>>
+>>>> Mark
+>>>
+>>> If we want to get rid of the legacy interface eventually I think thi=
+s is
+>>> how you can do it:
+>>>
+>>> 1) Wrap it with a boolean Kconfig.  Default to enabled.
+>>> 2) Add some messaging in this Kconfig that it's being removed after =
+the
+>>> LTS kernel from 2028.
+>>> 3) Emit a pr_notice_once() or similar that it's deprecated and will =
+be
+>>> removed in the future.
+>>> 4) Modify all (known) userspace software to stop using it.
+>>> 5) Wait for userspace software to tag new releases.
+>>> 6) Change default to disabled.
+>>> 7) Wait some time.
+>>> 7) Next LTS is declared.
+>>> 7) Drop kconfig and legacy code.
+>>=20
+>> That should work, but my point is rather to avoid adding another
+>> aggregate interface to replace the old one and instead switch over the
+>> ecosystem to the existing (and documented) class device platform
+>> profile interface.
+>>=20
+>> The legacy aggregate one may simply be removed when everybody stops
+>> using it (which may take a while and it may be moved to staging at one
+>> point).
 >
-> The current lenovo-wmi-* implementation enforces the binding between
-> LENOVO_CAPABILITY_DATA_00+01 and LENOVO_OTHER_MODE because of a
-> limitation of the device component framework. When the capdata device
-> bailing out due to a WMI error, lenovo-wmi-other becomes unbound and
-> unable to provide firmware-attributes or hwmon/power_supply_ext devices
-> for the other functional capdata device.
->
-> Therefore, errors must be non-fatal in order not to break the
-> assumptions made by the device component framework.
->
-> Poison the capdata device by releasing the capability data list in this
-> case. After that, NULL list will be passed to lenovo-wmi-other on bind.
-> The latter will provide whatever is available, or unbind the components
-> if nothing is available.
->
-> A poisoned capdata device releases or skips allocating most resources,
-> e.g., the capability data list and the debugfs directory. The device
-> itself is only used to satisfy the component dependency of lenovo-wmi-
-> other and coordinate with the latter about the absence of the capabili=
-ty
-> data.
->
-> Meanwhile, for devices that properly stubs the WMI query method (but
-> still declares >0 instances), keeping the capability data list with
-> empty data is meaningless and causes lenovo-wmi-other to call
-> lwmi_cd*_get_data() to retrieve nonexistent capdata in vain. These
-> capdata devices are poisoned as well to save resources.
->
-> In order to release or skip allocating most resources for poisoned
-> devices, some preparatory work is done in prior. With the preparatory
-> work, it also skips allocating most resources for the WMI devices that
-> declare 0 instance.
->
-> Also identify missing components using the new wmidev_exists() interfa=
-ce
-> (introduced at the very beginning of the series), and skip adding them
-> to the match list, so that all components in the list must present,
-> fulfilling the binding requirement. Some devices need this because they
-> either do not have the WMI GUID of LENOVO_CAPABILITY_DATA_01, or do not
-> implement the query method, causing the WMI core not to create the
-> corresponding WMI device. This was reported by Navon.
->
-> The new WMI API is also adopted to conform to the behavior of the
-> Windows WMI-ACPI driver and improve robustness on various WMI ACPI
-> method implementation.
->
-> Finally, add myself as a LENOVO drivers maintainer as previously
-> suggested by Derek.
->
-> Reported-by: Charles <hanker007@gmail.com>
-> Closes:=20
-> https://msgid.link/CAKtz0s8UYRQYW_0bh=3D0TMx47Axm-W-muEay-r3rqUBS1NHMP=
-Vw@mail.gmail.com/
-> Reported-by: Navon John Lukose <navonjohnlukose@gmail.com>
-> Closes:=20
-> https://msgid.link/20260928190901.1369497-1-navonjohnlukose@gmail.com
-> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Link:=20
-> https://msgid.link/9789f452-d7eb-4f1e-8a13-7335332193a7@app.fastmail.c=
-om
-> Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Link: https://msgid.link/782FE636-A06A-4E12-9563-786374805947@gmail.com
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
-> Changes in v3:
-> - Shorten the comments of struct lwmi_cd_priv's members (thanks Derek
->   J. Clark)
-> - Leave struct cd_fan_block's __packed attribute as is (thanks Armin
->   Wolf)
-> - Link to v2:=20
-> https://patch.msgid.link/20261009-lwmi-wmi-new-api-v2-0-402828382679@r=
-ong.moe
->
-> Changes in v2:
-> - Add PATCH 1 ("platform/wmi: Introduce wmidev_exists()") to the series
->   as discussed at=20
-> https://msgid.link/83776200-4A60-4756-A99F-D5A3BB4D834A@rong.moe
-> - Add PATCH 2 ("lenovo-wmi-capdata: Do not stop the AC notifier chain =
-on
->   error") to the series, as adopting the new WMI API will intentionally
->   catch more faulty firmware and propagate more errors
-> - Synchronize mutex initialization with release-acquire barriers (than=
-ks
->   Ilpo J=C3=A4rvinen)
-> - Refine line wrap (ditto)
-> - Replace the term "poison" with "stub" (ditto)
-> - Add PATCH 10 ("platform/x86: lenovo-wmi-capdata: Do not match missing
->   components") to the series to solve the report made by Navon
-> - Update outdated comments, function documentations and commit messages
-> - Link to v1:=20
-> https://patch.msgid.link/20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@r=
-ong.moe
->
-> ---
-> Armin Wolf (1):
->       platform/wmi: Introduce wmidev_exists()
->
-> Rong Zhang (11):
->       platform/x86: lenovo-wmi-capdata: Do not stop the AC notifier=20
-> chain on error
->       platform/x86: lenovo-wmi-capdata: Only allocate sub-master info=20
-> when necessary
->       platform/x86: lenovo-wmi-capdata: Store a pointer to component=20
-> info
->       platform/x86: lenovo-wmi-capdata: Defer mutex initialization
->       platform/x86: lenovo-wmi-{capdata,other}: Only allocate capdata=20
-> list when necessary
->       platform/x86: lenovo-wmi-capdata: Adopt new WMI API
->       platform/x86: lenovo-wmi-capdata: Register component even on WMI=20
-> error
->       platform/x86: lenovo-wmi-capdata: Detect stubbed capdata device
->       platform/x86: lenovo-wmi-capdata: Do not match missing components
->       platform/x86: lenovo-wmi-helpers: Adopt new WMI API
->       MAINTAINERS: Add myself as a LENOVO drivers co-maintainer
->
->  MAINTAINERS                               |   1 +
->  drivers/platform/wmi/core.c               |  33 ++-
->  drivers/platform/x86/lenovo/wmi-capdata.c | 447 +++++++++++++++++++++=
-+--------
->  drivers/platform/x86/lenovo/wmi-helpers.c |  61 ++--
->  drivers/platform/x86/lenovo/wmi-other.c   |  24 +-
->  include/linux/wmi.h                       |   3 +
->  6 files changed, 397 insertions(+), 172 deletions(-)
-> ---
-> base-commit: af32da41b0327b9c6a37856ba82b6760d6c8d10e
-> change-id: a504a929-lwmi-wmi-new-api-f5344d48a86a
->
-> Thanks,
-> Rong
+> Right totally agreed.  I was meaning userspace software should switch =
+to=20
+> class interfaces not add a new aggregate one.
 
-For the series (with the minor typo noted in #7) - looks good to me.
+OK - I'm in a minority. I will gracefully retreat back under my rock :)
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+I guess if PPD and tuneD are migrated that will cover 99% of the use cas=
+es anyway.
+
 Mark
