@@ -1,57 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B944CDA36;
-	Thu, 15 Oct 2026 10:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E8F4AA004;
+	Thu, 15 Oct 2026 10:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792059141; cv=none; b=NyFWP74vTowrdH29zH9lV6rzDfK204ZCIDrhKS7NdkLDdyQMLTgOSdoKXZ5H+WY42MJQloeRjQU1QLSMQyVE/MrL7lWFOUpB9l5jQs5wqii2NNoURvhvCJ3ardAlcO4UyRgtSH6mW5FYDkubjSYSsQ3qgfiPIqTJ8xv8DW5U7T0=
+	t=1792059880; cv=none; b=mOjp6Zs7TMGmj8/wy70LVfmjsrB+f6z1mu60cZk0roHayTs3hre7evxuWPdO0aua/x58Ck37gkEQ5+6y04m09HIgrDS0dV9DQY11OQIRPv5vfHhCO72BH6eKQOQTe4k+sM4gcAvS4smQugDoawvgf2cAmE2g5XjG1f/Ik44W8Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792059141; c=relaxed/simple;
-	bh=bQvfl9e9flDdW8Zy5J2Am3lyOYaDCVx7bTib2aYfJhw=;
+	s=arc-20240116; t=1792059880; c=relaxed/simple;
+	bh=lfdpyoKU84XiyN2LyAURT9vH9J+pdY+5AW7uC2lLPbM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DqtjVepil/X+Nsp0/Sh9nelLSJC8E8srktjjXzeGfSl4Bh2oF3KGuUaTqmSFaj9df8Zk+eqA1ImmqjE4Yv/6RknXkQJKPMUIFQfjsT9wXzIruhppcnB/bwNFfQKYWBBibczoNiGrjgsvDIhb3LfWK0i4RF+Ygutx/+LtNpxups0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WyIpUFkE; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=d6RaYtuwtxu2AQaYeEPbFE8uZWk7TScqkFsxtid1PJKXu0z3oIq151dDbtaizVFRwwq1cDkDm7Go8PQRIiwCV7n7drH4rpx/j3yfpYxCQE4AjIpir1GFttiE7U4RikLq7GqFTYj1BqrUmHKaNYyJK5jUF4X73igFJe5PzrxpWaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FCpDbqW4; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WyIpUFkE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FCpDbqW4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792059140; x=1823595140;
+  t=1792059879; x=1823595879;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=bQvfl9e9flDdW8Zy5J2Am3lyOYaDCVx7bTib2aYfJhw=;
-  b=WyIpUFkEszMRK5s2AS9BWgHuD+V4ZGZZyzuUTq4lm27emfrzA8bmX/4U
-   rLyc+6jMrCfDIiB4Y7SMlw6BAXGFV/V36k21ozi0mQ0MpmBlJbe47mTGS
-   DbSMT3Ya38mysKG3czr06Yk3U9nPTHfqB1VlZ/HlCkTGvlNcgTZvimNnX
-   k+xI6d3qW4NeiYlyltqXYgtyza9HfUB5xOk0vhKqhl9wH/x1tgtxBN8Pg
-   p5XahA08Cn46zTx1/P60NNgYrbr13KmXtilU+z0QGg+UFcYh6dGdCQ8Qw
-   0b9ljRCabUo/AfKKi7IIoYPqAsPigZpWDH2+QHCIoBPvKUkJ+Mp8q6X8g
-   A==;
-X-CSE-ConnectionGUID: 7p1mihegR56KU3epH08pYQ==
-X-CSE-MsgGUID: R9p0ra7BSFSJ3DPNg5xSzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11935"; a="834529"
+  bh=lfdpyoKU84XiyN2LyAURT9vH9J+pdY+5AW7uC2lLPbM=;
+  b=FCpDbqW4phRbLuvG17wbgaJ8inmWPURoWnHohsImaAj0CeZFnpSBpGS+
+   lEz3SaxXoR5Cs5hVM79j3ARVyNwNqHKGjTGlP2PXkuAAJM8VCQxGZb74Z
+   mnsDYAIm8I6Ncd2GzZVyiwh16RfOXP0RNsWghdUktnyhRoKYY6mQuCKly
+   v74NtECMvKzNtSvcDKtP57koJ4GUiHl1lLa+RjSMpWDDUS0SExfz0+7IU
+   KzFXxZcB2XYWufPLbZfEQWqqwpt9CkP5hwV7mmIBccO4sKkA0Jx+TPymb
+   4Cuc6IUbqlseF5pBn/vn2pU08pOgNwuicH6r8u3JWT8zpdgIp234yRmDy
+   g==;
+X-CSE-ConnectionGUID: C3/D7L6kSz2us3qNrxO3bQ==
+X-CSE-MsgGUID: ix7V8lvATDiXhd4f9Vk1DA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11935"; a="712920"
 X-IronPort-AV: E=Sophos;i="6.27,159,1787036400"; 
-   d="scan'208";a="834529"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 03:12:19 -0700
-X-CSE-ConnectionGUID: /BZGfBNAS1GLL/+b+soehg==
-X-CSE-MsgGUID: Vu7gupRqR1WO7FPE4BUfkQ==
+   d="scan'208";a="712920"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 03:24:39 -0700
+X-CSE-ConnectionGUID: +eHC1fw/RiaY5iG6jibd6g==
+X-CSE-MsgGUID: m6qYxr8EQm+3QUl0Wckg3A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,159,1787036400"; 
-   d="scan'208";a="1586339"
+   d="scan'208";a="1545666"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.130])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 03:12:17 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 03:24:37 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 15 Oct 2026 13:12:13 +0300 (EEST)
+Date: Thu, 15 Oct 2026 13:24:33 +0300 (EEST)
 To: chitranshmandhaniya@gmail.com
 cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>, Chitransh_Mandhaniya@dell.com
 Subject: Re: [PATCH v2 2/2] platform/x86: dell-uart-backlight: recover from
  stray EC response byte
 In-Reply-To: <20261015074339.27388-3-chitranshmandhaniya@gmail.com>
-Message-ID: <d31cdfa8-3f52-e1c1-3d03-8fccfcd57e0d@linux.intel.com>
+Message-ID: <84634c19-87a7-f7a9-a559-11208b2dd033@linux.intel.com>
 References: <20261004110333.5790-1-chitranshmandhaniya@gmail.com> <20261015074339.27388-1-chitranshmandhaniya@gmail.com> <20261015074339.27388-3-chitranshmandhaniya@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -126,6 +126,12 @@ On Thu, 15 Oct 2026, chitranshmandhaniya@gmail.com wrote:
 > +
 > +		memmove(&dell_bl->resp[RESP_DATA], &dell_bl->resp[RESP_DATA + 1],
 > +			dell_bl->resp_len - RESP_DATA - 1);
+
+sashiko.dev (an AI review tool so be reasonably critical to its findings) 
+mentions that if ->resp_len check fails due to len being too large, 
+->status is -EIO and this may end up moving more than there's room in the 
+buffer.
+
 > +		dell_bl->resp_idx = dell_bl->resp_len - 1;
 > +
 > +		/* Re-fetch checksum byte from remaining data */
@@ -137,26 +143,10 @@ On Thu, 15 Oct 2026, chitranshmandhaniya@gmail.com wrote:
 >  	wake_up(&dell_bl->wait_queue);
 > -	return ret;
 > +	return len;
-
-Thanks. Structuring it this way makes it much easier to follow than the 
-loop.
-
-What I'm left a bit unsure is how this last return behaves, and why there 
-is the change from ret -> len in this second patch which should be only 
-about adding the extra byte trickery.
-
-If ret is always expected to be equal to len before this patch, it would 
-make more sense to make that change in patch 1?
-
-(I admit this entire code looks a bit more convoluted than what I'd 
-expect to be needed, so I'm not sure if I can follow all this fully.)
-
-
-
-Unrelated to this change/series, there seems to be mutex_init() call in 
-dell_uart_bl_serdev_probe() that should be changed to devm_mutex_init() + 
-error handling so one doesn't need to have to make mutex_destroy() call
-manually (it is currently missing).
+>  }
+>  
+>  static const struct serdev_device_ops dell_uart_bl_serdev_ops = {
+> 
 
 -- 
  i.
