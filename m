@@ -1,119 +1,163 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30EE5111A5
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 09:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B944CDA36;
+	Thu, 15 Oct 2026 10:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792058118; cv=none; b=rVCTIntmoyG3xdQ6qptQ4NkLVWi/Gc2coqpEN15qhUHOS4gyRWAD7u2NuiRt+PIVz3NaIhVNDvFNitS58kIOd6me2aPBDB3a6S64Ejvxk6SY3PRdg7LKy8EtHf9yNchK3qq4sOr1QSV7Sk/2kXsKC4uve2az9bFzKwhtxV48AFU=
+	t=1792059141; cv=none; b=NyFWP74vTowrdH29zH9lV6rzDfK204ZCIDrhKS7NdkLDdyQMLTgOSdoKXZ5H+WY42MJQloeRjQU1QLSMQyVE/MrL7lWFOUpB9l5jQs5wqii2NNoURvhvCJ3ardAlcO4UyRgtSH6mW5FYDkubjSYSsQ3qgfiPIqTJ8xv8DW5U7T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792058118; c=relaxed/simple;
-	bh=JLGAow2rLUO/+TKOPOX0VJmztAPGduP307ghbO3dOEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KW01BkuEnHEGiLE1sIYF5HOLVJloM4Gfo53PqwKiI0fcmy4REA/C67d+RM4/uPiKHRS3PM9Gqfl7WThAwT+3l48jDLrVtTlA7I/Pf8MzB4fnl5jmc1mqsTHXBUsvwoMlSAWrcT1BBwgurxHuEBQFk79HCip96HfdlOafvWflV+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rjV9QYzv; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792059141; c=relaxed/simple;
+	bh=bQvfl9e9flDdW8Zy5J2Am3lyOYaDCVx7bTib2aYfJhw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DqtjVepil/X+Nsp0/Sh9nelLSJC8E8srktjjXzeGfSl4Bh2oF3KGuUaTqmSFaj9df8Zk+eqA1ImmqjE4Yv/6RknXkQJKPMUIFQfjsT9wXzIruhppcnB/bwNFfQKYWBBibczoNiGrjgsvDIhb3LfWK0i4RF+Ygutx/+LtNpxups0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WyIpUFkE; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rjV9QYzv"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-533778ab0bdso57721661cf.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 02:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792058112; x=1792662912; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FaMd1QSYMqEo5wIiy4wQAPVusgGd/ylNS3r3kXBy7sc=;
-        b=rjV9QYzvJMPx4FYBxMEwoe/VqHo0fj9IqklI3SEAkS4+Dzagc00P3KLWV78SuopmeF
-         yXqu0bRHT2nXtDgUlGeev3n6XalrLHQjZeWITiFuSSWF/zdPZJh1yL5Gv7Nc9PtKDkRO
-         PQY5/BnLXFghyXKWGlR6kU4FBz7+iT6XjQ5iv7eX23RGREMrGF8yjId2O5Ruv0BxexAz
-         HV4H4TuvpdnY5GVqbvXjqAiifeGRs/kSLCbbYdr5VhOyhMIrlyCOrX4gr93BDugT8/l3
-         u//zaNCJGDDzmefMEWtC7DxxVBls8fwdITWx3gY0Z3lZmqWCK5CFOL0iDefbpAWf5bww
-         L3PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792058112; x=1792662912;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=FaMd1QSYMqEo5wIiy4wQAPVusgGd/ylNS3r3kXBy7sc=;
-        b=msu09Yau9RkZxRbqu08XxkzQ5zsnnguWqu/KLdtFjJRHC7Cb6k5wZAf8uJghx1i0wE
-         jREDkzFiSisnTw37m0unlnzZZu3NnpWPc09uqU3ZWS9mT1gCnn8p9WDj7CBLoP6ifCJL
-         IF5kX5BvbxjUJdrpBvvlK/XOB8UzfwBmOSZhFnrKRsrCxEL61GEk7X4fnoHeaZDV0tQJ
-         XlYKnWCaZjZ7+1uvvZsm2ye3xseoCUJuSE65IRSZ+BHG/3Y/5DYmFIq4c2wL+IeRNyoP
-         OrxSITGfh0bKJYzH0gXvm4ziQWc/f3gJnymw+42kLpMztyPO/C7GFJOfU94d7LtowU4f
-         3EGQ==
-X-Gm-Message-State: AFq9FYJLQ66GtKuePN25PYi4PbNasvPmNWW49KH00LPkXEOSYT71Aw0i
-	17/h4RQTu90earUKfDQUcSByU1IYHpl02lN0WhGtOfUVxdwUA2pNSt0lEhJZyw7NfUM=
-X-Gm-Gg: AYBFou1LzwSajCuEyX4bwf6vt8yRXvOkdfxF9JQyb9atbiJX3RSY7ivo0A1eXcMo51a
-	PR1iZNjmtY210zw1PcG1Zsm6kz7Tp7GKF5vdCRinYD07pEpqsk8mmzgVk/sFw+wtK79/QivSiYw
-	v6h9YC5+QIaCTUvq1hr7AnjXISUcqcaTXgbEoGOr6RBVNGNNJLDrrymI0/hVBPJNhsZhI1SCnCM
-	IZtm4fpFW2shfioUS6mlQ+CoWuhpV+kDxH3NF1I5dGGedApL4KeRt8dFUj1rEwXwdU3DSoHQZQg
-	dPFAkUcPIi2BlRk/zfsRPF0VlaAbTf1jZh701O0lmAJAKGgLdxng91Q0yWcQrRxUCg7QzPCfeso
-	poSQ2c252FAwe16su2UfWIQQlVx3/QzNKDLZ9sELqcBZ6W2xZSHsM3Um90DdPoLXFFVeivWG1ih
-	Rhyegh35rbEzMN9v9qlJHhcKgDTBz9jIz9+tLRIPAVWaWwsMjIdVwohGm5bB8tTCxCZeJ0RXSWe
-	/SR2H0T+R4tT/T7nXsNeSBO+AlM2jxvkI/iHnlI8vKA
-X-Received: by 2002:ac8:5d8d:0:b0:532:d6bd:1b3b with SMTP id d75a77b69052e-5359fbb3ad8mr327227621cf.52.1792058112058;
-        Thu, 15 Oct 2026 02:55:12 -0700 (PDT)
-Received: from [192.168.60.5] ([207.115.103.98])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5361269f364sm21663911cf.2.2026.10.15.02.55.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Oct 2026 02:55:11 -0700 (PDT)
-Message-ID: <2df90a2a-770b-4439-9d01-bd8105084719@gmail.com>
-Date: Thu, 15 Oct 2026 17:55:07 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WyIpUFkE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792059140; x=1823595140;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bQvfl9e9flDdW8Zy5J2Am3lyOYaDCVx7bTib2aYfJhw=;
+  b=WyIpUFkEszMRK5s2AS9BWgHuD+V4ZGZZyzuUTq4lm27emfrzA8bmX/4U
+   rLyc+6jMrCfDIiB4Y7SMlw6BAXGFV/V36k21ozi0mQ0MpmBlJbe47mTGS
+   DbSMT3Ya38mysKG3czr06Yk3U9nPTHfqB1VlZ/HlCkTGvlNcgTZvimNnX
+   k+xI6d3qW4NeiYlyltqXYgtyza9HfUB5xOk0vhKqhl9wH/x1tgtxBN8Pg
+   p5XahA08Cn46zTx1/P60NNgYrbr13KmXtilU+z0QGg+UFcYh6dGdCQ8Qw
+   0b9ljRCabUo/AfKKi7IIoYPqAsPigZpWDH2+QHCIoBPvKUkJ+Mp8q6X8g
+   A==;
+X-CSE-ConnectionGUID: 7p1mihegR56KU3epH08pYQ==
+X-CSE-MsgGUID: R9p0ra7BSFSJ3DPNg5xSzA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11935"; a="834529"
+X-IronPort-AV: E=Sophos;i="6.27,159,1787036400"; 
+   d="scan'208";a="834529"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 03:12:19 -0700
+X-CSE-ConnectionGUID: /BZGfBNAS1GLL/+b+soehg==
+X-CSE-MsgGUID: Vu7gupRqR1WO7FPE4BUfkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,159,1787036400"; 
+   d="scan'208";a="1586339"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.130])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 03:12:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 15 Oct 2026 13:12:13 +0300 (EEST)
+To: chitranshmandhaniya@gmail.com
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Chitransh_Mandhaniya@dell.com
+Subject: Re: [PATCH v2 2/2] platform/x86: dell-uart-backlight: recover from
+ stray EC response byte
+In-Reply-To: <20261015074339.27388-3-chitranshmandhaniya@gmail.com>
+Message-ID: <d31cdfa8-3f52-e1c1-3d03-8fccfcd57e0d@linux.intel.com>
+References: <20261004110333.5790-1-chitranshmandhaniya@gmail.com> <20261015074339.27388-1-chitranshmandhaniya@gmail.com> <20261015074339.27388-3-chitranshmandhaniya@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3] platform/x86: panasonic-laptop: Add
- platform_profile support
-To: Wu Zhipeng <zepwu@foxmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- Kenneth Chan <kenneth.t.chan@gmail.com>
-References: <20261007190446.38862-1-alexyeo362@gmail.com>
- <tencent_7F39F02728B55CE3B1878AAB51BAA0FE2D07@qq.com>
-Content-Language: en-US
-From: Alex Yeo <alexyeo362@gmail.com>
-In-Reply-To: <tencent_7F39F02728B55CE3B1878AAB51BAA0FE2D07@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Wu,
+On Thu, 15 Oct 2026, chitranshmandhaniya@gmail.com wrote:
 
-Thanks for testing the patch on a CF-SV1.
-While the fan curve was observed to change, it is interesting to note 
-that the CPU wattage appears to stay the same after an unlock.
+> From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
+> 
+> On some Dell AIO machines the EC occasionally inserts a spurious byte
+> after the cmd-echo in UART backlight response frames.  A get-brightness
+> reply "04 0c 0a e5" arrives as "04 0c 0d 0a e5". The length field still
+> reflects the original frame size, so the parser consumes the stray byte
+> as payload and mistakes the real payload for the checksum, returning
+> -EIO.
+> 
+> On the first checksum failure for a frame longer than the minimum size,
+> drop the byte at the first payload offset, shift the remaining data down
+> by one, and call dell_uart_bl_receive_data() again to re-fetch the
+> checksum byte from the wire and re-validate.
+> 
+> Limit this single-byte resync to once per command via a resync_used flag
+> cleared at the start of each transaction. A second mismatch is still a
+> hard error.  Well-formed replies pass on the first check and never enter
+> the recovery path.
+> 
+> Tested on Dell OptiPlex AIO 7410 65W (0TKWC4) where the EC inserts a
+> stray byte on every get-brightness response -- resync fixes it
+> transparently.
+> 
+> Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
+> ---
+>  .../platform/x86/dell/dell-uart-backlight.c   | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
+> index b61499d7b3f8..085dcc055554 100644
+> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
+> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
+> @@ -60,6 +60,7 @@ struct dell_uart_backlight {
+>  	u8 resp_len;
+>  	u8 resp_max_len;
+>  	u8 pending_cmd;
+> +	bool resync_used;
+>  	int status;
+>  	int power;
+>  };
+> @@ -91,6 +92,7 @@ static int dell_uart_bl_command(struct dell_uart_backlight *dell_bl,
+>  	dell_bl->resp_len = -1; /* Invalid / unset */
+>  	dell_bl->resp_max_len = resp_max_len;
+>  	dell_bl->pending_cmd = cmd[1];
+> +	dell_bl->resync_used = false;
+>  
+>  	/* The TTY buffer should be big enough to take the entire cmd in one go */
+>  	ret = serdev_device_write_buf(to_serdev_device(dell_bl->dev), cmd, cmd_len);
+> @@ -270,8 +272,27 @@ static size_t dell_uart_bl_receive(struct serdev_device *serdev, const u8 *data,
+>  	if (ret < 0)
+>  		return len; /* Response not complete yet */
+>  
+> +	/* Stray byte after cmd-echo? Drop it, shift data down, re-fetch checksum. */
+> +	if (dell_bl->status == -EIO &&
+> +	    !dell_bl->resync_used && dell_bl->resp_len > MIN_RESP_LEN) {
+> +		dell_bl->resync_used = true;
+> +		dell_bl->status = -EBUSY;
+> +
+> +		dev_dbg(dell_bl->dev, "Resync: dropping stray byte 0x%02x at offset %d\n",
+> +			dell_bl->resp[RESP_DATA], RESP_DATA);
+> +
+> +		memmove(&dell_bl->resp[RESP_DATA], &dell_bl->resp[RESP_DATA + 1],
+> +			dell_bl->resp_len - RESP_DATA - 1);
+> +		dell_bl->resp_idx = dell_bl->resp_len - 1;
+> +
+> +		/* Re-fetch checksum byte from remaining data */
+> +		ret = dell_uart_bl_receive_data(dell_bl, data + ret, len - ret);
+> +		if (ret < 0)
+> +			return len; /* Need more data for checksum byte */
+> +	}
+> +
+>  	wake_up(&dell_bl->wait_queue);
+> -	return ret;
+> +	return len;
 
-Based on the data, pkg max temp is a bit low which does indicate the 
-possible presence of a firmware level power limit.
+Thanks. Structuring it this way makes it much easier to follow than the 
+loop.
 
-If you do find the time to test,
-may I ask if you have thermal and power data when running Windows?
+What I'm left a bit unsure is how this last return behaves, and why there 
+is the change from ret -> len in this second patch which should be only 
+about adding the extra byte trickery.
 
-Initial observations that have resulted in the creation of this patch 
-series were made with a power meter (can be a watt meter from the wall 
-or a watt meter from a USB-C PD monitor).
+If ret is always expected to be equal to len before this patch, it would 
+make more sense to make that change in patch 1?
 
-On the SR4, maximum on Linux was around 42W, while Windows had spikes 
-that went up to ~60W (on the AC charger) or ~80W on a 100W USB-C PD 
-charger. (in addition to the higher CPU temps with all settings on both 
-Windows and Panasonic utilities set to performance)
+(I admit this entire code looks a bit more convoluted than what I'd 
+expect to be needed, so I'm not sure if I can follow all this fully.)
 
-Application of this patch on Linux with TLP set to performance resulted 
-in similar observations when testing.
 
-Additionally, may I ask if you have tested to see if thermald affects 
-the fan or power setting?
 
-Running it once in my case with the defaults has resulted in power being 
-unlocked until next reboot. This change can be observed with both 
-turbostat and a watt meter when plugged in.
+Unrelated to this change/series, there seems to be mutex_init() call in 
+dell_uart_bl_serdev_probe() that should be changed to devm_mutex_init() + 
+error handling so one doesn't need to have to make mutex_destroy() call
+manually (it is currently missing).
 
-The DMI quirk code is appreciated but I'd like to clarify the power 
-unlock part first before including it.
+-- 
+ i.
+
