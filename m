@@ -1,146 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A0D496D4C;
-	Thu, 15 Oct 2026 11:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948CC51C04B
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 11:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792062011; cv=none; b=mN5TTVLtgmrrM1je8RFlwziUpluorts76WGeIuqLRpqC/7NzTt8E3SrLW1KkeBnUbl6WFOq1BwqFFA39oN2bHM6UmxvVHbZ6+OROPEKhQRH9xER1AQHjHOcBVwjLNAfIjVM2ExbN9TxRQlk7dafZDjwKsjGTIegyQDi9lV1omno=
+	t=1792063939; cv=none; b=J8nEdb+mbDku4gsZ09j45qnsTMzQ2tUWpC2sH2WmSRUF9+UYhouie7/jdf48F39O+ixTLfbanUU4HNzIH8lQFL2iLk/HxBvSIWEupaXTMKZ4yZVwuX7oY8tpVu5y9r8NVshWtqpvT4S9UUMAg85GRRCha0HesB5Tr3A2fKhgvWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792062011; c=relaxed/simple;
-	bh=ni+cZ2x3SfxVByDI3e+2C4Xsw/g+GmhxtmKn7cBp4sc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gUg7jFHM3/kiDTmDcFTRqZdNIFtcO3xqd4HMca9T4jnwxXygZuA48fs4l1Bj5o6LBfqz3IDstY50UVTxy4TOcIvESs+njATures2hBC9+ZPeV49GuFawBHwKVuvgd6Tts/077TlP8802fcH18EFRKJy8IZLlKL8f6Wg3psuuxow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9/TvslN; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1792063939; c=relaxed/simple;
+	bh=/qTM632djo7wozLrYC0vwPo30eUKp/12hQOtYJOpW2k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DHGGjXp3OmYzXx1jK8EY3Njpb+HqbXg6fOx6GyT/IQcZMXT1JE0mK1ahWIGNubAfStAuY4XTrf5jQKclQZ+Z/5iBT4h83lZKSQARmqUhG3Vm8w+YVAVW3b+yg6jHZL/ptUZ36FTVQxUUG3VvxNMPHf/780W8EkN6ZLYPUBqCGqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUPVD4Hx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9/TvslN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792062010; x=1823598010;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=ni+cZ2x3SfxVByDI3e+2C4Xsw/g+GmhxtmKn7cBp4sc=;
-  b=Y9/TvslNnxeg4jrobNKX6mboWs3vxtWOYS+JlCN+ZIMFanz6+izFsNgI
-   ZWWRgBr9DtED99q7N2cji40mYz5B29Oeiwme6KqC7Wzwj4a+/7AmWyD2o
-   c/LCCMJfGa/05EsNd5m+I20Ug5GB+BWQxSyXfqedeUpYyt9r8POHGm0TW
-   6at7lrqhkIaQpO22n853WoY7CPJ9F15MpiZ3ff7wN0FX2vv2nHyFLUZO/
-   H5zSZ2NK4yIvUlEWr3/mknULAuO8anzbSnZyskBFRzeUgg0hxtEXugxqV
-   vb1OjltgOsQcu2QsuW+osmPwCj2Nw2AhR9tS5p/Jp/34rBSR17ZjwyFts
-   w==;
-X-CSE-ConnectionGUID: OWxTlkZHRISD1uYnwCTFyQ==
-X-CSE-MsgGUID: XPvyiFC8SAGdYNBixjbryQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11935"; a="848647"
-X-IronPort-AV: E=Sophos;i="6.27,159,1787036400"; 
-   d="scan'208";a="848647"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 04:00:09 -0700
-X-CSE-ConnectionGUID: wTnngkqfT/K/kEDKjJM6Lg==
-X-CSE-MsgGUID: JVQWppVZRiyXutzmaJG01g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,159,1787036400"; 
-   d="scan'208";a="1629282"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.130])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 04:00:06 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 15 Oct 2026 14:00:02 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, wse@tuxedocomputers.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/5] platform/x86: uniwill-laptop: Lightbar fixes
-In-Reply-To: <3a55c989-f16e-40a5-bd2c-201d45c82c85@gmx.de>
-Message-ID: <2a516987-83a4-d703-3226-be216e499b1a@linux.intel.com>
-References: <20261007144101.323289-1-W_Armin@gmx.de> <179148110928.29028.17146158167227573018.b4-ty@b4> <3a55c989-f16e-40a5-bd2c-201d45c82c85@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUPVD4Hx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 009411F000C7
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 11:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792063937;
+	bh=/qTM632djo7wozLrYC0vwPo30eUKp/12hQOtYJOpW2k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=BUPVD4HxCLIXFFHjU8vUePl2t6xx2FOPXd8le9NfCpzSB2B50Jhso/DiHQqrJ+uMK
+	 v07GqY8xDx6QrueVa1SKsbIUSOcsbVCXV2F0i34e5gETVsxi/HWs9hTzQsxPCCnYSb
+	 /Am9dHIYtUGfm/pjKlbGzrJ6gE5TLM0wqSlVg+pIPHqwuGhI/+a3Jeyozo3z5O+2Y7
+	 gYPUPARtC245UZBJDpKejlU91GmCGhSHiujq0cLXBg8vKcYW2lRJVKn88Im9AQwasY
+	 wXpXEwXdNgC6gm5FMXYUJ2DIJoBvTu67UY7lPilecvZpphbV3nzo8F/lrHcvOfIPN9
+	 2sOcCMabTJ27w==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5bcb1f1358aso3560118e87.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 04:32:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBydlJ6sokVcb0v6Yj6PeedRzbXM5aEemG/NI55n7AbSu3p6XtGVVX53a7P8izGfVsftdfrn0AOIzaaRv43vUrSGGs/0@vger.kernel.org
+X-Gm-Message-State: AFq9FYK3uPXy5s8ieEkYfLER7UWTNInYI+rGTE6+q4PSMGXwKcXckPO0
+	fqWQ1cFLegUzX/GyqCkMrI3GSK81ZJ1ac+kqcUlPyM7f4pgV3YFWeHN3qfy2XswPCaW0Giq2aaF
+	cGzgbEuT737ktnqiJwc/WJcq1VBi5Jx8=
+X-Received: by 2002:a05:6512:10d3:b0:5b8:99b1:fa26 with SMTP id
+ 2adb3069b0e04-5bcde6c08b5mr7566012e87.30.1792063935419; Thu, 15 Oct 2026
+ 04:32:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1907028847-1791796143=:1222"
-Content-ID: <2a956f0f-55d7-6ffb-862e-370cd5140e0f@linux.intel.com>
+References: <20261014132500.3817549-1-daniel.lezcano@oss.qualcomm.com>
+ <20261014132500.3817549-4-daniel.lezcano@oss.qualcomm.com> <c751e18d-57e9-4ce6-95dc-1bf53a7a4808@gmx.de>
+In-Reply-To: <c751e18d-57e9-4ce6-95dc-1bf53a7a4808@gmx.de>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Thu, 15 Oct 2026 13:30:05 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jQQsXP4v7dymuHZhy2oVjPwV9eXhqV4bGPUgMyGyUsUQ@mail.gmail.com>
+X-Gm-Features: AclHuK-MrNhF7fxhSV-bdpZ8WBZksbpNF_88y0eoYHFmpjizETXDqP6cb1yw0WU
+Message-ID: <CAJZ5v0jQQsXP4v7dymuHZhy2oVjPwV9eXhqV4bGPUgMyGyUsUQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] platform profile: Add firmware-neutral aggregate
+ sysfs interface
+To: Armin Wolf <W_Armin@gmx.de>, Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>, 
+	Hans de Goede <hansg@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Jai Luthra <jai.luthra@ideasonboard.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jack Wu <jackbb_wu@compal.com>, 
+	"Mario Limonciello (AMD)" <superm1@kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Kurt Borja <kuurtb@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Oct 14, 2026 at 11:31=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 14.10.26 um 15:24 schrieb Daniel Lezcano:
+>
+> > The per-provider class interface is firmware-independent, but system-
+> > wide profile selection is only exposed under /sys/firmware/acpi.
+> >
+> > Add /sys/kernel/platform_profile/{choices,profile}, sharing the existin=
+g
+> > aggregate callbacks and semantics with the legacy interface. Keep
+> > attributes hidden until a provider is registered and remove them after
+> > the last provider.
+> >
+> > Notify both aggregate frontends on profile changes. Also notify the
+> > provider class device on a direct profile write, matching its documente=
+d
+> > POLLPRI ABI. Restore aggregate visibility after a failed registration.
+>
+> IMHO the aggregate sysfs interface only exists for backwards-compatibilit=
+y,
+> so i would be very happy if you could just make the associated code optio=
+nal
+> and instead teach platform-profiles-daemon to use the individual class de=
+vices
+> instead.
 
---8323328-1907028847-1791796143=:1222
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <275a563a-ddbf-ce35-07f9-295f7d29c5a7@linux.intel.com>
+It is not just a matter of opinion AFAICS, the aggregate interface has
+been regarded as legacy for quite a while (see commit 778b94d7ac17
+"ACPI: platform_profile: Add support for hidden choices" for example)
+and it was retained exactly for backwards compatibility reasons IIRC.
 
-On Sat, 10 Oct 2026, Armin Wolf wrote:
+I'm with Armin on this.
 
-> Am 08.10.26 um 19:38 schrieb Ilpo J=E4rvinen:
->=20
-> > On Wed, 07 Oct 2026 16:38:53 +0200, Armin Wolf wrote:
-> >=20
-> > > This patch series mainly deals with various issues inside the code
-> > > responsible for controlling the lightbar on supported devices.
-> > >=20
-> > > The first patch utilizes the improved multicolor LED API to report
-> > > the correct brightness of the lightbar to userspace. The next two
-> > > patches fix issues discovered inside the code for controlling
-> > > animations, while the fourth patch fixes an issue with the naming
-> > > of the LEDs in general. The last patch also adds support for another
-> > > variant of the Intel NUC x15 laptop kit.
-> > >=20
-> > > [...]
-> > Thank you for your contribution, it has been applied to my local
-> > review-ilpo-next branch. Note it will show up in the public
-> > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> > local branch there, which might take a while.
->=20
-> Thank you :)
->=20
-> I noticed that the LED next branch contains a commit that requires trigge=
-rs
-> to implement a new callback and prints a warning if this is not the case.
->=20
-> Should i wait till the next cycle to send a patch implementing said callb=
-ack
-> or do you want to rebase for-next onto LED next?
-
-=2E..Goes to look at the other repo...
-
-I don't want to base on top of other maintainers next branches (or pull=20
-them into my for-next).
-
-I suppose it might be best to make that addition after -rc1 through=20
-fixes, or if time permits, already during the merge window in a separate=20
-PR after the usual for-next PR.
-
---
- i.
-
-> Thanks,
-> Armin Wolf
->=20
-> > FYI [if applicable to your patch], as per Linus' policy change, also
-> > fixes are mostly routed through for-next unless the fix is for a
-> > commit introduced in the most recent cycle or is clearly a regression
-> > fix.
-> >=20
-> > The list of commits applied:
-> > [1/5] platform/x86: uniwill-laptop: Report correct lightbar brightness
-> >        commit: de41d8b4d0dbb81c81cd99c245238d878a3e1951
-> > [2/5] platform/x86: uniwill-laptop: Implement rainbow animation as trig=
-ger
-> >        commit: 59e4e406b6c08ad41f3ad86db6d42b82d8539c12
-> > [3/5] platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
-> >        commit: 969a3bfa474e35828e142d0160f393a97d9bf0ee
-> > [4/5] platform/x86: uniwill-laptop: Label multicolor LEDs correctly
-> >        commit: 42e6b269fc1134a3fcce57539034ee496e2c1344
-> > [5/5] platform/x86: uniwill-laptop: Extend support for the Intel NUC x1=
-5
-> >        commit: 7a159a14ce0f5d5a3c2f835f39986ec5539ae374
-> >=20
-> > --
-> >   i.
-> >=20
-> >=20
->=20
-
---=20
- i.
---8323328-1907028847-1791796143=:1222--
+Thanks!
