@@ -1,147 +1,108 @@
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BC03AA1B2;
-	Fri, 16 Oct 2026 02:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB10339390
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 06:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792119470; cv=none; b=LeAAbCoGJLRnMQ8B55sXRYTLVKgrBfs9lmqdUJ2QkouzYwmX5awG0J04PgrxR6IAOjOw6MVC+eApn1L7/yLHkiXBmc6vyaShT7Y2hd8fELEdj7EeHx8eQHnqfdaVLYf4SnIGqn8r1A7eDAJtlb+vKkOOUcR1ByORKNDQ2Cd1Tjg=
+	t=1792132477; cv=none; b=puXvSOmwP3fql3rVCzKhpV9bkUq8k6ye31HFNXuJ9b9I4U++jWc50NqW91QZvUMGit8ljEHQK2OvQIf3InHCVvjmrJ/2khEF+yS0MECJkqEloZePkqGfeF74r6t1vT6dojMFLrV6enIJ74BwIFGGyQk4zNRC/9DT9ShnvUDdpt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792119470; c=relaxed/simple;
-	bh=rIRSv36RxPsQ95yPNEV2d6LpKKzaMMZSbNtDCDDrznE=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d4eHswug9nmqbMXADNwQCAxCuVSxC0MdEuIGASDZAaLli8/+/L0pCEKNuubY8qj9CkmaL4jXbO2N6rvyG0N4gEe1v0uqnnNQct0Z5MMY5UpdlYgdKUanxZL8Ndr7aPVl/6OTr+FE8qUpDROAav8XraXAr8WYECNdTxwi+/l4y54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=n2XBDevQ; arc=none smtp.client-ip=203.205.221.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1792132477; c=relaxed/simple;
+	bh=ckd8Z01py6nfMuc7JfJGjW9DMPCumhB1KgWSdYZ3e0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TnweKVnAswUMYR6NoWDfCpMHeyZSxpUVfDTCr+M8Mwd8bMqgNRFbyiF0ja499jNLcWXasEa7AUOQo/1uoeekB5e63PhkDZGEuKL3D6fCZfvqKMacBsmCLOUA3QAEBYwyejd54bXOV2zWEvhcv8hr0OfFkNTAecMENBWDFrYgJI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LjphkV2I; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="n2XBDevQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1792119462;
-	bh=uYvE/H155U1b46baEfSLgR5Se7+7qQkO+xg/A0e0yME=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=n2XBDevQsZlMfaQb6s/opOzUvDacbkIIBnLLNDeeXmQhQpRsszaUnzUkMQVH1JvTh
-	 GqyhlIsheMf0xZbBB6kX6HOQp2D9t+rQxHRIcTHb0DDWq2tFXIf0fYeOIxluE2DWKQ
-	 MVleNh/LnPVZlWJjNaZNf1ivDJ+s0EPuUF8tw2WY=
-Received: from [127.0.1.1] ([223.66.52.202])
-	by newxmesmtplogicsvrszb51-1.qq.com (NewEsmtp) with SMTP
-	id E683A2AA; Fri, 16 Oct 2026 10:57:40 +0800
-X-QQ-mid: xmsmtpt1792119460tswdi55ed
-Message-ID: <tencent_B82AAA47238236B668C04FA0547231C7A609@qq.com>
-X-QQ-XMAILINFO: Nwte6vbuj0EqYRWAZQ2yEn0nnMAuyziV6eANkhZ/W29om9C1etIggSFBeZv+c0
-	 ZfeA+G7V6tjxnsSTATHYU/9nONFZv3d516uyugY2AfkhRJe4U8z+IypBkKq2yjAfWixdfr+Nbz3T
-	 coiw7R8gWQ+itrI/SGOozOwRKpT7uYEE8+WczTD+C6VEEUpE789S9Ag+42oaKw4h7GooY1C00oZv
-	 e6WjudUT9gWwZSzX4lSnYycBpuv2PzdV0rNwvSKbD6RIeI4RdMTl3b6XrJeJriK2aA69CGqeupct
-	 HNcA1ikkOlzZDRGsniwpqPB0IOtWr5LTZS6rr7FINOoJzlWygdzqgT7V9qg726GxmioNYrVV/UwD
-	 mz9ZRmmC9UVSGHuf+G+BnD0m3VkcRQB5b2/eA2NDzGFNm76E2Mfbpamv8I7ioVWrfp4rBpfZhzas
-	 QCzI3UNu4bvjdqjtMaXdiuiKGn9WNU1NpdCRfZeFlzPqf8xAw6Msz3cTRwoMdQHhwIS/44AcSgcF
-	 PzKNEOUOzxUPpM4DbO+ycC3v60IYVhADkP28B7WLggTRYT+wOHs1KoScdaFoiwf/MzwtYk5LsXMT
-	 A2cOD06KffoNCv/AAkYniMugEfO++qaW/KT3zdm5YayBZIsB3bEziXeYS/Rjt09Q4/TgJHGEl+tK
-	 oOo8f90dkZmtRjYj+YDrsZYyUEI3ck7R9GEtWioO2CYUDneNBiAYtRi3vEw544esy1gSQEAn9/5G
-	 nXPTBlj4EwCoA/ZAZtijb7taDcYWiZZ556T1UC8grMRas83bvZCjEuJzEbaL7UAINJSmE012v6/T
-	 InDaxOLtFs/BKWCrxaGLAnqsYQahhOW5GNTSDD0MM97R+/llUE2QRXDKFfe7pc/fn4NavX3q2AJT
-	 LosPS3cZQjQnmm4VUZsztmUEi6T6Yr8ZIdaKoCwxuBtzsavEE5F+E8LBZroYa9ZlAuQ1DQXklCc2
-	 5fRDPiuaHrThfn/4PB1g52QiJIwemhLABn9lLIIJF9MZuLOZ2p4AgVw3qMMSFXFNJwEFji3E/KCY
-	 /KKNAeQijdY5M/zVFXVaFEKMXLmKFwJ7vhbkcYfHhw8w5MI1IeMno6XL0AP46MgdGner+56sRpni
-	 LPEaV4od1NoOaQGoI=
-X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
-From: Wu Zhipeng <zepwu@foxmail.com>
-To: Alex Yeo <alexyeo362@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, Kenneth Chan <kenneth.t.chan@gmail.com>
-Subject: Re: [RFC PATCH v3] platform/x86: panasonic-laptop: Add
- platform_profile support
-Date: Fri, 16 Oct 2026 10:57:40 +0800
-X-OQ-MSGID: <179211946029.956581.435333470375911880@foxmail.com>
-In-Reply-To: <2df90a2a-770b-4439-9d01-bd8105084719@gmail.com>
-References: <20261007190446.38862-1-alexyeo362@gmail.com>
- <tencent_7F39F02728B55CE3B1878AAB51BAA0FE2D07@qq.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LjphkV2I"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3ac91ac8924so1294243a91.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 23:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792132476; x=1792737276; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ckd8Z01py6nfMuc7JfJGjW9DMPCumhB1KgWSdYZ3e0Q=;
+        b=LjphkV2ILgevGHXbwcsAEwbzCks+3pGhEr+G+Yx6d7SJ+5fJI3cjg8RXJEtOdaS4yG
+         pF9hdemfgU6ESqR3JwqHKx7VHN9R51vfrFFZEGPmr8nYg6q0X4eeRI5ywsjzIr6MpvYe
+         XhwR/XIXSpGnhaLY1o6Jfs5ZB40BDmdtkCdyu42r85hI4rbbZTF+oW/uH8KZdTzEQpIf
+         Cvx/br3BgF5Cpu3NUFgLfsbkfWC+bm6SWQPlWfDAiRtCtSSWEwXPQtOLeAmviH3UDA6W
+         ktCriXMkUxLCcCuQRzS5eCpzNiORSxIl1z7kfb/A6tu+qpU37Cas/xjkE40eNlE1ufDU
+         /zHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792132476; x=1792737276;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ckd8Z01py6nfMuc7JfJGjW9DMPCumhB1KgWSdYZ3e0Q=;
+        b=soIqlK4E6iyE7xL88cSfvxj38q+JMsgEoxtSSmSe0r5Ky3Bktk8Y245u32z6kkBNAY
+         d5htPZuYGjOU8Qx9t1dOExSUO9Qs7QGZvzVusOwdaB8DFemhacufwahlmdbOSqPtTWF2
+         9Y1RLkS0eEYRIbSG+0mDLhtMXAGE9Z4nJ2ZVG7NbF4+EK97duo6PG80wDIp5lEknqyet
+         XkcRme/MToU13PHBDFjTYQOIi0pE/s75CkMYRd5nGRYEvEhOW6ixZblZnJDr8GfWB8OB
+         ETJM1Mvye2SzB6dPAtvZn+WkfIpurzLSuDg9sP/mDBuhmYMEb+J6DNiFkDOewQ439y8d
+         u/0A==
+X-Forwarded-Encrypted: i=1; AKwUvByW2JtRLYb2PPbc3K6yg1+lekfIUBLPch5r1/a+p9+Y/UbERETBDVFhsZTW4Y4hTLdoS/MeumT4scef4QqTMH/X+VXh@vger.kernel.org
+X-Gm-Message-State: AFq9FYKYq7D4up/ll2xaaHXlj+P33RHtVaegtsGZY6n1wunFUtatc/BO
+	qItYq7gJq7UOqLM4PukKs92hnFPBpGoX9y/lLRnvaZd8A6p7exk9M4pW
+X-Gm-Gg: AYBFou1OfaFdtN/PzlUKLmGyk+fdhXL0UPx5zr7Ij40xk+i10SWOrGiAGS5YoVuj14U
+	UTMznH+rER4iSPsm5EAcXEyz1vjyxhFV/fRuwDgpsFly5Gd+lLIYIM0veQE6N8m5dciZPpwT/qF
+	LJQF2yuy4+yCGh1lZpa1HuTFOQnTDUn1mVYhvDRHd1KR74uIEAvuv0dtWkyPCAXYkoM8tmMAc1+
+	q0EWr3kC1pPjFZygZra0xOh6r6TsgQ+RuC9kodbDW1ca/3IB6aW9nsbTj9+Vz2rpmNY9RC+zhhh
+	BJaYdYwsaPAT3ySfWOGocW4sK1jHXTeGZ+gIOlrWCdTAhih5Je6Bmkzt0xycC6Pn6+UJDq1BpJr
+	J77jcy5+NYK1QTmokAzrJfvWePwLMuV9YP/EF5sNF6s4dMBzYuVUNyMa8lhfzt1usUPj+JVlc38
+	/6cMvnrFnprR26VyP/BdnXBcT0ZwOzFxl9aALXC27Z6qwytLHPWLcdY349MeMAAxRRPRyGrIwMP
+	KXPFbX3YpHTr1/oWgKoHujLqANsAFRkN4+I
+X-Received: by 2002:a17:90b:2885:b0:3a8:495b:d64b with SMTP id 98e67ed59e1d1-3ab3a32cbb8mr16897575a91.4.1792132475742;
+        Thu, 15 Oct 2026 23:34:35 -0700 (PDT)
+Received: from localhost.. (59-124-112-186.hinet-ip.hinet.net. [59.124.112.186])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ac947dfa00sm7678169a91.17.2026.10.15.23.34.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 23:34:34 -0700 (PDT)
+From: chipang_kao <prozac2734@gmail.com>
+X-Google-Original-From: chipang_kao <chipang_kao@asus.com>
+To: hansg@kernel.org
+Cc: W_Armin@gmx.de,
+	ilpo.jarvinen@linux.intel.com,
+	corentin.chary@gmail.com,
+	luke@ljones.dev,
+	denis.benato@linux.dev,
+	scardracs@disroot.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] platform/wmi: Move ASUS platform drivers from x86 to wmi/asus
+Date: Fri, 16 Oct 2026 14:34:27 +0800
+Message-ID: <20261016063427.664738-1-chipang_kao@asus.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <41d6bd7a-e4ea-4077-87e3-e60102ebfef3@kernel.org>
+References: <41d6bd7a-e4ea-4077-87e3-e60102ebfef3@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Alex,
+Hi Armin, Hans, and all,
 
-Thanks for the follow-up. A correction first, then what I can say about
-the power unlock, and the tests you asked for.
+I tried moving the ASUS-related platform drivers from
+drivers/platform/x86 to a dedicated drivers/platform/asus/
+directory. Most drivers compile successfully after this
+restructuring, except for asus-armoury.c, which depends on
+firmware_attributes_class currently defined in
+drivers/platform/x86/firmware_attributes_class.c.
 
-1. Correction to my previous AC numbers
+I found that Sean Rhodes has submitted a similar change to
+move the firmware attributes class:
+https://lore.kernel.org/lkml/ar0DNFlI7MEA8zp2@tzungbi-laptop/
 
-The 12 AC runs behind the tables in my last mail have to be discounted:
-they were taken with the machine in its efficiency profile -- EPP=power
-with turbo disabled -- and a small thermal control tool I wrote was still
-running, which re-applies the profile's EPP. Only the battery session was
-pinned to EPP=performance.
+The patch has been applied to the Chrome Platform tree's
+for-firmware-next branch, but I haven't found a corresponding
+pull request to Linus' tree.
 
-  AC session (last mail) : epp=power       5412-5510 e/s
-  Battery session        : epp=performance 8122-8497 e/s
-  Earlier AC, same day   : epp=performance 8143-8515 e/s
+Is this change expected to be sent to mainline for an
+upcoming merge window?
 
-On this CPU, EPP=power at 8-thread load draws ~8.5 W and the PL is not
-the binding constraint, so "the TDP toggle moves essentially nothing" is
-an artifact of that state, not firmware behaviour. The fan deltas are
-unaffected (both arms shared the state); it is the power columns that
-should be disregarded, not the fan conclusion.
-
-I will rerun the AC matrix with EPP=performance, turbo enabled and the
-tool stopped, and send the corrected table.
-
-2. What I can say about the power unlock now
-
-TL;DR: on this unit the EC enforces its own power limit, and any
-SEFM/SEPL write re-derives the EC PL registers from the IETM tables, so
-a direct PL write does not stick. The ~10 W "locked" plateau is EPP plus
-that EC enforcement, not the PL failing to bind; with EPP=performance
-and turbo on the PL binds again, and "unlocked" only removes the
-firmware table PL.
-
-Details:
-
- - Both PL write paths bind with EPP=performance and turbo on: on the
-   direct path, set points of 3/10/20 W give 3.7/9.9/19.9 W and 255 gives
-   ~26 W (the RAPL ceiling, not a firmware cap); on the SEFM/SEPL path,
-   set points of 10/15/18/20 W give 9.98/14.98/17.98/19.98 W (package
-   reaching ~4.2 GHz). An earlier ~17 W reading for the 20 W set point was
-   a thermal state, not a wall.
-
- - MSR 0x610 (RAPL PL1/PL2) stays at 28 W / 60 W across all of that.
-   The EC enforces the limit through its own path instead of
-   reprogramming the RAPL registers, so the ~10 W of the locked states
-   does not show up in the MSR either, and the missing TDPL() call is
-   not the explanation.
-
- - Any SEFM/SEPL write re-runs REFM/REPL, which re-derives 0xCA/0xCB
-   from the IETM tables (P140/P143 here) -- so a PL override does not
-   survive, which fits your decision to drive only SEFM/SEPL and leave
-   the PL alone.
-
-3. Tests you asked for
-
- - Windows: I am setting up a Windows 11 install on the same unit and
-   will run a comparable 8-thread load with HWiNFO logging package power
-   and temperature, and dump the ACPI tables from that side as well. I
-   have no wall or USB-C PD meter, so those will be package power
-   numbers.
-
- - thermald: not tested yet; it belongs in the picture because it is the
-   component that drives _OSC -> SEFM/SEPL here. I will report CEFM/EPLE,
-   MSR 0x610 and package power before and after starting it. For
-   reference, in an earlier run a single SEPL write during 8-thread load
-   moved package power from ~8 W to 27.7 W within ~5 s, so an OS-level
-   writer can move the power state here.
-
-On the DMI quirk: I would rather hold it until the above is in, so that
-you are not asked to carry a model whose power side is still half
-measured. Say the word if you would rather have it earlier.
-
-If you have a load you prefer for the Windows comparison, I will match
-it so the numbers are directly comparable.
-
-Wu Zhipeng <zepwu@foxmail.com>
-
+Best regards,
+Chipang Kao
