@@ -1,163 +1,315 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB8349BB44
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 18:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62E93EFFD7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 21:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792175309; cv=none; b=qUH93MJVpB2saEZPvdqPgRVk1i/zhP4cnHnqgXM35XUtMB1oWzDuOdEh0CK3amZf24tzRHYKoigBrkG9q/jVd+mEFGGNSO5I3sZ85FNDSQfj0FtYGT7PnHlwMnNTQ+9tyZoQ3mXWpx8KpSmuZok3Y8ig/SP80VDCjVrEH/xEiZU=
+	t=1792184581; cv=none; b=EP3gkASnoLyPLr5Yu7aZOsLMC7etJYCSLWQvyuFIs7dXnqtc8/yeITEjHzD5PAkES7ybG5IQXA4Q36IwYGmlEKUfl9NJj0AOnW1V2hLBogKNvfBoC0mC9sWvjVyajD+2eq2G8yaTL1xEZ/8Rp5voN2h4SB8e+JWaFfp2iwd6Tk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792175309; c=relaxed/simple;
-	bh=10hhcb+teMBFLSbT/3K2b8Zye2TeejDqFqqpiCHgZU4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z9Lcrlwg8EBoP+7gmqyYeuN/FFAypRBe2hzQujePPxLtekbqV0o2/KTKrIdODf6hUu5UI9ShWJZNtvwPGrLnjTVQHa1io4lFPKmvncKiQkLFdLsPTU4ZunHPi9i38IwAi0nl4BwJjZfk5IxD1B8pTVm3iLmA2rBy4afcDd046zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0lPpssT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1792184581; c=relaxed/simple;
+	bh=U/oy081LlbYzXLB/FH9w1Oc6yVjRp4AOpyZy1GpB0BQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=d9hOmxENlkUHb/vOpblJihDomJ3+XPhXaKxUxsVOWjImc6qWUgIXCQtrB5srchP9AoTB/PVxSyv+Kjj8F9N5XEfmMO1ewIhxzl0/IWfA169aK1oOMmFAbj6pFO3c6Y7YhK9auCIx5BdMTmAIcKoBVWptii536Az1NEAG61Sutzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=lZzKLKAD; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0lPpssT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 587DFC2BCF4
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 18:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1792175309;
-	bh=10hhcb+teMBFLSbT/3K2b8Zye2TeejDqFqqpiCHgZU4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=E0lPpssTK0Bet75J/H1pqC5jXC+adynDAXG0M8TSgnVpZMvV6FPK3a98Rn0fdqWhQ
-	 ig/ucET24esU8u1xXFPllw/twMJ8sEnKai694NB8V3lLB9DFlbc8M1UkCLO4uGAnny
-	 hmCcSwlKml4groGW7D0F/lkhv0kh3I4AhwgJekiWbq3XcMmB+8+Smjvu68n1dxJxCB
-	 +ZBMaDucDHZMio+051DO6wQPKPaSEPbYjcsG4SR041RJQ38kxqHVyvBm/n5I2gf7wE
-	 /210iTmNsbdEWgyjE/YEcfN9YpuuwYaI8avOZC6BJos5MI/ldswqjj3OcvawVUegIE
-	 yPiSyYSNJDDQw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 38BDDC41616; Fri, 16 Oct 2026 18:28:29 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221752] asus-wmi: no camera LED classdev registered on Zenbook
- S 14 UX5406SA (micmute LED works)
-Date: Fri, 16 Oct 2026 18:28:29 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: silk98287@hotmail.co.uk
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221752-215701-WawIUifFz8@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221752-215701@https.bugzilla.kernel.org/>
-References: <bug-221752-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="lZzKLKAD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1792184577; x=1792443777;
+	bh=hS3ICmeLm9M5uLWOvmDgO1qkQb5Etay8ummjKV1y1DM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=lZzKLKAD1bbAB4NqDgmbAj5RgvdTsldP4a+Ga/jViMBin06/uMVXlyIycTxA3z7ad
+	 U3/xNaZ4P4Ftyf0oGyM2DeluDktMuYQigkUlFDtn/g7GAVRw9fH1UEKEX3iQ+Kird+
+	 bilSfC+tIkrl1nTSDu3gi6EpqiRhoOvArC5eoWD56AD9foroMQ8T0TnFofDTqBqCe/
+	 toR80UBoMuSmfSBwsDeqNxdEjsMmEls2NMKIqHnss41LPlWT2UTFhBb86NChstdM98
+	 64fjtn1TLPD31JDIQPdL2QiMyAhQ6xL1F/h4VG7SuGSU/LrfwLUi8PPk+8Jm9me0Un
+	 KwdRomrzd587Q==
+Date: Fri, 16 Oct 2026 21:02:51 +0000
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Daniel Scally <dan.scally@ideasonboard.com>, Jakob Berg Jespersen <dev@berg.pm>, George Neacsu <geocausa@gmail.com>, Bryan O'Donoghue <bod@kernel.org>, German Pablo Lindo <germanpapulindez@gmail.com>, Simon Kruse <simon0x+git@proton.me>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] media: i2c: ov13858: add regulator, clock and reset GPIO handling
+Message-ID: <20261016210246.58562-1-lsa.uz@pm.me>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: c99d4f08000a61f24598a33b8949ebfebe43adcb
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221752
+The driver assumes the sensor is already powered when probe() reads its
+chip ID. That holds where the rails and clock are ACPI power resources,
+but not where an INT3472 companion device registers them as regulators, a
+clock and a reset GPIO for the sensor driver to consume, which this
+driver does not do.
 
---- Comment #2 from silk98287@hotmail.co.uk ---
-Hi, I'm also experiencing this same problem, where the camera disabled=20
-LED doesn't illuminate despite the firmware blocking the camera when f10=20
-is pressed. I'm using a Zenbook S 16 UM5606WA on bios ver 321 and Linux=20
-7.2.9+deb14-amd64. My device is missing both the LED classdev=20
-"asus::camera" and the device id 0x00060079 (ASUS_WMI_DEVID_CAMERA_LED).=20
-I created a little patch that seemed to fixed this issue by also reading=20
-the status from device 0x00060078 (ASUS_WMI_DEVID_CAMERA_LED_NEG) if it=20
-is present, every time the f10 hotkey was pressed (on my device this=20
-fired the WMI code 0x85). Although this worked, both the micmute key and=20
-camera toggle key LEDs would turn themselves off every time the computer=20
-was powered off, and not come back on until pressed (even though the mic=20
-/ camera would still actually be disabled). I was first going to look=20
-into that, but I can still send in the patch I have - I'm very new to=20
-this so I'm not sure how to proceed, and I'm sorry if I've messed up any=20
-formatting of this email, it is my first mail to the mailing list. :)
+Request the three supplies and the reset GPIO, and sequence them along
+with the clock the driver already looks up, in runtime PM callbacks.
 
-On 10/10/2026 22:09, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D221752
->
-> git@turtledev.nz changed:
->
->             What    |Removed                     |Added
-> -------------------------------------------------------------------------=
+Tested-by: German Pablo Lindo <germanpapulindez@gmail.com>
+Tested-by: Simon Kruse <simon0x+git@proton.me>
+Assisted-by: Claude:claude-opus-5-5
+Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
 ---
->                   CC|                            |git@turtledev.nz
->
-> --- Comment #1 from git@turtledev.nz ---
-> Same laptop here, UX5406SA with BIOS .309 (11/18/2025), Fedora 44 on
-> 7.2.9-200.fc44, secure boot on. Same issue, no asus::camera LED.
->
-> I dumped the DSDT to see what's going on. I think it also explains why the
-> set side didn't work for Jos=C3=A9 in "[PATCH v2] platform/x86: asus-wmi:=
- fix
-> camera key led on Zenbook S14".
->
-> 0x00060079 (CAMERA_LED) just returns 0 for both DSTS and DEVS on this
-> machine, so asus-wmi never registers the LED. Everything is on 0x00060078
-> (CAMERA_LED_NEG).
->
-> The DSTS handler for 0x00060078 reads EC register 0x50 and writes the
-> result straight to the LED GPIO before returning:
->
->      Local1 =3D ^^PC00.LPCB.EC0.ST8E (0x50, Zero)
->      If (((Local1 & One) =3D=3D One))       { Local0 =3D One }
->      ElseIf (((Local1 & 0x02) =3D=3D 0x02)) { Local0 =3D Zero }
->      If ((FSIS =3D=3D Zero)) { Local0 |=3D 0x00080000 }
->      Local0 |=3D 0x00050000
->      Local2 =3D (Local0 & One)
->      SGOV (0x00180885, Local2)
->      Return (Local0)
->
-> So a plain read is what updates the LED. Reading it after the camera key
-> event, like v2 does, is enough. It's probably worth a comment in the code
-> since the side effect isn't obvious.
->
-> DEVS on 0x00060078 (2 =3D LED on, 3 =3D LED off) is guarded by a one-shot=
- flag:
->
->      If ((FSIS =3D=3D One)) { Return (Zero) }
->      FSIS =3D One
->
-> FSIS only gets cleared in EC0W when Arg0 =3D=3D 4 (resume from S4). So af=
-ter the
-> first call each boot, every set returns 0 and does nothing. Bit 0x80000 in
-> the DSTS result shows whether that first call is still available. I'd tre=
-at
-> the LED as read-only on this model.
->
-> Other things I noticed:
->
-> - The firmware handles the privacy itself. While the camera is "off",
->    /dev/video0 still opens and streams, but every frame is a grey placeho=
-lder
->    with a crossed-out camera icon. There's no USB disconnect. The key LED
->    stays dark the whole time, since nothing does the DSTS read.
-> - On S0ix entry the PEPD _DSM turns the GPIO off, and on exit it only tur=
-ns
->    it back on if EC 0x50 bit1 is set. That might be related to the stuck =
-LED
->    in the original report.
-> - GPIO 0x00180885 is GPP_H_5 (INTC105D:02 pin 31). Micmute is GPP_H_4 rig=
-ht
->    next to it. The pad is config-locked but TX isn't, so as a workaround
->    "gpioset -c <chip> -t0 31=3D0" turns the LED on and 31=3D1 turns it of=
-f.
->
-> I couldn't call WMI directly because of lockdown, so this is all from rea=
-ding
-> the DSDT. I can attach the acpidump, and I'm happy to test a v3.
->
+Changes in v4:
+- runtime PM ops only, without the system sleep handlers that
+  DEFINE_RUNTIME_DEV_PM_OPS() adds, as camera-sensor.rst asks. With them, a
+  system suspend tried during a stream powered the sensor off before the
+  IPU6 ISYS refused the suspend, and the stream stalled; now it goes on.
+- German's and Simon's Tested-by from v3 kept: the change touches only
+  system sleep, which neither reported testing. Simon's was not threaded
+  under v3:
+  https://lore.kernel.org/all/20261010142353.23707-1-simon0x+git@proton.me/
+Link to v3: https://patch.msgid.link/20260831130312.26296-1-lsa.uz@pm.me
 
+George Neacsu's device tree support for this sensor builds on it:
+https://lore.kernel.org/all/20261015-ov13858-x1e-v1-0-acdd918f4fb6@gmail.co=
+m/
+
+Changes in v3, from Sakari Ailus's review of v2:
+- wrapped the one line over 80 columns
+- dropped an unrelated hunk in ov13858_id_table. It was not deliberate: v2 =
+was
+  regenerated against mainline from a tree based on a distribution kernel, =
+and
+  that difference came along with it.
+Link to v2: https://patch.msgid.link/20260831124352.86935-1-lsa.uz@pm.me
+
+Changes in v2, from the review of v1:
+- commit message cut down; the detail below
+- dropped the comment on the supply names; it is a KAPI with int3472
+- ARRAY_SIZE() directly instead of a local macro
+- fsleep() instead of usleep_range()
+- one function each for power on and off, used as the PM callbacks directly=
+,
+  instead of a pair of wrappers
+- removed the now-useless dev_err() in the probe error path
+- i declared inside its loop
+Link to v1: https://patch.msgid.link/20260831100404.40463-1-lsa.uz@pm.me
+
+Without the patch the first I2C transaction fails:
+
+  ov13858 i2c-OVTID858:00: failed to find sensor: -5
+
+The power sequence follows ov02c10: supplies, then clock, then release rese=
+t,
+and the reverse on the way down.
+
+Measured on a Microsoft Surface Pro 11 for Business (Intel Lunar Lake, IPU7=
+),
+with the parts isolated one at a time:
+
+  supplies enabled, clock enabled   sensor identifies, driver binds
+  supplies enabled, clock left off  -EIO
+  supplies left off, clock enabled  -EIO
+
+so both are needed; a longer settling delay alone is not enough. Verified
+across five module unload/load cycles with no probe failure, and again afte=
+r
+this rework, with the sensor streaming each time.
+
+This needs POWER1 GPIO support in int3472 to be useful on that machine: the
+dvdd rail is described there as an INT3472 GPIO of type 0x08, and without t=
+hat
+patch the rail is never registered.
+Link: https://patch.msgid.link/20260829-sp7plus-int3472-v3-1-454b50485ce2@b=
+erg.pm
+
+The same sensor on the Surface Pro 10 was made to work downstream by forcin=
+g
+the regulators on for the driver's lifetime, which the people who did it
+called too broad for upstream. Runtime PM keeps them off while the sensor i=
+s
+idle instead.
+Link: https://github.com/linux-surface/linux-surface/issues/2153
+
+dovdd is not described on this machine and resolves to a dummy regulator. I=
+t
+is listed because it is one of the three supplies these sensors normally ta=
+ke.
+
+A working camera also needs an ipu-bridge entry for OVTID858, separately.
+
+ drivers/media/i2c/ov13858.c | 91 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 88 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+index 5a49fa0ec02..5d7b3c335de 100644
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -3,9 +3,12 @@
+=20
+ #include <linux/acpi.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-event.h>
+@@ -1034,9 +1037,17 @@ static const struct ov13858_mode supported_modes[] =
+=3D {
+ =09}
+ };
+=20
++static const char * const ov13858_supply_names[] =3D {
++=09"dovdd",=09/* Digital I/O power */
++=09"avdd",=09=09/* Analog power */
++=09"dvdd",=09=09/* Digital core power */
++};
++
+ struct ov13858 {
+ =09struct device *dev;
+ =09struct clk *clk;
++=09struct regulator_bulk_data supplies[ARRAY_SIZE(ov13858_supply_names)];
++=09struct gpio_desc *reset_gpio;
+=20
+ =09struct v4l2_subdev sd;
+ =09struct media_pad pad;
+@@ -1706,6 +1717,54 @@ static void ov13858_free_controls(struct ov13858 *ov=
+13858)
+ =09mutex_destroy(&ov13858->mutex);
+ }
+=20
++static int ov13858_power_on(struct device *dev)
++{
++=09struct v4l2_subdev *sd =3D dev_get_drvdata(dev);
++=09struct ov13858 *ov13858 =3D to_ov13858(sd);
++=09int ret;
++
++=09ret =3D regulator_bulk_enable(ARRAY_SIZE(ov13858_supply_names),
++=09=09=09=09    ov13858->supplies);
++=09if (ret) {
++=09=09dev_err(ov13858->dev, "failed to enable regulators: %d\n", ret);
++=09=09return ret;
++=09}
++
++=09ret =3D clk_prepare_enable(ov13858->clk);
++=09if (ret) {
++=09=09dev_err(ov13858->dev, "failed to enable clock: %d\n", ret);
++=09=09regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->su=
+pplies);
++=09=09return ret;
++=09}
++
++=09if (ov13858->reset_gpio) {
++=09=09/* Hold reset for at least 1 ms on a back to back off-on */
++=09=09fsleep(1000);
++=09=09gpiod_set_value_cansleep(ov13858->reset_gpio, 0);
++=09}
++
++=09/* t4: 8192 XVCLK cycles after reset is released, before the first I2C =
+*/
++=09fsleep(5000);
++
++=09return 0;
++}
++
++static int ov13858_power_off(struct device *dev)
++{
++=09struct v4l2_subdev *sd =3D dev_get_drvdata(dev);
++=09struct ov13858 *ov13858 =3D to_ov13858(sd);
++
++=09gpiod_set_value_cansleep(ov13858->reset_gpio, 1);
++=09regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->suppl=
+ies);
++=09clk_disable_unprepare(ov13858->clk);
++
++=09return 0;
++}
++
++static const struct dev_pm_ops ov13858_pm_ops =3D {
++=09RUNTIME_PM_OPS(ov13858_power_off, ov13858_power_on, NULL)
++};
++
+ static int ov13858_probe(struct i2c_client *client)
+ {
+ =09struct ov13858 *ov13858;
+@@ -1729,14 +1788,34 @@ static int ov13858_probe(struct i2c_client *client)
+ =09=09=09=09     "external clock %lu is not supported\n",
+ =09=09=09=09     freq);
+=20
++=09for (unsigned int i =3D 0; i < ARRAY_SIZE(ov13858_supply_names); i++)
++=09=09ov13858->supplies[i].supply =3D ov13858_supply_names[i];
++
++=09ret =3D devm_regulator_bulk_get(ov13858->dev, ARRAY_SIZE(ov13858_supply=
+_names),
++=09=09=09=09      ov13858->supplies);
++=09if (ret)
++=09=09return dev_err_probe(ov13858->dev, ret,
++=09=09=09=09     "failed to get regulators\n");
++
++=09ov13858->reset_gpio =3D devm_gpiod_get_optional(ov13858->dev, "reset",
++=09=09=09=09=09=09      GPIOD_OUT_HIGH);
++=09if (IS_ERR(ov13858->reset_gpio))
++=09=09return dev_err_probe(ov13858->dev,
++=09=09=09=09     PTR_ERR(ov13858->reset_gpio),
++=09=09=09=09     "failed to get reset GPIO\n");
++
+ =09/* Initialize subdev */
+ =09v4l2_i2c_subdev_init(&ov13858->sd, client, &ov13858_subdev_ops);
+=20
++=09ret =3D ov13858_power_on(ov13858->dev);
++=09if (ret)
++=09=09return ret;
++
+ =09/* Check module identity */
+ =09ret =3D ov13858_identify_module(ov13858);
+ =09if (ret) {
+ =09=09dev_err(ov13858->dev, "failed to find sensor: %d\n", ret);
+-=09=09return ret;
++=09=09goto error_power_off;
+ =09}
+=20
+ =09/* Set default mode to max resolution */
+@@ -1744,7 +1823,7 @@ static int ov13858_probe(struct i2c_client *client)
+=20
+ =09ret =3D ov13858_init_controls(ov13858);
+ =09if (ret)
+-=09=09return ret;
++=09=09goto error_power_off;
+=20
+ =09/* Initialize subdev */
+ =09ov13858->sd.internal_ops =3D &ov13858_internal_ops;
+@@ -1780,7 +1859,9 @@ static int ov13858_probe(struct i2c_client *client)
+=20
+ error_handler_free:
+ =09ov13858_free_controls(ov13858);
+-=09dev_err(ov13858->dev, "%s failed:%d\n", __func__, ret);
++
++error_power_off:
++=09ov13858_power_off(ov13858->dev);
+=20
+ =09return ret;
+ }
+@@ -1795,6 +1876,9 @@ static void ov13858_remove(struct i2c_client *client)
+ =09ov13858_free_controls(ov13858);
+=20
+ =09pm_runtime_disable(ov13858->dev);
++=09if (!pm_runtime_status_suspended(ov13858->dev))
++=09=09ov13858_power_off(ov13858->dev);
++=09pm_runtime_set_suspended(ov13858->dev);
+ }
+=20
+ static const struct i2c_device_id ov13858_id_table[] =3D {
+@@ -1817,6 +1901,7 @@ static struct i2c_driver ov13858_i2c_driver =3D {
+ =09.driver =3D {
+ =09=09.name =3D "ov13858",
+ =09=09.acpi_match_table =3D ACPI_PTR(ov13858_acpi_ids),
++=09=09.pm =3D pm_ptr(&ov13858_pm_ops),
+ =09},
+ =09.probe =3D ov13858_probe,
+ =09.remove =3D ov13858_remove,
 --=20
-You may reply to this email to add a comment.
+2.54.0
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+
