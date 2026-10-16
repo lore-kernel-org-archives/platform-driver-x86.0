@@ -1,37 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341E71C3BFC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34280380FEA;
 	Fri, 16 Oct 2026 12:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792152921; cv=none; b=CjRoZbhVlmvflO3YpbLZHRpCwdHCeXb5JgTvz3iXY0AIXlVTp0WnlkkmLvFgcUoa891zia/RqVg+jfvQCAKywQanviOnF983A4sjCLLmr4H9AR7wvAkpG6VpAmxliAF3WDY1ZPCEC4xYrzk/J5BhZoVnxgSjKgTTYHYAVEujHgg=
+	t=1792152922; cv=none; b=cO6GZLUMdbZUoGRKpz618b9FfDiM0cNcQ1SXcfE3zrsEXmY+HbyyrTGkrnCHrDrG1V1Ac3f2J/HeBUAcpXAXgO70+z3831HktCCOgYNF4eBQQhRCGYJjRhDqSIiupANaCF5ZyOlWhCTgECk67XNE9ybypBZZdgBUnYRW4+o4PgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792152921; c=relaxed/simple;
-	bh=HLwzPpaL3zTFOuvjZx6YZu2iqk6DnziCs0DOL7ItLSk=;
+	s=arc-20240116; t=1792152922; c=relaxed/simple;
+	bh=HwqPxEc/VRoAty3zZmRH8dzc7Jd0Viee9QKNZCUAphw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ba8NF6N6Gvcy5OlD/Z+RI1Rgo4BHi53Pf2e1BHanj6rw4X18gEVOmO6iKGNSl4d9EsUQqWRj+vRLocJ3E151rFNfj296t9AWUEwjAV/9/qtcU/l4kmhcyx75iF/kXrDu51Ygs+eBtlToVE6AKUK0i4RmOR3WzK2KGZMfW6rHXWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IrZkpyZe; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=TvQSqkSJ7skl0BtHXz9bthiNL4btR7EiOB+//ifsH4vQczU4QsphojU0vLoY4Bq0QH1NRfmF9A8Imgs+Fzsu1pzYjYesmqzz4wdrVNEqJtGaFvTnokJdSt3+dflIWboCnEiHdNVCocfu0N0oUOjwAccGVXOkxXVYZFLH97E70XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=YgwMMe3K; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IrZkpyZe"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="YgwMMe3K"
 Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 1969082B97;
-	Fri, 16 Oct 2026 14:15:13 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id B4E9E82C14;
+	Fri, 16 Oct 2026 14:15:12 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id xGBu6Dp7cVtC; Fri, 16 Oct 2026 14:15:12 +0200 (CEST)
+ id y3wkXQTkr30U; Fri, 16 Oct 2026 14:15:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1792152912; bh=HLwzPpaL3zTFOuvjZx6YZu2iqk6DnziCs0DOL7ItLSk=;
+	t=1792152911; bh=HwqPxEc/VRoAty3zZmRH8dzc7Jd0Viee9QKNZCUAphw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IrZkpyZesFptld/lempuotj9umOxKSzwl2zbJ9GgakJz/9qFp7eN6qOigkW2oPuK1
-	 Kb74IMcYSqSViuytFOaAZ5whzP6OK331w3HzrmlOJ86ckZZH+NKO2vwFeeeDpZBYue
-	 VD9+4shjzPkrjIX4KAmgzuFgIGtrafiJv3vC3XGhZVLTDYgWO8l+JXk/+LI3gMnUxX
-	 eI1eBZD72VCy2clXctVHvrXPm3K9lzN/3+JCXUcEP/OM9bDI9qLZL63iWJUavPWSt1
-	 ETOfpcK8hFKn52arh7+qXmGvHnu7QZyuzU2gLMooE81hWnYh3+vrHpJmPDo0hgkk64
-	 +Y3x4NX3WjPTQ==
+	b=YgwMMe3KGdM45XT4NkPCBc38VVH8WGWEy80lX3NOLxU+Tp1erwpNe70VHVRyM7iy6
+	 /z/KrFjR2EE3QVPEGZILfB+70Fh0zGzM0AFTrdNASx/l2/kSVBr6Dya4bCZsZiLiKu
+	 j2t7iK22Z9cD5IKbQzE2hJV1KqKDNDHeJhYhZ5aufNDORfPl5r0a7LelkDEtUmUJkE
+	 XLq9ic5pjD8OODFbwZ9YmuCXKJFsOHaqo+bdEH7zSW0o3znbfzmqkgiEsIisbhIDju
+	 Vv9Snu2oj0JLjUqJnRrqjYWkmPTzdv2aMicUJNKhJYJQUFQPx1jdA6rNJNl12ijbhG
+	 4Ll6H86c6lnTw==
 From: Marco Scardovi <scardracs@disroot.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Hans de Goede <hansg@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Marco Scardovi <scardracs@disroot.org>
-Subject: [PATCH v2 4/6] platform/x86: asus-armoury: add power limits quirk for FA608UP
-Date: Fri, 16 Oct 2026 14:14:30 +0200
-Message-ID: <20261016121432.35071-5-scardracs@disroot.org>
+Subject: [PATCH v2 3/6] platform/x86: asus-armoury: add power limits quirk for FA608UH
+Date: Fri, 16 Oct 2026 14:14:29 +0200
+Message-ID: <20261016121432.35071-4-scardracs@disroot.org>
 In-Reply-To: <20261016121432.35071-1-scardracs@disroot.org>
 References: <20261016121432.35071-1-scardracs@disroot.org>
 Precedence: bulk
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a power limits quirk entry for the ASUS FA608UP laptop. The limits
+Add a power limits quirk entry for the ASUS FA608UH laptop. The limits
 are extracted from the device's ThrottleGear XML configuration.
 
 Signed-off-by: Marco Scardovi <scardracs@disroot.org>
@@ -64,13 +64,13 @@ Signed-off-by: Marco Scardovi <scardracs@disroot.org>
 
 --- a/drivers/platform/x86/asus-armoury.h
 +++ b/drivers/platform/x86/asus-armoury.h
-@@ -883,6 +883,37 @@
+@@ -816,6 +816,37 @@
+ 				},
  			},
  		},
- 	},
 +		{
 +			.matches = {
-+				DMI_MATCH(DMI_BOARD_NAME, "FA608UP"),
++				DMI_MATCH(DMI_BOARD_NAME, "FA608UH"),
 +			},
 +			.driver_data = &(struct power_data) {
 +				.ac_data = &(struct power_limits) {
@@ -101,6 +101,6 @@ Signed-off-by: Marco Scardovi <scardracs@disroot.org>
 +		},
  	{
  		.matches = {
- 			DMI_MATCH(DMI_BOARD_NAME, "FA608WI"),
+ 			DMI_MATCH(DMI_BOARD_NAME, "FA608UM"),
 -- 
 2.56.0
