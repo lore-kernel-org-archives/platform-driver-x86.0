@@ -1,220 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A8D47B436;
-	Fri, 16 Oct 2026 10:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE90471408;
+	Fri, 16 Oct 2026 10:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792145241; cv=none; b=XgvhkLyZk10mtFi0L0dwK8p9BS1SELf3IZldCIyDzKR9fqLs/p+FIXgeU7GPBAMo9mbVuynnM3moHpOp/RVMbKTfbM+FPEJ/QnzSoOqvUa7Jd2l4wfK6WHiwJfojmkXYtGwMTxyg7jt7oO2Mvkf3vHD4B6c1SmyzfCJVMA6798A=
+	t=1792147834; cv=none; b=tlvmIU5Eu/PTo7XbReoCXXGW5W9goL1Ukvm7t/RKNrR5xmFQsNTne6faKNKaDCUYadjG99hg6aQhaBqBi4KTwO5r5FlpitUzdPJX6Sb7/wpROVVdRuf2gG3VPhnvuRle9NCkRZCS9ZyV51BwJ5cKXlE+G3vMjJmzXw7cofS7JkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792145241; c=relaxed/simple;
-	bh=ycLYlWgildj1eydfVk7aTjidCEghj5MHoaZtD9xE77s=;
+	s=arc-20240116; t=1792147834; c=relaxed/simple;
+	bh=QuTUpXOUCaUuBOC1UbPUqse6N0EFcQRqSPKqz3NAqFs=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=itoH3S1D3qz+Pk3rSSV0Ti6rybzPR5dEjHvxHc0D0lvT3rECrHyjw5x8Wjkyij0fcORITmHbf08Ub3mhL/c+7IwIYJ0HKG6ibSy0apyi+m4DrS82offFEUeQziTHI1y4tLNbnzVjFnH4X01u9XAgvnfyE04BngMkuB75vXEzVI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GK5nOa8Y; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=o9UF5AM4TQ70PEN7VLkhdw5E2Rt+7CHpiZiKSZVQUDCvu2+w5RsM08srpkKhDCwy7ll7wf+Y7/TxvJG6/8MNfIc/ACNSbZLQKvGsw3KH3+ri76T16VLxqKQgxpT8LpFr31p1Ch83HJRS5oPa0oN2qz5bv7SHOGrTtiPYBZXH6QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Se2sqRSe; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GK5nOa8Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Se2sqRSe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792145236; x=1823681236;
+  t=1792147832; x=1823683832;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ycLYlWgildj1eydfVk7aTjidCEghj5MHoaZtD9xE77s=;
-  b=GK5nOa8YQOu6qlBj4dVmna5/s/UKBcdH1ssxgCs4Kj2CkL2Qpis85THc
-   u9HJJLyxvGE1Xy6Ie4WsG/zDSivP0TX4suKTQChuBJu7AsQ8zowkFCiz8
-   TZgYQ7eDOrXSxBQdenjZvnUBtOqXCbwiOUUCekddgiv5VvCuJ++hLs5M6
-   Gz+V5+nJYu3fnEfLSxXLWjSEhNJOB3nDboTficKyBMsH72gqlfqAvnw8F
-   FHZrY0AwU+eG+NzfOgB34Y3e6AwPr9ix3OizZmjNvyUR9Bn2CC8aqdhpZ
-   z4bwr3dFWuAyAdIXX+iReeMIH5fliRBbp/zpjPCsbQUHxZJ4mrmAya/pL
+  bh=QuTUpXOUCaUuBOC1UbPUqse6N0EFcQRqSPKqz3NAqFs=;
+  b=Se2sqRSeb2FgWNQgLKfCR6Q1N2Zv2ZBvezWG1F3VD7YpQrVzNOzXtD0b
+   xsHK0wwXxVX3mzlre/W0WREwRhoDvDMau1OMdwb8tuJtHSuwXzoffzazP
+   0QoOnqSIiZK6wLMz8sf0i7FxiYeJPM8+3sqvNEaktF5FvvAHCcSUbBBUw
+   2g18eSwv21wIxG1b5Z4buOvArsIVFyp2akKwARqi4h965lDGphZEPsSVZ
+   N6UMfw25cnqXgXe5UW+idQz1oWa35E+Vk/tXzZpaouHfMdRjFtc2DAbDW
+   lUzWL7DJ9gR4BA19c0HdIENCt1gCG+oiebiPBkNpkz7GjW0YPe2B/q4I9
    w==;
-X-CSE-ConnectionGUID: nklBJe3IQQytZdZoIKyKVg==
-X-CSE-MsgGUID: wwalyMZcQKGz0NOzXpCeQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="929206"
+X-CSE-ConnectionGUID: frXJgo58RfqbbVGv8D4peg==
+X-CSE-MsgGUID: HdbjNfjcQU+Ml49qUCZ1MA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="813144"
 X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="929206"
+   d="scan'208";a="813144"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 03:07:15 -0700
-X-CSE-ConnectionGUID: /wE4urAxTWmIVhBbCbBb6Q==
-X-CSE-MsgGUID: +gzDmLQvRimZSjbTKiOl6w==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 03:50:30 -0700
+X-CSE-ConnectionGUID: tS1l6KnoTtyw9/CX2dJCKg==
+X-CSE-MsgGUID: Okq7koC+Ti6Lzl5JCFYy8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="1987796"
+   d="scan'208";a="1991378"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 03:07:12 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 03:50:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 16 Oct 2026 13:07:08 +0300 (EEST)
-To: chitranshmandhaniya@gmail.com
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Chitransh_Mandhaniya@dell.com
-Subject: Re: [PATCH v3 2/2] platform/x86: dell-uart-backlight: recover from
- stray
-In-Reply-To: <20261016093302.55528-3-chitranshmandhaniya@gmail.com>
-Message-ID: <8d97e2d8-fc0e-4f59-38f4-401446add879@linux.intel.com>
-References: <20261004110333.5790-1-chitranshmandhaniya@gmail.com> <20261016093302.55528-1-chitranshmandhaniya@gmail.com> <20261016093302.55528-3-chitranshmandhaniya@gmail.com>
+Date: Fri, 16 Oct 2026 13:50:21 +0300 (EEST)
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    Guenter Roeck <linux@roeck-us.net>, Bjorn Andersson <andersson@kernel.org>, 
+    Abel Vesa <abelvesa@kernel.org>, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] platform: arm64: Add a driver for the EC found
+ on ASUS Glymur machines
+In-Reply-To: <e4cec04d-2c66-4900-940c-d7d3d245cc64@oss.qualcomm.com>
+Message-ID: <f97000c4-496d-0ce1-318a-1df5c0de804b@linux.intel.com>
+References: <20261015-topic-asus_ec-v4-0-af6305ffcb10@oss.qualcomm.com> <20261015-topic-asus_ec-v4-2-af6305ffcb10@oss.qualcomm.com> <ba7830c7-9ad8-6695-f543-c4c419aa9133@linux.intel.com> <e4cec04d-2c66-4900-940c-d7d3d245cc64@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1896846893-1792147821=:1180"
 
-On Fri, 16 Oct 2026, chitranshmandhaniya@gmail.com wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
-> 
-> On some Dell AIO machines the EC occasionally inserts a spurious byte
-> after the cmd-echo in UART backlight response frames. A get-brightness
-> reply "04 0c 0a e5" arrives as "04 0c 0d 0a e5". The length field still
-> reflects the original frame size, so the parser consumes the stray byte
-> as payload and mistakes the real payload for the checksum, returning
-> -EIO.
-> 
-> On the first checksum failure for a fully received frame, drop the byte
-> at the first payload offset, shift the remaining data down by one, and
-> call dell_uart_bl_receive_data() again to re-fetch the checksum byte
-> from the wire. Track total consumed bytes so the exact count is
-> returned to serdev.
-> 
-> The resync is guarded by resp_idx == resp_len to ensure a complete frame
-> was received, preventing memmove on a truncated or out-of-range length
-> field.
-> 
-> Limit this single-byte resync to once per command via a resync_used flag
-> cleared at the start of each transaction.  A second mismatch is still a
-> hard error. Well-formed replies never enter the recovery path.
-> 
-> While at it, switch mutex_init() to devm_mutex_init() so the mutex is
-> automatically destroyed via devres, fixing a missing mutex_destroy()
-> on the teardown path.
-> 
-> Tested on Dell OptiPlex AIO 7410 65W (0TKWC4) where the EC inserts a
-> stray byte on every get-brightness response -- resync fixes it
-> transparently.
-> 
-> Suggested-by: ilpo.jarvinen@linux.intel.com
+--8323328-1896846893-1792147821=:1180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-This is not the correct formatting for a tag (please see 
-Documentation/process/submitting-patches.rst). And my Suggested-by should 
-only be in the devm_mutex_init() change (more on this below).
+On Thu, 15 Oct 2026, Konrad Dybcio wrote:
 
-> Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
-> ---
->  .../platform/x86/dell/dell-uart-backlight.c   | 35 ++++++++++++++++---
->  1 file changed, 31 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
-> index af9c5f9a566f..b0df479a4658 100644
-> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
-> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-> @@ -60,6 +60,7 @@ struct dell_uart_backlight {
->  	u8 resp_len;
->  	u8 resp_max_len;
->  	u8 pending_cmd;
-> +	bool resync_used;
->  	int status;
->  	int power;
->  };
-> @@ -91,6 +92,7 @@ static int dell_uart_bl_command(struct dell_uart_backlight *dell_bl,
->  	dell_bl->resp_len = -1; /* Invalid / unset */
->  	dell_bl->resp_max_len = resp_max_len;
->  	dell_bl->pending_cmd = cmd[1];
-> +	dell_bl->resync_used = false;
->  
->  	/* The TTY buffer should be big enough to take the entire cmd in one go */
->  	ret = serdev_device_write_buf(to_serdev_device(dell_bl->dev), cmd, cmd_len);
-> @@ -256,7 +258,7 @@ static size_t dell_uart_bl_receive_data(struct dell_uart_backlight *dell_bl,
->  static size_t dell_uart_bl_receive(struct serdev_device *serdev, const u8 *data, size_t len)
->  {
->  	struct dell_uart_backlight *dell_bl = serdev_device_get_drvdata(serdev);
-> -	size_t ret;
-> +	size_t consumed;
->  
->  	dev_dbg(dell_bl->dev, "Recv: %*ph\n", (int)len, data);
->  
-> @@ -266,12 +268,35 @@ static size_t dell_uart_bl_receive(struct serdev_device *serdev, const u8 *data,
->  		return len;
->  	}
->  
-> -	ret = dell_uart_bl_receive_data(dell_bl, data, len);
-> +	consumed = dell_uart_bl_receive_data(dell_bl, data, len);
->  	if (dell_bl->status == -EBUSY)
->  		return len; /* Response not complete yet */
+> On 10/15/26 4:24 PM, Ilpo J=C3=A4rvinen wrote:
+> > On Thu, 15 Oct 2026, Konrad Dybcio wrote:
+> >=20
+> >> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>
+> >> Some Qualcomm Snapdragon X2 Elite (Extreme)-based ASUS laptops (at
+> >> least the Zenbook A14 and A16) expose a custom, somewhat
+> >> Qualcomm reference-derived EC interface. Introduce a driver to
+> >> communicate with said EC, allowing for fan speed reporting, keyboard
+> >> backlight setting and receiving of a number of miscellaneous sideband
+> >> events.
+>=20
+> [...]
+>=20
+> >> +/* RAM addresses are sent MSB first, while returned data is LSB first=
+=2E */
+> >> +struct asus_qcom_ec_ram_request {
+> >> +=09__be16 addr;
+> >> +=09u8 count;
+> >> +=09u8 reserved[2];
+> >> +} __packed;
+> >> +
+> >> +struct asus_qcom_ec_ram_response {
+> >> +=09__le16 data;
+> >> +=09u8 unused[3];
+> >> +} __packed;
+> >=20
+> > Endianness stuff looks sane now but __packed also needs an include.
+>=20
+> Some fun statistics:
+>=20
+> $ rg compiler_attributes.h drivers -l | wc -l
+> 30
 
-So again I'm not following logic here. dell_uart_bl_receive_data() 
-consumed all of len but response is still not complete, right? Why we 
-return len and not consumed? I'd expect them to be same in that case but 
-is there a case where they differ?
+You didn't consider compiler.h -> compiler_types.h ->=20
+compiler_attributes.h that seems a guaranteed include path to me. The=20
+numbers would be slightly better with that.
 
-Subtle things like this may make the code harder to follow, because reader 
-will have to ask this kind of questions and then attempt to figure out 
-what case he/she doesn't understand.
+> $ rg __packed drivers -l | wc -l
+> 1228
+>=20
+> [...]
 
-> +	/*
-> +	 * Stray byte after cmd-echo? Drop it, shift data down, re-fetch
-> +	 * checksum. Only attempt when a full frame was received (resp_idx ==
-> +	 * resp_len) to avoid acting on a truncated length field.
-> +	 */
-> +	if (dell_bl->status == -EIO && !dell_bl->resync_used &&
-> +	    dell_bl->resp_idx == dell_bl->resp_len &&
-> +	    dell_bl->resp_len > MIN_RESP_LEN) {
-> +		dell_bl->resync_used = true;
-> +		dell_bl->status = -EBUSY;
-> +
-> +		dev_dbg(dell_bl->dev, "Resync: dropping stray byte 0x%02x at offset %d\n",
-> +			dell_bl->resp[RESP_DATA], RESP_DATA);
-> +
-> +		memmove(&dell_bl->resp[RESP_DATA], &dell_bl->resp[RESP_DATA + 1],
-> +			dell_bl->resp_len - RESP_DATA - 1);
-> +		dell_bl->resp_idx = dell_bl->resp_len - 1;
-> +
-> +		consumed += dell_uart_bl_receive_data(dell_bl, data + consumed, len - consumed);
-> +		if (dell_bl->status == -EBUSY)
-> +			return len; /* Need more data for checksum byte */
+So lets not add another mine to what is already a scary minefield. :-)
 
-I don't follow why consumed is what should be returned because we've eaten 
-everything of len but still are short of bytes? So consumed should be same 
-as len by my own logic but would be more logical to return (if they're 
-equal).
+The indirect include paths are a minefield if somebody ever wants to=20
+refactor a header. I know some maintainers may be more lax on this but=20
+here we try to follow include-what-you-use principle to extent that is=20
+reasonable (when the include path is guaranteed such as=20
+platform_device.h -> device.h or linux/x.h -> asm.h you can only include=20
+the former ones).
 
-Please don't just mindlessly change these to consumed, I could be wrong 
-as I don't fully understand the related logic as it's somewhat messy so 
-following all control flow paths is bit of a challenge (to put it mildly).
+> >> +static int asus_qcom_ec_read_ram(struct asus_ec *ec, u16 addr, u8 cou=
+nt, u16 *out)
+> >> +{
+> >> +=09struct asus_qcom_ec_ram_request req =3D {
+> >> +=09=09.addr =3D cpu_to_be16(addr),
+> >> +=09=09.count =3D count,
+> >> +=09=09.reserved =3D { 0 },
+> >=20
+> > 0 is the default init value so generally =3D {} should be enough but I =
+think=20
+> > it's not necessary to add the reserved member at all because the entire=
+=20
+> > struct should be initialized anyway by the surrounding construct.
+> >=20
+> > With these fixed,
+> >=20
+> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> Yeah I know. I still left it in deliberately so that in case anyone
+> wants to audit the format here and compare it to the DSDT it's more
+> obvious that this wasn't an oversight. Do you still prefer I resend
+> (or maybe you'd like to fix that up while applying, which I don't
+> mind either)?
 
-> +	}
-> +
->  	wake_up(&dell_bl->wait_queue);
-> -	return ret;
-> +	return consumed;
->  }
->  
->  static const struct serdev_device_ops dell_uart_bl_serdev_ops = {
-> @@ -291,7 +316,9 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
->  	if (!dell_bl)
->  		return -ENOMEM;
->  
-> -	mutex_init(&dell_bl->mutex);
-> +	ret = devm_mutex_init(dev, &dell_bl->mutex);
-> +	if (ret)
-> +		return ret;
+We can keep the member there but I'll change it to {}.
 
-Thanks but when I says something is "unrelated" to the patch/series. It 
-means I've just noticed another issue while reviewing the patch/series,
-such extra changes should be made in own patch(es).
+I can try to remember to fix these while applying (I'm good in=20
+forgetting though :-)). But I at least try to check all the comments made=
+=20
+to the last version.
 
-We try to make all changes such that they contain only one logical change 
-in its minimal form, and no more. In rare cases we need to compromise from 
-that rule to not break anything but this is not such a case and could 
-definitely be in own patch.
-
-When you have to write in changelog an itemized list or say "while at 
-it", "in addition", etc. it's often indicator that you're combining more 
-than one logical change. Always when writing such phrase it's good to 
-stop for a moment, and ask oneself if that thing could be safely moved to 
-own patch instead. Very often the answer is yes.
-
--- 
+--=20
  i.
 
+--8323328-1896846893-1792147821=:1180--
