@@ -1,165 +1,317 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE90471408;
-	Fri, 16 Oct 2026 10:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FF946D2A9;
+	Fri, 16 Oct 2026 11:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792147834; cv=none; b=tlvmIU5Eu/PTo7XbReoCXXGW5W9goL1Ukvm7t/RKNrR5xmFQsNTne6faKNKaDCUYadjG99hg6aQhaBqBi4KTwO5r5FlpitUzdPJX6Sb7/wpROVVdRuf2gG3VPhnvuRle9NCkRZCS9ZyV51BwJ5cKXlE+G3vMjJmzXw7cofS7JkY=
+	t=1792148571; cv=none; b=A+NWTQDCQSQVRPfB6hXwJLz6LPX3xscqBwfSfB5WQAXY/cO+Mo8CxaAPugZ7aL3/VTbjTk9rQuuiuN3TvSXx1w06vJRn38+9YhvAhHEDASBvAQZuh7IVYZ/dJjgiAsOeEZWxvWJ3V2Z/CQc6DEVfnKEodVLSWc+7YCOf9XfHBRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792147834; c=relaxed/simple;
-	bh=QuTUpXOUCaUuBOC1UbPUqse6N0EFcQRqSPKqz3NAqFs=;
+	s=arc-20240116; t=1792148571; c=relaxed/simple;
+	bh=cd9NHChjukRyOmLhluj4QgQvN2dgP1Kr8gC4ABon+98=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=o9UF5AM4TQ70PEN7VLkhdw5E2Rt+7CHpiZiKSZVQUDCvu2+w5RsM08srpkKhDCwy7ll7wf+Y7/TxvJG6/8MNfIc/ACNSbZLQKvGsw3KH3+ri76T16VLxqKQgxpT8LpFr31p1Ch83HJRS5oPa0oN2qz5bv7SHOGrTtiPYBZXH6QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Se2sqRSe; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=fj2idNyZrulGSfLVUg+j4KlXRrEJntG1ns14yL4MubXjl5yPPmyF7xWWJItDYSIicS0L3Cd+RSG4dCwnbbU3V+mGGeF6j0cxHWx8a0lyj4qkQ0icGANHO940wT6poMxsdGeOchikNOV0CsfARVAHdXrvUSYc3iqwvgDxFRQL1+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ihF6dBbW; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Se2sqRSe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ihF6dBbW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792147832; x=1823683832;
+  t=1792148571; x=1823684571;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=QuTUpXOUCaUuBOC1UbPUqse6N0EFcQRqSPKqz3NAqFs=;
-  b=Se2sqRSeb2FgWNQgLKfCR6Q1N2Zv2ZBvezWG1F3VD7YpQrVzNOzXtD0b
-   xsHK0wwXxVX3mzlre/W0WREwRhoDvDMau1OMdwb8tuJtHSuwXzoffzazP
-   0QoOnqSIiZK6wLMz8sf0i7FxiYeJPM8+3sqvNEaktF5FvvAHCcSUbBBUw
-   2g18eSwv21wIxG1b5Z4buOvArsIVFyp2akKwARqi4h965lDGphZEPsSVZ
-   N6UMfw25cnqXgXe5UW+idQz1oWa35E+Vk/tXzZpaouHfMdRjFtc2DAbDW
-   lUzWL7DJ9gR4BA19c0HdIENCt1gCG+oiebiPBkNpkz7GjW0YPe2B/q4I9
+  bh=cd9NHChjukRyOmLhluj4QgQvN2dgP1Kr8gC4ABon+98=;
+  b=ihF6dBbW7PIJKcKOMamYc4rutfybYnteeEOx6N38Eq8/iza78MyCuL0p
+   oCFP3C1OYDedywcW6geMfivc2wU89JV9rNFQujnD8dGC37AVWZNh6YLCu
+   vNKCQHRVwCKXvc7AWMkvyuYRAfnxuw8TbOiuXK4W4lWC/FEnoNhjJcrsx
+   /IdBPzHq4b9nf/uvlKRB1T9sncRznszh5+G3YoTmyKOiuEUmeoRHBM9mp
+   wTgHJcu97/L97Yu2uJViU8BJrWQ2ueveKeXnQPtyCvsRo+0n8zoK7vv+8
+   NOsaSXLC8q0ivaRodE4+uyfUblnvW9c4hNbQGz+2PtqirMLTqWCkweCJj
    w==;
-X-CSE-ConnectionGUID: frXJgo58RfqbbVGv8D4peg==
-X-CSE-MsgGUID: HdbjNfjcQU+Ml49qUCZ1MA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="813144"
+X-CSE-ConnectionGUID: s7zTbn0JStaQ6RxzCXJk/Q==
+X-CSE-MsgGUID: 3IswGisASVanC9zX72kZgQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="829746"
 X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="813144"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 03:50:30 -0700
-X-CSE-ConnectionGUID: tS1l6KnoTtyw9/CX2dJCKg==
-X-CSE-MsgGUID: Okq7koC+Ti6Lzl5JCFYy8g==
+   d="scan'208";a="829746"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:02:50 -0700
+X-CSE-ConnectionGUID: uX//t1EwQLuzSr+4ziQVIA==
+X-CSE-MsgGUID: vapTHZbHSPSx4qTZZxxgnw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="1991378"
+   d="scan'208";a="2284183"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 03:50:26 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:02:46 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 16 Oct 2026 13:50:21 +0300 (EEST)
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Guenter Roeck <linux@roeck-us.net>, Bjorn Andersson <andersson@kernel.org>, 
-    Abel Vesa <abelvesa@kernel.org>, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] platform: arm64: Add a driver for the EC found
- on ASUS Glymur machines
-In-Reply-To: <e4cec04d-2c66-4900-940c-d7d3d245cc64@oss.qualcomm.com>
-Message-ID: <f97000c4-496d-0ce1-318a-1df5c0de804b@linux.intel.com>
-References: <20261015-topic-asus_ec-v4-0-af6305ffcb10@oss.qualcomm.com> <20261015-topic-asus_ec-v4-2-af6305ffcb10@oss.qualcomm.com> <ba7830c7-9ad8-6695-f543-c4c419aa9133@linux.intel.com> <e4cec04d-2c66-4900-940c-d7d3d245cc64@oss.qualcomm.com>
+Date: Fri, 16 Oct 2026 14:02:42 +0300 (EEST)
+To: Erwan Velu <erwanaliasr1@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+    Carlos Bilbao <carlos.bilbao@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/4] platform/x86/amd/hsmp: Add /sys/devices/amd_hsmp
+ socket devices
+In-Reply-To: <20261007125908.321186-3-erwanaliasr1@gmail.com>
+Message-ID: <0ce3cf8c-2e00-835c-caed-c0b099a70c3b@linux.intel.com>
+References: <20261007125908.321186-1-erwanaliasr1@gmail.com> <20261007125908.321186-3-erwanaliasr1@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1896846893-1792147821=:1180"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 7 Oct 2026, Erwan Velu wrote:
 
---8323328-1896846893-1792147821=:1180
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> From: Erwan Velu <e.velu@criteo.com>
+> 
+> The per-socket attributes live under /sys/devices/platform/AMDI0097:0X
+> with the ACPI driver, while the platform driver uses
+> /sys/devices/platform/amd_hsmp/socketN. Userspace has to know which
+> driver probed to find them.
+> 
+> Add a driver-independent /sys/devices/amd_hsmp/socketN device per
+> socket carrying hsmp_sock_groups, and register it from the ACPI driver.
+> The AMDI0097:0X attributes are kept, as they are documented ABI.
+> 
+> The socket device is unregistered before remove takes hsmp_sock_rwsem:
+> device_unregister() waits for in-flight sysfs reads, which take the
+> rwsem for read.
+> 
+> Assisted-by: claude-opus-5-5
+> Signed-off-by: Erwan Velu <e.velu@criteo.com>
+> ---
+>  Documentation/arch/x86/amd_hsmp.rst   |   8 +-
+>  drivers/platform/x86/amd/hsmp/acpi.c  |   6 ++
+>  drivers/platform/x86/amd/hsmp/hsmp.h  |   5 ++
+>  drivers/platform/x86/amd/hsmp/sysfs.c | 112 +++++++++++++++++++++++++-
+>  4 files changed, 129 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
+> index fa1fc240e212..aba4a009bd8d 100644
+> --- a/Documentation/arch/x86/amd_hsmp.rst
+> +++ b/Documentation/arch/x86/amd_hsmp.rst
+> @@ -57,6 +57,12 @@ In-kernel integration:
+>  HSMP sysfs interface
+>  ====================
+>  
+> +The ACPI driver exposes its per socket sysfs files in a per socket
+> +directory created at /sys/devices/amd_hsmp/socket%d/.
+> +
+> +For backward compatibility, the files are also available under
+> +/sys/devices/platform/AMDI0097:0X/.
+> +
+>  1. Metrics table binary sysfs
+>  
+>  AMD MI300A MCM provides GET_METRICS_TABLE message to retrieve
+> @@ -80,7 +86,7 @@ The same is defined in the amd_hsmp.h header.
+>  
+>  2. HSMP telemetry sysfs files
+>  
+> -Following sysfs files are available at /sys/devices/platform/AMDI0097:0X/.
+> +Following sysfs files are available at /sys/devices/amd_hsmp/socket%d/.
+>  
+>  * c0_residency_input: Percentage of cores in C0 state.
+>  * prochot_status: Reports 1 if the processor is at thermal threshold value,
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> index d76979baffa8..468d4b1515db 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -441,6 +441,10 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
+>  		dev_dbg(&pdev->dev, "AMD HSMP ACPI misc device registered\n");
+>  	}
+>  
+> +	ret = hsmp_sock_dev_register(dev_get_drvdata(&pdev->dev));
+> +	if (ret)
+> +		dev_warn(&pdev->dev, "Failed to register HSMP socket device: %d\n", ret);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -448,6 +452,8 @@ static void hsmp_acpi_remove(struct platform_device *pdev)
+>  {
+>  	struct hsmp_socket *sock = dev_get_drvdata(&pdev->dev);
+>  
+> +	hsmp_sock_dev_unregister(sock);
+> +
+>  	/*
+>  	 * Serialize the kref_put() and any release it triggers against a
+>  	 * concurrent probe, and drain the data plane for the whole
+> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+> index 692721e2e6d3..f638edd7768b 100644
+> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
+> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+> @@ -28,6 +28,7 @@
+>  
+>  #define HSMP_CDEV_NAME		"hsmp_cdev"
+>  #define HSMP_DEVNODE_NAME	"hsmp"
+> +#define HSMP_ROOT_DEV_NAME	"amd_hsmp"
+>  #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
+>  
+>  #define DRIVER_VERSION		"2.6"
+> @@ -47,6 +48,7 @@ struct hsmp_socket {
+>  	/* Size of the region mapped at @metric_tbl_addr, as reported by SMU */
+>  	size_t metric_tbl_size;
+>  	void __iomem *virt_base_addr;
+> +	struct device *sysfs_dev;
+>  	struct semaphore hsmp_sem;
+>  	/* Serializes HSMP_GET_METRIC_TABLE fill-and-copy for this socket */
+>  	struct mutex metric_read_lock;
+> @@ -80,6 +82,9 @@ int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+>  static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return 0; }
+>  #endif
+>  int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args);
+> +int hsmp_sock_dev_register(struct hsmp_socket *sock);
+> +void hsmp_sock_dev_unregister(struct hsmp_socket *sock);
+> +
+>  extern const struct attribute_group *hsmp_sock_groups[];
+>  
+>  /*
+> diff --git a/drivers/platform/x86/amd/hsmp/sysfs.c b/drivers/platform/x86/amd/hsmp/sysfs.c
+> index b1db3b4d77b9..e9e91b640b2a 100644
+> --- a/drivers/platform/x86/amd/hsmp/sysfs.c
+> +++ b/drivers/platform/x86/amd/hsmp/sysfs.c
+> @@ -4,7 +4,8 @@
+>   * Copyright (c) 2024, AMD.
+>   * All Rights Reserved.
+>   *
+> - * This file provides the per-socket sysfs attributes of the HSMP interface.
+> + * This file provides the per-socket sysfs attributes of the HSMP interface
+> + * and the /sys/devices/amd_hsmp/socket%u devices carrying them.
+>   */
+>  
+>  #include <asm/amd/hsmp.h>
+> @@ -12,7 +13,12 @@
+>  #include <linux/array_size.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/bits.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/lockdep.h>
+> +#include <linux/mutex.h>
+> +#include <linux/slab.h>
+>  #include <linux/sysfs.h>
+>  
+>  #include "hsmp.h"
+> @@ -336,3 +342,107 @@ const struct attribute_group *hsmp_sock_groups[] = {
+>  	NULL
+>  };
+>  EXPORT_SYMBOL_NS_GPL(hsmp_sock_groups, "AMD_HSMP");
+> +
+> +/*
+> + * /sys/devices/amd_hsmp is created when the first socket device is registered
+> + * and removed with the last one. hsmp_root_lock serializes that against the
+> + * per-socket register/unregister calls.
+> + */
+> +static DEFINE_MUTEX(hsmp_root_lock);
+> +static struct device *hsmp_root_dev;
+> +static unsigned int hsmp_root_users;
+> +
+> +static void hsmp_sock_dev_release(struct device *dev)
+> +{
+> +	kfree(dev);
+> +}
+> +
+> +/**
+> + * hsmp_sock_dev_register() - Create /sys/devices/amd_hsmp/socket%u for @sock.
+> + * @sock: fully probed HSMP socket.
+> + *
+> + * The device carries hsmp_sock_groups with @sock as its drvdata, so @sock must
+> + * stay valid until hsmp_sock_dev_unregister() returns.
+> + *
+> + * Return: 0 on success, a negative error code otherwise.
+> + */
+> +int hsmp_sock_dev_register(struct hsmp_socket *sock)
+> +{
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	guard(mutex)(&hsmp_root_lock);
+> +
+> +	if (!hsmp_root_users) {
+> +		hsmp_root_dev = root_device_register(HSMP_ROOT_DEV_NAME);
+> +		if (IS_ERR(hsmp_root_dev)) {
+> +			ret = PTR_ERR(hsmp_root_dev);
+> +			hsmp_root_dev = NULL;
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Built by hand rather than with device_create_with_groups(), which
+> +	 * rejects a NULL class: these devices belong to no class or bus.
+> +	 */
+> +	dev = kzalloc_obj(*dev);
+> +	if (!dev) {
+> +		ret = -ENOMEM;
+> +		goto err_root;
+> +	}
+> +
+> +	device_initialize(dev);
+> +	dev->parent = hsmp_root_dev;
+> +	dev->groups = hsmp_sock_groups;
+> +	dev->release = hsmp_sock_dev_release;
+> +	dev_set_drvdata(dev, sock);
+> +
+> +	ret = dev_set_name(dev, "socket%u", sock->sock_ind);
+> +	if (!ret)
+> +		ret = device_add(dev);
+> +	if (ret) {
 
-On Thu, 15 Oct 2026, Konrad Dybcio wrote:
+Tricky control logic. Preferrably handle errors first.
 
-> On 10/15/26 4:24 PM, Ilpo J=C3=A4rvinen wrote:
-> > On Thu, 15 Oct 2026, Konrad Dybcio wrote:
-> >=20
-> >> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>
-> >> Some Qualcomm Snapdragon X2 Elite (Extreme)-based ASUS laptops (at
-> >> least the Zenbook A14 and A16) expose a custom, somewhat
-> >> Qualcomm reference-derived EC interface. Introduce a driver to
-> >> communicate with said EC, allowing for fan speed reporting, keyboard
-> >> backlight setting and receiving of a number of miscellaneous sideband
-> >> events.
->=20
-> [...]
->=20
-> >> +/* RAM addresses are sent MSB first, while returned data is LSB first=
-=2E */
-> >> +struct asus_qcom_ec_ram_request {
-> >> +=09__be16 addr;
-> >> +=09u8 count;
-> >> +=09u8 reserved[2];
-> >> +} __packed;
-> >> +
-> >> +struct asus_qcom_ec_ram_response {
-> >> +=09__le16 data;
-> >> +=09u8 unused[3];
-> >> +} __packed;
-> >=20
-> > Endianness stuff looks sane now but __packed also needs an include.
->=20
-> Some fun statistics:
->=20
-> $ rg compiler_attributes.h drivers -l | wc -l
-> 30
+> +		put_device(dev);
+> +		goto err_root;
+> +	}
+> +
+> +	sock->sysfs_dev = dev;
+> +	hsmp_root_users++;
 
-You didn't consider compiler.h -> compiler_types.h ->=20
-compiler_attributes.h that seems a guaranteed include path to me. The=20
-numbers would be slightly better with that.
+Why reinvent the wheel and not use kref.h? It got immediately complicated 
+on the rollback path when you tried to do this with your own approach.
 
-> $ rg __packed drivers -l | wc -l
-> 1228
->=20
-> [...]
+> +	return 0;
+> +
+> +err_root:
+> +	if (!hsmp_root_users) {
+> +		root_device_unregister(hsmp_root_dev);
+> +		hsmp_root_dev = NULL;
+> +	}
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_dev_register, "AMD_HSMP");
+> +
+> +/**
+> + * hsmp_sock_dev_unregister() - Remove /sys/devices/amd_hsmp/socket%u for @sock.
+> + * @sock: HSMP socket; a no-op if its device was never registered.
+> + *
+> + * device_unregister() waits for in-flight show/read handlers, which take
+> + * hsmp_sock_rwsem for read. The caller must therefore not hold it, or a
+> + * concurrent sysfs read would deadlock the teardown.
+> + */
+> +void hsmp_sock_dev_unregister(struct hsmp_socket *sock)
+> +{
+> +	lockdep_assert_not_held(&hsmp_sock_rwsem);
+> +
+> +	guard(mutex)(&hsmp_root_lock);
+> +
+> +	if (!sock->sysfs_dev)
+> +		return;
+> +
+> +	device_unregister(sock->sysfs_dev);
+> +	sock->sysfs_dev = NULL;
+> +
+> +	if (!--hsmp_root_users) {
+> +		root_device_unregister(hsmp_root_dev);
+> +		hsmp_root_dev = NULL;
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_dev_unregister, "AMD_HSMP");
+> 
 
-So lets not add another mine to what is already a scary minefield. :-)
-
-The indirect include paths are a minefield if somebody ever wants to=20
-refactor a header. I know some maintainers may be more lax on this but=20
-here we try to follow include-what-you-use principle to extent that is=20
-reasonable (when the include path is guaranteed such as=20
-platform_device.h -> device.h or linux/x.h -> asm.h you can only include=20
-the former ones).
-
-> >> +static int asus_qcom_ec_read_ram(struct asus_ec *ec, u16 addr, u8 cou=
-nt, u16 *out)
-> >> +{
-> >> +=09struct asus_qcom_ec_ram_request req =3D {
-> >> +=09=09.addr =3D cpu_to_be16(addr),
-> >> +=09=09.count =3D count,
-> >> +=09=09.reserved =3D { 0 },
-> >=20
-> > 0 is the default init value so generally =3D {} should be enough but I =
-think=20
-> > it's not necessary to add the reserved member at all because the entire=
-=20
-> > struct should be initialized anyway by the surrounding construct.
-> >=20
-> > With these fixed,
-> >=20
-> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> Yeah I know. I still left it in deliberately so that in case anyone
-> wants to audit the format here and compare it to the DSDT it's more
-> obvious that this wasn't an oversight. Do you still prefer I resend
-> (or maybe you'd like to fix that up while applying, which I don't
-> mind either)?
-
-We can keep the member there but I'll change it to {}.
-
-I can try to remember to fix these while applying (I'm good in=20
-forgetting though :-)). But I at least try to check all the comments made=
-=20
-to the last version.
-
---=20
+-- 
  i.
 
---8323328-1896846893-1792147821=:1180--
