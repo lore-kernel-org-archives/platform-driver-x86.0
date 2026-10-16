@@ -1,60 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FF946D2A9;
-	Fri, 16 Oct 2026 11:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086704756DD;
+	Fri, 16 Oct 2026 11:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792148571; cv=none; b=A+NWTQDCQSQVRPfB6hXwJLz6LPX3xscqBwfSfB5WQAXY/cO+Mo8CxaAPugZ7aL3/VTbjTk9rQuuiuN3TvSXx1w06vJRn38+9YhvAhHEDASBvAQZuh7IVYZ/dJjgiAsOeEZWxvWJ3V2Z/CQc6DEVfnKEodVLSWc+7YCOf9XfHBRU=
+	t=1792149150; cv=none; b=dIiUSUYNU5EQiGex4wBPLAG2EWEozFYe2HYkzxLtZFdRLoyBAix0sH6Cg4/RhIMhfwEf6LBc85jmLAjzCvtcYS5UQjrXRrJhOM1G+pT2rJlbSudxjpMzCRdcUl+FYwDQNk5LUwJo/LQPK0mwghZ7GGloXeb1zbS/KUnO1p/mnHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792148571; c=relaxed/simple;
-	bh=cd9NHChjukRyOmLhluj4QgQvN2dgP1Kr8gC4ABon+98=;
+	s=arc-20240116; t=1792149150; c=relaxed/simple;
+	bh=4VJ2z5A9KKIT6W0gydKidsgD20kaen4w5A0B+vkmkJQ=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fj2idNyZrulGSfLVUg+j4KlXRrEJntG1ns14yL4MubXjl5yPPmyF7xWWJItDYSIicS0L3Cd+RSG4dCwnbbU3V+mGGeF6j0cxHWx8a0lyj4qkQ0icGANHO940wT6poMxsdGeOchikNOV0CsfARVAHdXrvUSYc3iqwvgDxFRQL1+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ihF6dBbW; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=AJJkXHHn5sh4qzumv2rdo7tdflQiuQhXpXrPKcqvYMrHX0m3FYzojehg/+Z280hRxy/i37r+nlVx5ocau+g6Pqr/08U5vxSKmNVW+Qd2lk4cdRjOEUGIAlY9lzgZ9pe8g7MvwmuR9uLf02KHWNva1kmHbFYAU/shcDziLZ+wPYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhWQ1Qc0; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ihF6dBbW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhWQ1Qc0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792148571; x=1823684571;
+  t=1792149147; x=1823685147;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=cd9NHChjukRyOmLhluj4QgQvN2dgP1Kr8gC4ABon+98=;
-  b=ihF6dBbW7PIJKcKOMamYc4rutfybYnteeEOx6N38Eq8/iza78MyCuL0p
-   oCFP3C1OYDedywcW6geMfivc2wU89JV9rNFQujnD8dGC37AVWZNh6YLCu
-   vNKCQHRVwCKXvc7AWMkvyuYRAfnxuw8TbOiuXK4W4lWC/FEnoNhjJcrsx
-   /IdBPzHq4b9nf/uvlKRB1T9sncRznszh5+G3YoTmyKOiuEUmeoRHBM9mp
-   wTgHJcu97/L97Yu2uJViU8BJrWQ2ueveKeXnQPtyCvsRo+0n8zoK7vv+8
-   NOsaSXLC8q0ivaRodE4+uyfUblnvW9c4hNbQGz+2PtqirMLTqWCkweCJj
-   w==;
-X-CSE-ConnectionGUID: s7zTbn0JStaQ6RxzCXJk/Q==
-X-CSE-MsgGUID: 3IswGisASVanC9zX72kZgQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="829746"
+  bh=4VJ2z5A9KKIT6W0gydKidsgD20kaen4w5A0B+vkmkJQ=;
+  b=jhWQ1Qc0QSmp86XmyIZOtkfU4tUHPhFEOwaV8Pa/RgsM3OGH6LeDKEJi
+   /o2uBedBTNftaD5BtaToz/ySAQgKUgw2hAprKqolDjATZkm2ogA0LHKDd
+   4S/dJ7WeJIGry973PbRCbnCUbDVUQsuoEM3/AJYPO9C1l3UdBIjKgq/3y
+   HFWMQBgkilStmPU6Kaa7z8cUrvRtu5OSyZbZCTCry+b0jv2u2+1jJG9AH
+   EnQLqilil7yDFUobnriC3c+Sr4dW4q2X2QSZX60JcUGtJFYotN8A90Vdh
+   Wm3u32enoFcTyigBZTmSF5TtW7Wk7hLWc4kERzrZHx0yK5Vvkh0mhYuLf
+   Q==;
+X-CSE-ConnectionGUID: hVO7eo90T8WiR8mGH7zehA==
+X-CSE-MsgGUID: CrHW76BiS5SSkfx/VpTa3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="814772"
 X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="829746"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:02:50 -0700
-X-CSE-ConnectionGUID: uX//t1EwQLuzSr+4ziQVIA==
-X-CSE-MsgGUID: vapTHZbHSPSx4qTZZxxgnw==
+   d="scan'208";a="814772"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:12:26 -0700
+X-CSE-ConnectionGUID: z22QST8jRWu6IMdnIuF33A==
+X-CSE-MsgGUID: oRwvTB6jSSKuG39AuXvJjQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="2284183"
+   d="scan'208";a="1880042"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:02:46 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:12:23 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 16 Oct 2026 14:02:42 +0300 (EEST)
-To: Erwan Velu <erwanaliasr1@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
-    Carlos Bilbao <carlos.bilbao@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+Date: Fri, 16 Oct 2026 14:12:18 +0300 (EEST)
+To: Alex Yeo <alexyeo362@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+    Kenneth Chan <kenneth.t.chan@gmail.com>, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] platform/x86/amd/hsmp: Add /sys/devices/amd_hsmp
- socket devices
-In-Reply-To: <20261007125908.321186-3-erwanaliasr1@gmail.com>
-Message-ID: <0ce3cf8c-2e00-835c-caed-c0b099a70c3b@linux.intel.com>
-References: <20261007125908.321186-1-erwanaliasr1@gmail.com> <20261007125908.321186-3-erwanaliasr1@gmail.com>
+Subject: Re: [RFC PATCH v3] platform/x86: panasonic-laptop: Add platform_profile
+ support
+In-Reply-To: <20261007190446.38862-1-alexyeo362@gmail.com>
+Message-ID: <31bc2c6d-5d06-e278-a701-0bd4138598f9@linux.intel.com>
+References: <20261007190446.38862-1-alexyeo362@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,255 +62,374 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 7 Oct 2026, Erwan Velu wrote:
+On Thu, 8 Oct 2026, Alex Yeo wrote:
 
-> From: Erwan Velu <e.velu@criteo.com>
+> Expose firmware thermal and power management policies via the
+> platform_profile interface.
 > 
-> The per-socket attributes live under /sys/devices/platform/AMDI0097:0X
-> with the ACPI driver, while the platform driver uses
-> /sys/devices/platform/amd_hsmp/socketN. Userspace has to know which
-> driver probed to find them.
+> Supported and tested models:
+>  - CF-RZ6 (2016)
+>  - CF-SV8 (2019)
+>  - CF-QV9 (2020)
+>  - CF-SR4 (2024)
 > 
-> Add a driver-independent /sys/devices/amd_hsmp/socketN device per
-> socket carrying hsmp_sock_groups, and register it from the ACPI driver.
-> The AMDI0097:0X attributes are kept, as they are documented ABI.
+> Firmware fan operating mode and the TDP limit switch are mapped onto
+> the Linux platform_profile ABI.
 > 
-> The socket device is unregistered before remove takes hsmp_sock_rwsem:
-> device_unregister() waits for in-flight sysfs reads, which take the
-> rwsem for read.
+> This implementation queries the firmware for every get().
+> CUSTOM is returned when the current state is not recognized.
+> The set() callback writes the values regardless of what the
+> current fan mode and TDP limit is.
 > 
-> Assisted-by: claude-opus-5-5
-> Signed-off-by: Erwan Velu <e.velu@criteo.com>
+>  - Introduce as separate platform_driver
+>  - Used DEFINE for driver and platform_profile device name
+>  - DMI quirks restrict support to tested models
+>  - When raising TDP, fan mode is switched first
+>  - When limiting TDP, TDP limit is applied first
+>  - ACPI handle for the EC device was used as the EC path varies
+>    slightly between models.
+>  - This device is optional: keep hotkey and everything already
+>    loaded if profile driver fails for any reason.
+> 
+> Signed-off-by: Alex Yeo <alexyeo362@gmail.com>
 > ---
->  Documentation/arch/x86/amd_hsmp.rst   |   8 +-
->  drivers/platform/x86/amd/hsmp/acpi.c  |   6 ++
->  drivers/platform/x86/amd/hsmp/hsmp.h  |   5 ++
->  drivers/platform/x86/amd/hsmp/sysfs.c | 112 +++++++++++++++++++++++++-
->  4 files changed, 129 insertions(+), 2 deletions(-)
+> v3:
+>  - Removed sysfs.h import
+>  - Refactored platform profile probe function to use a different pattern
+>    (check warn_on, continue on double unset, then set)
 > 
-> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-> index fa1fc240e212..aba4a009bd8d 100644
-> --- a/Documentation/arch/x86/amd_hsmp.rst
-> +++ b/Documentation/arch/x86/amd_hsmp.rst
-> @@ -57,6 +57,12 @@ In-kernel integration:
->  HSMP sysfs interface
->  ====================
->  
-> +The ACPI driver exposes its per socket sysfs files in a per socket
-> +directory created at /sys/devices/amd_hsmp/socket%d/.
-> +
-> +For backward compatibility, the files are also available under
-> +/sys/devices/platform/AMDI0097:0X/.
-> +
->  1. Metrics table binary sysfs
->  
->  AMD MI300A MCM provides GET_METRICS_TABLE message to retrieve
-> @@ -80,7 +86,7 @@ The same is defined in the amd_hsmp.h header.
->  
->  2. HSMP telemetry sysfs files
->  
-> -Following sysfs files are available at /sys/devices/platform/AMDI0097:0X/.
-> +Following sysfs files are available at /sys/devices/amd_hsmp/socket%d/.
->  
->  * c0_residency_input: Percentage of cores in C0 state.
->  * prochot_status: Reports 1 if the processor is at thermal threshold value,
-> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index d76979baffa8..468d4b1515db 100644
-> --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -441,6 +441,10 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
->  		dev_dbg(&pdev->dev, "AMD HSMP ACPI misc device registered\n");
->  	}
->  
-> +	ret = hsmp_sock_dev_register(dev_get_drvdata(&pdev->dev));
-> +	if (ret)
-> +		dev_warn(&pdev->dev, "Failed to register HSMP socket device: %d\n", ret);
-> +
->  	return 0;
->  }
->  
-> @@ -448,6 +452,8 @@ static void hsmp_acpi_remove(struct platform_device *pdev)
->  {
->  	struct hsmp_socket *sock = dev_get_drvdata(&pdev->dev);
->  
-> +	hsmp_sock_dev_unregister(sock);
-> +
->  	/*
->  	 * Serialize the kref_put() and any release it triggers against a
->  	 * concurrent probe, and drain the data plane for the whole
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index 692721e2e6d3..f638edd7768b 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -28,6 +28,7 @@
->  
->  #define HSMP_CDEV_NAME		"hsmp_cdev"
->  #define HSMP_DEVNODE_NAME	"hsmp"
-> +#define HSMP_ROOT_DEV_NAME	"amd_hsmp"
->  #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
->  
->  #define DRIVER_VERSION		"2.6"
-> @@ -47,6 +48,7 @@ struct hsmp_socket {
->  	/* Size of the region mapped at @metric_tbl_addr, as reported by SMU */
->  	size_t metric_tbl_size;
->  	void __iomem *virt_base_addr;
-> +	struct device *sysfs_dev;
->  	struct semaphore hsmp_sem;
->  	/* Serializes HSMP_GET_METRIC_TABLE fill-and-copy for this socket */
->  	struct mutex metric_read_lock;
-> @@ -80,6 +82,9 @@ int hsmp_create_sensor(struct device *dev, u16 sock_ind);
->  static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return 0; }
->  #endif
->  int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args);
-> +int hsmp_sock_dev_register(struct hsmp_socket *sock);
-> +void hsmp_sock_dev_unregister(struct hsmp_socket *sock);
-> +
->  extern const struct attribute_group *hsmp_sock_groups[];
->  
->  /*
-> diff --git a/drivers/platform/x86/amd/hsmp/sysfs.c b/drivers/platform/x86/amd/hsmp/sysfs.c
-> index b1db3b4d77b9..e9e91b640b2a 100644
-> --- a/drivers/platform/x86/amd/hsmp/sysfs.c
-> +++ b/drivers/platform/x86/amd/hsmp/sysfs.c
-> @@ -4,7 +4,8 @@
->   * Copyright (c) 2024, AMD.
->   * All Rights Reserved.
->   *
-> - * This file provides the per-socket sysfs attributes of the HSMP interface.
-> + * This file provides the per-socket sysfs attributes of the HSMP interface
-> + * and the /sys/devices/amd_hsmp/socket%u devices carrying them.
+> v2: https://lore.kernel.org/platform-driver-x86/20261006085021.853827-1-alexyeo362@gmail.com/
+>  - Refactored code to use its own platform_driver
+>  - Removed DEFINE_FREE and its corresponding __free as its addition
+>    in this module is inappropriate
+>  - Removed pr_fmt line as its addition to this patch is inappropriate
+>  - Added DMI check during __init to prevent attempt of platform profile
+>    device loading on unsupported hardware
+>  - Fixed use of enums as truth values by adding explicit comparisons
+>  - Added *profile_pdev to keep track of new platform_driver
+>  - Removed extra spaces in the quirk definitions
+>  - Added helper function for calling EC methods for simplicity
+>  - Use ARRAY_SIZE() for for loops and added include for array_size.h
+>  - Refactored pcc_profile to be a pointer in platform profile set
+>    function
+>  - Use WARN_ON() when a malformed quirk is detected in the platform
+>    profile probe function
+>  - Avoid use of status as variable name if not acpi_status
+>  - Added Kconfig line for ACPI_PLATFORM_PROFILE
+>  - Removed bool .use_platform_profiles from the quirks struct as it is
+>    no longer needed as a result of the platform_driver being separate.
+>  - Moved DMI quirk matching in probe function before devm_kzalloc of
+>    driver struct
+> 
+> v1: https://lore.kernel.org/platform-driver-x86/20260805180544.1134916-1-alexyeo362@gmail.com/
+> 
+> This RFC patch adds support for mapping firmware thermal and CPU power
+> operating policy to platform_profile for Panasonic Let's Note laptops.
+> This originally started as a hwmon and thermal patch, but further
+> analysis had revealed that these are firmware power and thermal
+> policies as opposed to fan control.
+> 
+> Panasonic firmware exposes firmware operating policy through two
+> methods:
+>  - Fan cooling policy (active/passive)
+>  - Processor TDP limit (capped/uncapped)
+> 
+> At boot, firmware defaults to an active cooling policy with the
+> CPU TDP capped. Vendor drivers / DPTF normally unlocks this on
+> Windows.
+> 
+> These 2 methods map to 4 possible distinct states. Only states that
+> correspond to the platform_profile ABI are mapped and exposed as
+> choices. Unmapped states will be returned as "custom" by the driver.
+> 
+> I have tested the following models:
+>  - CF-RZ6 (2016)
+>  - CF-SV8 (2019)
+>  - CF-QV9 (2020)
+>  - CF-SR4 (2024)
+> 
+> State to platform_profile mapping:
+> 
+>  Profile                         | Fan Mode  | TDP
+> +--------------------------------+-----------+------------+
+>  PLATFORM_PROFILE_COOL (SR4 only)| Active    | Locked
+>  PLATFORM_PROFILE_BALANCED       | Active    | Locked
+>  PLATFORM_PROFILE_QUIET          | Passive   | Locked
+>  PLATFORM_PROFILE_PERFORMANCE    | Active    | Unlocked
+>  CUSTOM (unmapped on all)        | Passive   | Unlocked
+> 
+> Across all of them, the fan and TDP modes are toggled by the same ACPI
+> methods. However, there is a slight variation in its interpretation based
+> on testing results.
+> 
+> These methods are normally called by the DPTF/IPF _OSC handshake.
+> Depending on the capability bits, the firmware will alter its thermal
+> and power policy.
+> 
+> \_SB.IETM Implementation A:
+>  - CF-RZ6 (2016)
+>  - CF-SV8 (2019)
+> 
+> \_SB.IETM Implementation B:
+>  - CF-QV9 (2020)
+>  - CF-SR4 (2024)
+> 
+> Models belonging to the same group share what appears to be identical
+> AML code for the _OSC.
+> 
+> This patch only exposes the ability to read and set these firmware
+> toggles. The get() callback queries current firmware state and returns
+> the mapped platform_profile. The set() callback sets the target state
+> regardless of current state.
+> 
+> Proposed mappings in this patch are defined in the quirks struct.
+> Activation of platform_profile is gated by DMI checks.
+> 
+> For every model except the SR4, only balanced and performance profiles
+> are defined. This is because the aggressive fan paired with the locked
+> TDP on the SR4 more appropriately correspond to the cool profile.
+> 
+> Test results for the proposed mappings are below.
+> 
+> Test results:
+> ================
+> (CPU PkgWatt: peak / sustained)
+> (Sysbench CPU: all available threads)
+> 
+> CF-RZ6: (i5-7Y57, Startup default: Balanced)
+> 
+>  Platform Profile |  CPU PkgWatt    |  Sysbench CPU  | Stress Temp (CPU)
+> +-----------------+-----------------+----------------+-------------------+
+>  BALANCED         |  10.0W / 9.0W   |    19712       |   57C
+>  PERFORMANCE      |  18.9W / 14.9W  |    29132       |   72C
+> 
+> CF-SV8: (i5-8365U, Startup default: Balanced)
+> 
+>  Platform Profile |  CPU PkgWatt     |  Sysbench CPU  | Stress Temp (CPU)
+> +-----------------+------------------+----------------+-------------------+
+>  BALANCED         |  9.9W  / 9.9W    |    44695       |   58C
+>  PERFORMANCE      |  29.0W / 19.9W   |    71747       |   81C
+> 
+> CF-QV9: (i5-10310U, Startup default: Balanced)
+> 
+>  Platform Profile |  CPU PkgWatt     |  Sysbench CPU  | Stress Temp (CPU)
+> +-----------------+------------------+----------------+-------------------+
+>  BALANCED         |  10.0W / 9.9W    |    46545       |   59C
+>  PERFORMANCE      |  18.9W / 14.9W   |    57416       |   70C
+> 
+> CF-SR4: (i5-1345U, Startup default: Cool)
+> 
+>  Platform Profile |  CPU PkgWatt     |  Sysbench CPU  | Stress Temp (CPU)
+> +-----------------+------------------+----------------+-------------------+
+>  COOL             |  12.0W / 12.0W   |    177139      |   66C
+>  QUIET            |  12.0W / 12.0W   |    176315      |   73C-75C
+>  PERFORMANCE      |  29.6W / 21.3W   |    247602      |   98C-100C
+> 
+> CF-SR4 Notes:
+>  - QUIET: downclock/throttle at 75C, no increase in package_throttle_count
+>  - PERFORMANCE: stable boost clock, package_throttle_count increase
+> 
+> 
+> Other notes:
+> ===============
+> 
+> Additional notes about thermald:
+> During testing, I have observed that running thermald for the first time
+> since boot will trigger an _OSC negotiation that will unlock CPU TDP for
+> new models (IETM Implementation B). Once thermald is running, exits or
+> runs again, these bits were not observed to change again during testing.
+> 
+> Running thermald on older models (IETM Implementation A) does not touch
+> the fan curve or TDP mode setting.
+> 
+> Suspend: observed to not alter the values set prior to suspend
+> 
+>  drivers/platform/x86/Kconfig            |   1 +
+>  drivers/platform/x86/panasonic-laptop.c | 399 +++++++++++++++++++++++-
+>  2 files changed, 399 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 957034f39e4e..571c09152310 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -820,6 +820,7 @@ config PANASONIC_LAPTOP
+>  	depends on ACPI_VIDEO=n || ACPI_VIDEO
+>  	depends on SERIO_I8042 || SERIO_I8042 = n
+>  	select INPUT_SPARSEKMAP
+> +	select ACPI_PLATFORM_PROFILE
+>  	help
+>  	  This driver adds support for access to backlight control and hotkeys
+>  	  on Panasonic Let's Note laptops.
+> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+> index 19d194ff37ca..c4b13a3554e3 100644
+> --- a/drivers/platform/x86/panasonic-laptop.c
+> +++ b/drivers/platform/x86/panasonic-laptop.c
+> @@ -120,9 +120,13 @@
 >   */
 >  
->  #include <asm/amd/hsmp.h>
-> @@ -12,7 +13,12 @@
->  #include <linux/array_size.h>
->  #include <linux/bitfield.h>
+>  #include <linux/acpi.h>
+> +#include <linux/array_size.h>
+>  #include <linux/backlight.h>
 >  #include <linux/bits.h>
-> +#include <linux/cleanup.h>
->  #include <linux/device.h>
+>  #include <linux/ctype.h>
+> +#include <linux/dmi.h>
 > +#include <linux/err.h>
-> +#include <linux/lockdep.h>
-> +#include <linux/mutex.h>
-> +#include <linux/slab.h>
->  #include <linux/sysfs.h>
+> +#include <linux/errno.h>
+>  #include <linux/i8042.h>
+>  #include <linux/init.h>
+>  #include <linux/input.h>
+> @@ -130,6 +134,8 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/platform_profile.h>
+> +#include <linux/printk.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/serio.h>
+>  #include <linux/slab.h>
+> @@ -158,10 +164,37 @@ MODULE_LICENSE("GPL");
+>  #define ECO_MODE_OFF		0x00
+>  #define ECO_MODE_ON		0x80
 >  
->  #include "hsmp.h"
-> @@ -336,3 +342,107 @@ const struct attribute_group *hsmp_sock_groups[] = {
->  	NULL
+> +#define PCC_ACPI_FAN_ACTIVE_MODE	0x00
+> +#define PCC_ACPI_FAN_PASSIVE_MODE	0x01
+> +#define PCC_ACPI_TDP_LIMIT_ON		0x01
+> +#define PCC_ACPI_TDP_LIMIT_OFF		0x00
+> +
+>  #define ACPI_PCC_DRIVER_NAME	"Panasonic Laptop Support"
+> +#define PROFILE_PCC_DRIVER_NAME	"panasonic-platform-profile"
+>  
+>  #define ACPI_PCC_INPUT_PHYS	"panasonic/hkey0"
+>  
+> +enum pcc_profile_fan_mode {
+> +	PCC_FAN_MODE_UNSET = 0,
+> +	PCC_FAN_MODE_ACTIVE,
+> +	PCC_FAN_MODE_PASSIVE,
+> +};
+> +
+> +enum pcc_profile_tdp_mode {
+> +	PCC_TDP_MODE_UNSET = 0,
+> +	PCC_TDP_MODE_LOCKED,
+> +	PCC_TDP_MODE_UNLOCKED,
+> +};
+> +
+> +struct pcc_platform_profile {
+> +	enum pcc_profile_fan_mode fan_mode;
+> +	enum pcc_profile_tdp_mode tdp_mode;
+> +};
+> +
+> +struct pcc_profile_quirk {
+> +	struct pcc_platform_profile platform_profiles[PLATFORM_PROFILE_LAST];
+> +};
+> +
+>  /* LCD_TYPEs: 0 = Normal, 1 = Semi-transparent
+>     ECO_MODEs: 0x03 = off, 0x83 = on
+>  */
+> @@ -251,6 +284,104 @@ struct pcc_acpi {
+>  	u32			sinf[] __counted_by(num_sifr);
 >  };
->  EXPORT_SYMBOL_NS_GPL(hsmp_sock_groups, "AMD_HSMP");
+>  
+> +struct pcc_profile {
+> +	acpi_handle			ec_handle;
+> +	const struct pcc_profile_quirk	*quirks;
+> +	struct device			*platform_profile_dev;
+> +};
 > +
-> +/*
-> + * /sys/devices/amd_hsmp is created when the first socket device is registered
-> + * and removed with the last one. hsmp_root_lock serializes that against the
-> + * per-socket register/unregister calls.
-> + */
-> +static DEFINE_MUTEX(hsmp_root_lock);
-> +static struct device *hsmp_root_dev;
-> +static unsigned int hsmp_root_users;
+> +static struct pcc_profile_quirk quirk_cf_sr4 = {
+> +	.platform_profiles = {
+> +		[PLATFORM_PROFILE_QUIET] = {
+> +			.fan_mode = PCC_FAN_MODE_PASSIVE,
+> +			.tdp_mode = PCC_TDP_MODE_LOCKED,
+> +		},
+> +		[PLATFORM_PROFILE_COOL] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_LOCKED,
+> +		},
+> +		[PLATFORM_PROFILE_PERFORMANCE] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
+> +		},
+> +	},
+> +};
 > +
-> +static void hsmp_sock_dev_release(struct device *dev)
-> +{
-> +	kfree(dev);
-> +}
+> +static struct pcc_profile_quirk quirk_cf_qv9 = {
+> +	.platform_profiles = {
+> +		[PLATFORM_PROFILE_BALANCED] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_LOCKED,
+> +		},
+> +		[PLATFORM_PROFILE_PERFORMANCE] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
+> +		},
+> +	},
+> +};
 > +
-> +/**
-> + * hsmp_sock_dev_register() - Create /sys/devices/amd_hsmp/socket%u for @sock.
-> + * @sock: fully probed HSMP socket.
-> + *
-> + * The device carries hsmp_sock_groups with @sock as its drvdata, so @sock must
-> + * stay valid until hsmp_sock_dev_unregister() returns.
-> + *
-> + * Return: 0 on success, a negative error code otherwise.
-> + */
-> +int hsmp_sock_dev_register(struct hsmp_socket *sock)
-> +{
-> +	struct device *dev;
-> +	int ret;
+> +static struct pcc_profile_quirk quirk_cf_sv8 = {
+> +	.platform_profiles = {
+> +		[PLATFORM_PROFILE_BALANCED] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_LOCKED,
+> +		},
+> +		[PLATFORM_PROFILE_PERFORMANCE] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
+> +		},
+> +	},
+> +};
 > +
-> +	guard(mutex)(&hsmp_root_lock);
-> +
-> +	if (!hsmp_root_users) {
-> +		hsmp_root_dev = root_device_register(HSMP_ROOT_DEV_NAME);
-> +		if (IS_ERR(hsmp_root_dev)) {
-> +			ret = PTR_ERR(hsmp_root_dev);
-> +			hsmp_root_dev = NULL;
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Built by hand rather than with device_create_with_groups(), which
-> +	 * rejects a NULL class: these devices belong to no class or bus.
-> +	 */
-> +	dev = kzalloc_obj(*dev);
-> +	if (!dev) {
-> +		ret = -ENOMEM;
-> +		goto err_root;
-> +	}
-> +
-> +	device_initialize(dev);
-> +	dev->parent = hsmp_root_dev;
-> +	dev->groups = hsmp_sock_groups;
-> +	dev->release = hsmp_sock_dev_release;
-> +	dev_set_drvdata(dev, sock);
-> +
-> +	ret = dev_set_name(dev, "socket%u", sock->sock_ind);
-> +	if (!ret)
-> +		ret = device_add(dev);
-> +	if (ret) {
+> +static struct pcc_profile_quirk quirk_cf_rz6 = {
+> +	.platform_profiles = {
+> +		[PLATFORM_PROFILE_BALANCED] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_LOCKED,
+> +		},
+> +		[PLATFORM_PROFILE_PERFORMANCE] = {
+> +			.fan_mode = PCC_FAN_MODE_ACTIVE,
+> +			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
+> +		},
+> +	},
+> +};
 
-Tricky control logic. Preferrably handle errors first.
+Multiple of these look exact duplicates. In such cases, we try to reuse 
+the same struct even if we cannot then exactly match the name with the 
+model.
 
-> +		put_device(dev);
-> +		goto err_root;
-> +	}
-> +
-> +	sock->sysfs_dev = dev;
-> +	hsmp_root_users++;
-
-Why reinvent the wheel and not use kref.h? It got immediately complicated 
-on the rollback path when you tried to do this with your own approach.
-
-> +	return 0;
-> +
-> +err_root:
-> +	if (!hsmp_root_users) {
-> +		root_device_unregister(hsmp_root_dev);
-> +		hsmp_root_dev = NULL;
-> +	}
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_dev_register, "AMD_HSMP");
-> +
-> +/**
-> + * hsmp_sock_dev_unregister() - Remove /sys/devices/amd_hsmp/socket%u for @sock.
-> + * @sock: HSMP socket; a no-op if its device was never registered.
-> + *
-> + * device_unregister() waits for in-flight show/read handlers, which take
-> + * hsmp_sock_rwsem for read. The caller must therefore not hold it, or a
-> + * concurrent sysfs read would deadlock the teardown.
-> + */
-> +void hsmp_sock_dev_unregister(struct hsmp_socket *sock)
-> +{
-> +	lockdep_assert_not_held(&hsmp_sock_rwsem);
-> +
-> +	guard(mutex)(&hsmp_root_lock);
-> +
-> +	if (!sock->sysfs_dev)
-> +		return;
-> +
-> +	device_unregister(sock->sysfs_dev);
-> +	sock->sysfs_dev = NULL;
-> +
-> +	if (!--hsmp_root_users) {
-> +		root_device_unregister(hsmp_root_dev);
-> +		hsmp_root_dev = NULL;
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_dev_unregister, "AMD_HSMP");
-> 
+> +static const struct dmi_system_id pcc_profile_quirks[] = {
+> +	{
+> +		.ident = "Panasonic Connect Co., Ltd. CFSR4-1",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Connect Co., Ltd."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "CFSR4-1"),
+> +		},
+> +		.driver_data = &quirk_cf_sr4,
+> +	},
+> +	{
+> +		.ident = "Panasonic Corporation CFQV9-1",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Corporation"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "CFQV9-1"),
+> +		},
+> +		.driver_data = &quirk_cf_qv9,
+> +	},
+> +	{
+> +		.ident = "Panasonic Corporation CFSV8-2",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Corporation"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "CFSV8-2"),
+> +		},
+> +		.driver_data = &quirk_cf_sv8,
+> +	},
+> +	{
+> +		.ident = "Panasonic Corporation CFRZ6-2",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Corporation"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "CFRZ6-2"),
+> +		},
+> +		.driver_data = &quirk_cf_rz6,
+> +	},
+> +	{},
+> +};
 
 -- 
  i.
-
