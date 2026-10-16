@@ -1,57 +1,146 @@
-Received: from mail-43103.protonmail.ch (mail-43103.protonmail.ch [185.70.43.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0718A3822BF
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 14:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.103
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792161007; cv=none; b=Deo3UXMM0tFRYdhcL83vpq0Th/Ayjo4rggmnoh6g859EQF11oyCTH5DlDkYsVadCKFuYBJxBpT2x6xAOF+m25hQl1gPY8+96HYzPJPMHygutI3LE00O3Ow+ON4lNW2rzltv1YsNF3sOsFj4o0k+A80b4bL7Mtt1lwyvKEfHteTI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792161007; c=relaxed/simple;
-	bh=33O0YnyipeSJUmepqp5PMqMgUm6dy3niNvq40NaPLL0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R85M1+9vSBUjAGDyTMjtWohWZlqicu6B0Dl9EXhJHpaQo8FnIJPPleqDhzdtVU7rE1Fti85yHqjWeao/FlUr99uzgnyLdCIkrI4VqPQ4ChEucr1fvFLKz0tL1EO6GdMV8HOtKNw1hi8UHKteWA3u+sUUEqvbwRvDM4Sjs6wH4RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=cM9exizd; arc=none smtp.client-ip=185.70.43.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DAE53E30F
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 17:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792170267; cv=pass; b=ucVN3Pw/IZyndgSyaP8qY6R2c0LVzOe1hruPaEoB8uzv94MxhJedB2xcBIKhQXGrIuNsjv8rvDmJp0Du6+C5awQDEoG+LOWxOb8+7RnP4YmuBQU5CS1TPelkFwy8J5qGOfCpSB9um4iVrySWdcJYUwsh+gC2UWysIHjYWRknpE8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792170267; c=relaxed/simple;
+	bh=gukvw137Tc5v8YNIKZfQF3zggLjApXVNAOx8tztyb0I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M/Eo+WncJShWwdt9ns/3d/HurpLSIVY3JyBqbRfaS3s3gJ+Qsprt6wFGfnMsFrWoGeKAK74v5bx4HPF5CGPljpAT/eJ/T8jqWxjKrUNc/8gOjoPKDblgih8KaqRiyibInHCb3iqHJx2411oIeOpvO1fQkeHQfa72dvNzgnWctL0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfflGzOY; arc=pass smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="cM9exizd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1792161003; x=1792420203;
-	bh=33O0YnyipeSJUmepqp5PMqMgUm6dy3niNvq40NaPLL0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=cM9exizd2a21k9YRnKg6u48BmL08QPjXcsl32BoTW81ssK3QFekquvLX2tCFvZVdk
-	 nYKluTq66k1yCPKONaNqJ+lNTQSoQd6pSlEoGAoPPU7zz67xpw9p6wZSJHmgYz8njz
-	 UJhM9FRSpT27IJtEfWCbntqBOsPRTED9qO5TJYqvcCij/H6M7F9UrFmhdWcvhbv162
-	 59wvHgXrzAIbF1v3OwfTx3nAy7L9foK1LHFjgb7jP0YbieiOWkEXKPwGGo1DRyb0bK
-	 nWIBJPUQTfhSKoS1e0Jt8kPNR11n7kftVLAnlZ78GhxW1sgrq7Gxw1oGW6Kgjn+Jjk
-	 Fh0i0TAM7EE1Q==
-Date: Fri, 16 Oct 2026 14:29:59 +0000
-To: Hans de Goede <hansg@kernel.org>, Hao Yao <hao.yao@intel.com>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Dan Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@amd.com>, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: int3472: Use actual clock frequency for DSM method
-Message-ID: <20261016142954.60684-1-lsa.uz@pm.me>
-In-Reply-To: <df3724fb-1ad6-403c-bea0-19856b11635f@kernel.org>
-References: <20261016112744.39905-1-lsa.uz@pm.me> <df3724fb-1ad6-403c-bea0-19856b11635f@kernel.org>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: 92f3b6dc9e7235df9ec428a1e4b6136d99813635
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfflGzOY"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c2afa22e1dcso21976166b.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 10:04:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792170264; cv=none;
+        d=google.com; s=arc-20260327;
+        b=p7gCgu6MUw9DnPfhuznaZlhDxBCMIO2MGCYg+kAzP7FRatC66xudSQJTfnTXgyF43i
+         lKVfL/hUOgXe9GIRgibnzgIRCQMaeGaKjZ1iVeDRqMgtu5ekOhcmm8yOGgdrf3Lq6GVw
+         GWL5FX6cBaXkKcuQBjkfFDGUtsQbKTPxXdjJMOTmFeBWtc/1inf/lOT6DZj7N3TnNp6g
+         hyfHwNgBJGL2MfXsJYe0q/QW5QlE3pWG/pzsd1oQDqlf78+4p9UZVKgTpNR+Ikfkm4Jn
+         M+0cxqUeoRa2kuBU0gFQmGqkJgAhWQoVy7vdlCl0cZVTveuKPRENctzD9zRL+LQOJdp+
+         0a3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=3nq2M2zdxjUhEkBFo/wkCmYTA/LTHy8Z+3UOk5RQris=;
+        fh=YzK97LzHzJcOJqZvNnKuAXxi2PWmHI12ucr/j7HMU14=;
+        b=eBU40t6CLsDmX3datoG4dwXqoaCcrdhoGg9j9My03nnwYUKJtSJ0YGp3sn7di7iBjG
+         /G7Z/CdpIspADSUMb5NgpYtu4XOP5AkYG9iEtc4nAkZaQCsmxstyXVcdvvkFQH2FIJq/
+         F5MuqEPg+IgpJ/51wWZgMIOWe5xFztiAOM9lbOuDTYWgulFenUzs9SMAqJh/2OIPiOtd
+         KJ5PeiWP8RbN/O5ckDhm4ZUICRDyhGeh2mlixvaaq1D8tYIUfY6rkkJNRsCa18Ko5pa8
+         /SVfRQicbdbGMcinrtitATo/xIAmlObrMQQ6+dgenH+3IUwAquwB3ZKLFFLjZvttu3hZ
+         CX+g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792170264; x=1792775064; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=3nq2M2zdxjUhEkBFo/wkCmYTA/LTHy8Z+3UOk5RQris=;
+        b=OfflGzOY5X/kInmu/Xqh0fIC+zI8O3ojCVT6UmunAI23cuG+VgnYVOnOuI7th+O+yS
+         VT7xDBt1sRj9rsXSlguE8oaD9D4+d1Nl+zpcSKf7HF3C6CUXAsR4JGKPhyJo1440EX9Q
+         Ru7GzV8U+Jo6Hz3Tu97zWDlbGbIcdx/pLHlI5/v6rh5uMxqm4LYfazdwZeAm57PUBoQT
+         ESuAHAQInk6DMah6gFFoDJ7y7k8v+XQ0yRezpGeE3sVRP9kHLb/1rLutcu4ZB62fn0Pw
+         yJD+VAkDy5KJAvDfkmMsSvFsn9HNnRK/5MDyjPv64JDfiQ0bMZmJTr5ot/vhOt3XCNBF
+         EPXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792170264; x=1792775064;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3nq2M2zdxjUhEkBFo/wkCmYTA/LTHy8Z+3UOk5RQris=;
+        b=MqLy2ErK14aWkPjRf+W120mzu/J8yEmM3GR0K7QFW1n6R8GQe4iOhJWc/B4nKlN4dk
+         w49Z6/QbF6Wwv9KpdokcW5n9ImU0dCqGUzgkRTWEIn8x/4C/5DsLj+XTOfSLtwNxidlv
+         HfKTHNbRiBg8LF6k6Qf8ftCfDY+oN7DSk22peeqDKlELCXgJ/lxIW52AGmgGIAot+N/V
+         JXl3y/nhW9RXFmaVK4l1lxPVAaTqrAQ+pIa5MZ5VchSGcHc0081sg1Yx7fSJnq65uMRm
+         xvHxHXvm3v2ox1QaClseavaLd/tHvDfsTe+qFJMP5xxdVgLkifF8nAYPnMbRln+dnaRt
+         AMjw==
+X-Gm-Message-State: AFq9FYL9ESkwLjZN6tJPrlBz0e0FeT3trrA1Wl7yb1mPLK6GRDdn6NTc
+	CCGBLqgDDWF2MrbeWw5B4yCS3smK6KWyCNPlghwfUm/FLWntkbbobXxGJhz/3HBSUTMGIQ6XEDi
+	tmoxsbkTosYtxU8ugPrSD5zAVVoAKvyE=
+X-Gm-Gg: AYBFou161jgVw5MKK+M7IK0WdbcyIMIiShWxTyjUSOLx18MjeO3fm9IMMWXvLjnN2wg
+	mG5zwfaQfFthFU1ueH168PhfO0tEIQwUOHAxbFCD1rSTYS/qu+UBdApdrEDaHMD7/OnAXA3eQC8
+	1jLOvH8FeQqP7OUF0ISy78DVARSOKO8sbCPcX/z8eC8KfF4j0S5V/nIcfpMxAEemCYdXwadNVM0
+	oTUtjIce3f/qNs3wUpJ5FJxIGqjqSu9TrA11gGb/d8Kc0+e8NHKm/GL2czESIfG1oT/HFmM25s5
+	meXaTQzdqYF7GxbwjmzgyYxDbs/j/EnZrMC2EXqA6Ro0MyoGPLpmDF7uHd4OPBgkycocaJBj9yu
+	MOtGu6IwJHe5VZmEYwcfy+H9tUa9e2b6Qjf3chpg=
+X-Received: by 2002:a17:906:c142:b0:c2a:34fe:ea4d with SMTP id
+ a640c23a62f3a-c419e639b87mr40098166b.25.1792170264288; Fri, 16 Oct 2026
+ 10:04:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CALeJObvxQ3b-s6MGGBKSz-d7EeByy4wh7raKBEFYZg6bXq4ytQ@mail.gmail.com>
+In-Reply-To: <CALeJObvxQ3b-s6MGGBKSz-d7EeByy4wh7raKBEFYZg6bXq4ytQ@mail.gmail.com>
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Fri, 16 Oct 2026 22:04:12 +0500
+X-Gm-Features: AclHuK-O3QGVATFlYGfsS6SEptvh6nF7Tic-5KTWxTOwmcMAjlMwm-5k9VkgQgk
+Message-ID: <CADqcGBmGUNgLRALGAS8LTU469vc+yD-xS444rdTNo+g5KPm17Q@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/x86: hp-bioscfg: fix 16-byte heap overflow
+ for empty auth token
+To: Saatvik Sharma <saatvik333sharma@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, jorge.lopez2@hp.com, 
+	ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+Hi Saatvik,
 
-Thank you, noted: if I resend it, it will be based on media-committers
-next. The v2 applies to it unchanged, at d7e7bca7169, which is the tree
-I tested it on.
+Thank you for testing this on the ZBook Firefly 16 G11 and for the
+detailed results.
 
-Sergey
+This was applied by Ilpo on 5 Oct as 67e222d412cc, so there is no v5
+of this patch. The commit has Fixes: b2715aa2e135 and Cc: stable, so
+it will be considered for stable trees, 6.18.y included, once it
+reaches mainline.
 
+Thanks,
+Muhammad
+
+On Fri, Oct 16, 2026 at 4:26=E2=80=AFPM Saatvik Sharma
+<saatvik333sharma@gmail.com> wrote:
+>
+> Hi Muhammad, Ilpo and Jorge,
+>
+> I tested the v4 empty-authentication buffer fix on this machine:
+>
+>   HP ZBook Firefly 16 inch G11 Mobile Workstation PC
+>   Board: 8CD1
+>   BIOS: W70 Ver. 01.10.00
+>   Kernel: 6.18.55-2-cachyos-lts
+>
+> Before the fix, writing 4 to the hp-bioscfg "Customized Fan Control
+> Options" attribute failed with EINVAL. The kernel logged:
+>
+>   hp_bioscfg: Returned error 0x4, "Invalid command type"
+>
+> I rebuilt hp-bioscfg from v6.18.55 with the v4 change, removing the
+> empty-string early return in hp_calculate_security_buffer(), and loaded
+> it on the same kernel. Writes to 4 and then 15 succeeded, with matching
+> current_value readback and pending_reboot=3D0.
+>
+> This confirms the BIOS-setting write failure is fixed on this hardware.
+> Fan RPM and persistence across reboot have not been verified.
+>
+> Tested-by: Saatvik Sharma <saatvik333sharma@gmail.com>
+>
+> Please keep this fix on track for stable kernels, including 6.18.y.
+>
+> Patch tested:
+> https://lore.kernel.org/platform-driver-x86/20260919060037.84602-1-meatun=
+i001@gmail.com/
+>
+> Thanks,
+> Saatvik
