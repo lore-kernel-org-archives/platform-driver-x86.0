@@ -1,47 +1,76 @@
-Received: from mail-43170.protonmail.ch (mail-43170.protonmail.ch [185.70.43.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C465B345EA9;
-	Fri, 16 Oct 2026 01:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806C6145B3F
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 02:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792115521; cv=none; b=ejoj2vvztAJL0FYNhvmoQ4vxto43sBJs4dcj4fgKfhXFs6lJdO8IzNx4JHHlenEDNc5bPxAZLhHe8i9h1aDDpTaV9Tz+fJVXykU8a3Y0f6drwvVXPLigpaMQtG+/o/O5orUyy49mHrfzf4pCREZK55OV1rP/K41Oy731Gq8wIE4=
+	t=1792119250; cv=none; b=ia21i9a5Bi61xSBrEhJI7ERu1Akh7vwQuDdonPt67nWdnNfxUFkwnwdQN0Q1MwBae3ZxFOjRAQcPh/JAgVUJ1W/g/eQHPN4pNxHNtYHPnQs+Vh71EQ5T7TaNnnM+G27uGeM52/UX5KrnxNai9+W/VaPNrJQeDkceHjXKOKwr4lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792115521; c=relaxed/simple;
-	bh=ZT0I/kFBxVwxCCueKs5V2RHNnh1kbf7ID6w/rJbNKmA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QDvDgJRLChqtseqlm1Ols2cSiW6kykfn9lWdzyd0RzPqY5gz+60ctUhnl0YN5ZpQ/PebMiv136YjLpY8p+okkbwGQ5vIg2Di1Y2Cc9ykklGzKjno+oGNkugRjzwi8E6gudJZ4vQc090zFjppZydXMEDXmmS/tzyQ93X3edhBsbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bogusta.com; spf=pass smtp.mailfrom=bogusta.com; dkim=pass (2048-bit key) header.d=bogusta.com header.i=@bogusta.com header.b=PnFjcZKl; arc=none smtp.client-ip=185.70.43.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bogusta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bogusta.com
+	s=arc-20240116; t=1792119250; c=relaxed/simple;
+	bh=Ht/sdt0Xg3nIv22FnH9XXQfkg9UkhWoR7tnim7fk8CU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K6baTNSt7h4ASC/r+huxdHk5wVR2w3evLBu6tezW/D+YdVGemASApwv5N5Y0W2WlVyysPQaaBZEP+PGe2e5ony2PBaZrK7bbzdDEF1IeEr5sRAUz/1DoIa2b17HqpzpF914jimLDgQIZLDJ3TyvcPfqA6f7YFElGXA31Th/hsv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XqX/ySFp; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bogusta.com header.i=@bogusta.com header.b="PnFjcZKl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bogusta.com;
-	s=protonmail3; t=1792115515; x=1792374715;
-	bh=AenpXWAYrKA7cxjqocTZK68lgeROxEPztY5XibpKiXY=;
-	h=From:To:Cc:Subject:Date:Message-ID:From:To:Cc:Date:Subject:
-	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=PnFjcZKlyeUPwE4iFpfAS1CumHb4lYRtmhpo5t4pDcA+wpv5//+1HsPMW38R+EsG9
-	 8fmDuBQGZesSUY8x3tMla125ks32pOr/9XMtOy1BBlPWkMY8JzadiveCg0K65isjmu
-	 eF6BE9fF/OYnkTMjk1plp4GGBqKgF6A+EjBuhL779XXtB4K66ByLJ4qOpF3wrRyQ1d
-	 8Vp2uKv7gUp//QeJRWZbxtFa20aQCsCvg8C3XMX0xYKpiqjiIYDvbi7ipHJ6dRjfx2
-	 BsZFw+bP0gqygzPynhfN7ZRQ4Re9DUZKC5FVJeVpfPwoBgta9q34ilSDrK/UGryKvw
-	 tTLfnGOdUREuQ==
-X-Pm-Submission-Id: 4j5Sbp4tBPz1DDXm
-From: Alex Bogusta <alex@bogusta.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XqX/ySFp"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-48afcd7ba9bso3307390f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 19:54:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792119248; x=1792724048; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XMUiVCJk6662ECKbtVsXltYgL8clVA2PMrxyPMJzO04=;
+        b=XqX/ySFpTzRSBTt1mV4sD6PLe1aalmffvIhZyzQ853fZjU6SYGYvA7Ef/JTpP0ljwx
+         7Q2odnqBhpNffRuyVyr2Sl9QQDTjpJKhL9187KYQs/I8t2aYyRqDBo88f/Q4aN33Kpqg
+         J8fnfNoG/P6bs+7qHBBEjrLmR4B79YhVb+FUXZqe7yCDhonM4o39teFEreE6gRGn7QBu
+         MSnoGWvaN0kq/NjKgVZZAaj/kdfCqTeeAN/zksfM/kl07C3UIBXcNfM27VUnPtOK/yR1
+         aJ2PhB7kNGcPJjiwbvMYMoCH3gUALs085/JSH8CwYMhXFqmUSE8kDN3xe/dQBqGPgcTE
+         xrkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792119248; x=1792724048;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=XMUiVCJk6662ECKbtVsXltYgL8clVA2PMrxyPMJzO04=;
+        b=oo+owuUYT4Qw/5yt+VKQsg1kPDfD8V7TIYMH7j3NLB57ukIqPZAu0LQifo5d3Q6yoZ
+         sP6oi7rmiyeyBja58lumHeySf72eQEicf/Tgy8GfwlRq8i+N6mzN4liNjHoQ6Z8NGhVc
+         4JffCk0sdQTa+VljuXj6ogEH0wvbZOv805HwXCE0w8lCx5rv17D85JDYunZXIUYPxadt
+         szcIAmBomdKNGxDZP/dK00KmCUyayvAMvvsWQeptH94/ccamBInpXGUacptjlamr88yA
+         8OK3e25ljbMNVZ7Y1dl0HWry3gdidAa+gcGThoQYSOOmw51JaFtO9vdsaWqg1eAZZjfQ
+         D2YA==
+X-Forwarded-Encrypted: i=1; AKwUvBxZVhoVM0JaDGa2G6QebR3vuy+jONaz8Y+nddbNdLQcGe32SEtDNO4rqTXT3flnyrqXz3QAm0Y5M/0Oh5fgYi87m4vz@vger.kernel.org
+X-Gm-Message-State: AFq9FYJUpy27SBdasXJZNvD9XsZ0/lkqAlRwEMLTxphRPbIe+A3+Mvas
+	4/oHDU7ieukpY9/echME7V36ylqET0iLG9qCpIMAUK9Rs2RpUlCBBo/X
+X-Gm-Gg: AYBFou3EQ7iQb34N/DrNgxMAd1yWNweCiEE+XKxngDm5q9I9HT5sXXkFIxz+vS/PIXB
+	H3A6vD8M/bjrQqEeNuxsuU1EHq1WK/8g08s7BcgQL+HXmx/RJh92guPNACeAivitkPWRWIy4t6m
+	MnxMIk+LCZe0fYGdF0/7A4eAzO+hruqJx0Al1tekUbjPJ2yjqqyT7Elk+w/7TPOTBAzKTjruG5W
+	Fp5mYZE3N8ZD8KMihaH51qeBJFHPC66qA30S1AqwtJ6w/MkF5HbDUbwp0Yf3KQ7ev435kOTtzwJ
+	GVk4w3B0Jc/Yb13XZWN+dAew5lzGldpt6hzn0GWGZZYEXtevpsxFWVynFFRoQtLFc7onfIdJJqw
+	JmccFkjro4i4sGEhuVSR45n2+Ir3ovajyRL+w98WYFnjG6uv9BlabFrgRtLLFyHq3g1NC8/+03l
+	o0hnLappvXNtl2kuX2r1g4kNIv3AehBItafzbtb3n7Go3DOgAXBVHDmvSO/Lp1EcYp7DWPM6yGP
+	/HfXFIoVXK1IgnA2dpTm4br+ygxJJ5K7P1FPdlkuzqioGpDyx4UNZu5mXTolII=
+X-Received: by 2002:a05:6000:299c:10b0:48a:fb3e:d93c with SMTP id ffacd0b85a97d-48dba784b80mr29887033f8f.5.1792119247573;
+        Thu, 15 Oct 2026 19:54:07 -0700 (PDT)
+Received: from fedora ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd50aafbsm1954775f8f.52.2026.10.15.19.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 19:54:06 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: Jorge Lopez <jorge.lopez2@hp.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Alex Bogusta <alex@bogusta.com>,
-	Denis Benato <benato.denis96@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-wmi: Clamp keyboard backlight level from hotkeys
-Date: Thu, 15 Oct 2026 21:51:16 -0400
-Message-ID: <20261016015117.32174-1-alex@bogusta.com>
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH v6] platform/x86: hp-bioscfg: fix heap OOB in hp_enforce_single_line_input()
+Date: Fri, 16 Oct 2026 07:53:52 +0500
+Message-ID: <20261016025352.230535-1-meatuni001@gmail.com>
 X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -49,59 +78,48 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Pressing the keyboard backlight down key at level 0 drives the cached
-level negative, so the backlight then needs one extra up press per
-extra down press before it turns back on. brightness_hw_changed also
-reports out-of-range values: 4 after pressing up at the maximum level,
-and ENODATA or values like 4294967294 below 0.
-
-kbd_led_set_by_kbd() stores the new level without clamping it, and
-kbd_led_update_all() skips do_kbd_led_set() for negative levels and
-notifies userspace with the unclamped value. The level is computed in
-enum led_brightness, which is unsigned, so the subtraction at level 0
-wraps around.
-
-Compute the level as int and clamp it in kbd_led_set_by_kbd(), which
-covers every hotkey path.
-
-Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
-Signed-off-by: Alex Bogusta <alex@bogusta.com>
+The input is copied with kstrdup(), which stops at the first NUL, but
+the full write size is passed to hp_enforce_single_line_input(). With
+an embedded NUL the helper reads, and can write one byte, past the
+copy. Return -EINVAL if the input contains a NUL.
+ 
+Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
+followed by 4093 bytes of "B" to current_password 100 times returns
+-EINVAL every time, without reading into the heap.
+ 
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Cc: stable@vger.kernel.org
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes in v6:
+ - Return -EINVAL on embedded NUL instead of limiting the scan (Ilpo)
+ 
+v5: https://lore.kernel.org/all/20261007134711.473857-1-meatuni001@gmail.com/
+ 
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 9fb3fe4b161c..599a73862903 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1949,10 +1949,10 @@ static int kbd_led_set(struct led_classdev *led_cdev, enum led_brightness value)
- 	return 0;
- }
- 
--static void kbd_led_set_by_kbd(struct asus_wmi *asus, enum led_brightness value)
-+static void kbd_led_set_by_kbd(struct asus_wmi *asus, int value)
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 876fc35d035b..e306bd8b1e72 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -162,6 +162,10 @@ int hp_enforce_single_line_input(char *buf, size_t count)
  {
- 	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
--		asus->kbd_led_wk = value;
-+		asus->kbd_led_wk = clamp_val(value, 0, ASUS_EV_MAX_BRIGHTNESS);
- 		asus->kbd_led_notify = true;
- 	}
- 	queue_work(asus->led_workqueue, &asus->kbd_led_work);
-@@ -4668,9 +4668,9 @@ static int asus_wmi_get_event_code(union acpi_object *obj)
+ 	char *p;
  
- static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- {
--	enum led_brightness led_value;
- 	unsigned int key_value = 1;
- 	bool autorelease = 1;
-+	int led_value;
++	/* buf is a string, so a NUL before count is invalid input */
++	if (strnlen(buf, count) < count)
++		return -EINVAL;
++
+ 	p = memchr(buf, '\n', count);
  
- 	if (asus->driver->key_filter) {
- 		asus->driver->key_filter(asus->driver, &code, &key_value,
+ 	if (p == buf + count - 1)
 
-base-commit: 98f039265e580291d5e76a11b2072541fbb1c393
+base-commit: 8667bd30fd033295b3038ce374c551d1059538ba
 -- 
 2.56.0
 
