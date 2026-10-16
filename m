@@ -1,69 +1,120 @@
-Received: from mail-43101.protonmail.ch (mail-43101.protonmail.ch [185.70.43.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FB835CB6B;
-	Fri, 16 Oct 2026 11:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B47331328E;
+	Fri, 16 Oct 2026 11:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792150099; cv=none; b=aB4XLqSDnSzuXbBApAiTI9W1djGG1h2lCCwS9IwFyNUtgPH656TONOuMWRcJusG2mLXUy9A1DD0q9VHuDRpx5X4acqm6XqW9mNHeKtRAZ0UmsIIeUyJcu9oSrnKjL36ilJ3JclssMaiO2if84B6TGsnbSRexkUwfE9cI9lugkZY=
+	t=1792150572; cv=none; b=Cbx+bjPmgV+0J/wfDKaGqqVYyafOh5TSOGfnMaGcG9EqbAKHDuYsOBmy4pLjTrul8T3a+5PePXtAVuHOmTqJj474rafwonfHd8X00YjbWOEYddM/6wNMRCq84o7ZRVDx+S1yhX8vJzMtfvlKo69PeUldnlbQdwx4GVSBO90lRYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792150099; c=relaxed/simple;
-	bh=5DFAb0p1QI16M+Im7teM/V0ggs8P5vmQ07oO/6EG6lU=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k6tpoCPu0io7YUrH9DVWe7OOQ7rITff9ucKEe5ivYokaXb+QNfhm4hpI5eEREA/k2Xga8zMsv59ebw7UhcghwVy2Kun4t1RfbhFJ5Jbc5nd5b5tFPRWILk0j47iX41P4TK7nh6zmWidojytCceGBKPk3hjHpT8g2KfKOa4fGSCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=SliMkUhi; arc=none smtp.client-ip=185.70.43.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1792150572; c=relaxed/simple;
+	bh=lP1JaRZd8SJ9aL/z2Ey7Uk+l25m3bdI9BATnKHnwin4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=qoSCWGwtSFSbYz3arLSGUgiORqp6Fr+oP66PXRm0oR+UNodbb+mN5BVSELlca4u4eDcBmFoVh+tZ6eGC4UngKCgSnSB6T8vsTfhq/u7wGXin0F7lDctpI41DYtyGbN9S5yzPRXyVaM7+Fw4818v23k+270wFFy+XArZ1i715SfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UkVt5UhU; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="SliMkUhi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1792150090; x=1792409290;
-	bh=5DFAb0p1QI16M+Im7teM/V0ggs8P5vmQ07oO/6EG6lU=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=SliMkUhiHmnhi0O9oQKAPKfT/ruLWfGssi004e01Y5evYFcr1LkD7heVSoF5StPXZ
-	 y/LO2T/l9xfQueUtID++Wl4tH/mkoxy7Q28wHXp63bAVJebqrtR4GUlDh0pBUMdAbk
-	 qnxbCw5J0UDs10DlXu3wmMqQcluICHfKlWwQRyVeOJ4EQw0l2No4mYJEtkj5OKccCz
-	 4QmeO1F694XI2+h0TAmcUeteyiX4TTTNT5EYHgBEXFfJ3CKVw4H7RBDNhThxPGpV/t
-	 us4KRp7HcX/phV0RLf8senTIM4gWGK/9gii85iVkx3xyyoDZkjh+91NkSbIvruKLA0
-	 6C8I/iubCe5JQ==
-Date: Fri, 16 Oct 2026 11:28:02 +0000
-To: Hao Yao <hao.yao@intel.com>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, Dan Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@intel.com>, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: int3472: Use actual clock frequency for DSM method
-Message-ID: <20261016112744.39905-1-lsa.uz@pm.me>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: d3e3c2e49dec7b70a116e6d09278d73495caef78
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UkVt5UhU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792150568; x=1823686568;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=lP1JaRZd8SJ9aL/z2Ey7Uk+l25m3bdI9BATnKHnwin4=;
+  b=UkVt5UhUr1TDyrnayGQWTVNZdVlb2szOKGsnKVRQs1GcSpHcPch4SfP4
+   4ScbxR5krI8fQJbiM95cy6mIDThS9ZO7kHfrI32UTh+LbpKxUYAbrFeDy
+   zqM7MP5QJxWXeocbAyqHVyk4ex1fXM53gmfoCysHma3lP6jdQS12mrHsw
+   2XVHQfdo/8aNviNot6GQVZADiL56ZMElqRV7egMB3kkJYK16iHdn02d5G
+   TfXYJQ8oukcQnhL6fDC6G9pBg3V+E91Uj/JR4Q+hmuVTTWqkOcB4kRYgM
+   A4NtaawFIWloN+j5dpAm94nV7HnacGz5XGc5Ppp/YgL79yAncMvofXHgw
+   Q==;
+X-CSE-ConnectionGUID: my19EW4FSVOWM/gt4+mfLg==
+X-CSE-MsgGUID: puZqDvMyRs6W9SPR77apAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="952357"
+X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
+   d="scan'208";a="952357"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:36:07 -0700
+X-CSE-ConnectionGUID: f6MqJw8KSs6//7HZiG4Zdw==
+X-CSE-MsgGUID: g9Ah1glCRXek/4yLE+0YVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
+   d="scan'208";a="3763233"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 04:36:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 16 Oct 2026 14:36:02 +0300 (EEST)
+To: Donjuanplatinum <donplat@barrensea.org>
+cc: W_Armin@gmx.de, hans@kernel.org, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 RESEND] platform/x86: uniwill-laptop: Add support
+ for
+In-Reply-To: <20261016082819.1414285-2-donplat@barrensea.org>
+Message-ID: <305b37f0-b1c0-911a-0a07-42f6c4a51b85@linux.intel.com>
+References: <87wlridqzx.fsf@barrensea.org> <20261016082819.1414285-2-donplat@barrensea.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Hao,
+On Fri, 16 Oct 2026, Donjuanplatinum wrote:
 
-This fixes a camera on the Surface Pro 11 with Intel (Lunar Lake), for
-your v2:
-https://lore.kernel.org/all/20251208035122.2147678-1-hao.yao@intel.com/
+Your shortlog (on subject line) is truncated.
 
-Its infrared sensor, an ST VD55G0 (SMO55F0), has 24 MHz in its SSDB,
-and INT3472 turns its clock on through the _DSM with 1, 19.2 MHz. The
-sensor driver sets the sensor up for 24 MHz, so everything the sensor
-derives runs at four fifths: it streamed at 47.31 fps where its
-configuration gives 59.14, which also puts its MIPI output at 633.6
-Mbps, below the sensor's minimum of 750. With your v2 on media next and
-my vd55g0 driver, the sensor runs at 59.14 fps in every mode, as computed.
-A value of 0 did not change the clock here either, as you saw on the
-oscilloscope.
+> Add support for the MECHREVO WUJIE Series 15 X Pro (WUJIE
+> Series-X5SP4NAG).
+> 
+> Signed-off-by: Yifei Yao <donplat@barrensea.org>
+> ---
+>  drivers/platform/x86/uniwill/uniwill-acpi.c | 22 +++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> index 7a2eeaec4c96..bf46f03fb5f5 100644
+> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> @@ -2712,6 +2712,20 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+>  	.lightbar_max_brightness = 200,
+>  };
+>  
+> +static struct uniwill_device_descriptor series_x5sp4nag_descriptor __initdata = {
+> +	.features = UNIWILL_FEATURE_FN_LOCK |
+> +		    UNIWILL_FEATURE_SUPER_KEY |
+> +		    UNIWILL_FEATURE_CPU_TEMP |
+> +		    UNIWILL_FEATURE_PRIMARY_FAN |
+> +		    UNIWILL_FEATURE_SECONDARY_FAN |
+> +	            UNIWILL_FEATURE_BATTERY_CHARGE_MODES |
+> +		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT |
+> +		    UNIWILL_FEATURE_AC_AUTO_BOOT |
+> +		    UNIWILL_FEATURE_USB_POWERSHARE,
+> +	.kbd_led_single_color = false,
+> +	.kbd_led_max_brightness = 4,
+> +};
+> +
+>  /*
+>   * The featuresets below reflect somewhat chronological changes:
+>   * 1 -> 2: UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL is added to the EC firmware.
+> @@ -2996,6 +3010,14 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
+>  		},
+>  		.driver_data = &tux_featureset_4_descriptor,
+>  	},
+> +	{
+> +		.ident = "MECHREVO WUJIE Series 15 X Pro",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "WUJIE Series-X5SP4NAG"),
+> +		},
+> +		.driver_data = &series_x5sp4nag_descriptor,
+> +	},
+>  	{
+>  		.ident = "TUXEDO InfinityBook Pro 14/15 Gen9 Intel/Commodore Omnia-Book 15 Gen9",
+>  		.matches = {
+> 
 
-Tested-by: Sergey Lebedev <lsa.uz@pm.me> # Surface Pro 11 (Intel), VD55G0
-
-Would you send a v3 with the Fixes tag and the note on 0 and 2 that Ilpo
-asked for? I will repeat the Tested-by on it. If you are busy, I can
-resend it with your authorship.
-
-Sergey
+-- 
+ i.
 
