@@ -1,525 +1,346 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20222D2486
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 23:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651CF4502F
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 01:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792108259; cv=none; b=JAboFtZzBZCFSSVuCQoxR+zseLUP2/CvgpGi2CxKLtpxjKtby9G81A0p2GWYqkE3/oooB5nHY5P82ClJl+zYR8ruje876VcPfH0M+8YhEbJs5ho7wYqAMELptbn1yL5HcYXHB4xl6KZmFohS8fVjf3Fm5casDNnB5YynsCnJjT4=
+	t=1792114606; cv=none; b=LXTfNjRTCs+i6bcwpq4wW0SYl7fvKEHyT3gHak8bhqnRhODz1iRSNyBg406D3eBG+8fFbapi3cw5TGeTrMsJSC7YabCoq8ahZYOYmKGQ1w1eueW8HxvN8y2Oc0aHl7rV3XOTUnZohtwwad7aUKSGxBeKZV0MJ6VagfBVdVvAfPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792108259; c=relaxed/simple;
-	bh=GANNJTrrPVR7deBPiYxEg1r72QFifvY1nBYgf+d+/zo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HK26f3Iz7c/MK5Qdc6XLbL+RTbECzcpRf5Bw+W6aEdter+N4NXpV+2Ak2NVqyYZdozTpzNJ4YAMIcia3pVY5kHpZ3kWUZa6BDkS0m8lcMDo+v0u7zT6klfDNfXayJt5ZMuXrP9C+yIQvbZeSUFVepcb2TRwH1jtvqC19mP8Rg1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=dIoFoDWE; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1792114606; c=relaxed/simple;
+	bh=4H9T4VUulD/tG05EyhxjVBGERFgglqehYCOeAIbuZXE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RUGogGpVmfXWWPJq1a9EID3+hC7CZsmUXkLW0UFWw46dPI69WCjF5iN6XtUPscRXSZXGWtMPqpKeJnoxJ1qPJ12tfN4ezG+a7tJK/dRZee0cw1a2I8Z5ihF2LWKZvHLWappYUq96cVOkPlvCCHiswyQRwQfSbgHlUZMGsKAl6K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=If8L2Doj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=daEsTwsh; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="dIoFoDWE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1792108254; x=1792713054; i=w_armin@gmx.de;
-	bh=v90V2GiGUNY5y9rWYZDOt/LF07VCTwPPmLeY6NzWMUI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=dIoFoDWEjSImOfz5deKHrSFMeVNnstV6G8aUB3x3hlSxSSerLqvZlho62sa9Pm1B
-	 eR5bY5vzDOzdCygxYyd/U4renO9yPVR3OhBLNOpYpHhA5oS2He8vPTYRt/4GOI/uy
-	 ciYVtPFPJ3XIjfrS8I0pJFQBgXckOeAcBX64Z6TSBgohGNp6nlSSG0qp+DjXyl9rP
-	 60e03dTm7xYPoRVA39C4L4e4vwqwOjQIWzOGK+qgR9B4ItNYNrg0A9xbXGWQlrAV7
-	 1d0IP6fSf89bxNuBogvHlui3i0nQy37W4WtW9bLFfq6ixKB1NWcwlHcDNiwvwv5x6
-	 CQ61ll+7qy2MLLrHPg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MaJ7v-1x52Tr2dOP-00NaF3; Fri, 16
- Oct 2026 01:50:54 +0200
-Message-ID: <813fe457-80bd-4642-9ff9-c3df0c213f05@gmx.de>
-Date: Fri, 16 Oct 2026 01:50:53 +0200
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="If8L2Doj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="daEsTwsh"
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfout.phl.internal (Postfix) with ESMTP id 57636EC011D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Oct 2026 21:36:43 -0400 (EDT)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Thu, 15 Oct 2026 21:36:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1792114602;
+	 x=1792201002; bh=ul+ngWLywgKQiugJN9aGkJJiKF1Ax+rFjGUbRDbYI+w=; b=
+	If8L2DojtQUQQz/iaVNxU/+Yjvr6AmNNDChxYHdYGf+4dthi44e6WNHIW3iXVbKn
+	W5RA9/bQnGsB8hmknT7gcsALq/5P6/co/17r4W9lqs5M4E/k9wMPLRWmvCkG6YJy
+	KFAfNSEX4KCR9eKZi2lYRbPKNMPYvmxYrSfsOYLqLqZBAeexkWc/ktfI5SsWC3ob
+	3g1Wp9QIxsf4sWyAPo+SnK1U3fXDTV4ygTMJi5DxIorCIGHSunSbywZ8kHi5bqm3
+	SEj43FzUoXx+IZGXMOnvaGeL1qjw6vmvVmxEeEDjI/L1yLli/I/KnTVCN0Yyqkev
+	HqjK92m/Ig9mUKBF9O0aZw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792114602; x=
+	1792201002; bh=ul+ngWLywgKQiugJN9aGkJJiKF1Ax+rFjGUbRDbYI+w=; b=d
+	aEsTwshue1BkVWxbX7l/8iOoJGRtx0F5qhyJ1gBjXNjXBqu8XoKjqBBhF1K8Wb1Q
+	hFCKEbFQ808Hfiojgn1HDTJzh4p8EufYVnswSg0LnszWL4DHqcJ5PlzN1Ixnq+1P
+	PPo0Weuo/azMd77y4ftl1mddRBq+R77Aeta5wwH3zctFTST0wi6zd6EBDQsj9Sdx
+	oCJhPeeGOPHKuQkHfwbCgVbMGnCa2hiMGwfS9tUJfZljtXhiP5/SCRLaBdyE1Onn
+	X29w4/lH1o/jTLACmrnjhDf2CHSj+SSBR8r5OqZl0AJvMmczfysyCktNPc5d8BDV
+	jWMBviFow9b6IqZ7CZnRw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=sign d=squebb.ca a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792114602; d=squebb.ca;
+	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm3:rsa-sha256:bTvB6HdiWxfrT6JyXqTfbK+Ff1EUtUtYgk9HfaVFEk/mibj
+	EdR7kHBYM4n6Dl+KAniWuMqVQ4B6Xd4Bfw8clha9UtZF1V+lGitVJDiUED3jHcFD
+	il8MYPUWOS+MclsdL8RQTofvwX0jf4rQTf7EBz5iPNQjllqwqYYs69M3vOGeIr1r
+	H/JcNzKGV2AcAXvn5f8meS/DyB/BizID5Uv42AoyU+lLDBMqRyx8HGQU4nYIqryD
+	z49AIjhV+Ii8h3Y6GKMns8l2aYmjk8H+IQ01EfaMXY+Pk0Y78BeaQ4EPJ34HOsdq
+	zKY8YQ/xFNuqKRmgmgtwF8NWP89tu0j0CdPONiw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:dkIa20XfF4E+mV/e113h5rOu0RjtSCUMFJZbmQSM21Q=:4H9T4VUulD/tG05EyhxjVBGERFgglqehYCOeAIbuZXE=;
+X-ME-Sender: <xms:qX_Rakoak0_Q9WFgXgDCM8rTrFs7U9S5XHBlORq2Pg4isoa7bxn66A>
+    <xme:qX_RaleBB0_iVEW0lCGnUT_uI5NTGSgcBsNmr1oJpjoUJxmkj1cKPbp15n6a7pq05
+    gXLKNKBCV0pwo6M_KWQ4y0oUMKtHL0YKBvwfsyW6kMRn3w9H2-0xWFq>
+X-ME-Proxy-Cause: dmFkZTEYrEqohSqHaisglAQI8x+hYTh6VfquOCb0mb4JvokoGhOzMLj6WgsyZzj80vWoA6
+    J6DN98pIi1+2oXoqVF2Zi6eXBqMaCCWEVhvRmfXlq7N8PLNTGkfu9cElJZ0yCjKPjNnZhC
+    wPWBgyrvv43HGiZ4KJG3xciO5FqQSGlJkCCIvPMKOpWLUYHSsdRB27YGQKMc3e65Ew9VLZ
+    /0t7BXyvor3k4nUL8hToVQy3sMFQmm6tWLBipzYP3/wtYS3c1x295480/v7LEUnoQMk+RI
+    lZc6FP/MVbhx8Lrlm6EImU0nnu2Hjv1ZtaoemF0YLLIkJaacsTgfChIt5mUvnzm+aqD6Nq
+    oaopU98uQV75A9vvVwaKQYn8K7qS1VLTDYJRIEWUHMPwKAJWsdIXZr0FxyDBp8HB9RdX2e
+    XcNFEKlZHpZ9uU6JmQ3hnTSnRBsYUsvAaVeywFpMZDxGMRMU/UrmcyKHbRHTnWlg1QLUY5
+    U8o+g7NtGBVSTCIBxkHxgK9I7Iit1booVtQO3x2ygDab5NF3eu8QLQdDAicgBLbpd75rio
+    3bc2ycVJYETo8JaBsFY2f6iCqQjBvRUiLsUgvxkGXXqTjveA+SZ41pTQVpF7eE2zRuzXmO
+    WQrLyb2tu74JzSxXPq0PF027MAlKEWv/u6Qr1NQfJayQh1Czt02AqpMlwNWQ
+X-ME-Proxy: <xmx:qX_RaiQwzNhVh-oe0v6P48x53wkPuSRvCc8UQCC9QYIDlHWy20J7Tw>
+    <xmx:qX_Rah03rq3eteNIqD83NfXtqJh7ohYK_N1OOr2vXQQXthqcsT-wFA>
+    <xmx:qX_RavvgR-FR1KRE2o0pVw1sUIqaxqGiH5vJABp7QUUyGoyniGIQKQ>
+    <xmx:qX_RavhHiR_7fG6pwoqClqvvKFYwg1vC7XefGnWjPdFJ71ZH8eNG1w>
+    <xmx:qn_RajPAZOvS7iiE8lkaExu73WE13T-rk0SkHYCphYyxevKkyEk8eRTV>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id 096012C0007C; Thu, 15 Oct 2026 21:36:41 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] platform/x86/amd/wmi: aod: Document the WMI interface
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com
-References: <20261010190543.563161-1-Shyam-sundar.S-k@amd.com>
- <20261010190543.563161-4-Shyam-sundar.S-k@amd.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20261010190543.563161-4-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vAEsCw4fX715DPY1IVF5xKQZVBdKUEZRGecx1klm5SiD824yeqf
- zfpIE7J6xphyEZEfCXTN8DKwRTdZwIqD+/9U4eZo/hBqD8jRtQNzVZ1bgpBuKvPVCY963bG
- z4GG989dmK81F6EQzpTMGCqF5hbnCs2N9CQ/kFFjcD0R3RGTlW3ELXjHiqDCtuRi1490/v3
- pJDj0mXe+cJO7WLEfDRNg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:x+qcgRkAS+E=;CFBMXaCp0pGBIaZ8PaBoDQVYJ8S
- 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
- P7Ln/AiAWeU=
+X-ThreadId: AcGzoZcWswFR
+Date: Thu, 15 Oct 2026 21:36:20 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Armin Wolf" <W_Armin@gmx.de>
+Cc: "Prasanth Ksr" <prasanth.ksr@dell.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, Dell.Client.Kernel@dell.com,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Message-Id: <8de3cc82-cf96-49e7-9aab-fe24239d4376@app.fastmail.com>
+In-Reply-To: <81b73de2-62ef-4c7a-b5d3-d7cfc226b2b4@gmx.de>
+References: <mpearson-lenovo@squebb.ca>
+ <20260925160047.2063361-1-mpearson-lenovo@squebb.ca>
+ <20260925160047.2063361-6-mpearson-lenovo@squebb.ca>
+ <f0407ed1-3b8f-4285-8349-926edf80e54f@gmx.de>
+ <f0c68763-7960-458f-8a82-f5761ea61890@app.fastmail.com>
+ <90fffebb-2c6e-49de-9a73-df194cff0845@gmx.de>
+ <deae55a0-cc2e-453e-8713-7ccc53947923@app.fastmail.com>
+ <c73ea81b-62b3-4cbc-a597-0672f65cdb1f@app.fastmail.com>
+ <81b73de2-62ef-4c7a-b5d3-d7cfc226b2b4@gmx.de>
+Subject: Re: [RFC PATCH 5/7] platform/x86: think-lmi: Initial ThinkLMI v2 driver
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Am 10.10.26 um 21:05 schrieb Shyam Sundar S K:
-
-> Describe the AMD Overclocking WMI interface, the commands used for the
-> sysfs attributes and the debugfs interface.
+On Thu, Oct 15, 2026, at 4:35 PM, Armin Wolf wrote:
+> Am 03.10.26 um 00:08 schrieb Mark Pearson:
 >
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->   Documentation/wmi/devices/amd-wmi-aod.rst | 291 ++++++++++++++++++++++
->   MAINTAINERS                               |   1 +
->   2 files changed, 292 insertions(+)
->   create mode 100644 Documentation/wmi/devices/amd-wmi-aod.rst
+>> Hi Armin,
+>>
+>> On Mon, Sep 28, 2026, at 9:08 PM, Mark Pearson wrote:
+>>> On Fri, Sep 25, 2026, at 4:00 PM, Armin Wolf wrote:
+>>>> Am 25.09.26 um 21:00 schrieb Mark Pearson:
+>>>>
+>>>>> Thanks Armin
+>>>>>
+>>>>> On Fri, Sep 25, 2026, at 2:53 PM, Armin Wolf wrote:
+>>>>>> Am 25.09.26 um 18:00 schrieb Mark Pearson:
+>>>>>>
+>>>>>>> Lenovo Thinkpad, Thinkstation and ThinkCenter are moving to a new common
+>>>>>>> WMI implementation.
+>>>>>>>
+>>>>>>> This driver adds initial support for the new implementation, allowing
+>>>>>>> attributes to be read and modified.
+>>>>>>>
+>>>>>>> Certificate based authentication is not implemented in this
+>>>>>>> version.
+>>>>>>>
+>>>>>>> think-lmi is updated to use this driver if supported by the HW and
+>>>>>>> requested by the user.
+>>>>>>>
+>>>>>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>>>>>> ---
+>>>>>>>     drivers/platform/x86/lenovo/think-lmi-v2.c | 960 +++++++++++++++++++++
+>>>>>>>     drivers/platform/x86/lenovo/think-lmi.c    |   9 +-
+>>>>>>>     drivers/platform/x86/lenovo/think-lmi.h    |  59 ++
+>>>>>>>     3 files changed, 1025 insertions(+), 3 deletions(-)
+>>>>>>>     create mode 100644 drivers/platform/x86/lenovo/think-lmi-v2.c
+>>>>>>>
+>>>>>>> diff --git a/drivers/platform/x86/lenovo/think-lmi-v2.c b/drivers/platform/x86/lenovo/think-lmi-v2.c
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..5bc0a349c5fb
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/drivers/platform/x86/lenovo/think-lmi-v2.c
+>>>>>>> @@ -0,0 +1,960 @@
+>>>>>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>>>> +/*
+>>>>>>> + * Think LMI V2 BIOS configuration driver
+>>>>>>> + *
+>>>>>>> + * Copyright(C) 2026 Lenovo
+>>>>>>> + * Distributed under the GPL-2.0 license
+>>>>>>> + */
+>>>>>>> +
+>>>>>> ...
+>>>>>>
+>>>>>>> +/* Get password settings from BIOS */
+>>>>>>> +static int tlmi_get_pwd_settings(void)
+>>>>>>> +{
+>>>>>>> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+>>>>>>> +	const union acpi_object *obj;
+>>>>>>> +	acpi_status status;
+>>>>>>> +
+>>>>>>> +	if (!tlmi_priv.can_get_password_settings)
+>>>>>>> +		return -EOPNOTSUPP;
+>>>>>>> +
+>>>>>>> +	status = wmi_query_block(LENOVO_BIOS_ACCESS_DATA_GUID, 0, &output);
+>>>>>> Big NACK from my side, this function is deprecated and scheduled for removal.
+>>>>>>
+>>>>>> If i understand correctly the core drivers needs two WMI GUIDs, one for
+>>>>>> discovering
+>>>>>> settings and one for operating on those settings. Please use the
+>>>>>> component framework
+>>>>>> to link those two together by register a component for the data GUID
+>>>>>> and a component
+>>>>>> master for the method GUID.
+>>>>>>
+>>>>>> This also allows you to use the modern buffer-based WMI API, so you can
+>>>>>> leave ACPI
+>>>>>> behind when writing this driver.
+>>>>>>
+>>>>> OK - good to know. As a note, I suspect the original driver will need updating here too.
+>>>>>
+>>>>> For "use the component framework to link those two together" - is there an example or documentation you can recommend as a reference for doing this?
+>>>> https://docs.kernel.org/driver-api/component.html, other than that the
+>>>> Lenvovo Gamezone drivers AFAIK uses it,
+>>>> but in a IMHO convoluted way.
+>>>>
+>>> Thanks - I'm getting my head around this all :)
+>>>
+>>>>>>> +	if (ACPI_FAILURE(status))
+>>>>>>> +		return -EIO;
+>>>>>>> +
+>>>>>>> +	obj = output.pointer;
+>>>>>>> +	if (!obj)
+>>>>>>> +		return -ENOMEM;
+>>>>>>> +
+>>>>>>> +	if (obj->type != ACPI_TYPE_PACKAGE) {
+>>>>>>> +		kfree(obj);
+>>>>>>> +		return -EIO;
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>> +	tlmi_priv.pwdcfg_v2.password_state = obj->package.elements[0].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.minlen = obj->package.elements[1].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.maxlen = obj->package.elements[2].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.strong_password = obj->package.elements[3].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.supported_encodings = obj->package.elements[4].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.supported_keyboard = obj->package.elements[5].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.hdd_user_password = obj->package.elements[6].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.hdd_master_password = obj->package.elements[7].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.nvme_user_password = obj->package.elements[8].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.nvme_master_password = obj->package.elements[9].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.deploy_mode = obj->package.elements[10].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.sys_mgr_pwd_ctrl = obj->package.elements[11].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.power_on_pwd_ctrl = obj->package.elements[12].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.storage_pwd_ctrl = obj->package.elements[13].integer.value;
+>>>>>>> +	tlmi_priv.pwdcfg_v2.sys_mgr_setup_ctrl = obj->package.elements[14].integer.value;
+>>>>>>> +
+>>>>>>> +	if (WARN_ON(tlmi_priv.pwdcfg_v2.maxlen >= TLMI_PWD_BUFSIZE))
+>>>>>>> +		tlmi_priv.pwdcfg_v2.maxlen = TLMI_PWD_BUFSIZE - 1;
+>>>>>>> +
+>>>>>>> +	tlmi_priv.pwd_admin = tlmi_create_auth(SVP, "bios-admin");
+>>>>>>> +	if (tlmi_priv.pwdcfg_v2.password_state & TLMI_SVP_PWD)
+>>>>>>> +		tlmi_priv.pwd_admin->pwd_enabled = true;
+>>>>>>> +
+>>>>>>> +	tlmi_priv.pwd_power = tlmi_create_auth(POP, "power-on");
+>>>>>>> +	if (tlmi_priv.pwdcfg_v2.password_state & TLMI_POP_PWD)
+>>>>>>> +		tlmi_priv.pwd_power->pwd_enabled = true;
+>>>>>>> +
+>>>>>>> +	tlmi_priv.pwd_system = tlmi_create_auth(SMP, "system");
+>>>>>>> +	if (tlmi_priv.pwdcfg_v2.password_state & TLMI_SMP_PWD)
+>>>>>>> +		tlmi_priv.pwd_system->pwd_enabled = true;
+>>>>>>> +
+>>>>>>> +	tlmi_priv.pwd_hdd = tlmi_create_auth(HDD1, "hdd");
+>>>>>>> +	tlmi_priv.pwd_hdd->index = 1;
+>>>>>>> +	if (tlmi_priv.pwdcfg.ext.hdd_user_password ||
+>>>>>>> +	    tlmi_priv.pwdcfg.ext.hdd_master_password) {
+>>>>>>> +		tlmi_priv.pwd_hdd->pwd_enabled = true;
+>>>>>>> +		if (tlmi_priv.pwdcfg.ext.hdd_master_password)
+>>>>>>> +			tlmi_priv.pwd_hdd->index =
+>>>>>>> +				ffs(tlmi_priv.pwdcfg.ext.hdd_master_password) - 1;
+>>>>>>> +		else
+>>>>>>> +			tlmi_priv.pwd_hdd->index =
+>>>>>>> +				ffs(tlmi_priv.pwdcfg.ext.hdd_user_password) - 1;
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>> +	tlmi_priv.pwd_nvme = tlmi_create_auth(NVME1, "nvme");
+>>>>>>> +	tlmi_priv.pwd_nvme->index = 1;
+>>>>>>> +	if (tlmi_priv.pwdcfg.ext.nvme_user_password ||
+>>>>>>> +	    tlmi_priv.pwdcfg.ext.nvme_master_password) {
+>>>>>>> +		tlmi_priv.pwd_nvme->pwd_enabled = true;
+>>>>>>> +		if (tlmi_priv.pwdcfg.ext.nvme_master_password)
+>>>>>>> +			tlmi_priv.pwd_nvme->index =
+>>>>>>> +				ffs(tlmi_priv.pwdcfg.ext.nvme_master_password) - 1;
+>>>>>>> +		else
+>>>>>>> +			tlmi_priv.pwd_nvme->index =
+>>>>>>> +				ffs(tlmi_priv.pwdcfg.ext.nvme_user_password) - 1;
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>> +	kfree(obj);
+>>>>>>> +
+>>>>>>> +	return 0;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int tlmi_analyze(struct wmi_device *wdev)
+>>>>>>> +{
+>>>>>>> +	int i, ret;
+>>>>>>> +
+>>>>>>> +	if (wmi_has_guid(LENOVO_BIOS_CONFIGURATION_GUID))
+>>>>>>> +		tlmi_priv.can_set_bios_settings = true;
+>>>>>>> +	if (wmi_has_guid(LENOVO_BIOS_ACCESS_DATA_GUID))
+>>>>>>> +		tlmi_priv.can_get_password_settings = true;
+>>>>>>> +	if (wmi_has_guid(LENOVO_BIOS_ACCESS_GUID)) {
+>>>>>>> +		tlmi_priv.can_set_bios_password = true;
+>>>>>>> +		tlmi_priv.certificate_support = true;
+>>>>>>> +	}
+>>>>>> This should be used to determine which components the component master wants
+>>>>>> to bind to, as some of them seem to be optional.
+>>>>>>
+>>>>>> Using wmi_has_guid() will not work for duplicated GUIDs, so we need a
+>>>>>> new function
+>>>>>> here. I can write a patch that adds:
+>>>>>>
+>>>>>> 	bool wmidev_exists(const char *guid);
+>>>>>>
+>>>>>> You could then carry this patch with this patch series.
+>>>>>>
+>>>>> That would fantastic - thanks!
+>>>>>
+>>>>> Mark
+>>>> Ok. Is the firmware interface still being in development? Because i
+>>>> would prefer if the main
+>>>> WMI object (aka the component master) would contain some WMI methods to
+>>>> determine which optional
+>>>> features are supported.
+>>>>
+>>> Sorry - somehow missed your message in my inbox.
+>>>
+>>> FW interface is pretty much done. Putting changes in would be quite
+>>> hard now as we'd have to co-ordinate across three different business
+>>> units and the 2027 platforms (where this is being targeted) are just
+>>> around the corner.
+>>>
+>>> What did you have in mind? Changes aren't impossible...but difficult.
+>>>
+>>> Mark
+>> Your patch works - but I changed it to accept a string as input first. e.g:
+>>
+>> bool wmidev_exists(const char *guid_string)
+>> {
+>>          guid_t guid;
+>>          int ret;
+>>
+>>          ret = guid_parse(guid_string, &guid);
+>>          if (ret < 0)
+>>                  return false;
+>>
+>>          return bus_for_each_dev(&wmi_bus_type, NULL, (void *)&guid, wmidev_match_guid) == 1;
+>> }
+>>
+>> Any concerns?
+>>
+>> Mark
 >
-> diff --git a/Documentation/wmi/devices/amd-wmi-aod.rst b/Documentation/w=
-mi/devices/amd-wmi-aod.rst
-> new file mode 100644
-> index 000000000000..c75a8d11d8c9
-> --- /dev/null
-> +++ b/Documentation/wmi/devices/amd-wmi-aod.rst
-> @@ -0,0 +1,291 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +AMD Overclocking WMI driver (amd-wmi-aod)
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Introduction
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +AMD Ryzen platforms implement the AMD Overclocking (AOD) interface
-> +in the platform firmware. The firmware exposes it through a WMI device =
-with
-> +the GUID ``95F20B61-3D44-41F8-87E1-03CBF94C4E8F``. All platforms that
-> +implement the AOD interface use this GUID. On Windows this interface is
-> +used by AMD Ryzen Master.
-> +
-> +The interface is command based. The firmware reports a list of supporte=
-d
-> +commands, each with a numeric command ID and a property flag. Commands =
-with
-> +a linear range of values (property 1) report their minimum, maximum and=
- step
-> +size, commands with discrete values (property 0) report the list of val=
-ues
-> +they accept. A new value is applied by executing the command.
-> +
-> +The firmware stores new values in its setup variables, so they only tak=
-e
-> +effect after a reboot. Some commands also report their current value, b=
-ut
-> +this depends on the firmware: on the systems tested so far the memory c=
-lock
-> +and SMT report their current value, the PPT, TDC and EDC limits do not.
-> +
-> +The driver exposes a selected set of these commands as sysfs attributes=
-,
-> +see Documentation/ABI/testing/sysfs-platform-amd-wmi-aod. An attribute =
-is
-> +only created if the firmware lists the matching command. All attributes
-> +call into the firmware and are only accessible by root. More attributes
-> +can be added later as needed.
-> +
-> +WMI interface description
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> +
-> +The WMI interface description can be decoded from the embedded binary M=
-OF
-> +(bmof) data using the `bmfdec <https://github.com/pali/bmfdec>`_ utilit=
-y.
-> +Only the WMI methods and data classes used by the driver are shown here=
-:
-> +
-> +::
-> +
-> +  [WMI,
-> +   Locale("MS\\0x409"),
-> +   Description("This class contains the definition of the package used =
-in other classes"),
-> +   guid("{ABBC0F58-8EA1-11d1-00A0-C90629100000}")
-> +  ]
-> +  class OIDPackage
-> +  {
-> +      [WmiDataId(1),
-> +       read, write,
-> +       Description("Number of ID")
-> +      ] uint8 Length;
-> +      [WmiDataId(2),
-> +       read, write,
-> +       Description("64*4 bytes of data")
-> +      ] uint32 ID[64];
-> +      [WmiDataId(3),
-> +       read, write,
-> +       Description("64*4 bytes of data")
-> +      ] uint32 property[64];
-> +      [WmiDataId(4),
-> +       read, write,
-> +       Description("64 strings")
-> +      ] string IDstring[64];
-> +  };
-> +
-> +  [WMI,
-> +   Locale("MS\\0x409"),
-> +   Description("This class contains the definition of the package used =
-in other classes"),
-> +   guid("{ABBC0F65-8EA1-11d1-00A0-C90629100000}")
-> +  ]
-> +  class GetdValuesPackage
-> +  {
-> +   [WmiDataId(1),
-> +       read, write,
-> +       Description("ID")
-> +      ] uint32 ID;
-> +   [WmiDataId(2),
-> +      read, write,
-> +      Description("Current")
-> +      ] uint32 Current;
-> +   [WmiDataId(3),
-> +       read, write,
-> +       Description("Number of ID")
-> +      ] uint32 Length;
-> +   [WmiDataId(4),
-> +       read, write,
-> +       Description("100*4 bytes of data")
-> +      ] uint32 DValuesBuffer[100];
-> +  };
-> +
-> +  [WMI,
-> +   Locale("MS\\0x409"),
-> +   Description("This class contains the definition of the package used =
-in other classes"),
-> +   guid("{7BF6AE1F-85CC-4ee5-94FD-394B5FE7E710}")
-> +  ]
-> +  class OutBuffer
-> +  {
-> +   [WmiDataId(1),
-> +       read, write,
-> +       Description("ID")
-> +      ] uint8 result[200];
-> +  };
-> +
-> +  [WMI,
-> +   Locale("MS\\0x409"),
-> +   Description("This class contains the definition of the package used =
-in other classes"),
-> +   guid("{ABBC0F63-8EA1-11d1-00A0-C90629100000}")
-> +  ]
-> +  class GetMinMaxSteppingPackage
-> +  {
-> +      [WmiDataId(1),
-> +          read, write,
-> +          Description("ID")
-> +          ] uint32 Value;
-> +          [WmiDataId(2),
-> +           read, write,
-> +           Description("Current")
-> +          ] uint32 Current;
-> +          [WmiDataId(3),
-> +           read, write,
-> +           Description("Min")
-> +          ] uint32 Min;
-> +          [WmiDataId(4),
-> +           read, write,
-> +           Description("Max")
-> +          ] uint32 Max;
-> +          [WmiDataId(5),
-> +           read, write,
-> +           Description("Stepping")
-> +          ] uint32 Stepping;
-> +  };
-> +
-> +  [WMI,
-> +   Dynamic,
-> +   Provider("WmiProv"),
-> +   Locale("MS\\0x409"),
-> +   Description("Class to Query/Set a CLKValue"),
-> +   guid("{95F20B61-3D44-41F8-87E1-03CBF94C4E8F}")
-> +  ]
-> +  class AMD_ACPI
-> +  {
-> +      [key, read]
-> +       string InstanceName;
-> +      [read] boolean Active;
-> +
-> +      [WmiMethodId(1),
-> +       Implemented,
-> +       read, write,
-> +       Description("Get version")
-> +      ] void QueryVersion([out,Description("version")]uint32 version);
-> +
-> +      [WmiMethodId(3),
-> +       Implemented,
-> +       read, write,
-> +       Description("Get BIOS ACPI support function table.")
-> +      ] void GetObjectID([out,Description("Get BIOS support Object ID t=
-able")]OIDPackage pack);
-> +
-> +      [WmiMethodId(4),
-> +       Implemented,
-> +       read, write,
-> +       Description("Bios request data")
-> +      ] void Getdvalues([in,Description("ID used to identify")]uint32 I=
-D,[out,Description("status")]GetdValuesPackage pack);
-> +
-> +      [WmiMethodId(5),
-> +       Implemented,
-> +       read, write,
-> +       Description("Command Run")
-> +      ] void RunCommand([in,Description("In buffer")]uint8 Inbuf[8],[ou=
-t,Description("Out buffer")]OutBuffer Outbuf);
-> +
-> +      [WmiMethodId(6),
-> +       Implemented,
-> +       read, write,
-> +       Description("Get Min/Max/Stepping values")
-> +      ] void GetMinMaxSteppingValues([in,Description("ID used to identi=
-fy")]uint32 ID,[out,Description("status")]GetMinMaxSteppingPackage pack);
-> +
-> +       [WmiMethodId(8),
-> +       Implemented,
-> +       read, write,
-> +       Description("Get BIOS ACPI support function table2.")
-> +      ] void GetObjectID2([out,Description("Get BIOS support Object ID =
-table2")]OIDPackage pack);
-> +  };
+> I plan to get rid of the GUID strings in the future, so having 
+> wmidev_exists() accept a guid_t is
+> preferable to me. You can use a small wrapper function inside your 
+> driver if you want.
+>
 
-The MOF description is incomplete, please also add unused WMI methods and/=
-or classes. However you do not need to explain them.
+Understood. I've refactored my code to use your original patch (going in with Rong's series now)
 
-Thanks,
-Armin Wolf
-
-> +
-> +WMI method usage
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +All WMI methods use instance 0. The firmware reads a 32-bit input argum=
-ent
-> +even for WMI methods that take no arguments, so the driver always passe=
-s
-> +at least a 32-bit argument. All integers are 32-bit little-endian value=
-s.
-> +
-> +QueryVersion (method ID 1)
-> +--------------------------
-> +
-> +Returns the version of the AOD interface implemented by the firmware as
-> +a single integer.
-> +
-> +GetObjectID (method ID 3) and GetObjectID2 (method ID 8)
-> +--------------------------------------------------------
-> +
-> +Return the list of supported general (GetObjectID) and overclocking
-> +(GetObjectID2) commands as a package with 193 elements:
-> +
-> +- the number of valid entries
-> +- 64 command IDs
-> +- 64 property flags
-> +- 64 command names as strings
-> +
-> +The driver uses both lists during probe to find out which of its sysfs
-> +attributes are supported.
-> +
-> +Getdvalues (method ID 4)
-> +------------------------
-> +
-> +Takes a command ID and returns the discrete values supported by this
-> +command:
-> +
-> +- the command ID
-> +- the current value
-> +- the number of valid discrete values
-> +- 100 discrete values
-> +
-> +RunCommand (method ID 5)
-> +------------------------
-> +
-> +Takes a command ID and a new value, and applies the new value. The
-> +firmware returns a 200 byte buffer, with the 32-bit status of the
-> +operation (AodSmiStatus) located at offset 2. A status of 0 means
-> +success.
-> +
-> +GetMinMaxSteppingValues (method ID 6)
-> +-------------------------------------
-> +
-> +Takes a command ID and returns the range of values supported by this
-> +command:
-> +
-> +- the command ID
-> +- the current value, or 0 if the firmware does not report it
-> +- the minimum value
-> +- the maximum value
-> +- the step size
-> +
-> +Commands with discrete values return all fields as 0. In the same way,
-> +Getdvalues returns an ID and a length of 0 for commands with a linear r=
-ange.
-> +
-> +The WMI methods 2 (Init), 7 (GetDimmSpdData), 9 (GetRmpData),
-> +10 (GetOppTable), 11 (GetOppData) and 12 (GetMemoryProfile) are not use=
-d
-> +by the driver.
-> +
-> +Commands used by the driver
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> +Command ID	sysfs attribute		Firmware unit	sysfs unit
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> +0x00050001	ppt_limit		mW		uW
-> +0x00050002	tdc_limit		mA		mA
-> +0x00050003	edc_limit		mA		mA
-> +0x00020001	mem_clock		MHz		MHz
-> +0x00020026	smt_enable		0/1		0/1
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> +
-> +Debugfs interface
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +For debugging and for tools that need access to commands without a
-> +dedicated sysfs attribute, the driver exposes the raw WMI methods in
-> +``/sys/kernel/debug/amd-wmi-aod-<device>/``. This interface is not a
-> +stable ABI and is only accessible by root.
-> +
-> +``query_version``
-> +  Reads the AOD interface version.
-> +
-> +``get_object_id``, ``get_object_id2``
-> +  Read the command lists in text form, one line per command.
-> +
-> +``get_object_id_raw``, ``get_object_id2_raw``
-> +  Read the command lists as a 4612 byte binary structure: the number of
-> +  entries (u32), 64 command IDs (u32), 64 property flags (u32) and 64
-> +  NUL-terminated command names of 64 bytes each. The firmware is querie=
-d
-> +  when the file is read.
-> +
-> +``get_dvalues``, ``get_minmax_stepping``
-> +  Write a command ID, then read the result of Getdvalues or
-> +  GetMinMaxSteppingValues for this command.
-> +
-> +``run_command``
-> +  Write ``"<command id> <value>"`` to execute a command.
-> +
-> +``run_command_status``
-> +  Reads the status reported by the firmware for the last command execut=
-ed
-> +  using ``run_command``.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d069d02665e2..0a3b81e59142 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1340,6 +1340,7 @@ M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->   L:	platform-driver-x86@vger.kernel.org
->   S:	Supported
->   F:	Documentation/ABI/testing/sysfs-platform-amd-wmi-aod
-> +F:	Documentation/wmi/devices/amd-wmi-aod.rst
->   F:	drivers/platform/x86/amd/wmi/
->  =20
->   AMD XDNA DRIVER
+Thanks!
+Mark
