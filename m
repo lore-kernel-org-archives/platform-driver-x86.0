@@ -1,105 +1,99 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.barrensea.org (mail.barrensea.org [198.12.121.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C4A2BDC1C;
-	Fri, 16 Oct 2026 08:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908AB3A7F68;
+	Fri, 16 Oct 2026 08:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.12.121.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792138596; cv=none; b=XS82UannXosfc0Jie5UQQIcCCNPaNmTHzRT7WB3hO5BSCbt4yX2gAWAZi/57pXMXFODso0+LqTgB/WJ6fasA1NUT1nTFJCVpb0ve5IkEWA09O/1jU/xWERoETwTAoAeixFObej6w7pWgVB3Hvc/cAyRtCtNcykVtO2mki8APf0Q=
+	t=1792139339; cv=none; b=WKyE23AI9F0H4X2CKkhBnty2+k6nZ2MrrdOXcIGCwWvLRIVKBR6B/2Hwp9i+enwV5Cnwd45y87OS8jdnd/GBGaN2UroC3zFwqR3af04UaWo3ovqrIUitoFwb8uQMPjElg8zI8wwyAOkgINfEyQrcK+C8IE2DH5h+lpXe4C5xC58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792138596; c=relaxed/simple;
-	bh=6TOnW/MA4pMf99mGWUzYsj73jWLOXg/h4TzwFJtG1x8=;
+	s=arc-20240116; t=1792139339; c=relaxed/simple;
+	bh=LBQ9ZD62JTNmRS6AOCDUgLAf++EljMJmm0NlNWltPEY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oqw84HhEb19pkko6FhTDn8Q4cKaNvdfWkMhR7a8RoigViICmCSjQhwEWQzauv+/u32yRHI6KbOWZI0o9YCpuHM4zcIEgRqj7ZLHuPwH0+5x2tkoEkL7UzGRBesOAh6I9zxxNtw53cMZKz5Rn3lyaFVIBEanpfynyAz/hoo1gi40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=CtrghCmD; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 MIME-Version; b=GKXab9uxL1NGasJkm0ANBplFpU7bkomgNVelZehNdR1smcQ4RYWEzcaPpS+VWYxJJbWdDzTUPBedCQk67lJLVVi0/a+2bUCr7gup/ITstFnENxaAljZuNvS8Mytl2prw6T7qD2ysu/Pljc5Rrj/ZgHdfDvM7zdKNZPU2uQfJGhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=barrensea.org; spf=pass smtp.mailfrom=barrensea.org; dkim=pass (2048-bit key) header.d=barrensea.org header.i=@barrensea.org header.b=GDsNndwE; arc=none smtp.client-ip=198.12.121.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=barrensea.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=barrensea.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="CtrghCmD"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id A48C78086C;
-	Fri, 16 Oct 2026 10:16:31 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id zfgfk5ePhhTs; Fri, 16 Oct 2026 10:16:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1792138591; bh=6TOnW/MA4pMf99mGWUzYsj73jWLOXg/h4TzwFJtG1x8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CtrghCmD4i1Cocg3bZXAewE9n71xPHw6tKpwQ6Kzvjwp66kQhIvNtLOeRoPXQFK9p
-	 8F9YZTq5k2AO1xbDF25C/hK1xxQmrdVH8QZUnhHN9oXzBQ9o5/+0Ynrs2IMuEVX0e7
-	 l43/seT75UKZl6ooFlZ+imXM0J7KugJRcInTSJCLK0db2Lv6QbvsV88yic5JS7o3gK
-	 hWJl7dHYBMvQ+e13PUtr0vW+nUJhNo6De9unz8NH8dKe1osyHloI68nZp1zp9r1jfF
-	 ScdjIssUJOQw7ah1nIE537/geQ2n1cevAC/4UgyM2wiBmd9HwQV0vf9eecU+6kDASd
-	 lNFj7gXop/jeA==
-From: Marco Scardovi <scardracs@disroot.org>
-To: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
- Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>,
- Denis Benato <denis.benato@linux.dev>
-Cc: linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 6/6] platform/x86: asus-armoury: add power limits quirk for G533QS
-Date: Fri, 16 Oct 2026 10:16:17 +0200
-Message-ID: <3aECX-AIQvCO8gjgxWHq5g@disroot.org>
-In-Reply-To: <20261015181850.170862-7-scardracs@disroot.org>
-References:
- <20261015181850.170862-1-scardracs@disroot.org>
- <20261015181850.170862-7-scardracs@disroot.org>
+	dkim=pass (2048-bit key) header.d=barrensea.org header.i=@barrensea.org header.b="GDsNndwE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=barrensea.org;
+	s=mail; t=1792139335;
+	bh=LBQ9ZD62JTNmRS6AOCDUgLAf++EljMJmm0NlNWltPEY=;
+	h=From:To:Cc:Subject:In-Reply-To:References;
+	b=GDsNndwE3gr5jIrHak54DGb5SZiWm1H71En0o+14tOQh9Z1PWhFtJidFODb8TpWhu
+	 MbKLpLXROuKg9by1TrASJwujvTFL2vpicJKdxIVV0KWYERAXhDVVR7hdXMpZ26kKx2
+	 +OY4eMvevnwA0P8QcbOpWH8Wkprumb+1hBSt7npDIHDcXgLqspOtjWdV36Ft7MhXko
+	 ivmudPK/SCRVDr9Rgqsj7AtG7R6CNY+X60HAD9dzjJOvexRbTiAZTRBBDHmtketE/3
+	 A97ICg6N5bDDPej38N06BEgHn0wYcxMWWb7peKKNI/AU8UQIX2uqsz8JxcMIDiPTa0
+	 ZTltLKOgLCRbw==
+From: Donjuanplatinum <donplat@barrensea.org>
+To: W_Armin@gmx.de
+Cc: hans@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donjuanplatinum <donplat@barrensea.org>
+Subject: [PATCH v3 RESEND] platform/x86: uniwill-laptop: Add support for
+Date: Fri, 16 Oct 2026 16:28:20 +0800
+Message-ID: <20261016082819.1414285-2-donplat@barrensea.org>
+In-Reply-To: <87wlridqzx.fsf@barrensea.org>
+References: <87wlridqzx.fsf@barrensea.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-In data gioved=C3=AC 15 ottobre 2026 20:18:50 Ora legale dell=E2=80=99Europ=
-a centrale,=20
-Marco Scardovi ha scritto:
-> add power limits quirk entry for ASUS G533QS laptop.
-> The limits are extracted from the device's ThrottleGear XML configuration.
->=20
-> Signed-off-by: Marco Scardovi <scardracs@disroot.org>
-> ---
->  drivers/platform/x86/asus-armoury.h | 13 changes(+/-)
->  1 file changed, 13 insertions(+), 0 deletions(-)
->=20
-> --- a/drivers/platform/x86/asus-armoury.h
-> +++ b/drivers/platform/x86/asus-armoury.h
-> @@ -1223,6 +1223,19 @@
->  	},
->  		{
->  			.matches =3D {
-> +				DMI_MATCH(DMI_BOARD_NAME,=20
-"G533QS"),
-> +			},
-> +			.driver_data =3D &(struct power_data) {
-> +				.ac_data =3D &(struct power_limits)=20
-{
-> +					.ppt_pl1_spl_max =3D 80,
-> +					.ppt_pl1_spl_min =3D 15,
-> +					.ppt_pl2_sppt_max =3D 80,
-> +					.ppt_pl2_sppt_min =3D 15,
-> +				},
-> +			},
-> +		},
-> +		{
-> +			.matches =3D {
->  				DMI_MATCH(DMI_BOARD_NAME,=20
-"G713QR"),
->  			},
->  			.driver_data =3D &(struct power_data) {
+Add support for the MECHREVO WUJIE Series 15 X Pro (WUJIE
+Series-X5SP4NAG).
 
-There was a cover as well but seems it didn't start at all...
-@Ilpo these are the models I sent +2 new models asked in the meantime (that=
-'s
-why I waited a bit to send them again). I don't have any rush to see them
-merged as always.
+Signed-off-by: Yifei Yao <donplat@barrensea.org>
+---
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 22 +++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Best Regards,
-Marco
-
-
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index 7a2eeaec4c96..bf46f03fb5f5 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -2712,6 +2712,20 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+ 	.lightbar_max_brightness = 200,
+ };
+ 
++static struct uniwill_device_descriptor series_x5sp4nag_descriptor __initdata = {
++	.features = UNIWILL_FEATURE_FN_LOCK |
++		    UNIWILL_FEATURE_SUPER_KEY |
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN |
++	            UNIWILL_FEATURE_BATTERY_CHARGE_MODES |
++		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT |
++		    UNIWILL_FEATURE_AC_AUTO_BOOT |
++		    UNIWILL_FEATURE_USB_POWERSHARE,
++	.kbd_led_single_color = false,
++	.kbd_led_max_brightness = 4,
++};
++
+ /*
+  * The featuresets below reflect somewhat chronological changes:
+  * 1 -> 2: UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL is added to the EC firmware.
+@@ -2996,6 +3010,14 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
+ 		},
+ 		.driver_data = &tux_featureset_4_descriptor,
+ 	},
++	{
++		.ident = "MECHREVO WUJIE Series 15 X Pro",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "WUJIE Series-X5SP4NAG"),
++		},
++		.driver_data = &series_x5sp4nag_descriptor,
++	},
+ 	{
+ 		.ident = "TUXEDO InfinityBook Pro 14/15 Gen9 Intel/Commodore Omnia-Book 15 Gen9",
+ 		.matches = {
+-- 
+2.55.0
 
