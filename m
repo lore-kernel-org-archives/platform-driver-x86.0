@@ -1,108 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE86137882A;
-	Fri, 16 Oct 2026 07:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C4A2BDC1C;
+	Fri, 16 Oct 2026 08:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792137382; cv=none; b=r391nnJto/xUYlOlCmbeg/5zx5IKAJT3iobzxCcWSRRtttXkFQkcK3JsGdeoEJnxEgf9eFVCm3BPPuYvkFB0wIy3d2/j2Q8aw1Vjai8I4A/8scQDWEpzVJiXEgBePUe3uelWOQZtUAjThCTltNc3PEfK7+cMTx1Ewy0D1zCN4xI=
+	t=1792138596; cv=none; b=XS82UannXosfc0Jie5UQQIcCCNPaNmTHzRT7WB3hO5BSCbt4yX2gAWAZi/57pXMXFODso0+LqTgB/WJ6fasA1NUT1nTFJCVpb0ve5IkEWA09O/1jU/xWERoETwTAoAeixFObej6w7pWgVB3Hvc/cAyRtCtNcykVtO2mki8APf0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792137382; c=relaxed/simple;
-	bh=+drlSrJPTY/pu5rpNmgJYnF6iYPtFEufsY2xeEh6AQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mhUfiekdok1gg3MjhJ+J7yApC9ml4I81uro43flHZT7ElROeUnxZDpyGvO2t2VvLjuizOMTDnCiWw9kAxOVfPc+w4amQt+QPiu6pdwEWHfZAQih6xCPYhEzia21F7C+9U+W0ZJcO43xDtFUlY5oJRH/xzAv+CMBA3iMqaJ53Bgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0s+bGmL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792138596; c=relaxed/simple;
+	bh=6TOnW/MA4pMf99mGWUzYsj73jWLOXg/h4TzwFJtG1x8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Oqw84HhEb19pkko6FhTDn8Q4cKaNvdfWkMhR7a8RoigViICmCSjQhwEWQzauv+/u32yRHI6KbOWZI0o9YCpuHM4zcIEgRqj7ZLHuPwH0+5x2tkoEkL7UzGRBesOAh6I9zxxNtw53cMZKz5Rn3lyaFVIBEanpfynyAz/hoo1gi40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=CtrghCmD; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0s+bGmL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B00A1F000C4;
-	Fri, 16 Oct 2026 07:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792137381;
-	bh=vJntNNnJE05BLx+i3AFhrRvMHPGgrpV5I5IEsjodr/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=L0s+bGmLFoR9LcyDnyZ/CTHSnMQEsFftjcl11NZp1TX0z2l6yn+auCuUQzM44aIrJ
-	 Pg9ELB8ysAWQF2FaAxEH/SWZWDnHxP1BHLFWr2X/2e4NUZOLL19vMho7N34RXFT4OF
-	 sULgwuz1/71/Ff9h7RxiDWDD5XA76bEIVZLcLJmQnaKZDujM+kBmzEdzEBszFossQC
-	 GCUlUtYLugJ8HWZBvjvn1WRcWltAvcMQvVFDgLK2hdA7Jz4JRZr1dvgk9nV+Zt2zoW
-	 uS0mzDfIdFWhewl1ceSKPcGADBDoScTV61IVcVAn/ZIJCfJGXGv0plVyevKLvZu0qX
-	 vnLrv9tu0c0Yw==
-Date: Fri, 16 Oct 2026 07:56:18 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	Xi Pardee <xi.pardee@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, tfiga@chromium.org
-Subject: Re: [PATCH] platform/x86/intel/pmc: Disable ACPI PM timer during
- suspend on Panther Lake
-Message-ID: <atHYognzBSwCrF1f@google.com>
-References: <20261015035712.3604634-1-tzungbi@kernel.org>
- <6075cb9a-b739-644a-2dac-998e7893ec31@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="CtrghCmD"
+Received: from mail01.layka.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A48C78086C;
+	Fri, 16 Oct 2026 10:16:31 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id zfgfk5ePhhTs; Fri, 16 Oct 2026 10:16:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1792138591; bh=6TOnW/MA4pMf99mGWUzYsj73jWLOXg/h4TzwFJtG1x8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=CtrghCmD4i1Cocg3bZXAewE9n71xPHw6tKpwQ6Kzvjwp66kQhIvNtLOeRoPXQFK9p
+	 8F9YZTq5k2AO1xbDF25C/hK1xxQmrdVH8QZUnhHN9oXzBQ9o5/+0Ynrs2IMuEVX0e7
+	 l43/seT75UKZl6ooFlZ+imXM0J7KugJRcInTSJCLK0db2Lv6QbvsV88yic5JS7o3gK
+	 hWJl7dHYBMvQ+e13PUtr0vW+nUJhNo6De9unz8NH8dKe1osyHloI68nZp1zp9r1jfF
+	 ScdjIssUJOQw7ah1nIE537/geQ2n1cevAC/4UgyM2wiBmd9HwQV0vf9eecU+6kDASd
+	 lNFj7gXop/jeA==
+From: Marco Scardovi <scardracs@disroot.org>
+To: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+ Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>,
+ Denis Benato <denis.benato@linux.dev>
+Cc: linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH 6/6] platform/x86: asus-armoury: add power limits quirk for G533QS
+Date: Fri, 16 Oct 2026 10:16:17 +0200
+Message-ID: <3aECX-AIQvCO8gjgxWHq5g@disroot.org>
+In-Reply-To: <20261015181850.170862-7-scardracs@disroot.org>
+References:
+ <20261015181850.170862-1-scardracs@disroot.org>
+ <20261015181850.170862-7-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6075cb9a-b739-644a-2dac-998e7893ec31@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Oct 15, 2026 at 11:52:05AM +0300, Ilpo Järvinen wrote:
-> > diff --git a/drivers/platform/x86/intel/pmc/ptl.c b/drivers/platform/x86/intel/pmc/ptl.c
-> > index a7d5d4f77934..8c32f9be9302 100644
-> > --- a/drivers/platform/x86/intel/pmc/ptl.c
-> > +++ b/drivers/platform/x86/intel/pmc/ptl.c
-> > @@ -6,6 +6,7 @@
-> >   * Copyright (c) 2025, Intel Corporation.
-> >   */
-> >  
-> > +#include <linux/io.h>
-> >  #include <linux/pci.h>
-> >  
-> >  #include "core.h"
-> > @@ -548,6 +549,9 @@ static const u8 ptl_pmc_list[] = {PMC_IDX_MAIN};
-> >  #define PTL_NPU_PCI_DEV                0xb03e
-> >  #define PTL_IPU_PCI_DEV                0xb05d
-> >  
-> > +#define ACPI_TMR_CTL_OFFSET            0x18fc
-> > +#define ACPI_TIM_DIS                   BIT(1)
-> 
-> Please add include for this as well.
+In data gioved=C3=AC 15 ottobre 2026 20:18:50 Ora legale dell=E2=80=99Europ=
+a centrale,=20
+Marco Scardovi ha scritto:
+> add power limits quirk entry for ASUS G533QS laptop.
+> The limits are extracted from the device's ThrottleGear XML configuration.
+>=20
+> Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+> ---
+>  drivers/platform/x86/asus-armoury.h | 13 changes(+/-)
+>  1 file changed, 13 insertions(+), 0 deletions(-)
+>=20
+> --- a/drivers/platform/x86/asus-armoury.h
+> +++ b/drivers/platform/x86/asus-armoury.h
+> @@ -1223,6 +1223,19 @@
+>  	},
+>  		{
+>  			.matches =3D {
+> +				DMI_MATCH(DMI_BOARD_NAME,=20
+"G533QS"),
+> +			},
+> +			.driver_data =3D &(struct power_data) {
+> +				.ac_data =3D &(struct power_limits)=20
+{
+> +					.ppt_pl1_spl_max =3D 80,
+> +					.ppt_pl1_spl_min =3D 15,
+> +					.ppt_pl2_sppt_max =3D 80,
+> +					.ppt_pl2_sppt_min =3D 15,
+> +				},
+> +			},
+> +		},
+> +		{
+> +			.matches =3D {
+>  				DMI_MATCH(DMI_BOARD_NAME,=20
+"G713QR"),
+>  			},
+>  			.driver_data =3D &(struct power_data) {
 
-Ack, fixed in v2.
+There was a cover as well but seems it didn't start at all...
+@Ilpo these are the models I sent +2 new models asked in the meantime (that=
+'s
+why I waited a bit to send them again). I don't have any rush to see them
+merged as always.
 
-> > +static void ptl_set_acpi_pm_timer_on_suspend(struct pmc_dev *pmcdev, bool suspend)
-> > +{
-> > +	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-> > +	bool enabled;
-> > +	u8 val;
-> > +
-> > +	if (!pmc || !pmc->regbase)
-> > +		return;
-> > +
-> > +	if (!suspend && !pmcdev->pm_timer_enabled)
-> > +		return;
-> > +
-> > +	val = readb(pmc->regbase + ACPI_TMR_CTL_OFFSET);
-> > +	enabled = !(val & ACPI_TIM_DIS);
-> > +	if (suspend && enabled)
-> > +		writeb(val | ACPI_TIM_DIS, pmc->regbase + ACPI_TMR_CTL_OFFSET);
-> > +	else if (!suspend)
-> > +		writeb(val & ~ACPI_TIM_DIS, pmc->regbase + ACPI_TMR_CTL_OFFSET);
-> 
-> Change val on a separate line for clarity.
-> 
-> How about using this alternative:
-> 
-> 	old_val = val;
-> 	if (...)
-> 		val |= ACPI_TIM_DIS;
-> 	else if (...)
-> 		val &= ~ACPI_TIM_DIS;
-> 	if (val != old_val)
-> 		writeb(...);
+Best Regards,
+Marco
 
-Ack, tried something similar in v2.
+
+
