@@ -1,88 +1,130 @@
-Received: from mail-10698.protonmail.ch (mail-10698.protonmail.ch [79.135.106.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8987B551990
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 17:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3823256E059
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 17:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792170660; cv=none; b=IYHyw7zR6/d3Xkzu2twP4VTE/b8CWNubQZri6+G0EWHAJ15J/DBTF5gqa2QrZ6nftxupbn/q8nAYTS9b9X22K4H9YujWQhLRO+EtOxQ9UXtY/t5NWWD+VQRo5yEz92mYny7qWefyTx0wWiqw4gIGwtZ77BEgxvRCkZHp+Tc64xQ=
+	t=1792171582; cv=none; b=M3M/PaicIRcc2d8XTJh2GJfPSa1kuxgrztMhfbChH6GURxs7GvM8GsNs5o22cSizUU8fk6zMv3mKBeAWHohzBfNOEkAkM3up70N5Eq2jOnKCS7c3Y/lMB5Mn49mex0SMYL8Tad18uCfklpkv2O2Rk58L+Yrvyck8VsMiRORl4s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792170660; c=relaxed/simple;
-	bh=W7xbTv6LVk2SPZ7FumDpd75gCS8aZPFROkF1VDLtQ9M=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BZi+7pL6r36rfCJslQ6WiS2l025l+4Diyxp0lRgkA2AhFeLBXk/ibOJn+3HXyb4HOb7BqWm9d5BXMPjUsmmfPeifwxr0fT7VE1LR49zF/gt6xiph57D2b8ZYlQh14/5BV7MY02ncj+KX6+3SjJTZOj7ZKq/JXSiNIRcqKbRyyOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Gyh28cR0; arc=none smtp.client-ip=79.135.106.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1792171582; c=relaxed/simple;
+	bh=M4ytFOlsuAxsi/XkpYodCf/7zbjSI9R56ThsIDKe7B4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AiQN1wxkokD7KRXXf0IyWeDihy+fUJdNYimb7efpztt8PPQO3/HV6K07Qqn/EyUdQrP+mX7BUHLmh2sH1nvjkeDazrIjV89q78yn+/N4dxYGjb/LS3StGTyfhx+cP85F/T6HGJ3FYx4Kqe3s8VCqS+W3ZszjwXdokyg+wiAYqU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YT9r1tyk; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Gyh28cR0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1792170647; x=1792429847;
-	bh=gD58N0uFrmMxGVW+YSTVLDO9ivTCqwde1SgK7xA5pCM=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=Gyh28cR0MG05SXgd1JicviitTvjWCn2hXIoQfbNB9aQG4cKlc5ccESuXJGc3Ea4g0
-	 d2jciT/Tizfef+zNfXGJ+SQWIhB8zttzCPadIuwgL8YTM0rOxWbXH0qHcyaepIOsxv
-	 KXT/Gay909nkCcHYsGCIFWV8Vqv80nGnilEMWfjKCxkFYP7Tn6HCd/wdqeeyXC6fj+
-	 7NYCU3/hrJcFF8UQO4sevHUh2qLlv2/5Wo8y08D0hwS1RdsrU0njvBuUSJscVMy7qv
-	 L6fTpywC6eMojAbGlISpMaRhVOi7p8wjGQ4TgsoEhlIBKRwzhT4rps5RY5WPDZ+h2Z
-	 nVfpMY6CLnAog==
-Date: Fri, 16 Oct 2026 17:10:41 +0000
-To: "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>
-From: verazimmerman1987 <verazimmerman1987@proton.me>
-Cc: "daniel.lezcano@kernel.org" <daniel.lezcano@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "superm1@kernel.org" <superm1@kernel.org>, "lsanche@lyndeno.ca" <lsanche@lyndeno.ca>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: platform_profile: power-saver lost on Panther Lake when SoC Power Slider and dell-pc are both bound (low-power vs quiet)
-Message-ID: <UPfoGdnS1R04q8uekSMTyes9PbDuvsGeBE42zHmsjD2xIdfPYx7ejdcpZhrxWFq6uwoMvClHTuHbrwaCh3yxD0Rw7OarNABC4dZsDra44mk=@proton.me>
-Feedback-ID: 187400468:user:proton
-X-Pm-Message-ID: b9e317f2340975c03edd43708d77f12298f2d894
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YT9r1tyk"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2e5fb79ce82so545325ad.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2026 10:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792171580; x=1792776380; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=M0sMKvoCBddf3NULdihue/8J2Gg5vlScxeExo0WVuVY=;
+        b=YT9r1tykwfy+qmrBSU91HMTTkCjnU8RjsmfQNLfQ3XzLTlze4lqW156PQbDydcvjJb
+         jfAQZ8gjslI2PqFe2tGlwkqANkTSz04sCQ8k7n+Sb1FuYK3FQ/RliVmeitvEC0ouOt8q
+         dmkKyx+3sd6wDB4jIBlv0FVF9plW7wk2iM3xrAgZ4o4uueqPkY1LotcrxSY+Mw/xV4X0
+         z0xChxpPXmheaZAGkyDGNjkpwFZ97mahfyfLyb2oLaomBe8dD3JRmmwHmftvZI6ITzeX
+         BD+IxG8LrqWR9y6HRedL8VtKBynpKXhTz1dIHJbBbnbDA8lrac6jxn0sUbp6LAbc7F/w
+         uRxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792171580; x=1792776380;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=M0sMKvoCBddf3NULdihue/8J2Gg5vlScxeExo0WVuVY=;
+        b=ViQKKdx24ozvWZWcIWFwkECriEXA5PkvooOSazlStqHclSNK1Tx7XxZ6zrXTkc//yG
+         2Ej9gKMy585n9YnodDaqEdRVTVvEjBnQ9wLzsbs3/+Ckgi+i/qVKf7mktvdu1BXRGyxn
+         boYhu5ZDaGe75ik1u0e4kuuhb8CVci39qXtyOp1o04nws9nrPhOcka5YqxLmx/TLKqsc
+         zevsQLWO613NZC3zYkU1rXbF2AhoEwyDbGcz54zr1Ed3Fygkw6DH5ONwbuN3Isypn3fM
+         /mWTYaBRYMpi4ndxZohf3uXXmQItL1FgxMmA8+Nmh4hkxz9KpQ/0M5dxHz/YfnD8kVdR
+         OCUQ==
+X-Gm-Message-State: AFq9FYKQcHNVNboU+p4PuFwYv3GeaZKsDAUCxqoBQ/fci72sQyE8OaN6
+	v7NKjOsP/LIFXZ7SsTuVOZD7PtrrD0egLktCexz75v1kqveXAHiGhv2/
+X-Gm-Gg: AYBFou31wA9TArpxJaYOLxnjpooClDzBZKocQWskZt1p2d9+yik/zXJ3zrSDb2QH267
+	KII+6r+8Oy/EfliFONXRgzRcp1D9Ej8y/T3QY/ttE4mKz9W9xXujf2MGyx4ED+NB6qv9J9LqRXe
+	PTBlybea2xyd64bR1cW7suPrCZUus3MQBuvng0hJb4cXNisvBc+jEwTuEMQ1w+fpziXg2w414Ei
+	bjhOSIQjUBwZ/bPLXLB9yfJlhO0bqK5eTlZmETuIy/sKH+3MjTVYQ9ATWsgHO0l5OxrW7PmNwfP
+	mZSUaFRsVU9RVOU2GWmhZaKXUexRr2ARC2s6wGQxW/B0m/EnADTO+PM/8639NDniOVsDY56+oJ6
+	axEE/GC4ZM9D3HNQY59HX2DHLBrMN8h+V7vKC/f1di7tMMGFe75s3QFRhs8MCFsHetVbvn1XQ1a
+	SHaW/U0zV/gx2owFUZM2gQ96I3MuPOt44IEY+OAmi1HtrK/s1gTHP67h+mhrsL52bNEcQ/Yi3vp
+	cBCx5DOsi4kX19tLzrDg34mr8xBTyNox2a+s5e/7gbw1yUUCs1IVCI9Co8lKsRAmgHs
+X-Received: by 2002:a17:903:2f86:b0:2e9:460e:ca49 with SMTP id d9443c01a7336-2e9a68da459mr5690005ad.18.1792171580463;
+        Fri, 16 Oct 2026 10:26:20 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e97e5d5558sm13901345ad.7.2026.10.16.10.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Oct 2026 10:26:20 -0700 (PDT)
+Date: Fri, 16 Oct 2026 22:56:14 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, W_Armin@gmx.de
+Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP OmniBook
+ 5 16-ag1xxx (board 8DF4)
+Message-ID: <atJc2J2hYrdI_Eun@archlinux>
+References: <CAPvUaSo1D+1Tvk3-4TMiXw-ScBtY8Mu0FzO7R_EG6zrjYfjYqg@mail.gmail.com>
+ <asxTYBiGy6lf6-Ki@archlinux>
+ <CAPvUaSo-ubCOCYYPadY1C23y1Fd_AAhQLuVKWRa6F1XVh6mk_Q@mail.gmail.com>
+ <asz7WqGzukhkYHGD@archlinux>
+ <CAPvUaSrbWrBuvAi3R02xC8w8M5Yh97pVd3-+FBXLp3mPgG5cUQ@mail.gmail.com>
+ <as0bOFOoaaw-smyB@archlinux>
+ <CAPvUaSoBgAG=MX93vMhfEiEk5bYXGydFsGn8CpoCu_QVQRPTCQ@mail.gmail.com>
+ <CAPvUaSpPVYc-5M72G0Hf9JPsbdAp2-4f-p5OetYbMKdLqm0PXQ@mail.gmail.com>
+ <atEh9Gon95EFIq76@archlinux>
+ <CAPvUaSpq2d5hkxTaqAL6rBoeHct68Y37C4nSpV+goGZ-QwrCsw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAPvUaSpq2d5hkxTaqAL6rBoeHct68Y37C4nSpV+goGZ-QwrCsw@mail.gmail.com>
 
-Hi,
+On Fri, Oct 16, 2026 at 09:06:03AM +0200, Lorenzo Collevecchio wrote:
+>Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP
+>OmniBook 5 16-ag1xxx (board 8DF4)
+>
+>Hi Krishna,
+>
+>Thanks a lot for digging into the ACPI code, the explanation makes
+>everything fit: the missing GMCF call for HPWMI_GM, Local2 being left
+>as an Integer, and the -22 coming from that.
+>
+>I also tried your suggestion about the platform profile. With
+>HPWMI_READ/WRITE the errors should not appear:
+>
+>  Before: dmesg | grep -c WHCM  ->  3 (the three boot-time errors)
+>  cat /sys/firmware/acpi/platform_profile  ->  quiet
+>  After:  dmesg | grep -c WHCM  ->  3 (no new errors)
+>
+>On the fan: thanks for confirming that acpi_fan reads the EC value
+>correctly. Together with hearing the fan on Mint and on CachyOS at
+>idle, that makes me fairly comfortable that the 0 RPM readings are the
+>fan really being off.
+>
+>Your plan to query the fan count and hide pwm1_enable and
+>fan{1,2}_input when it fails sounds good to me. I am happy to test it
+>on 8DF4 whenever you have a patch, and I can rebase it onto a stable
+>kernel tree on my side if that is easier for you.
+>
+>I also tried 7.2.10-1-cachyos: dmesg and the hp-wmi hwmon folder are
+>identical to 7.2.9 (three WHCM errors, then the -22 message, and
+>pwm1_enable still present).
+>
+>Thanks again for the time you spent on this.
 
-On a Dell XPS 14 (2026, Panther Lake, Core Ultra X7 358H) two platform
-profile handlers are registered, and their choices have no common
-low-power option, so the legacy /sys/firmware/acpi/platform_profile
-interface exposes only "balanced performance". As a result
-power-profiles-daemon cannot select a low-power firmware mode in
-power-saver.
+Thanks, I will share the final proposed patch on your Bugzilla report
+(222138), and leave this thread for others to pick up the WQBC/WQBE
+errors.
 
-Handlers:
-
-  platform-profile-0  name: SoC Power Slider
-                      choices: low-power balanced performance
-  platform-profile-1  name: dell-pc
-                      choices: cool quiet balanced performance
-
-  /sys/firmware/acpi/platform_profile_choices: balanced performance
-
-Effect: power-saver in power-profiles-daemon leaves both handlers at
-"balanced". The Dell firmware stays in its "optimized" mode, so
-thermald --adaptive keeps applying the optimized DTT table (PL1
-19-25 W) instead of the quiet/cool tables (PL1 15-19 W, lower skin
-temperature targets). Setting the handlers individually
-(dell-pc=3Dquiet, SoC slider=3Dlow-power) works and thermald picks the
-"quiet" target, but the legacy file then reports "custom" and
-power-profiles-daemon falls back to "balanced", so there is no
-consistent way to use it.
-
-This looks like the same class of problem as amd-pmf + asus-wmi,
-which was solved by adding "quiet" as a hidden choice in amd-pmf
-(commit 44e94fece517, "platform/x86/amd: pmf: Add 'quiet' to hidden
-choices"). Would a similar hidden "quiet" (and perhaps "cool") choice
-for the Intel SoC Power Slider, mapped to its low-power setting, be
-acceptable? I'm happy to test patches.
-
-System:
-  Kernel: 7.2.9-arch1-1
-  DMI: Dell Inc. XPS 14 DA14260, BIOS 1.11.0
-  power-profiles-daemon: 0.30-1
-  thermald: 2:2.5.13-1
-
-Thanks,
-Vera
+>Best regards,
+>Lorenzo
+>
+[...]
