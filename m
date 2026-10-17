@@ -1,145 +1,190 @@
-Received: from sender6-op-o12.zoho.com (sender6-op-o12.zoho.com [165.173.180.12])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD54362154;
-	Sat, 17 Oct 2026 18:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577E13921FB;
+	Sat, 17 Oct 2026 18:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792261796; cv=pass; b=Q56H2dAZ6+YwKHldAziddCIQoBzICdLtoWoeZh9ysclSvCZjpZqw5CJZtPn7NB8TgUUX6evn7hTKBHls38pc+N2lpqFiK6+zdlYNTKFCGyIpF0s3Yj5dDoNGAU5aNwMILS0p6Nv1qWhTM7YEu9YOzQG/2uKM99w/kVEoMGjW0Gg=
+	t=1792262582; cv=pass; b=fOOf50+7PH2Mq+9mSr0PpE7vXdvAi94fB32K8/Lh6R8pERUzWUghR0iAAFl2/0FM61btaIMpG22o5O4K1fcIXO5Okr3+FaZrEcvMqsIMBTF4AffQGqPdjBEyTReKgZT8E2DRjFb1UCljPVqlGUxaZ3dBSFQR026UY44QHXfAldg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792261796; c=relaxed/simple;
-	bh=49Y3TWwT6jzURnREaPoE86F9UtFvuQ4XzPRvFHCmZFE=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=RaI3VwmQV55PBWmnIerbjOA7HHw6DECas5zlft+l7JwR4e2PyKt0lNXFeEisyXctpbHDT3Bsw0XU9FSTvCTPRqREg5soz+D8j72NvmMAbDKb1s76F6dWAVSzHPxsmLI8gNZ9lus2HZcR6eqtnveOQxLUIhuMZhE4XxetTsmS00M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=SSddNJ8O; arc=pass smtp.client-ip=165.173.180.12
+	s=arc-20240116; t=1792262582; c=relaxed/simple;
+	bh=tm7WOCOdXVnruUyEr1d9GICgvPAFdmtHhh8mVuQdGeI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MnJnoSgj70F9kaDNZ8Yr7Pp7iBUUsmCQvUlAEeqsHXtu7bqfSfLc10sTULanHFDAmjBRqTF6Gphsi47UeaaRxlWSoU30kCNk15VDlVjnmhcWTIliVzPi+XrmGItQv5Iet47jpyDJ/1dOBr2D/HARZfMAlrgRIiVciIlxLnUbt6I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=SoO2/2zW; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="SSddNJ8O"
-ARC-Seal: i=1; a=rsa-sha256; t=1792261760; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="SoO2/2zW"
+ARC-Seal: i=1; a=rsa-sha256; t=1792262571; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=k7Ox22qBO8gmNsbzWTL9E210GjMKlGBLi12Un/zckWdANCfnWjMT0cTr+5+f1dk5VX9sg2VMnXh5AIMneOdjiRA50uG8xMdsZ2TW8Y9J7cWHQloeEBLYaRddevTupcy89w/vWs5XDi2uKknEkbVi4nQsiqgfd6Uc5JxYxUTRQNU=
+	b=EYpLXrYL+uXN3QBwVe0XKzPQ1q3E6axnAVZduISxbm0IUyZk5DhM3J9GDRx4j17WK59LPoO/XDCG0AmonHvxkzjYR8PXbvp5fcqV3kWx32a72KItdPpQ1JoY6LWn/cu98nuymUqs/ojEuEhbS7BZRYEZE37XkQ/fSarYlcqDRmo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792261760; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=NbLgjZCbwJNl+PL3kYhc1bvwnDPQCgz9nTMZiJVd3eI=; 
-	b=lnn79/eeLp0uPmNpLf3u7cPKYpYEbdtTobOX8oFqnFvkFg18AddAyvyWnu1vS6NQg7OlgCvKX2Iv/UY9AbOM2CRY/MtD76aaim085PRDOQH6DgEWuuKug8cOyvrx5YR1uE/uJGjkN7zwfhTEH2i3ExmcwBpjK0CtoAGAAjNHqWo=
+	t=1792262571; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=TRXKiOnDHB4Q3axsgrKmLm4uzR/VUp60mTpkKCsfx1I=; 
+	b=ZuChxXjGMhcxWUPQvdn9LFGbhABFHqReLT6MrpfLC0mW6O6h3vwAn/GHGG5tgBJ59eFR6EQd1cuBQABOkTPAvVkV/e3SuZNsVzjPxlPFlZ5lcpV6DMdRlU0D7SxvkYqcJk8M65dB1/puYWBSFQcizntdHS4mSIVbTElIGR1TJ40=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792261760;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262571;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=NbLgjZCbwJNl+PL3kYhc1bvwnDPQCgz9nTMZiJVd3eI=;
-	b=SSddNJ8Osk/9ZlFE+NVH5+ILPZWiUbcSV3tvPVIfHlmv196dQJoYvlS7kiF3G0pd
-	Hj9D8eTAXflaqwViDrLhtBXLwp7eJQCk5YGhrA0Stx7irsdo5ZpLwTy/a+6mE5z4KZu
-	cxyJtoEQUaSCstLLxteVmXYiS9ihRmJ7/E9S/Lm73mbOFXoKhvQivkfrjYSW1UQcdRq
-	Fv4JTg2A9FV6SXYluhPyqpw38Fvp9jUAeCrJP/dr9CQfLS/S9Lukb0VuKSVIZYdoDwu
-	R4BSNYirHDzrJ37Y6Lun53M/SFOIFxHQUzYtAhrNqJVG7FEbFhbsyQqc+2paWMk3JhE
-	KHiOXC3EBQ==
-Received: by smtp.zohomail.com with SMTPS id 1792261759316393.94545613618743;
-	Sat, 17 Oct 2026 11:29:19 -0700 (PDT)
-Message-ID: <9fbc5d0f232f231102437b3682ead619cac30f64.camel@rong.moe>
-Subject: Re: [PATCH v2 0/4] ACPI: Serialize battery, INT3403 _TMP and
- ideapad methods
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=TRXKiOnDHB4Q3axsgrKmLm4uzR/VUp60mTpkKCsfx1I=;
+	b=SoO2/2zWMxExEuXlRAUKT9uyFZk7b0WscQ1RmVniZ5pYUSD7Vblp2c7RJ2CdnLug
+	MhIeLmQXvP39+6mBhicfMTQ5ejrjThhHfgWRd2+cUJrh+CZwcR8lQ3p5TpNeuaPTR2W
+	29+EXAtY+12/ybuYHXrfdU0zR755V5Ocmxg9KZU981VK0boolDnxQwC0VHsHNyTInQk
+	9OQB4F4qns+mrWgNtjuCGk7Ot4xXCK8owzwc6DSW5KX4EfmdsK1+q/eO6Ow3IkZZK6B
+	H8ZHpAENkRES5MhrV0RJ85WpTnFgQCYIpOxzi0NiaCVA0NCF3vUk1zCgPGe1UA285Sc
+	gg/G3ahvRQ==
+Received: by smtp.zohomail.com with SMTPS id 1792262569671448.5068987587547;
+	Sat, 17 Oct 2026 11:42:49 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-To: Ali Ahmet =?gb2312?Q?Memi=810=946?= <aliamemis@disroot.org>, "Rafael J
- . Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <johannes.goede@oss.qualcomm.com>, Len Brown
- <lenb@kernel.org>,  Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui
- <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,  Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>, Ike Panhc
- <ikepanhc@gmail.com>, "Derek J . Clark" <derekjohn.clark@gmail.com>, Mark
- Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf	 <W_Armin@gmx.de>, Charis
- Stratakis <c.stratakis@proton.me>, Avraham Hollander	
- <anhollander516@gmail.com>, Jeffrey =?ISO-8859-1?Q?W=E4lti?=	
- <jeffrey@waelti.dev>, Rick <rickk1166@gmail.com>,
- linux-acpi@vger.kernel.org, 	linux-pm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, 	acpica-devel@lists.linux.dev,
- linux-kernel@vger.kernel.org
-In-Reply-To: <d0da648567bc15ccac06d9429b46142e241df1a8.camel@rong.moe>
-References: <20261017130652.318778-1-aliamemis@disroot.org>
-	 <d0da648567bc15ccac06d9429b46142e241df1a8.camel@rong.moe>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 18 Oct 2026 02:24:11 +0800
+Subject: [PATCH v4 00/12] platform/x86: lenovo-wmi-{other,capdata,helpers}:
+ Improve robustness on faulty firmware
+Date: Sun, 18 Oct 2026 02:42:30 +0800
+Message-Id: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22OQQ7CIBBFr2JYixkGrODKexgXtB0Uo60BpRrTu
+ wuaGKMuZvGT/96fO4sUPEW2nNxZoOSj77sc1HTCmp3ttsR9mzOzc1DWoOGH4eh5uY4Gbk+eu7l
+ UqlXa6sqyjJ0COX99KtebV46Xek/NuXhKY+fjuQ+352YSpccQsAIj1K8+CQ58YRWAQ1cZp1eh7
+ 7azY0+s2BO+eQHw572EmVeAGrXUWC3MFy8/+L/7MvMkQGJNrWi0+ODHcXwA/Z3WI0EBAAA=
+X-Change-ID: a504a929-lwmi-wmi-new-api-f5344d48a86a
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: Charles <hanker007@gmail.com>, 
+ Navon John Lukose <navonjohnlukose@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Rong Zhang <i@rong.moe>, stable@vger.kernel.org
+X-Mailer: b4 0.17-dev-73bef
 X-ZohoMailClient: External
 
-On Sun, 2026-10-18 at 02:06 +0800, Rong Zhang wrote:
-> Hi Ali,
->=20
-> On Sat, 2026-10-17 at 16:06 +0300, Ali Ahmet Memi=C5=9F wrote:
-> > On ThinkPad P1 Gen2 and P53, INT3403 _TMP switches the EC page selector
-> > without taking the mutex the battery methods use.  On some Lenovo
-> > IdeaPad and Yoga models, the battery _BIX and the ideapad GBMD take the
-> > EC mutex and a serialized method in opposite order and deadlock until
-> > an AML mutex times out.
-> >=20
-> > As discussed in [1], add exclusive variants of the AML evaluation
-> > helpers and use them for the battery, INT3403 _TMP=C2=A0
-> >=20
->=20
-> int3403_add() seems to be another call site of INT3403 _TMP, but PATCH 3
-> didn't touch it. Is it intended?
+Some devices do not support LENOVO_CAPABILITY_DATA_01 and define the
+query method as a stub that returns zero buffer. Unfortunately, some
+devices do not implement the stub properly, causing WMI errors
+(including ACPI errors). This was reported by Charles.
 
-If the device is probed through PCI, proc_thermal_add() may be relevant,
-too.
+The current lenovo-wmi-* implementation enforces the binding between
+LENOVO_CAPABILITY_DATA_00+01 and LENOVO_OTHER_MODE because of a
+limitation of the device component framework. When the capdata device
+bailing out due to a WMI error, lenovo-wmi-other becomes unbound and
+unable to provide firmware-attributes or hwmon/power_supply_ext devices
+for the other functional capdata device.
+
+Therefore, errors must be non-fatal in order not to break the
+assumptions made by the device component framework.
+
+Poison the capdata device by releasing the capability data list in this
+case. After that, NULL list will be passed to lenovo-wmi-other on bind.
+The latter will provide whatever is available, or unbind the components
+if nothing is available.
+
+A poisoned capdata device releases or skips allocating most resources,
+e.g., the capability data list and the debugfs directory. The device
+itself is only used to satisfy the component dependency of lenovo-wmi-
+other and coordinate with the latter about the absence of the capability
+data.
+
+Meanwhile, for devices that properly stubs the WMI query method (but
+still declares >0 instances), keeping the capability data list with
+empty data is meaningless and causes lenovo-wmi-other to call
+lwmi_cd*_get_data() to retrieve nonexistent capdata in vain. These
+capdata devices are poisoned as well to save resources.
+
+In order to release or skip allocating most resources for poisoned
+devices, some preparatory work is done in prior. With the preparatory
+work, it also skips allocating most resources for the WMI devices that
+declare 0 instance.
+
+Also identify missing components using the new wmidev_exists() interface
+(introduced at the very beginning of the series), and skip adding them
+to the match list, so that all components in the list must present,
+fulfilling the binding requirement. Some devices need this because they
+either do not have the WMI GUID of LENOVO_CAPABILITY_DATA_01, or do not
+implement the query method, causing the WMI core not to create the
+corresponding WMI device. This was reported by Navon.
+
+The new WMI API is also adopted to conform to the behavior of the
+Windows WMI-ACPI driver and improve robustness on various WMI ACPI
+method implementation.
+
+Finally, add myself as a LENOVO drivers maintainer as previously
+suggested by Derek.
+
+Reported-by: Charles <hanker007@gmail.com>
+Closes: https://msgid.link/CAKtz0s8UYRQYW_0bh=0TMx47Axm-W-muEay-r3rqUBS1NHMPVw@mail.gmail.com/
+Reported-by: Navon John Lukose <navonjohnlukose@gmail.com>
+Closes: https://msgid.link/20260928190901.1369497-1-navonjohnlukose@gmail.com
+Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Link: https://msgid.link/9789f452-d7eb-4f1e-8a13-7335332193a7@app.fastmail.com
+Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Link: https://msgid.link/782FE636-A06A-4E12-9563-786374805947@gmail.com
+Signed-off-by: Rong Zhang <i@rong.moe>
+---
+Changes in v4:
+- Fix typo (thanks Mark Pearson)
+- Pass the error from guid_parse() to matchptr
+- Link to v3: https://patch.msgid.link/20261014-lwmi-wmi-new-api-v3-0-e1032bed1c81@rong.moe
+
+Changes in v3:
+- Shorten the comments of struct lwmi_cd_priv's members (thanks Derek
+  J. Clark)
+- Leave struct cd_fan_block's __packed attribute as is (thanks Armin
+  Wolf)
+- Link to v2: https://patch.msgid.link/20261009-lwmi-wmi-new-api-v2-0-402828382679@rong.moe
+
+Changes in v2:
+- Add PATCH 1 ("platform/wmi: Introduce wmidev_exists()") to the series
+  as discussed at https://msgid.link/83776200-4A60-4756-A99F-D5A3BB4D834A@rong.moe
+- Add PATCH 2 ("lenovo-wmi-capdata: Do not stop the AC notifier chain on
+  error") to the series, as adopting the new WMI API will intentionally
+  catch more faulty firmware and propagate more errors
+- Synchronize mutex initialization with release-acquire barriers (thanks
+  Ilpo Järvinen)
+- Refine line wrap (ditto)
+- Replace the term "poison" with "stub" (ditto)
+- Add PATCH 10 ("platform/x86: lenovo-wmi-capdata: Do not match missing
+  components") to the series to solve the report made by Navon
+- Update outdated comments, function documentations and commit messages
+- Link to v1: https://patch.msgid.link/20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe
+
+---
+Armin Wolf (1):
+      platform/wmi: Introduce wmidev_exists()
+
+Rong Zhang (11):
+      platform/x86: lenovo-wmi-capdata: Do not stop the AC notifier chain on error
+      platform/x86: lenovo-wmi-capdata: Only allocate sub-master info when necessary
+      platform/x86: lenovo-wmi-capdata: Store a pointer to component info
+      platform/x86: lenovo-wmi-capdata: Defer mutex initialization
+      platform/x86: lenovo-wmi-{capdata,other}: Only allocate capdata list when necessary
+      platform/x86: lenovo-wmi-capdata: Adopt new WMI API
+      platform/x86: lenovo-wmi-capdata: Register component even on WMI error
+      platform/x86: lenovo-wmi-capdata: Detect stubbed capdata device
+      platform/x86: lenovo-wmi-capdata: Do not match missing components
+      platform/x86: lenovo-wmi-helpers: Adopt new WMI API
+      MAINTAINERS: Add myself as a LENOVO drivers co-maintainer
+
+ MAINTAINERS                               |   1 +
+ drivers/platform/wmi/core.c               |  33 ++-
+ drivers/platform/x86/lenovo/wmi-capdata.c | 452 ++++++++++++++++++++++--------
+ drivers/platform/x86/lenovo/wmi-helpers.c |  61 ++--
+ drivers/platform/x86/lenovo/wmi-other.c   |  24 +-
+ include/linux/wmi.h                       |   3 +
+ 6 files changed, 401 insertions(+), 173 deletions(-)
+---
+base-commit: af32da41b0327b9c6a37856ba82b6760d6c8d10e
+change-id: a504a929-lwmi-wmi-new-api-f5344d48a86a
 
 Thanks,
 Rong
 
->=20
-> > and ideapad methods.
-> > Patches 2-4 depend on patch 1.
-> >=20
-> > Changes in v2:
-> > - Merge the follow-up series [2] and drop its EC query and UCSI patches
-> >   until they are shown to help
-> > - Add acpi_execute_simple_method_exclusive() for _BTP and ideapad
-> > - Make the helpers wrappers that take the lock around the existing ones
->=20
-> You dropped Hans' R-b from PATCH 1 due to the massive change. The next
-> time you do the similar, please add a note to the changelog.
->=20
-> > - Join lines up to 100 columns, add a Link: for Suggested-by:
-> >=20
-> > Link: https://lore.kernel.org/all/CAJZ5v0gS4agVUkCO6M=3DVW4Wi2y1-s+k23b=
-pzmX9aAZ0Rsv4z9Q@mail.gmail.com/ [1]
-> > Link: https://lore.kernel.org/all/20261014190544.150093-1-aliamemis@dis=
-root.org/ [2]
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
-> > v1: https://lore.kernel.org/all/20261014132703.93355-1-aliamemis@disroo=
-t.org/
->=20
-> The series is now neat to me.
->=20
-> With int3403_add() fixed (or explained), for the series:
->=20
->    Reviewed-by: Rong Zhang <i@rong.moe>
->=20
-> Thanks,
-> Rong
->=20
-> >=20
-> > Ali Ahmet Memi=C5=9F (4):
-> >   ACPI: utils: Add exclusive AML evaluation helpers
-> >   ACPI: battery: Evaluate battery methods exclusively
-> >   thermal: intel: int340x: Evaluate _TMP exclusively
-> >   platform/x86: ideapad-laptop: Evaluate ACPI methods exclusively
-> >=20
-> >  drivers/acpi/battery.c                        | 12 +++---
-> >  drivers/acpi/utils.c                          | 41 +++++++++++++++++++
-> >  drivers/platform/x86/lenovo/ideapad-laptop.c  | 12 ++++--
-> >  .../int340x_thermal/int340x_thermal_zone.c    |  6 ++-
-> >  include/acpi/acpi_bus.h                       |  7 ++++
-> >  5 files changed, 66 insertions(+), 12 deletions(-)
-> >=20
-> >=20
-> > base-commit: 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907
