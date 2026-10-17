@@ -1,139 +1,172 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746DB311C2D;
-	Sat, 17 Oct 2026 13:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692BB15E5BB
+	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Oct 2026 13:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792242543; cv=none; b=BYJGfwv9easjFXGHg7FH5nFeYN9x8or1eBpAWV/ruvuQQ/uZyffl0uBy9iuEsJGMRmM1X/O9ndmdsE1MPKv7gYEkW6i1UUXCXnmqKuYxUE70pi+O8I36WCImTDc8BmXSDKZDBHYnPXKolpxs1dCC9w6bCnVuMXXouXr3i4RUOsc=
+	t=1792243472; cv=none; b=RNja5m8YWvXNzaLJCxBApBBsrVg/JPGTAhpJdF1JfiT5rbq0EkdPUKDA8oYlfYWOmCNkLpia13qM3lZZFPWC4x7z2YYG0j6ob+jFB0Abn3RKJT+4pGC6vdLtPfjnQG22nKDmXahHJjChzKjwW95VOBz71a5tiIqsofzqHXJPAAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792242543; c=relaxed/simple;
-	bh=OaL1Gpxuch1Zw2DJv3JbxCry//JaeMv/NYthqYMb10k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KZSglxtDKS8UBhdqwWTB6rr3qqbRiH9h03go1g6QV/zEWeON1BLlwwyiY8bXQgaHHmpUhrjwyz9uXAimifiGG7fTBfp2I8GMT6kC+s5QC38yUkbDLSx+eJzlL7TX7NrXOVnveNslZMUamWFGhb02IHXgoGEfr/lWPPuLZmRgvxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=PjvIZyRT; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1792243472; c=relaxed/simple;
+	bh=gLue7yef9uvfyxJFMURRNO3MQczL2A/EJwhF0/lnaIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nqieorJEkGAlvUEJJVtfXP0QP8Rlf7Nwb5G8AyR0EUdf/h6qnHPSTU9RrHBIV/9aeeZuke8mIMWQ7DTo1mq+3YuvNLn2ojEeGAywTuW+u8D9ZIWQzF1mwrIbwFECWBj6c4BrybUMg9EmKa9QjC9vBULZP2UCdZZcUCpS3nJ27aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dkgj9xnv; arc=none smtp.client-ip=74.125.82.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="PjvIZyRT"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id F161180B1E;
-	Sat, 17 Oct 2026 15:08:59 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id YrlJ5mjOseF5; Sat, 17 Oct 2026 15:08:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1792242539; bh=OaL1Gpxuch1Zw2DJv3JbxCry//JaeMv/NYthqYMb10k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=PjvIZyRTSucaESfB+opgxBkKNeKBI4a05ggPy1BVJ8cu5nA1bZRkSSt/fmjEKCiM5
-	 Dt+C9gqg8eGo90EuWaTUcrKmfhOSTdZ0rtD1t9idRKBU4xq7UbRZbCFhjjyvxpk4Mw
-	 yox2jhdHo6zEgg4fpyFyAbZvu8LgZWSbQWEYYrKywl13saMrwe8ieJDNlyx7/Efy7g
-	 rMpADffL6+WrFs7JpJnGAl/AfiSgq1L/+Fyh/PUTJcwfywUytg477bny/6iNtsQvHD
-	 zom7UptKEzG+L7Prlw9wxqXV1fFwOVK5rEpVN2HxwQCqvPrQ8epvyetoCxq+7E562C
-	 rTMHvc85Ne75g==
-From: =?UTF-8?q?Ali=20Ahmet=20Memi=C5=9F?= <aliamemis@disroot.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	Rong Zhang <i@rong.moe>,
-	Len Brown <lenb@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ike Panhc <ikepanhc@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Charis Stratakis <c.stratakis@proton.me>,
-	Avraham Hollander <anhollander516@gmail.com>,
-	=?UTF-8?q?Jeffrey=20W=C3=A4lti?= <jeffrey@waelti.dev>,
-	Rick <rickk1166@gmail.com>,
-	linux-acpi@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] platform/x86: ideapad-laptop: Evaluate ACPI methods exclusively
-Date: Sat, 17 Oct 2026 16:08:46 +0300
-Message-ID: <20261017130847.319661-1-aliamemis@disroot.org>
-In-Reply-To: <20261017130652.318778-1-aliamemis@disroot.org>
-References: <20261017130652.318778-1-aliamemis@disroot.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkgj9xnv"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-16ad92569b5so750467c88.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 17 Oct 2026 06:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792243469; x=1792848269; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=vuBcV8Vuj1/7kHJ1EaX30e66343TtFfRGuqJHWrtZw4=;
+        b=dkgj9xnviuv/P8J2FHyAjuMtc+RWrS9+mWXAIFVTqVoU+MXmTqGLEXk4tESTec7OXK
+         PR0K+qsUTmZw2IuvJF+HGX7MlmpIKTLKJljBF2lVo5Ik1ah1snHLSIwtpTuhoiPBAyk3
+         VRKWo1UYGDTfi3mdsRq8GS4YXVO0YqCxRVBbO3iexQXCnlaRkltbhTzJPlxoEcJxg9Zh
+         Ei6RuKTBHXlVNTtTAUiAc3CmuawEuk54oM+GTqHKTZyjidbmqWcrpKSjFnRhuDqofKBC
+         7XaAb9GhTBXUnnfZJ5/0AbpPHHAL4+uA9kCtJR3nLr+kMaz+GbIdmuDj/9hkK0n7ylr2
+         Xm/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792243469; x=1792848269;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vuBcV8Vuj1/7kHJ1EaX30e66343TtFfRGuqJHWrtZw4=;
+        b=C4mhvTNRRT7g8zuZg9rgV1oq0AM/BdAOmmJ9vVpONlk3Ar4CH8b8H6prUT9bthzq+6
+         X3BwCvB1aINcZ36eH64PEgWZEUNcv2t2tw3vYDWgG/kuSA3TnaXxErB9JwgdO4zXVbNT
+         Mirv/ocnYe4lAestUoi0Ig04GIhqOcC8D4nlKBj5Qs6Ds67ark/ZrqN98oXVjgYmwYgQ
+         OzH38m30Pm7YXSg0gAHcZOdykz4ahuUJA0hFk32Ds0ZWinBzsDPDHxHxLVplul4wG0cd
+         8VrSxvN8Zw8P2d/37IfHFfQWakXZvXV3US5jF/3MPRax3biH/uWBYHWZ4TdoOf35ndkb
+         l9Qg==
+X-Gm-Message-State: AFq9FYKdeD6ECpQUPWpyUnt69D8C01Ib561kt5GDTv6YMCBctkZWaP6n
+	x5NeuM+VjRZVhkJFwDalXImmLQiPjjNAirD8bQLkpnb7QyU2bk8A5ojO
+X-Gm-Gg: AYBFou3mVOagW/HkFDHCzTxhne3I6cetwcy8xrAwRYcahlox7cSF9A0zYmK+kSMXbPi
+	/K1hufvCjyTOvPY+EJQUXTV1zi1hIfPEohcsWXhfUWcGWivOZClcuUUVzj4jY7Uvpb8N5xltRwd
+	QmVNJJijSVjLM/WOTDp7gxV9zkX+SYmQQNHCs6arM7btrt78wRa7rMEmcZAlniSQc084ht00a3/
+	Jwf3ZM+IgRYrB8BsFkDfhWmoF6nKa5QjdNRLI25S5wxg2l9i1M5dwF/I92AZb6ufQO3WI5IvcK2
+	v0Owy1PNf5nAFbRHhhij2iTqv8+C+3X17PJrsbIHd2VERvxNNGPvszqdIuHhZqUwcoIjMQJCtW+
+	eZISB1PYh7GoS+D3rHYEutCqZ6yt4/Nuh2RM3HKSeL0y3J0OO6w9yHCCnjH3wnvhRYvbyHYejSe
+	z+SRDqqRF+4iZ9ApJ9ayHM5FGZCthZgZLPLdf3on5GcbWDab7h/QmSygdb0VytuJ+vPZX5ZdulN
+	Um1/xWwp+YdpUZeRa0mZHt/zzJlBZQVr6b7qBedC6RURkcA/bRxAC6ttq4aXuei25iZukQak3EJ
+	7Sg2Ihk2xR31bdk=
+X-Received: by 2002:a05:701b:4309:b0:144:c128:4c4b with SMTP id a92af1059eb24-185134dd22cmr3563521c88.36.1792243469339;
+        Sat, 17 Oct 2026 06:24:29 -0700 (PDT)
+Received: from archlinux.tailec59cb.ts.net ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1831c4d4675sm13406158c88.21.2026.10.17.06.24.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Oct 2026 06:24:29 -0700 (PDT)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>,
+	Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Disable hwmon attributes when no fans are usable
+Date: Sat, 17 Oct 2026 18:54:21 +0530
+Message-ID: <20261017132421.279522-1-krishna.chomal108@gmail.com>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On some Lenovo IdeaPad and Yoga models, the battery _BIX takes the EC
-AML mutex and then calls the serialized RDER through RDIF, while GBMD
-calls RDER first and then takes the EC mutex. When the two run
-interleaved they deadlock until the mutex acquisition in RDER times
-out, and GBMD returns garbage that is reported as both charge types
-being enabled.
+Currently, hp_wmi_hwmon_is_visible() checks whether fan RPM queries
+succeed before exposing fan1_input and fan2_input, but pwm1_enable
+remains visible always, even when fan support is unavailable. On some
+devices, such as certain Omnibook models, the firmware does not provide
+functional WMI fan methods. Exposing pwm1_enable on these devices can
+mislead userspace and cause fan mode changes to fail.
 
-Evaluate all methods with the exclusive helpers, so that GBMD never runs
-interleaved with the battery methods.
+Additionally, some firmware implementations provide stub methods
+that return an all-zero buffer instead of an error. In this case,
+hp_wmi_get_active_fan_speed() and hp_wmi_get_fan_speed() can report 0
+RPM even when the fan is physically spinning.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=221065
-Link: https://lore.kernel.org/all/58586fa666f09c209f9d7fe8c692a8bdda6d4410.camel@rong.moe/
-Signed-off-by: Ali Ahmet Memiş <aliamemis@disroot.org>
+Use the result of fan count query (fetched from firmware once in
+hp_wmi_setup_fan_settings(), and cached in hwmon private data) to
+determine whether fan related attributes should be exposed.
+
+The fan count query can have the following outcomes:
+* Negative: The WMI query failed. Other fan-related queries are also
+  expected to fail, so disable fan support.
+* Zero (stub firmware): The methods return zero-filled responses without
+  providing functional fan support, so disable fan support.
+* Zero (genuine firmware): No fans are exposed through WMI, so disable
+  fan support.
+* Positive (1 or 2): Firmware reports one or more fans, so allow fan
+  support. Per-channel RPM queries continue to determine which
+  individual fan input attributes are exposed.
+
+When fan support is unavailable, hide the fan and PWM attributes and
+skip applying the initial fan settings.
+
+Tested on: HP OmniBook 5 Laptop 16-ag1xxx (board: 8DF4)
+
+Tested-by: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+Reported-by: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=222138
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
 ---
- drivers/platform/x86/lenovo/ideapad-laptop.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index 8213524504ee..1335f4e48870 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -297,12 +297,16 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
- #define IDEAPAD_EC_POLL_MIN_US 150
- #define IDEAPAD_EC_POLL_MAX_US 300
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 0eac5e1d9cdb..52077833ac89 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -651,6 +651,7 @@ enum pwm_modes {
  
-+/*
-+ * On some models GBMD and the battery _BIX take the EC mutex and a
-+ * serialized method in opposite order, so evaluate all methods exclusively.
-+ */
- static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
+ struct hp_wmi_hwmon_priv {
+ 	struct mutex lock;	/* protects mode, pwm */
++	int fan_count;
+ 	u8 min_rpm;
+ 	u8 max_rpm;
+ 	u8 mode;
+@@ -2950,12 +2951,18 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+ 				       enum hwmon_sensor_types type,
+ 				       u32 attr, int channel)
  {
- 	unsigned long long result;
- 	acpi_status status;
++	const struct hp_wmi_hwmon_priv *priv = data;
++
+ 	switch (type) {
+ 	case hwmon_pwm:
++		if (priv->fan_count <= 0)
++			return 0;
+ 		if (attr == hwmon_pwm_input && !hp_wmi_fan_control_supported())
+ 			return 0;
+ 		return 0644;
+ 	case hwmon_fan:
++		if (priv->fan_count <= 0)
++			return 0;
+ 		if (hp_wmi_fan_control_supported()) {
+ 			if (hp_wmi_get_active_fan_speed(channel) >= 0)
+ 				return 0444;
+@@ -3124,6 +3131,7 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
  
--	status = acpi_evaluate_integer(handle, (char *)name, NULL, &result);
-+	status = acpi_evaluate_integer_exclusive(handle, (char *)name, NULL, &result);
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
+ 	/* Default behaviour on hwmon init is automatic mode */
+ 	priv->mode = PWM_MODE_AUTO;
++	priv->fan_count = hp_wmi_get_fan_count_userdefine_trigger();
  
-@@ -324,7 +328,7 @@ static int eval_int_with_arg(acpi_handle handle, const char *name, unsigned long
- 	in_obj.type = ACPI_TYPE_INTEGER;
- 	in_obj.integer.value = arg;
+ 	/* Bypass devices without fan control support. */
+ 	if (!hp_wmi_fan_table_supported())
+@@ -3208,6 +3216,11 @@ static int hp_wmi_hwmon_init(void)
+ 		return PTR_ERR(hwmon);
+ 	}
  
--	status = acpi_evaluate_integer(handle, (char *)name, &params, &result);
-+	status = acpi_evaluate_integer_exclusive(handle, (char *)name, &params, &result);
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
- 
-@@ -336,7 +340,7 @@ static int eval_int_with_arg(acpi_handle handle, const char *name, unsigned long
- 
- static int exec_simple_method(acpi_handle handle, const char *name, unsigned long arg)
- {
--	acpi_status status = acpi_execute_simple_method(handle, (char *)name, arg);
-+	acpi_status status = acpi_execute_simple_method_exclusive(handle, (char *)name, arg);
- 
- 	return ACPI_FAILURE(status) ? -EIO : 0;
- }
-@@ -394,7 +398,7 @@ static int eval_vpcw(acpi_handle handle, unsigned long cmd, unsigned long data)
- 	in_obj[1].type = ACPI_TYPE_INTEGER;
- 	in_obj[1].integer.value = data;
- 
--	status = acpi_evaluate_object(handle, "VPCW", &params, NULL);
-+	status = acpi_evaluate_object_exclusive(handle, "VPCW", &params, NULL);
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
- 
++	if (priv->fan_count <= 0) {
++		dev_info(dev, "No usable fans reported by WMI, disabling fan support\n");
++		return 0;
++	}
++
+ 	ret = hp_wmi_apply_fan_settings(priv);
+ 	if (ret)
+ 		dev_warn(dev, "Failed to apply initial fan settings: %d\n", ret);
 -- 
-2.55.0
+2.56.0
 
