@@ -1,48 +1,48 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFF83A5E6F;
-	Sat, 17 Oct 2026 18:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3BF3CAA3B;
+	Sat, 17 Oct 2026 18:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792262600; cv=pass; b=iAc6oCXTcXEDORNImvErUNRx14k8UfY1Ab40/xY+DzJfJAktj2TJ3OpO1+bgoJ9OaVmoWE9uwubYP3Oapf558BAQDjxMDoFeAtQ1pyiQiIBdFCVPPL14I4Q7rWPM3js9UUgvoMc3SNmMMHtUQ1/UXAYWJQHi18BDoF8tv37twfY=
+	t=1792262609; cv=pass; b=dBg8ARR92uzrQR+k77bkW/XfsMrMChFbGM3dXEKiCDCOonom9+N/yBJjQyy+qnQfghZOI8LfO0gPih/SQDknlOZF7uinsxynjptOzweLEoBtE1jmUkRAOsBMW+ZqWEy3JnTeuA3sf4Tbpf8qCXSHZ7u/WedhGr36mHcAWCHMqvE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792262600; c=relaxed/simple;
-	bh=eiO5gm9snsDPd3SvjqUvaRPcTOldP7B0flR9rWZUp2g=;
+	s=arc-20240116; t=1792262609; c=relaxed/simple;
+	bh=o1UfGAIw7tfo1RSPliKOTXQ+BWcg1UNVlwF7NBw39Vo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lXVey36zYb3yvioce4yaeUAIQBUJBr+lP2J5n+xbEsyND9ncgingBJw/i15bHjxGtiltLumCs+7BZHupIDAGCmI2AdCjLuVADOGKrBz/2/dCSOqi1z3dCX7VBjkzwaCb4hHnjSrEpZ9VAy1ZbA2VCw4NmDb3AQJHUMU+uKuduUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=iGw9wGFY; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=H2QE6mcB/jvUHCImvOunWDQg5koKgiKnjEFsKvUWfJYA7JFzNXBjq2wiQf4gttldisIt7//FfBGCvUeJV5PI7nJ+84OMaO7UB8UJ0hHu0y4LSwF5mlp5/ABpMLW9i0Qn9W5E4yh03J7cOVRlZS6qBCcuu1ysvryBBW6ZWVCsWWg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=M7p25Opd; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="iGw9wGFY"
-ARC-Seal: i=1; a=rsa-sha256; t=1792262577; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="M7p25Opd"
+ARC-Seal: i=1; a=rsa-sha256; t=1792262581; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=NT90/gWv89aTAdHp5xBFi9W59PDs/WPG9xEUizLJm/zsRFGdiWvVY+TE4zDi8Y8qMqeep+82LMNQdDimeVpA4dTNfHonxH1nEs28yj8FFaAYuY3YaBm5rNEVsshbn+ihDHOt4rOXS025YhaRnOY2tsWS2QTT5ADi8GV8jRUSyXc=
+	b=XDis9xAzSW368jI1BKk8h3Nia4MRImnHFH05j3VRCWY113fTNmU81TxNVjsIRlJjh2cuusncdaC57BpKb9t2ReD6CbtOC/csWqN2ZeOgtOa3f6pEsk07Eju8OVtsrFDB7B/CNOLyAXMqezwknQ3SwID4w4zBLKI+Kqth6UpNHDA=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792262577; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0UkI+p2KaBppYji0GomycRUpxyn5jorwQt7/VnBco3Q=; 
-	b=A0LMnrPJwjCwcXxeLp3fKyqrBTRr978NIMHHIUdUOQVg1H/S2EE+uE4HOVxziHH+vKCxWstb7nU2dFfpBD8dRm/5igWxXpiEpogKooaVSQZEPw0uP8KcWbLENkK541P5eDLmhexyhbvP17VxNRLAjnC+Q5FYcLo3GqnAdPMygxU=
+	t=1792262581; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=PdMAha2bu9bIn+TvAIBbdJnVTbjJLN/vn9wKaWr7N2A=; 
+	b=EoQSe/ULFaaHIOr7nZa+nfqiFm2Jcn0HNsLrnqjH/14kkVlDjgCZ4gyYwpm81zHbty7Rci3Fk7RWgP4cHGH1+xOpLyM8TOTZUL/QB6QiSzElNvCIZm4ZSVVwUEQlllB75KAWEUU0iv3KiemaDzakjtEvpd/FCDYS+bFlRczSuEo=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262577;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262581;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=0UkI+p2KaBppYji0GomycRUpxyn5jorwQt7/VnBco3Q=;
-	b=iGw9wGFYINarnTCqKwhbD+ZFunMM0xANvF8AgyRDUQ38k9EdhyTAXZaGSavDd+sY
-	P86bFKrx+YjdLrWETIu4EqX8l4sG7gT4Pgg6+V/g3cxWkT16sSQfmJ7qNRIpoOjlcMD
-	mgAuYXZMiXZFOB6mSKqLYjOF1UYNiiWc9oBLruiOjNn9MtVVE+y41BSd3ob4VobqB2T
-	huUu3k1Pu7r5VWRaS1IK0+f7laSLxT5sxt5p9fuAzZw7mhTUC82TQKWE1qEnvSGJWP1
-	iu3AiyGIzwCGCuz9VR4PMGnWbGAsTgIv9l2ehM+uuFwoZ9RpKb/B2OSeobchLOKPQYT
-	QFbisBZtuQ==
-Received: by smtp.zohomail.com with SMTPS id 1792262576124316.56916271270666;
-	Sat, 17 Oct 2026 11:42:56 -0700 (PDT)
+	bh=PdMAha2bu9bIn+TvAIBbdJnVTbjJLN/vn9wKaWr7N2A=;
+	b=M7p25Opdn8YJoQP+4lWkXzNWpKv8GHlqln5hJbjEMcYhvsU/5Aga+szFzYK+X2DX
+	XeUqmS6uzmFeZ0ll1on6hY/ueIVih2oI4eHr7tqEOQWcbZll+41yFUbdvw0IyEKRa+U
+	ttsvF2Q9BrJI9H2BezCLl4ChIUB4/U7Z4c1t52IOL+WtcVEAW0CvcouuCbEjGNsGZTY
+	NGcQzl14phwHG6drL5dHHztPCADHxn+d4xjJVEq0bSJvM7vUgABQ64Ie/RmgmHF1fo5
+	lVz+PYf+Ogy91bufsqqJf+eJ9pXzjjJTBuMMCyo1XuQVWXUDjWmY3cqSx0xTGXgf9fQ
+	RLneNVGgaQ==
+Received: by smtp.zohomail.com with SMTPS id 1792262579272423.5197930182352;
+	Sat, 17 Oct 2026 11:42:59 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Date: Sun, 18 Oct 2026 02:42:32 +0800
-Subject: [PATCH v4 02/12] platform/x86: lenovo-wmi-capdata: Do not stop the
- AC notifier chain on error
+Date: Sun, 18 Oct 2026 02:42:33 +0800
+Subject: [PATCH v4 03/12] platform/x86: lenovo-wmi-capdata: Only allocate
+ sub-master info when necessary
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,7 +51,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261018-lwmi-wmi-new-api-v4-2-aafef7956c4a@rong.moe>
+Message-Id: <20261018-lwmi-wmi-new-api-v4-3-aafef7956c4a@rong.moe>
 References: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
 In-Reply-To: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
@@ -62,72 +62,111 @@ To: Mark Pearson <mpearson-lenovo@squebb.ca>,
 Cc: Charles <hanker007@gmail.com>, 
  Navon John Lukose <navonjohnlukose@gmail.com>, 
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Rong Zhang <i@rong.moe>, stable@vger.kernel.org
+ Rong Zhang <i@rong.moe>
 X-Mailer: b4 0.17-dev-73bef
 X-ZohoMailClient: External
 
-Returning NOTIFY_BAD to the AC notifier chain stops it by preventing
-later notifier blocks from being called, but our error is non-fatal for
-other AC notifier blocks, which should continue to consume the event.
+When capdata00 declares no fan test support, there is no need to
+allocate sub-master info as it's basically unused except for the
+priv->sub_master->sub_component_list == ERR_PTR(-ENODEV) placeholder.
 
-Return NOTIFY_DONE and add a dev_warn() on error, so that the AC
-notifier chain continues. This also aligns with hp-wmi.
+Therefore, only allocate priv->sub_master when necessary, otherwise its
+absence implies the absence of sub-component. With that,
+PTR_ERR(sub_component_list) == -ENODEV is repurposed for the following
+changes to represent stubbed sub-component.
 
-The function documentation was copied from elsewhere and makes no sense
-here, so correct it as well.
-
-Fixes: e1a5fe662b59 ("platform/x86: Add Lenovo Capability Data 01 WMI Driver")
-Cc: stable@vger.kernel.org
 Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
 Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
-Changes in v2:
-- New patch in the series
+Changes in v3:
+- Shorten the comments of struct lwmi_cd_priv's members (thanks Derek
+  J. Clark)
 ---
- drivers/platform/x86/lenovo/wmi-capdata.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/platform/x86/lenovo/wmi-capdata.c | 34 +++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-index d5e961566136..58787da959b4 100644
+index 58787da959b4..fbe2ba627ff5 100644
 --- a/drivers/platform/x86/lenovo/wmi-capdata.c
 +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-@@ -774,13 +774,11 @@ static int lwmi_cd_setup(struct lwmi_cd_priv *priv, enum lwmi_cd_type type)
+@@ -101,9 +101,9 @@ struct lwmi_cd_priv {
+ 	struct lwmi_cd_sub_master_priv {
+ 		struct device *master_dev;
+ 		cd_list_cb_t master_cb;
+-		struct cd_list *sub_component_list; /* ERR_PTR(-ENODEV) implies no sub-component. */
++		struct cd_list *sub_component_list; /* ERR_PTR(-ENODEV): stubbed sub-component. */
+ 		bool registered;                    /* Has the sub-master been registered? */
+-	} *sub_master;
++	} *sub_master;                              /* NULL: no sub-component. */
+ };
  
- /**
-  * lwmi_cd01_notifier_call() - Call method for cd01 notifier.
-- * block call chain.
-- * @nb: The notifier_block registered to lenovo-wmi-events driver.
-+ * @nb: The cd01 ACPI notifier_block.
-  * @action: Unused.
-  * @data: The ACPI event.
-  *
-- * For LWMI_EVENT_THERMAL_MODE, set current_mode and notify platform_profile
-- * of a change.
-+ * Refresh cached capdata on AC status change.
-  *
-  * Return: notifier_block status.
-  */
-@@ -799,8 +797,16 @@ static int lwmi_cd01_notifier_call(struct notifier_block *nb, unsigned long acti
- 	switch (event->type) {
- 	case ACPI_AC_NOTIFY_STATUS:
- 		ret = lwmi_cd_cache(priv);
--		if (ret)
--			return NOTIFY_BAD;
-+		if (ret) {
-+			dev_warn(&priv->wdev->dev,
-+				 "failed to refresh capdata on AC change: %d\n", ret);
-+
-+			/*
-+			 * Our error is non-fatal for others, and we still want
-+			 * the other event consumers to process it.
-+			 */
-+			return NOTIFY_DONE;
+ struct cd_list {
+@@ -258,6 +258,12 @@ static int lwmi_cd_component_bind(struct device *cd_dev,
+ 	case LENOVO_CAPABILITY_DATA_00:
+ 		binder->cd00_list = priv->list;
+ 
++		/* Missing sub-master info implies missing sub-component. */
++		if (!priv->sub_master) {
++			binder->cd_fan_list_cb(om_dev, NULL);
++			break;
 +		}
++
+ 		priv->sub_master->master_dev = om_dev;
+ 		priv->sub_master->master_cb = binder->cd_fan_list_cb;
+ 		lwmi_cd_call_master_cb(priv);
+@@ -288,13 +294,9 @@ static void lwmi_cd_component_unbind(struct device *cd_dev,
+ {
+ 	struct lwmi_cd_priv *priv = dev_get_drvdata(cd_dev);
  
- 		return NOTIFY_OK;
- 	default:
+-	switch (priv->list->type) {
+-	case LENOVO_CAPABILITY_DATA_00:
++	if (priv->sub_master) {
+ 		priv->sub_master->master_dev = NULL;
+ 		priv->sub_master->master_cb = NULL;
+-		return;
+-	default:
+-		return;
+ 	}
+ }
+ 
+@@ -369,17 +371,19 @@ static int lwmi_cd_sub_master_add(struct lwmi_cd_priv *priv,
+ 	struct component_match *master_match = NULL;
+ 	int ret;
+ 
++	/*
++	 * If the sub-master has no sub-component, there is no need to allocate
++	 * or register the sub-master. The master callback will be called with
++	 * NULL on master <-> sub-master bind to inform the master about the
++	 * absence of sub-component.
++	 */
++	if (sub_component_type == CD_TYPE_NONE)
++		return 0;
++
+ 	priv->sub_master = devm_kzalloc(&priv->wdev->dev, sizeof(*priv->sub_master), GFP_KERNEL);
+ 	if (!priv->sub_master)
+ 		return -ENOMEM;
+ 
+-	if (sub_component_type == CD_TYPE_NONE) {
+-		/* The master callback will be called with NULL on bind. */
+-		priv->sub_master->sub_component_list = ERR_PTR(-ENODEV);
+-		priv->sub_master->registered = false;
+-		return 0;
+-	}
+-
+ 	/*
+ 	 * lwmi_cd_match() needs a pointer to enum lwmi_cd_type, but on-stack
+ 	 * data cannot be used here. Steal one from lwmi_cd_table.
+@@ -404,7 +408,7 @@ static int lwmi_cd_sub_master_add(struct lwmi_cd_priv *priv,
+  */
+ static void lwmi_cd_sub_master_del(struct lwmi_cd_priv *priv)
+ {
+-	if (!priv->sub_master->registered)
++	if (!priv->sub_master || !priv->sub_master->registered)
+ 		return;
+ 
+ 	component_master_del(&priv->wdev->dev, &lwmi_cd_sub_master_ops);
 
 -- 
 2.55.0
