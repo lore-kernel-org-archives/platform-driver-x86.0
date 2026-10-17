@@ -1,48 +1,48 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7652D3A5E6F;
-	Sat, 17 Oct 2026 18:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5EC37C109;
+	Sat, 17 Oct 2026 23:16:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792262695; cv=pass; b=Mh5bRaz89prxNSgfp2Mz+Y4EEhjIQ2rodopxKocjowGZLHyoz/5GeEetPfGxW/Dlj5Fwm0XuHH/jzLAV3cw79gj7fBhDx8mpUXiDIMKV86CNlqitBqiEJGUn71u7foB0Jr0rpnTe0eY3nGaUG8IjdoVdtUdp4813njUerX/fRKs=
+	t=1792279005; cv=pass; b=HT5X7fTM6uZoub4IPsBiW6P/lJWluq1pHLgh3bLBCO4ULh2WX72+aaYHJxduSCj/yo6/iPCQGYYdkybC57syTZL6ny/nY6PH75iomEWsz2a5yR5TEySx9iQjkEvVUXHfi+owWreznpRA5ilSWTOetRQkbUsXJVvsZhNwTj0CyyQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792262695; c=relaxed/simple;
-	bh=A0rRh/QeYtmdUgAhUuqkGkSk2dzuMp4cLDqwyVGPelM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W7RH7WGgmcFfV+TDymMsuIVmdUfEy++5ENbJHA0zuEcVdh0vCpsYIYwx7YrnNF/aeaxNmIyIFeq1/QXRB1upyGbTXh/ltidBr4jVqpypLc1mPiaZZD3rkctwv71X3dwHwl0WN1m7y7eLr60ijrmJaYRPfCyWXeJZKtWm6OOckSA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=DqCduN3f; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1792279005; c=relaxed/simple;
+	bh=3NLu69xnmXGuJpUsAFPYowmvOmnuWDR4fL1ZandStho=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LaWZtPAZuUU0rv4grH1TZRCBIEadrII5nt6kmBl7pXgP4n4JNKE0hdK1RyNAhXcAXFEd4/5SkojQeYEyeZObFUVtPpytrfN2bkOZDd8POxV6WwCLrIrZ8veHSJRnoBEKUkTvn/iHN6o/eR1JdiLMUQHpSS/53AWQm47+xQcP+5U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=Zq1M+mOS; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="DqCduN3f"
-ARC-Seal: i=1; a=rsa-sha256; t=1792262609; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="Zq1M+mOS"
+ARC-Seal: i=1; a=rsa-sha256; t=1792278994; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=k+Y2CfoAtQ0UI9+kxvNyKlFW0hDyJ5icnvDA9dp5g70yYjYn415qMLmTLVsGJODId/8Dr4ueT0CNOUWj3mZbVBnOUlN0vysicn/GO4cPu9mLr53TK3XLlcrkqiSX1sCTv47azL8KUf8tV/WYX8IyJhCr6PQX9+74qXAaX97k3bQ=
+	b=bhITBwjKH8Pf/ovfpye7cm5efSAx8IRc+EuBGR56rnhOS7VZ7gh8EekMPBmA9yQ2i87pzKANlfq+fu9Q/DZfR82pGLF1LxAjMLhFihJxEMWPnTRY1ZsLwpNZ/PQvydr48eYwFKyvqh/BoRwMeb24wnj2pQhnPwn3mL2BN9qXu4c=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792262609; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Cu0Ku63ibtiD8dSCNBVjWGKMrJyfLPEWtMUvr63+F74=; 
-	b=JtamZsxftY6LocrigMiunxJnH0lBjrsoNZyzVdA5536JbxmR6a1HZRuSu2fNRyKWfzaUJor7sJidQIpJL8dRALnHLR2ch1fqplV1UJdLsRD593SCoEidjH01Z4Qmha2MoGw8T8VthGY5BX7eMJaLabpni70tuu3livMfS10tgkg=
+	t=1792278994; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=53HKstwmkLPFbV8XfZ5DGpoM+Ybu/fPwYEuOn3Qd33A=; 
+	b=UcP1d6/i8IdKG+793rmgjMcMzsG8KkvwSxpeUwwlnqcz1IiuP3GyaBGlc0HnJtN4s8s8WzxeI4r6Myl2D15NdsJ/+RN/PcZtifkbMnKbAwknENOPDEQ0QpmCRfaAUcy24/vha4jb8nH7VJvHosXlEpYsg7IH+FxMvRMgRuhn5fg=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262609;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792278994;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=Cu0Ku63ibtiD8dSCNBVjWGKMrJyfLPEWtMUvr63+F74=;
-	b=DqCduN3fStfZipZI93r28Zaomaprm0dkJGOXSwKa96sa77Hy5iv+CatUC9q5qwCC
-	eQ1AbXry7pt1IX50ImO/8ZMasI948/4jzJscDMvEUPCXZSYgzZ541m5St7b4prS3jfS
-	RdfkDAMHOQIfCudPkLAODc3BFSGubx3eyD5516HB84J6AiGTm+o7dH9ClkyTeBR+a24
-	IUQOkXo7xm934tbMsThCZ3otKHNLel7SW6oBurTL5D12fsJkSm6lujqas9MxIsaQAIL
-	GvBbSBaFAbTe6Ex/IXU76CCNUCGw61dV/YKE59+exk7apOJ2n95VDRyEnGXedf/UDzy
-	FYPSc9Wb5g==
-Received: by smtp.zohomail.com with SMTPS id 179226260737642.869995973074424;
-	Sat, 17 Oct 2026 11:43:27 -0700 (PDT)
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=53HKstwmkLPFbV8XfZ5DGpoM+Ybu/fPwYEuOn3Qd33A=;
+	b=Zq1M+mOSRLIKvEUQ56W+cLGx7wx5qvDyRRZUUKNDPBLGW9OhK0NGOTeQUPemFnoD
+	QAlAdasQCIdg9d7vx644j5mlXyL6oHVoUFM2piOstcYnG0sgzcPtW6mw8IkzfiCHIeW
+	Oxt77yBC8JV/yDL518Fyv3Bs8XvYs2gJzeSw/ce+u2fTmGXsfc3Ffip42yZ+hvw5fQH
+	0e3za3KtmgnFCXrfxxbaYRFhfS9z65eh+z0YwInWjEUSAMcql19ze58FnEUxl0iGfIQ
+	tWddsjR6FBOXmnfgjWFxlb4/kA91xN6Qn8zOnA4GAqhOMi3xNVqI+Wl8g4G5yxJ+GVc
+	nBOsS5cMhg==
+Received: by smtp.zohomail.com with SMTPS id 1792278992220550.5663809917767;
+	Sat, 17 Oct 2026 16:16:32 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Date: Sun, 18 Oct 2026 02:42:42 +0800
-Subject: [PATCH v4 12/12] MAINTAINERS: Add myself as a LENOVO drivers
- co-maintainer
+Subject: [PATCH 0/2] platform/x86: ideapad-laptop: Fix unexpected
+ charge_types on probe
+Date: Sun, 18 Oct 2026 07:16:17 +0800
+Message-Id: <20261018-ideapad-fix-charge-types-v1-0-db52e3bb061a@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,51 +51,51 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261018-lwmi-wmi-new-api-v4-12-aafef7956c4a@rong.moe>
-References: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
-In-Reply-To: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQ6CQBBE0auQXjMJkhGBqxAWA11os8DJNBgJ4
+ e62unzJrzpIkQRKbXZQwktUnovhkmc0PsJyhxM2E6ayBgdvRIiB3SRvZ0WyYt0j1BXVjX3FRd3
+ 4K9k8Jljzu+76v3UbZozr94/O8wOVuyxEfAAAAA==
+X-Change-ID: ef28eda4-ideapad-fix-charge-types-067d46d08945
+To: Ike Panhc <ikepanhc@gmail.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
  "Derek J. Clark" <derekjohn.clark@gmail.com>, 
  Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Charles <hanker007@gmail.com>, 
- Navon John Lukose <navonjohnlukose@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Rong Zhang <i@rong.moe>
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Rong Zhang <i@rong.moe>
 X-Mailer: b4 0.17-dev-73bef
 X-ZohoMailClient: External
 
-I regularly review patches and resolve bug reports posted on the pdx86
-mailing list or the kernel Bugzilla to improve LENOVO drivers (including
-lenovo-wmi-* and ideapad-laptop) along with Derek J. Clark and Mark
-Pearson. I've been submitting patches to add new features and fix issues
-on my devices, too.
+It was reported [1] that some unfortunate combinations of BIOS and
+Lenovo utilities (e.g., Legion Go 2 + Legion Space) may enable Rapid
+Charge and Conservation Mode at the same time, which is very out of
+sepc.
 
-Add myself as a LENOVO drivers co-maintainer to reflect this.
+If both are enabled during a previous Windows boot, ideapad-laptop will
+see both bits set and correctly shout "unexpected charge_types".
 
-Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
-Link: https://msgid.link/782FE636-A06A-4E12-9563-786374805947@gmail.com
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+A planned BIOS update will address this. Before that, if unexpected
+charge_types are encountered on probe, enforce [Long_Life] to prevent
+the device from operating in an out-of-spec state. On check or fix
+failure, skip registering the battery hook and the conservation_mode
+attribute.
+
+Note: the switches never enable themselves autonomously, so there is no
+need to fix it during runtime.
+
+Fixes: 90430ea98f55 ("platform/x86: ideapad-laptop: Add charge_types:Fast (Rapid Charge)")
+Closes: https://github.com/ValveSoftware/SteamOS/issues/2876 [1]
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Rong Zhang (2):
+      platform/x86: ideapad-laptop: Factor out charge_types methods for internal use
+      platform/x86: ideapad-laptop: Fix unexpected charge_types on probe
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f53047aa8d3c..fa576b4b5919 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14808,6 +14808,7 @@ F:	drivers/usb/misc/legousbtower.c
- LENOVO drivers
- M:	Mark Pearson <mpearson-lenovo@squebb.ca>
- M:	Derek J. Clark <derekjohn.clark@gmail.com>
-+M:	Rong Zhang <i@rong.moe>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 113 ++++++++++++++++++++-------
+ 1 file changed, 84 insertions(+), 29 deletions(-)
+---
+base-commit: 58161ead29e50d70a317ea26b472e0c7508e69da
+change-id: ef28eda4-ideapad-fix-charge-types-067d46d08945
 
--- 
-2.55.0
+Thanks,
+Rong
 
