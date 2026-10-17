@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE2137A82E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD893502A3;
 	Sat, 17 Oct 2026 08:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792226038; cv=none; b=AJ+t5fdJzuxVCRtIblSUyuGFkmL6PCGA6HesrJ+rqUIb9VC+TIsVGytXYPwJ1eOCLnHoYLfl38H+BhEpJ4IoXOfsP+1akG4VyDaJwY/qnYRdIznLAE6emGRxSzTW5lFf32A9YjwF18zVJeAQncYB5yaGvG2B97WjFq3ucifkhQQ=
+	t=1792226038; cv=none; b=XXrIeDbXc7A7VmSK0ZTEe7fhmWmGt6ssLFSwMEVp3dyD8sO1/BpdooEL2WxELkIo5MAy1/ZUgMLiX5Dh85+WrM42PyLpx8TbKbhBgddAkvQDgeEF7LbKuGx6I2WlnIj1N3UQ/0DgKD5bG64i4LhbpxUvIHDhNonGNeX5vD3mprA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1792226038; c=relaxed/simple;
-	bh=JVjdQX0PdR4Q4QZEUjGXnX8KHC9tVxVDL0I8x1kOeow=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n3ymXm4SH5Jrwc6x4vZyb4y51d/eUoApn+pzmBvp4TGuMUoaLFcRyd3LIOdsyo/rNxuit4XDhzLo3yCVUnerTG5IZ2vJawS9+HnMdHPkJ0qV726rR/21WHQEiUNvsoS2swrSEbfg/c39/AurbAb24m1w0fBy4LZTqzhoX24gTa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxEDyO9a; arc=none smtp.client-ip=10.30.226.201
+	bh=5rWtNt1vL+mrQkDtba5N98fbbX9UeGo0VrHEVuJypWM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oAnsdJf9IfmsjOA6K/3TWnqB6Q4BNEc1qeAWArIyCnoR00MCjGhpa8AUOslcKmYfII5tdShycEeLGYywuIi8HTtXQgWwG0iZkgB5YOWJNreHjJMkZ/ZW6La8hGmh/y3obuFPP6iNchuXN5CXO10c5CYSbdDIdPlaov6poPtYbfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkG4+7cP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxEDyO9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C9A1C2BCFF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkG4+7cP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7095CC2BCFA;
 	Sat, 17 Oct 2026 08:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1792226038;
-	bh=JVjdQX0PdR4Q4QZEUjGXnX8KHC9tVxVDL0I8x1kOeow=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ZxEDyO9aSsgmkH0cvmPOviyF1EctKU4504JyQgbbBG95x4YW4IYjxjmOUTXze+IzU
-	 HoJoGoe0D0yanpUTZv1VjLIr1W28EU4nHi3V/XvGM1fGUqYtJKSW50PH53JnOXgLwq
-	 zryUhY7ebuA6H0+VFY3OdO/tBWO2dB01U98xIp2Y8+Vzorum5C1UehVCZ0TGLrLOTE
-	 xHmwZdZDY1MOEw2QSXzZ+7OcR4CyZTrIrwAJPWPrOoNZcr9AkyWL8pf6KJxXT9rmIe
-	 vCNWGBmIPEtYux1GeVAVNqYh4LGP/Ps1bKBeQkfsh/JgLKKMe/Fwatvra+Uiuf/DYm
-	 wuYB3UtPY45qQ==
+	bh=5rWtNt1vL+mrQkDtba5N98fbbX9UeGo0VrHEVuJypWM=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=fkG4+7cPGqKVWIx8a5SMg3RexJqOWRUAOexMzb0h5OlMO2V1x6w+EIDre+0O0zhAH
+	 oxW2iJnu1bfZeGE8d4yhQONi4JTEnBCgH+qa9dcen2MTyItQWq01Uk8eIti4kaaGr5
+	 C5EDddGIVx2+u9dxwqAGUF3SO7McKMImWQ5NDyvf01poyFY7o/QFJWZfpj9GPXxM0w
+	 sOXxDnv6iIOfE4DwvYIOTb9WIDax1zWMSJScuT34RYnRjAAofsh2LpuLwzpTJp0+nq
+	 LhqyhAcL/JfZqQb+sZkOK9fR/BGtXBz/1ECQd4/MNAos1+mukX18G6lN01p11mBojj
+	 FSbEIFkiYInJg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82149CCF2CA;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E680CCF2C7;
 	Sat, 17 Oct 2026 08:33:58 +0000 (UTC)
 From: Dennis Nilsson via B4 Relay <devnull+kontakt.dennisnilsson.se@kernel.org>
-Date: Sat, 17 Oct 2026 10:33:59 +0200
-Subject: [PATCH 2/2] platform/x86: acer-wmi: Add support for Acer Nitro
- AN16-41
+Subject: [PATCH 0/2] platform/x86: acer-wmi: Add Nitro AN16-41 support and
+ handle its mode key
+Date: Sat, 17 Oct 2026 10:33:57 +0200
+Message-Id: <20261017-acer-nitro-an16-41-v1-0-c2e7a0ee7303@dennisnilsson.se>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,19 +41,20 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261017-acer-nitro-an16-41-v1-2-c2e7a0ee7303@dennisnilsson.se>
-References: <20261017-acer-nitro-an16-41-v1-0-c2e7a0ee7303@dennisnilsson.se>
-In-Reply-To: <20261017-acer-nitro-an16-41-v1-0-c2e7a0ee7303@dennisnilsson.se>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMwQ6CMAyA4VchPdukHROir2I4jFm0HgbpgJAQ3
+ t2hx+/w/ztkMZUM92oHk1WzjqmALxXEd0gvQX0WgyPXMHGLIYph0tlGDIkb9IzX2lHrb0SD76G
+ Ek8mg22/66P7OS/+ROJ8nOI4vCzkwIHYAAAA=
+X-Change-ID: 20261017-acer-nitro-an16-41-532074900f4b
 To: "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hansg@kernel.org>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Dennis Nilsson <kontakt@dennisnilsson.se>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1792226037; l=1346;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792226037; l=1115;
  i=kontakt@dennisnilsson.se; s=20261017; h=from:subject:message-id;
- bh=QTBqp6Vi/0AxROqLBEXCoQ7Mc+MetYvOr68Lo+Bb148=;
- b=f4gjnUTG8Zq45IQkm8WzVjhyr/j5xFLz28d1tcMpLPw9f2BKuD+B2Dw+5hK9EVccwUG1agqiI
- frEtdknVzTaCSb57rcTJunHN9VjWi2ltoK/b8hbe77aqppAdVMklgCn
+ bh=5rWtNt1vL+mrQkDtba5N98fbbX9UeGo0VrHEVuJypWM=;
+ b=QXK3HUbXbx2leig3lU1IWwnNVqw0QJINfGUEnvlRXoNcNcBXFBM4Fd+a0c+XqWUGkCtcPAzV1
+ BgiAj1terE0CYnoFaN2rwvTBCr3d9F4C7uvuwMKnKsRcxxpjuG0fZtc
 X-Developer-Key: i=kontakt@dennisnilsson.se; a=ed25519;
  pk=H+jadpTa8sEscQhkbeWZC2woL8j7NYwN5m1YCjkHJRQ=
 X-Endpoint-Received: by B4 Relay for kontakt@dennisnilsson.se/20261017 with
@@ -61,46 +62,33 @@ X-Endpoint-Received: by B4 Relay for kontakt@dennisnilsson.se/20261017 with
 X-Original-From: Dennis Nilsson <kontakt@dennisnilsson.se>
 Reply-To: kontakt@dennisnilsson.se
 
-From: Dennis Nilsson <kontakt@dennisnilsson.se>
-
 The Acer Nitro AN16-41 supports the Predator Sense v4 platform profile,
-hwmon sensors and fan control, but currently needs the predator_v4
-module parameter to expose them. Add a DMI quirk for it, reusing the
-Nitro AN515-58 quirk entry since the feature set is the same.
+hwmon sensors and fan control, but needs predator_v4=1 to expose them,
+and its mode key does nothing because it reports key_num 0x4, which the
+driver only treats as a turbo button.
 
-Tested on BIOS V1.03: all five platform profiles are offered by the
-firmware and switching them changes the fan curve, both fan speeds and
-the temperature sensors read correctly, and pwm1/pwm2 work in custom,
-maximum and automatic mode.
+Patch 1 routes key_num 0x4 to the platform profile cycle on machines
+without the turbo LED capability, where it was previously a no-op.
+Patch 2 adds a DMI quirk for the AN16-41.
 
-Assisted-by: LLM
-Signed-off-by: Dennis Nilsson <kontakt@dennisnilsson.se>
+Both patches were tested together on an AN16-41 (BIOS V1.03) running
+7.0: the quirk matches without module parameters, all five profiles
+cycle from the mode key, and pwm works in custom, maximum and automatic
+mode.
+
 ---
- drivers/platform/x86/acer-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Dennis Nilsson (2):
+      platform/x86: acer-wmi: Cycle platform profile on mode key 0x4
+      platform/x86: acer-wmi: Add support for Acer Nitro AN16-41
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 323179c43..3a018fdf5 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -681,6 +681,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_acer_travelmate_2490,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Acer Nitro AN16-41",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN16-41"),
-+		},
-+		.driver_data = &quirk_acer_nitro_an515_58,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "Acer Nitro AN515-58",
+ drivers/platform/x86/acer-wmi.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+---
+base-commit: ea40f1e9f07aab937b9a217633be7a1f66260394
+change-id: 20261017-acer-nitro-an16-41-532074900f4b
 
--- 
-2.53.0
+Best regards,
+--  
+Dennis Nilsson <kontakt@dennisnilsson.se>
 
 
