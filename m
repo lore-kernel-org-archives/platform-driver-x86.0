@@ -1,47 +1,48 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF83C061D;
-	Sat, 17 Oct 2026 18:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFF83A5E6F;
+	Sat, 17 Oct 2026 18:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792262592; cv=pass; b=avWmV0TFOLE03y7eKfPzwBkPGWWxSU9Wy2bUO7Lz8qpTjoMDhbpNJk36Dt8HxSwevLV/BozYbGEDmyid3+bKDkCmFdmOd+qj1OckQsV3QgnJzWniyDyQ2evM8EjCzWDCshkrnL79++qglWBSI7En9lmC+zE6cErICsWllyUkwZU=
+	t=1792262600; cv=pass; b=iAc6oCXTcXEDORNImvErUNRx14k8UfY1Ab40/xY+DzJfJAktj2TJ3OpO1+bgoJ9OaVmoWE9uwubYP3Oapf558BAQDjxMDoFeAtQ1pyiQiIBdFCVPPL14I4Q7rWPM3js9UUgvoMc3SNmMMHtUQ1/UXAYWJQHi18BDoF8tv37twfY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792262592; c=relaxed/simple;
-	bh=c1efmwifO1stTw131+mH0kerfKrDGSq6CCjLjls6aNc=;
+	s=arc-20240116; t=1792262600; c=relaxed/simple;
+	bh=eiO5gm9snsDPd3SvjqUvaRPcTOldP7B0flR9rWZUp2g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z4lIslX7ThYiE/ofsS8LnZKRDzwQpzkTdmkJYyPaNuIGXYVjtaUAAt4bxSjUUpFpjX4H7D9ZKAEyVIYoZ8SlmGrBhlpBmcdjo0p+7xHCNvttLzEhIfoYo5NLqfG7evQSyP1x55r4yQPckih6e0dtAGFUdr+jK88zJTPu46Nm+dg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=Y93W1uAC; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=lXVey36zYb3yvioce4yaeUAIQBUJBr+lP2J5n+xbEsyND9ncgingBJw/i15bHjxGtiltLumCs+7BZHupIDAGCmI2AdCjLuVADOGKrBz/2/dCSOqi1z3dCX7VBjkzwaCb4hHnjSrEpZ9VAy1ZbA2VCw4NmDb3AQJHUMU+uKuduUA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=iGw9wGFY; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="Y93W1uAC"
-ARC-Seal: i=1; a=rsa-sha256; t=1792262575; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="iGw9wGFY"
+ARC-Seal: i=1; a=rsa-sha256; t=1792262577; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=UUFcwX93cSIAGe40jYyh0vBwcJ1V3JyiYoZoWD16ZTnMMNeFBR6/RpXIC8gRaeCxD31JNXMK8zF2EvMPSZ3nBBABTMHmEJTN+z8WB5ELZgdUPWYpRIvOldSTK+9xU6gs9/fICP8p4dXWPFL1NljvBQ82lcR0P44xZNnM5M3bsFE=
+	b=NT90/gWv89aTAdHp5xBFi9W59PDs/WPG9xEUizLJm/zsRFGdiWvVY+TE4zDi8Y8qMqeep+82LMNQdDimeVpA4dTNfHonxH1nEs28yj8FFaAYuY3YaBm5rNEVsshbn+ihDHOt4rOXS025YhaRnOY2tsWS2QTT5ADi8GV8jRUSyXc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792262575; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ReRS4ZShNiHqof3Nd8ldDThiBg0uWWLo8oSubqtXzPw=; 
-	b=V83XwX5MhX8ZUhKmZ7VZuLywZeTJ5Mz26425E+JYkFmreNgN75NkQ10dM+QiIeFXdEVtXrQka8n2/pQWgeVz/CNwLpdAsVXFrIdd/5dY4lm9Xple2/K6aF/XVEcKJNulBeS2ojykutydi6ut2ZShPVSuEeS4GUW4oySamcjx+A8=
+	t=1792262577; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0UkI+p2KaBppYji0GomycRUpxyn5jorwQt7/VnBco3Q=; 
+	b=A0LMnrPJwjCwcXxeLp3fKyqrBTRr978NIMHHIUdUOQVg1H/S2EE+uE4HOVxziHH+vKCxWstb7nU2dFfpBD8dRm/5igWxXpiEpogKooaVSQZEPw0uP8KcWbLENkK541P5eDLmhexyhbvP17VxNRLAjnC+Q5FYcLo3GqnAdPMygxU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262575;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262577;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=ReRS4ZShNiHqof3Nd8ldDThiBg0uWWLo8oSubqtXzPw=;
-	b=Y93W1uACgBGhBa/wgsCPKJIeu9fOjpFP+CYQZr4Ks1Gf7utB2M/lmk/oa2hNW940
-	0tQ/Yv+picnd3bYe7ml2RX3KeyWDpr6Nn9r+KpIoecovcEL7jPI3eXQMeOfcrt5ZM5g
-	TCLy7LP1Sqf/yt90gAhUPkyPpuLS5gXV0XvNLWqomAqjJHQ1s6j5C6KPnOLW5fFfBpN
-	6Nhf9lUzbbweKdAa2ICqlB7wDk7jWwvRpR22ETJc8CH7OvcFv4PItGJbxK2Qbz6TnMm
-	2b/TCP1BB07BUkTPYyr1EzNolkJcmw7nbZKmROmn3rYsROsD0Y9bogL+eVFsx+uuVNH
-	9BLTvuAFeg==
-Received: by smtp.zohomail.com with SMTPS id 1792262572850561.2849380101287;
-	Sat, 17 Oct 2026 11:42:52 -0700 (PDT)
+	bh=0UkI+p2KaBppYji0GomycRUpxyn5jorwQt7/VnBco3Q=;
+	b=iGw9wGFYINarnTCqKwhbD+ZFunMM0xANvF8AgyRDUQ38k9EdhyTAXZaGSavDd+sY
+	P86bFKrx+YjdLrWETIu4EqX8l4sG7gT4Pgg6+V/g3cxWkT16sSQfmJ7qNRIpoOjlcMD
+	mgAuYXZMiXZFOB6mSKqLYjOF1UYNiiWc9oBLruiOjNn9MtVVE+y41BSd3ob4VobqB2T
+	huUu3k1Pu7r5VWRaS1IK0+f7laSLxT5sxt5p9fuAzZw7mhTUC82TQKWE1qEnvSGJWP1
+	iu3AiyGIzwCGCuz9VR4PMGnWbGAsTgIv9l2ehM+uuFwoZ9RpKb/B2OSeobchLOKPQYT
+	QFbisBZtuQ==
+Received: by smtp.zohomail.com with SMTPS id 1792262576124316.56916271270666;
+	Sat, 17 Oct 2026 11:42:56 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Date: Sun, 18 Oct 2026 02:42:31 +0800
-Subject: [PATCH v4 01/12] platform/wmi: Introduce wmidev_exists()
+Date: Sun, 18 Oct 2026 02:42:32 +0800
+Subject: [PATCH v4 02/12] platform/x86: lenovo-wmi-capdata: Do not stop the
+ AC notifier chain on error
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,7 +51,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261018-lwmi-wmi-new-api-v4-1-aafef7956c4a@rong.moe>
+Message-Id: <20261018-lwmi-wmi-new-api-v4-2-aafef7956c4a@rong.moe>
 References: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
 In-Reply-To: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
@@ -61,126 +62,72 @@ To: Mark Pearson <mpearson-lenovo@squebb.ca>,
 Cc: Charles <hanker007@gmail.com>, 
  Navon John Lukose <navonjohnlukose@gmail.com>, 
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Rong Zhang <i@rong.moe>
+ Rong Zhang <i@rong.moe>, stable@vger.kernel.org
 X-Mailer: b4 0.17-dev-73bef
 X-ZohoMailClient: External
 
-From: Armin Wolf <W_Armin@gmx.de>
+Returning NOTIFY_BAD to the AC notifier chain stops it by preventing
+later notifier blocks from being called, but our error is non-fatal for
+other AC notifier blocks, which should continue to consume the event.
 
-Some WMI drivers need to be able to detect the existence of WMI
-devices matching a given GUID in order to determine the availability
-of optional features. Using wmi_has_guid() for this will not work for
-WMI devices that cannot be used with the legacy GUID-based API (aka
-have WMI_GUID_DUPLICATED set).
+Return NOTIFY_DONE and add a dev_warn() on error, so that the AC
+notifier chain continues. This also aligns with hp-wmi.
 
-Introduce wmidev_exists() that also checks WMI devices that are only
-available to the bus-based API. Also mark wmi_has_guid() as deprecated
-because only WMI drivers using the legacy GUID-based API will continue
-to have use for it.
+The function documentation was copied from elsewhere and makes no sense
+here, so correct it as well.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Fixes: e1a5fe662b59 ("platform/x86: Add Lenovo Capability Data 01 WMI Driver")
+Cc: stable@vger.kernel.org
 Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
 Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
 Changes in v2:
-- New patch in the series as discussed at
-  https://msgid.link/83776200-4A60-4756-A99F-D5A3BB4D834A@rong.moe
+- New patch in the series
 ---
- drivers/platform/wmi/core.c | 33 +++++++++++++++++++++++++++++----
- include/linux/wmi.h         |  3 +++
- 2 files changed, 32 insertions(+), 4 deletions(-)
+ drivers/platform/x86/lenovo/wmi-capdata.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
-index 529825dcfbfe..a99da9b7039d 100644
---- a/drivers/platform/wmi/core.c
-+++ b/drivers/platform/wmi/core.c
-@@ -145,7 +145,7 @@ static inline void get_acpi_method_name(const struct wmi_block *wblock,
- 	buffer[4] = '\0';
- }
- 
--static int wmidev_match_guid(struct device *dev, const void *data)
-+static int wmidev_match_guid_legacy(struct device *dev, const void *data)
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 	const guid_t *guid = data;
-@@ -218,7 +218,7 @@ static struct wmi_device *wmi_find_device_by_guid(const char *guid_string)
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
--	dev = bus_find_device(&wmi_bus_type, NULL, &guid, wmidev_match_guid);
-+	dev = bus_find_device(&wmi_bus_type, NULL, &guid, wmidev_match_guid_legacy);
- 	if (!dev)
- 		return ERR_PTR(-ENODEV);
- 
-@@ -800,10 +800,10 @@ acpi_status wmi_remove_notify_handler(const char *guid)
- EXPORT_SYMBOL_GPL(wmi_remove_notify_handler);
+diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
+index d5e961566136..58787da959b4 100644
+--- a/drivers/platform/x86/lenovo/wmi-capdata.c
++++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+@@ -774,13 +774,11 @@ static int lwmi_cd_setup(struct lwmi_cd_priv *priv, enum lwmi_cd_type type)
  
  /**
-- * wmi_has_guid - Check if a GUID is available
-+ * wmi_has_guid - Check if a GUID is available (deprecated)
-  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+  * lwmi_cd01_notifier_call() - Call method for cd01 notifier.
+- * block call chain.
+- * @nb: The notifier_block registered to lenovo-wmi-events driver.
++ * @nb: The cd01 ACPI notifier_block.
+  * @action: Unused.
+  * @data: The ACPI event.
   *
-- * Check if a given GUID is defined by _WDG.
-+ * Check if a given GUID is available and usable with the legacy GUID-based API.
+- * For LWMI_EVENT_THERMAL_MODE, set current_mode and notify platform_profile
+- * of a change.
++ * Refresh cached capdata on AC status change.
   *
-  * Return: True if GUID is available, false otherwise.
+  * Return: notifier_block status.
   */
-@@ -821,6 +821,31 @@ bool wmi_has_guid(const char *guid_string)
- }
- EXPORT_SYMBOL_GPL(wmi_has_guid);
+@@ -799,8 +797,16 @@ static int lwmi_cd01_notifier_call(struct notifier_block *nb, unsigned long acti
+ 	switch (event->type) {
+ 	case ACPI_AC_NOTIFY_STATUS:
+ 		ret = lwmi_cd_cache(priv);
+-		if (ret)
+-			return NOTIFY_BAD;
++		if (ret) {
++			dev_warn(&priv->wdev->dev,
++				 "failed to refresh capdata on AC change: %d\n", ret);
++
++			/*
++			 * Our error is non-fatal for others, and we still want
++			 * the other event consumers to process it.
++			 */
++			return NOTIFY_DONE;
++		}
  
-+static int wmidev_match_guid(struct device *dev, void *data)
-+{
-+	struct wmi_block *wblock = dev_to_wblock(dev);
-+	const guid_t *guid = data;
-+
-+	if (guid_equal(guid, &wblock->gblock.guid))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+/**
-+ * wmidev_exists - Check if a WMI device with a given GUID exists
-+ * @guid: GUID of the WMI device to search for
-+ *
-+ * Check if a WMI device with a given GUID exists at the given moment.
-+ *
-+ * Return: True if a matching WMI device exists, false otherwise.
-+ */
-+bool wmidev_exists(const guid_t *guid)
-+{
-+	return bus_for_each_dev(&wmi_bus_type, NULL, (void *)guid, wmidev_match_guid) == 1;
-+}
-+EXPORT_SYMBOL_GPL(wmidev_exists);
-+
- /**
-  * wmi_get_acpi_device_uid() - Get _UID name of ACPI device that defines GUID (deprecated)
-  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index defcb624a7e2..3dd223f2ff18 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -13,6 +13,7 @@
- #include <linux/acpi.h>
- #include <linux/device-id/wmi.h>
- #include <linux/types.h>
-+#include <linux/uuid.h>
- 
- /**
-  * struct wmi_device - WMI device structure
-@@ -83,6 +84,8 @@ acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, const struct
- 
- u8 wmidev_instance_count(struct wmi_device *wdev);
- 
-+bool wmidev_exists(const guid_t *guid);
-+
- /**
-  * struct wmi_driver - WMI driver structure
-  * @driver: Driver model structure
+ 		return NOTIFY_OK;
+ 	default:
 
 -- 
 2.55.0
