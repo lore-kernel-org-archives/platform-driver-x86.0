@@ -1,48 +1,47 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577E13921FB;
-	Sat, 17 Oct 2026 18:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF83C061D;
+	Sat, 17 Oct 2026 18:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792262582; cv=pass; b=fOOf50+7PH2Mq+9mSr0PpE7vXdvAi94fB32K8/Lh6R8pERUzWUghR0iAAFl2/0FM61btaIMpG22o5O4K1fcIXO5Okr3+FaZrEcvMqsIMBTF4AffQGqPdjBEyTReKgZT8E2DRjFb1UCljPVqlGUxaZ3dBSFQR026UY44QHXfAldg=
+	t=1792262592; cv=pass; b=avWmV0TFOLE03y7eKfPzwBkPGWWxSU9Wy2bUO7Lz8qpTjoMDhbpNJk36Dt8HxSwevLV/BozYbGEDmyid3+bKDkCmFdmOd+qj1OckQsV3QgnJzWniyDyQ2evM8EjCzWDCshkrnL79++qglWBSI7En9lmC+zE6cErICsWllyUkwZU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792262582; c=relaxed/simple;
-	bh=tm7WOCOdXVnruUyEr1d9GICgvPAFdmtHhh8mVuQdGeI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MnJnoSgj70F9kaDNZ8Yr7Pp7iBUUsmCQvUlAEeqsHXtu7bqfSfLc10sTULanHFDAmjBRqTF6Gphsi47UeaaRxlWSoU30kCNk15VDlVjnmhcWTIliVzPi+XrmGItQv5Iet47jpyDJ/1dOBr2D/HARZfMAlrgRIiVciIlxLnUbt6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=SoO2/2zW; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1792262592; c=relaxed/simple;
+	bh=c1efmwifO1stTw131+mH0kerfKrDGSq6CCjLjls6aNc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Z4lIslX7ThYiE/ofsS8LnZKRDzwQpzkTdmkJYyPaNuIGXYVjtaUAAt4bxSjUUpFpjX4H7D9ZKAEyVIYoZ8SlmGrBhlpBmcdjo0p+7xHCNvttLzEhIfoYo5NLqfG7evQSyP1x55r4yQPckih6e0dtAGFUdr+jK88zJTPu46Nm+dg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=Y93W1uAC; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="SoO2/2zW"
-ARC-Seal: i=1; a=rsa-sha256; t=1792262571; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="Y93W1uAC"
+ARC-Seal: i=1; a=rsa-sha256; t=1792262575; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=EYpLXrYL+uXN3QBwVe0XKzPQ1q3E6axnAVZduISxbm0IUyZk5DhM3J9GDRx4j17WK59LPoO/XDCG0AmonHvxkzjYR8PXbvp5fcqV3kWx32a72KItdPpQ1JoY6LWn/cu98nuymUqs/ojEuEhbS7BZRYEZE37XkQ/fSarYlcqDRmo=
+	b=UUFcwX93cSIAGe40jYyh0vBwcJ1V3JyiYoZoWD16ZTnMMNeFBR6/RpXIC8gRaeCxD31JNXMK8zF2EvMPSZ3nBBABTMHmEJTN+z8WB5ELZgdUPWYpRIvOldSTK+9xU6gs9/fICP8p4dXWPFL1NljvBQ82lcR0P44xZNnM5M3bsFE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792262571; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TRXKiOnDHB4Q3axsgrKmLm4uzR/VUp60mTpkKCsfx1I=; 
-	b=ZuChxXjGMhcxWUPQvdn9LFGbhABFHqReLT6MrpfLC0mW6O6h3vwAn/GHGG5tgBJ59eFR6EQd1cuBQABOkTPAvVkV/e3SuZNsVzjPxlPFlZ5lcpV6DMdRlU0D7SxvkYqcJk8M65dB1/puYWBSFQcizntdHS4mSIVbTElIGR1TJ40=
+	t=1792262575; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ReRS4ZShNiHqof3Nd8ldDThiBg0uWWLo8oSubqtXzPw=; 
+	b=V83XwX5MhX8ZUhKmZ7VZuLywZeTJ5Mz26425E+JYkFmreNgN75NkQ10dM+QiIeFXdEVtXrQka8n2/pQWgeVz/CNwLpdAsVXFrIdd/5dY4lm9Xple2/K6aF/XVEcKJNulBeS2ojykutydi6ut2ZShPVSuEeS4GUW4oySamcjx+A8=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262571;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792262575;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=TRXKiOnDHB4Q3axsgrKmLm4uzR/VUp60mTpkKCsfx1I=;
-	b=SoO2/2zWMxExEuXlRAUKT9uyFZk7b0WscQ1RmVniZ5pYUSD7Vblp2c7RJ2CdnLug
-	MhIeLmQXvP39+6mBhicfMTQ5ejrjThhHfgWRd2+cUJrh+CZwcR8lQ3p5TpNeuaPTR2W
-	29+EXAtY+12/ybuYHXrfdU0zR755V5Ocmxg9KZU981VK0boolDnxQwC0VHsHNyTInQk
-	9OQB4F4qns+mrWgNtjuCGk7Ot4xXCK8owzwc6DSW5KX4EfmdsK1+q/eO6Ow3IkZZK6B
-	H8ZHpAENkRES5MhrV0RJ85WpTnFgQCYIpOxzi0NiaCVA0NCF3vUk1zCgPGe1UA285Sc
-	gg/G3ahvRQ==
-Received: by smtp.zohomail.com with SMTPS id 1792262569671448.5068987587547;
-	Sat, 17 Oct 2026 11:42:49 -0700 (PDT)
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=ReRS4ZShNiHqof3Nd8ldDThiBg0uWWLo8oSubqtXzPw=;
+	b=Y93W1uACgBGhBa/wgsCPKJIeu9fOjpFP+CYQZr4Ks1Gf7utB2M/lmk/oa2hNW940
+	0tQ/Yv+picnd3bYe7ml2RX3KeyWDpr6Nn9r+KpIoecovcEL7jPI3eXQMeOfcrt5ZM5g
+	TCLy7LP1Sqf/yt90gAhUPkyPpuLS5gXV0XvNLWqomAqjJHQ1s6j5C6KPnOLW5fFfBpN
+	6Nhf9lUzbbweKdAa2ICqlB7wDk7jWwvRpR22ETJc8CH7OvcFv4PItGJbxK2Qbz6TnMm
+	2b/TCP1BB07BUkTPYyr1EzNolkJcmw7nbZKmROmn3rYsROsD0Y9bogL+eVFsx+uuVNH
+	9BLTvuAFeg==
+Received: by smtp.zohomail.com with SMTPS id 1792262572850561.2849380101287;
+	Sat, 17 Oct 2026 11:42:52 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Subject: [PATCH v4 00/12] platform/x86: lenovo-wmi-{other,capdata,helpers}:
- Improve robustness on faulty firmware
-Date: Sun, 18 Oct 2026 02:42:30 +0800
-Message-Id: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
+Date: Sun, 18 Oct 2026 02:42:31 +0800
+Subject: [PATCH v4 01/12] platform/wmi: Introduce wmidev_exists()
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,12 +49,10 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22OQQ7CIBBFr2JYixkGrODKexgXtB0Uo60BpRrTu
- wuaGKMuZvGT/96fO4sUPEW2nNxZoOSj77sc1HTCmp3ttsR9mzOzc1DWoOGH4eh5uY4Gbk+eu7l
- UqlXa6sqyjJ0COX99KtebV46Xek/NuXhKY+fjuQ+352YSpccQsAIj1K8+CQ58YRWAQ1cZp1eh7
- 7azY0+s2BO+eQHw572EmVeAGrXUWC3MFy8/+L/7MvMkQGJNrWi0+ODHcXwA/Z3WI0EBAAA=
-X-Change-ID: a504a929-lwmi-wmi-new-api-f5344d48a86a
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261018-lwmi-wmi-new-api-v4-1-aafef7956c4a@rong.moe>
+References: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
+In-Reply-To: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
  "Derek J. Clark" <derekjohn.clark@gmail.com>, 
  Hans de Goede <hansg@kernel.org>, 
@@ -64,127 +61,127 @@ To: Mark Pearson <mpearson-lenovo@squebb.ca>,
 Cc: Charles <hanker007@gmail.com>, 
  Navon John Lukose <navonjohnlukose@gmail.com>, 
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Rong Zhang <i@rong.moe>, stable@vger.kernel.org
+ Rong Zhang <i@rong.moe>
 X-Mailer: b4 0.17-dev-73bef
 X-ZohoMailClient: External
 
-Some devices do not support LENOVO_CAPABILITY_DATA_01 and define the
-query method as a stub that returns zero buffer. Unfortunately, some
-devices do not implement the stub properly, causing WMI errors
-(including ACPI errors). This was reported by Charles.
+From: Armin Wolf <W_Armin@gmx.de>
 
-The current lenovo-wmi-* implementation enforces the binding between
-LENOVO_CAPABILITY_DATA_00+01 and LENOVO_OTHER_MODE because of a
-limitation of the device component framework. When the capdata device
-bailing out due to a WMI error, lenovo-wmi-other becomes unbound and
-unable to provide firmware-attributes or hwmon/power_supply_ext devices
-for the other functional capdata device.
+Some WMI drivers need to be able to detect the existence of WMI
+devices matching a given GUID in order to determine the availability
+of optional features. Using wmi_has_guid() for this will not work for
+WMI devices that cannot be used with the legacy GUID-based API (aka
+have WMI_GUID_DUPLICATED set).
 
-Therefore, errors must be non-fatal in order not to break the
-assumptions made by the device component framework.
+Introduce wmidev_exists() that also checks WMI devices that are only
+available to the bus-based API. Also mark wmi_has_guid() as deprecated
+because only WMI drivers using the legacy GUID-based API will continue
+to have use for it.
 
-Poison the capdata device by releasing the capability data list in this
-case. After that, NULL list will be passed to lenovo-wmi-other on bind.
-The latter will provide whatever is available, or unbind the components
-if nothing is available.
-
-A poisoned capdata device releases or skips allocating most resources,
-e.g., the capability data list and the debugfs directory. The device
-itself is only used to satisfy the component dependency of lenovo-wmi-
-other and coordinate with the latter about the absence of the capability
-data.
-
-Meanwhile, for devices that properly stubs the WMI query method (but
-still declares >0 instances), keeping the capability data list with
-empty data is meaningless and causes lenovo-wmi-other to call
-lwmi_cd*_get_data() to retrieve nonexistent capdata in vain. These
-capdata devices are poisoned as well to save resources.
-
-In order to release or skip allocating most resources for poisoned
-devices, some preparatory work is done in prior. With the preparatory
-work, it also skips allocating most resources for the WMI devices that
-declare 0 instance.
-
-Also identify missing components using the new wmidev_exists() interface
-(introduced at the very beginning of the series), and skip adding them
-to the match list, so that all components in the list must present,
-fulfilling the binding requirement. Some devices need this because they
-either do not have the WMI GUID of LENOVO_CAPABILITY_DATA_01, or do not
-implement the query method, causing the WMI core not to create the
-corresponding WMI device. This was reported by Navon.
-
-The new WMI API is also adopted to conform to the behavior of the
-Windows WMI-ACPI driver and improve robustness on various WMI ACPI
-method implementation.
-
-Finally, add myself as a LENOVO drivers maintainer as previously
-suggested by Derek.
-
-Reported-by: Charles <hanker007@gmail.com>
-Closes: https://msgid.link/CAKtz0s8UYRQYW_0bh=0TMx47Axm-W-muEay-r3rqUBS1NHMPVw@mail.gmail.com/
-Reported-by: Navon John Lukose <navonjohnlukose@gmail.com>
-Closes: https://msgid.link/20260928190901.1369497-1-navonjohnlukose@gmail.com
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Link: https://msgid.link/9789f452-d7eb-4f1e-8a13-7335332193a7@app.fastmail.com
-Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
-Link: https://msgid.link/782FE636-A06A-4E12-9563-786374805947@gmail.com
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
+Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
-Changes in v4:
-- Fix typo (thanks Mark Pearson)
-- Pass the error from guid_parse() to matchptr
-- Link to v3: https://patch.msgid.link/20261014-lwmi-wmi-new-api-v3-0-e1032bed1c81@rong.moe
-
-Changes in v3:
-- Shorten the comments of struct lwmi_cd_priv's members (thanks Derek
-  J. Clark)
-- Leave struct cd_fan_block's __packed attribute as is (thanks Armin
-  Wolf)
-- Link to v2: https://patch.msgid.link/20261009-lwmi-wmi-new-api-v2-0-402828382679@rong.moe
-
 Changes in v2:
-- Add PATCH 1 ("platform/wmi: Introduce wmidev_exists()") to the series
-  as discussed at https://msgid.link/83776200-4A60-4756-A99F-D5A3BB4D834A@rong.moe
-- Add PATCH 2 ("lenovo-wmi-capdata: Do not stop the AC notifier chain on
-  error") to the series, as adopting the new WMI API will intentionally
-  catch more faulty firmware and propagate more errors
-- Synchronize mutex initialization with release-acquire barriers (thanks
-  Ilpo Järvinen)
-- Refine line wrap (ditto)
-- Replace the term "poison" with "stub" (ditto)
-- Add PATCH 10 ("platform/x86: lenovo-wmi-capdata: Do not match missing
-  components") to the series to solve the report made by Navon
-- Update outdated comments, function documentations and commit messages
-- Link to v1: https://patch.msgid.link/20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe
-
+- New patch in the series as discussed at
+  https://msgid.link/83776200-4A60-4756-A99F-D5A3BB4D834A@rong.moe
 ---
-Armin Wolf (1):
-      platform/wmi: Introduce wmidev_exists()
+ drivers/platform/wmi/core.c | 33 +++++++++++++++++++++++++++++----
+ include/linux/wmi.h         |  3 +++
+ 2 files changed, 32 insertions(+), 4 deletions(-)
 
-Rong Zhang (11):
-      platform/x86: lenovo-wmi-capdata: Do not stop the AC notifier chain on error
-      platform/x86: lenovo-wmi-capdata: Only allocate sub-master info when necessary
-      platform/x86: lenovo-wmi-capdata: Store a pointer to component info
-      platform/x86: lenovo-wmi-capdata: Defer mutex initialization
-      platform/x86: lenovo-wmi-{capdata,other}: Only allocate capdata list when necessary
-      platform/x86: lenovo-wmi-capdata: Adopt new WMI API
-      platform/x86: lenovo-wmi-capdata: Register component even on WMI error
-      platform/x86: lenovo-wmi-capdata: Detect stubbed capdata device
-      platform/x86: lenovo-wmi-capdata: Do not match missing components
-      platform/x86: lenovo-wmi-helpers: Adopt new WMI API
-      MAINTAINERS: Add myself as a LENOVO drivers co-maintainer
+diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+index 529825dcfbfe..a99da9b7039d 100644
+--- a/drivers/platform/wmi/core.c
++++ b/drivers/platform/wmi/core.c
+@@ -145,7 +145,7 @@ static inline void get_acpi_method_name(const struct wmi_block *wblock,
+ 	buffer[4] = '\0';
+ }
+ 
+-static int wmidev_match_guid(struct device *dev, const void *data)
++static int wmidev_match_guid_legacy(struct device *dev, const void *data)
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 	const guid_t *guid = data;
+@@ -218,7 +218,7 @@ static struct wmi_device *wmi_find_device_by_guid(const char *guid_string)
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
+ 
+-	dev = bus_find_device(&wmi_bus_type, NULL, &guid, wmidev_match_guid);
++	dev = bus_find_device(&wmi_bus_type, NULL, &guid, wmidev_match_guid_legacy);
+ 	if (!dev)
+ 		return ERR_PTR(-ENODEV);
+ 
+@@ -800,10 +800,10 @@ acpi_status wmi_remove_notify_handler(const char *guid)
+ EXPORT_SYMBOL_GPL(wmi_remove_notify_handler);
+ 
+ /**
+- * wmi_has_guid - Check if a GUID is available
++ * wmi_has_guid - Check if a GUID is available (deprecated)
+  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+  *
+- * Check if a given GUID is defined by _WDG.
++ * Check if a given GUID is available and usable with the legacy GUID-based API.
+  *
+  * Return: True if GUID is available, false otherwise.
+  */
+@@ -821,6 +821,31 @@ bool wmi_has_guid(const char *guid_string)
+ }
+ EXPORT_SYMBOL_GPL(wmi_has_guid);
+ 
++static int wmidev_match_guid(struct device *dev, void *data)
++{
++	struct wmi_block *wblock = dev_to_wblock(dev);
++	const guid_t *guid = data;
++
++	if (guid_equal(guid, &wblock->gblock.guid))
++		return 1;
++
++	return 0;
++}
++
++/**
++ * wmidev_exists - Check if a WMI device with a given GUID exists
++ * @guid: GUID of the WMI device to search for
++ *
++ * Check if a WMI device with a given GUID exists at the given moment.
++ *
++ * Return: True if a matching WMI device exists, false otherwise.
++ */
++bool wmidev_exists(const guid_t *guid)
++{
++	return bus_for_each_dev(&wmi_bus_type, NULL, (void *)guid, wmidev_match_guid) == 1;
++}
++EXPORT_SYMBOL_GPL(wmidev_exists);
++
+ /**
+  * wmi_get_acpi_device_uid() - Get _UID name of ACPI device that defines GUID (deprecated)
+  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index defcb624a7e2..3dd223f2ff18 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -13,6 +13,7 @@
+ #include <linux/acpi.h>
+ #include <linux/device-id/wmi.h>
+ #include <linux/types.h>
++#include <linux/uuid.h>
+ 
+ /**
+  * struct wmi_device - WMI device structure
+@@ -83,6 +84,8 @@ acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, const struct
+ 
+ u8 wmidev_instance_count(struct wmi_device *wdev);
+ 
++bool wmidev_exists(const guid_t *guid);
++
+ /**
+  * struct wmi_driver - WMI driver structure
+  * @driver: Driver model structure
 
- MAINTAINERS                               |   1 +
- drivers/platform/wmi/core.c               |  33 ++-
- drivers/platform/x86/lenovo/wmi-capdata.c | 452 ++++++++++++++++++++++--------
- drivers/platform/x86/lenovo/wmi-helpers.c |  61 ++--
- drivers/platform/x86/lenovo/wmi-other.c   |  24 +-
- include/linux/wmi.h                       |   3 +
- 6 files changed, 401 insertions(+), 173 deletions(-)
----
-base-commit: af32da41b0327b9c6a37856ba82b6760d6c8d10e
-change-id: a504a929-lwmi-wmi-new-api-f5344d48a86a
-
-Thanks,
-Rong
+-- 
+2.55.0
 
