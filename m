@@ -1,361 +1,189 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3DC3D903E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 18 Oct 2026 17:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AF623E324
+	for <platform-driver-x86@vger.kernel.org>; Sun, 18 Oct 2026 17:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792344384; cv=pass; b=pNFVq3QXwFXEP6Sw+jGpHQwjdoOJlBMgMxKkQ7dYuQHtIMvmKHEO/eXzi61ZElfyE+mdsMwDCUGd2oOeg7kxjz8mR4FwHgiWOvBz0Z7m2dLD87HhLq19Xv7g8sOe7ATghV2a8Jnyp93knwqW31eMmiPRvVoahU17WO/3G9iQF+A=
+	t=1792346285; cv=pass; b=HwEPWS7SNphLdonl5rEsXNF9xv1Jk1dM69J0OIxsk53fs4KI2LxHS42uUEe3ubg/TQZaCA1OwoXOTL/oq4D7DXzoy9XXBUaHpSz78HZTpJqcA7NXWb9zIFejL7SwsYvtfbZoApUSbZjso/AWNsbWRiXLYry1VebF+sFCb2KI/wE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792344384; c=relaxed/simple;
-	bh=MdJeBviov5OQRbSlC9idszBcCsSHBdodJl9n5WYEraI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XKKl4M/tFI8qpdF/3h1bmSiumr84TITH2q0wD5I9LEl9xD1XKQtn1KZB5AkMBLFWgiPjqu7oNPbDuf4Zx+YaKmuSoNFTDnYZOjSRGKOqpbt/KwZIK3/fThLLUS+j/KGykhPZxjgLehSZs/9SAmvauxJy8F+ZDPD4OQE93goqdDk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sa0AXVfK; arc=pass smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792346285; c=relaxed/simple;
+	bh=iQPskCNoqtPoMIcpKpZqttiB5ypZPAjgyiyTyp6wuYw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=d0p50wfpEdY8j+887xvzJbymYXhvnI6anvXSeMG+xRxISEMajiGjxFTwLWeLPdL5bjp95sKS1FnEGqV1lzuWwPtCwcry6C0ETOj07IVelS+DQQeTZxoqUlFY7c1X+HvBScc8eQsUi56F8nFOCcN9Wtu8B/CsHJ4tmvaphUOba4k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=voidship.net; spf=pass smtp.mailfrom=voidship.net; dkim=pass (2048-bit key) header.d=voidship-net.20251104.gappssmtp.com header.i=@voidship-net.20251104.gappssmtp.com header.b=XkeD72Qc; arc=pass smtp.client-ip=74.125.224.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=voidship.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=voidship.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa0AXVfK"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-93e63ee7b4cso165860585a.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Oct 2026 10:26:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792344382; cv=none;
+	dkim=pass (2048-bit key) header.d=voidship-net.20251104.gappssmtp.com header.i=@voidship-net.20251104.gappssmtp.com header.b="XkeD72Qc"
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-6798c4b882eso1009131d50.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Oct 2026 10:58:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792346282; cv=none;
         d=google.com; s=arc-20260327;
-        b=c2nSU02TfIsILmFROK19dOPbswKLHhG0mYAHObMxxIQ+jRK8YT052JzGOOfCedKoJT
-         egrU7Osf13tBreYGK+HO7RwD8wWkm1+NuQjcD9MVr0eiaGQQckIgcn13E0yPXlj+s3Hn
-         g23RgYB9E+U8jIssLCXVsGZkBYznYtpCY1U4IEk24Y2GFiohqYHq4ip5U9GQtKpMTUrW
-         ZJedx9Q8ot6UMd6PFsMydlt/M/KzneVI0qLQA1B1nCYfGb4FCmcyz44jr98QscRdDSVW
-         vIUd+5Y1oP+Y8B+fapyqmXAkiQVVepMREec//E2TujHxfe44NQ53dcJjmMXBz9T3LsCQ
-         8rkA==
+        b=VXq+IVkuL8XUFLLttbpTIPU0AwdkwiMmLxm3JDtGKolVHM0YYPwaCEepkL50LK2dcj
+         q1Z+qVMRiFCtlHQpwMKeRYVoDh8AuIxedBmcR7Vp1unTj2xG1WM85t9fZARO3rHDxzwH
+         wgOhcr3KA4PguqLFlZ2A+weBgS7r+vItg09QtRh0RvgNrPKBzk7W8wOsh2IdZThunxXR
+         Y9Pf+cIFNsO3D4Urnr/tSndvICVErYEQBzoTzxO2rxZVGvtoEVc8xkzgJbon1/TvUT/w
+         yVFBEuuNqLCRcuabXcpeFRUfcVOykNzJD0s+DWiIwsiA1Jz22/tjobD8Z4Bw/vjMvzYo
+         nBmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=y1tw446O5jq7V0fXkanJIqYdDtYyOEyHpl2LRuqXdW4=;
-        fh=AG4KpJ93rF2qy2kVM8r80L2UvnAB/nXxXO4my5b/OuE=;
-        b=pK/3trdLsvb32DD5qhvsMcGiD0fRJ0a7eUCBrkZrC02fwlsE/yc/rwfO5JaIGMmm6s
-         hCdRhCyEV/XT+BRU5MoxO9FSko+dpjHaR7ebhNNoukuwaQJWrfXVp2S4NA7NrIDFtQSo
-         6vbUpFhHFpRMpX1voJFyLwFnnZFqXqK0pxccLxii0Z5P8oAMvKuz4EM3G0taDYRaeEjE
-         60ip56EJWeAb7r2cHaC6hNp/ZfbaFcy2pec1fQSACIGfmBfgoHbk4c8KIqouWUMMRlop
-         h7zWDN1ZmwQK1DWyS5l4Xn/dkn+QUrTNrm2otnic9HCBFIBmJajd1+ol/GwZi9uD7Ldr
-         ZZ1Q==;
+        bh=1vqWMr0i+A+wOg3Y8J4IXW6zaKZ6EAFuThjGg28E8gc=;
+        fh=lzB/reb+B6+dMTxVm5KBV5a63KACtIHwAUfSxyfuwxo=;
+        b=R8UHLpBtgpfI3QfIif0R71NGYSLUYbZy7CEgi/9i9Qtk1sxNjhX7BDcy5BP9ewHqIN
+         D333OGUpITVU00X4THB5gIb7xMe73rsB5ynguZ5KBdryccOPCzZGoUIMqjuMVLTH42tW
+         WDDQj3waSaYG30W7pHH3W9FfHv6tZSehBfhbXcsKgtVebAF4sJ60wM+XB9lF3QxlgHkZ
+         EeBpG98z+MuwZpRJVgGKMpT3q7InZf6bXqxnrpwrdFNrEczl7RdjqE05U71+BKfh+wFL
+         87CRedkEXtHknp9MFZTUbvS+eIdtFziOQdPslpGv+LC82qilaMPyhimTTktZMaaiGasN
+         cCqw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792344382; x=1792949182; darn=vger.kernel.org;
+        d=voidship-net.20251104.gappssmtp.com; s=20251104; t=1792346282; x=1792951082; darn=vger.kernel.org;
         h=content-type:cc:to:subject:message-id:date:from:mime-version:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=y1tw446O5jq7V0fXkanJIqYdDtYyOEyHpl2LRuqXdW4=;
-        b=Sa0AXVfKiFKNsrAVaQxwz4JKbmfvo/94wpuc+ztMgRvma+NUoKjqa/60dyIkYZiAQE
-         uoWKNiAOf7Xltx13eXobqxc75l8ubixhUCphlUgmCJKFayTwoWKYbs0dHG9o8YshsrK6
-         REKSqGHlWI7NaDeGRQUEK7kC7NZxTqjl5MPePllpRZN0DVFr/3TYtPIfjmKeoHtNDky5
-         LEoY3mgD0/aMlZ+A4PE/mO0OnXNnJpzvbajKN4weMj58AXtW0me9B/qbt3cVzb+F/xRv
-         uFFXGVIIpX8/Bzi6ytCpqlfSYHCgfhHdK8/KbAgS1ZqCKoyO5Eqg7jEQpJHvHt0uvBx0
-         aW4g==
+        bh=1vqWMr0i+A+wOg3Y8J4IXW6zaKZ6EAFuThjGg28E8gc=;
+        b=XkeD72QcA6zmnTfMKMbVIBz5tfb82Sk+64DoHW1Kl+x1jTsOrvvxfhnwb6ZozyADnN
+         NnbpsTr/IIwPAV/hmH7CAAzFbXflavka7dsjAOiAYX+kAFf7GEwq1J/RDcDA735Qor94
+         woHWkeTjNBLiEajQCdsEjqAzkwg4bESsUARBzgHuFqnBSE7ZWhTYt9Zk+NEE/vYUEd8N
+         hszHUReHz9O8FONRXWyyVJFYV246fxbg+g6msq08fvcntd7/iyYObYvVgjp3ypyBX/gu
+         15t50EgnyFIikKtB2eGi6IGg5UzOIy1qFFzJTdnMu2wPoacZm5KaGX2u4d8Ma+xb7kvi
+         PIjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792344382; x=1792949182;
+        d=1e100.net; s=20260707; t=1792346282; x=1792951082;
         h=content-type:cc:to:subject:message-id:date:from:mime-version
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=y1tw446O5jq7V0fXkanJIqYdDtYyOEyHpl2LRuqXdW4=;
-        b=ot+yw3xYfdZuACMbWID3Qxetlt61cr9+6JzuXxs04z5yH3U1y92he2xHATUjvkyUV6
-         V5iPxsp65njLuNIYNJtWqSE7R5SNTzUu+j3PyATLb9+//R8CYqx/ZmtNWch05TYiaLNm
-         R4nXb9o/IQDV33ud91dVUYubWBCgegi8aCI/6DTDTouHK8KXvlnGeYGq3pav9oOtGylC
-         SmvxmVIkf9jRa45N3XB7OIa6vDTv2aMClKyKmTaNaY1NZSv16VP6sRexwS/FEwWfgCym
-         XunXwXzrPXB4Cu+wkULqUA8ifjHEfaH2MeEEro+/lcXsgi2QCYxLc4bSjEaV0ugAQGpd
-         atfg==
-X-Forwarded-Encrypted: i=1; AKwUvBzurIVCFbtoWsfnf6QInPybJmgC9JAas6AzL6XMxBsUbYos51A+vgqaZihZ9C/C7zVMXFIgcnVmuDj6eRFwCmNBlSlI@vger.kernel.org
-X-Gm-Message-State: AFq9FYJtv5qxmnVUR/sGVbVxTsuVUWp6ujh4OFksWIHFEiBpCeeDccTN
-	OR2GKcf7904a/yfDdQ0TOVQe8/R8R4Kj60baI22S7ixrNC+/DfTTbq3cktg+gNH9OV7eomJLFsJ
-	YauWRn0mCABBOoKCYI+RxUWSjfzFjFTzE8IfpuQo=
-X-Gm-Gg: AYBFou2ltmsGWiEOWcBQBbPvnPxs8LURNyxHil9YsNMEB/KdgEPV0eDQR0arz1MWEvR
-	1SXzV7oWQgdqt+Nr2Xuel5i+6Rw0t4fzrv71IycR7bTqt6L/SytIehgzA2+PfVPz1IP84iGoCDj
-	opK0dx0nrKtqGoxaR/AzvNafVwK6H7eWMp8OikALJC1bwoUUFSwa1KjmVWeGRX3ikGv6QOclWCq
-	hoblhbyzrKPePSUeUHKgQgvv+HrNxE4yQ2qUnh2YNIRT/zr/fZOq0T+YqxDfhMf5HU17KMA0CAu
-	PDtVzgS1us3wxDJlNdt+K++qYj6L+8dirQn84dac73OqfnBGJeTDlefaUjb75x56XMWiZBk+Pak
-	+NkxgmCQpCrQ5izAld813IowEcSZ2w734nSOb83f6GnFm
-X-Received: by 2002:a05:620a:4442:b0:939:a0f3:6aef with SMTP id
- af79cd13be357-93f29ced7cemr898083285a.23.1792344381825; Sun, 18 Oct 2026
- 10:26:21 -0700 (PDT)
+        bh=1vqWMr0i+A+wOg3Y8J4IXW6zaKZ6EAFuThjGg28E8gc=;
+        b=01UVFwqdIziDXm4Dz+zvI5WcbV4OouS7ApzWUhDYe0dl523dlbdJ/Ktwfi9AJ4EB9f
+         PKwywlVJwfTgTmRHHjOjvYh7pUjuSH8zDdAqaouLmZ5FEvRODnWtEL+rSK1/J10HLoZQ
+         jJB6SX5o1DePE6GRmuLc8/L9otery3hK9h8aCo63J92/xUL1Vb9kG/iMRgqad+wjuDpi
+         H931cZlWeoA6L+cIElQsl+trwezWoGTz1Ugb5dLL8O/DTrN+a9kSjPcLA33KCYjKgF6C
+         1/xrXfyxavSaQx7+J8cDGrm6ogyv3+IEvIVEjmducDv2ZYrEkVKRMBXchQ2g0NU/BSVC
+         8N4A==
+X-Forwarded-Encrypted: i=1; AKwUvBzzRFpJdLUeQ5Qsvqv0RXSW2vEG5V6OBkjWbQ4iN/dwvECF/KL/0Nj11SyiIyRbOXy+4fLAxmgszToUHv1YmyHjuIun@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ15d6z/qhuDhPoGGDmQ343TcXn1Wu5e7VbGujubpj+pfvzUibE
+	0CQCliNNqx4+9OiChnO2bpC9bqB922gXu7Z1x+/kTAPFHfrKh7CbFBkhbGxbq84mQBbooX0skCo
+	k5L4hpmuzJ5l/ZRVqwhABkWtNK2ifBQIeVc+QsMNHWGaM9aQRjdMy
+X-Gm-Gg: AYBFou0BRpCZnVSARxH6py1BV6I0dB42WXRXEyFEfNoBIPUCTq6ULBJ0T1N6ZAxQJqg
+	jpyJeikXWMcz7ONgnEsVDrtA4OckhpwMcq55HthTQqfOrwr1WqpGFS6f3qTo5bZIc76t11LUWFz
+	mw2DxEO1fkBLeA1MJ93mdbeXg6ld8Em91jwSjTEMgauw96MQB4nqigY5xZ+49lifwaeGP8XmzrQ
+	wEROGdLJRfal4kRSCenKwmQHTS7ivXkQEyK7+G5xtq5GspO7Ybbxb4HInJr85i+WBAlaisMBJ23
+	uW4HT4VGHbiBtLKGW8hHBgZVeWcXih10freonuxF0ZXKetEtXxOn6SA=
+X-Received: by 2002:a05:690e:80c:20b0:671:2ab1:899c with SMTP id
+ 956f58d0204a3-679ca8c23d2mr1000683d50.89.1792346282539; Sun, 18 Oct 2026
+ 10:58:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Lars Francke <lars.francke@gmail.com>
-Date: Sun, 18 Oct 2026 19:25:45 +0200
-X-Gm-Features: AclHuK-WBTCeWf3r86ayNotw4-Vl_UTB4Xwfvm3k3Kj0sJBXEKxBDr4hxtUSx1E
-Message-ID: <CAD-Ua_hKvVoixLPbYfndo0mZ=7kdcj5zTGD=_hceXB_fpO5Byw@mail.gmail.com>
-Subject: amd-pmf: NULL pointer dereference in tee_client_invoke_func() after
- failed TA re-init on hibernate restore
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Mario Limonciello <superm1@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hansg@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	John Allen <john.allen@amd.com>, platform-driver-x86@vger.kernel.org, 
-	linux-crypto@vger.kernel.org
-Content-Type: multipart/mixed; boundary="00000000000031d582065e20b2ba"
-
---00000000000031d582065e20b2ba
+From: Karlos Abel <kabel@voidship.net>
+Date: Sun, 18 Oct 2026 13:57:51 -0400
+X-Gm-Features: AclHuK-uZlwOXUocPsVVlfaIB9gzCJ2YCWicP8Um52WGcy0S0rsyATVZG5eZq9o
+Message-ID: <CANDoYxu94VsX-_Sfzj-pk4Xjfg-oZo_5=L806DHnw786oQD9JQ@mail.gmail.com>
+Subject: [BUG] xhci Intel 8086:777d: Bluetooth active disconnect leaves USB2
+ PLL on; isolated U3 prevents it
+To: Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org
+Cc: Xi Pardee <xi.pardee@linux.intel.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On a ThinkPad T14 Gen 6, turning off the platform Bluetooth rfkill switch
+while its USB link is active leaves PMC0:USB2_PLL_OFF_STS at 0 after the
+xHCI controller runtime-suspends. Suspending the USB device before the
+same radio-off operation leaves the status at 1. Earlier installed-kernel
+tests associated these conditions with failed and successful S0ix entry.
 
-this is a follow-up to my hibernate report from last year [1], which
-led to 48d229c70471 ("platform/x86/amd/pmf: Prevent TEE errors after
-hibernate") and 0ba2035026d0 ("crypto: ccp - Add an S4 restore flow").
-I used the get_maintainer.pl script to arrive at the list of
-recipients.
+I have narrowed the difference to hardware link suspension, independently
+of Linux's normal USB-device suspend bookkeeping. I am asking for guidance
+on the controller/platform mechanism before proposing a kernel fix.
 
-Claude helped me analyse this and I tried to verify it manually. I
-have to admit though that I'm very far out of my depth here, so some
-of it may be wrong. It is real behavior I see though and the
-explanation _seems _ to make sense to me.
+Hardware and software:
+  Lenovo ThinkPad T14 Gen 6, type 21QDS3DH00
+  Core Ultra 7 255U; BIOS N4JET28W (1.18), dated 2026-06-16
+  xHCI 0000:00:14.0, PCI 8086:777d, xHCI version 1.20
+  Bluetooth USB 8087:0033, full-speed (12 Mbps), root port 10 / USB 3-10
+  Bluetooth firmware intel/ibt-0093-0041.sfi
+  Active-versus-normal-suspend failure reproduced on stock 7.2.7-arch1-1
+  Latest isolation test: 7.2.7-arch1-bzlink1, a local diagnostic build
+  This report does not claim a hardware test of current mainline.
 
-Both are in the kernel I am running.
-When the TA re-init in the restore path fails, the next s2idle resume
-oopses in the PMF work item and the machine slowly locks up.
+A source comparison on 2026-10-18 against stable 7.2.11 and mainline
+32c52ec87d6245ee2d12ed5dd509e40062939b50 found no matching clock-release fix
+in the reviewed USB/xHCI, Bluetooth, rfkill, ACPI, and PMC paths. Mainline
+does contain newer endpoint-recovery prevention after disconnect, including
+042aad8d0db6 and 7e0ef4332ed9. In the captured radio-off-to-clock-sample
+intervals, however, the only traced xHCI command is Disable Slot: there are
+no endpoint reset, stop, or Set TR Dequeue commands for those changes to
+suppress. This source review does not replace testing a current kernel.
 
-Hardware (just as last time): HP ZBook Ultra G1a (Ryzen AI MAX+ PRO
-395), BIOS X89 Ver. 01.06.02 08/26/2026
-Kernel:   7.2.8-arch1-2 (Arch), linux-firmware 20260916
+All five cases below ran in one boot, awake on battery. Before each case:
+hold the root hub and PCI controller runtime-active; re-enable Bluetooth;
+wait for firmware download and boot plus successful MGMT Read Info; force
+the USB device on/active; remove its configuration and interfaces. For the
+diagnostic cases, also require an idle EP0 and disabled data endpoints.
 
-Sequence, all in one boot:
+Then perform the indicated action, block tpacpi_bluetooth_sw, wait for USB
+removal, release parent PM holds, and sample the clock condition after PCI
+runtime suspend. The clock reading was stable across three samples.
 
-1. 2026-10-06, s2idle resume:
+  State immediately before radio-off                 USB2_PLL_OFF_STS
+  Normal USB suspend, initial control                         1
+  Active U0                                                  0
+  Stop Endpoint (Suspend=1), remain U0, wait one second        0
+  Same Stop Endpoint, set U3, wait one second                 1
+  Normal USB suspend, final control                          1
 
-ccp 0000:c3:00.2: tee: command 0x5 timed out, disabling PSP
-amd-pmf AMDI0105:00: TEE enact cmd failed. err: ffff000e, ret:0
+The local diagnostic uses xhci_set_link_state(..., XDEV_U3) after the guarded
+EP0 stop. It does not set udev->port_is_suspended or the xHCI suspended_ports
+bit. Both flags were observed clear; USB state remained ADDRESS and runtime
+PM remained active/manual. Debugfs showed EP0 stopped and PORTSC 0x663 (U3)
+before and after a measured 1.000659-second wait. The stopped-U0 case showed
+PORTSC 0x603 across its matched wait. No normal suspend callback was used
+for the isolated case.
 
-The enact error then repeats about once a second for 12 days,
-~540k lines in the journal.
-I totally failed to notice this until after the fact :)
+The verifier checked command success, firmware readiness, no target URBs,
+no unexpected target port writes, no target/parent PM transitions during
+isolation, and zero trace loss. No kernel errors occurred in the comparison.
+An initial AC-connected preflight refusal preceded the valid comparison and
+did not change the test state.
 
-2. 2026-10-18, resume from hibernate:
+At the first disconnect event, all five cases already report identical
+PORTSC 0x000202a0: disconnected, disabled, RxDetect, power on, CSC set.
+Their subsequent target PORTSC writes are also identical:
+  0x000202a0, 0x0a0002a0, 0x0a0202a0.
+Disable Slot is issued in each case. Earlier captures verified successful
+Disable Slot completion even when the clock stayed on.
 
-ccp 0000:c3:00.2: tee: ring init command failed with busy status, retrying
-Failed to open TEE session err:0xffff000e, rc:0
-amd-pmf AMDI0105:00: Failed to open TA session (-22)
-amd-pmf AMDI0105:00: TEE init failed for UUID[0] ret: -22
+The local source and saved AML show:
+  thinkpad_acpi bluetooth_set_status -> SBDC(0) -> BPWC(0)
+  -> SGOV(0x00140414, 0), a GPIO output change.
+There is no USB-suspend handshake in this path. By disconnect handling time,
+the port is disabled; the normal xHCI U3 operation requires an enabled port.
 
-Nothing schedules pb_work here, so the system runs fine for hours
-(this sentence is something Claude told me and I'm not entirely sure
-what it means, I hope it makes sense).
+Other established controls: driver unbinding, removal of USB configuration,
+logical USB removal before radio-off, and extra active-idle time do not
+substitute for suspension. Resuming a suspended device before radio-off
+reintroduces the failure. Cycling the empty port's power repairs it, but
+that has only been treated as a diagnostic recovery, not a proposed fix.
 
-3. Next s2idle resume, about 1.5 s after "PM: suspend exit":
+Is there a known controller/PHY or CNVi sequencing requirement for active
+full-speed Bluetooth removal on this controller? In particular, should
+the disconnected/disabled port release this clock autonomously, or is
+there a documented platform pre-power-off sequence or controller recovery
+that Linux should implement?
 
-BUG: kernel NULL pointer dereference, address: 0000000000000020
-Workqueue: events amd_pmf_invoke_cmd [amd_pmf]
-RIP: 0010:tee_client_invoke_func+0xc/0x30 [tee]
-Call Trace:
-  amd_pmf_invoke_cmd_enact+0x103/0x770 [amd_pmf]
-  amd_pmf_invoke_cmd+0x19/0x40 [amd_pmf]
-  process_one_work+0x19f/0x370
-  worker_thread+0x1b1/0x310
+The guarded diagnostic patches, exact harness, traces, register snapshots,
+and hash-verified evidence are available. QEMU validates the diagnostic's
+guards and isolated U3 behavior, but does not reproduce Intel PMC behavior.
+The internal defect, minimum useful suspend duration, and production fix
+remain unestablished.
 
-The kworker dies while it is still busy, so anything that later
-flushes per-CPU work on that CPU blocks forever. In my case waybar
-ended up in D state in memfd_add_seals() -> lru_add_drain_all(), every
-following suspend failed with "1 tasks refusing to freeze", and after
-a while userdb lookups, reboot and the compositor hung too. Only a
-hard reset got me out.
+Investigation and drafting were assisted by Codex.  Any mistakes,
+however, are entirely and regrettably my own.
 
-I assume the root cause is the PSP disabling itself after the s2idle
-resume. I have no idea why that happened and I can't remember having
-seen this before (that said I didn't check actively in the past).
+Thank you very much for your attention and your work maintaining this
+stack.  if I can provide any further details, I'm very happy to.
 
-The full kernel log excerpt is attached. I can try to test patches
-even thought I forgot most of what I learned about building a Kernel
-from last year. I'm sure I can relearn :)
-
-[1] https://lore.kernel.org/platform-driver-x86/CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com/
-
-Thanks,
-Lars
-
---00000000000031d582065e20b2ba
-Content-Type: text/plain; charset="US-ASCII"; name="pmf-oops-log.txt"
-Content-Disposition: attachment; filename="pmf-oops-log.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mve3brfn0>
-X-Attachment-Id: f_mve3brfn0
-
-IyBqb3VybmFsY3RsIC1iIC0xIC1rLCBBcmNoIDcuMi44LWFyY2gxLTIsIEhQIFpCb29rIFVsdHJh
-IEcxYSAoQklPUyBYODkgMDEuMDYuMDIpCgojIyAyMDI2LTEwLTA2OiBQU1AgZGlzYWJsZWQgYWZ0
-ZXIgczJpZGxlIHJlc3VtZQpbMjY3NDYuMTgwNzgyXSBsYXJzLWxhcHRvcCBrZXJuZWw6IGNjcCAw
-MDAwOmMzOjAwLjI6IHRlZTogY29tbWFuZCAweDUgdGltZWQgb3V0LCBkaXNhYmxpbmcgUFNQClsy
-Njc0Ni4xODA5NDddIGxhcnMtbGFwdG9wIGtlcm5lbDogYW1kLXBtZiBBTURJMDEwNTowMDogVEVF
-IGVuYWN0IGNtZCBmYWlsZWQuIGVycjogZmZmZjAwMGUsIHJldDowCgojIyAyMDI2LTEwLTE4IDA5
-OjQ3OiBoaWJlcm5hdGUgcmVzdG9yZSwgVEEgcmUtaW5pdCBmYWlscwpbNTgxMDQ5LjA1MjQ3N10g
-bGFycy1sYXB0b3Aga2VybmVsOiBQTTogaGliZXJuYXRpb246IEJhc2ljIG1lbW9yeSBiaXRtYXBz
-IGNyZWF0ZWQKWzU4MTA0OS4wNTI1OTVdIGxhcnMtbGFwdG9wIGtlcm5lbDogUE06IGhpYmVybmF0
-aW9uOiBQcmVhbGxvY2F0aW5nIGltYWdlIG1lbW9yeQpbNTgxMDQ5LjA1NzA5MF0gbGFycy1sYXB0
-b3Aga2VybmVsOiBQTTogaGliZXJuYXRpb246IEFsbG9jYXRlZCA0ODQxNDUwIHBhZ2VzIGZvciBz
-bmFwc2hvdApbNTgxMDQ5LjA1NzEwOV0gbGFycy1sYXB0b3Aga2VybmVsOiBQTTogaGliZXJuYXRp
-b246IEFsbG9jYXRlZCAxOTM2NTgwMCBrYnl0ZXMgaW4gNDIuMzYgc2Vjb25kcyAoNDU3LjE3IE1C
-L3MpCls1ODEwNDkuMDU3NzMyXSBsYXJzLWxhcHRvcCBrZXJuZWw6IFBNOiBoaWJlcm5hdGlvbjog
-Tm9ybWFsIHBhZ2VzIG5lZWRlZDogNTczNDY0NiArIDEwMjQsIGF2YWlsYWJsZSBwYWdlczogNjc4
-NzQwOQpbNTgxMDQ5LjA1ODc1OF0gbGFycy1sYXB0b3Aga2VybmVsOiBjY3AgMDAwMDpjMzowMC4y
-OiB0ZWU6IHJpbmcgaW5pdCBjb21tYW5kIGZhaWxlZCB3aXRoIGJ1c3kgc3RhdHVzLCByZXRyeWlu
-ZwpbNTgxMDQ5LjA2MDc5M10gbGFycy1sYXB0b3Aga2VybmVsOiBGYWlsZWQgdG8gb3BlbiBURUUg
-c2Vzc2lvbiBlcnI6MHhmZmZmMDAwZSwgcmM6MApbNTgxMDQ5LjA2MDgxMF0gbGFycy1sYXB0b3Ag
-a2VybmVsOiBhbWQtcG1mIEFNREkwMTA1OjAwOiBGYWlsZWQgdG8gb3BlbiBUQSBzZXNzaW9uICgt
-MjIpCls1ODEwNDkuMDYwOTA4XSBsYXJzLWxhcHRvcCBrZXJuZWw6IGFtZC1wbWYgQU1ESTAxMDU6
-MDA6IFRFRSBpbml0IGZhaWxlZCBmb3IgVVVJRFswXSByZXQ6IC0yMgpbNTgxMDQ5LjExNTkzMF0g
-bGFycy1sYXB0b3Aga2VybmVsOiAgPyBfX3BmeF9wY2lfcG1fcmVzdG9yZSsweDEwLzB4MTAKWzU4
-MTA0OS4xMTg4MDRdIGxhcnMtbGFwdG9wIGtlcm5lbDogUE06IGhpYmVybmF0aW9uOiBCYXNpYyBt
-ZW1vcnkgYml0bWFwcyBmcmVlZApbNTgxMDQ5LjExOTg3N10gbGFycy1sYXB0b3Aga2VybmVsOiBQ
-TTogaGliZXJuYXRpb246IGhpYmVybmF0aW9uIGV4aXQKCiMjIDIwMjYtMTAtMTggMTQ6NTU6IGZp
-cnN0IHMyaWRsZSByZXN1bWUgYWZ0ZXIgdGhhdCwgT29wcwpbNTg3NjE3LjAxOTA1M10gbGFycy1s
-YXB0b3Aga2VybmVsOiBQTTogc3VzcGVuZCBleGl0Cls1ODc2MTguNTU4MTQxXSBsYXJzLWxhcHRv
-cCBrZXJuZWw6IEJVRzoga2VybmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSwgYWRkcmVzczog
-MDAwMDAwMDAwMDAwMDAyMApbNTg3NjE4LjU1ODM2OV0gbGFycy1sYXB0b3Aga2VybmVsOiAjUEY6
-IHN1cGVydmlzb3IgcmVhZCBhY2Nlc3MgaW4ga2VybmVsIG1vZGUKWzU4NzYxOC41NjExMTFdIGxh
-cnMtbGFwdG9wIGtlcm5lbDogI1BGOiBlcnJvcl9jb2RlKDB4MDAwMCkgLSBub3QtcHJlc2VudCBw
-YWdlCls1ODc2MTguNTYxMTYxXSBsYXJzLWxhcHRvcCBrZXJuZWw6IFBHRCAwIFA0RCAwIApbNTg3
-NjE4LjU2MTE5M10gbGFycy1sYXB0b3Aga2VybmVsOiBPb3BzOiBPb3BzOiAwMDAwIFsjMV0gU01Q
-IE5PUFRJCls1ODc2MTguNTYxMjExXSBsYXJzLWxhcHRvcCBrZXJuZWw6IENQVTogNCBVSUQ6IDAg
-UElEOiAzOTg2MzU1IENvbW06IGt3b3JrZXIvNDozIFRhaW50ZWQ6IEcgICAgICAgIFcgIE9FICAg
-ICAgIDcuMi44LWFyY2gxLTIgIzEgUFJFRU1QVChmdWxsKSAgMTg2MTYzY2FlYTZlYjVkYzRiMmEw
-MjUyNDYzYzdjZTFjNjkyNzI5NApbNTg3NjE4LjU2MTIyN10gbGFycy1sYXB0b3Aga2VybmVsOiBU
-YWludGVkOiBbV109V0FSTiwgW09dPU9PVF9NT0RVTEUsIFtFXT1VTlNJR05FRF9NT0RVTEUKWzU4
-NzYxOC41NjEyNDBdIGxhcnMtbGFwdG9wIGtlcm5lbDogSGFyZHdhcmUgbmFtZTogSFAgSFAgWkJv
-b2sgVWx0cmEgRzFhIDE0IGluY2ggTW9iaWxlIFdvcmtzdGF0aW9uIFBDLzhEMDEsIEJJT1MgWDg5
-IFZlci4gMDEuMDYuMDIgMDgvMjYvMjAyNgpbNTg3NjE4LjU2MTI1MF0gbGFycy1sYXB0b3Aga2Vy
-bmVsOiBXb3JrcXVldWU6IGV2ZW50cyBhbWRfcG1mX2ludm9rZV9jbWQgW2FtZF9wbWZdCls1ODc2
-MTguNTYxMjYwXSBsYXJzLWxhcHRvcCBrZXJuZWw6IFJJUDogMDAxMDp0ZWVfY2xpZW50X2ludm9r
-ZV9mdW5jKzB4Yy8weDMwIFt0ZWVdCls1ODc2MTguNTYxMjcxXSBsYXJzLWxhcHRvcCBrZXJuZWw6
-IENvZGU6IGNjIGI4IGVhIGZmIGZmIGZmIGMzIGNjIGNjIGNjIGNjIDBmIDFmIDAwIDkwIDkwIDkw
-IDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIGYzIDBmIDFlIGZhIDBmIDFm
-IDQ0IDAwIDAwIDQ4IDhiIDA3IDw0OD4gOGIgNDAgMjAgNDggOGIgNDAgMDggNDggOGIgNDAgNDAg
-NDggODUgYzAgNzQgMDYgZmYgZTAgY2MgY2MgY2MKWzU4NzYxOC41NjEyODJdIGxhcnMtbGFwdG9w
-IGtlcm5lbDogUlNQOiAwMDE4OmZmZmZjY2E3NjZjZjNkODAgRUZMQUdTOiAwMDAxMDI0NgpbNTg3
-NjE4LjU2MTI5Ml0gbGFycy1sYXB0b3Aga2VybmVsOiBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJY
-OiBmZmZmOGIwMDQxMmFjMDM4IFJDWDogZmZmZmNjYTc2NmNmM2RhOApbNTg3NjE4LjU2MTMwMl0g
-bGFycy1sYXB0b3Aga2VybmVsOiBSRFg6IGZmZmZjY2E3NjZjZjNkYTggUlNJOiBmZmZmY2NhNzY2
-Y2YzZDkwIFJESTogZmZmZjhiMDk3OTQ0ZjcwMApbNTg3NjE4LjU2MTMxMl0gbGFycy1sYXB0b3Ag
-a2VybmVsOiBSQlA6IGZmZmY4YjAwOGU1MDAwMDAgUjA4OiAwMDAwMDAwMDAwMDAwMDAxIFIwOTog
-ZmZmZjhiMDA0MWU4OTAwMApbNTg3NjE4LjU2MTMyNF0gbGFycy1sYXB0b3Aga2VybmVsOiBSMTA6
-IGZmZmY4YjAwNDFlMDY0NTggUjExOiBmZmZmOGIwMDQwMDQyODAwIFIxMjogZmZmZjhiMGI4ZGIz
-MjJjMApbNTg3NjE4LjU2MTMzNF0gbGFycy1sYXB0b3Aga2VybmVsOiBSMTM6IGZmZmY4YjAwNDAy
-OTU2MDUgUjE0OiAwMDAwMDAwMDAwMDAwMDAwIFIxNTogZmZmZjhiMDA0MTJhYzNhMApbNTg3NjE4
-LjU2MTM0NF0gbGFycy1sYXB0b3Aga2VybmVsOiBGUzogIDAwMDAwMDAwMDAwMDAwMDAoMDAwMCkg
-R1M6ZmZmZjhiMGJlZDYyYTAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwCls1ODc2MTgu
-NTYxMzU1XSBsYXJzLWxhcHRvcCBrZXJuZWw6IENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBD
-UjA6IDAwMDAwMDAwODAwNTAwMzMKWzU4NzYxOC41NjEzNjRdIGxhcnMtbGFwdG9wIGtlcm5lbDog
-Q1IyOiAwMDAwMDAwMDAwMDAwMDIwIENSMzogMDAwMDAwMDc5MTgyMjAwMCBDUjQ6IDAwMDAwMDAw
-MDBmNTBlZjAKWzU4NzYxOC41NjEzNzddIGxhcnMtbGFwdG9wIGtlcm5lbDogUEtSVTogNTU1NTU1
-NTQKWzU4NzYxOC41NjEzODddIGxhcnMtbGFwdG9wIGtlcm5lbDogQ2FsbCBUcmFjZToKWzU4NzYx
-OC41NjEzOTVdIGxhcnMtbGFwdG9wIGtlcm5lbDogIDxUQVNLPgpbNTg3NjE4LjU2MTQwNV0gbGFy
-cy1sYXB0b3Aga2VybmVsOiAgYW1kX3BtZl9pbnZva2VfY21kX2VuYWN0KzB4MTAzLzB4NzcwIFth
-bWRfcG1mIDcwMTA1MDA5ZDM2M2RkMWZmMmM2MTI0NDcyNzgyNjMxNWJiNTg4ZmVdCls1ODc2MTgu
-NTYxNDE2XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICBhbWRfcG1mX2ludm9rZV9jbWQrMHgxOS8weDQw
-IFthbWRfcG1mIDcwMTA1MDA5ZDM2M2RkMWZmMmM2MTI0NDcyNzgyNjMxNWJiNTg4ZmVdCls1ODc2
-MTguNTYxNDI2XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICBwcm9jZXNzX29uZV93b3JrKzB4MTlmLzB4
-MzcwCls1ODc2MTguNTYxNDM4XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICB3b3JrZXJfdGhyZWFkKzB4
-MWIxLzB4MzEwCls1ODc2MTguNTYxNDQ2XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICA/IF9fcGZ4X3dv
-cmtlcl90aHJlYWQrMHgxMC8weDEwCls1ODc2MTguNTYxNDU0XSBsYXJzLWxhcHRvcCBrZXJuZWw6
-ICBrdGhyZWFkKzB4ZTQvMHgxMjAKWzU4NzYxOC41NjE0NjFdIGxhcnMtbGFwdG9wIGtlcm5lbDog
-ID8gX19wZnhfa3RocmVhZCsweDEwLzB4MTAKWzU4NzYxOC41NjE0NzBdIGxhcnMtbGFwdG9wIGtl
-cm5lbDogIHJldF9mcm9tX2ZvcmsrMHgyYTcvMHgzMzAKWzU4NzYxOC41NjE0NzldIGxhcnMtbGFw
-dG9wIGtlcm5lbDogID8gX19wZnhfa3RocmVhZCsweDEwLzB4MTAKWzU4NzYxOC41NjE0ODddIGxh
-cnMtbGFwdG9wIGtlcm5lbDogIHJldF9mcm9tX2ZvcmtfYXNtKzB4MWEvMHgzMApbNTg3NjE4LjU2
-MTQ5NV0gbGFycy1sYXB0b3Aga2VybmVsOiAgPC9UQVNLPgpbNTg3NjE4LjU2MTUwNF0gbGFycy1s
-YXB0b3Aga2VybmVsOiBNb2R1bGVzIGxpbmtlZCBpbjogbXQ3OTI1ZSBtdDc5MjVfY29tbW9uIHRj
-cF9kaWFnIGluZXRfZGlhZyByZmNvbW0gaGlkX3NlbnNvcl9wcm94IGhpZF9zZW5zb3JfZ3lyb18z
-ZCBoaWRfc2Vuc29yX3RyaWdnZXIga2ZpZm9fYnVmIGhpZF9zZW5zb3JfaWlvX2NvbW1vbiBpbmR1
-c3RyaWFsaW8gc25kX3NlcV9kdW1teSBzbmRfaHJ0aW1lciBoaWRfc2Vuc29yX2h1YiBzbmRfc2Vx
-IHNuZF9zZXFfZGV2aWNlIGNjbSBhbGdpZl9oYXNoIGFsZ2lmX3NrY2lwaGVyIGFmX2FsZyBuZl9j
-b25udHJhY2tfbmV0bGluayB4dF9uYXQgeHRfdGNwdWRwIHZldGggeHRfY29ubnRyYWNrIHh0X01B
-U1FVRVJBREUgYnJpZGdlIHN0cCBsbGMgeGZybV91c2VyIHhmcm1fYWxnbyB4dF9zZXQgaXBfc2V0
-IHh0X2FkZHJ0eXBlIG5mdF9jb21wYXQgeF90YWJsZXMgYm5lcCBidHVzYiBidG10ayBidHJ0bCBi
-dGJjbSBidGludGVsIGJsdWV0b290aCBvdmVybGF5IHNuZF9hY3BfbGVnYWN5X21hY2ggc25kX2Fj
-cF9tYWNoIHNuZF9zb2NfbmF1ODgyMSBzbmRfYWNwM3hfcm4gc25kX2FjcDcwIG5mdF9yZWplY3Rf
-aW5ldCBzbmRfYWNwX2kycyBuZl9yZWplY3RfaXB2NCBzbmRfYWNwX3BkbSBuZl9yZWplY3RfaXB2
-NiBzbmRfc29jX2RtaWMgc25kX2FjcF9wY20gbmZ0X3JlamVjdCBzbmRfc29mX2FtZF9hY3A3MCBz
-bmRfc29mX2FtZF9hY3A2MyBzbmRfc29mX2FtZF92YW5nb2doIHNuZF9zb2ZfYW1kX3JlbWJyYW5k
-dCBzbmRfc29mX2FtZF9yZW5vaXIgc25kX3NvZl9hbWRfYWNwIHNuZF9zb2ZfcGNpIHNuZF9zb2Zf
-eHRlbnNhX2RzcCBuZnRfY2hhaW5fbmF0IG5mX25hdCBzbmRfc29mIG5mX2Nvbm50cmFjayBzbmRf
-c29mX3V0aWxzIHNuZF9wY2lfYWNwN3ggbmZfZGVmcmFnX2lwdjYgc25kX3BjaV9wcyBuZl9kZWZy
-YWdfaXB2NCBzbmRfc29jX2FjcGlfYW1kX21hdGNoIHNuZF9hbWRfc2R3X2FjcGkgaW50ZWxfcmFw
-bF9tc3Igc25kX2N0bF9sZWQgc291bmR3aXJlX2FtZCBpbnRlbF9yYXBsX2NvbW1vbgpbNTg3NjE4
-LjU2MTU4Ml0gbGFycy1sYXB0b3Aga2VybmVsOiAgc291bmR3aXJlX2dlbmVyaWNfYWxsb2NhdGlv
-biBuZl90YWJsZXMgc25kX2hkYV9jb2RlY19hbGMyNjkgc291bmR3aXJlX2J1cyBzbmRfaGRhX2Nv
-ZGVjX3JlYWx0ZWtfbGliIHNuZF9oZGFfc2NvZGVjX2NvbXBvbmVudCBzbmRfc29jX3NkY2Egc25k
-X2hkYV9zY29kZWNfY3MzNWw1Nl9zcGkgc25kX2hkYV9jb2RlY19nZW5lcmljIHNuZF9oZGFfY29k
-ZWNfYXRpaGRtaSBzbmRfc29jX2NvcmUgc25kX2hkYV9jb2RlY19oZG1pIG10NzkyeF9saWIgc25k
-X2NvbXByZXNzIG10NzZfY29ubmFjX2xpYiBhYzk3X2J1cyBzbmRfaGRhX2ludGVsIHZmYXQgc25k
-X3BjbV9kbWFlbmdpbmUgbXQ3NiBzbmRfaGRhX2NvZGVjIGZhdCBzbmRfYWNwX3BjaSBocF9iaW9z
-Y2ZnIHNuZF9hbWRfYWNwaV9tYWNoIGFtZF9pc3A0X2NhcHR1cmUgc25kX2hkYV9jb3JlIG1hYzgw
-MjExIHNwZDUxMTggc25kX2ludGVsX2RzcGNmZyB2aWRlb2J1ZjJfdm1hbGxvYyBzbmRfYWNwX2xl
-Z2FjeV9jb21tb24gc25kX2hkYV9zY29kZWNfY3MzNWw1Nl9pMmMga3ZtX2FtZCBzbmRfaGRhX3Nj
-b2RlY19jczM1bDU2IHZpZGVvYnVmMl9tZW1vcHMgc25kX3BjaV9hY3A2eCBzbmRfaW50ZWxfc2R3
-X2FjcGkgdWNzaV9hY3BpIGZpcm13YXJlX2F0dHJpYnV0ZXNfY2xhc3MgdmlkZW9idWYyX3Y0bDIg
-c25kX2hkYV9jaXJydXNfc2NvZGVjIHNwNTEwMF90Y28gc25kX3BjaV9hY3A1eCBzbmRfaHdkZXAg
-a3ZtIHNuZF9zb2NfY3MzNWw1Nl9zaGFyZWQgdHlwZWNfdWNzaSB2aWRlb2J1ZjJfY29tbW9uIHNu
-ZF9ybl9wY2lfYWNwM3ggY2ZnODAyMTEgc25kX3NvY19jc19hbXBfbGliIHJvbGVzIHNuZF9wY20g
-c25kX2FjcF9jb25maWcgaHBfd21pIHZpZGVvZGV2IGFtZHhkbmEgam95ZGV2IGNzX2RzcCBzbmRf
-c29jX2FjcGkgdHlwZWMgc25kX3RpbWVyIGlycWJ5cGFzcyBzcGFyc2Vfa2V5bWFwIGkyY19waWl4
-NCBtb3VzZWRldiBoaWRfbXVsdGl0b3VjaCBncGlvX2tleXMgcmZraWxsIHJhcGwgc25kIHdtaV9i
-bW9mIGFtZF9wbWYgbGliYXJjNCBtYwpbNTg3NjE4LjU2MTg1N10gbGFycy1sYXB0b3Aga2VybmVs
-OiAgcGluY3RybF9hbWRpc3AgaTJjX2Rlc2lnbndhcmVfYW1kaXNwIHNvdW5kY29yZSBpMmNfc21i
-dXMgazEwdGVtcCBzbmRfcGNpX2FjcDN4IHRodW5kZXJib2x0IGFtZHRlZSBpMmNfaGlkX2FjcGkg
-YW1kX3NmaCBpMmNfaGlkIHNlcmlhbF9tdWx0aV9pbnN0YW50aWF0ZSBzb2NfYnV0dG9uX2FycmF5
-IGFtZF9pc3A0IHdpcmVsZXNzX2hvdGtleSBhbWRfcG1jIG1hY19oaWQgY3J5cHRvX3VzZXIgaTJj
-X2RldiBhY3BpX2NhbGwoT0UpIGRtX2NyeXB0IGVuY3J5cHRlZF9rZXlzIHRydXN0ZWQgYXNuMV9l
-bmNvZGVyIHRlZSBhbWRncHUgZG1fbW9kIGRybV9idWRkeSBhbWR4Y3AgaTJjX2FsZ29fYml0IGRy
-bV90dG1faGVscGVyIHR0bSBkcm1fZXhlYyBhZXNuaV9pbnRlbCBkcm1fcGFuZWxfYmFja2xpZ2h0
-X3F1aXJrcyBnZjEyOG11bCBncHVfc2NoZWQgbnZtZSBhZWFkIGRybV9zdWJhbGxvY19oZWxwZXIg
-bnZtZV9jb3JlIGRybV9kaXNwbGF5X2hlbHBlciB2aWRlbyBudm1lX2tleXJpbmcgY2NwIGNlYyB3
-bWkgbnZtZV9hdXRoIHNlcmlvX3JhdyBbbGFzdCB1bmxvYWRlZDogbXQ3OTI1X2NvbW1vbl0KWzU4
-NzYxOC41NjE4NzddIGxhcnMtbGFwdG9wIGtlcm5lbDogQ1IyOiAwMDAwMDAwMDAwMDAwMDIwCls1
-ODc2MTguNTYxODg3XSBsYXJzLWxhcHRvcCBrZXJuZWw6IC0tLVsgZW5kIHRyYWNlIDAwMDAwMDAw
-MDAwMDAwMDAgXS0tLQoKIyMgMjAyNi0xMC0xOCAxNTowMTogd2F5YmFyIHN0dWNrIGJlaGluZCB0
-aGUgZGVhZCBrd29ya2VyLCBzdXNwZW5kIGZhaWxzCls1ODc5ODQuMDEzOTM2XSBsYXJzLWxhcHRv
-cCBrZXJuZWw6IEZyZWV6aW5nIHVzZXIgc3BhY2UgcHJvY2Vzc2VzIGZhaWxlZCBhZnRlciAyMC4w
-MDUgc2Vjb25kcyAoMSB0YXNrcyByZWZ1c2luZyB0byBmcmVlemUsIHdxX2J1c3k9MCk6Cls1ODc5
-ODQuMDEzOTYwXSBsYXJzLWxhcHRvcCBrZXJuZWw6IHRhc2s6d2F5YmFyICAgICAgICAgIHN0YXRl
-OkQgc3RhY2s6MCAgICAgcGlkOjI2NjUgIHRnaWQ6MjY2NSAgcHBpZDoxNDA2ICAgdGFza19mbGFn
-czoweDQwMDAwMCBmbGFnczoweDAwMDgwMDAyCls1ODc5ODQuMDEzOTczXSBsYXJzLWxhcHRvcCBr
-ZXJuZWw6IENhbGwgVHJhY2U6Cls1ODc5ODQuMDEzOTkxXSBsYXJzLWxhcHRvcCBrZXJuZWw6ICA8
-VEFTSz4KWzU4Nzk4NC4wMTQwMTddIGxhcnMtbGFwdG9wIGtlcm5lbDogIF9fc2NoZWR1bGUrMHg0
-MjAvMHgxNzcwCls1ODc5ODQuMDE0MDQ0XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICBzY2hlZHVsZSsw
-eDI3LzB4YTAKWzU4Nzk4NC4wMTQwNTldIGxhcnMtbGFwdG9wIGtlcm5lbDogIHNjaGVkdWxlX3Rp
-bWVvdXQrMHhkYy8weDEyMApbNTg3OTg0LjAxNDA3M10gbGFycy1sYXB0b3Aga2VybmVsOiAgd2Fp
-dF9mb3JfY29tcGxldGlvbisweDlhLzB4MTgwCls1ODc5ODQuMDE0MDkyXSBsYXJzLWxhcHRvcCBr
-ZXJuZWw6ICBfX2ZsdXNoX3dvcmsrMHgzMTUvMHg0NTAKWzU4Nzk4NC4wMTQxMDZdIGxhcnMtbGFw
-dG9wIGtlcm5lbDogID8gX19xdWV1ZV93b3JrKzB4MTZjLzB4NTcwCls1ODc5ODQuMDE0MTE5XSBs
-YXJzLWxhcHRvcCBrZXJuZWw6ICA/IF9fcGZ4X3dxX2JhcnJpZXJfZnVuYysweDEwLzB4MTAKWzU4
-Nzk4NC4wMTQxMzRdIGxhcnMtbGFwdG9wIGtlcm5lbDogIF9fbHJ1X2FkZF9kcmFpbl9hbGwrMHgx
-ZDgvMHgyMzAKWzU4Nzk4NC4wMTQxNDVdIGxhcnMtbGFwdG9wIGtlcm5lbDogIG1lbWZkX2FkZF9z
-ZWFscysweDM2OC8weDY2MApbNTg3OTg0LjAxNDE2MF0gbGFycy1sYXB0b3Aga2VybmVsOiAgbWVt
-ZmRfZmNudGwrMHg4Ny8weGEwCls1ODc5ODQuMDE0MTc0XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICBk
-b19mY250bCsweDU2ZS8weDk4MApbNTg3OTg0LjAxNDE4Nl0gbGFycy1sYXB0b3Aga2VybmVsOiAg
-PyBkb19zeXNjYWxsXzY0KzB4YWEvMHg2NjAKWzU4Nzk4NC4wMTQyMDBdIGxhcnMtbGFwdG9wIGtl
-cm5lbDogID8gdm1zX2NvbXBsZXRlX211bm1hcF92bWFzKzB4MjEyLzB4MjMwCls1ODc5ODQuMDE0
-MjIwXSBsYXJzLWxhcHRvcCBrZXJuZWw6ICBfX3g2NF9zeXNfZmNudGwrMHhiMC8weDEyMApbNTg3
-OTg0LjAxNDIzMl0gbGFycy1sYXB0b3Aga2VybmVsOiAgZG9fc3lzY2FsbF82NCsweGFhLzB4NjYw
-Cls1ODc5ODQuMDE0MjcxXSBsYXJzLWxhcHRvcCBrZXJuZWw6ICA/IF9fdm1fbXVubWFwKzB4MTMz
-LzB4MjAwCls1ODc5ODQuMDE0MzE2XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICA/IGRvX2Z1dGV4KzB4
-MTFkLzB4MWYwCls1ODc5ODQuMDE0MzM1XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICA/IF9feDY0X3N5
-c19tdW5tYXArMHgxYi8weDMwCls1ODc5ODQuMDE0MzUwXSBsYXJzLWxhcHRvcCBrZXJuZWw6ICA/
-IGRvX3N5c2NhbGxfNjQrMHhhYS8weDY2MApbNTg3OTg0LjAxNDM2MV0gbGFycy1sYXB0b3Aga2Vy
-bmVsOiAgPyB2bV9tbWFwX3Bnb2ZmKzB4MTYxLzB4MjEwCls1ODc5ODQuMDE0MzkyXSBsYXJzLWxh
-cHRvcCBrZXJuZWw6ICA/IGRvX3N5c2NhbGxfNjQrMHgyNTIvMHg2NjAKWzU4Nzk4NC4wMTQ0MDdd
-IGxhcnMtbGFwdG9wIGtlcm5lbDogID8ga3N5c19tbWFwX3Bnb2ZmKzB4MTY4LzB4MjAwCls1ODc5
-ODQuMDE0NTY5XSBsYXJzLWxhcHRvcCBrZXJuZWw6ICA/IGRvX3N5c2NhbGxfNjQrMHhhYS8weDY2
-MApbNTg3OTg0LjAxNDU4NF0gbGFycy1sYXB0b3Aga2VybmVsOiAgPyBfX3g2NF9zeXNfb3BlbmF0
-KzB4NjEvMHhhMApbNTg3OTg0LjAxNDU5N10gbGFycy1sYXB0b3Aga2VybmVsOiAgPyBkb19zeXNj
-YWxsXzY0KzB4YWEvMHg2NjAKWzU4Nzk4NC4wMTQ2MDldIGxhcnMtbGFwdG9wIGtlcm5lbDogID8g
-ZG9fc3lzY2FsbF82NCsweDVmLzB4NjYwCls1ODc5ODQuMDE0NjIxXSBsYXJzLWxhcHRvcCBrZXJu
-ZWw6ICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg3Ni8weDdlCls1ODc5ODQuMDE0
-NjM1XSBsYXJzLWxhcHRvcCBrZXJuZWw6IFJJUDogMDAzMzoweDdmMTRlZjM5NDY3OApbNTg3OTg0
-LjAxNDY0OF0gbGFycy1sYXB0b3Aga2VybmVsOiBSU1A6IDAwMmI6MDAwMDdmZmRiZmRhYTUyMCBF
-RkxBR1M6IDAwMDAwMjAyIE9SSUdfUkFYOiAwMDAwMDAwMDAwMDAwMDQ4Cls1ODc5ODQuMDE0NjYy
-XSBsYXJzLWxhcHRvcCBrZXJuZWw6IFJBWDogZmZmZmZmZmZmZmZmZmZkYSBSQlg6IDAwMDA3ZmZk
-YmZkYjE2MDAgUkNYOiAwMDAwN2YxNGVmMzk0Njc4Cls1ODc5ODQuMDE0Njc4XSBsYXJzLWxhcHRv
-cCBrZXJuZWw6IFJEWDogMDAwMDAwMDAwMDAwMDAwZiBSU0k6IDAwMDAwMDAwMDAwMDA0MDkgUkRJ
-OiAwMDAwMDAwMDAwMDAwMDI5Cls1ODc5ODQuMDE0Njk0XSBsYXJzLWxhcHRvcCBrZXJuZWw6IFJC
-UDogMDAwMDdmZmRiZmRhYjY5MCBSMDg6IDAwMDA3ZjE0ZjI0NzEwMDAgUjA5OiAwMDAwN2YxNGYy
-NDcxMDEwCls1ODc5ODQuMDE0NzA4XSBsYXJzLWxhcHRvcCBrZXJuZWw6IFIxMDogMDAwMDAwMDA0
-NTdlYzVjZSBSMTE6IDAwMDAwMDAwMDAwMDAyMDIgUjEyOiAwMDAwN2YxNGYwNThmMzgwCls1ODc5
-ODQuMDE0NzIxXSBsYXJzLWxhcHRvcCBrZXJuZWw6IFIxMzogMDAwMDdmZmRiZmRiMTc0MCBSMTQ6
-IDAwMDAwMDAwMDAwMDAwMjkgUjE1OiAwMDAwN2ZmZGJmZGIxNmU4Cls1ODc5ODQuMDE0NzM0XSBs
-YXJzLWxhcHRvcCBrZXJuZWw6ICA8L1RBU0s+Cg==
---00000000000031d582065e20b2ba--
+Karlos Abel
