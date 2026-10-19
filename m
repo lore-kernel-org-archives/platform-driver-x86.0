@@ -1,343 +1,352 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F1A49503E;
-	Mon, 19 Oct 2026 08:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC644A384A;
+	Mon, 19 Oct 2026 08:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792399147; cv=none; b=XncE6d/matg1YCrMWSBzdaPfxjCxnoo8uRrVyAu6fK1p5AtqrOmUYsnGYA1z02hJAcxRrtkbZidWkC4w6SvqFdjHd+84Jt7tz/ptVHISnX+CJjtuB7KJnOARt7hIc8woukmWB02JutKFiYjLiqtzKhhZ8ANhKQQoh844jxHgsL0=
+	t=1792399890; cv=none; b=EQRL5s8sbrYyQxxvWtfKISu+KvOtXcvt7tbup+bUw+SKO6EXEo44xEZxWmWqG1vFybAIqmtD6ud+z6PTmWhByfgkJbMxXCKvthQrk4g7M/UGiDCUHukcSrBitPL0vt6WwLF8Mqh6IjudCVqkpzKI16cEP0FZY2ZI37MNjuNcf+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792399147; c=relaxed/simple;
-	bh=venZQXPXW5PYUnoUQ/X6QXBIVXJIgvaB4iADLUpnq4A=;
+	s=arc-20240116; t=1792399890; c=relaxed/simple;
+	bh=2NSqRpEuX7v4Xg6GlQD2CRZRzWslpUrxuvy9cVQX8KA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=OmCfRqBIpSpj8l8uG2x3B9+NvSn760aklf0oZHsUQR1Hbc1hwdGtifPxEYFCBgh1rAV2q4S8J5Cw5vJ9R5bPPriTVUjDSOHwG2rqi1wc/mvw2E0cQqAHnpXMaeI3FwbjdiuXnwz+ACHMlhhA1D04GavjUu0daye+6buu0JSL5D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gmt9e64S; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=o/45fPUTakJGwko3WzQecXC6Ah4/RoaStGNxmY7oXVzSi6DN/HcEOEKCcOFxXse2jvTOOseXuiH4cWLDzxnUsNIj1h/keZzgw0kww1nmmP4Hx6viJ9rWhqyTktvTz4d9sdyqsDvPjzmMasHluzLYrH0zGMsfusySPo52myQ19dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZU/Ytda9; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gmt9e64S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZU/Ytda9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792399145; x=1823935145;
+  t=1792399889; x=1823935889;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=venZQXPXW5PYUnoUQ/X6QXBIVXJIgvaB4iADLUpnq4A=;
-  b=gmt9e64SOxrrcROoDNjH/ZkxoRqtYhSHGh9zaGBL4O6o+4pho6CyFoSf
-   vGzipwXS30LDTdaVK/5RY/WFrbWFcYGWmc8PfgYNjxwyhyHPvsy/NS99+
-   16BpLHw2utJIFlTowNg9GHjAWSoVCaxzfPNC98qulc8dlEXoF+oQmcmJ7
-   6oklKB4fN4/umeYWjml/sEmh7mYQnmGKppTKPmzY+M2JRcsY8V093zUdD
-   pR0EWJuZ5Bw+8j86TodfSoYXCWl0n2RdLeFet6HKjZPLRfqQ9AOdG1P2S
-   lNk7ImDHNqzYh9i7zwtJCx8QzEamcZyqDA30zkB1yMy0pFZlx7fUj4cck
+  bh=2NSqRpEuX7v4Xg6GlQD2CRZRzWslpUrxuvy9cVQX8KA=;
+  b=ZU/Ytda98a15JME8b7XfeFYCF+rMiC1EOQFoyAZv3igQd93AxpHJhr0N
+   jSkOnYBHjgswa9HWj5KvuEk/LHu/KLz9MbGMihIzeTnr3VLNrG6w6MfZo
+   cJDV1L0aWKZfCaVL0KgCHD3Bz+vYdpeHOFWSE7KLylbXSts84Qjb+ruSD
+   2xbdxjt8LeN2d8idDfXGppTTcMopPzwhLFlXVdnresDGyYTBOdjwIN8J1
+   BlbfcKsd54xuijH/7NUDXqI/Dhz8ibPbzAOcGrXDAk7vQ0bzjJvjWnkU0
+   f0emVCaKEMXyDXOb7O7RFVJftyDEZ1xSvdgJnXNOUPiatJG1sk6Jg7Fxs
    w==;
-X-CSE-ConnectionGUID: zc8pi8TcQOG6E0WoWSXdOg==
-X-CSE-MsgGUID: pNR8Y3VlQoib1uQgHZ8Cxw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11939"; a="1076010"
+X-CSE-ConnectionGUID: K0+cD5I9Qi2bf4ETsBrW7w==
+X-CSE-MsgGUID: 2nJnt8ONQciwEddG5LPw3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11939"; a="1100550"
 X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="1076010"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 01:39:05 -0700
-X-CSE-ConnectionGUID: HaiY17CwQvimVz1GSCoCDw==
-X-CSE-MsgGUID: Yialp5LvRKWtNGSV4iDRDw==
+   d="scan'208";a="1100550"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 01:51:09 -0700
+X-CSE-ConnectionGUID: Ks/3HmzpQyy4sifFt1K2aA==
+X-CSE-MsgGUID: 9uRHwIj9TzqlaBf9HksSbw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="2467828"
+   d="scan'208";a="4239543"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.177])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 01:39:02 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 01:51:01 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 Oct 2026 11:38:54 +0300 (EEST)
-To: Zane Hunt <git@turtledev.nz>
-cc: Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    =?ISO-8859-15?Q?Jos=E9_Guilherme_de_Castro_Rodrigues?= <jose.guilherme.cr.bh@gmail.com>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] platform/x86: asus-wmi: fix camera key LED on Zenbook
- S14
-In-Reply-To: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
-Message-ID: <fdafaeae-e44d-be40-efc0-46bae9973b53@linux.intel.com>
-References: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
+Date: Mon, 19 Oct 2026 11:50:56 +0300 (EEST)
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+    Viresh Kumar <viresh.kumar@linaro.org>, Hans de Goede <hansg@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+    Daniel Lezcano <daniel.lezcano@kernel.org>, 
+    Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+    Armin Wolf <W_Armin@gmx.de>, Jai Luthra <jai.luthra@ideasonboard.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    "Mario Limonciello (AMD)" <superm1@kernel.org>, 
+    Jack Wu <jackbb_wu@compal.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Zhang DM <jixianqiang1540@gmail.com>, linux-acpi@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, 
+    linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] platform profile: Separate handler locking from
+ sysfs lifetime
+In-Reply-To: <20261019073930.2352283-2-daniel.lezcano@oss.qualcomm.com>
+Message-ID: <2818716f-3502-aa4b-0b7b-4efc61e46f6c@linux.intel.com>
+References: <20261019073930.2352283-1-daniel.lezcano@oss.qualcomm.com> <20261019073930.2352283-2-daniel.lezcano@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1007985297-1792399134=:1469"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 19 Oct 2026, Daniel Lezcano wrote:
 
---8323328-1007985297-1792399134=:1469
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Mon, 19 Oct 2026, Zane Hunt via B4 Relay wrote:
-
-> From: Zane Hunt <git@turtledev.nz>
->=20
-> On some newer Zenbooks (Zenbook S 14 UX5406SA, Zenbook S 16 UM5606WA) the
-> camera key turns the camera off in firmware, but the LED on the key never
-> lights up under Linux. These machines don't have
-> ASUS_WMI_DEVID_CAMERA_LED, so asus-wmi never registers asus::camera. The
-> firmware exposes the state through ASUS_WMI_DEVID_CAMERA_LED_NEG instead.
->=20
-> Reading CAMERA_LED_NEG is what drives the LED: the DSTS handler reads the
-> camera state from the EC and writes it to the LED GPIO before returning
-> it. The set side can't be used, the firmware only accepts DEVS on this
-> device once per boot.
->=20
-> When CAMERA_LED is missing but CAMERA_LED_NEG is there, register
-> asus::camera as a read-only LED backed by CAMERA_LED_NEG, and read it
-> after every camera key event, sending a brightness_hw_changed event.
-> Registering the LED reads it as well, which fixes the LED being dark afte=
-r
-> a cold boot with the camera disabled.
->=20
-> While at it, include <linux/container_of.h>, which this file already
-> relied on.
->=20
-> Link: https://lore.kernel.org/r/adg6GzkykThAB_4u@djouze-zen
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D221752
-> Assisted-by: Claude:claude-opus-5-5 iasl
-> Co-developed-by: Jos=C3=A9 Guilherme de Castro Rodrigues <jose.guilherme.=
-cr.bh@gmail.com>
-> Signed-off-by: Jos=C3=A9 Guilherme de Castro Rodrigues <jose.guilherme.cr=
-=2Ebh@gmail.com>
-> Signed-off-by: Zane Hunt <git@turtledev.nz>
+> Registration and removal currently hold profile_lock across
+> device_unregister() and sysfs_update_group(). These operations can remove
+> sysfs attributes and wait for their active callbacks to finish. The
+> profile read and write callbacks acquire profile_lock themselves, so a
+> concurrent access can deadlock:
+> 
+>   Removal/update path             Active sysfs callback
+>   -------------------             ---------------------
+>   acquire profile_lock            hold kernfs active reference
+>   remove a sysfs attribute         wait for profile_lock
+>   wait for its active references
+> 
+> The removal path cannot finish until the callback returns, and the
+> callback cannot return until the removal path releases profile_lock.
+> This applies both to per-provider device teardown and to updates of the
+> legacy aggregate attribute group.
+> 
+> Commit 041142d7d252 ("ACPI: platform-profile: Fix possible deadlock in
+> platform_profile_remove()") previously fixed this lock ordering by moving
+> sysfs_remove_group() outside profile_lock. Commit 55b1e68134bf ("ACPI:
+> platform_profile: Use guard(mutex) for register/unregister") reintroduced
+> the issue by extending the mutex guard over sysfs_remove_group(). Later,
+> commit 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI
+> platform profile") replaced that teardown with device_unregister() and
+> sysfs_update_group(), still under the same mutex, extending the problem
+> to class-device teardown and aggregate attribute updates.
+> 
+> Simply dropping profile_lock around these operations is insufficient.
+> Aggregate operations currently discover providers through the class
+> device list. A provider being unregistered could therefore still be
+> selected for an aggregate read, write or cycle while its sysfs files are
+> being torn down. Concurrent registrations and removals would also race
+> when updating aggregate attribute visibility.
+> 
+> Introduce profile_registration_lock to serialize registration, removal
+> and aggregate sysfs updates. Sysfs callbacks never acquire this mutex.
+> Retain profile_lock for profile operations and use it to protect an
+> explicit list of handlers participating in the aggregate interface.
+> 
+> Add a handler to that list only after device_register() succeeds. On
+> removal, unlink it under profile_lock before calling device_unregister().
+> Acquiring profile_lock first waits for any aggregate operation already
+> using the handler to complete; unlinking prevents later aggregate
+> operations from finding it. Release profile_lock before draining sysfs
+> callbacks, allowing active per-provider callbacks to complete before the
+> device is released. Apply the same unlink-before-unregister ordering to
+> registration error cleanup.
+> 
+> Walk this list for aggregate reads, writes and profile cycling, and use
+> its emptiness to determine aggregate attribute visibility. The class
+> devices remain the per-provider userspace interface.
+> 
+> There can now be an interval between removing the last handler from the
+> list and removing the aggregate attributes. Explicitly reject choices
+> reads and writes during that interval: the intersection bitmap starts
+> with every bit set, so an empty traversal must not advertise all profiles
+> or report a successful write without updating a provider.
+> 
+> This separates aggregate membership from class device teardown while
+> preserving the existing class and ACPI sysfs interfaces.
+> 
+> Fixes: 55b1e68134bf ("ACPI: platform_profile: Use guard(mutex) for register/unregister")
+> Assisted-by: OpenCode:gpt-6.1-sol
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
 > ---
-> Changes in v4:
-> - Keep Jos=C3=A9's Signed-off-by from v2 and add his Co-developed-by
-> - Use my full name in the tags
-> - Include <linux/container_of.h>
-> - Reuse the existing asus::camera registration block, only the
->   handlers and flags differ
-> - camera_neg_led_available is now only set when CAMERA_LED is missing,
->   so asus::camera is always the CAMERA_LED_NEG one when it's set. That
->   makes the LED_BRIGHT_HW_CHANGED check in the event handler unneeded,
->   so it's gone
-> - Drop the explicit read at probe, led_classdev_register() already
->   reads the state through brightness_get
-> - Link to v3: https://patch.msgid.link/20261017-asus-wmi-camera-led-v3-1-=
-845a82373997@turtledev.nz
->=20
-> Changes in v3 (picking up Jos=C3=A9's v2, which had stalled):
-> - Rebased on pdx86 for-next
-> - Also read CAMERA_LED_NEG at probe, so the LED is right after a cold boo=
-t
-> - Register a read-only asus::camera LED when only CAMERA_LED_NEG exists,
->   with brightness_hw_changed on key presses (Ilpo's suggestion on v2)
-> - Comment on why the read is what updates the LED (also from v2 review)
-> - v2: https://lore.kernel.org/r/adg6GzkykThAB_4u@djouze-zen
->=20
-> Tested again on the Zenbook S 14 UX5406SA (BIOS 309), on Fedora's 7.2.9
-> kernel with the same change applied: camera key presses keep the LED,
-> asus::camera and the camera output in sync, and with the camera disabled
-> and the LED forced off, loading the driver turns the LED back on.
->=20
-> I used Claude while working on this. It helped
-> me read through the DSDT, drafted the changes on top of v2 and wrote the
-> test scripts. I went through the patch myself and ran the tests on my
-> laptop.
-> ---
->  drivers/platform/x86/asus-wmi.c            | 75 ++++++++++++++++++++++++=
-++++--
->  include/linux/platform_data/x86/asus-wmi.h |  2 +-
->  2 files changed, 73 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index fb1d4a0..93b51c8 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -17,6 +17,7 @@
->  #include <linux/backlight.h>
+>  drivers/acpi/platform_profile.c | 75 ++++++++++++++++++---------------
+>  1 file changed, 42 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index 79d2e92e5c28..f98ce4cda02c 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -8,6 +8,7 @@
 >  #include <linux/bits.h>
 >  #include <linux/cleanup.h>
-> +#include <linux/container_of.h>
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
-> @@ -72,6 +73,8 @@ module_param(fnlock_default, bool, 0444);
->  #define NOTIFY_KBD_TTP=09=09=090xae
->  #define NOTIFY_LID_FLIP=09=09=090xfa
->  #define NOTIFY_LID_FLIP_ROG=09=090xbd
-> +#define NOTIFY_CAMERA_TOGGLE_1=09=090x82
-> +#define NOTIFY_CAMERA_TOGGLE_2=09=090x85
->  #define NOTIFY_KEYSTONE=09=09=090xb4
-> =20
->  #define ASUS_WMI_FNLOCK_BIOS_DISABLED=09BIT(0)
-> @@ -312,6 +315,7 @@ struct asus_wmi {
->  =09u32 kbd_rgb_dev;
->  =09bool kbd_rgb_state_available;
->  =09bool oobe_state_available;
-> +=09bool camera_neg_led_available;
-> =20
->  =09u8 throttle_thermal_policy_mode;
->  =09u32 throttle_thermal_policy_dev;
-> @@ -2096,6 +2100,54 @@ static int camera_led_set(struct led_classdev *led=
-_cdev,
->  =09return err < 0 ? err : 0;
->  }
-> =20
-> +static bool is_camera_toggle(int code)
-> +{
-> +=09return code =3D=3D NOTIFY_CAMERA_TOGGLE_1 || code =3D=3D NOTIFY_CAMER=
-A_TOGGLE_2;
-> +}
-> +
-> +/*
-> + * Some models (e.g. Zenbook S 14 UX5406SA, Zenbook S 16 UM5606WA) have =
-no
-> + * ASUS_WMI_DEVID_CAMERA_LED. The firmware handles the camera key itself=
- and
-> + * only exposes the state through ASUS_WMI_DEVID_CAMERA_LED_NEG, and rea=
-ding
-> + * that has a side effect: the firmware copies the state to the LED GPIO=
-=2E
-> + * Nothing else updates the LED, so read it after every camera key event=
-=2E
-> + * Registering asus::camera reads it too (via brightness_get), which set=
-s the
-> + * LED at probe. Setting it is no use, the firmware accepts DEVS on this
-> + * device only once per boot.
-> + *
-> + * Returns 1 if the camera is disabled (LED lit), 0 if enabled, or -errn=
-o.
+>  #include <linux/init.h>
+> +#include <linux/list.h>
+>  #include <linux/mutex.h>
+>  #include <linux/platform_profile.h>
+>  #include <linux/sysfs.h>
+> @@ -15,8 +16,12 @@
+>  #define to_pprof_handler(d)	(container_of(d, struct platform_profile_handler, dev))
+>  
+>  static DEFINE_MUTEX(profile_lock);
 
-This should be Returns: to follow kerneldoc formatting (even if it's not=20
-exactly 100% kerneldoc in other aspects). But no need to send another=20
-version just because of it, I'll try to remember to change it while=20
-applying. If you get some other comments and end up doing another version,=
-=20
-then make the change yourself.
+Should definitely add comment to this lock as well to explain what it 
+protects.
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> +/* Serialize registration and sysfs updates without blocking sysfs callbacks. */
+> +static DEFINE_MUTEX(profile_registration_lock);
+> +static LIST_HEAD(profile_handlers);
 
-I'll wait a few days before consider this to give Jos=C3=A9 and others time=
- to=20
-respond and review.
-
---=20
+-- 
  i.
 
-> + */
-> +static int camera_neg_led_sync(struct asus_wmi *asus)
+
+>  struct platform_profile_handler {
+> +	struct list_head node;
+>  	const char *name;
+>  	struct device dev;
+>  	int minor;
+> @@ -44,6 +49,22 @@ static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
+>  
+>  static DEFINE_IDA(platform_profile_ida);
+>  
+> +static int profile_walk_handlers(void *data,
+> +				 int (*fn)(struct device *dev, void *data))
 > +{
-> +=09u32 result;
-> +=09int err;
+> +	struct platform_profile_handler *handler;
+> +	int ret;
 > +
-> +=09err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG, &r=
-esult);
-> +=09if (err)
-> +=09=09return err;
+> +	lockdep_assert_held(&profile_lock);
+> +	list_for_each_entry(handler, &profile_handlers, node) {
+> +		ret = fn(&handler->dev, data);
+> +		if (ret)
+> +			return ret;
+> +	}
 > +
-> +=09return !(result & ASUS_WMI_DSTS_STATUS_BIT);
+> +	return 0;
 > +}
 > +
-> +static enum led_brightness camera_neg_led_get(struct led_classdev *led_c=
-dev)
-> +{
-> +=09struct asus_wmi *asus =3D container_of(led_cdev, struct asus_wmi, cam=
-era_led);
-> +=09int state =3D camera_neg_led_sync(asus);
-> +
-> +=09return state < 0 ? LED_OFF : state;
-> +}
-> +
-> +/* The firmware owns this LED; a write just resyncs it with the camera s=
-tate. */
-> +static int camera_neg_led_set(struct led_classdev *led_cdev,
-> +=09=09=09      enum led_brightness brightness)
-> +{
-> +=09struct asus_wmi *asus =3D container_of(led_cdev, struct asus_wmi, cam=
-era_led);
-> +
-> +=09if (!(led_cdev->flags & LED_UNREGISTERING))
-> +=09=09camera_neg_led_sync(asus);
-> +=09return 0;
-> +}
-> +
->  static void asus_wmi_led_exit(struct asus_wmi *asus)
+>  /**
+>   * _commmon_choices_show - Show the available profile choices
+>   * @choices: The available profile choices
+> @@ -306,20 +327,18 @@ static ssize_t platform_profile_choices_show(struct kobject *kobj,
+>  	int err;
+>  
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &data, _aggregate_choices);
+> +		err = profile_walk_handlers(&data, _aggregate_choices);
+>  		if (err)
+>  			return err;
+>  		if (data.count == 1) {
+> -			err = class_for_each_device(&platform_profile_class, NULL,
+> -						    &data, _remove_hidden_choices);
+> +			err = profile_walk_handlers(&data, _remove_hidden_choices);
+>  			if (err)
+>  				return err;
+>  		}
+>  	}
+>  
+>  	/* no profile handler registered any more */
+> -	if (bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
+> +	if (!data.count || bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
+>  		return -EINVAL;
+>  
+>  	return _commmon_choices_show(data.aggregate, buf);
+> @@ -384,8 +403,7 @@ static ssize_t platform_profile_show(struct kobject *kobj,
+>  	int err;
+>  
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &profile, _aggregate_profiles);
+> +		err = profile_walk_handlers(&profile, _aggregate_profiles);
+>  		if (err)
+>  			return err;
+>  	}
+> @@ -423,15 +441,13 @@ static ssize_t platform_profile_store(struct kobject *kobj,
+>  		return -EINVAL;
+>  
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		ret = class_for_each_device(&platform_profile_class, NULL,
+> -					    &data, _aggregate_choices);
+> +		ret = profile_walk_handlers(&data, _aggregate_choices);
+>  		if (ret)
+>  			return ret;
+> -		if (!test_bit(i, data.aggregate))
+> +		if (!data.count || !test_bit(i, data.aggregate))
+>  			return -EOPNOTSUPP;
+>  
+> -		ret = class_for_each_device(&platform_profile_class, NULL, &i,
+> -					    _store_and_notify);
+> +		ret = profile_walk_handlers(&i, _store_and_notify);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -450,22 +466,11 @@ static struct attribute *platform_profile_attrs[] = {
+>  	NULL
+>  };
+>  
+> -static int profile_class_registered(struct device *dev, const void *data)
+> -{
+> -	return 1;
+> -}
+> -
+>  static umode_t profile_class_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
 >  {
->  =09scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> @@ -2227,11 +2279,18 @@ static int asus_wmi_led_init(struct asus_wmi *asu=
-s)
->  =09=09=09goto error;
->  =09}
-> =20
-> -=09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
-> +=09if (asus->camera_neg_led_available ||
-> +=09    asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
->  =09=09asus->camera_led.name =3D "asus::camera";
->  =09=09asus->camera_led.max_brightness =3D 1;
-> -=09=09asus->camera_led.brightness_get =3D camera_led_get;
-> -=09=09asus->camera_led.brightness_set_blocking =3D camera_led_set;
-> +=09=09if (asus->camera_neg_led_available) {
-> +=09=09=09asus->camera_led.flags =3D LED_BRIGHT_HW_CHANGED;
-> +=09=09=09asus->camera_led.brightness_get =3D camera_neg_led_get;
-> +=09=09=09asus->camera_led.brightness_set_blocking =3D camera_neg_led_set=
-;
-> +=09=09} else {
-> +=09=09=09asus->camera_led.brightness_get =3D camera_led_get;
-> +=09=09=09asus->camera_led.brightness_set_blocking =3D camera_led_set;
-> +=09=09}
-> =20
->  =09=09rv =3D led_classdev_register(&asus->platform_device->dev,
->  =09=09=09=09=09=09&asus->camera_led);
-> @@ -4733,6 +4792,13 @@ static void asus_wmi_handle_event_code(int code, s=
-truct asus_wmi *asus)
->  =09if (is_display_toggle(code) && asus->driver->quirks->no_display_toggl=
-e)
->  =09=09return;
-> =20
-> +=09if (is_camera_toggle(code) && asus->camera_neg_led_available) {
-> +=09=09int state =3D camera_neg_led_sync(asus);
+> -	struct device *dev;
+> -
+> -	dev = class_find_device(&platform_profile_class, NULL, NULL, profile_class_registered);
+> -	if (!dev)
+> -		return 0;
+> -
+> -	put_device(dev);
+> +	guard(mutex)(&profile_lock);
+>  
+> -	return attr->mode;
+> +	return list_empty(&profile_handlers) ? 0 : attr->mode;
+>  }
+>  
+>  static const struct attribute_group platform_profile_group = {
+> @@ -502,8 +507,7 @@ int platform_profile_cycle(void)
+>  	int err;
+>  
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &profile, _aggregate_profiles);
+> +		err = profile_walk_handlers(&profile, _aggregate_profiles);
+>  		if (err)
+>  			return err;
+>  
+> @@ -512,8 +516,7 @@ int platform_profile_cycle(void)
+>  		    profile == PLATFORM_PROFILE_LAST)
+>  			return -EINVAL;
+>  
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &data, _aggregate_choices);
+> +		err = profile_walk_handlers(&data, _aggregate_choices);
+>  		if (err)
+>  			return err;
+>  
+> @@ -525,8 +528,7 @@ int platform_profile_cycle(void)
+>  					  PLATFORM_PROFILE_LAST,
+>  					  profile + 1);
+>  
+> -		err = class_for_each_device(&platform_profile_class, NULL, &next,
+> -					    _store_and_notify);
+> +		err = profile_walk_handlers(&next, _store_and_notify);
+>  
+>  		if (err)
+>  			return err;
+> @@ -583,7 +585,7 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+>  		}
+>  	}
+>  
+> -	guard(mutex)(&profile_lock);
+> +	guard(mutex)(&profile_registration_lock);
+>  
+>  	/* create class interface for individual handler */
+>  	minor = ida_alloc(&platform_profile_ida, GFP_KERNEL);
+> @@ -604,6 +606,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+>  		put_device(ppdev);
+>  		goto cleanup_ida;
+>  	}
+> +	scoped_guard(mutex, &profile_lock)
+> +		list_add_tail(&to_pprof_handler(ppdev)->node, &profile_handlers);
+>  
+>  	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+>  
+> @@ -614,6 +618,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
+>  	return ppdev;
+>  
+>  cleanup_cur:
+> +	scoped_guard(mutex, &profile_lock)
+> +		list_del(&to_pprof_handler(ppdev)->node);
+>  	device_unregister(ppdev);
+>  
+>  cleanup_ida:
+> @@ -636,7 +642,10 @@ void platform_profile_remove(struct device *dev)
+>  
+>  	pprof = to_pprof_handler(dev);
+>  
+> -	guard(mutex)(&profile_lock);
+> +	guard(mutex)(&profile_registration_lock);
 > +
-> +=09=09if (state >=3D 0)
-> +=09=09=09led_classdev_notify_brightness_hw_changed(&asus->camera_led, st=
-ate);
-> +=09}
-> +
->  =09if (!sparse_keymap_report_event(asus->inputdev, code,
->  =09=09=09=09=09key_value, autorelease))
->  =09=09pr_info("Unknown key code 0x%x\n", code);
-> @@ -5210,6 +5276,9 @@ static int asus_wmi_add(struct platform_device *pde=
-v)
->  #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
-> =20
->  =09asus->oobe_state_available =3D asus_wmi_dev_is_present(asus, ASUS_WMI=
-_DEVID_OOBE);
-> +=09asus->camera_neg_led_available =3D
-> +=09=09!asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED) &&
-> +=09=09asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG);
-> =20
->  =09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POL=
-ICY))
->  =09=09asus->throttle_thermal_policy_dev =3D ASUS_WMI_DEVID_THROTTLE_THER=
-MAL_POLICY;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
-latform_data/x86/asus-wmi.h
-> index 4ea1ccc..5964063 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -57,7 +57,7 @@
->  #define ASUS_WMI_DEVID_MUTE_LED=090x0004001C
-> =20
->  /* Disable Camera LED */
-> -#define ASUS_WMI_DEVID_CAMERA_LED_NEG=090x00060078 /* 0 =3D on (unused) =
-*/
-> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG=090x00060078 /* 0 =3D on */
->  #define ASUS_WMI_DEVID_CAMERA_LED=090x00060079 /* 1 =3D on */
-> =20
->  /* Backlight and Brightness */
->=20
-> ---
-> base-commit: ea40f1e9f07aab937b9a217633be7a1f66260394
-> change-id: 20261017-asus-wmi-camera-led-06a6e05f01e2
->=20
-> Best regards,
-> -- =20
-> Zane Hunt <git@turtledev.nz>
->=20
->=20
---8323328-1007985297-1792399134=:1469--
+> +	scoped_guard(mutex, &profile_lock)
+> +		list_del(&pprof->node);
+>  
+>  	ida_free(&platform_profile_ida, pprof->minor);
+>  	device_unregister(&pprof->dev);
+> 
