@@ -1,65 +1,65 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792422306;
-	b=KhdEQawTXDq1/jr2GxLCOPytCXnP/yimIhgsACoVkMPeQIkXZO0GBqoZnXE8UPXcJkJQ
-	 xs5y25WyEDdYE5dRCHUARLrjvWCcf670LN98ey9hMlL6dcvn47zwKZsTNT25jFQx4qFX9
-	 8ds6DLkTQcFYdE/nAvsE5JllcFa3eXHH65F7dA6JXAIocBECh9k0dvhSQRGiKjjCNyGpL
-	 GPpGx5QdJb7vwxsb51GVmjQX9gRGLX5s0hHVz7Q2O8YeBdVldoETM+2JAHx9JvV3IMPh+
-	 oPq9mSO8ojDt0LQ5dHmmx68pwflCsiSnPUDE2nDBXX2EsGcfTg4NELeTok5mb0m+4Lg==
+	t=1792422241;
+	b=Ewj06rTB906I8pxFkiWO19i1tBHXYiei4CExdLFjKtl4m9ca5Tg7WAu+i5+uk8UN1PR+
+	 7pOwsyDGvIPkNDhnI9LO0iV+9G/2ywe6kyvYiD6BGatpOrHNp1Me4M/vo0BovxD2dT0/8
+	 gwOwW8gg2gboUuNUl1WXeLxPKJw0JBDKDG6iOeqgQcWKBUmiIeMDAXlpohrHN5ws9w9Te
+	 We1AIyOB7Z/6MacHQ5V9GwfjogeGn4MTz0liA/Yg6jf1TI+lFs8o2YyD92REHLl4MkSGa
+	 1PGomgwZjR5DCTprdjkATrSuVRTr/QOqGr3tDeQcJ25fAZeVfuI1hwx0YtsXOQNEGVQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792422306;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792422241;
 	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer:X-ZohoMailClient;
-	bh=FnTa9xUrHpkEZLnF/C/Uhf2QRS6M/PPDbqmx71vQSBI=;
-	b=NqfUrgSz0VquD2LChGZ56DgRUUw2aVYqvjmuHMIN1XR4hAmOo0aSjZnQFKOymKoQoU9S
-	 /K8OSkWCFLEwSLdWRPlaccFXqZAIRbwRp+nO/y+Y4/FMb/mp4/cvoLCQ+2Y4biAEgizBX
-	 zPvzMPsV10eAyux8MrV+tzev7ixV2jV1zGk+MA0ICTJD+w2RwT5+vWbkHDcB8HqU+Tk5V
-	 JaE6E1ioJV9Dvd06syG6YyIBaQuBDKxRg3mcsS46jOofCCFYbeBdEfgEBCI8Djr1yMxnd
-	 PBAomFK/gk23S9O2Cqv0UAvNqb4CTl+Cv8H3ydCYVLUhNGKRfG639i6ncd1yz19zwSw==
+	bh=Gcyo/x+7dSKQKoLvMY1mobH5f1e7zJvCCB0MCLbeP+w=;
+	b=Hpp+z+zRFg6ye4uKpdo+dYvwDQxocNp+vR6lkn4ZQWSguFwNJZGHLnUrs07vH09tee02
+	 5DprWaycZl9CJ6lCqW1cucaiYNmG1Zcm4u+CbJUuIZR3cFhDQsFPEphjlthAHdBWUSS2w
+	 qPG5G7+hOJ2ztYoRS9dso3IOjP+iG2b1z2sq9neV4wNeb6d5y1vHzkeTZA7ok5GOv6vRW
+	 wtq4WUuoXYAZKvmK2ZO2GlKgZD1sfymtBw4xR0GKpXwGi7twBRnIZyTG0/LvIgTqcwmIG
+	 a4QEAyAYyFG/khRXy1WenHICWyBqbTUkv7v+fsQEVui4eL2DkW/63ablORyJKEGR+Yw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=rong.moe;
 	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=OazP6l3+;
+	dkim=pass header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=VoDhipSD;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B4B607F4BB;
-	Mon, 19 Oct 2026 15:05:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 46B4B607F4BB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518B9607DC77;
+	Mon, 19 Oct 2026 15:04:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 518B9607DC77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=OazP6l3+
-ARC-Seal: i=1; a=rsa-sha256; t=1792422221; cv=none; 
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=VoDhipSD
+ARC-Seal: i=1; a=rsa-sha256; t=1792422193; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=OWTvOStEtrydX6runmwaOj72222u12oXwLH748Vd7xkQWzwq8JV1Jjhh4GWVl8diUm91f55aUsvzoF8yR9iGj+pFKeixzAkYnXtZus6rw5ywt56ishZeYuU2XMbsCRDAwdqOW2RqiaRff2ZklD3r7IqZrgr0POFKQx/XTVJwo+o=
+	b=Bqu0yagmjCb0/3ixkEDVf4E3QdM9HCgwy8sJrW3IrvvmzL1oeQQFz39RN/osvRH8g3cXHWe/hmG4KDnRT2m0Atg5660Z1szww3iadT9eujJKHGdyzDkDqJfoOl8Lacs1VQTTL2ZWWXoy5++WyJQ+kJTyzykzJXxgIUuwy74Jwd8=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792422221; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FnTa9xUrHpkEZLnF/C/Uhf2QRS6M/PPDbqmx71vQSBI=; 
-	b=gnuqSx8srvGv02rdgDybrUGhxhSsCSsGv06aIsJpMyXtEHXWrp+6vk45RiW+k9QaMPsU3U1oEgR47lli5Y0BM1DVXmxAp7cUs1prPm4MDwXECCECdcdtzpr7qfKtTzs5kGsfy5Ufvt78IdFmOS2fl9cfdIYgFuTYMByhc61CSgU=
+	t=1792422193; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Gcyo/x+7dSKQKoLvMY1mobH5f1e7zJvCCB0MCLbeP+w=; 
+	b=GiLVAeDg58xjTM0a6Kz7cZImgWSuUOGE0fvGRtUUl9YXvZWRLAMDtBfABp/qXnDUWKv5kAVTBV8lvIAbIiSG5onUEiFSAfcWejQbytelIrWLuqv91bXasG5dFqXB01YvG3MtTmzLSx9E2hkX8OdVlyoyr0SUA6qfr1Ed47szwHM=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792422221;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792422193;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=FnTa9xUrHpkEZLnF/C/Uhf2QRS6M/PPDbqmx71vQSBI=;
-	b=OazP6l3+l5WRNO5R7EPj3+A2Lrau6F/20Kb9mBtZORCLr4WN7rmnmypnQovJCeSQ
-	HqlRCQsaTyZGqvcBZH6kSMoOpnPgoft7vz6bfZbS4m3YVLz8fPooZQPcYmrVfB+Y9RF
-	UdAN8FfxFQQ4Y5CNz1BRgxpyatU355ckn134e63todQXl5PjXOr/7QfY7GxPB8QfeJj
-	KR/X0Kg+P6QDbsJdotLo4V3HkxeqzruB/ZpADgCxUVPkJBKUjbJi47nk+gHPazPSYlP
-	fr7ekizoUPP+b62G4rxvAkmQuiKTnTW9Ye3F3XpAwxLEf11D60dj/Zp9qQYIMPOXuRV
-	PT8S7LBtHw==
-Received: by smtp.zohomail.com with SMTPS id 1792422215333737.0129824035191;
-	Mon, 19 Oct 2026 08:03:35 -0700 (PDT)
+	bh=Gcyo/x+7dSKQKoLvMY1mobH5f1e7zJvCCB0MCLbeP+w=;
+	b=VoDhipSDM5583y3C3rxGMbo06zhNXgyqlgLmzp5/9y2DgqixEE94WGAtXhIaaJYu
+	+3pLNiqZCCN/Uleo12OF0J1DXdlDJeV5mOcD1RAbEaFmbyFVZFYgYzm5on3zfb989Jb
+	BvvyG4ADKNC2sfgkBAtBDDML3LlIcjsIqO5pVitsBn8DSBoBqnoK5COJ8uY8KYJO1b7
+	tWIh9rZcgKGAbfueVenLnkvHkv0EOlImyJ/mghTQDASVoKDxzruzSB/d9MAsZuogSCK
+	gFjLpFTnZjA+JNVRXO3XQa7NeRqJTzJktq+84Jv4ft9mGhXGJ2I4cpdczfOWFvExMes
+	7OXytgqIaw==
+Received: by smtp.zohomail.com with SMTPS id 179242219054699.15617082516553;
+	Mon, 19 Oct 2026 08:03:10 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Date: Mon, 19 Oct 2026 23:02:33 +0800
-Subject: [PATCH v5 11/12] platform/x86: lenovo-wmi-helpers: Adopt new WMI
- API
+Date: Mon, 19 Oct 2026 23:02:27 +0800
+Subject: [PATCH v5 05/12] platform/x86: lenovo-wmi-capdata: Defer mutex
+ initialization
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -70,8 +70,8 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261019-lwmi-wmi-new-api-v5-11-71557d28d058@rong.moe>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20261019-lwmi-wmi-new-api-v5-5-71557d28d058@rong.moe>
 References: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
 In-Reply-To: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
@@ -86,114 +86,212 @@ Cc: Charles <hanker007@gmail.com>,
 X-Mailer: b4 0.17-dev-6be7c
 X-ZohoMailClient: External
 
-The new WMI API supports multiple ACPI types by converting them into a
-unified buffer that satisfies alignment and size requirements.
+In the following changes, priv->list may be freed if the first call to
+lwmi_cd_cache() fails due to WMI/ACPI errors, so the list_mutex must be
+initialized after it in order not to break lockdep, as there is no
+devm_mutex_destroy(). Considering that the first call to lwmi_cd_cache()
+doesn't need serialization as there is no other reader or writer this
+early, the initialization of list_mutex can be deferred.
 
-Adopt it to make our life easier.
+Therefore, initialize list_mutex only after the first call to
+lwmi_cd_cache() succeeds, otherwise it remains uninitialized and can be
+devm_kfree()-ed.
 
-Note that the Windows WMI-ACPI driver converts all ACPI objects into a
-common buffer format, so adopting the new API intentionally accepts more
-ACPI types as a followup of commit 465dc9da8ff6 ("platform/x86:
-lenovo-wmi-helpers: Convert returned buffer into u32").
-
-Suggested-by: Armin Wolf <W_Armin@gmx.de>
-Link: https://lore.kernel.org/r/f1787927-b655-4321-b9d9-bc12353c72db@gmx.de/
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
 Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
- drivers/platform/x86/lenovo/wmi-helpers.c | 61 ++++++++++++-------------------
- 1 file changed, 23 insertions(+), 38 deletions(-)
+Changes in v2:
+- Synchronize the initialization with release-acquire barriers (thanks
+  Ilpo Järvinen)
+---
+ drivers/platform/x86/lenovo/wmi-capdata.c | 86 +++++++++++++++++++++++--------
+ 1 file changed, 65 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
-index 8f5766c391eb..687caa226263 100644
---- a/drivers/platform/x86/lenovo/wmi-helpers.c
-+++ b/drivers/platform/x86/lenovo/wmi-helpers.c
-@@ -24,9 +24,10 @@
- #include <linux/export.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
--#include <linux/unaligned.h>
+diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
+index 5748859f8101..3ef8879d8587 100644
+--- a/drivers/platform/x86/lenovo/wmi-capdata.c
++++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+@@ -48,6 +48,8 @@
+ #include <linux/types.h>
  #include <linux/wmi.h>
  
-+#include <asm/byteorder.h>
++#include <asm/barrier.h>
 +
+ #include "wmi-capdata.h"
  #include "wmi-helpers.h"
  
- /* Thermal mode notifier chain. */
-@@ -42,49 +43,33 @@ static BLOCKING_NOTIFIER_HEAD(tm_chain_head);
-  * @size: Length of the buffer.
-  * @retval: Pointer for the return value to be assigned.
+@@ -91,6 +93,7 @@ struct lwmi_cd_priv {
+ 	struct wmi_device *wdev;
+ 	struct cd_list *list;
+ 	struct dentry *debugfs_dir;
++	bool initialized;
+ 
+ 	/*
+ 	 * A capdata device may be a component master of another capdata device.
+@@ -586,14 +589,14 @@ static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
+ /* ======== WMI interface ======== */
+ 
+ /**
+- * lwmi_cd_cache() - Cache all WMI data block information
++ * __lwmi_cd_cache() - Cache all WMI data block information locklessly
+  * @priv: lenovo-wmi-capdata driver data.
   *
-- * Calls wmidev_evaluate_method for Lenovo WMI devices that return an ACPI
-- * integer. Validates the return value type and assigns the value to the
-- * retval pointer.
-+ * Calls the specified WMI method for Lenovo WMI devices that return a WMI
-+ * integer. Validates the return value and assigns it to @retval when it's not
-+ * NULL, otherwise the return value is not validated.
+- * Loop through each WMI data block and cache the data.
++ * Loop through each WMI data block and cache the data locklessly.
   *
-  * Return: 0 on success, or an error code.
+  * Return: 0 on success, or an error.
   */
- int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
- 			  unsigned char *buf, size_t size, u32 *retval)
+-static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
++static int __lwmi_cd_cache(struct lwmi_cd_priv *priv)
  {
--	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
--	struct acpi_buffer input = { size, buf };
--	acpi_status status;
+ 	size_t size;
+ 	int idx;
+@@ -615,7 +618,6 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+ 		return -EINVAL;
+ 	}
+ 
+-	guard(mutex)(&priv->list->list_mutex);
+ 	for (idx = 0; idx < priv->list->count; idx++, p += size) {
+ 		union acpi_object *ret_obj __free(kfree) = NULL;
+ 
+@@ -633,14 +635,38 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+ 	return 0;
+ }
+ 
++/**
++ * lwmi_cd_cache() - Cache all WMI data block information
++ * @priv: lenovo-wmi-capdata driver data.
++ *
++ * Loop through each WMI data block and cache the data.
++ *
++ * Return: 0 on success, or an error.
++ */
++static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
++{
++	/* Synchronize mutex initialization. Paired with lwmi_cd_finalize(). */
++	if (!smp_load_acquire(&priv->initialized))
++		return __lwmi_cd_cache(priv);
++
++	switch (priv->info->type) {
++	case LENOVO_CAPABILITY_DATA_01:
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	guard(mutex)(&priv->list->list_mutex);
++	return __lwmi_cd_cache(priv);
++}
++
+ /**
+  * lwmi_cd_fan_list_alloc_cache() - Alloc and cache Fan Test Data list
+  * @priv: lenovo-wmi-capdata driver data.
+- * @listptr: Pointer to returned cd_list pointer.
+  *
+- * Return: count of fans found, or an error.
++ * Return: 0 on success, or an error.
+  */
+-static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struct cd_list **listptr)
++static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
+ {
+ 	struct cd_list *list;
+ 	size_t size;
+@@ -686,6 +712,9 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struct cd_lis
+ 	if (!list)
+ 		return -ENOMEM;
+ 
++	list->count = count;
++	priv->list = list;
++
+ 	for (idx = 0; idx < count; idx++) {
+ 		/* Do not calculate array index using count, as it may be truncated. */
+ 		list->cd_fan[idx] = (struct capdata_fan) {
+@@ -695,8 +724,7 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struct cd_lis
+ 		};
+ 	}
+ 
+-	*listptr = list;
+-	return count;
++	return 0;
+ }
+ 
+ /**
+@@ -712,7 +740,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
+ {
+ 	struct cd_list *list;
+ 	size_t list_size;
+-	int count, ret;
++	int count;
+ 
+ 	count = wmidev_instance_count(priv->wdev);
+ 
+@@ -724,11 +752,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
+ 		list_size = struct_size(list, cd01, count);
+ 		break;
+ 	case LENOVO_FAN_TEST_DATA:
+-		count = lwmi_cd_fan_list_alloc_cache(priv, &list);
+-		if (count < 0)
+-			return count;
 -
--	status = wmidev_evaluate_method(wdev, instance, method_id, &input,
--					&output);
--	if (ACPI_FAILURE(status))
--		return -EIO;
+-		goto got_list;
++		return lwmi_cd_fan_list_alloc_cache(priv);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -737,17 +761,33 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
+ 	if (!list)
+ 		return -ENOMEM;
+ 
+-got_list:
+-	ret = devm_mutex_init(&priv->wdev->dev, &list->list_mutex);
+-	if (ret)
+-		return ret;
 -
--	union acpi_object *ret_obj __free(kfree) = output.pointer;
--
--	if (retval) {
--		if (!ret_obj)
--			return -ENODATA;
--
--		switch (ret_obj->type) {
--		/*
--		 * The ACPI method may simply return a buffer when a u32
--		 * is expected. This is valid on Windows as its WMI-ACPI
--		 * driver converts everything to a common buffer.
--		 */
--		case ACPI_TYPE_BUFFER:
--			if (ret_obj->buffer.length < sizeof(u32))
--				return -ENXIO;
--
--			*retval = get_unaligned_le32(ret_obj->buffer.pointer);
--			return 0;
--		case ACPI_TYPE_INTEGER:
--			*retval = (u32)ret_obj->integer.value;
--			return 0;
--		default:
--			return -ENXIO;
--		}
--	}
-+	struct wmi_buffer input = {
-+		.length = size,
-+		.data = buf,
-+	};
-+	struct wmi_buffer output;
+ 	list->count = count;
+ 	priv->list = list;
+ 
+ 	return 0;
+ }
+ 
++/**
++ * lwmi_cd_finalize() - Finalize the capability data initialization
++ * @priv: lenovo-wmi-capdata driver data.
++ *
++ * Return: 0 on success, or an error code.
++ */
++static int lwmi_cd_finalize(struct lwmi_cd_priv *priv)
++{
 +	int ret;
 +
-+	if (!retval)
-+		return wmidev_invoke_procedure(wdev, instance, method_id, &input);
++	if (priv->list) {
++		ret = devm_mutex_init(&priv->wdev->dev, &priv->list->list_mutex);
++		if (ret)
++			return ret;
++	}
 +
-+	ret = wmidev_invoke_method(wdev, instance, method_id, &input,
-+				   &output, sizeof(__le32));
++	/* Synchronize mutex initialization. Paired with lwmi_cd_cache(). */
++	smp_store_release(&priv->initialized, 1);
++	return 0;
++}
++
+ /**
+  * lwmi_cd_setup() - Cache all WMI data block information
+  * @priv: lenovo-wmi-capdata driver data.
+@@ -766,7 +806,11 @@ static int lwmi_cd_setup(struct lwmi_cd_priv *priv)
+ 	if (ret)
+ 		return ret;
+ 
+-	return lwmi_cd_cache(priv);
++	ret = lwmi_cd_cache(priv);
 +	if (ret)
 +		return ret;
 +
-+	__le32 *valp __free(kfree) = output.data;
-+
-+	*retval = le32_to_cpu(*valp);
++	return lwmi_cd_finalize(priv);
+ }
  
- 	return 0;
- };
+ /**
 
 -- 
 2.55.0
