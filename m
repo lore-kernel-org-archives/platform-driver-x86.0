@@ -1,237 +1,148 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE5D38422E;
-	Mon, 19 Oct 2026 12:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792411244; cv=pass; b=rVCWCQtI1iQS6tAaGzoawUHJEUEFxy/X9xyqMv4wXLkVTS+7nDaux0WmzY85yAGyQrD6RfiT1Ift6Np4B74h+NXfh0Ogvbql65uuIATu0GMl61WpfSU8v3I5iofTSrD+UzuquM1brgvWJesv6b3xOwbPQcM7GU8LdbZbwwd6+wY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792411244; c=relaxed/simple;
-	bh=xU02j8m+D6JSG+GsTV1kqiERwb91tGkQ8GNkssoRa4o=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=HFrjcw3nYlWhkOJshaWr7oT+cqK76cCuo1x01TWg+3A6OKBpBfJntOVplXXdSXRjam2u8eK92JTeXkmb4FqUwEdDr4lbankhwtHvtCO4O5igleS3CmiU3cpdz9GA1c5s1Ay7gMozYnxyiTBCqe8hdW0S8FBuU64IG7ffoWUdZrE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=ZqhXtVFf; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902544E4306
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 12:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792412511; cv=none; b=rCitgcoSXRejuNHrU4+sJXt1gIuo+leFyrnCRKiJWY1IqqKcnP2e2CyF4yhkeZyonDB5BNeKO6JjZ68jKHQ8L9d65QHCRPAZt38pdOJ/+q/5gZwQoXyGEpa08GqMQ+UWntFInINWyVmHgA9IxDGJXZ2uwg6dgRBkHD/9GRKUDr0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792412511; c=relaxed/simple;
+	bh=EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=NBicH2Kn1o13Px/wE6zEVA+T2EgyIaLrNXqOlm/AipWbv+qWUGpbiGV4BMqhRBdtsUjEg40O+HyHlD4nZW9sabrsrLJ2xz0DwwDaZ8wT7tLlGKTRLXUPYLYpsmnXpKuyV+XNINej9G5S7iSqxB/Z996wxOoLCsbXy1Efxt7wflc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=NJO62aLU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X27MOJKN; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="ZqhXtVFf"
-ARC-Seal: i=1; a=rsa-sha256; t=1792411233; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=PMEPr3NIZj3K1fkQWP9rilN6ZynJ7EZDuuC7vEH7XF4SZjTvq0zibvPQaE+JgNYXgQdlrgcbZOVlnTqgQVmkt0erPZvaS+D69x+DMcsLoN0uxLKP1GCaJC/FtKEaiEQnfQvmiE97kKt1GsOaf9Ub4DL0qcydDtUyjAU8TlIbwqQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792411233; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4yXoG5YUxfbI3LGES2Do+1gRPxz0L6AD1tK7zf8ZUJY=; 
-	b=FRiu6MmXSJjSNztE8w7ah7JHkxwUvBxw4bjzVX731GWd3DZmPkK5pjxx8x/LLcCbGq5MB5pyiZqYq+JFjnzsLvUHkXMZnnO6mWJzThMiuTqcB4OtrjzfcBvHxbsTsdNo2jtwB+miNqbJ+Dqu87dq4HUQFntyXc3tZPVrO7zgdt8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792411233;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=4yXoG5YUxfbI3LGES2Do+1gRPxz0L6AD1tK7zf8ZUJY=;
-	b=ZqhXtVFf6nj7wfoSQE2v6m/K+Qq4xPY0oPkff/vAm0KfQAWHVmAzl2TRCv5RTsOZ
-	2GqTJV0+85q/+b8KlppG0Q8qVSHA/c6QbYdeK5FOa423EXzj57Z/44eF2ml6XZV97+B
-	ZpKEFkecFkCAGJ1OulgLi2yi9kHBB4vhJ0FiyrtOVGnEbfhcdcS7+O3+LvTgCVDRlj2
-	aOy/B93e9ErNie/OUg1KWt7EwuBGm6Fx7QltK+VQrKKq6IBa6ssP03aTYElMvXNlquI
-	PjD+pe/cFYo0uY85x7pYuzQUFSyC51gBevdHlb6amxu59xw7qbaZfDsTqgI47SjKmP2
-	PL3xENd/EQ==
-Received: by smtp.zohomail.com with SMTPS id 1792411228562577.1517549414438;
-	Mon, 19 Oct 2026 05:00:28 -0700 (PDT)
-Message-ID: <006245a9857566cdd7e6bd24882bfec66d2db56c.camel@rong.moe>
-Subject: Re: [PATCH v4 07/12] platform/x86: lenovo-wmi-capdata: Adopt new
- WMI API
-From: Rong Zhang <i@rong.moe>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"
-	 <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Armin Wolf
-	 <W_Armin@gmx.de>, Charles <hanker007@gmail.com>, Navon John Lukose
-	 <navonjohnlukose@gmail.com>, platform-driver-x86@vger.kernel.org, LKML
-	 <linux-kernel@vger.kernel.org>
-In-Reply-To: <e67534db-c29c-4f89-9b7d-cf9ff5704674@linux.intel.com>
-References: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
-	 <20261018-lwmi-wmi-new-api-v4-7-aafef7956c4a@rong.moe>
-	 <e67534db-c29c-4f89-9b7d-cf9ff5704674@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Oct 2026 19:54:31 +0800
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="NJO62aLU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X27MOJKN"
+Received: from stl-compute-01.internal (stl-compute-01.internal [10.204.2.61])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id E20F27A00D8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 08:21:48 -0400 (EDT)
+Received: from stl-imap-13 ([10.204.2.104])
+  by stl-compute-01.internal (MEProxy); Mon, 19 Oct 2026 08:21:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1792412508;
+	 x=1792498908; bh=EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=; b=
+	NJO62aLUv39aCKnPUwwUkMAwIZQkNReFmPkk3hS+zKjSvZOVRU7dKJgcEmvCQk5m
+	1nq2JUKgaYiDYKEQMi0QgfkXmvrQ21mTZmhS6uFCH0+lmIz7AGfFxc6/OzSex8Iw
+	9E1XXHzvpP88wmjOZd97YbimwOI8oMR6qE9ZekKkXsNG3G37nE63ywpsQIX4idtp
+	dBvodzZOacaeYnwzPF2YNLyIOfEG68MYf1oVhfDbgNNxL6RB92icTbIjhA29ON+3
+	bFiMGZet6oVaHdUXi7Nb1mp8L2eT8WyNAFEbTffnRkrdsh0RqTAqoHdnPDhEGYOX
+	k88W2qMUZx3xwnJfpfn0og==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792412508; x=
+	1792498908; bh=EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=; b=X
+	27MOJKNA/rQq8wGPKIqyJR/QsGc3GiZQxra46TbbnBC8iKTqTLT3MvvfH+gVjpPl
+	FDKP2bDavW6I+mEx7FRUJCHqxkJ6afvtoouZ4Y4C6Z3GQuMlxxxdjYU5jUkJsRaM
+	cC81JxE/VKzsAhOs7mvGX4xWaGLb0vpQ5HfsCEko/+e89iBNAY0gJ7G8vM6xZucH
+	M4GgfQl00EkrKevnPXePjHigoCXXcIEDaTErzdNjzsaCeiDbT2I6CGYxprwBT50u
+	Y8MVtY1rmIahZd/d8FofqhzU2hNzkvFghd16MghQtAuqR+bA+fFXELCjwiKGy/3T
+	ULg+wD4N1TwIbfPmPoJTA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=sign d=lyndeno.ca a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792412508; d=lyndeno.ca;
+	mf=PGxzYW5jaGVAbHluZGVuby5jYT4=;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm1:rsa-sha256:gUi4gJpfBNrs0J+Oih0zkqSKy+0EkxJsfofEzBhn8zIvWTR
+	u0i+ZlZHs0itRjBOfEDwA+3c1A/hrVkXSOlhwC8Gwz0InAqPHHQZhF8UGn7l5pzt
+	iiZXsW5XD3uYjws9Cqmcxtx06gtjzudd47UgRaBow2MRBjatuVXEAYyLz1yWVuKY
+	Xmh09vv2Gy/gC/x99/kgwHkHTJYGa1CW1Bh3Tx8ru+lZb1qKXdnvxrZad2jEf8MU
+	S/y6TK5bRll+/v46WBaECd/NdVcoSHBcd7AsRS9DniDmG/V2hRxZ5SwRfYYkchNb
+	kvptaTJXIJWk2MJeeZvQkYzTrhmP0kgGlUeVrlQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:W7vikNgX5faAmV6jrWk9+BYj8bfrtgwq7qCewo0+QYE=:EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=;
+X-ME-Sender: <xms:XAvWaiQVudugeT5-p2I9NMLR9B7eJx5uFVe0rjEMflOIiJhiy07gfw>
+    <xme:XAvWaiksi2d5Xzy6spFd0j9Y-TOLrI8QLwW5PmUEyWS3EJRVP_6RoWNOLq9Hlwssn
+    VJZpH5WRxV1NTSjfFirnQWp78VA-SS14J_u4r6MJ-EH7g813-wfn8GH>
+X-ME-Proxy-Cause: dmFkZTFrqgzUfBqSiwFG4oYJknaKDBF3ZDk1iCX9Scqi/RsIaAoSKGxnm6sbu8oXl5wNKi
+    fxPXLXQvqQhng4qUxrrrf14+TXnYnlRkXdaVVV9rURwCRNHHvF7mYtvlcMJa0xV2MtLJcQ
+    E16PRPYyRsReUlA/46/TXuQPCjwmRjHqLSoYNzxKX9kXcVjTczVK14zC8uKimpCLR46xJI
+    k3o2T6+JNdtJbIcd5FHwcunqG6ppRD0tGr0DnXdIO+uBHSqKxmREnvJTUXUYIxlUdhyotO
+    v/GT6VLd10nXvN3KZlN78tgEJWIT0Z5qm+RCsUNSMh6//WEik6xZGdCXHyXqwewuzEeBSS
+    0kEvAqgpRH04E6j97fWMg2oed2/IsRIkgETY5eW2lDlj5hhHHBRy+zG84JdAilSTcA7VPY
+    Ea3HAQR1EPQ952QZDig/t2x//+NFgxyBsXyQnD/pNlxxTFoCBD8swU6OeKmLZqsQW0WmNm
+    stdPPny4i0t2BU2i2mas+0wosUNnA5j1C1LNRW0eAgarpjCbQSOe8UMgM86YIKLJ9LcKcB
+    sAfgxyMwHsMbIZnrUf776F5f32plLKyUzr+Ju5l6gI6cqk/0sbWEBSCkCFHPVq4Y+PNaTk
+    cZWPmrRxEHwDHMt8lVPOcAi1TjRn3k7kEIV9Fs8vC9QMNHNwMksBnDjVjldw
+X-ME-Proxy: <xmx:XAvWatz8ggLndlU5qEmS6fXdyulr4SmV3ucZcyo52zVx6hl7Iei-Zw>
+    <xmx:XAvWagVTONTiTIyiiCzvZJ2faqqUOB6R7DpXrtsxPDkph3LCras89Q>
+    <xmx:XAvWah-vSzEzsP3WV9bNw2WmC5Mjf4aOhZ7dWzDQKt-fRjB1gciPMQ>
+    <xmx:XAvWarvhJSj3ltskyZqKglD5HLfC4__ihhdQtr1iB20kztc20RqvnQ>
+    <xmx:XAvWas5rrAy1aGF2ANLMRg_tNbPoN8D6sY4i-Ryk35SBIC7orunTpBjm>
+Feedback-ID: i1769461a:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id 40F4BF6007F; Mon, 19 Oct 2026 08:21:48 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Oct 2026 08:21:47 -0400
+Message-Id: <DM8T7ELISJJB.2MKMPBE1BELFC@lyndeno.ca>
+From: "Lyndon Sanche" <lsanche@lyndeno.ca>
+To: "verazimmerman1987" <verazimmerman1987@proton.me>,
+ "srinivas.pandruvada@linux.intel.com"
+ <srinivas.pandruvada@linux.intel.com>, "rafael@kernel.org"
+ <rafael@kernel.org>
+Cc: "daniel.lezcano@kernel.org" <daniel.lezcano@kernel.org>,
+ "rui.zhang@intel.com" <rui.zhang@intel.com>, "superm1@kernel.org"
+ <superm1@kernel.org>, "linux-pm@vger.kernel.org"
+ <linux-pm@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+ <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>
+Subject: Re: platform_profile: power-saver lost on Panther Lake when SoC
+ Power Slider and dell-pc are both bound (low-power vs quiet)
+X-Mailer: aerc 0.21.0
+References: <UPfoGdnS1R04q8uekSMTyes9PbDuvsGeBE42zHmsjD2xIdfPYx7ejdcpZhrxWFq6uwoMvClHTuHbrwaCh3yxD0Rw7OarNABC4dZsDra44mk=@proton.me>
+In-Reply-To: <UPfoGdnS1R04q8uekSMTyes9PbDuvsGeBE42zHmsjD2xIdfPYx7ejdcpZhrxWFq6uwoMvClHTuHbrwaCh3yxD0Rw7OarNABC4dZsDra44mk=@proton.me>
 
-Hi Ilpo,
+Hello, thank you for reporting this.
 
-Thanks for your review.
+To me there are a number of ways we could handle this.
 
-On Mon, 2026-10-19 at 09:46 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 18 Oct 2026, Rong Zhang wrote:
->=20
-> > The new WMI API supports multiple ACPI types by converting them into a
-> > unified buffer that satisfies alignment and size requirements.
-> >=20
-> > Adopt it to make our life easier.
-> >=20
-> > Note that the new WMI API only accepts a few ACPI types to conform to
-> > the behavior of the Windows WMI-ACPI driver. By adopting the new API, w=
-e
-> > intentionally rejects improper ACPI types instead of silently ignoring
-> > them.
-> >=20
-> > Meanwhile, considering that `struct_size(block, data, count * 3)' may
-> > overflow when calculating `count * 3', ignore Fan Test Data with count =
->
-> > U8_MAX instead of capping `count'.
-> >=20
-> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> > Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
-> > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > Signed-off-by: Rong Zhang <i@rong.moe>
-> > ---
-> > Changes in v4:
-> > - Fix typo (thanks Mark Pearson)
-> >=20
-> > Changes in v3:
-> > - Leave struct cd_fan_block's __packed attribute as is (thanks Armin
-> >   Wolf)
-> > ---
-> >  drivers/platform/x86/lenovo/wmi-capdata.c | 70 ++++++++++++++---------=
---------
-> >  1 file changed, 31 insertions(+), 39 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platfo=
-rm/x86/lenovo/wmi-capdata.c
-> > index 3c09bb9e3d46..abf5ffda7163 100644
-> > --- a/drivers/platform/x86/lenovo/wmi-capdata.c
-> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-> > @@ -626,17 +626,19 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv *p=
-riv)
-> >  	}
-> > =20
-> >  	for (idx =3D 0; idx < priv->list->count; idx++, p +=3D size) {
-> > -		union acpi_object *ret_obj __free(kfree) =3D NULL;
-> > +		struct wmi_buffer wbuf;
-> > +		int ret;
-> > =20
-> > -		ret_obj =3D wmidev_block_query(priv->wdev, idx);
-> > -		if (!ret_obj)
-> > -			return -ENODEV;
-> > -
-> > -		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
-> > -		    ret_obj->buffer.length < size)
-> > +		ret =3D wmidev_query_block(priv->wdev, idx, &wbuf, size);
-> > +		if (ret =3D=3D -ENODATA) /* The block is too short, probably stubbed=
-. */
-> >  			continue;
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		/* Capdata 01 is an extension to capdata 00. */
-> > +		struct capdata00 *capdata __free(kfree) =3D wbuf.data;
-> > =20
-> > -		memcpy(p, ret_obj->buffer.pointer, size);
-> > +		memcpy(p, capdata, size);
-> >  	}
-> > =20
-> >  	return 0;
-> > @@ -678,43 +680,34 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *pri=
-v)
-> >   */
-> >  static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
-> >  {
-> > +	struct wmi_buffer wbuf;
-> >  	struct cd_list *list;
-> > -	size_t size;
-> > +	int ret, idx;
-> >  	u32 count;
-> > -	int idx;
-> > =20
-> > -	/* Emit unaligned access to u8 buffer with __packed. */
-> >  	struct cd_fan_block {
-> >  		u32 nr;
-> >  		u32 data[]; /* id[nr], max_rpm[nr], min_rpm[nr] */
-> > -	} __packed * block;
-> > +	} __packed;
->=20
-> Could this just be moved outside of the function?
+On Fri Oct 16, 2026 at 1:10 PM EDT, verazimmerman1987 wrote:
+> This looks like the same class of problem as amd-pmf + asus-wmi,
+> which was solved by adding "quiet" as a hidden choice in amd-pmf
+> (commit 44e94fece517, "platform/x86/amd: pmf: Add 'quiet' to hidden
+> choices"). Would a similar hidden "quiet" (and perhaps "cool") choice
+> for the Intel SoC Power Slider, mapped to its low-power setting, be
+> acceptable? I'm happy to test patches.
 
-Makes sense. Will submit a v5 soon.
+This certainly would fix the immediate issue: platform_profile providing
+consistent choices across handlers to allow selecting a range of
+profiles exposed by the system. I feel like there is a better way to
+handle this besides adding hidden profiles.
+
+What if platform_profile itself was changed to separate the user/system
+choice: the "desired" profile, from the "actual" profile(s)? In this
+scenario, different drivers expose different possible profiles, the
+system tries to apply the closest possible profile per-driver to the
+user's choice. The possible profiles would have an index to indicate
+where on a linear scale it lays. If I request quiet (2), but the Intel
+SoC slider only implements power-saver (3), the system chooses 3 for
+that driver.
+
+I am only thinking out loud and would find comments on this to be
+useful. I realize the behaviour of some profiles do not exactly fall on
+a linear scale so this would need consideration as well.
 
 Thanks,
-Rong
 
->=20
-> > -	union acpi_object *ret_obj __free(kfree) =3D wmidev_block_query(priv-=
->wdev, 0);
-> > -	if (!ret_obj)
-> > -		return -ENODEV;
-> > +	ret =3D wmidev_query_block(priv->wdev, 0, &wbuf, sizeof(struct cd_fan=
-_block));
-> > +	if (ret =3D=3D -ENODATA) /* The block is too short, probably stubbed.=
- */
-> > +		return 0;
-> > +	if (ret)
-> > +		return ret;
-> > =20
-> > -	if (ret_obj->type =3D=3D ACPI_TYPE_BUFFER) {
-> > -		block =3D (struct cd_fan_block *)ret_obj->buffer.pointer;
-> > -		size =3D ret_obj->buffer.length;
-> > +	struct cd_fan_block *block __free(kfree) =3D wbuf.data;
-> > =20
-> > -		count =3D size >=3D sizeof(*block) ? block->nr : 0;
-> > -		if (size < struct_size(block, data, count * 3)) {
-> > -			dev_warn(&priv->wdev->dev,
-> > -				 "incomplete fan test data block: %zu < %zu, ignoring\n",
-> > -				 size, struct_size(block, data, count * 3));
-> > -			count =3D 0;
-> > -		} else if (count > U8_MAX) {
-> > -			dev_warn(&priv->wdev->dev,
-> > -				 "too many fans reported: %u > %u, truncating\n",
-> > -				 count, U8_MAX);
-> > -			count =3D U8_MAX;
-> > -		}
-> > -	} else {
-> > -		/*
-> > -		 * This is usually caused by a dummy ACPI method. Do not return an e=
-rror
-> > -		 * as failing to probe this device will result in sub-master device =
-being
-> > -		 * unbound. This behavior aligns with lwmi_cd_cache().
-> > -		 */
-> > +	count =3D block->nr;
-> > +
-> > +	if (count > U8_MAX) {
-> > +		dev_warn(&priv->wdev->dev,
-> > +			 "too many fans reported: %u > %u, ignoring\n", count, U8_MAX);
-> > +		count =3D 0;
-> > +	} else if (wbuf.length < struct_size(block, data, count * 3)) {
-> > +		dev_warn(&priv->wdev->dev,
-> > +			 "incomplete fan test data block: %zu < %zu (%u fans), ignoring\n",
-> > +			 wbuf.length, struct_size(block, data, count * 3), count);
-> >  		count =3D 0;
-> >  	}
-> > =20
-> > @@ -729,11 +722,10 @@ static int lwmi_cd_fan_list_alloc_cache(struct lw=
-mi_cd_priv *priv)
-> >  	priv->list =3D list;
-> > =20
-> >  	for (idx =3D 0; idx < count; idx++) {
-> > -		/* Do not calculate array index using count, as it may be truncated.=
- */
-> >  		list->cd_fan[idx] =3D (struct capdata_fan) {
-> >  			.id      =3D block->data[idx],
-> > -			.max_rpm =3D block->data[idx + block->nr],
-> > -			.min_rpm =3D block->data[idx + (2 * block->nr)],
-> > +			.max_rpm =3D block->data[idx + count],
-> > +			.min_rpm =3D block->data[idx + (2 * count)],
-> >  		};
-> >  	}
-> > =20
-> >=20
-> >=20
+Lyndon
