@@ -1,220 +1,343 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFD73D34BB
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 07:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F1A49503E;
+	Mon, 19 Oct 2026 08:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792396140; cv=none; b=mxujOBq94jnvZmWBi8k8G1KbcXATYVq53meMA/FY6ph0WYW0CuF2ob6y+IfrzLidj3lFfslc1ceYxON9+ZaBmhlI5U8lIpwMGfi3tE/h0U29pEWpaSnqDUn8H1Ul4nvPLUP+anw0+Rtsk9yDvSEGz38xjvfhNFhHNNgJRkjgKxw=
+	t=1792399147; cv=none; b=XncE6d/matg1YCrMWSBzdaPfxjCxnoo8uRrVyAu6fK1p5AtqrOmUYsnGYA1z02hJAcxRrtkbZidWkC4w6SvqFdjHd+84Jt7tz/ptVHISnX+CJjtuB7KJnOARt7hIc8woukmWB02JutKFiYjLiqtzKhhZ8ANhKQQoh844jxHgsL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792396140; c=relaxed/simple;
-	bh=HOO9uaduFPE0IroXVdESFXNKO0zP9kAwjlqcqX6X7/E=;
+	s=arc-20240116; t=1792399147; c=relaxed/simple;
+	bh=venZQXPXW5PYUnoUQ/X6QXBIVXJIgvaB4iADLUpnq4A=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=i48n2W3efMa2inhgI4xJlFe0QDZhG/n6ZMl1xBEbxBKcDMHckk3brF7+D8UfMsurd26aZKIYjgHd13gRXxNO4PZlfonkM+bFoS1QYVCk1W8t5XSzQgi7Su0oIjuTLLuIm1A2P+8xf5L11nSXfVHzGSI/WYgPV1G0sR2mKaGXIGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xmd//BeQ; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version:Content-Type; b=OmCfRqBIpSpj8l8uG2x3B9+NvSn760aklf0oZHsUQR1Hbc1hwdGtifPxEYFCBgh1rAV2q4S8J5Cw5vJ9R5bPPriTVUjDSOHwG2rqi1wc/mvw2E0cQqAHnpXMaeI3FwbjdiuXnwz+ACHMlhhA1D04GavjUu0daye+6buu0JSL5D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gmt9e64S; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xmd//BeQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gmt9e64S"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792396139; x=1823932139;
+  t=1792399145; x=1823935145;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=HOO9uaduFPE0IroXVdESFXNKO0zP9kAwjlqcqX6X7/E=;
-  b=Xmd//BeQXwDaVqjRkwfw4euON+JnP4P8XXU0IsnlQHgJRSDC95n8h7y0
-   VKVORhkn0N27yMz+Q+MblS+Zl2EhlQ6KJGU0UMnKhsHsUUlMBMoHx1nxE
-   9ZloXonrqTKn0L7JVyQEia0uYvH6ceZ7uCCFHvAfM5rFcaQAq0K9ovxvm
-   NSL7M7ZpD9EUHjD0IyGlrTXOX2aHDjka13Bnoj/3jlEtzb2uyAn2qPRYM
-   bKtWiODcho5gLRk32JtkAhYHBJrr7pEAAtn+0WCxijC5Qi0gTUfKWImWW
-   A5Tz3gjpMTKuSLkVqgeZ6gUcqP7W3stzYJ6sJ/dxI6EB5hzTrWQEzG3p+
+  bh=venZQXPXW5PYUnoUQ/X6QXBIVXJIgvaB4iADLUpnq4A=;
+  b=gmt9e64SOxrrcROoDNjH/ZkxoRqtYhSHGh9zaGBL4O6o+4pho6CyFoSf
+   vGzipwXS30LDTdaVK/5RY/WFrbWFcYGWmc8PfgYNjxwyhyHPvsy/NS99+
+   16BpLHw2utJIFlTowNg9GHjAWSoVCaxzfPNC98qulc8dlEXoF+oQmcmJ7
+   6oklKB4fN4/umeYWjml/sEmh7mYQnmGKppTKPmzY+M2JRcsY8V093zUdD
+   pR0EWJuZ5Bw+8j86TodfSoYXCWl0n2RdLeFet6HKjZPLRfqQ9AOdG1P2S
+   lNk7ImDHNqzYh9i7zwtJCx8QzEamcZyqDA30zkB1yMy0pFZlx7fUj4cck
    w==;
-X-CSE-ConnectionGUID: ZC1jbwR2R+CPvmDuNqSX7w==
-X-CSE-MsgGUID: GNEqNY9oQ9iqTyoMVnFklg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11939"; a="975745"
+X-CSE-ConnectionGUID: zc8pi8TcQOG6E0WoWSXdOg==
+X-CSE-MsgGUID: pNR8Y3VlQoib1uQgHZ8Cxw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11939"; a="1076010"
 X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="975745"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 00:48:58 -0700
-X-CSE-ConnectionGUID: 48Y8PPwUTV+uKwpQHxnJAA==
-X-CSE-MsgGUID: 6IDAtbAmTeGSPHtgyrVXXA==
+   d="scan'208";a="1076010"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 01:39:05 -0700
+X-CSE-ConnectionGUID: HaiY17CwQvimVz1GSCoCDw==
+X-CSE-MsgGUID: Yialp5LvRKWtNGSV4iDRDw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="4253456"
+   d="scan'208";a="2467828"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.177])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 00:48:56 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 01:39:02 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 Oct 2026 10:48:51 +0300 (EEST)
-To: Felix Radensky <fradensky@nvidia.com>
-cc: Hans de Goede <hansg@kernel.org>, Vadim Pasternak <vadimp@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH platform-next v2 0/3] platform/mellanox: Add nvsw core
- and SPC6 host driver
-In-Reply-To: <20261018101156.699575-1-fradensky@nvidia.com>
-Message-ID: <274bb540-5f61-d343-173b-a2f46f7ea69a@linux.intel.com>
-References: <20261018101156.699575-1-fradensky@nvidia.com>
+Date: Mon, 19 Oct 2026 11:38:54 +0300 (EEST)
+To: Zane Hunt <git@turtledev.nz>
+cc: Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    =?ISO-8859-15?Q?Jos=E9_Guilherme_de_Castro_Rodrigues?= <jose.guilherme.cr.bh@gmail.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] platform/x86: asus-wmi: fix camera key LED on Zenbook
+ S14
+In-Reply-To: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
+Message-ID: <fdafaeae-e44d-be40-efc0-46bae9973b53@linux.intel.com>
+References: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1007985297-1792399134=:1469"
 
-On Sun, 18 Oct 2026, Felix Radensky wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> This series adds support for system control and monitoring on Nvidia
-> SPC6 based switches, through the CPLD/FPGA devices attached to the host
-> CPU.
-> 
-> Patch 1 adds nvsw-core, which implements the register map setup, the I2C
-> mux topology and the creation of the mlxreg-* platform devices shared by
-> all Nvidia switch board drivers. Patch 2 adds nvsw-host-spc6, the first
-> user of that core, covering the liquid cooled systems, along with
-> documentation for the register access attributes it exposes. Patch 3
-> adds the air cooled SPC6 systems, which unlike the liquid cooled ones
-> carry their own power supplies and fan drawers.
-> 
-> The functionality covered is component resets and reset cause
-> reporting, mux selection for hardware components, general purpose
-> registers, LED control, watchdog control, and fan control on the
-> systems that have fans. The core also creates an mlxreg-hotplug device
-> for boards that describe one; no SPC6 system does, and that path comes
-> into use with the BMC driver mentioned below.
-> 
-> Why a new core instead of extending mlx-platform
-> ================================================
-> 
-> The obvious question is why this does not go into mlx-platform.c, which
-> already serves the existing Mellanox switch generations. There are two
-> reasons.
-> 
-> The first is that mlx-platform.c cannot reach this hardware. It is
-> built around a single memory mapped LPC window: it calls
-> devm_ioport_map() once, hands the resulting base to devm_regmap_init()
-> with its own ioread8()/iowrite8() callbacks, and every system it
-> supports is described in terms of offsets into that window. On SPC6 the
-> CPLD is not on the LPC bus at all, it is an I2C device, and the driver
-> reaches it with devm_regmap_init_i2c() through a client on the host I2C
-> tree. Supporting SPC6 in mlx-platform.c would mean giving it a second,
-> parallel register access path and making its register map setup
-> conditional, which is a larger and more invasive change than adding a
-> separate driver.
-> 
-> The same applies beyond SPC6. The identical CPLD register layout is
-> also managed from an ARM Baseboard Management Controller, where the
-> device is reached over I2C in the same way but is described in device
-> tree rather than discovered through DMI. nvsw-core holds only the parts
-> that do not depend on how the board was found, so the register
-> definitions and the mlxreg-* device descriptions are shared, and each
-> board driver supplies its own instantiation. mlx-platform.c is
-> inherently x86 and DMI bound and cannot serve the BMC side.
-> 
-> The second reason is structural. mlx-platform.c has grown to roughly
-> 8600 lines covering 49 DMI matches, with the per-system description
-> data and the device creation logic interleaved in a single translation
-> unit. Adding another switch generation to it makes the file harder to
-> review and makes it impossible to build support for one system without
-> carrying the tables for all the others. nvsw splits the two concerns:
-> the core holds the logic (760 lines) and each board driver holds only
-> its own description data, so a kernel can be built with just the boards
-> it needs.
-> 
-> The core is not speculative generality. The SPC6 host driver in this
-> series is its first user, and we intend to submit a BMC driver and an
-> NVL7 host driver on top of it once the core has been reviewed.
-> 
-> Why the SPC6 driver is split over two patches
-> =============================================
-> 
-> Patches 2 and 3 add a single driver, split along a hardware line
-> rather than chopped into arbitrary pieces. Patch 2 is complete and
-> useful on its own: it covers the liquid cooled SPC6 systems, which
-> shipped first. Patch 3 adds the air cooled systems, which arrived
-> later and expose a different set of CPLD attributes because they carry
-> their own power supplies and fan drawers.
-> 
-> Most of both patches is register description data, and the two sets
-> are largely disjoint. Folding them together would give a single patch
-> of roughly 1800 lines in which two unrelated board descriptions are
-> interleaved, with nothing in the diff to indicate which attribute
-> belongs to which system.
-> 
-> Patch 3 is purely additive: it does not modify or remove a single line
-> introduced by patch 2. The per SKU description struct and the
-> driver_data based DMI dispatch are introduced in patch 2, so patch 3
-> adds only the new register definitions, the new board description and
-> the DMI entry that selects it.
-> 
-> On the shared "mlxplat" platform device name
-> ============================================
-> 
-> nvsw-host-spc6 registers its platform device as "mlxplat", the same
-> name used by mlx-platform.c. This is deliberate. The mlxreg-io
-> attributes are a long standing userspace ABI documented in
-> Documentation/ABI/stable/sysfs-driver-mlxreg-io, and the management
-> software reads them from
-> /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/. Keeping the name
-> keeps those paths stable across switch generations, so existing tooling
-> works unchanged on SPC6.
-> 
-> The two drivers cannot collide at runtime: each calls dmi_check_system()
-> and returns -ENODEV before registering anything, and their DMI tables
-> are disjoint, so on any given system exactly one of them instantiates.
-> If you would still rather the new driver used a distinct name, we can
-> change it, but it would mean a new sysfs path and a userspace ABI break
-> for the affected systems.
-> 
-> Symbol namespace
-> ================
-> 
-> The two symbols the core exports to its board drivers are exported as
-> EXPORT_SYMBOL_NS_GPL() in the NVSW namespace, so that the core does not
-> add anything to the global symbol table and the dependency is explicit
-> in each consumer via MODULE_IMPORT_NS().
-> 
-> Testing
-> =======
-> 
-> Built on x86_64 against pdx86/for-next with gcc W=1 and with clang 17
-> W=1 plus CONFIG_WERROR, both warning free, at every patch in the
-> series. Checked with sparse v0.6.5-rc1, smatch and the coccinelle
-> report mode scripts, all clean. checkpatch --strict reports
-> no errors and no checks. Module linkage and the namespace import were
-> verified with modpost and modinfo.
-> 
-> v1->v2
-> Comments pointed out by Ilpo:
-> - Add the direct includes for the macros the two drivers use rather
->   than relying on them arriving transitively: linux/array_size.h for
->   ARRAY_SIZE, linux/bits.h for BIT and GENMASK, linux/err.h for IS_ERR
->   and PTR_ERR and linux/dev_printk.h for the dev_*() helpers, plus
->   linux/export.h and linux/types.h in the core.
-> - Remove the redundant NULL assignments from the error paths. The
->   registration helpers now return into a local variable, so a struct
->   nvsw_core field is only ever assigned a valid pointer and never an
->   ERR_PTR, which is what the NULL stores were papering over. 19 of the
->   23 assignments are gone; the 4 that remain are on the two module
->   scope pointers in nvsw-host-spc6, which outlive a failed probe.
-> - Rework the rollback in nvsw_core_platform_init() and
->   nvsw_host_spc6_mux_topology_init() to be positional, and drop the
->   defensive pointer tests from the matching exit paths, which can no
->   longer see a partially initialised state.
-> Additional fixes added by Felix:
-> - Sort the include blocks in both drivers.
-> Link to v1: https://lore.kernel.org/platform-driver-x86/20261008061704.794379-1-fradensky@nvidia.com/
-> 
-> Felix Radensky (3):
->   platform/mellanox: nvsw-core: Add core driver for Nvidia switches
->   platform/mellanox: nvsw-host-spc6: Add driver for Nvidia SPC6 switches
->   platform/mellanox: nvsw-host-spc6: Add support for SPC6 air cooled
->     switches
+--8323328-1007985297-1792399134=:1469
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Also please check what sashiko.dev has to say about these patches.
+On Mon, 19 Oct 2026, Zane Hunt via B4 Relay wrote:
 
-Note that sashiko is an AI review tool so please apply healthy bit of 
-critisism to any of its findings.
+> From: Zane Hunt <git@turtledev.nz>
+>=20
+> On some newer Zenbooks (Zenbook S 14 UX5406SA, Zenbook S 16 UM5606WA) the
+> camera key turns the camera off in firmware, but the LED on the key never
+> lights up under Linux. These machines don't have
+> ASUS_WMI_DEVID_CAMERA_LED, so asus-wmi never registers asus::camera. The
+> firmware exposes the state through ASUS_WMI_DEVID_CAMERA_LED_NEG instead.
+>=20
+> Reading CAMERA_LED_NEG is what drives the LED: the DSTS handler reads the
+> camera state from the EC and writes it to the LED GPIO before returning
+> it. The set side can't be used, the firmware only accepts DEVS on this
+> device once per boot.
+>=20
+> When CAMERA_LED is missing but CAMERA_LED_NEG is there, register
+> asus::camera as a read-only LED backed by CAMERA_LED_NEG, and read it
+> after every camera key event, sending a brightness_hw_changed event.
+> Registering the LED reads it as well, which fixes the LED being dark afte=
+r
+> a cold boot with the camera disabled.
+>=20
+> While at it, include <linux/container_of.h>, which this file already
+> relied on.
+>=20
+> Link: https://lore.kernel.org/r/adg6GzkykThAB_4u@djouze-zen
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D221752
+> Assisted-by: Claude:claude-opus-5-5 iasl
+> Co-developed-by: Jos=C3=A9 Guilherme de Castro Rodrigues <jose.guilherme.=
+cr.bh@gmail.com>
+> Signed-off-by: Jos=C3=A9 Guilherme de Castro Rodrigues <jose.guilherme.cr=
+=2Ebh@gmail.com>
+> Signed-off-by: Zane Hunt <git@turtledev.nz>
+> ---
+> Changes in v4:
+> - Keep Jos=C3=A9's Signed-off-by from v2 and add his Co-developed-by
+> - Use my full name in the tags
+> - Include <linux/container_of.h>
+> - Reuse the existing asus::camera registration block, only the
+>   handlers and flags differ
+> - camera_neg_led_available is now only set when CAMERA_LED is missing,
+>   so asus::camera is always the CAMERA_LED_NEG one when it's set. That
+>   makes the LED_BRIGHT_HW_CHANGED check in the event handler unneeded,
+>   so it's gone
+> - Drop the explicit read at probe, led_classdev_register() already
+>   reads the state through brightness_get
+> - Link to v3: https://patch.msgid.link/20261017-asus-wmi-camera-led-v3-1-=
+845a82373997@turtledev.nz
+>=20
+> Changes in v3 (picking up Jos=C3=A9's v2, which had stalled):
+> - Rebased on pdx86 for-next
+> - Also read CAMERA_LED_NEG at probe, so the LED is right after a cold boo=
+t
+> - Register a read-only asus::camera LED when only CAMERA_LED_NEG exists,
+>   with brightness_hw_changed on key presses (Ilpo's suggestion on v2)
+> - Comment on why the read is what updates the LED (also from v2 review)
+> - v2: https://lore.kernel.org/r/adg6GzkykThAB_4u@djouze-zen
+>=20
+> Tested again on the Zenbook S 14 UX5406SA (BIOS 309), on Fedora's 7.2.9
+> kernel with the same change applied: camera key presses keep the LED,
+> asus::camera and the camera output in sync, and with the camera disabled
+> and the LED forced off, loading the driver turns the LED back on.
+>=20
+> I used Claude while working on this. It helped
+> me read through the DSDT, drafted the changes on top of v2 and wrote the
+> test scripts. I went through the patch myself and ran the tests on my
+> laptop.
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 75 ++++++++++++++++++++++++=
+++++--
+>  include/linux/platform_data/x86/asus-wmi.h |  2 +-
+>  2 files changed, 73 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
+wmi.c
+> index fb1d4a0..93b51c8 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/backlight.h>
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+> +#include <linux/container_of.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+> @@ -72,6 +73,8 @@ module_param(fnlock_default, bool, 0444);
+>  #define NOTIFY_KBD_TTP=09=09=090xae
+>  #define NOTIFY_LID_FLIP=09=09=090xfa
+>  #define NOTIFY_LID_FLIP_ROG=09=090xbd
+> +#define NOTIFY_CAMERA_TOGGLE_1=09=090x82
+> +#define NOTIFY_CAMERA_TOGGLE_2=09=090x85
+>  #define NOTIFY_KEYSTONE=09=09=090xb4
+> =20
+>  #define ASUS_WMI_FNLOCK_BIOS_DISABLED=09BIT(0)
+> @@ -312,6 +315,7 @@ struct asus_wmi {
+>  =09u32 kbd_rgb_dev;
+>  =09bool kbd_rgb_state_available;
+>  =09bool oobe_state_available;
+> +=09bool camera_neg_led_available;
+> =20
+>  =09u8 throttle_thermal_policy_mode;
+>  =09u32 throttle_thermal_policy_dev;
+> @@ -2096,6 +2100,54 @@ static int camera_led_set(struct led_classdev *led=
+_cdev,
+>  =09return err < 0 ? err : 0;
+>  }
+> =20
+> +static bool is_camera_toggle(int code)
+> +{
+> +=09return code =3D=3D NOTIFY_CAMERA_TOGGLE_1 || code =3D=3D NOTIFY_CAMER=
+A_TOGGLE_2;
+> +}
+> +
+> +/*
+> + * Some models (e.g. Zenbook S 14 UX5406SA, Zenbook S 16 UM5606WA) have =
+no
+> + * ASUS_WMI_DEVID_CAMERA_LED. The firmware handles the camera key itself=
+ and
+> + * only exposes the state through ASUS_WMI_DEVID_CAMERA_LED_NEG, and rea=
+ding
+> + * that has a side effect: the firmware copies the state to the LED GPIO=
+=2E
+> + * Nothing else updates the LED, so read it after every camera key event=
+=2E
+> + * Registering asus::camera reads it too (via brightness_get), which set=
+s the
+> + * LED at probe. Setting it is no use, the firmware accepts DEVS on this
+> + * device only once per boot.
+> + *
+> + * Returns 1 if the camera is disabled (LED lit), 0 if enabled, or -errn=
+o.
 
--- 
+This should be Returns: to follow kerneldoc formatting (even if it's not=20
+exactly 100% kerneldoc in other aspects). But no need to send another=20
+version just because of it, I'll try to remember to change it while=20
+applying. If you get some other comments and end up doing another version,=
+=20
+then make the change yourself.
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+I'll wait a few days before consider this to give Jos=C3=A9 and others time=
+ to=20
+respond and review.
+
+--=20
  i.
 
+> + */
+> +static int camera_neg_led_sync(struct asus_wmi *asus)
+> +{
+> +=09u32 result;
+> +=09int err;
+> +
+> +=09err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG, &r=
+esult);
+> +=09if (err)
+> +=09=09return err;
+> +
+> +=09return !(result & ASUS_WMI_DSTS_STATUS_BIT);
+> +}
+> +
+> +static enum led_brightness camera_neg_led_get(struct led_classdev *led_c=
+dev)
+> +{
+> +=09struct asus_wmi *asus =3D container_of(led_cdev, struct asus_wmi, cam=
+era_led);
+> +=09int state =3D camera_neg_led_sync(asus);
+> +
+> +=09return state < 0 ? LED_OFF : state;
+> +}
+> +
+> +/* The firmware owns this LED; a write just resyncs it with the camera s=
+tate. */
+> +static int camera_neg_led_set(struct led_classdev *led_cdev,
+> +=09=09=09      enum led_brightness brightness)
+> +{
+> +=09struct asus_wmi *asus =3D container_of(led_cdev, struct asus_wmi, cam=
+era_led);
+> +
+> +=09if (!(led_cdev->flags & LED_UNREGISTERING))
+> +=09=09camera_neg_led_sync(asus);
+> +=09return 0;
+> +}
+> +
+>  static void asus_wmi_led_exit(struct asus_wmi *asus)
+>  {
+>  =09scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> @@ -2227,11 +2279,18 @@ static int asus_wmi_led_init(struct asus_wmi *asu=
+s)
+>  =09=09=09goto error;
+>  =09}
+> =20
+> -=09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
+> +=09if (asus->camera_neg_led_available ||
+> +=09    asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
+>  =09=09asus->camera_led.name =3D "asus::camera";
+>  =09=09asus->camera_led.max_brightness =3D 1;
+> -=09=09asus->camera_led.brightness_get =3D camera_led_get;
+> -=09=09asus->camera_led.brightness_set_blocking =3D camera_led_set;
+> +=09=09if (asus->camera_neg_led_available) {
+> +=09=09=09asus->camera_led.flags =3D LED_BRIGHT_HW_CHANGED;
+> +=09=09=09asus->camera_led.brightness_get =3D camera_neg_led_get;
+> +=09=09=09asus->camera_led.brightness_set_blocking =3D camera_neg_led_set=
+;
+> +=09=09} else {
+> +=09=09=09asus->camera_led.brightness_get =3D camera_led_get;
+> +=09=09=09asus->camera_led.brightness_set_blocking =3D camera_led_set;
+> +=09=09}
+> =20
+>  =09=09rv =3D led_classdev_register(&asus->platform_device->dev,
+>  =09=09=09=09=09=09&asus->camera_led);
+> @@ -4733,6 +4792,13 @@ static void asus_wmi_handle_event_code(int code, s=
+truct asus_wmi *asus)
+>  =09if (is_display_toggle(code) && asus->driver->quirks->no_display_toggl=
+e)
+>  =09=09return;
+> =20
+> +=09if (is_camera_toggle(code) && asus->camera_neg_led_available) {
+> +=09=09int state =3D camera_neg_led_sync(asus);
+> +
+> +=09=09if (state >=3D 0)
+> +=09=09=09led_classdev_notify_brightness_hw_changed(&asus->camera_led, st=
+ate);
+> +=09}
+> +
+>  =09if (!sparse_keymap_report_event(asus->inputdev, code,
+>  =09=09=09=09=09key_value, autorelease))
+>  =09=09pr_info("Unknown key code 0x%x\n", code);
+> @@ -5210,6 +5276,9 @@ static int asus_wmi_add(struct platform_device *pde=
+v)
+>  #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+> =20
+>  =09asus->oobe_state_available =3D asus_wmi_dev_is_present(asus, ASUS_WMI=
+_DEVID_OOBE);
+> +=09asus->camera_neg_led_available =3D
+> +=09=09!asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED) &&
+> +=09=09asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG);
+> =20
+>  =09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POL=
+ICY))
+>  =09=09asus->throttle_thermal_policy_dev =3D ASUS_WMI_DEVID_THROTTLE_THER=
+MAL_POLICY;
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
+latform_data/x86/asus-wmi.h
+> index 4ea1ccc..5964063 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -57,7 +57,7 @@
+>  #define ASUS_WMI_DEVID_MUTE_LED=090x0004001C
+> =20
+>  /* Disable Camera LED */
+> -#define ASUS_WMI_DEVID_CAMERA_LED_NEG=090x00060078 /* 0 =3D on (unused) =
+*/
+> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG=090x00060078 /* 0 =3D on */
+>  #define ASUS_WMI_DEVID_CAMERA_LED=090x00060079 /* 1 =3D on */
+> =20
+>  /* Backlight and Brightness */
+>=20
+> ---
+> base-commit: ea40f1e9f07aab937b9a217633be7a1f66260394
+> change-id: 20261017-asus-wmi-camera-led-06a6e05f01e2
+>=20
+> Best regards,
+> -- =20
+> Zane Hunt <git@turtledev.nz>
+>=20
+>=20
+--8323328-1007985297-1792399134=:1469--
