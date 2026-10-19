@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC125AD60D;
-	Mon, 19 Oct 2026 14:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DC9592B92;
+	Mon, 19 Oct 2026 14:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792418413; cv=none; b=C5/T5di7NzFnLtImdYbP+XbqDbj9UuTkyWabT9dDIwBSkRJSUGDI38PJQBNbp7aHjQ51anDhKkDYa3E1cnIZT3dJkCqGhGbjBH+t2V7yHVMHizN/WV6RfQbsYvIPDgA5IgcEuNIhptxYSfQiYPMJVFzNCjzW7yWlhubrObVW0J8=
+	t=1792418428; cv=none; b=txmQCzauM66RsTb3IasDm/L+kHyd7LFl3Es5gsLNzBD9/lgdafnpx1Tc0nszkT7QFclN78iQVsc9te88wiRreraPROALvXY3XpjID19LqiruI2dWRo5DlOLCwfPmF723MSzQMFAUIWsPauD+Z0FwKcPNWpMS2AJJoL/LoyZPoV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792418413; c=relaxed/simple;
-	bh=BAxXmKzipUKgwnwjt46mX8OWaHPtpfcRGxvBMikOUgc=;
+	s=arc-20240116; t=1792418428; c=relaxed/simple;
+	bh=4Rp/XM0BDoxxGDmgkvVnAlFwp5YJnh3unci5+esLcs0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UcSKqsuv0eqJLdDCf+WzS/xpf28UNh5DKmD+1+jCivHoig+8VPpQcZBFfruY8RXa/wprjVqF8Oenhrq/nxbkD8Y++qH61lmkfzwSMa9/ow0FMqyje62rh5w5zlStGbsEx6XC6x1aFlzDjdT09J01TcHyd2ySLsDc/qWAcKo4gGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XodgFDMJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=KpeSgqdwgr27vvBEiw9rvnTihlJfAUVpJ7HhRYcsbHNb1NoI79Rs4BlH9ehFTAtqtZXq2oIAy71+k/FF9CmpP9Nu0jLXurlCiIzh+zOUrDeOriswYINv2DBU3nL7QBLtax5f/dwdI99bFQYJyOXsBaThBoWj+DRQi1YECpqiRdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nfd/4S/j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XodgFDMJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACB41F000C4;
-	Mon, 19 Oct 2026 14:00:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nfd/4S/j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E6981F000C8;
+	Mon, 19 Oct 2026 14:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792418411;
-	bh=62WN2Y9i3wsFgQq2p6V9Mjpp4uZxM4JD2fNUMBgQi6Q=;
+	s=k20260515; t=1792418425;
+	bh=of1C+/M8BwjuAYp9FT+EIm9IrF5m8DlAapB+2n200kQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XodgFDMJP27pnY/QoaxbohoV75QlAljUVCPIRsCNLxQkG5wjvqjcvYKZZhztWBIZT
-	 VnjTRdgNOijREW2v+7zXzeDiK33y3v7w3Lz+AVTdsdXvzyJF7sl+hrVo2pyjncdDZc
-	 p8ibT8Vv/CjXGdeYbNIHmR07uWfAW6a+8JI+toM3nKj+abyK3A6666tzoZni8PJ7gY
-	 /caSmLquwejwphDLIAbA5L6hfLuzBku4BHO/resrJNGlPTtw4M01xgtMsd8TAXab8A
-	 KYw16XV5FDr+w/AIYny9Tpr/gW7E/Nu3t3csJ4u76nPJsedko9rB3UzsKRvVCWHZJN
-	 ecTzHpiyfzgGg==
+	b=Nfd/4S/joHIXRf5MW3kWr62I1uJ1q/db+t0crcBZn+WZKREY+Zn3+b0cx0Xhxt90m
+	 UqOzqYWOb00gg1smcMvFMSn11YdZzNNPed7IhStyv/xQVjdHn31wMUBEVai9Zgg9gt
+	 UykFrU0KKqbwv1Dogi8Q5+HV6yLDed1fWY0dsZ2TuMmjfSSuQ1AvNa6Rp4ZsuCbuTY
+	 2lu0daYzgSekX/xYJBIUI8QhqrrX1EuFC2mW7Jtl1XDJfBrWsVu5ZRrxEIAiSSohfj
+	 9Dv5r9+6xLGbxBs3Z9Voo9VW1dhqqD05PsXBvrVR74U4f/Cn8IPNM3Y3O+30TWkgQL
+	 EQgmgoGoj8ySQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Abdun Nihaal <nihaal@cse.iitm.ac.in>,
-	Sashiko <sashiko-bot@kernel.org>,
+Cc: Yap Weei Choong <ywc8891@gmail.com>,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	s.shravan@intel.com,
+	Shyam-sundar.S-k@amd.com,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-6.12] platform/x86: int1092: Fix info leak in parse_package()
-Date: Mon, 19 Oct 2026 09:48:41 -0400
-Message-ID: <20261019135441.1420968-230-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.18] platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to s2idle quirk list
+Date: Mon, 19 Oct 2026 09:48:51 -0400
+Message-ID: <20261019135441.1420968-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261019135441.1420968-1-sashal@kernel.org>
 References: <20261019135441.1420968-1-sashal@kernel.org>
@@ -55,29 +55,39 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.18.57
 Content-Transfer-Encoding: 8bit
 
-From: Abdun Nihaal <nihaal@cse.iitm.ac.in>
+From: Yap Weei Choong <ywc8891@gmail.com>
 
-[ Upstream commit f5eb833730c071b68a68de5d1df442aae4ae7e6e ]
+[ Upstream commit e25fb2258bddbcf70df69d1358be3e1274bdc5f2 ]
 
-Sashiko reports a possible information leak that can occur as follows:
+The ThinkPad T14 Gen 2 AMD was sold under two machine types, 20XK and
+20XL, but only 20XK has been in the s2idle quirk list since the quirk
+was introduced in commit 455cd867b85b ("platform/x86: thinkpad_acpi:
+Add a s2idle resume quirk for a number of laptops").
 
-1. In parse_package(), memory allocated for data->device_mode_info is not
-   zerozed initially as it is allocated with devm_kmalloc_array().
+On 20XL machines the firmware SMI handler therefore still runs on the
+NVMe D3->D0 transition when exiting suspend-to-idle. With IOMMU
+translation enabled (the default), this intermittently stalls resume
+for ~10.25 seconds: seven devices across three root ports (nvme, both
+xhci_hcd functions, xhci-pci-renesas, snd_hda_intel x2, snd_rn_pci_acp3x)
+block in pci_pm_resume_noirq and are released simultaneously, consistent
+with all cores being held in SMM.
 
-2. In the for loop after the allocation, a malformed ACPI package
-   provided by firmware can cause some fields in data->device_mode_info
-   to remain uninitialized.
+Add the missing 20XL machine type, mirroring the existing 20XK entry.
+This is the same class of omission fixed by commit 9a469c6dfab3
+("platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle
+quirk list").
 
-3. Later in update_sar_data(), the uninitialized fields gets copied to
-   the fields of context->sar_data, which can be exposed to userspace
-   through sysfs attribute read (intc_data_show()).
+Verified on a ThinkPad T14 Gen 2a (type 20XLS41C00, BIOS R1MET62W 1.32,
+kernel 6.12.95): with this entry the quirk message appears at probe and
+a 14-hour suspend resumes in ~1s with no noirq stalls, where previously
+even short suspends could hit the ~10s delay. A further two-day soak
+(short naps and two ~14-hour suspends) showed every resume clean.
 
-Fix the leak by switching to use devm_kcalloc() for allocation.
-
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/#/patchset/20260710052806.100107-1-nihaal%40cse.iitm.ac.in
-Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
-Link: https://patch.msgid.link/20260723-platx86-v4-2-93b4a178b595@cse.iitm.ac.in
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=221755
+Signed-off-by: Yap Weei Choong <ywc8891@gmail.com>
+Tested-by: Yap Weei Choong <ywc8891@gmail.com>
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Link: https://patch.msgid.link/20260717060744.1252065-2-ywc8891@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -85,395 +95,433 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 LLM Generated explanations, may be completely bogus:
 
-I have enough to judge the leak path, the `devm_kcalloc` fix, and
-whether this 7.3-rc4 tree should take it. Writing up the nine-phase
-analysis next.
+The local checkout is **Linux 7.3.0-rc4**
+(`v7.3-rc4-27-gf0100363d8c37`). The candidate is `e25fb2258bddb`
+(`platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to s2idle quirk list`).
+It is an 8-line DMI hardware-quirk addition: the sibling machine type
+20XK has been quirked since 2022; 20XL was omitted, and that omission
+causes ~10s s2idle resume stalls on T14 Gen 2 AMD.
 
-## Phase 1: Commit message forensics
+===============================================================
+PHASE 1: COMMIT MESSAGE FORENSICS
+===============================================================
 
-**Step 1.1: Subject line**
-Record: `[platform/x86: int1092]` `[Fix]` `[info leak in parse_package()
-— uninitialized kmalloc data can reach sysfs]`
+**Step 1.1: PARSE THE SUBJECT LINE**
+Record: `[platform/x86/amd/pmc] [Add] [T14 Gen2 AMD machine type 20XL to
+the existing s2idle DMI quirk list]`
 
-**Step 1.2: Tags**
+**Step 1.2: PARSE ALL COMMIT MESSAGE TAGS**
 Record:
-- `Reported-by: Sashiko <sashiko-bot@kernel.org>` — automated kernel
-  review bot, not syzbot
-- `Closes: https://sashiko.dev/#/patchset/20260710052806.100107-1-
-  nihaal%40cse.iitm.ac.in`
-- `Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>` (author)
-- `Link: https://patch.msgid.link/20260723-platx86-v4-2-
-  93b4a178b595@cse.iitm.ac.in`
+- `Link: https://bugzilla.kernel.org/show_bug.cgi?id=221755` — user-
+  filed kernel bug
+- `Link:
+  https://patch.msgid.link/20260717060744.1252065-2-ywc8891@gmail.com` —
+  lore submission
+- `Signed-off-by: Yap Weei Choong <ywc8891@gmail.com>` (author)
+- `Tested-by: Yap Weei Choong <ywc8891@gmail.com>` (author verified on
+  hardware)
+- `Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>` (AMD PMC
+  author of the original quirk)
 - `Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>`
-  (platform/x86 maintainer)
+  (platform-drivers-x86 maintainer)
 - `Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>`
-  (applied by maintainer)
-- No `Fixes:` tag in the committed message (expected for this review
-  pipeline)
-- No `Cc: stable` in the committed message; original mail **was** CCed
-  to `stable@vger.kernel.org` (verified via `b4 dig -w` and the v4 cover
-  letter on the stable list)
-- No `Tested-by:` (cover letter: compile-tested only)
+  (applied)
+- No `Fixes:` tag (expected)
+- No `Cc: stable` (expected)
+- No `Reported-by:` (bugzilla Link instead)
+- Ignore any Sasha Levin SOB (none on the real commit)
 
-**Step 1.3: Body**
+**Step 1.3: ANALYZE THE COMMIT BODY TEXT**
 Record:
-- **Bug:** `device_mode_info` is allocated with `devm_kmalloc_array()`
-  (non-zeroed). The parse loop `continue`s on malformed ACPI package
-  elements, leaving those array slots uninitialized.
-- **Symptom:** Uninitialized fields can be copied in `update_sar_data()`
-  into `context->sar_data` and read from userspace via `intc_data` sysfs
-  (`intc_data_show()`).
-- **Root cause:** Allocation is not zeroed, despite `parse_package()`
-  documenting that skipped entries “will have the default value of
-  zero.”
-- **Fix:** `devm_kmalloc_array()` → `devm_kcalloc()`.
-- **Version info in message:** none. Driver has existed since v5.15.
+- **Bug:** ThinkPad T14 Gen 2 AMD shipped as machine types 20XK and
+  20XL. Only 20XK was listed when the quirk was added in `455cd867b85b`.
+- **Symptom:** On 20XL, the firmware SMI still runs on NVMe D3→D0 at
+  s2idle exit. With IOMMU on (default), resume stalls ~10.25s; seven
+  devices on three root ports (`nvme`, both `xhci_hcd`, `xhci-pci-
+  renesas`, `snd_hda_intel` x2, `snd_rn_pci_acp3x`) block in
+  `pci_pm_resume_noirq` and wake together — consistent with all cores
+  stuck in SMM.
+- **Fix:** Add DMI entry 20XL mirroring 20XK. Same class of omission as
+  `9a469c6dfab3` (missing T14s Gen1 type).
+- **Versions:** Reproduced on kernel 6.12.95, BIOS R1MET62W 1.32, type
+  20XLS41C00. After the quirk: 14-hour suspend resumes in ~1s; two-day
+  soak was clean.
+- **Root cause:** Incomplete DMI coverage of a known Lenovo firmware SMI
+  bug, not a new kernel logic bug.
 
-**Step 1.4: Hidden bug fix?**
-Record: Not hidden. Explicit information-leak fix. The surrounding
-comment already promised zeroed skipped slots; the allocator did not
-provide that.
+**Step 1.4: DETECT HIDDEN BUG FIXES**
+Record: Not a disguised cleanup. Explicit hardware quirk for a
+documented firmware bug. The verb is "Add" because that is how DMI quirk
+tables are extended.
 
-## Phase 2: Diff analysis
+===============================================================
+PHASE 2: DIFF ANALYSIS - LINE BY LINE
+===============================================================
 
-**Step 2.1: Inventory**
+**Step 2.1: INVENTORY THE CHANGES**
 Record:
-- File: `drivers/platform/x86/intel/int1092/intel_sar.c` (+4/−4)
-- Function: `parse_package()`
-- Scope: single-file, one-call-site surgical change
+- File: `drivers/platform/x86/amd/pmc/pmc-quirks.c` — **+8 / −0**
+- Function: none; static `fwbug_list[]` table only
+- Scope: single-file surgical DMI addition
 
-**Step 2.2: Code flow**
+**Step 2.2: UNDERSTAND THE CODE FLOW CHANGE**
 Record:
-- **Before:** `devm_kmalloc_array()` returns uninitialized heap. Loop
-  writes only successfully parsed modes; failed/malformed entries leave
-  `device_mode_info[itr]` untouched.
-- **After:** `devm_kcalloc()` zeros the whole array first, so skipped
-  slots stay `{0}` as the function comment describes.
-- **Path:** probe/init (`sar_get_data()` → `parse_package()`), then
-  later sysfs read / ACPI notify (`update_sar_data()`).
+- **Before:** DMI match for LENOVO/`20XK` applies
+  `quirk_s2idle_spurious_8042`. LENOVO/`20XL` does not match, so
+  `amd_pmc_quirks_init()` leaves `dev->quirks` unset for 20XL.
+- **After:** 20XL matches the same quirk. Probe logs the s2idle quirk;
+  `amd_pmc_process_restore_quirks()` runs
+  `amd_pmc_skip_nvme_smi_handler()` on s2idle restore;
+  `disable_8042_wakeup` is also set (same as 20XK).
+- Path: probe (`amd_pmc_quirks_init`) and s2idle restore
+  (`amd_pmc_s2idle_restore` → `amd_pmc_process_restore_quirks`). DMI-
+  gated; other machines unchanged.
 
-**Step 2.3: Bug mechanism**
-Record: **Uninitialized data / kernel info leak.**
-Mechanism verified in this tree:
-1. `parse_package()` allocates `device_mode_info`.
-2. Loop uses `continue` on type/count/`get_int_value()` failures (lines
-   105–114).
-3. `update_sar_data()` compares `context->sar_data.device_mode` to
-   `device_mode_info[itr].device_mode` and copies `bandtable_index`,
-   `antennatable_index`, `sartable_index`.
-4. `intc_data_show()` emits those four ints to userspace.
-
-If a skipped slot’s uninitialized `device_mode` happens to match the
-current mode, heap leftovers are copied into `sar_data` and printed.
-
-**Step 2.4: Fix quality**
-Record: Obviously correct. `devm_kcalloc()` is the zeroing counterpart
-of `devm_kmalloc_array()`. No API change, no lock change, no extra error
-path. Regression risk is negligible (slightly more work at probe to zero
-a small array, max 50 modes).
-
-## Phase 3: Git history
-
-**Step 3.1: Blame**
+**Step 2.3: IDENTIFY THE BUG MECHANISM**
 Record:
-- Buggy skip-and-leave-uninitialized loop: `dcfbd31ef4bcf`
-  (“platform/x86: BIOS SAR driver for Intel M.2 Modem”), 2021-08-20,
-  first in **v5.15-rc1**.
-- Original allocator was `kmalloc_array()` (also non-zeroing). Same leak
-  class from day one.
-- Matching-by-`device_mode` copy: `7df227847ab56` (2021-10-11).
+- **Category:** Hardware workaround (DMI quirk table entry)
+- **Mechanism:** Skip the Lenovo BIOS SMI on NVMe D3→D0 by clearing bit
+  0 at `FCH_PM_BASE + FCH_PM_SCRATCH` (`0xFED80380` / SI3R) before the
+  D0 transition. 20XL never got that skip.
 
-**Step 3.2: Fixes: tag**
-Record: No `Fixes:` on this commit. The matching parent
-(`30c906cff490c`) has `Fixes: dcfbd31ef4bc`. That introducer **is** an
-ancestor of this tree (`git merge-base --is-ancestor dcfbd31ef4bcf HEAD`
-succeeded).
-
-**Step 3.3: File history**
-Record: Recent related commits on this file:
-- `30c906cff490c` — convert to `devm_*` allocations (patch 1/2, parent
-  of this commit)
-- `f5eb833730c07` — this info-leak fix (patch 2/2)
-This is **patch 2/2** of a two-patch series. It is standalone *on top of
-patch 1*.
-
-**Step 3.4: Author**
-Record: Abdun Nihaal submitted both int1092 fixes in this series. Ilpo
-Järvinen (platform/x86 maintainer) reviewed and applied both. Not the
-original driver author (Shravan Sudhakar / Intel).
-
-**Step 3.5: Prerequisites**
-Record: **Depends on `30c906cff490c`**, which changed
-`kmalloc_objs`/`kmalloc_array` into `devm_kmalloc_array()`. This hunk
-only applies as written if that conversion is present. In **this** tree,
-that parent **is** present (`git merge-base --is-ancestor 30c906cff490c
-HEAD` succeeded). No other missing helpers: `devm_kcalloc()` is core
-device-managed alloc.
-
-## Phase 4: Mailing list / external research
-
-**Step 4.1: Original discussion**
+**Step 2.4: ASSESS THE FIX QUALITY**
 Record:
-- `b4 dig -c f5eb833730c07` → https://patch.msgid.link/20260723-platx86-
-  v4-2-93b4a178b595@cse.iitm.ac.in
-- Series: v1 (combined) → v2 → v3 (split 2/2) → **v4** (applied). v4
-  only updated the commit message per Ilpo to document the leak path.
-- Cover letter: “[PATCH v4 0/2] platform/x86: int1092: Fix two bugs in
-  SAR driver”
-- Explicitly CCed `stable@vger.kernel.org`; also appeared on the stable
-  list (spinics `lists/stable/msg986235.html` / `msg971516.html`).
-- No NAK found in available archives.
-- Cover letter: “Both patches are compile tested only.”
+- Obviously correct: identical copy of the adjacent 20XK entry with
+  product name `20XL`.
+- Minimal: 8 lines, no API/locking/refactor.
+- Regression risk: very low. Only DMI-matched 20XL machines. False-
+  positive would require another Lenovo product whose DMI product name
+  contains `20XL`; Lenovo machine types are 4-character prefixes and
+  existing entries (`20XK`, `20XF`, `20XH`, …) use the same pattern.
+- Red flags: none.
 
-**Step 4.2: Recipients (`b4 dig -w`)**
-Record: Abdun Nihaal; Shravan Sudhakar; Hans de Goede; Ilpo Järvinen;
-`platform-driver-x86@vger.kernel.org`; `linux-kernel@vger.kernel.org`;
-**`stable@vger.kernel.org`**; Sashiko. Maintainer Ilpo reviewed and
-applied.
+===============================================================
+PHASE 3: GIT HISTORY INVESTIGATION
+===============================================================
 
-**Step 4.3: Bug report**
-Record: Sashiko static/agent review, not a user crash report. Closes URL
-did not return the specific finding body (only the Sashiko project
-page). Leak path is independently verifiable from the source.
-**UNVERIFIED:** exact Sashiko finding text.
-
-**Step 4.4: Series**
-Record: 2/2. Patch 1 (`30c906cff490c`) is the `devm_` conversion (has
-`Cc: stable` and `Fixes:`). Patch 2 is this kcalloc leak fix. Both are
-in this tree, in order.
-
-**Step 4.5: Stable list**
-Record: Series was mailed to stable@ (cover + both patches). No evidence
-of a NAK or “not for stable” reason. Patch 1 later received
-CVE-2026-89437 (memory leak). That CVE is **patch 1**, not this info-
-leak commit; not used as the reason for this decision.
-
-## Phase 5: Code semantic analysis
-
-**Step 5.1: Functions**
-Record: `parse_package()` modified. Related: `update_sar_data()`,
-`intc_data_show()`, `sar_get_data()`, `sar_probe()`,
-`sar_get_device_mode()`, `intc_reg_store()`.
-
-**Step 5.2: Callers**
+**Step 3.1: BLAME THE CHANGED LINES**
 Record:
-- `parse_package()` ← `sar_get_data()` ← `sar_probe()` (boot/probe,
-  `MAX_REGULATORY` = 3 times)
-- `update_sar_data()` ← `sar_get_device_mode()` (probe + ACPI notify
-  `0x80`) and `intc_reg_store()` (sysfs write)
-- `intc_data_show()` ← sysfs read of `intc_data`
+- 20XK block: `e8ef8dd28c4c4` (Mario Limonciello, 2023-07-10) — moved
+  the quirk from `thinkpad_acpi` into amd-pmc.
+- 20XK `driver_data`: later `5b9e07551faa7` (2025-07-24) switched it to
+  `&quirk_s2idle_spurious_8042`.
+- 20XL block: `e25fb2258bddb` (Yap Weei Choong, 2026-07-17) — this
+  candidate.
+- Original 20XK-only list: `455cd867b85b` (2022-04-28, `thinkpad_acpi`).
+  `git show 455cd867b85b` contains `20XK` and **not** `20XL`.
+- Bug present since v5.18-era quirk introduction; still present after
+  the 2023 move into amd-pmc.
 
-**Step 5.3: Callees**
-Record: `get_int_value()`, `devm_kcalloc()`. No locks, no I/O besides
-ACPI objects already passed in.
+**Step 3.2: FOLLOW THE FIXES: TAG**
+Record: No `Fixes:` tag. Referenced history:
+- `455cd867b85b` — **is an ancestor of HEAD** (`git merge-base --is-
+  ancestor` exit 0). Introduced the quirk; listed T14 Gen2 as 20XK only.
+- `9a469c6dfab3` — **is an ancestor of HEAD**. Precedent: add the
+  missing second Lenovo machine type (T14s Gen1 20UJ beside 20UH). Same
+  8-line DMI pattern.
 
-**Step 5.4: Reachability**
-Record: Yes, from userspace on systems with ACPI ID `INTC1092`:
-- `DEVICE_ATTR_RO(intc_data)` is mode **0444** (`__DEVICE_ATTR_RO` →
-  0444 in `include/linux/device.h`).
-- Documented in `Documentation/ABI/testing/sysfs-driver-intc_sar` as
-  `/sys/bus/platform/devices/INTC1092:00/intc_data`.
-Unprivileged processes can read it. Triggering the *uninitialized* slots
-still needs malformed ACPI firmware; once those slots exist, a matching
-`device_mode` exposes leftover heap words.
+**Step 3.3: CHECK FILE HISTORY FOR RELATED CHANGES**
+Record: Recent `pmc-quirks.c` work is more DMI quirk rows (Legion Go 2,
+Yoga 6, MECHREVO, TUXEDO, L14 Gen3, suspend delay). No refactor that
+this depends on. `git log e25fb2258bddb..HEAD -- pmc-quirks.c` shows no
+later edits of the 20XL entry. Standalone, not patch X/Y.
 
-**Step 5.5: Similar patterns**
-Record: Same file’s loop comment already required zeros. No sibling copy
-of this bug in the int1092 directory. The immediately preceding series
-patch did not zero the array (`devm_kmalloc_array`), so this follow-up
-is required to actually close the leak.
+**Step 3.4: CHECK THE AUTHOR'S OTHER COMMITS**
+Record: Yap Weei Choong has this single commit under
+`drivers/platform/x86/amd/`. Mario Limonciello (reviewer) originated the
+quirk and maintains this table. Ilpo Järvinen applied it as platform-
+drivers-x86 maintainer.
 
-## Phase 6: Local tree (this checkout only)
+**Step 3.5: CHECK FOR DEPENDENT/PREREQUISITE COMMITS**
+Record: On this tree the patch assumes `fwbug_list[]` and
+`quirk_s2idle_spurious_8042` in `pmc-quirks.c`. Both exist.
+`amd_pmc_quirks_init()` / `amd_pmc_process_restore_quirks()` exist in
+`pmc.c`. Applies standalone here.
 
-**Step 6.1: Does the buggy code exist here?**
+===============================================================
+PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
+===============================================================
+
+**Step 4.1: FIND THE ORIGINAL PATCH DISCUSSION**
 Record:
-- Tree: **`v7.3-rc4-27-gf0100363d8c37`**, `make kernelversion` =
-  **7.3.0-rc4**, `VERSION=7 PATCHLEVEL=3 SUBLEVEL=0 EXTRAVERSION=-rc4`.
-- Driver **is** present. `parse_package()` / `update_sar_data()` /
-  `intc_data_show()` all exist.
-- Introducer `dcfbd31ef4bcf` is an ancestor (v5.15-era).
-- Current file already uses `devm_kcalloc()` because `f5eb833730c07` is
-  an ancestor of HEAD. That is **not** treated as “already selected”; it
-  only confirms the code and the fix belong to this lineage.
-- Parent `30c906cff490c` is also an ancestor, so the hunk’s
-  `devm_kmalloc_array` context exists in this history.
+- `b4 dig -c e25fb2258bddb` →
+  https://patch.msgid.link/20260717060744.1252065-2-ywc8891@gmail.com
+- `b4 dig -a`: **v1 only**; committed version is that v1.
+- Thread (mbox): (1) author submission, (2) Mario `Reviewed-by` with no
+  requests, (3) Ilpo applied as `[1/1]` to `review-ilpo-next`.
+- No NAK. No reviewer `Cc: stable`. Ilpo’s boilerplate: fixes usually go
+  via for-next unless they are this-cycle or a clear regression — that
+  explains missing `Cc: stable`, not unsuitability for later stable
+  backport.
+- Lore HTTP 403 from this environment; thread recovered via `b4 dig -m`
+  and Openwall/Patchew mirrors.
 
-**Step 6.2: Backport difficulty**
-Record: **Clean apply** onto the parent already in this tree (4-line
-allocator swap in one function). No conflicting refactor of this
-function after the parent besides this commit itself.
+**Step 4.2: CHECK WHO REVIEWED THE PATCH**
+Record (`b4 dig -w`): To `platform-driver-x86@vger.kernel.org`; Cc Hans,
+Ilpo, Shyam-sundar.S-k@amd.com (MAINTAINERS for AMD PMC), Mario, linux-
+kernel. Right lists and both AMD PMC and PDx86 maintainers.
 
-**Step 6.3: Related fixes already here**
-Record: Patch 1 (devm conversion) is here. That conversion **does not**
-zero the array, so it does not substitute for this fix. No other info-
-leak fix on this path.
+**Step 4.3: SEARCH FOR THE BUG REPORT**
+Record: Bugzilla 221755 linked; HTTP 403, so **bugzilla comments are
+UNVERIFIED**. Commit body itself is a first-hand report: machine type
+20XLS41C00, BIOS, 6.12.95, 10.25s stall, soak test. Patchew lists a
+single-patch series.
 
-## Phase 7: Subsystem context
+**Step 4.4: CHECK FOR RELATED PATCHES AND SERIES**
+Record: msgid `…-2` is git-send-email numbering. Ilpo applied `[1/1]`;
+Patchew: “posted 1 patch”. Standalone.
 
-**Step 7.1**
-Record: `drivers/platform/x86/intel/int1092/` — Intel BIOS Dynamic SAR
-for M.2 modem. Criticality: **PERIPHERAL / platform-specific**, but the
-sysfs node is world-readable, so the leak is a real userspace-visible
-security issue on those machines.
+**Step 4.5: CHECK STABLE MAILING LIST HISTORY**
+Record: WebSearch of lore stable for this subject found **no**
+discussion of 20XL / this commit. No recorded reason to keep it out of
+stable.
 
-**Step 7.2**
-Record: Low-churn mature driver (added 2021, occasional fixes).
-Maintainer: Shravan Sudhakar; applied by Ilpo Järvinen (pdx86). Config:
-`CONFIG_INTEL_SAR_INT1092`, depends on ACPI.
+===============================================================
+PHASE 5: CODE SEMANTIC ANALYSIS
+===============================================================
 
-## Phase 8: Impact and risk
+**Step 5.1: IDENTIFY KEY FUNCTIONS IN THE DIFF**
+Record: No function body edited. Table consumers:
+`amd_pmc_quirks_init()`, `amd_pmc_process_restore_quirks()`,
+`amd_pmc_skip_nvme_smi_handler()`. semcode MCP: not available; used `git
+grep`.
 
-**Step 8.1: Who is affected**
-Record: Users of Intel platforms with ACPI device `INTC1092` and this
-driver loaded (WWAN SAR). Not universal; **driver/platform-specific**.
-
-**Step 8.2: Trigger**
-Record: Probe parses BIOS ACPI DSM packages. Malformed/partial packages
-skip slots. Later, ACPI notify or `intc_reg` store calls
-`update_sar_data()`; any user can read `intc_data`. Firmware-dependent,
-but the skip path is intentional (not a theoretical dead branch).
-Unprivileged read of the attribute: **yes**.
-
-**Step 8.3: Failure mode**
-Record: Kernel heap contents (a few integers) can be copied into a
-world-readable sysfs attribute. Severity: **HIGH** (info leak /
-security), not a panic. Matches the classic uninitialized-kmalloc-to-
-userspace pattern.
-
-**Step 8.4: Risk–benefit**
+**Step 5.2: TRACE CALLERS**
 Record:
-- **Benefit:** High for affected hardware — closes a kernel-memory
-  disclosure through a documented 0444 sysfs ABI; implements the
-  behavior the function comment already promised.
-- **Risk:** Very low — one allocator flag, no locking, no ABI change, no
-  new features.
-- **Ratio:** Strongly favors taking the fix.
+- `amd_pmc_quirks_init(dev)` from `amd_pmc_probe()` in `pmc.c` when
+  `CONFIG_SUSPEND` and `!disable_workarounds`.
+- `amd_pmc_process_restore_quirks(pdev)` from
+  `amd_pmc_s2idle_restore()`, the LPS0 `.restore` callback
+  (`acpi_register_lps0_dev`).
+- Impact: AMD notebook s2idle resume, DMI-limited to 20XL.
 
-## Phase 9: Synthesis
+**Step 5.3: TRACE CALLEES**
+Record: `dmi_first_match(fwbug_list)`; on match, skip SMI via
+`request_mem_region_muxed` / `ioremap` / `iowrite8(val & ~BIT(0))` at
+FCH PM scratch. Same path 20XK already uses.
 
-**Step 9.1: Evidence**
+**Step 5.4: FOLLOW THE CALL CHAIN**
+Record: Userspace suspend (s2idle, default on modern AMD laptops) → ACPI
+LPS0 restore → skip SMI. Reachable on every suspend/resume of a 20XL T14
+Gen 2 AMD. Unprivileged users typically can suspend.
+
+**Step 5.5: SEARCH FOR SIMILAR PATTERNS**
+Record: Same file already pairs Gen1 T14 as 20UD+20UE and T14s as
+20UH+20UJ. T14 Gen2 was 20XK only until this commit — same hole
+`9a469c6dfab3` fixed for T14s Gen1.
+
+===============================================================
+PHASE 6: CROSS-REFERENCING AGAINST THE LOCAL TREE
+===============================================================
+
+**Step 6.1: DOES THE BUGGY CODE EXIST IN THIS TREE?**
+Record:
+- Tree: **7.3.0-rc4** (mainline).
+- File and `fwbug_list` exist. 20XK exists. 20XL **is present** because
+  `e25fb2258bddb` is already an ancestor of HEAD (`git merge-base --is-
+  ancestor` exit 0). That is the mainline landing, not a reason to
+  reject the fix on technical merit.
+- Pre-commit state (20XK without 20XL) is what this patch corrects. The
+  omission dates to `455cd867b85b` (2022).
+
+**Step 6.2: CHECK FOR BACKPORT COMPLICATIONS**
+Record: On this tree the hunk applies cleanly against the 20XK block.
+Expected difficulty: **clean apply**. (Older stables that still keep the
+table in `thinkpad_acpi.c` would need the same 8 lines next to 20XK
+there; that is not this checkout.)
+
+**Step 6.3: CHECK IF RELATED FIXES ARE ALREADY HERE**
+Record: No alternate 20XL fix. `git grep 20XL` hits only this new `pmc-
+quirks.c` entry. `9a469c6dfab3` is the analogous T14s fix, already here.
+
+===============================================================
+PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
+===============================================================
+
+**Step 7.1: IDENTIFY THE SUBSYSTEM AND ITS CRITICALITY**
+Record: `drivers/platform/x86/amd/pmc/` — AMD PMC s2idle. **IMPORTANT**
+for AMD Ryzen notebooks (`CONFIG_AMD_PMC`, depends on ACPI/PCI/SUSPEND).
+Not core mm/VFS, but suspend/resume on a current ThinkPad SKU.
+
+**Step 7.2: ASSESS SUBSYSTEM ACTIVITY**
+Record: Actively maintained; frequent DMI quirk additions. Table is the
+supported way to fix firmware s2idle bugs. MAINTAINERS: Shyam Sundar S
+K; Mario is the quirk author and reviewed this patch.
+
+===============================================================
+PHASE 8: IMPACT AND RISK ASSESSMENT
+===============================================================
+
+**Step 8.1: DETERMINE WHO IS AFFECTED**
+Record: Driver-specific / DMI-specific: Lenovo ThinkPad T14 Gen 2 AMD
+machine type **20XL** (e.g. 20XLS41C00). 20XK already quirked.
+CONFIG_AMD_PMC + s2idle.
+
+**Step 8.2: DETERMINE THE TRIGGER CONDITIONS**
+Record: s2idle suspend/resume with IOMMU (default). Intermittent but
+seen on short suspends; 10s stall. Users who close the lid trigger it.
+Not a theoretical race.
+
+**Step 8.3: DETERMINE THE FAILURE MODE SEVERITY**
+Record:
+- Failure: ~10s resume hang; PCI noirq waiters; all cores in SMM.
+  Original quirk commit also documented IOMMU page faults and post-
+  resume instability on this firmware SMI.
+- Severity: **HIGH** (multi-second system hang on resume; possible IOMMU
+  faults). Not a panic on every resume, but a serious production laptop
+  bug.
+
+**Step 8.4: CALCULATE RISK-BENEFIT RATIO**
+Record:
+- Benefit: **high** for 20XL owners (resume ~1s vs ~10s; matches 20XK).
+- Risk: **very low** (8 lines, DMI-gated, copies a years-old entry).
+- Ratio: strongly favors backport. Hardware-quirk exception category.
+
+===============================================================
+PHASE 9: FINAL SYNTHESIS
+===============================================================
+
+**Step 9.1: COMPILE THE EVIDENCE**
 
 FOR:
-- Real uninitialized-heap info leak to userspace via sysfs
-- World-readable `intc_data` (0444)
-- Function comment already required zeros;
-  `kmalloc`/`devm_kmalloc_array` never provided them
-- Bug present since the driver was added (v5.15); code exists in this
-  7.3 tree
-- 4-line, obviously correct `devm_kcalloc()` switch
-- Reviewed and applied by the platform/x86 maintainer
-- Author CCed stable@; v4 series posted to the stable list
-- Prerequisite patch 1 is already in this tree
+- Real firmware bug; missing second machine type of a known model
+- ~10s s2idle resume stall, PCI noirq pileup, SMM hold; original class
+  also caused IOMMU page faults
+- Hardware quirk / DMI ID — explicit stable exception
+- 8 lines, copy of 20XK, no new API
+- Tested on hardware (6.12.95, 14h suspend, two-day soak)
+- Reviewed by Mario Limonciello and Ilpo Järvinen
+- Precedent: `9a469c6dfab3` did the same for T14s Gen1
+- Bugzilla 221755; infrastructure present in this tree since 2023
+  (`e8ef8dd28c4c4`)
+- Applies cleanly beside 20XK
 
 AGAINST:
-- Niche Intel WWAN SAR driver, not a core path
-- Needs malformed ACPI to leave holes (though that path is explicit)
-- Compile-tested only, no `Tested-by`
-- Committed message omitted `Fixes:` / `Cc: stable` (not a negative per
-  pipeline rules)
+- No `Cc: stable` (expected; Ilpo routed via for-next)
+- Affects one ThinkPad SKU, not all users
+- Bugzilla page itself could not be fetched (403)
 
 UNRESOLVED:
-- Full Sashiko finding text (page did not return the patchset body)
-- Full verbatim Ilpo review mail (known: he asked to document the leak
-  path; then Reviewed-by + applied)
-- lore.kernel.org WebFetch returned 403; discussion reconstructed via
-  `b4 dig`, openwall, LKML archive, and spinics
+- Full bugzilla 221755 comment thread (403)
+- Direct lore.kernel.org HTML (403); mbox + mirrors were enough
 
-**Step 9.2: Stable rules**
-1. Obviously correct and tested? **PASS** (obvious kcalloc swap;
-   maintainer review; compile-tested)
-2. Real bug affecting users? **PASS** (heap data can reach sysfs)
-3. Important (crash/security/corruption/deadlock)? **PASS** —
-   security/info leak
-4. Small and contained? **PASS** — 8 lines in one function
-5. No new features/APIs? **PASS**
-6. Can apply to this tree? **PASS** — file, function, and
-   `devm_kmalloc_array` parent all exist here
+**Step 9.2: APPLY THE STABLE RULES CHECKLIST**
+1. Obviously correct and tested? **PASS** — identical 20XK entry; author
+   soak-tested; AMD + PDx86 review
+2. Fixes a real bug that affects users? **PASS** — 20XL s2idle stall,
+   bugzilla, hardware verification
+3. Important issue? **PASS** — HIGH: resume hang / SMM stall; original
+   bug class includes IOMMU faults
+4. Small and contained? **PASS** — +8 lines, one table
+5. No new features or APIs? **PASS** — DMI row for existing quirk
+6. Can apply to the local tree? **PASS** — `pmc-quirks.c` + 20XK +
+   `quirk_s2idle_spurious_8042` present
 
-**Step 9.3: Exception category**
-Record: Not a device-ID/quirk/DT/build/docs exception. It is a normal
-**security/uninitialized-data** bugfix.
+**Step 9.3: CHECK FOR EXCEPTION CATEGORIES**
+Record: **Hardware quirk/workaround** (DMI s2idle quirk), same class as
+USB/PCI/codec quirk table additions. Automatically stable-appropriate.
 
-**Step 9.4: Decision**
-This tree is 7.3-rc4. The INT1092 SAR driver and the non-zeroed
-allocation-plus-`continue` parse loop are part of this lineage.
-Switching to `devm_kcalloc()` is the minimal, correct way to stop
-leftover slab contents from being matched in `update_sar_data()` and
-printed by `intc_data_show()`. Prerequisite `30c906cff490c` is already
-here, so the patch is self-contained for this tree. That is a stable-
-quality security fix.
+**Step 9.4: MAKE YOUR DECISION**
+This is a textbook stable backport: a missing DMI match for a known
+firmware SMI bug on a shipping ThinkPad, eight lines, already reviewed
+and tested. It belongs in this tree’s stable lineage.
 
-### What the commit solves, and why it matters here
-`parse_package()` can skip malformed ACPI package entries and leave
-`device_mode_info[]` uninitialized. Those words can later be copied into
-`context->sar_data` and read through
-`/sys/bus/platform/devices/INTC1092:00/intc_data` (mode 0444). On 7.3
-this driver is present; without zeroing, that is a kernel info leak.
-`devm_kcalloc()` closes it with no behavioral change for well-formed
-firmware.
+===============================================================
+DETAILED EXPLANATION
+===============================================================
 
-### Stable rules / risk
-The change is four lines, maintainer-reviewed, and does not add APIs.
-Benefit is closing a userspace-visible leak; regression risk is
-essentially zero.
+**Problem:** T14 Gen 2 AMD has two Lenovo machine types. The kernel has
+skipped a resume-time NVMe SMI on 20XK since 2022. 20XL never matched,
+so firmware still traps into SMM on s2idle resume, stalling the machine
+~10 seconds (and historically this SMI also caused IOMMU page faults).
 
-### Concerns
-Needs patch 1’s `devm_kmalloc_array` conversion — **already in this
-tree**. No other blockers.
+**Stable rules:** Obviously correct, user-visible, small, no new API.
+Hardware-quirk exception applies.
+
+**Risk vs benefit:** Benefit is restoring normal ~1s resume on 20XL.
+Risk is a DMI match that can only fire on 20XL-like product names. No
+locking or core-path change.
+
+**Concerns:** None material on this 7.3-rc4 tree. The patch does not
+need other series members. Older stables that still keep the list in
+`thinkpad_acpi.c` would place the same row next to 20XK; that does not
+apply here.
+
+===============================================================
+VERIFICATION
+===============================================================
 
 Verification:
-- [Phase 1] Parsed tags: Reported-by Sashiko; Reviewed-by/SOB Ilpo
-  Järvinen; no Fixes in the commit; original mail CCed stable@
-- [Phase 2] Diff: `devm_kmalloc_array` → `devm_kcalloc` in
-  `parse_package()` only
-- [Phase 2] Confirmed skip/`continue` loop and `update_sar_data()` copy
-  in `intel_sar.c`
-- [Phase 3] Introducer `dcfbd31ef4bcf` (v5.15-rc1) is ancestor of HEAD
-- [Phase 3] Parent `30c906cff490c` is ancestor of HEAD (`merge-base
-  --is-ancestor` exit 0)
-- [Phase 3] `git describe HEAD` = `v7.3-rc4-27-gf0100363d8c37`; `make
-  kernelversion` = 7.3.0-rc4
-- [Phase 4] `b4 dig -c f5eb833730c07`: v4 2/2 at
-  patch.msgid.link/20260723-platx86-v4-2-93b4a178b595@cse.iitm.ac.in
-- [Phase 4] `b4 dig -a`: v1…v4; applied version is v4 (commit-message-
-  only change)
-- [Phase 4] `b4 dig -w`: pdx86 maintainers + stable@vger.kernel.org
-- [Phase 4] Cover letter: two bugfixes, compile-tested only; Ilpo
-  requested leak-path wording
-- [Phase 4] lore.kernel.org WebFetch: 403; used openwall/LKML/spinics
-  instead
-- [Phase 5] Call chain: `sar_probe` → `sar_get_data` → `parse_package`;
-  sysfs `intc_data_show` is 0444
-- [Phase 6] Buggy parse/sysfs path exists in this tree; kcalloc is the
-  correct fix for it
-- [Phase 8] Failure mode: kernel heap integers to userspace sysfs,
-  severity HIGH (info leak)
-- UNVERIFIED: verbatim Sashiko finding body; full Ilpo review email text
+- [Phase 1] Subject/tags parsed from `git log -1 e25fb2258bddb`: Add DMI
+  quirk; Links bugzilla 221755 and msgid; Tested-by author; Reviewed-by
+  Mario Limonciello and Ilpo Järvinen; no Fixes/Cc-stable
+- [Phase 1] Body: 10.25s s2idle stall on 20XL; verified 20XLS41C00 /
+  BIOS R1MET62W / 6.12.95
+- [Phase 2] `git show e25fb2258bddb`: +8 lines in `fwbug_list[]` only;
+  LENOVO/`20XL` → `quirk_s2idle_spurious_8042`
+- [Phase 2] Read `pmc-quirks.c`: skip SMI in
+  `amd_pmc_skip_nvme_smi_handler()`; 20XK block immediately above
+- [Phase 3] `git blame -L 66,82 pmc-quirks.c`: 20XK from `e8ef8dd28c4c4`
+  (2023); 20XL from `e25fb2258bddb`
+- [Phase 3] `git merge-base --is-ancestor 455cd867b85b HEAD` → 0; `git
+  show` confirms original list has 20XK, not 20XL
+- [Phase 3] `git merge-base --is-ancestor 9a469c6dfab3 HEAD` → 0; same
+  8-line missing-type pattern for T14s 20UJ
+- [Phase 3] Author log: only this amd/pmc commit; no later 20XL edits
+- [Phase 4] `b4 dig -c e25fb2258bddb`: lore msgid
+  20260717060744.1252065-2
+- [Phase 4] `b4 dig -a`: v1 only
+- [Phase 4] `b4 dig -w`: PDx86 list, Hans, Ilpo, Shyam, Mario
+- [Phase 4] `b4 dig -m /tmp/thread.mbox`: Mario Reviewed-by; Ilpo
+  applied [1/1]; no NAK; for-next routing note
+- [Phase 4] Openwall/Patchew mirrors confirm the same thread; Patchew “1
+  patch”
+- [Phase 4] lore.kernel.org HTTP 403; bugzilla 221755 HTTP 403
+- [Phase 4] Stable-list search: no hits for this subject
+- [Phase 5] `git grep amd_pmc_quirks_init`: probe in `pmc.c:938`;
+  restore via `amd_pmc_s2idle_restore` →
+  `amd_pmc_process_restore_quirks`
+- [Phase 5] semcode unavailable; callers from grep/read
+- [Phase 6] `make kernelversion` / `git describe HEAD`: 7.3.0-rc4 /
+  v7.3-rc4-27-gf0100363d8c37
+- [Phase 6] `git merge-base --is-ancestor e25fb2258bddb HEAD` → 0
+  (commit already in this mainline checkout)
+- [Phase 6] File and 20XK entry present; hunk would apply cleanly to the
+  pre-commit 20XK block
+- [Phase 7] Kconfig AMD_PMC: AMD Ryzen notebook s2idle; MAINTAINERS
+  Shyam / PDx86
+- [Phase 8] Failure mode from commit + `455cd867b85b`: SMM resume stall
+  / possible IOMMU faults; HIGH; DMI-limited
+- UNVERIFIED: bugzilla 221755 comment text (403)
+- UNVERIFIED: live lore HTML (403); mbox used instead
+
+The patch is a contained hardware quirk for a real s2idle hang on T14
+Gen 2 AMD 20XL and meets stable criteria on this tree.
 
 **YES**
 
- drivers/platform/x86/intel/int1092/intel_sar.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
-index 7263114f0b3d0..f506155f35d4d 100644
---- a/drivers/platform/x86/intel/int1092/intel_sar.c
-+++ b/drivers/platform/x86/intel/int1092/intel_sar.c
-@@ -91,10 +91,10 @@ static acpi_status parse_package(struct wwan_sar_context *context, union acpi_ob
- 	    item->package.count <= data->total_dev_mode)
- 		return AE_ERROR;
- 
--	data->device_mode_info = devm_kmalloc_array(&context->sar_device->dev,
--						    data->total_dev_mode,
--						    sizeof(*data->device_mode_info),
--						    GFP_KERNEL);
-+	data->device_mode_info = devm_kcalloc(&context->sar_device->dev,
-+					      data->total_dev_mode,
-+					      sizeof(*data->device_mode_info),
-+					      GFP_KERNEL);
- 	if (!data->device_mode_info)
- 		return AE_ERROR;
- 
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index 74ddf1d8289a9..09a30f3337596 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -71,6 +71,14 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "20XK"),
+ 		}
+ 	},
++	{
++		.ident = "T14 Gen2 AMD",
++		.driver_data = &quirk_s2idle_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20XL"),
++		}
++	},
+ 	{
+ 		.ident = "T14 Gen1 AMD",
+ 		.driver_data = &quirk_s2idle_spurious_8042,
 -- 
 2.53.0
 
