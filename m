@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DC9592B92;
-	Mon, 19 Oct 2026 14:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE14528DD9;
+	Mon, 19 Oct 2026 14:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792418428; cv=none; b=txmQCzauM66RsTb3IasDm/L+kHyd7LFl3Es5gsLNzBD9/lgdafnpx1Tc0nszkT7QFclN78iQVsc9te88wiRreraPROALvXY3XpjID19LqiruI2dWRo5DlOLCwfPmF723MSzQMFAUIWsPauD+Z0FwKcPNWpMS2AJJoL/LoyZPoV0=
+	t=1792418585; cv=none; b=ROXDJMHKeF8Mhm8pIQTHNwulcm16JGcyz+YZ6nqsHEyiGKrqYVbjxFTw4ceIRoAN4/at7RuYmgs8SlkudfwBThJVv2LaFHbYQ6llam6FsSRXV8nuVLEVUpyODJ9/k8tjTqY1wogT9+tzSTaUZjd+Nk9vSzwDPgJE1R+pa7MxmF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792418428; c=relaxed/simple;
-	bh=4Rp/XM0BDoxxGDmgkvVnAlFwp5YJnh3unci5+esLcs0=;
+	s=arc-20240116; t=1792418585; c=relaxed/simple;
+	bh=mQITwMWKBiKAgP34t0D6onZiPL8vWkWKKsJkcSCc/Jc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KpeSgqdwgr27vvBEiw9rvnTihlJfAUVpJ7HhRYcsbHNb1NoI79Rs4BlH9ehFTAtqtZXq2oIAy71+k/FF9CmpP9Nu0jLXurlCiIzh+zOUrDeOriswYINv2DBU3nL7QBLtax5f/dwdI99bFQYJyOXsBaThBoWj+DRQi1YECpqiRdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nfd/4S/j; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Tv//EsuAoXnl7Gkflky7ueFrsY1Ay5F7nwapHVMmj7aXyDuHhefTTXxUBtvZdqy49O68hOdmO1pi5R1dXJHLIy9P8Oa+ApraGoEKptyzDmC2OuK7wBHpipJ1eWIAouPgcm+Z85NFHuMJN3lEkYVd+4vhdmBHiVNkm0euxZ4k0vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2asbGwr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nfd/4S/j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E6981F000C8;
-	Mon, 19 Oct 2026 14:00:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2asbGwr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 682191F000C6;
+	Mon, 19 Oct 2026 14:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792418425;
-	bh=of1C+/M8BwjuAYp9FT+EIm9IrF5m8DlAapB+2n200kQ=;
+	s=k20260515; t=1792418582;
+	bh=wLdPCGvUXNvRoYDMbpd0S/lpiMhlBoSYMlhEUM3aMd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Nfd/4S/joHIXRf5MW3kWr62I1uJ1q/db+t0crcBZn+WZKREY+Zn3+b0cx0Xhxt90m
-	 UqOzqYWOb00gg1smcMvFMSn11YdZzNNPed7IhStyv/xQVjdHn31wMUBEVai9Zgg9gt
-	 UykFrU0KKqbwv1Dogi8Q5+HV6yLDed1fWY0dsZ2TuMmjfSSuQ1AvNa6Rp4ZsuCbuTY
-	 2lu0daYzgSekX/xYJBIUI8QhqrrX1EuFC2mW7Jtl1XDJfBrWsVu5ZRrxEIAiSSohfj
-	 9Dv5r9+6xLGbxBs3Z9Voo9VW1dhqqD05PsXBvrVR74U4f/Cn8IPNM3Y3O+30TWkgQL
-	 EQgmgoGoj8ySQ==
+	b=U2asbGwrkyzRN3s7Ybz0IN1CdeHSfHxC21kzSqHXZphIJ0M2ZplxyFQfecGBbpDgP
+	 nWiVdvykX+5lqAYYNN6/rkOqxIrbfdn5KjozwpjtP25f8OBKhZmyyt5N36H90t54WF
+	 VGddnr9TjVUDgABoPO1WXg6u6eYVntfF6tjKDKS57DWvjkJ2oi0EII0KLNjRXcg55O
+	 1KjNaBXIEoimdbd4Ce4w2nVyXx+scPF7DGN0LrAmRpMYATVl07+1JLHOFt0lLbRVgi
+	 z310bmIjPrA3bNcreBN2dehaB0W9n3vSjnpuMMpaTKMhxRssExqT3HkoktyslaOyIL
+	 s+EsrKpLhHdiA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Yap Weei Choong <ywc8891@gmail.com>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
+Cc: Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>,
+	Denis Benato <denis.benato@linux.dev>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	Shyam-sundar.S-k@amd.com,
+	corentin.chary@gmail.com,
+	luke@ljones.dev,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18] platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to s2idle quirk list
-Date: Mon, 19 Oct 2026 09:48:51 -0400
-Message-ID: <20261019135441.1420968-240-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.18-5.10] platform/x86: asus-nb-wmi: map ProArt key (0x8b) to KEY_PROG3
+Date: Mon, 19 Oct 2026 09:50:41 -0400
+Message-ID: <20261019135441.1420968-350-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261019135441.1420968-1-sashal@kernel.org>
 References: <20261019135441.1420968-1-sashal@kernel.org>
@@ -55,39 +56,23 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.18.57
 Content-Transfer-Encoding: 8bit
 
-From: Yap Weei Choong <ywc8891@gmail.com>
+From: Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>
 
-[ Upstream commit e25fb2258bddbcf70df69d1358be3e1274bdc5f2 ]
+[ Upstream commit 6303451189a6d8f304221065c44ccd597e0acbe5 ]
 
-The ThinkPad T14 Gen 2 AMD was sold under two machine types, 20XK and
-20XL, but only 20XK has been in the s2idle quirk list since the quirk
-was introduced in commit 455cd867b85b ("platform/x86: thinkpad_acpi:
-Add a s2idle resume quirk for a number of laptops").
+The dedicated "ProArt" key on the ASUS ProArt PX13 (HN7306) emits ASUS
+WMI event code 0x8b. This code is absent from the asus-nb-wmi sparse
+keymap, so pressing the key only produces a "Unknown key code 0x8b"
+message and does nothing in userspace.
 
-On 20XL machines the firmware SMI handler therefore still runs on the
-NVMe D3->D0 transition when exiting suspend-to-idle. With IOMMU
-translation enabled (the default), this intermittently stalls resume
-for ~10.25 seconds: seven devices across three root ports (nvme, both
-xhci_hcd functions, xhci-pci-renesas, snd_hda_intel x2, snd_rn_pci_acp3x)
-block in pci_pm_resume_noirq and are released simultaneously, consistent
-with all cores being held in SMM.
+On this model the key is exposed solely through the WMI interface and has
+no HID scancode, so it can only be handled inside asus-nb-wmi. Map 0x8b
+to KEY_PROG3 so the key emits a bindable event, consistent with the
+existing KEY_PROG3 mapping used for the ASUS programmable/Armoury key.
 
-Add the missing 20XL machine type, mirroring the existing 20XK entry.
-This is the same class of omission fixed by commit 9a469c6dfab3
-("platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle
-quirk list").
-
-Verified on a ThinkPad T14 Gen 2a (type 20XLS41C00, BIOS R1MET62W 1.32,
-kernel 6.12.95): with this entry the quirk message appears at probe and
-a 14-hour suspend resumes in ~1s with no noirq stalls, where previously
-even short suspends could hit the ~10s delay. A further two-day soak
-(short naps and two ~14-hour suspends) showed every resume clean.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=221755
-Signed-off-by: Yap Weei Choong <ywc8891@gmail.com>
-Tested-by: Yap Weei Choong <ywc8891@gmail.com>
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Link: https://patch.msgid.link/20260717060744.1252065-2-ywc8891@gmail.com
+Signed-off-by: Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
+Link: https://patch.msgid.link/20260719090843.66777-1-nizar.m.kabbani@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -95,433 +80,327 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 LLM Generated explanations, may be completely bogus:
 
-The local checkout is **Linux 7.3.0-rc4**
-(`v7.3-rc4-27-gf0100363d8c37`). The candidate is `e25fb2258bddb`
-(`platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to s2idle quirk list`).
-It is an 8-line DMI hardware-quirk addition: the sibling machine type
-20XK has been quirked since 2022; 20XL was omitted, and that omission
-causes ~10s s2idle resume stalls on T14 Gen 2 AMD.
+## Phase 1: Commit message forensics
 
-===============================================================
-PHASE 1: COMMIT MESSAGE FORENSICS
-===============================================================
+**Step 1.1 — Subject**
+Record: **[platform/x86: asus-nb-wmi:] [map] dedicated ProArt WMI event
+0x8b to KEY_PROG3**
+Subsystem: `platform/x86` (`asus-nb-wmi`). Verb: **map** — hardware-key
+enablement, not a refactor.
 
-**Step 1.1: PARSE THE SUBJECT LINE**
-Record: `[platform/x86/amd/pmc] [Add] [T14 Gen2 AMD machine type 20XL to
-the existing s2idle DMI quirk list]`
+**Step 1.2 — Tags** (ignoring pipeline `Signed-off-by: Sasha Levin` /
+`[Upstream commit …]` as instructed)
 
-**Step 1.2: PARSE ALL COMMIT MESSAGE TAGS**
-Record:
-- `Link: https://bugzilla.kernel.org/show_bug.cgi?id=221755` — user-
-  filed kernel bug
-- `Link:
-  https://patch.msgid.link/20260717060744.1252065-2-ywc8891@gmail.com` —
-  lore submission
-- `Signed-off-by: Yap Weei Choong <ywc8891@gmail.com>` (author)
-- `Tested-by: Yap Weei Choong <ywc8891@gmail.com>` (author verified on
-  hardware)
-- `Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>` (AMD PMC
-  author of the original quirk)
-- `Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>`
-  (platform-drivers-x86 maintainer)
-- `Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>`
-  (applied)
-- No `Fixes:` tag (expected)
-- No `Cc: stable` (expected)
-- No `Reported-by:` (bugzilla Link instead)
-- Ignore any Sasha Levin SOB (none on the real commit)
+- **Fixes:** none (expected)
+- **Reported-by:** none
+- **Tested-by:** none in the commit; the lore `From` host is `proart-
+  px13.tail9ecfc0.ts.net`, so the author submitted from the affected
+  machine
+- **Reviewed-by:** Denis Benato `<denis.benato@linux.dev>`; Ilpo
+  Järvinen `<ilpo.jarvinen@linux.intel.com>` (platform/x86 maintainer)
+- **Acked-by:** none
+- **Link:** `https://patch.msgid.link/20260719090843.66777-1-
+  nizar.m.kabbani@gmail.com`
+- **Cc: stable:** none (expected)
+- **Signed-off-by:** Nizar Al-Kabbani (author); Ilpo Järvinen
+  (maintainer application)
 
-**Step 1.3: ANALYZE THE COMMIT BODY TEXT**
-Record:
-- **Bug:** ThinkPad T14 Gen 2 AMD shipped as machine types 20XK and
-  20XL. Only 20XK was listed when the quirk was added in `455cd867b85b`.
-- **Symptom:** On 20XL, the firmware SMI still runs on NVMe D3→D0 at
-  s2idle exit. With IOMMU on (default), resume stalls ~10.25s; seven
-  devices on three root ports (`nvme`, both `xhci_hcd`, `xhci-pci-
-  renesas`, `snd_hda_intel` x2, `snd_rn_pci_acp3x`) block in
-  `pci_pm_resume_noirq` and wake together — consistent with all cores
-  stuck in SMM.
-- **Fix:** Add DMI entry 20XL mirroring 20XK. Same class of omission as
-  `9a469c6dfab3` (missing T14s Gen1 type).
-- **Versions:** Reproduced on kernel 6.12.95, BIOS R1MET62W 1.32, type
-  20XLS41C00. After the quirk: 14-hour suspend resumes in ~1s; two-day
-  soak was clean.
-- **Root cause:** Incomplete DMI coverage of a known Lenovo firmware SMI
-  bug, not a new kernel logic bug.
+Record: Maintainer + ASUS-WMI reviewer sign-off. No syzbot, no crash
+report.
 
-**Step 1.4: DETECT HIDDEN BUG FIXES**
-Record: Not a disguised cleanup. Explicit hardware quirk for a
-documented firmware bug. The verb is "Add" because that is how DMI quirk
-tables are extended.
+**Step 1.3 — Body**
+Record: **Bug:** ASUS ProArt PX13 (HN7306) ProArt key emits WMI 0x8b,
+which is missing from `asus_nb_wmi_keymap[]`.
+**Symptom:** `pr_info("Unknown key code 0x8b")` and no EV_KEY in
+userspace.
+**Root cause:** key is WMI-only on this model (no HID scancode), so only
+this driver can report it.
+**Fix:** map 0x8b → `KEY_PROG3`, matching Armoury/programmable-key
+practice.
+**Version info:** none in the message.
 
-===============================================================
-PHASE 2: DIFF ANALYSIS - LINE BY LINE
-===============================================================
+**Step 1.4 — Hidden bug fix?**
+Record: **No disguise.** This is an explicit missing-keymap fix /
+hardware enablement, not cleanup dressed as a fix.
 
-**Step 2.1: INVENTORY THE CHANGES**
-Record:
-- File: `drivers/platform/x86/amd/pmc/pmc-quirks.c` — **+8 / −0**
-- Function: none; static `fwbug_list[]` table only
-- Scope: single-file surgical DMI addition
+---
 
-**Step 2.2: UNDERSTAND THE CODE FLOW CHANGE**
-Record:
-- **Before:** DMI match for LENOVO/`20XK` applies
-  `quirk_s2idle_spurious_8042`. LENOVO/`20XL` does not match, so
-  `amd_pmc_quirks_init()` leaves `dev->quirks` unset for 20XL.
-- **After:** 20XL matches the same quirk. Probe logs the s2idle quirk;
-  `amd_pmc_process_restore_quirks()` runs
-  `amd_pmc_skip_nvme_smi_handler()` on s2idle restore;
-  `disable_8042_wakeup` is also set (same as 20XK).
-- Path: probe (`amd_pmc_quirks_init`) and s2idle restore
-  (`amd_pmc_s2idle_restore` → `amd_pmc_process_restore_quirks`). DMI-
-  gated; other machines unchanged.
+## Phase 2: Diff analysis
 
-**Step 2.3: IDENTIFY THE BUG MECHANISM**
-Record:
-- **Category:** Hardware workaround (DMI quirk table entry)
-- **Mechanism:** Skip the Lenovo BIOS SMI on NVMe D3→D0 by clearing bit
-  0 at `FCH_PM_BASE + FCH_PM_SCRATCH` (`0xFED80380` / SI3R) before the
-  D0 transition. 20XL never got that skip.
+**Step 2.1 — Inventory**
+Record: **1 file**, `drivers/platform/x86/asus-nb-wmi.c`, **+1 / −0**.
+Function/object: static table `asus_nb_wmi_keymap[]`. **Single-file
+surgical table insertion.**
 
-**Step 2.4: ASSESS THE FIX QUALITY**
-Record:
-- Obviously correct: identical copy of the adjacent 20XK entry with
-  product name `20XL`.
-- Minimal: 8 lines, no API/locking/refactor.
-- Regression risk: very low. Only DMI-matched 20XL machines. False-
-  positive would require another Lenovo product whose DMI product name
-  contains `20XL`; Lenovo machine types are 4-character prefixes and
-  existing entries (`20XK`, `20XF`, `20XH`, …) use the same pattern.
-- Red flags: none.
+**Step 2.2 — Flow**
+Record: **Before:** WMI notify → `sparse_keymap_report_event()` misses
+0x8b → log + drop.
+**After:** same path reports `KEY_PROG3` (code 202) as a bindable key.
+Path: firmware WMI event on key press (normal input path, not
+error/init).
 
-===============================================================
-PHASE 3: GIT HISTORY INVESTIGATION
-===============================================================
+**Step 2.3 — Bug mechanism**
+Record: **Hardware workaround / keymap gap** (same family as device-ID /
+input quirk table rows). Not UAF, leak, race, or crash. Unmapped sparse-
+keymap code is ignored.
 
-**Step 3.1: BLAME THE CHANGED LINES**
-Record:
-- 20XK block: `e8ef8dd28c4c4` (Mario Limonciello, 2023-07-10) — moved
-  the quirk from `thinkpad_acpi` into amd-pmc.
-- 20XK `driver_data`: later `5b9e07551faa7` (2025-07-24) switched it to
-  `&quirk_s2idle_spurious_8042`.
-- 20XL block: `e25fb2258bddb` (Yap Weei Choong, 2026-07-17) — this
-  candidate.
-- Original 20XK-only list: `455cd867b85b` (2022-04-28, `thinkpad_acpi`).
-  `git show 455cd867b85b` contains `20XK` and **not** `20XL`.
-- Bug present since v5.18-era quirk introduction; still present after
-  the 2023 move into amd-pmc.
+**Step 2.4 — Fix quality**
+Record: **Obviously correct** for a static `key_entry`. Minimal. No API,
+lock, or alloc change.
+**Regression risk:** low. Theoretical: some other ASUS model could emit
+WMI 0x8b for a different function. 0x8b sat in a hole between 0x8A
+(2012) and 0x8C (2012) with no mapping for ~14 years, so that is
+unlikely.
+**Note (not a blocker):** `hid-asus.c` maps HID usage 0x8b to
+`KEY_PROG1` (“ProArt Creator Hub”). This commit uses `KEY_PROG3` and
+states PX13 has no HID scancode, so this model should not double-report.
 
-**Step 3.2: FOLLOW THE FIXES: TAG**
-Record: No `Fixes:` tag. Referenced history:
-- `455cd867b85b` — **is an ancestor of HEAD** (`git merge-base --is-
-  ancestor` exit 0). Introduced the quirk; listed T14 Gen2 as 20XK only.
-- `9a469c6dfab3` — **is an ancestor of HEAD**. Precedent: add the
-  missing second Lenovo machine type (T14s Gen1 20UJ beside 20UH). Same
-  8-line DMI pattern.
+---
 
-**Step 3.3: CHECK FILE HISTORY FOR RELATED CHANGES**
-Record: Recent `pmc-quirks.c` work is more DMI quirk rows (Legion Go 2,
-Yoga 6, MECHREVO, TUXEDO, L14 Gen3, suspend delay). No refactor that
-this depends on. `git log e25fb2258bddb..HEAD -- pmc-quirks.c` shows no
-later edits of the 20XL entry. Standalone, not patch X/Y.
+## Phase 3: Git history
 
-**Step 3.4: CHECK THE AUTHOR'S OTHER COMMITS**
-Record: Yap Weei Choong has this single commit under
-`drivers/platform/x86/amd/`. Mario Limonciello (reviewer) originated the
-quirk and maintains this table. Ilpo Järvinen applied it as platform-
-drivers-x86 maintainer.
+**Step 3.1 — Blame**
+Record: Neighbor entries 0x8A / 0x8C from **a935eaecef2b20 /
+24c8a4c4ba6cfe (2012)**. Driver table since **b229ece9911cc (2011)**.
+The 0x8b row is **6303451189a6d** (this commit, 2026-07-19).
+`KEY_PROG3` for Armoury: **f56e676a7f1ca** (`v5.19-rc7~…`).
 
-**Step 3.5: CHECK FOR DEPENDENT/PREREQUISITE COMMITS**
-Record: On this tree the patch assumes `fwbug_list[]` and
-`quirk_s2idle_spurious_8042` in `pmc-quirks.c`. Both exist.
-`amd_pmc_quirks_init()` / `amd_pmc_process_restore_quirks()` exist in
-`pmc.c`. Applies standalone here.
+**Step 3.2 — Fixes: tag**
+Record: **N/A** — no `Fixes:`. This fills a table gap for hardware, not
+a regression from a prior commit.
 
-===============================================================
-PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
-===============================================================
+**Step 3.3 — File history**
+Record: Recent related work: DMI quirks, display-toggle keymap
+(`e521dc1687834`), ExpertBook keys (`3c75dc44ad11c`). Pattern of one-
+line keymap rows is established. **Standalone**, not `N/M`.
 
-**Step 4.1: FIND THE ORIGINAL PATCH DISCUSSION**
-Record:
-- `b4 dig -c e25fb2258bddb` →
-  https://patch.msgid.link/20260717060744.1252065-2-ywc8891@gmail.com
-- `b4 dig -a`: **v1 only**; committed version is that v1.
-- Thread (mbox): (1) author submission, (2) Mario `Reviewed-by` with no
-  requests, (3) Ilpo applied as `[1/1]` to `review-ilpo-next`.
-- No NAK. No reviewer `Cc: stable`. Ilpo’s boilerplate: fixes usually go
-  via for-next unless they are this-cycle or a clear regression — that
-  explains missing `Cc: stable`, not unsuitability for later stable
-  backport.
-- Lore HTTP 403 from this environment; thread recovered via `b4 dig -m`
-  and Openwall/Patchew mirrors.
+**Step 3.4 — Author**
+Record: Nizar Al-Kabbani’s only hit under `drivers/platform/x86/` here
+is this commit (hardware owner, not maintainer). Weight comes from
+**Denis Benato** and **Ilpo Järvinen**.
 
-**Step 4.2: CHECK WHO REVIEWED THE PATCH**
-Record (`b4 dig -w`): To `platform-driver-x86@vger.kernel.org`; Cc Hans,
-Ilpo, Shyam-sundar.S-k@amd.com (MAINTAINERS for AMD PMC), Mario, linux-
-kernel. Right lists and both AMD PMC and PDx86 maintainers.
+**Step 3.5 — Dependencies**
+Record: **None.** Needs existing `asus_nb_wmi_keymap[]`, `KEY_PROG3`,
+and `sparse_keymap_setup()`. All present. **Applies standalone.**
 
-**Step 4.3: SEARCH FOR THE BUG REPORT**
-Record: Bugzilla 221755 linked; HTTP 403, so **bugzilla comments are
-UNVERIFIED**. Commit body itself is a first-hand report: machine type
-20XLS41C00, BIOS, 6.12.95, 10.25s stall, soak test. Patchew lists a
-single-patch series.
+Commit **6303451189a6d** is an ancestor of HEAD (`git merge-base --is-
+ancestor` succeeded). First contained in **v7.3-rc1**
+(`v7.3-rc1~63^2~75`). **Not in v7.2.** Merged via `platform-
+drivers-x86-v7.3-1`.
 
-**Step 4.4: CHECK FOR RELATED PATCHES AND SERIES**
-Record: msgid `…-2` is git-send-email numbering. Ilpo applied `[1/1]`;
-Patchew: “posted 1 patch”. Standalone.
+---
 
-**Step 4.5: CHECK STABLE MAILING LIST HISTORY**
-Record: WebSearch of lore stable for this subject found **no**
-discussion of 20XL / this commit. No recorded reason to keep it out of
-stable.
+## Phase 4: Mailing list / external
 
-===============================================================
-PHASE 5: CODE SEMANTIC ANALYSIS
-===============================================================
+**Step 4.1 — b4 dig**
+Record: Lore: `https://patch.msgid.link/20260719090843.66777-1-
+nizar.m.kabbani@gmail.com`
+**v1 only** (single `[PATCH]`, applied as submitted).
+Denis: `Reviewed-by` only, no NAK.
+Ilpo: applied to `review-ilpo-next`; noted for-next routing (not a same-
+cycle regression). **No Cc: stable in review.**
 
-**Step 5.1: IDENTIFY KEY FUNCTIONS IN THE DIFF**
-Record: No function body edited. Table consumers:
-`amd_pmc_quirks_init()`, `amd_pmc_process_restore_quirks()`,
-`amd_pmc_skip_nvme_smi_handler()`. semcode MCP: not available; used `git
-grep`.
+**Step 4.2 — Recipients (`b4 dig -w`)**
+Record: Corentin Chary, Luke D. Jones, Denis Benato, Hans de Goede, Ilpo
+Järvinen, `platform-driver-x86@`, `linux-kernel@`. Right maintainers.
 
-**Step 5.2: TRACE CALLERS**
-Record:
-- `amd_pmc_quirks_init(dev)` from `amd_pmc_probe()` in `pmc.c` when
-  `CONFIG_SUSPEND` and `!disable_workarounds`.
-- `amd_pmc_process_restore_quirks(pdev)` from
-  `amd_pmc_s2idle_restore()`, the LPS0 `.restore` callback
-  (`acpi_register_lps0_dev`).
-- Impact: AMD notebook s2idle resume, DMI-limited to 20XL.
+**Step 4.3 — Bug report**
+Record: No bugzilla/syzbot. Author describes the unknown-key log from
+the PX13. WebFetch of lore URLs returned **403**; thread recovered via
+`b4 dig -m`.
 
-**Step 5.3: TRACE CALLEES**
-Record: `dmi_first_match(fwbug_list)`; on match, skip SMI via
-`request_mem_region_muxed` / `ioremap` / `iowrite8(val & ~BIT(0))` at
-FCH PM scratch. Same path 20XK already uses.
+**Step 4.4 — Series**
+Record: **Standalone v1.** No companion patches.
 
-**Step 5.4: FOLLOW THE CALL CHAIN**
-Record: Userspace suspend (s2idle, default on modern AMD laptops) → ACPI
-LPS0 restore → skip SMI. Reachable on every suspend/resume of a 20XL T14
-Gen 2 AMD. Unprivileged users typically can suspend.
+**Step 4.5 — stable@**
+Record: No stable-list discussion found for this subject.
 
-**Step 5.5: SEARCH FOR SIMILAR PATTERNS**
-Record: Same file already pairs Gen1 T14 as 20UD+20UE and T14s as
-20UH+20UJ. T14 Gen2 was 20XK only until this commit — same hole
-`9a469c6dfab3` fixed for T14s Gen1.
+---
 
-===============================================================
-PHASE 6: CROSS-REFERENCING AGAINST THE LOCAL TREE
-===============================================================
+## Phase 5: Semantic / call graph
 
-**Step 6.1: DOES THE BUGGY CODE EXIST IN THIS TREE?**
-Record:
-- Tree: **7.3.0-rc4** (mainline).
-- File and `fwbug_list` exist. 20XK exists. 20XL **is present** because
-  `e25fb2258bddb` is already an ancestor of HEAD (`git merge-base --is-
-  ancestor` exit 0). That is the mainline landing, not a reason to
-  reject the fix on technical merit.
-- Pre-commit state (20XK without 20XL) is what this patch corrects. The
-  omission dates to `455cd867b85b` (2022).
+**Step 5.1 — Functions**
+Record: Table `asus_nb_wmi_keymap[]` only (not a function body).
 
-**Step 6.2: CHECK FOR BACKPORT COMPLICATIONS**
-Record: On this tree the hunk applies cleanly against the 20XK block.
-Expected difficulty: **clean apply**. (Older stables that still keep the
-table in `thinkpad_acpi.c` would need the same 8 lines next to 20XK
-there; that is not this checkout.)
+**Step 5.2 — Callers**
+Record: `.keymap = asus_nb_wmi_keymap` on `asus_nb_wmi_driver`.
+`asus_wmi_input_init()` → `sparse_keymap_setup(..., keymap)`.
+`asus_wmi_notify()` → `sparse_keymap_report_event()`; miss → `"Unknown
+key code 0x%x"`.
 
-**Step 6.3: CHECK IF RELATED FIXES ARE ALREADY HERE**
-Record: No alternate 20XL fix. `git grep 20XL` hits only this new `pmc-
-quirks.c` entry. `9a469c6dfab3` is the analogous T14s fix, already here.
+**Step 5.3 — Callees**
+Record: `sparse_keymap_report_event` / `sparse_keymap_setup` only. No
+alloc/lock/I/O in the new row.
 
-===============================================================
-PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
-===============================================================
+**Step 5.4 — Reachability**
+Record: Firmware WMI interrupt/notify on physical ProArt key. Userspace
+sees an evdev event after the fix. Not a syscall bug. Unprivileged user
+with the laptop can press the key.
 
-**Step 7.1: IDENTIFY THE SUBSYSTEM AND ITS CRITICALITY**
-Record: `drivers/platform/x86/amd/pmc/` — AMD PMC s2idle. **IMPORTANT**
-for AMD Ryzen notebooks (`CONFIG_AMD_PMC`, depends on ACPI/PCI/SUSPEND).
-Not core mm/VFS, but suspend/resume on a current ThinkPad SKU.
+**Step 5.5 — Similar patterns**
+Record: Same driver: 0x86 `KEY_PROG1` (MyASUS), 0x38 /
+`ASUS_WMI_KEY_ARMOURY` `KEY_PROG3`, many other `KE_KEY` rows. hid-asus
+HID 0x8b → `KEY_PROG1` for PX Creator Hub (different transport).
 
-**Step 7.2: ASSESS SUBSYSTEM ACTIVITY**
-Record: Actively maintained; frequent DMI quirk additions. Table is the
-supported way to fix firmware s2idle bugs. MAINTAINERS: Shyam Sundar S
-K; Mario is the quirk author and reviewed this patch.
+---
 
-===============================================================
-PHASE 8: IMPACT AND RISK ASSESSMENT
-===============================================================
+## Phase 6: This checkout
 
-**Step 8.1: DETERMINE WHO IS AFFECTED**
-Record: Driver-specific / DMI-specific: Lenovo ThinkPad T14 Gen 2 AMD
-machine type **20XL** (e.g. 20XLS41C00). 20XK already quirked.
-CONFIG_AMD_PMC + s2idle.
+**Step 6.1 — Local tree**
+Record: `git describe HEAD` = **v7.3-rc4-27-gf0100363d8c37**. `make
+kernelversion` = **7.3.0-rc4**. Makefile `VERSION=7 PATCHLEVEL=3
+SUBLEVEL=0 EXTRAVERSION=-rc4`.
+Driver and keymap **exist**. Line 635 already has `{ KE_KEY, 0x8B, {
+KEY_PROG3 } }`. The pre-fix gap (0x8A then 0x8C) exists in **v7.2**;
+this 7.3-rc tree already includes the row because the commit landed in
+**v7.3-rc1**. That is mainline history, not a “already selected for
+stable” marker.
 
-**Step 8.2: DETERMINE THE TRIGGER CONDITIONS**
-Record: s2idle suspend/resume with IOMMU (default). Intermittent but
-seen on short suspends; 10s stall. Users who close the lid trigger it.
-Not a theoretical race.
+**Step 6.2 — Backport difficulty**
+Record: **Clean apply** on a tree with this keymap (context around
+0x8A/0x8C is the same as v7.2). One-line insert.
 
-**Step 8.3: DETERMINE THE FAILURE MODE SEVERITY**
-Record:
-- Failure: ~10s resume hang; PCI noirq waiters; all cores in SMM.
-  Original quirk commit also documented IOMMU page faults and post-
-  resume instability on this firmware SMI.
-- Severity: **HIGH** (multi-second system hang on resume; possible IOMMU
-  faults). Not a panic on every resume, but a serious production laptop
-  bug.
+**Step 6.3 — Related fixes here**
+Record: No alternate fix. This is the mapping. No other 0x8b WMI
+handling in `asus-nb-wmi.c`.
 
-**Step 8.4: CALCULATE RISK-BENEFIT RATIO**
-Record:
-- Benefit: **high** for 20XL owners (resume ~1s vs ~10s; matches 20XK).
-- Risk: **very low** (8 lines, DMI-gated, copies a years-old entry).
-- Ratio: strongly favors backport. Hardware-quirk exception category.
+---
 
-===============================================================
-PHASE 9: FINAL SYNTHESIS
-===============================================================
+## Phase 7: Subsystem
 
-**Step 9.1: COMPILE THE EVIDENCE**
+**Step 7.1**
+Record: **platform/x86 laptop hotkeys**. **PERIPHERAL / vendor-driver**,
+but `CONFIG_ASUS_NB_WMI` is common on ASUS x86 notebooks.
 
-FOR:
-- Real firmware bug; missing second machine type of a known model
-- ~10s s2idle resume stall, PCI noirq pileup, SMM hold; original class
-  also caused IOMMU page faults
-- Hardware quirk / DMI ID — explicit stable exception
-- 8 lines, copy of 20XK, no new API
-- Tested on hardware (6.12.95, 14h suspend, two-day soak)
-- Reviewed by Mario Limonciello and Ilpo Järvinen
-- Precedent: `9a469c6dfab3` did the same for T14s Gen1
-- Bugzilla 221755; infrastructure present in this tree since 2023
-  (`e8ef8dd28c4c4`)
-- Applies cleanly beside 20XK
+**Step 7.2**
+Record: **Active** (recent DMI quirks and keymap rows through 2026).
+Table format itself is mature (2011).
 
-AGAINST:
-- No `Cc: stable` (expected; Ilpo routed via for-next)
-- Affects one ThinkPad SKU, not all users
-- Bugzilla page itself could not be fetched (403)
+---
 
-UNRESOLVED:
-- Full bugzilla 221755 comment thread (403)
-- Direct lore.kernel.org HTML (403); mbox + mirrors were enough
+## Phase 8: Impact and risk
 
-**Step 9.2: APPLY THE STABLE RULES CHECKLIST**
-1. Obviously correct and tested? **PASS** — identical 20XK entry; author
-   soak-tested; AMD + PDx86 review
-2. Fixes a real bug that affects users? **PASS** — 20XL s2idle stall,
-   bugzilla, hardware verification
-3. Important issue? **PASS** — HIGH: resume hang / SMM stall; original
-   bug class includes IOMMU faults
-4. Small and contained? **PASS** — +8 lines, one table
-5. No new features or APIs? **PASS** — DMI row for existing quirk
-6. Can apply to the local tree? **PASS** — `pmc-quirks.c` + 20XK +
-   `quirk_s2idle_spurious_8042` present
+**Step 8.1 — Who**
+Record: **Driver-specific / hardware-specific:** ASUS notebooks that
+emit WMI 0x8b (documented: ProArt PX13 HN7306). Harmless no-op elsewhere
+(code never generated).
 
-**Step 9.3: CHECK FOR EXCEPTION CATEGORIES**
-Record: **Hardware quirk/workaround** (DMI s2idle quirk), same class as
-USB/PCI/codec quirk table additions. Automatically stable-appropriate.
+**Step 8.2 — Trigger**
+Record: Press the ProArt key. Common for owners of that model; **not** a
+race. Physical access only.
 
-**Step 9.4: MAKE YOUR DECISION**
-This is a textbook stable backport: a missing DMI match for a known
-firmware SMI bug on a shipping ThinkPad, eight lines, already reviewed
-and tested. It belongs in this tree’s stable lineage.
+**Step 8.3 — Failure mode**
+Record: **Dead key + `pr_info`**. No oops, hang, corruption, or UAF.
+**Severity: LOW** as a crash class; **real functional hardware miss**
+for that laptop.
 
-===============================================================
-DETAILED EXPLANATION
-===============================================================
+**Step 8.4 — Ratio**
+Record: **Benefit: moderate for those users** (key becomes bindable;
+only kernel path that can do it). **Risk: very low** (1 line, static
+table). **Ratio: favorable**, same as device-ID / keymap rows stable
+already takes.
 
-**Problem:** T14 Gen 2 AMD has two Lenovo machine types. The kernel has
-skipped a resume-time NVMe SMI on 20XK since 2022. 20XL never matched,
-so firmware still traps into SMM on s2idle resume, stalling the machine
-~10 seconds (and historically this SMI also caused IOMMU page faults).
+---
 
-**Stable rules:** Obviously correct, user-visible, small, no new API.
-Hardware-quirk exception applies.
+## Phase 9: Synthesis
 
-**Risk vs benefit:** Benefit is restoring normal ~1s resume on 20XL.
-Risk is a DMI match that can only fire on 20XL-like product names. No
-locking or core-path change.
+**For backporting**
+- One-line keymap row; reviewed by pdx86 maintainer and ASUS-WMI
+  reviewer; v1 applied unchanged
+- Real user-visible miss: unknown WMI code, key does nothing; WMI-only
+  on this model
+- Same shape as device IDs / input quirks / historical `asus-nb-wmi`
+  keymap additions (`33e21e56243eb` MyASUS, `e521dc1687834` display
+  toggle, `f56e676a7f1ca` Armoury `KEY_PROG3`)
+- `Documentation/process/stable-kernel-rules.rst`: hardware quirk / “oh,
+  that’s not good”, and device-ID-class table additions
+- No new API (`KEY_PROG3` already in uapi); no series dependency
+- Surrounding driver/keymap exist in this tree; patch applies cleanly
 
-**Concerns:** None material on this 7.3-rc4 tree. The patch does not
-need other series members. Older stables that still keep the list in
-`thinkpad_acpi.c` would place the same row next to 20XK; that does not
-apply here.
+**Against**
+- Not a crash, security hole, deadlock, or data corruption
+- Enablement for one model, not a regression
+- Ilpo took it via for-next, not as an urgent regression
+- hid-asus uses `KEY_PROG1` for HID 0x8b ProArt Creator Hub (userspace
+  binding may differ across models; reviewers accepted `KEY_PROG3`)
 
-===============================================================
-VERIFICATION
-===============================================================
+**Unresolved**
+- Lore HTML 403; mbox contents were used instead
+- Cannot prove no other ASUS SKU uses WMI 0x8b for something else (long-
+  standing hole makes that unlikely)
+- No stable@ thread
 
-Verification:
-- [Phase 1] Subject/tags parsed from `git log -1 e25fb2258bddb`: Add DMI
-  quirk; Links bugzilla 221755 and msgid; Tested-by author; Reviewed-by
-  Mario Limonciello and Ilpo Järvinen; no Fixes/Cc-stable
-- [Phase 1] Body: 10.25s s2idle stall on 20XL; verified 20XLS41C00 /
-  BIOS R1MET62W / 6.12.95
-- [Phase 2] `git show e25fb2258bddb`: +8 lines in `fwbug_list[]` only;
-  LENOVO/`20XL` → `quirk_s2idle_spurious_8042`
-- [Phase 2] Read `pmc-quirks.c`: skip SMI in
-  `amd_pmc_skip_nvme_smi_handler()`; 20XK block immediately above
-- [Phase 3] `git blame -L 66,82 pmc-quirks.c`: 20XK from `e8ef8dd28c4c4`
-  (2023); 20XL from `e25fb2258bddb`
-- [Phase 3] `git merge-base --is-ancestor 455cd867b85b HEAD` → 0; `git
-  show` confirms original list has 20XK, not 20XL
-- [Phase 3] `git merge-base --is-ancestor 9a469c6dfab3 HEAD` → 0; same
-  8-line missing-type pattern for T14s 20UJ
-- [Phase 3] Author log: only this amd/pmc commit; no later 20XL edits
-- [Phase 4] `b4 dig -c e25fb2258bddb`: lore msgid
-  20260717060744.1252065-2
-- [Phase 4] `b4 dig -a`: v1 only
-- [Phase 4] `b4 dig -w`: PDx86 list, Hans, Ilpo, Shyam, Mario
-- [Phase 4] `b4 dig -m /tmp/thread.mbox`: Mario Reviewed-by; Ilpo
-  applied [1/1]; no NAK; for-next routing note
-- [Phase 4] Openwall/Patchew mirrors confirm the same thread; Patchew “1
-  patch”
-- [Phase 4] lore.kernel.org HTTP 403; bugzilla 221755 HTTP 403
-- [Phase 4] Stable-list search: no hits for this subject
-- [Phase 5] `git grep amd_pmc_quirks_init`: probe in `pmc.c:938`;
-  restore via `amd_pmc_s2idle_restore` →
-  `amd_pmc_process_restore_quirks`
-- [Phase 5] semcode unavailable; callers from grep/read
-- [Phase 6] `make kernelversion` / `git describe HEAD`: 7.3.0-rc4 /
-  v7.3-rc4-27-gf0100363d8c37
-- [Phase 6] `git merge-base --is-ancestor e25fb2258bddb HEAD` → 0
-  (commit already in this mainline checkout)
-- [Phase 6] File and 20XK entry present; hunk would apply cleanly to the
-  pre-commit 20XK block
-- [Phase 7] Kconfig AMD_PMC: AMD Ryzen notebook s2idle; MAINTAINERS
-  Shyam / PDx86
-- [Phase 8] Failure mode from commit + `455cd867b85b`: SMM resume stall
-  / possible IOMMU faults; HIGH; DMI-limited
-- UNVERIFIED: bugzilla 221755 comment text (403)
-- UNVERIFIED: live lore HTML (403); mbox used instead
+**Stable rules checklist**
+1. Obviously correct and tested? **PASS** — one table row; maintainer
+   review; author on PX13
+2. Real bug that affects users? **PASS** — dedicated key dead without
+   the mapping
+3. Important (crash/security/corruption/deadlock)? **PASS as hardware
+   quirk / device-ID-class**, not as a panic
+4. Small and contained? **PASS** — +1 line, one file
+5. No new features/APIs? **PASS** — existing `KEY_PROG3`; no new
+   syscall/sysfs
+6. Can apply to this tree? **PASS** — keymap context matches; no extra
+   commits needed
 
-The patch is a contained hardware quirk for a real s2idle hang on T14
-Gen 2 AMD 20XL and meets stable criteria on this tree.
+**Exception:** hardware keymap / input quirk table entry (device-ID
+analogue).
+
+This tree is **7.3-rc4**, which already contains the row via v7.3-rc1.
+That does not change technical merit: the driver is here, the change is
+a one-line hardware table fix, and it is the kind of addition stable
+accepts. It is not a new driver, not an API, and not a refactor.
+
+### What it solves for stable users
+ProArt PX13 owners on a stable kernel with `asus-nb-wmi` get a working,
+bindable ProArt key instead of a dmesg-only unknown code. Risk is a
+single unused WMI code gaining `KEY_PROG3` globally in this driver.
+
+### Verification
+- **[Phase 1]** Parsed commit `6303451189a6d`; tags as above; no
+  Fixes/stable/syzbot
+- **[Phase 2]** `git show`: +1 line in `asus_nb_wmi_keymap[]`
+- **[Phase 3]** blame 0x8A/0x8C = 2012; `git merge-base --is-ancestor
+  6303451189a6d HEAD` = yes; `git describe --contains` =
+  `v7.3-rc1~63^2~75`; not in v7.2
+- **[Phase 3]** `git log --oneline --author='Nizar Al-Kabbani' --
+  drivers/platform/x86/` = this commit only
+- **[Phase 4]** `b4 dig -c/-a/-w/-m`: v1, lore msgid above, recipients
+  listed, mbox has Denis Rb and Ilpo apply mail
+- **[Phase 4]** WebFetch lore = 403; stable search = no thread for this
+  patch
+- **[Phase 5]** keymap used in `asus_nb_wmi_driver`; report path
+  `asus_wmi_notify` @ `asus-wmi.c:4692`; unknown log @ 4694
+- **[Phase 5]** hid-asus `case 0x8b` → `KEY_PROG1` (Amit Chaudhari,
+  `831f70a5b93bd`)
+- **[Phase 6]** `git describe HEAD` = v7.3-rc4-27-gf0100363d8c37; line
+  635 already has the mapping; v7.2 file has 0x8A then 0x8C, no 0x8B
+- **[Phase 7]** `CONFIG_ASUS_NB_WMI` in `drivers/platform/x86/Kconfig`
+- **[Phase 8]** Failure = unknown key log + no evdev; severity LOW as
+  crash, real as hardware enablement
+- **UNVERIFIED:** whether any other ASUS model emits WMI 0x8b; lore HTML
+  (403)
+
+The change meets stable rules as a small, reviewed hardware
+keymap/quirk, not as a crash fix.
 
 **YES**
 
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index 74ddf1d8289a9..09a30f3337596 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -71,6 +71,14 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20XK"),
- 		}
- 	},
-+	{
-+		.ident = "T14 Gen2 AMD",
-+		.driver_data = &quirk_s2idle_spurious_8042,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20XL"),
-+		}
-+	},
- 	{
- 		.ident = "T14 Gen1 AMD",
- 		.driver_data = &quirk_s2idle_spurious_8042,
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 8dad7bdb8f612..a840d16e063e0 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -622,6 +622,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x86, { KEY_PROG1 } }, /* MyASUS Key */
+ 	{ KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
+ 	{ KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
++	{ KE_KEY, 0x8B, { KEY_PROG3 } }, /* ProArt key (PX13/HN7306) */
+ 	{ KE_KEY, 0x8C, { KEY_SWITCHVIDEOMODE } }, /* SDSP DVI only */
+ 	{ KE_KEY, 0x8D, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + DVI */
+ 	{ KE_KEY, 0x8E, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + DVI */
 -- 
 2.53.0
 
