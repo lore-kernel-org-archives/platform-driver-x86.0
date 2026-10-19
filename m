@@ -1,350 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DEA64237F;
-	Mon, 19 Oct 2026 14:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF864A3F34
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 14:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792418786; cv=none; b=KomAY3HpKd7jRhJjEVUkGZga1r2VdEuhdDLy4vviTNHBjlVJFu+wYabdR29ZBNwtNaniPd3aM7QPnY/Wyu7p3Kj01uwa3y2eGwUN0Bph5ZYqzhz3nRdUDBcUDq+wNFSCVo657kTvdlO7y+/iQW0T3XzFhwo/7D4/Gn/TwoCbAh8=
+	t=1792419816; cv=none; b=DwtISR+eoLOf4VLsm51CTfiEZ+8fgpZZT2RqXf1O2skHqsEBXJTDLHYb140qgTc3ppj7alN1ZR4UsdKU9vAODH6CmxeMlUeJUiimDHlh3NiGsguaOEhvRNgWevhzGSONOMaAAcWhAhJHqk1T3yAGrOroGHcPbiKDd3ta3sWi68A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792418786; c=relaxed/simple;
-	bh=pygUcnzaksX9aU8kJ88BWTM71IAxaDaqLTBnSiwPHag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pgfvqb/G2Qts4mIM8M9hKlI4LjG2anjPbVxgkL2UkxSYiRaLwvjFrXEWDCOdkGwGF3FAiNNTw/7AKdQvfD44kBfUdvd7E5mcBbKI4xBorBdhdG/Xdr8pASD5KK/Vt0mxkHGNeJhVUiVWWWAesDBa16KqdRY2OEbEqrEh/RYX9pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCKdYXhA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792419816; c=relaxed/simple;
+	bh=qDSERsCNQSFnHcVNhtUWBKFx6lf6cL7WoenLEdoTiA0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jVET/FyynUqdhtbserLXi6oX2t93afSeLQsaeO7OqeraMSNoi5aTQwVkWioP2EznYoc/m3o2kGx6F598+uwuT83gcy53ZQGUiolV+1LNphN0T9TimEUN33n3yKMNaYldG3tBNCKCmYf2G9M43MprcGPZeHxsLSZFTy3x5Z+GESk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=mRvj8o0J; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCKdYXhA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F451F000C7;
-	Mon, 19 Oct 2026 14:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792418783;
-	bh=+zdzCHQBF84phwrViAwt8IDjEeqG5XBif9izD52XHEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mCKdYXhA1LpdN9IF42ifafMvinE+7DyUltDx/1WXXgVGeTGKT8rfaIkbPSqr1b7PK
-	 DYvYCpR8BqLrfqnkCaAyrW0hjpDQIrEFYEJbQIyjEZjVfa1eqfxSK46qOuOtGYHt7m
-	 2MiAiUwbb2LNyuPyb7wrmWHwA5cdYnObsJ0OecgSZS+65VIzapfhPEoVTGLxkvej1Q
-	 tDscrCIhuhA/c+mfsMvTclL39zSiW21DGLlu2VwoWejpy0+MLvdd8a4Px4CZ+9R3Ys
-	 hEoOX9mLKj9FeRLmvf6onvPU7uYsc6vmtff+P5IMdOcIyMc7+3v2mzmydSKuM0GexG
-	 ZFAdn3Y2OF4uA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Muralidhara M K <muralidhara.mk@amd.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	naveenkrishna.chatradhi@amd.com,
-	hansg@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18] platform/x86/amd/hsmp: Validate _DSD mailbox sub-package element count
-Date: Mon, 19 Oct 2026 09:53:04 -0400
-Message-ID: <20261019135441.1420968-493-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261019135441.1420968-1-sashal@kernel.org>
-References: <20261019135441.1420968-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="mRvj8o0J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1792419801; x=1792679001;
+	bh=qDSERsCNQSFnHcVNhtUWBKFx6lf6cL7WoenLEdoTiA0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=mRvj8o0JWdNz1VPaEHsP8Kw08WlOJVfKNcXS64tb/arL2BDzPZrGGWoIaIuN5Ms0H
+	 e/YZkyGRNLeYd41lJHs2dZX4uCK2rw8EpbOM5Q18erDeknHoFjfACltP47Wm6i+5pf
+	 2FG1L4hXipxCr/WwfSAO2kDSIkXSwBuXBY2afqK9ebNvvI0vqBE728/0cqcqCauqdA
+	 iXV1PJnVAJY0OACmGuX+/vlretBeSoRm/F/n0nifIWV/OzGkCA1STEZ5Qb9TAGwtZo
+	 iceLl7T8/UVV1+ONba80t/ovlCQgvp+bM2C6b5N3TgZvnvbIhKJ2nUa3GzqicLeWqE
+	 FtoDvWPpDnbHw==
+Date: Mon, 19 Oct 2026 14:23:18 +0000
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com
+From: Jona Sadjak <jona.sadjak@proton.me>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [BUG] platform/x86: hp-wmi: OMEN board 8603 gets no platform profile, and a 0x1B event loop once it does
+Message-ID: <69aafae4-acbe-4e69-91ec-204f1f7aa310@proton.me>
+In-Reply-To: <26460fe0-b8c6-42fc-847d-3cbeea8d3721@proton.me>
+References: <26460fe0-b8c6-42fc-847d-3cbeea8d3721@proton.me>
+Feedback-ID: 174706356:user:proton
+X-Pm-Message-ID: 70eabe0b6cea251a1dca5854edb37c64ae770bbb
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.18.57
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Muralidhara M K <muralidhara.mk@amd.com>
+Hi Hans, hi Ilpo,
 
-[ Upstream commit 0d7a2664494534d6152be9bd9bf1cb1d089c67d3 ]
+On my HP OMEN laptop with DMI board name 8603, hp-wmi never registers
+a platform profile, although 8603 is listed in
+omen_thermal_profile_boards. Without the OMEN performance mode, the EC
+holds the CPU to about 45 W under sustained load. I found two separate
+problems in the driver. With a local workaround for both, performance
+mode works and removes that limit.
 
-hsmp_read_acpi_dsd() dereferenced elements[0] and elements[1] of each
-mailbox sub-package before confirming the package actually held two
-elements, allowing an out-of-bounds read on a malformed _DSD.
+System
+------
+=C2=A0 Product:=C2=A0 OMEN by HP Laptop 17-cb0xxx (cb0905ng specifically)
+=C2=A0 Board:=C2=A0 =C2=A0 8603
+=C2=A0 BIOS:=C2=A0 =C2=A0 =C2=A0F.53 (04/24/2024)
+=C2=A0 CPU:=C2=A0 =C2=A0 =C2=A0 Intel Core i7-9750H
+=C2=A0 GPU:=C2=A0 =C2=A0 =C2=A0 NVIDIA GeForce RTX 2060 Mobile (nvidia-open=
+ kernel modules)
+=C2=A0 Kernel:=C2=A0 =C2=A07.2.11-arch1-1 (Arch Linux), tainted 12292 (S O =
+E).
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 O and E come from out-of-tree mod=
+ules (nvidia-open, and the
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 hp-wmi copy used for testing), S =
+from MSR writes by
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 throttled, which I used to raise =
+the RAPL limits. The code
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 paths below look unchanged in v7.=
+3.
 
-Verify package.count >= 2 first, then fetch the string and integer
-objects.
+Problem 1: the EC profile read fails, so setup gives up silently
+----------------------------------------------------------------
+thermal_profile_setup() calls platform_profile_omen_get_ec(), which
+reads EC offset 0x95. On this machine that byte reads 0x37, and it
+stays 0x37 after switching modes:
 
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Link: https://patch.msgid.link/20260625123337.886435-3-muralidhara.mk@amd.com
-Link: https://patch.msgid.link/20260629155634.1807598-3-muralidhara.mk@amd.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+=C2=A0 # modprobe ec_sys
+=C2=A0 # od -An -tx1 -j 0x95 -N1 /sys/kernel/debug/ec/ec0/io
+=C2=A0 =C2=A037
 
-LLM Generated explanations, may be completely bogus:
+0x37 is not one of the known v0/v1 values, so the function returns
+-EINVAL. hp_wmi_bios_setup() ignores the return value of
+thermal_profile_setup(), so nothing is logged, there is no
+/sys/firmware/acpi/platform_profile, and power-profiles-daemon falls
+back to its placeholder driver.
 
-## Phase 1: Commit message forensics
+The rest of the path works on this board.
+omen_get_thermal_policy_version() returns 0, and
+HPWMI_SET_PERFORMANCE_MODE accepts all three modes (it returns the
+requested mode). Logged with a debug print I added after
+omen_thermal_profile_set():
 
-**Step 1.1:** Record: `[platform/x86/amd/hsmp] [Validate] [check _DSD
-mailbox sub-package count before indexing elements[0]/[1]]`
+=C2=A0 hp_wmi: Omen thermal policy version 0, set mode 0x00, result 0
+=C2=A0 hp_wmi: Omen thermal policy version 0, set mode 0x01, result 1
+=C2=A0 hp_wmi: Omen thermal policy version 0, set mode 0x02, result 2
 
-**Step 1.2:** Record: tags present:
-- `Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>`
-  (platform-drivers-x86 maintainer)
-- `Link: https://patch.msgid.link/20260625123337.886435-3-
-  muralidhara.mk@amd.com` (v2 7-patch series)
-- `Link: https://patch.msgid.link/20260629155634.1807598-3-
-  muralidhara.mk@amd.com` (v2 4-patch series, applied version)
-- `Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>` (author)
-- `Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>`
-  (maintainer apply)
-- No `Fixes:`, no `Reported-by:`, no `Cc: stable` (absence is expected)
-- No syzbot, no Tested-by, no CVE
+Problem 2: event 0x1B after every mode change makes the profile cycle
+---------------------------------------------------------------------
+After working around problem 1, the firmware sends WMI event 0x1B
+(HPWMI_FN_P_HOTKEY) each time the thermal mode is set: once at module
+load and again on every switch. hp_wmi_notify() handles it as the Fn+P
+key and calls platform_profile_cycle(). That sets the next mode, which
+triggers another 0x1B, so the profile cycles performance -> cool ->
+balanced -> performance without end. kacpi_notify workers use
+noticeable CPU, and the fans stay low, presumably because the EC
+restarts its fan adjustment on every switch. As far as I can tell,
+this laptop has no Fn+P key.
 
-**Step 1.3:** Record: `[Bug: hsmp_read_acpi_dsd() indexed mailbox sub-
-package elements[0] and elements[1] before checking package.count]
-[Symptom: out-of-bounds read on malformed ACPI _DSD] [Versions: none
-stated] [Root cause: missing count check before pointer fetch]`
+With the event ignored on this board, the log shows it arriving
+together with each mode change:
 
-Cover letter for the 4-patch series: “This series hardens the AMD HSMP
-ACPI driver against malformed firmware.” Patches 1–2 are ACPI input
-validation; this is patch 2.
+=C2=A0 hp_wmi: ignoring Fn+P event (0x1b) on Omen
+=C2=A0 hp_wmi: Omen thermal policy version 0, set mode 0x00, result 0
+=C2=A0 hp_wmi: Registered as platform profile handler
+=C2=A0 hp_wmi: ignoring Fn+P event (0x1b) on Omen
+=C2=A0 hp_wmi: Omen thermal policy version 0, set mode 0x01, result 1
 
-**Step 1.4:** Record: `[Not disguised. Explicit OOB-read fix. “Validate”
-here is a real bounds check, not style cleanup.]`
+Effect on CPU power
+-------------------
+Default mode (no platform profile), sustained CPU load:
+=C2=A0 - package power settles at 44.5-45 W, sometimes drifting down to
+=C2=A0 =C2=A0 about 40 W, at 2.9-3.3 GHz all-core and 67-79 C
+=C2=A0 - MSR_CORE_PERF_LIMIT_REASONS (0x64F) shows PL1 as the active limit
+=C2=A0 - MSR_PKG_POWER_LIMIT already reads PL1 =3D PL2 =3D 90 W from firmwa=
+re,
+=C2=A0 =C2=A0 and the limit stays at 45 W even with both the MSR and the MC=
+HBAR
+=C2=A0 =C2=A0 copy set to 90 W. MSR_PLATFORM_POWER_LIMIT (0x65C) is disable=
+d.
+=C2=A0 =C2=A0 So the 45 W limit comes from outside the registers the OS can
+=C2=A0 =C2=A0 see, presumably the EC.
 
-## Phase 2: Diff analysis
+Performance mode, via the workaround:
+=C2=A0 - under full load the CPU holds 3.9-4.0 GHz all-core at 65-75 W
+=C2=A0 =C2=A0 package power, at 85-97 C, and the fans ramp up properly
+=C2=A0 - this matches what OMEN Gaming Hub's performance mode did on
+=C2=A0 =C2=A0 Windows on the same machine
 
-**Step 2.1:** Record: `[drivers/platform/x86/amd/hsmp/acpi.c: +9/-3]
-[function: hsmp_read_acpi_dsd] [single-file surgical fix]`
+Switching back to performance at runtime
+----------------------------------------
+After switching to balanced and then back to performance at runtime,
+the call succeeds ("set mode 0x01, result 1") and platform_profile
+reads performance, but package power stays limited to 40-45 W.
+Sending performance again or unplugging and replugging AC does not
+help. A suspend/resume cycle (deep) does restore the full power, and
+so does a reboot, where balanced and then performance are set during
+startup.
+So the EC seems to apply the higher limit only at boot or on resume.
 
-**Step 2.2:** Record: Before: after `msgobj =
-&mailbox_package->package.elements[j]`, the code immediately did `msgstr
-= &msgobj->package.elements[0]` and `msgint =
-&msgobj->package.elements[1]`, then checked `msgobj->type`,
-`msgstr->type`, and `msgint->type`. After: check `msgobj->type !=
-ACPI_TYPE_PACKAGE || msgobj->package.count < 2` first (`||` short-
-circuits, so `.package.count` is not read on a non-package), then take
-the two element pointers, then check string/integer types. Probe error
-path: malformed firmware now returns `-EINVAL` instead of reading off
-the end of the ACPI object array.
+Local workaround (not a proposed fix)
+-------------------------------------
+Shown against v7.3 for readability. I tested the same two changes
+(plus debug prints) on an out-of-tree copy of hp-wmi.c that is synced
+with v7.0.12, not on a mainline build.
 
-**Step 2.3:** Record: `[Bug category: buffer overflow / out-of-bounds
-AND type-confused union access] [Mechanism: ACPI package elements array
-is sized to package.count; count 0 or 1 makes elements[0]/elements[1]
-OOB. Type was also checked after the dereference, so a non-PACKAGE
-object was read as a package.]`
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -1391,6 +1391,9 @@
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_info("Unknown key code -=
+ 0x%x\n", key_code);
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;
+=C2=A0 =C2=A0 =C2=A0case HPWMI_FN_P_HOTKEY:
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 /* board 8603 sends this after every thermal m=
+ode change */
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (is_omen_thermal_profile())
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 break;
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0platform_profile_cycle();
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;
+=C2=A0 =C2=A0 =C2=A0case HPWMI_OMEN_KEY:
+@@ -1722,7 +1725,13 @@
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*profile =3D PLATFORM_PROFILE_COOL;
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;
+=C2=A0 =C2=A0 =C2=A0default:
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL;
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 /* EC reports 0x37 on board 8603: trust the la=
+st set profile */
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (active_platform_profile =3D=3D PLATFORM_PR=
+OFILE_COOL ||
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 active_platform_profile =3D=3D P=
+LATFORM_PROFILE_PERFORMANCE)
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *profile =3D active_platform_pro=
+file;
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 else
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *profile =3D PLATFORM_PROFILE_BA=
+LANCED;
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 break;
+=C2=A0 =C2=A0 =C2=A0}
 
-**Step 2.4:** Record: `[Obviously correct: reorder of existing checks
-plus one count test. No unrelated edits. Regression risk very low: well-
-formed _DSD (count >= 2, string+integer) is unchanged; only malformed
-firmware takes the new -EINVAL path.]`
+=C2=A0 =C2=A0 =C2=A0return 0;
 
-## Phase 3: Git history
+Trusting the last set profile also matters for
+omen_powersource_event(). When the EC value was simply mapped to
+"balanced", that handler kept re-sending the user's profile on AC
+events. Ignoring 0x1B for every Omen board is obviously too broad;
+a per-board flag (skip the EC read, ignore 0x1B) may be the right
+shape, but you know the other boards far better than I do.
 
-**Step 3.1:** Record: `[Buggy dereference introduced in ba8dcff0e9c4f
-("platform/x86/amd/hsmp: Add support for ACPI based probing",
-2024-01-06). First in v6.9. Moved unchanged to acpi.c in 969f915473d8c
-(v6.13). Present for ~2 years before this fix.]`
+I'm happy to test patches and to send acpidump output or more logs.
 
-**Step 3.2:** Record: `[No Fixes: tag. Original buggy commit
-ba8dcff0e9c4f is an ancestor of this HEAD.]`
+Note on how this report was made: I used an AI assistant (Claude,
+claude-opus-5-5) to help read the driver source, interpret my
+measurements and draft this mail. All logs and measurements come from
+my laptop, I applied and tested the workaround myself, and I have
+checked the text.
 
-**Step 3.3:** Record: `[Sibling series (self-contained, this patch does
-not need the others):`
-- `4c7d1b4cd75a7 Validate ACPI UID before parsing socket index (1/4)`
-- `0d7a266449453 this commit (2/4)`
-- `b558cbed39af2 Pass struct device explicitly (3/4, pure refactor)`
-- `e5e511f5d9e05 Gate the data plane on a fully initialized socket
-  (4/4)`
-`] [Standalone: yes. No shared types or helpers.]`
+Thanks,
+Jona
 
-**Step 3.4:** Record: `[Author Muralidhara M K is an AMD HSMP
-contributor (many HSMP commits). Subsystem maintainers: Naveen Krishna
-Chatradhi (MAINTAINERS), applied/reviewed by Ilpo Järvinen (pdx86).]`
-
-**Step 3.5:** Record: `[No functional prerequisites. Later HEAD commit
-b558cbed39af2 changed the prototype to hsmp_read_acpi_dsd(struct device
-*dev, struct hsmp_socket *sock); that is a follow-up, not a dependency
-of this bounds check.]`
-
-## Phase 4: Mailing list
-
-**Step 4.1:** Record: `[b4 dig: https://patch.msgid.link/20260629155634.
-1807598-3-muralidhara.mk@amd.com] [Revisions: combined UID+_DSD patch as
-2/7 on 2026-06-25; split to 2/4 on 2026-06-29 after Ilpo asked for a
-split; applied version is that 2/4] [Ilpo: “totally independent changes
-so they should be split”; then Reviewed-by. No NAK, no stable
-nomination, no concern about the OOB logic itself.]`
-
-**Step 4.2:** Record: `[To: Ilpo Järvinen; Cc: platform-
-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org. Right
-maintainer and list.]`
-
-**Step 4.3:** Record: `[No bugzilla/syzbot report. Bug was found by
-review of the ACPI parser, not a user crash. Cover letter: “based on the
-review discussion at [1]”.]`
-
-**Step 4.4:** Record: `[Part of a 4-patch hardening series. This hunk is
-independent. Patch 3 is explicitly “pure refactor”; patch 4 is a
-different race. Do not need 3/4 or 4/4 for this OOB fix.]`
-
-**Step 4.5:** Record: `[lore.kernel.org/stable search returned HTTP 403.
-UNVERIFIED: no confirmed stable-list discussion.]`
-
-## Phase 5: Code semantics
-
-**Step 5.1:** Record: `[hsmp_read_acpi_dsd]`
-
-**Step 5.2:** Record: `[Callers: hsmp_parse_acpi_table() → init_acpi() →
-hsmp_acpi_probe(). Probe of the AMD HSMP ACPI platform device
-(CONFIG_AMD_HSMP_ACPI). Not interrupt context, not a syscall. One call
-site.]`
-
-**Step 5.3:** Record: `[acpi_evaluate_object_typed("_DSD"),
-is_acpi_hsmp_uuid(), strncmp on MSG_*_STR, ACPI_FREE. No locks, no
-allocation beyond the ACPI buffer already obtained.]`
-
-**Step 5.4:** Record: `[Reachable at driver bind when firmware exposes
-the HSMP ACPI object (EPYC / MI300A). Unprivileged userspace cannot
-inject a malformed _DSD on a normal system; the trigger is firmware.
-Broken/tampered ACPI tables can hit it at probe.]`
-
-**Step 5.5:** Record: `[Outer _DSD package already checks
-dsd->package.count != 2 before elements[0]/[1]. Only the inner mailbox
-sub-packages lacked a count check. No other copy of this inner loop.]`
-
-## Phase 6: This tree (v7.3-rc4)
-
-**Step 6.1:** Record: `[Local tree: v7.3-rc4-27-gf0100363d8c37,
-kernelversion 7.3.0-rc4. File and function exist. Bug introduced in
-v6.9, long before 7.3. Current working tree already contains the count
-check (this commit is an ancestor of HEAD). Evaluating the pre-fix
-logic: the OOB was in this lineage.]`
-
-**Step 6.2:** Record: `[On this checkout the change is already present;
-a re-apply of the raw diff would not match because (a) the check is
-already there and (b) b558cbed39af2 later changed the function
-signature. That is history of this development tree, not a missing
-prerequisite. The fix itself is a 12-line reorder in one function.]`
-
-**Step 6.3:** Record: `[No alternate fix for this OOB. git log
---grep='mailbox sub-package' on this path only finds this commit.]`
-
-## Phase 7: Subsystem context
-
-**Step 7.1:** Record: `[platform/x86 AMD HSMP ACPI driver] [PERIPHERAL /
-IMPORTANT-for-EPYC-servers: Host System Management Port mailbox on AMD
-EPYC and MI300A, CONFIG_AMD_HSMP_ACPI]`
-
-**Step 7.2:** Record: `[Active in 2026: concurrency/lifecycle series
-plus metric-table work. Parser bug itself dates to the original ACPI
-probe support (v6.9), so it is old code, not a last-month feature.]`
-
-## Phase 8: Impact and risk
-
-**Step 8.1:** Record: `[Affected users: systems with
-CONFIG_AMD_HSMP_ACPI and an HSMP ACPI device (AMD EPYC / MI300A
-servers). Not universal.]`
-
-**Step 8.2:** Record: `[Trigger: probe-time parse of ACPI _DSD mailbox
-sub-packages with count < 2 or non-PACKAGE type. Common on correct AMD
-BIOS: no. Possible with broken BIOS, firmware fuzzing, or ACPI table
-tampering. Unprivileged users cannot trigger it via a syscall.]`
-
-**Step 8.3:** Record: `[Failure mode: out-of-bounds read of union
-acpi_object (KASAN OOB / possible oops during probe). Severity: HIGH if
-firmware is malformed; LOW on well-formed production BIOS. Probe failure
-is preferable to an OOB.]`
-
-**Step 8.4:** Record: `[Benefit: closes a real memory-safety hole in a
-production server driver, cheaply. Risk: very low (error path only, same
-success path). Ratio: favorable.]`
-
-## Phase 9: Synthesis
-
-**For backporting:** Real OOB (and type-confused union access) in
-`hsmp_read_acpi_dsd()`. Small (+9/-3), obviously correct, maintainer-
-reviewed. Driver and buggy pattern exist in this tree’s history since
-v6.9. No series dependency. Matches stable rules for memory-safety
-fixes.
-
-**Against:** No user/syzbot report; firmware-only trigger; driver is not
-core kernel. Cover letter calls it “hardening.” This 7.3-rc4 checkout
-already contains the commit.
-
-**Unresolved:** Stable mailing list search was HTTP 403.
-
-**Stable rules checklist:**
-1. Obviously correct and tested? **PASS** — reorder + count check; Ilpo
-   Reviewed-by; W=1/checkpatch claimed on the series.
-2. Real bug affecting users? **PASS** — OOB on malformed _DSD;
-   EPYC/MI300A with bad firmware would oops or KASAN-fail at probe.
-3. Important (crash/security/corruption/deadlock)? **PASS** — OOB read
-   is a crash/memory-safety issue. Not a wild userspace exploit, but
-   still an important class.
-4. Small and contained? **PASS** — one function, 12 lines.
-5. No new features/APIs? **PASS**
-6. Can apply to this tree? **PASS** — the file/function exist here; the
-   change is the right fix for this parser. (HEAD already has the
-   equivalent code.)
-
-**Exception category:** none (not a device ID/quirk/DT/build/doc patch).
-It is a normal memory-safety bugfix.
-
-This tree is 7.3.0-rc4. The HSMP ACPI `_DSD` parser is present. The bug
-is a genuine out-of-bounds read of ACPI package elements, not a
-refactor. The success path is unchanged. That is stable-quality on
-technical merit.
-
-Verification:
-- [Phase 1] Parsed tags: Reviewed-by Ilpo; two msgid Links; no
-  Fixes/Reported-by/Cc:stable
-- [Phase 2] Diff: +9/-3 in `hsmp_read_acpi_dsd()`; count check before
-  `elements[0]/[1]`
-- [Phase 3] `git blame` on parent: lines from 969f915473d8c; semantic
-  intro `ba8dcff0e9c4f` (in v6.9, ancestor of HEAD)
-- [Phase 3] No Fixes: tag; `git merge-base --is-ancestor ba8dcff0e9c4f
-  HEAD` yes
-- [Phase 3] Series 1/4–4/4 identified; this patch does not need 3/4 or
-  4/4
-- [Phase 4] `b4 dig -c 0d7a266449453`: lore URL above; `-a` showed
-  7-patch then 4-patch split; `-w` To Ilpo + pdx86
-- [Phase 4] Ilpo 2026-06-26: split request + Reviewed-by; no NAK on the
-  OOB fix
-- [Phase 4] lore.kernel.org WebFetch 403; stable list UNVERIFIED
-- [Phase 5] Call chain: `hsmp_acpi_probe` → `init_acpi` →
-  `hsmp_parse_acpi_table` → `hsmp_read_acpi_dsd`
-- [Phase 6] `git describe HEAD` = v7.3-rc4-27-gf0100363d8c37; `make
-  kernelversion` = 7.3.0-rc4; file present; `git merge-base --is-
-  ancestor 0d7a266449453 HEAD` yes
-- [Phase 8] Failure mode: OOB ACPI object read at probe; HIGH if
-  firmware malformed
-- UNVERIFIED: whether stable@ discussed this (lore 403)
-
-**YES**
-
- drivers/platform/x86/amd/hsmp/acpi.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 674be31654776..8f297d52ab5e3 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -152,12 +152,18 @@ static int hsmp_read_acpi_dsd(struct hsmp_socket *sock)
- 		union acpi_object *msgobj, *msgstr, *msgint;
- 
- 		msgobj	= &mailbox_package->package.elements[j];
--		msgstr	= &msgobj->package.elements[0];
--		msgint	= &msgobj->package.elements[1];
- 
- 		/* package should have 1 string and 1 integer object */
- 		if (msgobj->type != ACPI_TYPE_PACKAGE ||
--		    msgstr->type != ACPI_TYPE_STRING ||
-+		    msgobj->package.count < 2) {
-+			ret = -EINVAL;
-+			goto free_buf;
-+		}
-+
-+		msgstr	= &msgobj->package.elements[0];
-+		msgint	= &msgobj->package.elements[1];
-+
-+		if (msgstr->type != ACPI_TYPE_STRING ||
- 		    msgint->type != ACPI_TYPE_INTEGER) {
- 			ret = -EINVAL;
- 			goto free_buf;
--- 
-2.53.0
 
