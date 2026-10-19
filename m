@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.195
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792446715;
-	b=fBoW7+K1izGCTCARz39D//b8HT3td0Quq9Nnuow+g6aSUSFWvq8TYBhNp5fI6yz5N3hL
-	 nNDfGiqDZlzzorLXli7uIj+YLDo5xpfRpzcPVfvxI9M9BRbPD/oqesmqdpa44fmXlJCwJ
-	 gwlRSnStCVClm5FTpctEvcupuTOVGfXnUmYZ4Km705N1cYO92cdsmk33wLl9vypHaaJ4z
-	 JloA+FzvlthB8US1GQ7BOay540tizsI9pgOqll/6neVhn4DBEvIbLNKnRiUwvWfb3YKIp
-	 dDb3/qIycEMde8EArXpxw2XUqOGMrPGuJmOe59XSeVKLQvPnc5b4WnZxbMEJSjpZOKw==
+	t=1792447927;
+	b=wAWba6Y+XohBDHgd8tfQ6SSFKO6nL37UziAqRDoiLhibk6AUz+VBbTWqtQRE4HIRM0qA
+	 uf5+eST3aHjo8ri4Ms4GEs2n9LRMPu7coV+rkoRFzen7D6HqJMd32tk24xvrRU7FqiP8L
+	 EA4O7fhKCSyc35dhA9jIx442bVeg/EZHeWOq+FCYxkAdpWCaaZLfEQc8TDAn8d8S9/e0G
+	 dXrrLl9Uz1GZsCj64ek4xCDxxzZ+b4GRmhOP4lOspkMBuQBcPohmyQu8kTC6zFuC/V1t5
+	 GEgivmxFRHwDMGvxF0SkRGHf0o8RF26qerQC+isTkbNk2G3Dh8mNmK81mVzx9yhXE9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792446715;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792447927;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=LqjyEKLTkX6+1Aqf9iomjAog7kKxzRPzlu8iaZzTXog=;
-	b=ORdAV0Tw3ouw57LCvIC4cmqS9yXWll73xXet6pCjOlBn/YtD6prBzjDqgiK/utEaxsKs
-	 G3Ks0CXFHi9AATz8qeq+T+hDGARmzycz9wcS6dms8AnmK9ALX9mjoYJ6kf6i7Ps0e9eUD
-	 jKhGZ2eaNSpWqCWpcKF3u+MBQR6XEaJLd5Bkqqw18nowN0pRZa7tml91/TaZFUVVVUS0g
-	 a+UAibZ9rV/TsVU6GaXlCbsF/rRNVXGwGmIwQieOXlHDaj+Bm9JZMBSc8Fqw3DNGsNX+9
-	 GQWv/v5XUO2+hwEQjUtHB0YIOEnC8Y0jYkYt40WIdFb5FKH2oOb5C5+G1LzNRAbhQhA==
+	bh=qOgEM347UA2oUXrlePKVhdOzVwXTFnw/rujmP6OQ7Og=;
+	b=GK7a86V6j/vulLb4/ocNoYIgb3veGMttoAb8LwOuO81mMh5PnMFWpBBf5PuLU2AHI5Sx
+	 q5qssGprxJrGf+Cc6Hdhi8ARV8lQRAPvp9+jP79cAz68KcjkgxE+5pmYRFyVzZVvrfaty
+	 XsgDsx53hgx3GgKNRxsSWpudo46/KiHYGcKtFxcbPSSIFejvS9W1oFNLi64xiQccBPWWj
+	 BmmQshqLK4iLtIpgTT/FeXDQ5ZR+Hf3Uaj3l0iR+b7AhMX5LrwRUGiw7B5mfR/nNR3Qmv
+	 QZHZfVnQ3pIPoc3URHv3QLs0foEwrohTmaTmMBKE8hWkF7dYjAaEw3DDIHLiXHyFHYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=rUrh4AGz;
-	arc=none smtp.remote-ip=95.215.58.54
-Received: from mta1.migadu.com (out-54.mta1.migadu.com [95.215.58.54])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FhAzmzFg;
+	arc=none smtp.remote-ip=95.215.58.195
+Received: from mta1.migadu.com (out-195.mta1.migadu.com [95.215.58.195])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70048606A319
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 21:51:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70048606A319
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F51606A31A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 22:12:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4F51606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=rUrh4AGz
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FhAzmzFg
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=iuINLRNPHC+Snxt6vGRFDY7i0T8cvdP6Sc9wX0VcqPU=;
+DKIM-Signature: a=rsa-sha256; bh=DikdP9xMiFcD79eHzl2Rx85QAWRmN2Gb3vUT8s7Ubxs=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792446712; v=1; x=1793051512;
- b=rUrh4AGzuU2aDuc52tCobwUYVZaPw1cs1NFlVHQRZeX5Wr9K5SSXdHlPdXIYiKEim/ju584I
- CA5WhsKmbIZLgDWveLgJjChxb10qtrSiQcYVQxaXweR7aQXG1al7y8U1UVRRqSiYpR4A6u+YUCd
- vgxYdFnHAPtjPkrXPniP+twg=
+ t=1792447924; v=1; x=1793052724;
+ b=FhAzmzFgLT58AZzAGSVbJ21vLRvLIp41QnyctBylJnPV/rp43SqizB+agP1IhsoNxpAvxzhC
+ VYtC8/wPdXg6BaHu5EexnR5xGd5k98M8glcnW69JdR+BxVQMQi0azR/dQyVPVLt749iRxr59eDa
+ XY9uITxiN8GfAsHDeEmg+BS4=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 78e351183aea031e;
-	Mon, 19 Oct 2026 21:51:52 +0000
-X-Mizu-Trace-ID: 78e351183aea031e
+Received: by smtp.migadu.com with ESMTPS id 1c70924cc703aeac;
+	Mon, 19 Oct 2026 22:12:04 +0000
+X-Mizu-Trace-ID: 1c70924cc703aeac
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <f71595e8-8553-4e18-89a8-cca93cd65f56@linux.dev>
-Date: Mon, 19 Oct 2026 23:51:51 +0200
+Message-ID: <d27c2b12-8968-4eec-b925-d5345ba1821e@linux.dev>
+Date: Tue, 20 Oct 2026 00:12:03 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -59,88 +59,122 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: Clamp keyboard backlight level
- from hotkeys
-To: Alex Bogusta <alex@bogusta.com>, Corentin Chary
- <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>,
- Hans de Goede <hansg@kernel.org>,
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Ignore spurious 0xe5 events on
+ GU605MY
+To: Evgeny Volferts <eugene.wolferz@gmail.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>
+Cc: Hans de Goede <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Denis Benato <benato.denis96@gmail.com>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261016015117.32174-1-alex@bogusta.com>
+References: <20261015163029.107250-1-eugene.wolferz@gmail.com>
 Content-Language: en-US
 From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20261016015117.32174-1-alex@bogusta.com>
+In-Reply-To: <20261015163029.107250-1-eugene.wolferz@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 10/16/26 03:51, Alex Bogusta wrote:
-> Pressing the keyboard backlight down key at level 0 drives the cached
-> level negative, so the backlight then needs one extra up press per
-> extra down press before it turns back on. brightness_hw_changed also
-> reports out-of-range values: 4 after pressing up at the maximum level,
-> and ENODATA or values like 4294967294 below 0.
+On 10/15/26 18:30, Evgeny Volferts wrote:
+> The ASUS ROG Zephyrus G16 GU605MY periodically emits an
+> unrecognized WMI event (0xe5), approximately every 12 seconds.
 >
-> kbd_led_set_by_kbd() stores the new level without clamping it, and
-> kbd_led_update_all() skips do_kbd_led_set() for negative levels and
-> notifies userspace with the unclamped value. The level is computed in
-> enum led_brightness, which is unsigned, so the subtraction at level 0
-> wraps around.
+> The event is reported as KEY_UNKNOWN through the Asus WMI hotkeys
+> input device. When the session is locked, it causes both the
+> internal display and an external monitor connected through a
+> Thunderbolt dock to wake up repeatedly.
 >
-> Compute the level as int and clamp it in kbd_led_set_by_kbd(), which
-> covers every hotkey path.
-
-Hi Alex,
-
-thanks for taking a look at this!
-
-
-> Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
-> Signed-off-by: Alex Bogusta <alex@bogusta.com>
-> ---
->  drivers/platform/x86/asus-wmi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Add a DMI-specific quirk to suppress this event on the GU605MY
+> without affecting other ASUS notebook models.
 >
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 9fb3fe4b161c..599a73862903 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1949,10 +1949,10 @@ static int kbd_led_set(struct led_classdev *led_cdev, enum led_brightness value)
->  	return 0;
->  }
->  
-> -static void kbd_led_set_by_kbd(struct asus_wmi *asus, enum led_brightness value)
-> +static void kbd_led_set_by_kbd(struct asus_wmi *asus, int value)
+> Ignoring the event was first verified on a 7.2.7-based OGC kernel.
+> The DMI-specific quirk was subsequently built against 7.2.8-ogc5
+> and tested on 7.2.9-ogc2 and 7.2.9-ogc4. On both 7.2.9 variants,
+> the DMI match was confirmed and the unknown 0xe5 event messages
+> disappeared.
 
-Is the change of type really necessary? I think clamp_value does everything required already.
+Hi Evgeny,
 
->  {
->  	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-> -		asus->kbd_led_wk = value;
-> +		asus->kbd_led_wk = clamp_val(value, 0, ASUS_EV_MAX_BRIGHTNESS);
->  		asus->kbd_led_notify = true;
->  	}
->  	queue_work(asus->led_workqueue, &asus->kbd_led_work);
-> @@ -4668,9 +4668,9 @@ static int asus_wmi_get_event_code(union acpi_object *obj)
->  
->  static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->  {
-> -	enum led_brightness led_value;
->  	unsigned int key_value = 1;
->  	bool autorelease = 1;
-> +	int led_value;
->  
+Thank you for your work!
 
-Honestly I don't like the change of type... I would prefer something that prevents the
-bad thing from happening without changing the type.
+I am thinking that a quirk with e5 in the name is a bit overly specific...
 
->  	if (asus->driver->key_filter) {
->  		asus->driver->key_filter(asus->driver, &code, &key_value,
->
-> base-commit: 98f039265e580291d5e76a11b2072541fbb1c393
+That code has never been handled and is just the EC repeating some settings.
+
+I am thinking that perhaps the best thing to do is just create a case 0xE5 that
+simply does the ignore with no quirks check and a nice comment outlining
+why it is done.
+
+I don't see asus repurposing that for something else honestly so it should
+be future-proof enough and will potentially avoid this to other models as
+well.
+
+On the other end it would be cool to know what that really is telling us...
+
+If you don't come up with an answer I would defer to Ilpo whether preferring
+reducing quirks or keeping the symmetry within that key_filter function.
+
+I am fine either way.
 
 Best regards,
 Denis Benato
+
+> Signed-off-by: Evgeny Volferts <eugene.wolferz@gmail.com>
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 17 +++++++++++++++++
+>  drivers/platform/x86/asus-wmi.h    |  1 +
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index aeb461b1644d..8d69231d25a0 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -150,6 +150,10 @@ static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
+>  	.key_wlan_event = ASUS_WMI_KEY_IGNORE,
+>  };
+>  
+> +static struct quirk_entry quirk_asus_gu605my = {
+> +	.ignore_e5_wmi_event = true,
+> +};
+> +
+>  static struct quirk_entry quirk_asus_z13 = {
+>  	.key_wlan_event = ASUS_WMI_KEY_ARMOURY,
+>  	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
+> @@ -562,6 +566,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>  		},
+>  		.driver_data = &quirk_asus_z13,
+>  	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUS ROG Zephyrus G16 GU605MY",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Zephyrus G16 GU605MY_GU605MY"),
+> +		},
+> +		.driver_data = &quirk_asus_gu605my,
+> +	},
+>  	{},
+>  };
+>  
+> @@ -690,6 +703,10 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
+>  		if (quirks->key_wlan_event)
+>  			*code = quirks->key_wlan_event;
+>  		break;
+> +	case 0xE5:
+> +		if (quirks->ignore_e5_wmi_event)
+> +			*code = ASUS_WMI_KEY_IGNORE;
+> +		break;
+>  	}
+>  }
+>  
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> index 5cd4392b964e..e7772397cd10 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -41,6 +41,7 @@ struct quirk_entry {
+>  	bool wmi_force_als_set;
+>  	bool wmi_ignore_fan;
+>  	bool filter_i8042_e1_extended_codes;
+> +	bool ignore_e5_wmi_event;
+>  	int key_wlan_event;
+>  	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+>  	int wapf;
