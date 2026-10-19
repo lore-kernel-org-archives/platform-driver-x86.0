@@ -1,148 +1,120 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902544E4306
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 12:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB93E4F4CE8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 13:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792412511; cv=none; b=rCitgcoSXRejuNHrU4+sJXt1gIuo+leFyrnCRKiJWY1IqqKcnP2e2CyF4yhkeZyonDB5BNeKO6JjZ68jKHQ8L9d65QHCRPAZt38pdOJ/+q/5gZwQoXyGEpa08GqMQ+UWntFInINWyVmHgA9IxDGJXZ2uwg6dgRBkHD/9GRKUDr0=
+	t=1792416178; cv=none; b=ZQRyIGBr692/Iax+WxrmenUoq9UTDQvAvnqjKt3bVJS+jo4pThZXaisC/Dc8MvQPqQIJoxCj//rlTDrDRpJgzSdNGl1SNeph80R5OBewf9opKb/jqhZa/knW0xzQwfyjlo0MIAmpRJRWFO0oFalnyiyYWGHZfEjXb29zagp7Z90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792412511; c=relaxed/simple;
-	bh=EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=NBicH2Kn1o13Px/wE6zEVA+T2EgyIaLrNXqOlm/AipWbv+qWUGpbiGV4BMqhRBdtsUjEg40O+HyHlD4nZW9sabrsrLJ2xz0DwwDaZ8wT7tLlGKTRLXUPYLYpsmnXpKuyV+XNINej9G5S7iSqxB/Z996wxOoLCsbXy1Efxt7wflc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=NJO62aLU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X27MOJKN; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1792416178; c=relaxed/simple;
+	bh=V6JuOESdlo11Gl/2S3nP4z8xwaqD9faUnTleg+RxuGo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K5DN6GdYj+4Za0pz1k5mkvfHShmqDbeHQPrnOdaFdQ7Q7+hRnRt31pEVQYodKsyXZitgYoomFFgqVnNmKhpuTENJxkgK0wdVlvK+vahozymMTmKBh44BmXKl9Ne3PtjU3ApSgeKINtjwas1GC+4+aG+GlDmUCEeAJqC/Z0LZe3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RAok/XHe; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="NJO62aLU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X27MOJKN"
-Received: from stl-compute-01.internal (stl-compute-01.internal [10.204.2.61])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id E20F27A00D8
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 08:21:48 -0400 (EDT)
-Received: from stl-imap-13 ([10.204.2.104])
-  by stl-compute-01.internal (MEProxy); Mon, 19 Oct 2026 08:21:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1792412508;
-	 x=1792498908; bh=EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=; b=
-	NJO62aLUv39aCKnPUwwUkMAwIZQkNReFmPkk3hS+zKjSvZOVRU7dKJgcEmvCQk5m
-	1nq2JUKgaYiDYKEQMi0QgfkXmvrQ21mTZmhS6uFCH0+lmIz7AGfFxc6/OzSex8Iw
-	9E1XXHzvpP88wmjOZd97YbimwOI8oMR6qE9ZekKkXsNG3G37nE63ywpsQIX4idtp
-	dBvodzZOacaeYnwzPF2YNLyIOfEG68MYf1oVhfDbgNNxL6RB92icTbIjhA29ON+3
-	bFiMGZet6oVaHdUXi7Nb1mp8L2eT8WyNAFEbTffnRkrdsh0RqTAqoHdnPDhEGYOX
-	k88W2qMUZx3xwnJfpfn0og==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792412508; x=
-	1792498908; bh=EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=; b=X
-	27MOJKNA/rQq8wGPKIqyJR/QsGc3GiZQxra46TbbnBC8iKTqTLT3MvvfH+gVjpPl
-	FDKP2bDavW6I+mEx7FRUJCHqxkJ6afvtoouZ4Y4C6Z3GQuMlxxxdjYU5jUkJsRaM
-	cC81JxE/VKzsAhOs7mvGX4xWaGLb0vpQ5HfsCEko/+e89iBNAY0gJ7G8vM6xZucH
-	M4GgfQl00EkrKevnPXePjHigoCXXcIEDaTErzdNjzsaCeiDbT2I6CGYxprwBT50u
-	Y8MVtY1rmIahZd/d8FofqhzU2hNzkvFghd16MghQtAuqR+bA+fFXELCjwiKGy/3T
-	ULg+wD4N1TwIbfPmPoJTA==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
-	action=sign d=lyndeno.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1792412508; d=lyndeno.ca;
-	mf=PGxzYW5jaGVAbHluZGVuby5jYT4=;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:gUi4gJpfBNrs0J+Oih0zkqSKy+0EkxJsfofEzBhn8zIvWTR
-	u0i+ZlZHs0itRjBOfEDwA+3c1A/hrVkXSOlhwC8Gwz0InAqPHHQZhF8UGn7l5pzt
-	iiZXsW5XD3uYjws9Cqmcxtx06gtjzudd47UgRaBow2MRBjatuVXEAYyLz1yWVuKY
-	Xmh09vv2Gy/gC/x99/kgwHkHTJYGa1CW1Bh3Tx8ru+lZb1qKXdnvxrZad2jEf8MU
-	S/y6TK5bRll+/v46WBaECd/NdVcoSHBcd7AsRS9DniDmG/V2hRxZ5SwRfYYkchNb
-	kvptaTJXIJWk2MJeeZvQkYzTrhmP0kgGlUeVrlQ==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:W7vikNgX5faAmV6jrWk9+BYj8bfrtgwq7qCewo0+QYE=:EuezTHb/fLuDXt+dlX+AWXGQlXbedyyCyOKOUZxl9AU=;
-X-ME-Sender: <xms:XAvWaiQVudugeT5-p2I9NMLR9B7eJx5uFVe0rjEMflOIiJhiy07gfw>
-    <xme:XAvWaiksi2d5Xzy6spFd0j9Y-TOLrI8QLwW5PmUEyWS3EJRVP_6RoWNOLq9Hlwssn
-    VJZpH5WRxV1NTSjfFirnQWp78VA-SS14J_u4r6MJ-EH7g813-wfn8GH>
-X-ME-Proxy-Cause: dmFkZTFrqgzUfBqSiwFG4oYJknaKDBF3ZDk1iCX9Scqi/RsIaAoSKGxnm6sbu8oXl5wNKi
-    fxPXLXQvqQhng4qUxrrrf14+TXnYnlRkXdaVVV9rURwCRNHHvF7mYtvlcMJa0xV2MtLJcQ
-    E16PRPYyRsReUlA/46/TXuQPCjwmRjHqLSoYNzxKX9kXcVjTczVK14zC8uKimpCLR46xJI
-    k3o2T6+JNdtJbIcd5FHwcunqG6ppRD0tGr0DnXdIO+uBHSqKxmREnvJTUXUYIxlUdhyotO
-    v/GT6VLd10nXvN3KZlN78tgEJWIT0Z5qm+RCsUNSMh6//WEik6xZGdCXHyXqwewuzEeBSS
-    0kEvAqgpRH04E6j97fWMg2oed2/IsRIkgETY5eW2lDlj5hhHHBRy+zG84JdAilSTcA7VPY
-    Ea3HAQR1EPQ952QZDig/t2x//+NFgxyBsXyQnD/pNlxxTFoCBD8swU6OeKmLZqsQW0WmNm
-    stdPPny4i0t2BU2i2mas+0wosUNnA5j1C1LNRW0eAgarpjCbQSOe8UMgM86YIKLJ9LcKcB
-    sAfgxyMwHsMbIZnrUf776F5f32plLKyUzr+Ju5l6gI6cqk/0sbWEBSCkCFHPVq4Y+PNaTk
-    cZWPmrRxEHwDHMt8lVPOcAi1TjRn3k7kEIV9Fs8vC9QMNHNwMksBnDjVjldw
-X-ME-Proxy: <xmx:XAvWatz8ggLndlU5qEmS6fXdyulr4SmV3ucZcyo52zVx6hl7Iei-Zw>
-    <xmx:XAvWagVTONTiTIyiiCzvZJ2faqqUOB6R7DpXrtsxPDkph3LCras89Q>
-    <xmx:XAvWah-vSzEzsP3WV9bNw2WmC5Mjf4aOhZ7dWzDQKt-fRjB1gciPMQ>
-    <xmx:XAvWarvhJSj3ltskyZqKglD5HLfC4__ihhdQtr1iB20kztc20RqvnQ>
-    <xmx:XAvWas5rrAy1aGF2ANLMRg_tNbPoN8D6sY4i-Ryk35SBIC7orunTpBjm>
-Feedback-ID: i1769461a:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 40F4BF6007F; Mon, 19 Oct 2026 08:21:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAok/XHe"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-38759bcd877so1234144a91.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 06:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792416176; x=1793020976; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9uMVfxmGmbk7TOx82CukxIKkrbkQu+OEaYbQ6wWfobw=;
+        b=RAok/XHeWd8QZ7TQbUoLtndOTpw02UQoA4LOySKblW3ClVvs0IzMKd7OUNv0SK+nh0
+         FZNVR7A6FJVqdmRkUphe1t7XRUPv4umyWUxC0IiwdGP8F1BZ6aOfqzyLSRbdmjSBWSoK
+         VOAgy9g5Ls8iE7728M9quF4AgITBeZMgtKVWCzUdNsefQQ+SSiXrRQz8SQZ9mZx5WWFz
+         fWLGqvcxS1InbJJpSYlAwzG4Z2oG/izp+pDsT6WkET9Ca3NRyk3HDfuuSWgjBDfxPwnR
+         CCKZLhg9yclgdtUBJVMZBSIUD0YrcmxrHCqiTss4jsjyAtDfb/O0mTRJnK+20vyUJgoo
+         FjlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792416176; x=1793020976;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=9uMVfxmGmbk7TOx82CukxIKkrbkQu+OEaYbQ6wWfobw=;
+        b=Mx0uBa6BsGxi2KMGaytBwvWaHPzq154DZssHlfbWlHALubkrt51v9jqMby+b0IRVKA
+         mEt/cN+8ZaQ9k7naO2vxCD2hgg16hAAtYADpBH9zuJakk5itL2Nnxwn03Wx0vYxNL/6K
+         523PlH5q3iMDd9ky+kN2LiML9iHOAfYybb84NM+oOApJu0LI0pSRCRNM58w3r9UBpdHR
+         XXGmpeIqTrR5YHz51XbFn4OYjDbKo43dpcvbzLV4JWv5lo10KHyzJdbjBX5bpx5u8i27
+         0HN8ACrp4I+gSu9LP/KxxhD5r5wMAN0aUAlRx28CLQNwIAFZia8Kt5IY6x9JigjxmFYq
+         3KMw==
+X-Forwarded-Encrypted: i=1; AKwUvBxGpg8hJ3/u14I/65PceIczpS1KaqwFwjDSbX7HQEIxzxrzX/zjr3FQ9Iqq8Z9gbt6lUGspMWmCRmHXRwbDtTSpJRmi@vger.kernel.org
+X-Gm-Message-State: AFq9FYK3NrQrFNnr48R41oqgSqlwR3KnerPzn7QLzlYLieYO2TDW7reF
+	Aw5WMaQq+VAvuxJ6Fx11/W+Xt92yelDD/AHze/CA5qYY1E4WZowFKXvx
+X-Gm-Gg: AYBFou2EerBw8+7mzTjRo3mKw+24JqsaFxFQ8uZwJGU1Qn2b/mvU5Gt03C5vsiamdCN
+	4bu/KVEfQyOizFewEaXelseSXH3UHy5n9BF559ZtqZk1E9VV1hZM62wQb6sSLX8Avgjj3d8UfK3
+	lUbR+doFn/KvZmwBuBKb4T92ILg7pAF2Vw0hVlmyklV3gIw2fntLPXvyZjj7bURljkggNYtXbdu
+	P25xEGp4VIPF6ta0/ynUxMN81vd97aF89H5qmNvHJQwcCPYZ4uv6ubMQrI2RHRJyERihgzFbHud
+	M0joPSyjfTe4ikoOY7e9Q8GKuGWdHnnASDWgE47DxvPiw2DFylU+PcGhP8+S4lBPdtIq6YlY9WR
+	dtXEtBlavzIikTomCYEVBXiBbvjTC0Q3Cc2rVgHaYqMRD0+QuLDR+dvH+ejiAfzP1+86fDAryXE
+	VL+uBNf+r2kJ7RNnj7dQTomNDK3D7svvhB27r8+k/enUdYLlWdq9nqAUxqLoFOyZS1BM93I8TZl
+	A+ptg==
+X-Received: by 2002:a17:90b:568b:b0:3ac:a7ee:6761 with SMTP id 98e67ed59e1d1-3aceefc6182mr6486080a91.21.1792416175787;
+        Mon, 19 Oct 2026 06:22:55 -0700 (PDT)
+Received: from [58.206.202.11] ([104.28.215.70])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cd654a2ab4csm3834933a12.28.2026.10.19.06.22.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2026 06:22:55 -0700 (PDT)
+From: Haoran Wang <haoranwangsec@gmail.com>
+To: =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, haoranwangsec@gmail.com
+Subject: [PATCH] tools/wmi: dell-smbios-example: fix 1-byte stack overflow in find_token()
+Date: Mon, 19 Oct 2026 21:22:50 +0800
+Message-ID: <179241617018.5916.3033533776160790448@whr>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 Oct 2026 08:21:47 -0400
-Message-Id: <DM8T7ELISJJB.2MKMPBE1BELFC@lyndeno.ca>
-From: "Lyndon Sanche" <lsanche@lyndeno.ca>
-To: "verazimmerman1987" <verazimmerman1987@proton.me>,
- "srinivas.pandruvada@linux.intel.com"
- <srinivas.pandruvada@linux.intel.com>, "rafael@kernel.org"
- <rafael@kernel.org>
-Cc: "daniel.lezcano@kernel.org" <daniel.lezcano@kernel.org>,
- "rui.zhang@intel.com" <rui.zhang@intel.com>, "superm1@kernel.org"
- <superm1@kernel.org>, "linux-pm@vger.kernel.org"
- <linux-pm@vger.kernel.org>, "linux-acpi@vger.kernel.org"
- <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-Subject: Re: platform_profile: power-saver lost on Panther Lake when SoC
- Power Slider and dell-pc are both bound (low-power vs quiet)
-X-Mailer: aerc 0.21.0
-References: <UPfoGdnS1R04q8uekSMTyes9PbDuvsGeBE42zHmsjD2xIdfPYx7ejdcpZhrxWFq6uwoMvClHTuHbrwaCh3yxD0Rw7OarNABC4dZsDra44mk=@proton.me>
-In-Reply-To: <UPfoGdnS1R04q8uekSMTyes9PbDuvsGeBE42zHmsjD2xIdfPYx7ejdcpZhrxWFq6uwoMvClHTuHbrwaCh3yxD0Rw7OarNABC4dZsDra44mk=@proton.me>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hello, thank you for reporting this.
+find_token() builds sysfs paths for Dell SMBIOS token files with sprintf
+into stack buffers that are sized to the formatted string length but miss
+the NUL terminator.
 
-To me there are a number of ways we could handle this.
+    char value_sysfs[57];
+    sprintf(value_sysfs, "%s/%04x_value", token_sysfs, token);
+    char location_sysfs[60];
+    sprintf(location_sysfs, "%s/%04x_location", token_sysfs, token);
 
-On Fri Oct 16, 2026 at 1:10 PM EDT, verazimmerman1987 wrote:
-> This looks like the same class of problem as amd-pmf + asus-wmi,
-> which was solved by adding "quiet" as a hidden choice in amd-pmf
-> (commit 44e94fece517, "platform/x86/amd: pmf: Add 'quiet' to hidden
-> choices"). Would a similar hidden "quiet" (and perhaps "cool") choice
-> for the Intel SoC Power Slider, mapped to its low-power setting, be
-> acceptable? I'm happy to test patches.
+token_sysfs is the 46-char static const literal
+"/sys/bus/platform/devices/dell-smbios.0/tokens" and token is a __u16
+(always exactly four hex digits via %04x), so the formatted strings are
 
-This certainly would fix the immediate issue: platform_profile providing
-consistent choices across handlers to allow selecting a range of
-profiles exposed by the system. I feel like there is a better way to
-handle this besides adding hidden profiles.
+    46 + 1 + 4 + 6 = 57 chars  (".../XXXX_value")
+    46 + 1 + 4 + 9 = 60 chars  (".../XXXX_location")
 
-What if platform_profile itself was changed to separate the user/system
-choice: the "desired" profile, from the "actual" profile(s)? In this
-scenario, different drivers expose different possible profiles, the
-system tries to apply the closest possible profile per-driver to the
-user's choice. The possible profiles would have an index to indicate
-where on a linear scale it lays. If I request quiet (2), but the Intel
-SoC slider only implements power-saver (3), the system chooses 3 for
-that driver.
+plus the NUL that sprintf writes one byte past each buffer
+(value_sysfs[57] / location_sysfs[60]).  Callers pass only the fixed u16
+constants CAPSULE_EN_TOKEN / CAPSULE_DIS_TOKEN, so this 1-byte stack OOB
+is deterministic on every invocation (the sprintf runs before the fopen,
+so it fires regardless of whether the sysfs file exists).
 
-I am only thinking out loud and would find comments on this to be
-useful. I realize the behaviour of some profiles do not exactly fall on
-a linear scale so this would need consideration as well.
+token_sysfs and token are compile-time-bounded, so sizing each buffer to
+hold the terminator (57 to 58, 60 to 61) fully removes the OOB.
 
-Thanks,
+Signed-off-by: Haoran Wang <haoranwangsec@gmail.com>
+---
+ tools/wmi/dell-smbios-example.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Lyndon
+diff --git a/tools/wmi/dell-smbios-example.c b/tools/wmi/dell-smbios-example.c
+index 1f3e7ab14..214071f6f 100644
+--- a/tools/wmi/dell-smbios-example.c
++++ b/tools/wmi/dell-smbios-example.c
+@@ -52,8 +52,8 @@ static int run_wmi_smbios_cmd(struct dell_wmi_smbios_buffer *buffer)
+ 
+ static int find_token(__u16 token, __u16 *location, __u16 *value)
+ {
+-	char location_sysfs[60];
+-	char value_sysfs[57];
++	char location_sysfs[61];
++	char value_sysfs[58];
+ 	char buf[4096];
+ 	FILE *f;
+ 	int ret;
