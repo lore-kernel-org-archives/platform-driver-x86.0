@@ -1,65 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792422241;
-	b=Ewj06rTB906I8pxFkiWO19i1tBHXYiei4CExdLFjKtl4m9ca5Tg7WAu+i5+uk8UN1PR+
-	 7pOwsyDGvIPkNDhnI9LO0iV+9G/2ywe6kyvYiD6BGatpOrHNp1Me4M/vo0BovxD2dT0/8
-	 gwOwW8gg2gboUuNUl1WXeLxPKJw0JBDKDG6iOeqgQcWKBUmiIeMDAXlpohrHN5ws9w9Te
-	 We1AIyOB7Z/6MacHQ5V9GwfjogeGn4MTz0liA/Yg6jf1TI+lFs8o2YyD92REHLl4MkSGa
-	 1PGomgwZjR5DCTprdjkATrSuVRTr/QOqGr3tDeQcJ25fAZeVfuI1hwx0YtsXOQNEGVQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792422241;
-	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer:X-ZohoMailClient;
-	bh=Gcyo/x+7dSKQKoLvMY1mobH5f1e7zJvCCB0MCLbeP+w=;
-	b=Hpp+z+zRFg6ye4uKpdo+dYvwDQxocNp+vR6lkn4ZQWSguFwNJZGHLnUrs07vH09tee02
-	 5DprWaycZl9CJ6lCqW1cucaiYNmG1Zcm4u+CbJUuIZR3cFhDQsFPEphjlthAHdBWUSS2w
-	 qPG5G7+hOJ2ztYoRS9dso3IOjP+iG2b1z2sq9neV4wNeb6d5y1vHzkeTZA7ok5GOv6vRW
-	 wtq4WUuoXYAZKvmK2ZO2GlKgZD1sfymtBw4xR0GKpXwGi7twBRnIZyTG0/LvIgTqcwmIG
-	 a4QEAyAYyFG/khRXy1WenHICWyBqbTUkv7v+fsQEVui4eL2DkW/63ablORyJKEGR+Yw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=VoDhipSD;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.103
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792425363;
+	b=OUFNQCda1M0PCtu8bONIyH3fL/4l5Kv1CoXsh8Fs5sZJxmdGgR26nWmqcVO5WPe4Umtr
+	 Z2QcJj8ve0aEVC6n/6zBXWj8TQFeDR78gFGIADLv7+VtW6eyasmloKyVNMqRWqrVhZTYE
+	 D1CRtgYVumC5jJ5ssuweKpbq3clD0U1aSRkAjEJ8JNtGONaEDRi+Xbdr8k6tzrB3KyC/N
+	 0373pyfF9ulIvGVAyLw7hpqNtbo7n3gbejv1HARstjq0lMvJNQwPxQ3xQvWuVRng/87o+
+	 Jio0lCxFLr2GZcKaPr7T9iR7qY/U+RyhTp/RMrTIYcywwlXpW/19lniMTsRZkRKAYow==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792425363;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=SBtxlT+Qp4W+IJHkb15i2LvcCwgPafujvbV+bqx52tw=;
+	b=wJ2ahpDz5fQVmu+YPdfIUDV3OG+63QiIK2D073otW9iCy6HJ+DspgM0VsRUr89DJmyY8
+	 xIhErjQSELnMp54rgu6+PU+ct2ReRP3yzGY6jw2icpPI+yCeSOPiEAPXQGvz1UlQ7AX8K
+	 fw/I4dP4PNa+K8F0KDwsCiXnLhtzCFkHpILiIZYmTbo0G0HVj1xDmLppokePKbvESA5JG
+	 f2Jxr4OgV01w/idCjOrq3hQp+FzujHkXdmJ3K6hCyqV9kOm7ZhQWCnyDFuDxx2KTIQxj3
+	 9U5J3FzJ3xAg/QEdxssL05pciEur8H/P3c3sPYm0PjEW+WQYOAwk5/QerAFhsW17SXA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=CuE+Fqe0;
+	arc=none smtp.remote-ip=185.70.43.103
+Received: from mail-43103.protonmail.ch (mail-43103.protonmail.ch [185.70.43.103])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518B9607DC77;
-	Mon, 19 Oct 2026 15:04:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 518B9607DC77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD2E606C149
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 15:56:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2AD2E606C149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=VoDhipSD
-ARC-Seal: i=1; a=rsa-sha256; t=1792422193; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Bqu0yagmjCb0/3ixkEDVf4E3QdM9HCgwy8sJrW3IrvvmzL1oeQQFz39RN/osvRH8g3cXHWe/hmG4KDnRT2m0Atg5660Z1szww3iadT9eujJKHGdyzDkDqJfoOl8Lacs1VQTTL2ZWWXoy5++WyJQ+kJTyzykzJXxgIUuwy74Jwd8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792422193; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Gcyo/x+7dSKQKoLvMY1mobH5f1e7zJvCCB0MCLbeP+w=; 
-	b=GiLVAeDg58xjTM0a6Kz7cZImgWSuUOGE0fvGRtUUl9YXvZWRLAMDtBfABp/qXnDUWKv5kAVTBV8lvIAbIiSG5onUEiFSAfcWejQbytelIrWLuqv91bXasG5dFqXB01YvG3MtTmzLSx9E2hkX8OdVlyoyr0SUA6qfr1Ed47szwHM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792422193;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=Gcyo/x+7dSKQKoLvMY1mobH5f1e7zJvCCB0MCLbeP+w=;
-	b=VoDhipSDM5583y3C3rxGMbo06zhNXgyqlgLmzp5/9y2DgqixEE94WGAtXhIaaJYu
-	+3pLNiqZCCN/Uleo12OF0J1DXdlDJeV5mOcD1RAbEaFmbyFVZFYgYzm5on3zfb989Jb
-	BvvyG4ADKNC2sfgkBAtBDDML3LlIcjsIqO5pVitsBn8DSBoBqnoK5COJ8uY8KYJO1b7
-	tWIh9rZcgKGAbfueVenLnkvHkv0EOlImyJ/mghTQDASVoKDxzruzSB/d9MAsZuogSCK
-	gFjLpFTnZjA+JNVRXO3XQa7NeRqJTzJktq+84Jv4ft9mGhXGJ2I4cpdczfOWFvExMes
-	7OXytgqIaw==
-Received: by smtp.zohomail.com with SMTPS id 179242219054699.15617082516553;
-	Mon, 19 Oct 2026 08:03:10 -0700 (PDT)
-From: Rong Zhang <i@rong.moe>
-Date: Mon, 19 Oct 2026 23:02:27 +0800
-Subject: [PATCH v5 05/12] platform/x86: lenovo-wmi-capdata: Defer mutex
- initialization
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=CuE+Fqe0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1792425359; x=1792684559;
+	bh=SBtxlT+Qp4W+IJHkb15i2LvcCwgPafujvbV+bqx52tw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=CuE+Fqe0VPEcvQtt4M5Hjuv5oUlpEJX34dz/HT4r9HJQWltRATX9LWGdev7tgydB1
+	 UDG9AVcyJMTJ/oKrYooHRyEu1qJBTeechb73YqIAVfMIi6Wy7Mfq+1iWfgfmeumAq6
+	 hPauXIU2+KhToxYXzGU7z3tPlE57dTdEpCcY4qMW9rpY95/GGJhk5JPfZtxQ4vM4QP
+	 vY42n0NWBIWAWW3NhEM6onhkS2OEa3VCyN4qAxkucjQaxyj5t7Lfkvex6rG81nS9Lx
+	 HstjI0xzwtSiE5KQ8a/9eZBFEPUTke1OoeoWFvQ9W/lZOnyxXh8MUGZBRNAVhA5rBi
+	 maNxyxAyVjr/Q==
+Date: Mon, 19 Oct 2026 15:55:55 +0000
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com
+From: Jona Sadjak <jona.sadjak@proton.me>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: Re: [BUG] platform/x86: hp-wmi: OMEN board 8603 gets no platform profile, and a 0x1B event loop once it does
+Message-ID: <19157a11-33c1-42ef-b7a5-7be1f5682c79@proton.me>
+In-Reply-To: <69aafae4-acbe-4e69-91ec-204f1f7aa310@proton.me>
+References: <26460fe0-b8c6-42fc-847d-3cbeea8d3721@proton.me> <69aafae4-acbe-4e69-91ec-204f1f7aa310@proton.me>
+Feedback-ID: 174706356:user:proton
+X-Pm-Message-ID: 918d14565bc480e783217e217530d5b0d1ee8e5a
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -69,230 +64,68 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20261019-lwmi-wmi-new-api-v5-5-71557d28d058@rong.moe>
-References: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
-In-Reply-To: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Charles <hanker007@gmail.com>, 
- Navon John Lukose <navonjohnlukose@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Rong Zhang <i@rong.moe>
-X-Mailer: b4 0.17-dev-6be7c
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-In the following changes, priv->list may be freed if the first call to
-lwmi_cd_cache() fails due to WMI/ACPI errors, so the list_mutex must be
-initialized after it in order not to break lockdep, as there is no
-devm_mutex_destroy(). Considering that the first call to lwmi_cd_cache()
-doesn't need serialization as there is no other reader or writer this
-early, the initialization of list_mutex can be deferred.
+On 19.10.26 16:23, Jona Sadjak wrote:
+> Switching back to performance at runtime
+> ----------------------------------------
+> After switching to balanced and then back to performance at runtime,
+> the call succeeds ("set mode 0x01, result 1") and platform_profile
+> reads performance, but package power stays limited to 40-45 W.
+[...]
+> So the EC seems to apply the higher limit only at boot or on resume.
+I found what is behind this, and a third problem.
 
-Therefore, initialize list_mutex only after the first call to
-lwmi_cd_cache() succeeds, otherwise it remains uninitialized and can be
-devm_kfree()-ed.
+Problem 3: performance falls back after about 120 seconds
+---------------------------------------------------------
+Even when performance mode does take effect (after boot or resume),
+the EC drops back to its default state about two minutes later. In an
+idle test it held for about 127 s, with AC online and no battery
+discharge. platform_profile keeps reading "performance", but the fans
+drop and package power is limited to 40-45 W again. Under a gaming
+load, the EC's battery data showed the battery discharging after the
+fallback (up to about 1.9 A, cell voltages dropping) while AC stayed
+connected.
 
-Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
-Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Rong Zhang <i@rong.moe>
----
-Changes in v2:
-- Synchronize the initialization with release-acquire barriers (thanks
-  Ilpo Järvinen)
----
- drivers/platform/x86/lenovo/wmi-capdata.c | 86 +++++++++++++++++++++++--------
- 1 file changed, 65 insertions(+), 21 deletions(-)
+In my ec_sys dumps, EC offset 0x12 reads 0x29 while performance is in
+effect and 0x1f otherwise, and it flips back at the moment of the
+fallback. I could not find a byte that counts down, and 0x62/0x63
+(timer and flags on the timed boards) stay 0x00 throughout.
 
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-index 5748859f8101..3ef8879d8587 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.c
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-@@ -48,6 +48,8 @@
- #include <linux/types.h>
- #include <linux/wmi.h>
- 
-+#include <asm/barrier.h>
-+
- #include "wmi-capdata.h"
- #include "wmi-helpers.h"
- 
-@@ -91,6 +93,7 @@ struct lwmi_cd_priv {
- 	struct wmi_device *wdev;
- 	struct cd_list *list;
- 	struct dentry *debugfs_dir;
-+	bool initialized;
- 
- 	/*
- 	 * A capdata device may be a component master of another capdata device.
-@@ -586,14 +589,14 @@ static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
- /* ======== WMI interface ======== */
- 
- /**
-- * lwmi_cd_cache() - Cache all WMI data block information
-+ * __lwmi_cd_cache() - Cache all WMI data block information locklessly
-  * @priv: lenovo-wmi-capdata driver data.
-  *
-- * Loop through each WMI data block and cache the data.
-+ * Loop through each WMI data block and cache the data locklessly.
-  *
-  * Return: 0 on success, or an error.
-  */
--static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
-+static int __lwmi_cd_cache(struct lwmi_cd_priv *priv)
- {
- 	size_t size;
- 	int idx;
-@@ -615,7 +618,6 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
- 		return -EINVAL;
- 	}
- 
--	guard(mutex)(&priv->list->list_mutex);
- 	for (idx = 0; idx < priv->list->count; idx++, p += size) {
- 		union acpi_object *ret_obj __free(kfree) = NULL;
- 
-@@ -633,14 +635,38 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
- 	return 0;
- }
- 
-+/**
-+ * lwmi_cd_cache() - Cache all WMI data block information
-+ * @priv: lenovo-wmi-capdata driver data.
-+ *
-+ * Loop through each WMI data block and cache the data.
-+ *
-+ * Return: 0 on success, or an error.
-+ */
-+static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
-+{
-+	/* Synchronize mutex initialization. Paired with lwmi_cd_finalize(). */
-+	if (!smp_load_acquire(&priv->initialized))
-+		return __lwmi_cd_cache(priv);
-+
-+	switch (priv->info->type) {
-+	case LENOVO_CAPABILITY_DATA_01:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	guard(mutex)(&priv->list->list_mutex);
-+	return __lwmi_cd_cache(priv);
-+}
-+
- /**
-  * lwmi_cd_fan_list_alloc_cache() - Alloc and cache Fan Test Data list
-  * @priv: lenovo-wmi-capdata driver data.
-- * @listptr: Pointer to returned cd_list pointer.
-  *
-- * Return: count of fans found, or an error.
-+ * Return: 0 on success, or an error.
-  */
--static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struct cd_list **listptr)
-+static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
- {
- 	struct cd_list *list;
- 	size_t size;
-@@ -686,6 +712,9 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struct cd_lis
- 	if (!list)
- 		return -ENOMEM;
- 
-+	list->count = count;
-+	priv->list = list;
-+
- 	for (idx = 0; idx < count; idx++) {
- 		/* Do not calculate array index using count, as it may be truncated. */
- 		list->cd_fan[idx] = (struct capdata_fan) {
-@@ -695,8 +724,7 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struct cd_lis
- 		};
- 	}
- 
--	*listptr = list;
--	return count;
-+	return 0;
- }
- 
- /**
-@@ -712,7 +740,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
- {
- 	struct cd_list *list;
- 	size_t list_size;
--	int count, ret;
-+	int count;
- 
- 	count = wmidev_instance_count(priv->wdev);
- 
-@@ -724,11 +752,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
- 		list_size = struct_size(list, cd01, count);
- 		break;
- 	case LENOVO_FAN_TEST_DATA:
--		count = lwmi_cd_fan_list_alloc_cache(priv, &list);
--		if (count < 0)
--			return count;
--
--		goto got_list;
-+		return lwmi_cd_fan_list_alloc_cache(priv);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -737,17 +761,33 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
- 	if (!list)
- 		return -ENOMEM;
- 
--got_list:
--	ret = devm_mutex_init(&priv->wdev->dev, &list->list_mutex);
--	if (ret)
--		return ret;
--
- 	list->count = count;
- 	priv->list = list;
- 
- 	return 0;
- }
- 
-+/**
-+ * lwmi_cd_finalize() - Finalize the capability data initialization
-+ * @priv: lenovo-wmi-capdata driver data.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+static int lwmi_cd_finalize(struct lwmi_cd_priv *priv)
-+{
-+	int ret;
-+
-+	if (priv->list) {
-+		ret = devm_mutex_init(&priv->wdev->dev, &priv->list->list_mutex);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Synchronize mutex initialization. Paired with lwmi_cd_cache(). */
-+	smp_store_release(&priv->initialized, 1);
-+	return 0;
-+}
-+
- /**
-  * lwmi_cd_setup() - Cache all WMI data block information
-  * @priv: lenovo-wmi-capdata driver data.
-@@ -766,7 +806,11 @@ static int lwmi_cd_setup(struct lwmi_cd_priv *priv)
- 	if (ret)
- 		return ret;
- 
--	return lwmi_cd_cache(priv);
-+	ret = lwmi_cd_cache(priv);
-+	if (ret)
-+		return ret;
-+
-+	return lwmi_cd_finalize(priv);
- }
- 
- /**
+hp-wmi already describes this kind of timeout for the Victus S fan
+modes: hp_wmi_get_fan_count_userdefine_trigger() "enables and/or
+maintains the laptop in user defined thermal and fan states", and the
+fan keep-alive repeats it every KEEP_ALIVE_DELAY_SECS (90 s). Doing the
+same for the Omen thermal profile works on this board:
 
--- 
-2.55.0
+  - call hp_wmi_get_fan_count_userdefine_trigger() right after
+    omen_thermal_profile_set() for a non-balanced profile (it returns
+    2, the fan count)
+  - repeat it every 90 s from a delayed work while the profile is not
+    balanced, and cancel it when switching to balanced
+
+Log with debug prints I added:
+
+  hp_wmi: Omen thermal policy version 0, set mode 0x01, result 1
+  hp_wmi: Omen user-defined state trigger, result 2
+  hp_wmi: Omen keep-alive trigger, result 2
+  hp_wmi: Omen keep-alive trigger, result 2
+
+With this, performance mode has held for roughly 12 min under
+prime95. It also explains the runtime switching problem
+quoted above: with the trigger sent right after the mode change,
+switching from balanced back to performance at runtime takes effect
+immediately, without a suspend/resume cycle. After writing "balanced"
+and then "performance" to /sys/firmware/acpi/platform_profile, prime95
+holds package power at about 89 W, which is the 90 W PL1 I set with
+throttled at 3.4 GHz and 93-95 C.
+
+I'm happy to send the full local diff or to test patches.
+
+Same note as before: an AI assistant (Claude) helped analyze the logs
+and draft this mail. The measurements and tests are my own.
+
+Thanks and greetings from Vienna,
+Jona
 
