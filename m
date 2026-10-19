@@ -1,150 +1,237 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CB04A688D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 11:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792410022; cv=none; b=fjLu1PRXgo1S+cEiq2Cnj00iLPlEh51AcbQB9rFO0AXNcmxyqV+CVYF86cUyuPr4VLT8YrUXPN0ih5vr8RQ1tNuQ6ckLC97P9RED12xBED+Q4sAISsIoiyRvHusoZt0dPDa4mYwupdlmXXnEumbkXTuJmZaSV4hAAiBGRN6NUcE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792410022; c=relaxed/simple;
-	bh=zNa6hjnbJsZirNp2D6itt1WLH37BdWd7BIdoXDU6qOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sLydcyNh+RdmsJ65rfMQWe2I9f6clQbCKTmYfKnkPLENiDUr5f80wEMjFyMQ5SpVsHDtjkan57ClcIVc35eAWUw0vqNVTW0CD2EvxZT4XtrxMO7g1F72Goli1olEWM3rl2EaMYVXZfC3+jPVHcTTHV//gjOfJdV4E+MkzV9twYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=b0qske6Y; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=EDQbixxJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE5D38422E;
+	Mon, 19 Oct 2026 12:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792411244; cv=pass; b=rVCWCQtI1iQS6tAaGzoawUHJEUEFxy/X9xyqMv4wXLkVTS+7nDaux0WmzY85yAGyQrD6RfiT1Ift6Np4B74h+NXfh0Ogvbql65uuIATu0GMl61WpfSU8v3I5iofTSrD+UzuquM1brgvWJesv6b3xOwbPQcM7GU8LdbZbwwd6+wY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792411244; c=relaxed/simple;
+	bh=xU02j8m+D6JSG+GsTV1kqiERwb91tGkQ8GNkssoRa4o=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=HFrjcw3nYlWhkOJshaWr7oT+cqK76cCuo1x01TWg+3A6OKBpBfJntOVplXXdSXRjam2u8eK92JTeXkmb4FqUwEdDr4lbankhwtHvtCO4O5igleS3CmiU3cpdz9GA1c5s1Ay7gMozYnxyiTBCqe8hdW0S8FBuU64IG7ffoWUdZrE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=ZqhXtVFf; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="b0qske6Y";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="EDQbixxJ"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69J8Os7D1665655
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 11:40:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=IqIT7unUNeDVbUGIwzQRnFuw
-	+MAaKeTUmeCgf8MNO6I=; b=b0qske6YXg+7km4y82nPrdnSjk/9jGB8dE2zAfS2
-	aLdB2rwbp9/1KnLBds4r2l+TrTfOr0U2KAQr2xmzeLUMdUyF2/jWc/jzV2W/Kzk1
-	MtUZqw//2uZv88Ml9ugxhsStIbmxF22YsG21P7WFiHCPcXOx5sKcKQgO+9SZqewA
-	Nn9U5MxRg+2/s3jR73PD5JiMN7wGp5myf7+uj7UvOlcx+8Jine2wHPRi1OIIzv5o
-	HDwZfAfu8RHnZTzOeU/78hxlJnQnc9tUb76eQE7DRNM3yaeO6PY6HP03SIfEdORN
-	Z0W+8/fHeQ3IvKkWvCw1PCqKIIktBR/PKTyWevAi2Ib5rg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hdf3n0v48-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 11:40:20 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-93c5ab5c136so337964885a.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 04:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792410019; x=1793014819; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=IqIT7unUNeDVbUGIwzQRnFuw+MAaKeTUmeCgf8MNO6I=;
-        b=EDQbixxJ0NfTXTz7U+4qvABrqvUor5sanbWa0DR/E+8gPR3poqnx8Wdgz9lWq+g42R
-         t3jdLH1nSenRiBJ4HOnH1VbzwsfHAhKx3apt2+zQtHSZlYCTIlqDTp9x07HuY19N6BYp
-         qMIMgu5iBC07+0/cXDZhNC2kOo+7Ag0FSdNpjkwJUWvqmo5pHNeYpoFmgxrCcwaGUj7n
-         niBkZpnsubaOVkk2zk8bDI664ZGJG4zqN8QRo4HLxcV7rPNCyCIWNGYJuDFxmKXQZvp1
-         kvMdmu0pEV+995FCdPF6+6GxsNK78ki5opgFJxt+Sel1iGX5jdjHzkb/EmP59VHEuWQK
-         Hk7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792410019; x=1793014819;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=IqIT7unUNeDVbUGIwzQRnFuw+MAaKeTUmeCgf8MNO6I=;
-        b=z5K8XF4dEuVkglS9CIf9hyWUOpaj981Vs5xDhR5Q3rvOKQKY6MwRRUmjc2Mor3m4cn
-         qu5u5HXlaYRTUI7zXhcI4WwyxWXrpDIlFUasWyuJoNz9WK3nmkNzRbEEtvoA9gUDWBao
-         u+9Em3Gdq/RbqjMc5GAJ7qCs61xX4tSfeeZQWMhlG/5seOqXztCqTLaqpdLr13/LMR5I
-         LldAPZ6w7pjgcNhzaKqbDjO0MBn3f5OL7LhSEbuwFoQIOQpWTv06rKbvwjLXeXBjArjX
-         E4dDiBkNb4wjkGFAJbqBIlVyJWprXAQCbgVvd5EBQWLPcNxd5FLUzq5G9f7pcI/iaHm6
-         ZBlQ==
-X-Forwarded-Encrypted: i=1; AKwUvByrWclLynUm4r06wHgCaykSekV+Chibvr2j2ujn9RhF5St2J1/pP2NT34ZZ1qfcJNoBTpkEmj4POuH1JrRoZnwYoMgw@vger.kernel.org
-X-Gm-Message-State: AFq9FYLqwHkYatitPKBGFv4ousl85ZawyZVnDfPk+ZG1Mb8pxVG0+wft
-	bOJmT5XM31s/6Y9u5moLOnMp5wzdiWBpPrbTF1RAlplgyUAxzKLP/f0UcuehFCX94lHL7Y5YemE
-	HusYVDWerlExotGTdrCh29u4WAUPeDXRqVj7Dv5h+ET8mukrgGdHGkrbZtUkqKgTwNmzFtYIrB7
-	N1
-X-Gm-Gg: AYBFou3b31wnrDFIkoE18v5tVtXpJpPRXyRWpmqgE7RZAsv8x5tXS+1XYCCcXcvxGwr
-	d2rOJ1/ZiBFZbyNU84VaTmfSsvZzRuM8tKq0HevOsjjmsVLKy/ikLz8HAryepI4OmKND2NI7ddT
-	Vibou7zXj+PkVdRgUeY8t/LOBteuVjc4vAC2crtLbGWxrwuH9ahtfjXgUfMrp2wOzFtVpBnSnvu
-	gjUxYGyv11e+tlLpDvpAiM+8TK+h819zm8z4567JsJJS6a+4+VRLUMItm+fL1U85u1+0aJxRDZ2
-	EPAbZqUZJ0+g4uevsy/4ohtkq5hEH5qIOKlQ0JoRUxvuuymbiFw+YkBXYsbrvYcbDdgDU/9Su7i
-	J4OysibaFpnApnUhP
-X-Received: by 2002:a05:620a:258d:b0:939:6dea:374d with SMTP id af79cd13be357-93f29d813camr1251144685a.49.1792410019024;
-        Mon, 19 Oct 2026 04:40:19 -0700 (PDT)
-X-Received: by 2002:a05:620a:258d:b0:939:6dea:374d with SMTP id af79cd13be357-93f29d813camr1251139485a.49.1792410018424;
-        Mon, 19 Oct 2026 04:40:18 -0700 (PDT)
-Received: from oss.qualcomm.com ([188.27.161.187])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1c8a81587sm519633865e9.1.2026.10.19.04.40.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 04:40:17 -0700 (PDT)
-Date: Mon, 19 Oct 2026 14:40:15 +0300
-From: Abel Vesa <abel.vesa@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Abel Vesa <abelvesa@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: glymur-zenbook-a14: Add
- Embedded Controller
-Message-ID: <44vpjtmnwg7wtp6xsqgl54rbpos27fndfru7pmudfvzweyl3zo@r7dxlf74klfl>
-References: <20261015-topic-asus_ec-v4-0-af6305ffcb10@oss.qualcomm.com>
- <20261015-topic-asus_ec-v4-4-af6305ffcb10@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="ZqhXtVFf"
+ARC-Seal: i=1; a=rsa-sha256; t=1792411233; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PMEPr3NIZj3K1fkQWP9rilN6ZynJ7EZDuuC7vEH7XF4SZjTvq0zibvPQaE+JgNYXgQdlrgcbZOVlnTqgQVmkt0erPZvaS+D69x+DMcsLoN0uxLKP1GCaJC/FtKEaiEQnfQvmiE97kKt1GsOaf9Ub4DL0qcydDtUyjAU8TlIbwqQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1792411233; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4yXoG5YUxfbI3LGES2Do+1gRPxz0L6AD1tK7zf8ZUJY=; 
+	b=FRiu6MmXSJjSNztE8w7ah7JHkxwUvBxw4bjzVX731GWd3DZmPkK5pjxx8x/LLcCbGq5MB5pyiZqYq+JFjnzsLvUHkXMZnnO6mWJzThMiuTqcB4OtrjzfcBvHxbsTsdNo2jtwB+miNqbJ+Dqu87dq4HUQFntyXc3tZPVrO7zgdt8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792411233;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=4yXoG5YUxfbI3LGES2Do+1gRPxz0L6AD1tK7zf8ZUJY=;
+	b=ZqhXtVFf6nj7wfoSQE2v6m/K+Qq4xPY0oPkff/vAm0KfQAWHVmAzl2TRCv5RTsOZ
+	2GqTJV0+85q/+b8KlppG0Q8qVSHA/c6QbYdeK5FOa423EXzj57Z/44eF2ml6XZV97+B
+	ZpKEFkecFkCAGJ1OulgLi2yi9kHBB4vhJ0FiyrtOVGnEbfhcdcS7+O3+LvTgCVDRlj2
+	aOy/B93e9ErNie/OUg1KWt7EwuBGm6Fx7QltK+VQrKKq6IBa6ssP03aTYElMvXNlquI
+	PjD+pe/cFYo0uY85x7pYuzQUFSyC51gBevdHlb6amxu59xw7qbaZfDsTqgI47SjKmP2
+	PL3xENd/EQ==
+Received: by smtp.zohomail.com with SMTPS id 1792411228562577.1517549414438;
+	Mon, 19 Oct 2026 05:00:28 -0700 (PDT)
+Message-ID: <006245a9857566cdd7e6bd24882bfec66d2db56c.camel@rong.moe>
+Subject: Re: [PATCH v4 07/12] platform/x86: lenovo-wmi-capdata: Adopt new
+ WMI API
+From: Rong Zhang <i@rong.moe>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"
+	 <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Armin Wolf
+	 <W_Armin@gmx.de>, Charles <hanker007@gmail.com>, Navon John Lukose
+	 <navonjohnlukose@gmail.com>, platform-driver-x86@vger.kernel.org, LKML
+	 <linux-kernel@vger.kernel.org>
+In-Reply-To: <e67534db-c29c-4f89-9b7d-cf9ff5704674@linux.intel.com>
+References: <20261018-lwmi-wmi-new-api-v4-0-aafef7956c4a@rong.moe>
+	 <20261018-lwmi-wmi-new-api-v4-7-aafef7956c4a@rong.moe>
+	 <e67534db-c29c-4f89-9b7d-cf9ff5704674@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 19 Oct 2026 19:54:31 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261015-topic-asus_ec-v4-4-af6305ffcb10@oss.qualcomm.com>
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE5MDA0NiBTYWx0ZWRfX2R7XfQ5EM1hR
- j+urK+7KfhQ763ELXfANFhIYSmD/iP9Xa3ByUCUin4t0ruU45nyRq5gTciTqgIC0nr0CSnKRyUn
- lxmzqKtXpziGbYjiQuNrtrwumj9zzOg=
-X-Proofpoint-ORIG-GUID: ifRdmlfUZqFuyrDbmHwyR-FKQgEAv8rx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE5MDA0NiBTYWx0ZWRfXxFyKiq7c29KW
- er6Y7LQ+91W65N55NhjeFEJSC4RCbP1XGEIIhmKn2YCkb1eJ/ohIZc5tmvlOY8qpIJM1nw4sINE
- S+vWGImsNtGf0r+8knPinwDqMZkR4Ori/ZYnJOWPsLvUFFB9gW8fMqqcUpLetCkiLN1Oay/Tmv/
- eNJJixGGw+CYAe93/6MzjboVNIZ3nq7WHpXq1xxUgaWzo3SKmZcHhsMmXfUuA/mkTcaxyqZx5By
- +Bqs294g3RbrcwH0l7tVoT77fMsWcNqAn3wb1tKnTbNfdSPPPDiiE0LERPy95FoaFRNdissSzz3
- jQvFqBEUR28JZzqKmcEwErh7hOS0tz9WF1TT1JC/zDJ9iXrBHnj8l6IVeZ/cliV7pK0IvhOhquN
- xVX3nlXlujIb6CEzs+WDjf1fDie7B6eiz7qzNNdEiDJfonxnRmDVl67mkF5C9sVM2trzMmkTebj
- fKZgK0Y50qa2lnQxgdg==
-X-Proofpoint-GUID: ifRdmlfUZqFuyrDbmHwyR-FKQgEAv8rx
-X-Authority-Analysis: v=2.4 cv=Zf2IpcVA c=1 sm=1 tr=0 ts=6ad601a4 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=Qvngrl3H0rQgGg+94q4QgA==:17
- a=kj9zAlcOel0A:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
- a=EUspDBNiAAAA:8 a=-FifcBtKAQNI-ioUATQA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-19_03,2026-10-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
- phishscore=0 priorityscore=1501 bulkscore=0 suspectscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610190046
+User-Agent: Evolution 3.56.2-10+b1 
+X-ZohoMailClient: External
 
-On 26-10-15 10:55:32, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> The Glymur-based Zenbook A14 features an Embedded Controller running
-> custom ASUS firmware (which is loosely based on the reference Qualcomm
-> Hamoa EC one with a lot of modifications). It provides keyboard
-> backlight control, additional temperature sensor readouts, fan speed
-> monitoring and a number of miscellaneous functions.
-> 
-> Describe it.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Hi Ilpo,
 
-Reviewed-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Thanks for your review.
+
+On Mon, 2026-10-19 at 09:46 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Sun, 18 Oct 2026, Rong Zhang wrote:
+>=20
+> > The new WMI API supports multiple ACPI types by converting them into a
+> > unified buffer that satisfies alignment and size requirements.
+> >=20
+> > Adopt it to make our life easier.
+> >=20
+> > Note that the new WMI API only accepts a few ACPI types to conform to
+> > the behavior of the Windows WMI-ACPI driver. By adopting the new API, w=
+e
+> > intentionally rejects improper ACPI types instead of silently ignoring
+> > them.
+> >=20
+> > Meanwhile, considering that `struct_size(block, data, count * 3)' may
+> > overflow when calculating `count * 3', ignore Fan Test Data with count =
+>
+> > U8_MAX instead of capping `count'.
+> >=20
+> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> > Tested-by: Navon John Lukose <navonjohnlukose@gmail.com>
+> > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> > Changes in v4:
+> > - Fix typo (thanks Mark Pearson)
+> >=20
+> > Changes in v3:
+> > - Leave struct cd_fan_block's __packed attribute as is (thanks Armin
+> >   Wolf)
+> > ---
+> >  drivers/platform/x86/lenovo/wmi-capdata.c | 70 ++++++++++++++---------=
+--------
+> >  1 file changed, 31 insertions(+), 39 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platfo=
+rm/x86/lenovo/wmi-capdata.c
+> > index 3c09bb9e3d46..abf5ffda7163 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-capdata.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+> > @@ -626,17 +626,19 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv *p=
+riv)
+> >  	}
+> > =20
+> >  	for (idx =3D 0; idx < priv->list->count; idx++, p +=3D size) {
+> > -		union acpi_object *ret_obj __free(kfree) =3D NULL;
+> > +		struct wmi_buffer wbuf;
+> > +		int ret;
+> > =20
+> > -		ret_obj =3D wmidev_block_query(priv->wdev, idx);
+> > -		if (!ret_obj)
+> > -			return -ENODEV;
+> > -
+> > -		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
+> > -		    ret_obj->buffer.length < size)
+> > +		ret =3D wmidev_query_block(priv->wdev, idx, &wbuf, size);
+> > +		if (ret =3D=3D -ENODATA) /* The block is too short, probably stubbed=
+. */
+> >  			continue;
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		/* Capdata 01 is an extension to capdata 00. */
+> > +		struct capdata00 *capdata __free(kfree) =3D wbuf.data;
+> > =20
+> > -		memcpy(p, ret_obj->buffer.pointer, size);
+> > +		memcpy(p, capdata, size);
+> >  	}
+> > =20
+> >  	return 0;
+> > @@ -678,43 +680,34 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *pri=
+v)
+> >   */
+> >  static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
+> >  {
+> > +	struct wmi_buffer wbuf;
+> >  	struct cd_list *list;
+> > -	size_t size;
+> > +	int ret, idx;
+> >  	u32 count;
+> > -	int idx;
+> > =20
+> > -	/* Emit unaligned access to u8 buffer with __packed. */
+> >  	struct cd_fan_block {
+> >  		u32 nr;
+> >  		u32 data[]; /* id[nr], max_rpm[nr], min_rpm[nr] */
+> > -	} __packed * block;
+> > +	} __packed;
+>=20
+> Could this just be moved outside of the function?
+
+Makes sense. Will submit a v5 soon.
+
+Thanks,
+Rong
+
+>=20
+> > -	union acpi_object *ret_obj __free(kfree) =3D wmidev_block_query(priv-=
+>wdev, 0);
+> > -	if (!ret_obj)
+> > -		return -ENODEV;
+> > +	ret =3D wmidev_query_block(priv->wdev, 0, &wbuf, sizeof(struct cd_fan=
+_block));
+> > +	if (ret =3D=3D -ENODATA) /* The block is too short, probably stubbed.=
+ */
+> > +		return 0;
+> > +	if (ret)
+> > +		return ret;
+> > =20
+> > -	if (ret_obj->type =3D=3D ACPI_TYPE_BUFFER) {
+> > -		block =3D (struct cd_fan_block *)ret_obj->buffer.pointer;
+> > -		size =3D ret_obj->buffer.length;
+> > +	struct cd_fan_block *block __free(kfree) =3D wbuf.data;
+> > =20
+> > -		count =3D size >=3D sizeof(*block) ? block->nr : 0;
+> > -		if (size < struct_size(block, data, count * 3)) {
+> > -			dev_warn(&priv->wdev->dev,
+> > -				 "incomplete fan test data block: %zu < %zu, ignoring\n",
+> > -				 size, struct_size(block, data, count * 3));
+> > -			count =3D 0;
+> > -		} else if (count > U8_MAX) {
+> > -			dev_warn(&priv->wdev->dev,
+> > -				 "too many fans reported: %u > %u, truncating\n",
+> > -				 count, U8_MAX);
+> > -			count =3D U8_MAX;
+> > -		}
+> > -	} else {
+> > -		/*
+> > -		 * This is usually caused by a dummy ACPI method. Do not return an e=
+rror
+> > -		 * as failing to probe this device will result in sub-master device =
+being
+> > -		 * unbound. This behavior aligns with lwmi_cd_cache().
+> > -		 */
+> > +	count =3D block->nr;
+> > +
+> > +	if (count > U8_MAX) {
+> > +		dev_warn(&priv->wdev->dev,
+> > +			 "too many fans reported: %u > %u, ignoring\n", count, U8_MAX);
+> > +		count =3D 0;
+> > +	} else if (wbuf.length < struct_size(block, data, count * 3)) {
+> > +		dev_warn(&priv->wdev->dev,
+> > +			 "incomplete fan test data block: %zu < %zu (%u fans), ignoring\n",
+> > +			 wbuf.length, struct_size(block, data, count * 3), count);
+> >  		count =3D 0;
+> >  	}
+> > =20
+> > @@ -729,11 +722,10 @@ static int lwmi_cd_fan_list_alloc_cache(struct lw=
+mi_cd_priv *priv)
+> >  	priv->list =3D list;
+> > =20
+> >  	for (idx =3D 0; idx < count; idx++) {
+> > -		/* Do not calculate array index using count, as it may be truncated.=
+ */
+> >  		list->cd_fan[idx] =3D (struct capdata_fan) {
+> >  			.id      =3D block->data[idx],
+> > -			.max_rpm =3D block->data[idx + block->nr],
+> > -			.min_rpm =3D block->data[idx + (2 * block->nr)],
+> > +			.max_rpm =3D block->data[idx + count],
+> > +			.min_rpm =3D block->data[idx + (2 * count)],
+> >  		};
+> >  	}
+> > =20
+> >=20
+> >=20
