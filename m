@@ -1,60 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.25
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792445724;
-	b=kanmvN2NSIAQd0YSfTdvxHps51pS3sHzo9J5rp3wKVg0ns03Ebph3ZoR/gfvLxLxhfEZ
-	 mR2P1jWr4It/sFG1ThvAqnh2fVdKXMP7SNXD85h+odvmV/SDaqHCb7fX2G74XBqLxl4zU
-	 /dWpDxuuQZQSJNyjsmxcEUgtMv7Rdo+6HhSZWBLra6yxsDs5QCfsi7YYEpmTVbIfk7Nri
-	 huOPAzRwo/By8Bwr9vemoBKHkizREJsO9lF1VkQJss2BgbCUoIMKuFxJudG4olNfVv6Nh
-	 piUv4s0viaeypWnITkvWGq2TfcYQTTtLshT5mhtqUik9FusKwdPdM1bktqbxdycBakQ==
+	t=1792446715;
+	b=fBoW7+K1izGCTCARz39D//b8HT3td0Quq9Nnuow+g6aSUSFWvq8TYBhNp5fI6yz5N3hL
+	 nNDfGiqDZlzzorLXli7uIj+YLDo5xpfRpzcPVfvxI9M9BRbPD/oqesmqdpa44fmXlJCwJ
+	 gwlRSnStCVClm5FTpctEvcupuTOVGfXnUmYZ4Km705N1cYO92cdsmk33wLl9vypHaaJ4z
+	 JloA+FzvlthB8US1GQ7BOay540tizsI9pgOqll/6neVhn4DBEvIbLNKnRiUwvWfb3YKIp
+	 dDb3/qIycEMde8EArXpxw2XUqOGMrPGuJmOe59XSeVKLQvPnc5b4WnZxbMEJSjpZOKw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792445724;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1792446715;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=vHL+OCLoMPPykU/EzZkExlVkKDRpQnrt5ls5P4riEHI=;
-	b=IUoqc1JZlJZFwCTPrh4FC+l8E8S8t8XxUVwJC3/Cqip5+nz/+Q1GhUuCtGYZabRIbcJ1
-	 D53frdrmHGvmP1yquWVRErpSWBQu/p//9Y/FIbabci9z10MD7LWrS8fNTkmAc/T/m6Ydw
-	 24w7COcixG509GKicn0bOYXoBd18weVz30a12GL9c9HDgR/mdZeXz1xgT+mL51sOofYv8
-	 L/u4t6j7lQ6lLV5/7g8R2oI9KIF12cVYuYc8K1zjzU+Dq6zEnduueJef09qP6CkxSFZml
-	 OhmBORMy1DRvflS6n3WN4fY6kxWsIiPDjXmEASNDfxUDkCVreMCqbVxKrkwnDJhwkBw==
+	bh=LqjyEKLTkX6+1Aqf9iomjAog7kKxzRPzlu8iaZzTXog=;
+	b=ORdAV0Tw3ouw57LCvIC4cmqS9yXWll73xXet6pCjOlBn/YtD6prBzjDqgiK/utEaxsKs
+	 G3Ks0CXFHi9AATz8qeq+T+hDGARmzycz9wcS6dms8AnmK9ALX9mjoYJ6kf6i7Ps0e9eUD
+	 jKhGZ2eaNSpWqCWpcKF3u+MBQR6XEaJLd5Bkqqw18nowN0pRZa7tml91/TaZFUVVVUS0g
+	 a+UAibZ9rV/TsVU6GaXlCbsF/rRNVXGwGmIwQieOXlHDaj+Bm9JZMBSc8Fqw3DNGsNX+9
+	 GQWv/v5XUO2+hwEQjUtHB0YIOEnC8Y0jYkYt40WIdFb5FKH2oOb5C5+G1LzNRAbhQhA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=yuh7i5iribccpkngmjosjkrl4i.protonmail2 header.b=sxObmSJd;
-	arc=none smtp.remote-ip=109.224.244.25
-Received: from mail-24425.protonmail.ch (mail-24425.protonmail.ch [109.224.244.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=rUrh4AGz;
+	arc=none smtp.remote-ip=95.215.58.54
+Received: from mta1.migadu.com (out-54.mta1.migadu.com [95.215.58.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613C5606A31B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 21:35:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 613C5606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70048606A319
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 21:51:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70048606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=yuh7i5iribccpkngmjosjkrl4i.protonmail2 header.b=sxObmSJd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=yuh7i5iribccpkngmjosjkrl4i.protonmail2; t=1792445720;
-	x=1792704920; bh=vHL+OCLoMPPykU/EzZkExlVkKDRpQnrt5ls5P4riEHI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=sxObmSJdvY5lQ5WfR+Lqln6YArQoAfFjxQr850X/3sv+dBDn+fAJlB95L9wv679Bl
-	 SAF8/kN+LXZX61PXvUF3QiTKDEQEL0DKs8/c3SVaYiNP5+fhnwyRfFbEg7NGNS2CQc
-	 3yrYzu9cwPvbMFE0jQwSDAsRMm5K8obM2lfuaIWJRrVDUfCGhl/WMMyA+sdehqis10
-	 YVfYnQ+UadYhEwoZWoLaF0uaWzbejBY9EjlbjugLVclDsk9q4CS4ku3qENA2vcxmA1
-	 +IjvfM4/ZD6f4TozjCEAggOsyVzplWoTbogFlQ51uRCw1x4fMk/kC+GLXaf2dhrux/
-	 j3GXPNTtipBtA==
-Date: Mon, 19 Oct 2026 21:35:15 +0000
-To: Lyndon Sanche <lsanche@lyndeno.ca>
-From: verazimmerman1987 <verazimmerman1987@proton.me>
-Cc: "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>, "daniel.lezcano@kernel.org" <daniel.lezcano@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "superm1@kernel.org" <superm1@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: platform_profile: power-saver lost on Panther Lake when SoC Power Slider and dell-pc are both bound (low-power vs quiet)
-Message-ID: <BZwCwyE08uZUOYVbDR8jIYn6pG9aKdn5VG6e5EzDnlo6KgYEmMA2szkOBVrXMbbDclud59u4DWTPP5h9tr2IqM43QL3tDXUnGs03TqgcGJw=@proton.me>
-In-Reply-To: <DM8T7ELISJJB.2MKMPBE1BELFC@lyndeno.ca>
-References: <UPfoGdnS1R04q8uekSMTyes9PbDuvsGeBE42zHmsjD2xIdfPYx7ejdcpZhrxWFq6uwoMvClHTuHbrwaCh3yxD0Rw7OarNABC4dZsDra44mk=@proton.me> <DM8T7ELISJJB.2MKMPBE1BELFC@lyndeno.ca>
-Feedback-ID: 187400468:user:proton
-X-Pm-Message-ID: 55d50284c3692d3dddaf569c107074e03854b4b6
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=rUrh4AGz
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=iuINLRNPHC+Snxt6vGRFDY7i0T8cvdP6Sc9wX0VcqPU=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792446712; v=1; x=1793051512;
+ b=rUrh4AGzuU2aDuc52tCobwUYVZaPw1cs1NFlVHQRZeX5Wr9K5SSXdHlPdXIYiKEim/ju584I
+ CA5WhsKmbIZLgDWveLgJjChxb10qtrSiQcYVQxaXweR7aQXG1al7y8U1UVRRqSiYpR4A6u+YUCd
+ vgxYdFnHAPtjPkrXPniP+twg=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 78e351183aea031e;
+	Mon, 19 Oct 2026 21:51:52 +0000
+X-Mizu-Trace-ID: 78e351183aea031e
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <f71595e8-8553-4e18-89a8-cca93cd65f56@linux.dev>
+Date: Mon, 19 Oct 2026 23:51:51 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,84 +58,89 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-wmi: Clamp keyboard backlight level
+ from hotkeys
+To: Alex Bogusta <alex@bogusta.com>, Corentin Chary
+ <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Antheas Kapenekakis <lkml@antheas.dev>
+Cc: Denis Benato <benato.denis96@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261016015117.32174-1-alex@bogusta.com>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20261016015117.32174-1-alex@bogusta.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Hi Lyndon,
+On 10/16/26 03:51, Alex Bogusta wrote:
+> Pressing the keyboard backlight down key at level 0 drives the cached
+> level negative, so the backlight then needs one extra up press per
+> extra down press before it turns back on. brightness_hw_changed also
+> reports out-of-range values: 4 after pressing up at the maximum level,
+> and ENODATA or values like 4294967294 below 0.
+>
+> kbd_led_set_by_kbd() stores the new level without clamping it, and
+> kbd_led_update_all() skips do_kbd_led_set() for negative levels and
+> notifies userspace with the unclamped value. The level is computed in
+> enum led_brightness, which is unsigned, so the subtraction at level 0
+> wraps around.
+>
+> Compute the level as int and clamp it in kbd_led_set_by_kbd(), which
+> covers every hotkey path.
 
-Thanks for looking at this.
+Hi Alex,
 
-> What if platform_profile itself was changed to separate the user/system
-> choice: the "desired" profile, from the "actual" profile(s)?
+thanks for taking a look at this!
 
-From the user side this sounds right, and it matches what I would
-expect as a user: I pick one profile, each driver does the closest
-thing it can. A few observations from testing on this machine:
 
-1. The legacy /sys/firmware/acpi/platform_profile is where it actually
-   breaks today. When I set dell-pc=3Dquiet and the SoC slider=3Dlow-power
-   by hand, the legacy file reports "custom", and power-profiles-daemon
-   treats that as an external change and falls back to "balanced". If
-   the legacy file reported the desired profile instead of "custom",
-   the main userspace consumer would keep working.
+> Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
+> Signed-off-by: Alex Bogusta <alex@bogusta.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 9fb3fe4b161c..599a73862903 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1949,10 +1949,10 @@ static int kbd_led_set(struct led_classdev *led_cdev, enum led_brightness value)
+>  	return 0;
+>  }
+>  
+> -static void kbd_led_set_by_kbd(struct asus_wmi *asus, enum led_brightness value)
+> +static void kbd_led_set_by_kbd(struct asus_wmi *asus, int value)
 
-2. On the ordering: low-power / quiet / balanced / performance fit a
-   linear scale well. "cool" is less clear. On this Dell its DTT table
-   has the same PL1 range as quiet (15-19 W) but a lower skin
-   temperature target (40 vs 42 C), so it is more of a thermal
-   preference than a power level. Placing it next to quiet, or letting
-   drivers declare it as an alias of the nearest level, would probably
-   be good enough.
+Is the change of type really necessary? I think clamp_value does everything required already.
 
-3. Ties and gaps: when a driver has no exact match, rounding towards
-   the lower-power side seems the safer default (e.g. desired quiet ->
-   low-power on the SoC slider rather than balanced).
+>  {
+>  	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+> -		asus->kbd_led_wk = value;
+> +		asus->kbd_led_wk = clamp_val(value, 0, ASUS_EV_MAX_BRIGHTNESS);
+>  		asus->kbd_led_notify = true;
+>  	}
+>  	queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> @@ -4668,9 +4668,9 @@ static int asus_wmi_get_event_code(union acpi_object *obj)
+>  
+>  static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+>  {
+> -	enum led_brightness led_value;
+>  	unsigned int key_value = 1;
+>  	bool autorelease = 1;
+> +	int led_value;
+>  
 
-As an interim step, the hidden-choice approach would fix power-saver
-on current Panther Lake Dell systems with a small, backportable
-change. Another user on the same model (XPS 14 DA14260) hit the same
-power-saver -> balanced fallback independently:
-https://github.com/omacom/omarchy/issues/14174
+Honestly I don't like the change of type... I would prefer something that prevents the
+bad thing from happening without changing the type.
 
-I'm happy to test either approach on this hardware.
+>  	if (asus->driver->key_filter) {
+>  		asus->driver->key_filter(asus->driver, &code, &key_value,
+>
+> base-commit: 98f039265e580291d5e76a11b2072541fbb1c393
 
-Thanks,
-Vera
-
--------- Original Message --------
-On Monday, 10/19/26 at 15:21 Lyndon Sanche <lsanche@lyndeno.ca> wrote:
-Hello, thank you for reporting this.
-
-To me there are a number of ways we could handle this.
-
-On Fri Oct 16, 2026 at 1:10 PM EDT, verazimmerman1987 wrote:
-> This looks like the same class of problem as amd-pmf + asus-wmi,
-> which was solved by adding "quiet" as a hidden choice in amd-pmf
-> (commit 44e94fece517, "platform/x86/amd: pmf: Add 'quiet' to hidden
-> choices"). Would a similar hidden "quiet" (and perhaps "cool") choice
-> for the Intel SoC Power Slider, mapped to its low-power setting, be
-> acceptable? I'm happy to test patches.
-
-This certainly would fix the immediate issue: platform_profile providing
-consistent choices across handlers to allow selecting a range of
-profiles exposed by the system. I feel like there is a better way to
-handle this besides adding hidden profiles.
-
-What if platform_profile itself was changed to separate the user/system
-choice: the "desired" profile, from the "actual" profile(s)? In this
-scenario, different drivers expose different possible profiles, the
-system tries to apply the closest possible profile per-driver to the
-user's choice. The possible profiles would have an index to indicate
-where on a linear scale it lays. If I request quiet (2), but the Intel
-SoC slider only implements power-saver (3), the system chooses 3 for
-that driver.
-
-I am only thinking out loud and would find comments on this to be
-useful. I realize the behaviour of some profiles do not exactly fall on
-a linear scale so this would need consideration as well.
-
-Thanks,
-
-Lyndon
-
+Best regards,
+Denis Benato
