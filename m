@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.226
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792447927;
-	b=wAWba6Y+XohBDHgd8tfQ6SSFKO6nL37UziAqRDoiLhibk6AUz+VBbTWqtQRE4HIRM0qA
-	 uf5+eST3aHjo8ri4Ms4GEs2n9LRMPu7coV+rkoRFzen7D6HqJMd32tk24xvrRU7FqiP8L
-	 EA4O7fhKCSyc35dhA9jIx442bVeg/EZHeWOq+FCYxkAdpWCaaZLfEQc8TDAn8d8S9/e0G
-	 dXrrLl9Uz1GZsCj64ek4xCDxxzZ+b4GRmhOP4lOspkMBuQBcPohmyQu8kTC6zFuC/V1t5
-	 GEgivmxFRHwDMGvxF0SkRGHf0o8RF26qerQC+isTkbNk2G3Dh8mNmK81mVzx9yhXE9Q==
+	t=1792448200;
+	b=1nmNpd2P0N/mQ4Q9ydbFAzYly3NNA4qrnzAE8VD4zv/e04bjhZpxLYRKpPq/qWHNGYGR
+	 8qx+pffHiyFcq8i9CygljpnG+G4pNF9bG9a9FAG54jCFc72WokIC/tpMtNQkdprl+OO0C
+	 xF8qJBMvhN5EcFkJ6zus0RAm6ZkxT2tOboSogcto+eNj1uNJ0j/U7ND8faqGgUQVkc6bK
+	 OUNrs/Kvj9TaN3wJVB256UkZEHuxi44Yf16lOcp88BtcYbABetDaSiA/B059EnoOgpWM/
+	 NtWBbGtJ3xD+v1QZ9trzD/Aqbkr0ejPe7nYgMgAkzQ6/K3BN4NHPrhntJfXnQQLYdlQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792447927;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792448200;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=qOgEM347UA2oUXrlePKVhdOzVwXTFnw/rujmP6OQ7Og=;
-	b=GK7a86V6j/vulLb4/ocNoYIgb3veGMttoAb8LwOuO81mMh5PnMFWpBBf5PuLU2AHI5Sx
-	 q5qssGprxJrGf+Cc6Hdhi8ARV8lQRAPvp9+jP79cAz68KcjkgxE+5pmYRFyVzZVvrfaty
-	 XsgDsx53hgx3GgKNRxsSWpudo46/KiHYGcKtFxcbPSSIFejvS9W1oFNLi64xiQccBPWWj
-	 BmmQshqLK4iLtIpgTT/FeXDQ5ZR+Hf3Uaj3l0iR+b7AhMX5LrwRUGiw7B5mfR/nNR3Qmv
-	 QZHZfVnQ3pIPoc3URHv3QLs0foEwrohTmaTmMBKE8hWkF7dYjAaEw3DDIHLiXHyFHYA==
+	bh=EXsWdRRXk9+eSwgIbAC5EdjqHAJ26rQd5xjGJ291me8=;
+	b=kiFhcdvLZEYFm3503bhUVFaBdMi941gfHh0jzqtiYG1dTOfxNu8FYgVJYbD9uILYk7p1
+	 XIGToGZ38XU/nOG457/Z50JXaBeDXUvLJbl9aXOANju6BdDI+roIhksLNijqd+8NYwCOi
+	 ESddHaE70n1qLBz8hBcE58PHyLoJtl+gRi0vBtXRkB2HS+uiM23uQHzlXjoj8Ucqu9qa0
+	 eOAicCg4EeaYBzczG7u9F+34LEPPq1vmqUyDfaU7h+1PpoZWR3UTrBhTgzJr65R6gk63x
+	 u/NkTmvarEIENhyVzcdlh7jOq/cdcXYMNW5Uo7ZJfO4mCIpHEI6uOl+FqzFMinH4/Dg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FhAzmzFg;
-	arc=none smtp.remote-ip=95.215.58.195
-Received: from mta1.migadu.com (out-195.mta1.migadu.com [95.215.58.195])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=k4f4OZv6;
+	arc=none smtp.remote-ip=95.215.58.226
+Received: from mta1.migadu.com (out-226.mta1.migadu.com [95.215.58.226])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F51606A31A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 22:12:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4F51606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35CB606A321
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 22:16:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D35CB606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FhAzmzFg
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=k4f4OZv6
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=DikdP9xMiFcD79eHzl2Rx85QAWRmN2Gb3vUT8s7Ubxs=;
+DKIM-Signature: a=rsa-sha256; bh=VdViblTxEAGeTZ5GLdZhsWWOx0ITRuctWTHtwxKtpLE=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792447924; v=1; x=1793052724;
- b=FhAzmzFgLT58AZzAGSVbJ21vLRvLIp41QnyctBylJnPV/rp43SqizB+agP1IhsoNxpAvxzhC
- VYtC8/wPdXg6BaHu5EexnR5xGd5k98M8glcnW69JdR+BxVQMQi0azR/dQyVPVLt749iRxr59eDa
- XY9uITxiN8GfAsHDeEmg+BS4=
+ t=1792448198; v=1; x=1793052998;
+ b=k4f4OZv635S01y0v3A3Q7XDOcojtHz8dTJgq5xYLNlP0MJeTtTTRCuZafhrYz9QN93pHtySU
+ 7dTHhoG52dJxVYx/qungin/U69z/JnmoWSpnN5xird9GyNNXJSk9FepUK4UgGLLGIrWfsDUOpOh
+ ZUrGTW00fig1PK+mQ+ZP5NIQ=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 1c70924cc703aeac;
-	Mon, 19 Oct 2026 22:12:04 +0000
-X-Mizu-Trace-ID: 1c70924cc703aeac
+Received: by smtp.migadu.com with ESMTPS id 4a9cb402a2071a1a;
+	Mon, 19 Oct 2026 22:16:37 +0000
+X-Mizu-Trace-ID: 4a9cb402a2071a1a
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <d27c2b12-8968-4eec-b925-d5345ba1821e@linux.dev>
-Date: Tue, 20 Oct 2026 00:12:03 +0200
+Message-ID: <6eeab3fd-3f87-4289-9e5e-b8b3c2679116@linux.dev>
+Date: Tue, 20 Oct 2026 00:16:37 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -59,122 +59,49 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Ignore spurious 0xe5 events on
- GU605MY
-To: Evgeny Volferts <eugene.wolferz@gmail.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>
-Cc: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261015163029.107250-1-eugene.wolferz@gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: asus-laptop: Unregister the wimax
+ rfkill on exit
+To: "Pavel Kossenko (kotekompotek)" <kotekompotek@gmail.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261010193837.1120-1-kotekompotek@gmail.com>
+ <20261010193837.1120-2-kotekompotek@gmail.com>
 Content-Language: en-US
 From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20261015163029.107250-1-eugene.wolferz@gmail.com>
+In-Reply-To: <20261010193837.1120-2-kotekompotek@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 10/15/26 18:30, Evgeny Volferts wrote:
-> The ASUS ROG Zephyrus G16 GU605MY periodically emits an
-> unrecognized WMI event (0xe5), approximately every 12 seconds.
+On 10/10/26 21:38, Pavel Kossenko (kotekompotek) wrote:
+> asus_rfkill_init() registers an "asus-wimax" rfkill switch on machines
+> that implement WM_RSTS, but asus_rfkill_exit() never unregisters it.
+> The rfkill device is leaked when the driver is removed, and also when
+> probe fails after asus_rfkill_init() has succeeded.
 >
-> The event is reported as KEY_UNKNOWN through the Asus WMI hotkeys
-> input device. When the session is locked, it causes both the
-> internal display and an external monitor connected through a
-> Thunderbolt dock to wake up repeatedly.
->
-> Add a DMI-specific quirk to suppress this event on the GU605MY
-> without affecting other ASUS notebook models.
->
-> Ignoring the event was first verified on a 7.2.7-based OGC kernel.
-> The DMI-specific quirk was subsequently built against 7.2.8-ogc5
-> and tested on 7.2.9-ogc2 and 7.2.9-ogc4. On both 7.2.9 variants,
-> the DMI match was confirmed and the unknown 0xe5 event messages
-> disappeared.
+> Add the missing asus_rfkill_terminate() call. It is a no-op when the
+> switch was never registered.
 
-Hi Evgeny,
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
 
-Thank you for your work!
-
-I am thinking that a quirk with e5 in the name is a bit overly specific...
-
-That code has never been handled and is just the EC repeating some settings.
-
-I am thinking that perhaps the best thing to do is just create a case 0xE5 that
-simply does the ignore with no quirks check and a nice comment outlining
-why it is done.
-
-I don't see asus repurposing that for something else honestly so it should
-be future-proof enough and will potentially avoid this to other models as
-well.
-
-On the other end it would be cool to know what that really is telling us...
-
-If you don't come up with an answer I would defer to Ilpo whether preferring
-reducing quirks or keeping the symmetry within that key_filter function.
-
-I am fine either way.
-
-Best regards,
-Denis Benato
-
-> Signed-off-by: Evgeny Volferts <eugene.wolferz@gmail.com>
+> Fixes: 3c8671ffd334 ("asus-laptop: add rfkill interfaces for wlan and wwan")
+> Assisted-by: Claude Opus 5.5
+> Signed-off-by: Pavel Kossenko (kotekompotek) <kotekompotek@gmail.com>
 > ---
->  drivers/platform/x86/asus-nb-wmi.c | 17 +++++++++++++++++
->  drivers/platform/x86/asus-wmi.h    |  1 +
->  2 files changed, 18 insertions(+)
+>  drivers/platform/x86/asus-laptop.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index aeb461b1644d..8d69231d25a0 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -150,6 +150,10 @@ static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
->  	.key_wlan_event = ASUS_WMI_KEY_IGNORE,
->  };
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+> index de607ed..8e69f02 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -1332,6 +1332,7 @@ static void asus_rfkill_terminate(struct asus_rfkill *rfk)
 >  
-> +static struct quirk_entry quirk_asus_gu605my = {
-> +	.ignore_e5_wmi_event = true,
-> +};
-> +
->  static struct quirk_entry quirk_asus_z13 = {
->  	.key_wlan_event = ASUS_WMI_KEY_ARMOURY,
->  	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
-> @@ -562,6 +566,15 @@ static const struct dmi_system_id asus_quirks[] = {
->  		},
->  		.driver_data = &quirk_asus_z13,
->  	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "ASUS ROG Zephyrus G16 GU605MY",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Zephyrus G16 GU605MY_GU605MY"),
-> +		},
-> +		.driver_data = &quirk_asus_gu605my,
-> +	},
->  	{},
->  };
->  
-> @@ -690,6 +703,10 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
->  		if (quirks->key_wlan_event)
->  			*code = quirks->key_wlan_event;
->  		break;
-> +	case 0xE5:
-> +		if (quirks->ignore_e5_wmi_event)
-> +			*code = ASUS_WMI_KEY_IGNORE;
-> +		break;
->  	}
->  }
->  
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-> index 5cd4392b964e..e7772397cd10 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -41,6 +41,7 @@ struct quirk_entry {
->  	bool wmi_force_als_set;
->  	bool wmi_ignore_fan;
->  	bool filter_i8042_e1_extended_codes;
-> +	bool ignore_e5_wmi_event;
->  	int key_wlan_event;
->  	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
->  	int wapf;
+>  static void asus_rfkill_exit(struct asus_laptop *asus)
+>  {
+> +	asus_rfkill_terminate(&asus->wimax);
+>  	asus_rfkill_terminate(&asus->wwan);
+>  	asus_rfkill_terminate(&asus->bluetooth);
+>  	asus_rfkill_terminate(&asus->wlan);
