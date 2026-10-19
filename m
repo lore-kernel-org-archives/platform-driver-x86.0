@@ -1,488 +1,235 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6B03FD121
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 07:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45CA3FE64A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 07:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792395619; cv=none; b=caiGMHciEX8fn5cpDsq3rQ4ZuiPMEcAQmzPscoGckDFoPZJcTif3SfF4x+kAPCzmzaoiRYN4gfPzU7f5FK/9jax2r22oC9qOzA9xFsknf6427o/MfDFx6/BkNqO7Cms1/5A4QNN/D0irQCDw3zgZdfPpUGrkoX59jzB7tQ/V/LQ=
+	t=1792395653; cv=none; b=eOBWyS+die7U7DoUB13f/4A31nb+jsjPWSn3/snsdFDXxNwaez/KzUawCBIWb26tjuSvixjLWIsJJUp73zpWEpMKVC79OF0goMCthqzHRmVYOD877FnFz7/LZHHgXMznyUUlQi9hJwZu8oKt2ewUtgF2vdVk0wyIjXlTqODSJAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792395619; c=relaxed/simple;
-	bh=Zk3AtaRrsWVloEcs5Wdm1kb5Rq5+jNt3UApPvmURU9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cmU3ldksA7VwtNtjV52ddps5mnlH5ZstbE3/Nb/iGZ3JaIdeZ3Xc1LG+vaYkhv3RYgCZ+1MkO71/IWePtItn6C7PCsUQjQkIaf3TpbDGp/cX8IuvNoryE+uv8n+I20IeGWAjgiWU88vxaPM6/GiMlLCqbq1VKTawWI/hjZx3iJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q2zATEqf; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Dj27jw7o; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1792395653; c=relaxed/simple;
+	bh=OCVMV0IKrd29NclpDRVmil+PGO5nL1mX3UOCSUhJQm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eJ2vNUA5kvnfYCU0B+gRjEddGwT6grw1nNGRWJhg7oh92FvJ8nGm/v3Bz/eqKJR0MlBzUKt0sQ+xFExtdyBR8zrKUQWkLO48atYSHmuJiBFPtXD5pkO5UtcYfGIK74rxgRMD68xNsGSAF7qm6hX5MtiElCiT/ILlimMTsUG5PGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n/wMucLj; arc=none smtp.client-ip=74.125.82.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q2zATEqf";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Dj27jw7o"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69J4irmG2818435
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 07:40:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=rFGmPQr3jkd
-	6FbiHxP2MmwIuITClgB5wxGunUaoARfs=; b=Q2zATEqfMYsyJ/9PlaxMcdU0Lj3
-	0fejHnFz0NEsOifkeJUOS0YtZJb/TANwn7KOo8Li6GvhY9M3SqATMECMA1v1THn8
-	Mn0j/D/ZO62fCogD5+X44weTWDoYoruDTSd6be1z0iRM014V4Mal8yaDZaC/141Y
-	bu/TFSOsywqGYyhXkK9XRegUbVuRSEzIKhY2XtZ4VDIVukWqnJtfRsrfwPFFe4kc
-	Gbg+fpATlwA8Au/qaKv5n/9F/Xweq+faupFSstENFHwlfblaD8r3T2qySbsrbIHJ
-	08J9bYoDCPHlBqFYCtQswC6fItV3cG4XVYpluwNVy8s7actwbk8Vmv1Pekw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hbxqfwt6q-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 07:40:15 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93f26dd2165so650118685a.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 00:40:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/wMucLj"
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-3645f0f3fcdso1229946eec.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 00:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792395614; x=1793000414; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=rFGmPQr3jkd6FbiHxP2MmwIuITClgB5wxGunUaoARfs=;
-        b=Dj27jw7oU74ET32/QbJIbLDf9srn/kSoDB3ZNmbtHwsqjTIqpkDGq1COVREwSRwviy
-         VVr7OyiXA7bRlhfoE5UkfuzA4FmrN0lRQQHd551zaPDpbQ7hRRrlDeGzmN3D8ZFWmSnS
-         enQub4pIq6Aarw/dvSwMKgSD9Qt6RaLx0ZSdDXFh5io4ous5a7dTXfA59+AdKBUaahxi
-         2jiBC281x8fE43zpAzb4tGth+5qA/j4nCSLhGXYreeoMMMBWNn9c3QZST/JYWrQliqud
-         /4W9TCNnML5lkgcGo52btXuACkN/BpJDx31QrEhwrn01Ye0GsgKO/euY5uQT3nc6vf97
-         vZVA==
+        d=gmail.com; s=20251104; t=1792395651; x=1793000451; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=BeGiDStF9eNoCQfKhlV8VGcTt3Kr1QpPNqxrZ5/m7SM=;
+        b=n/wMucLj0pec3tIla0iKVuZemSHt0hRMbAOymSsU4q/MOGh42priDG3LtOgCQYj8jF
+         yCRRH+iE1s96ZZAK/tjJ0JPI9dq3+zcsZbuFJmqlFL95vFxhKB9Ys49xU++i3Z/sD5or
+         4gs6Do583HRHEz+OXK5agtKLoC6YW6Hz5+oixXWveaibV6KQgzrCswgCgQsRZxNmSzYU
+         5SA8nlsXW6ewhfvrZJ6Q+Sy7AMGxNhde1bnm5Zzqu6KTfNfLxNpp9Cc1sBA4+AR4QUmo
+         1uOiFq59fCXOWl0+hYSogAdDJr7hIJqkEzs2GxHwupcUKLQNkdbREppvd7GEQWInDcRp
+         tMLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792395614; x=1793000414;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=rFGmPQr3jkd6FbiHxP2MmwIuITClgB5wxGunUaoARfs=;
-        b=xiK8jbx/arlfyJK9xs0A9/91VEcMgmT6rqmY9I/u21ZxnGrY0LPw83iVIoN/HEXUe7
-         qh2c8rENbYtQxp2dOYsUqZS8L/ozEXbwpsE3B5rSlwbuDcSMaNDhurE7yPA59hpS7QX5
-         NpOGr699Ob3g6eBzigIUtqmBYg821dOwxMl5VWCHcs+8hc5TEbrkMWnJk9U9ZQir96In
-         YXmlX6FCKpBWZGdWEOY1luHBcTG7zUAsU75Jj5PGjYG9gqZYNIw2eQnuf4RQloCNMGye
-         EW1w19IOLXuzpxFYlyICVM9KrQ9f3Wd7EjHJATzalDuhJxK9Ac/yClJh+fcScvDfXmJV
-         GkgA==
-X-Forwarded-Encrypted: i=1; AKwUvBwPaHo2Ys5TL2/g7IDiLnrNPNS7YV2EQvSL9PAVy1fmBJvXudHnD+/Rzx9+A8L78vPcx27S8jmr8aMQb00IRjtLKTwR@vger.kernel.org
-X-Gm-Message-State: AFq9FYJiFm3LM8OJ5MIYa25M8quGmKSPD4RhdO1EKf0GsIqc4rrCJlgu
-	YwVeEwIpOQipHFdicO7e9P/5znNQnMuir5WYtniHz9nzFUU0gt5PP5kAmc5chf/Tuyg55Mj72fV
-	nrd27HMO2W2UU+JgwAJDlAZnKT3/6zrTcSH311DPw7z2Ga3j8/y3CBfGdnzmC5fZh9ZN0kfWnzM
-	Z4
-X-Gm-Gg: AYBFou2CJlecIKCxAD+tmY3PerhlzN99PwoEHeMrQPngAp5bNlg22bSiwA9DREdBu0r
-	h25M66pIGxr4HlaGDmZuhKknhwsr0PztFyFULIqi30ilXMhlDcVirGo9AdjOFRaM6KseJLJ9fnh
-	yl/ELIzASQxuw8O8piaCHRVJO4zisUjo0D2nS62wvW8cfPX6BoPmyV42muT8DJ1AG0wNhPUgWF0
-	rffSg01ECj4yxETpxRHyWRS0CDZYBSBC0WGOInRBeGd/crcOl17o2/iWtYSGH0E5y7qivVlQ6hX
-	T04FWMuc8VQi6m3YckY+hEXdbnXOObW16iK5AEzDliMn33KvSaLbM/fj7QgXZ1H8327KHjK42NY
-	qreXgxLLUel5/BPSc54T9aOyPtFs=
-X-Received: by 2002:a05:620a:40c3:b0:93e:646c:9133 with SMTP id af79cd13be357-93f29da5d84mr1142212885a.64.1792395614030;
-        Mon, 19 Oct 2026 00:40:14 -0700 (PDT)
-X-Received: by 2002:a05:620a:40c3:b0:93e:646c:9133 with SMTP id af79cd13be357-93f29da5d84mr1142208685a.64.1792395613447;
-        Mon, 19 Oct 2026 00:40:13 -0700 (PDT)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:d01d:2002:4b7d:4c30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1ce325107sm212812955e9.3.2026.10.19.00.40.12
+        d=1e100.net; s=20260707; t=1792395651; x=1793000451;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=BeGiDStF9eNoCQfKhlV8VGcTt3Kr1QpPNqxrZ5/m7SM=;
+        b=c9wims8CLJgJ3pKQ7ge97x5p8OKwGfHWyiet27eTg4gce7nc0WdyEU78SH1AWbImbi
+         Hz85H1Wrk+tnV53GlLn/3JtHaHjPdIOkJ2Xc1ouMu9AbMCG5x3XFrjqqdi1QLbwChSWZ
+         atKLRlyE+KiKsYBGVC6sybeO/+iSuCRf3/QCQF3VTyelTCYKY0aPAcrP4bQDvDDYsfUc
+         BZSldvVgtRHM3ynIZdj7FiP3X3PQivtkg4pO+JithjB+oy/UD86RdKIvlw1tYfuf41Ci
+         v0iRN2AkPULPdaBh7DzE0tdPqYfxm3U9w36YsfQcw+QC/QaO8NllE3+gbY9gu0h8Bamk
+         4dUw==
+X-Forwarded-Encrypted: i=1; AKwUvByztc0UNIzWoUg9q8RJKXfRcBhoax1OcDsNsn444WSgQ/qgotDjTAWNTflUX6jUc///MiWbGxT9FzmHX1i7MZJvsx13@vger.kernel.org
+X-Gm-Message-State: AFq9FYLhPP76lRH+wwrzLfu8rg07D2H4oDycoGzZm+kM1VJ//Ntudbdi
+	IlFI8QC/pl3jWGrlBv4ofOLKmq9jmtRMtny0lxvs7o0Qn+PjsOLdCmHEZfhlkQ==
+X-Gm-Gg: AYBFou17Z6PmnLbWqTW/4ze6r1GSFuqoPa5sknzqROGDaZ5hIfA51cvzRBTPiWzWDA6
+	H0mxKct6TSFalvhzZJ/BjINhTbY0fbHmMOUDoaCZA5/0dTvvmP0c/n7DBq4fb0y532kWpe2+TP8
+	CBJf4AeAF7ulIbHOK8wHzRHOId/l4SXiU/7/5UdOjpbZMbBSO0c3/pmAMHG9aN+HBo8u6CSXmjW
+	9NBnw1W9B+56+4otk1kbM3/riS7M+Le36q6lEy6g7Cil8+hFNZsEoHrR18L3bKwPyOav7owoGG9
+	+66KEuXdC3impD7nPPaiLDF4wFYgDt2w4p6WGqJgXbPQse1HI6VQtAnHFVKzehVzUvX86LFz353
+	WT+R7dFl6yNdTyWBl1/vuNKeA6LYtGVV5cGrnUyuQmcT5esCgUmVK7vAfpWypkIEN6PbJQKvqRw
+	OpxzUj0rULPTXbbgJrv0jZNrHHsfDfGUnP7FsefRiH4SPz0sJGtUZGAr9+rvazVwD+QLExNItkk
+	oFVxCtUQjR47RFHe5hCZ+jNC7Svvjgn8kXHX1gND4oC6LxMT1sw9ORNVSfuhVFXhfvp+ZGpljvx
+	yd4=
+X-Received: by 2002:a05:7301:271d:b0:353:5d0a:dba4 with SMTP id 5a478bee46e88-361a2449313mr12338122eec.36.1792395650437;
+        Mon, 19 Oct 2026 00:40:50 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-360813b6791sm33971784eec.6.2026.10.19.00.40.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 00:40:12 -0700 (PDT)
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-To: rafael@kernel.org
-Cc: Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        "Derek J. Clark" <derekjohn.clark@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Armin Wolf <W_Armin@gmx.de>, Jai Luthra <jai.luthra@ideasonboard.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mario Limonciello (AMD)" <superm1@kernel.org>,
-        Jack Wu <jackbb_wu@compal.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Zhang DM <jixianqiang1540@gmail.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: [PATCH v2 5/5] platform profile: Make legacy ACPI aggregate interface optional
-Date: Mon, 19 Oct 2026 09:39:08 +0200
-Message-ID: <20261019073930.2352283-6-daniel.lezcano@oss.qualcomm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261019073930.2352283-1-daniel.lezcano@oss.qualcomm.com>
-References: <20261019073930.2352283-1-daniel.lezcano@oss.qualcomm.com>
+        Mon, 19 Oct 2026 00:40:50 -0700 (PDT)
+Date: Mon, 19 Oct 2026 13:10:45 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Disable hwmon attributes when no
+ fans are usable
+Message-ID: <atW-vwLB8k8yaEc2@archlinux>
+References: <20261017132421.279522-1-krishna.chomal108@gmail.com>
+ <650e9c05-6631-8870-44ba-5a7532cb500b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE5MDAzMCBTYWx0ZWRfX3/rAG681VK0a
- XL1EsGy+B0vxnJ4ug+UX/i94kFyorXepLrwUhbaPgV93AP9lqU4hj2eCwPIKonfdDyNHtYaVxfV
- sptckGXL0LUG6ywfitgmBHofRVyjZ9g=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE5MDAzMCBTYWx0ZWRfX/5mBX3UFaRsG
- 3g5DxKZlfD65uZ3GATao/W+WJmRKcW/5ZDl2jxhXrC4ApejMeq3jmd7/SCOeG3TThUwvavECW64
- ws7CXpx5l2ricY3+JkXqdspFsF/pomn5sbaiPeUH8Ze4qNiu0WaytmsEONNLCXqq7OB+ZkqG3Z6
- 2ZKAcVfqfuo5fn3jqO2ssJUuIQee0cF+74k+IRtmVLO26Ywa8XIrH4ZwXDdGaYzy9XCPG+Kjjci
- V/xGehVWcctCzWtW1DJVkT76a5CVM/w0jp63bhM56CT0toh/VqQpPH4tDtLMoMduVg3ZmaZxOcb
- GxjDMbM9AMTRUIzMne4/5ujhYxQ32TBnaezz41IGvpskVYds0l68oNz21uv3RKMWnwy1vUu7YiH
- OPtnuq8SbcETXqadTmQBCaYK8kDrEKR69X9BoT30m+PEY/fR7y9OnPv+M8aHIKVGhmzTdJV95I/
- USz/olFuY/AWx1k01Jg==
-X-Proofpoint-ORIG-GUID: wDXL7Pa3mXqgmTeCmWvNgJ95BM49rrRL
-X-Proofpoint-GUID: wDXL7Pa3mXqgmTeCmWvNgJ95BM49rrRL
-X-Authority-Analysis: v=2.4 cv=RYMFmFtv c=1 sm=1 tr=0 ts=6ad5c95f cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=660iZSQnnn4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=eoimf2acIAo5FJnRuUoq:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=20KFwNOVAAAA:8
- a=B7gyEwpuI2iDi5sUgSMA:9 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-19_02,2026-10-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 impostorscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 suspectscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610080000
- definitions=main-2610190030
+In-Reply-To: <650e9c05-6631-8870-44ba-5a7532cb500b@linux.intel.com>
 
-The aggregate attributes under /sys/firmware/acpi/ are retained
-for backwards compatibility. Firmware-independent userspace can already
-discover providers through /sys/class/platform-profile/ and control each
-provider using its choices and profile attributes.
+On Mon, Oct 19, 2026 at 09:22:59AM +0300, Ilpo Järvinen wrote:
+>On Sat, 17 Oct 2026, Krishna Chomal wrote:
+>
+>> Currently, hp_wmi_hwmon_is_visible() checks whether fan RPM queries
+>> succeed before exposing fan1_input and fan2_input, but pwm1_enable
+>> remains visible always, even when fan support is unavailable.
+>
+>Why does it yield different result from is_visible?
+>
+>...Somehow I find starting with this more confusing than helpful.
 
-Add PLATFORM_PROFILE_LEGACY, a boolean depending on PLATFORM_PROFILE and
-ACPI, to control the legacy aggregate sysfs interface. Default it to y so
-existing userspace continues to work when updating its configuration.
+Hi,
 
-Compile the ACPI adapter and legacy sysfs callbacks only when the option
-is enabled. Keep common aggregation helpers in the core because kernel
-hotkey users still need platform_profile_cycle(). Class devices and their
-notifications remain available regardless of the legacy option.
+Thanks for the feedback. Let me rephrase the two issues:
 
-Document the compatibility option and recommend individual class devices
-for new userspace. No daemon changes are included in this kernel series.
-Move the legacy ABI documentation to obsolete/, retain its original
-creation dates and attribute descriptions, identify the replacement class
-attributes, and update its MAINTAINERS entry.
+This is how our current switch-case looks like in is_visible:
+	switch (type) {
+	case hwmon_pwm:
+		if (attr == hwmon_pwm_input && !hp_wmi_fan_control_supported())
+			return 0;
+		return 0644;
+	case hwmon_fan:
+		if (hp_wmi_fan_control_supported()) {
+			if (hp_wmi_get_active_fan_speed(channel) >= 0)
+				return 0444;
+		} else {
+			if (hp_wmi_get_fan_speed(channel) >= 0)
+				return 0444;
+		}
+		break;
+	default:
+		return 0;
+	}
 
-Mark the legacy ABI deprecated and document removal after the 2028 LTS
-kernel, conditional on userspace migration. Keep the enabled default
-until class-device support has been released and deployed in userspace.
-Emit one shared pr_notice_once() when either legacy attribute is read or
-the profile is written, identifying actual legacy use rather than warning
-merely because the compatibility code was loaded.
+For pwm1_enable we have:
+- type = hwmon_pwm
+- attr = hwmon_pwm_enable
 
-Validate ARM64 without ACPI and x86 module builds with the option enabled
-and disabled. With ACPI active and the option disabled, QEMU tests confirm
-that the legacy attributes are absent while class controls, notifications,
-kernel cycling and concurrent registration/removal continue to work.
+which means we go straight to return 0644; exposing this field for all
+devices. For OmniBook series, changing pwm modes would result in either:
+* Failure with WMI error
+* Silent failure (stub firmware, see below)
 
-Assisted-by: OpenCode:gpt-6.1-sol
-Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
----
- .../{testing => obsolete}/sysfs-platform_profile   | 12 ++++
- .../userspace-api/sysfs-platform_profile.rst       | 17 +++--
- MAINTAINERS                                        |  2 +-
- drivers/platform/Kconfig                           | 23 ++++++-
- drivers/platform/profile/Makefile                  |  2 +-
- drivers/platform/profile/core.c                    | 72 ++++++++++++++++++----
- drivers/platform/profile/profile.h                 |  2 +-
- 7 files changed, 109 insertions(+), 21 deletions(-)
+For fan attributes (fan1_input, fan2_input), the return value of
+hp_wmi_get_fan_speed(channel) decides whether they are visible or not.
+I believe, the idea originally was to expose these fields to userspace
+only if the get fan speed queries success. But the problem is, certain
+devices (OmniBook again) have stub methods in their firmware, returning
+all-zero buffer instead of an error. This means: get fan speed query
+returns 0, and is_visible ends up exposing this field to userspace. This
+is problematic because hwmon will always return 0 RPM even when the
+users have reported hearing the fan spinning.
 
-diff --git a/Documentation/ABI/testing/sysfs-platform_profile b/Documentation/ABI/obsolete/sysfs-platform_profile
-similarity index 70%
-rename from Documentation/ABI/testing/sysfs-platform_profile
-rename to Documentation/ABI/obsolete/sysfs-platform_profile
-index 125324ab53a9..c001c8641a3a 100644
---- a/Documentation/ABI/testing/sysfs-platform_profile
-+++ b/Documentation/ABI/obsolete/sysfs-platform_profile
-@@ -2,6 +2,12 @@ What:		/sys/firmware/acpi/platform_profile_choices
- Date:		October 2020
- Contact:	Hans de Goede <hdegoede@redhat.com>
- Description:	This file contains a space-separated list of profiles supported for this device.
-+		Available with CONFIG_PLATFORM_PROFILE_LEGACY on active ACPI
-+		systems for backwards compatibility. New userspace should use
-+		/sys/class/platform-profile/platform-profile-X/choices instead.
-+		This interface is deprecated, with removal intended after the
-+		2028 LTS kernel once userspace migration is complete. Accessing
-+		either legacy attribute emits a one-time deprecation notice.
- 
- 		Drivers must use the following standard profile-names:
- 
-@@ -27,6 +33,12 @@ Description:	Reading this file gives the current selected profile for this
- 		device. Writing this file with one of the strings from
- 		platform_profile_choices changes the profile to the new value.
- 
-+		This legacy interface requires CONFIG_PLATFORM_PROFILE_LEGACY.
-+		Individual class devices remain available without that option.
-+		Use /sys/class/platform-profile/platform-profile-X/profile
-+		instead. This interface is deprecated, with removal intended
-+		after the 2028 LTS kernel once userspace migration is complete.
-+
- 		This file can be monitored for changes by polling for POLLPRI,
- 		POLLPRI will be signalled on any changes, independent of those
- 		changes coming from a userspace write; or coming from another
-diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Documentation/userspace-api/sysfs-platform_profile.rst
-index a85ede3fb8e5..a3fc1ee20832 100644
---- a/Documentation/userspace-api/sysfs-platform_profile.rst
-+++ b/Documentation/userspace-api/sysfs-platform_profile.rst
-@@ -26,11 +26,20 @@ The firmware-independent userspace interface is available under
- ``/sys/class/platform-profile/platform-profile-X/``, with ``name``,
- ``choices`` and ``profile`` attributes for each registered provider.
- 
--On ACPI systems, ``/sys/firmware/acpi/platform_profile_choices`` and
-+On ACPI systems with ``CONFIG_PLATFORM_PROFILE_LEGACY`` enabled,
-+``/sys/firmware/acpi/platform_profile_choices`` and
- ``/sys/firmware/acpi/platform_profile`` remain available as compatibility
- interfaces for aggregate profile selection across registered providers.
--On non-ACPI systems, userspace selects profiles through the individual
--provider class devices.
-+New userspace should select profiles through the individual provider class
-+devices. These remain available when the legacy interface is disabled and
-+on non-ACPI systems. Kernel profile cycling also remains available without
-+the legacy interface.
-+
-+The legacy aggregate interface is deprecated. Removal is intended after the
-+2028 LTS kernel, once userspace has migrated to released software using the
-+class devices. Compatibility remains enabled by default during the migration;
-+the date alone does not trigger removal. Accessing either legacy attribute
-+emits a one-time kernel notice directing userspace to the class interface.
- 
- Note that this API is only for selecting the platform profile, it is
- NOT a goal of this API to allow monitoring the resulting performance
-@@ -70,7 +79,7 @@ Multiple driver support
- When multiple drivers on a system advertise a platform profile handler, the
- platform profile handler core will only advertise the profiles that are
- common between all drivers to the ``/sys/firmware/acpi`` interfaces, when
--ACPI is active.
-+ACPI is active and ``CONFIG_PLATFORM_PROFILE_LEGACY`` is enabled.
- 
- This is to ensure there is no ambiguity on what the profile names mean when
- all handlers don't support a profile.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 929e1e095f17..47b7724f20ea 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -283,10 +283,10 @@ S:	Supported
- Q:	https://patchwork.kernel.org/project/linux-acpi/list/
- B:	https://bugzilla.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-+F:	Documentation/ABI/obsolete/sysfs-platform_profile
- F:	Documentation/ABI/testing/configfs-acpi
- F:	Documentation/ABI/testing/sysfs-bus-acpi
- F:	Documentation/ABI/testing/sysfs-class-platform-profile
--F:	Documentation/ABI/testing/sysfs-platform_profile
- F:	Documentation/firmware-guide/acpi/
- F:	Documentation/userspace-api/sysfs-platform_profile.rst
- F:	arch/x86/kernel/acpi/
-diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
-index 395b75f2edf0..7270f24a3b6e 100644
---- a/drivers/platform/Kconfig
-+++ b/drivers/platform/Kconfig
-@@ -9,12 +9,31 @@ config PLATFORM_PROFILE
- 
- 	  The core exposes per-provider controls under /sys/class/platform-profile/.
- 	  A provider driver must register before profile attributes become
--	  available. ACPI is not required; on ACPI systems the legacy system-wide
--	  interface under /sys/firmware/acpi/ is also provided.
-+	  available. ACPI is not required. The legacy system-wide interface under
-+	  /sys/firmware/acpi/ can be enabled separately for existing userspace.
- 
- 	  To compile this as a module, choose M here: the module will be called
- 	  platform_profile.
- 
-+config PLATFORM_PROFILE_LEGACY
-+	bool "Legacy ACPI platform profile sysfs interface (DEPRECATED)"
-+	depends on PLATFORM_PROFILE && ACPI
-+	default y
-+	help
-+	  Expose platform_profile and platform_profile_choices under
-+	  /sys/firmware/acpi/ for compatibility with existing userspace. These
-+	  attributes aggregate the profiles of all registered providers.
-+
-+	  This interface is deprecated and is intended for removal after the
-+	  2028 LTS kernel, once userspace has migrated to the class interface.
-+	  It remains enabled by default until replacement userspace releases
-+	  are available and have had time to reach users.
-+
-+	  New userspace should use the individual devices under
-+	  /sys/class/platform-profile/ instead. Disabling this option removes
-+	  the legacy sysfs interface but retains class devices and kernel
-+	  profile cycling. If unsure, say Y to preserve compatibility.
-+
- source "drivers/platform/mips/Kconfig"
- 
- source "drivers/platform/loongarch/Kconfig"
-diff --git a/drivers/platform/profile/Makefile b/drivers/platform/profile/Makefile
-index ae95ba09383c..787fc9bc961a 100644
---- a/drivers/platform/profile/Makefile
-+++ b/drivers/platform/profile/Makefile
-@@ -2,4 +2,4 @@
- obj-$(CONFIG_PLATFORM_PROFILE) += platform_profile.o
- 
- platform_profile-y := core.o
--platform_profile-$(CONFIG_ACPI) += acpi.o
-+platform_profile-$(CONFIG_PLATFORM_PROFILE_LEGACY) += acpi.o
-diff --git a/drivers/platform/profile/core.c b/drivers/platform/profile/core.c
-index 320a5a964fea..1bffca947157 100644
---- a/drivers/platform/profile/core.c
-+++ b/drivers/platform/profile/core.c
-@@ -25,12 +25,16 @@ static DEFINE_MUTEX(profile_lock);
- /* Serialize registration and sysfs updates without blocking sysfs callbacks. */
- static DEFINE_MUTEX(profile_registration_lock);
- static LIST_HEAD(profile_handlers);
-+#ifdef CONFIG_PLATFORM_PROFILE_LEGACY
- static struct kobject *compat_kobj;
-+#endif
- 
- static void profile_notify(void)
- {
-+#ifdef CONFIG_PLATFORM_PROFILE_LEGACY
- 	if (compat_kobj)
- 		sysfs_notify(compat_kobj, NULL, "platform_profile");
-+#endif
- }
- 
- static int profile_update(void);
-@@ -304,6 +308,12 @@ static int _aggregate_choices(struct device *dev, void *arg)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PLATFORM_PROFILE_LEGACY
-+static void profile_legacy_notice(void)
-+{
-+	pr_notice_once("The ACPI platform_profile sysfs interface is deprecated and planned for removal after the 2028 LTS kernel once userspace has migrated; use /sys/class/platform-profile/ instead\n");
-+}
-+
- /**
-  * _remove_hidden_choices - Remove hidden choices from aggregate data
-  * @dev: The device
-@@ -342,6 +352,8 @@ static ssize_t platform_profile_choices_show(struct kobject *kobj,
- 	};
- 	int err;
- 
-+	profile_legacy_notice();
-+
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
- 		err = profile_walk_handlers(&data, _aggregate_choices);
- 		if (err)
-@@ -359,6 +371,7 @@ static ssize_t platform_profile_choices_show(struct kobject *kobj,
- 
- 	return _commmon_choices_show(data.aggregate, buf);
- }
-+#endif
- 
- /**
-  * _aggregate_profiles - Aggregate the profiles across providers
-@@ -403,6 +416,7 @@ static int _store_and_notify(struct device *dev, void *data)
- 	return _notify_class_profile(dev, NULL);
- }
- 
-+#ifdef CONFIG_PLATFORM_PROFILE_LEGACY
- /**
-  * platform_profile_show - Show the current aggregate profile
-  * @kobj: The kobject
-@@ -418,6 +432,8 @@ static ssize_t platform_profile_show(struct kobject *kobj,
- 	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
- 	int err;
- 
-+	profile_legacy_notice();
-+
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
- 		err = profile_walk_handlers(&profile, _aggregate_profiles);
- 		if (err)
-@@ -451,6 +467,8 @@ static ssize_t platform_profile_store(struct kobject *kobj,
- 	int ret;
- 	int i;
- 
-+	profile_legacy_notice();
-+
- 	/* Scan for a matching profile */
- 	i = sysfs_match_string(profile_names, buf);
- 	if (i < 0 || i == PLATFORM_PROFILE_CUSTOM)
-@@ -502,6 +520,44 @@ static int profile_update(void)
- 	return 0;
- }
- 
-+static int profile_compat_init(void)
-+{
-+	int err;
-+
-+	compat_kobj = platform_profile_compat_kobj();
-+	if (!compat_kobj)
-+		return 0;
-+
-+	err = sysfs_create_group(compat_kobj, &platform_profile_group);
-+	if (err)
-+		kobject_put(compat_kobj);
-+
-+	return err;
-+}
-+
-+static void profile_compat_exit(void)
-+{
-+	if (compat_kobj) {
-+		sysfs_remove_group(compat_kobj, &platform_profile_group);
-+		kobject_put(compat_kobj);
-+	}
-+}
-+#else
-+static int profile_update(void)
-+{
-+	return 0;
-+}
-+
-+static int profile_compat_init(void)
-+{
-+	return 0;
-+}
-+
-+static void profile_compat_exit(void)
-+{
-+}
-+#endif
-+
- /**
-  * platform_profile_notify - Notify the provider and aggregate sysfs interfaces
-  * @dev: The class device
-@@ -728,24 +784,16 @@ static int __init platform_profile_init(void)
- 	if (err)
- 		return err;
- 
--	compat_kobj = platform_profile_compat_kobj();
--	if (compat_kobj) {
--		err = sysfs_create_group(compat_kobj, &platform_profile_group);
--		if (err) {
--			kobject_put(compat_kobj);
--			class_unregister(&platform_profile_class);
--		}
--	}
-+	err = profile_compat_init();
-+	if (err)
-+		class_unregister(&platform_profile_class);
- 
- 	return err;
- }
- 
- static void __exit platform_profile_exit(void)
- {
--	if (compat_kobj) {
--		sysfs_remove_group(compat_kobj, &platform_profile_group);
--		kobject_put(compat_kobj);
--	}
-+	profile_compat_exit();
- 	class_unregister(&platform_profile_class);
- }
- subsys_initcall_sync(platform_profile_init);
-diff --git a/drivers/platform/profile/profile.h b/drivers/platform/profile/profile.h
-index 910c9f7da6a0..362eb8cc4592 100644
---- a/drivers/platform/profile/profile.h
-+++ b/drivers/platform/profile/profile.h
-@@ -5,7 +5,7 @@
- #include <linux/kconfig.h>
- #include <linux/kobject.h>
- 
--#ifdef CONFIG_ACPI
-+#ifdef CONFIG_PLATFORM_PROFILE_LEGACY
- struct kobject *platform_profile_compat_kobj(void);
- #else
- static inline struct kobject *platform_profile_compat_kobj(void)
+Both issues arise because fan-related attributes are exposed even when
+fan support is unavailable. To fix, we use the fan count query to check
+whether fan support is available before exposing these attributes.
+
+>> On some
+>> devices, such as certain Omnibook models, the firmware does not provide
+>> functional WMI fan methods. Exposing pwm1_enable on these devices can
+>> mislead userspace and cause fan mode changes to fail.
+>>
+>> Additionally, some firmware implementations provide stub methods
+>> that return an all-zero buffer instead of an error. In this case,
+>> hp_wmi_get_active_fan_speed() and hp_wmi_get_fan_speed() can report 0
+>> RPM even when the fan is physically spinning.
+>>
+>> Use the result of fan count query (fetched from firmware once in
+>> hp_wmi_setup_fan_settings(), and cached in hwmon private data) to
+>> determine whether fan related attributes should be exposed.
+>>
+>> The fan count query can have the following outcomes:
+>> * Negative: The WMI query failed. Other fan-related queries are also
+>>   expected to fail, so disable fan support.
+>> * Zero (stub firmware): The methods return zero-filled responses without
+>>   providing functional fan support, so disable fan support.
+>> * Zero (genuine firmware): No fans are exposed through WMI, so disable
+>>   fan support.
+>> * Positive (1 or 2): Firmware reports one or more fans, so allow fan
+>>   support. Per-channel RPM queries continue to determine which
+>>   individual fan input attributes are exposed.
+>>
+>> When fan support is unavailable, hide the fan and PWM attributes and
+>> skip applying the initial fan settings.
+>>
+>> Tested on: HP OmniBook 5 Laptop 16-ag1xxx (board: 8DF4)
+>>
+>> Tested-by: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+>> Reported-by: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=222138
+>> Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
+>> ---
+>>  drivers/platform/x86/hp/hp-wmi.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+>> index 0eac5e1d9cdb..52077833ac89 100644
+>> --- a/drivers/platform/x86/hp/hp-wmi.c
+>> +++ b/drivers/platform/x86/hp/hp-wmi.c
+>> @@ -651,6 +651,7 @@ enum pwm_modes {
+>>
+>>  struct hp_wmi_hwmon_priv {
+>>  	struct mutex lock;	/* protects mode, pwm */
+>> +	int fan_count;
+>>  	u8 min_rpm;
+>>  	u8 max_rpm;
+>>  	u8 mode;
+>> @@ -2950,12 +2951,18 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+>>  				       enum hwmon_sensor_types type,
+>>  				       u32 attr, int channel)
+>>  {
+>> +	const struct hp_wmi_hwmon_priv *priv = data;
+>> +
+>>  	switch (type) {
+>>  	case hwmon_pwm:
+>> +		if (priv->fan_count <= 0)
+>> +			return 0;
+>>  		if (attr == hwmon_pwm_input && !hp_wmi_fan_control_supported())
+>>  			return 0;
+>>  		return 0644;
+>>  	case hwmon_fan:
+>> +		if (priv->fan_count <= 0)
+>> +			return 0;
+>>  		if (hp_wmi_fan_control_supported()) {
+>>  			if (hp_wmi_get_active_fan_speed(channel) >= 0)
+>>  				return 0444;
+>> @@ -3124,6 +3131,7 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+>>
+>>  	/* Default behaviour on hwmon init is automatic mode */
+>>  	priv->mode = PWM_MODE_AUTO;
+>> +	priv->fan_count = hp_wmi_get_fan_count_userdefine_trigger();
+>>
+>>  	/* Bypass devices without fan control support. */
+>>  	if (!hp_wmi_fan_table_supported())
+>> @@ -3208,6 +3216,11 @@ static int hp_wmi_hwmon_init(void)
+>>  		return PTR_ERR(hwmon);
+>>  	}
+>>
+>> +	if (priv->fan_count <= 0) {
+>> +		dev_info(dev, "No usable fans reported by WMI, disabling fan support\n");
+>> +		return 0;
+>> +	}
+>> +
+>>  	ret = hp_wmi_apply_fan_settings(priv);
+>>  	if (ret)
+>>  		dev_warn(dev, "Failed to apply initial fan settings: %d\n", ret);
+>>
+>
+>-- 
+> i.
+>
