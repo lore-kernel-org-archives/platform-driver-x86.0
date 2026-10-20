@@ -1,96 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.176
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792540327;
-	b=2925f3mpbhWWH7r9BqbGccLU2np+YcMtunJOpNK6ZmNwJ6PEA0E6tsoIg19jcYVFUkuq
-	 4yxIUFL+oLsWbicxoO5gqpUXC8PnXgFWmKMmGfBFX6VEsl5gbAZMMVakZq+mZxph/FMI2
-	 SukYa5/U+gsWGBKjuQjNJU3kJOYFWzl8wWIFPnhywT7vOphnZuCXjamLAH4ls/To1z5IH
-	 P4FdOcBp14yRNmNYtl2vsNSPDAAu8mk7B4OyzsgOr4PVaD/wfPSFeCXOo4GIlzPRdUlF3
-	 JWa3pZlW+TZ+N4v+GQorWQfXsA3aM5hp8lW08PafvgsIH7ERLeyzbRRoR9QOgbyO78A==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792540327;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=s0EDmxFaEkL/j8eAXne0uZ63W5PYdrf9Cumh97hbnw4=;
-	b=dwkuBy/8fuJliTwrIRaMF8ESZrH95T86T+frZJNOSmcBdlpuUwBwVSuy5j1bc+GjL1RQ
-	 kZkpqFbbhnRIEUmaINJ1VoAvs/pgiroB1v4JLsLIqI8WJ2pjYti1jj5HnbFlCFe9T3cB1
-	 +XflXj9qbZuQquDI9+FLKfwlYJGIYICSmOIb4QOnnLBcAVEIvNUpgN4VNFLY2qSKxIZ55
-	 ERfmIz0i5jGGqHnsOTuiGDnjdtuz0JvBjnaeO4iwJyunKcCnECgO7uprWhfu8CfHdxgHq
-	 QYKpg3SSsaa0q97CWppEyDItxQoQyrQf6d/UmA+LERKKhwImNuhb2Du3h++0Qg8Uywg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=a6jDOqWB;
-	arc=none smtp.remote-ip=209.85.221.176
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BA8606A31B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 23:52:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 78BA8606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792540445;
+	b=uwFST//CPrdSL2Lq5VEb03wq0EMEkowBxXLDMjfnuLXjEMKKX4TE726MFWFpdTBmvNC4
+	 varcpTYoSvz2j072IStoOhY8DaEO29jFiFMxDv2WGkVDHbnZhfKNij/yymktghdTx/PJG
+	 t6wk5whA98mKugW236hQf5k4E4ym4dqywXGJLPOSJdfvkgfxvgyMJo29ZY5dF856kR0g7
+	 hrIkW67lL5tkwNXd14WiV2VJOesg8MUajjZ5+FqI3CUvFzq6qw7PfThobfW+fqmbFDlyO
+	 4OVEsdYO7eXzK3sCzIufGFKjwuam8SDwaXpBeq1ZHepUHyUcGfnJp9dMZ9YyvvJRK5A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792540445;
+	h=Received:Received:DKIM-Signature:Received:From:To:Subject:Date:
+	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
+	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
+	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
+	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
+	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
+	 Message-ID:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
+	bh=O61bEgmpX4RJHMbA2ReiOME53YuLJwY/mmThroXQbPY=;
+	b=B2LqzASAV3P12oUSIR1QeabFMJC5n9pHWMCCiH6cm8PKzvKw5ir7dfOtYsduWNauIbL8
+	 AvHNwViXhAFp021tgLYSCjR/jvHf/Rpx4MIBli8tdSl4M3o8A7KBJATkR5mPjl99jDlGv
+	 LfFfOP7cbBQ1+QzErg8kGa2YhGxVwetW5LmYhbcCIpM9SsFLcnnh03ZzKGcfd7GhwD0J4
+	 a/iwttylFwb+Wz8DvukLhLGBqyMShIwhP6IygpkX2Ys0JtZEuwCIa/Xu/FDRzBzYvGKbX
+	 VZ4WJmxIkBpQCPP0fP251UWg8/a9PTSJatz7D0woijTcCRvghCe7ZAsjZbu8o9xhD/Q==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SKZayqSD;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
+Received: from aws-us-west-2-korg-listserv-1.web.codeaurora.org (ip-10-30-226-211.us-west-2.compute.internal [10.30.226.211])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE2BE606A319
+	for <platform-driver-x86.vger.kernel.org@localhost.mlmmj>; Tue, 20 Oct 2026 23:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=a6jDOqWB
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5ead5ff47caso69882e0c.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 16:52:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792540326; x=1793145126; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=s0EDmxFaEkL/j8eAXne0uZ63W5PYdrf9Cumh97hbnw4=;
-        b=a6jDOqWBsZ3WJxxs7GoVS+nO9gT7sBzwMzsfWYjsLb05yjKdBKUmWDQrPG8LPdoj4d
-         RLq0vZRuehpW5Geugsc/u9APfQuWGNWLI7Gc2yumYFvBTZQnoMsUqsGuumKPTZEDNuFN
-         mnygSBJpjedrhIee++C0SZNqBFbrtB7p58Jt08emlnASiOtkHW5PFUhn+x353eFq1Tg1
-         tSeqx+6a9lV+qkhLceblKgZVCw1MGNQ7Px3dYD1s8255JGwNhW7VCjUaY6IBtSG8rWMe
-         CnjXTU8VMQXfvvQNn4170ROWa3VHnMv/DmzLvCbtZXW0Z2p7b92iR65UcoXu5Ic5WpzE
-         CCSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792540326; x=1793145126;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=s0EDmxFaEkL/j8eAXne0uZ63W5PYdrf9Cumh97hbnw4=;
-        b=QLYhfeUFFc3pwsKsb73iX10gjeZwMCbkKIC4JC6h3lkoCZc+CbP4ZS3HLpZG3Xa3ly
-         +JniTp+M+BZ/kqUlAsTr9YqvvBDLdQPua8HTQAoLFlJs77DezHpGq8ojSWpk1DT+JbYS
-         9n1s8m+m3dBXw0LJZowxvAd+ef23p5SwOZmxH7qL4R9tkaHVTvc4kdwj11eaDCwpm1wB
-         Cd27LFiyaYtQv/BEUX2GlAU7kUyvAZ7iEBE6KE3Bsezv3WoGf5rMW9oFMz4juJDrUy2F
-         Dej6RALxQ+9DLGnWA0jotiaGNJgyKtRaD1lhwyUew2sytebQCpPXOvTDR6CF48yqetNs
-         edXg==
-X-Gm-Message-State: AFq9FYL9J8blToEtf1tG59xkqmVL6RuV7PuETGzYjzEPv8LVXHXennN8
-	9uF9r569Vupc4txl2byAXsLobwpMmy3a/Znurm9gKVNM3/4C7+7ZWmo8MHoNptzJ
-X-Gm-Gg: AYBFou3uKsqgKO3VLAQ2muJHfLjUiNlCMlMWWorLPBjP5ioE8Osv2RRswtDJoHQZL8b
-	ncN8o1Khz6NUxM+byptLYqymNaE9f+c1OEnhVwYHt4KO9RETBvVze0nN/y8uWt/qQMAjSBwvuFm
-	Cj9ZZh13aQGQM1NO2W57b2BWa5eq3aPopr5XWt3newncjGjEKyA912ehCZOwjDXEJC1UEK/p8EE
-	QIoF01JJ/k4t5019ZzJ91foJSgDYw4o9hN1VWwquQbSLoWkhbi0PKMOy3e7XS5op68M+3LLJZHv
-	coeuq9QY5034H8NLYmWY6SYhUg9sw30CY/2+/TxHcxGwoc3jKb8iAKHukjQ4pld1ksMWJwVM+0u
-	RW3V5EexlMmKcCpJ1gGhYJ9pTDjUoUqBjqEIrODCtl7gXV0xsTkN/7rpjrxtjHbNctIpbRCE/to
-	pVhd2m6cEEWzTiKis2bZ/LxSZyapsiNaqBv3LzsyJhZUogNLW7f0p0UrwbZpUyIOeQjwsNvsYHN
-	JVI0x99zd2oP0VRiqM/asEO+JZgD7/S8x6vMy4=
-X-Received: by 2002:a05:6123:22:b0:5ea:c120:4514 with SMTP id 71dfb90a1353d-5eaebe26980mr100730e0c.15.1792540326370;
-        Tue, 20 Oct 2026 16:52:06 -0700 (PDT)
-Received: from tutebook.tail57d09c.ts.net ([2803:9800:a0a8:8014:618c:a663:bfd0:635e])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5eae983a9aesm1172772e0c.16.2026.10.20.16.52.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 16:52:05 -0700 (PDT)
-From: TuteMthCD <matias.civadda2342001@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SKZayqSD
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DB025771
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 23:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792540445; cv=none; b=IsK2//MIyyeb3yaxuvCvdut9qBJkeMKm/5dnO3vlsjwA7eKY3cwNaMF68jZ330VIZtq5GLei7aeibpWY71KUjZeeQKyB6cD9xsswPr/lepOLH8PiDSGjcMZ67U7dq+2vWK+8SzkMJ5ooWS9pP7F0qAVHPC+upTGuEcesOtC16Wo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792540445; c=relaxed/simple;
+	bh=O61bEgmpX4RJHMbA2ReiOME53YuLJwY/mmThroXQbPY=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=s2K6XtY0YkgFbBS2Tiu+s5YaNB+AZzP4xnrUU3S5s0gjt+QTNr4TookkjqXn42rHYZd5RDOCcrkuAa4eaB6UrOsUybO1DkC3KWO86WqhLlrsOGeVNbautDvdHdc+FKhMHkanqGsnFMDeNNHeCXPQ0G02qBJ6p3LYm3wPAep9JL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKZayqSD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D892BC2BCFA
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 23:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1792540444;
+	bh=O61bEgmpX4RJHMbA2ReiOME53YuLJwY/mmThroXQbPY=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=SKZayqSDpKcdeqPWwSB35UL40n6lAANy3cnB3eiCtxXzqeoMtb//BdsXQFEAMo9to
+	 ycztdkxAFZTxKOCIx1oSFY6GrgwXDPLBVgVbjeFUWRoMO5yF/ARfqc6tZwR/3ADw/y
+	 0VcqvuOchfKJ97vonNpgYv4NE91htEkDv6osahVorbYaaIWyrv62zLmfCNkoDsVKUh
+	 poGINXwdHEfMpG4y3GcwsOAzu3q4PD47pB/LgcqxGWOOE9l2ioNBL99BVhfSJTXaqq
+	 Oj1tJENi4QjJ5x3F/kkpJNjPUqEg4Y/6wlJdB7F3LZgo08NBMTREtJE9AHQWKImDKp
+	 X6AxtsW618Irw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id ACD2DC3279F; Tue, 20 Oct 2026 23:54:04 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	qby140326@gmail.com,
-	ilya.gladyshev@linux.dev,
-	ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	chris@miget.com,
-	TuteMthCD <matias.civadda2342001@gmail.com>
-Subject: [PATCH v3 2/2] platform/x86: bitland-mifs-wmi: Fix TM2107 profile handling
-Date: Tue, 20 Oct 2026 20:49:27 -0300
-Message-ID: <20261020234927.121570-3-matias.civadda2342001@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261020234927.121570-1-matias.civadda2342001@gmail.com>
-References: <20261020234927.121570-1-matias.civadda2342001@gmail.com>
+Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
+Date: Tue, 20 Oct 2026 23:54:04 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-222161-215701-T5eoDr64a1@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
+References: <bug-222161-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -100,59 +93,14 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The TIMI Redmi Book Pro 14 2022 (TM2107) stores the MIFS WMI return
-code at the end of the response and uses different profile values:
-0 for performance, 1 for balanced and 2 for low power.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
 
-Add a DMI entry using the existing quirks infrastructure to select
-the correct response layout and profile mapping.
+--- Comment #7 from Armin Wolf (W_Armin@gmx.de) ---
+Maybe you can zry to disable the auto repeat feature of the keyboard?
 
-Skip the adapter-type query on this model to allow performance mode
-with its USB-C charger, while retaining the external-power check.
+--=20
+You may reply to this email to add a comment.
 
-Tested profile switching on physical TM2107 hardware.
-
-Assisted-by: LLM
-Signed-off-by: TuteMthCD <matias.civadda2342001@gmail.com>
----
- drivers/platform/x86/bitland-mifs-wmi.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index 522b38e9755e..8c1ec6f1166c 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -116,7 +116,28 @@ static const struct bitland_mifs_quirks default_quirks = {
- 	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
- };
- 
-+static const struct bitland_profile_entry tm2107_profile_entries[] = {
-+	{ PLATFORM_PROFILE_LOW_POWER,   2 },
-+	{ PLATFORM_PROFILE_BALANCED,    1 },
-+	{ PLATFORM_PROFILE_PERFORMANCE, 0 },
-+};
-+
-+static const struct bitland_mifs_quirks tm2107_quirks = {
-+	.profile_entries = tm2107_profile_entries,
-+	.num_profile_entries = ARRAY_SIZE(tm2107_profile_entries),
-+	.return_code_at_end = true,
-+	.skip_ac_type_check = true,
-+};
-+
- static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Redmi Book Pro 14 2022"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2107"),
-+		},
-+		.driver_data = (void *)&tm2107_quirks,
-+	},
- 	{}
- };
- 
--- 
-2.56.0
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
