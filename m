@@ -1,78 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=88.99.38.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792533199;
-	b=nqhJOLXpc8s1EgLm7IHe6Ms6vp33f4Fz49WWVWs2eoKDWMCTl3LCpdbdlPJsXDmNFndx
-	 z7LUgwFrdVRXM4rg5fpvyffu1pw8Mrxc8aTnXcDOHYoslIaFmwsGo1zLDIBVf2IZ/zB9y
-	 t1ndx+b6b+Jo9ZhYPYwhiOAGfp0WnOwAZVfF/ULqRn2B2J1qCXNCmJNyT2mlKI4QOhoxK
-	 wk71ANGlPpnb/ddIIXtGV78H9+I8mfrruw0XRTXeEFzBA8/eH+0q5/SnCsl1ZLpsqrrc1
-	 PJjjyi2BvjZPM8fR7Zi42n7JTUDcXcuxpOGrpq9BONBhRH2l93oIGSE4zV/v9XBvr0w==
+	t=1792533324;
+	b=XugX9ak2tl/xq4NssDIIcYRb4J2i9OxkNiIv26zdyXjM8jbZXltGLSJmFc50/uZGi1S2
+	 +9o6+Rt6kmMoB+YnlsyWEExG1LL/C3Fs4wsKgQC57D94zPO2rbbVY47M5odSELMNJj1jr
+	 IbpxxiwQj3M4mFNVOf/n6hcXTvIXMWuGo4Zkov3R99DmFb1GFVtdk5l6KGVtTOXM12rTf
+	 KMSU0yZ2SFddsJbcsv/NDKQ9bl6bvyMdx59YGWQEvbhK2r1XO+u40C++7tWCZqhHsKHeC
+	 Ao0p5uEitFR8X/brKwGLR5yJyw7SOcmpZT0u1gCNqAZnOQzcbzyFsm1/MTaTn6PW+gA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792533199;
-	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Received-SPF:
-	 Received:X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding:X-PPP-Message-ID:X-PPP-Vhost:
-	 X-Virus-Scanned:X-Virus-Status;
-	bh=Q36YX3yioX5PhNiWAlX2IMcnnOhUaYruhBYCSPIOZgE=;
-	b=Sc35EjPP5L6YEaMNxPfnegdGYJo1BBbPl/GEkA53yYoNd1NzhxLZmJON1p2OSGNOVxIk
-	 0XLtibGXg2j5Y4LPttHl6iPJS9vpK2BmIKN/pW5sS3AtXnzohZ/Cmc3fj/xW43o/RrImg
-	 pWe7Zt1rr2w6GlzWZXBnb0Pt7LVZUZgP5SeB5wEKKVBloIwGETwXfBfuB29jyodEnBKXn
-	 XL/ClhyWeZ9a6JCAJaH8/bfiMIseJxNSWUBeNOy/Pr9/pZVPMduksqtnMTQykm8oKKxvh
-	 8SicXNTQiswBtWkNSFRmZ577gad3VUUGoIun3KnzfsxqlLRS3tUVMKn//O0pNWzsvNw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792533324;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=kKwtJWuJPnB5J10PDRpzntxMxxzAUdKUtxf3uWvcEfA=;
+	b=ida9Q6Aw7R+A3jNp0pGjH5ONdY73lBZ82GiNaEydyD++RB0hQTYF6WlmuVWoVqkNuqid
+	 yUMPncwIfFjmIklnIDksC+BV2qHjw1sXXCnW7iPL7e3I8R8yK922kZ26D0hCWoDWrFYGj
+	 7FePcJa0CkPYOgQIIyRPpxLYzrRbgz0fHbg1HguE8IXRfPoUWFWWJuNkyFj8aYFAFXXBK
+	 m0LyoaGDvZreR5ON5qSHH5BI8FnFqlDUltJa9SYfi0trAxpbr5z8eltPehKM5PyxTW/tF
+	 1KQ1JUzLUzNo0+QDDbn3VlqJtq3IL0oaJRHIBHXhz27IZbpQBj5Za5qpLhki+a9FmrQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=antheas.dev;
-	spf=pass smtp.mailfrom=antheas.dev;
-	dkim=pass header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b="XLEr/SCx";
-	arc=none smtp.remote-ip=88.99.38.195
-Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+	dmarc=pass header.from=squebb.ca;
+	spf=pass smtp.mailfrom=squebb.ca;
+	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm3 header.b=PHUfSbDV;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=FNB6WpXb;
+	arc=none smtp.remote-ip=103.168.172.152
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E11A606A31A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 21:53:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E11A606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70E8606A31A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 21:55:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E70E8606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=XLEr/SCx
-Received: from relay12 (localhost [127.0.0.1])
-	by relay12.grserver.gr (Proxmox) with ESMTP id F2BABBE1A3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 00:53:08 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay12.grserver.gr (Proxmox) with ESMTPS id 653E1BDFAC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 00:53:08 +0300 (EEST)
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 757751FF9F2
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 00:53:07 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1792533187;
-	bh=Q36YX3yioX5PhNiWAlX2IMcnnOhUaYruhBYCSPIOZgE=;
-	h=Received:From:Subject:To;
-	b=XLEr/SCxE/h0PaZxOMWrixylSk7mP3yMFq1mSDmbQlXNPUieDSSJ0HhkER2gFRWkV
-	 bkAO3Tpk93U4fGzIAOLFM4keZAgbanVuhXJEQDz68OWv0HlsDrmP7NCwVHvOmUlO9W
-	 5scy1C1Zp4BH/VOt0tX0UHmp7eVka8QC56b4kc6Myr2MjE/n3Okna9lAobePxRn+3E
-	 7D5qbE2QPu10owEFAecyt8JK6w+lok0tlS7GC7z4+OOeOOBachfIrG7mUCTRXk2D6l
-	 q+XFxl1/p5aKXPL9YsBfsbSRhthSj8h+TvjwjSuoegkuEi2CpMLRtg15wsXwuI/5Sl
-	 MlfpoQH7NtQUg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.214.176) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f176.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pl1-f176.google.com with SMTP id
- d9443c01a7336-2e987b4a710so5947435ad.1
-        for <platform-driver-x86@vger.kernel.org>;
- Tue, 20 Oct 2026 14:53:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AKwUvBzwaZCXj3TW9lhCztsff4yADSShAWS+KlbbhTFbcMClsOQez8FRw3xh4RoOmUWUF9kaRPvryEBflO/s8Z6E+fVOBICK@vger.kernel.org
-X-Gm-Message-State: AFq9FYI5lB87wt/s+YEAnTrewB/5tv2CWe+i6cd5fXtqAA2PI6i3u61N
-	DsbizRdhdhArlQaIkSPz9NAo1lxZ1cMxF92m7jBovbCZjilgPuXuCC5l6yT6JLzJaSOsqdHAMhm
-	AD9YVZ34DVD4fjclKDoNjU+c4RujCQts=
-X-Received: by 2002:a17:902:e548:b0:2e9:4f49:111c with SMTP id
- d9443c01a7336-2ea1dd04761mr22807325ad.27.1792533185889; Tue, 20 Oct 2026
- 14:53:05 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm3 header.b=PHUfSbDV;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=FNB6WpXb
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 392451400153
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 17:55:21 -0400 (EDT)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Tue, 20 Oct 2026 17:55:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1792533317;
+	 x=1792619717; bh=kKwtJWuJPnB5J10PDRpzntxMxxzAUdKUtxf3uWvcEfA=; b=
+	PHUfSbDVeUPap5reYr5mWoZV+jl5WMwpqnzqT0bdjbCbFGgeZHIbwvSwgL2hLpMm
+	IErogJ/61/R9pn/JZbVrP6WqQH5LTfDn887X5PWyomwrKYDdBo9w4cFqjaICqWaZ
+	sjtXVWNtdEuFqTT7Q8rQ9ZUojF4jlP/dZ0GyviwnniEBktqAz/qCu0V1HMDgZ+rN
+	PBwbV5igNO9/EyEwaVqTpbMU9jI2mueAk416ss1JfwimHR8B/BCgDJ/3eSgjL5F9
+	aQ0aUt/qjOQlMTQg9D7gk2WHZm7RSub2Mp6Cp4uyPEhUGbTIuvBmUQIqUvU7MZZ6
+	gPt7cvpHemVueIdv/4Jauw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792533317; x=
+	1792619717; bh=kKwtJWuJPnB5J10PDRpzntxMxxzAUdKUtxf3uWvcEfA=; b=F
+	NB6WpXbJTZeZCebNLe79TyjyoUYrmTxOiKrJhHEE4UqG/5wUMkjmOFt/K6uiLg6E
+	C9m78WNk2wQQteNLHJbcnhIgFS88ifCx24C8eSwet+b/TiC2VtHOc0vcjTZ2eLsT
+	W/rsoIl1h1QQqjTBv3+M3HB1J82qtH5zhamPbebTINaYl6ChXD6TWDWHsKNaOuD5
+	qkuAu9shpi8FGm/mCpccJTY7Kb59nGYrEkplIOsovetlSS0X65mWGfYEPD+gI4pD
+	zAtP+5Q382EwvP8JNkCCsmf9+MFU7KBY2Hvew0mI1bfWKM0XtqxSxWJh6LLZqKHr
+	I7GzZ1erVd6PDflaFs8KA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=sign d=squebb.ca a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792533317; d=squebb.ca;
+	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm3:rsa-sha256:i3o6TBDss6ADT3OhAef9DJuqYFduAmcHhePHvUyGY2FDH/9
+	S6GgTjXNzt41f3DuaMU2WEpcVD2zHR2vyXsmUhr5HcKa3Es4Lr7RmjZX0fBFv1Wi
+	4zdwdsMWlmThVFA1y4Smz2Y0ztRjMF/aPLuTvRmRHYlWCLNp31u3ErDgAfFasXhZ
+	wN3fynsmElKYQpAYgxEI+tu/B0hLWNBotkoZEWxDnvjOB9AQc3LAewlynw13YnxT
+	60VCVvUaz9wqyPFcUiad7JePeHz0zHK55EiRkwy5w1hb94aXZUD1lhBC6AoBYb2g
+	k12JGIDD2ZQfUEuf37X1/Fi0pn96c8EQTfYBx9g==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:+yOQjQ6zXwRbJ+kN8rcSInQA4bMulg0f4PEqkTuqIiQ=:NI2fXuKCJ44j/5aG07kT0zNKWgQIFH5UQn9ZfhyNfTI=;
+X-ME-Sender: <xms:Q-PXagx1bKs4N4aOLmCRBtvgZPOu68EzT95T3F76RjekBo2LRmOn6A>
+    <xme:Q-PXavFx9ZhlojmrgXI28-scfv6vQPH00hd-7pQUeJVvpHscg1-Zjx1GHmB62tlCg
+    DiBOt5mCikqBbuhj4XkBz6kyEPd_gXdYG3sR1iUp7OeMaJTpddexm-bXg>
+X-ME-Proxy-Cause: dmFkZTFZV6kkUrn0Shef1bYJCjdKRM6Xsss50sZJQtfMZJNXzy8lPQuJxVRlkniLikOuNH
+    h7IREj3Djkq8ksTarpB352xDwUMTcN/3OUDaU6IxiHYP14BA8lLLSOVxQodBj7zEqxaGAz
+    sNJL0wx125zXHaIvCG8l+SwCH9Yo4YrytlFfPHf6BwVgakHut7ouYVNfkolvMZvWAW5H+F
+    FN9nYYxM5iDVsxvQiufvGRVavdmar8TzX4AFXs+jau2xv1JEWK5KEcy5yZi4bBPgx+hkA0
+    FhZFTxoCQa4utbjJLeiuQ8vc6gWYnCBKuQx/zsNf8iRNlck7MoLmjdCmHCrXOOClP7aDaS
+    EfFr35X6sdQWoFhWAxHnGyS1Fy/ZkSxPhowtsclla6spOn58x+QtkcuFzNLqJqNFYBV2XA
+    L+6YMFR66aZlray3a1sNpJMyXFbrb47R4IKzqoPtejxl3aTL/sbbRF3YdL7H7Wu7NZ5oWl
+    pBFIxKYTHdWpD9gYMv/FRVFVIWvnFUrrULfveN1K5LnkD1RQBAxJDdww4ia6crMidLff/k
+    SvBfSplPkSwvkD5M3XxcuvLcofX10wvPDtbV/boNQP1eO0PX9HjnGd5s8pGQSlNonmr+AN
+    MPIyOJb5CD442iuo2h96UH79g8e4KV58AFpDJOmcprWByCxJlfnafAqT708w
+X-ME-Proxy: <xmx:Q-PXaoxIRJnAUQ0yC-f-RnQ8N6VWkjDk2-wFMrJTvx1S6SfItjj5Xg>
+    <xmx:Q-PXalndrtWC17akR1Bqe40LUf8SHXPT-Y01V2eXzKi8DWM5SSc9vQ>
+    <xmx:Q-PXaiWeL5zJEvgiTe_z2xcIENRSPIXD6npRQeh2djIWOwJMNreOpQ>
+    <xmx:Q-PXagPzhmxk5FFuDMckODuiM8wdIa55579FeOwFeGYMMYxsZR2wwA>
+    <xmx:RePXagAGQn86p4ijSb-ECYhhi8MhT3Syj45YGTZKEuDJKVtcrcrYXP8e>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id ADF422C0007E; Tue, 20 Oct 2026 17:55:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,128 +115,337 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20260803221614.59324-1-derekjohn.clark@gmail.com>
- <20260803221614.59324-2-derekjohn.clark@gmail.com>
- <f8b2c85a-2800-c9a3-4e56-7af4c53823e5@linux.intel.com>
- <58a9c644-98c2-47ee-b083-0d5b19fa5053@roeck-us.net>
- <CAGwozwGdwhE6Sm6oa2uxx_sHfFNQ6fHYnAhYHkEPQcp_Yb=Z6w@mail.gmail.com>
-In-Reply-To: 
- <CAGwozwGdwhE6Sm6oa2uxx_sHfFNQ6fHYnAhYHkEPQcp_Yb=Z6w@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Tue, 20 Oct 2026 23:52:53 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFUTagam+dr0SXyziAMz1MJKcYMYUgrogFcmvEaE1X0UQ@mail.gmail.com>
-X-Gm-Features: AclHuK9jLmnj5XD9NNmx0ULw93cvry9tRRHsfv7i6vb3Lkle29Ysvo4RB4szGUU
-Message-ID: 
- <CAGwozwFUTagam+dr0SXyziAMz1MJKcYMYUgrogFcmvEaE1X0UQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] platform/x86: msi-wmi-platform: Move guard out of
- switch in platform_write()
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, W_Armin@gmx.de, corbet@lwn.net,
-	jdelvare@suse.com, kuurtb@gmail.com, linux-doc@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <179253318781.1186819.16566335289821031206@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
-X-Virus-Status: Clean
+X-ThreadId: AqFACRUlSr37
+Date: Tue, 20 Oct 2026 17:54:55 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Daniel Lezcano" <daniel.lezcano@oss.qualcomm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Len Brown" <lenb@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>, "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Maximilian Luz" <luzmaximilian@gmail.com>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Daniel Lezcano" <daniel.lezcano@kernel.org>,
+ "Zhang Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>,
+ "Armin Wolf" <W_Armin@gmx.de>, "Jai Luthra" <jai.luthra@ideasonboard.com>,
+ "Greg KH" <gregkh@linuxfoundation.org>,
+ "Mario Limonciello" <superm1@kernel.org>, "Jack Wu" <jackbb_wu@compal.com>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "Zhang DM" <jixianqiang1540@gmail.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Message-Id: <647d10df-72bc-4c08-96e4-045a387d54f9@app.fastmail.com>
+In-Reply-To: <20261020144525.3265851-1-daniel.lezcano@oss.qualcomm.com>
+References: <20261020144525.3265851-1-daniel.lezcano@oss.qualcomm.com>
+Subject: Re: [PATCH v3] platform profile: Separate handler locking from sysfs lifetime
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, 18 Aug 2026 at 17:26, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+On Tue, Oct 20, 2026, at 10:45 AM, Daniel Lezcano wrote:
+> Registration and removal currently hold profile_lock across
+> device_unregister() and sysfs_update_group(). These operations can remove
+> sysfs attributes and wait for their active callbacks to finish. The
+> profile read and write callbacks acquire profile_lock themselves, so a
+> concurrent access can deadlock:
 >
-> On Tue, 18 Aug 2026 at 16:42, Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > On 8/18/26 07:12, Ilpo J=C3=A4rvinen wrote:
-> > > On Mon, 3 Aug 2026, Derek J. Clark wrote:
-> > >
-> > >> The ML patch set uses a guard within a switch case that violates cle=
-anup
-> > >> rules. Move the guard outside the switch so all return paths are cov=
-ered.
-> > >>
-> > >> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > >> ---
-> > >>   drivers/platform/x86/msi-wmi-platform.c | 2 +-
-> > >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platf=
-orm/x86/msi-wmi-platform.c
-> > >> index dfb65ac8fbf6..33acd448f674 100644
-> > >> --- a/drivers/platform/x86/msi-wmi-platform.c
-> > >> +++ b/drivers/platform/x86/msi-wmi-platform.c
-> > >> @@ -675,11 +675,11 @@ static int msi_wmi_platform_write(struct devic=
-e *dev, enum hwmon_sensor_types ty
-> > >>      u8 buffer[32] =3D { };
-> > >>      int ret;
-> > >>
-> > >> +    guard(mutex)(&data->wmi_lock);
-> > >>      switch (type) {
-> > >>      case hwmon_pwm:
-> > >>              switch (attr) {
-> > >>              case hwmon_pwm_enable:
-> > >> -                    guard(mutex)(&data->wmi_lock);
-> > >
-> > > While I cannot see the code easily, one could also add braces to insi=
-de
-> > > the case to avoid this problem.
-> > >
-> >
-> > I don't see the code either, but wouldn't this be a use case for
-> > scoped_guard() ?
+>   Removal/update path             Active sysfs callback
+>   -------------------             ---------------------
+>   acquire profile_lock            hold kernfs active reference
+>   remove a sysfs attribute         wait for profile_lock
+>   wait for its active references
 >
-> Hi, not explicitly stated in the cover letter, but this is essentially
-> a series on top of the series I sent last year but I did not clean up
-> due to a variety of issues with MSI firmware that would have made the
-> driver unsuitable for upstreaming (to my standards at least). These
-> issues span Intel driver problems, HID controller instability, and
-> varying WMI implementations esp. in regards to PLx setting between AMD
-> / Intel variants, shift mode behavior not acting correctly, and fan
-> curve application / resetting being weird (the fan curve on off bit
-> does not seem to change whether an automatic curve is used but how
-> close the device alings to the set curve? requiring us to back up and
-> restore the original curve? half of the devices keep the curve during
-> sleep and half don't? but if the fan curve is so finicky do we really
-> want a resume handler for it? Perhaps we can kick the timing quirks to
-> userspace)
+> The removal path cannot finish until the callback returns, and the
+> callback cannot return until the removal path releases profile_lock.
+> This applies both to per-provider device teardown and to updates of the
+> legacy aggregate attribute group.
 >
-> For this reason, I focused on other manufacturers such as Ayaneo and
-> OneXPlayer. I will revisit this series per request from Derek as he
-> seems to want this for steamos and hid-msi is already queued for 7.3?
-> Although, to be honest, compared to the controller firmware issues,
-> the WMI implementation is pristine.
+> Commit 041142d7d252 ("ACPI: platform-profile: Fix possible deadlock in
+> platform_profile_remove()") previously fixed this lock ordering by moving
+> sysfs_remove_group() outside profile_lock. Commit 55b1e68134bf ("ACPI:
+> platform_profile: Use guard(mutex) for register/unregister") reintroduced
+> the issue by extending the mutex guard over sysfs_remove_group(). Later,
+> commit 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI
+> platform profile") replaced that teardown with device_unregister() and
+> sysfs_update_group(), still under the same mutex, extending the problem
+> to class-device teardown and aggregate attribute updates.
 >
-> So I will need to go through these issues 1 by 1 and see which can be
-> fixed and either drop certain features in the beginning.
+> Simply dropping profile_lock around these operations is insufficient.
+> Aggregate operations currently discover providers through the class
+> device list. A provider being unregistered could therefore still be
+> selected for an aggregate read, write or cycle while its sysfs files are
+> being torn down. Concurrent registrations and removals would also race
+> when updating aggregate attribute visibility.
 >
-> Particularly for the fan curves, if we say that resume handlers are
-> required to be in the kernel moving forward, I do not know how
-> realistic it is to make those reliable for this WMI device family.
+> Introduce profile_registration_lock to serialize registration, removal
+> and aggregate sysfs updates. Sysfs callbacks never acquire this mutex.
+> Retain profile_lock for profile operations and use it to protect an
+> explicit list of handlers participating in the aggregate interface.
+>
+> Add a handler to that list only after device_register() succeeds. On
+> removal, unlink it under profile_lock before calling device_unregister().
+> Acquiring profile_lock first waits for any aggregate operation already
+> using the handler to complete; unlinking prevents later aggregate
+> operations from finding it. Release profile_lock before draining sysfs
+> callbacks, allowing active per-provider callbacks to complete before the
+> device is released. Apply the same unlink-before-unregister ordering to
+> registration error cleanup.
+>
+> Walk this list for aggregate reads, writes and profile cycling, and use
+> its emptiness to determine aggregate attribute visibility. The class
+> devices remain the per-provider userspace interface.
+>
+> There can now be an interval between removing the last handler from the
+> list and removing the aggregate attributes. Explicitly reject choices
+> reads and writes during that interval: the intersection bitmap starts
+> with every bit set, so an empty traversal must not advertise all profiles
+> or report a successful write without updating a provider.
+>
+> This separates aggregate membership from class device teardown while
+> preserving the existing class and ACPI sysfs interfaces.
+>
+> Fixes: 55b1e68134bf ("ACPI: platform_profile: Use guard(mutex) for 
+> register/unregister")
+> Assisted-by: OpenCode:gpt-6.1-sol
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+> ---
+> Changes in v3:
+>   - Send the locking fix as a standalone patch, independently of the
+>     firmware-agnostic extraction and legacy-interface deprecation 
+> series.
+>   - Document that profile_lock protects handler-list membership and
+>     serializes profile operations against each other and handler 
+> removal.
+>     Explain why it must not be held across sysfs teardown.
+>
+> Changes in v2:
+>   - Expand the deadlock and handler-lifetime explanation.
+>   - Add the Fixes tag and describe the earlier fix, regression and later
+>     extension to class-device teardown and sysfs group updates.
+>
+>  drivers/acpi/platform_profile.c | 80 ++++++++++++++++++++++++-----------------
+>  1 file changed, 47 insertions(+), 33 deletions(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index 79d2e92e5c28..d79080a20e21 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -8,15 +8,25 @@
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/init.h>
+> +#include <linux/list.h>
+>  #include <linux/mutex.h>
+>  #include <linux/platform_profile.h>
+>  #include <linux/sysfs.h>
+> 
+>  #define to_pprof_handler(d)	(container_of(d, struct 
+> platform_profile_handler, dev))
+> 
+> +/*
+> + * Protects profile_handlers membership and serializes profile 
+> operations
+> + * against each other and handler removal. Never held across sysfs 
+> teardown,
+> + * which can wait for callbacks that acquire this lock.
+> + */
+>  static DEFINE_MUTEX(profile_lock);
+> +/* Serialize registration and sysfs updates without blocking sysfs 
+> callbacks. */
+> +static DEFINE_MUTEX(profile_registration_lock);
+> +static LIST_HEAD(profile_handlers);
+> 
+>  struct platform_profile_handler {
+> +	struct list_head node;
+>  	const char *name;
+>  	struct device dev;
+>  	int minor;
+> @@ -44,6 +54,22 @@ static_assert(ARRAY_SIZE(profile_names) == 
+> PLATFORM_PROFILE_LAST);
+> 
+>  static DEFINE_IDA(platform_profile_ida);
+> 
+> +static int profile_walk_handlers(void *data,
+> +				 int (*fn)(struct device *dev, void *data))
+> +{
+> +	struct platform_profile_handler *handler;
+> +	int ret;
+> +
+> +	lockdep_assert_held(&profile_lock);
+> +	list_for_each_entry(handler, &profile_handlers, node) {
+> +		ret = fn(&handler->dev, data);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * _commmon_choices_show - Show the available profile choices
+>   * @choices: The available profile choices
+> @@ -306,20 +332,18 @@ static ssize_t 
+> platform_profile_choices_show(struct kobject *kobj,
+>  	int err;
+> 
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &data, _aggregate_choices);
+> +		err = profile_walk_handlers(&data, _aggregate_choices);
+>  		if (err)
+>  			return err;
+>  		if (data.count == 1) {
+> -			err = class_for_each_device(&platform_profile_class, NULL,
+> -						    &data, _remove_hidden_choices);
+> +			err = profile_walk_handlers(&data, _remove_hidden_choices);
+>  			if (err)
+>  				return err;
+>  		}
+>  	}
+> 
+>  	/* no profile handler registered any more */
+> -	if (bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
+> +	if (!data.count || bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
+>  		return -EINVAL;
+> 
+>  	return _commmon_choices_show(data.aggregate, buf);
+> @@ -384,8 +408,7 @@ static ssize_t platform_profile_show(struct kobject *kobj,
+>  	int err;
+> 
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &profile, _aggregate_profiles);
+> +		err = profile_walk_handlers(&profile, _aggregate_profiles);
+>  		if (err)
+>  			return err;
+>  	}
+> @@ -423,15 +446,13 @@ static ssize_t platform_profile_store(struct 
+> kobject *kobj,
+>  		return -EINVAL;
+> 
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		ret = class_for_each_device(&platform_profile_class, NULL,
+> -					    &data, _aggregate_choices);
+> +		ret = profile_walk_handlers(&data, _aggregate_choices);
+>  		if (ret)
+>  			return ret;
+> -		if (!test_bit(i, data.aggregate))
+> +		if (!data.count || !test_bit(i, data.aggregate))
+>  			return -EOPNOTSUPP;
+> 
+> -		ret = class_for_each_device(&platform_profile_class, NULL, &i,
+> -					    _store_and_notify);
+> +		ret = profile_walk_handlers(&i, _store_and_notify);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -450,22 +471,11 @@ static struct attribute *platform_profile_attrs[] = {
+>  	NULL
+>  };
+> 
+> -static int profile_class_registered(struct device *dev, const void 
+> *data)
+> -{
+> -	return 1;
+> -}
+> -
+>  static umode_t profile_class_is_visible(struct kobject *kobj, struct 
+> attribute *attr, int idx)
+>  {
+> -	struct device *dev;
+> -
+> -	dev = class_find_device(&platform_profile_class, NULL, NULL, 
+> profile_class_registered);
+> -	if (!dev)
+> -		return 0;
+> -
+> -	put_device(dev);
+> +	guard(mutex)(&profile_lock);
+> 
+> -	return attr->mode;
+> +	return list_empty(&profile_handlers) ? 0 : attr->mode;
+>  }
+> 
+>  static const struct attribute_group platform_profile_group = {
+> @@ -502,8 +512,7 @@ int platform_profile_cycle(void)
+>  	int err;
+> 
+>  	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &profile, _aggregate_profiles);
+> +		err = profile_walk_handlers(&profile, _aggregate_profiles);
+>  		if (err)
+>  			return err;
+> 
+> @@ -512,8 +521,7 @@ int platform_profile_cycle(void)
+>  		    profile == PLATFORM_PROFILE_LAST)
+>  			return -EINVAL;
+> 
+> -		err = class_for_each_device(&platform_profile_class, NULL,
+> -					    &data, _aggregate_choices);
+> +		err = profile_walk_handlers(&data, _aggregate_choices);
+>  		if (err)
+>  			return err;
+> 
+> @@ -525,8 +533,7 @@ int platform_profile_cycle(void)
+>  					  PLATFORM_PROFILE_LAST,
+>  					  profile + 1);
+> 
+> -		err = class_for_each_device(&platform_profile_class, NULL, &next,
+> -					    _store_and_notify);
+> +		err = profile_walk_handlers(&next, _store_and_notify);
+> 
+>  		if (err)
+>  			return err;
+> @@ -583,7 +590,7 @@ struct device *platform_profile_register(struct 
+> device *dev, const char *name,
+>  		}
+>  	}
+> 
+> -	guard(mutex)(&profile_lock);
+> +	guard(mutex)(&profile_registration_lock);
+> 
+>  	/* create class interface for individual handler */
+>  	minor = ida_alloc(&platform_profile_ida, GFP_KERNEL);
+> @@ -604,6 +611,8 @@ struct device *platform_profile_register(struct 
+> device *dev, const char *name,
+>  		put_device(ppdev);
+>  		goto cleanup_ida;
+>  	}
+> +	scoped_guard(mutex, &profile_lock)
+> +		list_add_tail(&to_pprof_handler(ppdev)->node, &profile_handlers);
+> 
+>  	sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> 
+> @@ -614,6 +623,8 @@ struct device *platform_profile_register(struct 
+> device *dev, const char *name,
+>  	return ppdev;
+> 
+>  cleanup_cur:
+> +	scoped_guard(mutex, &profile_lock)
+> +		list_del(&to_pprof_handler(ppdev)->node);
+>  	device_unregister(ppdev);
+> 
+>  cleanup_ida:
+> @@ -636,7 +647,10 @@ void platform_profile_remove(struct device *dev)
+> 
+>  	pprof = to_pprof_handler(dev);
+> 
+> -	guard(mutex)(&profile_lock);
+> +	guard(mutex)(&profile_registration_lock);
+> +
+> +	scoped_guard(mutex, &profile_lock)
+> +		list_del(&pprof->node);
+> 
+>  	ida_free(&platform_profile_ida, pprof->minor);
+>  	device_unregister(&pprof->dev);
+>
+> base-commit: d0cd1e850e1602729dd60dc3c5fd96f80e0cdc5d
 
-This driver still needs work. I am getting bug reports about
-inconsistent TDP application on the EX. A8 is broken as well. Even
-with your patches Derek. I need to grab a new version of center M and
-see what they are doing.
+Looks good to me.
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
-Does this driver work in your experience? What is that SMT toggle you added
-
-Antheas
-
-> Best,
-> Antheas
->
->
-> > Guenter
-> >
-> > >>
-> > >>                      buffer[0] =3D MSI_PLATFORM_AP_SUBFEATURE_FAN_MO=
-DE;
-> > >>                      ret =3D msi_wmi_platform_query_unlocked(
-> > >>
-> > >
-> >
-> >
-
+Mark
