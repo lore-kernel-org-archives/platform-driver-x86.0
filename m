@@ -1,101 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=74.125.82.47
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1792460567;
-	b=5PViPp2yiMtJl2bNFCnbyPQ2FOy4M34NTMmj3MuhrolKuQdMpYqrefdgmg9aqMz/phvi
-	 M7gxPKqJABgMxBk7OQhjN2speHJCL6B+VvCM7Jpsti8BelYYE7XBj5Ewao1/wCqO/FMFQ
-	 +InYV9IP4DKTBlihJ1wAZFZ4nXJUm6yxtfmjq72vDsoLF6TWswpEuK0ysCibtmwO6xAjq
-	 D2s/TLLNjXhP/HK9Ncv9iONR6+khnvOsF3EdG4K83+nIPT/dB4CLE/vS5DwyHKgZ1jNQv
-	 8ATrcfe2HwUft8rJIww/6//HB1geDezBf0pxoi8f/xPiJzjM/ueOo5uuoQ2Akc4ew1A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792460567;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.172
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792461048;
+	b=DVdFly0GeAw2o4nJHOhYKoZSkE/lHl1AzsMsktn4I088Q1RBglJCScaiV0wKOQmofv35
+	 GZ9U7pn7cPEFEydhnCPbkENReCeZriikR6VM51Efyf4DicjbBoRp0SVJPMgZAUE8ANTKB
+	 GHwDOusUrj4jKtkjPqf1E2WCwVBXeExOYhO5nTJV1bMwSrQiKMzwnC1Jr7NE+CH1kw1Vy
+	 rbMxIURceGgVonzw38fxviJr8IPWNTpW9hghehxvQkcjANMbQ8AhEVI6uOXG88KbcubkE
+	 Exv2U53+AF3sgAewHH3ZCnx/EZ7EpbkfuwQi/97UVdkm83NGy9vDwuAtKnOUuC0c4pg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792461048;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=Rp8Ffr7i1kQdoqttTgj80eUef2QxAuNHO9ZKaqh7x74=;
-	b=Abj1wIQh8s249IscAOd6Z4Qmkys+YstDvuSOR0Qg8F7iIgkciaHIA4ADrd5E/t4wVnO3
-	 paddrEb0Ty0B/onGATL7MmHJJSTJb1dO5Iwd0zEvRzRQ+IDWPf5qvOKGP+M7/UpmFciIc
-	 ZL9OH5eJWuestlBbPVz/ncTB2d+fDlVbtRc7FxDsfw2/0dsujhw8o54twkc4H5Gls4bDO
-	 6KQE8rzVAH0QOEQKrzfibxgj/bL22aB+b/mOOARDLkkOm1w1K/V/ImahSctFlw7SNbfpT
-	 qu5rx12ERLX9WAVwgcCuPqjBgX2dTljqpVy6gW2ntjoI9RGVetaECgFoPeGa2MO5kQQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=3lfY+o1OBadHsWe3VMCpcuef7XGMN+U6VqfmlmEcxRs=;
+	b=WfDIP3hbcEjNLP47VHr24es59Cs8Y5/k3rl1I4oHtDags+5TrXpyUWtar4FVMkJ+xoX8
+	 wKa+7C6kG9LcXWTSF/COhiPoUAueNa41GzfKLTZ+CbqG/GTiGC49UC981o62jt4QPHdCv
+	 4aQ2H+ao2XTjwDn0ulUuac1khHSx5NiIZoUxVhupeXpDAyqZAO+iDHIsbJUATNrqUX5Dq
+	 glh2Z+Gz0OYXrB45z7FjVSHnPkt944N7ZTpPtV5Bm8KqWU9GDkF6j2YalY+HhFZMPWpf0
+	 b18806MZNjnh7TZrJ+7wRvXTHrnluadVtvNlI9FOLrr/Y5oaGgnvqPm7KsXHITbz4fg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=omGHA01z;
-	arc=fail smtp.remote-ip=74.125.82.47
-Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RyWKyHV2;
+	arc=none smtp.remote-ip=74.125.82.172
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6A1606A319
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 01:42:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AC6A1606A319
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F251606A327
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 01:50:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3F251606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=omGHA01z
-Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-14394530ec6so1749336c88.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 18:42:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792460566; cv=none;
-        d=google.com; s=arc-20260327;
-        b=eDe/EU7XiItlcNdgywGBT+G7EfP6ZyHESVUUPsug3puipGTHGdtfRAwIM1DGtIlFc+
-         7LGQpCtOXH+NtGSQqFXNodaSkWXAvBq5/xa+WenLcYKN6F6JUfhtYEneXQmR1QQPnEJ8
-         so06tdpKbWDg1xcq34UCI3mGCMz9MTtIQY4+gUZfGvYs4D4esmBzgFhNAbmE8wybRkbM
-         /KfqmiCmCNNGJ7rqvo7Q0rAWJg6H9zkiit5xFm2IZqU0UQSO5GVZpw/Z0Lsxbm9weebq
-         vN36k8Dqyoze2qlbarbubL0asSb+TykJ4z4e+nReMiCrGw6nj+UvR0pG0cqS+qzxV8Pk
-         uCGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Rp8Ffr7i1kQdoqttTgj80eUef2QxAuNHO9ZKaqh7x74=;
-        fh=D/TlMEA3xx6kKMz+/rRuvQobHrRaXZeT0LazgngBUc8=;
-        b=PkHo/tqDawEbXLUBoEembZ5l/4JYmFg/ngbxmknmY85ZpvZWmdVB9B1A+gUFW9Y5nr
-         64zVre8vYRhF8PiClhzuiX57vQonyVLAss+wFNGzC2or/UbAOX3ElsIldf205jUtu5X8
-         2/CGGhu38IXd4XbXm776g+NXp3IJrczKqxkQwAVlcaGW15iKgEy4NreoBMAKxEhCDOuh
-         t2W9q7tj1Pc3TcL7TMk1mL9RWzRK4QK876kl55/3MeWZlTubDfnxs3NUYZvTyUFaVDyx
-         zZ2T4zw8WzCf+ysUoL9bVueDR4OwCzUYe2rGB92jZkS7UQ4t9ExyYc+Eoi31K610SpGm
-         C5jA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RyWKyHV2
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-35c76e9614aso5173794eec.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 18:50:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792460566; x=1793065366; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Rp8Ffr7i1kQdoqttTgj80eUef2QxAuNHO9ZKaqh7x74=;
-        b=omGHA01zmyPq1CHM7hp2/yWfhaEtC1zIvrXr/bzStVHNjFKYIIG/GvZZT1wo7o14+6
-         1L+VjmU0hTrHADB1UCD2yD+o9VorZm8Fjcq8BOKSsuc0mZtL8wj389Omu5qKyfzjsLQJ
-         JpS6Vmt+fhy9E2Wv65b9rKEknL7NWkWY7SAhc4WpwrsQxlgMfcRLh7QxNWlVIDFmptdb
-         Z6cGKvgjX8riTied9zP/BqVJTbhP6GTHYYtWJ1GL2libTRGh2zq70t/ZvBsap9DO7uAp
-         DFMfPiSPjabPV2lHgSjIXw1lBlHcETOh7+JSN9nWqo3biBldacQj1DvDkljq1JotLpkj
-         R7ew==
+        d=gmail.com; s=20251104; t=1792461047; x=1793065847; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=3lfY+o1OBadHsWe3VMCpcuef7XGMN+U6VqfmlmEcxRs=;
+        b=RyWKyHV2ZBys68j125r1pIPPZm8v+gibOch5r6fu+UbvdXQYkC8CYLvuHkYBno5B6U
+         2YdecQnuE/jFjG5Naz2okf7WMrCOSv2fNYnKg3QHndDBjGfmrR859Xq6VY7dCjD89Pak
+         dlww8du4nc3nRc7EcfS0vOrqHGL+MXikrQtfRR4Y6noB4WtduFvXAWt4LwHcRrP7RrPt
+         2TGV+aPQeEyPHgOZaMuqhmtrNbV0hZ57lsA1SKsIVMJRMukPrci/kt664C3sJhx6rLkU
+         afhLLzHVxq/7F0T9y4ia7asDV2cqKr9TNXGt5fPAatEkcvcUg8EaakZSZvY58rkSL8Ko
+         dctg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792460566; x=1793065366;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Rp8Ffr7i1kQdoqttTgj80eUef2QxAuNHO9ZKaqh7x74=;
-        b=SqWdxKHJdRx1adCi9fCGp0ceJ17CWvNli3h9HWg/RZpC6UzbX9BCC6TV9fFlw5b2HW
-         1zw7ZC/IzknVvUfpHzb7Lo25umX9y2ylY2K1Ld3YtXxOHW7wPpwxMsgCMnTANBYztMQz
-         utJH01pQ8MhHzCCGAjwNqraLNHbYAiaqZlGbsVhpFUOT4OLoH/1+IkKGpnxo9covhw0I
-         8f/tJ8YZqljW1Bc4UcRFSdDxe61fiiXYQ3QBR7h5/5NFsLLrfmX3Mv3x7Tdi17/AnSaI
-         phLICt4eVVt3ASu8Bqk44zf/PAQTSHTsCV0BGZq4XfGoSMVOnm0VqU5Eex52L9ppXW2j
-         ZD+g==
-X-Forwarded-Encrypted: i=1; AKwUvBwin/redhXePtjmb6KEZOUcIUE9MDEq3ssMNw6kJPdn+F2eNFH3d+eiusXmWueBxJWn78aJvvuLMswOpv5rptalUqUF@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ7H83M5hX7PfwvNnGkcBQFWn7Yf3V5Sk84iUp+zHakxGZpx+KL
-	f4SOTDatLdv5FELlVG/5vyU3nfx8dYGjddAndigoFRHwdM+UAHvPazm+4ddXoNNmOZLhjl5r/Am
-	e2f1dy/mzCb9AnSBl4mb3GJVdyrz01r5rnQ==
-X-Gm-Gg: AYBFou2IU33vhIq18EvzpisJMJJyLI3Gr5U/ydroJe3CkI0hrD1Y/PeNEZiCaLzPf5I
-	Ts7YOOv7jxvK8KeNvqZFs79ydJO7BkTpmVMzKXuWnA2oVmaakZ4CCs6jBjdaiWA+gsqgd5jpDGA
-	zPJyVOVaWOtBhwvTnaB/V6Z37G5Szt/ECZdpQaNx6TIA0thEj+Ve7b1OQMi7gSEHCWe6ab4x9pR
-	WjdyCsscfweFfyWq34w1SOpEQ+c2P0lYKUM6+/zQblAM0WRlypW4ZRBjwQAWsYv3uf3bmGRU+B2
-	E95Kl02aJTAJmGROUbnR9RVN0YsYGkaWv3UuBy+TLm/JBm5BICqKw6+oQOzN1kYLkXHMN4Hkv3Q
-	u6Azx2knPcjWqRegN8wE69JjPYpuLcCMtewOykpNR/JTZk3+qOrxNXmLhCdRYslAvGbCY/D8Ygg
-	==
-X-Received: by 2002:a05:701b:4291:10b0:166:9e0d:3b56 with SMTP id
- a92af1059eb24-18513e7c690mr13539809c88.38.1792460565679; Mon, 19 Oct 2026
- 18:42:45 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792461047; x=1793065847;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=3lfY+o1OBadHsWe3VMCpcuef7XGMN+U6VqfmlmEcxRs=;
+        b=s5rj2AniIsck/4QiVhfxVSOo91NJJMaKEGB0kPvGykXCdClRSrWW1HfBvXLmHxBwQY
+         cxIoS/n7HXAtVYt5ItrGU9F+SB51k/vII/6kKlalOJqt4FO75I9Z42c+OonGXGV35AZk
+         LZE5sOR7wiXgJuYUgVbAQCBvCmW61SPvPDveshSLbya7drmsRT6VPFk8HMQOrmTIQMoq
+         4YTpM16ntonSyTKGL6A2hlGczl7Mi2vU+1NI8NYXRC6ShcnIW/1rpA4d0XGlRHtRc1NO
+         XaiPWMwygFIp7rqDlUvhKDLSyPHLPhv4Zy3QiNBxiun3hOB5oglmy+rtByjFpi1JjZLL
+         8YZg==
+X-Forwarded-Encrypted: i=1; AKwUvBwNVWNn/Ymxvvbi4Ny/TXQi3Agn3YiEFNqg+1GmBw5qgJsxxY/l3w7sdE5yz3YhsIkUyvaviYXioJq22XakmImhOjYD@vger.kernel.org
+X-Gm-Message-State: AFq9FYIO54wUXKHE5CzsMYMspjokKo5lQXzMDn7IDAnGotJDAe21Loh7
+	gLb1FEteg2eJUKnjwYzoY7y1QYt/9qW0ApV1djKeAq3PbDGNMVNdCAn3
+X-Gm-Gg: AYBFou3cn0y+y3e+ovucNrkQ00M1yR8Z93e9Zmvos95XH9CHbXv/BTLQcTHuXhRkoYH
+	IWZOw6TbHqEsYM6337P/HERq6uAME3DFs9E+tc6nUrtjZL2jt2U1Qv3AwiaQUEG56b1mermUfKQ
+	nUd2wgLjcFqd46Lws4Cal8vU26GPDo72KFnMA+r3mKDyZDr/11yeOXZplR3JGBLQbTBnVpB7bon
+	QHdrD0aTm/pHBDFjzCpcDHlu8mv7Y2Ki3TivjgaI2Mi6JWXV/38IuOE/hVvHmd3HbJeXA8bbjzS
+	vb6+G54jNAK6hwlxi/FhthstCEWlaj0fvpFLUfXFUN8ZeGm4gXmCgJyZ8hyAFfUxjvA+VGlpZp7
+	re0kmtSFvZA4ybqu08VI2aCwrRnULxpW9LUvkMvpZ2F4wzCdCeThpBHLoGq+E71hSHKhTPoSzUt
+	DBBqVbacj2Rf8Kz+XOPxXhFDcUkkJrc6Dszs94ud5LGnSUVB3TF69ESvaRz2Awwd+yFceJE76E9
+	I7JBvUzzFbrO7iP5ew3V4i4hbcRzFzoA28H70WxwhFAb59jZQ941KK9
+X-Received: by 2002:a05:701b:454b:20b0:144:f096:4dda with SMTP id a92af1059eb24-1851434bc5cmr12888966c88.43.1792461047064;
+        Mon, 19 Oct 2026 18:50:47 -0700 (PDT)
+Received: from duo.lan ([2001:fd8:f0db:3ee7:799b:69c2:e95b:f04e])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1831919fdfesm32684879c88.7.2026.10.19.18.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2026 18:50:44 -0700 (PDT)
+From: Alexander Patrakov <patrakov@gmail.com>
+To: johannes.goede@oss.qualcomm.com
+Cc: adee.sahan@gmail.com,
+	andy@kernel.org,
+	antti.laakso@linux.intel.com,
+	dan.scally@ideasonboard.com,
+	diamondback@cohunt.app,
+	ilpo.jarvinen@linux.intel.com,
+	linux-media@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	sakari.ailus@linux.intel.com,
+	Alexander Patrakov <patrakov@gmail.com>
+Subject: [PATCH 1/3] media: ipu-bridge: Add sensor configuration for OV5675 (OVTI5678)
+Date: Tue, 20 Oct 2026 09:49:59 +0800
+Message-ID: <20261020015001.15672-1-patrakov@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <CAN_LGv3QH4oupSv6KzopjHRXO7tWhY4wvBuCHBzNhJoDW4ZL4g@mail.gmail.com>
+References: <CAN_LGv3QH4oupSv6KzopjHRXO7tWhY4wvBuCHBzNhJoDW4ZL4g@mail.gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,57 +104,52 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261016141716.130220-1-johannes.goede@oss.qualcomm.com>
-In-Reply-To: <20261016141716.130220-1-johannes.goede@oss.qualcomm.com>
-From: Alexander Patrakov <patrakov@gmail.com>
-Date: Tue, 20 Oct 2026 09:41:38 +0800
-X-Gm-Features: AclHuK-hKUi6ptQ0VuUKNJ_EDPqfEHSaqDvIfagtlke9vieQerUGIlASU92TZLY
-Message-ID: <CAN_LGv3QH4oupSv6KzopjHRXO7tWhY4wvBuCHBzNhJoDW4ZL4g@mail.gmail.com>
-Subject: Re: [PATCH 0/5] platform/x86: int3472: Fix AVDD and add DOVDD + DVDD mappings
-To: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Antti Laakso <antti.laakso@linux.intel.com>, 
-	Leif Skunberg <diamondback@cohunt.app>, Sahan Nissanka <adee.sahan@gmail.com>, 
-	linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 16, 2026 at 10:17=E2=80=AFPM Hans de Goede
-<johannes.goede@oss.qualcomm.com> wrote:
->
-> Hi All,
->
-> Here is a patch-set to sort out the problems with the Linux INT3472 code
-> mapping the 0x10 GPIO type which is meant for AVDD to DOVDD.
->
-> This should allow the OV5678 front camera of the Lenovo Yoga Duet 7 13ITL=
-6
-> to properly get powered-on by Linux, without breaking any existing setups=
-.
->
-> See "[PATCH 5/5] platform/x86: int3472: Properly map the AVDD GPIO type t=
-o
-> a "avdd" regulator" for more details on this. The other patches are prett=
-y
-> trivial prep patches.
->
-> Note this series is ordered so that if [PATCH 5/5] somehow does cause
-> regressions it can be easily reverted without needing to revert any of
-> the other changes (which should all be safe).
+From: Sahan Nissanka <adee.sahan@gmail.com>
 
-For the whole series:
+The front camera of the Dell Latitude 7320 Detachable is an OV5675
+described in ACPI as OVTI5678. Without an entry here ipu-bridge creates
+no software node for it, so no fwnode endpoint exists and the sensor
+cannot be connected to the IPU6 even once a driver binds it:
 
-Tested-by: Alexander Patrakov <patrakov@gmail.com>
+  intel-ipu6 0000:00:05.0: Found supported sensor OVTI8856:00
+  intel-ipu6 0000:00:05.0: Connected 1 cameras
 
-I finally found time to test your patch series (on top of
-next-20261016) together with three more patches that Claude made for
-me, which I will post in response to this message. The camera "works"
-to the degree limited by the incorrect format declaration.
+450 MHz is OV5675_LINK_FREQ_450MHZ, the only link frequency ov5675.c
+supports, and matches the two data lanes the machine's SSDB reports.
 
-AI was also able to generate a standalone tool that demosaics this
-complex layout to a proper color image and feeds v4l2loopback, and
-that's how I participate in online meetings.
+With this entry both cameras are found and the front sensor appears in
+the media graph:
 
---=20
-Alexander Patrakov
+  intel-ipu6 0000:00:05.0: Found supported sensor OVTI5678:00
+  intel-ipu6 0000:00:05.0: Found supported sensor OVTI8856:00
+  intel-ipu6 0000:00:05.0: Connected 2 cameras
+
+[Rebased onto next-20261016 and adjusted the comment]
+
+Signed-off-by: Sahan Nissanka <adee.sahan@gmail.com>
+Signed-off-by: Alexander Patrakov <patrakov@gmail.com>
+Link: https://lore.kernel.org/linux-media/20260809042540.15849-4-adee.sahan@gmail.com/
+---
+ drivers/media/pci/intel/ipu-bridge.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index 3739c4a2a8c4..0b6272c4d826 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -111,8 +111,9 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("OVTIDB10", 1, 560000000),
+ 	/* Omnivision OV2680 */
+ 	IPU_SENSOR_CONFIG("OVTI2680", 1, 331200000),
+-	/* Omnivision OV5675 */
++	/* Omnivision OV5675 and its RGB-IR variant OV5678 */
+ 	IPU_SENSOR_CONFIG("OVTI5675", 1, 450000000),
++	IPU_SENSOR_CONFIG("OVTI5678", 1, 450000000),
+ 	/* Omnivision OV5693 */
+ 	IPU_SENSOR_CONFIG_MATCH_FL("OVTI5693", ipu6_ov5693_ncont_clk,
+ 				   IPU_BR_FL_CSI2_CLK_NONCONTINUOUS,
+-- 
+2.56.0
+
