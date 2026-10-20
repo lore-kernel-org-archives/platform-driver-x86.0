@@ -1,77 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792501732;
-	b=OGYIrUfpg7Zu9RSnZc9zGCRAU+F3anDP1B3Xuco/0a229dqwjXSwYtUth5mumgYZX2Ys
-	 ujAcXVBo/rvRMuhvdHMo4YwMsMhAjcPYLhcX5XyUfKuszARMv79eShVAZ8Ng+KaJ03l5q
-	 /Ao3FSYITHcHy0HxkZecon25Ew6La7kah4mfsWj+1xfC9K0k1DNwCfoDRDuwmV6oyfT2P
-	 LiU0GGn4IqB4sHTqcHwmsaTnhJiTzJMyI9mmZaXRO+GQm7RU3xvOlm910/ehH4JdYEYZ1
-	 5PIwAinCAV7nND6e3itpsD+/YHoc9IYgFo1jGyfPxWnSPEC4oD+kYEsFu8pBZXAlFHw==
+	t=1792503753;
+	b=p+E966ZMOkZoDjPmjt9nnLRLxh0HUwrjy+HTiu5PDrBWLElIOyFmvnB0TnN2XnRs5EyS
+	 C3cgqkj9Z9BRJi27Q+ega3p7qOsPDfgMBBHcfxE3r9nuPZmYp+rPpr3+5pY8HnKVi9QUU
+	 3klUivGPcF6F2+L9dn7wLj6qDGt+uPbv2Cu7AYAK3fXBxtjQ0Xgj6ihQDCOHcSM484fBp
+	 JImEPzPiJFxyMXU6ePQfA3Nu4Elq2oVQbR5gxIznZJk+g5WC/iTuSzmh3ujz4W/Ei3E2e
+	 ZqpfoXh06rYmzdTRYb8fsHRe5YIeVEywtl9vtAnBjM+lDVWjCSrIQ8FyMgmzCsxKE/A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792501732;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792503753;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=Z6XXg8D2Jni1w5UG/h2otN80XxXBVxUGHMl3ukoCRhs=;
-	b=jZya00V0z3iiyzgwz3KmFdjlZLK9+D4aCOZKR45FoP4fGTOz7PxX24NUgSTldyzR3Chp
-	 77swexsas++UbEZRgLMuZkdt7YJQJYiwvewW5n044naZz2uyNDyGbtRQhaidui77854ff
-	 rB1iGHmHhG1BSrprMDKpsWOngFvn+XXJ9AWHMB9P1rtvSx6il9h9jjDwKyCrA4MhU+GX0
-	 32g/6WTE2POEMXW+d8QH4t5JnInjyAcQu+A0iLocIHgV9d+1ySzxr//1UGgryzu0Fgz27
-	 zXIWiLA3KfQoZkqJQ4cOIT9KJmrHfBqoBTcOookQBU7Wv4sxxT71xx/+yUYhgO7nDcw==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
+	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Mailer;
+	bh=emi/66x/BabhSf3BDBoOE10h38uK/MW7pPw0XDhUDRw=;
+	b=FQAdO05VRUY9L0tm5tNNi2psABf/jIBJBq8zSmpjZ7K833I9QGW55lu7lt6f+2gkMina
+	 OtK850/ZAyXdpcwETDIWgNcX8et8o7gtXn7kbQzTuN5n+lVnuMAOk6Pt/7JIlORdSd6el
+	 osWg25gyHZNeBDHbc2+aQCrpltNJXp2tMtxhIEIFcK7hiYksSRTrplxdQxuemd5NQUp82
+	 OMoOfcERwpWLzJaSYS/nsVmRB4Y+uI5+869rFAL6b0YRkKvWd+mvLQPAIGMW3/4bj3fJQ
+	 PfCTAI1zMCazr/runhknOieSk51OiMp5+NxWsrWKu1ukicKTQu+PV6xZcIIH7OIAePg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DpUnGnWA;
-	arc=none smtp.remote-ip=192.198.163.16
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dDZiP4yQ;
+	arc=none smtp.remote-ip=198.175.65.19
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A64606A319;
-	Tue, 20 Oct 2026 13:08:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 46A64606A319
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFB7606A31B;
+	Tue, 20 Oct 2026 13:42:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3BFB7606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DpUnGnWA
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dDZiP4yQ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792501733; x=1824037733;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ftoDVKP4FmzQxXitwmaMLu02k8bEuuMI6TnnwAM9v+o=;
-  b=DpUnGnWAI7sSh5TSOt59ZkHTdwLUgaESCus6omgFgGvmlPfzTI/7Pd6X
-   n52+JebIdVDyFdkA/+7HJsQKCczjh39SwpbpwlzkzsOqWVvrY6ZTj6ZIJ
-   huCh40T9nsKnYfzLmtJMhrnFo9KI4B0UT9jU0NKfcLPaniBWLgU7EiIFh
-   3FypNjKscRoqTBEfMtUXy9aQu5uSG/7StWGmSKTwlKxXqaXrQ1pJPiSkR
-   Dra6q46e8xT1v8gKtH94snxStXBpR3wPOBbjVJ8wrFcSc7itIm/YDVXr+
-   nNYTEbNA2Zj903JGffHrJ+28k9P+xxMl7KBInAB5E3szsDJOwQ3PEfKhc
+  t=1792503752; x=1824039752;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=gSicUJuQXSumBo1b/yNxSSakGzyaRj409jA06AFNnEo=;
+  b=dDZiP4yQxkCA6l+O8pWUlc6KPu40XL1e91tktx+41kVWkXIjOzDF8l5g
+   MeD2hkye3P1XB99Wowsl+As+j9sANlks89Ov+m+V0ApMSxk8lr5TuiKZo
+   xCDhiFN3N680O/TwjQIwsA9oZ3N+5CRTLYhkS9k5YAuH6egpSNOrjURVQ
+   XLy1VvdwrYmliA+a++1MBEq4LiGhi7NiO0CI4QWtuU3+i5kwcreCa/hed
+   1pNEUq1Lc4eUvbtjdQM0x94NScruRnH/5d9korKsvUdR1uwh1LUya8oBg
+   q3a/Mg1FBy1w3TNWyLoFX7RDLZhb/RJOO8FCBRQojJLV4bq1cvK1EKFnj
    Q==;
-X-CSE-ConnectionGUID: z7MrYQjfQMykseyHl17a+A==
-X-CSE-MsgGUID: rO3SBx5ZTtu7c+c1hi020A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11940"; a="1213963"
+X-CSE-ConnectionGUID: dONf+aGqQwOfUJkrbEuB1g==
+X-CSE-MsgGUID: CBlISLmLRzikxIIKhgvlzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11940"; a="1239754"
 X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
-   d="scan'208";a="1213963"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:08:52 -0700
-X-CSE-ConnectionGUID: GaNmvxB4RkaF9lRLOPTApQ==
-X-CSE-MsgGUID: j/RDLSMFQkmN/GwlhnW4nw==
+   d="scan'208";a="1239754"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:42:31 -0700
+X-CSE-ConnectionGUID: 1As9G+q3RvCviKEsE4tAuQ==
+X-CSE-MsgGUID: DcA7xthFTO6stDhr9wbrUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
-   d="scan'208";a="2814933"
+   d="scan'208";a="4605275"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.181])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:08:49 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:42:28 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 Oct 2026 16:08:44 +0300 (EEST)
-To: Denis Benato <benato.denis96@gmail.com>
-cc: Denis Benato <denis.benato@linux.dev>, Bartu Alev <bartualev@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>
-Subject: Re: [PATCH v2 2/2] platform/x86: asus-wmi: add TUF keyboard RGB
- readback support
-In-Reply-To: <2C6A459C-890A-418C-9331-D8B521B226A5@gmail.com>
-Message-ID: <6086490b-4a59-5095-8bcc-3728922fd9d6@linux.intel.com>
-References: <20260925200744.129714-1-bartualev@gmail.com> <20260926005625.171560-1-bartualev@gmail.com> <20260926005625.171560-3-bartualev@gmail.com> <c0301eb2-62b9-4dbd-ba24-3a2c40675b20@linux.dev> <570a8f23-0782-8a45-d62f-c95bb28dade9@linux.intel.com>
- <2C6A459C-890A-418C-9331-D8B521B226A5@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
+ Rong Zhang <i@rong.moe>
+Cc: Charles <hanker007@gmail.com>, 
+ Navon John Lukose <navonjohnlukose@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
+References: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
+Subject: Re: [PATCH v5 00/12] platform/x86:
+ lenovo-wmi-{other,capdata,helpers}: Improve robustness on faulty firmware
+Message-Id: <179250374334.19315.17912913288074703218.b4-ty@b4>
+Date: Tue, 20 Oct 2026 16:42:23 +0300
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,173 +85,62 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1389911286-1792501724=:1177"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 19 Oct 2026 23:02:22 +0800, Rong Zhang wrote:
 
---8323328-1389911286-1792501724=:1177
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Some devices do not support LENOVO_CAPABILITY_DATA_01 and define the
+> query method as a stub that returns zero buffer. Unfortunately, some
+> devices do not implement the stub properly, causing WMI errors
+> (including ACPI errors). This was reported by Charles.
+> 
+> The current lenovo-wmi-* implementation enforces the binding between
+> LENOVO_CAPABILITY_DATA_00+01 and LENOVO_OTHER_MODE because of a
+> limitation of the device component framework. When the capdata device
+> bailing out due to a WMI error, lenovo-wmi-other becomes unbound and
+> unable to provide firmware-attributes or hwmon/power_supply_ext devices
+> for the other functional capdata device.
+> 
+> [...]
 
-On Thu, 8 Oct 2026, Denis Benato wrote:
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-> Il 8 ottobre 2026 14:48:31 CEST, "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linu=
-x.intel.com> ha scritto:
-> >On Sat, 26 Sep 2026, Denis Benato wrote:
-> >> On 9/26/26 02:56, Bartu Alev wrote:
-> >> > TUF Gaming laptops expose kbd_rgb_mode and kbd_rgb_state as write-on=
-ly
-> >> > attributes (DEVICE_ATTR_WO), preventing userspace from querying the
-> >> > active hardware configuration.
-> >> >
-> >> > Add readback support by querying ASUS_WMI_DEVID_TUF_RGB_READBACK
-> >> > (0x0010005B) via the WMI DSTS method. On supported platforms this
-> >> > evaluates the DSDT method EC0.KBLS(), which returns a 16-byte buffer
-> >> > containing the active lighting mode, RGB color channels, effect spee=
-d
-> >> > and power-state flags.
-> >> >
-> >> > Introduce kbd_rgb_read_status() to evaluate and validate the buffer,
-> >> > and convert both attributes to DEVICE_ATTR_RW. Map the hardware spee=
-d
-> >> > codes (0xe1, 0xeb, 0xf5) to their sysfs indices (0, 1, 2).
-> >> >
-> >> > The command field is not part of the status buffer: "immediate vs
-> >> > save-to-flash" is a property of the write verb (0xb3/0xb4), not of
-> >> > readable state, and the EC mirror is updated identically by both.
-> >> > Readback therefore emits a synthetic leading '1' - the canonical
-> >> > input form userspace writes - so that output matches input.
-> >> >
-> >> > Suggested-by: Denis Benato <denis.benato@linux.dev>
-> >> > Signed-off-by: Bartu Alev <bartualev@gmail.com>
-> >> > ---
-> >> >  drivers/platform/x86/asus-wmi.c            | 79 +++++++++++++++++++=
-++-
-> >> >  include/linux/platform_data/x86/asus-wmi.h |  3 +
-> >> >  2 files changed, 80 insertions(+), 2 deletions(-)
-> >> >
-> >> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
-asus-wmi.c
-> >> > index db6ee1974838..fe1dcc7701ad 100644
-> >> > --- a/drivers/platform/x86/asus-wmi.c
-> >> > +++ b/drivers/platform/x86/asus-wmi.c
-> >> > @@ -1046,7 +1046,58 @@ static ssize_t gpu_mux_mode_store(struct devi=
-ce *dev,
-> >> >  static DEVICE_ATTR_RW(gpu_mux_mode);
-> >> >  #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
-> >> > =20
-> >> > +static int kbd_rgb_read_status(u8 data[16])
-> >> > +{
-> >> > +=09int err;
-> >> > +
-> >> > +=09err =3D asus_wmi_evaluate_method_buf(ASUS_WMI_METHODID_DSTS,
-> >> > +=09=09=09=09=09   ASUS_WMI_DEVID_TUF_RGB_READBACK,
-> >> > +=09=09=09=09=09   0, data, 16);
-> >> > +
-> >> > +=09if (err)
-> >> > +=09=09return err < 0 ? err : -ENODEV;
-> >> > +
-> >> > +=09/* DUBF[0] is a constant 1 set by the AML: anything else is not =
-KBLS */
-> >> > +=09if (data[0] !=3D 1)
-> >> > +=09=09return -ENODEV;
-> >> > +
-> >>=20
-> >> -ENODEV or -ENOTSUPP ? Which one is better suited for these kind of th=
-ings?
-> >
-> >If something is not there, -ENODEV is appropriate.
-> >
-> >Unexpected comms is -EIO (-EINVAL is unfortunately often misused for=20
-> >this but it -EINVAL is to say input parameter was wrong).
-> >
-> >-ENOTSUPP is not a standard error code (the correct one would be=20
-> >-EOPNOTSUPP).
-> >
-> >TBH, I don't really know where the line between -ENODEV and -EOPNOTSUPP=
-=20
-> >is. I'd personally use the latter mostly for the case where software sid=
-e=20
-> >lacks something.
-> >
-> >In anycase, wrong errno's are endemic and hard to fix without running=20
-> >afoul with something as they often relate also to userspace ABIs.
-> >
->=20
-> -ENODEV it is.... Or -ENODATA when we can write but not read back the sta=
-tus?
->=20
->=20
-> >> If we go with two separate sysfs attrs you don't register the read one=
-,
-> >> otherwise I am not sure.
-> >>=20
-> >> > +=09return 0;
-> >> > +}
-> >> > +
-> >> >  /* TUF Laptop Keyboard RGB Modes **********************************=
-************/
-> >> > +static ssize_t kbd_rgb_mode_show(struct device *dev,
-> >> > +=09=09=09=09 struct device_attribute *attr,
-> >> > +=09=09=09=09 char *buf)
-> >> > +{
-> >> > +=09u8 data[16] =3D {};
-> >> > +=09u32 speed;
-> >> > +=09int err;
-> >> > +
-> >> > +=09err =3D kbd_rgb_read_status(data);
-> >> > +=09if (err)
-> >> > +=09=09return err;
-> >> > +
-> >> > +=09/* Map hardware speed codes back to sysfs index:
-> >> > +=09 * 0xe1 -> 0 (slow), 0xeb -> 1 (normal), 0xf5 -> 2 (fast)
-> >> > +=09 */
-> >> > +=09switch (data[5]) {
-> >> > +=09case 0xe1:
-> >> > +=09=09speed =3D 0;
-> >> > +=09=09break;
-> >> > +=09case 0xeb:
-> >> > +=09=09speed =3D 1;
-> >> > +=09=09break;
-> >> > +=09case 0xf5:
-> >
-> >Name literals with defines. When it comes to offsets, consider if a=20
-> >struct would be viable instead of byte array + named define index.
-> >
-> >> > +=09=09speed =3D 2;
-> >> > +=09=09break;
-> >> > +=09default:
-> >> > +=09=09speed =3D 1;
-> >> > +=09=09break;
-> >> > +=09}
-> >> > +
-> >> > +=09return sysfs_emit(buf, "1 %d %d %d %d %d\n",
-> >> > +=09=09=09  data[1], data[2], data[3], data[4], speed);
-> >>=20
-> >> We had this discussion in discord so I want to update everyone reading=
-:
-> >> the status returned is the current one and both cmd=3D0 and cmd=3D1 on=
- write
-> >> update the current status.
-> >>=20
-> >> Therefore this is an asymmetry that doesn't really need to be,
-> >> what if we introduce another sysfs that is RO? Ilpo?
-> >
-> >I'm not entirely sure what's the suggestion.
-> >
->=20
-> 1 sysfs attribute for read and don't touch the write one since they are i=
-n two different formats.
->=20
-> Like one returns 4 values and one accepts 5: they are asymmetric hence my=
- suggestion.
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
-Hi again,
-
-Does it have to return "1" or even a number? Could we just have return=20
-something like "n/a" in that field (which would be ~ "not available")?
+The list of commits applied:
+[01/12] platform/wmi: Introduce wmidev_exists()
+        commit: 6e01338e987886c03e58b3523adb1f1df176822e
+[02/12] platform/x86: lenovo-wmi-capdata: Do not stop the AC notifier chain on error
+        commit: 3b53e691e907086672b72d0544e4bf27efd4250d
+[03/12] platform/x86: lenovo-wmi-capdata: Only allocate sub-master info when necessary
+        commit: 6f8252df18828d19030af6538362c6bea59414d1
+[04/12] platform/x86: lenovo-wmi-capdata: Store a pointer to component info
+        commit: c8b350085917f8ed6412ae53f3f13cfca4d79ffa
+[05/12] platform/x86: lenovo-wmi-capdata: Defer mutex initialization
+        commit: 9a4102e4185ad37d41b00d263ac05c370f5c9baf
+[06/12] platform/x86: lenovo-wmi-{capdata,other}: Only allocate capdata list when necessary
+        commit: 50a11dcdbd073a26b152b46d214cc980ecfc8426
+[07/12] platform/x86: lenovo-wmi-capdata: Adopt new WMI API
+        commit: f44eea1b94819cc3a790c24a9cc77d06738050f5
+[08/12] platform/x86: lenovo-wmi-capdata: Register component even on WMI error
+        commit: 952f7fcb161aefcbd6528e34a43932be1f64d839
+[09/12] platform/x86: lenovo-wmi-capdata: Detect stubbed capdata device
+        commit: 41a2ea4df8f036c9420616f29deb8ef5744dfd65
+[10/12] platform/x86: lenovo-wmi-capdata: Do not match missing components
+        commit: 1e99760fb07fbe568d1163795ad3a31825952d45
+[11/12] platform/x86: lenovo-wmi-helpers: Adopt new WMI API
+        commit: 87a7c09a9d4092782820d2c28c09df1d85d4cd93
+[12/12] MAINTAINERS: Add myself as a LENOVO drivers co-maintainer
+        commit: 3c182ededcd4b89d96fdae43a0868b27d93548b5
 
 --
  i.
---8323328-1389911286-1792501724=:1177--
+
