@@ -1,89 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792530734;
-	b=ll5Vmbsc+gxD12CC1tZH7/Y96ONmYWrNEKQrcPRg8stSwMK6t0vhIbJ0BbmcUt5Oppum
-	 CtdR+cVXcLkbzeqg10Ax+aKHLkluWtCnKMIgGKZAQ51qdKg1g7kPixQRqMAhRFb03hSOY
-	 TjsNb6IxuNw88+pe4/4yD4RPymWPrEvH7L718g/pF2FwyCEPjJwjw27Vu6lBbr//yJVcW
-	 iB7lfI901Fll+xZdy5AbyioFIUoMSLJRgI3ATWLwqqohRAW9qrP9yp1qh0D3tYKMm1ElR
-	 EMTqfP3GLTBkV0psbOW9dzAU2dZL91iYhgssvN3vxXv5EYj14VxFdIA58nvIFJmiRnA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792530734;
-	h=Received:Received:DKIM-Signature:Received:From:To:Subject:Date:
-	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
-	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
-	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
-	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
-	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
-	 Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
-	bh=OKJlx7sEmqXBLnKry/aJvXEGMCuQDYbJfQL54eGZEIA=;
-	b=HWtT1SakNn1ybQLPGwP6Qid/TCR/t9du5rxd1iw9w4yinhROoHJge48LsqvxJbnt20ax
-	 jOK5ykdkYJxL5Z+lbTC/7PHhaGo6EZAG+WKZ1KeSzZSiz0Gj1CGdXFW+YEgGWRPVNcpZ2
-	 SXNS7Y0mQSK+JtiYfUKSpPKvG02YCnXuRJEBFfU0g1iltN+z3xmSOo5pEjXhgb+DsjGVC
-	 NiRzgShzWOqDdwALPjk5cCH6uxD7le2TRyd7LDn8bcHR2lHIzxIFJiQkT/BiyIZTwuluA
-	 yG1wH5SuuJLT7GXpSQipykqs8fwB2VZLXWVwM6ood9scCJrCuFalyqkMGIMqACRvxnw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b="Btgin/5H";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
-Received: from aws-us-west-2-korg-listserv-1.web.codeaurora.org (ip-10-30-226-211.us-west-2.compute.internal [10.30.226.211])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44800606A319
-	for <platform-driver-x86.vger.kernel.org@localhost.mlmmj>; Tue, 20 Oct 2026 21:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Btgin/5H
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.16
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792531168;
+	b=RwsmrIyFmpKlA2qHkKCl9WXYde7Z+y6h6R3+8vabWUZ6RMTff+QgOInEgXwME5Z+35cW
+	 ZECFF0Bcow19A4/nCLUvKmboRJSfX87shoDVCkssHmBYmezlcAoT09AoQgAHd74IgE1Tc
+	 TKQ2IkvVvPsDbg5rKeEfuT2sGBv+eiukb5exh6UdBQsN9kB/32LMHMTjEMXN9aZg6PWtw
+	 cBOSZAbLGm/Y08tXRSr7pcOc+phv9xQ2O57qLFMtDIGMcnF94GAOshFIIIrPJBRihXwiL
+	 ScVH0SSpfCQYWoLoPEEyv7vSqVnONqv5udXvdVArxCxdzuiDR34yQuPBErZHzEn0G0A==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792531168;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=EFiAhLpPCbCG0qGhG6c3PkB+2nh7/RIhptsbUY/w6Xo=;
+	b=zE7G1F2BMDxF2ljgEjGhiYYOpMC8+neVqtWeukvfaMIqt1sufSZanQd2hFkRw1YgONZu
+	 /V1JCOPUchqr6h/Qof6GR4WwO7jpLned0Ev5Q2e0MGSgMG+i0uXpl5WZFfyVco1sq52aW
+	 o6vpraU9vxLJhJxQA7XecBjZGzYMLacRNMRJoRUI+B3xtwyUKydJedYvxLDRAg56ULNGT
+	 A0Y70lgmsZUnVU7VhBJhrXkUek4SwYvddfOWD7+j6gy/gZoinupd1fBN6xi0tYZUezAtT
+	 xHuuG4AzUcu6FxZRBViVv1eejkiAHRME0e033XLSXRHPTpANo9JRGr1gjz0Iidv8xxw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=F3qdzCfs;
+	arc=none smtp.remote-ip=198.175.65.16
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B26825771
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 21:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792530734; cv=none; b=jj6LdDggAHiHTMJmYpQ4yXUHl4EV/ERaK27B/E0NOH39UO86oxuFtKCpOXlkIGrKnRJXs2JeZ6yBtCSBGtt5UFawVcYs0Zr3UUzXHCdrNHL/fFiiCuWvtiSCq+08Noka24VK1zsQUMsJaAntAFvt1qSpb8/JL4XmJmcfSdCK3ng=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792530734; c=relaxed/simple;
-	bh=OKJlx7sEmqXBLnKry/aJvXEGMCuQDYbJfQL54eGZEIA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n7MtCzkGi4p+U+ItRzi/nxtvnoU4NTqUkzpL6v7SqAZjyNWSU3sUlymL0cWZENp8P8NwbasoHipFBQjqulZMDv3cbR/8r8EgUfIxWOpiVoGacxebLlGbFQCdPrku9lTS+rS8qd+D2c5aAQyeMk3r3nThM3Wy4k7UsJcBCrBl9Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Btgin/5H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 23A04C2BCC7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 21:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1792530733;
-	bh=OKJlx7sEmqXBLnKry/aJvXEGMCuQDYbJfQL54eGZEIA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Btgin/5H8ASba/kSPG+7kMGh6yuFXJImjys33goI1RnJk177hMUEMknC6usMAMIDF
-	 VqX7pBjwnwNj1GErj+e6h8FhqfUSamNlGhKD9I6i+prfzxB+nuMz8A7ilkoM5Katib
-	 8NRU7tdQx5CI9r0kTq2ZICNfOmCJ7KO6JAh3BQ2bMeCUpx+I6ZTepS2VBR50rHWLux
-	 4JXu9TfyjkWmmcGXxkm8FFGRVzXUCWP5tjYQMkYYzE7UFTv3wMTz5g8zo1Z+kbiICs
-	 CNPEPnGmIxGJu5oDk78Xwso1ya81rCneVH1J/RTg6/VSUm9fDFZQNt3ZRDUZSxhwrc
-	 8O6mCN8ZxcZHQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id EDF4EC3279F; Tue, 20 Oct 2026 21:12:12 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
-Date: Tue, 20 Oct 2026 21:12:12 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: W_Armin@gmx.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-222161-215701-bUqAWXl8yB@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
-References: <bug-222161-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFE5606A31A;
+	Tue, 20 Oct 2026 21:19:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AEFE5606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=F3qdzCfs
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792531168; x=1824067168;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wgvs4TfrBwmQe25MIzOokgSbmEY5CtIwpB5o6j1X8W8=;
+  b=F3qdzCfs8B2EhF8lIFh3AukcSjMLBPyvBiSFn515Loa/BIeCiZdw8AwR
+   aqWHuHa8JBYjQ/sZOsEMqQ/uhFrtwAy0laugta3X6srSSXOHquoibSlqv
+   FOA5cEyvJ2tonCkNe1prS02zb21DKNr3i9sn5bWOdMPsYoMi+mgXSSFHN
+   HjDGWwjHZcj17mKQtsyEryFbpbJUXO3YazWbyTj2MYi6o71DwFLHv6001
+   NG3xYIQ+fFG9ZuTre+5AlvWBSznXXCeHUiAN/km2fOQRXdJJ7ExX3M2n1
+   eQhyugYsd1RU/xQz+9pmaMbQiWH+bu75De5bg4QIGA+A/J2XH/F6Ul+kE
+   A==;
+X-CSE-ConnectionGUID: oMG9/OQWTPmh2s52y+kJUg==
+X-CSE-MsgGUID: zji5zxIQQZ2H2sDnD4nLKg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1237154"
+X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
+   d="scan'208";a="1237154"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 14:19:27 -0700
+X-CSE-ConnectionGUID: xa+w+ahqQl+dGt6z/uSZNg==
+X-CSE-MsgGUID: ZhqweZftTYe8HRjO2kP8mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
+   d="scan'208";a="3316165"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.181])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 14:19:23 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 Oct 2026 00:19:20 +0300 (EEST)
+To: Muhammad Bilal <meatuni001@gmail.com>
+cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH v6] platform/x86: hp-bioscfg: fix heap OOB in
+ hp_enforce_single_line_input()
+In-Reply-To: <20261016025352.230535-1-meatuni001@gmail.com>
+Message-ID: <29c3e4a2-9d6a-60cf-d06d-85152a40a703@linux.intel.com>
+References: <20261016025352.230535-1-meatuni001@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -93,17 +82,65 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-400396624-1792531160=:1177"
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---- Comment #3 from Armin Wolf (W_Armin@gmx.de) ---
-Can you use "evtest" to check if both KEY_LEFTMETA come from your keyboard =
-or
-if they indeed come from lg-laptop? AFAIK lg-laptop should never send
-KEY_LEFTMETA.
+--8323328-400396624-1792531160=:1177
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Fri, 16 Oct 2026, Muhammad Bilal wrote:
+
+> The input is copied with kstrdup(), which stops at the first NUL, but
+> the full write size is passed to hp_enforce_single_line_input(). With
+> an embedded NUL the helper reads, and can write one byte, past the
+> copy. Return -EINVAL if the input contains a NUL.
+> =20
+> Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
+> followed by 4093 bytes of "B" to current_password 100 times returns
+> -EINVAL every time, without reading into the heap.
+> =20
+> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+> Cc: stable@vger.kernel.org
+> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+> ---
+> Changes in v6:
+>  - Return -EINVAL on embedded NUL instead of limiting the scan (Ilpo)
+> =20
+> v5: https://lore.kernel.org/all/20261007134711.473857-1-meatuni001@gmail.=
+com/
+> =20
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platf=
+orm/x86/hp/hp-bioscfg/bioscfg.c
+> index 876fc35d035b..e306bd8b1e72 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -162,6 +162,10 @@ int hp_enforce_single_line_input(char *buf, size_t c=
+ount)
+>  {
+>  =09char *p;
+> =20
+> +=09/* buf is a string, so a NUL before count is invalid input */
+> +=09if (strnlen(buf, count) < count)
+
+Why use n variant?
+
+> +=09=09return -EINVAL;
+> +
+>  =09p =3D memchr(buf, '\n', count);
+> =20
+>  =09if (p =3D=3D buf + count - 1)
+>=20
+> base-commit: 8667bd30fd033295b3038ce374c551d1059538ba
+>=20
 
 --=20
-You may reply to this email to add a comment.
+ i.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--8323328-400396624-1792531160=:1177--
