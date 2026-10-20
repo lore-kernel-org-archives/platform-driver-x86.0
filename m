@@ -1,130 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792507547;
-	b=co9tlkbJqkX/3m9/ZLSz0T/cUoBJhwz6vRGMvZRxF/RtbkTSToWWvCy8+k6USLW5O9Tq
-	 Y1tsqPw8EDDRGvdqxbGtm9QfUTpHgJ6wt4/hh4mYyyEzZfbrVICSMvnocLcqtVy+E+LyU
-	 2IFjvMYgZ5qJhrlPmt3K/KAFUPCXdK+kTbTB921GxVhFwIC0UMgkTyMYzeHPD+dHz5XYg
-	 y6OewvRbO15WOa5p4wvF5CBd56AYiQkQYiVZyfUQKTOBKnAPVBUa4V3E3hyXYXKyakBhP
-	 iM7fAr/7KVHnO9VZva0qbNubmSanQtP/CmwW/LuV0SshFHfARDT6NXcFIl9uTeym56w==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792507547;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=8dbti84VQZnRoyeZV4350aERHO6muqhqQOQJux036u0=;
-	b=WqborG5NvjJVjr+OIH3WSx2x/OaLfWo2QUwfWv05ifJ8XxIxXyHRAN4klFmVoF/kmAgE
-	 ezGwWFetABG7RckPRkurJZOY3SPft+jpxOZuMXu3A9BGE4pJ5b18oQEbmwJRG6lZuzcXh
-	 yu9CeUmg9Wy0CbE28yxq2CUu9Ewj9tRMwp4kmP7qGkPfHHVocpUZVYUD28eom9rCQmh80
-	 4IQ0ucQls7xZAwvQmbb+1BZbJ4j1H+zfkjcmzMcmnQ98O/GM7UeKfQAlwhyy6geZi5Hp5
-	 E/bv5O6w91eAlEf6T250zTp6jw9l/9K5383CkfE5iKxVAZ7utdvInpptDNixBf5c8BA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=hLMMg0QP;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=ids73i61;
-	arc=none smtp.remote-ip=205.220.180.131
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.56.21
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792517290;
+	b=MzlA7SEavJlhML7YBnwP6z3ZJQH0m3ErVGzQab0RjO1DM0DuA+d/fZ4w1a0AfY9hojf3
+	 qfsUVFEU2yOuTOJ+myWipVajfnrm+9+bW81+pWEB+yTzm9THWrNxD3ZnAflqpJaLmvIR/
+	 Ki2piwSS5+zHkgTEsY5GyVFsyLnC54yIMirUoRYsjlT9ryWLl4YJHlbn0wgSn5ALfv4R7
+	 ULdo4WAZhtXS186tYKBe+26jt/ogrj4TmJYMMtAN4W4vtWidbWRMlaVHlFE7en7XIesbx
+	 nz7bWysvjPnpT4pf/DI/EOX//vccy+dSlnBNwlxAsIgi95XOBB8DZAHgA5TJZajpX/Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792517290;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Originating-IP:X-ClientProxiedBy:X-EOPAttributedMessage:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=uQMMKZDRFP/MAzWxy6EKktWyy+fBCKa/JQHOrdB8+UU=;
+	b=I7rmyw+l+k57HB0Z6h7qdag03vojcdMV3i2wnl7/KYN5V2c5wbkIVZwGtVLQ5tnUtWfi
+	 VPxdg0aos1VGGf9F65iaOby7DT2PTmRIrtgRdBWShlFk01eZnGDgdJIut+7pAn8MlhfV1
+	 tNhQ4ACMC3NKpzB8nceJ//wn731UN+0dmskY62Eq6H44VaO5RrXi9+knXtCcuiciGP8z4
+	 ImTEQ2EBRNchnlx3Ec343Or3fNmplXqmsa1t991/tJdG++Z29kffCwDq2frR1+mD5zN6I
+	 OVIIWcdDY0D9a+q8SJIQSzqal7KeZTnT3GRTLm6mKVrHALRLwhlCbMrCXS6Tn1U77jw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=BSCaNQga;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.56.21
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010021.outbound.protection.outlook.com [52.101.56.21])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD0D606A31D
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:45:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7AD0D606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C645E606A31F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 17:28:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C645E606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=hLMMg0QP;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=ids73i61
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69KEIfq72448598
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:45:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=8dbti84VQZnRoyeZV4350aERHO6muqhqQOQ
-	Jux036u0=; b=hLMMg0QPCCSRW1jxQN0pwOX162ofZo2sdj7Uph673jP7aGe2K7a
-	/+rirvtt/Grar/hgd667SoVlXSplzEGDDDZ2NfWUXoDCmVN5b4qUntDRnmbmPLZW
-	TgfzPoiQyXQCf1RoWSLOXotJ0wH6C0ONGfHtpf68OfTxQ9XpSXEmemUvvSEcUhfK
-	xtCT8PjJSns+Z0jTYP0aRN2P5+wRFQUunr59qVRYQeM5LCKy2dIRZR2ECaXM3M7F
-	b5227oqMXtn7yoi7dcJdPnsYWxi+5W/PlyDAdAb7PqjJvuopDwM6yUDomyci9D0t
-	X3Yb9E/vByA3podX9AoPFZUamMaceyvF+2w==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hdw5pjykg-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:45:45 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93f20addba1so608619485a.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 07:45:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792507545; x=1793112345; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=8dbti84VQZnRoyeZV4350aERHO6muqhqQOQJux036u0=;
-        b=ids73i61zfzfbT1OHvtyC7WeOE/60r6cZf7JJIVDtlAtKZ5+AY6WZwbDW760OnXyuf
-         q3aZWYPuGCy7tZ/OH1hc3xvmHm58JbSYUGEmtCj1qS85+AosBMLGZkfC0h8+KZjVg4w4
-         QzOS9YhgdcoMyd7r7ruvag/YNyKe2AtQ4spbwbX+0q1vdRnWE/C80c8pT8apvc15Ceg9
-         9f9ecnUe1O+x2m1Po25QYYmqsI41I2sa42eJNIXmdDo1p8gjk9zXw/l/RQLbPEMERryL
-         nuRPixgbYmVSEd86kbc8vFoJ+DhS25gSERjdbBcCq3/hM33mRz0MMuE7ILvSl6WTLsSV
-         9NJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792507545; x=1793112345;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=8dbti84VQZnRoyeZV4350aERHO6muqhqQOQJux036u0=;
-        b=hRv/lV9X1wh798oF/uqrCeXHdA/jfyOfR3AQcNWPSQQ3TDlctBUy3dis5qHRK96l4n
-         wlt+nslS3VT1xLw6hK1Z1Ev8D4OAsfCH2Az9UFj2+HBTbidFQ1Glpjv+KQVsCeHO4+BD
-         u0Qzp449Qda1UZQUxSxeMjAU77OW+rt2WgjSFBs9t5drMPaTLZJkOEwH5uupDs3d7RjW
-         blLQ+Dr5zzR1ynAn683xhJIhgpgh8kGR7vhyoT56EyRXzwAFKhhGXSwd909E29wm6z6e
-         DOAAG3+hDlawJkbFeVJiuDcvCUST2Fb1RCD9GzdbnzYq3aEae8zO5Alr4dfUQC9cmSGt
-         9ddg==
-X-Forwarded-Encrypted: i=1; AKwUvBwVzz40MxirdNUU2Be6bO0cB/AOOOZVmvEjuZ1BYa7VBBmcX59ETbxPnf8OOmpBuJa1fJJGioeeqP+CTNyWgnBQBayV@vger.kernel.org
-X-Gm-Message-State: AFq9FYIrVsSUowesVaUTZzoCZgGVZw4pdiVMbpx5Wg0Y8f6qH5/TYCfe
-	WFP5djNHTMY8EjGA2kPDF0QL6ynhDKypoSGXoT5Zu5+YQjcHd+5W1WPyO6EsvyZO4bq9cMFV78z
-	NUpBBGIJWxQl7rvDgt7UON3P8wRJOl7nqh2S/O4Cn/8183mjlnq28dZWrvPhhqZNwjpxyJMR8kl
-	+D
-X-Gm-Gg: AYBFou05mhU23GDjksahxfdLZ7bjZlRcOkMYmQjLPHGQg4KAeEqu4X0NOkV4BRfS2VZ
-	jNssr3JmkjXtKW1BGX2fvmAjNN+0/SETOcIQW6AlnoWsmWhOpE0zBbP4KxJhfwEO2tYKbs9Flhs
-	XppdF9l68meutAX1nFrEEBATSFnuLMrQDpVrCgr3TK2ImRqdcMzpygZHUx+YCzO+LMvWYob+519
-	P5din5qTWUqmNX9U1fFkv2mGVda33yB2KaHIdBLN9aWIXl/K96jBgWGgCKos4800yRfhFWIOW+C
-	vLGKr9Z2LsLCOcQm3+zY6a3D4ug+76IA9cEClWrviP9+njRe2Sj5gqe0yO8G/KZ6GZRs4Jx0Gs4
-	KlsY56yvXEKrkn408BXj0xNyNs6o=
-X-Received: by 2002:a05:620a:7014:b0:912:1206:ddd1 with SMTP id af79cd13be357-93f29b46ad7mr1631405385a.1.1792507543007;
-        Tue, 20 Oct 2026 07:45:43 -0700 (PDT)
-X-Received: by 2002:a05:620a:7014:b0:912:1206:ddd1 with SMTP id af79cd13be357-93f29b46ad7mr1631380385a.1.1792507540863;
-        Tue, 20 Oct 2026 07:45:40 -0700 (PDT)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:4884:6e9a:d9ff:9fa6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1df370381sm179377585e9.1.2026.10.20.07.45.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 07:45:40 -0700 (PDT)
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-To: rafael@kernel.org
-Cc: Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        "Derek J. Clark" <derekjohn.clark@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Armin Wolf <W_Armin@gmx.de>, Jai Luthra <jai.luthra@ideasonboard.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mario Limonciello (AMD)" <superm1@kernel.org>,
-        Jack Wu <jackbb_wu@compal.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Zhang DM <jixianqiang1540@gmail.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3] platform profile: Separate handler locking from sysfs lifetime
-Date: Tue, 20 Oct 2026 16:45:25 +0200
-Message-ID: <20261020144525.3265851-1-daniel.lezcano@oss.qualcomm.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=BSCaNQga
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OLTRKn05Dc35pKKOTm4wHVqTUgD5hD/IRlcsgnWSIHU4e0KY9Smb11KVVNTAcY5FG2jQX2t9i1eAgU9B4Pdx1FWtsgQhi+SzzbJglvZCXAtc7kUn1APgsUca5Wh6RYMYV5Q8xlzgTgyZsF37B7tFfAGfM5m1nyF9n0F6b4qhw/JjcbiDSO9edKctdqrTC9S/Gs+811gUs8qEJPsFHEzzPGYXvUCQY24PNdktd19o3n3MjtF5fOLCSXVy+K+0bbwcuIWXk8fhKTS1lmLkYvTeQMkYU2F6/bsTvKgRrdKf/fgp7tTuCci0cg/Ezs/VX2sJdK0koF54FWaWruYJpXmIVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uQMMKZDRFP/MAzWxy6EKktWyy+fBCKa/JQHOrdB8+UU=;
+ b=O72/Xyu15Io7H+6CQo9gE7HdMk1Lq1e920EiMhK43r/zdkRDXkSTBxRdnwsUau1RrE0ZJe1PBH/AC0nKbRpKO61G4A5Rc2B11nL+V0sBs0USA41owSYD8GkLp472EOZdmI08+3Vf3U8CfOI2iXLKnEfB+9ZU+IbHaxZRQaXyVb88HL/JNUA8MjiHUifw+0AZ2z0PHe0Z+4l0s55rm6uftF4jGLvMzAcozVVew27NHMbkl+smowVhBoviBaVq4hbzPv+vGneUjgCXIXZgykMAa2DGHunr9fXExvv6hj38JcnK+mqOnk1MmlrUhv63X9Kqsb7WuN9nF92mrZIIji9A8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uQMMKZDRFP/MAzWxy6EKktWyy+fBCKa/JQHOrdB8+UU=;
+ b=BSCaNQga7ApFeM/I1J+6n6WODkK+rV1+mqTXgMHaiZ7o0JD+viTTmseyNzRUUcg7Fw9sJU/053kGHhssx55pA4Y82IIFDE7SW090N91+MMtpXWL0yATngg5DYEaHjN0yjR4CUJjW5yviosLDNouXjliN/hUUP+DA8PKTK02TusbVXHbfW3dMUwZqpzoy57WqA9HczzV4+w2ibCSMyobrarmn934OqbY/xlqoDJni4W1JDoJ6zakorClxRf/yoBGMV/stlZbxAmJW2woO8eoNJ98n8LNk5npaid36EcJuDpPjNmYiZaXobCY1Qynkvf9akeCMJGYwho5AnbpnyN8XwA==
+Received: from MN0PR05CA0016.namprd05.prod.outlook.com (2603:10b6:208:52c::15)
+ by IA0PR12MB7555.namprd12.prod.outlook.com (2603:10b6:208:43d::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.15; Tue, 20 Oct
+ 2026 17:28:04 +0000
+Received: from BL02EPF0002992E.namprd02.prod.outlook.com
+ (2603:10b6:208:52c:cafe::51) by MN0PR05CA0016.outlook.office365.com
+ (2603:10b6:208:52c::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.546.15 via Frontend Transport; Tue,
+ 20 Oct 2026 17:28:04 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 216.228.117.160) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BL02EPF0002992E.mail.protection.outlook.com (10.167.249.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.522.6 via Frontend Transport; Tue, 20 Oct 2026 17:28:04 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Tue, 20 Oct
+ 2026 10:27:41 -0700
+Received: from r-build-bsp-06.mtr.labs.mlnx (10.126.230.37) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.49; Tue, 20 Oct 2026 10:27:39 -0700
+From: Felix Radensky <fradensky@nvidia.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hansg@kernel.org>, Vadim Pasternak <vadimp@nvidia.com>,
+	Felix Radensky <fradensky@nvidia.com>, <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH platform-next v2 0/3] platform/mellanox: Add nvsw core and SPC6 host driver
+Date: Tue, 20 Oct 2026 20:27:23 +0300
+Message-ID: <20261020172723.4160326-1-fradensky@nvidia.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <274bb540-5f61-d343-173b-a2f46f7ea69a@linux.intel.com>
+References: <20261018101156.699575-1-fradensky@nvidia.com> <274bb540-5f61-d343-173b-a2f46f7ea69a@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -134,313 +111,162 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=a7WlZkSF c=1 sm=1 tr=0 ts=6ad77e99 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=660iZSQnnn4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8 a=4c0kPULnjDDMktAHOzUA:9
- a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-ORIG-GUID: B8QfuPH1moi3wBWb45jdfR6E9QC4jDxt
-X-Proofpoint-GUID: B8QfuPH1moi3wBWb45jdfR6E9QC4jDxt
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIwMDA1OCBTYWx0ZWRfX7b9AuHHQgrKa
- 08UctCqwJToUBGKItxuTnnKgN5oMBhcTbl7F8JMHuRNZyjdcTp9jorzzL3MhzDPLy9nk7xzmeUk
- jFLkgboV//5/8YkdmM0g5Vrglitv2fo44gavsjh1EPqsRWepN9BSVV71WW/7EZfHv90Y3yhzduj
- yETShI1HZQaXncx07l96p4FBoDsdb3RtN5WvyXDBXOGWat2Fc0V2/gLut3Fe1L5qN0vkEwsrSMD
- l8Ut80/4K8/sJZ2E9lb098GkKTeEwAxcVlr2rnGR1x8ByXumDX2PV4n0zFsbxHQZ4iGeKuJ9O6S
- nlyh3rbKHb5ki10fLjcO82CJqghYAc125UJAqIE6fIAc2ZHqwmdbvFa87DVDye5Nylx++m576jg
- CakbHPAOfmCd5tO4XzMwk6outhImZ/bUo+oK5CnFyTgoLPr78G2U6sWfExNEUDuVLL6njAxi7zY
- 3RtJxpkG4Ugb/KvCNSA==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIwMDA1OCBTYWx0ZWRfX9w0MH1YVoiGZ
- rHSnOKncoN84xUvY+kHZKhOWNrd5ciWDBBUNXw2eKJlq5wiqKobmYP0eRxynbVYY8e4F1HtZAq7
- Ictfxa1elj/YgqpgwYDWhIlo2gGmjy0=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-20_02,2026-10-19_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015
- malwarescore=0 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610200058
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0002992E:EE_|IA0PR12MB7555:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5956dcf1-57b5-4f17-0df4-08df2ecf7f85
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|36860700016|1800799024|82310400026|56012099006|4143699003|11063799006|5023799004|261009223027099003|10067099003|18002099003|22082099003|6133799003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	Mj3YgbORZ/k3llS38/yW/hnWzg5p0ng6Sx8zyQCDlAEXtrnwKpkTOw2+1Nvz4WAngp8ZYadllgB6pUoZnS24R1NnS3DVO7hp7sLpLLJpGYv7yEV8Xc9VZ9oMA/xao2zfAUMgTiQ3nK9zpnEwkPFCJWwmyIjQBXD5ilD5JXFqVEr8OtpDuH3s6WodfPB8OUijNy7RC083Tvp7Esq+NKlxrwI/IO6XhhcdMtSZZqYay34K9ssFjN1lcS1I9pMmjJKuSTuNoR+SMvfB8asX/tBdExeTnp53PYs8i0zsbri5da1l6MLhFA+FX7xmHauGVJ1roHmHnyddtfSkhVDAsHn77n3KkmQkybUvalpoL0ZQ0XhGkrtvo65Sp0NoqocC3KDAnNwbVA0kI+yX2eUhmmN30mPiMVKI3rkN0bD+pfcd9zolRkWK7Rae3F88heE8aSRcqj4StICXBYi4wPnwmaQpKCoF7beuwlKMErAVfP7oqLB08SLTJ+tLUr0KUFGAZhK8+XXDdKi+f5EqctTATWJSc4Du45NdSDUkxOmbbIqnRd9Wj7zvBj2/hdzmsNQJuZpFY2tbFyFN8ISSA6quis9S+tv4YNVfdULtldL6euZ+JguDA+jp6JF5tS+6NNRcaLcpPyd0Df/nm9e6YRIdcVyPtIwy4U2e2vm+PYG0FvxFDutDVyrUsjxIJ0dJyGLSJC17l/R3Jx4tjzTThDNul/7+VA==
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(23010399003)(36860700016)(1800799024)(82310400026)(56012099006)(4143699003)(11063799006)(5023799004)(261009223027099003)(10067099003)(18002099003)(22082099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	ceSa2L/n5ddk8F7KLZbE3E6rTvNXg/MXMdNIvzejAHyD02xjSBLBzf9UfoAI7rPQGGhboTLQ/+sRGJ5l4KSBA125OHbj59lD3ekK/TtxEeu3+HTf8zQDPJMrdsvfEkZVkuccGl5PnglNJqpEHV6A/7iS8t1q8P6oZOjSTb/VB+QLrNHYSiYrzqbPXW2bN9KFF0XTQt/JeWzJR0+kkZx5yqj9yS/CLp/QPmad9ww+WyufnaavVhFq/kBR+tZ8RUmgG5u3eFDtsBZaweEV5O50WcJyadd/5BXn7RnfTbEkvpzpwYRo3nbthAF50nRmn/2qkxhV8Nt7/3GVArs8fnLnXcD80nvJnASqqQUwnGLTT36ptQS8vxjifwVvUgqaK6FAHZOnct+TEcYmph0Qoe0H/r2VbONvvf6SG7eu9aK3HzxViqIdNE3GTnvwoCBR95Rp
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2026 17:28:04.0631
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5956dcf1-57b5-4f17-0df4-08df2ecf7f85
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0002992E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7555
 
-Registration and removal currently hold profile_lock across
-device_unregister() and sysfs_update_group(). These operations can remove
-sysfs attributes and wait for their active callbacks to finish. The
-profile read and write callbacks acquire profile_lock themselves, so a
-concurrent access can deadlock:
+On Mon, 19 Oct 2026, Ilpo Järvinen wrote:
 
-  Removal/update path             Active sysfs callback
-  -------------------             ---------------------
-  acquire profile_lock            hold kernfs active reference
-  remove a sysfs attribute         wait for profile_lock
-  wait for its active references
+> Also please check what sashiko.dev has to say about these patches.
+>
+> Note that sashiko is an AI review tool so please apply healthy bit of
+> critisism to any of its findings.
 
-The removal path cannot finish until the callback returns, and the
-callback cannot return until the removal path releases profile_lock.
-This applies both to per-provider device teardown and to updates of the
-legacy aggregate attribute group.
+Done. The criticism turned out to be necessary, though not in the way
+I expected: none of the seven findings was a false positive, but three
+of them pointed at fixes that would have introduced bugs. I checked
+each finding against the CPLD register map rather than against the
+code alone, which is what caught those three.
 
-Commit 041142d7d252 ("ACPI: platform-profile: Fix possible deadlock in
-platform_profile_remove()") previously fixed this lock ordering by moving
-sysfs_remove_group() outside profile_lock. Commit 55b1e68134bf ("ACPI:
-platform_profile: Use guard(mutex) for register/unregister") reintroduced
-the issue by extending the mutex guard over sysfs_remove_group(). Later,
-commit 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI
-platform profile") replaced that teardown with device_unregister() and
-sysfs_update_group(), still under the same mutex, extending the problem
-to class-device teardown and aggregate attribute updates.
+Also, on your comment in patch 1: the label is gone and
+nvsw_core_init() now returns directly when
+nvsw_core_mux_topology_init() fails.
 
-Simply dropping profile_lock around these operations is insufficient.
-Aggregate operations currently discover providers through the class
-device list. A provider being unregistered could therefore still be
-selected for an aggregate read, write or cycle while its sysfs files are
-being torn down. Concurrent registrations and removals would also race
-when updating aggregate attribute visibility.
+Three it got right, fixed as suggested
+======================================
 
-Introduce profile_registration_lock to serialize registration, removal
-and aggregate sysfs updates. Sysfs callbacks never acquire this mutex.
-Retain profile_lock for profile operations and use it to protect an
-explicit list of handlers participating in the aggregate interface.
+- pdb1_pwr_status..pdb4_pwr_status were exposed 0644 over
+  NVSW_REG_PS_DC_OK_OFFSET, which is not listed in
+  nvsw_writeable_reg(), so every write returned -EIO. They are 0444
+  now and the ABI documentation says read only.
 
-Add a handler to that list only after device_register() succeeds. On
-removal, unlink it under profile_lock before calling device_unregister().
-Acquiring profile_lock first waits for any aggregate operation already
-using the handler to complete; unlinking prevents later aggregate
-operations from finding it. Release profile_lock before draining sysfs
-callbacks, allowing active per-provider callbacks to complete before the
-device is released. Apply the same unlink-before-unregister ordering to
-registration error cleanup.
+- The air cooled pwr_cycle had mode 0244 rather than 0200, denying
+  read access to root while granting it to everyone else on a write
+  only attribute. The liquid cooled table already had 0200.
 
-Walk this list for aggregate reads, writes and profile cycling, and use
-its emptiness to determine aggregate attribute visibility. The class
-devices remain the per-provider userspace interface.
+- Patch 3's commit message claimed the air cooled systems expose power
+  supply alarm indications, but no attribute is described over the
+  alarm registers. I dropped the claim rather than adding attributes,
+  as we have no plans to expose the alarm registers from this driver.
 
-There can now be an interval between removing the last handler from the
-list and removing the aggregate attributes. Explicitly reject choices
-reads and writes during that interval: the intersection bitmap starts
-with every bit set, so an empty traversal must not advertise all profiles
-or report a successful write without updating a provider.
+One where it correctly refused to guess
+=======================================
 
-This separates aggregate membership from class device teardown while
-preserving the existing class and ACPI sysfs interfaces.
+It flagged NVSW_REG_FAN_OFFSET as being used with two contradictory
+polarities: my ABI text says bit value 1 means the drawer is present,
+while mlxreg_fan_read() treats a set bit as "FAN is not connected". It
+presented both directions without picking one, which was right, since
+nothing in the patch settles it. The CPLD map does: the bits are
+FAN1_PRSNT_N..FAN5_PRSNT_N, "'0' - Present, '1' - Not Present". So
+mlxreg-fan is correct and my ABI text was wrong, fixed in the
+documentation with no code change. It also noted in passing that
+psu_status might have the same problem "if active-low", and it does,
+while psu_ac_status and psu_dc_status sharing that description block
+are active high. The polarity is now stated per attribute.
 
-Fixes: 55b1e68134bf ("ACPI: platform_profile: Use guard(mutex) for register/unregister")
-Assisted-by: OpenCode:gpt-6.1-sol
-Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
----
-Changes in v3:
-  - Send the locking fix as a standalone patch, independently of the
-    firmware-agnostic extraction and legacy-interface deprecation series.
-  - Document that profile_lock protects handler-list membership and
-    serializes profile operations against each other and handler removal.
-    Explain why it must not be held across sysfs teardown.
+Incidentally, mlxreg-fan.c has a comment claiming the presence bit is
+one when the FAN is connected, which its own code contradicts five
+lines later. That is probably where my wrong ABI text came from -
+happy to send a trivial patch for it if you want.
 
-Changes in v2:
-  - Expand the deadlock and handler-lifetime explanation.
-  - Add the Fixes tag and describe the earlier fix, regression and later
-    extension to class-device teardown and sysfs group updates.
+Two where the problem is real but a proposed fix was not
+========================================================
 
- drivers/acpi/platform_profile.c | 80 ++++++++++++++++++++++++-----------------
- 1 file changed, 47 insertions(+), 33 deletions(-)
+asic2_health..asic4_health were broken: the masks sit at bits [3:2],
+[5:4] and [7:6] but all three carried .bit = 1, so ror32() shifted by
+zero and they returned 0/8/12 and so on instead of the documented 0, 2
+and 3. It offered two remedies - set .bit to 3, 5 and 7, or move .reg
+to NVSW_REG_ASIC{2,3,4}_HEALTH_OFFSET - and the second would have been
+worse than the bug, since all four health fields are packed into
+0x2550 and 0x2553 is the ASIC thermal status register. v3 sets .bit to
+3, 5 and 7.
 
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index 79d2e92e5c28..d79080a20e21 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -8,15 +8,25 @@
- #include <linux/bits.h>
- #include <linux/cleanup.h>
- #include <linux/init.h>
-+#include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/platform_profile.h>
- #include <linux/sysfs.h>
- 
- #define to_pprof_handler(d)	(container_of(d, struct platform_profile_handler, dev))
- 
-+/*
-+ * Protects profile_handlers membership and serializes profile operations
-+ * against each other and handler removal. Never held across sysfs teardown,
-+ * which can wait for callbacks that acquire this lock.
-+ */
- static DEFINE_MUTEX(profile_lock);
-+/* Serialize registration and sysfs updates without blocking sysfs callbacks. */
-+static DEFINE_MUTEX(profile_registration_lock);
-+static LIST_HEAD(profile_handlers);
- 
- struct platform_profile_handler {
-+	struct list_head node;
- 	const char *name;
- 	struct device dev;
- 	int minor;
-@@ -44,6 +54,22 @@ static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
- 
- static DEFINE_IDA(platform_profile_ida);
- 
-+static int profile_walk_handlers(void *data,
-+				 int (*fn)(struct device *dev, void *data))
-+{
-+	struct platform_profile_handler *handler;
-+	int ret;
-+
-+	lockdep_assert_held(&profile_lock);
-+	list_for_each_entry(handler, &profile_handlers, node) {
-+		ret = fn(&handler->dev, data);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * _commmon_choices_show - Show the available profile choices
-  * @choices: The available profile choices
-@@ -306,20 +332,18 @@ static ssize_t platform_profile_choices_show(struct kobject *kobj,
- 	int err;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &data, _aggregate_choices);
-+		err = profile_walk_handlers(&data, _aggregate_choices);
- 		if (err)
- 			return err;
- 		if (data.count == 1) {
--			err = class_for_each_device(&platform_profile_class, NULL,
--						    &data, _remove_hidden_choices);
-+			err = profile_walk_handlers(&data, _remove_hidden_choices);
- 			if (err)
- 				return err;
- 		}
- 	}
- 
- 	/* no profile handler registered any more */
--	if (bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
-+	if (!data.count || bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
- 		return -EINVAL;
- 
- 	return _commmon_choices_show(data.aggregate, buf);
-@@ -384,8 +408,7 @@ static ssize_t platform_profile_show(struct kobject *kobj,
- 	int err;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &profile, _aggregate_profiles);
-+		err = profile_walk_handlers(&profile, _aggregate_profiles);
- 		if (err)
- 			return err;
- 	}
-@@ -423,15 +446,13 @@ static ssize_t platform_profile_store(struct kobject *kobj,
- 		return -EINVAL;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		ret = class_for_each_device(&platform_profile_class, NULL,
--					    &data, _aggregate_choices);
-+		ret = profile_walk_handlers(&data, _aggregate_choices);
- 		if (ret)
- 			return ret;
--		if (!test_bit(i, data.aggregate))
-+		if (!data.count || !test_bit(i, data.aggregate))
- 			return -EOPNOTSUPP;
- 
--		ret = class_for_each_device(&platform_profile_class, NULL, &i,
--					    _store_and_notify);
-+		ret = profile_walk_handlers(&i, _store_and_notify);
- 		if (ret)
- 			return ret;
- 	}
-@@ -450,22 +471,11 @@ static struct attribute *platform_profile_attrs[] = {
- 	NULL
- };
- 
--static int profile_class_registered(struct device *dev, const void *data)
--{
--	return 1;
--}
--
- static umode_t profile_class_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
- {
--	struct device *dev;
--
--	dev = class_find_device(&platform_profile_class, NULL, NULL, profile_class_registered);
--	if (!dev)
--		return 0;
--
--	put_device(dev);
-+	guard(mutex)(&profile_lock);
- 
--	return attr->mode;
-+	return list_empty(&profile_handlers) ? 0 : attr->mode;
- }
- 
- static const struct attribute_group platform_profile_group = {
-@@ -502,8 +512,7 @@ int platform_profile_cycle(void)
- 	int err;
- 
- 	scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock) {
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &profile, _aggregate_profiles);
-+		err = profile_walk_handlers(&profile, _aggregate_profiles);
- 		if (err)
- 			return err;
- 
-@@ -512,8 +521,7 @@ int platform_profile_cycle(void)
- 		    profile == PLATFORM_PROFILE_LAST)
- 			return -EINVAL;
- 
--		err = class_for_each_device(&platform_profile_class, NULL,
--					    &data, _aggregate_choices);
-+		err = profile_walk_handlers(&data, _aggregate_choices);
- 		if (err)
- 			return err;
- 
-@@ -525,8 +533,7 @@ int platform_profile_cycle(void)
- 					  PLATFORM_PROFILE_LAST,
- 					  profile + 1);
- 
--		err = class_for_each_device(&platform_profile_class, NULL, &next,
--					    _store_and_notify);
-+		err = profile_walk_handlers(&next, _store_and_notify);
- 
- 		if (err)
- 			return err;
-@@ -583,7 +590,7 @@ struct device *platform_profile_register(struct device *dev, const char *name,
- 		}
- 	}
- 
--	guard(mutex)(&profile_lock);
-+	guard(mutex)(&profile_registration_lock);
- 
- 	/* create class interface for individual handler */
- 	minor = ida_alloc(&platform_profile_ida, GFP_KERNEL);
-@@ -604,6 +611,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
- 		put_device(ppdev);
- 		goto cleanup_ida;
- 	}
-+	scoped_guard(mutex, &profile_lock)
-+		list_add_tail(&to_pprof_handler(ppdev)->node, &profile_handlers);
- 
- 	sysfs_notify(acpi_kobj, NULL, "platform_profile");
- 
-@@ -614,6 +623,8 @@ struct device *platform_profile_register(struct device *dev, const char *name,
- 	return ppdev;
- 
- cleanup_cur:
-+	scoped_guard(mutex, &profile_lock)
-+		list_del(&to_pprof_handler(ppdev)->node);
- 	device_unregister(ppdev);
- 
- cleanup_ida:
-@@ -636,7 +647,10 @@ void platform_profile_remove(struct device *dev)
- 
- 	pprof = to_pprof_handler(dev);
- 
--	guard(mutex)(&profile_lock);
-+	guard(mutex)(&profile_registration_lock);
-+
-+	scoped_guard(mutex, &profile_lock)
-+		list_del(&pprof->node);
- 
- 	ida_free(&platform_profile_ida, pprof->minor);
- 	device_unregister(&pprof->dev);
+The fan drawer LEDs are accurate against mainline: mlxreg_led_config()
+gates on (regval & data->bit) and never looks at data->slot, so with
+.bit = 0 all ten are skipped. But giving them a .bit would be wrong,
+because the capability register holds the number of fan drawers rather
+than a bitmask, so masking a count of 5 would register drawers 1 and 3
+and skip the rest. mlxreg-fan already handles both conventions; only
+leds-mlxreg does not, so the fix belongs there and we will submit it
+separately. The LED table is unchanged in v3.
 
-base-commit: d0cd1e850e1602729dd60dc3c5fd96f80e0cdc5d
+The one where the fix was to delete the code
+============================================
+
+It reported that nvsw_core_reg_def was unsorted, so regcache_init()
+logged "Driver needs fixing: Unsorted reg_defaults", and that its
+entries never reach the hardware anyway. Both are true:
+nvsw_volatile_reg() covers every register the driver declares, so
+regcache_default_sync() skips all of them.
+
+The obvious fix is the one mlx-platform, nvsw-sn2201 and mlxreg-lc all
+use, looping over reg_defaults with regmap_write(). Checking the two
+registers first showed that would have been a mistake. Neither is
+relevant on SPC6: 0x2537 is not a PWM control register on this
+hardware, the name being inherited from mlx-platform, and writing the
+0x00 default would assert two active low signals that reset
+de-asserted; 0x2543 is the low aggregate interrupt mask, which
+mlxreg-hotplug programs from its own .mask_low when a board describes
+a hotplug device, and no SPC6 system does.
+
+So v3 deletes the array rather than sorting it, along with the cache
+configuration that then has nothing left to hold. One side effect
+worth flagging, since it undoes part of what you asked for in v1:
+linux/bits.h is no longer included in nvsw-core.c, as the GENMASK in
+that array was its only user there.
+
+SPC6 does need one register default, but neither of those two: the
+CPLD can override the fan PWM and drive the fans at full speed on a
+fan fault, and mlx-platform clears the enable bit for that override on
+every system it supports. On SPC6 the bit has moved to a different
+register, so the write is done from the board driver in patch 3,
+through the set_reg_default callback the core already provides.
+
+The finding was real, both halves of it. But the fix it implied would
+have turned dead code into a bug.
+
+What the tool was worth
+=======================
+
+One finding it did not make, which it led me to: following the same
+reasoning as the pdb*_pwr_status finding, I checked all 85 registers
+in nvsw_writeable_reg() against the register map and found one more
+mismatch, NVSW_REG_FU_CAP_OFFSET. Dropped in v3.
+
+So: every finding described something real, which is better than I
+expected, but three pointed at remedies that would have been wrong,
+and each of those would have looked plausible in review. Worth
+running, but not worth applying without checking what the registers
+actually are.
+
+Thanks for the pointer, and for the review.
+
+-- 
+Felix
