@@ -1,101 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.50
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792476517;
-	b=eklOtEOmbJDmsCBDxpsYG4qWNO68LfqSoja+0FYItP3Vf6IQNMht4HJjdAZxtZv7w6Fi
-	 PZWErar+FP4RS+dQ12whsVc2fLc/rF9qqRUC32KiP9W2V6kXRWYJ51vfMkUlfXpCf3wjt
-	 1ALKiU9ufulTbV/DYPhwR4zBerYjG2vLTzWPPqPIY9D5cWYoHSs/VxDfPEyufM337O4GF
-	 lO0yIwrOtS/BvVbtTVTPkuHhOyJ6X/K/FGVN6ZVPQ6FnNB06Tq14BGIm8WlnBWHlpeo6K
-	 BlmYfSlYDtqxNLjBeQTH88pGYwmD4uBeEwpKrZtr1Yg4JuiqBDQOmGR4CLngMdYnEeg==
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.218.50
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1792478090;
+	b=vxl+HlTkkzHuyDtznBVfK+Rl6gBgtpfdeDQlJiqdGuqGlXb0WoCf0Ot77nIGighAuRfH
+	 zx5ww3v4zW8RX2BPARVpsJ9wv3oOm1J2a21dQ6JKuYWGDUIw2gMpPDtzA7JdVgXwWbKuN
+	 TuH2rdb/EER2B5Mj+Unyt9HiS3vqzAazr6XQR9V6afoxiJDXU3ccNCTg2A92HgEHbswYH
+	 /Jy0Yr4ucwYHFwu2ypEx5AAl0yWsjHAbsq5Cn/8VRR6pd514UWYAlilxFY3TW2icMC0r3
+	 YKEh0FoKJSaEa7m8bed8fkyklGkkLsPY5OJzlEDAE0bIBxvYeoQlXr8lpARzfGTtaLA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792476517;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792478090;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=XoYOnbE8zEhaUTNNg5EvX6Px2rVWLGPe8RxRxFiK/ys=;
-	b=UHzivpjAhR+NW4IHeZsVESgathakmmGxPJgt9w3BYEWsXdUDpydBfw4LcbwM9CqkYq/k
-	 kBY6FxspGibJLB4WdvFv6Qz8OFGgDZZtD/0tcdwCyuG8MqvK2v9D3PtDDydRinjPV5K7I
-	 5/7jjHu3yH7ncZRdB7qVWNYaZwsD17AWvGaP2uGMUvtlQVMZogqFmkUdwIs873t7BUn+Q
-	 SLCpE4X8r0RniNT37Iy6Uve1NzihDJgs37iJQvSabxtsRuyhzv0aFjOzYXngG3rQSlIn5
-	 k1TDyYs4TuJotci79K9XDXQ+g9g6DVaK7l6n481UpLJvZJCtvII7puJTujksSTM74bA==
+	bh=fZFyrGnKjSZQP434QTLDvpHoAeJBavWJ2Vq/PH6CLec=;
+	b=UMcJdBVm4DOevxPVJPu2AuS1C/1fuBRdICgHE6HHqru7mTyjtg5wC/4hkAbzhlnf6eIH
+	 ih9Mv+AJwB4jgZ6BfV+OORFFmvgw5A5BH3K4QpZkVXEHXT7dbL+3mcfPUdDKacPLTk/p9
+	 BvDWucxGFClxcWglCIYETnWgCzyEXvNDx0XCgDj502RoDgqHyktRxssN5mCIsa4YI6vcm
+	 kiSWhrhzV3e7U5cn6FE184hJFM14hG+reCxcfiXemDURtvw1yMUFLJQhf43FxtG4mpcuK
+	 gcFEEV2H6EisPQOuYra1An6AgYMcRmfXmNy+CBpYx/YCXlBBMq3DDPmVn32+ODJ1BfQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=YnxSBBWH;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.50
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TyrFzfDc;
+	arc=fail smtp.remote-ip=209.85.218.50
 Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4EB606A321
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 06:08:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2A4EB606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDFD606A31B
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 06:34:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AFDFD606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=YnxSBBWH
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c40e30c26a4so49503366b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 23:08:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792476514; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TyrFzfDc
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c4395d31228so250716966b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2026 23:34:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792478088; cv=none;
         d=google.com; s=arc-20260327;
-        b=dDX3bWL9CfMmLjXXXFC3mLUGtvb7/vN3gRmhTgAslo98arPD9u5oL+xVIg+tLsj5vi
-         7ii1UKwm5ngpC05o8enzAswUuYxqbbbkb5/DwtXw4V3n9YGwl7Y4YyDCwbuBQl6vx2yR
-         ycUfEBHQOnxSoYvRDbOSr/JEQI46jACK5isOoz6JxpHdfbRWanBgtwvpCCoVlQB5Jw3g
-         Dz9hIYl5GzF5mwUIhjUpuEZsIxggDAfkg84NNDLzc5phmBxaxXtNOTCoyRVon7MhkMVf
-         8FJD+vqlOG+MeMRqxwGvFerlsIk9HeWwy1O7T7qr98fZcQH0fGO2Q2tq5G3LhAKewNmo
-         999g==
+        b=cpfgKVfQ92ubJDS381C7hmtjj/gpLFJ/NKPvQzIgZGiNcyIGMzU3aomjEaiV6/uxai
+         Irzc49ymOY2c23OTZWYavQ5MC+dmbBvQm6SGvdWvjhGOmMfh91MUce5S4GR8baYWMGmg
+         8rEzRBO/fx0fYWlxSRdUBlNVVwKN7hof+IlWJVNR0xwl4YNrqaIMYWhUqnucQjudADGO
+         NhRGkQY3quFSUYyQ12mlHY24AIUxsYehixfSMMxpv4cZwE2Ay/8g5WdQjL7LKpv0Brh6
+         Fy9G84lm8MavoSwOPYuBFKSrg4nr28MQ9ncqXU9XbDTOHHXuqFBYei+oV/cGPv356yOa
+         GqhQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=XoYOnbE8zEhaUTNNg5EvX6Px2rVWLGPe8RxRxFiK/ys=;
-        fh=KSJU1F7QHCvtsRrWJaL0Yltu20M+yfPw0aFO3pTL69s=;
-        b=F5NqXkPL4bR+NKPx+gAnZ+N+epvy0ug0zxXEiWesl2ukDHBZaGCzRX8/MABzBc87Zd
-         EAHGqJLWy/9DubTe3UciPDMVW1iSo00umcJXltfpa7piCFfjI0gtUt+eSzm5ghoc/8PI
-         bFFgDpkXabJ9G7QoeyyoRRfZP+QLO70QJFyiME2tCt+N5rJlmKzSD2VJZPqpjSw4eeIu
-         hS0LzXgdGQKf/0BwytpkuQq/21gTC8kzKbENHPUrQ+O/wB/ZBTmtKm6L8rQRcUppeLrg
-         eK3nLVPcsaTPyB686X3jLulRGuFXoqDxfYwcDeGYVpxsLfqCkQM82PtfsFrR4cHxCHZz
-         QcmA==;
+        bh=fZFyrGnKjSZQP434QTLDvpHoAeJBavWJ2Vq/PH6CLec=;
+        fh=ffbXay80UZlISO1wZs6k9gzKfJ6rlgTRY0OuX0Vjzq0=;
+        b=YhzSpBzHWP0vd8E1Qd8Mvv8Xo+2ItB0ENUMhngBjvUrgoMHaao5fMizoEpWR4eAaXP
+         yqJ8m32qUHBG1zfVSHrXsWjmwugImJbvAUMnGRea93Ve+b90gafE5SweYvwftxI3NBmv
+         duldvFuUVklsbJ/UIFzx3MSaIcaGkATZicYnaeAXySovkjhFEJNGXNKl5AJmnhJe9EN8
+         C9gBCaxQifB51HQkQeuvY1MbLQ2HCVkVSe8LfjABZEqtw0bMEUU2pBlp+jlGwXithiPP
+         aOU54yuMJC9EO8/C4frbqpFg9AqI8SzMb+fevp2chpS0VjDFbQEAWcyg4EBa7gDGXsba
+         JchA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792476514; x=1793081314; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792478088; x=1793082888; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=XoYOnbE8zEhaUTNNg5EvX6Px2rVWLGPe8RxRxFiK/ys=;
-        b=YnxSBBWHVrkaUeSSDayl0uhIwRfnwEv+Puu+OwRyKnn8VRyygbSL4sIuZiFN4NLBEk
-         g55xRjcFEDjfy+t7dQr9jS4AaAMIFyaMOiLAUkfsnnIZj6btEw+xrdnFer8boq8PiO1m
-         IddtGJ/pXbmLF2Mf7Mn/e0MlAFgIchaOqt8Iave94DnR0BCHXrX4tIcnkgWCZiBKkgq2
-         MlRri2NP9UDHQ1RWolaAbFRQKxKmlIFV3KmTfJOoWdVKpNGmKUevd1m0Lxm3SKplhtVz
-         bBQzKsQLGy+KedwWvlcEp5x/0shubRY23DEOtC9Kdzc8DJd+dgzF0m/IzyHpm20jRqhH
-         P0Ng==
+        bh=fZFyrGnKjSZQP434QTLDvpHoAeJBavWJ2Vq/PH6CLec=;
+        b=TyrFzfDcm//CDOdpT58Hf++OQ7UIqKplmBjhAvdi/767yUNkUIh8lNwsDadn3DEYiq
+         AYmms7foplWL4NJJsTIgQMEDkrriffcVyxg/C+Gller3mrNWt1wDjKeejhBX3VN94v8R
+         Ht2cp+PU1jQtDbsWG783Hs02ePiUBi8rLcfeKZgwcKp9vL8GpiDNKcs2BMIwstIIlplt
+         G3MKSNY6kAlmZSEz6XMGholavTtUTUcpDq0mTjcDdajune0rqHqWC2Sm2bKS9+vDDCKE
+         g+4eej3ybfw/Zot0DBcboJFLpWgDFLq18+ZxPxAPgwvnA7BU9vv8rXcB2ug1t4GLSCY9
+         sQAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792476514; x=1793081314;
+        d=1e100.net; s=20260707; t=1792478088; x=1793082888;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=XoYOnbE8zEhaUTNNg5EvX6Px2rVWLGPe8RxRxFiK/ys=;
-        b=m+re1yPj1jAq/0LqNhrpQDeYgJPf79q8eKAoj2ZH7dkv+8j8KzHal273NlbWcaUQw4
-         0BdBWdQ7d3l4L4BIk1+8VWmVDLDrKZpoOnCsapgzXFLvH7pIBbeTd/lnOLkbG6HaruaI
-         Gyamvx0tsypYXyhRYwEQ1hYmS2do9tob6Fq0etnOLs/VWaa9M3zlRcvzs30QA+H9mg1+
-         GclmkKYez/hId+NzFoUJCGnnkEKRauvtqtuaXI7HVjpIF6rVAi7JoI5R/G6VUW1UbJcS
-         EsVdraiCRtp3rghV7ed3L/De4U8GWdDsQyxj3rcaW71gOpL47MyaZrg9rDWaGmR3TzVB
-         viLw==
-X-Forwarded-Encrypted: i=1; AKwUvByuA/tDypM+yH4xjgRyTyEsRpwuEbf+PDWmgUD7stCSPEpJdJRNG74SdWMWWYGpztlV9oAEee/PUGdSUZX40Of4bT5W@vger.kernel.org
-X-Gm-Message-State: AFq9FYK55/3d7045XxLcZBJQuo7ZZ7iEVJvE6an4gDd5m+VewZDY0sVM
-	aWmD+wNdJVkkSryY6ZTqtA35WcL+zExZP3o9MIBxWULq4m0qhzL83QGCGs77sNFmZVa7gTj12T9
-	u6PAGaMlof5u/j6KGzmjvNemA7R7B3VU=
-X-Gm-Gg: AYBFou0bYh42tztYzH0f9w9sTJOc5EiHGUEYXYhLfvr0eLHXR95S0/5GQXkUlk5cdik
-	CzMhh3ljX7tLlZ3upFi4V6TPbio3FZI8PFrhUc8CoE4T5uSMDFD8KQtSN9iUcTo7j4GF+jzapF9
-	cKsI8o8uGAL1phaCswPoN2MHH/IwWV4FJQ8LO60yqEppM9ZB+XZyUXI76pc8DLp8N17ptk2WDD8
-	TKNQJVWbuhJbew09hD05C3+3SBhU9eImEkHZkjM81kl2LIrcp60aY4oItq1i4fBGPzT0rAIIaky
-	pAhzDvfnSPS7VRMr2OKk3CON50laCQlt5wjdwGQ4FF0qd7xg6H3XCA7MKOgkrFYoDrDJpDUDX1b
-	JIRqkEq5qsPaY4H8huO95oGTd8Fv/SDnHJycRKXLHTCjj1iDkjNrKQg4EHT6hncKMQrcAANBqen
-	vWtX4kTRTzJKRHP+apGeg/E/qQY+AsVZ2kX0OzZ7/T5ArB+M4I2Ic=
-X-Received: by 2002:a17:906:478c:b0:c2d:b9b4:f4de with SMTP id
- a640c23a62f3a-c4604ed9efemr80609966b.18.1792476514274; Mon, 19 Oct 2026
- 23:08:34 -0700 (PDT)
+        bh=fZFyrGnKjSZQP434QTLDvpHoAeJBavWJ2Vq/PH6CLec=;
+        b=JE9hSOJOGxkO/YyMj8+7RhvL6xEAjqQqJYza68L6BFqVeKVLBg3joys7vpT2lnZjwh
+         51KxKkEx8iXBuHe2gbMqhp9CG7Msg1Wz57idTsosQ2h1dmbUfn4S+I7rMaQM63igMnEv
+         OwR9BDi2yP4FkDXQwfSzbteDKZwJ/F8jZfqoI+z25si1txWreMpjA+RIttKjqs7x0+aA
+         IKOt0HePvmnd6tdEXWqFGtFH2npCviGezMejWan9Sw/VvIgZ3irwN6pklj9jZdprcx6U
+         RiHhFogcIpLSNoezkPqkRxjehwuJZLqCjZCoMdp6QGvPkfamQn2LrZiOif3/2K2hTCld
+         4uGw==
+X-Forwarded-Encrypted: i=1; AKwUvBzirdu1TlJxNic3eZkbS5NYNg8kDmYWoY8QqZDEsTqhMfkWHmqJP/XW9YxzxrdEvhT1jMDtEjKNp5Z3yJ4qx8uCC42W@vger.kernel.org
+X-Gm-Message-State: AFq9FYIO2L0ffCdTxIGa1Ki6yaw87i7Yq9hcKxlTiOwYufIZMVj0ScB+
+	j9ilDUuSGlPAZvqcFlsEUehoc0uM5EDRufkA9ldIO/x68Gy9NJJH5Jq2DcSU0ZJ9PaIvXo4eLyd
+	F1sksGOk8U3XqWF9TwRIwJedGUxhEm6s=
+X-Gm-Gg: AYBFou3uG2zJClT2JZ34X/gQKMvo+sLzgXsLmJNFL7rVG3dl9LdvS1T4lh7JQS9wAzR
+	Trj668gOW3c6I5j4ARYlTggaXDiVEA+ecGHjFEIqmbHVuc0Pm0jdoPHrJelZhCq3T8jh7fBGF3G
+	N2VYtD+oYIDmvMob4Wvxm8b9O0D+tZjMNrh/ptVhZOzWntPdC3WSGc6Ddwxd2bM+UWlfkiCYgwI
+	ExPq8WJ0enjMHGxGBB2O7x0LnhUMsG5cjkLdMwheHSJnD3EeZ2dAvMsgLa/BbpdFgYWDVXYG9ky
+	aGIk4Ai7B8bfCvAD+uINMm/39wDqYxsKrYMvrKVHx52JgZ3DJ0U2B1Cj5Hy28qAR02rZPmGug8h
+	JTl3mijeIGQfRYB2TPbaxlwJ1tw5TAuNSLs+R6uRsss+iHw4Lq7Ebud1z8gJrffhcJpD5ciJ4KB
+	5yqYHk0rx6TDhgo0qSaW6dyZLuK0SyU/2YPP7jVAwO
+X-Received: by 2002:a17:907:e109:b0:c43:6d40:4f84 with SMTP id
+ a640c23a62f3a-c436d405421mr304474466b.4.1792478087855; Mon, 19 Oct 2026
+ 23:34:47 -0700 (PDT)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -106,14 +106,14 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 References: <CAN_LGv3QH4oupSv6KzopjHRXO7tWhY4wvBuCHBzNhJoDW4ZL4g@mail.gmail.com>
- <20261020015001.15672-1-patrakov@gmail.com>
-In-Reply-To: <20261020015001.15672-1-patrakov@gmail.com>
+ <20261020015001.15672-1-patrakov@gmail.com> <20261020015001.15672-2-patrakov@gmail.com>
+In-Reply-To: <20261020015001.15672-2-patrakov@gmail.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 20 Oct 2026 09:07:57 +0300
-X-Gm-Features: AclHuK9mxBlfzqPJhisR4c9pDdEzb9nRSUMVCy6rRwKN_GMG2p1UiXDepmzcr-k
-Message-ID: <CAHp75VdwhC_T+7NNroyqQH_qhLW3Uzi97VmLVg2_WT_4Mu7ZCg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] media: ipu-bridge: Add sensor configuration for
- OV5675 (OVTI5678)
+Date: Tue, 20 Oct 2026 09:34:09 +0300
+X-Gm-Features: AclHuK-0DWmL4ciHRdqJ13K1229Nrgrf0eszph6lmY66CYqR_mlykGne-GAUrRQ
+Message-ID: <CAHp75Vc_yxWNeuSi8jwTtT=0CvrBW1nQkHvzEYkhqkGhRhTrrw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] media: i2c: ov5675: Defer the probe until the
+ endpoint exists
 To: Alexander Patrakov <patrakov@gmail.com>
 Cc: johannes.goede@oss.qualcomm.com, adee.sahan@gmail.com, andy@kernel.org, 
 	antti.laakso@linux.intel.com, dan.scally@ideasonboard.com, 
@@ -126,49 +126,18 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Oct 20, 2026 at 4:50=E2=80=AFAM Alexander Patrakov <patrakov@gmail.=
 com> wrote:
 >
-> The front camera of the Dell Latitude 7320 Detachable is an OV5675
-> described in ACPI as OVTI5678. Without an entry here ipu-bridge creates
-> no software node for it, so no fwnode endpoint exists and the sensor
-> cannot be connected to the IPU6 even once a driver binds it:
+> On ACPI systems the sensor's endpoint is a software node which ipu-bridge
+> creates when the IPU probes. Nothing orders that before the probe of the
+> sensor. If the sensor is first, there is no endpoint yet, parsing it
+> fails, and the probe fails for good: the camera is missing until the
+> next boot.
 >
->   intel-ipu6 0000:00:05.0: Found supported sensor OVTI8856:00
->   intel-ipu6 0000:00:05.0: Connected 1 cameras
->
-> 450 MHz is OV5675_LINK_FREQ_450MHZ, the only link frequency ov5675.c
-> supports, and matches the two data lanes the machine's SSDB reports.
->
-> With this entry both cameras are found and the front sensor appears in
-> the media graph:
->
->   intel-ipu6 0000:00:05.0: Found supported sensor OVTI5678:00
->   intel-ipu6 0000:00:05.0: Found supported sensor OVTI8856:00
->   intel-ipu6 0000:00:05.0: Connected 2 cameras
+> Return -EPROBE_DEFER when there is no endpoint, as ov2740, ov13b10 and,
+> since commit 437e1f6a9600 ("media: mt9m114: Return -EPROBE_DEFER if no
+> endpoint is found"), mt9m114 do.
 
-> [Rebased onto next-20261016 and adjusted the comment]
-
-This should usually go just before your SoB line.
-
-> Signed-off-by: Sahan Nissanka <adee.sahan@gmail.com>
-> Signed-off-by: Alexander Patrakov <patrakov@gmail.com>
-
-> Link: https://lore.kernel.org/linux-media/20260809042540.15849-4-adee.sah=
-an@gmail.com/
-
-What is this Link for? There is no reference to it in the text of the
-commit message.
-
-
-> -       /* Omnivision OV5675 */
-> +       /* Omnivision OV5675 and its RGB-IR variant OV5678 */
->         IPU_SENSOR_CONFIG("OVTI5675", 1, 450000000),
-> +       IPU_SENSOR_CONFIG("OVTI5678", 1, 450000000),
-
-Please, split the comment, id est leave original one and add a new one like
-       /* Omnivision OV5678 (variant of OV5678 with RGB-IR) */
-
-Note, there was discussion at LPC 2026 about RGB-IR support. My
-understanding is that the kernel lacks it right now, but media people
-(Hans, Laurent) may correct me if I'm wrong.
+It is also possible (I think) to call reprobe in the ipu-bridge
+driver, but I dunno which approach is less hackish.
 
 --=20
 With Best Regards,
