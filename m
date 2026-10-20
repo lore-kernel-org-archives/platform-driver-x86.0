@@ -1,124 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792534106;
-	b=3+zO9H9ZfabJGAk2VXoca4CuBVH8Oz129zzJB9MxJMb5BSuR5Jxyny/MIoDoxuyFB0Ov
-	 b/XKvClq/Fa51wgeRoeZw6iEySowEoz7b6FIjLnXSSl4bwZfPGC3A8vnpQPaxHuBPqVEg
-	 gcJ4R6rm8PeM/ht469x0jmLECMKfHsl6IqPzcTjMzqvl56YV5X4eTIAQ/qjA2uTNZgDXW
-	 1lQuWWvea0hV92B3/VOTFdzk04m2tGvY+Mihwh/4j0BDVnW24phTfbLu8i2bFHAqNA+UV
-	 LzRDejBwpMiM0ysebbYBEdNL1W/FM9E0OsZbjCztO2Md0zPBi3YS80KcuvS8yzzo6rg==
+	t=1792535481;
+	b=ZPWBIKuuIAdJ93LA4HxFP7N4zq7V2dZMdIjGWBBxeO2rF3CCYXRkUZknEgFSZjxl6HOS
+	 qkKdcsGQWxxE66Ysq4Eu0ZhV69n2Ljfw2iqo/FZ4OPXWewkOTkSpOhlgaJt40nxVMd59d
+	 5i5xyb4Z9tOGs04lmcwvG+H35e8hIZ+FWncsVtsz9loTH/TlOoZq4ZdV2nZoU3yUqgAzo
+	 EQN4VsMwCPhEMU/QnguoqxXMhMAEbsYFqkmgDIyKdf8xZ+Xk/MNx33MCAbA1E9iv9tfXd
+	 URNnqTORkIHBow5rtA7QAgz65PrkctqFmeXK5059iH9t511Bi8VyUV74+uANpkQ7cXQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792534106;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:
-	 Cc:Content-Type:Content-Transfer-Encoding:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:
-	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=LvrfjD3yEpX3v2qha/GP6cEVLRQb3yl9/nVMpyayXVw=;
-	b=Aw20qVh+UwpL0KIFjHTLwGP9wEDOPolyID7rqtBuOCg1TuP2q9aP284J/45FbJLtqwG0
-	 JlgxqKPNAwZ12WOZKHowGUB3uDVBbCieUAQsUsSh+2TZgMrS2zKlPpWuoCiLzZUxCIShP
-	 WLFdq7d3f3Ex5tMY5JJyyrLcC4O+qStakyPbKal2sSqi97NwJiYnYBxDDc+vZf3gqoueh
-	 XEG6FjqVoIP7z4KcM4wU7b3vC9OSFZJ4hPpOO3Kd/MMvWC+402yC5YkJHkPJIA0pF3JEM
-	 5/m3IdQCMpf6Px0XcCW3f1PutI8q5ThJr6snNlyAqxWefJp3RK66SaT8Hh+8qeEdiZg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792535481;
+	h=Received:Received:DKIM-Signature:Received:From:To:Subject:Date:
+	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
+	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
+	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
+	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
+	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
+	 Message-ID:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
+	bh=p7WG1H6F+Erx8urQoFe9GP62MikJYUj+hGmKpe70u/4=;
+	b=jA26xs9KfKaIoHlZs7VtoJmvTy+CFBlVZqqBwDGLm8N8hleuMQeaWnFiVxIoxjOId78n
+	 0XgMKJi5hQtjeHDxz8FogB+Gnr6JUMJmXFBu/RW1zbR4ExuUAwoqhmWmAshzfWo7Ts+H7
+	 ZtPYbROBZWOkqmQ6PNCzUME1HBBOulhEVQDsytSjktPK5L1SgYElt4j1oKf/iEYghCdjb
+	 yreDFpRKHZ5IYY2kSWnOhIBpKr6Iaw1mlBDxC6OBDz4QqTTHCvg2ZZbIQmgQZ7ssaMF+R
+	 cBwCH+SENTmwcfthrzz69XC3Mq2fsmr7fhcBmZIPSaBaAa+RQKDNDT3lm5okR3fsiIw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=YlaRjfcq;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=VYJvx1au;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=205.220.168.131
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F4C606A31D
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 22:08:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98F4C606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jwvIYELE;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
+Received: from aws-us-west-2-korg-listserv-1.web.codeaurora.org (ip-10-30-226-211.us-west-2.compute.internal [10.30.226.211])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF53606A319
+	for <platform-driver-x86.vger.kernel.org@localhost.mlmmj>; Tue, 20 Oct 2026 22:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=YlaRjfcq;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=VYJvx1au
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69KKteHT3856190
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 22:08:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LvrfjD3yEpX3v2qha/GP6cEVLRQb3yl9/nVMpyayXVw=; b=YlaRjfcqXcboaVER
-	1sRzZAh0HZmehbrFy3UhCVu3vYTichraLfUUhymZp7bS8WmM+1ILHlTWUJND9zH1
-	molG1kOsh5qZXu4oWndIDWnLZYCKH5bhpLi6x7KTJOgQfqirofxKnQIxaeQxDMmZ
-	T1ptdo6i4RT/9PpAHw8RWDrJA1UBA93lUQ6EvzTa/qWKVJrPqHe/hpRFmntVORul
-	huURSP231+POlZc8B4gHgfOJibHq2Z+pltWIDWIcz0cUfyUsdLmvtm8pRMYXLrF4
-	VPqplyftx/lioIukz+3RRBitIdinjEeC4elRpAXXTxtCIBRQwUlcOeoAROSmvKWV
-	sCuQtQ==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hedabgt7j-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 22:08:24 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cfa4e4684bso808705ad.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 15:08:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792534104; cv=none;
-        d=google.com; s=arc-20260327;
-        b=jAS74/SSmAhtjNcw98IXH5VRulvPUn86zGTqoLZ61T2rpu1QVXBXX0ObG5eUfEZvMb
-         Q7080VSNB0d9EbbXUSv1rf6V5EgpkWUIFP3/TebyRSq8N1w/3uf3OPHwuFOcXCKC8e1M
-         FLkM7g2lFod7i/Y0sT112gaU6k7ZCndIZxkF4+ehgb81k4Hcd8cle7YqVe9HTgAa4jvz
-         1C9JtLPgzsd0Du396nsqQVEvbgwXnV7l8lfCEbYKFWbA1bVFX0FU1xaOuz2OT8FjapP7
-         QrIH7EACBY7V3RVIcxwziOvp3m8BYX2UK8W2DBkD9areK8NJb+bHjjCA5+8swySQ+1YA
-         P6UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LvrfjD3yEpX3v2qha/GP6cEVLRQb3yl9/nVMpyayXVw=;
-        fh=hgwpDZf94PHNTClBp/2iL9Q+VhsumfvyUHFVy5hce1o=;
-        b=JyiKiVAQc6DettdXRLXoSCjdIf3MrBD5ugTRE8o65WOyP/pTNNXPidgvAjcU1GyVmm
-         QM96KEThyMEYWfUWKYBz+ARnrnEB5wSc5O38O3x0NXdoc/clbN92glI2jVqsJn/Wkp0I
-         jI7Nh/gpj5zL9vzCylza1XIOlgRmp6KtZ5G34tLunDX/tTwDz6qqVjdoeRhhC27fEzpM
-         wNYj/BvdvRwb143fLCzIPreGmi9gBk28knWio2YCuYi/9LFjzWbKk4ZJ23+61H3MIgH6
-         41Oz1/hxxt7XZRLjZTlHQjPuyhVwGnQHd3ERVAjfTDv+M5crI+dDnTAozCPhQ5VLDvr2
-         IILw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792534104; x=1793138904; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=LvrfjD3yEpX3v2qha/GP6cEVLRQb3yl9/nVMpyayXVw=;
-        b=VYJvx1auuDRH2wVC08tOG9Z20YTD5JPjYHPtr69HH03y8NFtkUZcpGNLud3yPWIP1u
-         miaymRq2HtxRfK6hs/X4WIkzzAYxIt59HyXwmDxmKCJlrES/2eqUjmZp4gjJXWFkTRl7
-         U9p0gygH9rfH/75K96YMOdfoTuHvwtYJnj3rEFlfT4os85Vjb+hPG+qrDGs6u4Relznb
-         tKnrZ0kK9mQmeSZtDJLi423qdZ8CuVYqdOIHalNpruqMDr1Ji//ryJZKdzwhsGDwbmfE
-         IeEt2OKM/hBAcXFo0hZ1cSjnp0iPm1TUBzAgiqHOeqwkrjIMMMTeilnuummXGM4wtwqj
-         t89Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792534104; x=1793138904;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LvrfjD3yEpX3v2qha/GP6cEVLRQb3yl9/nVMpyayXVw=;
-        b=ndAX5d0FAMyh/IaniG+n4kOsnDDjwSbNkmquZVkvY2Xgjjtw9IR3kLTqGNqiTq1v7+
-         dS/LfsTneYEdJ7ThfpfBmyiphvnOSJihhDEl/XGD1/TVaUYkntjJK96nwh40fciWuaF2
-         71DmaSUzkd/0DpD5+s0s66/nhkvwujeng1UC+oi+RkkKtM9CymZ4MbpdvCoKTTZ/TLsG
-         9kWOrMDt2ilKC6PL085iBIGKw5M38e1g4+M4zz6mVuufRdC/4H+bJfJSXIx2OpReRW3u
-         CYy8MCjaJ4vamE+xPsFPNZztADyKCeND6V9wHdMnDJF7vk1ozQKYqeTikfABzLJ+ryhe
-         F9Tg==
-X-Forwarded-Encrypted: i=1; AKwUvBxV7LHIFtKBEN9uOmNT7TonoERHQJcRp9n5hAKMzlVIrOrQRWdsrjHBOUIMc/4uuD9ODnfDxY3TNdoqen92eaBbrs57@vger.kernel.org
-X-Gm-Message-State: AFq9FYL/O3WfJHFkZPcBqV9xV3qlyInCYP9D029Mgl61c8DYfZHNlFbu
-	4mwfn8evgdQNK18bK01zCmbL8hN7FdWmhDbltP1qJ8Sgzc7aUR9W1EmEzPZuB3hfc1KDUJmNcap
-	6grQ5QGkYG8OjyAj+2AQG7QmWrou/o2zojvMS2T6NnNQNubm4NmkwBPvgIT/dF19IfgLQgpMo5+
-	7ILLtneVfGLQWar6jqSX1z08ImFE3ylDvkZIpaWy6ygj1lxvatstg=
-X-Gm-Gg: AYBFou041NUvw6hWGEXpDZZQQCJg8VA+TbGg6sAY6OH/VHUDn1uH6zm8oDKoI6/IxWs
-	xfuduKjvFvyEdtaamm7Sxz+dB+BT0a37ucYXqe0FqBpaGG4YSbZihJT974M8j3m13VoEvbSW1Rp
-	DlKtlDe7JcIj/oQpBuRYVJmfIZhOa33nca3azY+F4cdPUbihXz5pWBWPhCSayLZO4ZdAWrgQWsU
-	JuXokXh7XyfJ/te/58wqNcFItjdH9FYZR1D4Awt0npSi04=
-X-Received: by 2002:a17:903:1b4d:b0:2e6:dcce:8222 with SMTP id d9443c01a7336-2ea43cf0d3fmr947235ad.57.1792534104145;
-        Tue, 20 Oct 2026 15:08:24 -0700 (PDT)
-X-Received: by 2002:a17:903:1b4d:b0:2e6:dcce:8222 with SMTP id
- d9443c01a7336-2ea43cf0d3fmr946955ad.57.1792534103541; Tue, 20 Oct 2026
- 15:08:23 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jwvIYELE
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399A325771
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 22:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792535481; cv=none; b=TbkzBVtFmqbxV98SvWbPP6j3KEWfD+U84JpJoztfrIEcxMYsjhMCfh4ZDHN2QIBFUd77Rw4tselsvY5hgb4p3DkLfML8+z0VI5iMFkqDxAEFKBCsLvODQ4ETbEik77jPAmpJH4C1xhbbN40CGWu/RUosLEPabWCGqI/4FZshd2Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792535481; c=relaxed/simple;
+	bh=+Qa+wY/HiDOxDXCgtdTH4sI3NWmS+5wGrJE65bZp/Ik=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oeYcHDEHn3Iq6hjqAk7oYolrG+CI8RxSXuhVacwBOqT3cJ5IYwIkft5lc8bq7DxhZQ+FvxVGQe5Xrj1NnrPIrFiYRb8XmQaPsRQr57lraPZqNXBQ5NmDbi63lkmFUbl3RREzGSeZ3xAGwq9Wuc+Q2XEutxPXHY1Jm4jav/IptV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwvIYELE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7FCF2C2BCC7
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 22:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1792535480;
+	bh=+Qa+wY/HiDOxDXCgtdTH4sI3NWmS+5wGrJE65bZp/Ik=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=jwvIYELEJsPt1Ec0MdmZqw91KqD9YMfdWU3ur8viEKyWNtCp0VotwZv3i5fclpJ2H
+	 of8ggFs4OEK5FnLn42kZl/jGe50uLg4HdFdv+5ZgwsDcYpVC7rIQfgnzNPC0Gu4vSW
+	 3ok3tUhlhYaXP0UwfIm7nKfFIxCLVTmm4B2VTVCgCvecEPxGGt0US32ZXppvISK0gF
+	 diGRCqsEh7uW9kly1fuUt5uIubeRcZ0MN0dDZIZy5o0eyCFx5xoDiSz/kC7vQI+k+B
+	 PuwnoaK3k/Ketx6QjUgjM4ps9pill+MsvSWaCM9ssxZ2YZt8+UrXqqZMO1mApkrrSb
+	 tgTBER6w8/HAw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 536A1C3279F; Tue, 20 Oct 2026 22:31:20 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
+Date: Tue, 20 Oct 2026 22:31:20 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: helian.caumeil@clever.cloud
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-222161-215701-fvyfHPK5YK@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
+References: <bug-222161-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -128,66 +93,273 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261015-topic-asus_ec-v4-0-af6305ffcb10@oss.qualcomm.com>
-In-Reply-To: <20261015-topic-asus_ec-v4-0-af6305ffcb10@oss.qualcomm.com>
-From: Loic Minier <loic.minier@oss.qualcomm.com>
-Date: Wed, 21 Oct 2026 00:08:11 +0200
-X-Gm-Features: AclHuK8EIJ8ZjWBQ6mFXW1Y_Kcn10ejjzpfnSn9R3N6EwnixFcyxmqimJkA2vVk
-Message-ID: <CAAwKf-ftxr5fw+1Jkz17YCROjDB1G+7aEZnDyD-zs_d_OrWJJQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] Asus Zenbook A16/A14 (UX3607OA/UX3407NA) EC driver
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Abel Vesa <abelvesa@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Abel Vesa <abel.vesa@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIwMDA4OCBTYWx0ZWRfX7CIhMXWDxnyI
- cxyB6Xw9qisAsPkUbmmEwyHK7KLGaB3OpPsxSC1U6kM+2oa44iNSiYF11NEif7sRBM1HZX7lw8R
- c+1KW3mh0sCXotOnnqIjmmcJWt/a2o4=
-X-Proofpoint-ORIG-GUID: FAgNXIpVY-6MLsSw20MjKKu3GCQnyfLS
-X-Proofpoint-GUID: FAgNXIpVY-6MLsSw20MjKKu3GCQnyfLS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIwMDA4OCBTYWx0ZWRfX8a20sroYw7Ud
- OylB9gPT3xV1HUIY+XRZTnU5XpZPYNrQ5RRremGDbc0VNeMfHr5CkNcfypbW0Ir2hPzcOLSKhBK
- hrnd4G1zL1vjULme+eFN+ymHwSbx/alW+jlS3v9hesRox8VxJ5+x3p5K8V0jiXaCRooymru+9Bd
- gfc2RhNMLt4Sx+Rxs8g1Id9JDC51ccrArzQee2Alac7ZaFjUVOEUfo5qzlp1PVXsLdGq5/LAbR3
- gn8kCesjiai4Dr07l/SZQvOqw9JOFnA6nBEP9NzYNG5P0xKncUFH8zmJ2Z2upvFh0iuqX1Cc9rA
- 4b9ov1fGaI7oOdWdaEIFSXsMNi4tX18Z0pK3TltJNb3EBOg+FVrp9kAgm/KeyoieZ0jgDDbEglu
- JEcRVFmXt0TFBpg+gcsvg4ts45udpix72mJlUnH/wQuzgY62ymg4PRr3miAexq82357V+2WpQz5
- 4Q5Fja4xw2eLsvB98ZA==
-X-Authority-Analysis: v=2.4 cv=NLpAaE6g c=1 sm=1 tr=0 ts=6ad7e658 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=eoimf2acIAo5FJnRuUoq:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=bO4u5d9499Dzb9AJ53AA:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-20_04,2026-10-19_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
- impostorscore=0 phishscore=0 spamscore=0 adultscore=0 lowpriorityscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2610190000
- definitions=main-2610200088
 
-Hi
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
 
-On Thu, 15 Oct 2026 at 10:59, Konrad Dybcio <konradybcio@kernel.org> wrote:
-> The Snapdragon X2 series-based Zenbooks come with a bespoke embedded
-> controller firmware [...]
+--- Comment #4 from helian.caumeil@clever.cloud ---
 
-Tested on Zenbook A14 UX3407NA: hwmon temps/fans update with a
-stress-ng load, keyboard backlight levels 0-3 work from GNOME/sysfs,
-suspend/resume works.
+Of course,
 
-Tested-by: Lo=C3=AFc Minier <loic.minier@oss.qualcomm.com>
+I reverted my patch and run "evtest" on the two event
+source at the same time, only pressing KEY_LEFTMETA+KEY_ENTER.
+I indeed see some keypress on the LG WMI hotkeys side:
 
-Thanks!
-- Lo=C3=AFc
+/dev/input/event5:      LG WMI hotkeys
+/dev/input/event6:      AT Translated Set 2 keyboard
+
+dmesg:
+[  710.072542] LG Gram Laptop Support LGEX0820:00: Received event 130
+(805437440)
+[  710.348094] LG Gram Laptop Support LGEX0820:00: Received event 130
+(805437441)
+[  710.584279] LG Gram Laptop Support LGEX0820:00: Received event 130
+(805437441)
+
+/dev/input/event5:
+./evtest /dev/input/event5
+ut/event5
+Input driver version is 1.0.1
+Input device ID: bus 0x19 vendor 0x0 product 0x0 version 0x0
+Input device name: "LG WMI hotkeys"
+Supported events:
+  Event type 0 (EV_SYN)
+  Event type 1 (EV_KEY)
+    Event code 171 (KEY_CONFIG)
+    Event code 184 (KEY_F14)
+    Event code 185 (KEY_F15)
+    Event code 186 (KEY_F16)
+    Event code 191 (KEY_F21)
+    Event code 240 (KEY_UNKNOWN)
+    Event code 248 (KEY_MICMUTE)
+    Event code 465 (KEY_FN_ESC)
+    Event code 589 (KEY_CAMERA_ACCESS_TOGGLE)
+    Event code 701 (KEY_PERFORMANCE)
+  Event type 4 (EV_MSC)
+    Event code 4 (MSC_SCAN)
+Properties:
+Testing ... (interrupt to exit)
+Event: time 1792534713.188538, type 4 (EV_MSC), code 4 (MSC_SCAN), value
+30020000
+Event: time 1792534713.188538, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), val=
+ue 1
+Event: time 1792534713.188538, -------------- SYN_REPORT ------------
+Event: time 1792534713.188569, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), val=
+ue 0
+Event: time 1792534713.188569, -------------- SYN_REPORT ------------
+Event: time 1792534713.464086, type 4 (EV_MSC), code 4 (MSC_SCAN), value
+30020001
+Event: time 1792534713.464086, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), val=
+ue 1
+Event: time 1792534713.464086, -------------- SYN_REPORT ------------
+Event: time 1792534713.464104, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), val=
+ue 0
+Event: time 1792534713.464104, -------------- SYN_REPORT ------------
+Event: time 1792534713.700293, type 4 (EV_MSC), code 4 (MSC_SCAN), value
+30020001
+Event: time 1792534713.700293, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), val=
+ue 1
+Event: time 1792534713.700293, -------------- SYN_REPORT ------------
+Event: time 1792534713.700322, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), val=
+ue 0
+Event: time 1792534713.700322, -------------- SYN_REPORT ------------
+
+/dev/input/event6:
+./evtest /dev/input/event6
+Input driver version is 1.0.1
+Input device ID: bus 0x11 vendor 0x1 product 0x1 version 0xab83
+Input device name: "AT Translated Set 2 keyboard"
+Supported events:
+  Event type 0 (EV_SYN)
+  Event type 1 (EV_KEY)
+    Event code 1 (KEY_ESC)
+    Event code 2 (KEY_1)
+    Event code 3 (KEY_2)
+    Event code 4 (KEY_3)
+    Event code 5 (KEY_4)
+    Event code 6 (KEY_5)
+    Event code 7 (KEY_6)
+    Event code 8 (KEY_7)
+    Event code 9 (KEY_8)
+    Event code 10 (KEY_9)
+    Event code 11 (KEY_0)
+    Event code 12 (KEY_MINUS)
+    Event code 13 (KEY_EQUAL)
+    Event code 14 (KEY_BACKSPACE)
+    Event code 15 (KEY_TAB)
+    Event code 16 (KEY_Q)
+    Event code 17 (KEY_W)
+    Event code 18 (KEY_E)
+    Event code 19 (KEY_R)
+    Event code 20 (KEY_T)
+    Event code 21 (KEY_Y)
+    Event code 22 (KEY_U)
+    Event code 23 (KEY_I)
+    Event code 24 (KEY_O)
+    Event code 25 (KEY_P)
+    Event code 26 (KEY_LEFTBRACE)
+    Event code 27 (KEY_RIGHTBRACE)
+    Event code 28 (KEY_ENTER)
+    Event code 29 (KEY_LEFTCTRL)
+    Event code 30 (KEY_A)
+    Event code 31 (KEY_S)
+    Event code 32 (KEY_D)
+    Event code 33 (KEY_F)
+    Event code 34 (KEY_G)
+    Event code 35 (KEY_H)
+    Event code 36 (KEY_J)
+    Event code 37 (KEY_K)
+    Event code 38 (KEY_L)
+    Event code 39 (KEY_SEMICOLON)
+    Event code 40 (KEY_APOSTROPHE)
+    Event code 41 (KEY_GRAVE)
+    Event code 42 (KEY_LEFTSHIFT)
+    Event code 43 (KEY_BACKSLASH)
+    Event code 44 (KEY_Z)
+    Event code 45 (KEY_X)
+    Event code 46 (KEY_C)
+    Event code 47 (KEY_V)
+    Event code 48 (KEY_B)
+    Event code 49 (KEY_N)
+    Event code 50 (KEY_M)
+    Event code 51 (KEY_COMMA)
+    Event code 52 (KEY_DOT)
+    Event code 53 (KEY_SLASH)
+    Event code 54 (KEY_RIGHTSHIFT)
+    Event code 55 (KEY_KPASTERISK)
+    Event code 56 (KEY_LEFTALT)
+    Event code 57 (KEY_SPACE)
+    Event code 58 (KEY_CAPSLOCK)
+    Event code 59 (KEY_F1)
+    Event code 60 (KEY_F2)
+    Event code 61 (KEY_F3)
+    Event code 62 (KEY_F4)
+    Event code 63 (KEY_F5)
+    Event code 64 (KEY_F6)
+    Event code 65 (KEY_F7)
+    Event code 66 (KEY_F8)
+    Event code 67 (KEY_F9)
+    Event code 68 (KEY_F10)
+    Event code 69 (KEY_NUMLOCK)
+    Event code 70 (KEY_SCROLLLOCK)
+    Event code 71 (KEY_KP7)
+    Event code 72 (KEY_KP8)
+    Event code 73 (KEY_KP9)
+    Event code 74 (KEY_KPMINUS)
+    Event code 75 (KEY_KP4)
+    Event code 76 (KEY_KP5)
+    Event code 77 (KEY_KP6)
+    Event code 78 (KEY_KPPLUS)
+    Event code 79 (KEY_KP1)
+    Event code 80 (KEY_KP2)
+    Event code 81 (KEY_KP3)
+    Event code 82 (KEY_KP0)
+    Event code 83 (KEY_KPDOT)
+    Event code 86 (KEY_102ND)
+    Event code 87 (KEY_F11)
+    Event code 88 (KEY_F12)
+    Event code 89 (KEY_RO)
+    Event code 90 (KEY_KATAKANA)
+    Event code 91 (KEY_HIRAGANA)
+    Event code 92 (KEY_HENKAN)
+    Event code 93 (KEY_KATAKANAHIRAGANA)
+    Event code 94 (KEY_MUHENKAN)
+    Event code 95 (KEY_KPJPCOMMA)
+    Event code 96 (KEY_KPENTER)
+    Event code 97 (KEY_RIGHTCTRL)
+    Event code 98 (KEY_KPSLASH)
+    Event code 99 (KEY_SYSRQ)
+    Event code 100 (KEY_RIGHTALT)
+    Event code 102 (KEY_HOME)
+    Event code 103 (KEY_UP)
+    Event code 104 (KEY_PAGEUP)
+    Event code 105 (KEY_LEFT)
+    Event code 106 (KEY_RIGHT)
+    Event code 107 (KEY_END)
+    Event code 108 (KEY_DOWN)
+    Event code 109 (KEY_PAGEDOWN)
+    Event code 110 (KEY_INSERT)
+    Event code 111 (KEY_DELETE)
+    Event code 112 (KEY_MACRO)
+    Event code 113 (KEY_MUTE)
+    Event code 114 (KEY_VOLUMEDOWN)
+    Event code 115 (KEY_VOLUMEUP)
+    Event code 116 (KEY_POWER)
+    Event code 117 (KEY_KPEQUAL)
+    Event code 118 (KEY_KPPLUSMINUS)
+    Event code 119 (KEY_PAUSE)
+    Event code 121 (KEY_KPCOMMA)
+    Event code 122 (KEY_HANGEUL)
+    Event code 123 (KEY_HANJA)
+    Event code 124 (KEY_YEN)
+    Event code 125 (KEY_LEFTMETA)
+    Event code 126 (KEY_RIGHTMETA)
+    Event code 127 (KEY_COMPOSE)
+    Event code 128 (KEY_STOP)
+    Event code 140 (KEY_CALC)
+    Event code 142 (KEY_SLEEP)
+    Event code 143 (KEY_WAKEUP)
+    Event code 155 (KEY_MAIL)
+    Event code 156 (KEY_BOOKMARKS)
+    Event code 157 (KEY_COMPUTER)
+    Event code 158 (KEY_BACK)
+    Event code 159 (KEY_FORWARD)
+    Event code 163 (KEY_NEXTSONG)
+    Event code 164 (KEY_PLAYPAUSE)
+    Event code 165 (KEY_PREVIOUSSONG)
+    Event code 166 (KEY_STOPCD)
+    Event code 172 (KEY_HOMEPAGE)
+    Event code 173 (KEY_REFRESH)
+    Event code 183 (KEY_F13)
+    Event code 184 (KEY_F14)
+    Event code 185 (KEY_F15)
+    Event code 186 (KEY_F16)
+    Event code 187 (KEY_F17)
+    Event code 188 (KEY_F18)
+    Event code 189 (KEY_F19)
+    Event code 190 (KEY_F20)
+    Event code 191 (KEY_F21)
+    Event code 192 (KEY_F22)
+    Event code 193 (KEY_F23)
+    Event code 194 (KEY_F24)
+    Event code 217 (KEY_SEARCH)
+    Event code 226 (KEY_MEDIA)
+  Event type 4 (EV_MSC)
+    Event code 4 (MSC_SCAN)
+  Event type 17 (EV_LED)
+    Event code 0 (LED_NUML) state 1
+    Event code 1 (LED_CAPSL) state 0
+    Event code 2 (LED_SCROLLL) state 0
+Key repeat handling:
+  Repeat type 20 (EV_REP)
+    Repeat code 0 (REP_DELAY)
+      Value    250
+    Repeat code 1 (REP_PERIOD)
+      Value     33
+Properties:
+Testing ... (interrupt to exit)
+Event: time 1792534713.189414, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+Event: time 1792534713.189414, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), va=
+lue
+1
+Event: time 1792534713.189414, -------------- SYN_REPORT ------------
+Event: time 1792534713.442128, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+Event: time 1792534713.442128, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), va=
+lue
+2
+Event: time 1792534713.442128, -------------- SYN_REPORT ------------
+Event: time 1792534713.458047, type 4 (EV_MSC), code 4 (MSC_SCAN), value 1c
+Event: time 1792534713.458047, type 1 (EV_KEY), code 28 (KEY_ENTER), value 1
+Event: time 1792534713.458047, -------------- SYN_REPORT ------------
+Event: time 1792534713.541971, type 4 (EV_MSC), code 4 (MSC_SCAN), value 1c
+Event: time 1792534713.541971, type 1 (EV_KEY), code 28 (KEY_ENTER), value 0
+Event: time 1792534713.541971, -------------- SYN_REPORT ------------
+Event: time 1792534713.699964, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+Event: time 1792534713.699964, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), va=
+lue
+0
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
