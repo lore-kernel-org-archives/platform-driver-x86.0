@@ -1,107 +1,107 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792506177;
-	b=I1AAGAAY7nNww0EKhqTE68CHVxeExEQL1Cd0uFlPnGngM/GjXAuDz1CFyKY0z9ZEOz7P
-	 yNEA2y/kVwH3+XsLQFovHQO6jR0ns8eKkRDmRbWnA+ZFBqgnomRKJUoIJrbwib0QPZiEV
-	 5vUJlN7TAlfI12fmqUH4otod6f9uXKLVrUkb99ZLnv13ZU5dn+bu6tyffSxLVpGcNFg8i
-	 zTLylwpKGYD6kOOE1Xt9+PmLP0un7wVZjFUt0cRBNmNeV8mMZGymDwqB3Q7kRNEze5KZu
-	 NzVVi3lLSBOEFtm6bxnmkBMD3gC7nJqiOyeu9vymGIXKQz2jqNR5AuW5IIA+K6VWgZg==
+	t=1792506178;
+	b=E0TsPsvxEQt8i+mGOzkPBE4wzcEGj6pkvGydZQIaHmbHXfBeNATm05wXmSIqp2zHTZRv
+	 AQeRMlHUV0f0UnMLbYUJTJgQwYTp9X7LK+y0XMMJDj8p7yJznEOtIkw/GkJmvw8S1MAJO
+	 +E1lPIlKq9pFCW9D118t6d8bhJLxMMT6eSM3ruzjzj0qfA6Fb40W5jEsy+CNiTLqqbrTX
+	 17kBsH+Gu4eqMF6588t7XX9g/iItb4yi2eO8Iv/o/ywgcMNKASgcXnJex4xVY+vCIFAlA
+	 ldDAES1Zz10qTACDqOVXrD8iu+DzlXRfV2+FWn1bZ3IKW3pPaT+biphxiZ4qeuYjm7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792506177;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792506178;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
 	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:From:To:Cc:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Authority-Analysis:X-Proofpoint-Virus-Version:
+	 Content-Transfer-Encoding:X-Proofpoint-GUID:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-ORIG-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Virus-Version:
 	 X-Proofpoint-Spam-Details;
-	bh=fM3PLiGnnqUhaB0ZVpT3/vhaHjplzibrteXaHg1wWa8=;
-	b=5t9z84v1ziGAbegE/rVKjejA8RZXz4fpq76K9ZeNdODGCWo8YSykHGIS6DJb18SpYt4I
-	 x7taKsbAfOpSr9TURA3aoz+/vsFTN6ArqgVrrgUV/+xiSlWK36zwgHSA4mfQiDwmA2YHA
-	 dL4R1sWrZsUWwhbwGi1Z8kgKkcctls0Piy4Gfdeymyirw61oSd4rc9AGNO2+fF1FnGBuy
-	 uV06nWxVUDb3uCgQVUQoFEz6Wi6TmC8tbazI6Vf0LjdEm7PJtdkQx5yPpHQoanZbvznn2
-	 WsVufqtoUdtSWamriA2V4ThxQfnTcCvhMYBa8ZrxB2hZAGc7qWnOmAIsa3tqz44uqlw==
+	bh=YRwYv0eC0+iPIM7Fh4ok36xGZCCJPDQEatB2sCGwZQI=;
+	b=mWQ6ZBPPYbaUHolEFSds/uroOUp0wIIIsZuTSIjNL3pLyuOJrgQ6tc6CiOFt9lext0Rj
+	 gUJ99mvsemiETVybdariUDshBZZ27w1EsY8yABIJm6ygdbclj9m+ZRQiAoVGebu6DAxo+
+	 CLQv7sP0XkUWi9Gr1f84qwkPayfDXv649C8aSx78qyqHsw7yzEIoMmeAGMmUsK6AniFtz
+	 zI6KeBTzfeL+A/Do1oChASBuAW4+bhzzl2uctc96JYM5uf440gUXpJs8CquaKrsEk4rUD
+	 PshcJDAzlKhUGJr+Cy9exSvBj/FfA3xmQAzd2FOXT1d2EVhyR05tGE4eDXbCdYHo2Lw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=oss.qualcomm.com;
 	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=W6ezHx+Z;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=XsfDH87C;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b="U8T/6XgB";
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=T5N1xsL1;
 	arc=none smtp.remote-ip=205.220.180.131
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1226606A33E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:22:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B1226606A33E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C8E60A2622
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:22:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 13C8E60A2622
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=W6ezHx+Z;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=XsfDH87C
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69KDAK6r2214653
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:22:55 GMT
+	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=U8T/6XgB;
+	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=T5N1xsL1
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69KD9vOW1731388
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:22:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=fM3PLiGnnqU
-	haB0ZVpT3/vhaHjplzibrteXaHg1wWa8=; b=W6ezHx+ZRV7aS1y2Lr5J1VDQ/px
-	jx0sTtarpnCooQyzh1bRog8pnfx3R3jn+3yvuECXUcKCGCrKNwZBtw6iALxYwObE
-	eTyU6bW2YsQxJYO8+OFv6DJM/95WT2GPekNRHiufEpNlyx8d/RqO2FCEmhIQ4bKt
-	TRLE7P6eaI0WgGdYyewcbfVxzv5jPRr/NuroejFA3TvLFZAztTcZVGsoCgxjqWMy
-	7AncWi/GmB6inhBUB8404mtaF2VVnK4qaHBCBSA46PP01Bn8j+hQST40iTrElIfa
-	Iafzl7IJb6PEb05j620KSshtdgTqeXVihCGvSE4agFXeuxmxcE79ZSm0UQw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hdw5ntsyh-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=YRwYv0eC0+i
+	PIM7Fh4ok36xGZCCJPDQEatB2sCGwZQI=; b=U8T/6XgBZERzHClTz3nXp6rEjyy
+	MNkbEdxki445QDqQ/6C+mbzHo9ohs+MNO1IZlMhhHQCiOuPK0cv5OB24/JFldDNq
+	Xi09wQM8yWoJci0SyY+O1XxlPW6OgIOHYjGfY6qkNeLhmic6Yh7RvT3Oti19zf/0
+	JylwSdUDD/efYBmHjSt6OU9/M6dRn0cav08XeNsAms4RqjhoIwXD6nqwNUsZURxg
+	KHYjuW66OvUXdGa46VIQpjxVoIBsuBYDNmVR2/iCjrWyTByTE5qq5lQEiCwSOal+
+	FwWuimmloCQemjX6VygQmYPfaEy3agOmpOivRlXVm0w7XmUHgPmAE7eWguA==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hdw5n2vrj-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:22:55 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93f37c94ceeso140199485a.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 07:22:55 -0700 (PDT)
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:22:57 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-5337f26ee19so54814701cf.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 07:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792506175; x=1793110975; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1792506176; x=1793110976; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=fM3PLiGnnqUhaB0ZVpT3/vhaHjplzibrteXaHg1wWa8=;
-        b=XsfDH87CnkBy1iFNSIXVIDVb50lIdO0r4QT1OutpTWN2qPXt9m++lth16KYei64MbL
-         rtksRkbjH/mQe41xtEgXuT/1p2CGrLnopBsd3IZgyVSNPJeckPKjVfm17+A3t8e0OrlC
-         ecX1dP6MlWL3jMidNs0yIZy3zXXZymfQFPVe1wXujDEmtF551926XGXJVr85Qnkq7cfU
-         TnH6KeSiLkn9oftAe4pSSbxeziq5EU6DbYXXNln7SO3azw8kTwfIpPpGGbzL/PBfdcdW
-         GAl3A4WwdSCGKBHYeSff1hED62rEAO4hhbfPKw+rtQdHJOUWV20PYjrsTPDboMFuav4m
-         +ysA==
+        bh=YRwYv0eC0+iPIM7Fh4ok36xGZCCJPDQEatB2sCGwZQI=;
+        b=T5N1xsL1sNb775J1uuBHb/sMjE32iZxoBCrCwesibrwQGswCqUUSiAqOG21m9NXj+m
+         0eGGYNfvW7yDlGXeIfRNWGebOZ+skYfk0qOIKiD0gm0dGlkpRcutz3mQT2A7RRMEQPfV
+         Q+QVsPxvGnlRc+Sg9UfFhPxfj+gJFLYdaUQ1DAJSnflOF0tfFGOyDROChiKPBPaAWcuX
+         CAFfLIQJ7cJmpGnnSMWXaaM6GlMq0Vje+DYZ+3sXCg9X0pimc5NWI7ScGIjE3rj8tI5k
+         Hx43jA3GYR1j5ddHEHJ5wqey6uZviE6aFtjgpGNjZMKk931tYiQYJZBIAyvriasn/aF7
+         XZZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792506175; x=1793110975;
+        d=1e100.net; s=20260707; t=1792506176; x=1793110976;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fM3PLiGnnqUhaB0ZVpT3/vhaHjplzibrteXaHg1wWa8=;
-        b=dyHrICjyY6b2Q0OeFcTqa+YBi8Zd+ThD3offAAlWMHdTGHgwGRwykXijADCaKICAPW
-         saXdQaNBZZJlspmINRYWqkW+olSPY8BK91+hjUlZG2/2JrguGtTn+TwRn2mdTBtDmDoR
-         Nh9OtOm9rlPGaX7nb4VHJZX3Hlu3rgM+W/wVVeKCIwfMvN6Sbc7VLCB8ZpBsqWuENksk
-         iBPqcI+JY9bjmLrve2BLJcMDsxtoLyCJ7ZZlAA4qSFinTjRvO6DL1XL3YVUdRxb4qx73
-         BjaMhZUaoFZpC92ZfS7EGJAY8RIbhEaksp4zzMyqyFhV4Xkg5y5C5hUU7YRfpuCsTLki
-         RMpg==
-X-Forwarded-Encrypted: i=1; AKwUvBzwhXTKpyVYliSf0YKvBbtcravEg9q4UIwDUxHhraHT/B6D57mwQUjnzg/ufq7UC6XTziLZ9/3qvUqUSOaIlChvoC3e@vger.kernel.org
-X-Gm-Message-State: AFq9FYIc4WQNXO0d9i0gpQskfgpfwHkjr9IEAWtxv4FSb5Ui9/iQ02WE
-	8SOJrO8JeLVy9v4LiJLUSBQx2QRHzTHb2BS/Lg5ErSwfddwZavrP0Vde8HgSmn5TiYqPlZcg7En
-	UithI8hLp3XYw7WSt4Kzxl4pWhfKdN6HixGHjbLVfz7fBtemZdnJJCP3yZT8AWxgyigWmH80nq9
-	ET
-X-Gm-Gg: AYBFou2ZzgW8UqDdKzNxNSrD2IiDL1N+aATmyCFRZIn+4+LwbLS5w/gjFONFo92L64U
-	k6WQiNGLJGj8ZPRRP3/npQnwPEc3Y0ygeobEdZ4QBS0nsnE/WOw8PncaSXxVE9C8oSXc2w6xJWF
-	55zwTugLvoBrDT5rXndGCX2nPp4dkd2ze0yqKMWzzPGEgNlZNfQ9cBoWHhS+9/n4z5CzQs0B/NG
-	H8tLJAfiwtwpIHgkUtoPyFlUUUU1V0+w5qiuSv7TovUqcBTLj6AvNXiACdPUGfYrtf2hVGg+Ai0
-	t2nPJ/9OksfuU1MLLugiVPd/4qBxbvzfw/9/p5oLg5hzq1+LIAArhs2KpAhzsBFvNPtZaJ/Fk5O
-	iV0wOBtRBO9SLIMW1dlsnSg8SGLrYV7X7N4n/7thPMb0VG0bFOQQLpYIYxV8ixJ19m88Oxf/MsI
-	5/viQadk6HD0U/RZA=
-X-Received: by 2002:a05:620a:178e:b0:93c:5952:5765 with SMTP id af79cd13be357-93f4c197083mr341324085a.6.1792506174815;
-        Tue, 20 Oct 2026 07:22:54 -0700 (PDT)
-X-Received: by 2002:a05:620a:178e:b0:93c:5952:5765 with SMTP id af79cd13be357-93f4c197083mr341317985a.6.1792506174109;
-        Tue, 20 Oct 2026 07:22:54 -0700 (PDT)
+        bh=YRwYv0eC0+iPIM7Fh4ok36xGZCCJPDQEatB2sCGwZQI=;
+        b=yj7S9y6U5Y2Dcd03uDZan1jzX2Rv3JSgXJ4pePH1aCA0B/+Y9fqpewxgWNvYqSi1Hn
+         ItYxluyk6x2T41LrSXdXlyxGvvOJUV3mqiREwIyFN6lUFuhp/DnPqFMJReT99UDdWsKL
+         D2ZZW995GVRx49UhWs0ow/wBC8PB93QTOO9ns3XEmpa4JQuIAFJdJcFWcY+CQnVf2mlF
+         LlflgFo3/j1txoMz/PxMnms5ZzBgmO8vPOy2q2fDJv3xhR88w9/JnmF1EDJZe5Gz1vft
+         WUk37b2P+UwRqgicSr/IeYSPv484S/iad2vB8vjcT7ubvcRHpCZr8zmGR/Fn4vp4f7ju
+         G+gg==
+X-Forwarded-Encrypted: i=1; AKwUvBz+8Nu2v6Upk5tlXXcxt49mWR3x6KqCSz+Y6p5NkO9qzh3seQWcCnWXywWo2MeW0+20U21ZHWfy19SUeueS0pGuhPsr@vger.kernel.org
+X-Gm-Message-State: AFq9FYLb4dzpjt9PftLhkqkMQqQ1HDYMVsJ7TrJSct2h8ZSlQ3GtzGnQ
+	LK0tMKv0oyZOjJU/hJikhdPqG80k/ADtJWWngZxWliUT5CKgWHh8QS5ZN1+h6nX7YdWRzbCYRki
+	I2OsTmMx0wgYgif8A+8EPtMjfUfL0n3j1sh5JUa9GYhAddyIkmAb4tQiOrFob3pFmpIu5JMt7ym
+	oH
+X-Gm-Gg: AYBFou34Ma6Zv1/bVhn4vuOKHTgG8pKOZilMW0GBj8ug7Rw6odO2aFMsokRb/vMZ7Gg
+	sfz8zhjR8eN6kviljQjaS0ck4spdz/P7Ae6ILpFGB9WWIg3MBwpecf4gwc6y/rttEFSjRYg8VXx
+	craUHJboHfjF/p26H4QkB33+V+hNZRuDDMRfTpTWsvj7FamUuysGQGq3mUx5I/oOv+NR3+u9wyT
+	Z1hkjQ4oxaYWpsO1cdYg6GtdmCrTeYmaNQ1BJApKyuXnT9y4JSLe06d4oqgkMjIOxTr5xhmR9jO
+	1b1dX3L8fPijuxswc/DI6VH8ZvVmYyxjDCCQl1Vi4lStaSpByKGdgeKemn28+DR4B4aRygrIaJw
+	mfTq6C9bbDWy1RkmHt5grBU+QtkMG/Byp+aWZDKI4uU6g4apeTNX0kkk+RNDEg+dCPWpGCpDC+L
+	rDcg+SPtul++GWYWo=
+X-Received: by 2002:a05:620a:6081:b0:93c:6738:c2c1 with SMTP id af79cd13be357-93f29b7348emr1815569085a.2.1792506176321;
+        Tue, 20 Oct 2026 07:22:56 -0700 (PDT)
+X-Received: by 2002:a05:620a:6081:b0:93c:6738:c2c1 with SMTP id af79cd13be357-93f29b7348emr1815565985a.2.1792506175888;
+        Tue, 20 Oct 2026 07:22:55 -0700 (PDT)
 Received: from shalem (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b38a1b113dsm5185084a12.10.2026.10.20.07.22.52
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b38a1b113dsm5185084a12.10.2026.10.20.07.22.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 07:22:53 -0700 (PDT)
+        Tue, 20 Oct 2026 07:22:54 -0700 (PDT)
 From: Hans de Goede <johannes.goede@oss.qualcomm.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -110,10 +110,11 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Antti Laakso <antti.laakso@linux.intel.com>
 Cc: Hans de Goede <johannes.goede@oss.qualcomm.com>,
         platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+        Alexander Patrakov <patrakov@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: [PATCH v2 4/5] platform/x86: int3472: Rename avdd_second_sensor to power_enable_second_sensor
-Date: Tue, 20 Oct 2026 16:22:42 +0200
-Message-ID: <20261020142243.25072-5-johannes.goede@oss.qualcomm.com>
+Subject: [PATCH v2 5/5] platform/x86: int3472: Properly map the AVDD GPIO type to a "avdd" regulator
+Date: Tue, 20 Oct 2026 16:22:43 +0200
+Message-ID: <20261020142243.25072-6-johannes.goede@oss.qualcomm.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261020142243.25072-1-johannes.goede@oss.qualcomm.com>
 References: <20261020142243.25072-1-johannes.goede@oss.qualcomm.com>
@@ -127,88 +128,104 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIwMDA1NyBTYWx0ZWRfX98bYj2jqd7YY
- t5aSYQwhxot0Nh50qsLti8qMbL4Q/T5aaQ1crV+MPJFgyiifI7DiTqHhm10FU6YzmL/eCAVX2/R
- i6MDYjhVu9vnDSps+TaXT+n9yt71iMM=
-X-Proofpoint-GUID: qRr8zGwN5BTj9ddmdWn29D7tWuB6_NlA
-X-Proofpoint-ORIG-GUID: qRr8zGwN5BTj9ddmdWn29D7tWuB6_NlA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIwMDA1NyBTYWx0ZWRfX3knb6Mw2xSkj
- 1vqJvqjHv4Brq8xl6gEGbnzMcGKJ/DMJcAX+c5uCCh5NZBh+UGrgTSRA4Pju5LZLPmwuuQ6AJd8
- Ffv7pqffO8YVKBVX56li/MMYP99d25X3WfSASNpDerv8ER0YrVuAmLSkHS7XyudRc3ZwhrLIGhd
- GAeHUP7reuXiF02SRJK/GL75ekzvKFtz5tfuK1JlFAzQnxPhWc4XeAuy84HL82rANKMOurNMUsS
- XQo2ibZTL5eeNr8Q7i2uFWJQAYt6tKD9+lHptcn1iFM9tB1tZ4LmmbR8qZUz6JMYQD6W49GDCyI
- +k8oDKFR9kp6DU080swbQ1bubbdTT9QGvxoiMC9Q2zVf5NokjNCWQZZUdKnCYlIBJLxgiiCYRA9
- CUvkbfpzH62AOH1S2zxDL4zYCmFhiAk7+LEGD+wsx/qSX78VRdnKSSMBR7hPqYh1giDHUEY2Nh4
- Vu/mgkawHeBtijVOC2g==
-X-Authority-Analysis: v=2.4 cv=TcsDJhQh c=1 sm=1 tr=0 ts=6ad7793f cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=660iZSQnnn4A:10
+X-Proofpoint-GUID: PwBlZ9j3MOBsHiMtqYy9nQP3XLlYhDDC
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIwMDA1NyBTYWx0ZWRfXzoNVwK4v+G2P
+ lnmXc1bvw6hi3zhr2sA1YGutRG6uItJ2Q70Ywj/T6CiMbLBmO0M8lEln04wjiFiIUzT+80eMLWj
+ FfElnhMs17HPklTJBXqyPutJekaqtls=
+X-Proofpoint-ORIG-GUID: PwBlZ9j3MOBsHiMtqYy9nQP3XLlYhDDC
+X-Authority-Analysis: v=2.4 cv=A5z5rKWG c=1 sm=1 tr=0 ts=6ad77941 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=660iZSQnnn4A:10
  a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=_glEPmIy2e8OvE2BGh3C:22 a=QyXUC8HyAAAA:8 a=P1BnusSwAAAA:8 a=EUspDBNiAAAA:8
- a=m6U5Mi7_xXUadIKIrwgA:9 a=PEH46H7Ffwr30OY-TuGO:22 a=D0XLA9XvdZm18NrgonBM:22
+ a=gowsoOTTUOVcmtlkKump:22 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=QyXUC8HyAAAA:8
+ a=P1BnusSwAAAA:8 a=EUspDBNiAAAA:8 a=QxxHkoVCA9QCKdrcC6kA:9
+ a=uxP6HrT_eTzRwkO_Te1X:22 a=D0XLA9XvdZm18NrgonBM:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIwMDA1NyBTYWx0ZWRfXyNUjrioLhbeU
+ /raJ7CAmsSQx/aoDDVYfxtUtoDNM75DCRurGEZ9lhjppb3OsIHVz9ioz9M52HwL4AFU6vllBq03
+ a0wgu/6P0KmnG+2pV0wB7LsRC7Jc+qMGTlXgYZMioSyo37/f0dctC4uJapO6hQKWhimDLS3k/6c
+ Kc/UU13otRYvZ5iQiiR/k1YZavgnWzQec2qGzTOjUUOFvp/ukMkE9mc3rRI7dyBMR86/ck2jN5k
+ FTANeSkCKvJWMM6RKnPxzEeWhLIIMpCdIiAnwr4Kxjx4eppBh9yrUzBmncQI7q47arzKJP3rpO2
+ cXKjCxa+zTUrrwwyctJjvBAyK84iaCyFJa2+pg2JpZdpWGcRjm6ODeoXYB43TQp0noruFvTUxsS
+ R8SfCdWINpbmwnb9MCGMu/w1sW2e3yJygFyc9qg9UnqQvmOBBUfOHCg3k9TVJ4a8uQeOMkg650S
+ 49n+7BTu+0BTtpTRgVQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-10-20_02,2026-10-19_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 impostorscore=0 suspectscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ phishscore=0 spamscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610200057
 
-The avdd_second_sensor quirk is for when a GPIO with the power-enable type
-is shared between sensors. Sofar power-enable happened to be mapped to
-a "avdd" regulator. But that is going to change in future patches, rename
-the quirk to better reflect what it actually is for.
+Before commit 34e31390a3b9 ("platform/x86: int3472: support the POWER1 GPIO
+type") the int3472/discrete.c code mapped 3 GPIO types to regulators:
 
+0x0b INT3472_GPIO_TYPE_POWER_ENABLE -> avdd
+0x10 INT3472_GPIO_TYPE_AVDD         -> dovdd
+0x12 INT3472_GPIO_TYPE_HANDSHAKE    -> dvdd
+
+(with the INT3472_GPIO_TYPE_AVDD define wrongly being named
+INT3472_GPIO_TYPE_DOVDD in the past)
+
+The OV5678 front camera of the Lenovo Yoga Duet 7 13ITL6 uses the following
+GPIO types:
+
+0x0f INT3472_GPIO_TYPE_DOVDD
+0x10 INT3472_GPIO_TYPE_AVDD
+0x11 INT3472_GPIO_TYPE_DVDD
+
+A previous patch in this series maps the DOVDD and DVDD types to "dovdd"
+resp. "dvdd" regulators. This creates a regulator naming conflict on this
+laptop for the old AVDD to "dovdd" mapping.
+
+This patch fixes this by changing the unfortunate mapping of the AVDD type
+to a "dovdd" regulator by swapping the POWER_ENABLE and AVDD mappings,
+mapping POWER_ENABLE to "dovdd" and AVDD to "avdd".
+
+This is safe to do because all sensors which may be used with the INT3472
+code are listed in drivers/media/pci/intel/ipu-bridge.c and a manual check
+of all drivers for sensors listed there in current media-committers/next
+has found that all drivers either support all 3 of "dovdd", "avdd" and
+"dvdd" or none of them and enable all 3 of them at the same time. So this
+swap ends up being a no-op.
+
+With the exception being the new in -next ov05c10 driver which only
+supports "avdd", this is fixed by an earlier patch in this series.
+
+Note this change does not impact the recent adding of mapping POWER1 to
+a "dvdd" regulator since it does not touch any "dvdd" mappings.
+
+Reported-by: Alexander Patrakov <patrakov@gmail.com>
+Closes: https://lore.kernel.org/platform-driver-x86/CAN_LGv0qkxARw4bxO8K-1hUkWNg2ts6q50dooCB5UM5en=bo0w@mail.gmail.com/
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 Signed-off-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 ---
- drivers/platform/x86/intel/int3472/discrete.c        | 2 +-
- drivers/platform/x86/intel/int3472/discrete_quirks.c | 2 +-
- include/linux/platform_data/x86/int3472.h            | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel/int3472/discrete.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 046f93ed1c9f..18649ee448a4 100644
+index 18649ee448a4..ff94dc2ad8a1 100644
 --- a/drivers/platform/x86/intel/int3472/discrete.c
 +++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -437,7 +437,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 			break;
- 		case INT3472_GPIO_TYPE_POWER_ENABLE:
--			second_sensor = int3472->quirks.avdd_second_sensor;
-+			second_sensor = int3472->quirks.power_enable_second_sensor;
- 			fallthrough;
- 		case INT3472_GPIO_TYPE_POWER1:
- 		case INT3472_GPIO_TYPE_DOVDD:
-diff --git a/drivers/platform/x86/intel/int3472/discrete_quirks.c b/drivers/platform/x86/intel/int3472/discrete_quirks.c
-index 552869ef91ab..4e57d3f73111 100644
---- a/drivers/platform/x86/intel/int3472/discrete_quirks.c
-+++ b/drivers/platform/x86/intel/int3472/discrete_quirks.c
-@@ -5,7 +5,7 @@
- #include <linux/platform_data/x86/int3472.h>
- 
- static const struct int3472_discrete_quirks lenovo_miix_510_quirks = {
--	.avdd_second_sensor = "i2c-OVTI2680:00",
-+	.power_enable_second_sensor = "i2c-OVTI2680:00",
- };
- 
- const struct dmi_system_id skl_int3472_discrete_quirks[] = {
-diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
-index f0ec2e7c68fa..86b7510d5a45 100644
---- a/include/linux/platform_data/x86/int3472.h
-+++ b/include/linux/platform_data/x86/int3472.h
-@@ -98,8 +98,8 @@ struct int3472_cldb {
- };
- 
- struct int3472_discrete_quirks {
--	/* For models where AVDD GPIO is shared between sensors */
--	const char *avdd_second_sensor;
-+	/* For models where power-enable GPIO is shared between sensors */
-+	const char *power_enable_second_sensor;
- };
- 
- struct int3472_gpio_regulator {
+@@ -270,7 +270,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
+ 	case INT3472_GPIO_TYPE_POWER_ENABLE:
+-		*con_id = "avdd";
++		*con_id = "dovdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
+ 	case INT3472_GPIO_TYPE_POWER1:
+@@ -282,8 +282,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
+ 	case INT3472_GPIO_TYPE_AVDD:
+-		/* Should be avdd kept as dovdd for now to avoid regressions */
+-		*con_id = "dovdd";
++		*con_id = "avdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
+ 	case INT3472_GPIO_TYPE_DVDD:
 -- 
 2.55.0
 
