@@ -1,92 +1,115 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792505682;
-	b=g/WLo07kTFjXMNGl3wTFtzA78GdxeeSrHrIhmSI0ehvIB60xjS25RJdDOwZ6C85S/ziM
-	 jwC+pk/WsHIXdMiHP+KlxPhsm7VPShddLO6A6szl83bx8ELm7r/4ZKYFW1E7ZN5ktbAER
-	 /Iyq3l+3uP0x6NTjgWjORRfGFaiWPygYceWlli4RiNjmyn//v+8vPUwgn43i+b4dp/P4u
-	 q/6+ZG7P/Cz9M6F7HGp9Pvyym/FETecL4e5MLcQUZEII+wNzXiDmSr1m3ZPsHsHi51kdT
-	 2cDOMw+H09AKm5Ko3C5wqDS70dZfZWjR9ELLVNJYROHlZzdACc2DyhzX7JJ0WlmpiaQ==
+	t=1792505862;
+	b=C27bhNutg18aapS+m3T/gZUgslMomFx1Umn+1MluZI0BqMsiZdlyiTITvAOChGDPzgNP
+	 2quaAHjRc1z5n3N1RIeNU9+RhNQq9EK8Noe23X0o4RUbsZ5otuiuuLRHoSMGAMTnmB7I0
+	 Q1zu8BBDV3ewMCurSO6xA+voWwYvdtw/3dsAs1j7E5nvyB4Sp6FIP9J602uo3GbXE8Qqh
+	 Le3yFTQ75WRqBDwOIQQW68Lkd5IzXUFVmbozClrgBcyPZ8dMkghw63r4kF68pskydGMks
+	 42mJ2TvKpozB2Zq4n7SArC8BgZE5SrYzi/tInz6w2PVUg1ZR9HHm9AryowWnYXlymQA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792505682;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=zEsuZyfDjSWj/BpGeHEM3jz4WjCMQaIiWWeMu5F0b1c=;
-	b=p4CHE1lwBeVCjl5IqbH++OMTCjJDFSJ5kZQ4ZKf7767aJZUkhHjXWfWh0szE6YBLnGIG
-	 yrB0ejKasKQPuN0s/WW+nF9wH3nv9f6o1iEaTNBIIb3VLkHDqrdGM+Tx4EER72/Vdqn+u
-	 ANJKZtpZesuEYSzJGAWN+BPc0tnRE0qxuwDcE7KMiIgu6tCW5Ni3CCYiQkhSN/oIU7zPJ
-	 /9+rstw+1MTU69hkiGMsTd/eCtBEy4PUkpXWo5RNSDXmk1mq+6+HCd9vwpTJUvj93OR/v
-	 PaGnHLDSzohSUFMYoCCfn2f1pvtkDQxmPmS9/EkRkJsxpmD3FMeSaYJL3l3sRk2Xv1g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792505862;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Rspamd-Action:X-Spam-Level:X-Spamd-Result:X-Spam-Flag:X-Spam-Score;
+	bh=XFlV1RmalC8K0NLEBS3Iy9voYg9q0vdr+81kkTOaZ8I=;
+	b=aofeUY604nNYLHSinkqrMVuiri+fYEFel0AmxG0XXIYlVd9FX7nTWX21+YxucQ5w7mlX
+	 ZQh1iqQmkM/QTVhZohIXc3dhYl2qdxNUGSOaIRiUMiJFJxqSCKHkiSXZ9xCzTHGmG5IJ3
+	 bTiNStVwt96BNZ/C1ONasfFfyWQKvSak0OO4vs9Xr6tjM/wCCv31V0GGGTGsxQDeObCli
+	 nvnM2d9qqVLcjsJ4UR96TdECocAspGZLLJW+JlIqNgM9xfFPVMV9+hgLMMvimeSWlo7Qd
+	 kPLmP5HchjTbWzYUI4OQQTmf/rWMqDxOstcBwKKL/jvJQLwBQgCspmaDb+s5k2hcSrA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="QMLhtJ/y";
-	arc=none smtp.remote-ip=209.85.221.43
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=xiF1YwJx;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="/2I8z5qm";
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Czn8TwrX;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=VEzo3nLX;
+	arc=none smtp.remote-ip=195.135.223.131
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9798606A32A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 14:14:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9798606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A951D606AA29;
+	Tue, 20 Oct 2026 14:17:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A951D606AA29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=QMLhtJ/y
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48e011d370dso2692314f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 07:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792505675; x=1793110475; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=zEsuZyfDjSWj/BpGeHEM3jz4WjCMQaIiWWeMu5F0b1c=;
-        b=QMLhtJ/y4NSHZItSc7srqIghcCaAhr1j8x0Vht0rNppW51Pi2HyvVi6N5v4pa8B88t
-         a9D/o5qoeqwerLUcMi0Pb/ppeU5kgXepX+fODjMW6ycDPzeB4ssxaurLYS2VOxVOQQ93
-         WbBezIojpi3KkdhXpoy3+2I9ZoVtkQV1iCUcwzBSpw9FAv7V0t362ZaiBXjtNwarT5EY
-         2d8GvoqLcBmT98zj5jGSMoiuvTVH30/ZboFvzV+UiLpLhcADD3TIa00bwRaQNKQC+1Ym
-         st7Fmk8XILZlG6xA49W8lBdoaY/upgfdFjK9dxMfFlcEre0J+Y2A/2UjnfC1bmjoeGXH
-         527Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792505675; x=1793110475;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=zEsuZyfDjSWj/BpGeHEM3jz4WjCMQaIiWWeMu5F0b1c=;
-        b=w9EnblfiBHZL4578MmL5mjHd525et4/SyKW8aVDiXszHCvw0oxSRG3F0u41P9qYwOQ
-         nO/ei3sxYKrx8fAMlTGcitAmr74lwmTTIxSce1rG/FN2bo1teMyIh9djtbzCJxe/yrpM
-         yKfgh6LQ+so+JwjdvBRePNxBfJkEe7MzrOtTaWGb4MQE+xUdMCREpHD8Mom+67Om7Irk
-         5VSkABpi9RZyTN+2oOrz4P3zIIJ2OOxs0VS0oOC9AyCA2CQjskRmeXPSU44Bib7/MgAS
-         WozZ/L6SNCCdO0UL6yGMLhpKTtEDCogMotopq49UyHvejYRiDtKpct6mTNZOD2j17Uya
-         cM3A==
-X-Gm-Message-State: AFq9FYLPlQ7Ghnydpnc8n8e5m4FY8GuiDb+hUCmIEZTeHy5+rTAHqpdT
-	NuzenMs3bNPiB0XxHRk3GFkGnfLKgnQeHpoU1KFFvNRgB5oZrzx46Yeh
-X-Gm-Gg: AYBFou1iKsu0D0svc5rE+jCH8rwa/BWDGuXD3aAIPeqszNZasqAf7qIU/QEYx//diEY
-	Mm7IaUqKZ57X2zQtSpJJdjAadi+FFeN2LbeUE52vXTgYiciACM1d8a12YxmIQ/97toeVNKNbbSB
-	TBF6uUumMppnJwXP7lzdpOdhYSxm6/geWYdBEFrYs6gJ7v3bTtgkEBqgtydXXmR/LBuPw1e9sME
-	8lG8Z3HA0V94kvf7bXVjg3te8pE9gsqW6FTTEQ3EP3gtU8PZp1cbDPLioqeeGWydul33McK7/bR
-	EAPRSNn/875HLP3G6PE5ebYi3HVt1+uk23AC4XkJoUI7DaHOc/Ws16+xUXK8SzbNbOPrU40jVFu
-	GKpT8HUxUwDOq5newqxnwWESmSp20qradmKdqIGTYuozHOpWmNuhOOxz1+5TrVSDxwXbF1NaVAR
-	P/XYIdyc8XZA2xFzRrC1d4QOaeXdFr611T9JUdUoZ7WEhtaHIMO3ec+zC+PxKjyVowEsOdCwb49
-	yEGF3AHOOdJtoHgGJ1iAOqj/jNISycha1NVhqihXzPHSFI+gd2aFi3KC+t3PXBNecKfR+EZsWfa
-	ILXDa0HUFS2f1opaqIIaElpYZoFVq+0wdMKzXvho2xw=
-X-Received: by 2002:a5d:528f:0:b0:48c:466e:9d08 with SMTP id ffacd0b85a97d-48e07fa94bemr15933068f8f.43.1792505674826;
-        Tue, 20 Oct 2026 07:14:34 -0700 (PDT)
-Received: from archlinux.cern.ch (ppilicho-1.dyndns.cern.ch. [2001:1458:202:228::101:227])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e1d80f9cdsm6256287f8f.11.2026.10.20.07.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 07:14:34 -0700 (PDT)
-From: Patryk Pilichowski <pat.pilichowski@gmail.com>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Patryk Pilichowski <pat.pilichowski@gmail.com>
-Subject: [PATCH v2 0/2] platform/x86: msi-wmi: Ignore WMI events for keys also handled by atkbd
-Date: Tue, 20 Oct 2026 16:14:25 +0200
-Message-ID: <20261020141427.1580282-1-pat.pilichowski@gmail.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=xiF1YwJx;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=/2I8z5qm;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Czn8TwrX;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=VEzo3nLX
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D843F1F7BF;
+	Tue, 20 Oct 2026 14:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792505860; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFlV1RmalC8K0NLEBS3Iy9voYg9q0vdr+81kkTOaZ8I=;
+	b=xiF1YwJxWKh633YXu8vOeyRtiinwHWTHugDXKac28Vdp9e/gPA4VQ/oa91IbZXXtZE6Ayv
+	a5H5qtP/k+mXgjvdETjYWF4DMhELJrLbsaljg70Zaz7UGR22xcC2RNOjBeuAwYtMXuB1Xw
+	0v8UkZJC+s0Mor6Us5g/IChplR3PElM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792505860;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFlV1RmalC8K0NLEBS3Iy9voYg9q0vdr+81kkTOaZ8I=;
+	b=/2I8z5qmjd9TFQ/6WzOsuGg6fAjd51S35p3jqv/UX276JBu1ENeP+6X088fLpTl1SAElcr
+	4TZ4miqOtbDxdmCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Czn8TwrX;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=VEzo3nLX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792505859; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFlV1RmalC8K0NLEBS3Iy9voYg9q0vdr+81kkTOaZ8I=;
+	b=Czn8TwrXSbSol1nlB3SJbgF+SvQGzRFpU62+56Z8bWV2utp8+rFOoQqrTcpMKPrZPA2xDv
+	pmE7eixs58RG8Mrlkm8bsMIXoWB+MNalCyux+bDIH6SkVJTEtjoB2h132Bd6tCINfJXmt4
+	OZr58v90FZZf47X1vJRFmeOHTNIO3U0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792505859;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFlV1RmalC8K0NLEBS3Iy9voYg9q0vdr+81kkTOaZ8I=;
+	b=VEzo3nLXsCuf0u2bZFH3B2JUfYbyHORN/4U8i1SAAHmA1fRj8dOAWPn9z1+5ktTkzQW2zI
+	wSetL9XmTJBmZBBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8C961136C6;
+	Tue, 20 Oct 2026 14:17:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VKrBFgN412p8MgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 20 Oct 2026 14:17:39 +0000
+Date: Tue, 20 Oct 2026 16:17:39 +0200
+Message-ID: <87y0bsfocc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	Junrui Luo <moonafterrain@outlook.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ibm_rtl: Fix potential OOB read at signature search
+In-Reply-To: <818a69b8-785f-9eec-d93a-89c8833d94fc@linux.intel.com>
+References: <20261020130301.351768-1-tiwai@suse.de>
+	<818a69b8-785f-9eec-d93a-89c8833d94fc@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -95,35 +118,145 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D843F1F7BF
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[outlook.com];
+	FREEMAIL_CC(0.00)[suse.de,vger.kernel.org,kernel.org,outlook.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
 
-On MSI notebooks, several keys send a WMI event through the Wind event
-GUID in addition to a regular AT keyboard event, and each press logs
-"Unknown key pressed". This series marks those codes as KE_IGNORE.
+On Tue, 20 Oct 2026 15:52:28 +0200,
+Ilpo Järvinen wrote:
+> 
+> On Tue, 20 Oct 2026, Takashi Iwai wrote:
+> 
+> > The loop for signature search fetches 8 bytes at each check,
+> 
+> But that's not all it's going to access??
 
-Patch 1 sorts the existing scancodes numerically with no functional
-change, as suggested by Ilpo. Patch 2 adds the new entries.
+Oh indeed it access further.
 
-Changes in v2:
-- Split into two patches: first sort the existing scancodes
-  numerically, give every entry an explicit value and use lowercase
-  hex (Ilpo)
-- Add the new scancodes in sorted order
+> > while the
+> > loop count is calculated in 4 bytes unit, which means that, at the
+> > last entry, it fetches over the limit.
+> > 
+> > Correct the boundary condition to "ebda_size/sizeof(unsigned int)-1"
+> 
+> This seems even more obfuscated than this code already is!
 
-v1: https://lore.kernel.org/platform-driver-x86/20260926165034.94254-1-pat.pilichowski@gmail.com/
+Yeah, the driver code is really ugly, and I made a whip cream on the
+top :)
 
-Patryk Pilichowski (2):
-  platform/x86: msi-wmi: Sort scancodes numerically
-  platform/x86: msi-wmi: Ignore WMI events for keys also handled by
-    atkbd
+> I think it should do this instead:
+> 
+> (ebda_size - sizeof(*rtl_table)) / sizeof(u32)
 
- drivers/platform/x86/msi-wmi.c | 35 +++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+Hrm, this will result in the omit of the last loop entry?
+
+I guess it'd be better understandable rather by directly adding the
+offset in the loop instead of the counter.  Something like below.
+
+> Admittedly, it a logical change too but why you think only partial RTL 
+> table is good enough just because signature can be checked? After the sig 
+> check, it will read the struct beyond that.
+> 
+> ...And that other sizeof() should use u32 as well.
+> 
+> 
+> Unrelated to this change and if you have this HW and can test changes, it 
+> would be nice to also get rid of the debug parameter and use dynamic 
+> debugging instead of RTL_DEBUG() for consistency.
+
+No, I don't.  It was caught only through reviews at backporting to the
+distro kernels.
+
+> I also don't understand why it's mixing readq() and ioread*() for reading 
+> from the same area.
+
+I guess it's just an optimization for the signature check.
+The driver needs significant code cleanup, in anyway...
 
 
-base-commit: 893018d51f27ec0449155b0afe371aaf65380630
+thanks,
+
+Takashi
+
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH v2] platform/x86: ibm_rtl: Fix potential OOB read at signature
+ search
+
+The loop for signature search fetches 22 bytes of struct ibm_rtl_table
+at each check, while the loop count is calculated in 4 bytes unit,
+which means that, at the last entry, it fetches over the limit.
+
+Rewrite the loop to use the byte offset and correct the boundary
+condition check for avoiding the potential OOB access.
+
+Fixes: 15dd100349b8 ("platform/x86: ibm_rtl: fix EBDA signature search pointer arithmetic")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/platform/x86/ibm_rtl.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
+index 139956168cf9..6f0a10e1d81e 100644
+--- a/drivers/platform/x86/ibm_rtl.c
++++ b/drivers/platform/x86/ibm_rtl.c
+@@ -234,9 +234,9 @@ static const struct dmi_system_id ibm_rtl_dmi_table[] __initconst = {
+ };
+ 
+ static int __init ibm_rtl_init(void) {
+-	unsigned long ebda_addr, ebda_size;
++	unsigned long ebda_addr, ebda_size, offset;
+ 	unsigned int ebda_kb;
+-	int ret = -ENODEV, i;
++	int ret = -ENODEV;
+ 
+ 	if (force)
+ 		pr_warn("module loaded by force\n");
+@@ -271,9 +271,9 @@ static int __init ibm_rtl_init(void) {
+ 		return -ENOMEM;
+ 
+ 	/* search for the _RTL_ signature at the start of the table */
+-	for (i = 0 ; i < ebda_size/sizeof(unsigned int); i++) {
++	for (offset = 0 ; offset + sizeof(*rtl_table) <= ebda_size; offset += 4) {
+ 		struct ibm_rtl_table __iomem * tmp;
+-		tmp = (struct ibm_rtl_table __iomem *) (ebda_map + i*sizeof(unsigned int));
++		tmp = (struct ibm_rtl_table __iomem *) (ebda_map + offset);
+ 		if ((readq(&tmp->signature) & RTL_MASK) == RTL_SIGNATURE) {
+ 			phys_addr_t addr;
+ 			unsigned int plen;
 -- 
-2.56.0
+2.55.0
 
