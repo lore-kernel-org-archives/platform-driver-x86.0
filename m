@@ -1,81 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792503753;
-	b=p+E966ZMOkZoDjPmjt9nnLRLxh0HUwrjy+HTiu5PDrBWLElIOyFmvnB0TnN2XnRs5EyS
-	 C3cgqkj9Z9BRJi27Q+ega3p7qOsPDfgMBBHcfxE3r9nuPZmYp+rPpr3+5pY8HnKVi9QUU
-	 3klUivGPcF6F2+L9dn7wLj6qDGt+uPbv2Cu7AYAK3fXBxtjQ0Xgj6ihQDCOHcSM484fBp
-	 JImEPzPiJFxyMXU6ePQfA3Nu4Elq2oVQbR5gxIznZJk+g5WC/iTuSzmh3ujz4W/Ei3E2e
-	 ZqpfoXh06rYmzdTRYb8fsHRe5YIeVEywtl9vtAnBjM+lDVWjCSrIQ8FyMgmzCsxKE/A==
+	t=1792504357;
+	b=VC1xXGV9i9HWuI5WbKlYPmkRFfWbItKNePiaAyRKJU5wf45rBkJpA4MYKTC5cn757pfP
+	 9EbkW61fTyahUx00YDpIi+XHJjOIBAjzTHrZaxYF4Xo4Ec4mfJTnVo0DklSxpM/dRlM3c
+	 uJjuioAvwzwXdnIV9CHW8jvh5vvWA20OUP77jSzj1opq22cPKXhLxwB26S7fmn82YDmuV
+	 yea54ru4fChGDqNj6ViDhTBJ6CPXxv6IP0e1Zpa5ZHCqmAn6zmh1Nd473Wfs4tu0+YGCa
+	 9jq59tqysydiFo9K/Fiu5idaSqi2nFfBq8t9oXd6/qe/LxNBFRAzJz7g+A9EoSPjC0Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792503753;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792504357;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
-	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=emi/66x/BabhSf3BDBoOE10h38uK/MW7pPw0XDhUDRw=;
-	b=FQAdO05VRUY9L0tm5tNNi2psABf/jIBJBq8zSmpjZ7K833I9QGW55lu7lt6f+2gkMina
-	 OtK850/ZAyXdpcwETDIWgNcX8et8o7gtXn7kbQzTuN5n+lVnuMAOk6Pt/7JIlORdSd6el
-	 osWg25gyHZNeBDHbc2+aQCrpltNJXp2tMtxhIEIFcK7hiYksSRTrplxdQxuemd5NQUp82
-	 OMoOfcERwpWLzJaSYS/nsVmRB4Y+uI5+869rFAL6b0YRkKvWd+mvLQPAIGMW3/4bj3fJQ
-	 PfCTAI1zMCazr/runhknOieSk51OiMp5+NxWsrWKu1ukicKTQu+PV6xZcIIH7OIAePg==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=R8sga/m2NvCY076z1Fv1XeDyz3d8jWnI9Hw+ncaRq8I=;
+	b=iXZSBQ6nsykVxSVSlp54XZcHGhXfKXYHdjT/3KyoaT/Kwt2YpSsoG83D3Xdvo2/mdGH7
+	 WsVmXfyuUgKr8I8zQVr5uoAC3+c6oJ3D7/9cUUbVtSO8gnBCZS8Ei5Q7XHK9xZVJOAsgG
+	 Q5n/urGP/DkyGWgzVG0XmGcsvd6qDWy0KEB304wQiu5HD/0DXx8/6zoePBMwGH7hgo3A7
+	 Stt0GILUA1DVmwjvztPhDY3p8vzJaeOHnSBimJD6SdEkJMvyUEXWXA1otPePAnB5voft0
+	 L9x/5i0jJAm7MXtvCwlO29uWCRRsNvTqfSEbOoEqyXXNd6NWgVwVp8NgOLOMp1BAfqw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dDZiP4yQ;
-	arc=none smtp.remote-ip=198.175.65.19
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E5pQMM1b;
+	arc=none smtp.remote-ip=198.175.65.20
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFB7606A31B;
-	Tue, 20 Oct 2026 13:42:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3BFB7606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66C4606A33B;
+	Tue, 20 Oct 2026 13:52:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B66C4606A33B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dDZiP4yQ
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E5pQMM1b
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792503752; x=1824039752;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=gSicUJuQXSumBo1b/yNxSSakGzyaRj409jA06AFNnEo=;
-  b=dDZiP4yQxkCA6l+O8pWUlc6KPu40XL1e91tktx+41kVWkXIjOzDF8l5g
-   MeD2hkye3P1XB99Wowsl+As+j9sANlks89Ov+m+V0ApMSxk8lr5TuiKZo
-   xCDhiFN3N680O/TwjQIwsA9oZ3N+5CRTLYhkS9k5YAuH6egpSNOrjURVQ
-   XLy1VvdwrYmliA+a++1MBEq4LiGhi7NiO0CI4QWtuU3+i5kwcreCa/hed
-   1pNEUq1Lc4eUvbtjdQM0x94NScruRnH/5d9korKsvUdR1uwh1LUya8oBg
-   q3a/Mg1FBy1w3TNWyLoFX7RDLZhb/RJOO8FCBRQojJLV4bq1cvK1EKFnj
-   Q==;
-X-CSE-ConnectionGUID: dONf+aGqQwOfUJkrbEuB1g==
-X-CSE-MsgGUID: CBlISLmLRzikxIIKhgvlzg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11940"; a="1239754"
+  t=1792504356; x=1824040356;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=hUne80GpDyo1HHQIW0VzFgnz43mFg3bFCUJV7ieLX4Q=;
+  b=E5pQMM1bNdC8GXDEZSoSCRGeRLVuTsBtESYTVl9OtdgDR1oUkKMrZSkg
+   8N11b3outxEqVv17yC59mDQKBizM3zTenYOwayQu8RQmj8KJxIhx54SAB
+   mBhbwGKsgoo7M/YxpUVH2SLkb9Un+bPKcXPtYxTvzDppjmyzuTWK4CDez
+   jTuW75DWufpVcHUTzE2ydZ8a59QkOpFiL1kjSNY9jXYtYM4Gfop+Mpq2e
+   0ciJWFJ3kApJEbF+js7/FKHKnXfh6zQp5s8efFS1Qw0HxTeSSvdv2CaV2
+   3IUWXDhER9Jua8xN4BOx1M+sTxIVq7pBbqCdm0lm9+FiNYW5ToOpx0MNl
+   w==;
+X-CSE-ConnectionGUID: XIG8QMQcSR+c+5CDrhC1sw==
+X-CSE-MsgGUID: Jwf0hwwkThOmP32cVoG9uA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1216809"
 X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
-   d="scan'208";a="1239754"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:42:31 -0700
-X-CSE-ConnectionGUID: 1As9G+q3RvCviKEsE4tAuQ==
-X-CSE-MsgGUID: DcA7xthFTO6stDhr9wbrUw==
+   d="scan'208";a="1216809"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:52:36 -0700
+X-CSE-ConnectionGUID: 3v0WZaCKTnOeePGZEeS4jg==
+X-CSE-MsgGUID: 8h7C9q4EQD6ko7+j6Yh3bA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,168,1787036400"; 
-   d="scan'208";a="4605275"
+   d="scan'208";a="2704959"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.181])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:42:28 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 06:52:34 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
- Rong Zhang <i@rong.moe>
-Cc: Charles <hanker007@gmail.com>, 
- Navon John Lukose <navonjohnlukose@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
-References: <20261019-lwmi-wmi-new-api-v5-0-71557d28d058@rong.moe>
-Subject: Re: [PATCH v5 00/12] platform/x86:
- lenovo-wmi-{other,capdata,helpers}: Improve robustness on faulty firmware
-Message-Id: <179250374334.19315.17912913288074703218.b4-ty@b4>
-Date: Tue, 20 Oct 2026 16:42:23 +0300
+Date: Tue, 20 Oct 2026 16:52:28 +0300 (EEST)
+To: Takashi Iwai <tiwai@suse.de>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+    Junrui Luo <moonafterrain@outlook.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ibm_rtl: Fix potential OOB read at signature
+ search
+In-Reply-To: <20261020130301.351768-1-tiwai@suse.de>
+Message-ID: <818a69b8-785f-9eec-d93a-89c8833d94fc@linux.intel.com>
+References: <20261020130301.351768-1-tiwai@suse.de>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,62 +80,66 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 19 Oct 2026 23:02:22 +0800, Rong Zhang wrote:
+On Tue, 20 Oct 2026, Takashi Iwai wrote:
 
-> Some devices do not support LENOVO_CAPABILITY_DATA_01 and define the
-> query method as a stub that returns zero buffer. Unfortunately, some
-> devices do not implement the stub properly, causing WMI errors
-> (including ACPI errors). This was reported by Charles.
+> The loop for signature search fetches 8 bytes at each check,
+
+But that's not all it's going to access??
+
+> while the
+> loop count is calculated in 4 bytes unit, which means that, at the
+> last entry, it fetches over the limit.
 > 
-> The current lenovo-wmi-* implementation enforces the binding between
-> LENOVO_CAPABILITY_DATA_00+01 and LENOVO_OTHER_MODE because of a
-> limitation of the device component framework. When the capdata device
-> bailing out due to a WMI error, lenovo-wmi-other becomes unbound and
-> unable to provide firmware-attributes or hwmon/power_supply_ext devices
-> for the other functional capdata device.
+> Correct the boundary condition to "ebda_size/sizeof(unsigned int)-1"
+
+This seems even more obfuscated than this code already is!
+
+I think it should do this instead:
+
+(ebda_size - sizeof(*rtl_table)) / sizeof(u32)
+
+Admittedly, it a logical change too but why you think only partial RTL 
+table is good enough just because signature can be checked? After the sig 
+check, it will read the struct beyond that.
+
+...And that other sizeof() should use u32 as well.
+
+
+Unrelated to this change and if you have this HW and can test changes, it 
+would be nice to also get rid of the debug parameter and use dynamic 
+debugging instead of RTL_DEBUG() for consistency.
+
+I also don't understand why it's mixing readq() and ioread*() for reading 
+from the same area.
+
+> for avoiding the potential OOB access.
 > 
-> [...]
+> Fixes: 15dd100349b8 ("platform/x86: ibm_rtl: fix EBDA signature search pointer arithmetic")
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> ---
+>  drivers/platform/x86/ibm_rtl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
+> index 139956168cf9..6d6998049d8c 100644
+> --- a/drivers/platform/x86/ibm_rtl.c
+> +++ b/drivers/platform/x86/ibm_rtl.c
+> @@ -271,7 +271,7 @@ static int __init ibm_rtl_init(void) {
+>  		return -ENOMEM;
+>  
+>  	/* search for the _RTL_ signature at the start of the table */
+> -	for (i = 0 ; i < ebda_size/sizeof(unsigned int); i++) {
+> +	for (i = 0 ; i < ebda_size/sizeof(unsigned int) - 1; i++) {
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Also remove that extra space after i = 0.
 
-FYI [if applicable to your patch], as per Linus' policy change, also
-fixes are mostly routed through for-next unless the fix is for a
-commit introduced in the most recent cycle or is clearly a regression
-fix.
+>  		struct ibm_rtl_table __iomem * tmp;
+>  		tmp = (struct ibm_rtl_table __iomem *) (ebda_map + i*sizeof(unsigned int));
+>  		if ((readq(&tmp->signature) & RTL_MASK) == RTL_SIGNATURE) {
+> 
 
-The list of commits applied:
-[01/12] platform/wmi: Introduce wmidev_exists()
-        commit: 6e01338e987886c03e58b3523adb1f1df176822e
-[02/12] platform/x86: lenovo-wmi-capdata: Do not stop the AC notifier chain on error
-        commit: 3b53e691e907086672b72d0544e4bf27efd4250d
-[03/12] platform/x86: lenovo-wmi-capdata: Only allocate sub-master info when necessary
-        commit: 6f8252df18828d19030af6538362c6bea59414d1
-[04/12] platform/x86: lenovo-wmi-capdata: Store a pointer to component info
-        commit: c8b350085917f8ed6412ae53f3f13cfca4d79ffa
-[05/12] platform/x86: lenovo-wmi-capdata: Defer mutex initialization
-        commit: 9a4102e4185ad37d41b00d263ac05c370f5c9baf
-[06/12] platform/x86: lenovo-wmi-{capdata,other}: Only allocate capdata list when necessary
-        commit: 50a11dcdbd073a26b152b46d214cc980ecfc8426
-[07/12] platform/x86: lenovo-wmi-capdata: Adopt new WMI API
-        commit: f44eea1b94819cc3a790c24a9cc77d06738050f5
-[08/12] platform/x86: lenovo-wmi-capdata: Register component even on WMI error
-        commit: 952f7fcb161aefcbd6528e34a43932be1f64d839
-[09/12] platform/x86: lenovo-wmi-capdata: Detect stubbed capdata device
-        commit: 41a2ea4df8f036c9420616f29deb8ef5744dfd65
-[10/12] platform/x86: lenovo-wmi-capdata: Do not match missing components
-        commit: 1e99760fb07fbe568d1163795ad3a31825952d45
-[11/12] platform/x86: lenovo-wmi-helpers: Adopt new WMI API
-        commit: 87a7c09a9d4092782820d2c28c09df1d85d4cd93
-[12/12] MAINTAINERS: Add myself as a LENOVO drivers co-maintainer
-        commit: 3c182ededcd4b89d96fdae43a0868b27d93548b5
-
---
+-- 
  i.
 
