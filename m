@@ -1,61 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792569460;
-	b=XTWZyE6cFnzAhPzy2UMpuhTcVW6aJwLrTuSUxXSTNBxZOE4qkQ/xtfnclVLP/2cBND/l
-	 mEkuT4ZZGPd8ng/CwkvSIPJeydX1X6Wee9XbWBPakiJQ7pgUUcf9rZBe5KA2519QF9XP3
-	 V0WTEHdXseJqGXunzta9AmLk1NBysbKanaZei5thPkWYe6TdChmJy/Btdjcz2+IXmj3zr
-	 EUUx/ibyUDRN6RW6F+pdVPXKVInlgCpfB0JhKTWaVGimzOoC/ShPMJGHuDS10ZVFZw7zW
-	 Fu8ulArsYX1yBbCIPvyotn7VRnwOA4myLzzBbBUxKIFrrnEkDkrLpgv5k1zYauTj2YA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792569460;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=BV9BOHopYA3wXVCh5Eknj+WEQ523UWns6dBr5+4bBG0=;
-	b=MvUfmkMvEcLqsi7T7q0sLPTJpUDJTIx1h0XR+Zwke0WYh0swGkGjnegT92FgNpiG2gIN
-	 P0qscDjMYQ7/K29LSw94/A+GbTlrT6u23TfoTC2Mn7NIljqXT6a1jKvT8nMni3T4gQ5cc
-	 mCYUSK2sC6t99sRwhEFe6xerCuCtfGoVMZBIFskcYl6aW98T2HDY6LYkuGok5brhNdjgr
-	 ee2Hef9P5r5QR9RZMV/SQoBmWRr2mSmlkmK6avOYS3alrnTNrNkR5iLK+gbFv0dY6xDu9
-	 eeb/c2zEdJMWlxq8ZWDTTUacKlLkr9LSiEkYmvHjf1if73xCK1xPBKYsIBKJRWAa8ag==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jd9ocoul;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 6E344606A328;
-	Wed, 21 Oct 2026 07:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792570288;
+	b=HA7K7vVb+GwlxjAKNqcS7/k0lh/xMK9qb050Rguq4Dxui5RdI4RAvH099X0a+54wAuCV
+	 XpKQEe40wM42BPAaRta7R/TOJwhyilT7vjgqpOmKI7z2l3FLG3VxyUV5vIrDGPBs42XP0
+	 AaF9skdXF3tV8Ou1pyqFKZF8oCwiLB206TKA5zsxJuB8V3fNK4J7+KOiX1ykv5UIrgoS7
+	 pVU6rFKwBgd6XaE+0BgLd1oRr69lxsNN3O9d1muyN0jGXRIFjeaiS5jdi8No6rXnQRAg/
+	 tmdSZXCm4+9/l6Bth7IaJ81S4PeWEAo8rLEg27ndATMgW/XPnutd44yGl9WYM1WtYzA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792570288;
+	h=Received:Received:DKIM-Signature:Received:From:To:Subject:Date:
+	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
+	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
+	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
+	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
+	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
+	 Message-ID:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
+	bh=7LBTd8zYsbBMWHD8ToI5lLSztEE4Z1Z6VaoGZCzMjgg=;
+	b=WlC2WngXP7dVqnLHyDg1RBVJn+S9oWLKFdICbEgu5tnPqnUrhrzpVCE/CDC7SVF5VNv9
+	 xnbZpwCTVczPpl3VpO3SMOn43b0+i83Dm14ux97urbzputISXoxqgXb5Im/ImK49KeLvs
+	 UkJa34TQqW0LSi4mRaZSKBnUWDwE1cwByRxw3hdrVtmHXY5NxdCrpCvenidezVHa7N4pK
+	 CroEBZ8sW+l9tWg4uv2UwKvhHn5J/O/XYTwiARZktB4IMcFiJ8Q/tmahInCZUr0AUeZ1i
+	 j6Q9krp0YJYEv8UIVjpe8B2fpH9KrvExVcCDrtMnC7eBp6yJKDLZS3ttXSSM2mr+nUw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=IIZ08eNa;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
+Received: from aws-us-west-2-korg-listserv-1.web.codeaurora.org (ip-10-30-226-211.us-west-2.compute.internal [10.30.226.211])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F02AE606A320
+	for <platform-driver-x86.vger.kernel.org@localhost.mlmmj>; Wed, 21 Oct 2026 08:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jd9ocoul
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 7AE5A1F00ADF;
-	Wed, 21 Oct 2026 07:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792569460;
-	bh=BV9BOHopYA3wXVCh5Eknj+WEQ523UWns6dBr5+4bBG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Jd9ocoulOy00YLsKjx28C7XkFRzYMQNreki9UstyZ/GcY6oEM9TCpyf/S+Sg44GLd
-	 dDiYUVdzCIGukKIHRT9ffHevKMU9nJJEa0RLTqNKTJKFlEd3q06sc+hY9EdY42jpcL
-	 lT5IIORLLQUV6sgu8Z/PzJFtYdGi5JbCtB37W6/67NNL6Iz9kdHa+qx+nGkvVnn3LW
-	 9KD6M9JOJl15JHclL3HTk7pxz5F02Gr2sKCz3hV9Plav5bvkCP9uV+qqzNLkpsWMlZ
-	 OwnEuFa9IHuosXSIQY8m352LbfSupeJjl+mtAOgzOxRwgj4SNvIkjk3c9vR64Qm9Xr
-	 9AJ9Cf8Y8eRNg==
-Date: Wed, 21 Oct 2026 09:57:36 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Alexander Patrakov <patrakov@gmail.com>, 
-	johannes.goede@oss.qualcomm.com, adee.sahan@gmail.com, andy@kernel.org, 
-	antti.laakso@linux.intel.com, dan.scally@ideasonboard.com, diamondback@cohunt.app, 
-	ilpo.jarvinen@linux.intel.com, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 3/3] media: i2c: ov5675: Add the OVTI5678 RGB-IR variant
-Message-ID: <athwFX2It1emIVYk@monoceros>
-References: <CAN_LGv3QH4oupSv6KzopjHRXO7tWhY4wvBuCHBzNhJoDW4ZL4g@mail.gmail.com>
- <20261020015001.15672-1-patrakov@gmail.com>
- <20261020015001.15672-3-patrakov@gmail.com>
- <atcpXzA6KQfgiD7J@kekkonen.localdomain>
- <atcs_nK50gJ3dBRX@ashevche-desk.local>
- <atdaMqiA3RSb5GEs@monoceros>
- <CAHp75VeoH8FMcwx1Q2C_KhxUrVCEKxetBq53BNwotgPMA714ww@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=IIZ08eNa
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C366225771
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 08:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792570287; cv=none; b=uKg5atlgg+0rNqZgNM9QmMzxPeXzlYxFTzGjK4IkI3me3h+opJpAhEktb524cgaQZnl8iwI2OUrTP34vOUVXWve7/YmB3WVe0v4lPcfFwUDeMSAZWpGjF2z4SlE1aI2MGyYS3c2X0Cse0cEc2s6GRUQP8OMuxtcKEBhFr8iGvII=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792570287; c=relaxed/simple;
+	bh=7LBTd8zYsbBMWHD8ToI5lLSztEE4Z1Z6VaoGZCzMjgg=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WmA0Lx0FAbgtDK8Tbb0Km4B9wkpGhHo2sMLbxlK8UhHJeinwokIFERPGS+Sx09bKdo2mbEe2nmE0rQYQyrz/i8gFT5BaYIyxYJSuw6H5SWtygeSgJeMKqKT5tBX9CRuU5trAh3kP6NVDfBO/M6D5BmwnSLQawn1dp0eI1ZOQ13g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIZ08eNa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 29807C2BCF7
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 08:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1792570287;
+	bh=7LBTd8zYsbBMWHD8ToI5lLSztEE4Z1Z6VaoGZCzMjgg=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=IIZ08eNajWklNs4t4Lvg3B7rkcks/9xzSyq0r6GtZZEcLMm5EljrdD+QpScPTs6g8
+	 VkKpgwI9PSQGZxLD8A5jKRiPacl7NvtywDAvbZhKflYKjIiKr7/FmoLAfBxDoGTnO8
+	 1mh/eavpD0ZdVqqnrgxJClMCCcbByLkZTTwQrzkRG3kjI+ci5NAnAjqBWzKBl6NhzM
+	 ytxp+YnVTuqTCgyfCDj9IqdM2TyW9Yp6DetrvS5bVVhdz4qYanzP9WvHRaDXEUIW32
+	 lFHiBvXChLLZC3OwNaH1gO88VUFksXUHvVsU/XUzE9B2DJCZGoBn10i1sBCT9Fk8bB
+	 WbTNhNku7hw/g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id EF699C41612; Wed, 21 Oct 2026 08:11:26 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
+Date: Wed, 21 Oct 2026 08:11:26 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: helian.caumeil@clever.cloud
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-222161-215701-nhVpdG53yM@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
+References: <bug-222161-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -65,74 +93,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6rakhpiudnje6wwv"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeoH8FMcwx1Q2C_KhxUrVCEKxetBq53BNwotgPMA714ww@mail.gmail.com>
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
 
---6rakhpiudnje6wwv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/3] media: i2c: ov5675: Add the OVTI5678 RGB-IR variant
-MIME-Version: 1.0
+--- Comment #8 from helian.caumeil@clever.cloud ---
+> Maybe you can zry to disable the auto repeat feature of the keyboard?
 
-Hello Andy,
+I don't know such feature.
+I should i have precised that the bug appear in 7.3.
+I don't see any change that could have trigger this bug
+on my keyboard driver.
 
-On Wed, Oct 21, 2026 at 08:57:58AM +0300, Andy Shevchenko wrote:
-> On Tue, Oct 20, 2026 at 3:13=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@k=
-ernel.org> wrote:
-> > On Tue, Oct 20, 2026 at 11:57:34AM +0300, Andy Shevchenko wrote:
-> > > On Tue, Oct 20, 2026 at 11:42:07AM +0300, Sakari Ailus wrote:
-> > > > On Tue, Oct 20, 2026 at 09:50:01AM +0800, Alexander Patrakov wrote:
->=20
-> ...
->=20
-> > > > >  #include <linux/gpio/consumer.h>
-> > > > >  #include <linux/i2c.h>
-> > > > > +#include <linux/mod_devicetable.h>
-> > > >
-> > > > #include <linux/device-id/acpi.h>
-> > >
-> > > No, this has to be part of i2c.h on par with device-id/of.h
-> >
-> > Well, <linux/i2c.h> includes <linux/acpi.h> which in turn includes
-> > <linux/device-id/acpi.h>, so <linux/i2c.h> already provides
-> > acpi_device_id.
-> >
-> > > Uwe, can we get this fixed, please?
-> >
-> > With the above said, there is nothing to fix, is there?
->=20
-> I believe it's just a coincidence. We need to include both explicitly
-> (I mean -id/of.h and -id/acpi.h). Do spi.h and platform_device.h
-> include acpi.h as well?
->=20
-> TL;DR: we have an inconsistency behind this, so it's definitely
-> something to address.
+No problem in 7.2.11 neither all minor (i apply every release).
+I verified on 7.2.11 and 7.1.2 to be sure (with "evtest"),=20
+events with a value of 2 where present.
+For me, those event are totaly normal.
 
-IMHO the transitive include is good enough, so I won't address your
-concern. But if you consider it important, I also won't (try to) stop
-you.
+What is not normal is having keypress on the LG WMI hotkeys part,
+which i did not see on the 7.1.2 and 7.2.11.
 
-Best regards
-Uwe
+> So for some reason your keyboard auto-repeats the super key.
 
+Following what i said before, this does not explain why my
+fix make my keyboard act normaly again.
 
---6rakhpiudnje6wwv
-Content-Type: application/pgp-signature; name="signature.asc"
+Tell me if i am wrong, but i don't think my keyboard "auto-repeats",
+it just tell that the key is still pressed.
+The test i ran are just confirming me what i think in the first place..
 
------BEGIN PGP SIGNATURE-----
+--=20
+You may reply to this email to add a comment.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmrYcG4ACgkQj4D7WH0S
-/k70RAgApf6QQsrq+lNVEWv3xsRoSFEJFcLqADowk2GFHip5qaRv0tmd/v+p3xsV
-00r9r3gOtNow7tvoEym8c8R2RF0ChjvZ+XIw6/sT45ebvgsW+H54ZDF/l0OsD9Dy
-6+zTSHg1Bq6Wwz0jTL0kpdNtppX0jkyk7xeFu7MdgfYEebq1I3GFNDJpNXSVLacI
-t5nADdGLjucKmFoTrhfKoFP5ylYQH2olJmwjnGdUISSGJvk0056NrJVcU0XkdMRZ
-yv5t8YFxWCSm/13ThFeoNhAIKRBS2OQ5bzKtuRWodEscdTAi8R9mnKmQlomzmZ+E
-m8TavMmVTRlhY1sQ07QZ/4AS/fT31Q==
-=BzOZ
------END PGP SIGNATURE-----
-
---6rakhpiudnje6wwv--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
