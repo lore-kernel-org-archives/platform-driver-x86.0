@@ -1,100 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792554132;
-	b=R04GMIceTyXn+ZON+Oz5ZwveSPvhPHZMfLFfN0dJhPptTIqe53g5wyTNoz2oX1PT36bO
-	 /l1rlub3VWv+BNeA5jW/Ng9JfcTtmXy+J3joPXe0/3p7OSOF8mvGXpB7oJnMba/4NxXB1
-	 dwg38z+8ydU2DYkwhJ96QjkSiaHYOUrY/wfpFxx8pgrfm3OeZGfGdDxKLulbI5OSMSjrr
-	 XPbElaHcXNsaWT/l3iDhEsZGrv0wIUEO+dojDxn1HDeNWeHrpEnQ/S1NFIXm3Jis+NEcq
-	 3EWek3GyrlYLxipLmtSHIA5n8uxeN6B/Vn6BBa6jr07E657pKFJWTbV5C4UOr+mhLJA==
+	t=1792562317;
+	b=MepTxfI/qnlpMBoMDn+O0f//G7U0GR1Op5kOWayIPPUdIdEpRN3t83CBKGjcM+QuDJ7L
+	 cORPcdBwSkSX55rvyH0m0R9kzaTLRN1Q/mjhKv2M1kJFnc1bQwd66bgYQqnvQf89g6QnJ
+	 BAgWgGps7qm1EeGKYexbxz7Ytqfi1+CXAgXEnZ1mzw1SKgxIHQJSffBRqUHrFx8Jt8BXy
+	 8hL0MgwwhAge8w4rW+m686kfNPtzsSy3EDt/J4K1WwMCASYJqLTEnKRmakZsMPQ+YMukv
+	 VkUP80hcNwBjZEvWJJ2FPiBGmGjQI5HhzRsTymZGJKABEhVLOkUFaltOKSwWdwSrt7A==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792554132;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792562317;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=IeaSzkQDMTFDSwIXhXuKa6PQEsom42E15utOhKCt/2A=;
-	b=ZMN9Q91fr4AaBwrmR29nP738HAPE2ZtaST4FpRIW1/4yhi6+n1EaLCwLm6gRiuY6Bucz
-	 iEcvgP2UTE/OeSxbdv+QV8k7ACrwKBjIv3A8ZeMUxnJzBto/qKxXt4Vjz4Q5xHnS4x0o6
-	 MsYrWhhxwcZMljZfc4EL1YiqM49egIh4tMOTo50mYAIbzcqRtT7dRbWM2L8eF1Zpirpgt
-	 AupZ5i8bO4+pLhhn5vZx6ShqIAtOQQrTrMT52EtIso1PbuYPKGVfRQ6up0AHaJCd8lTqt
-	 Gzs6C+xeHyLltMK2T1d6tyudnve9dVg/kTOCl5+/LmrORV0lFKK8oyTqWt+sgf/H9XQ==
+	bh=cDTft4oCYYFLnSmAGGawpHgZJuk+rVPSatHBqJxDTuY=;
+	b=GkTjMEhcCk7YFRkVAujf+6ivdk4tr3hk9BC7cOvDeDWU3bjnVaqb/lnSYKgfApDbELP9
+	 Kh3D4RRWnZYwBa1P09bnUIso0Cdw0b0FGdLH6cdxrk5yzV8Dzgz6TqmDNAEOo0iuTKqm3
+	 ge7sdcQgga8x/rKTGpMLwP/DQ/vrCV/I9RF1zgsyxUKKWLic91unW8NDoDM3pObSCNjEa
+	 IMq/vkVASyhY9Bq+xy8MeZMdxwjlzeBlfHyXnGHVIQVPGoBEayZzlVQnmmcpzezr6G8C3
+	 ODjB19PeiavVu/IqGBUFPiWtMEZPNUT9P5mogNGJGg+GZRiOYJ1RTibdDEereYbAsRQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fdr8XTCc;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.43
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=QdeVr4lO;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D22606A31B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 03:42:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 31D22606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4230606A319
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 05:58:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4230606A319
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fdr8XTCc
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c434376dbebso52789066b.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 20:42:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792554129; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=QdeVr4lO
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-c418e215671so32389266b.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 22:58:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792562315; cv=none;
         d=google.com; s=arc-20260327;
-        b=NI8XMAvgatx9SKCrZVO20iXWebnMaDhv8O/1xkkLM3+BnqjeKzbxFt8dZPXjXiC2Rx
-         4ptWUiXNCcq26Hm8P/0bS8eRIguFA0F/zg5//V8abdr34ubxRgCEZ3fLQ5TY95UApJ+S
-         1IV43t+bm3Qe0+4QABGYuNaiBxX7TSDDtCG5xJKhXyEAygyAWb60hOYnwfy9w3sbFBVU
-         /TdrN8FA/EI7PMJDn8fKoWQJkdDAnTUmGujYqGCKfq7dACtX3s6YLhDiC+0Cp7o0Zyjt
-         gARglP/NKF0/7zPMVkI7WQNO2HUsz961b/CkowOoBAbS1O4bp+38xONr8O48NfUMei/+
-         qfMg==
+        b=lsFI3qfkcF2Pj/ptcIOoO2Z3AoVHlcFKtNnEU9Lr39IG+ufZqKW5igEQANyucDxfQT
+         xd104zcZGe5wMM+fVRkL7+OMlKb1ifyBiR67AkoOYcm6HS1bNnlFL0cJrfaGA+q6pbm6
+         5MdDwfVrZsCnbTlMpAejaH9YIXXSapRnckvzpIPc7dSFekKtGJYw+aJpNGsHX/vQiVyZ
+         kkc3/angbjoyVUoM8vZoVxeC0B6BXP5roG0LmLVkQdtJLRdjQdp311CUt8cWy+t63am0
+         uVoqBiZH4R5JrzukBiidtWP9xSmcNniXi8FXwqgsAd/O1EC9A/76ogG6DlXl8Eqn0UB3
+         D3KQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=IeaSzkQDMTFDSwIXhXuKa6PQEsom42E15utOhKCt/2A=;
-        fh=fTxsDQ4Z059h63fEHrQwIsbADdmpHBMdy47WGbn+NPM=;
-        b=oFnJ2Q3tLIsdsd7BRMM9P+SUEsAyN5FxH86gM2WyeYbopXmR04okmBeHWX5RmYPIIX
-         KQP6PaZtAbdsFcmtQCFTt9XaWZ/eekG7pBVeMsKHpoGITZrhAl6jMX5CYV+ZeiKMetg0
-         FEg4E+Yu/3EWdg8LMLkCIsN87pFZhj+0/nm0FUFIJcry3fvH8cQx3AcjEVYlpkwE+9re
-         J8in/XPW3GvjLulanvN1TnPMxHSpBsYScno+6QICDjvKeKDLkH9mPKNHGPfZwH8wSPhj
-         PqmUjw7iS5Z1l1dAsDebiVdBu49xfwIwAZ5YZ2AN50Au2WdCWCedBuyboO9ZhymI1Xhx
-         7r2g==;
+        bh=cDTft4oCYYFLnSmAGGawpHgZJuk+rVPSatHBqJxDTuY=;
+        fh=B10QInrV9dlDIKGCGyl9xs9/3WWutk3p9qRbgHI8tDU=;
+        b=hsF8qly8a4LPdWT/80NdM7Hkg88JFpX0vD3Q37ODptNnv1xiGOxDzs4K8Qfb0T3ShQ
+         axKR1Ymn0OUw9g4+85dPswNjS8Qq1YgWf4RkKBWMMPC+GY7NcrKzeanB/2e2TNzQz7T3
+         My3WCk0zlA/oII2t06PTRxP83S1dxalTNMrS/Nw9WoOueK+1CuFjbF3sDU8XEjl2eL/n
+         g8RhF4XT2sMIgRWDywbFxJJjCrjeMcCxc4XKd6Qu4Jl3W8GaTZQdK2bu6xT9XTOBEwpx
+         CnKQqq3CYn/HQ0DYAFC1djwwrpT5nBZl5o6U/0LCuN8RYYZKA/1JcAvgW4pii7aw3oCF
+         50uw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792554129; x=1793158929; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792562315; x=1793167115; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=IeaSzkQDMTFDSwIXhXuKa6PQEsom42E15utOhKCt/2A=;
-        b=fdr8XTCclouSuGw09TYrAEEcJg7A9xLzXplGn13seFUteBNT8XQ2Jk7tXT33UG0p7F
-         KbYa0QRdgodG1q9KC/l0eEVYt4PTAnmeMVpAh5sjtUezx5yNBAdGu5X9D+iOQjhx/cea
-         WjLE+AaCkdceQw+O2VEtr4HDo//UuLNyZ7YD/awC3DDR9bDxOw8Tgt31uhiVcOan2LV0
-         slHIWfuC9e09mby/ct081rD9UsBugdBk7RQVhXI9cKXDvdwnhRT2pbQqlKTA9McJIlCk
-         1+7tPkezzJ/rorluB2FbqOxU3YB5t/SkE0Sh+2uEq44j04pnvieK5fryQD5/QkPeUZi6
-         QrUg==
+        bh=cDTft4oCYYFLnSmAGGawpHgZJuk+rVPSatHBqJxDTuY=;
+        b=QdeVr4lOTL6AxWWcpOsY3zAqJ3qggfXrol95yDDKMyqSdO1nXV28EV6UpznchG4Hze
+         o5xTDHUdwD7FLsPMnWeONBCXZy7Si+S3CCi+Th6e9DOgh78ObJ9xxTYA4CkUlYxkfGAG
+         /VEPLmtAcBeti5Xj2A1I48feHuAFOsbuzqzvxvKqUb549nYP0BY8cg3ybwCGBAsiItaS
+         pDgg46yMxRxGeD2sdOiXHAjDJ6hMZ5wcJCcZTnNb6PNPC6EgwWEbVFINsBqvDqfXhNDP
+         WGYBXp/30TXPlSk7zmgVGgKK5vNnnGVI7ohd3UaPlRwTe06LC2y1bNQTJHmtfc7nc2Ee
+         ZKBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792554129; x=1793158929;
+        d=1e100.net; s=20260707; t=1792562315; x=1793167115;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IeaSzkQDMTFDSwIXhXuKa6PQEsom42E15utOhKCt/2A=;
-        b=H4zCfbDx/U7EJz7M/iMJzJl4D5WjWsl6mo7YZBGeyKI0Q1EbCK8mjZSKhj1eDxvjjT
-         Ju8s6Xhjt6I6ta3DZAWoAtCxKlC8AhQwgyVw8nUhSV5oWFpkLeXItQl070t84m0DNd3l
-         2gwksqmUR1GGVkiL4NFDoJ6RDSwgWpBshztRDND2AullAlDcw07nx75OH4DXUBcCQpb2
-         gG3TB0jzoTa6eQVa7bTRDlkUt2Z81v6i/3H0uhaT93JzfmFN+MWO0VOx4w6438wz+bhN
-         Q1XOtjliavhHXTbJtFy2ZsmCSeN1G7HXFwedSVE3TxHb2I/zUUXDqTONUtphIB7aIRBJ
-         7fDA==
-X-Forwarded-Encrypted: i=1; AKwUvBx51MC9eaugYZk2t5cBe8oxr0kfyZ/RiwP8yOXz6Op2LbNuB8N0v/lbQIcHovmvF3xIAJhACaMB7hN8J9DPYh2fsV6Q@vger.kernel.org
-X-Gm-Message-State: AFq9FYIWia3aM7p2MKj0ZbbX0toaszLdIg6o5skhwCtRZwl2xsSUx/ON
-	CRKsec951Esg0qC2Ks564v3mMW2UWNZUAWud1AkQH23/9YoWdTqe0qzPIs7pXq7485QSTuTlKT0
-	FYd4LzXjYgDxBsaUEXbSVw1Ucgjt9Me0=
-X-Gm-Gg: AYBFou1+4OPS3hVvul4RHefmf+DVl2BCgve89zlX3QiNi1DnaomVLbGlgyOcgx/IVsK
-	+eZDctqCzmXZl8RBHhOMceKJqH/z8pcKpXbh56jhvYdP69gU0mCkhRGIwVvo015Pg4mXh2HI/nr
-	zzODR8tq+feEh9ZXNlUDYmySeMhNffItFvldglwE5Kt5vQ/mARU0ZBWpuxQgp3TmbVV6YXX3fIf
-	DJN5mGCYQ2oiqEr3l2LhqCY/mhT2gWwFx47txpZsIR/JACGGpPlk2C65+QiGMFMQpEFnAfWbEqU
-	jRtB5PSrFVh00mtjF2y/vYxChqoHJQSZGqQP6+USw9rdbscbmdcOIZ879AgjZ8vPOxPONpOHtlY
-	zftJiTG3pAPui2NZGgDlmqkfy5RS4W5EJbzrkGjp2
-X-Received: by 2002:a17:907:9723:b0:c29:4b57:503e with SMTP id
- a640c23a62f3a-c46791a894bmr80209666b.1.1792554129390; Tue, 20 Oct 2026
- 20:42:09 -0700 (PDT)
+        bh=cDTft4oCYYFLnSmAGGawpHgZJuk+rVPSatHBqJxDTuY=;
+        b=jfPQKFO0mw01un5NiQRA6zo7zrReCHN79IXJbc4FQnacmWAJ1WTqznUkQ730knqPmQ
+         lKlRgnhKV63sHUf47vPnIN1cUHspxek4E6el3xP3ryrU7tNz26oaajJN3+B5urd3NlV8
+         d6hDur7GtMNklv56BNvSTUchE+wJP2iLvKEXuzrVNtbg1pP+CjXxSOEQxgpjM7TMTMAh
+         Yn2ht4TZuCr6tIUci9nlfex1b5tB879txM7zR+O2XIcw4tg5uMNs/NMzMdjHUfDWRf5i
+         MgML5cK3FisF+r8nq3QOfdfDJZooHJZW1StloNHnaHw8Llx0GxNEAbysTFQrAFGdkAQ2
+         AZoA==
+X-Forwarded-Encrypted: i=1; AKwUvBwXBycg9OyDxnlR487tE9hROKzilRkShMBMa9H2lj0WCf2cfCwqo9tsFlkwBrQPXgGCq61ihozNbSpwpcdP/pfXFBpF@vger.kernel.org
+X-Gm-Message-State: AFq9FYJsTj/mGSI+AhhTx9TGWnt4EmiqmLqJOD34mvU/kdJ75zfH1SLo
+	UaHowh+ZEcSb1rHVpRXvGkWbuFDXrr4ep2hKoJ/logkZcqNW0DGhiw8p8C46Ytl/Afl9fvZPLpL
+	iTDsHp+CIWJBgIJyD/5J7SS1FCNY+dUQ=
+X-Gm-Gg: AYBFou2li3Puwqc/lqc0iCwU3wL6LxLIcMNJFZLAnodTaqo9WQXAZ1g5+wLxhZXn/zp
+	6NCUo5sdG7KOI0DuCPjFkUkYNEE7nA+r8sY8vkAVBb2qxnCJtRaxz7CAjz9TYESqbaYBu80xmD6
+	nqc+vM/p9jiXcI9y7JJpc/VgnVJv+Tb858noz3bUwy6GJnRuM9wzOqKvvRMSIfp84qKiTbG9HJz
+	hvjBBFu7Jp/uf+PWRE5WBQBwbK4yqYgJTq5hQxylpMbrqEFG1xaAU6JmCPqsgpRP5CZ1rdKDHy3
+	D/66PBChM4N4u6PwsiVfUnm8YWRJk4CoqI3uEhGE608t8VwqOYpV1GW+gvbldwCugJxnyGF3uQO
+	09sF4WNXdj7GNDWsJA9Lfdac9z5/ivm8fIc/0HbKJnr+N4ZcH0E3tynIkkQ8T+Sr6ZFLQ1fA0tj
+	vTqsqJB4gaxkk8FELYZatONB6wgKuCd6OMz2IT/LavNK1wHGkPes4wEB5Pi5Yo0w7VMGS8pS3wF
+	N9dWsApYXesxn8bunnhn7zpxe8lbe6DuxRcnw==
+X-Received: by 2002:a17:907:97cc:b0:c42:e6c8:e496 with SMTP id
+ a640c23a62f3a-c46797a19f7mr70958666b.36.1792562314818; Tue, 20 Oct 2026
+ 22:58:34 -0700 (PDT)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -104,84 +106,58 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261016025352.230535-1-meatuni001@gmail.com> <29c3e4a2-9d6a-60cf-d06d-85152a40a703@linux.intel.com>
-In-Reply-To: <29c3e4a2-9d6a-60cf-d06d-85152a40a703@linux.intel.com>
-From: Muhammad Bilal <meatuni001@gmail.com>
-Date: Wed, 21 Oct 2026 08:41:57 +0500
-X-Gm-Features: AclHuK-ireUCJptFa_FX8V4hNSMKN72Ng1R0P-ZWBFx4NRNhVt-8-KKpzPkwUPg
-Message-ID: <CADqcGBkV4iE_0j6usv6TvV3K9XGUa0L9J-ebUkTLsB0NBYzTHA@mail.gmail.com>
-Subject: Re: [PATCH v6] platform/x86: hp-bioscfg: fix heap OOB in hp_enforce_single_line_input()
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	stable@vger.kernel.org
+References: <CAN_LGv3QH4oupSv6KzopjHRXO7tWhY4wvBuCHBzNhJoDW4ZL4g@mail.gmail.com>
+ <20261020015001.15672-1-patrakov@gmail.com> <20261020015001.15672-3-patrakov@gmail.com>
+ <atcpXzA6KQfgiD7J@kekkonen.localdomain> <atcs_nK50gJ3dBRX@ashevche-desk.local>
+ <atdaMqiA3RSb5GEs@monoceros>
+In-Reply-To: <atdaMqiA3RSb5GEs@monoceros>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 21 Oct 2026 08:57:58 +0300
+X-Gm-Features: AclHuK-PF5pOS0r7ZZClhjL5fCAFIawvnh7U4tmrV2llCBHRZIaHJ4fecWq7QXw
+Message-ID: <CAHp75VeoH8FMcwx1Q2C_KhxUrVCEKxetBq53BNwotgPMA714ww@mail.gmail.com>
+Subject: Re: [PATCH 3/3] media: i2c: ov5675: Add the OVTI5678 RGB-IR variant
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Alexander Patrakov <patrakov@gmail.com>, 
+	johannes.goede@oss.qualcomm.com, adee.sahan@gmail.com, andy@kernel.org, 
+	antti.laakso@linux.intel.com, dan.scally@ideasonboard.com, 
+	diamondback@cohunt.app, ilpo.jarvinen@linux.intel.com, 
+	linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ilpo,
+On Tue, Oct 20, 2026 at 3:13=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ker=
+nel.org> wrote:
+> On Tue, Oct 20, 2026 at 11:57:34AM +0300, Andy Shevchenko wrote:
+> > On Tue, Oct 20, 2026 at 11:42:07AM +0300, Sakari Ailus wrote:
+> > > On Tue, Oct 20, 2026 at 09:50:01AM +0800, Alexander Patrakov wrote:
 
-> Why use n variant?
-strnlen() keeps the read within count, which is the size of buf as far
-as this helper knows, so it does not depend on the caller NUL
-terminating the buffer. Both current callers pass a kstrdup() copy, so
-strlen() works too. I can switch to it in v7 if you prefer.
+...
 
-Thanks
-Muhammad
+> > > >  #include <linux/gpio/consumer.h>
+> > > >  #include <linux/i2c.h>
+> > > > +#include <linux/mod_devicetable.h>
+> > >
+> > > #include <linux/device-id/acpi.h>
+> >
+> > No, this has to be part of i2c.h on par with device-id/of.h
+>
+> Well, <linux/i2c.h> includes <linux/acpi.h> which in turn includes
+> <linux/device-id/acpi.h>, so <linux/i2c.h> already provides
+> acpi_device_id.
+>
+> > Uwe, can we get this fixed, please?
+>
+> With the above said, there is nothing to fix, is there?
 
-On Wed, Oct 21, 2026 at 2:19=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Fri, 16 Oct 2026, Muhammad Bilal wrote:
->
-> > The input is copied with kstrdup(), which stops at the first NUL, but
-> > the full write size is passed to hp_enforce_single_line_input(). With
-> > an embedded NUL the helper reads, and can write one byte, past the
-> > copy. Return -EINVAL if the input contains a NUL.
-> >
-> > Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
-> > followed by 4093 bytes of "B" to current_password 100 times returns
-> > -EINVAL every time, without reading into the heap.
-> >
-> > Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-> > Cc: stable@vger.kernel.org
-> > Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
-> > ---
-> > Changes in v6:
-> >  - Return -EINVAL on embedded NUL instead of limiting the scan (Ilpo)
-> >
-> > v5: https://lore.kernel.org/all/20261007134711.473857-1-meatuni001@gmai=
-l.com/
-> >
-> >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/pla=
-tform/x86/hp/hp-bioscfg/bioscfg.c
-> > index 876fc35d035b..e306bd8b1e72 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > @@ -162,6 +162,10 @@ int hp_enforce_single_line_input(char *buf, size_t=
- count)
-> >  {
-> >       char *p;
-> >
-> > +     /* buf is a string, so a NUL before count is invalid input */
-> > +     if (strnlen(buf, count) < count)
->
-> Why use n variant?
->
-> > +             return -EINVAL;
-> > +
-> >       p =3D memchr(buf, '\n', count);
-> >
-> >       if (p =3D=3D buf + count - 1)
-> >
-> > base-commit: 8667bd30fd033295b3038ce374c551d1059538ba
-> >
->
-> --
->  i.
+I believe it's just a coincidence. We need to include both explicitly
+(I mean -id/of.h and -id/acpi.h). Do spi.h and platform_device.h
+include acpi.h as well?
+
+TL;DR: we have an inconsistency behind this, so it's definitely
+something to address.
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
