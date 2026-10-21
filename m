@@ -1,103 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.21.23.139
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792564828;
-	b=nvUWjEchH0tKBTi0LeWo+lTTfpzYh8EIisqv4zT0gztYcze5aR0mGD0zxnxWPOVmNJC1
-	 +qfyUSa95fDry5VsBPlor0f8ZvbNHCDTeT2WgtMjf280pQyScLWn2qAEXfvqvyW/QgKl7
-	 5SYB1mtdRS0YrdCjHGmsSFLYP/T+Ac8FHxpOxLABgZFDFd3s/9h23ChTsDLdc+V1D9erQ
-	 MRCZERviJm+H8UObu7eE5aaCnbP7lsWi0nNrInVLamazvL3b2ZEIp7qmf17hswN/le1Yv
-	 v6nzVu6KRZ8z4qPupmLpt/bHsyWH1EGuhgptTnoNiWKllEgvZegjECTFY8xXVpJLadg==
+	t=1792566632;
+	b=LoOklzcWaPc6EP5uNsMS/F0PlQI1DeSmUQ1v12q3NIu566sfuErmYKEsdm821Sor9lte
+	 kXo0yEge9oIrBd9uhJd2rfPzVUywCUWauYktQna5SJx9flurpfl7ymMfn+d37sd0g0FOp
+	 ST0UvSvUTXh9QnL2nje7RgjCOBxmaJITz93bfuKp9pVvVHisQRKARQ4iqIbR4zQZeh+Wf
+	 rk+YhhF5Vga1gjU1PZBFCu3t5wsk7w4RMbX1uQOU6eNxK5pQ2587RCBs9S0Io4UvYwzNU
+	 wWEXZTK7NwToENQxHERVcDr5KiF5Z5W0yVrzRIdg+lWfAGHz1ImAhbEOD1tZa4XqfVw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792564828;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-Rspamd-Action:
-	 X-Spam-Score:X-Spam-Flag:X-Spamd-Result:X-Spam-Level:
-	 X-Rspamd-Queue-Id:X-Rspamd-Server;
-	bh=IFxtjK8vWWVjmsKHN1R3xD1X1PYGIrjdd4sH9XB5K68=;
-	b=zN0Xg9+xUXFiiBp0H6subduFLYQWznO/N6HjobaDRDp98qiO1fH+qfbVKqp/HDOIUowf
-	 mLp95y14TT8XbrFABQpEeJv08jkbbJjAsLswYSbpONtVhL3/jMQqDItAVXhkh5eY5SZpR
-	 9K6d+Jc7w3+KdubbDOBxdu72o909moGQG5ziUx5d7+0Iz9yMsnzSGyt/j1RUglFPM9fAX
-	 xVqohY77QHM4jfXlfxykFtbsCGvSQsVdCvy6G3HDA/3gw8fQrIJIEnc+BWWnt8CvNw40D
-	 MpS+dEf1admcRrnmx6SpsPSSUomvZw2a+nD7i/O1mslkVcq8n4UEkdigeecVO8X24Ew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792566632;
+	h=DMARC-Filter:Received:X-Virus-Scanned:Received:DKIM-Signature:From:
+	 To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=rix1p1Cyzqd0FxvmT7jEXaKym4HfEZY1F+++eXXNjow=;
+	b=0fX3viqwnFT3fzwT1Kbkfs74ukTRYhYW4PEBCQxiLfDXWeiywdkQICREB32VWHZ81KoE
+	 HIVQZzOtgCaX3n96mVsCAp7qn3Nl5bApxxDxQz/2ag2AOZkPv4M/hjz1RZiBJMeSZqKbd
+	 Vb5usIe0LHWvMvtfS7ZHp8EwLlIC7mf5dW1th0H0jRRkBzGSglpm3rVEV8KgL7aS/niB3
+	 0l6APvZPTae1c3lbnnAuyuplv4u5/hHp7dMVRJkZbGbks78C/uwk76A7x2xvY6s9IB4sF
+	 LTj4GpSh3YLa6OjlDJ+F9eTZIOVUmtqM8hTUvphM7TaOzhZkQouEAdYzu37oH6VTMjg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=15SSNEyl;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Y8l4M7fW;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=15SSNEyl;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Y8l4M7fW;
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	dmarc=pass header.from=disroot.org;
+	spf=pass smtp.mailfrom=disroot.org;
+	arc=none smtp.remote-ip=178.21.23.139
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F0D606A31D;
-	Wed, 21 Oct 2026 06:40:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A3F0D606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=15SSNEyl;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Y8l4M7fW;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=15SSNEyl;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=Y8l4M7fW
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C3BFD1F394;
-	Wed, 21 Oct 2026 06:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792564825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=IFxtjK8vWWVjmsKHN1R3xD1X1PYGIrjdd4sH9XB5K68=;
-	b=15SSNEylYkq/EosgujXgW/HDVBzX67U9/Xcv2XLAgyUE3yFlekMvB+UCahA+mjvEpcNoIN
-	ftV+vXpd0zI+c0KWNUx8vXILcXM/WtWnIzy9u6xqU1qEEzNB3KHHIDtJbgBwP4RCwk4OFn
-	z85pBNvbF7n+ZGB4V9lceFbs9TUPdWE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792564825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=IFxtjK8vWWVjmsKHN1R3xD1X1PYGIrjdd4sH9XB5K68=;
-	b=Y8l4M7fW9j4mTA/KLk38DkdpqaX0ParibPBzQOnyONE2OX9GNIVXKesPG3ywSEotHd/uR3
-	cxkPO+XLh+YaEvBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=15SSNEyl;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Y8l4M7fW
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792564825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=IFxtjK8vWWVjmsKHN1R3xD1X1PYGIrjdd4sH9XB5K68=;
-	b=15SSNEylYkq/EosgujXgW/HDVBzX67U9/Xcv2XLAgyUE3yFlekMvB+UCahA+mjvEpcNoIN
-	ftV+vXpd0zI+c0KWNUx8vXILcXM/WtWnIzy9u6xqU1qEEzNB3KHHIDtJbgBwP4RCwk4OFn
-	z85pBNvbF7n+ZGB4V9lceFbs9TUPdWE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792564825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=IFxtjK8vWWVjmsKHN1R3xD1X1PYGIrjdd4sH9XB5K68=;
-	b=Y8l4M7fW9j4mTA/KLk38DkdpqaX0ParibPBzQOnyONE2OX9GNIVXKesPG3ywSEotHd/uR3
-	cxkPO+XLh+YaEvBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 73DEE134A5;
-	Wed, 21 Oct 2026 06:40:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vDTAElle2GohYQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 21 Oct 2026 06:40:25 +0000
-From: Takashi Iwai <tiwai@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8974C606A31B;
+	Wed, 21 Oct 2026 07:10:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8974C606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.layka.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 843A880F2B;
+	Wed, 21 Oct 2026 09:10:23 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id jumLQudmijQE; Wed, 21 Oct 2026 09:10:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1792566622; bh=PZ1GvDFUXRjWYbO2XyfsDNhfyv/qKWSYBm4vd8JR6Js=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=hKuRzUs6d5oAXZfo67I3LeFwcWg8qsN7KE3s10EtG0Qu1W9vhLqqR51/9BfNk4YGB
+	 K1uOdldFhu7S9MZX3Ljdg6aP+arFsCWG0KLvlv0rfcECqLfUfsyHltcCCQrTdLB7Lt
+	 ogvddKggW/HbX54rUxkLE6omWg+eF7sMMfY6kQIIR5ThTRAVzeyH97k2VH40RNHU/M
+	 bxi8cPbJP9Zyh82s/CY/XBjNhZblDmknjDyxsE34i2AHcxii5iy8GYGo6VtoJreX8i
+	 BFyydwNM+UI542255E2xP3E9s20/7xJ5LCfzv5jMq6naWcz46pqvoreeAIBwGi6xX2
+	 fn1LryieF3MyQ==
+From: Marco Scardovi <scardracs@disroot.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hansg@kernel.org>,
-	Junrui Luo <moonafterrain@outlook.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: ibm_rtl: Fix potential OOB read at signature search
-Date: Wed, 21 Oct 2026 08:39:55 +0200
-Message-ID: <20261021064012.457870-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.55.0
+Cc: Hans de Goede <hansg@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Scardovi <scardracs@disroot.org>
+Subject: [PATCH v4 2/7] platform/x86: asus-armoury: add power limits quirk for FA608PM
+Date: Wed, 21 Oct 2026 09:08:14 +0200
+Message-ID: <20261021070948.19916-3-scardracs@disroot.org>
+In-Reply-To: <20261021070948.19916-1-scardracs@disroot.org>
+References: <20261021070948.19916-1-scardracs@disroot.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -108,82 +70,54 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[outlook.com];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,outlook.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Rspamd-Queue-Id: C3BFD1F394
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 
-The loop for signature search fetches 22 bytes of struct ibm_rtl_table
-at each check, while the loop count is calculated in 4 bytes unit,
-which means that, at the last entry, it fetches over the limit.
+Add a power limits quirk entry for the ASUS FA608PM laptop. The limits
+are extracted from the device's ThrottleGear XML configuration.
 
-Rewrite the loop to use the byte offset and correct the boundary
-condition check for avoiding the potential OOB access.
-
-Fixes: 15dd100349b8 ("platform/x86: ibm_rtl: fix EBDA signature search pointer arithmetic")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
 ---
-v1->v2: Replace loop counter with offset and correct boundary check
+ drivers/platform/x86/asus-armoury.h | 31 changes(+/-)
+ 1 file changed, 31 insertions(+), 0 deletions(-)
 
- drivers/platform/x86/ibm_rtl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
-index 139956168cf9..82fda8d9178b 100644
---- a/drivers/platform/x86/ibm_rtl.c
-+++ b/drivers/platform/x86/ibm_rtl.c
-@@ -234,9 +234,9 @@ static const struct dmi_system_id ibm_rtl_dmi_table[] __initconst = {
- };
- 
- static int __init ibm_rtl_init(void) {
--	unsigned long ebda_addr, ebda_size;
-+	unsigned long ebda_addr, ebda_size, offset;
- 	unsigned int ebda_kb;
--	int ret = -ENODEV, i;
-+	int ret = -ENODEV;
- 
- 	if (force)
- 		pr_warn("module loaded by force\n");
-@@ -271,9 +271,9 @@ static int __init ibm_rtl_init(void) {
- 		return -ENOMEM;
- 
- 	/* search for the _RTL_ signature at the start of the table */
--	for (i = 0 ; i < ebda_size/sizeof(unsigned int); i++) {
-+	for (offset = 0; offset + sizeof(*rtl_table) <= ebda_size; offset += 4) {
- 		struct ibm_rtl_table __iomem * tmp;
--		tmp = (struct ibm_rtl_table __iomem *) (ebda_map + i*sizeof(unsigned int));
-+		tmp = (struct ibm_rtl_table __iomem *) (ebda_map + offset);
- 		if ((readq(&tmp->signature) & RTL_MASK) == RTL_SIGNATURE) {
- 			phys_addr_t addr;
- 			unsigned int plen;
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -789,6 +789,37 @@
+ 	},
+ 	{
+ 		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA608PM"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.nv_dynamic_boost_max = 15,
++				.nv_dynamic_boost_min = 10,
++				.nv_temp_target_max = 87,
++				.nv_temp_target_min = 75,
++				.nv_tgp_max = 100,
++				.nv_tgp_min = 55,
++				.ppt_pl1_spl_max = 100,
++				.ppt_pl1_spl_min = 45,
++				.ppt_pl2_sppt_max = 115,
++				.ppt_pl2_sppt_min = 60,
++				.ppt_pl3_fppt_max = 135,
++				.ppt_pl3_fppt_min = 80,
++			},
++			.dc_data = &(struct power_limits) {
++				.nv_temp_target_max = 87,
++				.nv_temp_target_min = 75,
++				.ppt_pl1_spl_max = 68,
++				.ppt_pl1_spl_min = 35,
++				.ppt_pl2_sppt_max = 71,
++				.ppt_pl2_sppt_min = 36,
++				.ppt_pl3_fppt_max = 74,
++				.ppt_pl3_fppt_min = 70,
++			},
++		},
++	},
++	{
++		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "FA608UM"),
+ 		},
+ 		.driver_data = &(struct power_data) {
 -- 
-2.55.0
-
+2.56.0
