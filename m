@@ -1,77 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792577219;
-	b=ojM7ebErQ35dQjyoQjKpk0sWOEmcynvKBv4bW34F1DWzaNmwAGjwmv83XoJous4AMqzK
-	 ivrkDQPqreX2jhAjERxLoL6o/DCbkhNIFpG5j/1FriwMnOOSMf3jOydhrXSQCeBRkX6p5
-	 7nduYzkc+XwKTYMyax/XIaJ60Ya3l71G3nlcn0JZFU+IAy57yjfZ0u72O7GKXnD9GzvQR
-	 zSrqzNebgQHpcjTEL3VuuBIh7ePu3P1EeJQxaQwi3b5d9bur+0ScHiGQSeSyJZWmqUkT7
-	 RXxTvtY2ropr/ltai7HQio1gV6scUycsEnlFHQVz9vIheNjweind7wjh4jKgPh+FSsg==
+	t=1792577223;
+	b=UUkNLW2VkRmR1SyXDZS4bGfvglNlrV/U6m9DqveCPvENDPSybH6JjqgrixxAIQgWG9gc
+	 yVdb2JOVv8lQB86srunhD46r2ftSmQyxwAurU7Q84v9pOtXEgkP1aUHXYzfZnViUIjruS
+	 WXe8Fp1JgpTZJOL91qm8n7E4WmIpLCVSvzMeuSj3qCqND/v0NSqHk1ewADeA4tM+jfWp4
+	 XIq+izEj7Wkz0v48kGAvZ9I6U37WMgAdLJXCbhABzuMlQHW2BkaiCM6myF64OsIdVXqaB
+	 N1h1TwgJMqjpjFyNN6IZgTPdAtHiH01IdvtgDZCoL9o2fFKHDpc+uNBe2+dxsu7Fp4Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792577219;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792577223;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=AwR/mWAjfllw9cCm4QRkuwIqpiC8gCFh6BB36vMgvbM=;
-	b=2Trh+dVry3XClZFOI2dbYQLLPG0AWQVjRbcb/Bz2C+GfyGksYtkTvJkj1LI38dlnRWq6
-	 Tt/xqR0/IPnHsJ2w/NCl6+iGLtXjH4qO0BxPmf6IjYFO6g9kKWyXyA3BvvXdYTKXQtOIu
-	 2djIpIhY9K7nxIpRdrREzH9WyZL2UHf8Tc7nkcx6jKqBSV7o41iX4+XYeN+IOvENs5Vx/
-	 p704GsNQw6DS4uMDrByLRo9X3RVDeHUty/VRLVSkiTC3dzthfy2eGHebT3zl2uAkjvksc
-	 xnM5vHAoHwpsAeTqc9iJmL1NtJGgkmLwWnOUAb/sB9W0jmD+hJfeZJabUggRGsq+0ww==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
+	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Mailer;
+	bh=QvPThFQs7CPNFPQ+vkGx4arKK/k402cnRQc1S826sqI=;
+	b=vmJuANQIXcAdFqYDv7A6YL0PGSNzkGfjOP9q7aEa1Oqw2ieEDCt3FzduCwoTCRB1qFgb
+	 b4Lx9xAxZkU3akP6SFT40YZGxyVZ00OpRz85OBfCT1cTQv7WBgw6ECxl1E3fLxw4jn5yl
+	 xmTl7fgdZvFbgCdAQRnrmm2CCqoSWBiiPAQpnMgHQocDwnAQw/QDW6Mx4xYNNSVXH7BNp
+	 i3CtuEuaxbk73yEF6zzxnTItAihnLFl4IzHgK9cR+tndZWLH1DCVtZyR5d00P8+UdmeSP
+	 Xv2c5euMLVikUaCfPcN9S01fgfD4pPzpvdlLnOISKEFgMdNfqScJgvDx+xWtv2DqYtQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iJ5OCrmk;
-	arc=none smtp.remote-ip=192.198.163.14
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lRuA7Ht1;
+	arc=none smtp.remote-ip=198.175.65.10
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B62606A31E;
-	Wed, 21 Oct 2026 10:06:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 46B62606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518A2606A319;
+	Wed, 21 Oct 2026 10:07:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 518A2606A319
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iJ5OCrmk
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lRuA7Ht1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792577219; x=1824113219;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ddfeBxUm3ZEEfef8gk5qFC+/ow3vU2YA9UAWO5ssV2Y=;
-  b=iJ5OCrmkwp7IUc96u7c1PN9ktuOrzpORf+loEUFHaDdd69MjVT33h6/J
-   cqXt0T5yDONSbiwHkwTPiCJ6a8ROOOXcymz7XQ6ginarDOZyDNk6yUWpj
-   QzudobuHF43anzMJZF4La7eQIdZL6oNw149Ex20Sv/L8L1oJ202NV2oQ+
-   Olp1SC+mJjQSI/iRZvpRRP0PdvWLx1z/XcixKY9yqcrOFsA4zJFXKqzjr
-   YifM+/p7tt3wqxiGIFB39QntsbKcYjnBLPgI2wUWHO07lU46sLGWj7EJ2
-   Qip9smsp1CUaZYcNP+OuRFCPeMmo2YKHf866/3oui9OPE2MZecIlnPJL1
+  t=1792577223; x=1824113223;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=NL0lYY9NdoNlkvR0pbijV4vrZONetomEaQ/12rrA3+A=;
+  b=lRuA7Ht1QM8eJLT/O0+R9QKc7IA3JosZ2O1mFINlIAZf08Mkkt+QlurF
+   34xcTeduMXYSl/phY9FVVo5F1zHvYctIwnAveKjcbAadaswTaZuXXeYf9
+   8BBasjihGOKLut4K6/0Grg3TavWOt8hDWT00S8jt75uHtu2LWjs+yEqsM
+   qVZ5xPO0CRElMlr0sHKgo8QuaJBY2duJw46Idw66q+Gn2xYXoW4qGTKnc
+   oRogkdEB0SbcY1AFoGctRB2m1hmNOoHLV1/RZ/T9SQtmfPF3hmtHoyrV3
+   zBqwjpHmn90mdnOCbVB6jglpnWzLKHOFh2zlHLsuwxddvsHViycTTGeyx
    A==;
-X-CSE-ConnectionGUID: JFsMsnCvRK2ab9FZaxQ1/w==
-X-CSE-MsgGUID: MDJb+Yz2R/+xWaWMTxOD7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1313756"
+X-CSE-ConnectionGUID: wrUdAa5wR0OWsPDc4ERrGA==
+X-CSE-MsgGUID: n129C2gLR3GdBhiNuZtTKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1185900"
 X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
-   d="scan'208";a="1313756"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 03:06:58 -0700
-X-CSE-ConnectionGUID: eqe3AZTfTpaD1ytC/EQvvg==
-X-CSE-MsgGUID: /iJAJg9RRnappbuCo+BvRw==
+   d="scan'208";a="1185900"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 03:07:02 -0700
+X-CSE-ConnectionGUID: F+zXWec0Q4WsP2rH6Z+pjQ==
+X-CSE-MsgGUID: PiqTdiP/SbScuA9fo7BX6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
-   d="scan'208";a="4888835"
+   d="scan'208";a="3373794"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.75])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 03:06:55 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 03:06:59 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 21 Oct 2026 13:06:49 +0300 (EEST)
-To: Bartu Alev <bartualev@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    luke@ljones.dev, denis.benato@linux.dev, benato.denis96@gmail.com, 
-    corentin.chary@gmail.com, linux-api@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/5] platform/x86: asus-wmi: TUF keyboard shutdown
- naming and RGB readback
-In-Reply-To: <20261010101601.888709-1-bartualev@gmail.com>
-Message-ID: <f090ad2d-55b7-237b-864f-cee7917568fc@linux.intel.com>
-References: <20261010101601.888709-1-bartualev@gmail.com>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+ Junrui Luo <moonafterrain@outlook.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20261021064012.457870-1-tiwai@suse.de>
+References: <20261021064012.457870-1-tiwai@suse.de>
+Subject: Re: [PATCH v2] platform/x86: ibm_rtl: Fix potential OOB read at
+ signature search
+Message-Id: <179257721467.10359.5031455063414547974.b4-ty@b4>
+Date: Wed, 21 Oct 2026 13:06:54 +0300
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,93 +80,35 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-On Sat, 10 Oct 2026, Bartu Alev wrote:
+On Wed, 21 Oct 2026 08:39:55 +0200, Takashi Iwai wrote:
 
-> This series fixes the name of the fourth TUF keyboard power state and
-> makes the TUF keyboard RGB attributes readable.
+> The loop for signature search fetches 22 bytes of struct ibm_rtl_table
+> at each check, while the loop count is calculated in 4 bytes unit,
+> which means that, at the last entry, it fetches over the limit.
 > 
-> The fourth flag of kbd_rgb_state was labelled "keyboard" and treated as
-> a no-op since it was introduced.  In hardware it gates the backlight
-> during the ACPI S5 power-off sequence: with the bit set the keyboard
-> lights up white while the machine powers off, with the bit clear the
-> machine powers off dark.  Patch 2 renames the field and carries a Fixes
-> tag for stable.
+> Rewrite the loop to use the byte offset and correct the boundary
+> condition check for avoiding the potential OOB access.
 > 
-> The remaining patches prepare and add readback.  DSTS device 0x0010005B
-> evaluates the DSDT method EC0.KBLS(), which returns a 16-byte snapshot
-> of the EC's keyboard state: lighting mode, red, green and blue levels,
-> animation speed, and the four power flags.  Both kbd_rgb_mode and
-> kbd_rgb_state become readable and report the write format with the
-> command word fixed at 1.
-> 
-> Responses to the v2 review:
-> 
-> Ilpo:
-> - Documentation: patch 5 adds the missing ABI entries.
-> - Errno: the helper already separates the cases.
->   asus_wmi_evaluate_method_buf() returns -EIO for a failed evaluation
->   and -ENODEV for an unsupported DEVID.  The readback keeps the
->   err < 0 ? err : -ENODEV normalization for the positive ACPI integers
->   that leak through, and the AML signature check returns -ENODEV as
->   well.
-> - Named defines: patch 3 names the three speed codes and the four state
->   bits, and the decoding comments are gone.
-> - Struct: patch 4 parses the status buffer through a packed struct.
->
-> Denis:
-> - DEVID naming: the write DEVID is now ASUS_WMI_DEVID_TUF_RGB_CMD
->   (patch 1) and the read DEVID is ASUS_WMI_DEVID_TUF_RGB_READ_STATUS,
->   as you suggested.
-> - -ENODATA: asus_wmi_evaluate_method_buf() already returns -ENODATA for
->   empty buffers, so no extra handling was added.
-> 
-> Provenance: the KBLS buffer layout and the speed-code semantics were
-> recovered by static analysis of the EC firmware (ITE IT5570VG),
-> assisted by an LLM-driven toolchain; the readback patch carries an
-> Assisted-by tag.  Tested on a TUF Gaming A15 (FA507NV): the v2
-> readback on kernel 7.2.6, and the S5 behaviour of the shutdown flag by
-> A/B testing both values.
-> 
-> Changes in v3, relative to v2:
-> - split into five patches, one logical change each
-> - renamed the write DEVID to ASUS_WMI_DEVID_TUF_RGB_CMD and the new one
->   to ASUS_WMI_DEVID_TUF_RGB_READ_STATUS, per Denis Benato
-> - named the speed codes and the power state bits and dropped the
->   decoding comments
-> - parse the status buffer through a packed struct
-> - added the ABI documentation, with the attributes documented at their
->   real location under /sys/class/leds/asus::kbd_backlight/ and worded
->   for all laptops that expose the zonal RGB devices, not only TUF
->   models
-> - added linux-api to Cc, which the earlier versions missed
-> 
-> v2: https://lore.kernel.org/all/20260926005625.171560-1-bartualev@gmail.com/
-> v1: https://lore.kernel.org/all/20260925200744.129714-1-bartualev@gmail.com/
-> 
-> Bartu Alev (5):
->   platform/x86: asus-wmi: rename TUF RGB state DEVID to _CMD
->   platform/x86: asus-wmi: fix TUF keyboard power state shutdown naming
->   platform/x86: asus-wmi: name the TUF keyboard RGB state and speed
->     codes
+> [...]
 
-Thanks.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-I took the first 3 patches into the review-ilpo-next branch now as there 
-is another series that conflicts/overlaps with them.
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
->   platform/x86: asus-wmi: add TUF keyboard RGB readback support
+The list of commits applied:
+[1/1] platform/x86: ibm_rtl: Fix potential OOB read at signature search
+      commit: f1d81af2521ad504a20481fef12c358d26e6c3a6
 
-v2 thread has my thoughts about this one.
-
->   Documentation/ABI: asus-wmi: document TUF keyboard RGB attributes
-> 
->  .../ABI/testing/sysfs-platform-asus-wmi       |  42 ++++++
->  drivers/platform/x86/asus-wmi.c               | 123 +++++++++++++++---
->  include/linux/platform_data/x86/asus-wmi.h    |   5 +-
->  3 files changed, 153 insertions(+), 17 deletions(-)
-
--- 
+--
  i.
 
