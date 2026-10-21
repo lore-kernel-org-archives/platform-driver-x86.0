@@ -1,89 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792540445;
-	b=uwFST//CPrdSL2Lq5VEb03wq0EMEkowBxXLDMjfnuLXjEMKKX4TE726MFWFpdTBmvNC4
-	 varcpTYoSvz2j072IStoOhY8DaEO29jFiFMxDv2WGkVDHbnZhfKNij/yymktghdTx/PJG
-	 t6wk5whA98mKugW236hQf5k4E4ym4dqywXGJLPOSJdfvkgfxvgyMJo29ZY5dF856kR0g7
-	 hrIkW67lL5tkwNXd14WiV2VJOesg8MUajjZ5+FqI3CUvFzq6qw7PfThobfW+fqmbFDlyO
-	 4OVEsdYO7eXzK3sCzIufGFKjwuam8SDwaXpBeq1ZHepUHyUcGfnJp9dMZ9YyvvJRK5A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792540445;
-	h=Received:Received:DKIM-Signature:Received:From:To:Subject:Date:
-	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
-	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
-	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
-	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
-	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
-	 Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
-	bh=O61bEgmpX4RJHMbA2ReiOME53YuLJwY/mmThroXQbPY=;
-	b=B2LqzASAV3P12oUSIR1QeabFMJC5n9pHWMCCiH6cm8PKzvKw5ir7dfOtYsduWNauIbL8
-	 AvHNwViXhAFp021tgLYSCjR/jvHf/Rpx4MIBli8tdSl4M3o8A7KBJATkR5mPjl99jDlGv
-	 LfFfOP7cbBQ1+QzErg8kGa2YhGxVwetW5LmYhbcCIpM9SsFLcnnh03ZzKGcfd7GhwD0J4
-	 a/iwttylFwb+Wz8DvukLhLGBqyMShIwhP6IygpkX2Ys0JtZEuwCIa/Xu/FDRzBzYvGKbX
-	 VZ4WJmxIkBpQCPP0fP251UWg8/a9PTSJatz7D0woijTcCRvghCe7ZAsjZbu8o9xhD/Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SKZayqSD;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
-Received: from aws-us-west-2-korg-listserv-1.web.codeaurora.org (ip-10-30-226-211.us-west-2.compute.internal [10.30.226.211])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE2BE606A319
-	for <platform-driver-x86.vger.kernel.org@localhost.mlmmj>; Tue, 20 Oct 2026 23:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SKZayqSD
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.173
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792544950;
+	b=lfcXf6Ui7pWHoMPrkJtuPkOT2FPVt2NyD7E2YMG3/a0cA7ZlrVfoTkJp4aORTB2BaHnc
+	 BwBDHpKA5ZJe1/N2X2BrNnXAH5+IHuhkYAVHWNtmm+iGv7XoYn9710VD4dnR92Bk2A/rP
+	 bpW0FkfEg/T2GkvjiXglDrVDxXqg7NtzxlGI7BzeP8z+ZHekwpbHkSGE7ksdpCToeVZuc
+	 jGVRsuC7L/InC+qMqBsGkY0E//vY03FrcyOrW5Bct8UqpyMG6CoRzxSBZ6xyyZozxI9fP
+	 bURo6GpsC8nq/IHf86rsqB3m21gERHCs/DSH7uDeeKwAD6hc8rQIsBQpZFO5yHLgsnQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792544950;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=7iEPiz9yOIV+y72qaA8W2UPQbrqSP5r2/Sa3LQF4egM=;
+	b=jh5mevXCS5XBNWlUZj6iTAEDRp0bGae9GFPkmgvcuZSH698ms1gPF8RbM+nb16P4xlgU
+	 TeFbzd8IgAZ4C8VRZO1RlUMCHOKrgu9euIX8Py8MyBtzIbReL39gIYhNOqOLUOmNJRCBF
+	 Fk0zbWhv3LTMYZQJpbxPEeHjUv7nFBsjiQDVMT1Re+7jfPbZdrU2IsMCvzzm8XyT272+q
+	 08i1ReD/jd8SnEKnY6H5gMMRPsZE/DB5XfwnmjkqVKIAgNr+shtC4e6T3aN11QTOASCv1
+	 AJNbU0W99rJaV/tw932SG4K5U7xWtsCTfFjUmzVUFwqhoYgJE5aMFIStXFhpZXeGNnQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Hv09cj6J;
+	arc=none smtp.remote-ip=209.85.221.173
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DB025771
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 23:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792540445; cv=none; b=IsK2//MIyyeb3yaxuvCvdut9qBJkeMKm/5dnO3vlsjwA7eKY3cwNaMF68jZ330VIZtq5GLei7aeibpWY71KUjZeeQKyB6cD9xsswPr/lepOLH8PiDSGjcMZ67U7dq+2vWK+8SzkMJ5ooWS9pP7F0qAVHPC+upTGuEcesOtC16Wo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792540445; c=relaxed/simple;
-	bh=O61bEgmpX4RJHMbA2ReiOME53YuLJwY/mmThroXQbPY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s2K6XtY0YkgFbBS2Tiu+s5YaNB+AZzP4xnrUU3S5s0gjt+QTNr4TookkjqXn42rHYZd5RDOCcrkuAa4eaB6UrOsUybO1DkC3KWO86WqhLlrsOGeVNbautDvdHdc+FKhMHkanqGsnFMDeNNHeCXPQ0G02qBJ6p3LYm3wPAep9JL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKZayqSD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D892BC2BCFA
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 23:54:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1792540444;
-	bh=O61bEgmpX4RJHMbA2ReiOME53YuLJwY/mmThroXQbPY=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=SKZayqSDpKcdeqPWwSB35UL40n6lAANy3cnB3eiCtxXzqeoMtb//BdsXQFEAMo9to
-	 ycztdkxAFZTxKOCIx1oSFY6GrgwXDPLBVgVbjeFUWRoMO5yF/ARfqc6tZwR/3ADw/y
-	 0VcqvuOchfKJ97vonNpgYv4NE91htEkDv6osahVorbYaaIWyrv62zLmfCNkoDsVKUh
-	 poGINXwdHEfMpG4y3GcwsOAzu3q4PD47pB/LgcqxGWOOE9l2ioNBL99BVhfSJTXaqq
-	 Oj1tJENi4QjJ5x3F/kkpJNjPUqEg4Y/6wlJdB7F3LZgo08NBMTREtJE9AHQWKImDKp
-	 X6AxtsW618Irw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id ACD2DC3279F; Tue, 20 Oct 2026 23:54:04 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
-Date: Tue, 20 Oct 2026 23:54:04 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: W_Armin@gmx.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-222161-215701-T5eoDr64a1@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
-References: <bug-222161-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741D0606A31B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 01:09:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 741D0606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Hv09cj6J
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5eaa1b5b84aso228459e0c.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Oct 2026 18:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792544949; x=1793149749; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7iEPiz9yOIV+y72qaA8W2UPQbrqSP5r2/Sa3LQF4egM=;
+        b=Hv09cj6J8eoXcUtgZ4L9LJvQ5fMzvH+PM1JKFCE11ERCdj48sOiWUOJJDvxRbG2qZQ
+         +V9Ld7wl18TlaSg4o80tjB9O5ww+gY6IbcY4EecGhLRcVwv9gkNHfLUEOPmRdlZ7KkBN
+         pu6FOFLBgNFtbNbY29k1lqlORPlQe1GTOrEg6WIou1pos0nLyR5DSLb+yQbXAQxyCXWX
+         Ol6jiasluvnjnBfQRLM9I/rOYpb8BoKDEIiU9c6cTYPk8gcZ9fSQYxUzoxyXCpVRUI6k
+         CwBGaRU0PGmQaRyw4HWYAJDSnn0TKf9O+xBDHJgIllueVX7SKQUqOZfc3HutbNGEVCj7
+         06lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792544949; x=1793149749;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7iEPiz9yOIV+y72qaA8W2UPQbrqSP5r2/Sa3LQF4egM=;
+        b=MQvOpTirMJfKAP+xcsnnUGLU2yoi9eRvYdM15tfHjQtuPXJed5K33Vo4h3YMDuy1dy
+         7Z+XSIVHEyHkl6rbgkboQqY2dD1p1ZukkZZlGjK9YKlusPabG1VTOzTOFj7c10ja8iGX
+         y5G7QuU8zVQQtwxYTwWTfDSDrDjSYbgibgN9TbtNhSk2JKFkSifLdek3vnYO3oCYjrbT
+         WJRe0E73zZ8zqjwI5NBnV/B74SiyfJII8iwPv9FIZYGlLQ2fanN7dWAplZ560mu1VFIE
+         z/LaSIsxS86FP3EleCJtE/5Niqyf0KZ+J230ngkvB8aHdvudHObadJU7IsMGzRQpCvsn
+         Gxpg==
+X-Forwarded-Encrypted: i=1; AKwUvByEAQVNMJAovu4Zzl/Fb8Bzu3afhUXs+9t5gUABxskDnBlr1RHdDeBPFhh9Me9iHu/ux0fA5ajbV8EBho66pQk2AzoQ@vger.kernel.org
+X-Gm-Message-State: AFq9FYLKNMV9HeQZVZhxkVgH6459aGGeaovK3lQW2RfvHr/9aoAJc7Rm
+	qB4nF1O4iyShfpVm5um1yqfq1hqR09MhI/YE5UImuoG+ThrRY2bJpVu0
+X-Gm-Gg: AYBFou1Pu/y8mZiRU27lAPSqIYS4vPQ7fpNTtIsG5aIyj2yPQiBdomcZJDoJe4qlvQy
+	R0+enhLxjLTI2O+T4Dkr6dT664/jZu8BsISP0lZrOuINpNONpT2zx4bOl4B+13myUunVfqmlRXr
+	fRgZEc2DXZv9yX9BFZxXjiZxNyb+OWEwqrHQ66f+oB62Meuuy/pymwFp+CzkeV0li5VC75uwLIH
+	5zLDxGKF/mSZpShX6Vg2e8dXgVAreqN5H7s4pV0V3rumJzuuGCRaO66E07b5R8c4JiVDZDirmQj
+	Q9QVs95uSv2V32KnLlbAGWc+zS0He1BLn/zjpXoqw1IDy52XzT87fs4Mu5dMffrobmpd7aodhFu
+	Zt7mxA2eCzQKn+9QswB4em0Ae87n+JT2wr11CPN3D+rvZijQ87udXAnbvgC7f/CJdenxZLcGAzl
+	0SMsc+gZcZoW46TZraY2yJsNE4CHqqixjUOPdGS96a8vYeYDF8B0OSCDlFnLAGZK9+qFF9F5+9d
+	9Eaor0M36kW
+X-Received: by 2002:a05:6122:e203:b0:5ea:c77f:2f2f with SMTP id 71dfb90a1353d-5eaebd72abemr166243e0c.4.1792544949299;
+        Tue, 20 Oct 2026 18:09:09 -0700 (PDT)
+Received: from localhost ([2804:14c:5bc6:abb9:bc2d:a62c:e289:6aca])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5eae97df494sm1413817e0c.10.2026.10.20.18.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Oct 2026 18:09:08 -0700 (PDT)
+Date: Tue, 20 Oct 2026 22:09:05 -0300
+From: =?iso-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues <jose.guilherme.cr.bh@gmail.com>
+To: git@turtledev.nz
+Cc: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] platform/x86: asus-wmi: fix camera key LED on Zenbook
+ S14
+Message-ID: <atgQsQrbCvCGKKld@djouze-zen>
+References: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -93,14 +100,44 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
+Hi, Zane.
 
---- Comment #7 from Armin Wolf (W_Armin@gmx.de) ---
-Maybe you can zry to disable the auto repeat feature of the keyboard?
+Thanks for the updated patch!
+I've applied the patch locally and it works just fine on my Zenbook S 14
 
---=20
-You may reply to this email to add a comment.
+On Mon, Oct 19, 2026 at 07:35:18PM +1300, Zane Hunt via B4 Relay wrote:
+> From: Zane Hunt <git@turtledev.nz>
+> 
+> When CAMERA_LED is missing but CAMERA_LED_NEG is there, register
+> asus::camera as a read-only LED backed by CAMERA_LED_NEG, and read it
+> after every camera key event, sending a brightness_hw_changed event.
+> Registering the LED reads it as well, which fixes the LED being dark after
+> a cold boot with the camera disabled.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+With this patch applied, a write to /sys/class/leds/asus::camera/brightness
+returns no error, even though the led is "read-only". I'm wondering
+whether we should care about this?
+
+> +
+> +/* The firmware owns this LED; a write just resyncs it with the camera state. */
+> +static int camera_neg_led_set(struct led_classdev *led_cdev,
+> +			      enum led_brightness brightness)
+> +{
+> +	struct asus_wmi *asus = container_of(led_cdev, struct asus_wmi, camera_led);
+> +
+> +	if (!(led_cdev->flags & LED_UNREGISTERING))
+> +		camera_neg_led_sync(asus);
+> +	return 0;
+> +}
+> +
+
+Is this function necessary? We can't perform what the caller has asked
+us to perform, since there is no way to set the LED. If this "resync"
+functionality affects the behavior, please ignore this comment.
+
+Apart from the comments, I'm fine with the patch as it is. I just
+wondered these two things out loud.
