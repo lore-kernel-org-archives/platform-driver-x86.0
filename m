@@ -1,78 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792575667;
-	b=LTq658U3xQDq0K0cLKQS5PB0lxBZZPjFGIhZf/wD0ySHzOqGl1dCQP/ogpLFLbPPdvtA
-	 maREST2k7dKbK1VLZADJeJ73HgQh6aja6pfCmmmhxQEuH9HkwhXEDR/pe2OWgFPN9AX73
-	 FIfVe/2LOC4diXqqIs2ZASwpXwXIr7GRlWWTaHpgqgr1mlZXE7SGS40/ff1eHtkiG0yO4
-	 9xnHHCz365V9AUnP1M067wFrNm+toEXO2AxI5kkhgHWqPlELw6YR0/EosoAXoK4v1+IsN
-	 byK4M4fJyA7w2QFACZr9V7JjJSX5KemOy2In9VHcZiun7evhnkwxFuz7RKTujLsCH8w==
+	t=1792576122;
+	b=OxAf2WnX1OwQJ+IOZLszGYLWJBmJGlYuxziNV/+65OmiNPGADdQZDOtqsZSveqQGoUzW
+	 olR+eYMskvkxH3Y2lL3Zd4x+2Z7QjbtzvALnjis5aW1iKkHH8Yt5I8V6EBwk/64Sm20qR
+	 gP6b23qdegTj/UTbIGHBDvGYWkh1JYxisCg0/TkSmNqpHg6krsILlJa3A5SAfNFN6d5dC
+	 sVrL1JE/KE0AXaYMy+4gD/k0iySrbpTgLIlQCqzCIaTmZ3/RPLrv0xg0Dqo0daFVTN1Ze
+	 Q07PNCTHsaGrdwPkVKw8hZTG5kyUgPsCpXCCOzTunTiORuArJjRvaPDbtOr255fwjsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792575667;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792576122;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
 	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=GQxW6xENtXbMj8QQDuCNwAAh6QE3zn6BXyEAG556udM=;
-	b=Q+lJqH4SIzqqiHBQvWWmEAmGXstAfR5xhCa6Omu6JPZ8jJ4O878uyqw1sf2bDoVz1Mm9
-	 iWXsC8eR/MpA6QVBsiwRwX/b58dspf429cBz0eTsPgOFodN5mwh4Er/hG6kDs/6BwAYKv
-	 449BKJILXvLZjwQhBWQWosfnrEq5BIxrUxpB8vOBdjlsAXlW8aXeAPRHpHUC1joUbuWdW
-	 QgmQX/IjHw8LWzSRa3brSOigSWvPngIw5wl0F5dpYpliS3zC/i4vMdeYe6wNyChJYZd+B
-	 8JeCHoR2TjBmqjONaNr06CxvWw4l7M18yiJNV2cDkT/4bR/rOX61vsalKUiYFux0gAg==
+	bh=Xm+Ve/tXN2PYHWw15Ga7Gmdc7Cs7sLZm518+G2Vxh1Q=;
+	b=uL7ReUofGhFmvAIPLR2NFSF8NC/G2u3g5KKpKkT1MaaZZfPgtA9KRPGSYR0oF51KmRjq
+	 LTjiJXm3buZIINvCa6639q3/q3w/c03XTKIaLuWoIcpQBN/nQS6kq1zk5H1Ixu5+PDFrt
+	 lWzwbU00W2nmpiM5t8trhMPftkqqBK7viWYa3SzcLRMud5Nuarj8OZfyK+Va99//6T17t
+	 HnxRtTmnva97LPOoPJxKJOwZ6S6iqf4Y8+kiRbIIZkV5qyD+DQBRFPUhoabbGiGsecRjc
+	 lreZl7w67qomiybollSdgIfe4TmPYQctGKQHsTFuBYju4YKn0u6WffwZzeJJBEneVFg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="hM86O0k/";
-	arc=none smtp.remote-ip=198.175.65.20
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gXQbmU4B;
+	arc=none smtp.remote-ip=192.198.163.10
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817F1606A31B;
-	Wed, 21 Oct 2026 09:41:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 817F1606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAE2606A319;
+	Wed, 21 Oct 2026 09:48:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ECAE2606A319
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hM86O0k/
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gXQbmU4B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792575667; x=1824111667;
+  t=1792576122; x=1824112122;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=jWWtomYEmcE2WRVvCrQva78fyq2hiVCpAZfWf4+FIys=;
-  b=hM86O0k/TqhZFl1DEX4P7hhwtJ91DIPJzGa2NEtERr4pZfRSHn+ajZCU
-   9UXV5C34jL3PifhwE3iZEWcatgF1Q816eVJQeUV83VuNDZxQSU8m4ZC0Y
-   hXAJ+gL3+bMS6ZS1cxwuPK79MrLg6liHdIbUsK8RQotJxvLOdITte5/Lz
-   0TXu+vWdMTVZJglpTp5J8UXjyncYTAeMMpMhufSV7ZeARos4tuZ9fnwgq
-   Z6DBk4i9pfpfLTOt+hUqw+3SUmw2ec5r1IpmyEQk3l459HVjo6rPT/xRA
-   jpV4elgYFWkKvvS8k10Xags6GEF3+Vu92wH/ORrmhFKsUSHfrbU9aENlL
-   A==;
-X-CSE-ConnectionGUID: qMmBT9zjS86dfTucRozmJw==
-X-CSE-MsgGUID: XNA5n7G5S++rmVUBjf0Gyw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1306606"
+  bh=mYqES3D0TXPYP1B4ikr75vrMtc0qw0j02MmovWZ+a6Y=;
+  b=gXQbmU4BmgayKc8F/Ob5aCBT/T2fJnSTkkrwhy4IVLndzuWTTQDsWdzL
+   N6UePy6A0bkJBbs3Qnzwey4LrzRKqZffi+utaE/9NGUrejAp4401OsZpd
+   jlSkn5YUZPliSBlmbvepcmMllNyF0P2sqSHZC+XgPoNgVg7mIrZrJxM3h
+   g+vEk1BiWhBSh310OkAm9CR+V573xC45Xo/nHBCDa6QC4n3sUH6qbdbte
+   LlBGCEe3B1yMBhNSf8jjFRR2Er6uFhLftHvAQ9RQKldsC5zDwQi1tN/Dx
+   Tij9ETqMr3ZrojD3vResCQDmD1e9qlvSZsNxxyMp3cev+haMwnZAW7k7H
+   Q==;
+X-CSE-ConnectionGUID: l+wBijV8S0qHAb1yFPa7HA==
+X-CSE-MsgGUID: Z9VthFNOQcqPhKaNIdAREA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1194603"
 X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
-   d="scan'208";a="1306606"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 02:41:07 -0700
-X-CSE-ConnectionGUID: CuTzZbQvS3uG0gS4V7rB9Q==
-X-CSE-MsgGUID: 8Y1uQFNaSS2B3yPFqYXC3g==
+   d="scan'208";a="1194603"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 02:48:42 -0700
+X-CSE-ConnectionGUID: JMNunso3RSWEVRtxj0YqSw==
+X-CSE-MsgGUID: bf5g+90CQ5aaoqBy82Hpbw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
-   d="scan'208";a="4845540"
+   d="scan'208";a="3039664"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.75])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 02:41:03 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 02:48:38 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 21 Oct 2026 12:40:58 +0300 (EEST)
-To: Muhammad Bilal <meatuni001@gmail.com>
-cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+Date: Wed, 21 Oct 2026 12:48:32 +0300 (EEST)
+To: Wentao Liang <vulab@iscas.ac.cn>
+cc: Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+    luzmaximilian@gmail.com, platform-driver-x86@vger.kernel.org, 
     stable@vger.kernel.org
-Subject: Re: [PATCH v6] platform/x86: hp-bioscfg: fix heap OOB in
- hp_enforce_single_line_input()
-In-Reply-To: <a905f45d-aec8-569f-d5bc-718896f7c9c9@linux.intel.com>
-Message-ID: <273be4cc-ad7d-cdcd-de25-8d1439bed3e3@linux.intel.com>
-References: <20261016025352.230535-1-meatuni001@gmail.com> <29c3e4a2-9d6a-60cf-d06d-85152a40a703@linux.intel.com> <CADqcGBkV4iE_0j6usv6TvV3K9XGUa0L9J-ebUkTLsB0NBYzTHA@mail.gmail.com> <a905f45d-aec8-569f-d5bc-718896f7c9c9@linux.intel.com>
+Subject: Re: [PATCH] platform/surface: aggregator: Fix use-after-free in
+ ssh_ptl_shutdown()
+In-Reply-To: <20260917135607.2154130-1-vulab@iscas.ac.cn>
+Message-ID: <8cddfc6f-c357-c5f8-dc4d-8209d3c31668@linux.intel.com>
+References: <20260917135607.2154130-1-vulab@iscas.ac.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,36 +80,57 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1747451990-1792575658=:1258"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 17 Sep 2026, Wentao Liang wrote:
 
---8323328-1747451990-1792575658=:1258
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> ssh_packet_put() is called on the loop variable of both
+> list_for_each_entry() loops in ssh_ptl_shutdown(), freeing the packet
+> before the iterator advances past it. Use list_for_each_entry_safe()
+> and move pending packets to complete_p, as their links use
+> pending_node, so that each loop walks a single list.
 
-On Wed, 21 Oct 2026, Ilpo J=C3=A4rvinen wrote:
+It sounds like there are two independent issues as per your description, 
+so two patches would be needed.
 
-> On Wed, 21 Oct 2026, Muhammad Bilal wrote:
->=20
-> > Hi Ilpo,
-> >=20
-> > > Why use n variant?
-> > strnlen() keeps the read within count, which is the size of buf as far
-> > as this helper knows, so it does not depend on the caller NUL
-> > terminating the buffer. Both current callers pass a kstrdup() copy, so
-> > strlen() works too. I can switch to it in v7 if you prefer.
->=20
-> As the contract here is the input must be a string, I don't see any need=
-=20
-> to limit the length with n variant so I do prefer strlen(). Also, we know=
-=20
-> that it should not be longer than count anyway.
+> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/platform/surface/aggregator/ssh_packet_layer.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> index 3dd22856570f..871780828419 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> @@ -1983,13 +1983,13 @@ void ssh_ptl_shutdown(struct ssh_ptl *ptl)
+>  		smp_mb__before_atomic();
+>  		clear_bit(SSH_PACKET_SF_PENDING_BIT, &p->state);
+>  
+> -		list_move_tail(&p->pending_node, &complete_q);
+> +		list_move_tail(&p->pending_node, &complete_p);
+>  	}
+>  	atomic_set(&ptl->pending.count, 0);
+>  	spin_unlock(&ptl->pending.lock);
+>  
+>  	/* Complete and drop packets on complete_q. */
+> -	list_for_each_entry(p, &complete_q, queue_node) {
+> +	list_for_each_entry_safe(p, n, &complete_q, queue_node) {
+>  		if (!test_and_set_bit(SSH_PACKET_SF_COMPLETED_BIT, &p->state))
+>  			__ssh_ptl_complete(p, -ESHUTDOWN);
+>  
+> @@ -1997,7 +1997,7 @@ void ssh_ptl_shutdown(struct ssh_ptl *ptl)
+>  	}
+>  
+>  	/* Complete and drop packets on complete_p. */
+> -	list_for_each_entry(p, &complete_p, pending_node) {
+> +	list_for_each_entry_safe(p, n, &complete_p, pending_node) {
+>  		if (!test_and_set_bit(SSH_PACKET_SF_COMPLETED_BIT, &p->state))
+>  			__ssh_ptl_complete(p, -ESHUTDOWN);
+>  
+> 
 
-I only now notice Andy's comments which seem better suggestion in general.
-
---=20
+-- 
  i.
 
---8323328-1747451990-1792575658=:1258--
