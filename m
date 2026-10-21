@@ -1,76 +1,113 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792586429;
-	b=EcQUOBt2gjabhGSKN/BMGLBB5UBmmqT+5ETufUb5JdgNhNxM+ESJIGkg+xnmCl0VF+ft
-	 Ud48MFiu6T2DZO5Oc7+VRy6WXB86PyjF7/TmEXVsPMcXwXo5HONbf9e9yBMohXmwEpM2U
-	 44xoKtcZtEpVYhY8VbzeU+Gna1lOvUd+vWduafLR67J/Hm8wNo0OxpisdjDsDVZrXsCXU
-	 CUWUTzyh2LKTE3lYwGSKZ4IC2JVfnlK5lF93kDLDYDAwKwQHdqPMlvGRVyWd4ubUs+M36
-	 5eVza1+CzbCqXazu43RfWDgHce0I2RU5D5bCMsLbC5rM0h1oA8mOo6B+zA7316gNEiQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792586429;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=XK1aAp2qUs6uW3/Kbnpg/LwGVRC8xXD4h4lCmqqhJJg=;
-	b=jWbrdS98AMuJlqUnX/69o5NYK+EZU3u7zjzyjPxIVJd48UPdZGfGRzbMjVPA5a9aWiFo
-	 NTPRMpDAtYylXKbaC+leoxmPwZR9H9ApRpviSQ1rBtsw9jeyssvt/qCnX0UG7yn+uwac1
-	 dQVrtdQfcUNGjEEkhPZoKR8SNJeS8+1lbWMEJxRLEB3qkfhMy5gGZTwl4W1H6D0AtwEo+
-	 Cz3C5yGruiQOjKNb+ila2pf2evMdeDjICiG/lioEiEh/IVSgHfkNcxOkvD3awQvs8hFMR
-	 YtqQDpCYy3U5FgIsyoPR6BviiM/nivnjkzPdJ8YeVWUdUYGa9GRyeeYt/6iM1+U568A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=kyBT7MIH;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.66
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792589954;
+	b=wO6w7gOXAMhS2sr6SpOCx962XuI7WjwIonGxv1MMAbgWP46WPkEq2p2YU0bYw15GkSou
+	 f9Rk5colkRNCVtx45+DLPW5gMqxjByfse9Udp53IVacQ33gZJvARv0S1DtyoY90A9oNsk
+	 sq3YEdbigZX63AO3BZBJhhy2oWSgyUZcUBsdLx3BayJHUZ4AIVeQujItPyN5n4sgCJlzM
+	 wrnlpHlXTOxnKNbwt0uiB4Uip8oIqqbubvjrJGly9D+eTg8a3pOLVFpadLl43JrB80IRD
+	 uVFpq7HF4KE5wna1RumM0ZO2EVWLP95VW3ie1Ps9qsffKLNZZ8XbQNsjeq51vwun3eg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792589954;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Message-ID:Subject:
+	 From:To:Cc:Date:In-Reply-To:References:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP;
+	bh=8xqwOwW4tnu2Hh5iatDFQpq5avqjzl6UVLeiZ8m5Ir8=;
+	b=z4TMi4iaFnJV6bEKrc3CXQoLGO6O49a5/2th4BkykJuMwwv2tTlFrszYWam9dpnGmqE/
+	 K3kVDu1w7Z8/NVH0F2+cAra/Duo9jXI4pTA+clujmsXwLl6qgWDacM7nv49VhK3J6nna9
+	 Dr5r+ZPncouo6Pfm7WBbn2EsmNUL96VMw8Jgw/eBm8QeahWdSqUBAR7Ox+/iD6GcFz571
+	 hsp8uuRUuKjyNINt1lHunXLnK/q8kmntwpkk4xk/rdC76ezVO9C9FIQlp4v1QwfeBYIDn
+	 Qp4yTew4tJbY9z+hqGqeVkUdKNCGCJj/vSS8tANiPe5r5H+rlmAOzhfEo8aDKt9u+vQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=posteo.de;
+	spf=pass smtp.mailfrom=posteo.de;
+	dkim=pass header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=b14DOBKM;
+	arc=none smtp.remote-ip=185.67.36.66
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09E1606A31B;
-	Wed, 21 Oct 2026 12:40:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E09E1606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD775606A31A
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 13:39:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD775606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=kyBT7MIH
-ARC-Seal: i=1; a=rsa-sha256; t=1792586405; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=PrulwZYOz6GsbkxN5yCtCVdGL8KnpjbFYlU0UUgg1yUoBJloLxfaY7iM6ARxMTGxFnCVUW2eU4uZC1v2M2IqxL1/TGe79zBUMrskffTg199CS9cCj8IVHT+etNsrK4eCWzq9SILGQ8P4ABo/DYR10MxOtghMXelWHXDDBTJk5X4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792586405; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XK1aAp2qUs6uW3/Kbnpg/LwGVRC8xXD4h4lCmqqhJJg=; 
-	b=gHKDcpzusfFq9N5ckaTXRgwmu89+SlNZHm9fiqDXrH0yXO2WeSY3zGM1Dys9XpCdWiRfUy7uAYEJl3njaopKDYA7/00udyC4swAx4iVeK5oUMKwzrqbaffmGUjR//2r2ayun+pRyj87snyorTBH/FYMfNsG6ZyiuoCIEM2X1V98=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792586405;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=XK1aAp2qUs6uW3/Kbnpg/LwGVRC8xXD4h4lCmqqhJJg=;
-	b=kyBT7MIHYjryb/64EfgddoP5zM/77yBtwTwa3gnzo3bkAsjkINh8B7yQabAZQPXc
-	QJLmu87zxpcd6ZGMDrsnpcyG2MRaxZSlxklKk1sMZ6Cm2yBuOtqHy6nq4pH/9j6eYmW
-	jCxxKHgXvKat4TpmZCP9/0X+A89BsMKhYBUZEMsVXqETouuZnY9W/ic4dONnpGqHnuq
-	kjbJ3DuFHumXbViDeNP8r/bs1hJygBKfnBjecD9hEEMzrirnbJsBUNG+sKNFsmy2Ml4
-	N2E4sY7P17MlH0x85iw1tnaptmSxpBUEkeM1/SbVbM9NJbkLfYN8v+GOX7IMtHRxsJh
-	DEe1dNf8Cg==
-Received: by smtp.zohomail.com with SMTPS id 1792586401907139.97660660185863;
-	Wed, 21 Oct 2026 05:40:01 -0700 (PDT)
-Message-ID: <e212e07006249d68aa7b9df25c95581b307b10e2.camel@rong.moe>
-Subject: Re: [PATCH v4] platform/x86: asus-wmi: fix camera key LED on
- Zenbook S14
-From: Rong Zhang <i@rong.moe>
-To: git@turtledev.nz, Corentin Chary <corentin.chary@gmail.com>, "Luke D.
- Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Hans de
- Goede <hansg@kernel.org>,  Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
-Cc: =?ISO-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues
-	 <jose.guilherme.cr.bh@gmail.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
-References: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 21 Oct 2026 20:34:53 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=b14DOBKM
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 57D3B24010B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 15:39:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1792589945;
+	bh=8xqwOwW4tnu2Hh5iatDFQpq5avqjzl6UVLeiZ8m5Ir8=;
+	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP:From;
+	b=b14DOBKMQG5ll034i7gPx857so2Kb1Qotn8fqIwEB6KNZntI+J4IdHjHuu2ptZU21
+	 eaHDucZnpiACh3mwa1F0gV8SsMb1Fk9AXM63yDOywfQTvYTxpapz8VAExJt1BCEAkd
+	 xPdNKP565Ce52BsLhp7MpJn4UEJo8gPKOCmSM9zBjCOykm6J49Qss+AVoAjWhzNDgq
+	 CzQCcniLTAOfj0WKIo4QhYfOB01eLvO1iHxs/G11tNAPXotGFjghQg6xpUTIOAk3Qw
+	 Q4vwZhltccr6VW6t49uVJird6jrSA+FiWwxleO44qM5yVAGCEJ5R6ykOIqtau97xAX
+	 TqsWo8s3exkRA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4j8r3V1Xn9z9rxF;
+	Wed, 21 Oct 2026 15:39:02 +0200 (CEST)
+Message-ID: <0be5624e3778c3426f88daf2d67376435f474497.camel@posteo.de>
+Subject: Re: [PATCH v2 1/3] serdev: handle devices without an ACPI or device
+ tree node
+From: Markus Probst <markus.probst@posteo.de>
+To: ChunAn Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com
+Date: Wed, 21 Oct 2026 13:39:04 +0000
+In-Reply-To: <20261021092124.2306053-1-an.wu@canonical.com>
+References: <20261021092124.2306053-1-an.wu@canonical.com>
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+ keydata=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
+ jfGillcaQOqFZ3WwVqyzG1BUfTow==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-GE1p2TeaP8kkYjvMcrqu"
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,314 +117,235 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
 
-Hi Zane, Jos=C3=A9,
 
-Hopefully I am not too late to show up here.
+--=-GE1p2TeaP8kkYjvMcrqu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regarding the title, you are not fixing a bug of the driver, but adding
-support for ASUS_WMI_DEVID_CAMERA_LED_NEG.
-
-On Mon, 2026-10-19 at 19:35 +1300, Zane Hunt via B4 Relay wrote:
-> From: Zane Hunt <git@turtledev.nz>
+On Wed, 2026-10-21 at 17:21 +0800, ChunAn Wu wrote:
+> Driver-created serdev clients may lack an ACPI companion or device tree
+> node.
 >=20
-> On some newer Zenbooks (Zenbook S 14 UX5406SA, Zenbook S 16 UM5606WA) the
-> camera key turns the camera off in firmware, but the LED on the key never
-> lights up under Linux. These machines don't have
-> ASUS_WMI_DEVID_CAMERA_LED, so asus-wmi never registers asus::camera. The
-> firmware exposes the state through ASUS_WMI_DEVID_CAMERA_LED_NEG instead.
+> Add a creator-supplied name for these clients. Use it as a serial
+> modalias fallback and to match a serdev driver of the same name. Keep
+> returning -ENODEV for unnamed clients.
 >=20
-> Reading CAMERA_LED_NEG is what drives the LED: the DSTS handler reads the
-> camera state from the EC and writes it to the LED GPIO before returning
-> it. The set side can't be used, the firmware only accepts DEVS on this
-> device once per boot.
->=20
-> When CAMERA_LED is missing but CAMERA_LED_NEG is there, register
-> asus::camera as a read-only LED backed by CAMERA_LED_NEG, and read it
-> after every camera key event, sending a brightness_hw_changed event.
-> Registering the LED reads it as well, which fixes the LED being dark afte=
-r
-> a cold boot with the camera disabled.
-
-I agree with Jos=C3=A9 that the current ignore-anything-but-resync behavior
-has a weird semantics, especially considering that writing to the
-attribute has a side-effect that updates led_cdev->brightness
-unconditionally [1].
-
-Unfortunately, errors from an LED driver never reach userspace through
-brightness_store(). Also, not every code path of the LED core prints set
-errors to kmsg. This is also the default behavior of the LED core when
-neither brightness_set() nor brightness_set_blocking() is implemented.
-Thus, returning an error here really doesn't make much sense here.
-
-If we really want to ensure the brightness and trigger attributes are
-read-only to userspace, consult LED_SYSFS_DISABLE and do not implement
-brightness_set[_blocking]() at all, but do we?
-
-[1]: While the cached brightness never reaches userspace because of the
-presence of brightness_get(), it's still... very weird.
-
->=20
-> While at it, include <linux/container_of.h>, which this file already
-> relied on.
->=20
-> Link: https://lore.kernel.org/r/adg6GzkykThAB_4u@djouze-zen
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D221752
-> Assisted-by: Claude:claude-opus-5-5 iasl
-> Co-developed-by: Jos=C3=A9 Guilherme de Castro Rodrigues <jose.guilherme.=
-cr.bh@gmail.com>
-> Signed-off-by: Jos=C3=A9 Guilherme de Castro Rodrigues <jose.guilherme.cr=
-.bh@gmail.com>
-> Signed-off-by: Zane Hunt <git@turtledev.nz>
+> Signed-off-by: ChunAn Wu <an.wu@canonical.com>
 > ---
-> Changes in v4:
-> - Keep Jos=C3=A9's Signed-off-by from v2 and add his Co-developed-by
-> - Use my full name in the tags
-> - Include <linux/container_of.h>
-> - Reuse the existing asus::camera registration block, only the
->   handlers and flags differ
-> - camera_neg_led_available is now only set when CAMERA_LED is missing,
->   so asus::camera is always the CAMERA_LED_NEG one when it's set. That
->   makes the LED_BRIGHT_HW_CHANGED check in the event handler unneeded,
->   so it's gone
-> - Drop the explicit read at probe, led_classdev_register() already
->   reads the state through brightness_get
-> - Link to v3: https://patch.msgid.link/20261017-asus-wmi-camera-led-v3-1-=
-845a82373997@turtledev.nz
+>  drivers/tty/serdev/core.c | 36 ++++++++++++++++++++++++++++++------
+>  include/linux/serdev.h    | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+), 6 deletions(-)
 >=20
-> Changes in v3 (picking up Jos=C3=A9's v2, which had stalled):
-> - Rebased on pdx86 for-next
-> - Also read CAMERA_LED_NEG at probe, so the LED is right after a cold boo=
-t
-> - Register a read-only asus::camera LED when only CAMERA_LED_NEG exists,
->   with brightness_hw_changed on key presses (Ilpo's suggestion on v2)
-> - Comment on why the read is what updates the LED (also from v2 review)
-> - v2: https://lore.kernel.org/r/adg6GzkykThAB_4u@djouze-zen
->=20
-> Tested again on the Zenbook S 14 UX5406SA (BIOS 309), on Fedora's 7.2.9
-> kernel with the same change applied: camera key presses keep the LED,
-> asus::camera and the camera output in sync, and with the camera disabled
-> and the LED forced off, loading the driver turns the LED back on.
->=20
-> I used Claude while working on this. It helped
-> me read through the DSDT, drafted the changes on top of v2 and wrote the
-> test scripts. I went through the patch myself and ran the tests on my
-> laptop.
-> ---
->  drivers/platform/x86/asus-wmi.c            | 75 ++++++++++++++++++++++++=
-++++--
->  include/linux/platform_data/x86/asus-wmi.h |  2 +-
->  2 files changed, 73 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index fb1d4a0..93b51c8 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -17,6 +17,7 @@
->  #include <linux/backlight.h>
->  #include <linux/bits.h>
->  #include <linux/cleanup.h>
-> +#include <linux/container_of.h>
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
-> @@ -72,6 +73,8 @@ module_param(fnlock_default, bool, 0444);
->  #define NOTIFY_KBD_TTP			0xae
->  #define NOTIFY_LID_FLIP			0xfa
->  #define NOTIFY_LID_FLIP_ROG		0xbd
-> +#define NOTIFY_CAMERA_TOGGLE_1		0x82
-> +#define NOTIFY_CAMERA_TOGGLE_2		0x85
->  #define NOTIFY_KEYSTONE			0xb4
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index 7500efcdfc21..8354a4688fd8 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -29,13 +29,21 @@ static DEFINE_IDA(ctrl_ida);
+>  static ssize_t modalias_show(struct device *dev,
+>  			     struct device_attribute *attr, char *buf)
+>  {
+> +	const struct serdev_device *serdev =3D to_serdev_device(dev);
+>  	int len;
 > =20
->  #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
-> @@ -312,6 +315,7 @@ struct asus_wmi {
->  	u32 kbd_rgb_dev;
->  	bool kbd_rgb_state_available;
->  	bool oobe_state_available;
-> +	bool camera_neg_led_available;
+>  	len =3D acpi_device_modalias(dev, buf, PAGE_SIZE - 1);
+>  	if (len !=3D -ENODEV)
+>  		return len;
 > =20
->  	u8 throttle_thermal_policy_mode;
->  	u32 throttle_thermal_policy_dev;
-> @@ -2096,6 +2100,54 @@ static int camera_led_set(struct led_classdev *led=
-_cdev,
->  	return err < 0 ? err : 0;
+> -	return of_device_modalias(dev, buf, PAGE_SIZE);
+> +	len =3D of_device_modalias(dev, buf, PAGE_SIZE);
+> +	if (len !=3D -ENODEV)
+> +		return len;
+> +
+> +	if (!serdev->name[0])
+> +		return -ENODEV;
+> +
+> +	return sysfs_emit(buf, "%s%s\n", SERDEV_MODULE_PREFIX, serdev->name);
+>  }
+>  static DEVICE_ATTR_RO(modalias);
+> =20
+> @@ -47,15 +55,22 @@ ATTRIBUTE_GROUPS(serdev_device);
+> =20
+>  static int serdev_device_uevent(const struct device *dev, struct kobj_ue=
+vent_env *env)
+>  {
+> +	const struct serdev_device *serdev =3D to_serdev_device(dev);
+>  	int rc;
+> =20
+> -	/* TODO: platform modalias */
+> -
+>  	rc =3D acpi_device_uevent_modalias(dev, env);
+>  	if (rc !=3D -ENODEV)
+>  		return rc;
+> =20
+> -	return of_device_uevent_modalias(dev, env);
+> +	rc =3D of_device_uevent_modalias(dev, env);
+> +	if (rc !=3D -ENODEV)
+> +		return rc;
+> +
+> +	if (!serdev->name[0])
+> +		return -ENODEV;
+> +
+> +	add_uevent_var(env, "MODALIAS=3D%s%s", SERDEV_MODULE_PREFIX, serdev->na=
+me);
+> +	return 0;
 >  }
 > =20
-> +static bool is_camera_toggle(int code)
-> +{
-> +	return code =3D=3D NOTIFY_CAMERA_TOGGLE_1 || code =3D=3D NOTIFY_CAMERA_=
-TOGGLE_2;
-> +}
-> +
-> +/*
-> + * Some models (e.g. Zenbook S 14 UX5406SA, Zenbook S 16 UM5606WA) have =
-no
-> + * ASUS_WMI_DEVID_CAMERA_LED. The firmware handles the camera key itself=
- and
-> + * only exposes the state through ASUS_WMI_DEVID_CAMERA_LED_NEG, and rea=
-ding
-> + * that has a side effect: the firmware copies the state to the LED GPIO=
-.
-> + * Nothing else updates the LED, so read it after every camera key event=
-.
-> + * Registering asus::camera reads it too (via brightness_get), which set=
-s the
-> + * LED at probe. Setting it is no use, the firmware accepts DEVS on this
-> + * device only once per boot.
-> + *
-> + * Returns 1 if the camera is disabled (LED lit), 0 if enabled, or -errn=
-o.
-> + */
-> +static int camera_neg_led_sync(struct asus_wmi *asus)
-> +{
-> +	u32 result;
-> +	int err;
-> +
-> +	err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG, &res=
-ult);
-> +	if (err)
-> +		return err;
-> +
-> +	return !(result & ASUS_WMI_DSTS_STATUS_BIT);
-> +}
-> +
-> +static enum led_brightness camera_neg_led_get(struct led_classdev *led_c=
-dev)
-> +{
-> +	struct asus_wmi *asus =3D container_of(led_cdev, struct asus_wmi, camer=
-a_led);
-> +	int state =3D camera_neg_led_sync(asus);
-> +
-> +	return state < 0 ? LED_OFF : state;
-> +}
-> +
-> +/* The firmware owns this LED; a write just resyncs it with the camera s=
-tate. */
-> +static int camera_neg_led_set(struct led_classdev *led_cdev,
-> +			      enum led_brightness brightness)
-> +{
-> +	struct asus_wmi *asus =3D container_of(led_cdev, struct asus_wmi, camer=
-a_led);
-> +
-> +	if (!(led_cdev->flags & LED_UNREGISTERING))
-> +		camera_neg_led_sync(asus);
-> +	return 0;
-> +}
-
-I agree with Jos=C3=A9 that this should be unnecessary considering that
-asus_wmi_handle_event_code() has handled the event.
-
-Still, could you confirm whether pressing the camera key during s2idle
-toggles the camera state without emitting a WMI event or not? If so, a
-resync should be performed on resume.
-
-If there is really a need to preserve the manual resync functionality,
-it'd be better to use custom LED attributes to achieve sensible
-semantics, see led_cdev->groups.
-
-> +
->  static void asus_wmi_led_exit(struct asus_wmi *asus)
+>  static void serdev_device_release(struct device *dev)
+> @@ -88,14 +103,23 @@ static const struct device_type serdev_ctrl_type =3D=
+ {
+> =20
+>  static int serdev_device_match(struct device *dev, const struct device_d=
+river *drv)
 >  {
->  	scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> @@ -2227,11 +2279,18 @@ static int asus_wmi_led_init(struct asus_wmi *asu=
-s)
->  			goto error;
->  	}
-> =20
-> -	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
-> +	if (asus->camera_neg_led_available ||
-> +	    asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
->  		asus->camera_led.name =3D "asus::camera";
->  		asus->camera_led.max_brightness =3D 1;
-> -		asus->camera_led.brightness_get =3D camera_led_get;
-> -		asus->camera_led.brightness_set_blocking =3D camera_led_set;
-> +		if (asus->camera_neg_led_available) {
-> +			asus->camera_led.flags =3D LED_BRIGHT_HW_CHANGED;
-> +			asus->camera_led.brightness_get =3D camera_neg_led_get;
-> +			asus->camera_led.brightness_set_blocking =3D camera_neg_led_set;
-> +		} else {
-> +			asus->camera_led.brightness_get =3D camera_led_get;
-> +			asus->camera_led.brightness_set_blocking =3D camera_led_set;
-> +		}
-> =20
->  		rv =3D led_classdev_register(&asus->platform_device->dev,
->  						&asus->camera_led);
-> @@ -4733,6 +4792,13 @@ static void asus_wmi_handle_event_code(int code, s=
-truct asus_wmi *asus)
->  	if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
->  		return;
-> =20
-> +	if (is_camera_toggle(code) && asus->camera_neg_led_available) {
-> +		int state =3D camera_neg_led_sync(asus);
+> +	const struct serdev_device *serdev;
 > +
-> +		if (state >=3D 0)
-> +			led_classdev_notify_brightness_hw_changed(&asus->camera_led, state);
-> +	}
+>  	if (!is_serdev_device(dev))
+>  		return 0;
+> =20
+> -	/* TODO: platform matching */
+>  	if (acpi_driver_match_device(dev, drv))
+>  		return 1;
+> =20
+> -	return of_driver_match_device(dev, drv);
+> +	if (of_driver_match_device(dev, drv))
+> +		return 1;
 > +
->  	if (!sparse_keymap_report_event(asus->inputdev, code,
->  					key_value, autorelease))
->  		pr_info("Unknown key code 0x%x\n", code);
-> @@ -5210,6 +5276,9 @@ static int asus_wmi_add(struct platform_device *pde=
-v)
->  #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+> +	/* Fall back to the name set by the creator of the device */
+> +	serdev =3D to_serdev_device(dev);
+> +	if (!serdev->name[0])
+> +		return 0;
+> +
+> +	return strcmp(serdev->name, drv->name) =3D=3D 0;
+>  }
 > =20
->  	asus->oobe_state_available =3D asus_wmi_dev_is_present(asus, ASUS_WMI_D=
-EVID_OOBE);
-> +	asus->camera_neg_led_available =3D
-> +		!asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED) &&
-> +		asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG);
-
-When a device has both ASUS_WMI_DEVID_CAMERA_LED and
-ASUS_WMI_DEVID_CAMERA_LED_NEG implemented, camera_neg_led_available is
-false and the LED device can't benefit from brightness_hw_changed.
-
-It'd be better to decouple the brightness_hw_changed path from
-!ASUS_WMI_DEVID_CAMERA_LED, since devices with both IDs should be able to
-emit the WMI event.
-
-With that, how about adding a wrapper function that dispatches call to
-either asus_wmi_get_devstate(ASUS_WMI_DEVID_CAMERA_LED) or
-asus_wmi_get_devstate(ASUS_WMI_DEVID_CAMERA_LED_NEG) according to the
-IDs' presence? Then you can share the same brightness_hw_changed path by
-calling the wrapper function and eliminate the need of adding a dedicated
-brightness_get() callback in the same manner.
-
-IOW, the presence of ASUS_WMI_DEVID_CAMERA_LED determines the
-availability of brightness_set_blocking(), and
-ASUS_WMI_DEVID_CAMERA_LED_NEG determines brightness_hw_changed. The
-brightness_get() callback is the same thanks to the wrapper function.
-
-Thanks,
-Rong
-
+>  /**
+> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> index b6c3d957ec15..26baa0321eef 100644
+> --- a/include/linux/serdev.h
+> +++ b/include/linux/serdev.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/types.h>
+>  #include <linux/device.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/string.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/termios.h>
+>  #include <linux/delay.h>
+> @@ -19,6 +20,10 @@ struct serdev_device;
+>   * serdev device structures
+>   */
 > =20
->  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLIC=
-Y))
->  		asus->throttle_thermal_policy_dev =3D ASUS_WMI_DEVID_THROTTLE_THERMAL_=
-POLICY;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
-latform_data/x86/asus-wmi.h
-> index 4ea1ccc..5964063 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -57,7 +57,7 @@
->  #define ASUS_WMI_DEVID_MUTE_LED	0x0004001C
+> +/* Large enough to hold the KBUILD_MODNAME of any serdev client driver *=
+/
+> +#define SERDEV_NAME_SIZE	40
+> +#define SERDEV_MODULE_PREFIX	"serial:"
+Move into include/linux/device-id/, see below first.
+
+> +
+>  /**
+>   * struct serdev_device_ops - Callback operations for a serdev device
+>   * @receive_buf:	Function called with data received from device;
+> @@ -35,6 +40,9 @@ struct serdev_device_ops {
+>   * struct serdev_device - Basic representation of an serdev device
+>   * @dev:	Driver model representation of the device.
+>   * @nr:		Device number on serdev bus.
+> + * @name:	Name of the device, set by its creator, empty for devices
+> + *		which are enumerated from firmware, see
+> + *		serdev_device_set_name().
+>   * @ctrl:	serdev controller managing this device.
+>   * @ops:	Device operations.
+>   * @write_comp:	Completion used by serdev_device_write() internally
+> @@ -43,6 +51,7 @@ struct serdev_device_ops {
+>  struct serdev_device {
+>  	struct device dev;
+>  	int nr;
+> +	char name[SERDEV_NAME_SIZE];
+>  	struct serdev_controller *ctrl;
+>  	const struct serdev_device_ops *ops;
+>  	struct completion write_comp;
+> @@ -135,6 +144,28 @@ static inline void serdev_device_set_client_ops(stru=
+ct serdev_device *serdev,
+>  	serdev->ops =3D ops;
+>  }
 > =20
->  /* Disable Camera LED */
-> -#define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 =3D on (unused) */
-> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 =3D on */
->  #define ASUS_WMI_DEVID_CAMERA_LED	0x00060079 /* 1 =3D on */
-> =20
->  /* Backlight and Brightness */
+> +/**
+> + * serdev_device_set_name() - set the name of a serdev device
+> + * @serdev:	serdev device.
+> + * @name:	non-empty name to use, typically KBUILD_MODNAME of the client
+> + *		driver.
+> + *
+> + * A serdev device is identified by its ACPI companion, by its device tr=
+ee
+> + * node, or by a name set by its creator. Serdev devices which are
+> + * instantiated by a driver rather than by firmware have neither of the
+> + * former, so they must set a name before serdev_device_add() to be
+> + * identifiable. Doing so gives them a SERDEV_MODULE_PREFIX modalias and
+> + * makes them match a serdev device driver of the same name.
+> + *
+> + * Devices enumerated from firmware have no name and keep deriving their
+> + * modalias and their driver match from firmware only.
+> + */
+> +static inline void serdev_device_set_name(struct serdev_device *serdev,
+> +					  const char *name)
+> +{
+> +	strscpy(serdev->name, name);
+> +}
+> +
+If you set a name via `serdev_device_set_name()`, the actual device
+name will still be "serial0-0" or similar.
+
+I don't think we should change the actual device name though, as it is
+a potentially breaking change.
+
+Instead we should name the field "modalias" like in the spi bus. So its
+clear it doesn't represent the device name.
+
+
+Also add
+
+`const struct serdev_device_id *id_table;`
+
+to `struct serdev_device_driver`.
+This makes it more consistent with other bus devices. It makes it also
+possible to handle multiple serial devices (without fwnode), including
+storing different private data.
+
+You will have to define serdev_device_id first inside
+`include/linux/device-id/`.
+
+Thanks
+- Markus Probst
+
+
+>  static inline
+>  void *serdev_controller_get_drvdata(const struct serdev_controller *ctrl=
+)
+>  {
 >=20
-> ---
-> base-commit: ea40f1e9f07aab937b9a217633be7a1f66260394
-> change-id: 20261017-asus-wmi-camera-led-06a6e05f01e2
->=20
-> Best regards,
-> -- =20
-> Zane Hunt <git@turtledev.nz>
->=20
+> base-commit: 9e947d96915af63e28896caae85a81b74855621b
+
+--=-GE1p2TeaP8kkYjvMcrqu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJPBAABCAA5FiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmrYwGgbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyAAoJEDR2H/jnrUPSWKwQAJp9Uc5NOiveSjZseSnQ
+21s2zT2RQWawJhdkCwnIywYfmBrEPOryhvDwyCY5StmRL7A1DC3Yb+KWR+gGa3GB
+8CpI+DDeZ8U+G8Ws5hH4Pj4qzRsqvuVpV/yUaS7xb1T/2Hvjgqu6/1aaVO+aZIyL
+0udltcVz1GFdshGqx39oej9zASKroOQ7ElpEW3+Av9x48ryyAFaJHqUeBGdmkJKf
+OVuloCMRyY/cz7J8+ZoMV17MA0kuoDUypMJbbR3amnUEgeCBWLwDFfWsL/XC9Z1u
+T1PXUy8ScXRdBlJLJIutzNy+V3ihzWb8nE6Hrw6LRpu/St84Hlf69u/sBC1WKjim
+CxEEwBw1iYNfCVZGAMtcmmKboZmEQ0+a58aik75LsyPFbBNcxhKmVw+459G2GwKV
+UUsEf9Wsa6Q5qfNGnfmW/ke9tCilBDB4DPMA1ocslNUEyV7ItQRn/R0Hf1Q43eYT
+/DG3ctXr8HnCx7VuQQP7LtO2Y08jMZVc1XlKso3xw835d/eU+PNNZ7QE29txm0e4
+b94Oo8DBy4/uAMyaROY8vjSXGNDKcz1/HMl/Sjm2ZeVnuM8F76pueda/b5xj6CJ9
+WijCjR+n/62QDF7wF5M+M+XO49wpLEAKxpLYQ0Q+QqtptdEl0Y2P7mZYlYj/p6NU
+Dx147tFhKJWRZshey/k15GxF
+=jKaf
+-----END PGP SIGNATURE-----
+
+--=-GE1p2TeaP8kkYjvMcrqu--
