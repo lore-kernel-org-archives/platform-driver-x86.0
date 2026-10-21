@@ -1,116 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792564185;
-	b=t1GNS/WHnjU9oLiBoJsjZlVtLbJ/9UfbpW5VM1Yts6wRVQ9k3wS/nbmM++ztNJpkrGKo
-	 a04bVvE1dbA7EL0eV07kHWbc5N8KsQo4+FMJn/AjozdYzgyDWEKsOE73vEto/HBz2uXoL
-	 ubbBz6JVnGxCDIG8NYQH7DQN08Py50+HBKoPSJSGBCxHhR0toJgN5u+LhhyRvnfjGpZ7n
-	 LDYmMEFv7prFS24towckhVBhpHnHswZxUz0cZiF0PhVbxAPaVdzYz5G3MnSpioQ1ffxlJ
-	 xnzqHbZpzXDhYwUgBdUQLl8YZb4bIPPMC+x4X9JHdO4oxRZbBbZzGdCuhCqWWMulVvA==
+	t=1792564549;
+	b=04Yw/wcIgZMLIKlIZd6Vt/qanh+IKm+DLnD3SCabKgM3k7/yTAz6ZBQeGkWWRcRZETxv
+	 sGrRlRsejFNLdJkTWEo9ednu3FQ1Ek/cAeeV8Z6mrkDglgoqKdMhY5yXgWvfB9osFQMvC
+	 8EzK2FOUGBzJbyY/qrGLD/C2CbYWFtXQBoyO+HVjXoi+er3I+QsAEpwUWazKQYsynQzBe
+	 NN6MyVNdn6CQKQrPt2p+dGKhkjhG6Kg94TTJd06i6LA4d40r0FJI1oT8kWerO7NzsY/ym
+	 wsSV2L0lkMZKg1UAXgYK/qTdmP9VDr565BF6k+kpf5v5CVLcCLAPrD99kipSDRzR7kg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792564185;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Spamd-Result:X-Spam-Score:X-Spam-Level:
-	 X-Spam-Flag;
-	bh=6xSciQaDxf0QTUEgEMRd7J5MDPBVIhr/8xJSewisc+o=;
-	b=JkvtmyxjUYUYp5Aq0Drz+AaY/Z5j8VqjMl3w3hFCwnBKp4XFMhKXOK0VchS8TfzKndwu
-	 2mWuBY/mRJE0b0aEVhpfnLRyDDlDBAj8myedyL9+089i5GTLmrEflFhjPMQhOUv3EbGvf
-	 EKyPVWXuNvzi3MBwSXsIfMkBNt02n41P9iHiy/HL6/jkI4vfpFP5batkjihibiCoXv77O
-	 4vTvxgjWTJSSGPyyOn+8pr7EtxWhDoIx9d8NZVOrOshhrFcD6o2sm05UvRq3TTKAo4pgp
-	 OBWbeHzgFFi2vLiax0gAABLuXt9JjpYwm/dpXRDXGYvr4ui1/LgbOaF0s0p/FqxCsbA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792564549;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=nI2lebnxiMrb8Ko9vQ5ebF7pfSORHUslFYD8iWIpiYQ=;
+	b=yS6gR67bzQS9EzkU4almiX6691aiBG2sYDaUumUxyG1ywI3O9mvHRCwF9fvJs3VdofPN
+	 68w9M3PXaliiMmd9+/gmoX8GrYcHRf46myOpYponBrWtLW6zCkH3i3kxOK3IAhw7pyws/
+	 jLqm2QB3IuZtoZr0LgQHSos+RyVXjBjiJ55INhunOQSJwa9AZYlSsQlvRQoQFi1ST9heJ
+	 KBJqj24me2HUh/rVvZxl7Von9RsNggTor22yNKAhdHTd56REMzQMirln7gGLua8yOARb4
+	 SGgl0pgP4UmF8jV8X1slcGd6M+fVX27qL36XOBgqwzIgpNZlC7vHrrFa4cYEU0cb3Og==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=oKm0b3Nb;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=C0NATNtu;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=LHS6+9+C;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="04oPn/5g";
-	arc=none smtp.remote-ip=195.135.223.130
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ehEEkDKU;
+	arc=none smtp.remote-ip=198.175.65.16
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A5F606A320;
-	Wed, 21 Oct 2026 06:29:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 31A5F606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2106606A31C;
+	Wed, 21 Oct 2026 06:35:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E2106606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=oKm0b3Nb;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=C0NATNtu;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=LHS6+9+C;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=04oPn/5g
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 284A421E3C;
-	Wed, 21 Oct 2026 06:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792564183; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6xSciQaDxf0QTUEgEMRd7J5MDPBVIhr/8xJSewisc+o=;
-	b=oKm0b3NbJIuak3bLu4GjTFsLdiF+wx2fbEn/0tqha+e7v4uYmNJi/dpcA0ey2wYCP97Wwk
-	2dgHWzLRHK0iEJLN6+p30OuiBdlfQcpftGqgi06/pQvJv3VCp49rjGsI1ZkZbScp6mhRnl
-	XLJVcqQuNKjTptuqwxrRxOCrs/KODHo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792564183;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6xSciQaDxf0QTUEgEMRd7J5MDPBVIhr/8xJSewisc+o=;
-	b=C0NATNtuTk+SKlICRp1poOTkTCiEoTnh3KbBJ0MITD2rNq0oyRqJbsB5dELJUO+Ps8KTiV
-	eVihpDzgW13wiyBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792564182; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6xSciQaDxf0QTUEgEMRd7J5MDPBVIhr/8xJSewisc+o=;
-	b=LHS6+9+C914l56r6SHM8/9QgItdubsBAGsXk+rGhkWN0ySZADTz2L3a6tZgoZ6hAJn0K04
-	9JZlswT/Ei9Kvf0Mg2Gu4+u7x5Y/3sDatBPWMDsckoPe5yQOgL5iUYdofS4jc66tMekJae
-	CnzfsJhWlBFHJMow3AAbZYvRDnS3mFg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792564182;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6xSciQaDxf0QTUEgEMRd7J5MDPBVIhr/8xJSewisc+o=;
-	b=04oPn/5gHnozZPjBw/5CH80u/SSBHVDEc3b1PK1zGZ/XWv4iqZg99K4I7oRSRkeyh329yt
-	z23rUSdpkGn3FoBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED0B0134A5;
-	Wed, 21 Oct 2026 06:29:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NJGpMNRb2GqzVAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 21 Oct 2026 06:29:40 +0000
-Date: Wed, 21 Oct 2026 08:29:40 +0200
-Message-ID: <87mrs7ftwr.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hansg@kernel.org>,
-	Junrui Luo <moonafterrain@outlook.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: ibm_rtl: Fix potential OOB read at signature search
-In-Reply-To: <4d28c3ce-63f7-399e-9798-4f35e60c608b@linux.intel.com>
-References: <20261020130301.351768-1-tiwai@suse.de>
-	<818a69b8-785f-9eec-d93a-89c8833d94fc@linux.intel.com>
-	<87y0bsfocc.wl-tiwai@suse.de>
-	<4d28c3ce-63f7-399e-9798-4f35e60c608b@linux.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ehEEkDKU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792564549; x=1824100549;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=204hoocMj5W7Cd2xOMa0yV5znDDU09JGjewWWWcCJoM=;
+  b=ehEEkDKU/2FUTLo+H8BA0oBL03fzbN0r4vQaQvIFPL6wGXl/XlKLGBoj
+   8STKpoRX25mOmaSIMTVfe6MgWfIfKW6zm3M88ZO+gKS5xEasSM0jN9tgK
+   ps6WsUN2oGzRtCwf0QlN7J+p5iKxDdRvczye6p1kBwuTwdMUYx0GE7Hlk
+   gUs4igeGg0wNaHFs5uthmzh2sOaNCBPDmu72inRArp01E2v5Ta9Q556kC
+   cacoMX1iLtnkScIQa47iZMCwCRaGk9RuchfSBG/h2DnhjqcT0dmyjTD+6
+   +0Dss901in+jcQIdSZQQ8FMDCRlV84xNdISrvzKuuTF7Lp8VGzYB7yRdy
+   w==;
+X-CSE-ConnectionGUID: nHH3e11FRii9Q+v8LxW6Nw==
+X-CSE-MsgGUID: AY5FqkXwSHCI5iqWKNUu5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1273109"
+X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
+   d="scan'208";a="1273109"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 23:35:48 -0700
+X-CSE-ConnectionGUID: AZ92ABLjRo2tGbTW+uc0LA==
+X-CSE-MsgGUID: 16YwEvqvSDepxi1uDl/OLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
+   d="scan'208";a="2957654"
+Received: from cpetruta-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.24])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 23:35:46 -0700
+Date: Wed, 21 Oct 2026 09:35:44 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Muhammad Bilal <meatuni001@gmail.com>
+Cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v6] platform/x86: hp-bioscfg: fix heap OOB in
+ hp_enforce_single_line_input()
+Message-ID: <athdQF9HW4cDR7xI@ashevche-desk.local>
+References: <20261016025352.230535-1-meatuni001@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -119,87 +81,73 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[outlook.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,vger.kernel.org,kernel.org,outlook.com];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261016025352.230535-1-meatuni001@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, 20 Oct 2026 22:20:50 +0200,
-Ilpo Järvinen wrote:
-> 
-> On Tue, 20 Oct 2026, Takashi Iwai wrote:
-> 
-> > On Tue, 20 Oct 2026 15:52:28 +0200,
-> > Ilpo Järvinen wrote:
-> > > 
-> > > On Tue, 20 Oct 2026, Takashi Iwai wrote:
-> > > 
-> > > > The loop for signature search fetches 8 bytes at each check,
-> > > 
-> > > But that's not all it's going to access??
-> > 
-> > Oh indeed it access further.
-> > 
-> > > > while the
-> > > > loop count is calculated in 4 bytes unit, which means that, at the
-> > > > last entry, it fetches over the limit.
-> > > > 
-> > > > Correct the boundary condition to "ebda_size/sizeof(unsigned int)-1"
-> > > 
-> > > This seems even more obfuscated than this code already is!
-> > 
-> > Yeah, the driver code is really ugly, and I made a whip cream on the
-> > top :)
-> > 
-> > > I think it should do this instead:
-> > > 
-> > > (ebda_size - sizeof(*rtl_table)) / sizeof(u32)
-> > 
-> > Hrm, this will result in the omit of the last loop entry?
-> > 
-> > I guess it'd be better understandable rather by directly adding the
-> > offset in the loop instead of the counter.  Something like below.
-> 
-> The patch below looks fine sans one nit but could you please send it in 
-> own thread so it gets captured by patchwork & sashiko & etc.
+On Fri, Oct 16, 2026 at 07:53:52AM +0500, Muhammad Bilal wrote:
+> The input is copied with kstrdup(), which stops at the first NUL, but
+> the full write size is passed to hp_enforce_single_line_input(). With
+> an embedded NUL the helper reads, and can write one byte, past the
+> copy. Return -EINVAL if the input contains a NUL.
+>  
+> Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
+> followed by 4093 bytes of "B" to current_password 100 times returns
+> -EINVAL every time, without reading into the heap.
 
-OK, will do.
+...
 
-(snip)
-> > @@ -271,9 +271,9 @@ static int __init ibm_rtl_init(void) {
-> >  		return -ENOMEM;
-> >  
-> >  	/* search for the _RTL_ signature at the start of the table */
-> > -	for (i = 0 ; i < ebda_size/sizeof(unsigned int); i++) {
-> > +	for (offset = 0 ; offset + sizeof(*rtl_table) <= ebda_size; offset += 4) {
-> 
-> Nit, remove the extra space before semicolon.
+>  {
+>  	char *p;
+>  
+> +	/* buf is a string, so a NUL before count is invalid input */
+> +	if (strnlen(buf, count) < count)
+> +		return -EINVAL;
+> +
+>  	p = memchr(buf, '\n', count);
+>  
+>  	if (p == buf + count - 1)
 
-Will be corrected in the next submission.
+Let's look at the full implementation
+
+int hp_enforce_single_line_input(char *buf, size_t count)
+{
+	char *p;
+
+	p = memchr(buf, '\n', count);
+
+	if (p == buf + count - 1)
+		*p = '\0'; /* strip trailing newline */
+	else if (p)
+		return -EINVAL;  /* enforce single line input */
+
+	return 0;
+}
+
+With your enforcement in place the rest can be simplified and refactored.
+The hint is to use strnchrnul().
+
+int hp_enforce_single_line_input(char *buf, size_t count)
+{
+	char *p;
+
+	p = strnchrnul(buf, count, '\n');
+
+	if (p == buf + count - 1)
+		*p = '\0'; /* strip trailing newline */
+	else if (p < buf + count - 1)
+		return -EINVAL;  /* enforce single line input */
+
+	return 0;
+}
+
+(the above done with the less intrusive changes)
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-thanks,
-
-Takashi
