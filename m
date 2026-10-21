@@ -1,110 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792593172;
-	b=3J+0sxfQvmPKvGeiRMrNvMz6Fbsn/+F+gA19NmJ57W8I7Z0CRGrgF2o4rQi0oFwD9YjK
-	 GaMb25MqZW5l/JxxkB4RGljJTiQKMcRhO/qVr8ruYzuieMUKINeuChda/bzDtAesvujAk
-	 0fEFgg4PmKPrNTn6gqCWiAAR9nBkO/dVX7Dagz5unUCMSqVhmboKePxuLMddi/sS7TwXS
-	 sl4lCDWxbTQwIk4zJMbw5xxj6++JNyJE47HUy+L8ptYVLxHTnK95mvioclVRBwx1LIyrD
-	 yoCpikG0iHbX00T+yQO2R9q0KmU3xiXudJQSoVv0HJ7UZsBTTaEn/T0qIp4D625P0yg==
+	t=1792593183;
+	b=Gqy6bdD02xFD4vBqv7irDg3YyFQL6seh+GJcNnGuIp3aOj8l8BXP4AnmWKb//93lF2BA
+	 ezTKagolV+mQ98O2du7Fl7u0tqXIrib/n1Ow9PYNs6X9AR18YRwfve1mvUZgAVdNCZ7vo
+	 QqxHueFvdpkshgG0PiOFd5ubMCeXaqM4XlmXDbz3/OA5JJHirRI1ZBWN/1hwdxm8GhwgT
+	 b6/t0VJtFBVAKASZVaVSRfPcwYcr0I6MoXfLfPRnIqTP4I2iSsIq8Rilm+Poez6c9ZSi6
+	 64MNd509CyYwisyMPs3JzbF6/H+1uMq883EX9iwWJmz6IVJ15Dinoaq5QDKEF8t6vzw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792593172;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Gm-Message-State:X-Gm-Gg:
-	 X-Received:X-Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:From:Subject:To:Cc:References:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-Authority-Analysis:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=AM/NbC4D/S6IZaw9GLu+10DxkxGhyZ5Y2SK3qxYlc1k=;
-	b=dSuM0upClcCNPSKsvakO68uTP4s/sYiInvUIuLECySrlvaBxwdiwgEonDlgzuE9yyWUz
-	 GDg5iMXz7mum3Wmnp/dq+dGQGcuQcDZ7zkuwqReTXko88WjanXdagZOXbo9IklRA1L1mA
-	 VcyoiSmxM4P0LazmV/VioHSQzu7yFkmVF3sSNydQBbMnPbIqgSdytoKz8yrggeldXNs3a
-	 72eP2mPMLgbsVPRSlJSUO0qqThUuUj1cQCds5XyuFcqWCPC2x1bs58rP4l74IsdBmCbQt
-	 Y883ssTtNXk0bFrm86hPsLd8Hwd/LbzOe6PEwwh2Q+gCbeUmOykvcC+qsz29tsm6deQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792593183;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=kThb887yl4OaivErYCFX9FiyQChfD/n8kNnGpPqyOzY=;
+	b=jYJFNVNgGJay+F43iGFojAznFv/JR2QrcpS66Om/Lef/d2dIYAp6FpC7eCosCkBOdseD
+	 cTnTpskRLJkHXpobg786deH+mjfwmpZ3vj7Fn8/a5R3H6WVAVEB7NPpAZJJH33PABWE4M
+	 gJdTKWOm4m8Be1LhyGsAHSwRfk9sFEqhZ3oMqufUvSL4bqMFkf7UtTVnKD1JloHszzURz
+	 DD7yL9BgDyK/oChz51odSYmEkpJT2lg8BdJwqAJh01aJ88NsQUmEX+/zVqjHMnWXF1loL
+	 XdVLtoltNps11r6WPShn79d02kOCHbQiow+zbXfjjVr5VdP8pC6DXyrB8TQ2Kp8O0Ow==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=OoBEpexJ;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=RzUfWia4;
-	arc=none smtp.remote-ip=205.220.180.131
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aSCxxTBw;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507B2606A31B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 14:32:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 507B2606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E39A606A319;
+	Wed, 21 Oct 2026 14:33:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=OoBEpexJ;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=RzUfWia4
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69LEFDkf1313695
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 14:32:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AM/NbC4D/S6IZaw9GLu+10DxkxGhyZ5Y2SK3qxYlc1k=; b=OoBEpexJhcDUokcv
-	/oJpmHQE6KvS06+mnpwKXbS/cq9oVcerGhZKgecWB+oN9lSVwSVVaV10XG1g/pKa
-	P+0FZEJFZcSk9zd6oqOSNUilJpdMQKM7v1UzbINMwu5+v+/i4C5jf9YWlRy4tXny
-	DOAXeCNNT8YbjhxNqTOntZoRZWNLTGx9FQB/V5gM8DQ+fvFMvlavtbBRXWF6HeeD
-	SdSjwc9Sgcl8/R2wqRZfCaYCvOaAlTd3Y55fiuYQESJC08A8ahuoLJ8neleSCDLz
-	J88mC7sYbgR+y6clgNM9ItDyCt5kCeuWswrDZ1eTqIrcOFvbn8h0qoTaluURL29n
-	xD7+IQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hegs03m7w-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 14:32:51 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93f2373e9b4so90171785a.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 07:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792593170; x=1793197970; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=AM/NbC4D/S6IZaw9GLu+10DxkxGhyZ5Y2SK3qxYlc1k=;
-        b=RzUfWia4qA7nT1HJcy/RuUX4lmo21XKKgciNyKWslx3rXmwS58A2eXQG3JfJ5tDEbi
-         tcy0omQQAQqJX6MhJGf+Qptlpnb2frNgLu8O++qAGcaK0rriStjjUSC1ROvj5j60k2rJ
-         JjY75lnsCQkggw/1PAXvkf+2XapaEkqRR6kM+vtxE4Vu6H4KJZn6Ov6BJUx7pmZU2c4W
-         moVS4cjeeKbOAQ+s+g2svlHZd13gKiLrk2mEWgEBisqPu1sHma8X1BbvWSrpydBSDL+A
-         HyvYup+Pb9S43GboPguMe8I1QnJys7+7bjlaBOTe1AevmUHft9kLr22AglVo5QQ9kwWk
-         nYQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792593170; x=1793197970;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=AM/NbC4D/S6IZaw9GLu+10DxkxGhyZ5Y2SK3qxYlc1k=;
-        b=fQTZg6ZsBEOqykBrCYAydXOVjfacWt/Tzy6kdTVXVQi2qJKBk/8ZoBGxl1xVPdZHSr
-         /PPYPL5x/eGUkFZAE3ICwv4k/CNrFKzS1kr/CToYFU48x1glGW1DkyLIBq5i0hHXMiO5
-         YzwTMLUEq0tY5yY9PWH4qxRAzcHvTCfINaadYT7n2InnDur+j6JlOs1h9DlZNA44oT5q
-         i7uUkMPXLwfHv5O5CxEyPhsrz8ZfoJlji3WTgSDFvs8eXmg9EpKvscESaAauZaHp5qC1
-         /GChv9+rsa8okdrOBNeyHbjlJ00dvqEp/+YwToIyXxu/+5OMCn7kMN7Hw0qEE7uw0fYv
-         Su3g==
-X-Gm-Message-State: AFq9FYJHOW5s5P8yPOyqwgXX9HHkvf7tvKu0HcniM++k0aEuhs33jZR+
-	2TdKKDdzx51RdgeAho3gpiAdji+x4ztJQ76REe4mGaNoZZ0IybRgiHQyVLi2iln6pJQn3jRGHJS
-	HeLCv2K4WqDU+JSSzQb+Xzg9JMWEwaCDP8hJ9RUNqd73TSkXOG5MCxEwUopepRn7wpZ2sOPOWXX
-	JUxolBp3gM
-X-Gm-Gg: AYBFou0OhKTgMK2RKKVyXwIl2uiYcIwY8fCzhAilNnsbHhptJO0W9b8TSLE/9GTIHvF
-	g2PBvar26k0ugi74a6WanAgLu845uo2JLMrCBkvHTI6igFT2brEwlDo9YuYPS0qdyoGpkqNZ/Xz
-	kYlrgnIVcDwNzMhO5Ht2K2y3GGHGt59H0ZzCnVp5SGJKeRv09XKGo1JmGwk7XtBQfWi+s+2PdNN
-	ERJ2mf+GAccjlJTC4j5tFxn3ehSI/g6gLGsnj8O69z9e1RTm0I4x1ONj4rJfKT4waC4RS2NZodQ
-	ZlvEtXF7kj5eC0OMBmZlrInOtvbf790NxGWsGLm1cscHiAblllkBSYWYxwRQj/ek+UNUMgl8fCX
-	+u5P9YZ9cCzssszahggScYoRgGIAdPsOLyb7KlDJhnvfsZl97oxWpRrrgds8EPH0VWGObjgX0Gn
-	e6N5aUkzrylbMHf4RwFpBDsKPm35S9+v2xx5jQLqS24CFZacwMQi854tz2e59IgvGWCw==
-X-Received: by 2002:a05:620a:1711:b0:93e:f9ba:68fc with SMTP id af79cd13be357-93f57f65f39mr488312285a.21.1792593170248;
-        Wed, 21 Oct 2026 07:32:50 -0700 (PDT)
-X-Received: by 2002:a05:620a:1711:b0:93e:f9ba:68fc with SMTP id af79cd13be357-93f57f65f39mr488305585a.21.1792593169636;
-        Wed, 21 Oct 2026 07:32:49 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c468a1f2981sm10594866b.10.2026.10.21.07.32.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Oct 2026 07:32:48 -0700 (PDT)
-Message-ID: <2711274a-94f1-445c-9f8c-ef4bcc5987f4@oss.qualcomm.com>
-Date: Wed, 21 Oct 2026 16:32:48 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aSCxxTBw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DC941F000C5;
+	Wed, 21 Oct 2026 14:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792593182;
+	bh=kThb887yl4OaivErYCFX9FiyQChfD/n8kNnGpPqyOzY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=aSCxxTBwdQ5fBcPY9rOyetmvAKv8H1aMfpdlqo1ahvg7jvA41DV4oAyTeVEJN8l7q
+	 BeI7135qFLSfUYbAAv/R1tmN1WE1PYgOLR5EZAFITVLgCYQJP54u+dyIBVpW9PouP5
+	 wz++H6El1fqhqn3psexHFsz7He+Nk++0QuaEVrZIgcfqFN1YpFM+QYy/GMfB8WhR40
+	 SBMg1uA46xRCRPOE4EIiCwoi1w78JlXG5CcU2q4tLp0/8UNsW2deh/Gu3mPWyQ7TLg
+	 cuDTKyPv6Dc8b5VLMpHIbXMcm8Pm7tPTZqq9G7gTQVh0ciXQ7tsXiCA2WsXVm7M+YL
+	 7JhqXuotSdbUQ==
+Message-ID: <250bded6-2a51-457d-9bf2-24c299dbd7a9@kernel.org>
+Date: Wed, 21 Oct 2026 16:32:58 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,96 +52,212 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Subject: Re: [PATCH v2 0/5] platform/x86: int3472: Fix AVDD and add DOVDD +
- DVDD mappings
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <dan.scally@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Antti Laakso <antti.laakso@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-References: <20261020142243.25072-1-johannes.goede@oss.qualcomm.com>
+Subject: Re: [PATCH v2 1/3] serdev: handle devices without an ACPI or device
+ tree node
+To: ChunAn Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, markus.probst@posteo.de,
+ gregkh@linuxfoundation.org, jirislaby@kernel.org,
+ ilpo.jarvinen@linux.intel.com, mpearson-lenovo@squebb.ca,
+ derekjohn.clark@gmail.com
+References: <20261021092124.2306053-1-an.wu@canonical.com>
+From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20261020142243.25072-1-johannes.goede@oss.qualcomm.com>
+In-Reply-To: <20261021092124.2306053-1-an.wu@canonical.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=S/NMU4sP c=1 sm=1 tr=0 ts=6ad8cd13 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=pGLkceISAAAA:8
- a=BrVY_DFHyF5R_7dy03IA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIxMDA1NyBTYWx0ZWRfX4ACW7PqV2+U8
- sOOogML+J2P23GcotHOx6SKD+W7DfbDMyz0llDFSNLA7/aIyB6bVl8zzvbtP/SuPwwYalhvvSVg
- BIMItzqMESf+l5Id4gQR2glE339UIZMZViZHFgtihI/d8UyvvtIATKW9Kk0Cx57/xyHyTT1RTVf
- +/V/6idkB6xc5st0h5WELHx3F5Ky1tYAMqVwhm7kMsNSRUmzNRuAx5DvxuPrH/QgI3h5JkUojO1
- aNwi81b4Xv4raEUDWp7rwx+BXZ7k308KS7oBLEwdE59kGIRwWhRQNnU6/88j0EP5AddBeMkgS4h
- ezS7M0J2PUZuLyq0bYf2bBdVAKr+Vq4Hghqwa9FTzS2HNEcfBhbC/HknI9gluhB3fTCpgN6UX5e
- L4DaQzp2+oNdSiUnw/krMo50M4ygV6TaH0XkUhVzb7ztsLmP3nniflNbMf8mxv629QuCdh6VLoi
- XzXPICOMnnB5WyBkHAQ==
-X-Proofpoint-ORIG-GUID: D8ZZAya89GYTH_1C5l7cl2QwGCi845bj
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIxMDA1NyBTYWx0ZWRfX/KRyFQWGTEXE
- mbeetnSAnB4+P/m8iIillRcNrgcoVAFVdDdJ5zBC0aFrlz3Ygc9PuMtszcYqrAKhTzuLpPzuG8l
- z7X2Kc+qQ4sWgcdpaVzY3r3zM8l6UfQ=
-X-Proofpoint-GUID: D8ZZAya89GYTH_1C5l7cl2QwGCi845bj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-10-21_04,2026-10-21_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1015 priorityscore=1501 spamscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610210057
 
-HI,
+Hi,
 
-On 20-Oct-26 16:22, Hans de Goede wrote:
-> Hi All,
+On 21-Oct-26 11:21, ChunAn Wu wrote:
+> Driver-created serdev clients may lack an ACPI companion or device tree
+> node.
 > 
-> Here is v2 of the patch-set to sort out the problems with the Linux INT3472
-> code mapping the 0x10 GPIO type which is meant for AVDD to DOVDD.
+> Add a creator-supplied name for these clients. Use it as a serial
+> modalias fallback and to match a serdev driver of the same name. Keep
+> returning -ENODEV for unnamed clients.
 > 
-> This should allow the OV5678 front camera of the Lenovo Yoga Duet 7 13ITL6
-> to properly get powered-on by Linux, without breaking any existing setups.
-> 
-> See "[PATCH 5/5] platform/x86: int3472: Properly map the AVDD GPIO type to
-> a "avdd" regulator" for more details on this. The other patches are pretty
-> trivial prep patches.
-> 
-> Note this series is ordered so that if [PATCH 5/5] somehow does cause
-> regressions it can be easily reverted without needing to revert any of
-> the other changes (which should all be safe).
-> 
-> Changes in v2:
-> - Fix #include-s sorting in ov05c10 patch
-> - Collect various Reviewed-by tags
+> Signed-off-by: ChunAn Wu <an.wu@canonical.com>
 
-I forgot to collect Alexander's Tested-by tag from v1,
+For v3 of this series please include a cover-letter and explain
+why this series is an improvement over the` existing situation.
 
-From Alexander for the series:
+The dell-uart-backlight and lenovo-yoga-tab2-pro-1380-fastcharger
+drivers are both pretty special cases and here you are adding
+a chunk of code to the serdev-core for those special cases,
+so I wonder: why?
 
-Tested-by: Alexander Patrakov <patrakov@gmail.com>
+The current manual attach approach taking in these 2 special
+drivers works fine.
+
+What does this new approach gain us ?
+
+Also if you are going to do this may I suggest looking at doing
+some sort of of-compatible matching based on a compatible string
+inside a swnode ? I do not know what that would look like but
+that is something which seems like it might be generally useful
+also outside these 2 special cases.
 
 Regards,
- 
+
 Hans
 
 
 
-
-> Hans de Goede (5):
->   media: ov05c10: Support full range of power rails
->   platform/x86: int3472: Rename DOVDD GPIO type to AVDD
->   platform/x86: int3472: Add support for DOVDD and DVDD GPIO types
->   platform/x86: int3472: Rename avdd_second_sensor to
->     power_enable_second_sensor
->   platform/x86: int3472: Properly map the AVDD GPIO type to a "avdd"
->     regulator
+> ---
+>  drivers/tty/serdev/core.c | 36 ++++++++++++++++++++++++++++++------
+>  include/linux/serdev.h    | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+), 6 deletions(-)
 > 
->  drivers/media/i2c/ov05c10.c                   | 32 +++++++++++++------
->  drivers/platform/x86/intel/int3472/discrete.c | 16 ++++++++--
->  .../x86/intel/int3472/discrete_quirks.c       |  2 +-
->  include/linux/platform_data/x86/int3472.h     |  8 +++--
->  4 files changed, 43 insertions(+), 15 deletions(-)
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index 7500efcdfc21..8354a4688fd8 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -29,13 +29,21 @@ static DEFINE_IDA(ctrl_ida);
+>  static ssize_t modalias_show(struct device *dev,
+>  			     struct device_attribute *attr, char *buf)
+>  {
+> +	const struct serdev_device *serdev = to_serdev_device(dev);
+>  	int len;
+>  
+>  	len = acpi_device_modalias(dev, buf, PAGE_SIZE - 1);
+>  	if (len != -ENODEV)
+>  		return len;
+>  
+> -	return of_device_modalias(dev, buf, PAGE_SIZE);
+> +	len = of_device_modalias(dev, buf, PAGE_SIZE);
+> +	if (len != -ENODEV)
+> +		return len;
+> +
+> +	if (!serdev->name[0])
+> +		return -ENODEV;
+> +
+> +	return sysfs_emit(buf, "%s%s\n", SERDEV_MODULE_PREFIX, serdev->name);
+>  }
+>  static DEVICE_ATTR_RO(modalias);
+>  
+> @@ -47,15 +55,22 @@ ATTRIBUTE_GROUPS(serdev_device);
+>  
+>  static int serdev_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
+>  {
+> +	const struct serdev_device *serdev = to_serdev_device(dev);
+>  	int rc;
+>  
+> -	/* TODO: platform modalias */
+> -
+>  	rc = acpi_device_uevent_modalias(dev, env);
+>  	if (rc != -ENODEV)
+>  		return rc;
+>  
+> -	return of_device_uevent_modalias(dev, env);
+> +	rc = of_device_uevent_modalias(dev, env);
+> +	if (rc != -ENODEV)
+> +		return rc;
+> +
+> +	if (!serdev->name[0])
+> +		return -ENODEV;
+> +
+> +	add_uevent_var(env, "MODALIAS=%s%s", SERDEV_MODULE_PREFIX, serdev->name);
+> +	return 0;
+>  }
+>  
+>  static void serdev_device_release(struct device *dev)
+> @@ -88,14 +103,23 @@ static const struct device_type serdev_ctrl_type = {
+>  
+>  static int serdev_device_match(struct device *dev, const struct device_driver *drv)
+>  {
+> +	const struct serdev_device *serdev;
+> +
+>  	if (!is_serdev_device(dev))
+>  		return 0;
+>  
+> -	/* TODO: platform matching */
+>  	if (acpi_driver_match_device(dev, drv))
+>  		return 1;
+>  
+> -	return of_driver_match_device(dev, drv);
+> +	if (of_driver_match_device(dev, drv))
+> +		return 1;
+> +
+> +	/* Fall back to the name set by the creator of the device */
+> +	serdev = to_serdev_device(dev);
+> +	if (!serdev->name[0])
+> +		return 0;
+> +
+> +	return strcmp(serdev->name, drv->name) == 0;
+>  }
+>  
+>  /**
+> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> index b6c3d957ec15..26baa0321eef 100644
+> --- a/include/linux/serdev.h
+> +++ b/include/linux/serdev.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/types.h>
+>  #include <linux/device.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/string.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/termios.h>
+>  #include <linux/delay.h>
+> @@ -19,6 +20,10 @@ struct serdev_device;
+>   * serdev device structures
+>   */
+>  
+> +/* Large enough to hold the KBUILD_MODNAME of any serdev client driver */
+> +#define SERDEV_NAME_SIZE	40
+> +#define SERDEV_MODULE_PREFIX	"serial:"
+> +
+>  /**
+>   * struct serdev_device_ops - Callback operations for a serdev device
+>   * @receive_buf:	Function called with data received from device;
+> @@ -35,6 +40,9 @@ struct serdev_device_ops {
+>   * struct serdev_device - Basic representation of an serdev device
+>   * @dev:	Driver model representation of the device.
+>   * @nr:		Device number on serdev bus.
+> + * @name:	Name of the device, set by its creator, empty for devices
+> + *		which are enumerated from firmware, see
+> + *		serdev_device_set_name().
+>   * @ctrl:	serdev controller managing this device.
+>   * @ops:	Device operations.
+>   * @write_comp:	Completion used by serdev_device_write() internally
+> @@ -43,6 +51,7 @@ struct serdev_device_ops {
+>  struct serdev_device {
+>  	struct device dev;
+>  	int nr;
+> +	char name[SERDEV_NAME_SIZE];
+>  	struct serdev_controller *ctrl;
+>  	const struct serdev_device_ops *ops;
+>  	struct completion write_comp;
+> @@ -135,6 +144,28 @@ static inline void serdev_device_set_client_ops(struct serdev_device *serdev,
+>  	serdev->ops = ops;
+>  }
+>  
+> +/**
+> + * serdev_device_set_name() - set the name of a serdev device
+> + * @serdev:	serdev device.
+> + * @name:	non-empty name to use, typically KBUILD_MODNAME of the client
+> + *		driver.
+> + *
+> + * A serdev device is identified by its ACPI companion, by its device tree
+> + * node, or by a name set by its creator. Serdev devices which are
+> + * instantiated by a driver rather than by firmware have neither of the
+> + * former, so they must set a name before serdev_device_add() to be
+> + * identifiable. Doing so gives them a SERDEV_MODULE_PREFIX modalias and
+> + * makes them match a serdev device driver of the same name.
+> + *
+> + * Devices enumerated from firmware have no name and keep deriving their
+> + * modalias and their driver match from firmware only.
+> + */
+> +static inline void serdev_device_set_name(struct serdev_device *serdev,
+> +					  const char *name)
+> +{
+> +	strscpy(serdev->name, name);
+> +}
+> +
+>  static inline
+>  void *serdev_controller_get_drvdata(const struct serdev_controller *ctrl)
+>  {
 > 
+> base-commit: 9e947d96915af63e28896caae85a81b74855621b
 
