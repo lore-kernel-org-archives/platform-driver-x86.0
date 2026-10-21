@@ -1,47 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.61.103
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792593183;
-	b=Gqy6bdD02xFD4vBqv7irDg3YyFQL6seh+GJcNnGuIp3aOj8l8BXP4AnmWKb//93lF2BA
-	 ezTKagolV+mQ98O2du7Fl7u0tqXIrib/n1Ow9PYNs6X9AR18YRwfve1mvUZgAVdNCZ7vo
-	 QqxHueFvdpkshgG0PiOFd5ubMCeXaqM4XlmXDbz3/OA5JJHirRI1ZBWN/1hwdxm8GhwgT
-	 b6/t0VJtFBVAKASZVaVSRfPcwYcr0I6MoXfLfPRnIqTP4I2iSsIq8Rilm+Poez6c9ZSi6
-	 64MNd509CyYwisyMPs3JzbF6/H+1uMq883EX9iwWJmz6IVJ15Dinoaq5QDKEF8t6vzw==
+	t=1792594615;
+	b=efUx0mOTTl4B0EoaeNKO0R0bTHqjABAVl7eBMXS3hSPil1RK5HraqysVx+BuMbUI0rOG
+	 /Kufe/TtKlNpCsNUUpp6krb59E4lCcJyD3fVjx9JWb3+CJFt/1g95YCmcPRfozKivt2QX
+	 BRzVURB21Nd4GoHcpdL8xxM9u4gIs7UVVoFUPfcv62vq3aUmOgmBY9Ejb7S+S+i0INo0o
+	 QW3aUmkTDYWaNM2ZRkGellls6P5+okpHWgGaXrPPGeB1Zn2bt+m29/frz4Ly78VLvsmsy
+	 A6f5M0EWezgDns8C1tKNnDhRSKOeSwcxsO3j3Y9b/VoQ7R77pXh5SfI6ygOi+B9tLiw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792593183;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=kThb887yl4OaivErYCFX9FiyQChfD/n8kNnGpPqyOzY=;
-	b=jYJFNVNgGJay+F43iGFojAznFv/JR2QrcpS66Om/Lef/d2dIYAp6FpC7eCosCkBOdseD
-	 cTnTpskRLJkHXpobg786deH+mjfwmpZ3vj7Fn8/a5R3H6WVAVEB7NPpAZJJH33PABWE4M
-	 gJdTKWOm4m8Be1LhyGsAHSwRfk9sFEqhZ3oMqufUvSL4bqMFkf7UtTVnKD1JloHszzURz
-	 DD7yL9BgDyK/oChz51odSYmEkpJT2lg8BdJwqAJh01aJ88NsQUmEX+/zVqjHMnWXF1loL
-	 XdVLtoltNps11r6WPShn79d02kOCHbQiow+zbXfjjVr5VdP8pC6DXyrB8TQ2Kp8O0Ow==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792594615;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=+iZS27kP8nAiM5q/eM3mC7RULw+yzeHiTMTuDv45kL8=;
+	b=N6iB+S4ECV+ADXWHfXz+R20rg4D1APUw437CRkve8I5aEJFn9Yiwq+QrnAjiuO7CgKmx
+	 GqPZr9sJIOm3inSD7uWFsvtvO1MB19pbBYNVODikkWc91w4poPfEHAY6Ih0BtgO1fujT3
+	 5YemVnN2sft1bqdPA5kuqreuMq3I35p0RbNLmCEi0j0ZSVkbndm0FiGVWXCLuYEBhGFL+
+	 NUNYIEWq+i1PM8KqsMfoc51Kn8wRDFpHRLJ6DTr8WIDeovxCA+3LPsm90svw+SbGwtLBD
+	 17Qe9rOqOgNO9V8P5R7TpB/ooqQlJnH6beTFt/PNzGpdES0V+VSJOKvQWy4HknNWugw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aSCxxTBw;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=fZWrf7yb;
+	arc=none smtp.remote-ip=188.68.61.103
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E39A606A319;
-	Wed, 21 Oct 2026 14:33:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF140606A323
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2026 14:56:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AF140606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aSCxxTBw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DC941F000C5;
-	Wed, 21 Oct 2026 14:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792593182;
-	bh=kThb887yl4OaivErYCFX9FiyQChfD/n8kNnGpPqyOzY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=aSCxxTBwdQ5fBcPY9rOyetmvAKv8H1aMfpdlqo1ahvg7jvA41DV4oAyTeVEJN8l7q
-	 BeI7135qFLSfUYbAAv/R1tmN1WE1PYgOLR5EZAFITVLgCYQJP54u+dyIBVpW9PouP5
-	 wz++H6El1fqhqn3psexHFsz7He+Nk++0QuaEVrZIgcfqFN1YpFM+QYy/GMfB8WhR40
-	 SBMg1uA46xRCRPOE4EIiCwoi1w78JlXG5CcU2q4tLp0/8UNsW2deh/Gu3mPWyQ7TLg
-	 cuDTKyPv6Dc8b5VLMpHIbXMcm8Pm7tPTZqq9G7gTQVh0ciXQ7tsXiCA2WsXVm7M+YL
-	 7JhqXuotSdbUQ==
-Message-ID: <250bded6-2a51-457d-9bf2-24c299dbd7a9@kernel.org>
-Date: Wed, 21 Oct 2026 16:32:58 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=fZWrf7yb
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j8snC1nlwz8V2J;
+	Wed, 21 Oct 2026 16:56:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1792594607;
+	bh=yl4upSdxfFCRoQtZCDjpGwpDplqSFA5GP7jpyhB8f8E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fZWrf7yb937teLc66XyBfN6oH9oG6hSH/jZkv6PPdPO7DNWmaPNLDPvPLEuyn9YK2
+	 ActWoWsEaz5F3DBN7XFLWU6MamS9k2fg6osZqrdENJCJpSagnkPfp1yzCpufgQICE8
+	 sQ+UJl3hAfcJ81gorCbnqTPX2aQoZvIsVhyWoXHACzIlpaTo4s8KoYP2y4DP9LtcO4
+	 lr1aZkyjOF8oAOF3y+m8vZpc0+CbnUAR31JWDmoA9t/ICo0hOglmupRCRjRZV5R/d+
+	 ZdtOU2JIr4DWwwFxS+LUte/1gw/DXJsSXtr0otPRFEBSgub1P9FszGP4tDLuIkjVmp
+	 jdHZjzgMCfk7g==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j8snC14z4z8V21;
+	Wed, 21 Oct 2026 16:56:47 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j8sn95lXXz8svW;
+	Wed, 21 Oct 2026 16:56:45 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id F21435FA56;
+	Wed, 21 Oct 2026 16:56:40 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <bacdb44f-a4ab-4d55-a312-5648515f41ac@leemhuis.info>
+Date: Wed, 21 Oct 2026 16:56:39 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -52,212 +75,39 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] serdev: handle devices without an ACPI or device
- tree node
-To: ChunAn Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, markus.probst@posteo.de,
- gregkh@linuxfoundation.org, jirislaby@kernel.org,
- ilpo.jarvinen@linux.intel.com, mpearson-lenovo@squebb.ca,
- derekjohn.clark@gmail.com
-References: <20261021092124.2306053-1-an.wu@canonical.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20261021092124.2306053-1-an.wu@canonical.com>
+Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
+ cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
+To: Serhiy Shliapuhin <shlyapugin@gmail.com>,
+ "qby140326@gmail.com" <qby140326@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ regressions@lists.linux.dev
+References: 
+ <CADGd8gGYm5QmnDrjBzfWsWcKg9_ULAAV7o8RzDxi1p9doN5gCw@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CADGd8gGYm5QmnDrjBzfWsWcKg9_ULAAV7o8RzDxi1p9doN5gCw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179259460125.1334023.14108136300815828033@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: F21435FA56
+X-NC-CID: EkqYTOKKNXtDN8si/SXeNHw7l499vEnKlm59d1sQ+/wjwokCjK4=
 
-Hi,
-
-On 21-Oct-26 11:21, ChunAn Wu wrote:
-> Driver-created serdev clients may lack an ACPI companion or device tree
-> node.
+On 10/20/26 07:12, Serhiy Shliapuhin wrote:
 > 
-> Add a creator-supplied name for these clients. Use it as a serial
-> modalias fallback and to match a serdev driver of the same name. Keep
-> returning -ENODEV for unnamed clients.
+> On my RedmiBook Pro 15 (2021) none of the platform profiles exposed
+> by bitland-mifs-wmi can actually be selected. "performance" and
+> "balanced-performance" are always rejected with -EOPNOTSUPP, even
+> while the laptop is charging, and "low-power" is accepted but has no
+> effect. As a result power-profiles-daemon can only stay in Balanced.
 > 
-> Signed-off-by: ChunAn Wu <an.wu@canonical.com>
+> This is a regression. With Ubuntu kernel 7.0.0-38-generic [...]
 
-For v3 of this series please include a cover-letter and explain
-why this series is an improvement over the` existing situation.
+Can you avoid it by blacklisting bitland-mifs-wmi? And does it still
+happen with vanilla 7.3? 7.0 is long EOL upstream (and 7.2 soon, too).
 
-The dell-uart-backlight and lenovo-yoga-tab2-pro-1380-fastcharger
-drivers are both pretty special cases and here you are adding
-a chunk of code to the serdev-core for those special cases,
-so I wonder: why?
+Ciao, Thorsten
 
-The current manual attach approach taking in these 2 special
-drivers works fine.
-
-What does this new approach gain us ?
-
-Also if you are going to do this may I suggest looking at doing
-some sort of of-compatible matching based on a compatible string
-inside a swnode ? I do not know what that would look like but
-that is something which seems like it might be generally useful
-also outside these 2 special cases.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/tty/serdev/core.c | 36 ++++++++++++++++++++++++++++++------
->  include/linux/serdev.h    | 31 +++++++++++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index 7500efcdfc21..8354a4688fd8 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -29,13 +29,21 @@ static DEFINE_IDA(ctrl_ida);
->  static ssize_t modalias_show(struct device *dev,
->  			     struct device_attribute *attr, char *buf)
->  {
-> +	const struct serdev_device *serdev = to_serdev_device(dev);
->  	int len;
->  
->  	len = acpi_device_modalias(dev, buf, PAGE_SIZE - 1);
->  	if (len != -ENODEV)
->  		return len;
->  
-> -	return of_device_modalias(dev, buf, PAGE_SIZE);
-> +	len = of_device_modalias(dev, buf, PAGE_SIZE);
-> +	if (len != -ENODEV)
-> +		return len;
-> +
-> +	if (!serdev->name[0])
-> +		return -ENODEV;
-> +
-> +	return sysfs_emit(buf, "%s%s\n", SERDEV_MODULE_PREFIX, serdev->name);
->  }
->  static DEVICE_ATTR_RO(modalias);
->  
-> @@ -47,15 +55,22 @@ ATTRIBUTE_GROUPS(serdev_device);
->  
->  static int serdev_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
->  {
-> +	const struct serdev_device *serdev = to_serdev_device(dev);
->  	int rc;
->  
-> -	/* TODO: platform modalias */
-> -
->  	rc = acpi_device_uevent_modalias(dev, env);
->  	if (rc != -ENODEV)
->  		return rc;
->  
-> -	return of_device_uevent_modalias(dev, env);
-> +	rc = of_device_uevent_modalias(dev, env);
-> +	if (rc != -ENODEV)
-> +		return rc;
-> +
-> +	if (!serdev->name[0])
-> +		return -ENODEV;
-> +
-> +	add_uevent_var(env, "MODALIAS=%s%s", SERDEV_MODULE_PREFIX, serdev->name);
-> +	return 0;
->  }
->  
->  static void serdev_device_release(struct device *dev)
-> @@ -88,14 +103,23 @@ static const struct device_type serdev_ctrl_type = {
->  
->  static int serdev_device_match(struct device *dev, const struct device_driver *drv)
->  {
-> +	const struct serdev_device *serdev;
-> +
->  	if (!is_serdev_device(dev))
->  		return 0;
->  
-> -	/* TODO: platform matching */
->  	if (acpi_driver_match_device(dev, drv))
->  		return 1;
->  
-> -	return of_driver_match_device(dev, drv);
-> +	if (of_driver_match_device(dev, drv))
-> +		return 1;
-> +
-> +	/* Fall back to the name set by the creator of the device */
-> +	serdev = to_serdev_device(dev);
-> +	if (!serdev->name[0])
-> +		return 0;
-> +
-> +	return strcmp(serdev->name, drv->name) == 0;
->  }
->  
->  /**
-> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-> index b6c3d957ec15..26baa0321eef 100644
-> --- a/include/linux/serdev.h
-> +++ b/include/linux/serdev.h
-> @@ -8,6 +8,7 @@
->  #include <linux/types.h>
->  #include <linux/device.h>
->  #include <linux/iopoll.h>
-> +#include <linux/string.h>
->  #include <linux/uaccess.h>
->  #include <linux/termios.h>
->  #include <linux/delay.h>
-> @@ -19,6 +20,10 @@ struct serdev_device;
->   * serdev device structures
->   */
->  
-> +/* Large enough to hold the KBUILD_MODNAME of any serdev client driver */
-> +#define SERDEV_NAME_SIZE	40
-> +#define SERDEV_MODULE_PREFIX	"serial:"
-> +
->  /**
->   * struct serdev_device_ops - Callback operations for a serdev device
->   * @receive_buf:	Function called with data received from device;
-> @@ -35,6 +40,9 @@ struct serdev_device_ops {
->   * struct serdev_device - Basic representation of an serdev device
->   * @dev:	Driver model representation of the device.
->   * @nr:		Device number on serdev bus.
-> + * @name:	Name of the device, set by its creator, empty for devices
-> + *		which are enumerated from firmware, see
-> + *		serdev_device_set_name().
->   * @ctrl:	serdev controller managing this device.
->   * @ops:	Device operations.
->   * @write_comp:	Completion used by serdev_device_write() internally
-> @@ -43,6 +51,7 @@ struct serdev_device_ops {
->  struct serdev_device {
->  	struct device dev;
->  	int nr;
-> +	char name[SERDEV_NAME_SIZE];
->  	struct serdev_controller *ctrl;
->  	const struct serdev_device_ops *ops;
->  	struct completion write_comp;
-> @@ -135,6 +144,28 @@ static inline void serdev_device_set_client_ops(struct serdev_device *serdev,
->  	serdev->ops = ops;
->  }
->  
-> +/**
-> + * serdev_device_set_name() - set the name of a serdev device
-> + * @serdev:	serdev device.
-> + * @name:	non-empty name to use, typically KBUILD_MODNAME of the client
-> + *		driver.
-> + *
-> + * A serdev device is identified by its ACPI companion, by its device tree
-> + * node, or by a name set by its creator. Serdev devices which are
-> + * instantiated by a driver rather than by firmware have neither of the
-> + * former, so they must set a name before serdev_device_add() to be
-> + * identifiable. Doing so gives them a SERDEV_MODULE_PREFIX modalias and
-> + * makes them match a serdev device driver of the same name.
-> + *
-> + * Devices enumerated from firmware have no name and keep deriving their
-> + * modalias and their driver match from firmware only.
-> + */
-> +static inline void serdev_device_set_name(struct serdev_device *serdev,
-> +					  const char *name)
-> +{
-> +	strscpy(serdev->name, name);
-> +}
-> +
->  static inline
->  void *serdev_controller_get_drvdata(const struct serdev_controller *ctrl)
->  {
-> 
-> base-commit: 9e947d96915af63e28896caae85a81b74855621b
 
