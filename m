@@ -1,94 +1,114 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792695396;
-	b=jXj+bAODQbTmaQbmi4DMfmxiowR4VwQbxhCmvyCf92w1srQC3/taTcVzDQv+D7MQ5reU
-	 3/KnGqSA//xikXWGiO2YX9LJtWXGfNwMo1QnaiM4JnjD+US8Dr0+yq0LMDMcpTcCGXI8R
-	 7OehfCoz68JLaghvzuAEgXiFzG1UTTPSuEbf/JbRSLNWY/PWj+/mZ7Uv2yI6j5GdXZ3sr
-	 viy+LPL46j7FXRCnCdoMv6UeCnodudNiwomFouywP+me3EZLru+Up66YHmkkyoLCTp5BO
-	 enbkN35mQw23CenkyqaZWV6DPi660X+PHhz3qghLzsDZDZU9NmdxwxAbtq3+qf3lOYw==
+	t=1792697246;
+	b=fvqHL1ePxd1ffcHLHcddGz1wfcABMQ+o6JfHAxcVwduwQbUE554o0sbxYmkiDpX07uMV
+	 tXcUGR58ZzShw68QnBxv89vi24TRl9ZjpdNA75W+mziKthg3y+opgCfAGwX7hP2O3XuLq
+	 Ta7Dw6juAszveRPsVKPQKhxbiPVwiprt+A6VASBcSrIf+4jw2gmZHdOGLQWsECi9wUz8f
+	 4mkfN1CyEnQR89HE81xrm1ICCeuDq4oAVIOzTyDoqbA6V71DkO1K+hPt8V0K10usTjQ7f
+	 zSvsiP4MPfVAlzN210HC8QGpw3E8RkPe2So73Umd6/6CG28uczIuk2wup8QB/rkgOdA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792695396;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792697246;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=XZ/amS4mzaM2HGomiZj/qSvCCV52gQUu/7cJw6R1VsA=;
-	b=UJngiGE28inKl6l4Et6ef08uxdtN3YgaGpowZTe1j75upgnhvHKz/EdTFmSMcN8IEVKz
-	 3awR0hm11rnbeM97wVzj4ZjJZ3qNji4a0P2dj3/moA21ok6xOtxtc25LOnn4k5ulE6w6f
-	 atZ6yKMMxz0j7yGGra5NKB7IuB9aTuF6Zpz9YkSeiKaeQidSmJSixZJlAuwQtRPkftuFF
-	 dY6HbbGTKdaplJENO5DISZffhyAzzdyXiYswg3PoyKRDSfh/bWZxKVJvhrDrdi7Mmklzh
-	 zvsVYn2uEHHO/iUpC4KHhwP+ySkit3PQQRLErNHrTDBApTbeQgaW95bfiU+RD15tAzw==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=UvQHobgH8Zb4rHJc4CXfEofhf12rBgJ9G+UkmAWeH18=;
+	b=RtLmVVc1JGpu1pa4aflHoEDCchD850JUQBe7ZdRvMedSMTZX72JGf7dHZTMGs5DTV4WE
+	 WGn5lQFWOzbOd0vUQO+cp74w8F94bQ9nAmp2U4E6GWRpxJi3XHEj7ac3GwjOPln5e95Qw
+	 6GI+/Zal+dw+ORN5locTuAlyJnwcKd2LTzfj9TQvICpct372G0yfEAvG70ihELbNtxyOt
+	 KB9g0cMM9S4OAQtzM2Wrg+XC6q8HcEcHsUZxoG83aqQxEa4K2RqxnMmr5cCcIJdNbnlvY
+	 bYlgZDB0ouvJ2YC3hve20y4LxP8cBxg6viswfta1fCbRZiBZNidYdGCs2jPQbDZA5Bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=c3Prp0lh;
-	arc=none smtp.remote-ip=209.85.216.50
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	dmarc=none header.from=thinkoid.org;
+	spf=none smtp.mailfrom=thinkoid.org;
+	dkim=pass header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=zhfZQOTK;
+	arc=none smtp.remote-ip=209.85.222.178
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA59A606A31A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 18:56:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA59A606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C8B606A31D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 19:27:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 57C8B606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=thinkoid.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=c3Prp0lh
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3ace9e6e1a5so709219a91.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 11:56:35 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=zhfZQOTK
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-93f1e5d7450so10821885a.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 12:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792695395; x=1793300195; darn=vger.kernel.org;
+        d=thinkoid-org.20251104.gappssmtp.com; s=20251104; t=1792697239; x=1793302039; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=XZ/amS4mzaM2HGomiZj/qSvCCV52gQUu/7cJw6R1VsA=;
-        b=c3Prp0lhvRU4qfuNt/z6tVRlfEH2iLh78Al0meWmPdrJyHt4AAxRFCnNb/siRbMFcZ
-         jyMRuznMsiZbGanzNOpEASOXm8ABddDP5walet8cbmlrfICo1FUGPKIVfmGXlCIKC/qe
-         g72oNvQPbmFGpwLqVaZS2g2wAQ57+64p7yvJhdCYdvW/DM6io2NZkfMIt2QEGZNnz3DB
-         FJZa0aPVI27WSKD86Eni0w7HuVhj3mUVQfxmZiwbHOZOIHfgrqwTj3c08BxaPla7MMYc
-         ffyujG4/O977f55SIY1GY2Q305AEanINsiySrBNZoDQXkMlZlDlSu+h+YYS3nna/3O5A
-         zCdw==
+        bh=UvQHobgH8Zb4rHJc4CXfEofhf12rBgJ9G+UkmAWeH18=;
+        b=zhfZQOTKLhfJXm5LG7URakF+NxBk8bk9htV9atsIWMIUWrU23y7Sfypddxdak+rC3i
+         PMYT/8uaey1X82aqk34aRLpVr2lJfr0AV634/gAmPx50zofgvvaTW+QNmNoCja4ZjVaL
+         02Nx8Bpbt+v1DsTKhFrexDMQGgpCYQjPIHqvvbCxam1OokDmFvqL2Zf8/2AY3S3aLOUW
+         jTRqtHAprU7w3Ia1FulRoOXZLlwn71GzVkf+/kB8LtXmBY1Y6fhfUSWgxlpTFRVIU4xE
+         s2NVxm4x4w5wU+lSdKeE4oHSfpC5VkQdC1Lh7ikpJgQbh1u39glIH6sgf/+glyqalNrw
+         6qNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792695395; x=1793300195;
+        d=1e100.net; s=20260707; t=1792697239; x=1793302039;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=XZ/amS4mzaM2HGomiZj/qSvCCV52gQUu/7cJw6R1VsA=;
-        b=rKKkYiaFuKkYMpZhCeQ4no92b93Kai6iimcDQYrvxJqwsaxdnWweTJMf95v8b0ziwr
-         V0MoGn01pmLkiXeQfQ/cYBk3ukO4S67giJ+BNHvEWRoP3dhpDpoyrFPlTIMH0bpd1hMs
-         ZIbwLWpzP0TVnSyHHjnCpKsOSpJhzraRNlmxbb6+EgUFRCYT09xTLG4iFD0E2ZjNev/V
-         1TU7GUmQgz7gmtILH8S99/G+gbUo4Wi3y2TwK9qjmOfK3Y4NTfKQZzo52ZLDJsOho8+8
-         gyx4HdXJUYZLfe/Eh4LMPtCQnGUueVOQ7FDb/5CF8kF9F/xdzITJ/DhGYwgovQBNgY+h
-         90GA==
-X-Gm-Message-State: AFq9FYLIePjqfQMO/wL/NExSi98r4/L0iT2qbBM8Ve6x1aVkxMvXBDtk
-	FcBLEiQ8QKb75D3qeJkRCGR/zvxgS6sJ5rIPzMqlfxVGwW66STQqAoi2
-X-Gm-Gg: AYBFou0TQccvQjpd8ZpbopgLHcslv2D/lUBGzOldp/lq4n/+WoIJbDn0M/THVpMCWY6
-	cP53cEGmoqAMgV/BrozibAv5gsCG0nSIIQ8soiZ11vhLw8SfU9S4zGEjdkK9CvlBhGc7fo5pGpd
-	AR0eOIb/CPTLwNEL90WiXn4tqzTMqTT3pXop0l9bDfUa7tPMv9/SycWldM2F7OcXFap+0l5IEz9
-	8JBDsYCuEPkejOp4+NdYvEpPfq3E0oPCDRp98iVQb2/87N6Qa3lungzcm+HtUL5VqdondYm2PDu
-	aiFerrqKXU5P2IXgzZkru69eA8AQHnmLhYaTP7jG1hi/pZElFpr/jGJO7nXLKevQZTL1dSd4zOj
-	xUFGKyKpUD6f1RcSS22VSS+W+czWlTzp7GxkZc6IHroZMHkKFD1UiHxNYPBwO6XhCLgD8yBGRsq
-	U1dC+cX13d68pruiC0t/rYC3XAhQXihrnDnFxWjuilbHk1lpH6jFPjxYM30ZqezN1/OUJ97OcxI
-	5o35yCiQjQNwSkrDQiHPHL0kRkHxujBi9tHpbZf5Zk1rzdSy6qge6ua
-X-Received: by 2002:a17:90b:2802:b0:3ac:b3c7:de04 with SMTP id 98e67ed59e1d1-3ada6c9d389mr1997279a91.34.1792695395293;
-        Thu, 22 Oct 2026 11:56:35 -0700 (PDT)
-Received: from Lucy-Fedora ([103.182.96.89])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3adca08e785sm176123a91.0.2026.10.22.11.56.31
+        bh=UvQHobgH8Zb4rHJc4CXfEofhf12rBgJ9G+UkmAWeH18=;
+        b=zMrZVlOT4Y4F+fbngejlqRJ6BPPnua+jdI2LzKEGr4T1mVIWbK3BQeJrHUWtA8YQY4
+         sO39Zqn5esnFPidy0cDQmlotDq7+kGaCAwoZXrVoyftjC1nkXQ1yP/fQgZSSnbOna9at
+         AOEClKstmqamAl9VLoZL8dcW9T1ZjjWPUxrK6zKe5tdwLxbZO/joiQKdD8VnL6KZwrM3
+         4lsmvEjhumme0V7CWTqcPn982mDALgz1oa6N12M7nGOydyiXRmYKn7tI+82SF/vaYKua
+         Yg9DQToAQXjiWhLlKAU+wk+tzKYi8YZY32M6BtflGuvAGtwSVBO/UU5PBOwqtdWw/FwU
+         7vLg==
+X-Forwarded-Encrypted: i=1; AKwUvBzoFs2Nt3Z52L19LcgS5isR9uyYy9/EZX/eYL00x/CR0RamEP4LcYjV/finZdjCDSt9/fBPQVbkk7hc2wsg9982Cjdw@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ3A985+gqeG8LKgXj3+paWhpY+6IipZUzo7qvyy3wpaIGEtUYc
+	YldvwOHTbExLN3H7gtmdRcQLM8G0w88v5WV/3LhsQ9YfpJq6jOLMuW3g3hqEF2HMzCg=
+X-Gm-Gg: AYBFou1T98YW2rD4tqf8gR/wuXZ1EY5IJ798t+ax3DXsd6+1x9Sxj/eGH8zHHFoKgO2
+	GaaUD6C/uj6lc5JjOku6ANmFrPbKdIsRMBJxIMHCT5NkN6IpaskIAM90F6mHvQIRjGzZkCz9Iae
+	91WUVSugAsZQ0Cd4rzgZZzp+ECLNGzujIj+bRCM4MG9ZkDVAQogzD7cIxAbtPYK2ZVcx28sIi3E
+	PtcxqyEVzp9qsuaDc6G4le0iWusHU0BsRErLc85Bu9VzvmmtDvlXr8OYZlhR5z+d3cosLROP/ua
+	aC/oFfaipjzPnF+N3OptN+7Gf0UkKyBDKDRx0S3LONh7PMifL7nEWIa1PoXiX9ZCMrSjkTxYBBK
+	otXmCQGEmstTt4VNFpwc0fFgWTn9a1f+jr00hrmu0Ac+k3kWDu7d6Hxs+UbBB/t0+Zgw5lUPYCM
+	1aDkyzEIwPyC/LkorGOvMJ3avbxA5O+u2J1TtGhfFsaUhU/7ZD95yrhv210NjWJHJDfcbWiCMOK
+	/4EzkyrjRs+NfWGj2RamjM1/iZWunEd9YS0
+X-Received: by 2002:a05:620a:44d3:b0:93e:fa30:f1dc with SMTP id af79cd13be357-93f6f8c01cemr79549185a.72.1792697238908;
+        Thu, 22 Oct 2026 12:27:18 -0700 (PDT)
+Received: from behemoth ([2605:a601:9b7d:cc00::c])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93f6fb82b87sm30290185a.13.2026.10.22.12.27.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 11:56:34 -0700 (PDT)
-From: Lucy Wong <lucywong2778@gmail.com>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
+        Thu, 22 Oct 2026 12:27:18 -0700 (PDT)
+From: Liviu Nicoara <lnicoara@thinkoid.org>
+To: Aleksandrs Vinarskis <alex@vinarskis.com>
+Cc: Michael Burch <me@michaelburch.net>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Abel Vesa <abelvesa@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Armin Wolf <W_Armin@gmx.de>,
-	Lucy Wong <lucywong2778@gmail.com>
-Subject: [PATCH v2] platform/x86: add Xiaomi WMI key driver
-Date: Fri, 23 Oct 2026 02:56:19 +0800
-Message-ID: <20261022185619.40188-1-lucywong2778@gmail.com>
+	platform-driver-x86@vger.kernel.org,
+	Abel Vesa <abel.vesa@oss.qualcomm.com>,
+	Tobias Heider <tobias.heider@canonical.com>,
+	Val Packett <val@packett.cool>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	linux-hardening@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
+Date: Thu, 22 Oct 2026 15:27:09 -0400
+Message-ID: <20261022192709.12149-1-lnicoara@thinkoid.org>
 X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20260601151404.93049-1-lucywong2778@gmail.com>
-References: <20260601151404.93049-1-lucywong2778@gmail.com>
+In-Reply-To: <NCQ5O8k2_GpmJZBjDzgZL67uwdiYmmuSudO9VmdRaFTDq0u7aec6at00VYbzdwwSVvgJnLnGxewwp_TVO9oTjM2pAjP_LoiURf9JCIKXB-w=@vinarskis.com>
+References: <NCQ5O8k2_GpmJZBjDzgZL67uwdiYmmuSudO9VmdRaFTDq0u7aec6at00VYbzdwwSVvgJnLnGxewwp_TVO9oTjM2pAjP_LoiURf9JCIKXB-w=@vinarskis.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -100,220 +120,98 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Certain Xiaomi laptops expose extra function keys through a single WMI
-event GUID (B74AF83F-8B2F-4069-ACAC-36D176F62FC0). Unlike the existing
-xiaomi-wmi driver where each key has its own GUID, here all keys share
-one GUID and the event buffer encodes both an event type and a keycode:
+On Thu, 22 Oct 2026 17:07:25 +0000, Aleksandrs Vinarskis wrote:
+> I do not think the left charger you identified is correct - how did
+> you arrive to that conclusion? Curious to compare to my method.
 
-  buffer[1] = event type
-    0x02: press/release keys (5 keys with abstract icons)
-    0x03: firmware-handled toggles (touchpad, Fn lock)
-  buffer[2] = keycode within that type
+I am afraid my method was simpler and coarser than yours: one run per
+port, nineteen samples ten seconds apart, the charger feeding the
+system only (battery at 96 % and not charging), on a 7.2.6 kernel
+with all four GPIO channels in one DTB. The deltas over three minutes:
 
-The keys with abstract icons are mapped to programmable macro keys for
-userspace to bind. The touchpad and Fn lock toggles, as well as the
-keyboard backlight level events, are handled by the firmware and are
-ignored.
+Channel                Left charger   Right charger
+0x14b  AMUX2_GPIO          +1.6           -0.9
+0x145  AMUX2_THM           +0.1           +3.4
+0x146  AMUX3_THM           +0.8           -0.1
+0x14a  AMUX1_GPIO          -0.2           +1.3
+0x144  AMUX1_THM           -0.1           +0.2
+0x148  AMUX5_THM           -0.2           +1.2
+0x147  AMUX4_THM           +0.1           +1.8
+0x14d  AMUX4_GPIO          +0.0           -0.0
 
-Link: https://lore.kernel.org/platform-driver-x86/20260601151404.93049-1-lucywong2778@gmail.com/
-Signed-off-by: Lucy Wong <lucywong2778@gmail.com>
----
-Changes in v2:
-- Convert to .notify_new and set .min_event_size
-- Ignore firmware-handled backlight and toggle events, which removes the
-  toggle deduplication state
-- Add the missing select INPUT_SPARSEKMAP
-- Name the event codes and align the defines
-- Add the dev_printk.h include
----
- MAINTAINERS                            |   6 ++
- drivers/platform/x86/Kconfig           |  12 +++
- drivers/platform/x86/Makefile          |   1 +
- drivers/platform/x86/xiaomi-wmi-keys.c | 123 +++++++++++++++++++++++++
- 4 files changed, 142 insertions(+)
- create mode 100644 drivers/platform/x86/xiaomi-wmi-keys.c
+The other channels fell or held while 0x14b rose, so it was not the
+board warming as a whole. But 1.6 C in three minutes, against your
+2.3 C in ten seconds on the right, might mean that 0x14b is a sensor
+somewhere on the left side of the board, not necessarily on the left
+port's power path. Under SSD load it moved with 0x146 and fell with
+it in cool-down, which puts it close to the SSD. "Left charger" was
+my reading of the sign pattern. Your ten-second test is probably the
+better discriminator for a sensor on a power path. If nothing answers
+the left charger in ten seconds, the simpler reading is that the left
+port has no thermistor of its own among these seven.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 839e39825455..7969b82c8315 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -29124,6 +29124,12 @@ F:	fs/xfs/
- F:	include/uapi/linux/dqblk_xfs.h
- F:	include/uapi/linux/fsmap.h
- 
-+XIAOMI WMI KEYS DRIVER
-+M:	Lucy Wong <lucywong2778@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/xiaomi-wmi-keys.c
-+
- XILINX AMS DRIVER
- M:	Salih Erim <salih.erim@amd.com>
- M:	Conall O'Griofa <conall.ogriofa@amd.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b54b5212b204..1e7128f88adf 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -90,6 +90,18 @@ config XIAOMI_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called xiaomi-wmi.
- 
-+config XIAOMI_WMI_KEYS
-+	tristate "Xiaomi WMI key events driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	select INPUT_SPARSEKMAP
-+	help
-+	  Say Y here if you want to support WMI-based hotkey events on certain
-+	  Xiaomi laptops.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called xiaomi-wmi-keys.
-+
- config REDMI_WMI
- 	tristate "Redmibook WMI key driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 872ac3842391..d852bb0bf61b 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
- obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
-+obj-$(CONFIG_XIAOMI_WMI_KEYS)		+= xiaomi-wmi-keys.o
- obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
- obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
-diff --git a/drivers/platform/x86/xiaomi-wmi-keys.c b/drivers/platform/x86/xiaomi-wmi-keys.c
-new file mode 100644
-index 000000000000..a01ef01e501e
---- /dev/null
-+++ b/drivers/platform/x86/xiaomi-wmi-keys.c
-@@ -0,0 +1,123 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xiaomi laptop WMI hotkey driver
-+ *
-+ * Copyright (C) 2026 Lucy Wong <lucywong2778@gmail.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/dev_printk.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/module.h>
-+#include <linux/wmi.h>
-+
-+#define XIAOMI_WMI_EVENT_GUID	"B74AF83F-8B2F-4069-ACAC-36D176F62FC0"
-+
-+#define XIAOMI_EVENT_TYPE_KEY	0x02
-+
-+#define XIAOMI_KEY_PRESS_FIRST	0x01
-+#define XIAOMI_KEY_COUNT	5
-+#define XIAOMI_KEY_RELEASE_FIRST	\
-+	(XIAOMI_KEY_PRESS_FIRST + XIAOMI_KEY_COUNT)
-+
-+struct xiaomi_wmi_keys_event {
-+	u8 reserved;
-+	u8 type;
-+	u8 code;
-+};
-+
-+struct xiaomi_wmi_keys {
-+	struct input_dev *input_dev;
-+};
-+
-+static const struct key_entry xiaomi_wmi_keys_keymap[] = {
-+	/* programmable keys with abstract icons */
-+	{ KE_KEY, 0x01, { KEY_MACRO1 } },
-+	{ KE_KEY, 0x02, { KEY_MACRO2 } },
-+	{ KE_KEY, 0x03, { KEY_MACRO3 } },
-+	{ KE_KEY, 0x04, { KEY_MACRO4 } },
-+	{ KE_KEY, 0x05, { KEY_MACRO5 } },
-+	{ KE_END, 0 },
-+};
-+
-+static int xiaomi_wmi_keys_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct xiaomi_wmi_keys *data;
-+	int ret;
-+
-+	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+	dev_set_drvdata(&wdev->dev, data);
-+
-+	data->input_dev = devm_input_allocate_device(&wdev->dev);
-+	if (!data->input_dev)
-+		return -ENOMEM;
-+
-+	data->input_dev->name = "Xiaomi WMI keys";
-+	data->input_dev->phys = "wmi/input0";
-+	data->input_dev->id.bustype = BUS_HOST;
-+
-+	ret = sparse_keymap_setup(data->input_dev, xiaomi_wmi_keys_keymap, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return input_register_device(data->input_dev);
-+}
-+
-+static void xiaomi_wmi_keys_notify(struct wmi_device *wdev,
-+				   const struct wmi_buffer *buffer)
-+{
-+	const struct xiaomi_wmi_keys_event *event = buffer->data;
-+	struct xiaomi_wmi_keys *data = dev_get_drvdata(&wdev->dev);
-+	unsigned int code;
-+	bool pressed;
-+
-+	/*
-+	 * Only the press/release keys are reported. Event types 0x01
-+	 * (backlight) and 0x03 (touchpad and Fn-lock toggles) are handled by
-+	 * the firmware and need no action from the driver.
-+	 */
-+	if (event->type != XIAOMI_EVENT_TYPE_KEY) {
-+		dev_dbg(&wdev->dev, "ignoring event type 0x%02x\n", event->type);
-+		return;
-+	}
-+
-+	if (event->code >= XIAOMI_KEY_PRESS_FIRST &&
-+	    event->code < XIAOMI_KEY_PRESS_FIRST + XIAOMI_KEY_COUNT) {
-+		code = event->code;
-+		pressed = true;
-+	} else if (event->code >= XIAOMI_KEY_RELEASE_FIRST &&
-+		   event->code < XIAOMI_KEY_RELEASE_FIRST + XIAOMI_KEY_COUNT) {
-+		code = event->code - XIAOMI_KEY_COUNT;
-+		pressed = false;
-+	} else {
-+		dev_dbg(&wdev->dev, "ignoring key code 0x%02x\n", event->code);
-+		return;
-+	}
-+
-+	sparse_keymap_report_event(data->input_dev, code, pressed, false);
-+}
-+
-+static const struct wmi_device_id xiaomi_wmi_keys_id_table[] = {
-+	{ .guid_string = XIAOMI_WMI_EVENT_GUID },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_keys_id_table);
-+
-+static struct wmi_driver xiaomi_wmi_keys_driver = {
-+	.driver = {
-+		.name = "xiaomi-wmi-keys",
-+	},
-+	.id_table = xiaomi_wmi_keys_id_table,
-+	.min_event_size = sizeof(struct xiaomi_wmi_keys_event),
-+	.probe = xiaomi_wmi_keys_probe,
-+	.notify_new = xiaomi_wmi_keys_notify,
-+	.no_singleton = true,
-+};
-+module_wmi_driver(xiaomi_wmi_keys_driver);
-+
-+MODULE_AUTHOR("Lucy Wong <lucywong2778@gmail.com>");
-+MODULE_DESCRIPTION("Xiaomi laptop WMI hotkey driver");
-+MODULE_LICENSE("GPL");
--- 
-2.56.0
+> pm8550_gpio_02 does NOT clearly follow. In your test you have
+> waited multiple minutes, which is enough to heat up a larger
+> area on the motherboard.
 
+Agreed. In your left run it was the only channel with a positive
+delta while the board drifted down, which is the same weak signal I
+had, and no more than that.
+
+On the two AMUX3/AMUX4 GPIO channels: neither carries a thermistor
+on this unit, and your tables say the same for yours. 0x14c reads
+130.048 C on every sample, the last row of the conversion table,
+where the driver clamps a voltage at or below the lowest it knows.
+Its input sits near 0 V. Windows' ADC configuration sets up only
+PM8550 GPIO3 and GPIO4 as analog inputs, for AMUX1 and AMUX2, so the
+pin behind AMUX3 is in its digital default, and PM8550's low GPIOs
+read back here as inputs with a 10 uA pull-down. 0x14d held 34.7 C
+within 0.1 C through both chargers and two load runs on this unit,
+and 35.8 to 36.0 C through every one of your tests, the hairdryer
+included. That is a biased pin, not a sensor. Both nodes can go.
+
+> ADC5_GEN3_AMUX1_GPIO_100K_PU - Likely "lpddr5_therm"
+
+I cannot separate 0x14a from 0x144 and 0x148 by heating. Under a
+one-core load reading a file from /dev/shm they rose 14.0, 14.4 and
+14.2 C in lockstep, while the SoC's mem TSENS zone rose 20 C. Your
+RAM stress warmed every PMIC die by 1 to 4 C as well, so it does not
+single out 0x14a either. The three sit with the SoC; which one is the
+memory I cannot tell.
+
+> Looks more like "sys_therm5" is the actual keyboard thermistor.
+
+Consistent with what I see. 0x147 is the coolest of the seven, 29 C
+at idle, and nearly indifferent to board loads: it gained 2.0 C where
+0x144 gained 9.2 under SSD I/O, and 2.5 C where 0x144 gained 14.4
+under the CPU load. A sensor away from the board, on the skin side,
+fits.
+
+On 0x146: under four minutes of direct-I/O reads it rose 8.2 C
+against 10.0 C on the NVMe's own sensor, the largest share of any
+channel, and it fell at once when the load stopped while the
+SoC-side channels kept rising. Under the CPU-only control its share
+halved. I would keep "ssd_conn_therm" on it with partial confidence,
+but I will not argue if it goes with the others.
+
+> Alternatively, I am leaning to drop the labels for anything we are
+> not sure about...
+
+Or just give them pirate names. Jk.
+
+Agreed. 0x145 as the right charger is what both of us measured.
+Everything else is a guess until the teardown. Numbering sys_therm
+from 1 matches Windows' SYS_THERM1 to 7, so that helps too.
+
+One consequence on my side: the 9345 thermal-zones patch
+(20261006185557.23016-1-lnicoara@thinkoid.org) names its zones
+chg-left on 0x14b and ssd on 0x146. I will respin it with neutral
+names for the zones that are not settled, so the two patches agree.
+
+Happy to test a v7, including a lid close on the EC interrupt line,
+which my v6 run did not cover.
+
+I love this laptop, but I will not open it up just to pinpoint the
+right thermistors' locations.
+
+Liviu
