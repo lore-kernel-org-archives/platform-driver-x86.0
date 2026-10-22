@@ -1,86 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.174
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792660424;
-	b=y9AqjQMgaw+zvlAhX2QcdX6zTkC1h6xDePK/1N0VxO6JuaTbC1HKiyRYUsLZ+bLuKSU0
-	 uE0pg8VNusaea/bfOWMIsP2O7jhI+zxdsVZEOL4BgipWBrrEgAjfTOk3yvPilzjeU18A3
-	 hh0gIdneidgRYJU9j2tK1TfvV7Qz0KbRupV6iIN5e1FChPCGbIMZk1HwXbiviYLEo48p9
-	 snKZsk3cHGwLTzN/Ese9L0lShLosiKvg6NTKFW3JcvMqQbyUZrucXXyNH55W/rMeuilqM
-	 TK2b3kqtcRftb13eHLvtDQimMOSNF2sCDU4SzOQ8w74Pl7KhUO/I5mLHVSrBDh3+WWQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792660424;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=FINTa2MpCSNE/TWHxw/1m7qkME3F6UZuCUBBZ7mFXGI=;
-	b=FN/dBpKhFNSDF/tvCzGC2+Oid05eXumMEJ4zO2rQ17lR7Ibp0KRFwHPsSFoBDg6FCjsE
-	 /FVdpLshWTCE9dVShbVBYtQUvHq5ljZ3OnjvUig99oVLYlQfNwP4PPQSlQVH+5Om18gN8
-	 oICNMiWUGriFSO26sjlAHYcN6+QtHCFAJEqe5n7LfEwuLN72GCDkfi112WEmLnw2icG7O
-	 +7U7mieTvabEKyoX9Oyp9POV0dgnfChqj92gYbytn5ti4BHkHejxzvaEPdFUXhgEl1gqh
-	 zFS2+G3ww2GGLyB6fPc+SoLkeqoTHGt0BETA5hwbyXea3hiTscQj+b0ZXrWjCLTGY4A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=jq6Mvjce;
-	arc=none smtp.remote-ip=209.85.210.174
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792674054;
+	b=sACqZunJSwdzTCAuYEG/gOwirV6oZ/s3wh8A+Q0ozReq+MX2zJPAFCCrdCbk3FyrXNW+
+	 zRJiBpoFAI04plis5/ws4DB7qUR1ibpMeCX8/j+tbovHHLqNATdJeSpaB/kstASkQ/1BK
+	 5H3dvo8I50KEVb46ac3Ec71yeX/kUL5wx53LfrJKki81UX5rL/xtQqwkiIKf+XwHiAxw/
+	 JCgtwRgC1JWyMSN2wCyf2VTTRTlbU2zkqa21QCubt7Gt3aGhSa0mzqXRGH8mlS38dshVO
+	 GfWT8SxTWmspld4YxZiBa3/Xkc0TkOdHzcxLGN4b0A/YnsFYrzl5JEUp3jqQwg6aG5Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792674054;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=tcvsiiLHqQEogFe4jcE5sMu10sQpK4YUcpJ25LK0ci8=;
+	b=Z7K0l0fvdpxg93xssfaBHu1gThrn1OKWWjOwqQ3navaMvH0nqWT/6SB0mHtGZ/0vPaZ2
+	 R0Mmh4O5aDGvDDlOAkFEJnB3oJ0vYZ+t4DSMPraofdkNxvx/PFOKIKDN3NRgCZwpjvFsW
+	 LK7LJnCFvB6YIDMerNPb4HFWG2oxneDhDya54nq80XhS8zTDTz6QWK9N4xLJruxJTZVk1
+	 HFGAaT0yf1VXMoqRCoXJmnElkWPPkdlneabp2U4cMTUvcAulwPGBPahvReQd2DoUih4HW
+	 LzN77nRYPrJaWNKUnFH6GmpvRpMPlEv5f++py16kZqrqbGI/nPNMwHWPvzc3rwvyBqQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="P/AD3ZZx";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1079B606A319;
+	Thu, 22 Oct 2026 13:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P/AD3ZZx
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1792674053;
+	b=W2780CmNb6wtpNBbQ6IAb8t6EIXmOJOOfIqodVhqd19nS4FB4CbdxtI3jrDtpifMD0Bc
+	 Z8VgNT/6eIoPqpMxeA8TJ+nY9Z6xPXFnqarB9PsnxB6FxgE2pYyZ6IIhw4W6VYIbaJosf
+	 h2O0OnBf30coWkTXS9g8KVgGskpWRQ07Z8JEa6yzSGMNspRAnf7MPI7dm47di5CJ9eLeH
+	 EDrBu5DrTqimKK35ZaMwlzlFWVm3j0kQOX+wxG9+COnb71+Hkt4MouVk6Pcj5EIhwW4bJ
+	 h0ZUnn6MVOTMbUGma661xDFefVUd2cK3LaIOpSmIoAVaK6FDq/UPwQGdOkTE/VnjIWQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1792674053;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=tcvsiiLHqQEogFe4jcE5sMu10sQpK4YUcpJ25LK0ci8=;
+	b=Ix2M+HgeFV7UQ6powAIwjBZYoC+d7p84csTADk553xg45CrtxhyNT6ZdbkaS1ZhMVpVt
+	 6UfVbZgY5NzUk8MISJzJHarnAvQ1ppyMF1RT6Qx/iVveE2cS8ZM85WZ0YYs9P5xZYeEzz
+	 X1iSw6PbQxYuYeaR/yQ8ydyxkwo4/xwKod9pXXUQCB9eWwsHnTEacobkt7Y3obvlqK9Ws
+	 VDmZYXKQ706Kjd2Byl6MmfiKrkHxuSQC9yRH88zOWpTNflVRQrcO7RoSer9H5vufKEpuJ
+	 BOytpKGHnlLxytwGorICUrMssrQavWauux+XXLdSDqg6QUNCxXxHlpRuUk2BorB1p8A==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F042606A319
-	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 09:13:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F042606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=jq6Mvjce
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-8a06e79e152so751375b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 02:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792660423; x=1793265223; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FINTa2MpCSNE/TWHxw/1m7qkME3F6UZuCUBBZ7mFXGI=;
-        b=jq6Mvjce/GTIvohfeypcC8iNVJ22S0OK14YRw0GjEkO6A/JX7+xVN7J30xXe6BwcJp
-         yLJMc8DFMaYsDtCq+ZuxdvgV655pgFyqvxYXowtBN9lHaBmNe7jAVIDPBkMkQf20kiOW
-         wTfONtjrp57urRp+yeCmgwaG2/K1WKyXgpcwmFrpS4slGUEBeOp7fFQqTj+gRzXxi0ee
-         XCnvBlbvW5Xp1J4SDYjhHt27Iwz4A8vSLhVZiSy1ZVaPTiK7hzptTdFKIQrMF0myeOA5
-         V8yj2LIubUgRWyWSr87Gv/jMEyWPfJN/oLo/FmCLNE8DpaHO9Q4mngcXvNNSsfWOhx5F
-         C8DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792660423; x=1793265223;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=FINTa2MpCSNE/TWHxw/1m7qkME3F6UZuCUBBZ7mFXGI=;
-        b=JlaDCfj3pyHJ3gYB3ApE5GDyLD1MGgzwn2rdSFkIwyCRfpOR1xb4Ah/9U5M3mLMiSa
-         dLgLYQV/uKNS36mGH/g1zddWgNoivNb40c0owALSXRjYWdzqrlKPxqCLU/T/O1xZlVZ4
-         8HH3DQoLd0hSfdODIoDWL8Ejzvt8YL7irbjpbqSzDlOIXk9X2Q0wgwJayYG43QtLxrT4
-         xOVbrA332UfI2ivh0o7QNw14rKeUBLqW0Sn8mbbh0x8SYkUIHigQd0ChDShgXvwGW+IJ
-         9vkM/+bZNOqYM2yzxJdFcnFCy3EwtSUwzEE/6IrHqmhyqqXy2DuNVheTUOSWZhhry914
-         DCtQ==
-X-Gm-Message-State: AFq9FYK81XBr3cQU1rrpOCtg6FyuXxA02gSC2zQY1CD9c0rqCzvon8UJ
-	xwscGZGEbuGhpgvdf3idKSGNQkOO/cxJifDbBrzrFdXAhXoFDHm1Vpzr
-X-Gm-Gg: AYBFou3Fgz9diCSKb7Z5rAjfOu1fitT/rNZUsUtBzbSsgONp/UDGBUdaNvKWlEfArFN
-	5ex9X+eg3G3L64JxdptSq9JzHgrsiI2L6zc1KYOHgf9ddK3UXKlnFhZegIaB1S1rI/tC4dDpoGO
-	9AwUZBDqWW67+85i/X7Uvo+ITaH4qPe9sm3VjWNObNI7sv48WlzyeXqmWNH85GWi59IFp2eXArz
-	Uagqhj7+6mDE2GNJiFMTQR9RwOhdUGYPVMKkkeysuB65SMDk7pmBXmCUekz9WOtA3LtqkFkCQMd
-	eOYSFSzDRyzjx3YReRViyHdd7cOvqkgLnV/D0xZZQ72HseWsjbWm7ulDajnvbP2Cx7gZ532mO+Q
-	HKR04ytMnbbVu9vhwVYq+OPD8uZ8xJSORS5u7VUbbXPgBDS2yYlwHwkzUfM3Lge3Wk0kNNUFvDu
-	ThGfGc9wuMOIxW34E2lao/JtH9BJVpTohsAbNzDmrJ+KiRQVYh/aBa5jDdUEAPJRpF0hJ2oWpYW
-	iuQnhnzsNiucMavnpYKYtEUpaUhHXypnBvy8cNEPQsjFWJEvk+hOvKgfgt9+LDxXDTvh/Z7B+q4
-	/NB/jzBUsR5GFWWQ96A=
-X-Received: by 2002:a05:6a21:9d8a:b0:3e1:bb35:476c with SMTP id adf61e73a8af0-3e287f30989mr3468912637.72.1792660423266;
-        Thu, 22 Oct 2026 02:13:43 -0700 (PDT)
-Received: from ?IPV6:2408:8210:2436:950:7b5d:9435:af71:375d? ([20.89.137.63])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a0895c060asm1855223b3a.22.2026.10.22.02.13.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Oct 2026 02:13:42 -0700 (PDT)
-Message-ID: <271a9f64-e1d8-4b21-968f-9cb95b980ec1@gmail.com>
-Date: Thu, 22 Oct 2026 17:13:38 +0800
+	by smtp.kernel.org (Postfix) with ESMTPS id 23B271F000C1;
+	Thu, 22 Oct 2026 13:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792674053;
+	bh=tcvsiiLHqQEogFe4jcE5sMu10sQpK4YUcpJ25LK0ci8=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=P/AD3ZZxEoLjPbsbT+O8X8ePsJfD2jFxIDXbXN2jSLM70AQR2FoE/+SDZ6hpcHytG
+	 ZOh6DgVh1Ifr4bKhpKsa7wJg9jRYkIycP3dtpSHBkYOxBXpq1VV6mQ1+oT6YgvgMUX
+	 cChKJ5cttWopr1IatETt+s42udkrFiGUEGoWjbUSGmN+LpoWCZcxw3haAp6Waf9JQd
+	 jRWB/308JsPp5Oba1eiz9Wj5dc0Pe9sRc/NDckU3M8IQRQtC2c7Qm3EPg1b10+UPaL
+	 cTNRn+/YgK80O2BIc1MZFcHcUOjFqsWzIw1vsVmbBlj15OJbcdNkEr9/OkwtaNfr9o
+	 RlDMo2fYiYOiw==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 790EC43397;
+	Thu, 22 Oct 2026 13:00:52 +0000 (UTC)
+From: Sercan GOKMEN via B4 Relay <devnull+gokmensercan.gmail.com@kernel.org>
+Date: Thu, 22 Oct 2026 16:00:52 +0300
+Subject: [PATCH] platform/x86: asus-wmi: Add keyboard backlight read-back
+ quirk for ASUS ExpertBook Ultra B9406CAA
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -90,69 +83,158 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
- cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
-To: Serhiy Shliapuhin <shlyapugin@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- regressions@lists.linux.dev
-References: <CADGd8gGYm5QmnDrjBzfWsWcKg9_ULAAV7o8RzDxi1p9doN5gCw@mail.gmail.com>
- <bacdb44f-a4ab-4d55-a312-5648515f41ac@leemhuis.info>
- <CADGd8gF9DxnDVZxbsARCNkXXp7_aWfWOkyAN_Y8v65TtKW3zNg@mail.gmail.com>
-Content-Language: en-US
-From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <CADGd8gF9DxnDVZxbsARCNkXXp7_aWfWOkyAN_Y8v65TtKW3zNg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261022-b4-asus-wmi-b9406caa-kbd-readback-v1-1-fb33ed98dd16@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXNwQ6CMAyA4VchPdtkFCTMVzEeuq1qJaJZRUkI7
+ 87U43f5/wVMsorBoVogy1tNH2NBvasgXnm8CGoqBnLU1Y4IQ4tsk+Hnrhh867rIjENImIVT4Dg
+ gS+rJ75vUNx5K55nlrPPvcTz9bVO4SXx9w7CuG/Khba2FAAAA
+X-Change-ID: 20261022-b4-asus-wmi-b9406caa-kbd-readback-aed82953d839
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sercan GOKMEN <gokmensercan@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792674051; l=5290;
+ i=gokmensercan@gmail.com; s=20261022; h=from:subject:message-id;
+ bh=fSTmrfZTjXJhJvDRdGbk0K/+rwI2QBECNtaYIr3fMRU=;
+ b=QxmCus+1hrgSGoq6KlRU6n1u9s+4iePiNgCTGkltxKKVejqhos/B/9600VXxtAZJ019OftfT4
+ a7biuSGhUQdAdxCD2n1EDzB/o3Cv1Ecz3leVubsy0yrtiz+dvVNfTZj
+X-Developer-Key: i=gokmensercan@gmail.com; a=ed25519;
+ pk=nFIlLCcGouUfBov8xxW0K4qUtEjdhJniMOO8WCSqghU=
+X-Endpoint-Received: by B4 Relay for gokmensercan@gmail.com/20261022 with
+ auth_id=1282
+X-Original-From: Sercan GOKMEN <gokmensercan@gmail.com>
+Reply-To: gokmensercan@gmail.com
+Content-Transfer-Encoding: 7bit
 
-On 10/22/26 16:08, Serhiy Shliapuhin wrote:
->> Can you avoid it by blacklisting bitland-mifs-wmi?
-> Yes. With bitland-mifs-wmi blacklisted no platform_profile handler is
-> registered, and power-profiles-daemon switches all three profiles via
-> intel_pstate EPP again, same as before the driver was added.
->
-> The same can be achieved by running power-profiles-daemon
-> with --block-driver=platform_profile, which is what I use now.
->
->> And does it still happen with vanilla 7.3? 7.0 is long EOL upstream
->> (and 7.2 soon, too).
-> Yes, it is reproducible with vanilla 7.3-rc3 (Ubuntu mainline build,
-> no distro patches; newer mainline builds are not available yet -
-> bitland-mifs-wmi.c has not changed since 2026-07-03 anyway).
->
->    $ uname -r
->    7.3.0-070300rc3-generic
->    $ cat /sys/class/platform-profile/platform-profile-0/name
->    bitland-mifs-wmi
->
->    low-power             -> accepted, reads back "balanced"
->    balanced-performance  -> -EOPNOTSUPP, stays "balanced"
->    performance           -> -EOPNOTSUPP, stays "balanced"
->
-> Understood regarding 7.0; I only mentioned it as the last kernel
-> where profile switching worked on this machine, before
-> bitland-mifs-wmi was added.
->
-> Thanks,
-> Serhiy Shliapuhin
->
-> On Wed, Oct 21, 2026 at 5:56 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 10/20/26 07:12, Serhiy Shliapuhin wrote:
->>> On my RedmiBook Pro 15 (2021) none of the platform profiles exposed
->>> by bitland-mifs-wmi can actually be selected. "performance" and
->>> "balanced-performance" are always rejected with -EOPNOTSUPP, even
->>> while the laptop is charging, and "low-power" is accepted but has no
->>> effect. As a result power-profiles-daemon can only stay in Balanced.
->>>
->>> This is a regression. With Ubuntu kernel 7.0.0-38-generic [...]
->> Can you avoid it by blacklisting bitland-mifs-wmi? And does it still
->> happen with vanilla 7.3? 7.0 is long EOL upstream (and 7.2 soon, too).
->>
->> Ciao, Thorsten
->>
-Hi, We're tracking this issue in the recent patch series.
+From: Sercan GOKMEN <gokmensercan@gmail.com>
 
-https://lore.kernel.org/platform-driver-x86/20261021123414.25516-1-qby140326@gmail.com/T/#t
+On the ASUS ExpertBook Ultra B9406CAA (BIOS 312) the keyboard backlight
+query DSTS(ASUS_WMI_DEVID_KBD_BACKLIGHT) always returns 0x550000: the
+presence bit is set but the level bits are 0 regardless of the level the
+EC is actually driving. The DSDT's DSTS handler for 0x00050021 builds
+its reply from constants (0x400000 | 0x350000, masked by the KBLT flag)
+and never reads the level from the EC, so no query variant can return
+it. Writes work: DEVS hands the value to the EC method SLKB and the
+0x80|level form the driver uses steps the keyboard through all levels.
+
+kbd_led_get() re-reads the firmware on every sysfs read and stores the
+result in asus->kbd_led_wk, so on this machine every read overwrites the
+cached level with 0. The visible effects are:
+
+ - /sys/class/leds/asus::kbd_backlight/brightness, UPower's
+   GetBrightness and brightnessctl always report 0;
+ - systemd-backlight saves 0 at shutdown and restores a dark keyboard
+   at every boot;
+ - the Fn backlight key on this laptop raises ASUS_EV_BRTTOGGLE, and
+   asus_wmi_kbd_led_hw_event() computes the next level from the cached
+   value, so after any read has zeroed the cache the next press always
+   yields level 1 whatever the keyboard was actually showing.
+
+Add a quirk_entry flag, kbd_led_no_readback, which makes kbd_led_get()
+return the cached level the way the existing !kbd_led_avail path
+already does. Every path that changes the level (do_kbd_led_set(),
+kbd_led_set_by_kbd(), the hotkey handler) keeps kbd_led_wk current, so
+the cache is the only trustworthy source on this board. Match the
+board with the same DMI strings the accepted SoundWire quirk for this
+machine uses (sys_vendor "ASUS", board_name "B9406CAA").
+
+Tested on the B9406CAA with Linux 7.2.3: after the quirk, brightness
+reads back 3/1/2 after the corresponding writes, UPower reports the same
+value, and three presses of the Fn backlight key from level 2 give
+2 -> 3 -> 0 -> 1 (the ASUS_EV_BRTTOGGLE wrap), each step read back
+correctly. Re-tested on Linux 7.3.0: writes of 3/1/2/0 read back
+unchanged. Also compile-tested on this base with W=1 (clang).
+
+Signed-off-by: Sercan GOKMEN <gokmensercan@gmail.com>
+---
+The patch is also tracked, with the other B9406CAA upstream patches,
+in the community support repo for this laptop:
+https://github.com/burakgon/asus-expertbook-linux/tree/main/upstream-patches
+---
+ drivers/platform/x86/asus-nb-wmi.c | 21 +++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.c    |  3 ++-
+ drivers/platform/x86/asus-wmi.h    |  5 +++++
+ 3 files changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 3b0f3346d..894f622c8 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -93,6 +93,18 @@ static struct quirk_entry quirk_asus_unknown = {
+ 	.wmi_backlight_set_devstate = true,
+ };
+ 
++/*
++ * ASUS ExpertBook Ultra B9406CAA (BIOS 312): the keyboard backlight query,
++ * DSTS(0x00050021), always returns 0x550000, i.e. level 0, whatever the EC is
++ * actually driving. Writes work. Without this quirk every sysfs read
++ * overwrites the cached level with 0, so UPower, brightnessctl and
++ * systemd-backlight all see a dark keyboard and restore level 0 at boot.
++ */
++static struct quirk_entry quirk_asus_b9406caa = {
++	.wmi_backlight_set_devstate = true,
++	.kbd_led_no_readback = true,
++};
++
+ static struct quirk_entry quirk_asus_q500a = {
+ 	.filter_i8042_e1_extended_codes = true,
+ 	.wmi_backlight_set_devstate = true,
+@@ -167,6 +179,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
+ }
+ 
+ static const struct dmi_system_id asus_quirks[] = {
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ExpertBook Ultra B9406CAA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUS"),
++			DMI_MATCH(DMI_BOARD_NAME, "B9406CAA"),
++		},
++		.driver_data = &quirk_asus_b9406caa,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. Q500A",
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index fb1d4a085..19a0b3a0c 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1966,7 +1966,8 @@ static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+ 	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+ 
+ 	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+-		if (!asus->kbd_led_avail)
++		if (!asus->kbd_led_avail ||
++		    asus->driver->quirks->kbd_led_no_readback)
+ 			return asus->kbd_led_wk;
+ 	}
+ 
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index b45f81b38..4f010f634 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -52,6 +52,11 @@ struct quirk_entry {
+ 	 */
+ 	int no_display_toggle;
+ 	u32 xusb2pr;
++	/*
++	 * The firmware never reports the keyboard backlight level (the query
++	 * always returns level 0), so trust the driver's cached value instead.
++	 */
++	bool kbd_led_no_readback;
+ };
+ 
+ struct asus_wmi_driver {
+
+---
+base-commit: 893018d51f27ec0449155b0afe371aaf65380630
+change-id: 20261022-b4-asus-wmi-b9406caa-kbd-readback-aed82953d839
+
+Best regards,
+--  
+Sercan GOKMEN <gokmensercan@gmail.com>
+
 
