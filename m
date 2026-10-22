@@ -1,86 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792690510;
-	b=cGS+dWjsBW+vT5ADIqupA7tF2Zk+78trPPGwt/QjPiv8MbKYWWpT69ao3LoadYNFfncC
-	 0E5RnHH9AHZkrj8juJhh3Jbifm1S924lSDr4PmoCILXga4CwAnpirMqwA03anCZ/ULshb
-	 EnGhvYW2nnZWsKio0pZPDfXft7H98ph+REftX/HrpW83y9iCzuOuZ1GCtGq6p8fWeRbep
-	 WtuUmfMIf9SuBT5wWHrodEyJJaOn/HxRxcdNIdHDsGOb3mK+5kV5kmViC3H0UGk1Yoczn
-	 xrqEC7Hq8Mb/A16QRsbkwKxzbVTMEnp+lRTYL2zTY8KlWU9v045vjcil7ijSF0Xmyew==
+	t=1792691827;
+	b=VTIndIzzxlyTlwqhp522zuRurJaAW4zjTiyZ0aVzlGFtWKq8N+TtZEVSM1eN5QQhu9tQ
+	 Ta2Pq8yfu0CCBMV9tdahrWqQt4pYQHtGK7y9t9K7kmL8b+48KOpuaAh6qGK7DY+msO23H
+	 32wupxgYcXAzJCRzSgaPWn93TvjOlb6ysqDuYR1x9AMwNRDrxfDYavyzsdADhlE9BWACn
+	 ZALeR756nQ+xm8ubf2BAPk0PTPVMOiKwy43sGcNCEOrZ1HFUd9fC7M9649tMkY/1B2kmv
+	 E9ijkjRQGBhJNsv5oM4w8rCGjCnMn1/sVZpkwMvW0Vzc+QB0GWrqPdsK5JXglTImewg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792690510;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Subject:
-	 From:To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version;
-	bh=oZDEPzuGf1lz0DRDIYtjs2i4JiW3UveAKuGqOol7MfQ=;
-	b=GLNjzkeYziKgcrK/loFySWiqMCdgNbt7YiVwv2dfr7C0YAY4Tu0fedJJb/cXkNOK7qe3
-	 gTKzVNNmm1hoPz5Y5SgHsjl13XxHz4IYPO9ru/YNdOFmklA3fJa2zWBeJxHbpBW967ah8
-	 KNxSAhy4CkffsHuSIQHHOYOydgMSzccp5yVPEt5m1zm3FzatFwrAETLiqI4sGVBH4zYIw
-	 BZzXgiCg80UxFymovQwEtgny1C/u0vJMTXay6+hmcctB5rQjy8zEj5bcljB4P8/GIEz4q
-	 pMSoVvhUBx2xKwIxvuf9usgO7eWnu7cXN2/M+lqpqOeP0J+b3OE23+0UbH4UGGiSByA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792691827;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=xDC2DOeyBzHDwiyIfobG+nl4tjQ7W1bldUlzQQQloY4=;
+	b=NekMMdq5E4hDIGrK+yiEsHHzsoZ/Cb+bBKtfpzLas1Ee6c9E9JAapI0P9ZoT1brV1zMO
+	 ZDVjnWzV9pqC6D/67s1gkEdaN0L73xmStRYmLHKpZzioGUtTXw9C5LdAOOmehMRSG3ryv
+	 W70DarqNB7lpFSOKj3+dOq/r+SgR99cdskq7nV5mcsKCxSFHUVKM9ddSOb0TAfeiHC4Nq
+	 IcjBHRy2s6Xyimf4DDrRHUNfbLy9jdVOuv+9mkCGhYyeM0u4OZaxp1qFZBh0yRJTRQ24F
+	 toZcsJXr6FQ3PZfhAsDAVOuGwWO3g/422bTltBWZULnYXaI1MVDd4m01wwzMkLfaKQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Ni2N9b4u;
-	arc=none smtp.remote-ip=198.175.65.9
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mqHcZ5oe;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BF9606A33B;
-	Thu, 22 Oct 2026 17:35:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5BF9606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6885606A321
+	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 17:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Ni2N9b4u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792690509; x=1824226509;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=KV352jArF/0prf2EvmUlHViwrIAAoX2VbsFxt3XNppU=;
-  b=Ni2N9b4uqQD3IOlbb5mLtcPNK3CP14Qo5ICOzOBDa8GvoQJ+CQpiH4yo
-   k1Y528vM6r4knG2IoVXbZokZLMkFmarjqHO81+IJChuGEERep861JMYl1
-   AOmIFGOCMN0PwdkFbVgCKbxQGvcKobHw26nZDnbS5XH6GyFr535eXdDGB
-   D249amqyqFFQuYwNjRZ5vhvVKAcxHAdbXJz5WwH54YEMeWCr9TCi0MO32
-   0RcTotGR8TktqPG/DkjiBxcwI/onDlAEdV0TNtmOZOYwYZRlJHgi7Z6CM
-   Apl/DGVuau52LEaTkO3LdpwyneN/JIGfixWC4susmf/+6OelJGHHT9MFc
-   Q==;
-X-CSE-ConnectionGUID: hlK/dCM3TRCnIa1jVhkJag==
-X-CSE-MsgGUID: aOQI07CYQvaMX5JQZYeAVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11942"; a="1326018"
-X-IronPort-AV: E=Sophos;i="6.27,172,1787036400"; 
-   d="scan'208";a="1326018"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2026 10:35:07 -0700
-X-CSE-ConnectionGUID: d03YhRjFT8qn9fpcqcPqQg==
-X-CSE-MsgGUID: a34KjfOKQx2yl/yS4DrCKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,172,1787036400"; 
-   d="scan'208";a="3753159"
-Received: from unknown (HELO [10.241.242.209]) ([10.241.242.209])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2026 10:35:07 -0700
-Message-ID: <93c4de9a3c86e0d00808fd7045b385a5a7069e4d.camel@linux.intel.com>
-Subject: Re: [PATCH v3] sched/cache: Honor asym packing over cache aware
- scheduling on hybrid systems
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Cc: Chen Yu <yu.c.chen@intel.com>, Mario Limonciello
- <mario.limonciello@amd.com>,  Vishal Badole <Vishal.Badole@amd.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, 
-	platform-driver-x86@vger.kernel.org, K Prateek Nayak
- <KPrateek.Nayak@amd.com>,  Ricardo Neri <ricardo.neri@intel.com>, Kayra
- Cizmeci <kayracizmeci@gmail.com>, stable@vger.kernel.org,  Vincent Guittot
- <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@redhat.com>, Klaus
- Kusche	 <klaus.kusche@computerix.info>
-Date: Thu, 22 Oct 2026 10:35:06 -0700
-In-Reply-To: <b29badede27bb6bfb4a759e06754cb19657f0778.1791308631.git.tim.c.chen@linux.intel.com>
-References: 
-	<b29badede27bb6bfb4a759e06754cb19657f0778.1791308631.git.tim.c.chen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mqHcZ5oe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746AC1F031E4
+	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 17:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792691826;
+	bh=xDC2DOeyBzHDwiyIfobG+nl4tjQ7W1bldUlzQQQloY4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=mqHcZ5oeH6bCj1Z9weWbhP6G6W7mkkC5c+Yteh07EZtuWJkkmy599HCl9Tl8ZyA2T
+	 G+LRnjcDFHlmhopKG2OLq+saN5JY/kXbJ3S0Lu/gtu4lSh0SnA1MqNmnrt6MZRfQol
+	 c8X5CryEAo/O0JVgDmQ4wQE59VD+Qg2F07cuF1/7jY/OcRK4AG0KeUbHtxZJPUe1iC
+	 iUO0MZmxmUOAd7tuIJDNdcECHdq1p9YXFUvOiBiPzgsJ8+QonovuyoIjidm+8K2tI6
+	 x548DIXRVDS1WzEZvqODBFhXxWUGHomYveDQpEn0NoZxuTWPFeqevpv/BylNQazWny
+	 WXZXq8cgy/XWA==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5be4fea434bso1044197e87.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 10:57:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByCW3X49sdNTPped8LyoHpGg6GVm5Vg2QPhKC/5Ql/GqZEb6eaU8xzw7DtbeU0RfM9kIaYETkP6a+uUv+mizqq3quH7@vger.kernel.org
+X-Gm-Message-State: AFq9FYL+6sNnX6bj8o5eLIh9jrxQ8TVzeNsDJ/fXsPQtICeI8klXxffl
+	Rcgd7/5CwxjoBaWZLCkzsn+gtIXalds0knZvyrSlxXqsV+DncXlRR/NHl2d4D1oTEz6mzcG2SFY
+	Mxw/29mWx7ZIVOH2vDkljYppaIZA475k=
+X-Received: by 2002:a05:6512:3d07:b0:5bf:ae14:aaef with SMTP id
+ 2adb3069b0e04-5bfae14ab6amr784225e87.21.1792691824499; Thu, 22 Oct 2026
+ 10:57:04 -0700 (PDT)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -90,120 +59,372 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+References: <20261020144525.3265851-1-daniel.lezcano@oss.qualcomm.com> <647d10df-72bc-4c08-96e4-045a387d54f9@app.fastmail.com>
+In-Reply-To: <647d10df-72bc-4c08-96e4-045a387d54f9@app.fastmail.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Thu, 22 Oct 2026 19:54:44 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jcSRsWue4FQC+AK7japX-O3qL5xxoU4jd9-q-F1D-bGg@mail.gmail.com>
+X-Gm-Features: AclHuK_1VCtT8SJnaGoCa2W8yy4ySBFH_Q3UdhHr9YR0tE-NkfLtyuNGzbFUlj8
+Message-ID: <CAJZ5v0jcSRsWue4FQC+AK7japX-O3qL5xxoU4jd9-q-F1D-bGg@mail.gmail.com>
+Subject: Re: [PATCH v3] platform profile: Separate handler locking from sysfs lifetime
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	"Derek J . Clark" <derekjohn.clark@gmail.com>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Armin Wolf <W_Armin@gmx.de>, 
+	Jai Luthra <jai.luthra@ideasonboard.com>, Greg KH <gregkh@linuxfoundation.org>, 
+	Mario Limonciello <superm1@kernel.org>, Jack Wu <jackbb_wu@compal.com>, 
+	"Limonciello, Mario" <mario.limonciello@amd.com>, Zhang DM <jixianqiang1540@gmail.com>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2026-10-07 at 10:25 -0700, Tim Chen wrote:
-> A regression was reported on an AMD Ryzen AI HX 370 running a cache
-> intensive Clang full-LTO link. The little cores run at a much lower
-> frequency (3.3 GHz vs 5.1 GHz) and have only half of the L3 cache
-> (8 MB vs 16 MB), so pinning such a task to the little-core LLC
-> hurts twice, and full-LTO builds slow down dramatically compared to
-> pre-cache-aware-scheduling kernels.
->=20
-> Asym packing and cache aware scheduling express conflicting placement
-> strategies. Asym packing wants a task to run on the highest priority CPU,
-> whereas cache aware scheduling wants to co-locate the tasks of a process
-> on one LLC regardless of the priority of CPUs in that LLC.
->=20
-> When asym packing tries to migrate task to an idle core that has higher
-> priority than source cpu, let asym packing win.  Moving tasks to a higher
-> performing idle core will buy more performance than cache co-location.
->=20
-> Prioritize asym packing over LLC balancing for regular and active load
-> balancing.
->=20
+On Tue, Oct 20, 2026 at 11:55=E2=80=AFPM Mark Pearson <mpearson-lenovo@sque=
+bb.ca> wrote:
+>
+> On Tue, Oct 20, 2026, at 10:45 AM, Daniel Lezcano wrote:
+> > Registration and removal currently hold profile_lock across
+> > device_unregister() and sysfs_update_group(). These operations can remo=
+ve
+> > sysfs attributes and wait for their active callbacks to finish. The
+> > profile read and write callbacks acquire profile_lock themselves, so a
+> > concurrent access can deadlock:
+> >
+> >   Removal/update path             Active sysfs callback
+> >   -------------------             ---------------------
+> >   acquire profile_lock            hold kernfs active reference
+> >   remove a sysfs attribute         wait for profile_lock
+> >   wait for its active references
+> >
+> > The removal path cannot finish until the callback returns, and the
+> > callback cannot return until the removal path releases profile_lock.
+> > This applies both to per-provider device teardown and to updates of the
+> > legacy aggregate attribute group.
+> >
+> > Commit 041142d7d252 ("ACPI: platform-profile: Fix possible deadlock in
+> > platform_profile_remove()") previously fixed this lock ordering by movi=
+ng
+> > sysfs_remove_group() outside profile_lock. Commit 55b1e68134bf ("ACPI:
+> > platform_profile: Use guard(mutex) for register/unregister") reintroduc=
+ed
+> > the issue by extending the mutex guard over sysfs_remove_group(). Later=
+,
+> > commit 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI
+> > platform profile") replaced that teardown with device_unregister() and
+> > sysfs_update_group(), still under the same mutex, extending the problem
+> > to class-device teardown and aggregate attribute updates.
+> >
+> > Simply dropping profile_lock around these operations is insufficient.
+> > Aggregate operations currently discover providers through the class
+> > device list. A provider being unregistered could therefore still be
+> > selected for an aggregate read, write or cycle while its sysfs files ar=
+e
+> > being torn down. Concurrent registrations and removals would also race
+> > when updating aggregate attribute visibility.
+> >
+> > Introduce profile_registration_lock to serialize registration, removal
+> > and aggregate sysfs updates. Sysfs callbacks never acquire this mutex.
+> > Retain profile_lock for profile operations and use it to protect an
+> > explicit list of handlers participating in the aggregate interface.
+> >
+> > Add a handler to that list only after device_register() succeeds. On
+> > removal, unlink it under profile_lock before calling device_unregister(=
+).
+> > Acquiring profile_lock first waits for any aggregate operation already
+> > using the handler to complete; unlinking prevents later aggregate
+> > operations from finding it. Release profile_lock before draining sysfs
+> > callbacks, allowing active per-provider callbacks to complete before th=
+e
+> > device is released. Apply the same unlink-before-unregister ordering to
+> > registration error cleanup.
+> >
+> > Walk this list for aggregate reads, writes and profile cycling, and use
+> > its emptiness to determine aggregate attribute visibility. The class
+> > devices remain the per-provider userspace interface.
+> >
+> > There can now be an interval between removing the last handler from the
+> > list and removing the aggregate attributes. Explicitly reject choices
+> > reads and writes during that interval: the intersection bitmap starts
+> > with every bit set, so an empty traversal must not advertise all profil=
+es
+> > or report a successful write without updating a provider.
+> >
+> > This separates aggregate membership from class device teardown while
+> > preserving the existing class and ACPI sysfs interfaces.
+> >
+> > Fixes: 55b1e68134bf ("ACPI: platform_profile: Use guard(mutex) for
+> > register/unregister")
+> > Assisted-by: OpenCode:gpt-6.1-sol
+> > Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+> > ---
+> > Changes in v3:
+> >   - Send the locking fix as a standalone patch, independently of the
+> >     firmware-agnostic extraction and legacy-interface deprecation
+> > series.
+> >   - Document that profile_lock protects handler-list membership and
+> >     serializes profile operations against each other and handler
+> > removal.
+> >     Explain why it must not be held across sysfs teardown.
+> >
+> > Changes in v2:
+> >   - Expand the deadlock and handler-lifetime explanation.
+> >   - Add the Fixes tag and describe the earlier fix, regression and late=
+r
+> >     extension to class-device teardown and sysfs group updates.
+> >
+> >  drivers/acpi/platform_profile.c | 80 ++++++++++++++++++++++++---------=
+--------
+> >  1 file changed, 47 insertions(+), 33 deletions(-)
+> >
+> > diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pr=
+ofile.c
+> > index 79d2e92e5c28..d79080a20e21 100644
+> > --- a/drivers/acpi/platform_profile.c
+> > +++ b/drivers/acpi/platform_profile.c
+> > @@ -8,15 +8,25 @@
+> >  #include <linux/bits.h>
+> >  #include <linux/cleanup.h>
+> >  #include <linux/init.h>
+> > +#include <linux/list.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/platform_profile.h>
+> >  #include <linux/sysfs.h>
+> >
+> >  #define to_pprof_handler(d)  (container_of(d, struct
+> > platform_profile_handler, dev))
+> >
+> > +/*
+> > + * Protects profile_handlers membership and serializes profile
+> > operations
+> > + * against each other and handler removal. Never held across sysfs
+> > teardown,
+> > + * which can wait for callbacks that acquire this lock.
+> > + */
+> >  static DEFINE_MUTEX(profile_lock);
+> > +/* Serialize registration and sysfs updates without blocking sysfs
+> > callbacks. */
+> > +static DEFINE_MUTEX(profile_registration_lock);
+> > +static LIST_HEAD(profile_handlers);
+> >
+> >  struct platform_profile_handler {
+> > +     struct list_head node;
+> >       const char *name;
+> >       struct device dev;
+> >       int minor;
+> > @@ -44,6 +54,22 @@ static_assert(ARRAY_SIZE(profile_names) =3D=3D
+> > PLATFORM_PROFILE_LAST);
+> >
+> >  static DEFINE_IDA(platform_profile_ida);
+> >
+> > +static int profile_walk_handlers(void *data,
+> > +                              int (*fn)(struct device *dev, void *data=
+))
+> > +{
+> > +     struct platform_profile_handler *handler;
+> > +     int ret;
+> > +
+> > +     lockdep_assert_held(&profile_lock);
+> > +     list_for_each_entry(handler, &profile_handlers, node) {
+> > +             ret =3D fn(&handler->dev, data);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * _commmon_choices_show - Show the available profile choices
+> >   * @choices: The available profile choices
+> > @@ -306,20 +332,18 @@ static ssize_t
+> > platform_profile_choices_show(struct kobject *kobj,
+> >       int err;
+> >
+> >       scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock)=
+ {
+> > -             err =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+> > -                                         &data, _aggregate_choices);
+> > +             err =3D profile_walk_handlers(&data, _aggregate_choices);
+> >               if (err)
+> >                       return err;
+> >               if (data.count =3D=3D 1) {
+> > -                     err =3D class_for_each_device(&platform_profile_c=
+lass, NULL,
+> > -                                                 &data, _remove_hidden=
+_choices);
+> > +                     err =3D profile_walk_handlers(&data, _remove_hidd=
+en_choices);
+> >                       if (err)
+> >                               return err;
+> >               }
+> >       }
+> >
+> >       /* no profile handler registered any more */
+> > -     if (bitmap_empty(data.aggregate, PLATFORM_PROFILE_LAST))
+> > +     if (!data.count || bitmap_empty(data.aggregate, PLATFORM_PROFILE_=
+LAST))
+> >               return -EINVAL;
+> >
+> >       return _commmon_choices_show(data.aggregate, buf);
+> > @@ -384,8 +408,7 @@ static ssize_t platform_profile_show(struct kobject=
+ *kobj,
+> >       int err;
+> >
+> >       scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock)=
+ {
+> > -             err =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+> > -                                         &profile, _aggregate_profiles=
+);
+> > +             err =3D profile_walk_handlers(&profile, _aggregate_profil=
+es);
+> >               if (err)
+> >                       return err;
+> >       }
+> > @@ -423,15 +446,13 @@ static ssize_t platform_profile_store(struct
+> > kobject *kobj,
+> >               return -EINVAL;
+> >
+> >       scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock)=
+ {
+> > -             ret =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+> > -                                         &data, _aggregate_choices);
+> > +             ret =3D profile_walk_handlers(&data, _aggregate_choices);
+> >               if (ret)
+> >                       return ret;
+> > -             if (!test_bit(i, data.aggregate))
+> > +             if (!data.count || !test_bit(i, data.aggregate))
+> >                       return -EOPNOTSUPP;
+> >
+> > -             ret =3D class_for_each_device(&platform_profile_class, NU=
+LL, &i,
+> > -                                         _store_and_notify);
+> > +             ret =3D profile_walk_handlers(&i, _store_and_notify);
+> >               if (ret)
+> >                       return ret;
+> >       }
+> > @@ -450,22 +471,11 @@ static struct attribute *platform_profile_attrs[]=
+ =3D {
+> >       NULL
+> >  };
+> >
+> > -static int profile_class_registered(struct device *dev, const void
+> > *data)
+> > -{
+> > -     return 1;
+> > -}
+> > -
+> >  static umode_t profile_class_is_visible(struct kobject *kobj, struct
+> > attribute *attr, int idx)
+> >  {
+> > -     struct device *dev;
+> > -
+> > -     dev =3D class_find_device(&platform_profile_class, NULL, NULL,
+> > profile_class_registered);
+> > -     if (!dev)
+> > -             return 0;
+> > -
+> > -     put_device(dev);
+> > +     guard(mutex)(&profile_lock);
+> >
+> > -     return attr->mode;
+> > +     return list_empty(&profile_handlers) ? 0 : attr->mode;
+> >  }
+> >
+> >  static const struct attribute_group platform_profile_group =3D {
+> > @@ -502,8 +512,7 @@ int platform_profile_cycle(void)
+> >       int err;
+> >
+> >       scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock)=
+ {
+> > -             err =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+> > -                                         &profile, _aggregate_profiles=
+);
+> > +             err =3D profile_walk_handlers(&profile, _aggregate_profil=
+es);
+> >               if (err)
+> >                       return err;
+> >
+> > @@ -512,8 +521,7 @@ int platform_profile_cycle(void)
+> >                   profile =3D=3D PLATFORM_PROFILE_LAST)
+> >                       return -EINVAL;
+> >
+> > -             err =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+> > -                                         &data, _aggregate_choices);
+> > +             err =3D profile_walk_handlers(&data, _aggregate_choices);
+> >               if (err)
+> >                       return err;
+> >
+> > @@ -525,8 +533,7 @@ int platform_profile_cycle(void)
+> >                                         PLATFORM_PROFILE_LAST,
+> >                                         profile + 1);
+> >
+> > -             err =3D class_for_each_device(&platform_profile_class, NU=
+LL, &next,
+> > -                                         _store_and_notify);
+> > +             err =3D profile_walk_handlers(&next, _store_and_notify);
+> >
+> >               if (err)
+> >                       return err;
+> > @@ -583,7 +590,7 @@ struct device *platform_profile_register(struct
+> > device *dev, const char *name,
+> >               }
+> >       }
+> >
+> > -     guard(mutex)(&profile_lock);
+> > +     guard(mutex)(&profile_registration_lock);
+> >
+> >       /* create class interface for individual handler */
+> >       minor =3D ida_alloc(&platform_profile_ida, GFP_KERNEL);
+> > @@ -604,6 +611,8 @@ struct device *platform_profile_register(struct
+> > device *dev, const char *name,
+> >               put_device(ppdev);
+> >               goto cleanup_ida;
+> >       }
+> > +     scoped_guard(mutex, &profile_lock)
+> > +             list_add_tail(&to_pprof_handler(ppdev)->node, &profile_ha=
+ndlers);
+> >
+> >       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> >
+> > @@ -614,6 +623,8 @@ struct device *platform_profile_register(struct
+> > device *dev, const char *name,
+> >       return ppdev;
+> >
+> >  cleanup_cur:
+> > +     scoped_guard(mutex, &profile_lock)
+> > +             list_del(&to_pprof_handler(ppdev)->node);
+> >       device_unregister(ppdev);
+> >
+> >  cleanup_ida:
+> > @@ -636,7 +647,10 @@ void platform_profile_remove(struct device *dev)
+> >
+> >       pprof =3D to_pprof_handler(dev);
+> >
+> > -     guard(mutex)(&profile_lock);
+> > +     guard(mutex)(&profile_registration_lock);
+> > +
+> > +     scoped_guard(mutex, &profile_lock)
+> > +             list_del(&pprof->node);
+> >
+> >       ida_free(&platform_profile_ida, pprof->minor);
+> >       device_unregister(&pprof->dev);
+> >
+> > base-commit: d0cd1e850e1602729dd60dc3c5fd96f80e0cdc5d
+>
+> Looks good to me.
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
-Hi Peter,
+Applied as 7.4-rc material with some minor tweaks:
 
-A quick ping on this patch. Do you think it is ready to be applied?
-
-Thanks.
-
-Tim
-
-> Fixes: 23b2b5ccc45c ("sched/cache: Introduce helper functions to enforce =
-LLC migration policy")
-> Reported-by: Klaus Kusche <klaus.kusche@computerix.info>
-> Closes: https://lore.kernel.org/lkml/2180ea5a-eb28-4152-8d4d-cd00b0c24b2e=
-@computerix.info/
-> Suggested-by: Kayra Cizmeci <kayracizmeci@gmail.com>
-> Reviewed-by: Kayra Cizmeci <kayracizmeci@gmail.com>
-> Tested-by: Klaus Kusche <klaus.kusche@computerix.info>
-> Tested-by: Ricardo Neri <ricardo.neri@intel.com>
-> Tested-by: Chen Yu <yu.c.chen@intel.com>
-> Cc: stable@vger.kernel.org # 7.2.x
-> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> ---
->=20
-> Notes:
->     v3: Remove redundant SD_ASYM_PACKING check in llc_balance() (Kayra Ci=
-zmeci).
->     Add Tested-by tag from Chen Yu and Reviewed-by tag from Kayra Cizmeci=
-.
->     Link v2:
->     https://lore.kernel.org/lkml/77ceef1e51b895760dc5f6c9cde985a1679545b5=
-.1791224900.git.tim.c.chen@linux.intel.com/
->=20
->  kernel/sched/fair.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
->=20
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 57360f5cdde4f..e4906486a4fe9 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -10934,6 +10934,8 @@ static inline bool task_misfits_asym_cpu(struct l=
-b_env *env, struct task_struct
->  	return false;
->  }
-> =20
-> +static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int =
-src_cpu);
-> +
->  /*
->   * Check if task p can migrate from source LLC to
->   * destination LLC in terms of cache aware load balance.
-> @@ -10958,6 +10960,10 @@ static enum llc_mig can_migrate_llc_task(struct =
-lb_env *env,
->  	if (cpu < 0 || cpus_share_cache(src_cpu, dst_cpu))
->  		return mig_unrestricted;
-> =20
-> +	/* Prioritize asym packing to idle core over cache awareness */
-> +	if (env->idle && sched_asym(env->sd, dst_cpu, src_cpu))
-> +		return mig_unrestricted;
-> +
->  	/* skip cache aware load balance for too many threads */
->  	if (invalid_llc_nr(grp, p, dst_cpu) ||
->  	    exceed_llc_capacity(grp, dst_cpu)) {
-> @@ -12154,6 +12160,14 @@ static inline bool llc_balance(struct lb_env *en=
-v, struct sg_lb_stats *sgs,
->  	    sgs->group_misfit_task_load)
->  		return false;
-> =20
-> +	/*
-> +	 * On asym packing domains, if the destination CPU
-> +	 * has higher priority than all CPUs in the source group,
-> +	 * prioritize asym packing.
-> +	 */
-> +	if (sgs->group_asym_packing)
-> +		return false;
-> +
->  	/*
->  	 * Skip cache aware tagging if nr_balanced_failed is sufficiently high.
->  	 * Threshold of cache_nice_tries is set to 1 higher than nr_balance_fai=
-led
-> @@ -13569,12 +13583,12 @@ static int need_active_balance(struct lb_env *e=
-nv)
->  {
->  	struct sched_domain *sd =3D env->sd;
-> =20
-> -	if (alb_break_llc(env))
-> -		return 0;
-> -
->  	if (asym_active_balance(env))
->  		return 1;
-> =20
-> +	if (alb_break_llc(env))
-> +		return 0;
-> +
->  	if (imbalanced_active_balance(env))
->  		return 1;
-> =20
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/=
+?id=3Db66621ad2a8fb553c4cb75b9d69fead4f0532933
