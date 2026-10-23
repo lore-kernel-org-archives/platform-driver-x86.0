@@ -1,95 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.167
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792747312;
-	b=U4kpSymWFi+4/XJd5ri+sJ15o31SaB/lSy5n2ssgcPtMcUn4I84ZxCF8DPPDaa0j49MW
-	 h6ifXgqWaCPicD8SPoL3+KqulRfCQqiPlA1CRoIYI8CghPUsVnpNww2BUIW7A+FzhMcla
-	 OVtDcOX2dzfz0ryEgV6Jk5QAI2bY6ughFK2FqoyIvFiccpl18T7yPjg5CPLHzNxiK1eMd
-	 wzyg3st8Xbe2F3/CihioDGL4p2a5XAyHabVPz1oDk3HDkR8TJO/bXhtYqjqfEe+6rCdNA
-	 h2CjvtRcnPmvHF0QqHorPlnQ6MSG7rzg1vlEQnMWSNaYkZLuo4D7+JIYsFcfmdj/48w==
+	t=1792756315;
+	b=Nvd0GqGT35oXATcRuko/MfyVunUHhJDf35qgCXByldMUA5gnUvvZnQfZ0O2qQruUJJU0
+	 ER/UidE4ThO5Xl00hQNAwH3zMVryvAyjst1RglmukEIJmdFO685kC0MlqjwbBltk7fsQz
+	 7hoWYdXwLACQ+VdhNcHkCed8oAiu9d4W3upU8G7W7e2RfL6IGtR19l1q+Oy48lq4XuzVD
+	 5T3jU0H/r2C9LFg8K2bcjhfM9WghFrcUdgFlYJzoA1l7vqq8JwHktgWIndDkmOetICr3E
+	 fe2eLr832EON68xNplNWSFEraYlnjLGUymIQvL8GLiuh75uNcPFVkFOAmJ0LooXfAgg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792747312;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=HmjHL70SjYeeHWsidnbTxThGBvDUXps9xX6PjKAHEKQ=;
-	b=TKltgsyhvngVmay+zh/bW7wyQUsbfypzeRaqaZeq5yoibLxANy0jOX9P460ICGZiRnEj
-	 kfDR6r428G050IYyhQkyEtuLfPN7A0Q9mxsc6WfvtLlzVWaadOmhs7OJWklf8MdpHoIs4
-	 tB8hKk7yxQkrsPgxwGZuAabGO9B7BXdxZnIhhRQMBmNY/6n3/8M/JD5y9YwgJ2c9DXhqh
-	 zNcTaP3/ZfiVTz/Tw3BoYNNojnnIPAe0BYMAlOOYxjWLSC0Wc5q1YhhvX/8NBuRlPJIX/
-	 Hmh13haYBen3VCBfDPe60yG6aL/V2zXs0x6gH48Olhk8ZSQN9Pm5r6ujPIWWUreX+YQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792756315;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=ayJIFzSqD2mTi71/46SkH3U4ZS4yL5e9ZrqBNzAW+NE=;
+	b=ZW9eLsLcLafMm341qBzRJ2ReQDPEsUrmT0ice9HtAozDZY/YILM/BEiW/KfFkgN9C0pb
+	 hWWqE7bHM30cOq0rXI9EmxQlyidht9gsVHQAbnAsP5zlb4fOcXNSCPToNLjNDlQKPI17S
+	 pvO/VVJMuUm2z0I3cFhXYV5hr2/LEMGvOd8KdzznLA6gEE0djqNl3VAz7rOo1XYx5XUNd
+	 KNjgQOLwIPA86qNEUi1TTjni4pVkeRgH5T3q35adikQamvCG+fPj0kTtsufpo2VgQ8Znh
+	 1vtc0ig6WBr4PTCj1DsBy+POEWURfeTFtwpUkTU81hLqip2RtkLgP/pFIDvz+22sNGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=baylibre.com;
-	spf=pass smtp.mailfrom=baylibre.com;
-	dkim=pass header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=AoVoI6+p;
-	arc=none smtp.remote-ip=209.85.128.48
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=nbwbcS6z;
+	arc=none smtp.remote-ip=185.70.43.167
+Received: from mail-43167.protonmail.ch (mail-43167.protonmail.ch [185.70.43.167])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5690A606A320
-	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 09:21:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5690A606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBBE606A31A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 11:51:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0DBBE606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=AoVoI6+p
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4a140e7405dso6327925e9.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 02:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1792747311; x=1793352111; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=HmjHL70SjYeeHWsidnbTxThGBvDUXps9xX6PjKAHEKQ=;
-        b=AoVoI6+pp+gL/JBGzfNKGQOz2A3uS42562gdzOMf+SfOy7QLNULEY/J/Nsdh+nwqEZ
-         BCd/53IKR9sBj+t7VLklJJjNGYq707j8vzT8tFN4X5AGHrv5OkDRH+bsXJdDA3rLgyUC
-         HnUoXa8UoysH7xisFxaL0vwA4bn6LUmDtP2nmkXDmzaQhTJ1/5T2d1lmv/emORm+vLMw
-         4xD6OgsTmvuJq0QpqldjZKk+NZG1FU9TUGFdIfIB2b8bTJLOKs8z7+rFGnMVR+Arh/WW
-         Ni3VnHEJ9zuEr7c5QFyJb8AsxV9SWhHOLzf+MSrMXc7cUw7wH1L+5bOm79oe4LrtA6Gi
-         xNdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792747311; x=1793352111;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HmjHL70SjYeeHWsidnbTxThGBvDUXps9xX6PjKAHEKQ=;
-        b=rwnn8OdyqErllgvV9zhlKGg4D36HMYfkItXe4o5ggw3T7UfV93wT9EuJD8nfSD/L8f
-         GlR8yfZX4FySTFuNoHtDh0bIdvLMpzAgeeqY6fQ/RX5Q2pzcc3CXqmFvmiTHxYgFPZmV
-         ys0G5VZnxX3HHWpEVLt+cUHU3JKrwXeSw/BQQauXEyt3V8wvPlgb6XPWM93uqmAyt6tT
-         xQ62TK+2lliByKrr3/K71wmg2Xw3NUpU1UOABK7Rb/SL0ZEcRF78/pWyFyxDbfnmpyaC
-         4QSppAPngL73Qiba1hD2H3dsel9c6nIfKjcBRJrCw9WPkBjQAl+5oMjvIRvRdT9qSxzT
-         AI1w==
-X-Forwarded-Encrypted: i=1; AKwUvByUoUFOKbTXhPYs4SrRayz+Jjzhl16RVBWp85XN+Piw+Z74m6LZ2W8DiYXl3fy9nUYsicri37zxksKdZNhFnOg+Fsek@vger.kernel.org
-X-Gm-Message-State: AFq9FYJnVJ8srA5MMoSjgHZI1fS06580gsYjVyB3nvTQ/vTjoPoVJTQn
-	+ovooHbfpiRu+HKO4w6ZJjZoqwvN00U/ppGR0TESAeyQV0GwoeuZSxk/pnMgaFO1hcc=
-X-Gm-Gg: AYBFou0jyofSZmaMcMR16VzXwWtNL0W355WDidNO5cvXBr/7nJO5DEJNWYQvKNcQa5h
-	YYUWaV2+NodmU1rW0hCo2/MzLnDba35ziAu9fxlsTBPUAGyclv+L0iIZLsN3+abkpjFd16Frj9k
-	TZ7pnGXePRc/75Kg9rPAGpNWni2yET7gAywiJ4Wu7/Sg6VbOZirAbHhFGPPOtaIdlCX9NyXkbhg
-	H8CaPgwpLWTyWv/Idyi3PXXWHVlr5N5/MPH6euMx59NGAzlfglIvJrtz5OCXGvCx+QKc33QBskw
-	7hbyEqVlibGWjgcdUuQkOuL6cTjiZQ2zChjFZZxBvOYozlGpF3Mxp2nCN9kXtzFc8gru9hgEggm
-	fugA6SFLe0O9unhn44sK/HfaYbAHbmGXpXhEqOYcc/znquaKMuTgI6mTZ4xLl7sTQ8RWFDNSSXF
-	rxJn2V0yvEtH79s2T/3o1wXW2C3cTzqGy1ob5rrZBLpKTLsP5rQPdvZ0vhKhA1Y4bz5lWVqV2QZ
-	rnNHhnSSU3uYZrRyfxyoEMHgSXpROwfGfWN9VU0AqscHVb1PvDTPSyd4bZ6auuSseL7s++FqI+H
-	TkQRyjePnjkWzsmpTDuMoz8eAQF2te5OID+5neyc8uA=
-X-Received: by 2002:a05:600c:314f:b0:4a2:b89:b02 with SMTP id 5b1f17b1804b1-4a211c9c5c1mr26749325e9.10.1792747310749;
-        Fri, 23 Oct 2026 02:21:50 -0700 (PDT)
-Received: from localhost (p200300f65f19a9045816c66224fa2d94.dip0.t-ipconnect.de. [2003:f6:5f19:a904:5816:c662:24fa:2d94])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-48e38025d76sm3827688f8f.13.2026.10.23.02.21.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Oct 2026 02:21:49 -0700 (PDT)
-Date: Fri, 23 Oct 2026 11:21:48 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: do not poke keyboard
- controller
-Message-ID: <atsmraNrFH4HW3Qb@monoceros>
-References: <4b2f60a7ceac543bd8b889b9c0772b2c@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=nbwbcS6z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1792756311; x=1793015511;
+	bh=ayJIFzSqD2mTi71/46SkH3U4ZS4yL5e9ZrqBNzAW+NE=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=nbwbcS6zfp2gP+PSe5Z5/az7zTYmEHVrbdBl0Iegdw3beXw1Tk2u1Tv3OdRqqYA05
+	 oWiEsZyS0p/RFVnUdg+ygYB33i4Ra/YQh06g5leoGJbfbi9gmWj99VHa/GTqsO0nLV
+	 IRDHV/cs75nnS8PPj+qaeeCj9KfOitdDnn6jOU6hNTK4GGVrctQZHIrf79vAsToYjg
+	 4yVSQ5qyiJ/GRw5TKT1LahniMBV4FWD3j/2cCrpOcRc/99gPKS3g8WMdaLF5F62T7T
+	 0r9jI/t0FLIx/kkYGGskgCqC2XPQNrew0Mgf4BcmjvPVJQfwbzpyc8XhOsNlSJPoZN
+	 9PzYLfsi3LE+w==
+Date: Fri, 23 Oct 2026 11:51:46 +0000
+To: Armin Wolf <W_Armin@gmx.de>, Mingyou Chen <qby140326@gmail.com>
+From: 7z0423arsenova <7z0423arsenova@proton.me>
+Cc: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: [BUG] bitland-mifs-wmi: platform_profile broken on Redmi G 2022 (TM2135)
+Message-ID: <OT2JfRLDi6yHShYvywRZoFBYdW-TUgdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50ISIc=@proton.me>
+Feedback-ID: 227066774:user:proton
+X-Pm-Message-ID: 726bffc88b5fcaad169362fdc2e6c59e1f332c49
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -99,59 +61,193 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="igkmiqlhogoklxiv"
-Content-Disposition: inline
-In-Reply-To: <4b2f60a7ceac543bd8b889b9c0772b2c@gmail.com>
-
-
---igkmiqlhogoklxiv
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: do not poke keyboard
- controller
-MIME-Version: 1.0
 
-On Wed, Oct 21, 2026 at 09:50:56PM -0700, Dmitry Torokhov wrote:
-> On Ideapad Z570 the driver tries to disable and re-enable data coming
-> from the touchpad by poking directly into 8042 keyboard controller.
-> This may coincide with the controller resuming and leads to spews in
-> dmesg and potentially other instabilities.
->=20
-> Instead of using i8042_command() to control the touchpad state create
-> an input handler that serves as a filter and drop events coming from
-> the touchpad when it is supposed to be off.
->=20
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->=20
-> v3:
-> - add missing header includes (compiler.h, container_of.h, errno.h,
->   mod_devicetable.h, slab.h, spinlock.h)
+Hi Armin, Mingyou,
 
-noooooooo, mod_devicetable.h is wrong, I want to get rid of that header
-and input_device_id is already provided by <inux/input.h>.
+On a Redmi G 2022 (board TM2135) the MICommonInterface firmware
+(B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B) does not match what
+bitland-mifs-wmi expects. On 7.2, "performance" cannot be selected
+and "balanced" selects the firmware's performance mode. The two
+patches now in pdx86 for-next (23cc56f6dea6 "Detect failed function
+calls" and 4cfc3631d4ca "Treat WMI_FN_SYSTEM_AC_TYPE as optional") do
+not fix the first problem, and with them the remaining profile writes
+fail with -ENOMSG even though the mode does change. I tested this,
+see 4.
 
-If you want full iwyu, please use <linux/device-id/input.h> instead.
+DMI:    TIMI Redmi G 2022/TM2135, BIOS RMGAD6T0P1313 09/25/2025
+Kernel: 7.2.11-arch1-1, power-profiles-daemon 0.30, on AC (barrel)
 
-Best regards
-Uwe
+1. performance and balanced-performance fail with -ENODATA
 
---igkmiqlhogoklxiv
-Content-Type: application/pgp-signature; name="signature.asc"
+   $ powerprofilesctl set performance
+   ... Error writing '/sys/firmware/acpi/platform_profile':
+   No data available
 
------BEGIN PGP SIGNATURE-----
+   bitland_check_performance_capability() reads command 0x1300
+   (SystemAcType). The firmware implements only Get commands
+   0x0800-0x0B00. For any other Get command WMAA returns a bare
+   Integer 0xE000 instead of the 32-byte buffer. The WMI core
+   marshals the Integer as 4 bytes, which is below min_size, so
+   wmidev_invoke_method() returns -ENODATA. The other unimplemented
+   Get commands the driver uses fail the same way (see the list at
+   the end).
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmrbJykACgkQj4D7WH0S
-/k7UUQf/fhPoADJkA8uE7YZ9tqBim2i0UzkFm07T8xnmU4CnTZhCoQ9Ozmsd6tr5
-1FGS21kPcdsoYa+h7unjfuMHYJNcG/WOx2VAp3BgYSwNgKYT4rnD4biWgJHQRNrM
-lhWcoLpkwuaUHXHcexOVQTbc2kjVhLQ9kUQFV7aR1za6pX+THOsGsys//h3v+/eI
-ReOfDJDne0l72AgYWxcPkyttdqZBYFnGg6pjvF/FsBReCyvxnszGvO7ZJg5s63bP
-ikNxNMtfJU18X2ZxhpE9/s4zkYcgEFm8ggEZbEVIIKKjEZzX64P5U5Mp5rc+OOJu
-JMUHB+DaL4Dp1tgHVXnTechZ2zULUw==
-=vw9K
------END PGP SIGNATURE-----
+2. "balanced" selects the performance mode
 
---igkmiqlhogoklxiv--
+   $ powerprofilesctl set balanced
+   $ cat /sys/firmware/acpi/platform_profile
+   performance
+   $ powerprofilesctl get
+   performance
+
+   The firmware's values for command 0x0800 are 1-4, not 0-3. Set
+   translates 3 to EC register ITSM 0 (and 4 to ITSM 3 where allowed)
+   and writes anything else, including 0, unchanged. Get reports
+   ITSM 0 as 3. The mode hotkey (EC query _Q0D) cycles ITSM
+   2 -> 1 -> 0 [-> 3] -> 2, and on battery the firmware uses only
+   ITSM 1 and 2. That gives:
+
+     value  ITSM  mode
+     1      1     balanced
+     2      2     quiet
+     3      0     performance
+     4      3     higher mode, only GPUT 1/3 with a >=3D 330 W adapter
+     0      0     not handled, ends up as performance
+
+   On this machine the mode hotkey cycles platform_profile through
+   low-power -> balanced-performance -> performance, and the event
+   values (see 3) go 2 -> 1 -> 3, which matches the table.
+
+   So the driver's "balanced" (0) selects performance, and the
+   firmware's balanced (1) is reachable only as "balanced-performance",
+   which problem 1 blocks. power-profiles-daemon reads back
+   "performance" and switches its own profile to it, which also sets
+   EPP to performance on all CPUs.
+
+3. Mode change events are dropped
+
+   THMD runs after every Set of 0x0800 and from _Q0D. It sends event
+   0x16 with the new mode (same 1-4 values) in byte 2. The driver
+   handles only 0x0F (WMI_EVENT_PERFORMANCE_PLAN), which this
+   firmware never sends, so platform_profile_notify() is never
+   called. With dynamic debug on, each hotkey press logs (device
+   prefix trimmed):
+
+     WMI event: id=3D0x16 value_low=3D0x02 value_high=3D0x00
+     Unknown event: id=3D0x16 value=3D0x02
+
+   0x16 is WMI_EVENT_FN_4 in the driver's table, so it cannot simply
+   be remapped for all models.
+
+4. The for-next series on this machine (tested)
+
+   I built bitland-mifs-wmi.c from pdx86 for-next (v7.2 +
+   23cc56f6dea6 + 4cfc3631d4ca) as a module for 7.2.11-arch1-1 and
+   loaded it in place of the in-tree one, with power-profiles-daemon
+   stopped:
+
+   $ echo low-power | sudo tee /sys/firmware/acpi/platform_profile
+   tee: /sys/firmware/acpi/platform_profile: No message of desired type
+   $ cat /sys/firmware/acpi/platform_profile
+   low-power
+   $ echo balanced | sudo tee /sys/firmware/acpi/platform_profile
+   tee: /sys/firmware/acpi/platform_profile: No message of desired type
+   $ cat /sys/firmware/acpi/platform_profile
+   performance
+   $ echo performance | sudo tee /sys/firmware/acpi/platform_profile
+   tee: /sys/firmware/acpi/platform_profile: No data available
+
+   - Problem 1 stays. The 4-byte Integer fails the min_size check
+     before return_code is looked at, so 4cfc3631 never sees
+     -EOPNOTSUPP.
+   - bitland_mifs_wmi_call() now also checks the function echo for
+     Set. This firmware fills FUTR (bytes 2-3) only in the Get path,
+     so Set replies carry function 0 and the write fails with -ENOMSG
+     although the EC has already switched, as the read-backs show.
+     On 7.2 these writes succeed, so this is a regression on this
+     model.
+   - Unknown Set commands do come back as the 32-byte buffer with
+     0xE000. When I unloaded the for-next module, the LED core's off
+     write (Set 0x1200, not implemented here) logged (prefix
+     trimmed):
+
+       kbd_backlight: Setting an LED's brightness failed (-95)
+
+     Only unknown Get commands come back as the bare Integer.
+
+As far as I can tell, the profiles on this model need all of:
+
+   - a bare Integer 0xE000 reply treated as "not supported", so that
+     4cfc3631 lets performance through (Set does its own adapter
+     checks),
+   - no function echo check for Set replies, or one that accepts 0,
+   - mode values 1 =3D balanced, 2 =3D quiet, 3 =3D performance,
+   - event 0x16 handled as a mode change.
+
+Together with the different meaning of 0x0900 (below), this looks
+like it needs per-model handling.
+
+Other differences, seen on 7.2:
+
+   - gpu_mode reads give "Protocol error". Get 0x0900 returns two fan
+     speeds and EC fields TSR6/TSR7 here, not the GPU mode.
+   - kb_mode, hwmon fan1_input and temp1_input give "No data
+     available" (0x1000, 0x0D00 and 0x1600 are not implemented).
+   - kbd_backlight brightness reads 4294967235: laptop_kbd_led_get()
+     returns -ENODATA through enum led_brightness.
+   - 0x0A00 holds the touchpad, Fn lock and Win key lock states
+     (sub-command in byte 4), and 0x0B00 looks like the GPU switch.
+
+Relevant ASL from SSDT "XMCC1806", \_SB.PC00.WMID.WMAA (trimmed, EC
+paths shortened):
+
+    Name (RETS, Buffer (0x20) { 0x00 })
+    CreateWordField (RETS, Zero, SGER)
+    CreateWordField (RETS, 0x02, FUTR)
+    CreateWordField (RETS, 0x04, FRD0)
+    ...
+    Case (0xFA00)                          // Get
+    {
+        Switch (FUN2)
+        {
+            Case (0x0800)
+            {
+                If (ECRD (ITSM) =3D=3D Zero) { FRD0 =3D 0x03 }
+                Else { FRD0 =3D ECRD (ITSM) }
+            }
+            ...                            // 0x0900, 0x0A00, 0x0B00
+            Default
+            {
+                Local5 =3D 0xE000
+                Return (Local5)            // Integer
+            }
+        }
+        SGER =3D 0x8000
+        FUTR =3D FUN2
+        Return (RETS)
+    }
+    Case (0xFB00)                          // Set
+    {
+        Switch (FUN2)
+        {
+            Case (0x0800)
+            {
+                SGER =3D 0x8000
+                ...                        // adapter wattage checks
+                If (FUN3 =3D=3D 0x03) { ECWT (Zero, ITSM) }
+                Else { ECWT (FUN3, ITSM) }
+                THMD ()
+                Break
+            }
+            ...
+        }
+        Return (RETS)                      // FUTR stays 0
+    }
+
+I can send the full acpidump and test patches.
+
+Thanks,
+Arsenova
+
