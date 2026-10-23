@@ -1,114 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792697246;
-	b=fvqHL1ePxd1ffcHLHcddGz1wfcABMQ+o6JfHAxcVwduwQbUE554o0sbxYmkiDpX07uMV
-	 tXcUGR58ZzShw68QnBxv89vi24TRl9ZjpdNA75W+mziKthg3y+opgCfAGwX7hP2O3XuLq
-	 Ta7Dw6juAszveRPsVKPQKhxbiPVwiprt+A6VASBcSrIf+4jw2gmZHdOGLQWsECi9wUz8f
-	 4mkfN1CyEnQR89HE81xrm1ICCeuDq4oAVIOzTyDoqbA6V71DkO1K+hPt8V0K10usTjQ7f
-	 zSvsiP4MPfVAlzN210HC8QGpw3E8RkPe2So73Umd6/6CG28uczIuk2wup8QB/rkgOdA==
+	t=1792723122;
+	b=MPg6X4NaLy4hUgREKzZDJi+wRpO6t+dNOCMNOXkwg0jqQ0VtAzFyPkha2GtIif7Nmcj2
+	 YJKOQ8Ci6AbcnuEm72950Jzr+aqiWTkPCEZZU3SO53Ln7JjPAFe5SZeMIOVsUpXW0oYOo
+	 UP1U4odXjrvhGv1QG1xj5Oo+G1KPcDjKnT+GUBMdcuFOQL+Op6wLrRuXPyEUNuXNOSAY+
+	 SPaRWBrlb6DipTOwgHbbsPifqw7tgmSqnXOKr/YZNS/B6uLkRSVA24QTXggJsBvy0/fQp
+	 qMFjGhBfqJvk13EWLKI1QC1kTzhgVgI5bWqSBz4yr616Hx7RbRvilX3kWEK2X0HgxdQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792697246;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=UvQHobgH8Zb4rHJc4CXfEofhf12rBgJ9G+UkmAWeH18=;
-	b=RtLmVVc1JGpu1pa4aflHoEDCchD850JUQBe7ZdRvMedSMTZX72JGf7dHZTMGs5DTV4WE
-	 WGn5lQFWOzbOd0vUQO+cp74w8F94bQ9nAmp2U4E6GWRpxJi3XHEj7ac3GwjOPln5e95Qw
-	 6GI+/Zal+dw+ORN5locTuAlyJnwcKd2LTzfj9TQvICpct372G0yfEAvG70ihELbNtxyOt
-	 KB9g0cMM9S4OAQtzM2Wrg+XC6q8HcEcHsUZxoG83aqQxEa4K2RqxnMmr5cCcIJdNbnlvY
-	 bYlgZDB0ouvJ2YC3hve20y4LxP8cBxg6viswfta1fCbRZiBZNidYdGCs2jPQbDZA5Bw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792723122;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Subject:Date:
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=hHKxGT7swwB8/X1LwBtc7lFDWey/fBbw4RDr/+OI86c=;
+	b=iZjrHJS4Z6Wr5LSHGQi+DV3ShKB7vZVXC9R78rLEyljBXKUpyLYPcKZQ+S70csTOodKu
+	 Ph3v+9rtB86VD+DZm1C7Ez+gCOFe8Fwapk5HfhI8WEcISmdMvdrWyWkblgZ0jbuGOyS05
+	 9755KeoabXAwr9B1I8Ahpf7uky7Yk5bEhKi55CxXZXNRAmJmk2sBLOz44nJilH4OixGEe
+	 54l0qUqM/r3TNQOvE40uRI3NEWOqpJJ//nFcMV5Whs12lg7RhYjKpWirGJLLO9AkVKSRd
+	 4AaYxnlPBEfWdxYqBykby6zv959QsK/1TCHfOi6KQo9BMmYBUL3xTEsSOCfN4zPMZCw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=thinkoid.org;
-	spf=none smtp.mailfrom=thinkoid.org;
-	dkim=pass header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=zhfZQOTK;
-	arc=none smtp.remote-ip=209.85.222.178
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Tl72OpbN;
+	arc=none smtp.remote-ip=198.175.65.14
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C8B606A31D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 19:27:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 57C8B606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=thinkoid.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A122606A31D;
+	Fri, 23 Oct 2026 02:38:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A122606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=zhfZQOTK
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-93f1e5d7450so10821885a.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 12:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thinkoid-org.20251104.gappssmtp.com; s=20251104; t=1792697239; x=1793302039; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=UvQHobgH8Zb4rHJc4CXfEofhf12rBgJ9G+UkmAWeH18=;
-        b=zhfZQOTKLhfJXm5LG7URakF+NxBk8bk9htV9atsIWMIUWrU23y7Sfypddxdak+rC3i
-         PMYT/8uaey1X82aqk34aRLpVr2lJfr0AV634/gAmPx50zofgvvaTW+QNmNoCja4ZjVaL
-         02Nx8Bpbt+v1DsTKhFrexDMQGgpCYQjPIHqvvbCxam1OokDmFvqL2Zf8/2AY3S3aLOUW
-         jTRqtHAprU7w3Ia1FulRoOXZLlwn71GzVkf+/kB8LtXmBY1Y6fhfUSWgxlpTFRVIU4xE
-         s2NVxm4x4w5wU+lSdKeE4oHSfpC5VkQdC1Lh7ikpJgQbh1u39glIH6sgf/+glyqalNrw
-         6qNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792697239; x=1793302039;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=UvQHobgH8Zb4rHJc4CXfEofhf12rBgJ9G+UkmAWeH18=;
-        b=zMrZVlOT4Y4F+fbngejlqRJ6BPPnua+jdI2LzKEGr4T1mVIWbK3BQeJrHUWtA8YQY4
-         sO39Zqn5esnFPidy0cDQmlotDq7+kGaCAwoZXrVoyftjC1nkXQ1yP/fQgZSSnbOna9at
-         AOEClKstmqamAl9VLoZL8dcW9T1ZjjWPUxrK6zKe5tdwLxbZO/joiQKdD8VnL6KZwrM3
-         4lsmvEjhumme0V7CWTqcPn982mDALgz1oa6N12M7nGOydyiXRmYKn7tI+82SF/vaYKua
-         Yg9DQToAQXjiWhLlKAU+wk+tzKYi8YZY32M6BtflGuvAGtwSVBO/UU5PBOwqtdWw/FwU
-         7vLg==
-X-Forwarded-Encrypted: i=1; AKwUvBzoFs2Nt3Z52L19LcgS5isR9uyYy9/EZX/eYL00x/CR0RamEP4LcYjV/finZdjCDSt9/fBPQVbkk7hc2wsg9982Cjdw@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ3A985+gqeG8LKgXj3+paWhpY+6IipZUzo7qvyy3wpaIGEtUYc
-	YldvwOHTbExLN3H7gtmdRcQLM8G0w88v5WV/3LhsQ9YfpJq6jOLMuW3g3hqEF2HMzCg=
-X-Gm-Gg: AYBFou1T98YW2rD4tqf8gR/wuXZ1EY5IJ798t+ax3DXsd6+1x9Sxj/eGH8zHHFoKgO2
-	GaaUD6C/uj6lc5JjOku6ANmFrPbKdIsRMBJxIMHCT5NkN6IpaskIAM90F6mHvQIRjGzZkCz9Iae
-	91WUVSugAsZQ0Cd4rzgZZzp+ECLNGzujIj+bRCM4MG9ZkDVAQogzD7cIxAbtPYK2ZVcx28sIi3E
-	PtcxqyEVzp9qsuaDc6G4le0iWusHU0BsRErLc85Bu9VzvmmtDvlXr8OYZlhR5z+d3cosLROP/ua
-	aC/oFfaipjzPnF+N3OptN+7Gf0UkKyBDKDRx0S3LONh7PMifL7nEWIa1PoXiX9ZCMrSjkTxYBBK
-	otXmCQGEmstTt4VNFpwc0fFgWTn9a1f+jr00hrmu0Ac+k3kWDu7d6Hxs+UbBB/t0+Zgw5lUPYCM
-	1aDkyzEIwPyC/LkorGOvMJ3avbxA5O+u2J1TtGhfFsaUhU/7ZD95yrhv210NjWJHJDfcbWiCMOK
-	/4EzkyrjRs+NfWGj2RamjM1/iZWunEd9YS0
-X-Received: by 2002:a05:620a:44d3:b0:93e:fa30:f1dc with SMTP id af79cd13be357-93f6f8c01cemr79549185a.72.1792697238908;
-        Thu, 22 Oct 2026 12:27:18 -0700 (PDT)
-Received: from behemoth ([2605:a601:9b7d:cc00::c])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93f6fb82b87sm30290185a.13.2026.10.22.12.27.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 12:27:18 -0700 (PDT)
-From: Liviu Nicoara <lnicoara@thinkoid.org>
-To: Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Michael Burch <me@michaelburch.net>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Abel Vesa <abelvesa@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Tl72OpbN
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792723122; x=1824259122;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=XD5THp9BlYM9lSBR08JsRNCcOLMeJudstF9CD6m5vMs=;
+  b=Tl72OpbNpi0lPlSeje7lFZ8KeVgjOUZFVUDHYm8isl3FVcuM7PqEjW3N
+   FhkzOV4YIRseUmC1vLAVNRR0g3gHUk22FXlv3kqx2442WZmXnUlMLLenG
+   m3+KtcwdeQSBBRtYA/weXE/AIzl1LJQxYBj7QtkBn8jWhFLophPSbs8yI
+   ReklYPHp3QNaLoc5cL+xAJS/9oChceGTuK0PAbWXFgg8UxnaJUxh83HhJ
+   /zE62sM/TSO89iUPYuKp5Tj+9aKkWdtTHBwFfx+T9WVAWkgrW8tCAkJCK
+   fng60KZH7wm+SBt7Tz+zw8QtrrlvghlqFrY3iWdIqih2q/qWYpACDEpuI
+   g==;
+X-CSE-ConnectionGUID: ScW65FwcQGqWU1ZavRePDQ==
+X-CSE-MsgGUID: ZxHeCTJhTlKqwg7VuyBcxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11943"; a="1356813"
+X-IronPort-AV: E=Sophos;i="6.27,173,1787036400"; 
+   d="scan'208";a="1356813"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2026 19:38:40 -0700
+X-CSE-ConnectionGUID: rCEgal3wSqqVfIz28OIP0g==
+X-CSE-MsgGUID: B+WEBNSISVCfwoB0ZTCqbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,173,1787036400"; 
+   d="scan'208";a="3461559"
+Received: from debox1-desk4.jf.intel.com ([10.54.77.98])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2026 19:38:41 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: ilpo.jarvinen@linux.intel.com,
+	david.e.box@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
-	Abel Vesa <abel.vesa@oss.qualcomm.com>,
-	Tobias Heider <tobias.heider@canonical.com>,
-	Val Packett <val@packett.cool>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	linux-hardening@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
-Date: Thu, 22 Oct 2026 15:27:09 -0400
-Message-ID: <20261022192709.12149-1-lnicoara@thinkoid.org>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <NCQ5O8k2_GpmJZBjDzgZL67uwdiYmmuSudO9VmdRaFTDq0u7aec6at00VYbzdwwSVvgJnLnGxewwp_TVO9oTjM2pAjP_LoiURf9JCIKXB-w=@vinarskis.com>
-References: <NCQ5O8k2_GpmJZBjDzgZL67uwdiYmmuSudO9VmdRaFTDq0u7aec6at00VYbzdwwSVvgJnLnGxewwp_TVO9oTjM2pAjP_LoiURf9JCIKXB-w=@vinarskis.com>
+	rodrigo.vivi@intel.com,
+	michael.j.ruhl@intel.com,
+	ayaz.siddiqui@intel.com,
+	syed.abdul.muqthyar.ahmed@intel.com,
+	intel-xe@lists.freedesktop.org,
+	hansg@kernel.org
+Subject: [PATCH v2 1/1] platform/x86/intel/pmt: Notify userspace when crashlogs complete
+Date: Thu, 22 Oct 2026 19:38:32 -0700
+Message-ID: <363a32e2e37d5fa62983bc9e280fc87dbf4ed214.1792721526.git.david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1792721526.git.david.e.box@linux.intel.com>
+References: <cover.1792721526.git.david.e.box@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -118,100 +87,324 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 22 Oct 2026 17:07:25 +0000, Aleksandrs Vinarskis wrote:
-> I do not think the left charger you identified is correct - how did
-> you arrive to that conclusion? Curious to compare to my method.
+A crashlog may already be complete when the driver binds, or it may
+complete asynchronously after userspace requests a manual trigger.
+Userspace otherwise has to poll to discover that data is ready.
 
-I am afraid my method was simpler and coarser than yours: one run per
-port, nineteen samples ten seconds apart, the charger feeding the
-system only (battery at 96 % and not charging), on a 7.2.6 kernel
-with all four GPIO channels in one DTB. The deltas over three minutes:
+Emit a KOBJ_CHANGE uevent on the per-instance crashlog device when a
+completed log is found at probe. After a manual trigger, poll the
+completion bit at 100 ms intervals for up to 5 seconds and emit the same
+event when capture completes, or when the poll window expires without
+completion, so userspace is not left waiting. A clear or rearm while
+polling ends the poll without an event. The poll runs on the freezable
+workqueue so it does not read the device during suspend. The event
+carries INTEL_PMT_CRASHLOG_COMPLETE set to 1 or 0 accordingly.
 
-Channel                Left charger   Right charger
-0x14b  AMUX2_GPIO          +1.6           -0.9
-0x145  AMUX2_THM           +0.1           +3.4
-0x146  AMUX3_THM           +0.8           -0.1
-0x14a  AMUX1_GPIO          -0.2           +1.3
-0x144  AMUX1_THM           -0.1           +0.2
-0x148  AMUX5_THM           -0.2           +1.2
-0x147  AMUX4_THM           +0.1           +1.8
-0x14d  AMUX4_GPIO          +0.0           -0.0
+The class device's attributes are created after its KOBJ_ADD, so the
+probe-time event is also the first point at which userspace can reliably
+read a log that was already captured.
 
-The other channels fell or held while 0x14b rose, so it was not the
-board warming as a whole. But 1.6 C in three minutes, against your
-2.3 C in ten seconds on the right, might mean that 0x14b is a sensor
-somewhere on the left side of the board, not necessarily on the left
-port's power path. Under SSD load it moved with 0x146 and fell with
-it in cool-down, which puts it close to the SSD. "Left charger" was
-my reading of the sign pattern. Your ten-second test is probably the
-better discriminator for a sensor on a power path. If nothing answers
-the left charger in ten seconds, the simpler reading is that the left
-port has no thermistor of its own among these seven.
+Initialize the work items before the device's sysfs attributes are
+exposed, and reject manual triggers until setup of that crashlog
+completes so a trigger cannot queue work against a device torn down by
+a later probe failure. Disable and drain the work items during removal.
 
-> pm8550_gpio_02 does NOT clearly follow. In your test you have
-> waited multiple minutes, which is enough to heat up a larger
-> area on the motherboard.
+Document the new uevent in the sysfs-class-intel_pmt ABI file.
 
-Agreed. In your left run it was the only channel with a positive
-delta while the board drifted down, which is the same weak signal I
-had, and no more than that.
+Assisted-by: LLM
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ .../ABI/testing/sysfs-class-intel_pmt         |  32 ++++
+ drivers/platform/x86/intel/pmt/crashlog.c     | 138 +++++++++++++++++-
+ 2 files changed, 165 insertions(+), 5 deletions(-)
 
-On the two AMUX3/AMUX4 GPIO channels: neither carries a thermistor
-on this unit, and your tables say the same for yours. 0x14c reads
-130.048 C on every sample, the last row of the conversion table,
-where the driver clamps a voltage at or below the lowest it knows.
-Its input sits near 0 V. Windows' ADC configuration sets up only
-PM8550 GPIO3 and GPIO4 as analog inputs, for AMUX1 and AMUX2, so the
-pin behind AMUX3 is in its digital default, and PM8550's low GPIOs
-read back here as inputs with a 10 uA pull-down. 0x14d held 34.7 C
-within 0.1 C through both chargers and two load runs on this unit,
-and 35.8 to 36.0 C through every one of your tests, the hairdryer
-included. That is a biased pin, not a sensor. Both nodes can go.
+diff --git a/Documentation/ABI/testing/sysfs-class-intel_pmt b/Documentatio=
+n/ABI/testing/sysfs-class-intel_pmt
+index ed4c886a21b1..cf95d1dcd4d6 100644
+--- a/Documentation/ABI/testing/sysfs-class-intel_pmt
++++ b/Documentation/ABI/testing/sysfs-class-intel_pmt
+@@ -66,6 +66,38 @@ Description:
+ 		can be determined from an XML file of specified GUID for the
+ 		parent device.
+=20
++What:		/sys/class/intel_pmt/crashlog<x>
++Date:		October 2026
++KernelVersion:	7.4
++Contact:	David Box <david.e.box@linux.intel.com>
++Description:
++		The driver emits a KOBJ_CHANGE uevent for the crashlog<x>
++		device with the following environment variable:
++
++		INTEL_PMT_CRASHLOG_COMPLETE
++			The crashlog complete status at the end of a check:
++			1 if set, 0 if not. It reports the status only, not
++			what caused the crashlog to be captured.
++
++		The event is currently sent when a completed crashlog is
++		found at probe, and after a write of 1 to trigger. It
++		returns 1 when the crashlog completes, or 0 for trigger if
++		it has not completed within the poll time. Writing clear
++		or rearm while polling ends trigger without an event.
++
++		The status may have changed by the time the event is
++		received, and the same crashlog may be reported more than
++		once. Consumers should read the status attributes before
++		acting. Consumers that start after the device was probed
++		should check the complete status of existing devices, for
++		example when handling a coldplug add event, since an event
++		emitted before the uevent listener starts is not replayed.
++
++		Other KOBJ_CHANGE events may be added in the future with
++		different variables. Consumers should match on
++		INTEL_PMT_CRASHLOG_COMPLETE and ignore variables they do not
++		recognize.
++
+ What:		/sys/class/intel_pmt/crashlog<x>/crashlog
+ Date:		October 2020
+ KernelVersion:	5.10
+diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x=
+86/intel/pmt/crashlog.c
+index d7018b495217..2d006abce5bf 100644
+--- a/drivers/platform/x86/intel/pmt/crashlog.c
++++ b/drivers/platform/x86/intel/pmt/crashlog.c
+@@ -13,13 +13,16 @@
+ #include <linux/intel_vsec.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/kobject.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+ #include <linux/printk.h>
+ #include <linux/slab.h>
++#include <linux/sysfs.h>
+ #include <linux/uaccess.h>
+ #include <linux/overflow.h>
++#include <linux/workqueue.h>
+=20
+ #include "class.h"
+=20
+@@ -115,6 +118,12 @@ struct crashlog_entry {
+ 	struct intel_pmt_entry		entry;
+ 	struct mutex			control_mutex;
+ 	const struct crashlog_info	*info;
++	struct work_struct		uevent_work;
++	struct delayed_work		uevent_poll_work;
++	u8				uevent_poll_tries;
++	bool				uevent_polling;
++	bool				uevent_complete;
++	bool				trigger_ready;
+ };
+=20
+ struct pmt_crashlog_priv {
+@@ -122,6 +131,9 @@ struct pmt_crashlog_priv {
+ 	struct crashlog_entry	entry[];
+ };
+=20
++#define PMT_CRASHLOG_UEVENT_POLL_MS		100
++#define PMT_CRASHLOG_UEVENT_POLL_MAX_TRIES	50
++
+ /*
+  * I/O
+  */
+@@ -271,6 +283,80 @@ static int pmt_crashlog_set_rearm(struct crashlog_entr=
+y *crashlog)
+ 	return pmt_crashlog_rmw(crashlog, crashlog->info->control.rearm, true);
+ }
+=20
++static void pmt_crashlog_uevent_fn(struct work_struct *work)
++{
++	struct crashlog_entry *crashlog =3D
++		container_of(work, struct crashlog_entry, uevent_work);
++	char *envp[] =3D {
++		READ_ONCE(crashlog->uevent_complete) ?
++			"INTEL_PMT_CRASHLOG_COMPLETE=3D1" :
++			"INTEL_PMT_CRASHLOG_COMPLETE=3D0",
++		NULL,
++	};
++
++	kobject_uevent_env(crashlog->entry.kobj, KOBJ_CHANGE, envp);
++}
++
++static void pmt_crashlog_uevent_poll_fn(struct work_struct *work)
++{
++	struct crashlog_entry *crashlog =3D
++		container_of(to_delayed_work(work), struct crashlog_entry,
++			     uevent_poll_work);
++	bool complete;
++	int ret;
++
++	guard(mutex)(&crashlog->control_mutex);
++
++	/* The cycle was ended by a clear or rearm */
++	if (!crashlog->uevent_polling)
++		return;
++
++	/* A newer trigger_store() re-armed us; that cycle owns the notification =
+*/
++	if (delayed_work_pending(&crashlog->uevent_poll_work))
++		return;
++
++	ret =3D pmt_crashlog_complete(crashlog, &complete);
++	if (!ret && complete) {
++		crashlog->uevent_polling =3D false;
++		WRITE_ONCE(crashlog->uevent_complete, true);
++		schedule_work(&crashlog->uevent_work);
++		return;
++	}
++
++	if (++crashlog->uevent_poll_tries < PMT_CRASHLOG_UEVENT_POLL_MAX_TRIES) {
++		queue_delayed_work(system_freezable_wq, &crashlog->uevent_poll_work,
++				   msecs_to_jiffies(PMT_CRASHLOG_UEVENT_POLL_MS));
++		return;
++	}
++
++	/* Trigger did not complete within the poll window */
++	crashlog->uevent_polling =3D false;
++	WRITE_ONCE(crashlog->uevent_complete, false);
++	schedule_work(&crashlog->uevent_work);
++}
++
++static void pmt_crashlog_end_poll(struct crashlog_entry *crashlog)
++{
++	lockdep_assert_held(&crashlog->control_mutex);
++
++	crashlog->uevent_polling =3D false;
++	cancel_delayed_work(&crashlog->uevent_poll_work);
++}
++
++static void pmt_crashlog_notify_pending(struct crashlog_entry *crashlog)
++{
++	bool complete;
++	int ret;
++
++	lockdep_assert_held(&crashlog->control_mutex);
++
++	ret =3D pmt_crashlog_complete(crashlog, &complete);
++	if (!ret && complete) {
++		WRITE_ONCE(crashlog->uevent_complete, true);
++		schedule_work(&crashlog->uevent_work);
++	}
++}
++
+ /*
+  * sysfs
+  */
+@@ -309,8 +395,12 @@ clear_store(struct device *dev, struct device_attribut=
+e *attr,
+ 	guard(mutex)(&crashlog->control_mutex);
+=20
+ 	ret =3D pmt_crashlog_set_clear(crashlog);
++	if (ret)
++		return ret;
+=20
+-	return ret ?: count;
++	pmt_crashlog_end_poll(crashlog);
++
++	return count;
+ }
+ static DEVICE_ATTR_RW(clear);
+=20
+@@ -454,8 +544,12 @@ rearm_store(struct device *dev, struct device_attribut=
+e *attr, const char *buf,
+ 	guard(mutex)(&crashlog->control_mutex);
+=20
+ 	ret =3D pmt_crashlog_set_rearm(crashlog);
++	if (ret)
++		return ret;
+=20
+-	return ret ?: count;
++	pmt_crashlog_end_poll(crashlog);
++
++	return count;
+ }
+ static DEVICE_ATTR_RW(rearm);
+=20
+@@ -502,9 +596,17 @@ trigger_store(struct device *dev, struct device_attrib=
+ute *attr,
+=20
+ 	if (!trigger) {
+ 		ret =3D pmt_crashlog_set_clear(crashlog);
+-		return ret ?: count;
++		if (ret)
++			return ret;
++
++		pmt_crashlog_end_poll(crashlog);
++		return count;
+ 	}
+=20
++	/* reject triggers until probe has finished setting up this entry */
++	if (!crashlog->trigger_ready)
++		return -EBUSY;
++
+ 	/* we cannot trigger a new crash if one is still pending */
+ 	ret =3D pmt_crashlog_complete(crashlog, &complete);
+ 	if (ret)
+@@ -513,8 +615,21 @@ trigger_store(struct device *dev, struct device_attrib=
+ute *attr,
+ 		return -EEXIST;
+=20
+ 	ret =3D pmt_crashlog_set_execute(crashlog);
++	if (ret)
++		return ret;
+=20
+-	return ret ?: count;
++	/*
++	 * Use non-sync since uevent_poll_fn() takes this same mutex, so
++	 * cancel_delayed_work_sync() here could deadlock against it.
++	 */
++	cancel_delayed_work(&crashlog->uevent_poll_work);
++
++	crashlog->uevent_polling =3D true;
++	crashlog->uevent_poll_tries =3D 0;
++	queue_delayed_work(system_freezable_wq, &crashlog->uevent_poll_work,
++			   msecs_to_jiffies(PMT_CRASHLOG_UEVENT_POLL_MS));
++
++	return count;
+ }
+ static DEVICE_ATTR_RW(trigger);
+=20
+@@ -640,6 +755,8 @@ static void pmt_crashlog_remove(struct auxiliary_device=
+ *auxdev)
+ 	for (i =3D 0; i < priv->num_entries; i++) {
+ 		struct crashlog_entry *crashlog =3D &priv->entry[i];
+=20
++		disable_delayed_work_sync(&crashlog->uevent_poll_work);
++		disable_work_sync(&crashlog->uevent_work);
+ 		intel_pmt_dev_destroy(&crashlog->entry, &pmt_crashlog_ns);
+ 		mutex_destroy(&crashlog->control_mutex);
+ 	}
+@@ -661,7 +778,13 @@ static int pmt_crashlog_probe(struct auxiliary_device =
+*auxdev,
+ 	auxiliary_set_drvdata(auxdev, priv);
+=20
+ 	for (i =3D 0; i < intel_vsec_dev->num_resources; i++) {
+-		struct intel_pmt_entry *entry =3D &priv->entry[priv->num_entries].entry;
++		struct crashlog_entry *crashlog =3D &priv->entry[priv->num_entries];
++		struct intel_pmt_entry *entry =3D &crashlog->entry;
++
++		/* trigger_store() rejects triggers until trigger_ready is set below */
++		INIT_WORK(&crashlog->uevent_work, pmt_crashlog_uevent_fn);
++		INIT_DELAYED_WORK(&crashlog->uevent_poll_work,
++				  pmt_crashlog_uevent_poll_fn);
+=20
+ 		ret =3D intel_pmt_dev_create(entry, &pmt_crashlog_ns, intel_vsec_dev, i);
+ 		if (ret < 0)
+@@ -670,6 +793,11 @@ static int pmt_crashlog_probe(struct auxiliary_device =
+*auxdev,
+ 			continue;
+=20
+ 		priv->num_entries++;
++
++		scoped_guard(mutex, &crashlog->control_mutex) {
++			crashlog->trigger_ready =3D true;
++			pmt_crashlog_notify_pending(crashlog);
++		}
+ 	}
+=20
+ 	return 0;
+--=20
+2.43.0
 
-> ADC5_GEN3_AMUX1_GPIO_100K_PU - Likely "lpddr5_therm"
-
-I cannot separate 0x14a from 0x144 and 0x148 by heating. Under a
-one-core load reading a file from /dev/shm they rose 14.0, 14.4 and
-14.2 C in lockstep, while the SoC's mem TSENS zone rose 20 C. Your
-RAM stress warmed every PMIC die by 1 to 4 C as well, so it does not
-single out 0x14a either. The three sit with the SoC; which one is the
-memory I cannot tell.
-
-> Looks more like "sys_therm5" is the actual keyboard thermistor.
-
-Consistent with what I see. 0x147 is the coolest of the seven, 29 C
-at idle, and nearly indifferent to board loads: it gained 2.0 C where
-0x144 gained 9.2 under SSD I/O, and 2.5 C where 0x144 gained 14.4
-under the CPU load. A sensor away from the board, on the skin side,
-fits.
-
-On 0x146: under four minutes of direct-I/O reads it rose 8.2 C
-against 10.0 C on the NVMe's own sensor, the largest share of any
-channel, and it fell at once when the load stopped while the
-SoC-side channels kept rising. Under the CPU-only control its share
-halved. I would keep "ssd_conn_therm" on it with partial confidence,
-but I will not argue if it goes with the others.
-
-> Alternatively, I am leaning to drop the labels for anything we are
-> not sure about...
-
-Or just give them pirate names. Jk.
-
-Agreed. 0x145 as the right charger is what both of us measured.
-Everything else is a guess until the teardown. Numbering sys_therm
-from 1 matches Windows' SYS_THERM1 to 7, so that helps too.
-
-One consequence on my side: the 9345 thermal-zones patch
-(20261006185557.23016-1-lnicoara@thinkoid.org) names its zones
-chg-left on 0x14b and ssd on 0x146. I will respin it with neutral
-names for the zones that are not settled, so the two patches agree.
-
-Happy to test a v7, including a lid close on the EC interrupt line,
-which my v6 run did not cover.
-
-I love this laptop, but I will not open it up just to pinpoint the
-right thermistors' locations.
-
-Liviu
