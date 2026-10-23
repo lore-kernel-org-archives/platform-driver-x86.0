@@ -1,85 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792783714;
-	b=eSl4FBHxF4Oe7UnVVdGp9XkEmKI60BiRx10AdXNxPEU9XhJLZk/OIps1rFlHnkdQRxU+
-	 21jIJxgtl5UubCjWGz+tmPHnrZ0/1LJOhDGu0Arcb45m95vDkilcHXXzzX+iL7l8G4Cak
-	 plxJZ1Iqx0nqlM6u69KhF6yaH4ET05mPcXs03rdrn3hMLyZp5RAcjNFJFF0aNYnNuy1FK
-	 1/2ItwjSZO1RSBTXP0HniZY2hbJECR93XgE9uJQ51NBha7dH43T4K+w3byT1vFdf4ad3/
-	 kKfN6JLe4fZm3eyXzfmSOxzdoj2IPbpX6Z8Y4k1RVjV5NSmKrccsRFA0oxIBAVHbjCA==
+	t=1792785569;
+	b=AsHoWNK3NwWAFDRXUrgTMt0wL7Iq88zL/okz9HDLclFepHMY7khT8R0kDeHqOFn2l5kK
+	 Jbohl7NYnfGoWEg0ck1bsDf9etjuTskPFJFQIInXBituw5eWns+EuWirOKfe84OAu7n4K
+	 QrfF6ZRuZ5GCyjhdzcgpJ11udxGfJsZJ0sSDtqO5CaPsJRt/SxiBb5NX5YOnLQqMCRwQm
+	 q+ZYM4vChAwBV28Hdq3nhATB5lPQ7mRViaxZysNf8uPEvtBxERTd9D7drDHnoc6xZgWSl
+	 NM8TZUKyFW1VOlwXx6mC03zv1jVm6D14D1y0YEnOHhAMVdEALWocXNpNrtUM0rhnkrQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792783714;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792785569;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:From:Subject:To:Cc:References:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=mvLuezFNA2hipcALnx9bbQiyX8P1aULpovhSslzsanA=;
-	b=ehewFkTPLG3s32egjfjd/7HL4nKgL4VZfE3/QRj+kOilg0rjWdt1pS3fnTxaqXqWzpZl
-	 yBk8J+w+feo3ErCQVUbaYZl0B/wgtI+qa4NxwFqQcMyZj8G1Hu6oIHT1NAnKKtLSQ5F1C
-	 1nqVGJTpt4qMKpLlQiEjyU9LX7m6AqJ5zfsH2/yTMiBcoH395J88DeivUNfDCBtqFmqaL
-	 ipqnsVZ4ytfctoWzIXC+7bzXAh8HvoX++4beVvS1y9l3naVYgvEMqd2ZjQd486bAPEQsl
-	 IDmFkjjS1oL33eoCgB873PzycHMXmCuYUP0XU4EmT56XeCcb+tC4QMU+PhD2i2zrydQ==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=dubg1gFlwLFjUntHBfFzK7AT4OWC46obGwplwmSB/ss=;
+	b=W+MmYf5h6hqXFP41dYilR9Ix8k6Jbk0Xg5p+OxAkXVikxOg3N7NatNZlGm5TcNDJWStf
+	 ClS3lt5YOFTQK5SkqBPF5krc/SR5WH3usnbwYdxVKrsNXdlYTCCgFH09EDB9wujdrMO86
+	 P79vcsjIhFFDbephw8Y5onpb5jGNlZc/R0Wan3QO1jef+2h7C62IYsI/l/746XOHEOikU
+	 ozlF/cRz0bOAhNSYZiAHSuXto46SgdC78iszo4V+9G/x6DsH9VJ6qKw3exAT0xVWxdSJi
+	 12ldysEx4zmkXx9R5ux+bpeHoltaUN1IiFco1kKbOqPj/FtVbpZWLNc6vQfrrJnOuRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=nilk.net;
-	spf=none smtp.mailfrom=nilk.net;
-	dkim=pass header.d=nilk.net header.i=@nilk.net header.a=rsa-sha256 header.s=nilk header.b=byHclBwL;
-	arc=none smtp.remote-ip=209.85.161.42
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="E2/f3yHA";
+	arc=none smtp.remote-ip=209.85.128.45
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198F2606A31B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 19:28:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 198F2606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nilk.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nilk.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EA0606A31B
+	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 19:59:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20EA0606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=nilk.net header.i=@nilk.net header.a=rsa-sha256 header.s=nilk header.b=byHclBwL
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6b1afdf5196so535850eaf.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 12:28:33 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=E2/f3yHA
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a140e7405dso12352035e9.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 12:59:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nilk.net; s=nilk; t=1792783713; x=1793388513; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mvLuezFNA2hipcALnx9bbQiyX8P1aULpovhSslzsanA=;
-        b=byHclBwLKiY0fHtowiegSkdlP+U1/x1sqXBcUIJ+AcGA/U/RGJT+N8n7QfkPzoGWxi
-         1kbwrFV4LYPY/4izifW+M8kMGJW4ao2G2OEF4H45XdYRSTXHQrsW3+JqUVj79THYyyRo
-         /YTJ4cz3zpxZE87Gpxjdp8vSV5WEFVZkxAtbI=
+        d=gmail.com; s=20251104; t=1792785567; x=1793390367; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=dubg1gFlwLFjUntHBfFzK7AT4OWC46obGwplwmSB/ss=;
+        b=E2/f3yHAM6m0IbyoviLEbfad9IrNmtVeBbDh6YA1AxtThOvKYLp8ovQ5q8wwtGi60O
+         BgXsxLo1t+gu8XptqE8IfuyLV6chhKRqTa5D+suRtQS3lUHnRZArbgkuHy4rAktdR0au
+         KbCYy8GlDgZUpojaCEZl484mrGDwZcibJ0L2XiUihgTW599oDMBmdWZ7yTHcpFnAlRAE
+         BTwHS3OM3xolyVEfLZ/49Efzxnb75j6pRcm2q/BA2bRsTviSYElRky4f4xBs3EwRHZyG
+         LSk9+lUwt8WZF0RawHk9i1RMEgkkj03W7UTzUPndV3o9Qnxupsj2h340WS1OMYwtBkU+
+         ve4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792783713; x=1793388513;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1792785567; x=1793390367;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=mvLuezFNA2hipcALnx9bbQiyX8P1aULpovhSslzsanA=;
-        b=AdJGK8RNUlT1bwm2gRkwVfN9vQMcB+6qjUbT35uGdEJMnpMheey+sHQNHRYLCygedd
-         kK8ufOEc1tv5r3DlVlzLSLtFd/0bQKxF2PogtcrQOBbai39Tko6YI5vagt75WwXSrlMg
-         h3jgNwZiTC3g6awbclI6yztQ/dWUnf1CM6vBTegLzBFrY7sDmtsgGKYBkFKqoywi+zgW
-         iZlI6E9O/H2gGt4N3x6UheXTDjMU5H0vDpbNq15GNyCmzdh2bflrQB2XgqJENkusxwRl
-         157xnq+GcXIgwtJnzT70t545VoyXdS8GnnIqM6arFjOLE/kNSHkfW6LdNQGX/QdJ9WyR
-         DLeg==
-X-Forwarded-Encrypted: i=1; AKwUvBx++B1/dc2zw0Qc5bKfl+jdqpcZg/ENRcFcrvAYXDyo+ngXJQfyBJRq+Mdrg4H0sOiqWq05o38puYSc/cPVAKaTnNu7@vger.kernel.org
-X-Gm-Message-State: AFq9FYKCEAnnNyHQwRcJeXz+9n1s6s0C5QGBpuyQaoZWSfVUO9VfQ71C
-	7t++KAcHywXDo5w3OgXZW95aCYUG/xhb8lx9CtWU8BTOIk6swRUKVJSSPpzTAU3sfQ==
-X-Gm-Gg: AYBFou0wf4/cTSE/0p5bcdsyH28ceg0hHbUcVJQgDiSilp1Vi/jxAhlhvfP2CKdqF3e
-	UhRJ399Lyq5FgypdSWEovTFiPZPaQoK1Wh2yimBpl3NglaVugij/+tHN1voc48+JaX7tQGhEJ6I
-	9AFt1hWTrDL+waYhZjKIfBWsgF52fmfCG7SJwkYSKPJ7IQzotE/WtrYJBI/oHddj/212P59/Ikr
-	1/+bZU7G8UHiFwMQIFW7vsOgP3UizjUmIPafTecuQWq3MJttOiEF1b8bhScb+oq7VXKPFSJig4Z
-	kHRUmrSv9edKN6x1cftRgWKWxlttp6bZFbuuUeqifNEGotEI+ABCxLLmDHJ+Rgj3M1jV0mvHLRt
-	hKP6DSlHsIaaKOp5XlHs66ILAR2nw/ygJHw+hjLbflUlalPabFizAQgjRbHb5EzeQEncKl+N8n0
-	jnUPwLIk7D7UFl00fQDgCJgs0xJtnOD+bbtKlmHRBe1X1GOLfLVZGPLYrkLYt8xhmkQ29Vmlt6l
-	BeBVejZthSvhJ0jV8TDBLExb8N8ZNExd8SU/jBn1cYgG6V49etYwPZ9h8dccKGBf0LMQHI7Kv82
-	zyHWm08H0uJfIBCzVyqdaeKUeDpSFoYyhnLtRuWNi3zwEqFq5X5H/rt08t2B0Ylw6V/xYoTYJ6r
-	ALVvDJuOWqH6n9seRyuT80JgQAMJdNnpmUATLQWaxhhwWDHN9RNMbEuvEYW8dPpXogt3P4YBRYD
-	0GDILpRMES62cdJal61+QAjaixujKYz3o=
-X-Received: by 2002:a05:6820:418d:b0:6e0:edfa:9b4d with SMTP id 006d021491bc7-70b88abcdc1mr1678638eaf.82.1792783712765;
-        Fri, 23 Oct 2026 12:28:32 -0700 (PDT)
-Received: from [192.168.0.114] ([187.14.251.59])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-70b9e0417cesm124968eaf.6.2026.10.23.12.28.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Oct 2026 12:28:32 -0700 (PDT)
-Message-ID: <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net>
-Date: Fri, 23 Oct 2026 13:28:30 -0600
+        bh=dubg1gFlwLFjUntHBfFzK7AT4OWC46obGwplwmSB/ss=;
+        b=i8DoRFBIavXREo/qdAnRJLeNEGLBC7rw0npXakaKm8Iq9uYTX9S3ovll0bcIoqgOqE
+         /Pyj+AAK42kK6KcHnLfZXF5JBZlw1lExr88V1WNgnhHhrJjpjiYBG2I4NeBPc8BXs21V
+         62Pr3pfmIQjUSGDvM+3g9ygrk0mNgTaaFj4AfoHrb2lzAIQ3WzLctGTQcVKf8D4aZIjV
+         OPyA7dUgTaOJ/L+37qQ48MhNp9Ouw67a4oBrqzHwfXKC3b63d69xnK7fAEq1GjOGCacN
+         IcV5EjTCh/KgZ9bKFsn/ThPJtr/lF+CkyRsikavZwtX2lzKncTeBzOHdTu16UvD0eUYm
+         CF6A==
+X-Forwarded-Encrypted: i=1; AKwUvBySRJ8s5YrqPyOIL9tS4t8XzHAIhbh3fH3BUo6+k4fR2x9O7KxXsx5AkJbBkQ0L4yuiIhX9T/i0e6387pgBR8J2Gjvr@vger.kernel.org
+X-Gm-Message-State: AFq9FYIu/3F29lwdvq2O68QZK0X0jCyZedOYculZhq/IsoZ4N0svXvA4
+	B8B613BLZoneaX//HALYXmC8kbZ80hAj+3zvGRStwf5o+2ncjI3NSE4=
+X-Gm-Gg: AYBFou19mp2tHqADpt9C23mFzA48B85hdCi47oMKhOMQe0VQ3/AdrCF6zrs16d5qjU/
+	4u6IlZFQAgGYbqPPh9TgNH38aHHSSomxtHoT9UQBGW3GggrgN3GMmG/3GXT5wiFGUoynnjDbjEC
+	J+piKuwDZZj+yyJm6Eop4P6H/4MqYGnWEF5pNVhRL98qZLnUrD0J0sE0xgOJoS0FUuIKmBQL1Me
+	U+XI7LzoJIUw5V/gb5YitLsPmVlyg0Dvlqx0R/R6zIdEuQZALObB763Eb2GI8fbsawCArOae4D7
+	nsHmwiq3siIzVJKGiU+6gUleey/EF3ehhVdqZTF58PrR6c/ro2sTsoBj45cUH1oLvYnGmV2ynYX
+	RR5lB1rCTGJxRZ7nP6u25BekUxMGF6rfye6nzz9hPvI7FlN3v/znIkglCH6T5YKD7rsRXLzv+UZ
+	lchRiVNd72MsFJuJXjNsMfQ4VBlc5ZBHIMbgYAXRNCl3AddjxQQ1K0QNfpMvhnVSxYonbwsdYb7
+	06TV2gSx58I2KZcxeNHklTXbVnCCy0ocJFdAX/Qto22gQ==
+X-Received: by 2002:a05:600c:a00b:b0:4a1:706f:b40d with SMTP id 5b1f17b1804b1-4a211c9c5cdmr49065325e9.7.1792785567419;
+        Fri, 23 Oct 2026 12:59:27 -0700 (PDT)
+Received: from debian.. ([2001:41d0:303:db6b::])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a0bac37sm5688475e9.6.2026.10.23.12.59.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 12:59:25 -0700 (PDT)
+From: Tristan Madani <tristmd@gmail.com>
+To: "Lee, Chun-Yi" <jlee@suse.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Matthew Garrett <mjg@redhat.com>,
+	Marek Vasut <marex@denx.de>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Tristan Madani <tristan@talencesecurity.com>
+Subject: [PATCH] platform/x86: acer-wmi: validate ACPI object type in acer_gsensor_event()
+Date: Fri, 23 Oct 2026 19:59:25 +0000
+Message-ID: <20261023195925.3559887-1-tristmd@gmail.com>
+X-Mailer: git-send-email 2.47.3
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -89,76 +99,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Chris Simpson <chris@nilk.net>
-Subject: Re: [PATCH] surface: aggregator: propagate -EPROBE_DEFER from
- ssam_irq_setup()
-To: ilpo.jarvinen@linux.intel.com
-Cc: janussss@163.com, luzmaximilian@gmail.com,
- platform-driver-x86@vger.kernel.org
-References: <7d51f80e-9552-957f-f32c-1d608042b647@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <7d51f80e-9552-957f-f32c-1d608042b647@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Tristan Madani <tristan@talencesecurity.com>
 
-Same failure here on a Surface Pro 9 (Tiger Lake, INTC1055 driven by
-pinctrl_tigerlake as a module): whenever surface_aggregator is loaded from
-the initramfs about 30 ms after /init, before udev has bound the GPIO
-controller, probe ends with
+acer_gsensor_event() accesses the ACPI evaluation result as a package
+without first verifying the object type.  If the firmware returns a
+non-package type, the code reads package.count and package.elements
+from the wrong union member, which can cause a NULL pointer
+dereference or read from an invalid address.
 
-  surface_serial_hub serial0-0: error -EINVAL: failed to setup IRQ
+Add a type check for ACPI_TYPE_PACKAGE before accessing the package
+fields, and validate that each element is ACPI_TYPE_INTEGER before
+reading integer.value.
 
-and is never retried, so Type Cover, battery and tablet-mode switch are
-gone until a manual rebind. linux-surface has several reports of this
-since v6.12 (linux-surface/linux-surface#2219, #1645, #2064, #2039), and
-it is a regression from b27622f13172 ("platform/surface: Add OF support"),
-which used to propagate the gpiod_get() error.
+Fixes: 1eb3fe1d3b6b ("ACER: Add support for accelerometer sensor")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tristan Madani <tristan@talencesecurity.com>
+---
+ drivers/platform/x86/acer-wmi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Janus, are you planning a v2? If not, below is a variant that follows
-Ilpo's comment by using gpiod_get_optional(): only "no GPIO described"
-falls back to fwnode_irq_get(), every other error including
--EPROBE_DEFER is passed on. I'm happy to send it properly (Fixes:
-b27622f13172, Cc: stable, your patch credited), or to test your v2 on
-the Pro 9 instead, whichever you prefer.
-
-I've tested it on the Pro 9 (Fedora 43, 7.2.12 with the linux-surface
-patches), with surface_aggregator forced into the initramfs. Unpatched,
-the probe fails with the -EINVAL above and the Type Cover, battery and
-tablet-mode switch are missing. Patched, the probe defers three times
-and completes about 0.2 s later, with all of them present and the
-device no longer listed in devices_deferred. Suspend/resume behaves as
-on an unpatched kernel. The analysis and the diff were produced with an
-AI coding assistant (Claude Code), and reviewed and tested by me.
-
-Chris Simpson
-
---- a/drivers/platform/surface/aggregator/controller.c
-+++ b/drivers/platform/surface/aggregator/controller.c
-@@ -2753,12 +2753,20 @@
- 	 */
- 	const int irqf = IRQF_ONESHOT | IRQF_TRIGGER_RISING | IRQF_NO_AUTOEN;
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 61ae622c93d94..72b44f02a992f 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -2043,7 +2043,12 @@ static int acer_gsensor_event(void)
+ 	if (ACPI_FAILURE(status))
+ 		return -1;
  
--	gpiod = gpiod_get(dev, "ssam_wakeup-int", GPIOD_ASIS);
--	if (IS_ERR(gpiod)) {
--		irq = fwnode_irq_get(dev_fwnode(dev), 0);
--	} else {
-+	/*
-+	 * Only fall back to the fwnode IRQ if no wakeup GPIO is described
-+	 * at all. Any other error, in particular -EPROBE_DEFER while the
-+	 * GPIO controller has not been registered yet, must reach the probe.
-+	 */
-+	gpiod = gpiod_get_optional(dev, "ssam_wakeup-int", GPIOD_ASIS);
-+	if (IS_ERR(gpiod))
-+		return PTR_ERR(gpiod);
+-	if (out_obj->package.count != 4)
++	if (out_obj->type != ACPI_TYPE_PACKAGE || out_obj->package.count != 4)
++		return -1;
 +
-+	if (gpiod) {
- 		irq = gpiod_to_irq(gpiod);
- 		gpiod_put(gpiod);
-+	} else {
-+		irq = fwnode_irq_get(dev_fwnode(dev), 0);
- 	}
++	if (out_obj->package.elements[0].type != ACPI_TYPE_INTEGER ||
++	    out_obj->package.elements[1].type != ACPI_TYPE_INTEGER ||
++	    out_obj->package.elements[2].type != ACPI_TYPE_INTEGER)
+ 		return -1;
  
- 	if (irq < 0)
+ 	input_report_abs(acer_wmi_accel_dev, ABS_X,
+-- 
+2.47.3
+
