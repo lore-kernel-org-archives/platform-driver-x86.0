@@ -1,62 +1,110 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=71.18.227.2
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.125.188.122
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792727315;
-	b=gOqCnL6h+WpNRaM6HmKgjuUO0YiyxZQioawL5pyqli1ccI7WPnc3CWrx4BmETFCTQSiT
-	 BzLlSp8Cgz+pJE8zOpr3J5DfBDcCqorz7EafWK+MY7Ft004cvBFBMqQGXxuhejvmsLl3b
-	 5KwLjEoR2Nf0fzLS5UImxJ8oJ1ZynZlfo3mclxGxrAFdZ00ZBaYXfGoGzJQ6Rog6uMr3i
-	 R5CygX5kWLcirWvC2boNtTDE6ZWGn6ECDbmZWqB8DwKJv0i/0kkycUFMKj9QaVvyhZcag
-	 w8gdkm6ydPN9tVUbZRJu+X0tqmr2svtf2ayrye0ixxnHvhvMZIe9ycrNC2uDZp7eXOQ==
+	t=1792733252;
+	b=IvhwBth9UIwbrP8nl+FnevUtQlLAWoXe2P5vZ3spbyxI7iUtL2RZUSrzRBPC5oQ010qr
+	 Vox9DXYxsCMGKR1tSOdm+fyamkcuzh8qEZHV+JH42p2LHs5u+RfLsScLEn05m6ECLTPF3
+	 7ATWIx3DalPbtyX9dKc4QV2RzptI8m8b5MtpS/CabB8+3F+OAn+GrJDYXLqxNrnELrC17
+	 naoNvo/zvJ56VdpSZMu2qYg8OgZDvvyNPzpklul1S2BmMsjDQk4cKruxTWMCmIkO4M87n
+	 zCDz7ndxWZUE6NywtHWzhHr3h40dlfjAjXvHiQTOmqHqh8RUTt3U4EziLd9AcMQyTTw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792727315;
-	h=DMARC-Filter:DKIM-Signature:Content-Transfer-Encoding:
-	 X-Original-From:Subject:Date:Message-Id:To:From:X-Mailer:Received:
-	 X-Lms-Return-Path:Content-Type:Cc:Mime-Version;
-	bh=4RgiMbSfv1Ffg9FSRDhGJXIih2wLIs1zUAkiNv6268E=;
-	b=xK/J4Y+HTM538BsCDKLjO1OSDchpOdeI9pqgKulMgnv4iUKCCHNZmnMEqRLV65xmxZXV
-	 0Vq/5BI2LBftzF0Tdxs6k97GgzYHDsw6bnMw2A6ENNImJtwU/q8iPW6gDIZf3vX5fbl+l
-	 bSXeNrGkNDNTAO6P2t5Xyh41MgmIJJDv+tUECpmHSPvXlVVvZ72gtcziHvRzGHZUn59/h
-	 t9Ymin9tn6ba8KfomFF4zrYJPx3AZB+tq8Bqxr5pcUDK1ziT3KLmifLq2t4Wo3LMGQR7n
-	 2THfEGUeZ/qWnRJ+CX+RqGmhYZbhHD5cLo9U3CgaYbxVLzYF6tkAJ+LCpvmJxgt8FHA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792733252;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:
+	 X-Google-DKIM-Signature:X-Forwarded-Encrypted:X-Gm-Message-State:
+	 X-Gm-Gg:X-Received:X-Received:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=HY73xKggEzfIdIfNeMh50oTUfXwZiTldS1Pkgz9mLq8=;
+	b=ENduflWCvX9jzAUhSqJaN6bb0YULBwh+uO7cQ9uIJe5Vbks8QQVVnhmg2Xug/2hd5rr+
+	 ifkcJfVBOdIZ2oKhiiqzz7OSWKZfE2PqaK97530yR0IWCzrvWhPeZ0bD1J8QiHrdcbkzu
+	 dxv9+ZjOaKtY5uDAOZTk8wwWZ8e52JcaBs8F2+xgrFSdqNbUaA7CJ2cbOUhlMM0FPiMFu
+	 CnE5Mta4ACPjwUAi/LpBHWn6pdgXUl/CozzmFonBeqGP5wwN1yDXOs/MiP+l5xdF16hiG
+	 cQm4tbf0JxKbLMyXgVqRsyCG9LaDvjtthJbrCH0X2gVQ/PlCQcVuyNFNKOlK9iWaFYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=qb.edu.kg;
-	spf=pass smtp.mailfrom=qb.edu.kg;
-	dkim=pass header.d=qb-edu-kg.20200927.dkim.feishu.cn header.i=@qb-edu-kg.20200927.dkim.feishu.cn header.a=rsa-sha256 header.s=s1 header.b=uZ+ODgAl;
-	arc=none smtp.remote-ip=71.18.227.2
-Received: from sg-2-2.ptr.blmpb.com (sg-2-2.ptr.blmpb.com [71.18.227.2])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=canonical.com;
+	spf=pass smtp.mailfrom=canonical.com;
+	dkim=pass header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=VIh7nUx+;
+	arc=none smtp.remote-ip=185.125.188.122
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51ED606A320
-	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 03:48:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A51ED606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=qb.edu.kg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qb.edu.kg
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF95606A31B
+	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 05:27:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AFF95606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qb-edu-kg.20200927.dkim.feishu.cn header.i=@qb-edu-kg.20200927.dkim.feishu.cn header.a=rsa-sha256 header.s=s1 header.b=uZ+ODgAl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=qb-edu-kg.20200927.dkim.feishu.cn; t=1792727307;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=4RgiMbSfv1Ffg9FSRDhGJXIih2wLIs1zUAkiNv6268E=;
- b=uZ+ODgAlJnH/dvMgtgLdjH/8KoFrph5oHb9Lv9hcdt03hIJuTEz5/fvLkTxhu05ll0Mu1T
- +gp18E1VzyEm31a79oVfbiUIoJTERmJKQ2w4zbe6gfX0gGWppS/wfdnztL0U1SIXyrb9Q3
- jvXHI+YBl/8oKi6xap9s5nR1ixWgNrtmxabmJnDUYZWPchWg2ydJgDVv7gf/uaxwdyWTeI
- U3wmYhq2woSUs2JrBZr91RBKdmJ75KhXdnpJrW8Px2PrR9Tx7F76vGl/UvhSNYj1c9lwku
- 01J4xuzoY6aeSuMkPuC9XuOYn/G/141UWfaiRksOBOQx5RvN4XYGah11uvBurQ==
-Content-Transfer-Encoding: 7bit
-X-Original-From: dydydd <admin@qb.edu.kg>
-Subject: [PATCH 1/2] platform/x86: uniwill: Add MECHREVO Jiaolong 16K (GM6BG0Q)
-Date: Fri, 23 Oct 2026 11:48:21 +0800
-Message-Id: <20261023034822.141263-1-admin@qb.edu.kg>
-To: "Armin Wolf" <W_Armin@gmx.de>
-From: "dydydd" <admin@qb.edu.kg>
-X-Mailer: git-send-email 2.56.0
-Received: from archlinux.localdomain ([223.104.85.253]) by smtp.feishu.cn with ESMTPS; Fri, 23 Oct 2026 11:48:24 +0800
-X-Lms-Return-Path: <lba+26adad909+d6ea76+vger.kernel.org+admin@qb.edu.kg>
-Content-Type: text/plain; charset=UTF-8
-Cc: "Hans de Goede" <hansg@kernel.org>, 
-	"Ilpo Jarvinen" <ilpo.jarvinen@linux.intel.com>, 
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+	dkim=pass (4096-bit key, unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=VIh7nUx+
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D4FFC40290
+	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 05:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1792733248;
+	bh=HY73xKggEzfIdIfNeMh50oTUfXwZiTldS1Pkgz9mLq8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=VIh7nUx+JRehjUimnHmLeWrKIsxe2VIhNKw4tQ2ktK7i7q30f9uFSvy+eZwpAAvwG
+	 sMTpAvxIymhawyl9XSc3uX7odUD9pviFLswdr9EqWoUTe309F1V9v9dUZJbTgnSdQz
+	 4xzS+elw+aPneNGFtqWsbAtOyDXbyz1HyhaPr8nh4RJXICOBk+ICJBXgEXzHx9IHns
+	 ooNXtEsMt39m1CxIuG+lTISX3s7Vx/bsMwuMqjGMIUANJON65H5Gl246g6XsLs1ixc
+	 z42h9EBrQzEvafT1ljSZt6Q32pCDxMbkbbY+FpJEk4IwrZhKM00iYJd7L6uj3XXg79
+	 cAUMa9IGFr2EybBlp5MUbedr22ORWbcVnOHBjCoPI9hsVNCrU4hNvCLpeJV14lkJVY
+	 YcSICQZwFiZFUHwueGr0lFNb25XZNvR6hiSoPt5n+iqHfp09pcjqcc5sM7ZZp35QsI
+	 3Kcss2nNb4I74xyyYcH8PjRo2uLicEEOBrTZqSGItkv9e8+YU2US5LqxT3EXzCxdNf
+	 xpU+vJ3z3cdFASx7CNQ6z7QtldwQIVa2ZgCsMlwi8hdcSC5GTQP7edgtda1sR4GJ8t
+	 dVd6VPAFDiSvMs4pvVG/PX8a/BLDTeKYV+HaumDC8fG7yiDfWidNujhlY8tjt//dsD
+	 QIWiUlftosM8Y8iZCjCgaVwc=
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-35935fae332so66222eec.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2026 22:27:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792733247; x=1793338047;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=HY73xKggEzfIdIfNeMh50oTUfXwZiTldS1Pkgz9mLq8=;
+        b=mSkD271UL1ZeKQ/QzAY4uhRoIbM/OvN+28YqjyWoGrOI0rvzjEibYzvmgI7Y9kRM/R
+         pj7l9Uo2BpUw/kgR3hzp9fvGeNiyiJ1Ch8meNjgRG/ZGI1SaoSAm34JhqX3dhXuISp2F
+         A81mJ/RCEVS2Hl7jfhMwKhF3iNyWh2BZUm+ctfZbk9tmbsnwK/sBx7Wk88NJT2/0F47G
+         nCItgy/pYZzrl5ZjS5PVlpoQrx4nwnoiry5SD8F/0pfYgyJ0IiF9TeLTM6BUVwF1iexa
+         abOWIliG6/SOIUnCRu3J2UkysC/RWGVX2haphx0KPZDmAOqoyluEOdALmj+VeQBHCKkm
+         039w==
+X-Forwarded-Encrypted: i=1; AKwUvByzwVSbW7Y3UsFjmGrdr//EgYhdRUfbomMn2aeK+BHQ6OZMeebTWEA87G/oY57u0uuci260pZ05KDgnmI748nOTjl1i@vger.kernel.org
+X-Gm-Message-State: AFq9FYLLVhRFnlFZjl8qik4JRMCEYTNPBWagFp6RqLlYA5sj7rMW7McR
+	ZxsGz7kHe/XrvG5ri1m5pBmDSJuoMDI0am1sCBwI/4BDlaG/Pa2t+6poiCVG0XCDHEDvKjfdIPr
+	kmZddNiJEB6FusbdP/ZTAE4ErjZWUweaDGsEQ5jsCyiYIc0515evT5VHrwHmUatQAeVhci/mreS
+	nCpgqQSFb1pS6LYsQ=
+X-Gm-Gg: AYBFou2flHZH1bxZH4Axa2x9Vqbk4/RTsDZk0gXxRUXjjOpvS4i5DPKmQ4foxN3cgoR
+	1TIzqXCwbCHNPJobxsakDVxXsft/q4CMc395VqkhdUhbHz4iOmh7FJt2DKWtNRP8HwLfbk/tDk8
+	4TWJiGAYTdewphHl/VFXBgHMJglpFCz+vzlWD6xk4lAZyyKh+yYU/Gc40d4qpKXYS+zZ/WopIYZ
+	1plG6s+LnyLkRaDnqbaNi/t2Hhbn+bpui2Dj92smHXD2SEPs8bQMFahhqRwWzg/A1fRDGOf2eyz
+	0STFxKPagRPx3so0x8sVmMh9h0OS5QcayDf8Drg4hGUwHTTJXpSy+lQwEK2wZvavUc9hcI9OHKr
+	p6n0BPBtY8W3HUB74zibb9czsQdZJl4sxHadyqCHQKQASYsN4IOsVrfDSTHlm/nX87KWHYMx9k9
+	oMR6p0EeJ3V1GNGt5yPUUhSboutQ844M4EUyQu0/iPZfYMtxkgXURZTcx6pTZZh4Fr5bXRlL/5O
+	4deBL1ZuRnPfNhVWsXyrqRSDB540orGGOP7/SfekGY=
+X-Received: by 2002:a05:693c:83dc:20b0:35e:d21c:f33e with SMTP id 5a478bee46e88-369d9721136mr2912007eec.1.1792733247163;
+        Thu, 22 Oct 2026 22:27:27 -0700 (PDT)
+X-Received: by 2002:a05:693c:83dc:20b0:35e:d21c:f33e with SMTP id 5a478bee46e88-369d9721136mr2911955eec.1.1792733246659;
+        Thu, 22 Oct 2026 22:27:26 -0700 (PDT)
+Received: from an-XPS-15-9520.buildd (2001-b011-2008-445c-b47a-213f-cf99-45b4.dynamic-ip6.hinet.net. [2001:b011:2008:445c:b47a:213f:cf99:45b4])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369d9e1a085sm3590098eec.29.2026.10.22.22.27.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2026 22:27:26 -0700 (PDT)
+From: ChunAn Wu <an.wu@canonical.com>
+To: linux-serial@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	markus.probst@posteo.de,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com
+Subject: [PATCH v3 0/3] serdev: handle devices without an ACPI or device tree
+Date: Fri, 23 Oct 2026 13:27:14 +0800
+Message-Id: <20261023052717.2577234-1-an.wu@canonical.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -65,77 +113,43 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Add a DMI entry for the MECHREVO Jiaolong 16K, which is built by Uniwill
-on the GM6BG0Q board (BIOS project ID "IDQ", EC version 1.24).
+Driver-created serdev clients without an ACPI companion or device tree
+node currently have no modalias and cannot be matched to a driver:
+their modalias sysfs read returns -ENODEV and their creators force a
+bind with device_driver_attach().
 
-The feature set was determined by testing every sysfs attribute exposed
-by the driver on the actual machine:
+Backlight function on dell-uart-backlight is not affected: that class
+device is registered independently and gets its own add uevent. The
+user-visible breakage is the failing modalias read on an existing
+serdev child -- Checkbox dkms_info_attachment aborts with
+"OSError: [Errno 19] No such device".
 
-  - fn_lock, super_key_enable and touchpad_toggle_enable are writable and
-    take effect
-  - the battery exposes charge_types (Trickle/Standard/Long_Life) instead
-    of charge_control_end_threshold, so BATTERY_CHARGE_MODES is used
-  - cpu_temp, gpu_temp, fan1_input and fan2_input report plausible values
-  - the keyboard backlight is RGB with four brightness levels
-  - ac_auto_boot and usb_powershare_high are writable
-  - usb_c_power_priority switches between charging and performance
-  - ctgp_offset is writable
+Resolve the two long-standing serdev-core TODOs by adding a creator-set
+modalias and an id_table, modelled on the SPI bus. ACPI and OF match
+first and are unchanged. Convert dell-uart-backlight and the Lenovo
+Yoga Tab 2 Pro fastcharger to this path and drop their force-attach
+workarounds.
 
-This machine has no lightbar, so UNIWILL_FEATURE_LIGHTBAR is left out.
+ChunAn Wu (3):
+  serdev: handle devices without an ACPI or device tree node
+  platform/x86: dell-uart-backlight: Bind through normal serdev matching
+  platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: Bind through
+    normal serdev matching
 
-Tested on: MECHREVO Jiaolong16K Series GM6BG0Q, BIOS N.1.19MRO15,
-           EC 1.24, AMD Rembrandt, NVIDIA RTX 4060 Mobile.
+ MAINTAINERS                                   |  1 +
+ .../platform/x86/dell/dell-uart-backlight.c   | 18 +++----
+ .../lenovo/yoga-tab2-pro-1380-fastcharger.c   | 27 +++++-----
+ drivers/tty/serdev/core.c                     | 54 ++++++++++++++++---
+ include/linux/device-id/serdev.h              | 16 ++++++
+ include/linux/serdev.h                        | 34 ++++++++++++
+ 6 files changed, 119 insertions(+), 31 deletions(-)
+ create mode 100644 include/linux/device-id/serdev.h
 
-Signed-off-by: dydydd <admin@qb.edu.kg>
----
- drivers/platform/x86/uniwill/uniwill-acpi.c | 26 +++++++++++++++++++++
- 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index 7a2eeaec..94ed83ed 100644
---- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -2677,6 +2677,24 @@ static struct uniwill_device_descriptor machenike_l16p_descriptor __initdata = {
- 	.kbd_led_max_brightness = 4,
- };
- 
-+static struct uniwill_device_descriptor mechrevo_gm6bg0q_descriptor __initdata = {
-+	.features = UNIWILL_FEATURE_FN_LOCK |
-+		    UNIWILL_FEATURE_SUPER_KEY |
-+		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-+		    UNIWILL_FEATURE_BATTERY_CHARGE_MODES |
-+		    UNIWILL_FEATURE_CPU_TEMP |
-+		    UNIWILL_FEATURE_GPU_TEMP |
-+		    UNIWILL_FEATURE_PRIMARY_FAN |
-+		    UNIWILL_FEATURE_SECONDARY_FAN |
-+		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
-+		    UNIWILL_FEATURE_USB_C_POWER_PRIORITY |
-+		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT |
-+		    UNIWILL_FEATURE_AC_AUTO_BOOT |
-+		    UNIWILL_FEATURE_USB_POWERSHARE,
-+	.kbd_led_single_color = false,
-+	.kbd_led_max_brightness = 4,
-+};
-+
- static struct uniwill_device_descriptor lapqc71a_lapqc71b_descriptor __initdata = {
- 	.features = UNIWILL_FEATURE_SUPER_KEY |
- 		    UNIWILL_FEATURE_LIGHTBAR |
-@@ -2877,6 +2895,14 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
- 		},
- 		.driver_data = &machenike_l16p_descriptor,
- 	},
-+	{
-+		.ident = "MECHREVO Jiaolong 16K GM6BG0Q",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6BG0Q"),
-+		},
-+		.driver_data = &mechrevo_gm6bg0q_descriptor,
-+	},
- 	{
- 		.ident = "XMG FUSION 15 (L19)",
- 		.matches = {
+base-commit: 9e947d96915af63e28896caae85a81b74855621b
 -- 
-2.56.0
+2.34.1
+
