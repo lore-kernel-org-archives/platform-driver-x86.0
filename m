@@ -1,83 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792863755;
-	b=XMud8cil9/BB8bO3drIwuW9pwd5JWs1YZz6yslck+be6YMJRk0hdW1alLetb7oKufUcm
-	 E5V+nETFbKbiOXSNYSLjK9BdmXdVuf7swo8E331cGi8FEdVnudOc51+OLTA5kAAViXkkF
-	 es8Xm4gGLEF0TMHSUP1BGjAjHKLhML35OLDQloEKRo5hvaZptur7cuDeyyMXMxHOT+fjS
-	 wNOQMyKjPoWX7w9Pvvgyuy3z3zn2FIvoLiYRaNgH5aJQd+gnX+7o1Aj0f62CfNX9quJLG
-	 Y+Kobu2VotHCWNfVoLjlg+84By7NuWusziw2+BOl3ElqocaDmFRnEq8riG3cE2ijFlA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792863755;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=BuZ1t5C7X+sSlJUKEoZNCJc0nbbvghvhuZ0zbUxxORM=;
-	b=JzhWeqhCTF62Q0S80bs/R0DIkMo4STV8L0FwOPfRvSLS60P9PTRbRSAmitqqbvVJ9U/E
-	 3yVvVqxQDSws0mTBH7X4N6ABGKh4qT0WcOJ4XSNrGHFC0MBef4GBuQbme1c871KKyi2F/
-	 HdLIMaNWpSFl7+rbjx4cxRoIHCoxOLdjtGnFhwEeiF+vsyJgMidK4seYyKjsTas7X989p
-	 WPs7bQYUvXK/G+V3titc5m4jytB7t8gNol9B75M1G5Gs5mdCS8Qqyfq7RWv0SV37hshJt
-	 +2OJOpZxzmfagP+kJTxEfp6Vr7KNLyuzVrGbDs+OZLCCQh0mBpLdrvD+usq/efXkIbQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fyJ0Oph1;
-	arc=none smtp.remote-ip=198.175.65.9
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.46
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792865169;
+	b=RkxHK5oJi7LsensjY1qngf8fdmVg0WTvs0lNEPSJiA3btioZiVGcB4+isdnffYv1hrIc
+	 H6zD09Y7bZ2d6dc0cXRdkSvSObPwoPbJDj9Fhk1tL/QB8CJRDpFZEM1XIcn8QRgh4AE3t
+	 Lz/hmFEVXX62eZRQzCbZsDuPi7SWJsYUIdJhIAZi2LUNzbFnVwrFEDSNdCFVRbhSze6a3
+	 eO43HUp57S0nfoiFsMKSE5T3n3qz2rdv7IgyTPMMcpG28LRuaJ4LFTSw5F3up90tOpekR
+	 NZBGhoaaP69smZXHR3Z79RRxJ/D1JRm7Cv7nYGmweiZ/VpgdAWKxPUDvbQ8XWCiwpjA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792865169;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=lPG44ydHfbZv48mg+W6n0PmTi2ySUzCmeSRTbHzbT3k=;
+	b=nwuE87zg/Wg9X32pyJyrqVFGyyaN+3NSqCCsXxzjkRhlQuWPBAWm2hoF7sizBScu0iJF
+	 Fk0r/zqIuOc5lIt9fE5XNdlP7kh77R3kzTgPReF8BLWeu0UUXFTOSUAazTgxnPbAyfZfL
+	 0GdgX8zr7tzOLe2BgAflJUXsm/c15p6AEuhZBrJFAEEd230ePHaxio6bHJFc2kIbUhtU3
+	 LO9lagtsn/kfcQKuep67Dy1ARhdbtBQEUdRdB9HQV7joO/qB81cvV9gPUSRils/K3z3AF
+	 zESIQpEdVod8X6UuUX56EWJHNcTiwM8dHrkacucn3vG1Vgp/uAbn6oiKGSZEo099Tyw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hJyH0Pvu;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.46
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF57606A31B;
-	Sat, 24 Oct 2026 17:42:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AF57606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69A2606A31B
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 18:06:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C69A2606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fyJ0Oph1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792863754; x=1824399754;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8vNrTE29DnPOhUoUbcQAhuV/RJaOFG+RLJlehh9FQn4=;
-  b=fyJ0Oph1du/s8g1KSUDFOKoY88kjZE+pJLWEL2dRto838761xsywg67B
-   3twdNjPcJZe5i8gTgPICv8CO5lLrOt0Y3JHsfjLuRsqcMjX7d9HpSpZd/
-   5l1pThimy5+dbiwTmHgzFT5Jg34e/9VB7C7ByBBEVRSgvWECBNw0b1NNx
-   Nfm0q8ZGu7RRGN9LuQAIRnOsOOp+RRPlAywA6uE4b501aJCwEiT0XNqQz
-   sVRVf4MJAUjSLnI3q7pxG6Sq2DjFdwIlaAnTsLfmA/oqchG9bouv7bsDV
-   oBvskF5plW5dbFWUEhdUdWFPo9V0KmKQCskfHeX2bNyLjGWzQPRpwno16
-   Q==;
-X-CSE-ConnectionGUID: ystu15h1Q5WaO4CnXeNfRw==
-X-CSE-MsgGUID: exDBMffOSu2tp9z3aq/oNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11945"; a="1468463"
-X-IronPort-AV: E=Sophos;i="6.27,176,1787036400"; 
-   d="scan'208";a="1468463"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2026 10:42:34 -0700
-X-CSE-ConnectionGUID: eJZY8DdJSTC/QSpw94f05w==
-X-CSE-MsgGUID: 3ONycMUWSKq+6Lkg09qGPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,176,1787036400"; 
-   d="scan'208";a="4013537"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 24 Oct 2026 10:42:30 -0700
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xKflD-00000000U6o-1dkn;
-	Sat, 24 Oct 2026 17:42:27 +0000
-Date: Sun, 25 Oct 2026 01:42:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: ChunAn Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, markus.probst@posteo.de,
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com, mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com
-Subject: Re: [PATCH v4] platform/x86: dell-uart-backlight: Bind through
- normal serdev matching
-Message-ID: <202610250118.t0UAW41j-lkp@intel.com>
-References: <20261024022930.2704030-3-an.wu@canonical.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hJyH0Pvu
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6af9a9451daso2700231a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 11:06:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792865167; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Tya9vlCp3TJp1dlaW9QFlzNeXNq2+8yVNoBJv36ZMCXAofuZVOTswAXkgxFFY6+nuM
+         Py6eTkSdxE9U1JuXPfw2niokKM+fObe4QTkkhh27+epDa48vjb5T7TpWGe634qAmKRSd
+         AASCNyLaQ+hz3guXVWjCrD/unwR8OnNJqkoPRB7ez9ppJnOYuiDOjFdSBdL2hPrfUBLI
+         xGotsFq7In8kOxjSSuax6tR46V8TQ6revC7/pmNuh40kO4EbpplWx/yd6qTkDAXz8Zbp
+         6AskHvGLe22ymi+1pnN3uuAH/Fu1l8AdV3jrDFHVXTerogBjLfa+OD98JgD0Q3NhWuxJ
+         ipOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=lPG44ydHfbZv48mg+W6n0PmTi2ySUzCmeSRTbHzbT3k=;
+        fh=u4RrklZeBcYdlSSqVm/NfG12r/dGU5ykX1qWewq/x+4=;
+        b=Qt5MMtVuqJ+9HSmYdWriKDFtmlKnpIIyEuGLLvVWeJeqgiQccqyPkbAViXarFQP/Gd
+         s8lvmflcEVe8yijJ6FhQPAFTDGRH2JKDi9o7f23/PzZ4z60pFlEmADx9xzqUXqNXZwn6
+         S4W1GhzRlgO4nIx09Pvd+fm2oFQu4dwFn4x9mdqY8iomnFZaOZ0DqeWda353hHTvxgkd
+         xXlSTNFRBOzlOopeNkBWfUPNmJ1erNWR4UzLHey5mI1L7srNOOuOk44u5ISc8gFAqhMu
+         bKtmBhsudhb1Evv/WUjbxA8I+oHb0+RmdE6ZXceVIXEbV/wAv9NSRb4du3fVD5P7nGLC
+         UJQA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792865167; x=1793469967; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=lPG44ydHfbZv48mg+W6n0PmTi2ySUzCmeSRTbHzbT3k=;
+        b=hJyH0PvugVb7vJNbOSoFSxa6zVPMprVBIUroubynC1lIsGBcHVYPmYXpKw9GJoaTJb
+         g847IYIRZ/pK0cA7eYB69sD5X45yHth7cFTNFYMF2JM2zOQ019bLsbhwuL4gl5TJcPMY
+         x4FSpwugGRe6ubcc+x6Toe45ev5Lc7N4n7QdbJWt1RrKyC5Fvf2EP3MDDoyDI57xCFwA
+         UV5joMBqyHXnnlBrUyBoAMF97kQv+iYCK94YJnm+4LlAofRAUesdapcWJ7NAX5qB7L3E
+         0n9o22HF72igY+teSD7fAxBSGcL1UM0XwTEFbev0a7xV2QAcPIbzL2Uo50V4FicGysab
+         6qDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792865167; x=1793469967;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lPG44ydHfbZv48mg+W6n0PmTi2ySUzCmeSRTbHzbT3k=;
+        b=cIO2XVagM5hv5A10jVwd8qKBoy/zM/KOmeAkld5MXL1cjvBoseLbFoMeuZ7vfXHT5x
+         VEbwCRxGtn9K0rrYsCZKoLQzl3qkdFPwahasj3ibqTfLUbkQQ3leYgTGcw+JtDn7Zrt+
+         +lbmrJihm/rUjhh1Vrd/D1OQhxQ71tNJBF1M22/jGJWJCqcpodqCwW/sKr02YpUo74Y+
+         c9L3VzLZDgHJWyUo6Pr6zvuwphtwPLn36RE9zi9/ydUQXgbyoZViRAeuBQtyt/uYGGf0
+         2WKb2FS++gTmcjSH1ucvNZiRDKZXl6/mxr4/EHHK69lebWGh6unuNZMjMFriSN3ofnnb
+         dkKg==
+X-Forwarded-Encrypted: i=1; AKwUvByKMNPV8H5Tx05rCNc741nFlftm6M406G38JSp0vPTj/RtNsXN95iArN4jToJXrs7vAhQg7z14JeZfB1mGy9AeqAcIB@vger.kernel.org
+X-Gm-Message-State: AFq9FYI0j/768/3uAcX0gXFfBsS7v6Rq8jGIbuiESg+v1hp/+Fzwmqcb
+	Lkx6ENxeLBGPF50USoNRGPDQ2pU3/EqdYirDNGiR8M71m03bQzSsU2ie7kFygifngUY26ZyqK4/
+	jFIXLxMSdXvh174tDBY57KAh95hw/oys=
+X-Gm-Gg: AYBFou1AcGmyfMMM/umQLbtRAjVxMv3qSkov0cIZXfjgzsBb/T9hDpI2kka0TXyUX1w
+	brh8IOP99stA+XIy/lET/8BcrIa6WqtBBI/UINC4pSf7nTUU/CIgIhhcOEJjhd6mS30pBwJ0VKh
+	PXg5VPum1PAnOqJCyOTHFFnbXb3KOJz83tb/Tow++FTtJ5PNxOm20cn7OuWMps9rxCQFyXkjIfA
+	7sdRswMCKJf2Wp/tza7zeONtZolh+0ut1BA7KTXi4d2/ieeb8THSEyhDWD7uZDRmsrGtDiSKAOz
+	RfE1nO9WPuKnmDkwQJt/gdEA2UlLQp5xLBvGDCQd/aqsv83DqdCkxwxL+XOFzW1AhHHvs2za8wS
+	3hZSwsY6qRHazlEswfcivGpiBY5Hauj2arPNccDZKfP/5FVuK70TThI3lD4plNLv/RuusoCA0jZ
+	pXE9RcVe2aXy5miP5oeWOo
+X-Received: by 2002:a17:907:3da0:b0:c3f:98d4:dfe2 with SMTP id
+ a640c23a62f3a-c46bde25765mr313652666b.18.1792865166843; Sat, 24 Oct 2026
+ 11:06:06 -0700 (PDT)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -87,112 +105,58 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261024022930.2704030-3-an.wu@canonical.com>
+References: <20261016025352.230535-1-meatuni001@gmail.com> <29c3e4a2-9d6a-60cf-d06d-85152a40a703@linux.intel.com>
+ <CADqcGBkV4iE_0j6usv6TvV3K9XGUa0L9J-ebUkTLsB0NBYzTHA@mail.gmail.com>
+ <a905f45d-aec8-569f-d5bc-718896f7c9c9@linux.intel.com> <273be4cc-ad7d-cdcd-de25-8d1439bed3e3@linux.intel.com>
+In-Reply-To: <273be4cc-ad7d-cdcd-de25-8d1439bed3e3@linux.intel.com>
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Sat, 24 Oct 2026 23:05:54 +0500
+X-Gm-Features: AclHuK8PFwnTEGocukzPDuOlDq-fzoGEr02g0x88KN8IXdmfzdiI_JHU5c7rfq4
+Message-ID: <CADqcGB=z3_mQ77Wk3E9tWMYyCaQ2hCno99kgPKH8ZrP9EFKY5Q@mail.gmail.com>
+Subject: Re: [PATCH v6] platform/x86: hp-bioscfg: fix heap OOB in hp_enforce_single_line_input()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi ChunAn,
+Hi Andy, Ilpo,
 
-kernel test robot noticed the following build errors:
+Thanks for the review. I switched to strnchrnul() as Andy suggested and
+posted v7:
+https://lore.kernel.org/all/20261024172641.19424-1-meatuni001@gmail.com/
 
-[auto build test ERROR on driver-core/driver-core-testing]
-[also build test ERROR on driver-core/driver-core-next driver-core/driver-core-linus linus/master v7.3 next-20261023]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks
+Muhammad
 
-url:    https://github.com/intel-lab-lkp/linux/commits/ChunAn-Wu/platform-x86-dell-uart-backlight-Bind-through-normal-serdev-matching/20261024-102929
-base:   driver-core/driver-core-testing
-patch link:    https://lore.kernel.org/r/20261024022930.2704030-3-an.wu%40canonical.com
-patch subject: [PATCH v4] platform/x86: dell-uart-backlight: Bind through normal serdev matching
-config: x86_64-randconfig-1014-20261024 (https://download.01.org/0day-ci/archive/20261025/202610250118.t0UAW41j-lkp@intel.com/config)
-compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261025/202610250118.t0UAW41j-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610250118.t0UAW41j-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/platform/x86/dell/dell-uart-backlight.c:328:60: error: array has incomplete element type 'const struct serdev_device_id'
-     328 | static const struct serdev_device_id dell_uart_bl_serdev_id[] = {
-         |                                                            ^
-   drivers/platform/x86/dell/dell-uart-backlight.c:328:21: note: forward declaration of 'struct serdev_device_id'
-     328 | static const struct serdev_device_id dell_uart_bl_serdev_id[] = {
-         |                     ^
->> drivers/platform/x86/dell/dell-uart-backlight.c:363:34: error: too many arguments to function call, expected 1, have 2
-     363 |         ret = serdev_device_add(serdev, KBUILD_MODNAME);
-         |               ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~~~~~
-   <command line>:8:24: note: expanded from macro 'KBUILD_MODNAME'
-       8 | #define KBUILD_MODNAME "dell_uart_backlight"
-         |                        ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/serdev.h:161:5: note: 'serdev_device_add' declared here
-     161 | int serdev_device_add(struct serdev_device *);
-         |     ^                 ~~~~~~~~~~~~~~~~~~~~~~
-   2 errors generated.
-
-
-vim +328 drivers/platform/x86/dell/dell-uart-backlight.c
-
-   327	
- > 328	static const struct serdev_device_id dell_uart_bl_serdev_id[] = {
-   329		{ KBUILD_MODNAME },
-   330		{ }
-   331	};
-   332	
-   333	static struct serdev_device_driver dell_uart_bl_serdev_driver = {
-   334		.probe = dell_uart_bl_serdev_probe,
-   335		.driver = {
-   336			.name = KBUILD_MODNAME,
-   337		},
-   338		.id_table = dell_uart_bl_serdev_id,
-   339	};
-   340	
-   341	static int dell_uart_bl_pdev_probe(struct platform_device *pdev)
-   342	{
-   343		enum acpi_backlight_type bl_type;
-   344		struct serdev_device *serdev;
-   345		struct device *ctrl_dev;
-   346		int ret;
-   347	
-   348		bl_type = acpi_video_get_backlight_type();
-   349		if (bl_type != acpi_backlight_dell_uart) {
-   350			dev_dbg(&pdev->dev, "Not loading (ACPI backlight type = %d)\n", bl_type);
-   351			return -ENODEV;
-   352		}
-   353	
-   354		ctrl_dev = get_serdev_controller("DELL0501", NULL, 0, "serial0");
-   355		if (IS_ERR(ctrl_dev))
-   356			return PTR_ERR(ctrl_dev);
-   357	
-   358		serdev = serdev_device_alloc(to_serdev_controller(ctrl_dev));
-   359		put_device(ctrl_dev);
-   360		if (!serdev)
-   361			return -ENOMEM;
-   362	
- > 363		ret = serdev_device_add(serdev, KBUILD_MODNAME);
-   364		if (ret) {
-   365			dev_err(&pdev->dev, "error %d adding serdev\n", ret);
-   366			serdev_device_put(serdev);
-   367			return ret;
-   368		}
-   369	
-   370		ret = serdev_device_driver_register(&dell_uart_bl_serdev_driver);
-   371		if (ret)
-   372			goto err_remove_serdev;
-   373	
-   374		/* So that dell_uart_bl_pdev_remove() can remove the serdev */
-   375		platform_set_drvdata(pdev, serdev);
-   376		return 0;
-   377	
-   378	err_remove_serdev:
-   379		serdev_device_remove(serdev);
-   380		return ret;
-   381	}
-   382	
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Wed, Oct 21, 2026 at 2:41=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Wed, 21 Oct 2026, Ilpo J=C3=A4rvinen wrote:
+>
+> > On Wed, 21 Oct 2026, Muhammad Bilal wrote:
+> >
+> > > Hi Ilpo,
+> > >
+> > > > Why use n variant?
+> > > strnlen() keeps the read within count, which is the size of buf as fa=
+r
+> > > as this helper knows, so it does not depend on the caller NUL
+> > > terminating the buffer. Both current callers pass a kstrdup() copy, s=
+o
+> > > strlen() works too. I can switch to it in v7 if you prefer.
+> >
+> > As the contract here is the input must be a string, I don't see any nee=
+d
+> > to limit the length with n variant so I do prefer strlen(). Also, we kn=
+ow
+> > that it should not be longer than count anyway.
+>
+> I only now notice Andy's comments which seem better suggestion in general=
+.
+>
+> --
+>  i.
