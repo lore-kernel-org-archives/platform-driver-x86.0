@@ -1,61 +1,113 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.4
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792821026;
-	b=yuqsAE2nfkuMhFxysh9UYP2lJIMwqr2j8B273wTmWRk5lGueecd1O333eS6dDFHtJMlf
-	 dBAOJnJ2jCpBiL+MAYyM96yCDqaDFrs++CRKYUYWXiAS4zxn/1zMBlMuUqYLgODHj0mJO
-	 ZhIPuF+6k2tWJfFGWYUbzmeAjKoDpMcdaGFcDiyv6qZCPfebpf3S/ACoGHNvRsiATNPZz
-	 IrLk9lyFal4n6lTwoTMZnwXNKp9b1KRsHAFNrqk5/RsGLrICdwAy8GlRW5Wuiq+xD+vxB
-	 E2RU251not/7fMWpjDMIBdkYIpdUMh97gcNZd2ppAlsMPA1qbvxiMrfMvv7ht/Wt6aA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792821026;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
-	 X-Originating-IP:X-CM-SenderInfo;
-	bh=4eeCO3rC80X62fcq/OXH4080ngr+dUvjk6HNy82lOk4=;
-	b=1+5AsmKA5dZp3NZk4DB4VYkJVNeu9r+wpAyEiUCeiR3QXyXh3K1olN9zCOrFMHYUScEv
-	 H+FKW3z4rm2pxTd0D2VSoKb4xQedNblxdorbPrvKAopqva+7yOq2eMq0KGDAr30ggIkye
-	 8lnoJND3N+xnlWUOizJgDL71WViUXXB+k31mNy0Of+/oON92QKmtg2ybGbHZpzT13uSkH
-	 IzE088QS3IU1m3wOPXTyBrQRVQfJGGPGduPd39PGjZJFDWy+CG7pHSgpeR4zQVFZFXZ7o
-	 0lyQaSEL3KTT2cchH/6C5kSFftsca0giEEqP6J5D8rw2lfpbLgYYX8ungs5yaGGNXGg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b="Xf/73uos";
-	arc=none smtp.remote-ip=117.135.210.4
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=185.125.188.122
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792831243;
+	b=p0eQRv52XrL57yB6DyqiTvnsohkjyLNKwQIrNsb/h5IkHlShPImc2Uzudvvo2dewBJYo
+	 SY7nofR45d71qw5bjn5R5ZEAIToFmYugVGFuOa56YHu7mz+uQyjHhIFd+2A2NS6hCYExm
+	 D2tJDwYR+NO48rh2vveYwzEgDxw+BgCKHOR1dpW9CCNfXzatklCyk5991b3PYeEYCGAs1
+	 cCrJdtUDtBzkU1e0tRez6yS7JnaaO9PkLGxlRjafkyQ5FvLk+3WQwXi1LQOoKvWvLAWuK
+	 gXSwTGkRdO7iHdP1un8tatzNO7f0Wjv/0abQyo+5W8lqXta0yCATHQmBEtaeB5WOmfA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792831243;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:
+	 X-Google-DKIM-Signature:X-Forwarded-Encrypted:X-Gm-Message-State:
+	 X-Gm-Gg:X-Received:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=yXq52twcMI4Pp7oE3JQoJWzm+YSJCWMd6m0T6uz2FyY=;
+	b=u74G/cE73Tj0VGG+b3v31360W8ZWyBVlGreZT5Y/uvkGUAeWytpy8tF9tjtS0nZM/AgK
+	 0w9hIjpLM3M9RPDC7i/llJ7esDW7UqcIUnTjpJcUgbmHiZNfurrP/6Yt11SM1tJeXsbGF
+	 MonBptlAzXtc5+C4uw+JEZ8LnAh6wrn/Yb5KC9dhoZVYk3g9Pb6zk9IltgMb/PkEuR468
+	 OZdh1fzqt1Hbbg+ymess5j40suuoyO2P8FE7By+5A+4Lx0/MbhKbqXKP9uYsk3RwBMrRo
+	 yoKmz45RNZ+P1uZJ6ULlD13FhQjjlyJgMsGfTFbeWPu1P6schkrpqf0n4A7LAEQn/EA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=canonical.com;
+	spf=pass smtp.mailfrom=canonical.com;
+	dkim=pass header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=RWGzfM5E;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=185.125.188.122
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF3E606A323;
-	Sat, 24 Oct 2026 05:50:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0BF3E606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48036606A31D
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 08:40:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48036606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=Xf/73uos
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version:
-	Content-Type; bh=4eeCO3rC80X62fcq/OXH4080ngr+dUvjk6HNy82lOk4=;
-	b=Xf/73uosj8Kq/DH1BxCXNhWCXU3rUmi6dvy+F4UR+//GnUxXRVVkSMOnvSU47J
-	ykUxAm7a14ANlDG8oJeRVHtjw5Jo/Ri+cFB+l4Cr08agz3NaFKid0tQoV0nPOvFx
-	7RSzvZwRQRb1uEkQbWYsHfoZtNZreI+JHU9jUxAhUv1vk=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgCX95oGR9xqGesABw--.21036S2;
-	Sat, 24 Oct 2026 13:50:00 +0800 (CST)
-From: Wu Enqiang <janussss@163.com>
-To: luzmaximilian@gmail.com
-Cc: platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	chris@nilk.net,
-	Wu Enqiang <janussss@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] surface: aggregator: propagate -EPROBE_DEFER from ssam_irq_setup()
-Date: Sat, 24 Oct 2026 13:49:21 +0800
-Message-ID: <20261024054921.48209-1-janussss@163.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261003044844.63157-1-janussss@163.com>
-References: <20261003044844.63157-1-janussss@163.com>
+	dkim=pass (4096-bit key, unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=RWGzfM5E
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 2BABC402DB
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 08:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1792831239;
+	bh=yXq52twcMI4Pp7oE3JQoJWzm+YSJCWMd6m0T6uz2FyY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=RWGzfM5ErxOVLdI8XJpxlcLmXn8iUZXzY2VW2zIJgikQXCaPH/ITUBadQJS/HQBt9
+	 50s4xhguHny6+B36AQUx4cXY0sxwvZEh70Wcrh1BrMwVo/U/5YTrdROLf4gRy2rQUE
+	 d2m6gfSZGo6j/qNVznjSAfMNzqDk3rMb/1wvBfuQh6+/jJZ5JZjIdmR2Ayw9fAIA59
+	 88KHXOP7Xlss3P/0FwlrKvGm+2zB2w+Vthx6j1vNjqhsiaRyIZC4fgGrL3Qsno3CEt
+	 v70vtzef3j9+WWfpI8DrplobNtYX0j/abb4XyLcra6mjvl9XjMWWoCX3XMsVTK9MxD
+	 KurQU6EQhCAMh3P/MmpFVQoVjb+zjItCjX8jrnHO/nVUQy01xQnpyDtAMGWYZQ2pU0
+	 vXMEm2KaBf8FP93vBsqIcuwoJ3QyRSoEAuEtJeqznIlSizDhxySNdaUI4AWyPIvgtQ
+	 o8k8rZ2gee5IfiXfYEloK8mrPOuWN+iYMZi0TqIZN1Wx+dhdmdg+KptcZu2xfeV0kX
+	 lBIFXBCXraIXbBtJTu2sZytV00Md/Z0LduY4vjWUyhUYPjTqkGQU8b7uoiAiZsvnmS
+	 MVZr1NTRti6GSTcqEt+nCeDfmLUsFjQXioNvMd+E3r8eUVQxhG+UZUglUH9pXj014Z
+	 GQi75yZBJunvS1o2j81BM3NE=
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-8250e0f6ec9so405378a34.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 01:40:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792831238; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Jea6MKcRQ3GWCbXbYdRRLd9B+dpzzvizsU+s/Em5Z4tFoPV5RO23mV7GgCp3WNDE7/
+         54fL70rA4n7MyP6ZdcaXyO9V/ReH6MQY1TQ2UI/UXgQLr0pX22gt7G2SJ2yn65UfjFom
+         jSwMZmu5eiWGmUzzbBwdVVgt8cU3gSE3LYBtGD3qYriq5jPG2TV42Nk/BJyiIIpF5imm
+         Ip675jSkEjDxpqOKyB0kOfnLk3m1xORLhqqpPNVJ9O0NjzJQm7GMmy6pNeGRKcVwTbsD
+         Bklv9xBg3XWwjIQIFjQrWEysIy1sQ3oTNcZN5ncopV985wtG6AnwBl98lyIWQYObfbVU
+         50Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=yXq52twcMI4Pp7oE3JQoJWzm+YSJCWMd6m0T6uz2FyY=;
+        fh=/eMqvSJEMd8mRIoOBCHZJqFmzHhA+pA+DXGsE5Dme4w=;
+        b=Ijg6Mh9C3X4FSX+AKcuFYTd8DSQZpAFcHQQqeY8in8RTtN/RFwV5wZtQxb+zqAI9+k
+         oyCskU8s2d2JJumKaLv38FGEYmGVXoVLUp9UsLLDqjU75GEWGkr7csYUptowotr0pViD
+         XqE7yJdhnjvTgwj8vN6HDGXsuvYmdrbhTq0bh0DznBVgVbIX0o75s2YWwWENONDoKObs
+         L2ooQr8VhMTVnRLp7wVXKaei/HlZIhzwLhdGJ1q52DUvam6QnvU0UJhmPLLxVb8yJiPP
+         QqVrBMMrW6FWmcjUqnA4l1A5WxAELaQl/9NlhhhdvZCn3Q2wU3ZiahtBtjH941BiFbRQ
+         XWoA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792831238; x=1793436038;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yXq52twcMI4Pp7oE3JQoJWzm+YSJCWMd6m0T6uz2FyY=;
+        b=phOM16rAS1wdT7Lb9IIrQLtmXjgZb0QjJnFLk5eSwb63CAy5vH8kgDt7VLSBVh/NnB
+         TbcMwhAzdhnviktG0SupD4tc4fQP6QUwMQIhvoLDHH7c56AddWDeI0ZPfWUS9Gj9DgTY
+         VYOODeS/3PCZoEvCLYWJRENLSb7xaYPsckggwM1TY6PbU0W72ZySGvxwSgdK/QAex3Y1
+         A1BVUXFzED17WBSfzop78pZxwuO114HFO7CoEBr/BuZ/OQ0lGnsg8Rsm0IzcueQjNZbS
+         Nb0GrUMse5X+bz1/dVoS/kXo3/tkHmpNEDmsnrefz3zMNxkBuCItaOH4snzzcArGbPBj
+         ffBw==
+X-Forwarded-Encrypted: i=1; AKwUvBzYylCD1qNdi+AMDayJGSoL4eeDgSXDGGI2jw4pagVEL1wsZ6HX1ZyrsatMpDcstzC6pjZ0dXt1B8R0YiD5yzW4Jhu6@vger.kernel.org
+X-Gm-Message-State: AFq9FYKL1gOJAsoKXmEGbfY95NRyVR7qgCod6/fJfc/XUIRzkyv/KWn1
+	xDa9eZHWg8kyL7mbHoQ5cFNBjZw/RMf4q/Pb4G21WYlVkb21nz8JASs4PSEeVMuOLfggmpyRg9A
+	3rVid3kQfPQP0y9HueYVzdS4OGvrp18kUKwROGJHYnowqAwicC7+dHp27XCFI2lJJqIUyAasqCF
+	/ODwTHHKP13PMEJkJaZ1THB8haqDEyQWtFWlttHRl0mTdv61rV7Zexurl6m1+cbI5gEA==
+X-Gm-Gg: AYBFou3omhZ+3nx2heOPYckbI0oDV+M5Vh0ynjXD25izfBg7ielnNn2ZQqptALP9m20
+	DmeTuh/cNjbiewusxlhTcvXoxukqTG1+dA9reEn8AnlMDu+ZPJzRwWGQ83vOEofKvPd1vyjCqhB
+	weg4TVq9rTmkuqCCQ8rxPOD312Iqt3auMrrhV1yG1WPG4GZuXCMAnAZTkOmLDO0fpeQR1Nt76rA
+	LDq+6oBkuYLVhiJNjdsypq9S8g4UaDoxlTjAbpnDV4qRLDnx7VlUS3ch4cag6e2UqxTpava8neP
+	SnDoxE4mtepLIzE=
+X-Received: by 2002:a05:6808:180f:b0:4e8:9e40:a0dc with SMTP id 5614622812f47-55bfff897a6mr1484028b6e.1.1792831237658;
+        Sat, 24 Oct 2026 01:40:37 -0700 (PDT)
+X-Received: by 2002:a05:6808:180f:b0:4e8:9e40:a0dc with SMTP id
+ 5614622812f47-55bfff897a6mr1484014b6e.1.1792831237305; Sat, 24 Oct 2026
+ 01:40:37 -0700 (PDT)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -65,89 +117,159 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgCX95oGR9xqGesABw--.21036S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGF1UuF1fKw4xXF1kAw4xJFb_yoW5urykpa
-	95GF43Xr98JF1rGanYgw1xuFWrtw1kArW0gF4kWrnru3s8XryfZryjgFy3W3ZxCrW8XFyY
-	vFn5X3W8CFyDAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRHlkcUUUUU=
-X-CM-SenderInfo: 5mdq32xvvvqiywtou0bp/xtbC3gmlD2rcRwmk1wAA32
+References: <20261024022930.2704030-1-an.wu@canonical.com>
+In-Reply-To: <20261024022930.2704030-1-an.wu@canonical.com>
+From: An Wu <an.wu@canonical.com>
+Date: Sat, 24 Oct 2026 16:40:26 +0800
+X-Gm-Features: AclHuK_lw0KrbOay5TaRrHza0ih03wUncsXLxEBm0ja6_fb_XrMQvlNi_qhwGNo
+Message-ID: <CAO4Mv0bkBSHHXo=_0SyCAN54Jb76fy34ba1hFVPVkFfs6ufoqA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] serdev: handle devices without an ACPI or device
+ tree node
+To: linux-serial@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, markus.probst@posteo.de, 
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, mpearson-lenovo@squebb.ca, 
+	derekjohn.clark@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-gpiod_get() can fail with -EPROBE_DEFER when the GPIO controller
-providing the "ssam_wakeup-int" GPIO has not been probed yet. The
-current error path falls back to fwnode_irq_get(), which returns
--EINVAL because this device only declares GPIO resources. The probe
-then fails hard and is never retried.
+Hi Makus
+    According to sashiko:
+'''
+In drivers/tty/serdev/core.c, serdev_controller_alloc() places controller
+devices on serdev_bus_type:
 
-This has been reported across various Surface devices since v6.12,
-including the Pro 6 and Pro 9 that were used to reproduce it. With
-the SSAM controller down, dependent ACPI devices, e.g. the battery
-with its _DEP on the SAN node, are never enumerated and battery
-status is missing.
+    device_initialize(&ctrl->dev);
+    ctrl->dev.type =3D &serdev_ctrl_type;
+    ctrl->dev.bus =3D &serdev_bus_type;
 
-Use gpiod_get_optional() and propagate errors to the caller so that
-probing is deferred until the GPIO controller becomes available. Only
-when no wakeup GPIO is described at all, fall back to fwnode_irq_get().
+When yt2_1380_fc_module_init() calls serdev_device_driver_register() for
+yt2_1380_fc_serdev_driver (or when a new serdev_controller is added), the
+driver core runs serdev_device_match() against every device on
+serdev_bus_type, including struct serdev_controller instances:
 
-Fixes: b27622f13172 ("platform/surface: Add OF support")
-Reported-by: Chris Simpson <chris@nilk.net>
-Link: https://lore.kernel.org/platform-driver-x86/d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net
-Link: https://github.com/linux-surface/linux-surface/issues/2219
-Tested-by: Chris Simpson <chris@nilk.net>
-Tested-by: Wu Enqiang <janussss@163.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Wu Enqiang <janussss@163.com>
----
-v2:
- * Per Ilpo's comment, pass any gpiod_get_optional() error on directly
-   instead of special-casing -EPROBE_DEFER; keep the fwnode_irq_get()
-   fallback only for the "no GPIO described" (NULL) case. Suggested by
-   Ilpo Järvinen and matching the variant Chris Simpson tested on a
-   Surface Pro 9.
- * Add missing final period (Ilpo Järvinen).
- * Use full name in Signed-off-by (Ilpo Järvinen).
- * Add Reported-by/Tested-by for Chris Simpson, and Fixes:/Cc: stable
-   for the v6.12 regression he identified.
- * Note the reports span various Surface devices (linux-surface
-   #2219, #1645, #2064, #2039); the Pro 6/Pro 9 are just the ones
-   used to reproduce.
- * Tested on a Surface Pro 6: probe no longer fails with the -EINVAL
-   "failed to setup IRQ" in dmesg, and battery plus dependent ACPI
-   devices are enumerated again.
----
- drivers/platform/surface/aggregator/controller.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+static int serdev_device_match(struct device *dev, const struct
+device_driver *drv)
+{
+        const struct serdev_device *serdev =3D to_serdev_device(dev);
+        const struct serdev_device_driver *sdrv =3D to_serdev_device_driver=
+(drv);
 
-diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-index 6a8430cb9..8846d22c6 100644
---- a/drivers/platform/surface/aggregator/controller.c
-+++ b/drivers/platform/surface/aggregator/controller.c
-@@ -2753,12 +2753,20 @@ int ssam_irq_setup(struct ssam_controller *ctrl)
- 	 */
- 	const int irqf = IRQF_ONESHOT | IRQF_TRIGGER_RISING | IRQF_NO_AUTOEN;
- 
--	gpiod = gpiod_get(dev, "ssam_wakeup-int", GPIOD_ASIS);
--	if (IS_ERR(gpiod)) {
--		irq = fwnode_irq_get(dev_fwnode(dev), 0);
--	} else {
-+	/*
-+	 * Only fall back to the fwnode IRQ if no wakeup GPIO is described
-+	 * at all. Any other error, in particular -EPROBE_DEFER while the
-+	 * GPIO controller has not been registered yet, must reach the probe.
-+	 */
-+	gpiod = gpiod_get_optional(dev, "ssam_wakeup-int", GPIOD_ASIS);
-+	if (IS_ERR(gpiod))
-+		return PTR_ERR(gpiod);
-+
-+	if (gpiod) {
- 		irq = gpiod_to_irq(gpiod);
- 		gpiod_put(gpiod);
-+	} else {
-+		irq = fwnode_irq_get(dev_fwnode(dev), 0);
- 	}
- 
- 	if (irq < 0)
--- 
-2.55.0
+        if (acpi_driver_match_device(dev, drv))
+                return 1;
 
+        if (of_driver_match_device(dev, drv))
+                return 1;
+
+        return !!serdev_match_id(sdrv->id_table, serdev->modalias);
+}
+
+Because serdev_device_match() does not check is_serdev_device(dev) before
+casting dev with to_serdev_device(dev), and yt2_1380_fc_serdev_driver has n=
+o
+ACPI or OF match table, serdev_device_match() falls through to
+serdev_match_id(sdrv->id_table, serdev->modalias) on struct serdev_controll=
+er
+devices.
+
+In struct serdev_device, modalias[SERDEV_NAME_SIZE] starts at offset
+sizeof(struct device) + 4, which in struct serdev_controller overlaps the
+struct device *host pointer, ctrl->nr, ctrl->serdev, ctrl->ops, and extends=
+ 12
+bytes past sizeof(struct serdev_controller). When the overlapping byte at
+modalias[0] is non-zero, serdev_match_id() passes that non-string memory an=
+d
+trailing out-of-bounds bytes to strcmp().
+
+Should serdev_device_match() verify is_serdev_device(dev) before casting de=
+v
+to struct serdev_device?
+'''
+
+If we remove is_serdev_device could cause some problem due to the
+serdev_controller could also
+run into this function and "serdev_match_id(sdrv->id_table,
+serdev->modalias);" can be a potential risk.
+
+I will add the "is_serdev_device" back and send v5 out.
+
+BR
+    An
+
+
+On Sat, Oct 24, 2026 at 10:29=E2=80=AFAM ChunAn Wu <an.wu@canonical.com> wr=
+ote:
+>
+> Driver-created serdev clients without an ACPI companion or device tree
+> node currently have no modalias and cannot be matched to a driver:
+> their modalias sysfs read returns -ENODEV and their creators force a
+> bind with device_driver_attach().
+>
+> Backlight function on dell-uart-backlight is not affected: that class
+> device is registered independently and gets its own add uevent. The
+> user-visible breakage is the failing modalias read on an existing
+> serdev child -- Checkbox dkms_info_attachment aborts with
+> "OSError: [Errno 19] No such device".
+>
+> Resolve the two long-standing serdev-core TODOs by letting the creator
+> pass a modalias to serdev_device_add() and giving the serdev driver an
+> id_table, modelled on the SPI bus. ACPI and OF match first and are
+> unchanged. Convert dell-uart-backlight and the Lenovo Yoga Tab 2 Pro
+> fastcharger to this path and drop their force-attach workarounds.
+>
+> Changes in v4:
+> - Patch 1: drop the dead is_serdev_device() guard from the match
+>   callback, and dereference serdev once at the top
+> - Patch 1: drop the "large enough" comment on SERDEV_NAME_SIZE
+> - Patch 1: in struct serdev_device_driver, place id_table right under
+>   driver, next to driver->of_match_table and driver->acpi_match_table
+> - Patch 1: merge serdev_device_set_modalias() into serdev_device_add()
+>   so the modalias is set at the only point where forgetting it would
+>   matter; internal firmware callers pass NULL
+> - All three patches: tightened commit messages and moved the v2/v3
+>   changelog narrative out of Patch 1 into this cover letter
+>
+> Changes in v3:
+> - Rename struct serdev_device::name to ::modalias; dev_name() is
+>   unchanged
+> - Model matching on the SPI bus: add struct serdev_device_id and
+>   id_table; drop driver->name matching
+> - Add serdev_device_set_modalias() helper and SERDEV_MODULE_PREFIX
+> - No MODULE_DEVICE_TABLE(serdev, ...) support: both in-tree
+>   firmware-less clients are created by the same module that provides
+>   their driver, so udev has nothing to autoload
+>
+> Changes in v2:
+> - Instead of silently returning success with no modalias, use a
+>   creator-supplied name as a "serial:<name>" modalias fallback and as
+>   the matching key, so clients can bind through normal serdev matching
+>
+> v3: https://lore.kernel.org/lkml/20261023052717.2577234-1-an.wu@canonical=
+.com/
+> v2: https://lore.kernel.org/lkml/20261022032842.2492572-1-an.wu@canonical=
+.com/
+> v1: https://lore.kernel.org/lkml/20261021092124.2306053-1-an.wu@canonical=
+.com/
+>
+> ChunAn Wu (3):
+>   serdev: handle devices without an ACPI or device tree node
+>   platform/x86: dell-uart-backlight: Bind through normal serdev matching
+>   platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: Bind through
+>     normal serdev matching
+>
+>  MAINTAINERS                                   |  1 +
+>  .../platform/x86/dell/dell-uart-backlight.c   | 33 ++++------
+>  .../lenovo/yoga-tab2-pro-1380-fastcharger.c   | 25 +++----
+>  .../platform/x86/x86-android-tablets/core.c   |  2 +-
+>  drivers/power/sequencing/pwrseq-pcie-m2.c     |  2 +-
+>  drivers/tty/serdev/core.c                     | 65 ++++++++++++++-----
+>  include/linux/device-id/serdev.h              | 19 ++++++
+>  include/linux/serdev.h                        | 12 +++-
+>  8 files changed, 105 insertions(+), 54 deletions(-)
+>  create mode 100644 include/linux/device-id/serdev.h
+>
+>
+> base-commit: 9e947d96915af63e28896caae85a81b74855621b
+> --
+> 2.34.1
+>
