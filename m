@@ -1,114 +1,114 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.65
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792843504;
-	b=VMJwq8ojiCu0yUnR8sWQFT5qP8uLXGqgJaWWJVEtcOYbbWHfBuXCbbCZTcKJ6Bj3o3aq
-	 PkRH1wT7wUhxopvrTWHJISplpnXpcEo4WUOT/g/VyGP3XsullvCljIB5gouYQ3zdHHCJ3
-	 CZyKG1uvFQxBWV1HMA3ivhltc5neCSYTCf9kEGdoNAO7fA59pHuJ/DOcP+VFvN2LGjUyy
-	 idCO0aX8kJnjdvknjJRdjwQGLTyzdsYXfXYWmraJPsJA1BiudXVD9NOFme5FsEii4na5e
-	 nlhk+GNQbRhEQLxDZJlBxqOx2yh4BkXfG5M6xtQgjG/4GbQumhzuSlLvZIrjz95Wy8w==
+	t=1792846747;
+	b=VJTdxkrNXjBhLn8y9HsSulsYaGNCXYmCETg5Eh2cIWLQSFYQqNwSsl7+Q8YPvhAUKS+E
+	 1aHGW0FOt+Iey3Wm8Fu8BX9G2HDUmJhIt69Up0lnlpqPLWI2vfRvIubnfes/dB3zuRJX+
+	 s695/aaXw0CM3QsY1v5GteZY65QOAOmHf/TXaGVFu2FGqGbkhAy86PrLih0mDTHLEn/r5
+	 w8RKJdHhJXxy/I02iy5MWk+fYdW3fD0SlJuvM6gKlZ/V+7YLpXMP4LAh/M45tBXd++FQs
+	 C57fB0m2jrRfyo5a+T8mvHBtW5Faw8S4Q/5bSt7PTvuSFGFXPuDnEfXTg1+/bhUKJqQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792843504;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:
-	 X-Google-DKIM-Signature:X-Forwarded-Encrypted:X-Gm-Message-State:
-	 X-Gm-Gg:X-Received:X-Received:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=XcXND02uVU9mligWZKre8PewcZOkoWJ0b9UoDwiNQPw=;
-	b=0lvXP7j9yBA8xOSUeW7IfRUWkdlJvUROUWZCrTmwb9MDA6wuZjywooAOCnJVATd99M3t
-	 CTyaqSvVKznDabMRfg8vvDKQD3TkRFFv2r+YI/V7IaLvHEiSf9S2nMZW7AQZkB++13j4C
-	 EMBes7xbFPI41vY6BntD3sOrBVFR4lBwMWUJedanrNNJK1dBU9Y+uErGlNx9yGAI7cC6I
-	 d62Uon5dBm4BZBB5OzzpCbbORihv6URMoLObajaEJFn5klPErD5R7NhKwsO9R343b3IVQ
-	 yjI+aFlVrcuRUt8FypMEWR9JhA35kf37vlQao/myAKP1GxlXoE7xVxqnaKqsUeHVT2w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792846747;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Message-ID:Subject:
+	 From:To:Cc:Date:In-Reply-To:References:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP;
+	bh=LUvyJQ1zjyOa9Odd6dqvliPzy8Me0ScGpoMY+ONU08w=;
+	b=3ooFp0GQvkGxAZHnd3MzNJA3MiHag2YtRRvKhNPgfK3xNvjmNHvGpkdz181DbcTweF5l
+	 j9Mzu29qtw9D1LNGNKgVIiHSp+qkHJHcVEtaK43qLFyqH6f55pnvl5Jk1do9crSWN/rCA
+	 x8tyaNm7nHMasM7aRJdoFad/U52RoJeBXvv7S0jM8VUPFDegiOsJN2oCQ4vyLPlGjOfU/
+	 Sy3K8rVMQLp7CfUNmxYisGLOQAyEGGbESFPzJj2iIxVD61SjnHGin66WySMOCfcR4vuHS
+	 CQA32/ttbhTL256N00XcDXizq9m6ZRbiE8FYBYXk61KjzXTMTtG74slf4OTd7BATh8w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=canonical.com;
-	spf=pass smtp.mailfrom=canonical.com;
-	dkim=pass header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=I0sgSLyf;
-	arc=none smtp.remote-ip=185.125.188.122
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	dmarc=pass header.from=posteo.de;
+	spf=pass smtp.mailfrom=posteo.de;
+	dkim=pass header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=jDiAiFCy;
+	arc=none smtp.remote-ip=185.67.36.65
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4EC606A331
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 12:05:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8F4EC606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43E8606A31D
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 12:59:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D43E8606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key, unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=I0sgSLyf
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 650743F698
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 12:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1792843502;
-	bh=XcXND02uVU9mligWZKre8PewcZOkoWJ0b9UoDwiNQPw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version;
-	b=I0sgSLyfiwSxnbjIJjhfm6g1YLsCEnhfuW5WZ6ZjzjYCbx3orKIIuYV0pRq0DzXvN
-	 lOwRVWd4ByYKijLzCzVEzxbJE6JwbqXUsAxzysrLt5AoRHDoa+/Uhxt6ihfbKGrCcL
-	 K1yi1AizLgrkT1WTv5qLTqlGM/WvuX+LbcAlhBtdYvWmLUsjahmmupNPpfuZerN+DZ
-	 ZCqwCwU5vB2flUXABFQcsAuq5xdoTsA3shFrtWRjK7wS0KCO/FmJfL5Zg16cHOCuLW
-	 Wjz0qxej8y5ERq4A/3nrV9UauyRdkVrV4ZkptuaDuXG9qdISqfDJF7cj/ssjaaobub
-	 Teq1YkIeUH8lA3SshGx0Rugt/shlpmQL2fHCpcKNvseg+IM8dEkKvOeFrVyYUjzWve
-	 wTeQo9etPzdY9PML+ZSi3RAcYO1fvRW3QZ5lRmL8tfup6vwJFQb4vB6rIWzCY1j/bC
-	 y8ks4b7rn+Hr6sU3L9/xdwIZMiz728A0W1dy+eodYMMTVw6lqK0rAbKy9Vac1UF08K
-	 m+wyFIzpe8Gdpb0wcN49oZ7sekN9u6PPMe3Qi4tSMPPjpr8aoo6qe/VbpKCeyBbruW
-	 EF2InAednb9OijiUIavZjUUJd278+6LkX9DpnxZMibY16GfawjrpXLNGpG8iWWboJE
-	 kbLZb6nsgHhZ0cE+7Le61Sv8=
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3ad94b96698so489270a91.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 05:05:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792843501; x=1793448301;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=XcXND02uVU9mligWZKre8PewcZOkoWJ0b9UoDwiNQPw=;
-        b=CuzJlZ4zaKrPVK5wMe5Y4bakoRcdGvuvlJEHX0nfjaWKOVuebQJD19uds/q/v4ntbW
-         19T1Y+G8Dmji9xKXBhnZHDci3CkqKKlQOh5M1rqm2wP8GtxvDtx3QVb+2M3HdwehdQLP
-         5TqNYgUT4RJiYSb6AmRPiu0eCsXAHXK/I/nhMcSpD/VnUF5Q00rnH84MJO4KoRjrTnMo
-         sSEG/Kh9bw7KscTj2/naXQcZKb/XU4Da+cJbvVsqd+MmJaADtR7TyqOK5HqA7ISsAdL1
-         3zS/aIOrmLwqr4YEvYK3IjQEgEVM793K61dfYEG5lTgWEL0yDylLEdGDlIq+ySSaeYex
-         9Cug==
-X-Forwarded-Encrypted: i=1; AKwUvBy7KL2viehUGR/PiCmJDQPtJVFGKXp5zwshFziw16gxXkOgquIjEAxgnDPFvHch3ZiTRRBt6Xwhr+D1ZD+ePS4V9i/X@vger.kernel.org
-X-Gm-Message-State: AFq9FYITxDnX0SbxGTyVorCvf8jMSttYJcExeoHr1XT/y3CCU7uyqMNY
-	Sl5HpnmDzJhoAx/dVDwl9aVw+c9Sn3l3q0xP62IfAjUnqtoFXXusyEazkmgjFwTooUuri7nmtNt
-	8mL1OUlXujJarGuDu/Kv4LyokBE+d3LPWwZG3hUCL+qh3qadHR0wrMnGRUoPDXA1t5+w90pPJRi
-	deqnYjfJViJ8O9HLI=
-X-Gm-Gg: AYBFou3bYsfkwWu6HMXbB0fsknJsWgQvvWmg4zHT99eNszMmb9mwFAkec5hgU41wfiG
-	CCgZ6qhPKlHdQdjqGmfXOX/MfUrxrvLWSCZqi17l69kpykepyttQTO5vHtuTOOE5nwtnj3zESJ4
-	5EmApLhwkYQmyEsKysjN9uYrWA9WR3yzbh6d/b5ktrChdL4oDFoY6Xd42aepRpsAy6vuqSX5XjI
-	FrT5cJrODg3Tted/QB+l9E5uBl5qXm10H9ccF+Se9HWbEoyKPGDEJoZC/EzTQP4lX30SgQp3Jkd
-	8+bdcAPf0+DLUqNa+q66OyLrY4p+wnYPmu8x6Mm1+32US3MmUyPhRulHNTays3kKt0MCp2OfZ1K
-	dR1kGYb4KdHygrojM5hyyXeuDTLBjR8XhEfEfB3wYhYyEv3a8mas7HgWB7PSGz9mq8bZItApWoY
-	J6XpMI9OeEJuWOwGI5th0lzFJkIL+OuqEjQ4hm2XOIu6GLUsmgnESIwcedVmTCnXc/XOYmpsAcO
-	Wdwpd8CiJJY7dAeOgFQc9fkSzIyofH8/MpDUwuIUg==
-X-Received: by 2002:a17:90b:580c:b0:3ac:73c7:9c07 with SMTP id 98e67ed59e1d1-3ade953ea72mr2539073a91.0.1792843500793;
-        Sat, 24 Oct 2026 05:05:00 -0700 (PDT)
-X-Received: by 2002:a17:90b:580c:b0:3ac:73c7:9c07 with SMTP id 98e67ed59e1d1-3ade953ea72mr2539026a91.0.1792843500265;
-        Sat, 24 Oct 2026 05:05:00 -0700 (PDT)
-Received: from an-XPS-15-9520.buildd (2001-b011-2008-445c-0e25-4b6d-1924-440d.dynamic-ip6.hinet.net. [2001:b011:2008:445c:e25:4b6d:1924:440d])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3adebb24a04sm2893409a91.16.2026.10.24.05.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 05:04:59 -0700 (PDT)
-From: ChunAn Wu <an.wu@canonical.com>
-To: linux-serial@vger.kernel.org,
+	dkim=pass (2048-bit key, unprotected) header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=jDiAiFCy
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 1551B240028
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 14:58:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1792846738;
+	bh=LUvyJQ1zjyOa9Odd6dqvliPzy8Me0ScGpoMY+ONU08w=;
+	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP:From;
+	b=jDiAiFCy+WdTVY3X7/ngZcwWiMzR5Ny7gK0gRMQPuHpazwGq5+8Zpzjkf6ybQnOgs
+	 bo1lrZDf76uoAnXEtxjesBNOoO6I9RpkOUGvmh5vgtw/Didhbzo+Z+GnD2cbdeqs3u
+	 FqFahEUVav80f3mCG6c8aR+u+vpsJ9zETPX+V4Yn0iqTH0aUBM6M9e7XWD3YovXi9M
+	 Zuollomx3zzTtURUeZXYqr04clgQCSAp2ML74eCxXpj/xLbhO1MDrilkL/7kBenIMM
+	 fed9K7HZInWAaMogInXlQH135L5MqdgorkkRoRrE+0Lqj3It7zXyyZ6vWhF9abDG8A
+	 sUmaZewCS/Daw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4jBg1r5T9Hz6tyK;
+	Sat, 24 Oct 2026 14:58:56 +0200 (CEST)
+Message-ID: <b66d47a456bddb23deaf1c4c625b0029dde0e9a5.camel@posteo.de>
+Subject: Re: [PATCH v5 1/3] serdev: handle devices without an ACPI or device
+ tree node
+From: Markus Probst <markus.probst@posteo.de>
+To: ChunAn Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org, 
 	platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	markus.probst@posteo.de,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com
-Subject: [PATCH v5 3/3] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: Bind through normal serdev matching
-Date: Sat, 24 Oct 2026 20:04:40 +0800
-Message-Id: <5e70a181599ada304c6aa6589cc61662f1a8d710.1792831564.git.an.wu@canonical.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1792831564.git.an.wu@canonical.com>
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com
+Date: Sat, 24 Oct 2026 12:58:57 +0000
+In-Reply-To: <f3ec60d4e68819c994a0d4c6d44eb5cf8d511ddb.1792831564.git.an.wu@canonical.com>
 References: <cover.1792831564.git.an.wu@canonical.com>
+	 <f3ec60d4e68819c994a0d4c6d44eb5cf8d511ddb.1792831564.git.an.wu@canonical.com>
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+ keydata=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
+ jfGillcaQOqFZ3WwVqyzG1BUfTow==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-npcyj5MqnDOl+NF7wk6J"
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -118,84 +118,351 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
 
-The software-node-backed serdev client cannot be matched through ACPI or
-device tree and is force-attached to its driver.
 
-Pass the modalias to serdev_device_add() and give the serdev driver a
-matching id_table, so that the serdev core binds the two through normal
-matching. Deferred probing is then handled by the driver core, so the
--EAGAIN translation is no longer needed.
+--=-npcyj5MqnDOl+NF7wk6J
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A failing serdev probe no longer propagates out of the platform probe;
-as for any other bus, the client is simply left unbound.
+On Sat, 2026-10-24 at 20:04 +0800, ChunAn Wu wrote:
+> Serdev clients instantiated by a driver have no ACPI companion and no
+> device tree node. Their modalias read returns -ENODEV, their add uevent
+> is suppressed, and they cannot be driver-matched, so creators force a
+> bind with device_driver_attach().
+>=20
+> Resolve both TODOs in the serdev core by modelling matching on the SPI
+> bus: let the creator pass a modalias to serdev_device_add() and give
+> struct serdev_device_driver an id_table. ACPI and OF are still tried
+> first; clients without their own modalias keep returning -ENODEV. The
+> device name, derived from the controller, is unchanged.
+>=20
+> Split struct serdev_device_id and its defines into a new
+> include/linux/device-id/serdev.h, following the pattern already used by
+> the SPI and I2C buses.
+>=20
+> Signed-off-by: ChunAn Wu <an.wu@canonical.com>
+> ---
+>  MAINTAINERS                                   |  1 +
+>  .../platform/x86/x86-android-tablets/core.c   |  2 +-
+>  drivers/power/sequencing/pwrseq-pcie-m2.c     |  2 +-
+>  drivers/tty/serdev/core.c                     | 62 ++++++++++++++++---
+>  include/linux/device-id/serdev.h              | 19 ++++++
+>  include/linux/serdev.h                        | 12 +++-
+>  6 files changed, 86 insertions(+), 12 deletions(-)
+>  create mode 100644 include/linux/device-id/serdev.h
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 917f3f72e31b..06e67aa5d9b0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -24905,6 +24905,7 @@ L:	linux-serial@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/serial/serial.yaml
+>  F:	drivers/tty/serdev/
+> +F:	include/linux/device-id/serdev.h
+>  F:	include/linux/serdev.h
+>  F:	rust/helpers/serdev.c
+>  F:	rust/kernel/serdev.rs
+> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
+atform/x86/x86-android-tablets/core.c
+> index cfff7f5eac5d..853aa6ff5d50 100644
+> --- a/drivers/platform/x86/x86-android-tablets/core.c
+> +++ b/drivers/platform/x86/x86-android-tablets/core.c
+> @@ -317,7 +317,7 @@ static __init int x86_instantiate_serdev(const struct=
+ x86_dev_info *dev_info, in
+>  	ACPI_COMPANION_SET(&serdev->dev, serdev_adev);
+>  	acpi_device_set_enumerated(serdev_adev);
+> =20
+> -	ret =3D serdev_device_add(serdev);
+> +	ret =3D serdev_device_add(serdev, NULL);
+>  	if (ret) {
+>  		dev_err(&serdev->dev, "error %d adding serdev\n", ret);
+>  		serdev_device_put(serdev);
+> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/se=
+quencing/pwrseq-pcie-m2.c
+> index e42e85f47629..e0482f2ef39f 100644
+> --- a/drivers/power/sequencing/pwrseq-pcie-m2.c
+> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
+> @@ -309,7 +309,7 @@ static int pwrseq_pcie_m2_create_serdev_one(struct pw=
+rseq_pcie_m2_ctx *ctx,
+>  	if (ret)
+>  		goto err_free_serdev;
+> =20
+> -	ret =3D serdev_device_add(pci_dev->serdev);
+> +	ret =3D serdev_device_add(pci_dev->serdev, NULL);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to add serdev for PCI device (%s): %d\n",
+>  			pci_name(pdev), ret);
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index 7500efcdfc21..e0517d5a48da 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -29,13 +29,21 @@ static DEFINE_IDA(ctrl_ida);
+>  static ssize_t modalias_show(struct device *dev,
+>  			     struct device_attribute *attr, char *buf)
+>  {
+> +	const struct serdev_device *serdev =3D to_serdev_device(dev);
+>  	int len;
+> =20
+>  	len =3D acpi_device_modalias(dev, buf, PAGE_SIZE - 1);
+>  	if (len !=3D -ENODEV)
+>  		return len;
+> =20
+> -	return of_device_modalias(dev, buf, PAGE_SIZE);
+> +	len =3D of_device_modalias(dev, buf, PAGE_SIZE);
+> +	if (len !=3D -ENODEV)
+> +		return len;
+> +
+> +	if (!serdev->modalias[0])
+> +		return -ENODEV;
+> +
+> +	return sysfs_emit(buf, "%s%s\n", SERDEV_MODULE_PREFIX, serdev->modalias=
+);
+>  }
+>  static DEVICE_ATTR_RO(modalias);
+> =20
+> @@ -47,15 +55,22 @@ ATTRIBUTE_GROUPS(serdev_device);
+> =20
+>  static int serdev_device_uevent(const struct device *dev, struct kobj_ue=
+vent_env *env)
+>  {
+> +	const struct serdev_device *serdev =3D to_serdev_device(dev);
+>  	int rc;
+> =20
+> -	/* TODO: platform modalias */
+> -
+>  	rc =3D acpi_device_uevent_modalias(dev, env);
+>  	if (rc !=3D -ENODEV)
+>  		return rc;
+> =20
+> -	return of_device_uevent_modalias(dev, env);
+> +	rc =3D of_device_uevent_modalias(dev, env);
+> +	if (rc !=3D -ENODEV)
+> +		return rc;
+> +
+> +	if (!serdev->modalias[0])
+> +		return -ENODEV;
+> +
+> +	return add_uevent_var(env, "MODALIAS=3D%s%s", SERDEV_MODULE_PREFIX,
+> +			      serdev->modalias);
+>  }
+> =20
+>  static void serdev_device_release(struct device *dev)
+> @@ -86,28 +101,57 @@ static const struct device_type serdev_ctrl_type =3D=
+ {
+>  	.release	=3D serdev_ctrl_release,
+>  };
+> =20
+> +static const struct serdev_device_id *serdev_match_id(const struct serde=
+v_device_id *id,
+> +						      const char *modalias)
+> +{
+> +	if (!id || !modalias[0])
+> +		return NULL;
+> +
+> +	while (id->name[0]) {
+> +		if (!strcmp(modalias, id->name))
+> +			return id;
+> +		id++;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  static int serdev_device_match(struct device *dev, const struct device_d=
+river *drv)
+>  {
+> +	const struct serdev_device *serdev;
+> +	const struct serdev_device_driver *sdrv;
+> +
+>  	if (!is_serdev_device(dev))
+>  		return 0;
+> =20
+> -	/* TODO: platform matching */
+> +	serdev =3D to_serdev_device(dev);
+> +	sdrv =3D to_serdev_device_driver(drv);
+> +
+>  	if (acpi_driver_match_device(dev, drv))
+>  		return 1;
+> =20
+> -	return of_driver_match_device(dev, drv);
+> +	if (of_driver_match_device(dev, drv))
+> +		return 1;
+> +
+> +	return !!serdev_match_id(sdrv->id_table, serdev->modalias);
+>  }
+> =20
+>  /**
+>   * serdev_device_add() - add a device previously constructed via serdev_=
+device_alloc()
+>   * @serdev:	serdev_device to be added
+> + * @modalias:	Driver name or alias, used to match devices which have nei=
+ther
+> + *		an ACPI companion nor a device tree node. NULL for devices
+> + *		enumerated from firmware.
+>   */
+> -int serdev_device_add(struct serdev_device *serdev)
+> +int serdev_device_add(struct serdev_device *serdev, const char *modalias=
+)
+>  {
+>  	struct serdev_controller *ctrl =3D serdev->ctrl;
+>  	struct device *parent =3D serdev->dev.parent;
+>  	int err;
+> =20
+> +	if (modalias)
+> +		strscpy(serdev->modalias, modalias);
+> +
+>  	dev_set_name(&serdev->dev, "%s-%d", dev_name(parent), serdev->nr);
+> =20
+>  	/* Only a single slave device is currently supported. */
+> @@ -553,7 +597,7 @@ static int of_serdev_register_devices(struct serdev_c=
+ontroller *ctrl)
+> =20
+>  		device_set_node(&serdev->dev, of_fwnode_handle(node));
+> =20
+> -		err =3D serdev_device_add(serdev);
+> +		err =3D serdev_device_add(serdev, NULL);
+>  		if (err) {
+>  			dev_err(&serdev->dev,
+>  				"failure adding device. status %pe\n",
+> @@ -707,7 +751,7 @@ static acpi_status acpi_serdev_register_device(struct=
+ serdev_controller *ctrl,
+>  	ACPI_COMPANION_SET(&serdev->dev, adev);
+>  	acpi_device_set_enumerated(adev);
+> =20
+> -	err =3D serdev_device_add(serdev);
+> +	err =3D serdev_device_add(serdev, NULL);
+>  	if (err) {
+>  		dev_err(&serdev->dev,
+>  			"failure adding ACPI serdev device. status %pe\n",
+> diff --git a/include/linux/device-id/serdev.h b/include/linux/device-id/s=
+erdev.h
+> new file mode 100644
+> index 000000000000..96644953cece
+> --- /dev/null
+> +++ b/include/linux/device-id/serdev.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef LINUX_DEVICE_ID_SERDEV_H
+> +#define LINUX_DEVICE_ID_SERDEV_H
+> +
+> +#ifdef __KERNEL__
+> +typedef unsigned long kernel_ulong_t;
+> +#endif
+> +
+> +/* serdev */
+> +
+> +#define SERDEV_NAME_SIZE	40
+> +#define SERDEV_MODULE_PREFIX	"serial:"
+> +
+> +struct serdev_device_id {
+> +	char name[SERDEV_NAME_SIZE];
+> +	kernel_ulong_t driver_data;	/* Data private to the driver */
+> +};
+> +
+> +#endif /* ifndef LINUX_DEVICE_ID_SERDEV_H */
+> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> index b6c3d957ec15..96a441abc1ac 100644
+> --- a/include/linux/serdev.h
+> +++ b/include/linux/serdev.h
+> @@ -7,7 +7,9 @@
+> =20
+>  #include <linux/types.h>
+>  #include <linux/device.h>
+> +#include <linux/device-id/serdev.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/string.h>
+Unused include.
 
-Signed-off-by: ChunAn Wu <an.wu@canonical.com>
----
- .../lenovo/yoga-tab2-pro-1380-fastcharger.c   | 25 +++++++------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+>  #include <linux/uaccess.h>
+>  #include <linux/termios.h>
+>  #include <linux/delay.h>
+> @@ -35,6 +37,10 @@ struct serdev_device_ops {
+>   * struct serdev_device - Basic representation of an serdev device
+>   * @dev:	Driver model representation of the device.
+>   * @nr:		Device number on serdev bus.
+> + * @modalias:	Name of the driver to use with this device, or the alias
+> + *		for it. Empty for devices enumerated from firmware, which
+> + *		are identified through their ACPI companion or their device
+> + *		tree node instead. See serdev_device_add().
+>   * @ctrl:	serdev controller managing this device.
+>   * @ops:	Device operations.
+>   * @write_comp:	Completion used by serdev_device_write() internally
+> @@ -43,6 +49,7 @@ struct serdev_device_ops {
+>  struct serdev_device {
+>  	struct device dev;
+>  	int nr;
+> +	char modalias[SERDEV_NAME_SIZE];
+>  	struct serdev_controller *ctrl;
+>  	const struct serdev_device_ops *ops;
+>  	struct completion write_comp;
+> @@ -55,12 +62,15 @@ struct serdev_device {
+>   * struct serdev_device_driver - serdev slave device driver
+>   * @driver:	serdev device drivers should initialize name field of this
+>   *		structure.
+> + * @id_table:	List of serdev devices supported by this driver, used to
+> + *		match devices which are not enumerated from firmware.
+>   * @probe:	binds this driver to a serdev device.
+>   * @remove:	unbinds this driver from the serdev device.
+>   * @shutdown:	shut down this serdev device.
+>   */
+>  struct serdev_device_driver {
+>  	struct device_driver driver;
+> +	const struct serdev_device_id *id_table;
+>  	int	(*probe)(struct serdev_device *);
+>  	void	(*remove)(struct serdev_device *);
+>  	void	(*shutdown)(struct serdev_device *);
+> @@ -158,7 +168,7 @@ static inline void serdev_controller_put(struct serde=
+v_controller *ctrl)
+>  }
+> =20
+>  struct serdev_device *serdev_device_alloc(struct serdev_controller *);
+> -int serdev_device_add(struct serdev_device *);
+> +int serdev_device_add(struct serdev_device *serdev, const char *modalias=
+);
+>  void serdev_device_remove(struct serdev_device *);
+> =20
+>  struct serdev_controller *serdev_controller_alloc(struct device *host,
 
-diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-index 8551ab4d2c7d..d0bd9d4e3137 100644
---- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-+++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-@@ -219,11 +219,17 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
- 	return 0;
- }
- 
-+static const struct serdev_device_id yt2_1380_fc_serdev_id[] = {
-+	{ KBUILD_MODNAME },
-+	{ }
-+};
-+
- static struct serdev_device_driver yt2_1380_fc_serdev_driver = {
- 	.probe = yt2_1380_fc_serdev_probe,
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 	},
-+	.id_table = yt2_1380_fc_serdev_id,
- };
- 
- static const struct pinctrl_map yt2_1380_fc_pinctrl_map[] = {
-@@ -260,25 +266,12 @@ static int yt2_1380_fc_pdev_probe(struct platform_device *pdev)
- 	/* The fwnode is a managed node, so it will be auto-put on serdev_device_put() */
- 	fwnode_handle_get(dev_fwnode(&serdev->dev));
- 
--	ret = serdev_device_add(serdev);
-+	ret = serdev_device_add(serdev, KBUILD_MODNAME);
- 	if (ret) {
- 		serdev_device_put(serdev);
- 		return dev_err_probe(&pdev->dev, ret, "adding serdev\n");
- 	}
- 
--	/*
--	 * serdev device <-> driver matching relies on OF or ACPI matches and
--	 * neither is available here, manually bind the driver.
--	 */
--	ret = device_driver_attach(&yt2_1380_fc_serdev_driver.driver, &serdev->dev);
--	if (ret) {
--		/* device_driver_attach() maps EPROBE_DEFER to EAGAIN, map it back */
--		serdev_device_remove(serdev);
--		return dev_err_probe(&pdev->dev,
--				     (ret == -EAGAIN) ? -EPROBE_DEFER : ret,
--				     "attaching serdev driver\n");
--	}
--
- 	/* So that yt2_1380_fc_pdev_remove() can remove the serdev */
- 	platform_set_drvdata(pdev, serdev);
- 	return 0;
-@@ -305,8 +298,8 @@ static int __init yt2_1380_fc_module_init(void)
- 	int ret;
- 
- 	/*
--	 * serdev driver MUST be registered first because pdev driver calls
--	 * device_driver_attach() on the serdev, serdev-driver pair.
-+	 * serdev driver MUST be registered first so that the serdev device
-+	 * created by the pdev probe binds to it via the id_table match.
- 	 */
- 	ret = serdev_device_driver_register(&yt2_1380_fc_serdev_driver);
- 	if (ret)
--- 
-2.34.1
+You will need to address the sashiko report (both are true positives).
 
+In the scripts/mod/file2alias.c file, you can copy the spi entry.
+scripts/mod/devicetable-offsets.{h,c,s} and
+include/linux/mod_devicetable.h are also relevant for this.
+(Didn't know myself those files existed, so thx Sashiko)
+
+Also add serdev_device_id to scripts/coccinelle/misc/of_table.cocci .
+
+
+With that fixed,
+
+Reviewed-by: Markus Probst <markus.probst@posteo.de>
+
+
+Thanks
+- Markus Probst
+
+--=-npcyj5MqnDOl+NF7wk6J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJPBAABCAA5FiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmrcq4MbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyAAoJEDR2H/jnrUPSV/8P+QHxKkO3OWRO5ZTjlET0
+ynDBkYi76/wwfHEvaZFP0ASnhtad9vK4Hi9rUGmz3A1D+ezyEbVmi92ZKSPCPscJ
+5/zeF68FyyyCsZmgg/h9KgrRC/NTKtmrJE+Z4DXF3DRIf1LlrO+ITyiBnTe6bZoF
+mrYOSLH2aAgYfNS+Z22rAI4AfFLefm9gS4xint/cknjyxHRub9bq0X5ku94t1adf
+nDu8EDB6OQpBanktYsqgE6kzjzzif+zb67MvBzMq/CX4QLl1JfQXmzLeMruE4ifA
+0NgvkO+CMpwUGGvfnu+WMvsbsyDAoEgYnORNmzaPC62zlMjH6BcgDqibspdlPFrm
+rtSNWzx44gqal0Q2N++i+GAGgC99T6hSGJfEidgsdiaijYubW26aghHnIKdQlCm1
+dCHB6cyyjMBV51j/y+KaDeCUY6V4EyWbbWDqQAWBRgbc9bNXjK0B+wkx2C8NXmtP
+zzA0pcaun3nNwkLX8w/AustJcsgFEX2e3L2ES3PC2vGAdMHykUGumAjf31UENGrG
+890E4d3yfajunawKBxcN3cn/lzJ95hrIFq49lWeIP+9lowRkI6xjQNVp1JX8/uC6
+11Xo5VpHr7MFoJq5brFVDvcz/m583h5pzkFCvzLXQAnUC13L2xRDS3H7n5gxewm/
+Kaea0ZW7Za+fjKZI2FUhKoSX
+=sLdq
+-----END PGP SIGNATURE-----
+
+--=-npcyj5MqnDOl+NF7wk6J--
