@@ -1,78 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792855983;
-	b=TZRhrWrn+w3x12/76LT80++hyTvjQmbNWdbIQdVXHoQ/44epvKgzZ/deHkix+um1zciQ
-	 3Rfd8rkw1BguguILiZ6IRhrLeiI/H7d0NB4YYg+ra4wDjYOp+sX/Lbgc+gl+H7WCWLmgN
-	 AHnbNGE9BAdfXCI9LX+harhLdNQbLXb/Bjn+1M2vCJ1VTxdK/3ZLJA5BllUYveQiVWRGg
-	 73YdxctyDZeT8Uh/DYQ9gevv9yZQUlJhtLJ394ZIGQ5PLRJUTFrYv3IZOVF4sJftld1eb
-	 JGci3pNZ5sB83pDf1heQov+X/SjpTU+b6aVriiEpLCLm7j6+HD5XIpk9vevJwp9IzPg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792855983;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=fDjbXdlTu4a88yMI0jTQlxuAUw20WpxuM9mcw2vGQgU=;
-	b=eAl+ouolmWIwhSyCLyphiKdD6bdPn2B4Q/GnPQCvPGwCV2JdTYJnnLu8V2VejRoPB0lf
-	 4OAe+8QJA/nOyjzQNKkZGQSLo6yE93OEdKzp/F81XBTLS6IAorjlawGrEWvmQr6aNovrS
-	 t8M/6usvnzkhWAqtZ7vHPr3gxAfGLrVlqYUuy8ynGvk8aRK2ceWTc7wW81MTEBRe1P9mP
-	 VmM96kANxBAs2fGFUpdHb/brSVc9btls+vMKw7uvzXJtqrNmo0MCyYhH8OEOqMLTD4twn
-	 JKfbRyG1cNbt5fGF6JxdD9/k9RqvjHrsmfrLVJxYMBtm34tLeHn+g2w59MJzkdWa3WQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=EV7CZgFS;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792862821;
+	b=gV0NZR+bIxEk9rKgS9eIpB/+NmgGh5lctCr03lHDZNZ7JiDYdbrh1uzuGtVdJ8PLmIsS
+	 fxTGQRP3aJK39zocoDiVQN2QQxKC84782wx6c8jWIhJPPYdHFLjRM9hQzvYLbTvf9fTqu
+	 Bs2t01LkU+vE3qL+ybRxKq6MdNJCxOOWhNxrbm92bCKmKgQMiP1CUOljcItXKJ0ajx13M
+	 XNASLjAuRT9y3u8n/3FoUqnB61L3x4UFP5OswSlvzCLtqp98pGoL7m/FGB2M6SYD5q1I0
+	 9x46Q/onsC86xr5nsqygsd0OV7nWtt8pibsBRyEn9HiUOFEv+y0kyG1mZKIyD0fUlVw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792862821;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=kEYtLwxZwrV359NviA74b+mH4aeRVHvNjyPhEsl/qZ8=;
+	b=D3uIgf2vY2IUigfjeNL54CplLiqBqYw7OqWRzvC4O3vTc4rxelOdWQO9aE1rvG9N1uA3
+	 Lt+gCHZq57Bjh41891WzGHgFze0lpIHpjAFfzzsViY5ZEzcpE5fyr20zUfw3T57SZhLLP
+	 w/96pnKb+9HMwudMFOcy37jMVLgre8UNA2gHcZzXWhmsd5vWi43S5BxRZYkCak2nTPjo5
+	 08QnRolfS8TMd/uUMPJVGJfJmeEh04P0I5ekjFtDw6m7WUWuVsiB9ILB45GmXn4TaWWe8
+	 bJwP6DZobDI+gSPnWnkpbOTYjPlCpWSu/oyzocoE71BkfBWLGIbhdOatnmDpTiCUvAQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SLGzCCFX;
+	arc=none smtp.remote-ip=209.85.128.54
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505A0606A31A;
-	Sat, 24 Oct 2026 15:33:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 505A0606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A79E606A31A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 17:27:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A79E606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=EV7CZgFS
-ARC-Seal: i=1; a=rsa-sha256; t=1792855972; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=YjGOzWeXrL5xSLlyw5NPMJ0jZvYslGtqHtViI6sLicXaIs7pnSpT4Xxsxu+mFcwGn2VzOiJICwQqwWA8/rA1Yk/mo4YbsJWd0vdRJ/9e/8jpVr3O8HpbC/u/DbZfris5bTvVR9Mtty6tncyD1VB9Q2DZYBy9BusxMFd6ZEVDXxk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1792855972; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=fDjbXdlTu4a88yMI0jTQlxuAUw20WpxuM9mcw2vGQgU=; 
-	b=cDPwombjdSEEu5ANyLe/GenDN1x4R6hx0RPGZsLyLRTwBgfOi7JIy0zZRB8s1Jbb1fqnBKZdb+FGML0pLtaWjrO6fuAWCKPvG+NAcD7i+Lon+wsUCLn8OpsCjMsE7fwWza6f7JwkVdH3O+3E7RrVhKliolp9et9/k3yGtVo7Q8I=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792855972;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=fDjbXdlTu4a88yMI0jTQlxuAUw20WpxuM9mcw2vGQgU=;
-	b=EV7CZgFSiFTInEEscBzbYXetXqAbgm1ysNTTcJVlqloJvrhbfBARc1bVhxLL/9PX
-	Jgw9XhwLoJz9FNUaAtHXndfc2tB5dMhFP1HgEN6uWarQ8Ffw18+GtmoZcCBANQbR6Lb
-	aIfrT8XL9WNbQBrP5pHf0Cc6eKkkicZh+P/myEoH3pfyrlOrlFMp2M3qYjcsYln3ehq
-	Ym+Ryy2ASEutAd5YIp6jq1yeigX/qKLI5FjjsfefFLMcbYKowab3nBSl0gOfM2TTPD6
-	aAebnL7783HvImBo/sdyLB/6MPhKmxOPB/1mSuiw6EYevZrBuR0PlqzLOecGwQp7XH9
-	yStHhQwhhQ==
-Received: by smtp.zohomail.com with SMTPS id 1792855970020729.9714410152917;
-	Sat, 24 Oct 2026 08:32:50 -0700 (PDT)
-Message-ID: <5bdb870be988333df200ac7d4904dd1bda6ef52f.camel@rong.moe>
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: do not poke keyboard
- controller
-From: Rong Zhang <i@rong.moe>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede	
- <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <7b21717e80a7b779ab94d964ca40ee68@gmail.com>
-References: <4b2f60a7ceac543bd8b889b9c0772b2c@gmail.com>
-		 <8cdbdcb893e2353e0ea2fe919e0c8a6a53f8b683.camel@rong.moe>
-		 <7b21717e80a7b779ab94d964ca40ee68@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 24 Oct 2026 23:30:06 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SLGzCCFX
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4956869750eso11034835e9.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 10:27:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792862820; x=1793467620; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kEYtLwxZwrV359NviA74b+mH4aeRVHvNjyPhEsl/qZ8=;
+        b=SLGzCCFXwEzIPp0HYrwFsmH1nScgGkoGYiTu2ZDnCmgW1A76aweYx34KZTSjMDJ677
+         luC7x5od955083hP9Iiu49BX3y5ihxgWXuQO042HOd79UUdV0zmTm6YFyw6lqeJZvGhe
+         BAjA0qfFBKYZqZiK96CR+v0g942HSiEKj5tpP1WNgRXIPcCuh20/VClnVLR7tZK1ANpR
+         XQzFGeqmJoRUF8rvDYC+gBqzSqb11ErCI91seBMYrlEysiZh8MF5YxNKrt5V/5vH+Ud4
+         FI7FrJhahEx1wQI/KW2P4x3JlDqTyhWv8a2vJROBw8ouoGWnNpg57LSWvTK6wDVMUiZj
+         i1xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792862820; x=1793467620;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kEYtLwxZwrV359NviA74b+mH4aeRVHvNjyPhEsl/qZ8=;
+        b=qxOiEq9+bFpoLEoPMcFlxFaDVE596noWzRWPgYrhDtiO8JWb+uqOdnEXohSFFwKvfP
+         /hdcPZSooy5GstGVksa8yP4X/vRdJ675uNZhyrlgQLpJ7nMF4x3xJ2OsJXmesPf3V6B2
+         k+uHzsXvIYiXErUtmdnUktRq7GAcIH199AIuA3D2VKyjC5bGnIjoQdcouQBb4cHZJVvW
+         DVLOAMc4osQnpTIN9Tnw6ysLItIph4xJAdpfL+f4xHqW94vdN/HpiwoCleG6BAbmT0Fe
+         ShmFe2vGZCljiPep49kElYx8+loTYJudwd+/vSrCV2WwChxGVWWlxJImqsuvadGSCLZz
+         1fKg==
+X-Forwarded-Encrypted: i=1; AKwUvBw80OGMKJ26ufdd61ImpC2M4LZplMvGjt5W6rh7+0whu9iypQhapikuhPNJoHUZD8sday6Gkj9n3tCpTEbW+4WywjuW@vger.kernel.org
+X-Gm-Message-State: AFq9FYLBqqHuGQU5eW6KgPC4jLctNuxkAMpd1DjbYuSY/mmmxYlEuWr+
+	u0TvMap9q6/BoYihSaZqlDbc8prLj9fC6s68E+TD0upeq6x/cBi9Ymbs
+X-Gm-Gg: AYBFou3a8YosMXrtX2fswOLI0HSvrtaODR8GN0SgYnoxWHCHM7h5HvE1GpPwrGcis7U
+	jqh5F9IYbwYoBrZbItQ/M66zYS/4uR8U3665D0jUXEcn79zfqGZxH4OfMuYxHlSHoV6vFK392Bs
+	O4sPcym8xFJmQdSSwxdbNolYFFSatZzmWTWDez9/N00snxo9KeWo3UqZY0skQNbox82IvTo0ONV
+	18/bpVTWFrodsqH18WVWf1K4QTt137A/ytgFhU+6cbjV92mAnz6avmyfLHiGf/28+3zO8UHfp/U
+	rsdhA93074S29sq6j9sIWkYpGiDr2EDlh/AahDpo8LoUgI7qUAW5oCbRDh9FJTctTkxpDtPLT0u
+	Pl5/sThyM2jS5trLvWZRductFnF0gMLMojqoCXvUse/98viFK9pFBOkCG1tHsG7hf3EBmjXDH7N
+	/Di/bvIs5hs8sQoEN9pAbnLzz6eqmv8E1B6LfJih1my180MNCb4gcIUxb/fC77oxd6aLLe9+f2i
+	ElnOhECef6cJxIA9V1hAjhht7Ha9IROodVBQcKi7AEsEmyNNn0TZcH/thsmd9eyBSx6aXllugTl
+	iyw+PUbtZkEJ+htzklEq3BGMJxftk7pE
+X-Received: by 2002:a05:600c:c173:b0:4a2:191f:7cbd with SMTP id 5b1f17b1804b1-4a35ac8bbd5mr40436765e9.11.1792862819430;
+        Sat, 24 Oct 2026 10:26:59 -0700 (PDT)
+Received: from fedora ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a359fc1207sm52573855e9.1.2026.10.24.10.26.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Oct 2026 10:26:59 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: jorge.lopez2@hp.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: andriy.shevchenko@linux.intel.com,
+	linux@weissschuh.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	meatuni001@gmail.com
+Subject: [PATCH v7] platform/x86: hp-bioscfg: fix heap OOB in hp_enforce_single_line_input()
+Date: Sat, 24 Oct 2026 22:26:41 +0500
+Message-ID: <20261024172641.19424-1-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,99 +101,65 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Dmitry,
+The input is copied with kstrdup(), which stops at the first NUL, but
+the full write size is passed to hp_enforce_single_line_input(). With
+an embedded NUL the helper reads, and can write one byte, past the
+copy. Use strnchrnul() so the scan stops at the first NUL, and return
+-EINVAL for a NUL or newline before the last byte.
 
-On Fri, 2026-10-23 at 20:20 -0700, Dmitry Torokhov wrote:
-> Hi Rong,
->=20
-> On Sat, Oct 24, 2026 at 10:15:56AM +0800, Rong Zhang wrote:
-> > >  static bool ctrl_ps2_aux_port;
-> > >  module_param(ctrl_ps2_aux_port, bool, 0444);
-> > >  MODULE_PARM_DESC(ctrl_ps2_aux_port,
-> > > -		 "Enable driver based PS/2 aux port en-/dis-abling on touchpad on/=
-off toggle. If you need this please report this to: platform-driver-x86@vge=
-r.kernel.org");
-> > > +		 "Enable driver based suppression of touchpad events on touchpad o=
-n/off toggle. If you need this please report this to: platform-driver-x86@v=
-ger.kernel.org");
-> >=20
-> > By re-purposing ctrl_ps2_aux_port, you are breaking its existing users
-> > *silently*.
->=20
-> I'm not?
+Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
+followed by 4093 bytes of "B" to current_password 100 times returns
+-EINVAL every time, without reading into the heap.
 
-Yes, and no.
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Cc: stable@vger.kernel.org
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+---
+Changes in v7:
+ - Use strnchrnul() instead of a separate NUL check (Andy)
+ - Drop the trailing comments
 
-When only focusing on the input events delivered to the userspace,
-nothing is broken if everything works fine.=20
+Changes in v6:
+ - Return -EINVAL on embedded NUL instead of limiting the scan (Ilpo)
 
-However, the methodology has been changed from hardware-based to
-software-based. Because of the fundamental change, it has the potential
-to break something if some users depends on the side-effect of toggling
-the aux port.
+Changes in v5:
+ - Limit the scan to the string instead of copying the input past its
+   first NUL (Ilpo)
 
-While my device never needs the quirk, I can think of several useful
-side-effects:
+v6: https://lore.kernel.org/all/20261016025352.230535-1-meatuni001@gmail.com/
+v5: https://lore.kernel.org/all/20261007134711.473857-1-meatuni001@gmail.com/
 
-- pause the interrupt (and hence pause event handling) to save some
-energy
-- prevent the touchpad from waking up the platform
-- reset faulty touchpads
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-By switching to the software-based methodology, all these capabilities
-have gone. Of course, relying on these side-effects is a misuse, but
-relying on the parameter itself without reporting it to the mailing list
-is also a misuse! More below.
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 876fc35d035b..8873d91bc235 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -162,12 +162,12 @@ int hp_enforce_single_line_input(char *buf, size_t count)
+ {
+ 	char *p;
+ 
+-	p = memchr(buf, '\n', count);
++	p = strnchrnul(buf, count, '\n');
+ 
+ 	if (p == buf + count - 1)
+-		*p = '\0'; /* strip trailing newline */
+-	else if (p)
+-		return -EINVAL;  /* enforce single line input */
++		*p = '\0';
++	else if (p < buf + count - 1)
++		return -EINVAL;
+ 
+ 	return 0;
+ }
 
->=20
-> >=20
-> > Please don't do so, but rename module parameter to reflect the new
-> > behavior. In this manner, the existing users should at least see some
-> > clues in kmsg.
->=20
-> The purpose of ctrl_ps2_aux_port (introduced in commit c69e7d843d2c
-> ("platform/x86: ideapad-laptop: Only toggle ps2 aux port on/off on
-> select models")) is to let the driver disable and re-enable the PS/2
-> touchpad on models where pressing the touchpad toggle hotkey only
-> toggles the LED in the EC without muting the touchpad itself.
->=20
-> This patch still targets the exact same i8042 PS/2 touchpad devices and
-> achieves the exact same user-visible behavior (muting and unmuting the
-> touchpad when the hotkey is pressed), just by filtering events in the
-> input layer instead of poking the 8042 controller behind the i8042 and
-> psmouse drivers' backs.
+base-commit: 8667bd30fd033295b3038ce374c551d1059538ba
+-- 
+2.56.0
 
-Input events are not the only user-visible behavior.
-
->=20
-> Anyone currently passing ideapad_laptop.ctrl_ps2_aux_port=3D1 on their
-> kernel command line or in modprobe configuration will continue to have a
-> working touchpad toggle. Renaming the module parameter, on the other
-> hand, is what would actually break those existing users by causing the
-> module to reject the parameter and stop muting their touchpad.
-
-A completely new behavior reusing an old knob is always prone to break
-*something* in a obscure way unless users are notified about the change.
-Breaking something with a visible warning [1] in kmsg is much better than
-potentially breaking something in radio silence.=20
-
-We don't want to support poking i8042 anymore, so the use of
-'ctrl_ps2_aux_port' is anyway becoming unsupported. The parameter was
-introduced only for debugging and is expected to be removed at any time.
-If users don't report their use of the parameter to the mailing list,
-they are already relying on a broken setup.
-
-By renaming it and breaking the unsupported setup loudly, we encourage
-users to report quirky devices, as well as getting rid of an outdated
-parameter name.
-
-[1]: ideapad_laptop: unknown parameter 'ctrl_ps2_aux_port' ignored
-
-Thanks,
-Rong
-
->=20
-> Thanks.
