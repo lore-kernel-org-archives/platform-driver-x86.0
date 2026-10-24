@@ -1,98 +1,114 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.59
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792838196;
-	b=EJO9u4XYSw/nHTx2i+1mnAuffCl5a36yqGD2evi4leJE6GznFtqC7v9mFSgibv2JKpT4
-	 dygD3n3arK8GjTP8HkrTHhENKIH0r4Qci0eYwYnarMoNzCquKV3LdRIoQLUsVqWY/bMT0
-	 3e6ClwZeH5JL195hITjNC77D5c8VLFXxQ3XfD2xxQreSOAEa4GuuP2m5aeOr/r5VFrfWm
-	 O5I3H0kCxmukP01vSjH4oRY82D86aIxHtsRDKlg9fVl8CprremL0E7wh+jPJPW8GF9dIm
-	 vgbQrVJeUnNd8UIVr/JBmIhhk9EY6zrwNRfTHpRG2yhjFOWmHYG4HLQdzBIYq7lP4tw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792838196;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:Content-Transfer-Encoding:
-	 Content-Type:X-ClientProxiedBy:X-Microsoft-Original-Message-ID:
-	 MIME-Version:X-MS-Exchange-MessageSentRepresentingType:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=zmG7lCMmVqpVe0SCCzLEXuIGNFwB+EIxKSHEUuilX8s=;
-	b=v/TDBhFVOq6x70ae2MoO+wy/sdGyvhkR46s/OCtG92QwvWKLNMJFcgNuKqb5lLFsU8P+
-	 RW33CqDG254BgW14IXvHNSDGELfswVbYmcogjRrIzHQHP6Agh4O/cRbyXdp1onZvu/Avu
-	 g3A6pbS4QYON7xkee1fYpze1lNIe7IjnhteAMQ4DtQKsxcU5NUROYAEk8RrPc4Rtf4Lfu
-	 7icxUg0P9SG/jIcrGFPYyd66WZ3dh2jAjWJ2fupxbHfnrxB2i/zSaPon4vsyPM1ZRn30y
-	 DS6PWXMbyqRyvxe2JnkiaHzJ5ptpaBwFBJfSAnhuS/lqRZejRas6ZEdfHzbD2AJGdgw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=outlook.com;
-	spf=pass smtp.mailfrom=outlook.com;
-	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=W9db0wjL;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.59
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazolkn19012059.outbound.protection.outlook.com [52.103.43.59])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.66
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792842547;
+	b=Q7I7FQiL+ayD1/B8fgj+WQFpGsOBzWBpzQb2j7ePppXdUe1BjGtrG6oJEC0oYZykci3Y
+	 F0v2L59GjI6KSbVPlu/XwUdsb0T7b373dKuKpJh85YhIdUuR6qQGhWHJ5G1+fALuOPB7U
+	 48WoWHeSsRpvQHP7zVlX98f0KX+agyh3OzavUJXSMDG5j7Qrl+tOdo0olKyZ26emECEGM
+	 tGbExRRmhMQUJqlVjJnk669OLp+3SqrZsHQgDsdUzwLbOLmxTMlIT1D+ix9AByuJjN1pg
+	 XF6bZRxsB5Ff845KvpEU21sg82fC4U8n82ZQfG83QQeQdZEpbBjldlVZl00LR3JC0sw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792842547;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Message-ID:Subject:
+	 From:To:Cc:Date:In-Reply-To:References:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP;
+	bh=hw1QPi56uJSIctdQv2Rn0y0FV97X9PM8hnq3yT9WocI=;
+	b=WP7DUicZAKOZb42BHsMxlB70W5AJJTcCUPsavAHnwgFsgX+Eq8o5iqqkJdtQ6Tvk/ina
+	 QviJ6PjFZbuPKdBw+v8s+xVoEjW0PWvWO0Z7B+V84OViODK1s9VmiTcsXT2txvCw6ayCd
+	 xs7tCRBUNKGNVnvFBnXhEFUqJNQ1KjE9hYfDCVXR/BnsNLbwUMh0UutGxrSYNb1tQ7npR
+	 ZXda7xozYTjqm1IWrLLYrPzLLlX5PvLHfZ7k54AafgkNpJ2tidDdtgVoZfkTxU1ZYCu6G
+	 BaSCZR5xhjmCwCRsoXf/N2Qxvn6S4XTV020gYfX6CLGaHTVKtJ2AEwGRPqfU3DIsgFA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=posteo.de;
+	spf=pass smtp.mailfrom=posteo.de;
+	dkim=pass header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=UZW7L1L5;
+	arc=none smtp.remote-ip=185.67.36.66
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7CF606A31F;
-	Sat, 24 Oct 2026 10:36:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E7CF606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB817606A31A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 11:49:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BB817606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=W9db0wjL
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d/efbZ9FnbmTQybXvbhNQD7o4mlaQhxhidb8gmlxxpwQa1ufZityjvlJAD9X4GpYmKTWg8/pHzbn8co8XgSMhLo6bjeKH5UzhfGtfIVxXMAKfPxgW9NSHXCYY3F0+Kw4JyMIXV3pR/C8dc7gncWsIeGL5vIpQWsBLbwNNBRgMXhh9gvPpuMRdgc5SGNRM/NqdwAisyeqf6Y5h30fZguECsVaCedhWL0UdqQrjaObR3ImrPVuahPSPS7YNmHcuGzjiGkldGwwkJ7zVAMKNrjiBrce8RclpATNTSFjD28XuGn5gcxzmTnIbrcPLiOgNwH+DgOtuxopqBFOmXVUQXuHKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zmG7lCMmVqpVe0SCCzLEXuIGNFwB+EIxKSHEUuilX8s=;
- b=i8bHm4a7plml4pSstEuIPSPFka6rDy1MOhmil8RZa+0KM6RGvyqbhFfa294alNaTD3qJPXon7ByAXrc4c6a6xjUo/+i+Wa8ksjN8Lp1HrI6+zIK+UPV3+CitjMRlLp9+ZBemILx31QHrn50atuszB623L263Oyfr1l8JDH20t5eRkgPJ8uzqcFzmACFpsQeaNwDpLz2aqaby0tYdILqrkS6Nxn5w9hTI2nQGWi2LP1lUAvoZBt/V+KNyDAHZeVtL4n0HF6rJMMzaKiLcuxwUkeeiZcuGGRVU4QczfaHtZolN9pgu9rIvuoL+hBoJ0nFgXfDaaYAcWdMZQNIcbzWivw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zmG7lCMmVqpVe0SCCzLEXuIGNFwB+EIxKSHEUuilX8s=;
- b=W9db0wjLxDVZ+x4grubh+kiBw0vrOewBmrzSdW9bfVv2ahW5XxrnKhVivtlm/DaCTSFoaiWl4jQSiz5v/KGgHU2Oun4SFDJxdNhSh5HJCeyW0Jg/j00vzLXGrM7zsoWbD/m1k7gXA8TZcglb7l3wetS2khzs593LpZwxp8/rvJLak0Mz+pCFGQAaa3g3VX1KFmKh9PDB27KreueODtjiqmOXZyVL1Ib4xqN44a1sJTSHFejikPk9gQySm7Vf993A81S8WEENHXmKRQa2Rj8w9+kL8C1kchFs22hUJKCNAeiDMoKtq7v9UT3am9qAQP5Q6eHC3/iSZGB9R9zw2OSSgQ==
-Received: from SI2PR04MB5895.apcprd04.prod.outlook.com (2603:1096:4:1eb::6) by
- PUZPR04MB6958.apcprd04.prod.outlook.com (2603:1096:301:119::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.20; Sat, 24 Oct
- 2026 10:36:31 +0000
-Received: from SI2PR04MB5895.apcprd04.prod.outlook.com
- ([fe80::eca5:8fa:ae90:10b9]) by SI2PR04MB5895.apcprd04.prod.outlook.com
- ([fe80::eca5:8fa:ae90:10b9%3]) with mapi id 15.21.0546.019; Sat, 24 Oct 2026
- 10:36:30 +0000
-From: Shuwen Bao <baoshuwen2013@outlook.com>
-To: Hans de Goede <hansg@kernel.org>,
- Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Krishna Chomal <krishna.chomal108@gmail.com>,
- Emre Cecanpunar <emreleno@gmail.com>,
- Suryansh Singh <technosfan14@gmail.com>,
- Radhey Kalra <radheykalra901@gmail.com>,
- =?UTF-8?B?S8O8csWfYXQgQWJheWzEsQ==?= <hello@kursatabayli.dev>
-Subject:
- Re: [PATCH v3] platform/x86: hp-wmi: add support for OMEN 16-am2xxx boards
-Date: Sat, 24 Oct 2026 18:36:16 +0800
-Message-ID:
- <SI2PR04MB5895909A0EDE359BDA4F78A3A2632@SI2PR04MB5895.apcprd04.prod.outlook.com>
-In-Reply-To: <179207451329.13793.4180821086242621563.b4-ty@b4>
-References:
- <SI2PR04MB589508E55CCCD8E26E53E4DBA2942@SI2PR04MB5895.apcprd04.prod.outlook.com>
- <179207451329.13793.4180821086242621563.b4-ty@b4>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-ClientProxiedBy: SEWP216CA0120.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:2b9::13) To SI2PR04MB5895.apcprd04.prod.outlook.com
- (2603:1096:4:1eb::6)
-X-Microsoft-Original-Message-ID: <3592109.44csPzL39Z@supercomputer>
+	dkim=pass (2048-bit key, unprotected) header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=UZW7L1L5
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 5E7D4240109
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 13:48:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1792842531;
+	bh=hw1QPi56uJSIctdQv2Rn0y0FV97X9PM8hnq3yT9WocI=;
+	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP:From;
+	b=UZW7L1L5k/I/gKsJZGr4Be7HgXhSb/FGk08xxttX6zbMW6RfcGm4Dsem43hNIqT1H
+	 ESFCO6lHYLqjQPN37RdSW197IwrOplYKNRzkrZ2xUa7NCruzBrAtfkfYTElcRfFQNP
+	 yV5M2KFFmJARaDpaG03ZIHfsV7XTZhtX462MaIQ95zQ9qAzrqI/25Djj0kIU7tD7J0
+	 PBX72AiCTN1Zo6EyodHtIJxp/JsNBrlknMgtOtnTs3+GNIz6xBrsGkVGZpQohbiK3B
+	 xk5lbnZ2rE6cKzjRE90LitUuxUuxv1soqr2LfNzc2PgLKHBo5T7DmQmC8etPOYZjhT
+	 zsCeW2aq8DCjA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4jBdSx5jsSz9rxL;
+	Sat, 24 Oct 2026 13:48:49 +0200 (CEST)
+Message-ID: <3874eaebc908def9dfa7bf817a726025a06f5b88.camel@posteo.de>
+Subject: Re: [PATCH v4 0/3] serdev: handle devices without an ACPI or device
+ tree node
+From: Markus Probst <markus.probst@posteo.de>
+To: An Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com
+Date: Sat, 24 Oct 2026 11:48:50 +0000
+In-Reply-To: <CAO4Mv0bkBSHHXo=_0SyCAN54Jb76fy34ba1hFVPVkFfs6ufoqA@mail.gmail.com>
+References: <20261024022930.2704030-1-an.wu@canonical.com>
+	 <CAO4Mv0bkBSHHXo=_0SyCAN54Jb76fy34ba1hFVPVkFfs6ufoqA@mail.gmail.com>
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+ keydata=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
+ jfGillcaQOqFZ3WwVqyzG1BUfTow==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-SG13v7S5Ehmb8Q9m+2CQ"
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -102,148 +118,181 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SI2PR04MB5895:EE_|PUZPR04MB6958:EE_
-X-MS-Office365-Filtering-Correlation-Id: a692b3ab-dfb9-4d50-a721-08df31baaa06
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|25010399006|8022599003|25031999004|19110799012|8060799015|22091999003|5072599009|15080799012|6090799003|23021999003|24021099003|3071699003|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NU92dGlHZnFtanNYZ3oreDN1cU1aQzZoZXcxSWc3VnN0MkRQT3h3NjBlazdM?=
- =?utf-8?B?MWR0QVRyVytwMkoxMVgyYjIyNE52d1JPUlU2eVdvbjh4K0JnV2E4YVUwRk1T?=
- =?utf-8?B?TTVGeTVtTnFRdzBGanRLcFBjOHdyd1lmWC9JcHFQN2xtUTNxVFNvQ0Q1cnVy?=
- =?utf-8?B?ZmVNdmdKUkx5NzRwSWs1ZXJhbXN1YzhMQzFLUU1JdzhHZGRlUitTQlA4bU90?=
- =?utf-8?B?Q0FubGdxVVNaZHo0T0NjdFFpdGVrRzNVNS9tZ1lzZlZra0VxandTajcwQUcz?=
- =?utf-8?B?YUJxVlQ5dkdTZ3Z2OGEzTlNKVzZENk0yd0l5a3lieU82WFRua3hXd0VpV09N?=
- =?utf-8?B?aDdrS1lFN1pOK1Q4Tkh4SlV1NU82VVF4dmZLS3VEWmFYUTlWeHVEaFl0N0Fv?=
- =?utf-8?B?blJ6ZktvdkVQUm9rNmtXZlZzdXJ2MVZiY3A0bTZtb0JDanBTWlFKZGhSMWhS?=
- =?utf-8?B?bURWSGdNb0J5bHNVMDlPOS9vaVB0aUNoYVJ5VlhlUi9LV2dGcjFMdTR0YWZ3?=
- =?utf-8?B?R0VDM0wrVEJPUVl4anRkYWpEbzJqSHY1R0JXMnNPZWYvRXF1eVFza2gxSkxa?=
- =?utf-8?B?VHRMN09WanZhQlV2cFB6SWcvOWd2US9QZitJMmpjSnBkU2J0WTBkVkN2cGdL?=
- =?utf-8?B?WmY2YTBHQ3MrWkl5ZjltSnF0VXdOQVZSZXdUNUpuS000M2RScDNOOTRzRGxq?=
- =?utf-8?B?MVBZVWxMeTBlRUJhK2oyT2E4a3AzZU1UQlMxQitpdWNCbGM3UUVvcHAwRFpq?=
- =?utf-8?B?UTlYaU5UN2RnVXo3c0N4ZlZKU3VBR2l3WXFiRCtYNVF1Y2duVE11ejQyY1Jr?=
- =?utf-8?B?b3pDWWZWWEY2bzVhVFJqQVd2VDh6Y3dVK0ZBZGFGSkdLdG1ydUE2Z2NkQUlP?=
- =?utf-8?B?VmYvMW0wNjBjbmQwOVQ3WGVOZU0xd01jMXVTVDRReHZFTHRvUlBLV2hTMXMr?=
- =?utf-8?B?NjU5SUxuWTBqU3lNNDFzeTlHZFVrdEZnbEpFMmt1RGptSS80YVVmMGU0ZnhL?=
- =?utf-8?B?dllTMjJwZmlIVXZMNzY2U1dPd1BGWXpscTF0OS94SExzaDZVTzdMQTg2dnlN?=
- =?utf-8?B?aG9rWkZ3Ym4rUTZDcG9vUFJPN0M0RnFVOGRibXdUV3FnSFpSalhERGQ3TW5n?=
- =?utf-8?B?elRRT3M3L09hdkoyalJKa3BwYU1ab3lnazROc0ZQYkY1UWJMbW4yeDlCeDEr?=
- =?utf-8?B?dC9NaWdwd2g3a2lxd05DK1YrbnIxaDZqSFdWay9McFdMQTZUcWQ5aE1CVkk4?=
- =?utf-8?B?eWI4TENPeFRGK1NUc3YrUEgwRE5GRGwyUXVSUmxic1VlSkFPQ2ZUek5aQ1c3?=
- =?utf-8?B?WnNzdWMzOWRlNVE1dGZ3VHJ1aURkcTlUMVB1MG1wMkJOSzNVNHoxbXplbXpy?=
- =?utf-8?B?N3BNQzFKMi9Md0E9PQ==?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RE9FaGhKaHZ6L0h6MUhsd256M0tjYkpUQVd5dE83b3FlVXBPS3kxeUc3ai9p?=
- =?utf-8?B?ZjJRbzRxSFhxNXpwUEVXcWhob3lRNDREUmM5U2lDdmU2Q1ZSa2EwR0c5Smpu?=
- =?utf-8?B?VWlaK2RYMmpyKzNlMnJKZEJnU2tDQmV3V2FWQjZDMDV0NGgrYklMR3Q1MGhP?=
- =?utf-8?B?RnFjdXh6eGQrQ3p0OS96UFI0S2FkS0dpcnQwU0thTmNTencwMmF5Mzc1Yjdv?=
- =?utf-8?B?TCthaDJlSGdmc3NocmtIRDdveEVlUzhBVDRkNCtFZ0tFL0kzUXlTZzR6ZjZr?=
- =?utf-8?B?ZlgzRzY0QkgxVmllQzFvUHhlSkRjai9ZOTlxSWltRkhMVVd5TWpodWZ1K2N5?=
- =?utf-8?B?Q1VNMWNzNUIwL2hIb0hDWUsvVXpZcGpNTVg1R2hDUGFUZjJHRDRTalQ5V2hF?=
- =?utf-8?B?a0tzeGtIc3ZMZWJrWHZNWlhiRWNkU2ovb010UnV6eC9tUjlwMjZuVCtDb21k?=
- =?utf-8?B?NVF1Qk5USWd3L0htM0dMRFVNcXdwa1lwd2pPajZZNm1nYmJkSEhQUTIvK1FQ?=
- =?utf-8?B?dWVPVHU5K0tGTTFQTklQbC92dERwOVB4VGlTbHJRL2N1clcvWERLSE1OeVZi?=
- =?utf-8?B?Mlg3WTJCMkd6aWo4bWVLNmpUdVB2Y2IxWGVsQnBQU1pUTzVnYzNZNHpZNmpV?=
- =?utf-8?B?NTNFeGZwd2RTaW1zdG51VG8zQU12Rkc0b2FTRWxIWFJ5UlhDODVhdldZdHR3?=
- =?utf-8?B?WldRRXlCL1JSZkVtYk9aeDg2ckRaSGlpN2NFdExXb05ueXE5U1BDUVN1VWN3?=
- =?utf-8?B?UzlmUHJGYk9YN2E3VHNQN1Y5L3JkS3lReTM0SXV1NWFUYWlaelFjcEJZKzJQ?=
- =?utf-8?B?Tm9jbFVXTkN1ODloZjhBeUdBNE5qODhKWVd5dEdqTDM5M2J1d29pME9BcW1i?=
- =?utf-8?B?Qkp3Y1RDSjZHT2Q2ZE1BQ3FQWWZOdE41REdsV1hMRWNzYlFJL1NhQW5QK3F6?=
- =?utf-8?B?MTIrYUd2NnlYNWREYjhMZVdXcXdzQ2hwc3M0OEdVRFFxY3FMWmlmVDR5QmZl?=
- =?utf-8?B?a3RSL0djQXJqSDVIbFZDaVhuMjJLZGpzMDEvQ01sSS9CZzRyQUFHVkVDb3hv?=
- =?utf-8?B?R0VFSFVCZkk4YjJidHc4VU9JYW01MGRVVWtsSzJwV1l1RUhicWlFVWNOMmFx?=
- =?utf-8?B?NVkzWEFKWUc1cTBkVDg5V1E1SmFKUnAxMzBHTXE3YUVLQThDN2w3UW9lcTRP?=
- =?utf-8?B?a3o5aWxxSUU0aXBCTzJ2a0xJRklHTHRDZ09JeTg2SGhpd1F2RFJkVnMxNURI?=
- =?utf-8?B?VlplZlI5eC9RZXMyZjFIeWx4ZTJnS2NvOE9xV2d1cHd4RXdnM0sxVXdOUTF6?=
- =?utf-8?B?bHllSTJ0RjRpR0lpdU1WL2U1MkZ2V2tha0NpU3ZqNmpOS1ZUVDc0OVNyZTd0?=
- =?utf-8?B?MEFhRTRycTFob2ZXazhXSU1Pb09WVlpkbVBOS3RYZjB1eXd1OG5TMGV3Wkd4?=
- =?utf-8?B?bFdBVUR5VHJIcElxOXR5YWJrM2J3UHlxL3J3SWhSWCtqNTVVVEdaNkxvWm81?=
- =?utf-8?B?UnBiSU1DU1RveXFJeVVmbFlmdW80SEFEQk9KL0hSMkxXSzBMNitVOUpoWFFU?=
- =?utf-8?B?bElQN3hxTEU3NXp1bUN1TmFrVFdXN3dmek9Ta04vMjZQcGNsS3BDeSt4NVJ0?=
- =?utf-8?B?UkQ2Zi8zYjlyUW54Z2xQMmdLZXhuVXVKa1llTXR0Y0tXcFpnb3hhdWN4cko1?=
- =?utf-8?B?S1NZdEdsRXNMb1MyMTAyeVBmYjJFa0NueDZITVRvaTZCb1VNcmxEQkt6WDQ0?=
- =?utf-8?B?Q1hHekxLbXF2S2V5bWhmZHJjWENQNStiWHowOTB1d2FWb0JnY3J6b0pXaDZK?=
- =?utf-8?B?WGhJK0xCcnF0bE5SWDJYdmhjU2grUk5rS0NTbFJYazBJZ2ljbHpYTFBoVTJ1?=
- =?utf-8?B?MnNUbUQ4a1VuVnhKZ3ptcVpJNmI2TGl2WXhjYTZkMzkrbFVBRnlVWXJwdS9w?=
- =?utf-8?B?YnZGWG8ycTRLSU02Ym5FVFNtS3V6eXRlS05qL0ZYSWtXenNCdXJtYU5BaWtP?=
- =?utf-8?B?VUNDbWk0RzZBPT0=?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a692b3ab-dfb9-4d50-a721-08df31baaa06
-X-MS-Exchange-CrossTenant-AuthSource: SI2PR04MB5895.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2026 10:36:30.5554
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR04MB6958
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
 
-=E5=9C=A8 2026=E5=B9=B410=E6=9C=8815=E6=97=A5=E6=98=9F=E6=9C=9F=E5=9B=9B =
-=E4=B8=AD=E5=9B=BD=E6=A0=87=E5=87=86=E6=97=B6=E9=97=B4 22:28:33=EF=BC=8CIlp=
-o J=C3=A4rvinen =E5=86=99=E9=81=93=EF=BC=9A
-> On Wed, 07 Oct 2026 11:08:36 +0800, Shuwen Bao wrote:
-> > The HP HyperX OMEN 16-am2xxx (DMI board 8F1C, 26C1 platform cycle,
-> > Arrow Lake-HXR) is listed in the OMEN Command Center device
-> > capability table with DisplayName "HyperX OMEN 16" and the
-> > "PerformanceControl" feature, but is missing from the kernel's
-> > hp_wmi_feature_boards[] list.
+
+--=-SG13v7S5Ehmb8Q9m+2CQ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, 2026-10-24 at 16:40 +0800, An Wu wrote:
+> Hi Makus
+>     According to sashiko:
+> '''
+> In drivers/tty/serdev/core.c, serdev_controller_alloc() places controller
+> devices on serdev_bus_type:
+>=20
+>     device_initialize(&ctrl->dev);
+>     ctrl->dev.type =3D &serdev_ctrl_type;
+>     ctrl->dev.bus =3D &serdev_bus_type;
+>=20
+> When yt2_1380_fc_module_init() calls serdev_device_driver_register() for
+> yt2_1380_fc_serdev_driver (or when a new serdev_controller is added), the
+> driver core runs serdev_device_match() against every device on
+> serdev_bus_type, including struct serdev_controller instances:
+>=20
+> static int serdev_device_match(struct device *dev, const struct
+> device_driver *drv)
+> {
+>         const struct serdev_device *serdev =3D to_serdev_device(dev);
+>         const struct serdev_device_driver *sdrv =3D to_serdev_device_driv=
+er(drv);
+>=20
+>         if (acpi_driver_match_device(dev, drv))
+>                 return 1;
+>=20
+>         if (of_driver_match_device(dev, drv))
+>                 return 1;
+>=20
+>         return !!serdev_match_id(sdrv->id_table, serdev->modalias);
+> }
+>=20
+> Because serdev_device_match() does not check is_serdev_device(dev) before
+> casting dev with to_serdev_device(dev), and yt2_1380_fc_serdev_driver has=
+ no
+> ACPI or OF match table, serdev_device_match() falls through to
+> serdev_match_id(sdrv->id_table, serdev->modalias) on struct serdev_contro=
+ller
+> devices.
+>=20
+> In struct serdev_device, modalias[SERDEV_NAME_SIZE] starts at offset
+> sizeof(struct device) + 4, which in struct serdev_controller overlaps the
+> struct device *host pointer, ctrl->nr, ctrl->serdev, ctrl->ops, and exten=
+ds 12
+> bytes past sizeof(struct serdev_controller). When the overlapping byte at
+> modalias[0] is non-zero, serdev_match_id() passes that non-string memory =
+and
+> trailing out-of-bounds bytes to strcmp().
+>=20
+> Should serdev_device_match() verify is_serdev_device(dev) before casting =
+dev
+> to struct serdev_device?
+> '''
+>=20
+> If we remove is_serdev_device could cause some problem due to the
+> serdev_controller could also
+> run into this function and "serdev_match_id(sdrv->id_table,
+> serdev->modalias);" can be a potential risk.
+>=20
+> I will add the "is_serdev_device" back and send v5 out.
+Your right, I missed that.
+
+Thanks
+- Markus Probst
+
+>=20
+> BR
+>     An
+>=20
+>=20
+> On Sat, Oct 24, 2026 at 10:29=E2=80=AFAM ChunAn Wu <an.wu@canonical.com> =
+wrote:
 > >=20
-> > Add 8F1C to the hp_wmi_feature_boards[] list, using
-> > omen_v1_legacy_board_params as driver_data.
+> > Driver-created serdev clients without an ACPI companion or device tree
+> > node currently have no modalias and cannot be matched to a driver:
+> > their modalias sysfs read returns -ENODEV and their creators force a
+> > bind with device_driver_attach().
 > >=20
-> > [...]
->=20
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-next branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> local branch there, which might take a while.
->=20
-> FYI [if applicable to your patch], as per Linus' policy change, also
-> fixes are mostly routed through for-next unless the fix is for a
-> commit introduced in the most recent cycle or is clearly a regression
-> fix.
->=20
-> The list of commits applied:
-> [1/1] platform/x86: hp-wmi: add support for OMEN 16-am2xxx boards
->       commit: 2cd10a35f3f09c49698956d32c6374fbdc03245d
->=20
-> --
->  i.
+> > Backlight function on dell-uart-backlight is not affected: that class
+> > device is registered independently and gets its own add uevent. The
+> > user-visible breakage is the failing modalias read on an existing
+> > serdev child -- Checkbox dkms_info_attachment aborts with
+> > "OSError: [Errno 19] No such device".
+> >=20
+> > Resolve the two long-standing serdev-core TODOs by letting the creator
+> > pass a modalias to serdev_device_add() and giving the serdev driver an
+> > id_table, modelled on the SPI bus. ACPI and OF match first and are
+> > unchanged. Convert dell-uart-backlight and the Lenovo Yoga Tab 2 Pro
+> > fastcharger to this path and drop their force-attach workarounds.
+> >=20
+> > Changes in v4:
+> > - Patch 1: drop the dead is_serdev_device() guard from the match
+> >   callback, and dereference serdev once at the top
+> > - Patch 1: drop the "large enough" comment on SERDEV_NAME_SIZE
+> > - Patch 1: in struct serdev_device_driver, place id_table right under
+> >   driver, next to driver->of_match_table and driver->acpi_match_table
+> > - Patch 1: merge serdev_device_set_modalias() into serdev_device_add()
+> >   so the modalias is set at the only point where forgetting it would
+> >   matter; internal firmware callers pass NULL
+> > - All three patches: tightened commit messages and moved the v2/v3
+> >   changelog narrative out of Patch 1 into this cover letter
+> >=20
+> > Changes in v3:
+> > - Rename struct serdev_device::name to ::modalias; dev_name() is
+> >   unchanged
+> > - Model matching on the SPI bus: add struct serdev_device_id and
+> >   id_table; drop driver->name matching
+> > - Add serdev_device_set_modalias() helper and SERDEV_MODULE_PREFIX
+> > - No MODULE_DEVICE_TABLE(serdev, ...) support: both in-tree
+> >   firmware-less clients are created by the same module that provides
+> >   their driver, so udev has nothing to autoload
+> >=20
+> > Changes in v2:
+> > - Instead of silently returning success with no modalias, use a
+> >   creator-supplied name as a "serial:<name>" modalias fallback and as
+> >   the matching key, so clients can bind through normal serdev matching
+> >=20
+> > v3: https://lore.kernel.org/lkml/20261023052717.2577234-1-an.wu@canonic=
+al.com/
+> > v2: https://lore.kernel.org/lkml/20261022032842.2492572-1-an.wu@canonic=
+al.com/
+> > v1: https://lore.kernel.org/lkml/20261021092124.2306053-1-an.wu@canonic=
+al.com/
+> >=20
+> > ChunAn Wu (3):
+> >   serdev: handle devices without an ACPI or device tree node
+> >   platform/x86: dell-uart-backlight: Bind through normal serdev matchin=
+g
+> >   platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: Bind through
+> >     normal serdev matching
+> >=20
+> >  MAINTAINERS                                   |  1 +
+> >  .../platform/x86/dell/dell-uart-backlight.c   | 33 ++++------
+> >  .../lenovo/yoga-tab2-pro-1380-fastcharger.c   | 25 +++----
+> >  .../platform/x86/x86-android-tablets/core.c   |  2 +-
+> >  drivers/power/sequencing/pwrseq-pcie-m2.c     |  2 +-
+> >  drivers/tty/serdev/core.c                     | 65 ++++++++++++++-----
+> >  include/linux/device-id/serdev.h              | 19 ++++++
+> >  include/linux/serdev.h                        | 12 +++-
+> >  8 files changed, 105 insertions(+), 54 deletions(-)
+> >  create mode 100644 include/linux/device-id/serdev.h
+> >=20
+> >=20
+> > base-commit: 9e947d96915af63e28896caae85a81b74855621b
+> > --
+> > 2.34.1
+> >=20
 
-Hi Krishna, Ilpo,
+--=-SG13v7S5Ehmb8Q9m+2CQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Thank you for applying the patch. However, after further extended testing,=
-=20
-I noticed a regression on this hardware.=20
+-----BEGIN PGP SIGNATURE-----
 
-Specifically, the board automatically reverts from performance mode back=20
-to balanced mode after a period of time (it seems like the time is not=20
-constant), which resembles the behavior of a timed thermal board.=20
+iQJPBAABCAA5FiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmrcmxwbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyAAoJEDR2H/jnrUPSVY4P/0xzs5nL7i1tTqdbwO0P
+GqR+O55MGJSmGhSoHK5eEa708+ux2lQ7AAFbNoPPSXuJCz8TIvWtNpjr2JwegeK6
+3STQvzfOe8TDjZxpwALYlNmVxCJR3586aCJbtrVaXbojI+xY8jYZbUEKUnkbpKXw
+ZvvFr/GZ+J8JBulWNUChzMCde+reZgRJzn6e6GMC1FFOkKuVPeIRdE7oKxlJPsdS
+h+bt4wozGWoXTFKuYx+flHDoAmco+fOgb5UfDcXMHyT6GqK+9ZJB6jR2Yzi1099p
+roaAoXWNh4jFpKFEos2Aapi1l+vEOXWs2UonoCfL+FnrXWQt6AZ9XY1thCUkvkQu
+Q5yCeTG08TG/iMARYBW20pnXyMClYsSBASXKacPhKHoNsoOLEQ2v/vH+fR+rbIfA
++YfoIUCPmacvVv23mWZSkT6IdWqlaRVvVx8bC5Z/T4SEjtBIOP8QWRfPZO2mJxbY
+PKcrx9Pc2frANJe9fr0OlbNRvkPvrpm8df99SE2WoNS3KrEU/aVs+AwaHPCa7rRS
+kt8bQOFDWpPW8GDx0jaz0bXHEb2aNJmmSylFO8uWBFimDEHBqL8ZycN34bHvcuay
+McZpIBcZrFOBQH9U6sQlf5Di/U80LDFs2Pf/8JrAuZbgCIs3t/wducloZTjRLEXR
+mrpZctbaXDdFgSgbnkZdQfPW
+=U9eF
+-----END PGP SIGNATURE-----
 
-This doesn't seem to be a thermal threshold or PL1/PL2 limitation,=20
-because manually switching the profile back to balanced and then to=20
-performance will re-enable performance mode successfully.
-
-I am still investigating the root cause and am currently unsure how to=20
-properly fix this yet. I'm currently testing adding 8F1C to=20
-omen_timed_thermal_profile_boards as a fix.
-
-I haven't looked deeply into hp-wmi.c before, so if adding it to that=20
-array is not the correct or intended way to handle this, please let me=20
-know.
-
-@Ilpo, since commit 2cd10a35f3f0 ("platform/x86: hp-wmi: add support for=20
-OMEN 16-am2xxx boards") is already in review-ilpo-next, would you prefer=20
-to revert it for now until I figure out a proper solution, or should we=20
-keep it as-is while I investigate?
-
-Thanks,
-Shuwen
-
-
-
-
-
+--=-SG13v7S5Ehmb8Q9m+2CQ--
