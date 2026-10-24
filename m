@@ -1,97 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792862821;
-	b=gV0NZR+bIxEk9rKgS9eIpB/+NmgGh5lctCr03lHDZNZ7JiDYdbrh1uzuGtVdJ8PLmIsS
-	 fxTGQRP3aJK39zocoDiVQN2QQxKC84782wx6c8jWIhJPPYdHFLjRM9hQzvYLbTvf9fTqu
-	 Bs2t01LkU+vE3qL+ybRxKq6MdNJCxOOWhNxrbm92bCKmKgQMiP1CUOljcItXKJ0ajx13M
-	 XNASLjAuRT9y3u8n/3FoUqnB61L3x4UFP5OswSlvzCLtqp98pGoL7m/FGB2M6SYD5q1I0
-	 9x46Q/onsC86xr5nsqygsd0OV7nWtt8pibsBRyEn9HiUOFEv+y0kyG1mZKIyD0fUlVw==
+	t=1792863755;
+	b=XMud8cil9/BB8bO3drIwuW9pwd5JWs1YZz6yslck+be6YMJRk0hdW1alLetb7oKufUcm
+	 E5V+nETFbKbiOXSNYSLjK9BdmXdVuf7swo8E331cGi8FEdVnudOc51+OLTA5kAAViXkkF
+	 es8Xm4gGLEF0TMHSUP1BGjAjHKLhML35OLDQloEKRo5hvaZptur7cuDeyyMXMxHOT+fjS
+	 wNOQMyKjPoWX7w9Pvvgyuy3z3zn2FIvoLiYRaNgH5aJQd+gnX+7o1Aj0f62CfNX9quJLG
+	 Y+Kobu2VotHCWNfVoLjlg+84By7NuWusziw2+BOl3ElqocaDmFRnEq8riG3cE2ijFlA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792862821;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=kEYtLwxZwrV359NviA74b+mH4aeRVHvNjyPhEsl/qZ8=;
-	b=D3uIgf2vY2IUigfjeNL54CplLiqBqYw7OqWRzvC4O3vTc4rxelOdWQO9aE1rvG9N1uA3
-	 Lt+gCHZq57Bjh41891WzGHgFze0lpIHpjAFfzzsViY5ZEzcpE5fyr20zUfw3T57SZhLLP
-	 w/96pnKb+9HMwudMFOcy37jMVLgre8UNA2gHcZzXWhmsd5vWi43S5BxRZYkCak2nTPjo5
-	 08QnRolfS8TMd/uUMPJVGJfJmeEh04P0I5ekjFtDw6m7WUWuVsiB9ILB45GmXn4TaWWe8
-	 bJwP6DZobDI+gSPnWnkpbOTYjPlCpWSu/oyzocoE71BkfBWLGIbhdOatnmDpTiCUvAQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792863755;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=BuZ1t5C7X+sSlJUKEoZNCJc0nbbvghvhuZ0zbUxxORM=;
+	b=JzhWeqhCTF62Q0S80bs/R0DIkMo4STV8L0FwOPfRvSLS60P9PTRbRSAmitqqbvVJ9U/E
+	 3yVvVqxQDSws0mTBH7X4N6ABGKh4qT0WcOJ4XSNrGHFC0MBef4GBuQbme1c871KKyi2F/
+	 HdLIMaNWpSFl7+rbjx4cxRoIHCoxOLdjtGnFhwEeiF+vsyJgMidK4seYyKjsTas7X989p
+	 WPs7bQYUvXK/G+V3titc5m4jytB7t8gNol9B75M1G5Gs5mdCS8Qqyfq7RWv0SV37hshJt
+	 +2OJOpZxzmfagP+kJTxEfp6Vr7KNLyuzVrGbDs+OZLCCQh0mBpLdrvD+usq/efXkIbQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SLGzCCFX;
-	arc=none smtp.remote-ip=209.85.128.54
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fyJ0Oph1;
+	arc=none smtp.remote-ip=198.175.65.9
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A79E606A31A
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 17:27:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A79E606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF57606A31B;
+	Sat, 24 Oct 2026 17:42:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AF57606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SLGzCCFX
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4956869750eso11034835e9.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 10:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792862820; x=1793467620; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kEYtLwxZwrV359NviA74b+mH4aeRVHvNjyPhEsl/qZ8=;
-        b=SLGzCCFXwEzIPp0HYrwFsmH1nScgGkoGYiTu2ZDnCmgW1A76aweYx34KZTSjMDJ677
-         luC7x5od955083hP9Iiu49BX3y5ihxgWXuQO042HOd79UUdV0zmTm6YFyw6lqeJZvGhe
-         BAjA0qfFBKYZqZiK96CR+v0g942HSiEKj5tpP1WNgRXIPcCuh20/VClnVLR7tZK1ANpR
-         XQzFGeqmJoRUF8rvDYC+gBqzSqb11ErCI91seBMYrlEysiZh8MF5YxNKrt5V/5vH+Ud4
-         FI7FrJhahEx1wQI/KW2P4x3JlDqTyhWv8a2vJROBw8ouoGWnNpg57LSWvTK6wDVMUiZj
-         i1xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792862820; x=1793467620;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=kEYtLwxZwrV359NviA74b+mH4aeRVHvNjyPhEsl/qZ8=;
-        b=qxOiEq9+bFpoLEoPMcFlxFaDVE596noWzRWPgYrhDtiO8JWb+uqOdnEXohSFFwKvfP
-         /hdcPZSooy5GstGVksa8yP4X/vRdJ675uNZhyrlgQLpJ7nMF4x3xJ2OsJXmesPf3V6B2
-         k+uHzsXvIYiXErUtmdnUktRq7GAcIH199AIuA3D2VKyjC5bGnIjoQdcouQBb4cHZJVvW
-         DVLOAMc4osQnpTIN9Tnw6ysLItIph4xJAdpfL+f4xHqW94vdN/HpiwoCleG6BAbmT0Fe
-         ShmFe2vGZCljiPep49kElYx8+loTYJudwd+/vSrCV2WwChxGVWWlxJImqsuvadGSCLZz
-         1fKg==
-X-Forwarded-Encrypted: i=1; AKwUvBw80OGMKJ26ufdd61ImpC2M4LZplMvGjt5W6rh7+0whu9iypQhapikuhPNJoHUZD8sday6Gkj9n3tCpTEbW+4WywjuW@vger.kernel.org
-X-Gm-Message-State: AFq9FYLBqqHuGQU5eW6KgPC4jLctNuxkAMpd1DjbYuSY/mmmxYlEuWr+
-	u0TvMap9q6/BoYihSaZqlDbc8prLj9fC6s68E+TD0upeq6x/cBi9Ymbs
-X-Gm-Gg: AYBFou3a8YosMXrtX2fswOLI0HSvrtaODR8GN0SgYnoxWHCHM7h5HvE1GpPwrGcis7U
-	jqh5F9IYbwYoBrZbItQ/M66zYS/4uR8U3665D0jUXEcn79zfqGZxH4OfMuYxHlSHoV6vFK392Bs
-	O4sPcym8xFJmQdSSwxdbNolYFFSatZzmWTWDez9/N00snxo9KeWo3UqZY0skQNbox82IvTo0ONV
-	18/bpVTWFrodsqH18WVWf1K4QTt137A/ytgFhU+6cbjV92mAnz6avmyfLHiGf/28+3zO8UHfp/U
-	rsdhA93074S29sq6j9sIWkYpGiDr2EDlh/AahDpo8LoUgI7qUAW5oCbRDh9FJTctTkxpDtPLT0u
-	Pl5/sThyM2jS5trLvWZRductFnF0gMLMojqoCXvUse/98viFK9pFBOkCG1tHsG7hf3EBmjXDH7N
-	/Di/bvIs5hs8sQoEN9pAbnLzz6eqmv8E1B6LfJih1my180MNCb4gcIUxb/fC77oxd6aLLe9+f2i
-	ElnOhECef6cJxIA9V1hAjhht7Ha9IROodVBQcKi7AEsEmyNNn0TZcH/thsmd9eyBSx6aXllugTl
-	iyw+PUbtZkEJ+htzklEq3BGMJxftk7pE
-X-Received: by 2002:a05:600c:c173:b0:4a2:191f:7cbd with SMTP id 5b1f17b1804b1-4a35ac8bbd5mr40436765e9.11.1792862819430;
-        Sat, 24 Oct 2026 10:26:59 -0700 (PDT)
-Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a359fc1207sm52573855e9.1.2026.10.24.10.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 10:26:59 -0700 (PDT)
-From: Muhammad Bilal <meatuni001@gmail.com>
-To: jorge.lopez2@hp.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: andriy.shevchenko@linux.intel.com,
-	linux@weissschuh.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	meatuni001@gmail.com
-Subject: [PATCH v7] platform/x86: hp-bioscfg: fix heap OOB in hp_enforce_single_line_input()
-Date: Sat, 24 Oct 2026 22:26:41 +0500
-Message-ID: <20261024172641.19424-1-meatuni001@gmail.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fyJ0Oph1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792863754; x=1824399754;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8vNrTE29DnPOhUoUbcQAhuV/RJaOFG+RLJlehh9FQn4=;
+  b=fyJ0Oph1du/s8g1KSUDFOKoY88kjZE+pJLWEL2dRto838761xsywg67B
+   3twdNjPcJZe5i8gTgPICv8CO5lLrOt0Y3JHsfjLuRsqcMjX7d9HpSpZd/
+   5l1pThimy5+dbiwTmHgzFT5Jg34e/9VB7C7ByBBEVRSgvWECBNw0b1NNx
+   Nfm0q8ZGu7RRGN9LuQAIRnOsOOp+RRPlAywA6uE4b501aJCwEiT0XNqQz
+   sVRVf4MJAUjSLnI3q7pxG6Sq2DjFdwIlaAnTsLfmA/oqchG9bouv7bsDV
+   oBvskF5plW5dbFWUEhdUdWFPo9V0KmKQCskfHeX2bNyLjGWzQPRpwno16
+   Q==;
+X-CSE-ConnectionGUID: ystu15h1Q5WaO4CnXeNfRw==
+X-CSE-MsgGUID: exDBMffOSu2tp9z3aq/oNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11945"; a="1468463"
+X-IronPort-AV: E=Sophos;i="6.27,176,1787036400"; 
+   d="scan'208";a="1468463"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2026 10:42:34 -0700
+X-CSE-ConnectionGUID: eJZY8DdJSTC/QSpw94f05w==
+X-CSE-MsgGUID: 3ONycMUWSKq+6Lkg09qGPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,176,1787036400"; 
+   d="scan'208";a="4013537"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 24 Oct 2026 10:42:30 -0700
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xKflD-00000000U6o-1dkn;
+	Sat, 24 Oct 2026 17:42:27 +0000
+Date: Sun, 25 Oct 2026 01:42:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: ChunAn Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, markus.probst@posteo.de,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com
+Subject: Re: [PATCH v4] platform/x86: dell-uart-backlight: Bind through
+ normal serdev matching
+Message-ID: <202610250118.t0UAW41j-lkp@intel.com>
+References: <20261024022930.2704030-3-an.wu@canonical.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -101,65 +87,112 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261024022930.2704030-3-an.wu@canonical.com>
 
-The input is copied with kstrdup(), which stops at the first NUL, but
-the full write size is passed to hp_enforce_single_line_input(). With
-an embedded NUL the helper reads, and can write one byte, past the
-copy. Use strnchrnul() so the scan stops at the first NUL, and return
--EINVAL for a NUL or newline before the last byte.
+Hi ChunAn,
 
-Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
-followed by 4093 bytes of "B" to current_password 100 times returns
--EINVAL every time, without reading into the heap.
+kernel test robot noticed the following build errors:
 
-Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-Cc: stable@vger.kernel.org
-Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
----
-Changes in v7:
- - Use strnchrnul() instead of a separate NUL check (Andy)
- - Drop the trailing comments
+[auto build test ERROR on driver-core/driver-core-testing]
+[also build test ERROR on driver-core/driver-core-next driver-core/driver-core-linus linus/master v7.3 next-20261023]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Changes in v6:
- - Return -EINVAL on embedded NUL instead of limiting the scan (Ilpo)
+url:    https://github.com/intel-lab-lkp/linux/commits/ChunAn-Wu/platform-x86-dell-uart-backlight-Bind-through-normal-serdev-matching/20261024-102929
+base:   driver-core/driver-core-testing
+patch link:    https://lore.kernel.org/r/20261024022930.2704030-3-an.wu%40canonical.com
+patch subject: [PATCH v4] platform/x86: dell-uart-backlight: Bind through normal serdev matching
+config: x86_64-randconfig-1014-20261024 (https://download.01.org/0day-ci/archive/20261025/202610250118.t0UAW41j-lkp@intel.com/config)
+compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261025/202610250118.t0UAW41j-lkp@intel.com/reproduce)
 
-Changes in v5:
- - Limit the scan to the string instead of copying the input past its
-   first NUL (Ilpo)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202610250118.t0UAW41j-lkp@intel.com/
 
-v6: https://lore.kernel.org/all/20261016025352.230535-1-meatuni001@gmail.com/
-v5: https://lore.kernel.org/all/20261007134711.473857-1-meatuni001@gmail.com/
+All errors (new ones prefixed by >>):
 
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+>> drivers/platform/x86/dell/dell-uart-backlight.c:328:60: error: array has incomplete element type 'const struct serdev_device_id'
+     328 | static const struct serdev_device_id dell_uart_bl_serdev_id[] = {
+         |                                                            ^
+   drivers/platform/x86/dell/dell-uart-backlight.c:328:21: note: forward declaration of 'struct serdev_device_id'
+     328 | static const struct serdev_device_id dell_uart_bl_serdev_id[] = {
+         |                     ^
+>> drivers/platform/x86/dell/dell-uart-backlight.c:363:34: error: too many arguments to function call, expected 1, have 2
+     363 |         ret = serdev_device_add(serdev, KBUILD_MODNAME);
+         |               ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~~~~~
+   <command line>:8:24: note: expanded from macro 'KBUILD_MODNAME'
+       8 | #define KBUILD_MODNAME "dell_uart_backlight"
+         |                        ^~~~~~~~~~~~~~~~~~~~~
+   include/linux/serdev.h:161:5: note: 'serdev_device_add' declared here
+     161 | int serdev_device_add(struct serdev_device *);
+         |     ^                 ~~~~~~~~~~~~~~~~~~~~~~
+   2 errors generated.
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 876fc35d035b..8873d91bc235 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -162,12 +162,12 @@ int hp_enforce_single_line_input(char *buf, size_t count)
- {
- 	char *p;
- 
--	p = memchr(buf, '\n', count);
-+	p = strnchrnul(buf, count, '\n');
- 
- 	if (p == buf + count - 1)
--		*p = '\0'; /* strip trailing newline */
--	else if (p)
--		return -EINVAL;  /* enforce single line input */
-+		*p = '\0';
-+	else if (p < buf + count - 1)
-+		return -EINVAL;
- 
- 	return 0;
- }
 
-base-commit: 8667bd30fd033295b3038ce374c551d1059538ba
--- 
-2.56.0
+vim +328 drivers/platform/x86/dell/dell-uart-backlight.c
 
+   327	
+ > 328	static const struct serdev_device_id dell_uart_bl_serdev_id[] = {
+   329		{ KBUILD_MODNAME },
+   330		{ }
+   331	};
+   332	
+   333	static struct serdev_device_driver dell_uart_bl_serdev_driver = {
+   334		.probe = dell_uart_bl_serdev_probe,
+   335		.driver = {
+   336			.name = KBUILD_MODNAME,
+   337		},
+   338		.id_table = dell_uart_bl_serdev_id,
+   339	};
+   340	
+   341	static int dell_uart_bl_pdev_probe(struct platform_device *pdev)
+   342	{
+   343		enum acpi_backlight_type bl_type;
+   344		struct serdev_device *serdev;
+   345		struct device *ctrl_dev;
+   346		int ret;
+   347	
+   348		bl_type = acpi_video_get_backlight_type();
+   349		if (bl_type != acpi_backlight_dell_uart) {
+   350			dev_dbg(&pdev->dev, "Not loading (ACPI backlight type = %d)\n", bl_type);
+   351			return -ENODEV;
+   352		}
+   353	
+   354		ctrl_dev = get_serdev_controller("DELL0501", NULL, 0, "serial0");
+   355		if (IS_ERR(ctrl_dev))
+   356			return PTR_ERR(ctrl_dev);
+   357	
+   358		serdev = serdev_device_alloc(to_serdev_controller(ctrl_dev));
+   359		put_device(ctrl_dev);
+   360		if (!serdev)
+   361			return -ENOMEM;
+   362	
+ > 363		ret = serdev_device_add(serdev, KBUILD_MODNAME);
+   364		if (ret) {
+   365			dev_err(&pdev->dev, "error %d adding serdev\n", ret);
+   366			serdev_device_put(serdev);
+   367			return ret;
+   368		}
+   369	
+   370		ret = serdev_device_driver_register(&dell_uart_bl_serdev_driver);
+   371		if (ret)
+   372			goto err_remove_serdev;
+   373	
+   374		/* So that dell_uart_bl_pdev_remove() can remove the serdev */
+   375		platform_set_drvdata(pdev, serdev);
+   376		return 0;
+   377	
+   378	err_remove_serdev:
+   379		serdev_device_remove(serdev);
+   380		return ret;
+   381	}
+   382	
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
