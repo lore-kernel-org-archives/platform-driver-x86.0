@@ -1,89 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.53
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792873712;
-	b=YCWCHxlpOahp65ZwsXDtO6FufX7ypYoo9rCs49IYBHwd4tgP07FO/bo4ytllViiz/vy1
-	 pkvmp8CagPifIqIZW7IaBusTpJKkbBs7TbeVK/PLrAogksGsZKTTkMt0ZyQbYpFqsq75z
-	 fKjkg71HoGCgXpqBkk+4FSdYEBTRnKgSJBpzcESZmA67RfSSGiXfQ2sEd3E8NPE27CO2s
-	 yh1csekDZmf4QocXqVwHiI4LvMjJWZseeQ07cwtOzUfQnhvB/AP5tjnII9zeSr8TtDOHh
-	 ccmOE45ZngSAYXvzMnNz1rv4jy2255dIC33VHMEgP2XagI7MhpnuPr6gsPH4Ehvc3KA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792873712;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=kikhthoaQlWBu42au/eGBn/q99FtaNm9yiWtkx2cnsk=;
-	b=hKtKWRVlgAZlZ+7dWd4ag3rjp6dP22EvFe/hDeNkNt9g6ppy9h2cxKr5hyqgzczJW2HY
-	 TXEGjxbFMHxzsfCwJvOcJP5dwL2hWfaDOiBoeqS74UrDtQww6rBGmoStoupv0psIODjxi
-	 39yk1Tfy91dNIBvin6DKVs6C53xWYaz5V6mVDqCz2nB/sTUfxPJzGNr6AEAc0YK0HHfC2
-	 GaV6xNQnW1aa3EVr04C9QiG9Kdx6D7MHfiw2+q+CO+PTBirEu6t6bAnDXhwoUKs4QuvrC
-	 0QUwy0LxGhqOgvxDw0S6V8NL2MLk3/bH4xSwr3ryqAoUmw4LdoARWw2/cMH3w7xz2qQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="Vnv/VXJ2";
-	arc=none smtp.remote-ip=74.125.82.53
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792874354;
+	b=w17KM1E/B747OOMek5delNFKt/RxtPxOipOrCApprYcTTd3DelfLTKAXVyKfxFCcdBdR
+	 yfMuHUU/EtMKZRHALeoh2FO1ZXdhAkgUcINw0DY3m54r2dg9FoT4iE4qzmAIqlWGW0N0Z
+	 D60Aahj3Z08r2qQFLZK/g93NwuEkEtMTom/kF1EOeVXwASiLbsafN3kd4vOCRmytB0eXz
+	 6EkrDY/C8P4+srw1P0N6bTk/3MUsaaTtjaAIMw5C9Sk5laLuWvTAjyMfZF6qQmPlruHAG
+	 6JozVD5PzPpr240ptaMMhgsWyZsGyUOikRZHMyXWV7gMkOc/z5QBFqUbXuGiBARJN0Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792874354;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=ixdUSjsQFaW20UFZIyzmxZy6ail/bQGntDRD3B9otLo=;
+	b=y9SyQwS61opHhFc5dT4Y7iT8A/NL6qaoT0EOpxgcjeym0m2EYBFOAg0p1aC/nr61Z4tj
+	 p4+QHh+6SOLVjd6UEvOW6/cqrzYAh2qbYuhrTtwtZSKDh2YrM19mSzp/qJMbtWxkiL+Lf
+	 VknsFhlO4O41Tkx8ABIo+J2ysItU9fjVbVrnUsokBdQicwoCUCfDEC30iIZVbNljX6I7K
+	 U7s0S3ktv6nc4kpcvaRbQoS64CBI7ki53brya0Wc8YvKoqGA4SWaaR5B0Pe7gii3VBbkQ
+	 oobJb5fay9CJp3AoHOwrB7VkIZAKXtImVtHbKPN51DzPr5YsX4umEtai0Q5rmuHmcBw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fB5W+r+S;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C857B606A31A;
+	Sat, 24 Oct 2026 20:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fB5W+r+S
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1792874353;
+	b=eatvTnI4Cd01ovxrSHCH8TLtLOTJMHm/4ZLxDh1rFBhnzc7QVTHQDi7wmW7xq8CMEmmg
+	 i0ERW0DvxhAmlUjd3COdtCEjai8ntUW5KNoWjXuCGLXQ1JwyG4rlz5Jiguv36fhjNMdS2
+	 QM2SMKJ2bWO/0k5OUMRXkHHXEw3f7FlHnGHvwyhpHIb+8YPxxRsELtUey3wwkars72MXE
+	 qRIV32BNWCkSy3cVFipJuelJOvyZlJzLQOT6lBcZTheHSLv6Ru6cih+ianastGKuXcgHS
+	 2Vk+y0PLQGCm2WluKmusCGNZsUbqKRUBVt4bmtRkU0Bwi0vQ4bFShxx8xfo6+UW4+cw==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1792874353;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=ixdUSjsQFaW20UFZIyzmxZy6ail/bQGntDRD3B9otLo=;
+	b=znJ009LGIPbtUpzmflHnUCSnvi4Xy/SFaRjyUCFrCdZXGG4RVwjVkDQVFjZ967gZ1xGK
+	 Hi8XH+Dq0g97fvuSgJfVXuSTVtgc1dPNThDIpwQDGvluZRl5JQyOENP1Mb16eEfCfDSJr
+	 /aKPpiB1FNayS2stU0dULa9dzUEADGBWPp1cJbcw6BxEIiFXDBfbB15xxiCMCxRxyP1Zq
+	 4JFaUZWGpjywT88XLTdh2Bz3jHJ1LsNwweUP1q4c0S4EKpEKK1yMtN7dNrbqKzAMSPFhs
+	 u6Fk4URhnGhWtiT92S2bY2CLcnemQFosqFa0Vd7UEAK3z3NuHm9zeKwndxqXTazJk0w==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DA3606A31B
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 20:28:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72DA3606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Vnv/VXJ2
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-170135e43c7so1974338c88.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 13:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792873711; x=1793478511; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=kikhthoaQlWBu42au/eGBn/q99FtaNm9yiWtkx2cnsk=;
-        b=Vnv/VXJ2lB58VILA6ioygffnws5UkzzQ/PjShVmAzAxAEzxAgS02Js0YebOFQQfFc7
-         E9dX9uMAgb/fXkhlqqlWPlKDWPHx61QdAutGcV+CRgLCKYLoxOOBIEiy1Oj1IdA7uK+K
-         HbZ/uXHwvXnjRK5XfoJ2YYTA2o1mO+M5i/uMDfP6G6oJOmgvhINsLHWkj+ooCz0jWg2w
-         8CpVurbi5C+fGW3IwIYEg79rJjMqXGaHu8sy4Pe1ch9u82+Tt9tdFWzfov5UcNMrCDii
-         GjY0AcJ6oWirhZVLCZr1wzcZXqUfYxcJQbTaBDClEQcVsu5vGZ0JBAE2ElZHg4yZ3Zft
-         dvtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792873711; x=1793478511;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kikhthoaQlWBu42au/eGBn/q99FtaNm9yiWtkx2cnsk=;
-        b=xPwwFctvILcYBQVkPrwDfg9aDf9sNdSfhIR+gwFE77UF8DGI0G+rx6k/X66e5gNnYV
-         1uOv0A45KmGAPEdYcGOOX2hQWgFJzMwRALTS3iK9oONig0HNSOaC58yYJiiuElh1nvvP
-         ooCZ0xVEVsEUFO9GEU/EosrhovjfIllT1feHycD2ZDym5Ek7pI9xQHvnfnwILOx15jlf
-         PV2APGEPIrysTv0IBQmyWuWl4zSeWIorhvblxrbS6f+VEXUzbGRiiD/Xu7vlsydizQ8I
-         iQeVLcyDU5Enbj0/DjNs9MgJp2yhbbXfhcw3V26jnkVbnbD3df4Glbdvdm1HO2VTYGji
-         JzgQ==
-X-Gm-Message-State: AFq9FYIH8tlmQndB4P3Ln4MQuLOfOZmORBxBZBH1ZVMUMk/XbMC1ly32
-	NPEm6PDsMGHSxbyey8K74An8VgA/v5rRccuI1/jd3dXA8DEaqg+cWC2q
-X-Gm-Gg: AYBFou1DVKFZ5X44rNnymskgYSjuN93oug7rD8HoWaSINF1edB6/vaeH6EZ0jubHHw9
-	/wj6++DyJe/jWuG79+8Q8mtXDgstuqzjtr6jEU2wnxAX1blU8+qfmAY5w6O4o0EVncnUF6P5jCm
-	9bBra47HXyTlc+nUfTclbxeg+MkVckpU2qrbfm4vOo47TJkYbbwQG3kBmHjf6FkDlFxzv+RHLHa
-	3miiLVxU/9k5ENJ76SkR7ii6Y4haUZWTW5wsSmX1gnN0JrtANf7iJXVJIZRKf9sticIN/LaeRzy
-	lZe3WxmzLApKF1Q3v4LwSxQyn51uKMo5k1MvJslNP/pLWL/0NFZ1l8WvYv088A2WUlI5YBzSvVm
-	lBTpmBglTSCDTq6s+2roh4RlF0WUdPyfaBQziQ79wH4O+SEacPbEVzHtC5oU60ozcTzDHMzBlxt
-	TbG1jT1dkRnfDBb8zxJoiEGR83rGa+U44QWT8YqM/1+6PTQKKL49ACX82Zk7uPkQz3rWqyjJF8H
-	HB7gadCVvut5hZDnKDykktE9+UtIF1SiBGSk3yC/LuO2Uep/VtfwuCVLJUfUO8d3dBAp+LoMe08
-	Lkg=
-X-Received: by 2002:a05:7022:438e:b0:195:e4b9:d326 with SMTP id a92af1059eb24-19936a5e5e9mr6393651c88.12.1792873711407;
-        Sat, 24 Oct 2026 13:28:31 -0700 (PDT)
-Received: from localhost.localdomain ([49.42.181.238])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1989ff2ee69sm13495358c88.4.2026.10.24.13.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 13:28:30 -0700 (PDT)
-From: Sourav Nayak <nonameblank007@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sourav Nayak <nonameblank007@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: fix platform profile values for Victus 15-fb0xxx (8A3D)
-Date: Sun, 25 Oct 2026 01:56:58 +0530
-Message-ID: <20261024202658.13149-1-nonameblank007@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	by smtp.kernel.org (Postfix) with ESMTPS id D7B431F01825;
+	Sat, 24 Oct 2026 20:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792874353;
+	bh=ixdUSjsQFaW20UFZIyzmxZy6ail/bQGntDRD3B9otLo=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=fB5W+r+SkAD47MXa9hScc0EvIq1E+k7Ge7AvBNCPXDotNVcjZBvrS3Xa4gsdeGZ4b
+	 jXWXiPFyi30mZ8kCGfRn22MrsyIS7LmXtXmpyxJ6PI6YUOtrmEpS6QwSXNaCCIZduu
+	 FuK+GC3P8G/Bi6A3YnXi/Squv6hLwjfpWN7A9Xq9/tG4XgGcfTnTyFrVrujgElHId5
+	 Z9dGZt9/9rc9JC3IV2BbyPmp/7QdWBzXHManERi934CcSRsultfzLipgcCv67L1o/7
+	 b+wgt9vECOUz1Fcpvhsv3lOTSBYKlvSFaszt9BpdlO16v67euZz+SDMBFD2pIR8538
+	 yY3nAbkfKFHxQ==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 48647448A0;
+	Sat, 24 Oct 2026 20:39:12 +0000 (UTC)
+From: Arnaud Ungaro via B4 Relay <devnull+contact.arnaud-ungaro.fr@kernel.org>
+Date: Sat, 24 Oct 2026 22:39:12 +0200
+Subject: [PATCH] platform/x86: hp-wmi: Add OMEN 16-k0xxx board 8A4C support
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -93,115 +82,115 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261024-hp-wmi-8a4c-v1-1-5297fe0104de@arnaud-ungaro.fr>
+X-B4-Tracking: v=1; b=H4sIAG8X3WoC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzNDAyMT3YwC3fLcTF2LRJNk3eRE02Qjy0QLUwuTRCWgjoKi1LTMCrBp0bG
+ 1tQAtXBcCXQAAAA==
+X-Change-ID: 20261024-hp-wmi-8a4c-ca5c29a8584a
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, 
+ Krishna Chomal <krishna.chomal108@gmail.com>, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792874351; l=3562;
+ i=contact@arnaud-ungaro.fr; s=20261024; h=from:subject:message-id;
+ bh=rRskuoSffCBZeKa0EotDA49CXzGteq8ptZIW1CoaE4M=;
+ b=0cC0d+4wMxvOvKTcdgD2Oi3wvky9K4u6kCNl0PVAxIU3dqQxTnRnC84774fTJQDz7Om4+ztQB
+ XucxRR4r9OSCiBRjpZTGdRPPGj63GZTnEo2Ts+MaFqKHmvZngOydqkT
+X-Developer-Key: i=contact@arnaud-ungaro.fr; a=ed25519;
+ pk=E36DBHlmRhVNV3rriuNdMXwzVy3fGJ5rWE/saD1H0XU=
+X-Endpoint-Received: by B4 Relay for contact@arnaud-ungaro.fr/20261024 with
+ auth_id=1313
+X-Original-From: Arnaud Ungaro <contact@arnaud-ungaro.fr>
+Reply-To: contact@arnaud-ungaro.fr
+Content-Transfer-Encoding: 7bit
 
-Currently Victus 15-fb0xxx (8A3D) takes victus_s_thermal_params,
-which causes it to register as incorrect EC layout while cold boot.
+From: Arnaud Ungaro <contact@arnaud-ungaro.fr>
 
-- On other hand windows Omen Gaming Hub registers EC offset as 0x95,
-- which is set in driver as HP_OMEN_EC_THERMAL_PROFILE_OFFSET.
-- So, address it by adding victus_s_ec_thermal_params.
+The HP OMEN 16-k0xxx ships with at least two DMI board names. 8A4D is
+already mapped to omen_v1_legacy_board_params but 8A4C is not. On 8A4C
+the driver falls back to the generic thermal profile path so the
+performance profile never enables the GPU configurable TGP. The RTX
+3070 Ti Laptop GPU stays capped at 105 W instead of 150 W with
+nvidia-powerd running.
 
-- Also perfcontrol modes as performance (0x1), default (0x0), quiet
-(0x3) registers. So, add support for quiet mode.
+The board reports thermal policy version 1 through
+HPWMI_GET_SYSTEM_DESIGN_DATA and keeps its thermal profile in EC
+register 0x95 (0x30 by default). This is what
+omen_v1_legacy_board_params expects.
 
-Also, hp_wmi_fan_speed_max_reset() caused fans to freeze during loads at
-0RPM, introduce a 'if' statement to resolve it by calling hp_wmi_fan_speed_max_set(0),
-and passing platform active again to reactive curves. Test data:
+Add 8A4C to hp_wmi_feature_boards[] and map it to
+omen_v1_legacy_board_params.
 
-auto/max:
-hp-isa-0000
-Adapter: ISA adapter
-fan1:        5400 RPM
-fan2:        5200 RPM
+Tested on an OMEN 16-k0001nf (board 8A4C, BIOS F.21) with nvidia-powerd
+running:
 
-mannual[255]:
-hp-isa-0000
-Adapter: ISA adapter
-fan1:        5800 RPM
-fan2:        5800 RPM
+- With this change on 7.2.9 the performance profile enables cTGP. The
+  GPU power limit goes from 80 W to 125 W at idle and 150 W under load.
+- With hp-wmi.c from for-next the low-power, balanced and performance
+  profiles all switch. EC 0x95 reads 0x31 in performance. The GPU power
+  limit at idle is 125 W in performance and 80 W otherwise. Both fan
+  speeds are reported and the max and auto fan modes work.
 
-Tested-by: Sourav Nayak <nonameblank007@gmail.com>
-Signed-off-by: Sourav Nayak <nonameblank007@gmail.com>
+Cc: stable@vger.kernel.org # 7.2.x
+Signed-off-by: Arnaud Ungaro <contact@arnaud-ungaro.fr>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+Notes on this board, not changed by this patch:
+
+- Like on 8A4D (https://bugzilla.kernel.org/show_bug.cgi?id=221680) the
+  EC moves 0x95 back to 0x30 120 to 132 s after switching to
+  performance while cTGP stays enabled and platform_profile still reads
+  "performance". Under a long CPU load the CPU is already limited by its
+  temperature (97 C) and package power is about the same before and
+  after the fallback.
+
+- I cleared the EC timer (0x63) and set the NOTIMER and TURBO flags in
+  0x62 after each profile change as the driver does for the boards in
+  omen_timed_thermal_profile_boards[]. 0x95 then stays at 0x31 but the
+  fans stay at 2100 and 0 RPM under full CPU load and the CPU throttles
+  down to 40 W. So I left the timer alone.
+
+- Reloading hp-wmi after the fallback left no platform profile
+  registered. A separate patch handles that.
+
+Kernel versions:
+
+- Tested on the laptop with 7.2.9.
+- Applies to 7.2.12 and 7.3 and builds without warnings with W=1
+  (7.2.12 against the 7.2.9 headers, 7.3 against for-next).
+- Does not apply to 7.0 and 7.1. They list 8A4D in
+  victus_s_thermal_profile_boards[] with omen_v1_legacy_thermal_params
+  so a backport there would add 8A4C to that table instead.
+- 6.19 and older have no support for 8A4D.
+
+This is why the stable tag is limited to 7.2.x.
+---
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 615b4cf6fc45..c35bbe1427e3 100644
+index 52077833ac89d3f4bd9b99fbbc1812c4f09d16c7..1cebc7e0cf47668761491091c50af0fb25d42572 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -121,6 +121,13 @@ static const struct thermal_profile_params victus_s_thermal_params = {
- 	.ec_tp_offset	= HP_EC_OFFSET_UNKNOWN,
- };
- 
-+static const struct thermal_profile_params victus_s_ec_thermal_params = {
-+	.performance	= HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE,
-+	.balanced	= HP_VICTUS_S_THERMAL_PROFILE_DEFAULT,
-+	.low_power	= HP_VICTUS_S_THERMAL_PROFILE_DEFAULT,
-+	.ec_tp_offset	= HP_OMEN_EC_THERMAL_PROFILE_OFFSET,
-+};
-+
- static const struct thermal_profile_params omen_v1_thermal_params = {
- 	.performance	= HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE,
- 	.balanced	= HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
-@@ -164,6 +171,11 @@ static const struct hp_wmi_board_params victus_s_board_params = {
- 	.fan_profile		= &victus_s_fan_profile_params,
- };
- 
-+static const struct hp_wmi_board_params victus_s_ec_board_params = {
-+	.thermal_profile	= &victus_s_ec_thermal_params,
-+	.fan_profile		= &victus_s_fan_profile_params,
-+};
-+
- static const struct hp_wmi_board_params omen_v1_board_params = {
- 	.thermal_profile	= &omen_v1_thermal_params,
- 	.fan_profile		= &victus_s_fan_profile_params,
-@@ -245,7 +257,7 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
- 	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
--		.driver_data = (void *)&victus_s_board_params,
-+		.driver_data = (void *)&victus_s_ec_board_params,
- 	},
- 	{
+@@ -257,6 +257,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
  		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
-@@ -2121,10 +2133,14 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
- 	 * but logically it should have tp == 0x30 || tp == 0x31, as
- 	 * corrected by the Omen Gaming Hub on windows. Hence accept both
- 	 * of these values.
-+	 * Since boards like 8A3D write 0x3 to EC offset 0x95 to
-+	 * engage quiet mode. Map this to PLATFORM_PROFILE_LOW_POWER.
- 	 */
- 	if (tp == victus_s_thermal_params.performance ||
- 	    tp == omen_v1_thermal_params.performance) {
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+	} else if (tp == HP_VICTUS_THERMAL_PROFILE_QUIET) {
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
- 	} else if (tp == victus_s_thermal_params.balanced ||
- 		   tp == omen_v1_thermal_params.balanced) {
- 		/*
-@@ -2657,7 +2673,17 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
- 		return 0;
- 	case PWM_MODE_AUTO:
--		if (hp_wmi_fan_control_supported()) {
-+		/*
-+		 * Victus models like 8A3D, calling hp_wmi_fan_speed_max_reset()
-+		 * freezes fans at 0 RPM under load. Instead, disable max fans and re-apply
-+		 * the active platform profile, so the EC firmware thermal curves regain control.
-+		 */
-+		if (hp_wmi_thermal_profile() == &victus_s_ec_thermal_params) {
-+			ret = hp_wmi_fan_speed_max_set(0);
-+			if (ret < 0)
-+				return ret;
-+			ret = platform_profile_victus_s_set_ec(active_platform_profile);
-+		} else if (hp_wmi_fan_control_supported()) {
- 			ret = hp_wmi_get_fan_count_userdefine_trigger();
- 			if (ret < 0)
- 				return ret;
+ 		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A4C") },
++		.driver_data = (void *)&omen_v1_legacy_board_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
+ 		.driver_data = (void *)&omen_v1_legacy_board_params,
 
-base-commit: 5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f
+---
+base-commit: 9d3475065167197742b0882aff21cf8e78393277
+change-id: 20261024-hp-wmi-8a4c-ca5c29a8584a
+
+Best regards,
 -- 
-2.55.0
+Arnaud Ungaro <contact@arnaud-ungaro.fr>
+
 
