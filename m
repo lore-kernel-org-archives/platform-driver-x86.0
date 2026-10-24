@@ -1,59 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792814504;
-	b=laJ8u/SEN8rfykL/4PtTS446GIQw6uMDBeO6WeMPdJ0IIjL0d/q0rOFR720QfnuSnd5t
-	 LaBeNrJTqElqHARrulmaXryJrM85BylX8ly+BlMgDZ6a17OHjs99d72He5xnPQxLA95us
-	 CXffQzZPPdvl5MorR5sIRAJxUVrndPmCvGxQiYHvTzxgNRV+x7ZW6a4Nso/4d/zaWW+Oc
-	 /dNLjvtvWr4NuUnKD718Zj/NtaDBoxe2JsZ8sugBdfBLwa7unMNO3X7TVHc6LtF/LRpJj
-	 LhqWJ0WctjF4US7BkhDH6uOppxAgAjeo8gEpXjVtqytuyjxLkeEeM4GfgW8F91ZPrHQ==
+	t=1792818279;
+	b=kuG8LXhWAkJgFcHvOFCzrihUYTX9VUh8aaYgdsH46Hf0oSsSQ32KrTC/4VRqcuEASkxV
+	 8HlMFNAGWs+7yVDUw+X4iyggYMZjXfMjsjvg9WJ6JKXygmYX5SsP6W0v2zaq+T1ERzRfH
+	 OguRNKTRsGFPOeDH7wOxEccev3AQlb7lGD3oGVX8ZCNIR7IfmbhFVwbWdS6I8eGKsaAsJ
+	 VtdtDBUcgyhlxu0PZQNLTwVhrcIY/E6Q5EXT+t9BTBw1oWdahgQUg7LH1h7Jkm6Ul1w8m
+	 0xw1EBkoMF5W5jBM5p8HJystHqBB80zICW6x1S+1tiKd8SSR2mMiP2TLT/Xx+L+UK3Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792814504;
-	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
-	bh=mp0eHvDYUCUbR4qMDj39s0a9SOwwSqfcFq4VcI5fipY=;
-	b=QNmKU9Sztqlzic9MnDJVKrj6Xlpt0BY+5oO+MYZvY8D++/CL8bN4cLN4EhUU6djWOiuJ
-	 yYldv99MFoNejGgLAj/z1uTWgEwP3mxuAKaAErYH3KBFza3rH5NtqafOystHXovT11ycN
-	 fs9jEZgOL0D7tPwK7ulrtAU4guDMXiR9RjAGADEN+3dldcnYbCBpQHS8KXv/X2iOoNQdA
-	 C4d59BFOXy1VscYa+42/z5yW5FYwNeP0cvZ0oQMxxh1KjbmoSptBy0uAScD7a6ctVvhTB
-	 E2CKKLWMq9oI1zJSb9m2cR0L4wcoGZLvfiMPzjUd47HPYQrPpOTR7Do+1O3uY+0j9fQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792818279;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=ruR+AEBsbUs7uOjrkZAAWlBorrvNfuoHCOldl10pJgg=;
+	b=4Ayhts2FAE6znUaClarKtG7wveWFAa8m4h2Ry3xLnDiwG2gi5vksWLmJ4L6x/DJ8kfQp
+	 jKBnGYjrNKT7U6uYhXNzNEfy+IwDhOEICFB57y6reo1L+Gk4sSVp41wwgKyO8DHalk+Rt
+	 G7TrHGynQYwPHodW6GqxRR5VXj9F3zBnG3IA6egsDA9IvuILMPkTMVFJws3Cvqx9y7s/q
+	 xn1xlrIOX67n8WPUh4A8OktRI3hc1KqbIIKbA+AKTl4oDbhHND25OtQQsPJsygJRapm3f
+	 9aHiXvY5CuQaUn97j9eL/vxCSsN0HuGkt+bFN4zD4ZAlXXyizdpF8tNf3/fYY5Om9RA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmx.de;
-	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=br5C7TPv;
-	arc=none smtp.remote-ip=212.227.15.19
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=oZSlbim7;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2C3606A31A
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 04:01:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DD2C3606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90501606A31A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 05:04:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 90501606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=br5C7TPv
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1792814500; x=1793419300; i=w_armin@gmx.de;
-	bh=mp0eHvDYUCUbR4qMDj39s0a9SOwwSqfcFq4VcI5fipY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=br5C7TPvhQ/zTePq07LoSPPvxpax/EvEVLOYru+FC2fk8R4QYmmoKvfzLIwIhuoZ
-	 5OwaA8STxU+ekO6qD4GduZHt89N7pITqv/Ione/l6aE7rF1YEtBpX+KtUfIIpD4S7
-	 +/b6b2bH9SpowW78BNwRReThbpYdx9mZQiSkXkuG2MXaB0ZHPer9vjLd251iKr9G7
-	 JmudtlHvbrmVNsNWUDL73mAN5wOZk+DvD1hgLMH0C4jCEMKNDzSIeLosn5RLkrrOr
-	 YZ2C9Z9yBVsIcREfgK21eUHXT0BOtT8ym/Pr7NFK7RjGyXH/zdLomZkJ+yYdd9qIm
-	 RX00uE4quJc264Itlg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1Hdw-1xIoG62uXy-00CepP; Sat, 24
- Oct 2026 06:01:40 +0200
-Message-ID: <e46ea453-5a56-4009-8b33-900166345905@gmx.de>
-Date: Sat, 24 Oct 2026 06:01:39 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=oZSlbim7
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a1dede3c2cso16799385e9.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2026 22:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792818277; x=1793423077; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ruR+AEBsbUs7uOjrkZAAWlBorrvNfuoHCOldl10pJgg=;
+        b=oZSlbim73jM3UMW68EDp8erN1t8dqIIRuFMmmNan+BldV3hxu+HaeT3kXWn+TN4Gvt
+         M8jDtLBdt2BqT69nfFBSJd6tMLurik19WXtRHxaukqdBwhEi+zSPhAN2VvXhOiwdJvk2
+         pUh+kOCN9+hZ+BCdjPK/gO2d2rIZP7AekpRYkhO9x4xWcA6ShPaHCecJCJz4ren7U5vO
+         Ikln8Hn37FQCP2yX7DxzEzEOhiwBpCH6XndNmvIx8ET4ECTWr6QCotgetrTGoGaQ0c/t
+         TXZZPGxoO7NcGJ7vUQIfxYmTrPlxuMRNE4SedMqO+LXPoz8jZw2bRPDxaf9VXXMjkF2C
+         8pNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792818277; x=1793423077;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ruR+AEBsbUs7uOjrkZAAWlBorrvNfuoHCOldl10pJgg=;
+        b=uTxcRBkkKHIyol6yEa5iBtn3rYXOmgsKvvlB5vzZ8mt41u7ezMRfPIgmDOW1RPMujw
+         7rIPBQkVT9jLB5udaH7rlAx9NDWIqccT2tNi17HNLxAUipo4oFMkAaOjl1rcV3yQfIVU
+         0cFAoCuvGZ3kcR5CsxHLZy0/BciKzw8PVBstktaIDl2yn8OCOPS5kTq2PAdqZA58T0m6
+         Wpcy/CeDdy0aZ+m8Rys95KoW+DXE689WVPM8zdXJ7IyP7A3aKxVHy3H528l+0jvSFpv3
+         XbQVXMeeK40lFCAw57egwv3bspV7wdRSuahKujrWdJHIdi1MJFwvuL6O91PuR7/oJy/7
+         7aYw==
+X-Forwarded-Encrypted: i=1; AKwUvBzpdTBZXyU9nYQZ7Ca4Ng3vgWQFSkmB6Rs7pHjffNRs1rzhkCD1WjiWQ6QY3wwMEKGmcFsmvCP0WwwUuBAvYcF7SP9J@vger.kernel.org
+X-Gm-Message-State: AFq9FYKvdXlf/2bvdFjhhSJG2kJugOxrxmT6ev4BiahES+g7mhCRifmN
+	V64dtldZI9QgmAK56CZKls29y9/RjOChqjNEpgUnSMVYVLwNq8JzuaYz
+X-Gm-Gg: AYBFou0nEqZhdsqMa5E7Al9RC3XrYnCXhOuRtWZ10q2m4AK6wZQgF1oxZ0pVPCK26dS
+	RcHHoDlPJbAY80iZQUCwNzp42O5Wnchtk40i49IkWld/pDZGog68VbaD85iDdKAZfYRkusq3JKx
+	O6Z9sxRFjXifSi6wRmKF14AUxuOm2R//GR6HlpvMMxst2t4kVDSiJmh7Uu58VeeyyevHDwASL6O
+	CpiFzbEceQMCnMV7pLwiKVAIezujwlZQVO6S/qGnVKjvfBxNM4Dcbd1f1uj40sPiags+nkGSVaE
+	EOon3kpFGRg85Ih9vq7dtz2UQH2pSJP1oJcQHTUswj/DbMU11G+JRX4PQyANNAeRLm57GWAvZsf
+	06739KSaCDqx5Pdne0KG9/jSwytiQtC8kZVgmSZRDJG0GWV3jzpTP4f/7eu9xfprKm8ct/9FdmA
+	kY8e3Mh81nrx/48NxDzKtiQfKh390+8ZiSz/6U48Esv7Pw3F3SqOTR7CNsR2xOzCdslenuOcpYR
+	Pft7kr/2zT3bo9cfal4ZE/WF4dq60p6ZpKCYaYSKcd+Tk/EuG7KcBuG
+X-Received: by 2002:a05:600c:870f:b0:4a3:5991:718 with SMTP id 5b1f17b1804b1-4a35ac99b34mr12153275e9.16.1792818276709;
+        Fri, 23 Oct 2026 22:04:36 -0700 (PDT)
+Received: from [10.5.0.2] ([187.13.29.40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a0bdd59sm19298215e9.4.2026.10.23.22.04.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Oct 2026 22:04:36 -0700 (PDT)
+Message-ID: <0c6aeb87-beb9-4606-9b11-89d1f2aac857@gmail.com>
+Date: Sat, 24 Oct 2026 07:04:34 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,143 +90,177 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] hp_bioscfg causes boot failure on model HP Laptop
- 15-bs1xx
-To: Julien <julien82453@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: regressions@lists.linux.dev, jorge.lopez2@hp.com
-References: <CAJOGg3x1KWjXrMpXoCDEMAV10i4Utk8E+hoJx7UW6Lr3uDkbEA@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAJOGg3x1KWjXrMpXoCDEMAV10i4Utk8E+hoJx7UW6Lr3uDkbEA@mail.gmail.com>
+Subject: Re: lenovo-wmi-other: no fan HWMON on Yoga Pro 9 16IAH10 (83L0) -
+ CAPABILITY_DATA_01 GUID missing
+To: Rong Zhang <i@rong.moe>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>
+Cc: Sergio Melas <sergiomelas@gmail.com>,
+ platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+References: <1d46e12b-ef21-417c-8bcb-b607ba3e32fa@gmail.com>
+ <98b1af05169012da3fdfa444d88f7e5e860dc2e0.camel@rong.moe>
+From: =?UTF-8?Q?Katona_G=C3=A9za?= <katona.geza.1@gmail.com>
+Content-Language: en-US, hu-HU
+In-Reply-To: <98b1af05169012da3fdfa444d88f7e5e860dc2e0.camel@rong.moe>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VPfBtPskUbhTecWqI+6dDY+KYA6B4d4Nr8ADZ4bQ2+o0o++fGY9
- ggdI2qkkeIgN1ra3REKAIxx1ZDqFP9zbtaSmsiT4Z8dXZEqR6NmVTBfQIr2G1YfKmwMJc+d
- 0M/bWwcfZpDb2hJ7Y7N+QRAoeJ+f/ntFp6ThLyrnTLzSjk8SoHzldrDNzrFIdT6wgWjUdrM
- PEce5UG/6xxjKXtnXsFbg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WjbpYBv7YL8=;Q5D9KU3iApOnJyR4Pv8q6X/E9Vn
- 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
+Content-Transfer-Encoding: 8bit
 
-Am 22.10.26 um 16:29 schrieb Julien:
-> Since commit 467d4afc6caa ("platform/x86: hp-bioscfg: Fix automatic
-> module loading"), the hp_bioscfg module is automatically loaded on HP
-> Laptop 15-bs1xx.
->=20
-> This module causes the system to hang during boot. Blacklisting
-> hp_bioscfg allows the laptop to boot successfully.
->=20
-> Sometimes the screen will go black but there is no kernel panic
-> screen. When I get to see logs, there are no messages related to
-> hp-bioscfg. I suspect the system crashes before it can display them
-> because on a normal boot the next message I would see is "Module
-> hp_bioscfg is blacklisted".
->=20
-> I think the hp_bioscfg module should be disable on this hp model until
-> a fix can be found.
->=20
-> #regzbot introduced: 467d4afc6caa
->=20
+Hi Derek, Rong, Sergio,
 
-What happens when you load the module manually after booting the system?
-Does dmesg contains any interesting messages in this case?
+thanks a lot for the quick replies.
+
+I built lenovo-wmi-{helpers,events,capdata,gamezone,other} from
+review-ilpo-next as out-of-tree modules against 7.2.11-200.fc44
+(the only change: wmidev_exists() replaced by wmi_has_guid() on the
+GUID string, since 7.2 lacks the former) and loaded them with
+dyndbg=+p, expose_all_fans=1 and relax_fan_constraint=1.
+
+The series fixes the binding: lenovo-wmi-other now binds with only
+CAPABILITY_DATA_00 present. But the firmware declares no fan RPM
+attribute, so there is no fan HWMON:
+
+   lenovo_wmi_capdata 362A3AFE-...-18: capdata00 declares no fan test 
+support
+   lenovo_wmi_capdata 362A3AFE-...-18: registered 
+LENOVO_CAPABILITY_DATA_00 with 3 items
+   lenovo_wmi_other DC2A8805-...-16: Collecting fan info from capdata_fan
+   lenovo_wmi_other DC2A8805-...-16: HWMON registration pending (00: 0, 
+fan: 1)
+   lenovo_wmi_other DC2A8805-...-16: bound 362A3AFE-...-18 (ops 
+lwmi_cd_component_ops [lenovo_wmi_capdata])
+   lenovo_wmi_other DC2A8805-...-16: Collecting fan info from capdata00
+   lenovo_wmi_other DC2A8805-...-16: all fans exposed. Use with caution
+   lenovo_wmi_other DC2A8805-...-16: fan RPM constraint relaxed. Use 
+with caution
+   lenovo_wmi_other DC2A8805-...-16: fan reporting/tuning is unsupported 
+on this device
+   lenovo_wmi_gamezone 887B54E3-...-15: platform_profile probe failed
+
+/sys/kernel/debug/lenovo_wmi/362A3AFE-3D96-4665-8530-96DAD5BB300E-18/capdata:
+
+   LENOVO_CAPABILITY_DATA_00[0]:
+     id:             0x000e0200 [dev:  0, feat: 14, mode:  2, type: 0]
+     supported:      0x00000007 [ RWV]
+     default_value:  0
+   LENOVO_CAPABILITY_DATA_00[1]:
+     id:             0x04040000 [dev:  4, feat:  4, mode:  0, type: 0]
+     supported:      0x00000005 [  WV]
+     default_value:  1
+   LENOVO_CAPABILITY_DATA_00[2]:
+     id:             0x00000000 [dev:  0, feat:  0, mode:  0, type: 0]
+     supported:      0x00000000 [    ]
+     default_value:  0
+
+This matches the ACPI code (SSDT20, \_SB.GZFD.WMAE):
+
+   - GetFeatureValue (Arg1 0x11) handles 0x01010000, 0x01020000,
+     0x01040000, 0x02010000-0x02030000, 0x00080000, 0x000E0200 and
+     0x000C0000. There is no 0x0403xxxx (FAN_RPM) case at all.
+   - SetFeatureValue 0x04040000 only stores the value in \_SB.FANL and
+     notifies \_SB.VFAN. FANL is used nowhere else: it just selects the
+     synthetic RPM (0/2500/3500/4500) that VFAN._FST returns. So it is a
+     "fan level" hint from the OS, not a reading.
+   - The only real fan data I can find is FLVL at EC offset 0x4A
+     (ECF2, EmbeddedControl), which no ACPI method reads.
+
+So unless Mark knows of another interface, I think this model simply
+does not report fan RPM through Other Mode, and there is nothing to fix
+on the driver side for the fan. For the binding part:
+
+Tested-by: Géza Katona <katona.geza.1@gmail.com>
+
+The full acpidump (MSDM table removed) is attached to this issue:
+https://github.com/sergiomelas/lenovo-linux-drivers/issues/24
 
 Thanks,
-Armin Wolf
+Géza Katona
+
+2026. 10. 22. 17:45 keltezéssel, Rong Zhang írta:
+> Hi Katona,
+>
+> On Thu, 2026-10-22 at 16:49 +0200, Katona Géza wrote:
+>> Hi all,
+>>
+>> I would like to ask you kind support. On my Lenovo Yoga Pro 9 16IAH10
+>> no fan speed is available to Linux at all. I went through the ACPI tables
+>> and the in-kernel drivers, and the  only interface that looks usable is
+>> Lenovo Other Mode (lenovo-wmi-other), which never completes binding
+>> on this machine.
+>>
+>> Machine (from /sys/class/dmi/id):
+>>
+>>     sys_vendor:      LENOVO
+>>     product_name:    83L0
+>>     product_family:  Yoga Pro 9 16IAH10
+>>     product_sku:     LENOVO_MT_83L0_BU_idea_FM_Yoga Pro 9 16IAH10
+>>     board_name:      LNVNB161216
+>>     bios_version:    QVCN50WW (01/28/2026)
+>>     CPU / dGPU:      Intel Core Ultra 7 255H (Arrow Lake-H) / RTX 5050
+>>     Kernel:          7.2.11-200.fc44.x86_64 (Fedora 44)
+>>
+>> 1) Lenovo WMI GUIDs present (/sys/bus/wmi/devices):
+>>
+>>     DC2A8805-3A8C-41BA-A6F7-092E0089CD3B  Other Mode  -> lenovo_wmi_other
+>>     362A3AFE-3D96-4665-8530-96DAD5BB300E  CAPABILITY_DATA_00 ->
+>> lenovo_wmi_capdata
+>>     887B54E3-DDDC-4B2C-8B88-68A26A8835D0  Gamezone -> "platform_profile
+>> probe failed"
+>>
+>>     absent:
+>>     7A8F5407-CB67-4D6E-B547-39B3BE018154  CAPABILITY_DATA_01
+>>     B642801B-3D21-45DE-90AE-6E86F164FB21  FAN_TEST_DATA
+> Could you test
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-ilpo-next
+> with dynamic debug printks enabled?
+>
+> It contains a recent series to solve the absence of CAPABILITY_DATA_01.
+> To workaround the absence of FAN_TEST_DATA, please also set lenovo-wmi-
+> other's module parameters expose_all_fans and relax_fan_constraint to 1.
+>
+> Please also dump CAPABILITY_DATA_00 with
+> /sys/kernel/debug/lenovo_wmi/*/capdata.
+>
+> As Sergio suggested, an acpidump will also be helpful.
+>
+> Thanks,
+> Rong
+>
+>>     lwmi_om_master_bind() returns -ENODEV when cd01_list is NULL, so the
+>>     component master never binds. As a result there is no
+>>     /sys/class/firmware-attributes/lenovo-wmi-other* and no fan hwmon.
+>>     The fan code path itself (lwmi_om_fan_info_collect_cd00() and
+>>     LWMI_ATTR_ID_FAN_RPM) only needs capdata00, and a missing capdata_fan
+>>     is already handled (channels hidden, or exposed read-only with
+>>     expose_all_fans=1).
+>>
+>> 2) Why the other fan drivers cannot work here (from acpidump + iasl):
+>>
+>>     - yogafan: the machine falls into the generic "Yoga" quirk
+>>       (\_SB.PCI0.LPC0.EC0.FANS), but there is no FANS/FA1S/FA2S/FAN0
+>>       object anywhere in the DSDT or SSDTs. \_SB.PC00.LPCB.EC0 (LCFC0002)
+>>       is an empty stub. The real EC is \_SB.PC00.LPCB.H_EC (SSDT
+>>       "CB-01"), and its ECF2 region has no RPM field, only FLVL at 0x4A.
+>>     - acpi_fan \_SB.VFAN (PNP0C0B): _FST returns a synthetic RPM table
+>>       selected by \_SB.FANL, which is only written through a _DSM call
+>>       (FIDS 0x04040000), so it always reads 0 on Linux.
+>>     - acpi_fan \_SB.IETM.TFN1 (INTC1063, DPTF): _FST calls
+>>       \_SB.PC00.LPCB.H_EC.DPTF.GFNS, which is only declared External and
+>>       not defined in any table, so _FST fails (fan1_input -> -ENODEV).
+>>     - ITE8 (SIO hwmon with GFNL/GFNH = IT87 fan1 tach regs 0x0D/0x18) is
+>>       disabled on this model (_STA 0, ITSI != 1).
+>>
+>> Questions / request:
+>>
+>>     a) Could CAPABILITY_DATA_01 be made optional in lwmi_om_master_bind(),
+>>        so that the fan HWMON (and the capdata00-only attributes) can bind
+>>        on machines that only implement capdata00?
+>>     b) Mark: does the Yoga Pro 9 Gen 10 firmware report fan RPM through
+>>        Other Mode GetFeatureValue (LWMI_ATTR_ID_FAN_RPM), as Lenovo Vantage
+>>        would use on Windows?
+>>
+>> I can test patches right away, run the module with expose_all_fans=1 and
+>> dyndbg, and send the full acpidump if needed.
+>>
+>> Thanks,
+>> Géza Katona
+
