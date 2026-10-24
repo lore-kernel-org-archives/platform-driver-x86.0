@@ -1,114 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792847520;
-	b=boNyVF0f3mQGoDWNA96hMJ58qUAHnGzosCWmIhNfQX/xxR+AMX5H7B9LvmXOlgYe9kfZ
-	 ujvvfa8TOdznIciHM8Aj9jiSQ2FXPCNvHRmIIjRxIlr599WZ9ubKa7UNvsvjOk9gpROzr
-	 VgA8KFsFuFme8DG4IJ5V7o7kYITD75ARgcnUvnYZZsA8S1AVe/16QqARKVE1c0XpUhlbi
-	 WJDJxqUn8HKo12rTICctUzgm/hG9uGlIHMezzLMAHMxGriZZkouo7/nwjZJ/f2dlvIRGE
-	 T+Salzvj6JIYRnxm+av7+Bw503UMdvtVh3Le47MdPubt676CvNs4Bn0n8vVZI7aKSbw==
+	t=1792849868;
+	b=U69lkhVNi+jcR4TnKEGktSHCGlnTqIE73gUKZ+PEfu+/Xg1Fv9hxukVrMIgmEGK9nJ+B
+	 FQAVdyUPo673VJ9Fu0m9POV7/YSl9/EqQ4GED3458sZpF20wb3pId/SDL4K6uq1vTILzX
+	 lxAmGX2dPcDrlP9Wi04WoYQdZDP+dxUF+2sWIuksqRnJndDwznAd/AXFZf+B4lXvQUe9z
+	 x7M62b6KZy5pHgGwGQCIPNmxmpKe/pjmrF8ynf00zCU29oz8n5uLPkVnU9V5WIc8L6N+g
+	 FnwBUilq9MjJogjYMTnAXnwNMEOm6iABJHxuaRCvxQVmBFjfKyAZJbWUcdIYN23bOAw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792847520;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Message-ID:Subject:
-	 From:To:Cc:Date:In-Reply-To:References:Autocrypt:Content-Type:
-	 MIME-Version:OpenPGP;
-	bh=Iv3dSry8ogl8b6c7rH4YrBtBHXy5H/q98FiU+OoQmhY=;
-	b=BsxQWEdX7dx+nmVOSeNHeHAyZyG2fzxUMABtDKeUDZFWYm02HvoNPgH4PKiGGDV16J0O
-	 hUCSnTmCCibDXezlbKMgHagigiYPo5rLKxLZtbtrmfBq+VbnqxZePZdLViSvyx6/c8ES5
-	 ohnElTsFnri/TlWhEjTM0oJHGYtxajWC4OKDAlSKaBzObG/o8+rLAObNVh29diaNllRdK
-	 TcKLh6zu9cYLa+Jq24AW+X2Mxwd7z/IFzKNxUR7raTsMpI4qptcG19IKSdtIwUWAto6Jp
-	 EZE3Iofjfa/YG+OboQ4Q9tmE538VUnDgnqeYdOPREgQD83vg9akrvE6hQYk+8crKW7Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792849868;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:Subject:To:
+	 Message-Id:In-Reply-To:References:X-Mailer:MIME-Version:Content-Type;
+	bh=FzMTW/GzPoZ2q8Pldb18GdeHt9ixP87PaMg7vgm71ME=;
+	b=BjVz1IvUTQusM1tNYMiMN+J+UewPMzkU/xuN7462CUbCef7p+ZFF/Cp5HFlHZxwDVBzy
+	 z1i2i/QHMxkP1LWG/8gaUmsH7ROgglK/6LhrLI3eXbj+ntlp3ph9ig26fdT4A/m+OGFs6
+	 HEFszLlUbTXCij1m+wPVVdZCpcz6fjxkOIc1lzLFQUCKGkyh3SczdP3aATYrwj78gQglR
+	 yuKDYqL/rQstz/lwy0DTej9htrP9eNAm5vSNM9nj4bWnzlaUoV2QU7zFKcVMTEAaDb8KF
+	 8bRO2VeFKDO/QqJVazUyhl3qL0kcmuu5JwO4kbh2YIsdhjRIyyY4uQGy2WvGv6SWKuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=posteo.de;
-	spf=pass smtp.mailfrom=posteo.de;
-	dkim=pass header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=FUsVZk+2;
-	arc=none smtp.remote-ip=185.67.36.66
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y2c+USOa;
+	arc=none smtp.remote-ip=209.85.221.51
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A585C606A31D
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 13:11:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A585C606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA12606A31A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 13:51:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6AA12606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=FUsVZk+2
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id E799E240104
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 15:11:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1792847516;
-	bh=Iv3dSry8ogl8b6c7rH4YrBtBHXy5H/q98FiU+OoQmhY=;
-	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
-	 MIME-Version:OpenPGP:From;
-	b=FUsVZk+2uFc5gnxYgfTk8xPLsVV0MbrvuFRu7PB/2o86jX4dq9+BR8UqAvIJwDBIe
-	 tmIW+nEWl1HiUxbE5ztWrB/Uy/+Tx8mzi9G5XiNtbzkxcJk2JqDkqUbn4vmw5gt1a5
-	 36QtUid1Rs6xv3gqp/CNVDmR3VygoM7SJ4RnFqK5KXK+uNg2G9Etst/yhnyeFnnOTT
-	 KrxcnrOGN4eE5CUQazqw+FyUDM0xAoXrQqT5vZXycmlg9B/0aES84Iju7V+2bdygzH
-	 wOOwW8w8p1eVvyL/U0403v2o7t5JptVZlDODmQcIyLoC1pPGvr6uGkR5oiYLE6PTd5
-	 4xwY4mkWn+qyw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4jBgJr07Rwz9rxN;
-	Sat, 24 Oct 2026 15:11:55 +0200 (CEST)
-Message-ID: <3cb4f43b2fc95c348f0646edce338064ec7add69.camel@posteo.de>
-Subject: Re: [PATCH v5 3/3] platform/x86:
- lenovo-yoga-tab2-pro-1380-fastcharger: Bind through normal serdev matching
-From: Markus Probst <markus.probst@posteo.de>
-To: ChunAn Wu <an.wu@canonical.com>, linux-serial@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, 
-	jirislaby@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com
-Date: Sat, 24 Oct 2026 13:11:56 +0000
-In-Reply-To: <5e70a181599ada304c6aa6589cc61662f1a8d710.1792831564.git.an.wu@canonical.com>
-References: <cover.1792831564.git.an.wu@canonical.com>
-	 <5e70a181599ada304c6aa6589cc61662f1a8d710.1792831564.git.an.wu@canonical.com>
-Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
- keydata=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
- jfGillcaQOqFZ3WwVqyzG1BUfTow==
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-cnwEvQ0BMpxM4kJfOKJQ"
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y2c+USOa
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-48e00eee27dso1092087f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 06:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792849866; x=1793454666; darn=vger.kernel.org;
+        h=content-type:mime-version:references:in-reply-to:message-id:to
+         :subject:from:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FzMTW/GzPoZ2q8Pldb18GdeHt9ixP87PaMg7vgm71ME=;
+        b=Y2c+USOaUkFAqK6YV+ZaEiHdDn/U9WQ6wUS8f559n1V+OTB/O1KbpupbrijRHxOXJb
+         RIr7H6J3As9x6H/gLeS5chIezZyjmeo3t0RlVrLix1/rEdhttDn82dvGBq2KYdsrUoxu
+         IvjWHKqm8DSfQQzxGI+j93VNvSNM2/nLCAVGAwoTnQHFZu2GuZkBE3I4qK2pPDAKnWTR
+         M5iKK2XXVZZhwUrib1n7TTLP4BTkx7M9FozeYRYTbWOH2g4+afINCMFF7TbJ0559Qm4p
+         Udwb61Wv93PPEqVanuWnyHk/Ndk4WqC6+zUWhH7EHur2rjbhXLnZmxZGtlPoFMLg+3Ra
+         67jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792849866; x=1793454666;
+        h=content-type:mime-version:references:in-reply-to:message-id:to
+         :subject:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=FzMTW/GzPoZ2q8Pldb18GdeHt9ixP87PaMg7vgm71ME=;
+        b=aaM5FWSbfblFjm5KGF1yX+B/fqbgEd+i747hl4ITX7AdQT1jtyvUQfw3y3MMPSli0O
+         SU4VErYwulfcXLWQbyOZ+BZ5/0s1mK2Cdno2sSydBx6ugsFlrGo7+GUYCMsBpyVjeRjS
+         yQSKNLeDEJl0ITaUhMP1gwbvY/Ervx2pyfgn43T5QUYnNGiVPACPNCTx3QvqnOnds8ak
+         3Q3zPRxn6pvt29txCC0UhlINsO7vLCUEGEnfVD9ot3cGkHuLXcL2IjX5c77pTkkO053z
+         wbVJUgNPLwtdWxR3mJxKQwrYXslPW5HbYqDaj4YTXg6fAaWa3V/+8meCCR/NgC2eu+Rb
+         FfXA==
+X-Gm-Message-State: AFq9FYKqPlpWew95rfGQSVIvT7MQLS0+tbOveNT3WiWhrdHqGygfTi2/
+	AOx5bJ1gs0wPAtzbgXS1LcMYdI+t/ukJLakXeb6xWBeVUAHghnjUIQ/Ybs9Atg==
+X-Gm-Gg: AYBFou1LnH+5BM1GXYS/KKyADz02WPkmBKWc/zZWBKgu/QArgnWAwxkxpcBdB1LjHNe
+	hQG4rBMwnvCkT/XOn7hEOlvkhgXV3pZ8GZ+PlxT0LGfjLWUkmMerZGZTByOavd7ihImxnfFJblx
+	poGfMcr//z5/LNM2aOwzm9NFMdnhk/L+phL9+CuB7dHLfoZgizfS3xDHuyfDjy9Lkx535VevN3g
+	UMzIGUWwrb6iyTiDM8BIfzUR7Gj+Azv6gjZ6RI0lXlXK9rscli3SFHcZmJTWqf/cd31g8c5FV8H
+	9CYvZX9ZNRkOGOn9EpAQ4X1Ff+rMnK7fyTScXwXBnV5G0i06YaDS+hlg4RNXHi+LJ89/QFMBuwI
+	Zz9Sm1rNLEReQb3XjhBgb1JuWCujrBoR3vlu77YcY0iOh04eaCh4/FzM5WNULzbJliTkt7VuNO8
+	d4Zz8po/XyXoDOuFrxVb4y/Z6eGmjeaFBXEM+vO7QoIa3uCXp7PWWaqEqR3iaNn1amMMGxatP05
+	RxD06U40uK3Q60RhziDhCYYp676GfxP8MD/NjzMsDH+LO2EgPRSbYC5dXxYGhWIB8GzhuCFu4ge
+	mF/Sx0B8MOPsxdxn+R/ab679xjheyrQYs7pPM54EDEzG0gR4zJqCE7N5njr4HFGg4CFHipmMRBp
+	rww==
+X-Received: by 2002:a05:600c:3544:b0:49f:fd40:80fa with SMTP id 5b1f17b1804b1-4a35acc6b74mr33233505e9.34.1792849866270;
+        Sat, 24 Oct 2026 06:51:06 -0700 (PDT)
+Received: from ?IPv6:2a05:b100:188e:3c00:4d27:e94f:1af:364b? ([2a05:b100:188e:3c00:4d27:e94f:1af:364b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a55e786sm68246255e9.3.2026.10.24.06.51.05
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Oct 2026 06:51:05 -0700 (PDT)
+Date: Sat, 24 Oct 2026 14:51:00 +0100
+From: Teodora <teolyub@gmail.com>
+Subject: Re: OptiPlex 7400 AIO HDMI-IN button requires WMI startup method
+To: platform-driver-x86@vger.kernel.org
+Message-Id: <0TZENT.54P2IBFQRED22@gmail.com>
+In-Reply-To: <OOZENT.01UBB4ITK3LK2@gmail.com>
+References: <OOZENT.01UBB4ITK3LK2@gmail.com>
+X-Mailer: geary/46.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -118,129 +95,144 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
+Content-Type: text/plain; charset=us-ascii; format=flowed
 
 
---=-cnwEvQ0BMpxM4kJfOKJQ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Sat, 2026-10-24 at 20:04 +0800, ChunAn Wu wrote:
-> The software-node-backed serdev client cannot be matched through ACPI or
-> device tree and is force-attached to its driver.
->=20
-> Pass the modalias to serdev_device_add() and give the serdev driver a
-> matching id_table, so that the serdev core binds the two through normal
-> matching. Deferred probing is then handled by the driver core, so the
-> -EAGAIN translation is no longer needed.
->=20
-> A failing serdev probe no longer propagates out of the platform probe;
-> as for any other bus, the client is simply left unbound.
->=20
-> Signed-off-by: ChunAn Wu <an.wu@canonical.com>
-> ---
->  .../lenovo/yoga-tab2-pro-1380-fastcharger.c   | 25 +++++++------------
->  1 file changed, 9 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c=
- b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> index 8551ab4d2c7d..d0bd9d4e3137 100644
-> --- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> +++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> @@ -219,11 +219,17 @@ static int yt2_1380_fc_serdev_probe(struct serdev_d=
-evice *serdev)
->  	return 0;
->  }
-> =20
-> +static const struct serdev_device_id yt2_1380_fc_serdev_id[] =3D {
-> +	{ KBUILD_MODNAME },
-> +	{ }
-> +};
-> +
->  static struct serdev_device_driver yt2_1380_fc_serdev_driver =3D {
->  	.probe =3D yt2_1380_fc_serdev_probe,
->  	.driver =3D {
->  		.name =3D KBUILD_MODNAME,
->  	},
-> +	.id_table =3D yt2_1380_fc_serdev_id,
->  };
-> =20
->  static const struct pinctrl_map yt2_1380_fc_pinctrl_map[] =3D {
-> @@ -260,25 +266,12 @@ static int yt2_1380_fc_pdev_probe(struct platform_d=
-evice *pdev)
->  	/* The fwnode is a managed node, so it will be auto-put on serdev_devic=
-e_put() */
->  	fwnode_handle_get(dev_fwnode(&serdev->dev));
-> =20
-> -	ret =3D serdev_device_add(serdev);
-> +	ret =3D serdev_device_add(serdev, KBUILD_MODNAME);
->  	if (ret) {
->  		serdev_device_put(serdev);
->  		return dev_err_probe(&pdev->dev, ret, "adding serdev\n");
->  	}
-> =20
-> -	/*
-> -	 * serdev device <-> driver matching relies on OF or ACPI matches and
-> -	 * neither is available here, manually bind the driver.
-> -	 */
-> -	ret =3D device_driver_attach(&yt2_1380_fc_serdev_driver.driver, &serdev=
-->dev);
-> -	if (ret) {
-> -		/* device_driver_attach() maps EPROBE_DEFER to EAGAIN, map it back */
-> -		serdev_device_remove(serdev);
-> -		return dev_err_probe(&pdev->dev,
-> -				     (ret =3D=3D -EAGAIN) ? -EPROBE_DEFER : ret,
-> -				     "attaching serdev driver\n");
-> -	}
-> -
->  	/* So that yt2_1380_fc_pdev_remove() can remove the serdev */
->  	platform_set_drvdata(pdev, serdev);
->  	return 0;
-> @@ -305,8 +298,8 @@ static int __init yt2_1380_fc_module_init(void)
->  	int ret;
-> =20
->  	/*
-> -	 * serdev driver MUST be registered first because pdev driver calls
-> -	 * device_driver_attach() on the serdev, serdev-driver pair.
-> +	 * serdev driver MUST be registered first so that the serdev device
-> +	 * created by the pdev probe binds to it via the id_table match.
->  	 */
-NIT: I think the order doesn't matter anymore, since it will bind
-regardless whether driver or device is registered/added first. I think
-you can remove the comment.
+I have a Dell OptiPlex 7400 All-in-One machine and have been 
+investigating why its physical HDMI-In/source button works under 
+Windows but not under Linux. I wanted to flag a potential solution, 
+though I am not a kernel developer but was hoping that perhaps this 
+could help the community.
 
-Reviewed-by: Markus Probst <markus.probst@posteo.de>
+So, my system details are:
 
-Thanks
-- Markus Probst
+- Dell OptiPlex 7400 All-in-One
+- Fedora 44
+- Kernel: 7.2.11-200.fc44.x86_64
+- dell-wmi-aio is present and loaded
+
+While investigating the Dell Windows OSD software, I found that the 
+button generates a WMI event through Acpi_OSD_event, GUID: 
+02314822-307C-4F66-BF0E-48AEAEB26CC8. The GDat payload generated when 
+pressing the source button begins 02 00 00 00 F2 DD which corresponds 
+to event/scancode 0xDDF2.
+
+More importantly, Dell's OSD service invokes another WMI method during 
+startup:
+
+    Class: AcpiOSD_WMBC_method
+    GUID: 2D703EE8-36AC-4F88-BDB5-7556CE6B2946
+
+    Method: PegaOemNotificationStartUp
+    WmiMethodId: 1
+    Description: "Invoked by AP when system up."
+
+Linux exposes this WMI interface on the machine, with instance_count = 
+1. I wrote a minimal test WMI driver which binds only to this GUID and 
+invokes: wmidev_invoke_procedure(wdev, 0, 1, &input); using an empty 
+input buffer.
+
+The result is reproducible: After a normal Linux boot, the HDMI/source 
+button does not switch the display. Then loading the test driver 
+invokes WMI method 1 and the firmware reports success. Immediately 
+after, the physical source button works correctly and switches the 
+panel to HDMI-In. The test module can then be unloaded and the physical 
+button continues to work.
+
+After rebooting, the problem returns until method 1 is invoked again. 
+This suggests that PegaOemNotificationStartUp is a one-shot firmware 
+initialization which Dell's Windows software performs at startup but 
+Linux currently does not.
+
+Below I am sharing the small module I use as a workaround; this is 
+loaded once on boot.
+
+// SPDX-License-Identifier: GPL-2.0
+
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/wmi.h>
+
+#define DELL_OSD_WMI_GUID "2D703EE8-36AC-4F88-BDB5-7556CE6B2946"
+#define DELL_OSD_STARTUP_METHOD 1
+
+static int dell_osd_probe(struct wmi_device *wdev, const void *context)
+{
+ struct wmi_buffer input = {
+  .length = 0,
+  .data = NULL,
+ };
+
+ u8 instances;
+ int ret;
+
+ (void)context;
+
+ instances = wmidev_instance_count(wdev);
+
+ dev_info(&wdev->dev,
+   "Dell OSD test: WMI device found, instance count = %u\n",
+   instances);
+
+ if (instances < 1) {
+  dev_err(&wdev->dev,
+   "Dell OSD test: no WMI instance 0 available\n");
+  return -ENODEV;
+ }
+
+ dev_info(&wdev->dev,
+   "Dell OSD test: calling PegaOemNotificationStartUp, method ID 1\n");
+
+ ret = wmidev_invoke_procedure(
+  wdev,
+  0,
+  DELL_OSD_STARTUP_METHOD,
+  &input
+ );
+
+ if (ret < 0) {
+  dev_err(&wdev->dev,
+   "Dell OSD test: startup method failed: %d\n",
+   ret);
+  return ret;
+ }
+
+ dev_info(&wdev->dev,
+   "Dell OSD test: startup method returned success\n");
+
+ return 0;
+}
+
+static const struct wmi_device_id dell_osd_id_table[] = {
+ {
+  .guid_string = DELL_OSD_WMI_GUID,
+ },
+ { }
+};
+
+MODULE_DEVICE_TABLE(wmi, dell_osd_id_table);
+
+static struct wmi_driver dell_osd_driver = {
+ .driver = {
+  .name = "dell-osd-wmi-test",
+ },
+ .id_table = dell_osd_id_table,
+ .probe = dell_osd_probe,
+ .no_singleton = true,
+};
+
+module_wmi_driver(dell_osd_driver);
+
+MODULE_AUTHOR("Dell OptiPlex 7400 AIO experimental test");
+MODULE_DESCRIPTION("Experimental Dell OSD WMI startup-method test");
+MODULE_LICENSE("GPL");
+
+I hope this would be useful as not having this function has been such a 
+bugbear for me over the years, especially on a business machine.
+
+Thanks,
+Teodora
 
 
-
->  	ret =3D serdev_device_driver_register(&yt2_1380_fc_serdev_driver);
->  	if (ret)
-
-
-
---=-cnwEvQ0BMpxM4kJfOKJQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQJPBAABCAA5FiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmrcrpsbFIAAAAAABAAO
-bWFudTIsMi41KzEuMTIsMiwyAAoJEDR2H/jnrUPSHwAQALQOE9nZFnHYee2suLio
-jVAK4rNPY5jgMlsrJVYXByghGLZ8sub3MRK3J79DheNb5D+L2p2Z4GVtXzytYSfw
-FIAaFS7P2ASxUQgwbfqrS0+FXx3M535LFoDPL88xgghQl+AZMgtWBAMwTecWBZlY
-CaYejJC21HVrxijILtOF5cg38ZvgQ7Gyap4eJ4c4J113JzcrBGQsGGrFs/h2WxoC
-7oVFCbXEEjVqi9fD8eoYlcJQ2vhotzYd1OYGEGcAecCsmtl3ZkN9tpc6MKNVtJrz
-MnGnh48JMxP89td9SHs5oCjgXLJ6feMNuNF0a9h+O52lm95DS9XZ8yoIzUoet+FQ
-xI25uGzp6r3JdTB7SmCoE4SPh8+MTMwtQIeJJ8intqKDgI0N4WkGM5MoKV7gMsvJ
-JtPvZeVafHKuREnnimD7B5IdtXZedF+g7jUFO3/OY4gV2BYhGdWcMayggN0FvcIl
-fDGFR1BIdwup87JZd2fdqDLfSpgzrsWz2UjKxHSry24pfxTKXQFNyPYwJp1a3ueC
-Bo8oI0vYDMFxJFomgvtuTTkxJNtOo5MmhmIR47wGzxMhPLmLE1elrp1ui9Dsb2ie
-OaXSzk8KCgdCLe80pMs452d69K07SiZbll0tMYCZfJZPKeoawgrKtrpA7UauEu8d
-/Ky+q3nQ9FEhQljJlCBwCTRR
-=XPcs
------END PGP SIGNATURE-----
-
---=-cnwEvQ0BMpxM4kJfOKJQ--
