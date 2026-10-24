@@ -1,78 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.156.171.147
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.69.209
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792833889;
-	b=PMcwu0B9JmuKCCJxC9cJf/8xx0YPmbNl37L8hqKvjNZISNnBmsevAzVmi8RxHl4/DbIT
-	 Ne/s7dYOYzWZVzPkumWlOzaS0boTg8shAWThTeTZHwqhj0TzHpZBzN0gNNLKOgUQLgq5R
-	 9/Ee7F659dDasjT9FwArf6Qz4ExPJ/EivNoXAMzgjRKMPhVHVNmBkYputo6lx72lOg/qu
-	 v82rFD1ffVu0jD1IlvwPBm0eNsEDBLSRYRRyq3VXrFK/CMrJVCJhiVP13R/v9NibRbjUc
-	 paOsufRc4qjuBoFaWYjJzy6vlKtbEbfI7cRocaPlym2dz9ugsKgBuiqujFFDZJHGKkw==
+	t=1792838194;
+	b=0XSInshVWpCnhiZeFbjxmp/dNj3ZmEGYG64FekqjD5zJB7AaysfyBAPBvg5GOsEfNVK3
+	 F8Wc6euJB/HFdIKNrkE0cxfS0qrCTxRgeo+jPJOO+sNTdFN44frQ98cT72KpT31wtWNEd
+	 7j3xd4+TC3sJwiRb3fjJo4hfmkkZq38hBwB/CGuAAteVEyxLAsjA2Ad9UaUL3y5CWwkNS
+	 F2oYTDZziBwDSH6/Gaxh2Su/n8rjdy99zZYmIcXZcA71lr+21M8RfgHD552fZhQpnzfoJ
+	 SNIm1tlP4jnhSwiC5uuTZ3q4/POywH53Tl04cAwv8ULhS/3i2jcSVyuupCIfAAs+D8Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792833889;
-	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Received-SPF:
-	 Received:X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding:X-PPP-Message-ID:X-PPP-Vhost:
-	 X-Virus-Scanned:X-Virus-Status;
-	bh=UlFh2m38NvlbmdwBn9Ovqim+aU2KYkaeGxqpK8ckbcY=;
-	b=r0czSijMFWftqYMebRAxUT+YNiqBjtlRlndkIk24uWXAH8LtuGyPv2nSA7gj22bcaG1w
-	 PROI+ckoE8P5H9t/ySHoqKvpk+YJ0HHDLGUaeOTZoz2LPJbv+Kn4N2y/vrE4f4h5n81UE
-	 IEEhMIl9abPMNgu6YiW3+mby9HnQ7fEA5OtDq7zQKPd6z4Hx3vUjdQRDgoIiIZQkjaa6o
-	 IPnQ78F2MIH49Nukvf0KZ7e3+wK/hr7asElkizwJecGt43GiGGCFrej3FA1QMqbGkhTjL
-	 Wkchp+hcevxqCb0zc/WdxJvuabybZ0uRKdZEOTJPyJi+hikCmnZeCjoQkTpMfScfqiA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792838194;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-Report-Abuse:Feedback-ID:X-smtpcorp-track;
+	bh=DZTDUAWdKi0sT3eB/7hOmCJ6WNuXspmZF2c/QOk8eu4=;
+	b=osvawJmwxeBuB/KR9C/JGX/LbnbXkuc5/mUgsW7/fSQHGnw9ZgjbbZWHODl/KUAdFnlb
+	 injAxA7bzFq+nAem0TxO4cmyg3odyuGSw2wE536E+7jHyXYyYLYA0KEH3G378Ls6nkWLR
+	 hBfI1Mku8UqEWrre04CaGsMKrhdDggtiKKxc+dL4QzvIB88TXzHVxpebVwUQdogF1XbiC
+	 IhCac+zVxVbMej+La8R7vwjtnjobWS5RtYzxtAAcm23OhHKtpHoeeDavX3PzW7jdQDk2s
+	 bBgCW+PHXb9eJgOfJ/tosIJ0YFbuR63yt+dq9qv79rpON6E58sP4p+mPGICa8Wy5K5w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=antheas.dev;
-	spf=pass smtp.mailfrom=antheas.dev;
-	dkim=pass header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=UK7cv0hD;
-	arc=none smtp.remote-ip=178.156.171.147
-Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+	dmarc=none header.from=oven.ninja;
+	spf=pass smtp.mailfrom=em762108.oven.ninja;
+	dkim=pass header.d=oven.ninja header.i=@oven.ninja header.a=rsa-sha256 header.s=s762108 header.b=iAaETRXO;
+	arc=none smtp.remote-ip=170.10.69.209
+Received: from o1i465.smtp2go.com (o1i465.smtp2go.com [170.10.69.209])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB56606A31E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 09:24:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AEB56606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF5B606A31F
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 10:36:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0BF5B606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oven.ninja
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em762108.oven.ninja
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=UK7cv0hD
-Received: from relay13 (localhost [127.0.0.1])
-	by relay13.grserver.gr (Proxmox) with ESMTP id 8973E5E62C
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 12:24:40 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay13.grserver.gr (Proxmox) with ESMTPS id 3298A5E53C
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 12:24:39 +0300 (EEST)
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 3B81B1FE06D
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 12:24:36 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1792833878;
-	bh=UlFh2m38NvlbmdwBn9Ovqim+aU2KYkaeGxqpK8ckbcY=;
-	h=Received:From:Subject:To;
-	b=UK7cv0hD6bJtqIymSzvo7g2UhmMbTYcWil1iHfALvUA5XDImvaN5gPq72kBS8bFUk
-	 /8/+4tUa8j5ZLqlw/xgEktv7qn0hsA5cyNuUppOVdtca0E3IyyASMRrAA7o1EiAd8L
-	 ganSC3lWSs0XgGk5GA+dEoaBFPSYowzraQkMP53LvcKFS558k+V1vU9YoxUC5k/8BO
-	 /cohSYU2v/KuR01U9HdSlo23GPmrtaR9aZW5wck8EEQoOqfOLSvVVWP5UbrmydX9WO
-	 QJFPQ/nowcttr2ZfdAZznjdbNFbqmFOzXg38PCtifnqCSVqS1nW14KsJWhkfAX7V+X
-	 SZ1ofZKNA4kmg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.215.169) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pg1-f169.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pg1-f169.google.com with SMTP id
- 41be03b00d2f7-cd8ba7c2694so508679a12.1
-        for <platform-driver-x86@vger.kernel.org>;
- Sat, 24 Oct 2026 02:24:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AKwUvByM1v8rNBMYIKYeEMTDQk2IckjHjm2fC4NrN2bdtjbV8kzhMe6YRSk1i0LRY8aCKQqWSEwJMlzub3um3riGJlVKGxqE@vger.kernel.org
-X-Gm-Message-State: AFq9FYKfroa7RQYvsFcnEPWFuTFJBTYu2PnnnfKsX8ZxyDk35TNvjfEe
-	AL1OpTMihljDprBwm2Vmh5lWyWD4tJUIoPu4pCo5jmJ81NxM5p3KjI+yeZ9qwFuhLL+fTx1ydz4
-	wRWON9UaG/442MHihfsLv3E4fWL0zRCM=
-X-Received: by 2002:a05:6a21:e587:b0:3e2:117a:62ff with SMTP id
- adf61e73a8af0-3e7cd5242b8mr1238652637.61.1792833873675; Sat, 24 Oct 2026
- 02:24:33 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=oven.ninja header.i=@oven.ninja header.a=rsa-sha256 header.s=s762108 header.b=iAaETRXO
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oven.ninja;
+ i=@oven.ninja; q=dns/txt; s=s762108; t=1792838188; h=from : subject :
+ to : message-id : date : list-unsubscribe : list-unsubscribe-post;
+ bh=DZTDUAWdKi0sT3eB/7hOmCJ6WNuXspmZF2c/QOk8eu4=;
+ b=iAaETRXORHPp5H6ZW3jM7JTWU3jYDT67wGtFoFqUEXeb+IEM9uN4m+F7y/VOmYYQzU3yO
+ QIub6f1EtnjPnkaoKxXuDyMmu9P/rgkpuP6AAgv2Y5z9PQHBrQkqUiS8Rz6h5iccv6WhVhb
+ prbvW8Qk03sLGAEBgVcwtQjc/NmDYnDyWCPe6AEVa+FPCOSOaAyNs7wMLYPV5iDhE9jt2Zk
+ itfbdw9CDWJZvMSv98ZCCtcLK+2m22Ln47QawHDCfeZW3yOzwnLZndBT4OUVKfJeV1CY9MD
+ y803GJnlnH73ASZQK1XW0vqRM1EezpPVDaFxbI8gnKWBhXyN3FZl89Gw9OaQ==
+Received: from [10.240.242.228] (helo=oven-pc)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256:X25519)
+	(Exim 4.100.1)
+	(envelope-from <ava@oven.ninja>)
+	id 1xKZ6p-FnQW0hPzDTH-Y1xB;
+	Sat, 24 Oct 2026 10:36:19 +0000
+From: Ava <ava@oven.ninja>
+To: prasanth.ksr@dell.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	Dell.Client.Kernel@dell.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ava <ava@oven.ninja>
+Subject: [PATCH] platform/x86: dell-wmi-sysman: replace deprecated strlcpy with strscpy
+Date: Sat, 24 Oct 2026 21:36:03 +1100
+Message-ID: <20261024103604.319624-1-ava@oven.ninja>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,182 +69,225 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20260803221614.59324-1-derekjohn.clark@gmail.com>
- <20260803221614.59324-2-derekjohn.clark@gmail.com>
- <f8b2c85a-2800-c9a3-4e56-7af4c53823e5@linux.intel.com>
- <58a9c644-98c2-47ee-b083-0d5b19fa5053@roeck-us.net>
- <CAGwozwGdwhE6Sm6oa2uxx_sHfFNQ6fHYnAhYHkEPQcp_Yb=Z6w@mail.gmail.com>
- <CAGwozwFUTagam+dr0SXyziAMz1MJKcYMYUgrogFcmvEaE1X0UQ@mail.gmail.com>
- <CAFqHKTmQ2R-UAP9rAZzoxe=p-T1_JKPU1NaQ2ijrVg0RXZEHUA@mail.gmail.com>
-In-Reply-To: 
- <CAFqHKTmQ2R-UAP9rAZzoxe=p-T1_JKPU1NaQ2ijrVg0RXZEHUA@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sat, 24 Oct 2026 11:24:21 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwGUAEb4Q9pfd_+aXMw2P3qY376F+usPHdUFO5Q6mV_ATQ@mail.gmail.com>
-X-Gm-Features: AclHuK_o5mK-ACNcsN3U3drXfMaNHe5y3JLkY05P_22D7Mibo_FAmTuZvNSEA6Q
-Message-ID: 
- <CAGwozwGUAEb4Q9pfd_+aXMw2P3qY376F+usPHdUFO5Q6mV_ATQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] platform/x86: msi-wmi-platform: Move guard out of
- switch in platform_write()
-To: Derek John Clark <derekjohn.clark@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	W_Armin@gmx.de, corbet@lwn.net, jdelvare@suse.com, kuurtb@gmail.com,
-	linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-	"Limonciello, Mario" <Mario.Limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <179283387798.2255925.10471571552470703470@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 762108m:762108aX0MQon:762108sNif9FO0KC
+X-smtpcorp-track: vAV2pLJtzmJO.1VjFVF9tSdDA.xy2BwgPBf3E
 
-On Wed, 21 Oct 2026 at 05:26, Derek John Clark
-<derekjohn.clark@gmail.com> wrote:
->
-> On Tue, Oct 20, 2026 at 2:53=E2=80=AFPM Antheas Kapenekakis <lkml@antheas=
-.dev> wrote:
-> >
-> > On Tue, 18 Aug 2026 at 17:26, Antheas Kapenekakis <lkml@antheas.dev> wr=
-ote:
-> > >
-> > > On Tue, 18 Aug 2026 at 16:42, Guenter Roeck <linux@roeck-us.net> wrot=
-e:
-> > > >
-> > > > On 8/18/26 07:12, Ilpo J=C3=A4rvinen wrote:
-> > > > > On Mon, 3 Aug 2026, Derek J. Clark wrote:
-> > > > >
-> > > > >> The ML patch set uses a guard within a switch case that violates=
- cleanup
-> > > > >> rules. Move the guard outside the switch so all return paths are=
- covered.
-> > > > >>
-> > > > >> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > > > >> ---
-> > > > >>   drivers/platform/x86/msi-wmi-platform.c | 2 +-
-> > > > >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >>
-> > > > >> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/p=
-latform/x86/msi-wmi-platform.c
-> > > > >> index dfb65ac8fbf6..33acd448f674 100644
-> > > > >> --- a/drivers/platform/x86/msi-wmi-platform.c
-> > > > >> +++ b/drivers/platform/x86/msi-wmi-platform.c
-> > > > >> @@ -675,11 +675,11 @@ static int msi_wmi_platform_write(struct d=
-evice *dev, enum hwmon_sensor_types ty
-> > > > >>      u8 buffer[32] =3D { };
-> > > > >>      int ret;
-> > > > >>
-> > > > >> +    guard(mutex)(&data->wmi_lock);
-> > > > >>      switch (type) {
-> > > > >>      case hwmon_pwm:
-> > > > >>              switch (attr) {
-> > > > >>              case hwmon_pwm_enable:
-> > > > >> -                    guard(mutex)(&data->wmi_lock);
-> > > > >
-> > > > > While I cannot see the code easily, one could also add braces to =
-inside
-> > > > > the case to avoid this problem.
-> > > > >
-> > > >
-> > > > I don't see the code either, but wouldn't this be a use case for
-> > > > scoped_guard() ?
-> > >
-> > > Hi, not explicitly stated in the cover letter, but this is essentiall=
-y
-> > > a series on top of the series I sent last year but I did not clean up
-> > > due to a variety of issues with MSI firmware that would have made the
-> > > driver unsuitable for upstreaming (to my standards at least). These
-> > > issues span Intel driver problems, HID controller instability, and
-> > > varying WMI implementations esp. in regards to PLx setting between AM=
-D
-> > > / Intel variants, shift mode behavior not acting correctly, and fan
-> > > curve application / resetting being weird (the fan curve on off bit
-> > > does not seem to change whether an automatic curve is used but how
-> > > close the device alings to the set curve? requiring us to back up and
-> > > restore the original curve? half of the devices keep the curve during
-> > > sleep and half don't? but if the fan curve is so finicky do we really
-> > > want a resume handler for it? Perhaps we can kick the timing quirks t=
-o
-> > > userspace)
-> > >
-> > > For this reason, I focused on other manufacturers such as Ayaneo and
-> > > OneXPlayer. I will revisit this series per request from Derek as he
-> > > seems to want this for steamos and hid-msi is already queued for 7.3?
-> > > Although, to be honest, compared to the controller firmware issues,
-> > > the WMI implementation is pristine.
-> > >
-> > > So I will need to go through these issues 1 by 1 and see which can be
-> > > fixed and either drop certain features in the beginning.
-> > >
-> > > Particularly for the fan curves, if we say that resume handlers are
-> > > required to be in the kernel moving forward, I do not know how
-> > > realistic it is to make those reliable for this WMI device family.
-> >
-> > This driver still needs work. I am getting bug reports about
-> > inconsistent TDP application on the EX. A8 is broken as well. Even
-> > with your patches Derek. I need to grab a new version of center M and
-> > see what they are doing.
-> >
-> > Does this driver work in your experience? What is that SMT toggle you a=
-dded
->
-> I've got a few reports of some issues, but nothing with much detail. I
-> have the 8 AI+, 8 EX AI+, and A8 in hand and all three had effective
-> TDP changes in SteamOS with these patches applied and SteamOS Manager.
-> I haven't done extensive testing over multiple suspends or longer
-> sessions myself. I'm also not aware if there have been BIOS updates
-> since my testing.
->
-> By SMT toggle i think you mean the STAPM toggle for the A8? It was
-> referenced in API_UserScenario.dll (setPowerLimit_AMDSTAMP) which I
-> reviewed using ILSpy. After toggling that TDP started reporting
-> correctly and being settable.
->
-> Hope this helps. LMK if you need anything tested or additional info.
+The kernel has deprecated the use of strlcpy wrappers in favor of
+the safer strscpy variants. Replace the internal driver helper
+function strlcpy_attr() with strscpy_attr() across all
+dell-wmi-sysman attribute parser files.
 
-Ok, I asked for more feedback. Yes, TDP changes do work, but they are
-not correct. Users AB testing with a Decky plugin called
-SimpleDeckyTDP report major divergence.
+Ensure explicit destination buffer sizes are passed using sizeof()
+to prevent potential out-of-bounds array writes during ACPI object
+evaluations.
 
-SimpleDeckyTDP uses a combination of RyzenAdj for AMD and RAPL for
-Intel. When set to 7W, users report 25W power consumption when using
-the kernel driver and 15W when using simpledeckytdp on A8. 15W is the
-correct value for a 7W envelope on an X840u APU.
+Signed-off-by: Ava <ava@oven.ninja>
+---
+ .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 +-
+ .../dell/dell-wmi-sysman/enum-attributes.c    | 25 +++++++++++--------
+ .../x86/dell/dell-wmi-sysman/int-attributes.c | 20 +++++++++------
+ .../dell/dell-wmi-sysman/passobj-attributes.c |  5 ++--
+ .../dell/dell-wmi-sysman/string-attributes.c  | 25 +++++++++++--------
+ .../x86/dell/dell-wmi-sysman/sysman.c         | 21 +++++++---------
+ 6 files changed, 55 insertions(+), 43 deletions(-)
 
-STAPM should not be required to use or deviate from STT. Both of them
-should have equivalent behavior and match ryzenadj as the underlying
-DPTC hooks are the same, ryzenadj just accesses the mailbox directly.
-Using STAPM is a workaround for buggy vendor firmware that does not
-control boost values correctly (SPPT/FPPT) and is what the first
-generation Lenovo Legion Go did as well before they fixed it.
-
-STAPM as a workaround works because it uses timers to control boost
-values, so they decay after 2-3 minutes to the steady state TDP set by
-the firmware. STT boosts for as long as the device thermal envelope
-allows. STAPM is deprecated by AMD, only STT should be used going
-forward. +CC Mario
-
-This points to a BIOS firmware issue. You should consider getting in
-touch with your MSI contact for feedback and to plan a fix. I do not
-have an MSI contact. And yes, I am not happy my users have to rely on
-third party unvetted plugins for basic power controls.
-
-But we cannot revisit this driver while basic behavior. does not work.
-If MSI does not fix this or there isn't a bug in this driver we can
-fix, the only viable way forward from our side is to move power
-controls to the DPTC RFC driver/RAPL for affected models and only
-retain fan curves on this driver. I do not want to do this, I have
-userspace integration for this driver already, but it is not
-functional to the standard expected by users.
-
-I checked the ACPI firmware and unlike other manufacturers, there is
-no EC independent control of the power envelope. We would still need
-to check a low battery hook in firmware but other than that it is a
-straight translation.
-
-Antheas
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+index eb48ced55..f82e07efc 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+@@ -162,7 +162,7 @@ static ssize_t curr_val##_store(struct kobject *kobj,				\
+ 
+ union acpi_object *get_wmiobj_pointer(int instance_id, const char *guid_string);
+ int get_instance_count(const char *guid_string);
+-void strlcpy_attr(char *dest, char *src);
++int strscpy_attr(char *dest, char *src, size_t size);
+ 
+ int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
+ 			struct kobject *attr_name_kobj, u32 enum_property_count);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+index a85639d8a..27291261c 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+@@ -165,24 +165,29 @@ int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
+ 	wmi_priv.enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(enumeration, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].attribute_name,
+-		enumeration_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].attribute_name,
++		enumeration_obj[ATTR_NAME].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].attribute_name));
+ 	if (check_property_type(enumeration, DISPL_NAME_LANG_CODE, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].display_name_language_code,
+-		enumeration_obj[DISPL_NAME_LANG_CODE].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].display_name_language_code,
++		enumeration_obj[DISPL_NAME_LANG_CODE].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].display_name_language_code));
+ 	if (check_property_type(enumeration, DISPLAY_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].display_name,
+-		enumeration_obj[DISPLAY_NAME].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].display_name,
++		enumeration_obj[DISPLAY_NAME].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].display_name));
+ 	if (check_property_type(enumeration, DEFAULT_VAL, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].default_value,
+-		enumeration_obj[DEFAULT_VAL].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].default_value,
++		enumeration_obj[DEFAULT_VAL].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].default_value));
+ 	if (check_property_type(enumeration, MODIFIER, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].dell_modifier,
+-		enumeration_obj[MODIFIER].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].dell_modifier,
++		enumeration_obj[MODIFIER].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].dell_modifier));
+ 
+ 	next_obj = MODIFIER + 1;
+ 
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+index ab5c24722..a32630a33 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+@@ -144,24 +144,28 @@ int populate_int_data(union acpi_object *integer_obj, int instance_id,
+ 	wmi_priv.integer_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(integer, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].attribute_name,
+-		integer_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].attribute_name,
++		integer_obj[ATTR_NAME].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].attribute_name));
+ 	if (check_property_type(integer, DISPL_NAME_LANG_CODE, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].display_name_language_code,
+-		integer_obj[DISPL_NAME_LANG_CODE].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].display_name_language_code,
++		integer_obj[DISPL_NAME_LANG_CODE].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].display_name_language_code));
+ 	if (check_property_type(integer, DISPLAY_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].display_name,
+-		integer_obj[DISPLAY_NAME].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].display_name,
++		integer_obj[DISPLAY_NAME].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].display_name));
+ 	if (check_property_type(integer, DEFAULT_VAL, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.integer_data[instance_id].default_value =
+ 		(uintptr_t)integer_obj[DEFAULT_VAL].string.pointer;
+ 	if (check_property_type(integer, MODIFIER, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].dell_modifier,
+-		integer_obj[MODIFIER].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].dell_modifier,
++		integer_obj[MODIFIER].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].dell_modifier));
+ 	if (check_property_type(integer, MIN_VALUE, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.integer_data[instance_id].min_value =
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+index be939b731..79b8f1e34 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+@@ -163,8 +163,9 @@ int populate_po_data(union acpi_object *po_obj, int instance_id, struct kobject
+ 	wmi_priv.po_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(po, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.po_data[instance_id].attribute_name,
+-		     po_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.po_data[instance_id].attribute_name,
++		     po_obj[ATTR_NAME].string.pointer,
++		     sizeof(wmi_priv.po_data[instance_id].attribute_name));
+ 	if (check_property_type(po, MIN_PASS_LEN, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.po_data[instance_id].min_password_length =
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+index 41e19f039..2634f6cce 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+@@ -128,24 +128,29 @@ int populate_str_data(union acpi_object *str_obj, int instance_id, struct kobjec
+ 	wmi_priv.str_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(str, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].attribute_name,
+-		     str_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].attribute_name,
++		     str_obj[ATTR_NAME].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].attribute_name));
+ 	if (check_property_type(str, DISPL_NAME_LANG_CODE, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].display_name_language_code,
+-		     str_obj[DISPL_NAME_LANG_CODE].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].display_name_language_code,
++		     str_obj[DISPL_NAME_LANG_CODE].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].display_name_language_code));
+ 	if (check_property_type(str, DISPLAY_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].display_name,
+-		     str_obj[DISPLAY_NAME].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].display_name,
++		     str_obj[DISPLAY_NAME].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].display_name));
+ 	if (check_property_type(str, DEFAULT_VAL, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].default_value,
+-		     str_obj[DEFAULT_VAL].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].default_value,
++		     str_obj[DEFAULT_VAL].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].default_value));
+ 	if (check_property_type(str, MODIFIER, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].dell_modifier,
+-		     str_obj[MODIFIER].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].dell_modifier,
++		     str_obj[MODIFIER].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].dell_modifier));
+ 	if (check_property_type(str, MIN_LEN, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.str_data[instance_id].min_length = (uintptr_t)str_obj[MIN_LEN].string.pointer;
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index ae89670f7..31b62214c 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -229,23 +229,20 @@ static const struct kobj_type attr_name_ktype = {
+ 	.sysfs_ops	= &kobj_sysfs_ops,
+ };
+ 
++
+ /**
+- * strlcpy_attr - Copy a length-limited, NULL-terminated string with bound checks
+- * @dest: Where to copy the string to
+- * @src: Where to copy the string from
++ * strscpy_attr - Copy a length limited, NULL-terminated string with bound checks
++ * @dest Where to copy the string to
++ * @src Where to copy the string from
+  */
+-void strlcpy_attr(char *dest, char *src)
++int strscpy_attr(char *dest, char *src, size_t size)
+ {
+-	size_t len = strlen(src) + 1;
+-
+-	if (len > 1 && len <= MAX_BUFF)
+-		strscpy(dest, src, len);
++	ssize_t rc = strscpy(dest, src, size);
+ 
+-	/*len can be zero because any property not-applicable to attribute can
+-	 * be empty so check only for too long buffers and log error
+-	 */
+-	if (len > MAX_BUFF)
++	if (rc == -E2BIG)
+ 		pr_err("Source string returned from BIOS is out of bound!\n");
++
++	return rc;
+ }
+ 
+ /**
+-- 
+2.56.0
 
