@@ -1,101 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792895930;
-	b=j5FTDBoVaDUbU6C1tMQsnK75ElXNDe06/uRO/tu+RAXKJUJDeBP53qp9VaMfXM6iuT1a
-	 f5QACe/Vg4NjydcqpeCECT6hEExnn5s6zZZuiOAMJfzy1mNVDcgUG4/FnBhEj3DIidBAv
-	 ZChPfc9eMiLH+UiKDKXgFFyyt7oMF43+BXvNM5KdoC9S2VDCjpaBWwBjHdiDZfGsLckb6
-	 qRIN29SmghMw3yYq7E6sXjd06Ja/Z2lc/+Ht7rlxCN8sjzECd6EkPMGMiqXbtNoXnPiIp
-	 eL3MpGzRB/R5dupibwU+8+6nXObm8oyVU6Bal6K30ET0/vYbd02ZGQ8TJyjP6Cd8Rig==
+	t=1792896529;
+	b=ivkevBX8C7irFNaP7BNHFX9oDNnwrEgmprL+rZK8gR2lvhn0ToAAz0FvI7mDgNBiaqPo
+	 Y6ScI9zazbYtvfxJ0y6ErexMBGGIwsZXgbigRy5mbVBKTgc7IcLSdBOQLUk4hVWJQaZgW
+	 FKL2gfx1W13zzBIA1tVA5DAXSYpjotluYiDaap1lHhSIC2pMd3JGAtiEr9jXqvTxVs+Ah
+	 7P4hXfPFyCR0M85Q4Oz3zSL7JS2NmMmOoht+px7y4T443k2k1bH86rrWwtE7/qz0HaAkM
+	 d45L4C6Pt5TN5X3E3QrkGzXPkekxNHkEZiSpu4PNUbbqfCOo1NLLTD2aSaogwHp+Biw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792895930;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792896529;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
-	 In-Reply-To;
-	bh=dflo9Yio8r83UnlnUmpgKhh7+70T4UxxCiY1S2zSEiQ=;
-	b=vit9NKIM1jnEVjh8cYd/TlgXiPbtinW56LW56t2UVDsXbm8eJkpl05FqjqQ3VGuUaDxM
-	 p5krnDgoqyioAVKJht1Y/4qXP8KtxpxZQp0rK0mLo2XQjkMi6HGTAi+MHmlJh5BNCUxQ8
-	 d7gv34R93VZhYvT+SPL5JZVHkfXAtVrBbe19iUzpaoYzI3bWrEJ9wTBBrAaEI5tYtFp20
-	 uCmzjgoGkm3XIwiup+yYPPUdC4ijXjbvZjbWZ5Fb+Qgp0TcDGfDjjlKJbjWT5ac6ZW4rY
-	 Drk1j5j/8gR8gy4eo8HyxT6vHQSgcGz/r4pJWAAvUxJy5tQNpOtq2ZWArJplpdNAQlQ==
+	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
+	bh=FRxwvjYywW2EDj8EBeP8mrgqVWNhsI+cL4nt5lpU7sA=;
+	b=3AOH7LEw+Bg5Zby1B2q4XmdsqZFqlZYYgj6MdN5rLnAfxp/VWUR0kalPKpHq50BNmFOw
+	 kPXJT/a+Eu9XchtK0VGvaBBJ5WVUcjvQwGALqK1ewiQW7ULS5UHmkVGzCelkzSovdWun8
+	 rry/fGItgV5r4sIpSvkbhPYM8OrlcIC97r4lIZRFSRxdHJ8dpSwj4Ugocs2e7aigEwNjr
+	 i831GgsmvegLu1LjYDJeYri7LPBFvaE8x1CN6lmbFIH7xbdUaT3cj4/FBUrnOIHs2C7w7
+	 XH/3xtk18ZpW1LM97EbDZNUTqbXaHsAFjxoeHgvTxVPd1VyeQjqPG1T9xYyjY3greAw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="V/l16pyh";
-	arc=none smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TpxwA813;
+	arc=none smtp.remote-ip=74.125.82.181
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EFC606A31A
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 02:38:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 01EFC606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E11606A331
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 02:48:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66E11606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=V/l16pyh
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-3645f0f3fcdso3860997eec.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 19:38:49 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TpxwA813
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-35f1f76ea84so3384202eec.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 19:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792895929; x=1793500729; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=dflo9Yio8r83UnlnUmpgKhh7+70T4UxxCiY1S2zSEiQ=;
-        b=V/l16pyhDwJpYItIN83XuiFQivIFKwHhhAwJ161uHWgFb67I/T1lzBGrycHLy1GeNM
-         3mYUmfsx8sSHGQn6eEdyo1VZx1K4bNXOm7LL3pfenIHyij22AnW7JrIFFuh8PUcX6t0A
-         cRKgG/LrioM88XW4XxB8rOPT8Y8K4zjKkehoIHMCAT2T7+xSX4N+SjHo48D2fcjPAZSu
-         FGYA/ZqD0b9rJoxtnl8I7NaVTfiULiGLckr1JXFQSzV3zw0g+lvDW7kMx/5QJKD/jo2g
-         I2MiKXfPJsnRjveIqYkAQw67oq6Vi4Pu1fqatFvu50oClERzYifBDOGcd3utLfblYuyK
-         nCXw==
+        d=gmail.com; s=20251104; t=1792896528; x=1793501328; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=FRxwvjYywW2EDj8EBeP8mrgqVWNhsI+cL4nt5lpU7sA=;
+        b=TpxwA813+P5znsifZUJ8deji2Cfy3YNYm07xUH+eLP83aZg54OT8spSktYMe6uqGRE
+         iQECHez5gjvBbx6xLGeVbfT8DSZ1k8Qt62vdK8EaDhI3b1+wztqIkJbaJlCtnuCA5esL
+         QRH/IaQA0IS4/4rwKKtRZShp/VJZY5B2CGAQ4+oQP9868SHQzHcsRMqbIUIJIrKAZ80n
+         lruFtXxmDd9FsV8X+PllJ668rF3ZZJTTNnl5/6dcw99NfAg8N0Yo5T4C0J1RuHQYX1ve
+         +cFbn2eSkjaZFV55MBT+LCMMz8FPEg4aiNN52QkcwWnlvHZrZ4/6zCg7MfQQ7POzh5gG
+         lE8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792895929; x=1793500729;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=dflo9Yio8r83UnlnUmpgKhh7+70T4UxxCiY1S2zSEiQ=;
-        b=yCP3R29uRYhOEstHKiPU9tYKwNeOAV0BXczdxRmh6bZPbInew01iQC/wMHhFEeOC0f
-         dYNpFFsiQdqC/sF0wG82NsP+LAQYY1SwPFNDFg543VFtgDj6YNp7AyFcOydBYD0oH0qM
-         T/gjfNsqIgTOwNvdFyYzR9oZOoZ0Varwp5zuFb1mltw3HpxjCp6a0zmccYQqyNVyamGU
-         jSfJ3lAzpO+pjoxKBAxxjSe4EEo+TuQXyLzWaLnhuc5htXmRq9cBFfl3wLNjIM9XdV28
-         hG+BcVVjBkGmQvGfIn58EaYe8gWQcXhCLAgPAoEz7h55vFM70DJ25lUt37EbeT/sDUon
-         xWzQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxl9zlfYrLztaaEtGReNB1v7fo7GOBMDPw5m3yLutr6oNYn6K9xKMWKg2J+UPlcsyOP/hGlVwfcPThHu6Qs+Hg1jBol@vger.kernel.org
-X-Gm-Message-State: AFq9FYLCIczS6u/IndBB37yojDkDSlMe51jZJMoPuNNVIl5ywasyCt7t
-	sfcguJEO4l5TX6f3tIf5+8EcVcXFQqWpXybdYE/GFdV+Y7b91lfxCizU
-X-Gm-Gg: AYBFou0SjiYb64z/jkaQ714GLr9lS9nTab29TeIeH8wFxu6XPLbpLWL4oYKBz2oQEPl
-	sXHwUEN8D9QM1fUvMbJ68s8govfvQa2zu/096lmR/BsGsveYuiLPdFr8ACW8a2Atfe5evt3uQRh
-	J8i72FyTMosvi7n09+32UtYFzwkQ/pkzH90N30tlh4Owjez1nYQmxxdx5VxbYe0B23Tok62YA1e
-	zZ/BW1gairTV67S8FCkgTbntRIFS8IZF7OnKcepc9XMl9ylwzDRr4WhyJIvioodOqjW5G1racBT
-	GifMC+ARkHScsM0EmXtqRoKkPY4Uu0yeTP7wtOCUidBTao3dCHqdTZftHkE6LZJfDGNbdzwGipT
-	ykt9mPRvi+8ye6+JPQuJCuHMkbP69RrGianyKkTVY/6OyLJGsyEq3pq3Q7mbKp9GnrBsTpRraDl
-	j7B5yrxJu9Kv/NA3x8adbECH3+uNHXG0LXUcyqEOZ998t/kfDa4kj5kmtbwX7ZMbJZW5E8lK5/u
-	feBkrwWXDCWRksy2RqzcNrTRPcCwJAMVhyY5heQsz+VKSKsJmJE2gL3Bg6YpxMCMcUVW4Q/TXyl
-	AG4NCqG06hMYSEx+rd4U2RVA8yyK0DM8jfv3weQFew==
-X-Received: by 2002:a05:693c:88c1:10b0:366:83dd:4704 with SMTP id 5a478bee46e88-369e84ff9f8mr4909251eec.17.1792895928963;
-        Sat, 24 Oct 2026 19:38:48 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:8fe4:693:7158:24de])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369e8ec864fsm13867225eec.24.2026.10.24.19.38.47
+        d=1e100.net; s=20260707; t=1792896528; x=1793501328;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FRxwvjYywW2EDj8EBeP8mrgqVWNhsI+cL4nt5lpU7sA=;
+        b=oPLroB3bHJ9SrJPanNETJa3nACx1ENeGXZoqq+5gMyv4bAfxPeKQLExc2W5oAQ8KoV
+         +3U9ZkGMYZ8srImAycsQf9TqV+gEZZzEWJKmsEs0Hmt3PIFyfWh4c8L/jAorJ4xaaIyK
+         yYFmKqiwcol0aeWTYi9gvR/3H1ZbY/NvVANG79oEyn1y2UE0JE7HQJNSh5h5BFCKww/l
+         MgnAO13L012BQc91vCQaw613zmnNklYzlrGMAF0BZBdfp8ixfFUOosxVBULKGo9lWHNP
+         sDWETXxqVnUX+OT4w0y9OIM9rw3dIN0fwFKcb2wJ4Ma9OcNYN8GXSq3LGtvnT2Jb+K7M
+         iAgw==
+X-Forwarded-Encrypted: i=1; AKwUvBzMmlr9LZRUlv+RjZZhHEqoRJwL0dDFargQbPKgeCO4dACO86pgiJy1bue4UKmWp7HXhcZAiofy10V0Q6sLk0E+iwYu@vger.kernel.org
+X-Gm-Message-State: AFq9FYJvVyOnRVc4kXfYik6ESAsPPXzHJ9RydH+bmrMqwNC/qIkUNf6w
+	sKB6AVqtSJ5oTygVdlwRdQmQwusJ3jHnzkfBqbWeREM7XpRT+PTW5DuG
+X-Gm-Gg: AYBFou06oYQMyZlEeyj8BL4+J6FUwRLddlwslOSDAqGSwMVzdvheS7oO6B7FJqjrE1e
+	OElj59bmz/NW0Sm8M6ddJoU598JblOwTC4LFZkUXtHqvBIqGkRbgXzX9t1ILucixUImcATZAPnj
+	uhkUAI1THYXDJiaLm57UuTzhQ+jQUu8KVzwv3Opuc/lKYK2rinMd2sQv1llqyIAvvCYoY//2B85
+	r5FXZrMz6Eul3pLV1aL13ek9rwiEhRd7kbx3kt5TOZSZfVd+FiMSAC7m7w2Ga09yzn4k682oi2m
+	bQ251V8hPG1XbKyig5mYxMWA6PdNfwZTr8ApK+DYJmjqfs/Zx4VdCuATRpqxw/biU8zVzMNt6fO
+	a2LHiyhZPd6uM8Q4Kf63DMUBlim0/zkJoPaVvU7oChNNp2qnoNUPHOssWkm/as21AZABHaDp72G
+	nUldnoiNzzf+KcU4P9vQ6DnrJtSmCXYwKoPDCEYfbC4A52iIdv91Pbn+/s/h93IPab7qtFkii75
+	bsgweK/PNFn1N1w3daGNhCrI2m3jkauuJHwGwC/t4Om/2smVyYZ8q+ISiAILsC3g/w7+3POH60U
+	rHB9u6bqP4hJsev40gr9UwZbanGadmJQ1zEAGdRt0oA=
+X-Received: by 2002:a05:7022:1087:b0:17d:7b45:f905 with SMTP id a92af1059eb24-19937025befmr4633321c88.31.1792896528487;
+        Sat, 24 Oct 2026 19:48:48 -0700 (PDT)
+Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:8fe4:693:7158:24de])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a2e32479sm10521272c88.21.2026.10.24.19.48.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 19:38:48 -0700 (PDT)
-Date: Sat, 24 Oct 2026 19:38:45 -0700
+        Sat, 24 Oct 2026 19:48:47 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Rong Zhang <i@rong.moe>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: do not poke keyboard
- controller
-Message-ID: <at1n85VJhz9E-bC7@google.com>
-References: <4b2f60a7ceac543bd8b889b9c0772b2c@gmail.com>
- <8cdbdcb893e2353e0ea2fe919e0c8a6a53f8b683.camel@rong.moe>
- <7b21717e80a7b779ab94d964ca40ee68@gmail.com>
- <5bdb870be988333df200ac7d4904dd1bda6ef52f.camel@rong.moe>
- <ab1d30eca12d5e7a764da99b68d0e229@gmail.com>
- <cae0b78ac544dbc78242d55fe370a0eb7926825b.camel@rong.moe>
+Date: Sat, 24 Oct 2026 19:48:41 -0700
+Subject: [PATCH 1/8] i2c: acpi: use 4-argument i2c_smbus_read_block_data()
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,101 +91,44 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cae0b78ac544dbc78242d55fe370a0eb7926825b.camel@rong.moe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261024-i2c-smbus-read-block-data-v1-1-19bb97467982@gmail.com>
+References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
+In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
+To: Mika Westerberg <westeri@kernel.org>, 
+ Andi Shyti <andi.shyti@kernel.org>, Corey Minyard <corey@minyard.net>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Sebastian Reichel <sre@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
+ openipmi-developer@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+X-Mailer: b4 0.17-dev-e56a4
 
-On Sun, Oct 25, 2026 at 09:52:27AM +0800, Rong Zhang wrote:
-> Hi Dmitry,
-> 
-> On Sat, 2026-10-24 at 16:13 -0700, Dmitry Torokhov wrote:
-> > Hi Rong,
-> > 
-> > On Sat, Oct 24, 2026 at 11:30:06PM +0800, Rong Zhang wrote:
-> > > However, the methodology has been changed from hardware-based to
-> > > software-based. Because of the fundamental change, it has the potential
-> > > to break something if some users depends on the side-effect of toggling
-> > > the aux port.
-> > > 
-> > > While my device never needs the quirk, I can think of several useful
-> > > side-effects:
-> > > 
-> > > - pause the interrupt (and hence pause event handling) to save some
-> > > energy
-> > > - prevent the touchpad from waking up the platform
-> > > - reset faulty touchpads
-> > > 
-> > > By switching to the software-based methodology, all these capabilities
-> > > have gone. Of course, relying on these side-effects is a misuse, but
-> > > relying on the parameter itself without reporting it to the mailing list
-> > > is also a misuse! More below.
-> > 
-> > This reminds me of https://xkcd.com/1172/ ("Workflow").
-> > 
-> > Also note that I8042_CMD_AUX_DISABLE / I8042_CMD_AUX_ENABLE only toggles
-> > the AUX clock inhibit bit in the 8042 controller; it does not power down
-> > or reset the touchpad (psmouse is unaware that ideapad-laptop poked the
-> > controller behind its back, which is the whole problem), and i8042
-> > already manages the AUX port and wakeup state across suspend and resume.
-> 
-> Thanks for the detailed explanation. I agree that there should be no
-> outstanding spacebar-heating workflow depending on I8042_CMD_AUX_DISABLE.
-> 
-> > 
-> > > A completely new behavior reusing an old knob is always prone to break
-> > > *something* in a obscure way unless users are notified about the change.
-> > > Breaking something with a visible warning [1] in kmsg is much better than
-> > > potentially breaking something in radio silence. 
-> > > 
-> > > We don't want to support poking i8042 anymore, so the use of
-> > > 'ctrl_ps2_aux_port' is anyway becoming unsupported. The parameter was
-> > > introduced only for debugging and is expected to be removed at any time.
-> > > If users don't report their use of the parameter to the mailing list,
-> > > they are already relying on a broken setup.
-> > > 
-> > > By renaming it and breaking the unsupported setup loudly, we encourage
-> > > users to report quirky devices, as well as getting rid of an outdated
-> > > parameter name.
-> > > 
-> > > [1]: ideapad_laptop: unknown parameter 'ctrl_ps2_aux_port' ignored
-> > 
-> > We already have DMI matching for this quirk (ctrl_ps2_aux_port_list[],
-> > which has only ever contained the 2011 IdeaPad Z570 since commit
-> > c69e7d843d2c added it in 2022), and the module parameter simply sets the
-> > exact same priv->features.ctrl_ps2_aux_port flag as the DMI table.
-> > 
-> > Intentionally breaking the module parameter for anyone who might be
-> > using it for its intended purpose (making the touchpad toggle hotkey
-> > work on an older IdeaPad) 
-> > 
-> 
-> It's the flag's intended purpose, and never the module parameter's.
-> 
-> The module parameter's intended purpose is only for debugging and bug
-> reporting. And its name and description describe the intended behavior.
-> 
-> Renaming it does not change either of them, while reusing the knob makes
-> its name mismatch the intended behavior.
-> 
-> > just because of hypothetical spacebar-heating
-> > workflows does not make sense to me.
-> 
-> Using the parameter without reporting is also a spacebar-heating
-> workflow. That's why the description asks users to report to the pdx86
-> mailing list, so that we can add a new entry to the DMI quirk table. It's
-> similar to sysfs bind/unbind to a certain extent, which recently gained
-> TAINT_FORCED_BIND.
-> 
-> We shouldn't create a divergence between the intended behavior and the
-> parameter's name simply because such a workflow either.
+Pass I2C_SMBUS_BLOCK_MAX to i2c_smbus_read_block_data() in
+i2c_acpi_space_handler().
 
-OK, I'll just defer to Ilpo here. If he wants to rename module option I
-can do that. I still believe that this gratuitously breaks users that
-happen to use this module parameters. While we would like them to report
-their systems they are under no obligation to do so.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/i2c/i2c-core-acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 84841ed13487..4acce685457f 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -751,7 +751,7 @@ i2c_acpi_space_handler(u32 function, acpi_physical_address command,
+ 	case ACPI_GSB_ACCESS_ATTRIB_BLOCK:
+ 		if (action == ACPI_READ) {
+ 			status = i2c_smbus_read_block_data(client, command,
+-					gsb->data);
++					I2C_SMBUS_BLOCK_MAX, gsb->data);
+ 			if (status >= 0) {
+ 				gsb->len = status;
+ 				status = 0;
 
 -- 
-Dmitry
+2.56.0.257.gf7497c7d27-goog
+
