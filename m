@@ -1,96 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.119
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792966280;
-	b=F97McX7c6v5MQ4B27aQzTl82XszylSYHKjxf7/EtlKW/yBLD8CaH5alUTEFk3GQX3A+9
-	 OEvqYmdT8KSKI8taZs2FujZLrZ6zWEmIdoQLJbHjIPSmd+Wrnk7II69iCVNaLido42Ef1
-	 hLmnoE3iRey+bhMPCr+iZhx1C62WWbi9Gd8EMr3p3Eou/WlvtSCwOpjEOqrWQPMx2zdy8
-	 +3S5pwq4Ezr2MQMaxZJeO+0KdxWcgis8Ev8hn6YdeIHe0So3D9g6FVg85SRlrOnQgweTq
-	 uBUEUUu/c05pSuATV/NzB0UdR/2wQUPhmScPzD4RaXTOPX9kcKkTM04v+6tLGhDxdgg==
+	t=1792966577;
+	b=wROXrDO1ilsDb2pbu/WDMqP7vHomYtyiMxyJD19dp7dlD5AizOlxaG7MZS0xBCh+rh0D
+	 dhKD+n9tyUowI6RBHA6ftVxzbmxEdLlOsXQWGzTtbfTeF4XwHjdaNQebZffWtvEkRH4KD
+	 00Jz8uDNvmr4J66GPL8SYMKuaOEy6FWBQhY0fdnjY+AfVLi/KFW8vVq4i9df12aCUJd2s
+	 7Wxbm3J/ZbZYgotgXoVYavOozM5JbndTLhMpMY+bs29dhILHnW+V00MubFGkUNhrqDq33
+	 AY4Pk3TNAOJcjs3kBpuXyKx5VkbteX3XF2QMO0kkkDwSSOu5PwIR+ROrPBnIRK8qH6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792966280;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=RbskrtRSFQKpXX2TVUnJjsMMRjXACIHvuNFaGQl3KOY=;
-	b=W4yaotBn5KANeOwop83AMEvPk0jYlRxKVX2XUcMV5Nq5MYeU0UxeQkknMGGlCu3KE4TB
-	 3N2r8n9WJcCl//pQ5ESaJlFUwbdNoA8PVdHNhv8L9kPN2WeSA+vN/r3MR6t5Qp2NE874j
-	 wS+ntdjU5INZWuD3fwWLFxm7OydUf6D1g9QDhVWawncD/elCWsQRk/qIPzr0InFL+I6FH
-	 snCBtvHYaiwEGZgCaBwWw+AK/n8xLqPwQwjGmKAmfPssf4N1SP80etWKAz0VHIWIPopir
-	 weAyCvTKHFWUOH8TrTnczIuBaC4xKGx0tyRhtAQbuhCBem1xp0rBODiGvaanvLzb8Nw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792966577;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=DMnV/6aSn1ZXSp1qQ4XFqAj3ot4W3oi4+OfSLRlndkc=;
+	b=kofABuH0XtFWYhsTS70kcDyiK8ze1LTVlTAUU3K5pOWqpG5cSh5b+0p3jPczeYxrFCF3
+	 4gfpZCiyj16ijYpDTyQ2XaLceeSSO4nTecb8w1umZobE+tS/8LcXMNmo1MvuFenVc4WFR
+	 bNkkoQDq1/MMvZKLGkZ1a/ScapNyqs9K38Jnx8bwKMDGK4Nz5545NU9J8tqPdu2ACAK2X
+	 VY7cFldap0mgZWfkLvAKG4UB1FOsZbpIASVdP8tVds+2BSJGYnYoxGPV5N2smj6lcOwje
+	 3I2vQZSIcExEZ/rYEC2xZ0PaZoqJCmWEu4cSQG3DBqkyuohKadCnqDPinfH00O7QpMA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C73HCDx9;
-	arc=none smtp.remote-ip=198.175.65.21
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=vinarskis.com;
+	spf=pass smtp.mailfrom=vinarskis.com;
+	dkim=pass header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=FzFEwH16;
+	arc=none smtp.remote-ip=109.224.244.119
+Received: from mail-244119.protonmail.ch (mail-244119.protonmail.ch [109.224.244.119])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB598606A31A;
-	Sun, 25 Oct 2026 22:11:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BB598606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80CA606A31E
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 22:16:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E80CA606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C73HCDx9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792966278; x=1824502278;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SvvFyjxTb+lI7eFPlaBGniMfSYQ5Hlh9HQr+bDAhB9A=;
-  b=C73HCDx96WLkay6CakySx1CazQMX2a2yY31Uuvxu/PceSIGKWAt56LTn
-   Khe1cI/rrBfzyKTeIhvjIKdfsP6b2HGaU+HvaM9vX5zpE8jZwEblriurR
-   DQzHM52tvvIdZTaQyYNxmfDvxQPXfPKmDUIEXmS5sM3fLhQBuQC52YcwV
-   eKHSNAIUWV25e2wJph4yiAWw/gz/1/GZ97paoq/BMhfmYvfBETd3s1xqr
-   +eEhBlgrsYFvR/TcTE2Njks9maDfjP+D8Tn6GjpNkax5QBNvILB47Ego+
-   o7rCvXgVe03YyU/L6+GSgVEjifCUXg0Q49+GkSwT9OivTY+0y+CpkxSHG
-   A==;
-X-CSE-ConnectionGUID: piN7Kd0pTmm/eWtKnLm9Tw==
-X-CSE-MsgGUID: IulAsO1ZQtuknE1xLXqMXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1720263"
-X-IronPort-AV: E=Sophos;i="6.27,178,1787036400"; 
-   d="scan'208";a="1720263"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2026 15:11:17 -0700
-X-CSE-ConnectionGUID: WDJ+oOdBR7yGTPf6fHnIlg==
-X-CSE-MsgGUID: uvV5O+jKRce54uh3Wj/RwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,178,1787036400"; 
-   d="scan'208";a="4458231"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 25 Oct 2026 15:11:11 -0700
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xL6Qm-00000000VCU-1YQH;
-	Sun, 25 Oct 2026 22:11:08 +0000
-Date: Mon, 26 Oct 2026 06:10:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
-	Andre Eikmeyer <dev@deq.rocks>, Bjorn Helgaas <helgaas@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"(maintainer:X86 ARCHITECTURE \\(32-BIT AND 64-BIT\\))" <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
-	Kenneth Feng <kenneth.feng@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org,
-	"(open list:X86 ARCHITECTURE \\(32-BIT AND 64-BIT\\))" <linux-kernel@vger.kernel.org>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 03/13] platform/apple-gmux: Fix MMIO interface
-Message-ID: <202610260503.TQjc0Dfl-lkp@intel.com>
-References: <20261025040046.1602-4-atharvatiwarilinuxdev@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=FzFEwH16
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
+	s=protonmail3; t=1792966573; x=1793225773;
+	bh=DMnV/6aSn1ZXSp1qQ4XFqAj3ot4W3oi4+OfSLRlndkc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=FzFEwH163Kethc0JpXcJAw5b98NkdekC+gczB91jtDHhg4YCXncWSKMzoePU73eyk
+	 7xecNkYt7sny7Wex8uMGZbMIEREPOWh4XB/51TSqoWYyoNW91N1mjTKv3eXaASVoPN
+	 btMettP4GvM5nzts47lCEf28kyOCHfNWpkBTsObcGDbailPlkZ6Bod1Bwiabi4ZCkb
+	 lQz7LmGq9e42ZEMKa5IAwGvwuQTkuOVEQ11UW538sn6z5e3y2QSt1v7Q7q0h9rFKyf
+	 W0qbuB1uYzSZ2OCCXNy47a+YmNZcOI5n2s8YdxVVKPfIihltjF4QGTO4CLisPeWHij
+	 V+1N3Z+XvM3rA==
+Date: Sun, 25 Oct 2026 22:16:07 +0000
+To: Liviu Nicoara <lnicoara@thinkoid.org>
+From: Aleksandrs Vinarskis <alex@vinarskis.com>
+Cc: Michael Burch <me@michaelburch.net>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Abel Vesa <abelvesa@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, Neil Armstrong <neil.armstrong@linaro.org>, Stephan Gerhold <stephan.gerhold@linaro.org>, linux-hardening@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
+Message-ID: <tgnlBNUOnW42EiLCz_akAzeeWkNknNtC0L6XgPu22x5snLwk-jvS8K8byxz0LVhf-i0Zi5deKpU5UuE0QqzqMOZHx6OqLcpSllgj6JyZAAM=@vinarskis.com>
+In-Reply-To: <20261022192709.12149-1-lnicoara@thinkoid.org>
+References: <NCQ5O8k2_GpmJZBjDzgZL67uwdiYmmuSudO9VmdRaFTDq0u7aec6at00VYbzdwwSVvgJnLnGxewwp_TVO9oTjM2pAjP_LoiURf9JCIKXB-w=@vinarskis.com> <20261022192709.12149-1-lnicoara@thinkoid.org>
+Feedback-ID: 158356072:user:proton
+X-Pm-Message-ID: 18a3e30b6d997ba5a1b9c6346f460aaab43f928c
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -100,88 +64,127 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261025040046.1602-4-atharvatiwarilinuxdev@gmail.com>
-
-Hi Atharva,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on v7.3]
-[also build test WARNING on next-20261023]
-[cannot apply to drm-misc/drm-misc-next pci/next pci/for-linus linus/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Atharva-Tiwari/platform-apple-gmux-Fix-power-for-MMIO-systems/20261024-235937
-base:   v7.3
-patch link:    https://lore.kernel.org/r/20261025040046.1602-4-atharvatiwarilinuxdev%40gmail.com
-patch subject: [PATCH 03/13] platform/apple-gmux: Fix MMIO interface
-config: x86_64-randconfig-1017-20261025 (https://download.01.org/0day-ci/archive/20261026/202610260503.TQjc0Dfl-lkp@intel.com/config)
-compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
-rustc: rustc 1.96.0 (ac68faa20 2026-05-25)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261026/202610260503.TQjc0Dfl-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610260503.TQjc0Dfl-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/platform/x86/apple-gmux.c:253:6: warning: variable 'val' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-     253 |         if (gmux_mmio_wait(gmux_data)) {
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/apple-gmux.c:263:9: note: uninitialized use occurs here
-     263 |         return val;
-         |                ^~~
-   drivers/platform/x86/apple-gmux.c:253:2: note: remove the 'if' if its condition is always true
-     253 |         if (gmux_mmio_wait(gmux_data)) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/apple-gmux.c:250:8: note: initialize the variable 'val' to silence this warning
-     250 |         u8 val;
-         |               ^
-         |                = '\0'
-   drivers/platform/x86/apple-gmux.c:290:6: warning: variable 'val' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-     290 |         if (gmux_mmio_wait(gmux_data)) {
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/apple-gmux.c:301:9: note: uninitialized use occurs here
-     301 |         return val;
-         |                ^~~
-   drivers/platform/x86/apple-gmux.c:290:2: note: remove the 'if' if its condition is always true
-     290 |         if (gmux_mmio_wait(gmux_data)) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/apple-gmux.c:286:9: note: initialize the variable 'val' to silence this warning
-     286 |         u32 val;
-         |                ^
-         |                 = 0
-   2 warnings generated.
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-vim +253 drivers/platform/x86/apple-gmux.c
 
-   247	
-   248	static u8 gmux_mmio_read8(struct apple_gmux_data *gmux_data, int port)
-   249	{
-   250		u8 val;
-   251	
-   252		mutex_lock(&gmux_data->index_lock);
- > 253		if (gmux_mmio_wait(gmux_data)) {
-   254			iowrite8((port & 0xff), gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-   255			iowrite8(GMUX_MMIO_READ | sizeof(val),
-   256				gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-   257			if (!gmux_mmio_wait(gmux_data))
-   258				return 0;
-   259			val = ioread8(gmux_data->iomem_base);
-   260		}
-   261		mutex_unlock(&gmux_data->index_lock);
-   262	
-   263		return val;
-   264	}
-   265	
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+On Thursday, October 22nd, 2026 at 21:27, Liviu Nicoara <lnicoara@thinkoid.=
+org> wrote:
+
+> On Thu, 22 Oct 2026 17:07:25 +0000, Aleksandrs Vinarskis wrote:
+> > I do not think the left charger you identified is correct - how did
+> > you arrive to that conclusion? Curious to compare to my method.
+>=20
+> I am afraid my method was simpler and coarser than yours: one run per
+> port, nineteen samples ten seconds apart, the charger feeding the
+> system only (battery at 96 % and not charging), on a 7.2.6 kernel
+> with all four GPIO channels in one DTB. The deltas over three minutes:
+>=20
+> Channel                Left charger   Right charger
+> 0x14b  AMUX2_GPIO          +1.6           -0.9
+> 0x145  AMUX2_THM           +0.1           +3.4
+> 0x146  AMUX3_THM           +0.8           -0.1
+> 0x14a  AMUX1_GPIO          -0.2           +1.3
+> 0x144  AMUX1_THM           -0.1           +0.2
+> 0x148  AMUX5_THM           -0.2           +1.2
+> 0x147  AMUX4_THM           +0.1           +1.8
+> 0x14d  AMUX4_GPIO          +0.0           -0.0
+>=20
+> The other channels fell or held while 0x14b rose, so it was not the
+> board warming as a whole. But 1.6 C in three minutes, against your
+> 2.3 C in ten seconds on the right, might mean that 0x14b is a sensor
+> somewhere on the left side of the board, not necessarily on the left
+> port's power path. Under SSD load it moved with 0x146 and fell with
+> it in cool-down, which puts it close to the SSD. "Left charger" was
+> my reading of the sign pattern. Your ten-second test is probably the
+> better discriminator for a sensor on a power path. If nothing answers
+> the left charger in ten seconds, the simpler reading is that the left
+> port has no thermistor of its own among these seven.
+>=20
+> > pm8550_gpio_02 does NOT clearly follow. In your test you have
+> > waited multiple minutes, which is enough to heat up a larger
+> > area on the motherboard.
+>=20
+> Agreed. In your left run it was the only channel with a positive
+> delta while the board drifted down, which is the same weak signal I
+> had, and no more than that.
+>=20
+> On the two AMUX3/AMUX4 GPIO channels: neither carries a thermistor
+> on this unit, and your tables say the same for yours. 0x14c reads
+> 130.048 C on every sample, the last row of the conversion table,
+> where the driver clamps a voltage at or below the lowest it knows.
+> Its input sits near 0 V. Windows' ADC configuration sets up only
+> PM8550 GPIO3 and GPIO4 as analog inputs, for AMUX1 and AMUX2, so the
+> pin behind AMUX3 is in its digital default, and PM8550's low GPIOs
+> read back here as inputs with a 10 uA pull-down. 0x14d held 34.7 C
+> within 0.1 C through both chargers and two load runs on this unit,
+> and 35.8 to 36.0 C through every one of your tests, the hairdryer
+> included. That is a biased pin, not a sensor. Both nodes can go.
+>=20
+> > ADC5_GEN3_AMUX1_GPIO_100K_PU - Likely "lpddr5_therm"
+>=20
+> I cannot separate 0x14a from 0x144 and 0x148 by heating. Under a
+> one-core load reading a file from /dev/shm they rose 14.0, 14.4 and
+> 14.2 C in lockstep, while the SoC's mem TSENS zone rose 20 C. Your
+> RAM stress warmed every PMIC die by 1 to 4 C as well, so it does not
+> single out 0x14a either. The three sit with the SoC; which one is the
+> memory I cannot tell.
+>=20
+> > Looks more like "sys_therm5" is the actual keyboard thermistor.
+>=20
+> Consistent with what I see. 0x147 is the coolest of the seven, 29 C
+> at idle, and nearly indifferent to board loads: it gained 2.0 C where
+> 0x144 gained 9.2 under SSD I/O, and 2.5 C where 0x144 gained 14.4
+> under the CPU load. A sensor away from the board, on the skin side,
+> fits.
+>=20
+> On 0x146: under four minutes of direct-I/O reads it rose 8.2 C
+> against 10.0 C on the NVMe's own sensor, the largest share of any
+> channel, and it fell at once when the load stopped while the
+> SoC-side channels kept rising. Under the CPU-only control its share
+> halved. I would keep "ssd_conn_therm" on it with partial confidence,
+> but I will not argue if it goes with the others.
+>=20
+> > Alternatively, I am leaning to drop the labels for anything we are
+> > not sure about...
+>=20
+> Or just give them pirate names. Jk.
+>=20
+> Agreed. 0x145 as the right charger is what both of us measured.
+> Everything else is a guess until the teardown. Numbering sys_therm
+> from 1 matches Windows' SYS_THERM1 to 7, so that helps too.
+>=20
+> One consequence on my side: the 9345 thermal-zones patch
+> (20261006185557.23016-1-lnicoara@thinkoid.org) names its zones
+> chg-left on 0x14b and ssd on 0x146. I will respin it with neutral
+> names for the zones that are not settled, so the two patches agree.
+>=20
+> Happy to test a v7, including a lid close on the EC interrupt line,
+> which my v6 run did not cover.
+>=20
+> I love this laptop, but I will not open it up just to pinpoint the
+> right thermistors' locations.
+
+I went ahead and tested thermistors against their potential names.
+Finding are available here:
+https://github.com/alexVinarskis/linux-x1e80100-dell-tributo/blob/master/de=
+ll-xps13-9345-ec.pdf
+
+TL;DR: with your correction of AMUX GPIOs to 1, 2 instead of 3, 4 most=20
+of the proposed labels are correct, except for left charging controller.
+This thermistor is quite far away such that IMO it cannot be associated
+with the charger. This perfectly explains the difference in heating up
+rate we both observed.
+
+I will adjust labels, address rest of the comments and respin series
+shortly.
+
+Regards,
+Alex
+
+>=20
+> Liviu
+> 
