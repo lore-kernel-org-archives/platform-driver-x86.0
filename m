@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792972390;
-	b=xALoL8pOJeEGugGtDgrKuyblcTQr7rLWKMnAFKTPbnYwqQid4g7ctz+HuVFiriPVH0aD
-	 xhzkzq7pzn4JhX+XLWYB1gacG1NyLqhsJu+78blqsG4ujOy0s60fkhxoZe8PU2nEGUZE6
-	 /DdIAKUCUBZ5cbJNhs/SQOaMt+8b4g9Au8ZYWvOqbORVgZFiB4HVoACzBLZT35Z/sue86
-	 vHEjcvQVg0FvO/enJ/GIntRJYUy1QFWqyt9rYhTGn5t4Pz1uJNEBcQ7FCOLv6fP8gy6gm
-	 KAHw93wPimHeP/QkkHadLLYqKTvw8Yid+YVB100lD1cSaBRXn7sNuL4F5DixQJRIaHQ==
+	t=1792972392;
+	b=XbdKxM0Y1q4xb9+w7T/TaKXowRxIy/yXIIc26IXkKFumASnkjrucUH8yVPbzFUXcjWZP
+	 sC3h3s5vwszRhdSybxa5GnMKl7jDZXFnATPaO2Zn6rhPUZog2m3UqpT2p2SBV6hMafkmi
+	 dLDKaIWFvaPPBHeOTsoapTiqYKRg/1awCOgRFloiXW9tIQjrmlPLADT3Cqgh0cnjEQMQY
+	 QAGzOtlRoC4YTiDVnkaWHJda4Tf0zGqRaW7dXWVLLOSM2A77L0/CaIWmtt66qncIMvezw
+	 DP90zS0YymowErgmsjo0+m9y9zBjMveMpGCQdn6KzKBZbl2NtLstrnfySP37IO9+Ofw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792972390;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792972392;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=81aVzsRhIxyvHrijYkBfmYhJCAQ6H9fni/47H/TxpOM=;
-	b=nmKVoTkC0b+GdsKbuLy/HhRL1bFM9ZlVT+XjEeSsfqy/ib8Zxg/vRXtFrRGg2561SRhX
-	 13wQZmLrTfBm4WLjc/BnOQZgTCp05+05pwdsvNowR+9YiqNR8kmeL3ysjB1nksqJcdyIh
-	 RGu+KD7ecXMkragdqgVksGTyaf1S07swXJJhuC+0RXAJFCpp2nKyPstW95CPNuX9E7Ik+
-	 6sd+PLPdXBBevvKaQU/wIgOM53sXSWU395jzu2QVO6jE6RcZKPJgJy3AnA2lDZnqvt73I
-	 DdofjiblOdwO8V/3mE7J42HcweElha1qBLq1t5dI7lT2xkZA+P2SpANFpTrv8SGCo/g==
+	bh=RMjjdnj15EPIEp1Xcr7HJfBq/GiPgHey9XLhjsl06Uw=;
+	b=R5n7binMK2HzIVAsF7YF3kmwnZv6sJL/9kBPddE+yBdkImfilk99+0m8LqSdoBWYB8d9
+	 XnrW/ISObwC+WDWHfSezLYmCmS71G/t3Txt/LawJI9jyO1N2ZmaT1mAhoalInaLbibm4R
+	 0bIrmLprF9eK8MY6qfZM5Gkp0lv+y4IXuM4Z+9Gp6PIuqigf3Rea/tw96Ib5DB/zF9d28
+	 s/cudZLiFOi5/1c4g8CufrtlT2z98Vk5npXtTSnmlxJDLuwCbggQIOlzbaMW3KhNXKl2g
+	 1vDrEr294hcEFfSoXJGjfCldgILqr2hgjMIesCN7yyr45z5vXFEnSmbuNSiePfBFnbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="kE/lKOK3";
-	arc=none smtp.remote-ip=91.218.175.195
-Received: from mta0.migadu.com (out-195.mta0.migadu.com [91.218.175.195])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TFsf6XUX;
+	arc=none smtp.remote-ip=91.218.175.199
+Received: from mta0.migadu.com (out-199.mta0.migadu.com [91.218.175.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE8760A2635
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 23:53:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6EE8760A2635
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0440060A263E
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 23:53:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0440060A263E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=kE/lKOK3
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TFsf6XUX
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=dxlZbiIEkXKFcuOlPf4JXHYhH/NjTKA8GtaFDY2kMA8=;
+DKIM-Signature: a=rsa-sha256; bh=MpUp3asw/jvoPlK/e+cT5xP1Gg2dHYa/G4XvMJkytyc=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792972387; v=1; x=1793577187;
- b=kE/lKOK3/AxhwZXZ2J5QBLdTNXdxwB+KlsJ6yWuXhcaZq1Kn2zXuShxHwHiai7/WBLF7cUuw
- NtcvtKH8buMBLObNcLP03QnzT4sYSX7zYXW0U00sMTxt6xUBKgtmIkwuKA5NhqXIWsClbkXKe1v
- ooqwMN+lj/EzOs7XhfPsG8Zk=
+ t=1792972390; v=1; x=1793577190;
+ b=TFsf6XUX5fWf5MmxAYpiIQ5ByPuF38H7xprcswLv5cumqmicdlZ3t+d9RiLdMbXhbVFq0nPg
+ Lee3YDA08oa+pvLBHF2cnGpHyUVmtzsSWib3F7K399fiUQp+I5b1HR+K2eJx6NbajsTQDAR0usK
+ ejSDZVLIapk7Ty+PkDokOU3Q=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 4bf86ce714a13f90;
-	Sun, 25 Oct 2026 23:53:07 +0000
-X-Mizu-Trace-ID: 4bf86ce714a13f90
+Received: by smtp.migadu.com with ESMTPS id df730c9150d6efe1;
+	Sun, 25 Oct 2026 23:53:10 +0000
+X-Mizu-Trace-ID: df730c9150d6efe1
 X-Migadu-Flow: FLOW_OUT
 From: Denis Benato <denis.benato@linux.dev>
 To: linux-kernel@vger.kernel.org
@@ -68,9 +68,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Hans de Goede" <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v11 15/18] HID: asus: size ally gamepad commands from the HID report descriptor
-Date: Sun, 25 Oct 2026 23:52:28 +0000
-Message-ID: <20261025235232.129945-16-denis.benato@linux.dev>
+Subject: [PATCH v11 16/18] platform/x86: asus-armoury: pick the eGPU activation from the reported GPU
+Date: Sun, 25 Oct 2026 23:52:29 +0000
+Message-ID: <20261025235232.129945-17-denis.benato@linux.dev>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20261025235232.129945-1-denis.benato@linux.dev>
 References: <20261025235232.129945-1-denis.benato@linux.dev>
@@ -85,357 +85,180 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ally_alloc_cmd() hardcodes ROG_ALLY_REPORT_SIZE both for the command
-buffer allocation and, at every call site, for the transfer length, and
-mcu_request_version() uses it for the size of the MCU version response.
-The gamepad protocol speaks through the 0x5A feature report, whose
-transfer length is declared by the HID report descriptor of the device
-at hand, and the MCU version is read back from the 0x0d feature report
-the same way.
+The egpu_enable attribute is a switch: writing 0 turns the eGPU off
+and writing 1 turns it on. Turning it on has always sent the NVIDIA
+activation value, which only works for NVIDIA stations, and the WMI
+interface cannot tell which GPU is installed in the connected one.
 
-Size both from the report descriptor instead:
-
-- ally_alloc_cmd() takes the HID device, resolves the length of the
-  0x5A feature report through asus_report_len() and returns it to the
-caller;
-- every caller sends and receives with the returned length instead of
-the hardcoded ROG_ALLY_REPORT_SIZE;
-- ally_set_button_mapping() declares the size of its mapping block
-(the length byte at buf[4] plus the four 11-byte entries, up to
-buf[48]) so a descriptor with a short 0x5A report is rejected by the
-fit check instead of being overflowed by the fixed-offset writes;
-- mcu_request_version() sizes the 0x0d response buffer with
-asus_report_len() and gives up when the device does not declare the
-report at all; ROG_ALLY_REPORT_SIZE has no users left and is removed.
+Let drivers that detect the station report the GPU vendor through
+asus-wmi: writing 1 sends the activation value matching the reported
+vendor and falls back to NVIDIA when nothing has been reported, so
+existing tools keep working unchanged on every station.
 
 Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/hid/hid-asus.c | 103 +++++++++++++++++++++++++++--------------
- 1 file changed, 69 insertions(+), 34 deletions(-)
+ drivers/platform/x86/asus-armoury.c        | 53 +++++++++++++---------
+ drivers/platform/x86/asus-wmi.c            | 29 ++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h | 11 +++++
+ 3 files changed, 71 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index f438cad13264..e444cad85b32 100644
---- a/drivers/hid/hid-asus.c
-+++ b/drivers/hid/hid-asus.c
-@@ -69,7 +69,6 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
- #define ASUS_XGM_QUERY_VERSION 0x03
- #define ASUS_XGM_INFO_LEN 32
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index fb382de5b57b..6cc5f0f6b3f5 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -538,13 +538,27 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+ ASUS_WMI_SHOW_INT(dgpu_disable_current_value, ASUS_WMI_DEVID_DGPU);
+ ASUS_ATTR_GROUP_BOOL(dgpu_disable, "dgpu_disable", "Disable the dGPU");
  
--#define ROG_ALLY_REPORT_SIZE 64
- #define ROG_ALLY_X_MIN_MCU 313
- #define ROG_ALLY_MIN_MCU 319
+-/* Values map for eGPU activation requests. */
+-static u32 egpu_status_map[] = {
+-	[0] = 0x00000000U,
+-	[1] = 0x00000001U,
+-	[2] = 0x00000101U,
+-	[3] = 0x00000201U,
+-};
++/*
++ * egpu_default_enable_value() - Activation value for the connected station
++ *
++ * The eGPU switch activation value selects the vendor of the external
++ * GPU: 0x0001 activates NVIDIA, 0x0101 AMD and 0x0201 Intel. Pick the
++ * value matching the GPU vendor reported for the connected station,
++ * and fall back to NVIDIA when no vendor has been reported.
++ *
++ * Return: the activation value for the reported GPU vendor
++ */
++static u32 egpu_default_enable_value(void)
++{
++	switch (asus_wmi_egpu_vendor()) {
++	case PCI_VENDOR_ID_ATI:
++		return 0x0101;
++	case PCI_VENDOR_ID_INTEL:
++		return 0x0201;
++	default:
++		return 0x0001;
++	}
++}
  
-@@ -943,28 +942,33 @@ static int ally_gamepad_send_receive_packet(struct ally_handheld *ally,
+ /*
+  * armoury_pci_rescan() - Performs a PCI rescan
+@@ -578,9 +592,14 @@ static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj
+ 	if (err)
+ 		return err;
  
- /**
-  * ally_alloc_cmd() - Construct a command buffer for the gamepad
-+ * @hdev: HID device the command is built for
-  * @cmd: Command code to send
-  * @payload: Optional payload data to include in the command
-  * @payload_size: Size of the payload data
-+ * @size: Where to store the length of the allocated buffer
-  *
-- * The constructed buffer is 64 bytes long, and it is the caller
-- * responsibility to free the buffer using kfree().
-+ * The buffer is sized after the feature report the device declares for
-+ * the gamepad commands, and it is the caller responsibility to free the
-+ * buffer using kfree().
-  *
-  * Return: the newly allocated buffer containing the command, or NULL on
-  * allocation failure or if the payload would not fit in the report
-  */
--static u8 *ally_alloc_cmd(u8 cmd, const u8 *payload, u8 payload_size)
-+static u8 *ally_alloc_cmd(struct hid_device *hdev, u8 cmd, const u8 *payload,
-+			  u8 payload_size, size_t *size)
- {
-+	size_t hw_len = asus_report_len(hdev, HID_ALLY_SET_REPORT_ID);
- 	u8 *hidbuf;
- 
- 	/*
- 	 * The payload is written after the 4-byte command header:
- 	 * reject one that would spill past the end of the report.
- 	 */
--	if (payload_size > ROG_ALLY_REPORT_SIZE - 4)
-+	if (hw_len < 4 || payload_size > hw_len - 4)
- 		return NULL;
- 
--	hidbuf = kzalloc(ROG_ALLY_REPORT_SIZE, GFP_KERNEL);
-+	hidbuf = kzalloc(hw_len, GFP_KERNEL);
- 
- 	if (!hidbuf)
- 		return NULL;
-@@ -977,6 +981,8 @@ static u8 *ally_alloc_cmd(u8 cmd, const u8 *payload, u8 payload_size)
- 	if (payload_size > 0 && payload)
- 		memcpy(&hidbuf[4], payload, payload_size);
- 
-+	*size = hw_len;
+-	if (requested >= ARRAY_SIZE(egpu_status_map))
++	if (requested > 1)
+ 		return -EINVAL;
+-	enable = egpu_status_map[requested];
 +
- 	return hidbuf;
- }
- 
-@@ -992,15 +998,17 @@ static bool ally_check_capability(struct hid_device *hdev, struct ally_handheld
- 				  enum ally_command_codes check_cmd)
- {
- 	u8 payload[] = { 0x00 };
-+	size_t buf_len;
- 	int ret;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(check_cmd, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, check_cmd, payload,
-+					       sizeof(payload), &buf_len);
- 	if (!buf) {
- 		hid_err(hdev, "Failed to allocate buffer for capability check.\n");
- 		return false;
- 	}
- 
--	ret = ally_gamepad_send_receive_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_receive_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to check capability 0x%02x: %d\n", check_cmd, ret);
- 		return false;
-@@ -1043,16 +1051,18 @@ static int ally_set_xbox_controller(struct hid_device *hdev,
- 				    struct ally_config *cfg, bool enabled)
- {
- 	u8 payload[] = { enabled ? 0x01 : 0x00 };
-+	size_t buf_len;
- 	int ret;
- 
- 	if (!cfg || !cfg->xbox_controller_support)
- 		return -EOPNOTSUPP;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_XBOX_CONTROLLER, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_XBOX_CONTROLLER,
-+					       payload, sizeof(payload), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to set Xbox controller mode: %d\n", ret);
- 		return ret;
-@@ -1160,6 +1170,7 @@ static DEVICE_ATTR_RW(xbox_controller);
- static int ally_set_gamepad_mode(struct ally_handheld *ally, struct hid_device *hdev, u8 mode)
- {
- 	u8 payload[] = { mode };
-+	size_t buf_len;
- 	int ret;
- 
- 	if (mode < ALLY_GAMEPAD_MODE_GAMEPAD ||
-@@ -1168,11 +1179,12 @@ static int ally_set_gamepad_mode(struct ally_handheld *ally, struct hid_device *
- 		return -EINVAL;
- 	}
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_GAMEPAD_MODE, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_GAMEPAD_MODE,
-+					       payload, sizeof(payload), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to set gamepad mode: %d\n", ret);
- 		return ret;
-@@ -1609,13 +1621,15 @@ static int ally_set_vibration_intensity(struct ally_handheld *ally,
- 					struct hid_device *hdev, u8 left, u8 right)
- {
- 	const u8 data[] = { left, right };
-+	size_t buf_len;
- 	int ret;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_VIBRATION_INTENSITY, data, sizeof(data));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_VIBRATION_INTENSITY,
-+					       data, sizeof(data), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to set vibration intensity: %d\n", ret);
- 		return ret;
-@@ -1777,13 +1791,15 @@ static int ally_set_joystick_thresholds(struct ally_handheld *ally,
- 					u8 left_it, u8 left_ot, u8 right_it, u8 right_ot)
- {
- 	const u8 payload[] = { left_it, left_ot, right_it, right_ot };
-+	size_t buf_len;
- 	int ret;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_JOYSTICK_DEADZONE, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_JOYSTICK_DEADZONE,
-+					       payload, sizeof(payload), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to set joystick ranges: %d\n", ret);
- 		return ret;
-@@ -2125,6 +2141,7 @@ static int ally_set_anti_deadzone(struct ally_handheld *ally,
- 				  u8 left_adz, u8 right_adz)
- {
- 	const u8 payload[] = { left_adz, right_adz };
-+	size_t buf_len;
- 	int ret;
- 
- 	if (!cfg->anti_deadzone_support) {
-@@ -2132,11 +2149,12 @@ static int ally_set_anti_deadzone(struct ally_handheld *ally,
- 		return -EOPNOTSUPP;
- 	}
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_ANTI_DEADZONE, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_ANTI_DEADZONE,
-+					       payload, sizeof(payload), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to set anti-deadzone values: %d\n", ret);
- 		return ret;
-@@ -2320,13 +2338,15 @@ static int ally_set_trigger_ranges(struct ally_handheld *ally,
- 				   u8 left_it, u8 left_ot, u8 right_it, u8 right_ot)
- {
- 	const u8 payload[] = { left_it, left_ot, right_it, right_ot };
-+	size_t buf_len;
- 	int ret;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_TRIGGER_RANGE, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_TRIGGER_RANGE,
-+					       payload, sizeof(payload), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to set trigger ranges: %d\n", ret);
- 		return ret;
-@@ -2676,13 +2696,15 @@ static int ally_set_joystick_resp_curve(struct ally_handheld *ally,
- 		curve->entry_3.move, curve->entry_3.resp,
- 		curve->entry_4.move, curve->entry_4.resp
- 	};
-+	size_t buf_len;
- 	int ret;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_RESP_CURVE, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_RESP_CURVE,
-+					       payload, sizeof(payload), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -3039,13 +3061,15 @@ static int ally_set_turbo_params(struct ally_handheld *ally,
- 		turbo->btn_m1.turbo,
- 		turbo->btn_m1.toggle,
- 	};
-+	size_t buf_len;
- 	int ret;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_TURBO_PARAMS, payload, sizeof(payload));
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_TURBO_PARAMS,
-+					       payload, sizeof(payload), &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	ret = ally_gamepad_send_packet(ally, hdev, buf, buf_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Failed to set turbo parameters: %d\n", ret);
- 		return ret;
-@@ -3318,12 +3342,18 @@ static int ally_set_button_mapping(struct hid_device *hdev, struct ally_handheld
- 	 */
- 	u8 macro_bytes[11] = {0};
- 	u8 btn_bytes[11] = {0};
-+	size_t buf_len;
- 
- 	if (!mapping || !mapping->first.remap || !mapping->first.macro ||
- 	    !mapping->second.remap || !mapping->second.macro)
- 		return -EINVAL;
- 
--	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_MAPPING, NULL, 0);
 +	/*
-+	 * The mapping block spans buf[4]..buf[48]: give ally_alloc_cmd() its
-+	 * size so the fit check protects the fixed-offset writes below.
++	 * 0 deactivates the eGPU, 1 activates it with the value matching
++	 * the GPU reported for the connected station.
 +	 */
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_MAPPING, NULL,
-+					       1 + 0x2C, &buf_len);
- 	if (!buf)
- 		return -ENOMEM;
++	enable = requested ? egpu_default_enable_value() : 0;
  
-@@ -3439,7 +3469,7 @@ static int ally_set_button_mapping(struct hid_device *hdev, struct ally_handheld
- 		memcpy(&buf[38], macro_bytes, 11);
+ 	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
+ 		/* Ensure the eGPU is connected before attempting to activate it. */
+@@ -661,7 +680,7 @@ static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj
+ static ssize_t egpu_enable_current_value_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 						char *buf)
+ {
+-	int i, err;
++	int err;
+ 	u32 status;
+ 
+ 	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
+@@ -670,20 +689,10 @@ static ssize_t egpu_enable_current_value_show(struct kobject *kobj, struct kobj_
+ 			return err;
  	}
  
--	return ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+	return ally_gamepad_send_packet(ally, hdev, buf, buf_len);
+-	for (i = 0; i < ARRAY_SIZE(egpu_status_map); i++) {
+-		if (egpu_status_map[i] == status)
+-			return sysfs_emit(buf, "%u\n", i);
+-	}
+-
+-	return -EIO;
++	return sysfs_emit(buf, "%u\n", status != 0);
  }
  
- /**
-@@ -4156,14 +4186,16 @@ static void ally_config_remove(struct hid_device *hdev, struct ally_config *cfg)
- static int ally_gamepad_check_ready(struct ally_handheld *ally, struct hid_device *hdev)
- {
- 	u8 payload[] = { 0x00 };
-+	size_t buf_len;
- 	int ret;
+-static ssize_t egpu_enable_possible_values_show(struct kobject *kobj, struct kobj_attribute *attr,
+-						char *buf)
+-{
+-	return armoury_attr_enum_list(buf, ARRAY_SIZE(egpu_status_map));
+-}
+-ASUS_ATTR_GROUP_ENUM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
++ASUS_ATTR_GROUP_BOOL(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
  
- 	for (int i = 0; i < HID_ALLY_READY_MAX_TRIES; i++) {
--		u8 *buf __free(kfree) = ally_alloc_cmd(CMD_CHECK_READY, payload, sizeof(payload));
-+		u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_CHECK_READY,
-+						       payload, sizeof(payload), &buf_len);
- 		if (!buf)
- 			return -ENOMEM;
+ /* Device memory available to APU */
  
--		ret = ally_gamepad_send_receive_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-+		ret = ally_gamepad_send_receive_packet(ally, hdev, buf, buf_len);
- 		if (ret < 0) {
- 			hid_dbg(hdev, "ROG Ally check %d/%d failed: %d\n", i,
- 				HID_ALLY_READY_MAX_TRIES, ret);
-@@ -5796,10 +5828,14 @@ static int mcu_parse_version_string(const u8 *response, size_t response_size)
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index a65090429ca7..40b4cf32c0ac 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -881,6 +881,35 @@ static DEVICE_ATTR_RW(dgpu_disable);
+ #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
  
- static int mcu_request_version(struct hid_device *hdev)
- {
--	u8 *response __free(kfree) = kzalloc(ROG_ALLY_REPORT_SIZE, GFP_KERNEL);
-+	size_t hw_len = asus_report_len(hdev, FEATURE_REPORT_ID);
- 	const u8 request[] = { 0x5a, 0x05, 0x03, 0x31, 0x00, 0x20 };
- 	int ret;
- 
-+	if (!hw_len)
-+		return -EINVAL;
+ /* eGPU ********************************************************************/
 +
-+	u8 *response __free(kfree) = kzalloc(hw_len, GFP_KERNEL);
- 	if (!response)
- 		return -ENOMEM;
++static u16 egpu_gpu_vendor;
++
++/**
++ * asus_wmi_egpu_set_vendor() - Report the vendor of the external GPU
++ * @vendor: PCI vendor ID of the GPU installed in the connected eGPU
++ * station, or 0 to fall back to the default activation value
++ *
++ * Drivers that detect an eGPU station report the vendor of the GPU
++ * they found so that the eGPU activation can use the matching value.
++ */
++void asus_wmi_egpu_set_vendor(u16 vendor)
++{
++	egpu_gpu_vendor = vendor;
++}
++EXPORT_SYMBOL_NS_GPL(asus_wmi_egpu_set_vendor, "ASUS_WMI");
++
++/**
++ * asus_wmi_egpu_vendor() - Vendor of the external GPU
++ *
++ * Return: the PCI vendor ID last reported with
++ * asus_wmi_egpu_set_vendor(), or 0 when no station is known
++ */
++u16 asus_wmi_egpu_vendor(void)
++{
++	return egpu_gpu_vendor;
++}
++EXPORT_SYMBOL_NS_GPL(asus_wmi_egpu_vendor, "ASUS_WMI");
++
+ #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t egpu_enable_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index b5ed8c83ace1..a53b2828bb1d 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -204,6 +204,8 @@ int asus_hid_register_listener(struct asus_hid_listener *cdev);
+ void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
+ int asus_hid_event(enum asus_hid_event event);
+ bool asus_wmi_custom_fan_curve_is_enabled(void);
++void asus_wmi_egpu_set_vendor(u16 vendor);
++u16 asus_wmi_egpu_vendor(void);
+ #else
+ static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
+ {
+@@ -239,6 +241,15 @@ static inline bool asus_wmi_custom_fan_curve_is_enabled(void)
+ {
+ 	return false;
+ }
++
++static inline void asus_wmi_egpu_set_vendor(u16 vendor)
++{
++}
++
++static inline u16 asus_wmi_egpu_vendor(void)
++{
++	return 0;
++}
+ #endif
  
-@@ -5807,17 +5843,16 @@ static int mcu_request_version(struct hid_device *hdev)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = hid_hw_raw_request(hdev, FEATURE_REPORT_ID, response,
--				ROG_ALLY_REPORT_SIZE, HID_FEATURE_REPORT,
--				HID_REQ_GET_REPORT);
-+	ret = hid_hw_raw_request(hdev, FEATURE_REPORT_ID, response, hw_len,
-+				 HID_FEATURE_REPORT, HID_REQ_GET_REPORT);
- 	if (ret < 0)
- 		return ret;
- 
--	ret = mcu_parse_version_string(response, ROG_ALLY_REPORT_SIZE);
-+	ret = mcu_parse_version_string(response, hw_len);
- 	if (ret < 0) {
- 		pr_err("Failed to parse MCU version: %d\n", ret);
- 		print_hex_dump(KERN_ERR, "MCU: ", DUMP_PREFIX_NONE,
--			      16, 1, response, ROG_ALLY_REPORT_SIZE, false);
-+			       16, 1, response, hw_len, false);
- 	}
- 
- 	return ret;
+ #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
 -- 
 2.47.3
 
