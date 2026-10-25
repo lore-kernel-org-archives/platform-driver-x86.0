@@ -1,100 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.54
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792883634;
-	b=zCpvZjFc9Jzte9HwMkFyRZ2d2XHkXlQVbH8XlWIDW2ucmN1J9FKQGTgPkCyFgUEoJ90x
-	 iyQuXC+3ZUUT/ZvJ3hZ6vxnDn8WQOhnOVeNfJd9uXxdx6dmLhk8yODjMxH5xP0LmT4Ul7
-	 m2OPImafnFclK/CKjFgRRxxCdo7FDcsTwivuXimYhfoxpZHDab/mf5wnj2edf2HEVum1N
-	 DDStwa81tAO4rg0aYHbk/7N7F7wCvNZw1Sd2sdwsQp8I5e3B1nIS/kPq3lNpv3gdVK/Ff
-	 SHWjgaLgUka6wYBd9tHopG1Wmx0I0TcDGi24HjyOjpnUx+iUeZRzdDpnlPRroHSJJQA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792883634;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Content-Disposition;
-	bh=imAl4+nQz/6gt4gpxMhLcrwfP6Z7GTEGSm74OZaRico=;
-	b=blWau3VjZ5OSzJbOG0xDzbtQuxTkfBiI4oaMtCiylq6VeLJXtprDbDUw/P4P5kjXnB3+
-	 Ld5iwoh4kkQsOTwPCFMi8YRSC/U4J+EBiNyPHSpCe7kjZw074tkQry2G2F1oZm0samz+2
-	 wrN09K1hxRzeHiMWRsyJQixm6LhNeJYmDNn7zvNRoqwqPLUlYdg1sUP3632HCPhAPcy30
-	 4/fjMLvVVAlBwE8t18bJ010stHNzxpNWzDWV+7N25ZHvdlJPBIAGI/OZQCqda7ekaSqUv
-	 jhkTydPip55XY46+YLjN+P/QHpZy8BevUjS6/t6CCLQypZj4LoU9n2dP/cG8xsd2yYQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=NrStFlRl;
-	arc=none smtp.remote-ip=74.125.82.54
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792893464;
+	b=PUIe7KtaKBMldMuXiBMgCvOAJPkncqyvQibulJREJuUbr1W8GDe7i4y7R0C/52Ib3xKw
+	 YQ268xNtovjg78wLOj0wIWycpfRobGzpczSIvNSazEt6vJVsq0KiEWYbl1KL9G4OVBl3G
+	 DL/G8Ifrovbzr/Nge8eLZB65hdQKLP+Rcru0atoPkS2JWwkBfmgKFp6ETYCaJwCP45j5h
+	 YG5uWRVytC39lc0Xl3Qtl+eTrCucF7xqEgfAT2m/a4CNR+PB+wHkxwpo3bofQp1z8By1U
+	 0qngAfz+F3O1fDWmSzuJWcIBaCQN/HazrYI4j2b8nGyM3XXbgco2QCtJdis3SRYb1CQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792893464;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=4h64vo79lK2wewb7d7GpVCiab3coj3gK3NzNyezcugE=;
+	b=POudes++uiSmyZBM070rjAL728/0FdaSg3wfVcUNLb+BZbZ21pFO28z3+mRrvp0tImqW
+	 wUwoqOohgUg82ubhE3DfwT2qieDtKw129DFiWpcDSIS8lnU1hioerjDr9NsltcgSLNTKg
+	 2kxO6MD9C43Zjg/wuRSQ/C29KD8AcfR4UgZWG0jA3ziticf9yvCImM1NXGSGK7p++qMys
+	 jMzHM14Mj8A/AtMqBfCiSRTzdNJlWha2EmG4/8jXohqF8+6LypMb+pdV+KztfTnE5jwp8
+	 OlMAv7SOZk+gek/i1KfGU8fyDbHSywYAYZkn66zW5ae75UYZeEcA8EeDHFusuhF90rQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b="SJ3Yoku/";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id B25BD606A328
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 23:13:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B25BD606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FA4606A31A;
+	Sun, 25 Oct 2026 01:57:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 63FA4606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=NrStFlRl
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-188406bb948so1532735c88.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 16:13:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792883633; x=1793488433; darn=vger.kernel.org;
-        h=content-disposition:content-transfer-encoding:content-type
-         :mime-version:references:in-reply-to:subject:cc:to:from:message-id
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=imAl4+nQz/6gt4gpxMhLcrwfP6Z7GTEGSm74OZaRico=;
-        b=NrStFlRltiFi7cA7liJFpE6qPKybS4VZpOjC5fp0LXf/iEtTddkuQspnqk3FuCL2Gl
-         P8nT2Nhhfx1/QFKJ6SAiJlDtZYbjs8u/CP9secYM9yFnL4kBM0oGONLZ9hYteeSBdwbb
-         f3G0Je9HzdAkRDG//UKBtwTAdcYm9aCV2s7lxjj2pvM/XMG6w+iL60Aj+Coba8Kyrjrf
-         M0jXUlBHfMi2WxcHgsnkEXOShdfRCuJSOO2Z9QcuaqYSR3Z85Y5U9quONEDqssJVybiN
-         nDX67zcJAbBmTxfJJIrDE6Kqdf77Mma98YmhJlSeC1e/v4gfGW3n9sPtTyXkwOKeAH5y
-         TDgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792883633; x=1793488433;
-        h=content-disposition:content-transfer-encoding:content-type
-         :mime-version:references:in-reply-to:subject:cc:to:from:message-id
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=imAl4+nQz/6gt4gpxMhLcrwfP6Z7GTEGSm74OZaRico=;
-        b=NXG6GAxkIBgIoXMtM2rprQliSxuEu7QmK9Ck58s/4R39HcI/YklMUJJ12LoHkH4+PK
-         uUvG3cfhuTiIO8NKNqWHlPAPdXk0oNPKzGkeAmQGmJ5WbacErl/YXXeqhlh0Qnj9h1kF
-         uP2wCrfFgVBk4y5gjoyMatUBjyKcNa9RxG/yV+iV6xUwuvtLoOitp7crylptIDTVViGN
-         xrPHV24C8cJXt5LqGxx1JbLRMsSYYRzPmY7KIkn5IqdNkxSaWWzpXtJogxzVYPeu7EPn
-         quKqSrmrU0QRpXJYZT6ANl5IuChoklPBr0TqhKmFrs42xX7TpXrMPDOB6nylPexgOmwg
-         YLWw==
-X-Forwarded-Encrypted: i=1; AKwUvBwjdUT/OMvehAD1kVb1TgV15dbyTOX+BymXP3cPs/ScHMHQiz0PLiBs90ZP769x0/B/kYZh6UWoCrSK7iL3MWA65RmN@vger.kernel.org
-X-Gm-Message-State: AFq9FYIIOPD4higfHRw/k+gxStBefsRz1qSCuwpeDi7ES1167nOUUz3k
-	ZRIotx2pYEOzcD+jPq1RfcJpGcrQ9wEtnM/8SApRtc8PVwyFqXqn/Mxs
-X-Gm-Gg: AYBFou3qf18f1eZoAa3R0Nd2Xg+KukWyMUq/iTbknYfFU/HdsQACFchtdTPouad/oiD
-	/7IN8cucKH9N36/3QGlCbwgubbK5yyhRSFEzeCt0HPoIbMmBKUJaWo5bEQSDqMHsNY/ElkiQqdL
-	XuF3AqLM5ocYquzNv81KMCgS/aqfbfbfDw7v6Tkhtj7W88Bu/Ef60eGLhIDYPWoe2bv+VghVnsD
-	1afDSxiEOYsXV+2TgRKF2nCl80HZNQYtSfEWY64Z5QrBlnOfk+sqyVFT4YaAexsoTxtTwgD07t5
-	oqyyO5w1MRAV1ddjdT1ZBd4LJBjrveRt3krhRMTcG7LF1gfrtVoJ1Q7JoQrTuyeXNEUQOpWU8vE
-	0IVPSUpFYpLMwNkVLweed93K9mJ/cUmuv++3WHWZtdQUHqEUsMjrrpmCY40oTxCDvgfUgfPZNkE
-	RJPtGNx7wpeFnKUYlNE3AonjpqUTFvdhahtvvReRbFPNBBkTGyUWMoBp1boiTrN83DrI5voIDAH
-	FdZBZeQEMvyjTJWPueAA8kKvxI8RyX81HLlHTdnhSYDkciLJ8JX3Wmz6/1Mf7Q53ir/z4WotCCZ
-	qjRLRQoTrvCNCAPbXqL/HoAAjHkbHCW2zFWAzuQb
-X-Received: by 2002:a05:7022:49c:b0:144:c128:4c4b with SMTP id a92af1059eb24-19937309cd8mr5409029c88.36.1792883632404;
-        Sat, 24 Oct 2026 16:13:52 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2ebe:8:8fe4:693:7158:24de])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a2a5937dsm10508969c88.20.2026.10.24.16.13.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 16:13:51 -0700 (PDT)
-Date: Sat, 24 Oct 2026 16:13:50 -0700
-Message-ID: <ab1d30eca12d5e7a764da99b68d0e229@gmail.com>
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Rong Zhang <i@rong.moe>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Ike Panhc <ikepanhc@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>,
-	Maxim Mikityanskiy <maxtram95@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: do not poke keyboard controller
-In-Reply-To: <5bdb870be988333df200ac7d4904dd1bda6ef52f.camel@rong.moe>
-References: <4b2f60a7ceac543bd8b889b9c0772b2c@gmail.com> <8cdbdcb893e2353e0ea2fe919e0c8a6a53f8b683.camel@rong.moe> <7b21717e80a7b779ab94d964ca40ee68@gmail.com> <5bdb870be988333df200ac7d4904dd1bda6ef52f.camel@rong.moe>
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=i@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=SJ3Yoku/
+ARC-Seal: i=1; a=rsa-sha256; t=1792893453; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bs7TuZH6QsjYYZKF+fV5lysLI3WTk5qyE6fFGqsdDTOyZiTyQQDjfHK1EmEEa9eWc6Kq/c22eb/d7+bRsIE7tkFkFnZbpuAu/MBleqHVf/iClLWkPqsK3kwKXoq0JXsL8pyspQjAg+tsUkjrJEkYBIO9I/Ro5R7Mvr/Jsi8/69I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1792893453; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4h64vo79lK2wewb7d7GpVCiab3coj3gK3NzNyezcugE=; 
+	b=fVKa6eB3gs1FkRsncasOVVyJR+9EOryCyLj+2Dw22xViT0jeZKPKvoYqUZk5MPPZWRdZx/3r0uWSiJkDra6Q4MMTKSf3ZrbFTNNwhZKtd1Sqajr1SH/NHCn3izjJU1iZuo9AuGWCCk0lQGDaSJatGVgwW3Ac5zdXxWlbwRE8Pm4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1792893453;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=4h64vo79lK2wewb7d7GpVCiab3coj3gK3NzNyezcugE=;
+	b=SJ3Yoku/zH1DrKbtB4RwkYQIKeKE+tKNp0K0sKP160qxBiy6+fHlSbToZOURs//Q
+	I6yV1yuANeKPOGSgAruMcc6oy8whSITKPDjn3w6NdS2/8gi8O6jynJ5wiOoLr8oNbU3
+	6iMdcsSCW8Bt1gfT1DVpYT4l8vTFSWgj9Dg+YA9tm5sIt07aUUgPSknzsSncnYa8NvM
+	r08M5jb+8m6us79O7W5FHS1Bbb3b2eCfH6QsETKaJ67i0KGBGy/Bf0Ms+5w5koRSe67
+	HP9nJev8IJCTs1ms+9H7B3frr4F41h6XWmFjUD6L+viK0zHCixLUZFcQcq+NrbCkgAe
+	zSj2IytWWw==
+Received: by smtp.zohomail.com with SMTPS id 1792893452059433.2882272106049;
+	Sat, 24 Oct 2026 18:57:32 -0700 (PDT)
+Message-ID: <cae0b78ac544dbc78242d55fe370a0eb7926825b.camel@rong.moe>
+Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: do not poke keyboard
+ controller
+From: Rong Zhang <i@rong.moe>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
+ <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede	
+ <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <ab1d30eca12d5e7a764da99b68d0e229@gmail.com>
+References: <4b2f60a7ceac543bd8b889b9c0772b2c@gmail.com>
+	 <8cdbdcb893e2353e0ea2fe919e0c8a6a53f8b683.camel@rong.moe>
+	 <7b21717e80a7b779ab94d964ca40ee68@gmail.com>
+	 <5bdb870be988333df200ac7d4904dd1bda6ef52f.camel@rong.moe>
+	 <ab1d30eca12d5e7a764da99b68d0e229@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 25 Oct 2026 09:52:27 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -104,67 +84,102 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+User-Agent: Evolution 3.56.2-10+b1 
+X-ZohoMailClient: External
 
-Hi Rong,
+Hi Dmitry,
 
-On Sat, Oct 24, 2026 at 11:30:06PM +0800, Rong Zhang wrote:
-> However, the methodology has been changed from hardware-based to
-> software-based. Because of the fundamental change, it has the potential
-> to break something if some users depends on the side-effect of toggling
-> the aux port.
->
-> While my device never needs the quirk, I can think of several useful
-> side-effects:
->
-> - pause the interrupt (and hence pause event handling) to save some
-> energy
-> - prevent the touchpad from waking up the platform
-> - reset faulty touchpads
->
-> By switching to the software-based methodology, all these capabilities
-> have gone. Of course, relying on these side-effects is a misuse, but
-> relying on the parameter itself without reporting it to the mailing list
-> is also a misuse! More below.
+On Sat, 2026-10-24 at 16:13 -0700, Dmitry Torokhov wrote:
+> Hi Rong,
+>=20
+> On Sat, Oct 24, 2026 at 11:30:06PM +0800, Rong Zhang wrote:
+> > However, the methodology has been changed from hardware-based to
+> > software-based. Because of the fundamental change, it has the potential
+> > to break something if some users depends on the side-effect of toggling
+> > the aux port.
+> >=20
+> > While my device never needs the quirk, I can think of several useful
+> > side-effects:
+> >=20
+> > - pause the interrupt (and hence pause event handling) to save some
+> > energy
+> > - prevent the touchpad from waking up the platform
+> > - reset faulty touchpads
+> >=20
+> > By switching to the software-based methodology, all these capabilities
+> > have gone. Of course, relying on these side-effects is a misuse, but
+> > relying on the parameter itself without reporting it to the mailing lis=
+t
+> > is also a misuse! More below.
+>=20
+> This reminds me of https://xkcd.com/1172/ ("Workflow").
+>=20
+> Also note that I8042_CMD_AUX_DISABLE / I8042_CMD_AUX_ENABLE only toggles
+> the AUX clock inhibit bit in the 8042 controller; it does not power down
+> or reset the touchpad (psmouse is unaware that ideapad-laptop poked the
+> controller behind its back, which is the whole problem), and i8042
+> already manages the AUX port and wakeup state across suspend and resume.
 
-This reminds me of https://xkcd.com/1172/ ("Workflow").
+Thanks for the detailed explanation. I agree that there should be no
+outstanding spacebar-heating workflow depending on I8042_CMD_AUX_DISABLE.
 
-Also note that I8042_CMD_AUX_DISABLE / I8042_CMD_AUX_ENABLE only toggles
-the AUX clock inhibit bit in the 8042 controller; it does not power down
-or reset the touchpad (psmouse is unaware that ideapad-laptop poked the
-controller behind its back, which is the whole problem), and i8042
-already manages the AUX port and wakeup state across suspend and resume.
+>=20
+> > A completely new behavior reusing an old knob is always prone to break
+> > *something* in a obscure way unless users are notified about the change=
+.
+> > Breaking something with a visible warning [1] in kmsg is much better th=
+an
+> > potentially breaking something in radio silence.=20
+> >=20
+> > We don't want to support poking i8042 anymore, so the use of
+> > 'ctrl_ps2_aux_port' is anyway becoming unsupported. The parameter was
+> > introduced only for debugging and is expected to be removed at any time=
+.
+> > If users don't report their use of the parameter to the mailing list,
+> > they are already relying on a broken setup.
+> >=20
+> > By renaming it and breaking the unsupported setup loudly, we encourage
+> > users to report quirky devices, as well as getting rid of an outdated
+> > parameter name.
+> >=20
+> > [1]: ideapad_laptop: unknown parameter 'ctrl_ps2_aux_port' ignored
+>=20
+> We already have DMI matching for this quirk (ctrl_ps2_aux_port_list[],
+> which has only ever contained the 2011 IdeaPad Z570 since commit
+> c69e7d843d2c added it in 2022), and the module parameter simply sets the
+> exact same priv->features.ctrl_ps2_aux_port flag as the DMI table.
+>=20
+> Intentionally breaking the module parameter for anyone who might be
+> using it for its intended purpose (making the touchpad toggle hotkey
+> work on an older IdeaPad)=C2=A0
+>=20
 
-> A completely new behavior reusing an old knob is always prone to break
-> *something* in a obscure way unless users are notified about the change.
-> Breaking something with a visible warning [1] in kmsg is much better than
-> potentially breaking something in radio silence. 
->
-> We don't want to support poking i8042 anymore, so the use of
-> 'ctrl_ps2_aux_port' is anyway becoming unsupported. The parameter was
-> introduced only for debugging and is expected to be removed at any time.
-> If users don't report their use of the parameter to the mailing list,
-> they are already relying on a broken setup.
->
-> By renaming it and breaking the unsupported setup loudly, we encourage
-> users to report quirky devices, as well as getting rid of an outdated
-> parameter name.
->
-> [1]: ideapad_laptop: unknown parameter 'ctrl_ps2_aux_port' ignored
+It's the flag's intended purpose, and never the module parameter's.
 
-We already have DMI matching for this quirk (ctrl_ps2_aux_port_list[],
-which has only ever contained the 2011 IdeaPad Z570 since commit
-c69e7d843d2c added it in 2022), and the module parameter simply sets the
-exact same priv->features.ctrl_ps2_aux_port flag as the DMI table.
+The module parameter's intended purpose is only for debugging and bug
+reporting. And its name and description describe the intended behavior.
 
-Intentionally breaking the module parameter for anyone who might be
-using it for its intended purpose (making the touchpad toggle hotkey
-work on an older IdeaPad) just because of hypothetical spacebar-heating
-workflows does not make sense to me.
+Renaming it does not change either of them, while reusing the knob makes
+its name mismatch the intended behavior.
 
-Thanks.
+> just because of hypothetical spacebar-heating
+> workflows does not make sense to me.
 
--- 
-Dmitry
+Using the parameter without reporting is also a spacebar-heating
+workflow.=C2=A0That's why the description asks users to report to the pdx86
+mailing list, so that we can add a new entry to the DMI quirk table. It's
+similar to sysfs bind/unbind to a certain extent, which recently gained
+TAINT_FORCED_BIND.
+
+We shouldn't create a divergence between the intended behavior and the
+parameter's name simply because such a workflow either.
+
+Note that we've broken another module parameter before. See commit
+cde7886b3517 ("platform/x86: ideapad-laptop: move ymc_trigger_ec from
+lenovo-ymc"), which moved and renamed a parameter.
+
+Thanks,
+Rong
+
+>=20
+> Thanks.
