@@ -1,60 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.119
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792966577;
-	b=wROXrDO1ilsDb2pbu/WDMqP7vHomYtyiMxyJD19dp7dlD5AizOlxaG7MZS0xBCh+rh0D
-	 dhKD+n9tyUowI6RBHA6ftVxzbmxEdLlOsXQWGzTtbfTeF4XwHjdaNQebZffWtvEkRH4KD
-	 00Jz8uDNvmr4J66GPL8SYMKuaOEy6FWBQhY0fdnjY+AfVLi/KFW8vVq4i9df12aCUJd2s
-	 7Wxbm3J/ZbZYgotgXoVYavOozM5JbndTLhMpMY+bs29dhILHnW+V00MubFGkUNhrqDq33
-	 AY4Pk3TNAOJcjs3kBpuXyKx5VkbteX3XF2QMO0kkkDwSSOu5PwIR+ROrPBnIRK8qH6A==
+	t=1792971555;
+	b=ZK5F14DVxXsQEFs/nekR4vhsv3gDRu261B3tOhY5Sj7HT8wKfZCSlZ5zAZW9Uu0+jQTQ
+	 IX0C+Zb9djBDWixyv+TreDFyWu78bbgrnkCm8kS47TJhjXUp2LiAHuDLIqmS9IFu81AKD
+	 Do4wkyUT/4BV2zXlsmBtNTyiWiFE28DgFO3AjHNPhQ0DD7eXYI2pYJ8i1Is3r38EhIbYp
+	 8x9qlVSXo5r/m80kvY3RWh2BWkOSmWzazaVXQjkBM36UONJkTfJ1sq/PhEGOcTGub3CsE
+	 e37nVEY3sX9IxQNN6aZboR3NoWKhcPODkPxP6M1D5U/OpiGkDV6HgPJyeBOMEkM3NLQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792966577;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=DMnV/6aSn1ZXSp1qQ4XFqAj3ot4W3oi4+OfSLRlndkc=;
-	b=kofABuH0XtFWYhsTS70kcDyiK8ze1LTVlTAUU3K5pOWqpG5cSh5b+0p3jPczeYxrFCF3
-	 4gfpZCiyj16ijYpDTyQ2XaLceeSSO4nTecb8w1umZobE+tS/8LcXMNmo1MvuFenVc4WFR
-	 bNkkoQDq1/MMvZKLGkZ1a/ScapNyqs9K38Jnx8bwKMDGK4Nz5545NU9J8tqPdu2ACAK2X
-	 VY7cFldap0mgZWfkLvAKG4UB1FOsZbpIASVdP8tVds+2BSJGYnYoxGPV5N2smj6lcOwje
-	 3I2vQZSIcExEZ/rYEC2xZ0PaZoqJCmWEu4cSQG3DBqkyuohKadCnqDPinfH00O7QpMA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792971555;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=hrxxPTtZzklJWr1I8RCcQH6APbY+mTeaGJ9MW6ThL0A=;
+	b=P27NCjZYqjOxvOTk0R2I136g/diyM5NQYYbgQLdE7KG7l2oN+jH5Hz0c6/EBBms15CKf
+	 +nMfn8HmUhB/8cnDApL2RbcKSu4qQrn0gS6NdDaDSjhGYPPPAK26WKT/yIx53dc3Iclxw
+	 zJRsQ4Wwr9OJdG8M6K2uOY5ioDnCYmFC+qIg576GjUw+los8ikHNfrW/JNagSLbcLooGW
+	 OXXbhM/aQ3kjCvh2iZhzv04SwaEfQ/PDaI/iGkLVrRkkRQJQv1481aFyRTAgDunycBD1K
+	 EZAWp169bpob2NE5KyVA23z2yZPGrwUbj9YAB3bJw7pRURrrLHn+FxqARrA1+DGy6wQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=vinarskis.com;
-	spf=pass smtp.mailfrom=vinarskis.com;
-	dkim=pass header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=FzFEwH16;
-	arc=none smtp.remote-ip=109.224.244.119
-Received: from mail-244119.protonmail.ch (mail-244119.protonmail.ch [109.224.244.119])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="d0T/cp/8";
+	arc=none smtp.remote-ip=209.85.221.45
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80CA606A31E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 22:16:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E80CA606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784CB606A31A
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 23:39:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 784CB606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=FzFEwH16
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail3; t=1792966573; x=1793225773;
-	bh=DMnV/6aSn1ZXSp1qQ4XFqAj3ot4W3oi4+OfSLRlndkc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=FzFEwH163Kethc0JpXcJAw5b98NkdekC+gczB91jtDHhg4YCXncWSKMzoePU73eyk
-	 7xecNkYt7sny7Wex8uMGZbMIEREPOWh4XB/51TSqoWYyoNW91N1mjTKv3eXaASVoPN
-	 btMettP4GvM5nzts47lCEf28kyOCHfNWpkBTsObcGDbailPlkZ6Bod1Bwiabi4ZCkb
-	 lQz7LmGq9e42ZEMKa5IAwGvwuQTkuOVEQ11UW538sn6z5e3y2QSt1v7Q7q0h9rFKyf
-	 W0qbuB1uYzSZ2OCCXNy47a+YmNZcOI5n2s8YdxVVKPfIihltjF4QGTO4CLisPeWHij
-	 V+1N3Z+XvM3rA==
-Date: Sun, 25 Oct 2026 22:16:07 +0000
-To: Liviu Nicoara <lnicoara@thinkoid.org>
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Michael Burch <me@michaelburch.net>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Abel Vesa <abelvesa@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, Neil Armstrong <neil.armstrong@linaro.org>, Stephan Gerhold <stephan.gerhold@linaro.org>, linux-hardening@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
-Message-ID: <tgnlBNUOnW42EiLCz_akAzeeWkNknNtC0L6XgPu22x5snLwk-jvS8K8byxz0LVhf-i0Zi5deKpU5UuE0QqzqMOZHx6OqLcpSllgj6JyZAAM=@vinarskis.com>
-In-Reply-To: <20261022192709.12149-1-lnicoara@thinkoid.org>
-References: <NCQ5O8k2_GpmJZBjDzgZL67uwdiYmmuSudO9VmdRaFTDq0u7aec6at00VYbzdwwSVvgJnLnGxewwp_TVO9oTjM2pAjP_LoiURf9JCIKXB-w=@vinarskis.com> <20261022192709.12149-1-lnicoara@thinkoid.org>
-Feedback-ID: 158356072:user:proton
-X-Pm-Message-ID: 18a3e30b6d997ba5a1b9c6346f460aaab43f928c
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=d0T/cp/8
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-48e4831c028so842912f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 16:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792971554; x=1793576354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=hrxxPTtZzklJWr1I8RCcQH6APbY+mTeaGJ9MW6ThL0A=;
+        b=d0T/cp/8+e869iqNfTNL2kpUbaKN8Ihr6W41M/w2HkFxdFMJMCVHnQVxCSp63fu1D4
+         KrzQJ1TO9cDDUTuKtGH0q61qjH9N1aRC9mYbwd7eDloZhcvHa8OxeMALxbqJfBccUwnK
+         2KSf2HiMUqdYxqorKokueXPuZp4d6K6YaDFRcdDjla5K5041ZnAq5ca12T5+4do2Xe2P
+         qJn/5HSVorPiZIhQSC3BQIERPjtnBxKkJPZCwi08TBCtTQ0aYriqjtwoa3KK9am2tmpk
+         8Eip9O0K7Lx3pkcLMR+ls6G6E7mWq9xjjPQnhDvIPOCZ9ADUFzy5R9Nk29cl7xK57XQx
+         bu5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792971554; x=1793576354;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=hrxxPTtZzklJWr1I8RCcQH6APbY+mTeaGJ9MW6ThL0A=;
+        b=VrhWX00X84WYokiq4KOig21yLoxnBkiR7LYLt+ZLiwyCV5CjhWuDzX0wf3CId/YhYg
+         yHOnRPJkn/Yn9VbrktinZnXpOcVmc/xcLUT94wkil3PgB2YLAKWzFWwjSW0i5lrchGPN
+         LhxVt5N7p38aQhDBE6F463VsHVbeNLSg0dpXj4cKbohe/WTqPRC1e68EClbeyLfZH2Q6
+         UnQAEzYDRtCVu+G6BkOxFPBiSao7CG64UfIDqW7RXFz7DHqgSlRrdP9lwDMzpJhcBlT8
+         HMvyaappJLgW4UNGIgjNEJ5GooQeu8T+92u91WOZsqYJIXz30s2HfzKwNyzAaXSctSHv
+         4BDA==
+X-Gm-Message-State: AFq9FYKp/0Z6p6jY6zTSTiMnd2U5ArNd19r3zwl++fYgSt2T1popx6TA
+	8FfAjE+/D9kxKVTOcgk9+5vo9QSocDOGBCOyOblOHNElF9J6fWlJKjSl
+X-Gm-Gg: AYBFou3VVjWuC7ioVzuEKgUGXhNpD5AHt00aoySwRCfYG6ihMnpOy/TiwrzC+3Y70+X
+	kTvsyi08or4NoBXL7LsDB5Wb3Sya3o1/Hu7et58Gn+em+Ks9dfhmi2Ep5Sbh/Io5ECcyRmsBJEG
+	bvyMRsAMG5+R0OMGiMTVKvWfHkScFZDa+dmD8d6/zw+mWTXuqwljQKRvo5IKiwaqFChgEPkb3sb
+	yK3ugcsE1hAd9bdYcfbbs+8S4pek+VAvv7MNJmKFab5q7S1EBvPemB0Y7RZi2cSBt1Pd6ad8+xW
+	FOiDhDv6O09420fjIDn8WlCAQfKSX6Xm4ny/c/bXH7A7qQ7RusGuMlPkT4kT3LdFPZ/7PLWJqYJ
+	8UUqSuIxUOSi3hTqMhf7xU7Ndw9rRu7qDrwI0NzmMiSCG6DRu2GpNOdDOASQl4RjgKzjGf7tOwx
+	3AnAqvm88Hh33hEbbWg6BIdtWqCDCy9M/uznIgiuvvgI0QNKKDNLtGOcGUp7FJ46JtZ7y9pYAAr
+	V2La4n8hPr8Bq0DGEkveRBkeGtYuFDjUGny/V2O0UBndHqX+H+Xa7ODI2nPHDUKMP8sPNGhTeFf
+	k0cSrWZRirzX1JTs6v40D9cu+u9CilL7AcDnhXKHYA==
+X-Received: by 2002:a05:6000:4b04:b0:48d:fbe1:bb17 with SMTP id ffacd0b85a97d-48e3eb7ca4emr9697468f8f.41.1792971553758;
+        Sun, 25 Oct 2026 16:39:13 -0700 (PDT)
+Received: from matebook.galaxus.box (adsl-84-226-215-1.adslplus.ch. [84.226.215.1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ebcb958sm12928801f8f.21.2026.10.25.16.39.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Oct 2026 16:39:13 -0700 (PDT)
+From: Cian Ruane <cian.ruane1@gmail.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Cian Ruane <cian.ruane1@gmail.com>
+Subject: [PATCH] platform/x86: huawei-wmi: Add keyboard backlight support
+Date: Mon, 26 Oct 2026 00:39:10 +0100
+Message-ID: <20261025233910.9907-1-cian.ruane1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,127 +94,153 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+The HWMI interface of the HUAWEI MateBook X Pro 2020 (MACHC-WAX9)
+exposes the keyboard backlight through the \GLIV and \SLIV methods of
+the WMAA dispatcher (MFID 2, SFID 6/7), with the level in byte 2 of the
+buffer. The EC stores the level doubled, so the three levels off/low/
+high are represented as 0, 2 and 4.
 
+Register a "platform::kbd_backlight" LED class device with a maximum
+brightness of 2 so that userspace, e.g. UPower, can control it.
 
+Changes made with the Fn+F3 hotkey are handled by the EC itself and
+are not reported to the OS on this model: no EC query or WMI event is
+generated. LED_BRIGHT_HW_CHANGED is therefore not set.
 
+The level encoding has only been verified on this model, so enable the
+feature through a DMI quirk.
 
-On Thursday, October 22nd, 2026 at 21:27, Liviu Nicoara <lnicoara@thinkoid.=
-org> wrote:
+Tested on: HUAWEI MACHC-WAX9 (MateBook X Pro 2020), BIOS 1.05 and 1.26,
+Ubuntu 24.04 (kernel 6.8.0-147-generic, with this patch backported).
 
-> On Thu, 22 Oct 2026 17:07:25 +0000, Aleksandrs Vinarskis wrote:
-> > I do not think the left charger you identified is correct - how did
-> > you arrive to that conclusion? Curious to compare to my method.
->=20
-> I am afraid my method was simpler and coarser than yours: one run per
-> port, nineteen samples ten seconds apart, the charger feeding the
-> system only (battery at 96 % and not charging), on a 7.2.6 kernel
-> with all four GPIO channels in one DTB. The deltas over three minutes:
->=20
-> Channel                Left charger   Right charger
-> 0x14b  AMUX2_GPIO          +1.6           -0.9
-> 0x145  AMUX2_THM           +0.1           +3.4
-> 0x146  AMUX3_THM           +0.8           -0.1
-> 0x14a  AMUX1_GPIO          -0.2           +1.3
-> 0x144  AMUX1_THM           -0.1           +0.2
-> 0x148  AMUX5_THM           -0.2           +1.2
-> 0x147  AMUX4_THM           +0.1           +1.8
-> 0x14d  AMUX4_GPIO          +0.0           -0.0
->=20
-> The other channels fell or held while 0x14b rose, so it was not the
-> board warming as a whole. But 1.6 C in three minutes, against your
-> 2.3 C in ten seconds on the right, might mean that 0x14b is a sensor
-> somewhere on the left side of the board, not necessarily on the left
-> port's power path. Under SSD load it moved with 0x146 and fell with
-> it in cool-down, which puts it close to the SSD. "Left charger" was
-> my reading of the sign pattern. Your ten-second test is probably the
-> better discriminator for a sensor on a power path. If nothing answers
-> the left charger in ten seconds, the simpler reading is that the left
-> port has no thermistor of its own among these seven.
->=20
-> > pm8550_gpio_02 does NOT clearly follow. In your test you have
-> > waited multiple minutes, which is enough to heat up a larger
-> > area on the motherboard.
->=20
-> Agreed. In your left run it was the only channel with a positive
-> delta while the board drifted down, which is the same weak signal I
-> had, and no more than that.
->=20
-> On the two AMUX3/AMUX4 GPIO channels: neither carries a thermistor
-> on this unit, and your tables say the same for yours. 0x14c reads
-> 130.048 C on every sample, the last row of the conversion table,
-> where the driver clamps a voltage at or below the lowest it knows.
-> Its input sits near 0 V. Windows' ADC configuration sets up only
-> PM8550 GPIO3 and GPIO4 as analog inputs, for AMUX1 and AMUX2, so the
-> pin behind AMUX3 is in its digital default, and PM8550's low GPIOs
-> read back here as inputs with a 10 uA pull-down. 0x14d held 34.7 C
-> within 0.1 C through both chargers and two load runs on this unit,
-> and 35.8 to 36.0 C through every one of your tests, the hairdryer
-> included. That is a biased pin, not a sensor. Both nodes can go.
->=20
-> > ADC5_GEN3_AMUX1_GPIO_100K_PU - Likely "lpddr5_therm"
->=20
-> I cannot separate 0x14a from 0x144 and 0x148 by heating. Under a
-> one-core load reading a file from /dev/shm they rose 14.0, 14.4 and
-> 14.2 C in lockstep, while the SoC's mem TSENS zone rose 20 C. Your
-> RAM stress warmed every PMIC die by 1 to 4 C as well, so it does not
-> single out 0x14a either. The three sit with the SoC; which one is the
-> memory I cannot tell.
->=20
-> > Looks more like "sys_therm5" is the actual keyboard thermistor.
->=20
-> Consistent with what I see. 0x147 is the coolest of the seven, 29 C
-> at idle, and nearly indifferent to board loads: it gained 2.0 C where
-> 0x144 gained 9.2 under SSD I/O, and 2.5 C where 0x144 gained 14.4
-> under the CPU load. A sensor away from the board, on the skin side,
-> fits.
->=20
-> On 0x146: under four minutes of direct-I/O reads it rose 8.2 C
-> against 10.0 C on the NVMe's own sensor, the largest share of any
-> channel, and it fell at once when the load stopped while the
-> SoC-side channels kept rising. Under the CPU-only control its share
-> halved. I would keep "ssd_conn_therm" on it with partial confidence,
-> but I will not argue if it goes with the others.
->=20
-> > Alternatively, I am leaning to drop the labels for anything we are
-> > not sure about...
->=20
-> Or just give them pirate names. Jk.
->=20
-> Agreed. 0x145 as the right charger is what both of us measured.
-> Everything else is a guess until the teardown. Numbering sys_therm
-> from 1 matches Windows' SYS_THERM1 to 7, so that helps too.
->=20
-> One consequence on my side: the 9345 thermal-zones patch
-> (20261006185557.23016-1-lnicoara@thinkoid.org) names its zones
-> chg-left on 0x14b and ssd on 0x146. I will respin it with neutral
-> names for the zones that are not settled, so the two patches agree.
->=20
-> Happy to test a v7, including a lid close on the EC interrupt line,
-> which my v6 run did not cover.
->=20
-> I love this laptop, but I will not open it up just to pinpoint the
-> right thermistors' locations.
+Signed-off-by: Cian Ruane <cian.ruane1@gmail.com>
+---
+ drivers/platform/x86/huawei-wmi.c | 64 +++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-I went ahead and tested thermistors against their potential names.
-Finding are available here:
-https://github.com/alexVinarskis/linux-x1e80100-dell-tributo/blob/master/de=
-ll-xps13-9345-ec.pdf
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 96ee9a97c..8eafda8a1 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -39,8 +39,14 @@ enum {
+ 	FN_LOCK_GET			= 0x00000604, /* \GFRS */
+ 	FN_LOCK_SET			= 0x00000704, /* \SFRS */
+ 	MICMUTE_LED_SET			= 0x00000b04, /* \SMLS */
++	KBD_BACKLIGHT_GET		= 0x00000602, /* \GLIV */
++	KBD_BACKLIGHT_SET		= 0x00000702, /* \SLIV */
+ };
+ 
++/* The EC stores the keyboard backlight level doubled: off/low/high = 0/2/4. */
++#define KBD_BACKLIGHT_MAX		2
++#define KBD_BACKLIGHT_STEP		2
++
+ union hwmi_arg {
+ 	u64 cmd;
+ 	u8 args[8];
+@@ -50,6 +56,7 @@ struct quirk_entry {
+ 	bool battery_reset;
+ 	bool ec_micmute;
+ 	bool report_brightness;
++	bool kbd_backlight;
+ };
+ 
+ static struct quirk_entry *quirks;
+@@ -65,6 +72,7 @@ struct huawei_wmi {
+ 
+ 	struct huawei_wmi_debug debug;
+ 	struct led_classdev cdev;
++	struct led_classdev kbd_cdev;
+ 	struct device *dev;
+ 
+ 	struct mutex wmi_lock;
+@@ -126,6 +134,10 @@ static struct quirk_entry quirk_matebook_x = {
+ 	.report_brightness = true,
+ };
+ 
++static struct quirk_entry quirk_kbd_backlight = {
++	.kbd_backlight = true,
++};
++
+ static const struct dmi_system_id huawei_quirks[] = {
+ 	{
+ 		.callback = dmi_matched,
+@@ -145,6 +157,15 @@ static const struct dmi_system_id huawei_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_matebook_x
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Huawei MACHC-WAX9",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MACHC-WAX9"),
++		},
++		.driver_data = &quirk_kbd_backlight
++	},
+ 	{  }
+ };
+ 
+@@ -322,6 +343,48 @@ static void huawei_wmi_leds_setup(struct device *dev)
+ 	devm_led_classdev_register(dev, &huawei->cdev);
+ }
+ 
++/* Keyboard backlight */
++
++static enum led_brightness huawei_wmi_kbd_backlight_get(struct led_classdev *led_cdev)
++{
++	u8 ret[0x100];
++
++	if (huawei_wmi_cmd(KBD_BACKLIGHT_GET, ret, sizeof(ret)))
++		return 0;
++
++	/* byte[0] = STAT, byte[2] = level as stored by the EC */
++	return ret[2] / KBD_BACKLIGHT_STEP;
++}
++
++static int huawei_wmi_kbd_backlight_set(struct led_classdev *led_cdev,
++					enum led_brightness brightness)
++{
++	union hwmi_arg arg;
++
++	arg.cmd = KBD_BACKLIGHT_SET;
++	arg.args[2] = brightness * KBD_BACKLIGHT_STEP;
++
++	return huawei_wmi_cmd(arg.cmd, NULL, 0);
++}
++
++static void huawei_wmi_kbd_backlight_setup(struct device *dev)
++{
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
++
++	if (!quirks || !quirks->kbd_backlight)
++		return;
++
++	if (huawei_wmi_cmd(KBD_BACKLIGHT_GET, NULL, 0))
++		return;
++
++	huawei->kbd_cdev.name = "platform::kbd_backlight";
++	huawei->kbd_cdev.max_brightness = KBD_BACKLIGHT_MAX;
++	huawei->kbd_cdev.brightness_get = &huawei_wmi_kbd_backlight_get;
++	huawei->kbd_cdev.brightness_set_blocking = &huawei_wmi_kbd_backlight_set;
++
++	devm_led_classdev_register(dev, &huawei->kbd_cdev);
++}
++
+ /* Battery protection */
+ 
+ static int huawei_wmi_battery_get(int *start, int *end)
+@@ -915,6 +978,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 		mutex_init(&huawei_wmi->wmi_lock);
+ 
+ 		huawei_wmi_leds_setup(&pdev->dev);
++		huawei_wmi_kbd_backlight_setup(&pdev->dev);
+ 		huawei_wmi_fn_lock_setup(&pdev->dev);
+ 		huawei_wmi_battery_setup(&pdev->dev);
+ 		huawei_wmi_debugfs_setup(&pdev->dev);
 
-TL;DR: with your correction of AMUX GPIOs to 1, 2 instead of 3, 4 most=20
-of the proposed labels are correct, except for left charging controller.
-This thermistor is quite far away such that IMO it cannot be associated
-with the charger. This perfectly explains the difference in heating up
-rate we both observed.
+base-commit: 9d3475065167197742b0882aff21cf8e78393277
+-- 
+2.43.0
 
-I will adjust labels, address rest of the comments and respin series
-shortly.
-
-Regards,
-Alex
-
->=20
-> Liviu
-> 
