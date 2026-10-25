@@ -1,86 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792955756;
-	b=WpGSTk495UpKN28GVx9Piabh+hEFUR4KbnYlLqfY4XuMD+ENOmZdp5LHVU9iI/LTmeJN
-	 9Q6ZSOGfFDE5wUk3q799LtWHNYQtmD+z0Q926Q6sdX5efpdExgs2Cqu/d6MY7MCPG6Hb5
-	 nQ1A7yBrnSkpPYId6Ggu7XX5iVUPLRJrAEdaFcLjwrc8VSWnPkIICzeTzzQFNJHt3sPPx
-	 XbdCPVggUyqh/w3yJYNnQy4y0dwo12WBw9V6ac1Qk7vFu4rHINBxu7zFRDiyJTdV/WPqW
-	 Ma1A8Fz9jZsVUZFA1R9N0eW5doDvDVswz8NJbYX3zOL3XMqgmnzkP/J+GUXjIW44Rqw==
+	t=1792957957;
+	b=iwcu8RgjimcxFUfqe4l2RgddXO7pcpvRWiGNf+ichk5ARpdbhYYcsLx1iy3BhCt2v/R7
+	 R2KfgKy1MPLjgE1Iez9fL/L5bAW0sRHWWxawHYwyZ8ilkXqA7Xkeo3rU7LItSAL4ugQRt
+	 7WnQ3r9UWDZVT4bNl7Pag8MGhwDcdzsWTyvW8Fhd8C77H3L4xb2fReSAp8mCTP2MH6c86
+	 OixKbuM4n1k7pl5iJgA1Q2/4XFRyNNMmL74Rjz5bntz1DGCnHFdnRR7BDMUWijM84PPkG
+	 4Z8XuAwk2bBkC9KWbC1JIcEXHlfQYHJ7Uboj8tficZN/QnTMIfffWKl8T1g3uVHcdXQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792955756;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=jnOKRaAII88X9ElxIuGyL9YIaom8N/anVTOLnZNdzHE=;
-	b=ptUQigOxy4f8Rt12+Cfl3PG8pJur/9WF+ZvpBwcqiK3v+QHDDrPQYnwBedSMnzMxTjAJ
-	 L+kF7GxzU+RGokHjUoc2eY4YIGkUc89oDB5DD6ncg6NOADkSv9pqLdu7GueMcKO25i0Vm
-	 VyacHxpG+9QKGkUfQ5++94cIaozof5fx3bW+Rffp1z7qcpfndbncg1ngDmOJjtT8LMvFL
-	 109Ns20mRdBaT7NrSDQqYjs8drDJM0QxEJAdU88t8l0VqaF1/0LAOKraRnz98UcodIZBo
-	 3l9YPiOsyJW9FTFlk+Iy4VP/u98kEdk1wcQP8leodH6UkpwKRaZr4DTAw7EkjJo5dzg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792957957;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=phNHyna0u7LX1lVWmmLhmAYjf4k2mLRW1J3H+0fjjJs=;
+	b=R6PiuU600LdBR7avWbAxMUlmLdialDzHdPWlq4deBBwKdDm7sDPnfgsUSm85FkGzQf+f
+	 vB9Ua98tKcJ+EMwvGbdieEmOSR03MGPo25V52bB59Zw044AdXPkgJuMnYDDQrr2LRsw0D
+	 4TmQ3zrtsfqNjMx0/G4NKGTijUZtvrSnXdgVlHGtL9Uy7WGU4aVWCP2nZfvBVx+Y1B8tM
+	 zjDzkuJNuGO275sRb/mJP/KxckYeaZERDnC8dr7vK3lR2G+js3qCjRiENt+V55nLZeJwD
+	 BVwMTWQJMcsxTruzNpKfL0S+o4jaGfwRft3MYbWAdr4tw9iPFHY+K1A/K1OP9flXHHQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=UxTV6It3;
-	arc=none smtp.remote-ip=209.85.160.181
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W7V8IHiw;
+	arc=none smtp.remote-ip=192.198.163.11
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E717606A31A
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 19:15:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6E717606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F527606A31A;
+	Sun, 25 Oct 2026 19:52:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4F527606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=UxTV6It3
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-53669f7b518so24772781cf.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 12:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792955755; x=1793560555; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jnOKRaAII88X9ElxIuGyL9YIaom8N/anVTOLnZNdzHE=;
-        b=UxTV6It3jXVjD3oVGMY5goBRy1ytdu/b3h7rYnkkk7CX3v4yuaU/pgSq+GwaiVB+q7
-         DaMqCvfHWFGZBPSIVEvS+7xt+xnNgS+RUq3NdE5jcwJQ7+3ysUq6Zyaig3l8ConK7zBj
-         PDafMnMUOaV9TwlxwvT+fp86q7SqsWTsluVRlKEF9zqhhmlqz/J+pqxxYCXzOoBgqhwR
-         loa7JndHccNAhWHWUUmnhm6urCKwWzqs58qHH0539UuSCygzxTic29F4Sra9CFlbkwJI
-         /P8njtvpsRxQvdMFTz/ArlEVV97zYXnR49io+rOgVNdXS9IO775XvDUjVhxPEhaiLv+Q
-         UNVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792955755; x=1793560555;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jnOKRaAII88X9ElxIuGyL9YIaom8N/anVTOLnZNdzHE=;
-        b=NvWHCo2pUta8DCiO9UG6c7ZTq/XRYF9qoe+Rxz4xIuQNcuSH6yRCWX3vSKXZ81SOxa
-         RdBSFHXN6GBUkOXxYdU9o5t0wtp1X5Tq5sOdxg+r6rsTM6iUywi71vhg5r5w+B/lDxeq
-         bz0NaBQA6RnlAhZY9g8f/zgaYVEabFaknxw+XXmopwT8eLS9d6B59xqg55iP44EGHFL6
-         RaAi8zFdprCzZRTu6yAfW9QwOzLovpH9ypBkb3UhmaqEoklzZzuz5va9QBHhQyvwH8aD
-         62P69OJzhTCwGev90mtNsK5vS9wRuxshHJgdKwf3RYRFTFfukSyML52kZ9C9AjMex0Ik
-         7Rlw==
-X-Gm-Message-State: AFq9FYJ0TXGb8XxUry7BqdeoR0YoEsFbQz52qFBNx8fOWgmFYEE2jCSX
-	8rhPGY09ZWGVovnw/W3uT32m6coz8q+6h4BXb5UfLF8DP0CyjqAtdHCT
-X-Gm-Gg: AYBFou3ScbSap5Q1wGsJ1t238m/VGtG3SFmvfxHqp+fhVHNL4AOyOym8z6TsKoonmbx
-	jx8eSw13Mzwfsx1TemIbb80vRD/cP8BFAq/8IQ5IYEwu6H7ilyMAX66nym9OoWSuRA8kpb1KQS+
-	lmUI2JcdrDYe2xec22W6/34GNHNPdTwFaIEiMnPCVfUds65gUk7N3e0yCdz5UNlGRgLTJjMaThn
-	t4hY6UDMV92KIdzv+mGV7n1hW1ZC/uzKeJhU08lDGvFdE764cs+93wBl+wXcrImnrV2Znx2QA1t
-	jkWwKkeH4IdZlPYmAViAsDGssxxHfoq9t0QgsQ+V3SP0fc+2H769ndhFzIw1F1zNo5hS9xNyR59
-	V5iDAxELYaL915dUfxahet/egjAOhy6YYUcCNeMnpswzkLOMVoU6S4WM0ZyjrWnIlaBVQCAD04i
-	VEObEzmVjEJzYEh74DZPMsHWMeHKIzneVyoszTbLbwTSbIfTBoc2xslRn/QtLP/z6WPUBhVMcvc
-	ENUna0MPwFu5u2Q5//lU83OwxsY5tBzdqaXc1tvYPN2B2W1m545NaPuPyOylwhScxYxCkGG5mRF
-	bxoWqdy11j3s7/yYCjz687KEIGaVUNs=
-X-Received: by 2002:ac8:6f11:0:b0:535:855e:6d15 with SMTP id d75a77b69052e-5383b4ef5c1mr78362381cf.30.1792955755510;
-        Sun, 25 Oct 2026 12:15:55 -0700 (PDT)
-Received: from [192.168.60.8] ([207.115.103.98])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47c53fdcsm52343606d6.27.2026.10.25.12.15.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Oct 2026 12:15:55 -0700 (PDT)
-Message-ID: <18bdb633-f168-428c-b3b4-dd8f91cbb9fc@gmail.com>
-Date: Mon, 26 Oct 2026 03:15:51 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W7V8IHiw
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1792957957; x=1824493957;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qBwv+wPUM4FN0ctAG5SZcloMYd4fYBZyh+tCuPCnIk0=;
+  b=W7V8IHiwk3bBFdubAc1ID4zLhCLRLZwtUT1VDoiHU+Bo+HAMZc3pc0KU
+   Q9K1eqAUwyv2RkxP459b+5Oj9SPv8VPOdEkPySnwqyVEGRm5MpB2ehpbP
+   VUd9Wv68LG99hnXXmxQf/lfiwEXgux9+Nrv54nPWIF6O//K8ckg9Vfz3V
+   UNyGA7TGw8lULp2wNMlERc+34y7fh8fg4y9HBYXqFyradevf3mrR00H7o
+   jl4tghz84XpjgsQHa1XEVnya60XidFR2o4yM0A0NmWRt/G1UKGAIXQeeG
+   b1i2YT2E+9oMd7fcwpSWMxUqB5ZgB1pN3mFLZP+c4+zeBZLROwkf5P1OV
+   Q==;
+X-CSE-ConnectionGUID: 1TduCIkpSjmstLpMMBTo+Q==
+X-CSE-MsgGUID: 3AluGXc5SpW1mNfudAkIDA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1533469"
+X-IronPort-AV: E=Sophos;i="6.27,178,1787036400"; 
+   d="scan'208";a="1533469"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2026 12:52:36 -0700
+X-CSE-ConnectionGUID: 7E3+Zwn8TUayQpI4TO0L6g==
+X-CSE-MsgGUID: 9D+HxSH9TIybHSEEXSv5nQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,178,1787036400"; 
+   d="scan'208";a="4464161"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.10])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2026 12:52:34 -0700
+Date: Sun, 25 Oct 2026 21:52:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Muhammad Bilal <meatuni001@gmail.com>
+Cc: jorge.lopez2@hp.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linux@weissschuh.net, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v7] platform/x86: hp-bioscfg: fix heap OOB in
+ hp_enforce_single_line_input()
+Message-ID: <at5d__q_RzGad7zt@ashevche-desk.local>
+References: <20261024172641.19424-1-meatuni001@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -90,33 +80,32 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3] platform/x86: panasonic-laptop: Add
- platform_profile support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
- Kenneth Chan <kenneth.t.chan@gmail.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20261007190446.38862-1-alexyeo362@gmail.com>
- <31bc2c6d-5d06-e278-a701-0bd4138598f9@linux.intel.com>
-Content-Language: en-US
-From: Alex Yeo <alexyeo362@gmail.com>
-In-Reply-To: <31bc2c6d-5d06-e278-a701-0bd4138598f9@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261024172641.19424-1-meatuni001@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Thank you for taking the time to do a code review for this patch. I have 
-incorporated the revisions for v4.
-
-v4: 
-https://lore.kernel.org/platform-driver-x86/20261025191300.1259541-1-alexyeo362@gmail.com/
-
-> Multiple of these look exact duplicates. In such cases, we try to reuse
-> the same struct even if we cannot then exactly match the name with the
-> model.
+On Sat, Oct 24, 2026 at 10:26:41PM +0500, Muhammad Bilal wrote:
+> The input is copied with kstrdup(), which stops at the first NUL, but
+> the full write size is passed to hp_enforce_single_line_input(). With
+> an embedded NUL the helper reads, and can write one byte, past the
+> copy. Use strnchrnul() so the scan stops at the first NUL, and return
+> -EINVAL for a NUL or newline before the last byte.
 > 
+> Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
+> followed by 4093 bytes of "B" to current_password 100 times returns
+> -EINVAL every time, without reading into the heap.
 
-Understood. QV9, RZ6 and SV8 now all share one quirk_default with the 
-SR4 keeping its own table. The DMI rows still say which model gets which 
-struct.
+...
+
+>  - Drop the trailing comments
+
+Why? At least The first one has the same meaning as before, what's wrong with
+the second one?
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
