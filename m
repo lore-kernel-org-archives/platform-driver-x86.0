@@ -1,88 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792896542;
-	b=E0WJQoqVGHDYVu633Uvcg/rb7Nezvz0dKpG8cG2iXu5JHrAkgINj+wrnTVAt6CS6tPYn
-	 xS5dDv+Ej+Bw2m2MJZRBcYSWQd7BhBJt+pyI88+FX1UTbcKIC8rruMgNMG4D+9SYPM9zu
-	 9bzIVQRnSuA1Lbug5z2KRgtWlSKgA5KJ4SzCgzykc0LLt419kjZOgmsS4NlA9c4TX9NeP
-	 TlT4H5szwxbTrv9nhYck8FJ1FgZEcWRBfpo3i5BXJi8FIoj7NbUTF3oUCA0jEBTevCr1x
-	 oFv1l/ZELBMSElHWOiHG32Mc5K5S2yIqqAggXFkDMd4NDsmGO8E7R7sFHBgNDUzTTHw==
+	t=1792896548;
+	b=wUJK5bbAknD3yRtaztn9zW+iR8g50Skrygrp3NztaI+DOihO436Z9QgRm/JX1A8JocXj
+	 ADwxt1M7dyM9Z8VV9ngjHqPwexQzjmy71C3jzHt7ui9I+gO2fbvVMuYuJy8PAJFnWFI59
+	 qL8t529mnbmlxe/XoAAHsR6o/mwi8gvalRk3aKqByqp3PxqCxYtdPDHnD3j7+R5eJwBaX
+	 W62qnWkC6i9ht1dqyGmRxtibLUfTlKs4xYXbGJSFs5jFQVZNL3fHbqtKsEwwDannmDjge
+	 PYPQTVZWP9tFTrv0OyemHMR0Gjge1TM6DRByNVhqrExPwOvBPKqcuf/aZS1P9K2SAwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792896542;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792896548;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=2WNFFspM+rHRPvmlX/IdB/mvBFJYspViUI+mUu/7+EQ=;
-	b=xJFZgGjZXp/whMpUw3+dtr1lWyylYkXcPt0ajRVRJVGbTPn2dty8SF53yJ/KLO8PnOx9
-	 ortwI4v650pjEqGVGmt0lJvXqgLloKCej4cGfmDGp2kFbq1iUVQAMoswg4KvR0+oEw27J
-	 1s9MITquIjhDQehypelfb40kNa1Whwgmvnk0q/vscSn3fYiEuYqjSkKnoSmLp/l+muAmE
-	 ABvRGHutgMvr55M1YEXlhDI6COSFuHZ2tUet1lVd8uunbHXGMYMqsD30tTIxVJvbmtcds
-	 DkmxL8PiW6rqDUSsmNYt3KXMQgYiMAo2UQvpcJhwT40epr7TQhj71+P2s0XFBJLzlpw==
+	bh=D+nSnF0X8MpqSOGXAt/KrCbg10WONH+Uf58W/fSb0Og=;
+	b=gRDysQh1GSwVzubPFfgoW1t752CexrKsF13DVLAJS5VrUq+Ga+auzuv+ag5iEzSddRFn
+	 UFXzuwjeXUHELZGjAjTbx51Mbsa/sYtOydppGJgEkM4nVEz/DL+kvIgdNYZuE4PNzixl6
+	 zSQCeydWaaHQBBp/DKnlY1Nfcqf41o0hvV2Z0CrE9UJdKZNHWeKJtuejL1uAVnn4xd7vo
+	 N53OSpcz+F7I5LCuPNsQ5XtJonp05nDSYw4RBE4lMIrOMwSBHU3HpP1DaiKbGuiri1ZY5
+	 0RxDC9deuNKmc45e6uY+lEO6c31JsJxZGqHb9C5hPHB+7pdFaYdfPLxjqgZrjp/vZfA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=AogBztQa;
-	arc=none smtp.remote-ip=74.125.82.175
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ewCpdmhW;
+	arc=none smtp.remote-ip=74.125.82.171
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4A9606A332
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 02:48:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A4A9606A332
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6351260A2613
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 02:48:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6351260A2613
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=AogBztQa
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-3550c917fd3so3023635eec.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 19:48:52 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ewCpdmhW
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-3535bf8b3e0so3281745eec.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 19:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792896532; x=1793501332; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792896536; x=1793501336; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=2WNFFspM+rHRPvmlX/IdB/mvBFJYspViUI+mUu/7+EQ=;
-        b=AogBztQaefRHxqIf7r7yyiPJ32TbkKSI3EZbJyc0kM0DrFhuCiEAqIV7SisQG5g01m
-         lP8walfX9nQXhaXidqzuNwI6Liv8Yr7pKoxYww/l1I3zNqNPsE0AbTEz1Y9/wA1xXQ+u
-         pQ6Bjf0E790OrznGUopeKOQszZ9uwLfYdMH3COcZyZ4oSsC6QlaWXUQep2FG9atErDPJ
-         rLSXwIHURFU/vZ1FggsB7lHTTHi5Nztr+uIT7tAjeUcGHkirI6ugimoSrRGeOsGzaU7p
-         Ogm+9BojY6irQAwGPPBCC/Udjma2QscUnzmO2cmOitOQmo9ottCgL420ReMargrfLKyq
-         LgQw==
+        bh=D+nSnF0X8MpqSOGXAt/KrCbg10WONH+Uf58W/fSb0Og=;
+        b=ewCpdmhWhvxKGaB1ywPwASIPJvYJtYs7/tUXoaILf+RVSyZJXZFHcki1Tr20z/w62l
+         SwxdbWi6sptizf0CRQ0j0YrCl8UAD11BNHJ4Egs3OCXlplmK+N4ZMhIgxr4Gi6FhAk/3
+         klg3bwOHnmiOf8Xc8pneI7FjXMoZj2ioY2qMzuAvcetGngNiRK7ZY92pNW5HDaJWhtx8
+         KUdxzZU93E5NzjmjB35aCbbHs9A5l5Hao6fjoCakLPcjAgS3HnYgV7RTm5cVLeyJVmcZ
+         XWSOgtXCwkwBA8RP+jcCUb0Yrux+qJvMc4osD93xp/XcEo9HrnpP+JpOeogrNmX+Y1mE
+         BrDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792896532; x=1793501332;
+        d=1e100.net; s=20260707; t=1792896536; x=1793501336;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2WNFFspM+rHRPvmlX/IdB/mvBFJYspViUI+mUu/7+EQ=;
-        b=uOlHLT6hXU1/VTBO+UFCIpuL/b2sGIr5keEEn/J+rvL5aQytmqw8oFUh+roHTR5KWU
-         iVUds8cCNDvd9/wFKm0tsuVbAA384A/HhIvLV5UurzVlvHFVet2MJw6PL/8ghAO6rFjG
-         gObFY5VJwUuSxc94w+kRgvDn1hmD498IQXreP8zQei8l0F1PjSPtY6lCpUD9iGSnb0LR
-         SVJHtUaKOF+cIz4Nh8GYGX9ul8JQu7N5kqsH0twTTSrFIvuNbDyVEHHFlnxs53L8NXeh
-         3cD394vGwvQKkZHk2kypnoDjKQd10bTzVsFpifQdsrUkSKEvHy0G4Qc4vP+JZ8ldQdP4
-         EoIA==
-X-Forwarded-Encrypted: i=1; AKwUvByI5V6CoRMbFaaygpBDI1bVFb3NABE/FqmvVc+U0IHP/CuCyBuNq+iKxO+qL2RzQZe81ktLmNSjrew/8BGY+FE5wczL@vger.kernel.org
-X-Gm-Message-State: AFq9FYKj7hZTNCA8wiYrBoqzOvYRNwiqgNl3MJYj+6hGGSIQPJt4dTuo
-	hKIehI4tNc0g4Fv+0HNXP1yyIcxS5fRygCCcuLeDW6zHCWBc7+NGG3EE
-X-Gm-Gg: AYBFou1JW5ja80pE/HIAsHj7wWrku5luxp+JWWaiAgeVwtySAKkbh2kB9j3tCuU5ofd
-	B8Ix/tKxxRe62jW7by9lBU9yuXME7cHaf5KfO8mkCwdCcoBJGO4pSo/qLoU2uHCe7LiGivwSm5U
-	pRzhxY/Ab2q6kBM1Es3KkHmnan88AaAyBupTZG/nxR3eF8+nRJ2e+bsG/qFGlEWf1WA9rZ7v+iy
-	+6n5WoDqe+BkG2xNOZUL8zH5gq6J3XR4ZDcmHnRwT7tztTCXVWrydEzg7E+/tVL229BwGCujCge
-	Q2/jUv9SZRCa1ZyXln5+f7IVNEEJLgRX16F2dzeSd2f04OqqM8C+zJchkmHIL5IhO1ZcXaeFPYI
-	KbE5t4jT3kFVyD5zbuGq2qFTIMrwMqyCx0ajB/VsJMZV9x51okgJmJv4ZMG7ekXWLkfoYrRqa7r
-	QJhkIhFZV3OOdRzXK90gpVJ8lK3u9xxwX7Iibhzp2OYLAjMm0uJx0ZaABu7+hZ4mYYJziRagpxy
-	MLVna9golo0KxfjxivbYh1t4vQdPX/9mntEBYzOkEueB7Nm3WzXkyK4lPT95v+ug1/2tucvUayZ
-	sUy+H/jJxtteO4H4n/RQyHiErMhQKP2DFkx1Ic//XxN2wHttrEkfhf8YYyQcMsRO
-X-Received: by 2002:a05:7022:ea5b:b0:19e:1ad9:1c2 with SMTP id a92af1059eb24-19e1ad9061emr760295c88.38.1792896531619;
-        Sat, 24 Oct 2026 19:48:51 -0700 (PDT)
+        bh=D+nSnF0X8MpqSOGXAt/KrCbg10WONH+Uf58W/fSb0Og=;
+        b=J95YvPZabTugWBWQJhR4YdwsOGrmnaBMuj4m+0DFHqIvVZnz+0EQ5x2E+aovyUeetZ
+         UtTI8f+ziuMt29hC27xZOEohRh3Y7sFNZAZm4mQ01hdZAgNJT1o0OzI6kAdYuxnXuQDR
+         bOG/ARq2n7YT+58JOClX1V/75OEJCeop4Izj1E9NBxqsYEtgNpQec1fdQfk0iftSm/AG
+         iVX5jk6NDyTpMSj7mw4pE5ffk33Id6nr1lHyE6Si1NavS6S7Su5QDVew2tYytBbsFosU
+         oa0i9R9ivZH/5+Afby/FDb4SKGQx1vbbMCkHlZMwW+viYJp01Pe8Ld7Tg1G6tNx3qXPC
+         5a1g==
+X-Forwarded-Encrypted: i=1; AKwUvBwUepkcuNbIbbT8thUVMCI/fT88+EzPyG0+qUWOssYx1pvboXmoAhZBUGMWlPp6X9FSng9BfTaUJRqoNIzQ6FBwtnbO@vger.kernel.org
+X-Gm-Message-State: AFq9FYKoo0UakcuzAINl5l+VoJ+PRaUn8d/Zjj8WYAyl99ZpXgQ/QCnF
+	qg++rKfHVR/8e/rG09aQXf8WQxvNuRvo2n9NPdn57RYDd3iDNQVyzjT/
+X-Gm-Gg: AYBFou2FtQoszZJbGwuHb0bLsv96Zg47a7mgVgdrO75pX9BjxMBL+MA2zaq7KqqYjh4
+	Nnai1L/M4tEmoE3owexO0v079f/bFd3xr5PnvZJVZmIJfWKncv557anuQGSlxawVNaDS48qVdQL
+	8VC76xIKhmH0dcCQVD47ePApzAvJZibjFp0kDp3C7VqjAuo+hrCKAQdmmONzfPV+LY1oLs+5JU1
+	KGys46qpq84ZwTU44jhmbbVZm/hk6G4LLlt+rBOqtcNoSvbWRmQ0Nw/aLbfWhgv/FDlRVFW1v5a
+	JyYukMRUeYjFr9q/Udm5cqKRjo9H4QSU4deOP/Z5YWMacSoKKyctUKGn2lvhTx9GjmxpYn5VKYJ
+	x9WxckjgPuP5DKYA7ZakeD//0KhQopz4CQYq4W360QZkLjcUhOOGYNDV+i6AiYutiU9yUrO5wTe
+	aYVYg1QZ6ybJvsn9LDKps5j1d9pnq6KL5jXO1UEviRBg47sCVpGFWX+JXDh2Jo3ohoJ2ge10yRh
+	PvRSlxUkvIZLt7sx4B2T1iYn2Jydz/NTOVNdOiafRsNANWmmKbc9jmdLWW95P1LBXLdpCN1Fzxl
+	UIC2cVBDefVvFSkh7H+myMqIIE2uSr25fvunJsZ2z7kK
+X-Received: by 2002:a05:7022:2513:b0:196:7742:3928 with SMTP id a92af1059eb24-1991b420832mr6834303c88.0.1792896536354;
+        Sat, 24 Oct 2026 19:48:56 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:8fe4:693:7158:24de])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a2e32479sm10521272c88.21.2026.10.24.19.48.50
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a2e32479sm10521272c88.21.2026.10.24.19.48.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 19:48:51 -0700 (PDT)
+        Sat, 24 Oct 2026 19:48:55 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Sat, 24 Oct 2026 19:48:43 -0700
-Subject: [PATCH 3/8] Input: cyapa - use 4-argument
- i2c_smbus_read_block_data()
+Date: Sat, 24 Oct 2026 19:48:46 -0700
+Subject: [PATCH 6/8] ipmi: ssif: use 4-argument i2c_smbus_read_block_data()
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -94,7 +93,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261024-i2c-smbus-read-block-data-v1-3-19bb97467982@gmail.com>
+Message-Id: <20261024-i2c-smbus-read-block-data-v1-6-19bb97467982@gmail.com>
 References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
 In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
 To: Mika Westerberg <westeri@kernel.org>, 
@@ -108,40 +107,190 @@ Cc: linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
  platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 X-Mailer: b4 0.17-dev-e56a4
 
-Pass the transfer length to i2c_smbus_read_block_data() in
-cyapa_smbus_read_block(), accounting for the final chunk size.
+Pass the receive buffer capacity to i2c_smbus_read_block_data() in
+ipmi_ssif_thread() via the i2c_size field, and update ssif_i2c_send()
+callers to pass the receive buffer size.
+
+Update read_response(), do_cmd(), and test_multipart_messages() to
+accept the response buffer length, clamping the transfer size to
+I2C_SMBUS_BLOCK_MAX when reading from the device.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/input/mouse/cyapa_gen3.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/char/ipmi/ipmi_ssif.c | 39 +++++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/input/mouse/cyapa_gen3.c b/drivers/input/mouse/cyapa_gen3.c
-index fc3fb954523b..0cdebf2c34e7 100644
---- a/drivers/input/mouse/cyapa_gen3.c
-+++ b/drivers/input/mouse/cyapa_gen3.c
-@@ -256,7 +256,7 @@ ssize_t cyapa_smbus_read_block(struct cyapa *cyapa, u8 cmd, size_t len,
- 	if (SMBUS_GROUP_BLOCK_CMD_MASK & cmd) {
- 		/* read specific block registers command. */
- 		smbus_cmd = SMBUS_ENCODE_RW(cmd, SMBUS_READ);
--		ret = i2c_smbus_read_block_data(client, smbus_cmd, values);
-+		ret = i2c_smbus_read_block_data(client, smbus_cmd, len, values);
- 		goto out;
+diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+index 2361103c5edc..9c0aebec2946 100644
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -503,7 +503,7 @@ static int ipmi_ssif_thread(void *data)
+ 		} else {
+ 			result = i2c_smbus_read_block_data(
+ 				ssif_info->client, ssif_info->i2c_command,
+-				ssif_info->i2c_data);
++				ssif_info->i2c_size, ssif_info->i2c_data);
+ 			if (result < 0)
+ 				ssif_info->done_handler(ssif_info, result,
+ 							NULL, 0);
+@@ -541,7 +541,7 @@ static void start_get(struct ssif_info *ssif_info)
+ 
+ 	ssif_i2c_send(ssif_info, msg_done_handler, I2C_SMBUS_READ,
+ 		  SSIF_IPMI_RESPONSE,
+-		  ssif_info->recv, I2C_SMBUS_BLOCK_DATA);
++		  ssif_info->recv, sizeof(ssif_info->recv));
+ }
+ 
+ static void start_resend(struct ssif_info *ssif_info);
+@@ -669,7 +669,7 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
+ 
+ 		ssif_i2c_send(ssif_info, msg_done_handler, I2C_SMBUS_READ,
+ 			 SSIF_IPMI_MULTI_PART_RESPONSE_MIDDLE,
+-			 ssif_info->recv, I2C_SMBUS_BLOCK_DATA);
++			 ssif_info->recv, sizeof(ssif_info->recv));
+ 		return;
+ 	} else if (ssif_info->multi_pos) {
+ 		/* Middle of multi-part read.  Start the next transaction. */
+@@ -736,7 +736,7 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
+ 				  I2C_SMBUS_READ,
+ 				  SSIF_IPMI_MULTI_PART_RESPONSE_MIDDLE,
+ 				  ssif_info->recv,
+-				  I2C_SMBUS_BLOCK_DATA);
++				  sizeof(ssif_info->recv));
+ 			return;
+ 		}
+ 	}
+@@ -1314,12 +1314,15 @@ static void ssif_remove(struct i2c_client *client)
+ 	kfree(ssif_info);
+ }
+ 
+-static int read_response(struct i2c_client *client, unsigned char *resp)
++static int read_response(struct i2c_client *client, unsigned char *resp,
++			 size_t resp_length)
+ {
+ 	int ret = -ENODEV, retry_cnt = SSIF_RECV_RETRIES;
+ 
+ 	while (retry_cnt > 0) {
+ 		ret = i2c_smbus_read_block_data(client, SSIF_IPMI_RESPONSE,
++						min_t(size_t, resp_length,
++						      I2C_SMBUS_BLOCK_MAX),
+ 						resp);
+ 		if (ret > 0)
+ 			break;
+@@ -1333,7 +1336,7 @@ static int read_response(struct i2c_client *client, unsigned char *resp)
+ }
+ 
+ static int do_cmd(struct i2c_client *client, int len, unsigned char *msg,
+-		  int *resp_len, unsigned char *resp)
++		  int *resp_len, unsigned char *resp, size_t resp_length)
+ {
+ 	int retry_cnt;
+ 	int ret;
+@@ -1350,14 +1353,14 @@ static int do_cmd(struct i2c_client *client, int len, unsigned char *msg,
+ 		return -ENODEV;
  	}
  
-@@ -265,7 +265,11 @@ ssize_t cyapa_smbus_read_block(struct cyapa *cyapa, u8 cmd, size_t len,
- 		smbus_cmd = SMBUS_ENCODE_IDX(cmd, index);
- 		smbus_cmd = SMBUS_ENCODE_RW(smbus_cmd, SMBUS_READ);
- 		buf = values + I2C_SMBUS_BLOCK_MAX * index;
--		ret = i2c_smbus_read_block_data(client, smbus_cmd, buf);
-+		ret = i2c_smbus_read_block_data(client, smbus_cmd,
-+						min_t(size_t,
-+						      len - I2C_SMBUS_BLOCK_MAX * index,
-+						      I2C_SMBUS_BLOCK_MAX),
-+						buf);
- 		if (ret < 0)
- 			goto out;
+-	ret = read_response(client, resp);
++	ret = read_response(client, resp, resp_length);
+ 	if (ret > 0) {
+ 		/* Validate that the response is correct. */
+ 		if (ret < 3 ||
+ 		    (resp[0] != (msg[0] | (1 << 2))) ||
+ 		    (resp[1] != msg[1]))
+ 			ret = -EINVAL;
+-		else if (ret > IPMI_MAX_MSG_LENGTH) {
++		else if (ret > resp_length) {
+ 			ret = -E2BIG;
+ 		} else {
+ 			*resp_len = ret;
+@@ -1382,7 +1385,7 @@ static int ssif_detect(struct i2c_client *client, struct i2c_board_info *info)
+ 	/* Do a Get Device ID command, since it is required. */
+ 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+ 	msg[1] = IPMI_GET_DEVICE_ID_CMD;
+-	rv = do_cmd(client, 2, msg, &len, resp);
++	rv = do_cmd(client, 2, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+ 	if (rv)
+ 		rv = -ENODEV;
+ 	else {
+@@ -1523,7 +1526,7 @@ static int start_multipart_test(struct i2c_client *client,
+ 
+ static void test_multipart_messages(struct i2c_client *client,
+ 				    struct ssif_info *ssif_info,
+-				    unsigned char *resp)
++				    unsigned char *resp, size_t resp_length)
+ {
+ 	unsigned char msg[65];
+ 	int ret;
+@@ -1572,7 +1575,7 @@ static void test_multipart_messages(struct i2c_client *client,
+ 					 1, msg + 64);
+ 
+ 	if (!ret)
+-		ret = read_response(client, resp);
++		ret = read_response(client, resp, resp_length);
+ 
+ 	if (ret > 0) {
+ 		/* End transactions work, we are good. */
+@@ -1590,7 +1593,7 @@ static void test_multipart_messages(struct i2c_client *client,
+ 					 SSIF_IPMI_MULTI_PART_REQUEST_MIDDLE,
+ 					 0, msg + 64);
+ 	if (!ret)
+-		ret = read_response(client, resp);
++		ret = read_response(client, resp, resp_length);
+ 	if (ret > 0)
+ 		/* Zero-size end parts work, use those. */
+ 		return;
+@@ -1748,7 +1751,7 @@ static int ssif_probe(struct i2c_client *client)
+ 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+ 	msg[1] = IPMI_GET_SYSTEM_INTERFACE_CAPABILITIES_CMD;
+ 	msg[2] = 0; /* SSIF */
+-	rv = do_cmd(client, 3, msg, &len, resp);
++	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+ 	if (!rv && (len >= 3) && (resp[2] == 0)) {
+ 		if (len < 7) {
+ 			if (ssif_dbg_probe)
+@@ -1800,13 +1803,13 @@ static int ssif_probe(struct i2c_client *client)
+ 		ssif_info->supports_pec = 0;
  	}
+ 
+-	test_multipart_messages(client, ssif_info, resp);
++	test_multipart_messages(client, ssif_info, resp, IPMI_MAX_MSG_LENGTH);
+ 
+ 	/* Make sure the NMI timeout is cleared. */
+ 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+ 	msg[1] = IPMI_CLEAR_MSG_FLAGS_CMD;
+ 	msg[2] = WDT_PRE_TIMEOUT_INT;
+-	rv = do_cmd(client, 3, msg, &len, resp);
++	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+ 	if (rv || (len < 3) || (resp[2] != 0))
+ 		dev_warn(&ssif_info->client->dev,
+ 			 "Unable to clear message flags: %d %d %2.2x\n",
+@@ -1815,7 +1818,7 @@ static int ssif_probe(struct i2c_client *client)
+ 	/* Attempt to enable the event buffer. */
+ 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+ 	msg[1] = IPMI_GET_BMC_GLOBAL_ENABLES_CMD;
+-	rv = do_cmd(client, 2, msg, &len, resp);
++	rv = do_cmd(client, 2, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+ 	if (rv || (len < 4) || (resp[2] != 0)) {
+ 		dev_warn(&ssif_info->client->dev,
+ 			 "Error getting global enables: %d %d %2.2x\n",
+@@ -1835,7 +1838,7 @@ static int ssif_probe(struct i2c_client *client)
+ 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+ 	msg[1] = IPMI_SET_BMC_GLOBAL_ENABLES_CMD;
+ 	msg[2] = ssif_info->global_enables | IPMI_BMC_EVT_MSG_BUFF;
+-	rv = do_cmd(client, 3, msg, &len, resp);
++	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+ 	if (rv || (len < 2)) {
+ 		dev_warn(&ssif_info->client->dev,
+ 			 "Error setting global enables: %d %d %2.2x\n",
+@@ -1857,7 +1860,7 @@ static int ssif_probe(struct i2c_client *client)
+ 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+ 	msg[1] = IPMI_SET_BMC_GLOBAL_ENABLES_CMD;
+ 	msg[2] = ssif_info->global_enables | IPMI_BMC_RCV_MSG_INTR;
+-	rv = do_cmd(client, 3, msg, &len, resp);
++	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+ 	if (rv || (len < 2)) {
+ 		dev_warn(&ssif_info->client->dev,
+ 			 "Error setting global enables: %d %d %2.2x\n",
 
 -- 
 2.56.0.257.gf7497c7d27-goog
