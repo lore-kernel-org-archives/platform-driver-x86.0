@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792972385;
-	b=VixzTQjM50VN+VzGN1pTM3UWoDBZitjmWRRWDclbeVbPeAx2Nr6o485re60vlEVh1lTF
-	 gc8z9fj6XH31Ebj2hHzC9T3NI8DqGGDYB0MqgDkZPy//cDIDAUkfQBIwwNzttE6f5KCCA
-	 pPgNG+KLUGG14ypUVlaWmVTuGy9NIaztAja+cwCwH4F56UFszgsG+Km8mnAsrs2XliePs
-	 xC3VE40EbhIbTQU/691JBOdnZMCkgecD2/RCIpb7bFi/pSrJdHaS6197QrXpRck+OFUYW
-	 qL4TxF2TgCyTOBfz4obYOvqltBU6U8kZdbPq7H+yyGl0B280oTIW412fxkg2RRYxXeA==
+	t=1792972386;
+	b=0TycVRhuvOnkU2lbq5lzTadzpYY/AcvnS54bA9XZMWeNkhP2n6Dy0RZPzkmRqcW6XE+/
+	 3MGRzrgxqMZpdfGn/iNRwkRDCgUxdr7stXMisDjMkMkplLLUoYEAU6jYIQBhqpovzvqPB
+	 209afpbsuvNIH0mVO9+XcXdo5qmYPjbJCGLWN21muOtwBVlc6ovJ3mI/V31KRvhllQ5N7
+	 Jr3Z//KXyDdrU2CoBY0jT1y1lr6owXr3c3x8juaM2foGw7b8QpRe9CzE5JGj170ctZdAq
+	 rk0vcLwMVcPuBZAG1YJktKVxo2+ZPrS7IWw9BPlcQdr9CVaKtp1AyE5cLmWOp/B6EZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792972385;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792972386;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=7A8P4RzYpNGwGiQBGJaS8LAYy4G86JrRiE6cgjDAfdk=;
-	b=Sx5VdD9Tmy1SjoAl3BtyQNnqzLP/EV9eDIHzE0wyfJ1bT8EiLn8QvoiDg7ApCWIy/x9U
-	 h+KuqJHHGCX6HGZ0z0+yDqfbVXw7QSJ6bnhYJUdez6O917ExEXx6BoNiplTADgrV2eYax
-	 /FdxTYtubcey6OBKMOrPicuLRvbQU/GMQGwg/uEFuTh/RkZKmYXkFuX9YWH6ZKP+eq8Bu
-	 HfwvAqRM4MiRFXFgDrabWE9eZRfIN2BdyetkyTo4d8bbFZ7nrKmUpHh97/SYcAL81+FPM
-	 E+3iF3jTX/t6BMxlRsB/+C8iYVPFPuXy1rGmYqzzxUJHobLub87lTd0s7o4CFgqQaTw==
+	bh=q1jVuR+7SereoPAmroo1mFDZie0TS4p+iVnpoukwQAk=;
+	b=2FM/N5mE5wd5gjaahl1HKHzHF+wDTvvSyGHJuBsTIPz6aBRUtO3p5YwMg7Qx8m/K/rlJ
+	 TJoNRVLBwKrwCmICPOLOhB2iU67GRLzXk8WUHkFeJ3CPpEAzwY/3H23ak0V4CSMHD86Wx
+	 iIr3e7/Kom6ISNEPgEf5cI99SEEOJwBGIQc4WKimsWk2CVmxSQtzkC0dGS07K0S2rPmlC
+	 WARQGUjat4LyOYBepsSZkr+1WORSnsDTSHptVeKFkB+PjoZMqG9lvsoH2UmR6QM8fXJkX
+	 OOHgblAJGEePhztZVKD0tpgJX7jo9FRUWvpCBH6oyTVxUfvJsB1nieChYetVjAPQ50Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UnBQqN3w;
-	arc=none smtp.remote-ip=91.218.175.177
-Received: from mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cDNEl++j;
+	arc=none smtp.remote-ip=95.215.58.102
+Received: from mta1.migadu.com (out-102.mta1.migadu.com [95.215.58.102])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843C260A2614
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 23:53:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 843C260A2614
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F3160A3826
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 23:53:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48F3160A3826
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UnBQqN3w
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=cDNEl++j
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=PQj14AKff6OHLvol8saVkczSv7fprx10zXikezABRl0=;
+DKIM-Signature: a=rsa-sha256; bh=TA069Yp6Ri3AwX+dumolaXc1HqbOA3IPqVuolFxXsS4=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792972382; v=1; x=1793577182;
- b=UnBQqN3woKHNQIhrx3sBf8hrP7YG61+qCo3JLd25xN7Y7fmsZJcJJldjwvJzIuOjeNR6miXN
- nHuhv7uxNGVsKPubtcyNhQaPK268VmGXNPtP1+jD9Me1hw+yUqyOS4UHljXIROFTMp9yJdZjk1A
- FVUJFu857CofYGTgHiUFotgk=
+ t=1792972384; v=1; x=1793577184;
+ b=cDNEl++jXZEAJwy2ljdWMXT3MY2VlT9hjoaRNCNYhbAwRT9pNcQxb4Dm5hCPscorrJwX+CaX
+ MWCTagw3LI25zvfgPCzpWwBptoLSstgzHP6TEn78oNt/4UOZ0uWAgH20C9N+9cO8M6tzZefNWPa
+ otheqHQtTz4GmnvjeBkbTS0k=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id bfc0de32eb9d6a2d;
-	Sun, 25 Oct 2026 23:53:02 +0000
-X-Mizu-Trace-ID: bfc0de32eb9d6a2d
+Received: by smtp.migadu.com with ESMTPS id cdb6c5a354d65986;
+	Sun, 25 Oct 2026 23:53:04 +0000
+X-Mizu-Trace-ID: cdb6c5a354d65986
 X-Migadu-Flow: FLOW_OUT
 From: Denis Benato <denis.benato@linux.dev>
 To: linux-kernel@vger.kernel.org
@@ -68,9 +68,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Hans de Goede" <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v11 12/18] HID: asus: size feature reports from the HID report descriptor
-Date: Sun, 25 Oct 2026 23:52:25 +0000
-Message-ID: <20261025235232.129945-13-denis.benato@linux.dev>
+Subject: [PATCH v11 13/18] HID: asus: identify XG Mobile stations and bind the LED to the reported model
+Date: Sun, 25 Oct 2026 23:52:26 +0000
+Message-ID: <20261025235232.129945-14-denis.benato@linux.dev>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20261025235232.129945-1-denis.benato@linux.dev>
 References: <20261025235232.129945-1-denis.benato@linux.dev>
@@ -87,292 +87,252 @@ Content-Transfer-Encoding: 8bit
 
 From: Denis Benato <benato.denis96@gmail.com>
 
-The ASUS vendor protocol uses the same feature report IDs across very
-different devices: on N-KEY keyboards and ROG Ally report 0x5A/0x5E are
-64-byte reports, while on XG Mobile stations report 0x5E is a 300-byte
-report. The driver currently hardcodes transfer lengths (16 bytes for
-the handshake, FEATURE_KBD_REPORT_SIZE for reads, ROG_XGM_REPORT_SIZE
-for the XG Mobile LED), which mismatches what the hardware expects and
-would break if a new device used yet another size for the same report
-ID.
+The XG Mobile LED interface is currently bound to two USB product IDs
+(0x1970, 0x1a9a). The stations identify themselves through the vendor
+report 0x5E: after the usual "ASUS Tech.Inc." unlock, the 0xCE 0x01
+query answers with a NUL terminated string of the form
 
-Derive the transfer length of every feature report from the HID report
-descriptor of the device at hand:
+  MB:<mainboard>;SN:<serial>;PRO:<model>;PNUM:<part number>;
 
-- add asus_report_len(), which resolves a report ID to its struct
-  hid_report and returns hid_report_len();
-- asus_kbd_set_report() now zero-pads short payloads to the exact
-  report size and rejects payloads that do not fit the report;
-- add asus_kbd_get_report() and use it from asus_kbd_init() and
-  asus_kbd_get_functions() so reads are sized per report as well;
-- asus_xgm_led_set() sends a minimal payload and checks the transfer
-  result against the descriptor length instead of the hardcoded
-  ROG_XGM_REPORT_SIZE, which is removed along with the fixed-size
-  buffers in asus_kbd_set_fn_lock() and asus_kbd_set_brightness().
-
-Captured USB traffic of the same commands issued by Windows shows they
-are always written at the full report length, which this change now
-matches.
+Run this query at probe time to initialize the LED interface only on
+supported models (GC31, GC32 and GC33), and name the LED after the
+reported model (asus:xgm-<model>:led).
 
 Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/hid/hid-asus.c | 148 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 120 insertions(+), 28 deletions(-)
+ drivers/hid/hid-asus.c | 183 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 182 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index ea27495c3df6..fe2a326ccd86 100644
+index fe2a326ccd86..e751bf163434 100644
 --- a/drivers/hid/hid-asus.c
 +++ b/drivers/hid/hid-asus.c
-@@ -63,8 +63,6 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+@@ -63,6 +63,12 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
  #define FEATURE_KBD_LED_REPORT_ID2 0x5e
  
--#define ROG_XGM_REPORT_SIZE 300
--
++/* XG Mobile station protocol on report 0x5E */
++#define ASUS_XGM_CMD_QUERY 0xce
++#define ASUS_XGM_QUERY_IDENTITY 0x01
++#define ASUS_XGM_QUERY_VERSION 0x03
++#define ASUS_XGM_INFO_LEN 32
++
  #define ROG_ALLY_REPORT_SIZE 64
  #define ROG_ALLY_X_MIN_MCU 313
  #define ROG_ALLY_MIN_MCU 319
-@@ -658,6 +656,51 @@ static void ally_probe_release_role(int ep)
- 	spin_unlock_irqrestore(&ally_data_lock, flags);
+@@ -174,6 +180,13 @@ struct asus_xgm_led {
+ 	struct hid_device *hdev;
+ };
+ 
++struct asus_xgm_info {
++	char mainboard[ASUS_XGM_INFO_LEN];
++	char serial[ASUS_XGM_INFO_LEN];
++	char model[ASUS_XGM_INFO_LEN];
++	char part_number[ASUS_XGM_INFO_LEN];
++};
++
+ struct asus_touchpad_info {
+ 	int max_x;
+ 	int max_y;
+@@ -471,6 +484,7 @@ struct asus_drvdata {
+ 	struct asus_hid_listener listener;
+ 	bool fn_lock;
+ 	struct asus_xgm_led *xgm_led;
++	struct asus_xgm_info *xgm_info;
+ };
+ 
+ static int asus_report_battery(struct asus_drvdata *, u8 *, int);
+@@ -6049,6 +6063,147 @@ static int asus_battery_probe(struct hid_device *hdev)
+ 	return ret;
  }
  
 +/**
-+ * asus_find_report() - Find a report of the given type by its ID
++ * asus_xgm_query() - Run a query command against an XG Mobile station
 + * @hdev: HID device
-+ * @type: report type (HID_INPUT_REPORT, HID_OUTPUT_REPORT or
-+ * HID_FEATURE_REPORT)
-+ * @report_id: report ID to look for
-+ *
-+ * Return: the report with the given ID, or NULL if the device does not
-+ * declare such a report
-+ */
-+static struct hid_report *asus_find_report(struct hid_device *hdev,
-+					   unsigned int type, u8 report_id)
-+{
-+	struct hid_report *report;
-+
-+	list_for_each_entry(report, &hdev->report_enum[type].report_list, list) {
-+		if (report->id == report_id)
-+			return report;
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-+ * asus_report_len() - Length of a feature report for the device
-+ * @hdev: HID device
-+ * @report_id: report ID of the feature report
-+ *
-+ * The same ASUS report ID can have different sizes depending on the device:
-+ * report 0x5E is a 64-byte report on laptops but a 300-byte report on XG
-+ * Mobile stations. Always size transfers from the report descriptor of the
-+ * device at hand instead of hardcoding lengths.
-+ *
-+ * Return: the length of the feature report in bytes, or 0 if the device
-+ * does not declare the report
-+ */
-+static size_t asus_report_len(struct hid_device *hdev, u8 report_id)
-+{
-+	struct hid_report *report;
-+
-+	report = asus_find_report(hdev, HID_FEATURE_REPORT, report_id);
-+
-+	return report ? hid_report_len(report) : 0;
-+}
-+
- static const u8 asus_report_id_init[] = {
- 	FEATURE_KBD_REPORT_ID,
- 	FEATURE_KBD_LED_REPORT_ID1,
-@@ -5370,18 +5413,64 @@ static int asus_raw_event(struct hid_device *hdev,
- 
- static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t buf_size)
- {
--	u8 *dmabuf __free(kfree) = kmemdup(buf, buf_size, GFP_KERNEL);
-+	size_t hw_len = asus_report_len(hdev, buf[0]);
-+
-+	/* The payload (including the report ID) must fit the device report. */
-+	if (!hw_len || buf_size > hw_len)
-+		return -EINVAL;
-+
-+	u8 *dmabuf __free(kfree) = kzalloc(hw_len, GFP_KERNEL);
- 	if (!dmabuf)
- 		return -ENOMEM;
- 
-+	memcpy(dmabuf, buf, buf_size);
-+
- 	/*
--	 * The report ID should be set from the incoming buffer due to LED and key
--	 * interfaces having different pages
-+	 * The report ID should be set from the incoming buffer due to LED and
-+	 * key interfaces having different pages. Short payloads are zero-padded
-+	 * to the exact report size the hardware expects for this report ID.
- 	 */
--	return hid_hw_raw_request(hdev, buf[0], dmabuf, buf_size, HID_FEATURE_REPORT,
-+	return hid_hw_raw_request(hdev, buf[0], dmabuf, hw_len, HID_FEATURE_REPORT,
- 				  HID_REQ_SET_REPORT);
- }
- 
-+/**
-+ * asus_kbd_get_report() - Read a report sized from the descriptor
-+ * @hdev: HID device
-+ * @report_id: report ID to read
-+ * @buf: buffer to store the report in
++ * @subcmd: query sub-command
++ * @buf: buffer to store the answer in
 + * @buf_size: size of @buf
 + *
-+ * The transfer is performed at the exact report size the device declares
-+ * for @report_id. The device may answer with a short read, and only the
-+ * bytes that fit in @buf are copied into it.
++ * Windows re-sends the "ASUS Tech.Inc." unlock before every command
++ * burst, so do the same.
 + *
 + * Return: 0 on success, negative errno on failure
 + */
-+static int asus_kbd_get_report(struct hid_device *hdev, u8 report_id,
-+			       u8 *buf, size_t buf_size)
++static int asus_xgm_query(struct hid_device *hdev, u8 subcmd,
++			  u8 *buf, size_t buf_size)
 +{
-+	size_t hw_len = asus_report_len(hdev, report_id);
++	const u8 unlock[] = {
++		FEATURE_KBD_LED_REPORT_ID2,
++		'A', 'S', 'U', 'S', ' ', 'T', 'e', 'c', 'h', '.', 'I', 'n', 'c', '.'
++	};
++	const u8 cmd[] = { FEATURE_KBD_LED_REPORT_ID2, ASUS_XGM_CMD_QUERY, subcmd };
 +	int ret;
 +
-+	if (!hw_len)
-+		return -EINVAL;
-+
-+	u8 *dmabuf __free(kfree) = kzalloc(hw_len, GFP_KERNEL);
-+	if (!dmabuf)
-+		return -ENOMEM;
-+
-+	ret = hid_hw_raw_request(hdev, report_id, dmabuf, hw_len,
-+				 HID_FEATURE_REPORT, HID_REQ_GET_REPORT);
++	ret = asus_kbd_set_report(hdev, unlock, sizeof(unlock));
 +	if (ret < 0)
 +		return ret;
 +
-+	/* The device may return less than requested (short read). */
-+	memcpy(buf, dmabuf, min(buf_size, hw_len));
++	ret = asus_kbd_set_report(hdev, cmd, sizeof(cmd));
++	if (ret < 0)
++		return ret;
++
++	return asus_kbd_get_report(hdev, FEATURE_KBD_LED_REPORT_ID2, buf, buf_size);
++}
++
++/**
++ * asus_xgm_info_assign() - Copy an identity field up to its ';'
++ * terminator
++ * @dst: destination buffer
++ * @dst_len: size of @dst, including the trailing NUL
++ * @src: start of the field inside the identity string
++ * @src_len: number of bytes available at @src
++ *
++ * Copies up to @dst_len - 1 bytes from @src, stopping at the first ';'
++ * field separator, and NUL terminates @dst.
++ */
++static void asus_xgm_info_assign(char *dst, size_t dst_len,
++				 const char *src, size_t src_len)
++{
++	const char *sep = strnchr(src, src_len, ';');
++	size_t n = sep ? (size_t)(sep - src) : src_len;
++
++	if (n >= dst_len)
++		n = dst_len - 1;
++
++	memcpy(dst, src, n);
++	dst[n] = '\0';
++}
++
++/**
++ * asus_xgm_get_identity() - Query the identity of an XG Mobile station
++ * @hdev: HID device
++ * @info: identity structure to fill in
++ *
++ * The identity query answers with a NUL terminated string of the form
++ * "MB:<mainboard>;SN:<serial>;PRO:<model>;PNUM:<part number>;", which is
++ * split into the fields of @info. The model field is mandatory: a station
++ * that does not report one is treated as absent.
++ *
++ * Return: 0 on success, negative errno on failure
++ */
++static int asus_xgm_get_identity(struct hid_device *hdev,
++				 struct asus_xgm_info *info)
++{
++	size_t len = asus_report_len(hdev, FEATURE_KBD_LED_REPORT_ID2);
++	const char *start, *p;
++	size_t rem;
++	int ret;
++
++	if (!len)
++		return -EINVAL;
++
++	u8 *buf __free(kfree) = kzalloc(len, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	ret = asus_xgm_query(hdev, ASUS_XGM_QUERY_IDENTITY, buf, len);
++	if (ret < 0)
++		return ret;
++
++	if (len < 4 || buf[1] != ASUS_XGM_CMD_QUERY ||
++	    buf[2] != ASUS_XGM_QUERY_IDENTITY)
++		return -ENODEV;
++
++	start = (char *)&buf[3];
++	rem = strnlen(start, len - 3);
++	if (!rem)
++		return -ENODEV;
++
++	p = strnstr(start, "MB:", rem);
++	if (p)
++		asus_xgm_info_assign(info->mainboard, sizeof(info->mainboard),
++				     p + 3, rem - (p + 3 - start));
++	p = strnstr(start, "SN:", rem);
++	if (p)
++		asus_xgm_info_assign(info->serial, sizeof(info->serial),
++				     p + 3, rem - (p + 3 - start));
++	p = strnstr(start, "PRO:", rem);
++	if (p)
++		asus_xgm_info_assign(info->model, sizeof(info->model),
++				     p + 4, rem - (p + 4 - start));
++	p = strnstr(start, "PNUM:", rem);
++	if (p)
++		asus_xgm_info_assign(info->part_number, sizeof(info->part_number),
++				     p + 5, rem - (p + 5 - start));
++
++	if (!info->model[0])
++		return -ENODEV;
 +
 +	return 0;
 +}
 +
- static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
- {
- 	/*
-@@ -5390,8 +5479,13 @@ static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
- 	 */
- 	const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
- 		     0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
-+	size_t hw_len = asus_report_len(hdev, report_id);
-+	size_t cmp_len;
- 	int ret;
- 
-+	if (!hw_len)
-+		return -EINVAL;
++static const char * const asus_xgm_models[] = { "GC31", "GC32", "GC33" };
 +
- 	ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
- 	if (ret < 0) {
- 		hid_err(hdev, "Asus handshake %02x failed to send: %d\n",
-@@ -5399,19 +5493,20 @@ static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
- 		return ret;
- 	}
- 
--	u8 *readbuf __free(kfree) = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
-+	u8 *readbuf __free(kfree) = kzalloc(hw_len, GFP_KERNEL);
- 	if (!readbuf)
- 		return -ENOMEM;
- 
--	ret = hid_hw_raw_request(hdev, report_id, readbuf,
--				 FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
--				 HID_REQ_GET_REPORT);
-+	ret = asus_kbd_get_report(hdev, report_id, readbuf, hw_len);
- 	if (ret < 0) {
- 		hid_warn(hdev, "Asus handshake %02x failed to receive ack: %d\n",
- 			 report_id, ret);
--	} else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
--		hid_warn(hdev, "Asus handshake %02x returned invalid response: %*ph\n",
--			 report_id, FEATURE_KBD_REPORT_SIZE, readbuf);
-+	} else {
-+		cmp_len = min_t(size_t, sizeof(buf), hw_len);
-+		if (memcmp(readbuf, buf, cmp_len) != 0) {
-+			hid_warn(hdev, "Asus handshake %02x returned invalid response: %*ph\n",
-+				 report_id, (int)cmp_len, readbuf);
-+		}
- 	}
- 
- 	/*
-@@ -5426,7 +5521,7 @@ static int asus_kbd_get_functions(struct hid_device *hdev,
- 				  u8 report_id)
- {
- 	const u8 buf[] = { report_id, 0x05, 0x20, 0x31, 0x00, 0x08 };
--	u8 *readbuf;
-+	size_t hw_len = asus_report_len(hdev, report_id);
- 	int ret;
- 
- 	ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
-@@ -5435,23 +5530,22 @@ static int asus_kbd_get_functions(struct hid_device *hdev,
- 		return ret;
- 	}
- 
--	readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
-+	if (!hw_len)
-+		return -EINVAL;
++/**
++ * asus_xgm_is_supported_model() - Check that a station is supported
++ * @info: identity of the station
++ *
++ * The supported families are the GC31, GC32 and GC33 stations.
++ *
++ * Return: true if the reported model belongs to one of the supported
++ * families, false otherwise
++ */
++static bool asus_xgm_is_supported_model(const struct asus_xgm_info *info)
++{
++	for (size_t i = 0; i < ARRAY_SIZE(asus_xgm_models); i++)
++		if (strncmp(info->model, asus_xgm_models[i],
++			    strlen(asus_xgm_models[i])) == 0)
++			return true;
 +
-+	u8 *readbuf __free(kfree) = kzalloc(hw_len, GFP_KERNEL);
- 	if (!readbuf)
- 		return -ENOMEM;
- 
--	ret = hid_hw_raw_request(hdev, report_id, readbuf,
--				 FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
--				 HID_REQ_GET_REPORT);
-+	ret = asus_kbd_get_report(hdev, report_id, readbuf, hw_len);
- 	if (ret < 0) {
- 		hid_err(hdev, "Asus failed to request functions: %d\n", ret);
--		kfree(readbuf);
- 		return ret;
- 	}
- 
- 	*kbd_func = readbuf[6];
- 
--	kfree(readbuf);
--	return ret;
-+	return 0;
- }
- 
- static int asus_kbd_disable_oobe(struct hid_device *hdev)
-@@ -5476,7 +5570,7 @@ static int asus_kbd_disable_oobe(struct hid_device *hdev)
- 
- static void asus_kbd_set_fn_lock(struct hid_device *hdev, bool enabled)
- {
--	const u8 buf[FEATURE_KBD_REPORT_SIZE] = { FEATURE_KBD_REPORT_ID, 0xd0, 0x4e, !!enabled };
-+	const u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xd0, 0x4e, !!enabled };
- 	int ret;
- 
- 	ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
-@@ -5486,7 +5580,7 @@ static void asus_kbd_set_fn_lock(struct hid_device *hdev, bool enabled)
- 
- static void asus_kbd_set_brightness(struct hid_device *hdev, u8 brightness)
- {
--	const u8 buf[FEATURE_KBD_REPORT_SIZE] = {
-+	const u8 buf[] = {
- 		FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, brightness
- 	};
- 	int ret;
-@@ -5957,17 +6051,15 @@ static int asus_battery_probe(struct hid_device *hdev)
- 
++	return false;
++}
++
  static int asus_xgm_led_set(struct led_classdev *led_cdev, enum led_brightness value)
  {
--	const u8 buf[ROG_XGM_REPORT_SIZE] = {
--		FEATURE_KBD_LED_REPORT_ID2, 0xC5, (value) ? 0x50 : 0x00
--	};
-+	const u8 buf[] = { FEATURE_KBD_LED_REPORT_ID2, 0xC5, (value) ? 0x50 : 0x00 };
- 	struct asus_xgm_led *xgm = container_of(led_cdev, struct asus_xgm_led, cdev);
+ 	const u8 buf[] = { FEATURE_KBD_LED_REPORT_ID2, 0xC5, (value) ? 0x50 : 0x00 };
+@@ -6315,15 +6470,41 @@ static void asus_initialize_reports(struct hid_device *hdev)
+ 
+ static int asus_xgm_init(struct hid_device *hdev, struct asus_drvdata *drvdata)
+ {
++	struct asus_xgm_info *info;
+ 	const char *name;
  	int ret;
  
--	ret = asus_kbd_set_report(xgm->hdev, buf, ROG_XGM_REPORT_SIZE);
-+	ret = asus_kbd_set_report(xgm->hdev, buf, sizeof(buf));
- 	if (ret < 0) {
- 		hid_err(xgm->hdev, "Unable to set XG mobile led state: %d\n", ret);
- 		return ret;
--	} else if (ret != ROG_XGM_REPORT_SIZE) {
-+	} else if (ret != (int)asus_report_len(xgm->hdev, FEATURE_KBD_LED_REPORT_ID2)) {
- 		hid_err(xgm->hdev, "Unexpected partial transfer to XG mobile: %d\n", ret);
- 		return -EIO;
- 	}
++	info = devm_kzalloc(&hdev->dev, sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	/*
++	 * The station reports its identity through the query protocol: the
++	 * reported model decides whether the LED interface is registered
++	 * and what name it gets.
++	 */
++	ret = asus_xgm_get_identity(hdev, info);
++	if (ret < 0) {
++		hid_warn(hdev, "Failed to query XG Mobile identity: %d\n", ret);
++		return 0;
++	}
++
++	hid_info(hdev, "XG Mobile: model %s, serial %s\n",
++		 info->model, info->serial);
++
++	if (!asus_xgm_is_supported_model(info)) {
++		hid_warn(hdev, "Unsupported XG Mobile model %s\n", info->model);
++		return 0;
++	}
++
++	drvdata->xgm_info = info;
++
+ 	drvdata->xgm_led = devm_kzalloc(&hdev->dev, sizeof(*drvdata->xgm_led), GFP_KERNEL);
+ 	if (drvdata->xgm_led == NULL)
+ 		return -ENOMEM;
+ 
+ 	name = devm_kasprintf(&hdev->dev, GFP_KERNEL, "asus:xgm-%s:led",
+-			      strlen(hdev->uniq) ? hdev->uniq : dev_name(&hdev->dev));
++			      info->model);
+ 
+ 	if (name == NULL) {
+ 		ret = -ENOMEM;
 -- 
 2.47.3
 
