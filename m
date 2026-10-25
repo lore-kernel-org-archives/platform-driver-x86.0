@@ -1,87 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792896548;
-	b=wUJK5bbAknD3yRtaztn9zW+iR8g50Skrygrp3NztaI+DOihO436Z9QgRm/JX1A8JocXj
-	 ADwxt1M7dyM9Z8VV9ngjHqPwexQzjmy71C3jzHt7ui9I+gO2fbvVMuYuJy8PAJFnWFI59
-	 qL8t529mnbmlxe/XoAAHsR6o/mwi8gvalRk3aKqByqp3PxqCxYtdPDHnD3j7+R5eJwBaX
-	 W62qnWkC6i9ht1dqyGmRxtibLUfTlKs4xYXbGJSFs5jFQVZNL3fHbqtKsEwwDannmDjge
-	 PYPQTVZWP9tFTrv0OyemHMR0Gjge1TM6DRByNVhqrExPwOvBPKqcuf/aZS1P9K2SAwg==
+	t=1792900131;
+	b=WKMBZPKl/F4Mj1dpt99EX6hvjkmQ6tWc3bhspXoCC9RK10sXXdHofEsueM6fqqyIS2Jb
+	 QncYFeFEJRBdiUgksFJUN5kDq6zihi5bZYnT4mATJGAf/5nyhFIEsZzdEhHyaCNpkzEX9
+	 UPvxr2eXwRBdcDnDwGl74ic7dTzcFEKGG4PEGMnG1tT3JSWpBy5qRvQK5YD3KYIyfRVOv
+	 QWVJdWN9i5rzp2pUlUbfb4KVhYQo3jc4ITK8vqL0dQdDmy+3eDJUvywHeVYOY1LFD4x8/
+	 SVGlAnTJUhzJS4jf8ryKjHy6+ydHP2Wmv8mJghXH7hpvaNW8dE2u3t6JCHi0PiWltgw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792896548;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792900131;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=D+nSnF0X8MpqSOGXAt/KrCbg10WONH+Uf58W/fSb0Og=;
-	b=gRDysQh1GSwVzubPFfgoW1t752CexrKsF13DVLAJS5VrUq+Ga+auzuv+ag5iEzSddRFn
-	 UFXzuwjeXUHELZGjAjTbx51Mbsa/sYtOydppGJgEkM4nVEz/DL+kvIgdNYZuE4PNzixl6
-	 zSQCeydWaaHQBBp/DKnlY1Nfcqf41o0hvV2Z0CrE9UJdKZNHWeKJtuejL1uAVnn4xd7vo
-	 N53OSpcz+F7I5LCuPNsQ5XtJonp05nDSYw4RBE4lMIrOMwSBHU3HpP1DaiKbGuiri1ZY5
-	 0RxDC9deuNKmc45e6uY+lEO6c31JsJxZGqHb9C5hPHB+7pdFaYdfPLxjqgZrjp/vZfA==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=LNVC/Q79iURelaMNO6LKar36XQUrN2NnF/HDD9huQKk=;
+	b=TF7+IKAzcIsfcK3TmZIf0BrUABVs+tJFXvv7rFFJC1wiZ7OTnzLDFdHZzcHB+IGi7cnr
+	 0RwWQbg8D3gURDAdA0YO3iLhcbuVIpwZEECzcqUUtXaboeN09g3w+7ALsP5kBh+wIsg+w
+	 HtQIZbNi9VDA0EC0HdwKV3ru3ncQ6eShtP/cYJSM2Jqn3yHB5xSz0mGY7kY1RqHkstcBk
+	 u096/HJ1pELgFQEgaxae5biAiz2bVRlMtT9g1IE7InOGCja8XSDXpUSnGG7OFoRvp0R7T
+	 aDWISrbNIxIlrK4xORneVdUFtVqkysC/sm1dR4nnduHM/1WmbbtDn2bxj4imdmZH5cw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ewCpdmhW;
-	arc=none smtp.remote-ip=74.125.82.171
-Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=KZ91zmuh;
+	arc=none smtp.remote-ip=74.125.82.178
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6351260A2613
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 02:48:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6351260A2613
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272B9606A31A
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 03:48:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 272B9606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ewCpdmhW
-Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-3535bf8b3e0so3281745eec.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 19:48:57 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=KZ91zmuh
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-3535a54bed9so3235626eec.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 20:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792896536; x=1793501336; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1792900130; x=1793504930; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=D+nSnF0X8MpqSOGXAt/KrCbg10WONH+Uf58W/fSb0Og=;
-        b=ewCpdmhWhvxKGaB1ywPwASIPJvYJtYs7/tUXoaILf+RVSyZJXZFHcki1Tr20z/w62l
-         SwxdbWi6sptizf0CRQ0j0YrCl8UAD11BNHJ4Egs3OCXlplmK+N4ZMhIgxr4Gi6FhAk/3
-         klg3bwOHnmiOf8Xc8pneI7FjXMoZj2ioY2qMzuAvcetGngNiRK7ZY92pNW5HDaJWhtx8
-         KUdxzZU93E5NzjmjB35aCbbHs9A5l5Hao6fjoCakLPcjAgS3HnYgV7RTm5cVLeyJVmcZ
-         XWSOgtXCwkwBA8RP+jcCUb0Yrux+qJvMc4osD93xp/XcEo9HrnpP+JpOeogrNmX+Y1mE
-         BrDA==
+        bh=LNVC/Q79iURelaMNO6LKar36XQUrN2NnF/HDD9huQKk=;
+        b=KZ91zmuhv7KcEEx8gUY7lKMO2jtzeTsCxr/YAB/rmCeOKn/fE5z8mZpNLxXIToBsgr
+         A52hGW5THyW8Z1ijoRSs+xe+TPG2Kki4StiNWqY9Ygo8fqMUcO14OMbVxCF6NjrqeNOp
+         GkyVDhm98fcWMW3CcarGsTDtR3k3icfa1Utfy1mVolpt2V7RfH3Z0xmmGGBaxSY5gWkR
+         7ai6RMlBajQcYZc3sh8etBY8AQ4cwAjt2GxsH4w9TMtDLIjqac1pa/VTbpdL2vO24OQR
+         Ze+dQagMNm99++dRbbrLCgvOBUAkUNQyTehCxi2zZBmtBcdmnSZi/DeawX4PsEoKRqOG
+         4HDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792896536; x=1793501336;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=D+nSnF0X8MpqSOGXAt/KrCbg10WONH+Uf58W/fSb0Og=;
-        b=J95YvPZabTugWBWQJhR4YdwsOGrmnaBMuj4m+0DFHqIvVZnz+0EQ5x2E+aovyUeetZ
-         UtTI8f+ziuMt29hC27xZOEohRh3Y7sFNZAZm4mQ01hdZAgNJT1o0OzI6kAdYuxnXuQDR
-         bOG/ARq2n7YT+58JOClX1V/75OEJCeop4Izj1E9NBxqsYEtgNpQec1fdQfk0iftSm/AG
-         iVX5jk6NDyTpMSj7mw4pE5ffk33Id6nr1lHyE6Si1NavS6S7Su5QDVew2tYytBbsFosU
-         oa0i9R9ivZH/5+Afby/FDb4SKGQx1vbbMCkHlZMwW+viYJp01Pe8Ld7Tg1G6tNx3qXPC
-         5a1g==
-X-Forwarded-Encrypted: i=1; AKwUvBwUepkcuNbIbbT8thUVMCI/fT88+EzPyG0+qUWOssYx1pvboXmoAhZBUGMWlPp6X9FSng9BfTaUJRqoNIzQ6FBwtnbO@vger.kernel.org
-X-Gm-Message-State: AFq9FYKoo0UakcuzAINl5l+VoJ+PRaUn8d/Zjj8WYAyl99ZpXgQ/QCnF
-	qg++rKfHVR/8e/rG09aQXf8WQxvNuRvo2n9NPdn57RYDd3iDNQVyzjT/
-X-Gm-Gg: AYBFou2FtQoszZJbGwuHb0bLsv96Zg47a7mgVgdrO75pX9BjxMBL+MA2zaq7KqqYjh4
-	Nnai1L/M4tEmoE3owexO0v079f/bFd3xr5PnvZJVZmIJfWKncv557anuQGSlxawVNaDS48qVdQL
-	8VC76xIKhmH0dcCQVD47ePApzAvJZibjFp0kDp3C7VqjAuo+hrCKAQdmmONzfPV+LY1oLs+5JU1
-	KGys46qpq84ZwTU44jhmbbVZm/hk6G4LLlt+rBOqtcNoSvbWRmQ0Nw/aLbfWhgv/FDlRVFW1v5a
-	JyYukMRUeYjFr9q/Udm5cqKRjo9H4QSU4deOP/Z5YWMacSoKKyctUKGn2lvhTx9GjmxpYn5VKYJ
-	x9WxckjgPuP5DKYA7ZakeD//0KhQopz4CQYq4W360QZkLjcUhOOGYNDV+i6AiYutiU9yUrO5wTe
-	aYVYg1QZ6ybJvsn9LDKps5j1d9pnq6KL5jXO1UEviRBg47sCVpGFWX+JXDh2Jo3ohoJ2ge10yRh
-	PvRSlxUkvIZLt7sx4B2T1iYn2Jydz/NTOVNdOiafRsNANWmmKbc9jmdLWW95P1LBXLdpCN1Fzxl
-	UIC2cVBDefVvFSkh7H+myMqIIE2uSr25fvunJsZ2z7kK
-X-Received: by 2002:a05:7022:2513:b0:196:7742:3928 with SMTP id a92af1059eb24-1991b420832mr6834303c88.0.1792896536354;
-        Sat, 24 Oct 2026 19:48:56 -0700 (PDT)
-Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:8fe4:693:7158:24de])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a2e32479sm10521272c88.21.2026.10.24.19.48.54
+        d=1e100.net; s=20260707; t=1792900130; x=1793504930;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LNVC/Q79iURelaMNO6LKar36XQUrN2NnF/HDD9huQKk=;
+        b=gfDWknjtjOUlyO29XcHCiSu32aFebuTpm0IkKQU/pjwXfZ05U69Kxr28AI/UzB1mwO
+         AQfIVehjJRUaScQPdeohIUUMcZCvYwKMMETWW6Mod4tnYR5ofd4I5aVZ8Yas55ILJJD0
+         NjmU+SoZDneawL/UfJnw8c9XPuoUcdvZrOLuuHmMYJ/CHiWeZAgWFBpuc98krW4Z3Xx1
+         FqO2ytcxcqb3h7JAaBi4KuVkA4jdpQiBT7ZInW6yKC5PbB0fJJRrZ2zo9uGmWcrYfMEm
+         5W8+kO34LAkEuKEGs/q8m/xIK1ZRN2ZiR3uSkkOBOaynorekHOMZ+LrfgqTrMsqYUPXq
+         57Yg==
+X-Forwarded-Encrypted: i=1; AKwUvBxgxAO0JbBoMJ+9aGSgLJ18e1CuHvEyoXzvIkPHSD/LJjn1mTia6lutF1QPnFVUBFJYV4xvUibFXPlzYCOFzKl4Nere@vger.kernel.org
+X-Gm-Message-State: AFq9FYK+SKsYCy8EM9qcbyNkpurATlvnVKef3OOTGbtBu0sjvmvhWNCY
+	hZXElNccMlQt+U/2pSa4Ouf/DcP8MmWM4v91SoceyNRj83XvHxHS+mwr
+X-Gm-Gg: AYBFou3nK9wgdhUzkqVcITEJE3D4x4erpNY+yit+32qplVzMnqFD9V3D+CLO5bPATQa
+	31nlvStkK6NgnvdZqA4b0KtpHs3nBLxioNh5wudl98q8qWIycZ6tpiR+0Tvm4YAU9Cpsb0skkam
+	dZCHlR2hS1tKPeIORFFgrQarjjfUZcGL5el2NFfk4CaI9tn8UI4BYHq8/FS9t5ye6jNAPCDqo/f
+	YHiux3Deb5Tu29KLcnYrDmmKWvTDlzrmgeB/pi993eUg3plxg7XzVZ42ehz60oQnHfgkRnx6vFp
+	pSHV9UUtrg5ewu+v4NI5RLurC3LpS0LV3uJd9lpVaikeAmw+nPkHYxM1RzjAnEc2NxpWUGtgtEQ
+	ZjnEcrOI6tadFaK0rTooHbCJuHIDTez48TdvznJ5zcNl18K0e7mF1SECW5iuwPKXIvEO3jchKwo
+	hXspl/X1nkWPmZ3MFA1eqcmFIn3asbh8a2vp9Indh9HijIehLdhyBjN6hT8R1oEIxmjy7WY9AZu
+	adXSUlKo4dYc7bawTROYCvlq7nJH3Ufz4Vl05MY6LN5l9qHSyIm0FY/5Bq4XS7fMJ0HnAEoJzBL
+	PYwm
+X-Received: by 2002:a05:693c:4195:20b0:369:535f:4d12 with SMTP id 5a478bee46e88-369e833625amr5936559eec.3.1792900130126;
+        Sat, 24 Oct 2026 20:48:50 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40e2:11e1:8680:3154:5358:731d:7be5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369e8ec864fsm14369443eec.24.2026.10.24.20.48.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 19:48:55 -0700 (PDT)
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Sat, 24 Oct 2026 19:48:46 -0700
-Subject: [PATCH 6/8] ipmi: ssif: use 4-argument i2c_smbus_read_block_data()
+        Sat, 24 Oct 2026 20:48:49 -0700 (PDT)
+From: Sourav Nayak <nonameblank007@gmail.com>
+To: nonameblank007@gmail.com
+Cc: ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH V2] platform/x86: hp-wmi: fix platform profile values for Victus 15-fb0xxx (8A3D)
+Date: Sun, 25 Oct 2026 09:15:39 +0530
+Message-ID: <20261025034539.4565-1-nonameblank007@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261024202658.13149-1-nonameblank007@gmail.com>
+References: <20261024202658.13149-1-nonameblank007@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -91,207 +98,115 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261024-i2c-smbus-read-block-data-v1-6-19bb97467982@gmail.com>
-References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
-In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
-To: Mika Westerberg <westeri@kernel.org>, 
- Andi Shyti <andi.shyti@kernel.org>, Corey Minyard <corey@minyard.net>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Sebastian Reichel <sre@kernel.org>
-Cc: linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
- openipmi-developer@lists.sourceforge.net, 
- platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-X-Mailer: b4 0.17-dev-e56a4
+Content-Transfer-Encoding: 8bit
 
-Pass the receive buffer capacity to i2c_smbus_read_block_data() in
-ipmi_ssif_thread() via the i2c_size field, and update ssif_i2c_send()
-callers to pass the receive buffer size.
+Currently Victus 15-fb0xxx (8A3D) takes victus_s_thermal_params,
+which causes it to register as incorrect EC layout while cold boot.
 
-Update read_response(), do_cmd(), and test_multipart_messages() to
-accept the response buffer length, clamping the transfer size to
-I2C_SMBUS_BLOCK_MAX when reading from the device.
+- On other hand windows Omen Gaming Hub registers EC offset as 0x95,
+- which is set in driver as HP_OMEN_EC_THERMAL_PROFILE_OFFSET.
+- So, address it by adding victus_s_ec_thermal_params.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+- Also perfcontrol modes as performance (0x1), default (0x0), quiet
+(0x3) registers. So, add support for quiet mode.
+
+Also, hp_wmi_fan_speed_max_reset() caused fans to freeze during loads at
+0RPM, introduce a 'if' statement to resolve it by calling hp_wmi_fan_speed_max_set(0),
+and passing platform active again to reactive curves. Test data:
+
+auto/max:
+hp-isa-0000
+Adapter: ISA adapter
+fan1:        5400 RPM
+fan2:        5200 RPM
+
+mannual[255]:
+hp-isa-0000
+Adapter: ISA adapter
+fan1:        5800 RPM
+fan2:        5800 RPM
+
+Tested-by: Sourav Nayak <nonameblank007@gmail.com>
+Signed-off-by: Sourav Nayak <nonameblank007@gmail.com>
 ---
- drivers/char/ipmi/ipmi_ssif.c | 39 +++++++++++++++++++++------------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-index 2361103c5edc..9c0aebec2946 100644
---- a/drivers/char/ipmi/ipmi_ssif.c
-+++ b/drivers/char/ipmi/ipmi_ssif.c
-@@ -503,7 +503,7 @@ static int ipmi_ssif_thread(void *data)
- 		} else {
- 			result = i2c_smbus_read_block_data(
- 				ssif_info->client, ssif_info->i2c_command,
--				ssif_info->i2c_data);
-+				ssif_info->i2c_size, ssif_info->i2c_data);
- 			if (result < 0)
- 				ssif_info->done_handler(ssif_info, result,
- 							NULL, 0);
-@@ -541,7 +541,7 @@ static void start_get(struct ssif_info *ssif_info)
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 615b4cf6fc45..ee6de96b3280 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -121,6 +121,13 @@ static const struct thermal_profile_params victus_s_thermal_params = {
+ 	.ec_tp_offset	= HP_EC_OFFSET_UNKNOWN,
+ };
  
- 	ssif_i2c_send(ssif_info, msg_done_handler, I2C_SMBUS_READ,
- 		  SSIF_IPMI_RESPONSE,
--		  ssif_info->recv, I2C_SMBUS_BLOCK_DATA);
-+		  ssif_info->recv, sizeof(ssif_info->recv));
- }
++static const struct thermal_profile_params victus_s_ec_thermal_params = {
++	.performance	= HP_VICTUS_THERMAL_PROFILE_PERFORMANCE,
++	.balanced	= HP_VICTUS_THERMAL_PROFILE_DEFAULT,
++	.low_power	= HP_VICTUS_THERMAL_PROFILE_QUIET,
++	.ec_tp_offset	= HP_OMEN_EC_THERMAL_PROFILE_OFFSET,
++};
++
+ static const struct thermal_profile_params omen_v1_thermal_params = {
+ 	.performance	= HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE,
+ 	.balanced	= HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
+@@ -164,6 +171,11 @@ static const struct hp_wmi_board_params victus_s_board_params = {
+ 	.fan_profile		= &victus_s_fan_profile_params,
+ };
  
- static void start_resend(struct ssif_info *ssif_info);
-@@ -669,7 +669,7 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
- 
- 		ssif_i2c_send(ssif_info, msg_done_handler, I2C_SMBUS_READ,
- 			 SSIF_IPMI_MULTI_PART_RESPONSE_MIDDLE,
--			 ssif_info->recv, I2C_SMBUS_BLOCK_DATA);
-+			 ssif_info->recv, sizeof(ssif_info->recv));
- 		return;
- 	} else if (ssif_info->multi_pos) {
- 		/* Middle of multi-part read.  Start the next transaction. */
-@@ -736,7 +736,7 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
- 				  I2C_SMBUS_READ,
- 				  SSIF_IPMI_MULTI_PART_RESPONSE_MIDDLE,
- 				  ssif_info->recv,
--				  I2C_SMBUS_BLOCK_DATA);
-+				  sizeof(ssif_info->recv));
- 			return;
- 		}
- 	}
-@@ -1314,12 +1314,15 @@ static void ssif_remove(struct i2c_client *client)
- 	kfree(ssif_info);
- }
- 
--static int read_response(struct i2c_client *client, unsigned char *resp)
-+static int read_response(struct i2c_client *client, unsigned char *resp,
-+			 size_t resp_length)
- {
- 	int ret = -ENODEV, retry_cnt = SSIF_RECV_RETRIES;
- 
- 	while (retry_cnt > 0) {
- 		ret = i2c_smbus_read_block_data(client, SSIF_IPMI_RESPONSE,
-+						min_t(size_t, resp_length,
-+						      I2C_SMBUS_BLOCK_MAX),
- 						resp);
- 		if (ret > 0)
- 			break;
-@@ -1333,7 +1336,7 @@ static int read_response(struct i2c_client *client, unsigned char *resp)
- }
- 
- static int do_cmd(struct i2c_client *client, int len, unsigned char *msg,
--		  int *resp_len, unsigned char *resp)
-+		  int *resp_len, unsigned char *resp, size_t resp_length)
- {
- 	int retry_cnt;
- 	int ret;
-@@ -1350,14 +1353,14 @@ static int do_cmd(struct i2c_client *client, int len, unsigned char *msg,
- 		return -ENODEV;
- 	}
- 
--	ret = read_response(client, resp);
-+	ret = read_response(client, resp, resp_length);
- 	if (ret > 0) {
- 		/* Validate that the response is correct. */
- 		if (ret < 3 ||
- 		    (resp[0] != (msg[0] | (1 << 2))) ||
- 		    (resp[1] != msg[1]))
- 			ret = -EINVAL;
--		else if (ret > IPMI_MAX_MSG_LENGTH) {
-+		else if (ret > resp_length) {
- 			ret = -E2BIG;
- 		} else {
- 			*resp_len = ret;
-@@ -1382,7 +1385,7 @@ static int ssif_detect(struct i2c_client *client, struct i2c_board_info *info)
- 	/* Do a Get Device ID command, since it is required. */
- 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
- 	msg[1] = IPMI_GET_DEVICE_ID_CMD;
--	rv = do_cmd(client, 2, msg, &len, resp);
-+	rv = do_cmd(client, 2, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
- 	if (rv)
- 		rv = -ENODEV;
- 	else {
-@@ -1523,7 +1526,7 @@ static int start_multipart_test(struct i2c_client *client,
- 
- static void test_multipart_messages(struct i2c_client *client,
- 				    struct ssif_info *ssif_info,
--				    unsigned char *resp)
-+				    unsigned char *resp, size_t resp_length)
- {
- 	unsigned char msg[65];
- 	int ret;
-@@ -1572,7 +1575,7 @@ static void test_multipart_messages(struct i2c_client *client,
- 					 1, msg + 64);
- 
- 	if (!ret)
--		ret = read_response(client, resp);
-+		ret = read_response(client, resp, resp_length);
- 
- 	if (ret > 0) {
- 		/* End transactions work, we are good. */
-@@ -1590,7 +1593,7 @@ static void test_multipart_messages(struct i2c_client *client,
- 					 SSIF_IPMI_MULTI_PART_REQUEST_MIDDLE,
- 					 0, msg + 64);
- 	if (!ret)
--		ret = read_response(client, resp);
-+		ret = read_response(client, resp, resp_length);
- 	if (ret > 0)
- 		/* Zero-size end parts work, use those. */
- 		return;
-@@ -1748,7 +1751,7 @@ static int ssif_probe(struct i2c_client *client)
- 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
- 	msg[1] = IPMI_GET_SYSTEM_INTERFACE_CAPABILITIES_CMD;
- 	msg[2] = 0; /* SSIF */
--	rv = do_cmd(client, 3, msg, &len, resp);
-+	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
- 	if (!rv && (len >= 3) && (resp[2] == 0)) {
- 		if (len < 7) {
- 			if (ssif_dbg_probe)
-@@ -1800,13 +1803,13 @@ static int ssif_probe(struct i2c_client *client)
- 		ssif_info->supports_pec = 0;
- 	}
- 
--	test_multipart_messages(client, ssif_info, resp);
-+	test_multipart_messages(client, ssif_info, resp, IPMI_MAX_MSG_LENGTH);
- 
- 	/* Make sure the NMI timeout is cleared. */
- 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
- 	msg[1] = IPMI_CLEAR_MSG_FLAGS_CMD;
- 	msg[2] = WDT_PRE_TIMEOUT_INT;
--	rv = do_cmd(client, 3, msg, &len, resp);
-+	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
- 	if (rv || (len < 3) || (resp[2] != 0))
- 		dev_warn(&ssif_info->client->dev,
- 			 "Unable to clear message flags: %d %d %2.2x\n",
-@@ -1815,7 +1818,7 @@ static int ssif_probe(struct i2c_client *client)
- 	/* Attempt to enable the event buffer. */
- 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
- 	msg[1] = IPMI_GET_BMC_GLOBAL_ENABLES_CMD;
--	rv = do_cmd(client, 2, msg, &len, resp);
-+	rv = do_cmd(client, 2, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
- 	if (rv || (len < 4) || (resp[2] != 0)) {
- 		dev_warn(&ssif_info->client->dev,
- 			 "Error getting global enables: %d %d %2.2x\n",
-@@ -1835,7 +1838,7 @@ static int ssif_probe(struct i2c_client *client)
- 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
- 	msg[1] = IPMI_SET_BMC_GLOBAL_ENABLES_CMD;
- 	msg[2] = ssif_info->global_enables | IPMI_BMC_EVT_MSG_BUFF;
--	rv = do_cmd(client, 3, msg, &len, resp);
-+	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
- 	if (rv || (len < 2)) {
- 		dev_warn(&ssif_info->client->dev,
- 			 "Error setting global enables: %d %d %2.2x\n",
-@@ -1857,7 +1860,7 @@ static int ssif_probe(struct i2c_client *client)
- 	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
- 	msg[1] = IPMI_SET_BMC_GLOBAL_ENABLES_CMD;
- 	msg[2] = ssif_info->global_enables | IPMI_BMC_RCV_MSG_INTR;
--	rv = do_cmd(client, 3, msg, &len, resp);
-+	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
- 	if (rv || (len < 2)) {
- 		dev_warn(&ssif_info->client->dev,
- 			 "Error setting global enables: %d %d %2.2x\n",
++static const struct hp_wmi_board_params victus_s_ec_board_params = {
++	.thermal_profile	= &victus_s_ec_thermal_params,
++	.fan_profile		= &victus_s_fan_profile_params,
++};
++
+ static const struct hp_wmi_board_params omen_v1_board_params = {
+ 	.thermal_profile	= &omen_v1_thermal_params,
+ 	.fan_profile		= &victus_s_fan_profile_params,
+@@ -245,7 +257,7 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
+-		.driver_data = (void *)&victus_s_board_params,
++		.driver_data = (void *)&victus_s_ec_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
+@@ -2121,10 +2133,14 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+ 	 * but logically it should have tp == 0x30 || tp == 0x31, as
+ 	 * corrected by the Omen Gaming Hub on windows. Hence accept both
+ 	 * of these values.
++	 * Since boards like 8A3D write 0x3 to EC offset 0x95 to
++	 * engage quiet mode. Map this to PLATFORM_PROFILE_LOW_POWER.
+ 	 */
+ 	if (tp == victus_s_thermal_params.performance ||
+ 	    tp == omen_v1_thermal_params.performance) {
+ 		*profile = PLATFORM_PROFILE_PERFORMANCE;
++	} else if (tp == victus_s_ec_thermal_params.low_power) {
++		*profile = PLATFORM_PROFILE_LOW_POWER;
+ 	} else if (tp == victus_s_thermal_params.balanced ||
+ 		   tp == omen_v1_thermal_params.balanced) {
+ 		/*
+@@ -2657,7 +2673,17 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+ 		return 0;
+ 	case PWM_MODE_AUTO:
+-		if (hp_wmi_fan_control_supported()) {
++		/*
++		 * Victus models like 8A3D, calling hp_wmi_fan_speed_max_reset()
++		 * freezes fans at 0 RPM under load. Instead, disable max fans and re-apply
++		 * the active platform profile, so the EC firmware thermal curves regain control.
++		 */
++		if (hp_wmi_thermal_profile() == &victus_s_ec_thermal_params) {
++			ret = hp_wmi_fan_speed_max_set(0);
++			if (ret < 0)
++				return ret;
++			ret = platform_profile_victus_s_set_ec(active_platform_profile);
++		} else if (hp_wmi_fan_control_supported()) {
+ 			ret = hp_wmi_get_fan_count_userdefine_trigger();
+ 			if (ret < 0)
+ 				return ret;
 
+base-commit: 5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f
 -- 
-2.56.0.257.gf7497c7d27-goog
+2.55.0
 
