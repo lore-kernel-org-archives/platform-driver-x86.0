@@ -1,87 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792952994;
-	b=SZza/u2BZbYQpe5oZdu474lraHojQ3Nxb2KT67oi6bpKVQiPmBv/qnzqVOLGr75nzGGB
-	 kuAU8ZxBh04uttyHv+igdDgdeB0GZ9NKEMoRJtIr5ehAwrblw8suS0gRJfOAscrSZTTxj
-	 lQQCWsxl2Ou0iYkalm6+1zDwRzIU9XuJBIFCubQFOtycekkgeEoUkq5WikINadoOPIehR
-	 johJUht4j9rwIFNJcbySotd42XsmvHlTZ98RMh0MVo6iFxfugCKIEex6YuOL26ueifTjB
-	 wl/qFfyfxGQVPf5Rmv2fkwxKOJZ3iEAlDf/3T390p4nLG1ftHFpHGQfD9d0UFR7iCfg==
+	t=1792954327;
+	b=G85DILHTXRayU3nC8fNGRa2rKuERoFH03UqqYK3j9cyLiU+kWbJetR6lg2dztg253bqD
+	 9nmzYGPuc9mEu4LHMXZxI8RK+LW13fQcXcvD4+s2ZpRSl8jq60tmzxRXQbOUvXsfacw54
+	 xUxnFzZgMaqpU9ZZ84UCg5/bf+m12XnEMercI6qQXFn//pes9K1YjrPYwnW1mtBQQ2X4u
+	 XDlGAAdrQ/NI8SS9+4rMQurARy7CvQZJmlXpmfo0z4J9pgmIW+U19F+oVgQVeCpDW0ZM/
+	 kou+TXMqP34LpTv2cxRJkNxIuxuprQyP2BJzY1cYdqivkuX1hEZ5OgHq/p6CPgd8r1A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792952994;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792954327;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=y6FshiR99RFnuWN54Tkkwtj2Axc2lsc5KYS1qB/8moY=;
-	b=0patOjXNVWKwa1+9tNp+6TzYnDVovoBBx0FSFq5wzSQJ49OOcHyEA1xFg6suaGnleL89
-	 C3ogezEmb1Nlh4fJWKy3EnawGF33uDNtXJFvY7mXNnE/GfCFk5w1me04peJgKFIlJtw8B
-	 GW01OQHa/RkbNIXszLXBqOvoWI/WJ3uaGZ598h69cQ2H1fAU9YGAlXpm68Lc93wItJsfL
-	 is8AwTSgu2NqdPGzMjse7AtJjufjp3KlQk+cUsfNIwB3EFPvmwD16plTdGDwl7supIWY4
-	 wLowzZms/rwBfnGNGxwpPq3iP8BrOduC0cx8qnKYabbw9gwc2oHtUSPhLD45++i1ZmQ==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=wyaZ7BGveZumfF7hscS0DMRBRSSbSHRt9FPELcPqyEk=;
+	b=VaQpa9ForrBiTC53QlDsS3ohx/KPQedhGfYZnl/bI5Zz5AyFgyERp/xZ2U0QxRrYeRN3
+	 pO/EUSA6yNzg9CQp3l6jKHwx3eJyS8g9OAZqCMNDQ0j7L6tXPUgiyQC4PetUsHN1/awBX
+	 K6iDeN+vJQ9BRWI3gzfze1jAvwTxmCJu42n3KNbahxWx6jRDIrb4rCap1zgrYkty6EWLq
+	 wCpXAvPWbCcYDHjPwZl7Wz75boRDYqbaAkKV2RJ4ORsA5eQuk1TGHtnveGaEOBpSMbo+V
+	 iIuXTpYVxt+6Pb1SBdKj5FLy73JwlB+oT9k+ze/VcusrLBqlaippFkERf89KxKCf7eA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=phSLBhUU;
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=XSNUmE39;
+	arc=none smtp.remote-ip=209.85.160.177
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1AE606A31F
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 18:29:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC1AE606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF48C606A31B
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 18:52:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AF48C606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=phSLBhUU
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a2084d62cdso18611855e9.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 11:29:53 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=XSNUmE39
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-53634b8328eso15604261cf.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 11:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792952992; x=1793557792; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=y6FshiR99RFnuWN54Tkkwtj2Axc2lsc5KYS1qB/8moY=;
-        b=phSLBhUUP32B+FeF3l7cQFgwAFjxm5Z0IdxHhnEYceesOsrtlblC2GDX9JWWNO+MuJ
-         Rscg+lV6RjIwFJIOVmJD1GJkEUBmhLTozub0+v5+HkvFyANlUYrDxjQ0nZVoQvStK2jk
-         JFcqGyD0jXWQHbrH2x/2LS9QmjBFqVrOhgWwek7SaDKIbzMSptvC+atN4Z/XyYODgxDC
-         sdFfCPJoZ9hwLjOxzlxxRwE4oQT4FatxP1/iyCoFgMaCUCYENI0r31M3afw1bagU4ca6
-         fKuZOZbLMLiR4L0Nf56NtHY0NqO/I+ehPIoApatQrD1hOA6AoaqmVuZGLI5o2IBXarEl
-         CJ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792952992; x=1793557792;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1792954326; x=1793559126; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=y6FshiR99RFnuWN54Tkkwtj2Axc2lsc5KYS1qB/8moY=;
-        b=GbS3IAyFgMxANMy0C4VKaGImh8wzNCIc/WI0+nerpnPSoXgSRuvBL2dY5qb+myIAhW
-         RulSXtwY1hYeJVkJNu6nCPVPPH2OpXHPcwGm2uEK1axLXxsJM/6oyTN2P92kCr0CZnxe
-         z4YBLS9osp24Qf73BpN/h31U+yCBS58am83KitPTkr+fIqUAComnv0TRxtTyD8c3vP4n
-         bdbUHb0IzYIq4P1SlnKS09IA8WJQe8k5rRt5I1Jv0ZVztkc64BOLQ8rYf+iLA68SnGFJ
-         yfjzRklQ3R2rDEKZRfvFVagxp2Ook9MYqLQ6xnO8B/4hI8LQC71SPok5NvQGybWkvkhw
-         PIRw==
-X-Forwarded-Encrypted: i=1; AKwUvByjxex+q21U+Hgdedtcb+dMjvj0ezxu3g0YvtgzbvzOjR4LOJ1V1cqMPfNth/rYPWINsE3Hjo7iOtMNH/bLiLCxGq3X@vger.kernel.org
-X-Gm-Message-State: AFq9FYK2FP94Ke5+vIgTReBFdjT39qrBDL1ZeH30Yf5H/db0O8D3xvV6
-	ReL9yx4TW1bT4YvkSJnWjHbuk3FM7ycvEWZiHpJOY7v1pWTTZcHJmPYR
-X-Gm-Gg: AYBFou0M7hMSdQbIUvxv3y5cSP0K6KdY0hdWnsz2ndmYVUjXulSVKixfUJhxWujpB0y
-	TlADvqoB9sqFZPS0MmGm9K9RSprpYTUekjp1VLpCXxOvYAmb6+CoDXdqqM776AEGY1f/IBm0ZaU
-	IEa9z6I9fZE3grPSslyIlD0zkoHrbP7cIg2fKM9pN5XbtiKVMC5IVeU0MKlDm/snZsnVc8AulFP
-	FL/b555/gTM1dwtnZVXv0C5yQkaGf9bN64rkD7RMF7aTIDzNoaINQI77X7FpJoaeq1DIZkAXrY9
-	V+dSfY8bgWltQ7bek9fNnKA4pdKV2R8vJ63hJj6mNXF4Tyuvt2NQpBUbSevOsy/p2achThMKIpR
-	2EoKPsOfIiT7yMCxXarRbRq2kEjotQJUNVaO54bXs27G5GUnmnVrtBAUWZ14aBr/zZgqGrlr7gu
-	cyeAWb5EZ278npvfEnh8QRRx6ZuwWYWHDTan6H15ccto79sTuzUfpxd0UYAtf/2zzAv2kPV78lY
-	5H7fEMbsy4RbGaLomyJsjdv/pFrSXM699BlNZKkRfYahJ3IuM2DBA==
-X-Received: by 2002:a05:600c:34c9:b0:4a2:994:575c with SMTP id 5b1f17b1804b1-4a35acb994bmr84167185e9.34.1792952992058;
-        Sun, 25 Oct 2026 11:29:52 -0700 (PDT)
-Received: from [127.0.1.1] ([85.105.252.11])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a2e8f25sm138255175e9.14.2026.10.25.11.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2026 11:29:51 -0700 (PDT)
-From: Bartu Alev <bartualev@gmail.com>
-Date: Sun, 25 Oct 2026 21:29:37 +0300
-Subject: [PATCH 2/2] platform/x86: asus-wmi: unify WMI and HID keyboard
- brightness stepping
+        bh=wyaZ7BGveZumfF7hscS0DMRBRSSbSHRt9FPELcPqyEk=;
+        b=XSNUmE39If1FuL56L0ck+PHzvGyU9hPoG9sZiFevEwP5bykPi8wx1Px43IXI1Al5f3
+         R/0cHSoNaSA+SFmZNXU0iAiLRGhmDfU3beeMBJSFQGd75YdycFXnPdzN2NhaZG2Yn6x3
+         3OvJ0ZlkSQMaShb9Oh+U2ioBxOagNmxbxYc+EWdqP+K0VBIOjrb2Ib6JZJa9TFPoR7c/
+         /u8c7wTKqmoxVOHR+tB+6ACrSoRr4wXECjirCMQp4XzU/k82MBb3F5Vo69DGmTpFAcjy
+         EuGpa5tkOg0V6esrhXGQ7ZaerM2NFh2dLsmtoVGryBE0ac3VCi14NpR8JIyHhh4eQmr7
+         pmMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792954326; x=1793559126;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=wyaZ7BGveZumfF7hscS0DMRBRSSbSHRt9FPELcPqyEk=;
+        b=GzoK5K+jvkaE1lXaFGrPT0l+p0j7MSvLLGaNKoYpMOiUgljpkoiHSlLeACkMOak8Mj
+         17kAPn4KJhhsD37G5ltFKq2gHC+JQnjqmNtn1/jgI2EbW62nVr8P6sziSDCUIZv6O4Zz
+         hZBMGly1nH1IcL+NwsjtnQ4UfrLk55CqlRvYhSArQdo161+zMZHwB/nAQmdRsk422IfN
+         86vLPzZqDjQtbrevX9ZmlrQaMavZznLayW+Ew3xWLtBDRvOXqvHecNnfPxWH27I9ioou
+         C+xVzsnj+1+snBMaiKfm1w2MPx7HAbfhjYw3LdBpEEk1WvOEuqmtQBc+Fmdm4jjAuR/S
+         7a/Q==
+X-Gm-Message-State: AFq9FYJxtJfZPh2IJSj79oJ7Cn8tNj8dcKdLAq3urpQuZ0CdVu3p+HUc
+	W1cQl6TxB52GjFd0/8TLzv4j6qZ9+f1SotvezGgRiZ/rbB+bxDvWKesI
+X-Gm-Gg: AYBFou0rHBNxfpV0QxJib+7reQ7o1/TMAERl6gASiI8n3YLvhk7gFVXvXUBuDEYd1eq
+	DSIzuI286fVyAiqZesa8d+q96ZeSZeVYGxSN1bwWTyjiaIKu3vTuL7V1Rwa2t/Ww29Y8LX/20QK
+	eOToKh/kCuIhbQwK+sYqsLKB621U3c4OsnryJ0IVmHHlIo37uqB1fhqijUNIgWYlV0CVK5QP2NS
+	Loj78rAB7qOpyB80yB5HPnmdjYVvIv1GrprV3hU3Aund6NIB6bSDiOn1i5P0k2ToS1QXFMFJxAr
+	/yG4b7TC60jMvBvMJ5Gxlth4FR9aP9iAvnfNO4dho75DArHErv417uCebfWRnpGOCt89JJwCzd9
+	k4HFOBfFUATlQboGInroV3Oob2PQPMbdpqtMRC+7gRcpc26edZNsg4UZDN7QqzzeSVTOF6amDME
+	/MKm6tUK3fIhvkItngRxrbW2O1S9B9382kqr00tpRfTiK6C/el7tlLFIx0Iz7HhMC3GTxEP7yjj
+	7FESnRb0ImTNKOs7ilJFtCfi99oPAjMe4vu5FvfDjEnAnRu7aYrt71ZgIftbV9N7bIqrnvVHSLp
+	zteLVTutt3Tq5TUPXKoFFmpesIoaMWA=
+X-Received: by 2002:a05:622a:8b08:b0:536:7747:3712 with SMTP id d75a77b69052e-5383b524fc7mr74981931cf.37.1792954325611;
+        Sun, 25 Oct 2026 11:52:05 -0700 (PDT)
+Received: from [192.168.60.8] ([207.115.103.98])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c47c54cbdsm51721106d6.26.2026.10.25.11.52.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Oct 2026 11:52:05 -0700 (PDT)
+Message-ID: <a6806b89-8086-4297-83f5-b7824a503099@gmail.com>
+Date: Mon, 26 Oct 2026 02:52:01 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -91,173 +90,70 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3] platform/x86: panasonic-laptop: Add
+ platform_profile support
+To: Wu Zhipeng <zepwu@foxmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>, Kenneth Chan <kenneth.t.chan@gmail.com>
+References: <20261007190446.38862-1-alexyeo362@gmail.com>
+ <tencent_7F39F02728B55CE3B1878AAB51BAA0FE2D07@qq.com>
+ <2df90a2a-770b-4439-9d01-bd8105084719@gmail.com>
+ <tencent_36C6A22A8A475F824CB6BAC101A1F272E709@qq.com>
+Content-Language: en-US
+From: Alex Yeo <alexyeo362@gmail.com>
+In-Reply-To: <tencent_36C6A22A8A475F824CB6BAC101A1F272E709@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261025-b4-asus-kbd-fixes-v1-2-fa4dcf7d2a69@gmail.com>
-References: <20261025-b4-asus-kbd-fixes-v1-0-fa4dcf7d2a69@gmail.com>
-In-Reply-To: <20261025-b4-asus-kbd-fixes-v1-0-fa4dcf7d2a69@gmail.com>
-To: Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Antheas Kapenekakis <lkml@antheas.dev>, 
- Benjamin Tissoires <bentiss@kernel.org>
-Cc: Denis Benato <benato.denis96@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartu Alev <bartualev@gmail.com>
-X-Mailer: b4 0.15.2
 
-WMI notifications and USB HID event passes calculate brightness steps in
-two separate functions: asus_wmi_handle_event_code() and asus_hid_event().
-The WMI path reads asus->kbd_led_wk under asus_ref.lock in
-asus_wmi_handle_event_code(), drops the lock, and then calls
-kbd_led_set_by_kbd(), which re-acquires asus_ref.lock. A concurrent event
-arriving between the two critical sections can overwrite the newer state.
+Thanks for taking the time to test and follow-up. These results match 
+with the other machines I have tested the patch on.
 
-Consolidate the step arithmetic into a helper, asus_kbd_led_calc_next(),
-and add asus_kbd_led_step() to calculate and store the new brightness
-level in a single asus_ref.lock critical section. Route the WMI notify
-handlers through this helper and remove kbd_led_set_by_kbd(). In
-asus_hid_event(), reuse asus_kbd_led_calc_next() under the existing
-critical section to keep stepping logic identical across endpoints.
+With EPP=performance, the TDP toggle works (~10 W locked vs ~26 W 
+unlocked). The fan toggle influences the temperature. thermald doing the 
+one-shot _OSC unlock matches what I see on the other IETM B machines.
 
-The step logic remains unchanged; locking is consolidated into a single
-critical section.
+ > 3. Windows comparison
 
-Cc: Antheas Kapenekakis <lkml@antheas.dev>
-Signed-off-by: Bartu Alev <bartualev@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 75 ++++++++++++++++++++---------------------
- 1 file changed, 37 insertions(+), 38 deletions(-)
+Based on the data, the unlocked power on Linux reaches the same range as 
+Windows.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 2478361b9b531..533c50c1dba6e 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1815,6 +1815,39 @@ static void kbd_led_update_all(struct work_struct *work)
- 	}
- }
- 
-+static inline int asus_kbd_led_calc_next(int cur, enum asus_hid_event event)
-+{
-+	switch (event) {
-+	case ASUS_EV_BRTUP:
-+		cur += 1;
-+		break;
-+	case ASUS_EV_BRTDOWN:
-+		cur -= 1;
-+		break;
-+	case ASUS_EV_BRTTOGGLE:
-+		cur = (cur >= ASUS_EV_MAX_BRIGHTNESS) ? 0 : cur + 1;
-+		break;
-+	default:
-+		return cur;
-+	}
-+
-+	return clamp_val(cur, 0, ASUS_EV_MAX_BRIGHTNESS);
-+}
-+
-+static int asus_kbd_led_step(struct asus_wmi *asus, enum asus_hid_event event)
-+{
-+	if (!asus)
-+		return -ENODEV;
-+
-+	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-+		asus->kbd_led_wk = asus_kbd_led_calc_next(asus->kbd_led_wk, event);
-+		asus->kbd_led_notify = true;
-+	}
-+
-+	queue_work(asus->led_workqueue, &asus->kbd_led_work);
-+	return 0;
-+}
-+
- /*
-  * This function is called from hid-asus to inform asus-wmi of brightness
-  * changes initiated by the keyboard backlight keys.
-@@ -1822,31 +1855,13 @@ static void kbd_led_update_all(struct work_struct *work)
- int asus_hid_event(enum asus_hid_event event)
- {
- 	struct asus_wmi *asus;
--	int brightness;
- 
- 	guard(spinlock_irqsave)(&asus_ref.lock);
- 	asus = asus_ref.asus;
- 	if (!asus || !asus->kbd_led_registered)
- 		return -EBUSY;
- 
--	brightness = asus->kbd_led_wk;
--
--	switch (event) {
--	case ASUS_EV_BRTUP:
--		brightness += 1;
--		break;
--	case ASUS_EV_BRTDOWN:
--		brightness -= 1;
--		break;
--	case ASUS_EV_BRTTOGGLE:
--		if (brightness >= ASUS_EV_MAX_BRIGHTNESS)
--			brightness = 0;
--		else
--			brightness += 1;
--		break;
--	}
--
--	asus->kbd_led_wk = clamp_val(brightness, 0, ASUS_EV_MAX_BRIGHTNESS);
-+	asus->kbd_led_wk = asus_kbd_led_calc_next(asus->kbd_led_wk, event);
- 	asus->kbd_led_notify = true;
- 	queue_work(asus->led_workqueue, &asus->kbd_led_work);
- 	return 0;
-@@ -1960,15 +1975,6 @@ static int kbd_led_set(struct led_classdev *led_cdev, enum led_brightness value)
- 	return 0;
- }
- 
--static void kbd_led_set_by_kbd(struct asus_wmi *asus, enum led_brightness value)
--{
--	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
--		asus->kbd_led_wk = clamp_val(value, 0, ASUS_EV_MAX_BRIGHTNESS);
--		asus->kbd_led_notify = true;
--	}
--	queue_work(asus->led_workqueue, &asus->kbd_led_work);
--}
--
- static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
- {
- 	struct asus_wmi *asus;
-@@ -4679,7 +4685,6 @@ static int asus_wmi_get_event_code(union acpi_object *obj)
- 
- static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- {
--	enum led_brightness led_value;
- 	unsigned int key_value = 1;
- 	bool autorelease = 1;
- 
-@@ -4696,22 +4701,16 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 	}
- 
--	scoped_guard(spinlock_irqsave, &asus_ref.lock)
--		led_value = asus->kbd_led_wk;
--
- 	if (code == NOTIFY_KBD_BRTUP) {
--		kbd_led_set_by_kbd(asus, led_value + 1);
-+		asus_kbd_led_step(asus, ASUS_EV_BRTUP);
- 		return;
- 	}
- 	if (code == NOTIFY_KBD_BRTDWN) {
--		kbd_led_set_by_kbd(asus, led_value - 1);
-+		asus_kbd_led_step(asus, ASUS_EV_BRTDOWN);
- 		return;
- 	}
- 	if (code == NOTIFY_KBD_BRTTOGGLE) {
--		if (led_value >= ASUS_EV_MAX_BRIGHTNESS)
--			kbd_led_set_by_kbd(asus, 0);
--		else
--			kbd_led_set_by_kbd(asus, led_value + 1);
-+		asus_kbd_led_step(asus, ASUS_EV_BRTTOGGLE);
- 		return;
- 	}
- 
+ > 4. Quirk status
+ >
+ > Noted on holding the quirk until the power side is clear.  I saw 
+Ilpo's review
+ > suggesting reusing quirk_cf_sr4 for models with the same boolean 
+mapping; SV1
+ > does have the same CEFM/EPLE mapping, so a simple DMI alias would 
+describe the
+ > driver's behaviour.  One point I would like your call on: our SV1 
+table is
+ > cool/quiet/performance, exactly like quirk_cf_sr4, but the RFC 
+reserves COOL for
+ > the SR4 ("aggressive fan + locked TDP").  If you would rather non-SR4 
+models not
+ > expose COOL, the SV1 mapping should be limited to 
+balanced/quiet/performance.
 
--- 
-2.56.0
+For the mapping: I used cool on the SR4 because the active curve was the 
+aggressive one. Your matrix shows the same shape, with quiet about 10 C 
+hotter than cool at the same package power, so cool/quiet/performance 
+fits the SV1 better than balanced. I left the QV9 on balanced because 
+its active curve was quiet enough that the difference was not worth a 
+separate profile.
 
+ > Either way I am happy to wait for v4, apply the exact version there 
+and test it
+ > before sending a formal Tested-by.
+
+Sounds good. I'm not the maintainer, but sending the CFSV1-2 DMI entry 
+as its own patch on top of the posted series seems like the right way to 
+do it.
+
+ >
+ > If there is anything else you would like measured on this unit, just 
+let me
+ > know - happy to run it.
+
+Thanks!
