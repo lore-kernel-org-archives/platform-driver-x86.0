@@ -1,87 +1,87 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792896539;
-	b=4Ih9yJKD/ppTXKGibyfyyib6SXhpxDxrw+8IdLA5JrgKdDdQizsx72Kn0h1iDf2fdeKX
-	 aSNQnFVQIM38VCedI1TAoqLG/jlcg3RRsYUJYadxcNPYWg9ljtPqOcqEw1kvNp138CJh5
-	 E2xupmcFVdKlWhy3ri4jb9Xz3qrbrlj2kZW5cUciPbH/qurWzQX/Th2awAJv9Scn0Zq+F
-	 QKK7MV6dDmRaxQKMVXkkjHwFOenl4omlTlpsunwLs8yb1ND1GBUlaw0pBFaLZvzGUBcJX
-	 2tBDtKX4YGDy/03g9SaWTRyOiWEr1F8MVk4a/+x6pj9mMepPqtpbqPIFLv7uP+zcRLw==
+	t=1792896540;
+	b=ijhApCmAzqi0lX/XJ+VZz/xSDN7vDfSf6Lob6FN0twSmQZLv6N71jJ2dEiNfmNVdB3mm
+	 mRnVBqa4y8Ri/iACuPAMZZa61dG6XoBa1diEw7GGGz6eVu47kxeK/ECxwl/mNx9/LUOrO
+	 0ARsbioD842dCSfbwp0W92n4k5ziRwREukWDhNIAsMuBQ8oQzwRbmRH68T9SxJ2gDH0LR
+	 pAHh33NLVHz3HYzvp8cuEcrwFcPEJqi4L9CMICnoAVfFjyH65CfQmHzm7EV9NzEUC8hz1
+	 P5aoF1pGkgNyWcYHp3XDMP8SbR92V5lstIaCBAjedcz8OtUhGpCy9O7cNRQ6UiCYBLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792896539;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792896540;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=+D4LEQidpEa6OUGGXTLPtwOtKyE7/MIv6b0FECjwB4c=;
-	b=ehHYdz09pxN07+oF07QIXAxsmkQmkOkHQYiDX0/LYV6jzW66QERTGo6Epb1RlV3nir4G
-	 tGBfHYNvJTPDevJ7FEkMPIXplMt/vL+OQ/kFTztzzqXG7h+QysgS09DJHDbeetg8ZV/Rw
-	 EFDVN6/rtzW8zBVZbhxDOcUQWyGn3piZO2UJ2PDwE0iDYeb4UsBhGiFTblmfpbniTML9n
-	 6EASypvqJ+AM8KoWLFi3cCAOx4pknu8f8pYLlK1dSYSHJQt2I8Lp8bKl50/DJgd6Vs7lA
-	 eR22xhLen4ZWOSL5AbRLBBJatMSy1TQBCuk/SbqnYJGW9K0T+99ddYxThr1qmgK4sug==
+	bh=xv9yLRfHeZEkf9phVasO/TM2yP5oqXz3F+WdBaktVTI=;
+	b=bmqEFUNp49F+gWWnX7978/ZntL68HLzfeEZzSFws8K8Lx0aTWsXKrl6OPfsC8yzWMxIl
+	 LxmnF9ulugulpKGI7Yl3cbYyAYaECe234cz2yCruk9rdsw7PtGTs5hkkSl6FBoPaFZyjX
+	 5WLjZL1z1KnalmHrnwjZlvlZTIDRe9bVjEzx+akPH1IZZ61DLPl4RA+IQNYfWkNQ9emPU
+	 B6lFhS0gp2goescokyIaM9pzAWik+fz+0ejjnAMT/CAxIOQp4XjoO4dl4q407BnVaguNS
+	 HKYnDKlOX3wjsTIhykjf+eEC9zeJDULneLMYR59b1ooO9Xc4+J/67shXWJkgTLcC+Sg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=KoY+mptH;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=MRUtJt7G;
 	arc=none smtp.remote-ip=74.125.82.48
 Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BDC60A260D
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 02:48:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1BDC60A260D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D95D60A2606
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 02:49:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4D95D60A2606
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=KoY+mptH
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-170135e43c7so2025610c88.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 19:48:58 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=MRUtJt7G
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1931ff67a29so4101433c88.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 19:49:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792896538; x=1793501338; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792896539; x=1793501339; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=+D4LEQidpEa6OUGGXTLPtwOtKyE7/MIv6b0FECjwB4c=;
-        b=KoY+mptHC0CdbSXyXRIQLOUk+sIQ2V8zR/H4vg66uM1mRxvr8C2tagJSF+7ZHnvhXb
-         mrm+QXgnkIMNQlrG+qcqoZpD2EjjNBgf7f9tWH1pbJYvt9qCPRW9+uC87jYr5Ky702+k
-         AnIyrs+SQfRs/p/9TcI61sYs1h+H/Fsfw++AkiPkMECbrp3cvdsYXqI2VnhX7hkgOGEj
-         mD+1RWZQm1044SZN0wrIX9xjwCRD/zU0pUFMP5Gs6Ypw/7ixhIsI0b0kGgurBXqbWMeO
-         eC+o04P9a2kRz69dA+KfBCr9OukmHDQDjvSOZdjBIcjV7OxjDDtIWYnbg+PLlF0D+H3m
-         4z/g==
+        bh=xv9yLRfHeZEkf9phVasO/TM2yP5oqXz3F+WdBaktVTI=;
+        b=MRUtJt7Gkp4vafFe0rMwqOvDHoXxAMNyVJYKgIxP6STY7JiEtaQfRGX4Bfxa00RzZd
+         LL9z7cyZsOY/4U6jo0Y82ZKnYeZ1xnNi4d2t5k2uSo3AfAtxKMndyfDNAgGYy05aj8O3
+         +NOHRUj7mM7v7fo+STYhhLtoX7v3SUKlWkXZeFFQzfGnr+1EFv7yXE1lbrNRa/fILIlL
+         PH4YGconi0OlzRG16TfoWqLahojfLcD9IiRsXiKBSsaWXiKATHLwZ+qecfhZ4HPZyt5D
+         pN3gc5vWiZm5akOtpG9Dj9qY7/RqqfmML7d/xeFrZiipH2FEafl+aiMOHS0bvZbGQNJD
+         kWXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792896538; x=1793501338;
+        d=1e100.net; s=20260707; t=1792896539; x=1793501339;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+D4LEQidpEa6OUGGXTLPtwOtKyE7/MIv6b0FECjwB4c=;
-        b=IdTlRpY0Pj5sDwRSFy/ieHGAX6fdYd1RUBnD90rTwOdN02G92DCAsr/qoZTuu147w8
-         9Vsq7OgZ//41b/EKyU1o/8HbeUfYjSKIl/E7zv6VnaMF7saKOSCME56xcbR071c1QvVJ
-         3I1L72Mt7rltrrrPtTQNIn8C7EE6zUtY6/zEf+WXUcOqaA/JET1N7kFu8ZiSmL3GuG59
-         aGEq29cyFon6G/Z9QnfenEsh/p8rO/slyd5C+C3FCnlClyd/3zP6KFsQtO2EDbg95ELZ
-         JABcNOBGM+501es3nqSOPzKzeoSPqVlDIHSpnGa20wN46hiHxuMswwsraPORMEpHfmPj
-         jS1w==
-X-Forwarded-Encrypted: i=1; AKwUvBwrD0NTVJhwoXdeE6EcA/YoVeadtELe/oUBsYYMvwrP96/DwIhVZNNwQetjAr2hrVG0cdBL//pp+duzi27HYPI4RDun@vger.kernel.org
-X-Gm-Message-State: AFq9FYIeF+8tkv8mCiF7XZymsFedjGBve4vuyFw6wlCrz5VdlRxio8R0
-	FUVfNWKHj9HWK2Bsy3qRprI80WvDNTDk5iy0YtHgjzi1+GqEUz5zjWXB
-X-Gm-Gg: AYBFou1+ltlwckELA+xo9J38FRdsNeQ61orT1pV1N8CjhO5c4HYZpOB0gaDa/3k+ZTW
-	vmo4ysXW6kKEaXRDcC2b/cHjb7QfvKoX5oh1SOMa0elAjsbQfLMzbr/gmrQ6+ZXL8ZakQKxvUS3
-	64mPwuYaxhKcVhSA0HjR4xfsgUe93LEgupdKEzsV47QpgfuxiMuaz0tC66v2wDflzGyS0fPjy9Q
-	hvMIWE2hsQkFGhfACG25XukS30Sm7M56S7SJQehDErhhT7kvR4+4L6lZcqyRC4cQvcOgz3WjSO6
-	yXrLwreDqp8DpiQeTOe+PMGeDk9skR58ZGmEo1WY3xaFsfTTVyRy+1sR0Y9HZuslzQZJnyWxEdb
-	j6gSvUnGIyJf4XEPoxmUAGOFqxR2QrAKcqRGDJqXugDAeZPzQjapVwBNY+Fo9EIMNol+hYqfqmO
-	/nWwM4BAivXBfTguJqF7cK/p49I0x9/Vu7vNa4pwD6GFLyZO1gd+Vu2OHkcOVC8qG0n6xiX1xR4
-	X48Vf1u4w9GTmGPf7pfVorwQHfj1FAi9hZhMO+QfZDBvTT2vONJHa6f0/5YeFlKOwKdyCZqGs5l
-	KvWsr4LEUtJqwFUsX9FdO8m1rWjiT32UQ/AtiRfdg5A=
-X-Received: by 2002:a05:701b:2714:b0:19c:dd9b:d09e with SMTP id a92af1059eb24-19cdd9bd124mr1585077c88.23.1792896537822;
-        Sat, 24 Oct 2026 19:48:57 -0700 (PDT)
+        bh=xv9yLRfHeZEkf9phVasO/TM2yP5oqXz3F+WdBaktVTI=;
+        b=1hE/bojizq2EELkezdh3SlpxTYDXGsXCHDmYVR3FQ2z+3Ij+AX3q5srLlOkYTNzdj9
+         T8JbOMwtBIx2kx9fTXZjJLMHzahu/hjKeaVp0xgbFcLq99wfYPEGvCp2Em+3zHflWvDq
+         Scd30Eg4nwXMpBshpQ17RPLd9rJ/YIntAGhdxXbpajS/wXT+lwtN2mKAayD1msv7T28u
+         7YlawPURd8Ddy6qctnOOCh0ovaK86xTkHX/bWdYBUgMXfhJl7l8uF7GZInb7HZW/0gPb
+         sgRShzxkje8ZKhKaLchyHS/Dagiq0gnhSKp8asNcEG6DKpTBb4nDt9n0jhZ0g3zA+JBN
+         eH4A==
+X-Forwarded-Encrypted: i=1; AKwUvBybCHYxQmyQi18c7bjpCUJmfXRwDSAuQPmKzWUg9kOwijz3rQTqmIm6uu4ANnO+SGBM87UXnSLYLiEwBQ06pGg7Tyo6@vger.kernel.org
+X-Gm-Message-State: AFq9FYLRTzpO0jyTAgqy8Fx83/hsMXkw39mqjf+suWQ2knKRC92Ap3h9
+	Kmu0LIjc8FLrfr042OHEOp2P/RugnIq4olyiqMANmSVBOkobBxy6V+5B
+X-Gm-Gg: AYBFou2PFpeE+1nHxJjF6mNnUcxqcvVPnGyT3a8QWZ5MHbjMSo3Xs++xqW2XUkddglp
+	RUGXAJqo7sQ7VxnffWBbVN7GM7RGxFP7Z09dg1Q+cezQIe+WoJJpQUwM6yomTFLEfK96kFMVd0Q
+	Gn7ya3penm4ilOiEC/sMfo0m8O4qCL3WTLeSTCVAeOT/RuHyreltNINNAe8MqmRyu6mw83DLTGl
+	FPasYhknZmKjf6KiAExNt4yTYHXBbK2rKYyIbqWda/AnGim2oNdeIAdE0T18tFoMMiERN1fYpPv
+	928IpDVX4C29dvG13z4Zy3aZnj6D9x2WElUOh6TjQv8yKt3m2k07Wo+SCCgeP+YPJpiuQ0T/cse
+	KFmKXYbKptIfPmc021H8GX/M7mCRwak1HcAPGIHPhj4PzrDyaKkhw0oeP+ncUUh9eDPCweQclYF
+	hVFUk0wl5vWYd/Q338G6bo0rYnOQPjndqkd0O7UaCXFsGmqPOjg2bVpwSqCLny1UB3dHNB99bGk
+	IsmdjJT7KaQRfvNo0iFoQqn5gkVLVs/B4JkIn/oMwUxuY+9KLAMQlwpE/SF+i2jH7wZEDc33UpO
+	BrXI3VacasukQt1wasaiM1wqUEmmQG9KsI54Aqp1fGs=
+X-Received: by 2002:a05:701b:21c5:b0:194:b2e5:473d with SMTP id a92af1059eb24-199298b3af6mr4872191c88.5.1792896539394;
+        Sat, 24 Oct 2026 19:48:59 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:8fe4:693:7158:24de])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a2e32479sm10521272c88.21.2026.10.24.19.48.56
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a2e32479sm10521272c88.21.2026.10.24.19.48.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 19:48:57 -0700 (PDT)
+        Sat, 24 Oct 2026 19:48:58 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Sat, 24 Oct 2026 19:48:47 -0700
-Subject: [PATCH 7/8] platform/x86: x86-android-tablets: use 4-argument
+Date: Sat, 24 Oct 2026 19:48:48 -0700
+Subject: [PATCH 8/8] power: supply: sbs-battery: use 4-argument
  i2c_smbus_read_block_data()
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -94,7 +94,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261024-i2c-smbus-read-block-data-v1-7-19bb97467982@gmail.com>
+Message-Id: <20261024-i2c-smbus-read-block-data-v1-8-19bb97467982@gmail.com>
 References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
 In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
 To: Mika Westerberg <westeri@kernel.org>, 
@@ -108,37 +108,48 @@ Cc: linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
  platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 X-Mailer: b4 0.17-dev-e56a4
 
-Pass the expected response length and destination buffer directly to
-i2c_smbus_read_block_data() in atla10_ec_cmd() instead of copying
-through an intermediate buffer.
+Pass the destination buffer size to sbs_read_string_data(), and pass
+the buffer capacity reserving space for a trailing NUL terminator to
+i2c_smbus_read_block_data().
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/power/supply/sbs-battery.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-index 67dba9aa51f6..bbfa040cd4ec 100644
---- a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-+++ b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-@@ -65,16 +65,14 @@ struct atla10_ec_data {
- static int atla10_ec_cmd(struct atla10_ec_data *data, u8 cmd, u8 len, u8 *values)
- {
- 	struct device *dev = &data->client->dev;
--	u8 buf[I2C_SMBUS_BLOCK_MAX];
- 	int ret;
- 
--	ret = i2c_smbus_read_block_data(data->client, cmd, buf);
-+	ret = i2c_smbus_read_block_data(data->client, cmd, len, values);
- 	if (ret != len) {
- 		dev_err(dev, "I2C command 0x%02x error: %d\n", cmd, ret);
- 		return -EIO;
- 	}
- 
--	memcpy(values, buf, len);
- 	return 0;
+diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+index 6714313bb3a3..f8b194c58a62 100644
+--- a/drivers/power/supply/sbs-battery.c
++++ b/drivers/power/supply/sbs-battery.c
+@@ -424,7 +424,8 @@ static int sbs_read_string_data_fallback(struct i2c_client *client, u8 address,
+ 	return ret;
  }
  
+-static int sbs_read_string_data(struct i2c_client *client, u8 address, char *values)
++static int sbs_read_string_data(struct i2c_client *client, u8 address,
++				char *values, size_t size)
+ {
+ 	struct sbs_info *chip = i2c_get_clientdata(client);
+ 	int retries = chip->i2c_retry_count;
+@@ -440,7 +441,7 @@ static int sbs_read_string_data(struct i2c_client *client, u8 address, char *val
+ 	}
+ 
+ 	while (retries > 0) {
+-		ret = i2c_smbus_read_block_data(client, address, values);
++		ret = i2c_smbus_read_block_data(client, address, size - 1, values);
+ 		if (ret >= 0)
+ 			break;
+ 		retries--;
+@@ -709,7 +710,8 @@ static const char *sbs_get_constant_string(struct sbs_info *chip,
+ 
+ 		addr = sbs_data[ret].addr;
+ 
+-		ret = sbs_read_string_data(chip->client, addr, buf);
++		ret = sbs_read_string_data(chip->client, addr, buf,
++					   sizeof(chip->strings[0]));
+ 		if (ret < 0)
+ 			return ERR_PTR(ret);
+ 	}
 
 -- 
 2.56.0.257.gf7497c7d27-goog
