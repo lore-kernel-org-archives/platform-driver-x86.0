@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.132
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792972392;
-	b=XbdKxM0Y1q4xb9+w7T/TaKXowRxIy/yXIIc26IXkKFumASnkjrucUH8yVPbzFUXcjWZP
-	 sC3h3s5vwszRhdSybxa5GnMKl7jDZXFnATPaO2Zn6rhPUZog2m3UqpT2p2SBV6hMafkmi
-	 dLDKaIWFvaPPBHeOTsoapTiqYKRg/1awCOgRFloiXW9tIQjrmlPLADT3Cqgh0cnjEQMQY
-	 QAGzOtlRoC4YTiDVnkaWHJda4Tf0zGqRaW7dXWVLLOSM2A77L0/CaIWmtt66qncIMvezw
-	 DP90zS0YymowErgmsjo0+m9y9zBjMveMpGCQdn6KzKBZbl2NtLstrnfySP37IO9+Ofw==
+	t=1792972395;
+	b=kHeOZiE4hOxuJMMDQr2f9YGKFwjy3T59zvbjQ/5aqkLoQ0BWSuFVLEJkauQGlzTabf91
+	 uyvyZ1ZI7PmqjgOpFU/IIOeqVbVjxnIOUC9U7VE9WlHvwmcm6C7dZnackUfzenlhrdKGl
+	 LaVWLWBAnVLwRott5Dnnr36jocqtWL+WV6OvWCeBWN9apEHJ9nKks8sYOKPTbQSNRf77G
+	 HPl0PZnjX0tfGQ1Wba5nkHM8bLdP0WUjKzm+eYxGTUrFjf4CSdqlmTwl+jG7rf8XtCVWE
+	 pZjw5Hi17Rsy2MNmVPZXSuEMrhNABNeiyirjFQtfAS9O4VZPxfANgJpQecC6MtKQp4g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792972392;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792972395;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=RMjjdnj15EPIEp1Xcr7HJfBq/GiPgHey9XLhjsl06Uw=;
-	b=R5n7binMK2HzIVAsF7YF3kmwnZv6sJL/9kBPddE+yBdkImfilk99+0m8LqSdoBWYB8d9
-	 XnrW/ISObwC+WDWHfSezLYmCmS71G/t3Txt/LawJI9jyO1N2ZmaT1mAhoalInaLbibm4R
-	 0bIrmLprF9eK8MY6qfZM5Gkp0lv+y4IXuM4Z+9Gp6PIuqigf3Rea/tw96Ib5DB/zF9d28
-	 s/cudZLiFOi5/1c4g8CufrtlT2z98Vk5npXtTSnmlxJDLuwCbggQIOlzbaMW3KhNXKl2g
-	 1vDrEr294hcEFfSoXJGjfCldgILqr2hgjMIesCN7yyr45z5vXFEnSmbuNSiePfBFnbw==
+	bh=r3ziTXHFHb4zHhIgsgB0v091oWQB+ztJTIBPrG7LfeU=;
+	b=a5/aXr6pkJdwsKsJEZRy3KA7opkQm9UWIVn5SFTKOq8Pqr0wqLrDDzg0fjcSdaLEHBe3
+	 5QRpUS8G6aCBiBjoiypzIbOpJNkDvd5vww9yxhGmjkrsgFsDb9tlDR7vW+2olPp9xvtSP
+	 wYK6mNcBXXFk2X8PXm5K3QQA7+AY6aXLZizGdH3d8VEJXxzzYoXtgbLhtJDJ+peG67466
+	 KCSCrw1OBQn9bH4uUNEVKZtrCTBBYXmsQZ1QyeIfFGd61ryEoC1jDlPOOWFAT2xVui60D
+	 KjpheDdTX0whr42OldGB9przljwKwppZVWuPeSB96mVW6JGTbscSJMUh34Zftyv+5Vg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TFsf6XUX;
-	arc=none smtp.remote-ip=91.218.175.199
-Received: from mta0.migadu.com (out-199.mta0.migadu.com [91.218.175.199])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GWzgtTOo;
+	arc=none smtp.remote-ip=95.215.58.132
+Received: from mta1.migadu.com (out-132.mta1.migadu.com [95.215.58.132])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0440060A263E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 23:53:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0440060A263E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1B760A3823
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 23:53:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE1B760A3823
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TFsf6XUX
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GWzgtTOo
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=MpUp3asw/jvoPlK/e+cT5xP1Gg2dHYa/G4XvMJkytyc=;
+DKIM-Signature: a=rsa-sha256; bh=Wv9AAOSychIFLGZa0J3lTL/8oGDGVJ41VngzrnO5Etg=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792972390; v=1; x=1793577190;
- b=TFsf6XUX5fWf5MmxAYpiIQ5ByPuF38H7xprcswLv5cumqmicdlZ3t+d9RiLdMbXhbVFq0nPg
- Lee3YDA08oa+pvLBHF2cnGpHyUVmtzsSWib3F7K399fiUQp+I5b1HR+K2eJx6NbajsTQDAR0usK
- ejSDZVLIapk7Ty+PkDokOU3Q=
+ t=1792972392; v=1; x=1793577192;
+ b=GWzgtTOoqX2zq4shTAbVtC2OIbqiBSNePxgLcSZQvomWCJG5Rjs/jSGi+6IEscSpGE1Y3MSJ
+ sE8j55xxTKXjTW9xQlHBlmD/ERB0CkDyI281kwxczZUcwGOGqkTa9MRnhanE0Vqgd1CdJpy8qj5
+ ui2PfR6L2v9S/wPfCpE5Zy0U=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id df730c9150d6efe1;
-	Sun, 25 Oct 2026 23:53:10 +0000
-X-Mizu-Trace-ID: df730c9150d6efe1
+Received: by smtp.migadu.com with ESMTPS id 5e2575209869a21e;
+	Sun, 25 Oct 2026 23:53:12 +0000
+X-Mizu-Trace-ID: 5e2575209869a21e
 X-Migadu-Flow: FLOW_OUT
 From: Denis Benato <denis.benato@linux.dev>
 To: linux-kernel@vger.kernel.org
@@ -68,9 +68,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Hans de Goede" <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v11 16/18] platform/x86: asus-armoury: pick the eGPU activation from the reported GPU
-Date: Sun, 25 Oct 2026 23:52:29 +0000
-Message-ID: <20261025235232.129945-17-denis.benato@linux.dev>
+Subject: [PATCH v11 17/18] HID: asus: report the XG Mobile GPU vendor to asus-wmi
+Date: Sun, 25 Oct 2026 23:52:30 +0000
+Message-ID: <20261025235232.129945-18-denis.benato@linux.dev>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20261025235232.129945-1-denis.benato@linux.dev>
 References: <20261025235232.129945-1-denis.benato@linux.dev>
@@ -85,180 +85,83 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The egpu_enable attribute is a switch: writing 0 turns the eGPU off
-and writing 1 turns it on. Turning it on has always sent the NVIDIA
-activation value, which only works for NVIDIA stations, and the WMI
-interface cannot tell which GPU is installed in the connected one.
-
-Let drivers that detect the station report the GPU vendor through
-asus-wmi: writing 1 sends the activation value matching the reported
-vendor and falls back to NVIDIA when nothing has been reported, so
-existing tools keep working unchanged on every station.
+The version query answers with the 4-part PCI ID of the GPU installed
+in the station. Parse it, report its vendor part to asus-wmi as soon
+as the station is identified and clear it when the station goes away,
+so that enabling the eGPU through egpu_enable composes the right
+activation value for NVIDIA, AMD and Intel stations alike.
 
 Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/platform/x86/asus-armoury.c        | 53 +++++++++++++---------
- drivers/platform/x86/asus-wmi.c            | 29 ++++++++++++
- include/linux/platform_data/x86/asus-wmi.h | 11 +++++
- 3 files changed, 71 insertions(+), 22 deletions(-)
+ drivers/hid/hid-asus.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index fb382de5b57b..6cc5f0f6b3f5 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -538,13 +538,27 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
- ASUS_WMI_SHOW_INT(dgpu_disable_current_value, ASUS_WMI_DEVID_DGPU);
- ASUS_ATTR_GROUP_BOOL(dgpu_disable, "dgpu_disable", "Disable the dGPU");
+diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+index e444cad85b32..244d103fbd4c 100644
+--- a/drivers/hid/hid-asus.c
++++ b/drivers/hid/hid-asus.c
+@@ -186,6 +186,7 @@ struct asus_xgm_info {
+ 	char part_number[ASUS_XGM_INFO_LEN];
+ 	char firmware_version[ASUS_XGM_INFO_LEN];
+ 	char generation[ASUS_XGM_INFO_LEN];
++	u8 gpu_id[4];
+ };
  
--/* Values map for eGPU activation requests. */
--static u32 egpu_status_map[] = {
--	[0] = 0x00000000U,
--	[1] = 0x00000001U,
--	[2] = 0x00000101U,
--	[3] = 0x00000201U,
--};
-+/*
-+ * egpu_default_enable_value() - Activation value for the connected station
-+ *
-+ * The eGPU switch activation value selects the vendor of the external
-+ * GPU: 0x0001 activates NVIDIA, 0x0101 AMD and 0x0201 Intel. Pick the
-+ * value matching the GPU vendor reported for the connected station,
-+ * and fall back to NVIDIA when no vendor has been reported.
-+ *
-+ * Return: the activation value for the reported GPU vendor
-+ */
-+static u32 egpu_default_enable_value(void)
-+{
-+	switch (asus_wmi_egpu_vendor()) {
-+	case PCI_VENDOR_ID_ATI:
-+		return 0x0101;
-+	case PCI_VENDOR_ID_INTEL:
-+		return 0x0201;
-+	default:
-+		return 0x0001;
+ struct asus_touchpad_info {
+@@ -6313,6 +6314,12 @@ static int asus_xgm_get_version(struct hid_device *hdev,
+ 	asus_xgm_tlv_str(info->firmware_version, sizeof(info->firmware_version),
+ 			 buf, len, "VER");
+ 
++	/* the 4-part PCI ID of the GPU installed in the station: buf[3..10] */
++	if (len < 11)
++		return -ENODATA;
++
++	memcpy(info->gpu_id, buf + 3, sizeof(info->gpu_id));
++
+ 	return 0;
+ }
+ 
+@@ -6685,6 +6692,8 @@ static int asus_xgm_init(struct hid_device *hdev, struct asus_drvdata *drvdata)
+ 		hid_info(hdev, "XG Mobile: firmware %s, generation %s\n",
+ 			 info->firmware_version, info->generation);
+ 
++	asus_wmi_egpu_set_vendor(info->gpu_id[0]);
++
+ 	/*
+ 	 * The attribute group is not devm-managed: a creation failure is
+ 	 * fatal and unwound through asus_xgm_init_err, while on the unbind
+@@ -6732,6 +6741,7 @@ static int asus_xgm_init(struct hid_device *hdev, struct asus_drvdata *drvdata)
+ 
+ 	return 0;
+ asus_xgm_init_err:
++	asus_wmi_egpu_set_vendor(0);
+ 	sysfs_remove_group(&hdev->dev.kobj, &asus_xgm_attr_group);
+ 	drvdata->xgm_info = NULL;
+ 	drvdata->xgm_led = NULL;
+@@ -6951,8 +6961,10 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	if (drvdata->listener.brightness_set)
+ 		asus_hid_unregister_listener(&drvdata->listener);
+ 
+-	if (drvdata->xgm_info)
++	if (drvdata->xgm_info) {
++		asus_wmi_egpu_set_vendor(0);
+ 		sysfs_remove_group(&hdev->dev.kobj, &asus_xgm_attr_group);
 +	}
-+}
  
- /*
-  * armoury_pci_rescan() - Performs a PCI rescan
-@@ -578,9 +592,14 @@ static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj
- 	if (err)
- 		return err;
+ 	if (drvdata->xgm_led)
+ 		devm_led_classdev_unregister(&hdev->dev, &drvdata->xgm_led->cdev);
+@@ -6972,8 +6984,10 @@ static void asus_remove(struct hid_device *hdev)
+ 	if (drvdata->listener.brightness_set)
+ 		asus_hid_unregister_listener(&drvdata->listener);
  
--	if (requested >= ARRAY_SIZE(egpu_status_map))
-+	if (requested > 1)
- 		return -EINVAL;
--	enable = egpu_status_map[requested];
-+
-+	/*
-+	 * 0 deactivates the eGPU, 1 activates it with the value matching
-+	 * the GPU reported for the connected station.
-+	 */
-+	enable = requested ? egpu_default_enable_value() : 0;
+-	if (drvdata->xgm_info)
++	if (drvdata->xgm_info) {
++		asus_wmi_egpu_set_vendor(0);
+ 		sysfs_remove_group(&hdev->dev.kobj, &asus_xgm_attr_group);
++	}
  
- 	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
- 		/* Ensure the eGPU is connected before attempting to activate it. */
-@@ -661,7 +680,7 @@ static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj
- static ssize_t egpu_enable_current_value_show(struct kobject *kobj, struct kobj_attribute *attr,
- 						char *buf)
- {
--	int i, err;
-+	int err;
- 	u32 status;
- 
- 	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
-@@ -670,20 +689,10 @@ static ssize_t egpu_enable_current_value_show(struct kobject *kobj, struct kobj_
- 			return err;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(egpu_status_map); i++) {
--		if (egpu_status_map[i] == status)
--			return sysfs_emit(buf, "%u\n", i);
--	}
--
--	return -EIO;
-+	return sysfs_emit(buf, "%u\n", status != 0);
- }
- 
--static ssize_t egpu_enable_possible_values_show(struct kobject *kobj, struct kobj_attribute *attr,
--						char *buf)
--{
--	return armoury_attr_enum_list(buf, ARRAY_SIZE(egpu_status_map));
--}
--ASUS_ATTR_GROUP_ENUM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
-+ASUS_ATTR_GROUP_BOOL(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
- 
- /* Device memory available to APU */
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a65090429ca7..40b4cf32c0ac 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -881,6 +881,35 @@ static DEVICE_ATTR_RW(dgpu_disable);
- #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* eGPU ********************************************************************/
-+
-+static u16 egpu_gpu_vendor;
-+
-+/**
-+ * asus_wmi_egpu_set_vendor() - Report the vendor of the external GPU
-+ * @vendor: PCI vendor ID of the GPU installed in the connected eGPU
-+ * station, or 0 to fall back to the default activation value
-+ *
-+ * Drivers that detect an eGPU station report the vendor of the GPU
-+ * they found so that the eGPU activation can use the matching value.
-+ */
-+void asus_wmi_egpu_set_vendor(u16 vendor)
-+{
-+	egpu_gpu_vendor = vendor;
-+}
-+EXPORT_SYMBOL_NS_GPL(asus_wmi_egpu_set_vendor, "ASUS_WMI");
-+
-+/**
-+ * asus_wmi_egpu_vendor() - Vendor of the external GPU
-+ *
-+ * Return: the PCI vendor ID last reported with
-+ * asus_wmi_egpu_set_vendor(), or 0 when no station is known
-+ */
-+u16 asus_wmi_egpu_vendor(void)
-+{
-+	return egpu_gpu_vendor;
-+}
-+EXPORT_SYMBOL_NS_GPL(asus_wmi_egpu_vendor, "ASUS_WMI");
-+
- #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t egpu_enable_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index b5ed8c83ace1..a53b2828bb1d 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -204,6 +204,8 @@ int asus_hid_register_listener(struct asus_hid_listener *cdev);
- void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
- int asus_hid_event(enum asus_hid_event event);
- bool asus_wmi_custom_fan_curve_is_enabled(void);
-+void asus_wmi_egpu_set_vendor(u16 vendor);
-+u16 asus_wmi_egpu_vendor(void);
- #else
- static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
- {
-@@ -239,6 +241,15 @@ static inline bool asus_wmi_custom_fan_curve_is_enabled(void)
- {
- 	return false;
- }
-+
-+static inline void asus_wmi_egpu_set_vendor(u16 vendor)
-+{
-+}
-+
-+static inline u16 asus_wmi_egpu_vendor(void)
-+{
-+	return 0;
-+}
- #endif
- 
- #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
+ 	if (drvdata->xgm_led)
+ 		devm_led_classdev_unregister(&hdev->dev, &drvdata->xgm_led->cdev);
 -- 
 2.47.3
 
