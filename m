@@ -1,87 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792900956;
-	b=L6eUiShHr6dsQLtDA8MQo5ZtpEOvN7ET/Hlg+GmZhTmVJvuk/vfWO2hyjPXStTiwRnnV
-	 cElseJxNspHAU8uCH4a1nwhW9XGxubQvGiz4vYsxfCPdy+4l/ocvYaXA+Q15Dpv2KVCkR
-	 K3SR9G/78vrYaYVFQlDMxtG9R04RuekbMkq0WTh8xzB1yxTFvEqtKYkyBcGusdqhX9KmF
-	 2T43TbwxJuTie5KksnwGf1LuAgOfqoEXn2ZAJSfeOcsUUzdRXWdbr862SRAdkCwzxmQYw
-	 sR8KoRI/vEW6D01MJEysoSP6BHA6XbOeOZaH0hn3bZg8lalfcDVUl1HAZPeN/9bAyAA==
+	t=1792900969;
+	b=ZdlXIP4KdaHOM9C00ByA4KjyrG97CMtcs6p8HqNXYdAbrYMsNVCgp4ZRdAmxy3v9Q/Fr
+	 zkUcQ7bR3aLVMYhO0flkiU4+t9j2Fu/nOC0r4dE9xCOJtQE4/m31PijCwh1RfJKDL6zUD
+	 FmAZLYkNnDhODhFykzBAP+cwQ4mSFbxIxYrPXjTzLPYD+F2OmDHLLdrCZq7qPG/BLUo7S
+	 8k7+hDMjUR0NnloBzURR5bWZbN/muxp6TiR7ffIhW9v+iPjqQZQBlg5qWY/Oy1WGv57m3
+	 ZdS4YN5USs/CPBf5W3jzURToh91wQZDGUd88/N1+9CaY7xUSFtO5spN6d9eq1n5JmDg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792900956;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792900969;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=osKiCGgvhu8yMTzDeDh9QImzUzGTyVINpwGdXaYWlN8=;
-	b=UE80A/G2xppgEpdTION6D0q9Rao+YNB/BglV4AufxeLOBrv0oOEH0VFss0eJms33OzzJ
-	 sWkkE31Iu3lbO2D3Y1iRoZZeAmOGsDIQz2mthinv5ulPqPyxMlErJa0ymEs7xQnDkzXBH
-	 pP8RAqeRZgrWmiTOxmM52aWMsDK8xQ6z7/GwI0kUyvlbgAkLng352frWI4vGyio3xsHqi
-	 n1pu5TO0r3a9WlMcmgsuAn68CkXa5VL8hl2zO4A+gX47oRZHf/eeZ2QJ6OgpAyLvcMGZ0
-	 Wc6c2m0GdZMi2/Ogx96PHHESoJQjTyc000IOmhEiX77sNvb3Gv5+k3btJvpFigyK6HA==
+	bh=kIWFjWx6bY2aMzP1Dlox6FZiyYw6gduqI5+MEIlEj5E=;
+	b=YbV9PMAZw6hRaMC2JDeA1E203PsODqy208hW1xVfD+3V3O8TkfIHhAfWjPk3O0z9/lAk
+	 ognI2agmVgj95CG4/g+zbu577QN6r9aOxdmSb/SE+83QuFYe8EQTec2TsUHOHBsIUyvB9
+	 +pd7Djm4F2FxKs49NWOW/F2iECuJ+hOt5eDCtZlFv49zdl6V/A1g8N4MArfXNLSnHl0n7
+	 BJVIx1clcLvkZJF7p/SNs7mckmZsS/9m1RKld8yU13Fzrlyb9BFW6NwYYwGT+ZLDT9m7g
+	 Xo63HV5sZfur7eCDHcST0c94IQFD/8GQcunBAnyREWycCEh8VHm5qQp+aXYLZ0yHuLw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=KpwzWuSt;
-	arc=none smtp.remote-ip=74.125.82.48
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=WDBnovbH;
+	arc=none smtp.remote-ip=74.125.82.47
+Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3168606A31B
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 04:02:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C3168606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA87606A31D
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Oct 2026 04:02:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0CA87606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=KpwzWuSt
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-15ea896ddc8so3433366c88.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 21:02:35 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=WDBnovbH
+Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-15ea896ddc8so3433490c88.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Oct 2026 21:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792900955; x=1793505755; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792900968; x=1793505768; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=osKiCGgvhu8yMTzDeDh9QImzUzGTyVINpwGdXaYWlN8=;
-        b=KpwzWuSt9n8WGO32G+YWj0LJ4cjjH9gIvlqJaV/l1g3jWAHaMiCSeVl3ctLoDHUZPr
-         v4jX5VvSfynhWrgTOaz83SVbBEMXyUy88uz1q376hvcyF73n5TkR8jjGqx6WETsB10bh
-         KfYNGMy9xwnoNGhT8kKvlV8BQha8ZF3x/7Y3OF6eiyjnuOaMDNpFj3suP45WsshBB6aR
-         Pq7ekQe0cY8xDIGJsm/WpoBDtKTDcyb+/qDfJfXi6vBSTfOD+JoQUfva2z+avQ2inYgh
-         aO5BFlYNp2hJunbaPjfI/DAJdzo5URyvsEqCV2+KHO2YswNOp6f2YubZ24ZEZzlFKipU
-         oFgQ==
+        bh=kIWFjWx6bY2aMzP1Dlox6FZiyYw6gduqI5+MEIlEj5E=;
+        b=WDBnovbHpvOpjdqqRAZCqZ/d1ZGckJZx8Ecb+LplBowbPWF38i1otc7fHClqk3vswU
+         6p6p2KhpZKXDiP7533kfVkOVMDVmV/JlYmIGBxfwc3YeW/jvJC08/E8XPOCiZeXhc7TI
+         Fkk93D9W8429SPchCLu8sJxpRx3ZJaSoPBBAQNOIpmV1LJqggboW65XMg8dchAkLoyl1
+         zQKW8WShzk3zOYZ9UEyiIVpANUVK+0RSGiefC6FU64TSO/2uFPFoHgBA8F6cfhXTpqHn
+         1ogASV07H0M7oWHiVdWJJiI4Avuq/7XYHbKjP0ntYPUrSd1R4GgA/BNiPG76sK79nXJ0
+         EA6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792900955; x=1793505755;
+        d=1e100.net; s=20260707; t=1792900968; x=1793505768;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=osKiCGgvhu8yMTzDeDh9QImzUzGTyVINpwGdXaYWlN8=;
-        b=ncvXMnZBZMcnO1r7LlROhmoH++tVY+y2aHJ65bCKgIJ8PpPD2anX3ldlsvLhm+yox2
-         5xUHxFdNS1+vnKTDExTHfiSJE7KynAswnNdzxYK6AGAjhaiX8ZWcD4/BpGXq53aCdcwd
-         NGWf3dlqbA5poE1ZdAuHP0OHTHOHJJV6nZmi5GMberaeG/rIXMNF/dsT4seel6GK4+Ee
-         QQ4fJPtwKJwoWIyCQEk3p2NV7t7ifBsOrMBJ8yYxYiBXY2sQV1WtZmjTaKbNkoDcgIkb
-         BQKbr9mQONHrq8lb9VauxZzqmGWudG1XRftBb0SiaZsgl9SdfXjgqZSNzqRhdVVqoL21
-         2EWA==
-X-Forwarded-Encrypted: i=1; AKwUvBxhsQDy6JMY43y/VORYQyOl6AU5PAdIAdpZkOnFssRzBw1qvcMEGXc7n8behscG55YQjOfiQdYUkFI1M2b0Dtch4mVM@vger.kernel.org
-X-Gm-Message-State: AFq9FYKJvQztA1pzp54xuHQK33kSjuvI54LD6fT4RBGWc62XkFbbnWrt
-	Iwn701zsORrCsqi7iJ5dfgWLT2UatXHpFiODxJivl97skm2RoAc0eOo=
-X-Gm-Gg: AYBFou3XJT2hlec2J1kq+iEUU47CdfVORmP3uJm7kOL9TOdCnvsvN3piZpzLEEJumlJ
-	RoXwEIvOZNOmV7YiZEkWZ3chQzz0ozFPJnIvNjp98Uxt6FG6Z3lLd6UmCoHtvTmaL0nyvzstUvW
-	P68ou8zxEbI1OoKV91UQOznwIa5ztIea+/xtTKUMYZFjhgJTRNXEcinSBy9PIvIrKa4mK7KZGWm
-	eaibKnCsVM1VLyBj2PaPQ08XKGQcELCOMJxavIfLPSt3PhdhVTVr68RQoA7nVpnaKxFv0UCGeeo
-	xAgt99Japwj9n0HXK+6hLq9doKS8jWunTegkfQ4NHUAXpwUd403BwnP0yekboJtLwciS+mvb8H/
-	h8SOU0tOtot4ejqfvuhJJSmTymNAlF3Qw6YyjbE7nABiWGWU06820j3AF0Ngz7//zqrIiQoVLSL
-	u3hG3wCqM4xA5daSFGu0qgBtoFxG9tPTRScWeRBh2IG7bfo/KX9XKK9p2SgV9qAdaNJzU9qvBcI
-	QRhjHXjPLHwJizv9esbF5jv6OBvlLEPT7zFOOSrbhbYeL4z+jMEA66ioRY8Km3+HvZ9s4pOAqoi
-	nSO5qbXofIxKprOx
-X-Received: by 2002:a05:701b:465c:b0:19a:9a93:c9b2 with SMTP id a92af1059eb24-19a9a93cdbbmr3658412c88.13.1792900954786;
-        Sat, 24 Oct 2026 21:02:34 -0700 (PDT)
+        bh=kIWFjWx6bY2aMzP1Dlox6FZiyYw6gduqI5+MEIlEj5E=;
+        b=l0G7ddI46WQOhZXbQUzpuJr+55jHTPEOx4nd3U3P8eWnDRlwrt4CdFo9M/ysUedoZO
+         H61uIwCJ0k10/pHYS2KZPvfflipHNWHT1JZwp2Dw7wcdCY1KEUMe0sEiXKY2sLPCQBnd
+         PK+2rPhmI+0QN/dvjGE9fGOPyJvJr3fG/N4wBesom2U1iQoe3AA1GR5tv55EceZ/oJF6
+         uh520XVJ6/buEbOwxlqe83P859yhx11mxu+Ey9Y3BZAQD13pGF5RVxyxCDILrKTGqpVw
+         kwtvtyrCpO4HNHp0Y5bqkenxgBsY/HVE0WqSpxImD3V294Po/q9gscBojMaYBHzJwdF3
+         SZVA==
+X-Forwarded-Encrypted: i=1; AKwUvBx0Wq/P3LwiWbFI/v8rV2XjxJj0Z/jbZIgVASqJjPUVTfuU86Am1O0WfUGgd5BLdCcf6vtvXK5ujqbyGKFfH025Jsaj@vger.kernel.org
+X-Gm-Message-State: AFq9FYI6hYSv1RbsDJ/uV1ARZmhiHQy33JZB47kjQjCyrCtVU34ApTdj
+	1GuhCb40SGqIb6rhdtm33AMugb3C8EyOaNo6jKWl3vPukz+jTeq1Rq4=
+X-Gm-Gg: AYBFou2WQGhKjdFS1Z0wx2OReynXeqquTk3vjUwM10GixYKKZsjllGobeYX+cRrL0iG
+	OgGc8uRqMc5ntpWjb8OnLQnOPhi72+3lFyJo65JDYb4UNY0zmZpGQK234VLSf6+bW3Ea7WqCCnX
+	vqRDHqiwHvYSI5+HTPz+dsR/gY3VG3x9I1d2tJkow4Am6TsW2bfawi+f//9ebMvPzsfYaCtnaNS
+	Gd76F2DdRGz6XsAxoSDyT1tfJeAAcFK5XU1LSr57UcSizR2ZAAhznJkyM42sfmT0cn0GrTxUj89
+	yViJTZTQbuvRbf51gNIta1W0S7Lk70fqx3CVOtU7Ee3n9+NQgIcGAdFXhmcPjur0767LCgPfM8K
+	ix05GsuD2cx8Q0vUfbwzddH8f8TcjIgQdx0yIMMJ09PcivfEBS12Pm6w9g9CL0iZcSqNL5xhRmI
+	u/7K4xZv3wJcFwPtJo4uBL9BAZFZZ/pr0h//7GhttOLN9v25noF4nWLgvVhlWbYL1+Q5qS47lm7
+	G893/NhWrdv00nGA7IA3sdc+FkZ3Hc6kNkY8EE62Xs8ufxCzvMAD0XBScLIyCyNba5+8u5fhMLb
+	KMecBhQTJz3SE80r
+X-Received: by 2002:a05:701a:ca0b:b0:17d:7b45:f91f with SMTP id a92af1059eb24-1993580fcd2mr5442774c88.32.1792900968114;
+        Sat, 24 Oct 2026 21:02:48 -0700 (PDT)
 Received: from at-Standard-PC-Q35-ICH9-2009 ([106.221.76.40])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a32ff780sm11635283c88.22.2026.10.24.21.02.25
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a32ff780sm11635283c88.22.2026.10.24.21.02.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2026 21:02:34 -0700 (PDT)
+        Sat, 24 Oct 2026 21:02:47 -0700 (PDT)
 From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 To: 
-Cc: Andre Eikmeyer <dev@deq.rocks>,
-	Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -99,14 +98,15 @@ Cc: Andre Eikmeyer <dev@deq.rocks>,
 	Kenneth Feng <kenneth.feng@amd.com>,
 	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andre Eikmeyer <dev@deq.rocks>,
 	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
 	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
 	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
 	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
 	platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS)
-Subject: [PATCH 05/13] platform/apple-gmux: Write switch state to EFI on MMIO devices
-Date: Sat, 24 Oct 2026 23:59:41 -0400
-Message-ID: <20261025040046.1602-6-atharvatiwarilinuxdev@gmail.com>
+Subject: [PATCH 06/13] platform/apple-gmux: Add parameter to configure boot gpu
+Date: Sat, 24 Oct 2026 23:59:42 -0400
+Message-ID: <20261025040046.1602-7-atharvatiwarilinuxdev@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261025040046.1602-1-atharvatiwarilinuxdev@gmail.com>
 References: <20261025040046.1602-1-atharvatiwarilinuxdev@gmail.com>
@@ -121,91 +121,43 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andre Eikmeyer <dev@deq.rocks>
+Currently on Indexed and MMIO systems, the system can't change
+GPU's on runtime, as the display is not trained on the secondary
+GPU, to combat this, we add a module parameter to configure the boot
+GPU, so users can change to iGPU or dGPU via reboot.
 
-On T2 devices (MMIO), the T2 coprocessor reads gpu-active efi
-variable, and macOS seems to write it, so to properly communciate
-to the T2 coprocessor, we write gpu-active.
-
-Co-developed: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-
-Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
 ---
- drivers/platform/x86/Kconfig      |  1 +
- drivers/platform/x86/apple-gmux.c | 29 +++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ drivers/platform/x86/apple-gmux.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index c37e76066..01895d511 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -217,6 +217,7 @@ config APPLE_GMUX
- 	depends on ACPI && PCI
- 	depends on PNP
- 	depends on BACKLIGHT_CLASS_DEVICE
-+	depends on EFI
- 	help
- 	  This driver provides support for the gmux device found on many
- 	  Apple laptops, which controls the display mux for the hybrid
 diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index bef87a57a..637b3b216 100644
+index 637b3b216..6a9580f27 100644
 --- a/drivers/platform/x86/apple-gmux.c
 +++ b/drivers/platform/x86/apple-gmux.c
-@@ -27,6 +27,7 @@
- #include <linux/dmi.h>
- #include <linux/workqueue.h>
- #include <linux/pm_runtime.h>
-+#include <linux/efi.h>
- #include <acpi/video.h>
- #include <asm/io.h>
+@@ -109,6 +109,10 @@ struct apple_gmux_config {
+ 	char *name;
+ };
  
-@@ -494,6 +495,31 @@ static void gmux_write_switch_state(struct apple_gmux_data *gmux_data)
- 		gmux_write8(gmux_data, GMUX_PORT_SWITCH_EXTERNAL, 3);
- }
++static int boot_gpu = -1;
++module_param(boot_gpu, int, 0);
++MODULE_PARM_DESC(boot_gpu, "Configure the boot gpu (-1 = auto, 0 = iGPU, 1 = dGPU)");
++
+ #define GMUX_INTERRUPT_ENABLE		0xff
+ #define GMUX_INTERRUPT_DISABLE		0x00
  
-+#define APPLE_GPU_VARS_GUID EFI_GUID(0xfa4ce28d, 0xb62f, 0x4c99, \
-+				     0x9c, 0xc3, 0x68, 0x15, 0x68, 0x6e, 0x30, 0xf9)
-+
-+static efi_char16_t gmux_gpu_active_name[] = L"gpu-active";
-+
-+static void gmux_write_switch_state_efi(struct apple_gmux_data *gmux_data)
-+{
-+	efi_guid_t guid = APPLE_GPU_VARS_GUID;
-+	u32 active = gmux_data->switch_state_display == VGA_SWITCHEROO_IGD;
-+	efi_status_t status;
-+
-+	if (!efivar_is_available())
-+		return;
-+
-+	status = efivar_set_variable(gmux_gpu_active_name, &guid,
-+				     EFI_VARIABLE_NON_VOLATILE |
-+				     EFI_VARIABLE_BOOTSERVICE_ACCESS |
-+				     EFI_VARIABLE_RUNTIME_ACCESS,
-+				     sizeof(active), &active);
-+	if (status != EFI_SUCCESS)
-+		pr_warn("writing gpu-active failed: 0x%lx\n", status);
-+	else
-+		pr_debug("gpu-active: %u\n", active);
-+}
-+
- static int gmux_switchto(enum vga_switcheroo_client_id id)
- {
- 	apple_gmux_data->switch_state_ddc = id;
-@@ -502,6 +528,8 @@ static int gmux_switchto(enum vga_switcheroo_client_id id)
- 		apple_gmux_data->switch_state_external = id;
+@@ -1215,6 +1219,11 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 	gmux_enable_interrupts(gmux_data, 1);
+ 	gmux_read_switch_state(gmux_data);
  
- 	gmux_write_switch_state(apple_gmux_data);
-+	if (apple_gmux_data->type == APPLE_GMUX_TYPE_MMIO)
-+		gmux_write_switch_state_efi(apple_gmux_data);
- 
- 	return 0;
- }
-@@ -1283,3 +1311,4 @@ MODULE_AUTHOR("Seth Forshee <seth.forshee@canonical.com>");
- MODULE_DESCRIPTION("Apple Gmux Driver");
- MODULE_LICENSE("GPL");
- MODULE_DEVICE_TABLE(pnp, gmux_device_ids);
-+MODULE_IMPORT_NS("EFIVAR");
++	if (boot_gpu == 0)
++		gmux_switchto(VGA_SWITCHEROO_IGD);
++	else if (boot_gpu == 1)
++		gmux_switchto(VGA_SWITCHEROO_DIS);
++
+ 	/*
+ 	 * Retina MacBook Pros cannot switch the panel's AUX separately
+ 	 * and need eDP pre-calibration. They are distinguishable from
 -- 
 2.55.0
 
