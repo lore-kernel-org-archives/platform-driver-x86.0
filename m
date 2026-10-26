@@ -1,101 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.174
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793038702;
-	b=VrGP5s93/y1zlUrna+LI9DU7G1Asmx8Oa7G8MUloJwNn4zkOwSU1T/btVjug3bscvecS
-	 oNbN9Wle9Bqe/s2w/yqcYfZrKEci1KU7NRVPWq7DpzTGSidSegFYPMV1yxmY2ugaazmOI
-	 WAnieKJ0KKSsi2tUkmjz8LKIQM8b2QDKPUQa01nGiE4pjz69dyqwJZ+GZ93iMglzxWkZ6
-	 FiZilr4HLGmsl6OTKAtpcZ+op8qxzw0nTa8w1xmr+vsSknzohcuGG3Ai4H+JWvDkibcgL
-	 N39zWzOzlI59exyfWHG+gDf9x1UZhGiXLZ5tQ0KMf1RazX9i5mpPTSO7f5GYXwiSikg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793038702;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=rUFVEl7fV+HUh8nhoQnb/g9LkM23VhHFCgUj8hV83sM=;
-	b=NPxeGjkDzRmmCHElIuRMaroKOXfYTRhzra9h8DfvV9LVr9dKnXikA9K5PeVkWlOYyEMx
-	 YjrNTd6ikH6H9ae0hN4oyv2kZwsI4w6xrjKKmPueepv/7Gj413BZmfN3CUlXAKOXyVQL/
-	 rhgqS/ND7jJ1GlOPu+k7IehbYX6uJ6XCzOCcgznlrUWHDFMi/Ek9p+Smdo2v8XfSTIGVI
-	 Ec1R0UyABCW8F/xLluCpDl4XOoi/TJfqGxIZI45i/WT5n1RDfDf56bLRHPKP/5+8QXBwF
-	 j9OBS/pEOLnW/GAUTnC33Zb1cYWWJ8lPcfZTcF7VR0AY4PPhwVpeD9g3hBqNkXXRxmw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fYOX5pph;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.174
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793038926;
+	b=3K43j2peuSxlH1F/KU2s9P/WB9QcnaK5hIFOhyxwIwP1nO7iRc9iMxZHwwPpJ515KrpQ
+	 2hP2LCqC3gGAH8kBlWzCL16b9zSL9hwmRf1iVekK3N5jP5mf3RVJvTn2nSvRDIzlboR/6
+	 96Fm9MVU0zQLkETncQNg5faOh3IK2yNKwYdxQSjKcxrcMO1KHNkM1pONP/sm4KMydMYdi
+	 ti1eY/7iMmUtYE4KHI4ZI8DJIraIxMDpPzSN51oAflWNYbngpIBPGOV6s0E5JU69Eww7y
+	 OqmP3G/qnmhtIjxxFILa1TXSbTiMyN8keMsu5O9qFfXOPysKuB//FD+bkgiuL2JZw4Q==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793038926;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=6XL6YcX8cL37HBNREbXC4Z1+wZEs5Q469sUSJUjSMy4=;
+	b=PyQJozqx+L90zDK3RKyVxTu53Bo59CKJt7lMOXK6Bek3nZdQmYPOSgCaGTUgxvPyO8sC
+	 75zgcTucOz63/mLixAgJI5+uMFXY4jK2q7oVDGmwWssI/mvZK8U4H3zGOS14melGnniB+
+	 fqev5x3tmaBYxcRyvt22jZT+qWaeFWrU4q3RcUODyDIGBZmk2wDaceGxzx5hW6SCJcrHE
+	 ASjaNXoqaHv9bTePfQGXOhl29iOyBDOuzxPLALHJkn7IpuA0yJfIJTu38TwW7moK9eA4D
+	 Y2Sz+/Zs2IqNiiPMS448LyZjbdIxOl8DBZGIv3/Q9Kzrr6T4rrqYlb8yjxbDSzdg+uQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="k2/1Iat4";
+	arc=none smtp.remote-ip=192.198.163.14
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9D3606A31D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 18:18:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E9D3606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B699B606A31A;
+	Mon, 26 Oct 2026 18:22:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B699B606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fYOX5pph
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-33bb5afa736so528748eec.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 11:18:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793038701; cv=none;
-        d=google.com; s=arc-20260327;
-        b=X/bKGyCoIp3hgVTK6UHriTEcdPK4Sesc/oTl2CBjK6PtZ6DbzFLEeejZg8CJoUCOW2
-         z0Q4C9m+O25mL4Fz1ogLC+pkA41WXbe3Xx758UA6Vm+8sHPHyy30yydivB6tHS+R3Lti
-         XahUHjHcscAXMw3tl0/G/WLsp+i2Ur+h99X7KomXsAZNLaPpM3IWXX2D3wCe7ZIq++wu
-         XmQh6oQTZkYinUpOQ94/R7EO5RwnRs9RKcQfc3mQPwNUGDTcn9H8HkMI6NWjSebp9S4p
-         poSFjH0IDj+uKKQ1xeLgJfV/XheXSvb/kuyfbPQ5EfKlxdfI+OtmRMvp1dpUYwfeRhJ7
-         avmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=rUFVEl7fV+HUh8nhoQnb/g9LkM23VhHFCgUj8hV83sM=;
-        fh=oSbqJrZK0e/U3ewV9WOAWvQ2uTq9g2KfeBU01eUWi9Q=;
-        b=pXuIUiCM7yta0qxUhL9O+PutNjbdXpbik0IDDkZolYy0lwxBfi+LYI+ll6/LiyXm0V
-         3cNbcdmAOo6hASjofaVLuqoWyuPHBekY8o6x4g/Ir/Z7om3TOmb5fO+MVYAdzOfF9wwV
-         P2zx9iDigtRPOGMYzfYWQKeed5N1ItKfv+V4PcOKGd1RaST+QSvFGQGLgzsRKwhfNdms
-         XRm0MukkgncyYzz4OfYhPxGD4Mjl+KX9J+pz0WJaEqaqn1H+dnVgS3jONvDNhSzrHz3i
-         2ohbx35hgRSGjVMTuB1th1HdahseoE9pt7o7Lkil1DSfHEQpjU0DNbCQTiQUw+SDPhP8
-         c5cg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793038701; x=1793643501; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=rUFVEl7fV+HUh8nhoQnb/g9LkM23VhHFCgUj8hV83sM=;
-        b=fYOX5pphsGY/+i/Iy06yAJ16VPzT/i1wL+b30sH0lJqe8b5j0u4TWNje0SRlBJbpNd
-         xVPxwEFG9gpIg7TXVB3JP/JIAyAYhYLwAH7rrfT9LYFSLkGi3RYylySiYPLv/ukn3+Ly
-         JyseKMEDyDuVup5co5JLXOoLtQQU5jiH+mNAEf6A9yIusnp+kdQvXSAZP8VLEHU76Pow
-         51SR089jLzIU4p3Jzib0uunNja3tletM5zojusi7gTZBYNg7T0rv6mVO2U2wp/P0/C8N
-         6v2SiKCeY6alA0+WUBcAMtxszynbgR9tww5BjynoDnP1oyhIwpO1dCic4ze44VzEHFvv
-         uBdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793038701; x=1793643501;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=rUFVEl7fV+HUh8nhoQnb/g9LkM23VhHFCgUj8hV83sM=;
-        b=pJtPuL/5An9nvVqpDQFwNGgJgq5SgWUYXkYeONrnLnSZOKPMsOyvkqODvqovoxA56W
-         6aha6lAQgwPNEbAbv9TUOph9VBIX2GPcscllDKTHWcq8dxbo7kPj0Z4WP1zQ0/4LLSTZ
-         +sRh9uYMw9ltWbwzLq4mTQX5O/vo2T99o9/QCnTdM5XGFRwDVua0hICt55f6xAzbWIf1
-         9EtKgtn+WUK7BaXbTHhFYz3W/0bnRSt3Z6t2cf1FskP8HVYtNFQVe8wjJgGmuOPd4aZf
-         FHob9I6IsUGIgRZ1/Ps00E+px/tUOpseHwWuImg+bh3jz4cJgVBb3CHm6Um9gAZtXfcJ
-         dpMg==
-X-Forwarded-Encrypted: i=1; AKwUvBwyUZzP5t801oqtVgqCwJlBwLXrI9C9IvYvqaPKIr61CmUAX/5axaNLjYzcD1h4v0cETbPW7eDToGuoAkBHnbR2XSEw@vger.kernel.org
-X-Gm-Message-State: AFq9FYIYl8g0vso6OFn7HH92jr/fMUmQ+hYnsiAtmYfLXi/frBrzbf12
-	aIPbf/OEo5dZhr3AL+Sck/zMbN/7VRY6+F1Y9MZqZ3MkBFUb7U3sJZ/gkJNYhfuL7DfzChJxVl0
-	PYDIFnJwqOaCAF90tsczKTHs4cX9W+Bo=
-X-Gm-Gg: AYBFou3qPVy/d9hqu8JDR/LDGDb7Y+CLGAo/21Vd4+Hwy6UGM2RhgytRG20afCSRr1V
-	NdYS//GdW707Tgz8iJ1b6ov4WAj6m2VTaveq2G45v0fT/Te0DldaafaGxYfm6JUOD/h8Hm+76+r
-	+grkH6yvZwKRSrASTP7fa6le42bqNoR+vVAmboEr/U2iQEmyUF7ybi0Hqd1UjNVIwf52ddmgdbY
-	rfntaWYRNkTtwtQ6KM0dY1z7Ve9ESXum+F9XDVGOfHQCZBM/NoHamaWY1/kvc9Wf9oq4qZKLv1G
-	63CKUR0GnkWQem4Qo+jW4f+97l4XufavxoN0Wu/KXQKQoZDRBf7gaoP+Mkt4tlxHCqpOylnwl/U
-	NudfuPMRrXgbunj+OaxjOhirf6Ie8tkFPzjFZCZp00Vu8gO3IXPWEhjyUAlWB9LCmFHqy0Tt6+m
-	LIQ5rqjnDbXT3BrX4XQ6ar5XU=
-X-Received: by 2002:a05:7022:5f07:b0:146:ffa9:2117 with SMTP id
- a92af1059eb24-1993639e5f7mr16191284c88.1.1793038700920; Mon, 26 Oct 2026
- 11:18:20 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=k2/1Iat4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793038925; x=1824574925;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=W58r7ddDUpnAk7HTNMuAQzfTn6aAlqEu+z1t7GbR9Og=;
+  b=k2/1Iat450hCLtFFKBx7KtLj7lI/6/nae/U7B/toleZovAJw0XmB6vx6
+   LGnCnulS3JopXhD45Z8gn4L4YiKAavhloWNUFYDfUVOSRgj3KiTi8FLv0
+   BdRMDxLexUNL4hT+wp3RDWIiYB/RWcRgo62qh2Q4rSBYriK2/uUU98zOt
+   fIwJXRaYelE7yn8Y/zHwGlSxVMtvF66S1D5ioPeRI7KVNHFepS8FNCDTz
+   MtJUL8qPCUE63Sg5VWrS+8Ebe5XkWVcOw+qjBZm33Vz8+aUWx1/79ixpL
+   cMR4fnCtEfByJvLZW7DokQxEJOyfnQzeTOZncleqtLFRJ4xh/xZuv8xUg
+   g==;
+X-CSE-ConnectionGUID: FpZQW2TCSqaWM36wOeRrgQ==
+X-CSE-MsgGUID: XGgi/VVnSt2v9GX6+ieMUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1747053"
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="1747053"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:22:03 -0700
+X-CSE-ConnectionGUID: K+l3cBvSSGmXyI6SxfTf8g==
+X-CSE-MsgGUID: pwLIt1CWRyG9WIcAOjS9Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="4474684"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.109])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:21:57 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 Oct 2026 20:21:54 +0200 (EET)
+To: Sakari Ailus <sakari.ailus@iki.fi>
+cc: Denis Benato <denis.benato@linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
+    kernel@lists.opengamingcollective.org, 
+    Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+    "Luke D . Jones" <luke@ljones.dev>, 
+    Mateusz Schwartz <matthew.schwartz@linux.dev>, 
+    Denis Benato <benato.denis96@gmail.com>, 
+    Jonathan LoBue <jlobue10@gmail.com>, 
+    Khamunetri Clark <khamunetriclark@gmail.com>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+    Joshua Leivenzon <hacker1024@users.sourceforge.net>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    =?ISO-8859-15?Q?Rebecca_Mara_M=FCller?= <rebecca.mara@posteo.de>, 
+    Ivan Levchenko <me@livan.pro>, Corentin Chary <corentin.chary@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v11 08/18] HID: asus: add support to force feedback
+In-Reply-To: <at9JNgMf8EZdCHEh@valkosipuli.retiisi.eu>
+Message-ID: <1c017f49-bc69-fc68-20f8-0c66a2c85719@linux.intel.com>
+References: <20261025235232.129945-1-denis.benato@linux.dev> <20261025235232.129945-9-denis.benato@linux.dev> <at9JNgMf8EZdCHEh@valkosipuli.retiisi.eu>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,104 +91,182 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261025040046.1602-1-atharvatiwarilinuxdev@gmail.com> <20261025040046.1602-13-atharvatiwarilinuxdev@gmail.com>
-In-Reply-To: <20261025040046.1602-13-atharvatiwarilinuxdev@gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 26 Oct 2026 14:18:09 -0400
-X-Gm-Features: AclHuK_gGXqjT0cI7KV7tvEEJQhRHXFUqhLnyaELH9XqFgMeuwm1bkZPQKcDe-s
-Message-ID: <CADnq5_NLhN4TKH-afTtJdF2d-e0=1kysf=pWiUpXu+bLhJFEeQ@mail.gmail.com>
-Subject: Re: [PATCH 12/13] drm/amdgpu: Skip AC/DC notification while the GPU
- is runtime suspended
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Andre Eikmeyer <dev@deq.rocks>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <siqueira@igalia.com>, Kenneth Feng <kenneth.feng@amd.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, 
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
-	"open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Sun, Oct 25, 2026 at 12:11=E2=80=AFAM Atharva Tiwari
-<atharvatiwarilinuxdev@gmail.com> wrote:
->
-> From: Andre Eikmeyer <dev@deq.rocks>
->
-> Plugging or unplugging the charger raises an ACPI AC event. The handler
-> sent the new power source to the SMU without a runtime PM reference, so
-> with GMUX keeping the GPU off every SMU message spun on skipped register
-> reads for seconds. A runtime resume racing with that left the SMU
-> firmware unable to start on MacBookPro15,1 and the GPU in runtime PM
-> error state. Record the power source only and let the resume apply it.
->
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
-> ---
->  drivers/gpu/drm/amd/pm/amdgpu_dpm.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/pm/amdgpu_dpm.c b/drivers/gpu/drm/amd/pm=
-/amdgpu_dpm.c
-> index 808be6c42..b64f0b681 100644
-> --- a/drivers/gpu/drm/amd/pm/amdgpu_dpm.c
-> +++ b/drivers/gpu/drm/amd/pm/amdgpu_dpm.c
-> @@ -30,6 +30,7 @@
->  #include "amd_pcie.h"
->  #include "amdgpu_display.h"
->  #include "hwmgr.h"
-> +#include <linux/pm_runtime.h>
->  #include <linux/power_supply.h>
->  #include "amdgpu_smu.h"
->
-> @@ -498,20 +499,26 @@ int amdgpu_dpm_smu_i2c_bus_access(struct amdgpu_dev=
-ice *adev,
->
->  void amdgpu_pm_acpi_event_handler(struct amdgpu_device *adev)
->  {
-> +       int active =3D 0;
-> +
->         if (adev->pm.dpm_enabled) {
->                 mutex_lock(&adev->pm.mutex);
-> +               active =3D adev->pm.rpm_mode =3D=3D AMDGPU_RUNPM_GMUX ?
-> +                               pm_runtime_get_if_active(adev->dev) : 1;
+On Mon, 26 Oct 2026, Sakari Ailus wrote:
 
-There's no reason this needs to be GMUX only.  You can drop the
-AMDGPU_RUNPM_GMUX check here.
+> Hi Denis,
+> 
+> I tested this on Asus T100TA, it seems to work fine.
+> 
+> Please see my other comments below.
+> 
+> On Sun, Oct 25, 2026 at 11:52:21PM +0000, Denis Benato wrote:
+> > Unlike ROG ally the X version and following ones uses DInput protocol
+> > and the force feedback needs to be implemented as its protocol is
+> > vendor-specific, therefore add support for FF_RUMBLE with magnitude
+> > scaling on a work-queue based approach to avoid using possibly
+> > sleeping calls in atomic context.
+> > 
+> > Signed-off-by: Denis Benato <denis.benato@linux.dev>
+> > Signed-off-by: Khamunetri Clark <khamunetriclark@gmail.com>
+> > Signed-off-by: Luke Jones <luke@ljones.dev>
+> > ---
+> >  drivers/hid/Kconfig    |   1 +
+> >  drivers/hid/hid-asus.c | 321 +++++++++++++++++++++++++++++++++++++----
+> >  2 files changed, 297 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> > index 2481bc01c435..042e3bb0d817 100644
+> > --- a/drivers/hid/Kconfig
+> > +++ b/drivers/hid/Kconfig
+> > @@ -189,6 +189,7 @@ config HID_ASUS
+> >  	depends on USB_HID
+> >  	depends on LEDS_CLASS
+> >  	depends on ASUS_WMI || ASUS_WMI=n
+> > +        select INPUT_FF_MEMLESS
+> 
+> Tabs, please.
+> 
+> >  	select POWER_SUPPLY
+> >  	help
+> >  	Support for Asus notebook built-in keyboard and touchpad via i2c, and
+> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> > index e1883ee20413..a3a21a1493aa 100644
+> > --- a/drivers/hid/hid-asus.c
+> > +++ b/drivers/hid/hid-asus.c
+> > @@ -244,6 +244,23 @@ struct ally_config {
+> >   */
+> >  static struct ally_config *ally_config;
+> >  
+> > +/* XInput force-feedback report (output report 0x0d, gamepad interface) */
+> > +struct ff_data {
+> > +	u8 enable;
+> > +	u8 magnitude_left;
+> > +	u8 magnitude_right;
+> > +	u8 magnitude_strong;
+> > +	u8 magnitude_weak;
+> > +	u8 pulse_sustain_10ms;
+> > +	u8 pulse_release_10ms;
+> > +	u8 loop_count;
+> > +} __packed;
+> > +
+> > +struct ff_report {
+> > +	u8 report_id;
+> > +	struct ff_data ff;
+> > +} __packed;
+> > +
+> >  struct ally_handheld {
+> >  	/* All read/write to IN interfaces must lock */
+> >  	struct mutex intf_mutex;
+> > @@ -269,6 +286,13 @@ struct ally_handheld {
+> >  	bool ally_x_probe_in_progress;
+> >  	bool keyboard_probe_in_progress;
+> >  
+> > +	struct ff_report ff_packet;
+> > +	struct work_struct ff_work;
+> > +	/* Serializes ff_packet and update_ff between play_effect and ff_work */
+> > +	spinlock_t ff_lock;
+> > +	bool ff_work_initialized;
+> > +	bool update_ff;
+> 
+> Arranging these with the rest of the bools would save some memory.
+> 
+> > +
+> >  	struct hid_device *keyboard_hdev;
+> >  	struct input_dev *keyboard_input;
+> >  
+> > @@ -384,10 +408,15 @@ enum ally_command_codes {
+> >  	CMD_SET_ANTI_DEADZONE           = 0x18,
+> >  };
+> >  
+> > +/* XInput rumble magnitudes use the hardware's 0..100 intensity range. */
+> > +#define ALLY_FF_MAX_INTENSITY 100
+> > +
+> >  static const u8 ALLY_FORCE_FEEDBACK_OFF[] = {
+> >  	0x0D, 0x0F, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0xEB
+> >  };
+> >  
+> > +static_assert(sizeof(struct ff_report) == sizeof(ALLY_FORCE_FEEDBACK_OFF));
+> > +
+> >  /*
+> >   * The ROG Ally device presents multiple USB interfaces (keyboard, mouse, gamepad,
+> >   * and custom configuration interface) that bind to the same module. Since only
+> > @@ -395,6 +424,7 @@ static const u8 ALLY_FORCE_FEEDBACK_OFF[] = {
+> >   * ally_handheld structure to share state across these separate HID interfaces.
+> >   */
+> >  static void ally_resume_work_fn(struct work_struct *work);
+> > +static void ally_x_ff_work_fn(struct work_struct *work);
+> >  
+> >  /*
+> >   * Changes to ally_drvdata must lock: the raw_event callbacks, which may
+> > @@ -410,6 +440,13 @@ static struct ally_handheld ally_drvdata = {
+> >  	 */
+> >  	.resume_work = __DELAYED_WORK_INITIALIZER(ally_drvdata.resume_work,
+> >  						  ally_resume_work_fn, 0),
+> > +	/*
+> > +	 * Initialised statically for the same reason as resume_work: remove()
+> > +	 * drains the work whichever of the interfaces probed or failed to
+> > +	 * probe, so it must be safe to cancel unconditionally.
+> > +	 */
+> > +	.ff_work = __WORK_INITIALIZER(ally_drvdata.ff_work, ally_x_ff_work_fn),
+> > +	.ff_lock = __SPIN_LOCK_UNLOCKED(ally_drvdata.ff_lock),
+> >  };
+> >  
+> >  /*
+> > @@ -2425,7 +2462,8 @@ static void ally_config_remove(struct hid_device *hdev, struct ally_config *cfg)
+> >  	 * create them, so a device without those capabilities does not
+> >  	 * trigger a "not found" warning.
+> >  	 */
+> > -	if (cfg->user_cal_support || cfg->anti_deadzone_support) {
+> > +	if (cfg->user_cal_support || cfg->anti_deadzone_support ||
+> > +	    cfg->resp_curve_support) {
+> >  		for (i = 0; i < ARRAY_SIZE(ally_cal_attr_groups); i++)
+> >  			sysfs_remove_group(&hdev->dev.kobj,
+> >  					   ally_cal_attr_groups[i]);
+> > @@ -2611,6 +2649,106 @@ static void ally_x_input_close(struct input_dev *dev)
+> >  	hid_hw_close(input_get_drvdata(dev));
+> >  }
+> >  
+> > +/**
+> > + * ally_x_send_ff_report() - Send a force-feedback report to the gamepad
+> > + * @hdev: HID device
+> > + * @buf: buffer containing the report to send
+> > + * @len: length of the report
+> > + *
+> > + * The gamepad interface consumes force-feedback packets as output reports,
+> > + * unlike the config interface which expects feature reports: a rumble packet
+> > + * sent as HID_REQ_SET_REPORT would be rejected by the hardware.
+> > + *
+> > + * The caller must hold ally->intf_mutex, so that a send cannot race with
+> > + * the gamepad interface being unbound and its transport being stopped.
+> > + *
+> > + * Return: count of data transferred, negative if error
+> > + */
+> > +static int ally_x_send_ff_report(struct hid_device *hdev,
+> > +				 const u8 *buf, size_t len)
+> > +{
+> > +	u8 *dmabuf __free(kfree) = kmemdup(buf, len, GFP_KERNEL);
+> 
+> It's not very nice to assign variables and then check for errors. I'd thus
+> separate the declaration and the assignment.
 
-Alex
+I actually thought the same thing first.
 
-> +
->                 if (power_supply_is_system_supplied() > 0)
->                         adev->pm.ac_power =3D true;
->                 else
->                         adev->pm.ac_power =3D false;
->
-> -               if (adev->powerplay.pp_funcs &&
-> -                   adev->powerplay.pp_funcs->notify_ac_dc)
-> -                       amdgpu_dpm_notify_ac_dc(adev);
-> -
-> -               if (is_support_sw_smu(adev))
-> -                       smu_set_ac_dc(adev->powerplay.pp_handle, true);
-> +               if (active) {
-> +                       if (adev->powerplay.pp_funcs &&
-> +                           adev->powerplay.pp_funcs->notify_ac_dc)
-> +                               amdgpu_dpm_notify_ac_dc(adev);
->
-> +                       if (is_support_sw_smu(adev))
-> +                               smu_set_ac_dc(adev->powerplay.pp_handle, =
-true);
-> +               }
->                 mutex_unlock(&adev->pm.mutex);
->         }
->  }
-> --
-> 2.55.0
->
+But then stopped and realized, it's mid-function declaration of a cleanup 
+variable exactly following the guidelines (the long comment in cleanup.h).
+
+So this function doesn't really have variable declaration block at all, 
+making the mid-function variable declaration look like one. I understand 
+it looks confusing when encountering this for the first time, it was for 
+me as well.
+
+> > +	if (!dmabuf)
+> > +		return -ENOMEM;
+> > +
+> > +	return hid_hw_output_report(hdev, dmabuf, len);
+> > +}
+
+-- 
+ i.
+
