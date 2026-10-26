@@ -1,95 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.62.57.64
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793013195;
-	b=cXcHEJy/Q0cM4afaF2cobm/qkIPj6ajyM1E28r8s2o9s9x4yBZw6NZrwAH3KdQCAVkij
-	 QEzZHtTg9QRv8Qduiiwlo/tCU43RLs58z9ylH7purNZkmzZv1PWEhOXKWISfFeS26n0V+
-	 AS8OmvyVrxvrUav7rCrFPCZ4f7JHklcrTwb5SOnui49hITTJPoUQiWgcFKWA2EvSXqmF2
-	 sd/S+HieuWCHlpEpgTnseqMKfTYWG/N2Ykptuh15flG8tfUkfTold/ujkWZGQrrEedBUn
-	 4y3keq5UpWbOlgh1o9dbuVZTLIe6d6GdrjMvWw4ioIMiyIEeVsey0eCA7BRAQQ7gBfw==
+	t=1793013970;
+	b=yLosVgalLWPbQg6s9WY6d6xHlAaZFcbEMwtsquj9nJnGLDTunV7OaU017+EgR24wWCGw
+	 1NdrLX5mJvCKNKMG5/0U2yX+3ciVCvL8/WNcdzdpBYn4dr0s9wudcKcBjNTn6118XhJRH
+	 OB9ziJrPXUtWAB6hNTTA0O0OnU9pm1bnjkh6CXk3oQaeRoVwU1dl05Iru/16C+jdJXWmL
+	 YwDV+dqnTIRUO9JkQ6Ub3dF3hy1eLijNCGDP1Ok7GIbwxAhziNAHF+wflgxyPQ+HqXugW
+	 UOeg1pKLDdmIYdVyoRaKwJ9sxX8d1/8swP7j3uPsin27mVv6zrV0+oyc35AYIxAT8nQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793013195;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=44FELyA7Kt+MCPXIDXpQzdpRkek5ze01af2IV4Cf03E=;
-	b=xJ4EAJ7z5ZA7jlyHqUDXIaBNMhIV3Nls/k12HtFpN2z4wgONRlGKn7e+2Im3m7ZvcwE4
-	 VIFW2RPSxSvhj5iCT5LQ439Fc9k8F1HIUuFrJn8mCtJqx9qXEMDKSE8IvXU6c2Nd7ovVu
-	 zNophCY6AZ1gOtnHMREfDfqimoMMrUbqpi6NtBlC4wfanggucxki7v2YDhf9UaYr9ZkYW
-	 X+ca+DlhoU4Q4iqnBS5/SX7Xkhe31ECmZFB9MELI8I89JQEyj6jpFp/qpQr1gwBObO33l
-	 lz5UuhmzmcMSmnPe0b+89qMomaydqyVY48hrcSsPiPi8uM8auTn03/HONmp5AN2vpNw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793013970;
+	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 MIME-Version;
+	bh=uOaURFmZY0XyV5YwXDbVEHdbFFNaws2NAdEXPOTyh6A=;
+	b=BJ3+T2h4EomV2EwdY+BpDsKJkCtICOkULwENIhvu5yWfCjxACFCF/magoF8Xm7XNXtis
+	 wK1jRpQbYYLZxH971l34v46ZdDJhKyVZU3yi1xsmnvQ7+NgycY4A8kWxJX/uA6PiJOME+
+	 NjvjZ0jqWz1pXKqIFmu1ffhkZEZj+Sj1secE95aRAolbbda+2B6flQ3qpLzqXBSZutbou
+	 SBsNbPk3zV+bAdkSkYpZimrVdq/+EcHmt5xpUxTSOxtgEt9dxritZEa3hBIImo3F41QFe
+	 46ka4XiHyo1tZ47zsSQ3s1XqMCVRJ362jAYHVDaUQccTrP768lhmJdyffkyN05bV6Zw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=LZhkHCHv;
-	arc=none smtp.remote-ip=209.85.215.173
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=foxmail.com;
+	spf=pass smtp.mailfrom=foxmail.com;
+	dkim=pass header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=AoJJKUeK;
+	arc=none smtp.remote-ip=162.62.57.64
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8260606B951
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 11:13:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8260606B951
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE66606A31A;
+	Mon, 26 Oct 2026 11:26:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AEE66606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=LZhkHCHv
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-ccca948203aso792194a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 04:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793013194; x=1793617994; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=44FELyA7Kt+MCPXIDXpQzdpRkek5ze01af2IV4Cf03E=;
-        b=LZhkHCHvsoG0TDM8rkXqEt0JDM3s5J6afDon/fYUgfIwEUn8yS69oKHbD0ldlIdw3e
-         xIzEwVnyQwxbSeEJVpqIsRwfOjVj2ldoL1gglmDlrrTtUz/G9qiFigfnhIH2QYaG6oNL
-         PSnIp6dO9nTMmwhu2b9yRm5xfS12q2J9zCuLzCJqeUOaXLjmOOl6iE9XeuzQjKvL4275
-         6njJwcXOehJHOUvvMOGPpHNZ+aah8uZlwciGDWIzl+e7nSn65CGPLYLj2ZUaNgKG1kvt
-         lixrzQwpqJaNdZPxh9Ea/DCrsnLdFcHMcr7iqos6oCnK7wPT5gRH6uscec+S7t1nrLnx
-         8Hrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793013194; x=1793617994;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=44FELyA7Kt+MCPXIDXpQzdpRkek5ze01af2IV4Cf03E=;
-        b=DGoNiiw6621wLNjW0EAUnSnCKdi/o/bP3cQiAygwp5vsynre6pEFvvz/XQh/TF3psm
-         11/Pxeq8qYHIT75CNwEhdE4Fp28WaEqd9KQKHNNmjt6zul5Oo8uKvGPnYTZhvsORxw+s
-         0Up7+zEMSFUXlJdBX9wb43iyIrfXhJPdwOGp/D7Y2CaHQgGA9gMaBrDxE1OjMLgZCmlM
-         8l5TMW+z7/DytzWwu98C94RI0xtAtFXJPeJu/JVRqL4F+G4RGeQga2CIvOdDrW/5HmnO
-         oNh0YIEBWn7QNs2BPtZbp/2JN8C+tUiVeAUKau6om024IKdPgu8a0DvTdo5jd8xpSU9i
-         cqdA==
-X-Forwarded-Encrypted: i=1; AKwUvBxVouzEbrPYnp1kDQBT8ydVBHhdeM6bjIYtJJ24zI5L62bZ7WbzCxts9U748m6TsIB0s7ap1cjy+SBClDwy53q6zfRt@vger.kernel.org
-X-Gm-Message-State: AFq9FYJhBTBhiru54Fu0TR3i9zP/WIH5Ld8I88fF4uABW2tHoGtWtR8i
-	x4Y+QMq16v1dtQY4Cy6+6U0CmC3i8Lg7PkxMtP6S5Kzjmd5T0eJ/taHv
-X-Gm-Gg: AYBFou0NMLcfUwIMKu0pn/K7eKH9F0ew1bNFynKGYLhJ2hi5MbMaSo+kbStPV02gpsF
-	Gucew/CCLfiRxXnpDT2EjxHsNprdfi6sS0JJyGh/VfWoPFN8DvJt5uG5Uf1eRq31w3EcHh2Y25u
-	oWyJT3WjXO5oVBRNKLTOE9sdDYzGWqW6sLNYk0EPsIQZ+zw4YNCmD0wBj+vkAN92Utzbaqzj0SI
-	1VXsB8kj3lBlJIWJlfRRgl3lIOM8sao6RQvcAP3e/rYByU0svX6+R5Mp8zlvjFzsWYdO0dI29p5
-	MpKm1S4lRHQMnSlmRtVHtk9ds5caiMu9WWd0LeIwewYA+Frl8F0XFqGFI6+FP27f4siGHtM84N+
-	cBxr2SgJULCbBKwnypjqK+fHfFzdOo74bQbPJ8z+XNHq79GFZ6PgKQNuuSVQGwWOZdKnuqbHqt3
-	QybwUQbBIAzADdutPd+phrheJ03uWvZNsSC1urgO5bC9Q1D7Lp1RETZKRKqn+iM64PRJNFT1qnx
-	1y6UcHvaZ2c4RnIAFxd74/Ne5KFHsp87G+3L4Ew
-X-Received: by 2002:a05:6a20:914d:b0:3e0:dc12:8908 with SMTP id adf61e73a8af0-3e7cd50c6c0mr5002050637.81.1793013194179;
-        Mon, 26 Oct 2026 04:13:14 -0700 (PDT)
-Received: from lgs.. ([2001:250:5800:1000::8534])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a36c0fdfefsm1128535b3a.50.2026.10.26.04.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 04:13:13 -0700 (PDT)
-From: Guangshuo Li <lgs201920130244@gmail.com>
-To: "Lee, Chun-Yi" <jlee@suse.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Matthew Garrett <mjg@redhat.com>,
-	Marek Vasut <marex@denx.de>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Guangshuo Li <lgs201920130244@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86: acer-wmi: fix UAF after accelerometer registration failure
-Date: Mon, 26 Oct 2026 19:11:03 +0800
-Message-ID: <20261026111103.4158855-1-lgs201920130244@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key, unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=AoJJKUeK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1793013963;
+	bh=uOaURFmZY0XyV5YwXDbVEHdbFFNaws2NAdEXPOTyh6A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=AoJJKUeKTSlVKHamUAWhSKzrbgZYCI2LK/ceLBJF0Xbp94qHDWdjyBZq5FrhxiO9L
+	 XjLNECkg+tUQKzt+bayQkuz+2ATmHSIHBEqUDl7/nXDzLHh0J+lV3/zVPISbflfxSX
+	 rh9CI9q/ZcpWWV7P2dTRJrVb7S/xvUefTHJKSClo=
+Received: from [127.0.1.1] ([223.66.54.214])
+	by newxmesmtplogicsvrszb51-1.qq.com (NewEsmtp) with SMTP
+	id 680AD89A; Mon, 26 Oct 2026 19:26:00 +0800
+X-QQ-mid: xmsmtpt1793013960t669rs50j
+Message-ID: <tencent_8D20C52D31F04EA8CEDCB3B1A80A8451A707@qq.com>
+X-QQ-XMAILINFO: OaUQ/Dm85kfN4rI7hmeeoT7K2H4gNfCwwIubMTJSqjDYTGsc6QAdImXom+jk4i
+	 ldG/0T93+58Yg3wYwrLXxyVvgMGVdIq1buarBNBlqdt7/5KgVSwYtOi7iGun+Bkg71xRpq6+jKns
+	 SbMyUAjjp1+0qCizYoP2TDANnvov4VNeNYrhEeXvPhhBQWYwToyutZtvh3DMN+R+TrMH3R4LVt9P
+	 Zft0Kpv/XtN16EwDHcUs+phD5ujssTN0PkV9j7H1JJl00IxTpya6P3yUP6Lif1GP5FJPC/TXiywk
+	 GVQ4ULFBAsg6CycX8SFXmqfb0cYeQyeHpkfvU3gcGA1oS0v8opygmszt0satPvbaDuHVN/nXXart
+	 KJzH3+vbhFzp9ULpSzajCMxYC/iUF3BMr4gRKLMzVSiRwKirrlPRPn8rZowKlye1wwshpAs1Mt3m
+	 +aKIDwk5Z0V819UI49supeTl9PsaUU9NoMHZamH0bPqWrP7w8fxH0rZSFQTg5rELc9g9GxazdufF
+	 sWZZ9qETQZ9dtL5/uvhvwTUNvLxP2iari56UYOXLBYODmg9hon2tLaVMFyaCoItsJBlxbCidR2GP
+	 yaxSD6mbV5mJerkeHVxqywevV/HuTQpvpojbdnuOcujoo6p36tOxLgeDKD0Tnx8W8DHOknLnaXZG
+	 Ky5zX/ObEPnXHXnHnnjNmcqTTz6XkYStuFAn+DM+jK+SV5Vvv5MW0Bg0a05lBD4LI7EhXIWVHGxF
+	 GFelFhqtG+Rz2/WO+wLeAp8oZzRpLvVXkshV5zGkGqEVQEKBbgLb4/pjB+rPdquBP7Og7J8kNzWR
+	 JWOLD0NWbfZapZeXK/zqvqoImMdqxKqQWOVdHk54TnDEEGmg5HWfKGafpqX5wjJqPzNx1UvgTgLW
+	 uzbeNZb7fAnP8N7kMh2LY8DvuWMZY3nE4/1m+u/W8VczB1Jy+Q+7xICY511/yevw/0oiiEFJCw/J
+	 2RywmuGP46aWZ+z2+GrVNZ8jqHBEcgzy48a5vnr33A8O6U7jvK65008rp1qj/TET2rwgU8EHx1+i
+	 YRkC/tNVFCkSk/0MmMAIIESMmq1//2x1E08kgJtl6UcTOJ0z2JR3RyDelxa5Q=
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
+From: Wu Zhipeng <zepwu@foxmail.com>
+To: Alex Yeo <alexyeo362@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>, Kenneth Chan <kenneth.t.chan@gmail.com>
+Subject: Re: [RFC PATCH v4] platform/x86: panasonic-laptop: Add
+ platform_profile support
+Date: Mon, 26 Oct 2026 19:26:00 +0800
+X-OQ-MSGID: <179301396052.9675.2367290265121810364@foxmail.com>
+In-Reply-To: <20261025191300.1259541-1-alexyeo362@gmail.com>
+References: <20261025191300.1259541-1-alexyeo362@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -99,40 +84,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When input_register_device() fails in acer_wmi_accel_setup(), the error
-path frees acer_wmi_accel_dev but leaves the global pointer non-NULL.
+Hi Alex,
 
-Since acer_wmi_init() ignores the accelerometer setup failure and
-continues initialization, a later driver removal or initialization
-failure can call input_unregister_device() on the dangling pointer,
-resulting in a use-after-free.
+Thanks for v4 and for settling the mapping =E2=80=94 cool/quiet/performance i=
+t is.
 
-Set acer_wmi_accel_dev to NULL after freeing it so that the cleanup
-paths do not attempt to unregister the already-freed input device.
+I applied this v4 to the v7.3 driver source and built it out-of-tree against
+Debian's 7.2.9 headers (the unit currently runs 7.2.9, not 7.3; the driver
+code is v4 verbatim). The 8-line CF-SV1-2 DMI entry is applied on top;
+without it the profile device does not bind on this model. BIOS V2.00L24,
+i5-1145G7.
 
-This issue was found by our static analysis tool under development.
+  $ cat /sys/firmware/acpi/platform_profile_choices
+  cool quiet performance
 
-Fixes: 1eb3fe1d3b6b ("ACER: Add support for accelerometer sensor")
-Cc: stable@vger.kernel.org
-Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
----
- drivers/platform/x86/acer-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+  target        CEFM   EPLE   read back
+  cool          0x0    0x1    cool
+  quiet         0x1    0x1    quiet
+  performance   0x0    0x0    performance
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 61ae622c93d9..26e17aa04abb 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -2681,6 +2681,7 @@ static int __init acer_wmi_accel_setup(void)
- 
- err_free_dev:
- 	input_free_device(acer_wmi_accel_dev);
-+	acer_wmi_accel_dev = NULL;
- 	return err;
- }
- 
--- 
-2.43.0
+The passive+unlocked combination (SEFM 1 + SEPL 0, written straight to the
+EC) reads back as custom; the ABI itself rejects custom (EINVAL) and
+max-power (EOPNOTSUPP). The values are the same through the legacy
+/sys/firmware/acpi/... interface and the class device, and writing through
+either frontend works.
+
+Suspend/resume: this unit only offers s2idle (no deep S3). quiet and cool
+both survived an s2idle cycle with CEFM/EPLE unchanged, and a profile write
+after resume still reached the EC. No errors in dmesg on load or on profile
+changes.
+
+Evidence (choices, round-trip, custom, resume logs):
+https://github.com/numuly/cf-sv1-2-platform-profile-evidence/tree/v4-test-202=
+61026/driver
+
+Tested-by: Wu Zhipeng <zepwu@foxmail.com>
+
+The CF-SV1-2 DMI entry follows as a separate patch, as you suggested.
+
+Thanks,
+Wu
 
