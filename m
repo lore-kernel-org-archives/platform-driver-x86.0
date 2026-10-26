@@ -1,77 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793011329;
-	b=etsZJL36QdzclQ6fy6DEuLFSPGNeoEjnSaIsZZ6VQTSDIWYw4N7vH7lNk2pGVw6xziF6
-	 SEc9ZHO/Sv3Sr3lv3UctDCa2xNAmBA2g2L6b6/YSgTMRmsG2lKUXJVAokyB57wZ7CsvZ4
-	 FalHHbjo1RdfZrIMkT6RnYppQBU1XDTE7d6MSBIFd1jJflQJloDzX4l/ORoqDyEcAnW8o
-	 loDn7kO632lG+EwvN2KBIo71B4XwfowqAE7YeQp6XDcztD5iooVmuNFSIn68op19nEvPY
-	 AEOslhBsim4hTQ3Seb9k+UA+BvJd7dpZCkdPLV4EZl+ee8LcGPMCvz83UDoToK+sUPw==
+	t=1793012313;
+	b=AiyxDWxnt9dZkBT8+S6VplVBuCfWXiOM1ur3Cxn0Ieux4qqRnjNbka/WomByCpqfgr1F
+	 6o5ODnzM+pIqrSQ7iL8sxfu5fPC0WvIfiMxz0pByG/s4e+jV476Cf9MYyiqHRt9NDo89N
+	 R2FIRsMXZnzAI8R4EkLHUWzTYTGSR6ZDzRsFj9K0ewcu1XnkPVhluLg4MuW8569xiU9TU
+	 CwAFTlAn6nM99rXJIM1u6w7ZGUESMyXizy52RpaLa9eiHUnNOBAOp3tUCvXP7b1CmumSe
+	 tSYNOqTcrhVWuV2+Ev9uuSEb6gJPOWM02eNb2iN0CBYIHS+7pmu0l3IJxERXjyxzAEg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793011329;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=f+DS/lqD8BGjXqhz3m5vE80K7tWoasgYoR/nHTZXhLM=;
-	b=FdjxSXk/zBcTZMHhZVHdIqMwnXacwsl9eGw8oplS3As9BLHEyrBD5l13e8FtgbABMgO/
-	 C2bN3d6sjKD3Vmg6pTtuZI2h0qQpYRnkMC3QclMdKvkyNIDFSPM90sGUuKxRCfyOdKIDC
-	 aLh5WkQB7YdZzeRTrPz/FV6HBIbrfftIssf0sx8mryPE/tb4msc7w5ax7bcMWD90zeMKE
-	 GvVLUoPWlT6k1mDUjD2K/VAgfBUatGuk3NHyp1SuwSKQPTfjP6nzX0MaLVx7ucwcNdJKB
-	 pauNn1z2cpo2z4KfW+kFini3Y1sr6yTfuNvr8O51kvE/ymHVl77CfO3Pq4Lv46uGpuA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793012313;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=F4PTtG0p5qUxkiwJlFf03ohdweVlCHw/PJrDFEEobnM=;
+	b=avJvHpbkMRxR2+BKtJjLLrZYew1X1qwr5BJvz2HPiscGAd20FIPRZV+mFqaF259EdMe3
+	 hevn61TU7LRKjX4CJJKgDrgsOo3LKTmZX10xafSJPir/9eIRGS40pXcbcm6BVABswUKzv
+	 OK6Fnv1YBOXT9VlB+tooO9Wz1bj2fDPCEn2WaKzw5YCfa6JArxRK3IR7Km6fhgsmbWTL+
+	 DqO/sd63VJ3mgTj7+2Sd+YpDMObzuYFWqNamRfAKIz+wCotJDwV8OSohMJrwPvHmRpb7h
+	 T/d14p2oHvbzqxWKsqH3w7Qo9bZYsbtc49YZk7oj9fB0j3Kuj8S7R67yu3NvYEBA0VQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QSdr9HZK;
-	arc=none smtp.remote-ip=198.175.65.12
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PGxIQdVp;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E66606A31A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 10:42:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4E66606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D4F606A31D;
+	Mon, 26 Oct 2026 10:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QSdr9HZK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793011329; x=1824547329;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=nW6h3bHAUR52uEYj2GY1TqqIF+Gwx3bZrMdTPOStt2w=;
-  b=QSdr9HZKA2ouTNNdH13H2yN6Ai1ENB89vcjj+c5ZyTybwPi+/4jrRlcj
-   m/3KHU8qzVYYkKQugcDq8v7hisfoX6JGenzKshTpmTqMJaBpvGd4DF9BC
-   nIGIQpNyxqW0DOM8MEZv74fPYXmZpOOqRa6Js2/jshumIT1uNHnY07YIz
-   GOJESrc4LmCQFoUURQFSFocOx9oOTzDpiUi4Kc2HQ3b4Ni0y1fgsciNP8
-   0idO9Y2MnFmeyZC72FJRJcaCnqf8QHU9Tz1QxtyMua2rTg5oVwxSUCSDQ
-   wIrPChz/x2Injtj52lwB7KnKhguyaABySAskRG6StEGsyX000TkDwMp6N
-   Q==;
-X-CSE-ConnectionGUID: lqiaCi82RSqWs5BFHABcUw==
-X-CSE-MsgGUID: NQPLwerES8KRtwbnoaforQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1559161"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1559161"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 03:42:08 -0700
-X-CSE-ConnectionGUID: 5gs09gJ5Qful0+p5IVISog==
-X-CSE-MsgGUID: MPV/74DgQUSJWC0aFbh9EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4134282"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 03:42:06 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Oct 2026 12:42:01 +0200 (EET)
-To: Chris Simpson <chris@nilk.net>, Konrad Dybcio <quic_kdybcio@quicinc.com>, 
-    Hans de Goede <hansg@kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-cc: janussss@163.com, luzmaximilian@gmail.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] surface: aggregator: propagate -EPROBE_DEFER from
- ssam_irq_setup()
-In-Reply-To: <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net>
-Message-ID: <2faa9857-9d55-a607-bd46-588598b64ca4@linux.intel.com>
-References: <7d51f80e-9552-957f-f32c-1d608042b647@linux.intel.com> <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PGxIQdVp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED471F01828;
+	Mon, 26 Oct 2026 10:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793012312;
+	bh=F4PTtG0p5qUxkiwJlFf03ohdweVlCHw/PJrDFEEobnM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=PGxIQdVp8L88LqYyx3vL76tCm8GDgKA++ToGxAeC0ElfCnRejTz2M6Zt6lH4uz2PB
+	 56EDJgyRuP1efY06BdLmJUCN7IX5I8d/tMEm9HWUEiKpDL/02pExOI9JgYqqfkTaIN
+	 isjmSrBro6LSz2BXkZE2rnHykFrFZIhlDz4WGTYVcfIEr/6G1b9CDZDgQRXro4Oru0
+	 AXuxVgM4Em/a3yfPiwiqYlwW3SLK8LBwp5TVbLDztoTuZIAZ8F212Y1nwMpIk76WeK
+	 MGD+l6CdTtC+J4WQU5f/TnJIFJQPTy6Ra7sCHsO4Rpw5mQcYGIW01my8u2N7r8xBAC
+	 KmHdDudFKApMg==
+Message-ID: <dd7765dc-f636-4572-8325-97e901814796@kernel.org>
+Date: Mon, 26 Oct 2026 11:58:25 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,85 +51,124 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-
-+ Konrad, Hans, Andy.
-
-On Fri, 23 Oct 2026, Chris Simpson wrote:
-
-> Hi,
-> 
-> Same failure here on a Surface Pro 9 (Tiger Lake, INTC1055 driven by
-> pinctrl_tigerlake as a module): whenever surface_aggregator is loaded from
-> the initramfs about 30 ms after /init, before udev has bound the GPIO
-> controller, probe ends with
-> 
->   surface_serial_hub serial0-0: error -EINVAL: failed to setup IRQ
-> 
-> and is never retried, so Type Cover, battery and tablet-mode switch are
-> gone until a manual rebind. linux-surface has several reports of this
-> since v6.12 (linux-surface/linux-surface#2219, #1645, #2064, #2039), and
-> it is a regression from b27622f13172 ("platform/surface: Add OF support"),
-> which used to propagate the gpiod_get() error.
-> 
-> Janus, are you planning a v2? If not, below is a variant that follows
-> Ilpo's comment by using gpiod_get_optional(): only "no GPIO described"
-> falls back to fwnode_irq_get(), every other error including
-> -EPROBE_DEFER is passed on. I'm happy to send it properly (Fixes:
-> b27622f13172, Cc: stable, your patch credited), or to test your v2 on
-> the Pro 9 instead, whichever you prefer.
-> 
-> I've tested it on the Pro 9 (Fedora 43, 7.2.12 with the linux-surface
-> patches), with surface_aggregator forced into the initramfs. Unpatched,
-> the probe fails with the -EINVAL above and the Type Cover, battery and
-> tablet-mode switch are missing. Patched, the probe defers three times
-> and completes about 0.2 s later, with all of them present and the
-> device no longer listed in devices_deferred. Suspend/resume behaves as
-> on an unpatched kernel. The analysis and the diff were produced with an
-> AI coding assistant (Claude Code), and reviewed and tested by me.
-> 
-> Chris Simpson
-> 
-> --- a/drivers/platform/surface/aggregator/controller.c
-> +++ b/drivers/platform/surface/aggregator/controller.c
-> @@ -2753,12 +2753,20 @@
->  	 */
->  	const int irqf = IRQF_ONESHOT | IRQF_TRIGGER_RISING | IRQF_NO_AUTOEN;
->  
-> -	gpiod = gpiod_get(dev, "ssam_wakeup-int", GPIOD_ASIS);
-> -	if (IS_ERR(gpiod)) {
-> -		irq = fwnode_irq_get(dev_fwnode(dev), 0);
-> -	} else {
-> +	/*
-> +	 * Only fall back to the fwnode IRQ if no wakeup GPIO is described
-> +	 * at all. Any other error, in particular -EPROBE_DEFER while the
-> +	 * GPIO controller has not been registered yet, must reach the probe.
-> +	 */
-> +	gpiod = gpiod_get_optional(dev, "ssam_wakeup-int", GPIOD_ASIS);
-> +	if (IS_ERR(gpiod))
-> +		return PTR_ERR(gpiod);
-> +
-> +	if (gpiod) {
->  		irq = gpiod_to_irq(gpiod);
->  		gpiod_put(gpiod);
-> +	} else {
-> +		irq = fwnode_irq_get(dev_fwnode(dev), 0);
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 0/7] Merge redmi-wmi into bitland-mifs-wmi
+To: Mingyou Chen <qby140326@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Ilya Gladyshev <ilya.gladyshev@linux.dev>
+Cc: KentoNion <kento@kekto.ru>, platform-driver-x86@vger.kernel.org,
+ ted eric <ericted8810@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
+ linux-kernel@vger.kernel.org, Chris Taraszka <chris@miget.com>,
+ Matias Civadda <matias.civadda2342001@gmail.com>, =?UTF-8?B?6auYIOS/ig==?=
+ =?UTF-8?B?5paH?= <btx342@gmail.com>, powerfullz <wleizc7319@gmail.com>,
+ =?UTF-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>,
+ =?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>, Rsplwe
+ <i@rsplwe.com>, Bozhen Peng <bozhenpeng93@gmail.com>,
+ Anton Karasev <uselessfire@gmail.com>, Jame Jao <jaojame6@gmail.com>,
+ Serhiy Shliapuhin <shlyapugin@gmail.com>
+References: <20261021123414.25516-1-qby140326@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20261021123414.25516-1-qby140326@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-I have to admit this was not exactly what I meant (I only meant to not 
-use -Exx literal in the return statement), but now that I see this v2, 
-I'm not saying your approach is wrong either (I'm left unsure).
+On 21-Oct-26 2:34 PM, Mingyou Chen wrote:
+> This patch series consolidates the standalone 'redmi-wmi' driver into the
+> 'bitland-mifs-wmi' driver to eliminate code duplication and centralize
+> the maintenance of overlapping ACPI WMI event streams.
+> 
+> Bitland is the ODM manufacturer for various Xiaomi Redmibook models. Both
+> platforms share the exact same keyboard event stream WMI GUID
+> (46C93E13-EE9B-4262-8488-563BCA757FEF). While redmi-wmi previously parsed
+> the 4-byte payload as a bulk u32 scancode, bitland-mifs-wmi deconstructed
+> it into discrete type/id/value fields.
+> 
+> Redmi operations were not contained in this patch series, future reverse
+> engineering is required.
+> 
+> This series introduce a newly reported mic-mute hotkey definition
+> for Redmibooks, dropped the previous redmi-wmi driver and intrudoced
+> the quirks table for the bitland-mifs-wmi driver.
+> 
+> I don't have a Redmi or other Bitland device. So I cannot work on the
+> real device.
+> 
+> Features are working properly on my device (Lecoo Bellator N176).
+> 
+> I leave the future reverse engineering work to the community.
+> 
+> Tests are welcome.
+> 
+> And by the way, the no_set member in bitland_profile_entry means a
+> platform profile is only report by the firmware but not available for
+> set.
+> 
+> Does accept_zero_function still necessary since the driver now permits
+> 0x0 function field on SET operations?
+> 
+> And I've got a question, from sashiko's comment in my v12
+> 
+> https://sashiko.dev/#/patchset/20261012133648.132363-1-qby140326%40gmail.com
+> 
+>> Will this result in the loss of KEY_PERFORMANCE events on event-only legacy
+>> devices?
+>> Looking at bitland_mifs_wmi_probe() in drivers/platform/x86/bitland-mifs-wmi.c,
+>> if dev_type == BITLAND_WMI_EVENT, it returns early after registering the input
+>> device:
+>> 	if (dev_type == BITLAND_WMI_EVENT) {
+>> 		/* Register input device for hotkeys */
+>> 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
+>> 		...
+>> 		return input_register_device(drv_data->input_dev);
+>> 	}
+>> When the performance key is pressed, bitland_mifs_wmi_notify() intercepts it,
+>> invokes the bitland_notifier_list, and returns without reporting an input event:
+>> 	case WMI_EVENT_PERFORMANCE_PLAN:
+>> 	case WMI_EVENT_PERFORMANCE_PLAN_ALT:
+>> 		blocking_notifier_call_chain(&bitland_notifier_list,
+>> 					     BITLAND_NOTIFY_PLATFORM_PROFILE,
+>> 					     NULL);
+>> 		return;
+>> Because the platform profile and notifier were not registered during probe
+>> for event-only devices, does this mean the events are silently dropped instead
+>> of emitting KEY_PERFORMANCE like the old driver did?
+> 
+> I ackknowledged that KEY_PERFORMANCE (WMI_EVENT_PERFORMANCE_PLAN_ALT in
+> bitland-mifs-wmi) looks like an event in this LKML thread
+> 
+>> Since the event reports a change that has already happened,
+>> platform_profile_notify() is the natural way to pass it on, as
+>> suggested in my v6 reply: power-profiles-daemon then re-reads the
+>> profile, which is harmless after the driver's own writes too. If
+>> KEY_PERFORMANCE should stay for on-screen displays (Ibragim asked to
+>> keep these events observable), it may be worth not reporting it for the
+>> event that echoes the driver's own write, or at least saying in a
+>> comment that it reports a mode change that already happened. On
+>> Ibragim's TM2209 the profile SET is reported not to work [3], so there
+>> 0x16 can only come from Fn+K and the echo does not exist; Ibragim, can
+>> you confirm?
+> 
+> https://lore.kernel.org/all/20261008152647.1510152-1-uselessfire@gmail.com/
+> 
+> So should I follow sashiko's advice?
 
-Are there some legimate cases where error other than -EDEFER_PROBE should 
-end up into this else like it previously did? The return on error was 
-removed by b27622f13172 ("platform/surface: Add OF support") so I assume 
-there was some good reason for that but the commit message isn't helpful 
-at all... :-(
+What I think should happen here is that *if* there is a platform-profile-handler,
+then platform_profile_notify() should be used (1). OTOH if there is no
+platform-profile-handler (the mentioned event-only mode) then reporting this
+to userspace as KEY_PERFORMANCE as was done before makes sense to me.
 
-Konrad, you did that change, can you explain the reason why the return was 
-removed from the error path?
+Does that sound reasonable?
 
--- 
- i.
+Regards,
+
+Hans
+
+
+
+1) This assumes the event indicates a platform-profile-change has happened, if
+it is a request for a platform-profile-change then platform_profile_cycle();
+should be used instead.
 
