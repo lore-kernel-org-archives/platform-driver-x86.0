@@ -1,64 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793039746;
-	b=RHcSeNub8j2ovai5C7oKzGKi7ouHsYAg7mbiRbbSLicQ6UMqIAjcqMAzmpOLKeiZ1faF
-	 nS+eWfjfEo6TaTBCr5aB+FVN/O3BvqOiPgErWOXyjvIDIg4D0Mny0FULqhBbvBvlTA2jY
-	 ZH+IS6SvLcbXnF07UKe5QJEQXrvHQJJCh7g6/HMVDFVWrWlXNpNoa7R5LZC0YflLzhhRm
-	 DoTPSt7PfFHJKUWsLdmITa70qSnnEYdI7H5ggO9HJR6MaWF/LAwIo3njdbfBIXiFvOYuR
-	 n8Te8GtLkLSQVohORNpJ5xBQWA54Z4stQVZbYrQ4atTGGdT3W+3ndzSev4HHACy+WmQ==
+	t=1793039748;
+	b=hKIaDLsDRxR07DCAUjTMWCzmtaniNSr9wloa7w+vnZLrPM5/kbEAe0svvfHiyW0lXScU
+	 IQq65ILI1Co4TOMOHtmJiqGKEPPHVbCvhXl8GeJG5hgJJBTO97/6sFPmQITCm9Ls40Gpt
+	 9Y5GJ3XmmGOpS0dtBQ0afHF6hE9FGdo+sslDIFh5/RcGdEMsNC7UGVElM04jA8Hx06Jp/
+	 D9OBKBn4jI1T5+cF7whpQwX7yRcOmLSIWiJEcOQKYlkEgfsK0X83GxxGd7/gmPbQh8dd6
+	 XRZa2OJPtz7pIrh0J8RZE4bgVw+zLWSP4FdM8e6g62pPwyOodUiJXnzkjCwjX2jw8Tg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793039746;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793039748;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=8IXIgyLaA+4UqfpivStTKKUXpyrUeLkhuzRJJLKuQgQ=;
-	b=KHF/kDNUZ7z1lDDwMpBO+H3BLAw/jOc5nyviwBopKrgSRo+4X6k8eBXEW5jFrhZT2JKW
-	 oPBNJLa1keYlfqn0RTUiW2fJ/v5yabfKw/42ZGX5yR78S9jIYFYKRFlEIC3NQH5GyPjGQ
-	 SgnOq/cYk8h2/b6jpE3Uv5Oz+yLBljpPNoxMl/M7iDnQfGMUL/n5cbziuh4ts29T9S3mT
-	 pq3H3fEtY4zEeCfNQ2vYZfYIroq2ZkOO7aqkbow3s1FcHwmaTR9odGzRY0+RS/bvp9GSe
-	 xpnQsjD45XQWXIZUdeK72s7SKkQojrohivpBR0EWiwY0yZN1kTBtbUNO18mKXb0rhjw==
+	 Content-Transfer-Encoding;
+	bh=MJ1UWsUjbcLi2/gOeHM1VIxSHs13bsbqmSIxqvL3JtI=;
+	b=GrA06QkyoSzcThnY0GFNmknTEe4p9F/2o6F/65j6XnqzNvksunNPEErD1PjEKbBe/AIr
+	 Y0BsP4+DfwpXD7NGD//EyeiOdTiiTXKzXyRh4h+ebB+Yd9yQXjIuH9JeQGUugNikulleL
+	 +JWraWxfjgCt0lu2LLpzzrYP+JkBMMRMekKHZInNDH3rz6poymKatoHDSniN4cKsnNgCL
+	 3uGimieleJst9tAwrH0TahOJjkVvyUX3Nari+h06n3Gtx6Xc9EEGTuQ9QWkFCsbTPJVew
+	 Go/dpEV6brBBme9q//FVbhlx7CUOezZQkbMfPCbNl6I9qc2u1ZbuaG+fMEPJxK4azRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cf8woerN;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=l+Psd+j7;
 	arc=none smtp.remote-ip=192.198.163.16
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4509C60A2621;
-	Mon, 26 Oct 2026 18:35:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4509C60A2621
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C59360A380D;
+	Mon, 26 Oct 2026 18:35:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5C59360A380D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cf8woerN
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=l+Psd+j7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793039746; x=1824575746;
+  t=1793039747; x=1824575747;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gKrWOcsZ05suzYJeyq1XYm0d5VcpS3k0Qdn7J0IezJc=;
-  b=cf8woerN39MStiFsjYwr3dHIMKhBqqanMhJwptcZlyVRktqQfCWpET7f
-   XD480gMwg6uU4rnh3A/9LicWya0TEMleZkVIJB/vdnhHslkACubx58UMi
-   AuuSXE/9aH71kiL+eQkCkXtNRV8ZgWLtx1EJCOIpeS7ILLus7HzeXefWZ
-   G7mXNi1Zl+bKnJhiGKl7/S7g3WLWDBFXIX4KwkS62Cb3jnaSl0mlVi6N9
-   iv7BNTaIscHhgzPQ+NcwXyTO8nmQJtMevkI5zaeiNXWBwIInXvANfl7hr
-   LwdrAlb+FOfUr0tjgWXrqeYwTWRiEuxu/oWhkfmotaqBdjkWYvfbIU3yX
-   w==;
-X-CSE-ConnectionGUID: EvSfygMaRdGFYFTsUGfE+Q==
-X-CSE-MsgGUID: gAUkqxaYRyejRV5S8kkE5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731507"
+  bh=YaR3i5zWpwMqXGdgbCXu/fddebtf8ZoNzStCuH9eIbE=;
+  b=l+Psd+j7DjbxCd4b8NiEVNZ/Qbg7AidVXCjWKP84ZeQsQQNIhJHCjj7z
+   gMkQyKPgGFPBGspS8EXv7lE5/PheNwYGRpm5cpxYvSNlAGkg1aP+RWLfB
+   pYaiKj8ei7lAfUQm0MCW26Db6yx8vIqPkiDz+42yqzpd1vImOjKJQl/I+
+   S3hnIxspZgl+q/OsjvGCOHMzFIyEvLqK1HNinn2mpImaT4Ft2K/K1s3wO
+   mhqBTfxaDWXaH1AHEGKRvtOYMC/KyBC3bL6KmOBD+1dQX01NngLc4MB2H
+   8uB5Zl7b0RA9PTbAvH/4um32eLse7EjE3HJqGTdenyVK4tHHwasbRPfQW
+   g==;
+X-CSE-ConnectionGUID: qvuJl6ouQsecz9FwB5gCaQ==
+X-CSE-MsgGUID: DYu76SCvTU+Wy7rcPbcrkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731536"
 X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1731507"
+   d="scan'208";a="1731536"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:35:36 -0700
-X-CSE-ConnectionGUID: CmwxzSfxTQSxgHI3Gc8SBA==
-X-CSE-MsgGUID: Z9FsR875RBeyTuP1lMm7ew==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:35:37 -0700
+X-CSE-ConnectionGUID: BxTwo0LMQ0O8fGrO6x4TJA==
+X-CSE-MsgGUID: abVsb/E0T7OyJei3+fwpgQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4293893"
+   d="scan'208";a="4293902"
 Received: from jf.intel.com (HELO jf.intel.com.jf.intel.com) ([10.165.154.102])
   by orviesa003.jf.intel.com with ESMTP; 26 Oct 2026 11:35:37 -0700
 From: Ehab Ababneh <ehab.ababneh@intel.com>
@@ -82,9 +82,9 @@ Cc: ashok.raj.linux@gmail.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	pengfei.xu@intel.com,
 	ravi.v.shankar@intel.com
-Subject: [PATCH 09/17] platform/x86/intel/ifs: Select CPUs from topology_cluster_cpumask() for simultaneous IFS tests
-Date: Mon, 26 Oct 2026 11:38:12 -0700
-Message-ID: <20261026183820.129459-10-ehab.ababneh@intel.com>
+Subject: [PATCH 12/17] platform/x86/intel/ifs: Add new sysfs interfaces {status, details, cpus_ran}_list
+Date: Mon, 26 Oct 2026 11:38:15 -0700
+Message-ID: <20261026183820.129459-13-ehab.ababneh@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261026183820.129459-1-ehab.ababneh@intel.com>
 References: <20261026183820.129459-1-ehab.ababneh@intel.com>
@@ -97,184 +97,148 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Jithu Joseph <jithu.joseph@intel.com>
 
-The current intel_ifs driver selects CPUs from cpu_smt_mask() to run
-IFS test simultaneously. This approach works well for processors currently
-supported by the intel_ifs driver, where threads in a CPU core share the
-same SCAN test engine. However, it will not work for new Intel Xeon
-processors, such as Diamond Rapids, where multiple CPU cores in a module
-share the same SCAN test engine and must run IFS tests simultaneously.
+Problem
+=======
+The current legacy interface for Intel In-Field Scan is designed to
+simultaneously test all CPUs in a group [1], but it only reports the
+status of the primary CPU in this group and doesn't indicate that
+secondary CPUs have been tested. This results in the following issues:
 
-Starting with Granite Rapids (GNR) and later generations, bit[20:16]
-(TID_BIT_SHIFT) of MSR_INTEGRITY_CAPABILITIES register [1] contains the
-number of bits to shift right on x2APICID to obtain a unique topology ID
-for all logical processors that share a SCAN test engine. In theory,
-computing a cpumask by this method and using a stop_machine() variant
-with an arbitrary cpumask passed in to rendezvous CPUs for simultaneous
-IFS tests should work for both cases where threads in a core or CPU
-cores in a module share the same SCAN test engine. However, as per
-Tony Luck's feedback and the previous discussion [2], the Linux community
-is not in favor of a stop_machine() variant with an arbitrary cpumask.
+  - All CPUs in a group can hold different statuses, but the user can
+    only see the status of the primary CPU, as any errors observed by
+    secondary CPUs are ignored.
 
-Observations on existing Intel Xeon processors and the upcoming Diamond
-Rapids with IFS capability show that the logical processors sharing the
-same SCAN test engine are exactly the logical processors sharing the
-same L2 cache.
+  - The topology of a group of CPUs may vary across systems. For example,
+    in a Hyper-Threading (HT) system, the group consists of all CPUs in
+    a core, while in a Dual-Core Module (DCM) based system (e.g., Intel
+    Diamond Rapids CPU), two cores in a module form a group. The user may
+    be unaware of the group topology and test each CPU of the system
+    individually, leading to duplicate test runs.
 
-topology_cluster_cpumask() returns the cpumask for CPUs sharing the same
-L2 cache. Therefore, select CPUs from topology_cluster_cpumask() to run
-IFS tests if simultaneous testing is required.
+Solution
+========
+The user continues to write a single value to run_test, and while the
+legacy sysfs reports results for the tested CPU to ensure backward
+compatibility, new sysfs interfaces {status, details, cpus_run}_list
+provide results for multiple related CPUs tested as part of a group.
+The user can check for the presence of new sysfs interfaces to
+understand that multiple results are available, read them, and identify
+which CPUs have been tested to avoid duplicate tests.
 
-[ Qiuxu: Re-wrote the commit message. ]
+  intel_ifs_0
+  +---- run_test	<--- Same legacy file
+  +---- current_batch
+  +---- details
+  +---- details_list	<--- Details for all CPUs in the group (new)
+  +---- dev
+  +---- image_version
+  +---- status
+  +---- status_list	<--- Status for all CPUs in the group (new)
+  +---- cpus_ran_list	<--- CPUs in the group tested along with CPU written to run_test (new)
+  \---- uevent
 
-[1] Vol. 4 "Table 2-56. Additional MSRs Supported by the Intel® Xeon®
-    6 P-Core Processors" in the Intel Software Developers' Manual,
-    March 2025.
+Example of reading the cpus_ran_list to see the CPUs tested:
 
-[2] https://lore.kernel.org/all/20220505082824.GD2501@worktop.programming.kicks-ass.net/
+  echo 0 > run_test
+  cat cpus_ran_list
+  0,96
 
-Suggested-by: Tony Luck <tony.luck@intel.com>
+  cat status_list
+  pass pass
+
+  cat details_list
+  0x8086 0x8087
+
+[1] Indicated by bits [20:16] of MSR_INTEGRITY_CAPABILITIES when bit 21 is set.
+    E.g., in Hyper-Threading (HT) systems, a group includes all threads in a core;
+    in Dual-Core Module (DCM) system, a group includes all CPU cores in a module.
+
+[ Qiuxu: wrote the commit message. ]
+
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
 ---
- drivers/platform/x86/intel/ifs/ifs.h     |  2 +
- drivers/platform/x86/intel/ifs/runtest.c | 48 +++++++++++++++++++-----
- 2 files changed, 40 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel/ifs/sysfs.c | 56 ++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 814ebac10a5d..365429fafe7a 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -285,6 +285,7 @@ struct ifs_test_msrs {
+diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
+index 287f96bb033e..82a603cd1fd3 100644
+--- a/drivers/platform/x86/intel/ifs/sysfs.c
++++ b/drivers/platform/x86/intel/ifs/sysfs.c
+@@ -135,6 +135,59 @@ static ssize_t image_version_show(struct device *dev,
  
- /**
-  * struct ifs_data - attributes related to Intel IFS driver
-+ * @grp_cpumask: set of CPUs being tested simultaneously
-  * @loaded_version: stores the currently loaded ifs image version.
-  * @loaded: If a valid test binary has been loaded into the memory
-  * @loading_error: Error occurred on another CPU while loading image
-@@ -298,6 +299,7 @@ struct ifs_test_msrs {
-  * @all_lp_join: all logical processors join test
-  */
- struct ifs_data {
-+	cpumask_t	grp_cpumask;
- 	int	loaded_version;
- 	bool	loaded;
- 	bool	loading_error;
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index c6a4d6dcccf1..09e7a81e9220 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -156,11 +156,9 @@ static atomic_t scan_cpus_in;
- /*
-  * Simplified CPU sibling rendezvous loop based on microcode loader wait_for_cpus()
-  */
--static void wait_for_sibling_cpu(atomic_t *t, long long timeout)
-+static void wait_for_sibling_cpu(struct ifs_data *ifsd, atomic_t *t, long long timeout)
- {
--	int cpu = smp_processor_id();
--	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
--	int all_cpus = cpumask_weight(smt_mask);
-+	int all_cpus = cpumask_weight(&ifsd->grp_cpumask);
+ static DEVICE_ATTR_RO(image_version);
  
- 	atomic_inc(t);
- 	while (atomic_read(t) < all_cpus) {
-@@ -195,9 +193,9 @@ static int doscan(void *data)
- 	}
- 
- 	/* Only the first logical CPU on a core reports result */
--	first = cpumask_first(cpu_smt_mask(cpu));
-+	first = cpumask_first(&ifsd->grp_cpumask);
- 
--	wait_for_sibling_cpu(&scan_cpus_in, NSEC_PER_SEC);
-+	wait_for_sibling_cpu(ifsd, &scan_cpus_in, NSEC_PER_SEC);
- 
- 	/*
- 	 * This WRMSR will wait for other HT threads to also write
-@@ -265,7 +263,11 @@ static void ifs_test_core(int cpu, struct device *dev)
- 
- 		params.activate = &activate;
- 		atomic_set(&scan_cpus_in, 0);
--		stop_core_cpuslocked(cpu, doscan, &params);
++static ssize_t status_list_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct ifs_data *ifsd = ifs_get_data(dev);
++	struct ifs_test_output *pcpu_state;
++	int lcpu, len = 0;
 +
-+		if (ifsd->all_lp_join)
-+			stop_cluster_cpuslocked(cpu, doscan, &params);
-+		else
-+			stop_core_cpuslocked(cpu, doscan, &params);
- 
- 		status = params.status;
- 
-@@ -310,15 +312,18 @@ static int do_array_test(void *data)
- 	struct run_array_params *params = data;
- 	int cpu = smp_processor_id();
- 	union ifs_array *command;
-+	struct ifs_data *ifsd;
- 	int first;
- 
-+	ifsd = params->ifsd;
++	if (cpumask_weight(&ifsd->grp_cpumask) == 0)
++		return sysfs_emit(buf, "%s\n", "none");
 +
- 	command = params->command;
--	wait_for_sibling_cpu(&array_cpus_in, NSEC_PER_SEC);
-+	wait_for_sibling_cpu(ifsd, &array_cpus_in, NSEC_PER_SEC);
- 
- 	/*
- 	 * Only one logical CPU on a core needs to trigger the Array test via MSR write.
- 	 */
--	first = cpumask_first(cpu_smt_mask(cpu));
-+	first = cpumask_first(&ifsd->grp_cpumask);
- 
- 	if (cpu == first) {
- 		wrmsrq(MSR_ARRAY_BIST, command->data);
-@@ -350,7 +355,11 @@ static void ifs_array_test_core(int cpu, struct device *dev)
- 		}
- 		atomic_set(&array_cpus_in, 0);
- 		params.command = &command;
--		stop_core_cpuslocked(cpu, do_array_test, &params);
++	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
++		pcpu_state = per_cpu_ptr(ifsd->result_ptr, lcpu);
++		len += sysfs_emit_at(buf, len, "%s%s", (len > 0) ? " " : "",
++				     status_msg[pcpu_state->test_result]);
++	}
++	len += sysfs_emit_at(buf, len, "\n");
 +
-+		if (ifsd->all_lp_join)
-+			stop_cluster_cpuslocked(cpu, do_array_test, &params);
-+		else
-+			stop_core_cpuslocked(cpu, do_array_test, &params);
- 
- 		if (command.ctrl_result)
- 			break;
-@@ -398,6 +407,24 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
- 		ifsd->status = SCAN_TEST_PASS;
- }
- 
-+static void build_cpugroup_mask(struct device *dev, int cpu)
++	return len;
++}
++
++static DEVICE_ATTR_RO(status_list);
++
++static ssize_t details_list_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct ifs_data *ifsd = ifs_get_data(dev);
++	struct ifs_test_output *pcpu_state;
++	int lcpu, len = 0;
++
++	if (cpumask_weight(&ifsd->grp_cpumask) == 0)
++		return sysfs_emit(buf, "%s\n", "none");
++
++	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
++		pcpu_state = per_cpu_ptr(ifsd->result_ptr, lcpu);
++		len += sysfs_emit_at(buf, len, "%s%#llx", (len > 0) ? " " : "",
++				     pcpu_state->test_details);
++	}
++	len += sysfs_emit_at(buf, len, "\n");
++
++	return len;
++}
++
++static DEVICE_ATTR_RO(details_list);
++
++static ssize_t cpus_ran_list_show(struct device *dev, struct device_attribute *attr, char *buf)
 +{
 +	struct ifs_data *ifsd = ifs_get_data(dev);
 +
-+	cpumask_clear(&ifsd->grp_cpumask);
++	if (cpumask_weight(&ifsd->grp_cpumask) == 0)
++		return sysfs_emit(buf, "%s\n", "none");
 +
-+	/*
-+	 * Some CPUs, such as Sierra Forest and Clearwater Forest, have multiple cores
-+	 * sharing the same SCAN test engine, but they don't require a rendezvous.
-+	 */
-+	if (!ifsd->all_lp_join) {
-+		cpumask_set_cpu(cpu, &ifsd->grp_cpumask);
-+		return;
-+	}
-+
-+	cpumask_copy(&ifsd->grp_cpumask, topology_cluster_cpumask(cpu));
++	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&ifsd->grp_cpumask));
 +}
 +
- /*
-  * Initiate per core test. It wakes up work queue threads on the target CPU and
-  * its sibling CPU. Once all sibling threads wake up, the scan test gets executed and
-@@ -411,6 +438,7 @@ int do_core_test(int cpu, struct device *dev)
++static DEVICE_ATTR_RO(cpus_ran_list);
+ /* global scan sysfs attributes */
+ struct attribute *plat_ifs_attrs[] = {
+ 	&dev_attr_details.attr,
+@@ -142,6 +195,9 @@ struct attribute *plat_ifs_attrs[] = {
+ 	&dev_attr_run_test.attr,
+ 	&dev_attr_current_batch.attr,
+ 	&dev_attr_image_version.attr,
++	&dev_attr_status_list.attr,
++	&dev_attr_details_list.attr,
++	&dev_attr_cpus_ran_list.attr,
+ 	NULL
+ };
  
- 	/* Prevent CPUs from being taken offline during the scan test */
- 	cpus_read_lock();
-+	build_cpugroup_mask(dev, cpu);
- 
- 	if (!cpu_online(cpu)) {
- 		dev_info(dev, "cannot test on the offline CPU %d\n", cpu);
 -- 
 2.43.0
 
