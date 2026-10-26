@@ -1,90 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793020645;
-	b=RX2CnpeYVq0Xm88lXrMIUPawHA65uQUy1TDSIq7FK0sh2fX5tIBQJwvpHFYcCW5xVn9z
-	 R0J15KnVvGpLAWzNlQBmuui/xQv+tKWom7CcQXad91iTsGXVA4/TF837FYXB44fDf/wCB
-	 PLic1FmgtXwsawX0lRxZFiAlsg5ccis5WrN0PMvYSqHr72hev2bnNdIe8cY/A7AwFRqrj
-	 EESBXXiDiAsaNpi+5NG2laq0dtm9L55fttLq+sfDQfEGWihoIIP8hn/tRuX07tuQ9zyjA
-	 Y/QgDuKbZAS0PjkAUyva0EbxNbbUxEDq9Jr+3w3E4yz3wyTDG/gghknLnQQ9mJrFWiQ==
+	t=1793020856;
+	b=qY8A+SA4FJHVQhvbq/4icQmN3GfBpfYg9ZxUVVO/n7Mh9FaZ8E+LwpMnPKTuS9H4Sa1T
+	 x3jUt7mm56VYCEogJefIjTjR7aRKupP9YjZdxqEc95dKtBK8FpYdXLWG5Zr3TUzVOVLXT
+	 fAgXtxZpoFnQKzun2K4MzCvY/JChtYqjGAOXULpL2mRLiVVEaIFlI3IT9tILZ2uS12wFQ
+	 6UCeXFStsBcDbBGxF4/RBnWv/5T1G4UwRw8mCyed7XUFoclPTkufi3SiZbUUUi78Rzexu
+	 4bUB/ykP7NaJmc1aQ9cC2tQkCqgdJrxRc/mLo1hDY4CULu9ivuKv6tPATFsE2mhTOpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793020645;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=dp3CEUIWG4ZlM/vo6FzdszxeLdRIwkhm0EFu7Z420cM=;
-	b=TeyY7pq3EQTlPU8CgrWIc9YpGVKKFQPEujXfqFCvMUvAxKkYjArOBCqpDnZhuPPlQxmP
-	 HeksIiqo7GzrS2iIBgTcGouUaUXWZWlfRbLL84P0O4/c5E69htDtLZ6mEgkCOqcVgqcnF
-	 6mpluKcggCt7JiqB/p5VB6ToTVHaK4wSX6jUaO918MF5pmcBZ4KQ+d+yjHfIXN1rGoAeT
-	 7FixLDJ/g1TmSrW1ze/swiJ7eSobiDuqDVnbzgxv/l33Kf4slR1QO2QfTLaY5f672R9le
-	 wPDJvFxMCg3gHJWWmVhRCIEN62Mtp940dPS5/PkRSLh3aG/jD/NqZv1cDmuOoqY3kKA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793020856;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=G+t5LI1oK9Rp/QuGiql4zUlrmxV3HSEfpw2XyLd1i0o=;
+	b=xwSxpp28ifnS/PCUlk1cTuvU4y1clLMhb/B5vn7MMcDXVin8UbxcdyMnCu0jqxIuefz9
+	 a69OXiD1bcqUK+xccuGZCTAcEW2FOcj6Ho9no3+b1kAViix3hoOueKZl4kg/J9pynFogu
+	 vnZ8AXK44iPv8KIA5KOAbA5/NWoritAFx+zXeq3Xpyw+qnrXibNtQxe30TSbMmk9zaqgY
+	 o9ZrwBHBoz90HdRlsKoVzi12ThqG7qPX/ZDTCy7P8wdKHcqqcT//FofpOoi0No2VMkA14
+	 8Sn4qLjvfbZlIGc78y5LtYuzj959PjiD+X4P54nwWtObY9o5DJI0xU9IMSdcvj5aw1Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=U937B17l;
-	arc=none smtp.remote-ip=209.85.221.42
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W7S3lZ4n;
+	arc=none smtp.remote-ip=192.198.163.16
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B592F606A31A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 13:17:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B592F606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32820606A31A;
+	Mon, 26 Oct 2026 13:20:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32820606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=U937B17l
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-48c4be28b82so2637958f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 06:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793020643; x=1793625443; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=dp3CEUIWG4ZlM/vo6FzdszxeLdRIwkhm0EFu7Z420cM=;
-        b=U937B17l2G0UPyJWQ74V63C09xXgltUEQfce5Rva5x7lDzrKGKGQB/uGp37018gJCv
-         fHvO5uO1VrzVNdWquKhthcvIlLa2GZ2huThF8EMjJr4RPttRAo73sqlZyt3/pIGLdZBZ
-         MQicrTeX/y2g37Pr8GswMAox6xYcfnsAhGJqwj3nyK/eZY/Q+styhQTc3+rsgAkeHJf3
-         EKZmnVGhjfwEkvSPyQQv9LIo6+RXNvjittyPp5gPEsCdaIwTzPTq9OXOjWMzIHZ3Lm8z
-         aLdRTxpcSsHkQiwb2eJWcPQ2eT1aDh/mgtywP3oHHU6y+HOLg4Fs65GJyPzUHDkl+yqv
-         nVXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793020643; x=1793625443;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=dp3CEUIWG4ZlM/vo6FzdszxeLdRIwkhm0EFu7Z420cM=;
-        b=esuOT3UmThFftr1enu4vuOZFJ2PT631lRkVSGYlEV/R5MtkLCdeeQDun+6GgcVWZXl
-         qOhG1iySUlXz5NvC0rsPcdRFI43S7DgbQD6rMOPHsg24tnx/e0DO285k2Qym12RU1efc
-         JBzwJt2zVtU3EVafPEThtsBhkr44js/XSl8WbVOGvkXc6lCj4pz7tAUwapWkuK+HIQGm
-         RqcRZZaQZPGyVOpuQAEFv/mRz8rb+Q7Ju0ND593u204v610Ni7uoRuaoLnpFLlpEKkRG
-         XnCr3OKU2RyphmUIO8fClbpRg//m5wtLxRocmkLIsndgcLlfSqKNb6RIIFtqA53/wjjx
-         VyEA==
-X-Gm-Message-State: AFq9FYLZYahQGH1/h13BDf/H6AXVv5g+oLZpjn2Gc7hl+VQEfgTfZ//n
-	LkSNGMuJlAcmSewmiaXMccI8I1hzZV0/UHIHWhE+pqfkowGXksrIfG1r
-X-Gm-Gg: AYBFou0BXUQrYJthXZ7bs1r0jbxr6oXbtP22IC8cPqW+dHdKiAFxrHVpOOGCxCQBx6/
-	rZ3/2T9iuwxcyvRHdulcE8Bth/gZDGIUH1k3DJIRyEaHhGqj7zjupR4nu6yk7jJRD/bhKtvkY+c
-	yBl18bRVTDhZQ4Xv6lzq6OD6e5oqK4E6k7ICPHEMRH8uWNnq4n6Xf86RblQR32S+GcugS+9Nmi9
-	tLCMHENTGzYgPItVqd1Hh3qeiDryllv7jrMxGou/pkfBhnoKNltzDMLL8kYEaSBfl0nh4J1XRwu
-	/49qbROyoH+XSQ3T702JPlrmkz7rSXfQZrejX4N+9Ypux8z/4cTnrfiyJeMRjkyKoXnBPthZwfE
-	qjYwNOtjoz7XIB88R9lfLV+LNzPrAxELXt1Mn3euYN5WTCW+SkjVF1JMN6O16MVFTHnOdUwpfkd
-	HqlHbjlvNm01Iaw6qVxeGRMn2F5vCiJmlK2QzPv4BhmUlLKrDlNVek9FzXT7GS5qYUKHWstomWs
-	g8/jil/hk4GbxFfcG6dWKXpZXmc9ZeJcDjjhnqFr8SceM3uGA0ey6X1G4Q8Hs7UodpNrxBVtsKB
-	DLfYCdRx+XsrQwG16Y2z6XY43OQJ+0SCflSaw47Ufw==
-X-Received: by 2002:a05:6000:40dc:b0:48e:1b11:7ee5 with SMTP id ffacd0b85a97d-48e3eb9a1d5mr12249321f8f.11.1793020642797;
-        Mon, 26 Oct 2026 06:17:22 -0700 (PDT)
-Received: from matebook.galaxus.box (adsl-84-226-215-1.adslplus.ch. [84.226.215.1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3eb8f37csm13485709f8f.8.2026.10.26.06.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 06:17:21 -0700 (PDT)
-From: Cian Ruane <cian.ruane1@gmail.com>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Cian Ruane <cian.ruane1@gmail.com>
-Subject: [PATCH v2] platform/x86: huawei-wmi: Add keyboard backlight support
-Date: Mon, 26 Oct 2026 14:17:20 +0100
-Message-ID: <20261026131720.9885-1-cian.ruane1@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W7S3lZ4n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793020856; x=1824556856;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=kgPxOnsQSOq9y4VzRLbWTcL9wCR+tTZD8Qaw7XVAdp4=;
+  b=W7S3lZ4nLVy+X9SQQKard4ImFMUNXXaDqJz4ICbR4v0D2aE/qFdYY9rx
+   mrAl5hAlvgTzyzmO6ayxQvTpjM1KejtqTxb/+KhARKsmhaybIAzKquLsS
+   yudEQCFkU784JgEUj9OvUoYofZpHSRx/rlh/dzvWPzgr9Hj1SeBccMTcK
+   uHE+pt7lc18zV83lksbCGA9oSkK1UWrczQ2qT+aaoS7oP0vm1D2/i33Tj
+   l/rOTTfBz+3agE1R5n5tcdVWIWlcJ/mM/a8PIZwoB88BRNUt5PukjF057
+   5lTajyURoKFHZI9ZrnDaFQISdrEy7cxQH8Ml3pQzLSjrH2UZbNvHuT7Yv
+   g==;
+X-CSE-ConnectionGUID: PwKOhL7SQzG2i1PTfB/1rg==
+X-CSE-MsgGUID: k72EBVEVQQevpCZMpUMcog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1697799"
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="1697799"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 06:20:55 -0700
+X-CSE-ConnectionGUID: uIUpBazpSBq7gQMkPdPEGQ==
+X-CSE-MsgGUID: lf++Tc8CTqeMD9RWBvKZ6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="4374535"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.109])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 06:20:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 Oct 2026 15:20:45 +0200 (EET)
+To: Denis Benato <denis.benato@linux.dev>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    linux-input@vger.kernel.org, kernel@lists.opengamingcollective.org, 
+    Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+    "Luke D . Jones" <luke@ljones.dev>, 
+    Mateusz Schwartz <matthew.schwartz@linux.dev>, 
+    Denis Benato <benato.denis96@gmail.com>, 
+    Jonathan LoBue <jlobue10@gmail.com>, 
+    Khamunetri Clark <khamunetriclark@gmail.com>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+    Joshua Leivenzon <hacker1024@users.sourceforge.net>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    =?ISO-8859-15?Q?Rebecca_Mara_M=FCller?= <rebecca.mara@posteo.de>, 
+    Ivan Levchenko <me@livan.pro>, Corentin Chary <corentin.chary@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v11 09/18] HID: asus: add support for gamepad mode
+In-Reply-To: <20261025235232.129945-10-denis.benato@linux.dev>
+Message-ID: <5f908138-980f-2005-b319-38d89a1e59dc@linux.intel.com>
+References: <20261025235232.129945-1-denis.benato@linux.dev> <20261025235232.129945-10-denis.benato@linux.dev>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -94,199 +90,240 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The HWMI interface of the HUAWEI MateBook X Pro 2020 (MACHC-WAX9)
-exposes the keyboard backlight through the \GLIV and \SLIV methods of
-the WMAA dispatcher (MFID 2, SFID 6/7), with the level in byte 2 of the
-buffer. The EC stores the level doubled, so the three levels off/low/
-high are represented as 0, 2 and 4.
+On Sun, 25 Oct 2026, Denis Benato wrote:
 
-Register a "platform::kbd_backlight" LED class device with a maximum
-brightness of 2 so that userspace, e.g. UPower, can control it.
+> ROG Ally devices can emulate either a mouse+keyboard (desktop mode)
+> or an gamepad device (xbox360 controller in ROG ally and a custom
+> DInput device on newer models): add support for switching the current
+> controller mode.
+> 
+> Signed-off-by: Luke Jones <luke@ljones.dev>
+> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+> ---
+>  drivers/hid/hid-asus.c | 158 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 157 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> index a3a21a1493aa..fae5f36a9fa6 100644
+> --- a/drivers/hid/hid-asus.c
+> +++ b/drivers/hid/hid-asus.c
+> @@ -198,6 +198,11 @@ struct ally_joystick_resp_curve {
+>  	struct ally_joystick_resp_curve_param entry_4;
+>  } __packed;
+>  
+> +enum ally_gamepad_mode_index {
+> +	ALLY_GAMEPAD_MODE_GAMEPAD = 0x01,
+> +	ALLY_GAMEPAD_MODE_KEYBOARD = 0x02,
+> +};
+> +
+>  struct ally_config {
+>  	/* Must be locked if the data is being changed */
+>  	struct mutex config_mutex;
+> @@ -411,6 +416,15 @@ enum ally_command_codes {
+>  /* XInput rumble magnitudes use the hardware's 0..100 intensity range. */
+>  #define ALLY_FF_MAX_INTENSITY 100
+>  
+> +static const char *const ally_gamepad_mode_text[] = {
+> +	"gamepad", "desktop"
 
-Changes made with the Fn+F3 hotkey are handled by the EC itself and
-are not reported to the OS on this model: no EC query or WMI event is
-generated. LED_BRIGHT_HW_CHANGED is therefore not set.
+So this paired with ally_gamepad_mode, because ally_gamepad_mode_index is 
+off-by-one?
 
-The level encoding has only been verified on this model, so enable the
-feature through a DMI quirk.
+> +};
+> +
+> +static const u8 ally_gamepad_mode[] = {
+> +	ALLY_GAMEPAD_MODE_GAMEPAD,
+> +	ALLY_GAMEPAD_MODE_KEYBOARD
 
-Add a HWMI_BUF_SIZE define for the size of the HWMI result buffer and
-use it for the existing battery threshold and Fn-lock buffers as well.
+Almost duplicate of _index variant?
 
-Tested on: HUAWEI MACHC-WAX9 (MateBook X Pro 2020), BIOS 1.05 and 1.26,
-Ubuntu 24.04 (kernel 6.8.0-147-generic, with this patch backported).
+Couldn't you use [xx] = style initializers with ally_gamepad_mode_text[] 
+instead?
 
-Signed-off-by: Cian Ruane <cian.ruane1@gmail.com>
----
-Changes in v2:
-- Use named defines for the HWMI buffer size and the level byte offsets
-  instead of literals, and use HWMI_BUF_SIZE for the existing battery
-  and Fn-lock buffers too (Ilpo)
+> +};
+> +
+>  static const u8 ALLY_FORCE_FEEDBACK_OFF[] = {
+>  	0x0D, 0x0F, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0xEB
+>  };
+> @@ -930,6 +944,137 @@ static ssize_t xbox_controller_store(struct device *dev,
+>  
+>  static DEVICE_ATTR_RW(xbox_controller);
+>  
+> +/**
+> + * ally_set_gamepad_mode() - Set the gamepad operating mode
+> + * @ally: ally handheld structure
+> + * @hdev: HID device
+> + * @mode: gamepad mode to set
+> + *
+> + * Return: 0 on success, negative errno on failure
+> + */
+> +static int ally_set_gamepad_mode(struct ally_handheld *ally, struct hid_device *hdev, u8 mode)
+> +{
+> +	u8 payload[] = { mode };
+> +	int ret;
+> +
+> +	if (mode < ALLY_GAMEPAD_MODE_GAMEPAD ||
+> +	    mode > ALLY_GAMEPAD_MODE_KEYBOARD) {
+> +		hid_err(hdev, "Invalid gamepad mode: %u\n", mode);
+> +		return -EINVAL;
+> +	}
+> +
+> +	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_GAMEPAD_MODE, payload, sizeof(payload));
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
+> +	if (ret < 0) {
+> +		hid_err(hdev, "Failed to set gamepad mode: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t gamepad_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	struct hid_device *hdev = to_hid_device(dev);
+> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+> +	struct ally_handheld *ally = drvdata->rog_ally;
+> +	struct ally_config *cfg;
+> +	u8 mode_byte;
+> +	int i;
+> +
+> +	if (!ally)
+> +		return -ENODEV;
+> +
+> +	cfg = ally_get_config(ally);
+> +	if (!cfg)
+> +		return -ENODEV;
+> +
+> +	guard(mutex)(&cfg->config_mutex);
+> +
+> +	mode_byte = cfg->gamepad_mode;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ally_gamepad_mode); i++) {
+> +		if (ally_gamepad_mode[i] == mode_byte)
+> +			return sysfs_emit(buf, "%s\n", ally_gamepad_mode_text[i]);
+> +	}
+> +
+> +	/*
+> +	 * The recorded mode only comes from the table above: an unknown
+> +	 * byte means memory corruption, not a userspace-visible value.
+> +	 */
+> +	return -EIO;
+> +}
+> +
+> +static ssize_t gamepad_mode_store(struct device *dev, struct device_attribute *attr,
+> +				  const char *buf, size_t count)
+> +{
+> +	struct hid_device *hdev = to_hid_device(dev);
+> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+> +	struct ally_handheld *ally = drvdata->rog_ally;
+> +	struct ally_config *cfg;
+> +	u8 mode_byte;
+> +	int mode;
+> +	int ret;
+> +
+> +	if (!ally)
+> +		return -ENODEV;
+> +
+> +	cfg = ally_get_config(ally);
+> +	if (!cfg)
+> +		return -ENODEV;
+> +
+> +	mode = sysfs_match_string(ally_gamepad_mode_text, buf);
+> +	if (mode < 0) {
+> +		hid_err(hdev, "Unknown gamepad mode\n");
+> +		return mode;
+> +	}
+> +
+> +	/* Convert the index of the text mode array to the byte
+> +	 * that will be accepted by the ally MCU.
+> +	 */
+> +	mode_byte = ally_gamepad_mode[mode];
+> +
+> +	guard(mutex)(&cfg->config_mutex);
+> +
+> +	ret = ally_set_gamepad_mode(ally, hdev, mode_byte);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	cfg->gamepad_mode = mode_byte;
+> +
+> +	hid_dbg(hdev, "Set gamepad mode to %s\n", ally_gamepad_mode_text[mode]);
+> +
+> +	sysfs_notify(&dev->kobj, NULL, "gamepad_mode");
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t gamepad_mode_index_show(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       char *buf)
+> +{
+> +	int i;
+> +	ssize_t len = 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ally_gamepad_mode_text); i++) {
+> +		if (!ally_gamepad_mode_text[i] || ally_gamepad_mode_text[i][0] == '\0')
 
-v1: https://lore.kernel.org/r/20261025233910.9907-1-cian.ruane1@gmail.com
+[i][0] == '\0' is not true for anything??
 
- drivers/platform/x86/huawei-wmi.c | 75 +++++++++++++++++++++++++++++--
- 1 file changed, 72 insertions(+), 3 deletions(-)
+> +			continue;
+> +		len += sysfs_emit_at(buf, len, "%s ", ally_gamepad_mode_text[i]);
+> +	}
+> +
+> +	/* Replace the last space with a newline */
+> +	if (len > 0)
+> +		buf[len - 1] = '\n';
+> +
+> +	return len;
+> +}
+> +
+> +static DEVICE_ATTR_RW(gamepad_mode);
+> +static DEVICE_ATTR_RO(gamepad_mode_index);
+> +
+>  /**
+>   * ally_set_vibration_intensity() - Set vibration intensity values
+>   * @ally: ally handheld structure
+> @@ -2217,6 +2362,8 @@ static struct device_attribute dev_attr_right_response_curve_index =
+>  
+>  static struct attribute *ally_config_attrs[] = {
+>  	&dev_attr_xbox_controller.attr,
+> +	&dev_attr_gamepad_mode.attr,
+> +	&dev_attr_gamepad_mode_index.attr,
+>  	NULL
+>  };
+>  
+> @@ -2356,7 +2503,7 @@ static struct ally_config *ally_config_create(struct hid_device *hdev, struct al
+>  	}
+>  
+>  	if (!cfg->initialized) {
+> -		cfg->gamepad_mode = 0x01;
+> +		cfg->gamepad_mode = ALLY_GAMEPAD_MODE_GAMEPAD;
+>  		cfg->xbox_controller_enabled = true;
+>  		cfg->left_deadzone = 10;
+>  		cfg->left_outer_threshold = 90;
+> @@ -2926,6 +3073,15 @@ static int hid_asus_ally_init(struct hid_device *hdev, struct ally_handheld *all
+>  				 ret);
+>  	}
+>  
+> +	/*
+> +	 * An MCU reset switches the gamepad mode back to its default:
+> +	 * send the recorded one first, so that every other setting
+> +	 * restored below is applied on top of the expected mode.
+> +	 */
+> +	ret = ally_set_gamepad_mode(ally, hdev, cfg->gamepad_mode);
+> +	if (ret < 0)
+> +		hid_warn(hdev, "Failed to restore gamepad mode: %d\n", ret);
+> +
+>  	/*
+>  	 * The MCU does not keep the vibration intensity across a reset:
+>  	 * send the recorded values again, whichever interface probed.
+> 
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 96ee9a97c..59b3f7d9d 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -31,6 +31,9 @@
- #define WMI0_EXPENSIVE_GUID "39142400-C6A3-40fa-BADB-8A2652834100"
- #define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
- 
-+/* Size of the buffer returned by HWMI, byte 0 is the return status */
-+#define HWMI_BUF_SIZE			0x100
-+
- /* HWMI commands */
- 
- enum {
-@@ -39,8 +42,17 @@ enum {
- 	FN_LOCK_GET			= 0x00000604, /* \GFRS */
- 	FN_LOCK_SET			= 0x00000704, /* \SFRS */
- 	MICMUTE_LED_SET			= 0x00000b04, /* \SMLS */
-+	KBD_BACKLIGHT_GET		= 0x00000602, /* \GLIV */
-+	KBD_BACKLIGHT_SET		= 0x00000702, /* \SLIV */
- };
- 
-+/* The EC stores the keyboard backlight level doubled: off/low/high = 0/2/4. */
-+#define KBD_BACKLIGHT_MAX		2
-+#define KBD_BACKLIGHT_STEP		2
-+/* Level byte in the \GLIV result (KBLL) and in the \SLIV argument (SOCP) */
-+#define KBD_BACKLIGHT_GET_LEVEL_OFFSET	2
-+#define KBD_BACKLIGHT_SET_LEVEL_OFFSET	2
-+
- union hwmi_arg {
- 	u64 cmd;
- 	u8 args[8];
-@@ -50,6 +62,7 @@ struct quirk_entry {
- 	bool battery_reset;
- 	bool ec_micmute;
- 	bool report_brightness;
-+	bool kbd_backlight;
- };
- 
- static struct quirk_entry *quirks;
-@@ -65,6 +78,7 @@ struct huawei_wmi {
- 
- 	struct huawei_wmi_debug debug;
- 	struct led_classdev cdev;
-+	struct led_classdev kbd_cdev;
- 	struct device *dev;
- 
- 	struct mutex wmi_lock;
-@@ -126,6 +140,10 @@ static struct quirk_entry quirk_matebook_x = {
- 	.report_brightness = true,
- };
- 
-+static struct quirk_entry quirk_kbd_backlight = {
-+	.kbd_backlight = true,
-+};
-+
- static const struct dmi_system_id huawei_quirks[] = {
- 	{
- 		.callback = dmi_matched,
-@@ -145,6 +163,15 @@ static const struct dmi_system_id huawei_quirks[] = {
- 		},
- 		.driver_data = &quirk_matebook_x
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Huawei MACHC-WAX9",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MACHC-WAX9"),
-+		},
-+		.driver_data = &quirk_kbd_backlight
-+	},
- 	{  }
- };
- 
-@@ -322,11 +349,52 @@ static void huawei_wmi_leds_setup(struct device *dev)
- 	devm_led_classdev_register(dev, &huawei->cdev);
- }
- 
-+/* Keyboard backlight */
-+
-+static enum led_brightness huawei_wmi_kbd_backlight_get(struct led_classdev *led_cdev)
-+{
-+	u8 ret[HWMI_BUF_SIZE];
-+
-+	if (huawei_wmi_cmd(KBD_BACKLIGHT_GET, ret, sizeof(ret)))
-+		return 0;
-+
-+	return ret[KBD_BACKLIGHT_GET_LEVEL_OFFSET] / KBD_BACKLIGHT_STEP;
-+}
-+
-+static int huawei_wmi_kbd_backlight_set(struct led_classdev *led_cdev,
-+					enum led_brightness brightness)
-+{
-+	union hwmi_arg arg;
-+
-+	arg.cmd = KBD_BACKLIGHT_SET;
-+	arg.args[KBD_BACKLIGHT_SET_LEVEL_OFFSET] = brightness * KBD_BACKLIGHT_STEP;
-+
-+	return huawei_wmi_cmd(arg.cmd, NULL, 0);
-+}
-+
-+static void huawei_wmi_kbd_backlight_setup(struct device *dev)
-+{
-+	struct huawei_wmi *huawei = dev_get_drvdata(dev);
-+
-+	if (!quirks || !quirks->kbd_backlight)
-+		return;
-+
-+	if (huawei_wmi_cmd(KBD_BACKLIGHT_GET, NULL, 0))
-+		return;
-+
-+	huawei->kbd_cdev.name = "platform::kbd_backlight";
-+	huawei->kbd_cdev.max_brightness = KBD_BACKLIGHT_MAX;
-+	huawei->kbd_cdev.brightness_get = &huawei_wmi_kbd_backlight_get;
-+	huawei->kbd_cdev.brightness_set_blocking = &huawei_wmi_kbd_backlight_set;
-+
-+	devm_led_classdev_register(dev, &huawei->kbd_cdev);
-+}
-+
- /* Battery protection */
- 
- static int huawei_wmi_battery_get(int *start, int *end)
- {
--	u8 ret[0x100];
-+	u8 ret[HWMI_BUF_SIZE];
- 	int err, i;
- 
- 	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, sizeof(ret));
-@@ -619,7 +687,7 @@ static int huawei_acpi_fn_lock_set(int on)
- 
- static int huawei_wmi_fn_lock_get(int *on)
- {
--	u8 ret[0x100] = { 0 };
-+	u8 ret[HWMI_BUF_SIZE] = { 0 };
- 	int err, i;
- 
- 	/* Newer models: use direct ACPI \GFRS method */
-@@ -627,7 +695,7 @@ static int huawei_wmi_fn_lock_get(int *on)
- 		return huawei_acpi_fn_lock_get(on);
- 
- 	/* WMI fallback */
--	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
-+	err = huawei_wmi_cmd(FN_LOCK_GET, ret, sizeof(ret));
- 	if (err)
- 		return err;
- 
-@@ -915,6 +983,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 		mutex_init(&huawei_wmi->wmi_lock);
- 
- 		huawei_wmi_leds_setup(&pdev->dev);
-+		huawei_wmi_kbd_backlight_setup(&pdev->dev);
- 		huawei_wmi_fn_lock_setup(&pdev->dev);
- 		huawei_wmi_battery_setup(&pdev->dev);
- 		huawei_wmi_debugfs_setup(&pdev->dev);
-
-base-commit: 9d3475065167197742b0882aff21cf8e78393277
 -- 
-2.43.0
+ i.
 
