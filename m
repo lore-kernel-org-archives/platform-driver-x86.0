@@ -1,76 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.59
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793040042;
-	b=zuR3dfoIqUYkHe26GfaUgeWX+k219w8jyUeke2xKHdlqco9f8ss1ZTZy4iWbo5VhHCRb
-	 Bf0q6hD5I4Lc9tF1r7NNfeAv1TH9pv/Az0k+vSXycbvRiyz+5/2MqzxPWlhpM+iWJbazg
-	 Qem8ea5xhP8LxzIKV+ZE4Bxz1AsH8ksUfLRPb8wYr/QA1e5aefP9TpYyDbVtYM19z6M2X
-	 SLsQSSVEzK4JsC9lifOQ7yQp+l66qjrVhm2uOfK04a8704bUXlkpdEGTEMJ6EXT4VIcJQ
-	 mWTjdwacRer0au13B+1HZ/V8qVGHTNiXd1tc4TKdOFzy6hI2jLwawD1Tzv9JUqzKuBQ==
+	t=1793043505;
+	b=lrnJ4jPBlD02sAfaOFed0tibGoZGiEWocC6kaRFqzAYIG7kUEG3kYFkRbUjzRS7YfZcd
+	 hlN6gLfi6PDG8rN1oLZzgd84gRYu+YyvJp9VlmKrm3IsptFYnFiZWWYQcQWRw7qRsw1Dk
+	 X7JBM6lttP1cjPjNrJXNd9aoAvwGJsdfCr1d137khyJoc/UOI35jnqy7rgkleSDSeaC74
+	 h5mrqwyGGICgj1O4jzaoWkr2W8+ic8YagsprqcYpueDI9v1va688GkGtRCNVVUp4vBUWC
+	 wZDA2ODq4KLQWpil7GqS95mZU+ed8ySWbhWvm7mdmwkWstns84MkwjVWemt/6PE7DmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793040042;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=VDgWlMJQtA0qkSiXReN0fJF7Xcv1xmNznGwS0L6pzwQ=;
-	b=KSh3yVf34X+6TPXTSkb4DRCuGT1Uh2F0dn0GloXX3sVvqoagXkRQUVnDsq1tBNorOj2M
-	 L2BOVDfmXaCmFmATQt/YznxqArC5MF32qlhZqj9gkEBxqB9lfotOdy3KOm6WDrdyr7mOc
-	 IkxkU9ynPMzT/TsWSCkKFhdXiZop1Tw2JJOyEBrbLdPHf69zbjAj3rxwLzjN46HfEtMGt
-	 O7I0E4WLImejlo+jpdZ7PtK4N+8t/YVV8PzNycO1NotLB6I2qdT6Kaxud2SoGjGAoWPX5
-	 5OawLz1XBRY21fb1uNwDppr1AWTpNDoMFB5mapqarYXwi3j4SKWGHjByZnieoFOfGbw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793043505;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=dSxMcvCi50FStr9NIPYVVCpZkXKm+Vd8EruufX/uBTA=;
+	b=ns/SNxDDxhsjGDr8N4gxRlR1OLGemHMbezj0PPp6l+3UaQYlqhK9nFNCA9iuP3J4UaPt
+	 lvvHUP5PVZU9G4a2mEipewUM90Re65y0w1xVbsgThLbdxwOZONCOORy+8pk/tJj0tgCrs
+	 W22JqpVEe7xjddAJBXn1eks/H0Y5EcYPORuYi8eeolab1HVBRAvEgUJFR/mJXY9FCtC+P
+	 oCn0f2Y1k4R919vdM7C2espGUeZEHslRxNdxSFQadxQH0hBxpVBO80zQQK+oSiPFEssAd
+	 MskNlVvQMqP/tVKuK/8L2LmycGU3y0K+X8+OQe/9y7VbxZMTkim4GleOteR3vf1M6Ww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=EPnPLQsu;
-	arc=none smtp.remote-ip=198.175.65.10
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vofSMuHZ;
+	arc=none smtp.remote-ip=91.218.175.59
+Received: from mta0.migadu.com (out-59.mta0.migadu.com [91.218.175.59])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021E9606A31A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 18:40:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 021E9606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCE0606A31E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 19:38:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5CCE0606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=EPnPLQsu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793040042; x=1824576042;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=om9J3y2TB2i+5V13CGaSt2Owb4FzKUd7N5XjeGX0zbU=;
-  b=EPnPLQsuYMoRVurUgzZdpx2pIJlHiozYWHi3qhRCAr3Gil2gQEBXCT5w
-   pO6g+CEGAyQi670T6/5CssLOS6ddymQE5OQH6q6x42WwXZHQvLo4ub9G8
-   HCBlYcNUZdAejDphjkQozPWg78xTQlMlEriCI5TJsGyv4x15aR9NqnPrl
-   8D/BRpdZb0MIJ3I4tHyX+WGXloqNEcpRVW6smHq1rQXAPFf9/Vvi/jJ5q
-   jzUEIFZ54t+7d5H0iVibW+hYsfooHJzbK/ttsSwCheBqV+vR/Gt/KnhtB
-   rWYW5qmpgmfJf/Lqb5CjrbqQH2BbBCU/0BFg8XJFn7aLaGJLP7yZ6BsNf
-   w==;
-X-CSE-ConnectionGUID: ih4f2eE0QMaWuDa4M11jnA==
-X-CSE-MsgGUID: vJ1w4WBBSxifefAGmyzR2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1611816"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1611816"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:40:41 -0700
-X-CSE-ConnectionGUID: MoZD0toJSMeIz9Xed617Wg==
-X-CSE-MsgGUID: 85gt4+2KTDC2D2JeLzIWKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4247700"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:40:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Oct 2026 20:40:35 +0200 (EET)
-To: Chris Simpson <chris@nilk.net>
-cc: Konrad Dybcio <quic_kdybcio@quicinc.com>, Hans de Goede <hansg@kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, janussss@163.com, 
-    luzmaximilian@gmail.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] surface: aggregator: propagate -EPROBE_DEFER from
- ssam_irq_setup()
-In-Reply-To: <17d6081f-50e2-42b1-831e-34ad02b7240f@nilk.net>
-Message-ID: <a8f480c1-a50b-dcd6-dfb4-70aff42a7840@linux.intel.com>
-References: <7d51f80e-9552-957f-f32c-1d608042b647@linux.intel.com> <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net> <2faa9857-9d55-a607-bd46-588598b64ca4@linux.intel.com> <17d6081f-50e2-42b1-831e-34ad02b7240f@nilk.net>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vofSMuHZ
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=526XwKCaV8g60Tmvkvy/WpLSza7NhvA7cZDq6upGYME=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793043502; v=1; x=1793648302;
+ b=vofSMuHZLbjx9qTH9SNM1w2Zab5XIucse9pgKZemcKrgdkKtpBKUyJrgG6ieWP3uTxRkqN0b
+ NGQpNVcTfIu3emPnDje2GiN8sAuTUVYJWJigmEVgDuxscBQOYipPE2POBcth1JHdvawHAlnY+ly
+ WHp93Rd19ELTrYSoPJyl3GsQ=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id f858b6db7119bcd9;
+	Mon, 26 Oct 2026 19:38:22 +0000
+X-Mizu-Trace-ID: f858b6db7119bcd9
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <ca5e15e8-5ef4-431e-91bb-198a00d6942f@linux.dev>
+Date: Mon, 26 Oct 2026 20:38:20 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,51 +58,83 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 12/18] HID: asus: size feature reports from the HID
+ report descriptor
+To: =?UTF-8?Q?Rebecca_Mara_M=C3=BCller?= <rebecca.mara@posteo.de>
+Cc: Paolo Pisati <p.pisati@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ kernel@lists.opengamingcollective.org,
+ Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ "Luke D . Jones" <luke@ljones.dev>,
+ Mateusz Schwartz <matthew.schwartz@linux.dev>,
+ Denis Benato <benato.denis96@gmail.com>, Jonathan LoBue
+ <jlobue10@gmail.com>, Khamunetri Clark <khamunetriclark@gmail.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ Joshua Leivenzon <hacker1024@users.sourceforge.net>,
+ Nathan Chancellor <nathan@kernel.org>, Ivan Levchenko <me@livan.pro>,
+ Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20261025235232.129945-13-denis.benato@linux.dev>
+ <20261026130606.212382-1-rebecca.mara@posteo.de>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20261026130606.212382-1-rebecca.mara@posteo.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 26 Oct 2026, Chris Simpson wrote:
 
-> Hi Ilpo,
-> 
-> > Are there some legimate cases where error other than -EDEFER_PROBE should
-> > end up into this else like it previously did?
-> 
-> Two corrections to my earlier mail first. The Surface Pro 9 here is
-> Alder Lake (i7-1255U), not Tiger Lake; its GPIO controller, INTC1055,
-> is handled by pinctrl-tigerlake, which is where my mix-up came from.
-> And "follows Ilpo's comment" was my misreading of your review: the
-> gpiod_get_optional() idea was mine, sorry for attributing it to you
-> (v2's "Suggested by Ilpo" comes from that too).
+On 10/26/26 14:06, Rebecca Mara Müller wrote:
+> Hi Denis,
+>
+> in the cover letter you asked Paolo and me to try asus_report_len() on
+> the Zenbook Duo. It works there, and it covers what Paolo's v4 5/7
+> ("Do not send feature reports larger than declared") was written for.
 
-Np. The end result seems better even if there was misread which triggered 
-that. At least sometimes misreading ends up being useful. :-)
+Hi Rebecca,
 
---
- i.
+Yeah I felt like putting an end about that whole class of bugs
+while also unifying some core code across devices was the right
+move.
 
-> On the question, I couldn't find such a case:
-> 
-> - DT: microsoft,surface-sam.yaml requires "interrupts" and has
->   additionalProperties: false, and the in-tree DTS files
->   (sc8280xp-microsoft-arcata, x1e80100-microsoft-romulus,
->   x1-microsoft-denali, x1p42100-microsoft-sp12in) all use
->   interrupts-extended. So on DT gpiod_get() returns -ENOENT, which
->   gpiod_get_optional() turns into NULL, and v2 still takes the
->   fwnode_irq_get() path.
-> 
-> - ACPI: fwnode_irq_get() ends up in acpi_irq_get(), which only looks at
->   Interrupt()/IRQ() resources, not GpioInt(). On the Pro 9 (UEFI
->   22.107.143) the MSHW0084 _CRS has UartSerialBusV2 plus GpioInt and
->   GpioIo on pin 174 of INTC1055, and no Interrupt() or IRQ(), and the
->   Surface Laptop 4 tables in linux-surface#2219 have the same layout.
->   So on these two machines the fallback can only turn -EPROBE_DEFER, or
->   a real GPIO error, into -EINVAL; for -EPROBE_DEFER that is the probe
->   failure v2 fixes.
-> 
-> What I can't tell is whether Konrad had another case in mind, or whether
-> some other Surface model has a plain Interrupt() there; I've only looked
-> at these two. I'm happy to test any variant on the Pro 9. As before, I
-> did the analysis with Claude Code.
-> 
-> Chris Simpson
-> 
+I apologize for making things a bit more complicated (and perhaps
+adding delay) but I feel like this is the right thing to do for everyone.
+
+> Setup: hid.git for-next (hid-asus.c f6aa1be09ad5, the base of your
+> 01/18), your patches 01-12, then Paolo's v4 1-4 and 6-7, leaving out
+> 5/7. I stopped at 12 because 16/17 change asus-wmi and asus-armoury,
+> which I cannot swap on this kernel. Paolo's 4/7 needed a trivial
+> manual fixup (include context and the enum hunk); 6/7 and 7/7 applied
+> cleanly. Built out-of-tree against a 7.2.6-based distribution kernel,
+> UX8407AA, with my userspace workaround stopped.
+
+Those asus-wmi changes are for the old non-thunderbolt XG mobile:
+you don't have that hardware connector anyway and no more laptops
+will be made with it so not a problem, I have this hardware and can
+confirm it kept working (albeit sashiko-bot spotted an issue that I couldn't
+with just my nvidia).
+
+> - Docked (USB, 0b05:1cd7), captured with usbmon while reloading the
+>   module and pressing the backlight key: every feature report goes to
+>   interface 4 as report 0x5a with wLength 16, zero-padded. That is the
+>   handshake SET and its GET read-back, the 0x05 function query and its
+>   GET, the initial brightness, and two brightness changes. All
+>   transfers completed with status 0. The backlight key and Fn+F
+>   (platform profile) work.
+> - Bluetooth (0b05:1cd8): the backlight key and Fn+F work, no errors
+>   in the log. This is where, as described in 5/7, the 64 byte writes
+>   used to fail with -EIO.
+> - After docking again: backlight and Fn+F still work, and the input
+>   devices keep their hid-generic names.
+>
+> So from my side 5/7 can be dropped in favour of this patch, and Paolo
+> can rebase the remaining Zenbook Duo patches on top of it.
+>
+> Tested-by: Rebecca Mara Müller <rebecca.mara@posteo.de> # UX8407AA
+
+Splendid! Thank you very much! With this tested, a ROG ally, an
+ASUS touchpad and a 2022 TUF tested this should improve the
+driver for at least 90% of supported devices!
+
+> Thanks,
+> Rebecca
