@@ -1,80 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.156.171.147
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793031454;
-	b=UYXLkFdUAS8X21/KS3FxDul2+9fzMhNhzetWAOLI5VQ3mJz+IimHOgkM6l6PHaLGGk3a
-	 WxAScXnyatK3aVMfyR5KByfKCtkjtPz3iMxp+hq2HLrpTI3b5b6ESXg4xZIZjhBFRNbT+
-	 evCc8KvOKBzci047gW9zo+yWjAtYkxBBgHc0rHyh67JZw8kTcBvxBrU3bOfyeweimdRHC
-	 qSj0n7Dbl75HhZSBW1mREcQ0jk3iHuNn7cEB4gm8W1KoZQMv7v19iYG/1TPm8NTABwcyD
-	 lVRQ1XNJ5hI9dzmIAhKRL+unjKoAAnNaoKXntfsn9TsmXqj0gGaPD2Rn56ml2a51igw==
+	t=1793033077;
+	b=wBzObl3R6EmTnDmK/4uZgIHhoB5BMZVHlsvCAijaReHlJNTcOuWzoZkjDLIGGo5ORpuT
+	 AUyeIn6iPPEiARbzPabCTtbh+ApJNKtNhRSWtjUfQNGt23zarXlIM7E+WkD809nPDjgjc
+	 B8w02BXX2shcq0YvprLgfnTsWsI9NLi9MfC4At+QeVKw0RN7OCjwmHiC0jO0lWaUtSxA8
+	 HHM+z964V7SvenCW4UyN56SFnaTKw19rn4kmnFNP2BIHJylyCADWRfsWipDECb2sCDrth
+	 4tVpwxzrGwC34OnzRdmZOUN1ZL1Tz/yzx+9UFTAOgIysPCreGkILAsBens7j65X4doQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793031454;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=tXKmM/Jkb0HPQfP8POIAbaB5M2u+MdmFudf8avH3sAo=;
-	b=1q0oHbDQlsgT+MZq957Sf2VUh35t32E53bW06vuzYFoR8YldI65J9CIN1rk2rZp+cd5d
-	 9e6oWaGlREIoPVy0FBYJIbdX+iV3WNXknQvmUt/xfMaYbVG2EehfI5G4F1IpoUGrdxhbM
-	 5sfVxvqn+ioaQe/7bDp+M3rmXI9bpNYJZES8caTEknXsxXuVJ+70qzwtXXR97daN4vz5E
-	 OoaHZSrozTg9oXHo84Lrqpl0pSTfNHPqi/XUw1Vw1UchQNWHPECR+NvT9lLRa4P6y7oQs
-	 P+ZOiahDYYEvAKat7lpTzWI+rlBK3DlITGM/dfKxo9CxlC8lpfBl5fHR3LJQiDfy6EA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793033077;
+	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Received-SPF:
+	 Received:X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:
+	 X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:X-PPP-Message-ID:X-PPP-Vhost:X-Virus-Scanned:
+	 X-Virus-Status;
+	bh=AFQJdAiGgN3fW1Ct+HsLIsRUW5WmUGGeAmWhxML3ipc=;
+	b=Ocyv6wDBV8F1ZZ9su6McQbQm6xm8aHyMzp4zfbuzRlmYlXKT+6dyeZ1rH8U66l5yz4qJ
+	 wLOui3IwzvTxADT2zUiuzmyio9vbfwWx9ruNm3oIFBNAa9qxIn+isGKJAnksBzp/r3OOV
+	 c/HVfIoYK7mwti9Hxjfw8VCCSBrQUFybahYDJg0dShhgVXEewYYIncahOmNJ+sblBY3cV
+	 n/FUbNGHas2QL0OYoCrvpw09WUnjinB2B1YKVQ5KJUfXf2oOrfhsfLptE7KSNkKYIUItS
+	 ydvYjUFBASEM9QrhwDmlZZ6cPfwK8pgbfe10a2j9liO8+tig3tj+CemOOIjt1gqdULQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="emSNP/Vm";
-	arc=none smtp.remote-ip=198.175.65.19
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=antheas.dev;
+	spf=pass smtp.mailfrom=antheas.dev;
+	dkim=pass header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=mLiH0jea;
+	arc=none smtp.remote-ip=178.156.171.147
+Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B875606A31A;
-	Mon, 26 Oct 2026 16:17:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5B875606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA7D606A31D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 16:44:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDA7D606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=emSNP/Vm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793031454; x=1824567454;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iVmEysx5vD5cbM5B02hobVDd5tR8fMGl/GugHVgwmIk=;
-  b=emSNP/VmrypulJTBM1/KIuAhkpPvMIIZs1vKBuLnkY+nAD3KjyqGOOPJ
-   wCjfQKRg4RfdKM1EF/6TpZwMDZtSuFNc6wItAKyfeFCcpXUWY0/sCRofa
-   F3P/tx11AG7l3ZXYW+7s4Uc8eEfeV6ByN00JTjgKD+kc0auU3TBdJFwMI
-   ezGdcrUktEvzAl1yBMIQ11QT8aGV7exNg04Gh598RpnmDf1cpUAF9WeeP
-   cOD8E7AbGic/ZnV4hgEzVwI3On2iTtZJKp4VzAl8i6wmlSd22NM1eA3Nk
-   SkEpICw6JkPORF1RiPxi7v6hUnF1s8bapWHplsb1T3Ous2swB6Xdcw2Wa
-   w==;
-X-CSE-ConnectionGUID: KZ1OnILGQnuWqXv3+0zl1g==
-X-CSE-MsgGUID: 9MrbL8x8Swmo3O9rd/AYZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1735195"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1735195"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 09:17:33 -0700
-X-CSE-ConnectionGUID: A/fS4Ec3RT+ohboIZtg1FA==
-X-CSE-MsgGUID: xkIqymftSHG7C/v01GIcMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="6156155"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 09:17:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Oct 2026 18:17:26 +0200 (EET)
-To: Shuwen Bao <baoshuwen2013@outlook.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Krishna Chomal <krishna.chomal108@gmail.com>, 
-    Emre Cecanpunar <emreleno@gmail.com>, 
-    Suryansh Singh <technosfan14@gmail.com>, 
-    Radhey Kalra <radheykalra901@gmail.com>, 
-    =?UTF-8?Q?K=C3=BCr=C5=9Fat_Abayl=C4=B1?= <hello@kursatabayli.dev>
-Subject: Re: [PATCH v3] platform/x86: hp-wmi: add support for OMEN 16-am2xxx
- boards
-In-Reply-To: <SI2PR04MB5895909A0EDE359BDA4F78A3A2632@SI2PR04MB5895.apcprd04.prod.outlook.com>
-Message-ID: <f7612110-b309-2c81-690f-0f43e0520ab8@linux.intel.com>
-References: <SI2PR04MB589508E55CCCD8E26E53E4DBA2942@SI2PR04MB5895.apcprd04.prod.outlook.com> <179207451329.13793.4180821086242621563.b4-ty@b4> <SI2PR04MB5895909A0EDE359BDA4F78A3A2632@SI2PR04MB5895.apcprd04.prod.outlook.com>
+	dkim=pass (2048-bit key, unprotected) header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=mLiH0jea
+Received: from relay13 (localhost [127.0.0.1])
+	by relay13.grserver.gr (Proxmox) with ESMTP id E68505E55C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 18:44:28 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay13.grserver.gr (Proxmox) with ESMTPS id 2177F5E68B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 18:44:28 +0200 (EET)
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id BC8311FD380
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 18:44:26 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1793033067;
+	bh=AFQJdAiGgN3fW1Ct+HsLIsRUW5WmUGGeAmWhxML3ipc=;
+	h=Received:From:Subject:To;
+	b=mLiH0jeaXXOPdcn28YqvU8/lgERePd1JNxQECJTfkU98ZiFNmsoZwoA6cbDuw/oqa
+	 eB4ZS3DcIvaVXOQPekRxtmOxW9/I6RmTEuc6CUFblelhwxJecmQddyCaliEpDJZsqT
+	 FR6r+Aze+OTdCGnEEDF5Syc3ybfwPQXYOyECeWtRe95+o8215+LWBCABjq1GWpzHJE
+	 no29XJrI5kzdxu0gzp/HdVNEqSQOFdcDut2zbRO8cW8/mSKJ6LtAG2943+biWcqvje
+	 Nfl5m3kxWxazKnZ0GUuaGY2Z6h7M2L4MOVFTM7sCaM/LgUUzbfBfzIb3AEg2vPmFAy
+	 4Atb+kYeTfHSg==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.214.169) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f169.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-pl1-f169.google.com with SMTP id
+ d9443c01a7336-2e985106c0cso27594665ad.2
+        for <platform-driver-x86@vger.kernel.org>;
+ Mon, 26 Oct 2026 09:44:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzV3UbT+izfUttKWHI28iEwEXPHref+6b7ZVrwbQDmNbqF+M93FpYRviRMN7yRXTt6Wxqgx8LN8NfWidL6wPgXRauBM@vger.kernel.org
+X-Gm-Message-State: AFq9FYL1gQfhnVqDeq9gATrV9j8zxJOirqL5txrg8PzCGZYcqiK/AIyl
+	EP2QWjNaEUVXTFZhAJ3QyOkX1NMs2QR0HMhR77Nan2YLYCXqozQsXNXK0wcbUiECqT7qIBDCUNr
+	ug3455YDsP21AlDznvVL8ohcNBQ0Jsn0=
+X-Received: by 2002:a17:903:3250:b0:2dd:b795:9cb6 with SMTP id
+ d9443c01a7336-2ea9c63d703mr60076695ad.21.1793033065583; Mon, 26 Oct 2026
+ 09:44:25 -0700 (PDT)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -84,101 +82,84 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1773986297-1793031446=:1162"
+References: <20250511204427.327558-1-lkml@antheas.dev>
+ <20260803221614.59324-1-derekjohn.clark@gmail.com>
+ <20260803221614.59324-2-derekjohn.clark@gmail.com>
+ <f8b2c85a-2800-c9a3-4e56-7af4c53823e5@linux.intel.com>
+ <58a9c644-98c2-47ee-b083-0d5b19fa5053@roeck-us.net>
+ <CAGwozwGdwhE6Sm6oa2uxx_sHfFNQ6fHYnAhYHkEPQcp_Yb=Z6w@mail.gmail.com>
+ <CAGwozwFUTagam+dr0SXyziAMz1MJKcYMYUgrogFcmvEaE1X0UQ@mail.gmail.com>
+ <CAFqHKTmQ2R-UAP9rAZzoxe=p-T1_JKPU1NaQ2ijrVg0RXZEHUA@mail.gmail.com>
+ <CAGwozwGUAEb4Q9pfd_+aXMw2P3qY376F+usPHdUFO5Q6mV_ATQ@mail.gmail.com>
+ <baf91d42-13dd-41eb-88d7-d6311ee0d9f9@amd.com>
+In-Reply-To: <baf91d42-13dd-41eb-88d7-d6311ee0d9f9@amd.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 26 Oct 2026 17:44:13 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwF00=zMvJKrjMG7mO18zRqSVF_Pz4DDf+og0giC5oSRcA@mail.gmail.com>
+X-Gm-Features: AclHuK9dGUF3PYf3eMe7nI2U44d9425QaJilwQrMRy5o1E9SAE9mLWiMo4Hv_n8
+Message-ID: 
+ <CAGwozwF00=zMvJKrjMG7mO18zRqSVF_Pz4DDf+og0giC5oSRcA@mail.gmail.com>
+Subject: Re: [PATCH 1/6] platform/x86: msi-wmi-platform: Move guard out of
+ switch in platform_write()
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Derek John Clark <derekjohn.clark@gmail.com>,
+ Guenter Roeck <linux@roeck-us.net>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	W_Armin@gmx.de, corbet@lwn.net, jdelvare@suse.com, kuurtb@gmail.com,
+	linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <179303306705.3339553.16625102007647996461@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1773986297-1793031446=:1162
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Sat, 24 Oct 2026, Shuwen Bao wrote:
-
-> =E5=9C=A8 2026=E5=B9=B410=E6=9C=8815=E6=97=A5=E6=98=9F=E6=9C=9F=E5=9B=9B =
-=E4=B8=AD=E5=9B=BD=E6=A0=87=E5=87=86=E6=97=B6=E9=97=B4 22:28:33=EF=BC=8CIlp=
-o J=C3=A4rvinen =E5=86=99=E9=81=93=EF=BC=9A
-> > On Wed, 07 Oct 2026 11:08:36 +0800, Shuwen Bao wrote:
-> > > The HP HyperX OMEN 16-am2xxx (DMI board 8F1C, 26C1 platform cycle,
-> > > Arrow Lake-HXR) is listed in the OMEN Command Center device
-> > > capability table with DisplayName "HyperX OMEN 16" and the
-> > > "PerformanceControl" feature, but is missing from the kernel's
-> > > hp_wmi_feature_boards[] list.
-> > >=20
-> > > Add 8F1C to the hp_wmi_feature_boards[] list, using
-> > > omen_v1_legacy_board_params as driver_data.
-> > >=20
-> > > [...]
-> >=20
-> > Thank you for your contribution, it has been applied to my local
-> > review-ilpo-next branch. Note it will show up in the public
-> > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> > local branch there, which might take a while.
-> >=20
-> > FYI [if applicable to your patch], as per Linus' policy change, also
-> > fixes are mostly routed through for-next unless the fix is for a
-> > commit introduced in the most recent cycle or is clearly a regression
-> > fix.
-> >=20
-> > The list of commits applied:
-> > [1/1] platform/x86: hp-wmi: add support for OMEN 16-am2xxx boards
-> >       commit: 2cd10a35f3f09c49698956d32c6374fbdc03245d
-> >=20
-> > --
-> >  i.
->=20
-> Hi Krishna, Ilpo,
->=20
-> Thank you for applying the patch. However, after further extended testing=
-,=20
-> I noticed a regression on this hardware.=20
->=20
-> Specifically, the board automatically reverts from performance mode back=
-=20
-> to balanced mode after a period of time (it seems like the time is not=20
-> constant), which resembles the behavior of a timed thermal board.=20
->=20
-> This doesn't seem to be a thermal threshold or PL1/PL2 limitation,=20
-> because manually switching the profile back to balanced and then to=20
-> performance will re-enable performance mode successfully.
->=20
-> I am still investigating the root cause and am currently unsure how to=20
-> properly fix this yet. I'm currently testing adding 8F1C to=20
-> omen_timed_thermal_profile_boards as a fix.
+<snip>
+> > SimpleDeckyTDP uses a combination of RyzenAdj for AMD and RAPL for
+> > Intel. When set to 7W, users report 25W power consumption when using
+> > the kernel driver and 15W when using simpledeckytdp on A8. 15W is the
+> > correct value for a 7W envelope on an X840u APU.
+> >
+> > STAPM should not be required to use or deviate from STT. Both of them
+> > should have equivalent behavior and match ryzenadj as the underlying
+> > DPTC hooks are the same, ryzenadj just accesses the mailbox directly.
+> > Using STAPM is a workaround for buggy vendor firmware that does not
+> > control boost values correctly (SPPT/FPPT) and is what the first
+> > generation Lenovo Legion Go did as well before they fixed it.
+> >
+> > STAPM as a workaround works because it uses timers to control boost
+> > values, so they decay after 2-3 minutes to the steady state TDP set by
+> > the firmware. STT boosts for as long as the device thermal envelope
+> > allows. STAPM is deprecated by AMD, only STT should be used going
+> > forward. +CC Mario
 >
-> I haven't looked deeply into hp-wmi.c before, so if adding it to that=20
-> array is not the correct or intended way to handle this, please let me=20
-> know.
+> It's up to the OEM to decide whether they have programmed their firmware
+> to to use STT or STAPM.  They should not be used at the same time.
 
-Hi,
+On BIOS configuration, not on runtime! The patches here based on RE
+configure STAPM on custom mode on demand. I did not even know this was
+possible.
 
-It certainly sounds like a similar problem. I'm not sure if the code=20
-related to omen_timed_thermal_profile_boards is hooked though with this=20
-board because it requires is_omen_thermal_profile() returning true.
+The purpose is to make the "custom slider" behave. Lenovo did the same
+thing on the original Legion Go because they were not setting boost
+values, and STAPM decays to the correct value eventually. Should we
+bake this in the driver?
 
-Some other drivers do profile keepalive by writing the same profile=20
-periodically if nothing has changed the profile for a while, that would=20
-seem easier/more generic solution than finding timer offset the current=20
-solution uses.
+> If their BIOS/EC is using one and reverse engineered software is using
+> the other, you will expect problems.
 
-If you need to change something it would be nice to generalize this=20
-so that the keepalive is not bound to a particular submodel category.=20
-The driver is slowly moving towards that for all models so that we'd=20
-have only one central dmi matching table where the struct would hold all=20
-necessary info/quirk details.
+Correctly implemented ACPI should 1-1 match both modes, so we do not
+care what the manufacturer did. Caring means their boost values are
+not being properly set.
 
-> @Ilpo, since commit 2cd10a35f3f0 ("platform/x86: hp-wmi: add support for=
-=20
-> OMEN 16-am2xxx boards") is already in review-ilpo-next, would you prefer=
-=20
-> to revert it for now until I figure out a proper solution, or should we=
-=20
-> keep it as-is while I investigate?
+Antheas
 
-I think I'll keep the change as it still works to an extent so it seems=20
-better than nothing.
+> >
+> > This points to a BIOS firmware issue. You should consider getting in
+> > touch with your MSI contact for feedback and to plan a fix. I do not
+> > have an MSI contact. And yes, I am not happy my users have to rely on
+> > third party unvetted plugins for basic power controls.
+> >
 
---=20
- i.
-
---8323328-1773986297-1793031446=:1162--
