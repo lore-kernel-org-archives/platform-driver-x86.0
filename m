@@ -1,59 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.111
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.112
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792972601;
-	b=KLeKNesmaA41b36rwIbLBq8jqP2frOFh2azhyDlKWHojMSGVtrYRWpcLo7nWiUHX1oe7
-	 IVvv1L2iq9CtwrdtgFBLlek9oLEVYwiC7YYondAeHQg9wl0+ZnemWBAJC2lh4K+nqMRe6
-	 AJaSRproQzr7LejP66BC/2WKhTd23cEpmr/hKP23xGu5++3I8bMgBv9JCrYsfSv46DuT6
-	 pSBDNFePtHOiucMX0xpWicTxcmnh/rqze3+WC5Fe2hqnenEhcpes2stzBZ3lfgmhPuP+D
-	 yG7ShpcSIVAV/vPUEONCXyxx/l9eN7jneWo/YI5UxmT2jgYV1Fo7Eia4VdFVBJ9ajXQ==
+	t=1792974602;
+	b=PA3UaJWN++A/sMKRD7ephpwj+JZG+P2mpr0NksxA28bzL6f8ZLNuk/iXxdhIV/5r9X63
+	 H8T525UFXm6JED7Z31oAohmQaSsxW52AJGrZ+4r1M0MuFDRPlfu98cjoa9aN9S9HIqGKS
+	 +PS9QfZR5kLZCJbIMUJvK/JT6g+YTYMk1tLlHiaXclhjOv8YJ/35/aWDGZpcMJO8Elk9u
+	 bk8T4ACILRtNqCmHN2ggIVuXzof7cEZr1g+W8CN+W3YvzahUkaiOh0vPMkuD2xmNC4pYb
+	 0WTyEU79N9LDOEXKXrhv9hnbqY0VqEh1qR51mi43KRydsaMiOtyMdMyTnEHkjNZbj1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792972601;
-	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:gpg:gpg:gpg:gpg:From:
-	 Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key;
-	bh=AIndq0QBvBOMT4aQTC7iTxVdxRNMAQYJH+2zTStxf7s=;
-	b=1Eoj0+LMJHHjlojsyUqAwh2VvhhCq0mPLZSWuvcjq0zCl5XGrdPSoqD9VjnqiNBukohN
-	 5v8i4REsq5lzs7Gics+dUuKq5d7/JPlY1a8s9FpHX4iTiCWbyBX5hgNVIA38CLhOLwh8k
-	 wO+H4tbhZIaXU8aHXykAc2oECfL0jycY8IGPCq8sARL6IrknCGmVeYkEJwl8wpmdU069s
-	 k/5/JkloJ303NQQh/WDRXazyLD3yKZ0qQzoENbatP18JtZw28t0EoajRl69Jz9t3lTCIo
-	 dbfLwriQY5yDdznT9tXkoYg5FSFOVHL9YQzld7W5l1x7MjDDqDjUkQMIEt4LirwP2tw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792974602;
+	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:Date:Subject:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
+	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
+	 X-Developer-Key;
+	bh=grEo01kQo66WHaUjHFxx2avn8S9t3Pe9iGjv32r3wtc=;
+	b=yzWovocJJX7a6/aTHbup10Cf7begh4lTSjFH1sRHeLIR300PUurfR/v/ugpSfHssu2gc
+	 oZQYIvQ4Pa1OMfeNqC9KJ7LQeHksezkomojnVegH2xeyQU4EWVbg9UdXOVcBva/s+68BT
+	 Dt/WHrDFDl+d0Mjcaxg41WLVH3eO4FZY67EI+fv+MaYe7TY2OYNhne8QShUURA5i9QdbS
+	 sX2DOL1m2oh4Pmo7g53giA8TTaZ930/dhjbrK/iJnrv/h1gqAP6IeSHHM43qgJlbY1DeY
+	 9e3jOZuUaKhK9Ozn3ZoER3yKu6qbwhYGMsdD9G7mALrrZ2gkqZ58M23We2MliNcrA/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=vinarskis.com;
 	spf=pass smtp.mailfrom=vinarskis.com;
-	dkim=pass header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=BOdBholy;
-	arc=none smtp.remote-ip=79.135.106.111
-Received: from mail-106111.protonmail.ch (mail-106111.protonmail.ch [79.135.106.111])
+	dkim=pass header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=e7lb6UIK;
+	arc=none smtp.remote-ip=79.135.106.112
+Received: from mail-106112.protonmail.ch (mail-106112.protonmail.ch [79.135.106.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9736B606A324;
-	Sun, 25 Oct 2026 23:56:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9736B606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B261F606A32A;
+	Mon, 26 Oct 2026 00:30:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B261F606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=BOdBholy
+	dkim=pass (2048-bit key, unprotected) header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=e7lb6UIK
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail3; t=1792972598; x=1793231798;
-	bh=AIndq0QBvBOMT4aQTC7iTxVdxRNMAQYJH+2zTStxf7s=;
+	s=protonmail3; t=1792974597; x=1793233797;
+	bh=grEo01kQo66WHaUjHFxx2avn8S9t3Pe9iGjv32r3wtc=;
 	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
 	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=BOdBholyd06SYb60P+E3Gd+QYiQWF2aplz/xf/iFtNw1yOlc8lBcFACq47V3nGvo8
-	 FhAiwBIirFP8TkzjqUHWbq7LBwq45AGo80TpKOSmL0I0hXvCc4BHua86579SV6lKQp
-	 Qd1+HcJfg4H7F7Dtmua0cOPaYPMu7BEssKV/70ITP5cPEPJFY6f2TtnlU3YxVlxYB7
-	 P4Zy1thwXwIfOnp+gLmOmv4lBMjgbY/OzWMjPEXNPmsRgvEU+BRKH9qO0B/cDs3A23
-	 H/ejNgsLzTmK/q6315Cg/lR+/4kFW6YFLDSHe635HFcijNWZskB/t2c4N6B1kE+jdH
-	 iqewaBrCYz/8Q==
-X-Pm-Submission-Id: 4jCYZB735xz1DFSk
-gpg: Signature made Sun 25 Oct 2026 11:52:52 PM CET
-gpg: using EDDSA key 8BFCF5668AA29DAD00D728F6EDAE71A20F500310
-gpg: Good signature from "Aleksandrs Vinarskis <alex@vinarskis.com>"
- [ultimate]
-gpg: aka "Aleksandrs Vinarskis <alex.vinarskis@gmail.com>" [ultimate]
+	b=e7lb6UIKD9dLsflH3N6v4erb+AIFCS/8QFU0nPsv+YuKuUni0wKb0ZZH0wWhOcsyJ
+	 ztH3X4X/wNLIz2RvifmKa1KRVTFEUyv7vGxQMfG7uHp8RFrCW19bOniGIaxYhaafqR
+	 /STWZkF7FpdxddmY8/wL/mgHDwBEqfOanlExZ1YDaXp/8Bu7uDMVmPHsrv2egySzpu
+	 VyW1wVInNgwNtd55kd7GfD6p0v2giCxLVsw/mxnq5tqRVnujxW1WKvcdvFNKjvFB6S
+	 j1FVbb715FNIBjLEItSbqzh9NagHIg16FgZROzsfd3MPmu52XTmeJwAT6TzP+RhPRH
+	 X8zoa1VYlth6Q==
+X-Pm-Submission-Id: 4jCZJd63CTz1DFSj
 From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Date: Mon, 26 Oct 2026 00:56:23 +0100
-Subject: [PATCH v7 1/3] dt-bindings: platform: introduce EC for Dell XPS 13
+Date: Mon, 26 Oct 2026 01:29:40 +0100
+Subject: [PATCH v8 1/3] dt-bindings: platform: introduce EC for Dell XPS 13
  9345
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,9 +61,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261026-dell-xps-9345-ec-v7-1-828ce301b839@vinarskis.com>
-References: <20261026-dell-xps-9345-ec-v7-0-828ce301b839@vinarskis.com>
-In-Reply-To: <20261026-dell-xps-9345-ec-v7-0-828ce301b839@vinarskis.com>
+Message-Id: <20261026-dell-xps-9345-ec-v8-1-251c2cbfbc6c@vinarskis.com>
+References: <20261026-dell-xps-9345-ec-v8-0-251c2cbfbc6c@vinarskis.com>
+In-Reply-To: <20261026-dell-xps-9345-ec-v8-0-251c2cbfbc6c@vinarskis.com>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -87,11 +82,11 @@ Cc: Liviu Nicoara <lnicoara@thinkoid.org>, linux-arm-msm@vger.kernel.org,
  Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
 X-Developer-Signature: v=1; a=openpgp-sha256; l=4342; i=alex@vinarskis.com;
- h=from:subject:message-id; bh=dLLWTs/IeTVPq6lqhexxwVftq/rPlXDy4Flf9DCOHHA=;
- b=owGbwMvMwCX2dl3hIv4AZgHG02pJDFn3putLd+4K9Py958J0s66dlo4Ptp3ivXpBLX/F4iIR9
- hlaPDPjO0pZGMS4GGTFFFm6/3xN61o0dy3DdY1vMHNYmUCGMHBxCsBEatcx/BVcMkHUcnUDV6Wp
- 7vndK13Fo9b02xj/2uPsWq8o49zq48TwT6/l1NMD7NF+s11Xzk98N91M8mvUw9ZONsuq72U6h5Y
- oMgIA
+ h=from:subject:message-id; bh=mv5nMGhQJ4HJU+dLxlctLnk3H+irsCgi2Dl4/EuzfiE=;
+ b=owGbwMvMwCX2dl3hIv4AZgHG02pJDFn35jOIyOrd/Xv29Ke/O+7ZLjjB/pVx4rnX730Nf6+6u
+ HrTk7yV/R2lLAxiXAyyYoos3X++pnUtmruW4brGN5g5rEwgQxi4OAVgImemMzLMWsix9nubTRTX
+ rFO6jsxqyqcK8pvVHxreKmRcNmPB9oIiRoYexwsWk3/dMA0xfSH8oXL3rLL2+QHp+usPPDO7+P3
+ zTxZOAA==
 X-Developer-Key: i=alex@vinarskis.com; a=openpgp;
  fpr=8E21FAE2D2967BB123303E8C684FD4BA28133815
 
@@ -108,7 +103,7 @@ Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
 
 diff --git a/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
 new file mode 100644
-index 000000000000..29cbb837a31b
+index 000000000000..33d59ad52f96
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
 @@ -0,0 +1,90 @@
@@ -191,7 +186,7 @@ index 000000000000..29cbb837a31b
 +                          <&pmk8550_vadc 0x145>,
 +                          <&pmk8550_vadc 0x146>,
 +                          <&pmk8550_vadc 0x147>,
-+                          <&pmk8550_vadc 0x148>,
++                          <&pmk8550_vadc 0x148>;
 +            io-channel-names = "sys_therm1",
 +                               "sys_therm2",
 +                               "sys_therm3",
