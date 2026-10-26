@@ -1,47 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793012313;
-	b=AiyxDWxnt9dZkBT8+S6VplVBuCfWXiOM1ur3Cxn0Ieux4qqRnjNbka/WomByCpqfgr1F
-	 6o5ODnzM+pIqrSQ7iL8sxfu5fPC0WvIfiMxz0pByG/s4e+jV476Cf9MYyiqHRt9NDo89N
-	 R2FIRsMXZnzAI8R4EkLHUWzTYTGSR6ZDzRsFj9K0ewcu1XnkPVhluLg4MuW8569xiU9TU
-	 CwAFTlAn6nM99rXJIM1u6w7ZGUESMyXizy52RpaLa9eiHUnNOBAOp3tUCvXP7b1CmumSe
-	 tSYNOqTcrhVWuV2+Ev9uuSEb6gJPOWM02eNb2iN0CBYIHS+7pmu0l3IJxERXjyxzAEg==
+	t=1793013018;
+	b=XYp4iFbH2LUTXE/TtVFJ2+q3n9ZiH950iQcMO9fOgNdHPhrAfnzeVMYM0YThIjbEPy9+
+	 Yj1jLpPmxpWPuQDMG38AdeE5wzfuBT1zOl6pnvFnqEAiTzASld1ohMGOUBWViSolPVKBP
+	 3IvLGgMm2t9O94kFbS5qaymLMVbFm4Iv3ZJPi1nMVpoovXo9lUiVuXtWTKeZ9ueXjxk0d
+	 N7c+ei5UsXuQj1Gh3f6ftUSM4Dt5K8iiM2kFkp/lUiDBkZCn8FTZ2KkP45ZfrCShTaFIG
+	 ZjBNN8fMdaKvEP6WeyXnHGuxgZl93HaZwkLF+IZJkqRW22xu2pFZgbGzulT9a+66gUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793012313;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=F4PTtG0p5qUxkiwJlFf03ohdweVlCHw/PJrDFEEobnM=;
-	b=avJvHpbkMRxR2+BKtJjLLrZYew1X1qwr5BJvz2HPiscGAd20FIPRZV+mFqaF259EdMe3
-	 hevn61TU7LRKjX4CJJKgDrgsOo3LKTmZX10xafSJPir/9eIRGS40pXcbcm6BVABswUKzv
-	 OK6Fnv1YBOXT9VlB+tooO9Wz1bj2fDPCEn2WaKzw5YCfa6JArxRK3IR7Km6fhgsmbWTL+
-	 DqO/sd63VJ3mgTj7+2Sd+YpDMObzuYFWqNamRfAKIz+wCotJDwV8OSohMJrwPvHmRpb7h
-	 T/d14p2oHvbzqxWKsqH3w7Qo9bZYsbtc49YZk7oj9fB0j3Kuj8S7R67yu3NvYEBA0VQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793013018;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=WfWK7ETWVc6JPLXBBH1usp1GYHzRwLQXcJjehdWx/dU=;
+	b=kdX7VcmZZaf/HEkNTdafk4mhhV1Aj6ed+pvPvAr1yq8OClHWb9J7NnDswcSIz4nRXOv4
+	 wwfKMSd5KX2kqTpJ8Qarp7lY9CnOjfQVn50rsiab1gtps0C73gOjCNQC6f6vXTXF35Ke3
+	 hjYo3jz4inzrZQw2xZhrsHZ+9nMaVy6ostOQhA15H6O3wqyKJ6F0sb8phhgk/xknE9qYI
+	 B3XxXLYoSkVNaiEf7iN19mDYrOdztOykeS5Gn40MgrpoTFunKxPbRBHigCXGSdeCFpSnO
+	 nunNYxLGFhnPHa7IqUr7xLU0DYnTxejxMDDSWOfep69U67Q8eixSkRE/PUrHJvyMrfQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PGxIQdVp;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=FF1MZ3tb;
+	arc=none smtp.remote-ip=209.85.128.43
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D4F606A31D;
-	Mon, 26 Oct 2026 10:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917CE606A31A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 11:10:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 917CE606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PGxIQdVp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED471F01828;
-	Mon, 26 Oct 2026 10:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793012312;
-	bh=F4PTtG0p5qUxkiwJlFf03ohdweVlCHw/PJrDFEEobnM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=PGxIQdVp8L88LqYyx3vL76tCm8GDgKA++ToGxAeC0ElfCnRejTz2M6Zt6lH4uz2PB
-	 56EDJgyRuP1efY06BdLmJUCN7IX5I8d/tMEm9HWUEiKpDL/02pExOI9JgYqqfkTaIN
-	 isjmSrBro6LSz2BXkZE2rnHykFrFZIhlDz4WGTYVcfIEr/6G1b9CDZDgQRXro4Oru0
-	 AXuxVgM4Em/a3yfPiwiqYlwW3SLK8LBwp5TVbLDztoTuZIAZ8F212Y1nwMpIk76WeK
-	 MGD+l6CdTtC+J4WQU5f/TnJIFJQPTy6Ra7sCHsO4Rpw5mQcYGIW01my8u2N7r8xBAC
-	 KmHdDudFKApMg==
-Message-ID: <dd7765dc-f636-4572-8325-97e901814796@kernel.org>
-Date: Mon, 26 Oct 2026 11:58:25 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=FF1MZ3tb
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so21488965e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 04:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793013016; x=1793617816; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WfWK7ETWVc6JPLXBBH1usp1GYHzRwLQXcJjehdWx/dU=;
+        b=FF1MZ3tbfMa+I3Hp68i+GoqS5xJQCOAdAEyU3AgVRrX2Vlf8WAQZW2Grn+avxiLLI3
+         zdyFYKtS2WtCeGEOowSYBKYvnBZoK6tP4vh63lFMovCllUsG44h+mEz1IP6VvoGlkDXq
+         YQuSCMIIKLJxsmdEVQiN8lNZVo4pv6I/vH4DE8Lz5sTIW+YC6TN0F79yue+AirnmCI1g
+         hsyKgsxNOhuJSYTB2XYn2ufURC63XVMPEW+7g3mTqpw+6CTLsASK4oTH37/2KjxQhBi8
+         ZPP9bS++j2T8OH77fGX80QI8Se2YofnpLSQvTal0KDEw2Pc7jKpHmlg/EtqEoG8Ga1WQ
+         /V8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793013016; x=1793617816;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=WfWK7ETWVc6JPLXBBH1usp1GYHzRwLQXcJjehdWx/dU=;
+        b=VMh/Vtkg9J89kjqaz3G/nvipOiZ3GvReK9BvsARYOpcV8TZK12oW/RfP1JXhhfBfUB
+         1VU9NSuPcqwkmKQRBu2LbPTB1cGhl+q9cWRoS2IfAbaNHTd4pS4hyBljZtNLWhs3IVJx
+         TD6MC38tYyFOkEGeEt6vWHCIuL+W/LaIs9E1Q/Cjy6P10YVyA3iC49Eyi7jT9cwy/dJ5
+         ojEEhhOa7mWHJqvcE5BIdX7+aNeeKgHDSAjoZ8rae4ewAcO8SioghpyCe9hwKS/3bMq9
+         zymBYyF5zyCn8I5u2W4/oJEt6EOAoyzKqAz8TeEdcM0Ay2XhyEXRf+YSv8NW7zPz9f0H
+         /l9g==
+X-Forwarded-Encrypted: i=1; AKwUvBzBcICV4syxv/trcG0TFeOOL0yP25uYgpu/koMvIS64BZeDhd2mDZQLjoGqqBLnQuzuI12frxsDDX1pGbDNKsCO4gnc@vger.kernel.org
+X-Gm-Message-State: AFq9FYKInfK0PkgIEkcpcht5+gy/eRVkCneFOR89H54/6sVv907Kx319
+	w/xGLlOrmBnAk4f6vRmtL4ZEIESAhI5U1OQvh56ps4cJ0H8W5eJjNVXE
+X-Gm-Gg: AYBFou36bpJD1I/KoG6qmy51y683reU3mGPrnT4DHMWpm0K/t+EqC1laryKVxvWpUpz
+	a8mtMbOPMLlXFVUshUTtqvQAivrGfQE6fM4SIzDKKWf8B6EK7VaY2wjOXFFVhV8g0/asBqR+KYf
+	aiifRZxvgoVcdR4LAw6EfoR8QAPJsmvsE5JTvcO/HufuKCeAOFkjxSRkM382jdKTc3+fJyNFDtW
+	POK0qLtOZPODqpKKP/krGCCljySKF22kKY5aDVwumTlzlR2+EgV7In9rw0X3cPUsh6r9vt5vXvD
+	iatp0KGLSXIiJ0PpP0ChfxekEa/7rvTryaiYJ23aygK3uG6WSL/oOODaseQkZmuVxXVfUUYyxRB
+	rEUynOrRoiuNq9sgWxcZ4CoMkfsGvSHSLEBqsTCEQ5FGOZlsuQK1HGTIQrxcWucZK/w8ZzHvbBV
+	qAEhU8K0OZg4XUHf3pY9+Ju5M463b35vjKpsr/xYv5e7TaX5Ri1xDpi/qJES3lwiMi+AvTg4c0v
+	tgqO+Z5lGUFuV/anal9nVZ8O+55dWEML/YEbSsa6m8e/OatYr98XrmnsiwET57qlEJUxwbH/jsN
+	qZZaEJPuMmfPfg==
+X-Received: by 2002:a05:600c:b86:b0:4a1:7ec7:a479 with SMTP id 5b1f17b1804b1-4a35acc1129mr115388295e9.33.1793013015679;
+        Mon, 26 Oct 2026 04:10:15 -0700 (PDT)
+Received: from raviolimobile.tail5f26fd.ts.net ([84.70.180.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a04ad39sm499383945e9.1.2026.10.26.04.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2026 04:10:15 -0700 (PDT)
+From: Fernando Rimoli <fernandorimoli11@gmail.com>
+To: Sergey Lebedev <lsa.uz@pm.me>,
+	Hao Yao <hao.yao@intel.com>
+Cc: Fernando Rimoli <fernandorimoli11@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: int3472: Use actual clock frequency for DSM method
+Date: Mon, 26 Oct 2026 11:10:10 +0000
+Message-ID: <20261026111012.33347-1-fernandorimoli11@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261025162614.95385-1-lsa.uz@pm.me>
+References: <20251208035122.2147678-1-hao.yao@intel.com> <20261025155048.42957-1-fernandorimoli11@gmail.com> <20261025162614.95385-1-lsa.uz@pm.me>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -51,124 +104,35 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 0/7] Merge redmi-wmi into bitland-mifs-wmi
-To: Mingyou Chen <qby140326@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ilya Gladyshev <ilya.gladyshev@linux.dev>
-Cc: KentoNion <kento@kekto.ru>, platform-driver-x86@vger.kernel.org,
- ted eric <ericted8810@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
- linux-kernel@vger.kernel.org, Chris Taraszka <chris@miget.com>,
- Matias Civadda <matias.civadda2342001@gmail.com>, =?UTF-8?B?6auYIOS/ig==?=
- =?UTF-8?B?5paH?= <btx342@gmail.com>, powerfullz <wleizc7319@gmail.com>,
- =?UTF-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>,
- =?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>, Rsplwe
- <i@rsplwe.com>, Bozhen Peng <bozhenpeng93@gmail.com>,
- Anton Karasev <uselessfire@gmail.com>, Jame Jao <jaojame6@gmail.com>,
- Serhiy Shliapuhin <shlyapugin@gmail.com>
-References: <20261021123414.25516-1-qby140326@gmail.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20261021123414.25516-1-qby140326@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Sergey, Hao,
 
-On 21-Oct-26 2:34 PM, Mingyou Chen wrote:
-> This patch series consolidates the standalone 'redmi-wmi' driver into the
-> 'bitland-mifs-wmi' driver to eliminate code duplication and centralize
-> the maintenance of overlapping ACPI WMI event streams.
-> 
-> Bitland is the ODM manufacturer for various Xiaomi Redmibook models. Both
-> platforms share the exact same keyboard event stream WMI GUID
-> (46C93E13-EE9B-4262-8488-563BCA757FEF). While redmi-wmi previously parsed
-> the 4-byte payload as a bulk u32 scancode, bitland-mifs-wmi deconstructed
-> it into discrete type/id/value fields.
-> 
-> Redmi operations were not contained in this patch series, future reverse
-> engineering is required.
-> 
-> This series introduce a newly reported mic-mute hotkey definition
-> for Redmibooks, dropped the previous redmi-wmi driver and intrudoced
-> the quirks table for the bitland-mifs-wmi driver.
-> 
-> I don't have a Redmi or other Bitland device. So I cannot work on the
-> real device.
-> 
-> Features are working properly on my device (Lecoo Bellator N176).
-> 
-> I leave the future reverse engineering work to the community.
-> 
-> Tests are welcome.
-> 
-> And by the way, the no_set member in bitland_profile_entry means a
-> platform profile is only report by the firmware but not available for
-> set.
-> 
-> Does accept_zero_function still necessary since the driver now permits
-> 0x0 function field on SET operations?
-> 
-> And I've got a question, from sashiko's comment in my v12
-> 
-> https://sashiko.dev/#/patchset/20261012133648.132363-1-qby140326%40gmail.com
-> 
->> Will this result in the loss of KEY_PERFORMANCE events on event-only legacy
->> devices?
->> Looking at bitland_mifs_wmi_probe() in drivers/platform/x86/bitland-mifs-wmi.c,
->> if dev_type == BITLAND_WMI_EVENT, it returns early after registering the input
->> device:
->> 	if (dev_type == BITLAND_WMI_EVENT) {
->> 		/* Register input device for hotkeys */
->> 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
->> 		...
->> 		return input_register_device(drv_data->input_dev);
->> 	}
->> When the performance key is pressed, bitland_mifs_wmi_notify() intercepts it,
->> invokes the bitland_notifier_list, and returns without reporting an input event:
->> 	case WMI_EVENT_PERFORMANCE_PLAN:
->> 	case WMI_EVENT_PERFORMANCE_PLAN_ALT:
->> 		blocking_notifier_call_chain(&bitland_notifier_list,
->> 					     BITLAND_NOTIFY_PLATFORM_PROFILE,
->> 					     NULL);
->> 		return;
->> Because the platform profile and notifier were not registered during probe
->> for event-only devices, does this mean the events are silently dropped instead
->> of emitting KEY_PERFORMANCE like the old driver did?
-> 
-> I ackknowledged that KEY_PERFORMANCE (WMI_EVENT_PERFORMANCE_PLAN_ALT in
-> bitland-mifs-wmi) looks like an event in this LKML thread
-> 
->> Since the event reports a change that has already happened,
->> platform_profile_notify() is the natural way to pass it on, as
->> suggested in my v6 reply: power-profiles-daemon then re-reads the
->> profile, which is harmless after the driver's own writes too. If
->> KEY_PERFORMANCE should stay for on-screen displays (Ibragim asked to
->> keep these events observable), it may be worth not reporting it for the
->> event that echoes the driver's own write, or at least saying in a
->> comment that it reports a mode change that already happened. On
->> Ibragim's TM2209 the profile SET is reported not to work [3], so there
->> 0x16 can only come from Fn+K and the echo does not exist; Ibragim, can
->> you confirm?
-> 
-> https://lore.kernel.org/all/20261008152647.1510152-1-uselessfire@gmail.com/
-> 
-> So should I follow sashiko's advice?
+On 25/10/2026 16:26, Sergey Lebedev wrote:
+> Fernando, a run with 0 in place of 3 would tell, and your own DSDT
+> whether it still matches the dump.
 
-What I think should happen here is that *if* there is a platform-profile-handler,
-then platform_profile_notify() should be used (1). OTOH if there is no
-platform-profile-handler (the mentioned event-only mode) then reporting this
-to userspace as KEY_PERFORMANCE as was done before makes sense to me.
+It takes 0. The DSDT on this machine (BIOS 23.102.143, 11/25/2025) still
+matches the dump: the clock _DSM on ICL0, ICL1 and ICL2 calls ICLK.CLKC
+with Arg3[1] and then ICLK.CLKF with Arg3[2], and CLKF does
 
-Does that sound reasonable?
+	CLKx = (CLKx & ~1) | Arg1
 
-Regards,
+with nothing masking Arg1, so 3 also sets the enable bit again on the
+way down, as you say.
 
-Hans
+I changed the int3472 discrete module to pass 0 when the SSDB asks for
+24 MHz and 1 otherwise, so the two 19.2 MHz cameras get what they get
+today, and swapped it in at runtime (the _DSM runs on every clock
+prepare). With the previous driver at 600 MHz, the infrared sensor goes
+from 57.60 fps to 72.00 fps, which is 57.60 times five fourths, and back
+to 57.60 with the unmodified module loaded again. So 0 gives 24 MHz
+here, and 1 and 3 both give 19.2 MHz.
 
+So the value depends on the generation: 3 where CLKF takes two bits, as
+on the Surface Pro 11, and 0 on Alder Lake, where coreboot's Tiger Lake
+and Alder Lake camera_clock_ctl.asl document bit 0 as "0: 24MHz, 1:
+19.2MHz". v3 would need to pick it per platform. I can test it on the
+Surface Pro 9, and I will run your driver at 396 MHz with it then.
 
-
-1) This assumes the event indicates a platform-profile-change has happened, if
-it is a request for a platform-profile-change then platform_profile_cycle();
-should be used instead.
-
+Fernando
