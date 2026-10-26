@@ -1,86 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793006562;
-	b=BFAm6/zQJ8RSxjpSBqNcf+k7Wl3V5UC2RU9CfLlCz5NCsMtIbU8rugfKF1zoadD4bWGq
-	 cNCXY/l7xX3+3+Fy7t0uMSVXFOD2QgJHfvMN2AsPHzA4OQ3HmSqGnitkO8MI8wymQ2OY3
-	 ZB/J3CymRLVwF/+BRTA/o279IeR4apoJ5V5w+H1qNHC6ib+WZxTlRK0KaVHr2xFo4EBx4
-	 yfCy6jqjrZ48s0xqN+O3YQtuqoNiFXGFbDzXQ6YSUzFsmG7RzcNeX3+8kFohwn/Zgo5aX
-	 HxlnWH1PSd3P9mEoH8xy66GKLB5fBQqIjEHeBosSCU1TJ2J36MyYAcOGbu9CIx1Y5ig==
+	t=1793007035;
+	b=x8ErdLN7q8fXV3eJpwTHq52hHSfXzy9UHGrpCZfASaivdNhsmOvFD1g6Tsnjgf+kCb0/
+	 v7i6xmrl9l+MjjvIl/TtPaDjvYKVEEMgTEaDw7LzdPwEBhMit4UgXeKszqgjRrBI1aIvd
+	 i5raJL51ZIbgtgW1yvAxaGtFd6+uFZ8UFHCNBZOwulwqJAvtxa4RvNIVPhYVSlxwpu1sN
+	 N7aqYmpQcT5Ohym+Sj9WIIQxvdWo8ZB8EswQYdOMO0xUi2X+6R2IZS8/7FfZB3z2cwP/v
+	 tOgLFQayi08w9oNfblOWer6NcrB4WaXlQYX7CpNuJixETf6P0zqw+gIX4Q9S5SBKoHw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793006562;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793007035;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
 	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
 	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=30QwHpi4RQGrlJA4Ni1ieESAKb4LlkBBANXTStC06eU=;
-	b=XinQeHif9PAVcJ3yRvRe/03zCnrOag6hEkgfxOQSuSMfIJ5bMdT48ZFNYKUEDsu0cepM
-	 IO5kIej1GJw2gDadO6KDQ/iSXU33etFRmskeoT7hVaYoS4S1ABEDugQYuaw65K4cQ6mc7
-	 aCtp/7AZQjJh3Q1EU9D/8uWQgmYYQm7qKyrqBcoxpgxwasKKTfs04Zmg6b3alX/toV3WL
-	 LuW2uk5QPqggk2TMJa2+Gn4XDikNIDzuxNdzzoTIePRVVtA1H8z7kUq1c0vFD3X2kBQK8
-	 wjQ5cLJolxAUwVLYX0LVZCtUKPz0a3GgkYyFTEgr34bzlwa+QFJW4zSNdJOYYySqfAQ==
+	bh=9Nx64ZUk6CyAu6407EOO7ojQd1FcMEUOXaKbUe9eUR4=;
+	b=OK346tPnRX1+XWS43UN13QGKEBL7WMYYTnp36fuq9ZhzwkqZa4DZyje68yzq802AgXJ5
+	 OadfRpKDRgFt4ND7i/J94fcQWLaY1+UqtIg5DcYFG0psA75rdW3+LM3rECElNP3M2XKlV
+	 bei+dtNx6DVh3+8fEwA0kIl+38bHGk+jzn13KIs2NpoXBzthyIGVQt2I1juI0IkjEt8jo
+	 If00B4kfnyDtccpVhXkmNQDRw07NltFXjytVJcu4ym0/4P0Ti6C12Os5Lff5hz/GZmjDf
+	 SZPGYWsHPIad0w4JQSqOu9TqhqtHrLwAVLc97LtOCdEHc3DgQVVyeqg2Fhob9rKZDsg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SqEKp91Q;
-	arc=none smtp.remote-ip=209.85.215.178
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=X1EizSir;
+	arc=none smtp.remote-ip=209.85.215.171
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FFE606A326
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 09:22:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 67FFE606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E135860A2603
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 09:30:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E135860A2603
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=SqEKp91Q
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-cd623dfe420so1778275a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 02:22:42 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=X1EizSir
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-cc52c1b8286so1162632a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 02:30:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793006562; x=1793611362; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1793007034; x=1793611834; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=30QwHpi4RQGrlJA4Ni1ieESAKb4LlkBBANXTStC06eU=;
-        b=SqEKp91QEemx2ju6xjRBnie9/9djcxRU+HZEFSiSRyQWs+ck13SCYuzwf5iDKE3O8b
-         h9juM9RlXBSS0KdREyQ8vvTsvLQCrNqK3youafF5HBvGBH/eCKkazk79Joz5fJFm4ZQX
-         +b96DLvSHiCQ45HZD/vDwgokbXbNuQUP5S74bpwWedQZRh70/dNYZAK3DZB+XANsRLFY
-         kfZtKSWgEgBCdgvbJxkr2U956y4A91JIDPEhds2IE13W0maedIO+xOCW01n0b1Wds8P+
-         VcJXT5VaDaHaZgPVWama7AlVlFBPDZfscJDtLcsCAbnYVHAej+yz+6wYOclPjEEujoI4
-         BbCQ==
+        bh=9Nx64ZUk6CyAu6407EOO7ojQd1FcMEUOXaKbUe9eUR4=;
+        b=X1EizSir/SPFC1iekp3/Ythb9HqjSwTXCN91i7egrkmk4EYyChYh4skg8qNN6YZKjG
+         wXzcJdIMeKBFzSP0K1ePX1lsMvzM7gDcxJ4grEU2ZnFFOAXlML33Q6rGLj8IXv+0D7Av
+         i4XZujl0NOm1a+yu2jrxx5j3f4yQpY0NCErIuA5DxxYZLY42EBRRGhk3WXqsRRUUrVT3
+         GM17cV3bntBGvYAmiA45hnbap7exo1PvHdzq1YXgmRNCW/O8N41hCxufemiaqbDeVvYg
+         cGDBKI75NNvJUhiO31WEEo/Xg+wBbYCQuN/OON5vN71ZzlD6lF48DLQ2ewBtFohGCcO/
+         f/qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793006562; x=1793611362;
+        d=1e100.net; s=20260707; t=1793007034; x=1793611834;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=30QwHpi4RQGrlJA4Ni1ieESAKb4LlkBBANXTStC06eU=;
-        b=ebsAmpBi86doGpKXpath3CNSYKZcrn0ATdDghYWN4r0tVDyG4Tv1nJWT0VG8pzJnFX
-         stQ4hAbmpR90x8cro8XgCeqR/qvrEnVg22uL4P9UcDSo+UWBocbBa5wBzGtnJLOxvJ7H
-         8geTIJ9yi1zbfI/tJRBSftydPXwG05GWaZ889Fs02J1UJ5KmsFsGvB3lDNoOn3n974oX
-         dj5YeRv8phmtpBi9yDI9avUCb3QimX9IyVJMCq2fvzykoYoMteALPj3xozqjk5WTjNt1
-         hcM8t10FkNh0S7GE9f6ReZJ5y/wA5YWedxsSXgGspNpVAml7HMwlkT4D2zwqOL2LvRXl
-         qkiQ==
-X-Gm-Message-State: AFq9FYJN9jWxO8JPK1aax0+2oN/mCKPGmA8C3GlgxrKuZ4lLUnjUJU8n
-	+cFX675kjRTvwGEvllzdH6qd7yNVX60ZQ8PMlWz0DItPQ7+Miy2MtCuV
-X-Gm-Gg: AYBFou2N2Jtrn/Q33REEnCvou4AVFqMJZ0UBW9cBmP0KHmzDmYmQrs/XudlpZ3fFwCg
-	BIL/nVnSBZZbX/rM0UmA+6pkW8aWCAVTbhoTXCz+6bKPsuU9f2IjM/1Z/ajwY+iYb1Eu0K+KjxC
-	7RhDgUpgArkcW3O94XLd11xJ/zGwpJ3s5NLgpf5iB06XsRW6SVFzH546+ZdvKINVvEa8Gotrpwf
-	+2PuYLBC1m7oi9KYxTp+CeGxJhjF0WhCdBzTuWTLedbdusGDlaINIE/KxUvkE9lEj8rj6qBlnK+
-	XYqog59AWt+giNmumhvlbOmFNtrUy1T/qD9ryEJpvhFBMZBk2ykwVHk/BvfJnOao2VczrHyYVif
-	40MrjNVd/9koEwZjP5cFMDesB91wn7ivEhSoWw54NNuR5eYd8AFKVWngqc38yzHEETn6AyEv7d2
-	s/FrZcluTaonjuj5coGWxoIDh0U8JGWR1e3YCtTrCd9SqmxGW2+W0vyVVclICwAABGMGy6jomG3
-	5YpS04JEOoznEnWLqSS3v/T+DyUQdlg6cnymn2p0eYsuH6vBNOPNX0+KNDF2MJOPbrsox+9MOBS
-	ZIYV04YrNqNz+MzHuqxzAg==
-X-Received: by 2002:a17:90b:2645:b0:3a8:878:ebab with SMTP id 98e67ed59e1d1-3adead4c29bmr5294059a91.35.1793006561792;
-        Mon, 26 Oct 2026 02:22:41 -0700 (PDT)
+        bh=9Nx64ZUk6CyAu6407EOO7ojQd1FcMEUOXaKbUe9eUR4=;
+        b=ZS3N8Ya3E8KcSwUS8PKPbNnd6f8uVl5Hg9kuv13fUxuwFw4dxHdyggapCC90mpyFvN
+         ZjVERF1Ct6KfxH2FR81TNgNLzqxCQb8qiT5RatWVx14tgEntaPZRdZYuTBl/DH0P2DNr
+         GSI2KlHUIXhZSY3RYRnyQnjLp0++d2z3Ujh5CrHUtTZ1GAH8eT5qK/s9KCOVVRUd2dht
+         gaFn4Bo82LPknrEQS292yr4h4V9gGLkZA0qrQxERpgTPFRHFrhK86YC7tgUiqaE8qWr/
+         1FdpFzoe1M5MLVFNmWJkljC5FgBAHoIVjsnIacnhR5dsO0TRWS8bTMzPboE4Eb2KkJNJ
+         WwMg==
+X-Gm-Message-State: AFq9FYKUhoMyy5kggWx6/JW6qPj1cB+ikHtQVzEgMTv923+ng+mz1a6B
+	IIH5QIr1U+q6IAM87wJS+eJMaZwh7VVEb47JEFQH1Mi4lM5W6ZVC383KdA3OGOA7
+X-Gm-Gg: AYBFou1jT5vGve54DUuAyweO5ITNem56F+reawtthQ217QqGe8VUO6MqH69ZF5hH9Fe
+	ZWDfKeTYk2TknX3P2AK8eT9YokJKQlX+5etBF2KeubBjbxEVqF+t/IbtMLrgWOkwijTBLKUjrcf
+	O7ni93Im6PBLnoBvzTJN5Tkwz9+MWA0d8laspntkyR+80JTZ/jzzWpnhNwJ62XIBYhNaGHf4wvi
+	kCty+NKVhzu2QBeL6Wu0DRRbPXALd+SJJDDiGdgMqN92rLcoUVAoi4u/vpDX/ronMGDQXe5ev3Q
+	N1zaQbdk3BsOe9dEZQhj+xfBxctS8WwJ+0NqihOczMtfpPrfMUB83eMHH1Q6PKkJlxdqwsJdt24
+	U7DHw3eF4WL4IgVg2sEStzYOUngHnGFQu8FC8l5g1qf6eD8l+/RlKAXEyqqS0yeIbHrfXVZRN+G
+	950/BX22xxMvS7zB5vtmK5Zv2aDYN1xOZKYDSoFS62F/7/a4/Gvylg+HQO1CtYbm8os0mV1xggl
+	hkIh9Vo1Qd1BMcoVBr7Ba1LX7rTllTK9OK3g9Skc845Jk0S5v6hNGI7Kxp143zCOhZFmgV6gEnN
+X-Received: by 2002:a05:6a20:4305:b0:3e2:8c65:b229 with SMTP id adf61e73a8af0-3e7bfa30602mr3664594637.11.1793007034252;
+        Mon, 26 Oct 2026 02:30:34 -0700 (PDT)
 Received: from ?IPV6:2408:8210:2436:950:3934:2b73:344c:e6fc? ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3adebb06c57sm5454569a91.3.2026.10.26.02.22.37
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cd8ccccf37esm1395979a12.27.2026.10.26.02.30.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Oct 2026 02:22:40 -0700 (PDT)
-Message-ID: <96fc3e59-9fd4-4960-b318-10dcca1bd11f@gmail.com>
-Date: Mon, 26 Oct 2026 17:22:36 +0800
+        Mon, 26 Oct 2026 02:30:33 -0700 (PDT)
+Message-ID: <5360953a-ed8a-450b-93c2-f55876af8600@gmail.com>
+Date: Mon, 26 Oct 2026 17:30:29 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -91,95 +90,127 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] platform/x86: bitland-mifs-wmi: Add Xiaomi Book
- Pro 14 quirk
+Subject: Re: [PATCH v2 2/2] platform/x86: bitland-mifs-wmi: Don't fail suspend
+ or resume on profile errors
 To: Chris Taraszka <chris@miget.com>, Hans de Goede <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
  KentoNion <kento@kekto.ru>, Matias Civadda <matias.civadda2342001@gmail.com>
 References: <20261025195456.43414-1-chris@miget.com>
- <20261025195456.43414-2-chris@miget.com>
+ <20261025195456.43414-3-chris@miget.com>
 Content-Language: en-US
 From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <20261025195456.43414-2-chris@miget.com>
+In-Reply-To: <20261025195456.43414-3-chris@miget.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 10/26/26 03:54, Chris Taraszka wrote:
-> The Xiaomi Book Pro 14 (board TM2424) implements SystemPerMode with
-> its own values. Its firmware ignores 0x00 and 0x01, and GET returns one
-> of 0x02, 0x03, 0x04, 0x09 or 0x0a, so with the default table balanced
-> and balanced-performance are no-ops and reading the profile fails with
-> -EINVAL whenever the firmware is in 0x04, 0x09 or 0x0a. The failed read
-> also aborts system suspend.
+> bitland_mifs_wmi_suspend() returns the laptop_profile_get() error to
+> the PM core, which aborts the whole system suspend. This happens on any
+> machine whose firmware reports a SystemPerMode value that is missing
+> from its profile table, and on such a laptop with the lid closed logind
+> keeps retrying the suspend, so the machine stays awake and drains its
+> battery.
 >
-> The values were identified from the WMAA method in the firmware's SSDT
-> and by setting each one and reading the sustained package power limit
-> from intel-rapl-mmio on AC:
+> bitland_mifs_wmi_resume() likewise returns any error other than
+> -EOPNOTSUPP from restoring the profile, so the resume is reported as
+> failed although the machine is fully usable.
 >
->    0x02  18 W
->    0x03  37 W
->    0x09  45 W
->    0x04  58 W
->    0x0a  18 W
+> Saving and restoring the platform profile is best effort. Warn and
+> continue instead of failing the system transition, and skip the restore
+> when nothing was saved, so resume does not write a stale or default
+> profile.
 >
-> Map low-power, balanced, balanced-performance and performance to 0x02,
-> 0x03, 0x09 and 0x04. 0x0a is only entered through the firmware's own
-> mode cycling, so report it as low-power without offering it for SET.
->
-> The machine is USB-C only and WMI_FN_SYSTEM_AC_TYPE is not implemented,
-> so skip the AC type check.
->
+> Fixes: dc1ec4fa86b2 ("platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver")
 > Signed-off-by: Chris Taraszka <chris@miget.com>
 > ---
 >
 > Notes:
->      Tested on the Xiaomi Book Pro 14 (TM2424, BIOS XMAPT4B0P0A0A) with this
->      series on top of v13, backported to v7.3, on AC: all four profiles set
->      and read back, and the firmware mode (EC 0x68) and PL1 follow:
->      0x02/18 W, 0x03/37 W, 0x09/45 W, 0x04/58 W. These match the values
->      first measured on BIOS XMAPT4B0P0909. s2idle suspend/resume from
->      performance restores 0x04.
+>      Tested on the same machine with v13 and this patch, without patch 1,
+>      and the firmware in 0x04. v13 alone aborts a pm_test=devices suspend:
 >      
->      On battery, balanced-performance and performance are refused by
->      bitland_pp_check_capability(), although BIOS 0909 applies 0x04 on
->      battery. This patch leaves that check as it is.
+>        bitland_mifs_wmi_suspend [bitland_mifs_wmi] returns -22
+>        PM: failed to suspend: error -22
+>      
+>      With this patch the suspend completes, "Failed to save platform
+>      profile: -22" is logged and the firmware is still in 0x04 after resume.
+>      
+>      This supersedes "platform/x86: bitland-mifs-wmi: Don't abort suspend
+>      when platform profile access fails" [1], reworked on top of v13 6/7.
+>      
+>      [1] https://lore.kernel.org/all/20260911182131.461415-1-chris@miget.com/
 >
->   drivers/platform/x86/bitland-mifs-wmi.c | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
+>   drivers/platform/x86/bitland-mifs-wmi.c | 22 +++++++++++++++-------
+>   1 file changed, 15 insertions(+), 7 deletions(-)
 >
 > diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-> index a4c341ffbb9b..73be63146fd5 100644
+> index 73be63146fd5..df9a931fa939 100644
 > --- a/drivers/platform/x86/bitland-mifs-wmi.c
 > +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -116,7 +116,28 @@ static const struct bitland_mifs_quirks default_quirks = {
->   	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
+> @@ -237,6 +237,7 @@ struct bitland_mifs_wmi_data {
+>   	struct device *pp_dev;
+>   	const struct bitland_mifs_quirks *quirks;
+>   	enum platform_profile_option saved_profile;
+> +	bool profile_saved;
 >   };
 >   
-> +static const struct bitland_profile_entry tm2424_profile_entries[] = {
-> +	{ PLATFORM_PROFILE_LOW_POWER,              0x02 },
-> +	{ PLATFORM_PROFILE_LOW_POWER,              0x0a, true },
-> +	{ PLATFORM_PROFILE_BALANCED,               0x03 },
-> +	{ PLATFORM_PROFILE_BALANCED_PERFORMANCE,   0x09 },
-> +	{ PLATFORM_PROFILE_PERFORMANCE,            0x04 },
-> +};
-> +
-> +static const struct bitland_mifs_quirks tm2424_quirks = {
-> +	.profile_entries = tm2424_profile_entries,
-> +	.num_profile_entries = ARRAY_SIZE(tm2424_profile_entries),
-> +	.skip_ac_type_check = true,
-> +};
-> +
->   static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2424"),
-> +		},
-> +		.driver_data = (void *)&tm2424_quirks,
-> +	},
->   	{}
->   };
+>   static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+> @@ -408,10 +409,15 @@ static int bitland_mifs_wmi_suspend(struct device *dev)
+>   		return 0;
 >   
-Reviewed-by: Mingyou Chen <qby140326@gmail.com>
+>   	ret = laptop_profile_get(data->pp_dev, &profile);
+> -	if (ret == 0)
+> -		data->saved_profile = profile;
+> +	data->profile_saved = !ret;
+> +	if (ret) {
+> +		dev_warn(dev, "Failed to save platform profile: %d\n", ret);
+> +		return 0;
+> +	}
+>   
+> -	return ret;
+
+What value does the firmware respond?
+
+This patch fixes the suspend problem, but it hides the real driver 
+problem (unsupported profile entry).
+
+I saw 0x04 in your patch "platform/x86: bitland-mifs-wmi: Add Xiaomi 
+Book Pro 14 quirk".
+
+If result.data[0] in laptop_profile_get actually equals 0x04, the 
+function should be succeed, but it doesn't.
+
+Is there another no_set (for read only) profile entry for the 
+performance profile?
+
+> +	data->saved_profile = profile;
+> +
+> +	return 0;
+>   }
+>   
+>   static int bitland_mifs_wmi_resume(struct device *dev)
+> @@ -419,8 +425,8 @@ static int bitland_mifs_wmi_resume(struct device *dev)
+>   	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
+>   	int ret;
+>   
+> -	/* Skip event device */
+> -	if (!data->pp_dev)
+> +	/* Skip event device, or nothing was saved on suspend */
+> +	if (!data->pp_dev || !data->profile_saved)
+>   		return 0;
+>   
+>   	ret = laptop_profile_set(dev, data->saved_profile);
+> @@ -436,8 +442,10 @@ static int bitland_mifs_wmi_resume(struct device *dev)
+>   		}
+>   	}
+>   
+> -	dev_dbg(dev, "Resuming, restoring profile %d\n", data->saved_profile);
+> -	return ret;
+> +	if (ret)
+> +		dev_warn(dev, "Failed to restore platform profile: %d\n", ret);
+> +
+> +	return 0;
+>   }
+>   
+>   static DEFINE_SIMPLE_DEV_PM_OPS(bitland_mifs_wmi_pm_ops,
