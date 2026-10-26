@@ -1,87 +1,173 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793019614;
-	b=XeWtLR0MKVRXT6zS9277FPsNnIR2rI9uMdKELelAL3S8JQiwIkod3YRJhS6NNZSE3vjc
-	 wgqkDzBcpuWdCPPwkSXuABsEDth7/M+RWyzyCIOIQ9GIDaXAuzfVNNvt6zu/l5Ny0Reye
-	 Y+65OBjA3ejjvyaOo7LaOWuvYY40qBbglXDDyPjptlJxLrQT7pXQdqPKANQ6jI5el16bI
-	 n/4ywEKles2JV+ki9YkMR4EoF8SErkp8rZfy7X0uL4sCI7Xble+AmrwiSCbHLvT3EtlzE
-	 Y7bItGa1MfNawIFvhjNCkZ7x1a+bC+ttLRfoxpmRpv6DlpYy4f2RrK0KL4wjJpyqf3g==
+	t=1793019751;
+	b=HDy544LZNNR7TwcC4mLQzyh37UvJeJSp3HDccg2AdQHWYIgveNdXkAdxlF8/40s87adl
+	 FR4NBf9XtWDFhjJm9D4X/jyhAt3E5p+uEdhShKpOSevoNvMMT507xf8mlVZyxx7pM0moF
+	 bAz+45JhKZHBB4wiL58EvlmKxrLTBkd+f4wcY9ps16G3ZA2k74BdPVOg4M4igEQHe7lj7
+	 UW5ral5jLr/2P5IYAJCqPIFdrSnDO0DL7kM2Z4v3vvDKYf8tLcuPSAsi4HKCWGD8f5UWU
+	 6Biq25PqvUFZJGm/UAusdzjKqd2ymiOIj9xezw41ZZ2bXhtOPmH1tGm/Qfxd4ucbtDw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793019614;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=aLycgPRWJ2JG0cxzTu+EAdwBiwxmFU1wy6+ndTeNbPA=;
-	b=eUNl8KFW6hKMlCnNIKpbymdKvYfmpUkaqEH7aLS4+ngtotokK2MyWJ8OUI8rv8/wdS2M
-	 IMDvwBymD9EfvLwQ5gOW8LkUL+vf1GMQgvmqNxWHMgD33ptFneDluxgg7DS+ru8XZEDFF
-	 nlBB6t5GAFjo7MSVLnCPap3wxn2N5YB5/ndvmC8vHNutTxYIqt/nPmQLDyDOeHLoRzCfI
-	 K+UFDqL0g0Eaawxc1DBpqTXkfcGOcLOeC4371xJ6eU6Yq9WMiXJ3VgepKllBVkHm2/ON7
-	 nNsbkRHLVp4GcViDZc6P7bGKRprHLaVFq9Wmx7bcG83PwqB8/ADrqCGzzrXQN3YNMOQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793019751;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:Received:
+	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Spam-Flag:X-Spam-Level:
+	 X-Spamd-Result:X-Spam-Score;
+	bh=VgucDQGlpzyRpthc04g7/oRg6NX1oBAdxDc/UgjwdQw=;
+	b=PrVX+rPfO5cvX8uSbs9VvHef0iXUvBT3d0ou7UxsQsVGYcu0SFSQ4vOpC4v9zSfv9Wlk
+	 QFleIYfpe34F+gemZmSuv2SeIjvczxl8S1VOd1pm8tgyckCX1apjhvAkDM3HfbcdvdRnI
+	 5d8MaKhDs2iBzNdN6aWDW/CMIflF1hGjgInNVarGFjPP9uDV6+21o5sc4MoRHRa8/xvQ4
+	 Y0ZlVy+ERQnz5syxvxHT8sr5nF167MiVRLjBv6PbbaTpTAyuf74CQRE7VsTg1F+jJhPvj
+	 nGnbilhPllwaXhG45KFr8SJIOKpIO21AfVajztxqlA254MWNckKnfKe6DXLE++oX3zA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dClPxWPr;
-	arc=none smtp.remote-ip=198.175.65.21
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=suse.com;
+	spf=pass smtp.mailfrom=suse.com;
+	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=JJ17nvYM;
+	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=JJ17nvYM;
+	arc=none smtp.remote-ip=195.135.223.131
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C51606A31D;
-	Mon, 26 Oct 2026 13:00:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9C51606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADFF606A325;
+	Mon, 26 Oct 2026 13:02:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4ADFF606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dClPxWPr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793019614; x=1824555614;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qDODWVgoL1IWxLL0zt9d9i/eSrOYk8bZzq8SoRG38j0=;
-  b=dClPxWPrTjZ4iQX1xm5Y0BqFoTa6ybLCc4mlUn81ex9fkODtwujKZ77K
-   pSoKh+y7gBGv3NjLv1ye6HD3mxY1DRMCGC+PP6/0SttnVlrolJi7HSWd0
-   yiTkfCs/MTIXEQlc5dTtI9K1hcGqCVbpT0TmE3hRRyTNKIabPD452ySRi
-   wte5Yfx96wkNyecfiYrivJsD1vU9wKcdP5/zq+YhnsGsAKKzPsfFAMx8V
-   S7mu7SZFa/oefe8nDbrsrm02ai2pqKwtdV84m7/CQb98NfIN3gFcTu6kT
-   ZlqLekuPU0k/G1Nyq6LAUO549cjxe3t6FtuWslgvqg8Wh0LGY6MZhUaSg
-   Q==;
-X-CSE-ConnectionGUID: tsnmzb6UQE6kx+2pMTMD7A==
-X-CSE-MsgGUID: Vwrn7s+gTy67PLahijHIUQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1776392"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1776392"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 06:00:13 -0700
-X-CSE-ConnectionGUID: At6L9gueRR2N4T0zmFjrHQ==
-X-CSE-MsgGUID: +XEWu6hVTRC6gLTqRPDXRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4270923"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 06:00:07 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Oct 2026 15:00:02 +0200 (EET)
-To: Denis Benato <denis.benato@linux.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-input@vger.kernel.org, kernel@lists.opengamingcollective.org, 
-    Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    "Luke D . Jones" <luke@ljones.dev>, 
-    Mateusz Schwartz <matthew.schwartz@linux.dev>, 
-    Denis Benato <benato.denis96@gmail.com>, 
-    Jonathan LoBue <jlobue10@gmail.com>, 
-    Khamunetri Clark <khamunetriclark@gmail.com>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Joshua Leivenzon <hacker1024@users.sourceforge.net>, 
-    Nathan Chancellor <nathan@kernel.org>, 
-    =?ISO-8859-15?Q?Rebecca_Mara_M=FCller?= <rebecca.mara@posteo.de>, 
-    Ivan Levchenko <me@livan.pro>, Corentin Chary <corentin.chary@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH v11 04/18] HID: asus: add joysticks inner and outer range
- configuration
-In-Reply-To: <20261025235232.129945-5-denis.benato@linux.dev>
-Message-ID: <2bf5c5f8-185e-c322-dd76-ec182514c93c@linux.intel.com>
-References: <20261025235232.129945-1-denis.benato@linux.dev> <20261025235232.129945-5-denis.benato@linux.dev>
+	dkim=pass (1024-bit key, unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=JJ17nvYM;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=JJ17nvYM
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 491121F461;
+	Mon, 26 Oct 2026 13:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1793019748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VgucDQGlpzyRpthc04g7/oRg6NX1oBAdxDc/UgjwdQw=;
+	b=JJ17nvYMH3Y9kIckqy6Y5tJHT+fxv7TDUxcVfKccWHoD50mqQbH+hNM2c2hvMMjr/kBmMY
+	oXpu9UOTuwrkToNMxTLQys1MhXYd4kAzwIqHxFz3hF3W+PS7xhIKY4h/VKbLYDyripnlMG
+	GSL+hGu0ouKDyR1+nDCWhv1EumU3ogE=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1793019748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VgucDQGlpzyRpthc04g7/oRg6NX1oBAdxDc/UgjwdQw=;
+	b=JJ17nvYMH3Y9kIckqy6Y5tJHT+fxv7TDUxcVfKccWHoD50mqQbH+hNM2c2hvMMjr/kBmMY
+	oXpu9UOTuwrkToNMxTLQys1MhXYd4kAzwIqHxFz3hF3W+PS7xhIKY4h/VKbLYDyripnlMG
+	GSL+hGu0ouKDyR1+nDCWhv1EumU3ogE=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E928313408;
+	Mon, 26 Oct 2026 13:02:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4jNRLWFP32puWgAAD6G6ig
+	(envelope-from <jgross@suse.com>); Mon, 26 Oct 2026 13:02:25 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	virtualization@lists.linux.dev,
+	linux-ide@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-coco@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	David Airlie <airlied@redhat.com>,
+	Helge Deller <deller@gmx.de>,
+	linux-geode@lists.infradead.org,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Pu Wen <puwen@hygon.cn>,
+	Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Kiryl Shutsemau <kas@kernel.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Len Brown <lenb@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Huang Rui <ray.huang@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	Artem Bityutskiy <dedekind1@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Ashok Raj <ashok.raj.linux@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	Xi Pardee <xi.pardee@linux.intel.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH v5 00/12] x86/msr: Drop 32-bit MSR interfaces
+Date: Mon, 26 Oct 2026 14:02:11 +0100
+Message-ID: <20261026130223.773129-1-jgross@suse.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -91,506 +177,242 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spamd-Result: default: False [-10.80 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.com,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,broadcom.com,gmx.de,lists.infradead.org,selenic.com,gondor.apana.org.au,infradead.org,arm.com,google.com,intel.com,linaro.org,microsoft.com,hygon.cn,amd.com,zhaoxin.com,oracle.com,roeck-us.net,gmail.com,arndb.de,linuxfoundation.org,bootlin.com,nod.at,ti.com,lists.xenproject.org];
+	R_RATELIMIT(0.00)[to_ip_from(RLbixyxwsf3a5i7e4ez64ejni4)];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[93];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -10.80
 
-On Sun, 25 Oct 2026, Denis Benato wrote:
+For accessing the MSR registers on the local CPU, there are 2 types of
+interfaces: the "modern" 64-bit ones (rdmsrq() etc.) and the 32-bit
+ones (rdmsr() etc.) which are using the upper and lower 32-bit halves
+of the 64-bit wide MSR register values.
 
-> ROG Ally devices supports configuring joysticks inner and outer range:
-> add sysfs attributes to allow userspace modifying the sensitivity
-> of those controllers.
-> 
-> Signed-off-by: Denis Benato <denis.benato@linux.dev>
-> Signed-off-by: Luke Jones <luke@ljones.dev>
-> ---
->  drivers/hid/hid-asus.c | 433 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 433 insertions(+)
-> 
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index 0471e6263c24..4dbca9402f1d 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -1039,6 +1039,358 @@ static struct device_attribute dev_attr_right_vibration_intensity =
->  static struct device_attribute dev_attr_right_vibration_intensity_range =
->  	__ATTR(intensity_range, 0444, right_vibration_intensity_range_show, NULL);
->  
-> +/**
-> + * ally_set_joystick_thresholds() - Generic function to set joystick ranges
-> + * @ally: ally handheld structure
-> + * @hdev: HID device
-> + * @left_it: inner threshold (deadzone) of the left stick (0-50)
-> + * @left_ot: outer threshold of the left stick (70-100)
-> + * @right_it: inner threshold (deadzone) of the right stick (0-50)
-> + * @right_ot: outer threshold of the right stick (70-100)
-> + *
-> + * This function sends the command to set both inner and outer threshold
-> + * for the left and right joysticks.
-> + *
-> + * Return: 0 on success, negative errno on failure
-> + */
-> +static int ally_set_joystick_thresholds(struct ally_handheld *ally,
-> +					struct hid_device *hdev,
-> +					u8 left_it, u8 left_ot, u8 right_it, u8 right_ot)
-> +{
-> +	const u8 payload[] = { left_it, left_ot, right_it, right_ot };
-> +	int ret;
-> +
-> +	u8 *buf __free(kfree) = ally_alloc_cmd(CMD_SET_JOYSTICK_DEADZONE, payload, sizeof(payload));
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	ret = ally_gamepad_send_packet(ally, hdev, buf, ROG_ALLY_REPORT_SIZE);
-> +	if (ret < 0) {
-> +		hid_err(hdev, "Failed to set joystick ranges: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t left_joystick_inner_threshold_show(struct device *dev, struct device_attribute *attr,
-> +						  char *buf)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	return sysfs_emit(buf, "%u\n", cfg->left_deadzone);
-> +}
-> +
-> +static ssize_t left_joystick_inner_threshold_store(struct device *dev,
-> +						   struct device_attribute *attr,
-> +						   const char *buf, size_t count)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +	u8 value;
-> +	int ret;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	ret = kstrtou8(buf, 10, &value);
-> +	if (ret || value > 50)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = ally_set_joystick_thresholds(ally, hdev,
-> +					   value,
-> +					   cfg->left_outer_threshold,
-> +					   cfg->right_deadzone,
-> +					   cfg->right_outer_threshold);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cfg->left_deadzone = value;
-> +
-> +	sysfs_notify(&dev->kobj, "left_joystick_axis", "inner_threshold");
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t left_joystick_inner_threshold_range_show(struct device *dev,
-> +							struct device_attribute *attr,
-> +							char *buf)
-> +{
-> +	return sysfs_emit(buf, "0 50\n");
-> +}
-> +
-> +static ssize_t left_joystick_outer_threshold_show(struct device *dev, struct device_attribute *attr,
-> +						  char *buf)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	return sysfs_emit(buf, "%u\n", cfg->left_outer_threshold);
-> +}
-> +
-> +static ssize_t left_joystick_outer_threshold_store(struct device *dev,
-> +						   struct device_attribute *attr,
-> +						   const char *buf, size_t count)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +	u8 value;
-> +	int ret;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	ret = kstrtou8(buf, 10, &value);
-> +	if (ret || value < 70 || value > 100)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = ally_set_joystick_thresholds(ally, hdev,
-> +					   cfg->left_deadzone,
-> +					   value,
-> +					   cfg->right_deadzone,
-> +					   cfg->right_outer_threshold);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cfg->left_outer_threshold = value;
-> +
-> +	sysfs_notify(&dev->kobj, "left_joystick_axis", "outer_threshold");
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t left_joystick_outer_threshold_range_show(struct device *dev,
-> +							struct device_attribute *attr,
-> +							char *buf)
-> +{
-> +	return sysfs_emit(buf, "70 100\n");
-> +}
-> +
-> +static ssize_t right_joystick_inner_threshold_show(struct device *dev,
-> +						   struct device_attribute *attr,
-> +						   char *buf)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	return sysfs_emit(buf, "%u\n", cfg->right_deadzone);
-> +}
-> +
-> +static ssize_t right_joystick_inner_threshold_store(struct device *dev,
-> +						    struct device_attribute *attr,
-> +						    const char *buf, size_t count)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +	u8 value;
-> +	int ret;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	ret = kstrtou8(buf, 10, &value);
-> +	if (ret || value > 50)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = ally_set_joystick_thresholds(ally, hdev,
-> +					   cfg->left_deadzone,
-> +					   cfg->left_outer_threshold,
-> +					   value,
-> +					   cfg->right_outer_threshold);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cfg->right_deadzone = value;
-> +
-> +	sysfs_notify(&dev->kobj, "right_joystick_axis", "inner_threshold");
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t right_joystick_inner_threshold_range_show(struct device *dev,
-> +							 struct device_attribute *attr,
-> +							 char *buf)
-> +{
-> +	return sysfs_emit(buf, "0 50\n");
-> +}
-> +
-> +static ssize_t right_joystick_outer_threshold_show(struct device *dev,
-> +						   struct device_attribute *attr,
-> +						   char *buf)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	return sysfs_emit(buf, "%u\n", cfg->right_outer_threshold);
-> +}
-> +
-> +static ssize_t right_joystick_outer_threshold_store(struct device *dev,
-> +						    struct device_attribute *attr,
-> +						    const char *buf, size_t count)
-> +{
-> +	struct hid_device *hdev = to_hid_device(dev);
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> +	struct ally_handheld *const ally = drvdata->rog_ally;
-> +	struct ally_config *cfg;
-> +	u8 value;
-> +	int ret;
-> +
-> +	if (!ally)
-> +		return -ENODEV;
-> +
-> +	cfg = ally_get_config(ally);
-> +	if (!cfg)
-> +		return -ENODEV;
-> +
-> +	ret = kstrtou8(buf, 10, &value);
-> +	if (ret || value < 70 || value > 100)
+The 32-bit interfaces are not optimal for 3 reasons:
 
-I'd prefer binding values that are not 0 or 100 with defines. You print 
-the ranges with string literals and they are linked to checks here so 
-the code should link those by using same define.
+- They are based on primitives using 64-bit sized values anyway.
 
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&cfg->config_mutex);
-> +
-> +	if (!cfg->user_cal_support)
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = ally_set_joystick_thresholds(ally, hdev,
-> +					   cfg->left_deadzone,
-> +					   cfg->left_outer_threshold,
-> +					   cfg->right_deadzone,
-> +					   value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cfg->right_outer_threshold = value;
-> +
-> +	sysfs_notify(&dev->kobj, "right_joystick_axis", "outer_threshold");
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t right_joystick_outer_threshold_range_show(struct device *dev,
-> +							 struct device_attribute *attr,
-> +							 char *buf)
-> +{
-> +	return sysfs_emit(buf, "70 100\n");
-> +}
-> +
-> +static struct device_attribute dev_attr_left_joystick_inner_threshold =
-> +	__ATTR(inner_threshold, 0644, left_joystick_inner_threshold_show,
-> +	       left_joystick_inner_threshold_store);
-> +
-> +static struct device_attribute dev_attr_left_joystick_inner_threshold_range =
-> +	__ATTR(inner_threshold_range, 0444, left_joystick_inner_threshold_range_show, NULL);
-> +
-> +static struct device_attribute dev_attr_left_joystick_outer_threshold =
-> +	__ATTR(outer_threshold, 0644, left_joystick_outer_threshold_show,
-> +	       left_joystick_outer_threshold_store);
-> +
-> +static struct device_attribute dev_attr_left_joystick_outer_threshold_range =
-> +	__ATTR(outer_threshold_range, 0444, left_joystick_outer_threshold_range_show, NULL);
-> +
-> +static struct device_attribute dev_attr_right_joystick_inner_threshold =
-> +	__ATTR(inner_threshold, 0644, right_joystick_inner_threshold_show,
-> +	       right_joystick_inner_threshold_store);
-> +
-> +static struct device_attribute dev_attr_right_joystick_inner_threshold_range =
-> +	__ATTR(inner_threshold_range, 0444, right_joystick_inner_threshold_range_show, NULL);
-> +
-> +static struct device_attribute dev_attr_right_joystick_outer_threshold =
-> +	__ATTR(outer_threshold, 0644, right_joystick_outer_threshold_show,
-> +	       right_joystick_outer_threshold_store);
-> +
-> +static struct device_attribute dev_attr_right_joystick_outer_threshold_range =
-> +	__ATTR(outer_threshold_range, 0444, right_joystick_outer_threshold_range_show, NULL);
-> +
->  static struct attribute *ally_config_attrs[] = {
->  	&dev_attr_xbox_controller.attr,
->  	NULL
-> @@ -1056,6 +1408,22 @@ static struct attribute *ally_right_vibration_attrs[] = {
->  	NULL
->  };
->  
-> +static struct attribute *left_joystick_axis_attrs[] = {
-> +	&dev_attr_left_joystick_inner_threshold.attr,
-> +	&dev_attr_left_joystick_outer_threshold.attr,
-> +	&dev_attr_left_joystick_inner_threshold_range.attr,
-> +	&dev_attr_left_joystick_outer_threshold_range.attr,
-> +	NULL
-> +};
-> +
-> +static struct attribute *right_joystick_axis_attrs[] = {
-> +	&dev_attr_right_joystick_inner_threshold.attr,
-> +	&dev_attr_right_joystick_outer_threshold.attr,
-> +	&dev_attr_right_joystick_inner_threshold_range.attr,
-> +	&dev_attr_right_joystick_outer_threshold_range.attr,
-> +	NULL
-> +};
-> +
->  static const struct attribute_group ally_attr_groups[] = {
->  	{
->  		.attrs = ally_config_attrs,
-> @@ -1070,6 +1438,28 @@ static const struct attribute_group ally_attr_groups[] = {
->  	},
->  };
->  
-> +/*
-> + * The joystick and trigger range calibration attributes are tied to the
-> + * user-calibration capability: their sysfs groups are registered only
-> + * when the device supports configuring those parameters, and the show
-> + * and store callbacks reject accesses with -EOPNOTSUPP regardless, in
-> + * case the groups are registered for another supported feature.
-> + */
-> +static const struct attribute_group ally_left_joystick_axis_group = {
-> +	.name = "left_joystick_axis",
-> +	.attrs = left_joystick_axis_attrs,
-> +};
-> +
-> +static const struct attribute_group ally_right_joystick_axis_group = {
-> +	.name = "right_joystick_axis",
-> +	.attrs = right_joystick_axis_attrs,
-> +};
-> +
-> +static const struct attribute_group *const ally_cal_attr_groups[] = {
-> +	&ally_left_joystick_axis_group,
-> +	&ally_right_joystick_axis_group,
-> +};
-> +
->  /**
->   * ally_config_create() - Initialize configuration and create sysfs entries
->   * @hdev: HID device
-> @@ -1130,6 +1520,25 @@ static struct ally_config *ally_config_create(struct hid_device *hdev, struct al
->  		}
->  	}
->  
-> +	/* Skip the calibration groups when the capability is missing. */
-> +	if (cfg->user_cal_support) {
-> +		int cal_i;
-> +
-> +		for (cal_i = 0; cal_i < ARRAY_SIZE(ally_cal_attr_groups);
-> +		     cal_i++) {
-> +			ret = sysfs_create_group(&hdev->dev.kobj,
-> +						 ally_cal_attr_groups[cal_i]);
-> +			if (ret < 0) {
-> +				hid_err(hdev, "Failed to create sysfs group '%s': %d\n",
-> +					ally_cal_attr_groups[cal_i]->name, ret);
-> +				while (cal_i-- > 0)
-> +					sysfs_remove_group(&hdev->dev.kobj,
-> +							   ally_cal_attr_groups[cal_i]);
-> +				goto ally_config_create_sysfs_err;
-> +			}
-> +		}
-> +	}
-> +
->  	cfg->initialized = true;
->  
->  	return cfg;
-> @@ -1160,6 +1569,18 @@ static void ally_config_remove(struct hid_device *hdev, struct ally_config *cfg)
->  
->  	for (i = 0; i < ARRAY_SIZE(ally_attr_groups); i++)
->  		sysfs_remove_group(&hdev->dev.kobj, &ally_attr_groups[i]);
-> +
-> +	/*
-> +	 * The calibration groups are removed with the same gating used to
-> +	 * create them, so a device without those capabilities does not
-> +	 * trigger a "not found" warning.
-> +	 */
-> +	if (cfg->user_cal_support || cfg->anti_deadzone_support ||
-> +	    cfg->resp_curve_support) {
-> +		for (i = 0; i < ARRAY_SIZE(ally_cal_attr_groups); i++)
-> +			sysfs_remove_group(&hdev->dev.kobj,
-> +					   ally_cal_attr_groups[i]);
-> +	}
->  }
->  
->  /**
-> @@ -1458,6 +1879,18 @@ static int hid_asus_ally_init(struct hid_device *hdev, struct ally_handheld *all
->  		hid_warn(hdev, "Failed to restore vibration intensity: %d\n",
->  			 ret);
->  
-> +	if (cfg->user_cal_support) {
-> +		ret = ally_set_joystick_thresholds(ally, hdev,
-> +						   cfg->left_deadzone,
-> +						   cfg->left_outer_threshold,
-> +						   cfg->right_deadzone,
-> +						   cfg->right_outer_threshold);
-> +		if (ret < 0)
-> +			hid_warn(hdev,
-> +				 "Failed to restore joystick thresholds: %d\n",
-> +				 ret);
-> +	}
-> +
->  	return 0;
->  }
->  
-> 
+- Modern x86 CPUs have added support for MSR access instructions using
+  an immediate value instead of a register for addressing the MSR,
+  while the value is in a 64-bit register.
+
+- rdmsr() is a macro storing the upper and lower 32-bit halves in
+  variables specified as macro parameters. This is obscuring variable
+  assignment through a macro. Additionally rdmsrq() is mimicking this
+  pattern by being a macro, too, with the target variable specified as
+  a parameter as well.
+
+For those reasons drop the 32-bit interfaces for accessing the x86 MSR
+registers completely and only use the 64-bit variants.
+
+This allows to switch all "high-level" MSR access macros to inline
+functions in the end.
+
+This series will be used as the base for further reorganisation of the
+MSR access functions, especially for completely inlining the MSR
+access instructions even with paravirtualization being active.
+
+Based on kernel 7.4 as of 2026-10-26.
+
+IMHO at least patches 2 and 3 should be applied rather sooner than later
+in order to avoid new instances of the 32-bit variants of the *_safe()
+functions creeping in again.
+
+Changes in V2:
+- dropped already applied patches
+- added patch 1
+- rebased
+
+Changes in V3:
+- small fixes in patches 4 and 13
+- rebased
+
+Changes in V4:
+- rebased
+
+Changes in V5:
+- patch 9 of V4 has been applied
+- rebased
+
+Juergen Gross (12):
+  x86/cpu: Fix coding style violation
+  x86/msr: Remove wrmsr_safe()
+  x86/msr: Remove rdmsr_safe()
+  drivers/ata: Stop using 32-bit MSR interfaces
+  agp/nvidia: Stop using 32-bit MSR interfaces
+  fbdev/geode: Stop using 32-bit MSR interfaces
+  hw_random/via-rng: Stop using 32-bit MSR interfaces
+  drivers/gpio: Stop using 32-bit MSR interfaces
+  x86/msr: Remove wrmsr()
+  x86/msr: Remove rdmsr()
+  treewide: convert rdmsrq() from a macro to an inline function
+  x86/msr: Simplify some rdmsrq() use cases
+
+ arch/x86/coco/sev/core.c                      |  2 +-
+ arch/x86/events/amd/brs.c                     |  4 +-
+ arch/x86/events/amd/core.c                    |  8 +--
+ arch/x86/events/amd/ibs.c                     | 18 +++----
+ arch/x86/events/amd/lbr.c                     | 16 ++----
+ arch/x86/events/amd/power.c                   |  8 +--
+ arch/x86/events/amd/uncore.c                  |  4 +-
+ arch/x86/events/core.c                        | 20 ++++----
+ arch/x86/events/intel/core.c                  | 15 ++----
+ arch/x86/events/intel/cstate.c                |  5 +-
+ arch/x86/events/intel/ds.c                    |  2 +-
+ arch/x86/events/intel/knc.c                   | 10 ++--
+ arch/x86/events/intel/lbr.c                   | 25 +++-------
+ arch/x86/events/intel/p4.c                    |  6 +--
+ arch/x86/events/intel/p6.c                    |  4 +-
+ arch/x86/events/intel/pt.c                    | 12 ++---
+ arch/x86/events/intel/uncore.c                |  6 +--
+ arch/x86/events/intel/uncore_nhmex.c          |  4 +-
+ arch/x86/events/intel/uncore_snb.c            |  2 +-
+ arch/x86/events/intel/uncore_snbep.c          |  6 +--
+ arch/x86/events/msr.c                         |  2 +-
+ arch/x86/events/perf_event.h                  |  6 +--
+ arch/x86/events/rapl.c                        |  6 +--
+ arch/x86/events/zhaoxin/core.c                | 10 ++--
+ arch/x86/hyperv/hv_apic.c                     |  9 ++--
+ arch/x86/hyperv/hv_init.c                     | 26 +++++-----
+ arch/x86/hyperv/hv_spinlock.c                 |  2 +-
+ arch/x86/include/asm/apic.h                   |  7 +--
+ arch/x86/include/asm/debugreg.h               |  6 +--
+ arch/x86/include/asm/fsgsbase.h               |  2 +-
+ arch/x86/include/asm/kvm_host.h               | 10 ----
+ arch/x86/include/asm/msr.h                    | 39 ++-------------
+ arch/x86/include/asm/paravirt.h               | 26 +---------
+ arch/x86/kernel/apic/apic.c                   | 14 +++---
+ arch/x86/kernel/apic/apic_numachip.c          |  6 +--
+ arch/x86/kernel/cet.c                         |  2 +-
+ arch/x86/kernel/cpu/amd.c                     | 14 +++---
+ arch/x86/kernel/cpu/aperfmperf.c              |  8 +--
+ arch/x86/kernel/cpu/bugs.c                    | 12 ++---
+ arch/x86/kernel/cpu/bus_lock.c                |  8 +--
+ arch/x86/kernel/cpu/centaur.c                 |  8 +--
+ arch/x86/kernel/cpu/common.c                  | 12 ++---
+ arch/x86/kernel/cpu/feat_ctl.c                |  4 +-
+ arch/x86/kernel/cpu/hygon.c                   |  4 +-
+ arch/x86/kernel/cpu/intel.c                   |  6 +--
+ arch/x86/kernel/cpu/intel_epb.c               |  4 +-
+ arch/x86/kernel/cpu/mce/amd.c                 |  4 +-
+ arch/x86/kernel/cpu/mce/core.c                |  8 +--
+ arch/x86/kernel/cpu/mce/inject.c              |  2 +-
+ arch/x86/kernel/cpu/mce/intel.c               | 18 +++----
+ arch/x86/kernel/cpu/mce/p5.c                  |  8 +--
+ arch/x86/kernel/cpu/mce/winchip.c             |  2 +-
+ arch/x86/kernel/cpu/microcode/intel.c         |  2 +-
+ arch/x86/kernel/cpu/mshyperv.c                |  6 +--
+ arch/x86/kernel/cpu/mtrr/amd.c                |  4 +-
+ arch/x86/kernel/cpu/mtrr/cleanup.c            |  4 +-
+ arch/x86/kernel/cpu/mtrr/generic.c            | 32 ++++++------
+ arch/x86/kernel/cpu/mtrr/mtrr.c               |  2 +-
+ arch/x86/kernel/cpu/resctrl/core.c            |  2 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c         |  4 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  4 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c        |  2 +-
+ arch/x86/kernel/cpu/topology.c                |  2 +-
+ arch/x86/kernel/cpu/topology_amd.c            |  4 +-
+ arch/x86/kernel/cpu/transmeta.c               |  8 +--
+ arch/x86/kernel/cpu/tsx.c                     | 10 ++--
+ arch/x86/kernel/cpu/umwait.c                  |  2 +-
+ arch/x86/kernel/cpu/zhaoxin.c                 |  4 +-
+ arch/x86/kernel/fpu/core.c                    |  2 +-
+ arch/x86/kernel/hpet.c                        |  2 +-
+ arch/x86/kernel/kvm.c                         |  2 +-
+ arch/x86/kernel/mmconf-fam10h_64.c            |  6 +--
+ arch/x86/kernel/process.c                     |  4 +-
+ arch/x86/kernel/process_64.c                  | 14 +++---
+ arch/x86/kernel/shstk.c                       |  8 +--
+ arch/x86/kernel/traps.c                       |  4 +-
+ arch/x86/kernel/tsc.c                         |  2 +-
+ arch/x86/kernel/tsc_msr.c                     |  6 +--
+ arch/x86/kernel/tsc_sync.c                    |  6 +--
+ arch/x86/kvm/msrs.c                           |  2 +-
+ arch/x86/kvm/svm/pmu.c                        |  4 +-
+ arch/x86/kvm/svm/svm.c                        |  6 +--
+ arch/x86/kvm/vmx/main.c                       |  2 +-
+ arch/x86/kvm/vmx/nested.c                     |  4 +-
+ arch/x86/kvm/vmx/pmu_intel.c                  |  8 +--
+ arch/x86/kvm/vmx/sgx.c                        |  6 +--
+ arch/x86/kvm/vmx/tdx.c                        |  2 +-
+ arch/x86/kvm/vmx/vmx.c                        | 40 +++++++--------
+ arch/x86/kvm/x86.c                            |  6 +--
+ arch/x86/lib/insn-eval.c                      |  6 +--
+ arch/x86/lib/msr-smp.c                        |  2 +-
+ arch/x86/mm/pat/memtype.c                     |  2 +-
+ arch/x86/pci/amd_bus.c                        |  8 +--
+ arch/x86/platform/olpc/olpc-xo1-rtc.c         |  6 +--
+ arch/x86/platform/olpc/olpc-xo1-sci.c         |  2 +-
+ arch/x86/power/cpu.c                          | 10 ++--
+ arch/x86/realmode/init.c                      |  2 +-
+ arch/x86/virt/hw.c                            |  8 +--
+ arch/x86/virt/svm/sev.c                       | 22 ++++----
+ arch/x86/virt/vmx/tdx/tdx.c                   |  2 +-
+ arch/x86/xen/suspend.c                        |  2 +-
+ drivers/acpi/processor_perflib.c              |  2 +-
+ drivers/ata/pata_cs5535.c                     | 24 ++++-----
+ drivers/ata/pata_cs5536.c                     | 17 +++----
+ drivers/char/agp/nvidia-agp.c                 | 32 ++++++------
+ drivers/char/hw_random/via-rng.c              | 29 +++++------
+ drivers/cpufreq/acpi-cpufreq.c                |  8 +--
+ drivers/cpufreq/amd-pstate.c                  |  4 +-
+ drivers/cpufreq/e_powersaver.c                | 20 ++++----
+ drivers/cpufreq/intel_pstate.c                | 28 +++++------
+ drivers/cpufreq/longhaul.c                    | 12 ++---
+ drivers/cpufreq/longrun.c                     | 16 +++---
+ drivers/cpufreq/powernow-k7.c                 | 10 ++--
+ drivers/cpufreq/powernow-k8.c                 |  8 +--
+ drivers/cpufreq/speedstep-centrino.c          |  4 +-
+ drivers/cpufreq/speedstep-lib.c               | 14 +++---
+ drivers/edac/amd64_edac.c                     |  6 +--
+ drivers/edac/intel-bff.c                      |  4 +-
+ drivers/gpio/gpio-cs5535.c                    | 10 ++--
+ drivers/hv/mshv_vtl_main.c                    |  2 +-
+ drivers/hwmon/hwmon-vid.c                     |  4 +-
+ drivers/idle/intel_idle.c                     | 26 +++++-----
+ drivers/misc/cs5535-mfgpt.c                   |  6 +--
+ drivers/mtd/nand/raw/cs553x_nand.c            |  6 +--
+ drivers/platform/x86/intel/ifs/load.c         | 10 ++--
+ drivers/platform/x86/intel/ifs/runtest.c      |  8 +--
+ drivers/platform/x86/intel/pmc/cnp.c          |  2 +-
+ .../intel/speed_select_if/isst_if_mbox_msr.c  |  6 +--
+ .../intel/speed_select_if/isst_tpmi_core.c    |  2 +-
+ drivers/platform/x86/intel_ips.c              | 20 ++++----
+ drivers/powercap/intel_rapl_msr.c             |  2 +-
+ drivers/thermal/intel/intel_hfi.c             |  8 +--
+ drivers/thermal/intel/therm_throt.c           | 22 ++++----
+ drivers/thermal/intel/x86_pkg_temp_thermal.c  |  6 +--
+ drivers/video/fbdev/geode/display_gx.c        |  8 +--
+ drivers/video/fbdev/geode/gxfb_core.c         |  2 +-
+ drivers/video/fbdev/geode/lxfb_ops.c          | 50 +++++++++----------
+ drivers/video/fbdev/geode/suspend_gx.c        | 24 +++++----
+ drivers/video/fbdev/geode/video_gx.c          |  8 +--
+ include/linux/cs5535.h                        | 10 ++--
+ 140 files changed, 567 insertions(+), 685 deletions(-)
 
 -- 
- i.
+2.56.0
 
