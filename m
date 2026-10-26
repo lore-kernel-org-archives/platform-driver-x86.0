@@ -1,109 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793010129;
-	b=jNo3i+T98TBxpGukdbAx78zeIjX8nLrqS8ej0XKHWSOxECtFaLtlTBk2kq3lcgCHR1i8
-	 ZnBy5l3VlCaIX1RbwBnqDhbXnDIwX7A+iqXB6hctLM1zY/ESU2XcLtwxT9VsPX2Zlil4n
-	 PQml6c3T0TULNho7x6t0jC4U7K3JTy+sPkDcH10wdFOcFSg0cN/NPTfVwy5/w9Mwb+k+j
-	 X+fY3QPUuGSOrJowiOhfThF1goqOsgNBMJKNIJirFCO7uEbA5vA8iOnnze5UnyIe4rtU4
-	 4dghHHbTE+pKlAOzmPyS4JfQ4jceSV9YwlrwxSLRbQ7k4BgG2H7RMskb4SoEYDf97yA==
+	t=1793011329;
+	b=etsZJL36QdzclQ6fy6DEuLFSPGNeoEjnSaIsZZ6VQTSDIWYw4N7vH7lNk2pGVw6xziF6
+	 SEc9ZHO/Sv3Sr3lv3UctDCa2xNAmBA2g2L6b6/YSgTMRmsG2lKUXJVAokyB57wZ7CsvZ4
+	 FalHHbjo1RdfZrIMkT6RnYppQBU1XDTE7d6MSBIFd1jJflQJloDzX4l/ORoqDyEcAnW8o
+	 loDn7kO632lG+EwvN2KBIo71B4XwfowqAE7YeQp6XDcztD5iooVmuNFSIn68op19nEvPY
+	 AEOslhBsim4hTQ3Seb9k+UA+BvJd7dpZCkdPLV4EZl+ee8LcGPMCvz83UDoToK+sUPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793010129;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=6ycmAB6PxtVDAOSxkc4Ku8pcl/F85BhrFwHWXHoa634=;
-	b=s4mWTeiFZc2ubI5tQCH2p1JG75Qay9lF6RPDs1C7aXYl5O1RfIvA/GmBkA9FyYWJgPuJ
-	 nNv4XBL44SFAytwxYNHi2WuRfuldVm/PYfXYTNW91gsedtnTjsxXvTM85JvoQB2XKfBi/
-	 fSM9NyNPKia/pmaYf4Frl62HmcQGgwCJ3g5AfV7MiGCLhqKfJuq8pVwrQG0ioKjnBbrQX
-	 f20G1iMnR8La3k/wiucPvbh02UTOkWXd8odm1oEpLIWbOWKc6AwgAz3xbJGQZTco6bnO0
-	 T5I2Pq2zgeVh7+hn3515YK8x/2Zfl4EoPiZvVPPnCRSXRHW84QfW8bhx+hezjwaFMXQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793011329;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=f+DS/lqD8BGjXqhz3m5vE80K7tWoasgYoR/nHTZXhLM=;
+	b=FdjxSXk/zBcTZMHhZVHdIqMwnXacwsl9eGw8oplS3As9BLHEyrBD5l13e8FtgbABMgO/
+	 C2bN3d6sjKD3Vmg6pTtuZI2h0qQpYRnkMC3QclMdKvkyNIDFSPM90sGUuKxRCfyOdKIDC
+	 aLh5WkQB7YdZzeRTrPz/FV6HBIbrfftIssf0sx8mryPE/tb4msc7w5ax7bcMWD90zeMKE
+	 GvVLUoPWlT6k1mDUjD2K/VAgfBUatGuk3NHyp1SuwSKQPTfjP6nzX0MaLVx7ucwcNdJKB
+	 pauNn1z2cpo2z4KfW+kFini3Y1sr6yTfuNvr8O51kvE/ymHVl77CfO3Pq4Lv46uGpuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=gU3+1lmO;
-	arc=none smtp.remote-ip=209.85.216.45
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QSdr9HZK;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7A460A260D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 10:22:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DD7A460A260D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E66606A31A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 10:42:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4E66606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=gU3+1lmO
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3ac9f49b984so1725438a91.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 03:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793010128; x=1793614928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=6ycmAB6PxtVDAOSxkc4Ku8pcl/F85BhrFwHWXHoa634=;
-        b=gU3+1lmO8MRBjumstxABnQkjClXrqaJybo4d1B19kkjLJtiGB9wQ7y76/6i7+eNGR7
-         BjfkLu5vBgC6KyVur3vp0k1UWNvaHhrGhuJdIpcH/2Sgk1cQFzdYuMvmk5WJi872AEco
-         /Qup1xEDoOOyr66xvZFEqIdx+1wA9cG/c37L25CxdZGlLDAwvbMT0hD8gFUfi+d/4sY4
-         IcGgA0TRqs/CbqqX7QaSrksXoaH7Uf8vxl02tUMGsE41Y4TqPmJmpPz5VEHmjMmh+C0j
-         zETptfoR0Rm8aXaylNMvqVmh5vRiKiBWvrnUrZNGzi3l4cHPySJFYXJ8pSjetm3GvRaf
-         EbfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793010128; x=1793614928;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=6ycmAB6PxtVDAOSxkc4Ku8pcl/F85BhrFwHWXHoa634=;
-        b=PvMxzT+cH2euqXQHhpFjQ+JcVpYleUSTtNBaWTzYT5IRzSaIJ6vhrG7tLrBelxw9Q0
-         Em3Pon4yWfosJzs0p4wL22Ob854zQcWcfh8yWECAgaRuxCzFxmtmjCS0sQrhJA8YC7o5
-         hS9XWCP2msvfAh+HGTkqhMKw8xVFW0+JkfB6BscNcJ/npG1KX5M6ac6J5unVQE85vATK
-         rM2agP41Rergfro5pKeD3NCWLcQ/RI+17kQ9g+fWRi5C/FIfhhdvmx7sT+tEa2pjfCG8
-         6a9EHdLE954vfR4pXgtxqX4Zrql3XPhJHHU0TUYZ8LLcbGhCsX5Zg9zoqvnWNTaKBcgl
-         qlhQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxzAlSEGJeELe35khWsPi0SvmHCOFYBqR6Dp5luPaWrdW6MJWl0DbiTM6FZBkeHnHyugiOTmkD3etPTEASLn/MWWU1H@vger.kernel.org
-X-Gm-Message-State: AFq9FYJYReB+UyTmHLfgxY4teAP0YcCEiWxgqRFzJGuWrrt/lqDPhFtI
-	GETZSLpa3mvm1LCev+EsHSl708HklJ/fxbHrHkm7OTbaVC8aGTVknVgu
-X-Gm-Gg: AYBFou31mF2p0cF+GYNvh8NWmsCILkWQ/qG8tY63Ov+COjHHY0LZKnqZqRVFmZqAFwg
-	Ff0x5Pa3W01epJloaOnVpMM/1w3pniwvOIzWvzq6xRW+3Twi9jl8UEIlv9J6Xqyi+yli9gEXX16
-	TDQKMqvZow+RZtF3rNEDC7hcTdJCqdM1wnbCt70P4yfKFHh4pkyV5ghnwQMQdryzZL61u6/46CN
-	apgUw/cy17bjK9Tddb+7p6ndyU6e1scr9HgIAM69yhZKgDehCizyw0Sa41a1OeQ23scvEsyWmwM
-	rSZWjooNmxovuawMCEOr8R8yV94VE8wBh4XiGz1+IONihM26w57S7wOOgj8uVDLaP8QcHYEdqu5
-	oTBMRt81vlgabqgMq5F2WCgBX9XyVsD9SF1NsIf9hajk8KIJ68CwLO+gu1sfPdbfwSRelBEp9ub
-	66/txaMbwUlgAHTvVFsfrUbk2W5iLGSGDmIcftdyt9u2LvakaEQVTeU8m2H6660ldxkXxzFNXrC
-	WhnwV07mk/plzWZQIcoFN3nxtKf3jOcuh+WoA==
-X-Received: by 2002:a17:90b:2b8f:b0:3a2:bb9f:f87d with SMTP id 98e67ed59e1d1-3adeb5a57afmr3846519a91.21.1793010128168;
-        Mon, 26 Oct 2026 03:22:08 -0700 (PDT)
-Received: from qby-nixos-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3adebe6af0dsm7877467a91.5.2026.10.26.03.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 03:22:07 -0700 (PDT)
-From: Mingyou Chen <qby140326@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilya Gladyshev <ilya.gladyshev@linux.dev>
-Cc: KentoNion <kento@kekto.ru>,
-	platform-driver-x86@vger.kernel.org,
-	ted eric <ericted8810@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	linux-kernel@vger.kernel.org,
-	Chris Taraszka <chris@miget.com>,
-	Matias Civadda <matias.civadda2342001@gmail.com>,
-	=?UTF-8?q?=E9=AB=98=20=E4=BF=8A=E6=96=87?= <btx342@gmail.com>,
-	powerfullz <wleizc7319@gmail.com>,
-	=?UTF-8?q?=E5=AD=99=20=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
-	=?UTF-8?q?Milo=C5=A1=20Vlku?= <vlku.milos.fun@gmail.com>,
-	Rsplwe <i@rsplwe.com>,
-	Bozhen Peng <bozhenpeng93@gmail.com>,
-	Anton Karasev <uselessfire@gmail.com>,
-	Jame Jao <jaojame6@gmail.com>,
-	Serhiy Shliapuhin <shlyapugin@gmail.com>,
-	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH v14 6/6] platform/x86: bitland-mifs-wmi: Fallback to balanced platform profile if last performance profile is not available
-Date: Mon, 26 Oct 2026 18:21:01 +0800
-Message-ID: <20261026102101.224568-7-qby140326@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261026102101.224568-1-qby140326@gmail.com>
-References: <20261026102101.224568-1-qby140326@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QSdr9HZK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793011329; x=1824547329;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=nW6h3bHAUR52uEYj2GY1TqqIF+Gwx3bZrMdTPOStt2w=;
+  b=QSdr9HZKA2ouTNNdH13H2yN6Ai1ENB89vcjj+c5ZyTybwPi+/4jrRlcj
+   m/3KHU8qzVYYkKQugcDq8v7hisfoX6JGenzKshTpmTqMJaBpvGd4DF9BC
+   nIGIQpNyxqW0DOM8MEZv74fPYXmZpOOqRa6Js2/jshumIT1uNHnY07YIz
+   GOJESrc4LmCQFoUURQFSFocOx9oOTzDpiUi4Kc2HQ3b4Ni0y1fgsciNP8
+   0idO9Y2MnFmeyZC72FJRJcaCnqf8QHU9Tz1QxtyMua2rTg5oVwxSUCSDQ
+   wIrPChz/x2Injtj52lwB7KnKhguyaABySAskRG6StEGsyX000TkDwMp6N
+   Q==;
+X-CSE-ConnectionGUID: lqiaCi82RSqWs5BFHABcUw==
+X-CSE-MsgGUID: NQPLwerES8KRtwbnoaforQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1559161"
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="1559161"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 03:42:08 -0700
+X-CSE-ConnectionGUID: 5gs09gJ5Qful0+p5IVISog==
+X-CSE-MsgGUID: MPV/74DgQUSJWC0aFbh9EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="4134282"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.109])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 03:42:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 Oct 2026 12:42:01 +0200 (EET)
+To: Chris Simpson <chris@nilk.net>, Konrad Dybcio <quic_kdybcio@quicinc.com>, 
+    Hans de Goede <hansg@kernel.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: janussss@163.com, luzmaximilian@gmail.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] surface: aggregator: propagate -EPROBE_DEFER from
+ ssam_irq_setup()
+In-Reply-To: <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net>
+Message-ID: <2faa9857-9d55-a607-bd46-588598b64ca4@linux.intel.com>
+References: <7d51f80e-9552-957f-f32c-1d608042b647@linux.intel.com> <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -113,64 +81,85 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-On Bitland laptops, performance profiles require an external power
-supply. If the system enters suspend in a performance profile and the AC
-adapter is unplugged while the machine is asleep, laptop_profile_set()
-fails with -EOPNOTSUPP during resume when attempting to re-apply
-saved_profile.
++ Konrad, Hans, Andy.
 
-Returning an error from the resume callback simply because the power
-cable was removed during sleep is undesirable, as the device is
-otherwise
-fully functional.
+On Fri, 23 Oct 2026, Chris Simpson wrote:
 
-Gracefully handle this condition by falling back to
-PLATFORM_PROFILE_BALANCED
-whenever restoring the saved profile returns -EOPNOTSUPP. Update
-saved_profile accordingly and notify user space via
-platform_profile_notify() so daemons such as power-profiles-daemon stay
-in sync with the actual hardware state.
+> Hi,
+> 
+> Same failure here on a Surface Pro 9 (Tiger Lake, INTC1055 driven by
+> pinctrl_tigerlake as a module): whenever surface_aggregator is loaded from
+> the initramfs about 30 ms after /init, before udev has bound the GPIO
+> controller, probe ends with
+> 
+>   surface_serial_hub serial0-0: error -EINVAL: failed to setup IRQ
+> 
+> and is never retried, so Type Cover, battery and tablet-mode switch are
+> gone until a manual rebind. linux-surface has several reports of this
+> since v6.12 (linux-surface/linux-surface#2219, #1645, #2064, #2039), and
+> it is a regression from b27622f13172 ("platform/surface: Add OF support"),
+> which used to propagate the gpiod_get() error.
+> 
+> Janus, are you planning a v2? If not, below is a variant that follows
+> Ilpo's comment by using gpiod_get_optional(): only "no GPIO described"
+> falls back to fwnode_irq_get(), every other error including
+> -EPROBE_DEFER is passed on. I'm happy to send it properly (Fixes:
+> b27622f13172, Cc: stable, your patch credited), or to test your v2 on
+> the Pro 9 instead, whichever you prefer.
+> 
+> I've tested it on the Pro 9 (Fedora 43, 7.2.12 with the linux-surface
+> patches), with surface_aggregator forced into the initramfs. Unpatched,
+> the probe fails with the -EINVAL above and the Type Cover, battery and
+> tablet-mode switch are missing. Patched, the probe defers three times
+> and completes about 0.2 s later, with all of them present and the
+> device no longer listed in devices_deferred. Suspend/resume behaves as
+> on an unpatched kernel. The analysis and the diff were produced with an
+> AI coding assistant (Claude Code), and reviewed and tested by me.
+> 
+> Chris Simpson
+> 
+> --- a/drivers/platform/surface/aggregator/controller.c
+> +++ b/drivers/platform/surface/aggregator/controller.c
+> @@ -2753,12 +2753,20 @@
+>  	 */
+>  	const int irqf = IRQF_ONESHOT | IRQF_TRIGGER_RISING | IRQF_NO_AUTOEN;
+>  
+> -	gpiod = gpiod_get(dev, "ssam_wakeup-int", GPIOD_ASIS);
+> -	if (IS_ERR(gpiod)) {
+> -		irq = fwnode_irq_get(dev_fwnode(dev), 0);
+> -	} else {
+> +	/*
+> +	 * Only fall back to the fwnode IRQ if no wakeup GPIO is described
+> +	 * at all. Any other error, in particular -EPROBE_DEFER while the
+> +	 * GPIO controller has not been registered yet, must reach the probe.
+> +	 */
+> +	gpiod = gpiod_get_optional(dev, "ssam_wakeup-int", GPIOD_ASIS);
+> +	if (IS_ERR(gpiod))
+> +		return PTR_ERR(gpiod);
+> +
+> +	if (gpiod) {
+>  		irq = gpiod_to_irq(gpiod);
+>  		gpiod_put(gpiod);
+> +	} else {
+> +		irq = fwnode_irq_get(dev_fwnode(dev), 0);
 
-Signed-off-by: Mingyou Chen <qby140326@gmail.com>
----
- drivers/platform/x86/bitland-mifs-wmi.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index 3f8f1ebb10fb..a431d3fef774 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -392,13 +392,27 @@ static int bitland_mifs_wmi_suspend(struct device *dev)
- static int bitland_mifs_wmi_resume(struct device *dev)
- {
- 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	int ret;
- 
- 	/* Skip event device */
- 	if (!data->pp_dev)
- 		return 0;
- 
-+	ret = laptop_profile_set(dev, data->saved_profile);
-+
-+	if (ret == -EOPNOTSUPP && data->saved_profile != PLATFORM_PROFILE_BALANCED) {
-+		dev_dbg(dev, "Cannot restore profile %d (likely on battery), falling back to balanced\n",
-+			data->saved_profile);
-+
-+		ret = laptop_profile_set(dev, PLATFORM_PROFILE_BALANCED);
-+		if (!ret) {
-+			data->saved_profile = PLATFORM_PROFILE_BALANCED;
-+			platform_profile_notify(data->pp_dev);
-+		}
-+	}
-+
- 	dev_dbg(dev, "Resuming, restoring profile %d\n", data->saved_profile);
--	return laptop_profile_set(dev, data->saved_profile);
-+	return ret;
- }
- 
- static DEFINE_SIMPLE_DEV_PM_OPS(bitland_mifs_wmi_pm_ops,
+I have to admit this was not exactly what I meant (I only meant to not 
+use -Exx literal in the return statement), but now that I see this v2, 
+I'm not saying your approach is wrong either (I'm left unsure).
+
+Are there some legimate cases where error other than -EDEFER_PROBE should 
+end up into this else like it previously did? The return on error was 
+removed by b27622f13172 ("platform/surface: Add OF support") so I assume 
+there was some good reason for that but the commit message isn't helpful 
+at all... :-(
+
+Konrad, you did that change, can you explain the reason why the return was 
+removed from the error path?
+
 -- 
-2.56.0
+ i.
 
