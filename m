@@ -1,93 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793039748;
-	b=hKIaDLsDRxR07DCAUjTMWCzmtaniNSr9wloa7w+vnZLrPM5/kbEAe0svvfHiyW0lXScU
-	 IQq65ILI1Co4TOMOHtmJiqGKEPPHVbCvhXl8GeJG5hgJJBTO97/6sFPmQITCm9Ls40Gpt
-	 9Y5GJ3XmmGOpS0dtBQ0afHF6hE9FGdo+sslDIFh5/RcGdEMsNC7UGVElM04jA8Hx06Jp/
-	 D9OBKBn4jI1T5+cF7whpQwX7yRcOmLSIWiJEcOQKYlkEgfsK0X83GxxGd7/gmPbQh8dd6
-	 XRZa2OJPtz7pIrh0J8RZE4bgVw+zLWSP4FdM8e6g62pPwyOodUiJXnzkjCwjX2jw8Tg==
+	b=e2EBedQE67WFH0JWvj7Q6vZZH3aaVXNkrIy7PMZXpKliA268/FpisXMsACXymfndWr6z
+	 KUz6IEcpBPLTMCiyKs9dF/TVHGb1U1vxdjoBLqB9i5UUW7I4VXh6hCf8LYMyHazl37FMr
+	 M2ecUEdCbaLRhGzQkoA86mq6MQELpKIvz8tVccHYixkS3aBuKpXE4fstdsJ/xzPTu/YAa
+	 ITd525VRif/X4dR/kP4zhNbUEmclSOYr/CL3jRzMlrQ4Ha/OjdxWtkOV8XU2FKJdY8OHx
+	 sn7fMXToIuk8SUPJzgivfu4gQQZA8OZnSEv+oIhoBmopvDcrx5Sb2ROURZj/wfAsW7Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793039748;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=MJ1UWsUjbcLi2/gOeHM1VIxSHs13bsbqmSIxqvL3JtI=;
-	b=GrA06QkyoSzcThnY0GFNmknTEe4p9F/2o6F/65j6XnqzNvksunNPEErD1PjEKbBe/AIr
-	 Y0BsP4+DfwpXD7NGD//EyeiOdTiiTXKzXyRh4h+ebB+Yd9yQXjIuH9JeQGUugNikulleL
-	 +JWraWxfjgCt0lu2LLpzzrYP+JkBMMRMekKHZInNDH3rz6poymKatoHDSniN4cKsnNgCL
-	 3uGimieleJst9tAwrH0TahOJjkVvyUX3Nari+h06n3Gtx6Xc9EEGTuQ9QWkFCsbTPJVew
-	 Go/dpEV6brBBme9q//FVbhlx7CUOezZQkbMfPCbNl6I9qc2u1ZbuaG+fMEPJxK4azRg==
+	bh=XVqAsV73aHG6/gVakHtHzwu7a/Y3OBtpGyVPADfxORE=;
+	b=mkSECkZ6VkLeCGNQ/re/bpFZa/11bXJuU5lTgDCHrP15cwn6IC2dpuHgATMRlzwJZfdX
+	 zObo7kQKYJejiaHPdZ2eQrg/hFKPtWNHSDs45OGmJVmhxBY3cAqvfzumHQpoFiBrkyibP
+	 uo+Gc5WM4hBQ+Rk0I18mpkSL14KdkDnikPmZIw+yz1lqDm/4dO4KIZ0HvqWiElJkO9bKu
+	 YK6fTJKXWZQAxa+OzR13/jT1M+Q7KooBBfzpIULdHUhkKbWOq5ojWUurCueYfWrjcw4Zp
+	 hndlh/EwIaL2g4p8jt/bfrLu7UGfSlohtXGyf+im1RUHkuzNIFQbyUTXF7hruceA3fQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=l+Psd+j7;
-	arc=none smtp.remote-ip=192.198.163.16
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=nilk.net;
+	spf=none smtp.mailfrom=nilk.net;
+	dkim=pass header.d=nilk.net header.i=@nilk.net header.a=rsa-sha256 header.s=nilk header.b=pnc9kNMQ;
+	arc=none smtp.remote-ip=209.85.160.48
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C59360A380D;
-	Mon, 26 Oct 2026 18:35:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5C59360A380D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7705960A3835
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 18:35:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7705960A3835
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nilk.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nilk.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=l+Psd+j7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793039747; x=1824575747;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YaR3i5zWpwMqXGdgbCXu/fddebtf8ZoNzStCuH9eIbE=;
-  b=l+Psd+j7DjbxCd4b8NiEVNZ/Qbg7AidVXCjWKP84ZeQsQQNIhJHCjj7z
-   gMkQyKPgGFPBGspS8EXv7lE5/PheNwYGRpm5cpxYvSNlAGkg1aP+RWLfB
-   pYaiKj8ei7lAfUQm0MCW26Db6yx8vIqPkiDz+42yqzpd1vImOjKJQl/I+
-   S3hnIxspZgl+q/OsjvGCOHMzFIyEvLqK1HNinn2mpImaT4Ft2K/K1s3wO
-   mhqBTfxaDWXaH1AHEGKRvtOYMC/KyBC3bL6KmOBD+1dQX01NngLc4MB2H
-   8uB5Zl7b0RA9PTbAvH/4um32eLse7EjE3HJqGTdenyVK4tHHwasbRPfQW
-   g==;
-X-CSE-ConnectionGUID: qvuJl6ouQsecz9FwB5gCaQ==
-X-CSE-MsgGUID: DYu76SCvTU+Wy7rcPbcrkA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731536"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1731536"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:35:37 -0700
-X-CSE-ConnectionGUID: BxTwo0LMQ0O8fGrO6x4TJA==
-X-CSE-MsgGUID: abVsb/E0T7OyJei3+fwpgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4293902"
-Received: from jf.intel.com (HELO jf.intel.com.jf.intel.com) ([10.165.154.102])
-  by orviesa003.jf.intel.com with ESMTP; 26 Oct 2026 11:35:37 -0700
-From: Ehab Ababneh <ehab.ababneh@intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	tony.luck@intel.com
-Cc: ashok.raj.linux@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tglx@kernel.org,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	pengfei.xu@intel.com,
-	ravi.v.shankar@intel.com
-Subject: [PATCH 12/17] platform/x86/intel/ifs: Add new sysfs interfaces {status, details, cpus_ran}_list
-Date: Mon, 26 Oct 2026 11:38:15 -0700
-Message-ID: <20261026183820.129459-13-ehab.ababneh@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261026183820.129459-1-ehab.ababneh@intel.com>
-References: <20261026183820.129459-1-ehab.ababneh@intel.com>
+	dkim=pass (1024-bit key, unprotected) header.d=nilk.net header.i=@nilk.net header.a=rsa-sha256 header.s=nilk header.b=pnc9kNMQ
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-48ed0b68895so1743443fac.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 11:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nilk.net; s=nilk; t=1793039747; x=1793644547; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XVqAsV73aHG6/gVakHtHzwu7a/Y3OBtpGyVPADfxORE=;
+        b=pnc9kNMQDKPRwkmY0TxaZvbOzCJ+DKqkwH5I8WmzVcLd/zWhGjH2JZUTU/tbJLNqC3
+         a4eWgblNu3rV+Zske7w9IPb/Hq2poiFlENyf/ydAXqck8ame5LdsMudP0aU2G8S1Ivon
+         iiyv1JbvRw/AA8r5yDcgNyT2vRCsGjAeZ/ddM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793039747; x=1793644547;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XVqAsV73aHG6/gVakHtHzwu7a/Y3OBtpGyVPADfxORE=;
+        b=zSYIoFTYmD1q0ijFrc7mmm/UoTY+6CTZciSTbpkVkRo8HuFKn5O0h+3CU4tSxFSisq
+         kRy5NIzbtKxyxaOBaAmWVf71jSSwKPOGJXhR8mNEvbXeKeYjRdi2sjUBAAqyrwpqlV+0
+         kTTczllGf65LL91efndLJTOA2d6I5ZlC3kvriL7mOpRRp7q4LdJRC3IjQbsupSfNmc+1
+         HZkBxjpbr67l0c+ltKR8UlELcwe2rHubkh21wOtPQIEIZXVC9INNbossgokesKDS7TYc
+         SfeTeCInYzlISdFCjQ5/nlrY27k/i/a8Zj9V5Zz6HZe5Q2LbuV4rehYOmivj6vPgLy/7
+         mdxA==
+X-Forwarded-Encrypted: i=1; AKwUvBy1TOX+CpZiDXL1QontgrWxkwVaOyCkHKUxdimdzC/HJ//w+BOjVTvXCABkraVKXJ5doN1vTwUY/VKhOLhHuo4epTzP@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ3aYIDCEkqLVz+3KWZCWolVYgdFKWuHC0X2HmgYQwuE+9RNMuz
+	sWpSbaA5vwOsQwem6vdPVyxsDtbGhJNR8Q7EMMIxcnM+y93j675S3qkl8Ov2DSpuAQ==
+X-Gm-Gg: AYBFou3JK7iOqrPBSI1fixB8J34VcG71dymYQDxnOR4dzsYUO+IhW98r6KhDuOCkpRb
+	KWMh64/lIdhP1SgcZYrRhGOlL/jhIyPHgPeIqvD8CTAunpOzOs4jFbitOSA6E5LlbLZ/wuNay5M
+	TKbPE+fG+v89d3drC8FFP1Vk6Ca6rQvsEi8mafPT9mDMK7eTNAApDA6M/unxSWWp4ve8B75YXtt
+	YvBVW5KVp5z7+4FI+ejNp9hzdb+5JJ1mOJaFyQm39gNmdAWHGFjPOZewV+bTAsc3FjVIUhlEvje
+	yg8JprPsm9sd3oUBIvyO1LaHfO82kH7uKzX/kfRFRmSt8aEVJy8mv0rxKzCFRAYlxcBjP4aJZFK
+	BRcFMAICQ3WTFfn2sIQ1zyw9FMfTeFpQnoprQIvEDSsWAkzJxEfpoW+u1354HvXydg49Q1WwIHT
+	bjkiOCJAKOvfcPlfwxwJuXKY3HKmEIYx62D1BNAZASN8eVji/f1/Y8Yf1QQKWJo/4P5HijsqrsF
+	LdYNux5WsEBtKwWcgeOVpuvtC2mATfA9oBEr7MqsfflrTpOBUM1Dm7Lj29M8QnyIQM9tyL3gIOx
+	KKmw3WB9y1yOlqImVGqt9f/+5lrtnHDCgPaojqVQaMtZrfsVWYprbaXYx9YaSR/9dVGlsCV7Gxc
+	bTEQpQ+aiYaXHqsdqIH1SMsrdP3RCEXKPm8OeromaZsXxYWqvjM4dAETQVmYzm99Nt+6A1lTF1w
+	pJ8/hywTaQeLNe9wNxsfa6jhYtPIuMYWc=
+X-Received: by 2002:a05:6870:5b8f:b0:49d:d617:b692 with SMTP id 586e51a60fabf-4a83f670948mr4391982fac.49.1793039747059;
+        Mon, 26 Oct 2026 11:35:47 -0700 (PDT)
+Received: from [192.168.0.114] ([187.14.251.82])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4a8431c1f89sm5099015fac.13.2026.10.26.11.35.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Oct 2026 11:35:46 -0700 (PDT)
+Message-ID: <17d6081f-50e2-42b1-831e-34ad02b7240f@nilk.net>
+Date: Mon, 26 Oct 2026 12:35:45 -0600
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -97,148 +91,57 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] surface: aggregator: propagate -EPROBE_DEFER from
+ ssam_irq_setup()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>, Hans de Goede <hansg@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: janussss@163.com, luzmaximilian@gmail.com,
+ platform-driver-x86@vger.kernel.org
+References: <7d51f80e-9552-957f-f32c-1d608042b647@linux.intel.com>
+ <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net>
+ <2faa9857-9d55-a607-bd46-588598b64ca4@linux.intel.com>
+Content-Language: en-US
+From: Chris Simpson <chris@nilk.net>
+In-Reply-To: <2faa9857-9d55-a607-bd46-588598b64ca4@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+Hi Ilpo,
 
-Problem
-=======
-The current legacy interface for Intel In-Field Scan is designed to
-simultaneously test all CPUs in a group [1], but it only reports the
-status of the primary CPU in this group and doesn't indicate that
-secondary CPUs have been tested. This results in the following issues:
+> Are there some legimate cases where error other than -EDEFER_PROBE should
+> end up into this else like it previously did?
 
-  - All CPUs in a group can hold different statuses, but the user can
-    only see the status of the primary CPU, as any errors observed by
-    secondary CPUs are ignored.
+Two corrections to my earlier mail first. The Surface Pro 9 here is
+Alder Lake (i7-1255U), not Tiger Lake; its GPIO controller, INTC1055,
+is handled by pinctrl-tigerlake, which is where my mix-up came from.
+And "follows Ilpo's comment" was my misreading of your review: the
+gpiod_get_optional() idea was mine, sorry for attributing it to you
+(v2's "Suggested by Ilpo" comes from that too).
 
-  - The topology of a group of CPUs may vary across systems. For example,
-    in a Hyper-Threading (HT) system, the group consists of all CPUs in
-    a core, while in a Dual-Core Module (DCM) based system (e.g., Intel
-    Diamond Rapids CPU), two cores in a module form a group. The user may
-    be unaware of the group topology and test each CPU of the system
-    individually, leading to duplicate test runs.
+On the question, I couldn't find such a case:
 
-Solution
-========
-The user continues to write a single value to run_test, and while the
-legacy sysfs reports results for the tested CPU to ensure backward
-compatibility, new sysfs interfaces {status, details, cpus_run}_list
-provide results for multiple related CPUs tested as part of a group.
-The user can check for the presence of new sysfs interfaces to
-understand that multiple results are available, read them, and identify
-which CPUs have been tested to avoid duplicate tests.
+- DT: microsoft,surface-sam.yaml requires "interrupts" and has
+  additionalProperties: false, and the in-tree DTS files
+  (sc8280xp-microsoft-arcata, x1e80100-microsoft-romulus,
+  x1-microsoft-denali, x1p42100-microsoft-sp12in) all use
+  interrupts-extended. So on DT gpiod_get() returns -ENOENT, which
+  gpiod_get_optional() turns into NULL, and v2 still takes the
+  fwnode_irq_get() path.
 
-  intel_ifs_0
-  +---- run_test	<--- Same legacy file
-  +---- current_batch
-  +---- details
-  +---- details_list	<--- Details for all CPUs in the group (new)
-  +---- dev
-  +---- image_version
-  +---- status
-  +---- status_list	<--- Status for all CPUs in the group (new)
-  +---- cpus_ran_list	<--- CPUs in the group tested along with CPU written to run_test (new)
-  \---- uevent
+- ACPI: fwnode_irq_get() ends up in acpi_irq_get(), which only looks at
+  Interrupt()/IRQ() resources, not GpioInt(). On the Pro 9 (UEFI
+  22.107.143) the MSHW0084 _CRS has UartSerialBusV2 plus GpioInt and
+  GpioIo on pin 174 of INTC1055, and no Interrupt() or IRQ(), and the
+  Surface Laptop 4 tables in linux-surface#2219 have the same layout.
+  So on these two machines the fallback can only turn -EPROBE_DEFER, or
+  a real GPIO error, into -EINVAL; for -EPROBE_DEFER that is the probe
+  failure v2 fixes.
 
-Example of reading the cpus_ran_list to see the CPUs tested:
+What I can't tell is whether Konrad had another case in mind, or whether
+some other Surface model has a plain Interrupt() there; I've only looked
+at these two. I'm happy to test any variant on the Pro 9. As before, I
+did the analysis with Claude Code.
 
-  echo 0 > run_test
-  cat cpus_ran_list
-  0,96
-
-  cat status_list
-  pass pass
-
-  cat details_list
-  0x8086 0x8087
-
-[1] Indicated by bits [20:16] of MSR_INTEGRITY_CAPABILITIES when bit 21 is set.
-    E.g., in Hyper-Threading (HT) systems, a group includes all threads in a core;
-    in Dual-Core Module (DCM) system, a group includes all CPU cores in a module.
-
-[ Qiuxu: wrote the commit message. ]
-
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
----
- drivers/platform/x86/intel/ifs/sysfs.c | 56 ++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
-index 287f96bb033e..82a603cd1fd3 100644
---- a/drivers/platform/x86/intel/ifs/sysfs.c
-+++ b/drivers/platform/x86/intel/ifs/sysfs.c
-@@ -135,6 +135,59 @@ static ssize_t image_version_show(struct device *dev,
- 
- static DEVICE_ATTR_RO(image_version);
- 
-+static ssize_t status_list_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+	struct ifs_test_output *pcpu_state;
-+	int lcpu, len = 0;
-+
-+	if (cpumask_weight(&ifsd->grp_cpumask) == 0)
-+		return sysfs_emit(buf, "%s\n", "none");
-+
-+	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
-+		pcpu_state = per_cpu_ptr(ifsd->result_ptr, lcpu);
-+		len += sysfs_emit_at(buf, len, "%s%s", (len > 0) ? " " : "",
-+				     status_msg[pcpu_state->test_result]);
-+	}
-+	len += sysfs_emit_at(buf, len, "\n");
-+
-+	return len;
-+}
-+
-+static DEVICE_ATTR_RO(status_list);
-+
-+static ssize_t details_list_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+	struct ifs_test_output *pcpu_state;
-+	int lcpu, len = 0;
-+
-+	if (cpumask_weight(&ifsd->grp_cpumask) == 0)
-+		return sysfs_emit(buf, "%s\n", "none");
-+
-+	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
-+		pcpu_state = per_cpu_ptr(ifsd->result_ptr, lcpu);
-+		len += sysfs_emit_at(buf, len, "%s%#llx", (len > 0) ? " " : "",
-+				     pcpu_state->test_details);
-+	}
-+	len += sysfs_emit_at(buf, len, "\n");
-+
-+	return len;
-+}
-+
-+static DEVICE_ATTR_RO(details_list);
-+
-+static ssize_t cpus_ran_list_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct ifs_data *ifsd = ifs_get_data(dev);
-+
-+	if (cpumask_weight(&ifsd->grp_cpumask) == 0)
-+		return sysfs_emit(buf, "%s\n", "none");
-+
-+	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&ifsd->grp_cpumask));
-+}
-+
-+static DEVICE_ATTR_RO(cpus_ran_list);
- /* global scan sysfs attributes */
- struct attribute *plat_ifs_attrs[] = {
- 	&dev_attr_details.attr,
-@@ -142,6 +195,9 @@ struct attribute *plat_ifs_attrs[] = {
- 	&dev_attr_run_test.attr,
- 	&dev_attr_current_batch.attr,
- 	&dev_attr_image_version.attr,
-+	&dev_attr_status_list.attr,
-+	&dev_attr_details_list.attr,
-+	&dev_attr_cpus_ran_list.attr,
- 	NULL
- };
- 
--- 
-2.43.0
-
+Chris Simpson
