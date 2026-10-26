@@ -1,81 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793013987;
-	b=rbiJhYMPxQaYYzh6uZcAYz3a4+wMXfHBR4eM9mpDWTFRrRpMpTiOIDK3ydmvHisKnnIE
-	 +Zq/n9+5Ep8fPZGlmNUeIEnBeBFuyeZu0ZaYRoDh9LyWiz2jOnxo1QRNvQRkKc7qANylf
-	 e7iU9bbrfjsCw3k4lSMxXCvvLmSgrbWtYfyN8mUokvAILD1AezEVyXnPs8tH3Q77k55O+
-	 rDdeR80sm9UfQn8BlW9KY5feNsdZTDCMZMeDYiWe+/wANc1VXP0ta6+wosAkdDzJiwhua
-	 dmLSUJ+KBXwgr9j6iqodSi4n6VRk6rEd6J0pY7Okl2qtUU4OTH6dCpQGED71GudESCw==
+	t=1793015153;
+	b=ZVtecXPwTMI7544A6K7JOaCq2HAC5rPjsX/N/f/LCQ68ZbyVXIZ8p6EOOHK+79WtcrCP
+	 LDTWD7T7X9rV6qN1eDBW8QEKmjRkhL+lUYXN7gkuu0d+XlkxD+w2ZgJOSh1/sBBsfQm3u
+	 gWUIkdMbyQCVe87ihdHc3JdLA16DIV41kbRUY1FwfbI0a3Q80LzlKAY8kGrYtMn4rbuXJ
+	 //js0FAqm7wFlTesi/g1INEklDfnIM5rpfqDSEX7fqzvGckOMwGN1/U/GZUTUQsk+HhtG
+	 ouMxx446ovXB92p4Ar3hHrUSyxlJgQRi/61oNSBxq3tUkQX0SZjmHPntvvYTeHiqT9w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793013987;
-	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
-	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
-	 MIME-Version;
-	bh=oTYGQvk36iQGPAlAArLgeHGW+UcTBSjIc8OCZrUQJSg=;
-	b=XAInfvBKbfQg5rax1qC9tGb/yyZGnX/Rt/p3uQiEczfv66ZqqGcAnB/k9n66Pm5dOZcs
-	 zNJ9IQRTh7DBovZ55cUNM5foMBH9k129KhlScwmKSyl9PibMgfn1OszYEyWpM57Q/93Dr
-	 E1dNk2JfbkDVWlip9fAs4snti8q50PfPlJkZvGZjaQxFbagqnala/aFbEe4KXV90s+3OL
-	 SjJG4k2m5UGp/wIfJllSgn2//j42OO0ZgftbJ6exdoluwtjMgGOpXcZUvnxNrD72a+ycY
-	 e4MTVoRDL08aKtmGvSqVKjGCmCGTCB/c0u7ArJpCboXIha77h6vGvzwpFq6C454Zp8A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793015153;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=/7KsSSyN4VyW8KfEr2T7xGdHDFQp8fStSXcEPnKWN+U=;
+	b=jegtsXxhDYq7clknLI3PQMBvM36rJilEBsdUF+DoVAM9tzcbhU8SeA9o8Hvbb/L45Kru
+	 l6ymgD2Tr+9XQhHTxKWmhJ0JT0NjWfIxSd3+ppgF/oSI4HVxnhesI5ELTOOKgnJ3tq+5d
+	 HExVoqCedaWdRznojSX77sy2Sr6UIYOO0egmwlYzTRBnU0HBsZmAZ96CeXekmY7zVptEl
+	 30i4DUuv7/2hhydiX3Q9lL3n2QeTxtySIbgOcsYzMK+fFjXkWEZ7pfALnAeN3isukr3Ho
+	 t6TslDKpUkkqa9hJebs+6PuOAXFZiQQOWw53LEInXZPenKi6CR2A1Ep69TWMoXLTJwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=foxmail.com;
-	spf=pass smtp.mailfrom=foxmail.com;
-	dkim=pass header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b="AlGM3/DT";
-	arc=none smtp.remote-ip=162.62.57.49
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oMy42Ydk;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073A8606A32A;
-	Mon, 26 Oct 2026 11:26:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 073A8606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3D7606A31E;
+	Mon, 26 Oct 2026 11:45:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=AlGM3/DT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1793013975;
-	bh=oTYGQvk36iQGPAlAArLgeHGW+UcTBSjIc8OCZrUQJSg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AlGM3/DTQl8HQ0H8jmo94nD6wg0E62hQzjo7Y7FZd6M5x9M7/qsbNjVBAzNB67d3s
-	 gHftWMyTipQ3MtfrBQHjDg7Utxv2BmQbqsKhZ6mqFEUNio7CPWNIS3Ip6lbtdrrY5n
-	 VJAcUsuasU1ql+b3srox4LINp3YTQotHcyIdP/7Y=
-Received: from [127.0.1.1] ([223.66.54.214])
-	by newxmesmtplogicsvrszc50-0.qq.com (NewEsmtp) with SMTP
-	id 68D934A9; Mon, 26 Oct 2026 19:26:13 +0800
-X-QQ-mid: xmsmtpt1793013973tnyplsmk1
-Message-ID: <tencent_93C673CDC6262B2846538214B73AC191A009@qq.com>
-X-QQ-XMAILINFO: MrjVnytwTg24VGTozIpzo9+ldJFFUEHqgm3e1KHsSKGw2bSVWLWPbpvlmeVtwq
-	 qsnuH0nxVxzhztVonbBixjM1txagmGv/3xyM28HUUr/oLd11majlebeXtt5SehtlUIJCxHy51TgW
-	 5rNS3uezDY/ojEibc94Du3LThviGQ4B5d4iJ2yGdVzq1pxVZeC0/z0KcAXX6PO1j9GN43PW8GPZ7
-	 z0WETsiN+JtxqJEkSGlrwe92POZRCTsAtugP7DPr1bMtYjylcg7ROZrOnNuQ91Zt9V/nNRcpPHch
-	 oYAxbsV/+M8TBd8uTipTkQav4ZaqQBIL71dGH8XY9wxwM9pCOuVNVZpLyu4d/q1cn1IN/BDKsys0
-	 4ZMSdHUuy7xC+aOh9o6U4Qr9q1FW2E4K8Murcqax1oKXa31M5t+UPO10Qd6FD47VJ23Dl59Tw2Tv
-	 a6Q7Yg8Q751pc8rcYYR/WWG1KwK76TtU5NxPG059q9KJGRL6c/SuRlONIW6wQ4c4H17OroYq0Ti6
-	 +YVxLP/yyc6gYqe2sMmsnryPA6uPbi0KFiKXFfYkaI8/Fs1knNNGVRXmf9FptHYq0yoenLUHy0GR
-	 3T06uEe3q8NxyETx+7miEUd4DEKVgNoYC0tKsVw9xEOelE694GYKh59AZAdwxAE7ZwrbpSJP/yi6
-	 3TdAjNhZi2v6mmGsVnDbeB7WwE+M6AeSX4dqPd4Ew+Ee66zmIbOFWFbebjX2Z2KPN6a3zD/Xf626
-	 9WJoVCH5/3TFSzz7HazII4wpk3Zv03KSA+qR27q1S47pzTBQJDIir0puYqsQ0q/8pQVY5Ug0dXYg
-	 j2MHr7kN4sk/p1aWx3fLNOYXVZAR0qJRU8CcaMlSnj7PFaDr9y9wdq+YJAZDphjw537ZNrolsapt
-	 pwflI07QXCpGS0i/H37wenqbESzErGC2Lk1aI2Q929Apt2qu8Pt7v9//6RVZSekW4NKNL/nI5eNH
-	 qYto066gGbPa7/5Ah97/HtoFTsPuKyK1w/UR0CH6zba/FFkDQFLQCbqKeOS26HIdx0fw502CNfsR
-	 fyQC5zZ1ZKbMTr9sL4lit7oB1WByjO5cYwjFEar2fTri2UiWqc3zWP99Kk5jeI7bPSEITPFfgx35
-	 AdUm8RKaEyfrO7A0IqqH6BOIUDFA==
-X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
-From: Wu Zhipeng <zepwu@foxmail.com>
-To: Alex Yeo <alexyeo362@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, Kenneth Chan <kenneth.t.chan@gmail.com>
-Subject:
- [PATCH] platform/x86: panasonic-laptop: Add CF-SV1-2 platform_profile entry
-Date: Mon, 26 Oct 2026 19:26:13 +0800
-X-OQ-MSGID: <179301397370.9696.11423986312935963476@foxmail.com>
-In-Reply-To: <20261025191300.1259541-1-alexyeo362@gmail.com>
-References: <20261025191300.1259541-1-alexyeo362@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oMy42Ydk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72D11F01828;
+	Mon, 26 Oct 2026 11:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793015152;
+	bh=/7KsSSyN4VyW8KfEr2T7xGdHDFQp8fStSXcEPnKWN+U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=oMy42YdkrBUxQs6B9UIudU/VtbOSCROPlHkb7UWLJQG6XGLMf8lbZ8wkW9ps3zzn2
+	 uLJxJExF27yqGg1DWsmU6wDYurhS3taxFHAsFRCbCCCyOFCIq09PBS1rSxMt+RKtbg
+	 MievsLdzkYoWTzCRShdFRAJrT//CzkdcLrq1Hmqc1/DYd7Un8tFeR8Bq8a76Rx53jx
+	 GjHDcWGbGQlOeaVZoad1JcM9xUMdUamGtu8CqubfKpgqTODoaYXYO1/r83YLu93yTY
+	 szrO73uo8oLJI+IFU57tHrBaSqyB+wOnc3WBFPI8WMNnBKU8b0O3W/+2oRJ2j4QB+7
+	 8HB/rZLJrCakA==
+Message-ID: <073e6aaa-12dd-4fc1-b7dd-4d27cb4e27b6@kernel.org>
+Date: Mon, 26 Oct 2026 12:45:48 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,62 +51,100 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 RESEND 0/6] Merge redmi-wmi into bitland-mifs-wmi
+To: Mingyou Chen <qby140326@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Ilya Gladyshev <ilya.gladyshev@linux.dev>
+Cc: KentoNion <kento@kekto.ru>, platform-driver-x86@vger.kernel.org,
+ ted eric <ericted8810@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
+ linux-kernel@vger.kernel.org, Chris Taraszka <chris@miget.com>,
+ Matias Civadda <matias.civadda2342001@gmail.com>, =?UTF-8?B?6auYIOS/ig==?=
+ =?UTF-8?B?5paH?= <btx342@gmail.com>, powerfullz <wleizc7319@gmail.com>,
+ =?UTF-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>,
+ =?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>, Rsplwe
+ <i@rsplwe.com>, Bozhen Peng <bozhenpeng93@gmail.com>,
+ Anton Karasev <uselessfire@gmail.com>, Jame Jao <jaojame6@gmail.com>,
+ Serhiy Shliapuhin <shlyapugin@gmail.com>
+References: <20261026102101.224568-1-qby140326@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20261026102101.224568-1-qby140326@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The CF-SV1-2 exposes the same CEFM/EPLE fan/TDP policy pair as the
-CF-SR4, with the same boolean mapping (cool =3D active + locked, quiet =3D
-passive + locked, performance =3D active + unlocked), so reuse
-quirk_cf_sr4 and add only a DMI entry.  The remaining combination
-(passive + unlocked) is reported as CUSTOM by get().
+Hi,
 
-Measured on the unit (BIOS V2.00L24, i5-1145G7, EPP=3Dperformance, turbo
-on, no userspace fan governor): the TDP toggle is the power lever (~10 W
-locked vs ~26 W unlocked) and the fan toggle is a temperature lever at
-essentially equal package power (active+locked 9.96 W / 50 C,
-passive+locked 9.95 W / 60 C, active+unlocked 26.32 W / 84 C).
+On 26-Oct-26 11:20 AM, Mingyou Chen wrote:
+> This patch series consolidates the standalone 'redmi-wmi' driver into the
+> 'bitland-mifs-wmi' driver to eliminate code duplication and centralize
+> the maintenance of overlapping ACPI WMI event streams.
 
-Notes for this model, because they do not generalise: the SEFM curve
-bytes behind the boolean differ from CF-SR4 (0x00 cool / 0x05 quiet /
-0x02 in S0i3), EPLE/SEPL select an IETM table PL rather than a fixed TDP
-cap, _FST[1] is a fan setpoint and not RPM, a nonzero TFN1._FSL override
-masks a profile change until released, and the EC boots at CEFM=3D0 /
-EPLE=3D1 (active + locked / COOL).
+<snip>
 
-Alex Yeo confirmed the cool/quiet/performance mapping for this model on
-2026-10-26.
+> And I've got a question, from sashiko's comment in my v12
+> 
+> https://sashiko.dev/#/patchset/20261012133648.132363-1-qby140326%40gmail.com
+> 
+>> Will this result in the loss of KEY_PERFORMANCE events on event-only legacy
+>> devices?
+>> Looking at bitland_mifs_wmi_probe() in drivers/platform/x86/bitland-mifs-wmi.c,
+>> if dev_type == BITLAND_WMI_EVENT, it returns early after registering the input
+>> device:
+>> 	if (dev_type == BITLAND_WMI_EVENT) {
+>> 		/* Register input device for hotkeys */
+>> 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
+>> 		...
+>> 		return input_register_device(drv_data->input_dev);
+>> 	}
+>> When the performance key is pressed, bitland_mifs_wmi_notify() intercepts it,
+>> invokes the bitland_notifier_list, and returns without reporting an input event:
+>> 	case WMI_EVENT_PERFORMANCE_PLAN:
+>> 	case WMI_EVENT_PERFORMANCE_PLAN_ALT:
+>> 		blocking_notifier_call_chain(&bitland_notifier_list,
+>> 					     BITLAND_NOTIFY_PLATFORM_PROFILE,
+>> 					     NULL);
+>> 		return;
+>> Because the platform profile and notifier were not registered during probe
+>> for event-only devices, does this mean the events are silently dropped instead
+>> of emitting KEY_PERFORMANCE like the old driver did?
+> 
+> I ackknowledged that KEY_PERFORMANCE (WMI_EVENT_PERFORMANCE_PLAN_ALT in
+> bitland-mifs-wmi) looks like an event in this LKML thread
+> 
+>> Since the event reports a change that has already happened,
+>> platform_profile_notify() is the natural way to pass it on, as
+>> suggested in my v6 reply: power-profiles-daemon then re-reads the
+>> profile, which is harmless after the driver's own writes too. If
+>> KEY_PERFORMANCE should stay for on-screen displays (Ibragim asked to
+>> keep these events observable), it may be worth not reporting it for the
+>> event that echoes the driver's own write, or at least saying in a
+>> comment that it reports a mode change that already happened. On
+>> Ibragim's TM2209 the profile SET is reported not to work [3], so there
+>> 0x16 can only come from Fn+K and the echo does not exist; Ibragim, can
+>> you confirm?
+> 
+> https://lore.kernel.org/all/20261008152647.1510152-1-uselessfire@gmail.com/
+> 
+> So should I follow sashiko's advice?
 
-Link: https://lore.kernel.org/platform-driver-x86/20261025191300.1259541-1-al=
-exyeo362@gmail.com/
-Link: https://github.com/numuly/cf-sv1-2-platform-profile-evidence
-Signed-off-by: Wu Zhipeng <zepwu@foxmail.com>
----
-Applies on top of RFC v4 (20261025191300.1259541-1-alexyeo362@gmail.com);
-the pre-image is the v4 post-image.
+Copy and pasting my v13 reply about this here to make sure it gets seen:
 
- drivers/platform/x86/panasonic-laptop.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+What I think should happen here is that *if* there is a platform-profile-handler,
+then platform_profile_notify() should be used (1). OTOH if there is no
+platform-profile-handler (the mentioned event-only mode) then reporting this
+to userspace as KEY_PERFORMANCE as was done before makes sense to me.
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/p=
-anasonic-laptop.c
-index e929d2527fb9e04b0f9fed1abae0ed0684d9698c..69d255a0c3b07241290359bcdc7e0=
-caf92c9804c 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -329,6 +329,14 @@ static const struct dmi_system_id pcc_profile_quirks[] =
-=3D {
- 		},
- 		.driver_data =3D &quirk_cf_sr4,
- 	},
-+	{
-+		.ident =3D "Panasonic Corporation CFSV1-2",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Corporation"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "CFSV1-2"),
-+		},
-+		.driver_data =3D &quirk_cf_sr4,
-+	},
- 	{
- 		.ident =3D "Panasonic Corporation CFQV9-1",
- 		.matches =3D {
---=20
-2.47.3
+Does that sound reasonable?
+
+Regards,
+
+Hans
+
+
+
+1) This assumes the event indicates a platform-profile-change has happened, if
+it is a request for a platform-profile-change then platform_profile_cycle();
+should be used instead.
+
 
