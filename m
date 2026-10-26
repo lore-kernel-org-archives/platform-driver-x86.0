@@ -1,76 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793008357;
-	b=loZT3fnjK+Wxl1KE3+6p1M29x7Tt+nxvMv23KFQRXrrMm64vaDXeBZt485SbRQXQRZQG
-	 /NzfeceV1LmJKNTiBF/3vh8lFIJmQbCpA/K+RbQZHilUIoHySuAcMH5hkt/7kJ/JJJG74
-	 0PijjslTxkhz9eZ4ujc15ZXPMyZ8ecShesLn0Wb0+ZUKJpK24D2jqmKUe2jLv3Bl9qGas
-	 +mI8YE9oYnSUQa4s+/kpSjrMx2GZSMqkiEt6aL8majrMX0VUfmiVvoKFkTjVH57DtLvaZ
-	 7SbnhW5C1ZEa0TBaxslM9lVC8nbr2YCGvBOua0sc9Shu6oXtfwd+oaX0levgixzmtDw==
+	t=1793009133;
+	b=3ImblYtNt9Xb5tWrTUNJNDCHVJwZ9HKUkgcXVtACRYrasfwU+A39tDEeBkg/wwCydQgi
+	 j7KuoGpQdFvRWRrG0sSgknOvFKc80HhROqAghkv2tgBxlT8k+jFTPf2gNI91RfbTBf7L9
+	 l1I9ePH81xProFA/uR3hlb8LBf10KMzhdR8ICF4RUtOo9dww86OO3ykJTb/HOcY7eLeFn
+	 HXiy6S4o/5bwYDQXqlxPj5PVDyfNX2557oSbgP0EPFQYwx6H4TflmoeSHpHfF1sDuTKZH
+	 2q7Uyzz00oO3qL1SRvLgCtTv2w2RAsZAv6w2w6oUm33f02hBIj4rrtkD6CAMz22e45g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793008357;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=ia+DMI3WqUj18cxUlgYQ9GOKAY9I2+g78j3wxqOshuo=;
-	b=refB4qFuP3Xxt6raNbDE6GmC3369CpkzOm01utGPN6d3XwpW+zk7iK8xdOWNVaYHmCkp
-	 OIY6oT+mR1hj4oYAKNOeEBQPwg3TR7QMUdX2XiPUfn56VwfZhz641KH6EvW9XEV+VFD/R
-	 cur0umSE/wBIhJijs/N0i2Roq9LB7PuIK7j12BPhM9MkOkklf9qzxi5D5w9zEoM11x4t3
-	 GMSevw9o6d40oNJswle1fNqUQRnXr5bghnng0ZhSUNOI6252qp3ZaaWKBPkg46pX6GuKp
-	 tFtWnW3FyIhUyXbNqtasQt8GSnAwtIW05HvP836KDD4eHN0+vOKig7RTBiKyh8I73yg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793009133;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=T+aX9Q4ROQnpcVK7Jjk1SxNchobadyriKnLi3sg6Z+c=;
+	b=h+yRToAPvPbdbkU4aX+9hfuraYoXmtGr/Zz4gf5EAY5o91nY7haQDW9+uao6eBd95STw
+	 J43hup7+AZFpC5KGjuHMgh9/9iHw90RKTSoSpunm0SAVr0ed03NBAZqDY549oaK4whWJu
+	 nT0Xwe2JNdRpl0OI1x8OOpEGzTmeUAIS3uIhfbBpzBZ2KAA1YSgPJu728lA4mkhpCVTb8
+	 tJW4qc2hlZrxTWy7RFAmXp44h3yTygcyjDSoNeNFM3yyLHzPFaTNKKMClTauRzkGiRHP4
+	 vLZeQ9S45rXRGkwnLHjZ2oIb4c/opDL5eGoBQG/SBXl/0k8O3toCXJruPwSNWoUbL8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=aDxWDnfU;
-	arc=none smtp.remote-ip=192.198.163.10
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hkepGJ+9;
+	arc=none smtp.remote-ip=209.85.210.175
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F02606A31E;
-	Mon, 26 Oct 2026 09:52:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49F02606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D62D606A33C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 10:05:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9D62D606A33C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=aDxWDnfU
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793008358; x=1824544358;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ity+bpTy8tXsipyPr92EtpFHpmJ9cJtcI7YcpljbMkQ=;
-  b=aDxWDnfU/uo48ixrYQ94FUyMkriVcbz72SetclVXKDioxUU7sbk+BV0n
-   kLQtPy/MQJnrphtYe8WuYYy+Ep6ghhDk77fsQNQrKba31lE4SJ16dDO5P
-   GK3Yw3Dc1zg+b65NwNF3bjDDhzRrG1O2lra/oU62Bs3Z/ldSRno6ElJlm
-   dROLeECEiWOduHIHxoAmmxW6+Cyv6LH7z56lSvIDjuiNW33AAby6BTjhD
-   B3Zyp847HDcGAjzpBHdRYvJt1j3ewesyOsr01EgrttIcHePCBtbeVdDHD
-   FAq+BSq9NO/SfyCETARen9YTrHf8jndBj9rzctd6uxMZpwqpcBuZmauo9
-   w==;
-X-CSE-ConnectionGUID: 108fUaN/RkCKOVuHUs2ITw==
-X-CSE-MsgGUID: K4MProUxStCoWip1n9MeuQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1570151"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1570151"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 02:52:37 -0700
-X-CSE-ConnectionGUID: 2DbDZJm6Sv2BT5XpKDFVyw==
-X-CSE-MsgGUID: cEvPn91mSMyBt4Cf1w1WKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="6048570"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.93])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 02:52:35 -0700
-Date: Mon, 26 Oct 2026 11:52:31 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Muhammad Bilal <meatuni001@gmail.com>
-Cc: jorge.lopez2@hp.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linux@weissschuh.net, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v8] platform/x86: hp-bioscfg: fix heap OOB in
- hp_enforce_single_line_input()
-Message-ID: <at8i35nLTr1weldL@ashevche-desk.local>
-References: <20261026051740.88791-1-meatuni001@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hkepGJ+9
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-8a05b210703so1068800b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 03:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793009132; x=1793613932; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=T+aX9Q4ROQnpcVK7Jjk1SxNchobadyriKnLi3sg6Z+c=;
+        b=hkepGJ+9KZADoCTSL0KhXQsjDFns/ciXEafHmmJCT571jx+wlW2ACZbarIJnUpNGVY
+         wM97afGqXfQSaYAN5Gk7WkcFV+pHCmvI6vPgmzelyRx6YWAdbZYtTVi0Y45w8sal6+kk
+         OeSdFWGkZv7CnHuY+k84ayZODVjqi/4k+uDAVYOtBK4jWckfaHg/MgYFNtuQoddz444V
+         pPUlUn4kK2ghGGIbUiBofU+l7y2rMz0e0ZCfoNf3ZMSg0dSSsw0yHwgYoq2JgQ9xSEMz
+         yhTNrv1j9bdfPFKDXHch5zLBOc5LBcT9khgva1X7pi4SLxhZ4l+jij/Lj5IbvyybNsKR
+         tG5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793009132; x=1793613932;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=T+aX9Q4ROQnpcVK7Jjk1SxNchobadyriKnLi3sg6Z+c=;
+        b=e3omHOiNhFfBvFXVsCRxtEvipm6lDI6Ic422co9MoDcK7HW8pxF8eCIytHkCg7zh4j
+         a1VLffQv57k7Gunb6paivTabLH9Ha+DnyO7xKkkaNVYjwrINrnwX0iD0yFfhB5fXYBw/
+         3LlNi+NLV3D1Mq3wRgdvVZnDT7TZyPKkQ8zyK1QEHO0xqehOJkxqBlP/dNoMEPGnGglS
+         MBWlRHDpU20AXHTsh4dZnGaQx8DqS4AVVssRFixvWbhyX80OV9xYNz+NFSVMJfDtkpu/
+         F+Vve4GWLyEr3D15dwG+8z6vnxYuDdX4YS+IKcEOByU3zf/lUokCt8iSOoP4k6r+mtbZ
+         xP9A==
+X-Forwarded-Encrypted: i=1; AKwUvBw/J9VTM2FU9dd3Ktlg1RgsUg8sQ8Kq9b8CASQj0uhVjHMCZku8U6qJaC6F/lm1hdsMwO89Z8Wc3TWkLU6dPCrEUsz+@vger.kernel.org
+X-Gm-Message-State: AFq9FYIXs4DGdwg0dmaRR3Bp9avolbdhBt67KWWcgpNBSl4L3uqprZ1U
+	OSxMtJ4UgGo0YrTZjfRGWZy8XWixqwGrNrvcQfp9PoIYu2pee+WU+6X1
+X-Gm-Gg: AYBFou1uweW+Bb2NE1VcXl5ZI+6RRP9GDKTREE05Gpcw+SC/dMgh7mk90AYou43GbQV
+	cxiK75Fm9M5qYx1RN+hpwWCFE7rnAWESRtI5OnPelD5Gpm00PA3EUAzmgRIor5GdZEH1SQ7siFZ
+	/Ptem/leO3aVMxxNvR+H5PiPQG5KvJowEpeqho1UK2R4Qt7KjUaDpqx9PdeW6T3ZxevM+I2pxEt
+	0typ0cRYYdubHFXc5u+bBrqxXnlQCsEUVBXkvzBEdL4j9Ph0YAZsM8a7xcrngDHPaTZhdlOQRLb
+	YZ2YRVSoxhMIdY7Pv9QI+aKGHI1kq9TJxD2YwxgeSW9ncmOS2lJLg5R4HjNvRWQBtfsJwtFGq3B
+	vpVj7BK0UoXWGZVgwnBeOEbuUTFc2jK3f7bqfActh13m0L4RPwdvQ06sPhQnMgGEpa5xJ1lzFRh
+	7WjgH/vhJS4iZA6tDAiKhvUNcLnzz4NMM1+GZIWZ8xbmyoZ5a6V7yHenG4k3H5MtpQADeh2IKD9
+	38RijtBU+4Zu7VbqsnV0FlxvGG38pEgeyzoPluoKl228VrdBaRGPe8McaU27tae6QCgarQ9YqWs
+X-Received: by 2002:a05:6a20:c85a:b0:3d3:adbf:777c with SMTP id adf61e73a8af0-3e7bfa64f75mr3257808637.24.1793009131937;
+        Mon, 26 Oct 2026 03:05:31 -0700 (PDT)
+Received: from ?IPV6:2408:8210:2436:950:3934:2b73:344c:e6fc? ([2a13:edc0:18:16f::a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a36c0fdfefsm1078943b3a.50.2026.10.26.03.05.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Oct 2026 03:05:31 -0700 (PDT)
+Message-ID: <84658f6a-4eb2-4deb-a174-842a2cd187bf@gmail.com>
+Date: Mon, 26 Oct 2026 18:05:26 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,27 +91,70 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261026051740.88791-1-meatuni001@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] platform/x86: bitland-mifs-wmi: Don't fail suspend
+ or resume on profile errors
+To: Chris Taraszka <chris@miget.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
+ KentoNion <kento@kekto.ru>, Matias Civadda <matias.civadda2342001@gmail.com>
+References: <20261025195456.43414-1-chris@miget.com>
+ <20261025195456.43414-3-chris@miget.com>
+ <5360953a-ed8a-450b-93c2-f55876af8600@gmail.com>
+ <CAAcRvKM2CQeJLWDnUhQJ+pKxiduY3XakeBbJCTbnY8=beE5MLw@mail.gmail.com>
+Content-Language: en-US
+From: Mingyou Chen <qby140326@gmail.com>
+In-Reply-To: <CAAcRvKM2CQeJLWDnUhQJ+pKxiduY3XakeBbJCTbnY8=beE5MLw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 26, 2026 at 10:17:40AM +0500, Muhammad Bilal wrote:
-> The input is copied with kstrdup(), which stops at the first NUL, but
-> the full write size is passed to hp_enforce_single_line_input(). With
-> an embedded NUL the helper reads, and can write one byte, past the
-> copy. Use strnchrnul() so the scan stops at the first NUL, and return
-> -EINVAL for a NUL or newline before the last byte.
-> 
-> Tested on HP EliteBook 840 G2 (Fedora 44, Linux 7.2.8): writing "A\0"
-> followed by 4093 bytes of "B" to current_password 100 times returns
-> -EINVAL every time, without reading into the heap.
+On 10/26/26 17:48, Chris Taraszka wrote:
+> On Mon, 26 Oct 2026, Mingyou Chen wrote:
+>> What value does the firmware respond?
+>>
+>> This patch fixes the suspend problem, but it hides the real driver
+>> problem (unsupported profile entry).
+>>
+>> I saw 0x04 in your patch "platform/x86: bitland-mifs-wmi: Add Xiaomi
+>> Book Pro 14 quirk".
+>>
+>> If result.data[0] in laptop_profile_get actually equals 0x04, the
+>> function should be succeed, but it doesn't.
+> Hi Mingyou,
+>
+> It does succeed with patch 1. The firmware returns 0x04 (I also read it
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Apologies, I misunderstood; I assume the "patch 1" you referred to is 
+the one that adds the MAINTAINERS entries
 
--- 
-With Best Regards,
-Andy Shevchenko
+of my v13.
 
+> back from EC 0x68), and with the TM2424 entry laptop_profile_get() maps
+> it to performance. Since then the machine has suspended and resumed
+> several times without the warning.
+>
+> The test in the notes was run without patch 1 on purpose, on the v13
+> default table, where 0x04 is not listed. That is the state of every
+> Bitland machine that has no entry yet: the TM2424 before patch 1, the
+> TM2107 before Matias' patch, and whatever model comes next. On those,
+> the aborted suspend is what users hit first. Before I knew the mode
+> values, logind retried the suspend every 15 seconds with the lid
+> closed, and the laptop drained about 40 Wh in one night.
 
+This is a good point, so
+
+Reviewed-by: Mingyou Chen <qby140326@gmail.com>
+>> Is there another no_set (for read only) profile entry for the
+>> performance profile?
+> No. GET only ever returned 0x02, 0x03, 0x04, 0x09 and 0x0a here, and
+> all five are in the table.
+>
+> So patch 2 does not hide a problem on this machine. On a machine
+> without an entry it keeps suspend working, and the "Failed to save
+> platform profile" warning still shows that the table needs an entry.
+>
+> Thanks for the review of patch 1.
+>
+> Chris
