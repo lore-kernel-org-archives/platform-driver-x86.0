@@ -1,120 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793137713;
-	b=cdXjPiJI0bJWeBJ9jUUS0LhfhsfROmLZLhRV09WX8822oDMaUbhpwJ8RoMrj/O3/42Iw
-	 3YkYn5wVn4sNYYJ5zwBTUvO9mvV0LqjCuJ2sHaKQoi1+/lWRrp/x3KrHCdijr7FMPriUu
-	 kI3xssWzR5f/dutd+cVbdNRigJbxKj2fnvuJhcpPvAnN4K4JiTtTWfheE/XRH12A/DEE6
-	 SgQULGDIHtru9FCmM8w54533AgpE8z5obOQD2pNtbcHNT4j4DoL1q5pHAwcc6+H80yoqe
-	 F4lnrC3aeeIug1PPeBXzkceDy9OGdNS6eFg+O9ZY9Dl/t/JnsmQH0rMJFQN10BleM8w==
+	t=1793142045;
+	b=D6Mx2hvKsuMWydNgHA0wl9ckkl8P6pZLCO0Ydkbfj/Kvw77CdydNq0KHrGc+QrgkB7/X
+	 PFTowSvrMNWLWV8NmAVvCpbD2NuaJJGBIY+UcOWdZbsKJ7FZfpoN4wsT3e00Ym78s63KA
+	 HSCFM3yE24lSpwUGqbXAVkrHuxeLQo5c2IV/61w40LeGJlDuy6vVIAn1On82XjITcwxFv
+	 a/rEFNlMnBPKP44oPhBXCt2w3ItredJgxS2q2lCX6ciijwGJDQQu3n3825wIUXxjTlTP2
+	 gbc35MxlqX58ibH0XWLD/JWMxTMJfluq6Zjcx6XV94a3nFsk5qmbe6Qgp7BztRI2C4w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793137713;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:
-	 X-Google-DKIM-Signature:X-Forwarded-Encrypted:X-Gm-Message-State:
-	 X-Gm-Gg:X-Received:X-Received:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=R5y3TC+OxgWb2k2zCyoTeuDSWBjSf0l8Xg0k9asjKQ8=;
-	b=cNWGN1WqwfvK5tWCeJFM4TwfBiuoWXEovWAtEMMvtNfpUcOqh4yKiKwp2RPsSRzopxqX
-	 X9Tq/DRE01xq6A0OnYg5cuyed9GHqtkSSFxqHRG7TUvmq2w6DCBnlOGVlEXsGsjpUCV9i
-	 g1rifE3b5PXdreYWXePlQCOUvTp0zGMIhpdLKW8SGB20xMm1kZVLTbhhgxgeI6r9AE1B2
-	 CVjFNOey9YNV5L0QSanwLYRQ5apqMH4AmufrmD+oB4/i6tvrC09mLZiBrQUbs3Nmo6Th8
-	 wDrRshPjqIHaM1I7Dj2Gj7e3gkvSFpF4mWr5bU6ieKXLAlPNyKd1ET35iShEG0sulQw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793142045;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=xdcwz2J0ViafkvJlhahLT/XzWeMevy88xwVh6TrPYbc=;
+	b=4b4sjJz7uILk/uIinro0q6e+zBockjI7X0cmcvdfMjIyqD0hEzZntxmvlSTc7cD+/MtL
+	 pMwNBGH+XrK5qT1l8nG1traAqFFqFUw7uO497KLb6tBRprJejYBf2gzeOYONCaem+KHfZ
+	 cLi2ITtiQhbLEANy2QMQK6OZjBlu56a34KfEOcFwmURTf18Bv/Jp5AKR7iUkISNsFLrhw
+	 bgXBUUqisinCmtfl4kiCUX7SMVJC6J/LJSDXLAxVnCvSQVRDgcu58buUGAWDXnGOLCJ/B
+	 nYs4FCY01f4YpyxwWR+YWhauKgt9UUEN/kw58Ew0ZYg8kJ913jbUe2i3mBp5vxKTNlA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=canonical.com;
-	spf=pass smtp.mailfrom=canonical.com;
-	dkim=pass header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=NsnIF6s2;
-	arc=none smtp.remote-ip=185.125.188.122
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lmZebDL8;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B09606A31E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2026 21:48:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0B09606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3771606A31E;
+	Tue, 27 Oct 2026 23:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key, unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=NsnIF6s2
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 132743FE82
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2026 21:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1793137710;
-	bh=R5y3TC+OxgWb2k2zCyoTeuDSWBjSf0l8Xg0k9asjKQ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version;
-	b=NsnIF6s23mLz8NdigrB4LFVWsHXrAI2gv8c/0r4DaBDgi1/szzsT3mv4J1WQvsX7U
-	 zdzd/DmaabVx0WgdHBRtYbsUUXQfLEmyIpuGgKO5QETxu3kW2fIUwM5U7EAKh+CzyL
-	 Pp9eBfvo7+XiQGcCKx0ts23DJkfEFlO/G03UBIhkJasSzYcHH7IHNp5njCNmk+G+fX
-	 8D5ybftMkhFpOTqrB031ZTfloLSY5zbGBxPF3Pi4FrN6DTWkxAj/qZzzsg59AoaEST
-	 9SQcPFdyqRxu7i3MP42POw4BgRS9tkm1/JJA95eprKGqLI9+SH3EgE2aJ+83zzBQsH
-	 0BK2u573yl1ivql/6a50YiauLCYuvqU9yJpCciUGP6JfULI4OnQFcAEoLF8LQkShTJ
-	 C8pkCrsnxG0Ls3PJ67TagKG7PvFo6IabWsfM8+YMZ2fKbwt8i9URBHx+cOA+J+9wIB
-	 wjNDKJ+hHkZKc3fQAhVSzXiNzs1EkPR6BwsF+9hJgbaT19J/EoO76NQTPsQftvBV1S
-	 fue1T1CPnh3FP1giDmLPTaBIcypc/pNfudv+N/2IhOW/d7T1F9SgW+oVhU44HidGMJ
-	 +gSp4ue3iAgi/OMUiyJX881ZsA2MKWyhDgMtdfG/H//GT7I9gqPXcQFi3DcV1xLLUR
-	 +OW5JYCOTL41oZtLE0vGfUp4=
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3ab08c4aca5so74247a91.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2026 14:48:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793137708; x=1793742508;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=R5y3TC+OxgWb2k2zCyoTeuDSWBjSf0l8Xg0k9asjKQ8=;
-        b=1JyfH78SENxO3eQd2qspSMoV3ZuApoyjxZS3I9LFbQoVtXrOv8nua/7BJjr0bIlAul
-         bjoJGkCOtQcqEQgFegVQNsa64o1K5Nhe2C9kqHpIBlsZt1HqGuaYj1i9M1hJdxBnsGGm
-         3XLNvO7w2MvaJFO3aRfLJvs1lsShPkouhojoF+fQQgkRrjkuAmA7PaYDKCSOFxYp+n4E
-         lrGYq2sb92VDmHHg2kQyQJtxSBptWDXkKgz50aH9R5o9ImEh3cUFg9PARXOaGbaQ1vK4
-         P/deIuogCJDPvOXxqEOwpcHp3VL0cau33oCV43PyOnIDrfD/L9XXhb+f0VFSOv76g7Pw
-         ojIg==
-X-Forwarded-Encrypted: i=1; AKwUvBwAqnHh53jziCGGTfyvscXDLS50VIQcU9JKGb6J99rQoW0vZpJVanZ37PANjwG5cze7FAgpN6UfOmBcYuxmE+hGTkOG@vger.kernel.org
-X-Gm-Message-State: AFq9FYKv3sV5/TrL0V9ENhW9BOA9Vqw7ijMKlYyY6KPED72nqot094YJ
-	MHgAgU4rt9ZDMfZ3Gvw5WH79mKKhjB1JKBzgcDQUFyXRn2yccX15Qm5a7O7N7QzjuhzDdZQRDcL
-	HM8zFz+kB6zT2ISWJWrQ4xdHCSyoHQ1jG9UA32EBtL1IhYTTOQZxIM8RPDIYhWlrKmIZvoWFK8q
-	V+m3RKyT6vlwc+tyc=
-X-Gm-Gg: AYBFou358uXr6wNZF6LYFh6L4W1CSy3JSK8AXgH/XM9JEnzGRUFvvkCMcbi3gXcqwka
-	P6AAJAbmEwjwfCPURv1s4Ho+4P1bD79H6cTNsNyg6JJed3tePOQ56rKLcwnrVDd4VbvsWD0BhQi
-	HXyM9rhDjKJBfP6SYzL4PpQ7Pobn18xnUKQZvekdjzErEKdnJEpx1qizL+CtoZGTRewoWMH6TjD
-	+BPJf704y0F/LqtEZ1XPXGAE/p8wbk4nagnbr6KeWihJyi9ciII3TrU/00yk5/UnPCO6piR145x
-	l7G7wK3QcyRGiPEheU1SIvuey2BgVSKI82tKyUD8BYcbDLUA328PmlhwB+6jfz8NBrU18RdSLNB
-	Aju2smHtcWp0j7qzBOAGPXSCCgsGzas+gHQpCdRYLp4c3gVJdXXaXXgRRYkBrGTjkUCctab36gF
-	0/YGyGnpvGj5zW+xitzPCwRP6/Jc9rxxT0k33NbGIm44hfesIOBVOCqe7kV5PqfW7r8cWz27SIA
-	Ay16wkAPB9w4v+A+G5MqmZGq8ElnD4S+cRAlpr/xw==
-X-Received: by 2002:a17:90b:6d0:b0:3a6:e1d1:e511 with SMTP id 98e67ed59e1d1-3ae581402edmr428965a91.4.1793137708581;
-        Tue, 27 Oct 2026 14:48:28 -0700 (PDT)
-X-Received: by 2002:a17:90b:6d0:b0:3a6:e1d1:e511 with SMTP id 98e67ed59e1d1-3ae581402edmr428960a91.4.1793137708192;
-        Tue, 27 Oct 2026 14:48:28 -0700 (PDT)
-Received: from an-XPS-15-9520.buildd (2001-b011-2008-445c-fcc4-d427-0dad-9764.dynamic-ip6.hinet.net. [2001:b011:2008:445c:fcc4:d427:dad:9764])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae5a9a5e73sm37741a91.10.2026.10.27.14.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2026 14:48:27 -0700 (PDT)
-From: ChunAn Wu <an.wu@canonical.com>
-To: Markus Probst <markus.probst@posteo.de>
-Cc: linux-serial@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	cocci@inria.fr,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] serdev: handle devices without an ACPI or device tree node
-Date: Wed, 28 Oct 2026 05:47:42 +0800
-Message-Id: <20261027214742.3624605-1-an.wu@canonical.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <75e6d86340073638d966acb85465c28e6a08ceda.camel@posteo.de>
-References: <cover.1792856688.git.an.wu@canonical.com> <263a607c3602f31a3f6fdd245e3c2008cdf97abd.1792856688.git.an.wu@canonical.com> <75e6d86340073638d966acb85465c28e6a08ceda.camel@posteo.de>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lmZebDL8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133671F01825;
+	Tue, 27 Oct 2026 23:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793142044;
+	bh=xdcwz2J0ViafkvJlhahLT/XzWeMevy88xwVh6TrPYbc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=lmZebDL8yRqLM+Wh/deQQ76tvi8l8JU1S5SVzREGnKnCGkYrs8CFKQPbV7gBuyyRZ
+	 74IkyIL+66EnqWwbU1AzUGlaIvq8+IWUw5SkeVPl3PcsJRtpv4pDee4cO/eq2xiS4V
+	 y/RR/5ihw4wzrT0BHjxLQONiMLWKrfUpnqwXA/XAYM2ReGp3nFzrFdwZXOwVFPcVfo
+	 bavBhn9rhhvOeWv7/Ptgu8NvBgAEUVFYEDgBr3vAfzBE9gS+E5hXtV0NFop/nXyzsn
+	 ZnqrMiAx6J9uT9VDTh8fD/UPivifim82POVYIJ9mKgCed3urVNWgzCkpG6F9Hquocu
+	 6UsNpJAhLlb8A==
+Date: Tue, 27 Oct 2026 18:00:42 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
+	Kenneth Feng <kenneth.feng@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Andre Eikmeyer <dev@deq.rocks>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	"open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH 02/13] PCI: Disable pcie port and access on D3 on
+ specific amd devices
+Message-ID: <20261027230042.GA516670@bhelgaas>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -124,21 +73,129 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261025040046.1602-3-atharvatiwarilinuxdev@gmail.com>
 
-On Mon, 2026-10-26 at 13:59 +0000, Markus Probst wrote:
-> Reviewed-by: Markus Probst <markus.probst@posteo.de>
->
-> You should add the maintainers for the modpost scripts to To/Cc.
->
-> $ ./scripts/get_maintainer.pl scripts/coccinelle/misc/of_table.cocci
-> scripts/mod/file2alias.c scripts/mod/devicetable-offsets.c
-> include/linux/mod_devicetable.h
+On Sat, Oct 24, 2026 at 11:59:38PM -0400, Atharva Tiwari wrote:
+> As mentioned in the previous commit, PWRD turns off the entire
+> bridge, and if we read/write anything to the config space
+> or the PCIE space when the bridge is dead, the CPU CATERR's,
 
-Hi Markus,
+Reading or writing to PCI devices in D3cold is a problem on every
+system and we should avoid it in generic ways.  I don't know what's
+special about these MacBooks.
 
-Thank you for the reminder. Adding the Coccinelle and modpost
-maintainers to Cc now.
+> so to avoid interaction when the bridge is dead,
+> we remove pcieport support for the bridges, and we restrict
+> access to those bridges when the bridge is dead.
+> 
+> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+> ---
+>  arch/x86/pci/fixup.c       | 30 ++++++++++++++++++++++++++++++
+>  drivers/pci/access.c       | 18 ++++++++++++++++++
+>  drivers/pci/pcie/portdrv.c |  2 +-
+>  include/linux/pci.h        |  7 +++++++
+>  4 files changed, 56 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> index 795d81c7a..66829941e 100644
+> --- a/arch/x86/pci/fixup.c
+> +++ b/arch/x86/pci/fixup.c
+> @@ -1094,6 +1094,35 @@ static void asus_disable_nvme_d3cold(struct pci_dev *pdev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a09, asus_disable_nvme_d3cold);
+>  
+> +static const struct dmi_system_id quirk_disable_pcie_port_dmi_table[] = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+> +static void quirk_disable_pcie_port(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *upstream = pdev;
+> +
+> +	if (dmi_check_system(quirk_disable_pcie_port_dmi_table)) {
+> +		while ((upstream = pci_upstream_bridge(upstream))) {
+> +			upstream->no_pcie_port = 1;
+> +			upstream->ignore_access_d3 = 1;
+> +		}
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x7340, quirk_disable_pcie_port);
+> +
+>  #ifdef CONFIG_SUSPEND
+>  /*
+>   * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
+> @@ -1179,4 +1208,5 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
+>  	}
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
+> +
+>  #endif /* CONFIG_SUSPEND */
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index b123da16b..5e9513067 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -559,6 +559,9 @@ EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
+>  
+>  int pci_read_config_byte(const struct pci_dev *dev, int where, u8 *val)
+>  {
+> +	if (pci_dev_ignore_access(dev))
+> +		return PCIBIOS_SUCCESSFUL;
 
-BR
-    An
+This doesn't seem like something we should do for a few special
+systems.
+
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -688,7 +688,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	int type = pci_pcie_type(dev);
+>  	int status;
+>  
+> -	if (!pci_is_pcie(dev) ||
+> +	if (!pci_is_pcie(dev) || dev->no_pcie_port ||
+>  	    ((type != PCI_EXP_TYPE_ROOT_PORT) &&
+>  	     (type != PCI_EXP_TYPE_UPSTREAM) &&
+>  	     (type != PCI_EXP_TYPE_DOWNSTREAM) &&
+
+Nor does this.  I don't know what the purpose of this is.
+
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d31a8d107..8835b1c82 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -420,6 +420,8 @@ struct pci_dev {
+>  	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
+>  	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
+>  	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
+> +	unsigned int	no_pcie_port:1; /* PCIE Port driver is forbidden */
+> +	unsigned int	ignore_access_d3:1;	/* Ignore access when device is in D3Cold */
+>  	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
+>  	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
+>  						   decoding during BAR sizing */
+> @@ -2747,6 +2749,11 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+>  	return READ_ONCE(dev->error_state) == pci_channel_io_perm_failure;
+>  }
+>  
+> +static inline bool pci_dev_ignore_access(const struct pci_dev *dev)
+> +{
+> +	return dev->ignore_access_d3 && dev->current_state == PCI_D3cold;
+> +}
+> +
+>  void pci_request_acs(void);
+>  bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
+>  bool pci_acs_path_enabled(struct pci_dev *start,
+> -- 
+> 2.55.0
+> 
