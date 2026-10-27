@@ -1,93 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793053375;
-	b=QOsk2K1X5PPNjiRhX6hIe88MpZqMUWbFA91/XXkNnxVIcNM/M4nqWDe9JU/+k9a/DPkz
-	 oU/7fVt56Xs6BR8Kxe6Nwne5L+ag4WZNaC0NLhtmNllj40wdGg5PgvvHy1n1Q5nLHDZpT
-	 QlZEbfdThCL5r4Qjjib4GbzZlDNqwYWDn5BQ9cBYIUV6gahvrZusrgJiRVkUjD0mprvxe
-	 /aFzUFZIKxtJjWx3m7USbuIEWYBVD/XAyONuQPEqEHm495j+DY712rVXl6MxrbXr/Mef3
-	 dmTmEr/13R0FrxanSJvIDz3R5gqaR76OmR5eHV57nCWAUy2gloUx+g8YubX702C+8Hw==
+	t=1793067060;
+	b=DHvU6ZyZXEiZWSyFZBBycD5SLJlqqck2k4/2V1QH3cvjYAaDVCi7Nc89e5Q8hGAy7snK
+	 K2NRwQ6bHt2Y8OUYmXHNOBJGazPnSBTmiaNpU4rRZuxJHgbVUmEWlO4Na0vXxYIS0x7V7
+	 gPXDmCquRc7Hh9sPeCyZPDzebEMkApJ+/+5ngOJuUFAHRlXZ2uXdr2xKrfczccVr1qVB4
+	 ccSgOkVF4Xs0S9eUecjj2lSinuKbthC1UIE2E4YJ1pxnejpujvvTOsgOWCW2jLvorF07D
+	 wzYL6LrOSVwDsqQLNfAMN/f2yDvyindd6OmoKgkhUs4sLc+NMvXLRvGyk8Fk3bwDIfw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793053375;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=dV1881HEeEtEiUTYAXLH0Ho3cOZgw7Cwho1AbJrtE2E=;
-	b=s/xoz3i9OiIlQpzbS/1tknB5HG7hFrdhqWdE7ysuP+9S5TDXrHr11cyDkVEQCnJLWKjg
-	 Ny9VhpPV6/mx91K58mDH7k2zD7eGbrCBDjcsn8pAnZeL3cdfs3k0hQodMSTwtS4MvsvHj
-	 86fARFfedsd8mFwUKD0dIPh+Q9F4BTuS/UrWxXzawACTfXf+jfum0kHYNbCp4dlNZzw/O
-	 nqWErK/377JWfovwJ5pdZIxTasRrAKVCT7Pxt8DR7yjDm5qgt7dWovdU4usYjubmHkcuW
-	 hhMvdzTqS916H7l7JPiI6hm5fpahnByuEuWhVB6YyOJkpuDtl9B+91zgYz6uV24zQ6w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793067060;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=GxBA4J5RiUUMvNo6tl6YNVwy0jvR1eX7L3/i8ZVGdD8=;
+	b=5U5rHDj3TZdGKH0/SpvF5haRjT/geSi43YGFikEgbM1+WZ0OtxS1OXLNP2+pPFkGXVlS
+	 Gd4Uf1A+YBSRGd2HJMRFKlIJZ1gXmGq+5OI8cg6D4TKmejXGHXLfEWE/cezTJxqTxY7fS
+	 G40+1vC9OUQz8UqOnIDwVB1cyiN/nFS7vgRyzzpjybGElb62DOlgwaNVidrFdx0zzlq0S
+	 0wEmFdh7TCCguAMtkEd82IeLHl10MHM9VqUsCchh/hdRRQjQ99T3PqhNmQoqoJyin0hwu
+	 ctSLN/p7zpqldic5WTyqvvcPJmb3Ww5bYKzmmhVD+4/IwTGr90OCZscwfLnYA/357cA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TxXa2YZy;
-	arc=none smtp.remote-ip=198.175.65.19
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=sIejQ8qz;
+	arc=none smtp.remote-ip=74.125.82.182
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5BE606A31D;
-	Mon, 26 Oct 2026 22:22:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF5BE606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDE6606A31D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2026 02:10:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1EDE6606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TxXa2YZy
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793053374; x=1824589374;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q5I42LJ+Ggvbwqnw/q5HRxVak1prfcKrwrjhtIMtmLQ=;
-  b=TxXa2YZyIiORib8VEl0NB7wMIRMMww4n+o5Z+ehVJb5AmtFTdoCjfnre
-   UFnsjEn0C3SoAMdL8+g+tNC5GALQQZaxtp1T5eY0dkhnRWojhDFRrLEY4
-   Ar4WMJeNxbfJlK5LRQjcWt6czpseIfdNbThKkfxP9opyDKw6S+5OVGcQA
-   2zC5OXzTXG/4guNIrey7zNd9AjRALE+iGRs/9T96JgRXt+nfGqlZ9JbLP
-   oZa/OC6afuibze+twLr7Fxr55s/R3To/+SSFLzWeq/YFrbKLCYUGjkE9j
-   Bl0vSXIGTLTLYxQ7UaJW3u+IjH6GnqI3fPLoxucUdk9FaHQvwO4L0CjJ+
-   Q==;
-X-CSE-ConnectionGUID: QeCtEhnRQm+7XgReaS9wBQ==
-X-CSE-MsgGUID: T3/d4BWFTjidyo9hC5tKzg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1769679"
-X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
-   d="scan'208";a="1769679"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 15:22:49 -0700
-X-CSE-ConnectionGUID: uJMEBo1OQ72a6KADbad8gA==
-X-CSE-MsgGUID: u7KF62snTnaBZeqPRxA/dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
-   d="scan'208";a="4246512"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 26 Oct 2026 15:22:45 -0700
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xLT5V-00000000WXw-1Zg3;
-	Mon, 26 Oct 2026 22:22:41 +0000
-Date: Tue, 27 Oct 2026 06:21:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mingyou Chen <qby140326@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=sIejQ8qz
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-369f33df08eso4229830eec.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2026 19:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793067059; x=1793671859; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=GxBA4J5RiUUMvNo6tl6YNVwy0jvR1eX7L3/i8ZVGdD8=;
+        b=sIejQ8qz4jeYBukvPiHcU5OiqfVAGRR1Y5iW3mSFDPbGf7Qc7I6Xy0KucnZ62HZMvi
+         +j7LliwyQmb0kvrDCP30zY7umd3dRzJzAxn3pYjDv0NuYVRHIaSyvRbzKCCX8M7ehACU
+         EEzFYh9CMSaDro/XzTC6/34PnYqVaAvUvZLxNVMS4UZGrnpLNroVBwzbFqFa+1cvm8h2
+         0ngaFsGwrqVJiVaWaDKyEiAknhfZFC5Txp4V5JMu7FhC7li9vdC2fFG2O3NKu2cOZquw
+         o33SbzM9auEEZkF62upKr7BTly+nDkRfS80siVlToI7TkaSCVztpNra2jNvlXcuMjrq1
+         QU9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793067059; x=1793671859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=GxBA4J5RiUUMvNo6tl6YNVwy0jvR1eX7L3/i8ZVGdD8=;
+        b=F3hIZWf1eWml+3V4yQYMV5U1LXbyI2S7x9xtWDWM/pJ9KG24GSrOXoZgCPJpqJRwrv
+         57oDRPRpCbWicplhk7eClH2X506i9ZeBctmjPeRNqOHdktxTgd9zC7QJujALRa3Q1csI
+         anJSKTzmOxSMP2WNYzMPTgojQSfXBB6vMsdvI9TIiBTefQB0qsTs2J7brddu9avqlgmA
+         T9HAXquZ+1mcepn0TydzdMj3RKRLCEPG72m/yMhxEuwJpV7DPDDqoEhqW9s5IYQpgu2D
+         jKBqur+kPhGPm5ejjui01D5ZIMWct7B1rjeSdm1kXFmucqzw5XW542DOmyTYJvsLjXc7
+         KjyQ==
+X-Gm-Message-State: AFq9FYIOT6n/zyuf5By1W4j6bFyzfotuOcB8WsChNdQL6+brZFBUAtOW
+	6wtZ+e3Ub0RjqHHprDtUb0+GGja2PEvV5xrMU/jAWvuEvtTjSTn1RS6saLegdz3W
+X-Gm-Gg: AYBFou0rtLVY2ku1sLiDehGbb+b2PYnF4FVZWXOewlBqDKW3cCpNnnwhntuKvMuH2+q
+	2L9SBM1zJz9DNbbo2Dx3HrjgQn6m8H5o0MykTLjTat+gVoYaF6Ll1Z4U0+agrz9wo5w588e4DmL
+	pmT9qfXxXbCfTYHqa+SzrMbPkerQJ7xzmvBhQb7gdpmfQE8BiV2r/amzqojewvNZyZqHAxfVkYO
+	HzsutAQ3NT8LHGOUkx3eytVlHx5H0jCg7Ewu1LS52Lhw5xmjpcMa7r2/10NN8nkAv8A9IpmqsT2
+	tIfw1vqoCbHw5lX6Zi0qlfNKYdsMT/SscG7a8p/Qq4ITThqN3gtA/fbjlGvkAypeI8FNbJff/A5
+	lRZ2uQLHQ+D/kWsP/MFmMAYzcdlXTAk5uS9lrK6Fnzs1XnyDoiosKK+pggn03uuTwnQdQ1C3+jl
+	N0cwq1kkNJLFoaKUrV/r8uazQYYAzb17tlBP7Xygujq62ipshGsqBmBmPG+kSj8zq5hHVSyC+xO
+	oAwZ2UqpxZePqXjBZk9BL301zIQdzqOeZ+p+wnsVkWBG01xqN8G87rP8lwKSmxDGoMzq7xh5Hqk
+	mdnXhSc3AWM=
+X-Received: by 2002:a05:7301:5158:b0:369:fe81:a575 with SMTP id 5a478bee46e88-369fe81aa97mr7798024eec.35.1793067059062;
+        Mon, 26 Oct 2026 19:10:59 -0700 (PDT)
+Received: from localhost ([112.204.100.142])
+        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-369e8daa3a8sm36120822eec.16.2026.10.26.19.10.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2026 19:10:58 -0700 (PDT)
+From: Alex Yeo <alexyeo362@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: alexyeo362@gmail.com,
+	Kenneth Chan <kenneth.t.chan@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilya Gladyshev <ilya.gladyshev@linux.dev>
-Cc: oe-kbuild-all@lists.linux.dev, KentoNion <kento@kekto.ru>,
-	platform-driver-x86@vger.kernel.org,
-	ted eric <ericted8810@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
-	linux-kernel@vger.kernel.org, Chris Taraszka <chris@miget.com>,
-	Matias Civadda <matias.civadda2342001@gmail.com>,
-	=?utf-8?B?6auYIOS/iuaWhw==?= <btx342@gmail.com>,
-	powerfullz <wleizc7319@gmail.com>,
-	=?utf-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>,
-	=?utf-8?B?TWlsb8Wh?= Vlku <vlku.milos.fun@gmail.com>,
-	Rsplwe <i@rsplwe.com>, Bozhen Peng <bozhenpeng93@gmail.com>,
-	Anton Karasev <uselessfire@gmail.com>,
-	Jame Jao <jaojame6@gmail.com>,
-	Serhiy Shliapuhin <shlyapugin@gmail.com>,
-	Mingyou Chen <qby140326@gmail.com>
-Subject: Re: [PATCH v14 4/6] platform/x86: redmi-wmi: Drop redmi-wmi driver
-Message-ID: <202610270608.l51GVbZ8-lkp@intel.com>
-References: <20261026102101.224568-5-qby140326@gmail.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: panasonic-laptop: add pr_fmt
+Date: Tue, 27 Oct 2026 10:09:53 +0800
+Message-ID: <20261027020954.92205-1-alexyeo362@gmail.com>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -97,37 +95,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261026102101.224568-5-qby140326@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Mingyou,
+Kernel messages originating from panasonic-laptop on dmesg do not
+specify its origin.
 
-kernel test robot noticed the following build errors:
+ex:
+[  +6.009811] Unknown hotkey event: 0x0030
+[  +0.229942] Unknown hotkey event: 0x0031
 
-[auto build test ERROR on 9d3475065167197742b0882aff21cf8e78393277]
+Add pr_fmt so that messages from this module now show up as:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mingyou-Chen/MAINTAINERS-Add-maintainer-entry-of-bitland-mifs-wmi-driver/20261026-182056
-base:   9d3475065167197742b0882aff21cf8e78393277
-patch link:    https://lore.kernel.org/r/20261026102101.224568-5-qby140326%40gmail.com
-patch subject: [PATCH v14 4/6] platform/x86: redmi-wmi: Drop redmi-wmi driver
-config: x86_64-rhel-9.4-ltp (attached as .config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261027/202610270608.l51GVbZ8-lkp@intel.com/reproduce)
+[  +0.209860] panasonic_laptop: Unknown hotkey event: 0x0031
+[  +0.160149] panasonic_laptop: Unknown hotkey event: 0x0030
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610270608.l51GVbZ8-lkp@intel.com/
+Signed-off-by: Alex Yeo <alexyeo362@gmail.com>
+---
+ drivers/platform/x86/panasonic-laptop.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-All errors (new ones prefixed by >>):
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 19d194ff37ca..080e306f796c 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -119,6 +119,8 @@
+  *		- v0.1  start from toshiba_acpi driver written by John Belmonte
+  */
+ 
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/acpi.h>
+ #include <linux/backlight.h>
+ #include <linux/bits.h>
+-- 
+2.55.0
 
->> error: recursive dependency detected!
-   symbol BITLAND_MIFS_WMI is selected by REDMI_WMI
-   symbol REDMI_WMI default value contains BITLAND_MIFS_WMI
-   For a resolution refer to Documentation/kbuild/kconfig-language.rst
-   subsection "Kconfig recursive dependency limitations"
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
