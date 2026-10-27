@@ -1,69 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.47.207.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793142045;
-	b=D6Mx2hvKsuMWydNgHA0wl9ckkl8P6pZLCO0Ydkbfj/Kvw77CdydNq0KHrGc+QrgkB7/X
-	 PFTowSvrMNWLWV8NmAVvCpbD2NuaJJGBIY+UcOWdZbsKJ7FZfpoN4wsT3e00Ym78s63KA
-	 HSCFM3yE24lSpwUGqbXAVkrHuxeLQo5c2IV/61w40LeGJlDuy6vVIAn1On82XjITcwxFv
-	 a/rEFNlMnBPKP44oPhBXCt2w3ItredJgxS2q2lCX6ciijwGJDQQu3n3825wIUXxjTlTP2
-	 gbc35MxlqX58ibH0XWLD/JWMxTMJfluq6Zjcx6XV94a3nFsk5qmbe6Qgp7BztRI2C4w==
+	t=1793144173;
+	b=USjJVwao6XYWlCet8LFdKbbr+dS7HcPjFu62gQnSeT5Bm+qhoKWdzEqX2Zge3SaqKqnO
+	 jmN8yjvrqbaMTCTW49wir4kURc80XBbcbvkvHI8VwspP5npdcdD645ZfYbsJSjcpAUYvB
+	 KnTWM8yF19V/ejMcQAxxwDOB+1BLU4WZ+vcVPXL+m3w5sYKmFCNOmi3BcUb9bEtGHpnEB
+	 nGT541vHQSl2VxGHaOOstzbKqORgk7ZolzoTcu8N1tKZSQsOyIiODlFsiHKqMn8l1abrl
+	 M8Wkniyfu/ZIInQTyNIEWkC93b74CyJbZW8jSa3ZquAahNY7WSw13YnfIUQlvVqmxGQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793142045;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=xdcwz2J0ViafkvJlhahLT/XzWeMevy88xwVh6TrPYbc=;
-	b=4b4sjJz7uILk/uIinro0q6e+zBockjI7X0cmcvdfMjIyqD0hEzZntxmvlSTc7cD+/MtL
-	 pMwNBGH+XrK5qT1l8nG1traAqFFqFUw7uO497KLb6tBRprJejYBf2gzeOYONCaem+KHfZ
-	 cLi2ITtiQhbLEANy2QMQK6OZjBlu56a34KfEOcFwmURTf18Bv/Jp5AKR7iUkISNsFLrhw
-	 bgXBUUqisinCmtfl4kiCUX7SMVJC6J/LJSDXLAxVnCvSQVRDgcu58buUGAWDXnGOLCJ/B
-	 nYs4FCY01f4YpyxwWR+YWhauKgt9UUEN/kw58Ew0ZYg8kJ913jbUe2i3mBp5vxKTNlA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793144173;
+	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:Received:Received:From:To:
+	 Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:X-Smtpcorp-Track:Feedback-ID:
+	 X-Report-Abuse;
+	bh=IGYDahWwuRgVs+v3B40ksZVdUjKk1YSApRxwtmgYmAI=;
+	b=wtgQaXAk/Lgx+MZjp7B0eLz1MWcZWJVRGccyxDXHl7R9loZsqy3us3GcOljs4kCM2baI
+	 UFovJlD6JCFKhKJnic+2hXJGmWPRGRoNxYwuu3DRyQZos6PYh7nt0Iep3TPQh34X67ETh
+	 wgShTFLh5Vee8/yr6eE04Jc6Yq8hMxqmuGC3MlynukL0n042M7anUHc1Y0ODL0NMLLBmu
+	 0Aq23/FsefhJWyOrHsyH/8Aakp1hwWECG8dQSrg6UPhn2Tg/e1TPyrCmvO+Hw6tCyJ9D6
+	 goeIvCwHrHfIYvqxnLe2vgpsWOSCwhjz7Wt62jNlu6/ByI7hYD+BuImp4FK5aEuiUgw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lmZebDL8;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=shangen.org;
+	spf=pass smtp.mailfrom=em879706.shangen.org;
+	dkim=pass header.d=smtpservice.net header.i=@smtpservice.net header.a=rsa-sha256 header.s=miusa0.a1-4.dyn header.b=TsvIvMAC;
+	dkim=pass header.d=shangen.org header.i=@shangen.org header.a=rsa-sha256 header.s=s879706 header.b=iwTkwSwl;
+	arc=none smtp.remote-ip=103.47.207.181
+Received: from a2i949.smtp2go.com (a2i949.smtp2go.com [103.47.207.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3771606A31E;
-	Tue, 27 Oct 2026 23:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F77606A31A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2026 23:36:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 74F77606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shangen.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em879706.shangen.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lmZebDL8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133671F01825;
-	Tue, 27 Oct 2026 23:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793142044;
-	bh=xdcwz2J0ViafkvJlhahLT/XzWeMevy88xwVh6TrPYbc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=lmZebDL8yRqLM+Wh/deQQ76tvi8l8JU1S5SVzREGnKnCGkYrs8CFKQPbV7gBuyyRZ
-	 74IkyIL+66EnqWwbU1AzUGlaIvq8+IWUw5SkeVPl3PcsJRtpv4pDee4cO/eq2xiS4V
-	 y/RR/5ihw4wzrT0BHjxLQONiMLWKrfUpnqwXA/XAYM2ReGp3nFzrFdwZXOwVFPcVfo
-	 bavBhn9rhhvOeWv7/Ptgu8NvBgAEUVFYEDgBr3vAfzBE9gS+E5hXtV0NFop/nXyzsn
-	 ZnqrMiAx6J9uT9VDTh8fD/UPivifim82POVYIJ9mKgCed3urVNWgzCkpG6F9Hquocu
-	 6UsNpJAhLlb8A==
-Date: Tue, 27 Oct 2026 18:00:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
-	Kenneth Feng <kenneth.feng@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andre Eikmeyer <dev@deq.rocks>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	"open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH 02/13] PCI: Disable pcie port and access on D3 on
- specific amd devices
-Message-ID: <20261027230042.GA516670@bhelgaas>
+	dkim=pass (2048-bit key, unprotected) header.d=smtpservice.net header.i=@smtpservice.net header.a=rsa-sha256 header.s=miusa0.a1-4.dyn header.b=TsvIvMAC;
+	dkim=pass (2048-bit key, unprotected) header.d=shangen.org header.i=@shangen.org header.a=rsa-sha256 header.s=s879706 header.b=iwTkwSwl
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=miusa0.a1-4.dyn; x=1793145072; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Date:Subject:To:From:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=IGYDahWwuRgVs+v3B40ksZVdUjKk1YSApRxwtmgYmAI=; b=TsvIvMACh4R0Yw/m1sgk2e/41x
+	GcVdjunEEzq/UXwHHQ3qOt7diHqLSLeAkCxNh7nXmCW3LQgdGuqZuxoa327RWHTq+ZW14SB5IpE1K
+	85H7dwqkhKY00CWRxthdsr1/dPEwTq8DPVl3jXoGjxZBmdHI/f9Hv9BYRN8cxMc8nIXJeJq18eXaH
+	6SnG0uHBHbGDHsSbeiEsNRg5NKFrv3LlslaSYQrfnXqnUrMO+b7RPcsnIcEqieYbYrmrhaotUXWCa
+	T22YEbUq9ZfDvKYBiuYHiN/RdtijJD4thWjsSpOXlntTS+ERKGv55K4vyFaioKhCZP8y/KNnWU9sP
+	yzRcc+uw==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shangen.org;
+ i=@shangen.org; q=dns/txt; s=s879706; t=1793144172; h=from : subject :
+ to : message-id : date;
+ bh=IGYDahWwuRgVs+v3B40ksZVdUjKk1YSApRxwtmgYmAI=;
+ b=iwTkwSwlzOSJzFzdTlrdRtZkB+Na4VO7A5/rCpqnBM19+ZBrXr1LccmaecWz1nQE53m0V
+ gzuSB4a3QJRpQf8av+xg6WqjOA5MuCFuvZAI/P/n3iR7qW5b1p9gTrEJFKaa/rF6vRIVBam
+ uhn+D1woUq/YNJmy/9tUOCxavxhRzPxD11DsvO0UzdV9bB0Sug/Vp2zduHHLoVWAMGdnm+T
+ s1Z+ETnGxCd4CKxSXbGucIWkQT+nPkRSJdgjJj+57tXe/swKF84MUvYsr7uIMzSYE6LqapX
+ CvXa9mlXLpphtd2+ZV6kyOHaZgO/k24B42ooMhUiXIsstKCbdUCNrPnbFsdQ==
+Received: from [10.45.79.170] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <sim@shangen.org>)
+ id 1xLqhc-gL4Vta-Ev; Tue, 27 Oct 2026 23:35:36 +0000
+Received: from [10.195.244.224] (helo=sse-laptop.lan4)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256:X25519)
+ (Exim 4.100.1) (envelope-from <sim@shangen.org>)
+ id 1xLqhb-FnQW0hPn835-KyNy; Tue, 27 Oct 2026 23:35:36 +0000
+From: Shang En Sim <sim@shangen.org>
+To: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shang En Sim <sim@shangen.org>,
+ Krishna Chomal <krishna.chomal108@gmail.com>,
+ Suryansh Singh <technosfan14@gmail.com>,
+ Emre Cecanpunar <emreleno@gmail.com>,
+ =?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>,
+ Radhey Kalra <radheykalra901@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Clamp PWM input before narrowing
+Date: Tue, 27 Oct 2026 18:35:08 -0500
+Message-ID: <20261027233512.211524-1-sim@shangen.org>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -73,129 +87,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261025040046.1602-3-atharvatiwarilinuxdev@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Smtpcorp-Track: CIpSkjPeIm9h.3NLhBolPslBL.WrsTaAfiPw7
+Feedback-ID: 879706m:879706aL5FzMA:879706s8MPA8VqoV
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-On Sat, Oct 24, 2026 at 11:59:38PM -0400, Atharva Tiwari wrote:
-> As mentioned in the previous commit, PWRD turns off the entire
-> bridge, and if we read/write anything to the config space
-> or the PCIE space when the bridge is dead, the CPU CATERR's,
+The hwmon write callback receives the PWM value as a long, but pwm_to_rpm()
+takes a u8. Out-of-range values therefore wrap before the helper can clamp
+them to the supported range. For example, 256 becomes 0 and -1 becomes 255,
+selecting the opposite end of the range instead of saturating the input.
 
-Reading or writing to PCI devices in D3cold is a problem on every
-system and we should avoid it in generic ways.  I don't know what's
-special about these MacBooks.
+Accept a long in pwm_to_rpm() so clamp_val() operates on the original value
+before interpolation. Values in the valid 0..255 range are unchanged.
 
-> so to avoid interaction when the bridge is dead,
-> we remove pcieport support for the bridges, and we restrict
-> access to those bridges when the bridge is dead.
-> 
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> ---
->  arch/x86/pci/fixup.c       | 30 ++++++++++++++++++++++++++++++
->  drivers/pci/access.c       | 18 ++++++++++++++++++
->  drivers/pci/pcie/portdrv.c |  2 +-
->  include/linux/pci.h        |  7 +++++++
->  4 files changed, 56 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index 795d81c7a..66829941e 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -1094,6 +1094,35 @@ static void asus_disable_nvme_d3cold(struct pci_dev *pdev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a09, asus_disable_nvme_d3cold);
->  
-> +static const struct dmi_system_id quirk_disable_pcie_port_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +
-> +static void quirk_disable_pcie_port(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *upstream = pdev;
-> +
-> +	if (dmi_check_system(quirk_disable_pcie_port_dmi_table)) {
-> +		while ((upstream = pci_upstream_bridge(upstream))) {
-> +			upstream->no_pcie_port = 1;
-> +			upstream->ignore_access_d3 = 1;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x7340, quirk_disable_pcie_port);
-> +
->  #ifdef CONFIG_SUSPEND
->  /*
->   * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
-> @@ -1179,4 +1208,5 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
->  	}
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
-> +
->  #endif /* CONFIG_SUSPEND */
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index b123da16b..5e9513067 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -559,6 +559,9 @@ EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
->  
->  int pci_read_config_byte(const struct pci_dev *dev, int where, u8 *val)
->  {
-> +	if (pci_dev_ignore_access(dev))
-> +		return PCIBIOS_SUCCESSFUL;
+Fixes: 46be1453e6e6 ("platform/x86: hp-wmi: add manual fan control for Victus S models")
+Signed-off-by: Shang En Sim <sim@shangen.org>
+---
+Verification: Standalone arithmetic boundary checks passed, and the
+affected hp-wmi.o object built with W=1.
 
-This doesn't seem like something we should do for a few special
-systems.
+ drivers/platform/x86/hp/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -688,7 +688,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	int type = pci_pcie_type(dev);
->  	int status;
->  
-> -	if (!pci_is_pcie(dev) ||
-> +	if (!pci_is_pcie(dev) || dev->no_pcie_port ||
->  	    ((type != PCI_EXP_TYPE_ROOT_PORT) &&
->  	     (type != PCI_EXP_TYPE_UPSTREAM) &&
->  	     (type != PCI_EXP_TYPE_DOWNSTREAM) &&
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 52077833ac89..d66481a98c32 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -688,7 +688,7 @@ static inline u8 rpm_to_pwm(u8 rpm, struct hp_wmi_hwmon_priv *priv)
+ 				       clamp_val(rpm, 0, priv->max_rpm));
+ }
+ 
+-static inline u8 pwm_to_rpm(u8 pwm, struct hp_wmi_hwmon_priv *priv)
++static inline u8 pwm_to_rpm(long pwm, struct hp_wmi_hwmon_priv *priv)
+ {
+ 	return fixp_linear_interpolate(0, 0, U8_MAX, priv->max_rpm,
+ 				       clamp_val(pwm, 0, U8_MAX));
+-- 
+2.56.0
 
-Nor does this.  I don't know what the purpose of this is.
-
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d31a8d107..8835b1c82 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -420,6 +420,8 @@ struct pci_dev {
->  	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
->  	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
->  	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
-> +	unsigned int	no_pcie_port:1; /* PCIE Port driver is forbidden */
-> +	unsigned int	ignore_access_d3:1;	/* Ignore access when device is in D3Cold */
->  	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
->  	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
->  						   decoding during BAR sizing */
-> @@ -2747,6 +2749,11 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
->  	return READ_ONCE(dev->error_state) == pci_channel_io_perm_failure;
->  }
->  
-> +static inline bool pci_dev_ignore_access(const struct pci_dev *dev)
-> +{
-> +	return dev->ignore_access_d3 && dev->current_state == PCI_D3cold;
-> +}
-> +
->  void pci_request_acs(void);
->  bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
->  bool pci_acs_path_enabled(struct pci_dev *start,
-> -- 
-> 2.55.0
-> 
