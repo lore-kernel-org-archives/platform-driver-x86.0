@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793186908;
-	b=egv7HuSrLyBPvIytTEKzohKpLqZs8IdD/2MqnxjVr1/wstMAd39KVlLuCE19Fbqv99ui
-	 Y6MhIrSmzWhjJ3ttBdTo852mV52wt0QvXL95TTd3B4icYklJI+uzQPhN6ad/gCKo/rPSx
-	 4zQWpxZf7tIdyefYR4mWMBlPUtnTdf5NSuAn6uHnU/lW94MGpEL4nmSaX9nwM7x5k8SyR
-	 RLfEolD05GMnP2ftGSavoSkIMQ4gyt1H4iT+HbRQJueONbJEBDkc4uzJ5NJeN+isyvpTM
-	 ECPonjUMigPXFXyKvnSbN/dpBrp7M3zCmiwCeP7ObdSF2SsYfcZGYrpvcshw/ZH/Qaw==
+	t=1793186916;
+	b=KSqJAIIYDMsNFUJQFnFkm89gS/7/3bihlcXYd1bP9iHKvjPteCtLRju42Nojbu231zth
+	 heTCufIqAK+xxkqbUHX4jaT9Ou/OzAs2X0LzoAGYdto2K/IDGIYxJM10bQV75jFE4TIAn
+	 kQo2XYfI352lk2FnllflbLIjNanz2AU6oBn0Hzxm1Y9/docbGlrRe1ZnMGzXD8Vef6s6K
+	 UL6vTIUkszWR3Fz9ZpZgIYhO1tdykGeoDfGtjMw/jlhvZDVwrOZ6sPMasMQjBacLU0VFx
+	 o1qwRBCTjPuWTQ9daWx1kFWDKDD7rQAipKTWYUMMzZJpPFI91TPkDakF2tqLYIsOP/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793186908;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793186916;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=cCgGM3irPqBvirq+p7tcD/3J00HIlDMpjyb73J5AciQ=;
-	b=fZSY/XMPXtjQ8TOJr3GCVL4pHIGzpP3Bes87ioid/JWlJiUf8/sRnZyglZyCaZ6GZbD2
-	 E62ppqLYDvBKMM99sDyg9W226T+kRNMWsVxOCA8q2G+hV0Jkau9lUuApvpOR1I19/J+kK
-	 fMGghQSGdQUgzLRHtDZl4GFLUREoNzwPQ5ok/R4wZeRcINSPCeCKZ2noPHVCduMLapo5z
-	 P+dorZ5YEJd2yVKJiUeeZaU5qhxWbbuyMqvNvr23bJuVbbwFA74SG4lhJrwz2SeD3GW1J
-	 dhVxkYVDSQiVp6p4fzqimANVar5C7sP32FgRUk7Hidq/X1xX8jyyDRcdyLACo+MpTAg==
+	bh=j/F76kbgYrpKb0Fn4+Jj4xeIeX7ZxO8oAt4rxBiqap4=;
+	b=y/s+z5XJTdTDp/6UXzLXB/edQA6Al3o1s8EroD/BX13tupVGJG+CXWD9vBnK/H8W0lNH
+	 ADoh3ilFFLotukcWp+OZd6bhJAJ+QjtSOb8SL6IrCvIwRHNABDQ3ApYldX8P9OhcSNMFJ
+	 srrm84R3qjFXCVFTDkXaI9gtKaVHKF7Z+OY/To/0a/iBxJODlKVYJ5ffM5zP/3Y5a/dkx
+	 P3ABbdWqrQM3JYJRU3Q1hxdRpW47cs1yZ2/rADejDJKW3vz55bPss2qGcB07zdI3ht+d9
+	 nRqa99o72Wk4xrfphtqQyP9ZRC/B61hJsYR3N8InctWROEqo1MDMoWfwVpEDtSJsV9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=N1JRB6sK;
-	arc=none smtp.remote-ip=209.85.214.174
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cTsrjI9D;
+	arc=none smtp.remote-ip=209.85.214.182
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FC8606A325
-	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 11:28:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4FC8606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B05F606A31F
+	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 11:28:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5B05F606A31F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=N1JRB6sK
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2e831e86ebfso4788995ad.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 04:28:27 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cTsrjI9D
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2e977109392so4522195ad.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 04:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793186907; x=1793791707; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793186916; x=1793791716; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=cCgGM3irPqBvirq+p7tcD/3J00HIlDMpjyb73J5AciQ=;
-        b=N1JRB6sKFu4wFLoPvPVRb75Erm0kyWpV3b63A4vJA7Q4/O+cvilRvfyjC1mfy54q+/
-         Jndgri+mfdBmNZFWlo/HV6wLT65VwZj0ME6r50faENbzEMprkmYJBOtMGEbgfTmkqfwb
-         gWxIrJk1BlIosFepk1lg2rDPeMpG3cClXQrE1ejH9Kc0DhFTv2KKvwKwRw/ZhZ2ayIE7
-         1767yLJvxhU/AaTTH1Sigw28x30ePXD9Z9Yg7wFdc+EcjngI01oGtMfSXNIxgI3Dhr3Y
-         vjvxBrsy+E9HpSbc8V3t3aqh/j0QhlifrvOtIhQU1Kzr1K6D5lw1fIhNH2dJ+IBsqrFN
-         rwGg==
+        bh=j/F76kbgYrpKb0Fn4+Jj4xeIeX7ZxO8oAt4rxBiqap4=;
+        b=cTsrjI9DwIQeGGah6Z6m36RwsXKr7p3Cuw3f8Dw/vIJFnmmMMaAbbz+ZKUZp4ZJFMa
+         QdeTGiXfjfUEiLeV8Uin87JnBKufqwbJqbQh5nvarpQhlQn/06Avkb6ej4ucnIiRP7cT
+         cE2EE7X7CPKSxMIskAPlJeFObQneiRhHwniB3oB4GNzb1Um9mxLnkgVP+SYf0IO6J/Xw
+         Mi+PQbsPlG2XnxK4ljRzeByk/gMPQysMVQyBpLGEG7Ul2SNPMd3fPSEihl/4knTVc3jm
+         jaf6E7C5PpqRabRjL2OLoxrIa2/u6meE7DLq5CPumefxJ7GFqwdq1eE2DMNtaWrkYkAE
+         Vcaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793186907; x=1793791707;
+        d=1e100.net; s=20260707; t=1793186916; x=1793791716;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=cCgGM3irPqBvirq+p7tcD/3J00HIlDMpjyb73J5AciQ=;
-        b=tlw0w69gERvuPOIM4E9/dw7+Jx6Fngsp/THCbEs01EWK7k2UqgZ3ODhQvIjheESpqW
-         426DsHmoBZP8Yfq819ZKfT5X6oAApnN3MBt1I/6xgmGmWkfCPSlUtsrEtPaGRtHs8nVD
-         p6ojzZNc+Knf0yB2t176Y/qLDvOkUEgZmMvbgR/OhvlYDsQr4xn5o8EJ23fXV4efPTEo
-         4vZkYNrD2KNBHgw9PffsqDUCYvdMefGUefF86LjZbU+6HgFgtwSaO0AX9ghBdJrvz1/i
-         pvGkOs3boVMGx3MUD4X62YBerbZQBJIr51xlw/V9hnXQRhLvb2GzQCYxb297VHOzbY/V
-         bv+Q==
-X-Forwarded-Encrypted: i=1; AKwUvByEH1oP9NdNHe9RRrtZ3tRDmI6B3Mrq2GxWcWbqk+qw3YavEHGnmxUPJmmk2hUvGN57fPibfMrKoNHMRf8JSjkcNjXb@vger.kernel.org
-X-Gm-Message-State: AFq9FYJzmuyuJy/dLrTXgnKcYgrQH2QvjuPWlHWc86EBXmBgzf/5lq4B
-	jNz4P9Eq9xV5iqXpTVUyo4rFFSCZl0nQDy3JoiSbqdt5U5s645JyFM1Y
-X-Gm-Gg: AYBFou3fg0i+tENklkQpmAuQrp7uvbq0CKoe/fgtZk/NIUtMh74h6dSgYAm5630YJf6
-	MwLzqDcNJxf69IvhNb5mb3IRTHvt7I6ZjFchOdaNawm634ixgDtUdQDxoql6gJ7ByGUM90edfXX
-	Q2PXHT6ZP7rcOAyDQ19Qwb1ZnvH+KzTYNpVrz2D4uykLmgCIfXB8etxvmhLfSSACCXjy7csA+uG
-	DFLON8s99ZNRH7liP4SbgvV/fuJtxLwYKcmSvqzIgf+PK6e0eABCBiIynhQAUECpZLWXV1tIu6X
-	7pRNKnlEDMmwr+2SIzb9R0Wxsiw57msAUYihGzE/s6qBSrWclYyKlXb9TmznKk+wEKGiwLPc5om
-	C/xvtyTU5EqaBonObXag6k+dNLlKTPdhUpw9oJ1NO7AVGkDHawtnylW1H7w298fP+d/EEwHeu28
-	UpORHNZEJB5mYIVABWh4FD09uei5PEM1EizzCUrKsgcfTkAFqEghu1FufSqrg3JGkZm81dF+OMC
-	2jMX99OL3jdStw2x8IKuaYtwd2fc1hKWdY3AjblWLUeHHjOhvxxGAEmWWknmGPnM+qfQa7mkLVT
-	9rPE8km5yOkOR16XJeTwgPAS+VAHFhpR
-X-Received: by 2002:a17:902:d48f:b0:2e4:4eed:5cc5 with SMTP id d9443c01a7336-2eb0040010bmr21383835ad.38.1793186907133;
-        Wed, 28 Oct 2026 04:28:27 -0700 (PDT)
+        bh=j/F76kbgYrpKb0Fn4+Jj4xeIeX7ZxO8oAt4rxBiqap4=;
+        b=dFlXrpbD5GQYTDm0L6y0p7ROqs9h2lfS7G/PY/eW0E0vqBFoyFewIhNLrCSrOAOGuV
+         vd8l2J9RWc4ZW+QyH1e7aITunSUKyvIQXVXHG8FW0koiJzOdPETRnXMbXiEU3QqWViRU
+         WBg6u4iaXlnAxwjTXW1+555FWuVWBOIav2s5U4TXAAdL6HT9HHCrk/Dx1RS4a16oI1Ev
+         GrdRNZPzY0QODmYlGCEeUdd9ou3LUs0FQrb8tok+0nFjLYba9uPhRebTSDVrjHmmGbV0
+         cXDXD1K0i8xbKfMkDLBLgwUt9M2+7gpZDr06JrDdEhVi/5n/cll4OBX7trzlcBRbt0uc
+         lTew==
+X-Forwarded-Encrypted: i=1; AKwUvBzNFHiVhFd4dtQehi5il6H9IMI6mBSg4ZtZ2iC7c4TElg3aLDaJIZI8AZn2pTJrMjK6pj/R8uJPjsf2c4FAGVPGr47f@vger.kernel.org
+X-Gm-Message-State: AFq9FYJdMtIWLeu5QhTYRVjVo6nqL9Ry2uJuhuBh1ZXse+/Fakrh2Yqo
+	k5cVw6dABPpZAkCThcvimkCpxe3+iLZgdBt8DWfmBFkkSO5kdDY17++1
+X-Gm-Gg: AYBFou0SSgvMZm7++BE9X3yHTISThc6Ec/HpXoNCkSTaNHxB+URud15/czUVL4hNzaO
+	AT4bUiYBmeEC/tdL7pYacLxrLw7CHdiM8PyifZ8ymEQXXjhfJSK2e/3zDeP/rOkEkach73M2C3e
+	CI1gl9pvS3IM8/daC2mvUU1BhSDMu3ypBGhQ+SncH1fYZz1JR0u7bRoupN1P2rgVw2/5ZFZeTwQ
+	2V9DjoZhMn9ZA354vYqlIkiBK0cKIeglNeJtDJT5IefWkxLUxgv08IIm4chI21XPgeedZPFC9NG
+	sOD/UnQQtLL4d9hBoicJyGH+BNCBu7fHu7kjysI8gACXs4nEkADvy0a3OzzkxjqGwB1exU2UDCg
+	glP4Fq8bhWjni48d8o9WRyRMYJ0cb9AVLg3gavSquq5rvgy0twCTxkGbZHofCMSNzMf42D52HAN
+	uQ7kcEX7NgwYPTZLXEfkyEw3dOcP3ljeQaFeablY6gXT68QjCBlUrArwUZ9q5ft248C77Q8bMmi
+	ZP2S1X/BrTfss0Kg7f4YWWxcpR3g8+dArLp2+5CcXKZrwGLpXFFvnnPohVBDP6TFnxRXFg53Nba
+	Kkgi1CXfMNvy8f+YwYzfw2mkZJKjcelP
+X-Received: by 2002:a17:902:fd84:b0:2e9:84f2:3738 with SMTP id d9443c01a7336-2eb00158878mr18366455ad.6.1793186915667;
+        Wed, 28 Oct 2026 04:28:35 -0700 (PDT)
 Received: from qby-nixos-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6b76dafsm20128745ad.18.2026.10.28.04.28.20
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6b76dafsm20128745ad.18.2026.10.28.04.28.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 04:28:26 -0700 (PDT)
+        Wed, 28 Oct 2026 04:28:34 -0700 (PDT)
 From: Mingyou Chen <qby140326@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -99,9 +99,9 @@ Cc: KentoNion <kento@kekto.ru>,
 	Jame Jao <jaojame6@gmail.com>,
 	Serhiy Shliapuhin <shlyapugin@gmail.com>,
 	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH v15 4/6] platform/x86: redmi-wmi: Drop redmi-wmi driver
-Date: Wed, 28 Oct 2026 11:27:40 +0000
-Message-ID: <20261028112742.674847-5-qby140326@gmail.com>
+Subject: [PATCH v15 5/6] platform/x86: bitland-mifs-wmi: Add quirks table
+Date: Wed, 28 Oct 2026 11:27:41 +0000
+Message-ID: <20261028112742.674847-6-qby140326@gmail.com>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261028112742.674847-1-qby140326@gmail.com>
 References: <20261028112742.674847-1-qby140326@gmail.com>
@@ -116,245 +116,351 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The redmi-wmi driver is no longer needed because its functionality
-has been superseded by the new generic bitland platform driver.
-All supported Redmi laptop models are now handled properly via the
-updated WMI interfaces in bitland-mifs-wmi.
+The MIFS WMI interface is shared by several Bitland ODM laptops which
+differ in the layout of the performance mode values of
+WMI_FN_SYSTEM_PER_MODE and in the capability checks.
 
-Remove the obsolete code, Kconfig entries, and Makefile references
-to clean up the platform directory.
+Introduce a quirks table to support multiple machine families without
+sprinkling model checks over the driver.
 
+Tested-by: Chris Taraszka <chris@miget.com>
 Signed-off-by: Mingyou Chen <qby140326@gmail.com>
 ---
- MAINTAINERS                      |   6 --
- drivers/platform/x86/Kconfig     |  13 +--
- drivers/platform/x86/Makefile    |   1 -
- drivers/platform/x86/redmi-wmi.c | 154 -------------------------------
- 4 files changed, 5 insertions(+), 169 deletions(-)
- delete mode 100644 drivers/platform/x86/redmi-wmi.c
+ drivers/platform/x86/bitland-mifs-wmi.c | 178 ++++++++++++++++--------
+ 1 file changed, 121 insertions(+), 57 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 250c471e674d..8ca065eb448f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23038,12 +23038,6 @@ S:	Maintained
- T:	git https://github.com/pkshih/rtw.git
- F:	drivers/net/wireless/realtek/rtw89/
+diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+index 0d7815c2faf9..3f8f1ebb10fb 100644
+--- a/drivers/platform/x86/bitland-mifs-wmi.c
++++ b/drivers/platform/x86/bitland-mifs-wmi.c
+@@ -12,6 +12,7 @@
+ #include <linux/bits.h>
+ #include <linux/container_of.h>
+ #include <linux/dev_printk.h>
++#include <linux/dmi.h>
+ #include <linux/device.h>
+ #include <linux/device/devres.h>
+ #include <linux/err.h>
+@@ -84,6 +85,38 @@ enum bitland_mifs_power_profile {
+ 	WMI_PP_FULL_SPEED	= 3,
+ };
  
--REDMIBOOK WMI DRIVERS
--M:	Gladyshev Ilya <foxido@foxido.dev>
--L:	platform-driver-x86@vger.kernel.org
--S:	Maintained
--F:	drivers/platform/x86/redmi-wmi.c
--
- BITLAND LAPTOP DRIVER
- M:	Mingyou Chen <qby140326@gmail.com>
- M:	Ilya Gladyshev <ilya.gladyshev@linux.dev>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7ee9ff3879c9..e7f0734e57be 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -79,16 +79,12 @@ config XIAOMI_WMI
- 	  be called xiaomi-wmi.
++struct bitland_mifs_wmi_data;
++
++struct bitland_profile_entry {
++	enum platform_profile_option profile;
++	u8 wmi_val;
++	bool no_set;
++};
++
++struct bitland_mifs_quirks {
++	const struct bitland_profile_entry *profile_entries;
++	size_t num_profile_entries;
++
++	bool return_code_at_end;
++	bool skip_ac_type_check;
++};
++
++static const struct bitland_profile_entry default_profile_entries[] = {
++	{ PLATFORM_PROFILE_LOW_POWER,            WMI_PP_QUIET },
++	{ PLATFORM_PROFILE_BALANCED,             WMI_PP_BALANCED },
++	{ PLATFORM_PROFILE_BALANCED_PERFORMANCE, WMI_PP_PERFORMANCE },
++	{ PLATFORM_PROFILE_PERFORMANCE,          WMI_PP_FULL_SPEED },
++};
++
++static const struct bitland_mifs_quirks default_quirks = {
++	.profile_entries = default_profile_entries,
++	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
++};
++
++static const struct dmi_system_id bitland_mifs_dmi_table[] = {
++	{}
++};
++
+ enum bitland_mifs_event_id {
+ 	WMI_EVENT_SWITCHVIDEOMODE	= 1,
+ 	WMI_EVENT_SELECTIVE_SCREENSHOT	= 2,
+@@ -131,12 +164,24 @@ struct bitland_mifs_input {
+ 	u8 payload[28];
+ } __packed;
  
- config REDMI_WMI
--	tristate "Redmibook WMI key driver"
-+	tristate "Redmibook WMI key driver (DEPRECATED)"
- 	depends on ACPI_WMI
-+	depends on HWMON
- 	depends on INPUT
--	select INPUT_SPARSEKMAP
--	help
--	  Say Y here if you want support for WMI-based hotkey events on
--	  Xiaomi Redmibook devices.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called redmi-wmi.
-+	depends on LEDS_CLASS
-+	depends on POWER_SUPPLY
+-struct bitland_mifs_output {
++struct bitland_mifs_output_head_rc {
+ 	__le16 return_code;
+ 	__le16 function;
+ 	u8 data[28];
+ } __packed;
  
- config GIGABYTE_WMI
- 	tristate "Gigabyte WMI temperature driver"
-@@ -108,6 +104,7 @@ config BITLAND_MIFS_WMI
- 	depends on INPUT
- 	depends on LEDS_CLASS
- 	depends on POWER_SUPPLY
-+	default REDMI_WMI if REDMI_WMI
- 	select ACPI_PLATFORM_PROFILE
- 	select INPUT_SPARSEKMAP
- 	help
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index b90c544387be..3052b92fb5fa 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -9,7 +9,6 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
- obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
--obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
- obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
++struct bitland_mifs_output_tail_rc {
++	__le16 function;
++	u8 data[28];
++	__le16 return_code;
++} __packed;
++
++union bitland_mifs_output_buf {
++	struct bitland_mifs_output_head_rc head;
++	struct bitland_mifs_output_tail_rc tail;
++	u8 raw[32];
++};
++
+ struct bitland_mifs_event {
+ 	u8 event_type;
+ 	u8 event_id;
+@@ -166,27 +211,41 @@ struct bitland_mifs_wmi_data {
+ 	struct input_dev *input_dev;
+ 	struct device *hwmon_dev;
+ 	struct device *pp_dev;
++	const struct bitland_mifs_quirks *quirks;
+ 	enum platform_profile_option saved_profile;
+ };
  
-diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redmi-wmi.c
-deleted file mode 100644
-index cc82ef502002..000000000000
---- a/drivers/platform/x86/redmi-wmi.c
-+++ /dev/null
-@@ -1,154 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/* WMI driver for Xiaomi Redmibooks */
--
--#include <linux/acpi.h>
--#include <linux/bits.h>
--#include <linux/device.h>
--#include <linux/input.h>
--#include <linux/input/sparse-keymap.h>
--#include <linux/module.h>
--#include <linux/mutex.h>
--#include <linux/unaligned.h>
--#include <linux/wmi.h>
--
--#include <uapi/linux/input-event-codes.h>
--
--#define WMI_REDMIBOOK_KEYBOARD_EVENT_GUID "46C93E13-EE9B-4262-8488-563BCA757FEF"
--
--#define AI_KEY_VALUE_MASK BIT(8)
--
--static const struct key_entry redmi_wmi_keymap[] = {
--	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
--	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
--	{KE_KEY, 0x00001b01,	{KEY_CONFIG}},
--	{KE_KEY, 0x00011b01,	{KEY_CONFIG}},
--	{KE_KEY, 0x00010101,	{KEY_SWITCHVIDEOMODE}},
--	{KE_KEY, 0x00001a01,	{KEY_REFRESH_RATE_TOGGLE}},
--
--	/* AI button has code for each position */
--	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
--	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
--
--	/* Keyboard backlight: Off / Auto / Low / High (new state in byte 2) */
--	{KE_KEY, 0x00000501,	{KEY_KBDILLUMTOGGLE}},
--	{KE_KEY, 0x00800501,	{KEY_KBDILLUMTOGGLE}},
--	{KE_KEY, 0x00050501,	{KEY_KBDILLUMTOGGLE}},
--	{KE_KEY, 0x000a0501,	{KEY_KBDILLUMTOGGLE}},
--
--	/* Xiaomi G Command Center */
--	{KE_KEY, 0x00010a01,	{KEY_VENDOR}},
--
--	/* OEM preset power mode: 1=Balanced 2=Silent 3=Turbo 4=Full speed */
--	{KE_KEY, 0x00011601,	{KEY_PERFORMANCE}},
--	{KE_KEY, 0x00021601,	{KEY_PERFORMANCE}},
--	{KE_KEY, 0x00031601,	{KEY_PERFORMANCE}},
--	{KE_KEY, 0x00041601,	{KEY_PERFORMANCE}},
--
--	/* Fn Lock state: 1=on 0=off */
--	{KE_KEY, 0x00000701,	{KEY_FN_ESC}},
--	{KE_KEY, 0x00010701,	{KEY_FN_ESC}},
--
--	/* Fn+`/1/2/3/4 */
--	{KE_KEY, 0x00011101, {KEY_F13}},
--	{KE_KEY, 0x00011201, {KEY_F14}},
--	{KE_KEY, 0x00011301, {KEY_F15}},
--	{KE_KEY, 0x00011401, {KEY_F16}},
--	{KE_KEY, 0x00011501, {KEY_F17}},
--
--	{KE_END}
--};
--
--struct redmi_wmi {
--	struct input_dev *input_dev;
--	/* Protects the key event sequence */
--	struct mutex key_lock;
--};
--
--static int redmi_wmi_probe(struct wmi_device *wdev, const void *context)
--{
--	struct redmi_wmi *data;
--	int err;
--
--	/* Init dev */
--	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
--	if (!data)
--		return -ENOMEM;
--
--	dev_set_drvdata(&wdev->dev, data);
--
--	err = devm_mutex_init(&wdev->dev, &data->key_lock);
--	if (err)
--		return err;
--
--	data->input_dev = devm_input_allocate_device(&wdev->dev);
--	if (!data->input_dev)
--		return -ENOMEM;
--
--	data->input_dev->name = "Redmibook WMI keys";
--	data->input_dev->phys = "wmi/input0";
--
--	err = sparse_keymap_setup(data->input_dev, redmi_wmi_keymap, NULL);
--	if (err)
--		return err;
--
--	return input_register_device(data->input_dev);
--}
--
--static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
--{
--	struct key_entry *entry;
--	struct redmi_wmi *data = dev_get_drvdata(&wdev->dev);
--	bool autorelease = true;
--	u32 payload;
--	int value = 1;
--
--	if (obj->type != ACPI_TYPE_BUFFER) {
--		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
--		return;
--	}
--
--	if (obj->buffer.length < 32) {
--		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
--		return;
--	}
--
--	payload = get_unaligned_le32(obj->buffer.pointer);
--	entry = sparse_keymap_entry_from_scancode(data->input_dev, payload);
--
--	if (!entry) {
--		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
--		return;
--	}
--
--	/* AI key quirk */
--	if (entry->keycode == KEY_ASSISTANT) {
--		value = !(payload & AI_KEY_VALUE_MASK);
--		autorelease = false;
--	}
--
--	guard(mutex)(&data->key_lock);
--	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
--}
--
--static const struct wmi_device_id redmi_wmi_id_table[] = {
--	{ WMI_REDMIBOOK_KEYBOARD_EVENT_GUID, NULL },
--	{ }
--};
--
--static struct wmi_driver redmi_wmi_driver = {
--	.driver = {
--		.name = "redmi-wmi",
--		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
--	},
--	.id_table = redmi_wmi_id_table,
--	.min_event_size = 32,
--	.probe = redmi_wmi_probe,
--	.notify = redmi_wmi_notify,
--	.no_singleton = true,
--};
--module_wmi_driver(redmi_wmi_driver);
--
--MODULE_DEVICE_TABLE(wmi, redmi_wmi_id_table);
--MODULE_AUTHOR("Gladyshev Ilya <foxido@foxido.dev>");
--MODULE_DESCRIPTION("Redmibook WMI driver");
--MODULE_LICENSE("GPL");
+ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+ 				 const struct bitland_mifs_input *input,
+-				 struct bitland_mifs_output *output)
++				 struct bitland_mifs_output_head_rc *output)
+ {
+ 	struct wmi_buffer in_buf = { .length = sizeof(*input), .data = (void *)input };
+ 	struct wmi_buffer out_buf = { 0 };
++	const u8 *payload_data;
++	__le16 return_code;
++	__le16 function;
+ 	int ret;
+ 
+ 	guard(mutex)(&data->lock);
+ 
+ 	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf, &out_buf,
+-				   sizeof(struct bitland_mifs_output));
++				   sizeof(union bitland_mifs_output_buf));
+ 	if (ret)
+ 		return ret;
+ 
+-	struct bitland_mifs_output *result __free(kfree) = out_buf.data;
++	union bitland_mifs_output_buf *result __free(kfree) = out_buf.data;
++
++	if (data->quirks->return_code_at_end) {
++		return_code = result->tail.return_code;
++		function = result->tail.function;
++		payload_data = result->tail.data;
++	} else {
++		return_code = result->head.return_code;
++		function = result->head.function;
++		payload_data = result->head.data;
++	}
+ 
+-	switch (le16_to_cpu(result->return_code)) {
++	switch (le16_to_cpu(return_code)) {
+ 	case WMI_RETURN_CODE_SUCCESS:
+ 		break;
+ 	case WMI_RETURN_CODE_UNKNOWN_FUNCTION:
+@@ -195,11 +254,19 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+ 		return -EIO;
+ 	}
+ 
+-	if (result->function != input->function)
++	if (function != input->function) {
++		if (function == 0 && input->operation == cpu_to_le16(WMI_METHOD_SET))
++			goto fn_ok;
++
+ 		return -ENOMSG;
++	}
+ 
+-	if (output)
+-		memcpy(output, result, sizeof(*output));
++fn_ok:
++	if (output) {
++		output->return_code = return_code;
++		output->function = function;
++		memcpy(output->data, payload_data, sizeof(output->data));
++	}
+ 
+ 	return 0;
+ }
+@@ -208,45 +275,41 @@ static int laptop_profile_get(struct device *dev,
+ 			      enum platform_profile_option *profile)
+ {
+ 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	const struct bitland_mifs_quirks *quirks = data->quirks;
+ 	struct bitland_mifs_input input = {
+ 		.operation = cpu_to_le16(WMI_METHOD_GET),
+ 		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
+ 	};
+-	struct bitland_mifs_output result;
++	struct bitland_mifs_output_head_rc result;
++	size_t i;
+ 	int ret;
+ 
+ 	ret = bitland_mifs_wmi_call(data, &input, &result);
+ 	if (ret)
+ 		return ret;
+ 
+-	switch (result.data[0]) {
+-	case WMI_PP_BALANCED:
+-		*profile = PLATFORM_PROFILE_BALANCED;
+-		break;
+-	case WMI_PP_PERFORMANCE:
+-		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
+-		break;
+-	case WMI_PP_QUIET:
+-		*profile = PLATFORM_PROFILE_LOW_POWER;
+-		break;
+-	case WMI_PP_FULL_SPEED:
+-		*profile = PLATFORM_PROFILE_PERFORMANCE;
+-		break;
+-	default:
+-		return -EINVAL;
++	for (i = 0; i < quirks->num_profile_entries; i++) {
++		if (quirks->profile_entries[i].wmi_val == result.data[0]) {
++			*profile = quirks->profile_entries[i].profile;
++			return 0;
++		}
+ 	}
+-	return 0;
++
++	return -EINVAL;
+ }
+ 
+-static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *data)
++static int bitland_pp_check_capability(struct bitland_mifs_wmi_data *data)
+ {
+ 	struct bitland_mifs_input input = {
+ 		.operation = cpu_to_le16(WMI_METHOD_GET),
+ 		.function = cpu_to_le16(WMI_FN_SYSTEM_AC_TYPE),
+ 	};
+-	struct bitland_mifs_output output;
++	struct bitland_mifs_output_head_rc output;
+ 	int ret;
+ 
++	if (data->quirks->skip_ac_type_check)
++		return power_supply_is_system_supplied() > 0 ? 0 : -EOPNOTSUPP;
++
+ 	/* Full-speed/performance mode requires DC power (not USB-C) */
+ 	if (!power_supply_is_system_supplied())
+ 		return -EOPNOTSUPP;
+@@ -269,47 +332,42 @@ static int laptop_profile_set(struct device *dev,
+ 			      enum platform_profile_option profile)
+ {
+ 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	const struct bitland_mifs_quirks *quirks = data->quirks;
+ 	struct bitland_mifs_input input = {
+ 		.operation = cpu_to_le16(WMI_METHOD_SET),
+ 		.function = cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
+ 	};
++	size_t i;
+ 	int ret;
+-	u8 val;
+ 
+-	switch (profile) {
+-	case PLATFORM_PROFILE_LOW_POWER:
+-		val = WMI_PP_QUIET;
+-		break;
+-	case PLATFORM_PROFILE_BALANCED:
+-		val = WMI_PP_BALANCED;
+-		break;
+-	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+-		ret = bitland_check_performance_capability(data);
+-		if (ret)
+-			return ret;
+-		val = WMI_PP_PERFORMANCE;
+-		break;
+-	case PLATFORM_PROFILE_PERFORMANCE:
+-		ret = bitland_check_performance_capability(data);
++	if (profile == PLATFORM_PROFILE_PERFORMANCE ||
++	    profile == PLATFORM_PROFILE_BALANCED_PERFORMANCE) {
++		ret = bitland_pp_check_capability(data);
+ 		if (ret)
+ 			return ret;
+-		val = WMI_PP_FULL_SPEED;
+-		break;
+-	default:
+-		return -EOPNOTSUPP;
+ 	}
+ 
+-	input.payload[0] = val;
++	for (i = 0; i < quirks->num_profile_entries; i++) {
++		if (quirks->profile_entries[i].profile == profile &&
++		    !quirks->profile_entries[i].no_set) {
++			input.payload[0] = quirks->profile_entries[i].wmi_val;
++			return bitland_mifs_wmi_call(data, &input, NULL);
++		}
++	}
+ 
+-	return bitland_mifs_wmi_call(data, &input, NULL);
++	return -EOPNOTSUPP;
+ }
+ 
+ static int platform_profile_probe(void *drvdata, unsigned long *choices)
+ {
+-	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+-	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+-	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
+-	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++	struct bitland_mifs_wmi_data *data = drvdata;
++	const struct bitland_mifs_quirks *quirks = data->quirks;
++	size_t i;
++
++	for (i = 0; i < quirks->num_profile_entries; i++) {
++		if (!quirks->profile_entries[i].no_set)
++			set_bit(quirks->profile_entries[i].profile, choices);
++	}
+ 
+ 	return 0;
+ }
+@@ -366,7 +424,7 @@ static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 	struct bitland_mifs_input input = {
+ 		.operation = cpu_to_le16(WMI_METHOD_GET),
+ 	};
+-	struct bitland_mifs_output res;
++	struct bitland_mifs_output_head_rc res;
+ 	int ret;
+ 
+ 	switch (type) {
+@@ -455,7 +513,7 @@ static enum led_brightness laptop_kbd_led_get(struct led_classdev *led_cdev)
+ 		.operation = cpu_to_le16(WMI_METHOD_GET),
+ 		.function = cpu_to_le16(WMI_FN_RGB_KB_BRIGHTNESS),
+ 	};
+-	struct bitland_mifs_output res;
++	struct bitland_mifs_output_head_rc res;
+ 	int ret;
+ 
+ 	ret = bitland_mifs_wmi_call(data, &input, &res);
+@@ -480,7 +538,7 @@ static ssize_t gpu_mode_show(struct device *dev, struct device_attribute *attr,
+ 		.operation = cpu_to_le16(WMI_METHOD_GET),
+ 		.function = cpu_to_le16(WMI_FN_GPU_MODE),
+ 	};
+-	struct bitland_mifs_output res;
++	struct bitland_mifs_output_head_rc res;
+ 	u8 mode_val;
+ 	int ret;
+ 
+@@ -534,7 +592,7 @@ static ssize_t kb_mode_show(struct device *dev, struct device_attribute *attr,
+ 		.operation = cpu_to_le16(WMI_METHOD_GET),
+ 		.function = cpu_to_le16(WMI_FN_RGB_KB_MODE),
+ 	};
+-	struct bitland_mifs_output res;
++	struct bitland_mifs_output_head_rc res;
+ 	u8 mode_val;
+ 	int ret;
+ 
+@@ -712,6 +770,7 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
+ 		.default_label = ":" LED_FUNCTION_KBD_BACKLIGHT,
+ 		.devname_mandatory = true,
+ 	};
++	const struct dmi_system_id *dmi_id;
+ 	int ret;
+ 
+ 	drv_data = devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
+@@ -726,6 +785,11 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
+ 
+ 	dev_set_drvdata(&wdev->dev, drv_data);
+ 
++	drv_data->quirks = &default_quirks;
++	dmi_id = dmi_first_match(bitland_mifs_dmi_table);
++	if (dmi_id)
++		drv_data->quirks = dmi_id->driver_data;
++
+ 	if (dev_type == BITLAND_WMI_EVENT) {
+ 		/* Register input device for hotkeys */
+ 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
 -- 
 2.56.0
 
