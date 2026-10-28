@@ -1,83 +1,115 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.47.207.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793144173;
-	b=USjJVwao6XYWlCet8LFdKbbr+dS7HcPjFu62gQnSeT5Bm+qhoKWdzEqX2Zge3SaqKqnO
-	 jmN8yjvrqbaMTCTW49wir4kURc80XBbcbvkvHI8VwspP5npdcdD645ZfYbsJSjcpAUYvB
-	 KnTWM8yF19V/ejMcQAxxwDOB+1BLU4WZ+vcVPXL+m3w5sYKmFCNOmi3BcUb9bEtGHpnEB
-	 nGT541vHQSl2VxGHaOOstzbKqORgk7ZolzoTcu8N1tKZSQsOyIiODlFsiHKqMn8l1abrl
-	 M8Wkniyfu/ZIInQTyNIEWkC93b74CyJbZW8jSa3ZquAahNY7WSw13YnfIUQlvVqmxGQ==
+	t=1793146151;
+	b=iJEnxC8KUAxl02db7a5AqCSu8zRRBmIbS73D4OHSZl48Ki6onJzIUXpO3w3gUup5MxXh
+	 V8NKxtKhwWJ6E/cXBAPPjWK/rKAWlWoSDPWF+6hWHZEtOUE9GAIbMcjpR4iXMYhkwigI9
+	 Y7hBFhzwgxpMjNc6hVaXwnG0aEH4X/Mzd+GQAbuzJGLIom50WLu0wmL3cIv2TKERwLhWQ
+	 g4gquKYWV4Nku5ZBto3ggVwRcKxqYrIY4XIDuvIWT1Yiir0tj2uFyAl1pGCWtTr4hAS2A
+	 E8H19hp2HMtmqqxZWtxPOBPPTPCZMMtHa56J4P2PuGRtXiy9+2jZx64sS2/1KXqgoog==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793144173;
-	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:Received:Received:From:To:
-	 Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:X-Smtpcorp-Track:Feedback-ID:
-	 X-Report-Abuse;
-	bh=IGYDahWwuRgVs+v3B40ksZVdUjKk1YSApRxwtmgYmAI=;
-	b=wtgQaXAk/Lgx+MZjp7B0eLz1MWcZWJVRGccyxDXHl7R9loZsqy3us3GcOljs4kCM2baI
-	 UFovJlD6JCFKhKJnic+2hXJGmWPRGRoNxYwuu3DRyQZos6PYh7nt0Iep3TPQh34X67ETh
-	 wgShTFLh5Vee8/yr6eE04Jc6Yq8hMxqmuGC3MlynukL0n042M7anUHc1Y0ODL0NMLLBmu
-	 0Aq23/FsefhJWyOrHsyH/8Aakp1hwWECG8dQSrg6UPhn2Tg/e1TPyrCmvO+Hw6tCyJ9D6
-	 goeIvCwHrHfIYvqxnLe2vgpsWOSCwhjz7Wt62jNlu6/ByI7hYD+BuImp4FK5aEuiUgw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793146151;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=rYaht9shbFWxq4kumOpndSaFwe2UdArezXMn/5BLyPQ=;
+	b=yLmscj5/MeVz08dMz6vn6YJn1+1vGRhTm5WWNfBbVOLD6dCLNvE2eC8v6UH39XzaE0Ze
+	 EGmZDyUxvJzJUw/Khmi0mk/FSQtHYzMErdfR+PRvfLDKKTvuwmvgsPBkNFm7nw/M00mBP
+	 1f89SyXIBUqbTtlw7WSnhr+tVHy3WsXDhnhBd3GePUmqqCzp0goPC1FQ/9Yl8Xug1sotO
+	 Oos72L8HeSr+jIN6pTRE3w+7rjop/7V3DrL8da+rqYAG+1t01MjkK8q89oPajO1edNg45
+	 jjfpYDSgOdoy/yKtEON17Bxon30YxOmqgQOhaQ/j766SLHOuUYIwgY1gIBpCBge/QrQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=shangen.org;
-	spf=pass smtp.mailfrom=em879706.shangen.org;
-	dkim=pass header.d=smtpservice.net header.i=@smtpservice.net header.a=rsa-sha256 header.s=miusa0.a1-4.dyn header.b=TsvIvMAC;
-	dkim=pass header.d=shangen.org header.i=@shangen.org header.a=rsa-sha256 header.s=s879706 header.b=iwTkwSwl;
-	arc=none smtp.remote-ip=103.47.207.181
-Received: from a2i949.smtp2go.com (a2i949.smtp2go.com [103.47.207.181])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c965U5rN;
+	arc=none smtp.remote-ip=74.125.82.179
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F77606A31A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2026 23:36:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 74F77606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shangen.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em879706.shangen.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CC1606A31E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 00:09:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62CC1606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=smtpservice.net header.i=@smtpservice.net header.a=rsa-sha256 header.s=miusa0.a1-4.dyn header.b=TsvIvMAC;
-	dkim=pass (2048-bit key, unprotected) header.d=shangen.org header.i=@shangen.org header.a=rsa-sha256 header.s=s879706 header.b=iwTkwSwl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=miusa0.a1-4.dyn; x=1793145072; h=Feedback-ID:
-	X-Smtpcorp-Track:Message-ID:Date:Subject:To:From:Reply-To:Sender:
-	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=IGYDahWwuRgVs+v3B40ksZVdUjKk1YSApRxwtmgYmAI=; b=TsvIvMACh4R0Yw/m1sgk2e/41x
-	GcVdjunEEzq/UXwHHQ3qOt7diHqLSLeAkCxNh7nXmCW3LQgdGuqZuxoa327RWHTq+ZW14SB5IpE1K
-	85H7dwqkhKY00CWRxthdsr1/dPEwTq8DPVl3jXoGjxZBmdHI/f9Hv9BYRN8cxMc8nIXJeJq18eXaH
-	6SnG0uHBHbGDHsSbeiEsNRg5NKFrv3LlslaSYQrfnXqnUrMO+b7RPcsnIcEqieYbYrmrhaotUXWCa
-	T22YEbUq9ZfDvKYBiuYHiN/RdtijJD4thWjsSpOXlntTS+ERKGv55K4vyFaioKhCZP8y/KNnWU9sP
-	yzRcc+uw==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shangen.org;
- i=@shangen.org; q=dns/txt; s=s879706; t=1793144172; h=from : subject :
- to : message-id : date;
- bh=IGYDahWwuRgVs+v3B40ksZVdUjKk1YSApRxwtmgYmAI=;
- b=iwTkwSwlzOSJzFzdTlrdRtZkB+Na4VO7A5/rCpqnBM19+ZBrXr1LccmaecWz1nQE53m0V
- gzuSB4a3QJRpQf8av+xg6WqjOA5MuCFuvZAI/P/n3iR7qW5b1p9gTrEJFKaa/rF6vRIVBam
- uhn+D1woUq/YNJmy/9tUOCxavxhRzPxD11DsvO0UzdV9bB0Sug/Vp2zduHHLoVWAMGdnm+T
- s1Z+ETnGxCd4CKxSXbGucIWkQT+nPkRSJdgjJj+57tXe/swKF84MUvYsr7uIMzSYE6LqapX
- CvXa9mlXLpphtd2+ZV6kyOHaZgO/k24B42ooMhUiXIsstKCbdUCNrPnbFsdQ==
-Received: from [10.45.79.170] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.94.2-S2G) (envelope-from <sim@shangen.org>)
- id 1xLqhc-gL4Vta-Ev; Tue, 27 Oct 2026 23:35:36 +0000
-Received: from [10.195.244.224] (helo=sse-laptop.lan4)
- by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256:X25519)
- (Exim 4.100.1) (envelope-from <sim@shangen.org>)
- id 1xLqhb-FnQW0hPn835-KyNy; Tue, 27 Oct 2026 23:35:36 +0000
-From: Shang En Sim <sim@shangen.org>
-To: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shang En Sim <sim@shangen.org>,
- Krishna Chomal <krishna.chomal108@gmail.com>,
- Suryansh Singh <technosfan14@gmail.com>,
- Emre Cecanpunar <emreleno@gmail.com>,
- =?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>,
- Radhey Kalra <radheykalra901@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-wmi: Clamp PWM input before narrowing
-Date: Tue, 27 Oct 2026 18:35:08 -0500
-Message-ID: <20261027233512.211524-1-sim@shangen.org>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c965U5rN
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-36a17a332ecso525262eec.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2026 17:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793146149; x=1793750949; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=rYaht9shbFWxq4kumOpndSaFwe2UdArezXMn/5BLyPQ=;
+        b=c965U5rNBMbffOcZNVLX7SYC5p8jyV80hOEHtyvhV7AogFI+ESUuCFugBF5gwdEW20
+         1fiy5dd03AVDB/cQe0C2Q/RBf0zXqKxCwbDPMYjT4MS2A3E0X5mvX49a6WCzw69f8hoA
+         /AbRH0Zpauzco43FsFU+8YvGTT1N96yrAqTD/QS8XIuKhvU4b5Q/iseu+NQ+WaunolGn
+         vFYPzzBjXIXCruLcSApWJMHiAO6IFXuZLuMhC9e7kIi3vz7n1XlfZ9tFjiF5Mnj5EJlS
+         R0pxRi2kX9r75u0t+R7/97vtTf04NnYctSwuK8dRSx7xAlpU9SukX0TDQzOmpY4B4XM3
+         QBZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793146149; x=1793750949;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=rYaht9shbFWxq4kumOpndSaFwe2UdArezXMn/5BLyPQ=;
+        b=SQ4U1w5NL7FehYhalM4jju9RGegfECc966o1UK5Z8vNpIlnnWsVSy3/rETcrC14Cms
+         pMMVMJUFQzVPA8By1EKxoUKywIc9WSFNABy19F9Tbr5g5ZGYAisZFpsMHLLLQ3ZFoAUM
+         0LRUJHI/ro/GtFNqsN+muh0NZAHUAA6NOszDCtDrSFAzIPXJ65QqkBeLWiDDtYZLs57y
+         8+sQ/aA9xGPZjl3SlNvuwn62UWzzbXpuKgIEG8p7VvBZ372V4JiOasthauzj7M+02cNg
+         46ZudrHOLC15Y41mIpVAw3nJSh3D8+Onc1VKqV/TaXPAaWJKy8z1mU9/E5DzBwT+sueI
+         hYWA==
+X-Forwarded-Encrypted: i=1; AKwUvBxoMGucK4iiYqc5Xru5XzyPFySMQpw4ZFDzK5epasUN648R+R9TZRDYxxbC6eDUUE281Rur/83pqttjNOwz2DFuhoZD@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ37Ad4hf+0xYgbfm40B6llhg28oX5x58nZvNEip1WboismHUXs
+	Z30l8OWNm0m49rCV/k3WzYqIGw89dwhcQitrtzH8wLfBcvzEAFJajKw=
+X-Gm-Gg: AYBFou1s3Zdia7ee2cSschjfgSFoUoBvCGlEkdIHrLre2qDUEG0/wbXKKkX4I3KI677
+	6zWpB6j9C26KT39S3VR+JGIKZ5rkKbg4OkKg3x5M7rB0b7o/WPweXz5B/RffmTSKNxcpD7Ki0bf
+	V++E/ATr7OIFOzjHuYpiSD5icLadHbZZFeW6NkjJUxyu3N3foMtAVqQtkBdlBK3lv+2mdJLwp4w
+	a7kSA+adPNlPvXfNIYXXkXS2bOvtZCL3q2AYVfRd7uuZUaCv2QFYFhasGAV6IqIZgNRdCuGSNEu
+	B7ILb2TC1h4JPgpRmDzcSOSMAzV/IAVZkn5FozigC9+0wVyikSlLak++ebhhhT/fDvtts5onomX
+	ilyTLo0x7Dxk1otWesrcayb3C20hH/dLoeUbFV7eKrQ2McllzaMJx8B4Dld+Qesf7mROCZisb8j
+	GCxiWwqh6o6WYOrzV1DP3ircnoKDtOSFCRVjkxx/6YnFImLc23+ciPOTInf3vVWZnnnAuKi5d/g
+	1mNW82tbduKF0+Cv/lTKt6EliGL5DEqoYbvwV0I0SnLOLeey6zwEUEl7PaHUdIAo7QHZGEvYzhb
+	Cd2ZUkID2iq7HhPZZQ==
+X-Received: by 2002:a05:7300:c7c3:b0:369:9af5:7bc9 with SMTP id 5a478bee46e88-36a2017929amr1084712eec.23.1793146149163;
+        Tue, 27 Oct 2026 17:09:09 -0700 (PDT)
+Received: from at-Standard-PC-Q35-ICH9-2009 ([106.202.118.107])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a239198c9sm336354eec.15.2026.10.27.17.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 17:09:08 -0700 (PDT)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: helgaas@kernel.org
+Cc: airlied@gmail.com,
+	alexander.deucher@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	atharvatiwarilinuxdev@gmail.com,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	christian.koenig@amd.com,
+	dave.hansen@linux.intel.com,
+	dev@deq.rocks,
+	dri-devel@lists.freedesktop.org,
+	hansg@kernel.org,
+	harry.wentland@amd.com,
+	hpa@zytor.com,
+	ilpo.jarvinen@linux.intel.com,
+	kenneth.feng@amd.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	mingo@redhat.com,
+	platform-driver-x86@vger.kernel.org,
+	simona@ffwll.ch,
+	siqueira@igalia.com,
+	sunpeng.li@amd.com,
+	tglx@kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH 02/13] PCI: Disable pcie port and access on D3 on specific amd devices
+Date: Tue, 27 Oct 2026 20:08:41 -0400
+Message-ID: <20261028000841.6816-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261027230042.GA516670@bhelgaas>
+References: <20261027230042.GA516670@bhelgaas>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -88,41 +120,28 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Smtpcorp-Track: CIpSkjPeIm9h.3NLhBolPslBL.WrsTaAfiPw7
-Feedback-ID: 879706m:879706aL5FzMA:879706s8MPA8VqoV
-X-Report-Abuse: Please forward a copy of this message, including all headers,
- to <abuse-report@smtp2go.com>
 
-The hwmon write callback receives the PWM value as a long, but pwm_to_rpm()
-takes a u8. Out-of-range values therefore wrap before the helper can clamp
-them to the supported range. For example, 256 becomes 0 and -1 becomes 255,
-selecting the opposite end of the range instead of saturating the input.
+> Reading or writing to PCI devices in D3cold is a problem on every
+> system and we should avoid it in generic ways.  I don't know what's
+> special about these MacBooks.
 
-Accept a long in pwm_to_rpm() so clamp_val() operates on the original value
-before interpolation. Values in the valid 0..255 range are unchanged.
+I did not know about, i will try to remove the ignore_access code, and
+will tell you the results, i added it as a failsafe
 
-Fixes: 46be1453e6e6 ("platform/x86: hp-wmi: add manual fan control for Victus S models")
-Signed-off-by: Shang En Sim <sim@shangen.org>
----
-Verification: Standalone arithmetic boundary checks passed, and the
-affected hp-wmi.o object built with W=1.
+> > +++ b/drivers/pci/pcie/portdrv.c
+> > @@ -688,7 +688,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+> >  	int type = pci_pcie_type(dev);
+> >  	int status;
+> >  
+> > -	if (!pci_is_pcie(dev) ||
+> > +	if (!pci_is_pcie(dev) || dev->no_pcie_port ||
+> >  	    ((type != PCI_EXP_TYPE_ROOT_PORT) &&
+> >  	     (type != PCI_EXP_TYPE_UPSTREAM) &&
+> >  	     (type != PCI_EXP_TYPE_DOWNSTREAM) &&
+> 
+> Nor does this.  I don't know what the purpose of this is.
 
- drivers/platform/x86/hp/hp-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 52077833ac89..d66481a98c32 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -688,7 +688,7 @@ static inline u8 rpm_to_pwm(u8 rpm, struct hp_wmi_hwmon_priv *priv)
- 				       clamp_val(rpm, 0, priv->max_rpm));
- }
- 
--static inline u8 pwm_to_rpm(u8 pwm, struct hp_wmi_hwmon_priv *priv)
-+static inline u8 pwm_to_rpm(long pwm, struct hp_wmi_hwmon_priv *priv)
- {
- 	return fixp_linear_interpolate(0, 0, U8_MAX, priv->max_rpm,
- 				       clamp_val(pwm, 0, U8_MAX));
--- 
-2.56.0
+This is however nessacary, without this The CPU just catters, so something
+used the PCIE address space or the config space of the bridges, unfortunately
+dmesg dosent show anything or journalctl.
 
