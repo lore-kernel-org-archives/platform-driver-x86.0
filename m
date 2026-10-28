@@ -1,77 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793215563;
-	b=c44lFWMDw5v6bN/+uvfNZ9AKMKEIwKmF/L7cQG4/iBP9jFQRaUY6N3NqlnuweaSkro12
-	 oVLbNaz4K1mtU4O7ob6yu+EGZgPo2lznUDZEMrR+BKfwYM0+YHYERsQh6aq7d7QtIv5ZB
-	 8uzEcFbTFLLYx5ZSZ96/b7VmKyrSjMPpzl+6SVJCWSgBu6wpm6MP4YpFwPfmIwMLbOZxD
-	 eYHyxlu5ny/DX+4duHwFRrXXbt0LMJG7ETobdEj1POvNXirAaZYpJBb/ORtC0X8EOMkbS
-	 78z90cLDBzkzARA8cjixwCrWgUQpNCkGl/Ra5BbWYJt54424emI4AahVxMvD1myVr7Q==
+	t=1793215862;
+	b=Lx+QtCDvQ/JYUM2qSNZFIi6wwVMkt44nn+ewMGSipcqzuymUT0pGWaSe9/F5KAMjfO/5
+	 5YdjCUhvPseWzNkls1NizNpfo1f/C2OctmKaiRpTN1U+a1pGXCEGkScw9zVA53Sr6Sk0+
+	 Lf+swrA4XSUi/5d8UlKourqaD+RMG3JxQrhdQCX4cZBApRuNUH070416lPAxlOgbS/o9C
+	 yqUcZHS7oye4MT/lLc2WpNgFEWHYlp5D/HKAZZr2tmGOwlVpRuX8zIKP0JDqDyZfUpBWA
+	 3loq80grXIZtHz6OnMjRrEnUk+1/32/qP46vA0kIXf1MxKJ0zJFrVTbav3H/+XEbJdw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793215563;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:
-	 Content-ID;
-	bh=x40zcwNsOo99UMks8dPee79Xtw7w7m5iS/T+vZL8Cjo=;
-	b=cADCpS1+rr2/bRKXZpZUElJwJ5qs4muQj5zvuu6eAHfdwN4hi+Ge84+3h25iCI1COtNV
-	 84d4P+H3EvnAFdLHnE70qWihxy0ujTN2pzefvpxABtrenFepOWyx4agIDuyvuSPUPTBF8
-	 vm/M+o55/DudSWGK7HBrPvUizj91wfvO+roaCtWuKR1LqFxuE/JFykuqQ7w+8M7wo3Xig
-	 SXbtGdN4ivJ3xNGUA07PGHouvpSDvZh3T4Sr4Acn6M7ykslD3X9m5+AyGYLX/eXBWSiFE
-	 1sfNToiT+pR2a1+srwMo29/HlbSiKXJKb5tbxrmZVRX2HNeM4Kal9kamU3rbxhZjSMA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793215862;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:Reply-To:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=hpULEwBzMr2yjpqrT2e1UdgumWStkpKL7baBkCqpHVM=;
+	b=NmfmERjwYVOKdNSfVHApyqCQE2mZDNp7Z+a3GcrPci7ANqQVo0zg9hBuucRi6ntt5gR6
+	 7aHES6p/UygBDvuP1ykqXbMGGeqriw2+Q/dJQY8oGQOwj3WrA+2pEWg8FhXxckcer45un
+	 TuPuUKoOBcyzqzg4+WprzDArlg/NMrh8sJcnCU1hieBMXEa9sQ3DOLWAjOa4+r+FkHMuG
+	 0Os1fgktCZ9fLJXwTRzW/WdHDYRCH2lc6u0ep7mzUKrHjPXFbQOf0dRlFTr8KLA8ncc7R
+	 CRvJy3mIAMbkzMn+lnNatWujPNyyLimO/OpJt0B3ZdkJDDbug38P5ZU1dwTLU/kPPzA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I7vADVV1;
-	arc=none smtp.remote-ip=192.198.163.9
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=minyard.net;
+	spf=pass smtp.mailfrom=minyard.net;
+	dkim=pass header.d=minyard.net header.i=@minyard.net header.a=rsa-sha256 header.s=google header.b=gC36719i;
+	arc=none smtp.remote-ip=209.85.160.46
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F06606A31F;
-	Wed, 28 Oct 2026 19:26:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6F06606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F4E606A324
+	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 19:31:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61F4E606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I7vADVV1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793215563; x=1824751563;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=0vmobdU3Bgl+1bOq1yR5rUg/eZZZm3tYqjKeGLnaHQQ=;
-  b=I7vADVV1tI2NFfX09SCntxieKuS/0j+6PN70WSDiWtEsvnbA05P9G2SK
-   5NuZ3gdE7tdZWBR102pLXSjXTuM77bjsKyA5WAj1bpa/G9KmGqDoO+3Me
-   g22+/4dBc9tHCcNmmlz5GZWtKzakbvPCE5vSGldT4CNg2k3SYpI5X0ik+
-   xl0cN4h/d2HDhaNel6eJAgmbt/oAF40S83DnmVJSSxbVvGu57SV6D33x0
-   HTwsOJuv8z3bLMkaqF5h1lqfB/5M0VDuvkff9Vmy5rlpH0F5j/82tk6M1
-   j/1Yz5dNwzDfVFG8bl6utzOkr39pTYUf6T/IGLhhFmN6D9yWvnnDTLCur
-   A==;
-X-CSE-ConnectionGUID: aVSZK0Y1TAeqxQ8z+M0ALQ==
-X-CSE-MsgGUID: ifSe74UFRZu4UF6zo24kxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11949"; a="1828989"
-X-IronPort-AV: E=Sophos;i="6.27,183,1787036400"; 
-   d="scan'208";a="1828989"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2026 12:26:02 -0700
-X-CSE-ConnectionGUID: FWlL+jMMRVKtxSG7KlBmtg==
-X-CSE-MsgGUID: fyNB0DwFTCaARC+vMjq4Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,183,1787036400"; 
-   d="scan'208";a="4859075"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.156])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2026 12:26:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 28 Oct 2026 21:25:56 +0200 (EET)
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: LKML <linux-kernel@vger.kernel.org>, 
-    PDx86 <platform-driver-x86@vger.kernel.org>, 
-    Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-    Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [GIT PULL] platform-drivers-x86 for v7.4-1
-In-Reply-To: <CAHk-=wjk2f+Vu656fEa7FOyHHaFe+-M-GEwUQPXykaYoor6A7g@mail.gmail.com>
-Message-ID: <112173bf-15bb-5a6f-e3d9-73c7675de537@linux.intel.com>
-References: <pdx86-pr-20261028113441-148823082@linux.intel.com> <CAHk-=wjk2f+Vu656fEa7FOyHHaFe+-M-GEwUQPXykaYoor6A7g@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=minyard.net header.i=@minyard.net header.a=rsa-sha256 header.s=google header.b=gC36719i
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-48e94879f02so535810fac.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 12:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=minyard.net; s=google; t=1793215861; x=1793820661; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:reply-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=hpULEwBzMr2yjpqrT2e1UdgumWStkpKL7baBkCqpHVM=;
+        b=gC36719iCpac+J0uMgq776jeOZj6OFfT5UfXAAu8QRjqm8ZgwVM5w6YXhN3q9KyUXc
+         UGImKfuKxj2xH2QGxCT0ozcu2XUDWhOrxBvqfGLLunODjP4c9GS11CQx8voF+sRxcalE
+         7S4ObHLYVH4+CpL+UZyeET/2rX8tn/qqqm3VZC6LSFoa+343pmRwDGuEC1NWm2iWEhRe
+         cHxwobq9jYGveOpMguxfPZVZkJIBsc0Xv6Z1asVJ6kZuWNYhYvqV7Ohyg09+WCESkW5O
+         IY/QLHxaICp8xiYXFy2t3R0S49kIPN1px7zdW4RenyjdzgXzlWoklwmhmNFNvuL8z1rH
+         x/Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793215861; x=1793820661;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hpULEwBzMr2yjpqrT2e1UdgumWStkpKL7baBkCqpHVM=;
+        b=DXm9bPf7ZFYW0GssI30/Hxv1tobCNcUT55xY5ni91g1EKvZdFukRpxcpRc5WAYlgmH
+         dbMupQbiHDC6tT1ZqczFou/ZgcO/zXEKqsBShk9olGujiA8NfVKtye2h5SD3AUoxmMuW
+         lAuQ+iepKpNNBLKc8Zo+JJ8F0FwtRaCOS7WY+ikhA49/EMeXEFqN9224zzcLukF7NLTK
+         GFGeg8x33N/bBFRnK3L1tJKdu5SqlwA3yHbM1BKz2unVl5IWeMFoJw3n1Yub8RMg8L60
+         rIIawf99v68ezrexfwy0nxL+Ld1qeAIwQbiucig9h9qB5Mg/kofhuG/QcNpIlbzpWIVl
+         e2Lg==
+X-Forwarded-Encrypted: i=1; AKwUvBzLwLSBNJWdMLVksWsQe3aF9LdZ4zd2lVlf047pGBe6OukUt5o+k0A85zak7z9uCBjl6lPUn8fOTwoMAPKGnJGP3L+n@vger.kernel.org
+X-Gm-Message-State: AFq9FYJKGUD7CLwLaE4UgQDlxaBK7Ua+VT/Awigs8AY7pafwfuiGbFoK
+	pRjpM4v+cEkNZ7wUZkNicTOJt3KSw2h5oK9qY81fLT1JlG5NGH13uavZu6tD+L/ndUU=
+X-Gm-Gg: AYBFou3/8o7PznRbt6Gmm6fEDzmaSEpui/J72kCMn3fsoHqqhMcz5rc9jemacG2jA+U
+	FRs4x6FmKdA7RVuJcZBGhzV8qvi932a1TvlhBR57h44ojxxPooHZMeiSXgMvihhwL2+ZUQ46zzM
+	NYiSLgSUwoEBIxsrs2epct3zXvBR2HbFMYuVuJvTylEs19FU1ERIp6CGozfnNkdvsGwuDv+J1mi
+	xTP1OGpxL+oTSzJxbjZoX7vObqDH7toA3dNx0GqISq/GKOtfFn68+LWIfDbaFsJ7Co6ZWraihS/
+	GdlmZZUuG5uEqAu02P3ujBr9GpPjuTD1Q9m3W8JruuHzDodueMv6kwXG2X+VGrtbJaEhOHONcX4
+	bHlPmX7j27Dg7CL24FBn/r6LgeUjdKl8GFcfBKm3aYpFJV3yxfgurB3TL/d8vhEynBUFM5JLlhY
+	i2glRrqNQ6/9se37SNPxWhBoV2yM9/6JOOacUidSEL5fhTJr6UPK7D2X7Gf3NgDnx+W+MSmS2/p
+	v4ppXfTU+6DXckPQi21/EpmvwyfVziriZT3AUyCEKo0BB7MzHGts8e1/nLT+YBlP4rFWYEYgb2R
+	EctJr6NZWdVLC88PuKvqo0fqbqhtbas4tQLrStYT1CNWHzJEjYBgx3qNBlGdhpHBh5lP5vGhAwA
+	0lmW10ASTDVC3Lv6I8Xt0tw78owjw6GsWNrg+4E95mlsekdq4tYE0AWZK3HW2W98GzYe1brU=
+X-Received: by 2002:a05:6870:9e08:b0:45e:54a3:b8ca with SMTP id 586e51a60fabf-4a8bb427d08mr2615315fac.19.1793215861021;
+        Wed, 28 Oct 2026 12:31:01 -0700 (PDT)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:2f32:e466:d3ef:5b82])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4a8b78de44esm3375499fac.11.2026.10.28.12.30.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 12:31:00 -0700 (PDT)
+Date: Wed, 28 Oct 2026 14:30:56 -0500
+From: Corey Minyard <corey@minyard.net>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sebastian Reichel <sre@kernel.org>, linux-i2c@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 6/8] ipmi: ssif: use 4-argument
+ i2c_smbus_read_block_data()
+Message-ID: <auJNcEiVgwCW5D1Y@mail.minyard.net>
+Reply-To: corey@minyard.net
+References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
+ <20261024-i2c-smbus-read-block-data-v1-6-19bb97467982@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,80 +107,205 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1097250158-1793214583=:1157"
-Content-ID: <5b3108f2-7ff5-0f91-1683-502b3eaa9b22@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-6-19bb97467982@gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sat, Oct 24, 2026 at 07:48:46PM -0700, Dmitry Torokhov wrote:
+> Pass the receive buffer capacity to i2c_smbus_read_block_data() in
+> ipmi_ssif_thread() via the i2c_size field, and update ssif_i2c_send()
+> callers to pass the receive buffer size.
+> 
+> Update read_response(), do_cmd(), and test_multipart_messages() to
+> accept the response buffer length, clamping the transfer size to
+> I2C_SMBUS_BLOCK_MAX when reading from the device.
 
---8323328-1097250158-1793214583=:1157
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <830ee9eb-6bcf-22f9-da91-f801ec466447@linux.intel.com>
+This is in my for-next tree.  It passes all tests.
 
-On Wed, 28 Oct 2026, Linus Torvalds wrote:
+The reuse of the "size" parameter to ssif_i2c_send() is ok.  That's not
+really what it was originally meant for, it was the transaction type,
+but it wasn't used, so all is good.
 
-> On Tue, 27 Oct 2026 at 23:59, Ilpo J=E4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > Highlights:
->=20
-> Please, people - give a *summary*.
->=20
-> Not 150 lines that just re-organizes the shortlog with some editing.
->=20
-> It's not a "Highlight" if it just repeats every small detail. That's
-> just a "list". And it certainly isn't informative.
->=20
-> I - and others who read merge commits - want to know the big picture.
-> Not every driver detail. If I wanted to know the exact details of what
-> happened in some particular driver, I would be reading the commits for
-> that driver. That's not what the merge is about. The merge is about
-> bigger issues than to see things like this:
->=20
->     - intel/pmt:
->        - Block mmap when read_telem() callback is present
->=20
-> and that's just one example of a *lot* of "this is not a big picture
-> issue, it's a small detail in one particular driver".
->=20
-> I suspect one thing that is actually a "bigger picture" issue is that
->=20
->  - ACPI: video: Remove CONFIG_X86 dependency as WMI now supports non-X86
->                archs
->=20
-> which is something that people might find interesting in general.
->=20
-> On the whole, I think 90% of that list should have been written along
-> the lines of
->=20
->  "Usual updates for laptop quirks from HP, ASUS, Acer and Dell:
->     - new model names and recent CPU support
->     - more special button / function key handling
->     - battery and hardware monitoring quirks"
->=20
-> or something.
->=20
-> Please *help* me write usable merge messages that are actually
-> informative and not just a "data dump". For the data dump, we have the
-> details in the git history.
+-corey
 
-Okay, thanks for the feedback. I'll try to leave more out the next time
-and/or write it more directly to you specifically.
-
-So far I've mainly written these from the perspective if one has the=20
-relevant HW or is using a driver, whether the change might be of interest=
-=20
-to such an user or not (it certainly didn't have everything even if I=20
-can believe you can easily get that feeling).
-
-I understand in platform drivers case many of those changes would be of=20
-zero interested to you, and same could be said of anyone else. HP owner=20
-won't be interested in any Dell changes, nor even those HP changes not=20
-relevant for one's device, etc.
-
-=2E..But I don't *have to* keep doing it like that. :-)
-
---=20
- i.
---8323328-1097250158-1793214583=:1157--
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/char/ipmi/ipmi_ssif.c | 39 +++++++++++++++++++++------------------
+>  1 file changed, 21 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+> index 2361103c5edc..9c0aebec2946 100644
+> --- a/drivers/char/ipmi/ipmi_ssif.c
+> +++ b/drivers/char/ipmi/ipmi_ssif.c
+> @@ -503,7 +503,7 @@ static int ipmi_ssif_thread(void *data)
+>  		} else {
+>  			result = i2c_smbus_read_block_data(
+>  				ssif_info->client, ssif_info->i2c_command,
+> -				ssif_info->i2c_data);
+> +				ssif_info->i2c_size, ssif_info->i2c_data);
+>  			if (result < 0)
+>  				ssif_info->done_handler(ssif_info, result,
+>  							NULL, 0);
+> @@ -541,7 +541,7 @@ static void start_get(struct ssif_info *ssif_info)
+>  
+>  	ssif_i2c_send(ssif_info, msg_done_handler, I2C_SMBUS_READ,
+>  		  SSIF_IPMI_RESPONSE,
+> -		  ssif_info->recv, I2C_SMBUS_BLOCK_DATA);
+> +		  ssif_info->recv, sizeof(ssif_info->recv));
+>  }
+>  
+>  static void start_resend(struct ssif_info *ssif_info);
+> @@ -669,7 +669,7 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
+>  
+>  		ssif_i2c_send(ssif_info, msg_done_handler, I2C_SMBUS_READ,
+>  			 SSIF_IPMI_MULTI_PART_RESPONSE_MIDDLE,
+> -			 ssif_info->recv, I2C_SMBUS_BLOCK_DATA);
+> +			 ssif_info->recv, sizeof(ssif_info->recv));
+>  		return;
+>  	} else if (ssif_info->multi_pos) {
+>  		/* Middle of multi-part read.  Start the next transaction. */
+> @@ -736,7 +736,7 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
+>  				  I2C_SMBUS_READ,
+>  				  SSIF_IPMI_MULTI_PART_RESPONSE_MIDDLE,
+>  				  ssif_info->recv,
+> -				  I2C_SMBUS_BLOCK_DATA);
+> +				  sizeof(ssif_info->recv));
+>  			return;
+>  		}
+>  	}
+> @@ -1314,12 +1314,15 @@ static void ssif_remove(struct i2c_client *client)
+>  	kfree(ssif_info);
+>  }
+>  
+> -static int read_response(struct i2c_client *client, unsigned char *resp)
+> +static int read_response(struct i2c_client *client, unsigned char *resp,
+> +			 size_t resp_length)
+>  {
+>  	int ret = -ENODEV, retry_cnt = SSIF_RECV_RETRIES;
+>  
+>  	while (retry_cnt > 0) {
+>  		ret = i2c_smbus_read_block_data(client, SSIF_IPMI_RESPONSE,
+> +						min_t(size_t, resp_length,
+> +						      I2C_SMBUS_BLOCK_MAX),
+>  						resp);
+>  		if (ret > 0)
+>  			break;
+> @@ -1333,7 +1336,7 @@ static int read_response(struct i2c_client *client, unsigned char *resp)
+>  }
+>  
+>  static int do_cmd(struct i2c_client *client, int len, unsigned char *msg,
+> -		  int *resp_len, unsigned char *resp)
+> +		  int *resp_len, unsigned char *resp, size_t resp_length)
+>  {
+>  	int retry_cnt;
+>  	int ret;
+> @@ -1350,14 +1353,14 @@ static int do_cmd(struct i2c_client *client, int len, unsigned char *msg,
+>  		return -ENODEV;
+>  	}
+>  
+> -	ret = read_response(client, resp);
+> +	ret = read_response(client, resp, resp_length);
+>  	if (ret > 0) {
+>  		/* Validate that the response is correct. */
+>  		if (ret < 3 ||
+>  		    (resp[0] != (msg[0] | (1 << 2))) ||
+>  		    (resp[1] != msg[1]))
+>  			ret = -EINVAL;
+> -		else if (ret > IPMI_MAX_MSG_LENGTH) {
+> +		else if (ret > resp_length) {
+>  			ret = -E2BIG;
+>  		} else {
+>  			*resp_len = ret;
+> @@ -1382,7 +1385,7 @@ static int ssif_detect(struct i2c_client *client, struct i2c_board_info *info)
+>  	/* Do a Get Device ID command, since it is required. */
+>  	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+>  	msg[1] = IPMI_GET_DEVICE_ID_CMD;
+> -	rv = do_cmd(client, 2, msg, &len, resp);
+> +	rv = do_cmd(client, 2, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+>  	if (rv)
+>  		rv = -ENODEV;
+>  	else {
+> @@ -1523,7 +1526,7 @@ static int start_multipart_test(struct i2c_client *client,
+>  
+>  static void test_multipart_messages(struct i2c_client *client,
+>  				    struct ssif_info *ssif_info,
+> -				    unsigned char *resp)
+> +				    unsigned char *resp, size_t resp_length)
+>  {
+>  	unsigned char msg[65];
+>  	int ret;
+> @@ -1572,7 +1575,7 @@ static void test_multipart_messages(struct i2c_client *client,
+>  					 1, msg + 64);
+>  
+>  	if (!ret)
+> -		ret = read_response(client, resp);
+> +		ret = read_response(client, resp, resp_length);
+>  
+>  	if (ret > 0) {
+>  		/* End transactions work, we are good. */
+> @@ -1590,7 +1593,7 @@ static void test_multipart_messages(struct i2c_client *client,
+>  					 SSIF_IPMI_MULTI_PART_REQUEST_MIDDLE,
+>  					 0, msg + 64);
+>  	if (!ret)
+> -		ret = read_response(client, resp);
+> +		ret = read_response(client, resp, resp_length);
+>  	if (ret > 0)
+>  		/* Zero-size end parts work, use those. */
+>  		return;
+> @@ -1748,7 +1751,7 @@ static int ssif_probe(struct i2c_client *client)
+>  	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+>  	msg[1] = IPMI_GET_SYSTEM_INTERFACE_CAPABILITIES_CMD;
+>  	msg[2] = 0; /* SSIF */
+> -	rv = do_cmd(client, 3, msg, &len, resp);
+> +	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+>  	if (!rv && (len >= 3) && (resp[2] == 0)) {
+>  		if (len < 7) {
+>  			if (ssif_dbg_probe)
+> @@ -1800,13 +1803,13 @@ static int ssif_probe(struct i2c_client *client)
+>  		ssif_info->supports_pec = 0;
+>  	}
+>  
+> -	test_multipart_messages(client, ssif_info, resp);
+> +	test_multipart_messages(client, ssif_info, resp, IPMI_MAX_MSG_LENGTH);
+>  
+>  	/* Make sure the NMI timeout is cleared. */
+>  	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+>  	msg[1] = IPMI_CLEAR_MSG_FLAGS_CMD;
+>  	msg[2] = WDT_PRE_TIMEOUT_INT;
+> -	rv = do_cmd(client, 3, msg, &len, resp);
+> +	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+>  	if (rv || (len < 3) || (resp[2] != 0))
+>  		dev_warn(&ssif_info->client->dev,
+>  			 "Unable to clear message flags: %d %d %2.2x\n",
+> @@ -1815,7 +1818,7 @@ static int ssif_probe(struct i2c_client *client)
+>  	/* Attempt to enable the event buffer. */
+>  	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+>  	msg[1] = IPMI_GET_BMC_GLOBAL_ENABLES_CMD;
+> -	rv = do_cmd(client, 2, msg, &len, resp);
+> +	rv = do_cmd(client, 2, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+>  	if (rv || (len < 4) || (resp[2] != 0)) {
+>  		dev_warn(&ssif_info->client->dev,
+>  			 "Error getting global enables: %d %d %2.2x\n",
+> @@ -1835,7 +1838,7 @@ static int ssif_probe(struct i2c_client *client)
+>  	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+>  	msg[1] = IPMI_SET_BMC_GLOBAL_ENABLES_CMD;
+>  	msg[2] = ssif_info->global_enables | IPMI_BMC_EVT_MSG_BUFF;
+> -	rv = do_cmd(client, 3, msg, &len, resp);
+> +	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+>  	if (rv || (len < 2)) {
+>  		dev_warn(&ssif_info->client->dev,
+>  			 "Error setting global enables: %d %d %2.2x\n",
+> @@ -1857,7 +1860,7 @@ static int ssif_probe(struct i2c_client *client)
+>  	msg[0] = IPMI_NETFN_APP_REQUEST << 2;
+>  	msg[1] = IPMI_SET_BMC_GLOBAL_ENABLES_CMD;
+>  	msg[2] = ssif_info->global_enables | IPMI_BMC_RCV_MSG_INTR;
+> -	rv = do_cmd(client, 3, msg, &len, resp);
+> +	rv = do_cmd(client, 3, msg, &len, resp, IPMI_MAX_MSG_LENGTH);
+>  	if (rv || (len < 2)) {
+>  		dev_warn(&ssif_info->client->dev,
+>  			 "Error setting global enables: %d %d %2.2x\n",
+> 
+> -- 
+> 2.56.0.257.gf7497c7d27-goog
+> 
