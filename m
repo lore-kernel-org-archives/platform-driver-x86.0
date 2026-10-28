@@ -1,102 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793191940;
-	b=W5LVQHSXR89eOEfn+jaMEPiLC7E98CZb4Lcijbzq+RoReNLnZf9dLuD2jujT/3Zc9ur1
-	 QyUoE0Klp1MHvVt4YW1VRjMETZgbM0OaPWzQ2Ai4I+5AMaKIGNqAIa0khjTa0Qqr1cDT3
-	 5uyYMmphMDjeBwwzsC2K4woRxPXoCJhUmPxfeUyDdjtCEOkGcw+RqFMMqcYV8t9f+KHsR
-	 XJKivo4lyC075k0LLdcAfu/icx5vUF7nWyrDeG5BqlNnbTci2r35dKe9jOLAQiSUkTaos
-	 QeSdfmoaRr4zTMNTkocy2gfITUxDOnxWWK6f/nq3T4LQCJk94DCpkTi3ybGI7e9BxPw==
+	t=1793196861;
+	b=Ouvw7SBbOm8ytCjIuy1WuYyCvK2kg1o/2vrY3aSHdaWYtnOuoeIYy4yJMDqGy8gGNbcN
+	 aS7hvMSS2zfxRbTI4bdbppnOfdTTWa8pPTxqKfOBH8ylvS92rS6viTH/1CbQnXpCdSRU4
+	 w6M2Q1ep4QX4oaQbmFQrT6+F1fJkL+p3RRXZInHuuaQphX1sgO8eojlRdnyfG0LlPvMAZ
+	 B8v6eBt5Td8bQ9syWYFVWlovonfUCG8Egq5GPYPxwjT6U25yabq+ibfAm/s6F7hx8VDpv
+	 NjZas40D7qvqYnmvscM0k+Eg/UYJ5pf3NV5KwjPCzVfI/91QYn5l+Juf+O5As9AakDA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793191940;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	bh=jif9CDAVAYhJXkuCpp/HgAnuYrVFMmNUw2aPhFOa0WA=;
-	b=ikS6Sw2dcDwAJc92A1JwEb+5cOXEUZggMDUwfSDN2tGnE1I+OLPOJttxASTW4715n6RM
-	 3zd2vdo6QFruBzQc7q7xuUaS/aKu7YiA1vp/+QKpJ+fshUn71IC6/IkQEhkUXqrF4DF2k
-	 yXX1f7hg6HfbHYlg03f8aJ68U15CqFItKUeu0URQ63Fq5sa+bTawurvBUbsleuE48cSgu
-	 YvVCmn8ycdHEXO0eF5dQ8sJAKCAIDPahKwJgVJKM+TDPOxqIHi7z3OBeK0TLv2GIrMeII
-	 KzABXI/1nbdinb/hWBtSDna/3X3lrHtWG3s3rUsIeMHwkn0kzgVWD1RAIYQACMiaWGQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793196861;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=3B9pb6vCsnCnbOeR5GmpL4ETSRTzIUQ/rfJdv4A2OPw=;
+	b=dCoyPKmC14f0gyWX7HBLq22RQuvNcHlbRTmPE40SklW2uAG2kyOjsm5F5/f2Vocm6QWH
+	 gdKUe4ZyP2u0oyjqxInC5QAz+jHVhR4GmlYDXUL8GBlI9NxemAjn4dVdOdvnt9DGE/npX
+	 +hSFnqqXruaBjqeUFR0Z8abVhTGT0TxQ3a758h0Sb6Zg2Z9NSaHCKhuLmRKy9kV/9QlIJ
+	 m+dxOv5a4V4wFxqRa0Ujdmohzlm979IsYiqJs07IcQl7R0Omk9WnmjvSgNJSGKSR0Y20T
+	 kIByIC6WVoEXp5sBDTCCKQZJSzq2+W46MoD7jt0TY3vDq6N9whD+DvFcVE2s/8i5ijQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZKnwUVbT;
-	arc=none smtp.remote-ip=209.85.210.173
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=Tnvi3yJV;
+	arc=none smtp.remote-ip=109.224.244.17
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72616606A31E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 12:52:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72616606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2DC606A31E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 14:14:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9D2DC606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZKnwUVbT
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-8a06b44bd01so508658b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 05:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793191935; x=1793796735; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:subject:cc:to:from:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jif9CDAVAYhJXkuCpp/HgAnuYrVFMmNUw2aPhFOa0WA=;
-        b=ZKnwUVbTIEGSp3YRgh3c5uKjT02PZpb8VjznUtGAmlyaZaegMduYT+jTcMWxiWUnpW
-         ZA4rCNqIZLDv97TYXn/nyqIe67U8TFasmoaaub/5wikT/0QXhdo4aLEzUifNj26SgGbI
-         +3Uxb9Whc4EmPZomkH3zEcCJg2MKSC0fTCHCk9M3E08VZbjjLcDUcD5sgejKUoU/xOaE
-         QF8lP4uGpqnkxU/4i6A2h64zncOHnLPFid4GRNhKvGOeIJSs6vQA07i7fj6axZfAjsL0
-         6HRACEo1ufoTcN5ln4SxVcuwkCZQKfSYlqmaYRLZtS5/rUE2O7sGCqyLiGTAhdTBxZT5
-         5Dlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793191935; x=1793796735;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:subject:cc:to:from:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jif9CDAVAYhJXkuCpp/HgAnuYrVFMmNUw2aPhFOa0WA=;
-        b=JN8nXHsq1/DqdoaOusIfDkGCHsa91heZFGT5ZftbdCT72L4ma7iFW9g8qfQpAQ5gvb
-         1fTd6uI39eqTmudpgBaz28EFKL4eJ9hhxN/Vigghz/yixE9wcyLGoaf963fw8MbzrQUg
-         /EAuQ4Rk+iaNS2bCC1S1MlaNGPV81f7bWsREJkMANsV81LWZ0TAQzTFhcnBDZ9MQ5PaX
-         2kb3z1sh1NeTN9R2G0+2Iy9muOKLr8cIHNwCutwfEjmAuCYS73ZAtnGZNT0qm/AyXsep
-         XzraVwP0GT61Rmc9mkNG+O2ziWH+lH3AVjw6BYT1+VMfuqkv1PQ9/SQwB/NtwPomGYmB
-         4l4g==
-X-Forwarded-Encrypted: i=1; AKwUvBzalrcK9kbbFH05fBTskh51htsdyR5tl/WSvAQwjtSvETjkEiDwEndAqjMOBLUlFPDoyMxAQjcFuEHSn7w+ynQMIvZy@vger.kernel.org
-X-Gm-Message-State: AFq9FYKCGurhXnrd1bDa4wSiMwLV9VuXtCxFEskOw7LzYVNTXHeYuJf0
-	4xwI54tFJy8NBZ7ZlfPeAbVjIZffTHjMJcMWtQo8wcHUPOR3fZbZsJCc
-X-Gm-Gg: AYBFou1RMUvuSgLW64r1CKQ/+021DXQabsvr4DS8kCURBhAdydHoDhlhd9KbesNZTyv
-	FLvYGfTrrL5IcDGvSIfPhChwr0wP8Zhd2+HqPacln7qjLKe7k1y5cWLATosN/gwv5gRZxheOCwk
-	sMka78skONnW7Y0p4m1seg0vrIvbWUZp/syI9h/vuAW9Kq73ZHWUi2N1JLgAG/EXt/o+xyrmH2t
-	3aj9n8GcesaZS/tN8TwGE4cZvNt5GTDsW9HyNZ9tHpe0erbEDhUCE0yIS8q2nLLipNCuTYU1MRE
-	3eaZ1wfNfKJztVxTjzdU6nXPx5qupqqig1XcSevKR/6wyN3wmJtuGJtk4L6qP1goaL/5ZTkIEEX
-	a8Ny6nuP2WMXABYl8NKUuXC7SQw9giIqJiB5mhv073GarLxKq5kC7zYcIheDVDmjdJHD/tZmcNw
-	bMA0oEYQuT/fjngB3yp3UsI+blssBUxrfJ+D5eMc3T+b21xlX4lmeQ17qFn4t8ZOgsnPiwbL0oP
-	JupKsEsQcX75KUMYOIP1NNnUW32ShAmelyohxcgA3XhgDZeu5Zi6qtETQ==
-X-Received: by 2002:a05:6a00:3a0e:b0:881:fa65:d507 with SMTP id d2e1a72fcca58-8a6e6a17a2fmr1919876b3a.22.1793191934270;
-        Wed, 28 Oct 2026 05:52:14 -0700 (PDT)
-Received: from [127.0.1.1] ([240e:46c:8910:7739:c024:4f7e:9059:99de])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a6e634ae83sm751438b3a.20.2026.10.28.05.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 05:52:13 -0700 (PDT)
-Message-ID: <6ae1effd.d3aa34e6.c46b1.441f@mx.google.com>
-Date: Wed, 28 Oct 2026 05:52:13 -0700 (PDT)
-From: Liang Haowen <nbg2974@gmail.com>
-To: Lee Jones <lee@kernel.org>
-Cc: linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
- Martin K . Petersen <mkp@kernel.org>, linux-scsi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
- Hans de Goede <hansg@kernel.org>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Marco Scardovi <scardracs@disroot.org>
-Subject: Re: (subset) [RFC v10 1/1] leds: asus-aura-scsi: Add ASUS Aura RGB
- LED driver for ROG NVMe enclosures
-In-Reply-To: <179319085271.3664457.8130606663267466619.b4-ty@b4>
-References: <20261015140051.1159817-1-nbg2974@gmail.com>
- <20261015140051.1159817-2-nbg2974@gmail.com>
- <179319085271.3664457.8130606663267466619.b4-ty@b4>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=Tnvi3yJV
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1793196858; x=1793456058;
+	bh=3B9pb6vCsnCnbOeR5GmpL4ETSRTzIUQ/rfJdv4A2OPw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=Tnvi3yJVJ8J77SIQIPN24OfE1vAXT4D+N6m/+Dg0IkYKQU97hgefABZ4eXayAnwCG
+	 kNKYzqDK1Q3RGqeSMGXzobne1F12UF/6Qbd+jR5gqVOH5IrIUJGH4PLJAxFVzg1E6T
+	 cUAwsS4PRl4LYw2GtzVf2OcLSNhwdV1zw5OChkJPWCgCg6C8ag4xzgexWVqSUuQe/o
+	 YoBO2FG2081g5lycXUBZZzjgOJsIGFaIIR6Xefo0N5kRb0QY8ajHJuO26EkT2fXV2Q
+	 KXmVluhPhsTG25uaKHapwN59ccNa91TBaGywcRcv0RndmzZi974RuT9bxAFgqI2wTz
+	 /EpnjIK2/V/mQ==
+Date: Wed, 28 Oct 2026 14:14:14 +0000
+To: Seifelden Abdelmonem <saif.elden.hatim@gmail.com>
+From: "caspar.adriani" <caspar.adriani@proton.me>
+Cc: Nirujogi Pratap <pratap.nirujogi@amd.com>, Benjamin Chan <benjamin.chan@amd.com>, Bin Du <bin.du@amd.com>, King Li <King.Li@amd.com>, Hans de Goede <hansg@kernel.org>, "Adam J . Sypniewski" <ajsyp@syptech.net>, amd-gfx@lists.freedesktop.org, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [RFC] AMD ISP4: OV13B10 (OMNI13B1) rear camera on ASUS ROG Flow Z13 GZ302 - ISP comes up, SET_STREAM_CONFIG fails with error 6
+Message-ID: <OLda3elCE7K_s9l7K6IHRCAJ0glPZx-B9zZCvsMzHeKMUfqfeQaIoV-466scB2JcOSOuZ4H6WRf0XVK7QnTz2c1TUind2lEAMczie9ieNX0=@proton.me>
+In-Reply-To: <20261027093218.35631-1-saif.elden.hatim@gmail.com>
+References: <lWYl1YJwDSh-q2Ew2f8b0BweQ4V-SUnPMSMurU5gT1LkqVdrmWFunj0sSgjC7m66bORBAD_jRCFTt1_ZOkotOMukY46rI4ayYbIfPQq4E9U=@proton.me> <ea758386-13b0-4667-8eca-9aa4efefe92b@amd.com> <P9m7agZFwqTsT5eczqDOuUVoP-lGl6Nd8FLvknyAj7gm7R_4cwIpb2_3-DNis287elaS_x5ummKLdOf_rk7LcHZqnrTnjMuzEPcX2syIefg=@proton.me> <20261027093218.35631-1-saif.elden.hatim@gmail.com>
+Feedback-ID: 135490423:user:proton
+X-Pm-Message-ID: 9970a4af79b75806f1fa910fa70679c4852f1fc9
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -106,8 +64,112 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, Lee. Your reviews along the way made the driver much
-better, and I'm glad to see it land.
+Hi Seifelden,
 
-Liang
+On Tue, 27 Oct 2026, Seifelden Abdelmonem wrote:
+> Caspar, did your hang happen after a suspend, or also without one, and
+> did you see those two messages?
+
+Without a suspend. I checked the journal of that boot: there was no
+suspend between boot and the hang. I did see both messages, several
+times, for the earlier attempts whose stop completed.
+
+The hang itself turned out to be a different bug from yours. The
+hung-task report said:
+
+  task .v4l2-ctl-wrapp:38440 is blocked on a mutex likely owned by
+  task .v4l2-ctl-wrapp:38440
+   isp4sd_stop_stream+0x43
+   isp4sd_enable_streams.cold+0x8b
+   isp4vid_qops_start_streaming
+
+isp4sd_start_stream() holds ops_mutex and its error path calls
+isp4sd_stop_stream(), which takes ops_mutex again. It is the same
+pattern Yifei Gao fixed in isp4sd_pwron_and_init(), and it is still
+present in mainline. It does not need the GZ302 to reproduce: start
+and stop a stream, then start it again without S_FMT. The stop clears
+the subdev pad format, so setup_output fails with "fail to get out
+prop" and the task deadlocks. Your setup gets past setup_output, which
+would explain why you don't hit it.
+
+I sent a fix to linux-media:
+https://lore.kernel.org/all/20261028-isp4-start-stream-deadlock-v1-1-babd80=
+273148@proton.me/
+
+I tested it on v7.3 on the GZ302 with a local OMNI13B1 enablement and
+the stock firmware: the second start now fails with EINVAL, the
+process exits, and the next start and stop work again.
+
+Thanks for posting the board details and the two fixes, that was
+useful. Same here: once AMD has OV13B10 firmware or a draft of the
+new driver, I'm happy to test it on my GZ302 as well.
+
+Cheers,
+Caspar
+
+On Tuesday, October 27th, 2026 at 10:32, Seifelden Abdelmonem <saif.elden.h=
+atim@gmail.com> wrote:
+
+> Hi Caspar, Pratap, all,
+>=20
+> I have the same laptop (GZ302EA) and have been working on the rear
+> camera as well. Some results that may help this thread:
+>=20
+> The rear camera streams on my machine (NV12 1920x1080, about 30 fps)
+> with an out-of-tree setup. As Pratap explained, the stock
+> linux-firmware image does not start this sensor; on my machine the
+> camera runs with ISP firmware and sensor setup data from my own
+> Windows driver installation, read from the Windows partition of that
+> machine. I do not redistribute any of it. The firmware alone was not
+> enough: getting a picture also took the board configuration and GPIO
+> wiring below, changes in the isp4 capture driver and in the sensor
+> setup, and the two fixes I sent to linux-media (link below).
+>=20
+> Board details as seen from Linux on the GZ302:
+> - The sensor is \_SB.CAMB (_HID "OMNI13B1") in an SSDT, without _CRS,
+>   so ACPI describes no GPIO, clock or regulator for it.
+> - I2C on the ISP's bus: the sensor answers at 0x10 once it is powered
+>   and clocked; the focus motor is at 0x0c and the module EEPROM at
+>   0x50, matching Caspar's scan. My guess is that with the stock
+>   firmware the sensor never gets powered, because SET_STREAM_CONFIG
+>   fails before that, which would explain why 0x10 did not ACK.
+> - Sensor reset: amdisp-pinctrl GPIO 0, active low (the "reset" GPIO of
+>   the ov13b10 driver), the same ISP GPIO as the OV05C10 enable line.
+> - enable_isp (AMDI0030:00 pin 85, as for OMNI5C10): not confirmed on
+>   this board. No ACPI device claims the pin, and the ISP also boots
+>   with it left undriven.
+> - Sensor clock: 24 MHz, as declared for the OV05C10 platform on the
+>   same ISP; four CSI-2 lanes.
+>=20
+> On the hang Caspar saw when stopping the stream, possibly related: when
+> a stream is running across s2idle (start a stream, then "rtcwake -m
+> mem -s 20"), no further frame arrives after resume, and stopping the
+> stream logs "fail to disable stream" and "fail to stop stream" because
+> the commands time out. On my machine the timeouts return and the
+> device can be closed; the driver has no system-sleep callbacks.
+> Caspar, did your hang happen after a suspend, or also without one, and
+> did you see those two messages?
+>=20
+> I sent two small isp4 fixes found on this machine to linux-media:
+> https://lore.kernel.org/all/20261026182442.229869-1-saif.elden.hatim@gmai=
+l.com/
+> After the merge window I plan to post the board data above as an RFC
+> (amdgpu OMNI13B1 entry and GPIO lookups, amd_isp4 board configuration),
+> explicitly not for merging until the firmware supports the sensor.
+>=20
+> Pratap, you mentioned contacting testers once there is OV13B10
+> firmware or a sensor-agnostic draft: I would be glad to test both on
+> the GZ302 and can share logs, ACPI tables and v4l2-compliance output.
+> My out-of-tree code (capture-driver changes, the board configuration
+> and the test scripts) is in a repository I can share on request.
+>=20
+> One question for the sensor-agnostic driver: will a board like this
+> one describe its sensor through amdgpu and amd_isp4 tables as today,
+> or will the firmware take the sensor setup from another source?
+>=20
+> Thanks,
+> Seifelden
+> 
