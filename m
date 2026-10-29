@@ -1,59 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.5
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793240051;
-	b=PS5j9xwWyNEKWg/ilQ89cSpRQfwW4B/ydX2dPhpun8oJ9H8pJ+xIaaLx5GfkQOw6sRXI
-	 L8UK4o3bz4uxcqzhvn1yEUkcx1j0K0SLqCwYSJ+xIjE+eYBR6RDCAxN92GekasSXFelB1
-	 lpNQELe5J3LC0RFTMKM8Z6uxkaz2pDeejQWdgX7aC734JrPDI+fmm59UYnpR86ApaPNb/
-	 uouCQ+EpIVYvMjrZSduZrdqqqJtfwiIkpowOUIawkHl1bnw2bcPBUeIV2heY40hIWnWgG
-	 rMsEv8UkI1MoPNqdZX6vRukzgxgiRflcjWcAPL72vQPUBVEQAgtS5I9JPP5Iorxo/pQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793240051;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=Slc2AKyaowZpbLm0PAB+O5peX7+yq4xY8GJXYbjsRpI=;
-	b=epIKXIhMHwQwXdUfVeHC1Lm68qyD9ShfxPuOWx2JudoYPCbYEu2EBaqeFfvoR6gCR7BY
-	 vvFjBhvwbRns1+1mlMFKZJ+kl+WBNGwiIfMGgQhXV3xYW07oc0IK1orqJ4RE35DyLKYEN
-	 TyFzv0sxrBlS4BNMhV9KeKVKsDEfYag2M2yWEdLXvkEaDZO8K3ADlNra4SbMKxIO2FKqk
-	 04Zt8HqCUlOLT+ntPZo+JHamWSsSc57rOdxvK7fja5cAxXoK/AkgfgHR6E2rxQPgQxPmZ
-	 bZ4FYL8DoqeKkbWTIHu/m6C+kEmrxa8ljs4/uJwHr8nb6NYtM4enI+MrTYT5ZLVi1sA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=YskRyQuq;
-	arc=none smtp.remote-ip=117.135.210.5
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793247940;
+	b=Hjp1wmy42IyHpY851hO2b2Dssmf4dI9F/v6HGpaxDuIUJyXX9zEaKV8ielvpU9Oc0T3n
+	 v6/YG+r3SyKy5dK8XqA+twCr5hdPZ2ogJzivrFA8+TittSNT+LcJP8aZ150jSmR2nd7we
+	 LzabfiG41kOxzxns4S1pRkuWY9d+vjCHiJTDtxwfn/stxFWaHUm9N+zUPhzL1jVgeU9M4
+	 REzKjtxlbxvVfR3DXKvD4yH8a5u1TDcQShtTVjYxobt7cFNv5Evcl8+mpgkMVMW52lmII
+	 CrSSCzYvWgwkAFDSgqnAToju5fhvdQPPmGBjPJy/ZCuTn5zS9RROIJiwFjUQ5oT0lDQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793247940;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
+	bh=3fXRVYvbW++PyTUnd2noLbDo6UlBD22dK8wssUsMy/w=;
+	b=sO1/DxWxjy+0PpFgyIcPYgmTLcKXx3tif5YyNLpUCJTzLCbEe6wFdzkaKx5ds5sJoEm2
+	 sMb+4vpLwivn5glKB0uONZFpOvsfdURipagdbvmMwe33Ra6otsItoAhcIg0KFHCP2ZsLE
+	 OilNxJxuUKfafzwx+wioJDu0o0kz/9+9pza5ku9RLtl+dXo2KLZ0TRVD2fb+VlaD8mMGB
+	 MTVybXUt9ifoVmSNn+YErWS525HU7fN0mypiTm4ybQeYR8fYR7ZLSY3US2W5UUGOmhZeh
+	 +vRsFBOw38BPDa0bmRKxVVesX50yTcIwdPGE1uoiuqPKslavHnVgqYLAX62SYEc0ExA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nBoYnxnl;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2571606A31C;
-	Thu, 29 Oct 2026 02:14:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2571606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA4606A31A
+	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Oct 2026 04:25:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6DFA4606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=YskRyQuq
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Sl
-	c2AKyaowZpbLm0PAB+O5peX7+yq4xY8GJXYbjsRpI=; b=YskRyQuqYLAqbkK4D8
-	RKZfdfU5QH8ZkOuU6PGL7b0nstX1aWGETvIhoEwMQ4ik2uHpS3Q0kVm39fupulBv
-	KuztT+lcuW+kBvNSAvGeqotqpmKDYKhBy1F6J0iggkItzPoXzK1/SoU3gCjPhotq
-	86GMtJyp3gm4IoDpEaNj2FxOQ=
-Received: from haiyue-pc.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3XyPNq+JqzDc4DQ--.7637S2;
-	Thu, 29 Oct 2026 10:13:34 +0800 (CST)
-From: Haiyue Wang <haiyuewa@163.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Haiyue Wang <haiyuewa@163.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v1] platform: arm64: drop the vacuous THERMAL dependency from EC_ASUS_GLYMUR
-Date: Thu, 29 Oct 2026 10:12:30 +0800
-Message-ID: <20261029021330.460192-1-haiyuewa@163.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nBoYnxnl
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-c4203bbb1e9so261894666b.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2026 21:25:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793247939; cv=none;
+        d=google.com; s=arc-20260327;
+        b=HwQR/aKK8+19y+tW76rdRl7ksRtsJ9BOQySdI4OSu8EBZfd1hL26OdZKpY/DwnZoou
+         FwjBcfh8q8JBQOqJ3WgDd0r46vv3E0RGhBdfomO3bWKGa5cXdDRH8DV5MpfyPT45NoQ3
+         UFrD1vPUfhFKBAOxgnuZuUKt6k8jMO6VcWg0tPdfK4OPyFPoosTWxHGoStfMmMGzDrEy
+         0eJTzvF8tYvFYrHuGm+VFurILZQ+Np5lLoad8iepzS66zY8RzkvaFJl8mfiWMQ6dqVXd
+         gxohTAjvPVyPbaDEN21APY8dm15H03+KKILpr2Y593u4pCCJDaSCHI1gjlQPeofUx0Un
+         7CSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=3fXRVYvbW++PyTUnd2noLbDo6UlBD22dK8wssUsMy/w=;
+        fh=xAJtVoKzw7q5HwIvK/YNN6Tn2TgEe8pV/uXEt9DOLw0=;
+        b=fcJV/QND2keEtBza4C3Ss7J3unx+ZBsRQQVT40E1cz5yU5WS09aWj/SEhrFfMLuagG
+         WaSOF2uKRwXgRhnYBaBSLd5H0XLZ4POJVSHfrh4PU3D8II1loSV0NNNDKRoXLKtu2iD6
+         Cvy0LEP7CXVDRPlSKQFnE4v/tXVvSb8hglt7KpcoowuuNbsMVBSNTE4R1jwa/xOznq1e
+         D1DKoe4rH9W/ZotKsx6yNWbUpWAUTuGcBED41dcngt17iDPfU2BAa2cg7e9JlApIx8zA
+         U2rSJQuorytubgAoBZ7FVd+YPRcsLfUypchowYFllZ00vauPgXYsNL/zh/2pXwXK4IV+
+         SoTQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793247939; x=1793852739; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=3fXRVYvbW++PyTUnd2noLbDo6UlBD22dK8wssUsMy/w=;
+        b=nBoYnxnlRWVnF/eYUrV31vbQlVhhnUcvQjjlOTrgc0PTUL3mxrBTdZk9SEwCY9F1dF
+         R8C/tKKpvKZnDgsK4FIGhr15k6Tk2B8ENOCV1o7GpXQAkMU3Ei7/IMGMg32PZq25gT7H
+         JTl9VL8lRioT+zPwZXmvNEC/aLwZ5XEl6WqRtXBoqynWVV4tVEu0e2bPx6TtmvfN/06f
+         y+QiCueuNDOpZSqrJBZsulx5WmvY5phrA2eDQeyfbU92Y/MMxEgLVAldL9Sfap+vVb1M
+         mRx/3lMFl3x9BoluZ6+bkUHwlGhu7SqLBkliPPuG7J7KlYuzX2h1I6wgK370MsuJklcP
+         /J0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793247939; x=1793852739;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=3fXRVYvbW++PyTUnd2noLbDo6UlBD22dK8wssUsMy/w=;
+        b=szR9bpuR9o1j8pOlqXXx7TQoPI9EwYhbr4M/THBWl5ZX/1jg4t/TDxIuWP7Cq0/kqp
+         oSLj0th9T+Vv+y9Y/xWz4UCREbEC1M341g285N8XVdtKNs4Ji2bj/1dTU6HBkPL7p2rC
+         37ohqgLvyV/boVmS06wkHWh/KT+CK+js85RWswrhrUGj4PHLScceqIR6m40PIYZrR3hJ
+         +sW3PkJSzNAzQcNiCGl7bD9FoCM+1ZNDRg4FJbK4s+beF1QpJE5bbL+e5I4Q9lERc/4G
+         +NySlx9p7hp0fbQ3QWYJ9BX5JDg5et0E/dYiNe9y/O5aV5LRHhfmoLI/8bWNGlAG0a7Q
+         fILA==
+X-Gm-Message-State: AFq9FYJkCx9AOscQEn3WtvVXX2EeaDnhhNTsVnuk2syuXsTMSi9Lnrwa
+	XBCbMoZiIVPwoFUfIzrM2+KBP7zJ4uWojie1qJegzKI+Mj+Woom/KlOxt+B6Yd/TvmFmOb1rRrZ
+	+Xc967L8kqSv6LEdZ+hHoI2kD4xGrkCV4iceQ
+X-Gm-Gg: AYBFou0cNw9fZCcHcrfJ+J9kisN64Wls4qs+0MIp0nQzVcIK+WlarPQUIFpGWN3MErC
+	q5U0FlcSdcs4CdhvFG4uDGaIJj8VZ0jsNbvBHKVLmfPmS1iXIMWdziO58RWocVPrvvJ4odA/bGK
+	b6jSEyGPzIrYxqStE+D/YrLELDyu2DwZMmmx1+S6zAHNDcthRqe7mgwgkWxltd58zwL1sx7exnJ
+	b2Lb+N45HHbpn+DGtWzeXs6UHg5WKHES6Lgm4uvBsVHTMRtpdjPNN0BV5tbsupyMvxcrILyo9PW
+	YAkN0xYIiRAQ2+K4UhFmi8l+KP4NtGFJSZ0rsOIfNgBmsCDBrGogdYOL399unWORMgbHFr6Zleh
+	63pd4385W5TaZWDaBCQrbuabtejDShQy0BZHpLslIRVe+JhPh3YWCmHMoA+4+5Qxitho8T2adGg
+	/QKHWkYpVF9CUwi2d57tLYRzzL0kOmw/9iNFtORrvTeFCYNTRcLkGh
+X-Received: by 2002:a17:907:7f92:b0:c42:2d07:4c38 with SMTP id
+ a640c23a62f3a-c49bdf8252cmr355590166b.26.1793247938630; Wed, 28 Oct 2026
+ 21:25:38 -0700 (PDT)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -63,61 +100,54 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3XyPNq+JqzDc4DQ--.7637S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr15tr13tFyDKF17GFWkXrb_yoW8CFWfpF
-	ZYg347Cr47JF4Fqw4Ut3yxuFW5Jan3JFW5JF1fC34jvasxZr95ur90vFyxXa1kArs5J3WY
-	qa9YgFy7KF15urUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_fHUxUUUUU=
-X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/xtbC8BBy3Wriq9DnFwAA3M
+From: Joseph Kim <wykim88@gmail.com>
+Date: Wed, 28 Oct 2026 21:25:01 -0700
+X-Gm-Features: AclHuK9HGkBIThvQ_Kbx-Mr5FBalXv9eaocKAW49eBaSgvyONt8O_Ws6JZ4CV44
+Message-ID: <CAFAqP1u38sPN34+wQ47WwphNOrM2q9o_+917fTRJSZvSd4Kc2g@mail.gmail.com>
+Subject: dell-laptop: battery charge control unavailable on XPS 13 DX13260
+ (2026), tokens report location 0xffff
+To: platform-driver-x86@vger.kernel.org
+Cc: Dell.Client.Kernel@dell.com, pali@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-'depends on THERMAL || THERMAL=n' is always true and is semantically a
-no-op, but it couples NEW_LEDS, which is selected here, to THERMAL and
-closes a Kconfig dependency loop. The C tools stay silent because they
-fold the always-true expression to 'y' before running dependency loop
-detection; kconfiglib, used by the Yocto kernel config audit, does not
-fold and rejects the config at parse time.
+Hi,
 
-The loop is easy to expose with the in-tree tools, using the technique
-from commit b33a654a5bd6 ("drm/tiny: Kconfig: Remove always-y THERMAL
-dep. from TINYDRM_REPAPER"),
-https://git.kernel.org/linus/b33a654a5bd6: temporarily make THERMAL
-tristate so the folding stops, then any config target reports it:
+On the 2026 Dell XPS 13 (DMI product name "XPS 13 DX13260", BIOS 1.6.0,
+kernel 7.2.8), the dell-laptop battery charge control attributes are
+created but don't work:
 
-  $ sed -i 's/bool "Thermal drivers"/tristate "Thermal drivers"/' \
-      drivers/thermal/Kconfig
-  $ make allnoconfig
-  error: recursive dependency detected!
-	symbol POWER_SUPPLY is selected by HID_ASUS
-	symbol HID_ASUS depends on LEDS_CLASS
-	symbol LEDS_CLASS depends on NEW_LEDS
-	symbol NEW_LEDS is selected by EC_ASUS_GLYMUR
-	symbol EC_ASUS_GLYMUR depends on THERMAL
-	symbol THERMAL is selected by AB8500_BM
-	symbol AB8500_BM depends on POWER_SUPPLY
+/sys/class/power_supply/BAT0/charge_types -> EIO
+/sys/class/power_supply/BAT0/charge_control_start_threshold -> ENXIO
+/sys/class/power_supply/BAT0/charge_control_end_threshold -> ENXIO
 
-Drop the vacuous line to break the loop; the driver still builds both
-with and without THERMAL.
+The battery tokens are present in the dell-smbios token table, but all
+of them report location 0xffff and value 0:
 
-Fixes: db3a9dddab5f ("platform: arm64: Add a driver for the EC found on ASUS Glymur machines")
-Signed-off-by: Haiyue Wang <haiyuewa@163.com>
-Assisted-by: LLM
----
- drivers/platform/arm64/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+0x0341 0x0342 0x0343 0x0346 0x0347 0x0349 0x034a -> location 0000ffff
 
-diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-index 2a84775a13a9..3f879410b311 100644
---- a/drivers/platform/arm64/Kconfig
-+++ b/drivers/platform/arm64/Kconfig
-@@ -40,7 +40,6 @@ config EC_ASUS_GLYMUR
- 	depends on HWMON
- 	depends on INPUT
- 	depends on PM
--	depends on THERMAL || THERMAL=n
- 	select NEW_LEDS
- 	select LEDS_CLASS
- 	help
--- 
-2.56.0
+Most of the ~900 tokens on this BIOS have location 0xffff. Charge mode
+and Custom start/stop thresholds can be set in BIOS setup (currently
+Custom 80/90) and are enforced by firmware, but there is no way to read
+or change them from the OS.
 
+dell-wmi-sysman does not load ("No such device"), so there is no
+firmware-attributes interface either. These WMI GUIDs are present with
+no driver bound:
+
+1F13AB7F-6220-4210-8F8E-8BB5E71EE969
+2BC49DEF-7B15-4F05-8BB7-EE37B9547C0B
+A6FEA33E-DABF-46F5-BFC8-460D961BEC9F
+
+Dell Command | Configure 5.1.0 (cctk) also fails to query
+PrimaryBattChargeCfg on this machine.
+
+Is battery charge configuration exposed through a different interface
+on this platform (possibly one of the GUIDs above), or is this something
+a future BIOS update will add to the SMBIOS token interface? Happy to
+test patches or provide dumps (bmof, token table, acpidump).
+
+(Resending from my personal address in plain text; an earlier copy went
+out from contact@inkas.org with an HTML part by mistake.)
+
+Thanks,
+Joseph
