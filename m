@@ -1,83 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793348628;
-	b=Xpm0iHY+iR77h36nlbESQhOnzi8jgH9O1Tpo1Gvs7g3OJVe1s4vRwzgfGRihkEoyrBNQ
-	 COOEcMKmjsqPLMbrqPv/zDt+IOAVzYAuosodB9bZnPoCXJlvvGoaql142CkIE/3iebY4f
-	 7YKRWYlOkI4xz+89Hjx0f8ohOlrpKLI2DO91pJrkeIIelYkjjJ/RP4tTUFLUpH8WG7mpz
-	 dCPSyqL/x5LuqIzzaLr6SB7kDmvSxGt2UXKYU0L+DetZ/HudzxXUGZcuRDsxFUeoS43Wd
-	 lr4FDjAWJ78VdVJ/K9lVuUPfJFyja9uISLdmRWDX5yPn78IPRv7e8+EtPO58PCUsBHw==
+	t=1793348634;
+	b=lt02qNnpTgcllOdDBJ9WC+R1RU5WFjsvgV/im99SIpA6KJMbyqfGYdnP4XmQHyle3Tnv
+	 utkFGwNwW/l5Uk5fd6WGH9VPHTJcB6wZ37S5GofR2nSSb+DtaJ72X6nWf65cop/wFQOCz
+	 ScT8u7x2wmuRimu7FGzeP5VufH/AVBNhXWHLR5iTH87PEkLN6HxnfMiPIyOqs2YnfqVdI
+	 HnUJjz7wlWLhOdpO5MnMd9RKHj7Izy50elawyqlq7vtvcMQCLieLl3b+5UwvWt3C+L06K
+	 FNVRpvIh1aEzG02JQZz53pYnfodeHvRYFEY5672C7VHb03KlQydbHyukoiW9Sz1Nmcg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793348628;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793348634;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=QQYBc96PPknTkspwMAYXcF1iUzAhc9SAfvHOe/sWht0=;
-	b=0pPFlXabDbvGP4nar+3xjhQEhZwcXXoRaX0BdQOQsOd88qa1hrYBTZs+w1QOdzlMHf1o
-	 alr9Cks8IrHvpLwJ5n1Bk2deSwvkwM9cQ5kmFauc4L7cGUjqz7Nel2xInDrTMWnfs6gi5
-	 vbrIZOVc5ZJJmIkWc4O9M/HVZwCQCZbvAWv2wIM/vnIWcWFw7GS8OW6dTjfga5L5Sd20b
-	 FphRvQ4ZCCBgePTBTbPsfXo5df9nT65HJG6j0O/LdN4+09YGKYkPmWvZr3gXjpA7QwS+j
-	 LQE6Fl9wbVV8sSbsTwt/+ZRsUBAZLrd8hqDoSVqVPFqvq3Phu1endscKt0u56fFDRzg==
+	bh=bqzCmvhaNWcuJ+bM11VMKpyipTAsKmtuL9+xfzPfDz0=;
+	b=2vmsC53+QpgZ5onG6OlgKK4dWXQXoPFzHVeuca+OrK4QHu6mCFQUMcYU0zPxt05sx5Ch
+	 TTEtiuGadtNfy8dmQ/lBrc/E2uEpnehbPhmWzvO7C1CLAAXTUQl4R1BQ0FY8YCS0jV6KK
+	 9j4yzboRnkuJykizBjOBsLlylWsD0WSxWsUo2voGGGVFyElvSa1uAqTbBnfbNJBdU2fQD
+	 Bysw6Hy+nHu/gW2RpuuRJ2nOVO8ezJS6syVsMfYYKv4X/681JIofZ/y9+Hwm8eoxG+fmS
+	 DlZxdTqamVgUah2oRzmsiqRc5f/oEDyQjZHbsxPlutNbegEdZNBfnPx9xMMWOCYMvZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kx82HvRZ;
-	arc=none smtp.remote-ip=74.125.82.177
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=LpZj5rMI;
+	arc=none smtp.remote-ip=74.125.82.182
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9016606A31F
-	for <platform-driver-x86@vger.kernel.org>; Fri, 30 Oct 2026 08:23:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D9016606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F11A606A31A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 30 Oct 2026 08:23:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4F11A606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kx82HvRZ
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-33fb4680717so1158982eec.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Oct 2026 01:23:47 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=LpZj5rMI
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-3535bf8b3e0so762659eec.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Oct 2026 01:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793348627; x=1793953427; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793348633; x=1793953433; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=QQYBc96PPknTkspwMAYXcF1iUzAhc9SAfvHOe/sWht0=;
-        b=kx82HvRZc7JDUNM8XzN4w7ecKDROoZmWmUuXvOcSOnlqFwnncePpohyBzpZ40/v7vu
-         y0F0pwCfJS8RF13XkOD2UtLcmumqOGMRHSFsg3gEH6vqVP/ZIwWl3df+NwNacEoaarHz
-         CeBt1Y8hyWEl1rlCxdhxgtPfAUctFF2hMHBipQshlfzhJ7dclS9zEa36ICc2hWMo8Eez
-         EEHUT4G47iXO7Ke6CZp3gvECfp6koR+D+ta9+8MQM0S1wKafF1geLu/rkTjP6nbqNm8S
-         f7ZbnJowmRBsj+wpoXbVWhWYfQLePF9Qk+nOl4/68UAp4NMdJPrOwQEsFn3oSwFTpCQi
-         eX7A==
+        bh=bqzCmvhaNWcuJ+bM11VMKpyipTAsKmtuL9+xfzPfDz0=;
+        b=LpZj5rMIFJPAg5A8Z1AM6kCvG0hisKEA3dzYDFsL4EiASeL7Pqw3FwXZKLJ3nj/Etd
+         gPmLPNQPcQuyBfeUFvKYkGqrj5JO6UUMgRjAMJM3d35diccuohJAjaBbtr3elkzcaVfV
+         Rp+dXhyhP3ramHiTHQHd6+YgVbp3myCWT4ykkrWUKK/JdYEwqZcMJs1c6gQD9CYoO96r
+         FjE5vU2D0t3mBj0quPr2u4J9SgU5ZUb8Pdw4vpf+ZcP/qdoYzCwlAZPGJWtrodZic0I/
+         h1m91pzAqK5q+b/wKAzK9iDqeenqqrzZoKrLjEQ5mGSwJGU4+NwAm8sqitKBX9bCLumK
+         kQpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793348627; x=1793953427;
+        d=1e100.net; s=20260707; t=1793348633; x=1793953433;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=QQYBc96PPknTkspwMAYXcF1iUzAhc9SAfvHOe/sWht0=;
-        b=MBV54xcYbDfZsYv4C9SBqAKdk+yyoRGQGlWBzVz80MNUgOuj7yZwi9tW7tmwNmwIuO
-         RDh3z1Vat7EhHELl/XdcnARsX0veYoKFEy4jgYUWaV+fWzJacS8VL1q9gQr1KQajEVVf
-         uM084U+I0BVa/7ZiuV24b+21JIIZKqjk4LzwCEfk4eCMFVkmGoEF/v5vw4tuiSmMyz4D
-         o03oviZDaXp/6kshkM3b8075LJJfXzQBRYkCLM5cu1oceIYjVwgMt5ThuxCo0I7wFuNT
-         kK6gkOckvspcY9RL9Y4hetFPyOW12OXlyQL2lf87a78mwcB+BTYMIt8aLFBZf0XTR+yw
-         J/GA==
-X-Gm-Message-State: AFq9FYK7ZDO6RuCemWvYugyehuBvkv4XzC4oHCfqGy9VN+KQKdeTVrKC
-	u47VKpIxl/4GOseCKfHGts2yXUbXRBi25gJtRmg0G6NdyMeGijC0wz4m
-X-Gm-Gg: AYBFou1SvX5cOJWuCDzNlm9kM6C5ywcQGr7r9kikM1/AyxQjqaKCvu+TlJ9weSrcCsu
-	/HqFz4Z9LC+jfe/NqyQEBNMkPHIRU3+oz/KEhfZevSZdlXbJk3QtKnrT6RZPEimNJdjiWQHvyee
-	VFJgGm5b0bHUVATRiZm7Qi1LG1a+8+8zOcnV6OXwVDP7IEbn6MzIAw1nIl3narSgBPnpXg8PinP
-	/T4AXAJX46l1kZAp3HvlTNGi22s/ZEQh8pN3qb6BEWfb68X0/toMtoZuy5BDpPkGsjozRThyIXB
-	RToC+68P2VarpmNVTr5nW7fjq31OsYydiLtuD4ZMoV3HYVjM/69doHEtLeF0e7JrWUC6D4CQiIx
-	BHVkXR1ub82RXzvAFlS8RfyCNPG4lCrmpCEic5dILX2c5eVMfUg6fLktZNSKK+oIJVIO6QM9yiN
-	epwJhePGTVyFZ4JjNG3eOHHJXaSG2DQKDgfAuAVTi5x4nH0quuEgO4F4Emd0h8Sbgog8qs9wV6q
-	gKX6cQQQ4EWAoRnQrX5XoEbAhwnQJgUj/7xOEE2MgeQiqN7TigcRFSaueSRmZxW8E7HGp9Vw+Ib
-	0iLCvHYh/u7W7saMVQc7mw31emp6lbFHTrMs21ghMs/IVb3QKPpJBl0FtOjod6ZRXFVZmrOpCbm
-	QOm0UW9fOiT4=
-X-Received: by 2002:a05:7301:7d06:b0:36a:1870:2240 with SMTP id 5a478bee46e88-36a423f12e7mr3068838eec.29.1793348626993;
-        Fri, 30 Oct 2026 01:23:46 -0700 (PDT)
+        bh=bqzCmvhaNWcuJ+bM11VMKpyipTAsKmtuL9+xfzPfDz0=;
+        b=SD3SsQDsd9FW7GSCVPet67a6rTAyTuW7P0a1kSrTFmqpNUpiFIFbx6j6vOGZnvwGaZ
+         Ivuewg8le9jQJdfeS0gGQOxY0WOeW3Pr6ZZ1xbL0IK73IVwmtjU5bOvHTJ1ojibXw7So
+         wPZrWe+Zu1T+izB1R+J2/pGOaB4KU9vf6szLS8dTSG1tf9pkojGAY2ksLuBaSH7+JFkk
+         ypF7ds64kQXrLGOvD/1hZzNGHy6oKa4Jt2MRpmFwVxJpgVUG6Qqaz83GT3RohTuRceFn
+         E2739OVaZn0+HCAHfNGj0Nowv1ZxNSdzUMqe5vlLekxUoMVH8XRrz2lHwhfGFbCJDrHQ
+         q3vQ==
+X-Gm-Message-State: AFq9FYLtcnvbsajZctsAv+YspQ/p8YKGE6GOjFk4NmVKMQas1hBmr1Jw
+	mXOxdkRsgoQ7fy+l2UGuxm8/V2utjhxCSB54IiFdqBYTne0wRRYKHpL3
+X-Gm-Gg: AYBFou2QqT15vgg097+UqUdW/mw3F/aMNA2CA9RNAD29uplmDzNIYNRvPq6CrlD+PBk
+	gplJumPsXPspD4kvjIcsPvYCi9+9NF2baYTRbVb2p6NJUZthItoHUveGZWzD9r+pfUMmUUpqUGn
+	vZiXNSGXHik3BuQp3b0kcoh2KoEpq8GOh+VBoaXE9eGO014DWweWWfMs6/6kZkgM15YZwTu9ALc
+	A+3lHGNCVf52aOU81mLmhDygY8DZolQwsrUMLHiNox45qpkgzeOQx4JDcXq+qgthLEZUjrTp34s
+	uV967xli3/B8ulFzhPTUdwcjJ+pfMz6lP3c03QLrEXBvhMMoLx02ayc6uB7EVUCrU6zXqyVXSTR
+	kDof1I0Rd8xNoIgatLo1DldbCeOQsKG2W14ohApGX0y2nDLS0iETFONgehIeAvhRkIi+K0fBA9l
+	yQfdNO3ojevuW/hbvwckpAs9HgOC0nzaGHaRqNCYHKfeVb81KsgVXElaTSTAzynvjImww85EvTN
+	VQJH0JqDP3shESKZScLreB+31Ncg4jd7L3mHTAetxgiD4hwROA7PqdA8shEyYf/tKg2LSsxnHtR
+	ULFio8/dGaQYxdya+KitiqFvPDY8riRRiDsASGo6EjtFKwS9gow7ah5wwGA7P/SqmA==
+X-Received: by 2002:a05:693c:4159:20b0:351:29c8:643 with SMTP id 5a478bee46e88-36a423a8b7fmr2874253eec.18.1793348633406;
+        Fri, 30 Oct 2026 01:23:53 -0700 (PDT)
 Received: from chitransh.. ([106.221.205.232])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a42a77c0dsm5999986eec.26.2026.10.30.01.23.42
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a42a77c0dsm5999986eec.26.2026.10.30.01.23.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 01:23:46 -0700 (PDT)
+        Fri, 30 Oct 2026 01:23:53 -0700 (PDT)
 From: chitranshmandhaniya@gmail.com
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -88,9 +87,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	david.e.box@linux.intel.com,
 	irenic.rajneesh@gmail.com,
 	qipeng.zha@intel.com
-Subject: [PATCH 2/8] platform/x86: isst_if_mbox_pci: switch to devm_mutex_init()
-Date: Fri, 30 Oct 2026 13:52:56 +0530
-Message-ID: <20261030082303.284271-3-chitranshmandhaniya@gmail.com>
+Subject: [PATCH 3/8] platform/x86: pmt_crashlog: switch to devm_mutex_init()
+Date: Fri, 30 Oct 2026 13:52:57 +0530
+Message-ID: <20261030082303.284271-4-chitranshmandhaniya@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261030082303.284271-1-chitranshmandhaniya@gmail.com>
 References: <20261030082303.284271-1-chitranshmandhaniya@gmail.com>
@@ -108,55 +107,44 @@ Content-Transfer-Encoding: 8bit
 From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
 
 Replace mutex_init() with devm_mutex_init() so the mutex lifecycle is
-managed by devres.  This removes the need for manual mutex_destroy()
-calls in both the error path and the remove callback.
-
-Since the only action on cdev_register failure was mutex_destroy(),
-simplify the tail of the probe function to return the registration
-result directly.
+managed by devres.  This removes the need for the manual
+mutex_destroy() call in pmt_crashlog_remove().
 
 Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
 ---
- .../x86/intel/speed_select_if/isst_if_mbox_pci.c     | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/platform/x86/intel/pmt/crashlog.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_pci.c
-index df1fc6c719f3..ea0b396d35cf 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_pci.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_pci.c
-@@ -180,7 +180,9 @@ static int isst_if_mbox_probe(struct pci_dev *pdev,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+index d7018b495217..1071320ce6be 100644
+--- a/drivers/platform/x86/intel/pmt/crashlog.c
++++ b/drivers/platform/x86/intel/pmt/crashlog.c
+@@ -591,13 +591,16 @@ static int pmt_crashlog_pre_decode(struct intel_vsec_device *ivdev,
+ 	struct crashlog_entry *crashlog;
+ 	u32 version;
+ 	u32 type;
++	int ret;
  
--	mutex_init(&punit_dev->mutex);
-+	ret = devm_mutex_init(&pdev->dev, &punit_dev->mutex);
+ 	if (!pmt_crashlog_supported(entry, &type, &version))
+ 		return 1;
+ 
+ 	/* initialize the crashlog struct */
+ 	crashlog = container_of(entry, struct crashlog_entry, entry);
+-	mutex_init(&crashlog->control_mutex);
++	ret = devm_mutex_init(&ivdev->auxdev.dev, &crashlog->control_mutex);
 +	if (ret)
 +		return ret;
- 	pci_set_drvdata(pdev, punit_dev);
  
- 	memset(&cb, 0, sizeof(cb));
-@@ -188,12 +190,7 @@ static int isst_if_mbox_probe(struct pci_dev *pdev,
- 	cb.offset = offsetof(struct isst_if_mbox_cmds, mbox_cmd);
- 	cb.cmd_callback = isst_if_mbox_proc_cmd;
- 	cb.owner = THIS_MODULE;
--	ret = isst_if_cdev_register(ISST_IF_DEV_MBOX, &cb);
--
--	if (ret)
--		mutex_destroy(&punit_dev->mutex);
--
--	return ret;
-+	return isst_if_cdev_register(ISST_IF_DEV_MBOX, &cb);
+ 	crashlog->info = select_crashlog_info(type, version);
+ 	entry->attr_grp = crashlog->info->attr_grp;
+@@ -641,7 +644,6 @@ static void pmt_crashlog_remove(struct auxiliary_device *auxdev)
+ 		struct crashlog_entry *crashlog = &priv->entry[i];
+ 
+ 		intel_pmt_dev_destroy(&crashlog->entry, &pmt_crashlog_ns);
+-		mutex_destroy(&crashlog->control_mutex);
+ 	}
  }
  
- static void isst_if_mbox_remove(struct pci_dev *pdev)
-@@ -202,7 +199,6 @@ static void isst_if_mbox_remove(struct pci_dev *pdev)
- 
- 	punit_dev = pci_get_drvdata(pdev);
- 	isst_if_cdev_unregister(ISST_IF_DEV_MBOX);
--	mutex_destroy(&punit_dev->mutex);
- }
- 
- static int __maybe_unused isst_if_resume(struct device *device)
 -- 
 2.43.0
 
