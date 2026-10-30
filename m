@@ -1,93 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793368503;
-	b=46N/J+1Vjr9/PtEoSP9b0jJ8vIq2pMA+K5Re5KAHnYht8AOCTO6Fhluq8Q4zTqYWMG/2
-	 jbXxlRnkpFP4TX/3GCeJZa31E7/ni1wdtFK++GgVKmK5gJttNDuGn5fXo2kfAP60LCMo8
-	 9exLqOpIX8ItDNcTlMdm2Hz+tteJ1I7GqYs0K75GHw1XOuisluMMYAOrV5GQb/xcTS4A4
-	 L8mY6SX1+gwbQf+KDNIbBuG2A3vldhh/N0BkasO3SrdYgl7Gp7AvE3W2nFsCt12jXLnzY
-	 b9x8sKyBQARTeyI8F4ZFN9fyICFhbjiuH3OahYDzZ/3Iuk/ws+hKgUjHRdBTRyhjPhg==
+	t=1793368582;
+	b=l95C2yn0jddOjvqGuiQfWTlHtHx0SOlbcjSozgd2kVpkMu8EuCvbC9DGaddbWFYuSQHY
+	 ejdNQZEUw0Pnj9omJSYpsqHljtucjrW28bKd2Ug5CzVC23H7bjifLz+OhRIGfcEwXn842
+	 LqF2K5LarcANaT9I3EEwbFymdki6kFaK0ZRjDP8ujJZUH5DUisAy6sO2/SgyybXVQinq7
+	 V3qrAxyh5bJ/0VyWcEQLWyntK1YAlupMMMpfWYrfXLyKZjbx5TuEdw3FVg01Du0wGbHkj
+	 jBwJ7J3Dz5OxVQezwcrOa3/Opu4U7kBnX4k86rxIhh3MpR5QW6BBQPKIFlG/IISFfsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793368503;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=NZCDYcK+JY9VUF/cNFEZgHG1OlXA2AsSHrrLvrSXcGw=;
-	b=OK5HGdDPR439SdYm6LjkjxFZ1aqMKEXEJL0S9QRAFqJSULiemOD5345rdpHbMKiHMY+w
-	 FcfoMhoQW278YDZ4095awo4Vb3ffVM8MY9CLmJqp+UT6Ezga8k1TrVzhio4wWLgglpzw5
-	 oRSnm4Gu6nXWSXup/VDPoclqpsuf3EkvxccXpjalHqh+5/3qrnj6nSuCCwyNrkOxouMGF
-	 TUTSEVMdQqLF/Drc6wi2V8RfsCOLFhRVBxKrLqh2QO2qhUEJr3y7rQopp8nOuVVJV+c7v
-	 fv3EUp69EeXCxodn+kaIV+ORnmoCRhTQ/6t6J/b3NlXdtwGpvI2OknneQQjVYFhEbGw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793368582;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:
+	 Content-ID;
+	bh=w1kqOyDDIUKrhtOCJmGJYi+BUT1Og4QY4onzDyYjeyU=;
+	b=cFG68uvzOs3ZSovHTlPs94pQzulHDfQh4ebsvZGVggxnjePUPiOdpETud1k5r5zQNIfb
+	 TiV6J2WQ6auJl8x9LuRdIHVGqD0j8Q6QF+ZF/5ASkJPfkuFKuEbaEb67atydWdn2aoEHG
+	 xx+xzeEtLVzXpvqEEheYfp4ryhiTedW2X2jXHajRCxbQdUJ364aDXJ4dWYC6mxACxDbYM
+	 /okuryhOjjcpzo6zz9NjX5z3Xgl2TbYeGLTQuy/ox/G94Uig2lEj6Lag0+Dsi326VIzXo
+	 Ei36/3JCPDsFbnkhINDe+SV4jpwxzSLiFNd0nsDU1xoDjMs/WCCWk9agQPNiIbzTR5g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Gpew9uGa;
-	arc=none smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZPb1bfh;
+	arc=none smtp.remote-ip=192.198.163.19
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C39606A31C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 30 Oct 2026 13:55:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E5C39606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2370606A31A;
+	Fri, 30 Oct 2026 13:56:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D2370606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Gpew9uGa
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-3514b90bb89so1434648eec.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Oct 2026 06:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793368502; x=1793973302; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NZCDYcK+JY9VUF/cNFEZgHG1OlXA2AsSHrrLvrSXcGw=;
-        b=Gpew9uGaUaAO9WYj5i8Jx6XaBcRG2K0y1smsGi9tJAA6a55iqJHuc2hiXg03kC3jT0
-         ejbcaVE0Oj98ZxtJtRvT1x3+h3RxJrkjDQ5SRrt4VcD9/OCLVrsG90RnFbDMZEK7kg1b
-         bfBmPJsgQwlrCxMjy+q1q1D1VoFimE1pjh5E4o9R3cMWs4G4D+ktZsXZ2lYKkrZ9WISK
-         x6NNTck5fiwZpsqcRM4QnbjnyMxFTMrDmL91sAoXGHYw1y/EEzly4A9xbYj/CVnJuirg
-         8G+Yoj2HLFo8EAk1wS8mkfcbJe7RRR/NYS2EQ16Od1pgiGYJBKHBFHauX3FJmpB24bD0
-         +VIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793368502; x=1793973302;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=NZCDYcK+JY9VUF/cNFEZgHG1OlXA2AsSHrrLvrSXcGw=;
-        b=gNwfYnRytSkz72v/gsTgLCxacYGLe1F2qoCEN+g73iapE1mBuibaWC0dhMvtrUNzV2
-         eIUGPk+IXe9kirabXEgMIVm9UUzK+HO1w7s2qcNAY8dPRSXzj2tUjTP+Eudz95+NY77P
-         qctjN5KPqIKBQTORViuilmN5Q/So5WFIburAAZ0kCos6SC2uFlB+eipGAtrvjJrqr9Hl
-         8Cj6Iut6GUmTYPP4q7hFTwSB4iR3eTlvfJrJAc6f/tDwrJk+bgsSH7TeNP/AAk3EZKvH
-         OZXHZH7qQa2zeTb9Hz0txtmUNFuSIk06wR7Yz2IcTQNx26ECDS6u/9D2WULfU45R9Rjg
-         OuyQ==
-X-Gm-Message-State: AFq9FYJYHVmZIfRogmm2wbXOAOTPX0jiXe9inryG5diR6DUK2bhrzNcT
-	5n8QwugH6AUfiMBxH/HmN5EYBQ3qA589GaevEE9n6YRVIwpHKafgHMBC
-X-Gm-Gg: AYBFou3L9D56j0fd7e3Ze7Nk6DrciYDXv+x1wapCNQcLbwompAzMfLwz4L+27ncpwXU
-	tDJ31eoKsG+iNN99KiUTCiuaJSN5CamKp/gQ6JBMsTYjwDEx42D2Q0UvwmBzo89DBlPaUmuWMKA
-	5a7uUKkN0Om/9IR65m9hkLh6PUlMhShXd5r2+GrI2TwBXvO7e+RT9tfxyliBvBUsmCzLdS5XHCT
-	VUo3CXKsoik5/4RRL/4cIUQRp/AkaHYTvNnoQ8tBS89H72HuULCaHT4qpXGGr81yow6uqXTjpGg
-	3lzM+ckJRsuJIJMisQAFvatjGgKXSFKwhhXFzsmMCiDMHj6r6xL29Dwcjd2JbRcjtzPRjo5wujG
-	Avk1Yea0CHm9EkeIKTSPXnb0RYe4ZzBobx+0LjVlxLhdMBOY0YUAkeZ0AHUyyez6yhlpMr2y3se
-	qZkgU+PJfroGDjbtUYeY2/wOASDuYwJZPuRuS30kvxfGVxU93SgvSHtWzLH5BnGIvAofYLnu+2N
-	Jh5OqbM97v4oTUGuU9QdAURh3IO/MriKkEB9umQ2D7yfAQJShGStLKSABtMUQp7wX0k1+iAmaza
-	h39WRJ3XySipEU0CHgOcoR6w6aW+cLtqrUpkow7jMPymCKpGFGdP
-X-Received: by 2002:a05:693c:41d2:20b0:369:f961:ccf8 with SMTP id 5a478bee46e88-36a423a9233mr3691448eec.19.1793368501692;
-        Fri, 30 Oct 2026 06:55:01 -0700 (PDT)
-Received: from chitransh.. ([2401:4900:94f3:523c:1f6:344a:9ff1:daf7])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a42a504c6sm8371902eec.21.2026.10.30.06.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 06:55:01 -0700 (PDT)
-From: surirajat@gmail.com
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	markpearson@lenovo.com,
-	hdegoede@redhat.com,
-	rajat.suri@dell.com
-Subject: [PATCH] platform/x86: lenovo: convert mutex_init() users to devm_mutex_init()
-Date: Fri, 30 Oct 2026 19:24:35 +0530
-Message-ID: <20261030135435.308058-1-surirajat@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZPb1bfh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793368581; x=1824904581;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=tSrR83xmYSA2BSZqQe/R73Z6YlF/aFH/BPV381rMTpg=;
+  b=hZPb1bfhXeM1DuDqUF8c/RYPKzKHR5DqVtOM8PH11jzC0W0dObKXsDau
+   OqmBAWg8dOe+0A2wk2Kw5cA+Lc+jgMTMkyP1sIs/rVyPxxhY10ot1JAjl
+   DehFKVPP5I5wrcoJiYcSvn8drH+OnR6H97VDriLLBpCt0J2aNdm5cZmkY
+   2rTLc4IU/eqlsHuFRaEunoSX/vN9AEssWlgPm4zGbnJT2BPZ0s0VBTNnX
+   E3zi0FYeWVbfWgU4zln8WAZwGKUnI4LTGoaJm89akbalVxWDs1DpGhWS7
+   8ntt2mRHA/SURcfNbRo0Xig54Jrzoo2D4zt7rTrM4EM7g6vqvS3NiIGBi
+   Q==;
+X-CSE-ConnectionGUID: w2Vkw13QSGO/9N4H8a5DeA==
+X-CSE-MsgGUID: vYTjEp2KRdKXiMMdvU9JJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2235830"
+X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
+   d="scan'208";a="2235830"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 06:56:20 -0700
+X-CSE-ConnectionGUID: /nJK04mTQk6xXF/K80kNog==
+X-CSE-MsgGUID: 2pQcFYS0RUGFkPbjkXruZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
+   d="scan'208";a="5333988"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.32])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 06:56:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 30 Oct 2026 15:56:01 +0200 (EET)
+To: Denis Benato <denis.benato@linux.dev>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    linux-input@vger.kernel.org, kernel@lists.opengamingcollective.org, 
+    Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+    "Luke D . Jones" <luke@ljones.dev>, 
+    Mateusz Schwartz <matthew.schwartz@linux.dev>, 
+    Denis Benato <benato.denis96@gmail.com>, 
+    Jonathan LoBue <jlobue10@gmail.com>, 
+    Khamunetri Clark <khamunetriclark@gmail.com>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+    Joshua Leivenzon <hacker1024@users.sourceforge.net>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    =?ISO-8859-15?Q?Rebecca_Mara_M=FCller?= <rebecca.mara@posteo.de>, 
+    Ivan Levchenko <me@livan.pro>, Corentin Chary <corentin.chary@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v11 01/18] HID: asus: add support for ROG Ally
+ handhelds
+In-Reply-To: <3791151b-8530-4c38-a9a5-77f415625116@linux.dev>
+Message-ID: <e78dc7ed-a23a-7f84-ce77-7aec3eee62ac@linux.intel.com>
+References: <20261025235232.129945-1-denis.benato@linux.dev> <20261025235232.129945-2-denis.benato@linux.dev> <088f5d2a-c5e1-5805-1872-27aa70b556dd@linux.intel.com> <3791151b-8530-4c38-a9a5-77f415625116@linux.dev>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -97,189 +92,130 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-2025089043-1793368272=:1187"
+Content-ID: <187ef955-790a-d80a-f165-d2de080c5e8c@linux.intel.com>
 
-From: Rajat Suri <rajat.suri@dell.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Convert the mutex_init() calls under drivers/platform/x86/lenovo/
-to devm_mutex_init() so that the mutex lifecycle is managed by devres.
+--8323328-2025089043-1793368272=:1187
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <dad506c7-13f4-29bf-a712-d28df967e311@linux.intel.com>
 
-This removes the need for manual mutex_destroy() calls in wmi-camera and
-ideapad-laptop, and fixes thinkpad_acpi, which never destroyed the
-hotkey, brightness, volume and fan mutexes on its teardown path.
+On Fri, 30 Oct 2026, Denis Benato wrote:
 
-Details per driver:
+>=20
+> On 10/26/26 13:38, Ilpo J=E4rvinen wrote:
+> > On Sun, 25 Oct 2026, Denis Benato wrote:
+> >
+> >> Implement the core functionality for ASUS handhelds:
+> >> - extend functionality of hid-asus if driver is enabled
+> >> - initialise the device to a "ready" state
+> >> - implement Ally X input mapping
+> >> - emit a single proper event for AC button long press
+> >> - reject probes from a different controller and from duplicated
+> >>   interfaces of the same one, which could evict the shared state
+> >>
+> >> Signed-off-by: Khamunetri Clark <khamunetriclark@gmail.com>
+> >> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+> >> Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+> >> Signed-off-by: Luke Jones <luke@ljones.dev>
+> >> Signed-off-by: Jonathan LoBue <jlobue10@gmail.com>
+> > Shouldn't you be using some Co-developed-by tags too?
 
- - wmi-camera: bind notify_lock to the WMI device and drop the
-   mutex_destroy() from remove().
+> >> +/**
+> >> + * ally_gamepad_check_ready() - Wait for the gamepad MCU to report re=
+ady
+> >> + * @ally: ally handheld structure
+> >> + * @hdev: HID device
+> >> + *
+> >> + * This should be called before any remapping attempts, and on driver
+> >> + * init/resume, after the asus handshake has been performed on the
+> >> + * configuration endpoint.
+> >> + *
+> >> + * Return: 0 on success, negative errno on failure
+> >> + */
+> >> +static int ally_gamepad_check_ready(struct ally_handheld *ally, struc=
+t hid_device *hdev)
+> >> +{
+> >> +=09u8 payload[] =3D { 0x00 };
+> > =3D {} is enough to initialize.
+> >
+> >> +=09int ret;
+> >> +
+> >> +=09for (int i =3D 0; i < HID_ALLY_READY_MAX_TRIES; i++) {
+> >> +=09=09u8 *buf __free(kfree) =3D ally_alloc_cmd(CMD_CHECK_READY, paylo=
+ad, sizeof(payload));
+> >> +=09=09if (!buf)
+> >> +=09=09=09return -ENOMEM;
+> >> +
+> >> +=09=09ret =3D ally_gamepad_send_receive_packet(ally, hdev, buf, ROG_A=
+LLY_REPORT_SIZE);
+> > ally_gamepad_send_packet()'s buf is const so why you need to alloc it o=
+ver=20
+> > and over again?
+> >
+> > Arguably, I'm not sure if this retry loop is expected to execute many=
+=20
+> > times.
+>=20
+> no the used buffer is u8 *buf (non const) and it gets overwritten by the =
+method
+> with the MCU response.
 
- - ideapad-laptop: allocate the DYTC private data with devm_kzalloc() and
-   bind its mutex to the platform device. Calling mutex_destroy() on a
-   manually freed object is not possible with devres, so the kfree() and
-   ideapad_dytc_profile_exit() helper are removed as well. The memory now
-   outlives the platform profile registration, which is also devm managed
-   and therefore released in reverse order.
+Ah, yes the buf arg seems not const now that I double check. I must have=20
+accidently searched for some other function name which inputed const buf=20
+(e.g. old function name in the copy-paste buffer for some reason). I'm=20
+sorry about that.
 
- - thinkpad_acpi: bind the hotkey, hotkey thread data, brightness, volume
-   and fan mutexes to tpacpi_pdev, which is registered before any
-   subdriver init runs, and propagate a possible failure from
-   devm_mutex_init().
+> Since I am not sure if while not ready it can write other bytes I have op=
+ted to
+> free it and reallocate it with correct data sice it is what gets sent and=
+ also
+> what is returned.
+>=20
+> Also yes, that cycle has to run many times to await for the MCU to come b=
+ack:
+> it has caused quite a few troubles in the past.
+>=20
+> >> +=09=09if (ret < 0) {
+> >> +=09=09=09hid_dbg(hdev, "ROG Ally check %d/%d failed: %d\n", i,
+> >> +=09=09=09=09HID_ALLY_READY_MAX_TRIES, ret);
+> >> +=09=09=09continue;
+> >> +=09=09}
+> >> +
+> >> +=09=09if (buf[2] =3D=3D CMD_CHECK_READY)
+> >> +=09=09=09return 0;
+> >> +
+> >> +=09=09usleep_range(1000, 2000);
+> >> +=09}
+> >> +
+> >> +=09hid_err(hdev, "ROG Ally never responded with a ready\n");
+> >> +=09return -ENODEV;
+> >> +}
 
-No functional change intended.
 
-Signed-off-by: Rajat Suri <rajat.suri@dell.com>
----
- drivers/platform/x86/lenovo/ideapad-laptop.c | 23 ++++----------------
- drivers/platform/x86/lenovo/thinkpad_acpi.c  | 21 +++++++++++++-----
- drivers/platform/x86/lenovo/wmi-camera.c     |  6 +----
- 3 files changed, 21 insertions(+), 29 deletions(-)
+> >> +=09byte =3D in_report->buttons[0];
+> >> +=09input_report_key(input, BTN_A, byte & BIT(0));
+> >> +=09input_report_key(input, BTN_B, byte & BIT(1));
+> >> +=09input_report_key(input, BTN_X, byte & BIT(2));
+> >> +=09input_report_key(input, BTN_Y, byte & BIT(3));
+> >> +=09input_report_key(input, BTN_TL, byte & BIT(4));
+> >> +=09input_report_key(input, BTN_TR, byte & BIT(5));
+> >> +=09input_report_key(input, BTN_SELECT, byte & BIT(6));
+> >> +=09input_report_key(input, BTN_START, byte & BIT(7));
+> >> +
+> >> +=09byte =3D in_report->buttons[1];
+> >> +=09input_report_key(input, BTN_THUMBL, byte & BIT(0));
+> >> +=09input_report_key(input, BTN_THUMBR, byte & BIT(1));
+> >> +=09input_report_key(input, BTN_MODE, byte & BIT(2));
 
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index fcb5ed7035f5..ee8e00bdaf6b 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -1172,11 +1172,13 @@ static int ideapad_dytc_profile_init(struct ideapad_private *priv)
- 		return -ENODEV;
- 	}
- 
--	priv->dytc = kzalloc_obj(*priv->dytc);
-+	priv->dytc = devm_kzalloc(&priv->platform_device->dev, sizeof(*priv->dytc), GFP_KERNEL);
- 	if (!priv->dytc)
- 		return -ENOMEM;
- 
--	mutex_init(&priv->dytc->mutex);
-+	err = devm_mutex_init(&priv->platform_device->dev, &priv->dytc->mutex);
-+	if (err)
-+		goto pp_reg_failed;
- 
- 	priv->dytc->priv = priv;
- 
-@@ -1195,24 +1197,11 @@ static int ideapad_dytc_profile_init(struct ideapad_private *priv)
- 	return 0;
- 
- pp_reg_failed:
--	mutex_destroy(&priv->dytc->mutex);
--	kfree(priv->dytc);
- 	priv->dytc = NULL;
- 
- 	return err;
- }
- 
--static void ideapad_dytc_profile_exit(struct ideapad_private *priv)
--{
--	if (!priv->dytc)
--		return;
--
--	mutex_destroy(&priv->dytc->mutex);
--	kfree(priv->dytc);
--
--	priv->dytc = NULL;
--}
--
- /*
-  * Rfkill
-  */
-@@ -2487,8 +2476,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	ideapad_backlight_exit(priv);
- 
- backlight_failed:
--	ideapad_dytc_profile_exit(priv);
--
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
- 		ideapad_unregister_rfkill(priv, i);
- 
-@@ -2516,8 +2503,6 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
- 				   ideapad_acpi_notify);
- 
- 	ideapad_backlight_exit(priv);
--	ideapad_dytc_profile_exit(priv);
--
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
- 		ideapad_unregister_rfkill(priv, i);
- 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 4f81855ad721..8c7d6f281ae3 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -3381,10 +3381,14 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	       tpacpi_inputdev->close != NULL);
- 
- 	TPACPI_ACPIHANDLE_INIT(hkey);
--	mutex_init(&hotkey_mutex);
-+	res = devm_mutex_init(&tpacpi_pdev->dev, &hotkey_mutex);
-+	if (res)
-+		return res;
- 
- #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
--	mutex_init(&hotkey_thread_data_mutex);
-+	res = devm_mutex_init(&tpacpi_pdev->dev, &hotkey_thread_data_mutex);
-+	if (res)
-+		return res;
- #endif
- 
- 	/* hotkey not supported on 570 */
-@@ -6834,7 +6838,9 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
- 
- 	vdbg_printk(TPACPI_DBG_INIT, "initializing brightness subdriver\n");
- 
--	mutex_init(&brightness_mutex);
-+	b = devm_mutex_init(&tpacpi_pdev->dev, &brightness_mutex);
-+	if (b)
-+		return b;
- 
- 	quirks = tpacpi_check_quirks(brightness_quirk_table,
- 				ARRAY_SIZE(brightness_quirk_table));
-@@ -7575,7 +7581,9 @@ static int __init volume_init(struct ibm_init_struct *iibm)
- 
- 	vdbg_printk(TPACPI_DBG_INIT, "initializing volume subdriver\n");
- 
--	mutex_init(&volume_mutex);
-+	rc = devm_mutex_init(&tpacpi_pdev->dev, &volume_mutex);
-+	if (rc)
-+		return rc;
- 
- 	/*
- 	 * Check for module parameter bogosity, note that we
-@@ -8913,11 +8921,14 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- static int __init fan_init(struct ibm_init_struct *iibm)
- {
- 	unsigned long quirks;
-+	int rc;
- 
- 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_FAN,
- 			"initializing fan subdriver\n");
- 
--	mutex_init(&fan_mutex);
-+	rc = devm_mutex_init(&tpacpi_pdev->dev, &fan_mutex);
-+	if (rc)
-+		return rc;
- 	fan_status_access_mode = TPACPI_FAN_NONE;
- 	fan_control_access_mode = TPACPI_FAN_WR_NONE;
- 	fan_control_commands = 0;
-diff --git a/drivers/platform/x86/lenovo/wmi-camera.c b/drivers/platform/x86/lenovo/wmi-camera.c
-index 89ecbce60bf4..de4596686d2a 100644
---- a/drivers/platform/x86/lenovo/wmi-camera.c
-+++ b/drivers/platform/x86/lenovo/wmi-camera.c
-@@ -107,9 +107,7 @@ static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
- 
- 	dev_set_drvdata(&wdev->dev, priv);
- 
--	mutex_init(&priv->notify_lock);
--
--	return 0;
-+	return devm_mutex_init(&wdev->dev, &priv->notify_lock);
- }
- 
- static void lenovo_wmi_remove(struct wmi_device *wdev)
-@@ -118,8 +116,6 @@ static void lenovo_wmi_remove(struct wmi_device *wdev)
- 
- 	if (priv->idev)
- 		input_unregister_device(priv->idev);
--
--	mutex_destroy(&priv->notify_lock);
- }
- 
- static const struct wmi_device_id lenovo_wmi_id_table[] = {
--- 
-2.43.0
+BTW, while cutting text I noticed these BIT()s should be named with=20
+defines.
 
+
+
+--=20
+ i.
+--8323328-2025089043-1793368272=:1187--
