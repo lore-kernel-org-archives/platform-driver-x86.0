@@ -1,76 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793369037;
-	b=zAilEkWTeVABK94eld/x++WRfC5eE5tAfMMGQPJO2K0cjWVkZW7NedRSex9XDSigRfSU
-	 EiKyNlIbW6BHeBkX9BM2sTjE7TPORYn6GIfc+wdQh/vSDAMdG8MBfLruvkhPJ1Z8Z3c42
-	 NtwN1V/L5Yy2X3IBfGvwDVXicc5sJTYbw6ISJpk6yYyMWQC7P2YaxW8RvgKuDlxiJ0Cr7
-	 3uG/Zr1CyeczcvCWk4hs9JswEAVyPl4fleiyP27nrI11aBYm89WiBC4Ilt2UAf63od8f8
-	 wKG8W74KAfPLFeZUecA/HNeFnToa6UpP0AeAmpWmvCWgPHCkCyoPyj6n9OMpKGvyo1A==
+	t=1793369637;
+	b=qwC9qE0wnF3xpPoCQD5/pEudVkspClAwoLa8A30NWYf2jdu/D2pwVArwqv41Kk3sku1O
+	 6Yl6YnluQQHyvpbN3sJ8l4K9nGH2fuoyJzkMsrSqegZ95HoEfICjWOegVjsav8s2cLtge
+	 Iq5wT2LFeuBbikiMH9039lmzjmSKd9IXDhouVDdey+sgca+77pLnqCvIUq/prGD6pVt3D
+	 xd1ShzF8jvm5SJpIVmoO0Z6CHK8SZyvUVlrJx9YKpLUNKANWtmzLDBfElSRWkWmM8zios
+	 wYA8KG/oraVZjz7iBdLRIUVg4LF2gQ7wlAEFgWfg3Wv94jenKWxseaRpEj7Bs2B+zOw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793369037;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=jHL1+/V1pt1FOWAIsOOBAHAwhoT4A92NFv8TlA3cGVE=;
-	b=fcQmUq3r8P4rrmypPEgobR8OKq3rAtHewj3RbiPhXYrS85j30Zm/d6OHWeTZiyj+VYAu
-	 MmeEH6CeLitUcKe0y5tfpW9/z5eBpZdyNahuwSNuhDdvpmtpCm/99U+tFAENM7Gd2MjCF
-	 0gaH/NTqGpmXOI1LbnRsHxbogzj3prmAOOmfmxac/cDReWAWnhXvcGGJI0VbQeCQf7i9M
-	 g+o5kEwY60tRPrfanzFbDlvC8tYVA0EDR3C5S7oUgQa3kU1Fpi5VD9WLMlbqL9sgIgg5Q
-	 /+AudekWuhddfMQnmjBWnRRD9Tzx5KLjIXiYazWDHKSyTUDnlZAkFCQGyimyieVxLig==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793369637;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=TNsSVNLBeomaAlCQSkZboyICmvNvVMg7m1kWjt7v5rg=;
+	b=E8ALnvIpanNN1CBZy8Ogi3gZHaYmVZ4IWoNfHSlTCivve4cGKRsOS5VPI1QYQWu1+ZWM
+	 jgL2YsVXCNtSrfC1Pxwe4MAsNBgAnurB230P1UgqQxDM9tPS56lwFjkyQkb0sAV7tT2oj
+	 RIPHc3So7CsqyXmg00WBe20S4YKo7tHSzzrvaISgTHyqJnIiURhsZaU/4YIEwHcsfmOpO
+	 pyMxeAfstEYWDxIK6qBTToVUQv0ZlrdHTbQpdP3f0vw9ZM0Q5yBBGPUrx8bJ8PPwr84LQ
+	 9rIFl4ISErILyetIQymuVCCBDz+Xt5B/UCCR4gUduPTWHgRggPd9UgEETfZ4/ZZ35gw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HcHrVvr+;
-	arc=none smtp.remote-ip=198.175.65.17
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kHEW0HQf;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9D5606A31F;
-	Fri, 30 Oct 2026 14:03:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AF9D5606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BAA606A31A;
+	Fri, 30 Oct 2026 14:13:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HcHrVvr+
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793369037; x=1824905037;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rTsbnyafhb2FO1JXtDpVeoHchWbqe1TG0in3JpRJm3o=;
-  b=HcHrVvr+zUTXNjjO38GITAK2/nCtJGJZWoZMrR6YodpR973bO9lYVwc5
-   /bo4qqkbQkKhSn+v1OqxZOg/mv6Dc65rTyiL+FPe9/Bf18pXv2nq/8Nk/
-   i5yz0mG6kdJP9vvNHvKi1bq/h+f3tIVQUEv2aCYdPaVug3shMYPODSYct
-   QeQUGqv7aZm9DnkNmwIqAYFuea+xAyQ2lDrWqs/+H7YYSBHGLm+mqhxwA
-   dx8/pkgsjSMkxC4cNlakxGpXuh5Rj6cI2/zA/dKLy+meOAt9ql0qC8yFd
-   7Ex/uCyXe/W3uo3X1FuWa5WTyzajlbX+nx+d1jxWT8Eyd0BEcg2cEHggw
-   Q==;
-X-CSE-ConnectionGUID: MSqgytRnQ5m3iBBZ9kcDOw==
-X-CSE-MsgGUID: sXo70oIcQBmfO67VZkoVlw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2147975"
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2147975"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 07:03:56 -0700
-X-CSE-ConnectionGUID: O3gLYXWsSsqPEA6yDH+3fA==
-X-CSE-MsgGUID: nwl2LN9lT8uqJSIC+6sKHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="5335735"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.32])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 07:03:53 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 30 Oct 2026 16:03:48 +0200 (EET)
-To: surirajat@gmail.com
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
-    markpearson@lenovo.com, hdegoede@redhat.com, rajat.suri@dell.com
-Subject: Re: [PATCH] platform/x86: lenovo: convert mutex_init() users to
- devm_mutex_init()
-In-Reply-To: <20261030135435.308058-1-surirajat@gmail.com>
-Message-ID: <1df64b2f-dc28-963a-0fd5-a3e77ade9e27@linux.intel.com>
-References: <20261030135435.308058-1-surirajat@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kHEW0HQf
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F9791F0093A;
+	Fri, 30 Oct 2026 14:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793369637;
+	bh=TNsSVNLBeomaAlCQSkZboyICmvNvVMg7m1kWjt7v5rg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=kHEW0HQfjjn+fvW3gHEgW9xEKuaPi/m7Pn6HW5sJNoeBC0BJ1FU78HDPp70YZlHpX
+	 9eLOR5bswDFEy6iOUzZ//JdXQtTPb2wxLCfuJ5fpuXr0yAjUg4GDdmTTnbwYuGyJ0C
+	 ShW55vneux9aK4Kj+sinCtX6PRX9ze1NeGWfHvDW8rNOe1qrx2fGcF1aBqmGWKMaTV
+	 o5bf14bWmLRhbVZLE1Uf2Q+tCVT8lASIJ0tgezPgMLBLcjrvcK/ghTfvYL8Hg0OpOF
+	 OXi5H5SeSoeMI20BenwUwUM05N+caszmYM3XZC79DFxVwxHS6p0gqTYvmCPupv/kwj
+	 7eg+HFNQzpbtA==
+Message-ID: <b9d12bc7-39de-4c39-9c16-80a1149dc055@kernel.org>
+Date: Fri, 30 Oct 2026 09:13:52 -0500
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,209 +51,73 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/pmc: Add LG Ultra PC 16U70Q to quirks
+ list
+Content-Language: en-US
+To: asinfreedom@gmail.com, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261030-lg-16u70q-quirk-v1-1-946f25fea731@gmail.com>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20261030-lg-16u70q-quirk-v1-1-946f25fea731@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 30 Oct 2026, surirajat@gmail.com wrote:
 
-> From: Rajat Suri <rajat.suri@dell.com>
+
+On 10/29/26 18:24, Carlos Baiget Orts via B4 Relay wrote:
+> From: Carlos Baiget Orts <asinfreedom@gmail.com>
 > 
-> Convert the mutex_init() calls under drivers/platform/x86/lenovo/
-> to devm_mutex_init() so that the mutex lifecycle is managed by devres.
+> The LG Ultra PC 16U70Q (Ryzen 7 5825U) spends ~5 seconds in the noirq
+> resume phase on every s2idle resume. This is the same NVMe SMI handler
+> issue seen on other Cezanne systems. Skipping it with s2idle_bug_mmio
+> brings it down to ~32 ms.
 > 
-> This removes the need for manual mutex_destroy() calls in wmi-camera and
-> ideapad-laptop, and fixes thinkpad_acpi, which never destroyed the
-> hotkey, brightness, volume and fan mutexes on its teardown path.
+> As on the other Cezanne systems, the entry must also keep the spurious
+> IRQ1 (8042) wakeup workaround. Otherwise the system wakes up immediately
+> from s2idle, so use quirk_s2idle_spurious_8042.
 > 
-> Details per driver:
-> 
->  - wmi-camera: bind notify_lock to the WMI device and drop the
->    mutex_destroy() from remove().
-> 
->  - ideapad-laptop: allocate the DYTC private data with devm_kzalloc() and
->    bind its mutex to the platform device. Calling mutex_destroy() on a
->    manually freed object is not possible with devres, so the kfree() and
->    ideapad_dytc_profile_exit() helper are removed as well. The memory now
->    outlives the platform profile registration, which is also devm managed
->    and therefore released in reverse order.
-
-Lets do this per driver.
-
-Clearly you when beyond the scope of devm_mutex_init() here (the summary 
-in the shortlog on Subject). It's easier to write a focused changelog when 
-you don't try to combine many things into one.
-
-Whenever you need to start to use bullet lists like this to describe 
-variations, you almost always want to split things into multiple patches 
-instead.
-
->  - thinkpad_acpi: bind the hotkey, hotkey thread data, brightness, volume
->    and fan mutexes to tpacpi_pdev, which is registered before any
->    subdriver init runs, and propagate a possible failure from
->    devm_mutex_init().
-> 
-> No functional change intended.
-
-Not true, in thinkpad_acpi case you wanted to add the missing 
-mutex_destroy() which surely is a function change.
-
-> Signed-off-by: Rajat Suri <rajat.suri@dell.com>
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/6021
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Assisted-by: Claude:claude-opus-5-5
+> Signed-off-by: Carlos Baiget Orts <asinfreedom@gmail.com>
 > ---
->  drivers/platform/x86/lenovo/ideapad-laptop.c | 23 ++++----------------
->  drivers/platform/x86/lenovo/thinkpad_acpi.c  | 21 +++++++++++++-----
->  drivers/platform/x86/lenovo/wmi-camera.c     |  6 +----
->  3 files changed, 21 insertions(+), 29 deletions(-)
+
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+
+> Tested on the 16U70Q (BIOS L2UG0160) with a locally built amd_pmc
+> carrying this entry: noirq resume drops from ~5.2 s to ~32 ms, and
+> s2idle no longer wakes up immediately from spurious IRQ1 events.
+> ---
+>   drivers/platform/x86/amd/pmc/pmc-quirks.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> index fcb5ed7035f5..ee8e00bdaf6b 100644
-> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> @@ -1172,11 +1172,13 @@ static int ideapad_dytc_profile_init(struct ideapad_private *priv)
->  		return -ENODEV;
->  	}
->  
-> -	priv->dytc = kzalloc_obj(*priv->dytc);
-> +	priv->dytc = devm_kzalloc(&priv->platform_device->dev, sizeof(*priv->dytc), GFP_KERNEL);
->  	if (!priv->dytc)
->  		return -ENOMEM;
->  
-> -	mutex_init(&priv->dytc->mutex);
-> +	err = devm_mutex_init(&priv->platform_device->dev, &priv->dytc->mutex);
-> +	if (err)
-> +		goto pp_reg_failed;
->  
->  	priv->dytc->priv = priv;
->  
-> @@ -1195,24 +1197,11 @@ static int ideapad_dytc_profile_init(struct ideapad_private *priv)
->  	return 0;
->  
->  pp_reg_failed:
-> -	mutex_destroy(&priv->dytc->mutex);
-> -	kfree(priv->dytc);
->  	priv->dytc = NULL;
->  
->  	return err;
->  }
->  
-> -static void ideapad_dytc_profile_exit(struct ideapad_private *priv)
-> -{
-> -	if (!priv->dytc)
-> -		return;
-> -
-> -	mutex_destroy(&priv->dytc->mutex);
-> -	kfree(priv->dytc);
-> -
-> -	priv->dytc = NULL;
-> -}
-> -
->  /*
->   * Rfkill
->   */
-> @@ -2487,8 +2476,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
->  	ideapad_backlight_exit(priv);
->  
->  backlight_failed:
-> -	ideapad_dytc_profile_exit(priv);
-> -
->  	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
->  		ideapad_unregister_rfkill(priv, i);
->  
-> @@ -2516,8 +2503,6 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
->  				   ideapad_acpi_notify);
->  
->  	ideapad_backlight_exit(priv);
-> -	ideapad_dytc_profile_exit(priv);
-> -
->  	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
->  		ideapad_unregister_rfkill(priv, i);
->  
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 4f81855ad721..8c7d6f281ae3 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -3381,10 +3381,14 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->  	       tpacpi_inputdev->close != NULL);
->  
->  	TPACPI_ACPIHANDLE_INIT(hkey);
-> -	mutex_init(&hotkey_mutex);
-> +	res = devm_mutex_init(&tpacpi_pdev->dev, &hotkey_mutex);
-> +	if (res)
-> +		return res;
->  
->  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
-> -	mutex_init(&hotkey_thread_data_mutex);
-> +	res = devm_mutex_init(&tpacpi_pdev->dev, &hotkey_thread_data_mutex);
-> +	if (res)
-> +		return res;
->  #endif
->  
->  	/* hotkey not supported on 570 */
-> @@ -6834,7 +6838,9 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
->  
->  	vdbg_printk(TPACPI_DBG_INIT, "initializing brightness subdriver\n");
->  
-> -	mutex_init(&brightness_mutex);
-> +	b = devm_mutex_init(&tpacpi_pdev->dev, &brightness_mutex);
-> +	if (b)
-
-b ?
-
-> +		return b;
->  
->  	quirks = tpacpi_check_quirks(brightness_quirk_table,
->  				ARRAY_SIZE(brightness_quirk_table));
-> @@ -7575,7 +7581,9 @@ static int __init volume_init(struct ibm_init_struct *iibm)
->  
->  	vdbg_printk(TPACPI_DBG_INIT, "initializing volume subdriver\n");
->  
-> -	mutex_init(&volume_mutex);
-> +	rc = devm_mutex_init(&tpacpi_pdev->dev, &volume_mutex);
-> +	if (rc)
-> +		return rc;
->  
->  	/*
->  	 * Check for module parameter bogosity, note that we
-> @@ -8913,11 +8921,14 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->  static int __init fan_init(struct ibm_init_struct *iibm)
->  {
->  	unsigned long quirks;
-> +	int rc;
->  
->  	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_FAN,
->  			"initializing fan subdriver\n");
->  
-> -	mutex_init(&fan_mutex);
-> +	rc = devm_mutex_init(&tpacpi_pdev->dev, &fan_mutex);
-> +	if (rc)
-> +		return rc;
->  	fan_status_access_mode = TPACPI_FAN_NONE;
->  	fan_control_access_mode = TPACPI_FAN_WR_NONE;
->  	fan_control_commands = 0;
-> diff --git a/drivers/platform/x86/lenovo/wmi-camera.c b/drivers/platform/x86/lenovo/wmi-camera.c
-> index 89ecbce60bf4..de4596686d2a 100644
-> --- a/drivers/platform/x86/lenovo/wmi-camera.c
-> +++ b/drivers/platform/x86/lenovo/wmi-camera.c
-> @@ -107,9 +107,7 @@ static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
->  
->  	dev_set_drvdata(&wdev->dev, priv);
->  
-> -	mutex_init(&priv->notify_lock);
-> -
-> -	return 0;
-> +	return devm_mutex_init(&wdev->dev, &priv->notify_lock);
->  }
->  
->  static void lenovo_wmi_remove(struct wmi_device *wdev)
-> @@ -118,8 +116,6 @@ static void lenovo_wmi_remove(struct wmi_device *wdev)
->  
->  	if (priv->idev)
->  		input_unregister_device(priv->idev);
-> -
-> -	mutex_destroy(&priv->notify_lock);
->  }
->  
->  static const struct wmi_device_id lenovo_wmi_id_table[] = {
+> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> index fed6c51879..ca188d815c 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> @@ -386,6 +386,15 @@ static const struct dmi_system_id fwbug_list[] = {
+>   			DMI_MATCH(DMI_BOARD_NAME, "WUJIE Series-X5SP4NAG"),
+>   		}
+>   	},
+> +	/* https://gitlab.freedesktop.org/drm/amd/-/issues/6021 */
+> +	{
+> +		.ident = "LG Ultra PC 16U70Q",
+> +		.driver_data = &quirk_s2idle_spurious_8042,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LG Electronics"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "16U70Q"),
+> +		}
+> +	},
+>   	{}
+>   };
+>   
 > 
-
--- 
- i.
+> ---
+> base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+> change-id: 20261029-lg-16u70q-quirk-fae864db4054
+> 
+> Best regards,
 
