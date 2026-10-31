@@ -1,78 +1,75 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793410189;
-	b=P5BbiGgET/XN4HQhPRq4sWgHwuEKj0wPZA5KepMu1wKJOulymJ66iCPJfkHX74w6n922
-	 daa4Om1BEv08mThbMnH6buqWdrS9PKlyr7/aKDkSmS942RwJYRZGKgXAuqHvKwfITUV04
-	 waWjxJHbrcvm73ORJpFr7Urb2YSzeQQJERAgOEMcQ6XkEcolD/hT3Ng8S5e3iDRFrL3SK
-	 gSkKdSqVC6VwVmbJlb2j7Ab4xd03mILmmraJtEzQpyHxf7luPEQ2w++jZzTC93GnWa+oi
-	 OzM5q/PLCUJN3PME1sSy9ikmwX+/xP5vA/uaUeZ7AccdvrHT44S0QtqCiQpwmBZTPOg==
+	t=1793410187;
+	b=jq5EJtERRYeFd5C3J+XFae61fuIMH2nLrdwb6Eb9bsvKrH9a3d21GT7iulfz/HDwuXLE
+	 ywXweynnVgELwJR2BZM5hxCkq1awdc3uUgCOI/v1Mlw+xOlbWPGy9smEKtB99dkIjdQtG
+	 jr3tMXXehEbSEPbQZPDFwcjGdFq918LWxVnd2b05+d202aXk1rPnuk44F+VuBAPh/2Iiq
+	 2wSNGzO4iWVq2wTXCWMG8CtStnnSPgCiD/seIZeo45WzxKnEujIQwyWI5EP85/wCyTdSE
+	 cCzg2AGnAEQ6jAlHvBK/Zk67GShREKzFYUJf/Qq+UpeZUSZwDCgjt78MmZ5nwJlvCMw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793410189;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793410187;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=+tcljZ0iA1LSGlmY18zvvh3MG+/umtsbNWTEc7x4Pv8=;
-	b=Mu6pnFMR7XwOHEns+wH7qUz2YePbOuSamEKBRBvGIzL70R7H4BVb0l/0Ruk2c6ysFVxO
-	 6UR253UplY6sX7qIaCYtO6wx5bQ66QOSplpKlidpTRt2R5oh8rlIEBln5KTeafozz8l2X
-	 bS0mFg+ynufe5O/lhDnhCFiHYb3Of8VZ3e6toFDKq6EGyEi2HgAs/onPFqYR3xtXM63dA
-	 yWXJYvS1TWwuywm+1avcDdqKNpYPT6HB4tDQJloDFCplrIgbQhKalvhu/jK7rk4ysxqpi
-	 Xy4rSEp22yqbfoObsNR1onRXtDJaG2X7QDsKwMlGCQIwjCdt5Mb9iIY0Ith4/rardzQ==
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=jF8wSoxLW5SkIOKdqm3Fjo8PCgof3ic+Ji9EzfyYGqE=;
+	b=YEMJbK0KcY3cEv5Co6odmKrxe3h2W8r3QzdqGNWvf/jd3okipL0M67BJp0Ua8wozofuP
+	 i2Ip2/PDfgjHa9QNqIGUNkiuXQ1B6ecjgXVuH3Yde/usvNVupTezSQvlXy/42FCEyUrDb
+	 XT+KMHTtuuMLv5yRbclgj4iF2g387MrANjFHC6ez2qakJXByB1jdkHDfuOLGWoPHRuIxB
+	 P4J3Y6OuycOLDhWUDsZynIeehr4rm/yNF01jB+GtLqc/vuQhe1WVR6c90TXEGSUn3JQoT
+	 Oy4jK2dCnSa8mfSfDTqFklBzH6tiZqBaLhHogk8CMpaIMCWxfsp+QrIghGfr6fzByXw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gV1BG6nR;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MYQDS3oc;
 	arc=none smtp.remote-ip=192.198.163.14
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B81606A32A;
-	Sat, 31 Oct 2026 01:29:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5B81606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95B2606A31A;
+	Sat, 31 Oct 2026 01:29:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E95B2606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gV1BG6nR
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MYQDS3oc
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793410189; x=1824946189;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KjH10n6BXimgCtOCEtZsl51elfPW30lUhWEJZOMtuls=;
-  b=gV1BG6nRnQM27sBC9iPgRMRFnHdu69khQd5tEY/SsGHVjdtLxNTtuAwE
-   rmcCcgSk/aT2mv223ZrHPvWle52VW6i+44PYhtdwDvW+GphOOfkDEqiKZ
-   R5o72kOsGHmRImJTS/G5drk+YYsEfiuN5EE1amO9cEiydvZ5PxNyLPmUt
-   BlLywM1sWs+X4b1OqRrXMcY/g43P30DtLXeVUBCpsC2tOjhODXW/StFIc
-   BdjITM0qttB9XH+fVxJyM9XRDJT3nXMzB3uUKYDp0aW1XC5VcPTlcrSLX
-   iKvoByhKwuZpMn2Yt5tduV3gGeUs2A2Xr4I9RfShO/zJJj4WqFQOpjef7
+  t=1793410186; x=1824946186;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uxebZQz0ocz9uOe3wR1oy9clAVn6B1/A4QshRfvjdSo=;
+  b=MYQDS3ocTsvHh68ofd5e4Mwcf9NMp0SpwQu1RHyc3u8HFxfV5f7ICgaW
+   ihAH72/+omPjeDby7gO4OcGSiSs6Ed6UBNaeZ3nF55Rg7jZfsflvh6eQ2
+   odhMXNssl2+eIkc8LkQzQp99fIVlqrCGYU9kniL2jKo4XQ8wuN8tczvPI
+   ittv+jjSe0ovSQpktschh0/OkajBOcbLw4IWV/XEynYGuC5756FeZDSE5
+   +xmkX1nGnpaxIISpjIMZBgVOOceaSWAaupR5Esyt9JlAcUErwlLcx62jR
+   OMdvPWEdJ/ki8/xCjCyTewEHu3HXAPyblsJ2lYB+QElmTxME1ZP6fExMi
    g==;
-X-CSE-ConnectionGUID: 7unI4FEzS/mfrdDdi1QRFA==
-X-CSE-MsgGUID: o9BaTc5nTyOl+AoRhk5qvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2213336"
+X-CSE-ConnectionGUID: 3N9MQHEdRQ26RHwIRloKjg==
+X-CSE-MsgGUID: sXnuwDsIR0G2sg0qN3Pyfg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2213325"
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2213336"
+   d="scan'208";a="2213325"
 Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:46 -0700
-X-CSE-ConnectionGUID: 9PqHG4SUSc2fJXa5C8cgjg==
-X-CSE-MsgGUID: 5OLzNLecToijlzNXOuL5uQ==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:45 -0700
+X-CSE-ConnectionGUID: 2glU4+2eSxGXl6sm8YxK7Q==
+X-CSE-MsgGUID: sdnM2pEvT3uBBKDk+uG3KA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="7397958"
+   d="scan'208";a="7397952"
 Received: from debox1-desk4.jf.intel.com ([10.54.77.98])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:46 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:45 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
 Cc: "David E. Box" <david.e.box@linux.intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] platform/x86/intel/pmt/discovery: Validate feature table against the BAR
-Date: Fri, 30 Oct 2026 18:29:37 -0700
-Message-ID: <20261031012939.377995-6-david.e.box@linux.intel.com>
+Subject: [PATCH 0/6] platform/x86/intel: Harden PMT discovery against malformed device data
+Date: Fri, 30 Oct 2026 18:29:32 -0700
+Message-ID: <20261031012939.377995-1-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261031012939.377995-1-david.e.box@linux.intel.com>
-References: <20261031012939.377995-1-david.e.box@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -84,66 +81,101 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-For ACCESS_LOCAL features, the feature table resource is built from the
-discovery table's offset and size fields, which are both read from the
-device. The offset is a 32-bit value applied past the end of the discovery
-region and the size is a 16-bit dword count, yet the resulting range is
-never checked against the BAR the discovery table lives in. A malicious or
-broken device can therefore direct the driver to map and read MMIO outside
-of its BAR.
+The Intel VSEC and PMT drivers build kernel copies and MMIO mappings from
+discovery data read from the device:
 
-Use intel_vsec_check_bar_resource() to reject feature tables that do not
-fit within the discovery BAR recorded by the vsec driver before mapping
-them.
+  1. DVSEC/VSEC config space,
+  2. the PMT discovery tables,
+  3. the feature tables pointed to from the discovery tables.
 
-Fixes: d9a078809356 ("platform/x86/intel/pmt: Add PMT Discovery driver")
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmt/discovery.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Several of these fields are used without being validated against the
+buffers or BARs they describe, so a device reporting out-of-spec values can
+make the drivers write past kernel structures, index past arrays, or map
+MMIO outside of their own BARs.
 
-diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/=
-x86/intel/pmt/discovery.c
-index 24ba7211e59d..6717121dc6f2 100644
---- a/drivers/platform/x86/intel/pmt/discovery.c
-+++ b/drivers/platform/x86/intel/pmt/discovery.c
-@@ -376,6 +376,7 @@ static int
- pmt_feature_get_feature_table(struct pmt_features_priv *priv,
- 			      struct feature *feature,
- 			      struct feature_discovery_table *disc_tbl,
-+			      struct intel_vsec_device *ivdev,
- 			      struct resource *disc_res)
- {
- 	struct feature_table *feat_tbl =3D &feature->table;
-@@ -404,6 +405,10 @@ pmt_feature_get_feature_table(struct pmt_features_priv=
- *priv,
- 		 */
- 		res =3D DEFINE_RES_MEM(disc_res->end + disc_tbl->offset + 1,
- 				     disc_tbl->size * sizeof(u32));
-+
-+		if (intel_vsec_check_bar_resource(ivdev, ivdev->tbir, &res))
-+			return dev_err_probe(priv->dev, -EINVAL,
-+					     "Feature table %pR outside of BAR\n", &res);
- 		break;
-=20
- 	default:
-@@ -494,7 +499,7 @@ static int pmt_features_discovery(struct pmt_features_p=
-riv *priv,
- 	if (ret)
- 		return ret;
-=20
--	ret =3D pmt_feature_get_feature_table(priv, feature, &disc_tbl, disc_res);
-+	ret =3D pmt_feature_get_feature_table(priv, feature, &disc_tbl, ivdev, di=
-sc_res);
- 	if (ret)
- 		return ret;
-=20
-@@ -653,3 +658,4 @@ MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.co=
-m>");
- MODULE_DESCRIPTION("Intel PMT Discovery driver");
- MODULE_LICENSE("GPL");
- MODULE_IMPORT_NS("INTEL_PMT");
-+MODULE_IMPORT_NS("INTEL_VSEC");
+These issues were found during an internal AI-assisted review of the PMT
+codebase. An LLM was also used to draft the fixes and to build the test
+tooling described below. Each finding was verified against the code, and
+each patch was reviewed and tested before posting.
+
+Patches 1-3 fix memory safety issues in the PMT discovery driver:
+
+  1. attr_size from the feature header sets the length of a
+     memcpy_fromio() into the fixed-size struct feature_table. The only
+     check was against the MMIO source size, which is also device
+     controlled, allowing an overflow of up to 1020 bytes. Bound it by
+     the destination, and skip the feature rather than failing probe.
+
+  2. Replace a WARN() on a bad table size with dev_err_probe(), since
+     malformed device data should not panic panic_on_warn systems.
+
+  3. The feature id is used as a BIT() shift and as an index into
+     pmt_feature_names[] before it is validated.
+
+Patches 4-6 validate the MMIO ranges built from discovery data against
+the BAR they claim to be in:
+
+  4. In the vsec driver, reject a DVSEC/VSEC table BAR index (tbir) that
+     is out of range or not a memory BAR, and discovery tables that
+     extend past the end of their BAR. The discovery BAR is recorded and
+     a helper is exported so the PMT drivers can apply the same check to
+     the ranges they build.
+
+  5. In the PMT discovery driver, check feature table resources against
+     the discovery BAR before mapping them.
+
+  6. In the PMT class driver, check telemetry and crashlog regions before
+     they are mapped, and mmappable by userspace, including ACCESS_BARID
+     regions whose BAR index can name the nonexistent BARs 6 and 7.
+
+All patches carry Fixes tags. Patches 5 and 6 depend on the helper added
+in patch 4.
+
+Testing:
+
+The malformed-data cases were tested on an emulated OOBMSM-style PMT device
+in QEMU, extended with fault injection to corrupt one discovery field at a
+time. With KASAN and UBSAN enabled, v7.3 showed each bug:
+
+   - an oops from the attr_size overflow corrupting struct feature (1),
+   - a WARN on a short table (2),
+   - a shift-out-of-bounds from the unvalidated feature id (3),
+     and discovery tables, feature tables and telemetry regions mapped
+     outside the BAR (4-6).
+
+With the series, every case was rejected with its message and
+no warnings, sanitizer reports or out-of-BAR mappings.
+
+For regressions, PMT state with and without the series was compared on
+
+  - Diamond Rapids (OOBMSM with enhanaced discovery),
+  - Tiger Lake (which uses early client flag, shifted table offset)
+  - Nova Lake with a Battlemage card (VSEC data registered by xe).
+
+The devices, telemetry and crashlog regions, and features were identical.
+All regions read and mmapped in full and the discovery KUnit test passed.
+
+The runtime testing above was done with the series on v7.3.=20
+
+David E. Box (6):
+  platform/x86/intel/pmt/discovery: Bound attr_size against
+    feature_table capacity
+  platform/x86/intel/pmt/discovery: Avoid WARN for malformed tables
+  platform/x86/intel/pmt/discovery: Validate feature id before use
+  platform/x86/intel/vsec: Validate discovery table bounds against the
+    BAR
+  platform/x86/intel/pmt/discovery: Validate feature table against the
+    BAR
+  platform/x86/intel/pmt: Validate telemetry regions against the BAR
+
+ drivers/platform/x86/intel/pmt/class.c     | 21 +++++
+ drivers/platform/x86/intel/pmt/discovery.c | 36 +++++++--
+ drivers/platform/x86/intel/vsec.c          | 93 ++++++++++++++++++++--
+ include/linux/intel_vsec.h                 |  8 ++
+ 4 files changed, 147 insertions(+), 11 deletions(-)
+
+
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
 --=20
 2.43.0
 
