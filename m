@@ -1,81 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793471417;
-	b=PCRDEeMVqmKZo30oUp7uFO4LaNVhtBjeaImMmYVR6EICto7tMF5IpI9HL4IMJWwyMyF5
-	 LTbrqsLSQgt5vNY9iZ2BHooZXAFhkzS3N8RmUd9yv2jcputUCDD2vd7bIkGZepu0VeUip
-	 mWe+7gXVVEW5rcoIwXDviBj6P76DEftLKFiHcbwMu9CJkqzJPsedqJbC8PucPAJYY/w3J
-	 tk0If093hYjtGm4CPSVD1ZuAegs+0zcAbu2Lz3rG61E87kkG9q4GWBz0jyiOk6TacMj8G
-	 ykMH31UlwfjV/bCrkgkEX79dKZSvmae6sGeLEgkh1/RNeZ3cLUz6ptQQvLUOqu3S8ZA==
+	t=1793479558;
+	b=h95r/dfqhT+NC0A5OL9nab9xR1Lu8hn+zNNOUb3agyznbUc05DxoboyXrxrH7uSLxQqD
+	 0sfz8fAmm5Y76VVg0modA9OpKESQ6ntKhGeLv3AA4TiVAm0zcKtYlLqTBQJlAwNFKxdWT
+	 UwqOHogWbrQPIaThOs1h5YWMNWhdnGBDwC4bY3dEyhBcMl3Qx/smtP+d3aJ6mV9XG56s0
+	 +vHnEnVBRLX6/VfEqITtefCV1/IzA/hIHNCfneukXcv6uh+8Bax+CwxqOyrSGZrJw1sMw
+	 KQBSf0TGsOkCn3RAoyCULYmttTm7vIa7v/s0ScGVhM938+UJBY/Hf/gDA6FdS+kVm5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793471417;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793479558;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=AsvtGasltz1LM3kzdXZQA2MXNQaYwUDHmgXhkb7YbX8=;
-	b=zkYLP4r7SIlE0pVTAIf1umLA23XScteLfMtTXrH7ZZpYX89eNARfBrFBatY94+PzICS/
-	 hLiqziVLYlgKhI4l4B+IW3UDcYTPwytTZGtM4F6en5QMRpz0vSkzXrxWqhYEmhxYwmV9n
-	 DqiYf1XzG64PHRIlC44UA3fmrS1rxSXYbhtBEPAfaqNFtzGez6K4mXgIlVQHJt8mwmhxR
-	 RpJQoHHm8KdCsseebCpFWiZSCaq1MmRNtwHja0Qtyp/SxvXx07PmaIkcm753hvORKowdH
-	 oWA6pSEV09scf4OamaBSAivqgjFtI6iA9fLH+hXr+HE4McJPvQn+5SMYwqVl69+rVlw==
+	bh=ZAflOofuGLk+nbttWuf0w123n/5uVVzhu34kZHp6h+Q=;
+	b=rmCCWK0+bvsQAlNT+eLm/iJWnJznhKbZiCWJR9WE++G+oUM4HddbXT8e5ySpcJ10g6pa
+	 4evyCtbQsdprRsucDyVnLfFk+FH10P2rtwge3NhmA+CXAxTrnSPQjLbmStIETwkQUmTym
+	 qtqNXlo1F7JHFvEtZQNKo9LSBpxp9MCBRKO6b1H2uxLc/J8kQQlBVA0DEqNu6C3LlfGzM
+	 ioyqVPAsuqSoqlz9hPx2rWF5Y/lcSbsBKbV6T6bqygCJc4duf5jWA7Txk2QrM0x/Kb6B9
+	 sJLeX6CJ/jQMSPRXKEZBzUP7lvcimUDpDHUUHC4elunrqCz6DfgsZxIo0RkkjeraxkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=posteo.de;
-	spf=pass smtp.mailfrom=posteo.de;
-	dkim=pass header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=YT+f1J7z;
-	arc=none smtp.remote-ip=185.67.36.66
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b="cWP/ZN0j";
+	arc=none smtp.remote-ip=185.70.43.16
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9137606A324
-	for <platform-driver-x86@vger.kernel.org>; Sat, 31 Oct 2026 18:30:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9137606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1C9606A31A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 31 Oct 2026 20:45:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7D1C9606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=YT+f1J7z
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 8DDDF24014E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 31 Oct 2026 19:30:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1793471412;
-	bh=AsvtGasltz1LM3kzdXZQA2MXNQaYwUDHmgXhkb7YbX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=YT+f1J7z7kYPvg742rKyFI4X4/RKAcZ4qB0+QfYoP+jGE0EkT4TyRJEne1lw4qZjq
-	 HdI2H3B90Ryw05rIakGD8HutzQHIGVws2N5ASZqYJKD36NYchkT66rH3kVJ3mDi+le
-	 TJsW9zPNaoz2KOA1ztpxlBwdYaSCjFJngfu+Di878B46YpkhgZWIeuLmWUGfTmSjNJ
-	 jqHrYpPSIdkGw00UUX6P5iKhyfHAu2K+vCgouUFUpYtYCluRa2yEPMpMcK/RE3tJIr
-	 jSmWAAll5bZxIncnUejXjdrWk4wb8tB2GCtVOWro6uSniTrCs4z2BomPLGKLGaXNAq
-	 OrA836lHQJfkA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4jH62n1RB2z9rxG;
-	Sat, 31 Oct 2026 19:30:09 +0100 (CET)
-From: =?UTF-8?q?Rebecca=20Mara=20M=C3=BCller?= <rebecca.mara@posteo.de>
-To: Denis Benato <denis.benato@linux.dev>
-Cc: Paolo Pisati <p.pisati@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	kernel@lists.opengamingcollective.org,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Mateusz Schwartz <matthew.schwartz@linux.dev>,
-	Denis Benato <benato.denis96@gmail.com>,
-	Jonathan LoBue <jlobue10@gmail.com>,
-	Khamunetri Clark <khamunetriclark@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Joshua Leivenzon <hacker1024@users.sourceforge.net>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Ivan Levchenko <me@livan.pro>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v12 01/17] HID: asus: size feature reports from the HID report descriptor
-Date: Sat, 31 Oct 2026 18:30:11 +0000
-Message-ID: <20261031182956.2250899-1-rebecca.mara@posteo.de>
-In-Reply-To: <20261031174130.208240-2-denis.benato@linux.dev>
-References: <20261031174130.208240-2-denis.benato@linux.dev>
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=cWP/ZN0j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1793479555; x=1793738755;
+	bh=ZAflOofuGLk+nbttWuf0w123n/5uVVzhu34kZHp6h+Q=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=cWP/ZN0jWPVLm9shVbf4ZhpalXX1r6WRS42dmITcbFMPyZjJv4VXu6pukTqeQldWU
+	 vYN3RKSolAZgYSr0rKgI6eYieebYdlwmBgCrjSiQCfxoWaHxH5Z6ybs0g6TmltJ4UX
+	 K2RgvZu1+4SZZSt4SPSVRSOO9lyIIsDr7jiHLIKoJYXgJPh5tz+FUtlxMLighldqz9
+	 ue9J74nug54kswyBtUmSFsG7G73oiukilXXpt0pQ3WvOwCsNDNlGQka5gB7OB49ADy
+	 sF1gY7OHeOJr31kUHg7xBD6NRpell/oQR+rWw2ljO+leotRGIlpBFnoRl+GMTsaBkf
+	 X6MfpmdQ2cFcQ==
+Date: Sat, 31 Oct 2026 20:45:50 +0000
+To: Mingyou Chen <qby140326@gmail.com>
+From: Arsenova <7z0423arsenova@proton.me>
+Cc: Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v15 0/6] Merge redmi-wmi into bitland-mifs-wmi
+Message-ID: <20261031204357.157958-1-7z0423arsenova@proton.me>
+Feedback-ID: 227066774:user:proton
+X-Pm-Message-ID: 9352d5be9697cb68f48bd7521b6575954ea16758
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,38 +61,52 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Denis,
+Hi Mingyou,
 
-as asked in the cover letter, I repeated the Zenbook Duo test on v12.
-Everything that worked with v11 still works.
+In the v15 cover letter you say you have no Redmi device and that
+tests are welcome. I have a Redmi G 2022 (board TM2135, BIOS
+RMGAD6T0P1313, Arch Linux, kernel 7.2.11) and can test this series
+on it, and later versions as they come.
 
-Setup as for v11: hid.git for-next (hid-asus.c f6aa1be09ad5), your
-v12 01-12, then Paolo's v4 1-4 and 6-7, leaving out 5/7, which this
-patch replaces. Your patches applied cleanly, and Paolo's went on top
-of the reworked 01/17 without conflicts (4/7 with the same trivial
-fixup as last time). Built out-of-tree with W=1 against a 7.2.6-based
-distribution kernel, no warnings from hid-asus.c. UX8407AA, my
-userspace workaround stopped.
+On October 23 I sent you and Armin a report that bitland-mifs-wmi
+does not work properly on this model, with details from the
+firmware's ASL. It arrived during the merge window, so it may well
+have been missed:
 
-- Docked (USB, 0b05:1cd7), captured with usbmon while reloading the
-  module and pressing the backlight key: 5 SET and 2 GET, every one of
-  them report 0x5a on interface 4 with wLength 16, all completed with
-  status 0. It is the same sequence as with v11: the handshake and its
-  read-back, the 0x05 function query and its GET, the initial
-  brightness and two changes. The backlight key and Fn+F (platform
-  profile) work.
-- Bluetooth (0b05:1cd8): the backlight key and Fn+F work, no errors
-  in the log.
-- After docking again: the backlight key and Fn+F still work.
+  https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYdW-TU=
+gdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50I=
+SIc=3D@proton.me/
 
-Tested-by: Rebecca Mara Müller <rebecca.mara@posteo.de> # UX8407AA
+Reading v15 (I have not run it yet), the quirks table seems to cover
+most of that:
 
-One small thing I noticed while applying: 06/17 adds 14 lines that
-contain only a single space, and git am warns about trailing
-whitespace. checkpatch will probably flag them too.
+  - skip_ac_type_check avoids the AC type query (0x1300), which on
+    TM2135 returns a bare Integer 0xE000 and makes "performance"
+    fail with -ENODATA;
+  - accepting function =3D=3D 0 in Set replies matches what I see here:
+    the EC switches mode, but the reply carries function 0;
+  - handling event 0x16 as WMI_EVENT_PERFORMANCE_PLAN_ALT covers the
+    mode change events this firmware sends.
+
+What TM2135 would still need is a DMI entry with its own profile
+table, because its firmware uses 1 =3D balanced, 2 =3D quiet and
+3 =3D performance instead of the default values.
+
+If that is useful, I can:
+
+  1. test v15 on this machine and send you the results, including
+     the Fn mode hotkey events; and
+  2. send a patch on top of the series that adds the TM2135 DMI
+     entry and profile table. I would base it on the base-commit
+     from your cover letter (9d3475065167) unless you prefer
+     another tree.
+
+Please tell me whether you would rather fold the entry into your
+series or have it sent separately.
 
 Thanks,
-Rebecca
+Arsenova
+
