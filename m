@@ -1,75 +1,75 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793410188;
-	b=SoS52kDc4S6NmFmcItusF209d7i1rHo2g0Tl/DrKajv2S2oFI4hEdN1vo89l98CxVo+M
-	 5mOm4cMoWmdJmTvbm2fDBESHaSCrnsXYY/0TzzzVLOLlcMW8rS5wzTeN4q6HEReFqorqf
-	 GTM9Df9dAjTKIVJewNgzF2+TWs4AmumSyi05tv6tXyJYpSfT9nZ374Ffa37NtU2RX+ZjH
-	 flHXWiIP4oDPR4XTbYx7gjBvtxFa58PhYqlhbZXrvJjzdQrQZcwzWnl42mB8Np08IM2/x
-	 IYXfpLjdnJAadzFAK8IdG5/dFe8GlpOLfdBbu/q2X1dfThrJm0kcLmAt8VVjxpjgaew==
+	t=1793410194;
+	b=NF0791MDteSWH0S2hlyG76QbKs49Gj/yfA5HkYMKM5615OD3x4PPApG6tXzGnB+hMQlQ
+	 FuB6BMmGGGj3LdmgQdEOgiExFiAXeenrhFzZ9d3NPg754xDvH5KXxVaKe0SWDHWskNAWK
+	 aXjxtD0PIKDJzfvH0qSC25ZRmS7mACufc2fQ+g4ieM1xCogRaW3PxRyAuLWiWlsxadoFT
+	 luSf1kZwm1r2xttEQcsFulLDKHdQ+wbpgWhjvtW/95hicWjztrCq4Gifnphrmre5csKeY
+	 gtNpYclgKKWpqsuuV70ZJWItSYcc/YyQWfPWiDVaUDHgV8bxiLkNy+OnPot5R+lGnrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793410188;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793410194;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=bYcLPh7ddNGIgYWjiRJmv2zfk0z9OUzXHQBnzK65jXc=;
-	b=xsJnkwUVNARF9HWGQHXKM4ze2v7dUs2mbv42UsmmCNXnVbSLlulYi5WHHKYMVt9cw4MN
-	 Pe6dubirvsavO3VsBeoOYcAKrsfGzh9cHE6X0Krc6wAq9LXCpkqs1MDxKtbs22rWM/wEK
-	 pU3GXw9zImLAvhG0dmmy/xxdxuE05NjGVTIRFd+cW+EFpnyLbMDNz8jqC63xtTIwBrxHu
-	 tqYhXeDHRiwsN7BCE1HJ46F8TT+i1YkpbevD8OpOSSTUnAs4qfp1eahNlauISgWzYGuEm
-	 EsSJIFMR3xx0d9GVUW5ZtuT2MTMhJ7biwyqNkbbLqgn2wiHF0W8LT6T3q3LrmW8adog==
+	bh=48u8q9gbjgm+FnmBNe9mWVyF+rAqI8YoLJBqJ5vrjbc=;
+	b=tNxaXxOXjXawH8nXchB8sCaQy8C43pINCAl11pFDnMVPQZ10B4m9ZUBjLPQOaU/LGURE
+	 VYIwGj4HIZCIFxA9OZJ2+5cgWvEajEba3OQtxSKyKlBiuJ1Hnjqg+RHnvJTCDcFsOpvWG
+	 l19zbDR6rRWckGGxe2mQ0/6uryrOQDgPy3NkFfATZwlEE1emzl6iySJGRBcLK2s8IUyfb
+	 U/2DOXzKJRVYtvS1jWxQVHHDzL42rrYl3xSmEjo0d9qR8WzMn2a7nrO7GSdwlVneLvQ5X
+	 Tw6c3+Ui8b9gk71IdHYg2OQ2u1Es8Mos0+GaEADbUiiOsBqd2UKWR370O6vy7axDZtg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NVLJ6S48;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Cglssmy+;
 	arc=none smtp.remote-ip=192.198.163.14
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD58606A31F;
-	Sat, 31 Oct 2026 01:29:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ABD58606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B583A606A329;
+	Sat, 31 Oct 2026 01:29:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B583A606A329
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NVLJ6S48
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Cglssmy+
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793410188; x=1824946188;
+  t=1793410189; x=1824946189;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nRWR7gKeYAWHlXE/fi9YQrS8IWwLowFiiE07j24IiuY=;
-  b=NVLJ6S48UPnqss2pdptZ/c97f1fnJK08kMM02CfRMorp1otiSN8qg7B7
-   8qx96JSvzZwh0oy4ZlSfUU2mG1S/wooIBRnczeuP+K4Jnf1alfHfVAYWP
-   MzjFlUavJw8DmYISFNVpWEHFQChqNzgONkgb3UFFce8nDtO0nZ5I4u69h
-   4rOEAJKMeXd2vv6obcex7g3o7JmHlsVYq9a9JI829Up8QOHdHXyyib5x2
-   IFsj6sZWYRyLW2UUPrey/fvh6TGgtcndhRiqVLKdD0Z6+4zuv1XKyrgD6
-   ueXiYwnGE5LzmKxd1R4RLdkp7hnbDmQutke1NRnLMW0ZOAMMESaN0etce
-   g==;
-X-CSE-ConnectionGUID: GPBH7JaMT7mZ+WZHojKeEA==
-X-CSE-MsgGUID: E/EN5R4zSzu2rlaEcmh/Xw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2213330"
+  bh=LRiKvRUskUruRWJMg/LsXb4ThqjjFUrvPJlq+ZPlX2w=;
+  b=Cglssmy+95nA78tNwMlXS5sOkr9k5RTdFoOkMTCOCxC+tw44eK/TOEVb
+   1/gjMXIDdF6Aqz8Op6JAT4KHFq9kHIFigMsXoOKlaIFmu1m1Si3zR9pMs
+   zE/fS9QMUGa/hE+jKxSxv8juSBGshMn5VXUntVGwR/PWw0FTmMXj0u3/5
+   J6DYCsmCQn0nf1BrMTPgROCKvdRKEekTgiz6xEXGgvOf2Adb4cMu9WLc+
+   +KgFfHXx09mwLo+sny1ghIWhc73VN2QlZWKS6XRB3h2aGvhgZ6VvU3ee9
+   GSgHFvSrsZBol17EVSNtAJ5MXE8n/0OD1raaO9FoB5hj+caeFongqIbE/
+   w==;
+X-CSE-ConnectionGUID: N7h26zIzTg2g5/h88wbHTQ==
+X-CSE-MsgGUID: amjMmt9QSGSfgB+xqBgtQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2213338"
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2213330"
+   d="scan'208";a="2213338"
 Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:45 -0700
-X-CSE-ConnectionGUID: G/mvpSurTl2ClWSg3T+5JA==
-X-CSE-MsgGUID: 740ZLtJLSeaU2x/n8PFMmQ==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:46 -0700
+X-CSE-ConnectionGUID: YmNQ32gQRdmsfzYwTlrarw==
+X-CSE-MsgGUID: rxrHooNkRa+GI/KhRuk5EA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="7397955"
+   d="scan'208";a="7397959"
 Received: from debox1-desk4.jf.intel.com ([10.54.77.98])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:45 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 18:29:46 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
 Cc: "David E. Box" <david.e.box@linux.intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] platform/x86/intel/pmt/discovery: Avoid WARN for malformed tables
-Date: Fri, 30 Oct 2026 18:29:34 -0700
-Message-ID: <20261031012939.377995-3-david.e.box@linux.intel.com>
+Subject: [PATCH 6/6] platform/x86/intel/pmt: Validate telemetry regions against the BAR
+Date: Fri, 30 Oct 2026 18:29:38 -0700
+Message-ID: <20261031012939.377995-7-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261031012939.377995-1-david.e.box@linux.intel.com>
 References: <20261031012939.377995-1-david.e.box@linux.intel.com>
@@ -84,37 +84,90 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The feature table contents are supplied by the device, so an invalid table
-size is an expected probe error. WARN() is not appropriate for malformed
-device data because systems with panic_on_warn set will panic.
+pmt_resolve_access_pci() computes the base address of a telemetry or
+crashlog region from the base offset and BAR index in the device's
+discovery header, and the region size also comes from the device. The
+resulting range is ioremapped by intel_pmt_dev_register() and can be
+mmapped by userspace through sysfs, but it is never checked against the
+BAR it claims to be in. A malicious or broken device can therefore
+direct the driver at MMIO outside its BAR. For ACCESS_BARID the BAR
+index is three bits, so it may also select BAR 6 or 7, which are not
+standard BARs.
 
-Use dev_err_probe() instead. This preserves the diagnostic and -EINVAL
-return while being a better fit for the probe failure path.
+Check the region against its BAR before it is mapped: the BAR holding the
+discovery table for ACCESS_LOCAL, or the BAR named in the header for
+ACCESS_BARID.
 
-Fixes: d9a078809356 ("platform/x86/intel/pmt: Add PMT Discovery driver")
+Fixes: e2729113ce66 ("platform/x86: Intel PMT class driver")
+Assisted-by: LLM
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmt/discovery.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/pmt/class.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/=
-x86/intel/pmt/discovery.c
-index 47a4def6e6b9..143d2b3be562 100644
---- a/drivers/platform/x86/intel/pmt/discovery.c
-+++ b/drivers/platform/x86/intel/pmt/discovery.c
-@@ -440,8 +440,9 @@ pmt_feature_get_feature_table(struct pmt_features_priv =
-*priv,
- 	size =3D sizeof(*header) + FEAT_ATTR_SIZE(header->attr_size) +
- 	       PMT_GUID_SIZE(header->num_guids);
- 	res_size =3D resource_size(&res);
--	if (WARN(size > res_size, "Bad table size %zu > %pa", size, &res_size))
--		return -EINVAL;
-+	if (size > res_size)
-+		return dev_err_probe(priv->dev, -EINVAL,
-+				     "Bad table size %zu > %pa\n", size, &res_size);
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/=
+intel/pmt/class.c
+index 2b11c4012f6a..8f87f8db3966 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -214,6 +214,10 @@ static int pmt_resolve_access_pci(struct intel_pmt_ent=
+ry *entry,
+ 	struct device *dev =3D &ivdev->auxdev.dev;
+ 	struct intel_pmt_header *header =3D &entry->header;
+ 	struct resource *disc_res;
++	struct resource res;
++	/* BAR the region lives in, the discovery BAR unless the device names one=
+ */
++	unsigned int bar =3D ivdev->tbir;
++	int ret;
+ 	u8 bir;
 =20
- 	/* Get the feature attributes, including capability fields */
- 	tbl_offset +=3D sizeof(*header);
+ 	/*
+@@ -258,6 +262,7 @@ static int pmt_resolve_access_pci(struct intel_pmt_entr=
+y *entry,
+ 				   (disc_res->start <=3D pci_resource_end(pci_dev, i))) {
+ 					entry->base_addr =3D pci_resource_start(pci_dev, i) +
+ 							   header->base_offset;
++					bar =3D i;
+ 					break;
+ 				}
+ 			if (!entry->base_addr)
+@@ -280,6 +285,7 @@ static int pmt_resolve_access_pci(struct intel_pmt_entr=
+y *entry,
+ 		 */
+ 		entry->base_addr =3D pci_resource_start(pci_dev, bir) +
+ 				   GET_ADDRESS(header->base_offset);
++		bar =3D bir;
+ 		break;
+ 	default:
+ 		dev_err(dev, "Unsupported access type %d\n",
+@@ -287,6 +293,20 @@ static int pmt_resolve_access_pci(struct intel_pmt_ent=
+ry *entry,
+ 		return -EINVAL;
+ 	}
+=20
++	/*
++	 * The base offset and size come from the device. Make sure the region
++	 * lies within the BAR it claims to be in before it is mapped.
++	 */
++	if (header->size) {
++		res =3D DEFINE_RES_MEM(entry->base_addr, header->size);
++
++		ret =3D intel_vsec_check_bar_resource(ivdev, bar, &res);
++		if (ret) {
++			dev_err(dev, "Region %pR is outside of its BAR\n", &res);
++			return ret;
++		}
++	}
++
+ 	return 0;
+ }
+=20
+@@ -574,3 +594,4 @@ module_exit(pmt_class_exit);
+ MODULE_AUTHOR("Alexander Duyck <alexander.h.duyck@linux.intel.com>");
+ MODULE_DESCRIPTION("Intel PMT Class driver");
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS("INTEL_VSEC");
 --=20
 2.43.0
 
