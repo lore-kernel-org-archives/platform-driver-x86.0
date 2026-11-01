@@ -1,57 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793479558;
-	b=h95r/dfqhT+NC0A5OL9nab9xR1Lu8hn+zNNOUb3agyznbUc05DxoboyXrxrH7uSLxQqD
-	 0sfz8fAmm5Y76VVg0modA9OpKESQ6ntKhGeLv3AA4TiVAm0zcKtYlLqTBQJlAwNFKxdWT
-	 UwqOHogWbrQPIaThOs1h5YWMNWhdnGBDwC4bY3dEyhBcMl3Qx/smtP+d3aJ6mV9XG56s0
-	 +vHnEnVBRLX6/VfEqITtefCV1/IzA/hIHNCfneukXcv6uh+8Bax+CwxqOyrSGZrJw1sMw
-	 KQBSf0TGsOkCn3RAoyCULYmttTm7vIa7v/s0ScGVhM938+UJBY/Hf/gDA6FdS+kVm5g==
+	t=1793495270;
+	b=sV+nKmmp4mfUUU9VheKr89SkE1FlZhZSw2ACT3S4jXUblh4XX32LKLnxOZ3XvglC17GH
+	 gQ4ZL+oXAVT84ZAlvL63DpXzPE8vtpVQB+7LmBqM7+uAbrM2p5yG9nPxsgxxe99kgpCMb
+	 WkMmUyT3aSLPyncoudO0PayJD/wna7GM6JC/bWopzKqLWs10L0MQnHBUrS4B0XagnCy2p
+	 wWSbFWUWDmx2fYp0ABS4i1kD/VcSqU8gFmWfukTqTw599kLjiogcobhuBPXbQ06Ml1bzA
+	 TyAixXulQ4dVdvO9ynKFvh5LBZoV9M938wSkPnLCdpFt+Wtfhv7wlA6d9ApsqR9YKcg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793479558;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793495270;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ZAflOofuGLk+nbttWuf0w123n/5uVVzhu34kZHp6h+Q=;
-	b=rmCCWK0+bvsQAlNT+eLm/iJWnJznhKbZiCWJR9WE++G+oUM4HddbXT8e5ySpcJ10g6pa
-	 4evyCtbQsdprRsucDyVnLfFk+FH10P2rtwge3NhmA+CXAxTrnSPQjLbmStIETwkQUmTym
-	 qtqNXlo1F7JHFvEtZQNKo9LSBpxp9MCBRKO6b1H2uxLc/J8kQQlBVA0DEqNu6C3LlfGzM
-	 ioyqVPAsuqSoqlz9hPx2rWF5Y/lcSbsBKbV6T6bqygCJc4duf5jWA7Txk2QrM0x/Kb6B9
-	 sJLeX6CJ/jQMSPRXKEZBzUP7lvcimUDpDHUUHC4elunrqCz6DfgsZxIo0RkkjeraxkA==
+	bh=o0dKNKFP2TnkjHjwq1OngqcbhclebE6bDgXM6dq7QKU=;
+	b=GRz/w0aoy0qF0RZFUBYZeUqAQZoMuOA9Vl8Uaj3osM+d+s3VOu+H9ryamds43U1rhq2C
+	 1Bi5WBvmTOXRxDohD+QMNQJ5TlkaswkbE2P8S8BPjJl6uru19Z15uWAUdBodTtVbpI+dR
+	 4ivIz+yxKVQ/D8+5MUAuNa8GQk0pDYdDKxb/N6wxFD2QmBLNKqtuQl3Q//ktm5iuSPEx1
+	 8OG5rFpmkyt8EJ3hqexEJxGJUH+VLIP6ZwCOXiATSzydR4nqBQgkBDE3k1fj9uV99QP1/
+	 Z0AKFjoInj7cwvAbIQKRoEa9vkTjZRAzCHF1OQv2MN7+qmF1NwnHA689xtIb3pn+MOQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b="cWP/ZN0j";
-	arc=none smtp.remote-ip=185.70.43.16
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a1eb1dRO;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1C9606A31A
-	for <platform-driver-x86@vger.kernel.org>; Sat, 31 Oct 2026 20:45:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7D1C9606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF086606A31A;
+	Sun,  1 Nov 2026 01:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=cWP/ZN0j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1793479555; x=1793738755;
-	bh=ZAflOofuGLk+nbttWuf0w123n/5uVVzhu34kZHp6h+Q=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=cWP/ZN0jWPVLm9shVbf4ZhpalXX1r6WRS42dmITcbFMPyZjJv4VXu6pukTqeQldWU
-	 vYN3RKSolAZgYSr0rKgI6eYieebYdlwmBgCrjSiQCfxoWaHxH5Z6ybs0g6TmltJ4UX
-	 K2RgvZu1+4SZZSt4SPSVRSOO9lyIIsDr7jiHLIKoJYXgJPh5tz+FUtlxMLighldqz9
-	 ue9J74nug54kswyBtUmSFsG7G73oiukilXXpt0pQ3WvOwCsNDNlGQka5gB7OB49ADy
-	 sF1gY7OHeOJr31kUHg7xBD6NRpell/oQR+rWw2ljO+leotRGIlpBFnoRl+GMTsaBkf
-	 X6MfpmdQ2cFcQ==
-Date: Sat, 31 Oct 2026 20:45:50 +0000
-To: Mingyou Chen <qby140326@gmail.com>
-From: Arsenova <7z0423arsenova@proton.me>
-Cc: Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v15 0/6] Merge redmi-wmi into bitland-mifs-wmi
-Message-ID: <20261031204357.157958-1-7z0423arsenova@proton.me>
-Feedback-ID: 227066774:user:proton
-X-Pm-Message-ID: 9352d5be9697cb68f48bd7521b6575954ea16758
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a1eb1dRO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE9E1F000C1;
+	Sun,  1 Nov 2026 01:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793495269;
+	bh=o0dKNKFP2TnkjHjwq1OngqcbhclebE6bDgXM6dq7QKU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=a1eb1dROmAhVQ61MQlal6Ap7Wbtl+Ngz2TIMIAwEsgCwttIY4YtbfkeB4YLLcsjlZ
+	 nz2xZEH1C/YJ9YaO/y6ogOD0fTzo/Me7AaL8H1e6qmsGqtN10cu2zlIWrgi/kBM+wB
+	 MLMQ5Nu7I9HGgwHt0MM4z7x8pDENFn2pbc5+hHJXjTo72OrLTLBFDOSBdGX3dhDSSR
+	 bBHJNI+ivrnkPZM/X8KAU/N3tBO5EDmY8B4PfVrayskaUDgvp1GxwKuytbBEbHXGe0
+	 YH8p3wDfYo7OWUEof1MPQcH304m2+9ot0CEYIxjGL8lrPtQDY3oiB2v6/T7dtKSTT+
+	 AiBAUdcvR+i4g==
+Date: Sun, 1 Nov 2026 01:07:37 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+ <lenb@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski
+ <brgl@kernel.org>, Sven Peter <sven@kernel.org>, Janne Grunau
+ <j@jannau.net>, Neal Gompa <neal@gompa.dev>, Guenter Roeck
+ <linux@roeck-us.net>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Griffin
+ Kroah-Hartman <griffin@kroah.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Sebastian Reichel
+ <sre@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim
+ Van Sebroeck <wim@linux-watchdog.org>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-leds@vger.kernel.org, mfd@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-security-module@vger.kernel.org
+Subject: Re: [RFC PATCH 00/14] Add macsmc support for Intel Macs, replacing
+ applesmc
+Message-ID: <20261101010737.203951cd@jic23-hlaptop>
+In-Reply-To: <20261029085504.3547-1-atharvatiwarilinuxdev@gmail.com>
+References: <20261029085504.3547-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -61,52 +85,136 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Mingyou,
+On Thu, 29 Oct 2026 04:51:57 -0400
+Atharva Tiwari <atharvatiwarilinuxdev@gmail.com> wrote:
 
-In the v15 cover letter you say you have no Redmi device and that
-tests are welcome. I have a Redmi G 2022 (board TM2135, BIOS
-RMGAD6T0P1313, Arch Linux, kernel 7.2.11) and can test this series
-on it, and later versions as they come.
+> applesmc is very old, and all of its code is lumped into one
+> driver. Fan control, sensors, the light sensor, the motion
+> sensor and the keyboard backlight in a single file
+> with its own way of talking to the SMC. It is hard to extend
+> and to support new machines.
+> 
+> This series adds Intel Mac support to the macsmc drivers that
+> were written for Apple Silicon (the Asahi implementation).
+> The SMC works the same way on both platforms, so we share a
+> lot of code with Asahi. Only the way of talking to the SMC
+> differs.
+> 
+> To make that work, patch 1 splits the macsmc driver into a
+> common core and a backend. The existing RTKit code moves into
+> its own backend. Patch 2 adds an ACPI backend for Intel Macs
+> with I/O port, MMIO and interrupt support. After that, each
+> function gets its own small driver using the standard kernel
+> interfaces (hwmon, IIO, LEDs, power supply, RTC, watchdog),
+> instead of one large driver doing everything.
 
-On October 23 I sent you and Armin a report that bitland-mifs-wmi
-does not work properly on this model, with details from the
-firmware's ASL. It arrived during the merge window, so it may well
-have been missed:
+Are we looking at ABI changes as a result of this? That
+tends to happen with split ups of unified drivers and mapping
+them to more standard kernel subsystems.
 
-  https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYdW-TU=
-gdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50I=
-SIc=3D@proton.me/
-
-Reading v15 (I have not run it yet), the quirks table seems to cover
-most of that:
-
-  - skip_ac_type_check avoids the AC type query (0x1300), which on
-    TM2135 returns a bare Integer 0xE000 and makes "performance"
-    fail with -ENODATA;
-  - accepting function =3D=3D 0 in Set replies matches what I see here:
-    the EC switches mode, but the reply carries function 0;
-  - handling event 0x16 as WMI_EVENT_PERFORMANCE_PLAN_ALT covers the
-    mode change events this firmware sends.
-
-What TM2135 would still need is a DMI entry with its own profile
-table, because its firmware uses 1 =3D balanced, 2 =3D quiet and
-3 =3D performance instead of the default values.
-
-If that is useful, I can:
-
-  1. test v15 on this machine and send you the results, including
-     the Fn mode hotkey events; and
-  2. send a patch on top of the series that adds the TM2135 DMI
-     entry and profile table. I would base it on the base-commit
-     from your cover letter (9d3475065167) unless you prefer
-     another tree.
-
-Please tell me whether you would rather fold the entry into your
-series or have it sent separately.
+What is the plan to handle them if so?
 
 Thanks,
-Arsenova
+
+Jonathan
+
+> 
+> On Intel Macs these drivers replace applesmc (hwmon, light
+> sensor, motion sensor and keyboard backlight) and acpi-sbs
+> (battery and adapter). They are mutually exclusive with the
+> drivers they replace, so only one is used at a time.
+> 
+> This is an RFC to get early feedback on the design. The macsmc
+> split and the Intel Mac backend touch fundamental parts, so I
+> would rather change them now if maintainers ask. After that I
+> will test the series on more macsand send it upstream as a
+> proper series.
+> 
+> The series is organised as follows:
+> 
+>   1      Split macsmc into a core and backends
+>   2      ACPI backend for Intel Macs
+>   3-6    New drivers: watchdog, IIO light and accelerometer,
+>          keyboard backlight LED
+>   7-9    RTC support for T2 Macs, a T2 detection flag, and
+>          disabling the broken ACPI RTCs
+>   10-11  Power supply support, replacing acpi-sbs
+>   12-13  hwmon support for Intel Macs
+>   14     ioctl for userspace access to SMC keys
+> 
+> 
+> Tested-on: MacBookPro16,1 , iMac20,1 , MacBookAir4,2 , MacBookPro12,1 ,
+> MacBookPro15,1
+> 
+> NOTE: Almost all drivers have been tested except the motion sensor
+> driver as i was not able to find any device that had one.
+> 
+> Atharva Tiwari (14):
+>   treewide: Add backend for macsmc
+>   platform/x86: add backend for macsmc in intel macs
+>   watchdog: add driver for apple smc
+>   iio/light: add new driver for macsmc
+>   iio/accel: add driver for apple SMS
+>   leds: add support for macsmc kbl
+>   rtc: add support for x86 macs in macsmc-rtc
+>   treewide: Add a flag to detect the Apple T2 chip
+>   treewide: disable other rtc's in t2 macs
+>   power/supply: add support for x86 macs in macsmc-power
+>   acpi: disable battery and adapter for x86 apple machines
+>   hwmon/macsmc: add more types
+>   hwmon: add support for x86 macs in macsmc-hwmon
+>   mfd/macsmc: add ioctl to access smc keys
+> 
+>  MAINTAINERS                                   |    2 +-
+>  arch/x86/kernel/quirks.c                      |   37 +
+>  drivers/acpi/acpi_tad.c                       |    4 +
+>  drivers/acpi/sbs.c                            |   17 +-
+>  drivers/acpi/x86/utils.c                      |    4 +
+>  drivers/gpio/Kconfig                          |    2 +-
+>  drivers/gpio/gpio-macsmc.c                    |   13 +-
+>  drivers/hwmon/Kconfig                         |    7 +-
+>  drivers/hwmon/macsmc-hwmon.c                  | 1126 ++++++++++++++++-
+>  drivers/iio/accel/Kconfig                     |   10 +
+>  drivers/iio/accel/Makefile                    |    1 +
+>  drivers/iio/accel/macsmc-accel.c              |  248 ++++
+>  drivers/iio/light/Kconfig                     |   11 +
+>  drivers/iio/light/Makefile                    |    1 +
+>  drivers/iio/light/macsmc-light.c              |  189 +++
+>  drivers/leds/Kconfig                          |   11 +
+>  drivers/leds/Makefile                         |    1 +
+>  drivers/leds/leds-macsmc.c                    |   69 +
+>  drivers/mfd/Kconfig                           |   15 +-
+>  drivers/mfd/Makefile                          |    2 +-
+>  drivers/mfd/macsmc-core.c                     |  362 ++++++
+>  drivers/platform/x86/Kconfig                  |   10 +
+>  drivers/platform/x86/Makefile                 |    1 +
+>  drivers/platform/x86/macsmc-acpi.c            |  642 ++++++++++
+>  drivers/power/reset/Kconfig                   |    2 +-
+>  drivers/power/supply/Kconfig                  |    2 +-
+>  drivers/power/supply/macsmc-power.c           |  751 ++++++++---
+>  drivers/rtc/Kconfig                           |    2 +-
+>  drivers/rtc/rtc-cmos.c                        |    4 +
+>  drivers/rtc/rtc-macsmc.c                      |  126 +-
+>  drivers/soc/apple/Kconfig                     |   14 +
+>  drivers/soc/apple/Makefile                    |    2 +
+>  .../macsmc.c => soc/apple/macsmc-rtkit.c}     |  185 ++-
+>  drivers/watchdog/Kconfig                      |   11 +
+>  drivers/watchdog/Makefile                     |    2 +-
+>  drivers/watchdog/macsmc_wdt.c                 |  140 ++
+>  include/linux/mfd/macsmc.h                    |  104 +-
+>  include/linux/platform_data/x86/apple.h       |    5 +
+>  .../platform_certs/keyring_handler.h          |    8 -
+>  security/integrity/platform_certs/load_uefi.c |   38 +-
+>  40 files changed, 3786 insertions(+), 395 deletions(-)
+>  create mode 100644 drivers/iio/accel/macsmc-accel.c
+>  create mode 100644 drivers/iio/light/macsmc-light.c
+>  create mode 100644 drivers/leds/leds-macsmc.c
+>  create mode 100644 drivers/mfd/macsmc-core.c
+>  create mode 100644 drivers/platform/x86/macsmc-acpi.c
+>  rename drivers/{mfd/macsmc.c => soc/apple/macsmc-rtkit.c} (70%)
+>  create mode 100644 drivers/watchdog/macsmc_wdt.c
+> 
 
