@@ -1,87 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793530018;
-	b=kNjdDsryqJYW2CoiYtecXaDuMd6yhcaiFoZGDloWJMVikLv/P/dVwc4NIOdHsfZP02Cs
-	 pl/3ivfnH6RDsdSgP3DXuw4s6yvLpbPpDUzCdNMrwWTFQcuUVMR/3js7TJ1TroXdU0K5x
-	 60BD5vCQZrxQoUcxfBD162u3Kz+P1D/4sv3HeMGQlK7mV/3kFlVaxxMmuTGjSiVTjNzxP
-	 ytVVkQEpbCODtfSlgICvWcGKv8LmnTHMASZqhfTNTfE48dp5rRtmqP+4FxU1/Ox/Jb5Fr
-	 WH92lTela87erpvmTztK707i0URVEE3SrhTpczko/+OCeTH9QAk/3uf5qcVrc6jIw1Q==
+	t=1793530022;
+	b=KmGcd8ysi60E47kX0aCPDTILGSxj3EDQ5WbWglLMOnIE7DcRRlZjh8fgLcmw1PvDxmEH
+	 8PZL2RJ1WXhP0VOQGJVLjnCSLlVTD+y6SXCFcSdTOIFVImssTvEOuSqXFUUUf44j2YL96
+	 pe8EOlkIRyw/7aHnsdVoynBGIdm7Ivy3cUo61MyEhoSrwC9h2FQIr/aLDc6OdwwBwBSnG
+	 gTpG0SYwM/Dxm8+UHbNj/gdB1vUz4c0NhcjVlvln6+/z2DEO+xuRe5KgGz/RQtNtfZKLs
+	 C1qj2wFnAhxDMY4nyUyMmSdTxGBCOSvShNXB0DRbbFK6tDuIExcTy7YS+pUgJ9oHfRQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793530018;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793530022;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=7G9vF9OS16E0g31UX34geJPbbud9xS33YqrpYdPUMwo=;
-	b=UUvvICGWFJXPreCUaJOCl7K/6L1BiSKfhVs1G6hwD4dmaGSTcJWQDde6jYgjCQZzBYU9
-	 7xlgQ3FhV6+0uM8h9v9ktjlpGUnb4qlnnjWEU2vqAM+Dfq7gUzad+tcw2NPTZQA5Sa2N2
-	 p3WXcE62em/iye2kWHq3LceW1tKqszoMwaZlwnv/8vVh5Fiy91v4ftauygJ7VE44bks0O
-	 iUWkewc5BHJmyZkV1AsGoGiYZjN7Xn271W+pm+d8eFr/3XMXjVH3WmHFnVw4olO2Uz654
-	 lKoBcQy4VCxk01JGLGmYfrbo4VJTe9gWHH/2E4BzFXWDOeU/paTzzHnKwf7YEOJ+8AQ==
+	bh=hqMFp7OoaihnU8SvIdhdeXnsjyjS2fMQMMOIfDJThPc=;
+	b=NlGFCE0iP9KnBwFvhnF8C8VCqwOC2Y3iN7zbrLOnqpvz7lYm48MMeq531/BokVZjA++2
+	 0NsOKV3QC1Ebe2Q+scGK8bjbKHdq/TDlHBIM4mjU90X4azeUjIamCohKutpZF9U2z6MJ8
+	 Lz8Tjgwt6ILv3gDQReOwcsNalJkaS/Zf0Fek22dgI8Cc5Geh3RzunBIEM1eZfZ4AP9lHq
+	 zxb7/J1H1VWmde4T9r+h53UjLII7dBeDpnj0J8ew0JhH8KcCC2xd55zNvf4uV3rabwLq2
+	 yCmIVnmRi22M/Yx1doxF6/t4DUJSewoECOom4/E4MDJq79X+inStYDrRrU/eaJ1EdwA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D5NoKQzc;
-	arc=none smtp.remote-ip=209.85.128.51
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dMyzMMgo;
+	arc=none smtp.remote-ip=209.85.128.50
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E77606A330
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 10:46:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 87E77606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F29606A338
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 10:47:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30F29606A338
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D5NoKQzc
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a549cd7fd2so18137835e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 02:46:58 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dMyzMMgo
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so21312865e9.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 02:47:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793530017; x=1794134817; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793530020; x=1794134820; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=7G9vF9OS16E0g31UX34geJPbbud9xS33YqrpYdPUMwo=;
-        b=D5NoKQzcOhGbdR3DBrqW2mnxCLFInSyDjJH/+62YKTx0X38vQhc0vCYMBkzpHK6ymy
-         ojU36Lg0xAj5NCCRLOLESGFqMcgx3+01OGf9fHep8bcKrI0/XANmkKByV4QuqjtGZBM+
-         7vqshWMC8YbcujGmfcvqq6kI0L5EusmF8CfkQicmO/0vuyhAVoiCIo9170VnG0tWkyYS
-         0z5dMP7QJKk0Ylbu6Wo04qPRi/l/f+1VYSgr49ZS60iRBTt6btidI0JBWNWQ0NrfBKpl
-         jyI0O4p6VYliMAfJtARMbVyi2ggH6S8I8qE/omv1YL4NqENqwIEOn/dbWDS5jHItVOdF
-         Mxtw==
+        bh=hqMFp7OoaihnU8SvIdhdeXnsjyjS2fMQMMOIfDJThPc=;
+        b=dMyzMMgoxz7oJACKph8xEWuaqrJKYCGA9WlXHE/rkVINGGmcpWoadzTxxGpjROCj8y
+         m0o5xGih1eEtO7+IydlNA6ibzyL3dnkR9y5pGuNn4W/3MuOLzLrlRTswTRGPHwUuQ33P
+         wxjiRMozLBjqwe5Ayk1dydUutBzLTPRMwjB6eEKu/vTNcNatIZ8gAJMmFa+etbwFwjLf
+         NjWmXTdy5RIfpfj76FlRgqqRII4zS1j1AJkhlh+ehpej7x4SJrpAi67Dl3hv1pHytrTV
+         KEoNeZJwAyM0koJaEVsl6TpYOBp5hQVNuOClY/A8qCEBZnvnSW4dXWMjFFVMD/2UScLc
+         sehg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793530017; x=1794134817;
+        d=1e100.net; s=20260707; t=1793530020; x=1794134820;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=7G9vF9OS16E0g31UX34geJPbbud9xS33YqrpYdPUMwo=;
-        b=aD7TuTnC8k61FKbMANCEm0+aoNrUGboURJs6xVevqUuAcHLR9YxUWoFsm4dc51AhTa
-         6v2LhJko8cG4gWFJLuiPW0TMu/Vbb3BeekpeWBSeo10xuVYmeQmeFDm0el1RgPZocNue
-         qfpnJArS1oWrS/X0EnNtjvIShTXbqjxVR154kZ+XjQdYYgoE4IkXAr+NnBFaXwu4MCJL
-         VpjtFN2hecegH5nsfjy1gyHn4CzwzOzQzCrtnsbhiniUWTONxTR5Fvb/CkPgvGPtTLWi
-         xclpwz686oFVXwm0DUGPHu4PwiKM6vfbvYIJZwG1hwe4cCKtYYY/R+LxcPXEtZ//3Wal
-         EBmw==
-X-Gm-Message-State: AFq9FYJawAL14AVcV43V0C+xKIyf+TOD+iypaaW7rd/18gvs93KPFXji
-	yDqUlohFNor5KU8oaaPOi1Ad46zz5mXvt58n0/kqZhDvp11XNSuJTVQM
-X-Gm-Gg: AYBFou2T91o0x1Ct14EMQzUuBi7+FwR1kANDVOWSRtVZ+lONeh77+nT2AkrcJqj4F2B
-	5z8H25m1Eq/N8StDomi1fHEwXkUBn0xXJvPN3gsP1zGScYfPqNaLYoO03wiK22e0YPr/j8/b+B/
-	WyH2O29pEX97Lmzn+OTQtkDU5Exw9g9SjdmnzrUNb1qbXrXQ99VUMq78HEL9F3YfPhYsiOfilk5
-	ywU3/tOvuWdwMhwpwpN7kVrB+y5dnDCXG/VRe7+rwGQDfNfwx2dv0Z2yCOzu337TIs/PnIFBX7Z
-	sqzsqg+mr6UNrWGRkgxbRJ7jPZfS1wFu/JakjiyeZnaPzK6GSI0sb5UIJPhNRoc2SdGlZdO048e
-	DJISCa8x7m5k+ANXALYhq3eCVCgKWs3/xW9iDpQlGVB32mVpDKxzQ9O6iMIWL9lt8CcuOxR5kiE
-	GXmkXyPNOhDt9mv6CBdr4l6vTdRVKnCFaPGQHn/z7GBLil0HEwcJKUwZ9JmLKhWZoPlg0d0zvTM
-	vz1nq4o5aFApjyJrYkkhAg5TmsjoD1Td/EoldWgFwY/Z9GgHLGkmkjyigonpm5Tv2c4gucVOIvT
-	ukg7VA/vKr6TlsSyScK2t3h/qPA=
-X-Received: by 2002:a05:600c:8116:b0:4a0:20b4:ba93 with SMTP id 5b1f17b1804b1-4ac17e10724mr168860485e9.16.1793530017002;
-        Sun, 01 Nov 2026 02:46:57 -0800 (PST)
+        bh=hqMFp7OoaihnU8SvIdhdeXnsjyjS2fMQMMOIfDJThPc=;
+        b=m7YJUdj1KxLfnceCh/y5M1WlmAecYXfdon+jWuO4K6OUC2V1jkPvCGQEBTlhwIGTXA
+         oPs9hjsiQbXokYmMQYvnmiO86dEkiXL00bHtMljlnwnM+XmqHks00/mvuUwxHivRfDd4
+         oqEjLrfG71LHillDbDYllooilI9GTRrZj16oLWsJTGtlZGhpl/n5tbSOD9XThbk3u5oC
+         EJMIqs19YKFbbbuQnNOQ7GBWfOZ8sPaZzZ/6qW1hv79ruI9ItKIGUZ0Ey7TxBIGY5mLr
+         q6Sx3uOfwrLCjGBnNwy9fQgTW1y65gAkYPbJzYG+7qM5TQF55AVNygY9uSxq/FA04XlQ
+         0WZA==
+X-Gm-Message-State: AFq9FYI50h/RGOdGSrAz9E2pnFzq1fTgmglaUXNser4AH3CCBKmQFE9q
+	Ijpo/fUOYwU/0mpWH5GJpmqBiiyHwJSeRCRP+AxHZLVywcZO1ZW2D/J3
+X-Gm-Gg: AYBFou1Qx2+892H3i8yp9nVcPh05GOTmHzVW9ugiAnPJ9IEhxRyt0gz2xUi9iAZNqeS
+	SP1by2AVZ86QXFgUcHGAGfD1Ugg3ekElivOz5SIJxrIYObGEpZO/pYDuIBoM585/EvLmuS+TLDA
+	DCA9z/vIGuIZPWKsepDpwwvDEPod3ztYkEc9FpZfHZFLI82cR3X8GQ86J0p8xTTTb4wpWHgFQwR
+	qnAEfxDKrP969TZgEj+PTl4U3h9qopn4SW7SxobyprQE1VbxFTB0Maeq+KgCaebJHjgEygp4wOl
+	6aDO9xKOJmnYyiAgAmF6lmPcCJwGW0NjzR3SRtXo6/4CRh6qzKGdhMSMIPwWNqJnbSmTaUL/eiA
+	4QoRSiwsZHbJXxbezNTCX8Ls+sBY+jH7in+mbEO25bM0jUAMVttkif4N5oVNr1zhx/12X425yG7
+	YijbOUrz3ZwUPkVVPfY4fHfDP28LiohqWy6YCsfqYYUbZBGvuRIQs9l+NMbdgGKgetw/1aDMZDB
+	z2yduwZLU6nZ1tX+Cz24u+YZfXGRGughbnVPBul3O75j77Se8oTa6Cws2m7oJUhKFr3rH1J7+Gv
+	Ik5Vsrh+GNgrf840Ipxuyu+/GQQ=
+X-Received: by 2002:a05:600c:1f93:b0:4a0:1fb9:2f51 with SMTP id 5b1f17b1804b1-4ac182dbc34mr156760555e9.14.1793530020382;
+        Sun, 01 Nov 2026 02:47:00 -0800 (PST)
 Received: from [127.0.1.1] ([85.105.252.11])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4aa7f322c46sm255602715e9.2.2026.11.01.02.46.53
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4aa7f322c46sm255602715e9.2.2026.11.01.02.46.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Nov 2026 02:46:56 -0800 (PST)
+        Sun, 01 Nov 2026 02:47:00 -0800 (PST)
 From: Bartu Alev <bartualev@gmail.com>
-Date: Sun, 01 Nov 2026 13:46:41 +0300
-Subject: [PATCH 1/7] platform/x86: asus-wmi: dump buffer replies in the
- debugfs dsts file
+Date: Sun, 01 Nov 2026 13:46:42 +0300
+Subject: [PATCH 2/7] Documentation: ABI: document the ASUS custom fan curve
+ attributes
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -93,7 +93,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261101-asus-fan-floors-v4-v1-1-b8d1c31a99a9@gmail.com>
+Message-Id: <20261101-asus-fan-floors-v4-v1-2-b8d1c31a99a9@gmail.com>
 References: <20261101-asus-fan-floors-v4-v1-0-b8d1c31a99a9@gmail.com>
 In-Reply-To: <20261101-asus-fan-floors-v4-v1-0-b8d1c31a99a9@gmail.com>
 To: Corentin Chary <corentin.chary@gmail.com>, 
@@ -105,88 +105,90 @@ Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-api@vger.kernel.org, Bartu Alev <bartualev@gmail.com>
 X-Mailer: b4 0.15.2
 
-Reading dsts calls asus_wmi_get_devstate(), which uses
-asus_wmi_evaluate_method().  Because that helper handles only
-ACPI_TYPE_INTEGER and leaves other return types zeroed, methods
-returning an ACPI buffer read as 0x0.  This affects fan floor tables
-(0x00110026, 0x00110027, 0x00110033), fan curve getters (0x00110024,
-0x00110025), and TUF RGB readback (0x0010005B).
+asus-wmi has exposed custom fan curve attributes since 5.17 for CPU
+and GPU fans, and since 6.6 for the mid fan, but the sysfs ABI was
+never documented.  Document the existing attributes before adding the
+firmware fan floor tables.
 
-Evaluate the method through asus_wmi_evaluate_method_locked() directly,
-matching the call node, which keeps execution serialized against other
-WMI operations.  Format integer replies as before, dump buffer
-contents with their byte length, and print any other type as t:<type>:
-
-  DSTS(0x110026) = 16 bytes:
-    00000000: 00 00 00 00 19 30 3a 4a 00 00 00 00 00 00 00 00
-
-The sentinels 0xfffffffe and 0xffffffff continue to return -ENODEV.
+This includes several embedded controller quirks: point Z is limited
+to the temperature decade [30 + 10 * (Z - 1), 39 + 10 * (Z - 1)]
+degrees Celsius, the EC clamps uploaded thresholds to that decade
+while reads return the raw byte written, fan speeds step without
+interpolation, and downward transitions use 5 degrees Celsius of
+hysteresis.
 
 Signed-off-by: Bartu Alev <bartualev@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c | 46 ++++++++++++++++++++++++++++++++++-------
- 1 file changed, 39 insertions(+), 7 deletions(-)
+ Documentation/ABI/testing/sysfs-platform-asus-wmi | 59 +++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index b33ebdb21aa21..c55f469cb03dc 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -5038,16 +5038,48 @@ struct asus_wmi_debugfs_node {
- static int show_dsts(struct seq_file *m, void *data)
- {
- 	struct asus_wmi *asus = m->private;
--	int err;
--	u32 retval = -1;
-+	struct bios_args args = {
-+		.arg0 = asus->debug.dev_id,
-+	};
-+	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	acpi_status status;
-+	u32 retval;
-+	int err = 0;
- 
--	err = asus_wmi_get_devstate(asus, asus->debug.dev_id, &retval);
--	if (err < 0)
--		return err;
-+	status = asus_wmi_evaluate_method_locked(asus->dsts_id, &input, &output);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
- 
--	seq_printf(m, "DSTS(%#x) = %#x\n", asus->debug.dev_id, retval);
-+	obj = (union acpi_object *)output.pointer;
-+	if (!obj)
-+		return -ENODATA;
- 
--	return 0;
-+	switch (obj->type) {
-+	case ACPI_TYPE_BUFFER:
-+		seq_printf(m, "DSTS(%#x) = %u bytes:\n", asus->debug.dev_id,
-+			   obj->buffer.length);
-+		seq_hex_dump(m, "  ", DUMP_PREFIX_OFFSET, 16, 1,
-+			     obj->buffer.pointer, obj->buffer.length, false);
-+		break;
-+	case ACPI_TYPE_INTEGER:
-+		retval = (u32)obj->integer.value;
-+		if (retval == ASUS_WMI_UNSUPPORTED_METHOD || retval == (u32)~0)
-+			err = -ENODEV;
-+		else
-+			seq_printf(m, "DSTS(%#x) = %#x\n", asus->debug.dev_id,
-+				   retval);
-+		break;
-+	default:
-+		seq_printf(m, "DSTS(%#x) = t:%d\n", asus->debug.dev_id,
-+			   obj->type);
-+		break;
-+	}
+diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+index f9825c6150b5c..775ea88625c0d 100644
+--- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+@@ -238,3 +238,62 @@ Description:
+ 		Set if the MCU can go in to low-power mode on system sleep
+ 			* 0 - False,
+ 			* 1 - True
 +
-+	kfree(obj);
++What:		/sys/class/hwmon/hwmonX/pwm[12]_enable
++Date:		Oct 2026
++KernelVersion:	5.17
++Contact:	Luke D. Jones <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Bartu Alev <bartualev@gmail.com>
++Description:
++		Enable or disable the custom fan curve of the CPU fan (pwm1)
++		or the GPU fan (pwm2).  Reads return 1 while the custom curve
++		is enabled and 2 while the firmware controls the fan.  Writes:
 +
-+	return err;
- }
- 
- static int show_devs(struct seq_file *m, void *data)
++		    * 1 - enable the stored curve,
++		    * 2 - disable the curve and let the firmware control the
++		      fan again,
++		    * 3 - reset the stored curve to the firmware defaults and
++		      disable it.
++
++		Enabling validates the curve: temperatures and duties must
++		not decrease from point to point, otherwise the write fails
++		with -EINVAL and the curve stays disabled.  Writing any
++		writable pwmY_auto_pointZ_temp or pwmY_auto_pointZ_pwm
++		attribute disables the curve, so a changed curve has to be
++		enabled again.
++
++What:		/sys/class/hwmon/hwmonX/pwm3_enable
++Date:		Oct 2026
++KernelVersion:	6.6
++Contact:	Luke D. Jones <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Bartu Alev <bartualev@gmail.com>
++Description:
++		Same as pwm1_enable and pwm2_enable, for the mid fan (pwm3)
++		of laptops whose firmware exposes a third fan curve.
++
++What:		/sys/class/hwmon/hwmonX/pwm[12]_auto_point[1-8]_temp
++What:		/sys/class/hwmon/hwmonX/pwm[12]_auto_point[1-8]_pwm
++Date:		Oct 2026
++KernelVersion:	5.17
++Contact:	Luke D. Jones <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Bartu Alev <bartualev@gmail.com>
++Description:
++		One point of the custom fan curve of the CPU fan (pwm1) or
++		the GPU fan (pwm2).  _temp is the temperature threshold of the
++		point in degrees Celsius, _pwm is its duty in pwm units
++		(0-255); the driver scales the duty to the percentage the
++		firmware expects when the curve is enabled.
++
++		The embedded controller binds point Z (Z = 1..8) to the
++		temperature decade [30 + 10 * (Z - 1), 39 + 10 * (Z - 1)]
++		degrees Celsius and silently clamps the threshold into that
++		decade when the curve is applied, while reads return the
++		value that was written.  On TUF series, the controller steps
++		from one point to the next without interpolating, and a point
++		is left downwards with 5 degrees Celsius of hysteresis.
++
++What:		/sys/class/hwmon/hwmonX/pwm3_auto_point[1-8]_temp
++What:		/sys/class/hwmon/hwmonX/pwm3_auto_point[1-8]_pwm
++Date:		Oct 2026
++KernelVersion:	6.6
++Contact:	Luke D. Jones <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Bartu Alev <bartualev@gmail.com>
++Description:
++		Same as the pwm1 and pwm2 curve points, for the mid fan
++		(pwm3) of laptops whose firmware exposes a third fan curve.
 
 -- 
 2.56.0
