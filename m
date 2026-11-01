@@ -1,59 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.21
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793553446;
-	b=C9NZq4/TBKeSU8Ryo27CmDFxDLhGhOp23o01V2+qBoOqEt7pDCP/AQuFXTavbDhNhAln
-	 TSFKJDzLaJplmcaGH1uSHktx/SfhOkWRX1A0peu7fy4ylsswBS5YvYk6p22w2zyzIOVVG
-	 T1n7FBG484t1gJ2knWNNJR68FX312DJdyVziFneHg5q9Nt61wtEt7y1EWf8UBLWVvsUEo
-	 fUhFrsPjO3FCIYkTEoruHZocCRMfcq9jU4QlgNGlXut4zxDovS3M4eSKtvVMo+Nkm6iZo
-	 C97GeToDR5LeNo9MC2s/ryzoSMokLRc+dyJtXl9i9jdwcIX9kLi96TivNpy9AKMH1hw==
+	t=1793553794;
+	b=W3b6kkWaFSLpEi9NWntTI+IMmyLy9RdQw4hJKfUrRJ4gfa2f0VoCRiiLaMzSfUfzXk9o
+	 EXDE+152N+/rdvl0eWYthcHTv7d4B2cvhlXufw8XfMFwQSsvPk3nQirMtDaHzmwiyZLGa
+	 764jApeXprg/FkUj+NDBVeTx51eVYF6dXiGDh00o+y7Ybuht/f7wXcZKwTxR/BPah0aCC
+	 D/Zrw7NHS9U02s+Kupl8wXJM2NwCrLhNk36/CnFxKmzAe5/it0jm5+6VQo45vi+A0TrW7
+	 a4j6IaamdeI2TOwCHSwT+bSm6r8iM6DRo3eJDp8DD7cp0MCKA71gQlh73QVhjzjHXVw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793553446;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793553794;
 	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:
 	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
 	 Content-Language:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
-	bh=x/OUTsZyLLVprYXSSUx3mVYubzv32ZbBuaaPtXo4r9Q=;
-	b=lMhFBGEmXMLd9uv7yNeJj7cSeyuJQ+ZcPCHR7Z0QVoTfWhxIKdFVHf0ZXvvkXXhcQD2T
-	 m/KYpfsJ/Q01tCC/2bwsDO1mMVduJ1u2CYsRq7bJ+NkLaPVqfJnJ5W6eluUbIlsbfZMbf
-	 USBx5l4DMawU6lBYZsbqK8HAq9ZeJiAUjMrbHZ97AI7Pw90BES03wI38ZZ37QjPNjvsa2
-	 H1eQ3aYkypn0jfW5NXsqgCdtqYBuNKFjBPIelUhrisQi5X+cKe6jShidgEc9QsaXjpw2b
-	 VJDr/wp5089fFEilbNpTgxKhgQ7QB5p2yJEw/m+aaB31C4b/+RloaLj4r+f89dcH/QQ==
+	bh=rjlm1NLd/OJojriPp5I3Kir/LDQArxR6bfxyFOtWTE8=;
+	b=GK8FEW6Jq7SIXM/VTIUzCDNJDp/M+U8b8Yo6vYMXkirA5uY1ScS+EppPLLmHdLIuPpxK
+	 S4yhDmQogYOZ0fdgDHMnRD2wO54Ax7z00XxyPJ224MvHsUfzcXke82jGkjRq4U1VI/Deo
+	 Qt5kn1dKYJ4IoPikoV0ire0dCL1mfJdWFx6jcwGpNGJogTFQekQEBBqz4i8D6z49t7oRr
+	 rH5BuEhxdctUXuPEiQ2LaokpPJ7tVJMiGPRIyNjB+3gHtkXywCkljfojZXIHaXBl/kT8I
+	 hYBygg/s0LUW3YuCbye1tzR3scRsQyVx118oIGJscZp0260kMAXPHLHeErhwW9HqoWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmx.de;
 	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=nkUMNegJ;
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=quNyzMbh;
 	arc=none smtp.remote-ip=212.227.17.21
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E6E606A325;
-	Sun,  1 Nov 2026 17:17:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81E6E606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FB4606A324;
+	Sun,  1 Nov 2026 17:23:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 83FB4606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=nkUMNegJ
+	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=quNyzMbh
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1793553440; x=1794158240; i=w_armin@gmx.de;
-	bh=x/OUTsZyLLVprYXSSUx3mVYubzv32ZbBuaaPtXo4r9Q=;
+	s=s31663417; t=1793553791; x=1794158591; i=w_armin@gmx.de;
+	bh=rjlm1NLd/OJojriPp5I3Kir/LDQArxR6bfxyFOtWTE8=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=nkUMNegJZbV9DO99imcONWo8oeyMOykzvMZm8cE/9QyPX9vl9ryNhIusQyxfF0Yo
-	 tT0M2p8eDuih2rw2Lqc3+ST8V+BGhGxTSP/SJhbuEuRr+J77nqLynhQZWxH/gNwpS
-	 3Y9m7esyIAJoYOwFgUGrUi/M5Fmsh+DD3Iq4FHHWyvkFWF+u0eXHPrFg4ZLcyDHY6
-	 uCd3ppGAgDOyMmGU4ko9hylleAWk+JjiWuGtNnP5+0JsiHUMbyES7Q24fJOdBXArO
-	 5r57Nuv2Mg4YjowA9wUVt1e3HMYY2lno1V9kqG6p65VCizinopv0JF6SP8X+yu0ie
-	 n/4+cv4iwFZN8nIS5A==
+	b=quNyzMbhkqA6PqoqTgxgeTyfjFnNEk8YP3ISUv1X5TIXw0lKkr9VSoXbAwM3gbII
+	 gB7Mbb3VqBingYEnSVLDVHkWWLFlCvkC7YJYzlHdmKrbtSeeoQZZ2cERwoDIQgA/Z
+	 fg50MVz8XfjnzfHYGFNd5Nayydyk6xfpZeaa4tLylmXI4ACOmy0ytG+Y/pNxDGJee
+	 JVVjvnPFK2s65HcJxiK0DBSEmvrpw32uXdcQxspwC97TzhxeO6dR5eurt8HFD3E22
+	 0arvs7ftcb+1fltA9rCXDEIlhvI7o0LOIv9V0jMLOz4caYI28O3dLGiMxOUOEGXPY
+	 WM7vuqSrbUfgyptpwA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MXXuB-1x1jLE34tr-00O2uO; Sun, 01
- Nov 2026 18:17:19 +0100
-Message-ID: <36f3b14c-f349-4a07-919e-73a2b1427c29@gmx.de>
-Date: Sun, 1 Nov 2026 18:17:18 +0100
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MpUUm-1wlA2N1Alw-00j2dw; Sun, 01
+ Nov 2026 18:23:11 +0100
+Message-ID: <b5c60864-f081-4b39-9ccb-cc86af90827b@gmx.de>
+Date: Sun, 1 Nov 2026 18:23:09 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,217 +64,495 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] platform/x86: uniwill: Add MECHREVO Jiaolong 16K
- (GM6BG0Q)
+Subject: Re: [PATCH 2/2] platform/x86: uniwill: Add platform profile support
 To: dydydd <admin@qb.edu.kg>
 Cc: Hans de Goede <hansg@kernel.org>,
  Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20261023034822.141263-1-admin@qb.edu.kg>
+ <20261023034822.141263-2-admin@qb.edu.kg>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20261023034822.141263-1-admin@qb.edu.kg>
+In-Reply-To: <20261023034822.141263-2-admin@qb.edu.kg>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:r1A6b59FMLJO+wlqK7Jd29cwW6MpJPJvNYgsZRtdpUEm01q83R9
- yql0KJIdcYO7Ivj2AfoQZEjzI9t+TDmvIy5ii4mKkMTBG5IAHXDTcqSMO5EOTe+coJVHVH6
- 7nv5BTuw9WZ6VOhHZsQDCINWZoXEASyUMSaNH0CIj4IeUzabcl9MJDpsz57pSsoD1GWl0OS
- F177fNQ0p3/YAwhPJXbKw==
+X-Provags-ID: V03:K1:jJBTd7tms8VUKqXwbvA1I+Rzu4QbfvOBK4TR7OqNp6xnDKW2iWS
+ uMyfkR5ufBezCVgfI69ory0mgHVoTCfBToTtg0DzSub+Sk6YMI2Bt2T9HC3ce1gCP07PvPi
+ Feq8fYWBeJtj0eeXUtb+aArzX1yzo8STnTLyysLlsGBjcAj0uwrNroY7/6KLcxaDb8onc7G
+ vwWHw4vTFu0xBPy17Cv0A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sI8UMtBWCP4=;Q0WbBJ9QpIy1MOV5pAYmmwDY4gK
- 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
- T9u7u4
+UI-OutboundReport: notjunk:1;M01:P0:7zVLdH38BEg=;p3LkDaSuWtEg61cLNNCFQGERRM2
+ UQ7yLEgU4J4cD+LwxW/v3aFj6LmJpQoYOu4e31atcvZhTIRsp6ohSyDZb5/PF6FsjMRtnHu1W
+ Yr8yZKNQZZjZsxY7LfKj2XA0bB7IvsvQBPmV+kNP6da6uqKF+LrGGjUq5EVW5gIwMXYNVz1NS
+ fCEar3PpQTyDQSGydeEkYr81i8suCNpMChggv5p15OwkbNS1oEQyxNEEEsszsykMbv3zcdVyG
+ sgzMgH5OR/IeKSRj58bPSpBsms4TQ+GOB9Azym3cqemSzFbV4QICAy1CPOnbmgd5foZO/V4Tl
+ mM23h+L0VcfxZ4no+cagpQPSov9QOVWtYqUP77D6YGPnRyf06+GbEU7f4Y6Zc7rHp3PAU29H2
+ jl7Q1CJlgeUTTBijnZ7034dHAbPmUbmCu65Y1NL1o/T6TF/JbulaiT/U6X+CZAv4Sl36I+Luv
+ nltiZPzbCH0UUatSDrhoYq5CWR3zm72T+Cv8xtIP8VUAWz1cibfYSkqfeZevdy9fpHsGgedHl
+ zD+XPMBb6KUVEQ57iQBqRMS3KhApivgsNVsl2ou+siA6owt6Gm7hTa5RMFn1Wy23Oh7SEUtiD
+ ZlNuzHoW2aVrrKfyrttKHLllyA1gE44B84+iBtMkSpykewY2T0e0uWibad+R7H7e22GJJkGxn
+ I4LqxEBmfnxWA1VAQgwz3QMvcQvH82bRFou7piRxZ+ZKGaZywp9V103RS0Imsv0TSM3Qnh4me
+ iZrhOnuVoYt5RH2zEns/8M1uehui3ulA8EnKvrOx4UI/bvlzyZffn96xpTtAbjWmPX3abWin7
+ TiAhZq4Fr/+vSc2txl+M6qH/IdQcthcv6H5ntakZkwvoGC6hxDlcK4g/7SvyLOcJyCH+VuqbI
+ VWEPJoo6Y6zXmYc9UF/0T3Ei+HgTGVNxQ4GVII5feGZmUUI264PEpqec9Pj9x67E++rLY1POu
+ 3qyphwdBM/94NRK4ULwyBqTTntRHI2zlYogwhW+p3eibuXSoDKBcuBWnMI1WSKsRAFNOyxCeW
+ OQ85mWP2/3KhUmaLhgbsOECNoQaNDm79HHoeTsDCo8CC1e7DHB9O/YZeWaX9+FKyKQ1SGnpD+
+ LMa0g314IMYSybhFw+3Ueod7msYqCqZ37Ia6Z0qABk1fFZOSmfINqcLocssDfxCOnv9JsvAdF
+ wzbcRAIkyZKDKeOH0S8PDoIAJgDFVGPg9tmGmejrLETkVmpiK9JJGAGvlDSnbqC+69mlYo4bf
+ BGVv4cRZtB/srSRbBT+Rbs2g8mphGyNaJ0i9Pl0/WiKc6iafbqxLq+duvG2hhWorKRFxvjXTk
+ LHcffsaCpwOFr1YRtjjMDQyd94VSL+WhjtAqqli5StFtVy/mYJsc7jlml4ucAwB+/pGK9m22s
+ sO1cKrCty2UeUufejY7QwNYXwCGpJifLR2MHddQ1plYRodqB9Bbxr7FK2dKb8DmUkSLFk8l4L
+ sfFll8oky/fAn/6jvpveJrK/zZHzES9L+qZrSW7JgwUtFtNBcArBEcwQVofvubniz7OQsMCsE
+ xQkMg9V3E9Ye2vIStbObbhz69bc8iehpJCQSmOyAo4V7QfwGe0hQ2BFaNBuBhKte1fOgoE8zv
+ 1OUmLqDtdadqDPiP1t3pmzGBsx39KmqRavY94YseB1arDh42BIltbVUq8Bkk3+GqPL+JU1I7D
+ 2e4K/T+IxuCIeWNXVq+UZsA3/dTLI9X27Bf6wiT3cohYxrX05dC+4FZPvwCMfDmrgB8tCrjKf
+ vx331z6r7UNOxz/x5WuOvDnWZnxgRvyFq5FpVITQMzvm6USI0WEG2KDyBLVtVSyJvuIVTzLC/
+ 52ECsS4RY4CehAkSgMUUweC+fG+iojiKikRWV8edvODy+j0KbffGAYTGdFwXZxqYawKXyhnSD
+ W8T0o3QDLMJK7GSWegeCXh4X9M/4NzkQU8rpgPD7xnNNxzvSAtvk0IA/CLJ0a/RwR6X1w2T1b
+ lfocURKv74iisOF6zWyMEiB1CNxT5S521wEGeS5c5XGC2JpZ7hg9TIF8Ig80+3mMsudgV76RS
+ Bhs91KWDy39fJj/YeCDhwFZTKmgvKTkGvO05TAcwX3zyNIXKYM7sSIA2ws0ZhpALOVC9SiluD
+ +xiU+r9P67Uk4E9pZmdzAEmDeMcjQrUCK0coU08RMobX8rRpZWTAFE2MfTU1urS5aj4FOlJxF
+ CnLNb8ceDpxSPRaPUNjBmAr7o7vdW7WNSXyotb9OhoLO7k+g1OCEzTlLIseO1IvikIx7yFiNZ
+ Tv6ESkAebY9zFsGInbVek1dx+A/6Lhmi52Y7eThCAxOeW6McqreyXW4lARWd639UrTW919hNX
+ YQ/X6OjXWxKjqoypnJ+tW7eWHhdxnP8OqJ6yYWhSyenJDqsYeXAHtihPsbCFXUOkEHZd1+Yl1
+ WmWdbcazwhvHHP8X0hfHcKFNNjdDpNzTsHfdSqgtqIQbScWOb3lXIbPL2/iC4TNFSEKRoarfy
+ bNIhxM57YTJ4T2AXiM9kPwJheXltTBpO5uDK9YhX46FW3IRfTe5Pg/Ik9kRRS3biPbmsCvFNS
+ ilKGqVfzkMZPM6KUc/lcemMN+JElSSnChpazeDSNTDkK2IOtT/ddSvECxxxyx+DZg1AMXZ0uy
+ O4njPm63Xl7SHtUuptVXBHXsC5iHRPntJ61+SWyc2IbDtVWA1HXV1QfopdLzgmrjJFn2qCap2
+ /Jq8giLaoaYQxb8EGMRceCR8bb7C1I0uKcjX/h5vazEEKTZp59ZsUPUVpV3gMNqC1U9z21T1t
+ LqS0E8t9Yz5oFbzx4DBhCvw6fuWc3+Rlh7mXNyFRW3lL1xG9I0x9lAiyBK1c5ing66tyMrGuH
+ OGOckp61HLt5bdbmuaedS5Yp9aeVquQ2n1su7uYziojsY8Fj6rcy/ASHk6ffyQWaQ+bQYcgJN
+ 4ItFgr6AeRJfebXuQauiO0Q9DimLH+nVyhhe1G1z1cmc5PzPm9rKHm72H/gyukUfiv5T5P/FA
+ GkgxY82ZVeDmsnnlpfcl3MV1Mz5ApqXesqQdjN694RP/fpnVYzK/R1YVT3mhjFAYpzK/NZE5A
+ Zsdgoeb17z/9Qy+V4Y3d1cKtY1girGGYtRsP9VTe8UjrGjsZkLcY85CqCVfOjTGIdJ/szljp1
+ JwKEYuau8ZyHswMlocfs7AdL9Zs10ew3c3JmLFNUaf1A3fFPgk662jbLO6prDhYp+FCqjxJLU
+ sdgA5tDgF4wvsr0hoNypfSvFCESQYbUCMEUcKu50jfkNB7u75IZDM/RAGZiyPfiebJLkSC06p
+ D5/Bzv+c9xPnFZOBzQhrEKLpetFEpHiNakPfdKamWKq/i7Da/pTxxuCw5BfJzoPCo9VIyU5zp
+ UBXJT9fjZhu8nNyb2rv6K73SNgUniH1Rlt2EYkbjUfD15AdMjQhN6oZD6JibKnYUipW/2ov3W
+ 8CvLZ3Nv4Zh7kMrk/ydayVBQs9KScxxDoZzYzqpjPolu1iBrxwVCr+Jz5iQ1Q03ThXXx9Qbgo
+ Oq12hbGo/IazhBIpLHed8oQHQCZg8uQo+eWsi6/r3+n4+WWmtr5/ocSW7/iae0t1MpXe8eU6D
+ OsuOwUobQxbSXdBlU4V1yBE0nOiuiDU4lZlJJe3dg3bit96dfeCfJm/vqyfKp59CaD05+jN44
+ cRFOJiC8L7AAZTa/kk4QN9LRiukgQ59rHdd2P9r5cz7q3qLNYf6uRJIOb0ZRLl9gnz9LIvLyJ
+ cwVDfQk6E8ZGVGBC2fls7ZOndC5HZI1C1LteCKfUBDSoQkjKZOWIeXsHHqPUXNvgijtzNysP1
+ qsFHxjZ9XrzFbdaUt/p5O+vePDJyRoy1+CU+Ol1BWDztZ9BYAmfkUS4P7JlLzl3OHS56nlm0J
+ sVhP2lGYtXteGiWNgleXeD18xPKypWFAB6/nKcPmE8cQI2Zti5DXxnsaUpsRmRgDe0dpRD+Yp
+ 07JfBzyNviYLZ5wqR8eLze3fqz7sYSlwVb+FgLABzZGcBkqSPOBcNWB/cDfIFW6sECIHLo8KZ
+ 75drhZoe3A1NvxJ41daVMhB347p7l0Dytul26dJUvSq3wK+OV4WYfTmSg9iFf57z0SZLdEO4J
+ a1RqVy+mYZV6xSKFVeuQiFlI+3pzLM3Hah9T9kEtYNUdorRdammWaeKV3YaUMbme6kPPINzLo
+ eZ0uhHKekt8fGryHLKwKPIf4o0gSvf9qQ00dt9upz6xd8mtYryvyqJJ/O0Z6QlAzOhAc4tqpn
+ iohktTpiKXcaJjwOJwURytpfB0/MxEOSi15Z/h+9Qk2lyV4p4viO2DGbaCS/oCI8pd5XJNN/2
+ YOB+A68O0yAdVmKcSCatQ737vORsyhk7H4APGXsL7zehRZCLxQaMCvzKTVZ07sVQ9ITUVGtKI
+ 9ICl3W6uWJmQDAjtbK9Q1rUsJCoofU9wuwO/uM1Ui/tPBsvQSFUAKbdrBGJobNnl11K7ssx/h
+ 9ueOXaBOI1RumKBsqIDDquVZQ3BMpqRHb9/BXkz8AEwiKgFfsQ1/JBNqJOGqd+575BuNZKP2P
+ UZmRj/Q98gEC6EjyEfxjGFNpQdNVc31cXpOdTxCkTZ/tvGXV9gdbigsxUFo6X9dRi0AFtQsAl
+ L56JpR1rDyKk982rmqgBmGZtqkFD1ZX5SVD6QukydeOf0Dlw/ztU7i6BRM00TcdOoOyvPzzyW
+ h2hXpeuiJPNizlI1tjvN2QeMdnI+hEK3l4Ilp7ZxZha+fZZgC6bIRMkIJt393y6wz7lujC07v
+ G8cLVl3vScboQUGxkDWlg4YDWm4ZEWg2tvSNAvMBECsqbBSIwRAfAdkxVFtpARMe0ACpEfayX
+ 3YFIbsIKfTbwTjZCUeFSYc0zInWMfGQffXqyRSyyuo8H3mNV2GPqv9GvydAZipmpAuwAoo3zK
+ TM8X04Y5SNOK1/jVs5JMp9DxIKPoxvd3L/Be32zNZHBFWgZX6gO9gJNS+VgLzURaaj9W0iwQn
+ Oe9tOD0nyGBjQQwbNK2bkt1rwLhzbqX+MqHmhPxpSKsYdddZvSpcw0SdU7T7RDSrXsKDRs7LA
+ ozOgbrcjycQZHTCXD7vxn0REAz4zsvrCDCM1vNVapOu5dCEhtPfJiNZpOYyy53MM8/EOS0bvh
+ yHgkY760RtktueEObNwuZLx7Qb3XPr/J5gM3VIYRGpF67XH/Kljl6d8Y+hoxMDtPBCcC3Yho2
+ yVXy3E8aiPoRsRv0jitwU33b3IBfmpRUYMhmCVg3KWyJN3rOohjyZj3al8A5u5DEnb/wz5DUf
+ GqC+9hqoL5l6neJCip8Go6ems8U+BOCjb4h5BC5la6YV8xClJJW1Z8Evtg7DcaFB426EDzQFy
+ h/LtJZqyqbzCAT1Q5LNuHTHmReGZLc21vwQ1lP+HoQeIf984/3jhy4PK8s57aG5Bn0aIK4jWi
+ tZntaxmfvvarhOuyPCAyXj0FwgaStUITlmPGEMvDe5haAjGtNz02TclwzvbcmIkZNkOOO8FO8
+ 5gZHWNNqXTCb5A4IHyE6s7OIUNT2wL5HGm/EWCT3elkiN5oYS+y5Dnh5pYv1Xk3qRHHDfXhkz
+ 5HouG+c9Ulji8Vd+o8dbfOSz6V1zYzeWC86crYj0nP5paU4KToHUlKSU2Wtx9dIk0SHhXN2Xs
+ dTEwdwHEI1VKeLP03/dUAfl1WqtWVkGUvOVSqDZnrOUkozCnKBmh0J/fTX6ZnxNuLRGBmQtOn
+ Np1XbnWheN/Gce5jp/tsnTbBZSqjzJ40b0hKuT1IMK5wkFysv3uI4coRxFiaaKi0t5tW+di3/
+ 22AGh7S3oCjdw4d8xUqsWnt+9K6MsvBcqBGgn3AbZfM4rqKYC1cX1EG+3G2AvRbo67XHcBdD1
+ QrhtLyu9XyGVSDjuEWNi5E1H4s+TN5jkm0my+FHj3GCRwoKQSgWobu5eSkcgzg9XjAuLq1mt4
+ E1Kvggb6qSWIR+T8DdwpEL0rI4Z9wYFWh3zmQj1vBwQYVFMxJ30Z+MQHukuhoxnmhz3IlKGAs
+ WuxigenJbmLNqj8EuE1VmNnbW1ww7f3KitRjWepv626t4XrEuFnUAPU5vhnsDr6oYNzEvlEPZ
+ ZA4iTZJhUU28eAxl1m80dyaTAieQxYqRiA3cD1yAMoMDETclClES5VDb2znoAKkNsEaGm1esW
+ k2GD/WtnHyR1CExGMYr+8/tt0YdzgsIKOHVtatByrt0j90fiIZkQxTx2+tGFVB46KatjhQxbM
+ ISrc25jhCzstHyk3SU2CP9brFlX1KHRiEdBLSeY3nbMBACBELkQrW0I/TkPlOeeBbJhJzVqBb
+ l75cSTVVFWy8cIjP5G3owq99KpA5Zz1YivgF016ud5hgVGU90DxhbcCo7dKckCYNM6iRs+Obn
+ 5kRaZiWEhrjZkgQl10TBR1di0HFeuqwVoU5S/JHmUv0iTr1MnOFspSNAgRjqEdINepEVpjIPa
+ /V/TVvf0g2SZ50HcOwa2oPmyqR0soTZQc3flYLYK2c2zgv7udEFhRP/orFACB44c3tlMkLzj2
+ 8RR8yFk5LHSRvcwG3GrBuLtUEBf9UGESwCVjWcxaFRuZC39g09b1XaHCBEAAtqJpUYNADFjaN
+ kAuHEAPL6YuibXNRFcA+JyJ2qyutZxMmRqN0AY6CuhZyYdTwOs50MI5PSZtz0Ds0WMCgJFvzR
+ LRHuqnZm6GgeMUChc0iio7zsTsji7iCH4SrGlfIs58uOqAZlCj7DloMEP0zfjrUaeDx2a9gCN
+ sQUGZXfcnOkQzLm+cv1ziIqGwkdobYyGe9wS4Td58KvzIVLkLpfn2R2AIunooMIQJWL1PnN14
+ XHOlaPJX0Rm3hHj4XiPtJeB8qiX+q7Il+ZLpaBREe0tsV3cjCxaCq+DzPpunp6yfT+2gIruLA
+ BhjytHhb4MkFMQG6GJ6xmMjAVe0NkcuvUkbIHUg7EhK2BaAfZz3oYHfCJHsR9YJeP7kY2JtkE
+ HhgXdLVstfknddv7SMVc/vtPqv8AxlG3rbhoe1iQ6yqBeV3ZkYeb/mAqDEdVSGZOslRGqYV3/
+ 0gcdo19e4qNfrjYFFGsgWjXsIkLGrCRHzAnhHRqyKYFryRn+UzKb0H1nxOfct2sindAmFM3ze
+ 4fk2ob5Z3c5DMANFdJ++nGRfx72BthFe1Q9mkc9nd1RiclxZD9rx76T3OQfCHBH3/+0dfNiL6
+ AVpgIWZJBWcabrUV2IsKaOT7xSK1H9acvRPp7JxYhcRGrn3IEH5WzL0nM+KDj4Gqmn9IDmKT5
+ v2Qyuvxvy9SmoAFAQIL9QM9SbAs0zJJmehLFCJtg4rjkhDTgtoGJ5Sfk5xVMbIfEJo20I6sYf
+ IPyg3XVSMYF+X+wvd6PS2oEDWGaVdeGVR1527P7dILAcMZiwbGC/oQu2vXx4zVKRv5hBhP3Ls
+ V3DmDwYsBnEU8nfBvRtNGFec4xN43XEf4B1BcFNuCFJEaMprPr1AYnhSZUEjuwVA3CP/bVPv7
+ MaoYnG7LoNAy5BENDB57G/TXDPz37gmloFJFbnJylJIRzimMfwURpI7O3cE/1vfNKDbhM7f31
+ Ca/81NBozU7lZKxgKGrVKi2Iu+10Zd6xO+uIk7E26shZceosgkMHZ6/TGRH8q89Fcs7fKXVFi
+ VEo7hgldC9f/1VFin6w==
 
 Am 23.10.26 um 05:48 schrieb dydydd:
 
-> Add a DMI entry for the MECHREVO Jiaolong 16K, which is built by Uniwill
-> on the GM6BG0Q board (BIOS project ID "IDQ", EC version 1.24).
+> The EC exposes PL1/PL2/PL4 registers, but the driver did not provide any
+> way to change them, so the admin guide stated that platform profile
+> support was not implemented.
 >
-> The feature set was determined by testing every sysfs attribute exposed
-> by the driver on the actual machine:
+> Add a standard platform_profile device that writes the three power limit
+> registers. The values are per-machine, so they are stored in the device
+> descriptor instead of being hardcoded in the profile code, and machines
+> without known values do not register the interface at all.
 >
->    - fn_lock, super_key_enable and touchpad_toggle_enable are writable a=
-nd
->      take effect
->    - the battery exposes charge_types (Trickle/Standard/Long_Life) inste=
-ad
->      of charge_control_end_threshold, so BATTERY_CHARGE_MODES is used
->    - cpu_temp, gpu_temp, fan1_input and fan2_input report plausible valu=
-es
->    - the keyboard backlight is RGB with four brightness levels
->    - ac_auto_boot and usb_powershare_high are writable
->    - usb_c_power_priority switches between charging and performance
->    - ctgp_offset is writable
+> The EC only latches writes to these registers while manual control (bit =
+0
+> of EC_ADDR_AP_OEM) is asserted; uniwill_ec_init() already sets that bit
+> for the lifetime of the driver, so the profile code re-asserts it before
+> writing to stay correct if the EC drops it.
+>
+> After a cold boot the registers read back as 0, meaning "no limit set".
+> Derive the reported profile from PL1 and apply the default profile in th=
+at
+> case, so the sysfs value never disagrees with the hardware.
+>
+> Tested on: MECHREVO Jiaolong16K Series GM6BG0Q, BIOS N.1.19MRO15,
+>             EC 1.24.
 
-Hi,
+Thank your for your patch. I am well aware that platform profile support
+is a highly requested feature, but we need to implement support for the
+SMRW ACPI control method first, because this method tells us if PL1/PL2/PL=
+4
+control is supported, and if yes what the maximum values are. Also the EC
+contains registers with the default PLx values for each platform profile,
+so having to hardwire those is IMHO unnecessary.
 
-thanks for the patch, did you verify that the individual sysfs attributes
-are not only writable, but also generate the desired effect? The EC will
-simply ignore any write request for unsupported features, so having a
-write succeed does not necessarily imply that the feature is supported
-on a given machine.
+Can we drop this patch and revisit this issue when support for SMRW is add=
+ed?
+I first need to finish full battery support and cleanup the driver a bit.
 
 Thanks,
 Armin Wolf
 
-> This machine has no lightbar, so UNIWILL_FEATURE_LIGHTBAR is left out.
->
-> Tested on: MECHREVO Jiaolong16K Series GM6BG0Q, BIOS N.1.19MRO15,
->             EC 1.24, AMD Rembrandt, NVIDIA RTX 4060 Mobile.
->
 > Signed-off-by: dydydd <admin@qb.edu.kg>
 > ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 26 +++++++++++++++++++++
->   1 file changed, 26 insertions(+)
+>   .../admin-guide/laptops/uniwill-laptop.rst    |  10 +-
+>   drivers/platform/x86/uniwill/uniwill-acpi.c   | 169 +++++++++++++++++-
+>   2 files changed, 177 insertions(+), 2 deletions(-)
 >
+> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Docu=
+mentation/admin-guide/laptops/uniwill-laptop.rst
+> index be50b45b..9442ae71 100644
+> --- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
+> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
+> @@ -38,7 +38,15 @@ two fans. Userspace applications can access sensor re=
+adings over the hwmon sysfs
+>   Platform profile
+>   ----------------
+>  =20
+> -Support for changing the platform performance mode is currently not imp=
+lemented.
+> +On devices that implement the EC power limit registers, the ``uniwill-l=
+aptop`` driver
+> +registers a standard platform profile device. It is available at
+> +``/sys/firmware/acpi/platform_profile`` and accepts ``low-power``, ``ba=
+lanced`` and
+> +``performance``.
+> +
+> +Each profile maps to a set of PL1/PL2/PL4 values taken from the OEM con=
+trol center
+> +configuration for that machine. Writing a profile updates the EC power =
+limits, which
+> +the firmware keeps until the next reboot. Machines without known profil=
+e values do not
+> +expose the interface.
+>  =20
+>   Battery Charging Control
+>   ------------------------
 > diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platf=
 orm/x86/uniwill/uniwill-acpi.c
-> index 7a2eeaec..94ed83ed 100644
+> index 94ed83ed..6d91b8f8 100644
 > --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 > +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -2677,6 +2677,24 @@ static struct uniwill_device_descriptor machenike=
+> @@ -39,6 +39,7 @@
+>   #include <linux/mutex.h>
+>   #include <linux/notifier.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/platform_profile.h>
+>   #include <linux/pm.h>
+>   #include <linux/printk.h>
+>   #include <linux/regmap.h>
+> @@ -369,6 +370,18 @@
+>   #define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT	BIT(12)
+>   #define UNIWILL_FEATURE_AC_AUTO_BOOT		BIT(13)
+>   #define UNIWILL_FEATURE_USB_POWERSHARE		BIT(14)
+> +#define UNIWILL_FEATURE_PLATFORM_PROFILE	BIT(15)
+> +
+> +/*
+> + * Power limits used by one platform profile. The EC keeps these in sin=
+gle
+> + * byte registers, so the values are plain watts.
+> + */
+> +struct uniwill_performance_profile {
+> +	enum platform_profile_option profile;
+> +	u8 pl1;
+> +	u8 pl2;
+> +	u8 pl4;
+> +};
+>  =20
+>   enum usb_c_power_priority_options {
+>   	USB_C_POWER_PRIORITY_CHARGING =3D 0,
+> @@ -418,6 +431,10 @@ struct uniwill_data {
+>   	struct notifier_block nb;
+>   	struct mutex usb_c_power_priority_lock; /* Protects dependent bit wri=
+te and state safe */
+>   	enum usb_c_power_priority_options last_usb_c_power_priority_option;
+> +	struct mutex profile_lock;	/* Protects profile writes */
+> +	enum platform_profile_option current_profile;
+> +	const struct uniwill_performance_profile *profiles;
+> +	unsigned int num_profiles;
+>   };
+>  =20
+>   struct uniwill_battery_entry {
+> @@ -430,6 +447,9 @@ struct uniwill_device_descriptor {
+>   	bool kbd_led_single_color;
+>   	u8 kbd_led_max_brightness;
+>   	u8 lightbar_max_brightness;
+> +	/* Only used when UNIWILL_FEATURE_PLATFORM_PROFILE is set. */
+> +	const struct uniwill_performance_profile *profiles;
+> +	unsigned int num_profiles;
+>   	/* Executed during driver probing */
+>   	int (*probe)(struct uniwill_data *data);
+>   };
+> @@ -619,6 +639,9 @@ static bool uniwill_writeable_reg(struct device *dev=
+, unsigned int reg)
+>   	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+>   	case EC_ADDR_CTGP_DB_DB_OFFSET:
+>   	case EC_ADDR_USB_C_POWER_PRIORITY:
+> +	case EC_ADDR_PL1_SETTING:
+> +	case EC_ADDR_PL2_SETTING:
+> +	case EC_ADDR_PL4_SETTING:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -665,6 +688,9 @@ static bool uniwill_readable_reg(struct device *dev,=
+ unsigned int reg)
+>   	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+>   	case EC_ADDR_CTGP_DB_DB_OFFSET:
+>   	case EC_ADDR_USB_C_POWER_PRIORITY:
+> +	case EC_ADDR_PL1_SETTING:
+> +	case EC_ADDR_PL2_SETTING:
+> +	case EC_ADDR_PL4_SETTING:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -691,6 +717,9 @@ static bool uniwill_volatile_reg(struct device *dev,=
+ unsigned int reg)
+>   	case EC_ADDR_OEM_4:
+>   	case EC_ADDR_CHARGE_CTRL:
+>   	case EC_ADDR_USB_C_POWER_PRIORITY:
+> +	case EC_ADDR_PL1_SETTING:
+> +	case EC_ADDR_PL2_SETTING:
+> +	case EC_ADDR_PL4_SETTING:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -1048,6 +1077,121 @@ static int uniwill_nvidia_ctgp_init(struct uniwi=
+ll_data *data)
+>   	return 0;
+>   }
+>  =20
+> +/*
+> + * Platform profile support.
+> + *
+> + * The EC latches PL1/PL2/PL4 only while manual control (bit 0 of
+> + * EC_ADDR_AP_OEM) is asserted, otherwise it overwrites them with its o=
+wn
+> + * values within a few seconds. uniwill_ec_init() already sets that bit=
+ for
+> + * the lifetime of the driver, so the profiles can simply write the reg=
+isters.
+> + */
+> +static const struct uniwill_performance_profile *
+> +uniwill_lookup_profile(struct uniwill_data *data, enum platform_profile=
+_option profile)
+> +{
+> +	for (int i =3D 0; i < data->num_profiles; i++) {
+> +		if (data->profiles[i].profile =3D=3D profile)
+> +			return &data->profiles[i];
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static int uniwill_profile_get(struct device *dev, enum platform_profil=
+e_option *profile)
+> +{
+> +	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> +
+> +	*profile =3D data->current_profile;
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniwill_profile_set(struct device *dev, enum platform_profil=
+e_option profile)
+> +{
+> +	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> +	const struct uniwill_performance_profile *limits;
+> +	int ret;
+> +
+> +	limits =3D uniwill_lookup_profile(data, profile);
+> +	if (!limits)
+> +		return -EOPNOTSUPP;
+> +
+> +	guard(mutex)(&data->profile_lock);
+> +
+> +	ret =3D regmap_set_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL_CT=
+RL);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regmap_write(data->regmap, EC_ADDR_PL1_SETTING, limits->pl1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regmap_write(data->regmap, EC_ADDR_PL2_SETTING, limits->pl2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regmap_write(data->regmap, EC_ADDR_PL4_SETTING, limits->pl4);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	data->current_profile =3D profile;
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniwill_profile_probe(void *drvdata, unsigned long *choices)
+> +{
+> +	struct uniwill_data *data =3D drvdata;
+> +
+> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_PLATFORM_PROFILE))
+> +		return -ENODEV;
+> +
+> +	for (int i =3D 0; i < data->num_profiles; i++)
+> +		set_bit(data->profiles[i].profile, choices);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct platform_profile_ops uniwill_profile_ops =3D {
+> +	.probe =3D uniwill_profile_probe,
+> +	.profile_get =3D uniwill_profile_get,
+> +	.profile_set =3D uniwill_profile_set,
+> +};
+> +
+> +static int uniwill_profile_init(struct uniwill_data *data)
+> +{
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_PLATFORM_PROFILE))
+> +		return 0;
+> +
+> +	/*
+> +	 * The EC reports 0 after a cold boot, which means "no limit set". Der=
+ive
+> +	 * the initial profile from PL1 so the sysfs value always matches what=
+ the
+> +	 * firmware is actually doing.
+> +	 */
+> +	ret =3D regmap_read(data->regmap, EC_ADDR_PL1_SETTING, &value);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	data->current_profile =3D PLATFORM_PROFILE_BALANCED;
+> +	for (int i =3D 0; i < data->num_profiles; i++) {
+> +		if (data->profiles[i].pl1 =3D=3D value) {
+> +			data->current_profile =3D data->profiles[i].profile;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (!value) {
+> +		ret =3D uniwill_profile_set(data->dev, data->current_profile);
+> +		if (ret < 0)
+> +			dev_warn(data->dev, "Failed to apply default profile: %d\n", ret);
+> +	}
+> +
+> +	return PTR_ERR_OR_ZERO(devm_platform_profile_register(data->dev, DRIVE=
+R_NAME, data,
+> +							      &uniwill_profile_ops));
+> +}
+> +
+>   static const char * const usb_c_power_priority_text[] =3D {
+>   	[USB_C_POWER_PRIORITY_CHARGING]		=3D "charging",
+>   	[USB_C_POWER_PRIORITY_PERFORMANCE]	=3D "performance",
+> @@ -2331,6 +2475,10 @@ static int uniwill_probe(struct platform_device *=
+pdev)
+>   	if (ret < 0)
+>   		return ret;
+>  =20
+> +	ret =3D devm_mutex_init(&pdev->dev, &data->profile_lock);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>   	ret =3D uniwill_ec_init(data);
+>   	if (ret < 0)
+>   		return ret;
+> @@ -2339,6 +2487,8 @@ static int uniwill_probe(struct platform_device *p=
+dev)
+>   	data->kbd_led_single_color =3D device_descriptor.kbd_led_single_color=
+;
+>   	data->kbd_led_max_brightness =3D device_descriptor.kbd_led_max_bright=
+ness;
+>   	data->lightbar_max_brightness =3D device_descriptor.lightbar_max_brig=
+htness;
+> +	data->profiles =3D device_descriptor.profiles;
+> +	data->num_profiles =3D device_descriptor.num_profiles;
+>  =20
+>   	/*
+>   	 * Some devices might need to perform some device-specific initializa=
+tion steps
+> @@ -2371,6 +2521,10 @@ static int uniwill_probe(struct platform_device *=
+pdev)
+>   	if (ret < 0)
+>   		return ret;
+>  =20
+> +	ret =3D uniwill_profile_init(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>   	ret =3D usb_c_power_priority_init(data);
+>   	if (ret < 0)
+>   		return ret;
+> @@ -2677,6 +2831,12 @@ static struct uniwill_device_descriptor machenike=
 _l16p_descriptor __initdata =3D {
 >   	.kbd_led_max_brightness =3D 4,
 >   };
 >  =20
-> +static struct uniwill_device_descriptor mechrevo_gm6bg0q_descriptor __i=
-nitdata =3D {
-> +	.features =3D UNIWILL_FEATURE_FN_LOCK |
-> +		    UNIWILL_FEATURE_SUPER_KEY |
-> +		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-> +		    UNIWILL_FEATURE_BATTERY_CHARGE_MODES |
-> +		    UNIWILL_FEATURE_CPU_TEMP |
-> +		    UNIWILL_FEATURE_GPU_TEMP |
-> +		    UNIWILL_FEATURE_PRIMARY_FAN |
-> +		    UNIWILL_FEATURE_SECONDARY_FAN |
-> +		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
-> +		    UNIWILL_FEATURE_USB_C_POWER_PRIORITY |
-> +		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT |
-> +		    UNIWILL_FEATURE_AC_AUTO_BOOT |
-> +		    UNIWILL_FEATURE_USB_POWERSHARE,
-> +	.kbd_led_single_color =3D false,
-> +	.kbd_led_max_brightness =3D 4,
+> +static const struct uniwill_performance_profile mechrevo_gm6bg0q_profil=
+es[] =3D {
+> +	{ PLATFORM_PROFILE_LOW_POWER,	35, 35, 100 },
+> +	{ PLATFORM_PROFILE_BALANCED,	65, 65, 100 },
+> +	{ PLATFORM_PROFILE_PERFORMANCE,	80, 80, 100 },
 > +};
 > +
->   static struct uniwill_device_descriptor lapqc71a_lapqc71b_descriptor _=
-_initdata =3D {
->   	.features =3D UNIWILL_FEATURE_SUPER_KEY |
->   		    UNIWILL_FEATURE_LIGHTBAR |
-> @@ -2877,6 +2895,14 @@ static const struct dmi_system_id uniwill_dmi_tab=
-le[] __initconst =3D {
->   		},
->   		.driver_data =3D &machenike_l16p_descriptor,
->   	},
-> +	{
-> +		.ident =3D "MECHREVO Jiaolong 16K GM6BG0Q",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6BG0Q"),
-> +		},
-> +		.driver_data =3D &mechrevo_gm6bg0q_descriptor,
-> +	},
->   	{
->   		.ident =3D "XMG FUSION 15 (L19)",
->   		.matches =3D {
+>   static struct uniwill_device_descriptor mechrevo_gm6bg0q_descriptor __=
+initdata =3D {
+>   	.features =3D UNIWILL_FEATURE_FN_LOCK |
+>   		    UNIWILL_FEATURE_SUPER_KEY |
+> @@ -2690,7 +2850,14 @@ static struct uniwill_device_descriptor mechrevo_=
+gm6bg0q_descriptor __initdata =3D
+>   		    UNIWILL_FEATURE_USB_C_POWER_PRIORITY |
+>   		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT |
+>   		    UNIWILL_FEATURE_AC_AUTO_BOOT |
+> -		    UNIWILL_FEATURE_USB_POWERSHARE,
+> +		    UNIWILL_FEATURE_USB_POWERSHARE |
+> +		    UNIWILL_FEATURE_PLATFORM_PROFILE,
+> +	/*
+> +	 * Taken from the OEM control center profiles (Mode1/2/3_Profile1.json=
+).
+> +	 * Low power and balanced are the "office" and "gaming" profiles.
+> +	 */
+> +	.profiles =3D mechrevo_gm6bg0q_profiles,
+> +	.num_profiles =3D ARRAY_SIZE(mechrevo_gm6bg0q_profiles),
+>   	.kbd_led_single_color =3D false,
+>   	.kbd_led_max_brightness =3D 4,
+>   };
