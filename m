@@ -1,93 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.177
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793561110;
-	b=tkMQANJK0jGBV7IDlxOlZQlzeCGivuY/V9Wnby2YWzdDQXfBNpYA6Kj1edW4EvyLJSA0
-	 J7TyEdF2b39LN0Vir8YStMXxFAQGPCFzDTMwgGplIouKdoDlbZXstLBsRBEDgTqzuEkR9
-	 vRg28g/fV9C8g1yYY6+tJe5yBnbiEi3G5b3ZcWJY8aKLyWwb9m/OiTKEmqtFI86GMhkfJ
-	 YilY3zByzlAJ29nRRN69VlmUMw99X/MRsiBLpBukj1LCObdricWJVSCuCmh5gyfQyfL5c
-	 644rGQpPcc0J6GMZZ3pwXrkhfVrmgSN4dXkHl3Wqi7t6QUW5D4uMpkzLfyffemNSaBg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793561110;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=xXV71PcODW6FyL159mGZh1/JIAVBGIw9B7bUXiNfwTI=;
-	b=ZKky5Obd/KEkunVIE2ZZiVgpjzu5QpW93HTCOOHbKjFDvKK5FZaBwbhJ/CzQnpCt39E+
-	 WPZ81WFq2X7w1/pDoIfgxmNHL3DH1ZLXyhIyXB836bMCYYaxejT2YOgxp6qPtOhC+DYut
-	 luMVHvgmQnv7uoXdjQ8ERnB6UHhK8Tbi5tcYHYlnLypoe4Ayb3nMiWptx2EOUcQzLOO4H
-	 Gh0WhyLcWM1JfHfS2bA5qzcTL8FKOUQ318Hb5Lvu17j2u/EaldUMorx9Szs7HuBv354x3
-	 fhmMpsQpbWSbM0wAdMAeVcBb9W03Iv2y7mA0eNx7E3OSsK7Xn9hwKx/oVLCN+8b/5UQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MGBKXP9I;
-	arc=none smtp.remote-ip=209.85.128.177
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09019606A324
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 19:25:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09019606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793565231;
+	b=O87MYWUIoMN7mzIzWDHz7aJrtQ/qIDMFwgYAt7X9gfMAAXAD1J6KO6kCvER7jgw1+ung
+	 edV7WLgByG6YOefcmAQJ6YEZ4GZNhOh0UOJoD8GFlyicWn1s30JJZIOFChhPbA/q5Jtrp
+	 85ZOLhvFV9DNHkd21lUlnhRp6XhF6//yHD2G6IfRvLYycY+konaAUWdTUc7acX+eNHyNu
+	 HUizp+H5/VUszyIhiz+yTu7i6JI+v+BJ4UbYrpzmrbN697imuIu1yd3tCPUShjz/xk5Ws
+	 Ug+zu9mrjBq/fE/WnXaOwJCA3v+Fw7GOq/AhV6Mf9IaqIwLW36nIVc+WgqYZXba6jOA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793565231;
+	h=Received:Received:DKIM-Signature:Received:From:To:Subject:Date:
+	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
+	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
+	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
+	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
+	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
+	 Message-ID:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
+	bh=iJu8B8OrmHhN4u62EdoFbtp6joe1N8GHz/kLm+hV5s4=;
+	b=LEztl1q9o2I/WmBp7izpOpwz/vHcWMfz1vF+5iuf7x0JlGdSwELDqLHIwxl0/qaN5kOd
+	 IQgqxLuw8ooc91V1JNYWLEBYjGv0j7qgKQFYqiC/mr+/12d8GzF075UIvTdXxqzu+ZALm
+	 SbYonS+Mjyd5qRgQxxKypqZc2d73feh6cfRgHTsejnxfgDII4xzK9Hm0imrajZFxhGRBm
+	 ihLIJ2bou+j3r58/B80UsYaXZGoKXT9PcKgRU46uqT19gI6iaUwCjcF7d9P2V3E7jNQK+
+	 DBJ2xfG80c2Mro3Jm2OKrnibaqZCeuyTcGt6blHftZ21JrHD1yfCcz9Xci9oZPfC1eA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b="dPr+Bum/";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=10.30.226.211
+Received: from aws-us-west-2-korg-listserv-1.web.codeaurora.org (ip-10-30-226-211.us-west-2.compute.internal [10.30.226.211])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33569606A324
+	for <platform-driver-x86.vger.kernel.org@localhost.mlmmj>; Sun,  1 Nov 2026 20:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MGBKXP9I
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-8ab3d3c5761so20905337b3.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 11:25:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793561109; x=1794165909; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xXV71PcODW6FyL159mGZh1/JIAVBGIw9B7bUXiNfwTI=;
-        b=MGBKXP9I7UoSqv3lSgZIQdK3vGpqts+w+Ei2ixXGxRZ+rZfTZKcjYZsaHLRktxU7c0
-         DR7AP7vVOqdGd6FTlK66g3jSONNRBnAcW+hZX3FhX0dbiF71VoxL2HcOn68SA0bwrgmI
-         HEuH1xrbZM1y/GAhwDQbvg5RCK4cPY069AsSPHzMsAkfrBL2cvontgYWstyFJcD4gpiX
-         8P/XyBa0oVOQ2WSxmWEE+WbwYRTwM9OGLSBYZIHcarQN0oRe8QmIcToMRvOPstTk+vjy
-         +C/BWw/McX4V0JImSVOex9i1qosn9K+JMpwkB+FcNsxIb5hEE+cvMPYmbnX6fMUwWKz6
-         nZhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793561109; x=1794165909;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xXV71PcODW6FyL159mGZh1/JIAVBGIw9B7bUXiNfwTI=;
-        b=q6vnVBofCBVVcyQNpoJDBYlfc6FF9XiX0h0Ef8z1rNBATgutKAk7nVa7HPpEvzbGUJ
-         SF5NqjW1aUewvOUPZrrUhvQ7wWWZbXiNy8jlpSWvzeqBAbreg1arJR5y0uYTW+duohKD
-         Ci7kuAIXFkq9JyONjrLx42ZnJNU0poQzeKsygnID1FpOouasxY4HSkkx1oma1HklaMTE
-         zxcckK67vO4wLLfGRG65RcJTT+RzH1kjBWypQ8BQMeVLKPz1UlkYBZU1EugbXFt8oFoD
-         yG6qp5xmWgyzUSAhOWf+3m/2CXD45pqs4K0z0mGzVb88gsG0+YuncKrhnt3T4dFVyL/s
-         7mfQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxRrJN0MSuM6IRn4IfR50baSuhNnxqCIV2kVIlmWx+p63mA1Od3dS/huoTFzS7nszO4uL4tGfTX0l5EIHyiGZhIUe/6@vger.kernel.org
-X-Gm-Message-State: APuU4Z+Op4/sHZhYjldKP895YXUQqH73sSeyzLiS1GSqP470P3q56jE9
-	50OJCGJ240RNIb+PZBOZU0rYEZXt/SkviVDnLA1qS0APpr4n5ooyFDNS
-X-Gm-Gg: AYBFou0ICvpT+567K9TGSF/LNozbmsMuHo2Jmv+KZCRnD4wKuS70jQmUdl5IoAdtJY1
-	XPk7AHQ1l4F3MZQm9og7f6Glx2oHy5hmX4UFuHfuLgFdGyRALCudpHPn3xlkjdAoXgt9w+RipfC
-	dPuRhleviW5SBhlikzeifo3BOhrTPbagrhHkCTh3SRMUcNzvDwBZ8w+iFHt61kVJXkI4Qegr7qe
-	aezHPX6bOrCVFL3GliNJ+qNmV9w7ug4x32MylnL+8CJOTrm03mRqOOMAcceSHnjtBdOQ0n0P1rB
-	5a9lt0d2uUuyKTNHg8I7+kNQmBmbJbZTP6NzhLuoDy6azof6bSGvCmtP8P5mUbV1pZAtumY5HPW
-	sHiDadt24QZcoRdDYsoRK79DKTEHeCaXgrLWCr2YfsztLLiPkzXRCEEeCQVaa9SXJ5PGbBR0ObE
-	wUGeG1PK0Xkf14ocKg0uIaI8SkvjN3uJYn05jCUDFdwLG4YPF3P0Wp3zKmd5vhBOj3Nxfihugvo
-	BT4sBdC7r/cp+PtEKpI+702uWvStQ7ODjnhk7/pnzcFH5upLqQhG2QydWg4rYWVckC43OhRVIzi
-	6iJSm1dWeLz3w1gdf4/0qMqdqkYJDWCnyGm27aY=
-X-Received: by 2002:a05:690c:fd3:b0:8b0:76e5:ecf0 with SMTP id 00721157ae682-8b2b65ba33emr54625067b3.4.1793561108916;
-        Sun, 01 Nov 2026 11:25:08 -0800 (PST)
-Received: from acer-pcaldeira.lan ([191.23.85.25])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b2b7165abesm40430797b3.32.2026.11.01.11.25.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Nov 2026 11:25:08 -0800 (PST)
-From: Pedro Caldeira <pdrocaldeira@gmail.com>
-To: "Lee, Chun-Yi" <jlee@suse.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Pedro Caldeira <pdrocaldeira@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: acer-wmi: Keep Bluetooth powered on Aspire E5-573
-Date: Sun,  1 Nov 2026 16:24:44 -0300
-Message-ID: <20261101192446.5615-1-pdrocaldeira@gmail.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dPr+Bum/
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085506513C0
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 20:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1793565231; cv=none; b=MA5HERauEJWEJezOam1J+ccUNl/uMjQZaycCzgFHIYP0Fqc/4YA2vNspD3vb8Xw4SsOQX/JODqiWgiaV+1wtClV8+oVNNQJJ5yO2vRlly41iF8s0eioPIOwCJ5Ny4Bwd/+07+HtxiPNnOsVtoA9pBcv1sbNVdvS7opBG/pRJc7M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1793565231; c=relaxed/simple;
+	bh=iJu8B8OrmHhN4u62EdoFbtp6joe1N8GHz/kLm+hV5s4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eJXmOSuC6rGK2LFdlbov782VO00WvHehgiRwRCA8Inuo/jxI8TtU4Nmr7lNyr5pVy1SYz/27PdVmEUOzC6j9VfhV/bepGQXe0JiNgowCXq+82MHlXzP6xcMINK1Vmm5/W/YBvUPElSDJ9BbZ3UbgYktnrZd4ejUqk60orh4UZ7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPr+Bum/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5319BC2BCFC
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 20:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1793565230;
+	bh=iJu8B8OrmHhN4u62EdoFbtp6joe1N8GHz/kLm+hV5s4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=dPr+Bum/LcSXKKC8+BnhV1R8VRvPfb38KgubuBpYu1cAKYhxWRBSfwmbYYGfHz34o
+	 AnUI6fScSxYyDr2ueFbFOVuPLgExT0Qx6YDdULjlB04CBWmLypChmsnSCWlgJbMqNr
+	 pUj0JJQpd+dDy3pDCr1ntlKYWCjspGoIYx5AY6c/S1AxZcqJ5jXgaan1lxv/ZvfkfR
+	 gXXlHZfjxOR3/j4Zh9ol8NmcCov+UUqy57oUvrBCrJj284MA/IOzbm806wCvQIgDG5
+	 u0PrdPwn0tW60D3J5iEBTXnPwSM+Py8Nbkz41/3PmO0IpOOxY0hsKtdZ4ibqnXetnF
+	 MpNTCUURhk9Vg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 1F21CC4160E; Sun,  1 Nov 2026 20:33:50 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
+Date: Sun, 01 Nov 2026 20:33:49 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: helian.caumeil@clever.cloud
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-222161-215701-zaFpsutP9m@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
+References: <bug-222161-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -97,95 +93,25 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The SMBIOS type AAh table of the Aspire E5-573 reports a communication
-button bitmap of 0x1 (WiFi only), although the laptop has internal
-Bluetooth.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
 
-wmid3_set_device_status() reads the device states using this bitmap and
-writes the result back, which loses the Bluetooth bit. Any write to the
-acer-wireless rfkill device therefore powers Bluetooth off, even if the
-WiFi state does not change. Userspace does such writes during boot, and
-Bluetooth cannot be turned back on as it has no rfkill device.
+--- Comment #11 from helian.caumeil@clever.cloud ---
+Today, I performed a git bisection between 7.2.11 and 7.3 and obtained the
+following:
 
-Add a quirk that adds Bluetooth to the bitmap and to the capabilities.
+ad873d6340957c1ed5a271eb7ebc8b873c42ba9d is the first 'bad' commit.
 
-Tested on BIOS V1.37 with an Intel 8260 card (USB 8087:0a2b) replacing
-the original one: Bluetooth survives boot and acer-wireless writes, and
-the new acer-bluetooth rfkill device blocks and unblocks it.
+Also, maybe this will help, my laptop is a lg gram 15Z80T-G.AU8BF.
 
-Fixes: 1d1fc8a75fec ("acer-wmi: replaced the hard coded bitmap by the communication devices bitmap from SMBIOS")
-Assisted-by: LLM
-Signed-off-by: Pedro Caldeira <pdrocaldeira@gmail.com>
----
-Reproducer without this patch:
+> If the patch somehow fixes the problem, then personally i would apply it
+> either way. Are you OK with that, Helian?
 
-  # rfkill unblock <index of acer-wireless>
-  usb 1-5: USB disconnect, device number 6
+I am totaly OK with that.
+Thanks for the time you take on this !
 
-Runtime-tested with the same change on v7.2.11; only build-tested on
-for-next. Not tested with the laptop's original card.
+--=20
+You may reply to this email to add a comment.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=190641 reports the same
-symptom on an E5-573G with its original card. I left that model out
-because I have no hardware to test it.
-
- drivers/platform/x86/acer-wmi.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 3a018fdf5..60028fe9f 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -406,6 +406,7 @@ struct quirk_entry {
- 	bool hwmon;
- 	bool platform_profile;
- 	bool pwm;
-+	bool commun_bluetooth;
- };
- 
- static struct quirk_entry *quirks;
-@@ -430,6 +431,11 @@ static void __init set_quirks(void)
- 
- 	if (quirks->pwm)
- 		interface->capability |= ACER_CAP_PWM;
-+
-+	if (quirks->commun_bluetooth) {
-+		commun_func_bitmap |= ACER_WMID3_GDS_BLUETOOTH;
-+		interface->capability |= ACER_CAP_BLUETOOTH;
-+	}
- }
- 
- static int __init dmi_matched(const struct dmi_system_id *dmi)
-@@ -454,6 +460,11 @@ static struct quirk_entry quirk_acer_aspire_1520 = {
- 	.brightness = -1,
- };
- 
-+/* The type AAh table omits the internal Bluetooth device */
-+static struct quirk_entry quirk_acer_aspire_e5_573 = {
-+	.commun_bluetooth = true,
-+};
-+
- static struct quirk_entry quirk_acer_aspire_a315_58g = {
- 	.hwmon = true,
- };
-@@ -663,6 +674,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_acer_aspire_a315_58g,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Acer Aspire E5-573",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Aspire E5-573"),
-+		},
-+		.driver_data = &quirk_acer_aspire_e5_573,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "Acer TravelMate 2490",
--- 
-2.56.0
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
