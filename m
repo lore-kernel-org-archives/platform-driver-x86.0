@@ -1,93 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.6
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793496410;
-	b=dLdD3Q/EDgIYExrlhaKfFnVZQHMPGYJ2oMsf53DQ1ZsI4lvDD3QpJIt/qr5zvryQOlqB
-	 mLnhQTSPPja6bsIa6oTDb+9SRiSMEieNeIkHZeqszhpi68w/N+aU7h3E/S6FVoT6AEPWU
-	 mPPH+JyJqEX049zgVGuL2GbXXW9/sW1k9TRIlhBfOFp4o/r0vVfPQcr31tPe7GMbXubNp
-	 7pz6EUatS7rDCDi1KmmphbNeBefO4dQ3LZoYRtA5h0Lc/PvinpHcPkg7BfB1JUZ5WgEYr
-	 FGC5i9ULSwNgDJGR061aubR9vkFuEHRkubS7E5icSo3ByeHTf57if0VZ1HGAN150P+Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793496410;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:Content-Transfer-Encoding:Content-Type:
-	 X-ClientProxiedBy:X-Microsoft-Original-Message-ID:MIME-Version:
-	 X-MS-Exchange-MessageSentRepresentingType:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=rAFixAvi+95MOlhfZLeYey03YNWt1baEcXJC2CbKc44=;
-	b=5Oyr72njxsOcPbwXpHRkdvo32nj8G32z/IUeOzBVZrW8kez2N2uMKpANb9lu3jLcZSdd
-	 CJTPNGs8n6qd6wQPq693+fPZGfSJJaRGRwOpeVUIs8RJm04x++flQYBqWAj9mbUhDfHqF
-	 95y1Op1uuWCe9zNjfWlAeFoM/O6HTqDN/Q9H93MZWbh2va65v/IKzeGcuMV1pD3h5fhSt
-	 jR6NezYFceSe6otOVPOKHtuPG+dsP/9+PdLhc92Me9QW/6w07chMTH5WIzIY5VDgMk2dl
-	 fozeqQRv6FzieYkV7pMon6qmu+lXIMzTpA84aDSFSsmmbjoJVfs5ZhiXrMUqDjve4rQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=outlook.com;
-	spf=pass smtp.mailfrom=outlook.com;
-	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=DDWwdPzk;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.6
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazolkn19010006.outbound.protection.outlook.com [52.103.43.6])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793496512;
+	b=az48cMPB11vjrFUc5C5ZMM10A5BjpJ/9/1XP5jl6Mns716/aqi67Bj+oTo5Yv6jAeXkj
+	 WRVCwT249jegdAFISXFNNmOvHQkdqMt8bhoelSLUmOnn9fEinADE26F/NscTxc2cEHQ/n
+	 npDkyo8Idth3ajJmBrcWL7TgAmm1r1hdCVCR0v9KDXZap6W8pETAOrX1n10L9yN8qVZs0
+	 vx+kmY7Vu+/bm9f4jNTuhAaf2xvW9rZWZQRry9lKLvX1cjXh978/5jvGxXIPJb9/wjP0j
+	 X2zV1STXbBuxWP9BA8WUwCjTmodwH3kB3yEuS5lmyAGEgEN69Pa4UEfaYrYjguQLA5g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793496512;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=9jxnaJU/GpcwWRWB/sWaXu2IklLN1zFRwShITZdyTMA=;
+	b=acxSgF52fE1oPbtaNMxO1iHJS0P/3mStBgPTCIUau318Cl1Cg+515xK0dfAciVJhGQ4p
+	 361oJ/haGkNLKzuO+RjOL7qj5tFv2SyBgFI7frrZpFTbiuGA0vx58poNNGaTtzedTdH7o
+	 JAfN6mStnf1EQA0T6jpsbn7xWHq4lFhS+0fhC3CyQJ9rTKogzy9q5t5F6GjllCJkQgW1S
+	 SMQWcFnDbBu/lFZmiJp4e+eaKdGJOExu6qjCAvJRJIfJQdz2E4s8tcW+NmNDAfEAJV8oj
+	 3zVbkWgebGEe9lJ7HREokQP4gxo787gYGF8R8e3L4h3ioztk2JVFFcC5vlhKTN8CLTw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="DlUf8b/P";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC91F606A31C;
-	Sun,  1 Nov 2026 01:26:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AC91F606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB697606A31A;
+	Sun,  1 Nov 2026 01:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=DDWwdPzk
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gX606ypevU8BW0evL+f2WOHbRiNJyFz4IBBfapGJFFfaESQ8CxhMZ538aeP0CANt5iRpmLcrdD4ThXyuhcw/eNFmC5POVGqsdrrk5Evz8jWv0RGLB80AjObrdatqTOXJ++FqgcVjDwnA49tZyOrwJ5CMayXitmzhPh0B1bizpekg9RUahE+L8GehZLlOdwrlK9cH0QTLywLUyX/luBLifmiZxCHiiSgi1PBNFo+dm1K1UANZhcdqDx1IkGK8vNAh2r7MoL9kO4B3wtyyZfGHJIAWXffbl7bOXTiH4FrGs6KTITVCAAF25hIdCluTfjcB/78cEPNWtyHfHCVUMeSZ4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rAFixAvi+95MOlhfZLeYey03YNWt1baEcXJC2CbKc44=;
- b=Sgqe2yGcik+v1tJBHt43e+TCFq8kX6oEGD47Ok96PV6+h5oJrll0BPgJotWxA8aAncMhE1iXQog9IxKAQVwQhqmBNKKIXV/vUrl5C/b+mj5P6qKa9TzshqSL9tENPECQRxEub+/99vhTxhmC3ecbw4J2lwbuixCF4vetdYAMqDjpnWW0GWfMarH1NHhlbRXmb/0p+MLRi78KF4GRmiBegOlzD5McS5u0XIZ57wdtS2EG4Dny2hxvamUf2M9M3mPru/FUI2kvP/k8i3UwriQSv6o+ehTXRSU/dtHCCuLB81AEKwMsUdoe+Huhs05y2sRz6WZPZywuvBiz6/fUiKTjAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rAFixAvi+95MOlhfZLeYey03YNWt1baEcXJC2CbKc44=;
- b=DDWwdPzkpM2cYrbLKjhmaI+Ox0ivOUDNbSdY06ngy5dlzQPETykqqIh04FenmlfZUr9F+/6ylngnZ2/ygcIquNgTWJrAWwL58cgYx/rBT0B1e/AUSkFPfZni1DBccJKh65o1UVTAoxXCW+991W3OQsw/aVRvmbkHMs4yzyWEEw4FsmUqb1xI3WB+TStnQWpv54GH2OJ7HYIX+OhdlKxZlJfQW4phCkwUrMYcf7D7TUXytjar/+jBVD/8K52WQh3Pl0cTIcOo33xrwx6EUXptgzouRkWvgyE+eaEvekfEq8ZrmqAe9uqSOwxC0bML0coP9c4RYOLEX0ED7tUEE4d/JA==
-Received: from TY7PR01MB13746.jpnprd01.prod.outlook.com (2603:1096:405:1eb::8)
- by TYCPR01MB10589.jpnprd01.prod.outlook.com (2603:1096:400:307::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.11; Sun, 1 Nov
- 2026 01:26:45 +0000
-Received: from TY7PR01MB13746.jpnprd01.prod.outlook.com
- ([fe80::a4eb:52b:9f18:eae0]) by TY7PR01MB13746.jpnprd01.prod.outlook.com
- ([fe80::a4eb:52b:9f18:eae0%6]) with mapi id 15.21.0569.010; Sun, 1 Nov 2026
- 01:26:44 +0000
-From: Jiajun Leng <adolphpi@outlook.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Antheas Kapenekakis <lkml@antheas.dev>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	Jiajun Leng <adolphpi@outlook.com>
-Subject: [PATCH] platform/x86: oxpec: add OneXPlayer X2 Mini (G3E) DMI entry
-Date: Sun,  1 Nov 2026 09:26:33 +0800
-Message-ID:
- <TY7PR01MB1374656B7810521751CB248D4DB6B2@TY7PR01MB13746.jpnprd01.prod.outlook.com>
-X-Mailer: git-send-email 2.54.0.windows.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TPYP295CA0025.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:7d0:a::15) To TY7PR01MB13746.jpnprd01.prod.outlook.com
- (2603:1096:405:1eb::8)
-X-Microsoft-Original-Message-ID: <20261101012633.408-1-adolphpi@outlook.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DlUf8b/P
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 310021F00A02;
+	Sun,  1 Nov 2026 01:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793496511;
+	bh=9jxnaJU/GpcwWRWB/sWaXu2IklLN1zFRwShITZdyTMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=DlUf8b/PjEZiH1rlFlhKz5afZUFvN3eB3xktIUb6mPXEXJc5nQw0YPKctxh3sUYb0
+	 GAy9//9SZsye80mhB5yHFC2sMSHdbDF2VJhrkVF/xvtJExFSlVUkaixESAMNZ3yTGq
+	 9IhnPp4IUYV9niMYchq4IdNft1SaAyiH60qUwBGWPOMtdc/LYdWJLs6TqdKJAachtX
+	 +CLTYQmulxXH8ZaNJf3wxMiQU6jwPtY+YaTSxK1Tr52PcGpKri+z/3MTZFrLXQcD+e
+	 VcTK7AE9owFIVm09wDwr+wn+fnr4M30yXt96j4Cl5+kB/DAt2P4Uy1h2AoKlnWSnP4
+	 7ZwP0gffUx1aQ==
+Date: Sun, 1 Nov 2026 01:28:12 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+ <lenb@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski
+ <brgl@kernel.org>, Sven Peter <sven@kernel.org>, Janne Grunau
+ <j@jannau.net>, Neal Gompa <neal@gompa.dev>, Guenter Roeck
+ <linux@roeck-us.net>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Griffin
+ Kroah-Hartman <griffin@kroah.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Sebastian Reichel
+ <sre@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Wim
+ Van Sebroeck <wim@linux-watchdog.org>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-leds@vger.kernel.org, mfd@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-security-module@vger.kernel.org
+Subject: Re: [RFC PATCH 04/14] iio/light: add new driver for macsmc
+Message-ID: <20261101012812.3661789c@jic23-hlaptop>
+In-Reply-To: <20261029085504.3547-5-atharvatiwarilinuxdev@gmail.com>
+References: <20261029085504.3547-1-atharvatiwarilinuxdev@gmail.com>
+	<20261029085504.3547-5-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -97,108 +85,265 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY7PR01MB13746:EE_|TYCPR01MB10589:EE_
-X-MS-Office365-Filtering-Correlation-Id: e60acd9d-ce70-4ad0-8183-08df37b730bd
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|24021099003|260925184616899003|25010399006|4140399003|22141099003|39105399006|5072599009|8060799015|37011999003|25031999004|19110799012|5062599005|23021999003|15080799012|40105399003|3412199025|440099028|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/T6KOnCGMuRCGCHTaRI8KwxP52njGkcAlk/Z8kcQCcg3pC48OZITHNnXesFN?=
- =?us-ascii?Q?gteqh31STQbq/bSxf3BrgRwJwwJVYjHPfPr89sqYTXB4RCwuCg9Zz+JKfSem?=
- =?us-ascii?Q?0xZFVLyojIXcgTVc6zFLMo85GjwBf4C//uWhwLxKWNbb4rGS9MOqNtM8th4v?=
- =?us-ascii?Q?kTiMFTLy3UAyb3ptkb0gtdH1L4q3RtPQZmuSOsbzLJYsqBjjJdCeVd5mynMq?=
- =?us-ascii?Q?p7hPGmsHPLv95HdAUBUsKwYIr2AZgMmLGGpMpbhDREHDFQwSi1Ty4bRdhTNX?=
- =?us-ascii?Q?VFC86Ic7ZZHneL5b46dLsiUXN6jkjJuCREnLVPQzIr0/v+70ugC7uvimBWfN?=
- =?us-ascii?Q?sDvSd28mOrge+cmDmUk/1OKh1NgpHy/DW2VFauHNsEb/iVQUevv0oxf1G8Vi?=
- =?us-ascii?Q?KRb8duffxbX7YyDXFh+WjDrSXlikK0IRkapJj2jqs2aCMxdZ4q8P8tI5iG+A?=
- =?us-ascii?Q?mrpVeYHJ9pTr4yFr69Lw4q8pP/EVAUJ46syEEBAMPw1Lc4K4ngv7ArgjXP3n?=
- =?us-ascii?Q?3TdaOMXZp7+E6QQOM1/llOKjuit/70YTrUbTaSckxGWcOA2TH7Y6r+8Ll9tx?=
- =?us-ascii?Q?OTu42595h1xmU/ns3g7uLWazgLMLhjikp/bfyXSEa190Yfph/uQER5w9nsKI?=
- =?us-ascii?Q?/6fJt0Le0WAyIOdWCbQ9rh5mi0kSdGCO52BXi32U5Li969tbJ1RmE7E8RTmB?=
- =?us-ascii?Q?xO+yu339fJfDyqqTEa3rMlnZngYI04ntFMZzboIgJfu32HxfudloC/+QA5Th?=
- =?us-ascii?Q?jeT9ua9qMRyxuT2WS9ppIU1VoF2dXxo5fsHskCZ8iCObXKza+TNRmIjEGwu4?=
- =?us-ascii?Q?a/iPyEb7wLOQ3xdmLLxRXYRXJmG/twQe+OWj8xj7l3h4Cp+9iOkqcb/1hFBw?=
- =?us-ascii?Q?5xBMS5/bjpMO0i2vKrHR97a+0Roq960t9X+7az0qjhkKz/Hg4qRj6YTeiRM+?=
- =?us-ascii?Q?VqpQnJ6o8/oZ1zvmQBur5T3nCMWgHOmztAnNHlDr42ULb4nlgphmyRu6GFAD?=
- =?us-ascii?Q?mqxuC0dtmAG78YLE1hscFbkIqE4WupMKemDqw+WdOkqSY3mTkblw44VO2xhk?=
- =?us-ascii?Q?ClchHDMYSwFSWCFGucNbYZIKY3gIdg=3D=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fkfq91+ZFYKWNBllbw/LlgqKNPHuZW1OYkl6+88A2MZMtDPzXe6oAolYLWw8?=
- =?us-ascii?Q?bVYC+UxvrOr/xybglbsHCn6oEbndJgYrRek1o96Rv+LcPjieEX+yLkdozfhF?=
- =?us-ascii?Q?tU0bI8/l3oxF7kTpsEZjzteBiCmoLsaLACXGoTv/N0wt/Ob+wYn53wSlUBR9?=
- =?us-ascii?Q?rOOl3DNpCwplEQrZrNjh6dlQs1ICKwjx+S0rVFQdGKTXSOaiQGpitheQfWQ8?=
- =?us-ascii?Q?eYUhhydJ3HVmRZH4VZaiKbaMZGt6xeRGojtDs+Setav68FCx1oFbLEVI5GQ3?=
- =?us-ascii?Q?JDx4yYzvzhf1p/KYHyKuO7IbmNmKUNsqzLQNge07zHObJByUiGde4qENkhzJ?=
- =?us-ascii?Q?JUs1QT5tDFBK2fKM0xy3zHymWB+p/IyykArZ+HbRq/lIbOyOuvqLrywf1otD?=
- =?us-ascii?Q?j8e7WLNJ1fQ+HR6hsHsVM8sWSCS35V+38XR4xgkK/IKVE/ArvRgeBNLt2G96?=
- =?us-ascii?Q?JISQ0weVZeyvSJnvFOScy1LRjLuqHaBfJFvpxntsC6djaxAGtcsgxqeFjlg9?=
- =?us-ascii?Q?D9VkCVYhjqz4WBCd3x6KUrKaHxU7jph6mGyB+XM4FigJI8Gog4v6Vhl3FYVG?=
- =?us-ascii?Q?qfTM7TkbixSXQlnUPnvQA3L7QaSN66p0TLO/845yW0LXG1etDxx8pOnxmt6v?=
- =?us-ascii?Q?Q0xmnYzmiXKQBf1yOUUxsy1zbZuEHJibOr8jVKGomRqoCLOqqelxfcA1lj7F?=
- =?us-ascii?Q?9xkJC3kzf5cU2A6C6s8ZhJUIuMWxv5eOx12GL0SiKeAes3b57udeDabF/8K4?=
- =?us-ascii?Q?MkvZg3zHTmV9cZTwgn7++f3oXUU26IMR2maIhQoABIKbN516BC7t2vppeZtM?=
- =?us-ascii?Q?jSCG2Q42P6ciDxJNxrxPvrd2wvxyzsKHXr2nSjZOC9po8I2fYf0CBbTLPwhQ?=
- =?us-ascii?Q?YW3t1/MML/HDdm7o5QSWCHBhAocSPJMs5Kgxbr4L4cCKu5ax+rYNdkKR4IKE?=
- =?us-ascii?Q?h9gevJY+0ivdIlMRmLQwQdsXpm9ozEL3dAPDYPj+P8N0BJGtcdgEJzrXYMkl?=
- =?us-ascii?Q?AOG6zlVwbMTGBny/0+l52b8ZIkvSZ9wl37Zz0Z99YxLArCDVy0uVQh+M8bhF?=
- =?us-ascii?Q?qZiY21tBRw2LOG5O6HDjVSv6LGSKhIkEJx5vCuDA9pgz9FKtGg4blHZP6PLY?=
- =?us-ascii?Q?E9zDfrVBtCc9tkL9FdMwk4LKUVvUYQo/Qkw022Hmk8rzJCCYPfA7i/suuJpb?=
- =?us-ascii?Q?7dg8B3877/zN/vbIce2cOQSBbtx/PWW3josNaiWsTt0yQkJnIJZDJ7uaS23a?=
- =?us-ascii?Q?xKNyeLDQeZMeOBRuqSBC3vNZQb6Ux44uY1v/uP0SR1rWbyQZekd++yRBfftp?=
- =?us-ascii?Q?MABBIUdOSI/EohwSbGvNKoVrL/w8hrISSSvPIen4BjXsOHvBOIlvaNMl64PI?=
- =?us-ascii?Q?CNumuHkXXr02eclzwf+p/n+0Ady5My/dgOXXg8Au6+XjXQCRaMmjZtgDlOSf?=
- =?us-ascii?Q?sPHrMu9tOC/UAadeKdco7qgJvp/1SnOo?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e60acd9d-ce70-4ad0-8183-08df37b730bd
-X-MS-Exchange-CrossTenant-AuthSource: TY7PR01MB13746.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2026 01:26:44.8423
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB10589
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The OneXPlayer X2 Mini (G3E) is the Intel variant and reports DMI board
-name "ONEXPLAYER X2Mini". It is not covered by the existing "ONEXPLAYER
-X2Mini PRO" entry, which is the AMD board using oxp_fly.
+On Thu, 29 Oct 2026 04:52:01 -0400
+Atharva Tiwari <atharvatiwarilinuxdev@gmail.com> wrote:
 
-Map it to oxp_g1_i, the profile used by the ONEXPLAYER 3, which has the
-same Intel EC layout.
+> Add a driver for the ambient light sensors, exposed through
+> the standard IIO interface with left and right channels.
+> 
+> This replaces the light sensor support in applesmc.
+> 
+> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Hi Atharva,
 
-Verified on Bazzite 44 with kernel 7.2.11-ogc4.1.fc44.x86_64: fan
-reading, manual PWM and charging control work.
+Given I'm generally in favour of bringing the overall
+driver to modern standard subsystems, I'll just do a quick
+review of the actual code in the IIO drivers.
 
-AI assistance: Claude (Anthropic) was used to draft this changelog and the
-diff. The submitter reviewed the change, built it as an out-of-tree module
-and tested it on the hardware.
+Various comments inline.
 
-Signed-off-by: Jiajun Leng <adolphpi@outlook.com>
----
- drivers/platform/x86/oxpec.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+thanks,
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index c4c4babe8e30..50d169302fc3 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -230,6 +230,13 @@ static const struct dmi_system_id dmi_table[] = {
- 		},
- 		.driver_data = (void *)oxp_g1_i,
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X2Mini"),
-+		},
-+		.driver_data = (void *)oxp_g1_i,
-+	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
--- 
-2.53.0
+Jonathan
+
+> diff --git a/drivers/iio/light/macsmc-light.c b/drivers/iio/light/macsmc-light.c
+> new file mode 100644
+> index 000000000..9d4532b34
+> --- /dev/null
+> +++ b/drivers/iio/light/macsmc-light.c
+> @@ -0,0 +1,189 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+> +/*
+> + * Apple SMC Light Sensor Driver
+> + *
+> + * Copyright (C) 2026 Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+> + *
+> + * Based on drivers/hwmom/applesmc.c:
+> + * Copyright (C) 2007 Nicolas Boichat <nicolas@boichat.ch>
+> + * Copyright (C) 2010 Henrik Rydberg <rydberg@euromail.se>
+> + */
+> +
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/byteorder/generic.h>
+> +#include <linux/mfd/macsmc.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/unaligned.h>
+Give these a sanity check against other drivers
+and what is used. For instance I'd expect the notifier chain
+header.  For IIO we follow IWYU roughly for all files.
+I don't want to assume what is in mfd/macsmc.h given
+that may change in subtle ways in future.
+
+> +
+> +enum {
+> +	LEFT_LIGHT = 0,
+> +	RIGHT_LIGHT
+Add trailing comma. Whilst that may always be the last value
+it's not a terminating style entry so we tend to assume
+maybe one day something will come after it.
+
+> +};
+> +
+> +struct macsmc_light {
+> +	struct apple_smc *smc;
+> +	struct notifier_block nb;
+> +	struct iio_dev *indio_dev;
+> +	u8 size;
+Size of what? Can we have a more informative name?
+> +};
+> +
+> +static int macsmc_light_read_raw(struct iio_dev *indio_dev,
+> +		const struct iio_chan_spec *chan,
+> +		int *val, int *val2, long mask)
+> +
+> +{
+> +	struct macsmc_light *drv = iio_priv(indio_dev);
+> +	u8 buffer[10];
+> +	int ret;
+> +
+> +	if (mask != IIO_CHAN_INFO_RAW)
+> +		return -EINVAL;
+> +
+> +	switch (chan->channel) {
+> +	case LEFT_LIGHT:
+> +		ret = apple_smc_read(drv->smc, SMC_KEY(ALV0), buffer, drv->size);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (drv->size == 10)
+> +			*val = be16_to_cpu(get_unaligned_be16(buffer + 6)) >> 10;
+
+odd.... You only pull 4 bits from the buffer and they are all in one byte.
+Why can't you do that without this dance via big endian conversions? 
+Also get_unaligned_be16() got you a value in cpu endian. If this were a
+big endian CPU be16_to_cpu() would be a noop, but it's not. So this just
+undid the endian handling and we are back to whatever the buffer ordering is.
+
+> +		else
+> +			*val = buffer[2];
+> +
+> +		break;
+> +	case RIGHT_LIGHT:
+> +		if (drv->size == 10) {
+> +			*val = 0;
+> +			break;
+> +		}
+> +		ret = apple_smc_read(drv->smc, SMC_KEY(ALV1), buffer, drv->size);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = buffer[2];
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int macsmc_light_event(struct notifier_block *nb, unsigned long event, void *data)
+> +{
+> +	struct macsmc_light *drv = container_of(nb, struct macsmc_light, nb);
+	struct iio_dev indio_dev = drv->indio_dev;
+
+> +	s64 timestamp = iio_get_time_ns(drv->indio_dev);
+> +
+> +	/* check if event is for us */
+> +	if (event != 0x2A)
+
+Give that a define in some common header...
+
+> +		return NOTIFY_DONE;
+> +
+> +	iio_push_event(drv->indio_dev,
+> +		IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
+> +				LEFT_LIGHT,
+> +				IIO_EV_TYPE_CHANGE,
+> +				IIO_EV_DIR_EITHER),
+> +		timestamp);
+
+	iio_push_event(indio_dev,
+		       IIO_UNMOD_EVENT_CODE(IIO_LIGHT, LEFT_LIGHT,
+					    IIO_EV_TYPE_CHANGE,
+					    IIO_EV_DIR_EITHER),
+		       timestamp);
+
+> +
+> +	if (drv->size != 10) {
+
+Why is size relevant? I'd add a comment, or a flag that names
+what that means.  I guess we have one signal for one or two
+sensors depending on what is present?  Then you are correct
+to just signal them both.
+
+> +		iio_push_event(drv->indio_dev,
+> +			IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
+> +					RIGHT_LIGHT,
+> +					IIO_EV_TYPE_CHANGE,
+> +					IIO_EV_DIR_EITHER),
+> +				timestamp);
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static void macsmc_light_unregister_notifier(void *data)
+> +{
+> +	struct macsmc_light *drv = data;
+> +
+> +	blocking_notifier_chain_unregister(drv->smc->event_handlers,
+> +					   &drv->nb);
+> +}
+> +
+> +static const struct iio_event_spec macsmc_light_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_CHANGE,
+> +		.dir = IIO_EV_DIR_EITHER,
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +};
+> +
+> +static const struct iio_chan_spec macsmc_light_channels[] = {
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.channel = LEFT_LIGHT,
+> +		.extend_name = "left",
+
+No to extend_name.  That's a piece of ancient bad design (was mind
+so I can be rude ;).  Use the read_label callback and provide labels
+for the channels to indicate the equivalent info.
+
+The extend_name thing makes a mess for standard userspace by putting
+free form text into the middle of file names.  Userspace folk
+objected rather strongly to that a long time back :(
+
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.event_spec = macsmc_light_events,
+> +		.num_event_specs = ARRAY_SIZE(macsmc_light_events),
+> +	},
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.channel = RIGHT_LIGHT,
+> +		.extend_name = "right",
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.event_spec = macsmc_light_events,
+> +		.num_event_specs = ARRAY_SIZE(macsmc_light_events),
+> +	},
+> +};
+> +
+> +static const struct iio_info macsmc_light_info = {
+> +	.read_raw = macsmc_light_read_raw,
+> +};
+> +
+> +static int macsmc_light_probe(struct platform_device *pdev)
+> +{
+
+There are enough uses of pdev->dev in here that I'd introduce
+	struct device *dev = &pdev->dev;
+as the dev to use for devm calls.
+
+> +	struct iio_dev *indio_dev;
+> +	struct macsmc_light *drv;
+> +	struct apple_smc_key_info info;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*drv));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	drv = iio_priv(indio_dev);
+> +	drv->smc = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	ret = apple_smc_get_key_info(drv->smc, SMC_KEY(ALV0), &info);
+> +	if (ret < 0)
+> +		return -ENODEV;
+> +
+> +	drv->size = info.size;
+> +	drv->indio_dev = indio_dev;
+> +	drv->nb.notifier_call = macsmc_light_event;
+> +	ret = blocking_notifier_chain_register(drv->smc->event_handlers, &drv->nb);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, macsmc_light_unregister_notifier, drv);
+
+I wonder how many users there would be a devm_blocking_notifier_chain_register()
+as it could be done more elegantly than this by stashing everything needed for
+the unregister call.  Perhaps not something for this patch set though.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->name = "macsmc-light";
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &macsmc_light_info;
+> +	indio_dev->channels = macsmc_light_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(macsmc_light_channels);
+> +
+> +	return devm_iio_device_register(&pdev->dev, indio_dev);
+> +}
 
