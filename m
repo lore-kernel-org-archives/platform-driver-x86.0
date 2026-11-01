@@ -1,58 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.22
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793552177;
-	b=XNERIruYWi0QQWrqexjhlsPdOUA1M3OfBK9tmHbeWy52rphvQCH56ZgqNLj5lhuq9PYG
-	 ss2ep7LX0k9c/wF2F3iSa6kj66jbsOkrHX9REcFLdFMvxHwm1SLiJXxlFHKIvC9a/fCvP
-	 KbrrZoLdtfblLw0Yx05zbgxun4khdGQtSXO3KEzNF+ToblsaBTM0IaugcRin9uQzAgxqB
-	 4GLb0CVle2x04Ug5xd8N1lp9D31HkTc2uy5yG01eZw2ibxgKpJqyd3rosUg4r9xxs9o2c
-	 8FN5DhK9k0xvOA2/hymKNaI+16cncuFsnN4u4YCiCH9T49ZTlwlBvOTzSComn6iJ+OA==
+	t=1793552859;
+	b=HvICUOIfAQr5tbsU0ZV1jrh+EyVlHmlfMk13PuaHry4X+69ohdytr2/CttPf+5wZMnmr
+	 5n+ElONbo/7VcDyJp+NecaPUqbfoHKdUKrEad5ei+6jJJwzZc+Pwvl516t00vIInykq3I
+	 U49Swkjl7lQOo62VM6wl9DEy2/hKEK6iqBNTW2nkizDVQQywJdCnJcBdYGRdeLCypFvq6
+	 9VZxUVv8s1hekE30Vkg/qHiadoM5t+iJT3MOwztxgDFbWcBlVPhUkmuRzVdni6eQRRVEO
+	 mfOsqYRzgMchFsa/IaxmL4t76xcW6M0aWcndpMBZesqXCEMtH/saW8csnSTlYiuN2vA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793552177;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793552859;
 	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:From:To:Cc:References:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
-	bh=uq5UcYrb3jC8Aad1Y+ojcRwgmWU3RMdEv79Fs7j1qj0=;
-	b=0BlDPXGFGljc3V0tMtbwbEB6srAEQnFijRYz9EObG4sQiZus6hvWuCa0pWfN2/F3qVS2
-	 tBWlnAq1rZ+J6EyFVt4GFoe8S6yUOa1KXUgB1V4XAAw6zt4l4EN0hvgQSGaZWEyx2dmPq
-	 EDPLjro2sp1Zavqtb5Pd4kSOaQIHR3Imm8DAu63gnvFeoVaElz7N3GfodyfpW8BNK0sPN
-	 wQ7LZ/TVBKclFJ21AqqJi/Yuq8pQaOVUEuSKN6FGCRuNsrnsn4i0e8PQcj9uw7RycqCjk
-	 MXAG7qLfPtq9P7mPyuWZSPY8aOvk/k6GyxFZnGO41uHqago5O0IfOW5XBbIN2CzjETQ==
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
+	bh=B8W4VyzG2JrpdCWWsQPNu8MRYmTxyedCjLer/wjTIa4=;
+	b=MVRJGpoxZ2VKfRRMaBASsQtY6LsU4PidDXsCY9HKVmvmL72XsHvXpd1n0jW0UWZ+3Fnd
+	 tP03xPZEZwPqjzxramx5vl7fnmD8X6gm+FxSRBC7o6lFl6yMYmXgLTQLFWycM6xVBD3WM
+	 sW3ZgdQPYPJY25jsgYy1F5tB67yKFaFZtpiCETo/X9tIGScYXh561dBxbEYoAqtDDlIoy
+	 udUM1lMQkCBvG55/Rmi+kOuy710jObI2UJkjZjGVGKQVshx6pH9YFbEshuXB2mR6SeDz7
+	 nGLXq4NkgWW/FFIXuc2ARwdLKHqMZSO0oiI0ieOf77aWXiKFB3kN3ZBqFAtQY/jrrZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmx.de;
 	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=VGt+GoIh;
-	arc=none smtp.remote-ip=212.227.15.15
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=luRmR5OJ;
+	arc=none smtp.remote-ip=212.227.17.22
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BD7606A324
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 16:56:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 54BD7606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0B2606A324;
+	Sun,  1 Nov 2026 17:07:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D0B2606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=VGt+GoIh
+	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=luRmR5OJ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1793552164; x=1794156964; i=w_armin@gmx.de;
-	bh=uq5UcYrb3jC8Aad1Y+ojcRwgmWU3RMdEv79Fs7j1qj0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=VGt+GoIhsNf1osTaos1ZjNU0ttATKf9DfQyxiRBNbd+fejK3/ZmAsO/ibyJ2pggz
-	 KSrsXM1S1VM13dF9auiwW8Z+TGa35WuwKEaTS36xlkWxtpqrv9D0/MB8/o+NeeFD8
-	 /LK0tFZsH1+B2YFuBuUyLuT3HeT1IOE9afhsTlXPNMtfjyTAuhr90zr1LyUh/hFHk
-	 dSNp4uLGI9pWPWVaTQWE9lc16c+qe1dgEbY1e3xfcrcjqWLKu5DwcJBSA3fdpuBAY
-	 kzjevIH3iA8bXdwmdjdkO+vj7hwHmYhlaB6NpWFno0EkEaVXRyMm7edp5wSv6DiNC
-	 2LAuGMzhZ2s+W/jvBA==
+	s=s31663417; t=1793552852; x=1794157652; i=w_armin@gmx.de;
+	bh=B8W4VyzG2JrpdCWWsQPNu8MRYmTxyedCjLer/wjTIa4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=luRmR5OJZ9nrbfSev1fp5EHc6/WMb1GJhzyL28tje1UbnhSrTFPj3FKVav0zUNBq
+	 w0JBeRxh5dPBTjMxTbsg7woLXBJOtBriiT787pIcBdxgjm1ZnPYAPbBOB11+zqfjc
+	 QD6SlzA+FfxWEi37Xmf+WUkxeV/YzprpANuYPmY4TSlvNRoZsgTLWFigHx68PEPuh
+	 XfDnbSPhTkAGBhr1aq3i5I/V+lQLWjb3ndhVPz3cvA8rJO+itGV1xtfdlykTdq0Br
+	 JApMkJCbecrFXnUftrYQN+SfW4DSm+Q4cW0R4EuckeP2UB7ympx4hZ62G8mV1wXRS
+	 uBx57FOuapezLbQ4Ug==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MgvvT-1wtjHV0wub-00ixDd; Sun, 01
- Nov 2026 17:56:04 +0100
-Message-ID: <2b2cd3fb-4c69-488d-915d-19a4dc338452@gmx.de>
-Date: Sun, 1 Nov 2026 17:56:03 +0100
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1My32F-1wbVTn1FZn-0169I6; Sun, 01
+ Nov 2026 18:07:32 +0100
+Message-ID: <e3d30656-0040-4993-a3cc-fac474909cf7@gmx.de>
+Date: Sun, 1 Nov 2026 18:07:29 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -63,238 +64,180 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: uniwill-laptop: XMG EVO 14 (E25) support - DMI entry, perf
- profiles, kbd backlight
-From: Armin Wolf <W_Armin@gmx.de>
-To: Nico Kessler <nicokessler@icloud.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <8A581217-ADC4-4DC2-AE21-1A92537341B0@icloud.com>
- <7FEA1980-AFC6-4A6C-84E1-E820B7E6CF3C@icloud.com>
- <56d9221d-c228-4037-8677-3d4737e323ca@gmx.de>
+Subject: Re: [PATCH] platform/x86: dell-wmi-ddv: switch sensor mutex to
+ devm_mutex_init()
+To: chitranshmandhaniya@gmail.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Chitransh_Mandhaniya@dell.com
+References: <20261027044819.75761-1-chitranshmandhaniya@gmail.com>
 Content-Language: en-US
-In-Reply-To: <56d9221d-c228-4037-8677-3d4737e323ca@gmx.de>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20261027044819.75761-1-chitranshmandhaniya@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Uut3hAbw4kMnFnXNxeN887NJdrTbV5+YQJsV7RGU4L3514cL46D
- yT39nR2ofFeGlayN7hyzjWYeuX17neKwToIzgIVPfahRuoJLVA8ebnlWaxI016hw7CrWLyT
- LKSjsHFRjXSFyv/8CYny5hoIjk8yDUVCovrd+8bAo3IKGYEkTrTok3hl3kOwT0nY8VDnzs0
- s4s9MaFjptqIviLa04oqA==
+X-Provags-ID: V03:K1:MlVZUc3G9XCOrF/YVdfDXSFrwtuBvS0+FBFsvvMJrMYrszzlFgP
+ Hj+8GbDXYBCus27VVLcIesV+ldeUuBVU1iQeug0rpwySUCEsp9QXLCcGww6YmjpYYtblU+/
+ fJv1PVMxC0JaDUo9wQ0J6CWo8sb/xctdMz1WtACDWLrUYCoMFoh/cVyq9Tuici8B6oCFDJR
+ AyO5EyuYv2UIK4FzSRY2A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:i9VGgqAM3VQ=;xRyqCOvwnUM6lDQa2657cYVuxqX
- stIH2M/Xh0ng8EocQm5g3ZqEJOhkj3j2ar5FgXGfNyg4YHqzsWirbAOMxLuADbjXk/KxUShXH
- Pyuc/aEqyh3qLGqAJjO+5aWwUdly/a/tAbZJvrASrbNoImnGDfRnzyz7lJmCHolbWbIZTCFA+
- qsV2LXE2Nl2bexyClso94VfTc11W8MKpCTD5LNrgged1UTBELd5T/j9+nPg8hnTb/hYki033+
- /57BpkzcbIXvfAd2WBC+hH/UOe3Yu6LnJun3WT9qMar/fzMAdIJE8OjT5QAe3if2iuECFBZsF
- uuMTg6Q3buIYBj47B0swBoinK6vy0r7dpVe4JUIjwKDdYQ9Pg28iH4V6Lk9L9EmevUb1IKxoo
- UniJ+VK4H4nHOviPUMBMF5n3yZtKbQETWtjWEiERsMofrA5DAzjn9cbNud2LRZROLLom9NmdD
- /FpnGh8CugUXvn8AQYZxEFuXUrdiUsjitn+aAIPLj1DtHitlzmySIwAyofCj+XJZ/r1+HsmbC
- 2qGe03ORGatWyAFIS/6ZWglqKu5Zsnf81zgTc52Xfnl0zDIyyB0L2hMSTkFRXrHqsraNZzJDv
- 9hOU3CJ3LAcFZOmBVuMVRVmbKdP2hQ8VswPJUcgdxKLv4ZvhK0WWEdcd/pjwnVk0pZcLEb1sD
- dfzWH857dCSQt3yUEGZQJ5KtomNIt1SAyLwlA15qUt5y06mXmon8ymIPIaOG0LZgWwm4drMCZ
- JfhyxZdEnBALOOWieZBk/bFUP9cKYuM5Ih/MkG+LMhnapdJoQ0ZaKEIslV2CNZRVDyEG4f1Wf
- kJ7Yje07vQ//YCURJveHuGTM1iFko6cWAbpkknwIr2KJ9wDhTUfc+NBzsYSUu7dvporYhK6Xk
- hc9Bo6iib7DE7wtx0tJZShug3uw3vdclHJn4nkc1HVI8O0j3mmT2I2lIBG3LPMaeAssEwhZ8J
- wpBDu3y4HEeUzs+pW2VziCYoObnivpNc9ktfKdXmnl3ZDjZO/To5g0NnP/Ng0WUBrnaJP1JXL
- joO2HLAkanGUKT1DsXzJZ2vqHVR0J66NYrZurVj0rTn0Re2BEnwsmCyUyvxSljXqc0EDX8ghD
- m8GwRwIs2v5lqTvbGbtIZTQZVqjoGGBjVMDzTjZ8fZJYgEC7NUIsa9h5X6dpCRJcVN/EQWc7V
- 037erXsIaW/DemRMbz8Vgmazl3ISUdlGQI29NsNkUc6Ma74Q7kAkSXulqstf5DEe4jPBiVY6+
- lUsgcMSGwCEj0YJpA4AabXrs8gVPKQNqxTWo3OgK3OPuqHpxsMCRB00/eDikvUfGHBPBaS7Fk
- ZBkZLVl4jh7wqaH64kdIT+Z2b5yNFNnmlUDerq2qTUgiXpiUwTCOsPwbzqlpSQXFA9i8Zq9dt
- g4LlMSBZCysKd6REIv3f70SiI8JoTAXmVlCG4B4OVamLkyYuuVgXp8Rs9lCjShInjLi35C4zZ
- BzWafR3dJ+p4Aoz1YrDsJ/5upE+lWeqUo+0xoADFXdyGOHNGkP//RZrU+keSqDouqLiZhAi2c
- RS76dMmByDH2DAgeN2qTJzvqbyJR7y+L4dDOEYGdAteZEh5rRfrM4mYDf7crV474960u8rO0T
- OEc80sSYHJky3Y9+sAKwRgA4JC4aC+asRZsTF9+vsXLdScMfEDB7JT/i8AlmRdAwlBW29OrbB
- t8cVIgJeerXvIfmncWneWAWCrmeizmBxBv0zerQZIjiY4qqbcOJmrBLJwem7gv0A5n7C/Y5n8
- JpnUw+IDT//Z4RHytMHp9ArC10fuzAqrKdvdndZB0oqGbSgzejCdyk+j7Ir2s5uDogi4jQFiN
- lelXa11tkkG72TeW3LlIC6z8ApZ2qJ1zbQOM5p5T+9w+VeoBn8QOrv5xrLTBCRsr3epBgddwO
- uVfsoQ/gR4hBq8z5ObeB1bWej+O653pgENNvqB2oYh7ghCgja49NSltCdmmA4ShWGZgKl9L9b
- ac+Na/b2pEMQ1DawCfFdYf/gWLKpqQmG8PCrafLb3y2V0JtCChSq3CrIeD+dglLojGxqTFgu8
- qx6W4eYdG84Qa9qKr08quRtaWrSJiu8fsqkkiUKzuy9ZI9WdeaNe5LBEmG4lK21+F9CNrVFtM
- fBteqzjjwbz9ILl1Z0uumnGAZyg112NF1wvfZuW4UQTz5I5/34J4/4ktRRFBwLm4lYUb5MUxU
- yLeKR+6WTFMf9b6FLnqEmyTTSsoI1Gsdd8nj8EYTxTfUzMg+/0pLtCTC8v9feiPZANa7MN3LR
- 5MpSIK3w8MEQXXuq0UIuf1HftmX+L5tLszOdhVI1HkuhGyhPVIWnv09Jk+BSkzY83ccZFA/3l
- hmzrH1FNFhGPNqtnvPK3OV6YQ0kfDbNyssZ+Y8cwp9EeNUmW5MY1oqIKxhpxJKTk7omWjLDqH
- itlrXkiEU/RV0dSgNBEilXQst7oi/Wvppm2486sDnY0hvyWkZtmnsWHGcWkjT8AZbdip+Fy22
- Uygjr4IsMvE09QVLMgssj2ul3xk/h3e7/YKgDQ8QitiVrk8UzxTn6ZKI81NL2Q1Rt7ZW6I1yh
- ULKhnm8jj6IePFPqs0N8HPLFLNBQleUZ6t9+Gw0jKJQESEf+IAhDf9hdwbkxcgDrUsoUh3mCS
- dfriTQ+sQ+mYpT2OFBVgOZUqKLPKNBBNzIJqODlvPOgzj+mwXnwiJ86paXxEGiWol6g6pAQmv
- sYvMUfkNGFtfvpXmngK42QThys4fEgnU99fZenhVEkqKjsfBuyGZ6uPysAZzd3Vgn+rnQXTtG
- OhTkZrG9WjV+WnBfssFfKcUZDYssm/yh2xJXShqLV85rwnsQ5HAEAjJVoSMFP0bENH4YjHNNt
- 2O8JfPUh8BrtO5GR9DDVr97PzJ075I+N0kfWwJIY8WvzNHgnQBJ1ilw01w1PBgcT8y1E0Nmig
- T7z5ewJ2r3eewz2CSYw2DtEOzoyjzZsoRWPXS5TUmRLzLjdLcRZ2Hi2DFz3zTDOZnx72NMxdZ
- QB0F6jSyLDJ2URD1OxaM8OuPmjap4kTdD9lqFf0RFriQlB+c4qD1JqRCcaejZheFPODgt6lqn
- Z0MMVFFb2Xf05A990NmAT5nXJmzgmJcXkDrwOG2BgJcP3Ga6mQiInY6dg9oz3Yt1zZXComzyw
- SWZCR8MHvES6vhkNqJE0KWLt0L6vLikmOMWfCzHQ6swh5n+/xnf9rbEc4AVIOb8xN++wCWBN/
- txi3vd0KYHUjLCfwrSaOUkdFKZ5/neCB02HYPJTqsLJYnbSKJSZXc2nifUZDD7h1xTdRalU52
- WcOfXXfzWuo9gyUVDIH4YzgOy11lm3gam0PYBSs8Wsi3LSK/w69wJGR8lRs5nQU1zMaQsqDAe
- 6wmZ4F+brRV1F1C3nkoPh3I+voYw/C32/qnMpbpfqQJSQOX/T50EXZSst3p0YjZb7VouODqd3
- 2QLEGGgOld7h9Sp/pelavfetNAfVHOlee4y323pKCOZqG1kH2egYqaK/HKhslvdFLmXR8eHNV
- bBLDDuD9jkhiuGxfQdB2P5XOBX64SM83/m3M8PkLFnyDbkQj4lbG7F3no8l7+kG42lvOLwQWO
- MA7j69NYoOsCowECOTEvLE3FqHkoJNXkuSMuhFtrjADA/5UDAjE3YaUdItyqXV9e1pwrmLqHs
- HpUfTKrRvIIAYuojEnsSmpDMn1T2tWMn0jxZ5QEaZTkybwru+4WTnx9RQH1W3sNqT8CiG/YGR
- creICR0vXp85Om28uWT11M+bA31xzHSCie2lRhyDfkkIJf8+Twq6BhuyIi0dqcclgBCnxNQkN
- EWo9KusTgh4+FlReXvVhWAiIN6IaNiY78bmLsgFJvZGiORqRyUitVgC7u62aaRMu3K1qGaeXd
- Vt1RDknL+PaPj2/cdEa7Rt83wcDFcfZu98/1xjPh9zwnHdM788YWL0hvgW6NVv5lVoGJU+11y
- z4cyNR/WfCe6XJ+d0AdkRZCtbYzKCLNWVtAxhzgxqXDkvvzJICBNtDVJyT1ZgjcvRp9z3YfuV
- rnbFwsQNqvo/nZHIhiE7df3Qv+YS4Da9rLFwDNYLwuyq+p18hp9yrZ2KBXH/ZK3QP0w7N2m69
- hRHj4GJHPx3EBj+2CIoSFCnAQ5zgrahyJtONfPupo6oCo4wHzqGwv3+F0fik5W12vMiE+e0v0
- EYSNHqIBO4DkXCnHwdB8pYVt+CiWgx582z7Ue4ydrKwTeHUX3x275qWwWfgUGAfr9BWkn6p6Y
- cFKKn+2d8XIDgabA7zpdO3MMqxwdrgg2ZId+8eKaxjxB7ZfX7Wqlb2mGzmA2zP4S0sIwjmW8a
- lzRl7zRGdNJbt8lK1PXjV0EMnQcnshWBIssb+ysXkuVN5rB6lHhS1KBCv7c25nP5NCS1imMdx
- tgVwhaZ9u+T36L1VXe92FEjSa3Ahi7LkEog/BGFjrnsO8D9SXqsdnPlcuxtCn1jIIP/lQ50Jw
- EeVwiKROCRMOqt45dYPKxNY4nh7KFBQgHdGhFOLkse5GSqweMPN3MMJCeiaC5FcYBSPdgEM1T
- pOfROzVi+4Kd+4UzoIWFDxPjwUcDRDs4ErttUzST7JwiwkfKAdZ59zOe24+eCc58DNMWkJ3f+
- 2kE67gXDrnoECbldr8xvlhUEJKvlsfOvHAY3cWBnSczzPEivb7JnT5U8guZgEatf+vxntuCYl
- 9rH6B6U2z7h9GopirGSSEi0JWHUPHleVikZPnWYpuQq2V+Fx3oEdWfcP+Mhs/5m81eJWzGYMU
- 4OzzSXHCBeH4bgpKVaXqfE/rBCQI6/WA2k9N3rfGMiVOL4OmfCMqxFlxUeGPF9qWbiWVrgrIm
- IGBCC1umN/rc7jda1jWSyp6cbEJUySTG3U4WVugik1WxcjvJekLwGw3dlbE1flGc/RLTyUKws
- UKanSvXj2M8XDC4SYOtiZuZ5uFdzcba0HYKTkhs/2TmXJ0HOvgbrYGZil/Z67aHz2kssYLwtt
- vPnMhSydTMktGhe0N6it2EBqDkd4lI3r8bHUqdt3tlaPIKQT8MmtVlHjU3oL+R7e7gexZNQBE
- KsM77Bzc1iiolZVpxB0HkDcVx7g6DwQOoMqlzvQGSLA4Iga/7cPYr8VT6BAIJss7Z1kgsMMXy
- R/7n4uXNOGLF2Xwrp8T3AwINw92mvGTOAd165B8Ros5QpCFF9uJBh1fVvfUKioqZkYUAWmcHI
- mnHIpQc9RNu0j6u7SwpoyGB/cJ/U/1f1X97ngKH4IJMA1ZQXGolaUf8+GACgJsYPw8KEE20/e
- 5xP/QCLVrCnQ3PopJ4pZQKgzolabWL5N6sAyDdMxYHwgOmlTqIHX1P2EoBGhcIm7zsnqo/I0N
- IqVkppOYdiiYjPWNEnl3CIqnpfYDJKPeDI8fJSLtNhfOLHLQHG/BoZYvmh6itEOi8RTKSHldD
- KI4+j9EcEhsJ+O332Mk/zljgyGTVszQXc/deGk3oM5dX06uFy/R9Gpp80u40TSunBHkjcvzRR
- pEhpOmeFimOrk455NkcfzlQi7ocMQFBKr3i90VyCksgWexTBaM+4i8Nrr4HGpgg3rsHkkmURB
- oQQtL/gHxoCZehNJo8h1ZsZ7aXtzfdWYGSdqRu8W3EwHhtTYKZr4bHBfnXjFsVLP24dZckoYr
- 8uAAjficW+AKuQIzks4+UkmI15sIs5jmipW4wtDTh2//Ljp4AIG8YmqNft8/RYc/y7WxZZH0C
- IzESZhwZC9jcBprJYWcgt8dpEuHaxpTXX0yedp62oUrLOpe/O3U627VPY13rQbjpuwWOvPA7Y
- TiZslbLrJ7AqdVpwPNpKAVlCTF+VU47cDUL7FrIGGCelkTqZ7fw7thozSlW/Qf4deiB+a3vmW
- aKc/h6c25r7k6l/u4yU/YQDfp/9+KMqeej3SmfMx02ZDCh1Y8VzURwS27G9PA13bHsg21ldbf
- HiI1IukA0NzknUDTKIT4D6cO8toJtFD0QdmIDMJRPPNnClXNXR4W2wHFJ9V2qvp9BAvANFdli
- 5sYUfF9J3VRq4eQnonpgJDyhggoTQFrDbV+9lU56r4Pp5CuBesTZl2ij8Iua2qVggE8YXUK1I
- 8w7QJN9RxopIB4E+5Vuy67ApBKFsq4hHJ5eG1Bf5bN61J/ABEMTjRAqi2uPji1C13UK2LmD5G
- yKYRlY8Z2rEyOiIYtIU3BwxipjA1zQfI+6ewmOsY8nkp5jJGgoaeuqk7J80nbZbIdlCWVx1pt
- OUeIQ+6mTyNhdKW8KgbNKHBySeDOoiVjsu0fZIUymO/c+lj1DSjkhxBr/izrRBVckQEfmmgb1
- INurobun7YHQxsJuJrg8r3ZMMpkUyTzP9iQCihOxfMdcNmxghbzOWrfEWlOqUtx75+OLJCQzP
- ub50GBcgbqZV44nMaGCneLr7NvrZRJ/gNyqv1ZbdkB4EuUHRGkoPf31qRauK6ffpDFYss9uo3
- T9xCXO7llYYJ7U5J4RZShRZ5HmEoHV8XDU8ff01der66b5yWCJpSpTQXhxHrHCgP70vfojjyl
- 6ltDrUzDPezNEerxjt4Nn4yloDL2AZr1xzqckdMkWLR4czenMylJ8RuIRZUTabIEgSG0N9Yr0
- 7+1o7jJXACkWv12QFwBd6rGRpVC7k1VZYK6W0h49oP/HgZTpJrVEXcUMMPqiib7iKMjlNkTiu
- cuXVJngQ8ICkeZbEEtV6ZdfK5vSIfI4IQgFPzuSHle4u2nbKIZpG37FkRgGiRHoCVyrNzmHKr
- eWZSb+6FTCfXzx7aSym/u7lC81LuZE4bGJJCAyLZUPQpnrh1+rd0hjVubvS3nmAn38WR56B+u
- O1f7lWpy0MHGqez3zQAO+ZdVzGbbsSKLu7+zGv4rri1Xi4yHQ12CPrFsivbGN6s+hgFKBdEyA
- 5z7Tx+W1D6l8CKB2SMvQH9SZUenMDMvvZt7zfi2FwXopyNZMEvfNoA+ixKU/oX7OoJjuEyxAM
- P/2O2DDg6Q7QGKB7JQmgE5e9+sTrJCJfJwp7w+RQSLb3Ha2z78eRS9tPDalbwwe3xQl5vYUhg
- uYr4Y/0ETG6r+YbELfq9/UzYS3+dRqOQuhVO/UxTecuMuXXcHOuLrL9mU9VXwX7KXdPmG5mDB
- PspZ33PpaP1MdtQwcktpRcgPp/1zRAyJjzWyiq9p+SHD8qyoTjn1XiCy4o9bJLAT0+F4VKZ09
- Q7+iTnWzu0K7kxrpTjUrd7tbyxwnwd0KsvgKrUw6vndp8GWTP0eQHDotxVQCfU14QlCRXKbbN
- AgNd6624hqPdnKBLwbJ7RhzSLa4bn0Fn114Dm0YnmtO7fWM17VZI3zd7IM8Ll29HX4zgX9O96
- jBcZw3e6ccPbNyIRAHIB9gqBGRS5kdbp0p0ElYcJdIXduInGBbw57U2lwPVu/OQryxQxGwA85
- NyzqzbXDkUSZja5Ai9NnpKTRDvtPm7rsPVRvJ8oYpWLSXmROuT6jibzvnR766ooiOT7XeIXZT
- edEuJJvBJOaTSoMQnqSHkD4A4cJXajknF17T6ZJYiVGH9+Eel3B/jrnesM=
+UI-OutboundReport: notjunk:1;M01:P0:BaFtbN982/8=;PZpqtVPr8+jZrcsWkwW073kxzgR
+ 5I2RyIXL6I+kZzY/IVqxC2LnfIuuDFEVN2Hzvbzv9d9vbHtIvXRYHIZq7U/i9UR8zNBn0fQb1
+ Fk85IborhjhRyCNlaN/mspWETGqTOzEgFZ/IcmNoDo9I8mh/xX1bedcaFD+eBDM70rub3KpRD
+ ELZfmwPT/LXDO6yziqVE683kT/xWv0YlVfYHIEIoQ8q9YuRw+L7yWILDG8RIWEz9cr18J88Zx
+ 89DjbzDkXV0ryaOr5QQdlx9HriTm95h1HJUPKgr+fBgG50q3xOTtSm4VEeaY7u1VG8M2TDCyT
+ 5Igh/4XfVvTPqW2OP9egHr46mD3w7wm1PHYwe9XAM9CYYTRp90UT0EWJpISnOY9O1OaocmD2k
+ SHFIps5Vo08DfgYWf9TiftHD8+ZCdj90SEO4GH08FJs/PqQ2O8vwqVduQmLizvY07G+kDFnVj
+ kY2WSySFaZ30v8BLmRClw2IRy7eC9LnTn6aai6vIqqLmqKHZlJRQxlKBqvneKZtS0J14KIZPU
+ DDDr9RrZ2fi7cd4zL1PM8sTK6qHMvToJl2uAs0BiUcQc1FPYKaRmY/sfDpyRmwDjFiJ8VNGiO
+ 9bFjFlIiKEtHMy6j0mWmgNWfrCUXSNZjJdNib9uoVdG+mKMSkh1w9mRHIwTiZurbt3nR6vQMM
+ QqcKJQqHyFF2Xhg6qJ7sQWzRGvIU4N4RdC35B6QXjUH404MoYlkVvp9ijN711Y2dz5YMBMyS0
+ yaG+j4D+LvAvmJ8ww4oWHhdnLcicWOYG7knV/2O9o74qsLwomP3mHg1elHBeN7N9mPe6GGG6A
+ zj16p7f6jhBIRZ11EjoTL3IPOGOI3tVJq+jK7lc1JzQik+Jhsw55p3Y8pULkiDG+bKCC2zXkI
+ 4OdJcNCVLkSvNFtkmtnk7ifmMTJXaSLNDJ8kWOT+ounQ/36COn7F6n92zB9JRdZKACe7Ctn2m
+ fk8F8yP2QfW/hdIo5ofaKe2C26epLkDycdPWPoMpR+BLlC7uLoHR+Lxm4MIoJYzpNlbK56I8O
+ bBHAbx+ygtM7jyLhzQBMa4Ngi30kCsdiHy5JU9fWVeNcTOxH4oliAhZTbvcJvzxINgPrgS068
+ KYpSDl+iN7Cjt24I1r9JQ9hKL5yItxSpAOLzV778TChjTFfPKTBvJPbFO5EE7dV1ZE3v6+B1q
+ PBRjaS4J3lsvlfdyKggBFRWRwtyTKPR+8r4SrEOto2K8x5CBo0Z5KwpPP4Q57YIrSG62396fU
+ lKucWx/+T6JcPK+43yuotJY/3gq3r1h6VvXzMp29i+ynyA11cCXCVsDtGcO0GY5cpj+C4vTFI
+ cIwXbPRrnwUYICg5P4tmz/vkMP26qS9xlKj5V+MsJ5zqt6ZwYs0blZppBzfACkN0Ak1fGVEVX
+ G3nPN8s9tPn83FI26yZwGF0XLYH+zOmzndJxMItElSTNrBBJUZAOhTmxrDzGjQnzCoRcz5e2k
+ vlUtd1kDMOYgtt68kVIVAprY3E4uzrNkDEX3UsSzAqseIM26CM1/Ptb0RwirjSDlKwwb2OGJI
+ VsHTMijQlNLF9k1Rtx610U4z6VX0HRDnOTANYMqT2KyTxNPf896JWJxW1YAGu/z0xkTFFcJxf
+ lGBgGeM1rFDy+2UwPgQQhzJjIojTPBYga4udJDJy9aDiUEdha6kTorvg58hwuc4ep0bTSFp+i
+ Ut/Iep0CC+5LaOk+dcQWLXEQyGJuNSUxkv1LYGqvaDR064ZPWHbVJ7SV9e1535p+CUNh0QZcT
+ XuyXdE1cTHVnuXVySx5QZ+BUgN0n82yVS+kmZwClTVB3AjBgoZO1rcRJwGeqj4Mlhemwlc6E1
+ zh/8f9HNIJ7EnEq030z50k7/3MZSWSJBrg/AOb5jXYvsPy/jZOfLqUgQGX3FIs6ZWsHyVVDy6
+ 9jJCM4C3Ljdwtzlr1Wt+vI1WYseF0wP/3jEmVZ1OAJF9vvVHiHR6dcY7j5lrzBwIHL0YsOD7d
+ SBFZW4b8x0wCfHG7CFUPdWBZ8ff+RTvvNOWkD96Qo2ZMDoIQH6oo7YnohL1xMBtmBRJW6LS60
+ sSzXEgHC+rtdlO5ROV87awoTqCbNCWMCN/fBaDKODB+ME1IXBejRsXPBYktzWSR0BJocMIVvm
+ gY96EMlCfMFmHe8moND6nMjrulF72iqmPAlFWn3RdAbEjyUdgt2sYPOTNV0CmdOMOiUG2GMof
+ iBpQ/8rAViYJBJtr4A2/CMbmrb+3MpApbe2iO/8blQt+xTs+r4cGfuvRtTvIhRNBvcX8jkBeM
+ IsrUGZ5m6+fjIysqpDm9OTW8abwYWoT3vmG4wyGtJN5KG+V1mknpD4rCLsoVaSS1rfdvsnRJj
+ ogvnYXA0mmCIDqrCe6GqmBx4ftfU0/ryyVokRs8tvBAohazI7X3lsNsjk+HSVlt0HDEpOpPWP
+ BDsEpAnxz3EMhrkNluNRVBIeccgpWSSnoGIapLVVqvnHj1fDXjlVzGWcCdmIJiBAlAmL9Nem9
+ l0q+GERGTAkQTwbvOxcLO1/exCC4D610VEzt+uCURUupYxXwpbJgy4OhMnkq2ISOIKw2DV1oh
+ zYckOhK9+IPfgR7oTNovkbL8jucI4iWOxBLtJPc95kVuc+OvI99gdUUpCFXd5hKFTdlqK3uRd
+ +rBMOpkaTUDzFGgaAjv2qodxSffw8Tnid/N5bGUnrCqArXL/2sYxI1yaGRBJHagWRnh2bfsRD
+ RU6gki3OzUY157dz/ml8dSpGqGMtIskQ1bS++vbKZu6pK/bX9s7VaFmLmIdHjRJ5Jw8TWrVLJ
+ Bux9/HpFuTyek8QB7S5hFcBbOM+4lpj3MtyQNYGFrtR5db4POMpy0H7M+HvQt1iHypRROpkml
+ avWfd1eDHQ683uFzNafffHkyJDWRRdO7pc0ocuFVRHdYS8iYZG7MD6PvNBUp8UEMRZVg+Kmud
+ h9f3U3cLHGaOmA+8GIKWrpFUpBO1L5qAV7v1PtDnt3FK+SOAZcFf3+UOcVkO1iMyDc6BB0EXc
+ BpcFe7QqOgjz9KReZ+oyoi7r/SO1g+qKzB9jrXYL6/S5bVb1fd6nYENtEUKR60gvitkO9DZVG
+ pW5rMV/MyvcFcpZMcENOL7+s3LPxC8DxFBseiOHJpoIusmU2PQJ8QSYVk+6wxuR5cjbgr7IUu
+ aI7WvSixrISMc28Ts2WjZrfMoXdPVgG0A5DNpMawlvgS7yvEHfAaWLttibx1KpkB1tk8ptRUG
+ t+AxRfHj3WO6R4kKyWCp4Sh6AvrMQSo3dKuLo3d/kEe3NX8JuLuFmgsYMt5HtU0FyZTNGyjKK
+ 9PjNi1Y9SWkWIIKyM8v/Xbc2E0ncK9sUKLCL3U5x5pEbhNOdJ6u49hpwiqABypGF0zKb9jHWv
+ SJbkcEcuWaWRQD1Mg7brtWCeK/1yLh2uGn7wEn6Sa1LwS5DgH2oOSRjVYV0riXmq8WICw4Fio
+ kKXViTfTY5WiVenmP1PrCZFQ4y8TAV3DCNw2s08NU62yTXu8Va3g+SITSI1PZxBE+OJw3NAn/
+ tqEm1IPm2NeZjgaFDJk1j7PgBr1sHivON+CU3MeHVKHwPyUlI2spwczztWcZXiWo7VpcqWSx+
+ hOQwCkJOhEFyP7K6wEzxt2xCcfslDcg/4CeX4jEy+N0KfBONVmf0nuwguA6LM8Nh2uSQPzm9z
+ o2g4V6O7/xtZOkG/eb0tN7+JnLy9mNTvjooJgX/COA/+6Ag49/4mtGZqEajJDWgmaaXxB4MUL
+ r2J5mKj/oESaBlKQGKjGx/GxSIPxO4FxvWTu9kZsKRSR48L2uc8WrkQqgLswvM6QUgpbVkDK5
+ JS/ywcriyoz8Bp1x6RXnvkVqpamSNro2X27OkvNC7HjOviyHSQJqdX3iJRvEMzyAW9hUR3J3v
+ e+D3VRNLIrPk9Y7XO4ZP7Da3EMPYnc4/obpobg1L++5F6ZoJu28YzcXgxEEX1eZ3T3psjebHW
+ /byyzqsCMayXs5RnBX7rjQ3aNMPAXJ/0/d8jz+OErHkzb2pTRr8nNbOXy09yaiMU1ZSHE1cc5
+ s3rYushHa1Oiqv8VA2GOX45e0T3UBjwGoAnR4ZLMEmN2Yl3VrjybTeBGvAnKTpUA3vpX3y3bH
+ Q3hES6kF9lsq/x0++u4vEl4aDrn3QAhjzbfsJdwBGKzgGPSReXvMeo+zLnV/fPam1glliuQgI
+ JPr8r7kmbjPy3iilvkQpbSNP6jIzYyYNYMJ5uJSB2O5/s4k1WrjTzQX7WTmEFseKLIT7j7y7T
+ fSt1HFZY7jQukovrAWyGmdo8FbMPtn23arFxOWHyG+k/PIXc0wRpZ8DB2VDZetkKR/4HGAPpP
+ ofViMCC9+IlssQ/Gq7kSuOovi+neDCaZg6nuM9QCFqLASbKvDwidU/rkU7rE8KGz87xyDz1B+
+ U/oZv83k4W6vrv9WCnxMta64DRGRc9S0cnHlRceH65miOYajVTRHX/stSwPDpDPFG2rY30/eu
+ iRzI5M8mgMrQP+ctTwArZzWsyFD+FV36HoY73Lc7UxTcAl24FISW9SKPwPofQ1gI4hlFpyL6g
+ 25KjIQ4bGtZKMvvRPTdHY1Kbzb6dpmOMKZacx+ag0vzXtWHk7SxMasLXWVui9Daxah9M1J2rg
+ JAzptef7Gv8kzT8bcPgcDDD3NZoiwptrT9c7Sze8EZv3BlLXBOFrGf23wdkGEs3lZKUc0TbP+
+ oECYy2tNrtVj46g2QZLG5uMCPgPM6xuoElatLsANuPc78AH2e8/CiLS2IqyBq9drXG5QIo6V7
+ fpuKePiSvi60Mu4RfdQMXx976Vy9eB1xZnqJTVs1UiTzTZlN+JgJUlojz9G63PBfVorKYjSH6
+ EG9js9rFy0RJdfocgyQ1UULb3yWHG/+uXdPfMfSNfZrpkFepAiYEAmQ+YeQ1mCUx4cg8QUgYs
+ Z0sKxb6iMWIVt987bAthemz1D3QvdjktPkIYARK1o2sscSc6JJ4T0ebI7WhUvxw+2UbfhPw+w
+ 6xP24Wu40URWbaQ2BMsvzNH2L/Hgch66UFkXtpQcELLGfoaxdLakJwk5gsL5prQXsS5DdxSWG
+ 7pZmXpXV+ONTJ1CkfNuglvKgQfUnY/Pl/hwhQfBe0kbCopP1Rsscv49DTI+96VTBxNWu2b6Fm
+ rSJ6LE79UcYftMoSlU0IGxVC3mBuFAOMIPBUiO1TWqdnguKAtzb5yAGtP1crFgcmvPW+MJRTv
+ YyIw9eAM7Y2SlJndJWA3sVYtQJJ8C5u9ZhUIkwS4yfOvgb4/B/WNT2AXQ2Gjxxy5EfjbStZBm
+ fMrySvRJS2v3OdUpy4zQmHLE7eKcEMuq8N4gOzj7LB4duVj5TIl4YpHStd3602V2Ki+EFblC8
+ rRXGbUP/ulOqrzterAL/HPQ7Q3glwqkVQMHmHdIVfyGUd92VHC1Edqr86uWxuRNfqrsiQvgGl
+ tkJot/mpwCVuWNQqE5CKLFLOrB3zSsiTjCFGBPxvgcZw5RTzc6U0PNrkVuodul5Fz0iOGsi6/
+ V9O2IPC1TWutizw2Y6ScmFlFEK1kbYnZoD5flHEWMXH0g/5oSuqKH4Z36kejHymNHB2uOxDZi
+ lyMsAbI+shpEJiunn5cciPprKLBKpR/rliOl5x2YOlrXmBpVtAP3ONypNVCxxOgzTmFn8ziVa
+ ysqruBJe4AhgV97xHmQaZ5Ie5t21PW9hcg00bGUFsHinFZNdeKALNV/yxSNkKW9IhWQaX+yJj
+ rwbANRTB6BmhVw1PjdR3UjmKdI4wyLH/VdwxnI3LcHS2q+GhOQcnO/+TSdczhK10vDOyYSHvo
+ t8pQxQu+v6cbmxmXeiOIm7FPgAFP0sihR2nZ0//VUkG3x2NFejMAyPSB8/9fNwkyOj1J6jtBB
+ NsNyDiBCQl80vleGGrpE9ONE6CgN8DMt8pVLnGA4Uo/3auJxCafFeZaN5QiXiFp0yUPh1k1WT
+ rrqCdeMOJjVPLcrW0htu5nrFkVPtj/5TFbzkSXwSbaG1oawSZLjsYw0BjhrXkeVApQpZac4+7
+ PQoHLCSC4j8r52Z31bRuKI0Ubh6kCpWoHbkYbOAewMZljCV5eCuCUP3qELwpLW+9WPf4Yd5Cd
+ 0dA4q5q3N191Mqcmz8Pkhp0HDyZgLBi+d0zMMt7+zSaulEEM5aQEbMcIukY/fS1/7GUptII+9
+ g8qE/H+MvmsEKrX8RAJxOMchn9RQwM8CZ/ZLLEVgKYnY6lHPXXOUcVyzN5M93OssDO4r4b+RO
+ X/1vu2J1K4YawSQ6Ys4Qc2N4SeQ0riW6fJGgZmMU/DsRQTXMdZkLlK3Jb2pZ8Oi6eUk1ttpFw
+ IlFVJv+mtN+AsEzIdXyR5VOsHfSrBi4aiYdwdk0Np6CZJBykguvYshyRhCUvu0EXX0WK5L6/p
+ MF0laHSi0gaB5/veVLBSMBhhLHQBuLAFmtaU+DLHlpxZO0RuDjFXGosbun9mOEezQ6cYM6KjZ
+ 4H++5grqcBkDRttx7XjlEf/VyqBNt1eZmDA5bSvVmESTWn6Jbsf4T0ZLSy6rObwrek4wgt5rh
+ VdMqxv47a7plffngE6heF/QdGjZXmq9csi7JT7djVjpXFN9jiif0O/IOn9O3r5bDeVOqaXKw5
+ jvoHCQP2dXaHHUaXGmtEL3bl9OQc5FgcnzCgaID0y77S2TtzU6rAl7Zj5EOQn3LH9LDLhd0MV
+ Kt71CTkPE1IJl3EsMrKDHRz22JRMo+pX8/Op9DRqXz27jAK8Z6AwcI5pJfyUm16/miF5B77KA
+ 1Prcz7UQImD5F5NdjFPuCoZHC4I5xzAFD/Ts1uA9ipgJ8/FEYVf1W9AFgVJXCKYcNVzUKqDtl
+ YODzVuR+ERQzlhfpsB0jdXg/8tVBtK2jxWE1wJFMu3mv6W/CsW3ff6PwcS55v8kvWkSRVR8Tn
+ bOQ2S3FfTV7yjhxxqMT7fV8vxkMOfA0f9cdqe8rbEe5/hulKDgDlHxLb2DeLSGd96pBwz/Eh1
+ wE94YXO+mDO83t9HHzdr7pluh3WuvXvCv+3F3x4+bOtJ0d3hQQJDiDlYP2pBPTnqhDpuTzIY6
+ V7Et12k72IH4I3CxdbUvpWzdLcVDdztTHULbNmPJWVSR+9ZERRBHDYhYv7EJFSZ+ZXQDbPWyz
+ jWwncbrVONfEWPJC1fPPgH3F4V9rq7kolBxZCA7wDbSyyD/IjvWVIXb0LrOPIsUC4DODfoCk8
+ iQc7gxowr7U8y06rL6KpJPwWkGTXZ5Z1Rp3vsdrfw4wEosRHxLcqzu1Yl+HjcjFUdRErnW+pj
+ V9XlGmB9uSbIpQYb2lP9DseI6X8wnZmbh6PE8ikgHzhlMBQhvgyTEm3UBrAU+PNF1YNUv2iSt
+ Mnrip/zuyQT3fjHO40Vj076A1dzFxtVfbqaV0fcqH6UYRWhjbmPXXP6Mn/nZ3n4Ra6v2ggUoL
+ adEO1ku8Prk3eUsfnx4SxV7tbRFL8NzZYdyZBa8uWNPPIk+8rPwoTNM7L4YXMn0p1dxyHwM0R
+ /ANTixPwR0JFpFqsbs9gWgzlgrwRJS1ZQSBxoT5hPpSuwB2XtSmmG/cdsk=
 
-Am 27.10.26 um 22:14 schrieb Armin Wolf:
+Am 27.10.26 um 05:48 schrieb chitranshmandhaniya@gmail.com:
 
-> Am 27.10.26 um 19:40 schrieb Nico Kessler:
+> From: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
 >
->> Hi Armin,
->>
->> a short addition to point 2 (charging profiles), now that I measured=20
->> a full charge with each profile:
->>
->> Trickle: charge ends at 16.75 V (4.19 V/cell), shown as 100%
->> Standard: charge goes to 17.62 V (4.40 V/cell), also shown as 100%,
->> still in the CV phase at that point (1.1 A)
->>
->> So the EC limits the end voltage in Trickle and rescales the reported=
-=20
->> capacity, the OS sees 100% in both cases. During the Standard charge,=
-=20
->> 16.75 V under 2.1 A was reported as 86%.
->>
->> Thanks,
->> Nico Kessler
+> Replace mutex_init() with devm_mutex_init() for the sensor caching
+> mutex so the mutex lifecycle is managed by devres. This allows
+> removing the manual mutex_destroy() call from the
+> dell_wmi_ddv_hwmon_cache_destroy() cleanup callback.
 >
-> Good work, i attached a patch that should whitelist your device. Can=20
-> you just check that this patch works
-> as intended?
->
-> Thanks,
-> Armin Wolf=20
+> The translation_cache_lock in the same driver already uses
+> devm_mutex_init(); this brings the sensor lock in line.
 
-Just for anyone that is listening: the user has replied off-list and repor=
-ted that the patch works.
+Hi,
+
+thanks for the patch, but now sensors->lock will remain initialized
+even when dell_wmi_ddv_channel_create() fails. To be honest i do not
+think that using devm_mutex_init() makes much sense here, because the
+lifetime of the sensor cache can end before the device lifetime (if
+dell_wmi_ddv_channel_create() returns an error).
 
 Thanks,
 Armin Wolf
 
->>> Am 27.10.2026 um 16:40 schrieb Nico Kessler <nicokessler@icloud.com>:
->>>
->>> =EF=BB=BF
->>> =EF=BB=BF
->>> Hi Armin,
->>>
->>> the XMG EVO 14 (E25) uses the same board as the TUXEDO InfinityBook=20
->>> Pro 14 Gen10 AMD, which is already in uniwill_dmi_table, but ships=20
->>> with a different system vendor, so uniwill-laptop does not load:
->>>
->>> sys_vendor: SchenkerTechnologiesGmbH
->>> product_name: XMG EVO (E25)
->>> board_name: XxKK4NAx_XxSP4NAx
->>> CPU: AMD Ryzen AI 7 350
->>> Kernel: 7.3.0-5-cachyos
->>>
->>> I built the 7.3 driver out of tree with an extra DMI entry and=20
->>> tested it for a few hours. Findings below, all register values were=20
->>> read back from the EC.
->>>
->>> 1) DMI entry
->>>
->>> With tux_featureset_4_descriptor and vendor=20
->>> "SchenkerTechnologiesGmbH" the driver loads and works (charge_types,=
-=20
->>> hwmon, fn_lock).
->>>
->>> 2) Charging profiles (charge_types)
->>>
->>> Standard / Long_Life / Trickle map to the three profiles of the XMG=20
->>> Control Center on Windows (OEM_4 0x07A6 bits 5:4). Two observations:
->>> - The firmware resets the profile to Standard on every boot (and=20
->>> when settings are saved in the BIOS setup). The Windows XMG Control=20
->>> Center re-applies it at startup; on Linux it has to be set again=20
->>> after each boot.
->>> - With Trickle the charge ends at 100% displayed with 16.75 V (4S=20
->>> pack, design voltage 15.4 V), so the reduced peak voltage seems to=20
->>> be handled by the EC as XMG describes.
->>>
->>> 3) Performance profiles (not supported by the driver yet)
->>>
->>> The three BIOS profiles are selected through 0x0751=20
->>> (EC_ADDR_MANUAL_FAN_CTRL). 0x07E8 reports the active one. Identical=20
->>> values whether set in the BIOS setup or with the XMG Control Center=20
->>> on Windows; a full dump of 0x0700-0x07FF showed no other related=20
->>> changes:
->>>
->>> profile 0x0751 0x07E8 sustained PPT (stress-ng)
->>> Balanced 0xa0 0x08 25 W, 62 C
->>> Enthusiast 0x00 0x00 45 W, 81 C
->>> Overboost 0x10 0x01 65 W, 94 C
->>>
->>> Writing 0x0751 from Linux switches the profile: 0x07E8 follows=20
->>> within 2 seconds and the power limits change as measured above. The=20
->>> setting survives reboots. PL1/PL2/PL4 (0x0783-0x0785) stay at 0 in=20
->>> all profiles.
->>>
->>> 4) Keyboard backlight (white, 4 levels)
->>>
->>> KBD_STATUS 0x078C reads 0x01 / 0x21 / 0x41 / 0x61 / 0x81 for off and=
-=20
->>> levels 1-4, so single color with kbd_led_max_brightness =3D 4 fits.=20
->>> Fn+Space is handled by the EC, and the EC turns the backlight off=20
->>> during suspend and restores it by itself.
->>> Note: uniwill_kbd_led_init() would set ENABLE_CHINA_MODE in 0x0782=20
->>> here, because CHINA_MODE is not set in SUPPORT_2 (0x0766 =3D 0x90). I=
-=20
->>> did not know what that does on this firmware, so I skipped that=20
->>> write (and the suspend/resume writes) in my test build. Writing only=
-=20
->>> the brightness bits works fine.
->>>
->>> Could you add the DMI entry? If useful, I can send my test patch for=
-=20
->>> the profile and backlight parts, more register dumps, or test patches.
->>>
->>> Thanks,
->>> Nico Kessler
+> Signed-off-by: Chitransh Mandhaniya <Chitransh_Mandhaniya@dell.com>
+> ---
+>   drivers/platform/x86/dell/dell-wmi-ddv.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform=
+/x86/dell/dell-wmi-ddv.c
+> index f8903ced461b..c7f3d07abbc7 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> @@ -548,7 +548,6 @@ static void dell_wmi_ddv_hwmon_cache_destroy(void *d=
+ata)
+>   	struct dell_wmi_ddv_sensors *sensors =3D data;
+>  =20
+>   	sensors->active =3D false;
+> -	mutex_destroy(&sensors->lock);
+>   	kfree(sensors->buffer);
+>   }
+>  =20
+> @@ -566,7 +565,9 @@ static struct hwmon_channel_info *dell_wmi_ddv_chann=
+el_init(struct wmi_device *w
+>   	if (ret < 0)
+>   		return ERR_PTR(ret);
+>  =20
+> -	mutex_init(&sensors->lock);
+> +	ret =3D devm_mutex_init(&wdev->dev, &sensors->lock);
+> +	if (ret < 0)
+> +		return ERR_PTR(ret);
+>   	sensors->active =3D true;
+>  =20
+>   	ret =3D devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_hwmon_cache=
+_destroy, sensors);
