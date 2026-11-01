@@ -1,88 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.227.138
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793507337;
-	b=EAC8oTB2rnnYLWw0vjxMRUNwuVzTTgRM+J+26LEhKQoaZ6HrB0dqziSJ+Vnx5vBde43F
-	 wwnSp6GcxydJx6Q11cgBQh9WVNwiPgai+gqnfROUoEbI7kCD1WBAruvt5DnCXJjkHNECY
-	 yb5dq/BuaA4iZjMYbgSTrSvA3Eu4I8kmLU3wJIq7ywjue8GdEiovdAmzP7eblb8rbnV6z
-	 yneI1I7ZHO4JnG4X8iDuC46lZIyNREk4rt+oLqCcn5HIRSO1weWmaJklMoxg1Hxb47NHQ
-	 RcKI6txW7asKFgxGDYvPAg6S3zQFjaFY4ekjEeKDtoXGGy9/pV1x7cojBdzkFO2DtPg==
+	t=1793527378;
+	b=UEFzoHtWp1IrAlhvFkNqION0bUar2Sp+xP9l6n8DqjTquG4DbRWKT8YPw9wq41AUqPJd
+	 5nnLRvZOX00AUTDgR+9+rFHjCjErXJ0KFulusWf2HDAAlP8MsGRsVeYfv97/6oMwwQRJY
+	 0zjQP5Xy9OXus9JkTFHcL2GLBnivvb0kLh3Bfa9TRB/DxWMK34E+Jr89hDRoIq9e6qPrS
+	 V0aPpenKJKGKl4IZt2AkVxPGzmMdaPot6kfZUfKJQgisSpY5N7tLf054SJG4D//WQMVBJ
+	 /j+sqrgrcnIgkJ5CAvGgxzBB8NcByGeIXjxtD5wSH6XLsPTOki9OqN2Zznf7ZRo22cg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793507337;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793527378;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=vIgwG3A4Xi+B0aPU2gi4TdOrPPpgK+2Hob+9YvGomNk=;
-	b=ODL/Z+xiyxe0qCtAXjHJG/I+sPhlXhyJ/+QhE96qp7aHHyS0GLNDbFD4srE9AycYgm9b
-	 IYElszwRVRPENWfvatI6JNjHMKbEiy0T1wOKi7w6AYXVmXaBnjHpVWdqq4IR8r4uK+2Du
-	 J0QYVHcaWoPiWlzyzLS4/eCd0s3LIGEg2L5tMmt9jXDhZZGoxGq/85UJApzOQBoRl61YH
-	 7aXXjbpRMiyQCk4NGoXJrK7pLWbhQSKXP4A+2Suln7pyw/eYrWXvfI58TEW75TasiSKqa
-	 qyK9u7BTfnLqi4lWZu8nE+sTIl8+yhUOB8GSpgMLLeWGLfE7gL3jHqql660WbsBD+3A==
+	bh=LugNflWSTGYWWTtxsSZYRFunR5npiQJObm4IegZVYlY=;
+	b=XMhu4xWr5d8o7SWJ8okvSwJbasrzELRKz+Ge+5NoS3SMiV28LQuWeDOnDmjQMlswkU5c
+	 deH3gUi90C47cPPS4LYQW6TluVeYIrrU7wRdH8Nu3IgIdL/P8lQvMS9ZKgFpRdwFt9h8z
+	 soqbjZ6HzdU5ecOJpJ1/qoNMw2tANg6oPmSfZXAACGWz2ro6mLUpfD2CP2IVwp1gaxmQ0
+	 dE+rBGH76sVUpCfcg4fnz/BbaN0wUPlBaeXaw2cqtoHEBmMLM4Le2QF2nu4MCpN8me4KA
+	 dcryQxDbEZqR5iLSSpB8G+ggIwka8/ORs/7ud7nbA2l+Q6wU5zZmvrKYoKGkIYND/5w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="c//C8HL2";
-	arc=none smtp.remote-ip=209.85.215.174
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="ABBzA/E1";
+	arc=none smtp.remote-ip=74.125.227.138
+Received: from mail-pj2-f10.google.com (mail-pj2-f10.google.com [74.125.227.138])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC68A606A324
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 04:28:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AC68A606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEFE606A326
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 10:02:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4EEFE606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c//C8HL2
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-cd62c570b5dso1176803a12.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 31 Oct 2026 21:28:56 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ABBzA/E1
+Received: by mail-pj2-f10.google.com with SMTP id 98e67ed59e1d1-3acb41888c0so84735a91.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 02:02:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793507336; x=1794112136; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vIgwG3A4Xi+B0aPU2gi4TdOrPPpgK+2Hob+9YvGomNk=;
-        b=c//C8HL2Vl+J0cOkKFXeURf2zy6PS/BqLTy7p/DbqeiOTaUTcbX0SBY4UaJurwYuFF
-         c7PrKphOVzH4qu5RCSDc81w5cZmqDt5yya6OmkZxYApabpcjNVq2Fc/5HwI3bwIHd1JW
-         pkDcaXCxyDAjtdyblOTsQXU/pAwvIGqZY7i4fSJT5GhXMIqeIY/bHCCbAMS7gIHkex2x
-         TdsLtQlRBjLZaPTHeztoAOj8eyy+7twJQZTvKaUm7LmxiKn5859Ucba7opq0wZx8ajp+
-         6iDUlyX9Hq+qGXV+uH8+cO82n47qUgQ8SFOOpyoSVxVADOEz4+oij0kcYDWuPvS5MG0X
-         LhCA==
+        d=gmail.com; s=20260707; t=1793527377; x=1794132177; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LugNflWSTGYWWTtxsSZYRFunR5npiQJObm4IegZVYlY=;
+        b=ABBzA/E1yzC/XyNbaXLATPDWKlLSVhgz9WDD6gJQXh5+SyImZxFMRf8wMbqdz8um8n
+         vH2Kt83PfykJPKhdkAtM5dhKf+1DLnKouyBXZ3lZPSUKuFT7+AzMfsCkYq2Z7ys4DZRU
+         0Iw+as4m+yH7pHKCtk74wB+05etUgxOmkl+p5W3qn6I+Flr15fU6Z+39Sd/ufb4eXhsQ
+         ujE2k4Sfk/hBv786opeI/diPCPoCpl7yazZWgH5Nq5sgB53uHySnvLEYjqmAdT5+rMGD
+         wH6aGH1hFQ0j/nbZLltNvO39LNZ2sbEO/wq4XyP9wzpy0nYzPKAPUuSvNWzciKxc/sNt
+         y+mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793507336; x=1794112136;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1793527377; x=1794132177;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vIgwG3A4Xi+B0aPU2gi4TdOrPPpgK+2Hob+9YvGomNk=;
-        b=UCieP1gn+XlrQ/iQfvznV5J+6gc1BJ8xOYllAupSmBZI+hDJKrJ4IizJrbwpXsgr5p
-         C+EYBn7szdhEwyjMBuxUfZNkCdBDAyTtHiEgO+sQtrUukJSSuq4162VT8aUVksE2+s0w
-         UosmnNKyIqm5aqtKm2N0cfj8WGRq0nqUdTnPW1+ee93+KllE43pLbSxILUwvWD9pdlzw
-         VWvhoGXM4ip7x2FdksJNGJgIUe0L9ouyHYv3rVTe8/v9dfF4/RO6wrOWABPOeCq/sgTs
-         6l7aNadY9rcCM3iSnObG0Diy7EjSp9u7upuB7ZmtmfF+BTVMcIRQHHQy7oBKlwb/3Ghk
-         DqxA==
-X-Forwarded-Encrypted: i=1; AKwUvBy1lolZdRS+/GjcMXZo2dUHcrh4M03CQFl+8bw0W8LIMP0UZshO2o3L3nOwVTk/dZGkyu+VMpiJR8GMTNFE0frNsGMP@vger.kernel.org
-X-Gm-Message-State: APuU4Z+U+vnjRfEeNmTb1NGcMBxGrot3ORDPpWAvPYQuvEcj5d6WpK2F
-	xWorF0LBUnO5KXSpftNj2HOARKR1f+LEpe3dNl8L4jc0VuavQ+3UtwsU
-X-Gm-Gg: AYBFou2RUIkCjzZiGe79B+NdfDES+6MtwTaqvC9nOAfnxwiN9NFFUU3pnVS29Wz/8d0
-	INZ0BMdQ3W3i6klC4Q6s5cgbq8t++o8MxjXX4y+hpSvJpGoOS8NGvvqGSH6+UBgPFpLjqJK4ar1
-	ceXBg7kYzK0WIYM/oJAjKuTKzfpva0gvpkTw4LRmYl1WawBxQpWKizUXpdgUozbhW3eba0UZO3A
-	U41wfaW/xTGrx5zcQlclba3q4VgcVFM1fkqOL2ByA7r41wP/Rv/Xv/XLmibC49ii0PUi3NNlth+
-	5Z+SG55hcqJRRsIXhcvNQbeb4uG7PaM6jd9oUzBb5R5ktp+YolN5tnYeszb/5LNxlhwoPgyE+FV
-	QlhxUIkTow0h2XKcGff3EFyyag7QBrLHyV+DmP8A2RFFoBFDDwEtNI5Jp9oA4SacESN1g+QAqyZ
-	D2aQXDIGSGkTdj04yJSiW5tiu5gCMYrAVnPlY/iM6T1+jGFLMPQwigcJAqoT4XX8jrfmf50As5t
-	ZGtB9RgwVcB0D9q0CQeihZPP82ipvevulfDNA4+5xzMLZZm5+nQyZhfXMeddt09h+JjxnjwZIxV
-	/A3RDIBaTU9q5KTxNGy9ZP13662Iq15F9RzxehdLDtLkqW4=
-X-Received: by 2002:a17:90b:3194:b0:3ae:a4fe:7ad4 with SMTP id 98e67ed59e1d1-3aea4fe7dd4mr1663954a91.2.1793507335992;
-        Sat, 31 Oct 2026 21:28:55 -0700 (PDT)
-Received: from ?IPV6:2408:8210:2436:950:5b1:370f:dc22:b6ab? ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e9db612sm13787149a91.17.2026.10.31.21.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 31 Oct 2026 21:28:55 -0700 (PDT)
-Message-ID: <f8970847-89c1-4c5c-bb15-2181f1c8f7b5@gmail.com>
-Date: Sun, 1 Nov 2026 12:28:50 +0800
+        bh=LugNflWSTGYWWTtxsSZYRFunR5npiQJObm4IegZVYlY=;
+        b=2056BdMD1L25kXYIwxLP9+p6dhRvPFUtpiit2FNdLykBhMDHee8evgb4CkFq44nhg4
+         e8t5x2ohJ5/FUs/3X0BI8z3zyxQHM+qJr9mGW/iHbozOVeKSlxG2eWc0MtKYcy/aPwkS
+         5RXuKuSgRdiI0nOOvzpoiYeJ17Waq73YgEaliu0vraZlRd6+SKPGjuve1/azN4Hizzod
+         q/w+Uc/yNN39bfg9b9lje2xH+JdKO9RsRM2RB9tGepnPloCRV7Zkv5ayJzBJzM9HvN/5
+         kOqGbX31LWvPYbdBeAmvnjjYF3lY5Fx5AtUxb8NO9gvr8P/XVGkcRxwbo9zKDe/BvbgX
+         hGpg==
+X-Forwarded-Encrypted: i=1; AKwUvBxZb+y0BsjRLVscyO1qgmmZ9+3vxIy9MtYmdLcMI11KvVlInY/srhsyxgaexxYbxlZ6ZgxLlhyoMeQx9Wu5RfWwXv9L@vger.kernel.org
+X-Gm-Message-State: APuU4Z+SlWj1eqA4JVPUpKe+XEDD1f2hPfmM+B4sSWfYaOb6j6vz9t4B
+	mwY/4uizR0Kxj62o8gFcVrCqAH4issbm6GflrXiBtqzQO7mNv9mrupCX
+X-Gm-Gg: AYBFou0ggAGHQ61cHnYLWAZUGk31Zv21fqPJc8XLwSo7C1jpEyyvPNVj/+HkgNfl9jK
+	wM5YAquZzy3Aiei9nFyBL1RfcFyq+c0TRfXlwxX4iGBgFePdhKCkFEfYRPBCZYZwEjaYUe86Stu
+	TvIgtQcacVAlYuP1V6PQbsBewKuO90+4GXjYtKNI26dnwa8IPjDPncdMfvklgZPrr2GnWVWb+0L
+	T7mNqvOKOr7ke4EBi+nE4Wtg5G57b1dDFUd/e3DrGSPgG95CnY+AaYukheKagEhINiar2b20RO2
+	t+R3ccFUTT/pUCEmPCg62qmKTQY6cUIRQVrEdDvNg++MIlCJBD+y61esKWkgM03jtpEj1p07xq2
+	u/xcaoJ7NaLp5vbrQMvRRY7NT2/MwRnRUGYn2bObPwUBaX5Jd4Cp0KydvS8QM9xIS9vwDRzzxH5
+	0Cr7T5lpye7yV/ao9dSK/CRmrCURRte3zv6IovEgmXzVSXgyQeQ1FWNhTGFPwB64UuyOeo1xKe1
+	nyJuzJJnYECF3faLoqs0CkWKEDuXLSH9AlcgaYwMQk8cfpxpp4ORWeURlkFZfuXU/4qa9bFGADQ
+	m01/nkxU5UGDFEswm5tiXI3d9aojkfkhQQ==
+X-Received: by 2002:a17:90b:57c5:b0:3a4:b509:88bd with SMTP id 98e67ed59e1d1-3ae89559f3amr4097204a91.2.1793527377532;
+        Sun, 01 Nov 2026 02:02:57 -0800 (PST)
+Received: from ThinkPad ([240e:46e:8710:e4e:e10f:cd51:e533:58a5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e99b267sm14314906a91.14.2026.11.01.02.02.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Nov 2026 02:02:57 -0800 (PST)
+From: Qiling Zhu <kmatzkaczor244@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Rong Zhang <i@rong.moe>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Griffin Kroah-Hartman <griffin@kroah.com>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	Lee Jones <lee@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Pavel Machek <pavel@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	vishnuocv@gmail.com,
+	vsankar@lenovo.com,
+	Qiling Zhu <kmatzkaczor244@gmail.com>
+Subject: [RFC PATCH 0/1] platform/x86: thinkpad_acpi: Add support for auto keyboard backlight
+Date: Sun,  1 Nov 2026 18:01:22 +0800
+Message-ID: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -92,94 +107,86 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 0/6] Merge redmi-wmi into bitland-mifs-wmi
-To: Arsenova <7z0423arsenova@proton.me>
-Cc: Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20261031204357.157958-1-7z0423arsenova@proton.me>
-Content-Language: en-US
-From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <20261031204357.157958-1-7z0423arsenova@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 11/1/26 04:45, Arsenova wrote:
-> Hi Mingyou,
->
-> In the v15 cover letter you say you have no Redmi device and that
-> tests are welcome. I have a Redmi G 2022 (board TM2135, BIOS
-> RMGAD6T0P1313, Arch Linux, kernel 7.2.11) and can test this series
-> on it, and later versions as they come.
->
-> On October 23 I sent you and Armin a report that bitland-mifs-wmi
-> does not work properly on this model, with details from the
-> firmware's ASL. It arrived during the merge window, so it may well
-> have been missed:
->
->    https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYdW-TUgdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50ISIc=@proton.me/
->
-> Reading v15 (I have not run it yet), the quirks table seems to cover
-> most of that:
->
->    - skip_ac_type_check avoids the AC type query (0x1300), which on
->      TM2135 returns a bare Integer 0xE000 and makes "performance"
->      fail with -ENODATA;
->    - accepting function == 0 in Set replies matches what I see here:
->      the EC switches mode, but the reply carries function 0;
->    - handling event 0x16 as WMI_EVENT_PERFORMANCE_PLAN_ALT covers the
->      mode change events this firmware sends.
->
-> What TM2135 would still need is a DMI entry with its own profile
-> table, because its firmware uses 1 = balanced, 2 = quiet and
-> 3 = performance instead of the default values.
->
-> If that is useful, I can:
->
->    1. test v15 on this machine and send you the results, including
->       the Fn mode hotkey events; and
->    2. send a patch on top of the series that adds the TM2135 DMI
->       entry and profile table. I would base it on the base-commit
->       from your cover letter (9d3475065167) unless you prefer
->       another tree.
->
-> Please tell me whether you would rather fold the entry into your
-> series or have it sent separately.
->
-> Thanks,
-> Arsenova
+Hi Mark, Ilpo, Rong,
 
-Hi,
+Recent ThinkPads with an ambient light sensor (ALS) support an auto
+mode for the keyboard backlight: the EC picks the backlight level
+according to ambient light. The mode is EC keyboard backlight level 3,
+above the two fixed levels exposed so far, and it is reachable only
+through the Fn+Space shortcut, which is handled entirely by the
+firmware. Userspace can neither select the mode nor observe whether it
+is active.
 
-Feel free to test the patch series on your machine.
+This series wires the auto mode up as a private hardware control
+trigger, "tpacpi-kbd-auto", on top of the hw control trigger framework
+that recently landed in mainline [1]. With it:
 
-Here's an example quirk of your machine.
+  - selecting the trigger writes EC level 3 (auto mode on); writing
+    "none" turns the backlight off
+  - the trigger state (bracketed in the trigger sysfs attribute, and
+    the new trigger_may_offload_to_hw attribute) is the userspace
+    view of auto mode; reading brightness returns -ENODATA while
+    auto mode is active, per the framework semantics
+  - Fn+Space keeps cycling through levels and auto mode as before,
+    and the trigger state now follows hardware-initiated transitions
+    automatically
 
-static const struct bitland_profile_entry tm2135_profile_entries[] = {
-     { PLATFORM_PROFILE_LOW_POWER,         0x02 },
-     { PLATFORM_PROFILE_BALANCED,         0x01 },
-     { PLATFORM_PROFILE_BALANCED_PERFORMANCE, 0x03 },
-     { PLATFORM_PROFILE_PERFORMANCE,          0x04 },
-};
+This is the thinkpad_acpi counterpart of the ideapad-laptop wiring
+from the same framework series, which is still queued; this patch
+depends only on the LED core parts already in mainline and can be
+applied independently.
 
-static const struct bitland_mifs_quirks tm2135_quirks = {
-     .profile_entries = tm2135_profile_entries,
-     .num_profile_entries = ARRAY_SIZE(tm2135_profile_entries),
-     .return_code_at_end  = false,
-     .skip_ac_type_check = true,
-};
+For background: the February discussion settled that auto mode must
+not be exposed as a brightness value [2], but no agreement was
+reached back then on how to expose it instead; the hardware control
+trigger approach was established later by the framework series [1].
 
+Tested on a ThinkPad X1 Carbon Gen 14 (MT 21V8) running linux-next
+next-20261030: 61 scripted user-visible assertions covering the
+software paths, the Fn+Space event chain and the unchanged legacy
+behavior, plus manual exercising of both the Fn+Space cycling and
+desktop-environment brightness controls; checkpatch --strict clean.
 
-static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-     {
-         .matches = {
-             /* if this doesn't match your DMI info, change it manually. */
-             DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
-             DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2135"),
-         },
-         .driver_data = (void *)&tm2135_quirks,
-     },
-     {}
-};
+Deliberately unchanged (details in the commit message):
 
+  - max_brightness stays 2; auto mode is not multiplexed into the
+    brightness value
+  - writing 3 to /proc/acpi/ibm/kbdlight keeps returning -EINVAL
+  - module unload still turns the keyboard backlight off
+
+Two open questions, the main reason for the RFC tag:
+
+  1. MLCG returns capability bits in the upper 16 bits; does one of
+     them indicate auto mode support? If yes, I would gate trigger
+     registration on it. Mark, does the EC documentation say?
+  2. On models without an ALS, the EC behavior when asked for level 3
+     via MLCS is unknown to me. If it is undefined rather than
+     rejected, optimistic registration would need a rethink (e.g.
+     DMI whitelisting).
+
+Rong, happy to rebase this on top of your series or fold it in, if
+you prefer to keep both wirings together.
+
+Comments welcome.
+
+Regards,
+Qiling Zhu
+
+This patch was developed with LLM assistance; I reviewed every design
+decision against the framework sources and validated the behavior on
+real hardware myself.
+
+[1] https://lore.kernel.org/r/20260618-leds-trigger-hw-changed-v2-0-c28c44053cf3@rong.moe/
+[2] https://lore.kernel.org/r/20260203232219.11683-1-vishnuocv@gmail.com/
+
+Qiling Zhu (1):
+  platform/x86: thinkpad_acpi: Add support for auto keyboard backlight
+
+ drivers/platform/x86/lenovo/Kconfig         |   1 +
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 104 ++++++++++++++++----
+ 2 files changed, 88 insertions(+), 17 deletions(-)
+
+-- 
+2.56.0
