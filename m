@@ -1,75 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=37.27.248.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793499877;
-	b=dcTmeV72H0z3DKICauWi3hJ+XbN4SFsaXVyaWSBNMgOteyuhT4A+umtEgv5jzB7k9YN9
-	 I3gWRuhVYmhaVoPr9OQG3Njcixs+Ch+qNqbtZmjnc0BYZJC5P+uPWWhYCq5pWm4qcQMjN
-	 KBKGAvm+VY66eToberwl6WUKtRjsNzgmDxWbypO49zp5wemE7htKXA+fKaslgZ7vjn09j
-	 gkqA72FiQ5e3gXb9vLKXBatnQfA0d+RiwQKoj3tYvpoAJA9xEWAIydq9yLvxxPjmmE5bX
-	 3AL+x3DDviHN+OKgveU5VkJbeed9TzMByKsFz3ShTRFMXufqEM8wuvBVMI4lnZP93Fw==
+	t=1793507337;
+	b=EAC8oTB2rnnYLWw0vjxMRUNwuVzTTgRM+J+26LEhKQoaZ6HrB0dqziSJ+Vnx5vBde43F
+	 wwnSp6GcxydJx6Q11cgBQh9WVNwiPgai+gqnfROUoEbI7kCD1WBAruvt5DnCXJjkHNECY
+	 yb5dq/BuaA4iZjMYbgSTrSvA3Eu4I8kmLU3wJIq7ywjue8GdEiovdAmzP7eblb8rbnV6z
+	 yneI1I7ZHO4JnG4X8iDuC46lZIyNREk4rt+oLqCcn5HIRSO1weWmaJklMoxg1Hxb47NHQ
+	 RcKI6txW7asKFgxGDYvPAg6S3zQFjaFY4ekjEeKDtoXGGy9/pV1x7cojBdzkFO2DtPg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793499877;
-	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Received-SPF:
-	 Received:X-Gm-Message-State:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:X-PPP-Message-ID:X-PPP-Vhost:
-	 X-Virus-Scanned:X-Virus-Status;
-	bh=kqU33gEA8KfwKOunAziA7xlh/3MGIAM7fmhplDE5fT0=;
-	b=kwirlqmTHcwqReBD1Rni168r1iBmfjO2LI/d2XC9pNPZXh0pf+bJ6z/mF/j4MLWcP+rH
-	 w/kEcuvbLoKQmYIESr1DtzI1FInTgmT/3kurwbLsSW62eOOyWbiy8BBJEttLCbwNnh/Sq
-	 V1IMwQ7THrG74zYNbZbfSMMHBORpjoUCmMQ/nY9juIy+X0Y9OkKB7C5wUe7cOwN3iCJ/y
-	 ZSUQv6rmz/VYd4H+zPkypnHfcV5NDrwknf3iPXQGVKWkXEF4oQwPZchGtMABgFmnMuVRU
-	 VDr7ZaV9SunL47ctEfeDm+1PJasGaLUcqcTJowhxBKYkXwArzaSoCktwZoKDFDyu34Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793507337;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=vIgwG3A4Xi+B0aPU2gi4TdOrPPpgK+2Hob+9YvGomNk=;
+	b=ODL/Z+xiyxe0qCtAXjHJG/I+sPhlXhyJ/+QhE96qp7aHHyS0GLNDbFD4srE9AycYgm9b
+	 IYElszwRVRPENWfvatI6JNjHMKbEiy0T1wOKi7w6AYXVmXaBnjHpVWdqq4IR8r4uK+2Du
+	 J0QYVHcaWoPiWlzyzLS4/eCd0s3LIGEg2L5tMmt9jXDhZZGoxGq/85UJApzOQBoRl61YH
+	 7aXXjbpRMiyQCk4NGoXJrK7pLWbhQSKXP4A+2Suln7pyw/eYrWXvfI58TEW75TasiSKqa
+	 qyK9u7BTfnLqi4lWZu8nE+sTIl8+yhUOB8GSpgMLLeWGLfE7gL3jHqql660WbsBD+3A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=antheas.dev;
-	spf=pass smtp.mailfrom=antheas.dev;
-	dkim=pass header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=T0mrSzgk;
-	arc=none smtp.remote-ip=37.27.248.198
-Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="c//C8HL2";
+	arc=none smtp.remote-ip=209.85.215.174
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7D4606A325
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 02:24:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4F7D4606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC68A606A324
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 04:28:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AC68A606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=T0mrSzgk
-Received: from relay10 (localhost.localdomain [127.0.0.1])
-	by relay10.grserver.gr (Proxmox) with ESMTP id 4B14F418D1
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 04:24:34 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay10.grserver.gr (Proxmox) with ESMTPS id 950373EF8D
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 04:24:33 +0200 (EET)
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 2FFCB200CD8
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 04:24:32 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1793499872;
-	bh=kqU33gEA8KfwKOunAziA7xlh/3MGIAM7fmhplDE5fT0=;
-	h=Received:From:Subject:To;
-	b=T0mrSzgk3SGxLmhAGlssQw0Kh7QMsm/wh6IP7rNeerpPE7jlrgSUUl4R//+rP5MBq
-	 7VDhgFgQYI0wkbNqmvo2Pn3prp9sYXig3plV6NFk5vbZ3+ztD4ElbMcYV1hYZpXjWb
-	 t/bkTIJW3KZBk6oj/zZ8G5wtUMvXv3niaX0jfV3nuZ0jYERl3AE1DZp8RIwaQYCgLZ
-	 oAdPRqc1kmKQUW2dZvsKL3hdSBZ2fVxfb5cp6YAjreZhT3kwZMF6b2ZZRasoaG6kFj
-	 MTLbeK6ApLKiOssmReG/vEXleSYGSKa5v3ZRVDnXpyxbhVwwgGX8uLbZKrP74EkLwx
-	 j/ILU/EamslOA==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.214.171) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f171.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pl1-f171.google.com with SMTP id
- d9443c01a7336-2e95bd1c14cso17453035ad.2
-        for <platform-driver-x86@vger.kernel.org>;
- Sat, 31 Oct 2026 19:24:32 -0700 (PDT)
-X-Gm-Message-State: APuU4Z+vbA0k1ECXFUGCRUeTjHx3hy8IKGLPYfY+ApKakRYTIQD2Fh2e
-	EfW5oXSNqlzJpT+RU5qfCz2UWSKr3cv1GBPB6yiV+GpkGHk4dkhVkZrXbfKAajYVBIOMuRzbi57
-	v1e2Ss9uGIcn2Jfqa6I/uO7f/dr1WspA=
-X-Received: by 2002:a17:902:d2cd:b0:2e9:5b4e:b8a7 with SMTP id
- d9443c01a7336-2eb364f8fe2mr65117825ad.51.1793499870868; Sat, 31 Oct 2026
- 19:24:30 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c//C8HL2
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-cd62c570b5dso1176803a12.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 31 Oct 2026 21:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793507336; x=1794112136; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vIgwG3A4Xi+B0aPU2gi4TdOrPPpgK+2Hob+9YvGomNk=;
+        b=c//C8HL2Vl+J0cOkKFXeURf2zy6PS/BqLTy7p/DbqeiOTaUTcbX0SBY4UaJurwYuFF
+         c7PrKphOVzH4qu5RCSDc81w5cZmqDt5yya6OmkZxYApabpcjNVq2Fc/5HwI3bwIHd1JW
+         pkDcaXCxyDAjtdyblOTsQXU/pAwvIGqZY7i4fSJT5GhXMIqeIY/bHCCbAMS7gIHkex2x
+         TdsLtQlRBjLZaPTHeztoAOj8eyy+7twJQZTvKaUm7LmxiKn5859Ucba7opq0wZx8ajp+
+         6iDUlyX9Hq+qGXV+uH8+cO82n47qUgQ8SFOOpyoSVxVADOEz4+oij0kcYDWuPvS5MG0X
+         LhCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793507336; x=1794112136;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vIgwG3A4Xi+B0aPU2gi4TdOrPPpgK+2Hob+9YvGomNk=;
+        b=UCieP1gn+XlrQ/iQfvznV5J+6gc1BJ8xOYllAupSmBZI+hDJKrJ4IizJrbwpXsgr5p
+         C+EYBn7szdhEwyjMBuxUfZNkCdBDAyTtHiEgO+sQtrUukJSSuq4162VT8aUVksE2+s0w
+         UosmnNKyIqm5aqtKm2N0cfj8WGRq0nqUdTnPW1+ee93+KllE43pLbSxILUwvWD9pdlzw
+         VWvhoGXM4ip7x2FdksJNGJgIUe0L9ouyHYv3rVTe8/v9dfF4/RO6wrOWABPOeCq/sgTs
+         6l7aNadY9rcCM3iSnObG0Diy7EjSp9u7upuB7ZmtmfF+BTVMcIRQHHQy7oBKlwb/3Ghk
+         DqxA==
+X-Forwarded-Encrypted: i=1; AKwUvBy1lolZdRS+/GjcMXZo2dUHcrh4M03CQFl+8bw0W8LIMP0UZshO2o3L3nOwVTk/dZGkyu+VMpiJR8GMTNFE0frNsGMP@vger.kernel.org
+X-Gm-Message-State: APuU4Z+U+vnjRfEeNmTb1NGcMBxGrot3ORDPpWAvPYQuvEcj5d6WpK2F
+	xWorF0LBUnO5KXSpftNj2HOARKR1f+LEpe3dNl8L4jc0VuavQ+3UtwsU
+X-Gm-Gg: AYBFou2RUIkCjzZiGe79B+NdfDES+6MtwTaqvC9nOAfnxwiN9NFFUU3pnVS29Wz/8d0
+	INZ0BMdQ3W3i6klC4Q6s5cgbq8t++o8MxjXX4y+hpSvJpGoOS8NGvvqGSH6+UBgPFpLjqJK4ar1
+	ceXBg7kYzK0WIYM/oJAjKuTKzfpva0gvpkTw4LRmYl1WawBxQpWKizUXpdgUozbhW3eba0UZO3A
+	U41wfaW/xTGrx5zcQlclba3q4VgcVFM1fkqOL2ByA7r41wP/Rv/Xv/XLmibC49ii0PUi3NNlth+
+	5Z+SG55hcqJRRsIXhcvNQbeb4uG7PaM6jd9oUzBb5R5ktp+YolN5tnYeszb/5LNxlhwoPgyE+FV
+	QlhxUIkTow0h2XKcGff3EFyyag7QBrLHyV+DmP8A2RFFoBFDDwEtNI5Jp9oA4SacESN1g+QAqyZ
+	D2aQXDIGSGkTdj04yJSiW5tiu5gCMYrAVnPlY/iM6T1+jGFLMPQwigcJAqoT4XX8jrfmf50As5t
+	ZGtB9RgwVcB0D9q0CQeihZPP82ipvevulfDNA4+5xzMLZZm5+nQyZhfXMeddt09h+JjxnjwZIxV
+	/A3RDIBaTU9q5KTxNGy9ZP13662Iq15F9RzxehdLDtLkqW4=
+X-Received: by 2002:a17:90b:3194:b0:3ae:a4fe:7ad4 with SMTP id 98e67ed59e1d1-3aea4fe7dd4mr1663954a91.2.1793507335992;
+        Sat, 31 Oct 2026 21:28:55 -0700 (PDT)
+Received: from ?IPV6:2408:8210:2436:950:5b1:370f:dc22:b6ab? ([2a13:edc0:18:16f::a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e9db612sm13787149a91.17.2026.10.31.21.28.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 Oct 2026 21:28:55 -0700 (PDT)
+Message-ID: <f8970847-89c1-4c5c-bb15-2181f1c8f7b5@gmail.com>
+Date: Sun, 1 Nov 2026 12:28:50 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -79,84 +92,94 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: 
- <TY7PR01MB1374656B7810521751CB248D4DB6B2@TY7PR01MB13746.jpnprd01.prod.outlook.com>
- <TY7PR01MB1374600CF756D90DF8CFC37BDDB6B2@TY7PR01MB13746.jpnprd01.prod.outlook.com>
-In-Reply-To: 
- <TY7PR01MB1374600CF756D90DF8CFC37BDDB6B2@TY7PR01MB13746.jpnprd01.prod.outlook.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 1 Nov 2026 03:24:20 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGbxW9+uVkbcCUiZVZZPK3dVBQsmV-jMXr96XovudEdzg@mail.gmail.com>
-X-Gm-Features: AclHuK8ncQZWy8VN_L5_o--scyvvyi6zdooVn7LuqNYynRJ8A1onvxPS4fM4gB4
-Message-ID: 
- <CAGwozwGbxW9+uVkbcCUiZVZZPK3dVBQsmV-jMXr96XovudEdzg@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: oxpec: add OneXPlayer X2 Mini (G3E) DMI
- entry
-To: Jiajun Leng <adolphpi@outlook.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 0/6] Merge redmi-wmi into bitland-mifs-wmi
+To: Arsenova <7z0423arsenova@proton.me>
+Cc: Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <179349987256.1471780.2878184344585968847@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
-X-Virus-Status: Clean
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
+References: <20261031204357.157958-1-7z0423arsenova@proton.me>
+Content-Language: en-US
+From: Mingyou Chen <qby140326@gmail.com>
+In-Reply-To: <20261031204357.157958-1-7z0423arsenova@proton.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, 1 Nov 2026 at 03:18, Jiajun Leng <adolphpi@outlook.com> wrote:
+On 11/1/26 04:45, Arsenova wrote:
+> Hi Mingyou,
 >
-> The OneXPlayer X2 Mini (G3E) is the Intel variant and reports DMI board
-> name "ONEXPLAYER X2Mini". Map it to oxp_g1_i, the profile used by the
-> ONEXPLAYER 3, which has the same Intel EC layout. Fan reading, manual PWM
-> and charging control work.
+> In the v15 cover letter you say you have no Redmi device and that
+> tests are welcome. I have a Redmi G 2022 (board TM2135, BIOS
+> RMGAD6T0P1313, Arch Linux, kernel 7.2.11) and can test this series
+> on it, and later versions as they come.
 >
+> On October 23 I sent you and Armin a report that bitland-mifs-wmi
+> does not work properly on this model, with details from the
+> firmware's ASL. It arrived during the merge window, so it may well
+> have been missed:
+>
+>    https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYdW-TUgdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50ISIc=@proton.me/
+>
+> Reading v15 (I have not run it yet), the quirks table seems to cover
+> most of that:
+>
+>    - skip_ac_type_check avoids the AC type query (0x1300), which on
+>      TM2135 returns a bare Integer 0xE000 and makes "performance"
+>      fail with -ENODATA;
+>    - accepting function == 0 in Set replies matches what I see here:
+>      the EC switches mode, but the reply carries function 0;
+>    - handling event 0x16 as WMI_EVENT_PERFORMANCE_PLAN_ALT covers the
+>      mode change events this firmware sends.
+>
+> What TM2135 would still need is a DMI entry with its own profile
+> table, because its firmware uses 1 = balanced, 2 = quiet and
+> 3 = performance instead of the default values.
+>
+> If that is useful, I can:
+>
+>    1. test v15 on this machine and send you the results, including
+>       the Fn mode hotkey events; and
+>    2. send a patch on top of the series that adds the TM2135 DMI
+>       entry and profile table. I would base it on the base-commit
+>       from your cover letter (9d3475065167) unless you prefer
+>       another tree.
+>
+> Please tell me whether you would rather fold the entry into your
+> series or have it sent separately.
+>
+> Thanks,
+> Arsenova
 
-Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
+Hi,
 
-FYI no reply-to next time. You shouldn't chain versions on the same
-thread especially for series. If you find out why Claude does that let
-us know
+Feel free to test the patch series on your machine.
 
-Antheas
+Here's an example quirk of your machine.
 
-> Signed-off-by: Jiajun Leng <adolphpi@outlook.com>
-> ---
-> Changes in v2:
-> - Remove the X2Mini PRO comparison and the downstream kernel version.
-> - Merge the quirk mapping and test results into the first paragraph.
-> - Place the entry above ONEXPLAYER X2Mini PRO to keep alphabetical order.
-> - Move the AI assistance note out of the commit message.
->
-> AI assistance: Claude (Anthropic) was used to draft this changelog and the
-> diff; the submitter reviewed and tested the change.
->
->  drivers/platform/x86/oxpec.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> index c4c4babe8e30..f4b5a35a4d69 100644
-> --- a/drivers/platform/x86/oxpec.c
-> +++ b/drivers/platform/x86/oxpec.c
-> @@ -300,6 +300,13 @@ static const struct dmi_system_id dmi_table[] = {
->                 },
->                 .driver_data = (void *)oxp_x1,
->         },
-> +       {
-> +               .matches = {
-> +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X2Mini"),
-> +               },
-> +               .driver_data = (void *)oxp_g1_i,
-> +       },
->         {
->                 .matches = {
->                         DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> --
-> 2.53.0
->
->
+static const struct bitland_profile_entry tm2135_profile_entries[] = {
+     { PLATFORM_PROFILE_LOW_POWER,         0x02 },
+     { PLATFORM_PROFILE_BALANCED,         0x01 },
+     { PLATFORM_PROFILE_BALANCED_PERFORMANCE, 0x03 },
+     { PLATFORM_PROFILE_PERFORMANCE,          0x04 },
+};
+
+static const struct bitland_mifs_quirks tm2135_quirks = {
+     .profile_entries = tm2135_profile_entries,
+     .num_profile_entries = ARRAY_SIZE(tm2135_profile_entries),
+     .return_code_at_end  = false,
+     .skip_ac_type_check = true,
+};
+
+
+static const struct dmi_system_id bitland_mifs_dmi_table[] = {
+     {
+         .matches = {
+             /* if this doesn't match your DMI info, change it manually. */
+             DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
+             DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2135"),
+         },
+         .driver_data = (void *)&tm2135_quirks,
+     },
+     {}
+};
 
