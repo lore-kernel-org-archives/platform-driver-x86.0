@@ -1,97 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.47
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793543208;
-	b=rh2e/yeyqYbWL57MONBas6HeyRLg6Tk1BRso4/4S3QrfMZj1TUH7gsXvHYGlAADiJ9JO
-	 8efPXzidSbmnJoyqT/GMEIYwBRP1nJ9VhEsRxoKIBGDRGEMiPZrPZBMqbBcAkpaLz6DHl
-	 WsdvrrdqLRQeQ8BaqcXh1HG0qJ+Qx43ntI6jAFoL5ATUGFW8gYkuOMZsEZdQj6j/7lCz+
-	 /yMh9yjeTMql9pHXPtNpHxqCdrWDmFN5Tce21XyMwqjveMylThncyeESbfqFGztWbODW4
-	 d40SGBzulsBG71/pEx/idbX0vLthkCBKsJCZbt5Ml2u3Ut5xMzm1Y8AI2wq/OVVT8pw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793543208;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.42
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793544073;
+	b=JA4a16/b6JnuBH0Y48Yk3+RsgCl+vChze0LPm5owgC+di5lShc/SvzpaBnbyZ45ktTkb
+	 iVFuovOBPGDL6Yd+axnAj4etGspiQiFm8kASoZC7sJrRax/nqqkLmIoY7XC8z4WWY2xA0
+	 E4lTntWHwT3fi8+bHtaA46aNCD9iNPG5zBoQBhjKQCGyGACW7ixOAUrad2TZLVWUFbzZL
+	 BpQPg8GouDenE3M0FyBtAmXwXoOtbd0gMERpflMjlBZXCOR4oMD1qDwNH082yNby2RmoX
+	 kV/ZqvexQ6YGbUg3kCDBS6h1pDOTqn9uJy/2Sj/EEljHc3wpz7eAfmpbbqq+/UoIPHg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793544073;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=VSMhtPmYj28P/PYH23LQ0LHJkDrgHurxFkaRZSD9+Uk=;
-	b=tgcgz0ZK9KBBXxfK4q2mldn5HRoeaTbobbaMINho3swcTwdZqRGyg6f1zCFZ3oDDjnuw
-	 Da6+bCoXeBTo4fe5MhfCVqBQ7AaswYl7OAFRe/Hf0cdUzDAbWBgUskUWtX/FkYZHnJNEF
-	 wetK5shNoBJx9fBD6aG0DnAnORPL11Lou3Zvm8+NO8FKgeVsH7QAjwKhaz5DtBMttSxek
-	 OI7n2bWyt5vfOx5o4WcxiGX1wLuBoBhCcVhhR/JuSSrcNT+5EgdKn5ywVXKAhTFBGmnJO
-	 yLFeUgeceiC3pMO3RX0VuXKgR0IZVpeSvuugjvzVsny0Pwv2MAXVe80HZQzd6loxGYA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=mnSYrptRMC/FkWaFEkTHqDgg2uSj3h2N3QT8hvMorB0=;
+	b=kaFfekpMRAJlpESCRNw0PiwaL8p5qvOOK4hhkKtyfg2Y0DqWGPt0RYa+GJJ/qGfRU0AY
+	 seGjpqzmi573w5P9G1N5o28poSpVFL8+ddYz5V2vVqd75D8hTbqP1M3DF7zn/4f6ayZ7Y
+	 h0uV0K/u6Pk7EDWT1ipzActOugp8yd0k9qaH8XOn9vEGKyIzhQx7fBBFOA3/tJBPf7NTn
+	 Krl2TrHbBQWsEKPQTbKiMzFLU8M2CAo1dZ9fg7Ek8rJTcEtuDoVoLipvegFoAiQlOViDC
+	 KIt/UxXwQf/g6kf5XuTuL71MlWOAd8ywOQPP72Ae+OV5XTyDabTtw2a4l6f1k8gum+Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=miget.com;
 	spf=pass smtp.mailfrom=miget.com;
-	dkim=pass header.d=miget.com header.i=@miget.com header.a=rsa-sha256 header.s=google header.b="SG2s/tPP";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.47
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	dkim=pass header.d=miget.com header.i=@miget.com header.a=rsa-sha256 header.s=google header.b=VD6J8csp;
+	arc=none smtp.remote-ip=209.85.218.42
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA642606A324
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 14:26:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA642606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2401606A324
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 14:41:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2401606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miget.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miget.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=miget.com header.i=@miget.com header.a=rsa-sha256 header.s=google header.b=SG2s/tPP
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-703be215729so1047392eaf.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 06:26:47 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793543207; cv=none;
-        d=google.com; s=arc-20260327;
-        b=PeJd3QqWZ4ZDJ1XOGr72yJUFCpL/aMJ4gtjEShp4hErk5io/YGxjHReqo0SCY5/bU3
-         Kkn4gfdcGN6PjjrOEKhOXncFpbsXiUBdEu3g1cw9bo48NCoALXIr0BGg96tGJr1OSBIo
-         glZzm7EnFt/YgKEFS2Su8ty9N2j5RwF0P3mEJwR9RPmvrtZSHCik6mUMIB0KKIAchX4k
-         Ui7t22PP59IN0QkkmUQfs6NtSPecXeCe/zU8sAaVXp8lScmCOeAd3p+mc/Mmd6sVVRY7
-         h6HPZigdTeHIoikCvcvwJRWQbeyNpDUVudZ7D1A2lYsTYroLCkBOExsYPqtBHpRLaUp/
-         IlqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=VSMhtPmYj28P/PYH23LQ0LHJkDrgHurxFkaRZSD9+Uk=;
-        fh=Oq0FEzrNxP3puOAwtc60vuaouLMTK55c2ggD1Oy9MPw=;
-        b=dFEQedVRr+dqiGyTZCJ4qRQoEHSanhdySP3+IenGFR/yQEDhemc3CdP4w+FCADU2Rs
-         iaXWvZJA1BEleZ6zppPxVvi1KlvpX3frXWlU4oWHAzAxZphDJkeYZ3hQNOSZ9MlJgalm
-         Ke5bb20gl5n99O5eYRFRJscPVvw4kKldELZ53301KpT2I8F+Cs5Npa9333NGQfoWaLPj
-         cuGkK6lTxEhw+tHzQHjzuhF5Bqa3OjBZ4aWDzHAzQobA/7MVI4ozvoAZSf+g+UBCnGvb
-         JC578gCcPoPbA/Ega0VM4nfDQtWjG8ky2SEDQ7ty9JXuezb2bau5hhZ4454azcicqKQD
-         YU0Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key, unprotected) header.d=miget.com header.i=@miget.com header.a=rsa-sha256 header.s=google header.b=VD6J8csp
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c38ac26cc5dso352005566b.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 06:41:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=miget.com; s=google; t=1793543207; x=1794148007; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VSMhtPmYj28P/PYH23LQ0LHJkDrgHurxFkaRZSD9+Uk=;
-        b=SG2s/tPP98PWmeaftY02H/z8zD336YrdgSY6n52NWltggx38Twlo9JM7IP4P5qLgob
-         U8fQTxsqlqlYBPLj6JO1qUQd68MY7OI5ytFCMzlNOKpWCcoEOKv3rHBL3UO2RdkvO8lh
-         5J4iTDpsh37P/T7IyWypweeAgYvBzSXVwtALo=
+        d=miget.com; s=google; t=1793544070; x=1794148870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mnSYrptRMC/FkWaFEkTHqDgg2uSj3h2N3QT8hvMorB0=;
+        b=VD6J8cspc0NNmny+qbMZvGLxpDGUmpsaX86nfBqAzTmDkZPhljuwy5Mu9euHWOzkPr
+         LjbO3mZR7pLmL8IqVpG3y5V+ZXh4nCzB1zbjMmh91Gz6kBgQXjv9tHTWebklnnhML16Z
+         lR6gYrvwakuhZUH/WSZisCwWfy+5tRas4dNWo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793543207; x=1794148007;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=VSMhtPmYj28P/PYH23LQ0LHJkDrgHurxFkaRZSD9+Uk=;
-        b=bsQS7PgPPQbR8CLjqtW/jLDcUPr3BfVor6482Kt4HcGttdXEK8qb2A8RnOcPzVc0pT
-         RTF5ioF1SVTS3RImSDfMY2ZFrZfZ2EaK2Q5p0L+Xcu4aFkKqcD6FSQycJZFwXcbHGUJP
-         suJ5pOUE7rZ3u93g9EKNhiDXyqUiCx6GSHnZyohyaIBpMCkpqkKk0RdeaVGv2ExqPAk9
-         fOKUoLFrRNPl5cfSaSaKuA3TaZ4HX2c3Dh0Zb+JFcEzDR+SWxhmvVjbVepV3IbR2cbXm
-         U2BlpLXjy7BnFSBfgS0VuepYQDqlxpfOM15B0eBXNWZXUkGOYS89Hnj+t1uxu/7PoR2P
-         2nvQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz8zvPzv8bQeXtQp0eMnP3puKm0crhpQjmI1qMSBzNq/8duKOHsw2Z9bJ7HLDNYs6PEl6sBhzE9bcxmfYCI44TgSg6t@vger.kernel.org
-X-Gm-Message-State: AFq9FYLyQ4L9WG9/9Fk1npxzEKsXLZEkbi9rOBsCIQcL6xEu5qF3+k1m
-	rwu2PSQeUZgWDebJjUWA81W3Uvi1IWIaQddnqujThantcwRnYeY98JvlY1eEHzTtSG12MPZ3hLy
-	hUBCNVvx0mwl/ppKSJrbMRXYRb4cfW333b0Wql8UoNQ==
-X-Gm-Gg: AYBFou2rcn/eWfexLnaG1SfrC+AjWdjvfdedDGOoP9NSuM37E36oK+TrJPFJodsn8cd
-	VkUNFwKhOXEBP4GZRzyUmOAs1ecjGhoOe63V8roOInBJHVtGdwnaHfzKdmhAyZ6pl/TYSapkBQ+
-	HpYTawNOHVmRA9X/5T7VlBK5e01XhLxwAjLktx70888F2xLHMG7x8RBB9bdmn2C3+V5FWn1iuOS
-	GF0JG7bb/lQ59to9Ei64iETeYGBuTSnfIm5Ak5KNXTld7BRA18w5e22Pd8UPvNxqA1mmLlFjvfr
-	qZt9xV4dVl/iopjRly1P4KywZOjsdXafQt8NrKcUoap1sT1f2Uyi6pg/Qbq/1tP6j+0zLYuCHCE
-	tB4mIWBysauXKY6tudqQEPKSlTP3Jgm80Jy/S3j8iQ3zI6MbcpTn8qqmW95jnR0jTBOuGQf4OAI
-	1PYs+YFamu3pQiypNpDDKkGL1qaulpwf7Vra1rJkxxu4L/XmE=
-X-Received: by 2002:a05:6820:828:b0:70d:77b7:686b with SMTP id
- 006d021491bc7-714f29bd919mr3821168eaf.40.1793543206773; Sun, 01 Nov 2026
- 06:26:46 -0800 (PST)
+        d=1e100.net; s=20260707; t=1793544070; x=1794148870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mnSYrptRMC/FkWaFEkTHqDgg2uSj3h2N3QT8hvMorB0=;
+        b=XApAnb6wfLJMw1AVA9cmpPG4t/iMADR2io3AnRAs30IwhtGIP518kTKslke/HV3PoT
+         O4ruJF1j5TG68QLfldAGJD/DYvjxhFb3omNZag5JCVlK3zwtrMp/nAiiP4e9q9Uy8no6
+         MFIOPkeYYRmd813eP/Cq19/Zs1gIytKZLWIFjTVZ8HKUCFxgqF1xOJhj9T976b35pFWd
+         v0KM2yOrmX/8ti07XGR9aYXZDfAWhOQifLHdDogGqBXW2Ql7At0zYAqTKn+Z1tEjlyQT
+         GYJVRl2lyseeOH0xSzSubFlP0QUAmm47WgCcnFZYjYgXucC68T6hv7PvvsqcefGgHkkz
+         I8LA==
+X-Gm-Message-State: AFq9FYI5sq/reqKC7WG+8WzOsor4aBQ62yPF+DfceYNjR7ONeHpHuzX7
+	F1x4eP1+Mj3K9Amy42euO+qSVab2iH0oD3TTc/XEqRzo4n0G64iUhCrBVA7IUiLF1uI=
+X-Gm-Gg: AYBFou0F9saUKIReFtdt5LMRXlSbTEXDzceKhBGxdacNxM8u/2qgxX2KQi2h10vZd0y
+	+LzxmKMAVcBzzMBhZPJRVGJTtmjWnFD1MRYh5pQmV7NVYmdpbSVE3iE10Mjgehn/Dq5k8K0y7lP
+	Ri0ZcWrDGR+bMolixcUn2lYHt3NFhdleKLkRl9TkehvfMk6QWouxxQaBlr4xgbqaWkw9tyc++5L
+	INEhYsZqyQ+FQBxErPUMINc2BeUhkMicdlxSGxUh+C4WvNA86Ejd0Vie93Jww9rKO2JI0J2Yuww
+	WdKGxtDWh3VJ9FyqQCiHQ8Bik326OGvfC52dj2smCZlJWPomAMdvjI4sZGdB9DQMy9BJFLJZjs9
+	rQTulFXz/gaFDY8mSJDKvXfde2mI9lFkcaZ90ENGqhOX53dp7nmAfTh69DkPH6CgKcwySV4gKmk
+	IMe/YdNrVJ0cihmZ7LM+Q5VYqFDdZUziSRq3aRe7bU4e8q6gKMvbDOzgWtuoeipouAWrn47klaf
+	yzal/8R0n4Gtj3tT2Wk6FNDYhi+Hd879bHxCNtdLCUPJuMqVteTDblSk28vowtR56cMHR68adK9
+	o3zW9Cnox9h7dp7YTEDgpIewaxEVcdrKG4qnH6hqVPv2k9wAWLwfV4RhgdQFQEMaaMb2Hw2kQv4
+	3Lv0T
+X-Received: by 2002:a17:907:868a:b0:c40:231:6eab with SMTP id a640c23a62f3a-c4ca7a4e651mr602881766b.16.1793544070508;
+        Sun, 01 Nov 2026 06:41:10 -0800 (PST)
+Received: from xia (user-46-112-84-13.play-internet.pl. [46.112.84.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c4cabec09fcsm280158866b.71.2026.11.01.06.41.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Nov 2026 06:41:10 -0800 (PST)
+From: Chris Taraszka <chris@miget.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mingyou Chen <qby140326@gmail.com>,
+	Ilya Gladyshev <ilya.gladyshev@linux.dev>,
+	Armin Wolf <W_Armin@gmx.de>,
+	KentoNion <kento@kekto.ru>,
+	Chris Taraszka <chris@miget.com>
+Subject: [PATCH] platform/x86: bitland-mifs-wmi: Cycle the platform profile on Fn+K
+Date: Sun,  1 Nov 2026 15:41:00 +0100
+Message-ID: <20261101144100.1043263-1-chris@miget.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -101,74 +96,124 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261026102101.224568-1-qby140326@gmail.com> <073e6aaa-12dd-4fc1-b7dd-4d27cb4e27b6@kernel.org>
- <CAAcRvKNvBKwVcPQ6vv-+OGZdL2Gxd-ocNyvZO_q-g083QNfR5w@mail.gmail.com>
- <f2dd98be-0551-4857-93c7-59ffad1d3e88@kernel.org> <CAAcRvKNYkXr+eor3JAYwO17vckeVAmYT+Dp+-wMobMmL40ukBg@mail.gmail.com>
- <fc016bc8-bc6e-47ed-a85e-891e522c3f24@kernel.org>
-In-Reply-To: <fc016bc8-bc6e-47ed-a85e-891e522c3f24@kernel.org>
-From: Chris Taraszka <chris@miget.com>
-Date: Sun, 1 Nov 2026 15:26:32 +0100
-X-Gm-Features: AclHuK-Zww_1hrg6V7YRypD6x2MCAdLGuHMa1GKcWFVyTX7OCr-uEhqE7nFiPjc
-Message-ID: <CAAcRvKMdHPUNuG6Zd4g=M2settZ609-oZG6P_PMRk5xL3jRfoQ@mail.gmail.com>
-Subject: Re: [PATCH v14 RESEND 0/6] Merge redmi-wmi into bitland-mifs-wmi
-To: Hans de Goede <hansg@kernel.org>
-Cc: Mingyou Chen <qby140326@gmail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Ilya Gladyshev <ilya.gladyshev@linux.dev>, KentoNion <kento@kekto.ru>, 
-	platform-driver-x86@vger.kernel.org, ted eric <ericted8810@gmail.com>, 
-	Armin Wolf <W_Armin@gmx.de>, linux-kernel@vger.kernel.org, 
-	Matias Civadda <matias.civadda2342001@gmail.com>, =?UTF-8?B?6auYIOS/iuaWhw==?= <btx342@gmail.com>, 
-	powerfullz <wleizc7319@gmail.com>, =?UTF-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>, 
-	=?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>, Rsplwe <i@rsplwe.com>, 
-	Bozhen Peng <bozhenpeng93@gmail.com>, Anton Karasev <uselessfire@gmail.com>, 
-	Jame Jao <jaojame6@gmail.com>, Serhiy Shliapuhin <shlyapugin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Oct 2026, Hans de Goede wrote:
-> Hmm, so does Fn+space work under Windows ? If it works there, then there
-> must be some way to make it work under Linux...
+On the Xiaomi Book Pro 14 (TM2424), Fn+K sends hotkey event 0x28 and
+the firmware does not change SystemPerMode itself. The event is a
+request that the vendor software acts on; without that software Fn+K
+does nothing on Windows either, and on Linux it is currently logged as
+an unknown event.
 
-Not on this install. Xiaomi PC Manager fails to start here, and without
-it Fn+Space does nothing under Windows either, so I cannot tell how it
-works with the vendor software running.
+Add a quirk for this and call platform_profile_cycle() from the control
+device when the event arrives, so Fn+K cycles through the profiles that
+all platform profile handlers support. Models without the quirk keep
+ignoring the event.
 
-> Ok, so the value-low indicates the state of the LED, right ?
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Chris Taraszka <chris@miget.com>
+---
 
-Yes, inverted: value_low is the firmware's "mic on" state, so 1 means
-LED off and 0 means LED on. The firmware builds it from the EC field
-MIUT (EC 0x17 bit 4), which drives the LED: MIUT=1 turns it on.
+Notes:
+    Tested on the Xiaomi Book Pro 14 (TM2424, BIOS XMAPT4B0P0A0A) on AC,
+    with Mingyou's v15 and my two TM2424 patches, loaded on v7.3: four Fn+K
+    presses step performance -> low-power -> balanced -> performance ->
+    low-power. The bitland and SoC Power Slider handlers and SystemPerMode
+    (EC 0x68) follow each press within a second, and power-profiles-daemon
+    picks up the change.
+    
+    Depends on Mingyou Chen's v15 "Merge redmi-wmi into bitland-mifs-wmi" [1]
+    and on my "platform/x86: bitland-mifs-wmi: Xiaomi Book Pro 14 support"
+    v2 [2].
+    
+    [1] https://lore.kernel.org/all/20261028112742.674847-1-qby140326@gmail.com/
+    [2] https://lore.kernel.org/all/20261025195456.43414-1-chris@miget.com/
 
-> Interesting. Is there someway to manually toggle the LED like we do on
-> other laptops, so that we can actually sync it to the alsa-mixer
-> mic-mute state ?
+ drivers/platform/x86/bitland-mifs-wmi.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Yes. WMAA has a SET for it: function 0x0A with sub-function (FUN3) 0x05,
-where FUN4 = 1 means mic on (LED off) and any other value means muted
-(LED on). The matching GET returns the same 1/0 state. I checked the
-LED side by writing MIUT directly, which switches the LED on and off
-without any event. The WMI SET itself I have only read in the SSDT so
-far.
+diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+index a72569d810e3..8a994f5b089e 100644
+--- a/drivers/platform/x86/bitland-mifs-wmi.c
++++ b/drivers/platform/x86/bitland-mifs-wmi.c
+@@ -99,6 +99,9 @@ struct bitland_mifs_quirks {
+ 
+ 	bool return_code_at_end;
+ 	bool skip_ac_type_check;
++
++	/* Fn+K sends WMI_EVENT_PERFORMANCE_CYCLE and leaves the mode to the OS */
++	bool cycle_profile_on_key;
+ };
+ 
+ static const struct bitland_profile_entry default_profile_entries[] = {
+@@ -125,6 +128,7 @@ static const struct bitland_mifs_quirks tm2424_quirks = {
+ 	.profile_entries = tm2424_profile_entries,
+ 	.num_profile_entries = ARRAY_SIZE(tm2424_profile_entries),
+ 	.skip_ac_type_check = true,
++	.cycle_profile_on_key = true,
+ };
+ 
+ static const struct dmi_system_id bitland_mifs_dmi_table[] = {
+@@ -168,6 +172,7 @@ enum bitland_mifs_event_id {
+ 	WMI_EVENT_MIC_MUTE		= 33,
+ 	WMI_EVENT_RESERVED_23		= 34,
+ 	WMI_EVENT_OPEN_APP		= 35,
++	WMI_EVENT_PERFORMANCE_CYCLE	= 40,
+ };
+ 
+ enum bitland_mifs_event_type {
+@@ -216,6 +221,7 @@ static BLOCKING_NOTIFIER_HEAD(bitland_notifier_list);
+ enum bitland_notifier_actions {
+ 	BITLAND_NOTIFY_KBD_BRIGHTNESS,
+ 	BITLAND_NOTIFY_PLATFORM_PROFILE,
++	BITLAND_NOTIFY_PLATFORM_PROFILE_CYCLE,
+ 	BITLAND_NOTIFY_HWMON,
+ };
+ 
+@@ -792,6 +798,10 @@ static int bitland_notifier_callback(struct notifier_block *nb,
+ 	case BITLAND_NOTIFY_PLATFORM_PROFILE:
+ 		platform_profile_notify(data_ctx->pp_dev);
+ 		break;
++	case BITLAND_NOTIFY_PLATFORM_PROFILE_CYCLE:
++		if (data_ctx->pp_dev)
++			platform_profile_cycle();
++		break;
+ 	case BITLAND_NOTIFY_HWMON:
+ 		fan_info = data;
+ 
+@@ -921,6 +931,7 @@ static void bitland_mifs_wmi_report_key(struct wmi_device *wdev, u32 payload)
+ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
+ 				    const struct wmi_buffer *buffer)
+ {
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
+ 	const struct bitland_mifs_event *event = buffer->data;
+ 	struct bitland_fan_notify_data fan_data;
+ 	u8 brightness;
+@@ -949,6 +960,15 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
+ 					     NULL);
+ 		return;
+ 
++	case WMI_EVENT_PERFORMANCE_CYCLE:
++		if (!data->quirks->cycle_profile_on_key)
++			break;
++
++		blocking_notifier_call_chain(&bitland_notifier_list,
++					     BITLAND_NOTIFY_PLATFORM_PROFILE_CYCLE,
++					     NULL);
++		return;
++
+ 	/*
+ 	 * The device has 3 fans (CPU, GPU, SYS),
+ 	 * but there are only the CPU and GPU fan has events
 
-One catch: after the SET the firmware sleeps 150 ms and raises event
-0x21 itself. So the driver has to ignore that echo, otherwise it
-reports KEY_MICMUTE again and userspace toggles the mute back.
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+prerequisite-patch-id: 99b10cd2b70d630ab65d8a8bb02c1d4bf89b1a63
+prerequisite-patch-id: 27db041f827872b8be142c310a14c79962154bd5
+prerequisite-patch-id: 74fc3298fa3dceb2224dfc3d2ae4cc6d4be61c01
+prerequisite-patch-id: 254b8455d8a7f56b730e842207d91bd6904a50ce
+prerequisite-patch-id: 9708c81da6b4ed6c2d47eb927efcd64ce4ed2ecf
+prerequisite-patch-id: 2fe8c043993034f1a2cde98b1b2e299987d5ac7f
+prerequisite-patch-id: 36137eee73ea8cee3db81af887f1f0859ef02b3a
+prerequisite-patch-id: f0ba644539dc52241b96a74d6e32a6f06241e577
+-- 
+2.56.0
 
-A key press toggles MIUT in the EC before the event is sent. So today,
-pressing the key while the LED is on turns the LED off while userspace
-mutes, which is exactly the desync you described.
-
-If an LED class device with the audio-micmute trigger is how you would
-like this done, I can do that on top of the TM2424 patches, together
-with the Fn+K one.
-
-On Wed, 28 Oct 2026, Mingyou Chen wrote:
-> I think different models have different behaviors on this.
-> Should we add a quirk item?
-
-I think so. On the TM2424, 0x28 is the Fn+K request and the firmware
-does not change the mode itself, while 0x16 on other models was
-described in this thread as reporting a change that already happened.
-A quirk flag for "0x28 requests a profile cycle" keeps it to models
-where that has been checked. I will add it with the Fn+K patch.
-
-Thanks,
-Chris
