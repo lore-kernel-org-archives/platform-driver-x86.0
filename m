@@ -1,95 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.47
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793550216;
-	b=RUYahWtCBEs+QpCaLMH4A3pz0Y+yguPR+v/QH72H4CDdbysYDrbhb020Gu85lzFN7xG3
-	 2Vh3iZIARR3bHpY3DLlpdNJupcbUuStHWYkYV+/sZOwO7KjfD0aeEdA7CA21GSIKq+hMH
-	 kxeeUYs3QFQbc1n/2/frOeuW5z+TgrJHlJsbVtnppYxWgCFaRU29fDRzv4RcJNdV48dzX
-	 oXPnH/FwgxxzdFSsW3127uOUwwagndRm3U+8CTAH8Man/Gx+iLkrez7HmWuRugCZP1vuR
-	 ilLmzaKPcpKPS47YJa90RxIuW04dDZBKYJ65NugysBF/0RSGpWGcBsXLE1kzIuFIprA==
+	t=1793550226;
+	b=AiI8fKWektsv0/QL+CYUp55fnGDuP3RRzeqpcu37zvmGCPvpiwer0QJuTg0rU+Z+wz0l
+	 yW+YokIpR8KhXw0R/4n27J2mGUbWYDVZ11xCUEH+T3Wr9TYTDJoaStQ59J1H7PzkRc65y
+	 fSALDd2GckJJ6s4wlOnodZ+qABYecLueEa3wg9Peeg98AfQIeSUHgrqQKkKmMwRBj43Uj
+	 H196Q403PUZHQ5ZOMB2Q2hRgmQt7amKz3Y/1sbU/6PP/D5PZFhb3Bq3mOhMlaJDwALNlr
+	 OJ4zB+KCMq0qi3y/xNEQvbE34i/xhXhsaN2CX+6/rnfGZ4w3rnrQ/9M4SD0oQBFfSwg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793550216;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793550226;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=//BiYczTSqt77P177JXkniyDHFQ+z+V4gCGeruh2sQ0=;
-	b=MBZPpo+u0WHYbdyX3zfIrjLy3qbxrWiErKKoW4PIzEHwO7iFednWJ5W9kLO47Q9B23Cl
-	 ZmoyoAtXCq/cz90oKYkz/awiVdABDu+wUgRS8sk/2V/+K7Pt9EKWd4ZYFbXotoEniKttb
-	 wUa8QF5tQoMApiiGwpatDJ50a0Lg+9wJ4Qcj06GwBZRL0qX1vaO31ZMckngIODMmMHB9H
-	 AainmZ3TKHtWl2S7jqrDEymWvDl4D+plb8tVBuv4PAtj1qvwusLk4MUXI1L5UYxpxxsD8
-	 U3UpRdIhjduabJpSfhxLSzDZhxaxWsM3GexrFraXZT6T2JC1TEnvu42QNazs8+m8H1Q==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=zgj/KSeFXnUIsMDU1UeDAewCE+Y7GVovPQtA+KPbLss=;
+	b=Ry/gw46RNnjV49AZi3YZjpWTcF1abYSLTwyDv/qMoI3VaJlrnREVcj0zd0zZwcv9SfLF
+	 uC7fp5grYG9lXx2svSjtyU02OhpnStNkbruf97L6d4oaTQC7+KOegyJgAOV6NBDHm9tNk
+	 rs/P4VAmvUmiJ2RKEhxa1jS/YOVqjhqsKrg0Fehu2RmuXykN7jwyozl+LtWHDjngJJvk5
+	 Wy3TpZHfjFOKoqU36Az3fPpBYN0nP+EX7gVdhjAgZdLBCHWNYL6eN84bGdZZN7ciJqOpU
+	 nvo494J8dRTyiqgik3p5PRuC6GpSgRxWJ2LHNhe9f8M61zHw8OzadIASfsdfxetK3ew==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=miget.com;
 	spf=pass smtp.mailfrom=miget.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.50
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	dkim=pass header.d=miget.com header.i=@miget.com header.a=rsa-sha256 header.s=google header.b=Aw6WD+I8;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.47
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B65606A325
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 16:23:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 05B65606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF4606A324
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2026 16:23:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75DF4606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miget.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miget.com
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-6faddda49e7so1904454eaf.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 08:23:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793550210; cv=none;
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=miget.com header.i=@miget.com header.a=rsa-sha256 header.s=google header.b=Aw6WD+I8
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6dd7070699eso1896272eaf.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 08:23:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793550225; cv=none;
         d=google.com; s=arc-20260327;
-        b=ZhSCDw73Fy7uSK5BLWLaZd8gbA4Ah3tWSl3DCaSrm8ApFRKa1KaO5hVIG/hSOBnATY
-         Jo8kYsCqmnN8TgC9bgbR35QR6ERmsUdKQaePcvLgy0U6KCsowhsB8lQk2kT56/txXTJd
-         0++7hFdnn+kgS89Aam8vStGHamZoXznYuDk+IeM6KZlC6mlBGgLBb9euW2uauq3W9aQt
-         KnAg5Sebap7nqHebN37wNGZAl+67d8Sw+aX7tegUPomo5v6YpdKCjPI9ecMwcgNoSeQE
-         Y+8ZLUmT3htVPE5L0YgoZcsAXyCie9U8TwCZdgp5Z06ijQhMv6KLERXXaMSu+5S9Dzx0
-         njQQ==
+        b=qJxrENC8wc4nbcTzKe0YRfJCU5E9oOnLns2lOMn5mfkOVYxIhGwqunrEqkhgdKWS12
+         1GjfcYuKibksvlslTVFYgl8rG7vrDi242+6SgMFdB4Zc7vjD+pOk27J3JtVU4f2TBihO
+         iBwB3N8a9yV8sILAdBLmjS8dgir5BwdzWJxuI8vRTuc3MlSv0yZGQ76Zf4gGn8KE3YCq
+         6M58jvNEex1vEiCFbMem2vf+9sUF0jv5bHgKZAwFmlTLgIQSbO1XskWgl66bJHHuFlvY
+         SQwnxkfIEYNMCksNWdBxuoXzMasx3fQLxW/yr24UfHsEKjmQbcVCXtn/YH87Q3hFCK0W
+         L5kg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=//BiYczTSqt77P177JXkniyDHFQ+z+V4gCGeruh2sQ0=;
-        fh=5zj63QUxOejMamRPa08zQ7S8zdItOF70oN3UaI2SbtE=;
-        b=hEM79V9gkhUL2QhCdT25RmKM70WY3tAj9VdtFF5j2zLFZuFEB6WSqF8NsHqvGou2vN
-         lba+SsWS9TWJDo0Tbct9uTZovGzLXiqHVebhFoyoXI4D9ndokyd6ALmr/whFYqCrN86/
-         5hxbNNR/wzbQqd/99iQeGAskevvPNURf0npJ4wnyz4th26XvXv4ABbtam9yeTKKmDHeb
-         O1UyyvKSkMwIiKcTsjPJTkNAi0+9s0n4f/Bjw/7Q8YarxpgZPQsXpYnAIHJ0Wdz2oLTC
-         XSu/kdmG31wBuyzOqRuufUe7fVXJyHEx+5bAgjfmKMtJGl7JU4QKLShCKrBPxhS9B7rV
-         tvjg==;
+        bh=zgj/KSeFXnUIsMDU1UeDAewCE+Y7GVovPQtA+KPbLss=;
+        fh=XPucYpESTfNluQfaEZy8yxIgT7P8JScqv4+inwwRdto=;
+        b=QoFopoid2+o5FaSjDQIUXooHFsqID3I2m57eqqfTf8wwl4rITuz7kJyEUfDHlu7VWO
+         LAGaxp2wkzu4jAbOFnAo3EamC9pA1BCdRCLR8+xmhaxmmD+X/CVtUsWgmWFJ8jK6mLhP
+         Wn99PI93nbHtdTisGjZlPrTaytMjWp8rIWjKi0zaiPooUysU5WqeLVXllkEMzrQ0hymr
+         r5BOCyhx+dsOlx76DjAV4UeOMWb94Z/AfpmOLvrQH2T6crqQ/Calxjy7YCU73RZ+hfUj
+         4sTYHRVRccP5bvp7prMSKT5BtNC2YSng2eDItxqr1N3VB3d6WqQsRXQt9IEBX1e412ol
+         Z5Vg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=miget.com; s=google; t=1793550210; x=1794155010; darn=vger.kernel.org;
+        d=miget.com; s=google; t=1793550225; x=1794155025; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=//BiYczTSqt77P177JXkniyDHFQ+z+V4gCGeruh2sQ0=;
-        b=IptkT1lCeVEW4GSLktWlzpRHIvYEQzQbHAjdian8+bAtOiw65U/iZe3Zoej2SCZXVF
-         tmQTv5OvjQOYs/6Sb95w6uNBdK5tZ1+Ti39et0wcaxN7Scae2mwCI61ti4BHt0/JHY/H
-         huek61pbYoOvDx/ODkhZzAtIIiTW9XL4c/TUw=
+        bh=zgj/KSeFXnUIsMDU1UeDAewCE+Y7GVovPQtA+KPbLss=;
+        b=Aw6WD+I8+hGhGpmj37eOAbN7b01ftVLyy2dsNnP3vlYepvtos54zJz0Cq9RYmGeldx
+         ajlOaK9cWG3FJBZInPM3tgEp5KZISklpvCoW087NSk0LbVU++Tb5HN9P1L9GWcs97Y+g
+         pzqFdw+FVaHZHIWJvrWOjzJJnZw9G8WvY/Qek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793550210; x=1794155010;
+        d=1e100.net; s=20260707; t=1793550225; x=1794155025;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=//BiYczTSqt77P177JXkniyDHFQ+z+V4gCGeruh2sQ0=;
-        b=dCKQzAhbrdiFUehMt5SQMyxvEiyDfO86jtysQyc0zcF0ibtV7RKYXuc89TRm2JCkBQ
-         S+Vwn1bUbDnvLyR2XsQ5SrKCg0QZX2aULoOZz3Qchcbj6e+71Ae6FAiAVjnZYi7za8vC
-         R8oJXJfBz0ee3JgNLY8gWn8dWEBVeQ6Cd3XUQmaVxAbN0VPAE34kQL4CITpOwNYLxaUQ
-         1HYStJGk3z1mmnkyfrj8irOHbuBHQOTb6uEWOZHrwFtwssmySEXXEDdxShkIfK0E6WHE
-         MyXygrw1eDI61pHl//VE2xyQpO/tCX6aO+G6GZATXdPHTEu85fSjaYBozJAmO99dn1lm
-         uEfA==
-X-Forwarded-Encrypted: i=1; AKwUvBy7mF1dF82XMRk9woyL0WhXm25XnAv1XlTcwAq/MnGHFdXExPCWqPC/CegqZyf5EoHtXopQam2RWLEee976+DwgQQu3@vger.kernel.org
-X-Gm-Message-State: AFq9FYKAjSPPAWnj1K+ztoNfTW07N51zR0kV6BN5XQmaW269DuJH5PD6
-	zVGZoZOKE+We3OUYMg9pMJDUAnBheNLsovkQmXessYy1AHnc1YY3WTG1GAIHr6rsOnHuf44lIlG
-	jxB8JpDQ6dxO1apQYyUwu3QgLMwzpHa9e8uOBg1RsHw==
-X-Gm-Gg: AYBFou20GE9/3Jksey25QFxxqGjiE70DF1pVltqCaIo4LDFkTQLDMQke1j4vZ8l9i0t
-	b3m4uszirMq7/Tl/JG2nTxcu7rkO1tLDkt1zn7hQPJqNj8yNVHpB1NJ1kDri64dA096QYEMrCUz
-	+Q5PbWipcFwnbCRrFS+4BcM+H55v2qrhqNW4QV9EzE6ZpcmZmY3uyfW1lPc/0JrlR30o2QqR8/O
-	nLRet/8aVEUIkTfjXq09Nzg6s8zN1V1zrhIB6BIejmnYM2VepIgAt0rVZ0CJk40logpj+1HxhX2
-	qkHgv+D82AyU7AmHglFKMmjraaZSZhTPBc0HYrdlYLgemuycCvscD+BpOrYC2PH7fIANOw9K0B0
-	KLJUo4CY+PfjeIkwbc1+v7zoSCUOlPrLBbXvSgcyEcGF+8pBfUXnK556gVy0ypp6uVb2j9wxfYG
-	xKbpZol3sfPtA6xC2V33cRgbiKdg==
-X-Received: by 2002:a05:6820:f024:b0:70a:d839:2b4e with SMTP id
- 006d021491bc7-714f2885c8bmr4370807eaf.28.1793550209930; Sun, 01 Nov 2026
- 08:23:29 -0800 (PST)
+        bh=zgj/KSeFXnUIsMDU1UeDAewCE+Y7GVovPQtA+KPbLss=;
+        b=LPqwnEwV5nNdZ1vG7Hg+ENRiVO1mJ4E2C8VrCjMo9R+XyKMtdr/K/Fqd7keffkPMnj
+         gBzyGxHnfgjz7G6JL83HF2BhGt/bryahZ8Yxnue37GP57tw2+e2Tqg9hZQvB9XSLZI7b
+         8lIH1bkR4NbOacC5qi52E9RdeCgoHeei9CSMEbpnT7BUfDFLCwu103NNQFXPkrxfjqu1
+         O2vf2qhkyNpfLHE9wJuW2XMoMuupLK/gcKbADuqfhWUV3sHxfqAp+4zspVC04k4FhWje
+         1CdLprWREK5d2aSknkzPQI8qLygJSZiPlnJryplOAy9WtEGQuZYnBgrwBzBCe/NMfj6H
+         bOew==
+X-Gm-Message-State: AFq9FYL0OevyclgFgQzv+faqdtoFyKio9dFWhEqo6esqfyYpNM5zpOv6
+	BIZzDNq5VlL8HpV0ChQnC6yHT1niuLJJZtXWL5lX+KNA6clX0lHWBdBQne8UU8u6Cor/l8KBkAR
+	1hJe3mm5NCWCYEfQMPmZ8Wi7GUvUlxwu+am+z3rHUEA==
+X-Gm-Gg: AYBFou2aKz44Mg6wwzv8P9r+cFCttyZf9g0sIkiTnsxcghcgyBy4FAvloIzGqfiBFoy
+	gRZsfTpEo5ESqeUFCky7tMjYBCMFp0xCcnu/PjOOXqHxMqw19IkFltvDXkYjzomu2+y/bFJAJ80
+	ug6m8afF2eSHqwQSzpUiNUz2ubvFR0nLWMO0TEnr0sYKriOYZvr7cOFlSzdDyjPi4ivsfZ0mMGD
+	mOo7FspIpzfW53lcV8+1hPxjK8yHNPqeknzf3ul8hC1k2PamobuEotpWoPcd3HkTqUO6JlUt8W5
+	tajTAgrDA9adafYL1wWnHYrtjCWD5JBWrtNIZ6xRTerCosV1EdGNxnB9+p3kgj1Vc939lEQY+5k
+	4FQldtSpBjzofINdmFIef81w2udIMP9AfKzhk1gB9c6scN48oLJ6o3EseTc2LmITfVx2ZnSsxvG
+	39zjxCxodr2MnC2AipWwI5ALUPOg==
+X-Received: by 2002:a05:6820:168a:b0:6f3:6cf9:f182 with SMTP id
+ 006d021491bc7-714f2480119mr4740296eaf.50.1793550225315; Sun, 01 Nov 2026
+ 08:23:45 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -99,70 +101,163 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261025195456.43414-1-chris@miget.com> <20261101153856.1367825-1-kento@kekto.ru>
-In-Reply-To: <20261101153856.1367825-1-kento@kekto.ru>
+References: <20261101144100.1043263-1-chris@miget.com>
+In-Reply-To: <20261101144100.1043263-1-chris@miget.com>
 From: Chris Taraszka <chris@miget.com>
-Date: Sun, 1 Nov 2026 17:23:18 +0100
-X-Gm-Features: AclHuK95wuYaVs_y70yGzxJna7r1n3cTJpA4sSaZzeYToJAUZISruSrOiT1I-cw
-Message-ID: <CAAcRvKOq6C_nWcc1oezzQ1Uima+ehJqDxg7Bf4yhrZ+jheCrrw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] platform/x86: bitland-mifs-wmi: Xiaomi Book Pro 14 support
-To: KentoNion <kento@kekto.ru>
-Cc: Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Armin Wolf <W_Armin@gmx.de>, Mingyou Chen <qby140326@gmail.com>, 
-	Ilya Gladyshev <ilya.gladyshev@linux.dev>, Matias Civadda <matias.civadda2342001@gmail.com>
+Date: Sun, 1 Nov 2026 17:23:34 +0100
+X-Gm-Features: AclHuK87kASEY1WffJQPQfxYIXO7Fza9xMyxIm6YyAKQG5rdvxp0M3XzA3a9A9s
+Message-ID: <CAAcRvKOZMnZqPhTdktNm4RtxU02k4QFZGyOG0aXw654iU94Mmg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: bitland-mifs-wmi: Cycle the platform
+ profile on Fn+K
+To: Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mingyou Chen <qby140326@gmail.com>, Ilya Gladyshev <ilya.gladyshev@linux.dev>, 
+	Armin Wolf <W_Armin@gmx.de>, KentoNion <kento@kekto.ru>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Kento,
-
-On Sun, 1 Nov 2026, KentoNion wrote:
-> 0x03 is Turbo, not balanced. This board has no
-> balanced-performance. 0x09 is the firmware's normal mode.
-
-You are right, thanks. The DTT tables in the firmware's data vault show
-the same: on battery 0x03 is Turbo at 50-58 W, and 0x04 has no battery
-entry. With v2, balanced on battery ran at 54 W.
-
-v3 maps low-power, balanced and performance to 0x02, 0x09 and 0x04, and
-uses 0x03 for performance on battery:
+This is now patch 4 of v3, please drop this one:
 https://lore.kernel.org/all/20261101161814.1325847-1-chris@miget.com/
 
 Thanks,
 Chris
 
 
-On Sun, Nov 1, 2026 at 4:39=E2=80=AFPM KentoNion <kento@kekto.ru> wrote:
+On Sun, Nov 1, 2026 at 3:41=E2=80=AFPM Chris Taraszka <chris@miget.com> wro=
+te:
 >
-> Hi Chris,
+> On the Xiaomi Book Pro 14 (TM2424), Fn+K sends hotkey event 0x28 and
+> the firmware does not change SystemPerMode itself. The event is a
+> request that the vendor software acts on; without that software Fn+K
+> does nothing on Windows either, and on Linux it is currently logged as
+> an unknown event.
 >
-> On Sun, 25 Oct 2026 at 20:54:54 +0100, Chris Taraszka wrote:
-> > Kento, if this is a problem on BIOS 0707 or 0A0A, please say so.
+> Add a quirk for this and call platform_profile_cycle() from the control
+> device when the event arrives, so Fn+K cycles through the profiles that
+> all platform profile handlers support. Models without the quirk keep
+> ignoring the event.
 >
-> Yes. On XMAPT4B0P0707, SET 0x04 is rejected on battery. The supply
-> check refuses balanced-performance and performance before the
-> firmware is asked, so 0x03 is unreachable on battery as well. On
-> XMAPT4B0P0A0A the SET status is success for every write, so that
-> status cannot show a rejected mode. Your 0A0A test on AC shows the
-> following GET is the value that actually stuck. Keep 0x04 only when
-> that GET returns 0x04, and otherwise SET 0x03. The supply check is
-> not needed for that.
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Chris Taraszka <chris@miget.com>
+> ---
 >
-> The map we use on TM2424 is:
+> Notes:
+>     Tested on the Xiaomi Book Pro 14 (TM2424, BIOS XMAPT4B0P0A0A) on AC,
+>     with Mingyou's v15 and my two TM2424 patches, loaded on v7.3: four Fn=
++K
+>     presses step performance -> low-power -> balanced -> performance ->
+>     low-power. The bitland and SoC Power Slider handlers and SystemPerMod=
+e
+>     (EC 0x68) follow each press within a second, and power-profiles-daemo=
+n
+>     picks up the change.
 >
->   low-power    SET 0x0A
->                GET 0x0A or 0x02
->   balanced     SET 0x09
->   performance  SET 0x04, or 0x03 when the following GET is not 0x04
->                GET 0x04 or 0x03
+>     Depends on Mingyou Chen's v15 "Merge redmi-wmi into bitland-mifs-wmi"=
+ [1]
+>     and on my "platform/x86: bitland-mifs-wmi: Xiaomi Book Pro 14 support=
+"
+>     v2 [2].
 >
-> 0x02 and 0x0A are both about 18 W. 0x0A also dims the panel and the
-> keyboard backlight, so that is the low-power write. 0x02 is only a
-> read alias. 0x03 is Turbo, not balanced. This board has no
-> balanced-performance. 0x09 is the firmware's normal mode.
+>     [1] https://lore.kernel.org/all/20261028112742.674847-1-qby140326@gma=
+il.com/
+>     [2] https://lore.kernel.org/all/20261025195456.43414-1-chris@miget.co=
+m/
 >
-> The quirks entry is the right place for this. I am not sending
-> another copy of the patch.
+>  drivers/platform/x86/bitland-mifs-wmi.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 >
-> Thanks,
-> Kento
+> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x=
+86/bitland-mifs-wmi.c
+> index a72569d810e3..8a994f5b089e 100644
+> --- a/drivers/platform/x86/bitland-mifs-wmi.c
+> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
+> @@ -99,6 +99,9 @@ struct bitland_mifs_quirks {
+>
+>         bool return_code_at_end;
+>         bool skip_ac_type_check;
+> +
+> +       /* Fn+K sends WMI_EVENT_PERFORMANCE_CYCLE and leaves the mode to =
+the OS */
+> +       bool cycle_profile_on_key;
+>  };
+>
+>  static const struct bitland_profile_entry default_profile_entries[] =3D =
+{
+> @@ -125,6 +128,7 @@ static const struct bitland_mifs_quirks tm2424_quirks=
+ =3D {
+>         .profile_entries =3D tm2424_profile_entries,
+>         .num_profile_entries =3D ARRAY_SIZE(tm2424_profile_entries),
+>         .skip_ac_type_check =3D true,
+> +       .cycle_profile_on_key =3D true,
+>  };
+>
+>  static const struct dmi_system_id bitland_mifs_dmi_table[] =3D {
+> @@ -168,6 +172,7 @@ enum bitland_mifs_event_id {
+>         WMI_EVENT_MIC_MUTE              =3D 33,
+>         WMI_EVENT_RESERVED_23           =3D 34,
+>         WMI_EVENT_OPEN_APP              =3D 35,
+> +       WMI_EVENT_PERFORMANCE_CYCLE     =3D 40,
+>  };
+>
+>  enum bitland_mifs_event_type {
+> @@ -216,6 +221,7 @@ static BLOCKING_NOTIFIER_HEAD(bitland_notifier_list);
+>  enum bitland_notifier_actions {
+>         BITLAND_NOTIFY_KBD_BRIGHTNESS,
+>         BITLAND_NOTIFY_PLATFORM_PROFILE,
+> +       BITLAND_NOTIFY_PLATFORM_PROFILE_CYCLE,
+>         BITLAND_NOTIFY_HWMON,
+>  };
+>
+> @@ -792,6 +798,10 @@ static int bitland_notifier_callback(struct notifier=
+_block *nb,
+>         case BITLAND_NOTIFY_PLATFORM_PROFILE:
+>                 platform_profile_notify(data_ctx->pp_dev);
+>                 break;
+> +       case BITLAND_NOTIFY_PLATFORM_PROFILE_CYCLE:
+> +               if (data_ctx->pp_dev)
+> +                       platform_profile_cycle();
+> +               break;
+>         case BITLAND_NOTIFY_HWMON:
+>                 fan_info =3D data;
+>
+> @@ -921,6 +931,7 @@ static void bitland_mifs_wmi_report_key(struct wmi_de=
+vice *wdev, u32 payload)
+>  static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
+>                                     const struct wmi_buffer *buffer)
+>  {
+> +       struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(&wdev->dev=
+);
+>         const struct bitland_mifs_event *event =3D buffer->data;
+>         struct bitland_fan_notify_data fan_data;
+>         u8 brightness;
+> @@ -949,6 +960,15 @@ static void bitland_mifs_wmi_notify(struct wmi_devic=
+e *wdev,
+>                                              NULL);
+>                 return;
+>
+> +       case WMI_EVENT_PERFORMANCE_CYCLE:
+> +               if (!data->quirks->cycle_profile_on_key)
+> +                       break;
+> +
+> +               blocking_notifier_call_chain(&bitland_notifier_list,
+> +                                            BITLAND_NOTIFY_PLATFORM_PROF=
+ILE_CYCLE,
+> +                                            NULL);
+> +               return;
+> +
+>         /*
+>          * The device has 3 fans (CPU, GPU, SYS),
+>          * but there are only the CPU and GPU fan has events
+>
+> base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+> prerequisite-patch-id: 99b10cd2b70d630ab65d8a8bb02c1d4bf89b1a63
+> prerequisite-patch-id: 27db041f827872b8be142c310a14c79962154bd5
+> prerequisite-patch-id: 74fc3298fa3dceb2224dfc3d2ae4cc6d4be61c01
+> prerequisite-patch-id: 254b8455d8a7f56b730e842207d91bd6904a50ce
+> prerequisite-patch-id: 9708c81da6b4ed6c2d47eb927efcd64ce4ed2ecf
+> prerequisite-patch-id: 2fe8c043993034f1a2cde98b1b2e299987d5ac7f
+> prerequisite-patch-id: 36137eee73ea8cee3db81af887f1f0859ef02b3a
+> prerequisite-patch-id: f0ba644539dc52241b96a74d6e32a6f06241e577
+> --
+> 2.56.0
+>
