@@ -1,95 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793643511;
-	b=JcI1DeG9Grbu6EJ8Mbwi60WN2dnFcJN3bgmYKjcoHMWT+xJKlY5oO6wKAvE2WXN4nEcv
-	 QlO70UOCMob76fzBbLgy49X5yl4OzYriOmMlREdOt6RAvHUBMfjZia+di5sTD2DzIJ43+
-	 DtIn97XsHQBdSUpxkzdLL4zVJPvpxOaI9ZT4AQJrfdNaTpMC1ooFrG4VxOe7HOHaNSS/t
-	 ojtrXriAeMkRG9cygY35dsG5TBpCqkRim7MQnCM6J062xSaMu0Inh0YR5p/3ViWjByI/y
-	 IjquNiYBPmyzZQJfXqQj3mOHt/EaoEgjY33M61A5HQ/SaS+uSGe4JlycDthgHHNtIkw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793643511;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=NHRs95xsQgjnwOuFrugRmWxAc9XLLQLwb+OYmfFck/4=;
-	b=FXR7fVgeXw8BaZAc7E3wqKjhr8LWrch3Vh1XfMD8sSrjHxztlkHOdOZHfZAFCjZ2YH0l
-	 +UqAxzMcp4Ms8qWHORrHcvO510fA+Dwt8bxBmou5FGHVEMZnlUTd4f+5GqPM2F78OIblH
-	 sBk+NycnA7hBiOHiR1Wn3+0hSdDIlGxyLlDmED1hUUcdmjjSy5SfzjeupQnGL3T9bHhWv
-	 BxposMn/OLbGUVCuPUodUQHAaURZYP9hfe5IFGYu6iFI1vD/hglFD9Yvd7QjULo0izuKH
-	 g21jyKYPWX8833ySEyLLIBSx3+c5kq/BCz/e8G/ZN0PLgSoXgAyYrFWD++CZhgpeAOA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BNcbP4a3;
-	arc=none smtp.remote-ip=209.85.221.43
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793643573;
+	b=U+PuAjuKms8E4oWo21HVu3bcyv5KbnpFW1QheMUjsCnXGy9P5bRupYRAIqu24QrMbpPT
+	 yIuTDYXM/OB2QSGH3IP/F03R083+bwPk8bSCj8QWu6fZCc92+9SO4G3vE9t6JAfuB3xDD
+	 EbnJbY37QQSGpTx1y6ao4A+tjypwHzbWyQ792ViT4wp8eN/tFZN5CiYYzeU+ghnhsghWG
+	 I8yW/xRSwh1VBxvOM2DcxVh3pDf01uq7pKba4Cr/c2nEmnOIS1IDM0AgEcTA0Gv7sD9+Y
+	 hQHCxU4kNwXctRTgUaQZtecoGqBybDC9WxsVCJTVHlj1IrmBAqHuOyy1/7l1Y81hpQg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793643573;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=jnrpWo/1k3ciop1RwuuOGAdzFMo6kbFNnV7QoPWs5n8=;
+	b=B5FoHNiW2MVQcMSAy6p2HBUDYNMZ9C2LTxtFvOHrOspD9IEMFj5/bvLFWD8UzfFAL21z
+	 TkNV+0fuzc0HsF8bnuUxqBknMOmbfpSiC0VGrYeJA5e6vOX8Z4qtyeKDfUNZCsiHNYkpX
+	 Og3+DKaD4dKORU0m7tWzL/uU6dyZanjm8v4rv4Un1pGbg3X4VGNvy2w9/6Zyf/Nwvx83h
+	 x1Wn7SSsjIECuqbXT2DGCjNKXW92M40BlmReldr146BX+mbHkfqsypUu0TxfnZGW+oDkz
+	 dp9GH6hd6LnIAC4chxbw6xOGFjWIuE/S50CCA3PC7jiqeGzufQKYa04wHZBHCqWbbzg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=W0qlPxcH;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104F3606A327
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 18:18:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 104F3606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC052606D810;
+	Mon,  2 Nov 2026 18:19:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC052606D810
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BNcbP4a3
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48e1d0e5dafso2377764f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 10:18:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793643509; x=1794248309; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NHRs95xsQgjnwOuFrugRmWxAc9XLLQLwb+OYmfFck/4=;
-        b=BNcbP4a3nURPwGReohMJlcBk7a+a/QqJYDJigkMRVyIu0fGjRRoEhJMwq/Id8ORSVy
-         cuB198sVread6+W+jQ5TzCWxhFtJyV+DI50GNK2tk2WzojkKwvynA2v+0Kby0Py3Hl7S
-         OXq1ci1nHxaX+emvJAan4BUEQOxPMv8xlLxdiT7dJRJ/awtbLOlGWv+i28diy5ePqwUn
-         pGPdpeiJkkLof9X+5xiIZR8LndVMPlD9VFWDVh/iC7cMWuSKWqtk2usG86ld7PrXMLkY
-         24CvM2zC3D4PvnYVmvaznI2ziS+kR8vehsO6akIBvV3pWM6OnY6bcYZErkjDgkZ5wRDN
-         wl6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793643509; x=1794248309;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=NHRs95xsQgjnwOuFrugRmWxAc9XLLQLwb+OYmfFck/4=;
-        b=0smvZfs6oHTFqVZxTebTLkXfUh6YMRu/4nEHk7YLST9nXUQ41Fph34PpJIzEGi9YiW
-         ytL6mDVf3tl1raLy5hYkQXgU3zkQUzVuZNvyiJ8zVfCQ0gRoWR59DUfsXlwdsQeE7PM0
-         MSxyM75TZ9THqej52xomc55xcP/kGgBf1lvgHFL2NUoiSRLk9S9FypmAxL7pfYGY31wP
-         GCzTHXyyERlkJSACsiNhbfnXyM/znUFFiihJbdD1fy9rfTCyHkjdWASZsOB7NoTlOzAJ
-         LMDqdOBH4/O4d3aO/2mwsDFQwZCJqfFOFh67f+cb+lSehWP2xUVZEjzVSY8K8ZqSqgHO
-         PhHw==
-X-Forwarded-Encrypted: i=1; AKwUvBx9gfo52Tlt7SzHbb+iHtdSMPtnA8boYDB8NwKVGdSGq3ZZesj6y81Z56hqDQZwpO9fZnR9C8/A3+zzeA5+bg2CScXz@vger.kernel.org
-X-Gm-Message-State: APuU4Z99PxYlUA5X8qNbCh9OGVfFXhByPeu6V1prkNL4f0cOQ5Z6vyPQ
-	/snRYt1YoWloH3Ux26QMJ/8bf+c4GHT/7uhzPNEYQ7kIVb4f7U+KQpo=
-X-Gm-Gg: AYBFou0WbTYEx6xCFrNgTZzp2jYiL8xRn9ZR0ULOi+jbhQXBnPQfIHx+d+vRVSQ0iUa
-	1QGDlLWvGdOoJOl56RmbzBrJgY0YulI8q/di0qwx4cFMHq3ZvkpMeCD/a1eqCg9R6Lto+4qVEj5
-	2ANSIPA1Frh6cFpkgxLUJmhbfHJ4928G9snVEfI2X7qvCQ3JSXVQu64lG7krYjs+HR8pzXETvGb
-	z1OnfWY71KEErfXJLM8XKrKu5Lc+ZGPT2IIKLebZzQabijSbuVpb+uOHkcipzTsH4A5WwHvLQem
-	8Ew4eKlOWZjrjnSDvPdk2HvLnJ9J0yG05Gw9u1I53t8byLS9ZahVhkneNrJNdKMpciqEgsqvOca
-	oJJ0tX8pzLvjAEm6W1FpdNaTaMc+d714+rxLCPv9W2+A9AC/Mc7cc6fVFRPB8YJ7TuOxSM6rI1f
-	b7+jFYj0BqgQRA5DlcK0V6R0/TmNijLE/skO449cy8PAiTBYeHnNm/HFH8NMpxSG2tqL4lwCRjH
-	s5Qu4X9gYJxw+pNAtWrKjyjK2hSaWx60ILigBxnN1hRtjzQ8PVRDXSWex2nGk2ZJxzMSRaBmAci
-	bHqbT+qHmvE=
-X-Received: by 2002:a5d:5e8c:0:b0:48e:5c9b:f12c with SMTP id ffacd0b85a97d-48e6e2d4c32mr27465476f8f.16.1793643509167;
-        Mon, 02 Nov 2026 10:18:29 -0800 (PST)
-Received: from debian.. ([2001:41d0:303:db6b::])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71baa1b3sm20326986f8f.56.2026.11.02.10.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 10:18:28 -0800 (PST)
-From: Tristan Madani <tristmd@gmail.com>
-X-Google-Original-From: Tristan Madani <tristan@talencesecurity.com>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Tristan Madani <tristan@talencesecurity.com>
-Subject: [PATCH] platform/x86: toshiba_acpi: validate ACPI object type in tci_raw()
-Date: Mon,  2 Nov 2026 18:18:27 +0000
-Message-ID: <20261102181827.1989460-1-tristan@talencesecurity.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=W0qlPxcH
+ARC-Seal: i=1; a=rsa-sha256; t=1793643544; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=GZMzWCHiJfYQa0fx4cqKgXRnvcNzfYwlEQ6AogyvfoN+TCC3D313maJBxv5CR7SiXinGP9/5Cf5xv7KKxeBqrOepVqISHpgWKjZn71v0Ttd5vL/yTf1vpEvjDvejKOFrjmXQHGRO4NWpMSqFaKBtr/q+Ge0HJRJZEW3t2QxoRhI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793643544; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=jnrpWo/1k3ciop1RwuuOGAdzFMo6kbFNnV7QoPWs5n8=; 
+	b=iyMbGwwzJs+29Yjo6cA1kbKsfFoUn6HsAMUVQihRdYDciLxtQIKGJ0vq46ysoB5QunWiAsU3i+ZS95TRH0pXYIinyiv/Y0k0oYg3hVA8Ohsugrhhqqi4gZFa9HYQtxIRzxnnSNWT3Yyo/GkC0hLHhlf7pY4yMwWHUbelN5Bl+J0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=W0qlPxcHPXZg18GTrVr9ozLsQdewcnwBB/a73g/YJgPZ6MYimm1Dvp5HZw8wpE01DSVM/vRXv8i5S4Z00MXo+zUrlXZFZ+hSBaePi+O79t56uqXNIm2LjJD6hkntRo8BTT0K3fNn8JAMyka9Go2oSyiU+cpU7IBLZL55o2W/JiaUbmHfiVC+X64A/DnwSuYsnwKfdsV7Lvn1gB/8ajyXL+7H6EOry3TOg29lMBkHG5up12+yGWTKAA2mbMtF13hF/sCuADv8Sf8y89pkuNiMV8Q0aOjux97rAvEsYHwyVO8QODn/oE9JkVVueLzzuO+vYoohSpHcBaOjhsT2FcIdCw==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=jnrpWo/1k3ciop1RwuuOGAdzFMo6kbFNnV7QoPWs5n8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793643541400173.10316889742307;
+	Mon, 2 Nov 2026 10:19:01 -0800 (PST)
+Message-ID: <c1bfa5151bbe73977725305613842f94616a8dbb.camel@rong.moe>
+Subject: Re: [RFC PATCH v2 0/2] Add support for auto keyboard backlight
+From: Rong Zhang <i@rong.moe>
+To: Qiling Zhu <kmatzkaczor244@gmail.com>, Mark Pearson	
+ <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  Henrique de Moraes Holschuh	
+ <hmh@hmh.eng.br>
+Cc: Griffin Kroah-Hartman <griffin@kroah.com>, 
+	ibm-acpi-devel@lists.sourceforge.net, Lee Jones <lee@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Pavel Machek	
+ <pavel@kernel.org>, platform-driver-x86@vger.kernel.org,
+ vishnuocv@gmail.com, 	vsankar@lenovo.com
+In-Reply-To: <20261102151211.40701-1-kmatzkaczor244@gmail.com>
+References: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
+		 <20261102151211.40701-1-kmatzkaczor244@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 03 Nov 2026 02:13:55 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -99,53 +75,170 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.62.1-2 
+X-ZohoMailClient: External
 
-tci_raw() calls acpi_evaluate_object() and uses the returned buffer as
-an ACPI_TYPE_PACKAGE without checking its type field. If the ACPI method
-returns a different object type, accessing package.count and
-package.elements interprets whatever data the union holds as a package
-descriptor.
+Hi Qiling,
 
-Add a type check before accessing the package fields. Return AE_TYPE
-when the result is not a package, when the package has more elements
-than TCI_WORDS, or when any element is not an ACPI_TYPE_INTEGER.
+On Mon, 2026-11-02 at 23:10 +0800, Qiling Zhu wrote:
+> Hi Mark, Rong, Ilpo,
+>=20
+> Thanks for the review comments on v1. This v2 addresses them and is
+> now split into a pure refactor (1/2) and the feature addition (2/2),
+> as requested.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tristan Madani <tristan@talencesecurity.com>
----
- drivers/platform/x86/toshiba_acpi.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+You don't need to refresh the series in a hurry, unless you've got enough
+reviews or may miss the cycle. Asking an LLM agent to refresh the series
+is easy, but a human being needs time to review your series.
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index a0b8060836d01..4ccc8f51c3a5b 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -342,9 +342,20 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
- 	status = acpi_evaluate_object(dev->acpi_dev->handle,
- 				      (char *)dev->method_hci, &params,
- 				      &results);
--	if ((status == AE_OK) && (out_objs->package.count <= TCI_WORDS)) {
--		for (i = 0; i < out_objs->package.count; ++i)
--			out[i] = out_objs->package.elements[i].integer.value;
-+	if (status == AE_OK) {
-+		if (out_objs->type == ACPI_TYPE_PACKAGE &&
-+		    out_objs->package.count <= TCI_WORDS) {
-+			for (i = 0; i < out_objs->package.count; ++i) {
-+				if (out_objs->package.elements[i].type !=
-+				    ACPI_TYPE_INTEGER) {
-+					status = AE_TYPE;
-+					break;
-+				}
-+				out[i] = out_objs->package.elements[i].integer.value;
-+			}
-+		} else {
-+			status = AE_TYPE;
-+		}
- 	}
- 
- 	return status;
--- 
-2.47.3
+Please leave some time for others to respond.
 
+>=20
+> Summary of the changes:
+>=20
+> * Kconfig: the "depends on LEDS_TRIGGERS_HW_CHANGED" is gone. While
+>   at it I also added a "select LEDS_TRIGGERS": without it the trigger
+>   helpers become no-op stubs and the whole feature would silently
+>   disappear in configurations that don't opt into LEDS_TRIGGERS,
+>   which seemed worse than a small select. HW_CHANGED support stays
+>   optional; without it the trigger still works, only the
+>   hardware-initiated transitions are not reported. The select goes
+>   beyond what was suggested, so please let me know if you'd rather
+>   drop it.
+>=20
+> * The auto mode is never reported to the LED core as level 3: a
+>   single helper maps it to a brightness of 0, used by both
+>   brightness_get and the brightness_hw_changed notification, so
+>   level 3 has no path into the LED core at all. Internal state
+>   tracking compares raw EC levels.
+>=20
+> * Writing a regular level through /proc/acpi/ibm/kbdlight now drops
+>   the trigger when leaving auto mode. Instead of raising the
+>   hardware-control notification and letting the worker handle it, I
+>   went through the same path brightness_store() uses: drop the
+>   trigger and hand the new level to the LED core, which applies it
+>   after the LED_OFF queued by dropping the trigger. That way proc
+>   and sysfs behave alike.
+>=20
+> * suspend/resume no longer touch the LED while auto mode is active
+>   (v1 would have restored brightness 2 there and left the trigger
+>   state inconsistent, as Rong pointed out =E2=80=94 thank you). The LED c=
+ore
+>   is now kept out of suspend entirely in auto mode; resume just
+>   re-reads the EC level and reconciles. My reasoning is that in auto
+>   mode the EC owns the backlight, so the driver should not make
+>   decisions on its behalf =E2=80=94 the firmware already turns the backli=
+ght
+>   off for suspend and restores it on resume by itself. This is based
+>   on observing my own machine (s2idle), so I may be wrong about
+>   other models. The non-auto paths are unchanged: suspend still
+>   turns the backlight off and resume still restores the previous
+>   level.
+
+If the firmware properly handles it when hw brightness !=3D 3, you can skip
+led_classdev_{suspend,resume}() completely as long as the device supports
+auto mode. They are only needed when the firmware doesn't take care of
+the keyboard backlight. Skipping them should make our life mush easier.
+
+Of course, we still need an approach to determine the support. That's why
+we should leave some time for Vishnu and Mark to answer the question.
+
+>=20
+> One thing Sashiko (the Linux Foundation's AI review system)
+> brought up in its review of v1, and which I then verified in the
+> code, seems worth raising here: led_trigger_hw_control_changed_worker()
+> reads the transition flag before acquiring the LED's trigger_lock,
+> and the read and the transition are not atomic. If, while a worker
+> carrying "deactivate" is still on its way, userspace re-selects the
+> private trigger, the worker then drops the trigger that userspace
+> just set, and no further event arrives to reconcile the state.
+> I haven't reliably reproduced this, but the window looks real, and
+> the ideapad wiring seems equally exposed. My feeling is that this
+> would be better addressed in the trigger core than worked around in
+> each driver, but I may be missing something =E2=80=94 Rong, I'd appreciat=
+e
+> your thoughts.
+
+It is an unfortunate side-effect of the workqueue deferral mechanism.=C2=A0=
+The
+mechanism was introduced in order that:
+
+- the LED driver can notify hw control change in an atomic context
+- the LED driver can properly serialize notification handling, trigger
+[de]activation, brightness_set[_blocking]() and hw_offloaded() callback
+without worrying about lock reentrance
+
+As for ideapad-laptop, it needs the second guarantee, as all said
+functions or callbacks need to acquire the same mutex to prevent TOCTOU
+issues.
+
+IMHO the race condition is not a big deal. The interface was designed
+with an assumption: it's the user who decides to press the shortcut
+(Fn+Space) and/or select the trigger via sysfs. It can only be barely
+reproduced in fuzz tests with scripts and robotic fingers, which is as
+boring as fuzzing the bind/unbind interface to stress naive drivers...
+
+That being said, I am thinking of working around this by querying
+hw_offloaded() in the worker. I will find some time to prepare a patch to
+see if the approach works and submit it. It won't change the interface,
+so patches can be applied in an arbitrary order. Please ignore the issue
+for the time being (OTOH, you don't need to rebase on top of the said
+patch when it's ready).
+
+Thanks,
+Rong
+
+>=20
+> A few observations that may be useful for the discussion:
+>=20
+> * I disassembled the DSDT and instrumented the driver to see what
+>   MLCS returns: it is the EC status word, and bit 31 looks like an
+>   error flag =E2=80=94 the DSDT skips the hotkey event when it is set. On=
+ my
+>   machine it reads 0 for all levels, with no level echo, and the
+>   error path is not reachable. That is why activation verifies with a
+>   read-back rather than the return value.
+>=20
+> * The 0x1012 event is raised by the DSDT itself: MLCS issues it when
+>   the write succeeded, the level actually changed, and the hotkey is
+>   not masked. This explains why driver-initiated writes also see the
+>   event and why rewriting the same level doesn't.
+>=20
+> * The Fn+Space cycle order on this machine is 0 -> 3 -> 1 -> 2 -> 0,
+>   confirmed by testing; sharing in case it is useful for comparison
+>   across models. Nothing in the code or tests relies on it.
+>=20
+> An open question from v1 that I'm still unsure about: on models
+> without an ALS the auto mode presumably doesn't exist =E2=80=94 how shoul=
+d
+> the driver handle that? Mark, do you know what the EC does when
+> asked for level 3 on such machines, and whether there is a reliable
+> way to tell at probe time whether auto mode is supported? For now
+> the trigger is registered unconditionally on keyboard-backlight-
+> capable machines.
+>=20
+> Vishnu, Rong mentioned in the v1 discussion that you are also working
+> on the same support using the hw control trigger framework =E2=80=94 how =
+is
+> that going? If you have answers to the questions above, or if there
+> is a chance to combine the two efforts, I'd be happy to coordinate.
+>=20
+> Tested on the same ThinkPad X1 Carbon Gen 14 (linux-next
+> next-20261030) with targeted tests and on-hardware verification of
+> the affected paths, including suspend/resume; checkpatch --strict
+> clean.
+>=20
+> Regards,
+> Qiling Zhu
+>=20
+> This patch was developed with LLM assistance; I reviewed every design
+> decision against the framework sources and validated the behavior on
+> real hardware myself.
+>=20
+> Qiling Zhu (2):
+>   platform/x86: thinkpad_acpi: Extract kbdlight_notify_change() helper
+>   platform/x86: thinkpad_acpi: Add support for auto keyboard backlight
+>=20
+>  drivers/platform/x86/lenovo/Kconfig         |   1 +
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 179 +++++++++++++++++---
+>  2 files changed, 159 insertions(+), 21 deletions(-)
