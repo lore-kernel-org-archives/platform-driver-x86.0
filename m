@@ -1,48 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.227.137
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793632384;
-	b=CRNg9vYXXpRqWXx15E1id0Bn2WHaafX0h41S6e2NAL3rCBut8agvcfqQwR44e4ZA85zu
-	 dtSCypUuFujdLEeKUzAvwp+BaYkx0sE510VnTYid/S5tTBK5pmr0NPrRwSX3eLP05OE2S
-	 ogpdwC/c8WsZHTbDY/+4nSx/rIIKdOIh3CSRWo7sKg0J4nfIsZtl5ZJLiBzUAqNzQ3kI8
-	 PEFE+epLygEVvATaKgJOBgs05PhHq11/UjxhNBxEO5iwILkspMzHWZFsgzJxBkDHYkY+W
-	 2OACOmOBqLitlAt+OxSwzAOhSk7SDUdvgC7hqorUGHfNrb+dfWN1YWoj52jm4miwc6w==
+	t=1793632399;
+	b=FWD4F4+aDAIsTLTwhXwCtY5J7QzjMjWjvs16U6veRvYU1dknLu1lVnx87VorhO7hp1P3
+	 H99EhnvUSfZFtj048fPyZj2G3JdxxuQufVx8351MQfvh+peu6Opa9aQ5UjsbDIX8At8Wg
+	 eF1xVxeXzjoVR5YwOOil+KuYvZBLeU1V2jFtIcA/Si5r8hsO2ko0Km4C32s+NgdjUGVAg
+	 0BPw96kQ+rOnme0OOFShBK7klFgbalN4ecjYvCTDp4glQvgSWSY7HmJDlHeacJBMUpJpI
+	 zuUSnMh7JRAStAGiy5ga4kBYYkgXp8MTEvQmrNqq9yaBVrh14ELLj/cw7G34e+iCBSw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793632384;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
-	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=0F908CJPgWsUmGeEXwOdb+LqVbJ68uHDJ1pDvsTQFww=;
-	b=2vEIapxVmGK33hzibVSvWHp1OnwhYD7u9pR0hW7i7AE0RjVjKFzef+NuvG4aqw9fqZp/
-	 rMus/wCQLQdiAz3GMlJlPqUYTOtuNcbTJeJ6KCOe90hR2VLnq6Qj2BPUrMxhpb31Yb7Hz
-	 QO+HLL9cPgFbHSdFPVxeDlm+HV3sHW2oV3WQCsSbhqEq3PqxT0K1CD+g0OELnZv08Pzif
-	 lTO3icySgr/su+qWph4mqkmEvH0NWtu49/t+ZuG4wytwX97O/9tuN1PqYoL5eVfbGwg1h
-	 iP/HeaL8QyvfwvqsgQfqhazEcnCsbyl0fXFMYSFy4NLPsyHEeQZ1kvByQLE46HMf1kw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793632399;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=YnReSI8mZSWFHXsSi0mG1BCqo+JHs0aKr+7QtxoB65I=;
+	b=LiOow7888FHJUydkDPjDex3isr/WsOs5GhmfDECUH/yLf7qkM8ENh+9xZYWviNPbLRwl
+	 rrDCK2/SwDvFI2os0mtVb4yUV0jROjfXjI9AMdfjukaxnlUdeGrdH+h0HJNB03L//QCq7
+	 Npqmz+yvPV4yzIjyy84PdYUVFcaSpHLLMeMZw1zB/GkjPVrMPq8lSwO2Qfn91sul0ytIX
+	 cHvIUTjHnnS5V6fIUw9XcamrrluWu4hq6RlMghtQ7Is+mfRukNDhssmUS87yPt/cKtUqS
+	 SudB1RJVDFsro3ckQixeJ0lwb13Iow423gBV6qrocMUdkUkfMhrhsXKpm/Ib7Lkgw7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hB1+KIUN;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ot57P1fy;
+	arc=none smtp.remote-ip=74.125.227.137
+Received: from mail-pj2-f9.google.com (mail-pj2-f9.google.com [74.125.227.137])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26826606A336;
-	Mon,  2 Nov 2026 15:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE8A6078252
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 15:13:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2CE8A6078252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hB1+KIUN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72FE71F00A16;
-	Mon,  2 Nov 2026 15:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793632383;
-	bh=0F908CJPgWsUmGeEXwOdb+LqVbJ68uHDJ1pDvsTQFww=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=hB1+KIUNyjEbaufWPwsUCeMJp7msq4zuBEN60a9O5elRG1b2/rFlP3YTkDeZbLt5o
-	 7GFV9HdREKNRcfcOalIomjHN+DuGMZHhn6rknHpTa3tT+DZMFRGXMfA02hly03O46p
-	 V2N2Qok2Ifuav4DftJTStutXTufDWTPS8H20slSlH8K8iOxpQ2j6zKHZoQK+Cqa+Mm
-	 WP5DYUA/m24WzubUhU3BE/pJR2GSBRAKw+06ZAK5laj5bIQXPmsUNZTzenFL6fHGwx
-	 eXLRQdsgA8M74MJxLFV6Uxn9eoXqxnqEvPHT85M/ywwVem0ohuPtIdOcZVhMsskDtT
-	 Oiv7mqzjJHJYw==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 02 Nov 2026 16:07:15 +0100
-Subject: [PATCH RFC 08/23] s390/cio: let procfs copy in writes
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ot57P1fy
+Received: by mail-pj2-f9.google.com with SMTP id d9443c01a7336-2e97ddaf3c4so15446145ad.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 07:13:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793632398; x=1794237198; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=YnReSI8mZSWFHXsSi0mG1BCqo+JHs0aKr+7QtxoB65I=;
+        b=ot57P1fySDomCsb826iIwhaJ+57fI8ZdPWl7d7nAaAPpks3AJgxLIrrd+sbKdBvwoI
+         Fnu7PxeoqGVt5A5Si0AT01sdN0BDRZxi4riRIMhtW1KlWAIJDI76RiaCb4shkcX6Oplm
+         YTcOeie9sEZ6kqrxvYVPSoI1JsFS+LZd46RvTUM2tGckKOECjQW8GkILYf/ejio88hNo
+         qwn99drynIWyUHJKK9UguUPfmZmDZckZDf+rVZ1KARzG6eMMW1VZt2NLR0VHit4my2YV
+         FDAqQQ/xb0DQe2Kwj87GFwbwDy7VxKxeld4jBbEAix6vs23WuWnzYq5Gd4c0dsCPLbFd
+         XhIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793632398; x=1794237198;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=YnReSI8mZSWFHXsSi0mG1BCqo+JHs0aKr+7QtxoB65I=;
+        b=iJWIivC3GeHIuis+xWS/oYhj0u5Tnv6AymwvUp9aD/frmSNX/GeS//RPec6MV14XHg
+         dYRV48GtaeXJzIqRoLT7LoUgWSmTlsFt+zkj7o8Pt2XT6FHmEPFcxcWq7ulqdAy3AyIf
+         OvIkbqm690PbFgGMCl/yhSW91mERimQR0nzCrqaH4rCckulK2RMg8YPxl5X2Jo9y8ZkU
+         ecvJsaPT6VQl3VTBued+qMpBLUgku58wjKeuakBUCQ2egbcix0oLoIhHwbuc1VftXaTp
+         L8nOe3G+uQ4HHLT+K67Nv0R/uSOyvflcDuUkYEupaiMZ8ebGGhd8IV6lP61JmKRcsEG3
+         G3DA==
+X-Forwarded-Encrypted: i=1; AKwUvBzxiC+HVLkrQzCc4KlJWkH7yvucZhtwhbu/fkoTQqEy7vSPF8DA4WBDblBqaystDhFhOqsuYVkoj7Y7xSODv449/6Rq@vger.kernel.org
+X-Gm-Message-State: APuU4Z/Qw2GWh1zU5MeV0o/oLCyDVKeT5W4mDX2YYGAZ/zYBC/RTg3iV
+	iUT9WWzrFmcUe7jNunbX8xYk14LSLze7g6OI5tqkritrYmgsOJYVFEaz
+X-Gm-Gg: AYBFou1O/gTXZa9Dek1P0m4QrEC/0OVEQ5stveCe+8+lkWxa9Ai3THBGac0to+7HA0m
+	5nnBqVAyj+V8pWabh4tW1Buj/EDoIW91KmhHHP7nt2W5mw6oDIhOpFniySQOz9KvWKOE7KNrsnP
+	0x5siHiMX1FY1m7tMCZnkuVLedzKCwr/SjXbm6yRBLxbCeK3RwfzEVPI3hZVIazut7FeZ6TNn1h
+	fs09Vdj0UxW+tPYl58yuufcKsGmW1xpDh5Y99BXcgu5m8W3ytEMgBcpLbvh3LDlTs1nfrKIImAx
+	PyhPi2eotxY1ZStcaEyMeLgui0Od15V90pSLT/hIwBnupgLzmgxaLbfmZuroExgVCQAMoZ7Fxcs
+	6Ss8su07p/t5dB1TnxtAjaU/U9Wx28iLwWmaeLWN8Zt3DcfYK+Ys7yx95EIj5IES9tpVzRmqWdl
+	Fs62MfMFDqlzod+gfwLfWpyEH4aq2k5Kr5kdPXQhXJ+3GQWuV2h5KEy0yC6EzulU2P4nUxe6nD0
+	5srt0xKdYmr5z1ORgwYrEmaz553kfvLRH1dhhjAZQKZxlfKTyq1cfUK10n6g3irzS2OTJU7WC36
+	9nrAi0vUEM4HmMepf2Vf0XFzB7ALSBWeBw==
+X-Received: by 2002:a17:903:1ace:b0:2e9:723a:cf41 with SMTP id d9443c01a7336-2eb3648b9c2mr103201975ad.15.1793632398375;
+        Mon, 02 Nov 2026 07:13:18 -0800 (PST)
+Received: from ThinkPad ([240e:46e:8710:e4e:e10f:cd51:e533:58a5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb3924c93fsm30567675ad.34.2026.11.02.07.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2026 07:13:18 -0800 (PST)
+From: Qiling Zhu <kmatzkaczor244@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Rong Zhang <i@rong.moe>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Griffin Kroah-Hartman <griffin@kroah.com>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	Lee Jones <lee@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Pavel Machek <pavel@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	vishnuocv@gmail.com,
+	vsankar@lenovo.com,
+	Qiling Zhu <kmatzkaczor244@gmail.com>
+Subject: [RFC PATCH v2 0/2] Add support for auto keyboard backlight
+Date: Mon,  2 Nov 2026 23:10:17 +0800
+Message-ID: <20261102151211.40701-1-kmatzkaczor244@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
+References: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -52,162 +111,119 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-work-procfs-drivers-v1-8-a994bd4d3b1a@kernel.org>
-References: <20261102-work-procfs-drivers-v1-0-a994bd4d3b1a@kernel.org>
-In-Reply-To: <20261102-work-procfs-drivers-v1-0-a994bd4d3b1a@kernel.org>
-To: linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
- Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
- Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
- NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
- Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
- Greg Kroah-Hartman <gregkh@suse.de>, 
- Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, 
- Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
- ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
- coreteam@netfilter.org, kexec@lists.infradead.org, 
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
- netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
- linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
- linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
- sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
- linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
- linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, 
- linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
- linux-debuggers@vger.kernel.org, 
- "Christian Brauner (Amutable)" <brauner@kernel.org>, 
- Chuck Lever <cel@kernel.org>
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3388; i=brauner@kernel.org;
- h=from:subject:message-id; bh=lEA79OgzD1RbbuI3leV0mq7RtW4au2plI+2F9ffJvH8=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG5gX1lbVGp1+7n6oZV+CxdFfRW5tVltZef/QtlzB
- Z4NCik/O0pYGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZy/wcjw1Y5VxW7pb/1p3xs
- usT8+v+/yZtVHxWIr5ZZcuVE9cbYgpcMP2Z+sgxZnFYro/9KTNL9v9icFmv9Ly+Dt3stcL12+dQ
- yVgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Implement ->proc_write_buf() for cio_ignore and cio_settle so procfs
-copies in what is written before it pins the entry. cio_ignore parses
-the list from that copy, up to the first NUL like strncpy_from_user()
-handed it to it before. Writes larger than 64k still come up short, now
-through PROC_ENTRY_SHORT_WRITES. Writes to cio_settle larger than
-PAGE_SIZE - 1 bytes fail with -EINVAL now, it never looked at what was
-written.
+Hi Mark, Rong, Ilpo,
 
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
----
- drivers/s390/cio/blacklist.c | 33 ++++++++++-----------------------
- drivers/s390/cio/css.c       |  4 ++--
- 2 files changed, 12 insertions(+), 25 deletions(-)
+Thanks for the review comments on v1. This v2 addresses them and is
+now split into a pure refactor (1/2) and the feature addition (2/2),
+as requested.
 
-diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
-index 4e02f78f6102..1ec7915be6b3 100644
---- a/drivers/s390/cio/blacklist.c
-+++ b/drivers/s390/cio/blacklist.c
-@@ -12,7 +12,7 @@
- 
- #include <linux/hex.h>
- #include <linux/init.h>
--#include <linux/vmalloc.h>
-+#include <linux/sizes.h>
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/ctype.h>
-@@ -355,39 +355,24 @@ cio_ignore_proc_seq_show(struct seq_file *s, void *it)
- }
- 
- static ssize_t
--cio_ignore_write(struct file *file, const char __user *user_buf,
-+cio_ignore_write(struct file *file, char *buf,
- 		 size_t user_len, loff_t *offset)
- {
--	char *buf;
--	ssize_t rc, ret, i;
-+	ssize_t ret, i;
- 
- 	if (*offset)
- 		return -EINVAL;
--	if (user_len > 65536)
--		user_len = 65536;
--	buf = vzalloc(user_len + 1); /* maybe better use the stack? */
--	if (buf == NULL)
--		return -ENOMEM;
- 
--	if (strncpy_from_user (buf, user_buf, user_len) < 0) {
--		rc = -EFAULT;
--		goto out_free;
--	}
--
--	i = user_len - 1;
-+	/* the parser never saw what follows a NUL */
-+	i = strnlen(buf, user_len) - 1;
- 	while ((i >= 0) && (isspace(buf[i]) || (buf[i] == 0))) {
- 		buf[i] = '\0';
- 		i--;
- 	}
- 	ret = blacklist_parse_proc_parameters(buf);
- 	if (ret)
--		rc = ret;
--	else
--		rc = user_len;
--
--out_free:
--	vfree (buf);
--	return rc;
-+		return ret;
-+	return user_len;
- }
- 
- static const struct seq_operations cio_ignore_proc_seq_ops = {
-@@ -398,9 +383,11 @@ static const struct seq_operations cio_ignore_proc_seq_ops = {
- };
- 
- static const struct proc_ops cio_ignore_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_SHORT_WRITES,
- 	.proc_seq_ops	= &cio_ignore_proc_seq_ops,
- 	.proc_state_size = sizeof(struct ccwdev_iter),
--	.proc_write	= cio_ignore_write,
-+	.proc_write_buf	= cio_ignore_write,
-+	.proc_write_size = SZ_64K,
- };
- 
- static int
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 54b8b8639694..efd3df3e90ba 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -1278,7 +1278,7 @@ static int __init channel_subsystem_init_sync(void)
- subsys_initcall_sync(channel_subsystem_init_sync);
- 
- #ifdef CONFIG_PROC_FS
--static ssize_t cio_settle_write(struct file *file, const char __user *buf,
-+static ssize_t cio_settle_write(struct file *file, char *buf,
- 				size_t count, loff_t *ppos)
- {
- 	int ret;
-@@ -1292,7 +1292,7 @@ static ssize_t cio_settle_write(struct file *file, const char __user *buf,
- 
- static const struct proc_ops cio_settle_proc_ops = {
- 	.proc_open	= nonseekable_open,
--	.proc_write	= cio_settle_write,
-+	.proc_write_buf	= cio_settle_write,
- };
- 
- static int __init cio_settle_init(void)
+Summary of the changes:
+
+* Kconfig: the "depends on LEDS_TRIGGERS_HW_CHANGED" is gone. While
+  at it I also added a "select LEDS_TRIGGERS": without it the trigger
+  helpers become no-op stubs and the whole feature would silently
+  disappear in configurations that don't opt into LEDS_TRIGGERS,
+  which seemed worse than a small select. HW_CHANGED support stays
+  optional; without it the trigger still works, only the
+  hardware-initiated transitions are not reported. The select goes
+  beyond what was suggested, so please let me know if you'd rather
+  drop it.
+
+* The auto mode is never reported to the LED core as level 3: a
+  single helper maps it to a brightness of 0, used by both
+  brightness_get and the brightness_hw_changed notification, so
+  level 3 has no path into the LED core at all. Internal state
+  tracking compares raw EC levels.
+
+* Writing a regular level through /proc/acpi/ibm/kbdlight now drops
+  the trigger when leaving auto mode. Instead of raising the
+  hardware-control notification and letting the worker handle it, I
+  went through the same path brightness_store() uses: drop the
+  trigger and hand the new level to the LED core, which applies it
+  after the LED_OFF queued by dropping the trigger. That way proc
+  and sysfs behave alike.
+
+* suspend/resume no longer touch the LED while auto mode is active
+  (v1 would have restored brightness 2 there and left the trigger
+  state inconsistent, as Rong pointed out — thank you). The LED core
+  is now kept out of suspend entirely in auto mode; resume just
+  re-reads the EC level and reconciles. My reasoning is that in auto
+  mode the EC owns the backlight, so the driver should not make
+  decisions on its behalf — the firmware already turns the backlight
+  off for suspend and restores it on resume by itself. This is based
+  on observing my own machine (s2idle), so I may be wrong about
+  other models. The non-auto paths are unchanged: suspend still
+  turns the backlight off and resume still restores the previous
+  level.
+
+One thing Sashiko (the Linux Foundation's AI review system)
+brought up in its review of v1, and which I then verified in the
+code, seems worth raising here: led_trigger_hw_control_changed_worker()
+reads the transition flag before acquiring the LED's trigger_lock,
+and the read and the transition are not atomic. If, while a worker
+carrying "deactivate" is still on its way, userspace re-selects the
+private trigger, the worker then drops the trigger that userspace
+just set, and no further event arrives to reconcile the state.
+I haven't reliably reproduced this, but the window looks real, and
+the ideapad wiring seems equally exposed. My feeling is that this
+would be better addressed in the trigger core than worked around in
+each driver, but I may be missing something — Rong, I'd appreciate
+your thoughts.
+
+A few observations that may be useful for the discussion:
+
+* I disassembled the DSDT and instrumented the driver to see what
+  MLCS returns: it is the EC status word, and bit 31 looks like an
+  error flag — the DSDT skips the hotkey event when it is set. On my
+  machine it reads 0 for all levels, with no level echo, and the
+  error path is not reachable. That is why activation verifies with a
+  read-back rather than the return value.
+
+* The 0x1012 event is raised by the DSDT itself: MLCS issues it when
+  the write succeeded, the level actually changed, and the hotkey is
+  not masked. This explains why driver-initiated writes also see the
+  event and why rewriting the same level doesn't.
+
+* The Fn+Space cycle order on this machine is 0 -> 3 -> 1 -> 2 -> 0,
+  confirmed by testing; sharing in case it is useful for comparison
+  across models. Nothing in the code or tests relies on it.
+
+An open question from v1 that I'm still unsure about: on models
+without an ALS the auto mode presumably doesn't exist — how should
+the driver handle that? Mark, do you know what the EC does when
+asked for level 3 on such machines, and whether there is a reliable
+way to tell at probe time whether auto mode is supported? For now
+the trigger is registered unconditionally on keyboard-backlight-
+capable machines.
+
+Vishnu, Rong mentioned in the v1 discussion that you are also working
+on the same support using the hw control trigger framework — how is
+that going? If you have answers to the questions above, or if there
+is a chance to combine the two efforts, I'd be happy to coordinate.
+
+Tested on the same ThinkPad X1 Carbon Gen 14 (linux-next
+next-20261030) with targeted tests and on-hardware verification of
+the affected paths, including suspend/resume; checkpatch --strict
+clean.
+
+Regards,
+Qiling Zhu
+
+This patch was developed with LLM assistance; I reviewed every design
+decision against the framework sources and validated the behavior on
+real hardware myself.
+
+Qiling Zhu (2):
+  platform/x86: thinkpad_acpi: Extract kbdlight_notify_change() helper
+  platform/x86: thinkpad_acpi: Add support for auto keyboard backlight
+
+ drivers/platform/x86/lenovo/Kconfig         |   1 +
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 179 +++++++++++++++++---
+ 2 files changed, 159 insertions(+), 21 deletions(-)
 
 -- 
-2.53.0
+2.56.0
 
