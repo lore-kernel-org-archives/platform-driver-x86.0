@@ -1,73 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793644707;
-	b=gutANjHecAl6h25PJFmrwmmXU/PcR2Jfq1JLP99HFSALTwpSr8hGmk6yYXezgoylETBN
-	 UA9AjxLKUPPYVQQPi+EB/9HEEhFhAs5hReXu32VptWRqKmk/o+WD/6jFPuJculurGraYb
-	 c/za3rcZf90W+kaKMQ2k+/Wsiside1Egjw2mb51/HrfAHt4Oga6cl+I0sENBR8JqJMy/c
-	 ukv8IerO0GwzdnOERLlafCNX8JDMmKi0ED/ZKkW3Ynj0OLgS91ip3wP4jyAyMdH/LSIBt
-	 ozWiqlqBtc2vBDTPGIOb30N2989hqdNYwgzZun0FF9BfeX5wkkX+bHqQwm2rK1c0X/g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793644707;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=YyTNUB58XiYL7Eyza4cKaimcacs/nSWRNsZcdsp4tZc=;
-	b=sqtT4WkW3FzWH1po+jwCXPyKhlLSvFsUQg3jx8IRyX5tfgKObRpNmtqU1WgvxAJEvKlu
-	 JToPEW6q+jtN9uDXG50YM2r2DY4xPVyF135tnqVu41j49o/Uf0FTBGKpA+AAIqdn4s/fa
-	 JeDGeIrvh/A8babjYYjSZJhIRMJO8jarRJMFW/A9PpaVjyGxfDKixUCWqcXb7EQxyNqJ7
-	 P5gtyv1ydGK2i97APStvwp0pKrMY4GB7LCXPR/xylZb0n+8nAaQxjYEL1Kd96WG5aHBpi
-	 D/sBcZlr9wIl4qgQ8MCj7ODmb80bQYBSP/3ulnFjMzQLttS5HjY/WXc5dcT4aYadxzg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=QVObcauK;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.170
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793652386;
+	b=rzeSRZo7siGkdPg6WkDH0d4wgz6BiN2ApmOb/ImRpLgnom5KfYVGYfFAGFZJeo5Z5x71
+	 Xi8Cvc7YyYG5jjz3419MmwUkSRmg41MkHuHQEkTHsmXYaKRR+pa7hYljCvVqj3WLBLI3r
+	 OHbjWPFJRuWG9ACPKsfMCwsOXwyZDvEYartCecwdW7zk0eD/my+gEUvnLGaKbEVy+e1qH
+	 FvjirDY0V6TP+tFeI4s6fiod19RIns3bq4zjfy95PQJ4nc6rJzKEcenReSwM7GVubPmQ0
+	 lTQc3Et3SW/oA/EhXmWzFGrM9lU0yrdsa9exNA4pKD2v0vV/VFgUsLJSd60RD8Wy6mg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793652386;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=di6Jkafc/mpbrSDW2gaJ0nmrbE6SSajMfKo0S//Reo0=;
+	b=Zf5sJWZc7Vzcm1A0qWz8ng7yoX7myxbiof4eRi3DdWWILRGP0etZrd1akymhEI8tncFD
+	 A/Wg1xc0pEsPfdCTQAiS68kSbNq58gdH4BzvtI6RbXNNUQdY/vzIrpo5dwtPyqWJSoBZq
+	 D3jXd5i/3GyGFu586V597GR61pnVukNj+w0qZtoC9qepNOXjExZpM0xYb7PQ66C4sppR4
+	 ccNo/Hrtidc2wwreVV1O7izlEF29j0HNiJi9CRWYT7CT+7kDz7WAIfVXMrfcjKM+1dypF
+	 Jeq83s/tCwN/EiQArobdTb4PMZlDQUXbK6o7Bvn8PrFxJnr50ndeExKepFK6DfpibTA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yOAp7HcV;
+	arc=none smtp.remote-ip=74.125.82.170
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DD3606A324;
-	Mon,  2 Nov 2026 18:38:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D8DD3606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374C8606A326
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 20:46:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 374C8606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=QVObcauK
-ARC-Seal: i=1; a=rsa-sha256; t=1793644680; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QnAeZl9QXDSq3NhHXMPLHueWiZfBajp3MPMXIO3ZShfo+kZFlDnMucKuivI4r6qdimYn6g1sAzfOZg15s37trJft5AAV9WSVEVGuyV7Ef7qa+qINHSt8WNV3zGXxAgf7D3baaW5UyCDiuNdnwVdWOKj37D6e45Ij2GFwqg/ddB4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793644680; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=YyTNUB58XiYL7Eyza4cKaimcacs/nSWRNsZcdsp4tZc=; 
-	b=WpDl1NZO81TZLIS529+SUxmm89RDnewdC/nh7TWQgMp5FkSQ2Yqcs9NuSJhyMgDcACcGN4Ie3LwV2+f2IZfKCpvJknAhfpoMTCk9aHYdrBX2ZTfvXSntmXKyXLGlPaZplJzUzCL4li/UkhxDyjHhpaVgJWxK4g50z9YyVpI6l/Y=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=QVObcauKl5RTwQV0RjFjg1gbAGFLDFnNtsbGZyN+V8wcNLyFiZw0wRhvuPb/sdGeKBQIi4jEWRhFyeZxbcE+Jqax7ZQzyXNbNvBEdAz3Q7AqENI87csdinfItvMBLobvJLCD4Yc9/np8kCATtadI6XDWnw49MBgC2Iun6GfALefacYAC8xAShk7jwNkUKKXSWPN5uOyrpTzqeKrP0XfejAuILw3A9QqOhIrjlM29uKnc+u6HRmFbeAy3aWux8+lXQzl8WdUNeAmhCfaQqtk1UU8ZK9EfqXB11Xi4BBSRf6HRiDo4/PcyJAD7mcVqgH5yue8hjlractpPOBAyKAJqLQ==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=YyTNUB58XiYL7Eyza4cKaimcacs/nSWRNsZcdsp4tZc=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793644677372100.39152180631663;
-	Mon, 2 Nov 2026 10:37:57 -0800 (PST)
-Message-ID: <e52830d6eb20e826a64910ef242348e790bf1815.camel@rong.moe>
-Subject: Re: [RFC PATCH v2 2/2] platform/x86: thinkpad_acpi: Add support
- for auto keyboard backlight
-From: Rong Zhang <i@rong.moe>
-To: Qiling Zhu <kmatzkaczor244@gmail.com>, Mark Pearson	
- <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,  Henrique de Moraes Holschuh	
- <hmh@hmh.eng.br>
-Cc: Griffin Kroah-Hartman <griffin@kroah.com>, 
-	ibm-acpi-devel@lists.sourceforge.net, Lee Jones <lee@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Pavel Machek	
- <pavel@kernel.org>, platform-driver-x86@vger.kernel.org,
- vishnuocv@gmail.com, 	vsankar@lenovo.com
-In-Reply-To: <20261102151211.40701-3-kmatzkaczor244@gmail.com>
-References: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
-	 <20261102151211.40701-1-kmatzkaczor244@gmail.com>
-	 <20261102151211.40701-3-kmatzkaczor244@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 02:32:51 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yOAp7HcV
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-369f3e9e431so35387eec.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 12:46:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793652385; x=1794257185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=di6Jkafc/mpbrSDW2gaJ0nmrbE6SSajMfKo0S//Reo0=;
+        b=yOAp7HcVolNt6JCpahtsBRUCuob9eeHzXReSWD0jBkmeri+7PsGX8cGOLPoLZMln4H
+         GQKhqlZ+izRX2A2QxfAr4EyxHJuox4Zxo1HrnYJSdmtTUEpj1eduhDc3ggqRUJmB2/w1
+         sMvjiWofHX8o8tddTIoAhOhX2YVJkLf/5xHgb4RrMvNdu7dWt5A6tWJ4aZLa2sPvOYxV
+         TVSsHoQeo3P2qNBV3AIs0023ubwCaNr3S/JY3gxyUUAPWzurr0V9qHoHtM/wN8u2DkZh
+         b+nVjyjLi89zKcWcXIubbyxGdS8+8BZ1XNSNHRNs4mbfcWblTTzmzPDUCqDWthbXvXXZ
+         jHFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793652385; x=1794257185;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=di6Jkafc/mpbrSDW2gaJ0nmrbE6SSajMfKo0S//Reo0=;
+        b=R7V6keEk6XLTQdyxXsvPrARqKCGWpGj9uk93mpJCbs2CfSdFR8dlvXrV/2InTj9x9Z
+         aJ1ewMx8xR7Zr0uR2FEYA0Ag6TEZlii6zA5ZWmCwB650M6lAiwHKJmzk1Tgm2S0Zg5jU
+         K0jS17y4DU8YstvSqrddGan81C7EVLjBIK7pylMEuFAaxwMxks59sKYgViqarWYMVZsQ
+         3g0QhKkKbiOJOkKvpgoXE1n/vvdcGzovYEjyHTHhw7FyxBTRLcV2GLpqehMQx+dtGxvU
+         3nwc4qYZc1/WmeRvC2fnn3uiqykpWUEGBB/CviYfeFqAud8nq5iIvCEpHYGJNMOnybQr
+         g+Cw==
+X-Gm-Message-State: APuU4Z+QV3zULt07Ny0aBy4C//Z2SSDmzBYRIwUiaBVusaLOTEJd1tqO
+	j/eVYjO6avkHBkDPpx3fXJbRMG7Vn2jSC7Prd3UvgBiAdeS/Q0sSsNnHP1V4939m+c8=
+X-Gm-Gg: AYBFou2Ut2EMEYSNy4twBMZuq4mt9nuSR7A+dIt9geFTDF/iZ1J6y39RBibJ9mJYQED
+	ANkddparrB2mN2s41ZQnFYTWwVtHxmD9psG0HGPdEJ5D/sxkneUkVqsjIjtPtLrljzMHpxLBtg2
+	cd7WW+9NUqG72CKBdLb9LDTNLcos5+3tc1/fgX5+kO5JLcjI7jy+KcXsrI+6QnvZGBkQWpmkM2J
+	IRBpnmJ6HjmbPXMMz+BJNEdkIIYAd5M5v3XCWPARjVu14MJEA6W4Vb3PiPog+TyKlTiszCiFipv
+	Xa95FLErIidttE69167rJc6JoHmlYJdRIFkdtdqCSpgzL9d9oDmMy05OZ2NBYLc6TH+UM2PnABH
+	ZS4Eb1hVEsZGIpyyIxvCKi+kh8mwXxL/sBpa3omkmfKfncc5vU85ZtJkSyhCL8urmTy1Qx+UGmI
+	t+MJ4iN8aUWL1+URjNQ2Oypb+XCa2N7Wi3d+6Dl3ksthKmpwqjiwc553mp4hln1QsT9KCgK7uvj
+	+lc0/MzrYD0821AGleipbiFI92UToWTCawkDoJsmDZ+jQxJ3j4lGVOJR30hs8eMe2B4pDNso92X
+	JMzS3xSUQlXfi8J5SvDf41UClUVO8Cq82lGXoZXfRQ717Dkq
+X-Received: by 2002:a05:7301:6e98:b0:343:5f5f:eef0 with SMTP id 5a478bee46e88-36a3007202dmr22788846eec.21.1793652384988;
+        Mon, 02 Nov 2026 12:46:24 -0800 (PST)
+Received: from Lucy-Fedora ([155.254.126.101])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a42a77c0dsm48033670eec.26.2026.11.02.12.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2026 12:46:24 -0800 (PST)
+From: Lucy Wong <lucywong2778@gmail.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lucy Wong <lucywong2778@gmail.com>
+Subject: [PATCH v3] platform/x86: add Xiaomi WMI key driver
+Date: Tue,  3 Nov 2026 04:46:11 +0800
+Message-ID: <20261102204611.63792-1-lucywong2778@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <0f1fab72-bf10-4074-b832-77ab1b583b78@gmx.de>
+References: <0f1fab72-bf10-4074-b832-77ab1b583b78@gmx.de>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -77,361 +99,243 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-2 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Qiling,
+Certain Xiaomi laptops expose extra function keys through a single WMI
+event GUID (B74AF83F-8B2F-4069-ACAC-36D176F62FC0). Unlike the existing
+xiaomi-wmi driver where each key has its own GUID, here all keys share
+one GUID and the event buffer encodes both an event type and a keycode:
 
-On Mon, 2026-11-02 at 23:10 +0800, Qiling Zhu wrote:
-> Recent ThinkPads with an ambient light sensor (ALS) support an auto mode
-> for the keyboard backlight: the EC controls the backlight according to
-> ambient light. The mode is EC keyboard backlight level 3, above the two
-> fixed levels exposed so far, and is currently reachable only through the
-> Fn+Space shortcut, which is handled directly by the firmware.
->=20
-> Wire the auto mode up as a private hardware control trigger, named
-> "tpacpi-kbd-auto", on top of the LED hw control trigger framework:
->=20
->   - selecting the trigger writes level 3 (activate); the offloaded state
->     is derived from the current EC level
->   - when Fn+Space cycles into or out of auto mode, the driver notifies
->     the LED core about the hardware-initiated hardware control
->     transition, so the trigger state (shown bracketed in the trigger
->     sysfs attribute) follows along
->   - if the EC is already in auto mode at driver initialization, the
->     trigger is set as the default one
->=20
-> The auto mode is not a brightness level: max_brightness stays 2 and the
-> LED core is always told a brightness of 0 while in auto mode. The proc
-> interface keeps reporting the raw EC level, including 3, and keeps
-> rejecting writes of 3 with -EINVAL; writing a regular level through it
-> while in auto mode drops the trigger, like writing a brightness through
-> sysfs does. In auto mode suspend and resume are left to the EC and the
-> firmware; on resume the restored EC level is observed and reconciled.
->=20
-> LEDS_TRIGGERS is selected to keep the trigger functional in
-> stripped-down configurations.
->=20
-> Deliberately unchanged: module unload still resets the backlight to off;
-> retaining auto mode across unload is left for future work.
->=20
-> Note that Documentation/admin-guide/laptops/thinkpad-acpi.rst has no
-> kbdlight section at all, so there is no in-tree documentation to update;
-> userspace-facing semantics of hardware control triggers are documented
-> in Documentation/leds/leds-class.rst.
->=20
-> Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
-> ---
->  drivers/platform/x86/lenovo/Kconfig         |   1 +
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 152 ++++++++++++++++++--
->  2 files changed, 141 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/l=
-enovo/Kconfig
-> index 516594993..77d159a3a 100644
-> --- a/drivers/platform/x86/lenovo/Kconfig
-> +++ b/drivers/platform/x86/lenovo/Kconfig
-> @@ -83,6 +83,7 @@ config THINKPAD_ACPI
->  =09select NVRAM
->  =09select NEW_LEDS
->  =09select LEDS_CLASS
-> +=09select LEDS_TRIGGERS
->  =09select INPUT_SPARSEKMAP
->  =09help
->  =09  This is a driver for the IBM and Lenovo ThinkPad laptops. It adds
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
-rm/x86/lenovo/thinkpad_acpi.c
-> index 3260eaa62..7b46ad6f9 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -5102,6 +5102,14 @@ static struct ibm_struct video_driver_data =3D {
->   * Keyboard backlight subdriver
->   */
-> =20
-> +/* EC level that selects ALS-controlled auto mode for the keyboard backl=
-ight */
-> +#define TPACPI_KBD_LIGHT_AUTO_LEVEL=093
-> +
-> +/*
-> + * Cached EC level, including TPACPI_KBD_LIGHT_AUTO_LEVEL. All state
-> + * tracking compares EC levels; the auto mode is translated to a
-> + * brightness value only when reporting to the LED core.
-> + */
->  static enum led_brightness kbdlight_brightness;
->  static DEFINE_MUTEX(kbdlight_mutex);
-> =20
-> @@ -5180,6 +5188,15 @@ static bool kbdlight_is_supported(void)
->  =09return status & BIT(9);
->  }
-> =20
-> +/* The auto mode is not a brightness level; report it as off to the LED =
-core. */
-> +static enum led_brightness kbdlight_level_to_brightness(int level)
-> +{
-> +=09if (level =3D=3D TPACPI_KBD_LIGHT_AUTO_LEVEL)
-> +=09=09return 0;
-> +
-> +=09return level;
-> +}
-> +
->  static int kbdlight_sysfs_set(struct led_classdev *led_cdev,
->  =09=09=09enum led_brightness brightness)
->  {
-> @@ -5194,16 +5211,54 @@ static enum led_brightness kbdlight_sysfs_get(str=
-uct led_classdev *led_cdev)
->  =09if (level < 0)
->  =09=09return 0;
-> =20
-> -=09return level;
-> +=09return kbdlight_level_to_brightness(level);
-> +}
-> +
-> +static struct led_hw_trigger_type kbdlight_auto_trigger_type;
-> +
-> +static int kbdlight_auto_trigger_activate(struct led_classdev *led_cdev)
-> +{
-> +=09/*
-> +=09 * The EC may already be in auto mode (cycled there on Fn+Space, or
-> +=09 * active since before the driver loaded), in which case there is
-> +=09 * nothing to program.
-> +=09 */
-> +=09if (kbdlight_get_level() =3D=3D TPACPI_KBD_LIGHT_AUTO_LEVEL)
-> +=09=09return 0;
+  buffer[1] = event type
+    0x01: keyboard backlight level (EC handled)
+    0x02: press/release keys (5 keys with abstract icons)
+    0x03: firmware-handled toggles (touchpad, Fn lock)
+  buffer[2] = keycode within that type
 
-I don't think the device needs this, as kbdlight_set_level() should be
-idempotent.
+The keys with abstract icons are mapped to programmable macro keys for
+userspace to bind. The backlight and toggle events are handled by the
+firmware and are ignored.
 
-> +
-> +=09if (kbdlight_set_level(TPACPI_KBD_LIGHT_AUTO_LEVEL))
-> +=09=09return -EIO;
-> +
-> +=09/*
-> +=09 * Check that the EC actually accepted the auto mode; on error the
-> +=09 * trigger core reverts the LED to the "none" trigger.
-> +=09 */
-> +=09if (kbdlight_get_level() !=3D TPACPI_KBD_LIGHT_AUTO_LEVEL)
-> +=09=09return -EIO;
+Link: https://lore.kernel.org/platform-driver-x86/20260601151404.93049-1-lucywong2778@gmail.com/
+Signed-off-by: Lucy Wong <lucywong2778@gmail.com>
+---
+Changes in v3:
+- Add a mutex to serialize sparse_keymap_report_event() calls
+- Document event types 0x01 and 0x03 with named defines
+- Use dev_notice() for unknown key indices
+- Fix reverse XMAS tree ordering of the notify() locals
+- Set .probe_type = PROBE_PREFER_ASYNCHRONOUS
 
-Nah. Please wait until Vishnu and Mark answer about the approach to
-determine the support for auto mode.
+Changes in v2:
+- Convert to .notify_new and set .min_event_size
+- Ignore firmware-handled backlight and toggle events, which removes the
+  toggle deduplication state
+- Add the missing select INPUT_SPARSEKMAP
+- Name the event codes and align the defines
+- Add the dev_printk.h include
 
-> +
-> +=09return 0;
->  }
-> =20
-> +static bool kbdlight_auto_trigger_hw_offloaded(struct led_classdev *led_=
-cdev)
-> +{
-> +=09return kbdlight_get_level() =3D=3D TPACPI_KBD_LIGHT_AUTO_LEVEL;
-> +}
-> +
-> +static struct led_trigger kbdlight_auto_trigger =3D {
-> +=09.name=09=09=3D "tpacpi-kbd-auto",
-> +=09.trigger_type=09=3D &kbdlight_auto_trigger_type,
-> +=09.activate=09=3D kbdlight_auto_trigger_activate,
-> +=09.hw_offloaded=09=3D kbdlight_auto_trigger_hw_offloaded,
-> +};
-> +
->  static struct tpacpi_led_classdev tpacpi_led_kbdlight =3D {
->  =09.led_classdev =3D {
->  =09=09.name=09=09=3D "tpacpi::kbd_backlight",
->  =09=09.max_brightness=09=3D 2,
-> -=09=09.flags=09=09=3D LED_BRIGHT_HW_CHANGED,
-> +=09=09.flags=09=09=3D LED_BRIGHT_HW_CHANGED | LED_TRIG_HW_CHANGED,
->  =09=09.brightness_set_blocking =3D &kbdlight_sysfs_set,
->  =09=09.brightness_get=09=3D &kbdlight_sysfs_get,
-> +=09=09.trigger_type=09=3D &kbdlight_auto_trigger_type,
->  =09}
->  };
-> =20
-> @@ -5221,9 +5276,30 @@ static int __init kbdlight_init(struct ibm_init_st=
-ruct *iibm)
->  =09=09return -ENODEV;
->  =09}
-> =20
-> -=09kbdlight_brightness =3D kbdlight_sysfs_get(NULL);
-> +=09kbdlight_brightness =3D kbdlight_get_level();
-> +=09if (kbdlight_brightness < 0)
-> +=09=09kbdlight_brightness =3D 0;
->  =09tp_features.kbdlight =3D 1;
-> =20
-> +=09/*
-> +=09 * Register the auto-mode trigger before the LED classdev: if the
-> +=09 * EC is already in auto mode, the trigger can then be set as the
-> +=09 * default one and gets activated during LED classdev registration.
-> +=09 */
-> +=09rc =3D devm_led_trigger_register(&tpacpi_pdev->dev,
-> +=09=09=09=09       &kbdlight_auto_trigger);
-> +=09if (rc) {
-> +=09=09tp_features.kbdlight =3D 0;
-> +=09=09return rc;
-> +=09}
-> +
-> +=09tpacpi_led_kbdlight.led_classdev.hw_control_trigger =3D
-> +=09=09kbdlight_auto_trigger.name;
-> +
-> +=09if (kbdlight_brightness =3D=3D TPACPI_KBD_LIGHT_AUTO_LEVEL)
-> +=09=09tpacpi_led_kbdlight.led_classdev.default_trigger =3D
-> +=09=09=09kbdlight_auto_trigger.name;
-> +
->  =09rc =3D led_classdev_register(&tpacpi_pdev->dev,
->  =09=09=09=09   &tpacpi_led_kbdlight.led_classdev);
->  =09if (rc < 0) {
-> @@ -5246,9 +5322,22 @@ static int kbdlight_set_level_and_update(int level=
-)
->  =09int ret;
->  =09struct led_classdev *led_cdev;
-> =20
-> -=09ret =3D kbdlight_set_level(level);
->  =09led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
-> =20
-> +=09/*
-> +=09 * Leaving auto mode through the proc interface has to drop the
-> +=09 * trigger, like writing a brightness through sysfs does. Route the
-> +=09 * new level through the LED core as well, so that it is applied
-> +=09 * after the LED_OFF queued by dropping the trigger.
-> +=09 */
-> +=09if (led_trigger_is_hw_controlled(led_cdev)) {
+Re: BMOF data -- the WMI device does not expose embedded BMOF data; there
+is no bmof sysfs attribute for B74AF83F-8B2F-4069-ACAC-36D176F62FC0.
+---
+ MAINTAINERS                            |   6 ++
+ drivers/platform/x86/Kconfig           |  12 +++
+ drivers/platform/x86/Makefile          |   1 +
+ drivers/platform/x86/xiaomi-wmi-keys.c | 134 +++++++++++++++++++++++++
+ 4 files changed, 153 insertions(+)
+ create mode 100644 drivers/platform/x86/xiaomi-wmi-keys.c
 
-You don't need this, and it causes a TOCTOU issue between
-is_hw_controlled() and remove_hw_control().
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 748ce4d1c6a2..0a280e6773a7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -30546,6 +30546,12 @@ F:	fs/xfs/
+ F:	include/uapi/linux/dqblk_xfs.h
+ F:	include/uapi/linux/fsmap.h
+ 
++XIAOMI WMI KEYS DRIVER
++M:	Lucy Wong <lucywong2778@gmail.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/xiaomi-wmi-keys.c
++
+ XILINX AMS DRIVER
+ M:	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
+ M:	Conall O'Griofa <conall.ogriofa@amd.com>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9ce384e0475e..efebf9e55b98 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -78,6 +78,18 @@ config XIAOMI_WMI
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called xiaomi-wmi.
+ 
++config XIAOMI_WMI_KEYS
++	tristate "Xiaomi WMI key events driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	select INPUT_SPARSEKMAP
++	help
++	  Say Y here if you want to support WMI-based hotkey events on certain
++	  Xiaomi laptops.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called xiaomi-wmi-keys.
++
+ config REDMI_WMI
+ 	tristate "Redmibook WMI key driver"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 229057234d00..e77959052776 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
+ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+ obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
+ obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
++obj-$(CONFIG_XIAOMI_WMI_KEYS)		+= xiaomi-wmi-keys.o
+ obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
+ obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+ obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
+diff --git a/drivers/platform/x86/xiaomi-wmi-keys.c b/drivers/platform/x86/xiaomi-wmi-keys.c
+new file mode 100644
+index 000000000000..7452c6eb8eca
+--- /dev/null
++++ b/drivers/platform/x86/xiaomi-wmi-keys.c
+@@ -0,0 +1,134 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Xiaomi laptop WMI hotkey driver
++ *
++ * Copyright (C) 2026 Lucy Wong <lucywong2778@gmail.com>
++ */
++
++#include <linux/device.h>
++#include <linux/dev_printk.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/wmi.h>
++
++#define XIAOMI_WMI_EVENT_GUID	"B74AF83F-8B2F-4069-ACAC-36D176F62FC0"
++
++#define XIAOMI_EVENT_TYPE_BACKLIGHT	0x01 /* keyboard backlight (EC handled) */
++#define XIAOMI_EVENT_TYPE_KEY		0x02 /* press/release keys */
++#define XIAOMI_EVENT_TYPE_TOGGLE	0x03 /* touchpad/Fn-lock toggles (EC handled) */
++
++#define XIAOMI_KEY_PRESS_FIRST	0x01
++#define XIAOMI_KEY_COUNT	5
++#define XIAOMI_KEY_RELEASE_FIRST	\
++	(XIAOMI_KEY_PRESS_FIRST + XIAOMI_KEY_COUNT)
++
++struct xiaomi_wmi_keys_event {
++	u8 reserved;
++	u8 type;
++	u8 code;
++};
++
++struct xiaomi_wmi_keys {
++	struct input_dev *input_dev;
++	struct mutex key_lock;	/* Serializes sparse_keymap_report_event() */
++};
++
++static const struct key_entry xiaomi_wmi_keys_keymap[] = {
++	/* programmable keys with abstract icons */
++	{ KE_KEY, 0x01, { KEY_MACRO1 } },
++	{ KE_KEY, 0x02, { KEY_MACRO2 } },
++	{ KE_KEY, 0x03, { KEY_MACRO3 } },
++	{ KE_KEY, 0x04, { KEY_MACRO4 } },
++	{ KE_KEY, 0x05, { KEY_MACRO5 } },
++	{ KE_END, 0 },
++};
++
++static int xiaomi_wmi_keys_probe(struct wmi_device *wdev, const void *context)
++{
++	struct xiaomi_wmi_keys *data;
++	int ret;
++
++	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++	dev_set_drvdata(&wdev->dev, data);
++
++	ret = devm_mutex_init(&wdev->dev, &data->key_lock);
++	if (ret)
++		return ret;
++
++	data->input_dev = devm_input_allocate_device(&wdev->dev);
++	if (!data->input_dev)
++		return -ENOMEM;
++
++	data->input_dev->name = "Xiaomi WMI keys";
++	data->input_dev->phys = "wmi/input0";
++	data->input_dev->id.bustype = BUS_HOST;
++
++	ret = sparse_keymap_setup(data->input_dev, xiaomi_wmi_keys_keymap, NULL);
++	if (ret)
++		return ret;
++
++	return input_register_device(data->input_dev);
++}
++
++static void xiaomi_wmi_keys_notify(struct wmi_device *wdev,
++				   const struct wmi_buffer *buffer)
++{
++	struct xiaomi_wmi_keys *data = dev_get_drvdata(&wdev->dev);
++	const struct xiaomi_wmi_keys_event *event = buffer->data;
++	unsigned int code;
++	bool pressed;
++
++	/*
++	 * Only the press/release keys are reported. Event types 0x01
++	 * (backlight) and 0x03 (touchpad and Fn-lock toggles) are handled by
++	 * the firmware and need no action from the driver.
++	 */
++	if (event->type != XIAOMI_EVENT_TYPE_KEY) {
++		dev_dbg(&wdev->dev, "ignoring event type 0x%02x\n", event->type);
++		return;
++	}
++
++	if (event->code >= XIAOMI_KEY_PRESS_FIRST &&
++	    event->code < XIAOMI_KEY_PRESS_FIRST + XIAOMI_KEY_COUNT) {
++		code = event->code;
++		pressed = true;
++	} else if (event->code >= XIAOMI_KEY_RELEASE_FIRST &&
++		   event->code < XIAOMI_KEY_RELEASE_FIRST + XIAOMI_KEY_COUNT) {
++		code = event->code - XIAOMI_KEY_COUNT;
++		pressed = false;
++	} else {
++		dev_notice(&wdev->dev, "unknown key index 0x%02x\n", event->code);
++		return;
++	}
++
++	mutex_lock(&data->key_lock);
++	sparse_keymap_report_event(data->input_dev, code, pressed, false);
++	mutex_unlock(&data->key_lock);
++}
++
++static const struct wmi_device_id xiaomi_wmi_keys_id_table[] = {
++	{ .guid_string = XIAOMI_WMI_EVENT_GUID },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_keys_id_table);
++
++static struct wmi_driver xiaomi_wmi_keys_driver = {
++	.driver = {
++		.name = "xiaomi-wmi-keys",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++	.id_table = xiaomi_wmi_keys_id_table,
++	.min_event_size = sizeof(struct xiaomi_wmi_keys_event),
++	.probe = xiaomi_wmi_keys_probe,
++	.notify_new = xiaomi_wmi_keys_notify,
++	.no_singleton = true,
++};
++module_wmi_driver(xiaomi_wmi_keys_driver);
++
++MODULE_AUTHOR("Lucy Wong <lucywong2778@gmail.com>");
++MODULE_DESCRIPTION("Xiaomi laptop WMI hotkey driver");
++MODULE_LICENSE("GPL");
+-- 
+2.56.0
 
-> +=09=09led_trigger_remove_hw_control(led_cdev);
-> +=09=09led_set_brightness(led_cdev, level);
-
-???
-
-Can't you simply refactor and call kbdlight_notify_change() here?
-
-In detail:
-
-- PATCH 1: split kbdlight_notify_change() into a function that accepts a
-hw brightness level and a wrapper that queries the hardware
-- PATCH 2: call the former in kbdlight_set_level_and_update(), like what
-commit 07f48f668fac ("platform/x86: ideapad-laptop: add FnLock LED class
-device") did
-- PATCH 3: add support for auto mode
-
-With those changes, kbdlight_set_level_and_update() should automatically
-removes the triggers without the need of poking the LED core harshly.
-
-Besides, IMO the attribute should really be deprecated with a warning
-stating that writing to the attribute may desynchronize the LED core, so
-that we can reduce the maintenance burden instead of infinitely working
-around all sorts of such issues [1]. I am not an expert at this driver,
-so I will defer it to other maintainers.
-
-> +=09=09return 0;
-> +=09}
-> +
-> +=09ret =3D kbdlight_set_level(level);
-> +
->  =09if (ret =3D=3D 0 && !(led_cdev->flags & LED_SUSPENDED))
->  =09=09led_cdev->brightness =3D level;
-
-[1]: for example, here is a pre-existing race condition.
-
-> =20
-> @@ -5293,6 +5382,8 @@ static int kbdlight_write(char *buf)
->  =09return kbdlight_set_level_and_update(level);
->  }
-> =20
-> +static void kbdlight_notify_change(void);
-> +
->  static void kbdlight_suspend(void)
->  {
->  =09struct led_classdev *led_cdev;
-> @@ -5301,38 +5392,75 @@ static void kbdlight_suspend(void)
->  =09=09return;
-> =20
->  =09led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
-> +
-> +=09/*
-> +=09 * In auto mode the EC drives the backlight and the firmware turns
-> +=09 * it off for suspend and restores it on resume by itself; keep the
-> +=09 * LED core out of it entirely.
-> +=09 */
-> +=09if (kbdlight_get_level() =3D=3D TPACPI_KBD_LIGHT_AUTO_LEVEL)
-> +=09=09return;
-> +
-
-As I've said, getting rid of led_classdev_{suspend,resume}() completely
-when the device supports auto mode will make our life much easier.
-
->  =09led_update_brightness(led_cdev);
->  =09led_classdev_suspend(led_cdev);
->  }
-> =20
->  static void kbdlight_resume(void)
->  {
-> +=09struct led_classdev *led_cdev;
-> +
->  =09if (!tp_features.kbdlight)
->  =09=09return;
-> =20
-> -=09led_classdev_resume(&tpacpi_led_kbdlight.led_classdev);
-> +=09led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
-> +
-> +=09/* Only balance a suspend that actually suspended the LED. */
-> +=09if (led_cdev->flags & LED_SUSPENDED) {
-> +=09=09led_classdev_resume(led_cdev);
-> +=09=09return;
-> +=09}
-> +
-> +=09/*
-> +=09 * Auto mode was left running over suspend; observe what the
-> +=09 * firmware actually restored.
-> +=09 */
-> +=09kbdlight_notify_change();
-
-If you'd like to do so, it should be in a separated patch, too.
-
-Thanks,
-Rong
-
->  }
-> =20
->  /*
-> - * The EC cycles the keyboard backlight level itself on Fn+Space; check
-> - * the current level and update the LED core state.
-> + * The EC cycles the keyboard backlight level (and auto mode) itself on
-> + * Fn+Space; check the current level and update the LED core state.
->   */
->  static void kbdlight_notify_change(void)
->  {
->  =09struct led_classdev *led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
->  =09enum led_brightness brightness;
-> +=09bool was_auto, is_auto;
-> +=09int level;
-> =20
->  =09guard(mutex)(&kbdlight_mutex);
-> =20
->  =09/*
-> -=09 * Check the brightness actually changed, setting the brightness
-> -=09 * through kbdlight_set_level() also triggers this event.
-> +=09 * Check the level actually changed, setting the brightness through
-> +=09 * kbdlight_set_level() also triggers this event.
->  =09 */
-> -=09brightness =3D kbdlight_sysfs_get(NULL);
-> -=09if (kbdlight_brightness =3D=3D brightness)
-> +=09level =3D kbdlight_get_level();
-> +=09if (kbdlight_brightness =3D=3D level)
->  =09=09return;
-> =20
-> -=09kbdlight_brightness =3D brightness;
-> +=09/*
-> +=09 * Notifying the trigger core is safe while holding
-> +=09 * kbdlight_mutex: the transition is only queued, and the worker
-> +=09 * re-reads the EC level (via hw_offloaded) after this critical
-> +=09 * section has been left.
-> +=09 */
-> +=09is_auto =3D level =3D=3D TPACPI_KBD_LIGHT_AUTO_LEVEL;
-> +=09was_auto =3D kbdlight_brightness =3D=3D TPACPI_KBD_LIGHT_AUTO_LEVEL;
-> +=09if (is_auto !=3D was_auto)
-> +=09=09led_trigger_notify_hw_control_changed(led_cdev, is_auto);
-> +
-> +=09brightness =3D kbdlight_level_to_brightness(level);
-> +=09kbdlight_brightness =3D level;
->  =09led_classdev_notify_brightness_hw_changed(led_cdev, brightness);
->  }
-> =20
