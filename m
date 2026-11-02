@@ -1,107 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.227.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793632437;
-	b=jSBNZP0e9DEZBJTONgoMxqT6sUF7it8Cgtmg3ttK7C5xorlKT+XWR4AFT2wb4YltmkiX
-	 QrvCtU2JpKW1qiMI1EBcKlu9NYAQTYtavohfmM5BMB91F2FQZHLO7bohdjBadVbscTyGt
-	 +SGLr1n67cPZgekl+QTVrmcAUSdhutQXUM6n/CxJdP4Gp0daPxqMn3/od7lDi3BrU6Jtc
-	 em0zHf96FgVv3vQ9UPqx7wWw4JEXHT85gUxKJJyTl2WjKiB1wjsbRRFfbmh3zuyqcbLQ9
-	 P5EfuknMHhXihRQVSITGd6qwPQOlAgb2yoElM9TlybjYf576YJ/AhYqNn+LO7A+Yhbw==
+	t=1793632438;
+	b=gcXHlNyXoAfoexXv5DvwKKzIhZ7LRHYbm7xh5AWOdzHzpsYtRK2bMbOrB0tzIJlqLY5c
+	 +k7dY34NtyJnayHIBBMtF8haVTrDxC6MRpzUcccP8q0w0uKjJ0Kq+KAtKOmZqOzuGhOJv
+	 c6mVt9JPltIpCsmj7SRk9mcv6hj/7bnp/ejynTORSgOLYtVVACYpHWoxlobaRo5ukO9MI
+	 wRAPS190h50QmTG3AXS3J/+4yPR5YlTHT+ljW1SP2qkSnWFkeQb91j7VZwz5LQT5IZGU7
+	 fphFzNykqrM5GP80UGV76thN2WYcK9qUTqnXs1fNzvIHYIBJ+mZJwzxhELS4Ah+MX8Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793632437;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=y7feNmDjfQ2jApjQuy0VL1P8l3TJBR1k6HT7MTIkCw0=;
-	b=K/aLkQFGIbjPp25WKWGFMoh51i5k44/4hN4hdK1zwgci2mYkuyOfEIupP9L4AGTcKLze
-	 NIXjU9zWxnZCUWsCr9kZCcXcOtu5gOKT8RCq+4zWQBGOFkhplIYXVF0kKFGnXhrJt/i8m
-	 gou4k3i80US8Eea7eDBovtscD/o+Ogymw2tpmBspiku2m19arwHnAk00CpmxmvKdT4qP5
-	 wMwNH9YScJmGL7eF883QkBbhXkqHGet1OeTe+D57ytfjePSsvBBvTA7p3cBLrbJGzGEtc
-	 4thh8z60pYYWbBDjJg3tCc0X3z9LTlPPExZCNmSt6JCVH4jVAD4LfaCy294C+rn/vfw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793632438;
+	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=S+W+g44aCaL43FGK45odLf2WH3NZSIh4HEIsQNMUIAQ=;
+	b=qvcHhHrr/ji2iE2+j5bSHA8c5BT7ziNPMmLfVVbFubojc+x+V+jOIWG/OGKyJKluYf1X
+	 IZCcSv+ZVv+4DGnBToP9w4DslzoeWHyPw1k7V3l7mj3YDDXsu02OWRwcj1YayMrzpGObi
+	 WBHWfYyC7yN9KqiOpDsJZMBDpPJPL3qz9X1dFpqgPCiqI9mnnMloZLocbd8udEJx/V80u
+	 Wx9FbkYbZgprikO4ik3UNE/h7O2xeIU/aZIRA9IoJD99T+PnknLWzV4b6S+wK+SxQZ9Hg
+	 p3kplMBZ/bfX7DJgPX1HWushURvvSQ5prDzhk52GVjeObKsnxtVuWDBi0e6AoC3+BNA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="PB/TvD+P";
-	arc=none smtp.remote-ip=74.125.227.130
-Received: from mail-pj2-f2.google.com (mail-pj2-f2.google.com [74.125.227.130])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F7Ox97aH;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D2B60B014C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 15:13:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D2D2B60B014C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6063160B016C;
+	Mon,  2 Nov 2026 15:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PB/TvD+P
-Received: by mail-pj2-f2.google.com with SMTP id d9443c01a7336-2e651c30dcbso16373955ad.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 07:13:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793632436; x=1794237236; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=y7feNmDjfQ2jApjQuy0VL1P8l3TJBR1k6HT7MTIkCw0=;
-        b=PB/TvD+Pr5FOPwke/1A60fksDFE4wenK56qArv4fl8Amx48YKVpxbXzQJwVNuBTpf0
-         V/umv1ym5X8lfM8u1/S5doAkz+M9ZGeUX9NevjOrrvTYOp9wif6jR7G4cC3RRukKMExJ
-         QyrSg9feCkGK9TcszdK4WdqmA4l+i0A/fu0tikhC4WJFwgZYiU54odYM9u+f6B9XtEsm
-         bVHwTfN31ZgUcrGOS4eweIeRwa52Q8Wsz6nFjeuoD7hTJQKMfe3rGi4Uk9MwHswZHYaU
-         Qm6ag64U0pPOMA9CcVel1bSqvfVQFN5brgehiNILxUb8arsOFiymrjzR+tfnzt+VQAYJ
-         C2uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793632436; x=1794237236;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=y7feNmDjfQ2jApjQuy0VL1P8l3TJBR1k6HT7MTIkCw0=;
-        b=I47bVS1s8Uchls37v7bu//VjVAF/+Svm0zGS6FyxhrGeg2zSKngg9qewVQ4v81L/or
-         9bzxrKPrQGVcB/keNFYtczwjYRFbMj0Nj4OjAUV3YnkpKwMcxfkDd5HPuuyqbmcuYpAW
-         5nQdX2wQGV2+s7frH3AZEG3KCFeayHqIn0eTKe1RFoqIAjklacQrxVvigN4kMv5mnl7t
-         rB2JvTDb++xi1D2BFLtf6q8RtLdcgsKy8BQyc6TSxRm/YF5gDpUiDZtR5WsItEPAqvl3
-         E3SPOVjQR33ZDhfPVXO5EeDZSM20CplZ9yxDg0sbfZqXXE/kx3NpNSYvDC8Pmruz1lpp
-         PhtQ==
-X-Forwarded-Encrypted: i=1; AKwUvBykcSxNsUUKuJDCQALjHPOd701cmWJ5cz8aVVk21efBQbJ/0aC6rBdTZ3X7QWcI44l4knhqdj6CrBGytgya+V6twxYb@vger.kernel.org
-X-Gm-Message-State: APuU4Z+X26Kfb1fmVUg4X2zNjallQhSlKgaC7g9h2FnXZJVl0uziXRIQ
-	Ifsirzgo6C3ZbFYmIPtmFZM+H5Zt6mt+ABUCIgWq4UZTaZQxaV+ucgDk
-X-Gm-Gg: AYBFou3rqVnW1r1Mq9HsmxMCkNgjEge4pEPTCG/6lbEDFuPnf3qkN/UaDvQhGXcxXfV
-	HodkNw2YEESsR8bcZuK+FXuzV222rux79SPOCBA1Bf9AYJ28f86J4PGfGtiNgocQGW+MHOi8n1Z
-	2Ny8hgKwsGRPTDsAo/PlrzbZIOj3kxkutHv/+xHu7mvIdHM7RR8F8yW/JRf+acUUci3JfEu9gI5
-	ZySc5SoC7FV7KEk7j5VASU1tS67TX2rDtI6A6HHu6WHv14KqvMoVaVqwZpT8eb/fZ99BtqrqvIT
-	QQsA774HNT7H5y96NvbrlYsEdZx4KxHbFo052GSchAu22mC/yQiVNH9PtqXk6re7I/mNH0d51Dm
-	kDxpSuP08FqavPgM8QVdtuFjOyK1oen3Dk8rP3Z3vRtjdwWgj9D0ub7BLs53vXgNnqqjZAcR+tf
-	P+zF9VsuoHtQkUQoaS20Y2bGHrlLeh6Nx8989unR8yBVcfSQLtl1XIWzeqUo4QOQRaKWN+4Jwn7
-	1T3kdCjzqAXVyyiZ88seMIFZrGW/yUA0GhtKrEljBD9EEWTX5CRm2WUWQfy0sBwz5y5coi8/eYo
-	L+y7ghD7UTgm3bsgj5Q3qT+cLbN81w1Q2p97kCgqmY6TVE8Z1AsuLVM=
-X-Received: by 2002:a17:903:4690:b0:2dd:c100:4b87 with SMTP id d9443c01a7336-2eb36533c4cmr100182345ad.62.1793632435888;
-        Mon, 02 Nov 2026 07:13:55 -0800 (PST)
-Received: from ThinkPad ([240e:46e:8710:e4e:e10f:cd51:e533:58a5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb3924c93fsm30567675ad.34.2026.11.02.07.13.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 07:13:55 -0800 (PST)
-From: Qiling Zhu <kmatzkaczor244@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Rong Zhang <i@rong.moe>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Griffin Kroah-Hartman <griffin@kroah.com>,
-	ibm-acpi-devel@lists.sourceforge.net,
-	Lee Jones <lee@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	Pavel Machek <pavel@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	vishnuocv@gmail.com,
-	vsankar@lenovo.com,
-	Qiling Zhu <kmatzkaczor244@gmail.com>
-Subject: [RFC PATCH v2 2/2] platform/x86: thinkpad_acpi: Add support for auto keyboard backlight
-Date: Mon,  2 Nov 2026 23:10:19 +0800
-Message-ID: <20261102151211.40701-3-kmatzkaczor244@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261102151211.40701-1-kmatzkaczor244@gmail.com>
-References: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
- <20261102151211.40701-1-kmatzkaczor244@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F7Ox97aH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A051F00A17;
+	Mon,  2 Nov 2026 15:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793632438;
+	bh=S+W+g44aCaL43FGK45odLf2WH3NZSIh4HEIsQNMUIAQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=F7Ox97aHb5v/69dEjCfSG3zYZyDUWGBbQmgwQbZqpHayfaTm2G57txgqdUeZo3I1H
+	 tTuLLwDngX1C0kdrF8+z5iHcLOLMVPlNHU7Ek70BsEwCNAgxWcFwACFn8dRM9vXuNi
+	 fR/HuBwWCNGkBIHly+3JqFmxpEpN+D+9f46wasKzYOnOtzNu5VuibzVNrASnI3ElKf
+	 98h5jEevjX95199qLf7TWhYAItcY3sascPk/jhcInRBKh/iRe1KPIclCVzGPEmbyX3
+	 JHM1Cp1LfYRKc0S2TNo/H269vvS4ZY0/H1hFOPI9a3WaLrf1PSJB04nf+i5VJqta6B
+	 C97Z41nHrVXzg==
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 02 Nov 2026 16:07:18 +0100
+Subject: [PATCH RFC 11/23] selftests/proc: check that a faulting writer
+ doesn't hold up removal
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -111,304 +53,315 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261102-work-procfs-drivers-v1-11-a994bd4d3b1a@kernel.org>
+References: <20261102-work-procfs-drivers-v1-0-a994bd4d3b1a@kernel.org>
+In-Reply-To: <20261102-work-procfs-drivers-v1-0-a994bd4d3b1a@kernel.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
+ Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+ NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+ Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
+ Greg Kroah-Hartman <gregkh@suse.de>, 
+ Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
+ ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+ coreteam@netfilter.org, kexec@lists.infradead.org, 
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+ netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
+ linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
+ sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+ linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, 
+ linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
+ linux-debuggers@vger.kernel.org, 
+ "Christian Brauner (Amutable)" <brauner@kernel.org>, 
+ Chuck Lever <cel@kernel.org>
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7699; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=E/Aoc9uQW8LTsep+BLiQcemfYl1Vwa4LIRzF+EstznY=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS9WG7Q9XihutiU620/TOp4nTfpGEvuYL3x8mh9fPS6m
+ l0cd9YYdpSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEykYy0jw80klv9bnE6761yY
+ H2ijFaLOd2/76W8uCq84DzG1i6+RmM7I0Gm2vy378801RpOnHzpQy/rRzmj9jUkqNSHZgglMcT1
+ TWAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-Recent ThinkPads with an ambient light sensor (ALS) support an auto mode
-for the keyboard backlight: the EC controls the backlight according to
-ambient light. The mode is EC keyboard backlight level 3, above the two
-fixed levels exposed so far, and is currently reachable only through the
-Fn+Space shortcut, which is handled directly by the firmware.
+Write to /proc/scsi/scsi_debug/<host> from a buffer whose page is backed
+by userfaultfd and remove the host while procfs copies in what is
+written:
 
-Wire the auto mode up as a private hardware control trigger, named
-"tpacpi-kbd-auto", on top of the LED hw control trigger framework:
+- removing the entry doesn't wait for the writer
 
-  - selecting the trigger writes level 3 (activate); the offloaded state
-    is derived from the current EC level
-  - when Fn+Space cycles into or out of auto mode, the driver notifies
-    the LED core about the hardware-initiated hardware control
-    transition, so the trigger state (shown bracketed in the trigger
-    sysfs attribute) follows along
-  - if the EC is already in auto mode at driver initialization, the
-    trigger is set as the default one
+- the write fails with -EIO once the fault is resolved
 
-The auto mode is not a brightness level: max_brightness stays 2 and the
-LED core is always told a brightness of 0 while in auto mode. The proc
-interface keeps reporting the raw EC level, including 3, and keeps
-rejecting writes of 3 with -EINVAL; writing a regular level through it
-while in auto mode drops the trigger, like writing a brightness through
-sysfs does. In auto mode suspend and resume are left to the EC and the
-firmware; on resume the restored EC level is observed and reconciled.
+The test loads scsi_debug if it isn't there and skips without it.
 
-LEDS_TRIGGERS is selected to keep the trigger functional in
-stripped-down configurations.
-
-Deliberately unchanged: module unload still resets the backlight to off;
-retaining auto mode across unload is left for future work.
-
-Note that Documentation/admin-guide/laptops/thinkpad-acpi.rst has no
-kbdlight section at all, so there is no in-tree documentation to update;
-userspace-facing semantics of hardware control triggers are documented
-in Documentation/leds/leds-class.rst.
-
-Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- drivers/platform/x86/lenovo/Kconfig         |   1 +
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 152 ++++++++++++++++++--
- 2 files changed, 141 insertions(+), 12 deletions(-)
+ tools/testing/selftests/proc/.gitignore            |   1 +
+ tools/testing/selftests/proc/Makefile              |   1 +
+ tools/testing/selftests/proc/config                |   3 +
+ .../selftests/proc/proc-remove-slow-writer.c       | 203 +++++++++++++++++++++
+ 4 files changed, 208 insertions(+)
 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index 516594993..77d159a3a 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -83,6 +83,7 @@ config THINKPAD_ACPI
- 	select NVRAM
- 	select NEW_LEDS
- 	select LEDS_CLASS
-+	select LEDS_TRIGGERS
- 	select INPUT_SPARSEKMAP
- 	help
- 	  This is a driver for the IBM and Lenovo ThinkPad laptops. It adds
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 3260eaa62..7b46ad6f9 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -5102,6 +5102,14 @@ static struct ibm_struct video_driver_data = {
-  * Keyboard backlight subdriver
-  */
+diff --git a/tools/testing/selftests/proc/.gitignore b/tools/testing/selftests/proc/.gitignore
+index e2566cc0ae07..51969f81afc5 100644
+--- a/tools/testing/selftests/proc/.gitignore
++++ b/tools/testing/selftests/proc/.gitignore
+@@ -24,6 +24,7 @@
+ /proc-remove-slow-sysctl
+ /proc-remove-slow-reader
+ /proc-remove-slow-readlink
++/proc-remove-slow-writer
+ /read
+ /self
+ /setns-dcache
+diff --git a/tools/testing/selftests/proc/Makefile b/tools/testing/selftests/proc/Makefile
+index 6a9bdc999f54..aecec6b93173 100644
+--- a/tools/testing/selftests/proc/Makefile
++++ b/tools/testing/selftests/proc/Makefile
+@@ -35,5 +35,6 @@ TEST_GEN_PROGS += proc-pidns
+ TEST_GEN_PROGS += proc-remove-slow-sysctl
+ TEST_GEN_PROGS += proc-remove-slow-reader
+ TEST_GEN_PROGS += proc-remove-slow-readlink
++TEST_GEN_PROGS += proc-remove-slow-writer
  
-+/* EC level that selects ALS-controlled auto mode for the keyboard backlight */
-+#define TPACPI_KBD_LIGHT_AUTO_LEVEL	3
-+
+ include ../lib.mk
+diff --git a/tools/testing/selftests/proc/config b/tools/testing/selftests/proc/config
+index 7b0e1d9be1a2..c7c61a2d7927 100644
+--- a/tools/testing/selftests/proc/config
++++ b/tools/testing/selftests/proc/config
+@@ -5,3 +5,6 @@ CONFIG_USERFAULTFD=y
+ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_DUMMY=m
++CONFIG_SCSI=y
++CONFIG_SCSI_PROC_FS=y
++CONFIG_SCSI_DEBUG=m
+diff --git a/tools/testing/selftests/proc/proc-remove-slow-writer.c b/tools/testing/selftests/proc/proc-remove-slow-writer.c
+new file mode 100644
+index 000000000000..f69ca75ba87c
+--- /dev/null
++++ b/tools/testing/selftests/proc/proc-remove-slow-writer.c
+@@ -0,0 +1,203 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Cached EC level, including TPACPI_KBD_LIGHT_AUTO_LEVEL. All state
-+ * tracking compares EC levels; the auto mode is translated to a
-+ * brightness value only when reporting to the LED core.
++ * A write that faults while procfs copies it in must not hold up removal of
++ * the /proc entry. Removing a scsi_debug host removes its
++ * /proc/scsi/scsi_debug/<host> file.
 + */
- static enum led_brightness kbdlight_brightness;
- static DEFINE_MUTEX(kbdlight_mutex);
- 
-@@ -5180,6 +5188,15 @@ static bool kbdlight_is_supported(void)
- 	return status & BIT(9);
- }
- 
-+/* The auto mode is not a brightness level; report it as off to the LED core. */
-+static enum led_brightness kbdlight_level_to_brightness(int level)
-+{
-+	if (level == TPACPI_KBD_LIGHT_AUTO_LEVEL)
-+		return 0;
++#define _GNU_SOURCE
++#include <dirent.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <limits.h>
++#include <linux/userfaultfd.h>
++#include <poll.h>
++#include <pthread.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++#include <sys/syscall.h>
++#include <unistd.h>
 +
-+	return level;
-+}
++#include "../kselftest_harness.h"
 +
- static int kbdlight_sysfs_set(struct led_classdev *led_cdev,
- 			enum led_brightness brightness)
- {
-@@ -5194,16 +5211,54 @@ static enum led_brightness kbdlight_sysfs_get(struct led_classdev *led_cdev)
- 	if (level < 0)
- 		return 0;
- 
--	return level;
-+	return kbdlight_level_to_brightness(level);
-+}
++#define ADD_HOST	"/sys/bus/pseudo/drivers/scsi_debug/add_host"
++#define HOST_DIR	"/proc/scsi/scsi_debug"
++#define TIMEOUT_MS	5000
++#define MAX_HOSTS	4096
++#define HOST_BITS	(8 * sizeof(unsigned long))
 +
-+static struct led_hw_trigger_type kbdlight_auto_trigger_type;
-+
-+static int kbdlight_auto_trigger_activate(struct led_classdev *led_cdev)
-+{
-+	/*
-+	 * The EC may already be in auto mode (cycled there on Fn+Space, or
-+	 * active since before the driver loaded), in which case there is
-+	 * nothing to program.
-+	 */
-+	if (kbdlight_get_level() == TPACPI_KBD_LIGHT_AUTO_LEVEL)
-+		return 0;
-+
-+	if (kbdlight_set_level(TPACPI_KBD_LIGHT_AUTO_LEVEL))
-+		return -EIO;
-+
-+	/*
-+	 * Check that the EC actually accepted the auto mode; on error the
-+	 * trigger core reverts the LED to the "none" trigger.
-+	 */
-+	if (kbdlight_get_level() != TPACPI_KBD_LIGHT_AUTO_LEVEL)
-+		return -EIO;
-+
-+	return 0;
- }
- 
-+static bool kbdlight_auto_trigger_hw_offloaded(struct led_classdev *led_cdev)
-+{
-+	return kbdlight_get_level() == TPACPI_KBD_LIGHT_AUTO_LEVEL;
-+}
-+
-+static struct led_trigger kbdlight_auto_trigger = {
-+	.name		= "tpacpi-kbd-auto",
-+	.trigger_type	= &kbdlight_auto_trigger_type,
-+	.activate	= kbdlight_auto_trigger_activate,
-+	.hw_offloaded	= kbdlight_auto_trigger_hw_offloaded,
++struct writer {
++	int fd;
++	char *buf;
++	ssize_t ret;
++	int err;
 +};
 +
- static struct tpacpi_led_classdev tpacpi_led_kbdlight = {
- 	.led_classdev = {
- 		.name		= "tpacpi::kbd_backlight",
- 		.max_brightness	= 2,
--		.flags		= LED_BRIGHT_HW_CHANGED,
-+		.flags		= LED_BRIGHT_HW_CHANGED | LED_TRIG_HW_CHANGED,
- 		.brightness_set_blocking = &kbdlight_sysfs_set,
- 		.brightness_get	= &kbdlight_sysfs_get,
-+		.trigger_type	= &kbdlight_auto_trigger_type,
- 	}
- };
- 
-@@ -5221,9 +5276,30 @@ static int __init kbdlight_init(struct ibm_init_struct *iibm)
- 		return -ENODEV;
- 	}
- 
--	kbdlight_brightness = kbdlight_sysfs_get(NULL);
-+	kbdlight_brightness = kbdlight_get_level();
-+	if (kbdlight_brightness < 0)
-+		kbdlight_brightness = 0;
- 	tp_features.kbdlight = 1;
- 
-+	/*
-+	 * Register the auto-mode trigger before the LED classdev: if the
-+	 * EC is already in auto mode, the trigger can then be set as the
-+	 * default one and gets activated during LED classdev registration.
-+	 */
-+	rc = devm_led_trigger_register(&tpacpi_pdev->dev,
-+				       &kbdlight_auto_trigger);
-+	if (rc) {
-+		tp_features.kbdlight = 0;
-+		return rc;
++struct remover {
++	int done;
++	int ret;
++};
++
++/* a positive @nr adds hosts, a negative one removes the last ones added */
++static int add_host(int nr)
++{
++	char s[16];
++	int fd, len, ret;
++
++	fd = open(ADD_HOST, O_WRONLY | O_CLOEXEC);
++	if (fd < 0)
++		return -errno;
++	len = snprintf(s, sizeof(s), "%d", nr);
++	ret = write(fd, s, len) == len ? 0 : -errno;
++	close(fd);
++	return ret;
++}
++
++/* the numbers of the hosts in /proc/scsi/scsi_debug as a bitmap */
++static int list_hosts(unsigned long *hosts)
++{
++	struct dirent *d;
++	DIR *dir;
++
++	memset(hosts, 0, MAX_HOSTS / 8);
++	dir = opendir(HOST_DIR);
++	if (!dir)
++		/* the directory comes with the first host and goes with the last */
++		return errno == ENOENT ? 0 : -errno;
++	while ((d = readdir(dir))) {
++		char *end;
++		long nr = strtol(d->d_name, &end, 10);
++
++		if (end != d->d_name && !*end && nr >= 0 && nr < MAX_HOSTS)
++			hosts[nr / HOST_BITS] |= 1UL << (nr % HOST_BITS);
++	}
++	closedir(dir);
++	return 0;
++}
++
++/* the host that is in @after but wasn't in @before */
++static int new_host(const unsigned long *before, const unsigned long *after)
++{
++	for (int i = 0; i < MAX_HOSTS / HOST_BITS; i++) {
++		unsigned long new = after[i] & ~before[i];
++
++		if (new)
++			return i * HOST_BITS + __builtin_ctzl(new);
++	}
++	return -1;
++}
++
++static void *write_thread(void *arg)
++{
++	struct writer *w = arg;
++
++	w->ret = write(w->fd, w->buf, 2);
++	w->err = errno;
++	return NULL;
++}
++
++static void *remove_thread(void *arg)
++{
++	struct remover *r = arg;
++	ssize_t ret;
++
++	r->ret = add_host(-1);
++	ret = write(r->done, "x", 1);
++	return (void *)ret;
++}
++
++FIXTURE(host) {
++	char path[PATH_MAX];
++	int host;
++};
++
++FIXTURE_SETUP(host)
++{
++	unsigned long before[MAX_HOSTS / HOST_BITS];
++	unsigned long after[MAX_HOSTS / HOST_BITS];
++
++	self->host = -1;
++	if (access(ADD_HOST, W_OK) && system("modprobe -q scsi_debug add_host=0"))
++		SKIP(return, "no scsi_debug");
++	if (access(ADD_HOST, W_OK))
++		SKIP(return, ADD_HOST ": %s", strerror(errno));
++
++	/* host numbers are reused, so look for the one that's new */
++	ASSERT_EQ(list_hosts(before), 0);
++	ASSERT_EQ(add_host(1), 0);
++	ASSERT_EQ(list_hosts(after), 0);
++	self->host = new_host(before, after);
++	ASSERT_GE(self->host, 0);
++	snprintf(self->path, sizeof(self->path), HOST_DIR "/%d", self->host);
++}
++
++FIXTURE_TEARDOWN(host)
++{
++	if (self->host >= 0 && !access(self->path, F_OK))
++		add_host(-1);
++}
++
++TEST_F(host, remove_while_writer_faults)
++{
++	struct uffdio_api api = { .api = UFFD_API };
++	struct uffdio_register reg = {};
++	struct uffdio_zeropage zero = {};
++	long psz = sysconf(_SC_PAGESIZE);
++	struct writer w = {};
++	struct remover r = {};
++	struct uffd_msg msg;
++	struct pollfd pfd;
++	pthread_t wt, rt;
++	int uffd, done[2];
++	char *buf;
++
++	w.fd = open(self->path, O_WRONLY | O_CLOEXEC);
++	if (w.fd < 0)
++		SKIP(return, "%s: %s", self->path, strerror(errno));
++
++	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
++	if (uffd < 0)
++		SKIP(return, "userfaultfd: %s", strerror(errno));
++	ASSERT_EQ(ioctl(uffd, UFFDIO_API, &api), 0);
++
++	buf = mmap(NULL, psz, PROT_READ | PROT_WRITE,
++		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
++	ASSERT_NE(buf, MAP_FAILED);
++	reg.range.start = (unsigned long)buf;
++	reg.range.len = psz;
++	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
++	ASSERT_EQ(ioctl(uffd, UFFDIO_REGISTER, &reg), 0);
++
++	w.buf = buf;
++	ASSERT_EQ(pthread_create(&wt, NULL, write_thread, &w), 0);
++
++	/* The writer now sleeps while what it writes is copied in. */
++	pfd = (struct pollfd){ .fd = uffd, .events = POLLIN };
++	ASSERT_EQ(poll(&pfd, 1, TIMEOUT_MS), 1);
++	ASSERT_EQ(read(uffd, &msg, sizeof(msg)), sizeof(msg));
++	ASSERT_EQ(msg.event, UFFD_EVENT_PAGEFAULT);
++
++	/* Removing the host removes the file that is being written. */
++	ASSERT_EQ(pipe2(done, O_CLOEXEC), 0);
++	r.done = done[1];
++	ASSERT_EQ(pthread_create(&rt, NULL, remove_thread, &r), 0);
++	pfd = (struct pollfd){ .fd = done[0], .events = POLLIN };
++	EXPECT_EQ(poll(&pfd, 1, TIMEOUT_MS), 1) {
++		TH_LOG("removing %s waited for the writer", self->path);
 +	}
 +
-+	tpacpi_led_kbdlight.led_classdev.hw_control_trigger =
-+		kbdlight_auto_trigger.name;
++	zero.range.start = (unsigned long)buf;
++	zero.range.len = psz;
++	ASSERT_EQ(ioctl(uffd, UFFDIO_ZEROPAGE, &zero), 0);
++	ASSERT_EQ(pthread_join(wt, NULL), 0);
++	ASSERT_EQ(pthread_join(rt, NULL), 0);
++	EXPECT_EQ(r.ret, 0);
 +
-+	if (kbdlight_brightness == TPACPI_KBD_LIGHT_AUTO_LEVEL)
-+		tpacpi_led_kbdlight.led_classdev.default_trigger =
-+			kbdlight_auto_trigger.name;
++	/* The entry was gone by the time the write got to it. */
++	EXPECT_EQ(w.ret, -1);
++	EXPECT_EQ(w.err, EIO);
++}
 +
- 	rc = led_classdev_register(&tpacpi_pdev->dev,
- 				   &tpacpi_led_kbdlight.led_classdev);
- 	if (rc < 0) {
-@@ -5246,9 +5322,22 @@ static int kbdlight_set_level_and_update(int level)
- 	int ret;
- 	struct led_classdev *led_cdev;
- 
--	ret = kbdlight_set_level(level);
- 	led_cdev = &tpacpi_led_kbdlight.led_classdev;
- 
-+	/*
-+	 * Leaving auto mode through the proc interface has to drop the
-+	 * trigger, like writing a brightness through sysfs does. Route the
-+	 * new level through the LED core as well, so that it is applied
-+	 * after the LED_OFF queued by dropping the trigger.
-+	 */
-+	if (led_trigger_is_hw_controlled(led_cdev)) {
-+		led_trigger_remove_hw_control(led_cdev);
-+		led_set_brightness(led_cdev, level);
-+		return 0;
-+	}
-+
-+	ret = kbdlight_set_level(level);
-+
- 	if (ret == 0 && !(led_cdev->flags & LED_SUSPENDED))
- 		led_cdev->brightness = level;
- 
-@@ -5293,6 +5382,8 @@ static int kbdlight_write(char *buf)
- 	return kbdlight_set_level_and_update(level);
- }
- 
-+static void kbdlight_notify_change(void);
-+
- static void kbdlight_suspend(void)
- {
- 	struct led_classdev *led_cdev;
-@@ -5301,38 +5392,75 @@ static void kbdlight_suspend(void)
- 		return;
- 
- 	led_cdev = &tpacpi_led_kbdlight.led_classdev;
-+
-+	/*
-+	 * In auto mode the EC drives the backlight and the firmware turns
-+	 * it off for suspend and restores it on resume by itself; keep the
-+	 * LED core out of it entirely.
-+	 */
-+	if (kbdlight_get_level() == TPACPI_KBD_LIGHT_AUTO_LEVEL)
-+		return;
-+
- 	led_update_brightness(led_cdev);
- 	led_classdev_suspend(led_cdev);
- }
- 
- static void kbdlight_resume(void)
- {
-+	struct led_classdev *led_cdev;
-+
- 	if (!tp_features.kbdlight)
- 		return;
- 
--	led_classdev_resume(&tpacpi_led_kbdlight.led_classdev);
-+	led_cdev = &tpacpi_led_kbdlight.led_classdev;
-+
-+	/* Only balance a suspend that actually suspended the LED. */
-+	if (led_cdev->flags & LED_SUSPENDED) {
-+		led_classdev_resume(led_cdev);
-+		return;
-+	}
-+
-+	/*
-+	 * Auto mode was left running over suspend; observe what the
-+	 * firmware actually restored.
-+	 */
-+	kbdlight_notify_change();
- }
- 
- /*
-- * The EC cycles the keyboard backlight level itself on Fn+Space; check
-- * the current level and update the LED core state.
-+ * The EC cycles the keyboard backlight level (and auto mode) itself on
-+ * Fn+Space; check the current level and update the LED core state.
-  */
- static void kbdlight_notify_change(void)
- {
- 	struct led_classdev *led_cdev = &tpacpi_led_kbdlight.led_classdev;
- 	enum led_brightness brightness;
-+	bool was_auto, is_auto;
-+	int level;
- 
- 	guard(mutex)(&kbdlight_mutex);
- 
- 	/*
--	 * Check the brightness actually changed, setting the brightness
--	 * through kbdlight_set_level() also triggers this event.
-+	 * Check the level actually changed, setting the brightness through
-+	 * kbdlight_set_level() also triggers this event.
- 	 */
--	brightness = kbdlight_sysfs_get(NULL);
--	if (kbdlight_brightness == brightness)
-+	level = kbdlight_get_level();
-+	if (kbdlight_brightness == level)
- 		return;
- 
--	kbdlight_brightness = brightness;
-+	/*
-+	 * Notifying the trigger core is safe while holding
-+	 * kbdlight_mutex: the transition is only queued, and the worker
-+	 * re-reads the EC level (via hw_offloaded) after this critical
-+	 * section has been left.
-+	 */
-+	is_auto = level == TPACPI_KBD_LIGHT_AUTO_LEVEL;
-+	was_auto = kbdlight_brightness == TPACPI_KBD_LIGHT_AUTO_LEVEL;
-+	if (is_auto != was_auto)
-+		led_trigger_notify_hw_control_changed(led_cdev, is_auto);
-+
-+	brightness = kbdlight_level_to_brightness(level);
-+	kbdlight_brightness = level;
- 	led_classdev_notify_brightness_hw_changed(led_cdev, brightness);
- }
- 
++TEST_HARNESS_MAIN
+
 -- 
-2.56.0
+2.53.0
 
