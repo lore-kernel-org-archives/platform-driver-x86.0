@@ -1,59 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.12.121.168
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793589035;
-	b=KvQVB7qud6/EnjuDG+nozMuES437rcPN2QuyAYqQRNg/bpTujA9pSlx3hWbJRZFSj0CR
-	 LXOxHnN6V+I8JFc3i5XNJLu0HVrH+XORU0juE7JnNSczr4KLyOsL2pTf9RXtqu2t3gP01
-	 /rlOO7rhdgnQ3NCFYHEHTN16F1NI0LgkVkmA7TS6wedWK7quLlBi6q2GvYOALEl/tlsnq
-	 zxu7dmCLOeX0ewrW7rT/plRBSQ9uUTxUjAcn+SEXLOn1MJ3npa77W0urY7p9/NKfBwnd5
-	 rjNdHyTsTYlYIEbT52RN+sMBe6keeCOSMgbTVvmgsmJFaDBLK+QNBIAHvU/M0FlXGuw==
+	t=1793589553;
+	b=Bl+VqXQMztiezX60rl0dLmy2vNNEKd1bbyygKdcYWyKPTDX74OaHStFkhD5EE/rUgCHd
+	 lvu7WLkibCf1iXY0z9DTVywX8j7CR1PRqGz2r3k4qbNdQ6gqTNTubxto3u8wtMBtSRPke
+	 mXIjI6Z89kmpGYUfRKTL+GmFyy8u3n09swAlh1A9Uwko8/5JdIaMj9g1wQlKQH0AshAtR
+	 bDSL8VAOI3hDYkJawpHMcY3mkjtXPs5zFTFJ9KFnP+V3wOg6jErdDPyeLDjibqe4aEwwC
+	 NqUmWcmUA0EbbozZQ9Kgyb03/perk/NhNPE9fkl+EI9/tKeIFCbR+ttv1qzZ3SFDFuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793589035;
-	h=DMARC-Filter:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:
-	 References:Date:Message-ID:MIME-Version:Content-Type;
-	bh=v+2g8LhY8MFTBrF3bcNOytObBw0f5aMK4zrYQ9fE5Pg=;
-	b=MQWIinuwh/8Q9yOJcsjH4nn3PEHvJ4Yb87yB//Qcwum7VQNzgX+ffFCB6xbClys3jL6i
-	 tn6ZlNF4rK/K5B3vRCko3SQLksEs7ydu121MAP/7hfH5qeHyAiQ9+GHpN2lwq0YrYPwtF
-	 rj25rJg7tPqgf6flxWGHfOSI6S+7xJxSbOlxWsSRzvgdidfSSAtzQNsJziy5zXMSyUWDe
-	 1tuMlrWsae8tuyKdICYzlyRXnyGpQj4Kj/aJn7+jy0cVgxHQKHfbrWBpevgjmjtGTGYed
-	 LVoky6e04ecTf5B1dElGqRB2fAPS+1eQzdF4nLYM8W7YxvbwL3TQFBYi+JzNl2ifuIA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793589553;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=Pq7i3VhC2u37X3a2faYflIcKZg9HRolwFH3fa/oNdq8=;
+	b=u/JM6pDIayIKjUrT47hSgW7wr6pUoh7QUoSa6SOrwvpB8s+S91vnDHB8B3bI4N0El5xz
+	 QawOIW4J88+7+m2F3CFU82urvjr7fJVWBD+fX7mkVmnxDopk6HqqnYM2HXOop9n1lfLlm
+	 kQKhxhcucqc5382XLJAlRwhZOxd7+Jo82UmgHBNrjarfAf4vOJ9x8+vjmFBOVyRzPbmns
+	 j91xmNrFIVLYQMwtrPdvDhnkuznkmjVYNuul7M0XsSd57uHlqwZYyU3nZsux3pSBxFX3a
+	 Ux6LKGxzsiLyQEy5juqXsvx5TzArDd8KNpMKnBVt111IsbK6gIYjikXS6TdlHceVhEg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=barrensea.org;
-	spf=pass smtp.mailfrom=barrensea.org;
-	dkim=pass header.d=barrensea.org header.i=@barrensea.org header.a=rsa-sha256 header.s=mail header.b=GL5ttpFy;
-	arc=none smtp.remote-ip=198.12.121.168
-Received: from mail.barrensea.org (mail.barrensea.org [198.12.121.168])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0c4lNAqb;
+	arc=none smtp.remote-ip=209.85.215.170
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5E4606A324;
-	Mon,  2 Nov 2026 03:10:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6D5E4606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=barrensea.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=barrensea.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FCB606A327
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 03:19:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2FCB606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=barrensea.org header.i=@barrensea.org header.a=rsa-sha256 header.s=mail header.b=GL5ttpFy
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=barrensea.org;
-	s=mail; t=1793589029;
-	bh=4x3+38Wv6GpzVvI5o+ijYIXw99v1yzm6GISaiqzWyn0=;
-	h=From:To:Cc:Subject:In-Reply-To:References;
-	b=GL5ttpFy1ceG8MBuOJuhPmighIar8ZSLsoXvgah3/OityDkI+TjvJPcDpl75gyaTF
-	 xr1mrk5zrFx0i50v/bl/PJmJFYc60w2lJ86z74oSLfRn9eAHxwcv8aLpCMh38hzqGw
-	 9YQpx+yOvC3U7Heepfd674U3btCv6qoKpTA1VL6UHtjE6P7G5GEy0XwbLN6RIiibvO
-	 agIDjIsF4Kle0K/AUBlDxs5/aZHnZgfUlZf8yputaYUOqI0azdUpojH0G3oBsNLuJz
-	 E5AAZUbfy3tsdt5HTBHvoBrc08k8v73YaUjfvflu7BEnhOfD2fJbBevBbcuqXfHvxM
-	 gl4z5zy8YVOYQ==
-From: Donjuanplatinum <donplat@barrensea.org>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Hans de Goede <hansg@kernel.org>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,  platform-driver-x86@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] uniwill: Add support for MECHREVO WUJIE Series 15 X Pro
-In-Reply-To: <c8cb27ab-e5de-4a86-ad09-6610905e74b8@gmx.de> (Armin Wolf's
-	message of "Sun, 1 Nov 2026 18:41:09 +0100")
-References: <20261011081421.38128-1-donplat@barrensea.org>
-	<c8cb27ab-e5de-4a86-ad09-6610905e74b8@gmx.de>
-Date: Mon, 02 Nov 2026 11:10:25 +0800
-Message-ID: <878q3cc4im.fsf_-_@barrensea.org>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0c4lNAqb
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-ca766c1c9ccso706430a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2026 19:19:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793589552; x=1794194352; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Pq7i3VhC2u37X3a2faYflIcKZg9HRolwFH3fa/oNdq8=;
+        b=0c4lNAqbAvc8AsVXd5NU8F1DHR4DwN4NTrsozwI15qfIQWOterjv+nT1KBRXjrRt1c
+         dZyeR+imfEBPM1DpcuT3hEt/NPiscPltdOtGM10Es0jdEN+aVSYheQ0s0Irjd+jh3JVD
+         rOAaK/CBiek7Y1Bntw9Ab2sazue6F9QgBPEmPPNNTE+dzZTh44SFWPXYGtGY5hXDdAS/
+         c3F3kEGSNBML4pnSKP/wMMV42Z5ZyJcmBamJYOHz3wD2DyO/FZ5G9OM4AyshV6+5L70p
+         XLhRERyHe3ZdCoxrKkwybkxfkeXD61g2DffpSWZwt5GA2DF3UAH24C3Ya9mSrq3XnjaL
+         TSXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793589552; x=1794194352;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Pq7i3VhC2u37X3a2faYflIcKZg9HRolwFH3fa/oNdq8=;
+        b=dOjb6sssBK+e05Bg8NeKirywEUvjJeUaRIyQGYmVuUCaHrcVtMKVUSq+fwVswsfYqQ
+         gydaGemesm5XpXGDbQKVCDIRBhqvNA8gq9LJD4/5ezFrzAod0Ds34HoOXAaG50R1tBh/
+         NUNoSuktUOwgkuXWKExPotPLA3Qu5bRkZQuhsLK8wIHEReyWGtas9tBxbyWn8wdeL4Gp
+         2FtV5nksFrhHpUsabpXmrNX0J3V2vIA2pxfJTXsejoJ/kRkCmG8p8SrmI84tsHs08DQP
+         yN3etOhmeRofXrPZuRioL0nnZBsLB9SmKNqXhvzZ+w99+JZPZn0yMjveNfTbRLnow76p
+         0VTg==
+X-Gm-Message-State: APuU4Z+DmPLExTvuxq+TZT781xTm+gSTTRFgnN0698+I1QRLqdOplaWm
+	xWIXxLdJUR6ZYeRo/z4hHr50+wYOuYtfW10usfZlJLATD8LuR/TKjUBztdJABQ==
+X-Gm-Gg: AYBFou2JQmfI/g5XlQ214fySVWBVvl01iTE2e0ini0JFz+mKIzLx7PmqaXSKvNr+8T2
+	yqq0JceS6QJNTrdcy6yHS6iaW0PFrOZb1rPZArQs7HSizCiEx0B0cf9FkK5RshJA0swPKfhaWhL
+	4G8wVaMqrotUoXTS3lbJzkSXou0XumMKBXtj+XPnDLlItt0pI4hnCvHPR72VYX/Bw5gPCpYkdFD
+	nG4+C6VyTjKblxffx67wNERVTGyWe5ZYhUaIBDz+z64YmB91amxbgiLslibpF3HpGYvgTgxRjJj
+	geKYJAPCCufrRgCuFqsthucyM52wcx0nZqhdmbD78l7987I8MOEYsb0FUcDIuplxJtJwm+R1znj
+	glZkFnVq/O2ApQwlCM5p50xCYukVcXFqjuZB0O9+IenUsS9hOdUyU/da28hKokxH5dQv3RXfgt3
+	f8fGZ7xbnbVqgnQOZFSunRVt0fsY97rM87/6HzaL1LqIFQsHV5Sm006lYmTfUL7V89TU8tMNjLg
+	3l6xFJbryQlJFVGU9oQHEkv2I9tM/fbhrQaa/o7e2JosnJSNtBMhZN4eyblmoB2sLdCpF1OHjNB
+	3fpfu5SUlSR4OquTSatlqlXPy4PBor78QwPk7/H3mvEtRUUNSe0UiaY6VOnOceU32n2+at0egiM
+	NTxZ7fqAtNEDk+Y4tF+eq3rIUYpX8qPq/dwaJ/FbuR/kaURlfxsZZNXKCn3OTO9BAAV0mxdOgmU
+	DQJPX5fuiZTCpHrQJiJ576efs=
+X-Received: by 2002:a17:90a:dfc5:b0:3ac:ad90:7090 with SMTP id 98e67ed59e1d1-3ae897dd47amr7489423a91.67.1793589552079;
+        Sun, 01 Nov 2026 19:19:12 -0800 (PST)
+Received: from ryzen.lan ([2601:644:8000:37f::e34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae85cb1bfdsm7752417a91.0.2026.11.01.19.19.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Nov 2026 19:19:11 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] platform/x86: dell-lis3lv02d: Add Precision M4800
+Date: Sun,  1 Nov 2026 19:19:10 -0800
+Message-ID: <20261102031910.82286-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -63,107 +95,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Armin Wolf <W_Armin@gmx.de> writes:
+The Dell Precision M4800 has an accelerometer on the i801 SMBus which
+is not described by ACPI, so the driver currently skips it:
 
-> Am 11.10.26 um 10:14 schrieb Donjuanplatinum:
->
+  dell_lis3lv02d: accelerometer is present on SMBus but its address is unknown, skipping registration
 
+Reading the WHO_AM_I register at address 0x29 returns 0x33 (LIS3DC),
+the same address as the sibling Precision M6800. With this entry the
+sensor is detected and reports sane values:
 
-> Does the OEM control center for Windows support battery charging
-> modes? If yes then you should also select
-> UNIWILL_FEATURE_BATTERY_CHARGE_MODES.
->
-> Other than that the patch looks fine to me, but i would be very happy
-> if you could rebase it on the current for-next branch.
->
-> Thanks, Armin Wolf
+  lis3lv02d: 8 bits 3DC sensor found
 
-Hi Armin, I think some of my previous replies may have been missed. I
-have added and tested the battery charging mode:
-
-> > Can you check if UNIWILL_FEATURE_BATTERY_CHARGE_MODES also works on
-> > your device?  Please note that the embedded controller will still
-> > report to charge the battery to 100%, so this is not a reliable
-> > indicator. Do you know if the Windows OEM app provides such a
-> > setting on this device?
-> >
-> > Thanks, Armin Wolf
-> >
-
-> I also checked the battery charge modes in the Windows OEM
-> application. The OEM application provides this setting.
-
-> Additionally, I used the interfaces exposed by the OEM's
-> ACPIDriverDll.dll to test the three charge modes and confirmed that
-> their behavior matches the current implementation in the Uniwill
-> driver.
-
-This is the previous disscuss:
-https://lore.kernel.org/platform-driver-x86/c8cb27ab-e5de-4a86-ad09-6610905e74b8@gmx.de/T/#mf80e6c3fdad4eb3af835504c0e512df66c474c52
-
-
-
-> Other than that the patch looks fine to me, but i would be very happy if you
-> could rebase it on the current for-next branch.
-
-I put the rebased patch here,it now base the for-next:
-
-From c45bac93447a52dd2e4a76395202a13c6d91763c Mon Sep 17 00:00:00 2001
-From: Donjuanplatinum <donplat@barrensea.org>
-Date: Mon, 2 Nov 2026 11:03:25 +0800
-Subject: [PATCH] platform/x86: uniwill-laptop: Add support for MECHREVO WUJIE
- Series 15 X Pro
-
-Add support for the MECHREVO WUJIE Series 15 X Pro (WUJIE
-Series-X5SP4NAG).
-
-Signed-off-by: Yifei Yao <donplat@barrensea.org>
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/platform/x86/uniwill/uniwill-acpi.c | 22 +++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/platform/x86/dell/dell-lis3lv02d.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index f62d59f29676..d49be1caea50 100644
---- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -2715,6 +2715,20 @@ static struct platform_driver uniwill_driver = {
- 	.shutdown = uniwill_shutdown,
- };
- 
-+static struct uniwill_device_descriptor series_x5sp4nag_descriptor __initdata = {
-+	.features = UNIWILL_FEATURE_FN_LOCK |
-+		    UNIWILL_FEATURE_SUPER_KEY |
-+		    UNIWILL_FEATURE_CPU_TEMP |
-+		    UNIWILL_FEATURE_PRIMARY_FAN |
-+		    UNIWILL_FEATURE_SECONDARY_FAN |
-+	            UNIWILL_FEATURE_BATTERY_CHARGE_MODES |
-+		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT |
-+		    UNIWILL_FEATURE_AC_AUTO_BOOT |
-+		    UNIWILL_FEATURE_USB_POWERSHARE,
-+	.kbd_led_single_color = false,
-+	.kbd_led_max_brightness = 4,
-+};
-+
- static struct uniwill_device_descriptor machenike_l16p_descriptor __initdata = {
- 	.features = UNIWILL_FEATURE_FN_LOCK |
- 		    UNIWILL_FEATURE_SUPER_KEY |
-@@ -3075,6 +3089,14 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
- 		},
- 		.driver_data = &x4sp4nal_descriptor,
- 	},
-+	{
-+		.ident = "MECHREVO WUJIE Series 15 X Pro",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "WUJIE Series-X5SP4NAG"),
-+		},
-+		.driver_data = &series_x5sp4nag_descriptor,
-+	},
- 	{
- 		.ident = "MACHENIKE L16 Pro",
- 		.matches = {
+diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
+index fe52bcd896f7..ee61b08324ad 100644
+--- a/drivers/platform/x86/dell/dell-lis3lv02d.c
++++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
+@@ -52,6 +52,7 @@ static const struct dmi_system_id lis3lv02d_devices[] __initconst = {
+ 	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6530",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision 3540",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision 3551",     0x29),
++	DELL_LIS3LV02D_DMI_ENTRY("Precision M4800",    0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision M6800",    0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Vostro V131",        0x1d),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Vostro 5568",        0x29),
 -- 
 2.56.0
 
