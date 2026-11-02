@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.43.53
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.45
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793604045;
-	b=vhKRJ0JftC4azK+loE8cZGL9XKH0SiTJv0tNEvC+LQK/6c92KiBcE2yGAPFJgdgEOoxb
-	 3mmgQ7tBFVUwo+T/kTKN5hluz2pa/HYxp7cOoyAmMzYaplEPUAIPyZXm+EQoL/wd2iiXv
-	 KX5/sSAo/mOjAXu8AjHRbJH7VikboO5XgT90V1Iqm0ehaFbYFRF4sJBvTFYVpqUzuVKCQ
-	 sKvzHGOhqwQSJSaIDWJQQ0kR4/uokV3SyJxVUl55odi/pgg4gvaLs0hwtp4HHXZ96Puom
-	 zQ1sU3eJcf1QMHq4drFbkkhL6g32t1IwnZfGss90RHdgu0Tzor6Hwok5iUMpBvk3eKA==
+	t=1793604046;
+	b=4nEYX7haOivBmG4fjel0jy/bPsCsaNUVwhkKEGgpWQoMSoyNFKId8uGvlt3rrlIV8FrW
+	 offQDeoF0/oRoRdhTJY/1G87e9p4oIo5pn3noOWZXfHMBAof+tpG3Xwwjkmt2Jyp4jTr4
+	 pIA+7yEIfv7pMNQbyM9E5IMGnFzibXxInNgGjNGFtkMxKBsJraX1K+M6PRmIFDijO2fdY
+	 kHAEjL/3VOuZYyZmficqjEMgHEajZd74K9oCEhGLfxOU5hsRrApKSI5h6AGnyWlQWE1Lu
+	 6iORsaKd7TNywGEeR4RWr5gDZfc9biFNzk2w98ylq23Q8/CVz6v9qKabznDCOc3g+TQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793604045;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793604046;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:
 	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
 	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
@@ -26,53 +26,53 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=2HjNbeRVHS/EE79O5LYOOQpXQTr0p3xAxKpzV0HxR+A=;
-	b=DmtPsHJdS2/j0iKtihB0+FQv+V1wOwWqa93ejWIhMPMR+BYk5W0dJ/ukkEkfrf//I2RD
-	 3oAClW5MWCL1/fHhPgD6IfK+ZjaXlblw7djAtWRKBjVntK8oB75lQlsOWXDTkOOK5XRWC
-	 2zYnia4g0lHu/9/e8Kah8ETRNBHBjriD1Krg+qRgFkAwJ4LyayDDEej+RlWel+NjDRd2r
-	 dJ3uEL2CT+XKz9qkJ0rsBk+QXtg3ev4axVDGM4U+xV8QLYPxJUzm3vo+MBMz/5jjUikLW
-	 58aftUjmFHgiPr+gAauKB3cizxisM50sxU8becetgZPGoOWUsqNTqCdycF8YDlHHfkA==
+	bh=oxjIbOCg768FA/qJzpwbWxmaQTjaEgDFbYsdK1Fn3fM=;
+	b=ylkRZIe4rP/shXoBrG6dpAaumMetjl8fwYFoqELMqztP9rtonGx2PbwEy4NSHEJgpBR4
+	 NYYTQ8Vfo0ZnjoG2ovkJ7J1GCRrv3bZSYMWEFwS05h+wPVTUUDx1nnWcH48h/KChTz/yV
+	 a0/qauO9TTEVVXAp35T5vUbX+BtaxyBE0b+RKvLOJwbJwmx/KprxAt5pwDSoj+fIy+ag3
+	 2swiiH8aLcRNi758gxYMye6OoDI3LSRpuk6tBfMxpotu2ov7DY6PKGBFXayFH7MFSz9jM
+	 65bplVvQ0iwPeKp04JY92s7a9v8OdGbrmfVFMFdy6JJgDu/WMi9ucHhY+gExrIWIvVA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=amd.com;
 	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=M4Ef4QSH;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.43.53
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012053.outbound.protection.outlook.com [52.101.43.53])
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b="D7cvPd/H";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.45
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011045.outbound.protection.outlook.com [52.101.52.45])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49443606A326
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 07:20:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49443606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F037606A324
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 07:20:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2F037606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=M4Ef4QSH
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=D7cvPd/H
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F74cySnq3jsF6wrvXj7I57533500Y9Qu+MqfuNbm0pKIAq3pjokJNcjlvcVC5tHkVj9PP3++3htwOMj2Bk2Z0uF3Dt4WhMteyLgkfMF2etT1EO1Gi/PPPYcNntHx+PQwi+3Rf3cyZ5U/5D8TGz5rZG4mOHAY+F0nJFYg8DRZf1jQ7ML76yds7jXwngtgbGiY1Qt4e+Zqiz0/MGJ/2fD+mQrDM8FsgW5QLLV/dl0t0356sFw2xfXVzK28/UNB6ZX1OkzzIVh6cHTITDVtr5enQD80LCPUHVBzmaEuhRsLG/q0HtEsxfMqwGq4/4k+mQYP+sai/+nCaVuxQzNMen28MQ==
+ b=NQw+uE/ayBGeIdNsajab/JImffzl061wDQWbIcs1XIR4up3QtbzNlOo89x8RgIwrZuu/pyieD45f/BxkEs9WVMcgKo6Ze8VwmEyAbckbOR9rz6TTT0TxAos5zRA4/qJartHozbXPVYwEDxomEqIu1wvc+HFGLyV5zaJOffuI83U9Sju0Jcv2p7zaohL8opRHxXI7sBNKpuW41y/QKPJCFpdYipmmi30ZHISiApYDoxEPylpYqX0nem3+K6PoYT4ofFOyzbEJ8S2VEGm02RGT77wlzHSFS9g+m2Btq+lrn/+aKZO0SU0g5NLi0LdILZI5Nq3V/HWv3jUrXbYLCLuTaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2HjNbeRVHS/EE79O5LYOOQpXQTr0p3xAxKpzV0HxR+A=;
- b=Zeuy17t9Zxa32ZcwxdbVAdeszrPhx2gHerfZiScuz59gWkkXG+PiQeu4+lDz7xFWCD77fDpi/M3gjh2o1qOWYcU0WqMIG6RTXHELpc0/IVeQzTF0BHjqYrVv2dFevdwaPmUXPxpKU2rECb+oJjJJ0cOK23eAdCa7botjKMzDuex20aiLWB4lu+6rSLykTfYwF1UXFF+aimojVE/KWMehMucgxmRpzualJ9m0dKIo8lkRtNaeIOUEGtnpFEem2+8bXpnFzgGnftAgg0PE1g/zrrArhVRC1E5zB7+EIzUBtRHPpFABga3Ji6fnfOK1YU7Ll3hAv9lk7VxNvNUF6zmYsw==
+ bh=oxjIbOCg768FA/qJzpwbWxmaQTjaEgDFbYsdK1Fn3fM=;
+ b=iWBtMV3sWpu4FaOGyzWgDMjiEui1s12SGcNVGlosCVcwAV3U0hj8ppAlPOcLn1d5MBX8bGPkHvDCQVUsB27NvoXyHJwR126GALyOK6gt3uaSeEw0OXY/pc4Vcxobq0jYerY81q1P9asDj/TncWBtVqk7ZMpntNvSbsG+6I5Ky3vBUWRYBAx7dJnoAqd05wKI4pWnC+Qhyp/uYMgebq0V+JD/DXlXz7Ww4evo69/C4wThyeotVriKgW+uDwKqxolVEzyMHu+jjzhvIPRgNvLmsehdbOzBoiuXEJorFWStWOfyfDwX2SpPX/v+hzwU5WbyFtBo/sBaGnX826Q8Je95VQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2HjNbeRVHS/EE79O5LYOOQpXQTr0p3xAxKpzV0HxR+A=;
- b=M4Ef4QSHz8qoW5ZDh90YQRtVJn6cPG1z/0aNnf+mEMxTCoXF4ODt28ePPSf4mtoWtXW8apG/kRpUVVH2Ja/WkLt6fA4K/7y1bcswwOBvUY0CION0Wf3e9R66NaRKxWHLjnVt9KthxTKxfCVzn6OmV8qY29m4NxXsZkuilmw8Ud0=
+ bh=oxjIbOCg768FA/qJzpwbWxmaQTjaEgDFbYsdK1Fn3fM=;
+ b=D7cvPd/HdqPaWEugLS09LjbQmLR1ZtB/ZVXHM5rpiGGg3CXNqd/oEpAoDeNyTB0kk/NpvTxULc/BIyEqT0LF4X3R3HNZ4uvIBLIKEAtGeDhFSoVA/EWcN4fjQ+bli7bIvTb25SePpB70YfOt8AAw/CjBRZr4SDFpAySOO6CNzng=
 Received: from MW3PR06CA0021.namprd06.prod.outlook.com (2603:10b6:303:2a::26)
- by DS3PR12MB999239.namprd12.prod.outlook.com (2603:10b6:8:38c::13) with
+ by CH1PPF2EB7CF87B.namprd12.prod.outlook.com (2603:10b6:61f:fc00::60b) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.10; Mon, 2 Nov
- 2026 07:20:38 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
+ 2026 07:20:41 +0000
 Received: from SJ1PEPF000037A5.namprd04.prod.outlook.com
- (2603:10b6:303:2a:cafe::8) by MW3PR06CA0021.outlook.office365.com
+ (2603:10b6:303:2a:cafe::8b) by MW3PR06CA0021.outlook.office365.com
  (2603:10b6:303:2a::26) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.569.12 via Frontend Transport; Mon, 2
- Nov 2026 07:20:38 +0000
+ Nov 2026 07:20:40 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -82,19 +82,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  SJ1PEPF000037A5.mail.protection.outlook.com (10.167.244.137) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.592.5 via Frontend Transport; Mon, 2 Nov 2026 07:20:38 +0000
+ 15.21.592.5 via Frontend Transport; Mon, 2 Nov 2026 07:20:40 +0000
 Received: from trento15c5.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Mon, 2 Nov
- 2026 01:20:35 -0600
+ 2026 01:20:37 -0600
 From: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
 To: <platform-driver-x86@vger.kernel.org>
 CC: <ilpo.jarvinen@linux.intel.com>, <Suma.Hegde@amd.com>,
 	<NaveenKrishna.Chatradhi@amd.com>, Muthusamy Ramalingam
 	<Muthusamy.Ramalingam@amd.com>
-Subject: [PATCH 12/26] platform/x86/amd/hsmp: Add io_bw and xgmi_bw sysfs files
-Date: Mon, 2 Nov 2026 07:19:10 +0000
-Message-ID: <cbec1c7339f0108aa3f4573a6f441bdacd804788.1793602633.git.Muthusamy.Ramalingam@amd.com>
+Subject: [PATCH 13/26] platform/x86/amd/hsmp: Add DIMM sideband sysfs files
+Date: Mon, 2 Nov 2026 07:19:11 +0000
+Message-ID: <7f7961fb899d26005ce25bcc2a3e5af9885fbf07.1793602633.git.Muthusamy.Ramalingam@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1793602633.git.Muthusamy.Ramalingam@amd.com>
 References: <cover.1793602633.git.Muthusamy.Ramalingam@amd.com>
@@ -113,1378 +113,377 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000037A5:EE_|DS3PR12MB999239:EE_
-X-MS-Office365-Filtering-Correlation-Id: 982229cd-7456-47c7-6044-08df38b1cb59
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000037A5:EE_|CH1PPF2EB7CF87B:EE_
+X-MS-Office365-Filtering-Correlation-Id: aae744e2-0bc6-4c5c-9970-08df38b1ccc3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700016|23010399003|376014|1800799024|56012099006|6133799003|10067099003|22082099003|3023799007|18002099003|11063799006|261026121527099003|261028144727099003|261026140227099003|261022105027099003|261009223027099003|261021121427099003|261021123027099003;
+	BCL:0;ARA:13230040|82310400026|36860700016|23010399003|376014|1800799024|6133799003|10067099003|22082099003|18002099003|56012099006|11063799006|261021123027099003|261021121427099003|261026121527099003|261026140227099003|261022105027099003|261009223027099003|261028144727099003;
 X-Microsoft-Antispam-Message-Info:
-	z7Gx4HUHzVu/evMslilP8gDD8iAY4LfaTehbz4y11wnAnf6ieUbBeYFcUxyqRNXfQakpOrdEJA/TPoZEtZwNqkn/tuZLVUpC6Ie9jamK98mp3r+VvQfTjbO5tIhkOJYZwdKrIQhTOdHFVtcI50fzUZTXX90D4okZN2zWsd9PjHvErB+RkzmIV0h9UjRjMK51NcVe/VM526pVHEr+XKgpskgjTRY3lOgGmkTzfHzf6ALMsrWh2kf+OoqTur77jx0Mx8CqSYr4REIexAzoVYn3ouogMbOxnnCg2VOZALQYi1B9X7gA8f9mkpvP8HpDUyobY8mYkveWoi4/GeDGA70xgLIEDqLt8eyp9yX1gquneVjEwhcB2gQZQnkLlqX5PFeg/dRROuH/u63Ve2gAEqE5PDN+p7TgoeCqYABk0uKvmI2ncG3rccDj9VgxuC73UnZPDhqq/SULfGSbjF5ZeCvygVjmm9mSrK43HkgoRpLfZ5/UpVQhl+10F3kE9h9NZqGFh8p2v/VM+yF3nNX6GoZOtvTZadlvJAhNdY99Sc6UAJvV0iNrvv2e+BTgRFliOgKXQ8Jf5WITzMBugpeG9gLdvwcY61pt7/zkp63Nt1Qrk+xIuFSOk7AVoWVlAQ9cb8oo5bmlNfrKlIuDbvpfHh6k7OPvDbvb/ESt+99YnxZS8kip6OBFxwePX4igSjg6XUR7vz0NSmeKn7O40nBRssoIfw==
+	c+LTRJTPgmUDRt3TRA5dEa5OYuKTb0FSjkMHNeFN7XYeQaUm9qDozxtiIogV1SbupNneSLoWAW6aJLRAebkVOxswSk8pK3wohwsuNQ+7JBTXcw3E1MAjV0LECYNBKYhBcCbqEag5Zq5XBA9nlzD+yl60aY+6ku7EpKWS7IJpgzhHVid93n/PdrxC0L6Fbcp0sXn/CgN6tn4TeRk+J9X1ANgckaaSYZqgxCovWrSP2x86i1WRH5vS7oL9b6HL4NLJ9H/bdjtqLlDYLWICM9UvK5o1nGTVwDLui3xzoX71hc1Ee6PWbsQL6oshbn6pyiMpsx+/2YYpHdrj1VifrKEfjJ8UOEGxDbe8/EirsVdGKOEiZ1gcKy5iNAroao+2CRdmRWtLzaqUQO2QW7F9Zm4PEODLVJruGhtQFkMIOTHsuDJ3BZlT+ebivdUAZRVKgdPmbUiThBqY6jZVBovu5GABZ2poiXvV6SK4JcDQt8nEfhJv1P4M1/8cboYado2YCL5wcv16uTsP2dbZllk3w1B26y/dbtrLHvwu3CIO/77ydqCmKIgxGU52Sx3qViJ4xlIRtW5VyihV9RdK3RQpL9hWC2QUm82ONAvE4XYcA7hg+Q0XbbZUTzj3KNeL5Odc/37/DYcIVrLGOEZvzre7jUsyzcd7AjVkFIag2HCJp3b+RwxtWsQeCoayVdgUA0mCfowedk/qk+lMdhndKHvs5AJiSA==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(23010399003)(376014)(1800799024)(56012099006)(6133799003)(10067099003)(22082099003)(3023799007)(18002099003)(11063799006)(261026121527099003)(261028144727099003)(261026140227099003)(261022105027099003)(261009223027099003)(261021121427099003)(261021123027099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(23010399003)(376014)(1800799024)(6133799003)(10067099003)(22082099003)(18002099003)(56012099006)(11063799006)(261021123027099003)(261021121427099003)(261026121527099003)(261026140227099003)(261022105027099003)(261009223027099003)(261028144727099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	jbx1q1G9ddERAJhkeCp3AQN8AAT0kBU61TwSU12tOgsUIFkqUlsufS+4M2w6G//GFGLm3m2lrXuLo26IQnWkk2szPVCDuR3QTeAt1iRdJTV/RGOoAniI33cczDik95xT8buaFrRl33+Rn+ZMpe1UY8hGySxWyE/8GbWEce2yns+2XXpwTzSsErX+5Ks4L8qCvl5qAtOqio9mgujvby2EQ3iaP8fmkuoCS09/wzA/RSrGG4EnQ81YFcQyCXGn/MOAZEAwv1ntkO6bwKt9BF7TVRZURzU/tkmsmsZZz+wtDxnUd9de31TzSRdn28mrJPOJ1qa5UmGc7pCYSfL/dHO4NNPhpVfr00TnrSePsVBn2Vd0qhurZ0SxG1LcEsoSnL6/aPPSJbVyFNa4bFi0NwuNmit1BL23oTImQTVK4BxN7P5tji0iQcwkj0Q5987f+8wA
+	fRU350cKH+QIAIXJCL/WSzBkkH5OZ3nYQAHOD4dVD9xhJwSpi0VEs/vWZg7szZYFVMM63oQtlSYAfpgRQ8CKNhB5RPotpeJ88a2bkLUJaEZ2NkuTzo+jxe34fRLu/SY5fv/3GQRCbSj2S0g+gYXqbfFXSoBpA9PczDlQWV7a85NauE4/ofKDJokgn6DUoMd9+KEaTo//ZMj3oq1VlGPMDdqjI3u0amCWZ475HR9FS53X2t70I28zKPqbKd9yr5hNPAxRECTwKGy2lGVs0QHCFOgMYYRURc5DQlztPkHeuKbPORe3SvZYU6Xr0TYeBqM3TjBY0E3mWhIA2nhF0WEoPZte+kcGDsyYSl2B8gyYN/XgReWPChJRWnTfXGyefX7zfz8j6CdCtodtebShkIb7kDRIsuYqOJ2hvo9PqBZXg4lupOYB40cou08U0gIsGBU7
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 07:20:38.0617
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 07:20:40.4627
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 982229cd-7456-47c7-6044-08df38b1cb59
+X-MS-Exchange-CrossTenant-Network-Message-Id: aae744e2-0bc6-4c5c-9970-08df38b1ccc3
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SJ1PEPF000037A5.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS3PR12MB999239
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF2EB7CF87B
 
-Expose io_bw and xgmi_bw directories on both drivers. Probe asks
-firmware which links accept HSMP_GET_IOLINK_BANDWITH and which link
-and bandwidth-type combinations accept HSMP_GET_XGMI_BANDWITH, and
-only those files are created. An io_bw read returns that link's
-aggregate bandwidth. An xgmi_bw read returns that link's aggregate,
-read, or write bandwidth.
+Expose dimm_sb_get and dimm_sb_set on both drivers. dimm_sb_get issues
+HSMP_DIMM_SB_RD and caches the request and data. A read returns that
+request and its data. Both stores reject extra arguments. dimm_sb_set
+writes a register with HSMP_DIMM_SB_WR.
 
 Co-developed-by: Suma Hegde <Suma.Hegde@amd.com>
 Signed-off-by: Suma Hegde <Suma.Hegde@amd.com>
 Signed-off-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
 ---
- Documentation/arch/x86/amd_hsmp.rst   |  10 +
- drivers/platform/x86/amd/hsmp/acpi.c  | 179 +++++++
- drivers/platform/x86/amd/hsmp/hsmp.c  | 161 ++++++
- drivers/platform/x86/amd/hsmp/hsmp.h  |  22 +
- drivers/platform/x86/amd/hsmp/plat.c  | 678 +++++++++++++++++++++++++-
- drivers/platform/x86/amd/hsmp/sysfs.c |  94 ++++
- drivers/platform/x86/amd/hsmp/sysfs.h |  18 +
- 7 files changed, 1159 insertions(+), 3 deletions(-)
+ Documentation/arch/x86/amd_hsmp.rst   |  10 ++
+ drivers/platform/x86/amd/hsmp/acpi.c  |  11 +-
+ drivers/platform/x86/amd/hsmp/plat.c  |  11 +-
+ drivers/platform/x86/amd/hsmp/sysfs.c | 190 ++++++++++++++++++++++++++
+ drivers/platform/x86/amd/hsmp/sysfs.h |  11 ++
+ 5 files changed, 231 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-index c63fc52316361..516e8391bfbd2 100644
+index 516e8391bfbd2..67f4c3b71f5e0 100644
 --- a/Documentation/arch/x86/amd_hsmp.rst
 +++ b/Documentation/arch/x86/amd_hsmp.rst
-@@ -135,6 +135,16 @@ write-only when the platform enables only that direction of the message.
-   Firmware rejects unsupported widths.
- * pcie_link_rate: Write-only. Sets the PCIe link rate control value
-   (HSMP_SET_PCI_RATE).
-+* io_bw/: Read-only IO link bandwidth in Mbps. Files are io_p0 through
-+  io_p5 and io_g0 through io_g7. A read returns the aggregate bandwidth.
-+  Probe keeps only the links firmware accepts for this platform. The
-+  directory is absent when none respond.
-+* xgmi_bw/: Read-only xGMI link bandwidth in Mbps. For each link p0
-+  through p5 and g0 through g7, the files are xgmi_<link>_agg,
-+  xgmi_<link>_rd, and xgmi_<link>_wr. A read returns that link's
-+  aggregate, read, or write bandwidth. Probe keeps only the link and
-+  type combinations firmware accepts. The directory is absent when
-+  none respond.
+@@ -145,6 +145,16 @@ write-only when the platform enables only that direction of the message.
+   aggregate, read, or write bandwidth. Probe keeps only the link and
+   type combinations firmware accepts. The directory is absent when
+   none respond.
++* dimm_sb_get: Read/write DIMM sideband read. Write
++  "<dimm_addr> <lid> <reg_offset> <reg_space>". Decimal and hexadecimal
++  values are accepted, and extra arguments are rejected. dimm_addr is
++  0-255, lid is 0-15, reg_offset is 0-2047, and reg_space is 0 or 1.
++  A read returns the last request and its data as
++  "0xAA 0xL 0xOFF S 0xDATA", or fails with -ENODATA until a read succeeds.
++* dimm_sb_set: Write-only DIMM sideband write. Write
++  "<dimm_addr> <lid> <reg_offset> <reg_space> <write_data>".
++  write_data is 0-255. Extra arguments are rejected. Field ranges match
++  dimm_sb_get.
  * socket_power_limit_max: Maximum socket power limit in mWatts (read only).
  * cclk_boost_limit: Socket boost limit in MHz (write only). Accepted range
    is 100-10000 MHz.
 diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 89c9e944b5537..d6bb8a849cca7 100644
+index d6bb8a849cca7..f2bd4d5369df5 100644
 --- a/drivers/platform/x86/amd/hsmp/acpi.c
 +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -440,6 +440,9 @@ static int init_acpi(struct device *dev)
- 			dev_err(dev, "Failed to get enabled HSMP messages on this platform\n");
- 			return ret;
- 		}
-+
-+		hsmp_scan_io_bw(sock);
-+		hsmp_scan_xgmi_bw(sock);
+@@ -358,8 +358,12 @@ static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
+ 	if (readable && writable) {
+ 		if (is_read_msg_enabled(sock, hattr->msg_id))
+ 			mode_updated |= mode & 0444;
+-		if (is_write_msg_enabled(sock, hattr->wr_msg_id))
++		if (hsmp_sysfs_write_follows_read(hattr)) {
++			if (is_read_msg_enabled(sock, hattr->msg_id))
++				mode_updated |= 0200;
++		} else if (is_write_msg_enabled(sock, hattr->wr_msg_id)) {
+ 			mode_updated |= 0200;
++		}
+ 		return mode_updated;
  	}
  
- 	if ((is_client_platform() &&
-@@ -555,6 +558,85 @@ HSMP_DEV_ATTR_RW(lclk_2, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
- 		 hsmp_lclk_2_show, hsmp_lclk_2_store, 0644);
- HSMP_DEV_ATTR_RW(lclk_3, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
- 		 hsmp_lclk_3_show, hsmp_lclk_3_store, 0644);
-+
-+#define HSMP_IO_LINK(_name, _id)					\
-+	HSMP_SYS_ATTR_PRIV(_name, _name, hsmp_io_link_bw_show, U16_MAX,	\
-+			   HSMP_GET_IOLINK_BANDWITH, _id)
-+
-+HSMP_IO_LINK(io_p0, 0);
-+HSMP_IO_LINK(io_p1, 1);
-+HSMP_IO_LINK(io_p2, 2);
-+HSMP_IO_LINK(io_p3, 3);
-+HSMP_IO_LINK(io_p4, 4);
-+HSMP_IO_LINK(io_p5, 5);
-+HSMP_IO_LINK(io_g0, 6);
-+HSMP_IO_LINK(io_g1, 7);
-+HSMP_IO_LINK(io_g2, 8);
-+HSMP_IO_LINK(io_g3, 9);
-+HSMP_IO_LINK(io_g4, 10);
-+HSMP_IO_LINK(io_g5, 11);
-+HSMP_IO_LINK(io_g6, 12);
-+HSMP_IO_LINK(io_g7, 13);
-+#undef HSMP_IO_LINK
-+
-+#define HSMP_XGMI_AGG(_link, _base)					\
-+	HSMP_SYS_ATTR_PRIV(xgmi_##_link##_agg, xgmi_##_link##_agg,	\
-+			   hsmp_xgmi_link_bw_show, U16_MAX,		\
-+			   HSMP_GET_XGMI_BANDWITH, (_base))
-+#define HSMP_XGMI_RD(_link, _base)					\
-+	HSMP_SYS_ATTR_PRIV(xgmi_##_link##_rd, xgmi_##_link##_rd,	\
-+			   hsmp_xgmi_link_bw_show, U16_MAX,		\
-+			   HSMP_GET_XGMI_BANDWITH, (_base) + 1)
-+#define HSMP_XGMI_WR(_link, _base)					\
-+	HSMP_SYS_ATTR_PRIV(xgmi_##_link##_wr, xgmi_##_link##_wr,	\
-+			   hsmp_xgmi_link_bw_show, U16_MAX,		\
-+			   HSMP_GET_XGMI_BANDWITH, (_base) + 2)
-+
-+HSMP_XGMI_AGG(p0, 0);
-+HSMP_XGMI_RD(p0, 0);
-+HSMP_XGMI_WR(p0, 0);
-+HSMP_XGMI_AGG(p1, 3);
-+HSMP_XGMI_RD(p1, 3);
-+HSMP_XGMI_WR(p1, 3);
-+HSMP_XGMI_AGG(p2, 6);
-+HSMP_XGMI_RD(p2, 6);
-+HSMP_XGMI_WR(p2, 6);
-+HSMP_XGMI_AGG(p3, 9);
-+HSMP_XGMI_RD(p3, 9);
-+HSMP_XGMI_WR(p3, 9);
-+HSMP_XGMI_AGG(p4, 12);
-+HSMP_XGMI_RD(p4, 12);
-+HSMP_XGMI_WR(p4, 12);
-+HSMP_XGMI_AGG(p5, 15);
-+HSMP_XGMI_RD(p5, 15);
-+HSMP_XGMI_WR(p5, 15);
-+HSMP_XGMI_AGG(g0, 18);
-+HSMP_XGMI_RD(g0, 18);
-+HSMP_XGMI_WR(g0, 18);
-+HSMP_XGMI_AGG(g1, 21);
-+HSMP_XGMI_RD(g1, 21);
-+HSMP_XGMI_WR(g1, 21);
-+HSMP_XGMI_AGG(g2, 24);
-+HSMP_XGMI_RD(g2, 24);
-+HSMP_XGMI_WR(g2, 24);
-+HSMP_XGMI_AGG(g3, 27);
-+HSMP_XGMI_RD(g3, 27);
-+HSMP_XGMI_WR(g3, 27);
-+HSMP_XGMI_AGG(g4, 30);
-+HSMP_XGMI_RD(g4, 30);
-+HSMP_XGMI_WR(g4, 30);
-+HSMP_XGMI_AGG(g5, 33);
-+HSMP_XGMI_RD(g5, 33);
-+HSMP_XGMI_WR(g5, 33);
-+HSMP_XGMI_AGG(g6, 36);
-+HSMP_XGMI_RD(g6, 36);
-+HSMP_XGMI_WR(g6, 36);
-+HSMP_XGMI_AGG(g7, 39);
-+HSMP_XGMI_RD(g7, 39);
-+HSMP_XGMI_WR(g7, 39);
-+#undef HSMP_XGMI_AGG
-+#undef HSMP_XGMI_RD
-+#undef HSMP_XGMI_WR
- HSMP_DEV_ATTR_W(cclk_boost_limit, HSMP_SET_BOOST_LIMIT_SOCKET,
- 		hsmp_cclk_boost_limit_store, 0200);
- HSMP_DEV_ATTR_RW(apb_disable, HSMP_SET_DF_PSTATE, HSMP_SET_DF_PSTATE,
-@@ -632,6 +714,101 @@ static const struct attribute_group lclk_group = {
- 	.is_visible = hsmp_lclk_is_visible,
- };
- 
-+static struct attribute *io_bw_attrs[] = {
-+	&hattr_io_p0.dattr.attr,
-+	&hattr_io_p1.dattr.attr,
-+	&hattr_io_p2.dattr.attr,
-+	&hattr_io_p3.dattr.attr,
-+	&hattr_io_p4.dattr.attr,
-+	&hattr_io_p5.dattr.attr,
-+	&hattr_io_g0.dattr.attr,
-+	&hattr_io_g1.dattr.attr,
-+	&hattr_io_g2.dattr.attr,
-+	&hattr_io_g3.dattr.attr,
-+	&hattr_io_g4.dattr.attr,
-+	&hattr_io_g5.dattr.attr,
-+	&hattr_io_g6.dattr.attr,
-+	&hattr_io_g7.dattr.attr,
-+	NULL
-+};
-+
-+static umode_t hsmp_io_bw_is_visible(struct kobject *kobj,
-+				     struct attribute *attr __always_unused,
-+				     int id)
-+{
-+	return hsmp_io_bw_file_visible(dev_get_drvdata(kobj_to_dev(kobj)), id);
-+}
-+
-+static const struct attribute_group io_bw_group = {
-+	.name = "io_bw",
-+	.attrs = io_bw_attrs,
-+	.is_visible = hsmp_io_bw_is_visible,
-+};
-+
-+#define HSMP_XGMI_ATTR(_link, _kind)					\
-+	(&hattr_xgmi_##_link##_##_kind.dattr.attr)
-+
-+static struct attribute *xgmi_bw_attrs[] = {
-+	HSMP_XGMI_ATTR(p0, agg),
-+	HSMP_XGMI_ATTR(p0, rd),
-+	HSMP_XGMI_ATTR(p0, wr),
-+	HSMP_XGMI_ATTR(p1, agg),
-+	HSMP_XGMI_ATTR(p1, rd),
-+	HSMP_XGMI_ATTR(p1, wr),
-+	HSMP_XGMI_ATTR(p2, agg),
-+	HSMP_XGMI_ATTR(p2, rd),
-+	HSMP_XGMI_ATTR(p2, wr),
-+	HSMP_XGMI_ATTR(p3, agg),
-+	HSMP_XGMI_ATTR(p3, rd),
-+	HSMP_XGMI_ATTR(p3, wr),
-+	HSMP_XGMI_ATTR(p4, agg),
-+	HSMP_XGMI_ATTR(p4, rd),
-+	HSMP_XGMI_ATTR(p4, wr),
-+	HSMP_XGMI_ATTR(p5, agg),
-+	HSMP_XGMI_ATTR(p5, rd),
-+	HSMP_XGMI_ATTR(p5, wr),
-+	HSMP_XGMI_ATTR(g0, agg),
-+	HSMP_XGMI_ATTR(g0, rd),
-+	HSMP_XGMI_ATTR(g0, wr),
-+	HSMP_XGMI_ATTR(g1, agg),
-+	HSMP_XGMI_ATTR(g1, rd),
-+	HSMP_XGMI_ATTR(g1, wr),
-+	HSMP_XGMI_ATTR(g2, agg),
-+	HSMP_XGMI_ATTR(g2, rd),
-+	HSMP_XGMI_ATTR(g2, wr),
-+	HSMP_XGMI_ATTR(g3, agg),
-+	HSMP_XGMI_ATTR(g3, rd),
-+	HSMP_XGMI_ATTR(g3, wr),
-+	HSMP_XGMI_ATTR(g4, agg),
-+	HSMP_XGMI_ATTR(g4, rd),
-+	HSMP_XGMI_ATTR(g4, wr),
-+	HSMP_XGMI_ATTR(g5, agg),
-+	HSMP_XGMI_ATTR(g5, rd),
-+	HSMP_XGMI_ATTR(g5, wr),
-+	HSMP_XGMI_ATTR(g6, agg),
-+	HSMP_XGMI_ATTR(g6, rd),
-+	HSMP_XGMI_ATTR(g6, wr),
-+	HSMP_XGMI_ATTR(g7, agg),
-+	HSMP_XGMI_ATTR(g7, rd),
-+	HSMP_XGMI_ATTR(g7, wr),
-+	NULL
-+};
-+
-+#undef HSMP_XGMI_ATTR
-+
-+static umode_t hsmp_xgmi_bw_is_visible(struct kobject *kobj,
-+				       struct attribute *attr __always_unused,
-+				       int id)
-+{
-+	return hsmp_xgmi_bw_file_visible(dev_get_drvdata(kobj_to_dev(kobj)), id);
-+}
-+
-+static const struct attribute_group xgmi_bw_group = {
-+	.name = "xgmi_bw",
-+	.attrs = xgmi_bw_attrs,
-+	.is_visible = hsmp_xgmi_bw_is_visible,
-+};
-+
- static const struct attribute_group hsmp_attr_grp = {
- 	.bin_attrs = hsmp_attr_list,
- 	.attrs = hsmp_dev_attr_list,
-@@ -642,6 +819,8 @@ static const struct attribute_group hsmp_attr_grp = {
- static const struct attribute_group *hsmp_groups[] = {
- 	&hsmp_attr_grp,
- 	&lclk_group,
-+	&io_bw_group,
-+	&xgmi_bw_group,
- 	NULL
- };
- 
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 4f23ae836a900..80721b13074d2 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -12,6 +12,7 @@
- #include <linux/acpi.h>
- #include <linux/array_size.h>
- #include <linux/bitmap.h>
-+#include <linux/bits.h>
- #include <linux/build_bug.h>
- #include <linux/cleanup.h>
- #include <linux/compiler.h>
-@@ -23,6 +24,7 @@
- #include <linux/rwsem.h>
- #include <linux/semaphore.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include <linux/sysfs.h>
- #include <linux/uaccess.h>
- 
-@@ -918,6 +920,165 @@ static int hsmp_set_default_msg_bitmap(u16 sock_ind)
- 	return hsmp_fetch_write_enabled_msgs(sock_ind, sock->enabled_write_msg_ids);
- }
- 
-+struct hsmp_io_link_enc {
-+	const char *name;
-+	u16 enc;
-+};
-+
-+/* Protocol 5 and 7: one-hot link encoding. */
-+static const struct hsmp_io_link_enc io_links_onehot[] = {
-+	{ "p0", BIT(0) }, { "p1", BIT(1) }, { "p2", BIT(2) }, { "p3", BIT(3) },
-+	{ "p4", BIT(8) }, { "p5", BIT(9) },
-+	{ "g0", BIT(4) }, { "g1", BIT(5) }, { "g2", BIT(6) }, { "g3", BIT(7) },
-+};
-+
-+/* MI300 (family 0x19, models 0x90-0x9F): index encoding. */
-+static const struct hsmp_io_link_enc io_links_mi300[] = {
-+	{ "p2", 0x3 }, { "p3", 0x4 }, { "g0", 0x8 }, { "g1", 0x9 },
-+	{ "g2", 0xA }, { "g3", 0xB }, { "g4", 0xC }, { "g5", 0xD },
-+	{ "g6", 0xE }, { "g7", 0xF },
-+};
-+
-+/* Bit index is the io_bw attribute id. */
-+static const char * const io_link_names[HSMP_IO_LINK_COUNT] = {
-+	"p0", "p1", "p2", "p3", "p4", "p5",
-+	"g0", "g1", "g2", "g3", "g4", "g5", "g6", "g7",
-+};
-+
-+static bool hsmp_io_link_is_mi300(void)
-+{
-+	return boot_cpu_data.x86 == 0x19 &&
-+	       boot_cpu_data.x86_model >= 0x90 &&
-+	       boot_cpu_data.x86_model <= 0x9F;
-+}
-+
-+static const struct hsmp_io_link_enc *hsmp_io_link_table(size_t *n)
-+{
-+	if (hsmp_io_link_is_mi300()) {
-+		*n = ARRAY_SIZE(io_links_mi300);
-+		return io_links_mi300;
-+	}
-+
-+	*n = ARRAY_SIZE(io_links_onehot);
-+	return io_links_onehot;
-+}
-+
-+int hsmp_io_link_encode(unsigned int id, u16 *enc)
-+{
-+	const struct hsmp_io_link_enc *tbl;
-+	size_t i, n;
-+
-+	if (!enc || id >= HSMP_IO_LINK_COUNT)
-+		return -EINVAL;
-+
-+	tbl = hsmp_io_link_table(&n);
-+	for (i = 0; i < n; i++) {
-+		if (!strcmp(io_link_names[id], tbl[i].name)) {
-+			*enc = tbl[i].enc;
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_NS_GPL(hsmp_io_link_encode, "AMD_HSMP");
-+
-+/*
-+ * Probe each candidate link and record the ones firmware accepts.
-+ * Caller holds hsmp_sock_rwsem for write.
-+ */
-+void hsmp_scan_io_bw(struct hsmp_socket *sock)
-+{
-+	unsigned int i;
-+
-+	if (!sock)
-+		return;
-+
-+	sock->io_bw_valid = 0;
-+	if (is_client_platform() ||
-+	    !is_read_msg_enabled(sock, HSMP_GET_IOLINK_BANDWITH))
-+		return;
-+
-+	for (i = 0; i < HSMP_IO_LINK_COUNT; i++) {
-+		struct hsmp_message msg = {};
-+		u16 enc;
-+
-+		if (hsmp_io_link_encode(i, &enc))
-+			continue;
-+
-+		msg.msg_id = HSMP_GET_IOLINK_BANDWITH;
-+		msg.sock_ind = sock->sock_ind;
-+		msg.num_args = 1;
-+		msg.response_sz = 1;
-+		/* Aggregate bandwidth type in [2:0], link encoding in [15:8]. */
-+		msg.args[0] = 1 | ((u32)enc << 8);
-+		if (!hsmp_send_message_locked(&msg))
-+			sock->io_bw_valid |= BIT(i);
-+	}
-+}
-+EXPORT_SYMBOL_NS_GPL(hsmp_scan_io_bw, "AMD_HSMP");
-+
-+/* Bandwidth type in args[0][2:0]: aggregate, read, then write. */
-+static const u8 xgmi_bw_types[HSMP_XGMI_BW_TYPES] = {
-+	BIT(0), BIT(1), BIT(2),
-+};
-+
-+/*
-+ * Pack HSMP_GET_XGMI_BANDWITH args[0] for xgmi_bw attribute @id.
-+ * Link encoding is the same as io_bw; the type sits in [2:0].
-+ */
-+int hsmp_xgmi_bw_arg(unsigned int id, u32 *arg)
-+{
-+	unsigned int link, type;
-+	u16 enc;
-+	int ret;
-+
-+	if (!arg || id >= HSMP_XGMI_BW_COUNT)
-+		return -EINVAL;
-+
-+	link = id / HSMP_XGMI_BW_TYPES;
-+	type = id % HSMP_XGMI_BW_TYPES;
-+	ret = hsmp_io_link_encode(link, &enc);
-+	if (ret)
-+		return ret;
-+
-+	*arg = xgmi_bw_types[type] | ((u32)enc << 8);
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(hsmp_xgmi_bw_arg, "AMD_HSMP");
-+
-+/*
-+ * Probe each candidate link and bandwidth type. Record the ones
-+ * firmware accepts. Caller holds hsmp_sock_rwsem for write.
-+ */
-+void hsmp_scan_xgmi_bw(struct hsmp_socket *sock)
-+{
-+	unsigned int i;
-+
-+	if (!sock)
-+		return;
-+
-+	sock->xgmi_bw_valid = 0;
-+	if (is_client_platform() ||
-+	    !is_read_msg_enabled(sock, HSMP_GET_XGMI_BANDWITH))
-+		return;
-+
-+	for (i = 0; i < HSMP_XGMI_BW_COUNT; i++) {
-+		struct hsmp_message msg = {};
-+
-+		if (hsmp_xgmi_bw_arg(i, &msg.args[0]))
-+			continue;
-+
-+		msg.msg_id = HSMP_GET_XGMI_BANDWITH;
-+		msg.sock_ind = sock->sock_ind;
-+		msg.num_args = 1;
-+		msg.response_sz = 1;
-+		if (!hsmp_send_message_locked(&msg))
-+			sock->xgmi_bw_valid |= BIT_ULL(i);
-+	}
-+}
-+EXPORT_SYMBOL_NS_GPL(hsmp_scan_xgmi_bw, "AMD_HSMP");
-+
- static void hsmp_dynamic_bitmap_zen6(u16 sock_ind)
- {
- 	struct hsmp_socket *sock = &hsmp_pdev.sock[sock_ind];
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index e67bbdd2b9bee..b41080c0f9555 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -83,6 +83,17 @@ struct hsmp_socket {
- 	u32 proto_ver;
- 	DECLARE_BITMAP(enabled_read_msg_ids, HSMP_MAX_MSGS);
- 	DECLARE_BITMAP(enabled_write_msg_ids, HSMP_MAX_MSGS);
-+	/*
-+	 * Links that answered HSMP_GET_IOLINK_BANDWITH at probe.
-+	 * Bit index matches io_bw/io_p0 .. io_g7 attribute order.
-+	 */
-+	u16 io_bw_valid;
-+	/*
-+	 * Link and bandwidth-type combinations that answered
-+	 * HSMP_GET_XGMI_BANDWITH at probe. Bit index is
-+	 * link * 3 + type, matching xgmi_bw/xgmi_<link>_{agg,rd,wr}.
-+	 */
-+	u64 xgmi_bw_valid;
- 	int (*amd_hsmp_rdwr)(struct hsmp_socket *sock, u32 off, u32 *val, bool rw);
- };
- 
-@@ -131,6 +142,17 @@ static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return
- #endif
- int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args);
- 
-+/* io_bw attribute order: p0 p1 p2 p3 p4 p5 g0 g1 g2 g3 g4 g5 g6 g7. */
-+#define HSMP_IO_LINK_COUNT	14
-+int hsmp_io_link_encode(unsigned int id, u16 *enc);
-+void hsmp_scan_io_bw(struct hsmp_socket *sock);
-+
-+/* xgmi_bw files per link: aggregate, read, write. */
-+#define HSMP_XGMI_BW_TYPES	3
-+#define HSMP_XGMI_BW_COUNT	(HSMP_IO_LINK_COUNT * HSMP_XGMI_BW_TYPES)
-+int hsmp_xgmi_bw_arg(unsigned int id, u32 *arg);
-+void hsmp_scan_xgmi_bw(struct hsmp_socket *sock);
-+
- /*
-  * Gates the HSMP data plane: hsmp_send_message() takes it for read; probe and
-  * remove take it for write to bring sockets up and tear them down.
+@@ -550,6 +554,9 @@ HSMP_DEV_ATTR_W(gmi3_link_width, HSMP_SET_GMI3_WIDTH,
+ 		hsmp_gmi3_link_width_store, 0200);
+ HSMP_DEV_ATTR_W(pcie_link_rate, HSMP_SET_PCI_RATE,
+ 		hsmp_pcie_link_rate_store, 0200);
++HSMP_DEV_ATTR_RW(dimm_sb_get, HSMP_DIMM_SB_RD, HSMP_DIMM_SB_RD,
++		 hsmp_dimm_sb_get_show, hsmp_dimm_sb_get_store, 0644);
++HSMP_DEV_ATTR_W(dimm_sb_set, HSMP_DIMM_SB_WR, hsmp_dimm_sb_set_store, 0200);
+ HSMP_DEV_ATTR_RW(lclk_0, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
+ 		 hsmp_lclk_0_show, hsmp_lclk_0_store, 0644);
+ HSMP_DEV_ATTR_RW(lclk_1, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
+@@ -673,6 +680,8 @@ static struct attribute *hsmp_dev_attr_list[] = {
+ 	&hattr_xgmi_width.dattr.attr,
+ 	&hattr_gmi3_link_width.dattr.attr,
+ 	&hattr_pcie_link_rate.dattr.attr,
++	&hattr_dimm_sb_get.dattr.attr,
++	&hattr_dimm_sb_set.dattr.attr,
+ 	&hattr_socket_power.dattr.attr,
+ 	&hattr_cclk_boost_limit.dattr.attr,
+ 	&hattr_tdelta.dattr.attr,
 diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index 162a5b1468a76..3af94db6fd5b7 100644
+index 3af94db6fd5b7..46676d9f90633 100644
 --- a/drivers/platform/x86/amd/hsmp/plat.c
 +++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -393,6 +393,476 @@ HSMP_DEV_ATTR_RW_X8(lclk_2, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
- 		    hsmp_lclk_2_show, hsmp_lclk_2_store, 0644);
- HSMP_DEV_ATTR_RW_X8(lclk_3, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
- 		    hsmp_lclk_3_show, hsmp_lclk_3_store, 0644);
-+
-+#define HSMP_IO_LINK(_name, _id, _sock)					\
-+	HSMP_SYS_ATTR_PRIV(_name##_##_sock, _name, hsmp_io_link_bw_show, \
-+			   _sock, HSMP_GET_IOLINK_BANDWITH, _id)
-+
-+HSMP_IO_LINK(io_p0, 0, 0);
-+HSMP_IO_LINK(io_p0, 0, 1);
-+HSMP_IO_LINK(io_p0, 0, 2);
-+HSMP_IO_LINK(io_p0, 0, 3);
-+HSMP_IO_LINK(io_p0, 0, 4);
-+HSMP_IO_LINK(io_p0, 0, 5);
-+HSMP_IO_LINK(io_p0, 0, 6);
-+HSMP_IO_LINK(io_p0, 0, 7);
-+HSMP_IO_LINK(io_p1, 1, 0);
-+HSMP_IO_LINK(io_p1, 1, 1);
-+HSMP_IO_LINK(io_p1, 1, 2);
-+HSMP_IO_LINK(io_p1, 1, 3);
-+HSMP_IO_LINK(io_p1, 1, 4);
-+HSMP_IO_LINK(io_p1, 1, 5);
-+HSMP_IO_LINK(io_p1, 1, 6);
-+HSMP_IO_LINK(io_p1, 1, 7);
-+HSMP_IO_LINK(io_p2, 2, 0);
-+HSMP_IO_LINK(io_p2, 2, 1);
-+HSMP_IO_LINK(io_p2, 2, 2);
-+HSMP_IO_LINK(io_p2, 2, 3);
-+HSMP_IO_LINK(io_p2, 2, 4);
-+HSMP_IO_LINK(io_p2, 2, 5);
-+HSMP_IO_LINK(io_p2, 2, 6);
-+HSMP_IO_LINK(io_p2, 2, 7);
-+HSMP_IO_LINK(io_p3, 3, 0);
-+HSMP_IO_LINK(io_p3, 3, 1);
-+HSMP_IO_LINK(io_p3, 3, 2);
-+HSMP_IO_LINK(io_p3, 3, 3);
-+HSMP_IO_LINK(io_p3, 3, 4);
-+HSMP_IO_LINK(io_p3, 3, 5);
-+HSMP_IO_LINK(io_p3, 3, 6);
-+HSMP_IO_LINK(io_p3, 3, 7);
-+HSMP_IO_LINK(io_p4, 4, 0);
-+HSMP_IO_LINK(io_p4, 4, 1);
-+HSMP_IO_LINK(io_p4, 4, 2);
-+HSMP_IO_LINK(io_p4, 4, 3);
-+HSMP_IO_LINK(io_p4, 4, 4);
-+HSMP_IO_LINK(io_p4, 4, 5);
-+HSMP_IO_LINK(io_p4, 4, 6);
-+HSMP_IO_LINK(io_p4, 4, 7);
-+HSMP_IO_LINK(io_p5, 5, 0);
-+HSMP_IO_LINK(io_p5, 5, 1);
-+HSMP_IO_LINK(io_p5, 5, 2);
-+HSMP_IO_LINK(io_p5, 5, 3);
-+HSMP_IO_LINK(io_p5, 5, 4);
-+HSMP_IO_LINK(io_p5, 5, 5);
-+HSMP_IO_LINK(io_p5, 5, 6);
-+HSMP_IO_LINK(io_p5, 5, 7);
-+HSMP_IO_LINK(io_g0, 6, 0);
-+HSMP_IO_LINK(io_g0, 6, 1);
-+HSMP_IO_LINK(io_g0, 6, 2);
-+HSMP_IO_LINK(io_g0, 6, 3);
-+HSMP_IO_LINK(io_g0, 6, 4);
-+HSMP_IO_LINK(io_g0, 6, 5);
-+HSMP_IO_LINK(io_g0, 6, 6);
-+HSMP_IO_LINK(io_g0, 6, 7);
-+HSMP_IO_LINK(io_g1, 7, 0);
-+HSMP_IO_LINK(io_g1, 7, 1);
-+HSMP_IO_LINK(io_g1, 7, 2);
-+HSMP_IO_LINK(io_g1, 7, 3);
-+HSMP_IO_LINK(io_g1, 7, 4);
-+HSMP_IO_LINK(io_g1, 7, 5);
-+HSMP_IO_LINK(io_g1, 7, 6);
-+HSMP_IO_LINK(io_g1, 7, 7);
-+HSMP_IO_LINK(io_g2, 8, 0);
-+HSMP_IO_LINK(io_g2, 8, 1);
-+HSMP_IO_LINK(io_g2, 8, 2);
-+HSMP_IO_LINK(io_g2, 8, 3);
-+HSMP_IO_LINK(io_g2, 8, 4);
-+HSMP_IO_LINK(io_g2, 8, 5);
-+HSMP_IO_LINK(io_g2, 8, 6);
-+HSMP_IO_LINK(io_g2, 8, 7);
-+HSMP_IO_LINK(io_g3, 9, 0);
-+HSMP_IO_LINK(io_g3, 9, 1);
-+HSMP_IO_LINK(io_g3, 9, 2);
-+HSMP_IO_LINK(io_g3, 9, 3);
-+HSMP_IO_LINK(io_g3, 9, 4);
-+HSMP_IO_LINK(io_g3, 9, 5);
-+HSMP_IO_LINK(io_g3, 9, 6);
-+HSMP_IO_LINK(io_g3, 9, 7);
-+HSMP_IO_LINK(io_g4, 10, 0);
-+HSMP_IO_LINK(io_g4, 10, 1);
-+HSMP_IO_LINK(io_g4, 10, 2);
-+HSMP_IO_LINK(io_g4, 10, 3);
-+HSMP_IO_LINK(io_g4, 10, 4);
-+HSMP_IO_LINK(io_g4, 10, 5);
-+HSMP_IO_LINK(io_g4, 10, 6);
-+HSMP_IO_LINK(io_g4, 10, 7);
-+HSMP_IO_LINK(io_g5, 11, 0);
-+HSMP_IO_LINK(io_g5, 11, 1);
-+HSMP_IO_LINK(io_g5, 11, 2);
-+HSMP_IO_LINK(io_g5, 11, 3);
-+HSMP_IO_LINK(io_g5, 11, 4);
-+HSMP_IO_LINK(io_g5, 11, 5);
-+HSMP_IO_LINK(io_g5, 11, 6);
-+HSMP_IO_LINK(io_g5, 11, 7);
-+HSMP_IO_LINK(io_g6, 12, 0);
-+HSMP_IO_LINK(io_g6, 12, 1);
-+HSMP_IO_LINK(io_g6, 12, 2);
-+HSMP_IO_LINK(io_g6, 12, 3);
-+HSMP_IO_LINK(io_g6, 12, 4);
-+HSMP_IO_LINK(io_g6, 12, 5);
-+HSMP_IO_LINK(io_g6, 12, 6);
-+HSMP_IO_LINK(io_g6, 12, 7);
-+HSMP_IO_LINK(io_g7, 13, 0);
-+HSMP_IO_LINK(io_g7, 13, 1);
-+HSMP_IO_LINK(io_g7, 13, 2);
-+HSMP_IO_LINK(io_g7, 13, 3);
-+HSMP_IO_LINK(io_g7, 13, 4);
-+HSMP_IO_LINK(io_g7, 13, 5);
-+HSMP_IO_LINK(io_g7, 13, 6);
-+HSMP_IO_LINK(io_g7, 13, 7);
-+#undef HSMP_IO_LINK
-+#define HSMP_XGMI_AGG(_link, _base, _sock)				\
-+	HSMP_SYS_ATTR_PRIV(xgmi_##_link##_agg_##_sock,			\
-+			   xgmi_##_link##_agg, hsmp_xgmi_link_bw_show,	\
-+			   _sock, HSMP_GET_XGMI_BANDWITH, (_base))
-+#define HSMP_XGMI_RD(_link, _base, _sock)				\
-+	HSMP_SYS_ATTR_PRIV(xgmi_##_link##_rd_##_sock,			\
-+			   xgmi_##_link##_rd, hsmp_xgmi_link_bw_show,	\
-+			   _sock, HSMP_GET_XGMI_BANDWITH, (_base) + 1)
-+#define HSMP_XGMI_WR(_link, _base, _sock)				\
-+	HSMP_SYS_ATTR_PRIV(xgmi_##_link##_wr_##_sock,			\
-+			   xgmi_##_link##_wr, hsmp_xgmi_link_bw_show,	\
-+			   _sock, HSMP_GET_XGMI_BANDWITH, (_base) + 2)
-+
-+HSMP_XGMI_AGG(p0, 0, 0);
-+HSMP_XGMI_RD(p0, 0, 0);
-+HSMP_XGMI_WR(p0, 0, 0);
-+HSMP_XGMI_AGG(p0, 0, 1);
-+HSMP_XGMI_RD(p0, 0, 1);
-+HSMP_XGMI_WR(p0, 0, 1);
-+HSMP_XGMI_AGG(p0, 0, 2);
-+HSMP_XGMI_RD(p0, 0, 2);
-+HSMP_XGMI_WR(p0, 0, 2);
-+HSMP_XGMI_AGG(p0, 0, 3);
-+HSMP_XGMI_RD(p0, 0, 3);
-+HSMP_XGMI_WR(p0, 0, 3);
-+HSMP_XGMI_AGG(p0, 0, 4);
-+HSMP_XGMI_RD(p0, 0, 4);
-+HSMP_XGMI_WR(p0, 0, 4);
-+HSMP_XGMI_AGG(p0, 0, 5);
-+HSMP_XGMI_RD(p0, 0, 5);
-+HSMP_XGMI_WR(p0, 0, 5);
-+HSMP_XGMI_AGG(p0, 0, 6);
-+HSMP_XGMI_RD(p0, 0, 6);
-+HSMP_XGMI_WR(p0, 0, 6);
-+HSMP_XGMI_AGG(p0, 0, 7);
-+HSMP_XGMI_RD(p0, 0, 7);
-+HSMP_XGMI_WR(p0, 0, 7);
-+HSMP_XGMI_AGG(p1, 3, 0);
-+HSMP_XGMI_RD(p1, 3, 0);
-+HSMP_XGMI_WR(p1, 3, 0);
-+HSMP_XGMI_AGG(p1, 3, 1);
-+HSMP_XGMI_RD(p1, 3, 1);
-+HSMP_XGMI_WR(p1, 3, 1);
-+HSMP_XGMI_AGG(p1, 3, 2);
-+HSMP_XGMI_RD(p1, 3, 2);
-+HSMP_XGMI_WR(p1, 3, 2);
-+HSMP_XGMI_AGG(p1, 3, 3);
-+HSMP_XGMI_RD(p1, 3, 3);
-+HSMP_XGMI_WR(p1, 3, 3);
-+HSMP_XGMI_AGG(p1, 3, 4);
-+HSMP_XGMI_RD(p1, 3, 4);
-+HSMP_XGMI_WR(p1, 3, 4);
-+HSMP_XGMI_AGG(p1, 3, 5);
-+HSMP_XGMI_RD(p1, 3, 5);
-+HSMP_XGMI_WR(p1, 3, 5);
-+HSMP_XGMI_AGG(p1, 3, 6);
-+HSMP_XGMI_RD(p1, 3, 6);
-+HSMP_XGMI_WR(p1, 3, 6);
-+HSMP_XGMI_AGG(p1, 3, 7);
-+HSMP_XGMI_RD(p1, 3, 7);
-+HSMP_XGMI_WR(p1, 3, 7);
-+HSMP_XGMI_AGG(p2, 6, 0);
-+HSMP_XGMI_RD(p2, 6, 0);
-+HSMP_XGMI_WR(p2, 6, 0);
-+HSMP_XGMI_AGG(p2, 6, 1);
-+HSMP_XGMI_RD(p2, 6, 1);
-+HSMP_XGMI_WR(p2, 6, 1);
-+HSMP_XGMI_AGG(p2, 6, 2);
-+HSMP_XGMI_RD(p2, 6, 2);
-+HSMP_XGMI_WR(p2, 6, 2);
-+HSMP_XGMI_AGG(p2, 6, 3);
-+HSMP_XGMI_RD(p2, 6, 3);
-+HSMP_XGMI_WR(p2, 6, 3);
-+HSMP_XGMI_AGG(p2, 6, 4);
-+HSMP_XGMI_RD(p2, 6, 4);
-+HSMP_XGMI_WR(p2, 6, 4);
-+HSMP_XGMI_AGG(p2, 6, 5);
-+HSMP_XGMI_RD(p2, 6, 5);
-+HSMP_XGMI_WR(p2, 6, 5);
-+HSMP_XGMI_AGG(p2, 6, 6);
-+HSMP_XGMI_RD(p2, 6, 6);
-+HSMP_XGMI_WR(p2, 6, 6);
-+HSMP_XGMI_AGG(p2, 6, 7);
-+HSMP_XGMI_RD(p2, 6, 7);
-+HSMP_XGMI_WR(p2, 6, 7);
-+HSMP_XGMI_AGG(p3, 9, 0);
-+HSMP_XGMI_RD(p3, 9, 0);
-+HSMP_XGMI_WR(p3, 9, 0);
-+HSMP_XGMI_AGG(p3, 9, 1);
-+HSMP_XGMI_RD(p3, 9, 1);
-+HSMP_XGMI_WR(p3, 9, 1);
-+HSMP_XGMI_AGG(p3, 9, 2);
-+HSMP_XGMI_RD(p3, 9, 2);
-+HSMP_XGMI_WR(p3, 9, 2);
-+HSMP_XGMI_AGG(p3, 9, 3);
-+HSMP_XGMI_RD(p3, 9, 3);
-+HSMP_XGMI_WR(p3, 9, 3);
-+HSMP_XGMI_AGG(p3, 9, 4);
-+HSMP_XGMI_RD(p3, 9, 4);
-+HSMP_XGMI_WR(p3, 9, 4);
-+HSMP_XGMI_AGG(p3, 9, 5);
-+HSMP_XGMI_RD(p3, 9, 5);
-+HSMP_XGMI_WR(p3, 9, 5);
-+HSMP_XGMI_AGG(p3, 9, 6);
-+HSMP_XGMI_RD(p3, 9, 6);
-+HSMP_XGMI_WR(p3, 9, 6);
-+HSMP_XGMI_AGG(p3, 9, 7);
-+HSMP_XGMI_RD(p3, 9, 7);
-+HSMP_XGMI_WR(p3, 9, 7);
-+HSMP_XGMI_AGG(p4, 12, 0);
-+HSMP_XGMI_RD(p4, 12, 0);
-+HSMP_XGMI_WR(p4, 12, 0);
-+HSMP_XGMI_AGG(p4, 12, 1);
-+HSMP_XGMI_RD(p4, 12, 1);
-+HSMP_XGMI_WR(p4, 12, 1);
-+HSMP_XGMI_AGG(p4, 12, 2);
-+HSMP_XGMI_RD(p4, 12, 2);
-+HSMP_XGMI_WR(p4, 12, 2);
-+HSMP_XGMI_AGG(p4, 12, 3);
-+HSMP_XGMI_RD(p4, 12, 3);
-+HSMP_XGMI_WR(p4, 12, 3);
-+HSMP_XGMI_AGG(p4, 12, 4);
-+HSMP_XGMI_RD(p4, 12, 4);
-+HSMP_XGMI_WR(p4, 12, 4);
-+HSMP_XGMI_AGG(p4, 12, 5);
-+HSMP_XGMI_RD(p4, 12, 5);
-+HSMP_XGMI_WR(p4, 12, 5);
-+HSMP_XGMI_AGG(p4, 12, 6);
-+HSMP_XGMI_RD(p4, 12, 6);
-+HSMP_XGMI_WR(p4, 12, 6);
-+HSMP_XGMI_AGG(p4, 12, 7);
-+HSMP_XGMI_RD(p4, 12, 7);
-+HSMP_XGMI_WR(p4, 12, 7);
-+HSMP_XGMI_AGG(p5, 15, 0);
-+HSMP_XGMI_RD(p5, 15, 0);
-+HSMP_XGMI_WR(p5, 15, 0);
-+HSMP_XGMI_AGG(p5, 15, 1);
-+HSMP_XGMI_RD(p5, 15, 1);
-+HSMP_XGMI_WR(p5, 15, 1);
-+HSMP_XGMI_AGG(p5, 15, 2);
-+HSMP_XGMI_RD(p5, 15, 2);
-+HSMP_XGMI_WR(p5, 15, 2);
-+HSMP_XGMI_AGG(p5, 15, 3);
-+HSMP_XGMI_RD(p5, 15, 3);
-+HSMP_XGMI_WR(p5, 15, 3);
-+HSMP_XGMI_AGG(p5, 15, 4);
-+HSMP_XGMI_RD(p5, 15, 4);
-+HSMP_XGMI_WR(p5, 15, 4);
-+HSMP_XGMI_AGG(p5, 15, 5);
-+HSMP_XGMI_RD(p5, 15, 5);
-+HSMP_XGMI_WR(p5, 15, 5);
-+HSMP_XGMI_AGG(p5, 15, 6);
-+HSMP_XGMI_RD(p5, 15, 6);
-+HSMP_XGMI_WR(p5, 15, 6);
-+HSMP_XGMI_AGG(p5, 15, 7);
-+HSMP_XGMI_RD(p5, 15, 7);
-+HSMP_XGMI_WR(p5, 15, 7);
-+HSMP_XGMI_AGG(g0, 18, 0);
-+HSMP_XGMI_RD(g0, 18, 0);
-+HSMP_XGMI_WR(g0, 18, 0);
-+HSMP_XGMI_AGG(g0, 18, 1);
-+HSMP_XGMI_RD(g0, 18, 1);
-+HSMP_XGMI_WR(g0, 18, 1);
-+HSMP_XGMI_AGG(g0, 18, 2);
-+HSMP_XGMI_RD(g0, 18, 2);
-+HSMP_XGMI_WR(g0, 18, 2);
-+HSMP_XGMI_AGG(g0, 18, 3);
-+HSMP_XGMI_RD(g0, 18, 3);
-+HSMP_XGMI_WR(g0, 18, 3);
-+HSMP_XGMI_AGG(g0, 18, 4);
-+HSMP_XGMI_RD(g0, 18, 4);
-+HSMP_XGMI_WR(g0, 18, 4);
-+HSMP_XGMI_AGG(g0, 18, 5);
-+HSMP_XGMI_RD(g0, 18, 5);
-+HSMP_XGMI_WR(g0, 18, 5);
-+HSMP_XGMI_AGG(g0, 18, 6);
-+HSMP_XGMI_RD(g0, 18, 6);
-+HSMP_XGMI_WR(g0, 18, 6);
-+HSMP_XGMI_AGG(g0, 18, 7);
-+HSMP_XGMI_RD(g0, 18, 7);
-+HSMP_XGMI_WR(g0, 18, 7);
-+HSMP_XGMI_AGG(g1, 21, 0);
-+HSMP_XGMI_RD(g1, 21, 0);
-+HSMP_XGMI_WR(g1, 21, 0);
-+HSMP_XGMI_AGG(g1, 21, 1);
-+HSMP_XGMI_RD(g1, 21, 1);
-+HSMP_XGMI_WR(g1, 21, 1);
-+HSMP_XGMI_AGG(g1, 21, 2);
-+HSMP_XGMI_RD(g1, 21, 2);
-+HSMP_XGMI_WR(g1, 21, 2);
-+HSMP_XGMI_AGG(g1, 21, 3);
-+HSMP_XGMI_RD(g1, 21, 3);
-+HSMP_XGMI_WR(g1, 21, 3);
-+HSMP_XGMI_AGG(g1, 21, 4);
-+HSMP_XGMI_RD(g1, 21, 4);
-+HSMP_XGMI_WR(g1, 21, 4);
-+HSMP_XGMI_AGG(g1, 21, 5);
-+HSMP_XGMI_RD(g1, 21, 5);
-+HSMP_XGMI_WR(g1, 21, 5);
-+HSMP_XGMI_AGG(g1, 21, 6);
-+HSMP_XGMI_RD(g1, 21, 6);
-+HSMP_XGMI_WR(g1, 21, 6);
-+HSMP_XGMI_AGG(g1, 21, 7);
-+HSMP_XGMI_RD(g1, 21, 7);
-+HSMP_XGMI_WR(g1, 21, 7);
-+HSMP_XGMI_AGG(g2, 24, 0);
-+HSMP_XGMI_RD(g2, 24, 0);
-+HSMP_XGMI_WR(g2, 24, 0);
-+HSMP_XGMI_AGG(g2, 24, 1);
-+HSMP_XGMI_RD(g2, 24, 1);
-+HSMP_XGMI_WR(g2, 24, 1);
-+HSMP_XGMI_AGG(g2, 24, 2);
-+HSMP_XGMI_RD(g2, 24, 2);
-+HSMP_XGMI_WR(g2, 24, 2);
-+HSMP_XGMI_AGG(g2, 24, 3);
-+HSMP_XGMI_RD(g2, 24, 3);
-+HSMP_XGMI_WR(g2, 24, 3);
-+HSMP_XGMI_AGG(g2, 24, 4);
-+HSMP_XGMI_RD(g2, 24, 4);
-+HSMP_XGMI_WR(g2, 24, 4);
-+HSMP_XGMI_AGG(g2, 24, 5);
-+HSMP_XGMI_RD(g2, 24, 5);
-+HSMP_XGMI_WR(g2, 24, 5);
-+HSMP_XGMI_AGG(g2, 24, 6);
-+HSMP_XGMI_RD(g2, 24, 6);
-+HSMP_XGMI_WR(g2, 24, 6);
-+HSMP_XGMI_AGG(g2, 24, 7);
-+HSMP_XGMI_RD(g2, 24, 7);
-+HSMP_XGMI_WR(g2, 24, 7);
-+HSMP_XGMI_AGG(g3, 27, 0);
-+HSMP_XGMI_RD(g3, 27, 0);
-+HSMP_XGMI_WR(g3, 27, 0);
-+HSMP_XGMI_AGG(g3, 27, 1);
-+HSMP_XGMI_RD(g3, 27, 1);
-+HSMP_XGMI_WR(g3, 27, 1);
-+HSMP_XGMI_AGG(g3, 27, 2);
-+HSMP_XGMI_RD(g3, 27, 2);
-+HSMP_XGMI_WR(g3, 27, 2);
-+HSMP_XGMI_AGG(g3, 27, 3);
-+HSMP_XGMI_RD(g3, 27, 3);
-+HSMP_XGMI_WR(g3, 27, 3);
-+HSMP_XGMI_AGG(g3, 27, 4);
-+HSMP_XGMI_RD(g3, 27, 4);
-+HSMP_XGMI_WR(g3, 27, 4);
-+HSMP_XGMI_AGG(g3, 27, 5);
-+HSMP_XGMI_RD(g3, 27, 5);
-+HSMP_XGMI_WR(g3, 27, 5);
-+HSMP_XGMI_AGG(g3, 27, 6);
-+HSMP_XGMI_RD(g3, 27, 6);
-+HSMP_XGMI_WR(g3, 27, 6);
-+HSMP_XGMI_AGG(g3, 27, 7);
-+HSMP_XGMI_RD(g3, 27, 7);
-+HSMP_XGMI_WR(g3, 27, 7);
-+HSMP_XGMI_AGG(g4, 30, 0);
-+HSMP_XGMI_RD(g4, 30, 0);
-+HSMP_XGMI_WR(g4, 30, 0);
-+HSMP_XGMI_AGG(g4, 30, 1);
-+HSMP_XGMI_RD(g4, 30, 1);
-+HSMP_XGMI_WR(g4, 30, 1);
-+HSMP_XGMI_AGG(g4, 30, 2);
-+HSMP_XGMI_RD(g4, 30, 2);
-+HSMP_XGMI_WR(g4, 30, 2);
-+HSMP_XGMI_AGG(g4, 30, 3);
-+HSMP_XGMI_RD(g4, 30, 3);
-+HSMP_XGMI_WR(g4, 30, 3);
-+HSMP_XGMI_AGG(g4, 30, 4);
-+HSMP_XGMI_RD(g4, 30, 4);
-+HSMP_XGMI_WR(g4, 30, 4);
-+HSMP_XGMI_AGG(g4, 30, 5);
-+HSMP_XGMI_RD(g4, 30, 5);
-+HSMP_XGMI_WR(g4, 30, 5);
-+HSMP_XGMI_AGG(g4, 30, 6);
-+HSMP_XGMI_RD(g4, 30, 6);
-+HSMP_XGMI_WR(g4, 30, 6);
-+HSMP_XGMI_AGG(g4, 30, 7);
-+HSMP_XGMI_RD(g4, 30, 7);
-+HSMP_XGMI_WR(g4, 30, 7);
-+HSMP_XGMI_AGG(g5, 33, 0);
-+HSMP_XGMI_RD(g5, 33, 0);
-+HSMP_XGMI_WR(g5, 33, 0);
-+HSMP_XGMI_AGG(g5, 33, 1);
-+HSMP_XGMI_RD(g5, 33, 1);
-+HSMP_XGMI_WR(g5, 33, 1);
-+HSMP_XGMI_AGG(g5, 33, 2);
-+HSMP_XGMI_RD(g5, 33, 2);
-+HSMP_XGMI_WR(g5, 33, 2);
-+HSMP_XGMI_AGG(g5, 33, 3);
-+HSMP_XGMI_RD(g5, 33, 3);
-+HSMP_XGMI_WR(g5, 33, 3);
-+HSMP_XGMI_AGG(g5, 33, 4);
-+HSMP_XGMI_RD(g5, 33, 4);
-+HSMP_XGMI_WR(g5, 33, 4);
-+HSMP_XGMI_AGG(g5, 33, 5);
-+HSMP_XGMI_RD(g5, 33, 5);
-+HSMP_XGMI_WR(g5, 33, 5);
-+HSMP_XGMI_AGG(g5, 33, 6);
-+HSMP_XGMI_RD(g5, 33, 6);
-+HSMP_XGMI_WR(g5, 33, 6);
-+HSMP_XGMI_AGG(g5, 33, 7);
-+HSMP_XGMI_RD(g5, 33, 7);
-+HSMP_XGMI_WR(g5, 33, 7);
-+HSMP_XGMI_AGG(g6, 36, 0);
-+HSMP_XGMI_RD(g6, 36, 0);
-+HSMP_XGMI_WR(g6, 36, 0);
-+HSMP_XGMI_AGG(g6, 36, 1);
-+HSMP_XGMI_RD(g6, 36, 1);
-+HSMP_XGMI_WR(g6, 36, 1);
-+HSMP_XGMI_AGG(g6, 36, 2);
-+HSMP_XGMI_RD(g6, 36, 2);
-+HSMP_XGMI_WR(g6, 36, 2);
-+HSMP_XGMI_AGG(g6, 36, 3);
-+HSMP_XGMI_RD(g6, 36, 3);
-+HSMP_XGMI_WR(g6, 36, 3);
-+HSMP_XGMI_AGG(g6, 36, 4);
-+HSMP_XGMI_RD(g6, 36, 4);
-+HSMP_XGMI_WR(g6, 36, 4);
-+HSMP_XGMI_AGG(g6, 36, 5);
-+HSMP_XGMI_RD(g6, 36, 5);
-+HSMP_XGMI_WR(g6, 36, 5);
-+HSMP_XGMI_AGG(g6, 36, 6);
-+HSMP_XGMI_RD(g6, 36, 6);
-+HSMP_XGMI_WR(g6, 36, 6);
-+HSMP_XGMI_AGG(g6, 36, 7);
-+HSMP_XGMI_RD(g6, 36, 7);
-+HSMP_XGMI_WR(g6, 36, 7);
-+HSMP_XGMI_AGG(g7, 39, 0);
-+HSMP_XGMI_RD(g7, 39, 0);
-+HSMP_XGMI_WR(g7, 39, 0);
-+HSMP_XGMI_AGG(g7, 39, 1);
-+HSMP_XGMI_RD(g7, 39, 1);
-+HSMP_XGMI_WR(g7, 39, 1);
-+HSMP_XGMI_AGG(g7, 39, 2);
-+HSMP_XGMI_RD(g7, 39, 2);
-+HSMP_XGMI_WR(g7, 39, 2);
-+HSMP_XGMI_AGG(g7, 39, 3);
-+HSMP_XGMI_RD(g7, 39, 3);
-+HSMP_XGMI_WR(g7, 39, 3);
-+HSMP_XGMI_AGG(g7, 39, 4);
-+HSMP_XGMI_RD(g7, 39, 4);
-+HSMP_XGMI_WR(g7, 39, 4);
-+HSMP_XGMI_AGG(g7, 39, 5);
-+HSMP_XGMI_RD(g7, 39, 5);
-+HSMP_XGMI_WR(g7, 39, 5);
-+HSMP_XGMI_AGG(g7, 39, 6);
-+HSMP_XGMI_RD(g7, 39, 6);
-+HSMP_XGMI_WR(g7, 39, 6);
-+HSMP_XGMI_AGG(g7, 39, 7);
-+HSMP_XGMI_RD(g7, 39, 7);
-+HSMP_XGMI_WR(g7, 39, 7);
-+#undef HSMP_XGMI_AGG
-+#undef HSMP_XGMI_RD
-+#undef HSMP_XGMI_WR
- HSMP_DEV_ATTR_X8(socket_power, HSMP_GET_SOCKET_POWER, hsmp_msg_resp32_show,
- 		 0444);
- HSMP_DEV_ATTR_W_X8(cclk_boost_limit, HSMP_SET_BOOST_LIMIT_SOCKET,
-@@ -544,6 +1014,174 @@ static const struct attribute_group *hsmp_sock_lclk_grps[] = {
- 	&sock7_lclk_grp,
- };
- 
-+#define HSMP_IO_BW_LIST(_s)						\
-+static struct attribute *sock##_s##_iobw_attrs[] = {			\
-+	&hattr_io_p0_##_s.dattr.attr,					\
-+	&hattr_io_p1_##_s.dattr.attr,					\
-+	&hattr_io_p2_##_s.dattr.attr,					\
-+	&hattr_io_p3_##_s.dattr.attr,					\
-+	&hattr_io_p4_##_s.dattr.attr,					\
-+	&hattr_io_p5_##_s.dattr.attr,					\
-+	&hattr_io_g0_##_s.dattr.attr,					\
-+	&hattr_io_g1_##_s.dattr.attr,					\
-+	&hattr_io_g2_##_s.dattr.attr,					\
-+	&hattr_io_g3_##_s.dattr.attr,					\
-+	&hattr_io_g4_##_s.dattr.attr,					\
-+	&hattr_io_g5_##_s.dattr.attr,					\
-+	&hattr_io_g6_##_s.dattr.attr,					\
-+	&hattr_io_g7_##_s.dattr.attr,					\
-+	NULL								\
-+}
-+
-+HSMP_IO_BW_LIST(0);
-+HSMP_IO_BW_LIST(1);
-+HSMP_IO_BW_LIST(2);
-+HSMP_IO_BW_LIST(3);
-+HSMP_IO_BW_LIST(4);
-+HSMP_IO_BW_LIST(5);
-+HSMP_IO_BW_LIST(6);
-+HSMP_IO_BW_LIST(7);
-+#undef HSMP_IO_BW_LIST
-+
-+static umode_t hsmp_plat_io_bw_is_visible(struct kobject *kobj __always_unused,
-+					  struct attribute *attr, int id)
-+{
-+	struct device_attribute *dattr = container_of(attr, struct device_attribute, attr);
-+	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(dattr);
-+	struct hsmp_socket *sock = NULL;
-+
-+	if (hsmp_pdev && hattr->sock_ind < hsmp_pdev->num_sockets)
-+		sock = &hsmp_pdev->sock[hattr->sock_ind];
-+
-+	return hsmp_io_bw_file_visible(sock, id);
-+}
-+
-+#define HSMP_IO_BW_GRP(index)						\
-+static const struct attribute_group sock##index##_iobw_grp = {		\
-+	.name = "io_bw",						\
-+	.attrs = sock##index##_iobw_attrs,				\
-+	.is_visible = hsmp_plat_io_bw_is_visible,			\
-+}
-+
-+HSMP_IO_BW_GRP(0);
-+HSMP_IO_BW_GRP(1);
-+HSMP_IO_BW_GRP(2);
-+HSMP_IO_BW_GRP(3);
-+HSMP_IO_BW_GRP(4);
-+HSMP_IO_BW_GRP(5);
-+HSMP_IO_BW_GRP(6);
-+HSMP_IO_BW_GRP(7);
-+#undef HSMP_IO_BW_GRP
-+
-+static const struct attribute_group *hsmp_sock_iobw_grps[] = {
-+	&sock0_iobw_grp,
-+	&sock1_iobw_grp,
-+	&sock2_iobw_grp,
-+	&sock3_iobw_grp,
-+	&sock4_iobw_grp,
-+	&sock5_iobw_grp,
-+	&sock6_iobw_grp,
-+	&sock7_iobw_grp,
-+};
-+
-+#define HSMP_XGMI_BW_LIST(_s)						\
-+static struct attribute *sock##_s##_xgmibw_attrs[] = {			\
-+	&hattr_xgmi_p0_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_p0_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_p0_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_p1_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_p1_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_p1_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_p2_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_p2_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_p2_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_p3_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_p3_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_p3_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_p4_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_p4_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_p4_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_p5_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_p5_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_p5_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g0_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g0_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g0_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g1_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g1_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g1_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g2_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g2_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g2_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g3_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g3_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g3_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g4_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g4_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g4_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g5_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g5_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g5_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g6_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g6_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g6_wr_##_s.dattr.attr,				\
-+	&hattr_xgmi_g7_agg_##_s.dattr.attr,				\
-+	&hattr_xgmi_g7_rd_##_s.dattr.attr,				\
-+	&hattr_xgmi_g7_wr_##_s.dattr.attr,				\
-+	NULL								\
-+}
-+
-+HSMP_XGMI_BW_LIST(0);
-+HSMP_XGMI_BW_LIST(1);
-+HSMP_XGMI_BW_LIST(2);
-+HSMP_XGMI_BW_LIST(3);
-+HSMP_XGMI_BW_LIST(4);
-+HSMP_XGMI_BW_LIST(5);
-+HSMP_XGMI_BW_LIST(6);
-+HSMP_XGMI_BW_LIST(7);
-+#undef HSMP_XGMI_BW_LIST
-+
-+static umode_t hsmp_plat_xgmi_bw_is_visible(struct kobject *kobj __always_unused,
-+					    struct attribute *attr, int id)
-+{
-+	struct device_attribute *dattr = container_of(attr, struct device_attribute, attr);
-+	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(dattr);
-+	struct hsmp_socket *sock = NULL;
-+
-+	if (hsmp_pdev && hattr->sock_ind < hsmp_pdev->num_sockets)
-+		sock = &hsmp_pdev->sock[hattr->sock_ind];
-+
-+	return hsmp_xgmi_bw_file_visible(sock, id);
-+}
-+
-+#define HSMP_XGMI_BW_GRP(index)						\
-+static const struct attribute_group sock##index##_xgmibw_grp = {	\
-+	.name = "xgmi_bw",						\
-+	.attrs = sock##index##_xgmibw_attrs,				\
-+	.is_visible = hsmp_plat_xgmi_bw_is_visible,			\
-+}
-+
-+HSMP_XGMI_BW_GRP(0);
-+HSMP_XGMI_BW_GRP(1);
-+HSMP_XGMI_BW_GRP(2);
-+HSMP_XGMI_BW_GRP(3);
-+HSMP_XGMI_BW_GRP(4);
-+HSMP_XGMI_BW_GRP(5);
-+HSMP_XGMI_BW_GRP(6);
-+HSMP_XGMI_BW_GRP(7);
-+#undef HSMP_XGMI_BW_GRP
-+
-+static const struct attribute_group *hsmp_sock_xgmibw_grps[] = {
-+	&sock0_xgmibw_grp,
-+	&sock1_xgmibw_grp,
-+	&sock2_xgmibw_grp,
-+	&sock3_xgmibw_grp,
-+	&sock4_xgmibw_grp,
-+	&sock5_xgmibw_grp,
-+	&sock6_xgmibw_grp,
-+	&sock7_xgmibw_grp,
-+};
-+
- static inline bool is_f1a_m0h(void)
- {
- 	if (boot_cpu_data.x86 == 0x1A && boot_cpu_data.x86_model <= 0x0F)
-@@ -603,6 +1241,9 @@ static int init_platform_device(struct device *dev)
- 				dev_err(dev, "Failed to get enabled HSMP messages on this platform\n");
- 				return ret;
- 			}
-+
-+			hsmp_scan_io_bw(sock);
-+			hsmp_scan_xgmi_bw(sock);
- 		}
- 
- 		if (sock->proto_ver == HSMP_PROTO_VER6) {
-@@ -681,6 +1322,8 @@ static void hsmp_remove_plat_sock_kobjs(void)
- 		if (!hsmp_plat_sock_kobj[i])
- 			continue;
- 
-+		sysfs_remove_group(hsmp_plat_sock_kobj[i], hsmp_sock_xgmibw_grps[i]);
-+		sysfs_remove_group(hsmp_plat_sock_kobj[i], hsmp_sock_iobw_grps[i]);
- 		sysfs_remove_group(hsmp_plat_sock_kobj[i], hsmp_sock_lclk_grps[i]);
- 		sysfs_remove_group(hsmp_plat_sock_kobj[i], hsmp_sock_attr_grps[i]);
- 		kobject_put(hsmp_plat_sock_kobj[i]);
-@@ -700,9 +1343,9 @@ static int hsmp_create_socket_sysfs(struct device *dev)
+@@ -124,8 +124,12 @@ static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
+ 	if (readable && writable) {
+ 		if (is_read_msg_enabled(sock, hattr->msg_id))
+ 			mode_updated |= mode & 0444;
+-		if (is_write_msg_enabled(sock, hattr->wr_msg_id))
++		if (hsmp_sysfs_write_follows_read(hattr)) {
++			if (is_read_msg_enabled(sock, hattr->msg_id))
++				mode_updated |= 0200;
++		} else if (is_write_msg_enabled(sock, hattr->wr_msg_id)) {
+ 			mode_updated |= 0200;
++		}
+ 		return mode_updated;
  	}
  
- 	/*
--	 * socketN is a kobject so it can hold both the socket attributes and
--	 * an lclk_dpm_range/ subdirectory. Attribute groups can only add one
--	 * directory level under a kobject.
-+	 * socketN is a kobject so it can hold the socket attributes and the
-+	 * nested lclk_dpm_range, io_bw, and xgmi_bw directories. Attribute
-+	 * groups add one directory level under that kobject.
- 	 */
- 	for (i = 0; i < hsmp_pdev->num_sockets; i++) {
- 		hsmp_plat_sock_kobj[i] = kobject_create_and_add(hsmp_plat_sock_names[i],
-@@ -735,6 +1378,35 @@ static int hsmp_create_socket_sysfs(struct device *dev)
- 			hsmp_plat_sock_kobj[i] = NULL;
- 			goto err;
- 		}
-+
-+		ret = sysfs_create_group(hsmp_plat_sock_kobj[i],
-+					 hsmp_sock_iobw_grps[i]);
-+		if (ret) {
-+			dev_err(dev, "Failed to create %s io_bw attributes\n",
-+				hsmp_plat_sock_names[i]);
-+			sysfs_remove_group(hsmp_plat_sock_kobj[i],
-+					   hsmp_sock_lclk_grps[i]);
-+			sysfs_remove_group(hsmp_plat_sock_kobj[i],
-+					   hsmp_sock_attr_grps[i]);
-+			kobject_put(hsmp_plat_sock_kobj[i]);
-+			hsmp_plat_sock_kobj[i] = NULL;
-+			goto err;
-+		}
-+		ret = sysfs_create_group(hsmp_plat_sock_kobj[i],
-+					 hsmp_sock_xgmibw_grps[i]);
-+		if (ret) {
-+			dev_err(dev, "Failed to create %s xgmi_bw attributes\n",
-+				hsmp_plat_sock_names[i]);
-+			sysfs_remove_group(hsmp_plat_sock_kobj[i],
-+					   hsmp_sock_iobw_grps[i]);
-+			sysfs_remove_group(hsmp_plat_sock_kobj[i],
-+					   hsmp_sock_lclk_grps[i]);
-+			sysfs_remove_group(hsmp_plat_sock_kobj[i],
-+					   hsmp_sock_attr_grps[i]);
-+			kobject_put(hsmp_plat_sock_kobj[i]);
-+			hsmp_plat_sock_kobj[i] = NULL;
-+			goto err;
-+		}
- 	}
- 
- 	return 0;
+@@ -385,6 +389,9 @@ HSMP_DEV_ATTR_W_X8(gmi3_link_width, HSMP_SET_GMI3_WIDTH,
+ 		   hsmp_gmi3_link_width_store, 0200);
+ HSMP_DEV_ATTR_W_X8(pcie_link_rate, HSMP_SET_PCI_RATE,
+ 		   hsmp_pcie_link_rate_store, 0200);
++HSMP_DEV_ATTR_RW_X8(dimm_sb_get, HSMP_DIMM_SB_RD, HSMP_DIMM_SB_RD,
++		    hsmp_dimm_sb_get_show, hsmp_dimm_sb_get_store, 0644);
++HSMP_DEV_ATTR_W_X8(dimm_sb_set, HSMP_DIMM_SB_WR, hsmp_dimm_sb_set_store, 0200);
+ HSMP_DEV_ATTR_RW_X8(lclk_0, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
+ 		    hsmp_lclk_0_show, hsmp_lclk_0_store, 0644);
+ HSMP_DEV_ATTR_RW_X8(lclk_1, HSMP_GET_NBIO_DPM_LEVEL, HSMP_SET_NBIO_DPM_LEVEL,
+@@ -904,6 +911,8 @@ static struct attribute _name[] = {					       \
+ 	&hattr_xgmi_width##_sock_ind.dattr.attr,			       \
+ 	&hattr_gmi3_link_width##_sock_ind.dattr.attr,			       \
+ 	&hattr_pcie_link_rate##_sock_ind.dattr.attr,			       \
++	&hattr_dimm_sb_get##_sock_ind.dattr.attr,			       \
++	&hattr_dimm_sb_set##_sock_ind.dattr.attr,			       \
+ 	&hattr_socket_power##_sock_ind.dattr.attr,			       \
+ 	&hattr_cclk_boost_limit##_sock_ind.dattr.attr,		       \
+ 	&hattr_tdelta##_sock_ind.dattr.attr,				       \
 diff --git a/drivers/platform/x86/amd/hsmp/sysfs.c b/drivers/platform/x86/amd/hsmp/sysfs.c
-index 77bb9c70c1c7f..73010a889eaca 100644
+index 73010a889eaca..bcf1b802b3287 100644
 --- a/drivers/platform/x86/amd/hsmp/sysfs.c
 +++ b/drivers/platform/x86/amd/hsmp/sysfs.c
-@@ -986,6 +986,100 @@ ssize_t hsmp_pcie_link_rate_store(struct device *dev,
+@@ -7,6 +7,8 @@
+  * Common sysfs helpers shared by ACPI and platform HSMP drivers.
+  */
+ 
++#include <asm/amd/node.h>
++
+ #include <linux/array_size.h>
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
+@@ -986,6 +988,14 @@ ssize_t hsmp_pcie_link_rate_store(struct device *dev,
  	return count;
  }
  
++bool hsmp_sysfs_write_follows_read(const struct hsmp_sys_attr *hattr)
++{
++	/*
++	 * dimm_sb_get's store issues HSMP_DIMM_SB_RD, which is a GET, so
++	 * the write bit follows the GET message bitmap.
++	 */
++	return hattr->msg_id == HSMP_DIMM_SB_RD;
++}
+ 
+ /* IO link bandwidth. priv is the io_bw attribute index. */
+ ssize_t hsmp_io_link_bw_show(struct device *dev, struct device_attribute *attr,
+@@ -1080,6 +1090,186 @@ umode_t hsmp_xgmi_bw_file_visible(const struct hsmp_socket *sock, int id)
+ 	return (sock->xgmi_bw_valid & BIT_ULL(id)) ? 0444 : 0;
+ }
+ 
++struct dimm_sb_cfg {
++	u8 addr;
++	u8 lid;
++	u16 reg_offset;
++	u8 reg_space;
++	u16 result;
++	bool configured;
++};
 +
-+/* IO link bandwidth. priv is the io_bw attribute index. */
-+ssize_t hsmp_io_link_bw_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
++static struct dimm_sb_cfg dimm_sb[MAX_AMD_NUM_NODES];
++
++static struct dimm_sb_cfg *dimm_sb_state(struct device *dev,
++					 struct device_attribute *attr)
 +{
 +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	u16 sock_ind = hsmp_sysfs_sock_ind(dev, hattr);
++
++	if (sock_ind >= MAX_AMD_NUM_NODES)
++		return NULL;
++
++	return &dimm_sb[sock_ind];
++}
++
++static int dimm_sb_parse(struct device *dev, const char *attr_name,
++			 const char *buf, bool with_data, int *addr, int *lid,
++			 int *off, int *space, int *data)
++{
++	u32 vals[5];
++	int n = with_data ? 5 : 4;
++	int ret;
++	int got;
++
++	/* Accept decimal and 0x-prefixed hexadecimal. */
++	ret = hsmp_parse_u32_args(buf, vals, n, 0, &got);
++	if (ret) {
++		if (with_data)
++			hsmp_err(dev, attr_name, HSMP_ERR_ARGC,
++				 "want=5 got=%d fmt=\"dimm_addr lid reg_offset reg_space write_data\" input=hex_or_dec",
++				  got);
++		else
++			hsmp_err(dev, attr_name, HSMP_ERR_ARGC,
++				 "want=4 got=%d fmt=\"dimm_addr lid reg_offset reg_space\" input=hex_or_dec",
++				  got);
++		return -EINVAL;
++	}
++
++	if (vals[0] > 255 || vals[1] > 15 || vals[2] > 2047 || vals[3] > 1 ||
++	    (with_data && vals[4] > 255)) {
++		if (with_data)
++			hsmp_err(dev, attr_name, HSMP_ERR_RANGE,
++				 "dimm_addr=0x%x lid=0x%x reg_offset=0x%x reg_space=%u write_data=%u valid_dimm_addr=0-255 valid_lid=0-15 valid_reg_offset=0-2047 valid_reg_space=0-1 valid_write_data=0-255",
++				  vals[0], vals[1], vals[2], vals[3], vals[4]);
++		else
++			hsmp_err(dev, attr_name, HSMP_ERR_RANGE,
++				 "dimm_addr=0x%x lid=0x%x reg_offset=0x%x reg_space=%u valid_dimm_addr=0-255 valid_lid=0-15 valid_reg_offset=0-2047 valid_reg_space=0-1",
++				  vals[0], vals[1], vals[2], vals[3]);
++		return -EINVAL;
++	}
++
++	*addr = vals[0];
++	*lid = vals[1];
++	*off = vals[2];
++	*space = vals[3];
++	if (with_data)
++		*data = vals[4];
++
++	return 0;
++}
++
++static u32 dimm_sb_pack(int addr, int lid, int off, int space, int data)
++{
++	return (addr & 0xff) |
++	       ((lid & 0xf) << 8) |
++	       ((off & 0x7ff) << 12) |
++	       ((space & 1) << 23) |
++	       ((data & 0xff) << 24);
++}
++
++/*
++ * Last DIMM sideband read request and its data, or -ENODATA if none has
++ * succeeded. Fields are address, LID, offset, reg space, and data.
++ */
++ssize_t hsmp_dimm_sb_get_show(struct device *dev, struct device_attribute *attr,
++			      char *buf)
++{
++	struct dimm_sb_cfg *cfg = dimm_sb_state(dev, attr);
++
++	if (!cfg)
++		return -EINVAL;
++	if (!cfg->configured)
++		return -ENODATA;
++
++	return sysfs_emit(buf, "0x%x 0x%x 0x%x %u 0x%x\n",
++			  cfg->addr, cfg->lid, cfg->reg_offset, cfg->reg_space,
++			  cfg->result);
++}
++
++/* Issue HSMP_DIMM_SB_RD and cache the request and the returned data. */
++ssize_t hsmp_dimm_sb_get_store(struct device *dev, struct device_attribute *attr,
++			       const char *buf, size_t count)
++{
++	struct dimm_sb_cfg *cfg = dimm_sb_state(dev, attr);
 +	struct hsmp_message msg = {};
-+	u16 sock_ind, enc;
++	int addr, lid, off, space;
 +	int ret;
 +
-+	sock_ind = hsmp_sysfs_sock_ind(dev, hattr);
-+	if (sock_ind == U16_MAX)
++	if (!cfg)
 +		return -EINVAL;
 +
-+	ret = hsmp_io_link_encode(hattr->priv, &enc);
++	ret = dimm_sb_parse(dev, "dimm_sb_get", buf, false, &addr, &lid, &off, &space, NULL);
 +	if (ret)
 +		return ret;
 +
 +	/*
-+	 * HSMP_GET_IOLINK_BANDWITH: link encoding in [15:8], aggregate
-+	 * bandwidth type 1 in [2:0]. Output is bandwidth in Mbps.
++	 * HSMP_DIMM_SB_RD: reg space[23] + reg offset[22:12] +
++	 * LID[11:8] + DIMM address[7:0].
 +	 */
-+	msg.msg_id = HSMP_GET_IOLINK_BANDWITH;
-+	msg.sock_ind = sock_ind;
++	msg.msg_id = HSMP_DIMM_SB_RD;
++	msg.sock_ind = hsmp_sysfs_sock_ind(dev, to_hsmp_sys_attr(attr));
 +	msg.num_args = 1;
 +	msg.response_sz = 1;
-+	msg.args[0] = 1 | ((u32)enc << 8);
++	msg.args[0] = dimm_sb_pack(addr, lid, off, space, 0);
 +
 +	ret = hsmp_send_message(&msg);
-+	if (ret)
++	if (ret) {
++		hsmp_err(dev, "dimm_sb_get", HSMP_ERR_HW,
++			 "dimm_addr=0x%x lid=0x%x reg_offset=0x%x reg_space=%u rc=%d",
++			  addr, lid, off, space, ret);
 +		return ret;
++	}
 +
-+	return sysfs_emit(buf, "%u\n", msg.args[0]);
++	cfg->addr = addr;
++	cfg->lid = lid;
++	cfg->reg_offset = off;
++	cfg->reg_space = space;
++	cfg->result = msg.args[0] & 0xffff;
++	cfg->configured = true;
++
++	return count;
 +}
 +
-+umode_t hsmp_io_bw_file_visible(const struct hsmp_socket *sock, int id)
-+{
-+	if (!sock || is_client_platform() ||
-+	    !is_read_msg_enabled(sock, HSMP_GET_IOLINK_BANDWITH) ||
-+	    !sock->io_bw_valid)
-+		return id ? 0 : SYSFS_GROUP_INVISIBLE;
-+
-+	if (id < 0 || id >= HSMP_IO_LINK_COUNT)
-+		return 0;
-+
-+	return (sock->io_bw_valid & BIT(id)) ? 0444 : 0;
-+}
-+
-+/* xGMI link bandwidth. priv is link * 3 + type (agg, rd, wr). */
-+ssize_t hsmp_xgmi_link_bw_show(struct device *dev, struct device_attribute *attr,
-+			       char *buf)
++/* Write one DIMM sideband register via HSMP_DIMM_SB_WR. */
++ssize_t hsmp_dimm_sb_set_store(struct device *dev, struct device_attribute *attr,
++			       const char *buf, size_t count)
 +{
 +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
 +	struct hsmp_message msg = {};
++	int addr, lid, off, space, data;
 +	u16 sock_ind;
 +	int ret;
 +
 +	sock_ind = hsmp_sysfs_sock_ind(dev, hattr);
-+	if (sock_ind == U16_MAX)
++	if (sock_ind >= MAX_AMD_NUM_NODES)
 +		return -EINVAL;
 +
-+	/*
-+	 * HSMP_GET_XGMI_BANDWITH: link encoding in [15:8], bandwidth
-+	 * type in [2:0]. Output is bandwidth in Mbps.
-+	 */
-+	ret = hsmp_xgmi_bw_arg(hattr->priv, &msg.args[0]);
++	ret = dimm_sb_parse(dev, "dimm_sb_set", buf, true, &addr, &lid, &off, &space, &data);
 +	if (ret)
 +		return ret;
 +
-+	msg.msg_id = HSMP_GET_XGMI_BANDWITH;
++	/*
++	 * HSMP_DIMM_SB_WR: write data[31:24] + reg space[23] +
++	 * reg offset[22:12] + LID[11:8] + DIMM address[7:0].
++	 */
++	msg.msg_id = HSMP_DIMM_SB_WR;
 +	msg.sock_ind = sock_ind;
 +	msg.num_args = 1;
-+	msg.response_sz = 1;
++	msg.response_sz = 0;
++	msg.args[0] = dimm_sb_pack(addr, lid, off, space, data);
 +
 +	ret = hsmp_send_message(&msg);
-+	if (ret)
++	if (ret) {
++		hsmp_err(dev, "dimm_sb_set", HSMP_ERR_HW,
++			 "dimm_addr=0x%x lid=0x%x reg_offset=0x%x reg_space=%u write_data=%u rc=%d",
++			  addr, lid, off, space, data, ret);
 +		return ret;
++	}
 +
-+	return sysfs_emit(buf, "%u\n", msg.args[0]);
-+}
-+
-+umode_t hsmp_xgmi_bw_file_visible(const struct hsmp_socket *sock, int id)
-+{
-+	if (!sock || is_client_platform() ||
-+	    !is_read_msg_enabled(sock, HSMP_GET_XGMI_BANDWITH) ||
-+	    !sock->xgmi_bw_valid)
-+		return id ? 0 : SYSFS_GROUP_INVISIBLE;
-+
-+	if (id < 0 || id >= HSMP_XGMI_BW_COUNT)
-+		return 0;
-+
-+	return (sock->xgmi_bw_valid & BIT_ULL(id)) ? 0444 : 0;
++	return count;
 +}
 +
  static ssize_t hsmp_lclk_nbio_show(struct device *dev,
  				   struct device_attribute *attr,
  				   u8 nbio_id, char *buf)
 diff --git a/drivers/platform/x86/amd/hsmp/sysfs.h b/drivers/platform/x86/amd/hsmp/sysfs.h
-index eb364fbc338bd..83358304da97b 100644
+index 83358304da97b..2e7064df871bb 100644
 --- a/drivers/platform/x86/amd/hsmp/sysfs.h
 +++ b/drivers/platform/x86/amd/hsmp/sysfs.h
-@@ -23,6 +23,7 @@ struct hsmp_sys_attr {
- 	u16 sock_ind;
- 	u32 msg_id;	/* message ID used for read / GET enable checks */
- 	u32 wr_msg_id;	/* message ID used for write / SET enable checks */
-+	unsigned int priv;
- };
+@@ -158,7 +158,18 @@ umode_t hsmp_io_bw_file_visible(const struct hsmp_socket *sock, int id);
+ ssize_t hsmp_xgmi_link_bw_show(struct device *dev, struct device_attribute *attr,
+ 			       char *buf);
+ umode_t hsmp_xgmi_bw_file_visible(const struct hsmp_socket *sock, int id);
++ssize_t hsmp_dimm_sb_get_show(struct device *dev, struct device_attribute *attr,
++			      char *buf);
++ssize_t hsmp_dimm_sb_get_store(struct device *dev, struct device_attribute *attr,
++			       const char *buf, size_t count);
++ssize_t hsmp_dimm_sb_set_store(struct device *dev, struct device_attribute *attr,
++			       const char *buf, size_t count);
  
- #define DDR_MAX_BW_MASK		GENMASK(31, 20)
-@@ -52,6 +53,16 @@ static struct hsmp_sys_attr hattr_##_var = {				\
- 	.wr_msg_id = _wr_msg_id,					\
- }
- 
-+/* Read-only attribute with a private index in @priv. */
-+#define HSMP_SYS_ATTR_PRIV(_var, _name, _show, _sock_ind, _msg_id, _priv) \
-+static struct hsmp_sys_attr hattr_##_var = {				\
-+	.dattr = __ATTR(_name, 0444, _show, NULL),			\
-+	.sock_ind = _sock_ind,						\
-+	.msg_id = _msg_id,						\
-+	.wr_msg_id = _msg_id,						\
-+	.priv = _priv,							\
-+}
-+
- ssize_t hsmp_msg_resp32_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf);
- ssize_t hsmp_msg_resp32_hex_show(struct device *dev, struct device_attribute *attr,
-@@ -141,6 +152,13 @@ ssize_t hsmp_lclk_3_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf);
- ssize_t hsmp_lclk_3_store(struct device *dev, struct device_attribute *attr,
- 			  const char *buf, size_t count);
-+ssize_t hsmp_io_link_bw_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf);
-+umode_t hsmp_io_bw_file_visible(const struct hsmp_socket *sock, int id);
-+ssize_t hsmp_xgmi_link_bw_show(struct device *dev, struct device_attribute *attr,
-+			       char *buf);
-+umode_t hsmp_xgmi_bw_file_visible(const struct hsmp_socket *sock, int id);
-+
++/*
++ * True when the attribute store issues a GET, or only records state for
++ * a later GET. The write bit then follows the GET message bitmap.
++ */
++bool hsmp_sysfs_write_follows_read(const struct hsmp_sys_attr *hattr);
  
  void hsmp_create_per_cpu_kobjects(struct device *dev, struct kobject *cpu_parent,
  				  struct hsmp_socket *sock);
