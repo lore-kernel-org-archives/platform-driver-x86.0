@@ -1,88 +1,113 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793617553;
-	b=WnIwNZcJbkuXzZo6EjckYN+ulyivP4KLm2pgkgTglnRLWhYiKNDOyfYWJSwvoGvvAhW8
-	 8y0MoMTS7hCdoFKmvpXlEG8s1uwrmhidlVOLjJTmf5w0mO0eOCF3rlXm1ixPXBPrZnIhR
-	 5ek1NsmLD4hqUZWroDZyYlpelW5Yf5PvCKsQNsAbIJIm6YiYoxr0mdPnFvquaQAe2Shcw
-	 9f/fdK1ytwXD/ToN//qW8JdsfxWxHSS6IL8ijavAXrDNHmqVdrAtAm4UcOThqlIsE2MXf
-	 Y7+efRFPR6bJQxnvLAI8KawMa2rFzrfZ25gVZcoip/B9w5RfLT4V2sbt+bzslFeqp5w==
+	t=1793617586;
+	b=FS01jL9UiO4JWQXeR6E4m25jIlkxinQXXIhcNfrYcCsCR0kTL0o7y0LmqHXU/etXuDYL
+	 4ZlNp1e4U+Zh7YMLdF2ajGlMyrtrkJQUYv4Al+iNwHTsm5vQK75GaSnVDc5daijgZ/lOf
+	 WA3KoMgB24gFfdgOz5IH8GRqBcYfw8Gzs0QfqEFrBOhJzcwyzOmUFnucDj5RR6zciPQvz
+	 F3nh/EB0bLFG/ixnb8ITv2EcA7IuTZT47YPFYTv+WNvy7uW6UvbaPW+B1ikTaYBM4Lud1
+	 J+t+J65iH2UwSikf6PD3e4pnk2DzWmCfuB4f0SpldJUQKAdZDVy+ZKdY2nlZU+fdNoQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793617553;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793617586;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
 	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=JJu+TCMCeoqlcg/tUUedJQVk3HA5Vgks9S+nkJckt/A=;
-	b=ArdrVRiGgieFUvPJK0ly8LE0XnGYfxc/NVc/qFFyZARcjpOoTX4rC6hIW8dpuaPFxgy8
-	 ep4eQ+J189ES9mY2/4fwbDcp+7GwRImM6Y2LYkawLl7lsLq9J602+RKt4HrzwhFaOxyB6
-	 emq8pb3GLaC4aokmnpSFOREJWHFRufwpzsprpu+/QDwxjaa7HeDWbhKUDdz0gDodN0QPt
-	 ksrrYs3wkjh2rmSedBPvvYbTC7jJ0xUgZ05oVNCEFkEi2qyRcJI5Cd6Jk2brxTQkr+Hyi
-	 /4x99xBc1yQnUbtZk6LWlb9lhiudUHnTunDyTE8QC99WMo06WvuplmmFzpyryV1w6AA==
+	 Content-Transfer-Encoding:X-Proofpoint-GUID:X-Authority-Analysis:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=8VexOwUS4nB1TRVAfE4qKBfboYevUooTSYEch1IVOQw=;
+	b=Km7Lv0p+lkXwSlLGHc66vdubTGWK1zBPBKMqnKf9f2CszapTkerQkzZxzzHbd5PLSLXg
+	 FIP+or8uR3gM6fmqdzSNKR6HlP4jogFHQKbY4qIVPo3d17RExrvSCAJeg9OvxHX0Wg5ZV
+	 cf++g81ZqNad6VGgE62IU68fa7xuBUt6KKSzKHhHkrlbBmnwkZxNLY8dzRNJyZ1w19ajQ
+	 Z2EWa7watmvjDSzkNh9EEKmeVjFu2ZGTFvgPN/hStfVRtSoPXi6/oZOIR0NVhFYdE47KD
+	 1jedv7a4IL48hU6OQe9Le3KeZjLGgB+y8PN4sQ+D2+0zE5KeMzf/KZyHylqFTOUH34Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T6VAAMM9;
-	arc=none smtp.remote-ip=209.85.214.169
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=K4P9gBfN;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=HhmbEf33;
+	arc=none smtp.remote-ip=205.220.180.131
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20F6606A32E
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 11:05:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B20F6606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C508E606A326
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 11:06:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C508E606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T6VAAMM9
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2e9d7791b00so21506135ad.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 03:05:52 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=K4P9gBfN;
+	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=HhmbEf33
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A29ADpV4039441
+	for <platform-driver-x86@vger.kernel.org>; Mon, 2 Nov 2026 11:06:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	8VexOwUS4nB1TRVAfE4qKBfboYevUooTSYEch1IVOQw=; b=K4P9gBfNFfYhga8t
+	CbQutxvofJsoWF/CvkeWYKvREfH5CcZEasccFLS3yOtqf+/MKUyPQpEO/osDuM0z
+	YjyAwJ1nfay16y63LbsIRRkRwjVZ8BPi3qcBiMBSjtPSObrx9Tg3Kyt/a1+4Kw56
+	pI/Zafkf7QTAdF/Hl1gyjq8/k84nwQtA6Jb8xgNC4bSsw1CohiQNdtWzKxDXGd6U
+	3BQN+0oOiS0EmZNNlEVPPvoXIrFcB8jVcGaVfpwpHQEdTlTxp6NA0FvTQUB2mQBR
+	lXWq2GuoXtCjxJpDlpO06hCPYzv0eI36aWpuWzTC9vJe3yjhjQEzY758piT6ZWhi
+	ebFttg==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hpph18te5-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 11:06:24 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-8a06750c74fso2110785b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 03:06:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793617552; x=1794222352; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1793617583; x=1794222383; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=JJu+TCMCeoqlcg/tUUedJQVk3HA5Vgks9S+nkJckt/A=;
-        b=T6VAAMM9R4b+esDkm4hYBZfCWg15ogO98FEtGhKKmnEskO8T9VgaCTGdm9K5wUowOv
-         hFkZ4tQQM/Sc+HgrD5BC7LF4P5hII6ySBPKMlJl17t3bNgMqcijBdWBPUrJl9OTXPbyY
-         LdkvKb80pVpM4ev8/pIA03+kkYfEiyBDm2/QPtcgMr6q5oNVTOmlDosEUD5gJEPiofFk
-         Ycn3ZBsKMQ9ioKlpnneDRSkRaFBazj1PBdpmh7nnjl6FW+PYeVaw/Zm7tPJDFRAFM5qR
-         tjtFMcDUa/ljwHJl430WBtTDSi/+gqvqw7LOe8fnqnFZuNfpcB/QSkPkNH4DmB6r57qD
-         UU/g==
+        bh=8VexOwUS4nB1TRVAfE4qKBfboYevUooTSYEch1IVOQw=;
+        b=HhmbEf336abxUMbX+nncxu1QPp/LvR0T07PbzQG1Z72O3pp2wlKY7kAxPbb/JcwkXA
+         FOx5T+LqCTTzwMzWmW08nAJW+uksUbaxA/26mBx49NoJeWa3RMkdEYYVvzQDRMvPX/qQ
+         Hc8YRZ7rTscMIZV9Xrl19qfYW33IOmBou1lPeKmKKO3VT71R8ZrV508f539iBFmPIQlp
+         jF2cW0SIYBMYQghEN0Qx6y0XZHhATufcvy6Fv8/RA0oz3dlDi8E3o+0SOo1etUqGPETg
+         8GYTNObaYgwdvua2fvtygcPSZJhHgJ1zaoS3gEYVRNde3RIZPGADjW6TE6l723gzLurs
+         0ceg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793617552; x=1794222352;
+        d=1e100.net; s=20260707; t=1793617583; x=1794222383;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=JJu+TCMCeoqlcg/tUUedJQVk3HA5Vgks9S+nkJckt/A=;
-        b=xwXOTDzAdIfKECuQxPQzhVN12Q4T7n7kINUkb8LKL0m34C/b3gLl9nMeQr6qG5zwsr
-         c+j9XiU3ypFLTaj2dP9rp5B8Dq4xEPwi7sIEfbfg8qO1Ab4Y4QuIaO+6gyIyjvUQXZmq
-         iyDILdORHbSq8r1my8K8luHHp3PMuqFg2swiufePSUaqALED0UTaptbRV5l/Ep4aIaxm
-         Z0EGF8o54z6wxF6DoHvbCeZRy5agx+6Xje4zlSg5XQ8++efnL/A2+x4QluXUyZG6zSVs
-         r+ggEGuqSpHU+XBVZK92gVqEdaEsZXp3MEyYWDGNR8FEoi5BgjwEhYhCXxx6YvvINm7r
-         eIeg==
-X-Forwarded-Encrypted: i=1; AKwUvBwwEs+yXoMhMyJYKJ7cZEJ9UteXbLHhrh5ns1dfvn95/S3TX3BLwV/vtHPKaa4MGUiDvtV2BcBpJc6nvHvT8DorYjOy@vger.kernel.org
-X-Gm-Message-State: APuU4Z/Le40yBdCSLHKSZ1JL//mUM2Fj6J1rmQZ/TEFlQubsudUFoKev
-	Fn2FLlTPOw111u+wScgkhk+3zXktDXZa1ERyVfPpGYI4JflXzveYZ1dE
-X-Gm-Gg: AYBFou06XrlAQ6sjf8UPGPCXgi3GnR/8fdVuyARh5UTqbBZXb/1fW4r67qUbUbU3dRc
-	SutfWWOg7wNKI1bBrlo44ZtXlngmrQU7HMJMIEK2FU8sbor0YEcQNdU1vxUKlS+Z7ELz2wBv1GU
-	VbLZuRmijRjNMXVgFVdgmRf4vRbzu+x22vr59fjgDx22X0UFeWdKSxbQYR+uastEKDFf/pGkONv
-	aSFt/++zI1d96INugP32KGiLdRx4r8vFb5/pXmQP1ymXhABeBKhFwA265Hnvj0pV7/cIlHs8usF
-	1J0p8mhLNQCytqHm2uVGFGZatMffimZ936Y5ysGEK0rY5ZlZOCBfWpqDEY1AnmaiwO8vLXdqXBE
-	rVCaP/30T8Zp2bvyTHw315HAxuypA0ByLXNv7bLDaSCmvnu+vo7sTVH+OcgT1Ery7RiPhzsC5nm
-	Vh6SOOTjk+Hou9/yz33mCfakuKkNRXsMb2kzwyD2d8Pa+DQWDBryi3m0g9/4HX+HMX6HSAHEpcV
-	s+96/M5FrW7obK0wFC4olKXo8e6hs78V1RxXyS2LbmkuUuQF2rIVHB5IUwxh6ud0lHkDpj/X8tc
-	og9/0KVC63qbUaPdpJR1BJBi0dilrdzGg5yI1L5g3/MjV28XbBfLm76G3Xbh+3P5X6l/2w==
-X-Received: by 2002:a17:903:46c8:b0:2e9:842d:3c34 with SMTP id d9443c01a7336-2eb364962ddmr86453655ad.13.1793617551989;
-        Mon, 02 Nov 2026 03:05:51 -0800 (PST)
-Received: from ?IPV6:2408:8210:2436:950:5bd4:8bc0:479b:e7d0? ([20.89.137.63])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb392add5dsm25973225ad.68.2026.11.02.03.05.48
+        bh=8VexOwUS4nB1TRVAfE4qKBfboYevUooTSYEch1IVOQw=;
+        b=GJwLHyZ6+1poRqifg7Y1dWYbvvlYtg1iFAq7hbklPUP/dXm5vuwBDh33DNzO9saKpJ
+         BACLt+SdbDk+rqCUdN4sGiNjVRcH+l1uaL1h1OJWmctLXwEHksV7cx5xrTKMM5DwZuE4
+         VXj9gDn47kxvIFTWKjEEX9MfmC9fxIZEuSYq9Cev8DpmdpaU8GA7DwQ6OGo7OkjowYMl
+         TCLdTIX4XHPmEjs/23/k1F2f2+ThG4lIy8I4vHgNFnkLthK3L7k091biT4CDjtVIk2Jh
+         S6Lt0t5VGcs451w6iiVahkAXxwC8cebCxS6mm16CpEmbdrQn7qn+9kYO7ETo6Gy40Uf6
+         MHTg==
+X-Forwarded-Encrypted: i=1; AKwUvBwOfVBVz5wFikrahn/WDpc5RxAqGazXUbksP23tvYTtR1yLnaywrMySjgjSeGtEc1WuD9/IpoB7Q41+rqS4256t8IuJ@vger.kernel.org
+X-Gm-Message-State: APuU4Z8I8kDunyXZiJplXQapAneMCZKD06OUgIZPp3QF9yiCa6AcGl+y
+	1O49+H/12tbLRaAZLwg7bAPLZNXzlrIy0mNQOcW5faZOX6Tuf956EJcDu+KANEuNzVsVtuOPCOr
+	EZe552HDC56fVCmBygrp9BLBbRBQeYnhmGdmPfLq1Qn/v2G1d81bqemyrf5KuqnlpyumMIhO0XC
+	0p
+X-Gm-Gg: AYBFou0jq7L9WHLfUHz2CMrykOZw6nwBAQCRHuiaK336J0r/yTdggSalXelI81svqal
+	d2VQ4HfN+HsEI/PfH7tT2Xe8rziK030rwqV+g6HMhgn4sISE7yj5lVlYcixbd4X/GWh8R2jcmD3
+	P0cFnotrcTn8ZMNY97zpZxI4u7AM/ZPP1jXd3rpGRp8z9PX5UdUJOJSC0ByOm715oGs6BV02zDJ
+	iz4APRX0e8W4y2rNSDsYtJAHqiTAy7qK21GnllbEal0gKKIYee3u34ELIxhPNr+JTAC/0vCEel+
+	eCFZD+JyHVttwuaxsS3WIXMU+8R3MBAluNQVAyy2zLFMNjdat1qU/Iy4oExs98Lvx2OfpLPlSfs
+	sYw2sWq96IB180nSwnAP/HkrcFypPYzFR7ebjJcrSA2l+OnIsC4pACgf56gbdZuYM0AbVzoCIVB
+	asnEUwcQ==
+X-Received: by 2002:a05:6a00:2d87:b0:886:281c:98dd with SMTP id d2e1a72fcca58-8a9beb61305mr7142665b3a.26.1793617583569;
+        Mon, 02 Nov 2026 03:06:23 -0800 (PST)
+X-Received: by 2002:a05:6a00:2d87:b0:886:281c:98dd with SMTP id d2e1a72fcca58-8a9beb61305mr7142622b3a.26.1793617583012;
+        Mon, 02 Nov 2026 03:06:23 -0800 (PST)
+Received: from [10.218.27.184] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8aad963cf90sm1795605b3a.16.2026.11.02.03.06.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Nov 2026 03:05:50 -0800 (PST)
-Message-ID: <85017b4a-434a-436d-80a2-89cb20a9c6bc@gmail.com>
-Date: Mon, 2 Nov 2026 19:05:46 +0800
+        Mon, 02 Nov 2026 03:06:22 -0800 (PST)
+Message-ID: <c3de7659-726c-4fbe-989e-148bcd13bc49@oss.qualcomm.com>
+Date: Mon, 2 Nov 2026 16:36:16 +0530
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -93,96 +118,131 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 0/6] Merge redmi-wmi into bitland-mifs-wmi
-To: 7z0423arsenova <7z0423arsenova@proton.me>
-Cc: Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20261031204357.157958-1-7z0423arsenova@proton.me>
- <f8970847-89c1-4c5c-bb15-2181f1c8f7b5@gmail.com>
- <BelDdF5woNEBX6dZ3_zJDEbVkifs1pdxEjtQ1yC-aKyZahijFJCllxm0l_SqZ5Hsj61D8wfJNa7uDSuNKmyyxo2S0tZp9QS5yaafeZUxvxE=@proton.me>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: glymur: Add EC thermal zones
+To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20260928-ec_thermistor_support-v1-0-d9c1bae4cd0d@oss.qualcomm.com>
+ <20260928-ec_thermistor_support-v1-3-d9c1bae4cd0d@oss.qualcomm.com>
+ <e77c0255-6299-4718-aaa6-04f4366fe749@oss.qualcomm.com>
+ <5d84ee1b-a765-4d6c-ab01-ca1a06a0e3d0@oss.qualcomm.com>
 Content-Language: en-US
-From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <BelDdF5woNEBX6dZ3_zJDEbVkifs1pdxEjtQ1yC-aKyZahijFJCllxm0l_SqZ5Hsj61D8wfJNa7uDSuNKmyyxo2S0tZp9QS5yaafeZUxvxE=@proton.me>
+From: Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
+In-Reply-To: <5d84ee1b-a765-4d6c-ab01-ca1a06a0e3d0@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: D3ALYV5LxAVnCOEo0o2bUgFl41l6NRAo
+X-Authority-Analysis: v=2.4 cv=IruL47/g c=1 sm=1 tr=0 ts=6ae86eb0 cx=c_pps
+ a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
+ a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=7-sR13JiO9-Nskhq_G0A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-ORIG-GUID: D3ALYV5LxAVnCOEo0o2bUgFl41l6NRAo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTAyMDA0NCBTYWx0ZWRfX2tGhkICJTyPm
+ UWH6w/eDyc8hgoutZ6CoKlh8msM+Q/eJgIsE29ylWheYZs8/fX5XE0FgzOdQx4Gj/hGuNg1ww0m
+ kFKSz0sRuHGjr8O9yQjvRpfHBlzRFbBlmAcKHYXdJuiopJV8rV3+JeOyzwWrL6Vk9bVuJEPBTtI
+ gfyQAmd+k/STbfI5NFk+CKbQ5opG3S00gKgrbxCx4eVQdfjkQ+47wDdqMfy7q92uH/Gr+mMyM4k
+ m9UQv5CWU+cPzuQxppNsWHlt9B0WC0A6Xa7kuuosz6zTVMNlsEzrMikGjrHbvr0MyyHuSMhL+7D
+ Akp9XKM1m22kReO/ivdc0Lmn2PwoNMaSfCCafiEg2RbFemVsaYOChqQ0na48j3n7UuMy0BsiS0z
+ UNxrqvcxil2ZznN5xrZPSA5JX9HWMlMd6dxB0aYmzq29XfLcm3SMY+j3cKzGgxLg8CYjEgYUvLn
+ pAkFNNnO5J1U308qZ7g==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTAyMDA0NCBTYWx0ZWRfX9tqHmvuy11Ds
+ WiUafBFXqgEOQsxTrk5Lb86wML8eye7h50hyCxsjERlS37jRcSLq9UpdRV5v9D3xIsfvdFj3PhR
+ 36yi/mEQazuyW8F1nd818oeAFkjE3cA=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-02_03,2026-10-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 impostorscore=0 clxscore=1011 bulkscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610300000 definitions=main-2611020044
 
-On 11/1/26 22:06, 7z0423arsenova wrote:
-> On 11/1/26 12:28, Mingyou Chen wrote:
->> Feel free to test the patch series on your machine.
+Hi Konrad,
+
+On 10/29/2026 2:38 PM, Anvesh Jain P wrote:
+> 
+> 
+> On 10/20/2026 1:33 PM, Konrad Dybcio wrote:
+>>> Add support for back cover, keyboard, and SoC thermal zones through
+>>> temperature sensors hosted on the EC for Glymur and Mahua CRDs.
+>>>
+>>> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/glymur-crd.dtsi | 45 +++++++++++++++++++++++++++++++-
+>>>   1 file changed, 44 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/glymur-crd.dtsi b/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
+>>> index e27c697e3170..571c98124a40 100644
+>>> --- a/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
+>>> @@ -594,10 +594,12 @@ &i2c9 {
+>>>   
+>>>   	status = "okay";
+>>>   
+>>> -	embedded-controller@76 {
+>>> +	ec: embedded-controller@76 {
+>> "ec" is a super short label, perhaps let's spell out
+>> embedded_controller
 >>
->> Here's an example quirk of your machine.
-> Thanks! I tested v15 with your example quirk on the Redmi G 2022
-> (TM2135, BIOS RMGAD6T0P1313), on AC power. I applied patches 2, 3, 5
-> and 6 (the ones touching bitland-mifs-wmi.c) to the file from
-> mainline as of 2026-10-29, which is the same blob as in your
-> base-commit (dd1648b7de77), and built it as an out-of-tree module for
-> Arch's 7.2.11-arch1-1. power-profiles-daemon was stopped during the
-> tests.
->
-> The quirk is picked up. Writing balanced-performance or performance
-> no longer fails with -ENODATA, Set replies with function 0 are
-> accepted, event 0x16 is handled, and the profile values match the
-> firmware except for performance.
->
-> Writing each profile to /sys/firmware/acpi/platform_profile (first
-> run; a second run gave the same events):
->
->    value  written               read back             event 0x16
->    0x02   low-power             low-power             0x02
->    0x01   balanced              balanced              0x01
->    0x03   balanced-performance  balanced-performance  0x03
->    0x04   performance           performance           none
->
-> Every write of 0x01, 0x02 or 0x03 was followed within 2 ms by event
-> 0x16 carrying the new value (10 of 10 writes over the two runs).
-> After writing 0x04 there was no event in the following 5 s in either
-> run, yet the mode reads back as 0x04.
->
->  From the ASL (not measured): after a Set, WMAA calls THMD, which sends
-> the 0x16 event, but THMD only handles EC modes 0 to 3. With GPUT 1 or
-> 3, Set 0x0800 turns 0x04 into EC mode 3 if the adapter is 330 W or
-> more, and rejects it with 0xE000 below that. With any other GPUT and
-> an adapter above 100 W, 0x04 is written to the EC as is. That matches
-> what I see here, so GPUT is presumably neither 1 nor 3 on this
-> machine, and 0x04 leaves the EC in a mode the firmware does not
-> define. I have not measured what the EC actually does in that state.
->
-> 0x03 (EC mode 0) is already the firmware's highest mode here, so for
-> TM2135 I would use LOW_POWER 0x02, BALANCED 0x01 and PERFORMANCE
-> 0x03, without a BALANCED_PERFORMANCE entry. The Fn+K cycle then reads
-> as low-power, balanced, performance, and the three
-> power-profiles-daemon profiles map onto the three firmware modes.
->
-> Fn+K on the built-in keyboard makes the firmware cycle the mode by
-> itself, quiet -> balanced -> performance -> quiet, and each step sends
-> 0x16 with value 2, 1 or 3 (in the ASL this cycle is _Q0D). v15
-> handles these events; the in-tree 7.2.11 driver logs "Unknown event:
-> id=0x16" and drops them.
->
-> On the KEY_PERFORMANCE question in your cover letter: on this machine
-> 0x16 is not only a key event. The firmware also sends it after every
-> successful profile write, so reporting it as a key would produce a
-> key press for every write, not just for Fn+K.
+> 
+> Thanks for you review, I will rename the label to embedded_controller.
+>> [...]
+>>
+>>> +&thermal_zones {
+>>> +	ec-back-cover {
+>>> +		polling-delay = <10000>;
+>>> +		thermal-sensors = <&ec 2>;
+>>> +
+>>> +		trips {
+>>> +			trip-point0 {
+>>> +				temperature = <90000>;
+>> This is *really* hot!
+>>
+> 
+> The 90°C trip value was suggested by thermal team(Manaf Meethalavalappu
+> Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>). We are open to using a
+> lower value if this is too high for the keyboard and back-cover sensors.
 
-Thanks for the information.
+These sensors are intended to be controlled primarily from userspace by 
+the thermal governor in thermald, through the powercap sysfs interface 
+[1]. We do not plan to add cooling bindings for these thermal zones.
 
->
-> The other attributes still do not work on TM2135 with the quirk.
-> Reading gpu_mode returns -EPROTO, and kb_mode and the hwmon inputs
-> return -ENODATA. The keyboard LED is registered with brightness
-> 4294967235 (-ENODATA read as unsigned), and unloading the module logs
-> "Setting an LED's brightness failed (-95)". From the ASL, the
-> firmware only implements Get commands 0x0800 to 0x0B00, and Get
-> 0x0900 returns fan data here. I did not write to gpu_mode, kb_mode or
-> fan_boost.
-This is currently not focused on this patch series.
->
-> Would you like to fold a TM2135 entry with these values into v16, or
-> should I send it as a separate patch on top of the series? Either way
-> I can test the next version here and send a Tested-by.
-I won't include it (the TM2135 quirks entry for your machine) in v16, 
-you should send a separate patch.
->
-> Thanks,
-> Arsenova
+Based on discussions with the tuning team, we agreed on a hot-trip 
+threshold of 90°C for these sensors.
+
+[1] 
+https://github.com/intel/thermal_daemon/pull/614/commits/7f3dd62353e039957e52eeb40c67ec388d543ebe
+
+Thanks,
+Manaf
+
+>>> +				hysteresis = <5000>;
+>>> +				type = "hot";
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +
+>>> +	ec-keyboard {
+>>> +		polling-delay = <10000>;
+>>> +		thermal-sensors = <&ec 1>;
+>>> +
+>>> +		trips {
+>>> +			trip-point0 {
+>>> +				temperature = <90000>;
+>> Likewise
+>>
+>> Konrad
+> 
+
