@@ -1,48 +1,73 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793653103;
-	b=ODYgBFFx1l49JS7mD1zvmxGWIALID2Ce7fQ+JZkGGxnclEiNYqJHNFLCEvBVyXztrrHB
-	 eB2YVpx+aSSXSwmfs9PRyVzNz0j7yWSvriux/8SW43JOsKDTP3hP5CtsN63ZoPRFDhBqh
-	 jx/Jt+DqOzAvfM7yWjD/WKcx79/kHzR+Y7GnWTjhA0CvbWR60nadb042R2iKKWwEDYRN3
-	 PyE0jrpgxzC62kVW1Q8iWfKWZ/gPF26hDlPXwppoOmVW6P3HOahLAQn4rzVp2QwaSrY3Q
-	 OY6CuLrjrKi1dFELdKV5AroThXw21dlL+hormpziTZpfhq2hsIzxt+fzrxEFt7QiCZA==
+	t=1793653906;
+	b=iGL7gUWQk3g6DXh0SwMASLul2JP6hxXu1zazD6wzDDpkUzk0pHDLk72mNNRafj1LTszk
+	 zlwTrBuWQ0f0fGbXhMLO3qK9an3akPhuOuMmYYmuIxNB6pB04ez1vDq8G9Q96ZSGAZvh2
+	 4QRAHCltSWW9vzLwjb+eRxS2n35bbIYEQ2QPcaZxE1OYzA+LR2+poFYDkZGVswt+V7XhP
+	 HijSZcAH2ZcNmz54UIVZL33Mo5wnbXKAD8n4pXdugg92KaXBolP5LR1Q7RcF6TAlgoF9B
+	 fdc1VaV54NgHaSAozWGu3/u8FVUhIzAdxtsIoYoXqyhhjUoZf4L0co+ysDIbWKkKbCg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793653103;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
-	 X-Mailer;
-	bh=H8CCJNeUjqX/fD9Zuv2hnoBkQYJRETeIY57UcmYbbhU=;
-	b=CPEWPlow4dH0ietwWCRJ/rRyoVZylt/wb/L8kYus0UI/XdNiFcm8DO+tH/pirg0iPsXp
-	 Ve5eOerd5tzQPqSOgrQorXe1KreX85JPUu4JKTJt9XH5qRDnOydoBci448qEcn89X1aff
-	 38MI1Doq7zvt1U47gHP8yfUVUfW0ZQagryI/RwVIICjia+ajmyue8ioSRP1QGNBiqFWTW
-	 8eofXu9DPo4GQMpQwP3nSzXQ4O7ZfhQOqll45+t8vAbH4b2sh05FUNwKzo/EFxSguy5kI
-	 l+SGJrwyFRBUNBRyHgFj5woxjuvgJ30oELEk1N/7cIHE+K5cYuqXWOBIeAH/0jiD8xQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793653906;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=xxWoHxsw4VPFqHPAqACZbusTmTkHUnFSnkXXJwnJ4WA=;
+	b=DFJTc1CEvVIBsE/vDp8FgdYWBusDQZHFflIrh5oW/B32SZLIGQe/MLZMUSFRohzpSU2U
+	 xktzhiRHQ5SNoX/FLja7Diuq1gcdHE3UtQTkXK6Nq0OERx4vpa+G2Ww5cuL9xIULnvD3h
+	 y+IFIc4AxDg4dqPSYsOxaL/9xDSfS5m2zkY5J9FtMxLZ+U7la9gNCnmz0OZTmNMAiZHyx
+	 Gz2MoyzXwSTqpYg4XTdf484CQXDUjGN0sTtN94DawulSJSjyDgd9l4K9YRIZV3n9PBlvz
+	 xTrxEZPMOrda1QqTGCvzAsKlorCC9BUbUbkbci++92fUGXEHEQbVVbL7p0GJLU9PkWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WHDq41xV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZe6+tyY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02807606A324;
-	Mon,  2 Nov 2026 20:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB1D606A329;
+	Mon,  2 Nov 2026 21:11:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WHDq41xV
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C7B1F00A17;
-	Mon,  2 Nov 2026 20:58:21 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZe6+tyY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F96B1F00A16;
+	Mon,  2 Nov 2026 21:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793653102;
-	bh=H8CCJNeUjqX/fD9Zuv2hnoBkQYJRETeIY57UcmYbbhU=;
-	h=From:Date:Subject:To:Cc;
-	b=WHDq41xV0Z81XSmj3g9nrz+b3+2JLD8AVaGritCYE3nVq/w0pN3B0t0AoLrLTuBFE
-	 m7bXRpBPWpXZGlOnviCqom1T9JpjwpK4n9F/CiNQqcCMDoLZzWTNdGE607O24OM8Be
-	 8NtreipsfDcGt+DF8ie59e5sY54ALEOrVGwiFFSlY5xC4r0cVadrGsxKlLWTlIHSP8
-	 og/yBDO2bZ1IKsTqirrTlDhEe3dXPbGDpl0wAoHzeAyeb/9Kbl2bqz8EtHRqUnG3Nc
-	 mHjGIS2aFRgeQFHHADRvVRJEkVk52jZ3vlr0yFARTsxRbS3eHK3qalcQNRg6p0Yfr+
-	 hY398hym/mqIA==
-From: Mario Limonciello <superm1@kernel.org>
-Date: Mon, 02 Nov 2026 14:58:08 -0600
-Subject: [PATCH v2] platform/x86/amd: send WBRF DSM payload as buffer
+	s=k20260515; t=1793653905;
+	bh=xxWoHxsw4VPFqHPAqACZbusTmTkHUnFSnkXXJwnJ4WA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=XZe6+tyYLswAenBO8yAzFdeWRzKxvbqg1Ev/mg/a4IY5Ykl6dyrcjlnUec04HQhAB
+	 wUqBfr7XNAis1gRkRlwuGTTv/aLI8n5inKL/pOeo0qX2ZMVH6ZsIHjb5NCZh9zUPL2
+	 o/ohakMyhEJMO6zYmevE4LT4/D6JmGaT3h4w7BN89zF2VUs59WIhKi/DP83L+kUnC9
+	 SsDT8nIZxjYMyLxMxFoJC8PTJcen/wSXsZsrKVj0Q0tCq0A7kxVFkRR+wzfD8le+If
+	 Wl/DtyEEVNWoCvyuUqF5srUDKOCiBW/Gb9kIb+nJ5eqrm2qnqAgrPwEWkqx/H5R5yQ
+	 Crn9JOHwAhkOw==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9A2D2F40069;
+	Mon,  2 Nov 2026 16:11:44 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Mon, 02 Nov 2026 16:11:44 -0500
+X-ME-Sender: <xms:kPzoauT46RzZZAtJ9pk6EmeQC8cMELBagB3u1iMeAaHmOjnENab40A>
+    <xme:kPzoaumk-opmRQlpeWeKnkRMlTth_z6pBLrv31d5JNfpKtehryrVtBuG3qfafkapL
+    0UJlxT0ifcf_WdI3louCiTK_NZW_9YRI03kfo2jNxtQamFkpy63zY0b>
+X-ME-Proxy-Cause: dmFkZTGGTt1pQq16zbZlBikp5z2kGCzhIzyCgkLQFgSXoffQhlPZQXfjBFq1ZiXvdSuuXZ
+    LGfrLfwbRgm8cT/TQHLtmkS2wq/scJf8NlSAUsi0B9JpHEGQcArw2onxUgxSVXeSq73Th3
+    +MD0Qi/P+BTULU9VUvoeDDNpVnNmDbD7jQoN3v4l/IoJhT2uLJVTZ+qQoBDMXBdvnbBuoB
+    9tDR+if4J7M64uHI42/0BjtEfvrRTVsfVuGRQKjlc4H4/Tpb6Ukdvkgbe36C9jT+yX7xq2
+    jBGJCbh4CPX6idD2imiKQ6v9tm9bzRUVfoBUnOyYFMrBkFYiOOBWgnG0kr7aHqxli45kQp
+    ohMXmtjBzal9CB+YgOYOkiE9b51wZucg/4Qex1khPYx+JLGLu0NEFrvGtoRmQ6eE2VafNW
+    CY+B7UtOu2dLLX0YzJKc7HKLrBl+UhzkRfMrCHLaMOitCefJUNU2mkw7vcohOcdeMVRCgw
+    TQWRrq9hCVC/B8Rxe6VYHSl8gHOGuRazDUmW6qr5GDwgwEuKJT0vVpSDws8RN4u7/JR2Bw
+    7Q9JGl1Z/LH2lgcMAQgF+wjiqdsKo0vCxpzH21ZsG7KiWO33lqILFRfkvZC562OP5TxBQG
+    hvqFJiKnoaGgu8gvbQah48jOhQq3KspK10b5m5ASEOwP4kkYmm4PvM17d+KA
+X-ME-Proxy: <xmx:kPzoakThPn76RnRib5bZ_FntPITCT1o4Ovwx9E8rstI1voUg5JpAIA>
+    <xmx:kPzoahfEU2tfoiygDyUOVgUPLZrN0jZ-87YF5q5IhIxNwkm1ztvL0w>
+    <xmx:kPzoatetgw6gOoAhlTHOnt-HZbmjY916FiHHIyaUhhTihCSwAOX_gA>
+    <xmx:kPzoaj1ywieDU5FAFn3LFQMJapowgQlEbMPUeurA4l5-zBDlAnyByg>
+    <xmx:kPzoat9Ejs2zX8NiQVdXzLsXpl7UKGdgzTPDTECnMqAK4pso_NRi0RMI>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 7098678273B; Mon,  2 Nov 2026 16:11:44 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -52,174 +77,62 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ThreadId: AFgPYeWZplpR
+Date: Mon, 02 Nov 2026 16:11:23 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Christian Brauner" <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Jann Horn" <jannh@google.com>, "Josef Bacik" <josef@toxicpanda.com>,
+ "Chris Mason" <mason@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, "Eric Dumazet" <edumazet@kernel.org>,
+ "Thomas Gleixner" <tglx@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>,
+ "Greg Kroah-Hartman" <gregkh@suse.de>,
+ "Joel Granados" <joel.granados@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>,
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ linux-um@lists.infradead.org, linux-wireless@vger.kernel.org,
+ "Linuxppc Dev" <linuxppc-dev@lists.ozlabs.org>, netdev@vger.kernel.org,
+ ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org,
+ coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net,
+ jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org,
+ linux-sh@vger.kernel.org, linux-usb@vger.kernel.org,
+ samba-technical@lists.samba.org, sparclinux@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net,
+ "Takashi Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org
+Message-Id: <7ee779f9-db3d-4829-bdd8-1d09e3f74c43@app.fastmail.com>
+In-Reply-To: <20261102-work-procfs-net-v1-6-982104a4f592@kernel.org>
+References: <20261102-work-procfs-net-v1-0-982104a4f592@kernel.org>
+ <20261102-work-procfs-net-v1-6-982104a4f592@kernel.org>
+Subject: Re: [PATCH RFC 06/11] SUNRPC: let procfs own the seq_file of the cache content
+ file
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-superm1-wbrf-v2-1-28b02bb4ce61@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/1WNyw6CMBBFf4XM2pp2IgKu/A/DgscA9UHJFKqG9
- N9tYWXu6iT3nruCJdZk4ZKswOS01WYMgIcEmqEaexK6DQwo8awkFsIuE/FLiXfNnWiLk0xlhTk
- qhDCZmDr92XS3cme71Hdq5uiIjUHb2fB3+3Mq9nZ1cP+rnRJK1GnehqSYZc31QTzS82i4h9J7/
- wOohYSYuwAAAA==
-X-Change-ID: 20261029-superm1-wbrf-d94050a28212
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Hans de Goede <hansg@kernel.org>, Ma Jun <Jun.Ma2@amd.com>, 
- Evan Quan <quanliangl@hotmail.com>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mario Limonciello <superm1@kernel.org>
-X-Mailer: b4 0.16.0
 
-Spec defines the WBRF record _DSM argument as a single buffer that packs
-the header and frequency ranges. The driver instead built a package of
-integers, so firmware on some systems abort \WBRF with AE_AML_OPERAND_TYPE
-when dereferencing Arg2[0].
 
-Encode the payload into a little-endian buffer and hand it as the lone
-package element.
 
-Fixes: 58e82a62669d ("platform/x86/amd: Add support for AMD ACPI based Wifi band RFI mitigation feature")
-Signed-off-by: Mario Limonciello <superm1@kernel.org>
----
-Changes in v2:
-- Declare payload with __free(kfree) at the kzalloc() site, after input
-  validation, instead of initializing it to NULL at the top of
-  wbrf_record() (Sashiko)
-- Compute payload length with struct_size_t() so it no longer depends on
-  payload being declared earlier (Sashiko)
-- Link to v1: https://patch.msgid.link/20261102-superm1-wbrf-v1-1-b58d8d85277c@kernel.org
----
- drivers/platform/x86/amd/wbrf.c | 75 +++++++++++++++++++++++------------------
- 1 file changed, 43 insertions(+), 32 deletions(-)
+On Mon, Nov 2, 2026, at 10:07 AM, Christian Brauner wrote:
+> Declare the seq_operations and let procfs open and free the seq_file of
+> /proc/net/rpc/<cache>/content. ->proc_open() and ->proc_release() only
+> take and drop the module reference and set up ->private now. The
+> rpc_pipefs file is unchanged. Reading the procfs file then no longer
+> holds up its removal when the network namespace goes away.
+>
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-diff --git a/drivers/platform/x86/amd/wbrf.c b/drivers/platform/x86/amd/wbrf.c
-index 3281357185d1f..2afb574e4327d 100644
---- a/drivers/platform/x86/amd/wbrf.c
-+++ b/drivers/platform/x86/amd/wbrf.c
-@@ -6,6 +6,8 @@
- 
- #include <linux/acpi.h>
- #include <linux/acpi_amd_wbrf.h>
-+#include <asm/byteorder.h>
-+#include <linux/slab.h>
- 
- /*
-  * Functions bit vector for WBRF method
-@@ -29,6 +31,17 @@ struct amd_wbrf_ranges_out {
- 	struct freq_band_range	band_list[MAX_NUM_OF_WBRF_RANGES];
- } __packed;
- 
-+struct wbrf_record_entry {
-+	__le64		start;
-+	__le64		end;
-+} __packed;
-+
-+struct wbrf_record_payload {
-+	__le32			num_of_ranges;
-+	__le32			action;
-+	struct wbrf_record_entry	ranges[];
-+} __packed;
-+
- static const guid_t wifi_acpi_dsm_guid =
- 	GUID_INIT(0x7b7656cf, 0xdc3d, 0x4c1c,
- 		  0x83, 0xe9, 0x66, 0xe7, 0x21, 0xde, 0x30, 0x70);
-@@ -42,8 +55,9 @@ static BLOCKING_NOTIFIER_HEAD(wbrf_chain_head);
- static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ranges_in_out *in)
- {
- 	union acpi_object argv4;
-+	union acpi_object args[1];
- 	u32 num_of_ranges = 0;
--	u32 num_of_elements;
-+	size_t payload_len;
- 	u32 arg_idx = 0;
- 	int ret;
- 	u32 i;
-@@ -64,45 +78,39 @@ static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ran
- 	if (num_of_ranges != in->num_of_ranges)
- 		return -EINVAL;
- 
--	/*
--	 * Every input frequency band comes with two end points(start/end)
--	 * and each is accounted as an element. Meanwhile the range count
--	 * and action type are accounted as an element each.
--	 * So, the total element count = 2 * num_of_ranges + 1 + 1.
--	 */
--	num_of_elements = 2 * num_of_ranges + 2;
--
--	union acpi_object *tmp __free(kfree) = kzalloc_objs(*tmp,
--							    num_of_elements);
--	if (!tmp)
-+	payload_len = struct_size_t(struct wbrf_record_payload, ranges, num_of_ranges);
-+	struct wbrf_record_payload *payload __free(kfree) =
-+		kzalloc(payload_len, GFP_KERNEL);
-+	if (!payload)
- 		return -ENOMEM;
- 
--	argv4.package.type = ACPI_TYPE_PACKAGE;
--	argv4.package.count = num_of_elements;
--	argv4.package.elements = tmp;
--
--	/* save the number of ranges*/
--	tmp[0].integer.type = ACPI_TYPE_INTEGER;
--	tmp[0].integer.value = num_of_ranges;
--
--	/* save the action(WBRF_RECORD_ADD/REMOVE/RETRIEVE) */
--	tmp[1].integer.type = ACPI_TYPE_INTEGER;
--	tmp[1].integer.value = action;
-+	payload->num_of_ranges = cpu_to_le32(num_of_ranges);
-+	payload->action = cpu_to_le32(action);
- 
--	arg_idx = 2;
-+	arg_idx = 0;
- 	for (i = 0; i < ARRAY_SIZE(in->band_list); i++) {
- 		if (!in->band_list[i].start || !in->band_list[i].end)
- 			continue;
- 
--		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
--		tmp[arg_idx++].integer.value = in->band_list[i].start;
--		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
--		tmp[arg_idx++].integer.value = in->band_list[i].end;
-+		payload->ranges[arg_idx].start = cpu_to_le64(in->band_list[i].start);
-+		payload->ranges[arg_idx].end = cpu_to_le64(in->band_list[i].end);
-+		arg_idx++;
- 	}
- 
-+	argv4.package.type = ACPI_TYPE_PACKAGE;
-+	argv4.package.count = ARRAY_SIZE(args);
-+	argv4.package.elements = args;
-+
-+	args[0].type = ACPI_TYPE_BUFFER;
-+	args[0].buffer.length = payload_len;
-+	args[0].buffer.pointer = (u8 *)payload;
-+
- 	union acpi_object *obj __free(kfree) =
--		acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
--				  WBRF_REVISION, WBRF_RECORD, &argv4);
-+		acpi_evaluate_dsm(adev->handle,
-+				  &wifi_acpi_dsm_guid,
-+				  WBRF_REVISION,
-+				  WBRF_RECORD,
-+				  &argv4);
- 
- 	if (!obj)
- 		return -EINVAL;
-@@ -236,8 +244,11 @@ int amd_wbrf_retrieve_freq_band(struct device *dev, struct wbrf_ranges_in_out *o
- 	param.string.length = 0;
- 	param.string.pointer = NULL;
- 
--	obj = acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
--							WBRF_REVISION, WBRF_RETRIEVE, &param);
-+	obj = acpi_evaluate_dsm(adev->handle,
-+				&wifi_acpi_dsm_guid,
-+				WBRF_REVISION,
-+				WBRF_RETRIEVE,
-+				&param);
- 	if (!obj)
- 		return -EINVAL;
- 
+Acked-by: Chuck Lever <cel@kernel.org>
 
----
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-change-id: 20261029-superm1-wbrf-d94050a28212
 
-Best regards,
---  
-Mario Limonciello <superm1@kernel.org>
-
+-- 
+Chuck Lever (Come to NFS bake-a-thon! https://nfsv4bat.org)
