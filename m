@@ -1,48 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793627121;
-	b=Q3tLXkFmA1EXgJ9F4+JSEbFET8nH7GDiaqI1qyEgdeelfdMaGP3tHmNo4NDrAP6Enn2F
-	 +/O5OJI2HK/iGTK928qYNktYoE5U9dKkNnIMr0wwKMYmggNERYgZdjT/Gpbzpyfmr2+Cf
-	 ALPwM8OplMWXapdEAZGA4/3iY6Qf/WNEEJ1buQMQ798cyYkCmYE5gs/tTfdJVURH8BYhQ
-	 G8wv2erGFvbIYSt+T0PCk3DirEWtYgNCVHXOtGnN5N0ZM8ChacRqc15R+puAPmX3ZYDOh
-	 oQAWilrpQ44cK2eV7OBG3O7Ireo+M9tH0asoA5KC7v263HH2mDH36ebDg75YaJXX+sQ==
+	t=1793627218;
+	b=YnBZRg3g1h2P0ZRWkp368OOxEj7V6U5d7o78Xg/8iHBfkKIwagcnnaadhcNLZjDxqeSS
+	 TnRyckWOOnQuPac6p99R5ja+dEbd+ygMf+lYg902MUQ54t32fbV3lEdYWvnIB7PEW+x3H
+	 6rkJ+B3hoNUVX3MZgieKh3buZpOPkJRmD4TTgGqRB07oSyCvTZ/S9FYovdEuw4JmE69Vb
+	 egXFsFxWBLHjF3AMD01tRWz8fS8zrGpW8MWje2xbHlQEWwdd3ebrZgqMByci/eQ3OjGRo
+	 uqn8oGRn8UjE0nlPxHXJ90Uu8zOC/cYfIcfivWErKyW0zTQyweQqtADoVAtvtIkQhvg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793627121;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
-	 X-Mailer;
-	bh=Wut76wPja3rY5EWLAZxeKXN2J3+NXIjzQxTslbLv4o0=;
-	b=eJ1kjhCl/Q2vzKyRpj1VeEJp34gtDsWNf3fN/UHlwmj04eH+D+GAsijlrIE5LViLaC5A
-	 FNi68GALvFcEI2URf3NCzFjtBx2G5IvC7S/SqhJYq37vtoQaVvOSk4sGFwuyW9purGZCU
-	 d0axcgr09LWNDNgwBHxSTd6uLvI72RmlH6tq4elna8d4/VrVe/2DEu7E4MUU2UvHZ0I6M
-	 l97BxQuVtb+iIBzyUwfZif16EiJ7ZUBLUQJ2JH6O9qkdcwhYt9CnyUcjF2LB73kzNRZFh
-	 sjjNgw1qfvDhICTHF9Ua2w60ruyhtbKF7/x+NzWkL8oSRDWBZgIAtqlACh/fwG1DzYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793627218;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=dubg1gFlwLFjUntHBfFzK7AT4OWC46obGwplwmSB/ss=;
+	b=eHFf09qLkK3Xq6OTCv4yrdGjXL4Jpryf0rnqfgJLDZnkaPbcP1vbn0SZVYgs4mOSovhP
+	 kijxxUwMNium7xz7Czfh3xBZdxE7OvAKLhAYm6ZaI/5GPT21ZQ01FcE26zCOEbsLuH6nZ
+	 Jyf7nGTw3wolDK+JP00WioHG+ZOUvTDif3A0Zjtkhs0AfDGzZ3Cei6Fti47H2X5xiBPS+
+	 wNVOWHlpU+cMTSu+0KzZquIqSJDpCe09Bdf9Lq/n0+eSx76mW/xAVUfqEIk6NJFl79QNR
+	 bEEJvlebgwRPV71iMwEIoLrigfJQHYMf/SRPmpW/rZNgXJ+JjgsU0fyiNUELCMwOGsQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D28xE5KX;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="Q6+Shkn/";
+	arc=none smtp.remote-ip=209.85.128.44
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922E1606A324;
-	Mon,  2 Nov 2026 13:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8D1606A32C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Nov 2026 13:46:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC8D1606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D28xE5KX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747141F00A16;
-	Mon,  2 Nov 2026 13:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793627121;
-	bh=Wut76wPja3rY5EWLAZxeKXN2J3+NXIjzQxTslbLv4o0=;
-	h=From:Date:Subject:To:Cc;
-	b=D28xE5KXK4V631GRrikMLEzqr6bgOq/oNKxxAixwd0UE2KooYO6UC/KpL/fQs/DCj
-	 Cz4od4SKeRUkJy7isi8RWZjD+mMA/MHzLgdhHo325pqMzf0n40mizGt7MC1PCLGwt2
-	 eHkq6X5xLJxOODYhiRoP9n+nKxDIcIClsrqLKrzS7MV6f+z/ayUR/l0Ijf9jtmrDNo
-	 iOwq1lkRDifUCYdSmB6el+zwKXhioKlRKuKDvLDJTGRe2YwFiuJ4hYsmQIBDWdy0zx
-	 j6wznKjL/9KEAvG/gzg6f+TXxNffp5GpGnSyMlfwpnliY+oAq5o+b9lJYPDk/52o24
-	 nxb909qVYpZjA==
-From: Mario Limonciello <superm1@kernel.org>
-Date: Mon, 02 Nov 2026 07:45:12 -0600
-Subject: [PATCH] platform/x86/amd: send WBRF DSM payload as buffer
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Q6+Shkn/
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a20a37703bso23735865e9.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 05:46:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793627216; x=1794232016; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=dubg1gFlwLFjUntHBfFzK7AT4OWC46obGwplwmSB/ss=;
+        b=Q6+Shkn/ObJr5jdATQDsyRSPLAb9MySAWl+yJX46CQKajHmZsK/iR0yiIQwuUi8y1J
+         9v1QZf3SPv/OiXznYwMqUybwM8VSNfZy96EEl4hAqrzMSwGDlyCLi5unRHhqOymdpMSA
+         yC/CjmhNV24dDnOUp7jrBKE1wsR/P6KqoEbo0STcFrMMOM38FZB4kn89Smwww6mXWspa
+         8rgzTWjmTWIzabmKmTTBqu3Jig0z76xSvrexbGAZaNosC9cP/MchuajEj9hYb343yGgH
+         KSkDgXj2Kb+7dk7qRtR1cUsRy/KLhwlPWtnZG7bHPMSCGjdwZcTgrgHtUiA1m/CgFOBC
+         3QmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793627216; x=1794232016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=dubg1gFlwLFjUntHBfFzK7AT4OWC46obGwplwmSB/ss=;
+        b=Zb2coEoxAdWvRDnsVVcHcUv7mCnavc6DeC8bSgzBvw3GOFx//XOlaFPAgreaUuPdxH
+         JoNoAtapDj1Q856hDiVx4Gi7e64MO6QNaKAONd29GlrGvKWE7cJ1CYILK5plZhTPRfwq
+         2KbGGdBcir7CfegTdPmzPLAXeOHzhiOGHNa5ykP5t12KSnbnoPL4hhskrKCho7G3HGSg
+         HNJ0r3ty1XuvXbYAxlWtd/mkmkgJHoFOKfCnOeexkVVy48jv+zWmHPdKJo+asZMSzFkL
+         9QA7PkoFtq5cr/ru1+tDlRJFKz67pYBj3xonFMbfGTbZv2TAbEw7uZ0VMjX2bZat+vTn
+         0luA==
+X-Forwarded-Encrypted: i=1; AKwUvBwXa0x7qvZRbr+stGsSNUQARmLuoHIeVtfNfBmcRoy3sVu0cHCp7boZT+CkSJh32AR4IyRujk49Qes66gJTknNEmyyC@vger.kernel.org
+X-Gm-Message-State: AFq9FYKM10tV+CV0FWD0+c1vUQTzWuV+1KDZOGHzxWG/Aek1MVplAkZ2
+	Thydq596Bi+MuZKSJMENeMuaWgyFwqJOvJp+7VXQae8+8rJxk8nxos+yg5YS
+X-Gm-Gg: AYBFou3BHVtLXtHU//Hq0rXO/zkKUzq2w5Qi0SB31a+OVRG75HLdlH7fWnGTaHJyHyp
+	kQ18c5L4D8T+bzgrFPYAC7Cz1/QLwjGYjAk38ZZh2ED/KboYgV06hN8HTt1FePoOW7FnnjBXisC
+	5RaomNOvAAlHdYev9/dNNWCalAbelHGbaVq/0bkOIukkK2RakymGsbGsmDgvStsnPHq2+KZi3f2
+	3/qjrRTCVUz6AvXV0EyoMnKrKH2ikm0PBHQY3a62w5C46qB/PJsaamePIMQ+vIHqMNtHzEZrvj1
+	wlZ73Nz9gonMFtzcXYxeewchUktfUV2k+rt2MTkokI39eXTy1CerG6aCFIOA9VvW9BvA4VUI2Lr
+	wYpqz0rh5GDlDX1DenOnlCggC3+Fc9Fl1DiSRk6ZnLcdkXF/1eUIybPSCMnXhRmr0c3ePAc+B9l
+	VzGiIpiNpPo+D0T+lsZxcWzIFzPDhgtH5YpZjAbdFO9x/Y7q4UQiwxlRGWG+jJtud4ZTyivUyL8
+	A4IuZYV7ospDcKf3VlfWBKi8NTpepZWJ13c61NMBHCuaFpj6bjrXezPWRMwrQ10mBtSZbmZAw==
+X-Received: by 2002:a05:600c:1f94:b0:4a8:f2ad:a9e5 with SMTP id 5b1f17b1804b1-4ac1548f591mr233240795e9.3.1793627216106;
+        Mon, 02 Nov 2026 05:46:56 -0800 (PST)
+Received: from debian.. ([2001:41d0:303:db6b::])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4aa81a896fesm388643405e9.10.2026.11.02.05.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2026 05:46:55 -0800 (PST)
+From: Tristan Madani <tristmd@gmail.com>
+To: jlee@suse.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: marex@denx.de,
+	mjg@redhat.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tristan Madani <tristan@talencesecurity.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: acer-wmi: validate ACPI object type in acer_gsensor_event()
+Date: Mon,  2 Nov 2026 13:46:54 +0000
+Message-ID: <20261102134654.638644-1-tristmd@gmail.com>
+X-Mailer: git-send-email 2.47.3
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -52,166 +99,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-superm1-wbrf-v1-1-b58d8d85277c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzNDAyNL3eLSgtSiXEPd8qSiNN0USxMDU4NEIwsjQyMloJaCotS0zAqwcdG
- xEH5xaVJWanIJyAyl2loAXRmSS3AAAAA=
-X-Change-ID: 20261029-superm1-wbrf-d94050a28212
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Hans de Goede <hansg@kernel.org>, Ma Jun <Jun.Ma2@amd.com>, 
- Evan Quan <quanliangl@hotmail.com>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mario Limonciello <superm1@kernel.org>
-X-Mailer: b4 0.16.0
+Content-Transfer-Encoding: 8bit
 
-Spec defines the WBRF record _DSM argument as a single buffer that packs
-the header and frequency ranges. The driver instead built a package of
-integers, so firmware on some systems abort \WBRF with AE_AML_OPERAND_TYPE
-when dereferencing Arg2[0].
+From: Tristan Madani <tristan@talencesecurity.com>
 
-Encode the payload into a little-endian buffer and hand it as the lone
-package element.
+acer_gsensor_event() accesses the ACPI evaluation result as a package
+without first verifying the object type.  If the firmware returns a
+non-package type, the code reads package.count and package.elements
+from the wrong union member, which can cause a NULL pointer
+dereference or read from an invalid address.
 
-Fixes: 58e82a62669d ("platform/x86/amd: Add support for AMD ACPI based Wifi band RFI mitigation feature")
-Signed-off-by: Mario Limonciello <superm1@kernel.org>
+Add a type check for ACPI_TYPE_PACKAGE before accessing the package
+fields, and validate that each element is ACPI_TYPE_INTEGER before
+reading integer.value.
+
+Fixes: 1eb3fe1d3b6b ("ACER: Add support for accelerometer sensor")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tristan Madani <tristan@talencesecurity.com>
 ---
- drivers/platform/x86/amd/wbrf.c | 75 +++++++++++++++++++++++------------------
- 1 file changed, 43 insertions(+), 32 deletions(-)
+ drivers/platform/x86/acer-wmi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/amd/wbrf.c b/drivers/platform/x86/amd/wbrf.c
-index 3281357185d1f..80088b755aa58 100644
---- a/drivers/platform/x86/amd/wbrf.c
-+++ b/drivers/platform/x86/amd/wbrf.c
-@@ -6,6 +6,8 @@
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 61ae622c93d94..72b44f02a992f 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -2043,7 +2043,12 @@ static int acer_gsensor_event(void)
+ 	if (ACPI_FAILURE(status))
+ 		return -1;
  
- #include <linux/acpi.h>
- #include <linux/acpi_amd_wbrf.h>
-+#include <asm/byteorder.h>
-+#include <linux/slab.h>
- 
- /*
-  * Functions bit vector for WBRF method
-@@ -29,6 +31,17 @@ struct amd_wbrf_ranges_out {
- 	struct freq_band_range	band_list[MAX_NUM_OF_WBRF_RANGES];
- } __packed;
- 
-+struct wbrf_record_entry {
-+	__le64		start;
-+	__le64		end;
-+} __packed;
+-	if (out_obj->package.count != 4)
++	if (out_obj->type != ACPI_TYPE_PACKAGE || out_obj->package.count != 4)
++		return -1;
 +
-+struct wbrf_record_payload {
-+	__le32			num_of_ranges;
-+	__le32			action;
-+	struct wbrf_record_entry	ranges[];
-+} __packed;
-+
- static const guid_t wifi_acpi_dsm_guid =
- 	GUID_INIT(0x7b7656cf, 0xdc3d, 0x4c1c,
- 		  0x83, 0xe9, 0x66, 0xe7, 0x21, 0xde, 0x30, 0x70);
-@@ -41,9 +54,11 @@ static BLOCKING_NOTIFIER_HEAD(wbrf_chain_head);
++	if (out_obj->package.elements[0].type != ACPI_TYPE_INTEGER ||
++	    out_obj->package.elements[1].type != ACPI_TYPE_INTEGER ||
++	    out_obj->package.elements[2].type != ACPI_TYPE_INTEGER)
+ 		return -1;
  
- static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ranges_in_out *in)
- {
-+	struct wbrf_record_payload *payload __free(kfree) = NULL;
- 	union acpi_object argv4;
-+	union acpi_object args[1];
- 	u32 num_of_ranges = 0;
--	u32 num_of_elements;
-+	size_t payload_len;
- 	u32 arg_idx = 0;
- 	int ret;
- 	u32 i;
-@@ -64,45 +79,38 @@ static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ran
- 	if (num_of_ranges != in->num_of_ranges)
- 		return -EINVAL;
- 
--	/*
--	 * Every input frequency band comes with two end points(start/end)
--	 * and each is accounted as an element. Meanwhile the range count
--	 * and action type are accounted as an element each.
--	 * So, the total element count = 2 * num_of_ranges + 1 + 1.
--	 */
--	num_of_elements = 2 * num_of_ranges + 2;
--
--	union acpi_object *tmp __free(kfree) = kzalloc_objs(*tmp,
--							    num_of_elements);
--	if (!tmp)
-+	payload_len = sizeof(*payload) + num_of_ranges * sizeof(payload->ranges[0]);
-+	payload = kzalloc(payload_len, GFP_KERNEL);
-+	if (!payload)
- 		return -ENOMEM;
- 
--	argv4.package.type = ACPI_TYPE_PACKAGE;
--	argv4.package.count = num_of_elements;
--	argv4.package.elements = tmp;
--
--	/* save the number of ranges*/
--	tmp[0].integer.type = ACPI_TYPE_INTEGER;
--	tmp[0].integer.value = num_of_ranges;
--
--	/* save the action(WBRF_RECORD_ADD/REMOVE/RETRIEVE) */
--	tmp[1].integer.type = ACPI_TYPE_INTEGER;
--	tmp[1].integer.value = action;
-+	payload->num_of_ranges = cpu_to_le32(num_of_ranges);
-+	payload->action = cpu_to_le32(action);
- 
--	arg_idx = 2;
-+	arg_idx = 0;
- 	for (i = 0; i < ARRAY_SIZE(in->band_list); i++) {
- 		if (!in->band_list[i].start || !in->band_list[i].end)
- 			continue;
- 
--		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
--		tmp[arg_idx++].integer.value = in->band_list[i].start;
--		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
--		tmp[arg_idx++].integer.value = in->band_list[i].end;
-+		payload->ranges[arg_idx].start = cpu_to_le64(in->band_list[i].start);
-+		payload->ranges[arg_idx].end = cpu_to_le64(in->band_list[i].end);
-+		arg_idx++;
- 	}
- 
-+	argv4.package.type = ACPI_TYPE_PACKAGE;
-+	argv4.package.count = ARRAY_SIZE(args);
-+	argv4.package.elements = args;
-+
-+	args[0].type = ACPI_TYPE_BUFFER;
-+	args[0].buffer.length = payload_len;
-+	args[0].buffer.pointer = (u8 *)payload;
-+
- 	union acpi_object *obj __free(kfree) =
--		acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
--				  WBRF_REVISION, WBRF_RECORD, &argv4);
-+		acpi_evaluate_dsm(adev->handle,
-+				  &wifi_acpi_dsm_guid,
-+				  WBRF_REVISION,
-+				  WBRF_RECORD,
-+				  &argv4);
- 
- 	if (!obj)
- 		return -EINVAL;
-@@ -236,8 +244,11 @@ int amd_wbrf_retrieve_freq_band(struct device *dev, struct wbrf_ranges_in_out *o
- 	param.string.length = 0;
- 	param.string.pointer = NULL;
- 
--	obj = acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
--							WBRF_REVISION, WBRF_RETRIEVE, &param);
-+	obj = acpi_evaluate_dsm(adev->handle,
-+				&wifi_acpi_dsm_guid,
-+				WBRF_REVISION,
-+				WBRF_RETRIEVE,
-+				&param);
- 	if (!obj)
- 		return -EINVAL;
- 
-
----
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-change-id: 20261029-superm1-wbrf-d94050a28212
-
-Best regards,
---  
-Mario Limonciello <superm1@kernel.org>
+ 	input_report_abs(acer_wmi_accel_dev, ABS_X,
+-- 
+2.47.3
 
