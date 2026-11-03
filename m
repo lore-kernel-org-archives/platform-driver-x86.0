@@ -1,73 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793725641;
-	b=k3xe1G61qufRWj87cFTGhPOjWWw2o7pcfGe9U9z5LhoUG0R7OPsj7lxgJJxST/SX5Bhi
-	 VRHK0zM0c0UgKAsD13VUoMAR+jyn3TTjTBRmBb46e/J23FggFg2YmY/myZV2Bo8WjNp8C
-	 VGd54/vwDW67SgPOdSP0EnHfSWRtDI50NHDYaIqKgwYO2HAZETIAUcAbIjJNF3hUVL5xv
-	 /jjcW4NP06IO6m7ZYhF09q8zKfkGAIe6GSg9IQe5aUjFN3ASjwT0WbkB0z6c3TsuszlMa
-	 l8bNNkEEBHWzjLHkVWD32bTDybvhq9968Hh6JaRwAXYLxkhuusp21G/mNnsAVMGCmTg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793725641;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=gRnLed9VQSLdnH58mLs+a4kx4U6I0Ux8DAjMMJuI8Po=;
-	b=4Fmz2Ib7Nk/7N1/NwwyvbvHzgHJ+PebrRJ47ipLv9xk/lyHqzOTHb6Ju76f1rWow4O+9
-	 5VyAPek/e+QnSMjyao0luWvNycnoq10tS7Mbn6VBgRdpKBwvWk5uB7wdNL/MDamYUuUkd
-	 lBxuCSLYZtykVN1F6H33Dq+0wIlUlz835aUF5SEzVNRcfpC+Kf7PHniCH2zyZMVqKj0SF
-	 hoN7y09SrOONtZsZOHrUp8sT4XXBmHMeGVXz1nMYRINB92UqanpC37XniTJMAiSucQsea
-	 dfvFK8kvozBgDU52vRb/awU/RiubCYzmc3uYTvsMrMxEzjFBtsH1U4OFwxu6ACqSzvg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=i4J+UBSz;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.15
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793729282;
+	b=daiHjNt1h32N3RSUaZdG7C1UoUV+8nTG7srGkwolv3Df4ZHZgAzmkxDPvMQ/COnXILYE
+	 KDjOgA3enIVG6bwxQo58Cocmt7lgDb7CCPNpFh1Z+EEMMzjnHD+8zaKqmZqpu2gL1x7Zo
+	 ILci+zUMT9XUrviyLu5pKlsAZUCSM3tGLKuLDBUrAzz+pG/bWnLhTuy3hh+mYMAqW1kiC
+	 NIgHrz/FZPX3IVvrFxtwWTUERKW3CtKKSM98Wo7uOdD8x1+eTgQiozztFCdG4XS9VJYHN
+	 52mVn/4AWPCVKIVOhStsH+/76NuX3qeQ2dL4e51M6Kj9cYCZmm4KLLY3qj3sd/Nr/kQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793729282;
+	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
+	bh=qBrrOZDdELpBa7w9GceU9M6SpXqpv/zbBRpjFArF7Kw=;
+	b=mvG3EHJguPdeGNNRsLUF7hb5n8AnZdwghd2xZnBOMqQRy0473jkDYzhIuoOb8pAT97cs
+	 EzlEqoq36Tw310d4FrP+CWNSQEAQmzeMgat7Gm5Z4Qjj2VXO98w9qJ18NSqaAq4JvGJ5o
+	 Qgx1AdZ6oLOHi21W0EbtFA4R3ZI2OFQkPW6oElh/EP2H1dTEbglJKDGDv9dlzrQuIwpq4
+	 exPZaQwdmDO/UO0AT6mpKra4vvfjx6B4M3y7cVRNwyyijtKW7MrI45UEOXadl3jUheh81
+	 WH5XtsvWQwDNcVZYXUmbA5oAABCYkH1OU+IcnWNKQpK/+H4zWKpqKZTUfDgrD7m0RqA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmx.de;
+	spf=pass smtp.mailfrom=gmx.de;
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b="Adx/jgdc";
+	arc=none smtp.remote-ip=212.227.15.15
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ABF606A327;
-	Tue,  3 Nov 2026 17:07:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23ABF606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0109606A31B;
+	Tue,  3 Nov 2026 18:08:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B0109606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=i4J+UBSz
-ARC-Seal: i=1; a=rsa-sha256; t=1793725607; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=DYnuNxuM9wNbjFSigLEseK7RbfcB/4KxGQ0De5eGaIx+gCPYREK71f21ehB2ngtumYGLK6aqhC72xXHDIr7WPColp82QbvuM7b7bpUxFvph+lzOnHg5qV+MVUqhJ1Ebp9PDEhetm918mwDw6cy0PLD/JIfD6LU+8ftF3ANG5lE0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793725607; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=gRnLed9VQSLdnH58mLs+a4kx4U6I0Ux8DAjMMJuI8Po=; 
-	b=bNY3nU8zw4Es+td4/u5Fud4eebZU0adFGTh1sLr/IRjszhPSy+pbQdS4zN4WQ+DbqoOVZGtuIumd+KlKwbwpYW60Yys2mPvpCfOXLLU7eUzfc7ABgMvinkj7vSRNCCFsSXPvYQp/nVwelky96w6EIfFxhrqfP3+VlNisQmn2MZg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=i4J+UBSzERADlUScZcUZy4ha+5g345fYvkLpFqLxIZZxiR38TGefby5vcnV7KFiPsIQ0cl+2/uq6lD7Q4/7WtDGUsw7NYxo+IFfGCr5X2Dlz1A5hF0lNgGvJCZ/IwCfDqV9zU3miz8aP68wFRti+QYZd3oXxSIw2L//w1v/WSpB8pHuWT6bKLJ7Upnw0wXMy02pXS/SIins4WSy/KfqwHGsWgGHfv9ew+3ZE7aWue3uHvc70G94yrGkTvPHabnjNqBfMyfFHPHM1XglyXCBW8OiH2dzg31m3FJEdwwAYR9k//2LfwsqxSBQt4HN4a1pquTjiFjTadTllDaavb7jwtw==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=gRnLed9VQSLdnH58mLs+a4kx4U6I0Ux8DAjMMJuI8Po=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793725605873107.46763878215052;
-	Tue, 3 Nov 2026 09:06:45 -0800 (PST)
-Message-ID: <527f9dbc20bf921f35108af60bbdebd2737698c4.camel@rong.moe>
-Subject: Re: lenovo-ymc: Yoga 7 14IRL8 keyboard backlight stays on in
- tablet mode; EC expects VPC 0x2A with posture data
-From: Rong Zhang <i@rong.moe>
-To: Mahir Faisal <mahirfaisalantiq33@gmail.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede	
- <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, Gergo Koteles <soyer@irl.hu>, Andrew
- Kallmeyer	 <kallmeyeras@gmail.com>, =?ISO-8859-1?Q?Andr=E9?= Apitzsch
- <git@apitzsch.eu>,  Swapnil Devesh	 <me@sidevesh.com>,
- platform-driver-x86@vger.kernel.org, 	linux-kernel@vger.kernel.org
-In-Reply-To: <CAGAHqH6GmTamRzM7twRSJmOCMYmAJ+j25585P6UVeF1eROjYNw@mail.gmail.com>
-References: 
-	<CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n8Cp3AzhVQ@mail.gmail.com>
-	 <c15f1bc47c470036c096689ea1411e324409a971.camel@rong.moe>
-	 <CAGAHqH62UiDKktoqg6cJ_oqj02NqH6FDjj32ucw7w+L2-_-NOg@mail.gmail.com>
-	 <CAGAHqH6GmTamRzM7twRSJmOCMYmAJ+j25585P6UVeF1eROjYNw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:01:39 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=Adx/jgdc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1793729275; x=1794334075; i=w_armin@gmx.de;
+	bh=qBrrOZDdELpBa7w9GceU9M6SpXqpv/zbBRpjFArF7Kw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Adx/jgdcScLNkj1DsJGIAkS1l8bekVUsze6yQowBpvsJ753rueytuE/2wdmQ4Q8X
+	 MQ9D9t8ZBuPZ8sYL5riAY4hmggRoN+rmyWxzrQo9xiJ0b5qfzesmJbLmk9tHyqvdU
+	 6CJFmNIr3uA4AfVQUkYQaUigns7Ihe7XR1hWaNpIJHn4WFWPQvG7sVDzCFbUIV0i1
+	 571WGXBZmLzsBbO/QO3F+9yXbwRka5SXT1Kn0cvWthNa++UgiUKaQ5+vtmx45OtM1
+	 AtkoEUurhzJtzN6Fpj1PmB97AZbpnnQq3uJE0WTwb5jCRQsSyK04O7hsgeZ2J2PPT
+	 FITE95blVaE3Ac65EQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N7zFZ-1wT1IH3a67-00uPzW; Tue, 03
+ Nov 2026 19:07:54 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: matan@svgalib.org
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	helian.caumeil@clever.cloud
+Subject: [PATCH] platform/x86: lg-laptop: Fix input of super key
+Date: Tue,  3 Nov 2026 19:07:14 +0100
+Message-ID: <20261103180750.228116-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -77,284 +70,149 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-3 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:iOA0OcU2PjlOsqhGEDnEVsIt0TpKkdw9qU1XHqxbHrP/SaAtIQ9
+ ladv22I4FG6YXMwSLHzL2w2g7QmQQC6CJA64WsjGvOtw1AOR8B41N1MXmyKSHf0X1AMsz/j
+ mr9bZgoXLocaCQQ2zhFjB5WCqHzH5oW2I4Pepxk8Hk4eHJdtGzzFDyxzAST9VskShNaGgWs
+ 748eQCinvG1xEnydMgsBQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:OshHa9tOHK8=;B/+IIk+WZ/tCffNXx9Dqq9gLxsI
+ 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
+ I6NqhK/nqFuswtkaWadlf2+RYorl0dCTAwtRg==
 
-Hi Mahir,
+From: Helian Caumeil <helian.caumeil@clever.cloud>
 
-On Tue, 2026-11-03 at 12:55 +0600, Mahir Faisal wrote:
-> Hello,
-> It's been quite a while. Any updates on the issue? Just a reminder, I
-> sent the required information you requested after testing it on my
-> hardware. Good day.
+Some devices emit special event codes when the super key is pressed.
+Mapping those events onto KEY_UNKNOWN by the sparse keymap seems to
+confuse userspace, causing duplicated super key input events.
 
-Usually, it is normal to have a one-week delay before receiving a
-response from LKML participants. Folks may be busy these days (me too).
-Try not to be in a hurry.
+Prevent this by ignoring those event codes.
 
-As for the acpidump, I didn't find anything interesting, so we'd have to
-rely on your and others' experiments.
+Signed-off-by: Helian Caumeil <helian.caumeil@clever.cloud>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
+Co-developed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/lg-laptop.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->=20
-> Thanks,
-> Mahir
-> (Resending in plain text mode as html text is not accepted. Sorry if
-> you receive duplicates.)
->=20
-> On Fri, Oct 30, 2026 at 3:32=E2=80=AFAM Mahir Faisal
-> <mahirfaisalantiq33@gmail.com> wrote:
-> >=20
-> > Subject: Re: lenovo-ymc: Yoga 7 14IRL8 keyboard backlight stays on in
-> > tablet mode; EC expects VPC 0x2A with posture data
-> >=20
-> > Hi Rong,
-> >=20
-> > Thanks for looking into this. I ran each case on the 14IRL8 (82YL,
-> > BIOS LHCN30WW) with my userspace daemon stopped. Commands were sent
-> > through acpi_call as VPCW 0 <data>, VPCW 1 0x2a; the EC cleared VCMD
-> > within ~10 ms every time. Keyboard/touchpad state was measured by
-> > counting evdev events from the internal devices (AT Translated Set 2
-> > keyboard, ELAN327E:00 04F3:327E Touchpad) during timed windows while
-> > I typed and used the touchpad. Backlight state is by eye.
-> >=20
-> > One observation up front, because it affects how the commands should
-> > be used: the commands set the keyboard/touchpad lock directly, but the
-> > backlight only changes when the command agrees with the physical
-> > posture (details under the 0x08/0x09 cases below).
-> >=20
-> > > What if:
-> > >=20
-> > > - 0x0A is not sent on start
-> >=20
-> > Not needed here. Fresh boot with nothing sent since power-on (the
-> > previous shutdown had sent 0x0B): folding alone left the backlight on;
-> > 0x08 while folded turned it off; unfolding plus 0x09 restored the
-> > keyboard (19 presses counted) and the backlight at its previous level.
-> >=20
-> > > - 0x08/0x09 is sent after sending 0x0B
-> >=20
-> > Both still work. After 0x0B, folding alone did not turn the backlight
-> > off, 0x08 while folded did, and unfolding plus 0x09 restored the
-> > keyboard (34 presses) and the backlight.
-> >=20
-> > > - 0x0A/0x08/0x09/0x0B is repeatedly sent multiple times
-> >=20
-> > Harmless. 0x0A x3, then 0x08 x3 while folded, then 0x09 x3 after
-> > unfolding (0.5 s apart) behaved the same as single commands: backlight
-> > off while folded, keyboard working afterwards (18 presses), no flicker
-> > or delay.
-> >=20
-> > > What if 0x0B is sent when the keyboard backlight is on?
-> >=20
-> > In laptop mode: nothing visible changes. The backlight stays on and the
-> > keyboard keeps working (27 presses afterwards).
-> >=20
-> > While folded with the backlight already off after 0x08: the backlight
-> > stays off and the keyboard stays disabled while folded (0 presses).
-> > On unfolding, with no 0x09 sent, the keyboard (24 presses) and the
-> > backlight came back on their own.
-> >=20
-> > > What if:
-> > > - 0x08 is sent when unfolded
-> >=20
-> > The keyboard and touchpad are disabled in laptop mode (0 key presses,
-> > 0 touchpad events over 10 s), but the backlight stays on. After one
-> > 0x09 the touchpad and keyboard were back.
-> >=20
-> > > - 0x09 is sent when folded
-> >=20
-> > With the backlight off after 0x08, a 0x09 while still folded
-> > re-enables the keyboard and touchpad (37 key presses and 3798
-> > touchpad events while folded), but the backlight stays off.
-> >=20
-> > So on this EC, a driver that sends the wrong posture would lock the
-> > internal keyboard and touchpad in laptop mode, while the backlight
-> > depends on the physical posture as well. Sending 0x08/0x09 strictly
-> > from the posture reported in the YMC event looks safe; 0x0A and
-> > repeated commands are not needed but do no harm.
-> >=20
-> > I also tested unfolding after 0x08 without sending 0x09 (0x0A sent
-> > before, no 0x0B). On unfolding, the backlight came back on, but the
-> > keyboard and touchpad stayed disabled: 0 key presses and 0 touchpad
-> > events over 10 s. They worked again after 0x0A + 0x09 (sent together,
-> > so this run alone doesn't show which one was needed; in the other
-> > tests 0x09 alone was enough).
-> >=20
-> > Compare the 0x0B-while-folded case above, where unfolding alone
-> > restored the keyboard. So once 0x08 is sent, the EC keeps the input
-> > lock until it gets 0x09; after 0x0B it follows the hinge again. For a
-> > driver this suggests re-sending the current posture on resume (the
-> > posture can change during suspend), and sending 0x0B on remove or
-> > shutdown, so a missed 0x09 can't leave the internal keyboard locked
-> > in laptop mode.
+diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-la=
+ptop.c
+index 36ad1e269443..49e3029d4b95 100644
+=2D-- a/drivers/platform/x86/lg-laptop.c
++++ b/drivers/platform/x86/lg-laptop.c
+@@ -138,6 +138,10 @@ static const struct key_entry wmi_keymap[] =3D {
+ 	{ KE_IGNORE,	0x30010001,	{ KEY_UNKNOWN }},
+ 	/* Change fan mode */
+ 	{ KE_KEY,	0x30010051,	{ KEY_PERFORMANCE }},
++	/* Super key pressed */
++	{ KE_IGNORE,    0x30020000,     { KEY_LEFTMETA }},
++	/* Super key released */
++	{ KE_IGNORE,    0x30020001,     { KEY_LEFTMETA }},
+ 	/* Disable camera */
+ 	{ KE_KEY,	0x40020000,	{ KEY_CAMERA_ACCESS_TOGGLE }},
+ 	/* Mute microphone */
+=2D-=20
+2.56.0
 
-Let me conclude:
-
-- the EC refreshes the backlight according to the physical posture, but
-an 0x08/0x09 is needed to initiate the refresh
-- 0x08 disables the touchpad and the keyboard
-- 0x09 enables the touchpad and the keyboard
-- 0x0a/0x0b doesn't matter
-
-With the information, I should be able to prepare a patch. I would still
-like to defer to others' opinions and experiments, though.
-
-Thanks,
-Rong
-
-> >=20
-> > > An acpidump would be helpful.
-> >=20
-> > The compressed dump is ~390 KB, so I'm sending it to you off-list
-> > rather than to the lists. The MSDM table is stripped from it.
-> >=20
-> > Thanks,
-> > Mahir
-> >=20
-> > On Thu, Oct 29, 2026 at 11:18=E2=80=AFPM Rong Zhang <i@rong.moe> wrote:
-> > >=20
-> > > Hi Mahir,
-> > >=20
-> > > Thanks for the report.
-> > >=20
-> > > On Thu, 2026-10-29 at 03:21 +0600, Mahir Faisal wrote:
-> > > > Hello,
-> > > >=20
-> > > > On a Lenovo Yoga 7 14IRL8 the keyboard backlight stays on when the
-> > > > laptop is folded into tablet/tent/stand mode under Linux, while on
-> > > > Windows it turns off. I traced the difference to a VPC command that
-> > > > the Windows YMC service sends on every posture change and that Linu=
-x
-> > > > does not send. Details below; I'd appreciate your view on whether
-> > > > lenovo-ymc/ideapad-laptop should send it.
-> > > >=20
-> > > > System
-> > > > ------
-> > > >   Model:  Lenovo Yoga 7 14IRL8 (DMI product name: 82YL)
-> > > >   BIOS:   LHCN30WW (latest)
-> > > >   Kernel: 7.2.11-300.fc45.x86_64 (Fedora)
-> > > >=20
-> > > > Symptom
-> > > > -------
-> > > > When folded, the EC disables the keyboard (no input reaches a VT) a=
-nd
-> > > > SW_TABLET_MODE is reported correctly by lenovo-ymc. The keyboard
-> > > > backlight, however, stays at its previous level. Writes through
-> > > > KBLC (via the ideapad-laptop kbd_backlight LED / UPower) are stored=
- in
-> > > > the EC (KBLS reads back the new value) but are not applied while
-> > > > folded, so there is no way to turn the backlight off without
-> > > > unfolding.
-> > > >=20
-> > > > The BIOS changelog suggests this is meant to be EC-driven. LHCN10WW=
-,
-> > > > "EC Notification":
-> > > >   "Fix the issue of keyboard backlight is on when turn on in notebo=
-ok
-> > > >    mode and change NoteBook mode to Yoga mode."
-> > > >=20
-> > > > The DSDT contains no tablet-mode handling in KBLC, and _Q1B only do=
-es
-> > > > Notify (WMIY, 0xD0). WMIY.WMAB just returns PCMD.
-> > > >=20
-> > > > What Windows does
-> > > > -----------------
-> > > > The "Lenovo Yoga Mode Control" package (YMC.exe 3.0.1.5, bound to
-> > > > ACPI\YMC2017) sends IOCTL 0x831020C0 to \\.\EnergyDrv with a 12-byt=
-e
-> > > > buffer {0x0C, 1, X}. EnergyDrv is AcpiVpc.sys from "Lenovo Energy
-> > > > Management". Its handler for that IOCTL maps function 0x0C to VPC
-> > > > command 0x2A (VPCCMD_W_YMC) and issues it through VPCW with X as th=
-e
-> > > > data byte, using the same VDAT/VCMD sequence as write_ec_cmd().
-> > > >=20
-> > > > Values of X observed in YMC.exe:
-> > > >   0x0A  service start
-> > > >   0x08  posture !=3D laptop (tent/stand/tablet)
-> > > >   0x09  posture =3D=3D laptop
-> > > >   0x0B  service stop
-> > >=20
-> > > What if:
-> > >=20
-> > > - 0x0A is not sent on start
-> > > - 0x08/0x09 is sent after sending 0x0B
-> > > - 0x0A/0x08/0x09/0x0B is repeatedly sent multiple times
-> > >=20
-> > > >=20
-> > > > Current Linux behaviour
-> > > > -----------------------
-> > > > ideapad_laptop_trigger_ec() sends VPCCMD_W_YMC with data 1, and onl=
-y
-> > > > for models in ymc_ec_trigger_quirk_dmi_table. Booting with
-> > > > ideapad_laptop.ymc_ec_trigger=3D1 on this machine has no effect on =
-the
-> > > > backlight.
-> > > >=20
-> > > > Test
-> > > > ----
-> > > > Using acpi_call against \_SB.PC00.LPCB.H_EC.VPC0, with VPCW 0 <data=
->
-> > > > followed by VPCW 1 0x2a, then polling VPCR 1 until 0:
-> > > >=20
-> > > >   data 0x0A, then fold      -> no change, backlight stays on
-> > > >   fold, then data 0x08      -> EC turns the keyboard backlight off
-> > > >   unfold, then data 0x09    -> keyboard and backlight work normally
-> > >=20
-> > > What if 0x0B is sent when the keyboard backlight is on?
-> > >=20
-> > > >=20
-> > > > I'm currently running a small userspace daemon that sends 0x0A at
-> > > > start, then 0x08/0x09 on each SW_TABLET_MODE change. It has worked
-> > > > reliably so far.
-> > >=20
-> > > What if:
-> > > - 0x08 is sent when unfolded
-> > > - 0x09 is sent when folded
-> > >=20
-> > > >=20
-> > > > Suggestion
-> > > > ----------
-> > > > On a YMC event, send VPCCMD_W_YMC with 0x08 when the reported postu=
-re
-> > > > is anything other than laptop and 0x09 for laptop, instead of 1. Th=
-is
-> > > > might also be worth doing outside the quirk table, since it matches
-> > > > what the Windows driver does on every model it supports. I can't te=
-ll
-> > > > whether data 1 is still needed on the models already in the quirk
-> > > > table (Yoga 7 14ARB7 / 14ACN6) for event re-arming, so someone with
-> > > > that hardware would need to check.
-> > >=20
-> > > There is a chance that the 0x0A[start] =3D> (0x08[fold] <=3D> 0x09[un=
-fold])
-> > > =3D> 0x0B[stop] sequence is generic. Derek, Mark, could you confirm i=
-f the
-> > > sequence exists in the documentation? If so, I think we can replace t=
-he
-> > > quirk table and the module parameter with the standard sequence. I wi=
-ll
-> > > prepare a patch once I get enough information.
-> > >=20
-> > > +CC Gergo, Andrew, Andr=C3=A9, Swapnil
-> > >=20
-> > > I believe the quirk was concluded by trial and error. Could you test =
-if
-> > > the above sequence works on your devices?
-> > >=20
-> > > >=20
-> > > > I can provide an acpidump, the disassembly excerpts, or test patche=
-s
-> > > > on this machine.
-> > >=20
-> > > An acpidump would be helpful.
-> > >=20
-> > > Thanks,
-> > > Rong
-> > >=20
-> > > >=20
-> > > > Disclosure: AI assistance was used to troubleshoot the issue and dr=
-aft
-> > > > this email.
-> > > >=20
-> > > > Thanks,
-> > > > Mahir
