@@ -1,73 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793654100;
-	b=HAt1zkDkvC823QWnwefPKV8d+gUTyNwS/Xf433yeXy/YhhjPs63KYS2hoO+NPA4Rs+tG
-	 I566EaWsRrbHJCAWNOM/gxjZhPSTgSn+Y6ahIjPsGRA5TY3HpecWVtCvXVoxs8UTKN6SH
-	 qgAv67DVBukPfMSCAc+KNrkp4iLd3YRZNg39f6HPl1sr/Wvl9UzVTAmr+aELm8iKCLtso
-	 nkQPhPfY14AGtJ059REgUwmxi51B53Vp38i0I5nKleBJ0I3oiBKQ1rOW1NfVb3NsBsYoU
-	 Q9HU3QFdGMR73zVKoYs984p7katZzJvNFZtTo8vP6h0ZOqV+iwsEL3lkmM7oQ75twlQ==
+	t=1793688876;
+	b=hzgqnxm3zgzuf0aUiAo+TwbFOHepCXmvsaus4+O16k1bbnO3tlMmS7GNAK/SQbdP73Wx
+	 xzOwuyw17pzLskYehOZKR01L4HyqMkAwrhloAtnQYaLWRgX5Rs/yrtIHrweYslhVn6IcK
+	 5eqreAaTkJs7AG6hEGnM44Bx1G2OzTfXuk+OMdgcjYlJEbhMEwrN+GEiyDeuvQrQThuPC
+	 Ouk0Qu8+orBy7D4vdsbuDAohgoazM3TDZGQOq89zItMIirS0tNttMsfXc/Dh5VDgdO4mg
+	 13lD5Y/t/jfmnd6XcL+jeZEx6/Imiv0ZTsk8HzaRaTu+LUKiTj28eRMK++TurW7lIWQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793654100;
-	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
-	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=IboT5prE1F2zgLUjN3M8JJkwTsSKYt9w9Q1ZY5Lm5jE=;
-	b=f14g5oniagmwPqNHteWN96h1eAYutmcfqhkDWl6Ev8AsvZutxLNVN3oL1a4ZrrSAJXry
-	 5BfYPliJq/wy6alFdh7Z7+LGwaOxWCtYwrfH+fHwRTr3EWXnjeRsOYtyNsDQFfHbRgGWo
-	 Zb9dEInf2lS975CR0PfscMfsXQsAAqlDGcLY1NXihlrtq68JtD2dpexOD4fCRgIQxIxWT
-	 mOBaFeUB2qjx9qpBj04w2N5MJgDYW18qwO7BAIa52R6Do6Pk1SzvpY0sZjhS9vtQeZzXi
-	 HoDrxrwYpwUq9lYbkKtQcZAmnZxL59WqHBunRYK50MG3/ZOAfXZQk4/uKXIxXgQ9Quw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793688876;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=pI+R0vssS3+rBEwGlEmrhAJtAWwC+K6R2fL7Q2wxluc=;
+	b=kHpHcYPZNySrVpcXOaZLKz7xVjV1Av85dZ82VFATW6ctQdNLvHkXM8xPm8vTEwpgtxuC
+	 PzvUVZcMmuK4xW9wuQUrRhISAEDM/i2eLIbmqaHah1ydPBfvqtdCLKxILkTz/bClasLEb
+	 02/LAN95Mz+aVP9ZIR9IYM7nDdFt7t1Zl+JJIuoupoibtIcnfINE5AVg7WrJGidH1jGI4
+	 829cycOww4c4If2fp9RJAZeSjSVW50H8YBv7rAHGwNexqAYmGBxmtJ1E4ZwXseO87faFy
+	 jrFAKpILH896Zgxs8XETeVpx2YPPDQbndp4cA+JCgBmecLIy2XG4qj3v57PsvEJEw6g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQQS2O2A;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HVwwGpgK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A93606A327;
-	Mon,  2 Nov 2026 21:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EAD606A334;
+	Tue,  3 Nov 2026 06:54:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQQS2O2A
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D90421F00A18;
-	Mon,  2 Nov 2026 21:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HVwwGpgK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57D471F000C1;
+	Tue,  3 Nov 2026 06:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793654100;
-	bh=IboT5prE1F2zgLUjN3M8JJkwTsSKYt9w9Q1ZY5Lm5jE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=iQQS2O2AfQi+b0NdK1c/IizthlwDmBEQCWvAB+m+GRkBQynljQMNycIudYc/9h+f7
-	 Vawkm19O3oDCTmBHyvNQu/VA+okB5t8Z9fKADvjwmVYg9kIDcYS0RGx7iOgEusCIt0
-	 sSUI2zMCBo8GTTgwELt8DWSNAXGAXBVX+K5v7+akC4NonZ2T53NHL1PfwdD1coLE4T
-	 UgMKhDsPZNnCe/lwhxhJk5/Y/IQS2vyCvDzuusO+IC/e8MHzZliwnwssfEHb72ld6S
-	 NYbu/taiK9urXN1VFBXtl6MzT92tBVkBKu03gGwf0I/CNsbIMUlES7wZk9EI6GVBLy
-	 iYqmaA0XMCbyQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 2F76AF40069;
-	Mon,  2 Nov 2026 16:14:59 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 02 Nov 2026 16:14:59 -0500
-X-ME-Sender: <xms:U_3oaryk6_helL1M_uAN7EO4qMybANaa-srCik-GRitZbuqFboBqdg>
-    <xme:U_3oauHfNHMR6hcCtpSbJvTRN_ZuN_nAzlCwpnkYqtzxS-rn0UxdTBvWBMWNMs9r7
-    a-ZlXU6FghOrVMCcUPo-AaD5xEXA36oq8MikTMcJ0_wa_b-qCwAZ-us>
-X-ME-Proxy-Cause: dmFkZTEUxvGtMocayGr7B4fSypLorEWulbSGFmyciE99PbNHadsfRj8oJMbJRxHXYsxQIt
-    HJax8p9oKuSMV2y6UVPmS/4j7HUd5rjIX/3bSv+WxKky+Oywmc7N971sq4gj98vooi1loy
-    1VA4HgeZfWDiXpb5kDKi7xQxXbyPK2MGwwLJpyE0xfXqkY7E8sGtcHcNk/wnkUWUjPmE52
-    1fC16geqAcoXm2lfB137c203Fk7N7eknF2FospDFhgMfqTlBG0mACNYr8lQadBYMcFzIwS
-    xdMqzJiY0yP6EWwdn+kTLuDIPyAnmsfc+Fkh0eyedsvXxZE99U6Un8Iqi+BS1rjMOYe8Fz
-    cQe0JnCi0QRuT4GlGVKOTxdQDJQGBLvWqhAt3O8bWkvcJjRQxhfL/VM8iaZvcS9vZVKk51
-    cvtcJa3aRzY9vaAN5UU1Ibv0Pajekkt1DB7g/9fGfI4l4GDXk/sjiDzMLuqExXW9bP0HpI
-    dlkRN4hQD6iF1Dpni2XhBAYy5+SXfWyXnYl1AI+JsbefeEaEHWJH579nLVVLQ2RUreV63D
-    i6ZwKTpLmExi/BxP76BApUlOAt1OWFEGi7PV30tQX9eGSmgvI8ft665RqCVrvfcBIoxi92
-    zFQPxo3hKtBKIYJAkTnATb8+t0TRoTHXfm/yYurKbQprEJCDPAhlI7Iqqfbg
-X-ME-Proxy: <xmx:U_3oarVQi5FE9RSxGSgbagw8vTijh5nt6FAc-00jRvkpLed5l5vdag>
-    <xmx:U_3oarwLIkKyHoZ6LAwzX3ZogBYMe6ySqBqbRllxe8MLJ4ae98X1cg>
-    <xmx:U_3oai-p1CErC1ApULRKgQLiL3sE4oRNFtrS1t981SDT9sMZWzyrdA>
-    <xmx:U_3oag_JWJPF20j5AMkb3zRn4u2LwnHCyu-zTglkeuv_nnvMExEErg>
-    <xmx:U_3oahVZk9Q3hibEcmT34YwGgluelPXvf0zWIimHFfvX5LF4LQPF-Sg6>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 181AE78273B; Mon,  2 Nov 2026 16:14:59 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1793688875;
+	bh=pI+R0vssS3+rBEwGlEmrhAJtAWwC+K6R2fL7Q2wxluc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=HVwwGpgKph2PTCR3kNBpzgeJl9Fiv96ILTSVlqr7otzEN5KOe+3Oq36TZyy3FWiTn
+	 B5JC9rU3ADl82tq64bDRGFlV2NLyjhAO9fPnLejhbwzeG1Z9dc6ee0GVq9fDWJMr9G
+	 uEn9b1MhNhFVniqfmxfA0bqOs/QBhcC6kPjZ8hJFtdA34IHlyTNGGcCj68Y62ICtjk
+	 Ouq+kpEpWGx9PHR9MkFKZswgqiZXimSJHDR7+eldSuTYGotHgFLXgZCx0dKYEpIAcw
+	 6pYXyTE/pVVs21IvMkWqyQ4k+6ZNZ7Rqbrs3FA5NB7/Klj97W0Huza14rR1CDkHC3E
+	 tLDaFtIRr3wRA==
+Message-ID: <a0736b1b-707e-4f24-8249-c7363c673a43@kernel.org>
+Date: Tue, 3 Nov 2026 07:54:21 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -77,61 +51,140 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AlKaHQIBeldV
-Date: Mon, 02 Nov 2026 16:14:38 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Christian Brauner" <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
-Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Jann Horn" <jannh@google.com>, "Josef Bacik" <josef@toxicpanda.com>,
- "Chris Mason" <mason@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, "Eric Dumazet" <edumazet@kernel.org>,
- "Thomas Gleixner" <tglx@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Jonathan Corbet" <corbet@lwn.net>, "Christoph Hellwig" <hch@lst.de>,
- "Greg Kroah-Hartman" <gregkh@suse.de>,
- "Joel Granados" <joel.granados@kernel.org>, "Kees Cook" <kees@kernel.org>,
- "Jan Kara" <jack@suse.cz>, "Jan Kara" <jack@suse.com>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 19/23] tty: sysrq: let procfs copy in writes to
+ /proc/sysrq-trigger
+To: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>,
+ Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>,
+ Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados
+ <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>,
+ Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>,
  linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
  linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-s390@vger.kernel.org,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
  linux-um@lists.infradead.org, linux-wireless@vger.kernel.org,
- "Linuxppc Dev" <linuxppc-dev@lists.ozlabs.org>, netdev@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
  ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org,
- coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org,
- linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net,
- jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org,
- linux-sh@vger.kernel.org, linux-usb@vger.kernel.org,
- samba-technical@lists.samba.org, sparclinux@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net,
- "Takashi Iwai" <tiwai@suse.de>, linux-input@vger.kernel.org,
- linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org
-Message-Id: <961e7e3d-2117-48ee-8a7e-a7a851ec8ef8@app.fastmail.com>
-In-Reply-To: <20261102-work-procfs-fs-v1-6-d09a996317b3@kernel.org>
-References: <20261102-work-procfs-fs-v1-0-d09a996317b3@kernel.org>
- <20261102-work-procfs-fs-v1-6-d09a996317b3@kernel.org>
-Subject: Re: [PATCH RFC 06/27] nfsd: let procfs own the seq_file of
- /proc/fs/nfs/exports
-Content-Type: text/plain
+ coreteam@netfilter.org, kexec@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net,
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org,
+ linux-usb@vger.kernel.org, samba-technical@lists.samba.org,
+ sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-doc@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>,
+ linux-input@vger.kernel.org, linux-raid@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>
+References: <20261102-work-procfs-drivers-v1-0-a994bd4d3b1a@kernel.org>
+ <20261102-work-procfs-drivers-v1-19-a994bd4d3b1a@kernel.org>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
+ IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
+ BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
+ eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
+ 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
+ XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
+ l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
+ UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
+ gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
+ oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
+ o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
+ Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
+ wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
+ t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
+ YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
+ DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
+ f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
+ 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
+ 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
+ /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
+ 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
+ 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
+ 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
+ wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
+ 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
+ jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
+ wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
+ wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
+ W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
+ f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
+ DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
+ S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
+In-Reply-To: <20261102-work-procfs-drivers-v1-19-a994bd4d3b1a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On Mon, Nov 2, 2026, at 10:07 AM, Christian Brauner wrote:
-> Declare the seq_operations and let procfs open and free the seq_file.
-> ->proc_open() and ->proc_release() only set up ->private and take and
-> drop the reference to the network namespace now. Reading the file then
-> no longer holds up its removal.
->
+On 02. 11. 26, 16:07, Christian Brauner wrote:
+> Implement ->proc_write_buf() so procfs copies in what is written before
+> it pins the entry, and handle the keys from that copy. Writes larger
+> than PAGE_SIZE - 1 bytes fail with -EINVAL now. They used to trigger the
+> first key, or all of them in bulk mode. procfs allocates the copy, which
+> is as small as the write, opening the file allocated as much already.
+> 
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-Acked-by: Chuck Lever <cel@kernel.org>
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+
+> ---
+>   drivers/tty/sysrq.c | 9 +++------
+>   1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index f4571d05b496..99363e1b59ed 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -1200,17 +1200,14 @@ EXPORT_SYMBOL(unregister_sysrq_key);
+>    * However, if the first character is an underscore,
+>    * all characters are processed.
+>    */
+> -static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+> +static ssize_t write_sysrq_trigger(struct file *file, char *buf,
+>   				   size_t count, loff_t *ppos)
+>   {
+>   	bool bulk = false;
+>   	size_t i;
+>   
+>   	for (i = 0; i < count; i++) {
+> -		char c;
+> -
+> -		if (get_user(c, buf + i))
+> -			return -EFAULT;
+> +		char c = buf[i];
+>   
+>   		if (c == '_')
+>   			bulk = true;
+> @@ -1225,7 +1222,7 @@ static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+>   }
+>   
+>   static const struct proc_ops sysrq_trigger_proc_ops = {
+> -	.proc_write	= write_sysrq_trigger,
+> +	.proc_write_buf	= write_sysrq_trigger,
+>   	.proc_lseek	= noop_llseek,
+>   };
+>   
+> 
 
 
 -- 
-Chuck Lever (Come to NFS bake-a-thon! https://nfsv4bat.org)
+js
+suse labs
