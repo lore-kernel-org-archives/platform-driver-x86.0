@@ -1,75 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793723196;
-	b=de0t5tAyrnyXAbkQbiTZ2C+cbAYfDQs2cTyl/SqxKfDJG3XHdMeMj3022Ufe+mERdVAT
-	 +ZzygmdJOITO18ZCTcF6Hze1dneVPtjYSJLLNNOZ4bq4JZQoTyhfB2H4OWGAlSDtbAp8X
-	 lMw+lQb0HBhfuqekU6sPU6XOcgN62V2BzWtztyYNkR5lDMcxukdlo1ZJ+1pazOpZmQLfn
-	 yWXqCMjxYFEfYAIrmYqyKPh7vya7mLyXWm99lwJ3Yunl0DlePoZ15H46ZKsOVXA5XjajR
-	 amsBuX0CyCvpY0OOus2YL65Do0Uox5LMAGQG9R6+YMBItQrG2k2yVSvVPsokIp2mzZA==
+	t=1793723295;
+	b=FtKw4IvA6LXe1UAh6m5MgCrTdg3a0PmyOFY2C7Iz537TTjQFQkNpsfJA1Bw0exJBlgqB
+	 7Y1O5iUuGokI1yA1xCUGgnU4LTiSB10iLOrQ0hXaIh0CZa59x1zxTvdG+tmzuo27wbz03
+	 CLdrEexWvUZJEiNEsveNy4kYSvNl3s1NZBtl7NM4ZbLqnii4oqOuneY+Tcc59E0SNVLi7
+	 wc46c3I41o9sgZi+o4rR1ZLeMvSvrR4rlt0S7EyT60M9NacvG9Uj79OvYKupVeDZ1PG8J
+	 Hj71M0qSTXshdqKYJ6MOfdXEwJHgOEm32GIhOQ8MHsEsNtrpWBilF2J19SwA5VlbyNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793723196;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=88x5nWCU4/5DUnm5J75+/44oJREtwTCj+m3lJcaJoNE=;
-	b=tdawQlYfgDrb3alGEDfr439O5Cw+xIZMzgxuDQTvu1eq98R7olpfgWnXNElxe+6RNneW
-	 +WtM6uldUVExM54iZpuquygLBgV4ss9v1DdlPrhBRgjlpJsdA9htasb5VqBuKI9xdRRZQ
-	 mXNqPuVznzoA01sj3DERKYaelKX3fIa36NpOutkvXGqh8Mxsj0eSKWhsIaJedFVEQIxti
-	 n7X9odVx6mncFTtIw7BeW8JUrJIaRC0dbILM11QFF47/8afyZkTDuml9E/fnFFfGtarJY
-	 +ME6FErInGL9MCUfBY7Ykc5Ds6s17BJZSRUQzGoG5BB1MPpvwHhtpkwzrDzTAt0asVQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793723295;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=VJDE2VaGlBqL1jKqnMs85FG086tb9WxrYjVRcaqG+3U=;
+	b=bbe7GuIWeDy5a6CaA/BmRJWAAxDJ0D4cZSdSSVtqTdb+9tgfQhKt7/CukuM+vvF/vjTE
+	 gy93+69nRJvHyHgz9Fgetgp5sbqFye9XlgHgNWCYDiS6bNt5HhvqiMx+I2FBdn9I0sgee
+	 AzKaETx8i00uQDRwG2jgEgmRwzEAq66bEG0gYbtqjW4TfK3mt/2a1WkXEj0Kb2aU6ODgT
+	 B1uRfl9mPpdGxzYsyC0cLGvKuCF9wXToEMCcI/TdbTexZkJxv8mR5aH5chUW10sY5kpzD
+	 XtrcB0Z0V65HAY0rACmafFzIJksegJwXy0JKnRqRXA7yB391ZpJYbB5uFBlOyHQkaBA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HyDteQG2;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WkmOKoRN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259F4606A327;
-	Tue,  3 Nov 2026 16:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F40606A326;
+	Tue,  3 Nov 2026 16:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HyDteQG2
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A721F000C1;
-	Tue,  3 Nov 2026 16:26:23 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WkmOKoRN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DA91F000C1;
+	Tue,  3 Nov 2026 16:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793723195;
-	bh=88x5nWCU4/5DUnm5J75+/44oJREtwTCj+m3lJcaJoNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HyDteQG2VBDz2pwudxJvRFZ3NzuhMM1n/qoJyRpSIEa+4sIo8qfNjCKCMkx9fqPnu
-	 PTXEB3HB8c+csEYJbUqrD18YNji+Wb3P0nPR4rCDriU41qd0d35Q951xfxtaew6zqD
-	 xTRV7HQa/evoV4YEWVb3yEGxlVh8/pDAOnR650sPVOaA2QtXNMiUjYtFVGzVyuFmxJ
-	 cuqSFcaDMPcPNDAwdq/HarCHKLW8nQ/TcudxBJnTO/IQN1HpQ6LTm2xHx92xHn7YRV
-	 9GYQVIg2n29fkajQrtiWC1hueIuFYRrAfwMXbzDr3+UFxfeou5MMiBIFbN+ZYhp4th
-	 RFlMkVbcaKQDw==
-Date: Tue, 3 Nov 2026 17:26:21 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
-	Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados <joel.granados@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org, 
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	Linuxppc Dev <linuxppc-dev@lists.ozlabs.org>, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	platform-driver-x86@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net, 
-	jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
-	linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH RFC 27/38] sunrpc: make queue_wait a global wait queue
- again
-Message-ID: <20261103-lufttemperatur-absondern-zweifach-31d272ad55ab@brauner>
-References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
- <20261102-work-procfs-bugfixes-v1-27-59422ed3e465@kernel.org>
- <16f91f93-16b4-49b1-b7fa-cec69759c349@app.fastmail.com>
+	s=k20260515; t=1793723295;
+	bh=VJDE2VaGlBqL1jKqnMs85FG086tb9WxrYjVRcaqG+3U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=WkmOKoRNNL2pOzw7Uj84JOivX/pMLxbV5J7iZcjv1/TLSJ+utD3OCblyij3dq2Dnr
+	 9feC+UlQytWfYP33F3owi4g37dQdcmd9vvWoi0GkgtXJ2gZThsFzLwiE/xcNRxPQOr
+	 oItU+sxORR/jc77LGjAY4U774yWvwKFAbWVGltZBDKgJIg9pmWqpe2ED823z32RKMR
+	 PUdljHUhVvqfLqcQL0edLv+ihXNVvKHpv66dMe5ANpDK8Y7zx+O5m9kvao4/3gvvtj
+	 /QVFTqWDJuJDQ6hue9xe9d7OaJZuZmUvHvDD3uMotmu0OPT28Pui7It2ocZMK5Orab
+	 15HpJk0eh73+w==
+Message-ID: <5babb98b-7d6e-4f3a-b306-b40b30c4cdfa@kernel.org>
+Date: Tue, 3 Nov 2026 17:28:11 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -79,72 +51,121 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <16f91f93-16b4-49b1-b7fa-cec69759c349@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: fix codec teardown if
+ poweroff handler setup fails
+To: Wentao Liang <vulab@iscas.ac.cn>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20261103105544.1394559-1-vulab@iscas.ac.cn>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20261103105544.1394559-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 02, 2026 at 10:12:12AM -0500, Chuck Lever wrote:
-> 
-> 
-> On Mon, Nov 2, 2026, at 9:21 AM, Christian Brauner wrote:
-> > Since commit 552d0e17ea04 ("sunrpc: convert queue_wait from global to
-> > per-cache-detail waitqueue") poll() and epoll queue their waiters for a
-> > channel file on the queue_wait head in struct cache_detail. But the
-> > cache_detail can be freed while its channel file is still open and
-> > waited on.
-> >
-> > The procfs channel files of a network namespace are removed when the
-> > namespace goes away. Removing a procfs file waits for the callers that
-> > are in one of its methods right now and then calls ->release on every
-> > file that is still open (cf. close_pdeo()). The waiters that poll() and
-> > epoll left on the head stay queued until their file is really closed.
-> > So:
-> >
-> >   sunrpc_exit_net()
-> >   -> ip_map_cache_destroy()
-> >      -> cache_unregister_net()
-> >         -> remove_cache_proc_entries()
-> >            -> proc_remove()      // ->release, the waiters stay queued
-> >      -> cache_destroy_net()      // kfree(cd)
-> >
-> > and when poll() returns remove_wait_queue() writes to the freed
-> > cache_detail:
-> >
-> >   BUG: KASAN: slab-use-after-free in _raw_spin_lock_irqsave+0x4b/0xa0
-> >   Read of size 1 at addr ff110001131bb570 by task sunrpc-poll-uaf/242
-> >   Call Trace:
-> >    remove_wait_queue+0x22/0x1c0
-> >    poll_freewait+0xc2/0x230
-> >    do_sys_poll+0x9ba/0xd50
-> >    __x64_sys_poll+0x165/0x470
-> >   Freed by task 12:
-> >    kfree+0x267/0x620
-> >    sunrpc_exit_net+0x34/0x80
-> >    ops_undo_list+0x271/0x8d0
-> >    cleanup_net+0x3f3/0x860
-> >
-> > Closing an epoll instance that watches the file gets there through
-> > ep_unregister_pollwait() instead.
-> >
-> > The channel files of a network namespace belong to the root of its
-> > user namespace and cache_open() doesn't check for a capability. So an
-> > unprivileged user can open the channel file of a namespace of its own
-> > from the outside, poll it and let the namespace die.
-> >
-> > Go back to a single static wait queue that never goes away. A wakeup
-> > for one cache wakes the waiters of all caches again but cache_poll()
-> > reports per cache_detail so that's just a spurious wakeup. procfs
-> > should really own the wait queue of its files like kernfs does but
-> > that's nothing for stable.
-> >
-> > Reported-by: Chris Mason <mason@kernel.org>
-> > Fixes: 552d0e17ea04 ("sunrpc: convert queue_wait from global to 
-> > per-cache-detail waitqueue")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
-> 
-> Acked-by: Chuck Lever <cel@kernel.org>
+Hi,
 
-Fwiw, I have a patch series on top of this that makes procfs own the
-waitqueue and then this whole UAF issues goes away structurally and you
-get to elide that global thing here.
+On 3-Nov-26 11:55 AM, Wentao Liang wrote:
+> lenovo_yoga_tab2_830_1050_init_codec() stores the codec device reference,
+> the pinctrl handle and the pin mappings in globals on success; they are
+> only released by lenovo_yoga_tab2_830_1050_exit(). If the
+> register_sys_off_handler() call which follows it fails, the init callback
+> returns an error before the exit callback has been registered with the
+> framework, so the codec device reference and the other resources are
+> never released.
+> 
+> Factor the codec teardown out into a helper and call it from the error
+> path of both init callbacks.
+> 
+> Fixes: 4ce8f4c2027d ("platform/x86: x86-android-tablets: Fix Lenovo Yoga Tablet 2 830/1050 poweroff again")
+> Cc: stable@vger.kernel.org
+> Assisted-by: DeepSeek-V4.1-Flash and OpenAI Codex
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  .../platform/x86/x86-android-tablets/lenovo.c | 27 +++++++++++++------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+> index 52d96ae89078..294986f84ce8 100644
+> --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
+> +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+> @@ -548,6 +548,14 @@ static int __init lenovo_yoga_tab2_830_1050_init_codec(void)
+>  	return ret;
+>  }
+>  
+> +static void lenovo_yoga_tab2_830_1050_exit_codec(void)
+> +{
+> +	device_remove_software_node(lenovo_yoga_tab2_830_1050_codec_dev);
+> +	pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
+> +	pinctrl_unregister_mappings(&lenovo_yoga_tab2_830_1050_codec_pinctrl_map);
+> +	put_device(lenovo_yoga_tab2_830_1050_codec_dev);
+> +}
+> +
+>  /*
+>   * These tablet's DSDT does not set acpi_gbl_reduced_hardware, so acpi_power_off()
+>   * gets used as pm_power_off handler. This causes "poweroff" on these tablets
+> @@ -578,8 +586,11 @@ static int __init lenovo_yoga_tab2_830_1050_init(struct device *dev)
+>  	lenovo_yoga_tab2_830_1050_sys_off_handler =
+>  		register_sys_off_handler(SYS_OFF_MODE_POWER_OFF, SYS_OFF_PRIO_FIRMWARE + 1,
+>  					 lenovo_yoga_tab2_830_1050_power_off, NULL);
+> -	if (IS_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler))
+> -		return PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
+> +	if (IS_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler)) {
+> +		ret = PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
+> +		lenovo_yoga_tab2_830_1050_exit_codec();
+> +		return ret;
+> +	}
+
+lenovo_yoga_tab2_830_1050_exit_codec() does not touch lenovo_yoga_tab2_830_1050_sys_off_handler,
+so there is no reason to store the error-code in ret before calling it.
+
+Please just keep this line:
+
+		return PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
+
+as-is.
+
+
+>  
+>  	return 0;
+>  }
+> @@ -588,10 +599,7 @@ static void lenovo_yoga_tab2_830_1050_exit(void)
+>  {
+>  	unregister_sys_off_handler(lenovo_yoga_tab2_830_1050_sys_off_handler);
+>  
+> -	device_remove_software_node(lenovo_yoga_tab2_830_1050_codec_dev);
+> -	pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
+> -	pinctrl_unregister_mappings(&lenovo_yoga_tab2_830_1050_codec_pinctrl_map);
+> -	put_device(lenovo_yoga_tab2_830_1050_codec_dev);
+> +	lenovo_yoga_tab2_830_1050_exit_codec();
+
+Please also remove the empty line which was there to group all the codec
+cleanup calls together which now no longer is necessary.
+
+>  }
+>  
+>  /*
+> @@ -776,8 +784,11 @@ static int __init lenovo_yoga_tab2_1380_init(struct device *dev)
+>  	lenovo_yoga_tab2_830_1050_sys_off_handler =
+>  		register_sys_off_handler(SYS_OFF_MODE_POWER_OFF, SYS_OFF_PRIO_FIRMWARE + 1,
+>  					 lenovo_yoga_tab2_830_1050_power_off, NULL);
+> -	if (IS_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler))
+> -		return PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
+> +	if (IS_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler)) {
+> +		ret = PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
+> +		lenovo_yoga_tab2_830_1050_exit_codec();
+> +		return ret;
+> +	}
+
+Same as above, please keep this line:
+
+		return PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
+
+as-is.
+
+Regards,
+
+Hans
+
