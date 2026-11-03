@@ -1,111 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793721213;
-	b=evxgxZBEQcT05Xd79HepXQFob5NO0WKNQGwJb74whv8aX51zC+XoNrCB2/Bgonn3scnN
-	 akBSwCQJhktpBsW30m4qXBqas+RJ/Sx2R+FVsF8XB/ySl0rEU9t2ex2omtM3+BmnlJcZE
-	 +tOtD/cD0abKrwYCOPLOl/g0zp/hYZp+xWG0XVOHC5a/sBd92UYDZjCeNpyWUzzhGoS+f
-	 hOObgobxQuGQnAZmzQ8tc8dKU8kZxJbsd/K1Tz7fgaFODY2paumL05E5yKphfTaDkGpTg
-	 Av614kFwrRew5ObCzcjoFvUq/YJCJ5QRdNwDKfjXAHpU5k/kwPFC+d+GgPtPSev2xNg==
+	t=1793723196;
+	b=de0t5tAyrnyXAbkQbiTZ2C+cbAYfDQs2cTyl/SqxKfDJG3XHdMeMj3022Ufe+mERdVAT
+	 +ZzygmdJOITO18ZCTcF6Hze1dneVPtjYSJLLNNOZ4bq4JZQoTyhfB2H4OWGAlSDtbAp8X
+	 lMw+lQb0HBhfuqekU6sPU6XOcgN62V2BzWtztyYNkR5lDMcxukdlo1ZJ+1pazOpZmQLfn
+	 yWXqCMjxYFEfYAIrmYqyKPh7vya7mLyXWm99lwJ3Yunl0DlePoZ15H46ZKsOVXA5XjajR
+	 amsBuX0CyCvpY0OOus2YL65Do0Uox5LMAGQG9R6+YMBItQrG2k2yVSvVPsokIp2mzZA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793721213;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=N3SYB/BgxSNTh4u+DnHBIGPI0+Di9/c/+FCF8jLlAW8=;
-	b=aEgyWEMondTCd7OVrjCJChJP4WciOKzx4w+1zpWlqvF2h+wn1ykSRSD266ZNYbxHM0Qa
-	 7PlAMy8hKHwWzSE7pLSWWIJ6E94ecCdAJZb8p37d+55A+UhEe7tViEKW2bWwKyZuLILKe
-	 gD9HF1hgNZLaSAMn41ymzRMCXs4k2aNNyEz4OfpcD4Zek3byuRz9I5c3GsGMIC2hioprd
-	 2krJOsrp/IEmLF4ZEIdtx1Yi+nUAp1pp15PPnNpwAqBnQ3yPVInl5JH9UX61WOSSJlpVY
-	 2JaWgggoxQXNTZNFjjmqOG11ykF9k8g/X0kPmJQS6kjEwND1J2krJTjw56PNLC8chbg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793723196;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=88x5nWCU4/5DUnm5J75+/44oJREtwTCj+m3lJcaJoNE=;
+	b=tdawQlYfgDrb3alGEDfr439O5Cw+xIZMzgxuDQTvu1eq98R7olpfgWnXNElxe+6RNneW
+	 +WtM6uldUVExM54iZpuquygLBgV4ss9v1DdlPrhBRgjlpJsdA9htasb5VqBuKI9xdRRZQ
+	 mXNqPuVznzoA01sj3DERKYaelKX3fIa36NpOutkvXGqh8Mxsj0eSKWhsIaJedFVEQIxti
+	 n7X9odVx6mncFTtIw7BeW8JUrJIaRC0dbILM11QFF47/8afyZkTDuml9E/fnFFfGtarJY
+	 +ME6FErInGL9MCUfBY7Ykc5Ds6s17BJZSRUQzGoG5BB1MPpvwHhtpkwzrDzTAt0asVQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cV1rfcaP;
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HyDteQG2;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E596606D830
-	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Nov 2026 15:53:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E596606D830
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259F4606A327;
+	Tue,  3 Nov 2026 16:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cV1rfcaP
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4af520023fdso13025795e9.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Nov 2026 07:53:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793721211; x=1794326011; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=N3SYB/BgxSNTh4u+DnHBIGPI0+Di9/c/+FCF8jLlAW8=;
-        b=cV1rfcaPqw5g4hra3OliVPaZNo6ZdIE9kz5vixcXtW8Tfcy1T3Fd1n3Qomk8mTQtoI
-         CpwV91/ivTc7kQ83ItiGXYNE8ylwa+AsAircAYdQm6ZwwjB7P4XiRmfKM+vE4jEG34Ky
-         o/4C6yfjE8hT44bQiK0txjwN9GJYfYPlJfGGvoMJUrQGGYAtowQYH6GIoGokPjSUvtmv
-         rEBoIKAbNy+l49cfORY/Y7SbiazcTqcB67q8IBSAIrSy73fTqo4/KjNSTFKw43puoHE1
-         aiWcFLDFiEkTGYTmfDSKA0vUw3dHJP67zgI+JsxiYKWsnckfO8ZbUN7mHtN9DDpUFG4w
-         IniQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793721211; x=1794326011;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=N3SYB/BgxSNTh4u+DnHBIGPI0+Di9/c/+FCF8jLlAW8=;
-        b=i+rICbcYUIN9+5sheD7MI028MxBWCyZO9il3/D3afeZmdGQx8eCw2l/U7vzlhHqLaW
-         sVp4nznEcBebG8fsT0CxaY7Xld2a6Q85fqAVUW2nxoTYPZJ3OBJhKXXKbYnj842mgH0C
-         a4dNmViokJNF5SnWvCo/fZV4rrvNMRA9Rr1dej5IO5Lt4iYTXqnUtbu4P7beUMXKeQAJ
-         R0CeQU3jnvvhwnGXfmIxPyxtGl1bnWHBC+YsZHNn/+VjLlrhp7IHuMjw2IqmR5fhEx7X
-         Q58xthno+wEOpoDiEdmm1OZUINz/Km9zwqavLniUWui7U64mcCq+knrtRjbJARHqlsU5
-         PPlw==
-X-Forwarded-Encrypted: i=1; AKwUvByS9TjoIznpIq53B2x7V9aAY5/YZr4auxyNH3FoKJC5ZucPxdL6uIFyiz/cZJ9rzcPdC75Xz46V0Ucmw0A4HD2mNGh9@vger.kernel.org
-X-Gm-Message-State: APuU4Z+eo8bOVKDgj1YiFPimcQBXrF4W2GO8AlwCSuA41wVHlLhij6SY
-	ImFEVZYIty5G4g6z0bF0d3+Jlb+e4LAj8sA9Qw1zDBUATJ0hBAU4VNLl
-X-Gm-Gg: AYBFou1daes7SqHRiBCpyCDwGXTod1D0wUW3Ko/U3/0/s7h3uQzC8PgG27cwXhKwcuP
-	KkNLuStDA0hHeOaJPSMDUwC438NU7JoSsG/qDwqPoK25+of6HcD/VI1b6nG6T0+Rb0G4q7x2b3g
-	TG3iOyV+ajgHJ0xB1fo2ZBROTpweATeJNSgGAqQUy2wTUsRXTzHR7+hEYtU7IGkF7xrEy7mdvrt
-	dh4IsO3mlxDHzVtbdunkJeGSsJdPVq4fsovaWccN+P8Vmbam5AOvoXnIA9suZ+nB6GuJbzs1163
-	N53HMfjhGgwiSF+yGfxS64SE7v52NvaiIFQJRP+yjdOnuw2WkDNhmkT/4E9YkzyQ/Jjvz03iAQy
-	3ho6N5VB7x2c5bv0CHsfYMsPBvEah1FwRs60O9Q+16w9zatZpK3DS5Zi9yTT/Irh3KbGeZopAyj
-	uLShtN/Dfr8If5fFyiISMlL+4SIuvAqAXw75ff0EhJIzBWOfwXAN+w2oj1u95wlbymvyiJWcduz
-	RWSx1H9AZWEcRTB05p9EB0DHw/FX6pqloVkQo9PkfHyYXa7s5udipCxoc6RVKlMtLN0lR7AzVjB
-	Oik5DOrRuJL5myw7V6HHPc1voTEnc0Cnt74nBk25B/G0f87UoMo=
-X-Received: by 2002:a05:600d:6505:20b0:4b2:3c81:103 with SMTP id 5b1f17b1804b1-4b23c8106abmr73912745e9.2.1793721211351;
-        Tue, 03 Nov 2026 07:53:31 -0800 (PST)
-Received: from Termis-ROG-FLOW-Z13 ([2001:16a2:4495:e600:1209:ec98:a2b4:9c5a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b2a879f401sm63777815e9.5.2026.11.03.07.53.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 07:53:30 -0800 (PST)
-From: Seifelden Abdelmonem <saif.elden.hatim@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bin Du <bin.du@amd.com>,
-	Nirujogi Pratap <pratap.nirujogi@amd.com>,
-	Benjamin Chan <benjamin.chan@amd.com>,
-	King Li <King.Li@amd.com>,
-	Caspar Adriani <caspar.adriani@proton.me>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Arec Kao <arec.kao@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Seifelden Abdelmonem <saif.elden.hatim@gmail.com>
-Subject: [RFC PATCH 3/3] drm/amdgpu: add the OMNI13B1 (OV13B10) ISP sensor
-Date: Tue,  3 Nov 2026 18:53:13 +0300
-Message-ID: <20261103155313.114347-4-saif.elden.hatim@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261103155313.114347-1-saif.elden.hatim@gmail.com>
-References: <20261103155313.114347-1-saif.elden.hatim@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HyDteQG2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A721F000C1;
+	Tue,  3 Nov 2026 16:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793723195;
+	bh=88x5nWCU4/5DUnm5J75+/44oJREtwTCj+m3lJcaJoNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HyDteQG2VBDz2pwudxJvRFZ3NzuhMM1n/qoJyRpSIEa+4sIo8qfNjCKCMkx9fqPnu
+	 PTXEB3HB8c+csEYJbUqrD18YNji+Wb3P0nPR4rCDriU41qd0d35Q951xfxtaew6zqD
+	 xTRV7HQa/evoV4YEWVb3yEGxlVh8/pDAOnR650sPVOaA2QtXNMiUjYtFVGzVyuFmxJ
+	 cuqSFcaDMPcPNDAwdq/HarCHKLW8nQ/TcudxBJnTO/IQN1HpQ6LTm2xHx92xHn7YRV
+	 9GYQVIg2n29fkajQrtiWC1hueIuFYRrAfwMXbzDr3+UFxfeou5MMiBIFbN+ZYhp4th
+	 RFlMkVbcaKQDw==
+Date: Tue, 3 Nov 2026 17:26:21 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
+	Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados <joel.granados@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org, 
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
+	Linuxppc Dev <linuxppc-dev@lists.ozlabs.org>, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
+	platform-driver-x86@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net, 
+	jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org, 
+	linux-usb@vger.kernel.org, samba-technical@lists.samba.org, sparclinux@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, 
+	linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-debuggers@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH RFC 27/38] sunrpc: make queue_wait a global wait queue
+ again
+Message-ID: <20261103-lufttemperatur-absondern-zweifach-31d272ad55ab@brauner>
+References: <20261102-work-procfs-bugfixes-v1-0-59422ed3e465@kernel.org>
+ <20261102-work-procfs-bugfixes-v1-27-59422ed3e465@kernel.org>
+ <16f91f93-16b4-49b1-b7fa-cec69759c349@app.fastmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,80 +79,72 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <16f91f93-16b4-49b1-b7fa-cec69759c349@app.fastmail.com>
 
-amdgpu creates the ISP 4.1.1 devices only when it finds a sensor from
-isp_sensor_ids, which lists only OMNI5C10. The ASUS ROG Flow Z13
-(GZ302EA) has an OmniVision OV13B10 with _HID "OMNI13B1" on the same
-ISP, so its camera is never set up.
+On Mon, Nov 02, 2026 at 10:12:12AM -0500, Chuck Lever wrote:
+> 
+> 
+> On Mon, Nov 2, 2026, at 9:21 AM, Christian Brauner wrote:
+> > Since commit 552d0e17ea04 ("sunrpc: convert queue_wait from global to
+> > per-cache-detail waitqueue") poll() and epoll queue their waiters for a
+> > channel file on the queue_wait head in struct cache_detail. But the
+> > cache_detail can be freed while its channel file is still open and
+> > waited on.
+> >
+> > The procfs channel files of a network namespace are removed when the
+> > namespace goes away. Removing a procfs file waits for the callers that
+> > are in one of its methods right now and then calls ->release on every
+> > file that is still open (cf. close_pdeo()). The waiters that poll() and
+> > epoll left on the head stay queued until their file is really closed.
+> > So:
+> >
+> >   sunrpc_exit_net()
+> >   -> ip_map_cache_destroy()
+> >      -> cache_unregister_net()
+> >         -> remove_cache_proc_entries()
+> >            -> proc_remove()      // ->release, the waiters stay queued
+> >      -> cache_destroy_net()      // kfree(cd)
+> >
+> > and when poll() returns remove_wait_queue() writes to the freed
+> > cache_detail:
+> >
+> >   BUG: KASAN: slab-use-after-free in _raw_spin_lock_irqsave+0x4b/0xa0
+> >   Read of size 1 at addr ff110001131bb570 by task sunrpc-poll-uaf/242
+> >   Call Trace:
+> >    remove_wait_queue+0x22/0x1c0
+> >    poll_freewait+0xc2/0x230
+> >    do_sys_poll+0x9ba/0xd50
+> >    __x64_sys_poll+0x165/0x470
+> >   Freed by task 12:
+> >    kfree+0x267/0x620
+> >    sunrpc_exit_net+0x34/0x80
+> >    ops_undo_list+0x271/0x8d0
+> >    cleanup_net+0x3f3/0x860
+> >
+> > Closing an epoll instance that watches the file gets there through
+> > ep_unregister_pollwait() instead.
+> >
+> > The channel files of a network namespace belong to the root of its
+> > user namespace and cache_open() doesn't check for a capability. So an
+> > unprivileged user can open the channel file of a namespace of its own
+> > from the outside, poll it and let the namespace die.
+> >
+> > Go back to a single static wait queue that never goes away. A wakeup
+> > for one cache wakes the waiters of all caches again but cache_poll()
+> > reports per cache_detail so that's just a spurious wakeup. procfs
+> > should really own the wait queue of its files like kernfs does but
+> > that's nothing for stable.
+> >
+> > Reported-by: Chris Mason <mason@kernel.org>
+> > Fixes: 552d0e17ea04 ("sunrpc: convert queue_wait from global to 
+> > per-cache-detail waitqueue")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+> 
+> Acked-by: Chuck Lever <cel@kernel.org>
 
-Add OMNI13B1 and register its GPIO lookups:
-
-- enable_isp on AMDI0030:00 pin 85, as for OMNI5C10. The ISP4 capture
-  driver requests this GPIO and fails to probe without it. On the
-  GZ302 no ACPI device claims the pin, and the ISP also boots with it
-  left undriven, so its function on this board is not confirmed.
-- the sensor reset line on amdisp-pinctrl GPIO 0, active low, under the
-  "reset" name the ov13b10 driver requests. This is the same ISP GPIO
-  as the OV05C10 enable line.
-
-Like the OMNI5C10 tables, they are registered once and stay registered.
-The ISP setup uses the software node that amd_isp4 attaches to the
-ACPI device, so this needs the amd_isp4 board configuration for
-OMNI13B1 to be in place.
-
-Signed-off-by: Seifelden Abdelmonem <saif.elden.hatim@gmail.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c |  1 +
- drivers/gpu/drm/amd/amdgpu/isp_v4_1_1.c  | 13 ++++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
-index 63088c072..412d3992c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
-@@ -1726,6 +1726,7 @@ bool amdgpu_acpi_is_s0ix_active(struct amdgpu_device *adev)
- #if IS_ENABLED(CONFIG_DRM_AMD_ISP)
- static const struct acpi_device_id isp_sensor_ids[] = {
- 	{ "OMNI5C10" },
-+	{ "OMNI13B1" },
- 	{ }
- };
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/isp_v4_1_1.c b/drivers/gpu/drm/amd/amdgpu/isp_v4_1_1.c
-index 363266f3e..7d6072e27 100644
---- a/drivers/gpu/drm/amd/amdgpu/isp_v4_1_1.c
-+++ b/drivers/gpu/drm/amd/amdgpu/isp_v4_1_1.c
-@@ -65,6 +65,14 @@ static struct gpiod_lookup_table isp_sensor_gpio_table = {
- 	},
- };
- 
-+static struct gpiod_lookup_table isp_ov13b10_gpio_table = {
-+	.dev_id = "i2c-ov13b10",
-+	.table = {
-+		GPIO_LOOKUP("amdisp-pinctrl", 0, "reset", GPIO_ACTIVE_LOW),
-+		{ }
-+	},
-+};
-+
- static int isp_poweroff(struct generic_pm_domain *genpd)
- {
- 	struct amdgpu_isp *isp = container_of(genpd, struct amdgpu_isp, ispgpd);
-@@ -240,10 +248,13 @@ static int isp_v4_1_1_hw_init(struct amdgpu_isp *isp)
- 		return 0;
- 	}
- 
--	/* add GPIO resources required for OMNI5C10 sensor */
-+	/* add GPIO resources required for the sensor */
- 	if (!strcmp("OMNI5C10", acpi_device_hid(acpi_dev))) {
- 		gpiod_add_lookup_table(&isp_gpio_table);
- 		gpiod_add_lookup_table(&isp_sensor_gpio_table);
-+	} else if (!strcmp("OMNI13B1", acpi_device_hid(acpi_dev))) {
-+		gpiod_add_lookup_table(&isp_gpio_table);
-+		gpiod_add_lookup_table(&isp_ov13b10_gpio_table);
- 	}
- 
- 	isp_base = adev->rmmio_base;
--- 
-2.56.0
-
+Fwiw, I have a patch series on top of this that makes procfs own the
+waitqueue and then this whole UAF issues goes away structurally and you
+get to elide that global thing here.
