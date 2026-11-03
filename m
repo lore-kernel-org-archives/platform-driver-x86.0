@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793704213;
-	b=vlsPjqxwQ0foA1Cvs20sQFkq6QYF7Q/ScHXB+NNOI1Ge8oE0AEx7bnOBXMrXS73MD9lo
-	 6zlXADickcftn2QbQ490DI9KxBFhkbDHsIdPLMQBqn8Ms83v3blH9ALBinTD4tNOaJI8x
-	 pPfrLHAnlDqtezy4t5L+YNpToKafa+WiCBq+x55z0qTlXxlESwm6TTQlXjYldjFT4J9n+
-	 0CCaBpTD3juF6GMbDJU62UWc4ypwH9XNm0DKatWE1niaQ4Jr8pNwqKrQQnBuvsD/aEA1z
-	 Pw7mKeaJJLIuSd1Hyl/s/R+y+4EhAJO6H6WKX0/fLNHJAFx7L+7O3NggqnjY99/GBIw==
+	t=1793704210;
+	b=vVbTtiaJk1S/sCC12KOytLF9ixJsABWB0JkvMhJfJgOSSKQO3cpftlCpz+9ZHJPTMJLC
+	 agvyHpBYVR8pfop+UlatC+1LO0KZv5Nn6VhLufEtibk0u0zp8nWjrPYCZbQ2bW0KpfAjp
+	 x6J1rqkVXCEugn6wAdmLX7v54QS64XIvfI0t5EOHUiH8rZGVOLCBWgoPn/BX21TN8Fd8Z
+	 7wx2y1l6Iz3SAK4ORHBGqPdXoBt4kPSts9jq2tEZFzCVi8tmZfGOhHKpd9gD+2JJB8fCa
+	 /Ss9DQoNFj6FGcap8tXZA3/bL3eiwV6RMH/oEN8SRRavGTaJZOuHBjadUDpyyRg186Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793704213;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793704210;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Xrwz9IBfFfoHPQootLsmvN6SUAJ6eFYWOgccNCVWXhw=;
-	b=ACydx0Uho4XJV2YKO1QwfXIzM9mX2HBhEodufMzasSmodcCyYo/P3ukgSFM7i230UHi1
-	 ZaCAueKECMtFdggRJjSOmbFPuClxkN2WwlOQ/JFg4m8qRRo3N8TJIxO0EKSIaI9f+EMj1
-	 nN5/dAY69rx4vTdty1MQnkNaILCD8b+W2esmlyA0DxXz7qrq/F2n6OP5N6wFHYE/ugkzk
-	 fLH7qzwZFOpco9CAS9uRiVceKf7MK/0Cik6BWZM3cdgC09AVhykh7Ave4d8bqfmXPpDnO
-	 PT1HQWxmgrBSZu2pbxNNEsbx6Rkik032P4k9dJ0pO6Lx2R9ERSRYlBbSfb6q8JHJG4g==
+	bh=M351HoN9QnzW4bajTJUrOSxIeJFA3W05dDUYpXeLH3c=;
+	b=0+GDFKnFZ5joyjrfU+lWCel05P62B01zkPEAZESGntlQGZ63A3WM5nPhVvVhVyMop3oO
+	 JwbasK/ZJcbEppL/jddQJTyK9vnhFiTJbNeBfcTNU0E8n9oBqM6Ija0+gyt//H8HWm6Co
+	 aabHUE1nPCvJANvI7Q+YC1qAM6BZyOV48eFlyqJ1BFcXj9/ZLAl7n/ou3YFO1fd0TlHPk
+	 aPzc9oSdqzmf6boRL2Y39ZsYq+uUs9wrgU/Jt9wjB/tpxdQqgdHqoVLG9JDtVYR/MlyxV
+	 fn0CUqwWz+A35QCapyj90tXg2px8WAYSVVUcltRozMzwZRDKDwyEUGFWwnhNs+F9p4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="it3qxw/x";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JqHxQZEb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B786E606BFB6;
-	Tue,  3 Nov 2026 11:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0616606BF86;
+	Tue,  3 Nov 2026 11:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=it3qxw/x
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB841F00919;
-	Tue,  3 Nov 2026 11:10:11 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JqHxQZEb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A538F1F00A17;
+	Tue,  3 Nov 2026 11:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793704212;
-	bh=Xrwz9IBfFfoHPQootLsmvN6SUAJ6eFYWOgccNCVWXhw=;
+	s=k20260515; t=1793704209;
+	bh=M351HoN9QnzW4bajTJUrOSxIeJFA3W05dDUYpXeLH3c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=it3qxw/xgXslVOfDZnuYm37LYUCszoR1IwcpG5DTgFmzjezsEs9DTWVTsIJgkwkm0
-	 i1zqsK5mu7KrB/f+b9HpX9MWbsXRR0/cJg52viK4qaSjUy6bhAyWuEgJsG5l0gHscQ
-	 jLRPYN3ijnPFKcd0tvXCnJsS65DvcBwy0rnqEiwPhve6K96JNZKKoqaT/5jUZ86kwS
-	 8KIBJdZzXNR2rGOG55qkD2BR70rbYC8ginIWxwk/6R7Jz4sqbO34iJCowhHKUMewj7
-	 CERU1ibMpTHxBa1wat48SRUrUxNSxjFszDOT1Yu4AAp+Fq2xQTTD0gp1aK3BRTD6TV
-	 M7tVKcG3ikDzg==
-Date: Tue, 3 Nov 2026 12:10:09 +0100
+	b=JqHxQZEbjqIPWdvJn3/s8FzkAMJ3m7hfBmzygiVTmR7MngOYVd4fwl45ATYkbt9yZ
+	 Kx6kVV/jvmvI/Oq14BHn2zGSJuUn1eQYDhJDdkeXtFKrrd085LSeZlpEEKuamnrab4
+	 flrrkqyWYxbzI5s+kam2gkU5K7LxUOlKvISq3KbPbjhcPzrVp6BgjCa86T6puu5jFT
+	 NZJ6lI4YZD6Asv8g2O0GbkWm1dZgDd6aK5SsCpgmc6nr61YuqFUah5z7rA4DPUZMiq
+	 7lYIl8HIUfuiS/vcE84+KEsC4RRQQmQI5bDjIbXgrGkosdXqNLQHY6zHhdDO/IVIdM
+	 iDZyYe8MSA4QQ==
+Date: Tue, 3 Nov 2026 12:10:06 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: stable@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: x86-android-tablets: fix codec teardown if
- poweroff handler setup fails
-Message-ID: <20261103-ludicrous-fervent-malamute-24ac38@quoll>
-References: <20261103105544.1394559-1-vulab@iscas.ac.cn>
+Cc: Vadim Pasternak <vadimp@nvidia.com>, Hans de Goede <hansg@kernel.org>, 
+	stable@vger.kernel.org, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform: mellanox: unregister the fan device on probe
+ failure
+Message-ID: <20261103-ancient-excellent-mongoose-3ed148@quoll>
+References: <20261103105545.1394576-1-vulab@iscas.ac.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -60,28 +60,25 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261103105544.1394559-1-vulab@iscas.ac.cn>
+In-Reply-To: <20261103105545.1394576-1-vulab@iscas.ac.cn>
 
 
-On Tue, 03 Nov 2026 10:55:44 +0000, Wentao Liang wrote:
-> lenovo_yoga_tab2_830_1050_init_codec() stores the codec device reference,
-> the pinctrl handle and the pin mappings in globals on success; they are
-> only released by lenovo_yoga_tab2_830_1050_exit(). If the
-> register_sys_off_handler() call which follows it fails, the init callback
-> returns an error before the exit callback has been registered with the
-> framework, so the codec device reference and the other resources are
-> never released.
+On Tue, 03 Nov 2026 10:55:45 +0000, Wentao Liang wrote:
+> mlxplat_platdevs_init() registers the mlxreg-fan platform device before
+> the watchdog and DPU devices, but the error paths for those later
+> registrations never unregister it: the cleanup chain below
+> fail_platform_wd_register drops the watchdog, io, LED and hotplug
+> devices, but not the fan.
 > 
-> Factor the codec teardown out into a helper and call it from the error
-> path of both init callbacks.
+> Unregister the fan device on those failure paths.
 > 
-> Fixes: 4ce8f4c2027d ("platform/x86: x86-android-tablets: Fix Lenovo Yoga Tablet 2 830/1050 poweroff again")
+> Fixes: 158cd8320776 ("platform: mellanox: Split logic in init and exit flow")
 > Cc: stable@vger.kernel.org
 > Assisted-by: DeepSeek-V4.1-Flash and OpenAI Codex
 > Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 > ---
->  .../platform/x86/x86-android-tablets/lenovo.c | 27 +++++++++++++------
->  1 file changed, 19 insertions(+), 8 deletions(-)
+>  drivers/platform/mellanox/mlx-platform.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Multiple things here:
