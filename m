@@ -1,89 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793690510;
-	b=ukUa4LgzhzdQDesYYwcssJhRKUxXpqLYyptavjE2c5pkku5OTn14I8dBn0cmkz8wdeM4
-	 l+qBl1bya+yDD39XNKBzJwI2mJxDYXhCQqL8xz7Rq7odzoqa0/k9mewGrWIFLW8Ii7XMY
-	 61JAmdERa3YEim4w/0+yMOY0/Rr/nQOqvat4Q7Xf/NH18+lVlpZBxfBihGMgtWFLrIEXv
-	 NVJuyCuzAoapXmw86csWgAS20rLh7SOcwiLsKR9c2s+QKz28cDvSOXKY9INVEnTN6j3X4
-	 CF2CVxErA2UJzo4GMkIrvSLsmE37JXAxD/SPTQO6LYy+0lxPbKq6Xq2VdjhVNfEFgWw==
+	t=1793690531;
+	b=Ywg/C8cSFfNYqO45WiaGzsYQO+FDxqZ95SdOS2XczhNN/VNW/K2FImtbuFcwoMvLAbrw
+	 g81vVHcIxWqFnmhQrs+ljqfwrzNLQDcia7GG3mwxndsKo3ahRY4MY4AnqPlaz6d/OKSw5
+	 bMCPR0yXw7E9pTGPqte7rcyxHlSpZdU2s7GPFZjGTy1oQIU2Da+kcdcTZyAr165HUBGy0
+	 ILYNRxOLnQ0e+4kiELyluGWK5qSUWOnN30wNjFIx7TJYK5k3jqU9Rd9nCmTpjw+mS9Z5J
+	 Z7dpNJK3lDsi5h55KP9uVEXyVDhzlKB8Wfr+kBvVqB0Z7WO2rqXvIKr7vomTQGIPgaw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793690510;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793690531;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
 	 Content-Language:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=f/KnB4zhJgMl+hFjknvmtRA3SG022rMHPfbeZGqIblc=;
-	b=OBX6zijuNlP8ed8Vk5JrjIGcbF4GjdnhlB0KTIg0UJNLmO9Gs1VwxUY9IahH6SnwEMs0
-	 sw0Q3CrRhytIooov629Waf5wqIrddnXSK/4xRcPLBUBWwjO9RKD6jDJU7x5auvY9M6y0A
-	 Z7IBhEkPZAd7f9ZPXpq827Eix+847EQgFFb0izIr3r77Y+s1n3Kz+R/GvA9X+wInosCL9
-	 8C10/RPz5ve8x9gCbZ4e44WrG55il6h4rY6SQuRGUdqJstOaNoCH5QWNgxCqi0rocaUEX
-	 /CAmPFUvasFO8WdSgfIzSaXNn+L3XGSMdlfjmuse51akiqYKt8zJ8YnssX5Q8a9WxTQ==
+	bh=aU0Fo/t+9JMAeVCzpMHJlOqMoWJ9Ex7tTQwt5AkyeMU=;
+	b=J3JnC36O8+DYprbO7BgO7giYYUjPEPC5jmYep0OKWt/AUmBw+8EFDCCG+QtNYB0Q032T
+	 H/18hKYBL7A+D9T5A9vcOvXjET71IL6c9haiv63MxX3J0qR0VZ2AEx7cz6s6/hB2I3OXn
+	 qwG/mLys+6/NtbCPjYUbish1DFxzcFDjMHdZjNhQvpOgEji/NiMUv9izMPmZHYN1cdOhz
+	 rJEIm+L7RsmBHpSfd+NHI2BJE1kwPayeRADgQubx6/45N9ms5l7KGpztapDI8mPBZnOyX
+	 dEItO/XKsMDlLXz+ljx2O7k8W0l2f4Gi+muB4AibdzqaHfXN34Ed2/irW+S4CLdWO2Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rAc5e13a;
-	arc=none smtp.remote-ip=209.85.128.47
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=odyE8Yx6;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C941606A329
-	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Nov 2026 07:21:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C941606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E75E606A32D
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Nov 2026 07:22:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5E75E606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rAc5e13a
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a59100fa83so33836415e9.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 23:21:49 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=odyE8Yx6
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4ac95761c85so24454835e9.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Nov 2026 23:22:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793690508; x=1794295308; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793690529; x=1794295329; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=f/KnB4zhJgMl+hFjknvmtRA3SG022rMHPfbeZGqIblc=;
-        b=rAc5e13ajULG1v3AnfLLIAD5cCrCxGudDlVWRdaYveV05iOKHOtx6s3SmbzF4RgQfc
-         ngE1LrUGF5rKL7pwoGri8s2Eb+TzsZqa77WH1ekA3cC5qiw2YKUL/BS9YypQOQDuXdL3
-         wo6Z/vHxOPrO5n1kkXCTOwIi8CrIlZe4NAL4OX9ZJHC0nYOodQZu6+62QUwfYYIDmSqJ
-         35pvTa60Z+HScl3f/0Aj9abXG84txnSzRtOon3j8uk13JMeC7tiyTAHQKkzdZOAl6Vzd
-         okqBPoNoZDwcJaffKKCNPlMTg0H3K43ZIrK4FG91Z3h2QYGhUSVo6MXDO9WjLlMSr3Kp
-         wVig==
+        bh=aU0Fo/t+9JMAeVCzpMHJlOqMoWJ9Ex7tTQwt5AkyeMU=;
+        b=odyE8Yx65t7UsqvcKqLhGzKhrrqO8u63aeWrdMumgLCHNAkRMRNKLZ94Fdb4ABER4G
+         Xqxm/dhzsDrYsM3LYV2j6/Iw8zJ42pkhJsIT+AHkvC0LD4ak4XsSszP8mU+ocuZ7G8iO
+         RLbQOxQfAiqF5C7K2pXjz1ukuvWPTDx4eQkaPV4WjOrugqcyHQ155B+DRXG8EqpS+iHs
+         cimiWx/UsmQHZW12PGCdfs5k6bNUs4XBVMhSfJv6lgEdTjGiQOOKtC7Ew1BVUxLe8OsK
+         31D0UZANQTVx0TNw12/y7SFZvysT0hxyv/YuVw4lPEREjVVGLY6cDMFr+FCmkwojsSA3
+         6JQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793690508; x=1794295308;
+        d=1e100.net; s=20260707; t=1793690529; x=1794295329;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=f/KnB4zhJgMl+hFjknvmtRA3SG022rMHPfbeZGqIblc=;
-        b=BIYu63AXOVG+nX/DRiB/tb1wxRnaFODJWYFhKfu+tQDJx15hfbuZn5wWf6045WG2Ap
-         uaE7wZwiOIIPoCk8UDT8teTnmzXGRvXcz8eGFbD/zITV5oD38kQOhWuBXyC+M/S5qv+H
-         8m1ZLU9enIVjkLh6wfmgS5mwpsOakFUKMLiAWqMVQ7zvhDCqngIrKsfvgJSvMiL7BzQZ
-         NWgzCEuSBEMjegIfxb7wDiU26JKusO3Q/Y3omTLXgsOHAx8lJtGj8ugxgTXVrzpPA7rr
-         Nnu9IZhN9fZQIBF266B1gD+PXRMQHV/imvDlWjfZqf/sQQPTrpJtOuEFd060NjTJGNyU
-         whcQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxf8kMxChWVM4qxtn142cJ/XFIrI14d/qU4xnHXHRJOMvnXZYHdkQMyqixt06EMEFJY1tfFNNgCsB1ntNp8wWx9Rqjj@vger.kernel.org
-X-Gm-Message-State: APuU4Z8E43h5MLqtLJQuFc1O0Rx8ClaqKCO2h2zFi16N842mCjeVFNQ7
-	HjTYJr/7KrfPvAOyQBk/s5ovsYPsnZOq5QR4G5ldiOLE8zMY4sTI2gge
-X-Gm-Gg: AYBFou2otsu0FD7o1OnVY0OdjVHxDTIY/3lHFWHxqoybzBzBfl5euk+f39XUleWG3yn
-	EKB2EUsWDiWATfu3pBX84sMoSm3DqKve9FYg8WpYAmGtwdI3Ml0ZAAx6GlPe5a+HVIPoQW+M2vE
-	H4SeLnN8XWzkQiBrOFhDExkscCBoI7G+Il3XL4LIF+sr0zbiihoWBVqlwHnvW2GqqmtGtkveoC0
-	vIsMgUjSicEFKam04C9C9ELgUKRfnjLGPurW0xyGRUbMqIhFDqgY+Rw04HnSH07mu3IqaGU9+Ln
-	Kb4QgN+Dj+J3IL6q1j053/PLan4KXQBZ9qEq2oEhcoSsbjHQFyDMgnFifXfum6veTKawgdxz9vT
-	M1A0AS9gAL3dulggdeGphjii3Cn3C0falQeb0Jb+5eyZLeTCAKz7LhJ3mwZQUCW6KMKKnT1GFup
-	lvVLCYNqsbN5VUwWU3+BwzCZ5Q/9PCHfON/eMG0ziHgjg7xPwKzdcL9LZg9N3AOrHHupkM62LZU
-	WUYweL+dCr/bq/IIhR7LZt/Ng8iQ2LgIyY7MW6No6vdN4JGQLuiBK5Wq5+WSq3yWtFhBdx1ZcVD
-	0EsX50dVper5jvXKnC9hEHvMKMJ6hk6x/uvLIZYudvxCklwGPwpiQL/6DzJRWs1n+d09s9gYJVr
-	AQwsQuYiM9FOVbIPiI2IbQQzhpyL9R76N2A4=
-X-Received: by 2002:a05:600c:e548:20b0:4ac:86c9:b09c with SMTP id 5b1f17b1804b1-4ac86c9b146mr172730365e9.13.1793690508288;
-        Mon, 02 Nov 2026 23:21:48 -0800 (PST)
+        bh=aU0Fo/t+9JMAeVCzpMHJlOqMoWJ9Ex7tTQwt5AkyeMU=;
+        b=wrOYeSZ9es/RsYVqjDfgFMjK6ZbKc0kwN+o5QlRfx73sikYRotrTFT7iX6wUe3vw8g
+         GtHnpEakHieXvJx0bLJ+A8fUXW3EcClIoq1JLI/xMGwafeOm02LYYREsg11wBfIMcX8G
+         nONlrCQuB6l/wVE1VuSJ7kZMnO1AM4alK9g32PuCNaFJI6YyKORTAVlLOfcN5ZVSaPaS
+         ZLhOz23qWE+b7kg1kXCMGYnqvjz2ca03L3AdIhXzkTwpzVXokNNR4Cs3c1+sYqasyp/B
+         8qClAUHXfcc4GERuArQXp+NY4d4An4MFtOK0SHFD+soTcAjI73CZIpCRyJ2B457sPUec
+         3f5Q==
+X-Forwarded-Encrypted: i=1; AKwUvByWjBj/KaZ9mP1K3YK9n+OSiir/W4RttyMBYNlYSGqdRvfrb2kj0uQL9ZXF7M48aH4EFQFKAZNvlz45tNVwkOpTnN9D@vger.kernel.org
+X-Gm-Message-State: APuU4Z/Qta+XiJ3+dKdEmDInJHcYBcpKabZ7UiDbqxg50aCRdPPvghWH
+	GEekvRQcWPRHMghQwDjjSeEYLpWICu2esWqJ7XeSCD+jztAIxjYaVRNR
+X-Gm-Gg: AYBFou2vu6w72p+UscxBG25p6sgmpJH4Y4iH7xIry1pQVfPP/Ia1pVAqbDuxXxhNteE
+	LUuapWHdWXePPdrHHD9kUPrefcjbYUcbNt9G1CNUbU5DlnGKjTDuPo8frW8LcLBA6TDLGQtXT01
+	CJnqeNI4xF/y/i9sRqDYXvCMdzE0OKnm6pQPnwLdBkC0d3AWtPPQkYaTB7PWddugUpmsfMACdyN
+	a8UFGGBBsZisiOmWvZUnUoKcwWCEZm3f87l66xJIcmTNwXsWc1yRKKj2yTY/PZJ9nyngPygQ4Ou
+	rV9qKOs9Yz8TcqAfLbMvWwDBqUjSwbw7D9MF74Tr4Qlv2zloxymWJMRi+0Cku08+KKmO19elz5f
+	Ip6i7yfurFiJf5HC9rBC/5ijJ68nu0asMHatLli53P+QRDIXrwQZDIXpJGQXUwhuX2XkGkTJyEW
+	guiVozXTnajTu0EGIGZ9SCjXici9oD4bvE691J9V2FwxwXilybLUqYsvzj5GUc4CbYjjAd+Celn
+	uyGn/8u8Mq9LWSynNkJAbmiARyZuy2STWQf+7Dd8+ArxeWsazCLPHB2zJmPz3uCywTjsyxd7ZEI
+	v3EwRzFRLdSegcg62+r/MliTKcME/6q5LBag+j0UoVOzI4xwpxNmuNOfXlpqwYo25tXZqeXU/g8
+	6aN+XuTGD2yNDBPtU9mNYzDObSvfGdXQkiBI=
+X-Received: by 2002:a05:600c:190f:b0:4a2:1a:a11d with SMTP id 5b1f17b1804b1-4ac1275c26emr262447705e9.0.1793690528518;
+        Mon, 02 Nov 2026 23:22:08 -0800 (PST)
 Received: from [10.77.100.5] (ipservice-092-209-215-046.092.209.pools.vodafone-ip.de. [92.209.215.46])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b2a80e0fe6sm43172275e9.1.2026.11.02.23.21.47
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b2a80e184esm41772445e9.2.2026.11.02.23.22.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Nov 2026 23:21:47 -0800 (PST)
-Message-ID: <cdf44987-3a3e-41f2-a067-8181aea08880@gmail.com>
-Date: Tue, 3 Nov 2026 08:21:23 +0100
+        Mon, 02 Nov 2026 23:22:08 -0800 (PST)
+Message-ID: <2479af7b-7919-434c-a205-14e3b545c9a4@gmail.com>
+Date: Tue, 3 Nov 2026 08:22:05 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -94,60 +94,70 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] power: supply: surface_battery: handle battery event 0x1a
-To: =?UTF-8?B?UmFtw7NuIEplc8O6cyBNaXJhbmRh?= <ramonjesusmiranda@gmail.com>,
- Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261023173215.6233-1-ramonjesusmiranda@gmail.com>
+Subject: Re: [PATCH] platform/surface: aggregator: Fix use-after-free in
+ ssh_ptl_shutdown()
+To: Wentao Liang <vulab@iscas.ac.cn>, hansg@kernel.org
+Cc: ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+References: <20260917135607.2154130-1-vulab@iscas.ac.cn>
 Content-Language: en-US
 From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20261023173215.6233-1-ramonjesusmiranda@gmail.com>
+In-Reply-To: <20260917135607.2154130-1-vulab@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Am 23.10.2026 um 19:32 schrieb Ramón Jesús Miranda:
-> On the Microsoft Surface Pro 11 (Snapdragon X Elite / X1E80100), the
-> Surface Aggregator Module (SAM) emits battery target category (0x02) event
-> CID 0x1a alongside standard battery status notifications. Because CID 0x1a
-> is currently unhandled in spwr_battery_event(), surface_battery logs:
+Am 17.09.2026 um 15:56 schrieb Wentao Liang:
+> ssh_packet_put() is called on the loop variable of both
+> list_for_each_entry() loops in ssh_ptl_shutdown(), freeing the packet
+> before the iterator advances past it. Use list_for_each_entry_safe()
+> and move pending packets to complete_p, as their links use
+> pending_node, so that each loop walks a single list.
 > 
->    surface_battery: unhandled battery event (cid = 0x1a)
-> 
-> Add SAM_EVENT_CID_BAT_0x1A (0x1a) and trigger a battery status recheck via
-> spwr_battery_recheck_full(), matching the existing battery state events.
-> 
-> Assisted-by: Antigravity:gemini-2.5-pro
-> Signed-off-by: Ramón Jesús Miranda <ramonjesusmiranda@gmail.com>
+> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+
+Thanks! Overall valid fix, but similar to Ilpo I'd prefer this to be
+two separate patches, and a better commit message for the typo. See below.
+
+With that, feel free to add
+
+Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+
 > ---
->   drivers/power/supply/surface_battery.c | 2 ++
->   1 file changed, 2 insertions(+)
+>   drivers/platform/surface/aggregator/ssh_packet_layer.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/supply/surface_battery.c
-> index c759add..a3fa899 100644
-> --- a/drivers/power/supply/surface_battery.c
-> +++ b/drivers/power/supply/surface_battery.c
-> @@ -26,6 +26,7 @@ enum sam_event_cid_bat {
->   	SAM_EVENT_CID_BAT_BST         = 0x16,
->   	SAM_EVENT_CID_BAT_ADP         = 0x17,
->   	SAM_EVENT_CID_BAT_PROT        = 0x18,
-> +	SAM_EVENT_CID_BAT_0x1A        = 0x1a,
-
-I don't particularly like it being named 0x1A. Do we know what exactly
-triggers this event?
-
-Best,
-Max
-
->   	SAM_EVENT_CID_BAT_DPTF        = 0x53,
->   };
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> index 3dd22856570f..871780828419 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> @@ -1983,13 +1983,13 @@ void ssh_ptl_shutdown(struct ssh_ptl *ptl)
+>   		smp_mb__before_atomic();
+>   		clear_bit(SSH_PACKET_SF_PENDING_BIT, &p->state);
 >   
-> @@ -368,6 +369,7 @@ static u32 spwr_notify_bat(struct ssam_event_notifier *nf, const struct ssam_eve
->   		break;
+> -		list_move_tail(&p->pending_node, &complete_q);
+> +		list_move_tail(&p->pending_node, &complete_p);
+
+This is fixes typo and should be addressed in a separate patch.
+
+>   	}
+>   	atomic_set(&ptl->pending.count, 0);
+>   	spin_unlock(&ptl->pending.lock);
 >   
->   	case SAM_EVENT_CID_BAT_PROT:
-> +	case SAM_EVENT_CID_BAT_0x1A:
->   		/*
->   		 * TODO: Implement support for battery protection status change
->   		 *       event.
+>   	/* Complete and drop packets on complete_q. */
+> -	list_for_each_entry(p, &complete_q, queue_node) {
+> +	list_for_each_entry_safe(p, n, &complete_q, queue_node) {
+>   		if (!test_and_set_bit(SSH_PACKET_SF_COMPLETED_BIT, &p->state))
+>   			__ssh_ptl_complete(p, -ESHUTDOWN);
+>   
+> @@ -1997,7 +1997,7 @@ void ssh_ptl_shutdown(struct ssh_ptl *ptl)
+>   	}
+>   
+>   	/* Complete and drop packets on complete_p. */
+> -	list_for_each_entry(p, &complete_p, pending_node) {
+> +	list_for_each_entry_safe(p, n, &complete_p, pending_node) {
+>   		if (!test_and_set_bit(SSH_PACKET_SF_COMPLETED_BIT, &p->state))
+>   			__ssh_ptl_complete(p, -ESHUTDOWN);
+>   
 
