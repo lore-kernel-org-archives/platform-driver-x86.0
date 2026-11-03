@@ -1,50 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793703342;
-	b=ZSK8O4kKUsUhIMK5Bot/0bNzvBGZEQFcLCEegOcMc1xZqc057ue1K98ejFOMO0VYk/im
-	 JCtMJ7NJJYFomSQcWffZ1srCWeSB2FUKv+b61O53PxvHLCwdK0iph7K5Qj5ou+ILUQ03k
-	 l18e43g7b7/OqOoDvRVERYFfJf5uEpmoVye14GCi168Z+5jP78z6ENa9VHcpegXfapVZa
-	 7nPySzauClgz1vhERgwXLUu8jYxfXABqMrsEY68sAN7cXUs1RcWv9iRekFtNaPdmrY4uQ
-	 cglybi+sDsDEqRoMDxm2jfv630S9O77WrzkHXx9EEDLs8tELvD8eHzjXQIn2o6u7KjA==
+	t=1793704206;
+	b=m8q9L5mgVqpcmLZuSQ5oKiQTJzIQ1hS7Iit9oi25AGBtTaIc7IBn8vrwNshPZdGtKQ9A
+	 gL+Tl3wzdQJp+ErLc2Q46GvS2iA3zDTU0m9uT2vAcjVdcH+nVnMLliSo+mQW7wcJF3INN
+	 /2y2theFVgqUKxthdbTpUfLU/aXVCMGb2GxObKedwrkeVBaG6gN4LQ8+QoyGC9rZqos99
+	 YDmXpVJCMRvYn+v3PgBd2FMlU5CpdZk1M1UsZz9TZS7D70BdS5QPu7V9lEHsBcbIn8+TZ
+	 8l1avE7HR3S3ylnTb4r8uWfJKgv7COr0M5uVFk8HpGAVTWLqvCbGbEBwxZkqNNJf+Dw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793703342;
-	h=DMARC-Filter:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-Originating-IP:X-CM-SenderInfo;
-	bh=YO2JIkijyjOjzjl6B/QzJc3lApKcV6LLjiv5hE0GLMo=;
-	b=lPGX+V4YonSztbORQmdRY5lSydahNd2tG1AVI1Y0aCYCMFoYlApFFrgkyj/MRLx9zW08
-	 4oG7SIi2FXb0+cxMij1Dop1z2QlQ7C3ZnZcbWmlQoxeUKcnEGpGDLufpdSHN13JXsKM1R
-	 29R8tgUqSPIZtxWpagGZ5AMNuNJMXHT7FfX+8eRwxV9ks0rkm8pvxrdTnYtROaQ4FSKbP
-	 gS4JYcW3KhI6wwtbTpdtdQxgyQczk1MFqPp+p5oglyyCpC0cczPnBBoQSKWC2zXRFGSxF
-	 7b9XqDtxNDlx20cirmsdEJocX3vyEBQD7wDPAC/kv+DpnigABWeH9EfIYOcoyEvP93A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793704206;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=dmCkHOV816s90fZumZgoW1aA+6XuqGyb3DqgAN4i7us=;
+	b=WTb7Sg8OBrg70t0NHoxZWGVPvSPngYVirm4v6JTJPMwHEDPCN9KssZpMLn2CF0j0EHL6
+	 rGDmGxJ8TgZDRDQtwXiWFp81nPw2ceEq6rvN6uvxRxFihrzYvJ2/y/9/r1tEs3tICJ3qv
+	 jx9Mg48dz43DWhF9BzrbpDEpSCsTAtJcBo960l8vJh/RIlvJSr8qp0PpFxRcQLQUG9wHK
+	 BMSKsw6nGYSBTd//k3tq4Ssq3WoPx2DgUvRs2e6xuZZ4hA06KHTDA9Xh0npap55RaGpKb
+	 bxbvOj9KCY0QOdRXZJSMQbG5Pm/fA1F9wy82NVcGtG2Z11Dp8muyk3+tUGXWdmvCWMA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=iscas.ac.cn;
-	spf=pass smtp.mailfrom=iscas.ac.cn;
-	arc=none smtp.remote-ip=159.226.251.81
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WRvlmla3;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BAE60775C4;
-	Tue,  3 Nov 2026 10:55:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 47BAE60775C4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from dfae2b116770.home.arpa (unknown [36.110.52.2])
-	by APP-03 (Coremail) with SMTP id rQCowACXaZqnvelqzOE7AA--.64965S2;
-	Tue, 03 Nov 2026 18:55:36 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform: mellanox: unregister the fan device on probe failure
-Date: Tue,  3 Nov 2026 10:55:45 +0000
-Message-Id: <20261103105545.1394576-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44894606BA6A;
+	Tue,  3 Nov 2026 11:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WRvlmla3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE941F0093A;
+	Tue,  3 Nov 2026 11:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793704206;
+	bh=dmCkHOV816s90fZumZgoW1aA+6XuqGyb3DqgAN4i7us=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=WRvlmla3zRoX5UXLTdHUHRWq8TY8FpNCzJ6AeUW0WO003l71vJYkvFPS8cRg6EeGQ
+	 IYDZgmB5+/ONmO6GRLQ45BIGzM0AtUzWHD0gLeN+YAXhA4wgowBG7ocfK92J3mcHmx
+	 e4rdp8iBkI4YO2mWT8GRFsFCl4JlyPbBrvPycJYX4wrcm3IV+y6yqIhHMVie55RWW+
+	 a3PWUukMRvAV/WHDsvpzJv6i5wddXGhJwJkWV7ky6pWxq2Yly7025MC0K9EnNG0WUo
+	 pTViXFLffe6Rg4yirRyZHTCzDKzQRijUUPxt0QbI44Mtc4vnBBjcqVZN6kDanlxGnt
+	 6ahJFDEjoVzMw==
+Date: Tue, 3 Nov 2026 12:10:03 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: pmc_atom: drop the PCI device reference
+ after setup
+Message-ID: <20261103-perfect-tungsten-junglefowl-ded7fd@quoll>
+References: <20261103105545.1394600-1-vulab@iscas.ac.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -54,55 +57,67 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACXaZqnvelqzOE7AA--.64965S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1fZFW5Cr15tF17tr1fZwb_yoW8Jw18pw
-	45u3ySyrWagr4j9w4UJa4UZFWjkFnIgrW8uryrA3y7A3s0grZ0k3s5Xa4xAFnrtr1xAa45
-	trn5tr4DuFW5Zr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9mb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Cr1j6r
-	xdMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VAI37AI020EjII2
-	zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026x
-	CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-	JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-	4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdYxBIdaVFxhVjvjDU0xZFpf9x07UNTmhUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRIAA2rpnICE9QAAs2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261103105545.1394600-1-vulab@iscas.ac.cn>
 
-mlxplat_platdevs_init() registers the mlxreg-fan platform device before
-the watchdog and DPU devices, but the error paths for those later
-registrations never unregister it: the cleanup chain below
-fail_platform_wd_register drops the watchdog, io, LED and hotplug
-devices, but not the fan.
 
-Unregister the fan device on those failure paths.
+On Tue, 03 Nov 2026 10:55:45 +0000, Wentao Liang wrote:
+> for_each_pci_dev() walks the bus using pci_get_device(), which takes a
+> reference on every device it returns.  pmc_atom_init() returns as soon
+> as the PMC device has been matched, without dropping that reference, so
+> the pci_dev is never released.
+> 
+> Save the setup result, release the reference and then return the saved
+> value.
+> 
+> Fixes: 93e5eadd1f6e ("x86/platform: New Intel Atom SOC power management controller driver")
+> Cc: stable@vger.kernel.org
+> Assisted-by: DeepSeek-V4.1-Flash and OpenAI Codex
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/platform/x86/pmc_atom.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
 
-Fixes: 158cd8320776 ("platform: mellanox: Split logic in init and exit flow")
-Cc: stable@vger.kernel.org
-Assisted-by: DeepSeek-V4.1-Flash and OpenAI Codex
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/platform/mellanox/mlx-platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+Multiple things here:
+1. Your team ignored completely previous feedback. Multiple times.
 
-diff --git a/drivers/platform/mellanox/mlx-platform.c b/drivers/platform/mellanox/mlx-platform.c
-index efcba68d3aa5..303721604c96 100644
---- a/drivers/platform/mellanox/mlx-platform.c
-+++ b/drivers/platform/mellanox/mlx-platform.c
-@@ -8389,6 +8389,8 @@ static int mlxplat_platdevs_init(struct mlxplat_priv *priv)
- fail_platform_wd_register:
- 	while (i--)
- 		platform_device_unregister(priv->pdev_wd[i]);
-+	if (mlxplat_fan)
-+		platform_device_unregister(priv->pdev_fan);
- fail_platform_fan_register:
- 	if (mlxplat_regs_io)
- 		platform_device_unregister(priv->pdev_io_regs);
--- 
-2.34.1
+2. You use multiple identities with this email address, thus I doubt that we
+   speak with an actual person.
+
+3. Your bot does not even bother running checkpatch, right?
+
+4. Nothing of this was reproduced nor tested.
+
+5. Finally, the same feedback:
+You sent multiple independent patches, to multiple independent
+subsystems. The amount of these patches clearly suggest this was
+AI generated and most likely not tested.
+
+More importantly, you sent all this work without properly organizing
+relevant patches into patchsets. This makes reviewing difficult
+and might cause multiple reviewers to address the same issue.
+Replying to the entire set is impossible and requires handling each
+patch independently, instead of applying or discarding the set.
+Maintainers also won't see the bigger picture of your work. Quite
+worrying.
+
+This is on the verge of hostile patch: bomb us with so many
+contributions, we won't be able to handle them in efficient manner,
+like responding ONCE to ask you to slow down.  Considering all this
+is untested and LLM generated, I have even more doubts whether this
+should be considered for review.
+
+Please read kernel documentation BEFORE posting more work. It will
+explain you how to identify subsystems, how to organize your work per
+subsystem (so a patchset grouping multiple patches with a short cover
+letter), how to document the issue discovery method and what was
+or was not tested.
+
+Best regards,
+Krzysztof
+
+
+
 
