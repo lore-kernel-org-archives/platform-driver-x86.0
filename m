@@ -1,53 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793704206;
-	b=m8q9L5mgVqpcmLZuSQ5oKiQTJzIQ1hS7Iit9oi25AGBtTaIc7IBn8vrwNshPZdGtKQ9A
-	 gL+Tl3wzdQJp+ErLc2Q46GvS2iA3zDTU0m9uT2vAcjVdcH+nVnMLliSo+mQW7wcJF3INN
-	 /2y2theFVgqUKxthdbTpUfLU/aXVCMGb2GxObKedwrkeVBaG6gN4LQ8+QoyGC9rZqos99
-	 YDmXpVJCMRvYn+v3PgBd2FMlU5CpdZk1M1UsZz9TZS7D70BdS5QPu7V9lEHsBcbIn8+TZ
-	 8l1avE7HR3S3ylnTb4r8uWfJKgv7COr0M5uVFk8HpGAVTWLqvCbGbEBwxZkqNNJf+Dw==
+	t=1793704213;
+	b=vlsPjqxwQ0foA1Cvs20sQFkq6QYF7Q/ScHXB+NNOI1Ge8oE0AEx7bnOBXMrXS73MD9lo
+	 6zlXADickcftn2QbQ490DI9KxBFhkbDHsIdPLMQBqn8Ms83v3blH9ALBinTD4tNOaJI8x
+	 pPfrLHAnlDqtezy4t5L+YNpToKafa+WiCBq+x55z0qTlXxlESwm6TTQlXjYldjFT4J9n+
+	 0CCaBpTD3juF6GMbDJU62UWc4ypwH9XNm0DKatWE1niaQ4Jr8pNwqKrQQnBuvsD/aEA1z
+	 Pw7mKeaJJLIuSd1Hyl/s/R+y+4EhAJO6H6WKX0/fLNHJAFx7L+7O3NggqnjY99/GBIw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793704206;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793704213;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=dmCkHOV816s90fZumZgoW1aA+6XuqGyb3DqgAN4i7us=;
-	b=WTb7Sg8OBrg70t0NHoxZWGVPvSPngYVirm4v6JTJPMwHEDPCN9KssZpMLn2CF0j0EHL6
-	 rGDmGxJ8TgZDRDQtwXiWFp81nPw2ceEq6rvN6uvxRxFihrzYvJ2/y/9/r1tEs3tICJ3qv
-	 jx9Mg48dz43DWhF9BzrbpDEpSCsTAtJcBo960l8vJh/RIlvJSr8qp0PpFxRcQLQUG9wHK
-	 BMSKsw6nGYSBTd//k3tq4Ssq3WoPx2DgUvRs2e6xuZZ4hA06KHTDA9Xh0npap55RaGpKb
-	 bxbvOj9KCY0QOdRXZJSMQbG5Pm/fA1F9wy82NVcGtG2Z11Dp8muyk3+tUGXWdmvCWMA==
+	bh=Xrwz9IBfFfoHPQootLsmvN6SUAJ6eFYWOgccNCVWXhw=;
+	b=ACydx0Uho4XJV2YKO1QwfXIzM9mX2HBhEodufMzasSmodcCyYo/P3ukgSFM7i230UHi1
+	 ZaCAueKECMtFdggRJjSOmbFPuClxkN2WwlOQ/JFg4m8qRRo3N8TJIxO0EKSIaI9f+EMj1
+	 nN5/dAY69rx4vTdty1MQnkNaILCD8b+W2esmlyA0DxXz7qrq/F2n6OP5N6wFHYE/ugkzk
+	 fLH7qzwZFOpco9CAS9uRiVceKf7MK/0Cik6BWZM3cdgC09AVhykh7Ave4d8bqfmXPpDnO
+	 PT1HQWxmgrBSZu2pbxNNEsbx6Rkik032P4k9dJ0pO6Lx2R9ERSRYlBbSfb6q8JHJG4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WRvlmla3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="it3qxw/x";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44894606BA6A;
-	Tue,  3 Nov 2026 11:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B786E606BFB6;
+	Tue,  3 Nov 2026 11:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WRvlmla3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE941F0093A;
-	Tue,  3 Nov 2026 11:10:05 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=it3qxw/x
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB841F00919;
+	Tue,  3 Nov 2026 11:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793704206;
-	bh=dmCkHOV816s90fZumZgoW1aA+6XuqGyb3DqgAN4i7us=;
+	s=k20260515; t=1793704212;
+	bh=Xrwz9IBfFfoHPQootLsmvN6SUAJ6eFYWOgccNCVWXhw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WRvlmla3zRoX5UXLTdHUHRWq8TY8FpNCzJ6AeUW0WO003l71vJYkvFPS8cRg6EeGQ
-	 IYDZgmB5+/ONmO6GRLQ45BIGzM0AtUzWHD0gLeN+YAXhA4wgowBG7ocfK92J3mcHmx
-	 e4rdp8iBkI4YO2mWT8GRFsFCl4JlyPbBrvPycJYX4wrcm3IV+y6yqIhHMVie55RWW+
-	 a3PWUukMRvAV/WHDsvpzJv6i5wddXGhJwJkWV7ky6pWxq2Yly7025MC0K9EnNG0WUo
-	 pTViXFLffe6Rg4yirRyZHTCzDKzQRijUUPxt0QbI44Mtc4vnBBjcqVZN6kDanlxGnt
-	 6ahJFDEjoVzMw==
-Date: Tue, 3 Nov 2026 12:10:03 +0100
+	b=it3qxw/xgXslVOfDZnuYm37LYUCszoR1IwcpG5DTgFmzjezsEs9DTWVTsIJgkwkm0
+	 i1zqsK5mu7KrB/f+b9HpX9MWbsXRR0/cJg52viK4qaSjUy6bhAyWuEgJsG5l0gHscQ
+	 jLRPYN3ijnPFKcd0tvXCnJsS65DvcBwy0rnqEiwPhve6K96JNZKKoqaT/5jUZ86kwS
+	 8KIBJdZzXNR2rGOG55qkD2BR70rbYC8ginIWxwk/6R7Jz4sqbO34iJCowhHKUMewj7
+	 CERU1ibMpTHxBa1wat48SRUrUxNSxjFszDOT1Yu4AAp+Fq2xQTTD0gp1aK3BRTD6TV
+	 M7tVKcG3ikDzg==
+Date: Tue, 3 Nov 2026 12:10:09 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: pmc_atom: drop the PCI device reference
- after setup
-Message-ID: <20261103-perfect-tungsten-junglefowl-ded7fd@quoll>
-References: <20261103105545.1394600-1-vulab@iscas.ac.cn>
+Cc: stable@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: fix codec teardown if
+ poweroff handler setup fails
+Message-ID: <20261103-ludicrous-fervent-malamute-24ac38@quoll>
+References: <20261103105544.1394559-1-vulab@iscas.ac.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -59,25 +60,28 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261103105545.1394600-1-vulab@iscas.ac.cn>
+In-Reply-To: <20261103105544.1394559-1-vulab@iscas.ac.cn>
 
 
-On Tue, 03 Nov 2026 10:55:45 +0000, Wentao Liang wrote:
-> for_each_pci_dev() walks the bus using pci_get_device(), which takes a
-> reference on every device it returns.  pmc_atom_init() returns as soon
-> as the PMC device has been matched, without dropping that reference, so
-> the pci_dev is never released.
+On Tue, 03 Nov 2026 10:55:44 +0000, Wentao Liang wrote:
+> lenovo_yoga_tab2_830_1050_init_codec() stores the codec device reference,
+> the pinctrl handle and the pin mappings in globals on success; they are
+> only released by lenovo_yoga_tab2_830_1050_exit(). If the
+> register_sys_off_handler() call which follows it fails, the init callback
+> returns an error before the exit callback has been registered with the
+> framework, so the codec device reference and the other resources are
+> never released.
 > 
-> Save the setup result, release the reference and then return the saved
-> value.
+> Factor the codec teardown out into a helper and call it from the error
+> path of both init callbacks.
 > 
-> Fixes: 93e5eadd1f6e ("x86/platform: New Intel Atom SOC power management controller driver")
+> Fixes: 4ce8f4c2027d ("platform/x86: x86-android-tablets: Fix Lenovo Yoga Tablet 2 830/1050 poweroff again")
 > Cc: stable@vger.kernel.org
 > Assisted-by: DeepSeek-V4.1-Flash and OpenAI Codex
 > Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 > ---
->  drivers/platform/x86/pmc_atom.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  .../platform/x86/x86-android-tablets/lenovo.c | 27 +++++++++++++------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
 > 
 
 Multiple things here:
