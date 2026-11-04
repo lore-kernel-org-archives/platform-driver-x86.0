@@ -1,79 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.27
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793756501;
-	b=wXE6T7x9qmeQqWctX/iGrdyA15AXP1rTXRlQs7H/I0ytjOZtS87I0BfpwBJb/9Shx3P6
-	 bmtD/KEW1o3SKj/pR3JlMuNHyDnV6eEuz6bl8AlVFGogcCos7TcuIouaah1oUj9cIgI4N
-	 yW6l5LBHVkJddA0fFaJhOFCyxwnERviFWKRUteQCTOTO8PUhIVZW8lvUbuhrnpugLze/b
-	 ViexyX7cQLppQhTntRnRMGxgjr2yIH1LGKQD4arYeoQXkpseRyOslq5Y1l92v2YIewDnC
-	 nEguX76YJNgbA2nW8IClFoNt4BInAk/K18SjHSdMQk90ZUnDCm9qOz4MYXdhUHNvL6A==
+	t=1793762863;
+	b=InB+t0m/WWsQobU3LTvqLnmfbmzb6y8zvfFxPui8FUuP0xLiTN/gOew0ZN/wabnmvQjo
+	 ak0XwlMRA4X72SQEgqdcqsWFcLTK+5xmhwhzBB0iFGdUoo0AYm3w8fcRL8L0I2+Pe3s79
+	 xGl1yHtEgfZURKvZhKvrPago/c/ZPZyA0Rw2XmyGYUL61EOGFLsgcRJIKwVJWdQRTapzw
+	 pavYAAUVsILwCcC3tQWC6x0M18LGaQk+di+Tf2Xa/sfjZU/wnB47VBpdOJbbZLWlF/s8P
+	 e1Kz+IjtNvFL6DocL+/YrWBBCEhxpusrljZk6kwAJByo+qmX8rrKo2r4yDohEq9X9kQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793756501;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=0ZzqJDoeEpW5CfU+Ff49nSju2Ph/tRx20nMXNwS/YtQ=;
-	b=BySdjxpuyhVgLwejGnWqp45BxJIFJE9yu11tG2f4A1KMaITdongu3BkIYjePg44GX/9z
-	 TWkA80k5iFCUfCG9AaeTPteAslKmFYOMML4IbT5nLo87Wzs+0eSXxT2EYZUeTMVKPtN3b
-	 KX0tRT1yE3fb27MRY3JzSQQQucgtvgSgosoIZVp4vYGXxK9ejh33JP8WiluuspXGLu16J
-	 g0T1b/F8FiU3AUSh/i8agdHUzH9cUy/WKGTX8fZZsRpFSu0YHA0Hm2WyJd6yVNgupfPvu
-	 dHqYiql/tm+xbbJkY4k3ZnD1cUVQvY9/8LodoVoyId9dRtwGrtDzGX7RwMrpMc8UALg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793762863;
+	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:X-Originating-IP:X-ClientProxiedBy:
+	 DKIM-Signature;
+	bh=viVVzkC8NSMYgoB03HU//cwy7wO7RE7Q9NlLJUdPBOA=;
+	b=LAqzd8MtYizYyM76qYhtRQkT2oY+vB9jIM/bD2UwmyoKqNIHjSRWTpD9+cYpi2DkTAk9
+	 OQn+dBDbCQp4t7lBpyJejPd8u7Zv4D8jgPX+dDLBhswunofY+pdMA5oFcuTpGQxy0LN6J
+	 Or+FEbfOpMwLZ7Fy7cc1wHrWRB8IACMj1kdLKX10pqq6+CwaR0vUxlBUwU1h9kB9uu7+f
+	 3+LoQC4DTHL1rz6sAgkPyqn7jn71RMskD5bN7h2zTa8szk7yO76IKf5nvDQXGeowTgUMD
+	 c7jOR7lX+a+6rcYra5Vmm9YxOOLw1xouDP75aBUPSr8S2JQYriBoM9GUpvXsd7YyhbQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tHO4hhWF;
-	arc=none smtp.remote-ip=91.218.175.27
-Received: from mta0.migadu.com (out-27.mta0.migadu.com [91.218.175.27])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A484C606D80C
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Nov 2026 01:41:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A484C606D80C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	dmarc=pass header.from=baidu.com;
+	spf=pass smtp.mailfrom=baidu.com;
+	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=i4Ia7dJG;
+	arc=none smtp.remote-ip=180.76.5.236
+Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id DA851606A33E
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Nov 2026 03:27:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA851606A33E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tHO4hhWF
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=hhvXy66lGbMj0qrrceqA8gQVJhAYMN9wky8VtEvh6LA=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793756497; v=1; x=1794361297;
- b=tHO4hhWFpBdhBAz/vC3/sO4c//k3HFBaoc5bEUNrbgkvmKYANOW2T0iY1iVg5mFmSn2j8pol
- qOMR5pilmlkrmMA6uIA6UtJ3u6NniZgxDbRxx6yhQvIJ8bNc4S+jWhW58lhfLZfxaOcVVzEZXla
- b6+EDaSMxKU8Qyv95t058jL0=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id bc5bb20736c767dc;
-	Wed, 04 Nov 2026 01:41:37 +0000
-X-Mizu-Trace-ID: bc5bb20736c767dc
-X-Migadu-Flow: FLOW_OUT
-From: Denis Benato <denis.benato@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	kernel@lists.opengamingcollective.org,
-	"Benjamin Tissoires" <bentiss@kernel.org>,
-	"Jiri Kosina" <jikos@kernel.org>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	"Mateusz Schwartz" <matthew.schwartz@linux.dev>,
-	"Denis Benato" <benato.denis96@gmail.com>,
-	"Jonathan LoBue" <jlobue10@gmail.com>,
-	"Khamunetri Clark" <khamunetriclark@gmail.com>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	"Joshua Leivenzon" <hacker1024@users.sourceforge.net>,
-	"Nathan Chancellor" <nathan@kernel.org>,
-	=?UTF-8?q?Rebecca=20Mara=20M=C3=BCller?= <rebecca.mara@posteo.de>,
-	"Ivan Levchenko" <me@livan.pro>,
-	"Corentin Chary" <corentin.chary@gmail.com>,
-	"Hans de Goede" <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v13 16/18] HID: asus: document ROG Ally sysfs attributes
-Date: Wed,  4 Nov 2026 01:39:33 +0000
-Message-ID: <20261104013935.512713-17-denis.benato@linux.dev>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20261104013935.512713-1-denis.benato@linux.dev>
-References: <20261104013935.512713-1-denis.benato@linux.dev>
+	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=i4Ia7dJG
+X-MD-Sfrom: lirongqing@baidu.com
+X-MD-SrcIP: 172.31.50.47
+From: lirongqing <lirongqing@baidu.com>
+To: Hans de Goede <hansg@kernel.org>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, Kristen Carlson Accardi
+	<kristen.c.accardi@intel.com>, Srinivas Pandruvada
+	<srinivas.pandruvada@linux.intel.com>, Li RongQing <lirongqing@baidu.com>,
+	Tero Kristo <tero.kristo@linux.intel.com>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86: TPMI: clean up CPU mappings on offline
+Date: Wed, 4 Nov 2026 11:27:24 +0800
+Message-ID: <20261104032724.1824-1-lirongqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,421 +52,73 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: bjhj-exc11.internal.baidu.com (172.31.3.21) To
+ bjkjy-exc3.internal.baidu.com (172.31.50.47)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
+	s=selector1; t=1793762853;
+	bh=viVVzkC8NSMYgoB03HU//cwy7wO7RE7Q9NlLJUdPBOA=;
+	h=From:To:Subject:Date:Message-ID:Content-Type;
+	b=i4Ia7dJGdyObaBZrmGDWdQY6yTrehawen1YMaxQp3u2VbAKYb4JXNGcirrXfYPlw2
+	 d5eutYVxtULFDgCKyPxlZ9ca1IgVkKBno9/GfJ4DjQleOXQEKmovn1rLF6Kvyg/9zs
+	 av+109Og+O+8trMy64hY6pbpdPgBDnmnzBSDv7+qjbgOEcrvHrT57VkiFgjaqodNhQ
+	 FsPamxsfz/tMqfiGYmG+nLAtfNsYqgLLsfKr3q2h5h3eES9x1PHTma77FBTt6bII+6
+	 NneGQH+ZUz09X6Gm1RvCnmZatOteaklCvKp+rOoCTHf3MjktdNXD48PtGRssNR3BNM
+	 D01mXj8KgrM7g==
 
-The driver publishes the gamepad configuration of the ROG Ally
-handhelds through sysfs: the controller emulation and the
-operating mode, the per-motor vibration strength, the per-axis
-joystick calibration (dead zone, outer threshold, anti-dead
-zone and response curve), the trigger activation ranges, and
-the per-button mapping, macro and turbo settings.
+From: Li RongQing <lirongqing@baidu.com>
 
-Document each file: where it is created, what a read returns,
-which values a write accepts, and the error returned when the
-controller lacks the capability.
+The TPMI power domain driver adds each online CPU to a hash table and
+its power domain mask, but does not remove either entry when the CPU
+goes offline. Bringing a CPU back online can therefore insert the same
+hlist node again and leave stale CPU mask state.
 
-Signed-off-by: Denis Benato <denis.benato@linux.dev>
+Register an offline callback that removes the hash entry and clears the
+CPU from its power domain mask.
+
+Fixes: 17ca2780458c ("platform/x86/intel: TPMI domain id and CPU mapping")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
 ---
- .../ABI/testing/sysfs-driver-hid-asus         | 389 ++++++++++++++++++
- 1 file changed, 389 insertions(+)
+ drivers/platform/x86/intel/tpmi_power_domains.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-hid-asus b/Documentation/ABI/testing/sysfs-driver-hid-asus
-index 30e0d17d4cec..515eb7c550fc 100644
---- a/Documentation/ABI/testing/sysfs-driver-hid-asus
-+++ b/Documentation/ABI/testing/sysfs-driver-hid-asus
-@@ -93,3 +93,392 @@ Description:
+diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
+index d89b989..c3fd1bd 100644
+--- a/drivers/platform/x86/intel/tpmi_power_domains.c
++++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+@@ -220,6 +220,23 @@ static int tpmi_cpu_online(unsigned int cpu)
+ 	return 0;
+ }
  
- 		Access: Read only
- 		Valid values: a single line of text
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/xbox_controller
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Enable or disable the Xbox controller emulation of the
-+		gamepad.
-+
-+		The file is created on the configuration interface of a
-+		bound ASUS ROG Ally or ROG Ally X controller. A read
-+		returns 1 when the emulation is enabled and 0 when it
-+		is disabled; the emulation is enabled by default.
-+
-+		Reading and writing return -EOPNOTSUPP when the
-+		controller does not report the capability.
-+
-+		Access: Read/Write
-+		Valid values: 0, 1
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/gamepad_mode
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Operating mode of the gamepad. In "gamepad" mode the
-+		buttons report gamepad codes, in "desktop" mode they
-+		report keyboard, mouse and media codes. The default
-+		mode is gamepad.
-+
-+		The file is created on the configuration interface of a
-+		bound ASUS ROG Ally or ROG Ally X controller. A switch
-+		asks the controller to change mode and resets the
-+		recorded button mappings to the firmware defaults of
-+		the new mode, so the remap, macro and remap_available
-+		files report those defaults afterwards.
-+
-+		Access: Read/Write
-+		Valid values: "gamepad", "desktop"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/gamepad_mode_index
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		List of the operating modes the gamepad_mode file
-+		accepts, space separated.
-+
-+		The file is created on the configuration interface of a
-+		bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: "gamepad desktop"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_vibration/intensity
-+		/sys/bus/hid/drivers/asus/<dev>/right_vibration/intensity
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Strength of the left or the right rumble motor, in
-+		percent of the maximum intensity. The controller does
-+		not keep the strength across a reset: the driver sends
-+		the recorded values again when it re-initializes the
-+		controller.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller. Both
-+		motors default to 100 and a write is rejected when the
-+		value is above 100.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 0..100
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_vibration/intensity_range
-+		/sys/bus/hid/drivers/asus/<dev>/right_vibration/intensity_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling intensity file accepts.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: "0 100"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/inner_threshold
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/inner_threshold
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Size of the inner dead zone of the joystick, in percent
-+		of the axis range. The default is 10.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller. Reading
-+		and writing return -EOPNOTSUPP when the controller does
-+		not report user calibration support.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 0..50
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/outer_threshold
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/outer_threshold
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Outer threshold of the joystick, in percent of the axis
-+		range: at and beyond this deflection the joystick
-+		reports full deflection. The default is 90.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller. Reading
-+		and writing return -EOPNOTSUPP when the controller does
-+		not report user calibration support.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 70..100
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/inner_threshold_range
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/inner_threshold_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling inner_threshold file
-+		accepts.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: "0 50"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/outer_threshold_range
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/outer_threshold_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling outer_threshold file
-+		accepts.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: "70 100"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/anti_deadzone
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/anti_deadzone
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Anti-dead zone of the joystick, in percent of the axis
-+		range: the deflection the controller applies to
-+		counteract the inner dead zone. The default is 0.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller. Reading
-+		and writing return -EOPNOTSUPP when the controller does
-+		not report anti-dead zone support.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 0..100
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/anti_deadzone_range
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/anti_deadzone_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling anti_deadzone file
-+		accepts.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: "0 100"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/response_curve
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/response_curve
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Response curve of the joystick, as four points. Each
-+		point is a pair: a move percentage, the deflection at
-+		which the point is placed, and a response percentage,
-+		applied from that point on.
-+
-+		The write is all-or-nothing: it is rejected when any
-+		value is out of range or the move percentages are not
-+		strictly increasing, and the recorded curve is left
-+		untouched. The default is the linear curve
-+		"0 0 33 33 66 66 100 100".
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller. Reading
-+		and writing return -EOPNOTSUPP when the controller does
-+		not report response curve support.
-+
-+		Access: Read/Write
-+		Valid values: eight unsigned numbers 0..100, the move
-+		ones strictly increasing
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_joystick_axis/response_curve_index
-+		/sys/bus/hid/drivers/asus/<dev>/right_joystick_axis/response_curve_index
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Explanation of the format of the sibling response_curve
-+		file.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: a single line of text
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_trigger/range_lower_limit
-+		/sys/bus/hid/drivers/asus/<dev>/right_trigger/range_lower_limit
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Lower limit of the analog trigger activation range, in
-+		percent of the trigger travel: below this deflection
-+		the trigger reports zero. The default is 0.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller. Reading
-+		and writing return -EOPNOTSUPP when the controller does
-+		not report user calibration support.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 0..50
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_trigger/range_upper_limit
-+		/sys/bus/hid/drivers/asus/<dev>/right_trigger/range_upper_limit
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Upper limit of the analog trigger activation range, in
-+		percent of the trigger travel: at and beyond this
-+		deflection the trigger reports full deflection. The
-+		default is 100.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller. Reading
-+		and writing return -EOPNOTSUPP when the controller does
-+		not report user calibration support.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 70..100
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_trigger/range_lower_limit_range
-+		/sys/bus/hid/drivers/asus/<dev>/right_trigger/range_lower_limit_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling range_lower_limit file
-+		accepts.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: "0 50"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/left_trigger/range_upper_limit_range
-+		/sys/bus/hid/drivers/asus/<dev>/right_trigger/range_upper_limit_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling range_upper_limit file
-+		accepts.
-+
-+		The files are created on the configuration interface of
-+		a bound ASUS ROG Ally or ROG Ally X controller.
-+
-+		Access: Read only
-+		Valid values: "70 100"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/<btn>/remap
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Target the button is remapped to, by name. A write
-+		sends the mapping to the controller and is rejected
-+		when the name is unknown or not valid for the button
-+		in the current mode; the recorded mapping is restored
-+		when the controller rejects it.
-+
-+		"NONE" is always valid. In "gamepad" mode only gamepad
-+		codes are valid, in "desktop" mode only keyboard,
-+		mouse and media codes are; btn_m1 and btn_m2 accept
-+		every code.
-+
-+		The file is created in one directory per button of the
-+		configuration interface of a bound ASUS ROG Ally or
-+		ROG Ally X controller. <btn> is one of: btn_a, btn_b,
-+		btn_x, btn_y, btn_lb, btn_rb, dpad_up, dpad_down,
-+		dpad_left, dpad_right, btn_l3, btn_r3, btn_menu,
-+		btn_view, btn_m1 and btn_m2.
-+
-+		Access: Read/Write
-+		Valid values: one name from the sibling
-+		remap_available file
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/<btn>/macro
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Macro target of the button, by name. The macro target
-+		is not restricted by the controller mode: every name
-+		the controller knows is valid for every button.
-+
-+		The file is created in the <btn> directories listed
-+		for the remap file.
-+
-+		Access: Read/Write
-+		Valid values: one name; the btn_m1 and btn_m2
-+		remap_available files list them all
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/<btn>/remap_available
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Names the remap file of this button accepts in the
-+		current mode, space separated. The btn_m1 and btn_m2
-+		files list every known name in every mode.
-+
-+		The file is created in the <btn> directories listed
-+		for the remap file.
-+
-+		Access: Read only
-+		Valid values: a single line of text
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/<btn>/turbo_period
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Repeat period of the turbo function of the button, in
-+		firmware units: while turbo is on, the button is
-+		automatically pressed again at this period. The period
-+		0, the default, disables the function.
-+
-+		The file is created in the <btn> directories listed
-+		for the remap file, only when the controller reports
-+		turbo support.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 0..20
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/<btn>/toggle_period
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Toggle period of the turbo function of the button, in
-+		firmware units.
-+
-+		The file is created in the <btn> directories listed
-+		for the remap file, only when the controller reports
-+		turbo support.
-+
-+		Access: Read/Write
-+		Valid values: an unsigned number 0..255
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/<btn>/turbo_period_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling turbo_period file
-+		accepts.
-+
-+		The file is created in the <btn> directories listed
-+		for the remap file, only when the controller reports
-+		turbo support.
-+
-+		Access: Read only
-+		Valid values: "0 20"
-+
-+What:		/sys/bus/hid/drivers/asus/<dev>/<btn>/toggle_period_range
-+Date:		October 2026
-+Contact:	linux-input@vger.kernel.org
-+Description:
-+		Range of the values the sibling toggle_period file
-+		accepts.
-+
-+		The file is created in the <btn> directories listed
-+		for the remap file, only when the controller reports
-+		turbo support.
-+
-+		Access: Read only
-+		Valid values: "0 255"
++static int tpmi_cpu_offline(unsigned int cpu)
++{
++	struct tpmi_cpu_info *info = &per_cpu(tpmi_cpu_info, cpu);
++	int index;
++
++	if (hlist_unhashed(&info->hnode) || !tpmi_domain_is_valid(info))
++		return 0;
++
++	index = info->pkg_id * MAX_POWER_DOMAINS + info->punit_domain_id;
++
++	guard(mutex)(&tpmi_lock);
++	cpumask_clear_cpu(cpu, &tpmi_power_domain_mask[index]);
++	hash_del(&info->hnode);
++
++	return 0;
++}
++
+ static int __init tpmi_init(void)
+ {
+ 	const struct x86_cpu_id *id;
+@@ -249,7 +266,7 @@ static int __init tpmi_init(void)
+ 
+ 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+ 				"platform/x86/tpmi_power_domains:online",
+-				tpmi_cpu_online, NULL);
++				tpmi_cpu_online, tpmi_cpu_offline);
+ 	if (ret < 0)
+ 		goto free_domain_map;
+ 
 -- 
-2.47.3
+2.9.4
 
