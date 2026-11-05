@@ -1,54 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.104
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793844847;
-	b=VELwR4/bOcxBjkudl/xptv0KpLcTnMg/wFY+rh1iQSz9r/8QQfO/lTLZ4WbHn1a0ryjW
-	 Lpj2IF33qk8hpFmxw6gL2dJVaVeM0gpuIzql1Uv9W8Xr7dnnKGoHe2ipvvgxzJnKC66wF
-	 uh4wDB9v7qhPIFobGEBeU2gNufHlVQ58SehXmTWOUqZSUZ6FWq+4IOjqlAzX4E4GHfglJ
-	 C4TgX7quByDedXVmv0T3Z6X8mmsgiXXNOb9bQOjFeY0yoS+UC7y2zYqg9BlxGzTK6BGTt
-	 7I+Xp8vNf34BfdJP/d+LiHMQV4OL7fEtcOkzIczV/8dt/SpsGhJb3QBV5CGk5m0eiSA==
+	t=1793848212;
+	b=Q9McP+0tSFn00Rckax67FPV8U6InA4cOBHK6NuUxsqZtDk+GDqiOZhoKuJn6/RgUxTKX
+	 b2NdyTh71WdPF/XgeFrUiQO/epqvR8Y9ShF+ToV/YaHs+LZ/L5ZerSH3NTfYpaZA8ezVE
+	 8KHTPKj7r7poRwH3WDOerirhIVqTePutMdDfeyPpYi+afWTD0tuG5IV2h6t5iknKHG+Wf
+	 lu6mIfcNJHEx8wKhp2ceEs7W7bgtHQh3s7tHeUmzK6ei9gCXfbRSj+mEumc3/V3esX6qe
+	 ACjJiW7BKG6jSbZ3urad72/iror1nEojQSz2UE0CfXZ96VUoSJB0OBv2jxvqvbLRgZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793844847;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=tXeq94tKXH8bHOz1amsH5XRU51n2PYOOTkgxfF1PjyI=;
-	b=Ov3Ocpo/VyEnplRcyhcPYKThcqFeRpLu74ZO6mTvLdJaslBiHzIg8TF2TqoYn/ROnGnf
-	 BDt686fEc78icOpMHe6+64AjNbOLeX6uQkxgk4OzMf5vnW8GVwIOSAnyYrPii8Y4gmtfP
-	 e5yED5gqftQI/UgU14iXhwGnUTHDZi2j+VGR+0CjhxIciUr8p4hPS0QGUMrNgkFot6r8j
-	 2/bIJXzXVkwWQGljaGT0tNsX51R7l+eupa1Dzjd3gGDhExA3orP2exXhLyxjZg5jYZMQ3
-	 pPt5TpbwDxfXuyGSyRbjlPI0fcLHlaFn/zuK7QxY+TSH09C/b1fa6SWePP32lZnXJcQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793848212;
+	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Thread-Topic:
+	 Thread-Index:Date:Message-ID:References:In-Reply-To:Accept-Language:
+	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 x-originating-ip:Content-Type:Content-Transfer-Encoding:MIME-Version:
+	 DKIM-Signature;
+	bh=e07Pz2eUsvO/znp5xdNBeb59KuqjApofn13Goj3xYd0=;
+	b=EQ5cvRMnhZz1CDWlQSzRvpZplv7F+/ymRRvQTVeQGRn9AiQP1ToE7zB6CbnoUUH7fvXn
+	 4Fgc3E8/7DiszUE8rmCvXNC0qGkGrrZJr3aHY2YrStzlRhTSdFMJPl43Slh+mJzuiKITW
+	 fEqyN781r3dn8cE51Ub0DIFRo80GDmpJotuVM8gzzGPE15vdmAhAzF5WBwDkUXE2arC8L
+	 4XQfBzELhKueCDiaFLGHnZs8Iqnq7RUZ7OpR0cyqkpBDwAUS3owpCGuETaBt0XeHpac5n
+	 cS55m6qdRGLKBE4botcLj4AZ4lPDGQFbWS3QztTAgIBsoMfIEGtr64R6hINPoTOvZCQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=j2sTp789;
-	arc=none smtp.remote-ip=95.215.58.104
-Received: from mta1.migadu.com (out-104.mta1.migadu.com [95.215.58.104])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C4F606A32D
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 02:14:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09C4F606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	dmarc=pass header.from=baidu.com;
+	spf=pass smtp.mailfrom=baidu.com;
+	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=KMRbz5zx;
+	arc=none smtp.remote-ip=180.76.5.236
+Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 78014606A336
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 03:10:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 78014606A336
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=j2sTp789
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=l5hRS8qgzR0WOCPLF0tQbQ+of37lp1oZsgw+XUQqwhg=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793844844; v=1; x=1794449644;
- b=j2sTp789TAzH4+lGZ7lYWfaDwj4tzc9cwnz9VymVYz+93eIx1j2P1wIewQP0NcIfVbJQKLyf
- 0DO8NIIghKzDouBSBnDym1wAnQyGpqJsD9irj2dQSZrGObeDZJB96QtjMGxheDIwPErfv1cfpzT
- zdnAQ3fG/Xx2Ge3hDWonFfXo=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 7ce234fbb2517b84;
-	Thu, 05 Nov 2026 02:14:03 +0000
-X-Mizu-Trace-ID: 7ce234fbb2517b84
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <fc4939cc-84ec-4c5c-88a7-658ca800377d@linux.dev>
-Date: Thu, 5 Nov 2026 10:15:13 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=KMRbz5zx
+X-MD-Sfrom: lirongqing@baidu.com
+X-MD-SrcIP: 172.31.3.13
+From: "Li,Rongqing" <lirongqing@baidu.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Hans de Goede
+	<hansg@kernel.org>, =?utf-8?B?SWxwbyBKw6RydmluZW4=?=
+	<ilpo.jarvinen@linux.intel.com>, Kristen Carlson Accardi
+	<kristen.c.accardi@intel.com>, Tero Kristo <tero.kristo@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXSBwbGF0Zm9ybS94?=
+ =?utf-8?Q?86:_TPMI:_clean_up_CPU_mappings_on_offline?=
+Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBUUE1J?=
+ =?utf-8?Q?:_clean_up_CPU_mappings_on_offline?=
+Thread-Index: AQHdbAxtacDUPetLwUqskey/PwKz+bcdhI+AgAFHb/A=
+Date: Thu, 5 Nov 2026 03:09:57 +0000
+Message-ID: <62ad2e7ffbbe4a4b8ad4cc76dbfc8f99@baidu.com>
+References: <20261104032724.1824-1-lirongqing@baidu.com>
+ <245eea039c692d03736fcf2ca2448a271fa135ce.camel@linux.intel.com>
+In-Reply-To: <245eea039c692d03736fcf2ca2448a271fa135ce.camel@linux.intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -58,189 +66,86 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v2 01/51] alloc_tag: don't remove /proc/allocinfo
- under the codetag module lock
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>,
- Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Eric Dumazet <edumazet@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>,
- Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados
- <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>,
- Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>,
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
- ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org,
- coreteam@netfilter.org, kexec@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-cifs@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-mm@kvack.org, linux-sh@vger.kernel.org,
- linux-usb@vger.kernel.org, samba-technical@lists.samba.org,
- sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-doc@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-atm-general@lists.sourceforge.net, Takashi Iwai <tiwai@suse.de>,
- linux-input@vger.kernel.org, linux-raid@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>,
- stable@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Suren Baghdasaryan <surenb@google.com>
-References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
- <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
-Content-Language: en-US
-From: Hao Ge <hao.ge@linux.dev>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-1-021c84d852e0@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
+	s=selector1; t=1793848200;
+	bh=e07Pz2eUsvO/znp5xdNBeb59KuqjApofn13Goj3xYd0=;
+	h=From:To:Subject:Date:Message-ID:Content-Type;
+	b=KMRbz5zx6k2UF8HSVMRZfBlzG9IO9mzNo3kxt03VpDwmWJoo8Yso5DVN0kgEqk7i+
+	 PYFLdCPWExezdzLVl2pee1WE7MEBxYOe7LX7Gqu+XupHQNUQoPq/JWh+AY0nghy4r4
+	 T/p0FpaAlaF3oh9LfPUnEOmrsWhkiqDHFuCykXcAQKo9BXZm0c3BXVVEaLnqnfBVTn
+	 Cjw+7XESjFuvQ2vkprtWPZyTZRxs1yO6nWA0ywj5SE/2YQP266AkqfMOLCb8ptyhCj
+	 c8RhZbPMIDsrjZ1FYWlqD0I9b8eV8dSc4YizjdSFAtHLaO9UwSFOsVWIWAR5L/REqy
+	 Nnb2qn56ikwbg==
 
-Cc Suren
-
-Hi Christian
-
-On 2026/11/5 03:06, Christian Brauner wrote:
-> codetag_alloc_module_section() takes the codetag type's mod_lock for
-> writing and calls reserve_module_tags() with it held. When that can't
-> reserve the tags, because the section's alignment doesn't fit, because
-> there are too many tags for the page flag bits or because the memory
-> for them can't be allocated, it shuts memory allocation profiling down
-> and removes /proc/allocinfo, still with mod_lock held.
-> 
-> remove_proc_entry() waits until every reader of the entry has let go of
-> it, and a reader of /proc/allocinfo takes mod_lock for reading in
-> allocinfo_start() while it holds the entry. So a module load that hits
-> one of those paths while /proc/allocinfo is being read waits for the
-> reader and the reader waits for the module load, for good.
-> 
-> Let a work item remove the entry in that case. The profiling is shut
-> down right away like before, the file just goes a moment later.
-> 
-> Fixes: 4835f747d3ed ("alloc_tag: support for page allocation tag compression")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
-
-Thanks.
-
-is this a problem you have hit in practice?
-Sashiko discovered this issue earlier and reported it as follows:
-
-> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
-> index 2070e682fe106..112a014d4b890 100644
-> --- a/mm/alloc_tag.c
-> +++ b/mm/alloc_tag.c
-> @@ -950,10 +950,12 @@ static void *reserve_module_tags(struct module *mod, unsigned long size,
->  		int grow_res;
->  
->  		module_tags.size = offset + size;
-> -		if (mem_alloc_profiling_enabled() && !tags_addressable()) {
-> +		if (!tags_addressable()) {
->  			shutdown_mem_profiling(true);
-This is a pre-existing issue, but does this shutdown_mem_profiling(true) call
-introduce an AB-BA deadlock between /proc/allocinfo file readers (pde->in_use)
-and module loading (cttype->mod_lock)?
-A user reading /proc/allocinfo acquires the procfs in_use reference in
-use_pde(), then blocks on down_read(&alloc_tag_cttype->mod_lock) in
-allocinfo_start().
-Concurrently, if a module loads and tags_addressable() fails,
-codetag_alloc_module_section() holds down_write(&cttype->mod_lock) and calls
-shutdown_mem_profiling(true), which removes the proc entry. This removal waits
-indefinitely for the in_use reference to drop to zero, hanging both procfs
-reads and module loading.
-> -			pr_warn("With module %s there are too many tags to fit in %d page flag bits. Memory allocation profiling is disabled!\n",
-> -				mod->name, NR_UNUSED_PAGEFLAG_BITS);
-> +			pr_warn_once("With module %s there are too many tags to fit in %d page flag bits. Memory allocation profiling is disabled!\n",
-> +				     mod->name, NR_UNUSED_PAGEFLAG_BITS);
-> +			release_module_tags(mod, false);
-> +			return ERR_PTR(-EAGAIN);
->  		}
->  
->  		grow_res = vm_module_tags_populate();
-
-I previously sent a patch with a comparable idea, though Sashiko remained unconvinced.
-
-[patch]: https://lore.kernel.org/all/20260817062726.106511-3-hao.ge@linux.dev/
-
-[Sashiko's objections]: https://sashiko.dev/#/patchset/20260817062726.106511-1-hao.ge@linux.dev
-
-Could this patch perhaps wait for mine? No worries if this is inconvenient.
-
-Best regards                                                                                                                                                                                                                                                                  
-Hao
-
-> ---
->  mm/alloc_tag.c | 27 ++++++++++++++++++++++++---
->  1 file changed, 24 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
-> index 82e2c3448dcf..7d7ad6704953 100644
-> --- a/mm/alloc_tag.c
-> +++ b/mm/alloc_tag.c
-> @@ -15,6 +15,7 @@
->  #include <linux/seq_file.h>
->  #include <linux/string_choices.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/workqueue.h>
->  #include <linux/kmemleak.h>
->  #include <uapi/linux/alloc_tag.h>
->  
-> @@ -604,6 +605,26 @@ static void shutdown_mem_profiling(bool remove_file)
->  	mem_profiling_support = false;
->  }
->  
-> +static void remove_allocinfo_file(struct work_struct *work)
-> +{
-> +	remove_proc_entry(ALLOCINFO_FILE_NAME, NULL);
-> +}
-> +static DECLARE_WORK(remove_allocinfo_work, remove_allocinfo_file);
-> +
-> +/*
-> + * A module's tags are reserved with the codetag module lock held for
-> + * writing, and a reader of /proc/allocinfo takes that lock with the entry
-> + * pinned. Removing the entry there would wait for that reader for good, so
-> + * let a work item do it.
-> + */
-> +static void shutdown_mem_profiling_async(void)
-> +{
-> +	if (!mem_profiling_support)
-> +		return;
-> +	shutdown_mem_profiling(false);
-> +	schedule_work(&remove_allocinfo_work);
-> +}
-> +
->  void __init alloc_tag_sec_init(void)
->  {
->  	struct alloc_tag *last_codetag;
-> @@ -855,7 +876,7 @@ static void *reserve_module_tags(struct module *mod, unsigned long size,
->  		align = 1;
->  
->  	if (!ensure_alignment(align, &prepend)) {
-> -		shutdown_mem_profiling(true);
-> +		shutdown_mem_profiling_async();
->  		pr_err("%s: alignment %lu is incompatible with allocation tag indexing. Memory allocation profiling is disabled!\n",
->  			mod->name, align);
->  		return ERR_PTR(-EINVAL);
-> @@ -905,14 +926,14 @@ unlock:
->  
->  		module_tags.size = offset + size;
->  		if (mem_alloc_profiling_enabled() && !tags_addressable()) {
-> -			shutdown_mem_profiling(true);
-> +			shutdown_mem_profiling_async();
->  			pr_warn("With module %s there are too many tags to fit in %d page flag bits. Memory allocation profiling is disabled!\n",
->  				mod->name, NR_UNUSED_PAGEFLAG_BITS);
->  		}
->  
->  		grow_res = vm_module_tags_populate();
->  		if (grow_res) {
-> -			shutdown_mem_profiling(true);
-> +			shutdown_mem_profiling_async();
->  			pr_err("Failed to allocate memory for allocation tags in the module %s. Memory allocation profiling is disabled!\n",
->  			       mod->name);
->  			return ERR_PTR(grow_res);
-> 
+PiANCj4gT24gV2VkLCAyMDI2LTExLTA0IGF0IDExOjI3ICswODAwLCBsaXJvbmdxaW5nIHdyb3Rl
+Og0KPiA+IEZyb206IExpIFJvbmdRaW5nIDxsaXJvbmdxaW5nQGJhaWR1LmNvbT4NCj4gPg0KPiA+
+IFRoZSBUUE1JIHBvd2VyIGRvbWFpbiBkcml2ZXIgYWRkcyBlYWNoIG9ubGluZSBDUFUgdG8gYSBo
+YXNoIHRhYmxlIGFuZA0KPiA+IGl0cyBwb3dlciBkb21haW4gbWFzaywgYnV0IGRvZXMgbm90IHJl
+bW92ZSBlaXRoZXIgZW50cnkgd2hlbiB0aGUgQ1BVDQo+ID4gZ29lcyBvZmZsaW5lLiBCcmluZ2lu
+ZyBhIENQVSBiYWNrIG9ubGluZSBjYW4gdGhlcmVmb3JlIGluc2VydCB0aGUgc2FtZQ0KPiA+IGhs
+aXN0IG5vZGUgYWdhaW4gYW5kIGxlYXZlIHN0YWxlIENQVSBtYXNrIHN0YXRlLg0KPiA+DQo+ID4g
+UmVnaXN0ZXIgYW4gb2ZmbGluZSBjYWxsYmFjayB0aGF0IHJlbW92ZXMgdGhlIGhhc2ggZW50cnkg
+YW5kIGNsZWFycw0KPiA+IHRoZSBDUFUgZnJvbSBpdHMgcG93ZXIgZG9tYWluIG1hc2suDQo+ID4N
+Cj4gDQo+IEhpIFJvblFpbmcsDQo+IA0KPiBUaGFua3MgZm9yIHRoZSBwYXRjaC4NCj4gDQo+IFRQ
+TUkgZmVhdHVyZSBkb2Vzbid0IGRlcGVuZCBvbiBDUFUgb25saW5lL29mZmxpbmUgYW5kIGNhbiB1
+cGRhdGUgTU1JTw0KPiB3aGlsZSBDUFUgaXMgb2ZmbGluZS4NCj4gDQoNCkhvd2V2ZXIsIGNvdWxk
+IHlvdSBjbGFyaWZ5IHdoeSB3ZSBuZWVkIHRoZSBDUFUgb25saW5lIGNhbGxiYWNrIGluIHRoaXMg
+Y2FzZT8NCg0KPiBJbnN0ZWFkIG9mIGFkZGluZyBhIG9mZmxpbmUgY2FsbGJhY2ssIGNhbiB3ZSBq
+dXN0IGRvIHRoZSBiZWxvdyBpZiB0aGUNCj4gY29zdCBvZiBzZWFyY2ggaXMgbm90IGhpZ2g/DQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaV9wb3dlcl9k
+b21haW5zLmMNCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC90cG1pX3Bvd2VyX2RvbWFp
+bnMuYw0KPiBpbmRleCBkODliOTg5NGM0MmEuLmRhZGQ1ZmM1NzE5ZiAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaV9wb3dlcl9kb21haW5zLmMNCj4gKysrIGIv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaV9wb3dlcl9kb21haW5zLmMNCj4gQEAgLTIw
+MSw2ICsyMDEsOCBAQCBzdGF0aWMgaW50IHRwbWlfZ2V0X2xvZ2ljYWxfaWQodW5zaWduZWQgaW50
+IGNwdSwNCj4gc3RydWN0IHRwbWlfY3B1X2luZm8gKmluZm8pDQo+ICBzdGF0aWMgaW50IHRwbWlf
+Y3B1X29ubGluZSh1bnNpZ25lZCBpbnQgY3B1KQ0KPiAgew0KPiAgICAgICAgIHN0cnVjdCB0cG1p
+X2NwdV9pbmZvICppbmZvID0gJnBlcl9jcHUodHBtaV9jcHVfaW5mbywgY3B1KTsNCj4gKyAgICAg
+ICBzdHJ1Y3QgdHBtaV9jcHVfaW5mbyAqZW50cnk7DQo+ICsgICAgICAgYm9vbCBmb3VuZCA9IGZh
+bHNlOw0KPiAgICAgICAgIGludCByZXQsIGluZGV4Ow0KPiANCj4gICAgICAgICAvKiBEb24ndCBm
+YWlsIENQVSBvbmxpbmUgZm9yIHNvbWUgYmFkIG1hcHBpbmcgb2YgQ1BVcyAqLw0KPiBAQCAtMjEy
+LDcgKzIxNCwxNCBAQCBzdGF0aWMgaW50IHRwbWlfY3B1X29ubGluZSh1bnNpZ25lZCBpbnQgY3B1
+KQ0KPiANCj4gICAgICAgICBndWFyZChtdXRleCkoJnRwbWlfbG9jayk7DQo+ICAgICAgICAgY3B1
+bWFza19zZXRfY3B1KGNwdSwgJnRwbWlfcG93ZXJfZG9tYWluX21hc2tbaW5kZXhdKTsNCj4gLSAg
+ICAgICBoYXNoX2FkZCh0cG1pX2NwdV9oYXNoLCAmaW5mby0+aG5vZGUsIGluZm8tPnB1bml0X2Nv
+cmVfaWQpOw0KPiArICAgICAgIGhhc2hfZm9yX2VhY2hfcG9zc2libGUodHBtaV9jcHVfaGFzaCwg
+ZW50cnksIGhub2RlLCBpbmZvLQ0KPiA+cHVuaXRfY29yZV9pZCkgew0KPiArICAgICAgICAgICAg
+ICAgaWYgKGVudHJ5ID09IGluZm8pIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZm91bmQg
+PSB0cnVlOw0KPiArICAgICAgICAgICAgICAgICAgICAgICBicmVhazsNCj4gKyAgICAgICAgICAg
+ICAgIH0NCj4gKyAgICAgICB9DQo+ICsgICAgICAgaWYgKCFmb3VuZCkNCj4gKyAgICAgICAgICAg
+ICAgIGhhc2hfYWRkKHRwbWlfY3B1X2hhc2gsICZpbmZvLT5obm9kZSwgaW5mby0NCj4gPnB1bml0
+X2NvcmVfaWQpOw0KPiANCg0KWW91ciBwcm9wb3NlZCBjaGFuZ2UgcHJldmVudHMgZHVwbGljYXRl
+IGhhc2ggZW50cmllcywgYnV0IGl0IGRvZXMgbm90IGFkZHJlc3Mgc3RhbGUgQ1BVIGVudHJpZXMg
+aW4gdHBtaV9wb3dlcl9kb21haW5fbWFzayBhZnRlciBhIENQVSBnb2VzIG9mZmxpbmUuIENvdWxk
+IHlvdSBhbHNvIGZpeCB0aGlzIGlzc3VlPw0KDQpUaGFua3MNCg0KW0xpLFJvbmdxaW5nXSANCg0K
+PiAgICAgICAgIGRvbWFpbl9kaWVfbWFwW2luZm8tPnBrZ19pZCAqIE1BWF9QT1dFUl9ET01BSU5T
+ICsgaW5mby0NCj4gPnB1bml0X2RvbWFpbl9pZF0gPQ0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICB0b3BvbG9neV9kaWVfaWQoY3B1KTsNCj4gVGhhbmtzLA0KPiBTcmluaXZhcw0KPiANCj4gPiBG
+aXhlczogMTdjYTI3ODA0NThjICgicGxhdGZvcm0veDg2L2ludGVsOiBUUE1JIGRvbWFpbiBpZCBh
+bmQgQ1BVDQo+ID4gbWFwcGluZyIpDQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgUm9uZ1FpbmcgPGxp
+cm9uZ3FpbmdAYmFpZHUuY29tPg0KPiA+IC0tLQ0KPiA+IMKgZHJpdmVycy9wbGF0Zm9ybS94ODYv
+aW50ZWwvdHBtaV9wb3dlcl9kb21haW5zLmMgfCAxOQ0KPiA+ICsrKysrKysrKysrKysrKysrKy0N
+Cj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaV9wb3dl
+cl9kb21haW5zLmMNCj4gPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3RwbWlfcG93ZXJf
+ZG9tYWlucy5jDQo+ID4gaW5kZXggZDg5Yjk4OS4uYzNmZDFiZCAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC90cG1pX3Bvd2VyX2RvbWFpbnMuYw0KPiA+ICsrKyBi
+L2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3RwbWlfcG93ZXJfZG9tYWlucy5jDQo+ID4gQEAg
+LTIyMCw2ICsyMjAsMjMgQEAgc3RhdGljIGludCB0cG1pX2NwdV9vbmxpbmUodW5zaWduZWQgaW50
+IGNwdSkNCj4gPiDCoAlyZXR1cm4gMDsNCj4gPiDCoH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IHRw
+bWlfY3B1X29mZmxpbmUodW5zaWduZWQgaW50IGNwdSkNCj4gPiArew0KPiA+ICsJc3RydWN0IHRw
+bWlfY3B1X2luZm8gKmluZm8gPSAmcGVyX2NwdSh0cG1pX2NwdV9pbmZvLCBjcHUpOw0KPiA+ICsJ
+aW50IGluZGV4Ow0KPiA+ICsNCj4gPiArCWlmIChobGlzdF91bmhhc2hlZCgmaW5mby0+aG5vZGUp
+IHx8DQo+ID4gIXRwbWlfZG9tYWluX2lzX3ZhbGlkKGluZm8pKQ0KPiA+ICsJCXJldHVybiAwOw0K
+PiA+ICsNCj4gPiArCWluZGV4ID0gaW5mby0+cGtnX2lkICogTUFYX1BPV0VSX0RPTUFJTlMgKyBp
+bmZvLQ0KPiA+ID5wdW5pdF9kb21haW5faWQ7DQo+ID4gKw0KPiA+ICsJZ3VhcmQobXV0ZXgpKCZ0
+cG1pX2xvY2spOw0KPiA+ICsJY3B1bWFza19jbGVhcl9jcHUoY3B1LCAmdHBtaV9wb3dlcl9kb21h
+aW5fbWFza1tpbmRleF0pOw0KPiA+ICsJaGFzaF9kZWwoJmluZm8tPmhub2RlKTsNCj4gPiArDQo+
+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiDCoHN0YXRpYyBpbnQgX19pbml0IHRw
+bWlfaW5pdCh2b2lkKQ0KPiA+IMKgew0KPiA+IMKgCWNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkICpp
+ZDsNCj4gPiBAQCAtMjQ5LDcgKzI2Niw3IEBAIHN0YXRpYyBpbnQgX19pbml0IHRwbWlfaW5pdCh2
+b2lkKQ0KPiA+DQo+ID4gwqAJcmV0ID0gY3B1aHBfc2V0dXBfc3RhdGUoQ1BVSFBfQVBfT05MSU5F
+X0RZTiwNCj4gPiDCoAkJCQkicGxhdGZvcm0veDg2L3RwbWlfcG93ZXJfZG9tYWluczpvbmwNCj4g
+PiBpbmUiLA0KPiA+IC0JCQkJdHBtaV9jcHVfb25saW5lLCBOVUxMKTsNCj4gPiArCQkJCXRwbWlf
+Y3B1X29ubGluZSwgdHBtaV9jcHVfb2ZmbGluZSk7DQo+ID4gwqAJaWYgKHJldCA8IDApDQo+ID4g
+wqAJCWdvdG8gZnJlZV9kb21haW5fbWFwOw0KPiA+DQo=
