@@ -1,98 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.229.135
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793884728;
-	b=gXqwWgq3VcSKK+jmUFszUd0hdBJM+bEdqbBXj0Dsm7IkNL0jeB2V/foL0aO5NW5aHIxx
-	 K9mlG5ri+DLV1S/tzleEuPV2LB0rrN19JF05CVZ27dvZap+DELwaxVp9LTK6rxMUCS10Y
-	 Xl7ySBd+xLThrVG+aOBpvdXZAIJVkA8lF/oE2F61B0T1kIrqxk4T4qPrPYPL3cYXDv2EF
-	 voi8PdmfylGA6/jtTdzFeH48Y5NrnoSmD9ky7dJT+fAyOdFQubxPOw7R5VcKetMD+Nzy7
-	 9xQlwSwbyqfviLaL1BuCEg6xXRWNQasUXLcjz8SHdciARtJYN0h6JHBs89ETvIrTzIw==
+	t=1793894409;
+	b=w8PeIQEF2AT8Ux/tui/Zw77QJg046s4UhQ/yMICfHW0zT58Yp4e34xGgGTkFPzqJnvHP
+	 ipCKY9irsdsbyv+miPitcN6rt1LWowzeSP645Pp1CuilaZEoPaZWK3FLzDJQKhqF6bLiP
+	 XA+oaNAp3j80ZUE5GtMYUSOZFiQkXnWbdSElrxeWChM4AY41ouLn3Q69Fx39nwUzG4ZUY
+	 8SBM4M10NywgSQQ55xKGbf34V16s2kNwgAL2PKQS6TxqqvJhyK2/i6/5VVq3QIK9Pjtx+
+	 JMKKWmSl3/MzkCz734B8W1mIOB+F7A2w1NNo4cAFPnm4qSxJocxYp/By2N9PR0cu7oA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793884728;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=WioThaDIkfDjWG1mFEw1+dKntzJ3B48ROFrYaw5ERg0=;
-	b=vz1F9+MXN1qHjJzXG3QzTVOJOARtrrYwFlPvEZwkuECn5ZvrfKzLbM5yazNG4GyeypoI
-	 L9vCM4vUgbB+bSZjdSJO8/s8OAHNVDGQ4LXih7mF+ZgKoRUaHjyDHu9pwVj1HbpJRr1Hh
-	 Cw3xhVgSo1YgHd3cxmfT5WIeGYaOFZ7qDxt4LnCI8uH8BpWRiipkwMt1cVQVZ6RAaqhpg
-	 hEBdt7uRFd9Rw8F40ojDv6TfLor05NHtXOilts+8d4Z6Kzoc2uBcVXJjgYib8V4D2NfX/
-	 Jx/ljOZkiFLZQxShbUDtJMtSp7kJgO+F44i6Gw0w7UDwUg4tgIFS6DIjzvl3h7eYouA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793894409;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Subject:
+	 From:To:Date:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:User-Agent:MIME-Version;
+	bh=On4JqE++qSJrLAuuQtRoTbIqv1RZRTko5Gv+lkYw2oU=;
+	b=pcQ+oCmzmJD3auNj+4VNr+QboOkStPuwrYKuZKHd0rP+FKcij3T65QZQLUn3shdesqEq
+	 8m/P5kBfqUzUzkCd6xymcBfjzZZKIs12oLmCBlMc2j0CpfbwWiM5Hio9Og2hYsPntba08
+	 E1uYkyogtfWg8SGRe3ZrDlHMy5d7xIUTcJBBQgyp522cZn1lkEaOBvEApF+GuV8/WrTP3
+	 8mGoz1Hbw+Y2uAu7ECXC/rmA8Yq0LC1AB5f8/RzkhOadmdFHJjCtWPdbV+GnvfhughLRd
+	 /gp4Du8itp12OxP/comI0I9dOSe5Q9rWIpwt94D7yMx/TWt7PjoM1+Zl4FrfgQsYK8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gVCCN+Gr;
-	arc=none smtp.remote-ip=74.125.229.135
-Received: from mail-dl2-f7.google.com (mail-dl2-f7.google.com [74.125.229.135])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XlzfrV2q;
+	arc=none smtp.remote-ip=192.198.163.17
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72DF606A326
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 13:18:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D72DF606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A675A606B445
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 16:00:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A675A606B445
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gVCCN+Gr
-Received: by mail-dl2-f7.google.com with SMTP id a92af1059eb24-139b659a45eso645219c88.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Nov 2026 05:18:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793884727; x=1794489527; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=WioThaDIkfDjWG1mFEw1+dKntzJ3B48ROFrYaw5ERg0=;
-        b=gVCCN+Gr73v3MUVBJLbnhV1b+0LV98ng6EW/VUJDQGsV4q2ORJtsbS+lfrWX95WGId
-         6FIiVlAf2bH/rqCwLCWWLVbgF7ZI1AbO1jKf++NOYwhzKHjRqkWj+UHZ3hheMXP0/evm
-         kCI5gAMcbW4ytsWSdskwf1NpkDbOyZmGIobSWo5figyGBI4kH4ta0Su4JLeZ+8Pnf1iF
-         XuAqVu0qxEMqO0SmRGY/JKGLTAZQWf+T/mOOnZcKUIbrmLaKqFffpbf605X6iPMy14BK
-         PM9sfX4LLWDSok2QY+NkVQtcS3206z/r7Fjc8KH/TVXWNdjcCyJLbzdSj80dRlibhkiN
-         yx0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793884727; x=1794489527;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WioThaDIkfDjWG1mFEw1+dKntzJ3B48ROFrYaw5ERg0=;
-        b=CozaG8tfP3ZWR0pCOYIgGvS5SKEm44DJ0Wp9WtF88yLy4h33eUrPBLdNWPY8/Jz6/k
-         NoP6SooHXjSlh60uN31/Jl+kNV8ogRoZHjrOQ9qdDKI+/qvqtgx4AFPRSu9BQHuXD5h9
-         80QK9SF1Te1NMaEClEsi2ga8B0il7zDo90hkA2iLMwlrfj5I6wM+NFxXhay9PuDhX8Kv
-         P6FWMl2Udqd75i2HLO91xLqW7DQ1/p6vc9NY8BgXzSKjLmy3M/GienTScHCs+GU5dHzM
-         +ftXDjt0lo64TUwCW6ckT+49QjDSqUUPc6YEHw5ZdOK+L5aEZuqBv1FkUSdpfms/IxgX
-         8oFw==
-X-Forwarded-Encrypted: i=1; AKwUvBzry+x5Mz3HZ0EhFl0IXg8Jf4H1Gme79Rj5lso1s6b65Wf0hTheNrOL2SMUURIF1sj+LvsQFXedvSc7PbltvRG9uMAb@vger.kernel.org
-X-Gm-Message-State: APuU4Z8W/ChQPBrIi20FOUXtCoydCvRIEa9VSFhSR/fErkMzsr9sFqWP
-	AEo6N26T7MMffhs7zavxRSWziIB50D1xgucCDDQKjGgdCEjsxzK6EJ13
-X-Gm-Gg: AYBFou1WWuhWy6zzgdjBRcG/h1NQMs6R9iWy/DcGk0JEcfLqxG6uFlV+k79/PiaRAhy
-	iIyiu3hgZl4MG+++3x3LnrjL1w4Tn0HVlHUyEEXxcdu6fACBL9GcTK0bTjHLJ1oKQTt/5AVbRSc
-	1UWeOtjOpCDkzCa8BcEm1h8qm0uxmyymxFfnDsSLwR+s1tgaen42qAFMST9WhKXTuOCoZBUjsWp
-	nSvr9NSkuIcm9I5kOmCfsojssmt+OZzn5GCsje8HNExnHmNEczKgOBrSScpPx2tijRMT7hwmWaU
-	YSKBKYWkWoIzaOFcQwxg0T05Mxp2jGIQWoNV2IMRlu3UoyBafU2uiltDf6sZwiDVP/brJCEg8DV
-	7SIWbCbVdzAoCq6Dd1Poaa6GsvzH4VmpI1b+HnrWWWWgUJKdXefy+Gf7DnlyZWgiYlg1hARfuvZ
-	4EXeUtOocq1y+3DKmTTwBqbraWspTIEpFshwLyLAaWQNbWSCHiizoNYoqAXF9L7DraDmP30dlGJ
-	8i9WwFmrH5SBIU7KMe+jERMtgjTZWAhCWDVu5hziBhKxsJcnM4rN3IKxg4onQE0fe0+YroqhYay
-	8JIl8yKDtFw5ra8gUJdoNQdk0X/6O2TmoqN7mcIdbTjHTalN
-X-Received: by 2002:a05:7300:e9d3:20b0:369:fe81:a575 with SMTP id 5a478bee46e88-36a4243ab94mr33257991eec.35.1793884726829;
-        Thu, 05 Nov 2026 05:18:46 -0800 (PST)
-Received: from ThinkPad ([192.220.23.71])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36ca38d3754sm22685561eec.14.2026.11.05.05.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 05:18:46 -0800 (PST)
-Date: Thu, 5 Nov 2026 21:18:14 +0800
-From: Qiling Zhu <kmatzkaczor244@gmail.com>
-To: Rong Zhang <i@rong.moe>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Griffin Kroah-Hartman <griffin@kroah.com>, ibm-acpi-devel@lists.sourceforge.net, Lee Jones <lee@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, vishnuocv@gmail.com, vsankar@lenovo.com
-Subject: Re: [RFC PATCH v2 0/2] Add support for auto keyboard backlight
-Message-ID: <aux8zfwaupCb3wey@ThinkPad>
-References: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
- <20261102151211.40701-1-kmatzkaczor244@gmail.com>
- <c1bfa5151bbe73977725305613842f94616a8dbb.camel@rong.moe>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XlzfrV2q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793894409; x=1825430409;
+  h=message-id:subject:from:to:date:in-reply-to:references:
+   content-transfer-encoding:mime-version;
+  bh=RmyFsLmXjh8O816rMSTPhGa4VACOea7qOMusS/o9Odg=;
+  b=XlzfrV2q4b+bLhKGKp+VfO11kpS2PoQ3PRIzQXzoqIgkJTwPv0UqfCTf
+   Srxccno+eVo3JHc162pIHPlwD8KLqgJYskA/0Hfq2oc3vQ56sPiaLM4r9
+   SKhO+IVkjKSB0qZEm1refDm+7jhFI3zmybY4v09i9uOFkPOl0wqnebpMw
+   omUACq/KmPkZ8FA0dlaCZk63+c9YunbOQwVaJgGv6W9F68sX/yynOJvZj
+   kfF2sqa68V6DoQrmihQIZjp2dzopeflxypCMPziAQF5n4LLZjvFZkrvPE
+   onN8aSSLmWq0wpmtEO2G5O7O8eNWCDHmc6ibLGGNuKW8lFtQVU9bWNTc0
+   g==;
+X-CSE-ConnectionGUID: udPHJ2QMRI2ypFqP6DBCzQ==
+X-CSE-MsgGUID: 1aul9ucrR3WphuHPtAbpZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2694017"
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="2694017"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 08:00:08 -0800
+X-CSE-ConnectionGUID: tdIzuQzSS8S53wVmF20A6A==
+X-CSE-MsgGUID: BHnPY7MRSYavbn61OdE+9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="7100309"
+Received: from spandruv-desk2.jf.intel.com ([10.24.80.14])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 08:00:06 -0800
+Message-ID: <233d4609e8c62e6f62d93af11789d38c150e1c0c.camel@linux.intel.com>
+Subject: Re: =?UTF-8?Q?=E7=AD=94=E5=A4=8D=3A?=
+ =?UTF-8?Q?_=5B=E5=A4=96=E9=83=A8=E9=82=AE=E4=BB=B6=5D?= Re: [PATCH]
+ platform/x86: TPMI: clean up CPU mappings on offline
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Li,Rongqing" <lirongqing@baidu.com>, Hans de Goede <hansg@kernel.org>, 
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>, Kristen
+ Carlson Accardi	 <kristen.c.accardi@intel.com>, Tero Kristo
+ <tero.kristo@linux.intel.com>,  Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, "platform-driver-x86@vger.kernel.org"	
+ <platform-driver-x86@vger.kernel.org>
+Date: Thu, 05 Nov 2026 08:00:06 -0800
+In-Reply-To: <62ad2e7ffbbe4a4b8ad4cc76dbfc8f99@baidu.com>
+References: <20261104032724.1824-1-lirongqing@baidu.com>
+	 <245eea039c692d03736fcf2ca2448a271fa135ce.camel@linux.intel.com>
+	 <62ad2e7ffbbe4a4b8ad4cc76dbfc8f99@baidu.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -102,45 +89,158 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1bfa5151bbe73977725305613842f94616a8dbb.camel@rong.moe>
 
-On Tue, Nov 03, 2026 at 02:13:55AM +0800, Rong Zhang wrote:
-> Hi Qiling,
-> 
-> On Mon, 2026-11-02 at 23:10 +0800, Qiling Zhu wrote:
-> > Hi Mark, Rong, Ilpo,
-> > 
-> > Thanks for the review comments on v1. This v2 addresses them and is
-> > now split into a pure refactor (1/2) and the feature addition (2/2),
-> > as requested.
-> 
-> You don't need to refresh the series in a hurry, unless you've got enough
-> reviews or may miss the cycle. Asking an LLM agent to refresh the series
-> is easy, but a human being needs time to review your series.
-> 
-> Please leave some time for others to respond.
+On Thu, 2026-11-05 at 03:09 +0000, Li,Rongqing wrote:
+> >=20
+> > On Wed, 2026-11-04 at 11:27 +0800, lirongqing wrote:
+> > > From: Li RongQing <lirongqing@baidu.com>
+> > >=20
+> > > The TPMI power domain driver adds each online CPU to a hash table
+> > > and
+> > > its power domain mask, but does not remove either entry when the
+> > > CPU
+> > > goes offline. Bringing a CPU back online can therefore insert the
+> > > same
+> > > hlist node again and leave stale CPU mask state.
+> > >=20
+> > > Register an offline callback that removes the hash entry and
+> > > clears
+> > > the CPU from its power domain mask.
+> > >=20
+> >=20
+> > Hi RonQing,
+> >=20
+> > Thanks for the patch.
+> >=20
+> > TPMI feature doesn't depend on CPU online/offline and can update
+> > MMIO
+> > while CPU is offline.
+> >=20
+>=20
+> However, could you clarify why we need the CPU online callback in
+> this case?
 
-Thanks, Rong, for the detailed review. I'll rework the series
-following your suggestions and take some time to understand and
-test the changes carefully.
+When online we read the PM logical ID on that CPU and store it.
+This PM logical ID doesn't change after offline/online.
 
-Thanks also for pointing out that I was updating the series
-too quickly. I apologize for not leaving enough time for others
-to review, and I appreciate your patience in explaining this.
-I'll be more mindful of the review process going forward.
+Thanks,
+Srinivas
 
-And thanks to Vishnu for clarifying the Auto-mode capability
-detection. I'll use MLCG bit 20 to determine whether the
-Auto trigger should be registered in the next revision.
-
-I'm very open to further suggestions or alternative approaches.
-If someone has a better implementation or existing patches that
-would be a better fit, I'd be equally happy to build on those
-instead. My main goal is to get this support implemented properly.
-
-Thanks again for your time and help.
-
-Regards,
-Qiling Zhu
+>=20
+> > Instead of adding a offline callback, can we just do the below if
+> > the
+> > cost of search is not high?
+> >=20
+> > diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
+> > b/drivers/platform/x86/intel/tpmi_power_domains.c
+> > index d89b9894c42a..dadd5fc5719f 100644
+> > --- a/drivers/platform/x86/intel/tpmi_power_domains.c
+> > +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+> > @@ -201,6 +201,8 @@ static int tpmi_get_logical_id(unsigned int
+> > cpu,
+> > struct tpmi_cpu_info *info)
+> > =C2=A0static int tpmi_cpu_online(unsigned int cpu)
+> > =C2=A0{
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tpmi_cpu_info *info =
+=3D &per_cpu(tpmi_cpu_info, cpu);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tpmi_cpu_info *entry;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool found =3D false;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret, index;
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Don't fail CPU online for=
+ some bad mapping of CPUs */
+> > @@ -212,7 +214,14 @@ static int tpmi_cpu_online(unsigned int cpu)
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 guard(mutex)(&tpmi_lock);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpumask_set_cpu(cpu, &tpmi_p=
+ower_domain_mask[index]);
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hash_add(tpmi_cpu_hash, &info->hn=
+ode, info->punit_core_id);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hash_for_each_possible(tpmi_cpu_h=
+ash, entry, hnode, info-
+> > > punit_core_id) {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 if (entry =3D=3D info) {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 found =3D t=
+rue;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 }
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!found)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 hash_add(tpmi_cpu_hash, &info->hnode, info-
+> > > punit_core_id);
+> >=20
+>=20
+> Your proposed change prevents duplicate hash entries, but it does not
+> address stale CPU entries in tpmi_power_domain_mask after a CPU goes
+> offline. Could you also fix this issue?
+>=20
+> Thanks
+>=20
+> [Li,Rongqing]=20
+>=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 domain_die_map[info->pkg_id =
+* MAX_POWER_DOMAINS + info-
+> > > punit_domain_id] =3D
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 topol=
+ogy_die_id(cpu);
+> > Thanks,
+> > Srinivas
+> >=20
+> > > Fixes: 17ca2780458c ("platform/x86/intel: TPMI domain id and CPU
+> > > mapping")
+> > > Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> > > ---
+> > > =C2=A0drivers/platform/x86/intel/tpmi_power_domains.c | 19
+> > > ++++++++++++++++++-
+> > > =C2=A01 file changed, 18 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > b/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > index d89b989..c3fd1bd 100644
+> > > --- a/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > @@ -220,6 +220,23 @@ static int tpmi_cpu_online(unsigned int cpu)
+> > > =C2=A0	return 0;
+> > > =C2=A0}
+> > >=20
+> > > +static int tpmi_cpu_offline(unsigned int cpu)
+> > > +{
+> > > +	struct tpmi_cpu_info *info =3D &per_cpu(tpmi_cpu_info,
+> > > cpu);
+> > > +	int index;
+> > > +
+> > > +	if (hlist_unhashed(&info->hnode) ||
+> > > !tpmi_domain_is_valid(info))
+> > > +		return 0;
+> > > +
+> > > +	index =3D info->pkg_id * MAX_POWER_DOMAINS + info-
+> > > > punit_domain_id;
+> > > +
+> > > +	guard(mutex)(&tpmi_lock);
+> > > +	cpumask_clear_cpu(cpu, &tpmi_power_domain_mask[index]);
+> > > +	hash_del(&info->hnode);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > =C2=A0static int __init tpmi_init(void)
+> > > =C2=A0{
+> > > =C2=A0	const struct x86_cpu_id *id;
+> > > @@ -249,7 +266,7 @@ static int __init tpmi_init(void)
+> > >=20
+> > > =C2=A0	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> > > =C2=A0				"platform/x86/tpmi_power_domains
+> > > :onl
+> > > ine",
+> > > -				tpmi_cpu_online, NULL);
+> > > +				tpmi_cpu_online,
+> > > tpmi_cpu_offline);
+> > > =C2=A0	if (ret < 0)
+> > > =C2=A0		goto free_domain_map;
+> > >=20
