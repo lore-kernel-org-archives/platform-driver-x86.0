@@ -1,76 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793872356;
-	b=nDD1PxD8Ocvb6JSC3dFkBcgHqtEsOzD5vabapU9sYMXRFAjFMf2Ovs9FX3gytjyUHhVd
-	 cLeObEZKA18E5bhX0FofHPAkDq7ZQP6OFeeKN5wfSbbTBPWrmw8rOimvXBuQJDjZKgsk0
-	 jKl50vhPZV1cNUXQ+TxzIy0+nX3y3tbko/cxhiw11BJq+KfL3xQwwT5UTLWrCCoP9ARHM
-	 bt2os+o08cA4KeoC4sYkWJvjea6cjsqcLZXpuZVZOrLFDYp2av81tdp+613qvxIFtlihz
-	 /OuCtEbEXY91g10wF2vf/Kz6bcY3RrWx4xGwu8OukbBr0nKsbrGiV6/4/n/M6O/oQeA==
+	t=1793872834;
+	b=EXvfb7CgAwNGb3L9z8diJ1Sj4n8ISs71saJI1GL9T5RPiiqRqIg5iKzb81zC9qV9kBEV
+	 dJOte84sHnuVG5tW5fLr2kG0KKtPHIXZ6PDklb9n5c+4U2TCuP91Lm1f7pTtw20GhbsEM
+	 tpY7rA6A2+UiK7M9+mfWWz+UdI/m58ThIdSfn/i2jrIYizY3ta7KWyfBM1KukAwwM9ExG
+	 gBKKZpXbj6um3Va0/u9qUDPIHAE0Xc5+hdVDZ06fHBFe+5knqpEScz90Y3ctfOx1IsMxd
+	 VVCkW8xtkTXygFLjByAxACiADVnKdcNSaGCqnzuGxYde7t4ORzFbJN+/pnrmNV2uOhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793872356;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793872834;
 	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Received:
 	 X-Forwarded-Encrypted:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type;
-	bh=SqrTjgENN7Dfs+HehxbKPgACeb32UvvfMAFijNHd6N4=;
-	b=mh2d3xSsNEawioiup9MjxR7rgihWDXluS6DuhUjuu2syWUG/xMzNCsSbZhuSWS0FC9nZ
-	 8vQxNXBtipAp+hS8k+gC4LfxmOFve4KTXKQNaeA7b5YRiYGI1UT78pnA3dTE5dDhqqX60
-	 jOZF+6ts9MaxoZuTxXQ/Nlk43ajO2/K/kESu+VrXlvfftdC6tZhgcYRixtejYRhtRwqAd
-	 Xo4sSwkWhE/vH3eBFVbBV2IW2IYd5tyHxY8UYUZJL1uTgzKbfjFXRrcsnmWRVb1QNOKxu
-	 98D2/+fqyftP/TT+ohIHrqjpsPM2dTNfpP+UwtRvV5Zs8EGs7tJcTYFCVx4mgQm3aSg==
+	bh=n+1lmuZTLENNkpqKh8T8PUriZ63OKZ7RGcjsYNzzAGM=;
+	b=FatV09r1AhE1roK5h+mRuLBDlXUOxsDnW4m+vO5LGGZPUGKkUtR3ZjY4RfF4iX3WLfad
+	 WOJALSHXex5EBfXYD6FdsuTeqzwM/Jqq5R8z8Y6fFbaIFtzkuv39FGOLnf73QPvzbWagC
+	 w9RlCYexRAHFx8RycyhXQTs+ghb5wOejCvsilsJQutJOLKPIDyknCVgUckNUXZm3YN2of
+	 T4CsHP2SL1nVg9Pc8f/rGC+AfCwaDRKus9vA24pLDexS1naxtIJ3eS9Ii20JBHsbbz+qo
+	 kMVsDTRNjctql+z8jwVVitGvHn8jfBR9nSGI7UVkpXPj7hV/ukUr5exQT/3oz3CDEwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=linux-m68k.org;
 	spf=pass smtp.mailfrom=gmail.com;
-	arc=none smtp.remote-ip=209.85.160.177
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	arc=none smtp.remote-ip=209.85.222.174
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA574606CC72
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 09:52:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA574606CC72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23B8606A32D
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 10:00:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F23B8606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-53653e30353so21940341cf.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Nov 2026 01:52:35 -0800 (PST)
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-93f3c8958d5so188148885a.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Nov 2026 02:00:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793872355; x=1794477155;
+        d=1e100.net; s=20260707; t=1793872833; x=1794477633;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=SqrTjgENN7Dfs+HehxbKPgACeb32UvvfMAFijNHd6N4=;
-        b=Muu7sBNT/xph01yVxPEPpDYton1+4kpAyVZBGuSzupSw6m13OIeIhx3KFsBkykHK37
-         6wqOJj9/fZXPG67ulUaZeHO5/ZHPJTU+oWvTGGpl0WXBn8A7TeEuWXuFnze+ddYnBe7u
-         reXbQZ/BOr8vTpAypl/4negSpoZP8N7nCmNGfCHMMB/WUWmoGGYFzzYQiqgATGXLgz9s
-         OdXOZguGKb7h+0AVsfDMMEkZzHws4PEqCxWibD7wJgaiRNFW6OfCYRJSfadnxqGPBu79
-         Cpw0Ybxl1Wt9zEweddblPUEkWCoD/rzQMPHTKOkO32ljexIgoKtdDOk+CK/FFy9mCn30
-         ippA==
-X-Forwarded-Encrypted: i=1; AKwUvBy77XiRj1P0lwTZQ9hAXeypgC0NAch+UCtUJqyb3hq2akPNir9ahXlk+llTrnexgaBs8OTCbhnc0C/bLX762lxhroF8@vger.kernel.org
-X-Gm-Message-State: APuU4Z93EQdaqCawgdYQwcFTjEV/Kwn7DaJfN2FIJYnh5cGcd6eFzevc
-	Q0VmdWsJLxmJWPXb/1E8zmoj54x7MWDrmCV7GUfNM+JdP9Abeu2BjRUQQTrK6zZ6plk=
-X-Gm-Gg: AYBFou2Q46NUJrMOK7rRgdjiAfrufhul3OQAQxv6UoMAv/8ZPRyzlkqdFdoUnOXWC+G
-	GSMPVPZKkaJQDF2pT3X/Tfgn8G+HwSHg9jNuucXp7NyVVHdEYRk7GxU0Gq7/nxgZZSYdMU7vRDH
-	KCaT2sHFDYj2p9dcK2AvCq3B30ls/mF0vO4rFQOD/P/DvMZMHoJmGk72I1WXgCBXAGC9Dvp0fRN
-	qcMzlKEKa9YOyryayZA2/M+BOPV8NeksxrOj0kTre3TdbfhzXwnsJg8xOYPfYsbFVzYCGl0nayj
-	vn+FpEcGkQ0yluzpo0tVeBLodhug5K/RGSQqu2aZVm591X+ROPFHQ+D2ZdIDVFCxTDHWfluUfiF
-	qu8AXqvDE2IfemWMOSm+F9yjEw51L4APRXAiUwc2jUqcyduvzagt55G/LmxhK27UDFsGVOBSBYc
-	3qw7psnxR7NF/iqoc7fPW6ArBQJanBM/N30dAgMPAV0oXs2kUknAfdiseARhj5ktN9wtVXt7e+P
-	dUxRY/692sS6KaZ0u5mInM+kxGlyRbIUezJg/s1sNVVTXIifrNOFosdhHZdd4zmkc11adtfzzA6
-	+dHAeBu8v/Qfg4MD0+OVRW5Q4nHvqgpv+NLtBT+IuqdTrQYM027RwAL1Y4FjsPRl3Q==
-X-Received: by 2002:a05:622a:e388:20b0:536:8d0d:2d96 with SMTP id d75a77b69052e-54a92a3c4d9mr81827241cf.13.1793872354989;
-        Thu, 05 Nov 2026 01:52:34 -0800 (PST)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com. [209.85.219.41])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-54b10cdc3d3sm47335951cf.28.2026.11.05.01.52.34
+        bh=n+1lmuZTLENNkpqKh8T8PUriZ63OKZ7RGcjsYNzzAGM=;
+        b=J+x291QXB7WvoSU5ymI/IuZW5aBITuEkFjulSFSB8Kh0HXHPKdX93bDQVGeXKGw3Qe
+         bp9oMbdswRpTTLgg2VAeHqJiRyFBh5AYEq3v8hyXD4QcO1ad3zEAiducn/30hGqhAQ3G
+         hFAx4TZeK1RCSNcPrLwnCaLoTHKbmJz9fNfldH9xmndjR5hRMlBb/9ptwXMP381Ca5Je
+         vWhwO2qdiSV3z1sEvL28+ujtfdewIJBccVWXdPy/8qgNC+mX00q3fZNCGawLeBGuqTD5
+         3SYXP8oIbYD5lUNHQRn1oFH1cQr9Wrn3zm7pUxOQi6PZLulGg468KeEDVZYjbwnI3ap6
+         Er8A==
+X-Forwarded-Encrypted: i=1; AKwUvByfSw54k80esx6iuOG5lSsPaZsUYMYdZAWoPfF9B6X01uKHtHVrcDJPipXJhqTy9F6jCJozlc6m5PynsuRC6baeXFn9@vger.kernel.org
+X-Gm-Message-State: APuU4Z/a43HRAiS700/m2hI6Ql6BoMcJoYdMSTlWgJY2+gDhOqo9XpyM
+	53UFuHgJsKDsAd0+DB7hMcLI9MHRjYVKoW73qxwwgYRz/rnDp/9HZRGWFD27uWJN3DA=
+X-Gm-Gg: AYBFou3+Te5ippRrWt1Yq0VVdfQoCpGNJJYGsOlZ3K9MrPpEks7Pda+W73OqEtkuYOz
+	+fZ7MLhtf/HBno/GygVZkA2ltADJ9KZLa48vBsvgkfcAFPm29/pAxYwLMIROYqBfz3oeI4oOfgf
+	Sw/M3zqg5uI06UyIuu71p5sXHfXS1k2lbZ7X3RV/OE+EUyCP+NuVPP5+jRcO6RgyLR/wTl9LvNN
+	PM/UuDP0/CYqAOtyKvXpCJ2eYtsfWJmEh23VtI61gUjhX3x0pfnDiZHH+FOnKvMwBYp/8/ZmVsH
+	RvPX5ernpTHadumey0U9hoPJHrzQRUgX1QPrBdOQ4ZXAURGmpRuYmxOM8QD2VaDwMdkHHWC5h8e
+	L9cZt5s64jvg08fu5QYZOYAwEvCYAsDiSCVvB77gL73jRdlsrgr51yPSCr/bvYmMtHm3m/YYt4O
+	ag+2TR2X7cTZ49neFSxwWbJQwRSHf4YzFuy34tD9mmoFjjDzDEyR9krh01KPsI7LlL78cykh/aq
+	kAJsXRYrt+qGK2O2z9Rd+Ls9MuFh/cCHkj/Pc2V3ywNGwSOOzyRJBwLND6htFx9hQMi8pGib6Ur
+	IRBm3CgOtX3SRyClPkgfCL/pm+RJLGNVrdurW41KYDdrv1a4wN72S6Im9SP80kT2s5+F7A==
+X-Received: by 2002:a05:620a:170a:b0:93e:bdeb:f067 with SMTP id af79cd13be357-944216cc773mr3215226385a.48.1793872832829;
+        Thu, 05 Nov 2026 02:00:32 -0800 (PST)
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-945d479e107sm425350185a.7.2026.11.05.02.00.32
         for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 01:52:34 -0800 (PST)
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-91c6ce60697so22123456d6.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Nov 2026 01:52:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBz1GYvss9eRR2d+gBIRv0Ru5o8k3SKL7zXeb+SQmLim2H+Y3I6VecjgkN091UUN+LbzTNsCediBysHBVMV40pce+lGy@vger.kernel.org
-X-Received: by 2002:a05:6102:3ec5:b0:7cc:2bb7:131d with SMTP id
- ada2fe7eead31-7d072baa484mr7324212137.9.1793871885062; Thu, 05 Nov 2026
- 01:44:45 -0800 (PST)
+        Thu, 05 Nov 2026 02:00:32 -0800 (PST)
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-5365f9a04c5so23565831cf.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Nov 2026 02:00:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBzTisr9BSxqvqurmBzNd4ENA5rziD+JtmHCTCPcEDXbIiv+c5Hkp1Z7otnHHioCDzwiiTbSwMVTlrgNvZhjU2dOUnHF@vger.kernel.org
+X-Received: by 2002:a05:6102:6449:b0:7cb:bc5e:7dad with SMTP id
+ ada2fe7eead31-7d072baa450mr7614890137.10.1793872492413; Thu, 05 Nov 2026
+ 01:54:52 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,14 +80,15 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org> <20261104-work-procfs-bugfixes-v2-10-021c84d852e0@kernel.org>
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-10-021c84d852e0@kernel.org>
+References: <20261104-work-procfs-arch-v2-0-2aeb952c9597@kernel.org> <20261104-work-procfs-arch-v2-4-2aeb952c9597@kernel.org>
+In-Reply-To: <20261104-work-procfs-arch-v2-4-2aeb952c9597@kernel.org>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 5 Nov 2026 10:44:33 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUy1RYKG0g8OWss3AD-jyYx3DXL0K7ABYkFUdxTxZ9VdQ@mail.gmail.com>
-X-Gm-Features: AclHuK9D-nB8icBns0zdoQH8fV1cfUPJ6LOey8o_VlUZpDIGqKC4cFf8-j5-HdE
-Message-ID: <CAMuHMdUy1RYKG0g8OWss3AD-jyYx3DXL0K7ABYkFUdxTxZ9VdQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 10/51] zorro: size the proc files like what they serve
+Date: Thu, 5 Nov 2026 10:54:40 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUNBs_NyhFpXonirMXkYptUWsAizMvVpGHUDLzto1LGJg@mail.gmail.com>
+X-Gm-Features: AclHuK_RsrcE7hVRjmpZezBV5tMd490Mza2XAQiqUTgUNqAiHAzRP5z7NIbtMh8
+Message-ID: <CAMuHMdUNBs_NyhFpXonirMXkYptUWsAizMvVpGHUDLzto1LGJg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 04/23] m68k/bootinfo: let procfs copy out reads
+ of /proc/bootinfo
 To: Christian Brauner <brauner@kernel.org>
 Cc: linux-fsdevel@vger.kernel.org, 
 	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, 
@@ -117,12 +118,10 @@ Cc: linux-fsdevel@vger.kernel.org,
 	linux-debuggers@vger.kernel.org, Chuck Lever <cel@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 4 Nov 2026 at 20:18, Christian Brauner <brauner@kernel.org> wrote:
-> The files under /proc/bus/zorro hand out a struct ConfigDev and seek
-> within that, but their size says sizeof(struct zorro_dev). Say
-> sizeof(struct ConfigDev).
+On Wed, 4 Nov 2026 at 20:36, Christian Brauner <brauner@kernel.org> wrote:
+> Implement ->proc_read_buf() so procfs copies what is read to userspace
+> after it unpinned the entry.
 >
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
 Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
