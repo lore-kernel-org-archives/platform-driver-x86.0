@@ -1,55 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.229.135
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793884155;
-	b=5PE6Zh3eI0Dm2E8w9PSucsSic2JFMBXxfDq0v0JPf//VzP1YGhJye7u9k9Ss5wPgot+a
-	 swGUazscdAqpraprBQlwnqlEChoJ22WGKkpvw+lWx3y4H0tJQSGA5LL4Eu35lRS377edL
-	 CHcLL4QWdHAppCx7eMjXYRFMa9y971l7RmZNKaKGGpAujk91HDOaw07syIYKMcsWT97Kb
-	 Wb44Xwwl49y/lQ8wI66OifX6z+Xu34HUc/3eT9rGEc0WBPU60xT3z95BwVlZMsdvdip4M
-	 578ibHVRz5p4JfoOUMhvTQGqkFxHa+OJeXVSOg7f8zbUP88u4ZvtIcA3ftBpb2AZxTA==
+	t=1793884728;
+	b=gXqwWgq3VcSKK+jmUFszUd0hdBJM+bEdqbBXj0Dsm7IkNL0jeB2V/foL0aO5NW5aHIxx
+	 K9mlG5ri+DLV1S/tzleEuPV2LB0rrN19JF05CVZ27dvZap+DELwaxVp9LTK6rxMUCS10Y
+	 Xl7ySBd+xLThrVG+aOBpvdXZAIJVkA8lF/oE2F61B0T1kIrqxk4T4qPrPYPL3cYXDv2EF
+	 voi8PdmfylGA6/jtTdzFeH48Y5NrnoSmD9ky7dJT+fAyOdFQubxPOw7R5VcKetMD+Nzy7
+	 9xQlwSwbyqfviLaL1BuCEg6xXRWNQasUXLcjz8SHdciARtJYN0h6JHBs89ETvIrTzIw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793884155;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:X-Developer-Signature:X-Developer-Key:
-	 Content-Transfer-Encoding;
-	bh=nKqS9ZMsRahIHs0QjU6Z8mMtCqLyoSSe36R37iF6B38=;
-	b=UDQ3Kt0MQw+cq8eVpJ0X2mTgI2HKF/EWTiKCbm/+nve34tZeQujdzC3fqNwVJYPfKcFz
-	 eBVTFQVgIqRakj6SMcbrSREr1kX8um49Mad738s6Yl/UD02pHSBG/jtZKkdJ0qBcA1XUd
-	 NJvKi0JouRbv18PQVESiXrs7Blo952v+TldrUcrqLCVXg1qs1AfuGym0m3HIPfbBjEv79
-	 1dbpu/IMNrIQ1HXNbelO5Mi5gzQi9SB8Fv2t7kJcdSZVgRFeFPCOkAXNmHX8J+kyFJJl/
-	 uy/Svv/UdBbztKEuJ3b4/rknDO61/kPBSuqovKtZN0cXPUb6fw//cjRbOA13tx2Frow==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793884728;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=WioThaDIkfDjWG1mFEw1+dKntzJ3B48ROFrYaw5ERg0=;
+	b=vz1F9+MXN1qHjJzXG3QzTVOJOARtrrYwFlPvEZwkuECn5ZvrfKzLbM5yazNG4GyeypoI
+	 L9vCM4vUgbB+bSZjdSJO8/s8OAHNVDGQ4LXih7mF+ZgKoRUaHjyDHu9pwVj1HbpJRr1Hh
+	 Cw3xhVgSo1YgHd3cxmfT5WIeGYaOFZ7qDxt4LnCI8uH8BpWRiipkwMt1cVQVZ6RAaqhpg
+	 hEBdt7uRFd9Rw8F40ojDv6TfLor05NHtXOilts+8d4Z6Kzoc2uBcVXJjgYib8V4D2NfX/
+	 Jx/ljOZkiFLZQxShbUDtJMtSp7kJgO+F44i6Gw0w7UDwUg4tgIFS6DIjzvl3h7eYouA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NrCJ+9KU;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gVCCN+Gr;
+	arc=none smtp.remote-ip=74.125.229.135
+Received: from mail-dl2-f7.google.com (mail-dl2-f7.google.com [74.125.229.135])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0660D606A31B;
-	Thu,  5 Nov 2026 13:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72DF606A326
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 13:18:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D72DF606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NrCJ+9KU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3CF1F000C1;
-	Thu,  5 Nov 2026 13:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793884154;
-	bh=nKqS9ZMsRahIHs0QjU6Z8mMtCqLyoSSe36R37iF6B38=;
-	h=From:To:Cc:Subject:Date;
-	b=NrCJ+9KUYB/7NPm+exFUKkv7HOVXzAFHLdPPqmNm0wFD8J6oNAfzm8cXLI33aJaHm
-	 vlzrFG0Y3+OxG8FytpVmg1r2rYpaxU7+/MfVenbPegPkbZsBagHW8d2pFNhP/0FbBZ
-	 d74iatEjPb2whsSxPNpoRbNAX10dU0cC33skX4OlGLeP9aLFHNTF2UZrrdg713hu4S
-	 6VwnB8qUoVAmpOnA5V8HgqyrhObD+oNwDtK71P4Hl8HSowHM/eJdkf2rB69h2neAFc
-	 T7uH5m4S4grCGCaDVcsR3HJA3+2W9TUpVSXT7xn52gNJrQ8yaYWls5ZwKZGFvfjzjn
-	 hZiqy03haFWXw==
-From: Thorsten Blum <blum@kernel.org>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Thorsten Blum <blum@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: apple-gmux: Use guard(mutex) to simplify the code
-Date: Thu,  5 Nov 2026 14:08:27 +0100
-Message-ID: <20261105130826.345690-3-blum@kernel.org>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gVCCN+Gr
+Received: by mail-dl2-f7.google.com with SMTP id a92af1059eb24-139b659a45eso645219c88.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Nov 2026 05:18:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793884727; x=1794489527; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=WioThaDIkfDjWG1mFEw1+dKntzJ3B48ROFrYaw5ERg0=;
+        b=gVCCN+Gr73v3MUVBJLbnhV1b+0LV98ng6EW/VUJDQGsV4q2ORJtsbS+lfrWX95WGId
+         6FIiVlAf2bH/rqCwLCWWLVbgF7ZI1AbO1jKf++NOYwhzKHjRqkWj+UHZ3hheMXP0/evm
+         kCI5gAMcbW4ytsWSdskwf1NpkDbOyZmGIobSWo5figyGBI4kH4ta0Su4JLeZ+8Pnf1iF
+         XuAqVu0qxEMqO0SmRGY/JKGLTAZQWf+T/mOOnZcKUIbrmLaKqFffpbf605X6iPMy14BK
+         PM9sfX4LLWDSok2QY+NkVQtcS3206z/r7Fjc8KH/TVXWNdjcCyJLbzdSj80dRlibhkiN
+         yx0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793884727; x=1794489527;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WioThaDIkfDjWG1mFEw1+dKntzJ3B48ROFrYaw5ERg0=;
+        b=CozaG8tfP3ZWR0pCOYIgGvS5SKEm44DJ0Wp9WtF88yLy4h33eUrPBLdNWPY8/Jz6/k
+         NoP6SooHXjSlh60uN31/Jl+kNV8ogRoZHjrOQ9qdDKI+/qvqtgx4AFPRSu9BQHuXD5h9
+         80QK9SF1Te1NMaEClEsi2ga8B0il7zDo90hkA2iLMwlrfj5I6wM+NFxXhay9PuDhX8Kv
+         P6FWMl2Udqd75i2HLO91xLqW7DQ1/p6vc9NY8BgXzSKjLmy3M/GienTScHCs+GU5dHzM
+         +ftXDjt0lo64TUwCW6ckT+49QjDSqUUPc6YEHw5ZdOK+L5aEZuqBv1FkUSdpfms/IxgX
+         8oFw==
+X-Forwarded-Encrypted: i=1; AKwUvBzry+x5Mz3HZ0EhFl0IXg8Jf4H1Gme79Rj5lso1s6b65Wf0hTheNrOL2SMUURIF1sj+LvsQFXedvSc7PbltvRG9uMAb@vger.kernel.org
+X-Gm-Message-State: APuU4Z8W/ChQPBrIi20FOUXtCoydCvRIEa9VSFhSR/fErkMzsr9sFqWP
+	AEo6N26T7MMffhs7zavxRSWziIB50D1xgucCDDQKjGgdCEjsxzK6EJ13
+X-Gm-Gg: AYBFou1WWuhWy6zzgdjBRcG/h1NQMs6R9iWy/DcGk0JEcfLqxG6uFlV+k79/PiaRAhy
+	iIyiu3hgZl4MG+++3x3LnrjL1w4Tn0HVlHUyEEXxcdu6fACBL9GcTK0bTjHLJ1oKQTt/5AVbRSc
+	1UWeOtjOpCDkzCa8BcEm1h8qm0uxmyymxFfnDsSLwR+s1tgaen42qAFMST9WhKXTuOCoZBUjsWp
+	nSvr9NSkuIcm9I5kOmCfsojssmt+OZzn5GCsje8HNExnHmNEczKgOBrSScpPx2tijRMT7hwmWaU
+	YSKBKYWkWoIzaOFcQwxg0T05Mxp2jGIQWoNV2IMRlu3UoyBafU2uiltDf6sZwiDVP/brJCEg8DV
+	7SIWbCbVdzAoCq6Dd1Poaa6GsvzH4VmpI1b+HnrWWWWgUJKdXefy+Gf7DnlyZWgiYlg1hARfuvZ
+	4EXeUtOocq1y+3DKmTTwBqbraWspTIEpFshwLyLAaWQNbWSCHiizoNYoqAXF9L7DraDmP30dlGJ
+	8i9WwFmrH5SBIU7KMe+jERMtgjTZWAhCWDVu5hziBhKxsJcnM4rN3IKxg4onQE0fe0+YroqhYay
+	8JIl8yKDtFw5ra8gUJdoNQdk0X/6O2TmoqN7mcIdbTjHTalN
+X-Received: by 2002:a05:7300:e9d3:20b0:369:fe81:a575 with SMTP id 5a478bee46e88-36a4243ab94mr33257991eec.35.1793884726829;
+        Thu, 05 Nov 2026 05:18:46 -0800 (PST)
+Received: from ThinkPad ([192.220.23.71])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36ca38d3754sm22685561eec.14.2026.11.05.05.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2026 05:18:46 -0800 (PST)
+Date: Thu, 5 Nov 2026 21:18:14 +0800
+From: Qiling Zhu <kmatzkaczor244@gmail.com>
+To: Rong Zhang <i@rong.moe>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+	Griffin Kroah-Hartman <griffin@kroah.com>, ibm-acpi-devel@lists.sourceforge.net, Lee Jones <lee@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, vishnuocv@gmail.com, vsankar@lenovo.com
+Subject: Re: [RFC PATCH v2 0/2] Add support for auto keyboard backlight
+Message-ID: <aux8zfwaupCb3wey@ThinkPad>
+References: <20261101100123.28749-1-kmatzkaczor244@gmail.com>
+ <20261102151211.40701-1-kmatzkaczor244@gmail.com>
+ <c1bfa5151bbe73977725305613842f94616a8dbb.camel@rong.moe>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -59,152 +102,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5005; i=blum@kernel.org; h=from:subject; bh=tt1H0sM720f4VaAxGTyX/iYAw4iKCiB5mCSt9KeFngE=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFlv6k/93K4jxP+nsvy5TL75xPA3D7KllvV8+sKz1svqx NoSx5rjHaUsDGJcDLJiiiwPZv2Y4VtaU7nJJGInzBxWJpAhDFycAjCRJ8IM//R3q0no357zYu0y tRv9G5VXX3IzOr3/v1AjG9vRJ6Z3uP0Y/nD8YvcLqo9isZR7/EE0+bTdTHc3nek338Zzx9sWKEx eygcA
-X-Developer-Key: i=blum@kernel.org; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1bfa5151bbe73977725305613842f94616a8dbb.camel@rong.moe>
 
-Use guard(mutex) and remove the manual mutex_unlock() calls. Return
-several results directly and drop the now-unused local variables.
+On Tue, Nov 03, 2026 at 02:13:55AM +0800, Rong Zhang wrote:
+> Hi Qiling,
+> 
+> On Mon, 2026-11-02 at 23:10 +0800, Qiling Zhu wrote:
+> > Hi Mark, Rong, Ilpo,
+> > 
+> > Thanks for the review comments on v1. This v2 addresses them and is
+> > now split into a pure refactor (1/2) and the feature addition (2/2),
+> > as requested.
+> 
+> You don't need to refresh the series in a hurry, unless you've got enough
+> reviews or may miss the cycle. Asking an LLM agent to refresh the series
+> is easy, but a human being needs time to review your series.
+> 
+> Please leave some time for others to respond.
 
-Signed-off-by: Thorsten Blum <blum@kernel.org>
----
- drivers/platform/x86/apple-gmux.c | 48 +++++++++----------------------
- 1 file changed, 14 insertions(+), 34 deletions(-)
+Thanks, Rong, for the detailed review. I'll rework the series
+following your suggestions and take some time to understand and
+test the changes carefully.
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 9c728ac4e045..6c7790012011 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -169,41 +169,32 @@ static int gmux_index_wait_complete(struct apple_gmux_data *gmux_data)
- 
- static u8 gmux_index_read8(struct apple_gmux_data *gmux_data, int port)
- {
--	u8 val;
--
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 	gmux_index_wait_ready(gmux_data);
- 	outb((port & 0xff), gmux_data->iostart + GMUX_PORT_READ);
- 	gmux_index_wait_complete(gmux_data);
--	val = inb(gmux_data->iostart + GMUX_PORT_VALUE);
--	mutex_unlock(&gmux_data->index_lock);
- 
--	return val;
-+	return inb(gmux_data->iostart + GMUX_PORT_VALUE);
- }
- 
- static void gmux_index_write8(struct apple_gmux_data *gmux_data, int port,
- 			      u8 val)
- {
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 	outb(val, gmux_data->iostart + GMUX_PORT_VALUE);
- 	gmux_index_wait_ready(gmux_data);
- 	outb(port & 0xff, gmux_data->iostart + GMUX_PORT_WRITE);
- 	gmux_index_wait_complete(gmux_data);
--	mutex_unlock(&gmux_data->index_lock);
- }
- 
- static u32 gmux_index_read32(struct apple_gmux_data *gmux_data, int port)
- {
--	u32 val;
--
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 	gmux_index_wait_ready(gmux_data);
- 	outb((port & 0xff), gmux_data->iostart + GMUX_PORT_READ);
- 	gmux_index_wait_complete(gmux_data);
--	val = inl(gmux_data->iostart + GMUX_PORT_VALUE);
--	mutex_unlock(&gmux_data->index_lock);
- 
--	return val;
-+	return inl(gmux_data->iostart + GMUX_PORT_VALUE);
- }
- 
- static void gmux_index_write32(struct apple_gmux_data *gmux_data, int port,
-@@ -212,7 +203,7 @@ static void gmux_index_write32(struct apple_gmux_data *gmux_data, int port,
- 	int i;
- 	u8 tmpval;
- 
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 
- 	for (i = 0; i < 4; i++) {
- 		tmpval = (val >> (i * 8)) & 0xff;
-@@ -222,7 +213,6 @@ static void gmux_index_write32(struct apple_gmux_data *gmux_data, int port,
- 	gmux_index_wait_ready(gmux_data);
- 	outb(port & 0xff, gmux_data->iostart + GMUX_PORT_WRITE);
- 	gmux_index_wait_complete(gmux_data);
--	mutex_unlock(&gmux_data->index_lock);
- }
- 
- static int gmux_mmio_wait(struct apple_gmux_data *gmux_data)
-@@ -241,24 +231,20 @@ static int gmux_mmio_wait(struct apple_gmux_data *gmux_data)
- 
- static u8 gmux_mmio_read8(struct apple_gmux_data *gmux_data, int port)
- {
--	u8 val;
--
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 	gmux_mmio_wait(gmux_data);
- 	iowrite8((port & 0xff), gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
--	iowrite8(GMUX_MMIO_READ | sizeof(val),
-+	iowrite8(GMUX_MMIO_READ | sizeof(u8),
- 		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
- 	gmux_mmio_wait(gmux_data);
--	val = ioread8(gmux_data->iomem_base);
--	mutex_unlock(&gmux_data->index_lock);
- 
--	return val;
-+	return ioread8(gmux_data->iomem_base);
- }
- 
- static void gmux_mmio_write8(struct apple_gmux_data *gmux_data, int port,
- 			      u8 val)
- {
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 	gmux_mmio_wait(gmux_data);
- 	iowrite8(val, gmux_data->iomem_base);
- 
-@@ -267,35 +253,29 @@ static void gmux_mmio_write8(struct apple_gmux_data *gmux_data, int port,
- 		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
- 
- 	gmux_mmio_wait(gmux_data);
--	mutex_unlock(&gmux_data->index_lock);
- }
- 
- static u32 gmux_mmio_read32(struct apple_gmux_data *gmux_data, int port)
- {
--	u32 val;
--
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 	gmux_mmio_wait(gmux_data);
- 	iowrite8((port & 0xff), gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
--	iowrite8(GMUX_MMIO_READ | sizeof(val),
-+	iowrite8(GMUX_MMIO_READ | sizeof(u32),
- 		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
- 	gmux_mmio_wait(gmux_data);
--	val = ioread32be(gmux_data->iomem_base);
--	mutex_unlock(&gmux_data->index_lock);
- 
--	return val;
-+	return ioread32be(gmux_data->iomem_base);
- }
- 
- static void gmux_mmio_write32(struct apple_gmux_data *gmux_data, int port,
- 			       u32 val)
- {
--	mutex_lock(&gmux_data->index_lock);
-+	guard(mutex)(&gmux_data->index_lock);
- 	iowrite32be(val, gmux_data->iomem_base);
- 	iowrite8(port & 0xff, gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
- 	iowrite8(GMUX_MMIO_WRITE | sizeof(val),
- 		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
- 	gmux_mmio_wait(gmux_data);
--	mutex_unlock(&gmux_data->index_lock);
- }
- 
- static u8 gmux_read8(struct apple_gmux_data *gmux_data, int port)
+Thanks also for pointing out that I was updating the series
+too quickly. I apologize for not leaving enough time for others
+to review, and I appreciate your patience in explaining this.
+I'll be more mindful of the review process going forward.
+
+And thanks to Vishnu for clarifying the Auto-mode capability
+detection. I'll use MLCG bit 20 to determine whether the
+Auto trigger should be registered in the next revision.
+
+I'm very open to further suggestions or alternative approaches.
+If someone has a better implementation or existing patches that
+would be a better fit, I'd be equally happy to build on those
+instead. My main goal is to get this support implemented properly.
+
+Thanks again for your time and help.
+
+Regards,
+Qiling Zhu
