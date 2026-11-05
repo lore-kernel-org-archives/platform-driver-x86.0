@@ -1,85 +1,121 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.144
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793894409;
-	b=w8PeIQEF2AT8Ux/tui/Zw77QJg046s4UhQ/yMICfHW0zT58Yp4e34xGgGTkFPzqJnvHP
-	 ipCKY9irsdsbyv+miPitcN6rt1LWowzeSP645Pp1CuilaZEoPaZWK3FLzDJQKhqF6bLiP
-	 XA+oaNAp3j80ZUE5GtMYUSOZFiQkXnWbdSElrxeWChM4AY41ouLn3Q69Fx39nwUzG4ZUY
-	 8SBM4M10NywgSQQ55xKGbf34V16s2kNwgAL2PKQS6TxqqvJhyK2/i6/5VVq3QIK9Pjtx+
-	 JMKKWmSl3/MzkCz734B8W1mIOB+F7A2w1NNo4cAFPnm4qSxJocxYp/By2N9PR0cu7oA==
+	t=1793906659;
+	b=jxkgbHU2A/7o0ZSjUYxVET1dO35BRxtW/EUnhWqCEKFCgA3HtwOYiKYlTAJNr13822DG
+	 f143jTdzT1T5FPvLS5UBaVdFaGq6zAGJ6iQS60Y+dZgXyML/ucaX6DNQupsqpYbyivAUM
+	 mCv7++6v81cy1XtorDHAEBwh7PBjRHpG9DiJrsNIQcOqnonEzaY5PWVLXDWASsTcCLlRp
+	 rZTItjgwQSz6a2hLCGWII1NhjIdAdhnXzQpTYrERJIxBNQoD+jmtpYAEa8PpRUXHqosOq
+	 JWDs4V2riXEQdzEuFDcl8M31uxHWJmGDgol9pkTrP6srP3q672p+/pX3mylSRfQP/PQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793894409;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Subject:
-	 From:To:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version;
-	bh=On4JqE++qSJrLAuuQtRoTbIqv1RZRTko5Gv+lkYw2oU=;
-	b=pcQ+oCmzmJD3auNj+4VNr+QboOkStPuwrYKuZKHd0rP+FKcij3T65QZQLUn3shdesqEq
-	 8m/P5kBfqUzUzkCd6xymcBfjzZZKIs12oLmCBlMc2j0CpfbwWiM5Hio9Og2hYsPntba08
-	 E1uYkyogtfWg8SGRe3ZrDlHMy5d7xIUTcJBBQgyp522cZn1lkEaOBvEApF+GuV8/WrTP3
-	 8mGoz1Hbw+Y2uAu7ECXC/rmA8Yq0LC1AB5f8/RzkhOadmdFHJjCtWPdbV+GnvfhughLRd
-	 /gp4Du8itp12OxP/comI0I9dOSe5Q9rWIpwt94D7yMx/TWt7PjoM1+Zl4FrfgQsYK8Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793906659;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
+	 Received:Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition;
+	bh=VfvCB69zFffTvll7Uz088QFRKuitfNBaW/NJB0o56kg=;
+	b=AXCqiHfNVKDxnfmFRJgLSYNnAz42sx2ngfI0f82i1O+d/kmWnYbxMaK/6HQgFIy6MPAG
+	 ETa1jP6XUCpqdn3upUxkVrBp71MLJxgcNGbz65JqKp1BLiv1PiigtESdRY9Lhv80rjFVG
+	 fBBcGYj5/s3z0aMKTIApS868uFVKHiKZ+O579GasTVG0dfGEZrl+WInnBuH+u8y4Gv/Sr
+	 x4cVj8YgiV8WovAXss5wZ+2amn0gmUtMw3iC9P5xUIqASxvHfh7/YhS5moTJwhFP+BqFV
+	 6iuzg7hkH9IFSydtxwRXRB/1s2n8gXTl/N99W7g/0fEdG1KWQ8RaRDSCi3j9QjkrpAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XlzfrV2q;
-	arc=none smtp.remote-ip=192.198.163.17
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=joshtriplett.org;
+	spf=pass smtp.mailfrom=joshtriplett.org;
+	dkim=pass header.d=joshtriplett.org header.i=@joshtriplett.org header.a=rsa-sha256 header.s=fm3 header.b=AtPTHxb6;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b="FpG0US/e";
+	arc=none smtp.remote-ip=103.168.172.144
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A675A606B445
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 16:00:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A675A606B445
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F53606A326
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 19:24:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4F53606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshtriplett.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joshtriplett.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XlzfrV2q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793894409; x=1825430409;
-  h=message-id:subject:from:to:date:in-reply-to:references:
-   content-transfer-encoding:mime-version;
-  bh=RmyFsLmXjh8O816rMSTPhGa4VACOea7qOMusS/o9Odg=;
-  b=XlzfrV2q4b+bLhKGKp+VfO11kpS2PoQ3PRIzQXzoqIgkJTwPv0UqfCTf
-   Srxccno+eVo3JHc162pIHPlwD8KLqgJYskA/0Hfq2oc3vQ56sPiaLM4r9
-   SKhO+IVkjKSB0qZEm1refDm+7jhFI3zmybY4v09i9uOFkPOl0wqnebpMw
-   omUACq/KmPkZ8FA0dlaCZk63+c9YunbOQwVaJgGv6W9F68sX/yynOJvZj
-   kfF2sqa68V6DoQrmihQIZjp2dzopeflxypCMPziAQF5n4LLZjvFZkrvPE
-   onN8aSSLmWq0wpmtEO2G5O7O8eNWCDHmc6ibLGGNuKW8lFtQVU9bWNTc0
-   g==;
-X-CSE-ConnectionGUID: udPHJ2QMRI2ypFqP6DBCzQ==
-X-CSE-MsgGUID: 1aul9ucrR3WphuHPtAbpZw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2694017"
-X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="2694017"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 08:00:08 -0800
-X-CSE-ConnectionGUID: tdIzuQzSS8S53wVmF20A6A==
-X-CSE-MsgGUID: BHnPY7MRSYavbn61OdE+9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="7100309"
-Received: from spandruv-desk2.jf.intel.com ([10.24.80.14])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 08:00:06 -0800
-Message-ID: <233d4609e8c62e6f62d93af11789d38c150e1c0c.camel@linux.intel.com>
-Subject: Re: =?UTF-8?Q?=E7=AD=94=E5=A4=8D=3A?=
- =?UTF-8?Q?_=5B=E5=A4=96=E9=83=A8=E9=82=AE=E4=BB=B6=5D?= Re: [PATCH]
- platform/x86: TPMI: clean up CPU mappings on offline
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "Li,Rongqing" <lirongqing@baidu.com>, Hans de Goede <hansg@kernel.org>, 
- Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>, Kristen
- Carlson Accardi	 <kristen.c.accardi@intel.com>, Tero Kristo
- <tero.kristo@linux.intel.com>,  Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, "platform-driver-x86@vger.kernel.org"	
- <platform-driver-x86@vger.kernel.org>
-Date: Thu, 05 Nov 2026 08:00:06 -0800
-In-Reply-To: <62ad2e7ffbbe4a4b8ad4cc76dbfc8f99@baidu.com>
-References: <20261104032724.1824-1-lirongqing@baidu.com>
-	 <245eea039c692d03736fcf2ca2448a271fa135ce.camel@linux.intel.com>
-	 <62ad2e7ffbbe4a4b8ad4cc76dbfc8f99@baidu.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
+	dkim=pass (2048-bit key, unprotected) header.d=joshtriplett.org header.i=@joshtriplett.org header.a=rsa-sha256 header.s=fm3 header.b=AtPTHxb6;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=FpG0US/e
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 0DE21EC009A
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Nov 2026 14:24:17 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Thu, 05 Nov 2026 14:24:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	joshtriplett.org; h=cc:content-type:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm3; t=1793906656; x=1793993056; bh=VfvCB69zFf
+	fTvll7Uz088QFRKuitfNBaW/NJB0o56kg=; b=AtPTHxb6T4qxMK1tAs470VUwz7
+	KV4vHjcqBgvYPeytqFAPwQiYEijo50nBf/luN2dcU0xWeCaQzGS8y0Im3PIoAU8z
+	JwT1Lx4vlvpeUEq8Bwr7J0ggVFkt8bIdy3Ek/ZrNZq81uabEWOpO8FCpRK6GVtXr
+	lCw43RvUv3Yqzv+rAgY4MHOEIgC2SxcFvxS5OKdXc+rrCaW4+hWK3eN9grX4iUoW
+	XFZEsYeJePAHVu4qDrlSd67oDSeTfzDJzWFTer9OF5JRJkVrPiDZmOD99p4jHR5x
+	CIJuRNZ/zXf0J0w6lWmfmjJDi1CRd4V6AbJGkk0SkHIkdJBDR5JwCSv6rVpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1793906656; x=
+	1793993056; bh=VfvCB69zFffTvll7Uz088QFRKuitfNBaW/NJB0o56kg=; b=F
+	pG0US/ex4mB0Yn9TIxxpL9EGJ4cXfiRbPTNntqJeBjha4F927CqaJaQ2eBmygQYd
+	PIMmXMLiGmf7x6qkc2tnQvYrWweNSU4wFlWGuInaMCgOYROsmivyWT7xEyGEeTTM
+	MMCuRWI8M3nfi/hI0+8m34G0nXFmOOKnHwOiPjhYVBoO+kcnKEU4bmsVeCbTAwZx
+	rQzDgrG8tBQsLdQSc5ZBH7U2dj8cOBdXSapQUy7dXEMO5rCc0ls42h57JSO50jAO
+	buZWDH+0E+XsHO4bGGvprtx0axeNCF12tp/+CUBuBTvl0sygOUeE+9HV/MMRf8Tu
+	J8E6b36n0HWa6Kw6FdoAQ==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=joshtriplett.org a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793906656; d=joshtriplett.org;
+	mf=PGpvc2hAam9zaHRyaXBsZXR0Lm9yZz4=;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm3:rsa-sha256:5mQsvt9U779IUb9JGTaI9X4u/KqM9xfR5O87ooRi7BFAwRm
+	TxEzAvzpiiut8Dt/vKD9b2ilXRE5fQ0gdcu6pqOBmZ82/+NOFuqDS/Kqf4WSohrH
+	6p5CRusWa2+OGDpnbAgzi954j1WzjWSX9bgLlQj3DcZHqAf6ggyP0kn4+MZV5JCq
+	oSHdg5j8mYUWYhJZVp2Vhv4qIkABPmzBhKvkV9Hlc69sDKc+KXzwJpY1t4Y4GkpF
+	gtTuXi1l+6InIMDkj8mXwy1Iy+R6ZpEqGrCVFGD4n9gV9bVzKE2f2UXER+de4NTG
+	K4CwzZKUlq859F7DNtgk+jbXy9lMcG10rx5looA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=9;
+	hn=content-disposition,content-type,date,feedback-id,from,
+	message-id,mime-version,subject,to;
+Message-Instance: m=1; h=sha256:rx+BpPmfIdPB4Tlqo3YU1f29HBHc55uNpTZc2CQUCyg=:k+Gh0LVp5gav5ovJp95LVAl72Y/3htLWNcLdWsteD9Q=;
+X-ME-Sender: <xms:4Nfsaka8L4-bcem0tFB4NTUQsjo75Us3AOw-CIqZcumKzRKAa3NpMg>
+    <xme:4NfsaicPd0-L-fVWZD-zSniI_WrOdNV53ynMGk_ssMRX_X-ZWlLjtkEWoZjfyA1wT
+    qfgvpgMawp1l3PO0Kmo72tGxJgzUKwsefX-7CV1skpsGxi6gc4HkkqG>
+X-ME-Received: <xmr:4NfsaplVYPOoCpGM3uHUk3gW-6MJfYlZWAxpLSxS6ZNYvTAUrAu1EZFMSg>
+X-ME-Proxy-Cause: dmFkZTFlFYMDGrPYwdNRx/GDjrurDJkqMGUZMAXjzy7BvQiIhXGcwMv11OxN5tZ/z/kIvv
+    6cklvOTOyjLd3Sj6jaKNDwAoSmIC9ot+2iS7Ael6CYOnqCrgD9/Nqh+/Xcpzv9ikR1gC7s
+    n0ShIa+m3tbrO/3YuNnrqIUdUlL2yLxi3zyI/yZwF2Ek4nyECMXYgh2yff95MryHoAqYwc
+    c57h03E7fuJldqud62nqSHe4s6g5mSQkDEGX7p4Rdcj/hO5kFaUZ8rtWQAsWbFIUKDLRy8
+    JSbr4tKrxhsDn/ETs39JJIzChYrgFb9KgloM++eGqCyVt32Gx+3920r4V+kOb58U2fvgsg
+    mwhL3OU6AeBLUVc1iD0lbT2/IfkTnziWU9RtmN7jAZVCzphF2pz2yGH9jUVQkpUHJdwdde
+    ctxt/b6adk0zj8cfr68+5ROKcAVXMqM2w+QzkqoC7zwQ+yJJAFt0gNlbRb7x/Df2pVqZbi
+    Pbeclf36SQh93yxFyMD41fDsmk0wmLEwKmMs+kr/csQxRaSp5q95kXK2kFPecg/GHTICch
+    6FrkipMIYZaOrhUA2KakV0/I97/iNmPudlF/lzZC2oAPlWPSupyC9x0Dfo861U2Lqm+HPy
+    NoJwTJ4tm4YTr2Ck7nKa+XlKRYBEUhUgfCbQTtI5M/+9RsKM0064MjzfMR7Q
+X-ME-Proxy: <xmx:4Nfsaq1f-pyzTpwyRO9J22skREzAHDRg_QfSPJYXZnXe4B_iaXaBKA>
+    <xmx:4NfsaqeTzJX8Zc3pARtY1wmqWlmvfzbXDhfvUP6OpZJ849FkPNvMyA>
+    <xmx:4Nfsasb4KEc2OEMfNKvHcPOwH_HZ2hIB2XbdezLIDKJY_jYVGFFJhw>
+    <xmx:4NfsanGS9q903gU-wnLpUYEKUywClFHSAsNJjfVk19IfIvR69nnTGg>
+    <xmx:4NfsapWw_kRu9H60Ks-RWFWptLUEYLP7ab30GkeGLQEZJMeGLor3qEc6>
+Feedback-ID: i83e94755:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 5 Nov 2026 14:24:15 -0500 (EST)
+Date: Thu, 5 Nov 2026 11:24:14 -0800
+From: Josh Triplett <josh@joshtriplett.org>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Rong Zhang <i@rong.moe>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: tpacpi: Mark charging LEDs as safe
+Message-ID: <a14640f58be48d4912ce5808faea1402ad7f7ad0.1793906572.git.josh@joshtriplett.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -89,158 +125,39 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, 2026-11-05 at 03:09 +0000, Li,Rongqing wrote:
-> >=20
-> > On Wed, 2026-11-04 at 11:27 +0800, lirongqing wrote:
-> > > From: Li RongQing <lirongqing@baidu.com>
-> > >=20
-> > > The TPMI power domain driver adds each online CPU to a hash table
-> > > and
-> > > its power domain mask, but does not remove either entry when the
-> > > CPU
-> > > goes offline. Bringing a CPU back online can therefore insert the
-> > > same
-> > > hlist node again and leave stale CPU mask state.
-> > >=20
-> > > Register an offline callback that removes the hash entry and
-> > > clears
-> > > the CPU from its power domain mask.
-> > >=20
-> >=20
-> > Hi RonQing,
-> >=20
-> > Thanks for the patch.
-> >=20
-> > TPMI feature doesn't depend on CPU online/offline and can update
-> > MMIO
-> > while CPU is offline.
-> >=20
->=20
-> However, could you clarify why we need the CPU online callback in
-> this case?
+tpacpi can expose the charging LEDs as `tpacpi:orange:batt` (LED 1) and
+`tpacpi:green:batt` (LED 2). However, at least on my X1 Carbon Gen 11,
+these LEDs get hidden because `TPACPI_SAFE_LEDS` doesn't allow them.
 
-When online we read the PM logical ID on that CPU and store it.
-This PM logical ID doesn't change after offline/online.
+Add these to `TPACPI_SAFE_LEDS`, so that tpacpi can expose them.
 
-Thanks,
-Srinivas
+This was previously proposed in
+https://lore.kernel.org/lkml/20250403040846.7834-1-martin@arp242.net/ .
 
->=20
-> > Instead of adding a offline callback, can we just do the below if
-> > the
-> > cost of search is not high?
-> >=20
-> > diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
-> > b/drivers/platform/x86/intel/tpmi_power_domains.c
-> > index d89b9894c42a..dadd5fc5719f 100644
-> > --- a/drivers/platform/x86/intel/tpmi_power_domains.c
-> > +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-> > @@ -201,6 +201,8 @@ static int tpmi_get_logical_id(unsigned int
-> > cpu,
-> > struct tpmi_cpu_info *info)
-> > =C2=A0static int tpmi_cpu_online(unsigned int cpu)
-> > =C2=A0{
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tpmi_cpu_info *info =
-=3D &per_cpu(tpmi_cpu_info, cpu);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tpmi_cpu_info *entry;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool found =3D false;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret, index;
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Don't fail CPU online for=
- some bad mapping of CPUs */
-> > @@ -212,7 +214,14 @@ static int tpmi_cpu_online(unsigned int cpu)
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 guard(mutex)(&tpmi_lock);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpumask_set_cpu(cpu, &tpmi_p=
-ower_domain_mask[index]);
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hash_add(tpmi_cpu_hash, &info->hn=
-ode, info->punit_core_id);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hash_for_each_possible(tpmi_cpu_h=
-ash, entry, hnode, info-
-> > > punit_core_id) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 if (entry =3D=3D info) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 found =3D t=
-rue;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 }
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!found)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 hash_add(tpmi_cpu_hash, &info->hnode, info-
-> > > punit_core_id);
-> >=20
->=20
-> Your proposed change prevents duplicate hash entries, but it does not
-> address stale CPU entries in tpmi_power_domain_mask after a CPU goes
-> offline. Could you also fix this issue?
->=20
-> Thanks
->=20
-> [Li,Rongqing]=20
->=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 domain_die_map[info->pkg_id =
-* MAX_POWER_DOMAINS + info-
-> > > punit_domain_id] =3D
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 topol=
-ogy_die_id(cpu);
-> > Thanks,
-> > Srinivas
-> >=20
-> > > Fixes: 17ca2780458c ("platform/x86/intel: TPMI domain id and CPU
-> > > mapping")
-> > > Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> > > ---
-> > > =C2=A0drivers/platform/x86/intel/tpmi_power_domains.c | 19
-> > > ++++++++++++++++++-
-> > > =C2=A01 file changed, 18 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
-> > > b/drivers/platform/x86/intel/tpmi_power_domains.c
-> > > index d89b989..c3fd1bd 100644
-> > > --- a/drivers/platform/x86/intel/tpmi_power_domains.c
-> > > +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-> > > @@ -220,6 +220,23 @@ static int tpmi_cpu_online(unsigned int cpu)
-> > > =C2=A0	return 0;
-> > > =C2=A0}
-> > >=20
-> > > +static int tpmi_cpu_offline(unsigned int cpu)
-> > > +{
-> > > +	struct tpmi_cpu_info *info =3D &per_cpu(tpmi_cpu_info,
-> > > cpu);
-> > > +	int index;
-> > > +
-> > > +	if (hlist_unhashed(&info->hnode) ||
-> > > !tpmi_domain_is_valid(info))
-> > > +		return 0;
-> > > +
-> > > +	index =3D info->pkg_id * MAX_POWER_DOMAINS + info-
-> > > > punit_domain_id;
-> > > +
-> > > +	guard(mutex)(&tpmi_lock);
-> > > +	cpumask_clear_cpu(cpu, &tpmi_power_domain_mask[index]);
-> > > +	hash_del(&info->hnode);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > =C2=A0static int __init tpmi_init(void)
-> > > =C2=A0{
-> > > =C2=A0	const struct x86_cpu_id *id;
-> > > @@ -249,7 +266,7 @@ static int __init tpmi_init(void)
-> > >=20
-> > > =C2=A0	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-> > > =C2=A0				"platform/x86/tpmi_power_domains
-> > > :onl
-> > > ine",
-> > > -				tpmi_cpu_online, NULL);
-> > > +				tpmi_cpu_online,
-> > > tpmi_cpu_offline);
-> > > =C2=A0	if (ret < 0)
-> > > =C2=A0		goto free_domain_map;
-> > >=20
+I'm currently toggling these using write_support via ec_sys, and would
+prefer to handle these via the normal LED mechanism.
+
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 4f81855ad721..50a8cff5b374 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -5608,7 +5608,7 @@ static const char * const tpacpi_led_names[TPACPI_LED_NUMLEDS] = {
+ 	"tpacpi::unknown_led3",
+ 	"tpacpi::thinkvantage",
+ };
+-#define TPACPI_SAFE_LEDS	0x1481U
++#define TPACPI_SAFE_LEDS	0x1487U
+ 
+ static inline bool tpacpi_is_led_restricted(const unsigned int led)
+ {
+-- 
+2.55.0
+
