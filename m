@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.0
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.40
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793983587;
-	b=xgVCWZcKVulA5eLDG/+jzuC5jrmyr/pAcfYZo0M9v/U2ESGiKgZd5U9szDrTgvwkCvqG
-	 OeN/hTSm3eroQWXy+xk3/cTVAWwCFS0lkxneHPmliPJsxuZ0py5/UIeXp86g87h2PjEhW
-	 VxHj0eXKOYcPK8R8YyQOQxPLs2Sq+9CD2NaG4LlbjMc//zkQTWOtpPmXtNgbvXCf/m9f9
-	 f/tpD3tD0G73KCz8EGa87zyMMTP1h6Ozzzi+Vq2o4UZM8Ay6wecmD7+D+qRJNUDdf5tjV
-	 apQB78o6udeEeDtiP14TTojEx7YA770QOrYEjoMzLW/kJlRS3d8sxyx/6Z6GfCBwBMA==
+	t=1793983589;
+	b=gmjoNKuAWQQt4fbkwCvr3jcDitJrU1W/UVz95LZkUsRu0GqlKVoFx/vX1FZL+TlNF4RH
+	 JjNB3TwfJ5UjUv4x23YuEtFBQ4NEK65ZlfTHY05vgA/Lq9lBIoTlnw25tWTz2ko3AEtzx
+	 /BzeNoQqfvny7qlxY5HV+ousZCph1dAIyTlj9u/jqDkrX4wOzECZa5wRWBj8SKKaEZCRd
+	 AC3vj974p5WYnpztp9yEMnyVmezgPq2dJwrtFXWxWsDOc4QyLYKxTSSnvhVzY4BXzeTT1
+	 lucLlUfs1s6wTRhAYPnGiWFBDWTKRvJ0Rq8I8ImqnlI5w+iHP/qCIjP3j2oLX8mpuEA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793983587;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793983589;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:
 	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
 	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
@@ -26,53 +26,53 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=kmCAU9AzTZeKuqz8YrA8dCriOm2Asl1Ftq45b8fLlMg=;
-	b=xgHAjlnJRF5hxvNZmFX6FtGoP/kSoJBKk6VvEnjcExNuHDddvpFLFrrmkOpBjLa1IYs7
-	 1MWqlirTJfeHirPoGanP+2HhcokMMpq1G3pUJl8zkVp8+CbDgPnij/czSu+WDRqHCkCdP
-	 sc8hfbqqwYXl3DE1jjxwMCVvFgbTajzuE1zQ92OEEjomoLO52e4ClpdN+UwouHoSHLbR4
-	 wXRkN4Syewo36q1EuyVsbDHZkZngBWy3l68yZmWwMwikVbkQGOZ96+fE4ll5uDPEbRzce
-	 MOgoxo5E5MViUNulc7H+PKHS3pEabusb4I/RsfB9me3ohcm9A4bsovnhRSf81mr9yJQ==
+	bh=jqYCC4jOPFE5HkZEK/f7GdDTmmQxrza0wnX/uDwBiko=;
+	b=Wj8HHSiNA6JzEx443GrgKPdBGimKXWuOGgCZQQCZ8+C2q20T+MN7jc26Rc9ujPbO3/g9
+	 fDYV5Jkjvf5coauticGNP6yCciNOsoU3sK3pa4xjHqwb1dlsoyq/WqtR0uvdEOjRws38r
+	 UOxu9wMVKMI9B4PlSPgXbphshgyTRyOsIVS8XI6U/5DMFaEMqaF/SS6P4V9AwUcqYhhev
+	 E+Im0m+y6tZv2BrWvCsDFA8fZf3tfBhU78WtGo4GWEHuNCTBhtX6BPqHlswV10swX4T/C
+	 k+ga0GKYa5qsszNrTXB+L4GLRSgii2Kj7VDeEGjbqLCaC3J0nr6YDCqk+lcSeoVUf8g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=amd.com;
 	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=p2Z8xhp8;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.0
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013000.outbound.protection.outlook.com [40.93.201.0])
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=0BXCHhhP;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.40
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011040.outbound.protection.outlook.com [52.101.57.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17907606A32C
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 16:46:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 17907606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4797606A32C
+	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 16:46:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4797606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=p2Z8xhp8
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=0BXCHhhP
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Rnmm9SmNkHPCbyBkoZZYeEVJMRdH8tacCuOT84HIHWTKHw0Oym2fJQO8SOc2+DKCHT0G4J5WnuXiHvQuoHm0iI1nEUKz+gZ9iZFqM346vt+tiQjQNDq1CIscHgLfESjYAhFq5/utlPbs95+iVUOq0lUzAtwiQzttD/q340H6FhOe+ERaO8uXFmCyPfU5xixjOxyHFgGA8FPaSpeMwhl/OfyHQuV5ube9oGM6laAEn+EMRh/dWrmajj2iSIr9rpseh/R/Vb7+Cc2aAck1gkP1JS9Cc6OCSBHZqXrX8iZ7Ct6JDE5ScZfwz9HI6O+LwR3xXkXS3OjrMKyBE3wfHWPT7A==
+ b=FzAZPTJsULOMjBw7WNkFB76PJRa8dkxOaKHZKCZplupOneT95B0VNvocx9Npm/xfycXau9tGwkW26wrIgo1R0cYHliLKU9ztXOqXh5uO6uQJOOxWoIroiesjzTsi4GVFUQKWRFmXMB1BaasrxLqC5si2zWepq0pNuCAvPvO/OBaRo/Y1pxLosTiNF07vtS4lRHWLW5BpmqR8cuLXgp+nVYvHhO1UrVMdqIL9tbJ/GKFRhuP27H2yb7YkCc1NFrunqiWOiJDFrpFh0p+YK4BYffAi5lDQFvI7Vf9MdOaTmQaMLipt76yWePl3jJ88eZUq1Dhpnpbjzyexa0KRgbkCJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kmCAU9AzTZeKuqz8YrA8dCriOm2Asl1Ftq45b8fLlMg=;
- b=dl++l4LEpkn4R7QEFKKuv5twuWTjCx4xFI9X31EcGqdYyQmfWEQR37TjdY39XHf54H/i43ldIos/2NxvTGzu8XmLz9+Aw2/ToIp56IivzSR4Tfta/4dKnM3QfH023Wg1vkbpY85XP8eQ1V4RkEacHNx1peqUeK+bJM7hd/5JZjX4JCoLPYZcs74nrseT9qnlY4a+s52Ufuno2KVFR5LbAnxhv0S6Q15ZR5K3iG5OHXNbK5oo31fQGN2nJKlUorUnCWeYQ3blIVRhGdoZR1BTPditZ1MijkYl2DB0RkQpT7418YrUnKrbQ38iw0o3fqMvTRGNS2ZOv3ZvXMuUhNZk8A==
+ bh=jqYCC4jOPFE5HkZEK/f7GdDTmmQxrza0wnX/uDwBiko=;
+ b=OYdvtPQGeshS6zB67Q16Mv60cRX1EKR6DZmLyDiaJEyAgYrcpzhZltKG+co6S4tfLUL1ZYCG7sfKCj76C2OGH8zuxDeajlNBeCpn82rDMv8SSU0GUEBR9/1xp/0Yg6Uo92WWo4KObdMUkK+kftGGvhZBN2OE563bcLmXkcrGuHDyxjZLq83sMzIjPZYPmIOgLq94uE+edhjh3q+bz2lxPVt65qw8tyFCMBF3hWex7n5G420qcQ3ZccPv7ugmkgCS8svXR5Un2maHeFOiAFd/G+A9LN6HyL9wkNzjgjqjPjSaFs3Lq2Inhtth2pCJ7gu/h8+4VKtQuVNgCmCmKvC2Ng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kmCAU9AzTZeKuqz8YrA8dCriOm2Asl1Ftq45b8fLlMg=;
- b=p2Z8xhp8E8HtBg34TgCNSaU2/qX+n4TFp1aPllj1eYxNXg1gguNmisi2m8PEi8fmgFIoinnJI8QOD/zbWIjRBm0wFsA1Ij3s6VgOyeeq4SNVemQWxONyqGgq8rhIzErkMwWr/+S53+daUKiJlfBPtmUuVGRVTfHmr/ygJ9A9vas=
-Received: from MW4PR04CA0367.namprd04.prod.outlook.com (2603:10b6:303:81::12)
- by DS0PR12MB8454.namprd12.prod.outlook.com (2603:10b6:8:15e::10) with
+ bh=jqYCC4jOPFE5HkZEK/f7GdDTmmQxrza0wnX/uDwBiko=;
+ b=0BXCHhhPTp/lgoa62awNiTzH+r3skoqwIG078PhdgFJJCcgDg8zf3qEdkkSIdaphQ3PGMy1Es0SlYVJ2+YceGwWRaooAxrjG1WcKSz1QQ/dW6p+JyPW5PSc/bdbzqFr+YzqQyKxC2niVuByvWDjXy8AqIszMyrKZBbct+2BxVCg=
+Received: from MW4PR04CA0314.namprd04.prod.outlook.com (2603:10b6:303:82::19)
+ by SJ2PR12MB8806.namprd12.prod.outlook.com (2603:10b6:a03:4d0::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Fri, 6 Nov 2026
- 16:46:22 +0000
-Received: from BY1PEPF0002695A.namprd05.prod.outlook.com
- (2603:10b6:303:81:cafe::78) by MW4PR04CA0367.outlook.office365.com
- (2603:10b6:303:81::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.11; Fri, 6 Nov
+ 2026 16:46:24 +0000
+Received: from BY1PEPF00026959.namprd05.prod.outlook.com
+ (2603:10b6:303:82:cafe::85) by MW4PR04CA0314.outlook.office365.com
+ (2603:10b6:303:82::19) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.11 via Frontend Transport; Fri, 6
- Nov 2026 16:46:21 +0000
+ Nov 2026 16:46:24 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -80,21 +80,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BY1PEPF0002695A.mail.protection.outlook.com (10.167.244.171) with Microsoft
+ BY1PEPF00026959.mail.protection.outlook.com (10.167.244.170) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Fri, 6 Nov 2026 16:46:21 +0000
+ 15.21.615.4 via Frontend Transport; Fri, 6 Nov 2026 16:46:24 +0000
 Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Fri, 6 Nov
- 2026 10:46:12 -0600
+ 2026 10:46:17 -0600
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
 	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
 	Mario Limonciello <superm1@kernel.org>
-Subject: [PATCH v2 01/10] platform/x86/amd/pmf: Skip legacy DRAM address commands on 1AH_M80H
-Date: Fri, 6 Nov 2026 22:14:20 +0530
-Message-ID: <20261106164429.30738-2-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v2 03/10] platform/x86/amd/pmf: Abstract TA dispatch through ta_ops table
+Date: Fri, 6 Nov 2026 22:14:22 +0530
+Message-ID: <20261106164429.30738-4-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261106164429.30738-1-Shyam-sundar.S-k@amd.com>
 References: <20261106164429.30738-1-Shyam-sundar.S-k@amd.com>
@@ -113,124 +113,183 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY1PEPF0002695A:EE_|DS0PR12MB8454:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b4a7bf7-6bba-40af-c780-08df3c257cfe
+X-MS-TrafficTypeDiagnostic: BY1PEPF00026959:EE_|SJ2PR12MB8806:EE_
+X-MS-Office365-Filtering-Correlation-Id: 762b3129-0a4d-4313-6c9a-08df3c257e96
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|23010399003|1800799024|376014|82310400026|18002099003|22082099003|56012099006|261022075727099003|3023799007|260925021911599003|260925022911599003|261021123027099003|261102123227099003|261026121527099003|261009223027099003|261028144727099003|261026140227099003|261021121427099003|260925021311599003|261022105027099003|10067099003|11063799006;
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|23010399003|6133799003|10067099003|22082099003|18002099003|261026140227099003|56012099006|5023799004|11063799006|261022105027099003|261028144727099003|261021121427099003|261021123027099003|261009223027099003|261102123227099003|261022075727099003;
 X-Microsoft-Antispam-Message-Info:
-	m9WFjJSygJ0QXricJ4IM2YOxzsUq1MP3NqXj9sQ1RZQ61suCSoORaqX9MCVBv8LKG1eaZsE6+2sFCtBC1Gb50jYVJG0AbmVGs2qzBY6eFKkra1gXrEAOGXwS7q6xmwR7qM1rVVqPrfqcbM0tYVmEgR40lvEu7tstpBXAZRb7u+F3DnWk4TttjEyTExrrQtVML9A8fZY4DICR5KPOkjEDFFQGsoj42MSkfwgSeADevnXHWNJLPnjBDS+rDTpSzs6F8vc6zFH404WHiLVrtqJW/SUBomLxd3ak+gfrnRy3kVaEW0lnNJs6PJ3IGcm279F9nwjZbRHyaswmMMLO8hyewQWl+JPb6hTNjjksp/bw6XKut8VYJ5OaSEyFF8t1qfaCQhEReM20elUGnkR3wsDpb7t+TkSwIYzfvFI7JI1WePYcA2P6rUt66KZCU/8UnLmPG0bN6PxaQpBil+byPG/jF6O1OfkBw0NvnUKXGG4dA8bCKiVZl6eW5LkO1us/anSRH/oNXOuO80xHkXiPxmqH2Ib+7U0kvNEysXbh5Iwg51lx8hcCjMlpPslHU9E9Wjv2fdIsjgUjVSu9CdUTtzqxWY67oKMPrvCRWF7/AEfqoF3U+rx+Dul7Nmg2ZlMwslIB9VEIdCE7cx+QFtqoBSnnReeLRQjVhk5t2KhM+k3Ziqr+FlQp1mVfKQhTIGkxcvreWDCn+KzvHnZxtgdoCR42CQ==
+	B//ys/uvzc1oyI+Eths5f0KofPOkEfyvhvrX0Y2lUmGSfNCUaRySJw2oIDAfwDWUORCHU9Sucl1TfblCaOzqLz3gdWE2ie8s5bScwbqnk/Rg2rcHS5aezuqfmBQcCMJuiTp6nVRCTDeuSYtYCFUYRRZGKR7WBmWp/RMxJN6oD0/jGr8w5fhhKcFSrrq+q10Xk1CZqjITqsFRn5P0xYnEwkXaMF/5W0CpL6355OnN2y3kJdkEfJN2EilUmqzJGemC9MUnuNcOw1lGTax1X38/PtPRuL5FB/kdfnsWUMf90Z5S+o9S2Gp9fufYKDUwFMDYL1l+3oOpWlcDlyL4+79fuQF/fX19dbaR329hkkEK5khfGhwnpGhYSJX+fpqZQSul9tHUpnHq8fHg+yTI3N0wPnOz/Mt8a+hK7oiaOhioKD7bRAVivXv111IH9hjkEqOaXfY1aQDiTNMXEJgclMQtJ1wpcFNowgim2SN96EtI5vAuMx8LYFsmLtDTuSgdUzpBHpL6GQToIe/p1Wz8wpjohT7c4e8OqwxMJ3u4HA5pXE4fr+cA4+r2LCuqCNAElY0tKALiL9iYBInCslwAp1v78vvbnTagbgVmedwoP9KeBB9yVQmpzdTvc9G5s98TlhoJ4/E6/nxbi+tCUAgBzPQY3aTUl8krnRwE6v0dExhc+EdbQUuVNzTv/k8VkWgNF3Q+xKllMnG2J4RvI9e45jX/RA==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(23010399003)(1800799024)(376014)(82310400026)(18002099003)(22082099003)(56012099006)(261022075727099003)(3023799007)(260925021911599003)(260925022911599003)(261021123027099003)(261102123227099003)(261026121527099003)(261009223027099003)(261028144727099003)(261026140227099003)(261021121427099003)(260925021311599003)(261022105027099003)(10067099003)(11063799006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(23010399003)(6133799003)(10067099003)(22082099003)(18002099003)(261026140227099003)(56012099006)(5023799004)(11063799006)(261022105027099003)(261028144727099003)(261021121427099003)(261021123027099003)(261009223027099003)(261102123227099003)(261022075727099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	4ELGznEa7fhY1hXekNhc7S4Wh9Ya7GBFxERPxcc8BhKc/qacv/6tqOg2MehfmX6EMPRuDJChl7FXWQ4zaSKMu3tkfXUMDNgqNQdEcN5L2SUou+Tl1bvB18I9I8kCZDM8/xkRB8jw9tqHVLD3G8IOlXTRoEmI19gZ6i0NbM4RfC0qxPwvS5rWnNuKp5VmWudzmCCwpcjkyEuM+a0Dl3lhEroBvAq7RdlGZp/VpY1mc1yDbop9/jQ+9I7M7p24yxjo1ZrzfIT3IlcA1IUntbRb6NITZZTtKefEjIBBUAv2uE6enD1kFzf6ONKJ9sfzsCpGQ0WJ6GjjIf8UwU/LTO7Y9ySEO1TQZb0Sx+wBgalq8aHH4rezW9Eyh2f53MzTcP+jrrsgpUPjpH3RY8/R9y6rRmngjc3jt+crUHzhNp1qil0MJpPTN+UcE3OwBIQ1HwMi
+	+V/tuLQtOe1Ims0JZ1OdmTaBNqZL4LGO5enaRsr5bWnfUOsJ0aseMIDnKi7QbiT+w//cXf80RPZlljlO4ClRepM45rdFi1jS2BsQlSFjnVH+2z4h4l/3AfNkPBXW0OhnUkqJCmw+ekIjZvF7DS8nqzG3krZRfQ1Gunsgyxg6Xm2vgKBgHKfp2xBuDbkGNatoC6RclS7yKXchgbJddd3G3FGlOZI9EoTk2gM++Z8n4SJigaHkhCItYWCVwHPSECApwB22fjopL3h6r4YDzg/5TZxB4VyikLCORdw2uwu74E13Fv8X6sT5UZH59Gi76dghGj0QdOKlpxSRARM/uKPpqNT3vSyYiv/3wXDD3Q/LejIhL/htfSGN9lcEPwMZ+bv2x0lIkBQhNI4YKyvvRYU/Q9o6YwvMjbVpDTZKP6NZYlfAbc0gDutQ2EIaiAfTMuaY
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2026 16:46:21.7411
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2026 16:46:24.4484
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b4a7bf7-6bba-40af-c780-08df3c257cfe
+X-MS-Exchange-CrossTenant-Network-Message-Id: 762b3129-0a4d-4313-6c9a-08df3c257e96
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BY1PEPF0002695A.namprd05.prod.outlook.com
+	BY1PEPF00026959.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8454
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8806
 
-1AH_M80H gets the metrics table address from PMFW through
-GET_1AH_M80H_METRICS_TABLE_DRAM_ADDR and does not support the
-SET_DRAM_ADDR_HIGH/LOW commands used by earlier platforms.
+The UUID list, the shared memory size and the init/enact calls of the
+PMF Trusted Application (TA) are hardcoded in the driver. Upcoming
+platforms use a different TA with its own shared memory layout, so
+these need to be selected per platform.
 
-amd_pmf_set_dram_addr() is still called on this platform from the
-Smart PC and auto mode/CnQF init paths. It logs an "Invalid CPU id"
-error and sends the address of its local buffer to PMFW using message
-IDs that mean something else on 1AH_M80H.
+Add struct amd_pmf_ta_ops to hold the per-platform TA details and use
+it in place of the direct calls. All existing platforms use the
+default ops, which point to the current functions.
 
-Do not send these commands on platforms that use accumulator based
-metrics. The buffer is still allocated, as the existing metrics paths
-use it. Add the 1AH_M80H case to the size switch, and move
-amd_pmf_supports_accumulator_metrics() to pmf.h so that it can be used
-from metrics.c.
+No functional changes.
 
-Fixes: 641b41a7a125 ("platform/x86/amd/pmf: Add 1AH_M80H metrics table and NPU metrics support")
 Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
 Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmf/core.c    | 10 ----------
- drivers/platform/x86/amd/pmf/metrics.c |  7 +++++++
- drivers/platform/x86/amd/pmf/pmf.h     | 10 ++++++++++
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ drivers/platform/x86/amd/pmf/acpi.c   |  2 +-
+ drivers/platform/x86/amd/pmf/core.c   |  4 ++--
+ drivers/platform/x86/amd/pmf/pmf.h    | 11 +++++++++++
+ drivers/platform/x86/amd/pmf/tee-if.c | 27 +++++++++++++++++++++------
+ 4 files changed, 35 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index ba9324448586..96e37eb56591 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -68,16 +68,6 @@ static bool smart_pc_support = true;
- module_param(smart_pc_support, bool, 0444);
- MODULE_PARM_DESC(smart_pc_support, "Smart PC Support (default = true)");
+diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+index 4392bf0bc0bf..24e6dffc608f 100644
+--- a/drivers/platform/x86/amd/pmf/acpi.c
++++ b/drivers/platform/x86/amd/pmf/acpi.c
+@@ -310,7 +310,7 @@ static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)
+ 	if (!pdev->cb_flag)
+ 		return;
  
--static bool amd_pmf_supports_accumulator_metrics(struct amd_pmf_dev *pdev)
--{
--	switch (pdev->cpu_id) {
--	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
--		return true;
--	default:
--		return false;
--	}
--}
--
- static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
- {
- 	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
-diff --git a/drivers/platform/x86/amd/pmf/metrics.c b/drivers/platform/x86/amd/pmf/metrics.c
-index 5c0e368ec8df..bf6117b4d742 100644
---- a/drivers/platform/x86/amd/pmf/metrics.c
-+++ b/drivers/platform/x86/amd/pmf/metrics.c
-@@ -158,6 +158,9 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
- 		case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
- 			dev->mtable_size = sizeof(dev->m_table_v2);
- 			break;
-+		case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
-+			dev->mtable_size = sizeof(dev->mtable_v3);
-+			break;
- 		default:
- 			dev_err(dev->dev, "Invalid CPU id: 0x%x\n", dev->cpu_id);
- 		}
-@@ -167,6 +170,10 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
- 			return -ENOMEM;
- 	}
- 
-+	/* Accumulator based platforms get the table address from PMFW instead */
-+	if (amd_pmf_supports_accumulator_metrics(dev))
-+		return 0;
-+
- 	phys_addr = virt_to_phys(dev->buf);
- 	hi = upper_32_bits(phys_addr);
- 	low = lower_32_bits(phys_addr);
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 9f64ab833c08..b29c5192d878 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -1105,6 +1105,16 @@ static inline int amd_pmf_get_power_source(void)
- 		return POWER_SOURCE_DC;
+-	amd_pmf_invoke_cmd_enact(pdev);
++	pdev->ta_ops->invoke_enact(pdev);
+ 	pdev->cb_flag = false;
  }
  
-+static inline bool amd_pmf_supports_accumulator_metrics(struct amd_pmf_dev *pdev)
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 96e37eb56591..e6aff9071d07 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -259,8 +259,8 @@ static int amd_pmf_reinit_ta(struct amd_pmf_dev *pdev)
+ 	bool status;
+ 	int ret, i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
+-		ret = amd_pmf_tee_init(pdev, &amd_pmf_ta_uuid[i]);
++	for (i = 0; i < pdev->ta_ops->num_uuids; i++) {
++		ret = amd_pmf_tee_init(pdev, &pdev->ta_ops->uuids[i]);
+ 		if (ret) {
+ 			dev_err(pdev->dev, "TEE init failed for UUID[%d] ret: %d\n", i, ret);
+ 			return ret;
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+index 226c3aa50500..378798fb3ec9 100644
+--- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -650,6 +650,16 @@ struct amd_pmf_arg_data {
+ 	u32 size;
+ };
+ 
++struct amd_pmf_dev;
++
++struct amd_pmf_ta_ops {
++	const uuid_t *uuids;
++	int num_uuids;
++	size_t shm_size;
++	int (*invoke_init)(struct amd_pmf_dev *dev);
++	int (*invoke_enact)(struct amd_pmf_dev *dev);
++};
++
+ struct amd_pmf_dev {
+ 	void __iomem *regbase;
+ 	void __iomem *smu_virt_addr;
+@@ -709,6 +719,7 @@ struct amd_pmf_dev {
+ 	struct amd_pmf_arg_data dram_addr;
+ 	struct amd_pmf_metrics_v3 prev_metrics;	/* Previous metrics for delta calculation */
+ 	bool npu_metrics_have_prev;
++	const struct amd_pmf_ta_ops *ta_ops;
+ };
+ 
+ struct apmf_sps_prop_granular_v2 {
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index 3fe79f0f37c5..e145eb7b03cd 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -55,7 +55,7 @@ static void amd_pmf_prepare_args(struct amd_pmf_dev *dev, int cmd,
+ 	arg->num_params = MAX_TEE_PARAM;
+ 
+ 	/* Fill invoke cmd params */
+-	param[0].u.memref.size = sizeof(struct ta_pmf_shared_memory);
++	param[0].u.memref.size = dev->ta_ops->shm_size;
+ 	param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
+ 	param[0].u.memref.shm = dev->fw_shm_pool;
+ 	param[0].u.memref.shm_offs = 0;
+@@ -323,7 +323,7 @@ static void amd_pmf_invoke_cmd(struct work_struct *work)
+ {
+ 	struct amd_pmf_dev *dev = container_of(work, struct amd_pmf_dev, pb_work.work);
+ 
+-	amd_pmf_invoke_cmd_enact(dev);
++	dev->ta_ops->invoke_enact(dev);
+ 	schedule_delayed_work(&dev->pb_work, msecs_to_jiffies(pb_actions_ms));
+ }
+ 
+@@ -347,7 +347,7 @@ int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
+ 
+ 	/* Update the actual length */
+ 	dev->policy_sz = header->length + 512;
+-	res = amd_pmf_invoke_cmd_init(dev);
++	res = dev->ta_ops->invoke_init(dev);
+ 	if (res == TA_PMF_TYPE_SUCCESS) {
+ 		/* Now its safe to announce that smart pc is enabled */
+ 		dev->smart_pc_enabled = true;
+@@ -503,7 +503,7 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid)
+ 		goto out_ctx;
+ 	}
+ 
+-	size = sizeof(struct ta_pmf_shared_memory) + dev->policy_sz;
++	size = dev->ta_ops->shm_size + dev->policy_sz;
+ 	dev->fw_shm_pool = tee_shm_alloc_kernel_buf(dev->tee_ctx, size);
+ 	if (IS_ERR(dev->fw_shm_pool)) {
+ 		dev_err(dev->dev, "Failed to alloc TEE shared memory\n");
+@@ -541,6 +541,19 @@ void amd_pmf_tee_deinit(struct amd_pmf_dev *dev)
+ 	dev->tee_ctx = NULL;
+ }
+ 
++static const struct amd_pmf_ta_ops amd_pmf_ta_default_ops = {
++	.uuids = amd_pmf_ta_uuid,
++	.num_uuids = ARRAY_SIZE(amd_pmf_ta_uuid),
++	.shm_size = sizeof(struct ta_pmf_shared_memory),
++	.invoke_init = amd_pmf_invoke_cmd_init,
++	.invoke_enact = amd_pmf_invoke_cmd_enact,
++};
++
++static void amd_pmf_select_ta_ops(struct amd_pmf_dev *dev)
 +{
-+	switch (pdev->cpu_id) {
-+	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
-+		return true;
-+	default:
-+		return false;
-+	}
++	dev->ta_ops = &amd_pmf_ta_default_ops;
 +}
 +
- /**
-  * fixp_q88_fromint: Convert integer to Q8.8
-  * @val: input value
+ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ {
+ 	bool status;
+@@ -584,8 +597,10 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 	if (!dev->prev_data)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
+-		ret = amd_pmf_tee_init(dev, &amd_pmf_ta_uuid[i]);
++	amd_pmf_select_ta_ops(dev);
++
++	for (i = 0; i < dev->ta_ops->num_uuids; i++) {
++		ret = amd_pmf_tee_init(dev, &dev->ta_ops->uuids[i]);
+ 		if (ret)
+ 			return ret;
+ 
 -- 
 2.34.1
 
