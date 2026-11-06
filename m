@@ -1,68 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793998452;
-	b=H66TX/7jaLe6G5+tzf2iAbSz68Wmsn27hUfmooOeV1YXnQbnwsfNLRMJeUwiMQKhsCjU
-	 kWcPNq/YnfLwjD3SLIqLEYdMCGhAaSSMDNSfpxq+4wqlA/8ppq1uY8LaHA156U1boW8SU
-	 pylGXm5W7/2RL5YA1PsKxFq8TCOR6tbygqxWvCezhSbOw4UGx0EWgkl/vMlGM0TeDUGT0
-	 6b6ktoBZKdC6gpk7w+XGpBSSDaTjmilDM8wXtadd3bUSGHvCik7UYXrt6ksPPDIhrWgG5
-	 Hp3jUXRW8Q6XdaCSPlD9jzysAHMG9q0KIgw0MbHnwg9ME5mgXRiePeTER1YnPIY1L+w==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793998452;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=2fs9ImFJupqmTCUcFxEp0C42UkUS7Xv9Wsy8jQH4kUo=;
-	b=vgug7MAoiWrmpheI/osodWhtI+7DRIRsZVZ4Uma6zZIQ7UMhsktXBj7vzq89lCpLQ7C/
-	 IUIPHzhTJDK5k2adokMwBqCK5aS3XJQjtF+TURu7yHqx75PJLdQua/moDz5VUo1T2F4KN
-	 WVaZCm9H4/0wGqocvoT5RQDB0wcHPHAAxk2Y6OxL4KAEkqGEirPVQCK3Z55oNX7gbxmAU
-	 NU3rZIPjd/wTzzQenTrqlPOzHzrerg97ANk7iDYr5jLhXL/MR4R3PpLG9IDTi3B5H16UF
-	 pLAvDsIsGN4Gwh2GR7ZjrdJp/7244R7AjcvSmwd5IBo57AjXpxvL2CzGXwys32fZt6g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=kiLkIk72;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794002525;
+	b=u3VlaDq7KggWEMTViUFpvTkfx1O/JOWo9PWuNsrn2avb/r1LGp8pEaCn2jd+KwQdIP9o
+	 q/eLhIyA6blZzX4ZBLVaK1h+b+/y2BaiXKVvGAdyHjtBgTyteGJOBKkj0GtXPiM/w1tQ6
+	 M5oBjrpofDgGTCGsezO5/UHGAsVEU427/VQuFMN2093lDWO1iizCwesPat2Q152g2sfsE
+	 qo/Z3aEYNK7j9D2Y9K7RtVFp8Ie72THh5Suj10lXXYc3iUZEVEKCnCKzCMzylSFnW3AIR
+	 qgOrz+oUv4up0BtIF8Az6HECYYWckbITa9GkuHNlk5mnhw2MFQgUa8JE1ug233U51HQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794002525;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:From:
+	 Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:X-Authority-Analysis:
+	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=7yEuGiHrl8v2KO1Qgqcvszxhl27VpOHCTIq8+dICIGk=;
+	b=WJXuKkNQfO/5jdwFAe0qLT2M8cxbnpgwhrM3oU6nRrjQ+7F+Sq4EZb0x+FH79E6QmxlP
+	 zZj+RwWhuLZEmkGh2HoGzIvo+dAcWdrWk2wNdBw2/LuKio5yRB414mK+9gRK0gziKnYzE
+	 YwATAHmyFHuY3ICZbtCd2ZmF/wTJIQZZ7oa9jlt1dg4FqpqEg+UHWL3dAPEXqKOTPn//l
+	 ejlEMestqzwunZQ2s/RCae/sH+wmr0VuaImJHcyyujBAzvcewoFAeKZKrHNLzU3Wb9NSG
+	 9B4Nbno2Wo0eJIcJrTGnxtJZfFP9o3LtwlRLCtID4dVT4ZnCYg60a19a7G1/qNpVZ1A==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=i0L4edZR;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=cb9Ev+QF;
+	arc=none smtp.remote-ip=205.220.180.131
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D04B606A330;
-	Fri,  6 Nov 2026 20:54:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D04B606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A886E606A32E
+	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 22:02:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A886E606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=kiLkIk72
-ARC-Seal: i=1; a=rsa-sha256; t=1793998430; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=JaAEXPZdanHVNF40DUmFdXWvoxVDVy9xqILaxuqMAjpCLlhrmr1zC/J22R+xIiisTaZcM7QWeCXhLGNWb7tQVHEhOEL+hCNWj8H7bDPD/HOpdLk6QyKQbT501wHuoouCtFKEWDxzOv0CIocd+bSAa6mcKWuyaIhILQe/tkDskNU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793998430; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=2fs9ImFJupqmTCUcFxEp0C42UkUS7Xv9Wsy8jQH4kUo=; 
-	b=EeGtkRpQcjykY9kf76bBIsuWvEbeRAHP4uuooBzuIWMIod5rq4R1B8zSZPBERuTabKcd5g02z8tU4W4JHAdiqDd4VmrB0Nd6cDMzhgeWSd2n1cKpBJ20vN6/CNp8lF7AiyIw038d13vtpnmFzb6GYDnM5soSprV+Do364kRs8Gc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=kiLkIk72UDtnuLO4qHgf1vazQKOzJ/JawycJNDT9ebxIjVYMKzZQ1WjUg0iIx5nDbbKAIq5iyl9wul0lRxuOvzAhdJ/W2l+sYdgfP7jkaMT5V1SjnzsPiN2PuEgglUapX88DUdXXH4j7x9vKuHevHaYy+ptgDc+PwMosbp/sqx/QDyqZ4GrInx6OR2wyohxWlApvX/IRZs46Bmq2oeGjY40R/380JweAM3f2kGoyYqqSyBk5IvgC98DIEMHt0b+iu1SNazvlAAkeZSSDJfQJmT6IRWjPmix2wDtKPRa7odvtuCL6n67/88kmh0JGEGJJ+M2fXoNBaZR9ybtpEmN0JA==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=2fs9ImFJupqmTCUcFxEp0C42UkUS7Xv9Wsy8jQH4kUo=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793998430081786.7957050408593;
-	Fri, 6 Nov 2026 12:53:50 -0800 (PST)
-Message-ID: <19f5b65e494ed710a65927311cb68535c87953d3.camel@rong.moe>
-Subject: Re: [PATCH] platform/x86: tpacpi: Mark charging LEDs as safe
-From: Rong Zhang <i@rong.moe>
-To: Josh Triplett <josh@joshtriplett.org>, Mark Pearson
-	 <mpearson-lenovo@squebb.ca>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-In-Reply-To: <a14640f58be48d4912ce5808faea1402ad7f7ad0.1793906572.git.josh@joshtriplett.org>
-References:
-	 	<a14640f58be48d4912ce5808faea1402ad7f7ad0.1793906572.git.josh@joshtriplett.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 07 Nov 2026 04:48:44 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=i0L4edZR;
+	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=cb9Ev+QF
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A6Hsxfp125555
+	for <platform-driver-x86@vger.kernel.org>; Fri, 6 Nov 2026 22:02:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=7yEuGiHrl8v2KO1Qgqcvsz
+	xhl27VpOHCTIq8+dICIGk=; b=i0L4edZR3i/ni09UBm5ll8dGWzoybXYNQLNY5V
+	vvjWK1712HYivGRWMj2Cr0tQQOVbdsYWGpi9Ro8Sdx9Q+FzOA2IjcGre3pVEBvTN
+	yKxbUZv/autEtk4P/XkFKPl7FkisApPEC8XEpZrsTOt8wKXrO3w4owjazw5HnVbU
+	qbIhobFg3jsbQNh+rZmmCm+y5+jU0SFsOvy6+0UAtJYIz1lvMWNWtwLCeyBOJdbc
+	B56m5Ok1h2o6OM73xtAi9rK+Nfr1nZh+627PEGtr+WKjYbqUp5WYGNFVC0TnUtjW
+	5L7Qgr0ZTEr58tCvpNvXtTcvtM9Fcvz+bRvSTkj8mgqCHo5Q==
+Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com [209.85.217.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hsk48s226-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Fri, 06 Nov 2026 22:02:03 +0000 (GMT)
+Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-7c10b8abe29so913186137.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Nov 2026 14:02:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1794002523; x=1794607323; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=7yEuGiHrl8v2KO1Qgqcvszxhl27VpOHCTIq8+dICIGk=;
+        b=cb9Ev+QF3A3U18mKZ9b8pMXoOzWDMSDM7qKajSNWixIqxQEvVigNNqodq1IgEGPFjF
+         ou0zLWFZyG1lZh8YadUaNgorBNdceTCEVO9/bAiFn5vb740e76kqOS8rUz1cLxtOOPIv
+         /H7YhGlt0JNHJkfaS3xLnWc/ejbmiptitqbytPa4r3dt/EsLyHUt8qdQSNypIK0d8voI
+         B2kXcOl3xIKEEt7WsN8r2ROHQBa17LenG1OJGnzm9ged61p4O+eTkc72tZubEN3oWIl8
+         zgIdAiLlRq0arosfmqiRO/7P7VIiQaPVqs++d/fxm7sqmcRevNGxV9zDkoh4vWOyluk+
+         v+9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794002523; x=1794607323;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=7yEuGiHrl8v2KO1Qgqcvszxhl27VpOHCTIq8+dICIGk=;
+        b=M23qkMP0JBo5L5GmwN0XCaRHBQWhqq//ANGoxQRjhY74opMh/JjNHzGZoWGcHsueFZ
+         mtf8hLTCqGhfeq584GeC5NBkF+RQ2vjKpZdU45kgTM9Qy6fyJNcdgeL623MWXNEXhr+L
+         MMVLNAg9eH4yHvk2R33lQRq6B2KICe4TgnisoqQsMJV9pR0tSsiwMYSIltnG84LfdcxN
+         5mT2p+7ltOTPjfLyaMiyaseUUIwpBZWXeyzMt8cRQ1nB8UvRXFVqqJ0FhWPD17Cu9GjT
+         g4wnLt7qCoozKM1nNorNexGVoEN0NiTtMgcBsG27Yf0kIfxnXfzKdS9YB4jqoaYEQPhS
+         IQnw==
+X-Forwarded-Encrypted: i=1; AL+hErHDd+7EXjxS4VWZQ/CimgUi2B+8HzBmsxgxUL6p0oPUTpUj0vNjEDcnEASaeV8KmnuPjZTLvGndsO84oL/IKQ/KfnUd@vger.kernel.org
+X-Gm-Message-State: APuU4Z/1XLERFr2gMLdBRAisnzCJt4xsihiop2rg3aVNaTcoOLu5tZ9X
+	OOv2bnO8FklriGAXpll8zZoKwnnda3UFt+MZ2R1K0zoJPU9u2IX/wpogN+l7OIe1qdG8bOzMtcM
+	eq+hYtEuFvvHHrWImlY+CpzTkmHqnDa7cclbvxN8v3KAWb/WdFYZJQO9AYuQe5h3PQveE0UehyN
+	Bf
+X-Gm-Gg: AYBFou07S8S+zWUlGG0L7CviUpL/5LP9FUgyWXUfp0EBAaWQOiE9oEWcJT9iGC+617G
+	r/iys2kbnfii8jiYG9ie5LxuVDV81MlBGEbXvyqLF7a5ybvpRCuIUxCIz+XYzSAQGnllSck1SPE
+	nIW5/gkDkbN9a35cDCjCCeDJyqM6lgMaLOTrfc8b5EGEJKsRje8AiTrcMo5IWFUjg5bhvwgKVW/
+	JOgLKIjLED42jNsBT33vK3Xzot6DpkIW2cAUflLvaL93ruItk2QFFnI1aRrfrJGlbxqpWNVRFcM
+	a0nQq2WbhmIfxDryUZvX8zPTcAdEk2evrWSXi/3t6WFGaFZ+NsSeJewFdoChsIHCmA4V4/xxyWa
+	xAEfXqsw9VwxCwo4+pfx5e6y8NUvojIrbTgBvU9bAylrzVYMNC0jQlQZnXg==
+X-Received: by 2002:a05:6102:32d1:b0:7cc:174b:f7d8 with SMTP id ada2fe7eead31-7d2a12f2ea3mr2331140137.1.1794002522600;
+        Fri, 06 Nov 2026 14:02:02 -0800 (PST)
+X-Received: by 2002:a05:6102:32d1:b0:7cc:174b:f7d8 with SMTP id ada2fe7eead31-7d2a12f2ea3mr2331120137.1.1794002521849;
+        Fri, 06 Nov 2026 14:02:01 -0800 (PST)
+Received: from [127.0.1.1] ([188.27.161.77])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-492d7cc6162sm5812437f8f.47.2026.11.06.14.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Nov 2026 14:02:00 -0800 (PST)
+From: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Subject: [PATCH 0/3] platform: arm64: lenovo-thinkpad-t14s: Add support for
+ the Gen 7 EC
+Date: Sat, 07 Nov 2026 00:01:51 +0200
+Message-Id: <20261107-t14s-gen7-ec-v1-0-f4a8edaac447@oss.qualcomm.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -72,90 +116,105 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-3 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE9O7moC/yXMTQ5AMBBA4avIrE3S1l+4ilhQg7Eo6SAScXfF8
+ lu8d4GQZxKoogs8HSy8uAAdR2Cn1o2E3AeDUSbXWuW46VRwJFcgWTRlkZVJ17dqsBCS1dPA57e
+ rm9+ydzPZ7X3AfT9++Z90cAAAAA==
+X-Change-ID: 20261106-t14s-gen7-ec-297593bda0fc
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abel Vesa <abelvesa@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Abel Vesa <abel.vesa@oss.qualcomm.com>
+X-Mailer: b4 0.15.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1680;
+ i=abel.vesa@oss.qualcomm.com; h=from:subject:message-id;
+ bh=X8BfmvpE8W7+B2t4IJID/uS+mnVleh2clOpF9Xw2obo=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBq7k5UdDjlMhFo+w5WSKkPrkrk+l7CpPlWADNeq
+ I1iEjXex7+JAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCau5OVAAKCRAbX0TJAJUV
+ VhWdEACS/USlBGnUt5PP9IL9TAcO6sJr1IknBqkK0SmE1IfcRgn8wxVxGGncBrEUKS4ITqqP3Db
+ 5lvEwB9dLa5Z8Ww1rTDriz/D7YdFoftjvKfJwFtHzZieZkgKahhUAIcm617g1AdHU9kILP3PzVL
+ JgnEAi6Cs/G19V8njZ9oNJX1agC7gfijJqGkg8GQDVRpc0RfmBG33ZOlEd7jmcRQegM2dhTdaJ4
+ 5/qt/9bNQ1Cr06rMGwnVGsha0JUpNeAD2YKejDR9ZIUAk0lZgIMNysCqU8K3/WgwUOD1QPm3f7M
+ AODyrwLhcpCIzN9mGWyIFJEP2/PJyALm0xz1TNr5R1/hsVlcrKW1UoxSpWFCXrD+IMkQdozcpbL
+ 1wMGHZUvKrRTW/A0L4HhkdGj96UIrUWd0BACPZiSOrFnxfZAvMh5Ub6OuZaczAHiGXpC55HWiT5
+ rOIflvDFpXWVuqMwEoJDTEv5noN1VviR7pO3KapCuyR2J9gPpRl1RReuFs3tFIPWgLlWEr+JIZx
+ joX+wrHb3Uc9FPTtHHvIV+a26zJF02NPSjo9b/qWvzU/zHA6GDPZ5MYCusVYmW585pHUl2OE7ff
+ 6alck/OwziocUisB479c5SwqeCFlKgcXC658z9DhGRIkBmk+0K+n2CsgO159oANrnXLx9nWLMY6
+ GB8xlh5XYYFBUEg==
+X-Developer-Key: i=abel.vesa@oss.qualcomm.com; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA2MDA4NyBTYWx0ZWRfX+3nSMOqvKbgs
+ ULrFhtJgFymUr9kL1IIf0VjUuSsJvN1+9LQHEVFUJTHcFE93lnX4eBYI3o/WvABseS2/L7zFR1g
+ vKNf6tZzFaeXRsGiLlSWeZPJF9gJ/1LsZ8SPpq7RsOspZVLna93nRereKXuFgMmjtLo+Oae9ydl
+ GWd1OEtshQ2vv5i9NX7vsrGp+ynn9DqeJd+PoEIaztXgFZNPexLvpnqNeh//fQOJbLrtZLaj7xE
+ X10JQZF7IwqGQUi2g8GsJzpwVI1xI/dzl0CE1XbHSW+G3m3GDkakn+ewmMeCTdIzi5LOKFmPvFy
+ q83qAYi4ZycIgE87ts05zXW+Bd5hOscitybZl8wo0zLDmi94c3DMi66FvpZ9w/i10HA4lA/+iB1
+ ebDD49rL/k32qoHKxTdoGQI616MnDsgV81fvXB1jV7VMVl5NOzPDXbV3DdBrgZ3pMH5CiOvx1D0
+ GMYti3i9HZOCw1lDxpA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA2MDA4NyBTYWx0ZWRfX3lKQhj3PQQKo
+ zV6Q86cO4yo27jBZ0iauy2ofAQ40e6oKk1OZ9u3805e91a9D2iHC914JX7/1ld6X9zqn0bqC+wP
+ 4Of8dtbe0Es4d6VvDbYcTyiCkYhNAvg=
+X-Proofpoint-ORIG-GUID: UYXyYloE8_Bl5OHO5dcuYrZ18aAbYrZk
+X-Authority-Analysis: v=2.4 cv=Gr3XaU1C c=1 sm=1 tr=0 ts=6aee4e5b cx=c_pps
+ a=DUEm7b3gzWu7BqY5nP7+9g==:117 a=asF+/XNaGoxFafzDDLC1GQ==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
+ a=7rjXLmKk895soiuU5V0A:9 a=QEXdDO2ut3YA:10 a=-aSRE8QhW-JAV6biHavz:22
+X-Proofpoint-GUID: UYXyYloE8_Bl5OHO5dcuYrZ18aAbYrZk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-06_06,2026-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611060087
 
-Hi Josh, Mark,
+The Lenovo ThinkPad T14s Gen 7 (Snapdragon X2, Mahua) has an embedded
+controller at the same I2C address as the Gen 6 one, with the same
+register layout and event codes, but it speaks a different command
+protocol over I2C. With the existing driver the EC never reports any
+event and the LED and keyboard backlight writes have no effect.
 
-On Thu, 2026-11-05 at 11:24 -0800, Josh Triplett wrote:
-> tpacpi can expose the charging LEDs as `tpacpi:orange:batt` (LED 1) and
-> `tpacpi:green:batt` (LED 2). However, at least on my X1 Carbon Gen 11,
-> these LEDs get hidden because `TPACPI_SAFE_LEDS` doesn't allow them.
->=20
-> Add these to `TPACPI_SAFE_LEDS`, so that tpacpi can expose them.
+The Gen 7 protocol is taken from the ACPI EC accessors in the Gen 7
+firmware (RDEC, WREC and QEVT): reads, writes and event reads use the
+0x80, 0x81 and 0x84 commands. The firmware also describes the EC
+interrupt as edge triggered, active low.
 
-Please see the commit message of commit a4d5effcc737 ("thinkpad-acpi:
-restrict access to some firmware LEDs").
+Patch 1 adds a Gen 7 compatible to the binding, patch 2 adds the Gen 7
+variant to the driver and patch 3 describes the EC on the T14s Gen 7.
 
-The term "unsafe LED" exists because LEDs are write-only for software and
-fire-and-forget for the EC. By taking the control of an unsafe LED, e.g.,
-attaching an LED trigger, any warning signal from the EC can no longer be
-displayed by the LED.
+Tested on a ThinkPad T14s Gen 7 (LCD): Fn+F4 reports KEY_MICMUTE, the
+mic mute and lid logo LEDs (including the hardware blinking) and the
+keyboard backlight work, and Fn+Space changes are reported through the
+LED class.
 
-When it comes to battery LEDs, they are definitely unsafe to override.
-After all, batteries are dangerous things when they malfuction. Thus, I
-don't think it's suitable to enable it for all users.
+Prepared with help from an LLM-based assistant.
 
->=20
-> This was previously proposed in
-> https://lore.kernel.org/lkml/20250403040846.7834-1-martin@arp242.net/ .
->=20
-> I'm currently toggling these using write_support via ec_sys, and would
-> prefer to handle these via the normal LED mechanism.
+---
+Abel Vesa (3):
+      dt-bindings: embedded-controller: lenovo,thinkpad-t14s-ec: Add Gen 7 support
+      platform: arm64: lenovo-thinkpad-t14s: Add Gen 7 EC support
+      arm64: dts: qcom: mahua-lenovo-thinkpad-t14s-gen7: Describe the Embedded Controller
 
-Since not providing them via the LED core does not really prevents users
-to control them, I am also thinking about adding a debugfs attribute that
-unlocks unsafe LEDs and taints the kernel.
+ .../lenovo,thinkpad-t14s-ec.yaml                   |   4 +-
+ .../qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts   |  24 +++
+ drivers/platform/arm64/lenovo-thinkpad-t14s.c      | 176 +++++++++++++++++++--
+ 3 files changed, 193 insertions(+), 11 deletions(-)
+---
+base-commit: ddfe51b0a0f5dc9e415cc2c8ad8db17532dd426b
+change-id: 20261106-t14s-gen7-ec-297593bda0fc
 
-I believe tainting the kernel when overriding unsafe LEDs would be a
-better approach. This is also one of the reason why taint flags exist,
-i.e., indicating that something unsupported has happened. Multiple
-drivers have taken the approach (hint: grep TAINT_USER).
+Best regards,
+--  
 
-We can also make the overriding procedure tedious to hopefully block
-users who don't know what they are doing:
+Abel
 
-- Drop CONFIG_THINKPAD_ACPI_UNSAFE_LEDS, so there is no longer a
-permanent switch
-- Unsafe LEDs are also registered, but with LED_SYSFS_DISABLE set to
-disable write access
-- Add a debugfs attribute unlock_unsafe_led to every unsafe LED, which
-can be written to unlock the LED's write access
-- When unlocking, taints the kernel with TAINT_USER
-
-Users must write to the attribute to unlock an unsafe LED. They can't
-unlock all unsafe LEDs at once. Instead, they must unlock whatever they
-desire one by one.
-
-From the said commit message, it seems that the reason why
-CONFIG_THINKPAD_ACPI_UNSAFE_LEDS was introduced was that Lenovo didn't
-want to support the use case of overriding unsafe LEDs. So...
-
-Mark, what do you think of the approach?
-
-I will send a patch implementing my proposal soon. You can reply there.
-
-Thanks,
-Rong
-
->=20
-> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
-rm/x86/lenovo/thinkpad_acpi.c
-> index 4f81855ad721..50a8cff5b374 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -5608,7 +5608,7 @@ static const char * const tpacpi_led_names[TPACPI_L=
-ED_NUMLEDS] =3D {
->  =09"tpacpi::unknown_led3",
->  =09"tpacpi::thinkvantage",
->  };
-> -#define TPACPI_SAFE_LEDS=090x1481U
-> +#define TPACPI_SAFE_LEDS=090x1487U
-> =20
->  static inline bool tpacpi_is_led_restricted(const unsigned int led)
->  {
