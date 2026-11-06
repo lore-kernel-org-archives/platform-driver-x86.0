@@ -1,57 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.118
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793975609;
-	b=JgtosejUvGJl8b3Y8JGGpDttuNWc5yZ0QPlksBP7LDhpOruhuzh0wKK1426j37AspBJZ
-	 /0WmhxLq/iPVR2qK7AbS4Kdz+tS3QsYq8+epoOR5oH9i2Rj5ikm6+mWu4SbJUx3wPwHEd
-	 eY8EOfokacNvOxT+k7cMjOWB+GE32D2OFlvEMG/zoZU7YFETlsww+pIlvUXxef1XMU/Hi
-	 VAAu4WYwsdd7ulRtTtdCJL1dUy0mHPfbcx0E5/QL4Lv92k2EjSKjvEWbOlBas0A/suikO
-	 H7JfnXvLjJjDcdhOdnXiTKh37zySxIqE20DhaGxRHXu1d/pqSdAO5mh6QMv98IKBKHA==
+	t=1793976793;
+	b=HiF789ISz53z1qfH2jV1Q1pJR9RCEobVWpMvjnKcmYL3OUqbQxeEOTH95OuWvlWBfSqU
+	 07OzNAua2iFg3Lj5a37L75XD9xji6a8FJTdUBxvvIhnCTmxt1zGovfcy4A2aTjBnF6sYF
+	 edC0eJT8RNjGYiB/7N5YmH+y/zMR6DARfBWCqn2891IeVmlqJOlBgByU7DNH0jzU2x98T
+	 V/Bfqe//J4kP1T8yu99IqyibDlXyv5ig3xknnaXExpTQcuJ+aS/UlvTQApLRRbmlyF/ke
+	 uxKuvv1XDpQkiyTcPY9q5Nx6H9tqtd9CJWOpuzmW3R1tuMIPf+64d2OAFWHPxMzxEkg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793975609;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=/eAhhOve+UaRgXRGweA394kXwzaPcnWOPVCBN849Nb0=;
-	b=u1A+i+CreNTckJxPc1PnCJYIWt065KMSzviLFVujDwVg3nha7+5nViKhafbFWVBQ8CCk
-	 CU3mbW4ZlvKoyfpPj5/d3I4vKrrTzOsOytBMr8CUPi3KTfuV2WW2zKnso3zI3g/rFzqXi
-	 toHaJPayHEl2f/ViTRloEON+GyBnCyfqThh7K0oqcDMKBJop7AUMnX59Kn76nOsJBoOC0
-	 J/FutNLmW1GSS7zUg6psUov01Ai22KzSI8vv5qj5uH7sPlQDcuvhnG2YENvGo2b6qJmLg
-	 1XB2MGKb2O3vr6ETIuReVMxTMAK6/thHmoQAM7S7uyLWgQh9PO3+jm2IkDAw1NvV4sQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793976793;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=mLqvI3dn6N8lQXTvWjkdTFlUcu1cTBREUoz3ikSQ55E=;
+	b=pAKQ5gU8HarqcVsvSl9/2SDWbwwYyCyPHGizPy9uoHmNkl0i3zikXSAUwT/krR7xXXKA
+	 nmVcFdIq3Yhkoucf9udy6EueVhBmksglzpTOyxlTDwICbXYpgHF9poKyI/6os9egLKY18
+	 SQq7vEyTUhyqDSqrzNM/pkXojaA9Y/gfj82KANcyQsmlOltdC5htb3QvHWkGy63P1Fg60
+	 3sCCA490TqWfaZ4DAy7PjVHddlfKDG0xxFt2l7rchVKYA1FvwFkIeYFeYcu3RuCKgh37e
+	 a3F5FIiHZ1OWLNrz1G7f9vFNopdt3R4iFghL6c35XJ1QvN37rwavupDvZQxC0KNMNXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=IUJgd8rt;
-	arc=none smtp.remote-ip=79.135.106.118
-Received: from mail-106118.protonmail.ch (mail-106118.protonmail.ch [79.135.106.118])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZYuwwQtK;
+	arc=none smtp.remote-ip=209.85.216.41
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833A2606A326;
-	Fri,  6 Nov 2026 14:33:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 833A2606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74B7606A326
+	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 14:53:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E74B7606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=IUJgd8rt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1793975605; x=1794234805;
-	bh=/eAhhOve+UaRgXRGweA394kXwzaPcnWOPVCBN849Nb0=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=IUJgd8rtV09L/PpUNdx5Lf+uDwImmskIZKG3FntEQcznMhDhaLHHKZ5ol4hyKAjKW
-	 Yq2zEg8tOAx3sPy4lCFBHvbwlkeObePdbDJV3+iS8qsC/YXKLCw4TClmb9gafQeNBB
-	 73J3MO2wSxPeiRKnfg35Lkc4OFkztYVXIwtk9Vyg7aCKiinhG9+7whIp36dnxF9uQj
-	 0plHUImfBBerIelL2Nj/jPp/NvX1XZGtxHhY58ockAN2mxXOVl2pndmsB3oSi5hblZ
-	 0d1ov909pSsw8frJNChjc0gRnUYZkY+rqj1yDRzlepdMgZURk2NXVy2s0PQd7Yrv8F
-	 NnWT0MB/sbR7g==
-Date: Fri, 06 Nov 2026 14:33:17 +0000
-To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Yun Wang <7z0423arsenova@proton.me>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mingyou Chen <qby140326@gmail.com>, Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>, Chris Taraszka <chris@miget.com>
-Subject: [PATCH] platform/x86: bitland-mifs-wmi: Add Redmi G 2022 (TM2135) quirk
-Message-ID: <20261106143114.95008-1-7z0423arsenova@proton.me>
-Feedback-ID: 227066774:user:proton
-X-Pm-Message-ID: 896d83f527b801804ebbfd88a4f151f0b8facdbc
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZYuwwQtK
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3ac6794fe45so602588a91.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Nov 2026 06:53:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793976792; x=1794581592; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mLqvI3dn6N8lQXTvWjkdTFlUcu1cTBREUoz3ikSQ55E=;
+        b=ZYuwwQtKeAwKiv/7pKIBwJPKYou5k0RS/bHke3DDCwwXrLUYiIvHNDqmMTUs2kBhcd
+         qBrzPktgFM0ICgHYahucC+2ocGpBVuZUAWVyEfuGrDNKOjEjX9po3YfHOGnOzBe8noqm
+         2CH8RcstjMm6DZ2qVT8gC+aYETRXVNEksNg4mWbjlOQD1yOyIz20mETEIQ8Gqiy9n04/
+         olqpl0kjYLr4ef5XjpyWOTzDchtrpMPzqxhl43NcV4agrf+UHXcThj+exi7UUIGHG5F7
+         JgDb3edRzu0U710DFVOs1AMyaG3qcpe9VQVexEMZM2r4yD2epCjvJVOFrj7qFzIrJumc
+         3TRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793976792; x=1794581592;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mLqvI3dn6N8lQXTvWjkdTFlUcu1cTBREUoz3ikSQ55E=;
+        b=v19d5vW6m+8ODGtnaUGuP1vCiG9UWYWDJ6nm/N9KRMIJN5tn9baksnRtFy6FQ/e04m
+         4Nlpx6sQBbP0hZyhj1jCtJJ5GIRTAMMAMRG7LTCHHXlqQUKNGbhscqhy5aVQ9E9ktBHk
+         6kE8pe0juKeMsbsOD4t+3nxZ1TYHTyqG+TlMTCEqS/J3B/mzjV5g5HgTGd6jgF463l/+
+         aGy7w6ZZreqMX+klbHqEbQJ0OirXFavYA1rpSwtasB3RqM3WZGkMHckln+cFR7NETv6D
+         Mw8aOWkrWUBDSn2NX7GGwi7Ns6ghruil9esSxI4C4lFt4FSMbkLEVpRtpNRvgATjJxwe
+         mpng==
+X-Gm-Message-State: APuU4Z8FAIqzsBYQ7i8bQHsDq2OnUGufqqSLHagKSbXNV4vyHl8qU1Wy
+	k3NwAoceqgaxwbROg0+BU04Dvq1Qe/sEFfbj4uS5swRCNFAucKK3P5es
+X-Gm-Gg: AYBFou0AkgejePYJ1t7wMyfLg4E/WgjZcX0fN5GylXL967IHFMjaCxJhNSpcr9+yjb0
+	Uut17KNdCq7T2Fpc4WQnZDh1aggKkJQ2tsc8FcbUM1Hk1cjAyppSaJ2QLFPRZLXqHIMqxjxuEqr
+	2r6bHOq5PnrM1Wrd0u7v150ZxM3HPMYDLjcYUKpwGSYsR1g0RTBPb8zez4KW3F59V0/u5/LlQrd
+	10PZ2ee0u8B4mZD/BBvG/mIV8tnsTpsHgzDLakHF785/aDl4P3hCXsct2+BEqWFcPIrRO1xy3Ch
+	9b4ghjWu6n0BEQ/cfznNgF+evnpfSRAmYmsucOOfxsbyGcokSzo55wcE195zboiNozCKjojqTY7
+	qLCpVA9rgCoEoVOKAPictSiM5Wczt3ZLUZWhQX2ps8QFBhQyrpseQWOqsE7rP19uqrZlwNbbgsF
+	0i6hdLfDAw4PmyS9JzIUYCHLu3kPdYrtPlQop2DBYzrLGbmOzOVF/b4lKEoQ/vaWCl7vWkLiEUR
+	7Ggxid6w6MpBp+kWnkJ98qGcp/rhT2K+tB6Xjq7r4Y4Z5gGK43O8hoPSfPHa+h+OtXNDuR3ZSvZ
+	cd3wTiYo6WGnxXDrWjSjJ1vQJ93O/TXxKw7xPM1RXTNOdDkyneIBz1nbtktlv7ubaG4=
+X-Received: by 2002:a17:90b:4c4f:b0:3a4:f75d:d1a3 with SMTP id 98e67ed59e1d1-3b0db6cf7bdmr2813526a91.32.1793976791875;
+        Fri, 06 Nov 2026 06:53:11 -0800 (PST)
+Received: from ?IPV6:2408:8210:2436:950:bfa8:849c:2010:a1c1? ([20.89.137.63])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b0b32812a6sm8081043a91.11.2026.11.06.06.53.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Nov 2026 06:53:11 -0800 (PST)
+Message-ID: <ecdecef6-b2da-4d3e-bb82-a22a15febaf6@gmail.com>
+Date: Fri, 6 Nov 2026 22:53:08 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -61,96 +90,161 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] platform/x86: bitland-mifs-wmi: performance profile fails
+ on TIMI A30 (USB-C only)
+To: okluar <okluar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <CAFbNUuJGjo5OW1JZhO=uXqk07fmzE8yo2Qibe5PoOtHCmoQXpQ@mail.gmail.com>
+ <ccc319f4-24aa-496b-8366-fcfdbd5dbce6@gmail.com>
+ <CAFbNUuKTvJXoNqf-5K7VykOHtFFVdVHTc50aYswC0if4eGQN8w@mail.gmail.com>
+Content-Language: en-US
+From: Mingyou Chen <qby140326@gmail.com>
+In-Reply-To: <CAFbNUuKTvJXoNqf-5K7VykOHtFFVdVHTc50aYswC0if4eGQN8w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The Redmi G 2022 (board TM2135, BIOS RMGAD6T0P1313) implements only
-three modes: 0x02 for quiet, 0x01 for balanced and 0x03 for performance.
-The default profile table maps balanced to 0x00, but this firmware
-recognizes it as the performance mode. Because the firmware does not
-implement the AC adapter type query, setting balanced-performance or
-performance fails with -ENODATA.
+On 11/4/26 06:26, okluar wrote:
+> Thanks for the patches and the quirk. I've built the kernel with your
+> changes and tested it on my TIMI A30.
+>
+> Set performance now works. No more "Operation not supported" error. A
+> quick check in Valheim shows the hardware reacts:
+> - balanced: ~44W GPU, ~1360 MHz
+> - performance: ~49W GPU, ~1440 MHz
+> The fans also spin up noticeably, so the EC is definitely applying the command.
+>
+> But reading the profile from sysfs is still broken:
+>   $ cat /sys/firmware/acpi/platform_profile
+>   cat: /sys/firmware/acpi/platform_profile: No message of desired type
+>
+> And dmesg shows:
+>   platform_profile: Failed to get profile for handler bitland-mifs-wmi
+>   bitland-mifs-wmi ...: Failed to unmarshal event data: -61
+>
+> I suspect the GET response from the firmware for this model uses
+> different values than the ones in my quirk table. So the read mapping
+> might need to be different for TIMI A30.
+>
+> Just for context on power limits:
+> - CPU-only load: both modes hit the same ~50W CPU hardware cap.
+> - Combined CPU+GPU load (Satisfactory): the total budget caps at ~65W
+> in both modes (~32W/32W split).
+> - GPU-only load (Valheim): performance mode shifts the free budget to
+> the GPU, raising its limit.
+>
+> Happy to test more patches or do ACPI tracing if needed.
 
-Add a DMI entry with a three-entry profile table for this model and
-enable skip_ac_type_check. 0x04 is not used for performance: writing it
-succeeds and the value reads back as 0x04, but in three test runs on
-7.2.11 the firmware did not emit WMI event 0x16, which it emits after
-every other mode change. The Fn+K hotkey also cycles only through the
-three modes above.
+Hi,
 
-Tested on this machine with this patch and the series it depends on,
-built as an out-of-tree module and loaded on a 7.2.14 kernel. Writing
-low-power, balanced, and performance succeeds, the profile reads back
-correctly, and the firmware emits one 0x16 event for each (values 2, 1,
-and 3). Writing balanced-performance is rejected, and Fn+K cycles
-through low-power, balanced, and performance.
+Don't top post (reply at the bottom please).
 
-Claude Code (claude-opus-5-5) analyzed the ACPI tables, wrote the test
-scripts, specified the change and corrected this changelog. I wrote the
-code and the changelog and ran the tests on this machine.
+I think the .no_set profile entries are currently missing for your quirk 
+(I missed them in the example quirk).
 
-Link: https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYd=
-W-TUgdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5L=
-D50ISIc=3D@proton.me/
-Link: https://lore.kernel.org/all/BelDdF5woNEBX6dZ3_zJDEbVkifs1pdxEjtQ1yC-a=
-KyZahijFJCllxm0l_SqZ5Hsj61D8wfJNa7uDSuNKmyyxo2S0tZp9QS5yaafeZUxvxE=3D@proto=
-n.me/
-Suggested-by: Mingyou Chen <qby140326@gmail.com>
-Signed-off-by: Yun Wang <7z0423arsenova@proton.me>
----
-This patch applies on top of all patches of Mingyou Chen's v15 series:
-https://lore.kernel.org/all/20261028112742.674847-1-qby140326@gmail.com/
+Here are some methods to get them:
 
-It adds to the same two places as Chris Taraszka's TM2424 series, so
-whichever is applied second needs a small conflict resolution that keeps
-both entries:
-https://lore.kernel.org/all/20261106114300.936782-1-chris@miget.com/
+- Reverse engineering the dsdt table (from your timi_a30_acpi.dat)
 
- drivers/platform/x86/bitland-mifs-wmi.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+- Or just simply print the values in the kernel code (add a dev_dbg 
+statement in laptop_profile_get function)
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86=
-/bitland-mifs-wmi.c
-index a431d3fef7..48a81e0655 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -113,7 +113,26 @@ static const struct bitland_mifs_quirks default_quirks=
- =3D {
- =09.num_profile_entries =3D ARRAY_SIZE(default_profile_entries),
- };
-=20
-+static const struct bitland_profile_entry tm2135_profile_entries[] =3D {
-+=09{ PLATFORM_PROFILE_LOW_POWER,=09=090x02 },
-+=09{ PLATFORM_PROFILE_BALANCED,=09=090x01 },
-+=09{ PLATFORM_PROFILE_PERFORMANCE,=09=090x03 },
-+};
-+
-+static const struct bitland_mifs_quirks tm2135_quirks =3D {
-+=09.profile_entries =3D tm2135_profile_entries,
-+=09.num_profile_entries =3D ARRAY_SIZE(tm2135_profile_entries),
-+=09.skip_ac_type_check =3D true,
-+};
-+
- static const struct dmi_system_id bitland_mifs_dmi_table[] =3D {
-+=09{
-+=09=09.matches =3D {
-+=09=09=09DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
-+=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2135"),
-+=09=09},
-+=09=09.driver_data =3D (void *)&tm2135_quirks,
-+=09},
- =09{}
- };
-=20
-
-base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
-prerequisite-patch-id: 99b10cd2b70d630ab65d8a8bb02c1d4bf89b1a63
-prerequisite-patch-id: 27db041f827872b8be142c310a14c79962154bd5
-prerequisite-patch-id: 74fc3298fa3dceb2224dfc3d2ae4cc6d4be61c01
-prerequisite-patch-id: 254b8455d8a7f56b730e842207d91bd6904a50ce
-prerequisite-patch-id: 9708c81da6b4ed6c2d47eb927efcd64ce4ed2ecf
-prerequisite-patch-id: 2fe8c043993034f1a2cde98b1b2e299987d5ac7f
---=20
-2.56.0
+         dev_dbg(dev, "profile wmi_val=%d\n", result.data[0]);
 
 
+After acknowledging the values, just add the profile entries into 
+timi_a30_profile_entries. For example,
+
+static const struct bitland_profile_entry timi_a30_profile_entries[] = {
+	/* Change this information if it doesn't match your device. */
+	{ PLATFORM_PROFILE_LOW_POWER,   2 },
+	{ PLATFORM_PROFILE_LOW_POWER,   <val>, .no_set = true },
+	{ PLATFORM_PROFILE_BALANCED,    1 },
+	{ PLATFORM_PROFILE_BALANCED,    <val>, .no_set = true },
+  	{ PLATFORM_PROFILE_PERFORMANCE, 0 },
+	{ PLATFORM_PROFILE_PERFORMANCE, <val>, .no_set = true },
+};
+
+Fill <val> placeholder with the values you actual get.
+
+>
+> On Tue, Nov 3, 2026 at 5:51 PM Mingyou Chen <qby140326@gmail.com> wrote:
+>> On 11/3/26 16:41, okluar wrote:
+>>> Hello,
+>>>
+>>> I am reporting an issue with the platform_profile interface on a
+>>> USB-C-only machine.
+>>>
+>>> Hardware:
+>>> - Model: TIMI A30 (Xiaomi Mi Notebook Pro X 15, 2021)
+>>> - CPU: 11th Gen Intel(R) Core(TM) i7-11370H
+>>> - iGPU: Intel Iris Xe Graphics
+>>> - dGPU: NVIDIA GeForce RTX 3050 Ti Mobile
+>>> - Charging: USB-C PD only (130W). No barrel-jack DC input.
+>>> - Kernel: 7.3.1-1-cachyos (Arch-based)
+>>> - Driver: bitland_mifs_wmi
+>>>
+>>> Problem:
+>>> platform_profile_choices correctly lists:
+>>> low-power balanced balanced-performance performance
+>>>
+>>> However, switching to performance fails, regardless of whether the
+>>> USB-C charger is connected:
+>>>     $ powerprofilesctl set performance
+>>>     Failed to communicate with power-profiles-daemon: ... Failed to
+>>> write to acpi_platform_profile:
+>>>     Error writing '/sys/firmware/acpi/platform_profile': Operation not
+>>> supported (15)
+>>>
+>>> Direct write also fails:
+>>>     $ echo performance | sudo tee /sys/firmware/acpi/platform_profile
+>>>     tee: /sys/firmware/acpi/platform_profile: Operation not supported
+>>>
+>>> Analysis:
+>>> This appears to be the same root cause as other USB-C only models: the
+>>> function bitland_check_performance_capability() requires
+>>> WMI_SYSTEM_AC_CIRCULARHOLE (barrel-jack DC), which is physically
+>>> impossible on this USB-C-only machine. The driver advertises the
+>>> profile in choices but rejects writes in profile_set().
+>>>
+>>> I am happy to test any patches on this model. Please let me know if
+>>> further ACPI tracing is needed.
+>>>
+>>> Thank you.
+>> Hi, this problem is being fixed with the following patch series.
+>>
+>> Please add your model to the quirks table before you test the patches.
+>>
+>> Link to the patches:
+>> https://lore.kernel.org/all/20261028112742.674847-1-qby140326@gmail.com/
+>>
+>>
+>> I take a look at your timi_a30_acpi.dat attachment, here's the quirk for
+>> your machine:
+>>
+>> static const struct bitland_profile_entry timi_a30_profile_entries[] = {
+>>       /* Change this information if it doesn't match your device. */
+>>       { PLATFORM_PROFILE_LOW_POWER,   2 },
+>>       { PLATFORM_PROFILE_BALANCED,    1 },
+>>       { PLATFORM_PROFILE_PERFORMANCE, 0 },
+>> };
+>>
+>> static const struct bitland_mifs_quirks timi_a30_quirks = {
+>>       .profile_entries = timi_a30_profile_entries,
+>>       .num_profile_entries = ARRAY_SIZE(timi_a30_profile_entries),
+>>       .return_code_at_end = false,
+>>       .skip_ac_type_check = true,
+>> };
+>>
+>> static const struct dmi_system_id bitland_mifs_dmi_table[] = {
+>>       {
+>>           .matches = {
+>>               /* Change this information if it doesn't match your device. */
+>>               DMI_MATCH(DMI_SYS_VENDOR, "TIMI"),
+>>               DMI_MATCH(DMI_PRODUCT_NAME, "A30"),
+>>           },
+>>           .driver_data = (void*)&timi_a30_quirks,
+>>       },
+>>       {}
+>> };
+>>
