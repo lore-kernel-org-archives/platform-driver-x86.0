@@ -1,13 +1,13 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793967613;
-	b=RzAnkqV0UCEnZMVZCRUPCm0yiBkADAo1e/U2nUlbfDeV1X7HhH+EFi4fv0F7EfoMYPpg
-	 aGugJTbfF+d7BnskMamqnnt1JvCLP2YHE2rHqwujO7ljJoQzFd6hfvOmW8l361XN2F/gF
-	 VVYpTJbwcXWFqnKuQmcUPB0p/I8U9rNeJ0xvqrVGb7r446hg8Oka4eIVFBuTjovdAwzQe
-	 UX0Q9bIqoVX07yJDOgo1jW4B6nsE7JyMWWGOaQAXMKww95wAOobUHZgHHsivifIqt9cgY
-	 4Lj8mjQR+ZHBFFp6pMNk5oZgGuyfmixpTIQqdhOcfLFS8Emy8h751Vm6iqfHWiC2M5A==
+	t=1793967713;
+	b=XAxL/h+YG0Zc8LCu0QXhsUHOI4P6S66JbBoaNFVQjPwC98djKPSdifOnrVMo3YQluhyB
+	 v0e4xO8jeGBVgscgivEgs2YBocQI9eVbudI0nuiGRO3dgoBy5qnR/YJhVRKyVS/fTVYs8
+	 wcxehvwLgO8PnOqeB4ZakA0DKYfw1FWgyTzeqsEj45nxrGue1179AsLpgywttPTrh8uFF
+	 BtAf3eF6vPb7a/nws+oKobU9k8stMlADRZUdF9O3fSNtqgvdTvNerQ0Mx6oelSggQUmXL
+	 KXysdBRA/ukkP4x8fv9NT9oTewk66ydM3ftGA5h3zAt0AV3Ls9+n5CZzdM5vm8ipHNA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793967613;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793967713;
 	h=Received:DKIM-Signature:Received:From:To:Subject:Date:
 	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
 	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
@@ -16,42 +16,42 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
 	 Message-ID:In-Reply-To:References:Content-Type:
 	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
-	bh=sSrqbT9feJNldR+/i/v4Ta0GhXZ5cYa17rpqpHbdf9E=;
-	b=rfWjjzU1uBW02H604gn6hJXZt3e0EBt6cWpKszCOx7btRGPbvvr6aHLFNqtBA7jJ7p5v
-	 d4ianaHIGe3HjG4lEP4eTtYl1ygprS35HrfERUYJGd+L6Z0f7YuTnADKvx/7FNGrcyi7o
-	 fRMd7KPoykYQClzk1Ohri3WlNQk/93HidUTKaL6o0633RVBsnSPCYPJ96gjjtUES/XKYK
-	 5Z8t4lgL4zGQpLXFgJdaVvtRM8QGYyviYEL0pdqTvopJ4V+/XQ+KArfhJ1UYijxeAGvc4
-	 OTVd3ZLy4J5+yDLAKNbopYFBW3G8CU5TcuCv1g3x9AYOZ2+uij5UqkkGG9KUcTdbkkg==
+	bh=yEaZRg5Of0LOYoXjNBnes7giITfqU+0Gn83Hx87w8fY=;
+	b=PFaf/4t8DQdDihYtOubmaSIjjX+zZphYycGk8dir/3NMjKj1CQy0cbX2M/WuLFUofHKY
+	 6YpsYHgm3s8Ie2pa3SQXIdkGIHd8VuM5vH/deT8FqQhzboJEFK6nuMq7Afk/wJKPAedef
+	 Zrae+iYk2MbZUeFqzJ7S9QoK38vqU2QzoCEFOlObPLaVZHPcz87eid4nXYbKESI686lEc
+	 xFfJHOY/8d3nwVdM6gudaQHKAudewqdc2fRKFjAvG8FAmVoy74FfRaTAvI2UvqNbHhtl5
+	 B4OVS/eVPPqBmD2kDVLi0JRzIQPB8DtUc7e52uEdFKB99lKfG8EFaWcn6Wyyq0ZLQwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OFE0slzr;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=brjIi22f;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEF7606A329
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 12:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DE3606A32F
+	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 12:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OFE0slzr
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7347A1F008A4
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 12:20:12 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=brjIi22f
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B5B0B1F008A6
+	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Nov 2026 12:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793967612;
-	bh=sSrqbT9feJNldR+/i/v4Ta0GhXZ5cYa17rpqpHbdf9E=;
+	s=k20260515; t=1793967712;
+	bh=yEaZRg5Of0LOYoXjNBnes7giITfqU+0Gn83Hx87w8fY=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=OFE0slzrjkkx4a/1A91w/OEaCXytB/pRWrGGZ6hxu4BV1kh6fXotYU5SAD6emEjCO
-	 VdZC6mvNpmG5D4HTDjCKuzo3hRRJIpeKonCl48cLl2vJ9nKI5ZhlEccs3AhmuOtfEX
-	 xpCYyDMWHKqDqM99KGgMErhsoAUUoVHrHq68r98afwtl1JuDqJgVnj2xr9Hu6q3/Lz
-	 PLCdYvc548f9GdQdxpCYThehu4uoko5qJd9RXRuUYkD926lCmrvKpWYDG/EdfAYLVa
-	 TASFOg903CHQ+KJCRxJkT1wVaTGh2TNBWEn0ktcGkRko+2FOz+B/B1avpsHyOfc/h4
-	 qdjdSHDXvouog==
+	b=brjIi22fJOLjKZ52VmaWHoL3LCkosWbl8PTFNchmZsPe19Jqs99juhGREAz7pBjwN
+	 sp2qfdOerqxAUtG9S1+Hlx6Evzgi1FxwOn90ugN9bnQ0CNtcAawFkvVpPV+cdZ1zFF
+	 XfPHeQWh/Qet5S8aLocscAhmMJkZC1pi9mZm1mcEB6nH2TJTCy6NgmTy1nRYJF4cAi
+	 mpApgVYDL/a+TTwDMPms8XEfUpsWt8mfUpmtmB5G4fYvrvRr4cYy9ijyhZggUk5Q0k
+	 eUfY8/3elrpHzX/TKDuP6ZiU+LxMiFlPvW8Wi3c69FKU0vPVH+MdjbMCTzxgEK4glT
+	 VXlxk2mfaJ24A==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6E243C53BC9; Fri,  6 Nov 2026 12:20:12 +0000 (UTC)
+	id AFFBEC4160E; Fri,  6 Nov 2026 12:21:52 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date: Fri, 06 Nov 2026 12:20:08 +0000
+Date: Fri, 06 Nov 2026 12:21:49 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -66,8 +66,8 @@ X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc attachments.created
-Message-ID: <bug-204807-215701-y8nH9WCrTq@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-204807-215701-AMC4W8JbaI@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -86,18 +86,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-z00nx0@gmail.com changed:
+--- Comment #358 from z00nx0@gmail.com ---
+Created attachment 311390
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D311390&action=3Dedit
+dmesg for ROG STRIX Z370-E GAMING
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |z00nx0@gmail.com
-
---- Comment #357 from z00nx0@gmail.com ---
-Created attachment 311389
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D311389&action=3Dedit
-ROG STRIX Z370-E GAMING DSDT
-
-ROG STRIX Z370-E GAMING DSDT
+dmesg for ROG STRIX Z370-E GAMING
 
 --=20
 You may reply to this email to add a comment.
