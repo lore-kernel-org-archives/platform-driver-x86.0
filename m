@@ -1,57 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.20
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794084608;
-	b=R8+uFAqOdQO36ZytKO40lTQv9C+H7fBVPX8MaKpssJJjxYnIjEccFxAYFZR8TjIQWwW0
-	 XBh1eCeZUZIlFKAu/VdRje5qVxnfnz3hy5ew/q1ZIiNEME4VTmncKw7I0oC/CTCj6XJ/E
-	 pqO4ocb1tDBrobkJZdA2hDJh3eXk9dQZDTGW1ok64nuA6vKbM88tKSOP7kKDO+fD1oLsS
-	 1xOe+N0nzUlzzRxtJ0A9zl/lEV6iGs8c/twvCp1Y3IPeFqGNpJSNScOyD1v2bfKEvp42h
-	 H/w0U9BOUs9t2NwtQXwMQkBdHeTqv9ptpYupAdP3Phos3/pmjuorQc8gcOb+tLVxQeg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794084608;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=ogu3WYl26VzYnLKTpBw3sq7j0lnDtjUsntu6D8wGtpY=;
-	b=SqRPZUzUBq1PPwZlQE7txwWmJdnoPvWGfehDuEMwMfHzir/Fuo3UXyoLD+Hs4t+nhcCX
-	 u5HjlUhIXBus8cBv2DSpllwpKAlvnGhYjuAIsVN8wy5lAf8tMpIIpwZKWsC7qJk+JXXmm
-	 CcZNjjaZ/zyBY3mYXGSVFlCPy6SjHBVKLnKN1LAhDoC5+gYbeoVT1qSBlb1Q1ZlBpQ4Ux
-	 IKZVLSx+3ebvKNFT+D6GHnH4FXbc+K5XmN0s65rOQ9emFCjnAVvRjykthPxaoLlaElQaQ
-	 DO6chWcFyr36xfaLGE3Z+M2sxH+VsuJUExi5dSwgYaDEoxE4rd966N3+SB2OKfIXd5g==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=modelmiser.com;
-	spf=pass smtp.mailfrom=modelmiser.com;
-	dkim=pass header.d=modelmiser.com header.i=@modelmiser.com header.a=rsa-sha256 header.s=protonmail header.b=I6Rca7cq;
-	arc=none smtp.remote-ip=109.224.244.20
-Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794085262;
+	b=e9NwNWJuZgNnAbcdKSVINFJgm6GZ7YdkFV/y7z/HqajH8hmPJju8QS0DYde7SHsD1KqE
+	 keqgRiitDhqUnZ9rS3vw+Cs2dCJVfpkXh4GPJIqlsor5JzaR3Th3XG8ggH3SECjaP0LYJ
+	 DvzZA+mNdOmgXWNOBkQfhMZSvq2QTK9hgdyhDZgpdmpkHCBtCeEqh3QqEzHqI7jitcIY/
+	 p31o5oJQL63U5g50rVRJpJ644ENitM9vANvSZ7UOlRj6vpSxjF5a82hPgyiBFOPW+yO63
+	 SFBPGbGPrW9Mm8A6t27AixqAjmKn5NT4IHY6im57zj+/IMOW5Dvc0n9hSfPhdYqGjbw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794085262;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=bubpN/uxsjHzDvEIVexuxwjbif9uTaF8rKGPq8z7hc0=;
+	b=VAq5pqvgnwOnyr8fddm5LMKM/2q+kFGkmo75ppMODKE5d317cU4WKXwTQkhA3GSt54vg
+	 c/dcNosIJCNxgx3c0yuT7IX+5PbmpVRuT6fRN8PYbLpmEtzAfsZQSzi45v0wx/J3PY+J8
+	 nu2x0EZJ4coO8q/cUGxMPmC+bU83bIOtFeAkpMg+EImdfMI6k+5CwGN/fDZ8+LpiKXjOV
+	 2u0rB5sLr9z/Pb1dM/tTnYD7owp/19SlPmo2PD5qkMDPJjfpZ6TzvNeku+30GfZcxxJmN
+	 19RH93ZmRd5+HWCvDKXhFUn0c7L1KPHHQwswhEPLkt+CWvDGw2dAdFshvZejjwHk9KQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=qk+U3okp;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F42606A33A
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 20:50:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1F42606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=modelmiser.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=modelmiser.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FF8606A32C;
+	Sat,  7 Nov 2026 21:01:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 87FF8606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=modelmiser.com header.i=@modelmiser.com header.a=rsa-sha256 header.s=protonmail header.b=I6Rca7cq
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=modelmiser.com;
-	s=protonmail; t=1794084603; x=1794343803;
-	bh=ogu3WYl26VzYnLKTpBw3sq7j0lnDtjUsntu6D8wGtpY=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=I6Rca7cqtH06AZZhUiywwWgrBwZ6IGtSDHaudMuvC6036TChEUJ91VBVrxuTO5qC6
-	 /qlJ/66HqFuNVWDKsEKB/zaF51qLgUlbibcHeCneQEdKBOvAl0Zu1m6He4Z2J+DlEv
-	 fXDzBmRcdrS8RDINE/zcgi3ruelPTruwxGEfwO4n0d+QmVZs4pz5gw+tkFxoSTDZco
-	 yLJMwb679wNwkPCWmxlyjPCCjAfeBYQ6UhFqEz4kpggb9V8alQcj3ZvSrkfp2L2Gy2
-	 eZPfSDc6Txinnv/RuQnNC6+K9C1mdJ5wTWpEXYDVBWmO3ISlpW9p1ci45OPf18Blhh
-	 WX3wZcwLSorAw==
-Date: Sat, 07 Nov 2026 20:49:58 +0000
-To: =?utf-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Chad Aldreda <ca@modelmiser.com>
-Cc: platform-driver-x86@vger.kernel.org, stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-smo8800: keep the state until the last file is closed
-Message-ID: <20261107204950.88952-2-ca@modelmiser.com>
-Feedback-ID: 232753253:user:proton
-X-Pm-Message-ID: 0531ab98a8600ea4e4b0ace56693e6f3eec95f87
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=qk+U3okp
+ARC-Seal: i=1; a=rsa-sha256; t=1794085243; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=W3KVlxQYKam3+YezudVdTCNVvIUU1S8bG/sbBN8aW1UrDG+lrto3flcZFRvrYQkQIF+r8oSEs6Qdj72PvaXlfg7DyqAZyOZ4oGw7YJXQZvTvJMtoHYhpJ9YrHkI6vmES1lzCVfwQv3wZVSk1ick6mpvYsVlZv9Pamm4omzdwlmI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1794085243; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=bubpN/uxsjHzDvEIVexuxwjbif9uTaF8rKGPq8z7hc0=; 
+	b=QUw24WDax6ceFmR2tNkOwT/oCwHbE1+CeudG9wdKfSUwTNpzLVCrvdAhwqk2OaNJlM1imkPcD+9Ta5Pp+8IfXuJGEb1nQljaUQfFgqoS4I29VzKk5PIPF4enQm0NC3WZELH6b6jrRrSTWWvfaSfaZ0AAfSJfeEW5abxlVoef0vM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=qk+U3okpjMaTGpGMpMcfIRAHcnZOEuk8rnqZ3wVyxZK0bmIw5mIJijXJ+T4mVUuFC7uQaQBDjISY+IkO/IljZqzhf5sp021qAR8WmVdPmAUUIvK5TxXgUaoCAHbdwJYLSMYHEp4tDIskb/R7eXIl0IXF8DTHQ9tN586lGxfieE0HM7aVhBjZOEsTQKUYShimc5mMvtu+oXoVflDqAhvkOc8OVt5qfrUT0jHRevntikucMH3f/bf9xP++we2J5PI2a9MuMTdTfEen+zAkyd8JgFc6jWw+SxdDAqQ9LsNWTbP6ajs28izpBnpAtnIV5WvsLMieddhhBleJo54jdFBWmQ==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=bubpN/uxsjHzDvEIVexuxwjbif9uTaF8rKGPq8z7hc0=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1794085241614579.3390642773406;
+	Sat, 7 Nov 2026 13:00:41 -0800 (PST)
+Message-ID: <f863a130bbcc14179d28c9a796dbdbc7ae2c813a.camel@rong.moe>
+Subject: Re: [PATCH] platform/x86: tpacpi: Mark charging LEDs as safe
+From: Rong Zhang <i@rong.moe>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Josh Triplett
+	 <josh@joshtriplett.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
+ <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,  Thinkpad-acpi devel ML
+ <ibm-acpi-devel@lists.sourceforge.net>, lkml <linux-kernel@vger.kernel.org>
+In-Reply-To: <11a8a3448ea82f594bdd46f380612ba9d703ccc9.camel@rong.moe>
+References: 
+	<a14640f58be48d4912ce5808faea1402ad7f7ad0.1793906572.git.josh@joshtriplett.org>
+		 <19f5b65e494ed710a65927311cb68535c87953d3.camel@rong.moe>
+		 <au5nUp4extfupCpS@localhost>
+		 <20d824152b1a889b636ef9877b4d1a8e06dcf460.camel@rong.moe>
+		 <c70af6c5-3d95-44c5-8f3f-b014178234c9@app.fastmail.com>
+	 <11a8a3448ea82f594bdd46f380612ba9d703ccc9.camel@rong.moe>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 08 Nov 2026 04:55:36 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -61,200 +78,64 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.62.1-3 
+X-ZohoMailClient: External
 
-struct smo8800_device is allocated with devm_kzalloc(), so it is freed
-when the driver is unbound, but a /dev/freefall file opened before the
-unbind still reaches it through file->private_data. release() then
-clears misc_opened in freed memory, and a read() blocked in
-wait_event_interruptible() is not woken by remove(). It sleeps on a wait
-queue inside the freed structure until a signal arrives, and then uses
-it. Unbinding the driver needs root. With KASAN, closing the file after
-an unbind gives a slab-use-after-free in smo8800_misc_release(), and a
-blocked reader interrupted after the unbind gives further reports in
-smo8800_misc_read() and prepare_to_wait_event().
+On Sat, 2026-11-07 at 23:25 +0800, Rong Zhang wrote:
+> Hi Henrique,
+>=20
+> Thanks a lot for the context and opinions.
+>=20
+> On Sat, 2026-11-07 at 09:34 -0300, Henrique de Moraes Holschuh wrote:
+> > Eh, I better voice something about this...
+> >=20
+> > 1. The EC does use the battery led for alarms, and it also has specific=
+ high urgency events when it thinks the thing will catch fire or going to f=
+orcefully cut power very soon, although this was a relatively later enhance=
+ment.
+> >=20
+> > Thinkpad ACPI is supposed to log a critical warning and it should attem=
+pt to initiate a system shutdown (power off) if it ever receives battery em=
+ergency alerts.  I was explicitly advised to do it this way by Lenovo bios =
+engineering, in private, a long time ago.
+> >=20
+> > 2. Module parameters are the way I dealt with this kind of thing in the=
+ past, especially if they are not mutable at runtime.  It is vastly better =
+than debugfs for this kind of thing IMHO and the fan control was implemente=
+d that way.
+> >=20
+> > But the default must be the safer behavior.
+> >=20
+> > > OTOH, CONFIG_THINKPAD_ACPI_UNSAFE_LEDS should taint the kernel on the
+> > > very beginning.
+> >=20
+> > I don't think tainting makes sense as long as it is something you eithe=
+r have to compile for and a distro would never do so as a default, or somet=
+hing you need to load the module with an explicit parameter set.  It will n=
+ot cause system instability, unlike, say, poking around the EC registers di=
+rectly.
+> >=20
+> > A module parameter is a decent compromise IMO:=20
+> > Debugfs is too reachable for userspace to mess with without actually do=
+ing an informed opt-in.  People respect module parameters a lot more.
+>=20
+> Using a module parameter also makes sense. I will resubmit my patch [1]
+> to adopt the approach, probably the next week.
+>=20
+> Speaking of tainting the kernel, I would still like to hear Mark's
+> option. Note that a module parameter may also taint the kernel as long as
 
-Allocate the structure with kzalloc() and give it a kref. open() takes a
-reference and release() drops it. The device's own reference is dropped
-by a devm action, which runs after smo8800_remove() on unbind and when
-probe fails. misc_open() calls ->open with misc_mtx held and
-misc_deregister() takes misc_mtx, so the device reference is held
-whenever ->open runs. Once the misc device is deregistered, by remove()
-or by the probe error path, a removed flag is set and the wait queue
-woken. A read() blocked at that point returns -ENODEV unless an event
-arrived first, and a later read() returns -ENODEV.
+Oops, a typo here.
 
-The problem was found with a Coccinelle script that reports device nodes
-in devm memory [1]. The fix, the reproducer and this message were
-written with an AI assistant (Claude) and checked by hand. The fix was
-tested in QEMU, with KASAN enabled, using a test-only module that
-registers an "smo8800" platform device with a simulated interrupt, not
-on Dell hardware.
+s/option/opinion/
 
-Link: https://lore.kernel.org/r/20261106193517.3267013-2-ca@modelmiser.com =
-[1]
-Fixes: 4738d8aabe89 ("platform: x86: dell-smo8800: Dell Latitude freefall d=
-river (ACPI SMO8800/SMO8810)")
-Cc: stable@vger.kernel.org
-Assisted-by: Claude:claude-opus-5-5
-Signed-off-by: Chad Aldreda <ca@modelmiser.com>
----
-The Coccinelle script reports a devm_k*() allocation when it, or an
-address inside it, is passed to misc_register(), cdev_add(),
-cdev_device_add(), video_register_device() or v4l2_device_register()
-in the same function, or when the allocated struct embeds one of those
-objects. It reports dell-smo8800 for the misc_register() of
-&smo8800->miscdev.
+Thanks,
+Rong
 
-Reproduced in QEMU 10.2.4 (q35, KASAN, booted with kasan_multi_shot). A
-test-only module registers a platform device named "smo8800" with an
-interrupt from an irq_sim domain, so the driver binds without the ACPI
-device, and a module parameter raises the interrupt. A process opens
-/dev/freefall and the driver is unbound through sysfs. Without this
-patch:
-
-  close after the unbind:                  1 KASAN report (release)
-  read() blocked across the unbind:        not woken; after a signal,
-                                           7 reports (read, wait queue,
-                                           release)
-  unbind, bind, then close the old file:   1 report
-  close before the unbind (control):       0
-
-With it there are none: the blocked read() returns -ENODEV when the
-driver is unbound, a bind after the unbind works, and an interrupt
-still wakes a reader with a count. Not tested on Dell hardware.
-
-An interrupt that arrives while remove() runs, between the reader's
-count check and its removed check, is dropped and the read returns
--ENODEV. remove() frees the IRQ before setting removed, so no event can
-be lost after that.
-
-kzalloc() rather than kzalloc_obj(), which first appears in v7.0: the
-patch then applies as is from v6.14. On v6.6 to v6.13 only the include
-hunk needs adjusting (those trees have no dell-smo8800-ids.h); v5.15 and
-v6.1 need a manual backport (remove() returns int there), and before
-v5.15 the driver was an ACPI driver.
-
- drivers/platform/x86/dell/dell-smo8800.c | 35 ++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x8=
-6/dell/dell-smo8800.c
-index 8872f9b57fce..8880bf39f895 100644
---- a/drivers/platform/x86/dell/dell-smo8800.c
-+++ b/drivers/platform/x86/dell/dell-smo8800.c
-@@ -13,9 +13,11 @@
- #include <linux/fs.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
-+#include <linux/kref.h>
- #include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
- #include <linux/uaccess.h>
- #include "dell-smo8800-ids.h"
-=20
-@@ -26,8 +28,22 @@ struct smo8800_device {
- =09unsigned long misc_opened;   /* whether the device is open */
- =09wait_queue_head_t misc_wait; /* Wait queue for the misc dev */
- =09struct device *dev;          /* acpi device */
-+=09struct kref kref;            /* device + open file */
-+=09bool removed;                /* the device has been removed */
- };
-=20
-+static void smo8800_free(struct kref *kref)
-+{
-+=09kfree(container_of(kref, struct smo8800_device, kref));
-+}
-+
-+static void smo8800_put(void *data)
-+{
-+=09struct smo8800_device *smo8800 =3D data;
-+
-+=09kref_put(&smo8800->kref, smo8800_free);
-+}
-+
- static irqreturn_t smo8800_interrupt_quick(int irq, void *data)
- {
- =09struct smo8800_device *smo8800 =3D data;
-@@ -60,11 +76,15 @@ static ssize_t smo8800_misc_read(struct file *file, cha=
-r __user *buf,
-=20
- =09atomic_set(&smo8800->counter, 0);
- =09retval =3D wait_event_interruptible(smo8800->misc_wait,
--=09=09=09=09(data =3D atomic_xchg(&smo8800->counter, 0)));
-+=09=09=09=09(data =3D atomic_xchg(&smo8800->counter, 0)) ||
-+=09=09=09=09READ_ONCE(smo8800->removed));
-=20
- =09if (retval)
- =09=09return retval;
-=20
-+=09if (!data)
-+=09=09return -ENODEV;
-+
- =09retval =3D 1;
-=20
- =09byte_data =3D min_t(u32, data, 255);
-@@ -84,6 +104,7 @@ static int smo8800_misc_open(struct inode *inode, struct=
- file *file)
- =09=09return -EBUSY; /* already open */
-=20
- =09atomic_set(&smo8800->counter, 0);
-+=09kref_get(&smo8800->kref);
- =09return 0;
- }
-=20
-@@ -93,6 +114,7 @@ static int smo8800_misc_release(struct inode *inode, str=
-uct file *file)
- =09=09=09=09=09 struct smo8800_device, miscdev);
-=20
- =09clear_bit(0, &smo8800->misc_opened); /* release the device */
-+=09smo8800_put(smo8800);
- =09return 0;
- }
-=20
-@@ -108,11 +130,16 @@ static int smo8800_probe(struct platform_device *devi=
-ce)
- =09int err;
- =09struct smo8800_device *smo8800;
-=20
--=09smo8800 =3D devm_kzalloc(&device->dev, sizeof(*smo8800), GFP_KERNEL);
-+=09/* An open file can outlive the device, so it holds a reference. */
-+=09smo8800 =3D kzalloc(sizeof(*smo8800), GFP_KERNEL);
- =09if (!smo8800) {
- =09=09dev_err(&device->dev, "failed to allocate device data\n");
- =09=09return -ENOMEM;
- =09}
-+=09kref_init(&smo8800->kref);
-+=09err =3D devm_add_action_or_reset(&device->dev, smo8800_put, smo8800);
-+=09if (err)
-+=09=09return err;
-=20
- =09smo8800->dev =3D &device->dev;
- =09smo8800->miscdev.minor =3D MISC_DYNAMIC_MINOR;
-@@ -151,6 +178,8 @@ static int smo8800_probe(struct platform_device *device=
-)
-=20
- error:
- =09misc_deregister(&smo8800->miscdev);
-+=09WRITE_ONCE(smo8800->removed, true);
-+=09wake_up_interruptible(&smo8800->misc_wait);
- =09return err;
- }
-=20
-@@ -160,6 +189,8 @@ static void smo8800_remove(struct platform_device *devi=
-ce)
-=20
- =09free_irq(smo8800->irq, smo8800);
- =09misc_deregister(&smo8800->miscdev);
-+=09WRITE_ONCE(smo8800->removed, true);
-+=09wake_up_interruptible(&smo8800->misc_wait);
- =09dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
- }
-=20
---=20
-2.43.0
-
-
+> module_param_unsafe() is used, and multiple pdx86 drivers have taken the
+> advantage of it.
+>=20
+> [1]: 20261107-tpacpi-debugfs-unlock-unsafe-led-v1-1-69b1f1e10c2f@rong.moe
+>=20
+> Thanks,
+> Rong
