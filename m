@@ -1,111 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.148
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794054866;
-	b=C0wjFHlqzdzSsvhKPE+xFXgczHKnGsJxRadoC0zjf8/SMZVfDUcHwdRFziF8A9SQ8iEB
-	 +zTME1cv8D47M7nf/yzEgsEt6ZwbRWjARvRrr1oCM3UYUVu0L1GCWA4Le7YgRXbFMkQH+
-	 xtLLtChbXytiXfXfdpB5UkBr6Yku4BT1Ulr6iTDZZ02m7+t3+pEDhTCgYX4/XRiE8bt0U
-	 8fMvud8W9W9tWIrReW6J6q5NfqpTWgKdXVC7+KBVL1aGUaHnKXGypOltYSoDo4fwWtN/M
-	 rplJNfVa/pdYJ+H2i2wXcSOg4vDNw6mSC/QJwb4XBHn44kV8/hNBN/1dc+sZzrMHtCg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794054866;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=9W0gqXHySUVAdfm5cgv/j9VwTU1fsDH68oG9t0v3Rrw=;
-	b=GWhVk8kvwq/+57i/Qs9sc+GwHNorNUcb+9/xEGkvKPcNChg3mwfqyw0v/gZZptbc2v/F
-	 fM2EQSKEPqhnO0zAs8eferohCYW0mMjMINmHTSh28FTifZI+NugewRbgINuola2MuSO8+
-	 3JLfqum4MHT5KekRJY/EcOsdffR+t9ySn1/5tsk4W8djaf6gXVtkkPbCXq7IhuXwLYj+1
-	 bLPpIpfRJJskxVosU2xF+ggu3OjWiCV/efHsH5j2i0BbZwQzkJy1vYfTqS8TYwjzwW10t
-	 C7/0RN3ROcu6hxuYL365U23PnpqVPU2PID+a5EVVIoDRzaPL2wMwiiwoeCGn83XHkMw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=hmh.eng.br;
-	spf=pass smtp.mailfrom=hmh.eng.br;
-	dkim=pass header.d=hmh.eng.br header.i=@hmh.eng.br header.a=rsa-sha256 header.s=fm1 header.b=KcEnS467;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=LniY3leB;
-	arc=none smtp.remote-ip=103.168.172.148
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.169
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794057860;
+	b=qv3so9WRAGb2ykYwVok8ghGeSKLLmb+RENdghzLwKMn7HMJNc/cYct+bz500+oyojUKb
+	 bVo0H3BOSUrMkaRlsP4Ytj7UgdNrQEboA2bTQPApKrEJK48XIrpfaLvi/MPYGDYTjIzRH
+	 a8LJUVOmgbarkv22RcSUoFExJUFm/C0BHEahVVc+XbogGlrlRrjd2pJuf1eQnw6yDzXq8
+	 YkA0ZN5rIPX+HaQ8XLYv7EyTVF7cXMXlg6nWOMJm7qm+Txpz7HpQYhKF65DDz029uWwSZ
+	 gxicU0e/AeB1D3E3BxrJbgsCdTr9aUUXS/4WR0vufAicmCddhBEbdCWcNhTvLiHihCw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794057860;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
+	b=h6KnfhBqWSgzb06a0pzfsKMamsJxb52AmSqnBaCRpX9mEsNeU1nH9fCCQZ9s48SIPo7L
+	 UppE0YPeDr8VTXgfQP9mfba8HG5G7dE7waATO7LnRo4sOpFrqvMTFWj3p5SmRGBEYYFxT
+	 Lm2+ou8qJ/UskkDVjKHnPlJ8Cy9GuuAtPClZwo2/YiSnPNPp4r6jMOPaWLa2RwQSeixyp
+	 LLHZCkcj932HN3uOFCvPN7M1Y4A3cz9rxIGH1JZNbEgS+DKZy18YI0DTwXI/n4ykmwag7
+	 /xnEvyDicDTaufZkO2ThOdHNcoOQlpI7Q/24emyLaGaw+5E4o4bpYnqYgRv7t8FHa6A==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="egt/9Ydq";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.169
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A109606A32C
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 12:34:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A109606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hmh.eng.br
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hmh.eng.br
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3BB606A326
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 13:24:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E3BB606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=hmh.eng.br header.i=@hmh.eng.br header.a=rsa-sha256 header.s=fm1 header.b=KcEnS467;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=LniY3leB
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id 765DAEC01CF
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 07:34:24 -0500 (EST)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-03.internal (MEProxy); Sat, 07 Nov 2026 07:34:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1794054864;
-	 x=1794141264; bh=9W0gqXHySUVAdfm5cgv/j9VwTU1fsDH68oG9t0v3Rrw=; b=
-	KcEnS467ndIClp5C6PbG/a6K6E/5pLkya/ZZ0bpm6nb6xUHJbJzV/fqW+abxrnSB
-	YRq5tQJb3Lop+7BEw7aiGyNYes3vmPIBxY9QNw8aWzNx+a6kk8Ao6Ly/9U+smyIV
-	dc51GKjYz2Nd21XJNEw71peaGVaLNuSW77iYSA3BzcGw6toZ2CzCv9vkZ+vA30FA
-	u9eAANWPD4sB56BD/UByqS5thHy7+cHj5xZrKxZOfu4BHpW033MmbBe3MnKkdDjs
-	Aw4Z94I8znq0GT1y/TAIDSvjOVWzHXAT8ms0wG95tsRPWvqH0xRltEOQRhTn3+3v
-	c4ekqrIjRCuBpK4qX7sXoA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1794054864; x=
-	1794141264; bh=9W0gqXHySUVAdfm5cgv/j9VwTU1fsDH68oG9t0v3Rrw=; b=L
-	niY3leBDGVSIScktI7pKt4gjtTMRMddDx2am7Hj3qDvfNt1iPc/Lgs2Yfzu/O7Nx
-	/c09yo5AJWxQoMqN6YDEJfBeXMDGmyTjJILlTAEWDh1xcujlnfqlDInPkQrI2p+y
-	n/Yzu27zky44xqX3IlVDzNlrmKitIiiOKWJSpqj+uqsS+S8g1bhgDb0F/oABdu/8
-	QYipJCm0QsH/KCtAKIDMPkLe9u0NZgVpgQZ8XBFqxMiwTzofSZ75NVo7zFDSpnnG
-	VI1f+jqB5F0m9fDJ92gSi1p+92PD/2GQlzAwCPdJBGjAXOYPMcNBiRb7WH9FQr+h
-	rQasJlwxXyC4EYnkf5fLA==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=hmh.eng.br a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1794054864; d=hmh.eng.br;
-	mf=PGhtaEBobWguZW5nLmJyPg==;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:mxc2pX/mgqcZmtmn03sE5Iz4zUJxo+SIgSiMWoYTATLVy8x
-	QAO0B1CHCtPUVDQpsYaKzTsc4U/nX2TQhI7U3PiqeZ9lovgglMnTfX9bQ0ySZf5D
-	9CYzNSd1In2N+nhzde6nTq9BwpmP3VmqryMqlGvSqJXp5r2d/stygNgqXlNLbRwB
-	U0QFSYLkr3YBYSCemH/bd4MVENpa6nVeBV8DGpelZULHuJ902O6+NWP17zBXnbSJ
-	n2QjwkFoSRdYZIIrxQ58jxnp+jdajgRkaBvMHgAI3a7nJuHQUh1WaQnYKEgeQ/nO
-	RRoYc+cSfAnM9bNQuqx7yhc9geRJisOhj2hOyaw==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:op/+dAocpZMiuBJeSEBQkYVcxAYa42blk0YlxQy9vM4=:6zjITNMaD/z2lGUZax68niVBqihsiRxpOtcZqfJiCuY=;
-X-ME-Sender: <xms:zxrvalE0UMu8WQlPjSJllvDNbGhsSRhnwP76DHFIMvMVO0_z3XHXfw>
-    <xme:zxrvalLgYfQQCl-jfMkahEYCX5i3CVXNEny7fgvPZ9chsjgee2huDDWrwfSqlfn8v
-    OjX4a0YmTx6-BLjE71zhVs4nWdxODqnzly4ZuLwnMcUAefWlPI>
-X-ME-Proxy-Cause: dmFkZTGvO4ynNH4DhsGblKpSxWFZ/omv9JAQSsnOL681JtoOZ0QN/UGJbVyR36yNilLqIz
-    GZAG2UXgMqULQPNxKC8OMOy3m2LnLVf6MNpt3DM93/pSn3iU0LMRardGYDKKtN3XYSp6z9
-    EwGSMFbstxVN59e+Bqe5CDkWBJ36Hfev4eb/mvIoM2wR5Z+L3g+NI2CsOZxLB5Fth7keYT
-    t96vZYFD2tYKJylTwE7+nh2vMAl2RT3QGoayzCAWqTM25Cn0h+2OMO5mOarwqC4AVGBKkR
-    nvtxfT09aUGpxounNJvgzGAHusHgaGcG2l6SWkNx0JW9qRAs1C+tQaOXvwIhhwKxi0HMAK
-    VDiQvCpToWCiQ1eXxAdLK/kcex6EQq3dDkkxXF/OJqalxDBxPp3dZu+PdKDH7FnCUySul6
-    WMPJPKmartknX2m49VobJ7CjGXNkKP2jpbpGocm29ZmVQXK0nPfOTRAWMX3MZbjSpiT+vj
-    8mmn6Eb3phsGKUrzdPjbJ0VKY3HBp68mojuzlsabTs7mv3C+CR3r9jgeMMYXat/fRXWpBk
-    xLn2iYRyzuef5LjjtUWzeCRYwqz21CFYkqkZjjYS5isnkZHGsmIMP+CvxoZzUNMmSIpU8S
-    NiLEspcnL5rm98qdAYuPCq/gqQ7cAlJGsNM6QZNjXMVZ/+/jCEaWhUIhu27g
-X-ME-Proxy: <xmx:zxrvagmRCeIHSBow1YWURzHluADVVNg2OkOztyu14E-CWHSFcV-f0g>
-    <xmx:zxrvai7YIYmOcEX0ciMdVLwZ06ZYGGP9-HBKjO4B2Xuz_YOSqC_-EQ>
-    <xmx:zxrvapQ3KFaPsvtPqSSSlEQ_-ztDSDLYh4HK6XFB5nCgIEpE3TSvxA>
-    <xmx:zxrvaowZgT7__y9Go_-1rzfcmAy2DFI-V1O7Uzn90DcTfvvCuUQEuQ>
-    <xmx:0BrvajrY6kkPv2sGdD_gbXnAaAL93I4nW7ZYbOIMxilrHPGZrCS8I0c->
-Feedback-ID: ib67041be:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 44F86182007E; Sat,  7 Nov 2026 07:34:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=egt/9Ydq
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-89f28c3ac7bso574365b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 07 Nov 2026 05:24:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794057860; cv=none;
+        d=google.com; s=arc-20260327;
+        b=r4TzKaWruAgHqnoRfG3ykKnkdawbQLjKs40TC/e+eEGWMVJg1QnBXQPCkk6amtiUGb
+         vOGL0xmmZ5kK68dG5Pb6jLL3CUTbgP+VdsbnuK/CJLAJToNIg0Bah5Wd1vNxfxWYHNG3
+         9PLjot5+BEsG6yFnhKwaeIx6YGi2cIEvfpSxNcU9kZ/HM4eg/yxwUih/GYSSVCSmug39
+         bxH8EKrPOQDuSNeuZ76bOJDan6hwRCo9OKV/xUho+0UygvVoyyV0Xc19EruhKMaG4M++
+         MJBOTRgvm9KzLQduG6zlDNVgIpIsGlBB0MTdowIRCkPbxm19Cm+6EszeGvxc5iT8M4T0
+         XoNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
+        fh=A6k1kTFTakE6XNF60Clq2D2FRhejemBAL0GbZgMEpOc=;
+        b=P0/to+ZK9zRxmhtuerJnojAU5GF0Ib8G4WH7bFzianMwZq/1Ccu5kGLuWyYaQsDRJI
+         zbp9FRywCZ53xLrWB4QFCMIo5xd8bAxnFLvIcDD4Pwzs8PO5Dys3ArzJH+aXD8yZ9ocS
+         hBq5Fww1YVSDPxhH5WqcPZTBP85tWyBmfr9jHGYpBv+fRUxmCPlk37m3FyEMxTnvJhqK
+         ZOJ64uGVxzB5Sk7EQ1EFGDtcT0XiZqVG8Aj7RtBF82GmUh2wPRI5f2tuj33Tm+kWGh27
+         QpuhbFxzSNtBs7Nhfo/3S8oPOgdxsIcewctC/IknP2GCdtPNcCL41wy8Aj/1kdEGLjpx
+         y7iA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794057860; x=1794662660; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
+        b=egt/9YdquNPXu8FvBII2kA5NnP+1Is4C2I3wbE/15bbbcqw0QV21/Jb6Xy3qHTVI37
+         WI09SrRKEfq8EZXttEBAFckJTz5wIQqdier6ICFf0EvMnOStSBZY9p4GD+iqWkSgYanl
+         6h0SUEu7N3EyG2ow6t08i+BSWLy+6AGLAdOahKL9yTRg0YkK9xlItZlHLzeFTmwzhXjQ
+         IKM3TWi1qBJUYMxJw0ltFs/q7av/xMOQ/mTK3ODWtpquJFFEt/knZ317IrLdu25zw3ZE
+         zdhnH2CZdF9lHs8cSxR4n/TEm8cBtaJ8S0jNuTd8v17CmRfmFSn5WqWDCtZurN5ai13N
+         cZzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794057860; x=1794662660;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
+        b=ng/3R+KmiDVJgQMB1pt0/N9a9TBYmsOGPYcnVhNz4vDSF5QpOkAF4YiVU01F64FWNP
+         7rc9prsPtSwGTm4ePMeGaCcBuFLQby9GEfi6kPR9OGmTHhJUD6W8DoYVYLB9APhDRRUT
+         TjAf/ub3iQPPCuD09hBHtE+FCy63RxyOlsJPLrDe1/Ntd/DkQsj0hb0RdLhuH+Ei7NnP
+         Eev1tZxGwrWdVk7RrudjiXVb0kVdbQ1CoyFfpi5e1kkCdPZMU4ZU9KhX3/6fHobTVYyn
+         sYMlc15ixvPaIUluKc2KtFRkJoPKenBDKFiiPwxComJVC6hSCzNKWtb1cPPc5wnL2szo
+         r+rA==
+X-Forwarded-Encrypted: i=1; AL+hErGGQXxTzsz7ba5jy1JzpJE9pTWZx316T8nEZgZKnaNCgHDsoSUs/FBA8NIGZhxB/Q7IDsUzpsTzBr87SpcoMT04BITB@vger.kernel.org
+X-Gm-Message-State: APuU4Z8KyT/6sjrqp0QkTrvmSdptMP8eBRDnTgm4REG5c1f+8B3Has+L
+	+m18TSdIFj+n6M9c/EQ7rzfVZX2QFB2e/u4yMw0iHna9Rl33OzzwIu10FEdcEkXPgnZ+5qPEPlw
+	mNJGJlcmmsphboQLYEnLXVriMAGWsu20=
+X-Gm-Gg: AYBFou1E81lREoOo0VXBVM5F9HQw2bTW5hD5dmmfHAHlPIWrrxSrP7Yi+5nmb/P//2b
+	XSEIFh6WrdGgk5L0tV1XxZZChNQbADi9JGRvB4+QIFCKLbPVU2HrWyAF/7LA67nyezdW10Ew6e/
+	H28Pv2WOr/kUDBHE2/Z3O23xQEfa5BdgTdZqjKPv8yiiR1KbEqeyrVpoJQ7uPLBhJGmy/OEyo52
+	SiHQcALE136POWvj9sOibOQ1twz0W4mypcacbrr2ZVp4m/22kWqcuVLF90/c3k6Z6/EgeuheKL0
+	DXkBzAcPj0R/pNHFEu0FnHHjM3Qd+E4p7ITWGu+4vxfrQYedix4uK/owIv1p+h1KUixrNHy2cW2
+	U4BgucG5WqqX7MqCHkTMFe2BfZLqoSLNXw2r690rR3j70qNEjCJJj2DM/PaUc0s+SGvb5
+X-Received: by 2002:a05:6a00:8c05:b0:89a:19ae:10e7 with SMTP id
+ d2e1a72fcca58-8b37be50e42mr5386306b3a.42.1794057859877; Sat, 07 Nov 2026
+ 05:24:19 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,45 +101,48 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AJ6AS3VwzXO7
-Date: Sat, 07 Nov 2026 09:34:03 -0300
-From: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
-To: "Rong Zhang" <i@rong.moe>, "Josh Triplett" <josh@joshtriplett.org>
-Cc: "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Thinkpad-acpi devel ML" <ibm-acpi-devel@lists.sourceforge.net>,
- lkml <linux-kernel@vger.kernel.org>
-Message-Id: <c70af6c5-3d95-44c5-8f3f-b014178234c9@app.fastmail.com>
-In-Reply-To: <20d824152b1a889b636ef9877b4d1a8e06dcf460.camel@rong.moe>
-References: 
- <a14640f58be48d4912ce5808faea1402ad7f7ad0.1793906572.git.josh@joshtriplett.org>
- <19f5b65e494ed710a65927311cb68535c87953d3.camel@rong.moe>
- <au5nUp4extfupCpS@localhost>
- <20d824152b1a889b636ef9877b4d1a8e06dcf460.camel@rong.moe>
-Subject: Re: [PATCH] platform/x86: tpacpi: Mark charging LEDs as safe
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>
+Date: Sat, 7 Nov 2026 14:23:43 +0100
+X-Gm-Features: AclHuK8W3wLee-SC_bINep9sAVMsLbYP6ki1_B-6wv6M2M-O8zCmkC4I3YCdlbc
+Message-ID: <CAENjc+w0Rqy=kDSew7XtNJCSvyPiXPJ5faWdmCr5RGYFhpunCA@mail.gmail.com>
+Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: Add Auto mode support
+ with dynamic max_brightness
+To: mpearson-lenovo@squebb.ca
+Cc: Derek John Clark <derekjohn.clark@gmail.com>, hansg@kernel.org, hmh@hmh.eng.br, i@rong.moe, 
+	ibm-acpi-devel@lists.sourceforge.net, ilpo.jarvinen@linux.intel.com, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	vishnuocv@gmail.com, vsankar@lenovo.com
+Content-Type: text/plain; charset="UTF-8"
 
-Eh, I better voice something about this...
+On Mon, Feb 23, 2026, at 6:19 PM, Mark Pearson wrote:
+> Hi Hans - do you have an opinion on the path forwards?
 
-1. The EC does use the battery led for alarms, and it also has specific high urgency events when it thinks the thing will catch fire or going to forcefully cut power very soon, although this was a relatively later enhancement.
+Hi all,
 
-Thinkpad ACPI is supposed to log a critical warning and it should attempt to initiate a system shutdown (power off) if it ever receives battery emergency alerts.  I was explicitly advised to do it this way by Lenovo bios engineering, in private, a long time ago.
+a data point from a user, since this thread seems to have stalled.
 
-2. Module parameters are the way I dealt with this kind of thing in the past, especially if they are not mutable at runtime.  It is vastly better than debugfs for this kind of thing IMHO and the fan control was implemented that way.
+On a ThinkPad X9-14 Gen 1 (21QA, BIOS 1.25) running 7.2.15, the
+firmware already enters Auto mode on its own: Fn+Space cycles
 
-But the default must be the safer behavior.
+  0 -> 3 (Auto) -> 1 -> 2 -> 0 -> ...
 
-> OTOH, CONFIG_THINKPAD_ACPI_UNSAFE_LEDS should taint the kernel on the
-> very beginning.
+so with the current driver tpacpi::kbd_backlight reports brightness 3
+while max_brightness is 2, and brightness_hw_changed emits 3 as well.
 
-I don't think tainting makes sense as long as it is something you either have to compile for and a distro would never do so as a default, or something you need to load the module with an explicit parameter set.  It will not cause system instability, unlike, say, poking around the EC registers directly.
+This is not only cosmetic. UPower 1.91.x treats 3 as out of range and
+stops watching brightness_hw_changed altogether, so the desktop no
+longer follows the hotkey at all after the first time Auto is reached:
+https://gitlab.freedesktop.org/upower/upower/-/work_items/367
 
-A module parameter is a decent compromise IMO: 
-Debugfs is too reachable for userspace to mess with without actually doing an informed opt-in.  People respect module parameters a lot more.
+Whatever interface is chosen for exposing Auto mode (separate attribute
+or hw-control trigger), would a minimal fix in the meantime be
+acceptable? Following Hans' suggestion earlier in the thread, the driver
+would report max_brightness (2) in brightness and brightness_hw_changed
+while MLCG says Auto, and leave the ABI otherwise unchanged. That keeps
+the 0-2 contract userspace relies on and is easy to backport to stable.
 
--- 
-  Henrique Holschuh
+I am happy to write and test such a patch on this machine, or to test
+a v2 of this series, whichever you prefer.
+
+Thanks,
+Andrea Rabbaglietti
