@@ -1,78 +1,129 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794082815;
-	b=fstGkyZjjVjzYf0Mep+TG1G6indyveE+3PCSdAX7BGyEXzJMVCh8GCTdEQizCpxFQOJY
-	 2D8lth6oKAqumYoG60GR6cj5pLL4bctmA13vpNAF0AJ3I7Bldt5qSqbqZ12j8DtUcm27d
-	 uexme+sldgOGfZKjK2j9jbXHy6+nCyFNfrIvoInBJo+UCnlnbB6/G6RCV4zZqojwOU01i
-	 XjWYNiRWAmS53STZDlz7/JvDhF06jReWXAcrwQWZPgapqUlQa7LE6ZalLNLSO5SqnLeUV
-	 9zT85bam73nTK+vfnOA+hWbrJ5kFNH/SXf2YxuOCktFmMV2n6ieSR6FZYkWRKfBIdJA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794082815;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=BsMmnTW5zQtmXUAz5wpSIXVWC8xQsapEEGYi9jYUJm8=;
-	b=Z1wxva4zYnpPfrKIOFglbI87J05ATFsLm2kikcd0ytB7pXXzUsqMV4boaTHah4DAWGil
-	 Y3JegyjDXA07QMVj588xqFiQtRhxeRVjFp2UVblaww658qsjAbz8DXjuFJgLOmlM4oQJr
-	 OVOuyN9l+XyqH6nqaSYPnQpMKdIFcO3/O19rJSAUrpo/itzRcRWZgcWy98nhn5DGBXQ4j
-	 kBnsL+3MC50tl91gphTNd8O6c3sPRv8pAq97UfMrNOr6gwWkLlGh+AYaizNIJtG5l0gYn
-	 jZCsFGMxcv5+6v8+xWdCy3RzXw2jZMdIboatX8Dl/VCyNCfXqY/qNL5t2xK8fSw3I5g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QLmnUrdp;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687E606A33B;
-	Sat,  7 Nov 2026 20:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QLmnUrdp
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794082814;
-	b=ASlZvMk5KrgAojeHeXUqC70potmqOsTsjqHcKWnlY2EAfedl+hGvJBTl9n7rnfISUcmY
-	 3GLifYJLMMq9qyzabrzUbZ9u4FhiEGv8g9J2MHOG0GpOmMOwVnKSsp3Vg2sry1sHsf4D4
-	 NzCapmgqVhZr96dvL8FbjNqDRannAj8XEPkbeg+P4VRTDUX9Sw/A0se2KuB+MPq12EyUg
-	 /JiC5pBeyYbYGrrPS3PY31Gd5vg0G05JfGbsa4Pf5Tupp1YfpTUFepk3iVeF3kKjyN/0Z
-	 kAxPQRk1DP+Z/978Xhtersz2ByLwUT4OeU8sz+sAHwzQMQvo8+hPvkj68dJVpyt+o/Q==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794082814;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=BsMmnTW5zQtmXUAz5wpSIXVWC8xQsapEEGYi9jYUJm8=;
-	b=Saff5V63edGXjD9Ieo2TXbUP3Q1aTfJ3Way8n1mf3NMXEbrvbZr0rwZ+7L4CIe0YBx0N
-	 6uRuyaXz5YQqCJWJ65bHZooaevUoLhTAgbQ1Xvd7P6FQOXXuPdRgi4RW134n8nz6JONtP
-	 SiFEJC16agCOd1fLfiJOt9pXnSAVPrZ0SM24AOGx9vZwyfB02SjBjCgmOYRQJlJX24FF1
-	 owr2GAjCd8NlRjGfV+V02DkV1zTwYZClmlNOicJPr5meUPQt3RXL4npsiQt8WuYy0zKdP
-	 37L1yJ+3G7zST1Jc4mEuYNeVI158FN7NAVpAE7f4ofWZ9iU01TQTPEftHiWwJG5H80Q==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.159
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794084604;
+	b=UwCYhX016L1X0FSSS8Vd35cteDDOMn9+Em21EGhZf0h6vzul6N98hxRxL/ZLfq27wsTj
+	 E0OOD0w3KbOWe/6ONiIeC8Nfbc9vXM1WF8hzw2g2LTHkI5GeGRi9vx/6j0DW9yKHg7Kxt
+	 qaR3InY4nRLYyUCmuLLWyoLVMNIc0F2lv3IDGsNFKVewerwV3fpjtPjcCME0laM65ic4V
+	 qzA8aW7wMGC4tZJ9UtomcbgSdtJkU7eegoteUyeRzSYZGHXW0NOQnzvc04wE4w6X7EhF+
+	 deu2d2mfuIFp15zixNzeBm2tIEvnA2TxcPL04sgT1qDstZ/MIG2PcOD0j7HKpp7mydQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794084604;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
+	 Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To;
+	bh=aOesGKy7Bt1YCMx1QwBRu3MlgUbtfj3W3WMjPklWMRI=;
+	b=4sREh4abzVdFeECLzqPkchJngI2C6OwO8oKi/9ZcTKH/H+vKvgQlTxF9QIiNpAKYhbBK
+	 VXDpKJFZLv8IjUbmYdS9y6WLPPMsB/Onl7kQ94sOCmEJdswsXs/rxFYe77T79vvxJRfPf
+	 x2Rgl4+JJPpVm3zYAD0fo7JQ3jXZYASAxURwZZxn5dWHNYe35GHf18TjUQG/blcAKpl23
+	 20iXoazRVVVafZIDxnnLIdEx8a14OERatKMvwUFnBkvGSzTlBhq7LWq8sw59QRw+SMdrr
+	 2utvdl9vstjAK3PjhyJWHJwMqMYWDywFZKQeaCmvYEtKkPRABBpgDkqBGI3iOSmPZVg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=joshtriplett.org;
+	spf=pass smtp.mailfrom=joshtriplett.org;
+	dkim=pass header.d=joshtriplett.org header.i=@joshtriplett.org header.a=rsa-sha256 header.s=fm3 header.b="z6u+N/G2";
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=dthcuLss;
+	arc=none smtp.remote-ip=202.12.124.159
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 193341F0089F;
-	Sat,  7 Nov 2026 20:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794082814;
-	bh=BsMmnTW5zQtmXUAz5wpSIXVWC8xQsapEEGYi9jYUJm8=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=QLmnUrdpFbqgABqoa4skKegumMkQzVfOe/UzRb/JD5FPmi5Eqvixw7L1p66Kw4tT6
-	 9cDkN4dVpE3ZYiElA55i1NleMvr34GHir4liZ/WjLiEeuss/h6QnjSS7O0TlQAgd4x
-	 3pJ0Z2W7E1SfY+dKd0Zhim8fb9Z/Kzi7LWzrUgHinkCXcaj6yJaKLul2tsnZg0bZa6
-	 Dj/mqKpMPX/taAFAFhtZFP7eHr5Fmov7kuxAePE2RvRN9T0EjwPcT97DyO6uRK8yGq
-	 jrGahdABJhSyIIQKzy+sseob1xJaCb6l7PQx5eGJrG5J7GIS3wN2MBIkCbP7+YFIRo
-	 axj0YwwLBrabw==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 7836F47CEC;
-	Sat,  7 Nov 2026 20:20:13 +0000 (UTC)
-From: =?utf-8?q?Bekir_=C3=9Cn_via_B4_Relay?= <devnull+bekiirun.gmail.com@kernel.org>
-Date: Sat, 07 Nov 2026 23:20:02 +0300
-Subject: [PATCH] platform/x86: acer-wmi: Add support for Acer Nitro AN16-51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF001606A326
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 20:50:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF001606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshtriplett.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joshtriplett.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=joshtriplett.org header.i=@joshtriplett.org header.a=rsa-sha256 header.s=fm3 header.b=z6u+N/G2;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=dthcuLss
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id D57C77A015B
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 15:50:02 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Sat, 07 Nov 2026 15:50:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	joshtriplett.org; h=cc:cc:content-transfer-encoding:content-type
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to; s=fm3; t=1794084601; x=1794171001; bh=aOesGKy7Bt1YCMx1QwBRu
+	3MlgUbtfj3W3WMjPklWMRI=; b=z6u+N/G2KU95qqFq0G5Z9YVJiKgWnQa5G3yvr
+	rYko1LUo1fh8ZyPT4RdiMBwABrTuZaIxpwDdoj0rSsmrWMLvVrug+N/jEfoTiU8W
+	vC5MGEfn8d+GpBZIPw6ZQWjp2T/cUptWMs/FaaqGSZ3nR3g18Zudm19kM2f8JiAn
+	fe7ijTtrDukQMkORYJ+a1P1BeBTkNr/+sx1JBZdavRymrM1EG+1foFsaDYu9MxWt
+	x/dbi3m7A9EoLJDsSRSX+sUrH5cxt9BM82ZB1f8VIlxPDBDCnoOmvLE5bcZR8Ofp
+	pZuep6G/RzDuvxZre+AnDp/Rt+FPI4SDvHtFQIqZ0GtocwujA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1794084601; x=
+	1794171001; bh=aOesGKy7Bt1YCMx1QwBRu3MlgUbtfj3W3WMjPklWMRI=; b=d
+	thcuLssM+anEFXWbCJArOEynkrI5v1Jg7Fg/dpmuI9sOL/RLzDPI0PpVK5FR0bjN
+	iqKZVEDpyiOlAACLkOzTkhEZI0/5cm80ofdvI0rQ/7IULCv667AN02oEqdidzLdV
+	YweqhfXi9Zzj7kxdW+TNXtoKoHg2mVRQyMNq2P1Uwv2B5FLQm7vuIIcdjWnpsfNM
+	0EX75KDEjwLhttcVPuDNupZVP5RSeAOTegDHBJfeJC0FAIQG2d5Wq0j8b3SLoJbo
+	PhaFb6NBo0gO4zYs30VnMAQKpNWbdYlnxRBtCxzrBgfLthczNWzISKHRXmVLfaOL
+	epp/7e41dTtvZ4h02DJQw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=joshtriplett.org a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1794084601; d=joshtriplett.org;
+	mf=PGpvc2hAam9zaHRyaXBsZXR0Lm9yZz4=;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm3:rsa-sha256:BOwl4ATij/pRmDpVhL3YioMUFw6CwZyfSfJz2eEXzzTD2/k
+	mIlEP4gfWhnZ1kgG+bZtoE42a7l+bpywAOdxbF1Z4X7sCeGJ+Y5yceLSQ3nhSgUo
+	yZhPHHQvWzCkFCdgqlwhIdbIhGeron8eZ3Kdqensr6aM0/UKDVdYmTdQjV3732zq
+	1BUtUcsz230a7wDQsT38jM6EGDqHebSvTiolXXbAB2Tqcd/Asjta10GpCELCKjBu
+	jE9c0gN1d8ftXJQjDYueirgNnZxgq0TcnLQHIb7duKhU+D4AupTwJkY+/i09dVap
+	CCubmTgOOFKtZoVImN4Mw/3yDqDV2QQBPytzT0g==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=13;
+	hn=cc,content-disposition,content-transfer-encoding,
+	content-type,date,feedback-id,from,in-reply-to,message-id,
+	mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:A19Renz0cxkEDfbt/2pLjrnJSUaI6TuPqDwDKxer6XA=:wyge+1tOzwAIZGqBD066PALFzHGlxq9/uxHhTr4zyrA=;
+X-ME-Sender: <xms:-I7vagZaEKGabKaUK2n6AmJXbY---mbLcGIPDmeQf0eIOCBVFHQu7Q>
+    <xme:-I7vaue51KYR_CdyAU9JVtZziXab25DTRCJ2LSZPPgB-zxAv0VJ3VueVHOhQPChXM
+    pJd6Ff8En29aV22QcCLyuu7r5MjkTvP3zVqkFUmNvw2_Wchmt_rwIRo>
+X-ME-Received: <xmr:-I7valmJqjbR82WX4MfEtBx4kgTPAccoL9fD3sM63Fr4okXBEFf2nhYQNQ>
+X-ME-Proxy-Cause: dmFkZTG1ZfC8HBbsKhJNIVCAtBIJYEcqG93Uh6xOwtCMmcb+hKolNtXgix5VRY7hVx0P8B
+    aYZ1u5MQjSiy0VXR2QRQLjMfSZMQs2XO1jXfVvLxh7OHNABgdwZpfX4CAiUwXmim6Ha2X6
+    qESHRKysaogslaAs00WB70ATq9CZzYDD2iGoK1R1YqhYAxANrJjL0h3zVAKqPYe/Sh4gBR
+    XzSZ41dqu5S/3HUnGosu8gvQmNE+ZRKEA7klcbk2KCUA055Y5/hwj8heGdpSLR7BWc0iDR
+    rdakdB0fTjSJhj47sYBvPpEp1KSXZ50H3A54OXwlecHRwFRUQc7WLRfCWkpv9DLN30UJY5
+    J5mqDOj/Qun4Zmx2MvapvFHmGV/iS+qpmWmDZMXraV6rsbFVDuF8jfSX+jei1rAUM0rM1E
+    AjU0fZVGaolYPMwzs806pNedfrALDiobYYQW69xnQmdfuYhP23Vq0wQfbzgSGpHczO+btB
+    x6b79xPE6tN8OkKKerIZ15w1LwiiEkNZG2/7zhTOknvmLMnhxnycxjGwyR8iuhUloF+UOG
+    dfaMb72Q9gjTUw6sXo/6dZdDCF3VBY1SZpVpBxCn/evX8h0/iiOG+xe3/c1ovlgz9Vsjo4
+    iIjGu/SydrpeS37sanYmyf29Ue7d9CkW5gK9EfjZ172E7+5v1dKYa8K2+mWw
+X-ME-Proxy: <xmx:-I7vam3oECNoJpIk_oWKN6zB9KevAY_pFNovB-w_cmYmygslEkMX9Q>
+    <xmx:-I7vamdNQX1CBZWACEd1rUZ_T2PukM2QWo7dD2aaC_gWYnvweU1P6w>
+    <xmx:-I7vaoaPvm8bINod_zcw9qt492Rse3XStQFf54aMVTkHST8DvdBxvw>
+    <xmx:-I7vajFCGNZdr7Oog2JnTNFu9oeJY9YuLYw-BxS3FRlZ2TSjngbr9A>
+    <xmx:-Y7vam24Yt0VSrPKEyka2JwxMCyDIfa0_tk6a5MpH3r4BP66IcNhhqzc>
+Feedback-ID: i83e94755:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 7 Nov 2026 15:49:59 -0500 (EST)
+Date: Sat, 7 Nov 2026 12:49:58 -0800
+From: Josh Triplett <josh@joshtriplett.org>
+To: Rong Zhang <i@rong.moe>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: tpacpi: Mark charging LEDs as safe
+Message-ID: <au-O9sHQNnHxla_e@localhost>
+References: <a14640f58be48d4912ce5808faea1402ad7f7ad0.1793906572.git.josh@joshtriplett.org>
+ <19f5b65e494ed710a65927311cb68535c87953d3.camel@rong.moe>
+ <au5nUp4extfupCpS@localhost>
+ <20d824152b1a889b636ef9877b4d1a8e06dcf460.camel@rong.moe>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,96 +133,46 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261107-acer-nitro-an16-51-v1-1-456278eb4cd0@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMMQ6DMAxA0asgz1jCFBLBVRBDSA2YISAHqkqIu
- zfQ8Q3/nxBZhSO02QnKH4myhgTKM/CzCxOjvJOhLEpDVFh0nhWD7LqiC2SwJmxMxdYM46uxFaR
- wUx7l+0y7/u94DAv7/T7Bdf0Aj1HNdXYAAAA=
-X-Change-ID: 20261107-acer-nitro-an16-51-964e76bf3974
-To: "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Bekir_=C3=9Cn?= <bekiirun@gmail.com>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794082812; l=2537;
- i=bekiirun@gmail.com; s=20261107; h=from:subject:message-id;
- bh=XbyK8OmmCdT09eWFW+p/K32iqIhSXoUAvUuuLGPFTsE=;
- b=gojpaeKoCAYDNWCaQNE0OspSdpAVSitkVKYPwY8SGeCEXT0VQYHUxMRQ7pdT46SYwViId1PtR
- rhEnvaqLsf/CKcDbVewLxh9/tbLl0Kd38rauB21QaCDbOBeBt2038xV
-X-Developer-Key: i=bekiirun@gmail.com; a=ed25519;
- pk=ThEeR1k91IQjKK+VVDMEgjG0h0zzy2D+IV65oEuWzxI=
-X-Endpoint-Received: by B4 Relay for bekiirun@gmail.com/20261107 with
- auth_id=1446
-X-Original-From: =?utf-8?q?Bekir_=C3=9Cn?= <bekiirun@gmail.com>
-Reply-To: bekiirun@gmail.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20d824152b1a889b636ef9877b4d1a8e06dcf460.camel@rong.moe>
 
-From: Bekir Ün <bekiirun@gmail.com>
+On Sat, Nov 07, 2026 at 07:45:12PM +0800, Rong Zhang wrote:
+> Hi Josh,
+> 
+> On Fri, 2026-11-06 at 15:48 -0800, Josh Triplett wrote:
+> > On Sat, Nov 07, 2026 at 04:48:44AM +0800, Rong Zhang wrote:
+> > > The term "unsafe LED" exists because LEDs are write-only for software and
+> > > fire-and-forget for the EC. By taking the control of an unsafe LED, e.g.,
+> > > attaching an LED trigger, any warning signal from the EC can no longer be
+> > > displayed by the LED.
+> > > 
+> > > When it comes to battery LEDs, they are definitely unsafe to override.
+> > > After all, batteries are dangerous things when they malfuction. Thus, I
+> > > don't think it's suitable to enable it for all users.
+> > 
+> > Choosing to not report "charging" vs "full" vs "not charging" via LEDs
+> > (as opposed to on-screen indicators) is not in itself dangerous. If the
+> > EC has something like "battery is damaged/overheating/exploding" to
+> > report, it had better do that by some more effective means than blinking
+> > an LED, or the message is going to be lost.
+> 
+> This is not in contradiction to the fact that blinking an LED is crucial.
 
-The Acer Nitro AN16-51 supports the same gaming WMI interface as the
-Nitro AN515-58 and AN16-41. Its ACPI tables (WMBH method on GUID
-7A4DDFE7-5B5D-40B4-8595-4408E0CC7F56) handle the thermal profile misc
-setting 0x0B with the values quiet (0x00), balanced (0x01), performance
-(0x04), turbo (0x05) and eco (0x06), and report the supported sensors
-as 0x0227 (CPU/GPU temperature, CPU/GPU fan speed, external
-temperature 2).
+Something can simultaneously be crucial and completely ineffective. As
+mentioned elsewhere in the thread, "immediate shutdown" would be an
+improvement. Bonus if a message appears on the screen for a few seconds
+so the user has some idea what's going on, but whether the OS handles
+that or not, the shutdown would be an improvement.
 
-Add a DMI entry so that platform profile, hwmon and fan control are
-enabled without the predator_v4 module parameter.
+> > I can't comment on what *every* ThinkPad EC would do, but at least on
+> > this X1 Carbon Gen 11,�
+>
+> That's the whole issue. The patch unlocks charging LEDs on all models,
+> while your ThinkPad can't speak on behalf of other models.
 
-Tested on an Acer Nitro AN16-51 (BIOS V1.12):
- - All five platform profiles can be selected through sysfs and
-   power-profiles-daemon; the mode key cycles through them and the
-   key LED changes accordingly.
- - fan1/fan2 and temp1/temp3 report plausible values; under full CPU
-   load in the turbo profile both fans ramp up to ~5850 RPM. temp2
-   (external temperature 2) always reads 0, the firmware advertises it
-   but the EC field it reads is not populated.
- - pwm1/pwm2: pwm_enable 0 (max) gives ~6600 RPM, pwm_enable 1 with
-   pwm 128 gives ~4000 RPM, pwm_enable 2 returns to automatic control.
+If that is the primary concern, would you accept a DMI-identity-based
+allowlist?
 
-Profiles and sensors were tested with predator_v4=1 on 7.2.14, fan
-control with this DMI entry applied to the 7.2.11 acer-wmi driver.
-
-The ACPI analysis, the change and this message were prepared with the
-help of an AI coding assistant (Claude, Anthropic) and tested by me on
-the hardware.
-
-Signed-off-by: Bekir Ün <bekiirun@gmail.com>
----
-Single DMI entry for the Acer Nitro AN16-51, reusing the AN515-58
-quirk. Test details are in the commit message.
----
- drivers/platform/x86/acer-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 3a018fdf5..08f663fc6 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -690,6 +690,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_acer_nitro_an515_58,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Acer Nitro AN16-51",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN16-51"),
-+		},
-+		.driver_data = &quirk_acer_nitro_an515_58,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "Acer Nitro AN515-58",
-
----
-base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
-change-id: 20261107-acer-nitro-an16-51-964e76bf3974
-
-Best regards,
---  
-Bekir Ün <bekiirun@gmail.com>
-
-
+- Josh
