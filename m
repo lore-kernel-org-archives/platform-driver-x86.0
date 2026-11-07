@@ -1,97 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.169
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794057860;
-	b=qv3so9WRAGb2ykYwVok8ghGeSKLLmb+RENdghzLwKMn7HMJNc/cYct+bz500+oyojUKb
-	 bVo0H3BOSUrMkaRlsP4Ytj7UgdNrQEboA2bTQPApKrEJK48XIrpfaLvi/MPYGDYTjIzRH
-	 a8LJUVOmgbarkv22RcSUoFExJUFm/C0BHEahVVc+XbogGlrlRrjd2pJuf1eQnw6yDzXq8
-	 YkA0ZN5rIPX+HaQ8XLYv7EyTVF7cXMXlg6nWOMJm7qm+Txpz7HpQYhKF65DDz029uWwSZ
-	 gxicU0e/AeB1D3E3BxrJbgsCdTr9aUUXS/4WR0vufAicmCddhBEbdCWcNhTvLiHihCw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794057860;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.179
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794060530;
+	b=chxxC6aIXl8JJp3ykdtNG7GNr7Dhybq9m206R3Tyr14LO7CW8YL00f9lVuOFgOA5JMa+
+	 oqqD/qm9G+tp2d7oWUpTdEsqvzbp8/h2heJbKJQR72zJr/PQNUSGEOI/iGfc2fzfs3IhL
+	 MkQwcM/gsVPSdUANpHqjgiy4yGcaRGs3gbAhpp1e+OxEUXXgsdqMp8EifkIHkRkJVt64k
+	 ZpA05XGiOnVZLAyFADFzNKbFDE6073F4R/X4gI2txi6tNxAGkGvoXO2cAa5C4LMCZue/D
+	 zHxBD0nZyCS8Y09Gz6/o/jSU2IfHhTY5IOvvq7Sy39yn+wERBddn954M45GQPvTbZ5A==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794060530;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type;
-	bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
-	b=h6KnfhBqWSgzb06a0pzfsKMamsJxb52AmSqnBaCRpX9mEsNeU1nH9fCCQZ9s48SIPo7L
-	 UppE0YPeDr8VTXgfQP9mfba8HG5G7dE7waATO7LnRo4sOpFrqvMTFWj3p5SmRGBEYYFxT
-	 Lm2+ou8qJ/UskkDVjKHnPlJ8Cy9GuuAtPClZwo2/YiSnPNPp4r6jMOPaWLa2RwQSeixyp
-	 LLHZCkcj932HN3uOFCvPN7M1Y4A3cz9rxIGH1JZNbEgS+DKZy18YI0DTwXI/n4ykmwag7
-	 /xnEvyDicDTaufZkO2ThOdHNcoOQlpI7Q/24emyLaGaw+5E4o4bpYnqYgRv7t8FHa6A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=Hr16Fowc+FBEmAYx4CWWn17wGWcX/dD/MZtdPd+ASsA=;
+	b=Qxvpja04IQjEq4mqMFKdFJZ+c3S7vHrdDZpY3/S30+SXuH/zJwhMXOSJmXxWG0LtNT5+
+	 v1KSEGD4H6Nr3qF8b6ddMleOeB77mRSXnuJgo6klH+ymOmU3NhLt4P8tsT3mM76MNu0Hn
+	 pV9PaIB9gWTPDX9Hh9EZ1GC74U4AhFFUeJXqG1FZJvY3aZK2vlOkMTwa7DrSX9BRhsY8R
+	 ldhhao8BRtRYCZjC4HVhghGGe465noynLiCwZOzJ8H36EbIWEAzrLFXqjbTnhowvKnp03
+	 HE4UOgFrBGmvc2KhmO4+V9pbLzMZrAPIDKpBZTI1uDJaIOLbkn2glCxXSz4sCRBcxTw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="egt/9Ydq";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.169
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="T724W/Lt";
+	arc=none smtp.remote-ip=74.125.82.179
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3BB606A326
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 13:24:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E3BB606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0DA606A326
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Nov 2026 14:08:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE0DA606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=egt/9Ydq
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-89f28c3ac7bso574365b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 07 Nov 2026 05:24:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794057860; cv=none;
-        d=google.com; s=arc-20260327;
-        b=r4TzKaWruAgHqnoRfG3ykKnkdawbQLjKs40TC/e+eEGWMVJg1QnBXQPCkk6amtiUGb
-         vOGL0xmmZ5kK68dG5Pb6jLL3CUTbgP+VdsbnuK/CJLAJToNIg0Bah5Wd1vNxfxWYHNG3
-         9PLjot5+BEsG6yFnhKwaeIx6YGi2cIEvfpSxNcU9kZ/HM4eg/yxwUih/GYSSVCSmug39
-         bxH8EKrPOQDuSNeuZ76bOJDan6hwRCo9OKV/xUho+0UygvVoyyV0Xc19EruhKMaG4M++
-         MJBOTRgvm9KzLQduG6zlDNVgIpIsGlBB0MTdowIRCkPbxm19Cm+6EszeGvxc5iT8M4T0
-         XoNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
-        fh=A6k1kTFTakE6XNF60Clq2D2FRhejemBAL0GbZgMEpOc=;
-        b=P0/to+ZK9zRxmhtuerJnojAU5GF0Ib8G4WH7bFzianMwZq/1Ccu5kGLuWyYaQsDRJI
-         zbp9FRywCZ53xLrWB4QFCMIo5xd8bAxnFLvIcDD4Pwzs8PO5Dys3ArzJH+aXD8yZ9ocS
-         hBq5Fww1YVSDPxhH5WqcPZTBP85tWyBmfr9jHGYpBv+fRUxmCPlk37m3FyEMxTnvJhqK
-         ZOJ64uGVxzB5Sk7EQ1EFGDtcT0XiZqVG8Aj7RtBF82GmUh2wPRI5f2tuj33Tm+kWGh27
-         QpuhbFxzSNtBs7Nhfo/3S8oPOgdxsIcewctC/IknP2GCdtPNcCL41wy8Aj/1kdEGLjpx
-         y7iA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T724W/Lt
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-36fc0a3fe93so2562053eec.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 07 Nov 2026 06:08:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794057860; x=1794662660; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
-        b=egt/9YdquNPXu8FvBII2kA5NnP+1Is4C2I3wbE/15bbbcqw0QV21/Jb6Xy3qHTVI37
-         WI09SrRKEfq8EZXttEBAFckJTz5wIQqdier6ICFf0EvMnOStSBZY9p4GD+iqWkSgYanl
-         6h0SUEu7N3EyG2ow6t08i+BSWLy+6AGLAdOahKL9yTRg0YkK9xlItZlHLzeFTmwzhXjQ
-         IKM3TWi1qBJUYMxJw0ltFs/q7av/xMOQ/mTK3ODWtpquJFFEt/knZ317IrLdu25zw3ZE
-         zdhnH2CZdF9lHs8cSxR4n/TEm8cBtaJ8S0jNuTd8v17CmRfmFSn5WqWDCtZurN5ai13N
-         cZzw==
+        d=gmail.com; s=20260707; t=1794060529; x=1794665329; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Hr16Fowc+FBEmAYx4CWWn17wGWcX/dD/MZtdPd+ASsA=;
+        b=T724W/LtQ4ky62wb76RYKI8r85JT2yclvz94YgeazwQ4/coL+6YO5Gec/9nSj7AqNi
+         l7RwpFuU9UgLOMaI0TvjcLXmtolpEzTYLvoTZTLpWcmrcmc6absy+JekBbfAya6UkMON
+         /ehVuyRrkP2aHd/+XRYavSl8rsLYcCagSrvoY7sZ+j4AIIQ6Aw4vcGHgONLKfG4Y7fzT
+         7QW0yOm4/edQXTokHAOKC14hCYC4GJjNGBIIoAmWFJoVSK3zPX+eRh4jzSfn3yKokxCl
+         B4a1NNurm3wYgRfU+VtrZ0nxfHkEahbptyhiQVB83TTUDbFsnJBIa7VL79FgE+gtzJGo
+         8h1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794057860; x=1794662660;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=z6cvIR8/w2KV+BnWSxqQJYCnMJX2uxJLLmGs+7Gm898=;
-        b=ng/3R+KmiDVJgQMB1pt0/N9a9TBYmsOGPYcnVhNz4vDSF5QpOkAF4YiVU01F64FWNP
-         7rc9prsPtSwGTm4ePMeGaCcBuFLQby9GEfi6kPR9OGmTHhJUD6W8DoYVYLB9APhDRRUT
-         TjAf/ub3iQPPCuD09hBHtE+FCy63RxyOlsJPLrDe1/Ntd/DkQsj0hb0RdLhuH+Ei7NnP
-         Eev1tZxGwrWdVk7RrudjiXVb0kVdbQ1CoyFfpi5e1kkCdPZMU4ZU9KhX3/6fHobTVYyn
-         sYMlc15ixvPaIUluKc2KtFRkJoPKenBDKFiiPwxComJVC6hSCzNKWtb1cPPc5wnL2szo
-         r+rA==
-X-Forwarded-Encrypted: i=1; AL+hErGGQXxTzsz7ba5jy1JzpJE9pTWZx316T8nEZgZKnaNCgHDsoSUs/FBA8NIGZhxB/Q7IDsUzpsTzBr87SpcoMT04BITB@vger.kernel.org
-X-Gm-Message-State: APuU4Z8KyT/6sjrqp0QkTrvmSdptMP8eBRDnTgm4REG5c1f+8B3Has+L
-	+m18TSdIFj+n6M9c/EQ7rzfVZX2QFB2e/u4yMw0iHna9Rl33OzzwIu10FEdcEkXPgnZ+5qPEPlw
-	mNJGJlcmmsphboQLYEnLXVriMAGWsu20=
-X-Gm-Gg: AYBFou1E81lREoOo0VXBVM5F9HQw2bTW5hD5dmmfHAHlPIWrrxSrP7Yi+5nmb/P//2b
-	XSEIFh6WrdGgk5L0tV1XxZZChNQbADi9JGRvB4+QIFCKLbPVU2HrWyAF/7LA67nyezdW10Ew6e/
-	H28Pv2WOr/kUDBHE2/Z3O23xQEfa5BdgTdZqjKPv8yiiR1KbEqeyrVpoJQ7uPLBhJGmy/OEyo52
-	SiHQcALE136POWvj9sOibOQ1twz0W4mypcacbrr2ZVp4m/22kWqcuVLF90/c3k6Z6/EgeuheKL0
-	DXkBzAcPj0R/pNHFEu0FnHHjM3Qd+E4p7ITWGu+4vxfrQYedix4uK/owIv1p+h1KUixrNHy2cW2
-	U4BgucG5WqqX7MqCHkTMFe2BfZLqoSLNXw2r690rR3j70qNEjCJJj2DM/PaUc0s+SGvb5
-X-Received: by 2002:a05:6a00:8c05:b0:89a:19ae:10e7 with SMTP id
- d2e1a72fcca58-8b37be50e42mr5386306b3a.42.1794057859877; Sat, 07 Nov 2026
- 05:24:19 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794060529; x=1794665329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Hr16Fowc+FBEmAYx4CWWn17wGWcX/dD/MZtdPd+ASsA=;
+        b=xXL02h7qVDSjikik7uj9/GTt+9tcW9878Cr5oAg/8tuZony2ysmGDCIxFmADnU7GM0
+         +tZF4YLGqc6tmWp2+1qxTHqPh7DjqRhT9hMbisjbheUlGzCR9fRgNeIOEAiz9/cPIGWw
+         xrWv0bymmXNSJz5DC6mbKt1H3eCnLk16dtPoGGhbQcxW3VBH0VUXMWuj3hKxtpQHOY5j
+         4FOlSp/hIIUdOAojBsFxt44Ww5Y5CDj6Hvkuo29xaJ/T4LcZEjYdg7NMg/sfQyuzxvQk
+         DdApOWbjo70kogFtFTsPvULIe943JtRdKDKqkTKrVKSIyTBmOhjKjfg7gxZJRQneVRar
+         DutQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx2qlnKT3zAF8V0rEgre6Oz+4Nk3iaGcM8AIOdKeiQ/d8gcYUF880kU8hkxwc3M2gFBlm+xnDTWi/yR3ZI1i4twlOD4@vger.kernel.org
+X-Gm-Message-State: APuU4Z/k2K4GaEW6aZxOiFJGK5+K45zgvREmwNUskYz7r/+4V4zMs0WY
+	lHkh2OgvJbqtoIkji9VlS7CvFwj7zAntz5I/IiEaCoU18gkZyg5tWmv3
+X-Gm-Gg: AYBFou1OvpEj9cAZRsJa7c6N9+pyVPV+JjYHsffoJDPKxduH1MYIurmWNsahjNn2k3F
+	iTskabTBjULlFa7T41d7jHjmG6Jzn4pMK83WgklV4oOHjPa3DESpsCVKtBiA9oZ60lEF8lRAlk8
+	wZRIqXJR7gRyBzu6DC3gWK1yY6aQjRbdMRK3nXZOUTv/p4HZ56O8mVOE9P5Ic240Q8obIBhAtDV
+	nsoZRifysxWUJDpifQgCOUn11n9WH4pPhc/agctjI/e6VigQQ0N57wHbU5qoN3NFxXxDD+85cYW
+	SfUIbPliSPy0mYHC6gwtiCgpT4GyQWjI5MyJqAsexUp1Ci645mfc24Wn7i3oxw7ep1uwfJ1rrhd
+	iRYQLkUtFhMsCxM2ouI70zY5DxhVKCGbCdMgS4q4oXK3u62jn5nPCR95G+np73pnSPXQtPDR7mn
+	3OVq2Lb6z5n2++QamiQY9m0fWBJMWx/IZVAZKNBeodnIClUHRcge7NNl1PtBV7qTYqfFvI3vzJM
+	0q/BwR9SRnj8fwMc47EJfg5U+o0Vt5ZsxfwW63trl+zVrUG+FanTGI0wXBvW7Xv7ZRX7ufNSOa+
+	KinItGqTSw38Rxtfdd3pNEHM3/Tu7RtCK2KoWSUwrYIWanm6JhDufRIx1DCGG8mwz4oELhtZfTF
+	RLwMtcgxJ5vKZj5cJ
+X-Received: by 2002:a05:7301:1887:b0:361:6884:78b1 with SMTP id 5a478bee46e88-36f7671a78cmr8352073eec.28.1794060528719;
+        Sat, 07 Nov 2026 06:08:48 -0800 (PST)
+Received: from localhost ([2401:4900:1c6e:17b2:fef3:c40e:ca92:2036])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36fa9aea75fsm27571401eec.15.2026.11.07.06.08.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Nov 2026 06:08:47 -0800 (PST)
+From: Punnay Sharma <punnaysharma805@gmail.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ike Panhc <ikepanhc@gmail.com>
+Cc: Punnay Sharma <punnaysharma805@gmail.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Rong Zhang <i@rong.moe>,
+	Stuart Hayhurst <stuart.a.hayhurst@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: ideapad-laptop: Do not warn if KBLC reports no backlight
+Date: Sat,  7 Nov 2026 19:35:56 +0530
+Message-ID: <20261107140700.16036-1-punnaysharma805@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -101,48 +102,60 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-From: Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>
-Date: Sat, 7 Nov 2026 14:23:43 +0100
-X-Gm-Features: AclHuK8W3wLee-SC_bINep9sAVMsLbYP6ki1_B-6wv6M2M-O8zCmkC4I3YCdlbc
-Message-ID: <CAENjc+w0Rqy=kDSew7XtNJCSvyPiXPJ5faWdmCr5RGYFhpunCA@mail.gmail.com>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: Add Auto mode support
- with dynamic max_brightness
-To: mpearson-lenovo@squebb.ca
-Cc: Derek John Clark <derekjohn.clark@gmail.com>, hansg@kernel.org, hmh@hmh.eng.br, i@rong.moe, 
-	ibm-acpi-devel@lists.sourceforge.net, ilpo.jarvinen@linux.intel.com, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	vishnuocv@gmail.com, vsankar@lenovo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 23, 2026, at 6:19 PM, Mark Pearson wrote:
-> Hi Hans - do you have an opinion on the path forwards?
+On probe, the driver asks KBLC for the keyboard backlight type and
+warns about any result other than 0x5 or 0x7.
 
-Hi all,
+The LOQ 15IRX10 with an RGB keyboard returns 0x1. Its KBLC sets bit 0
+in every result, and sets bit 2 for the type query only if the EC field
+GZ35 is 0. On this model GZ35 is not 0, and a separate USB controller
+(048d:c693) drives the keyboard lights. So 0x1 means that KBLC controls
+no keyboard backlight, but the driver logs on every boot:
 
-a data point from a user, since this thread seems to have stalled.
+  ideapad_acpi VPC2004:00: Unknown keyboard type: 1
 
-On a ThinkPad X9-14 Gen 1 (21QA, BIOS 1.25) running 7.2.15, the
-firmware already enters Auto mode on its own: Fn+Space cycles
+Add KBD_BL_NONE_TYPE for 0x1 and do not warn about it.
 
-  0 -> 3 (Auto) -> 1 -> 2 -> 0 -> ...
+Tested on a Lenovo LOQ 15IRX10 (BIOS R3CN44WW).
 
-so with the current driver tpacpi::kbd_backlight reports brightness 3
-while max_brightness is 2, and brightness_hw_changed emits 3 as well.
+Signed-off-by: Punnay Sharma <punnaysharma805@gmail.com>
+---
+KBD_BL_NONE_TYPE is placed last to avoid a conflict with Rong Zhang's
+pending keyboard backlight series.
 
-This is not only cosmetic. UPower 1.91.x treats 3 as out of range and
-stops watching brightness_hw_changed altogether, so the desktop no
-longer follows the hotkey at all after the first time Auto is reached:
-https://gitlab.freedesktop.org/upower/upower/-/work_items/367
+The same warning appears on other models, e.g. LOQ 15AHP10 [1] and
+Legion 5 Pro 16ACH6H [2].
 
-Whatever interface is chosen for exposing Auto mode (separate attribute
-or hw-control trigger), would a minimal fix in the meantime be
-acceptable? Following Hans' suggestion earlier in the thread, the driver
-would report max_brightness (2) in brightness and brightness_hw_changed
-while MLCG says Auto, and leave the ABI otherwise unchanged. That keeps
-the 0-2 contract userspace relies on and is easy to backport to stable.
+[1] https://lore.kernel.org/all/3f03931e7eafcb1781ca3cf922e588ab57caadcf@lavx.hu/
+[2] https://github.com/johnfanv2/LenovoLegionLinux/issues/336
 
-I am happy to write and test such a patch on this machine, or to test
-a v2 of this series, whichever you prefer.
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-Andrea Rabbaglietti
+diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+index fcb5ed7035f5..eb4158bed264 100644
+--- a/drivers/platform/x86/lenovo/ideapad-laptop.c
++++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+@@ -148,6 +148,7 @@ enum {
+ #define KBD_BL_QUERY_TYPE		0x1
+ #define KBD_BL_TRISTATE_TYPE		0x5
+ #define KBD_BL_TRISTATE_AUTO_TYPE	0x7
++#define KBD_BL_NONE_TYPE		0x1	/* No backlight through KBLC */
+ 
+ #define KBD_BL_COMMAND_GET		0x2
+ #define KBD_BL_COMMAND_SET		0x3
+@@ -2246,7 +2247,7 @@ static int ideapad_check_features(struct ideapad_private *priv)
+ 			} else if (val == KBD_BL_TRISTATE_AUTO_TYPE) {
+ 				priv->features.kbd_bl = true;
+ 				priv->kbd_bl.type = KBD_BL_TRISTATE_AUTO;
+-			} else {
++			} else if (val != KBD_BL_NONE_TYPE) {
+ 				dev_warn(&priv->platform_device->dev,
+ 					 "Unknown keyboard type: %lu",
+ 					 val);
+
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+-- 
+2.56.0
+
