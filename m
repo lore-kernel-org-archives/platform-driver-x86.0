@@ -1,91 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794170962;
-	b=cXmQah8qAjS3mjMtF/E+qnUtVCfZa75nJ8e+BKCurkrgEdd1rQKhyPO8quobfbTowZ7S
-	 Kqf95e76gZgEgOuxhmj+7326vkaCz29orKgm2PGoB0QG4u0W7U71XhK5jwiwdK98gv23h
-	 TSM0VgjOVkPEomDkpRIKlkuMJXEjYtGY1dx1/OG9gOzwg/REf7yvz9qgNcOuPiM+Say30
-	 TZ99IT50Fki960JyT/pQ3dUlfi1/puRCkaMAhNMC46H6kre+cBcM3vXS7QYvriSa9bKZI
-	 kTZ6+ujCKoykWLv3natP8aF38d4hZo0qdBXlLI/FxOxd44b1h9XRnuMZCbOlkApG6lg==
+	t=1794173824;
+	b=JzGIwcFoTeIPQInB7DG7iHqAErl1THmL6fJI91ONTROIlTRqF+QW4gFKnoOUqo2gf5tx
+	 HQjYG4NCU/JbrUTbexX3wNDHIZYCMklnwDpHDnR6afEbyGyP3PXb96t8P2NDH4ThkEpLE
+	 SdeOqK2BLx8Rn9m/Qq2SFsNFKbkAyucJTuzkc3PdFtNOYHG5T6IG7EF4/TF+TgYa3eaHv
+	 q7P3VrsVsfNO71fY65pv1KpM4dQ4A8L4frKLKkL49ftG8C4oV0gxddAAHCXAmWNb1HIuX
+	 ErgLHmLOTP10caVZyc/ThFmFtIpDADCP5XTIrRK9cdGhX7wEYKElnMohm86O8exWutQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794170962;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794173824;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=lcBQT/DgFL+Q32k682qKIG9RkjDSDm8GiU83RqsNyh8=;
-	b=C5XcjlMDb+K2LowCyYIr863nbZll/z4LodbtvmyWqCfXu3/thwTYbROI40G5/LtOYFOt
-	 Mptvq0GZ/n1vviYR4zhRO95JWuzJX5lxUL8ZNQLxAvxfArS7cBbWiwRgex7m1qF7Zoe1Q
-	 5c+mgydWW6MonHJ6bit1Csl58VGY17ZVe9As22MHNrrtQQq7KSOXcrJT465DG+jGlYSAQ
-	 zjn1sIkrINjF53KEz3jstRhI+yb0h9eQoFSlHMeRat16Xgy1UjqF6oOIBfWiOo3SDZ7Ud
-	 vPVWp529VduJ32IpAP9jylZwXzSAQldQkkJO0lZoW8nTz91C+GIZi2owO3K0ozmQHNw==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=L8TIOKAK5ZO/AJn4EDKI1sABIjRjRP+HnD9UzsjEV0o=;
+	b=qvfS6cszefY/s6P4bsLqnDP8tZbohsdhJWw4PRkO8fOXXnfu4zWvBnr3qNfceMHb1DiP
+	 XsGEQ84P86U09PAqzVdWM6rfcWWfCmxOUs1zlPKPaUXTqIsazSVFsTlxA7elr+3fyMen+
+	 Xg4gtEAxUIcjYoJfLhyVqx+6mXw/FUa2qPsmQXHVHIlzAkbbccyAOKHC11jlJ1fB6cb4x
+	 gTSE6Lv8JfpWjcspb2mT5rA+zEQyU8iuzOOOHeLoCwaa58eLeBf9sRIDo+PQmaGBwtpgH
+	 HpPb58KXdZThx4GuZGZW6prodcs++pIHvmyji9zbi7ocpSoVkflckImbV4sUb+ypxhQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aFa8jg8i;
-	arc=none smtp.remote-ip=209.85.128.47
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=NHbBpTO1;
+	arc=none smtp.remote-ip=209.85.128.48
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8738606A31C
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 20:49:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8738606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EA2606A32A
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 21:37:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 93EA2606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aFa8jg8i
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a5087a5348so1783955e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 12:49:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=NHbBpTO1
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4b4571ff080so3095645e9.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 13:37:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794170960; x=1794775760; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=lcBQT/DgFL+Q32k682qKIG9RkjDSDm8GiU83RqsNyh8=;
-        b=aFa8jg8ixedNGQI/n8mEkm3ReWeHLAj6CyUTxovTtYh5rOKopaS5Awgr+l5IZfG1u/
-         MvS/XOwaIbmi5x/ObP9hebsAkFS6X0SorAJSkXVLbiNbz9Z51R4TIq3+pLCaoU2OAe5H
-         n8fpJ1sfTpRrZiDAcaljfFeXPsmgtmuE/wPDG6NzTRpQaVkbMAdZ/oljm2BSJQjX8Ab2
-         JNynkS8Rd4WJ12ZjPJD9ps/55tqQYOZkggqjqxQAz4osybo0pAfjRJ4faIdi1X0D38cP
-         OkSRfjChdB3r/w7nAvYvzxN3aLlTicALJh8x8UEYimjTrKP6U6K3sdafi3nXAjoWVA2G
-         e5rQ==
+        d=gmail.com; s=20260707; t=1794173822; x=1794778622; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=L8TIOKAK5ZO/AJn4EDKI1sABIjRjRP+HnD9UzsjEV0o=;
+        b=NHbBpTO1b3sbDBGVHG/0BZgH9TAvD3ll9f/tEk8XtKiBecqfCwkQDhh+l92Hil9Jy6
+         17CtBnf+NUOf2d3/0E3X8v5MUcOfQQZvAcg7jxNZz2nOGKh5Wtt3t5kYpee4oGeoXfL1
+         fGu5JUCUk6tErdxBuTP+5mr44+RuVMuIbngsBDeWjx9TInwJZd/a6P+wKLFm0Gpf5p3o
+         YBjohUKgwo9XKmmlcdj8tJ0PUQO/Bfk4w74fsaA6SP1mfhSLjkRzpLn0vgGDUYBVpoMy
+         VZeleUukb7PLU7ibdIq5Rd143jiY6TsULVd3xiNllU0ceUqmymERK2dLVoqAuS8BPXwS
+         SVxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794170960; x=1794775760;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=lcBQT/DgFL+Q32k682qKIG9RkjDSDm8GiU83RqsNyh8=;
-        b=Y/phz9E3sV4vYSSFXAf4FhirFaBlhE0kKizFOavosl3nDiOYlr1dAwjk+y9sy0hcwD
-         7bTpNGlg053bLVcGnRtI/wIhJlVpf1Qjcr/rTsm8dUgWomaLr5GD9YEM3VNflcjBzCcX
-         S+tPOuDDEaFpKsRlbeFynIb8wL7GVI0dfcKWB857jj7cz52hq0pd47N8VObL9FZQcxtE
-         8/nTBNB58811FhFKMzRr+LtctF0d4DrWPdHg+gzEBiSI2YRfk5ocx+G+5ErBG7wKehQw
-         6VLCqr4RzTv+nUL5yt8oQCFPO2mrcBbYuAYb8hpgbht590l0toyppPfvpP1CSeWIjLuS
-         TBVg==
-X-Gm-Message-State: APuU4Z/uHTGbaCQ0rJdr/RcPvFKC9+E0dE+KFHf3MbmGesbJ8oZfe+t1
-	QBc1C3MT7AsYwnSIJssxOtkDADwOr8GICuHh4TBizZ5L98csZONAEVrv
-X-Gm-Gg: AYBFou19Gr5uOUAX2/1HpjdNMYZ1ezCNtTqZTAFD++T5bw1VXXf4d0Js1ydGJxWoihP
-	dO1O3PQk4PYLVLFwkfwwbx5/g+Z+GwHWowzjMMhQZXEQMLhyQ7EXmDvFjP7JDPaIbseZb90WQyu
-	GyOmmBZmli2yqRtyi2w+2UAbt6RCqYqIGNuMsCfhesVLCwQby7yWkGmivGY55A9icNZNCe1wH56
-	t1BaGVf6ewctJ9W7EMXtJWmUAELuUpJtqOnS+6iTnR76HQLHejjzXqCw7InoRVt4y1H3KcL6XIq
-	Ko+OWymLGQpXsWwg5HyJCpkSq1oP5z9G67q+08mC+mq3LfRLvM/TCa1L3nlQ/n1yGTZXcGT5OQk
-	VbGP/j3CRRdDxZl3ZpI9KeRmnpJN+TmXE+Rg8mq9G7MXyYNx6CUcyyXAW8Zw9rx0+3Xb1qzHb91
-	E8G33NYddvWJdfW3zB60UntIklVtEn8xvEIryxjWET8pwgZ8VpHNuyTW0qpuh3GuBuvc8Lqlog2
-	IxxkkRxK2wgdnK+MoCErLLpo659zQgPS/uA9rzy4frc24kCrHk/ipl0qhUs6Np4O0vuHrsIRMzz
-	DWw4+JJ7pQdZYVVrqt9/pHQwJyvFJ20qEXuou9Lj2YeVfdcoXsw9BbhcqkTIByZGsQ==
-X-Received: by 2002:a05:600c:83c4:b0:4a0:1efa:c74a with SMTP id 5b1f17b1804b1-4b963c6ca2dmr42368085e9.20.1794170960182;
-        Sun, 08 Nov 2026 12:49:20 -0800 (PST)
-Received: from laptop.home ([2a01:110f:4f01:4800:421a:58ff:fedf:2e2a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee2b8c0sm94217595e9.9.2026.11.08.12.49.19
+        d=1e100.net; s=20260707; t=1794173822; x=1794778622;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=L8TIOKAK5ZO/AJn4EDKI1sABIjRjRP+HnD9UzsjEV0o=;
+        b=WuNppkMDzVA1Dz0wg4tQ4SSPVCsx+02k10eMiHMA3ukUtaI2vj1knXbp++0aQscWRl
+         rqbStaI4RFlKb6pHt5bDyAF/VghGhbWtW95/31O5urqUaIoqVaWOE/sMIKLLN2/yoYZG
+         7cW8qJWo9XHwu1EjgQcSF3zO2rECMI+0YrJWdgm04TUyQNf4Bl2rFxeqFK8n+AiR5tid
+         s6KzcG0/oq24rqGAGwsB9sqx3zw7o4KzgK8FKBxXxM15Hbm360oSzx/oxmemwfJVd964
+         B4z1+SmHxRmskIoOEE6cfYRabpO0/MnCeAZ5h4Lhk2S44wE5k2DI3SSX9uilCPfFFEvH
+         tZRA==
+X-Forwarded-Encrypted: i=1; AL+hErGf61gDhEsIv5wwCGH8QiqTBRho2f3865L7Nt+ruKW23dW7SkoB71J/9y5w5oA7Yb9SlVA6eCz8OPxuCE/tqSgujdk2@vger.kernel.org
+X-Gm-Message-State: APuU4Z+AWt8Sdunt+uqQbVuZHGOJ2fkutLlqMVKO024jtzKXvuRjVzAB
+	NsOVYMgiWubwRFpUEf5ZBY6xPx4ukDDR4WVJKy8lLf9uVOdVrGl8nKUt
+X-Gm-Gg: AYBFou2hOxTOWL9mDUEJHcJuftBdcaQYBD4B1Mr3OiJAOVhgx73i8trf+Sxnfvx92bD
+	Zg6nXHuDp4F8wSH3kKVDBlfGLntLQJS8w+xhlgN+0kSZcoai05g1A1Q6W7PBSdKbrGTQODkkKkq
+	sKDKlT4WoD429NbPc2o5Flob3Pc3LvGgTzFUbUi4thZzxu7/XCkSDeY8J2QcAKF0V+UfuWDBGGH
+	zcH/QT8H6Usu6atTV9jc5Nx4rHJqtHZ1E6w+fxjlUu+ixXDSA7PmtvRPZ4MWAc+KvG0wCVPKdVU
+	zzTyhG/kXeOcP6uEhtDBq134LOup8wgath1NLo0ugS2tNeH81kYrOA2BOXu6MiFsK2d7EtUBnZJ
+	5sBS1Twi4QlbLV4EuvE58hYNXxfsUdNaiW5cEVkPn7flmcRu7bA83GbLhZr5/NFO79tDaBtSikO
+	xyICyLAe7Wa1vGWtqNVdo0vT9Xbt+Y6z7JWu1JNl4FSmPVdBmkSw3rr3bPoiwuxzoLv1P05G5L7
+	F9h44U41pbV+UIKEm4yaRiqb5gn0RCiWefRy+ZyhsTcv1uu9DeljUTwH94yY5fLQ371TOV9PrKT
+	i+ie46zSSFo7YnJMfOgGIzojG8uUcS8SaUcWpg81FvxRb7p6rehikWKQudUv
+X-Received: by 2002:a05:600c:6095:b0:4a2:150f:1601 with SMTP id 5b1f17b1804b1-4b960da5640mr43548365e9.12.1794173821866;
+        Sun, 08 Nov 2026 13:37:01 -0800 (PST)
+Received: from SurfaceArch.localdomain ([207.188.128.229])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee247e9sm92178595e9.6.2026.11.08.13.37.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Nov 2026 12:49:19 -0800 (PST)
-From: Konstantin Pospelov <kupospelov@gmail.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Sun, 08 Nov 2026 13:37:01 -0800 (PST)
+From: =?UTF-8?q?Antonio=20V=C3=A1zquez=20Blanco?= <antoniovazquezblanco@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Chen Yu <yu.c.chen@intel.com>
+Cc: Sachi King <nakato@nakato.io>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	linux-input@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Konstantin Pospelov <kupospelov@gmail.com>
-Subject: [PATCH] platform/x86/amd/pmc: Delay suspend for HP EliteBook 845 G10
-Date: Sun,  8 Nov 2026 21:48:52 +0100
-Message-ID: <20261108204852.11194-1-kupospelov@gmail.com>
+	=?UTF-8?q?Antonio=20V=C3=A1zquez=20Blanco?= <antoniovazquezblanco@gmail.com>
+Subject: [PATCH v2 1/2] Input: soc_button_array - support AMD variant Surface devices
+Date: Sun,  8 Nov 2026 22:36:55 +0100
+Message-ID: <20261108213656.13031-2-antoniovazquezblanco@gmail.com>
 X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261108213656.13031-1-antoniovazquezblanco@gmail.com>
+References: <20261108213656.13031-1-antoniovazquezblanco@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -95,45 +106,114 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On the HP EliteBook 845 G10 (Ryzen 7 7840U), the CPU stays stuck at 544
-MHz after resume from s2idle. Delaying suspend avoids this.
+From: Sachi King <nakato@nakato.io>
 
-Tested with and without the patch over 6 cycles:
-1. Suspend.
-2. Connect the charger.
-3. Resume.
+The power button on the AMD variants of the Surface Laptop 3 and 4 uses
+the same MSHW0040 device ID as the 5th and later generations of Surface
+devices, so soc_button_array matches it. The device check then rejects
+it, and surfacepro3_button binds instead, which is the wrong driver.
 
-The issue was reproduced 3 times, and was not reproducible 3 times with
-the patch.
+soc_device_check_MSHW0040() evaluates function 2 of the MSHW0040 _DSM,
+the OEM Platform Revision, and treats a returned 0 as proof that the
+_DSM is not there. That is wrong: 0 is a valid revision. The AMD
+variants implement the function and return 0, so the check rejects
+exactly the devices it is meant to accept.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218557
-Signed-off-by: Konstantin Pospelov <kupospelov@gmail.com>
+What separates the two groups is whether the device implements that
+function at all, which function 0 of the same _DSM advertises. Of the 32
+Surface models carrying MSHW0040 in the ACPI dumps at [1]:
+
+  fn 0 mask   fn 2 advertised   models
+  no _DSM     no                Surface Pro 4
+  0x03        no                Surface Book 1
+  0x05        yes               Surface Laptop 1, 2
+  0x0d        yes               Surface Book 2, Laptop SE, Studio 2
+  0x0f        yes               the remaining 25
+
+Only two models do not advertise it, and they are exactly the two that
+need surfacepro3_button: the Surface Pro 4, whose MSHW0040 device
+carries no _DSM at all, and the Surface Book 1, whose _DSM advertises
+functions 0 and 1 only, function 1 there being dGPU base attach
+handling.
+
+Use acpi_check_dsm() to make the decision, and keep evaluating the
+revision afterwards so that it remains available through dev_dbg().
+
+[1] https://github.com/linux-surface/acpidumps
+
+Fixes: c394159310d0 ("Input: soc_button_array - add support for newer surface devices")
+Link: https://lore.kernel.org/all/20211109081125.41410-1-nakato@nakato.io/
+Co-developed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Sachi King <nakato@nakato.io>
+Co-developed-by: Antonio Vázquez Blanco <antoniovazquezblanco@gmail.com>
+Signed-off-by: Antonio Vázquez Blanco <antoniovazquezblanco@gmail.com>
 ---
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/input/misc/soc_button_array.c | 31 +++++++++++++++------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index fed6c51879fc..037bb575870f 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -297,6 +297,15 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "83N1"),
- 		}
- 	},
-+	/* https://bugzilla.kernel.org/show_bug.cgi?id=218557 */
-+	{
-+		.ident = "HP EliteBook 845 G10",
-+		.driver_data = &quirk_s2idle_need_suspend_delay,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP EliteBook 845 14 inch G10 Notebook PC"),
-+		}
-+	},
- 	{
- 		.ident = "HP Laptop 14-fq1xxx",
- 		.driver_data = &quirk_s2idle_spurious_8042,
+diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+index dbf86ea778e6..75946e18cc80 100644
+--- a/drivers/input/misc/soc_button_array.c
++++ b/drivers/input/misc/soc_button_array.c
+@@ -546,9 +546,17 @@ static const struct soc_device_data soc_device_MSHW0028 = {
+  * Special device check for Surface Book 2 and Surface Pro (2017).
+  * Both, the Surface Pro 4 (surfacepro3_button.c) and the above mentioned
+  * devices use MSHW0040 for power and volume buttons, however the way they
+- * have to be addressed differs. Make sure that we only load this drivers
+- * for the correct devices by checking the OEM Platform Revision provided by
+- * the _DSM method.
++ * have to be addressed differs. Make sure that we only load this driver for
++ * the correct devices.
++ *
++ * The OEM Platform Revision _DSM function tells them apart, but its return
++ * value cannot: it is a revision number and 0 is a valid one, which the AMD
++ * variants of the Surface Laptop 3 and 4 report while still needing this
++ * driver. Check whether the function is implemented at all instead, which
++ * function 0 of the same _DSM advertises. The devices that need
++ * surfacepro3_button.c do not advertise it: the Surface Pro 4 has no _DSM on
++ * this device, and the Surface Book 1 has one that advertises functions 0
++ * and 1 only.
+  */
+ #define MSHW0040_DSM_REVISION		0x01
+ #define MSHW0040_DSM_GET_OMPR		0x02	// get OEM Platform Revision
+@@ -560,27 +568,22 @@ static int soc_device_check_MSHW0040(struct device *dev)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(dev);
+ 	union acpi_object *result;
+-	u64 oem_platform_rev = 0;	// valid revisions are nonzero
++	u64 oem_platform_rev = 0;
++
++	if (!acpi_check_dsm(handle, &MSHW0040_DSM_UUID, MSHW0040_DSM_REVISION,
++			    BIT(MSHW0040_DSM_GET_OMPR)))
++		return -ENODEV;
+ 
+-	// get OEM platform revision
++	/* Fetch the revision separately, it is only used for debugging. */
+ 	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+ 					 MSHW0040_DSM_REVISION,
+ 					 MSHW0040_DSM_GET_OMPR, NULL,
+ 					 ACPI_TYPE_INTEGER);
+-
+ 	if (result) {
+ 		oem_platform_rev = result->integer.value;
+ 		ACPI_FREE(result);
+ 	}
+ 
+-	/*
+-	 * If the revision is zero here, the _DSM evaluation has failed. This
+-	 * indicates that we have a Pro 4 or Book 1 and this driver should not
+-	 * be used.
+-	 */
+-	if (oem_platform_rev == 0)
+-		return -ENODEV;
+-
+ 	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+ 
+ 	return 0;
 -- 
 2.56.0
 
