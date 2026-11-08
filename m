@@ -1,95 +1,125 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.44
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794152465;
-	b=tnBSLBdirYIFBtP3Kag4pdwYK0ir1YW3ZP69syBunNTbT8oxBroDsNM4fiG5lhILlaBk
-	 EV/1L09uPx2jimsVOQ9ujj5KYboTYbf3fr8qOO22VPAdtAJsxva8JN8pMPYFol1e6rUFD
-	 RlEKETc6BTbosAZp/yh5a33dEApS99/JdO5FjDOiY4pbCiNfn9/bG+HgRPmmOiz0dH71K
-	 T10jr77iOxXkYxZSAppC/3JuyTFXfBQvvkiYlb5XO1oavoXz/XVDrrt9x2K3nK+LXXbAh
-	 t25YKYR7TvoPNJwNVdGzA2bh4g2+3izK9vIb0Vh3s+WXnCANDD+qx5s1HjbgdESLTZA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794152465;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.43
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794164398;
+	b=kxwAl0AGRQIpU12vb/aHi3ErY+AumCopfZ2fPh754rVV9B2yf0rTSwzxpx8Wz+nU3orX
+	 npWeQjMHKlGe01/8akTjDaqT7KmI0z7FXLQlINlexOAd4prsykDUB1z8R5Wz02oOrljCG
+	 UIRl/F8hueceeWxqLSfWDsknSQp4qwfQ+qdhXlQ1gtCMDdtm/VrwNjL0BND1HyopFoyVU
+	 QRpjaDghE04jwuTbkjnGFxZs3/canGfUA0BkUpZMCbVTbLbZXXv/qlqnVUZccBhci0xnV
+	 RK/UVsV2dEGR/1Nh0vDoS8N6r4KSGSocAGemz8xeE4bpvdWoHcS+ICGB5pjswX1v4Kw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794164398;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
-	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
-	bh=TI/AUGZciwVPY9wI7Ypz9QfScP10dM/co7oPtuQApfg=;
-	b=cuBA54oj4taAWFNRrd6vYAnJI6k+/WeT707rb9Z+hjcUCD/fCr0tcxdr2/Axw7wDOVOt
-	 mifDNrgVDCkdgdqmr1OiAHVHUepRveqX0iqKJT5rokVKeB5ax34z/YKIiJ22zsPV1LB73
-	 sf3dgT39Q0UA99EZeRpyjUTSqsE/kH8pk9EYaJRG3ZaeDh6uVwGrmQxl1mFJKWawVsbQT
-	 OzVrJwouoZyoEzol4zcWMultcmtfHwrklyGX2TN/MMnp/57FZYo/Q8D4T5Lxyfmc7t43C
-	 9b2jXfFbeeGwNZzfUOV7qMbZqGkyBKcVv+KtIL8/F/vFzkkb/t5Q7vAGbx4gmzwNoEQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=JLhUwzup1lwefYy8NOOFjthYnrByVfTsqIe79kkV+Lk=;
+	b=Z06TPSCVzJ9H2Qa6vKTM6RDl9/vxoLesx8Y1ovMcSrzkZunJ49GdOLvXkk5rao00k/0p
+	 Fupils4aXcHAgcFn6Eay1WWfM05yzKp05XaFgTIC7VNc/XY2JNkZdWfgUEbjaLgh83vE4
+	 lFP3Hol6VTYFcCd86mOAH3SWOK1opbvzUwRtpREB19W/9pOFG1Fm7dJfgod4jL04Z0m9K
+	 3Ew4zsrY/Q2K8yisSMVL0M9dvFo6t8ULPYMdwWhHFggRUbidqSP8KiDwW317ONd1VlZZK
+	 7bTjllZ02z33G0cP7oaboTXpzYPnag/EZn2lyRTVHoMY3Tuxr33r6Vjk7ISijoRXFIg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=shG3c5mc;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.44
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=XrEUEgHU;
+	arc=none smtp.remote-ip=209.85.128.43
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967C3606A31C
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 15:41:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 967C3606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F8F606D806
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 18:59:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 42F8F606D806
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=shG3c5mc
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-1adbf62dd31so175436c88.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 07:41:04 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794152464; cv=none;
-        d=google.com; s=arc-20260327;
-        b=a1TOVpEAm5wcmUfLc5DzN1tmQCSVgtz2ItlhlzoFJ/hq4x2i0jrOWaB7CWtdXTwZeO
-         D6jm/epTYqBaY9HXymhLokqOV9K3n6dLoKJZb5t/WbbWV6ukvlQsUurSxRFFERQDdaag
-         A3flDimy76Txenk10VNEg/1rV8TUrHa3BXPEtKiyA3Wq7lT/bbgbcK/MNWmjIycStWsu
-         Ajr1RiufHk3rXySTr0wUGDFqJtX1U21MJhN6UsztrF/zQAW9XONoqTsRTxeGFt4OU1x/
-         de2Z9FCkqSnVXXm9Hv08611KSw9hpCUacbSAYtj0RqW8y9UIRG/EqgAZkW9wnVGJxvQ0
-         XfMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=TI/AUGZciwVPY9wI7Ypz9QfScP10dM/co7oPtuQApfg=;
-        fh=gxy6PnQWsnKs+GdPpLQkyZnxq641YP7gkuXFkxLxVcs=;
-        b=b/SetPZimIGLs9KzgTtOKflW4NX9yMRFlEkmNmHe/Gy0VvIlvl9gLDntWVdhOBq9dQ
-         FjrpMuNvIeGGYqiStvcAHNC7Ll+Sctuux8GrmijNxw8AsbgoYyByDtzxYOR2QjR68i5P
-         Z7fL462TZew9eUux/LfI6NWDo/zqTGRnt3HyY8ZO5GaxNArk4V8o/sNOAFTY15FwLwlC
-         3QyQJnCG6SIIjgPrprTgtfyn1g6ZHmnfGCS8413cM+r4GlN0i3g1c6tSJyV7m42UIqSJ
-         HpAOR917krGXTfe+0gyRTaPeITf0Iuusc7wwxBVCnsfPxTfVWfBbZglT1V23i3xtN8FP
-         PZ0g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=XrEUEgHU
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4b79502c27aso1791445e9.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 10:59:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794152464; x=1794757264; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TI/AUGZciwVPY9wI7Ypz9QfScP10dM/co7oPtuQApfg=;
-        b=shG3c5mcpCwhyjR2HL2YIc7GBFy6VHvfOYWYQyfYukC10ieSYhh9Y162u2whHB63QV
-         HlQz7HipJwbLBfcHhOyggrxJQE2XtuSwjy92LQtsiYOCs4B4BP4yqVLTgguX+yr9H5CO
-         8+bOWY3KzMzDpxIxMsNVijbuHoezjJBpNhyfGSJlDfL4YPUlJZbOUkRpzLS6yzysrlka
-         xzUCzwTyOfE2rOlegDpiZRetrtZHGVR/hZ1EPI19RJxIbdJYML+tkXKFE9BIjqKt0GJl
-         r0sK6uLX9Xc5s2UT/svdGcWuDTSpnm3EKidXsLvqYuB4NdaT+byY3000L1Jrsfu+qICL
-         6yug==
+        d=gmail.com; s=20260707; t=1794164397; x=1794769197; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JLhUwzup1lwefYy8NOOFjthYnrByVfTsqIe79kkV+Lk=;
+        b=XrEUEgHUwv+lt2Z0T4RzlOQuYT1yMbnY/MJrtF5HY2pc8m0ujKE+1IGJbqc3A1SsPJ
+         Pz+po0Wh7ECcrOl1hyNdZBme+OsO/r11IeCA1lW9KMbstFhlOkC0Hm7Ef+TTavGsfrDk
+         7T2AE8nlcorDhYFpLo0KTCt4xOv09AacMRilfH2h4PS2mZ0iBReAF8XAcgtI3iT+qlRY
+         EJQPYUIUlDRCCjadf1+24R8V0flZyhCZpLCroCVsidoQ510350k4POOaAcSXgGRrBTWF
+         rbpUnz5O6K0TOR8uz/zwLHiObwDAqnCJFWP0+ssCNYCBYnXJwQ2yMfUqdKkv6ro/lp/q
+         XMaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794152464; x=1794757264;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=TI/AUGZciwVPY9wI7Ypz9QfScP10dM/co7oPtuQApfg=;
-        b=1eI8uZC05hqDAGHJZ7Oh0wKUd2q2cmLNolLZVwc6kaLkVIikduaz5E3qQ9sv/nPL2x
-         1I14x/lonw7Cl8qlfcAU6ONOVw79XDU3CSqYH0pX+Phn+feNHLHU8wZ1CFL3we741ou9
-         JAET615WduNNpzPSuP0qOyeR71cXysG5FmevncXKuML2bl3q0ilXHnpsvTh+EeqfIK0G
-         VTq6b7nSahCen4eZwfWDVD5zz/KQ9YmYi0IzKqNdvnB7zxysKrmFItGRMzP3rDyzJDFY
-         eUzock4J+QD8Xky+ffHpDC0wpzL0v2nz7JpoKh9mVOgZm0wfRaQaSMIoeUfrt0V9nYxh
-         ZM3g==
-X-Gm-Message-State: APuU4Z9voXFcja02T0dpXNSMid374i52Vg86TyUHIV4tvelAcyfTmbwX
-	XcRWqGZd368Z4H5rYSLVS2In5445pzZTAPeFmXs3Hm2HzUQ2sx/prDtFNN7B7IBVB2n9qn3UX8b
-	B0jLuRueQjj57r3gAZ1H8Q4oQptVRn3U=
-X-Gm-Gg: AYBFou3q+7ZozfLDFCeD9mhJNObOX7zDX7VjKZRfiokKnWtenU7c7KlxFP0iPQVizeq
-	bvK5U5vHn14zSVVCa/+IDJeTa6nPzq2LUnIN5/duSQy+FGyPfO3ypA+QYWnYdDEyilfFEEyPgkm
-	JX7qERAm2Z+4XrJjw8m2EMNPTat7ycHQJSJLgubWkO/0Db1rK7yxClwVBFQHw3WVLDEGNWoOyeH
-	EudR1mrLSdnoexJDCu9LmNnpQTIgUHoBPUcNiEDo/34yr7ZKQ39oBt3fVxUHcowp9KN3jnvjsJF
-	oyao2rJgPj/Dkk5d0+SNwzmfCyJzAEhASj5szMi30GVs2POcvT/wV6eiNp+vLtP9YRUBOuSuczd
-	ZkuBp9d6V/E+KrMj46ai+7N5RSk/3RDaMDvZKjrT8qG6Jv3Zf+pkOk00bHAzd
-X-Received: by 2002:a05:7022:1309:b0:148:bc4a:8356 with SMTP id
- a92af1059eb24-1b39feaecccmr2228737c88.28.1794152463457; Sun, 08 Nov 2026
- 07:41:03 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794164397; x=1794769197;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JLhUwzup1lwefYy8NOOFjthYnrByVfTsqIe79kkV+Lk=;
+        b=SLKvG+x6hEqStcyXNaQm5XMnvbjLH+5GXrpBZ0SYYnQINi8Ow8CJuEdqG7glfIshnA
+         jHq5GTt1guwXvfEIqz8Qfy3/bL89v/lGTinvSgVex6XOQ3UiQnyj9gqyl/k/Y52zD8ZL
+         3nEpHXmy7HsPzoZQ9axhKrt459Hoy6GD3rOFsdjYWVeXzXdkRyCbj7iBeYYlNK23jjZh
+         uWWTeAeYcJAkIStnuK3zCCxCJp8YHtmTe4sqwZ8GYcw/x7J4s/AHSsDnweu4soeX6Z5X
+         oD8qbQTfZief4V+gXA0Z850y1k7gxAulwSzM3eguM/oOcPzHqirtM2bB0poxL9oTNjUi
+         kdxQ==
+X-Forwarded-Encrypted: i=1; AL+hErGUcvOXHf5NLYC11mFiXd7+YhNbRRWRZCV6b8BbFb9nM/Hivs4Ty1uO4YmMhnnSH8cjQ/RHXfD2glWztnhouo6c9sg2@vger.kernel.org
+X-Gm-Message-State: APuU4Z9LX4XIKh37a9MvA9NtGK+hOP6ktiGaja1nSk4pHNhUO0hdM+E3
+	r5iXetVJ+e2YojGD8+CaHLqSBJ+wSjBSmnEoWIG191xAOaURGKoQdXFF
+X-Gm-Gg: AYBFou1SZsrRv6LiSplU2xftgqTYcowf51YwH823zRvfcYNw3QbBBE8WdjjlAtLko1H
+	hZDwq2I9zyPu+/LzS2KMFnr5AdXrsx13asRkIaZh6EhMCu9n0SiY6WfqNNNZ84RuUg3tAITpvEQ
+	stIefYGC2Eb9yiwRNEDv6H7IpyUE+PzcPL6GPpVD/ef94VsTLR2+ErQuOnoLLE4GEjqR9lD5ydm
+	/rcSxvbT7vxmQb2/foSM1vjXhRlAWYoy50YVsntY0KJEZSFtT5aj+vGHL+IPSWFvMtGoQBI+HRO
+	HovyixuOGX2lj7ky/OTPWQqLuFXeNe4xldAq1C62W5eAyyCbFYQ+Yv51VbOwsNwJpWdEW5a7Ozh
+	K/tT81WPJr4uImmDwDo8fNbzADdhgAnJFh2nRAMrrV54/mimTJl30HRjd3Tz4vNxcAkc0k1LHFQ
+	+PC3xAbqnDcS11FiSFYWEtUJFjfX74RKP43KgYTTSPsOo00Dy0/M0fDDy5Zq7+jvjtOsZONlnWK
+	h/BMH1QbgQzKqA5IyLNRcuKJxJz50pYYooW9/lGqmY+4xvs4DQbkxyXOFpwsksZ1qnZ0fj9MpyF
+	uFflFekKeIF8tjvVNXqL9B9FNl+YiPqpwNopnu9fJdJsL18+4Q29HFH3tmhZeBO+
+X-Received: by 2002:a05:600c:468f:b0:4a1:7e77:c382 with SMTP id 5b1f17b1804b1-4b960d9b170mr35982125e9.5.1794164396406;
+        Sun, 08 Nov 2026 10:59:56 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b7efb1f3acsm185228445e9.14.2026.11.08.10.59.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Nov 2026 10:59:56 -0800 (PST)
+Date: Sun, 8 Nov 2026 18:59:53 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ linux-fsdevel@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik
+ <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>, Jeff Layton
+ <jlayton@kernel.org>, NeilBrown <neil@brown.name>, Eric Dumazet
+ <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Al Viro
+ <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph
+ Hellwig <hch@lst.de>, Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados
+ <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, Jan Kara
+ <jack@suse.cz>, Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ netdev@vger.kernel.org, ntfs3@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org, coreteam@netfilter.org,
+ kexec@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, ibm-acpi-devel@lists.sourceforge.net,
+ jfs-discussion@lists.sourceforge.net, linux-alpha@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-mm@kvack.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org,
+ samba-technical@lists.samba.org, sparclinux@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net,
+ Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org, Chuck Lever
+ <cel@kernel.org>
+Subject: Re: [PATCH RESEND v2 14/23] proc: let procfs copy in writes before
+ pinning the entry
+Message-ID: <20261108185953.28054fb3@pumpkin>
+In-Reply-To: <20261107-akteur-gemieden-eckdaten-21304d085e35@brauner>
+References: <20261104-work-procfs-core-v2-14-76ace653a773@kernel.org>
+	<CAMuHMdVfakapgBK6TBhO1iWX8qzvLDk8jzRS=t2MVa5G=MCUeg@mail.gmail.com>
+	<20261107-akteur-gemieden-eckdaten-21304d085e35@brauner>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -99,53 +129,19 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-From: =?UTF-8?B?0J7Qu9C10LMg0KDRi9Cx0LDQu9C+0LI=?= <rybalov.oleg.dev@gmail.com>
-Date: Sun, 8 Nov 2026 18:40:52 +0300
-X-Gm-Features: AclHuK-WFGDHmxIeaNgit3IU_Q4J-eaaoStqVsY0uA2NoDy7gva41C3EZw72eME
-Message-ID: <CA+Kibh6FHk-QgmPsi4spmQ5MHGvt05xYHuRiiMMQdPP+31Z70A@mail.gmail.com>
-Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
- cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
-To: qby140326@gmail.com
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
-	regressions@leemhuis.info, regressions@lists.linux.dev, shlyapugin@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Same model line, different board and CPU vendor: I see this on a
-RedmiBook Pro 15 2023, board TM2209, AMD Ryzen 7 7840HS. Adding it
-as a second affected machine plus a few observations that may be
-relevant to the quirks table.
+On Sat, 7 Nov 2026 10:48:35 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-  XIAOMI Redmi Book Pro 15 2023, TM2209
-  BIOS RMAPH5B0P0909, EC 1.9, USB-C charging only, 100 W PD adapter
-  Fedora 45, kernel 7.2.15; identical on 7.1.8, 7.1.13, 7.2.7
+> > While at it, I think it would be good to use this conversion as an
+> > opportunity to replace "char *" by "void *", which will probably let
+> > you drop several casts from users.  
+> 
+> So I tried that too. The thing is it drops exactly one u8 * cast in
+> ntfs3's label write. 
 
-Same symptoms as reported: performance and balanced-performance
-return -EOPNOTSUPP while charging, low-power is accepted but reads
-back as balanced, and --block-driver=platform_profile restores
-working profiles via amd_pstate EPP.
+Since char is now unsigned that one isn't even needed...
 
-Three things I have not seen mentioned:
-
-1. On this board the platform profile does not track the effective
-   EC power mode. The budget is set by the Fn+K OEM hotkey, which
-   cycles three EC steps. Measured at the package: ~15 W, ~35 W
-   (the state after every boot), and a top step that bursts to
-   ~65 W and settles at ~54 W / 4.4 GHz all-core.
-   While the top step is active, laptop_profile_get() still returns
-   balanced. So relaxing the AC-type check alone would not give
-   userspace control of the power budget here.
-
-2. Ownership of the event GUID 46C93E13-EE9B-4262-8488-563BCA757FEF
-   flips between boots on the same kernel: some boots redmi-wmi
-   (input "Redmibook WMI keys"), others bitland-mifs-wmi (input
-   "Bitland MIFS WMI hotkeys").
-
-3. Writing 'balanced' to platform_profile while an Fn+K step is
-   active is accepted and wedges the EC: package power drops to
-   ~9 W, all-core to 1.0-1.1 GHz, Fn+K stops switching modes, and
-   scaling_max_freq stays unchanged so the cap is firmware-side.
-   Only a reboot recovers it.
-
-I can test a TM2209 quirk or any patch on request.
-
-Due to a language barrier, this text was prepared with Claude.
+David
