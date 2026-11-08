@@ -1,67 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.216.248.207
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794111478;
-	b=YJSaF8OxERNLZX8FLvv3xuIoeWTvGEtaLPeLOTJLz9c/WsetjfthDYLwTvbvkkvWfgxE
-	 baY+AezE1lYi5IiOtXOPXg+NEqSGKcJQ4peqbMFgtVraKxJLJLF+Uatj2JAAV4q6dQ6Wk
-	 s8A2AW+D9wMlQb4CxkJKvSlh4HA7TAqWxiDkewA1mCEHtqAt8SxvxZ3f9qBvgLv1nNl3+
-	 ggDJhKIQeSZq0GROcvEd4ws7YfxvOSZvYdRgR/gb2UNOWFAD0L59gKI88ZTg2ip8uTh0b
-	 sKB/INxcfBkjqML0afnreu8pIEvF2wnWm82u+GQY/DpqwDIo3k5tepwPSgY2oRYohiw==
+	t=1794132575;
+	b=fT8VErhqsOjQXXXQ+dTyK303phsw8qMSofBcz7cOdDT3IC9uxMX87nAQD/PcEI+EzcGp
+	 PYr5M/SERVxYtZfagjgPHlfdog+fE8ci2DZhe+6rvPnQ6dU/TolmquAvrTPR7yDNyZ8z7
+	 zwKD7GGdjCDcAgj/epyDJTXHM5C8pH7qk5ODQkm/GL6N9gDM1Am6VFamrv9VlatVNryST
+	 q0Qmjnr+Asln992qtrFXRLhKGKuRnDGnfuiPgW/Qe4TJ5C+bOV5lIClu3YBW7S8N6T1Un
+	 o3ntCJgDgyPOm4YDs9Ta4CRr74OUy3CWM8TCyQX11eR0KFt6HSKh73vneRlwOVRuMZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794111478;
-	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
-	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:EX-QQ-RecipientCnt:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
-	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=O7ltMIL70cv53BUR4Z/C6B6F/Y26pOdnIMdecL8YHO4=;
-	b=gc8ASs7tQ/Ud0pMc3LcWZ2Ltr5ajO4gSQBHweV2gh9uHH2f5XbHyjTyOsbhHsahXd4mw
-	 6fDKIYUnJWCIaTH1aWfTZcvbWts1VDHzGSsQ+lGfr+rjPXGW50X19vN3akwXTAMWYOn+o
-	 TzTJi7keKiXmPqC/NUgmGl5sKxZ/ixRjbP3CYPkGxejZIuSXbG671EiGjMdvOVUvq3/dS
-	 BGXYUq4ifJt29bN1vtvsSLEdTCh1RleZbdnCzwFL0K+rhpeRXodsSL+saLGj9Aphy2q96
-	 7YuqCeWzIt2sKedwXLlZgfn10MjEvS0xvIYjhL3y/ZF55DYRoZPFG/Fx0xoSthEZp6Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794132575;
+	h=DMARC-Filter:From:X-Lima-ML-UUID:DKIM-Signature:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=1uwiNKMbvhBAXcecmGoFjqOAK5Qba8ZnTWBcEvlHDAs=;
+	b=hre51RktPjYQQm2QuY+lAmQpgiWoZvhrXSdcIkmLnD9jkbYApdWLmzTRcfpmTRo3F87F
+	 2ENTRSHPcJATnMnNjutNVUQ1B9gGeboSHuWl93HXBhByt7Xf9dMHSUwkAEmEIZAAWfhlT
+	 kn62i6RsuGByQNNHH7+de8KKdHHi6Z0Uxnt5NeiZh290j6pPk85BfsIbIJpPEmu6QMGpw
+	 iCtroR3tjznp0P/IflQ6+YxFt4agLKaEEeyNIOJK7l+Gu/CWHTxmHPlXNPr/Erdi3tNih
+	 YuMaBd1vjBD6gbgHoQ5Q4iQ8O51yWolHRJwJQqWA4KWsDqmucw7nlbZh6mLsmYc6PYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mail.sustech.edu.cn;
-	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
-	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=umiBltMp;
-	arc=none smtp.remote-ip=54.207.19.206
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=deq.rocks;
+	spf=none smtp.mailfrom=deq.rocks;
+	dkim=pass header.d=deq.rocks header.i=@deq.rocks header.a=rsa-sha256 header.s=securedbylima-20251205 header.b=IGdFcVa0;
+	arc=none smtp.remote-ip=91.216.248.207
+Received: from mx5.mail-out.lima-city.de (mx5.mail-out.lima-city.de [91.216.248.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57C7606A31C;
-	Sun,  8 Nov 2026 04:17:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D57C7606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDCA606A31C;
+	Sun,  8 Nov 2026 10:09:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6CDCA606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=deq.rocks
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=umiBltMp
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
-	s=oemc2211; t=1794111449;
-	bh=O7ltMIL70cv53BUR4Z/C6B6F/Y26pOdnIMdecL8YHO4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=umiBltMpWfOHQj8fIWgTY0iSMSzZv5YU0qVZxE+KztnZ9TDahi1+//ekjXWinZikn
-	 E01ldAmEzzSrBEIB5aEOh51E8d31OXUXsA4w28O4tVGsdzBHcOTiNnnvsBV9cY1RYy
-	 muvFdHW94cPA6UaI/zbA/d+Qd+wtjI3aeKDB1M4M=
-X-QQ-mid: zesmtpgz6t1794111444t7683844f
-X-QQ-Originating-IP: fSwqMu6GwghLtzUDEQZmWVAOb3P6GxOPvLuAsKklHRk=
-Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.244])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 08 Nov 2026 12:17:23 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 16933119279076137902
-EX-QQ-RecipientCnt: 5
-From: Fuwei Xie <12313607@mail.sustech.edu.cn>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key, unprotected) header.d=deq.rocks header.i=@deq.rocks header.a=rsa-sha256 header.s=securedbylima-20251205 header.b=IGdFcVa0
+From: Andre Eikmeyer <dev@deq.rocks>
+X-Lima-ML-UUID: 0cb6624c-966a-4a95-a126-0519d608ab05
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=deq.rocks;
+	s=securedbylima-20251205; t=1794132570;
+	bh=S6Y/LwG+wCmImnTNaesKgeOzR3fz30WpQYzLROThjVQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IGdFcVa0bidLQ3V6WX5gz1QLex4rCqOuR9A/6rS4Mi5BcStBYv7sEXYtNC+u17+ck
+	 4Y2GdUVRw/GmC7SkGlLWLZh9k3q4LbQUZWc/m5/QzC/hmCx7/Tln68oUBv/GkqdMMd
+	 Wn5PdWnZLBCVT4SutpfwE2sM7CRIzY++Dar86UWTONIj4ZlNldiBzsCGZ9e5Bcy3yG
+	 0U1Lcu5IGK/AGZ1jghZciN8xbJAAvqtPYH3ZutsiDOQOUE0GBcZhlN2owqiF9677hn
+	 W2fMkh8yPpLwR/7EBZPI1U7nv0sd/RBtZEuxmE3aUGJw+bxMlD68GhTgyr1sGhM5Hc
+	 9AoFEUZS/IHPw==
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Fuwei Xie <12313607@mail.sustech.edu.cn>
-Subject: [RFC PATCH 2/2] platform/x86: huawei-wmi: expose native Turbo mode as platform_profile
-Date: Sun,  8 Nov 2026 12:17:13 +0800
-Message-ID: <583B99876AEC4CF2+20261108041714.328986-3-12313607@mail.sustech.edu.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261108041714.328986-1-12313607@mail.sustech.edu.cn>
-References: <20261108041714.328986-1-12313607@mail.sustech.edu.cn>
+	Andre Eikmeyer <dev@deq.rocks>
+Subject: [PATCH] drm/i915/backlight: restore the gmux brightness on dual GPU T2 MacBook Pros
+Date: Sun,  8 Nov 2026 11:09:26 +0100
+Message-ID: <20261108100926.28950-1-dev@deq.rocks>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -72,315 +72,150 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NOuPBFlZdNxRVNdUZIM80Wr/pVO6U4bTbNSdeWK9/nWWffrBwaWpuXLq
-	TWJydptzFkldHmDb+05VivAfYUrKMHy3gUqx2y+NZbPHk7D9KgLgvfN7radF4UweU5I4b0o
-	xiUSrmKbuuAUqIbWohGojy0o9qyNtGUBcnxxhqeGtFXrX9QKcVhvpCFnx4YoV635PjDI9Wz
-	jnrdmjPASYzJ0RGuerxhlz0gXVphuKC/LBhRa+6+w+zStwVob1lhUD5+uLiJMXMwcqnN3X8
-	mcMvKePpUZeplkWUJhmvNsvr5CLyl/T/Dei+P7Js7DHFXHyUPqJNV71GRFEn4NSIxgpeBCV
-	7KgPiz1KJzf1LAqFjDrTKPIv0C/XNC1OKTx17Tj1ODdgvPAT0HtlR7AYx83uvTNXedoSELY
-	h9PzHYduA5uzFXClbGWQAnHi1E7l94yW22mOUZmZxgcorLAP8gLAsh/CdbG+KRAi/DA9Thy
-	R6UvThGOTiala0LlTXe0+/G1+wt/ppBZrEKpbVckgtQpeQDC5ps+vtVQXtBDoAGTV+hzS+y
-	8rOnlW9pEvwO6Ya7QDDCF77ah13FEB1nDzNripb7nNoPZnQ8vOZSPxmaiw5Wo5ekXU+wZZP
-	RSIhtbV4DYUzyHqz/nCmcVOpFWY3qpIoyEKGNfEk4ZgaSV1ZVfdUreGiltpnh7jmke+YslZ
-	juge9q74s6OXca+ZfJBxSYtbmCe0Xpz9UM4KteuNhWOWfM344E+C8mT7QZ2peK3wlmJkUUv
-	60ot2xzg7riqgD8rUPYsuGkw7mFQkQB/yMGl3cQ9ponLZVrW2tIYNJYAKQ69T2KEPvxPCW6
-	1+b6pVHVRlFzWasO9MtJnfaj7oQyJAEiUaXw0tswkmnIeR/IFfWr5xwrFRDEogVQuE6cTxB
-	QIB+C6b62xthOMdDAIYRm51IjnFgF8DaFG+2UYXUslVyCFRuT4tpHqfps3CzBOnJ9m1guUG
-	meO9LuGe3nnbtIyuoi9b4Mwovl9WDw0YAYKI2PclEdKvzE4KXTpGAqXjKPWoEVB5/dzj9DX
-	5cLOD5bezDT4AvEG3rpESWzqHjMFSfA0ZZ7Zhkcllmsh6oBwrTTVFwKE9KATMcocVzU35m6
-	0HN3YJlpNDkG15jv2DJ2J8ps0EXJm82K5BUe+GZixOioSYQteB2WXMaPlp/iTIaq/Qqiooj
-	8iZ7
-X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
-X-QQ-RECHKSPAM: 0
 
-The firmware on the NbF-XX exposes GTUB/STUB behind WMI commands
-0x00000e04 and 0x00000f04 and reports mode changes through WMI events
-0x2a0 and 0x2a1. The driver implements none of this, so platform_profile
-is never registered and power-profiles-daemon falls back to its
-placeholder driver.
+When i915 drives the panel of a dual GPU T2 MacBook Pro, the panel comes
+back at 80% brightness after every screen lock, login and resume, while
+the gmux backlight device still reports the level userspace set.
 
-Map the native Turbo state to balanced and performance, re-read the state
-after a set instead of assuming the firmware accepted it, and refresh the
-reported state on WMI mode events, power supply changes and resume using a
-workqueue.
+gmux resets its brightness register to 0xcccc of 0xffff when i915 powers
+the panel off and applies that value when the panel comes back on.
 
-The firmware requires AC power and a battery charge of at least 21% before
-it will change mode; that restriction is preserved and a refusal is
-reported as an error. No periodic enforcement, direct EC write or fan
-curve override is added. Support is limited to the inspected NbF-XX
-BIOS 3.07 firmware, with ACPI method presence checks.
+This cannot be handled in apple-gmux. gmux raises no interrupt when the
+panel is powered off or on. Only the GPU driver knows when the panel is
+back.
 
-Signed-off-by: Fuwei Xie <12313607@mail.sustech.edu.cn>
+amdgpu needs no such restore. When it drives the panel, the gmux
+brightness register and the panel's DPCD brightness stay unchanged across
+a screen lock.
+
+Add a DMI quirk for these models and write the cached level back through
+the gmux backlight device after enabling the backlight. The device is
+looked up by name so i915 does not depend on apple-gmux.
+
+Tested on the MacBookPro15,1 and MacBookPro16,1.
+
+Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
 ---
- drivers/platform/x86/Kconfig      |   1 +
- drivers/platform/x86/huawei-wmi.c | 177 +++++++++++++++++++++++++++++-
- 2 files changed, 176 insertions(+), 2 deletions(-)
+ .../gpu/drm/i915/display/intel_backlight.c    | 31 ++++++++++++++++
+ drivers/gpu/drm/i915/display/intel_quirks.c   | 37 +++++++++++++++++++
+ drivers/gpu/drm/i915/display/intel_quirks.h   |  1 +
+ 3 files changed, 69 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9ce384e04..05e65a483 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -22,6 +22,7 @@ config HUAWEI_WMI
- 	depends on ACPI_EC
- 	depends on ACPI_WMI
- 	depends on INPUT
-+	select ACPI_PLATFORM_PROFILE
- 	select INPUT_SPARSEKMAP
- 	select LEDS_CLASS
- 	select NEW_LEDS
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 504ee2737..f85f89c54 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -16,9 +16,11 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/platform_profile.h>
- #include <linux/power_supply.h>
- #include <linux/sysfs.h>
- #include <linux/wmi.h>
-+#include <linux/workqueue.h>
- #include <acpi/battery.h>
- 
- /*
-@@ -39,6 +41,8 @@ enum {
- 	FN_LOCK_GET			= 0x00000604, /* \GFRS */
- 	FN_LOCK_SET			= 0x00000704, /* \SFRS */
- 	MICMUTE_LED_SET			= 0x00000b04, /* \SMLS */
-+	POWER_MODE_GET			= 0x00000e04, /* \GTUB */
-+	POWER_MODE_SET			= 0x00000f04, /* \STUB */
- };
- 
- union hwmi_arg {
-@@ -68,6 +72,9 @@ struct huawei_wmi {
- 	struct device *dev;
- 
- 	struct mutex wmi_lock;
-+	struct device *profile_dev;
-+	struct work_struct profile_work;
-+	struct notifier_block power_notifier;
- };
- 
- static struct huawei_wmi *huawei_wmi;
-@@ -259,6 +266,160 @@ static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- 	return err;
+diff --git a/drivers/gpu/drm/i915/display/intel_backlight.c b/drivers/gpu/drm/i915/display/intel_backlight.c
+index b128896cb..fddd2292e 100644
+--- a/drivers/gpu/drm/i915/display/intel_backlight.c
++++ b/drivers/gpu/drm/i915/display/intel_backlight.c
+@@ -793,6 +793,35 @@ static void __intel_backlight_enable(const struct intel_crtc_state *crtc_state,
+ 		panel->backlight.device->props.power = BACKLIGHT_POWER_ON;
  }
  
-+/* Native firmware profiles: no RAPL writes and no periodic enforcement. */
-+static const struct dmi_system_id huawei_profile_dmi[] = {
-+	{
-+		.ident = "Huawei NbF-XX (BIOS 3.07)",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "NbF-XX"),
-+			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "3.07"),
-+		},
-+	},
-+	{ }
-+};
-+
-+static int huawei_wmi_profile_get(struct device *dev,
-+				  enum platform_profile_option *profile)
++#if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
++/*
++ * The gmux of dual GPU T2 MacBook Pros falls back to its default brightness
++ * whenever the panel is powered off and raises no interrupt for it. Its
++ * backlight device still holds the level userspace set, so apply that level
++ * again once the panel is back on.
++ */
++static void intel_backlight_restore_gmux(struct intel_display *display)
 +{
-+	u8 ret[2];
-+	int err;
++	struct backlight_device *bd;
 +
-+	err = huawei_wmi_cmd(POWER_MODE_GET, ret, sizeof(ret));
-+	if (err)
-+		return err;
-+	if (ret[1] > 1)
-+		return -ENODATA;
-+	*profile = ret[1] ? PLATFORM_PROFILE_PERFORMANCE : PLATFORM_PROFILE_BALANCED;
-+	return 0;
-+}
-+
-+static int huawei_wmi_profile_set(struct device *dev,
-+				  enum platform_profile_option profile)
-+{
-+	enum platform_profile_option actual;
-+	union hwmi_arg arg = { .cmd = POWER_MODE_SET };
-+	int err;
-+
-+	if (profile != PLATFORM_PROFILE_BALANCED &&
-+	    profile != PLATFORM_PROFILE_PERFORMANCE)
-+		return -EOPNOTSUPP;
-+
-+	err = huawei_wmi_profile_get(dev, &actual);
-+	if (err || actual == profile)
-+		return err;
-+
-+	/* STUB enforces its own AC/battery requirements, even for disabling. */
-+	arg.args[2] = profile == PLATFORM_PROFILE_PERFORMANCE;
-+	err = huawei_wmi_cmd(arg.cmd, NULL, 0);
-+	if (err)
-+		return err;
-+	err = huawei_wmi_profile_get(dev, &actual);
-+	if (err)
-+		return err;
-+	return actual == profile ? 0 : -EAGAIN;
-+}
-+
-+static int huawei_wmi_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+	return 0;
-+}
-+
-+static const struct platform_profile_ops huawei_profile_ops = {
-+	.probe = huawei_wmi_profile_probe,
-+	.profile_get = huawei_wmi_profile_get,
-+	.profile_set = huawei_wmi_profile_set,
-+};
-+
-+static void huawei_wmi_profile_work(struct work_struct *work)
-+{
-+	struct huawei_wmi *huawei = container_of(work, struct huawei_wmi, profile_work);
-+	/* Pairs with release publication after profile/notifier registration. */
-+	struct device *dev = smp_load_acquire(&huawei->profile_dev);
-+	enum platform_profile_option profile;
-+	int err;
-+
-+	if (!dev)
++	if (!intel_has_quirk(display, QUIRK_GMUX_RESETS_BRIGHTNESS))
 +		return;
-+	err = huawei_wmi_profile_get(dev, &profile);
-+	if (err) {
-+		dev_warn_ratelimited(huawei->dev, "Cannot refresh firmware profile: %d\n", err);
++
++	bd = backlight_device_get_by_name("gmux_backlight");
++	if (!bd)
 +		return;
-+	}
-+	/* A cached value can miss a quick userspace change followed by Fn+P. */
-+	platform_profile_notify(dev);
-+}
 +
-+static void huawei_wmi_profile_refresh(struct huawei_wmi *huawei)
++	drm_dbg_kms(display->drm, "restoring gmux brightness %d\n",
++		    bd->props.brightness);
++	backlight_update_status(bd);
++	put_device(&bd->dev);
++}
++#else
++static void intel_backlight_restore_gmux(struct intel_display *display)
 +{
-+	/* Pairs with release publication after profile/notifier registration. */
-+	if (smp_load_acquire(&huawei->profile_dev))
-+		schedule_work(&huawei->profile_work);
 +}
++#endif
 +
-+static int huawei_wmi_power_changed(struct notifier_block *nb,
-+				    unsigned long event, void *data)
+ void intel_backlight_enable(const struct intel_crtc_state *crtc_state,
+ 			    const struct drm_connector_state *conn_state)
+ {
+@@ -811,6 +840,8 @@ void intel_backlight_enable(const struct intel_crtc_state *crtc_state,
+ 	__intel_backlight_enable(crtc_state, conn_state);
+ 
+ 	mutex_unlock(&display->backlight.lock);
++
++	intel_backlight_restore_gmux(display);
+ }
+ 
+ #if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
+diff --git a/drivers/gpu/drm/i915/display/intel_quirks.c b/drivers/gpu/drm/i915/display/intel_quirks.c
+index 96eb9a40d..739e030cf 100644
+--- a/drivers/gpu/drm/i915/display/intel_quirks.c
++++ b/drivers/gpu/drm/i915/display/intel_quirks.c
+@@ -100,6 +100,13 @@ static void quirk_disable_psr2(struct intel_display *display)
+ 	drm_info(display->drm, "PSR2 support not currently available for this setup, applying disable PSR2 quirk\n");
+ }
+ 
++/* The gmux of dual GPU T2 MacBook Pros resets the brightness on panel power off */
++static void quirk_gmux_resets_brightness(struct intel_display *display)
 +{
-+	struct huawei_wmi *huawei = container_of(nb, struct huawei_wmi, power_notifier);
-+
-+	if (event == PSY_EVENT_PROP_CHANGED)
-+		huawei_wmi_profile_refresh(huawei);
-+	return NOTIFY_OK;
++	intel_set_quirk(display, QUIRK_GMUX_RESETS_BRIGHTNESS);
++	drm_info(display->drm, "Applying gmux brightness restore quirk\n");
 +}
 +
-+static void huawei_wmi_profile_setup(struct huawei_wmi *huawei)
-+{
-+	enum platform_profile_option profile;
-+	struct device *dev;
-+	int err;
-+
-+	if (!dmi_check_system(huawei_profile_dmi) ||
-+	    !acpi_has_method(NULL, "\\GTUB") || !acpi_has_method(NULL, "\\STUB"))
-+		return;
-+	err = huawei_wmi_profile_get(huawei->dev, &profile);
-+	if (err)
-+		goto fail;
-+	dev = platform_profile_register(huawei->dev, "huawei-wmi", huawei,
-+					&huawei_profile_ops);
-+	if (IS_ERR(dev)) {
-+		err = PTR_ERR(dev);
-+		goto fail;
-+	}
-+	huawei->power_notifier.notifier_call = huawei_wmi_power_changed;
-+	err = power_supply_reg_notifier(&huawei->power_notifier);
-+	if (err) {
-+		platform_profile_remove(dev);
-+		goto fail;
-+	}
-+	/* Publish only after both registration steps succeed. */
-+	smp_store_release(&huawei->profile_dev, dev);
-+	huawei_wmi_profile_refresh(huawei);
-+	return;
-+fail:
-+	dev_warn(huawei->dev, "Native platform profiles unavailable: %d\n", err);
-+}
-+
-+/* Call after removing the WMI event handlers. */
-+static void huawei_wmi_profile_exit(struct huawei_wmi *huawei)
-+{
-+	if (!huawei->profile_dev)
-+		return;
-+	power_supply_unreg_notifier(&huawei->power_notifier);
-+	cancel_work_sync(&huawei->profile_work);
-+	platform_profile_remove(huawei->profile_dev);
-+	huawei->profile_dev = NULL;
-+}
-+
-+static int huawei_wmi_resume(struct device *dev)
-+{
-+	huawei_wmi_profile_refresh(dev_get_drvdata(dev));
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(huawei_wmi_pm, NULL, huawei_wmi_resume);
-+
- /* LEDs */
- 
- static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
-@@ -825,6 +986,15 @@ static void huawei_wmi_process_key(struct input_dev *idev, int code)
- 		kfree(response.pointer);
- 	}
- 
-+	/* These are firmware state notifications, not requests to toggle again. */
-+	if (code == 0x2a0 || code == 0x2a1 || code == 0x2a6) {
-+		/* Pairs with release publication after profile/notifier registration. */
-+		if (smp_load_acquire(&huawei_wmi->profile_dev)) {
-+			huawei_wmi_profile_refresh(huawei_wmi);
-+			return;
-+		}
-+	}
-+
- 	key = sparse_keymap_entry_from_scancode(idev, code);
- 	if (!key) {
- 		dev_info(&idev->dev, "Unknown key pressed, code: 0x%04x\n", code);
-@@ -899,6 +1069,8 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, huawei_wmi);
- 	huawei_wmi->dev = &pdev->dev;
-+	mutex_init(&huawei_wmi->wmi_lock);
-+	INIT_WORK(&huawei_wmi->profile_work, huawei_wmi_profile_work);
- 
- 	while (*guid->guid_string) {
- 		if (wmi_has_guid(guid->guid_string)) {
-@@ -913,12 +1085,11 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 	}
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
--		mutex_init(&huawei_wmi->wmi_lock);
--
- 		huawei_wmi_leds_setup(&pdev->dev);
- 		huawei_wmi_fn_lock_setup(&pdev->dev);
- 		huawei_wmi_battery_setup(&pdev->dev);
- 		huawei_wmi_debugfs_setup(&pdev->dev);
-+		huawei_wmi_profile_setup(huawei_wmi);
- 	}
- 
- 	return 0;
-@@ -935,6 +1106,7 @@ static void huawei_wmi_remove(struct platform_device *pdev)
- 		guid++;
- 	}
- 
-+	huawei_wmi_profile_exit(huawei_wmi);
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		huawei_wmi_debugfs_exit(&pdev->dev);
- 		huawei_wmi_battery_exit(&pdev->dev);
-@@ -945,6 +1117,7 @@ static void huawei_wmi_remove(struct platform_device *pdev)
- static struct platform_driver huawei_wmi_driver = {
- 	.driver = {
- 		.name = "huawei-wmi",
-+		.pm = pm_sleep_ptr(&huawei_wmi_pm),
+ static void quirk_enable_dpcd_backlight(struct intel_dp *intel_dp)
+ {
+ 	struct intel_display *display = to_intel_display(intel_dp);
+@@ -196,6 +203,36 @@ static const struct intel_dmi_quirk intel_dmi_quirks[] = {
+ 		},
+ 		.hook = quirk_no_pps_backlight_power_hook,
  	},
- 	.probe = huawei_wmi_probe,
- 	.remove = huawei_wmi_remove,
--- 
-2.53.0
++	{
++		.dmi_id_list = &(const struct dmi_system_id[]) {
++			{
++				.ident = "MacBookPro15,1",
++				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,1"),
++				},
++			},
++			{
++				.ident = "MacBookPro15,3",
++				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,3"),
++				},
++			},
++			{
++				.ident = "MacBookPro16,1",
++				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
++				},
++			},
++			{
++				.ident = "MacBookPro16,4",
++				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
++				},
++			},
++			{ }
++		},
++		.hook = quirk_gmux_resets_brightness,
++	},
+ };
+ 
+ static struct intel_quirk intel_quirks[] = {
+diff --git a/drivers/gpu/drm/i915/display/intel_quirks.h b/drivers/gpu/drm/i915/display/intel_quirks.h
+index 4996419ae..7498583c1 100644
+--- a/drivers/gpu/drm/i915/display/intel_quirks.h
++++ b/drivers/gpu/drm/i915/display/intel_quirks.h
+@@ -24,6 +24,7 @@ enum intel_quirk_id {
+ 	QUIRK_DISABLE_EDP_PANEL_REPLAY,
+ 	QUIRK_DISABLE_PSR2,
+ 	QUIRK_ENABLE_DPCD_BACKLIGHT,
++	QUIRK_GMUX_RESETS_BRIGHTNESS,
+ };
+ 
+ void intel_init_quirks(struct intel_display *display);
 
+base-commit: 7b42cc130bec053d6989b849785c553f27b752ce
