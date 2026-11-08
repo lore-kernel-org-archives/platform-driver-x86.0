@@ -1,100 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.179
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794164978;
-	b=B9REK7sHBavyOq/L9GgDJJdFqggNJ4AtoW3SXE0c09bP4jdOduDv46YstLqbJArW3BdL
-	 cMKPRt33XPb5j4p9EsRxSR4Uun7iGkSp7ktA/v/iGFgWYl/L8bNHdC19iQzCkGn3gKwWW
-	 1k2AcKdYrrLyCK9uU0dmERT6qyjAXch9PhIF690SNT3/RrDtSf7aMgUbSZ75ORSVYnoIb
-	 y7DJ8PeNRFUf4FK7nTQU73BeFkv6SCrBktNp0ODsPlTL7fs0VZlmlzKeUYAZhyFkIO4JS
-	 X6xX1TjDPy2qxj4aHjeFVQXvNCa2oUV1pXdERWeZ+zIblZCzOTxYKwObPPeWcAeaJEQ==
+	t=1794169161;
+	b=bEHbg/7gfRJMZHpXVNddp15xL+0OpO10/6LnYcTeeblwxPmMGZjzL3+a5GfEhfJ93+50
+	 FQzlJzfw7Vd+80JbzUyPja4UY6EsFErdEzyC5Ek8YWP5kM8Enn5JP1WS7KOQ4tLbB3hiS
+	 Bj2nN/Z2sq8rv2UX6PtmeJuay7GIR/Bnjop6uVEAiIhpR2A/7EMTIdz69PyhHbozbyZqx
+	 I3IOo8AYY/GRmglh+MhFnmdzCuPSd7izyyXyaCaZmIDwLUEre9/99XdNkDnLiJ+qVuKJ4
+	 TtDN2f+ysO86YfuHcaN2mDk0ciko0iYQL3GZEtG+CiszOz3AgXQs7s8kY0Ati7EBZww==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794164978;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794169161;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
 	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=nVPhrKJfbSmpnE1ryW+os71+IdLIXTokbMOzIHpkGpM=;
-	b=oLxT5G9yDRFN8WfhuG86x9QOzWfo1jdEZRm+bJ42MaV8kPMeK3I/28k1cEllsgwd0jm+
-	 qbXt0xjVCiAEx9yYhieZlhYOLWIUEgKAICeU68j47KirMnD20hluAbYpUwwwx9XCyeBNl
-	 2G46eoM2bxTakb7sSbGDT/JASvntOEqoOmJ9Ng9OmOBmp6DuzWchg2gfxUdxrBsLOE5qq
-	 jYBo+JTDSwe4/oHrmiuTabue0VwUvUWvs+ZByGpmvxwCN4gjBiUbrUEMGcpQeLv4vFDNZ
-	 HVQucEDsOpGg8Q/f7xnemXjd5s3mu/WWLv4tbsOkI9bPbuoaLu9vo47MH/ASWX8tJZw==
+	bh=dmRlkML0mYO/zvl9Gq6qNLyewxrO2RCCERSrCfMi++A=;
+	b=Gvf90Ts61ic2FtxDqMzD8S3S91oTFxzuv6Wdf1aO+mDr0kzjalnJNnPXPBU9itSyAi7L
+	 MnKgWqm/HuUd/QtdCS4FjYMGUxdpHjy9e0RYyBnrhuXt135UmtAgZBHyikOON0AudestY
+	 sTpSktsTJdA6WKYl27Hho8u61HqTD2wK8bkfPoJQsDGos6xUGr3MYQkcXwbqv/FvjuSGA
+	 9XC9vtO4T+nDdIkaTPl+AX9CgkYi8rI7+bBOT6rahAHSTAUBFagD376qGiJJdbC12czcW
+	 q/wDEsrrQ2RdQRXDRJ6SdHriPvb/o0GwLW+gZ7X5+ttR+hzZ2CsqflSq+poZDveu6sg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nyqhPkoJ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.52
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=jGsoKWST;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.179
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A653C606A31C
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 19:09:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A653C606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86826606A31C
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 20:19:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86826606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nyqhPkoJ
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5c0f0e04628so24667e87.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 11:09:37 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794164976; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=jGsoKWST
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-8a06e79e152so88335b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 12:19:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794169161; cv=none;
         d=google.com; s=arc-20260327;
-        b=lgcomNMOwqhjg/ZEfFByYCtpQbnisYAP7kNQJ9hL3Fb9w6thb1sVHHZL7rOIFDbB7Y
-         akbZqquWNCZ+Zpsol6TGPeMGGbwTphN25sCzf4Yd0pQl3uVzrT7tASe5P9CDHpPn1YsS
-         hzgAB36kHcXWOxmnMtLtIJs2hYD4XjNl4UsWPWlajg1njHciNTw5l/okzpgFI/gE/rgK
-         xG3IyvPpjCdT6gMT0QaUoB5ig9AgVdhHapq72TiTuh5+jrwUJ52axaLhw4k/2HvKWi7B
-         8wQ3jhd20JTKR/XQuCBY5zcf/cdv1ECU1jA84byb23QO2QqKpUr7+kh1ztkwa2+oUTfv
-         QWRw==
+        b=GeIcrCJQDQY2F3lXlxDZehcM8SekWGPzAUMKJAWVvKBJsG1rfTDuXBF6WvMtiww9pd
+         GHtYiZ+p/9YXGkc3BD4pNA4HULtC7tGKm1trSaFd6FVFn1xvK+uKeammGKCaJCFt1psV
+         GASGmJ/dShaG4EotxRUzBSecA1LEwUaAASvSyqNBkqkymJ9ifhdfPjIgCjx78hlglVfN
+         OJjoSbbtcoyAkJTo4Eac2CQlDSE2jt5lubhZDnOBj6hrcCUnLneYuRLv5Wl8OqoFNi/l
+         DWhmIVvMx5rEO2pxXZ0L5njCRn5IuvNllAvIXKidQc9oQCHyT7ckUKfRZ+Dn1vf86WNR
+         ZQ/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=nVPhrKJfbSmpnE1ryW+os71+IdLIXTokbMOzIHpkGpM=;
-        fh=ClWgzjGDGPtJ9NdV7X44lnMnAQLn/jzpf3m/Ewp1KpY=;
-        b=AYIg89nk28O66rMstHx0li4W2gYHClIZEKFZX5ZhM8DLR/BSYwa5qPQN1gqvm0iEP2
-         L6e/iFmnNWhE0LTYh4mguzzuWa9Fe+5id9CNqCWJF/Q1cX9IjIcHtG+sqfzp52oVCwdn
-         q5joxJbCxFZjxKQULNi5fF8mcfzi0FgFE0bvSJQhVZXgTBtgA9LaKnHk6H0XiorOZG+i
-         LKy42P7y/DPWOQvZf31quf2zFbJhLa5cund3emcrIsZoTPiL9egfO8pgDxklq67IduUJ
-         Q+YsVnn3EF/sX3J8jkJfMeAoDW7mXkaHtvC6Oz0XLYdQ8H7rDbFNpGJQ1pmMGOeKIA/i
-         4E/g==;
+        bh=dmRlkML0mYO/zvl9Gq6qNLyewxrO2RCCERSrCfMi++A=;
+        fh=YLEoDtbKL1aLfhD5tMQScjkJvcBKCkJA6QKs6ZBCyX0=;
+        b=fyD+3EjgTggFGt2g3obR6lKEEsBtBg8z2kCvCrvCvsbuJRM8Frhzv+WJFBK2Rh4kMU
+         UVAtGzIkpbkLZH8KLd9IZdnvbPbjrrVQBdSNYAg8/hlzvpECD/qr973fciks6yfvAafV
+         nGET6qKN70G7hQ3etMvSYqWy35hgBxs22o995DH/j/ILlexsjukZyDRnC1WEDQ1m6Jem
+         tTwkVfYJwBZmk+ZcOjLvdV3n99tWvMRH54S+FhgoCEr+gwt5QAytucnoQTkqXEVnkRUk
+         Eja8pOgMFjqbZZPxbZL1pIW88TR2lxa/bHvtJSGVodiJeynhBzS2u9sxGikrv9Zbk68N
+         XihA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794164976; x=1794769776; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794169161; x=1794773961; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=nVPhrKJfbSmpnE1ryW+os71+IdLIXTokbMOzIHpkGpM=;
-        b=nyqhPkoJf4ud3o1TNoUahdgrSk8UAzNFro6L20LwdXi6pzsG1JFYz7/hq+yiq56Sos
-         hIdYfIn7fBJakdI4m+bmVlv2y9vUaw91XeEMXFwCN8sKIUaSHTq9ec2wFyGVfwnFT0r/
-         jRS0GMBjeJWcVqAl4vWKAMXmmzuHhp3dGlsb3RyGYTUlN1GB39Wqp+pH/S7ri2ksB40S
-         mOul80aft9gc0KlaHVkXRUMipjiiw3PzmpaLddu4ZdbKPo+vFwtprGd+EM4UB48OkEK0
-         tJEN+w2HClt45BB1n+TDYkVMWWZuZu74L/iNF9FE01IrMjVd6fGC/0U2X2oatkpDZsoj
-         oCcA==
+        bh=dmRlkML0mYO/zvl9Gq6qNLyewxrO2RCCERSrCfMi++A=;
+        b=jGsoKWSTyrYHMj8fCbS3a1LfcXHv1JwityuJJ2HF2HnXq96xPKGMzW0MKjuOcpJXgb
+         PNQ5/++gG1x0Fy9v3fnkhReXDQFxPuNFKnSwXf7GQFvDP3VmPCUPl1FqnAPQv89/H8to
+         k/lRagWWjejm0bIw0NrHtyYCGIJsPr9ca0PDuiVI2NTGOxIVUjE6Eh+CyPDyaJSlhEso
+         8l3PhmqadzkkQly7BHhDqMYUScno7Est6loJAx5YzOe/yIdU1U8OIDwAU8IsWefbU/Ju
+         pjSuGPApZlHlmyUIfaTTSW03YarRnk7xiwQ81VGarRKMszVWwhUfVzk90Pv/DyV8kiVd
+         8XSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794164976; x=1794769776;
+        d=1e100.net; s=20260707; t=1794169161; x=1794773961;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=nVPhrKJfbSmpnE1ryW+os71+IdLIXTokbMOzIHpkGpM=;
-        b=htzlr623qP3M5h+shhdNIsGmqiTHcf+TV8RhK8GlC1GDH/gwTZtW3raaCr0V7SLyLl
-         Cu0eMneH9F6goe7r8C//SHqq5uNLvWEis9qDrDppzvtzR3Ocaso+J1Dcwx1B1qVE7F+w
-         RhZ8oF9SsTLHdwUYbn7px1hvvHr0bBU2522YBVczNN6QyQPN00yYkD1sbWiSNTaYBR1H
-         QTvk66EQT9RnFpvGvL+ERbptNctDUS6zrc+mfScs/4nArzLHaFQCBcOg/k+AMUSgsNCy
-         jsWHHWfXg2u638tTs4rnnIVE5TJE6nfBUZVoDNxNC2e/DACV5jGkbTytuLQqCT0322e0
-         mUSQ==
-X-Gm-Message-State: APuU4Z+D7v353Z4OOMjn1QALafuSOZNDlqZ6JlIm6f2uERWrgSxE7PlY
-	aFficD49dx3djpzWZhX8gCMTAZUsKj7lFK9dG3i5e/Q5C0R2dPVjb+7tYqtyghyzxS9u4JSTPDn
-	Cj8C74mOEArHLO7/9GDhDCDTsquBNXwo=
-X-Gm-Gg: AYBFou3eCB9/6k97/WbBsF1BbGBwSuYR06RadOFXvxOO33MU/V5nMXvk/caBVyhoVj/
-	FK1mDPzFfQ+740M/3hHbmc91/Eg0swCxHv9Aw83aKPACA1xtqbYYKsq7lwOo/QRbP9balGIK11F
-	zW0JHCipiuqEQTuaLBzUnQqY7dn1FUvfNsyQ6zTFkx7L103sCRpl7T58cdlQcEO3ZzbUemeFLwK
-	k4ESN1rcNf1uKBiaUCVGm+La3mcJRsXrT5/kYu5Hl7wTgE1/c316xWHBzh2t3LfMtVTQvaRR3fw
-	0e1618+8SuPiJmu2vQxSR0/Krwvi7cQH7f88zDwADSp/R8aarw1L+577+tyzDxHYWZLCoL2Vlr0
-	0xfKS+gCp+vbpAXwtglQ8dp6IhnKg/eUgOPKm5YvhkVntx6deGOi32pIvJAzTNPn8Cbj2dXKRMQ
-	i7QmLnMFx/9p/4sKA=
-X-Received: by 2002:a05:6512:6516:b0:5bf:a66f:e5e with SMTP id
- 2adb3069b0e04-5c14bf215b5mr451239e87.0.1794164975540; Sun, 08 Nov 2026
- 11:09:35 -0800 (PST)
+        bh=dmRlkML0mYO/zvl9Gq6qNLyewxrO2RCCERSrCfMi++A=;
+        b=sMngcS0swU5kxpNGkXUoPexUFKsv4XJAdfdSCVvNpTUCLui8uRXPaz776gNmDdp7FU
+         oNG3uqDaRUuLLSg74zGby9sEvSf0g1YIYtbMYETABDpBDzEwYnz64zQc2QZVDKKONkU/
+         fp3Jeq4XGo9JphWvChvtjaj09N6nRxFCjk2WeDBC+OFd1RWbbD7PXnKyg5atddQfaywp
+         pyxPcwMN8Mo7Fs15m5x2NVX+0tNelcELF0GhRAe41gMy6OYp3fM077DgwlYBYzlP8Cmi
+         qF2hcNzcBjzNmnZ2uhqA3q3nokcH18EUwH8+FzpkylgLTOOZ+LirHvM6nhN/vze6n6cA
+         UEeA==
+X-Gm-Message-State: APuU4Z90rG76oKw9pa3PrVGMUhi225wJSjNeSWTuUGkGc1FgM5/Pwtl2
+	iv9GGj9Eu+MXwFiI09ISRI4eK2cKXhfSleChPHBezXHEwkUgDHSr+8NZOFUPt9X9mL+dYyX10+e
+	dY1sygqA318syyiQ1ozEMr5FcEqfgqevtmNC5ZCg=
+X-Gm-Gg: AYBFou1+m6AO9NAV+tTc2asFg6rK4TRVzc/B+wG038xIQV09R17sAw03od9BFccFVsJ
+	Y6VfttuaOuSMcQztiNhYlNvxRhR1Jks5SdESDJi5Vl0qQr13P7H+iLgZIKdPg6vRu682T77VYJM
+	MjsUjNBqOx0SGv9+CquHsba2qaAs3IApUCkgAFTY6Nlj2Sx/k3RC0W5inyi9i1Oj69EyTJV/D13
+	8bL09JoSCC4TjdXfl7T928pMNlQ9p/+qEcZBm9qw7lUEBMKZ3fnNn8UeHeZFgiVT1lVUNtGWt46
+	GVzHSAiaDypI0qFdbMHnPJujdMRWcM4K+mkQH3KsdReUNvNCaxgh49N/bVPnld4LM/q6C0yYoJ8
+	CEoLcHo6ODY+sKNjLXXWMO+axKUDfemK8b2xFjgCwM1xcRQYhJXy31Y1u1aqk
+X-Received: by 2002:a05:6a00:8015:b0:8b6:5a07:7768 with SMTP id
+ d2e1a72fcca58-8b66fc970a4mr1568295b3a.21.1794169160741; Sun, 08 Nov 2026
+ 12:19:20 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -104,156 +103,71 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <CAPvUaSo1D+1Tvk3-4TMiXw-ScBtY8Mu0FzO7R_EG6zrjYfjYqg@mail.gmail.com>
- <asxTYBiGy6lf6-Ki@archlinux> <CAPvUaSo-ubCOCYYPadY1C23y1Fd_AAhQLuVKWRa6F1XVh6mk_Q@mail.gmail.com>
- <asz7WqGzukhkYHGD@archlinux> <CAPvUaSrbWrBuvAi3R02xC8w8M5Yh97pVd3-+FBXLp3mPgG5cUQ@mail.gmail.com>
- <as0bOFOoaaw-smyB@archlinux> <CAPvUaSoBgAG=MX93vMhfEiEk5bYXGydFsGn8CpoCu_QVQRPTCQ@mail.gmail.com>
- <CAPvUaSpPVYc-5M72G0Hf9JPsbdAp2-4f-p5OetYbMKdLqm0PXQ@mail.gmail.com>
- <atEh9Gon95EFIq76@archlinux> <CAPvUaSpq2d5hkxTaqAL6rBoeHct68Y37C4nSpV+goGZ-QwrCsw@mail.gmail.com>
- <atJc2J2hYrdI_Eun@archlinux> <CAPvUaSqAnLYVuzcq6Zq=hRp6JBoo8upjrsy=LSxnLdXuTyHDaw@mail.gmail.com>
-In-Reply-To: <CAPvUaSqAnLYVuzcq6Zq=hRp6JBoo8upjrsy=LSxnLdXuTyHDaw@mail.gmail.com>
-From: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
-Date: Sun, 8 Nov 2026 20:09:23 +0100
-X-Gm-Features: AclHuK_FNAfGTAsVxz4a8U8h_DJnTbqCdNj-mRMbyDEevkGVnR6kp2dma-lgvo0
-Message-ID: <CAPvUaSpk3wKyedtwcJpKFeQ_DGRJNa2-wXwVGSzX_bCadWozsQ@mail.gmail.com>
-Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP OmniBook
- 5 16-ag1xxx (board 8DF4)
-To: Krishna Chomal <krishna.chomal108@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, W_Armin@gmx.de
+References: <CAFbNUuJGjo5OW1JZhO=uXqk07fmzE8yo2Qibe5PoOtHCmoQXpQ@mail.gmail.com>
+ <ccc319f4-24aa-496b-8366-fcfdbd5dbce6@gmail.com> <CAFbNUuKTvJXoNqf-5K7VykOHtFFVdVHTc50aYswC0if4eGQN8w@mail.gmail.com>
+ <ecdecef6-b2da-4d3e-bb82-a22a15febaf6@gmail.com>
+In-Reply-To: <ecdecef6-b2da-4d3e-bb82-a22a15febaf6@gmail.com>
+From: okluar <okluar@gmail.com>
+Date: Sun, 8 Nov 2026 23:19:08 +0300
+X-Gm-Features: AclHuK86qY6A4zgnVFEkSSUFDrlV9DEZdARTMKmUCaJ22X5R0aMhYFrSn46aZ5o
+Message-ID: <CAFbNUuLXaP4_257tWkr-09n9h9yZX_y772LMStPY8QuGOWAipQ@mail.gmail.com>
+Subject: Re: [BUG] platform/x86: bitland-mifs-wmi: performance profile fails
+ on TIMI A30 (USB-C only)
+To: Mingyou Chen <qby140326@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Subject: Re: HP OmniBook 5 16-ag1xxx: fan stays off, thermal tables
-invalid, results after BIOS reinstall
+On Fri, Nov 6, 2026 at 5:53=E2=80=AFPM Mingyou Chen <qby140326@gmail.com> w=
+rote:
 
-Hi Krishna,
-
-A follow-up on the OmniBook 5 16-ag1xxx (board 8DF4), with some new
-data after reinstalling the BIOS.
-
-1. Reflash result: I reinstalled the same BIOS with HP's official
-installer (DMI reports Insyde F.12, bios_date 04/10/2026, i.e. 10
-April 2026), then did a hard EC reset. With Fan Always On disabled, a
-stress-ng run on CachyOS reached 85 =C2=B0C with the fan completely stopped
-(acpi_fan: 0 RPM), and I stopped it there. So the firmware reinstall
-did not change the behaviour.
-
-2. Thermal data from the firmware: on every boot dmesg shows
-   ACPI: thermal: [Firmware Bug]: Invalid critical threshold (-274000)
-   ACPI: thermal: [Firmware Bug]: No valid trip points!
-The only trip point Linux exposes is thermal_zone0 trip_point_0 (type
-hot, 103000). There are no active trip points. Both lines are present
-in every boot I have stored (4 to 8 Nov), before and after the
-reflash.
-
-3. A new intermittent error: ACPI BIOS Error (bug): Could not resolve
-symbol [^^^^NPCF.DTGP], AE_NOT_FOUND, followed by Aborting method
-\_SB.PCI0.LPC0.EC0._Q37 (AE_NOT_FOUND). It appears in only 2 of my 14
-stored boots, one before the reflash and one after, so it is not
-caused by the reflash and not present on every boot. It seems to
-depend on an EC event.
-
-4. Fan state: with the fan stopped at idle (0 RPM),
-/sys/class/thermal/cooling_device0 (type Fan) reads cur_state=3D1,
-max_state=3D1. dmesg also says "acpi-fan PNP0C0B:00: Using Microsoft fan
-extensions". I don't know whether cur_state is meaningful on this
-firmware.
-
-5. Still the same as before: the WHCM/WMAA AE_AML_OPERAND_TYPE errors,
-hp-wmi "Failed to apply initial fan settings: -22", and WQBC/WQBE
-"CreateField of length zero". hp_bioscfg exposes only Sure_Start
-(error 0x3, feature not supported).
-
-I'm not claiming the thermal-table or _Q37 errors cause the fan
-problem; they are just firmware bugs that are present alongside it.
-The fan stays off under load on Windows 11 as well, and HP's UEFI fan
-speed and thermal tests still pass, so I have asked HP for a warranty
-repair.
-
-I'm glad to run any commands, collect more logs or test patches if
-that would help. I can send the full dmesg and the journal output.
-
-Thanks again,
-Lorenzo
-
-Il giorno dom 8 nov 2026 alle ore 11:33 Lorenzo Collevecchio
-<lorenzocollevecchio17@gmail.com> ha scritto:
+> Hi,
 >
-> Subject: Re: HP OmniBook 5 16-ag1xxx: hp_bioscfg output and fan
-> results on all OSes
+> Don't top post (reply at the bottom please).
 >
-> Hi Krishna,
+> I think the .no_set profile entries are currently missing for your quirk
+> (I missed them in the example quirk).
 >
-> A quick update on the OmniBook 5 16-ag1xxx (board 8DF4, BIOS F.12), in
-> case it helps with the HP side.
+> Here are some methods to get them:
 >
-> 1. hp_bioscfg: the driver loads and registers hp-bioscfg, but the
-> attributes directory contains only Sure_Start and pending_reboot.
-> dmesg shows: hp_bioscfg: Returned error 0x3, "Invalid command
-> value/Feature not supported". There is no fan or thermal attribute, so
-> I can't read or change "Fan Always On" from Linux.
+> - Reverse engineering the dsdt table (from your timi_a30_acpi.dat)
 >
-> 2. Fan behaviour: it isn't specific to the kernel or the OS. With Fan
-> Always On disabled, the fan stays off under load on Windows 11, Linux
-> Mint, Arch, CachyOS LTS and CachyOS 7.3.1-1. A full-load stress-ng run
-> (all 12 threads, platform_profile=3Dperformance) reached 92 =C2=B0C in ab=
-out
-> 35 seconds with no fan. A 2-thread run reached 83 =C2=B0C with no fan.
+> - Or just simply print the values in the kernel code (add a dev_dbg
+> statement in laptop_profile_get function)
 >
-> 3. Timeline: BIOS F.12 has been installed since the end of July, and
-> the fan behaved normally until October. HP PC Hardware Diagnostics
-> UEFI still passes both the fan speed and thermal tests. A hard EC
-> reset and BIOS defaults changed nothing.
+>          dev_dbg(dev, "profile wmi_val=3D%d\n", result.data[0]);
 >
-> I've also reported this to HP and asked for a warranty repair. I'm
-> happy to test any further patches or run any commands on this machine.
 >
-> Thanks for your work on the hp-wmi fix.
+> After acknowledging the values, just add the profile entries into
+> timi_a30_profile_entries. For example,
 >
-> Lorenzo
+> static const struct bitland_profile_entry timi_a30_profile_entries[] =3D =
+{
+>         /* Change this information if it doesn't match your device. */
+>         { PLATFORM_PROFILE_LOW_POWER,   2 },
+>         { PLATFORM_PROFILE_LOW_POWER,   <val>, .no_set =3D true },
+>         { PLATFORM_PROFILE_BALANCED,    1 },
+>         { PLATFORM_PROFILE_BALANCED,    <val>, .no_set =3D true },
+>         { PLATFORM_PROFILE_PERFORMANCE, 0 },
+>         { PLATFORM_PROFILE_PERFORMANCE, <val>, .no_set =3D true },
+> };
 >
-> Il giorno ven 16 ott 2026 alle ore 19:26 Krishna Chomal
-> <krishna.chomal108@gmail.com> ha scritto:
-> >
-> > On Fri, Oct 16, 2026 at 09:06:03AM +0200, Lorenzo Collevecchio wrote:
-> > >Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP
-> > >OmniBook 5 16-ag1xxx (board 8DF4)
-> > >
-> > >Hi Krishna,
-> > >
-> > >Thanks a lot for digging into the ACPI code, the explanation makes
-> > >everything fit: the missing GMCF call for HPWMI_GM, Local2 being left
-> > >as an Integer, and the -22 coming from that.
-> > >
-> > >I also tried your suggestion about the platform profile. With
-> > >HPWMI_READ/WRITE the errors should not appear:
-> > >
-> > >  Before: dmesg | grep -c WHCM  ->  3 (the three boot-time errors)
-> > >  cat /sys/firmware/acpi/platform_profile  ->  quiet
-> > >  After:  dmesg | grep -c WHCM  ->  3 (no new errors)
-> > >
-> > >On the fan: thanks for confirming that acpi_fan reads the EC value
-> > >correctly. Together with hearing the fan on Mint and on CachyOS at
-> > >idle, that makes me fairly comfortable that the 0 RPM readings are the
-> > >fan really being off.
-> > >
-> > >Your plan to query the fan count and hide pwm1_enable and
-> > >fan{1,2}_input when it fails sounds good to me. I am happy to test it
-> > >on 8DF4 whenever you have a patch, and I can rebase it onto a stable
-> > >kernel tree on my side if that is easier for you.
-> > >
-> > >I also tried 7.2.10-1-cachyos: dmesg and the hp-wmi hwmon folder are
-> > >identical to 7.2.9 (three WHCM errors, then the -22 message, and
-> > >pwm1_enable still present).
-> > >
-> > >Thanks again for the time you spent on this.
-> >
-> > Thanks, I will share the final proposed patch on your Bugzilla report
-> > (222138), and leave this thread for others to pick up the WQBC/WQBE
-> > errors.
-> >
-> > >Best regards,
-> > >Lorenzo
-> > >
-> > [...]
+> Fill <val> placeholder with the values you actual get.
+
+Hi,
+
+I added the debug print and got the following values:
+
+   power-saver: 2
+   balanced:    1
+   performance: 0
+
+So the values are the same as the ones in the quirk table.
+
+After that, I added the ".no_set =3D true" entries to
+"timi_a30_profile_entries", as in your example. However, it did not
+fix the read issue. Here are the logs:
+
+   RAW (call): rc=3D8000 data0=3D02
+   bitland: wmi_call ret=3D-42, data[0]=3D0
+   platform_profile: Failed to get profile for handler bitland-mifs-wmi
