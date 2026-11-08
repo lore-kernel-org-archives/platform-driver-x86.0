@@ -1,67 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.207.19.206
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794111476;
-	b=Lt6IB/b7NglhS2Hu7ps8Q9fXqZW0lCZlDhlQAXSiKlFiXmWAEpXuBKwcSr5USRUkDbjj
-	 31R+xckoBCSDu5HdpxmutfHalR7RBuzxsWu59f7wRQ3sDl0h2Nt3k9bjUiCVG33sFcrE3
-	 XdpoBiOeP/HG4w2dIzncLod9SicTIEOiz+JXhAQs2S9RvjOGha5T/C5IzdU4Ss1jAvBUz
-	 kgFLw3Y9ZrxefWArI6JSNmbTla7ENic9hkQyklf8Bd1BEIJq2CXxZmALgkFDCH/FWhcQQ
-	 TzBb7S82ZLK65CX12OxfM+k1Xq1isYBbWmwtMxV3K9d4zI8e8aB5t7vM3epIhX9AmLw==
+	t=1794111478;
+	b=sjmAvUbh44z/9DGzRm9UfrJfPMLnkbcLe5CK3RHl87svUVlTUeQHisf8TTdnS9kAxs4o
+	 4rJd7ddpTu9c2JI9tXn74EgicxpkEfLSMi+25+W9u5NbAJ8jGr5xGgPb3WyxqiQswr1v7
+	 cM58gKnCPE/ua/B1Pm+gQwBa81qN2tJ1CQHI4y3FfpH8U3ku0cgUY4NXRu4hvyHRGnv3X
+	 GKr3dZllaqXqU/5+SN/2yq63f9HD4hrSUR5ljHPgU2qX7ItvzK03xeB4HdMRMmNp+0Jjq
+	 JrZUtmeUSvWgyXIQDDMTIevK9RH3ac+f6jb5hH8VdAztItuZlW2btgm2/OjuIuvGqLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794111476;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794111478;
 	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
-	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:EX-QQ-RecipientCnt:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
-	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=6xWbqKaBi4TTvwCyrzn7Tti12+Y+wbqvWW8h2d5Rdks=;
-	b=qIj82flAG1qqY5IrETuzSrhru/uFyJSSR9ynjS6xEKFhZ29GRIr0vFqMzatLU7pw3OmH
-	 ATMN9N53YC4FPFqU62VzDUKK4aNaYL2QGRWpEBt/FHroCFkVFzEi5/TxHL7EQCMfAcZCv
-	 wCCTAcrBLNqaS51wYRcMPvRBUfjsv6+2aQuIUomrSgUXV/CRH8Z61570FHlqHAi41wFgJ
-	 qH0zleW6CeoEGZGdkbwwnm+8e50+r79Bd6LeDKjd7m7fS315MEJXQtH+hjcULSo1PWDVJ
-	 srb6rbf1X2EpPt+PSgrpoRhZv1+XqZbZ//thxVhtrBIXZinqXXs/EUZD59rnwt7Sb1g==
+	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-QQ-SENDSIZE:
+	 Feedback-ID:X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
+	bh=y8TVDz2DGWUCnQIm6X0aU1xKZSROELon1gO9k0Csz00=;
+	b=a3uEdgorDuV3XvUxHkq8aO1QoGOzBpZBQQR1AXEwTxtQyaj9nsytqK3g1bY3BbHOALbQ
+	 BjiPq4NS7XezQ1ARP8NEcm/hW1gkqtxtjNNeCoHkjYZBxTllW5ttOt1AzBvh6ZgPvaeKK
+	 GPH6ncPIg3ir5YOdvSH83v8XgflrGZXpVRmOo2NHQiEZcOpVXwnaTlr6hYSf8mvdzlHLs
+	 jlQHacTO+nwlzDy/vHQizo8zk6stvn73iZIG4XEmnHy+x5CA0j2rQZSF8ELqvldLcRl14
+	 wd+A0Wvz7uBPNaMZYZ3e28YmsMa0Opk60gsQuShb7hz01NBNzIR7/++ilWnQmcS/06Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mail.sustech.edu.cn;
 	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
-	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=xdCOafoh;
-	arc=none smtp.remote-ip=54.243.244.52
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=ipQJqDdR;
+	arc=none smtp.remote-ip=54.207.19.206
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EE3606A31A;
-	Sun,  8 Nov 2026 04:17:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4EE3606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D588F606A31D;
+	Sun,  8 Nov 2026 04:17:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D588F606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=xdCOafoh
+	dkim=pass (1024-bit key) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=ipQJqDdR
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
-	s=oemc2211; t=1794111446;
-	bh=6xWbqKaBi4TTvwCyrzn7Tti12+Y+wbqvWW8h2d5Rdks=;
+	s=oemc2211; t=1794111439;
+	bh=y8TVDz2DGWUCnQIm6X0aU1xKZSROELon1gO9k0Csz00=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=xdCOafohGPhbOkBlM0pt8MGsXnqgIUfzYM3VC1HrAZuhEquwal/6axuuG9OuBO53t
-	 xaEtTWE6CmZ9WmW6yR50CUEJPGaBPat7LhUaceNKOFlyNVY614GY3EBGl6sF8986JN
-	 P6nEEUtMoXuNiePtouhy7vlOTlGNNRWavEqB1IN4=
-X-QQ-mid: zesmtpgz6t1794111441tff6a2164
-X-QQ-Originating-IP: 6XGKFTW8J+wZK0MvdDW9+Hh+TUotJx2Z7VNHXjNFPT4=
+	b=ipQJqDdRQTuN7nSwXg4Kq/P3DaaleQPGC4NwBjIe0MbzPWv2Wsy5I08OdhSsPo6MH
+	 LUMNPfCoNPofYKSz6yL52LrMBSzE2zWNhEUngZnsEjU+goAlTELymTM13xY0343ijA
+	 bjy6jfSC+wU67IWnR+ccxtDlTZWJVE/cw/MTCJLk=
+X-QQ-mid: zesmtpgz6t1794111435te6ab0396
+X-QQ-Originating-IP: OgnwCmsVEMCaQhezn6a+3Z759nHllDLgIdMetJcZqhk=
 Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.244])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 08 Nov 2026 12:17:16 +0800 (CST)
+	id ; Sun, 08 Nov 2026 12:17:14 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 14812342779989873084
-EX-QQ-RecipientCnt: 5
+X-BIZMAIL-ID: 8155728893601798832
 From: Fuwei Xie <12313607@mail.sustech.edu.cn>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Fuwei Xie <12313607@mail.sustech.edu.cn>
-Subject: [RFC PATCH 1/2] platform/x86: huawei-wmi: serialize WMI retries and validate responses
-Date: Sun,  8 Nov 2026 12:17:12 +0800
-Message-ID: <966F159F0693FC36+20261108041714.328986-2-12313607@mail.sustech.edu.cn>
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] platform/x86: huawei-wmi: native Turbo mode as platform_profile
+Date: Sun,  8 Nov 2026 12:17:11 +0800
+Message-ID: <5B1B48AF3851EE25+20261108041714.328986-1-12313607@mail.sustech.edu.cn>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261108041714.328986-1-12313607@mail.sustech.edu.cn>
-References: <20261108041714.328986-1-12313607@mail.sustech.edu.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -74,208 +69,170 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NsZBc+7DoEMQMbnrxp/Qrmd42FGlJasrTzUyLa8m77jZ8Lxpx0VR6it8
-	plKZIHUvcK5zMqC2Ix61dYEvdXw3SG2aPb8n7PoGumGjDi36CNtwMnz44diCgFdxXkTmXMn
-	2q84slomKdu1JNChmzsE9w2exjzPrbZlAin1oyK0biAszypxE4VyT7mvMeRu3SKYZCXiiyW
-	j3up7EwuZTstmOawmVA9DqS7nD+OqS0A/F+bGPYBR/DKlixBlrvjpE2G9Bznd+uw6gTmPgb
-	Um2msOMJGXrbXi6kYf+Qs3zJowDcFKZEKirhaD3CkTKr7h/t7eIUwrTxmVj4psP6du81N3f
-	Z+r9HYJodRt0NkekrihU0o4/Q3bMZkm+FoEXitCgFcQk0th5ECRvhPsyVRCDrO/PfhYUOLZ
-	0KJjKzGuEP2mcVRHWJZDn3EtfxBc/WKHljJZ2uGJ/BOVKGrPQWh2sopoMgJ2dF4WlEe60Qe
-	BufExOdlyMfrTSDisboYJiwY2eHfc7J5pOOjJTiil3KfUnszXIJnke5aGqTHaLv2h5yufjA
-	NlAhF7KcDYh5aDJCayCCLDkYz1HaIhnHV11J+vIYAsZmDBmrprVD5Ei8+LuD/WYvch9vIR/
-	gAEPHJm8ZEgIHCaOwiRXYVDI8B/M7pDBFZYg0Z/mItLW4ExxJc0CwfgzOZU328S5vbEwPXk
-	mYeO0Oi357KUgrz2Mor/1uavwxBWY6d8Ebo0p6nWOuaaI6bx81zhVYZlmLJWTyQUc71rbWx
-	Euu5Ut0I13s0ZrLDx+PJXTyndzDeNLrJ0tstGmrGnDcVufpgM1z2jRJioSvLRuIZvWMWrpb
-	qEBtvSU3yqrSIxcjxG+yDZeP4d/tTZfSIulP7zx9zllP9Tfno4I26Y28+5RT9WPLWsBPYeD
-	rQddMVb96vGnD75RBtRpypQnO62kZnNLNllu6/XzrRRr8+m2YsP9QmsG2UuseEFny62hizl
-	Sva/RZHutwH2NL2BWTSk+s6WBdxu1kVtDCLgu/QGDvyXe9uzpVE4f0c4O4E8r4k3Nx28l76
-	DfkexOsTDQxHciexeiueSu3QwuKLrkxGJTfL2w4s83yHahGPw5bP0OzM34HBQHQqa69F6hP
-	Xd26Kg0UmTBui0fcU57/ysBGeXhheu5P3HjQHm/keEiTn1f3+0iQ6ZJeH74d4OsK/PLd83N
-	+Xzx
-X-QQ-XMRINFO: MPJ6Tf5t3I/ylTmHUqvI8+Wpn+Gzalws3A==
+X-QQ-XMAILINFO: MjP4urDnSEKVFiKpg5bJ18eE3jz1JW0rgWy0YoZVehopZTuNvR0vtJ9l
+	2p0+ZMJ6gBuuQdZEa09r6XawVZjWwKvhwqRU+FS28Gm+SewjSgwMWVmImEvEFcH4umhpHzt
+	3+YEbkOPCJuVZtveImfiTJ5DvVEjRNQfF68jpBgaYxZUFPaKKwB/2/ms/1cyToo5o7gPBFg
+	UmO7A0CJmP2YJg/1DZoPOIJiaqadLPZ1C0y8ts9PIypOB3XWOWAi5166IVu6Z/0CEYONmQ6
+	653N/CJIjyHdZT7qkO74XOFA5L9bby+UPbPCMrGwWT2E72vHq60aYOZr+xBqLig4tiUthcz
+	/736rc1+ixYWyq3ndPYAC3eiE0/UN6KvO8Lsiy/SRa16S70i65U0lXrGld/PkMfrQ7Nec6N
+	2S9yCTJx/XCRxrgWL0eCyN2elQLgGYVWp9dgjCaLlTxYKHu1ufD89w6UTerSTXxAaZx3rvG
+	NKyejiebUNEUmPggQjU2RxeN8dUTyAZ3pahNSZvKQScdQ+LX3pe/DdR2QAijekgRg7BIVs3
+	vnUiT3KJUz9V4ryC63eXuRhFbrGNLGfg2WrvfltK/3M/fe3D+XSxa+DunucYdryYDBrSwqT
+	ToSWFv0PsuOyiYIHlqHClV7vBj6a4AhJmF5TgQ6FVGoYPIwFxu9T+llJW/Wooc84hnjmBLd
+	x+IKl/LTET8cKsHu7cNEO9c59EEdCKqM8fe+R4AU0FWZ0xfffXQXZ6JfaHZnw2RVpyxZ9Wo
+	VWE1YpqDCSk0bYP/Ueoqe0ij6q5/IRsYNOrd/o8QkSo9mZd7t3cFCu+XInplGTPhL7jrXQF
+	9lggODIpqo5pSCPXwlncaVyIGxvH4FJovdVU+w+6KixBOHXp6i6CRjIXJIt0xgoQcSBycJL
+	Pii2X5WiO+57W8IvXoxekwN6EwhiaQUh3XBs8GusZCwMSoS5ho6yUIZsQhNKudIKSzl4sRy
+	BZpQEdpLq17d4jpPZ9uNMWoRuSxw1HpNJoe40fDREpeHH4MZdI1CLk9vYgMg6UN6lE5vWeN
+	HI3J4GAv3uRpsH1pyvIUv5GxmE4ZR3/odTX0oaPDNpW06WKKefBs2N+l3Mb4ShLKvn1/mQb
+	oFbOa73AUxcSGNZoh38i4gAJucK+ADFb2BeiG5Dn2/KxFElS2dbruo=
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
 X-QQ-RECHKSPAM: 0
 
-The two-call firmware handshake can be re-entered and each retry leaked the
-previous response. Hold the transaction under the driver mutex, free the
-response before retrying, validate the returned payload shape, and reject
-short responses instead of letting callers read incomplete data.
+Hello Hans, Ilpo and everyone on the list,
 
-The borrowed payload points into the ACPI allocation and is not modified.
+This is an RFC patch series. It is not ready to merge.
 
-Signed-off-by: Fuwei Xie <12313607@mail.sustech.edu.cn>
----
- drivers/platform/x86/huawei-wmi.c | 119 +++++++++++++++---------------
- 1 file changed, 60 insertions(+), 59 deletions(-)
+I am sending code in the first round on purpose. The interface question is
+easier to settle with the diff in front of us than in the abstract.
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 96ee9a97c..504ee2737 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -150,14 +150,12 @@ static const struct dmi_system_id huawei_quirks[] = {
- 
- /* Utils */
- 
--static int huawei_wmi_call(struct huawei_wmi *huawei,
--			   struct acpi_buffer *in, struct acpi_buffer *out)
-+static int __huawei_wmi_call(struct huawei_wmi *huawei,
-+			     struct acpi_buffer *in, struct acpi_buffer *out)
- {
- 	acpi_status status;
- 
--	mutex_lock(&huawei->wmi_lock);
- 	status = wmi_evaluate_method(HWMI_METHOD_GUID, 0, 1, in, out);
--	mutex_unlock(&huawei->wmi_lock);
- 	if (ACPI_FAILURE(status)) {
- 		dev_err(huawei->dev, "Failed to evaluate wmi method\n");
- 		return -ENODEV;
-@@ -166,6 +164,45 @@ static int huawei_wmi_call(struct huawei_wmi *huawei,
- 	return 0;
- }
- 
-+static int huawei_wmi_call(struct huawei_wmi *huawei,
-+			   struct acpi_buffer *in, struct acpi_buffer *out)
-+{
-+	int ret;
-+
-+	mutex_lock(&huawei->wmi_lock);
-+	ret = __huawei_wmi_call(huawei, in, out);
-+	mutex_unlock(&huawei->wmi_lock);
-+	return ret;
-+}
-+
-+/* Return a borrowed payload without modifying the ACPI allocation. */
-+static int huawei_wmi_response(const union acpi_object *obj,
-+			       const u8 **data, size_t *len)
-+{
-+	if (!obj)
-+		return -EIO;
-+
-+	if (obj->type == ACPI_TYPE_BUFFER) {
-+		if (obj->buffer.length != 0x104 || !obj->buffer.pointer)
-+			return -EIO;
-+		*data = obj->buffer.pointer + 4;
-+		*len = 0x100;
-+	} else if (obj->type == ACPI_TYPE_PACKAGE) {
-+		if (obj->package.count != 2 || !obj->package.elements)
-+			return -EIO;
-+		obj = &obj->package.elements[1];
-+		if (obj->type != ACPI_TYPE_BUFFER || !obj->buffer.length ||
-+		    !obj->buffer.pointer)
-+			return -EIO;
-+		*data = obj->buffer.pointer;
-+		*len = obj->buffer.length;
-+	} else {
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- /* HWMI takes a 64 bit input and returns either a package with 2 buffers, one of
-  * 4 bytes and the other of 256 bytes, or one buffer of size 0x104 (260) bytes.
-  * The first 4 bytes are ignored, we ignore the first 4 bytes buffer if we got a
-@@ -179,82 +216,46 @@ static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- 	struct huawei_wmi *huawei = huawei_wmi;
- 	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
- 	struct acpi_buffer in;
--	union acpi_object *obj;
-+	const u8 *data;
- 	size_t len;
- 	int err, i;
- 
- 	in.length = sizeof(arg);
- 	in.pointer = &arg;
-+	/* Keep both halves of the firmware handshake in one transaction. */
-+	mutex_lock(&huawei->wmi_lock);
- 
- 	/* Some models require calling HWMI twice to execute a command. We evaluate
- 	 * HWMI and if we get a non-zero return status we evaluate it again.
- 	 */
- 	for (i = 0; i < 2; i++) {
--		err = huawei_wmi_call(huawei, &in, &out);
-+		out.length = ACPI_ALLOCATE_BUFFER;
-+		out.pointer = NULL;
-+		err = __huawei_wmi_call(huawei, &in, &out);
- 		if (err)
- 			goto fail_cmd;
- 
--		obj = out.pointer;
--		if (!obj) {
--			err = -EIO;
-+		err = huawei_wmi_response(out.pointer, &data, &len);
-+		if (err)
- 			goto fail_cmd;
--		}
--
--		switch (obj->type) {
--		/* Models that implement both "legacy" and HWMI tend to return a 0x104
--		 * sized buffer instead of a package of 0x4 and 0x100 buffers.
--		 */
--		case ACPI_TYPE_BUFFER:
--			if (obj->buffer.length == 0x104) {
--				// Skip the first 4 bytes.
--				obj->buffer.pointer += 4;
--				len = 0x100;
--			} else {
--				dev_err(huawei->dev, "Bad buffer length, got %d\n", obj->buffer.length);
--				err = -EIO;
--				goto fail_cmd;
--			}
--
--			break;
--		/* HWMI returns a package with 2 buffer elements, one of 4 bytes and the
--		 * other is 256 bytes.
--		 */
--		case ACPI_TYPE_PACKAGE:
--			if (obj->package.count != 2) {
--				dev_err(huawei->dev, "Bad package count, got %d\n", obj->package.count);
--				err = -EIO;
--				goto fail_cmd;
--			}
--
--			obj = &obj->package.elements[1];
--			if (obj->type != ACPI_TYPE_BUFFER) {
--				dev_err(huawei->dev, "Bad package element type, got %d\n", obj->type);
--				err = -EIO;
--				goto fail_cmd;
-+		if (!data[0] || i == 1) {
-+			err = data[0] ? -ENODEV : 0;
-+			if (buf) {
-+				if (len < buflen) {
-+					err = -ENODATA;
-+					goto fail_cmd;
-+				}
-+				memcpy(buf, data, buflen);
- 			}
--			len = obj->buffer.length;
--
--			break;
--		/* Shouldn't get here! */
--		default:
--			dev_err(huawei->dev, "Unexpected obj type, got: %d\n", obj->type);
--			err = -EIO;
- 			goto fail_cmd;
- 		}
--
--		if (!*obj->buffer.pointer)
--			break;
--	}
--
--	err = (*obj->buffer.pointer) ? -ENODEV : 0;
--
--	if (buf) {
--		len = min(buflen, len);
--		memcpy(buf, obj->buffer.pointer, len);
-+		kfree(out.pointer);
-+		out.pointer = NULL;
- 	}
- 
- fail_cmd:
- 	kfree(out.pointer);
-+	mutex_unlock(&huawei->wmi_lock);
- 	return err;
- }
- 
+Short version: on my laptop the firmware already has a Turbo mode, and the
+driver already receives its change notifications, but the driver never
+connects that mode to platform_profile. So the desktop power mode control
+has nothing to switch.
+
+Everything below comes from one machine:
+
+  HUAWEI NbF-XX, BIOS 3.07, Intel Core i5-1240P
+  Ubuntu kernel 7.0.0-42.42, power-profiles-daemon 0.30, thermald
+
+The problem
+
+Two things are missing in the current driver:
+
+  1. It cannot read or set the firmware's Turbo state.
+  2. It does not register platform_profile, so PPD falls back to its
+     placeholder driver and the desktop switch does nothing.
+
+There is also a smaller gap. The firmware announces Turbo changes through
+WMI events 0x2a0 and 0x2a1. The driver has no mapping for them, so they
+appear in dmesg as "Unknown key pressed, code: 0x02a0". By the time those
+events arrive the hardware mode has probably already changed; only the
+reporting is missing.
+
+What the firmware provides
+
+I decompiled this machine's DSDT and SSDTs. They define two ACPI methods
+behind WMI commands:
+
+  0x00000e04 -> GTUB, read the Turbo state
+  0x00000f04 -> STUB, set the Turbo state (requested value in input byte 2)
+
+The mapping used by patch 2 is:
+
+  Turbo off -> PLATFORM_PROFILE_BALANCED
+  Turbo on  -> PLATFORM_PROFILE_PERFORMANCE
+
+STUB itself requires AC power and a battery charge of at least 21%, and it
+applies that check to both enabling and disabling. The driver keeps that
+behaviour and reports the firmware refusal as an error instead of working
+around it. I have not tested the 21% boundary.
+
+What the two patches do
+
+1/2 - transport only. Keeps the two-call WMI handshake under the driver
+mutex, frees each response before a retry, validates the payload shape and
+rejects short responses. This does not depend on the profile feature.
+
+2/2 - the feature. Adds Turbo get/set helpers, registers platform_profile
+with balanced and performance, re-reads the state after a set and reports
+a mismatch instead of claiming success, and refreshes the reported state on
+WMI mode events, power supply changes and resume via a workqueue. It also
+adds "select ACPI_PLATFORM_PROFILE" to Kconfig.
+
+There is no polling timer, no kernel thread, no userspace daemon, no direct
+EC or MMIO power limit write, and no custom fan curve. Real power and fan
+behaviour stays with the firmware and the existing thermal stack.
+
+What I tested
+
+The series applies and builds cleanly against platform-drivers-x86
+for-next (c339f4010, v7.3), including with W=1, and checkpatch --strict
+reports no problems.
+
+The hardware results below were measured with a DKMS build based on the
+v7.0 driver source, which carries the same change set. The for-next
+series has not been loaded on hardware yet; it differs only in
+whitespace and in the surrounding upstream code.
+
+On the machine above, with the driver built as a DKMS module signed by a
+locally enrolled MOK and Secure Boot enabled:
+
+  - balanced <-> performance round trips worked through both the desktop
+    control and the native sysfs interface
+  - Fn+P changed the mode, and PPD followed it in both directions
+  - AC unplug and replug worked; the firmware went back to balanced on
+    unplug and PPD followed
+  - one s2idle cycle of about 11 seconds worked, including a mode change
+    after resume
+  - a normal reboot loaded the module automatically; mode switching still
+    worked afterwards
+  - two 60 second runs with 16 SHA256 workers each gave final-window mean
+    package power of 19.99 W in balanced and 27.98 W in performance, with
+    PL1 reading back as 20 W and 28 W
+  - a full kernel build in performance mode ran with PL1 at 28 W, the
+    package steady at 86 C, and no new thermal-throttle events over a six
+    second sample
+
+What I did not test
+
+  - any other model, BIOS version or kernel
+  - long runs or stability over hours
+  - the 21% battery boundary
+  - fan RPM. This machine exposes no fan sensor, so "the fan is louder in
+    performance" is what I heard, not a measurement
+
+The two load runs started at different temperatures, so the numbers are not
+a controlled benchmark. On one later switch back to balanced I briefly saw
+29.5 W before it settled at 20 W. The driver does not promise a fixed
+wattage at any point.
+
+Questions
+
+1. Is platform_profile the right place for this mode in huawei-wmi, or
+   would you rather see a separate attribute first? Is anyone else already
+   working on it?
+2. Is an exact model and BIOS restriction acceptable for a first series,
+   or would you prefer a capability check only? I restricted it because I
+   can only test this one firmware, and because a wrong guess on a
+   different model could drive it into a power state it does not expect.
+3. This series uses platform_profile_register() with explicit removal,
+   while several other platform/x86 drivers use
+   devm_platform_profile_register(). Would you prefer the devm variant?
+4. The driver re-queries on 0x2a0, 0x2a1 and 0x2a6. I do not know what
+   0x2a6 means yet. Should the first version leave it out until I do?
+
+Tooling disclosure
+
+OpenAI Codex assisted with the firmware analysis, the driver changes, the
+test scripts and this email. I set the direction and the constraints, and I
+ran all of the hardware tests myself; the observations above are mine. The
+code has not had human upstream review, which is what this series is asking
+for.
+
+Thanks for your time.
+
+Fuwei Xie
+
+
+Fuwei Xie (2):
+  platform/x86: huawei-wmi: serialize WMI retries and validate responses
+  platform/x86: huawei-wmi: expose native Turbo mode as platform_profile
+
+ drivers/platform/x86/Kconfig      |   1 +
+ drivers/platform/x86/huawei-wmi.c | 290 ++++++++++++++++++++++++------
+ 2 files changed, 233 insertions(+), 58 deletions(-)
+
 -- 
 2.53.0
 
