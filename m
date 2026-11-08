@@ -1,84 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794173825;
-	b=y4cKk8Y/svvx9OoJ5ScLwiR46imkHKdAWCrrDxQUIkuhz1quL7wWGOfJMlwPhq5k5StS
-	 V+RrQgfjZaVYRXZCK/4HZXj6VqXOGUKoo60alRYzx4Ji1UWazzgOWMRto4dcTrpaqca+n
-	 lDxIcky0fVAyslUFeJJiOWwTUUBLrqwOe9brhdscazURhvRztGyO/qzExxTwYSuZSHmZm
-	 X3vz2J2kWdRi/idaBbMUSY9WW2SIW7TiheJSr4052kcvv3veLRUkQF4TrnZIGPydtA6vA
-	 ZDpe1vTIOIr5LLbukwzjkFzvB5R2Hb0JwlbArXczvqzZEcoiDEW2qNKrsyzaYCbYxDA==
+	t=1794173822;
+	b=yTWREWzt0v3UdGW+UmdleW+DQT6DWhjZD5/9OisyWHT4D79EbupoT02AVxJKHu8Utvuj
+	 B1NBpqpuszb6YXrO1cw16sevvNHBhtpWYx9u9T8XEN5tllG2RxeK4dmZNv5YQEH89oVs7
+	 fMkW4msqGn4y+UHR6NskG0cnEKn4mdeRlZuuuWW8tI10IQoNu4FefMJwjhJhHYSCUlxMQ
+	 8LTIMpRc3Sr9J9ZK8ya6CPW7qKuZPTfb91Ihpj/TNw3ZvK8GkklaWyDeFTVu8fl/kOXju
+	 UynrlpMKkR0s6au0pZkqY+6+KFzHy6Bm12UmTBMrGISDprFrZ8ZIiWCEhhIYQUjWZwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794173825;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794173822;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=JAGmMop/rvSN6d+KRjZFTkwYCsZKr/1kSugo2sOx9jM=;
-	b=kIyZjWVE6YuQ9dvcnngcArDsMynln2X0CAJaK93laXvGF5tiu0WX+tacJGQOiRc/nD0n
-	 QwARiTfuH0xSlMfrONR/jP/gYhmQrXcHO/kcSGX69f+8nNdxYDikIKw+wag4echovIHiX
-	 BjG0VhtacFnMNc49xtY33H09r+Xo2YOo/HYLtsIDMS9yqUKZilNwRGUZldIj/AkKfHYJi
-	 saalz1mM1PQLMRUXTzlBN1YkI/hyFUd9Npc2EWV88lLSxWSbpXSH8cx1fiWNF76vSKFtX
-	 ai/VLSZhbffZwgh2E7ZVeQmw4Ujdgbc0xBB65xwkA5awJ8mY2EuZA0ULHhExKTz/UAw==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=ytnzf6VXxBICp1pG+WcFKQAeNWKQrJq47ffcZ2o26I8=;
+	b=BdzvLiRQxb7anlajNrLa9ErDQB8l+HczsRTylj08zT4TozOTbfL7Ia0c06G/pwEPUnj1
+	 b1BkL4fH9k1GxII0mRRhSvQ5NmGJWbCPe/sAaq1vOgeRU3Tqp7CsIJJI2ByZ2EYHkzdqh
+	 JB2C9oHOwa8dmloigtSY6DBWc0YtS+JjvyKzhy/eLBpe2IcZbQUhJnxdilhmrfDx44Rky
+	 8rUmkNVzlXfzKzbk8HVG8CjDNGwrWhgUd4gMcLlgbTon97qi6TuCgXVbzagOe34uZkxDJ
+	 TK0r1FZO3d0u0XBBaPsoIP7ZXoZqHJckA0vcFd2k5dJfvXhBiOifqikXF7U4EiJaeJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0WhQnpYV;
-	arc=none smtp.remote-ip=209.85.128.47
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k7fI5pG4;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED83606D80B
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 21:37:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2ED83606D80B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5A8606A321
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 21:37:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D5A8606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0WhQnpYV
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a5720b0a57so1952295e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 13:37:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k7fI5pG4
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a207b02a2cso1593595e9.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 13:37:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794173823; x=1794778623; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=JAGmMop/rvSN6d+KRjZFTkwYCsZKr/1kSugo2sOx9jM=;
-        b=0WhQnpYVJlFMoCs9uuNevqxP8Z4tvh9vdtDc2FjfGxNFWsbrZcmNCOh1W0LXGjUqnh
-         n0och4KQwz+EQ9I7LMymNGeAZLd4BrJc8677zkCId66dgI5AMAf8blMSYwwm0tqWu+HT
-         00Yn7HSvs1CVr68NkCsCu/rKD8lpVW2SrEzotBM4U9PQ0vzrFij+jAwtOJqUvUZG6/W2
-         xx7ZO8guQddn8Q+av8OYl3YlMN+f1yaVWV4AMI04QM24r7LUpDdebZtQTTyLEB70Al9H
-         H68izfiovJ8zIYOY+wRZi55ej+bREqJFgJ+l7PKicN2DJzCRdRWFOBaJ/6B1KpN1F4+j
-         Noig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794173823; x=1794778623;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20260707; t=1794173820; x=1794778620; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=JAGmMop/rvSN6d+KRjZFTkwYCsZKr/1kSugo2sOx9jM=;
-        b=WA3tBDLZq9xS8BD4eccG5FuBegzW7V12Oka00rS8a/OGz4qAcbmToC41kZeKJoFRKq
-         zqSi3pSa4gGe6AFRUL4dppvt5jk79SN0oOFqRhp0tXW4ioIrGDK963nvWEgL6IRvQbrn
-         TAPnTxh3GnzDialJTmNRq4iXYnAiUjKUpViJGAkZu3On6fekChsg8u9QM3mYYljPRhYq
-         RVspbhI6YBfSY6+EcFPw4omBcl2XowSr8+P7/4LFQ8bV7C2Siu4qQHtNVC1r1aaKsw6D
-         HHPrAwjXyKGaj4hEV7qCvtHG3NaMylOgV+pnSKC3/fbA5Gqi/HBjrLqOhXc1gPNeUmGM
-         yMTA==
-X-Forwarded-Encrypted: i=1; AL+hErGSddy0Cx+EuS/3FYOZxxPCxU9ccZLk/C1Rp6wn9hMRYEsP+ODPXuUBvbwRpmZK3SDrjyNwkp5UeFS3D3s6zOjVrO3L@vger.kernel.org
-X-Gm-Message-State: APuU4Z8vl8NXu8/u7/BOG9pnctHtnCzqw9jdXNjVWD24JXz3mhUzu65j
-	hTuzjXt1nLLOA9xslz3iuB2JnK9BqPEez7I/lrZuGsVC1FH7aNvOR6PO
-X-Gm-Gg: AYBFou2Jiw36PpQ0VMSvtHrYG9MAmcr5BI6UpMK+Po4bqdafVQ1rmVHHDuXAjSDbTmg
-	w34ruuJ6MaPNILdY+a5ACrsAmAW8hKA87ggbAJjSeeERnDVDTzcXRBMNTGkZ32qWa7zH8OyzxXo
-	KTf0qcWmHgNzmlfXpBRSSPBr+pOcDfLK352wmM/tI0I2D154C/GzgaB82YXPkFqUGT5ikENzVvM
-	gxAT8LewGZ3q/sK97tLTK/2pq6YVQ13gdgLTD3NLZUE/239+edSv/W8BfSDmrPLQ+81WV1XYDw4
-	S7mSqI/bxwgwAb/sAP2QY5blcvDHU+pmp0itrcDGfcAMw8hy7Q5bKLbPdmISSaDLkTP+1FYKVI1
-	IkYRftoiqL0gDspoPq+ztNYx3uMyKI5NsO1C6C6q/4io7Us9jThvjZwyT0oXOTNb/ZqiWuTp/Wg
-	Z3w8KBgJH7ZHu1YWHA9f65T5EnylAL1zil9BAk3sTO0U0GS5Kmee80f/xKPCZvjpK0M9xOIiXFk
-	OAxzMjGkGr2QX6XjBxxne0uMSxpXAE4cHh9zXG/JiVhruR/RswkqToYhz3/4n9psiNLhTDEOJBi
-	UWe1IqUHTlzDQddSAW73KIa36wn2ORH8d8vdsjHojUScOHASIl7+AdbuGi6R
-X-Received: by 2002:a05:600c:198c:b0:49f:c5aa:9ef4 with SMTP id 5b1f17b1804b1-4b9633ce4a4mr47702765e9.8.1794173823321;
-        Sun, 08 Nov 2026 13:37:03 -0800 (PST)
+        bh=ytnzf6VXxBICp1pG+WcFKQAeNWKQrJq47ffcZ2o26I8=;
+        b=k7fI5pG4uo55lbPEW3NEz7FyUKtUQcZKULR/CxTPToc4ALjBs2GlYauuwaNpuePIMI
+         uJcnFsRVubheyEiEKN0cMUOGFhJZYTOd/DheiUx/aKyfvkyeW0YMYUUmnuUTEHY1gfIB
+         32eLHnMHKclCuN+6UOS0JeBxgeT000I23E3p74SqgSrg81Dsb/gIzNOD/Rs6wOjaOfYJ
+         Q7oBqD9H5eGRNvGnfWRlp5zMascAmo6jCT/Kt48TNZFQJtyI/M5jkgSmjWaev24ZO77w
+         /1+KPZbHqa8Dp4UualDb8//G/rZUta4WEJFlYb1e1qMVX0jupbcp177VPSeLyQy+iXhc
+         jXWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794173820; x=1794778620;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ytnzf6VXxBICp1pG+WcFKQAeNWKQrJq47ffcZ2o26I8=;
+        b=MfmyrD6u9eOsZzq6uQlsgm2WOarMRXycMGKYgCu+U5ZdVhmsSV6fXWFighCIFiGrFN
+         X7Xhm3ZQf2/LJesXamqiiLAsJyPhsj3zeNL2e8o/DYpuse+juM+/r8zDu/b/X1Klgy8T
+         CWOAPqNHZPVIoVeq/PAKihH44GD/mPJTyHQGWqaSziDTgC5ohYeREIAAOwTTObUqZ/Yi
+         BC7/rlCbWyS/nraE7ullFZXca2LRGviKqAfB33NtxVUELmoOmMy+fyCOFnntMzmdTcHE
+         A8GWOv1d0KqM5tGZtij181phN73cGB0auszYSTq3NKICXubfk0W1p6dnaUtmCPm/hFz3
+         TvcQ==
+X-Forwarded-Encrypted: i=1; AL+hErGJ3gFNFnpOeg2Ix4ld2kxETTii8zHkAQjz/XTYOTtpkQBxVuIsCA7bHMAwTY5qmCchuKXEPGSNi5BOF66S82hOvE+q@vger.kernel.org
+X-Gm-Message-State: APuU4Z+8cu0YskxEH+NlpfjlirWRQg/KcQbjdClpCk58FU0uQl1miaCI
+	CLEsH+oD5qwpvBU+M/AgNb2t5HRjiwmP46tSbz6Wt5TB8MadiFESIh5stp+ns2gV
+X-Gm-Gg: AYBFou0Q8c4z4ihJTiPIv/zaLoCLanjzr3W9q8JK8sHbBbMJrVEnkZluQoPBViwrBZ3
+	8TvQZ3Ua2HxMtNMr+GZy7gypcr2biqi0GEO6Uk6KH1CgewU61JTsf0X+sSxvZVYa7gkNxzYN07O
+	GQXs7BgMPg91ayA50BkXzo81aht0NlvREl4r0+aEa5MFU6SJaY3G67xqc+yZZyqIkTslEGtp1V2
+	VZmsZU6/PztlTMt5RFQZ2BJ+iW/qagV2NM7loAcYpZzsfOeqxYmlG7yHjIP5UAGSjwKdjaabNX6
+	Jr7l0OHAGQIwy0Xye85cVxq/9oRUrdunIszuHr1RiirQrA3P8mWjTk6LkZvNERLUDrp0gPBp98u
+	wiCX9zhU8Vw4QPxoLAYtsJ6SrVLkCtxe25TGVp1+vBXqlMQ1Zyi/GGASEROaiw6ytwBMzispku8
+	MNmfRldaSPQdMBz+NlDWS12jhO2tVgnCZzEzqDAWWT5jSLCsLQuz+T6MvS+WGpdcD+lIXftUSQt
+	WC6nf+8Vux+tsjndRQ3ZzFbDvwd7R53cz0xI/4G4+xe6d38/J0HFv9Da3nv/bDs+ADcz4kbR9Zm
+	kzpAQT2BPYdaZVAFREAcRm1H2o+Nnd7FfL9EcmOik/baq+NOF7nXG6flYuKh
+X-Received: by 2002:a05:600c:4eca:b0:4a2:a8c:22b0 with SMTP id 5b1f17b1804b1-4b94d762f98mr43434335e9.1.1794173820341;
+        Sun, 08 Nov 2026 13:37:00 -0800 (PST)
 Received: from SurfaceArch.localdomain ([207.188.128.229])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee247e9sm92178595e9.6.2026.11.08.13.37.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee247e9sm92178595e9.6.2026.11.08.13.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Nov 2026 13:37:03 -0800 (PST)
+        Sun, 08 Nov 2026 13:36:59 -0800 (PST)
 From: =?UTF-8?q?Antonio=20V=C3=A1zquez=20Blanco?= <antoniovazquezblanco@gmail.com>
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -91,12 +90,10 @@ Cc: Sachi King <nakato@nakato.io>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Antonio=20V=C3=A1zquez=20Blanco?= <antoniovazquezblanco@gmail.com>
-Subject: [PATCH v2 2/2] platform/surface: surfacepro3_button: don't load on amd variant
-Date: Sun,  8 Nov 2026 22:36:56 +0100
-Message-ID: <20261108213656.13031-3-antoniovazquezblanco@gmail.com>
+Subject: [PATCH v2 0/2] Fix MSHW0040 button driver selection on AMD Surface devices
+Date: Sun,  8 Nov 2026 22:36:54 +0100
+Message-ID: <20261108213656.13031-1-antoniovazquezblanco@gmail.com>
 X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261108213656.13031-1-antoniovazquezblanco@gmail.com>
-References: <20261108213656.13031-1-antoniovazquezblanco@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -109,105 +106,140 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Sachi King <nakato@nakato.io>
+This is a rebase and rework of Sachi King's series from November 2021 [1].
+It was reviewed then, the review was never acted on, and the thread went
+quiet in March 2022. Sachi has confirmed they are happy for it to be
+carried and no longer have the hardware. Both patches keep their original
+authorship and sign-offs.
 
-surfacepro3_button binds to MSHW0040 on the AMD variants of the Surface
-Laptop 3 and 4, where soc_button_array is the right driver.
+The problem, restated, because Hans asked for this in [1] and never got a
+clear answer:
 
-surface_button_check_MSHW0040() evaluates function 2 of the MSHW0040
-_DSM, the OEM Platform Revision, and binds when the result is 0,
-assuming that only a failed evaluation yields 0. The AMD variants
-implement that function and legitimately return 0, so this driver binds
-there as well.
+The AMD variants of the Surface Laptop 3 and 4 use the same MSHW0040 ACPI
+device ID as the Intel Surface devices from the 5th generation on. Both
+soc_button_array and surfacepro3_button match that ID and tell the groups
+apart inside probe, by evaluating function 2 of the MSHW0040 _DSM, the OEM
+Platform Revision, and treating a returned 0 as proof that the method is
+absent. The AMD variants implement that function and legitimately return 0,
+so both drivers draw the wrong conclusion, and surfacepro3_button binds
+where soc_button_array should.
 
-Decide instead on whether the device implements the function at all,
-which function 0 of the same _DSM advertises and acpi_check_dsm()
-reports. Of the 32 Surface models carrying MSHW0040 in the ACPI dumps at
-[1], only two do not advertise it, and they are exactly the two this
-driver is for: the Surface Pro 4, whose MSHW0040 device carries no _DSM,
-and the Surface Book 1, whose _DSM advertises functions 0 and 1 only.
+The sound test is whether the device implements that function at all, which
+function 0 of the same _DSM advertises and acpi_check_dsm() reports.
 
-The driver currently reaches the right answer on the Surface Book 1 by
-accident rather than by that test. Function 2 is not implemented there,
-so the _DSM falls through to a trailing Return (Buffer), and
-acpi_evaluate_dsm_typed() rejects the type and returns NULL rather than
-an integer. The revision is left at 0 and the driver binds.
+To answer the question of which models are affected, every ACPI dump in
+linux-surface/acpidumps [2] carrying MSHW0040 was surveyed, 32 models, for
+UUID 6fd05c69-cde3-49f4-95ed-ab1665498035 revision 1:
 
-Keep evaluating the revision when it is advertised, so that it remains
-available through dev_dbg().
+  Model                        fn 0 mask fn 2 advertised
+  Surface Book 1               0x03      no
+  Surface Book 2               0x0d      yes
+  Surface Book 3               0x0f      yes
+  Surface Laptop 1             0x05      yes
+  Surface Laptop 2             0x05      yes
+  Surface Laptop 3 AMD         0x0f      yes
+  Surface Laptop 3 Intel       0x0f      yes
+  Surface Laptop 4 AMD         0x0f      yes
+  Surface Laptop 4 Intel       0x0f      yes
+  Surface Laptop 5             0x0f      yes
+  Surface Laptop 6             0x0f      yes
+  Surface Laptop 7 Qualcomm    0x0f      yes
+  Surface Laptop Go 1          0x0f      yes
+  Surface Laptop Go 2          0x0f      yes
+  Surface Laptop Go 3          0x0f      yes
+  Surface Laptop SE            0x0d      yes
+  Surface Laptop Studio 1      0x0f      yes
+  Surface Laptop Studio 2      0x0f      yes
+  Surface Pro 10 Business      0x0f      yes
+  Surface Pro 11 Qualcomm      0x0f      yes
+  Surface Pro 4                no _DSM   no
+  Surface Pro 5                0x0f      yes
+  Surface Pro 6                0x0f      yes
+  Surface Pro 7                0x0f      yes
+  Surface Pro 7 Plus           0x0f      yes
+  Surface Pro 8                0x0f      yes
+  Surface Pro 9 5G             0x0f      yes
+  Surface Pro 9 Intel          0x0f      yes
+  Surface Pro X SQ1            0x0f      yes
+  Surface Pro X SQ2            0x0f      yes
+  Surface Studio 2             0x0d      yes
+  Windows Dev Kit 2023         0x0f      yes
+Exactly two do not advertise function 2, and they are exactly the two that
+need surfacepro3_button:
 
-[1] https://github.com/linux-surface/acpidumps
+  - Surface Pro 4: its MSHW0040 device carries no _DSM at all, only _HID
+    and _STA.
+  - Surface Book 1: it does carry the _DSM with this UUID, but function 0
+    returns {0x03,0,0,0}, advertising functions 0 and 1 only. Function 1
+    there is dGPU base attach and detach handling.
 
-Fixes: 64dd243d7356 ("platform/x86: surfacepro3_button: Fix device check")
-Link: https://lore.kernel.org/all/20211109081125.41410-1-nakato@nakato.io/
-Co-developed-by: Maximilian Luz <luzmaximilian@gmail.com>
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-Signed-off-by: Sachi King <nakato@nakato.io>
-Co-developed-by: Antonio Vázquez Blanco <antoniovazquezblanco@gmail.com>
-Signed-off-by: Antonio Vázquez Blanco <antoniovazquezblanco@gmail.com>
----
+Worth noting that v1 said the devices needing surfacepro3_button "do not
+have the _DSM". That is not true of the Surface Book 1, and the inaccuracy
+is probably why the problem was hard to follow. The commit messages now
+describe what is actually tested.
+
+Changes in v2:
+ - Dmitry: a returned 0 is no longer treated as invalid. acpi_check_dsm()
+   makes the decision, and the revision is still evaluated and dev_dbg()'d
+   afterwards, instead of that evaluation being removed.
+ - Andy: the dev_dbg() of the OEM Platform Revision is kept, and the new
+   comments use kernel comment style.
+ - Hans: the commit messages now state which models load which driver and
+   what each one's _DSM advertises, and the in-driver comments are
+   expanded.
+ - Rebased onto v7.4-rc2: surface_button_check_MSHW0040() now takes
+   (struct device *, acpi_handle) and the driver has become a platform
+   driver.
+
+Not done, and I would welcome guidance. Hans also suggested replacing the
+ACPI match with a DMI table plus MODULE_DEVICE_TABLE(dmi, ...), so that
+surfacepro3_button stops auto-loading on machines that do not need it. That
+is a larger change, independent of this fix, and the survey above suggests
+the _DSM test is reliable across the whole range. That may be a good
+follow-up if it is still wanted.
+
+On merging: please do not separate the two patches. Both drivers match
+MSHW0040 and discriminate only in probe, so with only one of them applied,
+which driver claims the device on the AMD variants depends on module load
+order. Hans asked for the same arrangement for his own two patch series in
+2022, so either tree with an ack from the other would work.
+
+On testing. Tested on a Surface Pro 4, which is the "no _DSM" side of the
+check. Its own DSDT agrees with the survey above: the MSHW0040 device
+carries only _HID and _STA, with no _DSM at all. With both patches applied,
+MSHW0040 still binds surfacepro3_button, soc_button_array still declines,
+exactly one input device is registered, and the volume keys still work. No
+"OEM Platform Revision" line appears, which is the correct result here: on
+this model both drivers return before reaching that evaluation.
+
+That is a regression check, not a confirmation of the fix. On a Pro 4, v1,
+v2 and current mainline all take the same path, because the _DSM is simply
+absent and acpi_check_dsm() returns false. The Surface Book 1 is the case
+that separates them and I do not have one.
+
+Worth knowing, though: the out of tree linux-surface kernel has carried v1
+of both patches since 2021-10-05 and still ships them today on its 6.19,
+7.2 and 7.3 branches. This logic has therefore been in continuous use on
+Surface hardware, including the AMD Laptops it fixes, for about four years.
+The Pro 4 above had been running it before this test.
+
+Neither I nor Sachi has an AMD Surface Laptop, so the half this actually
+fixes is still untested by us directly. If anyone with an AMD Surface
+Laptop 3 or 4 can test it, that would be very welcome.
+
+[1] https://lore.kernel.org/all/20211109081125.41410-1-nakato@nakato.io/
+[2] https://github.com/linux-surface/acpidumps
+
+Sachi King (2):
+  Input: soc_button_array - support AMD variant Surface devices
+  platform/surface: surfacepro3_button: don't load on amd variant
+
+ drivers/input/misc/soc_button_array.c         | 31 ++++++++++---------
  drivers/platform/surface/surfacepro3_button.c | 31 ++++++++++---------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ 2 files changed, 34 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/platform/surface/surfacepro3_button.c
-index b38aa010053e..2d95a8ef3e23 100644
---- a/drivers/platform/surface/surfacepro3_button.c
-+++ b/drivers/platform/surface/surfacepro3_button.c
-@@ -148,7 +148,14 @@ static int surface_button_resume(struct device *dev)
- /*
-  * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
-  * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
-- * device by checking for the _DSM method and OEM Platform Revision.
-+ * device by checking whether the OEM Platform Revision _DSM function is
-+ * implemented, which function 0 of that _DSM advertises.
-+ *
-+ * The returned revision cannot be used for this: 0 is a valid revision, and
-+ * the AMD variants of the Surface Laptop 3 and 4 report it while needing
-+ * soc_button_array instead. The devices handled here do not advertise the
-+ * function at all: the Surface Pro 4 has no _DSM on this device, and the
-+ * Surface Book 1 has one that advertises functions 0 and 1 only.
-  *
-  * Returns true if the driver should bind to this device, i.e. the device is
-  * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
-@@ -156,21 +163,17 @@ static int surface_button_resume(struct device *dev)
- static bool surface_button_check_MSHW0040(struct device *dev, acpi_handle handle)
- {
- 	union acpi_object *result;
--	u64 oem_platform_rev = 0;	// valid revisions are nonzero
-+	u64 oem_platform_rev = 0;
-+
-+	if (!acpi_check_dsm(handle, &MSHW0040_DSM_UUID, MSHW0040_DSM_REVISION,
-+			    BIT(MSHW0040_DSM_GET_OMPR)))
-+		return true;
- 
--	// get OEM platform revision
-+	/* Fetch the revision separately, it is only used for debugging. */
- 	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
- 					 MSHW0040_DSM_REVISION,
--					 MSHW0040_DSM_GET_OMPR,
--					 NULL, ACPI_TYPE_INTEGER);
--
--	/*
--	 * If evaluating the _DSM fails, the method is not present. This means
--	 * that we have either MSHW0028 or MSHW0040 on Pro 4 or Book 1, so we
--	 * should use this driver. We use revision 0 indicating it is
--	 * unavailable.
--	 */
--
-+					 MSHW0040_DSM_GET_OMPR, NULL,
-+					 ACPI_TYPE_INTEGER);
- 	if (result) {
- 		oem_platform_rev = result->integer.value;
- 		ACPI_FREE(result);
-@@ -178,7 +181,7 @@ static bool surface_button_check_MSHW0040(struct device *dev, acpi_handle handle
- 
- 	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
- 
--	return oem_platform_rev == 0;
-+	return false;
- }
- 
- 
+
+base-commit: 8a65162514fbad21a2c58ffed65f42b27e92b163
 -- 
 2.56.0
 
