@@ -1,99 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794173822;
-	b=yTWREWzt0v3UdGW+UmdleW+DQT6DWhjZD5/9OisyWHT4D79EbupoT02AVxJKHu8Utvuj
-	 B1NBpqpuszb6YXrO1cw16sevvNHBhtpWYx9u9T8XEN5tllG2RxeK4dmZNv5YQEH89oVs7
-	 fMkW4msqGn4y+UHR6NskG0cnEKn4mdeRlZuuuWW8tI10IQoNu4FefMJwjhJhHYSCUlxMQ
-	 8LTIMpRc3Sr9J9ZK8ya6CPW7qKuZPTfb91Ihpj/TNw3ZvK8GkklaWyDeFTVu8fl/kOXju
-	 UynrlpMKkR0s6au0pZkqY+6+KFzHy6Bm12UmTBMrGISDprFrZ8ZIiWCEhhIYQUjWZwQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794173822;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=ytnzf6VXxBICp1pG+WcFKQAeNWKQrJq47ffcZ2o26I8=;
-	b=BdzvLiRQxb7anlajNrLa9ErDQB8l+HczsRTylj08zT4TozOTbfL7Ia0c06G/pwEPUnj1
-	 b1BkL4fH9k1GxII0mRRhSvQ5NmGJWbCPe/sAaq1vOgeRU3Tqp7CsIJJI2ByZ2EYHkzdqh
-	 JB2C9oHOwa8dmloigtSY6DBWc0YtS+JjvyKzhy/eLBpe2IcZbQUhJnxdilhmrfDx44Rky
-	 8rUmkNVzlXfzKzbk8HVG8CjDNGwrWhgUd4gMcLlgbTon97qi6TuCgXVbzagOe34uZkxDJ
-	 TK0r1FZO3d0u0XBBaPsoIP7ZXoZqHJckA0vcFd2k5dJfvXhBiOifqikXF7U4EiJaeJQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k7fI5pG4;
-	arc=none smtp.remote-ip=209.85.128.52
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.11
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794181955;
+	b=cqnprarQhneuePJVSt8hy3zaF6N4tW0Ng09ac7zPb1VrKRkrcHW3q95rXuoH7u2Ue7l2
+	 gKhcfR1Iv6Me8q4Jfqhh0e/NAhCBF++hhMF7puHo8nhrukN0j+F+IFr/iq+rkuJkLZE/o
+	 xiQjA5ZRZw170jV5OQSyWcUUKEjRs2U8agByWTXPzWLDEx8mlRGKxnxkMUPEe/RFsvb77
+	 txtJzYsyVbCdt8YE4qMQ6pUkCCUl1T2uUZ1OU6X+C8fuevcTgFCNn0NY8Pv0SC+K0UUzq
+	 s8bMDq0wHYgR42pmB/EHarXzQiTe7/qLCRMF19yrvrwtYQnvfI0W5vza/ftU2Pg4qXQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794181955;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:X-Zoho-Virus-Status:X-Zoho-AV-Stamp:
+	 X-ZohoMailClient;
+	bh=ZzZmW7U0j2vJpHF2NsUFVQax3mLzJ80uqYTPEp5SWu8=;
+	b=FixskRu9z5AQcALbyitr4e2+isBqHBLau4YPuYHGQpbpTI2QrBcVjKR3FzTWpwciHaa+
+	 nIPbh71+ZX4wmJ9nwPQG0tHZyESqm4xzF1XpQ5QmsoiUYhWuSC+CjcYZVfEsAhO/tt9nP
+	 lMQY7eqvHTi16YeZp+o7aiDqEJCwrIn3P1sOnpxh2Cov+vgU9EABxo3cZOjiujHYBvWcV
+	 1SjZ9Y+n1F0lnWww+lG5cwqxljh1T3zeVA+aEJjKNOJvmXe37KEqU1wRiM5959qT0JRBU
+	 G3BQjHBTyDkVXKRF/2mHX5OVBZQmZ7UeiWPrnGo3hAe7Ygy6Ietd6+9BO7drDH6vYmA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=collabora.com;
+	spf=pass smtp.mailfrom=collabora.com;
+	dkim=pass header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=zohomail header.b=OpUROlzi;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.11
+Received: from sender6-op-o11.zoho.com (sender6-op-o11.zoho.com [165.173.180.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5A8606A321
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 21:37:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D5A8606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978CE606A31C;
+	Sun,  8 Nov 2026 23:52:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 978CE606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k7fI5pG4
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a207b02a2cso1593595e9.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 13:37:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794173820; x=1794778620; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ytnzf6VXxBICp1pG+WcFKQAeNWKQrJq47ffcZ2o26I8=;
-        b=k7fI5pG4uo55lbPEW3NEz7FyUKtUQcZKULR/CxTPToc4ALjBs2GlYauuwaNpuePIMI
-         uJcnFsRVubheyEiEKN0cMUOGFhJZYTOd/DheiUx/aKyfvkyeW0YMYUUmnuUTEHY1gfIB
-         32eLHnMHKclCuN+6UOS0JeBxgeT000I23E3p74SqgSrg81Dsb/gIzNOD/Rs6wOjaOfYJ
-         Q7oBqD9H5eGRNvGnfWRlp5zMascAmo6jCT/Kt48TNZFQJtyI/M5jkgSmjWaev24ZO77w
-         /1+KPZbHqa8Dp4UualDb8//G/rZUta4WEJFlYb1e1qMVX0jupbcp177VPSeLyQy+iXhc
-         jXWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794173820; x=1794778620;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ytnzf6VXxBICp1pG+WcFKQAeNWKQrJq47ffcZ2o26I8=;
-        b=MfmyrD6u9eOsZzq6uQlsgm2WOarMRXycMGKYgCu+U5ZdVhmsSV6fXWFighCIFiGrFN
-         X7Xhm3ZQf2/LJesXamqiiLAsJyPhsj3zeNL2e8o/DYpuse+juM+/r8zDu/b/X1Klgy8T
-         CWOAPqNHZPVIoVeq/PAKihH44GD/mPJTyHQGWqaSziDTgC5ohYeREIAAOwTTObUqZ/Yi
-         BC7/rlCbWyS/nraE7ullFZXca2LRGviKqAfB33NtxVUELmoOmMy+fyCOFnntMzmdTcHE
-         A8GWOv1d0KqM5tGZtij181phN73cGB0auszYSTq3NKICXubfk0W1p6dnaUtmCPm/hFz3
-         TvcQ==
-X-Forwarded-Encrypted: i=1; AL+hErGJ3gFNFnpOeg2Ix4ld2kxETTii8zHkAQjz/XTYOTtpkQBxVuIsCA7bHMAwTY5qmCchuKXEPGSNi5BOF66S82hOvE+q@vger.kernel.org
-X-Gm-Message-State: APuU4Z+8cu0YskxEH+NlpfjlirWRQg/KcQbjdClpCk58FU0uQl1miaCI
-	CLEsH+oD5qwpvBU+M/AgNb2t5HRjiwmP46tSbz6Wt5TB8MadiFESIh5stp+ns2gV
-X-Gm-Gg: AYBFou0Q8c4z4ihJTiPIv/zaLoCLanjzr3W9q8JK8sHbBbMJrVEnkZluQoPBViwrBZ3
-	8TvQZ3Ua2HxMtNMr+GZy7gypcr2biqi0GEO6Uk6KH1CgewU61JTsf0X+sSxvZVYa7gkNxzYN07O
-	GQXs7BgMPg91ayA50BkXzo81aht0NlvREl4r0+aEa5MFU6SJaY3G67xqc+yZZyqIkTslEGtp1V2
-	VZmsZU6/PztlTMt5RFQZ2BJ+iW/qagV2NM7loAcYpZzsfOeqxYmlG7yHjIP5UAGSjwKdjaabNX6
-	Jr7l0OHAGQIwy0Xye85cVxq/9oRUrdunIszuHr1RiirQrA3P8mWjTk6LkZvNERLUDrp0gPBp98u
-	wiCX9zhU8Vw4QPxoLAYtsJ6SrVLkCtxe25TGVp1+vBXqlMQ1Zyi/GGASEROaiw6ytwBMzispku8
-	MNmfRldaSPQdMBz+NlDWS12jhO2tVgnCZzEzqDAWWT5jSLCsLQuz+T6MvS+WGpdcD+lIXftUSQt
-	WC6nf+8Vux+tsjndRQ3ZzFbDvwd7R53cz0xI/4G4+xe6d38/J0HFv9Da3nv/bDs+ADcz4kbR9Zm
-	kzpAQT2BPYdaZVAFREAcRm1H2o+Nnd7FfL9EcmOik/baq+NOF7nXG6flYuKh
-X-Received: by 2002:a05:600c:4eca:b0:4a2:a8c:22b0 with SMTP id 5b1f17b1804b1-4b94d762f98mr43434335e9.1.1794173820341;
-        Sun, 08 Nov 2026 13:37:00 -0800 (PST)
-Received: from SurfaceArch.localdomain ([207.188.128.229])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee247e9sm92178595e9.6.2026.11.08.13.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Nov 2026 13:36:59 -0800 (PST)
-From: =?UTF-8?q?Antonio=20V=C3=A1zquez=20Blanco?= <antoniovazquezblanco@gmail.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Chen Yu <yu.c.chen@intel.com>
-Cc: Sachi King <nakato@nakato.io>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-input@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Antonio=20V=C3=A1zquez=20Blanco?= <antoniovazquezblanco@gmail.com>
-Subject: [PATCH v2 0/2] Fix MSHW0040 button driver selection on AMD Surface devices
-Date: Sun,  8 Nov 2026 22:36:54 +0100
-Message-ID: <20261108213656.13031-1-antoniovazquezblanco@gmail.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (1024-bit key, unprotected) header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=zohomail header.b=OpUROlzi
+ARC-Seal: i=1; a=rsa-sha256; t=1794181941; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=BtFzMLxCW7POmHOdJvh+YwHALuxCRW48T/bezj1uC6xdFetr9tIPL7Iszd+OdGzDicTRGJXtluttjiQHye306N07B5G1fxSyWDVuKI93VbJIqsOwpo/m03zWmCPb/0yOhHJPMj2wy+qakZFU4U5nb947JLi2dTQ/yyAdRZ9y998=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1794181941; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZzZmW7U0j2vJpHF2NsUFVQax3mLzJ80uqYTPEp5SWu8=; 
+	b=J+ztNFldbR4GOE2FU2XTryHLrv70bkTrCOYeKe8n+7e33QZ+R21A92K0UTx9gaqBAMP31H3JgegChUbV6xhg9poA52MKbC58qMmlS3v4FGfDbc3WKsdGqsYiad3DCLfB0YMviEQCN7ANl3qlVVadvOtVHV157pA3H1okdvHEVsc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: a=rsa-sha256; b=OpUROlziJtMRtlVCbGddqbMWE4oPwZCM2nLSQ0fOYpEOqEce/RZWih6LsE2v456FiUtwqV+oBvq/s+yjeaBo6HGRjAN1E0TtLlCggAwV9aUZ4e5ByC6gmgBnLLwSIcbwii+MVqEFMnl6+Op8qHmivM/j1cf7k5lS1pvwNyD9Njk=; c=relaxed/relaxed; s=zohomail; d=collabora.com; v=1; bh=ZzZmW7U0j2vJpHF2NsUFVQax3mLzJ80uqYTPEp5SWu8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1794181940739147.63396619540686;
+	Sun, 8 Nov 2026 15:52:20 -0800 (PST)
+Received: by venus (Postfix, from userid 1000)
+	id 390461808E6; Mon, 09 Nov 2026 00:52:18 +0100 (CET)
+Date: Mon, 9 Nov 2026 00:52:18 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mika Westerberg <westeri@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Corey Minyard <corey@minyard.net>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-input@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 8/8] power: supply: sbs-battery: use 4-argument
+ i2c_smbus_read_block_data()
+Message-ID: <avELD9tlEfl9Uth7@venus>
+References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
+ <20261024-i2c-smbus-read-block-data-v1-8-19bb97467982@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -103,143 +73,101 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is a rebase and rework of Sachi King's series from November 2021 [1].
-It was reviewed then, the review was never acted on, and the thread went
-quiet in March 2022. Sachi has confirmed they are happy for it to be
-carried and no longer have the hardware. Both patches keep their original
-authorship and sign-offs.
-
-The problem, restated, because Hans asked for this in [1] and never got a
-clear answer:
-
-The AMD variants of the Surface Laptop 3 and 4 use the same MSHW0040 ACPI
-device ID as the Intel Surface devices from the 5th generation on. Both
-soc_button_array and surfacepro3_button match that ID and tell the groups
-apart inside probe, by evaluating function 2 of the MSHW0040 _DSM, the OEM
-Platform Revision, and treating a returned 0 as proof that the method is
-absent. The AMD variants implement that function and legitimately return 0,
-so both drivers draw the wrong conclusion, and surfacepro3_button binds
-where soc_button_array should.
-
-The sound test is whether the device implements that function at all, which
-function 0 of the same _DSM advertises and acpi_check_dsm() reports.
-
-To answer the question of which models are affected, every ACPI dump in
-linux-surface/acpidumps [2] carrying MSHW0040 was surveyed, 32 models, for
-UUID 6fd05c69-cde3-49f4-95ed-ab1665498035 revision 1:
-
-  Model                        fn 0 mask fn 2 advertised
-  Surface Book 1               0x03      no
-  Surface Book 2               0x0d      yes
-  Surface Book 3               0x0f      yes
-  Surface Laptop 1             0x05      yes
-  Surface Laptop 2             0x05      yes
-  Surface Laptop 3 AMD         0x0f      yes
-  Surface Laptop 3 Intel       0x0f      yes
-  Surface Laptop 4 AMD         0x0f      yes
-  Surface Laptop 4 Intel       0x0f      yes
-  Surface Laptop 5             0x0f      yes
-  Surface Laptop 6             0x0f      yes
-  Surface Laptop 7 Qualcomm    0x0f      yes
-  Surface Laptop Go 1          0x0f      yes
-  Surface Laptop Go 2          0x0f      yes
-  Surface Laptop Go 3          0x0f      yes
-  Surface Laptop SE            0x0d      yes
-  Surface Laptop Studio 1      0x0f      yes
-  Surface Laptop Studio 2      0x0f      yes
-  Surface Pro 10 Business      0x0f      yes
-  Surface Pro 11 Qualcomm      0x0f      yes
-  Surface Pro 4                no _DSM   no
-  Surface Pro 5                0x0f      yes
-  Surface Pro 6                0x0f      yes
-  Surface Pro 7                0x0f      yes
-  Surface Pro 7 Plus           0x0f      yes
-  Surface Pro 8                0x0f      yes
-  Surface Pro 9 5G             0x0f      yes
-  Surface Pro 9 Intel          0x0f      yes
-  Surface Pro X SQ1            0x0f      yes
-  Surface Pro X SQ2            0x0f      yes
-  Surface Studio 2             0x0d      yes
-  Windows Dev Kit 2023         0x0f      yes
-Exactly two do not advertise function 2, and they are exactly the two that
-need surfacepro3_button:
-
-  - Surface Pro 4: its MSHW0040 device carries no _DSM at all, only _HID
-    and _STA.
-  - Surface Book 1: it does carry the _DSM with this UUID, but function 0
-    returns {0x03,0,0,0}, advertising functions 0 and 1 only. Function 1
-    there is dGPU base attach and detach handling.
-
-Worth noting that v1 said the devices needing surfacepro3_button "do not
-have the _DSM". That is not true of the Surface Book 1, and the inaccuracy
-is probably why the problem was hard to follow. The commit messages now
-describe what is actually tested.
-
-Changes in v2:
- - Dmitry: a returned 0 is no longer treated as invalid. acpi_check_dsm()
-   makes the decision, and the revision is still evaluated and dev_dbg()'d
-   afterwards, instead of that evaluation being removed.
- - Andy: the dev_dbg() of the OEM Platform Revision is kept, and the new
-   comments use kernel comment style.
- - Hans: the commit messages now state which models load which driver and
-   what each one's _DSM advertises, and the in-driver comments are
-   expanded.
- - Rebased onto v7.4-rc2: surface_button_check_MSHW0040() now takes
-   (struct device *, acpi_handle) and the driver has become a platform
-   driver.
-
-Not done, and I would welcome guidance. Hans also suggested replacing the
-ACPI match with a DMI table plus MODULE_DEVICE_TABLE(dmi, ...), so that
-surfacepro3_button stops auto-loading on machines that do not need it. That
-is a larger change, independent of this fix, and the survey above suggests
-the _DSM test is reliable across the whole range. That may be a good
-follow-up if it is still wanted.
-
-On merging: please do not separate the two patches. Both drivers match
-MSHW0040 and discriminate only in probe, so with only one of them applied,
-which driver claims the device on the AMD variants depends on module load
-order. Hans asked for the same arrangement for his own two patch series in
-2022, so either tree with an ack from the other would work.
-
-On testing. Tested on a Surface Pro 4, which is the "no _DSM" side of the
-check. Its own DSDT agrees with the survey above: the MSHW0040 device
-carries only _HID and _STA, with no _DSM at all. With both patches applied,
-MSHW0040 still binds surfacepro3_button, soc_button_array still declines,
-exactly one input device is registered, and the volume keys still work. No
-"OEM Platform Revision" line appears, which is the correct result here: on
-this model both drivers return before reaching that evaluation.
-
-That is a regression check, not a confirmation of the fix. On a Pro 4, v1,
-v2 and current mainline all take the same path, because the _DSM is simply
-absent and acpi_check_dsm() returns false. The Surface Book 1 is the case
-that separates them and I do not have one.
-
-Worth knowing, though: the out of tree linux-surface kernel has carried v1
-of both patches since 2021-10-05 and still ships them today on its 6.19,
-7.2 and 7.3 branches. This logic has therefore been in continuous use on
-Surface hardware, including the AMD Laptops it fixes, for about four years.
-The Pro 4 above had been running it before this test.
-
-Neither I nor Sachi has an AMD Surface Laptop, so the half this actually
-fixes is still untested by us directly. If anyone with an AMD Surface
-Laptop 3 or 4 can test it, that would be very welcome.
-
-[1] https://lore.kernel.org/all/20211109081125.41410-1-nakato@nakato.io/
-[2] https://github.com/linux-surface/acpidumps
-
-Sachi King (2):
-  Input: soc_button_array - support AMD variant Surface devices
-  platform/surface: surfacepro3_button: don't load on amd variant
-
- drivers/input/misc/soc_button_array.c         | 31 ++++++++++---------
- drivers/platform/surface/surfacepro3_button.c | 31 ++++++++++---------
- 2 files changed, 34 insertions(+), 28 deletions(-)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="djssy5i5cnzkks24"
+Content-Disposition: inline
+In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-8-19bb97467982@gmail.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-0.2.13.1.5.4/294.158.93
+X-ZohoMailClient: External
 
 
-base-commit: 8a65162514fbad21a2c58ffed65f42b27e92b163
--- 
-2.56.0
+--djssy5i5cnzkks24
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 8/8] power: supply: sbs-battery: use 4-argument
+ i2c_smbus_read_block_data()
+MIME-Version: 1.0
 
+Hi,
+
+On Sat, Oct 24, 2026 at 07:48:48PM -0700, Dmitry Torokhov wrote:
+> Pass the destination buffer size to sbs_read_string_data(), and pass
+> the buffer capacity reserving space for a trailing NUL terminator to
+> i2c_smbus_read_block_data().
+>=20
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+>  drivers/power/supply/sbs-battery.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sb=
+s-battery.c
+> index 6714313bb3a3..f8b194c58a62 100644
+> --- a/drivers/power/supply/sbs-battery.c
+> +++ b/drivers/power/supply/sbs-battery.c
+> @@ -424,7 +424,8 @@ static int sbs_read_string_data_fallback(struct i2c_c=
+lient *client, u8 address,
+>  	return ret;
+>  }
+> =20
+> -static int sbs_read_string_data(struct i2c_client *client, u8 address, c=
+har *values)
+> +static int sbs_read_string_data(struct i2c_client *client, u8 address,
+> +				char *values, size_t size)
+>  {
+>  	struct sbs_info *chip =3D i2c_get_clientdata(client);
+>  	int retries =3D chip->i2c_retry_count;
+> @@ -440,7 +441,7 @@ static int sbs_read_string_data(struct i2c_client *cl=
+ient, u8 address, char *val
+>  	}
+> =20
+>  	while (retries > 0) {
+> -		ret =3D i2c_smbus_read_block_data(client, address, values);
+> +		ret =3D i2c_smbus_read_block_data(client, address, size - 1, values);
+>  		if (ret >=3D 0)
+>  			break;
+>  		retries--;
+> @@ -709,7 +710,8 @@ static const char *sbs_get_constant_string(struct sbs=
+_info *chip,
+> =20
+>  		addr =3D sbs_data[ret].addr;
+> =20
+> -		ret =3D sbs_read_string_data(chip->client, addr, buf);
+> +		ret =3D sbs_read_string_data(chip->client, addr, buf,
+> +					   sizeof(chip->strings[0]));
+>  		if (ret < 0)
+>  			return ERR_PTR(ret);
+>  	}
+>=20
+> --=20
+> 2.56.0.257.gf7497c7d27-goog
+>=20
+
+--djssy5i5cnzkks24
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmrxCyYACgkQ2O7X88g7
++pqbCA//WLpBfQbt6ZJ6XndBJ9N2OdPV0zOs8CxWZ+ua1SthiUpJEudANpYMuh8N
+0CmMUo+5FSj0HQmQYi3dnJecNT95GMgFnBhlctIo7MGfkenakz+0kAyVfzUWhh0D
+1kRQuB1pN754PEAjDKtaLQFDQq8EWYWI0S78dLmRKl1wlfxiqWQKVTk4uhpKqMsq
+WEThh3GiB2xPDttBSP/YU9X5nGmB9WWE4KVB7OuWI5gA/6e23w7MetL78gOvQDXw
+DIj8je51ctSbRU5iF2/rsRvjWp/DAQBN6H4OIuqvdJD8VYycfBZ2YM5W42pzhEDf
+3LNhVqsMAJWJIEsz+xYtYS578mxAYKCMWQEc5ol1b1wVHbA8J0QUQxJOMhBWQhys
+jgN2LwCQQXaiiwwRfJ77TJL/SVwCa9hfo2ST5POaTdIYPWTfKklpf9jNUjy5ISe6
+9lfpr94Rw9+B5gMaNJenVgQCVaKGfqdOMMDb2OigI1OpKPC4boV6btBc9bORiHQV
+t4BMOKy6MYWlst+LgE1Aw9WGNxArJ24fc+4gprFY2uxJC5ysK1bpXcsha6IyqUA9
+5kDAhLMTmfdpijezA1681U7HE88+xx8pjSdG9OSTl0G35IvZMESiWdXgCYx369Dh
+/i3G7gy+cnIPSBuVsuvGHLuQPsfELTqm9NlvpHQoBPSZ3yi1pjk=
+=XodA
+-----END PGP SIGNATURE-----
+
+--djssy5i5cnzkks24--
