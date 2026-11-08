@@ -1,78 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=157.180.73.62
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794139878;
-	b=cAt6+tKsWkjXwqsm/NJfHkeruMkjLvqkXhOW7ZIkYrzZfcF8szWonwEEEum5Jq9BCU+g
-	 YwuuYxADbE3M8Y0nslsTe5o5VTc7LBe//UzvONmFQUp5HVYXGLE0FELIgDUD2z/mI8x5e
-	 56JSiP11pPxmbKmupLhsrJc9xt+yJO40lg9nQqNe6GyjBzqi2HCzg/8ngCFNAONMD/QvZ
-	 Y9Tb71V81TXCDk6HaPrPVGw704KIyz1+NsDARoIfIuU/2DfVfmywa/tTH7kAHwOZ9EjzN
-	 0CgkiWpPSwzY6KgbFjliZ6KF69SDAdRPY42/DUErPWlyINqO4MwIa5Lp2fOyC7a1ebg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794139878;
-	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Received-SPF:
-	 Received:X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:X-PPP-Message-ID:X-PPP-Vhost:X-Virus-Scanned:
-	 X-Virus-Status;
-	bh=6ef9yYLdxXIUGY8RVd41r6+xeg6pmHrfr32Rdvc2dTg=;
-	b=lPE6Rj4Jzjyd33QN4rJKzfJsIv/G97QzoFHg1DvGoajYSL/72Scq6H+UjeGS6bPorFfk
-	 cke/Dcs1M6xhTdvQAhLfGgdivqDHZAFx/Vby4zJnTixJFDQ4l2JWzW/WNhaelZPk/skkS
-	 5kYqRorS7Deci3T7zaAxZg1iUJYBq3tD3bk80IZbDxwBknog07D8pwpTiGhQpLYc6mn+O
-	 VdkypBTufrXxlFNdE8XctY+9U0amerSsN4k/ZVRL8TiShnIUzO3ZaXG1jMh4Y/80Wxm18
-	 xX4Po6ivKsoRqi3yC98hNtUwDtwUnrzkIdSFQuSHsA6FnI1P20Hxz8bk7fmeYSrVwfQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=antheas.dev;
-	spf=pass smtp.mailfrom=antheas.dev;
-	dkim=pass header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=HRnjmmfI;
-	arc=none smtp.remote-ip=157.180.73.62
-Received: from relay14.grserver.gr (relay14.grserver.gr [157.180.73.62])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794145435;
+	b=JBaqjftMPgjuK/9R2elYn7jh+60pvDET5GoiZMh4JH4Fx05vgWp7iTF/gyXLYi5Csl5M
+	 GCu4tFE5hIUsxTO6UMRAHOL7maDVu2aXp0zenSnJMWn+Wclvr+gOQthiw398wOfl0EgM6
+	 64MKrZ+lwKXy4+3skYXu0xCX0r/NzWQmFklzusk1hXRvggx/1+Id+iL+FWFgMrLGX8h5/
+	 hfOmm0U5LUV1m82G6hugoSVkji6qLF5xC36hFITWkZLUO7AEHpefx5Oq4utEMRFmyUiJH
+	 UUtn1XDK76GLMTJm1I1+e3/CduundQ/7BrgwvUs5hb9Z2tnJP496k8KRn02ofnSjiwA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794145435;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=qmvZklbOx+m4g/jiXTtoD8pWGhbx6zwduNRbeDuyyv0=;
+	b=4MPx7nTqGMiQ2LVWtCeEwgv898KbeEX/Iz93UT9mRDsZRUITFbLa2b6vgEFTQ1Mbw0bS
+	 qroSjCEtSl4cOmO10E4Oa64v/DAkKF4dU2nCeOixOVkBe7kTLeY8EGSAIWqSz60Yq2Jdk
+	 KXwwwQmU3+n+bryFfssUVmy6COzvahXAJGjbputSXQai0MBozKMwRb5X0uzTjNl6UyXHV
+	 qcuB4ufRVkfKTopnkJM17KQaM+LeHZJm4VAIbdor+3MHDTR5XF6HGgEP4nXRDDVYro0/t
+	 ReltVsqhbig86x2viEIGmIqfrbdegG6dJ57KMHbzJXDO7UaC7loR0H8uF0vuotwpmzA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NNQufUPL;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55246606A338;
+	Sun,  8 Nov 2026 13:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NNQufUPL
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794145435;
+	b=TvWTkoDwQuW1AbtkoZOs0KDyUld5o8LnTYc4b7iJDx65vcQ6sLnAk7RM3RwKSQRJNJRj
+	 Ws/oVzDcnjYSiJMMVEw1QW7uAyBBp86cn+6QfREWaQToC3EZf/AH2YSv0UxoxvU9sp5Iw
+	 EIiH4X4mkq4RPdz9lNStyoVXK4G8jik7arWkArZ+G921P7rt6qGoXkKSGDDM6Qh/1EBGx
+	 M8fYEKkOpvaVwLoax5a2izRaWtaXpANPaCcJ2wb/TjncEshrpl5bYVXN0Q3gygv2vQCKn
+	 qHOkNwwg6No0I5sVbdR+7Gj9u+M65VB5E6PPFJrIkuLEWYm30oR26zHYAbsAfuKEz2Q==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794145435;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=qmvZklbOx+m4g/jiXTtoD8pWGhbx6zwduNRbeDuyyv0=;
+	b=nodD85Ug9msouWYwA8lqjvNgxXheEK8MQXvZdxZiKPZYYof8Wi8B+CtaaErJ7zQZO30s
+	 TT7Op25ouzYAEsLjq87BxdzYrKlM45FVf0QYyPeaoDMEY9ggQuTdJZ/a8QT/j1Px/RWBp
+	 XVIf1876fcXbFKoAFMPil1FXYy2NGF+J7osiJ9i096kw+RPcwN/6qkibrjKd2YookV6o/
+	 0uWG0VeZsOVEv2zQ6o+jHh5yLxUe/BwM5GyFtoviirOijoPvMkgehSRHPvTlZ+XCLaIfR
+	 RByINGz/quqojNYPLrXxpdJ7TVa2mAkjPHm/lUce94ZAywBtSb+rUPhbPgUqBU6T8iw==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8467606A31C
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 12:11:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8467606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=HRnjmmfI
-Received: from relay14 (localhost [127.0.0.1])
-	by relay14.grserver.gr (Proxmox) with ESMTP id 8A3863EC01
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 12:11:08 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay14.grserver.gr (Proxmox) with ESMTPS id D96103EAB2
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 12:11:07 +0000 (UTC)
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 18F631FE451
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 14:11:07 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1794139867;
-	bh=6ef9yYLdxXIUGY8RVd41r6+xeg6pmHrfr32Rdvc2dTg=;
-	h=Received:From:Subject:To;
-	b=HRnjmmfIdy3IlWKdFSMivipAEy8tbgTZFtfLrTlxEbsPz1MvaMSOY8tXsNJS1Lhnl
-	 NTMS3e/MDzN/EcXT0mF/TdkJifGCDmIivbHkecTzHdeSdLiK2o9i7XZG/t5WL1ePYL
-	 8AKwy+6ZXkq9x7vVhbTJw0PnIjGsv0m3gKe620cXX0ZfP3zCqPqEyzHZ2JwSrCWh7W
-	 2/Jz92i7rlCv8wKTym9d6bpVAona8BoBEc4tDpEB36NIHzg24DQY+w+B0bEf3g4NR1
-	 ds2Wjw61IGKIqqkWL0bFaSmQoJAKTNyUrSxYqglHMuGGylge47jw1mwljCIrmZxLD5
-	 G+Fe9FZYDwHlA==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.214.175) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f175.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pl1-f175.google.com with SMTP id
- d9443c01a7336-2ed0b03ce3eso86295ad.3
-        for <platform-driver-x86@vger.kernel.org>;
- Sun, 08 Nov 2026 04:11:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AL+hErFy+Jo0u4P/IQOgQXBFPVLSo1A5i1pcWlj9H5LKe865Y7ybp4szwhPop5Klwe20XBtyLP1h8f1mO+ImHyGQbTjEmtOT@vger.kernel.org
-X-Gm-Message-State: APuU4Z/fWMRZAr4HYdRju14jXv0cYfNBp/r7O7Y7CmTd+wgNi0rxS6fm
-	xfQwtdshgeb5gN7TonngXKOiHpMy+b+29lsDV4snh1vWXp05fSm4rUqxDFMbYveywzPEJ3aIiz8
-	dVPnm6l9oJnfOEJq9xGmYTaCz1qLKJvY=
-X-Received: by 2002:a17:903:3810:b0:2df:8733:f229 with SMTP id
- d9443c01a7336-2ed837595c8mr11333125ad.24.1794139865573; Sun, 08 Nov 2026
- 04:11:05 -0800 (PST)
+	by smtp.kernel.org (Postfix) with ESMTPS id 6BE0B1F0089F;
+	Sun,  8 Nov 2026 13:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794145435;
+	bh=qmvZklbOx+m4g/jiXTtoD8pWGhbx6zwduNRbeDuyyv0=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=NNQufUPLLHt6rkHZzthfQRLCU1/Yn4UnNMWF36RHCHtyKvlvVpnPRvwbYxXV0MrVV
+	 W344G8DkfLNxobE9gK6UHUOZSowkexpNY4r1ny6CnxPknB9LBI/BUdB2lAO8rCC4DQ
+	 3wtcmDqjIL56akKVnPEA0fee0JN02ltZu5izOS4HEjH3IA2gOOHU26+lezUGh+cAEX
+	 rYIKWLefVZPwwekZ/Xl3E9ttyQBn8sorQO508SbAbyaCS5lB2yFTB4fGlP8LTEYxMR
+	 y0QWyewlBWa/lWWwkmYBlgBwusPzr04yBDOmqGj5YeEzvYBmIPQso6XgHaXGEg5e+t
+	 ZXT5dk0I7oeBQ==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id C199D47F99;
+	Sun,  8 Nov 2026 13:43:53 +0000 (UTC)
+From: Moad Tarrih via B4 Relay <devnull+tarrihmoad.proton.me@kernel.org>
+Date: Sun, 08 Nov 2026 13:43:52 +0000
+Subject: [PATCH] platform/x86: asus-wmi: Ignore kbd backlight read-back on
+ rejected writes
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,69 +83,182 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261108020351.62494-1-hijae99@gmail.com>
-In-Reply-To: <20261108020351.62494-1-hijae99@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 8 Nov 2026 13:10:54 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGjyhc_j-gaoTj=ijD6us=7QbNyXymT_Gbd3iNue5_RiQ@mail.gmail.com>
-X-Gm-Features: AclHuK-zKZVbA7hsNK4LKG0ZduJ3hbw5slvRyY_Oky5Z8mfep99kmAdzUSaMCtQ
-Message-ID: 
- <CAGwozwGjyhc_j-gaoTj=ijD6us=7QbNyXymT_Gbd3iNue5_RiQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: ayaneo-ec: Enable charge control on Flip KB
-To: Hijae Song <hijae99@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <179413986733.727781.14048310417781021061@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261108-asus-wmi-kbd-readback-v1-1-bf38f6400ade@proton.me>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMSwrCQBBF0a2EGluQLmNo3Io46M9Ty2CULqOBk
+ L3b6vAM7l3IUBRG+2ahgpea3scKt2koXcJ4BmuuJmmld671HGwyft+Uh5i5IOQY0sCy7aXbwUu
+ Gp9o+Ck46/76H4982xSvS8zujdf0ApIqDsnkAAAA=
+X-Change-ID: 20261108-asus-wmi-kbd-readback-236245e82de8
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Antheas Kapenekakis <lkml@antheas.dev>, 
+ Benjamin Tissoires <bentiss@kernel.org>
+Cc: Sercan GOKMEN <gokmensercan@gmail.com>, 
+ Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Moad Tarrih <tarrihmoad@proton.me>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794145433; l=6348;
+ i=tarrihmoad@proton.me; s=20261108; h=from:subject:message-id;
+ bh=ogqq5dQqAtyFUUMKvHaCTODwgaE29oIxanDP3GCceZQ=;
+ b=+FilPRrjGtzfUQ3wv7tLx7b75sphxRuM6phl33jCQeP/Q6M4Qv72xoC6iDmljmMMDAOLby7su
+ 2y6EFDcQ2XpC+LY7Dm26DVaQ852Yq0pXFHDZ1pKi33qWwKfI8pAqAkk
+X-Developer-Key: i=tarrihmoad@proton.me; a=ed25519;
+ pk=wtwpmYxZldK7Qebavgtx7P5WmSQOiWjicK0506NOKLg=
+X-Endpoint-Received: by B4 Relay for tarrihmoad@proton.me/20261108 with
+ auth_id=1453
+X-Original-From: Moad Tarrih <tarrihmoad@proton.me>
+Reply-To: tarrihmoad@proton.me
+Content-Transfer-Encoding: 7bit
 
-On Sun, 8 Nov 2026 at 03:04, Hijae Song <hijae99@gmail.com> wrote:
->
-> Flip KB was matched to quirk_fan (fan control only), the same
-> quirk used for boards without a working charge-limit EC
-> interface. Testing on real hardware shows the charge-limit
-> register works identically to AIR/AIR 1S/KUN, so switch it to
-> quirk_charge_limit.
->
-> Verified on real hardware: switching charge_behaviour to
-> inhibit-charge stops the charge current (status: Not charging,
-> power_now: 0), and switching back to auto resumes charging.
->
+From: Moad Tarrih <tarrihmoad@proton.me>
 
-I would have liked a slightly shorter description with the slop "
-Verified on real hardware:" cut out, but it is not worth resending.
-Ideally dropping the second paragraph, and swapping "real hardware"
-with "the device"
+On the ASUS ROG Strix G18 G814FP, the brightness attribute of
+asus::kbd_backlight always reads 0, and every read breaks the keyboard
+brightness keys.
 
-Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
+The firmware reports the keyboard backlight WMI device as present, but
+DSTS(0x50021) returns 0x50000 (presence bit set, level 0) whatever level
+the keyboard shows, and DEVS(0x50021, 0x80..0x83) returns
+ASUS_WMI_UNSUPPORTED_METHOD for every level. The backlight is driven by
+hid-asus through its asus-wmi listener instead.
 
-Antheas
+Since commit fac55d29581f ("platform/x86: asus-wmi: Add support for
+multiple kbd led handlers"), kbd_led_get() stores the level it reads in
+kbd_led_wk, and the brightness key handlers step from kbd_led_wk. Any
+read of the attribute, for example by a desktop environment or
+systemd-backlight, therefore resets the stored level to 0, and the next
+brightness-up press sets the keyboard to the lowest level instead of
+stepping up:
 
-> Signed-off-by: Hijae Song <hijae99@gmail.com>
-> ---
->  drivers/platform/x86/ayaneo-ec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
-> index 41a24e09..6fe2387d 100644
-> --- a/drivers/platform/x86/ayaneo-ec.c
-> +++ b/drivers/platform/x86/ayaneo-ec.c
-> @@ -88,7 +88,7 @@ static const struct dmi_system_id dmi_table[] = {
->                         DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->                         DMI_MATCH(DMI_BOARD_NAME, "FLIP"),
->                 },
-> -               .driver_data = (void *)&quirk_fan,
-> +               .driver_data = (void *)&quirk_charge_limit,
->         },
->         {
->                 .matches = {
-> --
-> 2.54.0 (Apple Git-157)
->
->
+  # echo 3 > /sys/class/leds/asus::kbd_backlight/brightness
+  (keyboard goes to high)
+  # cat /sys/class/leds/asus::kbd_backlight/brightness
+  0
+  (brightness-up key: keyboard drops to low)
+
+systemd-backlight also saves 0 at shutdown, so the level is lost across
+reboots.
+
+Remember when the firmware rejects a write with -ENODEV, and from then
+on return the stored level from kbd_led_get(), as is already done when
+the WMI device is not available. The first write is queued right after
+the LED is registered, so the read-back is only trusted before any
+level has been set.
+
+The cause was found and this fix written with the help of an AI coding
+assistant (Claude Code, Claude Opus 5.5). I reviewed the change and
+tested it on the affected laptop.
+
+Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
+---
+Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317,
+keyboard 0b05:19b6) only, on 7.2.14 as a DKMS module. With the patch,
+the attribute reads back low, medium and high correctly, the brightness
+keys step from the real level, and the level survives suspend/resume
+and reboots. Build-tested with W=1 against pdx86 for-next
+(c339f4010dea): no warnings. checkpatch --strict is clean.
+
+Limitation: a machine whose firmware rejects writes but changes the
+brightness by itself would now report a stale level. I don't know of
+such a machine.
+
+Sercan GOKMEN posted a patch for the same symptom on the B9406CAA:
+https://lore.kernel.org/platform-driver-x86/20261030-b4-asus-wmi-b9406caa-kbd-readback-v2-1-ca93bb9039f6@gmail.com/
+On that board writes succeed and only the read-back is constant, so it
+uses a DMI quirk. The two patches are complementary: the rejected-write
+check doesn't catch the B9406CAA, and the quirk doesn't catch the
+G814FP. They touch the same condition in kbd_led_get(), so whichever
+lands second needs a trivial rebase; I'm happy to rebase onto it.
+
+This touches different code from Bartu Alev's pending series
+'[PATCH 0/2] platform/x86: asus-wmi: fix and unify keyboard brightness
+key handling' and applies cleanly before or after it.
+
+A more general option would be to ignore the WMI read-back whenever a
+hid-asus listener is registered, since hid-asus drives the backlight on
+the G814FP. I didn't do that because it could report stale levels on
+machines where the firmware does change the brightness itself, but I can
+rework the patch that way if preferred.
+
+AI assistance: Claude Code was used over several sessions to trace the
+read-back path in asus-wmi and hid-asus, run the debugfs DSTS/DEVS
+probes, write the patch and draft this message. Testing and final
+review were done by me on the hardware.
+---
+ drivers/platform/x86/asus-wmi.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index b33ebdb21aa2..c47ebc1f184a 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -258,6 +258,7 @@ struct asus_wmi {
+ 	struct led_classdev kbd_led;
+ 	int kbd_led_wk;
+ 	bool kbd_led_notify;
++	bool kbd_led_write_rejected;
+ 	bool kbd_led_avail;
+ 	bool kbd_led_registered;
+ 	struct led_classdev lightbar_led;
+@@ -1724,8 +1725,9 @@ static struct asus_hid_ref asus_ref = {
+ 	.listeners = LIST_HEAD_INIT(asus_ref.listeners),
+ 	.asus = NULL,
+ 	/*
+-	 * Protects .asus, .asus.kbd_led_{wk,notify}, and .listener refs. Other
+-	 * asus variables are read-only after .asus is set.
++	 * Protects .asus, .asus.kbd_led_{wk,notify,write_rejected}, and
++	 * .listener refs. Other asus variables are read-only after .asus is
++	 * set.
+ 	 *
+ 	 * The led cdev device is not protected because it calls backlight_get
+ 	 * during initialization, which would result in a nested lock attempt.
+@@ -1896,10 +1898,24 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
+ static void kbd_led_update(struct asus_wmi *asus)
+ {
+ 	int ctrl_param = 0;
++	int err;
+ 
+ 	scoped_guard(spinlock_irqsave, &asus_ref.lock)
+ 		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+-	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param,
++				    NULL);
++
++	/*
++	 * Some firmware reports the device as present but rejects writes,
++	 * and its read-back does not follow the level set through other
++	 * paths, such as hid-asus. Stop trusting the read-back once a
++	 * write has been rejected.
++	 */
++	if (err == -ENODEV) {
++		pr_debug("Keyboard backlight write rejected, ignoring read-back\n");
++		scoped_guard(spinlock_irqsave, &asus_ref.lock)
++			asus->kbd_led_write_rejected = true;
++	}
+ }
+ 
+ static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+@@ -1975,7 +1991,7 @@ static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+ 	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+ 
+ 	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+-		if (!asus->kbd_led_avail)
++		if (!asus->kbd_led_avail || asus->kbd_led_write_rejected)
+ 			return asus->kbd_led_wk;
+ 	}
+ 
+
+---
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
+
+Best regards,
+--  
+Moad Tarrih <tarrihmoad@proton.me>
+
 
