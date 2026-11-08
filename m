@@ -1,67 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.216.248.207
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794132575;
-	b=fT8VErhqsOjQXXXQ+dTyK303phsw8qMSofBcz7cOdDT3IC9uxMX87nAQD/PcEI+EzcGp
-	 PYr5M/SERVxYtZfagjgPHlfdog+fE8ci2DZhe+6rvPnQ6dU/TolmquAvrTPR7yDNyZ8z7
-	 zwKD7GGdjCDcAgj/epyDJTXHM5C8pH7qk5ODQkm/GL6N9gDM1Am6VFamrv9VlatVNryST
-	 q0Qmjnr+Asln992qtrFXRLhKGKuRnDGnfuiPgW/Qe4TJ5C+bOV5lIClu3YBW7S8N6T1Un
-	 o3ntCJgDgyPOm4YDs9Ta4CRr74OUy3CWM8TCyQX11eR0KFt6HSKh73vneRlwOVRuMZQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794132575;
-	h=DMARC-Filter:From:X-Lima-ML-UUID:DKIM-Signature:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=1uwiNKMbvhBAXcecmGoFjqOAK5Qba8ZnTWBcEvlHDAs=;
-	b=hre51RktPjYQQm2QuY+lAmQpgiWoZvhrXSdcIkmLnD9jkbYApdWLmzTRcfpmTRo3F87F
-	 2ENTRSHPcJATnMnNjutNVUQ1B9gGeboSHuWl93HXBhByt7Xf9dMHSUwkAEmEIZAAWfhlT
-	 kn62i6RsuGByQNNHH7+de8KKdHHi6Z0Uxnt5NeiZh290j6pPk85BfsIbIJpPEmu6QMGpw
-	 iCtroR3tjznp0P/IflQ6+YxFt4agLKaEEeyNIOJK7l+Gu/CWHTxmHPlXNPr/Erdi3tNih
-	 YuMaBd1vjBD6gbgHoQ5Q4iQ8O51yWolHRJwJQqWA4KWsDqmucw7nlbZh6mLsmYc6PYA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=deq.rocks;
-	spf=none smtp.mailfrom=deq.rocks;
-	dkim=pass header.d=deq.rocks header.i=@deq.rocks header.a=rsa-sha256 header.s=securedbylima-20251205 header.b=IGdFcVa0;
-	arc=none smtp.remote-ip=91.216.248.207
-Received: from mx5.mail-out.lima-city.de (mx5.mail-out.lima-city.de [91.216.248.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.170
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794134038;
+	b=3Ul542p2TlWwoEkACpppZSkbH/UcWsHAVApHlVCTOd+BjZUp6FhT6EFv1sTbGbvdavvI
+	 MSC+pFgMQgPY4MPXFW5voHjGqDWJlbRnJgASbXbYz8sY+WVnHboaYqhurP9bG5Fe+eEDn
+	 S5FvJ4/6xDLt+0e5px64L7roEjm4a/PcPNMGYvzFZPhlmraGEjJwRvke1xs8XlsQvpQZg
+	 LbtFXwzRhDaPsjipVQO89McpqqcjsAnqm6rDscwT1X6DmyPKsgu7I19Y/oG3qbNvO78oU
+	 EafB++MD1G6NFlGgJ0LXjE2WSOvIsaV7oJTwQRUSkjuBZBcc3Z4WMuYGh+gX43fZoGw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794134038;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=glvGrWRT1QN/fE8UGYdsbVnUnNT1CZIwbxztIXMB48g=;
+	b=NKXV7jWaCkA7j5I7l+L9JU/132BR/6ng/7UmQKJltnDLhlvMvFcJPOFIsjKnxgUJjkJH
+	 KJfPfPx1SnmBHkxpxSX3VE6WOl7uDM/JtdxvGgxOseVadHftMLkKpSFIJhU2KA3ttcyKg
+	 y7IwdjDk6FBkqHUiZFxL8IOZtAnNBCeKu9XjTxKsRlaYPbdfY972YV6RuOOIGLnNAAtD1
+	 iGscF1YjFwdICiJ+wgLSJW0WJQGvsv821JDku+trmQYffFDkmeC1Zy+zasxLxjzv1Onh3
+	 BB7iMxJquqmDpVukXLTiU123juEaOQzvpot1hMnfxn+4VFgVUFkhiAeJGtVhAVrBz1A==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aZyBVlwC;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.170
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDCA606A31C;
-	Sun,  8 Nov 2026 10:09:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6CDCA606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=deq.rocks
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C3A606A31C
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2026 10:33:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 99C3A606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=deq.rocks header.i=@deq.rocks header.a=rsa-sha256 header.s=securedbylima-20251205 header.b=IGdFcVa0
-From: Andre Eikmeyer <dev@deq.rocks>
-X-Lima-ML-UUID: 0cb6624c-966a-4a95-a126-0519d608ab05
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=deq.rocks;
-	s=securedbylima-20251205; t=1794132570;
-	bh=S6Y/LwG+wCmImnTNaesKgeOzR3fz30WpQYzLROThjVQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IGdFcVa0bidLQ3V6WX5gz1QLex4rCqOuR9A/6rS4Mi5BcStBYv7sEXYtNC+u17+ck
-	 4Y2GdUVRw/GmC7SkGlLWLZh9k3q4LbQUZWc/m5/QzC/hmCx7/Tln68oUBv/GkqdMMd
-	 Wn5PdWnZLBCVT4SutpfwE2sM7CRIzY++Dar86UWTONIj4ZlNldiBzsCGZ9e5Bcy3yG
-	 0U1Lcu5IGK/AGZ1jghZciN8xbJAAvqtPYH3ZutsiDOQOUE0GBcZhlN2owqiF9677hn
-	 W2fMkh8yPpLwR/7EBZPI1U7nv0sd/RBtZEuxmE3aUGJw+bxMlD68GhTgyr1sGhM5Hc
-	 9AoFEUZS/IHPw==
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andre Eikmeyer <dev@deq.rocks>
-Subject: [PATCH] drm/i915/backlight: restore the gmux brightness on dual GPU T2 MacBook Pros
-Date: Sun,  8 Nov 2026 11:09:26 +0100
-Message-ID: <20261108100926.28950-1-dev@deq.rocks>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aZyBVlwC
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3adf89523d8so35491fa.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 02:33:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794134036; cv=none;
+        d=google.com; s=arc-20260327;
+        b=UtXFMyb7f+jZ5HhhcxbJbcmBnLEiH0r2yEdimwBTdPnsLBrAIlbtaPfDH3DC0B+4JJ
+         OSE+MMZiDLsQMqbN2LhFDrHqCLqmguaIUNVQsz5caeqkViZd+24b1Djvzs+PTwRe75ck
+         MqrL8IKIuFV6+MHutdYDa1gIOMEuIlCkkzEwBaK1ozgWAxx3s9iJbtMaoxG/ZVx2/8bC
+         ioLCCczlh9H98UYEPwzl+H67OELVzoBA0y4BX+lTquqHtV/wKnfOFpBlrFAe6HUmrh1/
+         oeGh1KYhzjL3OhfgVkUXts9oyKco0YygukFQrasOEORF1nJ8Fd0yXICXikh8UD5onRwn
+         IkmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=glvGrWRT1QN/fE8UGYdsbVnUnNT1CZIwbxztIXMB48g=;
+        fh=ClWgzjGDGPtJ9NdV7X44lnMnAQLn/jzpf3m/Ewp1KpY=;
+        b=Sj6RwUHNAfCfFxhfFgI2N/EFSWhEvEkSU3aW2J+q0suq6y4yv51aXZHkm/1poy87Cs
+         Lkj4y7qkBZWc2z+TpsQwGUmtOhM556gpfOOX4hWqHtqVeOU77YQiEluoHrvQ0MLdVIPc
+         /U/P1kFiqblvmvHe6IeQfviwc0bAgH5ukglegVC6V6JgdRSTQZ4p5lBY4jZ4FkSHgAIW
+         HlgYxMj0svZPKgv+THPgWljRHHv4js8saaGLWD5LWySxqtSqK93OAC0/Fpdadl33EtXg
+         t9INxLwEYrJMQJYN3/sDMXTE1lOEP1NLeHNyeP/GE0NA8f28r76CcgZk61vsL79W2qXw
+         my6g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794134036; x=1794738836; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=glvGrWRT1QN/fE8UGYdsbVnUnNT1CZIwbxztIXMB48g=;
+        b=aZyBVlwCf3HtdIM+1sV0UWQdH2oSFkOc7HO3xGCc2YUHvHTXKYT7khh2XIxyNQ+mtv
+         ASKuqDjU8ERXQwDKG9KaoDqfPNad9Ukvu/lAl6xSetw/JW7T2bE0av8FKX0Rsdq8Bkhk
+         qFIx5stGz4MeP50q2tDAwKTLMmrax8Dp/bj9D9D0sIWULCizXkZP4q9MriCyyWoI0TFv
+         SbG2YCAzt5VAVm9BKTHlVK9CTS9aYYhZgtNifmVAFMTo6qxN1QmDa6v1YVinqxIeXQXA
+         N1/Wqf9Rc7JpqFLKV2qx6vi+v7qRbszs4wLnkL9fYoVjOX3qdUPV0ltxmtL9qIjtaNT+
+         2T1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794134036; x=1794738836;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=glvGrWRT1QN/fE8UGYdsbVnUnNT1CZIwbxztIXMB48g=;
+        b=dUMRbJleDfGKHm4pj5We7bhz6BfVu5HlDjQ1dYBLog8p1a+EwiBl71iG6an6E3emQg
+         +0zyuukP7Bmgky6xL1RyDw8gRumMHZdKaBTIl/3GqKuM1ccqOW9GVHlHTjccFvcH9viv
+         jHDw9oP9rIgtJxLRzHcFLvIuy88bzUBFJ1EuP2Kvc8cfNW0QDBqSOOMf8HVfuchJIxU/
+         Q25jMPefrMDZNro0aLWOWBx2260MsAa/ZornOk3ndtulYdOP55yCwfmUDYLzyuBs+7qx
+         7F5YPs4gxOcOjSM3iuhiWUy3QjaC2sX/e8EMgP7TwLiL7Loc0wK5HxPPDZzTEKOAj7K5
+         BT7g==
+X-Gm-Message-State: APuU4Z+JB5xCdLHPlIwh1v4aIP8AGlWkW2rlLjhxsyvAX3fjL4lz6St3
+	50uppbf375dn8qK0w8CidTZ6adLkSSb27BzAIiyyVCaLgkYe2W1+7/gp9f6n1C6HKveVqDZ+CZr
+	2L8Cvy2Y0fmqAN0HycqMkeJ0ohk4kP9M=
+X-Gm-Gg: AYBFou1d3PQu7ZxtHdNC+vPy9PAtYr5EG01dZLTiZbyn/1hm+RAn7gs4otDgwrDrqV/
+	fPancFotOoLf5dDN0cwCJPBcGwk8xGG91lnaLTTHOfXlYi7dYvbN1fOG1e7jahWxAuAYvKW8R7A
+	r29feArFrzidbJPoJaWoXLSxAEbSyLlf0bYkr6zKt3syegyxZp2WAbMu6btRSzkNXU4Uc+7tDUh
+	tNO02lnocYNBwodtrKrOu3b7KfqFjHpHPAHZIxHvhd6y4vcRVQ292gNgeeRgqfbHIYBuDZg02/B
+	bSS7wttX4irGc3Dd4fuNN9FR+1PnLM1CSYFigGe0IEOxJIB0Fxdo5ler6HKy7mFc5NqjsuBoDyI
+	Y4ej79GPPBW+V35MPGz0vX/TrTFNFT8g0oMXLidFKVYhFv2mWk4DZDO2AG0iJGa9roXci+Q==
+X-Received: by 2002:a2e:7a04:0:b0:3ac:ddd5:55ee with SMTP id
+ 38308e7fff4ca-3adfa3a50cbmr2094571fa.2.1794134035626; Sun, 08 Nov 2026
+ 02:33:55 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,151 +103,100 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAPvUaSo1D+1Tvk3-4TMiXw-ScBtY8Mu0FzO7R_EG6zrjYfjYqg@mail.gmail.com>
+ <asxTYBiGy6lf6-Ki@archlinux> <CAPvUaSo-ubCOCYYPadY1C23y1Fd_AAhQLuVKWRa6F1XVh6mk_Q@mail.gmail.com>
+ <asz7WqGzukhkYHGD@archlinux> <CAPvUaSrbWrBuvAi3R02xC8w8M5Yh97pVd3-+FBXLp3mPgG5cUQ@mail.gmail.com>
+ <as0bOFOoaaw-smyB@archlinux> <CAPvUaSoBgAG=MX93vMhfEiEk5bYXGydFsGn8CpoCu_QVQRPTCQ@mail.gmail.com>
+ <CAPvUaSpPVYc-5M72G0Hf9JPsbdAp2-4f-p5OetYbMKdLqm0PXQ@mail.gmail.com>
+ <atEh9Gon95EFIq76@archlinux> <CAPvUaSpq2d5hkxTaqAL6rBoeHct68Y37C4nSpV+goGZ-QwrCsw@mail.gmail.com>
+ <atJc2J2hYrdI_Eun@archlinux>
+In-Reply-To: <atJc2J2hYrdI_Eun@archlinux>
+From: Lorenzo Collevecchio <lorenzocollevecchio17@gmail.com>
+Date: Sun, 8 Nov 2026 11:33:44 +0100
+X-Gm-Features: AclHuK8RS4vQ3n6u4Bm4vCHvO6Hnt7D0ObPsJjucxe4puVLCmB39UPpPrbPa-oI
+Message-ID: <CAPvUaSqAnLYVuzcq6Zq=hRp6JBoo8upjrsy=LSxnLdXuTyHDaw@mail.gmail.com>
+Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP OmniBook
+ 5 16-ag1xxx (board 8DF4)
+To: Krishna Chomal <krishna.chomal108@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, W_Armin@gmx.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When i915 drives the panel of a dual GPU T2 MacBook Pro, the panel comes
-back at 80% brightness after every screen lock, login and resume, while
-the gmux backlight device still reports the level userspace set.
+Subject: Re: HP OmniBook 5 16-ag1xxx: hp_bioscfg output and fan
+results on all OSes
 
-gmux resets its brightness register to 0xcccc of 0xffff when i915 powers
-the panel off and applies that value when the panel comes back on.
+Hi Krishna,
 
-This cannot be handled in apple-gmux. gmux raises no interrupt when the
-panel is powered off or on. Only the GPU driver knows when the panel is
-back.
+A quick update on the OmniBook 5 16-ag1xxx (board 8DF4, BIOS F.12), in
+case it helps with the HP side.
 
-amdgpu needs no such restore. When it drives the panel, the gmux
-brightness register and the panel's DPCD brightness stay unchanged across
-a screen lock.
+1. hp_bioscfg: the driver loads and registers hp-bioscfg, but the
+attributes directory contains only Sure_Start and pending_reboot.
+dmesg shows: hp_bioscfg: Returned error 0x3, "Invalid command
+value/Feature not supported". There is no fan or thermal attribute, so
+I can't read or change "Fan Always On" from Linux.
 
-Add a DMI quirk for these models and write the cached level back through
-the gmux backlight device after enabling the backlight. The device is
-looked up by name so i915 does not depend on apple-gmux.
+2. Fan behaviour: it isn't specific to the kernel or the OS. With Fan
+Always On disabled, the fan stays off under load on Windows 11, Linux
+Mint, Arch, CachyOS LTS and CachyOS 7.3.1-1. A full-load stress-ng run
+(all 12 threads, platform_profile=3Dperformance) reached 92 =C2=B0C in abou=
+t
+35 seconds with no fan. A 2-thread run reached 83 =C2=B0C with no fan.
 
-Tested on the MacBookPro15,1 and MacBookPro16,1.
+3. Timeline: BIOS F.12 has been installed since the end of July, and
+the fan behaved normally until October. HP PC Hardware Diagnostics
+UEFI still passes both the fan speed and thermal tests. A hard EC
+reset and BIOS defaults changed nothing.
 
-Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
----
- .../gpu/drm/i915/display/intel_backlight.c    | 31 ++++++++++++++++
- drivers/gpu/drm/i915/display/intel_quirks.c   | 37 +++++++++++++++++++
- drivers/gpu/drm/i915/display/intel_quirks.h   |  1 +
- 3 files changed, 69 insertions(+)
+I've also reported this to HP and asked for a warranty repair. I'm
+happy to test any further patches or run any commands on this machine.
 
-diff --git a/drivers/gpu/drm/i915/display/intel_backlight.c b/drivers/gpu/drm/i915/display/intel_backlight.c
-index b128896cb..fddd2292e 100644
---- a/drivers/gpu/drm/i915/display/intel_backlight.c
-+++ b/drivers/gpu/drm/i915/display/intel_backlight.c
-@@ -793,6 +793,35 @@ static void __intel_backlight_enable(const struct intel_crtc_state *crtc_state,
- 		panel->backlight.device->props.power = BACKLIGHT_POWER_ON;
- }
- 
-+#if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
-+/*
-+ * The gmux of dual GPU T2 MacBook Pros falls back to its default brightness
-+ * whenever the panel is powered off and raises no interrupt for it. Its
-+ * backlight device still holds the level userspace set, so apply that level
-+ * again once the panel is back on.
-+ */
-+static void intel_backlight_restore_gmux(struct intel_display *display)
-+{
-+	struct backlight_device *bd;
-+
-+	if (!intel_has_quirk(display, QUIRK_GMUX_RESETS_BRIGHTNESS))
-+		return;
-+
-+	bd = backlight_device_get_by_name("gmux_backlight");
-+	if (!bd)
-+		return;
-+
-+	drm_dbg_kms(display->drm, "restoring gmux brightness %d\n",
-+		    bd->props.brightness);
-+	backlight_update_status(bd);
-+	put_device(&bd->dev);
-+}
-+#else
-+static void intel_backlight_restore_gmux(struct intel_display *display)
-+{
-+}
-+#endif
-+
- void intel_backlight_enable(const struct intel_crtc_state *crtc_state,
- 			    const struct drm_connector_state *conn_state)
- {
-@@ -811,6 +840,8 @@ void intel_backlight_enable(const struct intel_crtc_state *crtc_state,
- 	__intel_backlight_enable(crtc_state, conn_state);
- 
- 	mutex_unlock(&display->backlight.lock);
-+
-+	intel_backlight_restore_gmux(display);
- }
- 
- #if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
-diff --git a/drivers/gpu/drm/i915/display/intel_quirks.c b/drivers/gpu/drm/i915/display/intel_quirks.c
-index 96eb9a40d..739e030cf 100644
---- a/drivers/gpu/drm/i915/display/intel_quirks.c
-+++ b/drivers/gpu/drm/i915/display/intel_quirks.c
-@@ -100,6 +100,13 @@ static void quirk_disable_psr2(struct intel_display *display)
- 	drm_info(display->drm, "PSR2 support not currently available for this setup, applying disable PSR2 quirk\n");
- }
- 
-+/* The gmux of dual GPU T2 MacBook Pros resets the brightness on panel power off */
-+static void quirk_gmux_resets_brightness(struct intel_display *display)
-+{
-+	intel_set_quirk(display, QUIRK_GMUX_RESETS_BRIGHTNESS);
-+	drm_info(display->drm, "Applying gmux brightness restore quirk\n");
-+}
-+
- static void quirk_enable_dpcd_backlight(struct intel_dp *intel_dp)
- {
- 	struct intel_display *display = to_intel_display(intel_dp);
-@@ -196,6 +203,36 @@ static const struct intel_dmi_quirk intel_dmi_quirks[] = {
- 		},
- 		.hook = quirk_no_pps_backlight_power_hook,
- 	},
-+	{
-+		.dmi_id_list = &(const struct dmi_system_id[]) {
-+			{
-+				.ident = "MacBookPro15,1",
-+				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-+					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,1"),
-+				},
-+			},
-+			{
-+				.ident = "MacBookPro15,3",
-+				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-+					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,3"),
-+				},
-+			},
-+			{
-+				.ident = "MacBookPro16,1",
-+				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-+					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
-+				},
-+			},
-+			{
-+				.ident = "MacBookPro16,4",
-+				.matches = {DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-+					    DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
-+				},
-+			},
-+			{ }
-+		},
-+		.hook = quirk_gmux_resets_brightness,
-+	},
- };
- 
- static struct intel_quirk intel_quirks[] = {
-diff --git a/drivers/gpu/drm/i915/display/intel_quirks.h b/drivers/gpu/drm/i915/display/intel_quirks.h
-index 4996419ae..7498583c1 100644
---- a/drivers/gpu/drm/i915/display/intel_quirks.h
-+++ b/drivers/gpu/drm/i915/display/intel_quirks.h
-@@ -24,6 +24,7 @@ enum intel_quirk_id {
- 	QUIRK_DISABLE_EDP_PANEL_REPLAY,
- 	QUIRK_DISABLE_PSR2,
- 	QUIRK_ENABLE_DPCD_BACKLIGHT,
-+	QUIRK_GMUX_RESETS_BRIGHTNESS,
- };
- 
- void intel_init_quirks(struct intel_display *display);
+Thanks for your work on the hp-wmi fix.
 
-base-commit: 7b42cc130bec053d6989b849785c553f27b752ce
+Lorenzo
+
+Il giorno ven 16 ott 2026 alle ore 19:26 Krishna Chomal
+<krishna.chomal108@gmail.com> ha scritto:
+>
+> On Fri, Oct 16, 2026 at 09:06:03AM +0200, Lorenzo Collevecchio wrote:
+> >Subject: Re: hp-wmi: WHCM AE_AML_OPERAND_TYPE and fan init -22 on HP
+> >OmniBook 5 16-ag1xxx (board 8DF4)
+> >
+> >Hi Krishna,
+> >
+> >Thanks a lot for digging into the ACPI code, the explanation makes
+> >everything fit: the missing GMCF call for HPWMI_GM, Local2 being left
+> >as an Integer, and the -22 coming from that.
+> >
+> >I also tried your suggestion about the platform profile. With
+> >HPWMI_READ/WRITE the errors should not appear:
+> >
+> >  Before: dmesg | grep -c WHCM  ->  3 (the three boot-time errors)
+> >  cat /sys/firmware/acpi/platform_profile  ->  quiet
+> >  After:  dmesg | grep -c WHCM  ->  3 (no new errors)
+> >
+> >On the fan: thanks for confirming that acpi_fan reads the EC value
+> >correctly. Together with hearing the fan on Mint and on CachyOS at
+> >idle, that makes me fairly comfortable that the 0 RPM readings are the
+> >fan really being off.
+> >
+> >Your plan to query the fan count and hide pwm1_enable and
+> >fan{1,2}_input when it fails sounds good to me. I am happy to test it
+> >on 8DF4 whenever you have a patch, and I can rebase it onto a stable
+> >kernel tree on my side if that is easier for you.
+> >
+> >I also tried 7.2.10-1-cachyos: dmesg and the hp-wmi hwmon folder are
+> >identical to 7.2.9 (three WHCM errors, then the -22 message, and
+> >pwm1_enable still present).
+> >
+> >Thanks again for the time you spent on this.
+>
+> Thanks, I will share the final proposed patch on your Bugzilla report
+> (222138), and leave this thread for others to pick up the WQBC/WQBE
+> errors.
+>
+> >Best regards,
+> >Lorenzo
+> >
+> [...]
