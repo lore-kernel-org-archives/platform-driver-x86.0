@@ -1,79 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794212265;
-	b=ne7ovsK1nrmYf99OHt7nmjx93yOUaUTc4OD2y/UM8AB2XLQ0XyVB96XVO5jcsf7xtCF8
-	 rHJGqeDsmMrm63Hs8A33NPaWY6NkcN5GWecag/FXLkPLHWZsMZG3Az4t5vCxs0e+hdC7N
-	 ml6v+JLpNK+LyGHm6K6NGuEOsHYRQh0rsRWbQqNcXDh2BmDTdx8ZS4zGs4kVA5JFVz09R
-	 6OBuisq0triT58n/Hq9/h2k+N267qo+Y+SOEY7c0jIx0OTjbzjNMimQdeTZOcqGDJsglr
-	 ZZCkzKCzFAvvJ/fpCrWByQMYz2J4BQZvAuYOclxY6VLkP7H4RvXA1mtwjf+3tJFE9kw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794212265;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=GicAkmhuf4ryBLM8YzSZTSCqCMWM75k2VSA5zlKCbWw=;
-	b=hNwRTxG/FpoTA1ZbftV0EdElcMECznCRzTSY98Qz4qkIJtLHSQzQuxpJiiHnf3NtgNH4
-	 sOi5FZozlZqrhZ9ldsnOwS57N91UMwrIjFIO9ueuFLypUNFe35wiv/ZbMD6a1tEgH2H45
-	 OYl6NTLE44+SwLM6J1KtvvwZN6JXp2+EE8AVeXIuyR3brcjDpgQOMqbbmudBTJBbUi70U
-	 UevRzRflUQIpuzqABNkZBhkIPeLycoAn9j1+A/5awzjZSRaTeKRV2vLN6AA6MRQiQvnzZ
-	 SXB/8B6j1oGQiAhVmcYFLdM2nx92KIZUmafv64tKe+gxiR55JH3Es5dhG9QX+EO9ycQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fxhYoc7d;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2EC606A321;
-	Mon,  9 Nov 2026 08:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fxhYoc7d
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794212265;
-	b=NdyF8GvtYkM7czlVt2wj5oYVSFCa6SejfhwBlHB6EPvv3jrShPLcBWHhoWuzFJXmFxNw
-	 K1yDJD6EoXNRyfLx/PSTEd2XGWUlSP1mOWquxHQGMGUZUCHXDLVmSp1ySG3z8WFVyy86a
-	 ckj0xrjECj6haZBUrsMGoF2s4Mj/oFik4QtbysknWmy4mRO8RCHa7A136bmP9IHzjhr12
-	 TPbhX1O4bnwk+/ni8RQcEzwoPoJTgnK2XolyNY2vdclwCoFZeVHFQzEEusYJ6DToERg+L
-	 ckS45NFhIfHXnjLLG02ZZaGtyM0yvEJ6ZeBxxAbBpUrOUYXXDj68sGn8z/flZMydpaQ==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794212265;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=GicAkmhuf4ryBLM8YzSZTSCqCMWM75k2VSA5zlKCbWw=;
-	b=MgGBHoy3hCjPptCPpjUXaNQAybpBs72R0SkfVNjjwHN5xyF/FXxxDHaPwGXC6Ob0r8ui
-	 tHCElXE/KzChwUdCPVtrZrdTURKKY2LP2tirxxiVp468XO0UB0sEEZt6gDGarLmLK1U+Y
-	 LKrupxgk8X/1aqlE0eXgKotHtqlOunbxCHjsmN15lYrCE0/eifTaRuwTtIiwQHTirIR7l
-	 zk4NGy6FjKXwffyUISZIMkMx74hFcEVF9pWPmWJcJjY1pypgSFluLjonpJJBDXvtfO4ei
-	 uzAacLcqBmZHECgQZ8gBnty72SKYju7zF8A0FGrgydYbdFAUU99y/MdaiIqaaYf/B5A==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.44
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794212272;
+	b=4v68IXB8XnqVfs0pF/CCa40JQRENDBpezAaoKwXwRFVhy625H9x8G0DEDEq9f2263jvQ
+	 e2mywCfHEjSdhKeE1iBM6IeeNPCvQYNW5qaPScWbm0dbMb1cKP9jBaW35n0wIPT5tBIfH
+	 krGr6CXr1vnfmG61UykKgyF2/lQLsayvlvfljkVuM57UrnwRZjeP94D9JpOHQNgC+pOHg
+	 A3Uy+kJX3CcVHQtRti3Mn9o0XvLcqpBiNYaad3rKO+NhmTSUCnWggE5kPhRWMNggxmsRM
+	 LdCehvacELZ7WKEP1OFGYxTW8aQndL3LDkrAfWHUNQNxu5S6xfQzAfDldh3T8Z1rokw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794212272;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=b+9X6T2J+3RyQAnAuQX9Fg8kfH/4OEFG3vx3P/BfQ/w=;
+	b=J9bN/ngHa0bGQ3S3s+lkNqqXDoJnLqMg8//aw+LrQ/QkM5Ar5jP2bilxrzFWqeiVBnMl
+	 2nWg+86puJPHOi6S4LyjqCFPahQEKCVeN798iJLOe/FtTcFPi6xv5X1PlogoeBalv0U1y
+	 XnbWpxiigWIPyL4ai8+DmUByKH33pCyIzOhwr+SyLd0l9IH3pLMeze8g3Qkxiofoc1BiT
+	 sKx+xozRPCpNx5zpXhoz9OBVfmtk9GKP9jQfbdM8nYMsqnnBEH2UZ5uDhXN698Fm5GffT
+	 tRor5E/d1DxsGwX7Hk5qPr8ZbDMZmgpbUsHrqrktv/V/xt4YxCyaQC34HiiUxg8/TIw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cNwUGG0A;
+	arc=none smtp.remote-ip=209.85.167.44
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 9148D1F0089F;
-	Mon,  9 Nov 2026 08:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794212265;
-	bh=GicAkmhuf4ryBLM8YzSZTSCqCMWM75k2VSA5zlKCbWw=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=fxhYoc7d6TINHCq0+gINlVgIOkVykL4r+v9poeGMOJqeztE+UyOvsCfNrDoE2hNq9
-	 ZcoOlPq0tuagiXTZ252uGCZxLKqDm8DaNPl5/FyoJcjDaGBqClVpKCd9NXEVmxxaN6
-	 UXBqRQFrSYH0Srpn2/rLKCD+3tmZrTq9cQ19sJbkAsAHZ1CNutyz1DnofM86F3Uo6X
-	 MQjN7nhq3I1lKAPjcZ3OpZ7NI9hI2shJnRC1nObzOLbsXfz+V/WM/iTL3+CcX2VfHn
-	 AZud/pjc1y8xbm4tt9wTg32B7LieLZfuxmVwTLYNdw70tD1JvSrsSnlHk1j+H5jWrY
-	 jjkndR1EBaVCw==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 240914834C;
-	Mon,  9 Nov 2026 08:17:44 +0000 (UTC)
-From: Moad Tarrih via B4 Relay <devnull+tarrihmoad.proton.me@kernel.org>
-Date: Mon, 09 Nov 2026 08:17:40 +0000
-Subject: [PATCH v2] platform/x86: asus-wmi: Ignore unusable kbd backlight
- WMI device on ROG Strix G814FP
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA68C606A337
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 08:17:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA68C606A337
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cNwUGG0A
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5bccb867d6fso689554e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 00:17:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794212270; x=1794817070; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=b+9X6T2J+3RyQAnAuQX9Fg8kfH/4OEFG3vx3P/BfQ/w=;
+        b=cNwUGG0AArH5cx4a7e4MD+zCA+4QMWJrHBWL/IlUWzR/olJz6Z7EpQtiN/14oRMwkD
+         rd6nx0nV3z0cl+SnMQhZdJNyT+0f8OS0XEsW+KkRYvWwNr6xL04201nbK7SNCyIQSnc9
+         fEVP9PLwBw7ZYua+6T2/5CHi9UHXhFQChTrMBNbYfNi1v+hqyK1vC7psID22gZnTnKri
+         z1YToM3BT+/6iaaVtPlFd8l7Rk6iOKhJledwFe/caQwXuEPPzetJaa0/BL/y0+sphj2g
+         7AKY6ekf2i1xGjO7DSq0KbHBXex6XyxQ0g7epXQcWQ1TbL6+rlT+5TDd4qLjz5BC+G7K
+         b5bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794212270; x=1794817070;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=b+9X6T2J+3RyQAnAuQX9Fg8kfH/4OEFG3vx3P/BfQ/w=;
+        b=ZOY3xFcgjPwtaDtLU/y4VavgeGzS52ADKZBuVydMhp/6asG+sYU4d6kjKuQqnnTrsY
+         9t7JB4/FND52aDuXoB4KBnCpxdUjpfKtYmTA5DjL/MxQwDjsd73cUl/gVeFpZ9hWwiE9
+         +G0znGYi4w4NDVrwb5SMpBXLCz4TM+goTZ9deLeJI9AW5L3X2Hsl+vgREowSDh/3rXn/
+         W3iH+spn6D118pr38iE28k0FNmBmusJfkVoOKGu8TH0TxhHToWES/PuJg8moN/6w9T9e
+         oLjg/PffE77i8XehH7a0PJ6XsFUo1S4ca48+F91DBacz0dCu4kXnK8eM1AUuVHfxObQl
+         Zj0g==
+X-Gm-Message-State: APuU4Z+DeB823azdmydcTibgdEhSiezdr1T6VTQ7BQmNMwOYmvtnX0+M
+	F+8IyHJTCP91VxsZFcIafZRMl5Xpc7ioNiZjBNVIiLAbj7uQ083eRrf1QUMPGhf5L6TdNw==
+X-Gm-Gg: AYBFou1wpKTNbq3NQCOHDwzVCf+71YXIYn2+udnsfp5x9vAwwM1OLGokhMIIUxf8Wph
+	fR0Qva+ii+IDCWhskrArBD/I986BujtenazitgmsgQjRpFYl62vWblcoosghXbLC3yygVNuM8FA
+	xHazLKScmxush5lI2TGmtBMdUlfZ1TuDV+f0doH/0xQ3q+W7+CBaev2KVyT2rp9yI48C6rhJwj9
+	DSZ7fjnkydxM0sNypzhrPCEquG0CGWhgw/6QAGI8S5ZoaPaU8Vuiz6kvPz/tnelcXRUGrPAwHnU
+	ROXWBpxu5QamLrAtE82Pu+EDAdj1mtes2OSPeyw0XL5+uUlYtZgqlkKeX3qIhIbaYbTdcFu1I1K
+	xWLAWCs4L3PwRVWdmz3sHzOaW5p2JAYttufIoUZtB9tfzNav+RaknY4a3Ih6T9z0VAOF/ZuJsck
+	Zcwyu8y+aI04vxpGys0DSUyaB3o6e5mTS+MA+BLg5g/vJO5r6fRpXqT3Rz3tNfkNdCeFdOI+XL0
+	ITO9C+QZ9m+kG55K77ThhFLCfXPYqITzs14sdlBP2c9DYjeF7Fp4762es+RxsQc8dkpSAEsYx18
+	F4coIMgmI14mLSqEHnUHyMds9bDz1/rbQXRbaEzvltDIR1WZEyStsHxoL6/vAlLo8P4k
+X-Received: by 2002:a05:6512:3ca9:b0:5bf:a209:f81f with SMTP id 2adb3069b0e04-5c14bffe580mr794288e87.37.1794212269955;
+        Mon, 09 Nov 2026 00:17:49 -0800 (PST)
+Received: from zephyrus-g16 (89-179-242-53.static.corbina.ru. [89.179.242.53])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5c14b81d098sm726770e87.67.2026.11.09.00.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2026 00:17:49 -0800 (PST)
+From: Evgeny Volferts <eugene.wolferz@gmail.com>
+To: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	denis.benato@linux.dev,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	i@smmh.dev,
+	eugene.wolferz@gmail.com
+Subject: [PATCH v2] platform/x86: asus-nb-wmi: Ignore spurious 0xe5 events
+Date: Mon,  9 Nov 2026 11:16:44 +0300
+Message-ID: <20261109081644.2790549-1-eugene.wolferz@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261015163029.107250-1-eugene.wolferz@gmail.com>
+References: <20261015163029.107250-1-eugene.wolferz@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,181 +102,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261109-asus-wmi-kbd-readback-v2-1-c048fc53d8ee@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WPQQ6CMBREr2K69pu2IGlceQ/DoqUfqQSK/QU1h
- LtbwL3Ll8zMy8yMMDgkdjnMLODkyPk+gTweWNXo/o7gbGImuSyE4Ao0jQSvzkFrLATU1uiqBZk
- VMj+jkhYVS90hYO3e2+6t3JlG88AqrmNronEUffhs4kmsuX+OSYAAU2eqLnLOtcXrEHz0/alDV
- i67JOBzTB/iz7wsX9gEnnnhAAAA
-X-Change-ID: 20261108-asus-wmi-kbd-readback-236245e82de8
-To: Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Antheas Kapenekakis <lkml@antheas.dev>, 
- Benjamin Tissoires <bentiss@kernel.org>
-Cc: Sercan GOKMEN <gokmensercan@gmail.com>, 
- Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Moad Tarrih <tarrihmoad@proton.me>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794212264; l=6275;
- i=tarrihmoad@proton.me; s=20261108; h=from:subject:message-id;
- bh=YC6708aPnllJ505YNKrXbdPIH5G4EWcQfflTfwu8cJE=;
- b=ey79igGTqzypZ4XKkZfSWtawSMixEVllsZv8pZ89a6a9K2s7kU98nx1Z8K5tPgYwq4ycmwwxX
- 212cfI1qkeVCXhJelgyuadPiB+kwFKZ9CvhIWdLTvNKmHcM8zdFo5VM
-X-Developer-Key: i=tarrihmoad@proton.me; a=ed25519;
- pk=wtwpmYxZldK7Qebavgtx7P5WmSQOiWjicK0506NOKLg=
-X-Endpoint-Received: by B4 Relay for tarrihmoad@proton.me/20261108 with
- auth_id=1453
-X-Original-From: Moad Tarrih <tarrihmoad@proton.me>
-Reply-To: tarrihmoad@proton.me
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-From: Moad Tarrih <tarrihmoad@proton.me>
+Some ASUS laptops periodically emit WMI event 0xe5, which is not
+associated with a supported key or action.
 
-On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
-backlight brightness in sysfs works, but reading it back always gives
-0, and the read makes the Fn brightness keys misbehave.
+On the ROG Zephyrus G16 GU605MY, this event occurs approximately
+every 12 seconds and is reported as KEY_UNKNOWN. When the session
+is locked, it repeatedly wakes both the internal display and an
+external monitor connected through a Thunderbolt dock.
 
-The firmware reports the keyboard backlight WMI device as present but
-doesn't implement it. DSTS(0x00050021) always returns 0x50000, which
-is level 0 regardless of what the actual level is, and every
-DEVS(0x00050021) write is rejected as an unsupported method. The
-keyboard backlight is actually driven by hid-asus. asus-wmi saves the 0
-as the current level on every read, and the brightness keys step from
-the saved level. So after any read, for example by the desktop or by
-systemd-backlight, the brightness-up key sets the keyboard to the
-lowest level instead of one step higher.
+Ignore event 0xe5 globally to prevent these spurious input events.
+The same event has also been observed on other ASUS laptop models.
 
-Add a kbd_led_no_wmi quirk that makes asus-wmi treat the keyboard
-backlight WMI device as absent, and set it for this board, matched on
-the DMI board name. asus-wmi then keeps the LED registered for hid-asus
-and no longer reads from or writes to the WMI device. The entry also
-sets wmi_backlight_set_devstate which the board currently gets from
-the default quirk_asus_unknown, so nothing else changes for it.
-
-As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
-no longer created on this board, they never worked here since the firmware
-rejects those writes as well.
-
-This patch was written with the help of an AI coding assistant (Claude
-Code, Claude Opus 5.5). I reviewed it and tested it on my affected laptop.
-
-Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
-Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
-Suggested-by: Denis Benato <denis.benato@linux.dev>
-Cc: stable@vger.kernel.org
-Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
----
-Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317,
-keyboard 0b05:19b6) on 7.2.14, built as DKMS modules. The keyboard
-backlight is still registered and driven by hid-asus, the attribute
-reads back the level that was set, the brightness keys step from the
-real level, and the level survives suspend/resume and reboots.
-Build-tested with W=1 against pdx86 for-next (c339f4010dea): no
-warnings. checkpatch --strict is clean.
-
-The kbd_rgb_mode and kbd_rgb_mode_index attributes are no longer
-created on this board. They never worked here: writes to kbd_rgb_mode
-are rejected by the firmware with -ENODEV, like the brightness writes.
-
-To answer Denis's questions on v1, the bug this patch fixes happens on
-the latest BIOS for this board as of writing, which is version 317.
-I only have the G814FP, so I don't know if other 2025 G814 models
-are affected, the quirk only matches G814FP.
-
-This no longer depends on Sercan GOKMEN's kbd_led_no_readback patch.
-Both patches add a field to struct quirk_entry and a DMI entry, so
-whichever lands second may need a trivial rebase.
-
-AI assistance: Claude Code was used to trace the keyboard backlight
-code in asus-wmi, run the debugfs DSTS/DEVS probes, write the patch and
-draft this message. Testing and final review were done by me on the
-hardware.
+Signed-off-by: Evgeny Volferts <eugene.wolferz@gmail.com>
 ---
 Changes in v2:
-- Add a quirk that makes asus-wmi skip the keyboard backlight WMI
-  device on this board instead of detecting rejected writes at
-  runtime (Antheas), so no more WMI writes that are known to fail
-  are issued (Denis).
-- Link to v1: https://patch.msgid.link/20261108-asus-wmi-kbd-readback-v1-1-bf38f6400ade@proton.me
----
- drivers/platform/x86/asus-nb-wmi.c | 14 ++++++++++++++
- drivers/platform/x86/asus-wmi.c    |  3 ++-
- drivers/platform/x86/asus-wmi.h    |  6 ++++++
- 3 files changed, 22 insertions(+), 1 deletion(-)
+- Replace the GU605MY-specific DMI quirk with a global KE_IGNORE
+  entry for event 0xE5, following review feedback.
+- Remove the DMI quirk and associated key filter logic.
+
+A similar global fix was independently submitted by
+Seyed Mohammad Mahdi Hosseini:
+https://lore.kernel.org/r/d3871d83ee3f5eea3900d8bc0da1de764a8fc2ec.1791672579.git.i@smmh.dev
+
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 3b0f3346dc60..fbdb00248be5 100644
+index aeb461b1644d..6e784a4909a0 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -93,6 +93,11 @@ static struct quirk_entry quirk_asus_unknown = {
- 	.wmi_backlight_set_devstate = true,
- };
- 
-+static struct quirk_entry quirk_asus_g814fp = {
-+	.wmi_backlight_set_devstate = true,
-+	.kbd_led_no_wmi = true,
-+};
-+
- static struct quirk_entry quirk_asus_q500a = {
- 	.filter_i8042_e1_extended_codes = true,
- 	.wmi_backlight_set_devstate = true,
-@@ -167,6 +172,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
- }
- 
- static const struct dmi_system_id asus_quirks[] = {
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS ROG Strix G18 G814FP",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "G814FP"),
-+		},
-+		.driver_data = &quirk_asus_g814fp,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. Q500A",
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index b33ebdb21aa2..51fea21ff247 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2165,7 +2165,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 	asus->kbd_led.brightness_set_blocking = kbd_led_set;
- 	asus->kbd_led.brightness_get = kbd_led_get;
- 	asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
--	asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
-+	asus->kbd_led_avail = !asus->driver->quirks->kbd_led_no_wmi &&
-+			      !kbd_led_read(asus, &led_val, NULL);
- 	INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
- 
- 	if (asus->kbd_led_avail) {
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index b45f81b38a47..9f3769fc82f7 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -41,6 +41,12 @@ struct quirk_entry {
- 	bool wmi_force_als_set;
- 	bool wmi_ignore_fan;
- 	bool filter_i8042_e1_extended_codes;
-+	/*
-+	 * The keyboard backlight WMI device reports itself as present, but the
-+	 * firmware does not implement it: reads return level 0 and writes are
-+	 * rejected. Leave the backlight to hid-asus.
-+	 */
-+	bool kbd_led_no_wmi;
- 	int key_wlan_event;
- 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
- 	int wapf;
-
----
-base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
-change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
-
-Best regards,
---  
-Moad Tarrih <tarrihmoad@proton.me>
-
+@@ -662,6 +662,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0xCB, { KEY_F14 } }, /* Fn+noise-cancel */
+ 	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+ 	{ KE_IGNORE, 0xCF, },	/* AC mode */
++	{ KE_IGNORE, 0xE5, }, /* Periodic EC notification */
+ 	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
+ 	{ KE_KEY, 0xBD, { KEY_PROG2 } },           /* Lid flip action on ROG xflow laptops */
+ 	{ KE_KEY, ASUS_WMI_KEY_ARMOURY, { KEY_PROG3 } },
+-- 
+2.56.0
 
