@@ -1,78 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794248623;
-	b=mDmZa5F90DXBlYsvCD4CFGhMSnYhXgcx5mXvQ7ykmCnkLlC1xF3yKJQrPEfkjBqAkPpr
-	 xm5pCr7TIM1l01a3O7cBSHs9aRuE7UPwWMuT3AyqsmOD6kJg68saW6UtaM9AGZqRW76DU
-	 tp1qkIPZAg0vtzPiglvUITHyPgs7blW77RghtJvIlCH+8N20zfWuqVlfRv9n6kwbvketu
-	 8AA53Pl/wWGfdjbb0/D6Mu7oLRIhDzuocr5ThGdl4kAyqlzAll/dzSjoMM3B/UJdCKD5U
-	 MMpkF0FDpSEnuwXgMzzHhfaXGNtv5EwAtq+0iFHSj+lTgFUo73djzso5crOE//pGngA==
+	t=1794248873;
+	b=sjPO4eGvokKbzkn5rkiPZwp/pFTUHbCfvF6g/gJpTFsSdtfcCQuN+apniENfDYHVj8Es
+	 hKDn6iQXTyvVnXOD4Y1INMrvJ9i4pvA9NdQN5QDLJm0FLXEQ7V2KymWauR+7aYOREDydS
+	 w7PBZOZB0Cabw/MRDmeRZqc8FpINjLFvE9ILwJlrWAES5PJjxEdrOtKBkT2X5MJOeYIHa
+	 MoLCKbaTE7iw2aMXMojpZANL9bF95Wu4u7lc5cHZSXVTcuKD7HDVXGXSUoyTBtPJzzWlh
+	 cHcMmiNWlaRckocc9TVVJvmjjX7lxx8BB0lAqo7WZ/bP58VTjtkJ09YEa6/xHZaGIGw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794248623;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=nVHVF+Kc92+BRI/aLmdGMRNmm3kBUyhiEVjuIYHrvVQ=;
-	b=z9UlQ82kTkcUC8tSgR+Dor9d8Tb3hVSX3wX61I35gH2Yri+/0uN/Dh8vs11579k3VuWq
-	 XnEcouT0EN9UVtaDfodPg+2WxhBUATMw125TK4EcwL3LYPAewLNX+jbvQJlNL7iSvQjdi
-	 TYrBwSKDy/H2pZn5CZipbMIWjFBr0nnFRo3DXjpMlWrkqKSbVIIywdDx7p86ZS/1g1oPv
-	 /8E+3o2jEbx2AADO4QufwVTNM5lvzW4Dhu1cVf751HqqSlVJKUZu/LQ1r2eAg2UBqwOHP
-	 dyS0YSUGO9BOKadn2vwuyeq51RZOnnHcuDSA4h+kkHlZ7yViqOEban4EIZEVEj1NTqQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794248873;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=BhvvNpjCKmujfKtZaPMXgIgpX0BeaRWvx+u17Y9mg3M=;
+	b=xUrm419K4+2kTYklou1JkykBUW+begh+6zWxBetp6nie0RJJLMP/rNzG6c7vFSUfI3+W
+	 cLeNod5+kbyWahtOaYyVzCT8P8dI4wZ2cVB6M+vQ5aJ49L5kmB9RAs0bNpaR9S2UXRDvN
+	 1Df1CAXM1DgKXGnEK87cqiN1BsFmFkhsRUdbak1kfm8O/9iDQ3+8/6SSnw7jRVS2mkCMQ
+	 uHyVgdxAElhEDqOf14d+8RhQctQ5nVPOedjIFWgaQdPnTU58vQB81jE7gQJkY/OLOruF7
+	 gWY7NrUZrxKHEfDe1zHIMOm6jYLoR4Ao/to35ylBI+NFWlU66oLQf0J2ham2FvU5qjA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Nyw4HMPX;
-	arc=none smtp.remote-ip=198.175.65.13
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X+iEAdGK;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B87606A325;
-	Mon,  9 Nov 2026 18:23:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4B87606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F2E606CC5C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 18:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Nyw4HMPX
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794248622; x=1825784622;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=86KVkOJZ+b8WfEPmHNnWW2R1LFl+RH1uq4vmQ1SjCfI=;
-  b=Nyw4HMPX9dqxwylGUbnmHN64w1bV2UH2BWuWuG2NKR8I4Kn/SES95t8p
-   JT65qtxNkuoV75zEfJJWqMKIvAl5kfGOQeoE7sCRQ2w9Um94oPocvjrcn
-   wLSUwUlESVJysZHmHUsN6UbDIeLw3w8v/ygN8aIeffPlUTRkwZug6kSCd
-   UgkxmzkBIs+Yb7mwsTx/yIqnEsXJqzCxDhdvaCLTni8AHAcN1/V+G8wgh
-   +FtqHsxbw7w/JImhbrwDn8b37ZvhOhzHnVOagFBk7Q/fpc63W/sY1mG3b
-   F3GzkrsvTO0qIKJY9L/sYce1Grv4ImO3ARYThn/+3pN0UxglM4wTeto2/
-   A==;
-X-CSE-ConnectionGUID: JbObTrGdTzm44GkWN2fAQw==
-X-CSE-MsgGUID: PfjtixPOTv+WdgBlz5Cysg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="2861379"
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="2861379"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 10:23:41 -0800
-X-CSE-ConnectionGUID: K9QaV3jgR3mClpkPr7nl8A==
-X-CSE-MsgGUID: zJS3SNKUQnmc77RIMK62Mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="7957427"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.139])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 10:23:38 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Nov 2026 20:23:34 +0200 (EET)
-To: Bartu Alev <bartualev@gmail.com>
-cc: Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org, 
-    Guenter Roeck <linux@roeck-us.net>, linux-api@vger.kernel.org
-Subject: Re: [PATCH 4/7] platform/x86: asus-wmi: read the firmware fan floor
- tables
-In-Reply-To: <20261101-asus-fan-floors-v4-v1-4-b8d1c31a99a9@gmail.com>
-Message-ID: <9097a71a-a7f5-54ec-dd2b-7f55376b2a14@linux.intel.com>
-References: <20261101-asus-fan-floors-v4-v1-0-b8d1c31a99a9@gmail.com> <20261101-asus-fan-floors-v4-v1-4-b8d1c31a99a9@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X+iEAdGK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E8E1F00804
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 18:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794248872;
+	bh=BhvvNpjCKmujfKtZaPMXgIgpX0BeaRWvx+u17Y9mg3M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=X+iEAdGKyoPsESQkif23vUs+blI8wNPuufwgKM9iE1yWpOG3tPAjEq1kcoRNYCwpo
+	 6zToJ2+QIxOKynaQjWc/wyPtLokPBEoAPET0coM5rLmkhbQeFNfHI2gGtK7Rcf/Ekk
+	 7MARCvC3+UxZPOfoBBo7woAkYqlXpwB+25JJCdjEWZS8rBuhW+3FfHrRTFcQBZEWLw
+	 OnhSaZW+XVd6E0B67QvVRc9RhVFfc0kwCVfeyqkDBZ+JCMpb8hdnXh7vtJNL2QtFMk
+	 AYpYgcLruKXBAX8g12+srlKJ3ArzP6yOmemieGGeCzV11Zec3UgGbHOj01jDTJKguJ
+	 Itg4DhE6OC64Q==
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5eadef147ffso79818e0c.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 10:27:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErEL7ZJ/TFRAAUTDnE7K/E/UNRNKXa9Jtl8GXBX84CV3BzFp1EgOkj8OeXbp6VACtGCc9dTRBy/qtid1V+b2o8y4eLIk@vger.kernel.org
+X-Gm-Message-State: APuU4Z+2vrPvVMDO1zLOfjNYyO03D8OSyIOlzLj5jo6Hv0i0/7pysRXt
+	k6YXBELruJoQecakaicLKbm7/kKVgnc9yJ/LN6tGjTmpb9X1H/rEZigmTbk5e6yHc0sCVhBr3kv
+	bWG/zm7+FTRh2ZcNonOzsibYsyluvvXk=
+X-Received: by 2002:a05:6122:4b89:b0:5ea:e17d:fc73 with SMTP id
+ 71dfb90a1353d-5ee0cf1551dmr4265e0c.3.1794248870748; Mon, 09 Nov 2026 10:27:50
+ -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,369 +59,594 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20260930222650.1883805-1-jordan@brough.org> <20260930222650.1883805-2-jordan@brough.org>
+ <ar2nf4od0AJjUnLD@marvin.atrad.com.au>
+In-Reply-To: <ar2nf4od0AJjUnLD@marvin.atrad.com.au>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Mon, 9 Nov 2026 19:27:32 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0i2UT1QCa4cgapmtA7tVCTJgtcvNnUT5KVLQpya98nL+w@mail.gmail.com>
+X-Gm-Features: AclHuK9TJ8EA6dyh6OPjNaKqSPFH5IRQFyiP23tA4UhXXA59Q33rXZkYGfEHir0
+Message-ID: <CAJZ5v0i2UT1QCa4cgapmtA7tVCTJgtcvNnUT5KVLQpya98nL+w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] ACPI: battery: add acpi_ prefix to the battery
+ hook API
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Jordan Brough <jordan@brough.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
+	Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Antheas Kapenekakis <lkml@antheas.dev>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Armin Wolf <W_Armin@gmx.de>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Derek J. Clark" <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, 
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matan Ziv-Av <matan@svgalib.org>, Nikita Kravets <teackot@gmail.com>, 
+	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, 
+	Joshua Grisham <josh@joshuagrisham.com>, Jeremy Soller <jeremy@system76.com>, 
+	System76 Product Development <productdev@system76.com>, Azael Avalos <coproscefalo@gmail.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+	Sebastian Reichel <sre@kernel.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+	chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 1 Nov 2026, Bartu Alev wrote:
+On Thu, Oct 1, 2026 at 2:22=E2=80=AFAM Jonathan Woithe <jwoithe@just42.net>=
+ wrote:
+>
+> On Wed, Sep 30, 2026 at 04:26:33PM -0600, Jordan Brough wrote:
+> > Rename battery_hook_register(), battery_hook_unregister() and
+> > devm_battery_hook_register() to acpi_battery_hook_register(),
+> > acpi_battery_hook_unregister() and devm_acpi_battery_hook_register(), s=
+o
+> > that the exported ACPI battery hook API has a consistent namespace, and
+> > update all in-tree callers.
+> >
+> > No functional change.
+>
+> For the fujitsu-laptop changes:
+>
+>     Signed-off-by: Jonathan Woithe <jwoithe@just42.net>
 
-> On some ASUS laptops, the embedded controller enforces minimum fan
-> duties on top of custom fan curves written via CPU_FAN_CURVE
-> (0x00110024), GPU_FAN_CURVE (0x00110025), and the mid fan curve
-> methods. The floors are exposed via read-only DSTS methods 0x00110026,
-> 0x00110027, and 0x00110033.
-> 
-> The floor table is indexed by curve point: entry i (0-based, sysfs
-> point i + 1) provides the minimum duty for that point. The EC maps
-> each point to a temperature decade [30 + 10 * i, 39 + 10 * i] degrees
-> Celsius, stepping between points with 5 degrees Celsius of hysteresis
-> without interpolation on TUF series.
-> 
-> EC firmware dumps from an FA507 show floor tables of {0, 0, 0, 0, 25,
-> 48, 58, 74}% for the CPU fan and {0, 0, 0, 0, 26, 57, 68, 91}% for the
-> GPU fan, verified via live DSTS reads on an FA507NV.
-> 
-> Read the tables at probe and refresh them after power profile changes
-> or curve resets, as the EC can reload defaults when operating modes
-> change.  Profile switches did not alter table bytes on the FA507, so
-> this refresh is precautionary.
-> 
-> Export the floors without altering user curves, rejecting replies
-> shorter than eight bytes or containing values exceeding 100%.  If a
-> table contains decreasing values along its points, warn once but still
-> export it so userspace can inspect what firmware enforces.  When
-> firmware returns 0xFFFFFFFE, mark the table unsupported for that fan
-> to avoid repeating failed WMI calls on future refreshes; unreadable
-> tables remain zeroed.
-> 
-> Protect the cached floor tables with a mutex against concurrent sysfs
-> reads.
-> 
-> Also fix the stale comment claiming that firmware interpolates between
-> curve points.
-> 
-> Signed-off-by: Bartu Alev <bartualev@gmail.com>
-> ---
->  drivers/platform/x86/asus-wmi.c | 170 ++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 165 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index c55f469cb03dc..b6541183d4568 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -239,6 +239,10 @@ struct fan_curve_data {
->  	u32 device_id;
->  	u8 temps[FAN_CURVE_POINTS];
->  	u8 percents[FAN_CURVE_POINTS];
-> +	/* EC minimum duty per point, pwm 0-255, not percent */
-> +	u8 floors[FAN_CURVE_POINTS];
-> +	bool floors_valid;
-> +	bool floors_unsupported;
->  };
->  
->  struct asus_wmi {
-> @@ -320,6 +324,9 @@ struct asus_wmi {
->  	bool gpu_fan_curve_available;
->  	bool mid_fan_curve_available;
->  	struct fan_curve_data custom_fan_curves[3];
-> +	/* protects custom_fan_curves[].floors */
-> +	struct mutex fan_curve_lock;
-> +	struct device *fan_curve_hwmon;
->  
->  	struct device *ppdev;
->  
-> @@ -466,7 +473,8 @@ static int asus_wmi_evaluate_method5(u32 method_id,
->   * means that the method called is unsupported.
->   */
->  static int asus_wmi_evaluate_method_buf(u32 method_id,
-> -		u32 arg0, u32 arg1, u8 *ret_buffer, size_t size)
-> +		u32 arg0, u32 arg1, u8 *ret_buffer, size_t size,
-> +		size_t *ret_len)
->  {
->  	struct bios_args args = {
->  		.arg0 = arg0,
-> @@ -479,6 +487,9 @@ static int asus_wmi_evaluate_method_buf(u32 method_id,
->  	union acpi_object *obj;
->  	int err = 0;
->  
-> +	if (ret_len)
-> +		*ret_len = 0;
-> +
->  	status = asus_wmi_evaluate_method_locked(method_id, &input, &output);
->  
->  	pr_debug("%s called (0x%08x) with args: 0x%08x, 0x%08x\n",
-> @@ -503,6 +514,8 @@ static int asus_wmi_evaluate_method_buf(u32 method_id,
->  		}
->  
->  		memcpy(ret_buffer, obj->buffer.pointer, obj->buffer.length);
-> +		if (ret_len)
-> +			*ret_len = obj->buffer.length;
->  		break;
->  	case ACPI_TYPE_INTEGER:
->  		err = (u32)obj->integer.value;
-> @@ -3631,7 +3644,7 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
->  		mode = 2;
->  
->  	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
-> -					   FAN_CURVE_BUF_LEN);
-> +					   FAN_CURVE_BUF_LEN, NULL);
->  	if (err) {
->  		pr_warn("%s (0x%08x) failed: %d\n", __func__, fan_dev, err);
->  		return err;
-> @@ -3651,7 +3664,136 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
->  	return 0;
->  }
->  
-> -/* Check if capability exists, and populate defaults */
-> +/*
-> + * Read the firmware fan floor table. The EC enforces a minimum duty per
-> + * curve point on top of the custom curve. Reading is best effort: at
-> + * probe time a failed read leaves the table zeroed and invalid, and a
-> + * failed refresh keeps the last table that was read.
-> + */
-> +static int fan_curve_load_floors(struct asus_wmi *asus, u32 fan_dev)
-> +{
-> +	struct fan_curve_data *curves;
-> +	u8 buf[FAN_CURVE_BUF_LEN] = {};
-> +	size_t len;
-> +	int err, fan_idx, i;
+This should be Acked-by, no?
 
-Reverse xmas-tree order.
+Because you are not the author of anything in the patch nor a
+maintainer forwarding it to me.
 
-I seems to only use positive values(?) => unsigned int 
-
-> +	switch (fan_dev) {
-> +	case ASUS_WMI_DEVID_CPU_FAN_CURVE:
-> +		fan_idx = FAN_CURVE_DEV_CPU;
-> +		fan_dev = ASUS_WMI_DEVID_CPU_FAN_FLOOR;
-> +		break;
-> +	case ASUS_WMI_DEVID_GPU_FAN_CURVE:
-> +		fan_idx = FAN_CURVE_DEV_GPU;
-> +		fan_dev = ASUS_WMI_DEVID_GPU_FAN_FLOOR;
-> +		break;
-> +	case ASUS_WMI_DEVID_MID_FAN_CURVE:
-> +		fan_idx = FAN_CURVE_DEV_MID;
-> +		fan_dev = ASUS_WMI_DEVID_MID_FAN_FLOOR;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	curves = &asus->custom_fan_curves[fan_idx];
-> +	if (curves->floors_unsupported)
-> +		return -ENODEV;
-> +
-> +	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, 0, buf,
-> +					   FAN_CURVE_BUF_LEN, &len);
-> +	if (err) {
-> +		pr_debug("%s (0x%08x) failed: %d\n", __func__, fan_dev, err);
-
-Below you use dev_*() printing, so why pr_*() here??
-
-This also seems to lack include for dev_*() so lets finally add that one.
-
-> +		/* 0xFFFFFFFE means the firmware has no such method */
-
-Drop comment.
-
-> +		if (err == -ENODEV)
-> +			curves->floors_unsupported = true;
-> +		return err;
-> +	}
-> +
-> +	if (len < FAN_CURVE_POINTS) {
-> +		pr_debug("%s (0x%08x): short reply of %zu bytes\n",
-> +			 __func__, fan_dev, len);
-
-dev_...()
-
-> +		return -ENODATA;
-> +	}
-> +
-> +	/* A percentage above 100 would overflow the pwm scale below */
-
-Drop.
-
-> +	for (i = 0; i < FAN_CURVE_POINTS; i++) {
-> +		if (buf[i] > 100) {
-> +			pr_debug("%s (0x%08x): implausible floor table\n",
-> +				 __func__, fan_dev);
-
-dev_xx().
-
-Why is this only debug level? It would seem like something that has 
-relevance beyond that.
-
-When making it err/warn level, improve/simplify the message too to 
-simply state that floor table entry > 100 instead of something cryptic 
-like the above :-). And never print __func__ for messages intended for 
-normal user.
-
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * The floors observed so far do not decrease along the points, but
-> +	 * that is only proven on the FA507.  Do not reject a table that
-> +	 * does: the values are still usable as per-point minimums, and
-> +	 * hiding them would leave userspace no way to see what the
-> +	 * firmware enforces.
-> +	 */
-> +	for (i = 1; i < FAN_CURVE_POINTS; i++) {
-> +		if (buf[i] < buf[i - 1]) {
-
-Reverse the compare sides to make it more logical.
-
-> +			dev_warn_once(&asus->platform_device->dev,
-> +				      "fan curve (0x%08x): floor table decreases at point %d\n",
-> +				      fan_dev, i + 1);
-> +			break;
-> +		}
-> +	}
-> +
-> +	guard(mutex)(&asus->fan_curve_lock);
-> +	for (i = 0; i < FAN_CURVE_POINTS; i++)
-> +		curves->floors[i] = DIV_ROUND_UP(255 * buf[i], 100);
-
-Add include.
-
-> +	curves->floors_valid = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static void fan_curve_notify_floors(struct asus_wmi *asus)
-> +{
-> +	struct device *hwmon = asus->fan_curve_hwmon;
-> +	bool valid[ARRAY_SIZE(asus->custom_fan_curves)];
-> +	char name[32];
-> +	int fan, point;
-> +
-> +	if (!hwmon)
-> +		return;
-> +
-> +	scoped_guard(mutex, &asus->fan_curve_lock) {
-> +		for (fan = 0; fan < ARRAY_SIZE(valid); fan++)
-
-Add include.
-
-> +			valid[fan] = asus->custom_fan_curves[fan].floors_valid;
-> +	}
-> +
-> +	for (fan = 0; fan < ARRAY_SIZE(valid); fan++) {
-> +		if (!valid[fan])
-> +			continue;
-> +
-> +		for (point = 0; point < FAN_CURVE_POINTS; point++) {
-> +			snprintf(name, sizeof(name),
-
-scnprintf()
-
-> +				 "pwm%d_auto_point%d_floor_pwm",
-> +				 fan + 1, point + 1);
-> +			sysfs_notify(&hwmon->kobj, NULL, name);
-
-Add include.
-
-> +		}
-> +	}
-> +}
-> +
-> +/*
-> + * The EC re-runs its defaults reload when the mode byte it keys on
-> + * changes, which a thermal profile switch can do.  Re-read the tables
-> + * so that the exported values follow the firmware; on the FA507 the
-> + * tables are profile independent, so this is defensive.
-> + */
-> +static void fan_curve_refresh_floors(struct asus_wmi *asus)
-> +{
-> +	if (asus->cpu_fan_curve_available)
-> +		fan_curve_load_floors(asus, ASUS_WMI_DEVID_CPU_FAN_CURVE);
-> +	if (asus->gpu_fan_curve_available)
-> +		fan_curve_load_floors(asus, ASUS_WMI_DEVID_GPU_FAN_CURVE);
-> +	if (asus->mid_fan_curve_available)
-> +		fan_curve_load_floors(asus, ASUS_WMI_DEVID_MID_FAN_CURVE);
-> +
-> +	fan_curve_notify_floors(asus);
-> +}
-> +
-> +/* Check if the capability exists, populate its defaults and read its floor table */
->  static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
->  				   u32 fan_dev)
->  {
-> @@ -3668,6 +3810,16 @@ static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
->  	}
->  
->  	*available = true;
-> +
-> +	err = fan_curve_load_floors(asus, fan_dev);
-> +	if (err == -ENODEV)
-> +		dev_dbg(&asus->platform_device->dev,
-> +			"fan curve (0x%08x): no floor table\n", fan_dev);
-> +	else if (err)
-> +		dev_warn(&asus->platform_device->dev,
-> +			 "fan curve (0x%08x): unusable floor table (%d)\n",
-> +			 fan_dev, err);
-> +
->  	return 0;
->  }
->  
-> @@ -3738,8 +3890,9 @@ static int fan_curve_write(struct asus_wmi *asus,
->  }
->  
->  /*
-> - * A fan curve is a set of points the firmware interpolates between, so it
-> - * only makes sense if neither temperature nor PWM ever decreases along it.
-> + * A fan curve is a set of points the firmware steps through, without
-> + * interpolating between them, so it only makes sense if neither temperature
-> + * nor PWM ever decreases along it.
->   */
->  static int fan_curve_validate(struct device *dev, struct fan_curve_data *data)
->  {
-> @@ -3870,6 +4023,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
->  			err = asus_fan_set_auto(asus);
->  			if (err)
->  				return err;
-> +			fan_curve_refresh_floors(asus);
->  		} else {
->  			/* Safeguard against fautly ACPI tables */
->  			err = fan_curve_get_factory_default(asus, data->device_id);
-> @@ -3878,6 +4032,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
->  			err = fan_curve_write(asus, data);
->  			if (err)
->  				return err;
-> +			fan_curve_refresh_floors(asus);
->  		}
->  	}
->  	return count;
-> @@ -4125,6 +4280,8 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
->  		return PTR_ERR(hwmon);
->  	}
->  
-> +	asus->fan_curve_hwmon = hwmon;
-> +
->  	return 0;
->  }
->  
-> @@ -4195,6 +4352,8 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  	if (asus->mid_fan_curve_available)
->  		asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
->  
-> +	fan_curve_refresh_floors(asus);
-> +
->  	return 0;
->  }
->  
-> @@ -5202,6 +5361,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->  	asus->platform_device = pdev;
->  	wdrv->platform_device = pdev;
->  	platform_set_drvdata(asus->platform_device, asus);
-> +	mutex_init(&asus->fan_curve_lock);
->  
->  	if (wdrv->detect_quirks)
->  		wdrv->detect_quirks(asus->driver);
-> 
-> 
-
--- 
- i.
-
+> > Signed-off-by: Jordan Brough <jordan@brough.org>
+> > ---
+> >  drivers/acpi/battery.c                       | 30 ++++++++++----------
+> >  drivers/platform/x86/asus-wmi.c              |  4 +--
+> >  drivers/platform/x86/ayaneo-ec.c             |  2 +-
+> >  drivers/platform/x86/dell/dell-laptop.c      |  4 +--
+> >  drivers/platform/x86/dell/dell-wmi-ddv.c     |  2 +-
+> >  drivers/platform/x86/fujitsu-laptop.c        |  4 +--
+> >  drivers/platform/x86/huawei-wmi.c            |  4 +--
+> >  drivers/platform/x86/lenovo/ideapad-laptop.c |  4 +--
+> >  drivers/platform/x86/lenovo/thinkpad_acpi.c  |  4 +--
+> >  drivers/platform/x86/lenovo/wmi-other.c      |  4 +--
+> >  drivers/platform/x86/lg-laptop.c             |  4 +--
+> >  drivers/platform/x86/msi-ec.c                |  4 +--
+> >  drivers/platform/x86/oxpec.c                 |  2 +-
+> >  drivers/platform/x86/samsung-galaxybook.c    |  3 +-
+> >  drivers/platform/x86/samsung-laptop.c        |  4 +--
+> >  drivers/platform/x86/system76_acpi.c         |  4 +--
+> >  drivers/platform/x86/toshiba_acpi.c          |  4 +--
+> >  drivers/platform/x86/uniwill/uniwill-acpi.c  |  2 +-
+> >  drivers/power/supply/cros_charge-control.c   |  2 +-
+> >  include/acpi/battery.h                       |  7 +++--
+> >  20 files changed, 50 insertions(+), 48 deletions(-)
+> >
+> > diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+> > index 8599949f8786..306bb2088ca6 100644
+> > --- a/drivers/acpi/battery.c
+> > +++ b/drivers/acpi/battery.c
+> > @@ -821,7 +821,7 @@ static LIST_HEAD(acpi_battery_list);
+> >  static LIST_HEAD(battery_hook_list);
+> >  static DEFINE_MUTEX(hook_mutex);
+> >
+> > -static void battery_hook_unregister_unlocked(struct acpi_battery_hook =
+*hook)
+> > +static void acpi_battery_hook_unregister_unlocked(struct acpi_battery_=
+hook *hook)
+> >  {
+> >       struct acpi_battery *battery;
+> >
+> > @@ -838,7 +838,7 @@ static void battery_hook_unregister_unlocked(struct=
+ acpi_battery_hook *hook)
+> >       pr_info("hook unregistered: %s\n", hook->name);
+> >  }
+> >
+> > -void battery_hook_unregister(struct acpi_battery_hook *hook)
+> > +void acpi_battery_hook_unregister(struct acpi_battery_hook *hook)
+> >  {
+> >       mutex_lock(&hook_mutex);
+> >       /*
+> > @@ -847,13 +847,13 @@ void battery_hook_unregister(struct acpi_battery_=
+hook *hook)
+> >        * adding a new battery.
+> >        */
+> >       if (!list_empty(&hook->list))
+> > -             battery_hook_unregister_unlocked(hook);
+> > +             acpi_battery_hook_unregister_unlocked(hook);
+> >
+> >       mutex_unlock(&hook_mutex);
+> >  }
+> > -EXPORT_SYMBOL_GPL(battery_hook_unregister);
+> > +EXPORT_SYMBOL_GPL(acpi_battery_hook_unregister);
+> >
+> > -void battery_hook_register(struct acpi_battery_hook *hook)
+> > +void acpi_battery_hook_register(struct acpi_battery_hook *hook)
+> >  {
+> >       struct acpi_battery *battery;
+> >
+> > @@ -874,7 +874,7 @@ void battery_hook_register(struct acpi_battery_hook=
+ *hook)
+> >                        * hooks.
+> >                        */
+> >                       pr_err("hook failed to load: %s", hook->name);
+> > -                     battery_hook_unregister_unlocked(hook);
+> > +                     acpi_battery_hook_unregister_unlocked(hook);
+> >                       goto end;
+> >               }
+> >
+> > @@ -884,22 +884,22 @@ void battery_hook_register(struct acpi_battery_ho=
+ok *hook)
+> >  end:
+> >       mutex_unlock(&hook_mutex);
+> >  }
+> > -EXPORT_SYMBOL_GPL(battery_hook_register);
+> > +EXPORT_SYMBOL_GPL(acpi_battery_hook_register);
+> >
+> > -static void devm_battery_hook_unregister(void *data)
+> > +static void devm_acpi_battery_hook_unregister(void *data)
+> >  {
+> >       struct acpi_battery_hook *hook =3D data;
+> >
+> > -     battery_hook_unregister(hook);
+> > +     acpi_battery_hook_unregister(hook);
+> >  }
+> >
+> > -int devm_battery_hook_register(struct device *dev, struct acpi_battery=
+_hook *hook)
+> > +int devm_acpi_battery_hook_register(struct device *dev, struct acpi_ba=
+ttery_hook *hook)
+> >  {
+> > -     battery_hook_register(hook);
+> > +     acpi_battery_hook_register(hook);
+> >
+> > -     return devm_add_action_or_reset(dev, devm_battery_hook_unregister=
+, hook);
+> > +     return devm_add_action_or_reset(dev, devm_acpi_battery_hook_unreg=
+ister, hook);
+> >  }
+> > -EXPORT_SYMBOL_GPL(devm_battery_hook_register);
+> > +EXPORT_SYMBOL_GPL(devm_acpi_battery_hook_register);
+> >
+> >  /*
+> >   * This function gets called right after the battery sysfs
+> > @@ -928,7 +928,7 @@ static void battery_hook_add_battery(struct acpi_ba=
+ttery *battery)
+> >                        */
+> >                       pr_err("error in hook, unloading: %s",
+> >                                       hook_node->name);
+> > -                     battery_hook_unregister_unlocked(hook_node);
+> > +                     acpi_battery_hook_unregister_unlocked(hook_node);
+> >               }
+> >       }
+> >       mutex_unlock(&hook_mutex);
+> > @@ -961,7 +961,7 @@ static void __exit battery_hook_exit(void)
+> >        * need to remove the hooks.
+> >        */
+> >       list_for_each_entry_safe(hook, ptr, &battery_hook_list, list) {
+> > -             battery_hook_unregister(hook);
+> > +             acpi_battery_hook_unregister(hook);
+> >       }
+> >       mutex_destroy(&hook_mutex);
+> >  }
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asu=
+s-wmi.c
+> > index a65090429ca7..c274f456863c 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -1681,14 +1681,14 @@ static void asus_wmi_battery_init(struct asus_w=
+mi *asus)
+> >       asus->battery_rsoc_available =3D false;
+> >       if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_RSOC)) {
+> >               asus->battery_rsoc_available =3D true;
+> > -             battery_hook_register(&battery_hook);
+> > +             acpi_battery_hook_register(&battery_hook);
+> >       }
+> >  }
+> >
+> >  static void asus_wmi_battery_exit(struct asus_wmi *asus)
+> >  {
+> >       if (asus->battery_rsoc_available)
+> > -             battery_hook_unregister(&battery_hook);
+> > +             acpi_battery_hook_unregister(&battery_hook);
+> >  }
+> >
+> >  /* LEDs **************************************************************=
+*********/
+> > diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ay=
+aneo-ec.c
+> > index 41a24e091248..3ba87bd16c9a 100644
+> > --- a/drivers/platform/x86/ayaneo-ec.c
+> > +++ b/drivers/platform/x86/ayaneo-ec.c
+> > @@ -493,7 +493,7 @@ static int ayaneo_ec_probe(struct platform_device *=
+pdev)
+> >               data->battery_hook.add_battery =3D ayaneo_add_battery;
+> >               data->battery_hook.remove_battery =3D ayaneo_remove_batte=
+ry;
+> >               data->battery_hook.name =3D "Ayaneo Battery";
+> > -             ret =3D devm_battery_hook_register(&pdev->dev, &data->bat=
+tery_hook);
+> > +             ret =3D devm_acpi_battery_hook_register(&pdev->dev, &data=
+->battery_hook);
+> >               if (ret)
+> >                       return ret;
+> >       }
+> > diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform=
+/x86/dell/dell-laptop.c
+> > index 89e85c7f7132..cad2bd06f28a 100644
+> > --- a/drivers/platform/x86/dell/dell-laptop.c
+> > +++ b/drivers/platform/x86/dell/dell-laptop.c
+> > @@ -2446,13 +2446,13 @@ static void __init dell_battery_init(struct dev=
+ice *dev)
+> >       battery_supported_modes =3D battery_get_supported_modes();
+> >
+> >       if (battery_supported_modes !=3D 0)
+> > -             battery_hook_register(&dell_battery_hook);
+> > +             acpi_battery_hook_register(&dell_battery_hook);
+> >  }
+> >
+> >  static void dell_battery_exit(void)
+> >  {
+> >       if (battery_supported_modes !=3D 0)
+> > -             battery_hook_unregister(&dell_battery_hook);
+> > +             acpi_battery_hook_unregister(&dell_battery_hook);
+> >  }
+> >
+> >  static int __init dell_init(void)
+> > diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platfor=
+m/x86/dell/dell-wmi-ddv.c
+> > index f8903ced461b..6f0504d7519e 100644
+> > --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+> > +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> > @@ -972,7 +972,7 @@ static int dell_wmi_ddv_battery_add(struct dell_wmi=
+_ddv_data *data)
+> >       data->eppid_attr.attr.mode =3D 0444;
+> >       data->eppid_attr.show =3D eppid_show;
+> >
+> > -     return devm_battery_hook_register(&data->wdev->dev, &data->hook);
+> > +     return devm_acpi_battery_hook_register(&data->wdev->dev, &data->h=
+ook);
+> >  }
+> >
+> >  static int dell_wmi_ddv_buffer_read(struct seq_file *seq, enum dell_dd=
+v_method method)
+> > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x=
+86/fujitsu-laptop.c
+> > index ea543deef68f..96e74c4fdb29 100644
+> > --- a/drivers/platform/x86/fujitsu-laptop.c
+> > +++ b/drivers/platform/x86/fujitsu-laptop.c
+> > @@ -267,7 +267,7 @@ static int fujitsu_battery_charge_control_add(struc=
+t device *dev)
+> >               return -ENODEV;
+> >
+> >       priv->charge_control_supported =3D true;
+> > -     battery_hook_register(&battery_hook);
+> > +     acpi_battery_hook_register(&battery_hook);
+> >
+> >       return 0;
+> >  }
+> > @@ -277,7 +277,7 @@ static void fujitsu_battery_charge_control_remove(s=
+truct device *dev)
+> >       struct fujitsu_laptop *priv =3D dev_get_drvdata(dev);
+> >
+> >       if (priv->charge_control_supported)
+> > -             battery_hook_unregister(&battery_hook);
+> > +             acpi_battery_hook_unregister(&battery_hook);
+> >  }
+> >
+> >  /* Hardware access for LCD brightness control */
+> > diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/h=
+uawei-wmi.c
+> > index d6aaf14d66a5..8cc0e900e984 100644
+> > --- a/drivers/platform/x86/huawei-wmi.c
+> > +++ b/drivers/platform/x86/huawei-wmi.c
+> > @@ -512,7 +512,7 @@ static void huawei_wmi_battery_setup(struct device =
+*dev)
+> >               return;
+> >       }
+> >
+> > -     battery_hook_register(&huawei_wmi_battery_hook);
+> > +     acpi_battery_hook_register(&huawei_wmi_battery_hook);
+> >       device_create_file(dev, &dev_attr_charge_control_thresholds);
+> >  }
+> >
+> > @@ -521,7 +521,7 @@ static void huawei_wmi_battery_exit(struct device *=
+dev)
+> >       struct huawei_wmi *huawei =3D dev_get_drvdata(dev);
+> >
+> >       if (huawei->battery_available) {
+> > -             battery_hook_unregister(&huawei_wmi_battery_hook);
+> > +             acpi_battery_hook_unregister(&huawei_wmi_battery_hook);
+> >               device_remove_file(dev, &dev_attr_charge_control_threshol=
+ds);
+> >       }
+> >  }
+> > diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/pla=
+tform/x86/lenovo/ideapad-laptop.c
+> > index 8213524504ee..1d90d4591641 100644
+> > --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > @@ -2197,8 +2197,8 @@ static int ideapad_check_features(struct ideapad_=
+private *priv)
+> >                       priv->battery_hook.remove_battery =3D ideapad_bat=
+tery_remove;
+> >                       priv->battery_hook.name =3D "Ideapad Battery Exte=
+nsion";
+> >
+> > -                     err =3D devm_battery_hook_register(&priv->platfor=
+m_device->dev,
+> > -                                                      &priv->battery_h=
+ook);
+> > +                     err =3D devm_acpi_battery_hook_register(&priv->pl=
+atform_device->dev,
+> > +                                                           &priv->batt=
+ery_hook);
+> >                       if (err)
+> >                               return err;
+> >               }
+> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/plat=
+form/x86/lenovo/thinkpad_acpi.c
+> > index 1661f070c571..eb5ad18855db 100644
+> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> > @@ -10021,13 +10021,13 @@ static int __init tpacpi_battery_init(struct =
+ibm_init_struct *ibm)
+> >                                       battery_quirk_table,
+> >                                       ARRAY_SIZE(battery_quirk_table));
+> >
+> > -     battery_hook_register(&battery_hook);
+> > +     acpi_battery_hook_register(&battery_hook);
+> >       return 0;
+> >  }
+> >
+> >  static void tpacpi_battery_exit(void)
+> >  {
+> > -     battery_hook_unregister(&battery_hook);
+> > +     acpi_battery_hook_unregister(&battery_hook);
+> >  }
+> >
+> >  static struct ibm_struct battery_driver_data =3D {
+> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform=
+/x86/lenovo/wmi-other.c
+> > index fbb32bf404f2..0450634ac1dd 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > @@ -946,7 +946,7 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_pri=
+v *priv)
+> >       priv->battery_hook.name =3D "Lenovo WMI Other Battery Extension";
+> >       priv->bh_registered =3D true;
+> >
+> > -     battery_hook_register(&priv->battery_hook);
+> > +     acpi_battery_hook_register(&priv->battery_hook);
+> >  }
+> >
+> >  /**
+> > @@ -960,7 +960,7 @@ static void lwmi_om_psy_remove(struct lwmi_om_priv =
+*priv)
+> >       if (!priv->bh_registered)
+> >               return;
+> >
+> > -     battery_hook_unregister(&priv->battery_hook);
+> > +     acpi_battery_hook_unregister(&priv->battery_hook);
+> >       priv->bh_registered =3D false;
+> >  }
+> >
+> > diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg=
+-laptop.c
+> > index 36ad1e269443..e788671307c4 100644
+> > --- a/drivers/platform/x86/lg-laptop.c
+> > +++ b/drivers/platform/x86/lg-laptop.c
+> > @@ -1053,7 +1053,7 @@ static int acpi_probe(struct platform_device *pde=
+v)
+> >       if (ret)
+> >               goto out_platform_device;
+> >
+> > -     battery_hook_register(&battery_hook);
+> > +     acpi_battery_hook_register(&battery_hook);
+> >
+> >       return 0;
+> >
+> > @@ -1068,7 +1068,7 @@ static void acpi_remove(struct platform_device *p=
+dev)
+> >  {
+> >       sysfs_remove_group(&pf_device->dev.kobj, &dev_attribute_group);
+> >
+> > -     battery_hook_unregister(&battery_hook);
+> > +     acpi_battery_hook_unregister(&battery_hook);
+> >       platform_device_unregister(pf_device);
+> >       pf_device =3D NULL;
+> >       platform_driver_unregister(&pf_driver);
+> > diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-e=
+c.c
+> > index 566dfc73cb67..cb30a1d5b546 100644
+> > --- a/drivers/platform/x86/msi-ec.c
+> > +++ b/drivers/platform/x86/msi-ec.c
+> > @@ -1428,13 +1428,13 @@ static int __init msi_ec_init(void)
+> >       if (result < 0)
+> >               return result;
+> >
+> > -     battery_hook_register(&battery_hook);
+> > +     acpi_battery_hook_register(&battery_hook);
+> >       return 0;
+> >  }
+> >
+> >  static void __exit msi_ec_exit(void)
+> >  {
+> > -     battery_hook_unregister(&battery_hook);
+> > +     acpi_battery_hook_unregister(&battery_hook);
+> >  }
+> >
+> >  MODULE_LICENSE("GPL");
+> > diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.=
+c
+> > index 34bb17fca148..318f194e72b5 100644
+> > --- a/drivers/platform/x86/oxpec.c
+> > +++ b/drivers/platform/x86/oxpec.c
+> > @@ -956,7 +956,7 @@ static int oxp_platform_probe(struct platform_devic=
+e *pdev)
+> >               return PTR_ERR(hwdev);
+> >
+> >       if (oxp_psy_ext_supported()) {
+> > -             ret =3D devm_battery_hook_register(dev, &battery_hook);
+> > +             ret =3D devm_acpi_battery_hook_register(dev, &battery_hoo=
+k);
+> >               if (ret)
+> >                       return ret;
+> >       }
+> > diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platfo=
+rm/x86/samsung-galaxybook.c
+> > index 99f72b204a51..a4f7dbb76214 100644
+> > --- a/drivers/platform/x86/samsung-galaxybook.c
+> > +++ b/drivers/platform/x86/samsung-galaxybook.c
+> > @@ -549,7 +549,8 @@ static int galaxybook_battery_threshold_init(struct=
+ samsung_galaxybook *galaxybo
+> >       galaxybook->battery_hook.remove_battery =3D galaxybook_battery_re=
+move;
+> >       galaxybook->battery_hook.name =3D "Samsung Galaxy Book Battery Ex=
+tension";
+> >
+> > -     return devm_battery_hook_register(&galaxybook->platform->dev, &ga=
+laxybook->battery_hook);
+> > +     return devm_acpi_battery_hook_register(&galaxybook->platform->dev=
+,
+> > +                                            &galaxybook->battery_hook)=
+;
+> >  }
+> >
+> >  /*
+> > diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x=
+86/samsung-laptop.c
+> > index 710f3d5bf84c..43fa1dc2773c 100644
+> > --- a/drivers/platform/x86/samsung-laptop.c
+> > +++ b/drivers/platform/x86/samsung-laptop.c
+> > @@ -1142,8 +1142,8 @@ static int __init samsung_battery_hook_init(struc=
+t samsung_laptop *samsung)
+> >               samsung->battery_hook.add_battery =3D samsung_battery_add=
+;
+> >               samsung->battery_hook.remove_battery =3D samsung_battery_=
+remove;
+> >               samsung->battery_hook.name =3D "Samsung Battery Extension=
+";
+> > -             retval =3D devm_battery_hook_register(&samsung->platform_=
+device->dev,
+> > -                                                 &samsung->battery_hoo=
+k);
+> > +             retval =3D devm_acpi_battery_hook_register(&samsung->plat=
+form_device->dev,
+> > +                                                      &samsung->batter=
+y_hook);
+> >       }
+> >
+> >       return retval;
+> > diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x8=
+6/system76_acpi.c
+> > index dd7b1b07c316..33968b61f0b2 100644
+> > --- a/drivers/platform/x86/system76_acpi.c
+> > +++ b/drivers/platform/x86/system76_acpi.c
+> > @@ -288,12 +288,12 @@ static struct acpi_battery_hook system76_battery_=
+hook =3D {
+> >
+> >  static void system76_battery_init(void)
+> >  {
+> > -     battery_hook_register(&system76_battery_hook);
+> > +     acpi_battery_hook_register(&system76_battery_hook);
+> >  }
+> >
+> >  static void system76_battery_exit(void)
+> >  {
+> > -     battery_hook_unregister(&system76_battery_hook);
+> > +     acpi_battery_hook_unregister(&system76_battery_hook);
+> >  }
+> >
+> >  // Get the airplane mode LED brightness
+> > diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86=
+/toshiba_acpi.c
+> > index a0b8060836d0..4cc879bc267a 100644
+> > --- a/drivers/platform/x86/toshiba_acpi.c
+> > +++ b/drivers/platform/x86/toshiba_acpi.c
+> > @@ -3301,7 +3301,7 @@ static void toshiba_acpi_remove(struct platform_d=
+evice *pdev)
+> >       }
+> >
+> >       if (dev->battery_charge_mode_supported)
+> > -             battery_hook_unregister(&battery_hook);
+> > +             acpi_battery_hook_unregister(&battery_hook);
+> >
+> >       if (toshiba_acpi)
+> >               toshiba_acpi =3D NULL;
+> > @@ -3566,7 +3566,7 @@ static int toshiba_acpi_probe(struct platform_dev=
+ice *pdev)
+> >        * set, this must be done after toshiba_acpi is assigned.
+> >        */
+> >       if (dev->battery_charge_mode_supported)
+> > -             battery_hook_register(&battery_hook);
+> > +             acpi_battery_hook_register(&battery_hook);
+> >
+> >       return 0;
+> >
+> > diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/plat=
+form/x86/uniwill/uniwill-acpi.c
+> > index 7a2eeaec4c96..d76695c2c765 100644
+> > --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> > +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> > @@ -2165,7 +2165,7 @@ static int uniwill_battery_init(struct uniwill_da=
+ta *data)
+> >       data->hook.add_battery =3D uniwill_add_battery;
+> >       data->hook.remove_battery =3D uniwill_remove_battery;
+> >
+> > -     return devm_battery_hook_register(data->dev, &data->hook);
+> > +     return devm_acpi_battery_hook_register(data->dev, &data->hook);
+> >  }
+> >
+> >  static int uniwill_notifier_call(struct notifier_block *nb, unsigned l=
+ong action, void *dummy)
+> > diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power=
+/supply/cros_charge-control.c
+> > index e0f168624807..1901bbcffd73 100644
+> > --- a/drivers/power/supply/cros_charge-control.c
+> > +++ b/drivers/power/supply/cros_charge-control.c
+> > @@ -315,7 +315,7 @@ static int cros_chctl_probe(struct platform_device =
+*pdev)
+> >       if (ret < 0)
+> >               return ret;
+> >
+> > -     return devm_battery_hook_register(dev, &priv->battery_hook);
+> > +     return devm_acpi_battery_hook_register(dev, &priv->battery_hook);
+> >  }
+> >
+> >  static const struct platform_device_id cros_chctl_id[] =3D {
+> > diff --git a/include/acpi/battery.h b/include/acpi/battery.h
+> > index c93f16dfb944..08c7e37996bf 100644
+> > --- a/include/acpi/battery.h
+> > +++ b/include/acpi/battery.h
+> > @@ -18,8 +18,9 @@ struct acpi_battery_hook {
+> >       struct list_head list;
+> >  };
+> >
+> > -void battery_hook_register(struct acpi_battery_hook *hook);
+> > -void battery_hook_unregister(struct acpi_battery_hook *hook);
+> > -int devm_battery_hook_register(struct device *dev, struct acpi_battery=
+_hook *hook);
+> > +void acpi_battery_hook_register(struct acpi_battery_hook *hook);
+> > +void acpi_battery_hook_unregister(struct acpi_battery_hook *hook);
+> > +int devm_acpi_battery_hook_register(struct device *dev,
+> > +                                 struct acpi_battery_hook *hook);
+> >
+> >  #endif
+> > --
+> > 2.56.0
+>
+> --
