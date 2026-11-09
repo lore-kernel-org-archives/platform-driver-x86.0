@@ -1,102 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794208512;
-	b=ep0DLBazR2f0xFmISr/swqF/YsIdsoxidfs4d4rqXx1ZiJAEPguRPS+gGZenI4d2IABE
-	 nJ5JQwgDieX85XzAHUdUjzIHz1QQ4lLzVurnZyy85JFlF0lwJLCJVW6aqkjOwe72mqUoG
-	 Z8TpjJHLFiRI/UeiAGzjwBI2odr77QnB9jah8AWwKESFONQis4wu0VuFDj12RBGVC64TJ
-	 D1L6yoRsFSd9KNUBaSrKB6icBG9E3SYibw9Eo1PjNhr4lqLnEZH40P0z44NHHx8BNCzpX
-	 FQwiSYOpRBALl3HJOEPWQbk6XpY8dcsIvZmi12oH4ODCfOUL52rMI2dg4UvUIAXcldw==
+	t=1794212265;
+	b=ne7ovsK1nrmYf99OHt7nmjx93yOUaUTc4OD2y/UM8AB2XLQ0XyVB96XVO5jcsf7xtCF8
+	 rHJGqeDsmMrm63Hs8A33NPaWY6NkcN5GWecag/FXLkPLHWZsMZG3Az4t5vCxs0e+hdC7N
+	 ml6v+JLpNK+LyGHm6K6NGuEOsHYRQh0rsRWbQqNcXDh2BmDTdx8ZS4zGs4kVA5JFVz09R
+	 6OBuisq0triT58n/Hq9/h2k+N267qo+Y+SOEY7c0jIx0OTjbzjNMimQdeTZOcqGDJsglr
+	 ZZCkzKCzFAvvJ/fpCrWByQMYz2J4BQZvAuYOclxY6VLkP7H4RvXA1mtwjf+3tJFE9kw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794208512;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=W3TH+FpKDkN9+upkUl+wnaxnw+xID6Ayvvs9bsXe9Os=;
-	b=aJtZJp2rdPDGd+ldhJ5XnseC3v18LV+OpRL2m6H2pSRvy5Q9Q53qBaYT9bu35iViZUAf
-	 5NReUkeMTUPaWO7usLSi0R/ck2bjAhV2BRvXL7GPnQ20WTV1g15Q3hgBuzzXNhoHNhmBK
-	 I0PHIp+0tPJZxW21XuFjKhLfzoxw8G1mdFaKKZ8dWw0jAEfWdcTT5wIRKr5FCEVHvPMVH
-	 gAWc/x/ywIQe5PFoveCUw0TBw0JpKnOg0VuMt5f599smMNneNnVpnY57Yig1HTkd4Am6K
-	 3+SOQ3NymaDC/Y3GRqsTUE2Yhyu3ACHeVaU9C3LCyqQiVaH/PFcmxj8nCcRPvCO2V1Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794212265;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=GicAkmhuf4ryBLM8YzSZTSCqCMWM75k2VSA5zlKCbWw=;
+	b=hNwRTxG/FpoTA1ZbftV0EdElcMECznCRzTSY98Qz4qkIJtLHSQzQuxpJiiHnf3NtgNH4
+	 sOi5FZozlZqrhZ9ldsnOwS57N91UMwrIjFIO9ueuFLypUNFe35wiv/ZbMD6a1tEgH2H45
+	 OYl6NTLE44+SwLM6J1KtvvwZN6JXp2+EE8AVeXIuyR3brcjDpgQOMqbbmudBTJBbUi70U
+	 UevRzRflUQIpuzqABNkZBhkIPeLycoAn9j1+A/5awzjZSRaTeKRV2vLN6AA6MRQiQvnzZ
+	 SXB/8B6j1oGQiAhVmcYFLdM2nx92KIZUmafv64tKe+gxiR55JH3Es5dhG9QX+EO9ycQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=csU26nM3;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.176
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fxhYoc7d;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2EC606A321;
+	Mon,  9 Nov 2026 08:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fxhYoc7d
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794212265;
+	b=NdyF8GvtYkM7czlVt2wj5oYVSFCa6SejfhwBlHB6EPvv3jrShPLcBWHhoWuzFJXmFxNw
+	 K1yDJD6EoXNRyfLx/PSTEd2XGWUlSP1mOWquxHQGMGUZUCHXDLVmSp1ySG3z8WFVyy86a
+	 ckj0xrjECj6haZBUrsMGoF2s4Mj/oFik4QtbysknWmy4mRO8RCHa7A136bmP9IHzjhr12
+	 TPbhX1O4bnwk+/ni8RQcEzwoPoJTgnK2XolyNY2vdclwCoFZeVHFQzEEusYJ6DToERg+L
+	 ckS45NFhIfHXnjLLG02ZZaGtyM0yvEJ6ZeBxxAbBpUrOUYXXDj68sGn8z/flZMydpaQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794212265;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=GicAkmhuf4ryBLM8YzSZTSCqCMWM75k2VSA5zlKCbWw=;
+	b=MgGBHoy3hCjPptCPpjUXaNQAybpBs72R0SkfVNjjwHN5xyF/FXxxDHaPwGXC6Ob0r8ui
+	 tHCElXE/KzChwUdCPVtrZrdTURKKY2LP2tirxxiVp468XO0UB0sEEZt6gDGarLmLK1U+Y
+	 LKrupxgk8X/1aqlE0eXgKotHtqlOunbxCHjsmN15lYrCE0/eifTaRuwTtIiwQHTirIR7l
+	 zk4NGy6FjKXwffyUISZIMkMx74hFcEVF9pWPmWJcJjY1pypgSFluLjonpJJBDXvtfO4ei
+	 uzAacLcqBmZHECgQZ8gBnty72SKYju7zF8A0FGrgydYbdFAUU99y/MdaiIqaaYf/B5A==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F35606A32A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 07:15:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 25F35606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=csU26nM3
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-8b331cad3cfso3356427b3.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2026 23:15:11 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794208511; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HljWl6Q4+WOEtADU750MOfgPGiryj7gALD3Cqzz+9c522zUx/h7Et20dAuB501I4TJ
-         eYgX1myHPbaCnpn9hf3dWoi2r1oHlHD98u98utlPU5Bd+cpbKBHpxDs4fUXEpbCSeiYE
-         V0F5J6LATCED9ws7z+u/6wBG5LREx7rHjYVCR3LqHSzdExruOOqxByyji2nKU86SRzLl
-         NLC0+7percOQ4+NRHMme699/jOa2K/NGP/nw5kcCaLN9luciHY9cEsVLBjNWk5sgVsCx
-         I5UpF2osaIgpXXdK+XA41/8uuSpOlol9bAi2XDpJZUHQe9QvcAHLDdHOAvuGfaQdx4OY
-         P9mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=W3TH+FpKDkN9+upkUl+wnaxnw+xID6Ayvvs9bsXe9Os=;
-        fh=9hP/ZKGmdq4qNTUgMgfeGaAulDjfLgEWIYG1F/hjMvs=;
-        b=qlfDmiXFjl+1OJfzyFkpzskAvKdC/STfTilKYX6iv4JDZR4as42lOclwfUMaOnoOvv
-         S2DL8gubjgZJExcLjsTJIk3iQWXduqj80hfkL+3+1yuwfeIBiKWOYnOGdt9zqxJDvbi4
-         tWN3jkyp+CLOzAIrW0c41kB/BCfokZ1M+s1BnrAs9drsM36d+7jMJwqqYIoGN6LL2xPN
-         fJVeesAcPO6mwJhnUVxCfRny2QQRZZpwrxRO8YFZnh7JPrtu41vAI9xpB4oBAQEFCsEx
-         SrSL2rk+bRin+YkLWFHnHT1I2lv7UQyJO08AUO+zI5BNHE4X8pYzYs3AHodYF1WKnKlN
-         sgWw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794208511; x=1794813311; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=W3TH+FpKDkN9+upkUl+wnaxnw+xID6Ayvvs9bsXe9Os=;
-        b=csU26nM3k4fPR6c+45FXgNSnRd6mcGiFaUu5fBYpJCB35zLotT2fORe0o7XeUCLaY/
-         hjVDjwdD4kDmKRqzjXaYFFBeZ5XabH172MZi+LniP7uqs7p9+8Sho2n/M//EeF2v+Z0Z
-         bIF2rTnHM52w4rZ8UxueOZN/q3swm//FfuG3oAXlS5lfeHcFWFpPrLhH+FMQCJh9n98Q
-         g1fMq00h5DXiDnowP5J2Cysl3dMXpGL3+AmNLAcUnzIALcCARYG/n5E+0yNkz4QouzUr
-         akOFfvi4XQndFgLZBxT/3aR2OWfzVUkGzg5mR5kAq34rjnqlsOPJKhfC/MfQwatFvjmA
-         7HOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794208511; x=1794813311;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=W3TH+FpKDkN9+upkUl+wnaxnw+xID6Ayvvs9bsXe9Os=;
-        b=lA0V9R+GCg4Uv0zuYwnJ+6AcKhNwkYWpvziLOhkan2M2h5nRkLR9XgQ1/2XxNEEeXF
-         G3cmlzSODjBi9ymXFvpwnOXCsGJ52fTUnnwfRXDtm5lVs1emJOjdFHlQAC6Q2FuGxahe
-         3FCcVU+k899AWiZuRq5u8J2rXfWVanerNRvXjhY1rcQc60YDhdTMhgFtxvgbVBuz1QEj
-         GiUZgDN7Haoh4Jtx0xva/wnVPvKt0/lLvTTwIGwexY82Sju1goiQATaJZhUQe1lKfaRI
-         l+81sVCAXS8m4sfjgTCjSOiZ0Oe7XpLHpvUTTB1DAYQyA063eBX1IvbcVC4y7c4zulWV
-         Uing==
-X-Forwarded-Encrypted: i=1; AL+hErEf1ZO8d5drF/IQXRy21gGmTA551x4DihJBCGX7nbmOZH+ItERYotDLGfYcCCZTbSgBnOlItygBg0NpmeBbTjynbo05@vger.kernel.org
-X-Gm-Message-State: APuU4Z8chziT5DeTpbbtTQ6n5jYFKFlHS3grtQnJiRKdykK7GsI6+Yiu
-	H66V5wzLm6RreHPZMQeagHLZTlf6a/8525+2HUvlDmpgl7PznfxMi0ilwdodqLVr1J6X+1FlE1A
-	bs2sDIrK8mCDdnrz/n8ZDEF+AcoKR0YQ=
-X-Gm-Gg: AYBFou2hQUIpYImGncais70T0BYu1WJedW50LKB+DyST7Eg0vzK6LcyeL8LPg0RzapN
-	oODbyRY7TMljYQt9vg0Kn+xZM24rXLqH2RdDPZr8Qvn92g9VP2qX6n+uCC6NYnGXxogbh03mx/B
-	q9FV7UL/WX/n90PplYwIaruP4/nK3NWxrsZuUlc/rNl5ynLQEsC3v4paH7kfVfc3ggolLOBU2yO
-	DxSBhEREcph8IpEDGUpeO9XlUXDnMxhceAH3APTAnGM5fs98Mwk34CszC82t4gcNsorboi3F4eo
-	XVW+8y/Ij0TNjfoba0EGkQku0hg+kiHKg4sdnsSpkKq96a/GXeHUEFOOeuRUDgIheZXzlIIzfGa
-	CmzNGAgQjZoR2AaRP8Q8aoHfyKi0hnmZ2+Qe3KrWOOhw7VxR395kRvWUWURXG1P6gvvOwGXof9u
-	vYbi5PHXiyvh8j0mhOa6Ia61iw0KQlHHmdqj7js34bmRZINfTNOAS7pDhi5vRFC/gUcQXKFh/tJ
-	5sBDrKs4eQyv19PL7oT0EDVcd62Dah5JE+bp13wo7lT+ubhQZXp9JDvs3j0rQ==
-X-Received: by 2002:a05:690c:a4cd:10b0:8b3:6430:6728 with SMTP id
- 00721157ae682-8b36cb77a09mr16346547b3.53.1794208510681; Sun, 08 Nov 2026
- 23:15:10 -0800 (PST)
+	by smtp.kernel.org (Postfix) with ESMTPS id 9148D1F0089F;
+	Mon,  9 Nov 2026 08:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794212265;
+	bh=GicAkmhuf4ryBLM8YzSZTSCqCMWM75k2VSA5zlKCbWw=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=fxhYoc7d6TINHCq0+gINlVgIOkVykL4r+v9poeGMOJqeztE+UyOvsCfNrDoE2hNq9
+	 ZcoOlPq0tuagiXTZ252uGCZxLKqDm8DaNPl5/FyoJcjDaGBqClVpKCd9NXEVmxxaN6
+	 UXBqRQFrSYH0Srpn2/rLKCD+3tmZrTq9cQ19sJbkAsAHZ1CNutyz1DnofM86F3Uo6X
+	 MQjN7nhq3I1lKAPjcZ3OpZ7NI9hI2shJnRC1nObzOLbsXfz+V/WM/iTL3+CcX2VfHn
+	 AZud/pjc1y8xbm4tt9wTg32B7LieLZfuxmVwTLYNdw70tD1JvSrsSnlHk1j+H5jWrY
+	 jjkndR1EBaVCw==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 240914834C;
+	Mon,  9 Nov 2026 08:17:44 +0000 (UTC)
+From: Moad Tarrih via B4 Relay <devnull+tarrihmoad.proton.me@kernel.org>
+Date: Mon, 09 Nov 2026 08:17:40 +0000
+Subject: [PATCH v2] platform/x86: asus-wmi: Ignore unusable kbd backlight
+ WMI device on ROG Strix G814FP
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -106,65 +83,181 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261108213656.13031-1-antoniovazquezblanco@gmail.com> <20261108213656.13031-3-antoniovazquezblanco@gmail.com>
-In-Reply-To: <20261108213656.13031-3-antoniovazquezblanco@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 9 Nov 2026 09:14:34 +0200
-X-Gm-Features: AclHuK-MowMPC7nsIXdyGu4QxS5XFSL9LJIdTkFEgLEwFauodytJ5sllsbRZ9KE
-Message-ID: <CAHp75VfuW1Xz=UeEqCUtnwQF0+auziyTa4nyhHWSa6=QuZMV-g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/surface: surfacepro3_button: don't load
- on amd variant
-To: =?UTF-8?Q?Antonio_V=C3=A1zquez_Blanco?= <antoniovazquezblanco@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Chen Yu <yu.c.chen@intel.com>, Sachi King <nakato@nakato.io>, linux-input@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261109-asus-wmi-kbd-readback-v2-1-c048fc53d8ee@proton.me>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WPQQ6CMBREr2K69pu2IGlceQ/DoqUfqQSK/QU1h
+ LtbwL3Ll8zMy8yMMDgkdjnMLODkyPk+gTweWNXo/o7gbGImuSyE4Ao0jQSvzkFrLATU1uiqBZk
+ VMj+jkhYVS90hYO3e2+6t3JlG88AqrmNronEUffhs4kmsuX+OSYAAU2eqLnLOtcXrEHz0/alDV
+ i67JOBzTB/iz7wsX9gEnnnhAAAA
+X-Change-ID: 20261108-asus-wmi-kbd-readback-236245e82de8
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Antheas Kapenekakis <lkml@antheas.dev>, 
+ Benjamin Tissoires <bentiss@kernel.org>
+Cc: Sercan GOKMEN <gokmensercan@gmail.com>, 
+ Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Moad Tarrih <tarrihmoad@proton.me>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794212264; l=6275;
+ i=tarrihmoad@proton.me; s=20261108; h=from:subject:message-id;
+ bh=YC6708aPnllJ505YNKrXbdPIH5G4EWcQfflTfwu8cJE=;
+ b=ey79igGTqzypZ4XKkZfSWtawSMixEVllsZv8pZ89a6a9K2s7kU98nx1Z8K5tPgYwq4ycmwwxX
+ 212cfI1qkeVCXhJelgyuadPiB+kwFKZ9CvhIWdLTvNKmHcM8zdFo5VM
+X-Developer-Key: i=tarrihmoad@proton.me; a=ed25519;
+ pk=wtwpmYxZldK7Qebavgtx7P5WmSQOiWjicK0506NOKLg=
+X-Endpoint-Received: by B4 Relay for tarrihmoad@proton.me/20261108 with
+ auth_id=1453
+X-Original-From: Moad Tarrih <tarrihmoad@proton.me>
+Reply-To: tarrihmoad@proton.me
+Content-Transfer-Encoding: 7bit
 
-On Sun, Nov 8, 2026 at 11:37=E2=80=AFPM Antonio V=C3=A1zquez Blanco
-<antoniovazquezblanco@gmail.com> wrote:
->
-> From: Sachi King <nakato@nakato.io>
->
-> surfacepro3_button binds to MSHW0040 on the AMD variants of the Surface
-> Laptop 3 and 4, where soc_button_array is the right driver.
->
-> surface_button_check_MSHW0040() evaluates function 2 of the MSHW0040
-> _DSM, the OEM Platform Revision, and binds when the result is 0,
-> assuming that only a failed evaluation yields 0. The AMD variants
-> implement that function and legitimately return 0, so this driver binds
-> there as well.
->
-> Decide instead on whether the device implements the function at all,
-> which function 0 of the same _DSM advertises and acpi_check_dsm()
-> reports. Of the 32 Surface models carrying MSHW0040 in the ACPI dumps at
-> [1], only two do not advertise it, and they are exactly the two this
-> driver is for: the Surface Pro 4, whose MSHW0040 device carries no _DSM,
-> and the Surface Book 1, whose _DSM advertises functions 0 and 1 only.
->
-> The driver currently reaches the right answer on the Surface Book 1 by
-> accident rather than by that test. Function 2 is not implemented there,
-> so the _DSM falls through to a trailing Return (Buffer), and
-> acpi_evaluate_dsm_typed() rejects the type and returns NULL rather than
-> an integer. The revision is left at 0 and the driver binds.
->
-> Keep evaluating the revision when it is advertised, so that it remains
-> available through dev_dbg().
+From: Moad Tarrih <tarrihmoad@proton.me>
 
-> [1] https://github.com/linux-surface/acpidumps
->
-> Fixes: 64dd243d7356 ("platform/x86: surfacepro3_button: Fix device check"=
-)
-> Link: https://lore.kernel.org/all/20211109081125.41410-1-nakato@nakato.io=
-/
-> Co-developed-by: Maximilian Luz <luzmaximilian@gmail.com>
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> Signed-off-by: Sachi King <nakato@nakato.io>
+On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
+backlight brightness in sysfs works, but reading it back always gives
+0, and the read makes the Fn brightness keys misbehave.
 
-Same comments to the tag block and the commit message as per previous patch=
-.
+The firmware reports the keyboard backlight WMI device as present but
+doesn't implement it. DSTS(0x00050021) always returns 0x50000, which
+is level 0 regardless of what the actual level is, and every
+DEVS(0x00050021) write is rejected as an unsupported method. The
+keyboard backlight is actually driven by hid-asus. asus-wmi saves the 0
+as the current level on every read, and the brightness keys step from
+the saved level. So after any read, for example by the desktop or by
+systemd-backlight, the brightness-up key sets the keyboard to the
+lowest level instead of one step higher.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Add a kbd_led_no_wmi quirk that makes asus-wmi treat the keyboard
+backlight WMI device as absent, and set it for this board, matched on
+the DMI board name. asus-wmi then keeps the LED registered for hid-asus
+and no longer reads from or writes to the WMI device. The entry also
+sets wmi_backlight_set_devstate which the board currently gets from
+the default quirk_asus_unknown, so nothing else changes for it.
+
+As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
+no longer created on this board, they never worked here since the firmware
+rejects those writes as well.
+
+This patch was written with the help of an AI coding assistant (Claude
+Code, Claude Opus 5.5). I reviewed it and tested it on my affected laptop.
+
+Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
+Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
+Suggested-by: Denis Benato <denis.benato@linux.dev>
+Cc: stable@vger.kernel.org
+Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
+---
+Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317,
+keyboard 0b05:19b6) on 7.2.14, built as DKMS modules. The keyboard
+backlight is still registered and driven by hid-asus, the attribute
+reads back the level that was set, the brightness keys step from the
+real level, and the level survives suspend/resume and reboots.
+Build-tested with W=1 against pdx86 for-next (c339f4010dea): no
+warnings. checkpatch --strict is clean.
+
+The kbd_rgb_mode and kbd_rgb_mode_index attributes are no longer
+created on this board. They never worked here: writes to kbd_rgb_mode
+are rejected by the firmware with -ENODEV, like the brightness writes.
+
+To answer Denis's questions on v1, the bug this patch fixes happens on
+the latest BIOS for this board as of writing, which is version 317.
+I only have the G814FP, so I don't know if other 2025 G814 models
+are affected, the quirk only matches G814FP.
+
+This no longer depends on Sercan GOKMEN's kbd_led_no_readback patch.
+Both patches add a field to struct quirk_entry and a DMI entry, so
+whichever lands second may need a trivial rebase.
+
+AI assistance: Claude Code was used to trace the keyboard backlight
+code in asus-wmi, run the debugfs DSTS/DEVS probes, write the patch and
+draft this message. Testing and final review were done by me on the
+hardware.
+---
+Changes in v2:
+- Add a quirk that makes asus-wmi skip the keyboard backlight WMI
+  device on this board instead of detecting rejected writes at
+  runtime (Antheas), so no more WMI writes that are known to fail
+  are issued (Denis).
+- Link to v1: https://patch.msgid.link/20261108-asus-wmi-kbd-readback-v1-1-bf38f6400ade@proton.me
+---
+ drivers/platform/x86/asus-nb-wmi.c | 14 ++++++++++++++
+ drivers/platform/x86/asus-wmi.c    |  3 ++-
+ drivers/platform/x86/asus-wmi.h    |  6 ++++++
+ 3 files changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 3b0f3346dc60..fbdb00248be5 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -93,6 +93,11 @@ static struct quirk_entry quirk_asus_unknown = {
+ 	.wmi_backlight_set_devstate = true,
+ };
+ 
++static struct quirk_entry quirk_asus_g814fp = {
++	.wmi_backlight_set_devstate = true,
++	.kbd_led_no_wmi = true,
++};
++
+ static struct quirk_entry quirk_asus_q500a = {
+ 	.filter_i8042_e1_extended_codes = true,
+ 	.wmi_backlight_set_devstate = true,
+@@ -167,6 +172,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
+ }
+ 
+ static const struct dmi_system_id asus_quirks[] = {
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ROG Strix G18 G814FP",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "G814FP"),
++		},
++		.driver_data = &quirk_asus_g814fp,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. Q500A",
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index b33ebdb21aa2..51fea21ff247 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2165,7 +2165,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 	asus->kbd_led.brightness_set_blocking = kbd_led_set;
+ 	asus->kbd_led.brightness_get = kbd_led_get;
+ 	asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
+-	asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
++	asus->kbd_led_avail = !asus->driver->quirks->kbd_led_no_wmi &&
++			      !kbd_led_read(asus, &led_val, NULL);
+ 	INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
+ 
+ 	if (asus->kbd_led_avail) {
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index b45f81b38a47..9f3769fc82f7 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -41,6 +41,12 @@ struct quirk_entry {
+ 	bool wmi_force_als_set;
+ 	bool wmi_ignore_fan;
+ 	bool filter_i8042_e1_extended_codes;
++	/*
++	 * The keyboard backlight WMI device reports itself as present, but the
++	 * firmware does not implement it: reads return level 0 and writes are
++	 * rejected. Leave the backlight to hid-asus.
++	 */
++	bool kbd_led_no_wmi;
+ 	int key_wlan_event;
+ 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+ 	int wapf;
+
+---
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
+
+Best regards,
+--  
+Moad Tarrih <tarrihmoad@proton.me>
+
+
