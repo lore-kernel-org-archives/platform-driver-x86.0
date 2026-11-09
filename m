@@ -1,78 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794250216;
-	b=AjeN/K8JbSZHrDeFe3pgbe9sy0vOy+fJFVJkky19xOYlUK/vmPbThXlDnI6uPTq0LOtP
-	 IcFl0hLfw+32QQ1ER4B6cz1BuH2eHs1ArNsp7GrFXr7FvCQH/ij01GL5k2nstCdR7ZreZ
-	 5nMrv/wcuKeIQWn/38rMEXe++0lHvrtoHOQxkILfkeqp903FdwQ7MwRQO1D7VtzA3RZPp
-	 N2M5fw7QIPIEddJjsj91GuzZVQk0tt14kINS14ve31/hV24x9pwWC/4L2T/syD3Ljyz10
-	 67AWq08f3zpvp8Yn3EOz1F6xGUEQrodQf8GiwugY8C8/Lpl1m/7quLuZBcZ+5anfuow==
+	t=1794253078;
+	b=kKDYaZj+ZMBR+chtETTI56G4fIi+z/C0yLrcH62vjo5LGGQpLrI3Zqi4qU/AUwC3p61x
+	 qxWhOhurmXrp6htq6LkE1aQzU1bIJtBSh3eNE9SK58wJoBsAfQyANIPivp74GtsjIOgHd
+	 V08BJzWdoO8FmLKDNuHkBqQmi3jbDwPXixjQNLzZll5Pr6ZjYx2gzP5R7DVgymvDWBBaU
+	 BnjU5VUTlhn3rvNDUeWlqBbTXA8TAwwS1Tj6UBR61/OCsalIghim+fVeIhy6xesBYBJll
+	 ni5JYYhmFiIZ2SLX4vpSeGgH7AZ2+W5YkTswyON0ROWYf3wS1wUE/lQ06xkMXPKmJDg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794250216;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=Vn3jlK/7PgT2CwRRPrcdbUwucP43PxuZlvHHyuCpLUM=;
-	b=JUwwVbURDmaii4kpkzfJQmS4ljrAqEY/WZJ9qEtQmPxOLgCYvZGm8yeFfzrXpP3ApDfU
-	 e3ayt1pW2AwwmMPR6dPf6TqQPKQ9RFqjA2MuSX2hEphIdQ33B7669CcrNzjHmd5iMqAxf
-	 UCnm0NVNFrviqV2jz4ZDtaD/XHgeUWpmW7lh4HX7Pj/NhC0d9HIz+PTYOtpaIomLjOmBU
-	 ZItRoinZGSDDEWNyS93/IfUZiBS4k9p1Aa8WcdaF2FvXKucJoBe/Gp9eL5tA7pVTzf5N0
-	 biVVlkua5cbqRuxlcMUb+BUlNbcwJYLX6rf/YDzySm/6aYmIoOl94BxsBoItfn8s4JQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794253078;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=MvWd0+CmwRokWvhLXpRIo+Vb+Gi+G9Ir/IiNgUEH2gU=;
+	b=aofuD+Yf+8Wn3WpK2/Rx5hN/2UEamAMhlSp7W3j46656EdFQrm25vehjwlwy8Km7LYxe
+	 Oz617bIKuOP8cEz/aPsUeIqfRDskLMi6wusgCFT4m8110xIpPjjsvGpoosUD7EoFfDACk
+	 ssQe2V7v/HsLllQH5h0o5CD9jxg7/+LgUruHXV57fAuX/ZiuHuaBSTEswMJO6I0xLP7cO
+	 tEGOoRZz5zSvd950p/0dV3d/WQ7lpq0+NryXXFkpVjmpsGgmwMav+Xg1kF8SLVniIYRBp
+	 t/HAEVrvFiNsO+L4T5jsmvUq74c8ul4s1j7RSDIb8qfBfeyU2/3I1sdNkcW9TtndpbA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YkhMKsPe;
-	arc=none smtp.remote-ip=198.175.65.18
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cb2LBgsg;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832B360A260D;
-	Mon,  9 Nov 2026 18:50:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 832B360A260D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA89D606A326
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 19:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YkhMKsPe
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794250216; x=1825786216;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=BP3u9Z+++nqyCW5ye/g4jSpc5qlNx81n3H0N1YKS5dQ=;
-  b=YkhMKsPe5rVT1kncHp/z2wh8VBcqKr/eSyN/uEYL6B25q1R677nO4R4s
-   Pez1Eux5o6U9nmApGnPqymSZMgSqBK2MG04+ybflrK3hx0YtfAqICR+DQ
-   iY2DU1k+rdPay7jdKkAK0rkrzURiuznqOBJJSQm3xt50Tk8LsmiL6FRQP
-   79FLC1I/A8j3+BbqRED2FKOShpi07l53wl+rTgJ7XowqvdoDwDVhyMsQM
-   Kd38i9LCyzxYCsTuaUCiaAUYTYX1XVJ9Av9Mj98zi7gf6w9tc4s5o80fQ
-   OQLQzvIsZtD9Kc72LKlvCCOrgFkmpbeU36EnMrgPoIvQl1hyzQLE9UARg
-   A==;
-X-CSE-ConnectionGUID: K0pvPNbxT0C4s7+ctvtbPQ==
-X-CSE-MsgGUID: oLKTrpNNSLuEqtF8pkSgCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="2994970"
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="2994970"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 10:50:03 -0800
-X-CSE-ConnectionGUID: 2R8NI+f2QHWxoehJsQPVPw==
-X-CSE-MsgGUID: hLkk2NiYT6atHz9oy4O87w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="7996908"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.139])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 10:49:59 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Nov 2026 20:49:55 +0200 (EET)
-To: Hongyan Xu <getshell@seu.edu.cn>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-    Chanwoo Choi <cw00.choi@samsung.com>
-cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J . Clark" <derekjohn.clark@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    jianhao.xu@seu.edu.cn, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: lenovo: cancel fastcharger work on
- detach
-In-Reply-To: <20260806060526.1189-1-getshell@seu.edu.cn>
-Message-ID: <2ef4ad43-497f-c40f-b18a-f5b75799d95d@linux.intel.com>
-References: <20260806060526.1189-1-getshell@seu.edu.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cb2LBgsg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C50C1F00922
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 19:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794253077;
+	bh=MvWd0+CmwRokWvhLXpRIo+Vb+Gi+G9Ir/IiNgUEH2gU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=cb2LBgsg4n4sruyHj68RZq3ccVRcm5UuufSQqvsWoLVd3qVz8XzzsQWfgHw5tSGEg
+	 pnbDt8jyDOtgQcuDXSppvRmXz6+GdHI65SpERZ6/usCv7vacjt+EkL7n3Ls6Ikr0Lo
+	 Nlo01B8n9LjysiLed3s1rkW2YkDAiWoaNySqdsE53+WMqHUz4wivQxAjQHlvXi6R2u
+	 y0gJYq7BWHrhIwqDkqY+K3UDmnnyWx7Rl8IWwLXoQGrceK7lrqRXnvi87XeYvNXj4a
+	 dbaF1Ssx63xVGaryj9W1GN2E8iRypW66ZKa/ZoEAIXSk+Wk3kBXBewt9AduCWz5aks
+	 kJpdbRUxxdgTg==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3adfe77d336so9552271fa.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 11:37:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErGd16aV8GescS1UQajX80qrwznIbnHkH/QzOKcBkpeddjg/9cczS/cgj6n+s8O744ok4wii5eKtk0dL4cYg+CdHa3lP@vger.kernel.org
+X-Gm-Message-State: APuU4Z9tmII28tHMO5w3VPaR8AZ74wyPmGXgwEMMWW0z9556oSwSnT+d
+	iHpPHHs1zzOhDitk47stw1qeZFRicmNFlujWojaPd7rAHPfjVPDCeNyrv8K+SnaGsF1PspicjKH
+	uNW0QENn2F20v5kYD0UqHee3AGD3Q4kw=
+X-Received: by 2002:a05:651c:41c7:b0:3ad:de02:e9a6 with SMTP id
+ 38308e7fff4ca-3ae09623c97mr429461fa.16.1794253075553; Mon, 09 Nov 2026
+ 11:37:55 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,62 +59,52 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20261024223501.1420953-1-daniel.lezcano@oss.qualcomm.com>
+ <ed4aac63-ac58-4e2a-ae45-ebf4da158228@oss.qualcomm.com> <CAJZ5v0gGeKEqMWvP3cQrXztZt-faFZJF+yNfygcBPT57f-a8Lw@mail.gmail.com>
+ <34c23beb-88d5-4456-b84f-f00e31578468@kernel.org>
+In-Reply-To: <34c23beb-88d5-4456-b84f-f00e31578468@kernel.org>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Mon, 9 Nov 2026 20:37:43 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0haqd=UiGJq307O48NV=Ha2xHZiFQduHYaAPOf=2KA9=g@mail.gmail.com>
+X-Gm-Features: AclHuK-vX_OAFSpUyezAsyhyijSyOhOZPP76kuRi9FiBvZGn9m4D3huc1FthJj8
+Message-ID: <CAJZ5v0haqd=UiGJq307O48NV=Ha2xHZiFQduHYaAPOf=2KA9=g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Make platform profiles firmware independent
+To: Mario Limonciello <superm1@kernel.org>
+Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Armin Wolf <W_Armin@gmx.de>, 
+	Jai Luthra <jai.luthra@ideasonboard.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jack Wu <jackbb_wu@compal.com>, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Aug 2026, Hongyan Xu wrote:
+On Mon, Nov 9, 2026 at 6:39=E2=80=AFPM Mario Limonciello <superm1@kernel.or=
+g> wrote:
+>
+> On 11/9/26 10:46, Rafael J. Wysocki (Intel) wrote:
+> > On Mon, Nov 9, 2026 at 5:37=E2=80=AFPM Daniel Lezcano
+> > <daniel.lezcano@oss.qualcomm.com> wrote:
+> >>
+> >>
+> >> Hi,
+> >>
+> >> sashiko validated this series
+> >>
+> >> Is there any other comments for these changes I should take care of ?
+> >
+> > I'd love to see some feedback from someone having a vested interest in
+> > this interface.  Mario?  Mark?
+> >
+> I am onboard with the new approach.
+>
+> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
-> The extcon notifier and probe queue yt2_1380_fc_worker(), which can sleep
-> for several seconds while accessing managed pinctrl, GPIO and serdev
-> resources. Driver detach does not drain this work before those resources
-> are released, allowing the worker to use freed state.
-> 
-> Use devm_work_autocancel() between opening the managed serdev device and
-> registering the managed notifier. Reverse devres release order then
-> unregisters the notifier, cancels the work and only afterwards closes and
-> releases the resources used by the worker.
-> 
-> Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
-> Signed-off-by: Hongyan Xu <getshell@seu.edu.cn>
-> ---
->  .../platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c    | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> index 8551ab4d2c7d..cce677b5db48 100644
-> --- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> +++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> @@ -8,6 +8,7 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/delay.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/err.h>
->  #include <linux/errno.h>
->  #include <linux/extcon.h>
-> @@ -160,7 +161,6 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
->  
->  	fc->dev = dev;
->  	fc->nb.notifier_call = yt2_1380_fc_extcon_evt;
-> -	INIT_WORK(&fc->work, yt2_1380_fc_worker);
->  
->  	/*
->  	 * Do this first since it may return -EPROBE_DEFER.
-> @@ -209,6 +209,10 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
->  	serdev_device_set_baudrate(serdev, 600);
->  	serdev_device_set_flow_control(serdev, false);
->  
-> +	ret = devm_work_autocancel(dev, &fc->work, yt2_1380_fc_worker);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = devm_extcon_register_notifier_all(dev, fc->extcon, &fc->nb);
->  	if (ret)
->  		return dev_err_probe(dev, ret, "registering extcon notifier\n");
-
-While this looks an improvement from driver's perspective, sashiko is 
-still worried extcon doesn't properly synchronize because it's using raw 
-notifiers.
-
--- 
- i.
-
+All right then, applied as 7.5 material, thanks!
