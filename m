@@ -1,48 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794237302;
-	b=Dn/QwlX/GRaMyxIG8eqYg5uPh8iBOU8NSK5MAlG4kXoOCexI/zh4lj+CPXSxpDJVtMnU
-	 2u3rG1+8hPj4gtvhbcfvrV7QDm5Zx9AD3CqWzSWqeG4l/AkwJNOn46S+POC5NjkEmubfL
-	 ZAu85SehdbRd5ytvBv2zpTpB1vVo6k1dbOvjVLyxqyq2dUpNZiXkNZDGVq6PLkyQ5qlN8
-	 tRWyYQ7XY6TSsNYa1YhpG6UnNMM7E/w83rA62+nG4ShsM755s0H2x8PMFRfJVgGTNtIwI
-	 TflJOQ622bt6+4rduDnd+Nr77c3vTMGr7LYXe5r8aZV/z8SC8iC0IPS06yVT/TokgSA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794237302;
-	h=Received:DKIM-Signature:Content-Type:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:From:To:Cc:References:Content-Language:
-	 In-Reply-To;
-	bh=r3s6B+lr7DDGsEVLcxfwZIs+LqrgTCXcoBGn2S7+mTY=;
-	b=P8ztxwvTjjjUnRLEpboCAPvzQ48GCx5Fdsw3aV2bm4yk2FGG0eq/PafZqQz8i9+jh5E0
-	 L0KhO4JsmmLYeIeiWlRwK6hYClaZ57E01xVMn2wg4V93IWlEzN4QAhvMl+FUZ7hDhDM0V
-	 hjnb+ReAkm86X7zyfL7B63eVg+gObGVRWshbM5FTseO09paT8devA981KmnDIFmhDYeJ6
-	 bjJLeDPYXstJ54EhiBUHcU6E61NRAKLb1zk6V5SO2jIa+dOJkWBU3NIsKQZz4EQzyNUo3
-	 ohaOZpWish9a4PQrS8+glHI9UYfrIgJ+NYPLmD2cAv9EnmtDU+hJS3SBVMtIAgIA8pQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jql0wb5F;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.50
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794238465;
+	b=CJr/rqY3OlWKZSsGMV+COmZrBuZPD0/Sbcmbmk3pcbC20gYTz/ZoQUw2RbiaJj4ERFFw
+	 d1e7b7f10tmxpHcxysmDBuI+i3+Ir9u6XnkIOLI1cHsAsI9oP+j5zkGfab2OoE9YI+nrH
+	 rtKjDjxgvHdnfMkjsqtB/B+Q0y6SZVTZ9Z0Qh3kj0bWJSj5jM5qHUUp2ibhFCbZOBlqgg
+	 yKtGg1w6R/prxM+XTgmOgUmYXY9PqJbs8lNB73x6wvVTIuxo0xybf/F1J5IatOJ1EaSCw
+	 crk6MWkbqnoDGkzHnIq/TbRsblmGITPGRDq/V9SKWx03ekQZzdfEJ66rvQNVLushI/Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794238465;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
+	b=N86I1j4HoqxS10SgCjklB/Z0jbfPwZTuVA4FD7GEi7oJOfeG06bcva/Z376CO+jZ8zE7
+	 PpIqQ5thOihRrAHdr5jLPJKDmxuAH1e513u+Nq09kcWfIBwiaJbTsywJYGlhA7+rHV07m
+	 YGn5qflRV7XZnFpUljCBckT7F+lUiQYfkLfBE1zIGcmuWJxolNccNgI+R/50DA2Xi5xVq
+	 6XwMKlnQ/yIqMT7RTdO7NqoeQzUOwSjOjhxaWI+GFEj3/rogszGLyPVS4/XqAFTLu7FmK
+	 5ElkJ0MQ6zu3tr6DTtTRVZGGbiBr/jJ97FUQINdWnF0AbTuy2Et62rh5LyB4LNuQeVw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yikXqh2p;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.50
+Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD5D606A321;
-	Mon,  9 Nov 2026 15:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87669606A321
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 15:34:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 87669606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jql0wb5F
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D0441F0089F;
-	Mon,  9 Nov 2026 15:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794237301;
-	bh=r3s6B+lr7DDGsEVLcxfwZIs+LqrgTCXcoBGn2S7+mTY=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=Jql0wb5FdQBgaubXklkMxxM2+hIuloAEBDDY5xV4MceP/23CLg3OxpwYk5kGCzO2Z
-	 wVIgBIxTTlnMzbnySk6WVaPYlFQuSxkPqRiVhroWy1LRQ8OkyOUwBrz4PyRPQWapD8
-	 3s3dnUyOzA1Ue42frHhWaKLF+lt19KNGo6eAl0b/0OgGkj9W4E/Vk6ojuUEDtLB2B6
-	 x1SVsCs0ovAmv8OrcDZLHjusedWhQibvyRLGILfChjSe9kwnUw9DS76igz43n9RotX
-	 dCqJ4QUtW9rw/53VcT+qGOClaE3w4KodRTE9Ok5aJwXRTVbtW5Y9ikW+OOO0Y3Sneh
-	 UKXUgWR9prqgQ==
-Content-Type: multipart/mixed; boundary="------------A7xi0RJFcpUI0V6Z0A5xWgA2"
-Message-ID: <0c75e1b8-db5b-4512-9aa7-f0cb84606ce5@kernel.org>
-Date: Mon, 9 Nov 2026 16:14:57 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yikXqh2p
+Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-15dd124bbe7so675871c88.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 07:34:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794238465; cv=none;
+        d=google.com; s=arc-20260327;
+        b=WnY1QwIryIaQFxWc8aco7L5uZH4DPODNKLA4NMbe39MCEBUxKwAI7ZMmhGLPh6ZijS
+         gjYHaKutq5cR6sE/2o+9r1UaND+ADWFBP0hywAiFsdXBy5zePbxmiV8PAOKly4W+OMzn
+         zEnZcVprHn0sNj1B2I9V87tdPXI0t0d520ZxvzMRvmrFSvmIfyYSg6raml8mZLXY+bN5
+         m5B2fiJYtw2ZiZ14O/rLYCBkRnN6nbtQsPEteo/YIR1z7nafZfyi09vwWWfk+R2iuOoK
+         Mby1SNxCO5doqD9XSqVrwBEKoJeMib6AJHByCmfjO+e6hEmouyjQyK25aRIDz47Nrr6L
+         WI/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
+        fh=ZvRsMGnHv2E52FTeXGVKFRisfTAqdDSCoN3Lcymq7oU=;
+        b=NHkUi0K0WJ/6nraXLBqqDXHqqnnLXOp96OExV0lD+5LeDk0xBSlG7M/8qHhHlTx9FQ
+         9KcGvfFUy5uBWDO8APSU8R87uNJSjnzdkZO1jYu6dPIUk8QYxraQsPDENym7xV/R3YW7
+         0huFfNipfepr0kzYfB+fvSzlU4Jh39Q7ar3Wqmo1g4CWMaVRX5kkTv7glaNyZoNkSEBa
+         Z2jbqmkSiLo6IfAV1ZJjUDNWiNeydML9K6dN0mmuuxvFrHki/9E9a4AF49Mx8YcAlakk
+         FOuwLtLagdTHhm1ru/rCMy1Hmqiwq06uJ7pRMViQXFA493Ommvxo1mcH2h5FzVGskLVF
+         slAg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794238465; x=1794843265; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
+        b=yikXqh2phUIyvWpxB/H+q/1PVpKEZ/DNzQnpe8b0xI/tdJdVYp2ggI+b9bz0Lvje+A
+         xq/C6uYvJxliao7YP3t58ndm78b9osxrUCh/lIOTuAcOkttWmoNIZNAfbvO83rZBoqw5
+         uxrsWg8J5QK9wL356LHQynLSF3DAtVTzN2TbKjd70G44ENYfJUlZRfdr38Tl9IQ0XhQo
+         9Swa07oJGd9OqSK6KqIeHTKIW5ADbSKt5/glANh7d/xk3dOIftK+BCwiByTsrBwKCPL7
+         2KhDSTpUvbobLdSbyVtYj42pFi4PrQzcvIV3rZcK8dXeQk3ixCNQHfJK1I7YGiq3Z+8p
+         9v+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794238465; x=1794843265;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
+        b=rNRKrZzf89qsXMUUSidn5ycK9zHuZ8chWklAMZVfuBXOtGqyEub8V22hMsqeogkNeL
+         sr3sr64dIFXbh+Fae/DW/w/2+09xmHFpDmAEEpK3mh2aCtQXhEeuOFQEYm1NGBqKzp1d
+         P+o7cYhUTiDXIdxJPKrOhFo5lzLiY96YmwQzNzWrdscxC+Sh9lQYgLkxA2s8VMO/t9sw
+         3IELZYOxzg3trvQhRuALiw2qAMcACEQuDzECuh3qqPV+0e+2lxpRsjrXl7nZE2swYhc9
+         U5m42IXo/D68ICralqgPYiStnDzZyLa6ovsgMNLOqG+GZAJ1YqOzmbho73zhJJXd78ln
+         TX3g==
+X-Gm-Message-State: APuU4Z+ii1D92SKdhcnqw4+hir3MKqmhkkfTxUPJ4RSnz4QE7jfSQEtf
+	MOdcxlmLIaQhMO9STsxgfSuKwoVDZ9sCIEkw6VklKd5PJ/7BTXuKCjr0PfGEvEaJM9IRz5z5XB4
+	I+IuQqRRD0bOAG0tZ7k/QXjVrcVdgLR8=
+X-Gm-Gg: AYBFou0/w2YbawsdoyRYrXNoqPqV/2tkQ4S1EN4TCVzUFzNdjO3lJWoduaSohqBHfGt
+	MNC4aQdnI3Tvbmau/u57PWm8yFg4KqOEgUm63ieTmZsAUOTAerIime8zKxO1a2tTzqo4VT+IQkK
+	rXNTsI+Em3KZMNICWEwRJG5NirdQBJHq9cw2oZcjCNcUnYUj0y3DuE5PIvT2B9jzkU7lFsWGfFQ
+	927ZbYyrxEFSwWNg5lC+39D87M6tXzQ7aK1OLVtD9Hlu3p2nvRAj/3KD672nAl5JJ1Hp8QLgmzh
+	SD4PXA16imSRQihyxyxng19r3MXp6KpUpTIHiMvw8DLaIlGbdrvGgK7ykuYHLrHRICs7WagFKdO
+	8Uo56989mkXUUvEk6UN7wl9j67Hd3+3yLF9COuQ==
+X-Received: by 2002:a05:7022:4388:b0:1ae:e0f5:2cdd with SMTP id
+ a92af1059eb24-1b39feaebacmr8289891c88.28.1794238464457; Mon, 09 Nov 2026
+ 07:34:24 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -52,148 +102,116 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] platform: arm64: lenovo-thinkpad-t14s: Add Gen 7 EC
- support
-From: Hans de Goede <hansg@kernel.org>
-To: Abel Vesa <abel.vesa@oss.qualcomm.com>, Sebastian Reichel
- <sre@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abelvesa@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20261107-t14s-gen7-ec-v1-0-f4a8edaac447@oss.qualcomm.com>
- <20261107-t14s-gen7-ec-v1-2-f4a8edaac447@oss.qualcomm.com>
- <44e4ede9-3eb8-418a-b1f1-7e9dc75e2e75@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <44e4ede9-3eb8-418a-b1f1-7e9dc75e2e75@kernel.org>
+References: <CA+Kibh6FHk-QgmPsi4spmQ5MHGvt05xYHuRiiMMQdPP+31Z70A@mail.gmail.com>
+ <f718e7cd-24f1-428b-b9f7-28bb1a923a11@gmail.com> <CA+Kibh6T9tPKwhSF2X5Jwoo8OUoieypuAyM4GBKVujUDWgpr-g@mail.gmail.com>
+ <08e0f238-4330-418b-ae3b-fa7ce0f6ef62@gmail.com>
+In-Reply-To: <08e0f238-4330-418b-ae3b-fa7ce0f6ef62@gmail.com>
+From: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
+Date: Mon, 9 Nov 2026 18:34:11 +0300
+X-Gm-Features: AclHuK-BoccA8Cm9Huf8OBdFW57iTUEi1LolooeDp5MbFnpce5HgXJGPyHYeVk8
+Message-ID: <CA+Kibh5hpfyLHFb=z=rPjCOsRp=a_9eVpj6HF9E9rXx3oHg7oQ@mail.gmail.com>
+Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
+ cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
+To: Mingyou Chen <qby140326@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
+	regressions@leemhuis.info, regressions@lists.linux.dev, shlyapugin@gmail.com
+Content-Type: multipart/mixed; boundary="000000000000516e31065fd9b2da"
 
-This is a multi-part message in MIME format.
---------------A7xi0RJFcpUI0V6Z0A5xWgA2
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+--000000000000516e31065fd9b2da
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Abel,
+On Mon, Nov 9, 2026 at 2:28=E2=80=AFPM Mingyou Chen <qby140326@gmail.com> w=
+rote:
+> Hi,
+>
+> Here's your quirk (inside the email attachments).
+>
+> Please apply it on top of my patch series in this email:
+> https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
 
-On 9-Nov-26 15:52, Hans de Goede wrote:
+Tested your quirk on top of v15, built out-of-tree against 7.2.15.
 
-<snip>
+Three problems:
 
-> For easier review by you I've split the improvements into 4 patches (attached):
+1. The DMI entry does not match here:
+DMI_SYS_VENDOR   =3D "XIAOMI"
+DMI_BOARD_NAME   =3D "TM2209"
+DMI_PRODUCT_NAME =3D "Redmi Book Pro 15 2023"
+TM2209 is the board name, not the product name. As sent, the driver
+falls back to default_quirks - four entries in
+platform_profile_choices instead of three.
 
-<snip>
+2. .return_code_at_end =3D true is needed. A WMI_FN_SYSTEM_PER_MODE call re=
+turns:
 
-> 4: Cleanup: has_kbd_bl2_and_standby and mic_mute_led_generic checks are
-> really just checks for the original (gen6) support vs gen7 support
-> drop the bools and directly check which variant ec->variant points
-> at instead.
+00000000: 00 08 02 00 00 00 00 00 00 00 00 00 00 00 00 00
+00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80
 
-I accidentally left some debug code in patch 4, attached is a new version.
+function echo 0x0800 at offset 0, mode value at offset 2,
+0x8000 at offsets 30..31. Head-first parsing reads the function
+echo as the return code, so every call ends in -EIO and
+profile_get always fails.
 
+3. .skip_ac_type_check =3D true is needed; USB-C only board, AC type is
+never CIRCULARHOLE.
 
-<snip>
+Your profile values are correct - Fn+K emits hotkey events whose
+value_low cycles 1 -> 3 -> 2.
 
-> So about these differences:
-> 
-> 1: For the spk / mic mute LEDs, on a hunch I tried using std LED controls
-> with a LED idx/id of 15 for the spk mute LED and that also works.
-> 
-> I did not find either way (REG_AUD vs REG_LED) for the spk mute LED in
-> the DSDT, instead the DSDT ends up sending an ACPI notify event, relying
-> on some windows driver to handle this.
-> 
-> How did you find that REG_AUD still works, did you just try the gen 6
-> method ?
-> 
-> 2: For the kbd backlight, again the DSDT ends up sending an ACPI notify event
-> and does not access the EC itself at all.
-> 
-> How did you find that T14S_EC_REG_KBD_BL1 also works on gen 7?
+Corrected quirk attached. With it, from a clean boot all
+three profiles set and stay set through power-profiles-daemon, no
+reverts and no -EOPNOTSUPP.
 
-One more remark about the kbd-backlight the new mode which reports itself
-as brightness 3 is an auto mode with brightness 2, but it turns off
-the backlight after not using the keyboard for a while (and back on again
-on the next keypress).
+Two further observations.
 
-Newer x86 Thinkpads also have this and a whole new userspace API has just
-landed to support this. Here is a patch adding support for this auto
-mode to the x86 thinkpad_acpi driver:
+Fn+K emits WMI_EVENT_PERFORMANCE_PLAN_ALT (22), not
+WMI_EVENT_PERFORMANCE_PLAN (15); only the latter is handled, so
+platform_profile_notify() is never called here. value_low carries
+the resulting mode. Possibly relevant to the question in your v15
+cover letter.
 
-https://lore.kernel.org/platform-driver-x86/20261101100123.28749-1-kmatzkaczor244@gmail.com/
+The platform profile does not affect the power budget. Writes are
+accepted and read back, but package power does not change.
+stress -c 16 at both ends of the Fn+K range:
 
-Regards,
+Fn+K high low-power 4391 balanced 4348 performance 4217 MHz
+Fn+K low low-power 1726 balanced 1825 performance 1953 MHz
 
-Hans
+Varying the order of the profiles gave no consistent effect. The same
+sweep with --block-driver=3Dplatform_profile, amd_pstate only, gives
+1464 / 3550 / 3519, so the drop under power-saver comes from
+amd_pstate.
 
+Correction to my first mail: ~35 W is not one of the three Fn+K
+steps, it is the EC power-on state. The steps are 15 W, 54-60 W
+and 54-65 W; the first Fn+K press leaves the power-on state and it
+does not return until the next boot.
 
-
---------------A7xi0RJFcpUI0V6Z0A5xWgA2
-Content-Type: text/x-patch; charset=UTF-8;
- name="0004-fixup-platform-arm64-lenovo-thinkpad-t14s-add-Gen-7-.patch"
-Content-Disposition: attachment;
- filename*0="0004-fixup-platform-arm64-lenovo-thinkpad-t14s-add-Gen-7-.pa";
- filename*1="tch"
+--000000000000516e31065fd9b2da
+Content-Type: text/x-patch; charset="US-ASCII"; name="TM2209-quirk-fixed.patch"
+Content-Disposition: attachment; filename="TM2209-quirk-fixed.patch"
 Content-Transfer-Encoding: base64
+Content-ID: <f_mw9f5r7t0>
+X-Attachment-Id: f_mw9f5r7t0
 
-RnJvbSAwZTc3YzM2ZWQyYzlhYmE0OTg3MjM0NjVmMDFmZjZiYjIxN2FiYWRhIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxqb2hhbm5lcy5nb2VkZUBv
-c3MucXVhbGNvbW0uY29tPgpEYXRlOiBNb24sIDkgTm92IDIwMjYgMTQ6Mjk6MzcgKzAxMDAK
-U3ViamVjdDogW1BBVENIIDQvNF0gZml4dXAhIHBsYXRmb3JtOiBhcm02NDogbGVub3ZvLXRo
-aW5rcGFkLXQxNHM6IGFkZCBHZW4gNwogRUMgc3VwcG9ydAoKRHJvcCB0aGUgeGZlcl9sb2Nr
-IG11dGV4IGFuZCBpbnN0ZWFkIHVzZSBpMmNfbG9ja19idXMoKSBsaWtlCnRoZSBleGlzdGlu
-ZyB0MTRzIGdlbjYgc3VwcG9ydCBkb2VzIGZvciBtdWx0aS1tc2cgdHJhbnNhY3Rpb25zLgoK
-QWxzbyBkcm9wIHRoZSBmc2xlZXAoNTAwMCkgaW4gdDE0c19nZW43X2VjX2NtZF9yZWFkKCkg
-dGhlIERTRFQgY29kZQpoYXMgbm8gZGVsYXkgYmV0d2VlbiB0aGUgdHJhbnNmZXJzIHNvIHRo
-aXMgaXMgbm90IG5lY2Vzc2FyeS4KClNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUgPGpv
-aGFubmVzLmdvZWRlQG9zcy5xdWFsY29tbS5jb20+Ci0tLQogZHJpdmVycy9wbGF0Zm9ybS9h
-cm02NC9sZW5vdm8tdGhpbmtwYWQtdDE0cy5jIHwgMzAgKysrKysrKystLS0tLS0tLS0tLQog
-MSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDE3IGRlbGV0aW9ucygtKQoKZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0vYXJtNjQvbGVub3ZvLXRoaW5rcGFkLXQxNHMu
-YyBiL2RyaXZlcnMvcGxhdGZvcm0vYXJtNjQvbGVub3ZvLXRoaW5rcGFkLXQxNHMuYwppbmRl
-eCBhMjRiZjk1MjY4ZGMuLjQ1YjVjZGU2OWUzZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0
-Zm9ybS9hcm02NC9sZW5vdm8tdGhpbmtwYWQtdDE0cy5jCisrKyBiL2RyaXZlcnMvcGxhdGZv
-cm0vYXJtNjQvbGVub3ZvLXRoaW5rcGFkLXQxNHMuYwpAQCAtMTMyLDggKzEzMiw2IEBAIHN0
-cnVjdCB0MTRzX2VjIHsKIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7CiAJc3RydWN0IGRldmlj
-ZSAqZGV2OwogCWNvbnN0IHN0cnVjdCB0MTRzX2VjX3ZhcmlhbnQgKnZhcmlhbnQ7Ci0JLyog
-c2VyaWFsaXplcyB0aGUgbXVsdGktbWVzc2FnZSBHZW4gNyBFQyB0cmFuc2FjdGlvbnMgKi8K
-LQlzdHJ1Y3QgbXV0ZXggeGZlcl9sb2NrOwogCWVudW0gbGVkX2JyaWdodG5lc3MgbWljX211
-dGVfY2FjaGU7CiAJc3RydWN0IHQxNHNfZWNfbGVkX2NsYXNzZGV2IGxlZF9wd3JfYnRuOwog
-CXN0cnVjdCB0MTRzX2VjX2xlZF9jbGFzc2RldiBsZWRfY2hyZ19vcmFuZ2U7CkBAIC0yNTAs
-MjQgKzI0OCwyOCBAQCBzdGF0aWMgaW50IHQxNHNfZ2VuN19lY19jbWRfcmVhZChzdHJ1Y3Qg
-dDE0c19lYyAqZWMsIHU4IGNtZCwgdTggYXJnLCB1OCAqdmFsKQogCXN0cnVjdCBpMmNfY2xp
-ZW50ICpjbGllbnQgPSB0b19pMmNfY2xpZW50KGVjLT5kZXYpOwogCXU4IHJlcVsyXSA9IHsg
-Y21kLCBhcmcgfTsKIAlzdHJ1Y3QgaTJjX21zZyBtc2dzWzJdID0gewotCQl7IC5hZGRyID0g
-Y2xpZW50LT5hZGRyLCAuZmxhZ3MgPSAwLCAubGVuID0gMSwgLmJ1ZiA9ICZyZXFbMF0gfSwK
-KwkJeyAuYWRkciA9IGNsaWVudC0+YWRkciwgLmZsYWdzID0gMCwgLmxlbiA9IDIsIC5idWYg
-PSAmcmVxWzBdIH0sCiAJCXsgLmFkZHIgPSBjbGllbnQtPmFkZHIsIC5mbGFncyA9IEkyQ19N
-X1JELCAubGVuID0gMSwgLmJ1ZiA9IHZhbCB9LAogCX07CiAJaW50IHJldDsKIAotCWd1YXJk
-KG11dGV4KSgmZWMtPnhmZXJfbG9jayk7CisJaTJjX2xvY2tfYnVzKGNsaWVudC0+YWRhcHRl
-ciwgSTJDX0xPQ0tfU0VHTUVOVCk7CiAKLQlyZXQgPSBpMmNfbWFzdGVyX3NlbmQoY2xpZW50
-LCByZXEsIHNpemVvZihyZXEpKTsKKwkvKiBTZW5kIGNtZCArIGFyZyAqLworCXJldCA9IF9f
-aTJjX3RyYW5zZmVyKGNsaWVudC0+YWRhcHRlciwgbXNncywgMSk7CiAJaWYgKHJldCA8IDAp
-Ci0JCXJldHVybiByZXQ7CisJCWdvdG8gb3V0OwogCi0JZnNsZWVwKDUwMDApOwotCi0JcmV0
-ID0gaTJjX3RyYW5zZmVyKGNsaWVudC0+YWRhcHRlciwgbXNncywgQVJSQVlfU0laRShtc2dz
-KSk7CisJLyogUmVzZW5kIHRoZSBjbWQgYnl0ZSArIHJlYWQgdGhlIHZhbHVlICovCisJbXNn
-c1swXS5sZW4gPSAxOworCXJldCA9IF9faTJjX3RyYW5zZmVyKGNsaWVudC0+YWRhcHRlciwg
-bXNncywgMik7CiAJaWYgKHJldCA8IDApCi0JCXJldHVybiByZXQ7CisJCWdvdG8gb3V0Owog
-Ci0JcmV0dXJuIHJldCA9PSBBUlJBWV9TSVpFKG1zZ3MpID8gMCA6IC1FSU87CisJcmV0ID0g
-cmV0ID09IDIgPyAwIDogRUlPOworb3V0OgorCWkyY191bmxvY2tfYnVzKGNsaWVudC0+YWRh
-cHRlciwgSTJDX0xPQ0tfU0VHTUVOVCk7CisJcmV0dXJuIHJldDsKIH0KIAogc3RhdGljIGlu
-dCB0MTRzX2dlbjdfZWNfd3JpdGUodm9pZCAqY29udGV4dCwgdW5zaWduZWQgaW50IHJlZywK
-QEAgLTI3OCw4ICsyODAsNiBAQCBzdGF0aWMgaW50IHQxNHNfZ2VuN19lY193cml0ZSh2b2lk
-ICpjb250ZXh0LCB1bnNpZ25lZCBpbnQgcmVnLAogCXU4IGJ1ZlszXSA9IHsgVDE0U19HRU43
-X0VDX0NNRF9XUiwgcmVnLCB2YWwgfTsKIAlpbnQgcmV0OwogCi0JZ3VhcmQobXV0ZXgpKCZl
-Yy0+eGZlcl9sb2NrKTsKLQogCXJldCA9IGkyY19tYXN0ZXJfc2VuZChjbGllbnQsIGJ1Ziwg
-c2l6ZW9mKGJ1ZikpOwogCWlmIChyZXQgPCAwKQogCQlyZXR1cm4gcmV0OwpAQCAtNzMyLDEw
-ICs3MzIsNiBAQCBzdGF0aWMgaW50IHQxNHNfZWNfcHJvYmUoc3RydWN0IGkyY19jbGllbnQg
-KmNsaWVudCkKIAlpZiAoIWVjLT52YXJpYW50KQogCQllYy0+dmFyaWFudCA9ICZ0MTRzX2Vj
-X3ZhcmlhbnQ7CiAKLQlyZXQgPSBkZXZtX211dGV4X2luaXQoZGV2LCAmZWMtPnhmZXJfbG9j
-ayk7Ci0JaWYgKHJldCkKLQkJcmV0dXJuIHJldDsKLQogCWkyY19zZXRfY2xpZW50ZGF0YShj
-bGllbnQsIGVjKTsKIAogCWVjLT5yZWdtYXAgPSBkZXZtX3JlZ21hcF9pbml0KGRldiwgZWMt
-PnZhcmlhbnQtPnJlZ21hcF9idXMsCi0tIAoyLjU1LjAKCg==
-
---------------A7xi0RJFcpUI0V6Z0A5xWgA2--
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2JpdGxhbmQtbWlmcy13bWkuYyBiL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L2JpdGxhbmQtbWlmcy13bWkuYwppbmRleCBhNDMxZDNmZWYuLmM2
+ODAxMDdjMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvYml0bGFuZC1taWZzLXdt
+aS5jCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2JpdGxhbmQtbWlmcy13bWkuYwpAQCAtMTEz
+LDcgKzExMywyNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGJpdGxhbmRfbWlmc19xdWlya3MgZGVm
+YXVsdF9xdWlya3MgPSB7CiAJLm51bV9wcm9maWxlX2VudHJpZXMgPSBBUlJBWV9TSVpFKGRlZmF1
+bHRfcHJvZmlsZV9lbnRyaWVzKSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYml0bGFuZF9w
+cm9maWxlX2VudHJ5IHRtMjIwOV9wcm9maWxlX2VudHJpZXNbXSA9IHsKKwl7IFBMQVRGT1JNX1BS
+T0ZJTEVfTE9XX1BPV0VSLCAgIDIgfSwKKwl7IFBMQVRGT1JNX1BST0ZJTEVfQkFMQU5DRUQsICAg
+IDEgfSwKKwl7IFBMQVRGT1JNX1BST0ZJTEVfUEVSRk9STUFOQ0UsIDMgfSwKK307CisKK3N0YXRp
+YyBjb25zdCBzdHJ1Y3QgYml0bGFuZF9taWZzX3F1aXJrcyB0bTIyMDlfcXVpcmtzID0geworCS5w
+cm9maWxlX2VudHJpZXMgPSB0bTIyMDlfcHJvZmlsZV9lbnRyaWVzLAorCS5udW1fcHJvZmlsZV9l
+bnRyaWVzID0gQVJSQVlfU0laRSh0bTIyMDlfcHJvZmlsZV9lbnRyaWVzKSwKKwkucmV0dXJuX2Nv
+ZGVfYXRfZW5kID0gdHJ1ZSwKKwkuc2tpcF9hY190eXBlX2NoZWNrID0gdHJ1ZSwKK307CisKIHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCBiaXRsYW5kX21pZnNfZG1pX3RhYmxlW10g
+PSB7CisJeworCQkubWF0Y2hlcyA9IHsKKwkJCURNSV9FWEFDVF9NQVRDSChETUlfU1lTX1ZFTkRP
+UiwgIlhJQU9NSSIpLAorCQkJRE1JX0VYQUNUX01BVENIKERNSV9CT0FSRF9OQU1FLCAiVE0yMjA5
+IiksCisJCX0sCisJCS5kcml2ZXJfZGF0YSA9ICh2b2lkKikmdG0yMjA5X3F1aXJrcywKKwl9LAog
+CXt9CiB9OwogCg==
+--000000000000516e31065fd9b2da--
