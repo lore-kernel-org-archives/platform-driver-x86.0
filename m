@@ -1,78 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=78.46.171.57
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794247744;
-	b=NavljgdNLlEImdNfGXsrNbsNYFX5us+/ISAx8xtDOXBowpBditTXvXiQBIOVXhF04u8V
-	 DcjeOVHfwPKSE4tM0266p/d269i9/I1WGIt6YnuKIlLBqf1THrJhsmnP9pfSZ//Hc9tCl
-	 MQASII+rQC9qT8czFSr3oBDtlibI1If+a4eCHG4k2jxmMs9otRetASFdVBJ9PsPChO06v
-	 k8NzQINwQInRmLoGvMg3eLdn20c4VpXiE7W3VIMZ39bXSl9HNBersnPL0LKFfCAaEjtPw
-	 uOSu5FCc2dxzpcfavFN/qDyn7TxjsgiSBDtXJHJqR89dAzChSwx1iZzaBLMVPoQ1tCw==
+	t=1794247783;
+	b=yIFZBF45nzBlLgmsvDqKnc98k2HA+vg39qU4279Si3PGSHoWZmMUDrg3T3R+Be9D8lBf
+	 hFlvrYaozKLibvQw0DQ4o/8Bp9SK1zXKg6l8+KTbQdhXIdOGlpm8rOmxxtCKIzvlnwUJI
+	 8yezoQdxqhvdJfhA+oZwSlmu3IPOVjZZ8uWlpNZjNXuoG0XwWzombYOOeHvM30onKXNAM
+	 u5CvTZ59HJDxlndCSHcJtwLFiEu4zmd63WRV9ZerV+q8Xm7RW76+VLRCu8vwHtxR1UN4Z
+	 xFmU8YbZ13kpgN9ohI8L76IsPkFJZxSAuvAnEDyDREjhwTa184vs6aCu3Cbtr5o7Kpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794247744;
-	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Received-SPF:
-	 Received:X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:X-PPP-Message-ID:X-PPP-Vhost:X-Virus-Scanned:
-	 X-Virus-Status;
-	bh=cwiXIseu1tU968JiDtE3CP1qovA+L9Xqa6a2ybeurAw=;
-	b=KfXi6+3HHHqjSChLmNzO/2M012XTRtKNFFG32iEsdWjXN51dykODwn34f25gmbVvn1m/
-	 FRnXpVID8Py3a6ODyxsVH20DBVINsyMK0MB49QxCQYPrvVPUw/F7x160Bruj8pyAm5qrU
-	 XJz0cOmg3AfHUCtCD/aql1PbdQYOuKN60oyHmTddNedk61PGFhszAJ/7FfazstdQnyuuR
-	 6qryEWqTozqGfHdKj48Ds7VAIDqzyBVWHHN347RLI+INbOx2zQHfhCXszlsP8gBZFg5b1
-	 l+FumAIMc6/1su5QGgA6mMOGWqfwrW6CMEl7OqK+38QDbqkksgN6GXj7HNhjT+ffP0Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794247783;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=NyETrJbUD+hqxbhle7a7WmJRnJKa8FLKFhpoYnSB0Wk=;
+	b=LEOL9L5rr2YFWov9ztp/ovKip17ikO4+ZjyxnEqdizyitHGAkyvoyQ/7Vdgks/sJZwqK
+	 lGau19r+2dLLssPP3KLjSxjlgqB62BZ63OU/wJASYu7nRd+cR9URBizS1rgiIy3b468Y+
+	 1wNV2CjIfxN+dZIIoB/2Uyxds8lE6Oevfda7ZErVAnewFxas8QPNGT/cz7zISn86pCDez
+	 obiLYpS6v5B6WZ05pStuRUL/cN+0/PfGneRQrwbM1Gq37jkJc7zkhnRnu47fD+V7M2++T
+	 JjLWOldTWeIm+Kbu2gCWNJnwr5lIkjO293M7wx8bjHX7otzPQsUNzi0bSm74BJbJ+0Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=antheas.dev;
-	spf=pass smtp.mailfrom=antheas.dev;
-	dkim=pass header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=GWV1T4p5;
-	arc=none smtp.remote-ip=78.46.171.57
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gQy8dG47;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC1B606A325
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 18:09:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DFC1B606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F05C60A2609;
+	Mon,  9 Nov 2026 18:09:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4F05C60A2609
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=antheas.dev header.i=@antheas.dev header.a=rsa-sha256 header.s=default header.b=GWV1T4p5
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id 20EAFC49A2
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 20:08:54 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id 0CBABC0DF0
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 20:08:53 +0200 (EET)
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id DFC4F1FD83F
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 20:08:49 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1794247731;
-	bh=cwiXIseu1tU968JiDtE3CP1qovA+L9Xqa6a2ybeurAw=;
-	h=Received:From:Subject:To;
-	b=GWV1T4p5w4TjuWYVSgg/aZmrE1tcCpMOKLwC7EQQzJMWLO5CeyrnJ/1oUrsAX8s+A
-	 L1IZdP0oeDVWXaAUmImPKB1jHzZ9spxeZeRCd1G4xNtH5LeLuSjYcZpRvCVQ0RIAyE
-	 clKXXW6jeDlznKdB5WU8lTbL0tClwV1tdnre19qgjfRHs6qikdrAbnButGpsvtVQkb
-	 W7/Z4T8O8n77JVWcwem5i7BXAzWqY/mvPTJolGoVtzBO1A17SjaV/zu4L9DoIRpTiu
-	 TVuAdKmwFkKJ+k0p8H9TymE79CnlCVq6f7Fr95BKZebKi+B21dGKoVCFY16FQSvq58
-	 4eNjI2dnFC4+g==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.216.50) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pj1-f50.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pj1-f50.google.com with SMTP id
- 98e67ed59e1d1-3b155f50c24so668440a91.3
-        for <platform-driver-x86@vger.kernel.org>;
- Mon, 09 Nov 2026 10:08:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AL+hErG2P9W9gtro6sIYhYMYImP/rOcckztdcnWPDxKxd1HFXuUzvYR1lBiIhLqzumvzGRODHl4lMAOCyKqkwPQbF4/pFa6k@vger.kernel.org
-X-Gm-Message-State: APuU4Z/kQUtbX513DTAtfDAIAD4V7rIS+SXvA6aqDaX3Ij+liX3Qg0Zt
-	jnhV5ItqXdy8Glp5vPHqIZeFlEp62eG919IVV/1/bV0VXgTlNgUL5+caVHJyBSunPZqUNmq/3pO
-	FlZJ7w9nshyEVJOZbyno1bWy0erGyiRo=
-X-Received: by 2002:a17:90b:54c3:b0:3ac:c024:b275 with SMTP id
- 98e67ed59e1d1-3b166ae44eamr497272a91.9.1794247728146; Mon, 09 Nov 2026
- 10:08:48 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gQy8dG47
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794247784; x=1825783784;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xEgo4L9gzdCnmgxxQ23kg4wNOstbd44PXXFSGJn5uDA=;
+  b=gQy8dG47TKhI9sl65+rMlrN7qdnsAKQeBxwxAIu34gc3ZLd9EeiRdk+F
+   8rVO289IYKU+NX/FfWEYpqmuEhR8GCxUYNhQOpB5cv8jPqMMoOvXtmL7m
+   i1r9xvsalPAfmk9wReMN6im0CKYqP5I9JDc9eXFjoto16V8anMApSrJj7
+   mlDEFutHKZrQZF4MSCnf8VzU68tXsCQQdDS787dc/DvKw9By8acxt21xn
+   m5SYz9ewN7cnmSMyUgtuNo3780F+uEt4YIA+LOSWNZmPjFSnLvk0KcJ3o
+   N+Sadc1K17PHkPJfR+or60rbPfyElV6VVTrjQ+tz89eg9j2NpxfiikT2B
+   w==;
+X-CSE-ConnectionGUID: 8q/ZszU1Qc22Htv6HBwg4Q==
+X-CSE-MsgGUID: 4e1DCbm8RfKEgLU/OeQHqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="2859416"
+X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
+   d="scan'208";a="2859416"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 10:09:43 -0800
+X-CSE-ConnectionGUID: kMp0NImLRsWnH5m/HbNZzA==
+X-CSE-MsgGUID: K/Zw5+R3Szmi9KZroVBOyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
+   d="scan'208";a="8270746"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.139])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 10:09:39 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 9 Nov 2026 20:09:36 +0200 (EET)
+To: Bartu Alev <bartualev@gmail.com>
+cc: Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org, 
+    Guenter Roeck <linux@roeck-us.net>, linux-api@vger.kernel.org
+Subject: Re: [PATCH 1/7] platform/x86: asus-wmi: dump buffer replies in the
+ debugfs dsts file
+In-Reply-To: <20261101-asus-fan-floors-v4-v1-1-b8d1c31a99a9@gmail.com>
+Message-ID: <09c087ac-d0a4-8665-552d-63d289104e3a@linux.intel.com>
+References: <20261101-asus-fan-floors-v4-v1-0-b8d1c31a99a9@gmail.com> <20261101-asus-fan-floors-v4-v1-1-b8d1c31a99a9@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,198 +82,99 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261109-asus-wmi-kbd-readback-v2-1-c048fc53d8ee@proton.me>
-In-Reply-To: <20261109-asus-wmi-kbd-readback-v2-1-c048fc53d8ee@proton.me>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 9 Nov 2026 19:08:37 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwHtY9KU7vdsqqmXxnq4=eJtoMzt39DXYXYOVoEfi0gVkw@mail.gmail.com>
-X-Gm-Features: AclHuK88t3Crb0NgSMFK1GDnzs_chBsT6_eAPi911nkNap2DTu5Yk6bYt-dwsYw
-Message-ID: 
- <CAGwozwHtY9KU7vdsqqmXxnq4=eJtoMzt39DXYXYOVoEfi0gVkw@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Ignore unusable kbd backlight
- WMI device on ROG Strix G814FP
-To: tarrihmoad@proton.me
-Cc: Corentin Chary <corentin.chary@gmail.com>,
- "Luke D. Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Sercan GOKMEN <gokmensercan@gmail.com>,
-	Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <179424773129.131763.4672772315684514364@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 9 Nov 2026 at 09:17, Moad Tarrih via B4 Relay
-<devnull+tarrihmoad.proton.me@kernel.org> wrote:
->
-> From: Moad Tarrih <tarrihmoad@proton.me>
->
-> On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
-> backlight brightness in sysfs works, but reading it back always gives
-> 0, and the read makes the Fn brightness keys misbehave.
->
-> The firmware reports the keyboard backlight WMI device as present but
-> doesn't implement it. DSTS(0x00050021) always returns 0x50000, which
-> is level 0 regardless of what the actual level is, and every
-> DEVS(0x00050021) write is rejected as an unsupported method. The
-> keyboard backlight is actually driven by hid-asus. asus-wmi saves the 0
-> as the current level on every read, and the brightness keys step from
-> the saved level. So after any read, for example by the desktop or by
-> systemd-backlight, the brightness-up key sets the keyboard to the
-> lowest level instead of one step higher.
->
-> Add a kbd_led_no_wmi quirk that makes asus-wmi treat the keyboard
-> backlight WMI device as absent, and set it for this board, matched on
-> the DMI board name. asus-wmi then keeps the LED registered for hid-asus
-> and no longer reads from or writes to the WMI device. The entry also
-> sets wmi_backlight_set_devstate which the board currently gets from
-> the default quirk_asus_unknown, so nothing else changes for it.
->
-> As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
-> no longer created on this board, they never worked here since the firmware
-> rejects those writes as well.
->
-> This patch was written with the help of an AI coding assistant (Claude
-> Code, Claude Opus 5.5). I reviewed it and tested it on my affected laptop.
->
-> Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
-> Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
-> Suggested-by: Denis Benato <denis.benato@linux.dev>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
-> ---
-> Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317,
-> keyboard 0b05:19b6) on 7.2.14, built as DKMS modules. The keyboard
-> backlight is still registered and driven by hid-asus, the attribute
-> reads back the level that was set, the brightness keys step from the
-> real level, and the level survives suspend/resume and reboots.
-> Build-tested with W=1 against pdx86 for-next (c339f4010dea): no
-> warnings. checkpatch --strict is clean.
->
-> The kbd_rgb_mode and kbd_rgb_mode_index attributes are no longer
-> created on this board. They never worked here: writes to kbd_rgb_mode
-> are rejected by the firmware with -ENODEV, like the brightness writes.
->
-> To answer Denis's questions on v1, the bug this patch fixes happens on
-> the latest BIOS for this board as of writing, which is version 317.
-> I only have the G814FP, so I don't know if other 2025 G814 models
-> are affected, the quirk only matches G814FP.
->
-> This no longer depends on Sercan GOKMEN's kbd_led_no_readback patch.
-> Both patches add a field to struct quirk_entry and a DMI entry, so
-> whichever lands second may need a trivial rebase.
->
-> AI assistance: Claude Code was used to trace the keyboard backlight
-> code in asus-wmi, run the debugfs DSTS/DEVS probes, write the patch and
-> draft this message. Testing and final review were done by me on the
-> hardware.
-> ---
-> Changes in v2:
-> - Add a quirk that makes asus-wmi skip the keyboard backlight WMI
->   device on this board instead of detecting rejected writes at
->   runtime (Antheas), so no more WMI writes that are known to fail
->   are issued (Denis).
-> - Link to v1: https://patch.msgid.link/20261108-asus-wmi-kbd-readback-v1-1-bf38f6400ade@proton.me
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 14 ++++++++++++++
->  drivers/platform/x86/asus-wmi.c    |  3 ++-
->  drivers/platform/x86/asus-wmi.h    |  6 ++++++
->  3 files changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index 3b0f3346dc60..fbdb00248be5 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -93,6 +93,11 @@ static struct quirk_entry quirk_asus_unknown = {
->         .wmi_backlight_set_devstate = true,
->  };
->
-> +static struct quirk_entry quirk_asus_g814fp = {
-> +       .wmi_backlight_set_devstate = true,
+On Sun, 1 Nov 2026, Bartu Alev wrote:
 
-Make sure that wmi_backlight_set_devstate is needed
-
-> +       .kbd_led_no_wmi = true,
-> +};
-> +
->  static struct quirk_entry quirk_asus_q500a = {
->         .filter_i8042_e1_extended_codes = true,
->         .wmi_backlight_set_devstate = true,
-> @@ -167,6 +172,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
->  }
->
->  static const struct dmi_system_id asus_quirks[] = {
-> +       {
-> +               .callback = dmi_matched,
-> +               .ident = "ASUS ROG Strix G18 G814FP",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "G814FP"),
-> +               },
-> +               .driver_data = &quirk_asus_g814fp,
-> +       },
->         {
->                 .callback = dmi_matched,
->                 .ident = "ASUSTeK COMPUTER INC. Q500A",
+> Reading dsts calls asus_wmi_get_devstate(), which uses
+> asus_wmi_evaluate_method().  Because that helper handles only
+> ACPI_TYPE_INTEGER and leaves other return types zeroed, methods
+> returning an ACPI buffer read as 0x0.  This affects fan floor tables
+> (0x00110026, 0x00110027, 0x00110033), fan curve getters (0x00110024,
+> 0x00110025), and TUF RGB readback (0x0010005B).
+> 
+> Evaluate the method through asus_wmi_evaluate_method_locked() directly,
+> matching the call node, which keeps execution serialized against other
+> WMI operations.  Format integer replies as before, dump buffer
+> contents with their byte length, and print any other type as t:<type>:
+> 
+>   DSTS(0x110026) = 16 bytes:
+>     00000000: 00 00 00 00 19 30 3a 4a 00 00 00 00 00 00 00 00
+> 
+> The sentinels 0xfffffffe and 0xffffffff continue to return -ENODEV.
+> 
+> Signed-off-by: Bartu Alev <bartualev@gmail.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 46 ++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 39 insertions(+), 7 deletions(-)
+> 
 > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index b33ebdb21aa2..51fea21ff247 100644
+> index b33ebdb21aa21..c55f469cb03dc 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2165,7 +2165,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->         asus->kbd_led.brightness_set_blocking = kbd_led_set;
->         asus->kbd_led.brightness_get = kbd_led_get;
->         asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
-> -       asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
-> +       asus->kbd_led_avail = !asus->driver->quirks->kbd_led_no_wmi &&
-> +                             !kbd_led_read(asus, &led_val, NULL);
->         INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
->
->         if (asus->kbd_led_avail) {
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-> index b45f81b38a47..9f3769fc82f7 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -41,6 +41,12 @@ struct quirk_entry {
->         bool wmi_force_als_set;
->         bool wmi_ignore_fan;
->         bool filter_i8042_e1_extended_codes;
-> +       /*
-> +        * The keyboard backlight WMI device reports itself as present, but the
-> +        * firmware does not implement it: reads return level 0 and writes are
-> +        * rejected. Leave the backlight to hid-asus.
-> +        */
+> @@ -5038,16 +5038,48 @@ struct asus_wmi_debugfs_node {
+>  static int show_dsts(struct seq_file *m, void *data)
+>  {
+>  	struct asus_wmi *asus = m->private;
+> -	int err;
+> -	u32 retval = -1;
+> +	struct bios_args args = {
+> +		.arg0 = asus->debug.dev_id,
+> +	};
+> +	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
+> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *obj;
+> +	acpi_status status;
+> +	u32 retval;
+> +	int err = 0;
+>  
+> -	err = asus_wmi_get_devstate(asus, asus->debug.dev_id, &retval);
+> -	if (err < 0)
+> -		return err;
+> +	status = asus_wmi_evaluate_method_locked(asus->dsts_id, &input, &output);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+>  
+> -	seq_printf(m, "DSTS(%#x) = %#x\n", asus->debug.dev_id, retval);
+> +	obj = (union acpi_object *)output.pointer;
 
-See how the other quirks do not have comments? This one should not either
+Using __free() is preferred. Please also declare the variable here in 
+that case.
 
-Other than that, it looks fine to me
+> +	if (!obj)
+> +		return -ENODATA;
+>  
+> -	return 0;
+> +	switch (obj->type) {
+> +	case ACPI_TYPE_BUFFER:
+> +		seq_printf(m, "DSTS(%#x) = %u bytes:\n", asus->debug.dev_id,
+> +			   obj->buffer.length);
+> +		seq_hex_dump(m, "  ", DUMP_PREFIX_OFFSET, 16, 1,
+> +			     obj->buffer.pointer, obj->buffer.length, false);
+> +		break;
+> +	case ACPI_TYPE_INTEGER:
+> +		retval = (u32)obj->integer.value;
+> +		if (retval == ASUS_WMI_UNSUPPORTED_METHOD || retval == (u32)~0)
+> +			err = -ENODEV;
+> +		else
+> +			seq_printf(m, "DSTS(%#x) = %#x\n", asus->debug.dev_id,
+> +				   retval);
+> +		break;
+> +	default:
+> +		seq_printf(m, "DSTS(%#x) = t:%d\n", asus->debug.dev_id,
+> +			   obj->type);
+> +		break;
+> +	}
+> +
+> +	kfree(obj);
+> +
+> +	return err;
+>  }
+>  
+>  static int show_devs(struct seq_file *m, void *data)
+> 
+> 
 
-Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
-
-Use b4 to automatically carry the tag to v3
-
-Best,
-Antheas
-
-> +       bool kbd_led_no_wmi;
->         int key_wlan_event;
->         enum asus_wmi_tablet_switch_mode tablet_switch_mode;
->         int wapf;
->
-> ---
-> base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
-> change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
->
-> Best regards,
-> --
-> Moad Tarrih <tarrihmoad@proton.me>
->
->
->
+-- 
+ i.
 
