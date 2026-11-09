@@ -1,60 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.116
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.66
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794212377;
-	b=dIaP0gISf4SW/t+G9jKX2lHdU+YWAzbsWe/xTDxTyFlYh9O8LT1FcsMwu7qdUCCk74I8
-	 zNiF9Q3IllPWeKtxoIsaSLKxUxSP+3FsQKIXccPc50OEdhvxL3lMrJXD119+EIniAAy3j
-	 zSIULdJimUW02pCZLC2MYkG9YawNSKzK/0XBiiE4Yvpoyy7Qt0Aw4Eszl4A4hIHXsKoa4
-	 iO7OkEl8/8coZ1pIvqpWzfhjwjQFkAiOiTROxs+gHhNoKuZX1AltLRC5F+Z7jbmWsxDCM
-	 F4Y9sLG/zfRUTqt6lFk2d3EfaDuunZgCMWBh+nbx8yHvLKe1mSILSfTEWNdBYhUbsdQ==
+	t=1794218022;
+	b=zLW2ah9JOy0VG5/jhzQlMJLBX59EIxebGkqwY9HiUsvmIBL0HD+6vRELB3adAJcOUYu1
+	 KeTeqydGRk77xZtjBt1BQOp8IApMEXNkDAewCmyV6+X7834G6FflpD4wrfyvOibpykrlF
+	 nwJw3xuU+Ch25ZfbeEGk8lei4GnWd+WXi803xe2xGIFJ99AZ54+Z0XznUmqnzgRZUiAht
+	 HnstUXIjf1p113B94Dzm4YWNGyDygjsoeV8jFb1xHKAaVc1JY6A5n2xBtjLQP4piex4gR
+	 R6+9lu5pqK7RprA4nk1NaHm8MSCMliuqjhs5jtctpzXM+rAz79B78yEntMpAc6qH++A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794212377;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=LwiRrHuIEM0c1RECgB7tHJ1By6bIMEOUkcyx0I4tC7Q=;
-	b=kKEMJgoUOSOPfT3ML4uUhwjk6OF7EFbRu8pCb+WDAMlijbYRKL4Dl9L2qXmMbLm9AdBu
-	 d4+LzT9srWiY2/xBXofxqWLLq8a7lZBYUSl0QuJ3LnVVtqNwhXoIOkSxQ1bfj4tG0kU0X
-	 t/VM89ZS5UBkIEoISq83B5JY9cAHWI33HWvapSWZgNIRyJ8HuhgAODw+w2GxZKE9tJh7O
-	 HArwpV/Y7nMGnWM/xM5DEQjnOUDoWobE5Yt+whsweP0M1TXtqbmfqXU+DNC42QIo/p3oq
-	 EE2HOhDHMmz8pKHR/3eVhztqfSKCNdx4khrpnShQeh+MgqrGj8H0dL59CjGcgAaC28w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794218022;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Message-ID:Date:
+	 MIME-Version:From:Content-Language:To:Cc:Subject:Autocrypt:
+	 Content-Type;
+	bh=8prTv+MPSHTPBy1i3jbcq6UwPyEEuXAeqjCSNYnoeEM=;
+	b=I8RYvhAvQD5VfVVD2WB93lLdiC5ah4ADeAACF2sduLLErqzJ3+X7Q4zotuNKxSEoF4F1
+	 fgTx5hbx7polDrwnJwe4pmmyLWF3aT+79OZf7eKK4Zk2JkEKI5qn+3tjxemCaI+vFDTTh
+	 O8kOxqbKwGhgWyjnSOdwHurNP+rB7FJbzbdJ92S6rNjKcddopQF5SowzXvLnIDM49Jeo4
+	 T0J4G/A3nGKKWN/XMa8wIy+KhOVMFO58rTnNYMaqNoJahnDMogJ27VbLvw8ZTbJz7hD2j
+	 e5KVKEEao1fOKxa/ZzLLHMlX3lPosuTSZ9NDflamUBbxNPK44hnwGIfA3LuoYkaZj6w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=modelmiser.com;
-	spf=pass smtp.mailfrom=modelmiser.com;
-	dkim=pass header.d=modelmiser.com header.i=@modelmiser.com header.a=rsa-sha256 header.s=protonmail header.b=Rvu7HsMc;
-	arc=none smtp.remote-ip=79.135.106.116
-Received: from mail-106116.protonmail.ch (mail-106116.protonmail.ch [79.135.106.116])
+	dmarc=pass header.from=posteo.de;
+	spf=pass smtp.mailfrom=posteo.de;
+	dkim=pass header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=UXxZA8Oe;
+	arc=none smtp.remote-ip=185.67.36.66
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7D0606A323;
-	Mon,  9 Nov 2026 08:19:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4D7D0606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=modelmiser.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=modelmiser.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB26606A321
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 09:53:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AAB26606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=modelmiser.com header.i=@modelmiser.com header.a=rsa-sha256 header.s=protonmail header.b=Rvu7HsMc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=modelmiser.com;
-	s=protonmail; t=1794212372; x=1794471572;
-	bh=LwiRrHuIEM0c1RECgB7tHJ1By6bIMEOUkcyx0I4tC7Q=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=Rvu7HsMcsBPUNAiQJxAM4L+nyEsn0eQA0pNlRHeH38LqJdKWonaet/Vfd048BGExv
-	 7vpIg7dblK1Z3RnuSJmZtN+RAXpiSAkO0rdjaSFTsFveOVsAZIimLE4wHkFg5bXXAL
-	 RCGY3QtCE/JLyYLOyRwS3dA0qi4/xdPayiTc2kyc/ekGCXBB6di/GCu4yRfbJMpThP
-	 WdvRO1wu5Y2ihlda6n1X5uFwRZpGNH+FZ91pY+NuoBHqb0LANwooff/B4l7zexSHhn
-	 7+xuyz0YtQKc/gg+te9LEQKLnbNkGk1CxwayMVo0Jya9jcFJP7p7ngDiNSXIkE/E5r
-	 5KUtP2xWp7r+w==
-Date: Mon, 09 Nov 2026 08:19:25 +0000
-To: =?utf-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Chad Aldreda <ca@modelmiser.com>
-Cc: Shuangpeng Bai <shuangpeng.kernel@gmail.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: dell-smo8800: keep the state until the last file is closed
-Message-ID: <20261109081921.276450-2-ca@modelmiser.com>
-In-Reply-To: <20261107204950.88952-2-ca@modelmiser.com>
-References: <20261107204950.88952-2-ca@modelmiser.com>
-Feedback-ID: 232753253:user:proton
-X-Pm-Message-ID: 154141c3edacb5656cd161da6802610911c441b6
+	dkim=pass (2048-bit key, unprotected) header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=UXxZA8Oe
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 2D724240106
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 10:53:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1794218013;
+	bh=8prTv+MPSHTPBy1i3jbcq6UwPyEEuXAeqjCSNYnoeEM=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Autocrypt:
+	 Content-Type:From;
+	b=UXxZA8OeJgEkWP4ezKPzMJ3daESRvNgBZHBxTx23VsCePronQGJE5CR43VACbByMc
+	 qQmsIkZLLSn482sqhfooFEedy8yzxLdqGtjHfq5cCVsxZP50RRqjTQzBNvZDMd2zeE
+	 /GGUXMiS6jdYHdyRnrs76j0Zo1p91GsCUr8nSSDa7Kdu+OKlbl/F5PnYJ/hzZv6D1Q
+	 e6mr89tLihAOO7kKU/14ammmjqn3Ey7lw9IGlUm+VfZJTp0fSwXDyjypPJ6DYFJOzc
+	 dpBFopkNxUq0X+I42oUT8yYWzm/JjCEW6T0Iqoy2h+CFITcSDAv4BzrtFVa+TQ4J60
+	 vUA8svc923nEw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4jNQ8X17Khz9rxT;
+	Mon,  9 Nov 2026 10:53:32 +0100 (CET)
+Message-ID: <68b6c302-b175-41b4-9af9-71d974b82538@posteo.de>
+Date: Mon, 09 Nov 2026 09:53:32 +0000
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,16 +61,112 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: "Matthias B." <matthias.b@posteo.de>
+Content-Language: de-DE
+To: linux-pm@vger.kernel.org
+Cc: rafael@kernel.org, artem.bityutskiy@linux.intel.com, lenb@kernel.org,
+ platform-driver-x86@vger.kernel.org
+Subject: Arrow Lake-H hard freezes on C6 exit (bugzilla 221923): CPU-side oops
+ data, max_cstate=1 holds, max_cstate=2 does not
+Autocrypt: addr=matthias.b@posteo.de; keydata=
+ xjMEaPkB5hYJKwYBBAHaRw8BAQdAJVUDYh5hFaqVQCwk34bSiDbJO/06wbVOaRBRCpNGmHHN
+ Ik1hdHRoaWFzIEIuIDxtYXR0aGlhcy5iQHBvc3Rlby5kZT7CjwQTFggANxYhBEdoUeEO6U17
+ MUyxksSm7rjJER8lBQJo+QHmBQkDwmcAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQxKbuuMkR
+ HyUb0QEAv+MemOMCAEcHo3mBUufh2dVC9MwVnnf+1mfWF3NKdQEA/0FXvAD47uy9W4AtdQ2l
+ /JX8f3ljtrsjIlNhq1CpJu4LzjgEaPkB5hIKKwYBBAGXVQEFAQEHQIcyz3trEd2yS8Rl4F/m
+ wF1cu4vfovUubOweQJWuZD4DAwEIB8J+BBgWCAAmFiEER2hR4Q7pTXsxTLGSxKbuuMkRHyUF
+ Amj5AeYFCQPCZwACGwwACgkQxKbuuMkRHyWooQD+Ohv3mMqvC4nUZHbcinqZZZCtt585XaKI
+ 6BSlgAeMrV4A/ivbYFLThUqFTH8qv3vKmOz3M8e81wY5TXU1iF08SzgI
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------hjPi6vFZ0oCe0vihVl6mGuwM"
 
-Shuangpeng Bai reported this bug in June, with a reproducer, and I missed
-the report when I sent this patch. It is the same use-after-free after an
-unbind with the file still open.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------hjPi6vFZ0oCe0vihVl6mGuwM
+Content-Type: multipart/mixed; boundary="------------dm4eBQn81l0LFU4NrsH250Y5";
+ protected-headers="v1"; hp="clear"
+Message-ID: <68b6c302-b175-41b4-9af9-71d974b82538@posteo.de>
+Date: Mon, 9 Nov 2026 10:53:31 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: "Matthias B." <matthias.b@posteo.de>
+Content-Language: de-DE
+To: linux-pm@vger.kernel.org
+Cc: rafael@kernel.org, artem.bityutskiy@linux.intel.com, lenb@kernel.org,
+ platform-driver-x86@vger.kernel.org
+Subject: Arrow Lake-H hard freezes on C6 exit (bugzilla 221923): CPU-side oops
+ data, max_cstate=1 holds, max_cstate=2 does not
+Autocrypt: addr=matthias.b@posteo.de; keydata=
+ xjMEaPkB5hYJKwYBBAHaRw8BAQdAJVUDYh5hFaqVQCwk34bSiDbJO/06wbVOaRBRCpNGmHHN
+ Ik1hdHRoaWFzIEIuIDxtYXR0aGlhcy5iQHBvc3Rlby5kZT7CjwQTFggANxYhBEdoUeEO6U17
+ MUyxksSm7rjJER8lBQJo+QHmBQkDwmcAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQxKbuuMkR
+ HyUb0QEAv+MemOMCAEcHo3mBUufh2dVC9MwVnnf+1mfWF3NKdQEA/0FXvAD47uy9W4AtdQ2l
+ /JX8f3ljtrsjIlNhq1CpJu4LzjgEaPkB5hIKKwYBBAGXVQEFAQEHQIcyz3trEd2yS8Rl4F/m
+ wF1cu4vfovUubOweQJWuZD4DAwEIB8J+BBgWCAAmFiEER2hR4Q7pTXsxTLGSxKbuuMkRHyUF
+ Amj5AeYFCQPCZwACGwwACgkQxKbuuMkRHyWooQD+Ohv3mMqvC4nUZHbcinqZZZCtt585XaKI
+ 6BSlgAeMrV4A/ivbYFLThUqFTH8qv3vKmOz3M8e81wY5TXU1iF08SzgI
 
-Reported-by: Shuangpeng Bai <shuangpeng.kernel@gmail.com>
-Closes: https://lore.kernel.org/all/178144969601.60470.2802762361760676957@=
-gmail.com/
+--------------dm4eBQn81l0LFU4NrsH250Y5
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Chad
+SGksDQoNCnRoaXMgaXMgYSBwb2ludGVyIHRvIGRhdGEgSSBhZGRlZCB0byANCmh0dHBzOi8v
+YnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjIxOTIzDQooIkNvcmUgVWx0
+cmEgOSAyODVIOiB1bnJlY292ZXJhYmxlIGhhcmQgZnJlZXplIGF0IGlkbGU7IEZBVEFMIEJF
+UlQgU29DL1BNQw0KY3Jhc2hsb2dzIC4uLiIpLCB3aGljaCBoYXMgZm91ciByZXBvcnRlcnMg
+bm93IGFuZCBubyByZXNwb25zZSB5ZXQuDQoNCk15IG1hY2hpbmUgaXMgYSBMZW5vdm8gVGhp
+bmtQYWQgRTE0IEdlbiA3IHdpdGggYSBDb3JlIFVsdHJhIDcgMjU1SA0KKDA2LWM1LTAyLCBt
+aWNyb2NvZGUgMHgxMjIsIEJJT1MgMS41OSksIFVidW50dSA3LjAuMC0zOCAoNy4wLjE0IGJh
+c2UpLg0KTmluZSBoYXJkIGZyZWV6ZXMgaW4gfjUxIGggb2YgdXB0aW1lLiBVbmxpa2UgdGhl
+IG90aGVyIHJlcG9ydGVycyBJIGdvdA0KdGhyZWUgRUZJIHBzdG9yZSBvb3BzZXMsIGFsbCBp
+biB0aGUgaWRsZSB0YXNrIHJpZ2h0IGFmdGVyIGEgQy1zdGF0ZSBleGl0Og0KDQogwqAtICJP
+b3BzOiBpbnZhbGlkIG9wY29kZSIgYXQgdGlja19jaGVja19vbmVzaG90X2Jyb2FkY2FzdF90
+aGlzX2NwdSsweDAgb24NCiDCoCDCoHRoZSBmaXJzdCB0aW1lciBpbnRlcnJ1cHQgYWZ0ZXIg
+TVdBSVQ7IHRoZSBmaXJzdCBvb3BzIHNob3dzIENvZGUNCiDCoCDCoDw0Yj4gMWYgNDQgMDAg
+MDAsIHRoZSBuZXh0IHRocmVlIG9vcHNlcyBhdCB0aGUgc2FtZSBhZGRyZXNzIG9uIG90aGVy
+DQogwqAgwqBDUFVzIHNob3cgdGhlIGNvcnJlY3QgPDBmPiAxZiA0NCAwMCAwMC4gQSB0cmFu
+c2llbnQgYmFkIGluc3RydWN0aW9uDQogwqAgwqBmZXRjaCwgbm8gdGV4dCBwYXRjaGluZyBp
+bnZvbHZlZCAodGFpbnQgb25seSBPKS4NCiDCoC0gNDIxIHggImtlcm5lbCBCVUcgYXQga2Vy
+bmVsL2VudHJ5L2NvbW1vbi5jOjI2MCIgKEJVR19PTihpbl9ubWkoKSA9PQ0KIMKgIMKgTk1J
+X01BU0spIGluIGlycWVudHJ5X25taV9lbnRlcikgd2l0aGluIDAuOCBtczogTk1JLWNsYXNz
+IGV4Y2VwdGlvbiANCnN0b3JtLg0KIMKgLSAiI1BGOiBzdXBlcnZpc29yIGluc3RydWN0aW9u
+IGZldGNoIiBhdCAweGZmZmZmZmRmOGRhMDBiMzAsIGkuZS4gYW4NCiDCoCDCoC5lbnRyeS50
+ZXh0IHN0dWIgYWRkcmVzcyB3aXRoIGJpdCAzNyBjbGVhcmVkLCBvbiB0aGUgI01DIElTVCBz
+dGFjayB3aXRoDQogwqAgwqBzdGFjayByZWN1cnNpb246IGEgbWFjaGluZSBjaGVjayB3aG9z
+ZSB2ZWN0b3Igd2FzIGZldGNoZWQgY29ycnVwdGVkLg0KDQpFeHBlcmltZW50cywgb25lIHZh
+cmlhYmxlIGF0IGEgdGltZTogQklPUy9taWNyb2NvZGUgdXBkYXRlICgweDExYiAtPiAweDEy
+MikNCm5vIGVmZmVjdDsgaW50ZWxfaWRsZS5tYXhfY3N0YXRlPTIgKEMzX0FDUEkgcmVtb3Zl
+ZCwgQzJfQUNQSSA9IE1XQUlUIDB4MjENCmtlcHQpIGZyb3plIGFmdGVyIDYzIHMsIG1hdGNo
+aW5nIHRoZSA3OSBoIHJlZnV0YXRpb24gaW4gdGhlIGJ1ZzsNCmludGVsX2lkbGUubWF4X2Nz
+dGF0ZT0xIGhhcyBub3cgcnVuIDE0IGRheXMgLyAyMTEgaCAvIDMyIHMyaWRsZSBjeWNsZXMg
+d2l0aA0KemVybyBmcmVlemVzLiBTbyBjb3JlIEM2IGV4aXQgaXMgc3VmZmljaWVudCB0byB0
+cmlnZ2VyIGl0IG9uIHRoaXMgU29DLg0KDQpUaGUgQ29yZSBVbHRyYSAyMDBIIHNwZWMgdXBk
+YXRlIGxpc3RzIEFSTDAzNi9BUkwwMzcgKHVucHJlZGljdGFibGUgYmVoYXZpb3VyDQovIGNv
+cmUgaGFuZyBvbiBDNiBlbnRyeS9leGl0LCAiQklPUyBtYXkgY29udGFpbiBhIHdvcmthcm91
+bmQiKSBhcyBGaXhlZCBmb3INCnRoZSBIIHN0ZXBwaW5nLCB3aGljaCBldmlkZW50bHkgaXMg
+bm90IHRoZSB3aG9sZSBzdG9yeSBvbiBjdXJyZW50IE9FTSANCkJJT1Nlcy4NCg0KUXVlc3Rp
+b25zOg0KIMKgMS4gSXMgSW50ZWwgYXdhcmUgb2YgdGhpcywgYW5kIGlzIHRoZSBBUkwwMzYv
+MDM3IHdvcmthcm91bmQgc29tZXRoaW5nIHRoZQ0KIMKgIMKgIEJJT1MgaGFzIHRvIGFwcGx5
+IChzbyBPRU1zIG5lZWQgdG8gc2hpcCBpdCksIG9yIG1pY3JvY29kZT8NCiDCoDIuIFdvdWxk
+IGFuIGludGVsX2lkbGUgcXVpcmsgZm9yIDB4QzUgKGUuZy4gYSBuYXRpdmUgdGFibGUgd2l0
+aG91dCBDNiwgb3INCiDCoCDCoCBhIHBlci1tb2RlbCBtYXhfY3N0YXRlIGRlZmF1bHQpIGJl
+IGFjY2VwdGFibGUgYXMgYW4gaW50ZXJpbSB3b3JrYXJvdW5kPw0KIMKgIMKgIEkgY2FuIHRl
+c3QgcGF0Y2hlcy4NCg0KRnVsbCBkdW1wcywgdGltZWxpbmUgYW5kIHN5c2luZm8gYXJlIGF0
+dGFjaGVkIHRvIHRoZSBidWcuDQoNClRoYW5rcywNCk1hdHRoaWFzDQo=
 
+--------------dm4eBQn81l0LFU4NrsH250Y5--
+
+--------------hjPi6vFZ0oCe0vihVl6mGuwM
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRHaFHhDulNezFMsZLEpu64yREfJQUCavGYGwUDAAAAAAAKCRDEpu64yREfJYIO
+AQDg09hEQeD649T8RC9fI7EdIRetM+rSptU3VgY7ecsIQwEA+NHMv6fd18lrgF0mHE8uIYYY/yNt
+wUwUSC6nrTnCYwk=
+=4diG
+-----END PGP SIGNATURE-----
+
+--------------hjPi6vFZ0oCe0vihVl6mGuwM--
