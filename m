@@ -1,13 +1,13 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794261579;
-	b=Hk9FL/s90Ezkn7zDDpx2Yw5qxvmnZlGyGQMrCds4QXASpHSfrLMy0sbI2sTiXwKTaG7K
-	 zykzGNLhR/72NeLBNAjuhBoQbIn0fB4ocAQv/X3FV8M5X/51Xme4WXHnyQTyEI8g9EFOe
-	 UOYgFLAXFP95lWW8exwo8JhNjxKDRgSlEeuvtP2wL7GJZ1my3+8WSPzd3xan56To8YEJy
-	 dZ8bX8ir/FWEg42xwXraTxfGdWpU/jKj3j5sbcRploNiobU2oXwB1vR0bxumc25XS+nFE
-	 wWOHzQ6Rl7mo89/kN+YLvrfdcP7X1H/QOg95E+l2oOBZm5CaM5VawPquJAnT1kxC4hg==
+	t=1794261779;
+	b=bh6j+qqoKC7EOH1dXrctgqYXt9qcFMkwc+wioXkX1luIJGtvDPG5iyHvLVcG1EYvGKkG
+	 nkzlSIn7qBzkJ+maFecPTasjfUGeyuh1Zhks3gFuRt2USbQ3lRFwUGl9tBam1gl5fO5Z9
+	 0QPNN153ubVxRmUtQhSZeTSnQprJP6kPIILDQ/thNLsGVHoWvXpv9sLiegDFnAFTJi4Tw
+	 aaUfr9zQM5pkSKJOlutsRmjgXCsdAz5lon/HfrOCjGIYIqtC4X7l9kUYpNBigyQtJZg0L
+	 tasbAlSpumdLQSVJvDE/dveBvtUyxVOCL4xG9MwPGYa+BEridyeozqR3BCmaiPO0QfQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794261579;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794261779;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
 	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Date:From:
@@ -16,93 +16,93 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:
 	 X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:
 	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=0JHuIrO6HeQW90zGwb8mXlKmQS/KkaD9r735yyDrBqE=;
-	b=tbc7AHuze06T3mMh6P4/WcTVUlNwTDpvmskurlP9qii4j1AuIElfZaQ90RfUVmUaUF/k
-	 wenygHu18l0vdLMuE9mKBd+nuYRmTA3GVXVE9owtBJp/csCWR8T8hCxhf/Z36+ZRdpHSX
-	 jxRtK/vkcqvXNlFvpK2lZl+B8F6KicF8ta1FRjohvCSApchYeUoVxyCpCJfbKmLaM/lWa
-	 aFr3W3pu7ZmyVhxDKybfABiRrk6mfJB0K7jvB608bhiItr8PGtYOA7oQQbK+iNWj93ZQl
-	 FwoF52Qz0dr+6BQc/35j4Q00HW1Ud4D9yVgzDEb4tnN2GSqAf8JFtgVTnSFUK41q69A==
+	bh=AD5fB8OYC8HR6TpcbWLlkKIKZuUu5fuArtYqdnpv+5o=;
+	b=2XsrXGodXmfwvtB5tXci00+X1up4wPSz3xioQDzPcLKVM9vTDD7N6jnWSU6PytojZpqF
+	 jLZBcloQlL60OV3e96mQRDDDGioNvlb8RmYK9TreovCGbkt9hqwR77+9xzFdC3vkO1zu1
+	 xrgaVjBT0z94Mg3VlZ+AhjUwLNU9naLJ/zKLmrhqzaBPuTbTZm6pLLfJazW0YHIlK0t1h
+	 +eEDm7+STMxghAnCi/rB2mq2xAkea2g6YR3MmlAI3SlIipDKE7aYQRK2tRNiTMKdyaXxj
+	 HP2/BKNLVrPX67v8GFV9D2V0NeP3oUeQ5Z3V0seVE9tJnJXUq01oH7o+ax3AJ69j5sA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=oss.qualcomm.com;
 	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=ch7ENt1R;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=X3wlStDb;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=JiF17yli;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=OCK4JOX5;
 	arc=none smtp.remote-ip=205.220.180.131
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F43606A326
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 21:59:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97F43606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BD2606A31C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 22:02:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D8BD2606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=ch7ENt1R;
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=X3wlStDb
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=JiF17yli;
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=OCK4JOX5
 Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A9LAPdZ1401226
-	for <platform-driver-x86@vger.kernel.org>; Mon, 9 Nov 2026 21:59:37 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A9LAPxP1401243
+	for <platform-driver-x86@vger.kernel.org>; Mon, 9 Nov 2026 22:02:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=0JHuIrO6HeQW90zGwb8mXlKm
-	QS/KkaD9r735yyDrBqE=; b=ch7ENt1RzDTd0Cy7LxpzaWmCtj9d3F01+Hesh4BO
-	N9/scIG+o0vWI7Afc0J/S+FawtUid/nr8dHGkwsttMKKFtg8PycXQr3b9blscG3A
-	XQbV3K4sLckCt9xGYeyA3WDY3hv7aEeEEpb84ZR7LwXjZ3aIIxbMFxBUZhmUeiCy
-	8an16Vyl773x2e46hibUyNnBozTfG5TanrEmW5CN6oNFZ+sLCeI/RUGLa8GFqwzD
-	oCUY4svEPyRjJoR5sLCtgK/3LVqMUGdjTvLQHHoouKW0O57bUel68STegcYV3mTJ
-	aSzC6kRc9wN4TRFfcI35Z7T9H3ucxJcD8HPtMZw3wh9eGw==
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com [209.85.217.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hu6x2kqmf-1
+	:references:subject:to; s=qcppdkim1; bh=AD5fB8OYC8HR6TpcbWLlkKIK
+	ZuUu5fuArtYqdnpv+5o=; b=JiF17yliFGrBffx23Bs8PotLT983x4SWY/TK0qrN
+	iBZOZ8JpCAq7Iql5wQt4ScXtv5fHXk1Q5ve3RUz0KmYYH375IJwId7BUNwGePw2E
+	po+iTMaF9lQmuvgs0bFRt2VVeqzvAnvasVGkhud3WdFZPtnFfvrR8wyMxH5yFuch
+	maZsfPLO0JlsnBlPqPRC1Ay8cBIK64ZQRHwDncJa1qJEONRE8MJFDOZl1HEzKnGn
+	FnBDhZMlmpSLjsTKAIwruz5D4Anv83eCY+Mc7tGwGTh83eYC+JZSzIPQxiHHO6Le
+	5vrwcoyxv0obwy//+vU8/S5Xl31YlnroC1O2y9wygy0eCA==
+Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com [209.85.221.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hu6x2kr2v-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 21:59:37 +0000 (GMT)
-Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-7d2cb77c7abso154495137.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 13:59:37 -0800 (PST)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 22:02:57 +0000 (GMT)
+Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-5c96bf59c31so441110e0c.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 14:02:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1794261577; x=1794866377; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1794261777; x=1794866577; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=0JHuIrO6HeQW90zGwb8mXlKmQS/KkaD9r735yyDrBqE=;
-        b=X3wlStDbDzUkelKbfNuZ9htfiYQglqCloPyFrmv+wu2BNQziLEP2elRzoY3HEYIv6u
-         WvI8fRvKuR85P4v+g/iF9NTEOLZApHNefT6bMlBnj5ApnfpMjs4WjB563P4LFHTrxrXf
-         xJdOVbSsnMgb04D7Sp0XlgyQm6JkQ2WmA3BWtToLy1dmHm8Os/t6OOf4RSVWxX2V33ID
-         mFV4PL5PX5m0ngfeRYh2mBjOqOYxVLUkP/NL743fRoOKiJVh6/rXBxfDNtQST2VfpgUX
-         1czJkDbbSbO4YXcPAPaMqGKFe+nOC9xDVQhAvCl+Ih5wwWLgDQF+DAtuHDY8k+rVmoLv
-         ipvw==
+        bh=AD5fB8OYC8HR6TpcbWLlkKIKZuUu5fuArtYqdnpv+5o=;
+        b=OCK4JOX5AQuIMfmo6ZhNfcqpK5eHnWguZzoVm6Ej3Tp6K/DPF2fWKs6tD65mkwsTZt
+         tQoz8F0/j8SeaArJemrkLlSiyratZpsCiv91Zgg7miCu/iqcUqBB3PJZ5p5ru/j1yR3K
+         kZ2fP/rYxc21NIGniyzFZIj5GAIS0AEdBwuIooj46UeOpfBs2o7wDZrmFh+Evvwhvya/
+         DVKuJSziP+DnztXWdmddxqB4mM3inlQqWpRZKY0qxXXwmPbAXVUhki2SNdUmiWtq0JkM
+         5fnMOsgygUWRJPafc9VJayj4MW82ldZPJWBAVALBF9WGFiQ5hF5bduLR2Jyd/hIcLNQW
+         TdDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794261577; x=1794866377;
+        d=1e100.net; s=20260707; t=1794261777; x=1794866577;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=0JHuIrO6HeQW90zGwb8mXlKmQS/KkaD9r735yyDrBqE=;
-        b=QzDbnZJ0bpCY+8z1JW3zzta5C5WgqXXKPuODb7CQQQ07sZLJaKs6fS4zWp0t31+wgf
-         m+eGEy9RgovM+qUITLFnp50vGm+UoFUn14N2AXijpPxBDsuoyd5bELmNUP/vQ9HI5cBU
-         UOva9QvX0WO4k3fRyshFbltKNFL9+wPbNEKnFrah5w9hxzP80cgmiqkxSxbQskRBN8BJ
-         fcYoA96kusibg/tXsFqKyZvEzDIOOit7vf67BFFOMfQzbk670AqllQnm9E2cezZs/W6j
-         0xjC6P5PciUkJ8JaR3t46riJBCRAfwcr4loZnQ/26r3uwQEyXDmqR5Xs/aeK4yeca+cO
-         02PQ==
-X-Forwarded-Encrypted: i=1; AL+hErGYCaIrkHDr6E1PewSt2u12uQAFravExCA24TaJoHxNBojVR+zmaSceRpU64meBESmHoM4KDx7E9AKvM+B39bxxA6Jb@vger.kernel.org
-X-Gm-Message-State: APuU4Z9FONyRmqk4+xj/0fLPo51f8NK848xh8StmH2fhFx+Vztl5W2B/
-	B81lGp9AIsjQppbe8R7dx5dMDbd0LM+5WDeMSoUeVTedt8+64IrERajuR4wGdOoPqGKwZFOQqMY
-	kKuqgYeAhX/yhi6d38D3Svp4NmZxJc1n8uYW8gXU1wn1Z509dkvhbglIq5Zp1vlqSpb9Td/5I96
-	pU
-X-Gm-Gg: AYBFou18k2nqpAJotLrMN/ssOEsfkq2Gv2BAQz63lJsjjpq2927LO4ycrJNbmjaUYCE
-	sO7f7CZZF0IgEAAFQkWMoGUU72J/JFDtXVExfCK8iiAqRk52fZcsF67IQ8mQX2pt6OWt28Sgcam
-	Kp1hgMVXFz54T80uEuop2Xbg/R42GfvIkHaQutrZR0vvTi7+d9ArfQV4MKgRK/1mUoMzj+ArWfj
-	yTZp2qgOBM505wGOkpbhEkaGD1NI4dVxTCmD9N9NdmvcmEi3k1J0rzEMw6EjXEsugg31xCZG19i
-	xLac2Gd0gzs5I6KnKAzs/KkdG1jZKNYjQB/zSB8uIAFHL0MtwgMMNZkpxuBfrC4z/duxchx+2Qo
-	rrVoqB1t1xiGjmxdTbORZ9KVCswWmiOKp/fevBXFb7ULoBY1/meYhO/vQdaoIHnE=
-X-Received: by 2002:a05:6102:3753:b0:7cc:828b:41f4 with SMTP id ada2fe7eead31-7d301c3f850mr257645137.35.1794261576520;
-        Mon, 09 Nov 2026 13:59:36 -0800 (PST)
-X-Received: by 2002:a05:6102:3753:b0:7cc:828b:41f4 with SMTP id ada2fe7eead31-7d301c3f850mr257625137.35.1794261575843;
-        Mon, 09 Nov 2026 13:59:35 -0800 (PST)
+        bh=AD5fB8OYC8HR6TpcbWLlkKIKZuUu5fuArtYqdnpv+5o=;
+        b=Rih5yEvNNgwKhaX6cHoeWYNiKbni41GlKFWoQXOSOhKANzgwZkAA9u0FJmguCqWfQy
+         4XXg4AMLYIuUf/Quh/2V80LvSTQZQ2EzjpMYb+TnvrZppCos5I1uB/5Y0UW9Htm5vHhZ
+         ZL5F0Jm4nAKm7QZUt8sJgkSgYHRU17i+i7pvKxX/WguG5tlSkz7XEmbTxWnKxjWS7rQR
+         rmMKjvxvEHmWA3NH/9s2grfaqlkM28YP/DhNEcwqzqq2HWEAj1tpCWd9n7QHEZQS9KE4
+         2xGNymq1QKXfEPMV7nLIcOucoC2hNZcI5OR4DMMiYMORkG4uYmeVDmolUQKmDWx3QGR9
+         fHmg==
+X-Forwarded-Encrypted: i=1; AL+hErH0+Am6DzA+n7g1W0/fCQJ5THBBGkl4MWmpCHIDz/wk9G2MXjPcSP3hCxlzBvSOXisVUtxL2ISlxW1CP/DMJvJ/hvRs@vger.kernel.org
+X-Gm-Message-State: APuU4Z+n//sNRz/C5ILI5t4x1rv99vF80/wqVWwRb34zKLbXmE6H5nrO
+	V2psombsu2oKqWYG9lJBSsfJuMfjctANnCvLAE2OGtNNA2+Ap5SkOgde9F8dk3dLZi3fSBKRirQ
+	p4itcL0C14s134iZo16T76bAA65s3Hvqx4E3ofbG+9xEBU9aBveV9zCGxlVJm3o2cpOE8dkwYSR
+	ulduMMo14l
+X-Gm-Gg: AYBFou2Dtle7C+yCXRHVEvusdKjNzwwEqA8nEiuRNHhwXjfR+lRn4fAYb6P5KPc8o0c
+	omzS2u/LkdhptegykMBVA6TMmZdl8pi2B4UnugbVuCm2BfSaefKXHg4HdcaD2syYFf+Qu/Wh3kp
+	pYH13FyxKQtZkh9i5v82+qBaUvd+11zeL/AQhkYryIYlsAhGG784FSctwe1+wBqn4TL9grMicyz
+	ObtQuMDlzHwJqll+eIPfEFNBqzwBX9VBm3i5yJT0q3C+CfvFJf4B+jtEtj9SqMus9NQSEmnr0dd
+	5ZJtLTLWso+Gn907vfRh69oR0ZntZkgTtXuuq9oVlxXl/LZDopLtWJY4zmBXIhmSt78vsw6X4qw
+	nMdZrBR0JL4Ew1nHpCl1FdFb9JPe0fG3YwzQ4KJLrvLbaTfY40bZysgDDoNUsHA5E
+X-Received: by 2002:a05:6122:1313:b0:5ea:9218:eac1 with SMTP id 71dfb90a1353d-5ee0d1a2b45mr181662e0c.20.1794261776743;
+        Mon, 09 Nov 2026 14:02:56 -0800 (PST)
+X-Received: by 2002:a05:6122:1313:b0:5ea:9218:eac1 with SMTP id 71dfb90a1353d-5ee0d1a2b45mr181629e0c.20.1794261776020;
+        Mon, 09 Nov 2026 14:02:56 -0800 (PST)
 Received: from oss.qualcomm.com ([188.27.161.77])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-498363e0019sm1354173f8f.38.2026.11.09.13.59.34
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49836c835fcsm1162965f8f.59.2026.11.09.14.02.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2026 13:59:34 -0800 (PST)
-Date: Mon, 9 Nov 2026 23:59:33 +0200
+        Mon, 09 Nov 2026 14:02:54 -0800 (PST)
+Date: Tue, 10 Nov 2026 00:02:52 +0200
 From: Abel Vesa <abel.vesa@oss.qualcomm.com>
 To: Hans de Goede <hansg@kernel.org>
 Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -117,10 +117,11 @@ Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
         linux-arm-msm@vger.kernel.org
 Subject: Re: [PATCH 2/3] platform: arm64: lenovo-thinkpad-t14s: Add Gen 7 EC
  support
-Message-ID: <o55caq7vadrcc6ioc7n7aplbyh55n63mqgno6j2mgcksrjzb35@ptnencuakeo6>
+Message-ID: <hhmszf223l4uz2x76rqlu5quefgigaowwsuesmfmuzsdl7epe6@hssfeonsacru>
 References: <20261107-t14s-gen7-ec-v1-0-f4a8edaac447@oss.qualcomm.com>
  <20261107-t14s-gen7-ec-v1-2-f4a8edaac447@oss.qualcomm.com>
  <44e4ede9-3eb8-418a-b1f1-7e9dc75e2e75@kernel.org>
+ <0c75e1b8-db5b-4512-9aa7-f0cb84606ce5@kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -132,25 +133,25 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <44e4ede9-3eb8-418a-b1f1-7e9dc75e2e75@kernel.org>
-X-Authority-Analysis: v=2.4 cv=TMjQ2Fla c=1 sm=1 tr=0 ts=6af24249 cx=c_pps
- a=DUEm7b3gzWu7BqY5nP7+9g==:117 a=asF+/XNaGoxFafzDDLC1GQ==:17
+In-Reply-To: <0c75e1b8-db5b-4512-9aa7-f0cb84606ce5@kernel.org>
+X-Authority-Analysis: v=2.4 cv=TMjQ2Fla c=1 sm=1 tr=0 ts=6af24311 cx=c_pps
+ a=+D9SDfe9YZWTjADjLiQY5g==:117 a=asF+/XNaGoxFafzDDLC1GQ==:17
  a=kj9zAlcOel0A:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
  a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
- a=5kuUbzVnSpjELaQO4TEA:9 a=CjuIK1q_8ugA:10 a=-aSRE8QhW-JAV6biHavz:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA5MDA4NyBTYWx0ZWRfX9RbphPLalf/e
- OmLwEm9OzWBRHFt9orQJu4Zx/TraiNdd08Ly5ELSdnUieer5vZN8XAG8kPfBQ12TxCnneJ6zSWX
- 1U20HSEYaLwXlEO5RQ9aia0APOGw252YhFRg+S9vbzGfXrA7gMfgO14/tt61M2ypWoBWpW4TOSr
- Wht/Q/B41FGmohbnKgcwT4aazbzG39ixTTP37tSqUvM6XDQFn70uWbtfp9RF7DJMjvye5WsPIP4
- jbojQqGwjQHcU9ydsV/Yatw43us+R7cOce/sVGXLtgsLrVqCGXJKeSxXCyt87/3gjYffbpagW5P
- zzka6xUZwFIZuVNaG4gBqXfcc2+obpSN7QOVs5ff/XGGeOnZIdKeyqJaVI/3d8qy7oQlaF2CxEj
- 7UL4PmXpFvoC2vAdvv+KYN/ccfjvbFvA+Qckl8QfP18j6W/Angc0XGTIifa45H81GJ5Fkt4PJif
- 5gRlg/M1RCE3eOL7tig==
-X-Proofpoint-GUID: KIjwEWAdNEyo6pzMg0_eeQjGa_wta_5S
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA5MDA4NyBTYWx0ZWRfX1QoeWxTZzSL8
- X5Ps6TmzLWJzTelR546zBGWX4uU2plZhzC4alzDXZcKWQ03tsl2/OHyC2rpQPxPm9id1brg7ZJE
- k4S3U26+O10d1Sz3l0akRBDxO1GqsKg=
-X-Proofpoint-ORIG-GUID: KIjwEWAdNEyo6pzMg0_eeQjGa_wta_5S
+ a=YC2Dopf-cczdmvoT8fEA:9 a=CjuIK1q_8ugA:10 a=vmgOmaN-Xu0dpDh8OwbV:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA5MDA4NyBTYWx0ZWRfXxYBlweBq/9JY
+ w+hLjPnS7dEhZ08NHIAsKNuVZOROO+eVZsojqq661YTtMCYRQVRSkdYPSR+lWPU9qLP72kscg+C
+ 2uJsKb+UsOHHVJCS9E4NqTFaJ73hw8XY6b1PI4iArT53CmyR3Scl35MhIi30CeTASP/PKBFRs6h
+ lsvTz2w134jqVT82s2Ps664CTkcNEirm0jmXehwNMJa8YE0PRTDPgx1WKBDkHbXGzBJfEHLGOJx
+ EY3dLuGgpAmgfS360RrWr+//2ioPbiZZbgV/W94diASS7G1RIj4q/gcwGVf29uClFa/isQ3zW3N
+ n2X7oXz1pkUjzgJI7hSr0fEfgbrVGGOg1yBmQGRfOiNu0sI418gjFROCvxeKfSo+ICVDM8C53nE
+ devInF4YxYljMmstLW4xYY2SqwOi6Gf7IF5l3tTrTsewxL5XRbZu2kK6J+RxWWCbcMDl6TfoAjX
+ c/PLCASaR/dUFj+E5qw==
+X-Proofpoint-GUID: 7L8IzhSCIbV5L9OyxTwoIIl-imKkCZRj
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA5MDA4NyBTYWx0ZWRfX1DulC5PdW8w8
+ vKU8gIV/ZM+eGO8EioWFmw7AE0ZdPd3qOA3DhI8agOAAVQbBjYdXWn2YwZ002mfvdXNaRYt9pJj
+ IeWYybXkAX3xnD+qhNrTuHl7zOFaiyc=
+X-Proofpoint-ORIG-GUID: 7L8IzhSCIbV5L9OyxTwoIIl-imKkCZRj
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-11-09_07,2026-11-06_01,2025-10-01_01
@@ -160,96 +161,49 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611090087
 
-On 26-11-09 15:52:16, Hans de Goede wrote:
+On 26-11-09 16:14:57, Hans de Goede wrote:
 > Hi Abel,
 > 
-> On 6-Nov-26 23:01, Abel Vesa wrote:
-> > The embedded controller of the ThinkPad T14s Gen 7 uses the same
-> > register layout and event codes as the Gen 6 one, but a different set
-> > of I2C commands. Going by the ACPI EC accessors in the Gen 7 firmware:
+> On 9-Nov-26 15:52, Hans de Goede wrote:
+> 
+> <snip>
+> 
+> > For easier review by you I've split the improvements into 4 patches (attached):
+> 
+> <snip>
+> 
+> > 4: Cleanup: has_kbd_bl2_and_standby and mic_mute_led_generic checks are
+> > really just checks for the original (gen6) support vs gen7 support
+> > drop the bools and directly check which variant ec->variant points
+> > at instead.
+> 
+> I accidentally left some debug code in patch 4, attached is a new version.
+> 
+> 
+> <snip>
+> 
+> > So about these differences:
 > > 
-> >   - register read:  write {0x80, reg}, then write {0x80} + read 1 byte
-> >   - register write: write {0x81, reg, val}
-> >   - event read:     write {0x84, 0x00}, then write {0x84} + read 1 byte
-> > > With the Gen 6 commands the EC never reports any event and the LED
-> > and keyboard backlight accesses have no effect.
+> > 1: For the spk / mic mute LEDs, on a hunch I tried using std LED controls
+> > with a LED idx/id of 15 for the spk mute LED and that also works.
+> > 
+> > I did not find either way (REG_AUD vs REG_LED) for the spk mute LED in
+> > the DSDT, instead the DSDT ends up sending an ACPI notify event, relying
+> > on some windows driver to handle this.
+> > 
+> > How did you find that REG_AUD still works, did you just try the gen 6
+> > method ?
+> > 
+> > 2: For the kbd backlight, again the DSDT ends up sending an ACPI notify event
+> > and does not access the EC itself at all.
+> > 
+> > How did you find that T14S_EC_REG_KBD_BL1 also works on gen 7?
 > 
-> Thank you for working in this. I've been testing this and my own T14s gen7
-> and also I've taken a closer look at the DSDT leading to a bunch of
-> improvements. Instead of making these as suggested I've just gone ahead and
-> implemented these as fixup-s to be squashed into a v2 patch.
-> 
-> For easier review by you I've split the improvements into 4 patches (attached):
-> 
-> 1: Fix Fn-F12 not emitting a key-press + filter out some EC codes being reported
-> when pressing Fn + Fxx key combos which already send an I2C-HID kbd event.
-> 
-> 2: Add Gen 7 suspend/resume handling
-> 
-> 3: Cleanup: has_kbd_bl2_and_standby and mic_mute_led_generic checks are
-> really just checks for the original (gen6) support vs gen7 support
-> drop the bools and directly check which variant ec->variant points
-> at instead.
-> 4: Cleanup: has_kbd_bl2_and_standby and mic_mute_led_generic checks are
-> really just checks for the original (gen6) support vs gen7 support
-> drop the bools and directly check which variant ec->variant points
-> at instead.
-> 
-> > Describe the bus accessors and event read per variant and add one for
-> > the Gen 7. The Gen 7 firmware does not use the second keyboard backlight
-> > register or the modern standby register, it drives the mic mute LED as a
-> > generic LED (id 0x0e) instead of a bit in the audio register and, when
-> > the keyboard backlight is cycled with Fn+Space, it also reports 3 for
-> > the high level, so handle those differences too. Also handle the Gen 7
-> > only events as known ones.
-> 
-> So about these differences:
-> 
-> 1: For the spk / mic mute LEDs, on a hunch I tried using std LED controls
-> with a LED idx/id of 15 for the spk mute LED and that also works.
-> 
-> I did not find either way (REG_AUD vs REG_LED) for the spk mute LED in
-> the DSDT, instead the DSDT ends up sending an ACPI notify event, relying
-> on some windows driver to handle this.
-> 
-> How did you find that REG_AUD still works, did you just try the gen 6
-> method ?
+> One more remark about the kbd-backlight the new mode which reports itself
+> as brightness 3 is an auto mode with brightness 2, but it turns off
+> the backlight after not using the keyboard for a while (and back on again
+> on the next keypress).
 
-Yep, just tried the Gen 6 method and it worked. Nothing in the DSDT
-for it either.
+Thanks for the pointer. I'll keep it clamped to 2 for now.
 
-Re-checked just now: the speaker mute led lights up both via REG_AUD bit 6
-and as generic led 15 via REG_LED. Since the mic mute led is already a generic
-led (0x0e) on Gen 7, I'm fine with moving the speaker mute one to 15 too,
-if you prefer. Otherwise I'll keep REG_AUD, since that path is shared with Gen 6.
-
-> 
-> 2: For the kbd backlight, again the DSDT ends up sending an ACPI notify event
-> and does not access the EC itself at all.
-> 
-> How did you find that T14S_EC_REG_KBD_BL1 also works on gen 7?
-
-Same, tried the Gen 6 register and it worked. Writes change the level
-and reads follow the Fn+Space changes, which is how I noticed the extra
-level.
-
-> 
-> 3: For suspend/resume the DSDT does have modern-standby handling both
-> making the LEDS glow and setting some magic bit (which presumably makes
-> the EC use less power or maybe makes it send less wakeup events if we
-> were to make the EC IRQ a wakeup source) ?  This is implemented in
-> my second fixup patch.
-
-Squashed it in, thanks. Haven't been able to verify this path on my
-unit though, suspend has some unrelated other issues. Will try tomorrow.
-
-> 
-> Regards,
-> 
-> Hans
-
-All four fixups are squashed into patch 2 for v2, with your
-Co-developed-by and Signed-off-by.
-
-Thanks,
 Abel
