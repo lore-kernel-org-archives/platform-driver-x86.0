@@ -1,55 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794242830;
-	b=dVklWtyFhXSl9Ba/RSm4kznr9QiJhU+2elE7i1JjiIWEjDdVAe6NJRX1ONGMs7jlUwEy
-	 wViOl2l2DH63BB/klhR8XOxSNye4YPZLK3x8LK2HtHPlVt6FLhniU9OHfjEm6tFV35rmP
-	 Kb9asgfvpSG6YNQEGmBSI11zFqpoGWp9d5izfsNCq1FSsCKbw48npem0qcbJxlFUrrRLM
-	 GsXzSEqAh4EQfSil3hFae/kJstbBNOpLavrlK7eqNz2qtngEyrgJdqv9OjxYfqzyYeDDk
-	 B99E551JvstwTAB4yd+pXTj7rC+gkWgW1RT2uboxN5YZYq+rvi7tOToM3JdvqoGVPYw==
+	t=1794242985;
+	b=ovA+Uzw68GVzNFFDkV+YlFCOlikIIGY5/JuTSRbN/WHDsGdb0efZuGKb7A5dItUJ0KOC
+	 pIxw/1J7jj3tcqN0o7xsbZhdhMPZNr+e70oskFG3TfceGViQG8X/LGjO0KAu6Q+C28HgP
+	 2LE0fSM8qzEoap3ww4C5l463pLRWLyef2Zfa12GnxRMCAR4x1O4PWB982x/O2Z5ZfKrVk
+	 /XYjehdi7Y/FZaYy7LxhKBg73OsBw8fA09TxgUJjya1y48V4AFakY59ZP0lb9c+mCt3BS
+	 iOXA0sy7eo6cqC268Ilrub2mk8m7a14GwtLHE0/s1jauzwI76wV8svBDh1Dmr7jAeZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794242830;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=jQV5c6NkatZ0Eses+bAi+sUwiAR6q3hhUXHWX3VdAdw=;
-	b=USGQdGr6VWEf729zBbMq2MKulCUQKUm4hDjxB4HWQ1BxuFhjo/rpgL8XnqxbHbnFHQQb
-	 O+b6RCvQeRTuP2VAWk2YgZjjTpyFbWt78aKPZyc723sOAcR5xzfyJgwrDaqSJHovd3hYK
-	 SszZ/kC37rBhstZHSQOwZlEcbct5NYraTSobuPxOfBt0RBDF2y5FP15acRxxNB6LlqhVd
-	 p14CijCPsg+M8IZGh4ohfj1wzts9oLHqGObZRSo3Wnv21p1kkmSKFrPQ5xwLUFvpGpynC
-	 arJoYWyvHiydaiQ2ad7vqPUEShCD5idx0/xB5KNO8sTZVvGNH/0IRWE48L+r1GnXTeQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794242985;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=ntK5gzbhUL208dXGGZmvcLVkuFXD/3KoPHqBMeHnBTY=;
+	b=w0rcyA9zb1E5qsQTE8lBHMnseGqvYE4Juf3A2ThREUQozH5IAwrqHqahukOCRvXUu2Aa
+	 kDuEmXpd0k6uIpWOIHofvotaTZibHopT9lT5UDsLV3AWC/Lz71OYGWduy2xg5iPrL0uID
+	 lWju+SdmAZOC7Awr6gfxUNiBmX+Dqm0H+o8L6F9tCaMKYxe8fXZzxy5FpLJsQ5/wpiAMO
+	 x4HEphR1ai2x9Kv0QRTcynOMY1Pb68w4Ex4SJ4/5th40EQGJBuSSZ3fnsoAgg9XWbQeTV
+	 /+z4gJCkcyM1ULDiK5gv4KHYZAxMTkYNAJbWIfp/sWqZKjRWy3aiArjXo9W5CK4rs9Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EeQUAB+K;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="Hh58Y2/m";
+	arc=none smtp.remote-ip=192.198.163.14
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39857606A325
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 16:47:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5649606A339;
+	Mon,  9 Nov 2026 16:49:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5649606A339
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EeQUAB+K
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DB51F00931
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 16:47:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794242829;
-	bh=jQV5c6NkatZ0Eses+bAi+sUwiAR6q3hhUXHWX3VdAdw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=EeQUAB+K3o2BE8CbM/vq5tKHXRrU4LpEjh/A6Yib0XkNa37hhWL0a40OO6Z9gghlU
-	 3Q43aK76v9HNzOzOdx72/7s09xK15YM7wORJpbB/F3e1auWN+gFtw+l4MIdOW3Akmz
-	 yqtB60eUQDwLBugC5y1pbdslO8C7R2fgAMA76imZtBOX0WU+f0vEafdvGh0Wg7Apcl
-	 KmH3s7nMBtfmJy1+ipDOJzS1SL1dQ5cDiokbJsXSdAaLfPNorj/j2zASgF8dx7j8Lk
-	 C1anCPZ04lJLBu8tJJJKuBZN+N1NSxvMavO0ruqozawapkAp0DFScTVWdziyDIjaTy
-	 tMquGJkhmjCSQ==
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5eaefe5b523so753789e0c.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2026 08:47:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErGbTc7eh6sHo61TuGqecgCdM0US/Bs/0R5g7o/vtvhb94yp9deQm1w2BASveklEFBczZRldE0IOQ/KqZIUFZwW3+Ldv@vger.kernel.org
-X-Gm-Message-State: APuU4Z+s/5a8gvuBHjf/1MY+xkhooVrRw41OB4UX2qsFN10I6opb8ZmC
-	X9TKIeYepobtKGgH4Hp8j6QidZmmJ6Vj/naL68joUQVdSJm1zGqzE2/uyg3hEvRA+Nt947G4yI3
-	kvctilvIpnOtf2ao4w6bJMg8Eh+ElYDQ=
-X-Received: by 2002:a05:6122:298a:b0:5ec:4653:2431 with SMTP id
- 71dfb90a1353d-5ece73577efmr1865906e0c.15.1794242828771; Mon, 09 Nov 2026
- 08:47:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Hh58Y2/m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794242985; x=1825778985;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZYrr7yXEcAfkqcNTcDNMdpQscFbDq1OMas0rdq8GxKg=;
+  b=Hh58Y2/m/ID3pC84/h0JqekxrZlrLRLAv/7PoNz6TycPO4OS7MzdEDRr
+   iWAyGAdCohTSTAjnzR+f1phLGy9RwLIupVJpSeklLWU8YdstdmshPzA4/
+   lFAn7VWBp5TKeFhr4I0nG8X6x5pi5ZE5TYM2IhnhYZETNWdhkXi9ddsQ8
+   XrHtCtgWgE2cMo4avQNZss2Vv9jjh1wPE0W21qyztnfdrvRGJQmeuW1Fo
+   7tiUzPJ5uoeCS+v4TrhpKbM1tu8QGOw5z8V5Vo2LvOPEPkVasDig5kipC
+   JJ2+ADlsZIj6PElA6eoCLAiwdJ19Ba1NgI4ZC2HAIWzvXxWLQM0yCSFIG
+   A==;
+X-CSE-ConnectionGUID: m1Wc4WmKT1qONzODaw8aMQ==
+X-CSE-MsgGUID: FfJLgKQHQRWMgJNVPceCNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="3005200"
+X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
+   d="scan'208";a="3005200"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 08:49:44 -0800
+X-CSE-ConnectionGUID: /YFCPKe1Q7WTUqSiMEy4Bg==
+X-CSE-MsgGUID: IrGSkU9xSQG+QaYaBWhvfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
+   d="scan'208";a="9653170"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.139])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 08:49:42 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 9 Nov 2026 18:49:37 +0200 (EET)
+To: Rodnei Cilto <rodnei.cilto@gmail.com>
+cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+    Ike Panhc <ikepanhc@gmail.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>, linux-input@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/2] platform/x86: ideapad-laptop: add CapsLock/NumLock
+ LED via EC
+In-Reply-To: <20260628-ideapad-kbd-leds-v1-2-50b421d94927@gmail.com>
+Message-ID: <82a8e236-d219-3ce5-f6fa-c5ff23d910c3@linux.intel.com>
+References: <20260628-ideapad-kbd-leds-v1-0-50b421d94927@gmail.com> <20260628-ideapad-kbd-leds-v1-2-50b421d94927@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -59,235 +82,265 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261024223501.1420953-1-daniel.lezcano@oss.qualcomm.com> <ed4aac63-ac58-4e2a-ae45-ebf4da158228@oss.qualcomm.com>
-In-Reply-To: <ed4aac63-ac58-4e2a-ae45-ebf4da158228@oss.qualcomm.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Mon, 9 Nov 2026 17:46:53 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gGeKEqMWvP3cQrXztZt-faFZJF+yNfygcBPT57f-a8Lw@mail.gmail.com>
-X-Gm-Features: AclHuK_21pB0sZBLQgS6pGtnjP6yV12ddWqNvd6v3npp0rwykw62-EY_ITW-xpY
-Message-ID: <CAJZ5v0gGeKEqMWvP3cQrXztZt-faFZJF+yNfygcBPT57f-a8Lw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Make platform profiles firmware independent
-To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Armin Wolf <W_Armin@gmx.de>, 
-	Jai Luthra <jai.luthra@ideasonboard.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jack Wu <jackbb_wu@compal.com>, 
-	"Mario Limonciello (AMD)" <superm1@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Nov 9, 2026 at 5:37=E2=80=AFPM Daniel Lezcano
-<daniel.lezcano@oss.qualcomm.com> wrote:
->
->
-> Hi,
->
-> sashiko validated this series
->
-> Is there any other comments for these changes I should take care of ?
+On Sun, 28 Jun 2026, Rodnei Cilto wrote:
 
-I'd love to see some feedback from someone having a vested interest in
-this interface.  Mario?  Mark?
+> Some Lenovo IdeaPad laptops (e.g. 83RR/83SR, Wildcat Lake) have
+> physical CapsLock and NumLock LEDs controlled via the EC.
+> 
+> The EC exposes CAPL (bit 5) and NUML (bit 4) at offset 0xA1.
+> Writing these bits via ec_write() and evaluating _QDF via
+> acpi_evaluate_object() causes the firmware to sync EC state to the
+> GPIO lines that drive the physical LEDs.
+> 
+> Discovery via DSDT analysis on Lenovo IdeaPad 83RR (Wildcat Lake):
+>   - CAPL/NUML at EC offset 0xA1 (bits 5 and 4)
+>   - _QDF (_SB.PC00.LPCB.EC0._QDF) reads CAPL/NUML -> SGOV()
+>   - GPIO 0x001A1087 -> CapsLock LED physical pin
+>   - GPIO 0x001A0485 -> NumLock LED physical pin
+>   - ec_read/ec_write exported via EXPORT_SYMBOL in drivers/acpi/ec.c
+>     and declared in <linux/acpi.h>
+> 
+> Add two led_classdev entries (input::capslock, input::numlock)
+> guarded by DMI match (features.kbd_leds) for 83RR and its Brazil
+> regional variant 83SR.
+> 
+> Signed-off-by: Rodnei Cilto <rodnei.cilto@gmail.com>
+> ---
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 143 +++++++++++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> index 4fbc904f1fc3..03e3f234067c 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -42,6 +42,17 @@
+>  
+>  #include <dt-bindings/leds/common.h>
+>  
+> +/* EC keyboard LED control (IdeaPad EC PS/2 emulation).
+> + * Validated on Lenovo IdeaPad 83RR (Wildcat Lake):
+> + *   EC offset 0xA1 bit4=NUML, bit5=CAPL
+> + *   _QDF syncs EC state to GPIO -> physical LED
+> + * ec_read/ec_write declared in <linux/acpi.h>
+> + */
+> +#define IDEAPAD_EC_KBD_LED_OFFSET	0xA1
+> +#define IDEAPAD_EC_KBD_LED_NUML_BIT	BIT(4)
+> +#define IDEAPAD_EC_KBD_LED_CAPL_BIT	BIT(5)
+> +#define IDEAPAD_ACPI_EC0_QDF_PATH	"\\_SB.PC00.LPCB.EC0._QDF"
+> +
+>  #define IDEAPAD_RFKILL_DEV_NUM	3
+>  
+>  enum {
+> @@ -198,6 +209,7 @@ struct ideapad_private {
+>  		bool ctrl_ps2_aux_port    : 1;
+>  		bool usb_charging         : 1;
+>  		bool ymc_ec_trigger       : 1;
+> +		bool kbd_leds             : 1;
+>  	} features;
+>  	struct {
+>  		bool initialized;
+> @@ -210,6 +222,11 @@ struct ideapad_private {
+>  		struct led_classdev led;
+>  		unsigned int last_brightness;
+>  	} fn_lock;
+> +	struct {
+> +		bool initialized;
+> +		struct led_classdev capslock;
+> +		struct led_classdev numlock;
+> +	} kbd_leds;
+>  };
+>  
+>  static bool no_bt_rfkill;
+> @@ -1587,6 +1604,99 @@ static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
+>  /*
+>   * keyboard backlight
+>   */
+> +static int ideapad_kbd_led_ec_set(u8 bit, bool on)
+> +{
+> +	u8 val;
+> +	int err;
+> +
+> +	err = ec_read(IDEAPAD_EC_KBD_LED_OFFSET, &val);
+> +	if (err)
+> +		return err;
+> +	if (on)
+> +		val |= bit;
+> +	else
+> +		val &= ~bit;
+> +	err = ec_write(IDEAPAD_EC_KBD_LED_OFFSET, val);
+> +	if (err)
+> +		return err;
 
-> On 10/25/26 00:34, Daniel Lezcano wrote:
-> > Make platform profile selection independent of ACPI firmware.
-> >
-> > The provider API already uses struct device, profile enums and callback=
-s;
-> > it does not require an ACPI handle or firmware node. However, the core =
-is
-> > built under drivers/acpi/, its Kconfig symbol depends implicitly on ACP=
-I,
-> > and initialization fails when ACPI is disabled, preventing non-ACPI
-> > providers from using the existing firmware-independent class interface.
-> >
-> > This series moves the core to drivers/platform/profile/ and introduces
-> > CONFIG_PLATFORM_PROFILE, updating all existing provider selectors. It
-> > retains the tristate configuration and platform_profile module name.
-> > Firmware-specific discovery and profile operations remain with provider=
-s.
-> > The core can also be selected directly through its Kconfig prompt.
-> >
-> > An optional ACPI adapter obtains the legacy sysfs kobject and is linked
-> > into the same module. The generic core contains no ACPI types or symbol=
-s
-> > and initializes without ACPI support or with ACPI disabled at boot.
-> > The existing /sys/firmware/acpi/platform_profile and
-> > /sys/firmware/acpi/platform_profile_choices attributes remain available
-> > on active ACPI systems.
-> >
-> > CONFIG_PLATFORM_PROFILE_LEGACY controls the backwards-compatible aggreg=
-ate
-> > sysfs interface. It defaults to enabled to preserve existing userspace.
-> > Disabling it omits the legacy sysfs callbacks and ACPI adapter while
-> > retaining class devices and kernel profile cycling. New userspace shoul=
-d
-> > discover and control individual class devices instead.
-> > The interface is deprecated, with removal intended after the 2028 LTS
-> > kernel once userspace migration is complete. A shared pr_notice_once()
-> > warns on legacy attribute access rather than on merely loading the core=
-.
-> > The default remains enabled while userspace adopts released class-devic=
-e
-> > support; this series does not claim that ecosystem migration is complet=
-e.
-> >
-> > The existing firmware-independent interface remains:
-> >
-> >    /sys/class/platform-profile/platform-profile-X/name
-> >    /sys/class/platform-profile/platform-profile-X/choices
-> >    /sys/class/platform-profile/platform-profile-X/profile
-> >
-> > Non-ACPI userspace controls providers individually through these class
-> > devices. Aggregate selection remains available through the legacy ACPI
-> > attributes, and aggregate profile cycling remains available to kernel
-> > callers. No new sysfs directory or userspace ABI is introduced.
-> >
-> > The original first patch, "Separate handler locking from sysfs lifetime=
-",
-> > fixing the handler access race and sysfs teardown locking issue, has be=
-en
-> > sent separately as a standalone v3 fix. It is not included in this seri=
-es.
-> > The base tree used here already contains that fix.
-> >
-> > Patch 1 extracts the core and initializes it before built-in consumers.
-> > Patch 2 completes class-device notifications and registration cleanup.
-> > Patch 3 documents firmware-independent profile selection through class
-> > devices. Patch 4 makes the legacy ACPI aggregate sysfs interface option=
-al
-> > and documents its deprecation.
-> >
-> > Validation performed during development (before this rebase):
-> >
-> >    - ARM64 built-in core with CONFIG_ACPI=3Dn: W=3D1 build and sparse.
-> >    - x86 modular core with CONFIG_ACPI=3Dy: W=3D1 object build and spar=
-se.
-> >      Both CONFIG_PLATFORM_PROFILE_LEGACY=3Dy and =3Dn are covered.
-> >    - Full x86 kernel link and QEMU boot with lockdep and list debugging=
-,
-> >      with active ACPI and with acpi=3Doff.
-> >    - Firmware-less providers exercising common and hidden choices,
-> >      profile reads/writes, invalid input, mixed profiles, cycling,
-> >      partial callback failures and POLLPRI on the class and legacy ACPI
-> >      interfaces. With acpi=3Doff, class get/set, notifications and kern=
-el
-> >      cycling are exercised. Both runs check that no new aggregate sysfs
-> >      directory is created.
-> >    - Concurrent sysfs I/O with two persistent providers while a third
-> >      provider is registered and removed 200 times, last-provider attrib=
-ute
-> >      removal and repeated provider module reloads.
-> >    - QEMU with active ACPI and CONFIG_PLATFORM_PROFILE_LEGACY=3Dn: veri=
-fy
-> >      the legacy attributes are absent, class get/set and notifications
-> >      work, and kernel cycling and registration/removal stress pass.
-> >
-> > The provider API and profile names are unchanged. Aggregate writes reta=
-in
-> > their sequential, non-transactional behavior: a failing callback does n=
-ot
-> > roll back providers already updated.
-> >
-> > Changes in v3:
-> >    - Send the original first patch fixing the handler access race and
-> >      sysfs lifetime locking separately as a standalone v3 fix, includin=
-g
-> >      the requested profile_lock protection comment and Fixes tag.
-> >    - Reduce this series to the four remaining patches and renumber them=
-.
-> >    - Rebase the remaining changes onto the current base, which already
-> >      contains the separately submitted locking fix.
-> >
-> > Changes in v2:
-> >    - Add the Fixes tag to patch 1 and explain how the mutex-guard conve=
-rsion
-> >      reintroduced the teardown deadlock previously fixed in 041142d7d25=
-2,
-> >      and how class-device support subsequently extended the affected pa=
-ths.
-> >    - Drop the proposed /sys/kernel/platform_profile/ aggregate interfac=
-e
-> >      and its ABI documentation. Use the existing firmware-independent
-> >      /sys/class/platform-profile/platform-profile-X/ devices instead.
-> >    - Preserve aggregate selection through the legacy ACPI attributes an=
-d
-> >      retain internal aggregation for kernel profile cycling.
-> >    - Refocus patch 3 on class-device notifications for direct writes an=
-d
-> >      restoring aggregate visibility after failed registration.
-> >    - Update the Kconfig help and documentation to describe the existing
-> >      class interface and distinguish it from ACPI aggregate selection.
-> >    - Revalidate class controls and notifications with acpi=3Doff, legac=
-y
-> >      aggregation with ACPI active, and the absence of a new aggregate A=
-BI.
-> >    - Add CONFIG_PLATFORM_PROFILE_LEGACY (default y) to make legacy aggr=
-egate
-> >      sysfs code optional, independently of class devices and kernel cyc=
-ling.
-> >    - Mark the legacy ABI deprecated and describe removal after the 2028=
- LTS
-> >      kernel, conditional on userspace migration. Emit one shared notice=
- on
-> >      legacy attribute access; retain the enabled default during migrati=
-on.
-> >    - Move the legacy ACPI ABI documentation from testing/ to obsolete/,
-> >      document the replacement class attributes and update MAINTAINERS.
-> >
-> > Changes in v1:
-> >    - Initial series extracting the core from ACPI, separating handler
-> >      locking from sysfs lifetime operations and retaining the legacy AB=
-I.
-> >    - Proposed a firmware-neutral aggregate sysfs interface alongside th=
-e
-> >      existing per-provider class devices (removed in v2).
-> >
-> > Daniel Lezcano (4):
-> >    platform profile: Extract the core from ACPI
-> >    platform profile: Complete class notifications and registration
-> >      cleanup
-> >    platform profile: Document firmware-independent profile selection
-> >    platform profile: Make legacy ACPI aggregate interface optional
-> >
-> >   .../sysfs-platform_profile                    |  12 ++
-> >   .../ABI/testing/sysfs-class-platform-profile  |   2 +-
-> >   .../userspace-api/sysfs-platform_profile.rst  |  55 ++++++--
-> >   MAINTAINERS                                   |   5 +
-> >   drivers/acpi/Kconfig                          |   3 -
-> >   drivers/acpi/Makefile                         |   1 -
-> >   drivers/cpufreq/Kconfig.x86                   |   2 +-
-> >   drivers/platform/Kconfig                      |  35 +++++
-> >   drivers/platform/Makefile                     |   2 +
-> >   drivers/platform/profile/Makefile             |   5 +
-> >   drivers/platform/profile/acpi.c               |  15 +++
-> >   .../profile/core.c}                           | 122 ++++++++++++++---=
--
-> >   drivers/platform/profile/profile.h            |  17 +++
-> >   drivers/platform/surface/Kconfig              |   6 +-
-> >   drivers/platform/x86/Kconfig                  |  10 +-
-> >   drivers/platform/x86/amd/pmf/Kconfig          |   2 +-
-> >   drivers/platform/x86/dell/Kconfig             |   4 +-
-> >   drivers/platform/x86/hp/Kconfig               |   2 +-
-> >   drivers/platform/x86/lenovo/Kconfig           |   6 +-
-> >   drivers/thermal/intel/int340x_thermal/Kconfig |   2 +-
-> >   include/linux/platform_profile.h              |   3 +
-> >   21 files changed, 255 insertions(+), 56 deletions(-)
-> >   rename Documentation/ABI/{testing =3D> obsolete}/sysfs-platform_profi=
-le (70%)
-> >   create mode 100644 drivers/platform/profile/Makefile
-> >   create mode 100644 drivers/platform/profile/acpi.c
-> >   rename drivers/{acpi/platform_profile.c =3D> platform/profile/core.c}=
- (88%)
-> >   create mode 100644 drivers/platform/profile/profile.h
-> >
-> >
-> > base-commit: 8244dc8f69f0e73cb1789355260b7d68bf5494e7
->
+Hi,
+
+Don't you need to protect this RMW sequence with a lock?
+
+> +	acpi_evaluate_object(NULL, IDEAPAD_ACPI_EC0_QDF_PATH, NULL, NULL);
+> +	return 0;
+> +}
+> +
+> +static void ideapad_capslock_led_set(struct led_classdev *led_cdev,
+> +				     enum led_brightness brightness)
+> +{
+> +	ideapad_kbd_led_ec_set(IDEAPAD_EC_KBD_LED_CAPL_BIT, brightness != LED_OFF);
+> +}
+> +
+> +static enum led_brightness ideapad_capslock_led_get(struct led_classdev *led_cdev)
+> +{
+> +	u8 val;
+> +
+> +	if (ec_read(IDEAPAD_EC_KBD_LED_OFFSET, &val))
+> +		return LED_OFF;
+> +	return (val & IDEAPAD_EC_KBD_LED_CAPL_BIT) ? LED_ON : LED_OFF;
+> +}
+> +
+> +static void ideapad_numlock_led_set(struct led_classdev *led_cdev,
+> +				    enum led_brightness brightness)
+> +{
+> +	ideapad_kbd_led_ec_set(IDEAPAD_EC_KBD_LED_NUML_BIT, brightness != LED_OFF);
+> +}
+> +
+> +static enum led_brightness ideapad_numlock_led_get(struct led_classdev *led_cdev)
+> +{
+> +	u8 val;
+> +
+> +	if (ec_read(IDEAPAD_EC_KBD_LED_OFFSET, &val))
+> +		return LED_OFF;
+> +	return (val & IDEAPAD_EC_KBD_LED_NUML_BIT) ? LED_ON : LED_OFF;
+> +}
+> +
+> +static int ideapad_kbd_leds_init(struct ideapad_private *priv)
+> +{
+> +	int err;
+> +
+> +	if (WARN_ON(priv->kbd_leds.initialized))
+> +		return -EEXIST;
+> +
+> +	priv->kbd_leds.capslock.name           = "input::capslock";
+
+Documentation/leds/ example seems to have input<number>::capslock ?
+
+You should also cc leds people when sending v2.
+
+> +	priv->kbd_leds.capslock.max_brightness = 1;
+> +	priv->kbd_leds.capslock.brightness_set = ideapad_capslock_led_set;
+> +	priv->kbd_leds.capslock.brightness_get = ideapad_capslock_led_get;
+> +	priv->kbd_leds.capslock.flags          = LED_RETAIN_AT_SHUTDOWN;
+> +
+> +	err = led_classdev_register(&priv->platform_device->dev,
+> +				    &priv->kbd_leds.capslock);
+> +	if (err)
+> +		return err;
+> +
+> +	priv->kbd_leds.numlock.name            = "input::numlock";
+> +	priv->kbd_leds.numlock.max_brightness  = 1;
+> +	priv->kbd_leds.numlock.brightness_set  = ideapad_numlock_led_set;
+> +	priv->kbd_leds.numlock.brightness_get  = ideapad_numlock_led_get;
+> +	priv->kbd_leds.numlock.flags           = LED_RETAIN_AT_SHUTDOWN;
+> +
+> +	err = led_classdev_register(&priv->platform_device->dev,
+> +				    &priv->kbd_leds.numlock);
+> +	if (err) {
+> +		led_classdev_unregister(&priv->kbd_leds.capslock);
+> +		return err;
+> +	}
+> +
+> +	priv->kbd_leds.initialized = true;
+> +	return 0;
+> +}
+> +
+> +static void ideapad_kbd_leds_exit(struct ideapad_private *priv)
+> +{
+> +	if (!priv->kbd_leds.initialized)
+> +		return;
+> +	priv->kbd_leds.initialized = false;
+> +	led_classdev_unregister(&priv->kbd_leds.numlock);
+> +	led_classdev_unregister(&priv->kbd_leds.capslock);
+> +}
+> +
+>  static int ideapad_kbd_bl_check_tristate(int type)
+>  {
+>  	return (type == KBD_BL_TRISTATE) || (type == KBD_BL_TRISTATE_AUTO);
+> @@ -1832,6 +1942,29 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
+>  	priv->r_touchpad_val = value;
+>  }
+>  
+> +static const struct dmi_system_id ideapad_kbd_leds_dmi_table[] = {
+> +	{
+> +		/*
+> +		 * Lenovo IdeaPad 83RR (Wildcat Lake) - EC PS/2 emulation
+> +		 * controls CapsLock/NumLock LEDs via EC offset 0xA1 + _QDF.
+> +		 * CAPL=bit5 (0x20), NUML=bit4 (0x10).
+> +		 * _QDF drives GPIO via SGOV() to physical LED pins.
+> +		 */
+
+Put this comment before the table and generalize it such that it doesn't 
+start with the model but only given that as an example.
+
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "83RR"),
+> +		},
+> +	},
+> +	{
+> +		/* Lenovo IdeaPad 83SR (83RR Brazil regional variant) */
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "83SR"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+>  static const struct dmi_system_id ymc_ec_trigger_quirk_dmi_table[] = {
+>  	{
+>  		/* Lenovo Yoga 7 14ARB7 */
+> @@ -2178,6 +2311,8 @@ static int ideapad_check_features(struct ideapad_private *priv)
+>  	priv->features.touchpad_ctrl_via_ec = touchpad_ctrl_via_ec;
+>  	priv->features.ymc_ec_trigger =
+>  		ymc_ec_trigger || dmi_check_system(ymc_ec_trigger_quirk_dmi_table);
+> +	priv->features.kbd_leds =
+> +		dmi_check_system(ideapad_kbd_leds_dmi_table);
+
+Fits to one line.
+
+>  
+>  	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
+>  		priv->features.fan_mode = true;
+> @@ -2418,6 +2553,12 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>  			dev_info(&pdev->dev, "FnLock control not available\n");
+>  	}
+>  
+> +	if (priv->features.kbd_leds) {
+> +		err = ideapad_kbd_leds_init(priv);
+> +		if (err)
+> +			dev_warn(&pdev->dev, "Could not set up kbd LEDs: %d\n", err);
+> +	}
+> +
+>  	/*
+>  	 * On some models without a hw-switch (the yoga 2 13 at least)
+>  	 * VPCCMD_W_RF must be explicitly set to 1 for the wifi to work.
+> @@ -2477,6 +2618,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>  		ideapad_unregister_rfkill(priv, i);
+>  
+>  	ideapad_fn_lock_led_exit(priv);
+> +	ideapad_kbd_leds_exit(priv);
+>  	ideapad_kbd_bl_exit(priv);
+>  	ideapad_input_exit(priv);
+>  
+> @@ -2506,6 +2648,7 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
+>  		ideapad_unregister_rfkill(priv, i);
+>  
+>  	ideapad_fn_lock_led_exit(priv);
+> +	ideapad_kbd_leds_exit(priv);
+>  	ideapad_kbd_bl_exit(priv);
+>  	ideapad_input_exit(priv);
+>  	ideapad_debugfs_exit(priv);
+> 
+> 
+
+-- 
+ i.
+
