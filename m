@@ -1,69 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.11
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794181955;
-	b=cqnprarQhneuePJVSt8hy3zaF6N4tW0Ng09ac7zPb1VrKRkrcHW3q95rXuoH7u2Ue7l2
-	 gKhcfR1Iv6Me8q4Jfqhh0e/NAhCBF++hhMF7puHo8nhrukN0j+F+IFr/iq+rkuJkLZE/o
-	 xiQjA5ZRZw170jV5OQSyWcUUKEjRs2U8agByWTXPzWLDEx8mlRGKxnxkMUPEe/RFsvb77
-	 txtJzYsyVbCdt8YE4qMQ6pUkCCUl1T2uUZ1OU6X+C8fuevcTgFCNn0NY8Pv0SC+K0UUzq
-	 s8bMDq0wHYgR42pmB/EHarXzQiTe7/qLCRMF19yrvrwtYQnvfI0W5vza/ftU2Pg4qXQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794181955;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-Zoho-Virus-Status:X-Zoho-AV-Stamp:
-	 X-ZohoMailClient;
-	bh=ZzZmW7U0j2vJpHF2NsUFVQax3mLzJ80uqYTPEp5SWu8=;
-	b=FixskRu9z5AQcALbyitr4e2+isBqHBLau4YPuYHGQpbpTI2QrBcVjKR3FzTWpwciHaa+
-	 nIPbh71+ZX4wmJ9nwPQG0tHZyESqm4xzF1XpQ5QmsoiUYhWuSC+CjcYZVfEsAhO/tt9nP
-	 lMQY7eqvHTi16YeZp+o7aiDqEJCwrIn3P1sOnpxh2Cov+vgU9EABxo3cZOjiujHYBvWcV
-	 1SjZ9Y+n1F0lnWww+lG5cwqxljh1T3zeVA+aEJjKNOJvmXe37KEqU1wRiM5959qT0JRBU
-	 G3BQjHBTyDkVXKRF/2mHX5OVBZQmZ7UeiWPrnGo3hAe7Ygy6Ietd6+9BO7drDH6vYmA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=collabora.com;
-	spf=pass smtp.mailfrom=collabora.com;
-	dkim=pass header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=zohomail header.b=OpUROlzi;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.11
-Received: from sender6-op-o11.zoho.com (sender6-op-o11.zoho.com [165.173.180.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.240
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794186842;
+	b=Uf7eY9+oGdAQJL20KznnoB7qUI1DlsptpralzyxrebZydVB+9Ax8JA/nb09NCEzsxIvc
+	 bm+xfmLdLZ4jrqZu534gDm6EOE2+UgXp8uBKsGT6U5bGUVSFrL+sAGkO+HETEHiHZbnVN
+	 2zKLH0u5fPr87QL40WDwTzqFk2PJAaHUWTb6jfIyaVK00dimVjumKIw/LF9foB/8ytS4m
+	 sbnZNdKHM/c1gwccnzb3YMQpe6kNtzBOyZ2+31PhjUvyl4essGhWy5cMnLRrFCzXkPjSN
+	 pSGhQEMaWJgFUSCZFlHoKAQ5KDINl3SSxSe5x6HW20FvEYNF2tQYtK0Fk5ATq1NPdVQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794186842;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=mVqi2RplJqC9QdgfFtsdwMVPxwNrbdCkTESnwrts9uo=;
+	b=PHH5lB4a8Gj1YU+aFxEl04UU4nmcCjI+l8KiBBz2vePCVxk+fyY81t1XoH9W00iXa9j6
+	 xw4/iCy8UZD23rhAf2s+jxAapUxPfqu+kvVKZri18OBiD5tS++28InOcOHkCFb1NOPcew
+	 MGPY30+Fm+RbeZgXlgO9g8F6ZJnZgSrBgGJ+gaRU9CZE2ijAuq5z/pZZZzuw2OI6riFZt
+	 0Omd9WJdEwFcgIjVYcSjG7JR2IW647grJhd9Ai+l3A74VxVywL27KRjPqlMwgcnX8e2oY
+	 +NaEhLtZXLXJhpMbESHWXoTlr0uCQ9OUqJKqcB1GUlmuiIyYAc6apHUQnFGQOmzoxgg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=wiGvwk4x;
+	arc=none smtp.remote-ip=91.218.175.240
+Received: from mta0.migadu.com (out-240.mta0.migadu.com [91.218.175.240])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978CE606A31C;
-	Sun,  8 Nov 2026 23:52:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 978CE606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD1C606A322
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Nov 2026 01:14:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4AD1C606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=zohomail header.b=OpUROlzi
-ARC-Seal: i=1; a=rsa-sha256; t=1794181941; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BtFzMLxCW7POmHOdJvh+YwHALuxCRW48T/bezj1uC6xdFetr9tIPL7Iszd+OdGzDicTRGJXtluttjiQHye306N07B5G1fxSyWDVuKI93VbJIqsOwpo/m03zWmCPb/0yOhHJPMj2wy+qakZFU4U5nb947JLi2dTQ/yyAdRZ9y998=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1794181941; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZzZmW7U0j2vJpHF2NsUFVQax3mLzJ80uqYTPEp5SWu8=; 
-	b=J+ztNFldbR4GOE2FU2XTryHLrv70bkTrCOYeKe8n+7e33QZ+R21A92K0UTx9gaqBAMP31H3JgegChUbV6xhg9poA52MKbC58qMmlS3v4FGfDbc3WKsdGqsYiad3DCLfB0YMviEQCN7ANl3qlVVadvOtVHV157pA3H1okdvHEVsc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: a=rsa-sha256; b=OpUROlziJtMRtlVCbGddqbMWE4oPwZCM2nLSQ0fOYpEOqEce/RZWih6LsE2v456FiUtwqV+oBvq/s+yjeaBo6HGRjAN1E0TtLlCggAwV9aUZ4e5ByC6gmgBnLLwSIcbwii+MVqEFMnl6+Op8qHmivM/j1cf7k5lS1pvwNyD9Njk=; c=relaxed/relaxed; s=zohomail; d=collabora.com; v=1; bh=ZzZmW7U0j2vJpHF2NsUFVQax3mLzJ80uqYTPEp5SWu8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1794181940739147.63396619540686;
-	Sun, 8 Nov 2026 15:52:20 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id 390461808E6; Mon, 09 Nov 2026 00:52:18 +0100 (CET)
-Date: Mon, 9 Nov 2026 00:52:18 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mika Westerberg <westeri@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Corey Minyard <corey@minyard.net>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-input@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 8/8] power: supply: sbs-battery: use 4-argument
- i2c_smbus_read_block_data()
-Message-ID: <avELD9tlEfl9Uth7@venus>
-References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
- <20261024-i2c-smbus-read-block-data-v1-8-19bb97467982@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=wiGvwk4x
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=EWP48PASoTLGXrCYzvC4DPqeMouUPYhHoQTdcbU/rTM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794186839; v=1; x=1794791639;
+ b=wiGvwk4xQnRVfkaKWag29hQp/qzcZhyNFf6THZUJJkFi79m8AUB3preCoZGNueQQs2uE0+ke
+ c3qNQ2UOWXbQfmdLYHx7UjEmcH6CkVcRIYfJiRZVAXBuJ6a+sygCR/tPpCTF15WJ+OhgCQqPka3
+ LMTrvn3FRUeKZgw+F887JfzE=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 469add5eee026373;
+	Mon, 09 Nov 2026 01:13:58 +0000
+X-Mizu-Trace-ID: 469add5eee026373
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <725a6890-6460-42d0-8cd8-5aad8a75f3f2@linux.dev>
+Date: Mon, 9 Nov 2026 02:13:53 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -73,101 +58,238 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="djssy5i5cnzkks24"
-Content-Disposition: inline
-In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-8-19bb97467982@gmail.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-0.2.13.1.5.4/294.158.93
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-wmi: Ignore kbd backlight read-back on
+ rejected writes
+To: Antheas Kapenekakis <lkml@antheas.dev>, tarrihmoad@proton.me
+Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Sercan GOKMEN <gokmensercan@gmail.com>, Burak Goncu <burakgon12@gmail.com>,
+ Denis Benato <benato.denis96@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20261108-asus-wmi-kbd-readback-v1-1-bf38f6400ade@proton.me>
+ <CAGwozwENHjfYUJMT5CP_Jvp6fYr54jxrgbrZBKfSH+8K_3wqMA@mail.gmail.com>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <CAGwozwENHjfYUJMT5CP_Jvp6fYr54jxrgbrZBKfSH+8K_3wqMA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---djssy5i5cnzkks24
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 8/8] power: supply: sbs-battery: use 4-argument
- i2c_smbus_read_block_data()
-MIME-Version: 1.0
+On 11/8/26 15:05, Antheas Kapenekakis wrote:
+> On Sun, 8 Nov 2026 at 14:44, Moad Tarrih via B4 Relay
+> <devnull+tarrihmoad.proton.me@kernel.org> wrote:
+>> From: Moad Tarrih <tarrihmoad@proton.me>
 
-Hi,
 
-On Sat, Oct 24, 2026 at 07:48:48PM -0700, Dmitry Torokhov wrote:
-> Pass the destination buffer size to sbs_read_string_data(), and pass
-> the buffer capacity reserving space for a trailing NUL terminator to
-> i2c_smbus_read_block_data().
->=20
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
+Hi Moad!
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>> On the ASUS ROG Strix G18 G814FP, the brightness attribute of
+>> asus::kbd_backlight always reads 0, and every read breaks the keyboard
+>> brightness keys.
 
--- Sebastian
+Is this from a fully updated machine? Bios especially...
 
->  drivers/power/supply/sbs-battery.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sb=
-s-battery.c
-> index 6714313bb3a3..f8b194c58a62 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -424,7 +424,8 @@ static int sbs_read_string_data_fallback(struct i2c_c=
-lient *client, u8 address,
->  	return ret;
->  }
-> =20
-> -static int sbs_read_string_data(struct i2c_client *client, u8 address, c=
-har *values)
-> +static int sbs_read_string_data(struct i2c_client *client, u8 address,
-> +				char *values, size_t size)
->  {
->  	struct sbs_info *chip =3D i2c_get_clientdata(client);
->  	int retries =3D chip->i2c_retry_count;
-> @@ -440,7 +441,7 @@ static int sbs_read_string_data(struct i2c_client *cl=
-ient, u8 address, char *val
->  	}
-> =20
->  	while (retries > 0) {
-> -		ret =3D i2c_smbus_read_block_data(client, address, values);
-> +		ret =3D i2c_smbus_read_block_data(client, address, size - 1, values);
->  		if (ret >=3D 0)
->  			break;
->  		retries--;
-> @@ -709,7 +710,8 @@ static const char *sbs_get_constant_string(struct sbs=
-_info *chip,
-> =20
->  		addr =3D sbs_data[ret].addr;
-> =20
-> -		ret =3D sbs_read_string_data(chip->client, addr, buf);
-> +		ret =3D sbs_read_string_data(chip->client, addr, buf,
-> +					   sizeof(chip->strings[0]));
->  		if (ret < 0)
->  			return ERR_PTR(ret);
->  	}
->=20
-> --=20
-> 2.56.0.257.gf7497c7d27-goog
->=20
+>> The firmware reports the keyboard backlight WMI device as present, but
+>> DSTS(0x50021) returns 0x50000 (presence bit set, level 0) whatever level
+>> the keyboard shows, and DEVS(0x50021, 0x80..0x83) returns
+>> ASUS_WMI_UNSUPPORTED_METHOD for every level. The backlight is driven by
+>> hid-asus through its asus-wmi listener instead.
+>>
+>> Since commit fac55d29581f ("platform/x86: asus-wmi: Add support for
+>> multiple kbd led handlers"), kbd_led_get() stores the level it reads in
+>> kbd_led_wk, and the brightness key handlers step from kbd_led_wk. Any
+>> read of the attribute, for example by a desktop environment or
+>> systemd-backlight, therefore resets the stored level to 0, and the next
+>> brightness-up press sets the keyboard to the lowest level instead of
+>> stepping up:
+>>
+>>   # echo 3 > /sys/class/leds/asus::kbd_backlight/brightness
+>>   (keyboard goes to high)
+>>   # cat /sys/class/leds/asus::kbd_backlight/brightness
+>>   0
+>>   (brightness-up key: keyboard drops to low)
+>>
+>> systemd-backlight also saves 0 at shutdown, so the level is lost across
+>> reboots.
+>>
+>> Remember when the firmware rejects a write with -ENODEV, and from then
+>> on return the stored level from kbd_led_get(), as is already done when
+>> the WMI device is not available. The first write is queued right after
+>> the LED is registered, so the read-back is only trusted before any
+>> level has been set.
 
---djssy5i5cnzkks24
-Content-Type: application/pgp-signature; name="signature.asc"
+I would like to avoid issuing writes that we already know are going
+to fail.
 
------BEGIN PGP SIGNATURE-----
+I think that if after testing the updated BIOS this problem is still
+there the best thing to do is to implement a quirk and match by
+model.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmrxCyYACgkQ2O7X88g7
-+pqbCA//WLpBfQbt6ZJ6XndBJ9N2OdPV0zOs8CxWZ+ua1SthiUpJEudANpYMuh8N
-0CmMUo+5FSj0HQmQYi3dnJecNT95GMgFnBhlctIo7MGfkenakz+0kAyVfzUWhh0D
-1kRQuB1pN754PEAjDKtaLQFDQq8EWYWI0S78dLmRKl1wlfxiqWQKVTk4uhpKqMsq
-WEThh3GiB2xPDttBSP/YU9X5nGmB9WWE4KVB7OuWI5gA/6e23w7MetL78gOvQDXw
-DIj8je51ctSbRU5iF2/rsRvjWp/DAQBN6H4OIuqvdJD8VYycfBZ2YM5W42pzhEDf
-3LNhVqsMAJWJIEsz+xYtYS578mxAYKCMWQEc5ol1b1wVHbA8J0QUQxJOMhBWQhys
-jgN2LwCQQXaiiwwRfJ77TJL/SVwCa9hfo2ST5POaTdIYPWTfKklpf9jNUjy5ISe6
-9lfpr94Rw9+B5gMaNJenVgQCVaKGfqdOMMDb2OigI1OpKPC4boV6btBc9bORiHQV
-t4BMOKy6MYWlst+LgE1Aw9WGNxArJ24fc+4gprFY2uxJC5ysK1bpXcsha6IyqUA9
-5kDAhLMTmfdpijezA1681U7HE88+xx8pjSdG9OSTl0G35IvZMESiWdXgCYx369Dh
-/i3G7gy+cnIPSBuVsuvGHLuQPsfELTqm9NlvpHQoBPSZ3yi1pjk=
-=XodA
------END PGP SIGNATURE-----
+ROG laptops are basically all hid-controlled, no idea why that
+method returns supported in yours.
 
---djssy5i5cnzkks24--
+A very interesting question would be "is it only FP or all G814 2025 are the same?"
+
+>> The cause was found and this fix written with the help of an AI coding
+>> assistant (Claude Code, Claude Opus 5.5). I reviewed the change and
+>> tested it on the affected laptop.
+>>
+>> Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
+>> ---
+>> Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317,
+>> keyboard 0b05:19b6) only, on 7.2.14 as a DKMS module. With the patch,
+>> the attribute reads back low, medium and high correctly, the brightness
+>> keys step from the real level, and the level survives suspend/resume
+>> and reboots. Build-tested with W=1 against pdx86 for-next
+>> (c339f4010dea): no warnings. checkpatch --strict is clean.
+>>
+>> Limitation: a machine whose firmware rejects writes but changes the
+>> brightness by itself would now report a stale level. I don't know of
+>> such a machine.
+>>
+>> Sercan GOKMEN posted a patch for the same symptom on the B9406CAA:
+>> https://lore.kernel.org/platform-driver-x86/20261030-b4-asus-wmi-b9406caa-kbd-readback-v2-1-ca93bb9039f6@gmail.com/
+>> On that board writes succeed and only the read-back is constant, so it
+>> uses a DMI quirk. The two patches are complementary: the rejected-write
+>> check doesn't catch the B9406CAA, and the quirk doesn't catch the
+>> G814FP. They touch the same condition in kbd_led_get(), so whichever
+>> lands second needs a trivial rebase; I'm happy to rebase onto it.
+>>
+>> This touches different code from Bartu Alev's pending series
+>> '[PATCH 0/2] platform/x86: asus-wmi: fix and unify keyboard brightness
+>> key handling' and applies cleanly before or after it.
+>>
+>> A more general option would be to ignore the WMI read-back whenever a
+>> hid-asus listener is registered, since hid-asus drives the backlight on
+>> the G814FP. I didn't do that because it could report stale levels on
+>> machines where the firmware does change the brightness itself, but I can
+>> rework the patch that way if preferred.
+>>
+>> AI assistance: Claude Code was used over several sessions to trace the
+>> read-back path in asus-wmi and hid-asus, run the debugfs DSTS/DEVS
+>> probes, write the patch and draft this message. Testing and final
+>> review were done by me on the hardware.
+> Try to rewrite the commit message in your own words. It is hard to
+> follow. This patch adds too much code.
+>
+> From what you are saying, your device always returns 0. So that is the
+> bug. The code already has handling (as you said) for both the case
+> reads are bugged and the wmi device is missing.
+
+Hello Antheas,
+
+No: the bug is that the TUF keyboard brightness devid is answering
+with the presence bit set, that after removal of said bit becomes 0
+for the user/caller.
+
+If that interface cannot be used it shouldn't return the presence
+bit (or should return the unsupported feature 0xFFFFFFFE),
+and writes are rejected so we know ASUS intention here.
+
+> Therefore, in your case the proper fix is to either piggyback on that
+> quirk so that we do not read that device or, if you want to also avoid
+> logged errors, introduce a small new quirk that sets kbd_led_avail to
+> false and does not initialize a WMI device. The latter is an ideal
+> solution though, minor errors in dmesg due to bios misconfiguration
+> are common and harmless. The simplest solution for you is to use the
+> read quirk.
+>
+> In both cases, if Sercan's patches are queued, find Ilpo's remote and
+> base on that so you get no conflicts
+>
+> We cannot use a heuristic for when hid-asus is present. The device
+> reports a WMI handle. There are devices with multiple aura devices on
+> them.
+
+I think we can, but I don't think it's a good idea.
+
+> If it is found that a lot of devices report bogus reads, a potential
+> future approach is to remove readback from WMI altogether and always
+> use the bios stored value. This allows dropping the read quirk
+> altogether.
+
+The bios stored value?
+
+> Best,
+> Antheas
+>
+>> ---
+>>  drivers/platform/x86/asus-wmi.c | 24 ++++++++++++++++++++----
+>>  1 file changed, 20 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>> index b33ebdb21aa2..c47ebc1f184a 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -258,6 +258,7 @@ struct asus_wmi {
+>>         struct led_classdev kbd_led;
+>>         int kbd_led_wk;
+>>         bool kbd_led_notify;
+>> +       bool kbd_led_write_rejected;
+>>         bool kbd_led_avail;
+>>         bool kbd_led_registered;
+>>         struct led_classdev lightbar_led;
+>> @@ -1724,8 +1725,9 @@ static struct asus_hid_ref asus_ref = {
+>>         .listeners = LIST_HEAD_INIT(asus_ref.listeners),
+>>         .asus = NULL,
+>>         /*
+>> -        * Protects .asus, .asus.kbd_led_{wk,notify}, and .listener refs. Other
+>> -        * asus variables are read-only after .asus is set.
+>> +        * Protects .asus, .asus.kbd_led_{wk,notify,write_rejected}, and
+>> +        * .listener refs. Other asus variables are read-only after .asus is
+>> +        * set.
+>>          *
+>>          * The led cdev device is not protected because it calls backlight_get
+>>          * during initialization, which would result in a nested lock attempt.
+>> @@ -1896,10 +1898,24 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
+>>  static void kbd_led_update(struct asus_wmi *asus)
+>>  {
+>>         int ctrl_param = 0;
+>> +       int err;
+>>
+>>         scoped_guard(spinlock_irqsave, &asus_ref.lock)
+>>                 ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+>> -       asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+>> +       err = asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param,
+>> +                                   NULL);
+>> +
+>> +       /*
+>> +        * Some firmware reports the device as present but rejects writes,
+>> +        * and its read-back does not follow the level set through other
+>> +        * paths, such as hid-asus. Stop trusting the read-back once a
+>> +        * write has been rejected.
+>> +        */
+>> +       if (err == -ENODEV) {
+>> +               pr_debug("Keyboard backlight write rejected, ignoring read-back\n");
+>> +               scoped_guard(spinlock_irqsave, &asus_ref.lock)
+>> +                       asus->kbd_led_write_rejected = true;
+>> +       }
+>>  }
+>>
+>>  static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+>> @@ -1975,7 +1991,7 @@ static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+>>         asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>>
+>>         scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+>> -               if (!asus->kbd_led_avail)
+>> +               if (!asus->kbd_led_avail || asus->kbd_led_write_rejected)
+>>                         return asus->kbd_led_wk;
+>>         }
+>>
+>>
+>> ---
+>> base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+>> change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
+>>
+>> Best regards,
+>> --
+>> Moad Tarrih <tarrihmoad@proton.me>
+>>
+>>
+>>
