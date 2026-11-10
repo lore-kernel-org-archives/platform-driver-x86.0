@@ -1,99 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.47
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.50
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794342854;
-	b=InhEnoZbsb1CzWvhvNcO71UuYaSudRp3KLl1TnyuaumFte8hNRsNRHfHGg5Fgm/OiAmh
-	 vUhHqmSYFnwYR6KSVl3gylH8JRKbme2GvIqCcoNv+nUAFbxjTkKJhquzRAk8CSzRIdLvy
-	 uVHQNZdqB3hsWahHalN4lGMOAWDIpdm+VPX7CTGJ+CDuMC+8Mo98PvWdF8JFAer/apEpI
-	 8kfXiI/4Yohx4brYykVmHN1zjV+tCMndkMXERPPZc+rIDHnY0Q2J4opey6qsfj8cXPJqA
-	 R5uBRBH2ZbHANPgaWqSfS11iCFmPBgwhmA7538m4PpHSGFGendHhoTfewEMgnBDgHFQ==
+	t=1794342880;
+	b=4DfJ+CxvsghySK9fMq3v+Zi3Lv3HEbsW0P2QMbTFwRU7oNhHV/Av5w+0rPiENjjH7pR4
+	 1W8bC60fz3r2V33vjBK0xLlUBE/5Oq9wHWW9mVXxTiTzIXpCEoigoRBs1TXPf9YWwrkwn
+	 W1it3Cea+BV3NtOfjFKlwwpcFaeYn7VaQM5+OUh5ycNWgio7m5b8d1uz9gd+jSr92qRMV
+	 Mk8b5FlLXnb6pQh4jlk2WSRkh9lhXkiLRQj6Pb1gz8CQVmS9ybbcRaAkop8t7UuKtrski
+	 niqzwDbtaW/sKqrcsZaVCftdaIW9jwTVwU4iVskECFlo7HcRTHu3iO6wqu19ZI+vTkg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794342854;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794342880;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=S3yevQWR0QP2Mx5vcqLjpBrtJN6Cj5pb6mimG15JBzw=;
-	b=Vcg+qGLhWmIs4hHwYJGA9JkhYC7meMSDBaMGN05kpe+SjYMk+ENIUtu6QZyqtuGhGXa7
-	 syWFx2vLtcOd/ivRrR0TvQohuCguyY9TZka9KwbM7oS5K9a6NT+dfrxwOIJr44DQrs/3X
-	 wzRifBLnogz7I/hhqf1ATi8m8+LwcYctZedqkntMJQSBPlNmwJig7ywDKwq9X4apEHD8l
-	 y/5PPKObKZ0i1I7sBI2zbcZccqOv2MWvUxSu9r9ANBZudoDH+nXO+Fyv/eenDuWvCbw97
-	 3+CpqgZAQxBmJDTv+GOBqbwidG4HNgznEXDjWanl+taXqHgkzpGz+144TxwYchorsuw==
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=XhB/wmAO2gEI5agOW6oIrhyDza+W+waWoRcKr91K/YI=;
+	b=uLEiV1TO/2U6Fed494qKNBTBWhH9T2sH7/AGP6/K9CnZjZ69yr5T7/eICMxQ5MUAAllc
+	 GuhCB0PcBJ2/aQRSB+zlZaidm3YK0BMckT/HWknJKTa5e1wqeky2oYqEc5v8QChjYjwj4
+	 zzxGdMjKAD8PACiVqtc1PddHg3TJ4lQxx1lMbbftAL39gXmt9FajZogXQB5U8+akEvVOg
+	 6v6UnmAxOIrLCAN0tPnlfarDxyGeHcbVYbReIUkrTmDiyKF0nT0ka3D0vBKaeJ6MzHtkZ
+	 JOIWwHX3itzQT71eWUSxkUs8QNxyAcu3v8z0aHWaL6bQUNwtENL2S59mkPg90mYoW/g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rh+jOjak;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.47
-Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JJHWSdqs;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.50
+Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175E1606A327
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 20:34:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 175E1606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C2C606A321
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 20:34:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02C2C606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rh+jOjak
-Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-1a3c08d6928so4260293c88.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 12:34:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794342853; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JJHWSdqs
+Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-1a8cc11ac42so2445343c88.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 12:34:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794342879; cv=none;
         d=google.com; s=arc-20260327;
-        b=j280HFFr/haYJLR6CWtIh5RKFpUKt8Cu4jtFZfEEZoO3EdjpuC6BNg5mFTfJfk+exU
-         T8hbyEmu0NfCjvqQr5n3v3pxOmM9ghdKnPBej5IYQii+ZtAGLJttgZevIIJjNjtSOC78
-         8kVgeyPVvNSkklkv0hTJvvuspJuzGO72MqvR+7L44zpZ4faYye9RqAvcrAmtX93BKaFj
-         frdH8Cu/BOkl3VxGLiHPrITSSl2DkKUvj8VVpgMp0EOZLNfRSTKx1G4ovJ/AL2AcJxP8
-         HaqwycxfF0FdSXXK6ZozSWSCEc3IFeacApn4Rj1Ub4Vb0v9eO54V/OMTNPiIzIeNDdZO
-         0QJA==
+        b=KYsJc8LtuoB2zCygiLY1SWVPMXgIsxN/CLjoUnj0slq6oE0WE26tDdp1CU2hOkfM/O
+         HxveO2/pM07DShqUn1ZCzllOHhaZYEbE3ObbLJQ1cN9/5D2Ery5rp2BrWBePxuyiAaJT
+         S6Gko5fRyvEpcZlXgA3CQaHzwMdCrCCW4+Q5kXmxFEvg38wBgfQ+q9oiyOE9kixjTaaX
+         xPMkK4Ch67WvSQuJ0yBXrE5pybHTtmr2HSh/eaJ1ORFZKP+I0VjvtaQnk4I9k2Efd9fT
+         UTDr18mj2IDzt0iuNJRKxOIi4UMqI+BelebFouaj4QyenpyxxSlRem2ffi8Sl5CYGVNe
+         0Pfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=S3yevQWR0QP2Mx5vcqLjpBrtJN6Cj5pb6mimG15JBzw=;
-        fh=FJfF47IH0K8d88q4vdYCDf5QhsPjweNwb/pVg2YN00U=;
-        b=LjexGSHs4rrZ/MGyfZQPE5yNKN+2H4Jh1OpOA/gg2q61PRDz069g63r3++OgsH5V9e
-         qhs3AHMaf6JsatjnumJjEFQNrEZB62n5SvUZUCwyixT2qcjZii4whjrt0TN4SCX8qOgJ
-         5rwPmn27HpfJ4P+WzSF/jStGKJCluupHLaEcOXzbfPmK6OrJVd7gjQamgOUawT80wjgS
-         IoKyXnmKPyMCQqPD9U3KBmq/PMkuu2s4oSWzq8jxcgsw81HrYi8u4q2vmXhTGOV0kNbp
-         kCPZyvPX91eNKMXCdkmT3F+ODgTILxPe6tQsIbwSsjsbI5JL1u7ujVtTb+x2wRHTkdft
-         vmbg==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=XhB/wmAO2gEI5agOW6oIrhyDza+W+waWoRcKr91K/YI=;
+        fh=UQ55/URIWQY8Up3UL54MtAB87QSNnDWtI8ukQRSBEWI=;
+        b=EWGxDuvYUpS1aPJ95nwDfsrplYheuj8PDf+Gaz0O6Ng+x5OE9Xyqthkig4rv/tAbrh
+         s+KR1xGDlqXQUrYUFRd+qcarHdIDig5kLzm2kI4LDySvFCeBRGNM7ge37sTOHsBOpyjC
+         T4bakGvWSXhvByiZLXCs6Fn5KxBVXsLb+2h9s7qImKwuZuWm2Mc0Kdip6Mf0e5yMq8QJ
+         aB14gwSYpHffVDr9i2tbpheftJoIa1jhP5BE2GtvQtA6CBbA70iJx1NsftEvTEi+DqVr
+         g9+AplZ9ffZdkO5uyBbUtBfio6TYD0iIVBBq3lyyDG7dOfI6y65kWxxVX3DJ4xb+m/d1
+         ilNg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794342853; x=1794947653; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=S3yevQWR0QP2Mx5vcqLjpBrtJN6Cj5pb6mimG15JBzw=;
-        b=rh+jOjakz1G2mhKn7qUhYjA2f/PgbfhMztkjhsL7VKNEErg7iKclTlsgl3qQW1kwfh
-         /3vViQlVc3y9xHIaX1bp4vH3xLFW1sZXtLNWciRXBfBPAsuqPLVc7XfnHyPD47R0wk+3
-         HCkYrHGw53UOuL5i1hpGyVEL3qLps5eKTGbiSNulzmeW5/64EaZt1cjbas3YaO/IqkcB
-         +mhUjHTZJKbLu22kIFMrIT4rCmLI8v283sXOh2zhWVeYqQz/z7X3UedPxvVsCzmb562f
-         eBbM4JymaUo/ibQGFrYZAdEA0Ia+yWq2D3wQdzg3Do0MMnl3btYVVi7cp+2Rf8VL49ze
-         E70A==
+        d=gmail.com; s=20260707; t=1794342879; x=1794947679; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=XhB/wmAO2gEI5agOW6oIrhyDza+W+waWoRcKr91K/YI=;
+        b=JJHWSdqsEtM4bBU+5grCo2bl0FUiJb1cGjtLviO+HJ316nr8t93eAwbQrKRMSTg54v
+         S1eD3X6ENXcfeP1135+eyE78fqh6YlByhVfnIxLyFG7Fnme7gn9oHVld+Wq+x8XHcCgU
+         ruru19j4apZJUaalygL0J9pPog4yG/vMVTq376YY4QDiEFFSF48V4166IoB/ePVwxqgu
+         /D+dc8LeBN8iMMdGC15ltgljl1n3cr/733lqr6mNBbguaeSVcedgduo2I4tL96AGpr4Y
+         F5Cjwk7kDEsYWWPiIqIdzSPMbFSV4xONseh6BU8GmO+jDJSOZkGOTcyfvOQoysJ/zb2v
+         QPmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794342853; x=1794947653;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=S3yevQWR0QP2Mx5vcqLjpBrtJN6Cj5pb6mimG15JBzw=;
-        b=ZNT4ZlHxMAsalJQ2mtubuLbI55ZS6bMq2d8ZHzLuG31cblLUJywTj6hX3wKwYEt/8F
-         4CKeod94qzw8iPqUhqqHzCY09cFwvKtRpI0dCou5De/BXi9QCWB7KS619qE3oKwYK0c4
-         v/5m5mjaWuuoVZ5QYK7HlYtEGkvkjjunZvWN6WJQikpMZ1m6G8H3sgUYLsBuOA/dypZN
-         5Uaz7Uy3H7fdZU/QuY88iMqJxNcFpYjXlcZG79uYnKvk5LDY20sQPIgPEwrbRk9l7//p
-         d3ytwrD6pv35uV1CEHXU/WTJMLS8oGxSB3OHVLKUcPyNmRun/zio/zEl8pj5Rp3+vmIM
-         YoTg==
-X-Forwarded-Encrypted: i=1; AL+hErGpc1K7qHSpwM42SQZRaULTIjcHTzqaEPdNBdhW1ajZX033qLxFGUtbtCwVETAvaldqrD58aDUMGSf+2P/YVoupaUfz@vger.kernel.org
-X-Gm-Message-State: APuU4Z9cI6JqcxZTovNZpeIGfNFDqqGgsFjhcpvNWSG79q7mMh5+0cKE
-	8la0Mgv8wFpaFy5gPtTWaKMnLXZcQHbBJ6Uq9oMmqv5gE5zVUJJdwZPnccHlaxAJ9/bI8y/+rD8
-	2pRbim2wFBdlo4ArmJaMaz7r2EkNl0Is=
-X-Gm-Gg: AYBFou0hmXENBMYpHvHVRguWOzjaPIHu25uz9hVLdKlnplbXHbArvw/Py/qeJTvQS01
-	4Dn7z0lbn6661ie9zkhiOzPz1tvDLY0I43wJwJcvV7NN+ykh19LPfLkmy85bKs4SdQhhKvX9JWo
-	QCfmdwzaOCSGq+z7uve4e0veE/SEQDHhX/WEvpVlFF+v2yH1Vt7oVLvifiE555yAJcu+AuiiK3c
-	owOob7b3OQYcNfKTncp80akFwqo3Y3Mj18AW6J8XkYcYmzv3Y2ZztyiZ6INOJwIqLFLQAkfzPGa
-	c+s8kH/3wd6tv2/5BLbp/GnSB1EO56DfTiBp/NSAcMCOUz7GJ5TW7WQN4hTs4+neH45RKub6m2d
-	K/X/+HPUsdU7+M6ogz/4wog==
-X-Received: by 2002:a05:701b:4354:b0:1b2:4b42:1870 with SMTP id
- a92af1059eb24-1b3b60122e6mr5192830c88.31.1794342852985; Tue, 10 Nov 2026
- 12:34:12 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794342879; x=1794947679;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XhB/wmAO2gEI5agOW6oIrhyDza+W+waWoRcKr91K/YI=;
+        b=lVgn0x1s0yhj2YE7UJsI1ie/WpX0wscKSG0Qo9+6IDieZJ2DC2oKzTOSf9LxVMtSai
+         dQgv8C3j5qraahLaS+Jshtf74UWT6/Peg3G18bitUCokpSpCgD9AutXmvcSSt7vi6+jX
+         bOy4ugHFopJzyL18qGHXTdJetasQhFHfo7B6V89uOU8KISRpfnJ4Dln4m7mIrbudznlr
+         byjyLn2OQVumbYCAMNnOIiHqNa3tGBfpiKavhDFpITbhzyXgdxcrViV1Dc3K62EK7K9u
+         1LP88Llc87dxMuaVOamFM1sNt1RUwCWIAyaq0DBLQjR1FalIVedrVH5rsK7rUGtr5Zju
+         zbkw==
+X-Forwarded-Encrypted: i=1; AL+hErHnTAynIcNXrHlRqyt6D+R/TLgYqSuCndndOEN7ihAbFpOPlEwBSaoECdJcwH8YBobiQuLTDv5F0Dwb6C5fOZo04bYz@vger.kernel.org
+X-Gm-Message-State: APuU4Z+VOjpPoosWOor7nBNQaRgNXE6Ldimlk7v+kqRpGjRA67V4Kq7/
+	Y+6rcGYcCh2HFzuWmnFAMeCL3nLlzCr8jviFDVpYr8hX/eruBhtx8GcknEY6OQPzKAhGDXDUSgU
+	27PNg4UIkylDn3HZwmH4TmrzeM1Wu0r4=
+X-Gm-Gg: AYBFou3TwiUX2qdvkM2Jdy2bpU47gELQvencZhmvsfPFZnSJCKqSPEnibIzmlyKeFBk
+	t99KxwrNOCQVUQMJVHWd4kxJicZGRQU6dR0s6JBw8Wn4hUZbe2eZezaGbn5wHle9iGVXWqtUrhK
+	VEjn3eosYJT1LhVB0F6KQviNVLqphO8ccXi/EzIWTGQwglTeY4cQH5ps8CDeJb/bIzlh3yBxbHi
+	ulXe/hcR6Yt5tUDvN7I/g0I+lmG2NjiS+QI/ZZNa/sQ7zLmN1X5jvp4juG2ml4KfopLIskQdUcA
+	qyT9y8vebjGi/fdW7LRLbSHsbu19pkt1H8D/SsWoJwkzMTjaPcMu+PmVznwjGJbAEJeQVCaUlko
+	jXai92ZokGYZiafNHjxWMls68264ug9rM7WZX
+X-Received: by 2002:a05:7022:f210:b0:1a9:cad6:5b58 with SMTP id
+ a92af1059eb24-1b3b619527emr6112214c88.39.1794342879053; Tue, 10 Nov 2026
+ 12:34:39 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -103,71 +104,74 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261109-legion-lighting-rfc-v1-0-a87e1db8c5e3@gmail.com> <71ecff766a91670d509b1286efd995b71efc21f4.camel@rong.moe>
-In-Reply-To: <71ecff766a91670d509b1286efd995b71efc21f4.camel@rong.moe>
+References: <20261109-legion-lighting-rfc-v1-0-a87e1db8c5e3@gmail.com>
+ <20261109-legion-lighting-rfc-v1-2-a87e1db8c5e3@gmail.com> <0ff29b9d-bfd5-4d89-0e78-05497312e390@linux.intel.com>
+In-Reply-To: <0ff29b9d-bfd5-4d89-0e78-05497312e390@linux.intel.com>
 From: Ciro Pedrini <ciro.pedrini@gmail.com>
-Date: Tue, 10 Nov 2026 17:34:01 -0300
-X-Gm-Features: AclHuK-300J_C-DWjExk6OeF5Jmrb_TP8ZwYUDbSNJSRs61knDywMdBKoecE0iQ
-Message-ID: <CAPKD0HduW_atYsz47Nv-9A_88K1B33xENUnZgQAKcH4VHqV9PA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/2] Keyboard lighting for the Lenovo Legion Pro 7 Gen 10
-To: Rong Zhang <i@rong.moe>
+Date: Tue, 10 Nov 2026 17:34:27 -0300
+X-Gm-Features: AclHuK8u07v-lJ61Vl1Al48vF06fYxLioDMP6HLdGSnp9INLtz5V4nXHU_TVAE4
+Message-ID: <CAPKD0HfAWsMDntCAmjKSOsc3zOeLVMUn9=uBK45OaFo2ovy-XA@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/2] HID: lenovo-legion: Add keyboard lighting driver
+ for Legion Gen 10
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
 	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
 	Werner Sembach <wse@tuxedocomputers.com>, Aaron Erhardt <aer@tuxedocomputers.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
 	linux-input@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rong,
+Hi Ilpo,
 
-On Tue, 2026-11-10 at 22:56 +0800, Rong Zhang wrote:
-> Thanks for working on this.
+On Tue, 10 Nov 2026, Ilpo J=C3=A4rvinen wrote:
+> Thanks for the patch.
 
-Thanks for looking at it (and for the clear direction, it helped a lot).
+Thanks a lot for the thorough review, and sorry for all the noise in v1.
+
+I sent v2:
+https://lore.kernel.org/r/20261110-legion-lighting-rfc-v2-0-845726afb71c@gm=
+ail.com
+
+Rong asked to keep only the keyboard controller, so all the LampArray
+code is gone, including the pair lock and the byte arrays for those
+reports. The rest of your comments are done (struct with __le16,
+guard(), devm_mutex_init(), no magic numbers, includes). Some answers
+below.
+
+> Please don't include how things were prepared into changelog, but you can
+> use the area below the first --- so it won't end up into the final commit
+> message if you patch is applied (our tools will automatically cut the
+> part below ---).
+
+Fixed, it's below the --- now. Sorry for the rookie mistake.
+
+> > + spinlock_t event_lock; /* protects ready */
+>
+> Why does bool need a spinlock? That sounds like overkill if it's all it
+> protects.
 
 [...]
 
-> Let's take it step by step, and submit a driver for 048d:c197 first. As
-> far as I understood, the driver should be able to handle "hardware
-> brightness (0..9, stored), the controller's own effects (stored
-> profiles)," and "Fn+Up/Down/Space" by its own. (Please correct me if I
-> misunderstood your words.)
+> The racing reader side might have already reading ready and unlocked. So
+> what does this lock actually protect for real?
 
-Makes sense. v2 only does c197, and it doesn't depend on any LampArray
-work:
-https://lore.kernel.org/r/20261110-legion-lighting-rfc-v2-0-845726afb71c@gmail.com
+You're right, nothing. I checked hid-core: it holds driver_input_lock
+during probe() and takes it before remove(), and raw_event is only
+called when that lock can be taken. So raw_event can't run before
+probe() is done or after remove() starts, and ready was always true. I
+removed both.
 
-About your question: yes, the firmware does all of that by itself.
-Fn+Up/Down change the brightness (in steps of 3, and it's stored) and
-the controller sends the new level on a vendor input report. The driver
-only exposes the brightness as kbd_backlight and forwards the hotkey
-changes as brightness_hw_changed. Fn+Space switches between the stored
-effects (6 states counting off). The controller can also read and set
-the active effect, but I left that out of v2.
+> Can't the work be managed with devm_ ?
 
-> I am also working on a independent hid-lamparray implementation that is
-> far more generic than Aaron and Werner's series.
+I removed this too. It was only there to call
+led_classdev_notify_brightness_hw_changed() outside raw_event, but
+that's fine to call from raw_event (hid-lg-g15 does it).
 
-Something you may want to know for your driver: on this laptop c193
-doesn't show anything on its own. c197 has to hand the LEDs over first,
-with its vendor command 0xAA (07 AA 02 00 00 00 gives them to the
-LampArray, 07 AA 02 00 01 00 gives them back). The controller remembers
-it after power-off, but it only matters while the LampArray is in host
-mode. In autonomous mode you see the controller's effects anyway. So a
-generic driver on c193 alone would register lamps that do nothing until
-c197 is switched.
-
-v2 doesn't touch 0xAA. How would you like to handle it with your
-driver? A sysfs attribute on c197, something with your autonomous mode
-trigger, the component framework? Once your series is out I'm happy to
-write that part and test it here.
-
-> Please use the component framework (not in your next revision, it should
-> only add support for 048d:c197).
-
-OK, noted.
+I kept the LED itself without devm on purpose though: devm would
+unregister it after remove(), so after hid_hw_stop(), and in between
+someone could still write to brightness.
 
 Thanks,
 Ciro
