@@ -1,73 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.22
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794329614;
-	b=oNmf7mWCOdY6Gs6hkifvHbqHkZWnMB/pPknWU1s4FhnQ4K+UO75w1KgRo4wR8L16fW8n
-	 iukgG4d5Wsh5rYUF3OJoPjL6jGwbd8CGRcgqKJ8VspTkjI+1uuSLnuKY4vObp7Pfv+0BT
-	 W1Lt/1/10lDZ6XP8yOorPmq5N5TTcvJ9lDHWD/d96eELqA3npF+GpnBnSBBIgUaQUjg+X
-	 yTXHHgf7yldJoSAw063v1b1+IOdVmirnPTyCoTkRrI2/QUmVjSQoyaf2/LxV0EHm0o1ve
-	 zpJbK+L2cjQW4rM1OI8ZI21M7I0vwagNPovr2msp8rgvQT0AbVe21CxdwSZJICRCd4A==
+	t=1794329613;
+	b=HPSErPWeMwcFsEfmMFlpSWSpjUC/HdGGWgxEE82sTBLlHQgxiwkW54wxL3hGnqdAQqlU
+	 dg2zU24lgS9cKKZFbT+jD1pM97+8CYbpF5ejQiGtBsRWFQ8+0gUTSjId7/cN4sfgQTBUV
+	 CBoYT6fSeiKWvYz9yfc0LekanDbyHl8qd8WIO1WQaylWdeQ9fePE+vylfYequbaU+L374
+	 S4as0LwHW4utrjJxkrVNRDeC/tnckuIpbjO94mwAVzF/Aa+M+fZbxFag6qP7ejGbOPnrh
+	 Kv0N8svGlOYGWXGsUdU3q4m36lwtv3Mrx9WTYEtkA4gbJrlufpW3fDN1QeAaLEICYtQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794329614;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794329613;
+	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
-	bh=S9BGB4PMADB0aBjp0wYCxbN962ZBvNoG56LesM6ShLU=;
-	b=vVC/1m4A5d94di6drI15ggD+9nIRfIkU0vY7gLh5jRtg0C0hAO1lhMtNM5qv9tNBjMv9
-	 uOylASChvgh2cK2w3q2D3XPUKGG2f31GovFg1W0oefqQnRJQ1OBEsLZHKc02LjIGMkoox
-	 y27qxngvM/nIqNe3sxPaqxBGRTWO+EYYq4cyzUzAuOereHKbx1JQLH3ID31ahIgd7KXEO
-	 MIFQarPAtdCUT7iWXUTI6FK1ufcEuFg69dLgsHu9Wq50gMLcC+SSBaTntIabAHfN3nJMJ
-	 h8PSuUdFrTTIphhklWoDk1GaLSSey2WH9sZ9OBQRAU8S3vRDuR2O5xLNuVukLqpeKHQ==
+	bh=KYZ2UuvPfB+TRECtfVH9TmzAWUH1wX9K08urgnRmaOM=;
+	b=HpQGQfq6SNi1OSWN0hG/n4rhw9MZZ2aaO9K0LOS1iMqFbLbYumtTQo+fILePKl4u3flT
+	 9qKAcICX3PTjcCmR7RSca6zf0gHn8CZ8sXFWq7SkMgWrW7p3Ke8xwwvIL/N8fahZZovap
+	 tsbNAAMgzfDQ2iRzKZDOBRzdrs8k4aVFpHe2XeISr3pUUEBlXBK1EbWCJ8VCVTjJNcGbY
+	 m1ewqPf0YqzUrF2fzn1E0FiuxdFuztDzSr5OlNPg0mw35tPqKGy2RqJcwIeWgPVOMYGtA
+	 4nVBsVswxX2mvgWm258EhBM49COeIM0uLyZ+ur9stT1Ga5AexTdkDV1Yf2pklIkf8Fg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmx.de;
 	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b="OD+K/1tT";
-	arc=none smtp.remote-ip=212.227.17.20
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=Z4WNvha8;
+	arc=none smtp.remote-ip=212.227.17.22
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E5360A3836
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 16:53:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D6E5360A3836
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B855E60A3810;
+	Tue, 10 Nov 2026 16:53:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B855E60A3810
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=OD+K/1tT
-DKIM2-Signature:  i=1; m=1; t=1794329612;
- mf=PFdfQXJtaW5AZ214LmRlPg==;
- rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
- d=gmx.de;
- s=s31663417:rsa-sha256:AcxFnAg5e7d7WymFPF03qMgLAUZE
-   wg046SbQd0e70jmw6fVYR7FwGumqdMUpwWuCe0m8Ih86Z789VWy+b1AY99rX8qGmNdZKcf3JC/W
-   ux7FrHhnqEp31Lyn3bBoEYNsLoDPjtGcZxk1qr2j4jPYrjEhhjTHgHa/5KCNGBijPSnFPKLzcyA
-   0K5weKrorJOWVcNsT/Veec3dDfE2Au+MnhakZemZxId10NR5wrTpjiOD4qlvmSi9aYzfTF79QpL
-   KXIJqmopxJ6FF9Sw/MWM9UcSFkZvdkRsYwklljQGjKXgDsEHDiQ5KmHUCYoX4skw1X6WXmO7z6w
-   nlvNcJBSKxHKkw==;
-Message-Instance:  m=1;
- h=sha256:
-   U9Y8/NIAQALOxeAbWUX6X6/Th8BD1JgQQq/26QCKPVU=:
-   SNI28VtedYCB1M+rhu8/WwGK3HHuOb89rKr9XQRCRyo=,
-  sha512:
-   0xB7bQD7Y4YWLpRckMoymJ62ryLQ5Y4JuK+tDEzVvP9u/UEdtFwWog62gcoAPs93zoEykf0MCSqVTc5DXHLpvQ==:
-   zFPPhHwEABjC8fjphETf1Z0rJvdT4WKvQOjTTUuSP0nSTlkQoHjwInfBB7DHaEg/PLXCY8I9diS41fh5fKiigQ==;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=Z4WNvha8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1794329605; x=1794934405; i=w_armin@gmx.de;
-	bh=S9BGB4PMADB0aBjp0wYCxbN962ZBvNoG56LesM6ShLU=;
+	s=s31663417; t=1794329610; x=1794934410; i=w_armin@gmx.de;
+	bh=KYZ2UuvPfB+TRECtfVH9TmzAWUH1wX9K08urgnRmaOM=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=OD+K/1tTqIUobycctieq//F3x99J0i6aJPsU7TZtI+TDh/3QrFtNzzg4EmGtgCE5
-	 l5nam5dtfIyerg6AxV51r3svsx/tGti3nSgW53mNxlDn28z5qVILE1la12HCaKHEa
-	 urKAY2iQobs4lL/VbK+zXDAbGZ/SD7V51C3zpXiX9J35vmCzZT7PGOVwRrQAMI4/f
-	 lPs04xRuKvGPpu/y0iN7Kd8/Hm/i3Y0EzXSNUZLk+u9s1ObaEIW572DKFVcP6/n4b
-	 cVJD9NbZ/3YxTV1bDmDol1weDJFYxeS4TKy+7QKkFNubGhPtoUEqdmskg8D3ZfHhr
-	 BF7fxD9125idS2mWfA==
+	b=Z4WNvha8zSeDfFu9agMCTu5DqWPnmykuDAAYaTR0NV9xlJqM6kfSYfGuUlAGquL4
+	 13bHpcKm1X3k/31atr8upbiR0gdE1zSJYgGQD7PonmGdSd/2jLdiN5NhV67eoZn+Q
+	 8RoLizc4xoBjqOZ/EERy1Lu+CQp/llddrrLENllTVjvpekt8jzeILDDEFbc+N3Akp
+	 QtgrqVhg/VPuD7cc9Bwr7oUcMuiKw+8jjPOalovKSC0iCP7+44WpPLnt93edGpzos
+	 m2/PsrE0eFsyoaZDG69dJFjnUGeUnxJhXtle1PoU7YqnjvVWj5w5ne+rH3wwevJ0g
+	 R686tNY+K/F5C4WuHQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxDou-1wXuAO3tCi-014EWM; Tue, 10
- Nov 2026 17:53:25 +0100
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1McpJq-1wrDQm2o7O-00qjZf; Tue, 10
+ Nov 2026 17:53:30 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -78,9 +60,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	sre@kernel.org,
 	linux-pm@vger.kernel.org,
 	wse@tuxedocomputers.com
-Subject: [PATCH v2 1/9] power: supply: core: Add power_supply_has_property_direct()
-Date: Tue, 10 Nov 2026 17:50:02 +0100
-Message-ID: <20261110165318.631010-2-W_Armin@gmx.de>
+Subject: [PATCH v2 6/9] platform/x86: uniwill-laptop: Mark sysfs attributes as const
+Date: Tue, 10 Nov 2026 17:50:07 +0100
+Message-ID: <20261110165318.631010-7-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261110165318.631010-1-W_Armin@gmx.de>
 References: <20261110165318.631010-1-W_Armin@gmx.de>
@@ -94,187 +76,428 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:naKnM1oc3qiA5O/pH3UUWDoJkKSYroXHBCUWKwDWjPSlMe3frxu
- iMeB0UNxdhgZyygNAovbila9rDntYq70P4ZzPo8h2dvyYRnU27xKxb9YyrHaevZKLT6JChK
- OqvJFV/BdDEQSrPTXZ+hmhTUW1fDfFNxTALSwMSLfl6VNpRuWE2ZMv02eA4E2iSiltCyPJb
- uOtIQSyDq7PvzfQEZC/cQ==
+X-Provags-ID: V03:K1:9JeYf5ln9TaSYTZI/UOztFK2b1Q/2s0MRFc+b6FLzTXuMI/mPm+
+ VSNFIRnBaOhBQpTaRK7mDzV9mVwGKLZIpXigcK5JyslGOybI4tUg1LF+W2hUkcevqtNm9aa
+ YECI/Kiokpa28D1XIYSrit+xJAQihaT24lPuuuD9RZ6DzNIzaqTDcSPuxox/IE34CvfSmME
+ aqMLydYfgrhHkC6dGyqbQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:R80TtX9J5Bs=;APFKe0ApkqWwKXuYKtDPR3SoKoJ
- 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
- 5j5dp0c/3wqfwI3HrfnkAHq44ckMozJijbrA==
+UI-OutboundReport: notjunk:1;M01:P0:SknIBaUXiaU=;GAkbTf5q7vXRrlbE7Frm5p0e5t7
+ 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
+ W0gtYUhAYeYojspGDOw==
 
-Providers of power supply extensions might want to check if a given
-power supply supports a given property in order to select a suitable
-extension to load.
-
-Add power_supply_has_property_direct() to enable such use cases.
+Mark all sysfs attributes as const so that they can be placed in
+read only memory for increased security.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/power/supply/power_supply_core.c | 26 ++++++++++++++++++++----
- include/linux/power_supply.h             |  1 +
- 2 files changed, 23 insertions(+), 4 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 63 ++++++++++-----------
+ 1 file changed, 31 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supp=
-ly/power_supply_core.c
-index 1cc203f2780b..75b53aec5db4 100644
-=2D-- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -1367,17 +1367,35 @@ bool power_supply_ext_has_property(const struct po=
-wer_supply_ext *psy_ext,
- 	return false;
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
+m/x86/uniwill/uniwill-acpi.c
+index ef3e77446112..fbb704cf6e66 100644
+=2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -740,8 +740,8 @@ static int uniwill_write_fn_lock(struct uniwill_data *=
+data, bool status)
+ 	return regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATUS=
+, value);
  }
 =20
--bool power_supply_has_property(struct power_supply *psy,
--			       enum power_supply_property psp)
-+/**
-+ * power_supply_has_property_direct - Check if a power supply property ex=
-ists without checking
-+ *				      for extensions
-+ * @psy: The power supply
-+ * @psp: The power supply property to check
-+ *
-+ * Check if a given power supply support a given power supply property wi=
-thout taking into account
-+ * any power supply extesions registered on said power supply. This is mo=
-stly useful for determining
-+ * if a power supply extension should be registered for the power supply =
-or not.
-+ */
-+bool power_supply_has_property_direct(struct power_supply *psy, enum powe=
-r_supply_property psp)
+-static ssize_t fn_lock_store(struct device *dev, struct device_attribute =
+*attr, const char *buf,
+-			     size_t count)
++static ssize_t fn_lock_store(struct device *dev, const struct device_attr=
+ibute *attr,
++			     const char *buf, size_t count)
  {
--	struct power_supply_ext_registration *reg;
--
- 	if (psy_desc_has_property(psy->desc, psp))
- 		return true;
-=20
- 	if (power_supply_battery_info_has_prop(psy->battery_info, psp))
- 		return true;
-=20
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(power_supply_has_property_direct);
-+
-+bool power_supply_has_property(struct power_supply *psy, enum power_suppl=
-y_property psp)
-+{
-+	struct power_supply_ext_registration *reg;
-+
-+	if (power_supply_has_property_direct(psy, psp))
-+		return true;
-+
- 	power_supply_for_each_extension(reg, psy) {
- 		if (power_supply_ext_has_property(reg->ext, psp))
- 			return true;
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index cce61137aef4..73bcb127d0fc 100644
-=2D-- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -934,6 +934,7 @@ extern int power_supply_is_system_supplied(void);
- static inline int power_supply_is_system_supplied(void) { return -ENOSYS;=
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+ 	bool enable;
+@@ -772,7 +772,7 @@ static int uniwill_read_fn_lock(struct uniwill_data *d=
+ata, bool *status)
+ 	return 0;
  }
- #endif
 =20
-+bool power_supply_has_property_direct(struct power_supply *psy, enum powe=
-r_supply_property psp);
- extern int power_supply_get_property(struct power_supply *psy,
- 			    enum power_supply_property psp,
- 			    union power_supply_propval *val);
+-static ssize_t fn_lock_show(struct device *dev, struct device_attribute *=
+attr, char *buf)
++static ssize_t fn_lock_show(struct device *dev, const struct device_attri=
+bute *attr, char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+ 	bool status;
+@@ -785,7 +785,7 @@ static ssize_t fn_lock_show(struct device *dev, struct=
+ device_attribute *attr, c
+ 	return sysfs_emit(buf, "%d\n", status);
+ }
+=20
+-static DEVICE_ATTR_RW(fn_lock);
++static const DEVICE_ATTR_RW(fn_lock);
+=20
+ static int uniwill_write_super_key_enable(struct uniwill_data *data, bool=
+ status)
+ {
+@@ -809,7 +809,7 @@ static int uniwill_write_super_key_enable(struct uniwi=
+ll_data *data, bool status
+ 				 TRIGGER_SUPER_KEY_LOCK);
+ }
+=20
+-static ssize_t super_key_enable_store(struct device *dev, struct device_a=
+ttribute *attr,
++static ssize_t super_key_enable_store(struct device *dev, const struct de=
+vice_attribute *attr,
+ 				      const char *buf, size_t count)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -841,7 +841,8 @@ static int uniwill_read_super_key_enable(struct uniwil=
+l_data *data, bool *status
+ 	return 0;
+ }
+=20
+-static ssize_t super_key_enable_show(struct device *dev, struct device_at=
+tribute *attr, char *buf)
++static ssize_t super_key_enable_show(struct device *dev, const struct dev=
+ice_attribute *attr,
++				     char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+ 	bool status;
+@@ -854,7 +855,7 @@ static ssize_t super_key_enable_show(struct device *de=
+v, struct device_attribute
+ 	return sysfs_emit(buf, "%d\n", status);
+ }
+=20
+-static DEVICE_ATTR_RW(super_key_enable);
++static const DEVICE_ATTR_RW(super_key_enable);
+=20
+ static int uniwill_write_touchpad_toggle_enable(struct uniwill_data *data=
+, bool status)
+ {
+@@ -868,7 +869,7 @@ static int uniwill_write_touchpad_toggle_enable(struct=
+ uniwill_data *data, bool
+ 	return regmap_update_bits(data->regmap, EC_ADDR_OEM_4, TOUCHPAD_TOGGLE_O=
+FF, value);
+ }
+=20
+-static ssize_t touchpad_toggle_enable_store(struct device *dev, struct de=
+vice_attribute *attr,
++static ssize_t touchpad_toggle_enable_store(struct device *dev, const str=
+uct device_attribute *attr,
+ 					    const char *buf, size_t count)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -900,7 +901,7 @@ static int uniwill_read_touchpad_toggle_enable(struct =
+uniwill_data *data, bool *
+ 	return 0;
+ }
+=20
+-static ssize_t touchpad_toggle_enable_show(struct device *dev, struct dev=
+ice_attribute *attr,
++static ssize_t touchpad_toggle_enable_show(struct device *dev, const stru=
+ct device_attribute *attr,
+ 					   char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -914,9 +915,9 @@ static ssize_t touchpad_toggle_enable_show(struct devi=
+ce *dev, struct device_att
+ 	return sysfs_emit(buf, "%d\n", status);
+ }
+=20
+-static DEVICE_ATTR_RW(touchpad_toggle_enable);
++static const DEVICE_ATTR_RW(touchpad_toggle_enable);
+=20
+-static ssize_t breathing_in_suspend_store(struct device *dev, struct devi=
+ce_attribute *attr,
++static ssize_t breathing_in_suspend_store(struct device *dev, const struc=
+t device_attribute *attr,
+ 					  const char *buf, size_t count)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -942,7 +943,7 @@ static ssize_t breathing_in_suspend_store(struct devic=
+e *dev, struct device_attr
+ 	return count;
+ }
+=20
+-static ssize_t breathing_in_suspend_show(struct device *dev, struct devic=
+e_attribute *attr,
++static ssize_t breathing_in_suspend_show(struct device *dev, const struct=
+ device_attribute *attr,
+ 					 char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -960,9 +961,9 @@ static ssize_t breathing_in_suspend_show(struct device=
+ *dev, struct device_attri
+ 	return sysfs_emit(buf, "%d\n", !(value & LIGHTBAR_S3_OFF));
+ }
+=20
+-static DEVICE_ATTR_RW(breathing_in_suspend);
++static const DEVICE_ATTR_RW(breathing_in_suspend);
+=20
+-static ssize_t ctgp_offset_store(struct device *dev, struct device_attrib=
+ute *attr,
++static ssize_t ctgp_offset_store(struct device *dev, const struct device_=
+attribute *attr,
+ 				 const char *buf, size_t count)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -983,7 +984,7 @@ static ssize_t ctgp_offset_store(struct device *dev, s=
+truct device_attribute *at
+ 	return count;
+ }
+=20
+-static ssize_t ctgp_offset_show(struct device *dev, struct device_attribu=
+te *attr,
++static ssize_t ctgp_offset_show(struct device *dev, const struct device_a=
+ttribute *attr,
+ 				char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -997,7 +998,7 @@ static ssize_t ctgp_offset_show(struct device *dev, st=
+ruct device_attribute *att
+ 	return sysfs_emit(buf, "%u\n", value);
+ }
+=20
+-static DEVICE_ATTR_RW(ctgp_offset);
++static const DEVICE_ATTR_RW(ctgp_offset);
+=20
+ static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
+ {
+@@ -1036,8 +1037,7 @@ static const u8 usb_c_power_priority_value[] =3D {
+ 	[USB_C_POWER_PRIORITY_PERFORMANCE]	=3D USB_C_POWER_PRIORITY,
+ };
+=20
+-static ssize_t usb_c_power_priority_store(struct device *dev,
+-					  struct device_attribute *attr,
++static ssize_t usb_c_power_priority_store(struct device *dev, const struc=
+t device_attribute *attr,
+ 					  const char *buf, size_t count)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -1064,8 +1064,7 @@ static ssize_t usb_c_power_priority_store(struct dev=
+ice *dev,
+ 	return count;
+ }
+=20
+-static ssize_t usb_c_power_priority_show(struct device *dev,
+-					 struct device_attribute *attr,
++static ssize_t usb_c_power_priority_show(struct device *dev, const struct=
+ device_attribute *attr,
+ 					 char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -1085,7 +1084,7 @@ static ssize_t usb_c_power_priority_show(struct devi=
+ce *dev,
+ 	return sysfs_emit(buf, "%s\n", usb_c_power_priority_text[USB_C_POWER_PRI=
+ORITY_CHARGING]);
+ }
+=20
+-static DEVICE_ATTR_RW(usb_c_power_priority);
++static const DEVICE_ATTR_RW(usb_c_power_priority);
+=20
+ static int usb_c_power_priority_restore(struct uniwill_data *data)
+ {
+@@ -1125,7 +1124,7 @@ static int usb_c_power_priority_init(struct uniwill_=
+data *data)
+ 	return 0;
+ }
+=20
+-static ssize_t ac_auto_boot_store(struct device *dev, struct device_attri=
+bute *attr,
++static ssize_t ac_auto_boot_store(struct device *dev, const struct device=
+_attribute *attr,
+ 				  const char *buf, size_t count)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -1149,7 +1148,7 @@ static ssize_t ac_auto_boot_store(struct device *dev=
+, struct device_attribute *a
+ 	return count;
+ }
+=20
+-static ssize_t ac_auto_boot_show(struct device *dev, struct device_attrib=
+ute *attr, char *buf)
++static ssize_t ac_auto_boot_show(struct device *dev, const struct device_=
+attribute *attr, char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+ 	unsigned int regval;
+@@ -1162,7 +1161,7 @@ static ssize_t ac_auto_boot_show(struct device *dev,=
+ struct device_attribute *at
+ 	return sysfs_emit(buf, "%d\n", !!(regval & AC_AUTO_BOOT_ENABLE));
+ }
+=20
+-static DEVICE_ATTR_RW(ac_auto_boot);
++static const DEVICE_ATTR_RW(ac_auto_boot);
+=20
+ static int uniwill_write_usb_powershare_high(struct uniwill_data *data, b=
+ool status)
+ {
+@@ -1180,7 +1179,7 @@ static int uniwill_write_usb_powershare_high(struct =
+uniwill_data *data, bool sta
+ 	return regmap_update_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_USB_CHA=
+RGING, value);
+ }
+=20
+-static ssize_t usb_powershare_high_store(struct device *dev, struct devic=
+e_attribute *attr,
++static ssize_t usb_powershare_high_store(struct device *dev, const struct=
+ device_attribute *attr,
+ 					 const char *buf, size_t count)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -1212,7 +1211,7 @@ static int uniwill_read_usb_powershare_high(struct u=
+niwill_data *data, bool *sta
+ 	return 0;
+ }
+=20
+-static ssize_t usb_powershare_high_show(struct device *dev, struct device=
+_attribute *attr,
++static ssize_t usb_powershare_high_show(struct device *dev, const struct =
+device_attribute *attr,
+ 					char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -1226,9 +1225,9 @@ static ssize_t usb_powershare_high_show(struct devic=
+e *dev, struct device_attrib
+ 	return sysfs_emit(buf, "%d\n", status);
+ }
+=20
+-static DEVICE_ATTR_RW(usb_powershare_high);
++static const DEVICE_ATTR_RW(usb_powershare_high);
+=20
+-static struct attribute *uniwill_attrs[] =3D {
++static const struct attribute * const uniwill_attrs[] =3D {
+ 	/* Keyboard-related */
+ 	&dev_attr_fn_lock.attr,
+ 	&dev_attr_super_key_enable.attr,
+@@ -1243,7 +1242,7 @@ static struct attribute *uniwill_attrs[] =3D {
+ 	NULL
+ };
+=20
+-static umode_t uniwill_attr_is_visible(struct kobject *kobj, struct attri=
+bute *attr, int n)
++static umode_t uniwill_attr_is_visible(struct kobject *kobj, const struct=
+ attribute *attr, int n)
+ {
+ 	struct device *dev =3D kobj_to_dev(kobj);
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+@@ -1292,11 +1291,11 @@ static umode_t uniwill_attr_is_visible(struct kobj=
+ect *kobj, struct attribute *a
+ }
+=20
+ static const struct attribute_group uniwill_group =3D {
+-	.is_visible =3D uniwill_attr_is_visible,
+-	.attrs =3D uniwill_attrs,
++	.is_visible_const =3D uniwill_attr_is_visible,
++	.attrs_const =3D uniwill_attrs,
+ };
+=20
+-static const struct attribute_group *uniwill_groups[] =3D {
++static const struct attribute_group *const uniwill_groups[] =3D {
+ 	&uniwill_group,
+ 	NULL
+ };
 =2D-=20
 2.56.0
 
