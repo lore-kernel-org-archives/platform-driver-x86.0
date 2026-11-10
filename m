@@ -1,60 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794349688;
-	b=cni33ROSwdvXKCCLdlpnmt0rRSAK962+kGM68qq8Clx3sQ19ux4umgDPit0QXbPD4LR1
-	 ykJ2JSCsISYU9vlxZjnJulPUo3iOPr1WEw0kjF00fCKHjRWDndktzp1L6+Rx16AMAAFlX
-	 98OtoKNj7qoqDuWS/w0EuOed3Va0ShJoI5wGITzbP1B3Duq8gvYzP1Lgr/08HVhCEyBLF
-	 cKRC3i6Vt4Ur5HPO1/Xjf3TZ33Z637lU0WSm45RVkcRCC5mGAbRK01yfCvYFKXQWNiHH6
-	 cXulYTbKgxChZZCD7ac/lSvVDt6nGI9Owdl3f4kUFjpfEIC95z5WRNJJmHbB++HsPxQ==
+	t=1794354348;
+	b=WOJ+17TwqHSGvgGrdz/t703+WTGQWQ01g3oy2zXIyo38YKrEMesR9AYvv4jkPw7AVbTQ
+	 7xaPbkJloEbtCrwlVYdo71LY3I2c1hhjvgg4igy18D9UgUhTE6iMRg2vRiJQfbNz+XNKo
+	 x6D4Zq/0jsBfUpRZ2zFqtpIk2BvZoj1IXvrzMDi2zJL1shYrAKLgUr91/HWDjLx7F/ZZS
+	 QRROqwWuIWggV9utiuek0eMfWrL7bETzk7/yIV38OntTQphWrwG4p+6USWwOnEHM23a3L
+	 RsImQgwgNAy2NMz0WeuY2GAlosTjsvmD80Yx9lBNhovHo7hcR4dmp6/jiUqQgfZcb2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794349688;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=R6vbE0PtbYBdzOcdkK69nfI2NMGSRYdaGf+o1bvzgiw=;
-	b=hrGi3en3nEfTbCOmc0I6CI+vktQge2R0akoIOJPKWy8IWQJgZq6u0wtl8LB3Aqio75Kc
-	 7I0pHKFXUaCHczg83l4LQ0WeJExf2NrPSVfV1cqMsYMrk/uTcUe9kcQylnN0/f2VH27lK
-	 Zdxh8VO1Qv61uUuRPvL/3hTGK5tVVre3vwO7z8CImwIszZHKQBqRC5TAs1N5wgoXcQkFe
-	 TWxLtjkBBkjO9aVXp7L/rJCaQyisUf3dcoUIO9d1vdJNrWeLrZqIiDd+/U5VuX8cTbMAK
-	 xBwqTW0bSoS3fYAYzn7YuHCq+73pIOL34yZxZxoM/Bl3tQzVSjcvBTGl9aJ0pEg/qYQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794354348;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:MIME-Version;
+	bh=4Lsy1zyB+gZPkYYNWFQCNSOq76EenYc9gTefr5K/zps=;
+	b=Z44btUUGxBpad7DNpyhTPbW54LgZyiopTN7wk1qacuvXf8oMcGdZLlAKcUIqaoqNWG3P
+	 PMeybeNI3Sga/E/REtTbJ3sFfWFR6hb1xNXWtCPY5itiWYp6CYu+T+K2MKbym3IFd1gPH
+	 b8N40GD2RyVEto7H965gdo2l1stlp5OUOtBsAk66b3acU630XO3dxqFsvHhJ0IES9SQaI
+	 h54u3hHhWLgVDu1+Tnkup55I+ZRy4qPpH9ynQ4hURvO2n1Ifj+g/OUudAG/tZX3+QnDgP
+	 nPubQkpFFn0YpIf8QwpGN9GBjfc6mMcipWEuCODSEn+L5vXSsT61SchnPaKKU3WM0/g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=modelmiser.com;
-	spf=pass smtp.mailfrom=modelmiser.com;
-	dkim=pass header.d=modelmiser.com header.i=@modelmiser.com header.a=rsa-sha256 header.s=protonmail header.b=g7zvKaL4;
-	arc=none smtp.remote-ip=109.224.244.21
-Received: from mail-24421.protonmail.ch (mail-24421.protonmail.ch [109.224.244.21])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kxfmtrg6;
+	arc=none smtp.remote-ip=209.85.128.42
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C15A606A325
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 22:28:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C15A606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=modelmiser.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=modelmiser.com
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 4A2B9606A321
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 23:45:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A2B9606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=modelmiser.com header.i=@modelmiser.com header.a=rsa-sha256 header.s=protonmail header.b=g7zvKaL4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=modelmiser.com;
-	s=protonmail; t=1794349685; x=1794608885;
-	bh=R6vbE0PtbYBdzOcdkK69nfI2NMGSRYdaGf+o1bvzgiw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=g7zvKaL4lKwN2N+VfFEQTvirHWJZKH0GhxAC3xz7O3PICsC3q3N/TweRADNXGhXp+
-	 8J8Km0R7I8MjiY7DP5HLBdTLHjRzLBHZ0nhhohHwdmCAsU6KcWpNE4LTU6IkRbxK+N
-	 V6eCC7itw9+IzTSqzhDa94I/CnVle3l8vDWqoLm/weQJU6tQPoPwcmW2HMZ4HiQOnu
-	 ZPDqNqnFfstrnTbiUUzsa04Y2jNPIPZ+qr0RsqNPCs2/snK94gKkmEQLcfALsvW3es
-	 s8ew+WwVQEnD9753SBg0wHMPFzhh4rgt37dSAbop897CAwfkSfrY2fTnGegODnE9dK
-	 n8FWyFu+dXMiA==
-Date: Tue, 10 Nov 2026 22:27:59 +0000
-To: =?utf-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-From: Chad Aldreda <ca@modelmiser.com>
-Cc: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: dell-smo8800: keep the state until the last file is closed
-Message-ID: <20261110222752.2902827-2-ca@modelmiser.com>
-In-Reply-To: <20261110210359.upmeyc4b4xksfva2@pali>
-References: <20261107204950.88952-2-ca@modelmiser.com> <20261110210359.upmeyc4b4xksfva2@pali>
-Feedback-ID: 232753253:user:proton
-X-Pm-Message-ID: 55ee3176eb9293db6a8a8609f158030110622166
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kxfmtrg6
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a35db1f202so20893625e9.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 15:45:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794354347; x=1794959147; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=4Lsy1zyB+gZPkYYNWFQCNSOq76EenYc9gTefr5K/zps=;
+        b=kxfmtrg6hICMHR/In+Quy6FtPzrP0qEjJrogJcgX5m8fZd5Cc4i6EkbuNbBfat6HvA
+         jYkEgpBgf+8KWakwxcFHTzqJxNFY/eZvLGXUeqnTzZP00Ya/pRdKQB7a+85C3iU/TzSK
+         l9pM1aazZib8wTjm0WiZ3wKNSWR7gXoFKc0TAWO0BQUFzJ+AGiqNs1Ix/Vng7CWEknz/
+         H8UUTQOreCE6tBxpOwmpiHmwkp7CgXX/8S3RizmQ8Ghbs5xXZJ199iv7J+v8VjhXfOqX
+         4rnL8Gc+kUKAWqxL1eIN69C5fplCmdzM/AlrH6yMbKBH1CdNLEOLT1YHQbtR0EApHuMe
+         IKkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794354347; x=1794959147;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4Lsy1zyB+gZPkYYNWFQCNSOq76EenYc9gTefr5K/zps=;
+        b=NS2LTDdKRmbBevtko2qKN6wiAhwJYsg87d5rk/ggrQ6qQPD8uYZ9vfKCdM+dwO8TlT
+         KQ0N/bu0NgO78mw2AiFCMX0q9C9p/m4F4KiBc5KoY5K2e8k/w8A1WLRswbO1L2VO9Hbh
+         QZ3EsRCrYl56kE5BBoWgz6DGIZ+8bxZALjN/4nIn+1e0STC0BULxTVUBpHyiyYQMLbA+
+         olD3MxWatdZgYZbDE5bEWw0tZXZzK9iRV+ZXVju8djpVEjLCD6/JINjN2qpe4jaD5tCp
+         +ixBcMETH6yVAnagtPbL7K33v+oFVSesjHpY/0lVbxBbbxr1DWY34hsX4uPlIZUjquKl
+         GjMA==
+X-Forwarded-Encrypted: i=1; AL+hErFvyCE7xf2idGu1IP3fN2UJUshBSSlQqY4bNrQQxWiXZwlUqZkMrQGsxEAqTZs+AX7wVsCLy1bjVkSDZkY5273TEzay@vger.kernel.org
+X-Gm-Message-State: APuU4Z+slVh0R6+LNV+35l/ipMUNqGqecDwx1fEwfudhisk5RCuCVp7C
+	FbG7UjUfvztH1rTVxnrgGcwIimV7lwLuqkkgksEevF+fg4Qw2Cwbun8=
+X-Gm-Gg: AYBFou3xvfiJnnjS4hO+P98bu+LTs2VbMYTpDNFDosnqvG08VXHlOwFF3Jkfm6LHytq
+	ajKz4nO0VC1bdWMBwuE2LDLueMdOgBOzUrpXBchKhk7Jaeu0N1g72fUe4GiMxFbblW/7Ei7MTQM
+	poQWiL8v3FuLJtr6waYk/LxqC6npf54BLttVONnR2wb0wn609yHRsrNJhAxwyZ3xTDigbIRhZEU
+	i4E17Zz9Ba7gWs1UAR7s3ovYYHgNXVYRdxjDrG7ZY5Ny01x8G/jF1ya4uLJeD08kK+bS2V4IIlS
+	hYrOiEjQNQ2qGL8cO/uXDfhjKEX2/VJeRpbF3rdthFoZ+lytwVOr2GiqMchG01H4faKAM5Ef7V5
+	4PEuSzwig65YAMc6PG7dpF6mWlnGJExvtNoK/yPHRSNu67ltf7r7ZDEPt3Q4if6U07hpmEhEXQD
+	gOTpdTGszNbGTC+OvkSLh1BB8dVqvk2w9CpWFqd4PzahSTwCTx53yCCx0nSSM6YXqMRMJNxh7of
+	mUvK5xq9b5x0/8YQtgmeLeOnRABAU+Na19xVSC674j/FMleHkgzeELNJoy+vr77VtGviQVvVRuq
+	IjaW/oPy
+X-Received: by 2002:a05:600c:4ecb:b0:4b9:ff69:19ac with SMTP id 5b1f17b1804b1-4ba093811d3mr8644335e9.11.1794354346600;
+        Tue, 10 Nov 2026 15:45:46 -0800 (PST)
+Received: from debian ([2001:41d0:303:db6b::])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-4983f7801bbsm7532615f8f.5.2026.11.10.15.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 15:45:46 -0800 (PST)
+From: Tristan Madani <tristmd@gmail.com>
+X-Google-Original-From: Tristan Madani <tristan@talencesecurity.com>
+To: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Azael Avalos <coproscefalo@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: toshiba_acpi: validate ACPI object type in
+ tci_raw()
+Date: Tue, 10 Nov 2026 23:45:45 -0000
+Message-ID: <179435434594.2276199.18274627858522339873@talencesecurity.com>
+In-Reply-To: <7ac2114f-f4a5-c94a-0578-7659a7a291eb@linux.intel.com>
+References: <20261102181827.1989460-1-tristan@talencesecurity.com>
+ <7ac2114f-f4a5-c94a-0578-7659a7a291eb@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,44 +103,21 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Nov 2026, Pali Roh=C3=A1r wrote:
-> Hello, I have not checked this patch too deeply, but I have feeling that
-> something is probably wrong if we need to add a new manual refcounter
-> around a whole device.
+On Mon, 9 Nov 2026, Ilpo Järvinen wrote:
+> Your ACPI validation patches seem to lack information whether these
+> actually have been observed to occur on some device.
 
-Fair question. The count covers only the lifetime of struct
-smo8800_device: one reference while the driver is bound and one per
-open /dev/freefall file. It is needed because the struct comes from
-devm_kzalloc(), which frees it when the driver unbinds, while a file
-opened before the unbind stays open and still reaches it through
-file->private_data.
+No, this was found by code audit, not observed on hardware.  The
+tci_raw() function accesses the returned ACPI object as a package
+without checking the type field first.  If the firmware method ever
+returns something other than a package (e.g. an integer or buffer),
+the code interprets whatever the union holds as package.count and
+package.elements, which is undefined.
 
-> Anyway, this freefall logic was originally copied from the lis3lv02d.c
-> driver, which now lives in the file:
-> linux/drivers/misc/lis3lv02d/lis3lv02d.c
-> So if in the freefall device of dell-smo8800.c is some error then
-> probably the same issue would be in the freefall device of lis3lv02d.c.
+The sibling hp-bioscfg driver already validates the return type in
+the same way (biosattr-interface.c line 159), but toshiba_acpi
+predates that and never picked up the check.
 
-Thanks for the pointer. lis3lv02d does not have this use-after-free: its
-freefall state is the static global lis3_dev, which is never freed, and
-its file operations reach it through the miscdevice embedded there. It
-does share the other half: a read() blocked at remove is not woken there
-either, but with static state that only leaves the reader asleep until a
-signal, without touching freed memory.
-
-Making smo8800_device static like lis3_dev would also fix the
-use-after-free. I kept it per device because with static state a file
-left open across an unbind and bind keeps the device marked open, so new
-opens get -EBUSY until it is closed, and the old file sees the new
-binding's events, as in lis3lv02d. Either way I would keep the wakeup
-at remove, so that a blocked read() returns -ENODEV instead of sleeping
-until a signal. If you prefer the static version, I can send a v2 doing
-that.
-
-Chad
-
-This reply was drafted with an AI assistant (Claude Opus 5.5).
-
+I can resend as v2 with the changelog explicitly noting this is a
+hardening fix found by code inspection, if that helps.
