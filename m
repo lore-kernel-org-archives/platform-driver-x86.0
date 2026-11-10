@@ -1,87 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794312161;
-	b=AzRlnR9Wx+G4WP5LgKgLSDnhuPF0l+QB5fTldR97eE0w6DeutqK97ZotefBQ4Zu0TfEx
-	 aqoq7L8XWXGZm90oNIV+rjuDTw5DnxRVXAszoYiFIUIgL0It09bIt4iI7R8iOPTro/7QN
-	 ovmN37YdcnNsFEc+P+uJD7m0r6GT9zVvCjkDH/aguOVy0GZbPuKMihylPGzPu+Y7uUz6N
-	 2SUk9bBW8L3FnJREH6o3AtyVHMS45/PRckBtl+y3og/azEAFzswKs+o4dUezNHlM83Z1D
-	 rNy0/T6D/YZMBggV831YnJBKt9kYyuErwjyURw/8WeSEkPRGr688GP/2W9eBnzKYXvQ==
+	t=1794312173;
+	b=PvvgvNc/DySnYO5jJMoWww+fVtZJpOHcRCbJ/9LSuaSS7dnLelQiPrMfe57TjlknPr7B
+	 8L6mei/c0W7uDS9xPg/P0GwfwP2R483KZl1eWFnFLn9W/tfEPMU8h6cTV9oSTnoVw9EWc
+	 Z01/uWUKsJkGfV10JwIvUrV7ZndFbrzq3kHvOmogLflpCTD0DwMXEkmSwh2875qx2tHC0
+	 71xAbXHs8Q/TWj5Ij7Qp69bPMvExb7TcNg/eVH55CZpVe/itk9xpsbWTrGGbLxiavwTmO
+	 J4SNEcrC2HpWo9Q1kNKh0b0NU7Nv4ARRf9rXlbIN/BlbMxmt+WCfTAPWWx+Q8TEIgQA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794312161;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794312173;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=SH/FoN6uZbvhXWx+mjNqxG+5UNI9GCQnZ6S37gnELZA=;
-	b=fBwTqWAwvVLPfMMTc+2PDh+orDURJcBgvoXun4RhsnBltlvIvhai1e8+Kvd8LSK5bM4n
-	 OHv1JngOZRINR0ovhVybyEv1W3Td4DWWCga/QrIrbCI/dGpFrhwNXBimL0T5m9l/H7IGK
-	 VInh6A7W8iofLOy4C3S5Xq1OcV7pz3u1G8DyqCi+9Q596qzFuU15X0skg+HEM7sEU2/TV
-	 DRW4R5G0Js25aTUDh4E8deif3hjU5MUFEm1mIKae2t+jf1uTVhRV/2PCoSrJOwCI3/S/i
-	 P6XOUlhv5l5plrkp8UMJn7sAL5p7QJBUi+YZb5j6M9R7+XmLAadPCSk0i8S+vGQ0GVg==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:
+	 Organization:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=w5IMEhy4okHKxHyGpwkRamhqKC6oRcjh0YGoxUqp7KY=;
+	b=xtbIHdFi/QKsbS+vwakxWS2ZBHv5apvXKt+LORyTOna/gfF70RPDypSnHQWNSznJ+FPe
+	 ha9wJYyZtC1e8feJcU9x1HwvI+MyK0ONjGK3w9dsCW/99Mbw0hvlBAveEEp9wnVCtIWHM
+	 cBjr7zoylNWo0rXTmc+AqLig6TVF9FBNYBDncQGbQBIV7Dc7Br+JQv+vFuQwTavlrDLNh
+	 VdpkZvXMo5xyZPIamAyc2rMAEprHxYQ3TPeYL9Cj4d4yd+OaXwBQuhqqXvhNj/XGfgIiZ
+	 78DJmsRP2oj+DW109VtSnWpJC21myQS7qpT7W+/nA0kxggW50G+7SZIT15wGOJhKxhA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kUZTMrNx;
-	arc=none smtp.remote-ip=198.175.65.21
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="W4W3Ie/Z";
+	arc=none smtp.remote-ip=192.198.163.19
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB425606A31C;
-	Tue, 10 Nov 2026 12:02:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB425606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5C3606A332;
+	Tue, 10 Nov 2026 12:02:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E5C3606A332
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kUZTMrNx
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W4W3Ie/Z
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794312161; x=1825848161;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=eMdM21hEmkcP8lpu6VNP1r22o5MSqJ/EL0i7jh9A8CU=;
-  b=kUZTMrNxJtILykmCCaIXMcwKq3QkLvaW0LIpMR1fXQY62mFaTQGHT5QD
-   rDBW0hlZwjAiw0z7w6xzqxUTfQzf/9a/oE23kojFP5LmugEEEp+1usTTd
-   kWe/Fb8xxlcsycjuEuBX8ZUMCWAcs1AkWOz82LahPdJkDHM0KBJ+mTGp1
-   kRYGV3H5qih5Crm/2YekOVHlwVrJSxhnIiEnxH1UGPO5SgB4vBMwg1h8x
-   8O7efVfrBV71obIM0mkE/FfS/Czz2Ygjj/6ds0he6rwuwvAbn410mCmEx
-   oMNuHk2pdC8+dLZJZIUk4cKFBQDxnfekP9JtTJ+in/eiaKsQ/VSN3XV79
+  t=1794312173; x=1825848173;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HhAUpNuzDozuVjdF12LqWeLLpGws7iUzN3G4eEtCwpk=;
+  b=W4W3Ie/ZTOhfDceUYt/hfGTR9WEnF3IxHLCZROpY0nzYhYadsW0UBL22
+   FJZMVpnqdZGL8YulX+F93KbHjrzM0s/dQsXWktfqmBAOydBOizj03Shz0
+   9+Ie+4gytcOFmzh/2qWXKB378vCqnsZJ2L6c8fUe9wL2ku/aYTiN4ELGK
+   BCDYqpcE2F6Y/KHOrN0HuBWMTjMotGO/WonZQ1GoY+BZOzx+CG7Zx7W2s
+   9jXxNH6dBpXb9afRxeScTYil3WsLKsFToTPsO0FkrN0G14Ms5zENofq88
+   kEW3RQdQ5mGJBD16qMeNgQWfPZQYX6+3mMA6mCRpAiSQ+gPpmuRV/Rhph
    Q==;
-X-CSE-ConnectionGUID: eVnBbn3bRc+y8uyAB+YlEA==
-X-CSE-MsgGUID: XhuOpTUeTUWURYnlL8hycA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="3138909"
+X-CSE-ConnectionGUID: 9xoshxrkT6Gfb1+SnOyFSw==
+X-CSE-MsgGUID: 3BTVNRAsTjuo04ME/zTAbA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="3156162"
 X-IronPort-AV: E=Sophos;i="6.27,205,1787036400"; 
-   d="scan'208";a="3138909"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 04:02:40 -0800
-X-CSE-ConnectionGUID: xGdkc45iT5eGhiHxJBsghA==
-X-CSE-MsgGUID: 6/P5oL78RfKEQtOZQyxoMg==
+   d="scan'208";a="3156162"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 04:02:53 -0800
+X-CSE-ConnectionGUID: ZqmuHCDMTKyLwUC/7lBmqg==
+X-CSE-MsgGUID: A8Fj9ojISPexeUfkUXUf7A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,205,1787036400"; 
-   d="scan'208";a="8459686"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 04:02:32 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Nov 2026 14:02:28 +0200 (EET)
-To: Lee Jones <lee@kernel.org>
-cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-    Shuah Khan <skhan@linuxfoundation.org>, 
-    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
-    Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
-    =?ISO-8859-15?Q?Marek_Beh=FAn?= <kabel@kernel.org>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>, Ike Panhc <ikepanhc@gmail.com>, 
-    Rong Zhang <i@rong.moe>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-    Jakub Kicinski <kuba@kernel.org>, Vishnu Sankar <vishnuocv@gmail.com>, 
-    Vishnu Sankar <vsankar@lenovo.com>, linux-leds@vger.kernel.org, 
-    Netdev <netdev@vger.kernel.org>, linux-doc@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, chrome-platform@lists.linux.dev, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v7 00/13] leds: Add support for hardware-initiated hardware
- control trigger transition
-In-Reply-To: <20261110090105.GA6323@joneslee-macbookpro.roam.internal>
-Message-ID: <b19ef65f-c563-07f8-1be8-9a0a0689da22@linux.intel.com>
-References: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe> <179425319974.10927.7190572777719580956.b4-ty@b4> <20261110090105.GA6323@joneslee-macbookpro.roam.internal>
+   d="scan'208";a="8174905"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.11])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 04:02:48 -0800
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 0CCB6121B7B;
+	Tue, 10 Nov 2026 14:02:46 +0200 (EET)
+Date: Tue, 10 Nov 2026 14:02:46 +0200
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Seifelden Abdelmonem <saif.elden.hatim@gmail.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bin Du <bin.du@amd.com>, Nirujogi Pratap <pratap.nirujogi@amd.com>,
+	Benjamin Chan <benjamin.chan@amd.com>, King Li <King.Li@amd.com>,
+	Caspar Adriani <caspar.adriani@proton.me>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Arec Kao <arec.kao@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] platform/x86: amd_isp4: add the OV13B10
+ (OMNI13B1) board configuration
+Message-ID: <avMH5glolytc9L86@kekkonen.localdomain>
+References: <20261103155313.114347-1-saif.elden.hatim@gmail.com>
+ <20261103155313.114347-3-saif.elden.hatim@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -91,97 +96,23 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1170544091-1794312148=:1229"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261103155313.114347-3-saif.elden.hatim@gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Seifelden,
 
---8323328-1170544091-1794312148=:1229
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Thanks for the set.
 
-On Tue, 10 Nov 2026, Lee Jones wrote:
+On Tue, Nov 03, 2026 at 06:53:12PM +0300, Seifelden Abdelmonem wrote:
+> +#define AMDISP_OV13B10_HID		"OMNI13B1"
 
-> On Mon, 09 Nov 2026, Ilpo J=E4rvinen wrote:
->=20
-> > On Mon, 21 Sep 2026 03:40:14 +0800, Rong Zhang wrote:
-> >=20
-> > > Some laptops can tune their keyboard backlight according to ambient
-> > > light sensors (auto mode). This capability is essentially a hardware
-> > > control trigger. Meanwhile, such laptops also offer a shrotcut for
-> > > cycling through brightness levels and auto mode. For example, on
-> > > ThinkBook, pressing Fn+Space ("shortcut") cycles keyboard backlight
-> > > levels in the following sequence:
-> > >=20
-> > > [...]
-> >=20
-> > Thank you for your contribution, it has been applied to my local
-> > review-ilpo-next branch. Note it will show up in the public
-> > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> > local branch there, which might take a while.
-> >=20
-> > FYI [if applicable to your patch], as per Linus' policy change, also
-> > fixes are mostly routed through for-next unless the fix is for a
-> > commit introduced in the most recent cycle or is clearly a regression
-> > fix.
-> >=20
-> > The list of commits applied:
-> > [01/13] leds: class: Always protect brightness_show() with led_access
-> >         (no commit info)
-> > [02/13] leds: trigger: Move led_trigger_is_hw_controlled() to the right=
- place
-> >         (no commit info)
-> > [03/13] leds: class: Remove hardware control trigger when writing brigh=
-tness
-> >         (no commit info)
-> > [04/13] leds: trigger: Move led_trigger_group to the right place
-> >         (no commit info)
-> > [05/13] leds: trigger: Add hw_offloaded() callback and provide trigger_=
-may_offload_to_hw attribute
-> >         (no commit info)
-> > [06/13] leds: cros_ec: Implement hw_offloaded() trigger callback
-> >         (no commit info)
-> > [07/13] leds: turris-omnia: Implement hw_offloaded() trigger callback a=
-nd declare hw_control_trigger
-> >         (no commit info)
-> > [08/13] leds: trigger: netdev: Implement hw_offloaded() callback
-> >         (no commit info)
-> > [09/13] leds: trigger: Enforce strict checks in led_trigger_is_hw_contr=
-olled()
-> >         (no commit info)
-> > [10/13] leds: trigger: Add led_trigger_notify_hw_control_changed() inte=
-rface
-> >         (no commit info)
->=20
-> This is super confusing!
+Any idea who allocates these HIDs? Omnivision ACPI ID prefix is "OVTI" and
+"OMNI" is indeed unallocated. I presume these HIDs have been "allocated" by
+AMD? This is not the first time something like this happens but it would be
+good to avoid it from happening in the future.
 
-I know it is but it's how b4 thankyou mails appear.
+-- 
+Regards,
 
-> Where does this list come from?
-
-The list comes from the original series that b4 caches somewhere.
-I deleted the patches 1-10 and only applied mbox that contained patches=20
-11-13.
-
-When constructing thankyou mail, b4 seems to take the cached list of=20
-patches the series had and does not find 1-10 applied into my tree by me=20
-so it says (no commit info). The rest appear as expected:
-
-> > [11/13] platform/x86: ideapad-laptop: Serialize keyboard backlight trac=
-king
-> >         commit: d288a6f989b7b9e6a730140c601987b886af327e
-> > [12/13] platform/x86: ideapad-laptop: Decouple hardware & classdev brig=
-htness for keyboard backlight
-> >         commit: 7d6c073d181d7855561831cb4bba17dc9b7d4aa9
-> > [13/13] platform/x86: ideapad-laptop: Fully support auto keyboard backl=
-ight
-> >         commit: 5d805ca01382d63d54c9984e7f19922c4ae6f3dc
-
-Of course it would be much less confusing if it never showed those no=20
-commit info entries at all but unfortunately I don't think I can control=20
-that, sorry.
-
---=20
- i.
-
---8323328-1170544091-1794312148=:1229--
+Sakari Ailus
