@@ -1,55 +1,42 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=159.226.251.21
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794315522;
-	b=MGLNouOQKCBvUKMBhnGcaISG960D1vP5IpJc6CH8TQKJb9JMENHyfOCi87itXZcgNVH+
-	 j9gHuY7eYuc25Fzb9q/Uek5A4Hv24VNkiVXfONfkP1ofOdyaoxLq09GHi6O7LynOW4u8M
-	 AW+Wi9TVlLVwKQOE5D7Gshc+H99Y8RtgHzMInrUh7os0MU5KoueX4c3M6iy4CrSwufcdZ
-	 UUnJ7vc4NlImoPYwkj85w4qvh+or8mKq258CI2BqiGNVMv3NalWXGXRqyyT+izSsmjIBW
-	 EjuTAnwG/pMhmad7I/NttxvOVqVWKUlJpaJtC8Ay3N79F1zfIJp6fp9w12IWeScrEWA==
+	t=1794318254;
+	b=yOw3bePmt09tYQMi8J2+3nGY7lCbQ9v0YRiJLxfClpxgPkP/BEeTWig8kuv7a/dY0yG6
+	 C04gch+RxtYwqSy6DQQA0jw8gSffocHd5ifZ6nZGUGynAg1zi5AktaPk5d21OLdKWYi1o
+	 AXn2LFgKZqKbUzsJNgS6gyOObb04ej7kiqsln6Y0ypWDIohq8/EjAM0yZfUq22WqEd+u3
+	 iXPlJQ+imWVMq6vh2kQHtQh/lGcHdlTJVOX7tZ8l9u1PUUkzqw3sWUVh+vETnhPu9NR9F
+	 lOpF6ldOjML4RA6C50RvYXpLhHwzXs7K2JoLkxplhFafnlLChhM/FuFUMPa34jZ9Akg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794315522;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=4pmFjEsbdeyTNA61FOh5B6D8bCLWmzzoCQ3gdMGZrYI=;
-	b=pSWs+9MPhy6WbcN0Aab75XBM3PhdPoR/KXScGxDte+wsBWlya7ZC3R3X/fFBM9V3rBYY
-	 iMh0K4zjCv4iv/YC/tcft1fNL5F+Aq73PU6uO+EZy29jdWDyC1eV6p6z5HN69426bPvjY
-	 PLZNNwWQ3kSXMYtG8wOyiRXZkOHU2Sb0k19zsF0cq+gkCW1ZFXOK3HmWO6dB5oEydusYI
-	 cKJpbWGlrIo8ZAcy+wpd50XdGPQHDub3Ub0+77uj/gSGDbkgI6sR6c0gxd9wW/JynEUvI
-	 u8NuRwMqqXWPY5kLfpx3d1/SdKOcCTHs54Hi/3mxRbS3Oe+zfdS6V19Yo2VmokejB6w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794318254;
+	h=DMARC-Filter:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
+	 X-Mailer:X-CM-TRANSID:X-Coremail-Antispam:X-Originating-IP:
+	 X-CM-SenderInfo;
+	bh=/8eG7V+IcDdBQXwPQjy8Y/TEnkXIzPepTQcL05EXyfs=;
+	b=Um/k+erYjVHAUzjGZqQjvYfyBqPiKP81SRz+QhhxEIS09iyewZWMZgt0oPPWEi8Zux1e
+	 r0NbESRy5Mu7gCOwXBpcn2Hfxp/CMaUCbTXecRMTnWzzcD67mwMCW9KXJ+YOJNEUQfcKY
+	 rN+S3+gPLN92jDPA03PTjH0h+4YaRpbil9H3JoJgV4gIrqJL5Igk9UKK39tzZjeqjGAp1
+	 Wmccr17r1yw9jV20GckTfsR4vx7Nl7YNsfFLdR0VFteg4ixWJjmaVjd2tltfUzLZ4J5JD
+	 CsgNG4udnxbecvRXnjcpUBVj/1GG+DItTKy5eTPmsAzNDxWEiG+aasT9mJJVhcN/Z9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PhzmAHTx;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=iscas.ac.cn;
+	spf=pass smtp.mailfrom=iscas.ac.cn;
+	arc=none smtp.remote-ip=159.226.251.21
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8EE606A752
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 12:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PhzmAHTx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2901F008A1
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 12:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794315521;
-	bh=4pmFjEsbdeyTNA61FOh5B6D8bCLWmzzoCQ3gdMGZrYI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=PhzmAHTx6of0LqKShbmwlkl3PvJMgsDRK0tLrmNOpPVBnVPt+eLSZk1D054mLXwww
-	 hJo4ywu4g/SJlJ/F+6nW9jtsWILvMZb35WDJb0Jpd7mkYeJPLw+mFjqeu7ggJT4ive
-	 3KMqg8FpOCTEoF1sRIrZ68/E4BrjTh66416KWFtP11Aqly4P+qfPfw6x3yHFNVKr77
-	 DGYbA3YnqYqbpzKZ9nOHbytf4E8L//CFZUcfMLm/3fpWgSjKQO0b70j9P5eb+culhh
-	 FuUpgLg4N3ClSdOTgTiimN7INPxDIaMavbgDaXJxo6uDpqPERXsN+e83WbrHNQ5dCR
-	 OfMxNx6tSfOKw==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5c126fa1e3aso1283049e87.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 04:58:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErHQQ/QgIHyrRfT08HacuxRxBIxsG9ZcqSOQ9Phpeg/TrgQLyRXMJy/1yvjayYJ2U9ZvOGwR6Ms0mc4panqLyEIh+JAQ@vger.kernel.org
-X-Gm-Message-State: APuU4Z+Y8MG5zEyGNDHgLmHN4DvzcNL0H1d6Glz/bLTntiVz81LMuQgY
-	E1QOg87+s1TqRt+gYkoxJREshSmqx84419LC+sQYHK9YpinAubhHcfyQRjMHOHQEEj6HuCV6+7s
-	U61JZpu12zqnTw44xgroFlZQ8/GK2U6c=
-X-Received: by 2002:a05:6512:1113:b0:5c1:5a36:b041 with SMTP id
- 2adb3069b0e04-5c15a36b1a8mr418657e87.52.1794315520002; Tue, 10 Nov 2026
- 04:58:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6B0606A325;
+	Tue, 10 Nov 2026 13:44:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB6B0606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from [127.0.1.1] (unknown [223.166.93.97])
+	by APP-01 (Coremail) with SMTP id qwCowACXwfubH_NqRy+3AA--.4075S2;
+	Tue, 10 Nov 2026 21:44:02 +0800 (CST)
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Tue, 10 Nov 2026 21:43:54 +0800
+Subject: [PATCH] platform/wmi: Allow consumers to load without ACPI
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -59,66 +46,92 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260930222650.1883805-1-jordan@brough.org> <20260930222650.1883805-2-jordan@brough.org>
- <3cd06bed-83bd-425a-387b-f1d3b073cb47@linux.intel.com> <CAJZ5v0hxx-jZxgD+2aJXy2Y_LLz0_aeU4wgpx6+Bkq-YqvHmkw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hxx-jZxgD+2aJXy2Y_LLz0_aeU4wgpx6+Bkq-YqvHmkw@mail.gmail.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Tue, 10 Nov 2026 13:58:27 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hzZV+ys7WgAqaCkF4mP_BAuhRm_v6zX4_=0207W4UA-Q@mail.gmail.com>
-X-Gm-Features: AclHuK_2ewbjDRrI7vEm7qW4Gexy4KQhsFqwIuWKeOk5jHlI8WSPgXqyHRQNZ1A
-Message-ID: <CAJZ5v0hzZV+ys7WgAqaCkF4mP_BAuhRm_v6zX4_=0207W4UA-Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] ACPI: battery: add acpi_ prefix to the battery
- hook API
-To: Jordan Brough <jordan@brough.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>, 
-	Antheas Kapenekakis <lkml@antheas.dev>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Armin Wolf <W_Armin@gmx.de>, Jonathan Woithe <jwoithe@just42.net>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Ike Panhc <ikepanhc@gmail.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matan Ziv-Av <matan@svgalib.org>, 
-	Nikita Kravets <teackot@gmail.com>, =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, 
-	Joshua Grisham <josh@joshuagrisham.com>, Jeremy Soller <jeremy@system76.com>, 
-	System76 Product Development <productdev@system76.com>, Azael Avalos <coproscefalo@gmail.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
-	Sebastian Reichel <sre@kernel.org>, linux-acpi@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, chrome-platform@lists.linux.dev, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261110-wmi-no-acpi-v1-1-eebea07db551@iscas.ac.cn>
+X-B4-Tracking: v=1; b=H4sIAJkf82oC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzNDQ0MD3fLcTN28fN3E5IJMXUNTy0ST5DRDS1MLAyWgjoKi1LTMCrBp0bG
+ 1tQAnfNK4XQAAAA==
+X-Change-ID: 20261110-wmi-no-acpi-159a4cf19580
+To: Armin Wolf <W_Armin@gmx.de>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, Han Gao <rabenda.cn@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Han Gao <gaohan@iscas.ac.cn>
+X-Mailer: b4 0.14.2
+X-CM-TRANSID:qwCowACXwfubH_NqRy+3AA--.4075S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr18XF1kAw13uFWxWrW3KFg_yoW8ZryxpF
+	4Utay0krWrXa9FkwsrA3ZrW3y5uF1fu348Wry8C343Za1rWw1kW3Z7tas8XF98Jr4xAa1S
+	yFWkGay7ZFs8ZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7VUb_Ma5UUUUU==
+X-CM-SenderInfo: xjdrxt3q6l2u1dvotugofq/1tbiBwIHDGry2F7bZwABst
 
-On Mon, Nov 9, 2026 at 7:29=E2=80=AFPM Rafael J. Wysocki (Intel)
-<rafael@kernel.org> wrote:
->
-> On Wed, Oct 14, 2026 at 11:18=E2=80=AFAM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Wed, 30 Sep 2026, Jordan Brough wrote:
-> >
-> > > Rename battery_hook_register(), battery_hook_unregister() and
-> > > devm_battery_hook_register() to acpi_battery_hook_register(),
-> > > acpi_battery_hook_unregister() and devm_acpi_battery_hook_register(),=
- so
-> > > that the exported ACPI battery hook API has a consistent namespace, a=
-nd
-> > > update all in-tree callers.
-> > >
-> > > No functional change.
-> > >
-> > > Signed-off-by: Jordan Brough <jordan@brough.org>
-> >
-> > Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> >
-> > With one known caveat! There's c72dd9994952 ("platform/x86: add Acer
-> > battery control driver") in the pdx86 tree so if Rafael takes this like=
- he
-> > proposed in his reply to patch 2, that needs to be handled during merge=
-.
->
-> Well, I haven't applied it yet, so no worries.
->
-> It's in my 7.5 queue ATM.
+Since commit 4ea18e604272 ("ACPI: video: Remove CONFIG_X86 handling from
+nvidia_wmi_ec_supported()"), the ACPI video module uses WMI on all
+architectures. When ACPI is disabled, e.g. on a devicetree boot,
+acpi_wmi_init() returns -ENODEV, so the wmi module fails to load and so
+do video, amdgpu and radeon, which depend on it.
 
-Patches [1-2/3] from the series applied as 7.5 material, thanks!
+Return 0 without registering the WMI bus instead. The exported helpers
+then report that no WMI device exists. Skip the teardown on module exit
+accordingly.
+
+Fixes: 4ea18e604272 ("ACPI: video: Remove CONFIG_X86 handling from nvidia_wmi_ec_supported()")
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+Tested on a HiFive Premier P550 booted with devicetree and an RX550,
+with ACPI_WMI, ACPI_VIDEO and DRM_AMDGPU built as modules. Without
+this patch, wmi fails to load and so do video and amdgpu. With it,
+wmi, video and amdgpu load and the RX550 is initialized.
+---
+ drivers/platform/wmi/core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+index a99da9b7039d787ce3c1e0ece74ffbd79fafd3f7..6668789904a903c8d4e7810976f4e485d7a1b32a 100644
+--- a/drivers/platform/wmi/core.c
++++ b/drivers/platform/wmi/core.c
+@@ -1598,8 +1598,9 @@ static int __init acpi_wmi_init(void)
+ {
+ 	int error;
+ 
++	/* ACPI video still needs the exported helpers when ACPI is disabled. */
+ 	if (acpi_disabled)
+-		return -ENODEV;
++		return 0;
+ 
+ 	error = class_register(&wmi_bus_class);
+ 	if (error)
+@@ -1628,6 +1629,9 @@ static int __init acpi_wmi_init(void)
+ 
+ static void __exit acpi_wmi_exit(void)
+ {
++	if (acpi_disabled)
++		return;
++
+ 	platform_driver_unregister(&acpi_wmi_driver);
+ 	bus_unregister(&wmi_bus_type);
+ 	class_unregister(&wmi_bus_class);
+
+---
+base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+change-id: 20261110-wmi-no-acpi-159a4cf19580
+
+Best regards,
+-- 
+Han Gao <gaohan@iscas.ac.cn>
+
