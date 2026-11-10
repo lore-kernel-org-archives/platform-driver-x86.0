@@ -1,129 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794321776;
-	b=hgY+n8SexAwfddsyN6hJXLmtjXGUb/SxERJl17pZbET2bgZ1clKkce8YF+d/y16kYzU6
-	 OHTTV9Jt76XzyrjB0KsggV8bF7DY8tYyxR2ciXnI4OOMgTsd+72whUjsbD6GfQqnN6Lcm
-	 cabH3ZsAWypI8uHG+ruGZnkhQb8uH8/0ASUXIq6fam+gmEmBvtqsgjzcF182AI+/cdse2
-	 yNbuzxYs5NOrfmQqD0oWSELcmYHXjBwuTgNBQAPAfZzszSQvc2el9OtOC4o56XT/Ff3w8
-	 wvCLoni4xNZ5Nyy21IjBHlYXFsCNrs0RpujmUokZiPhwyU29oyNX1uFT3nWJjMKSfnQ==
+	t=1794322089;
+	b=V0IXw5SJR2BnqLujvrjzBIVEzeMdykwvVlfBlSOcjA/0oy8IdbagvLX/THA6pirTtVX6
+	 nSjdiKGy9i2nLIJwTcR42MUtxoePlXLawumRE8Ruyz5B29QcFGOAPw9W7SMZe7ytU4E7v
+	 PDeb9waXyO8/SPpQv8ecUC3BWRzM1eR6mUV6HLXx7occFZLBE0VJ+dhCZCvQX93+ZyOEE
+	 1MCJF9OscIbYdxffeFuczHDDeDmKxwfnkGbAhbFRjlHhAp9dMxutTJZJ/QlMO8gzsH4AS
+	 tOjV8g1Kzg08WIQEfomJvOFdznNlvZFC5Dgqbj2xlMXquKeX2q28kIZHH3JL5TBWwKQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794321776;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Spamd-Result:X-Rspamd-Server:X-Rspamd-Action:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Rspamd-Queue-Id;
-	bh=0B4qA1TkglN4OMx2OOtGC+4WxOgjbuwo6ZjpoXcLiI0=;
-	b=wfdcpmP+jxtQYR4Jd/mK0XscZL/b+FwNNC6mB/L0ViUBm+TV4JuraRK2dLBXffxQ5+XH
-	 lCynsLfY0drud7+hsoum9+IInlMk2KS7lDcsdi1OIObSJF8pRWt7JuIwvX56r9LQPVO9C
-	 eykHYK/yozylO7eKkk/xRmsunpkHQEc4MBeZMz6QdLLw9c8b+KvrweNF8Wu8hJRzHCJGd
-	 afOwGdzLyB2itcgFZ/A1xCorFoZWAezH3Hfj//o5pz0sMhyF8Mx8JtGBydWmWW5Wv5zpj
-	 QPeVnGKoJa033JNhjyqyU0/r+sPwn8D9hJ1SxYA5JdDg+ZyIrTtzojA0q88jt4EPk+A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794322089;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
+	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Mailer;
+	bh=gxzWINiIpnXzUkrqXxQgvKL6Z5C8HD59v3oLy36PnXM=;
+	b=E5wAPunP9CcafJzBZJn7Z6YQZb+ux5TdFXXWTneTgpBq8JDBIBW2xJikY5StQfAyki0T
+	 1uXOMuVxtclvaCXh8C5MBdPzNds4coiqZK3OeZPH5YVv4O5zrKqXlgEvTj4Y8H/DXpZOA
+	 Xk7RSyjNrq7HGXErqSvW/xjcHlXd+SGLg6vVVxl6V0QHEKPq4nBnFoM2v8krjo9IDoNo+
+	 IUij/P2BM6myAU9rbSWQ1fB45JsXIB/sTaeaeW2VbFD4G2v59GFrYk/DlSZZMJY3bIsLn
+	 /I31qwhqkeRXDlKb5sBAk+jkxOIWRtyn2ACuOvzVEK3KnN1t4DEs0ZCE/6pvmeRN6Sg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=suse.cz;
-	spf=pass smtp.mailfrom=suse.cz;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b="KX3USKj/";
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="/2pLOUfc";
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b="KX3USKj/";
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="/2pLOUfc";
-	arc=none smtp.remote-ip=195.135.223.130
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JaY1+rrG;
+	arc=none smtp.remote-ip=192.198.163.14
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4045B60A3809;
-	Tue, 10 Nov 2026 14:42:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4045B60A3809
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AF0606A31C;
+	Tue, 10 Nov 2026 14:48:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19AF0606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=KX3USKj/;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=/2pLOUfc;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=KX3USKj/;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=/2pLOUfc
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5D72521EF0;
-	Tue, 10 Nov 2026 14:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1794321773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0B4qA1TkglN4OMx2OOtGC+4WxOgjbuwo6ZjpoXcLiI0=;
-	b=KX3USKj/BuUCPazH8t3noRkhKvNyS5Vl2sfPRRfBrVBNp1j8KEsgjtdwoDEfs+Fi37nQ68
-	vnsR7ycg2OeYqigI5LNHLalsHJ9KCDX9IcBSdyT+NAc3WsyWV3FKF78iAL2OBmuxWV0Xwz
-	g2i8xSSiqPdjbp3ohRC0gvCg0kyAyjo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1794321773;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0B4qA1TkglN4OMx2OOtGC+4WxOgjbuwo6ZjpoXcLiI0=;
-	b=/2pLOUfcw4Ranr2A4Pwh/sC+sB848L9X9w962zn/48Fcdt+Sh4cEXY+LMMlgvMsVazsfNO
-	Ql9bUyzc9/d9uBDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="KX3USKj/";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="/2pLOUfc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1794321773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0B4qA1TkglN4OMx2OOtGC+4WxOgjbuwo6ZjpoXcLiI0=;
-	b=KX3USKj/BuUCPazH8t3noRkhKvNyS5Vl2sfPRRfBrVBNp1j8KEsgjtdwoDEfs+Fi37nQ68
-	vnsR7ycg2OeYqigI5LNHLalsHJ9KCDX9IcBSdyT+NAc3WsyWV3FKF78iAL2OBmuxWV0Xwz
-	g2i8xSSiqPdjbp3ohRC0gvCg0kyAyjo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1794321773;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0B4qA1TkglN4OMx2OOtGC+4WxOgjbuwo6ZjpoXcLiI0=;
-	b=/2pLOUfcw4Ranr2A4Pwh/sC+sB848L9X9w962zn/48Fcdt+Sh4cEXY+LMMlgvMsVazsfNO
-	Ql9bUyzc9/d9uBDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 288DF134F4;
-	Tue, 10 Nov 2026 14:42:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QGhKOWwt82q+MwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 10 Nov 2026 14:42:53 +0000
-Received: by quack.suse.cz (Postfix, from userid 1000)
-	id 7821722550; Tue, 10 Nov 2026 15:42:48 +0100 (CET)
-Date: Tue, 10 Nov 2026 15:42:48 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
-	Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados <joel.granados@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	netdev@vger.kernel.org, ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
-	coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, 
-	linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
-	sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net, 
-	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org, 
-	Chuck Lever <cel@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 37/51] proc/vmcore: don't let vmcore_cleanup() run
- twice at once
-Message-ID: <q4w6yd2pk7g6uzqva7sivfusaavqfwsgh3f4m2y7lbp74dfgvr@unclx56ulwys>
-References: <20261104-work-procfs-bugfixes-v2-0-bbf7d5546809@kernel.org>
- <20261104-work-procfs-bugfixes-v2-37-bbf7d5546809@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JaY1+rrG
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794322089; x=1825858089;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=To2IiISNRTGVGz3vwW6bRjbnmoVYaSM+CH97s+PzFl0=;
+  b=JaY1+rrGEZ2pBxeKIbRuXnzZFjfgHEX8NZoM1CzGpdYXzyAntwL35DP4
+   111FF/2EvcgshEQkr1skgZaoLb/kN6udHz2ALmflWxsJyTwlYbX2XDQnv
+   +Jw1ltQbKGOQHmNra2OHb/mlnsYP3nnqWVSaBfFJQawNFhTjOBLXY60V3
+   33nU8+odnnMVfT4gSt7u5TRZCR3fY9Hriqk71Hx0f5EPUG/61KUlun+k5
+   vXe4Z+/xeo810SMdR91mIdjMOj574GUeYIYh2FXDvCdGJM1H5LGKAxU13
+   0v2zQ+DihIjvZ/N1yZRBhN7XFq6CRoQl0f/EtwCVDU4nxXebjt+rz5m+G
+   g==;
+X-CSE-ConnectionGUID: wQwZrux/RnennXuxMU5nHg==
+X-CSE-MsgGUID: tHDHxS4sR4uzUmIVDD9UZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="3102603"
+X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
+   d="scan'208";a="3102603"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 06:48:08 -0800
+X-CSE-ConnectionGUID: A1FqHYpUSP2J8df7wYzpOA==
+X-CSE-MsgGUID: K14FceHRTxuTQwQ5RkmoLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
+   d="scan'208";a="8037181"
+Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.64])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 06:48:04 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Chipang Kao <prozac2734@gmail.com>
+Cc: W_Armin@gmx.de, chipang_kao@asus.com, corentin.chary@gmail.com, 
+ denis.benato@linux.dev, hansg@kernel.org, linux-kernel@vger.kernel.org, 
+ luke@ljones.dev, platform-driver-x86@vger.kernel.org, scardracs@disroot.org
+In-Reply-To: <20261110065630.270276-1-chipang_kao@asus.com>
+References: <20261110065630.270276-1-chipang_kao@asus.com>
+Subject: Re: [PATCH v6] platform/asus: Move ASUS platform drivers out of
+ drivers/platform/x86
+Message-Id: <179432207917.2180.5316107179972885113.b4-ty@b4>
+Date: Tue, 10 Nov 2026 16:47:59 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -133,95 +81,41 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261104-work-procfs-bugfixes-v2-37-bbf7d5546809@kernel.org>
-X-Spamd-Result: default: False [-11.51 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:dkim];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[60];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -11.51
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 5D72521EF0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-On Wed 04-11-26 18:47:23, Christian Brauner wrote:
-> vmcore_cleanup() has a single caller, fadump's release_mem_store() on
-> powerpc. That checks fw_dump.dump_active without a lock and calls
-> vmcore_cleanup() without one, and kernfs only serializes the writers of
-> one open file. So two tasks that write to
-> /sys/kernel/fadump/release_mem through different files run
-> vmcore_cleanup() at the same time.
-> 
-> The first one removes /proc/vmcore and waits for its readers in
-> proc_remove(). The second one finds the entry already unlinked, returns
-> from proc_remove() right away and frees vmcore_list, the ELF headers
-> and the device dumps while those readers still walk them. Or both of
-> them free the same lists at once.
-> 
-> Serialize vmcore_cleanup() with a mutex of its own. It can't be
-> vmcore_mutex, removing /proc/vmcore calls release_vmcore() which takes
-> it. The second caller then finds nothing left to free.
-> 
-> Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: b500afff11f6 ("fadump: Invalidate registration and release reserved memory for general use.")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+On Tue, 10 Nov 2026 14:56:28 +0800, Chipang Kao wrote:
 
-A bit sad but OK. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/proc/vmcore.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> ASUS WMI and related platform drivers currently reside under
+> drivers/platform/x86/. However, with the emergence of ARM64 devices
+> utilizing ACPI WMI interfaces, maintaining these drivers exclusively
+> under x86 creates unnecessary architectural restrictions and Kconfig
+> duplications.
 > 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 1fe70c4ecc54..ccb795b85509 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -1764,6 +1764,11 @@ fs_initcall(vmcore_init);
->  /* Cleanup function for vmcore module. */
->  void vmcore_cleanup(void)
->  {
-> +	/* Not vmcore_mutex, removing /proc/vmcore calls release_vmcore(). */
-> +	static DEFINE_MUTEX(vmcore_cleanup_mutex);
-> +
-> +	/* Two writers of fadump's release_mem can get here at once. */
-> +	guard(mutex)(&vmcore_cleanup_mutex);
->  	if (proc_vmcore) {
->  		proc_remove(proc_vmcore);
->  		proc_vmcore = NULL;
+> To allow non-x86 architectures (such as ARM64) to select and build
+> the applicable ASUS platform drivers:
+> 1. Relocate all ASUS platform drivers and headers from
+>    drivers/platform/x86/ to drivers/platform/asus/.
+> 2. Create dedicated Kconfig and Makefile under drivers/platform/asus/.
+> 3. Update drivers/platform/x86/Kconfig to remove duplicated entries.
 > 
-> -- 
-> 2.53.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> [...]
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
+
+The list of commits applied:
+[1/1] platform/asus: Move ASUS platform drivers out of drivers/platform/x86
+      commit: 6e3b727ff3115a4f870bdcfafc3f6827c2d36676
+
+--
+ i.
+
