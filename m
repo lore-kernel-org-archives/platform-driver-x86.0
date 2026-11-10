@@ -1,79 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794335967;
-	b=p8vyWVAmFXPrTLvwMS9CIUjqiew/Vv8iu2ghpmwa3z8V+M6dOga8eaA5VagBfSa2MGST
-	 YNQtIXclnm6KPKUYNakD9vUwhcvYHb+PZl8GI/rmFNa+T0+axN0CMb/p2Ldkg3ZAXEJPP
-	 tpSoqRSZDaZS2CFhKPfy3mFDtkMpSbsqxt9v7U0jbiwC5zhUkoZdhSHDwQPZmdIxokysr
-	 0h2O4i6EMBRt+rlW/YYw/TjJ2NKSRUm4MLuYQGt62E9B4uDzU87X+zRIqFaVEdtQK6tn0
-	 sWlWLR4orCBRJUwwuojmta+Xgg/XtoYleZt1B/IxgesbHFd+kWjML2yJrcHKF0WMiPw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794335967;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=ni0dTEFkOEdqX3aB5/r5AsPbCHUNITe03X/RTMKqB9s=;
-	b=44aG4KZ24CvVBbRP8DiTgnDqGW3Tzrgdo7tZP+Ry98QqZNElmzRbxNjGUwaUqkj2X2MY
-	 nXE6zXEQtYtFDeUI0TN9ybqMydgYa8c0AhziTeucCXVt4bFTj0SJPhovUAwjuoSoVkBrI
-	 VPhnbiOI3QvWUxB9pVMIIXh19VBd2sCpQzMav29xAHCdpoVwwQUZzZ4LqixW3ddFYbJNL
-	 SY8T5rJX/o2cYEZmysaB/q8+QYm0TG/7Lbj5B4dP1qSuXokymb0RSwK6KeWcYfPUHOmy9
-	 xtsMX+Gx1W9eKWlVcn9+KtGvLeFrwkhuf8CGCiPNDc4I33YsIbpyKcJ/XlfZFKYVE+Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZj7yuLJ;
-	arc=none smtp.remote-ip=198.175.65.9
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.46
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794336145;
+	b=F3SCpkhO3LBrt15lJ9Q/We1k3ESfliXv+7gwMEbJBLXr9twLzsvwCmUCOBnjIxwCwcYI
+	 eHtk3BTB1DUPfsDBRAU9sBfUBkHNLzEYU0C+nBuGZhllyL/xp0CeZ3d75oklQs2YxqjyC
+	 lX24qZvltVTEvNs+0wP+7rPeKnO5eAN6/QdJW2rne9nT5r9mO4UW/AX8isOUfYIfk5gbO
+	 dNFABzrVnmQyhPlx0jRze5qgNInJJw7Ll2emPgJBlaT4X3k3sToM82t5oXvwHMrICnhGx
+	 9/kUNX17aVelr4ma6q8MCKtFLHu1ARoI2bfoIWUW44yrlxErucIWlsakyk8CU8L5Iqw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794336145;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=IJxn3qo9bR1YiWbsVjx6fmfUIW8eyV5FFrf9nDql2TM=;
+	b=dkZHj3BQNJtIYbA8TMIQPEkL9u8xLdD9JG1dC/oRSRahtEnWJZQ2rOeikCHZ1AU5ceyJ
+	 eumHArTCYBf78xJ6UVBuvoFiA2AERv66BNYxfuAeRj3oh5OnrT3Cj3eI5xYdR3bwFhrq4
+	 +t2SYyZ0GQjxIprcU2qNYeKXeA4SulcbGeteN1CwLiu54jLsuBPKlxBqFxHatcKImyVHm
+	 aPJZEjVvmPZyUuUqCxdaX4s+40drOJMbr1lbsr3GLB8chxkM1uqjxrcNyMrFfn6w43UP8
+	 1vP+U7MkBraIRg1518U2STuUuH6oPMoZF2IdNLRfa1mvbW47QFFGhj8453I2miknSqQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GOzPl1L8;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.46
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564E8606A32D;
-	Tue, 10 Nov 2026 18:39:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 564E8606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84304606A92F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 18:42:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 84304606A92F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZj7yuLJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794335966; x=1825871966;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=5IIWJTjMiWzzw1rqGkI1LkFpGuY5WUpCBfbX01vYXnc=;
-  b=hZj7yuLJymPao9f2N9WVsdwKSZsLEfgTNIUiItWxV5uMDlFu7ST4kaRD
-   1JjcNcYpTdn7ni8wMEuOaFCf1xkv6Y51+lxqJNMe1v2Xx5TU4jEcHGc5o
-   d+TX+Ly7eRRCSthR4Km5lqpFhdDKoiCBhzbpJc5+O2cu1s/PRgDi/v1PG
-   0WCY+W+hHT/Awiye1LBVycFP4xhkMnDBAfZkgVzYAjae1oWLpEuvXiid/
-   Ry/ayLT4NjTZ/RrkoPtGzTEcqmy5i1FQT37FxtM7zw18vuD67trFQ788i
-   O8/2iW0arsROhV2VbYUTpdg1XC39FV6949C5+L8iXJH3s8Wses5l02hTJ
-   A==;
-X-CSE-ConnectionGUID: lSh6Tr/8R0esO48f/1r3+Q==
-X-CSE-MsgGUID: AFHltO6lTyCCL2PQCYipVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="3000743"
-X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
-   d="scan'208";a="3000743"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 10:39:25 -0800
-X-CSE-ConnectionGUID: pGYfelFnRri63STqEVTRcA==
-X-CSE-MsgGUID: C853midoRQ+w5QvwW93Qaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
-   d="scan'208";a="8045289"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.64])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 10:39:21 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Nov 2026 20:39:17 +0200 (EET)
-To: Yury Norov <ynorov@nvidia.com>
-cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-hardening@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Yury Norov <yury.norov@gmail.com>, jorge.lopez2@hp.com, 
-    Hans de Goede <hansg@kernel.org>, Muhammad Bilal <meatuni001@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v1 1/1] string: Export strnchrnul()
-In-Reply-To: <avNb_7QmpPkxa8xq@yury>
-Message-ID: <df77dcec-08ea-b307-53bc-d52078fce7a2@linux.intel.com>
-References: <20261110164222.698745-1-andriy.shevchenko@linux.intel.com> <avNb_7QmpPkxa8xq@yury>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GOzPl1L8
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-843a4ca671eso1027351a34.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Nov 2026 10:42:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794336143; cv=none;
+        d=google.com; s=arc-20260327;
+        b=h9Sjzf7NSzh7lVipK53DoznKusbOCv4ROFC8rqXVax1eh6/5/zD15KEn7R9zc7pru2
+         Uap2pZZoHekkhLL591xinLN7N+v/6UBKnU3+8uFTH0iTScCrM6kjY0b5TLv44aU4m4ix
+         cZLAivRLNXOcuAF6HPZLazcZZ43ydHLjF9AR5F/E/dW0GJwBeCymtLHkbsvXLwBa+dVj
+         TMERWVDjB1Y424IeJ5/8qUvAa4bIaYK2MqSjxwtayvTlbmc4k7bWfbZ1eYBEme72XUHv
+         LaGEBKUdCw3mTJ/yFec8ZUZ0UcZnbtbLWaWeWSdwAI3z/ilc15ywo0k8BkAopWw0ouAN
+         4MWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=IJxn3qo9bR1YiWbsVjx6fmfUIW8eyV5FFrf9nDql2TM=;
+        fh=amJUuyMKwStCUX6PBosinRuYPa4JCdqe0FqhiRPuW7g=;
+        b=b2BovBYgwgxTWfX41kArBpXHXkLi/8py3e7lnHssUA1+D0EIdT8T4lKI6NMR5ycgel
+         yJ8JY2idRiszVhXL48V1WlD+edzeJDsSbojwRgLCOr70uOotvapdXr18eAiypIdJnxH9
+         rFDeXckBZRzZhAhGr7PuKSzCEFYOlKTLG/iGYzCm59gU3z7IWEftnjTvosO4H3nZx95U
+         e14x3Jb049J+I0rHUaHHFvBKgS4d+2PYV+m/aucC6RJswxTgTXwZ9Fc2oIYM5F4O5MHQ
+         UXI5Nl9LNVse5uwnKd9nhrhQ45qWAX73BMYknaYfPKH6OEj1RaNCuozsNZ2UhY9F+j2X
+         j3cg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794336143; x=1794940943; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=IJxn3qo9bR1YiWbsVjx6fmfUIW8eyV5FFrf9nDql2TM=;
+        b=GOzPl1L8hRVjkffAQOxToM40LGbUN6J+NDsUfwKw2whmCy12nlhxMqTZrIffhYz6c5
+         82raO4rO5Z/Nnur8vQxYLPRuFWegRL9LQna+/16U/qixg+cCYrO84k3opaOnz/z9f//g
+         OvMmuW1l82/aqZBPhPkF/MRWD7wEOpc///gPqgv0Z63wprZeqEw9aafEjqB/YLKAkFAu
+         uEyg1Gh3mrFddj2nVel68LgHczYj88PuhW38WnVMmW3rfQkBPIuaO2p/1W3LAYjQmuEX
+         edsXx3DSwbwWpPfNXsmEt6yUl2iQfN9PXb6PoQkNB767Ud9sIdMaXNoOmZXinAaskBPI
+         dGTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794336143; x=1794940943;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=IJxn3qo9bR1YiWbsVjx6fmfUIW8eyV5FFrf9nDql2TM=;
+        b=CPdT7gmxb2tFso5AKL4s4zxg6YXDboEhzyayWnVki5ilpryLVwstDeTYm+l0EifafL
+         wUz5yE0I9HNpeCyBoz6Thv8upcm/DRS6ieLNPgpqUGJ//aRtulylE6q4nmO+EA1ho0L1
+         SxaLQasZBF0qJVWb0hxN9Xx+OVk/rxwpTVkdrR3tt2c3569fusA71nqRC9KG/6vSN2vX
+         Y2civwN+M/VbA3n3AJDVxaO0h62HIpA/1jAr+ib0rVN7aTOidk1tgrOM53toXbzQArbw
+         5Dq9LxkcXhGucs2Da5XYjGZ1uT4qd1vW3y32Oee/acIU8zIik7HFGWX8Ah+o3AwqVDoA
+         YZtw==
+X-Forwarded-Encrypted: i=1; AL+hErEYurdwQjw7YArRSYWt7/CgNT2M+o38OLYteZKC+p9iAZu6usfLw+yA7TqwMcxr5s54Dy3o1CR8syC/w8udgM7LSQ+q@vger.kernel.org
+X-Gm-Message-State: APuU4Z8BdfGIwqlTLuJHWYevJXAdMId8cw175wj7mGJ/7z9GXP9X6LkK
+	0za2lfiUygWMVIaH9/eA9mvF78LMAOO9FubGyy8nokpyAKzfHF2lDEHbuIOQVKFM2y6nya0C3iV
+	xma6AB/v9UHUFEdljedfrURHo7Tq2xsc=
+X-Gm-Gg: AYBFou2uVEs3RvxQciGrQ4VNJUDotSm81QXWqUAoICqIGlbGgwi9RQqq7e+ujya/zNU
+	1svIS98RWwfnpzWldh2yPBFn6zuMDMkexBeObLN/ZMVzLR++1Kq4wk/rQec072xm18/GQduIUkP
+	UK/AO/T/31kOY5wDK7U7zWWh9IAEggaunBuLe2HzneeSM+r1ZjW4Ru6w40SiC67CTGa18bbMLe5
+	c88IVCDedo7fHpgxqVunUTAYzRUJkzZClFEgpRjzhQQGuYfVA6bEHi2ZpIPA6KMDLhKwBBbI7Uu
+	R4f8pcBbkk9NVdtFS2D8skJoPdOoLOn6YySHpokld23wd/W7JGtgIrMHTFl3sZk9rIsLjsQyFDO
+	KRttgIStnaG+/QLMYs/NpxVfN6E5b70B5o6dUs3cPZvrTFPUMVlGqGeWqocNFrzjC
+X-Received: by 2002:a05:6808:2212:b0:4f3:e133:c574 with SMTP id
+ 5614622812f47-5683cc0efcemr2798420b6e.19.1794336143447; Tue, 10 Nov 2026
+ 10:42:23 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,61 +104,47 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20261110164222.698745-1-andriy.shevchenko@linux.intel.com>
+ <avNb_7QmpPkxa8xq@yury> <df77dcec-08ea-b307-53bc-d52078fce7a2@linux.intel.com>
+In-Reply-To: <df77dcec-08ea-b307-53bc-d52078fce7a2@linux.intel.com>
+From: Yury Norov <yury.norov@gmail.com>
+Date: Tue, 10 Nov 2026 13:42:12 -0500
+X-Gm-Features: AclHuK9zAzIBs3yl4x2cgqpMXprPRNOqAyrkGsucmnU2n3m4faNlmxAM7HKEc8g
+Message-ID: <CAAH8bW9ZT-D6boyM6qWLj9DpYwi1CgFXcfJk3Q9mtnNGqSYQDA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] string: Export strnchrnul()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Yury Norov <ynorov@nvidia.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	linux-hardening@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, jorge.lopez2@hp.com, 
+	Hans de Goede <hansg@kernel.org>, Muhammad Bilal <meatuni001@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Nov 2026, Yury Norov wrote:
+On Tue, Nov 10, 2026 at 1:39=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Tue, 10 Nov 2026, Yury Norov wrote:
+>
+> > On Tue, Nov 10, 2026 at 05:41:50PM +0100, Andy Shevchenko wrote:
+> > > Export strnchrnul() for users that may be compiled as modules.
+> > >
+> > > Reported-by: Armin Wolf <W_Armin@gmx.de>
+> > > Closes: https://lore.kernel.org/r/1969fb5a-38ef-4b4b-9d2f-cb9a4348b96=
+8@gmx.de
+> > > Fixes: 0bee0cece2a6 ("lib/string: add strnchrnul()")
+> >
+> > Not sure that exporting a symbol is actually a fix. It rather looks
+> > like a normal development. Also, I'd like to have this patch attached
+> > to the PDx86 or whatever series that uses it.
+>
+> I did put it now before the change that broke because of the missing
+> export.
+>
+> I dropped Closes and Fixes tags as the issue should be non-problem after
+> the history rewrite.
 
-> On Tue, Nov 10, 2026 at 05:41:50PM +0100, Andy Shevchenko wrote:
-> > Export strnchrnul() for users that may be compiled as modules.
-> > 
-> > Reported-by: Armin Wolf <W_Armin@gmx.de>
-> > Closes: https://lore.kernel.org/r/1969fb5a-38ef-4b4b-9d2f-cb9a4348b968@gmx.de
-> > Fixes: 0bee0cece2a6 ("lib/string: add strnchrnul()")
-> 
-> Not sure that exporting a symbol is actually a fix. It rather looks
-> like a normal development. Also, I'd like to have this patch attached
-> to the PDx86 or whatever series that uses it.
+OK, then
 
-I did put it now before the change that broke because of the missing 
-export.
-
-I dropped Closes and Fixes tags as the issue should be non-problem after 
-the history rewrite.
-
--- 
- i.
-
-> Their implementation may change, so this would become the exported
-> symbols space bloat.
-> 
-> Thanks,
-> Yury
-> 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > 
-> > Assumed to go via PDx86 where the first (wow!) module user wants to use it.
-> > 
-> >  lib/string.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/lib/string.c b/lib/string.c
-> > index a3778d5aab4a..cc8982a93afc 100644
-> > --- a/lib/string.c
-> > +++ b/lib/string.c
-> > @@ -352,6 +352,7 @@ char *strnchrnul(const char *s, size_t count, int c)
-> >  		s++;
-> >  	return (char *)s;
-> >  }
-> > +EXPORT_SYMBOL(strnchrnul);
-> >  
-> >  #ifndef __HAVE_ARCH_STRRCHR
-> >  /**
-> > -- 
-> > 2.50.1
-> > 
-> 
-
--- 
- i.
-
+Reviewed-by: Yury Norov <ynorov@nvidia.com>
