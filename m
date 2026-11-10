@@ -1,79 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794329444;
-	b=ExNqmbexxsaB9FeSwrmboOvRl7xZi0E/Z81XJCLmBUm14+b9pdbiIflSaslAbzYKT6iC
-	 uOhE0XJP6Iu/nqc4BpdcxPLn9D3aAhUowVoGC2MDhifqTpMhuW4WRJgyzw2QaVaKrg5IV
-	 p5I6N9nI0O8PkZBZZWHRCr3sWfhYv/bOynwibf2kWoLGUKJDVMjZo5tMH6Yh5GweEXVxf
-	 r8cpKtldFc2smNOduhJDWfCcVrqMH90/H1Vom0UDoSKV3j/WhY2Vs6ysgEj1pSFUrjaL9
-	 S7BdCRj9dRlA+hHf3bzhYEnV2K/Bz+1kO0JHfPs+uGyOemGjHbMVs0gTzygqwwMEHAg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794329444;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=ZWBQ6PMN/isuS4Cw3xyM7ROdfun5CoA0hXZHvUg1Lw0=;
-	b=bVxS2yvK0vcKbBs+KS4pE27Ga8y613NaRxy5SM9ZhVPvknH/QsPwEvZ3YbA3j0V8ESlb
-	 QJbbAaKcIHPAX+TH53v7WeLu+s57HDHv+IR4ybtKg6PAKS9b62bK/Of8FmkPVwQREcDfM
-	 PvYPf2hFGgYPzlPDsEDh2DaxF9Oqw44C1/Ybhn9vlHt7cbndg5libLymxgWwShTa8otfN
-	 /ZE77j3wF3iYsrhMn7fQFTXdCevyVjdxEbQkY6FDRkbE7GFOg/isDEYAAvEFGRUS9DXDD
-	 jJdoLlR53rDurvC4qS9vUhxX/ddphgd+q/epuERpaEy0FH7x9zoktevc6v90sXxMo/A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GSsDxeIz;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.15
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794329612;
+	b=f0wc5PcdBfTdzI9+D6A3CBCgqZeGAV0JB5YHY4b+1DvQm4za1BsxKpMtOX2qZWlFwejF
+	 TrEquPsAKhWCSfCPeQx8MGJrdQ22tIlA+C6l9lLYTjYDOuY2RAqMLBlOk8Mby5dRoHlC+
+	 IIn59Wd5K4sI1WS/fAWRBiPnyE20OTQVJMuVc9iXIj40OPy2v3+SFyviNOA0Cqg/KlNWI
+	 j82PAFcjtOvKIzeMc+EODGApDUCIhwS39yyhoFkq8qjH6tL1u9wfLmCeR1KScHlGLoDLg
+	 Baa2AhDdWvSUC7UH0ipQUYzJ6k6y1VTvEXX2S1A9mWdekDv9F9ASNEYVhsMZBSV17pw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794329612;
+	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
+	 UI-OutboundReport;
+	bh=0rj1XHNYZzGUfvEGFEeb+DMShOMai38hfZMBONwzmMw=;
+	b=wG6Sy9CV0YNnDBvEnNfIxTqcELrj73OL9kizYVlmqJhdf9fA8I3jRWrGPHPMdl2aa4oV
+	 8LmYSYpINj49nUcIvOQRV7363Xyq5xOwWHphkgBtlXjocpRkFktwNXV4KVbYFJtueCPGb
+	 69g5hv4PNtDGDNC8T2RY21UQhsi8tAwjY67vECXLhN9YYDg2RZjAwERM37CU12E4ZycRO
+	 LXlNpyeCAXNL5lvroM31n1PAqhGqsAc+cZNP9meKfuT1fq1ddLdgzN4uZp+fSQPXVYpew
+	 bppNjzVn8Hn9Mame4Siq4UIAbfQU31GR7sKvK+GQ03eAq5kGhAt63ZPx1tPPZGRsRBQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmx.de;
+	spf=pass smtp.mailfrom=gmx.de;
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=HAU77KYO;
+	arc=none smtp.remote-ip=212.227.15.15
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC00D606A323;
-	Tue, 10 Nov 2026 16:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E3960A260A;
+	Tue, 10 Nov 2026 16:53:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4E3960A260A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GSsDxeIz
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794329443;
-	b=S/PMtwjorcU1PZujT3PpyBu0brCfXwgF6P1PrAypHvFWIm5plrnp69mk9LQLuIqsSOQo
-	 OHiDmaE7aXHWVH8xOrZCKp9wPxp4lxXbv5J3gHrMwF3kh86sc1cxyGGRRbQ1+V4FEaKY1
-	 dA+KiDmcaTy4BbHJitoiS/l1uxD34oVYmu7ekxL1rv2qfPB8Q1LCSJnSQ/KVax6uA200W
-	 tfNBAv1nCXv3cFRO2Ybd9blo8xzV0+BBJy6TRp6brdjbzeq9o4wswgp+CdJs54XFQDZ1C
-	 RHgwfS8BHvrkrXc6rwJKNUekJtYiiDO8O1Aim4f4byFSlKH0X8O5sCH3tKVU9zn/g9A==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794329443;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=ZWBQ6PMN/isuS4Cw3xyM7ROdfun5CoA0hXZHvUg1Lw0=;
-	b=KESV93vWaDKWvTWeSn9UJLrFsPCCszAXTqG8d1HV6dJywS2kICpV5St/rPZAh1JzJkes
-	 Seoebfs3aY958sUGz9HFDEOFQ9bsDeb99bMosLbeyV5/agyfBGfoIqnWrFZEIdtQ8X0mN
-	 Nh2PTLQFL1S5ePC5pENxu7jsAlN3jrxtWPvKG3Q0glBkICaBlgfy/vIrZjxhYnm/whnHz
-	 3hXlcv0MkggGBE2fO3vMSpKN86480dR/Nwa73Rjaytb5clrDamgUB1JY8tDMLge1ixFzK
-	 ApXNFTTTgEFF5KbQ2norsAM+7AyAYMkBPagpg2Wd230e6jTvijYBs6IYySFiMNbGhHQ==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id B2D4F1F0089F;
-	Tue, 10 Nov 2026 16:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794329443;
-	bh=ZWBQ6PMN/isuS4Cw3xyM7ROdfun5CoA0hXZHvUg1Lw0=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=GSsDxeIzjShpjR6acMgsPRoX3k71r/7mzwITmvhwc47fma0zpjXYcYR9JpnhYa0tG
-	 GjrVPVljrCK3XL8cl+jCczS2XqWbv7vNL/AE/rcCkPRaU9/dYx1pbXG05kOh9s09vC
-	 4EoAnnkqZ7x09g1Ozp9b+9g7tTEN+eIr+6mlGw4kXyth18GxqXUQqVQksyb4UjpbUM
-	 rGZnrbhxfZ8uQEVXihYiAN1g8w7UtMxM+hWKVel6c8Qj++71aRmGCVkbnSID0lpTwk
-	 /fLAShvB/0xIOIOYfI6KEknLD5Mzhj0Ew0e1UKRjWWEsT41WUJsFZvzzYLtL4A18Wd
-	 /lqXGMFMJul4A==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 2CE9448BE0;
-	Tue, 10 Nov 2026 16:50:42 +0000 (UTC)
-From: Moad Tarrih via B4 Relay <devnull+tarrihmoad.proton.me@kernel.org>
-Date: Tue, 10 Nov 2026 16:50:27 +0000
-Subject: [PATCH v3] platform/x86: asus-wmi: Ignore unusable kbd backlight
- WMI device on ROG Strix G814FP
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=HAU77KYO
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1794329609; x=1794934409; i=w_armin@gmx.de;
+	bh=0rj1XHNYZzGUfvEGFEeb+DMShOMai38hfZMBONwzmMw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HAU77KYOS8If3fRplKotPcHkiyHW+QKLQwF6xAHsa+DFRv3ng7BV3+8+L0nCxvGV
+	 q8UJPPekV2o780G3gQA5aiUNjTXlc8XJMmoizfFrtTz35uwDNo/VrXvMZLf2r5wCQ
+	 nL3PzismR8w1wT6/DKbXSr7zg/G2CKAOi0i0zlGmcog9UYLtSBerR9wDDEvjt+ZXN
+	 RfDvfdB8VBN0117YDp3pYNFKsn0cUCLJiJtOgRbFat7MyvgSVjOspnL3ETPcCuA3T
+	 dhDVPzOd+4+kBMQGowIoQFtH3RT//qyozTx0b7vG55jbS4a6j9xHZD8D2dUFgmRnb
+	 ed3ZvNWQpOROfFMP7Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MjS5A-1wkdrX2bPO-00mwDl; Tue, 10
+ Nov 2026 17:53:29 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bifangknt@qq.com,
+	nicokessler@icloud.com,
+	sre@kernel.org,
+	linux-pm@vger.kernel.org,
+	wse@tuxedocomputers.com
+Subject: [PATCH v2 5/9] platform/x86: uniwill-laptop: Expose raw battery capacity to userspace
+Date: Tue, 10 Nov 2026 17:50:06 +0100
+Message-ID: <20261110165318.631010-6-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261110165318.631010-1-W_Armin@gmx.de>
+References: <20261110165318.631010-1-W_Armin@gmx.de>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,191 +76,285 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261110-asus-wmi-kbd-readback-v3-1-646adf2b8629@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WQyw6CMBBFf4V07Zg+gFRX/odxUdpBKpFiC6gh/
- LsFXOjCuDzJnXNvZiQBvcVA9slIPA42WNdEEJuE6Eo1ZwRrIhNOec4YlaBCH+B+tVAXBjwqUyh
- dAxc5TzOU3KAk8bb1WNrH4j2eVg59cUHdzbI5UdnQOf9cigc25/51DAwYFKWQZZ5SqgweWu861
- 2yvSOaOgX9adr8sPFo0TWWpM2EkflmmdarHWx8/0b33T9MLzLTyFScBAAA=
-X-Change-ID: 20261108-asus-wmi-kbd-readback-236245e82de8
-To: Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Antheas Kapenekakis <lkml@antheas.dev>, 
- Benjamin Tissoires <bentiss@kernel.org>
-Cc: Sercan GOKMEN <gokmensercan@gmail.com>, 
- Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Moad Tarrih <tarrihmoad@proton.me>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794329442; l=6707;
- i=tarrihmoad@proton.me; s=20261108; h=from:subject:message-id;
- bh=A3fueH7Mo+YXF19QBqh02BggMGzJGEqb1H2dxfXbUzs=;
- b=EgOWtgnOXN8ILC2KNlnypnxCwNuXPv14xQwsFYQDmH9bt1huHP1ulHAmbkshuahmbM/Gf6rQ9
- GOpVx0gxDJeCPUdFLb4+Xfp+J61edy6yMFpZhIkbDU0us2vymM2TVgj
-X-Developer-Key: i=tarrihmoad@proton.me; a=ed25519;
- pk=wtwpmYxZldK7Qebavgtx7P5WmSQOiWjicK0506NOKLg=
-X-Endpoint-Received: by B4 Relay for tarrihmoad@proton.me/20261108 with
- auth_id=1453
-X-Original-From: Moad Tarrih <tarrihmoad@proton.me>
-Reply-To: tarrihmoad@proton.me
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cmwvKpCBQ2UtDAkzC2lxYIldQgUfU9ZzILIn2HxCBwx+aXUXyOZ
+ s2kB8D1fhMuuogDQgDV7IJHlnyy+YBlvdYhE5yXW3vg+3hEkxOUHdMRaAG9AgwbNAHk9Wit
+ ilDT78cRsRsl4b0pCFpkFhGTslds2/bsfmLN0QDCmBbs4u8A1q2j8N0fbPlKqPVcIkKoPS4
+ TelNtMy5M4YMzB9yMZemw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Eo/nlKdBb9M=;/2ueJdNeFQpURFSvPmMf1T3ae/Y
+ VOoqCn+dn05Fxv+XfHtzJat9jaTaq9NJsfTU526KdvYy1VeOdHD2f1gUTCgGJQz6BzO81ozT1
+ QnZJWxeq+AkG0mmUySr1XoXTIDxKEIs4CtF9PzQwzgQK0XsqC7jNcOvd5MrNXOq26WEaSE4Dt
+ kcNiMqtCi9+L1Cuk/C258rbo0xMt6rKFSow4HqUA+gQfxa2dS7DD2tHxj1Fj3PUWAY2sXncYf
+ DV+cyEGQ9c51/xP8SBxmIkCtKzGAw++ZVzAuqLAvA1egMfZ7JJiYSu7jG3/XQyKpLmoY4xRKk
+ C01ph2D2KdPxqecXhVzjeSd3StKL8tRyW4rYMSJwDZOIDX/lme3BN3YnB9/GhTPoXe3a9e/7X
+ 1+P7017F5MC6ZlyKhlfpqVzffDQsZJADzcqze6zr6yje7eYth0eB6WDArJr5FhKTkmwHHQdpu
+ heESFvCobQVqHavP33Hzpfs/uTdMgvVgoGcFn9S+wRHCvDcJ0A0IXmF3oqygiO4GOmYgpJ4dP
+ WTcKRl0lqY5QmTSwV1ftEjoW9I8FDjSNJq9FWgNztn413naXkjP7TQQ/TSPwLAOin7Xqn51ON
+ YdKXvR9ol8pBtYC582nXgrR+uqT+r0ZPH30qZb5x3xjtDGbuqNdtsHmkn0zVh5LO4y1j8h0oH
+ b6L7AeEWYndalSrqHusnxxB9KXdpg3QIXXIYVQeXrK8aNw3vJvf+mQjJFHLj1VbJ4hZLg2AaV
+ 1lrhxcixZEaqclzHFcWMVwH0Wy2MdR83qYzBCxO0hfqZ5OgTGJiXdBdYB+VdhFQdD4MV+DRpe
+ SHfM0q+nuf2xbnzstZEenlJdKQr030OB2gpQqMhSGarPoY4mD/GQTNyD82HZsGMZ7YpsoU2bp
+ QBB7Vmm0DUTljlsnFS+sbSdPT0OWcdDGYBwMqI0P3Nryj7r2LYGPJYBE0voO8orBHXP5OaNDy
+ WdMna6wr8L8CSdZMDN76qGLfwNZxOu8wyQnQFDXmZO51LF7YJMFlblelnpnI22avBOuVeGe1f
+ w/EsAYhWILRvpj2R56TfVNBYrOwX596iRnSTO6WTzhthKFJh93yftEzye6tQoVwg0ASgwyCq4
+ remU9h998zMTJ40Sz6mK8I73Ps4lRFun0kD128OWvz5MAhdaTgp2kVcX1DWzRyOYyRkC+uiM6
+ un5/ODEcgCDJdXjZ1jpEqOcbqgh3CDokG6V5+7aHO9jCg5XGDcj8yw/L2jMbHIVfE6WnPqB34
+ VWqKddYqNeumSm3XLp0Ic6ZYYN3RZ9KxIrzMdjxerxktW5Lm8980Z7HpUKM2D8yiipuPZXt7J
+ grcSLLx+3jgkrbI/iUN9jp/icv50qxR0I/wZcYGsxo/h7qH/pW6AqDwr4a7wrg3ejTcoSWCeH
+ 2lbSFuIPG+4+VjW2SBfrwvR6+qi+4q5oVPAeL2cMZ+HMTZNL2RyK1u44se6VSqS5XXL1dl7KD
+ TQj/ouehOGLJfzbWJxJ7cDbQIRgwFjrfRy6tG0xeqrjZzfflvbP8PJhsWhy7R1N6UOgW9839g
+ QlY8bCNrgLsUu/XrH0GH3g8QEb6PuAhWwt1Cbq3h/CVktMWzsiz9+aqFlNEOkdk1I63CA1t5F
+ GXibhQ+/p3MXqJNui2V40DE5jbiU4EkoUmxlEvqEVAT7Q9ZjftvtmSKKasPXiqfpncU4LPC3J
+ fH/heaZpNUGVNRudZG4SvEmwlfOs0zDp45pPJI56dLuFpblApRv51qoMqvpwtMll9SgFMpbzq
+ Y/Smutfq1EAARn5nuRZMLpb5CzFuEyZo2Q5tYJtWdEEWHOqXa8wGP4HS6kMLjXbHLEX3Z9uNG
+ r1H/DEkwnHPqYc8S3mdqGoT/eLlZG2EU2h13tuvc8GlzM+6ABeK2DE2XE1smr/p2xJ3ZHaXm9
+ K7bU3KtF2f4pdmN8V/u5ln139fA/ewztQpLeWnDNs3moJzNsjuj9uPsmNukpYclqhq02mfdTV
+ 9unltNgyF+I68VUD76OUu1luJdaaVpE78R7dspTENFvGDygixPvWuBAO4A06dMl9ySVCVvr1r
+ /sW7daNH2U/M0vJDZi6uR3lTzgjswZ30RKbrDXUPLDFFjSHYHFWBhrQ7Byzc5P/pL23BG3Tkb
+ A0v7siQH5jrPdMwXmJN/ldTEILXpOA/EjBV8bhs0u5Slvu23ZOtNuGXPKRFTAgYjr2KwKNJNA
+ +R1XYTO/41MnGyJviufitiwM6S0udwyu+UdSr/5+tJ8SFG8uzWPsuc6fArIPDHHDFlJXr+J6c
+ WXIv8IrHD4kjr2WxzIU5xuG8hySCQRFXvOU4LoeTEfYzkwe/J0Sj5QjGV3CFWfvpd8tQFoslY
+ 6G36HvppyqFMeb9yb1rpsJNIRc/IFH5OE2sKCgmcbOHGjoXEpp+Wi/bhSxJ8S+Z3gANvNE6ie
+ 3oRebSbDgP58KK6sTQnV4y8ij47s+iVP6+ffB+afdE7kDkSXx2iJhn9Joma8lVMUuNh9uQ6pm
+ fMiDwN95lhyIxpakogCxTTQznSOfT0s9tvlO4IWIvTmwYsTie//PFwEeD5DOU1HrklfXMFuxM
+ Uv6i7zp3BVrEetus99NbVbRlLt90+5eXxR97z3tCbJrlOeqa4xCbJraRBLTIUYMiFOgpZG24h
+ 0I55fn5toJTSAWoFY6jImw49stRXQWYzGfiog4Rd+ktcZzhPm+uU/U0b3u4hP4v2ePJeVBASl
+ vvhUBCehswAVja9wyEu0d40hr9ptKqZ1Y3ANVcawBM+IjfqGcbgLIgqj9uItQjqKKT9ngpCUA
+ AlJdt9kQ4YvS3gmxj27QIDhD4vHeLWIRHocrli9ljIPXt2H3Nd7zTNWW9dbRtRB1xtMkcswII
+ +KdkDTFoJQIlOrVS8/r0jO6SdAcr4KvFNESsIKcj96YLl+U1fn86KkiZrmdlWVpp5lCBZOhHz
+ lFZ+aCjcWVW15WVYuKIPpE8rV0pg39fZ69OEDk1hnNiciGu7JLh0qZU7bLxL18OXeGiOKpOA9
+ nW40qBLyu9dBWFFCVGLAjoLdO3WVqmZp76d0FFXUWVwZuaz5WQliImWIPvGxfE0Qz+VAgdSSz
+ M4zdl6IoVvd9+q13SitmF2Aee6q8ZWj4zBbWNWPmUVNSFXNgg1F1vif9alYUXZJGaEu+/XjRw
+ DHSE73ydt9RufUcpUIfoyGsrMs+XnP3E7BgShb4O6mrN+q4P1s71JbCmxSkKajGOX91+ezVjz
+ uc2h2jEpxnTHpLQQp4NQunNPGFdvey8NENg23/lO4GhlmYRn1jFHJBGLkiALbT1wFAWU5J1Bz
+ +qfgmU44/s8fSmOEkcNnqHzt9GTM8cqtTK4M2KZW675RWzikL00xSdVVSKha7mWNxmlU7Yq0W
+ WuTSDnCb4F/H6Euq346bE3ep84JhzPReBNSFVNscYYzRHW73H4jw12jd6KatOAjg0mIA6j4u9
+ P3AgVMeSZ2GlvaHSlIVDOi40FwVRvEMk8unDWoB/NGo+RHtd0uVFCTK+EstePeCVv4Mn4fJBq
+ Bznnygr0w7lJVjJTCTIdGycPzju5ISHQsKIrf/QtNMcWLilSBXxk35YhLdTFys1nkGWV+v4rv
+ fiUuIPldjtkgZgm05VzUseQ3mqZF3dvjm80yZwdz4WTe6z8f8xChXWKLTsVVhjJf19QDb1SD4
+ BlnFWPaTltZMGDHYeuSD6YgDSxMYoZUElEgWbrl1JdOgPI1I1uuc3YMAmqCa2GEbHoz80gI5L
+ 3gYoq+vYndIMRX3vOfsLBihw9eUf9AQXG2DzaWgn2zWKpSH4KjBkLldnlc3EOAtp7HNdjNG/T
+ 1bakvN59zSSg4O1/1hCAzMqYwbRA/wnz5QQKCpJoyxdwQGMyOdjPhy+SpAy/pQ+OoTWYAZ2ST
+ t/5x3/hS9gKuQa9CCvo7yxH7n9HUSgRnaC2UJQR6GsR71xC5cDfbtbM61pvYb8JAws78hqj1s
+ UYFlUlcKwTZJCiZxD0BoBTocAFuQ9Sw/MVQZ23/fCAlWHztxcLtY+7BZwaxRSQ0Fuey+f3P8P
+ fhnAxznW1inJ4K0cKz8sob1NA627wys1lheLrGmeK5RhK1IEgVObS3RwVWcOAiUQi36NnIbMY
+ Lam+JOGgSgey28xT2wkwjfwkoGXJ94JIdS2nX1tfpoXVA9cUYkZdr0/5jaAUYXurtIvSkabam
+ FSWLqJRePd4BkbiF3K5NhtmOQ8VqtEAaRsO5xr65OEP1EKdYzjDuJnDZ/ZbJ+jzIrj/QIih1/
+ WpNjXSi5kCacRYWV3qESeNspq0wn3bGfCsjVhxd2SBvPOOH8CWHOEMzF5n32Z2SNLl06SB1c+
+ F8MGi/nh4w7W0hFwus50m9NC1/CCQJI+DDqX0G9ghh0PzUANVbCfvM8wd5QJhQCBEpEkHlpNM
+ P2vDizjpvbUYYIORnotMaayBuyZ2YM2LiqcLvKIoamvgT4W4bRbU0kmKTr/KDY7n9rVzwVdtT
+ jG/qazQJ6ORve5qiWvkbipLM7zhDVIef+Nyi7MB5Z6/ylF497xGEY1RChpLNoVMNS8jfuiH6X
+ nDEzkDnOU1nLeBiJqoIGzeXIcGfLToh1dDJzlgIxJVCHPX5V41oQHdFijYZ0ITeboNY23KO6O
+ UvjFp8hiN7upcLoa4BZX2QCTVJxRc+KdC/qhviag47LAKuiO5Cf9xHmtesEAV1TNq8iqytsN+
+ CV8ny5qitSnb0NPZNgbF4s5TXFzrAN/ze6uYCPOg0Orh4YiUzl8HDGIoN6LLnsQCWYvWrRUfD
+ csdYOF7R4t0w2gEddHDD3oRKEdwgHJQaaS5e0YWkzcgXHA0F/FB2i782scyeFVyMzqWNhe/fX
+ /GjwNNc8wGFfYyagv2onxIPL62tnNi6OrfjTkyL9/g8e47xJiZlmN1skXfquC8/31ebdWUqeu
+ tBDDbsZ5KnlUu8q/u9Yg+e/BPm8fEa1Zv4XVnEjbKLf1acLaUPk2UelXgbEBDSKw/GzvUJG62
+ xhYoXTyWvPqjkeZJ7zAi5enQHcSyZ2Oknt2x33E+suiDpMPdVGtFPKrZGP5N3OKS6p6sUQ8Ij
+ Vjzv3J07FB05ny5WCpVQVfUTfuiOfDEjjCxYP5YaY3WiomSLs41SAwm8WK+qhNXqOoWG0hjjK
+ CAdcvtWI3uqlxlI/RmyJxLv/3IVAd+7uINygpHQP/hDUqoEZbfXR0IHPc70wqODKsa7nrb94b
+ qYtZE3iGQ0gNNdRiuf4MV/J+s80XqYTMTxc4//E8JVY/me11bv6E80Efka5yPc4hPWe3qeZJS
+ E+PJu+M3Oz7nUhaAp87AqV+19VZv9v9B4cXk7VeNVu/B59qEinvqVvD8Pj63GeTmykoHmmSbI
+ H0KpVYW3PYRR3kM/T18fbRJ8F6VgfcJEkhIX+v5oeAKUuravmOZskob+HOnXc1C9xotGVSqIS
+ XjAuiqFyhaQmyjNEc1HzJpMJSeDAFfL9jg/asGyVb6ZziGCMAkf4brlbiNO+kHYsCZZJMxC1O
+ pxx6QCN9tq9jHcTLswieQ5Bus6KtBGV7QPGaukBsF+p64zvXz5IduOSLe578sIa2RrhmxGPq+
+ c9sSGHNGYYN+I23JVNvhA/j/yzQe+MRIWk7+2tVswhfrR3znUiTiPWjXFzQHvD+6Wzua5AK7m
+ /8yUShdw5G1VePeeTXWOhKpivHSUY4eRb2ShRhDXwfldP1coyHm7yJe3dE8JV5BzsMT2+UXmf
+ T0jLSIRAN+eyeN33qOXAMuktw/QhTDqjX6g6L2jJzM6/d1ICL9ELLVe7H+uYnfKRxBWfD7eAQ
+ EUSUyTFIUwXMYmoZgqSEsSi3wcHlcXWgtilqNhQ4uIIhHS5fLKvSE8qeEhm8/WY5aQ80XS3KW
+ THEhAqpe9yMaN8IvRrEWnCq7ktaxtrnCGTuFTqUQhQq5QKxU2pBUgw9VvNKCekiyHxSg0IU3y
+ bmQm+67fcSWOczT+Xrye8TNhqzEaYSkExuaYqopmWqh4bE95WlIJ8Tg23ivNXkIUmhuHd6pF9
+ 6hXLiT+cRg2wHF7lbmGk4+pGtm2jXLSN7eL9Fyj/mG4Xl7/m/pUPUo8ssewkghZ0joDinft5q
+ kg8BpHDj+JU6jehNOsxGRDel4Bte6tllEngjpSPbfbx13/GazwXYb0QuA6EJkzvL1DYcAHnqd
+ wIdwmxhXpVes67LHDtkPNkqLCeyr/5GycrpTZ5ptdXPG51AtHEIQfXAAtAvbyo6dj2XMhOtmi
+ nJ43r1CYzR/YRGXiuy57ToxZLzggnr8Uiz+0VYVB0lSNSPch6kdRKVK8/KjQVPUlZf+sHpQyx
+ iWyVN68DVC6srP13h7AmIVM6tvjQmad2hBGPkJrBxbrWGSC05PHQUwZI0a8OkQJFJNg2kSYmC
+ J7lF1WkiVrj1LidcoDI47JDmU450ifHh9WGhWy2yiHksIgW/8EQ8ulqIH8KmQUUXlyJlvM6HN
+ oboxQFMpwm1ct4qCsnUna3M9cI2v4N837irs4Ap4xVXKrys/mcYpbEBmXG2t5edDFTqY/u8vt
+ k09aZ+7HGBYFdUP+TC1akEe7oVAs8aJBQeHXskNdy1xePsbqISDQs8ZQaYl0Fa0+vGciiPaZz
+ UTD2+qZfGkJCl5vuU5+iFhi/AJtpReuXZ1hqJgXKDo/5mvgnmSsD5r26ozyLK3w6yiElxYuyx
+ K+4/BMbFm51hBIYaEMG5AUYeaiwU0ARR6H1PZWOAFdo5vIlWQdIvi0FUzDjDc1Za6VneiSYqP
+ 3zvN2U2SUmsvsPjxnw1oIVy0F+Vjv8bi5/QnV+vXWH0Fng2TGSjUHCunHx3XSqb9EGn2bjP4e
+ kpSAgGAbESOkKRfwAcs5hjK5t/M5OPoYx2UutjNd9gTTP8fMa9dMwFtZar4qJBS73WCbd3iCb
+ YPjsmwyL0LNS3TKAkCTFLnbNGH04pf/4U5hbrPkhpnsDBWU8ezN4wA35Nry1A/vbTRc0nsGca
+ 5Vb+jLlCbKaqkqP72ipG6wqLTRrzbfAqoKLZsUgr92HS7XwM8xJvJk3x7bKnaYH45KYh7AlCZ
+ Z264w7bL5HiG/zNYh2HdoSNxl3ESEr8EMC0h5u85QHzys70lwZCIP6cWOOmJbXkHxf5iZT+oR
+ qxg1ZxNuYCZCsoK++k9Les3cjMKG0Qa5qui9CrVkkV0ROA/p0ocV2qNI3H14Zq25U0oEfilqk
+ VjltxhF7C/DaW9TBCJbUzcRtHF7nOLRUUtTLMpwSBNBuW79CpADqTyLJn3e/EjajpD2TFJ1aW
+ e0WoxveM+cQJHJzkoR5B9Z3cRr8YB+B4Y86D4KVzsDQ1hbQkIF/xWf98IyA4HQL3ctKp2LwRd
+ h1H1y7oQm7oMAtZTncdxYUDGsXn31s+t+VIsoqqdxeyJ6+zAuIaQuf7rUOf3fha+iVOaqK2pi
+ ktCHTn9UK67efcTXYt0BtSsIXbd5RBgHIH9+DZ0PVQ8jryoKTZvkFWNTkbH5e9iIBIxzdx0/F
+ wB7VNtYoBcYm6tA5Ov2Rrqtt7+Cw9G9sJJQFN1in1Tg7iMUBtk2cnDli0iJArbc3DghR7VsTG
+ DNlwyXLwvFsds0oYoPL4Rb8Uo/DM2V3NoUuO+9N5fvCjdT6LBzimdmbl58chL3+uY5ttP2YnA
+ BH/fTk9ZdqUr0Fy7mTf6onHklHRZv1kyLeAVpD2I=
 
-From: Moad Tarrih <tarrihmoad@proton.me>
+It turns out that Uniwill will not report the true battery full charge
+capacity for the first 64 charge cycles. While this is likely being
+done for correctly calibrating the battery, it still prevents custom
+diagnostic software from accurately detecting the battery wear.
 
-On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
-backlight brightness in sysfs works, but reading it back always gives
-0, and the read makes the Fn brightness keys misbehave.
+Fix this by exposing the raw battery full charge capacity to userspace
+using a custom sysfs attribute.
 
-The firmware reports the keyboard backlight WMI device as present but
-doesn't implement it. DSTS(0x00050021) always returns 0x50000, which
-is level 0 regardless of what the actual level is, and every
-DEVS(0x00050021) write is rejected as an unsupported method. The
-keyboard backlight is actually driven by hid-asus. asus-wmi saves the 0
-as the current level on every read, and the brightness keys step from
-the saved level. So after any read, for example by the desktop or by
-systemd-backlight, the brightness-up key sets the keyboard to the
-lowest level instead of one step higher.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ .../ABI/testing/sysfs-driver-uniwill-laptop   | 11 +++++
+ drivers/platform/x86/uniwill/uniwill-acpi.c   | 48 ++++++++++++++++---
+ 2 files changed, 53 insertions(+), 6 deletions(-)
 
-Add a kbd_led_no_wmi quirk that makes asus-wmi treat the keyboard
-backlight WMI device as absent, and set it for this board, matched on
-the DMI board name. asus-wmi then keeps the LED registered for hid-asus
-and no longer reads from or writes to the WMI device.
-
-With its own quirk entry, the board no longer gets
-wmi_backlight_set_devstate from the default quirk_asus_unknown. That
-flag makes asus-wmi write DEVS(0x00050012, 2) at probe, but this
-firmware rejects both DSTS and DEVS on 0x00050012 as unsupported
-methods, so the write never did anything here.
-
-As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
-no longer created on this board, they never worked here since the firmware
-rejects those writes as well.
-
-This patch was written with the help of an AI coding assistant (Claude
-Code, Claude Opus 5.5). I reviewed it and tested it on my affected laptop.
-
-Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
-Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
-Suggested-by: Denis Benato <denis.benato@linux.dev>
-Cc: stable@vger.kernel.org
-Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
-Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
----
-Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317,
-keyboard 0b05:19b6) on 7.2.14, built as DKMS modules. The keyboard
-backlight is still registered and driven by hid-asus, the attribute
-reads back the level that was set, the brightness keys step from the
-real level, and the level survives suspend/resume and reboots. v3
-was retested the same way, and the screen backlight
-(nvidia_wmi_ec_backlight) still works without
-wmi_backlight_set_devstate.
-Build-tested with W=1 against pdx86 for-next (c339f4010dea): no
-warnings. checkpatch --strict is clean.
-
-The kbd_rgb_mode and kbd_rgb_mode_index attributes are no longer
-created on this board. They never worked here: writes to kbd_rgb_mode
-are rejected by the firmware with -ENODEV, like the brightness writes.
-
-To answer Denis's questions on v1, the bug this patch fixes happens on
-the latest BIOS for this board as of writing, which is version 317.
-I only have the G814FP, so I don't know if other 2025 G814 models
-are affected, the quirk only matches G814FP.
-
-This no longer depends on Sercan GOKMEN's kbd_led_no_readback patch.
-Both patches add a field to struct quirk_entry and a DMI entry, so
-whichever lands second may need a trivial rebase.
-
-AI assistance: Claude Code was used to trace the keyboard backlight
-code in asus-wmi, run the debugfs DSTS/DEVS probes, write the patch and
-draft this message. Testing and final review were done by me on the
-hardware.
----
-Changes in v3:
-- Drop the comment on kbd_led_no_wmi (Antheas).
-- Don't set wmi_backlight_set_devstate for this board: the firmware
-  rejects both DSTS and DEVS on 0x00050012, so the write did nothing
-  (Antheas).
-- Add Antheas's Reviewed-by.
-- Link to v2: https://patch.msgid.link/20261109-asus-wmi-kbd-readback-v2-1-c048fc53d8ee@proton.me
-
-Changes in v2:
-- Add a quirk that makes asus-wmi skip the keyboard backlight WMI
-  device on this board instead of detecting rejected writes at
-  runtime (Antheas), so no more WMI writes that are known to fail
-  are issued (Denis).
-- Link to v1: https://patch.msgid.link/20261108-asus-wmi-kbd-readback-v1-1-bf38f6400ade@proton.me
----
- drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
- drivers/platform/x86/asus-wmi.c    |  3 ++-
- drivers/platform/x86/asus-wmi.h    |  1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 3b0f3346dc60..9b2a4b829885 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -93,6 +93,10 @@ static struct quirk_entry quirk_asus_unknown = {
- 	.wmi_backlight_set_devstate = true,
- };
- 
-+static struct quirk_entry quirk_asus_g814fp = {
-+	.kbd_led_no_wmi = true,
-+};
+diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Docum=
+entation/ABI/testing/sysfs-driver-uniwill-laptop
+index f3060aaf8a76..5f7eccb2d205 100644
+=2D-- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
++++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+@@ -92,3 +92,14 @@ Description:
+ 		boot at the same time is not supported.
+=20
+ 		Reading this file returns the current status of the USB powershare func=
+tionality.
 +
- static struct quirk_entry quirk_asus_q500a = {
- 	.filter_i8042_e1_extended_codes = true,
- 	.wmi_backlight_set_devstate = true,
-@@ -167,6 +171,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
++What:		/sys/class/power_supply/<battery_name>/charge_full_raw
++Date:		December 2026
++KernelVersion:	7.5
++Contact:	Armin Wolf <W_Armin@gmx.de>
++Description:
++		Allows userspace applications to read the raw full charge capacity of t=
+he
++		battery. This value might differ from the full chage capacity reported =
+by the
++		battery itself, usually caused by postprocessing done inside the ACPI f=
+irmware.
++
++		Reading this file returns the raw full charge capacity in =C2=B5Ah of t=
+he battery.
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
+m/x86/uniwill/uniwill-acpi.c
+index 66770f939c83..ef3e77446112 100644
+=2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -395,6 +395,7 @@ struct uniwill_data {
+ 	enum power_supply_property extension_props[3];
+ 	struct power_supply_ext standard_extension;
+ 	struct power_supply_ext cycle_count_extension;
++	struct device_attribute charge_full_raw_attr;
+ 	bool last_fn_lock_state;
+ 	bool last_super_key_enable_state;
+ 	bool last_touchpad_toggle_enable_state;
+@@ -635,6 +636,8 @@ static bool uniwill_writeable_reg(struct device *dev, =
+unsigned int reg)
+ static bool uniwill_readable_reg(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
++	case EC_ADDR_BAT_FULL_CAPACITY_1:
++	case EC_ADDR_BAT_FULL_CAPACITY_2:
+ 	case EC_ADDR_CPU_TEMP:
+ 	case EC_ADDR_GPU_TEMP:
+ 	case EC_ADDR_MAIN_FAN_RPM_1:
+@@ -684,6 +687,8 @@ static bool uniwill_readable_reg(struct device *dev, u=
+nsigned int reg)
+ static bool uniwill_volatile_reg(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
++	case EC_ADDR_BAT_FULL_CAPACITY_1:
++	case EC_ADDR_BAT_FULL_CAPACITY_2:
+ 	case EC_ADDR_CPU_TEMP:
+ 	case EC_ADDR_GPU_TEMP:
+ 	case EC_ADDR_MAIN_FAN_RPM_1:
+@@ -1932,6 +1937,21 @@ static int uniwill_kbd_led_init(struct uniwill_data=
+ *data)
+ 	return uniwill_rgb_kbd_led_init(data);
  }
- 
- static const struct dmi_system_id asus_quirks[] = {
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS ROG Strix G18 G814FP",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "G814FP"),
-+		},
-+		.driver_data = &quirk_asus_g814fp,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. Q500A",
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index b33ebdb21aa2..51fea21ff247 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2165,7 +2165,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 	asus->kbd_led.brightness_set_blocking = kbd_led_set;
- 	asus->kbd_led.brightness_get = kbd_led_get;
- 	asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
--	asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
-+	asus->kbd_led_avail = !asus->driver->quirks->kbd_led_no_wmi &&
-+			      !kbd_led_read(asus, &led_val, NULL);
- 	INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
- 
- 	if (asus->kbd_led_avail) {
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index b45f81b38a47..e53c6b3fc619 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -41,6 +41,7 @@ struct quirk_entry {
- 	bool wmi_force_als_set;
- 	bool wmi_ignore_fan;
- 	bool filter_i8042_e1_extended_codes;
-+	bool kbd_led_no_wmi;
- 	int key_wlan_event;
- 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
- 	int wapf;
-
----
-base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
-change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
-
-Best regards,
---  
-Moad Tarrih <tarrihmoad@proton.me>
-
+=20
++static ssize_t charge_full_raw_show(struct device *dev, const struct devi=
+ce_attribute *attr,
++				    char *buf)
++{
++	const struct uniwill_data *data =3D container_of_const(attr, struct uniw=
+ill_data,
++							     charge_full_raw_attr);
++	__le16 value;
++	int ret;
++
++	ret =3D regmap_bulk_read(data->regmap, EC_ADDR_BAT_FULL_CAPACITY_1, &val=
+ue, sizeof(value));
++	if (ret < 0)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", le16_to_cpu(value) * 1000);
++}
++
+ static unsigned int uniwill_sanitize_battery_threshold(unsigned int value=
+)
+ {
+ 	/* 0 means "charging threshold not active" */
+@@ -2120,23 +2140,33 @@ static int uniwill_add_battery(struct power_supply=
+ *battery, struct acpi_battery
+ 	if (!entry)
+ 		return -ENOMEM;
+=20
++	ret =3D device_create_file(&battery->dev, &data->charge_full_raw_attr);
++	if (ret < 0)
++		goto err_free;
++
+ 	if (power_supply_has_property_direct(battery, POWER_SUPPLY_PROP_CYCLE_CO=
+UNT))
+ 		ext =3D &data->standard_extension;
+ 	else
+ 		ext =3D &data->cycle_count_extension;
+=20
+ 	ret =3D power_supply_register_extension(battery, ext, data->dev, data);
+-	if (ret < 0) {
+-		kfree(entry);
+-		return ret;
+-	}
+-
+-	guard(mutex)(&data->battery_lock);
++	if (ret < 0)
++		goto err_remove;
+=20
+ 	entry->battery =3D battery;
++	mutex_lock(&data->battery_lock);
+ 	list_add(&entry->head, &data->batteries);
++	mutex_unlock(&data->battery_lock);
+=20
+ 	return 0;
++
++err_remove:
++	device_remove_file(&battery->dev, &data->charge_full_raw_attr);
++
++err_free:
++	kfree(entry);
++
++	return ret;
+ }
+=20
+ static int uniwill_remove_battery(struct power_supply *battery, struct ac=
+pi_battery_hook *hook)
+@@ -2155,6 +2185,7 @@ static int uniwill_remove_battery(struct power_suppl=
+y *battery, struct acpi_batt
+ 		}
+ 	}
+=20
++	device_remove_file(&battery->dev, &data->charge_full_raw_attr);
+ 	if (power_supply_has_property_direct(battery, POWER_SUPPLY_PROP_CYCLE_CO=
+UNT))
+ 		ext =3D &data->standard_extension;
+ 	else
+@@ -2239,6 +2270,11 @@ static int uniwill_battery_init(struct uniwill_data=
+ *data)
+ 	data->hook.add_battery =3D uniwill_add_battery;
+ 	data->hook.remove_battery =3D uniwill_remove_battery;
+=20
++	sysfs_attr_init(&data->charge_full_raw_attr.attr);
++	data->charge_full_raw_attr.attr.name =3D "charge_full_raw";
++	data->charge_full_raw_attr.attr.mode =3D 0444;
++	data->charge_full_raw_attr.show_const =3D charge_full_raw_show;
++
+ 	return devm_battery_hook_register(data->dev, &data->hook);
+ }
+=20
+=2D-=20
+2.56.0
 
