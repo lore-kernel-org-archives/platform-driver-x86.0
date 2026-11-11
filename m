@@ -1,88 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794403107;
-	b=02c305Khr3H8w8g6liQhSbkD2EpBo5DUHjQSD6BBVuf4BRwvPwd2wGH1Jzo6GIi43uP7
-	 j8RVMo4PYiHy829my2b6U1ERL5O2gS5AnbWDLDhj/GGjEBnOHH9nyR6UMA6+Q9rp5PdND
-	 RJ/y0Rurk1xWhbojf9MroggZB2p7yRt3poksZbO7c0RKM70+Cjsf8IL27bUY9+Xu2q5kG
-	 eoGKcOaSZu/bgGU6OYeNB68d3h3MGvjTBEGl2OH8CLm3lIL7evA3w4GA5BDZwkID+/PBN
-	 s8AJTb4GTWzd3dPVsCJzST6+yFKTkczy/ufi9BC5bnAGeTafrAXiw/uKy8p/sv0TTUw==
+	t=1794403151;
+	b=pgO1mI2MDneF8jcHQ6hX0hqt2q2CL+aFdhtYUHKMOj61upLJQwPM7l1Fvhi+/Ytl7226
+	 wQ4ym+znwAnUwfAG15TeN236D9AJe7IVNg7t067vNRrUyPkaVyjkeVXiV/ellyT2WH9iK
+	 2h3jHCyKIqr+1xcSdZmea5Xq/7V5e82MGj2UbTVDGJ6IN0smllZ3HxqOzC3hGS0uy66Dh
+	 /Z3eRKK1ZF+1AGjoTJw3/TkkDxb8P7kwaydQQ7uWI/Pyko9RIiraMyJDyWQO0dXVqSQCD
+	 P2Wdqz8Qf1DG0mLD6KLTXyNsAcsaSROZrd3t3nR+B816KbB6HgWRwbN2IRTT++lS7RQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794403107;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=/sC0PYd6u7aXjl2JhSuzaaUvo6C/lmg3ble+mWNwtWY=;
-	b=QFz3LvwSYJ5FatsatRNH5s42w+KUY2SvvoFsVYCXK0zzo7SU1DKn0XlQW86dlQzlcnm+
-	 YBl+ePA9ynLnNpGTcccaaTqugSnxT3NJvdu0flzluWTZ4Q070qh53dET/OHdoGopF3EWs
-	 rMcPzYrZqzngfmDdB13R5G4TDcrvKXRaKPuEr6T/xwNnKaNDtoT07jHi3IT6wlG2j4Vou
-	 8TIFV5Z0Ima7wbjVtwhaoeN1Fv1JGuZa0AyGyjXMJ/LE0mGJwF1LdE0nfrDY6P4sxCRxG
-	 7x5ehbCBGFXFzJyY+CggJRbx8Nl2EmYJeOKxQbaAqi2ZqiNfJYF80MvpcEa7+cC/m+Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794403151;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:From:Subject:To:Cc:References:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=Wq0x5a4mY8xB9yKVASur7KflnAB98WTg4FjBdau/vd4=;
+	b=xZh3o/zSb9rTAgzcSmWEYfj/NkQPJCxN2f4ug92STmQGGFKOdgwZQ5wpsULcKb39z2T9
+	 GaJ4c8VrW5rojg4Xs7LVKAtOjBeUjOFSFIA6W98nvZVy+yP1gdpbQKSL5oyM6qDA66ZhC
+	 eOgiY5LJNkn5gNYomQ0mxLKyPkufV7QXbp3V0Gb59DWrzvBnibL4YFUIDRuVsEkU6gfYV
+	 aZfn5NiojkBYRreeYm/1au80UZ8hUYfrlIetAY7N/nhs/9Vs7cF+hocBg0Uw3doZh+FgU
+	 Rk0ODTkl7oZSGZfa+dBtvRuEyKz6gltquHBKylVQo4pjiRZrA1eq5Tz34DcpIxVWH0Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bjEoSXOj;
-	arc=none smtp.remote-ip=209.85.216.50
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=mQpqHWPm;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=HAA7ldxD;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121E9606A33A
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 13:18:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 121E9606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0969606A326
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 13:19:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0969606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bjEoSXOj
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3b0bbdeae06so1923184a91.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 05:18:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=mQpqHWPm;
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=HAA7ldxD
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6ABCYuRf1806575
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 13:19:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Wq0x5a4mY8xB9yKVASur7KflnAB98WTg4FjBdau/vd4=; b=mQpqHWPmMGcnsiWf
+	hpO1cKg+Jtxp/uwmr3icseUD75KSQGBoZgTj+xRXcYgJjR9yrckym1UxN1U767Rz
+	Y0cjFwgFiJj7RnFB/zhSiI0OsZZn6rsMxWcUFDLYrMlmmSX3sq+nvZhrHf5G9Sq2
+	ivV+L+8RA5D5qCptz8SAyO+Jm04QZwE9HE2Gh2myiEWRxTPy/hTOc09Hry7LqCLf
+	Go/4nhCBvtSSe0LfKZ83Y+eRuKaWYad5aiaKOTx3yFtDIv0AAZ/DoWt5Da+qb3Zn
+	Aq7xTfxQEC1qT0LtzsoCnaiNCiIY7Pjt7yz9tQ51dHfpp/tjCRLG8Ug0uAkQgptf
+	OK/bTw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hvfawj9ar-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 13:19:09 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93f26dd2165so805876485a.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 05:19:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794403106; x=1795007906; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/sC0PYd6u7aXjl2JhSuzaaUvo6C/lmg3ble+mWNwtWY=;
-        b=bjEoSXOjKRGEM99DYz2069eSWHV7dmmqqgAdKOUmR4/gJ2k7Kr378LjREkgcnh/1eT
-         0nKf6BFhVcQSf0SfCws9OBiaszp62J6BwjTACkQp0SKA1CZMv28QfD45mDlbIdW27hKM
-         OwwvIYigcX1KyxdhKPmgxKfCT9osJTk1y41sv5nJj20GB10AVPvk6XmDuM9bcRTqYEy2
-         VCVmQfW2bFndhR4RslD5l7AkYv8NwhLeolsHNO2g47c8EQ+eq635y7i/he6xFaOWez4v
-         xp26EXIOajgCly5j/greyTg31roSWxbR3w2VTAa9vtBoAA6SX13+gHq8H5JaaI0nNfXM
-         EXIQ==
+        d=oss.qualcomm.com; s=google; t=1794403149; x=1795007949; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Wq0x5a4mY8xB9yKVASur7KflnAB98WTg4FjBdau/vd4=;
+        b=HAA7ldxDaAof0ShezcR7fGz2sJQjVpywtFtxwqRDX6dsmrcfn6lPDuAt1ZKqM8qy0e
+         TfeJ60XxN0JEKjV+gO4uqXc9PLSBx0k8Kjbegtk0QILSNjEoPSQdN6PHi9RIlf+nL/dn
+         foAvOXoTaeNWQ4awothtI6FgnDmlVDpYeAbRqs6HcjBmlv3QKxr7XfULX8Yj/TLWqit/
+         NeAIKz+R0NMEMcknIniezAeNqpbtllTa5gwh+RfaOqjupRONlKc3qO24IYDUmKIzMpei
+         /w9Lffz4KijxpGVnvGO6ex7u6XlRGA8a4ipuBZUKRIX8pWc8VM5gfmtL9mTqHxw9ZRae
+         an0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794403106; x=1795007906;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1794403149; x=1795007949;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/sC0PYd6u7aXjl2JhSuzaaUvo6C/lmg3ble+mWNwtWY=;
-        b=RWFGFV1rvLQRqZPiCRLWJ72lDN606P35N2lgcGfHfegW2Xdojs0ZyH7XUi5zvFddGC
-         Yjqyqpjxdn/VD2tlZmMqA/u31uw7xijqauYMjc6qIcYkG3fQ0IkJRQSwlx6aMm+057v9
-         M6fD7jljTUhJ0hnLA1adTSY35dK0sqHCklJvxSYfmsQi9BDmSJ2/pUHDslSPEv9gEIi2
-         frIDg2la5gDPRqrhEb5a1ATgQoTPxIKPmjZxD9LW8UNcx0mOowwQev7SEQbgeZ9uCMQG
-         DD91mgFqKXlsDijAoBkEzz17X3GuhClR+otc5sJNHNVdMrRm01rvV73OSvQR+/k66RCJ
-         tSWw==
-X-Forwarded-Encrypted: i=1; AL+hErHgj67m7uudTl/qyihpf2MKcsTES9p7eVcHsJNObQdVtg3ZwjEPvXPtchOmRrH1gT4/S+FYLEdomS9wYa/Y1Uiod7Sv@vger.kernel.org
-X-Gm-Message-State: APuU4Z9Vq/Z5PtG5l7JsnNVbbcpFlNwf1iudFmFxWjRCW5KxLMYMYnT1
-	4jh5Sw+BIePAmUPgb2jF0gG/Yl/IcK4dC9evULgbHk3hN/uuSwG6e/hw
-X-Gm-Gg: AYBFou1LOLHCdZjqNAJUGD9Osfm9YRS7tSktrl7LOAl5XuUHFg9zyaP8EaQtR2P740y
-	BGHFxQfmHEhgmxy1l21MIBMPaf5rnFAcXPYwtwNCjFZlywBDdRwp5RBQ81m2oEQmLVe8WU+Rzy/
-	NGPOuNDr+P3VMajW3ZjzV+CGuH3ps5Kv5bUgt/N08gw3tR0Rxr8Ek4DG+kUp/1Qz2M07l+ldlaZ
-	9F2xAV+Ow1ybK9lDyOCkDyaYelo08Ubw/Snz8K1j/ZXY5ZJlF4luu2Cdiw8EfSemEiARqnogOSA
-	jwJkJv1H6ETrNSpeJa/6KWLrb+9TyC6DAmXAszp8xlsyNrjqsjUlS9/z5NjGKmJ5sCadBYe5NgV
-	fPvcG3bX+4MLr+4vYWWhvdipOCZXNRsk1PwjY3Vqle0NBUX+wUmzZRgwDmoX/8OpaZZ6T5lmnEt
-	y0YAaqErf1TsHOjpqrz16cSx4wfW+ySRgpny/1DyBTxpJBpIweoYeQeBhFFKCRrhKaqoL0VJ+i/
-	Do5wR1B0gn1qqXZgRf3oMddMZO0a70iEq1NFZnQ1FCnH5aFRJO3X4uIweghJo71wRogSUbyDBM7
-	cOoSxYQh+7xozdCodjLmsYynqScZulFfMrMhk2spTwHqWUhdzA==
-X-Received: by 2002:a17:90b:2244:b0:3ab:f38:2b43 with SMTP id 98e67ed59e1d1-3b182ee22cfmr2316612a91.34.1794403106200;
-        Wed, 11 Nov 2026 05:18:26 -0800 (PST)
-Received: from ?IPV6:2408:8210:2436:950:51a2:c8a9:6ee2:816d? ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17e1f88casm4387310a91.12.2026.11.11.05.18.19
+        bh=Wq0x5a4mY8xB9yKVASur7KflnAB98WTg4FjBdau/vd4=;
+        b=nD1IvF42UgQQuua65ntorg5ZXolPV51LyzxXT3H3lahaE/BpJuSrYD2Krhlgiz09kc
+         1Jdn0IJoQgIJ7s4c2UBUvaVeXFPtfIxoQgKnRoDGuHnNU00RI82sm3y0bcs5QsJAhYd2
+         MeWfB6jGCbR1CEZ5Yq2QOybqmLZuy3bs91KcfRIe6mJUY5Dn9I5kKj+tgwABm66iOxYd
+         zJzebnAqXwAzqNhDno/+RG4yC5XyM83+WOf6E5+1L+wxNXV7hA+Y9NJBPja3bfvab8Nn
+         NktiuJJBUVgrsOVc4hB3FkdVZtXgJclSTLIowKAotIdgnpSA5JfQqiytP9rWdXdoIEoS
+         GvYQ==
+X-Forwarded-Encrypted: i=1; AL+hErFpCdpq47YvdhxS40VH19Hep7e0tLR9jnjYdm9DN/nZKxrRjKQtXljhC8uLMdOPz014PdNZgXR/B8bz/8f0fTh+v6Ku@vger.kernel.org
+X-Gm-Message-State: APuU4Z9P6rHoe8mItmiX5gmL/nMmNLdgfCXU3c0y1qtJdVZA+fqoo3Oq
+	nddmfJ1vZTb6KdULYRotv0uf14WLmPRUu996T3S0ziZ6Uc4RgKAv6kh9/4Zzq8yVnS6xqpG0Dd4
+	y8Rzq0z4e0xg4grk4lS0sJhPyL0MrKu1is4CfltPCtDBrohydsaWYx8Svt9LCN4K+4MpB86NbQ+
+	1A
+X-Gm-Gg: AYBFou0k8L/pTUz18PnnC4MJFVj2S24/Z7nCUwVy83Lb6T4siCS+7qLtH38Hxiw89bp
+	vT0lzbc7mUY1vsRyr+nekN3KkelBYWculDDoF/4zSrhQx9/OgDXoxG5Xt6pP7wiVcMQnWHgvi8A
+	lYBzvB7P8ngVtrfpDUTbIYNfzGueYAWKlpRBpI/SwQBNzrn2rWdjn26E8yY8BH3Swp9Ct2scYFu
+	/9szZuEuLLzGJqIB/ZyxJysQS0HK3dJAch/njwrmhTgi1yin68wOlbC9/X8hUq4ZsRtLKzXPPna
+	8EuEwHhYgox93mm6ICCnqzLwwIQzhtZ3ri4mo5kvohV+LBLuVkBAKX77QzkDGcU1Nc3AHnK/lUX
+	9Dm93qkDbPny5nngYDLGrlyGy5nKFWykveqWV4vcJQlmUXBk9PioFvQWwY//MNP3bco0BB/4Z6/
+	GlhL9cHExDqepmcwFvYOFPAdV8CaU+9abVdGktH2I/t17uUADa1SufcJOxzNqwlCcmJImRKDuz5
+	CuBdjuLClwSXVickpTR/pDrsakGUgb/pMr7pVtPDdfs
+X-Received: by 2002:a05:620a:294c:b0:93e:c12c:fbb7 with SMTP id af79cd13be357-947b0051f3emr367305185a.68.1794403148776;
+        Wed, 11 Nov 2026 05:19:08 -0800 (PST)
+X-Received: by 2002:a05:620a:294c:b0:93e:c12c:fbb7 with SMTP id af79cd13be357-947b0051f3emr367299885a.68.1794403148297;
+        Wed, 11 Nov 2026 05:19:08 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b757823caasm2343467a12.1.2026.11.11.05.19.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Nov 2026 05:18:25 -0800 (PST)
-Message-ID: <5baeb1e2-7cc5-43dd-9408-e5f0365a08b1@gmail.com>
-Date: Wed, 11 Nov 2026 21:18:17 +0800
+        Wed, 11 Nov 2026 05:19:06 -0800 (PST)
+Message-ID: <c55d221b-4c1a-4b7c-b91e-dd89a12e0675@oss.qualcomm.com>
+Date: Wed, 11 Nov 2026 14:19:04 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -93,213 +117,110 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 0/6] Merge redmi-wmi into bitland-mifs-wmi
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
- Ilya Gladyshev <ilya.gladyshev@linux.dev>, KentoNion <kento@kekto.ru>,
- platform-driver-x86@vger.kernel.org, ted eric <ericted8810@gmail.com>,
- Armin Wolf <W_Armin@gmx.de>, linux-kernel@vger.kernel.org,
- Chris Taraszka <chris@miget.com>,
- Matias Civadda <matias.civadda2342001@gmail.com>, =?UTF-8?B?6auYIOS/ig==?=
- =?UTF-8?B?5paH?= <btx342@gmail.com>, powerfullz <wleizc7319@gmail.com>,
- =?UTF-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>,
- =?UTF-8?Q?Milo=C5=A1_Vlku?= <vlku.milos.fun@gmail.com>, Rsplwe
- <i@rsplwe.com>, Bozhen Peng <bozhenpeng93@gmail.com>,
- Anton Karasev <uselessfire@gmail.com>, Jame Jao <jaojame6@gmail.com>,
- Serhiy Shliapuhin <shlyapugin@gmail.com>, okluar <okluar@gmail.com>
-References: <20261028112742.674847-1-qby140326@gmail.com>
- <c502f0d3-9ae1-51e2-4410-9f3d532a5d49@linux.intel.com>
-Content-Language: en-US
-From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <c502f0d3-9ae1-51e2-4410-9f3d532a5d49@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Subject: Re: [PATCH] platform/wmi: Allow wmi module to load when acpi_disabled
+ is set
+To: Armin Wolf <W_Armin@gmx.de>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Han Gao
+ <gaohan@iscas.ac.cn>, Han Gao <rabenda.cn@gmail.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+References: <20261111131613.6290-1-johannes.goede@oss.qualcomm.com>
+Content-Language: en-US, nl
+In-Reply-To: <20261111131613.6290-1-johannes.goede@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTExMDA1MiBTYWx0ZWRfX0ahPTI9wsOYl
+ ua0dqVy2KyIu0AnWJLpipWuieZ5ga/jlqNSMPk2389Xonj9mRI49yuNc+w/RGAI1oLX1injHsVv
+ 3l4b6A3o0Wg8TQahjhVYVDHRzxfaswY=
+X-Proofpoint-ORIG-GUID: I5lZbBtBimg39hu3MjSZsf-EZ8u_e-d2
+X-Proofpoint-GUID: I5lZbBtBimg39hu3MjSZsf-EZ8u_e-d2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTExMDA1MiBTYWx0ZWRfXyhWVRvRfnskC
+ cuTlM10AVo4KJp0zheg1a0uZSsQ15Q1Qa5+u/B+Px1V7pZCVNDGRJT771v5Njk/w38di7VYHGcm
+ 2zAOmBhgU50l6QsPMYnwJPbSjfpuXtFI0R9cZG5LLIMv8CQIbZbxpxoKoJWt/h6gWOa5DjLQpz/
+ DdZfJGvChMgTy8gZbaNmERvqTn4IYrVysUvB4honS29WbqpvPlj5HKHXZgumzONO/qOqNIfC5IH
+ NQfM4zJmR8trqk2ePKdRU2pLI+krBoB6TlsovTTqJKwsDEKxkMipH8qI2wkUKCHyB8UD+PfeBzx
+ VB2kA3kYYkoZcY4iUcQpTsELDqjLkIFAFHZPH4W16Rhu5UKBka8hGiqWSkYMy7JO0Y9mqpPHYTg
+ 1j3vmKjOhgj+NqSpaBmUHKBSrWWd13Wpk9uTjSgkI0Pbu123VXTgIM04hkmZEgQwfKpffk8JJEz
+ tj8ZgAqj6sqlpCRzMWQ==
+X-Authority-Analysis: v=2.4 cv=CZadd7rl c=1 sm=1 tr=0 ts=6af46b4d cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=EUspDBNiAAAA:8
+ a=gDy9M4QhnISp6OFiptMA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-11_02,2026-11-11_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611110052
 
-On 11/9/26 21:09, Ilpo Järvinen wrote:
-> On Wed, 28 Oct 2026, Mingyou Chen wrote:
->
->> This patch series consolidates the standalone 'redmi-wmi' driver into the
->> 'bitland-mifs-wmi' driver to eliminate code duplication and centralize
->> the maintenance of overlapping ACPI WMI event streams.
->>
->> Bitland is the ODM manufacturer for various Xiaomi Redmibook models. Both
->> platforms share the exact same keyboard event stream WMI GUID
->> (46C93E13-EE9B-4262-8488-563BCA757FEF). While redmi-wmi previously parsed
->> the 4-byte payload as a bulk u32 scancode, bitland-mifs-wmi deconstructed
->> it into discrete type/id/value fields.
->>
->> Redmi operations were not contained in this patch series, future reverse
->> engineering is required.
->>
->> This series introduce a newly reported mic-mute hotkey definition
->> for Redmibooks, dropped the previous redmi-wmi driver and intrudoced
->> the quirks table for the bitland-mifs-wmi driver.
->>
->> I don't have a Redmi or other Bitland device. So I cannot work on the
->> real device.
->>
->> Features are working properly on my device (Lecoo Bellator N176).
->>
->> I leave the future reverse engineering work to the community.
->>
->> Tests are welcome.
->>
->> And by the way, the no_set member in bitland_profile_entry means a
->> platform profile is only report by the firmware but not available for
->> set.
->>
->>> And I've got a question, from sashiko's comment in my v12
->>>
->>> https://sashiko.dev/#/patchset/20261012133648.132363-1-qby140326%40gmail.com
->>>
->>>> Will this result in the loss of KEY_PERFORMANCE events on event-only legacy
->>>> devices?
->>>> Looking at bitland_mifs_wmi_probe() in drivers/platform/x86/bitland-mifs-wmi.c,
->>>> if dev_type == BITLAND_WMI_EVENT, it returns early after registering the input
->>>> device:
->>>> 	if (dev_type == BITLAND_WMI_EVENT) {
->>>> 		/* Register input device for hotkeys */
->>>> 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
->>>> 		...
->>>> 		return input_register_device(drv_data->input_dev);
->>>> 	}
->>>> When the performance key is pressed, bitland_mifs_wmi_notify() intercepts it,
->>>> invokes the bitland_notifier_list, and returns without reporting an input event:
->>>> 	case WMI_EVENT_PERFORMANCE_PLAN:
->>>> 	case WMI_EVENT_PERFORMANCE_PLAN_ALT:
->>>> 		blocking_notifier_call_chain(&bitland_notifier_list,
->>>> 					     BITLAND_NOTIFY_PLATFORM_PROFILE,
->>>> 					     NULL);
->>>> 		return;
->>>> Because the platform profile and notifier were not registered during probe
->>>> for event-only devices, does this mean the events are silently dropped instead
->>>> of emitting KEY_PERFORMANCE like the old driver did?
->>> I ackknowledged that KEY_PERFORMANCE (WMI_EVENT_PERFORMANCE_PLAN_ALT in
->>> bitland-mifs-wmi) looks like an event in this LKML thread
->>>
->>>> Since the event reports a change that has already happened,
->>>> platform_profile_notify() is the natural way to pass it on, as
->>>> suggested in my v6 reply: power-profiles-daemon then re-reads the
->>>> profile, which is harmless after the driver's own writes too. If
->>>> KEY_PERFORMANCE should stay for on-screen displays (Ibragim asked to
->>>> keep these events observable), it may be worth not reporting it for the
->>>> event that echoes the driver's own write, or at least saying in a
->>>> comment that it reports a mode change that already happened. On
->>>> Ibragim's TM2209 the profile SET is reported not to work [3], so there
->>>> 0x16 can only come from Fn+K and the echo does not exist; Ibragim, can
->>>> you confirm?
->>> https://lore.kernel.org/all/20261008152647.1510152-1-uselessfire@gmail.com/
->>>
->>> So should I follow sashiko's advice?
-> Do you find Hans' earlier feedback on this not actionable? Or did you miss
-> it.
->
-> Copying long walls of text from sashiko's findings for an older version to
-> the cover letter might not be the best approach in general. Usually, we
-> want to get the issues addressed before sending the next version so that
-> discussion should have occurred in the thread for the previous version.
->
->>> And some remaining comments from sashiko's review of my v13:
->>>
->>>>> -	/* Keyboard backlight: Off / Auto / Low / High (new state in byte 2) */
->>>>> -	{KE_KEY, 0x00000501,	{KEY_KBDILLUMTOGGLE}},
->>>>> -	{KE_KEY, 0x00800501,	{KEY_KBDILLUMTOGGLE}},
->>>>> -	{KE_KEY, 0x00050501,	{KEY_KBDILLUMTOGGLE}},
->>>>> -	{KE_KEY, 0x000a0501,	{KEY_KBDILLUMTOGGLE}},
->>>>> -
->>>>> -	/* Xiaomi G Command Center */
->>>>> -	{KE_KEY, 0x00010a01,	{KEY_VENDOR}},
->>>>> -
->>>>> -	/* OEM preset power mode: 1=Balanced 2=Silent 3=Turbo 4=Full speed */
->>>>> -	{KE_KEY, 0x00011601,	{KEY_PERFORMANCE}},
->>>>> -	{KE_KEY, 0x00021601,	{KEY_PERFORMANCE}},
->>>>> -	{KE_KEY, 0x00031601,	{KEY_PERFORMANCE}},
->>>>> -	{KE_KEY, 0x00041601,	{KEY_PERFORMANCE}},
->>>> In drivers/platform/x86/redmi-wmi.c, redmi_wmi_notify() reported these
->>>> keyboard backlight events (event_id 0x05) as KEY_KBDILLUMTOGGLE and OEM preset
->>>> power mode events (event_id 0x16) as KEY_PERFORMANCE through
->>>> sparse_keymap_report_entry().
->>>> In drivers/platform/x86/bitland-mifs-wmi.c, bitland_mifs_wmi_keymap defines
->>>> the four WMI_EVENT_KBD_BRIGHTNESS entries for KEY_KBDILLUMTOGGLE:
->>>> 	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0), {KEY_KBDILLUMTOGGLE} },
->>>> 	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0), {KEY_KBDILLUMTOGGLE} },
->>>> 	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 5, 0), {KEY_KBDILLUMTOGGLE} },
->>>> 	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x0a, 0), {KEY_KBDILLUMTOGGLE} },
->>>> However, bitland_mifs_wmi_notify() returns early for both
->>>> WMI_EVENT_KBD_BRIGHTNESS and WMI_EVENT_PERFORMANCE_PLAN_ALT before reaching
->>>> bitland_mifs_wmi_report_key():
->>>> 	switch (event->event_id) {
->>>> 	case WMI_EVENT_KBD_BRIGHTNESS:
->>>> 		brightness = event->value_low;
->>>> 		blocking_notifier_call_chain(&bitland_notifier_list,
->>>> 					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
->>>> 					     &brightness);
->>>> 		return;
->>>> 	case WMI_EVENT_PERFORMANCE_PLAN:
->>>> 	case WMI_EVENT_PERFORMANCE_PLAN_ALT:
->>>> 		blocking_notifier_call_chain(&bitland_notifier_list,
->>>> 					     BITLAND_NOTIFY_PLATFORM_PROFILE,
->>>> 					     NULL);
->>>> 		return;
->>>> 	...
->>>> 	}
->>>> 	payload = get_unaligned_le32(buffer->data);
->>>> 	bitland_mifs_wmi_report_key(wdev, payload);
->>>> Does this early return leave the WMI_EVENT_KBD_BRIGHTNESS entries in
->>>> bitland_mifs_wmi_keymap unreachable and cause a regression on Redmibook
->>>> laptops (especially models that only expose BITLAND_EVENT_GUID without the
->>>> BITLAND_MIFS_GUID control device) when pressing the keyboard backlight or
->>>> power mode hotkeys?
->>>> [ ... ]
->>> Don't actually agree with sashiko, if we report the key to the
->>> userspace, when WMs handle the KEY_KBDILLUMTOGGLE key, the keyboard
->>> light will be triggered twice if the firmware already respond to the event,
->>> which is not expected.
->>>
->>> So the question is, does the firmware respond the KBD_BRIGHTNESS event?
->>> And should we report this key to userspace?
->> >From Chris' comment:
->>
->>> - Fn+Space (keyboard backlight) sends no WMI event at all, neither 0x05
->>>    nor anything else, and does not change the backlight under Linux. So
->>>    this model cannot tell whether the firmware handles KBD_BRIGHTNESS.
->>>
->>> - Fn+K sends event 0x28 with value_low 0x01 on every press (01 28 01 00),
->>>    not 0x16. The firmware does not change the mode by itself: the
->>>    SystemPerMode value (EC 0x68) stays the same across the presses. If
->>>    0x28 is the performance mode key on this model, it is a request rather
->>>    than a notification, so platform_profile_cycle() would fit. 0x28 is
->>>    currently logged as "Unknown WMI event".
->>>
->>> - On Windows on the same machine, with Xiaomi PC Manager not running
->>>    (it fails to start on this install), neither Fn+K nor Fn+Space does
->>>    anything either. So Fn+K looks like a request that Xiaomi's software
->>>    normally acts on, not a mode change made by the firmware.
->> I think different models have different behaviors on this.
->> Should we add a quirk item?
-> For different behaviors, it may well be possible we need a quirk.
+Hi,
 
-This is included in Chris' patch series.
+On 11-Nov-26 14:16, Hans de Goede wrote:
+> The core wmi module provides symbols which may be used by other modules.
+> These other modules may still function when acpi_disabled is set, but
+> the current behavior of acpi_wmi_init() returning -ENODEV when it is set
+> causes loading these modules to fail because the wmi module these depend
+> on fails to load with -ENODEV.
+> 
+> One example of this is booting a kernel with both DT and ACPI/WMI support
+> on an arm64 systems with devicetree which will lead to acpi_disabled being
+> set. Trying to load the amdgpu module will fail in this case because it
+> uses symbols from the drivers/acpi/video module which in turn uses symbols
+> from the wmi module. Note the video module itself already contains handling
+> to still load when acpi_disables is set for similar reasons.
+> 
+> Fix this by allowing the wmi module to still load and also register
+> the class and bus instances since some exported functions like
+> wmi_driver_register() rely on these being valid.
+> 
+> Signed-off-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
-https://lore.kernel.org/r/20261106114300.936782-5-chris@miget.com
+Note there is an earlier submitted version of a similar patch here:
 
->
-> But it would be nice to get this refactoring out of the way relatively
-> soon as it has been blocking lots of other bitland patches and I'm a bit
-> worried the scope of this work is expanding beyond what an initial
-> refactor change would need.
->
-> If Chris' device lacks support without his series, this refactoring
-> shouldn't have to care about that yet as long as it doesn't intentionally
-> make decisions we need to change right away. New quirks on top of this
-> refactoring to support a previously unsupported model is not a problem but
-> too limiting thermal profile mapping would have been problematic as we'd
-> have immediately had to rework the mapper.
 
-I think it's enough for the known cases except this [1].
-
-[1] 
-https://lore.kernel.org/all/CAFbNUuLmaoq22pQPzrUidJ+RC2xf2u5Ovxzy5d0LQZ7owH52OA@mail.gmail.com/
-
-I'm confused with this bug report, everything looks correctly.
+> ---
+>  drivers/platform/wmi/core.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+> index 529825dcfbfe..412f2e23b01d 100644
+> --- a/drivers/platform/wmi/core.c
+> +++ b/drivers/platform/wmi/core.c
+> @@ -1573,9 +1573,6 @@ static int __init acpi_wmi_init(void)
+>  {
+>  	int error;
+>  
+> -	if (acpi_disabled)
+> -		return -ENODEV;
+> -
+>  	error = class_register(&wmi_bus_class);
+>  	if (error)
+>  		return error;
+> @@ -1584,6 +1581,9 @@ static int __init acpi_wmi_init(void)
+>  	if (error)
+>  		goto err_unreg_class;
+>  
+> +	if (acpi_disabled)
+> +		return 0;
+> +
+>  	error = platform_driver_register(&acpi_wmi_driver);
+>  	if (error) {
+>  		pr_err("Error loading mapper\n");
+> @@ -1603,7 +1603,8 @@ static int __init acpi_wmi_init(void)
+>  
+>  static void __exit acpi_wmi_exit(void)
+>  {
+> -	platform_driver_unregister(&acpi_wmi_driver);
+> +	if (!acpi_disabled)
+> +		platform_driver_unregister(&acpi_wmi_driver);
+>  	bus_unregister(&wmi_bus_type);
+>  	class_unregister(&wmi_bus_class);
+>  }
 
