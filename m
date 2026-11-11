@@ -1,76 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794400140;
-	b=f4ltg1e7d/njne4Ootyy59+OUHNkvxKTPfOKzc7dpqLces+vEBJzxoLKh6mH1YhB+b49
-	 XtGFb2yIIqVS1lk34e0Nm9IyZA4Kpc4sMiBvTF7+k3qweZUSBNFeid6/gWQ+ZBZQC7qXa
-	 Vbc3s0htPbU+6X67lgzSAAGWLzGM0KOkh3wcNK6VWg4H9BogB2aINcxZqxmQNAM6a5uOl
-	 bupSjwZ4h7bTLaqmF6XqwvmDTbmBuDwcoB/8MVUJ7JH+MMD4linAlcGLsfXMVCGjRYgPR
-	 RTeQXgMOiOx4PaTbVg6ZB+L02tTSfyC/6NUaFPksPQKt0fm2ucZ53Z0pa1PRxFsv0ew==
+	t=1794400541;
+	b=mHsBGIv85RkwscwvgbYc3hIV55mlrdFI3ZuSQtqrM6UG0F8iK5EzWz8Fz3L+TBrsG89a
+	 hhpPc0UJ0TizRCdkVryTAe6WL7LOeTXn2Pkw43P/e+ECb18AfksT8gf/Wp8F39Vr8JICC
+	 1gx/+bZi1gCaTf4Ur9tqTsGYRiELERksAkL3fkRu9eiXj1waS5vkJD4C5GQeQtlsDpPYm
+	 fPZjwkI5h4INNRic7d8IF2LtlLK3fK8YnRTspXl282E3SvovqnS5d0m5rtsPpkvMIQSC7
+	 pt/bip9NxLc8WW8hequx07bAhtHscMBXD/VPH6Py9P6P3ZYLL6knkytFc7SO3IIxbZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794400140;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794400541;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
 	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=2uXXxCptiBVKiV7trnfsefY6P8MdSqZYuQPA6gJbIGg=;
-	b=XpXsxrPwORDR9rYio3OLRZplpYrqiMlP8zBOHyxILZsNyaM6tn0SrrKZboMCdtasDADr
-	 t0wnKY3GtmxKJAZy7vIEixTa09BdvyhWU5JlpuAzOQMgKFXFuLznHx2Ml7F/ANSKEbpVD
-	 C2vhm1Z9dRz67Kl4Sry3osuBWWgfSCLJywvJaJ7p3AwWegL6a6TCmYS2Aeamaz1kXWo6l
-	 YZA1ohuNQQYL7eo7lNx/Ud3xmyNO92NPjz3xOt2GzuJmeLNEZ5T9fERu0adYpEAZ3TZGT
-	 2bIfQELK7qMkGms6mdjPnfs262cTkJBdKYl4xfAip+D/OsSj9btL4+RU2T1hTk6l+Lw==
+	bh=9FsJvyNPXZN+jXdXZZI8WCV8y3dL6EB8mV2FypAK0Gg=;
+	b=E5s3BdWx5cyDiGR4nQD0qFm9tzef9tX6vMnPSNwpT59/wpIZ2DHZdzR2ABJkLvlACVcT
+	 k9rAyBb2n5sOIjlG6Dwd0aBmW270W52QIwXLzL3rNVvK2lcagDLEefhWJtk1pselGQneJ
+	 ZYNhla33jpJt/y2YDlulRuU8sxqKfjerPiBLYhUfvtWMy2XxUWWT6fqLzPkOGvjDWIb3+
+	 vFQWPYsx5r6QQDmNxRQ9JKUFd9mR9IOPQVoYFVBz5xDUIO9xH4n3Rci4f23LnlsPX59Xm
+	 LOA0ABj5fzN9twOBLCN6MmXVumSK0vMOq6OzYRrF73n4pu9noEtojAgzmQ6SxROxKwA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="VV6Ms0F/";
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GkjZo+Fx;
 	arc=none smtp.remote-ip=192.198.163.15
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CDE606A335;
-	Wed, 11 Nov 2026 12:28:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 93CDE606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C226606A31C
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 12:35:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C226606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VV6Ms0F/
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GkjZo+Fx
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794400140; x=1825936140;
+  t=1794400542; x=1825936542;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=an7Iiy5Su5gkoynIAwmzhjvcJg2aeqyxVs2OyeoTxdQ=;
-  b=VV6Ms0F/R773LCmi9gqMtPjeHslZoU1292JcHAkeclrbs2pZKpjlw244
-   x3GbuWcR1KFNSuINeB7KlSR0JGrBKCUT06WSa9o32oTJ4irEQC5W2zXMu
-   Uib5brRNTG5lsty4ttmhwve4Mj+0L2Bk2bAvto7jw6DZ+7MykygkJm4B5
-   dnZWjCra0M1tTk+I1SoD3doakP8fbSQhuUAD52bhq/c67j9tcrQUCudcl
-   9aAzowKcwmb6puNx7ha5NVVzPWJ2XWVSnDvsQ1jD/a88XRM4YFoMMKCUe
-   dLb4BjlVbLHFm5/iiH6DD+cYFL69fzZaM9tn54R71pDGfri4/mwNjWmBO
+  bh=wDY0WAu133AnKYGks/70j1x+xnqhnawle6JT2+oWizk=;
+  b=GkjZo+FxuWXCrilTUXSFj51pj4KkYkLS+jjdjH4QK7jJ9x+7yAJFt9l1
+   f0kOS+rwrQg+lDyDQzACAMCeY6rVzdsZT8sz92KKQs3PS2BtqrBtyXYFf
+   lcAJrSUXvnJ7EX+vzfZiDeFv3w2vtWUDmYGSmB++MCA7FW9STmpdGWztw
+   KKA4Oi4t3UuFU+UQxJbntFdzB1KyyFUU3Wy7MXCJMeMEwzSYG7PHx0uq2
+   eV6vaZv8V2VK4GKASRgHkMFZhxacAq2EjpZYNRklfLYDJQ3elU2nW7Lzl
+   Hlib21csdZY9i+fNYJmNHoXugn4LFAzUWv7mE1hw1OiZN5Mf0ima+kzr0
    A==;
-X-CSE-ConnectionGUID: umqx0W9ESOKnHPos/XNqaw==
-X-CSE-MsgGUID: BBmPm79wT527G1SXKOKIuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="3175912"
+X-CSE-ConnectionGUID: xxWZabfwQByyi9KlZ1qfMA==
+X-CSE-MsgGUID: w3i1mpf8Rcy4kpiYT1/4ZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="3176344"
 X-IronPort-AV: E=Sophos;i="6.27,207,1787036400"; 
-   d="scan'208";a="3175912"
+   d="scan'208";a="3176344"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 04:28:59 -0800
-X-CSE-ConnectionGUID: WVJi+QieSViAYyAM5mt8GA==
-X-CSE-MsgGUID: Ihd47nl9QX2JqjoS1mOu6w==
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 04:35:42 -0800
+X-CSE-ConnectionGUID: aPU+L8e/Q1meA9xO86gQTA==
+X-CSE-MsgGUID: a0Gl6DjwTaOt4pxjG7ckJQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,207,1787036400"; 
-   d="scan'208";a="8572768"
+   d="scan'208";a="8573492"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.192])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 04:28:57 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 04:35:40 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Nov 2026 14:28:53 +0200 (EET)
-To: Tao Xiao <guanlan@awinic.com>
-cc: Hans de Goede <hansg@kernel.org>, 
-    "open list:ACPI SERIAL MULTI INSTANTIATE DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: serial-multi-instantiate: Do not request
- IRQ for AW88399
-In-Reply-To: <20261111043759.306458-1-guanlan@awinic.com>
-Message-ID: <ccd77135-cb25-d49f-7e30-1777682485e9@linux.intel.com>
-References: <20261111043759.306458-1-guanlan@awinic.com>
+Date: Wed, 11 Nov 2026 14:35:36 +0200 (EET)
+To: Saransh Halwai <saransh2304@gmail.com>
+cc: admin@aquinas.su, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v11] platform/x86: hp-wmi: Add multicolor LED support
+ for HP keyboard backlight
+In-Reply-To: <20261110210316.62037-1-saransh2304@gmail.com>
+Message-ID: <ff622077-ca44-fcb4-3f2d-c82c819f51ca@linux.intel.com>
+References:  <20261110210316.62037-1-saransh2304@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,42 +80,31 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 11 Nov 2026, guanlan@awinic.com wrote:
+On Wed, 11 Nov 2026, saransh2304@gmail.com wrote:
 
-> From: Tao Xiao <guanlan@awinic.com>
+> From: Saransh Halwai <saransh2304@gmail.com>
+> 
+> Hi Ilpo,
+> 
+> I noticed that this patch was withdrawn from review-ilpo-next due to a
+> reported configuration issue.
+> 
+> Could you point me to the original report or the failing configuration?
+> I'd be interested in investigating it.
+> 
+> I've tested v11 on an HP Omen 16-wf0xxx running Linux 7.4.0-rc2.
+> All four RGB zones were detected, and changing the WASD zone's color
+> worked correctly.
 
-I expected problem or justification described here first, but all I got 
-was what was done:
- 
-> Set the IRQ resource type to IRQ_RESOURCE_NONE for both instances so
-> the device instantiates regardless of the ACPI interrupt description.
+While it's quite far back by now so I might not remember all the details 
+anymore. But I think LKP found a case where build fails, the problem was 
+not in that the actual colors wouldn't have functioned (so more a 
+procedural problem than a technical problem with the implementation).
 
-Was there like a problem with some device that you're trying to fix? Why 
-that's not mentioned?
+It's probably in one of review-ilpo-next or for-next LKP build reports if 
+you want to hunt it down but it seems the original submitter is on it 
+already so it might not be worth the effort to track that down.
 
 -- 
  i.
 
-> Signed-off-by: Tao Xiao <guanlan@awinic.com>
-> ---
->  drivers/platform/x86/serial-multi-instantiate.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-> index ffec4f0a4992..f69ad3815c8c 100644
-> --- a/drivers/platform/x86/serial-multi-instantiate.c
-> +++ b/drivers/platform/x86/serial-multi-instantiate.c
-> @@ -309,8 +309,8 @@ static void smi_remove(struct platform_device *pdev)
->  
->  static const struct smi_node aw88399_hda = {
->  	.instances = {
-> -		{ "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
-> -		{ "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
-> +		{ "aw88399-hda", IRQ_RESOURCE_NONE, 0 },
-> +		{ "aw88399-hda", IRQ_RESOURCE_NONE, 0 },
->  		{}
->  	},
->  	.bus_type = SMI_AUTO_DETECT,
-> 
-> base-commit: 067c5c24cef23d913b67eaaf71ae67e7169a6620
-> 
