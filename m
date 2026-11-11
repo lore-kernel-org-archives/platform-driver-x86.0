@@ -1,63 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794398316;
-	b=o/r1ic9L4PM8xdUXwDSuLOdLx0uxx7JiPmWQ5t0DV0rvwU98rs7iWazZk1LEYLc0E8iG
-	 NN17Hk/swZ7p8nqPMgntBiCiWtFPXRh+cq0p189T7XGVZA0uB0o/GGfgUIMmBo2GRVRzw
-	 zbZ00t+sfRP0Z45WSAQkv2KZQuGqbxMEy8lnuDikDrPpUgPj9IflCge6JgUdhTIvbsiBy
-	 JVoWcSjXqpOazSqTX0vbgV5Gb7jglzlLtFjMU8/nwRKiv6WiOSlSw1+csiHF63HubVMsv
-	 si0i5FNXMS2SdUFPVfAf1plnRiyNWOPfeVqDXJy4Fu8sE9zBSd6jPC35oXn4sM1qw7w==
+	t=1794398342;
+	b=0tyZQwbuiy42oxCDaVhOZzFjT7aC/WSLR2SlOoaWuvS62YqCniej84tplEepbvPSlRKd
+	 1xsqOjVh/35KuwmC09naKQbkkulbMst9tNuXnSZqlhH8e2ZLjd0FtGfVJBO0VVujzvbYl
+	 x3DQlnuZLnxxehKy9CtxCnyy7vQUPAldID4mJ6meVgsr+rXYxHQC4c66bLZ30JEi01Wbu
+	 5/LlzZn2MF5v2N5KKTkqXAstrlKSeiBeLuWOK03ZdK5c3Z3U1GDW5dy9ijMKXkwUoVG/i
+	 Xfozy+6rWG6NkG5PO2yVwfbP1MDtQ3a9r2WuqMUg15T+DS9Tmmw2FIgDbvKHuQALPmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794398316;
-	h=DMARC-Filter:Received:DKIM-Signature:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=vRBWdWXdm4oQhc8NWMSHeqzsieYDX4JsnRhEavbz4WA=;
-	b=mHT6ii17HYUNHNmIk2DkFkvUhJIvmSSKJo2lBAlX01QznOF3EqixvTcVepHZkrTTnzbQ
-	 s9E8vS65tMh8kvbJcwfMG5r/NsOCvto62jx6g0EPvIh2V5UoMWsbgehS7q5Or3LD8STh0
-	 VRYtRSutwPD+ChO0mVsDg8XF/qp1xC2HlfDFG6++3aFkte1mLWLul/6ck7e4bCowwbDld
-	 l6eiSwbjdFrvep38s6c7HvIy3LD3txVEE7JcAvB8gJNpX0rPxgyiqIVwjN4S39u+48fdW
-	 UnCs+Z0VAHBKBH/3DSFuJl8wPkgsxflxXpDWyDU+6ijLNy1AceCp+O32O0004CfjlWA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794398342;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Debian-User;
+	bh=6+DIIko/jddTALojzUdCwqYFD7qAVSieeB13vaTbTZ4=;
+	b=3ZRUCpDbmpEIqJg6asZuWCc8fZxzo6lXaaSCZ0QAxP95vLI7LAQKcX9iohx0TsIgU1va
+	 QTCQH6UO/prTdzSOxtGty+PEHCFS9gxfcgdDwUDTIDO+KF2UrMC+hIfrKbno6sAIIHCHX
+	 Pnt/VW+p7jrXC6xEZ+yX7nTykz7R5OhdVuFCPQBEvrcsnB5UL4etyyEpvKyffZ/B5JHfC
+	 rPeAdPgYjX4Ox0IBDUvQ0dmGh9A/d4tlouZAkjgs3eoZcLbblxEvT4fsiU26tlsbBU3yd
+	 4YMi9mRgAwMd7CawaTdNiNWpC2QZimU59ww6viAdoJL39aN3SflSSlyy2qCaOHa2AcQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=tuxedocomputers.com;
-	spf=pass smtp.mailfrom=tuxedocomputers.com;
-	dkim=pass header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.a=rsa-sha256 header.s=default header.b=Q1HtTc4R;
-	arc=none smtp.remote-ip=157.90.84.7
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	dmarc=pass header.from=debian.org;
+	spf=pass smtp.mailfrom=debian.org;
+	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=R5XxGFbM;
+	arc=none smtp.remote-ip=82.195.75.108
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C52606A321;
-	Wed, 11 Nov 2026 11:58:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3C52606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579BC606A324;
+	Wed, 11 Nov 2026 11:59:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 579BC606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.a=rsa-sha256 header.s=default header.b=Q1HtTc4R
-Received: from wsembach-tuxedo.fritz.box (business-024-134-105-141.24.134.pools.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 4FF6C2FC007F;
-	Wed, 11 Nov 2026 12:58:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1794398307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vRBWdWXdm4oQhc8NWMSHeqzsieYDX4JsnRhEavbz4WA=;
-	b=Q1HtTc4Ry9EPFzm8SZkp2vv3UBYKhxh4ZFDOrkvTj0lZ3noH5UaCN+T2rs1OH4gczysJf1
-	P9qD32QkAr1Zi9j4bJAWB7QKpTXqh4p9VAQGdpCVwHZ7BWNtMKx4kXrS5QTRpfc8c0d13v
-	ixaqZPwn3DWWs0MRlC/c7uV10+ABVrI=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Werner Sembach <wse@tuxedocomputers.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: uniwill-laptop: Add TUXEDO Stellaris 16 - Gen8 - Intel
-Date: Wed, 11 Nov 2026 12:56:28 +0100
-Message-ID: <20261111115811.498955-1-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=R5XxGFbM
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6+DIIko/jddTALojzUdCwqYFD7qAVSieeB13vaTbTZ4=; b=R5XxGFbM6TZRqhT0SXxuzcMt1x
+	LUNRh7V8lAnKwChToktKXZ/BvtFiWDBfAUJ9dLKtb2UHW2064KOlAZ6KUeSJJgWg/hPASfykHm9lb
+	dvvgSD9ejQiiI+LIrAd6gbPGs/9xZWqr0yWBdHoCClUgJD2Bg1YMupaoC/QOZRmfVPSCT6MpDMhbS
+	246KM0GzqcBbc4E2580QxhluNnyoa2vW19Sk2kqFlCkeQ6ViS/yest6rZWy5lPKlR+T/Ay7hDfWGq
+	IJLMSEFD0EmRJ6D4dVOiq+0BkJb7lfNarlib+MyMxjNYvepLWzR3xSOakoCQkMgy3TimUB70/p52t
+	iE2dAMXA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xR6yh-00DAF9-2o;
+	Wed, 11 Nov 2026 11:59:00 +0000
+Date: Wed, 11 Nov 2026 03:58:49 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Jann Horn <jannh@google.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Eric Dumazet <edumazet@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>, 
+	Greg Kroah-Hartman <gregkh@suse.de>, Joel Granados <joel.granados@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	netdev@vger.kernel.org, ntfs3@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+	coreteam@netfilter.org, kexec@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-sound@vger.kernel.org, netfilter-devel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	ibm-acpi-devel@lists.sourceforge.net, jfs-discussion@lists.sourceforge.net, 
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mm@kvack.org, 
+	linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, samba-technical@lists.samba.org, 
+	sparclinux@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-doc@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-atm-general@lists.sourceforge.net, 
+	Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, linux-raid@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-modules@vger.kernel.org, linux-debuggers@vger.kernel.org, 
+	Chuck Lever <cel@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 39/51] powerpc/crash_dump: recover from a
+ machine check in copy_oldmem_page()
+Message-ID: <avRXzzCSzT9Qj2FC@gmail.com>
+References: <20261104-work-procfs-bugfixes-v2-0-021c84d852e0@kernel.org>
+ <20261104-work-procfs-bugfixes-v2-39-021c84d852e0@kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -67,49 +88,52 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261104-work-procfs-bugfixes-v2-39-021c84d852e0@kernel.org>
+X-Debian-User: leitao
 
-Same features as the Gen7. Just 2 new entries for the new boardnames.
+On Wed, Nov 04, 2026 at 08:25:32PM +0100, Christian Brauner wrote:
+> A capture kernel reads the memory of the crashed kernel, and that memory
+> may well have uncorrectable errors. On powerpc a machine check in the
+> kernel is only recovered from if the instruction that took it has an
+> exception table entry (cf. mce_common_process_ue()). copy_oldmem_page()
+> copies with copy_to_iter(). For a read() of /proc/vmcore that is a user
+> copy, all of whose loads have exception table entries, so the machine
+> check turns into a short copy and read_from_oldmem() returns -EFAULT.
+> 
+> But since commit 4a22fd20379c ("vmcore: convert __read_vmcore to use an
+> iov_iter") /proc/vmcore can be spliced too, and splice(), sendfile()
+> and copy_file_range() copy into kernel pages with memcpy(), which has
+> no exception table entries. A machine check there panics the capture
+> kernel. The same goes for the reads of the ELF headers and notes that
+> vmcore does itself, and those have been memcpy() for as long as
+> copy_oldmem_page() has had its kernel buffer branch, since commit
+> 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page").
+> 
+> Copy with _copy_mc_to_iter() instead. PPC64 selects ARCH_HAS_COPY_MC
+> and there it uses copy_mc_generic() for kernel and user destinations
+> alike, which has the exception table entries. Everywhere else it is
+> _copy_to_iter().
+> 
+> Reported-by: Chris Mason <mason@kernel.org>
+> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page")
+> Fixes: 4a22fd20379c ("vmcore: convert __read_vmcore to use an iov_iter")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-I wrote the ident the same way the system product dmi string is written,
-which itself now follows how the device is listed in your online shop. The
-only actual change was adding the '-' with spaces around.
+Reviewed-by: Breno Leitao <leitao@debian.org>
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
----
-This commit was built on top of Armins latest series:
-https://lore.kernel.org/all/20261110165318.631010-1-W_Armin@gmx.de/
+The change is the right direction, and x86_64 has the same gap.
 
- drivers/platform/x86/uniwill/uniwill-acpi.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+arch/x86/kernel/crash_dump_64.c:__copy_oldmem_page() copies with
+copy_to_iter(), the same as the powerpc code this patch changes. x86_64
+selects ARCH_HAS_COPY_MC, and _copy_mc_to_iter() is already available,
+with the _copy_to_iter() fallback in include/linux/uio.h for arches
+without it. The plain and encrypted paths share __copy_oldmem_page(), so
+one conversion there covers both.
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index dc99bf8a8568c..e2a6a704e942e 100644
---- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -3629,6 +3629,22 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
- 		},
- 		.driver_data = &gmxixxx_xxxx45xx_xxxx55xx_xxxx57xx_descriptor,
- 	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 - Gen8 - Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxAF5xxx"),
-+		},
-+		.driver_data = &gmxixxx_xxxx45xx_xxxx55xx_xxxx57xx_descriptor,
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 - Gen8 - Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxAF5xxx_mLED"),
-+		},
-+		.driver_data = &gmxixxx_xxxx45xx_xxxx55xx_xxxx57xx_descriptor,
-+	},
- 	{
- 		.ident = "TUXEDO Book BA15 Gen10 AMD",
- 		.matches = {
--- 
-2.43.0
-
+PS: I found this because I am looking at x856 production fleet  kdump
+success rate , where first kernel died of an MCE very often produce no
+usable vmcore at all, and makedumpfile never finishes due to this type
+of problem.
