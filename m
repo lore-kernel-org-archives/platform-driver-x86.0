@@ -1,63 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=15.235.45.126
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.28.97
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794363042;
-	b=ybW35P4ADPvqaeeZZ4gviXInNKWeg/3d1/JPmey8FeyG/d0ZHRhfN8QJho46AlSTYYyn
-	 geuQSezd+SnuSthCainLMhROl7zNEqdoeGuZivtYUICdXCku+0jDKh6DqzPnNDu3i/h/E
-	 zNpHssj+KWkcmfC8Tk0i5vK6p9BfcPxDkXmNC/EpvjMHoZhWQUjckl570ow3ytoZHoCrM
-	 P/33cEds/OoO7ola0AAwOB+hMqh0XHACS+SaHE9LH//D0+8Nav4PhTe1CfXSQa0O3we1n
-	 htgCJvy3788A9SI3jUKuOcqlp+ZK/U13SLh1Kz4vHnrWgrYCnW8rk5qKwbicb2BMTUA==
+	t=1794371913;
+	b=aLOYaQUJRRCYY1JPn2AjDK0iCWKHMjKkBQAg6Ez5B32bsEcrEZAwmCsu9w6/xzB/DHi9
+	 hGI7isgpG3fcJMD9XNemVDh2J1co2vkqN6b5yoZ+jVKaeF9ITPL7snVGuoKWFvUB+DxM5
+	 xE4BZn71Bj0aG8FRuVZiWj3h1BQh1lCF3rz3BAngksl6dZwc9TV8WbF8fMp1mkq+OjGYT
+	 dAS2mRUbpRV1z74i9TdxHc6+KFBDEzA3m1dYUeg9yXdX9YtFR9AkTgE70oapJVCOeEtox
+	 TXMqWe1YgbOzCk7++WSrLaOFWRgPs6+gAoCeR2Jh538m7GPCr5+Gy9zfxlaERUgtfow==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794363042;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794371913;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
+	 Subject:Date:Message-Id:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=w9QJunT9bd8vtlEuB9KqD4wnu7mXcZwBhzxqWM8pK6o=;
-	b=jd4aoUNIJrGTxMPjzjhE6rlLJQ0FlnjT6ARRSylV2W1IfBVKbV4Fe7QdX+FFEByBlg/5
-	 Ui63KuyO3fzh7nKlQBg9tGBMmowtrBPyrBmqWbP9nxRZcYMoERyC5lUVYtpXAj/w1BVah
-	 sLfaR4ysd17F8vZJypLUH1uY9UhsQ9SeiPZRAfnLHtg0ciTspV6L3hLrIo7bI7+lszTfp
-	 IKCUjOwtT8nNznE3+YGSqDHt22zspkhXoP7ROI9VLWAzTe8r5GzNRhI5LVPx1HcPHCQd9
-	 hzegr1pbk6m3ZUbu/HsyAHFtX0nkJcQtEqfAFPEGIEhgNYAM26YaOa4+c36bgJZhaEA==
+	bh=8fRv/jrTdWY76QICf0NPNF8q1S43YPpzmnfQf9/0gcE=;
+	b=Qtf2A5Zv5Va5+GlDk237MLA2kJLfdv0te0byyHMmMtWu9rT1pWWAS86/UGDMEqtSwQQ5
+	 PMseyDhJbLMJywHCKkneThGgLpb0ia+vLoAyRuyQ8mmHYCVNVI/Ok1oYCpvIo1ENTz7p0
+	 naIr7Uvjiis+jR8MNSvUeJ2o9CUlnsoiXo6qXftA/Zs30t23CZ4dRLYiPRkU+hmecFbXs
+	 j3/syPtutth772wwXie9NjKXFh2Qrm6bMYfiAJYPxAWRrsSD31m0hUjjG7l/beg7vopGd
+	 4EJSe4GgX4v0DbFDBIF+pN1P4Nnj/l5XW+r2w7KRNlfhBr765cZIQzAKHHivpZazlwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=petermarshall.ca;
-	spf=pass smtp.mailfrom=logotherapy.ca;
-	dkim=pass header.d=petermarshall.ca header.i=@petermarshall.ca header.a=rsa-sha256 header.s=mail header.b=lzOBeYL3;
-	arc=none smtp.remote-ip=15.235.45.126
-Received: from d2-2-bhs5.logotherapy.ca (d2-2-bhs5.logotherapy.ca [15.235.45.126])
+	dmarc=none header.from=awinic.com;
+	spf=pass smtp.mailfrom=awinic.com;
+	dkim=pass header.d=awinic.com header.i=@awinic.com header.a=rsa-sha256 header.s=default header.b=eDIlu5Tf;
+	arc=none smtp.remote-ip=115.124.28.97
+Received: from out28-97.mail.aliyun.com (out28-97.mail.aliyun.com [115.124.28.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EA7606A320;
-	Wed, 11 Nov 2026 02:10:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16EA7606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=petermarshall.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=logotherapy.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7CF606A31C;
+	Wed, 11 Nov 2026 04:38:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EE7CF606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=petermarshall.ca header.i=@petermarshall.ca header.a=rsa-sha256 header.s=mail header.b=lzOBeYL3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=petermarshall.ca;
-	s=mail; t=1794363028;
-	bh=+pDOmRH4H1/exPVI44n/CbERpYc7hXCGLqgk7LiCK7A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lzOBeYL3yS9S4GUmSX1UEw9eEy8FObN4tUz0hp8XM9OBuR2nt2CoeUp6VlCoVAjhI
-	 it7rCBkJ3i2/G4EzdzBbWUXUevALJJxVvb/GmpBiHTD8D4jodxJ4J2BK7PNrE44mX5
-	 MZ8T31fy9v3LhxFYsGZpS9hGnvEzMQhHe9jV9bGUeKv5iE34aflVuY8fMvQf1GLAlZ
-	 iq75NSBSaeXtwEvJrNOQZ76dR5R7te1MTm8O69HEsO3PTFQ2UHTxWA+4ntK0KzW1BX
-	 GDHXdW3JTbccssNlP45aHLzHKjmqMOKpyv7cPzRw1INqAHXSqsfqDFErJxfpI5Y/DM
-	 wV98xc+IDse/g==
-Received: by d2-2-bhs5.logotherapy.ca (Postfix) id E8BDE20555;
-	Wed, 11 Nov 2026 02:10:27 +0000 (UTC)
-From: Peter Marshall <pm@petermarshall.ca>
-To: Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Peter Marshall <pm@petermarshall.ca>
-Subject: [PATCH] platform/surface: platform_profile: handle fan standby state
-Date: Tue, 10 Nov 2026 21:09:16 -0500
-Message-ID: <20261111020916.3557508-2-pm@petermarshall.ca>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261111020916.3557508-1-pm@petermarshall.ca>
-References: <20261111020916.3557508-1-pm@petermarshall.ca>
+	dkim=pass (2048-bit key) header.d=awinic.com header.i=@awinic.com header.a=rsa-sha256 header.s=default header.b=eDIlu5Tf
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=awinic.com; s=default;
+	t=1794371902; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=8fRv/jrTdWY76QICf0NPNF8q1S43YPpzmnfQf9/0gcE=;
+	b=eDIlu5Tf+COeS2GoQpnjG4J0B1HgXdF3AEDkuCOO54cQ5enGev1vFrN5IK9xRlLWBPFpGJ9nAm2Qz+nlYr6Wf7QDRMIGW0uVMK5eZa3UH99Mk2TMfA2NliJP36QJSUUW0Sh4uoAI3H4VZ9o6uCm1A5YD0UWxnFAYZARn0aBP5I0P2S3TipZzRYzjKztQRmNfI6bisBuqmTF+JtrsU/FA+n+fkImn//8/nK7bDPOB4gE46wdphyzobTTpdx1E98S4u2kjiR9xFu40wC/Ksi2rQd6RMXGOfO5YO9Y14vQ4pDFx3PyUDs8HoMbKJ5mNpEBN5JWN6joY+HQBTUsqJ/jMuw==
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1624513|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00234802-3.15815e-05-0.99762;FP=2858016219476978982|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037034020;MF=guanlan@awinic.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.k.PQ8R4_1794371881;
+Received: from ChromeBook..(mailfrom:guanlan@awinic.com fp:SMTPD_---.k.PQ8R4_1794371881 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Wed, 11 Nov 2026 12:38:21 +0800
+From: guanlan@awinic.com
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org (open list:ACPI SERIAL MULTI INSTANTIATE DRIVER),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Tao Xiao <guanlan@awinic.com>
+Subject: [PATCH] platform/x86: serial-multi-instantiate: Do not request IRQ for AW88399
+Date: Wed, 11 Nov 2026 12:37:58 +0800
+Message-Id: <20261111043759.306458-1-guanlan@awinic.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -69,116 +63,33 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Send a fan standby command if a fan is present when entering a PM
-suspend transition and set it back to normal during resume.
+From: Tao Xiao <guanlan@awinic.com>
 
-Signed-off-by: Peter Marshall <pm@petermarshall.ca>
+Set the IRQ resource type to IRQ_RESOURCE_NONE for both instances so
+the device instantiates regardless of the ACPI interrupt description.
+
+Signed-off-by: Tao Xiao <guanlan@awinic.com>
 ---
- .../surface/surface_platform_profile.c        | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ drivers/platform/x86/serial-multi-instantiate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers/platform/surface/surface_platform_profile.c
-index 0e479e35e66e..203d21aa715c 100644
---- a/drivers/platform/surface/surface_platform_profile.c
-+++ b/drivers/platform/surface/surface_platform_profile.c
-@@ -32,6 +32,11 @@ enum ssam_fan_profile {
- 	SSAM_FAN_PROFILE_BEST_PERFORMANCE   = 4,
- };
+diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+index ffec4f0a4992..f69ad3815c8c 100644
+--- a/drivers/platform/x86/serial-multi-instantiate.c
++++ b/drivers/platform/x86/serial-multi-instantiate.c
+@@ -309,8 +309,8 @@ static void smi_remove(struct platform_device *pdev)
  
-+enum ssam_fan_state {
-+	SSAM_FAN_STATE_NORMAL  = 1,
-+	SSAM_FAN_STATE_STANDBY = 2,
-+};
-+
- struct ssam_tmp_profile_info {
- 	__le32 profile;
- 	__le16 unknown1;
-@@ -61,6 +66,13 @@ SSAM_DEFINE_SYNC_REQUEST_W(__ssam_fan_profile_set, u8, {
- 	.instance_id = 0x01,
- });
- 
-+SSAM_DEFINE_SYNC_REQUEST_W(__ssam_fan_state_set, u8, {
-+	.target_category = SSAM_SSH_TC_FAN,
-+	.target_id = SSAM_SSH_TID_SAM,
-+	.command_id = 0x0f,
-+	.instance_id = 0x01,
-+});
-+
- static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile *p)
- {
- 	struct ssam_tmp_profile_info info;
-@@ -88,6 +100,13 @@ static int ssam_fan_profile_set(struct ssam_device *sdev, enum ssam_fan_profile
- 	return ssam_retry(__ssam_fan_profile_set, sdev->ctrl, &profile);
- }
- 
-+static int ssam_fan_state_set(struct ssam_device *sdev, enum ssam_fan_state s)
-+{
-+	const u8 state = s;
-+
-+	return ssam_retry(__ssam_fan_state_set, sdev->ctrl, &state);
-+}
-+
- static int convert_ssam_tmp_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
- {
- 	switch (p) {
-@@ -236,6 +255,49 @@ static int surface_platform_profile_probe(struct ssam_device *sdev)
- 	return PTR_ERR_OR_ZERO(tpd->ppdev);
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+
-+static int surface_platform_profile_pm_prepare(struct device *dev)
-+{
-+	struct ssam_platform_profile_device *tpd;
-+	int status;
-+
-+	tpd = dev_get_drvdata(dev);
-+
-+	if (tpd->has_fan) {
-+		status = ssam_fan_state_set(tpd->sdev, SSAM_FAN_STATE_STANDBY);
-+		if (status)
-+			dev_err(&tpd->sdev->dev, "pm: fan standby notification failed");
-+	}
-+
-+	return status;
-+}
-+
-+static void surface_platform_profile_pm_complete(struct device *dev)
-+{
-+	struct ssam_platform_profile_device *tpd;
-+	int status;
-+
-+	tpd = dev_get_drvdata(dev);
-+
-+	if (tpd->has_fan) {
-+		status = ssam_fan_state_set(tpd->sdev, SSAM_FAN_STATE_NORMAL);
-+		if (status)
-+			dev_err(&tpd->sdev->dev, "pm: fan resume notification failed");
-+	}
-+}
-+
-+static const struct dev_pm_ops surface_platform_profile_pm_ops = {
-+	.prepare  = surface_platform_profile_pm_prepare,
-+	.complete = surface_platform_profile_pm_complete,
-+};
-+
-+#else /* CONFIG_PM_SLEEP */
-+
-+static const struct dev_pm_ops surface_platform_profile_pm_ops = { };
-+
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct ssam_device_id ssam_platform_profile_match[] = {
- 	{ SSAM_SDEV(TMP, SAM, 0x00, 0x01) },
- 	{ },
-@@ -247,6 +309,7 @@ static struct ssam_device_driver surface_platform_profile = {
- 	.match_table = ssam_platform_profile_match,
- 	.driver = {
- 		.name = "surface_platform_profile",
-+		.pm = &surface_platform_profile_pm_ops,
- 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ static const struct smi_node aw88399_hda = {
+ 	.instances = {
+-		{ "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
+-		{ "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
++		{ "aw88399-hda", IRQ_RESOURCE_NONE, 0 },
++		{ "aw88399-hda", IRQ_RESOURCE_NONE, 0 },
+ 		{}
  	},
- };
+ 	.bus_type = SMI_AUTO_DETECT,
+
+base-commit: 067c5c24cef23d913b67eaaf71ae67e7169a6620
 -- 
-2.56.0
+2.34.1
 
