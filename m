@@ -1,99 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.52
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794418059;
-	b=t2S5migomJwGEvYgWC7ifiLnYPmlqOdgVt4kJX09CYjSAU+1lmYvmLIjVvH/pK8rUJ8C
-	 9DgaxCAab/iV7ZQP+p9czTeuYIArUoWMRpr6PW/Fz1Y4gT0vbvMVpBcWxmyMykutH9AAU
-	 8GWoyHGSWoeikg7F9pEnMU4bnugXh12yBnwJjuoNUrOFy3N/ZIELe9loH6Vqsk1kO1uP8
-	 HTm9k8hHbaJApF9GphRwP5h6CFYzUzHSekhyoWHlXDvsZF18B3tk/uCBj+yY+AZlL4vzX
-	 5NhmfJ7xMwdZucI8cYnFkMRUQMZjCuUiRFeiqok1BESbOH0UHYS+lqB72sZkqkNuGrQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794418059;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=dSXiAG+3ZY/F8hDcAaOCi5cr+p+IP1IyyF8LUmknS0o=;
-	b=pwtjsO0szLm+ZKYkZmIP5ezKZQ44BrbjEQlvsdUEEvG+lfGLR7/R5r2RKfU3Z9TJrXEU
-	 WoK8w1fXIy2uGLK2YdcTRHvn+jigsNkeVHsvu3wt6v+meYGyMbGK7bQzWrGNlVd0xUYiL
-	 fMQcNG5oiD0OJYa75ei+VknzcUHTGaJWPsEviLNnKHsVPk9rh/IfQs4kUvK8GGdEgSMo3
-	 JEVOXlMNeOKxL+b74TkWqfFeivHkuc+/5V75uBuKUBZ3lq3UFxx/dQckrJn3lAj5p2toT
-	 WbcZjGrxz4JCcAqkwptOnwo96RKukh3swWsCdpKwz0hxSV1HTvljlE4BDmvABNfDwwA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tyg6ByNt;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.52
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794418626;
+	b=0RPeQqXyenQGK+87CUJukTt4GjbyPhz14vVJuy2o6XbNIpQQKvIizZTgz2mNaDZob0VR
+	 bA1CNWDopTeonU96plwxT1uiQ8v82TUyOvAkCVPGoivaGF9pNO8AdAoaOGmUVHiRwYBH/
+	 Yq+NfqSwGWbccWZfOF7SzlNaqnPZrm/a8EcUr3CE39KupR0iXg1DeexVRuxcSlb2J2hiL
+	 qJIfG9aV+hRvtjileQZHxLg5CfdDHPqwmVhIjmepiLzyjzBvEkY31wvizCLGgWWKkk+LY
+	 Vy7s5in5GBVsvHv6JRwZ3Jw38mOG56QZIGxyFTIuYuladVGbd3cC5cOGdf9DuvbK62w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794418626;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=9YexrO60oS4rlt/r0sleJ/GTAqTd7929wk1Rl5ZS/8I=;
+	b=0gDCGSBg0V4b8WRLaKuTtBkLWBE+br9Zoi/rTjIKMEJPLkHhuFetx/RCZ9Q3hxkZ7K8Z
+	 DVKP/nUmJ8XIc77R5WLLEcuWGcVJe8e6wzG6t4Bc2XhlskAhW1GH+RpVuB6E7nrbxnOlz
+	 3wezRXtxYEF3zXjNcn5WGx59GfNu4kL/D/9+bejZz7+pUoOSSe8YbHsjB/orYrepEN6zU
+	 fvM3geM7jUPqQQkofeqedWr+bDo+VzE7Am0vzjFfBFe75p2TG+bpA2Jq+QcjEmQfANTeh
+	 6y7jlBpIuLafn3pbwn3cdqN9QRGz2BCuiQmfF+ovmgYk34aw9pF48BZ38Gwk+/Y4acQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q9TyrzvW;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B05A606A321
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 17:27:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3B05A606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFDD606A321;
+	Wed, 11 Nov 2026 17:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tyg6ByNt
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1a3c08d6928so5712925c88.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 09:27:39 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794418058; cv=none;
-        d=google.com; s=arc-20260327;
-        b=RNwEo+inGpMqzVU9sympX6FqpK3v2Snj7yWBcSI9rDSVFso2BteOH6OrmTDvqC0qDT
-         8JLEFBmO4rumIcVxh3m9ut1OVV+PGamfa0LdXw8OQSfhSRl+yO4TCRiJRT6s0qSG9gXV
-         d/JJwRzyn+ppvkYL8x0Pl/88SMHyzYVYc1vyyUgldlGxItvkksuW+nU1MUnwoWtP16aP
-         NzE7Y8dD/curW6b8YNsu1g6zujwpQ2awRmiLJmfury0HbamU9kISJmBLCA5OMnrGVWSF
-         SHwxwP4fgLpIGt6OsLk6yza69w0j7eLgk8wapdqUVqfDWrjC91W/NIfLB83cV5Xt09JN
-         odFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=dSXiAG+3ZY/F8hDcAaOCi5cr+p+IP1IyyF8LUmknS0o=;
-        fh=REAyO+9ddGICP1ABY0MQX7rUvCP97vIxerep3uhOclk=;
-        b=kU6O8PN6HpA3Rbj2SQ9jwgrnFgR3R9tYpWx9UUZUfT7lBVbtWL23EA9xoUJgYziJbA
-         pPlIotESIrab3CHMZYBhhRCWy3UYgpgBMoY7qOWtyaKFqhvI7qy3tdVAWRFgADVNKfyQ
-         w2uwOuznEY6X8Vo9/P0cfKZeyDJrlW/88CoCjNSyGDeynB/FETlgQpu2eQ8nRmz24161
-         5Wjv5JjhYgXKKlpmPl7YeAnkydoyVidK2llO4UTrh206nJadBr/5vM7AyxT7xlNtSZco
-         mGC5sH5cDj7I/IPVDiueo0iAqu40h5+q5ZggLCrR+7MNJnHq85aRB2/gmuSJOQ22xYNl
-         /QVQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794418058; x=1795022858; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dSXiAG+3ZY/F8hDcAaOCi5cr+p+IP1IyyF8LUmknS0o=;
-        b=tyg6ByNtCOXd3UYgLHVPAI1+s7aXekSUxLSTJbM32FAWHq0F0hWB9djyJgasJd1l42
-         DlZT03LRvimmYFbcXJ8OpaFRa3cx9q7UJbKhuAk/Jm0SAYEDJjv06ajoRLw+qQhw8HQn
-         aSSpBhMTEtSVeGhM/EzuCVcS1Lm7G3woe7vAqtu+G27MtEGOkFLxNCajtXnJ653o51PW
-         fzjCMY73D9UmZgsWxWWoQRSCKRhEmuBciPAGjPkJzhJrqxS/TmBsBBGf1WcU1zqkDRdQ
-         WsWzelklgQGD824LA+SPXKwXpOlwzYv0i/NYwkLd4KbbE5axg3lQ7t+Q0S26/Ho8kO/H
-         uDKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794418058; x=1795022858;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=dSXiAG+3ZY/F8hDcAaOCi5cr+p+IP1IyyF8LUmknS0o=;
-        b=ERw1EvRm2QFhieDd/ra3kcg3dg0oMdKF9Z4/6SZVWuLsuP0BHjnlVtRQ0gBIOsQCXu
-         1ChUhgQ4h2A2QS4C2CjG56RRYjJGFiUSezI/PHqZbrlJNnHhmEJ+J3+CDtMgshKvZl30
-         XDBMIWGS4/JRxXT5y536xAqUq3E8PHVPF3AqmyXSN7s1/bZt52vwim1tDus7zrYftrNg
-         EZj1Lu5HaEzgMqNaoKygKvLXjTG2/xFdbgIJ8o3Q+SwxocC/VuikdIi491ZDuk/ayTU9
-         NT+iJBgOql/BAQ5R+o3aL4PgjNZ88hSuMzPd8zwPgQ/1lgenDHo8SmWjEVPAG2HU/tRX
-         sE9A==
-X-Forwarded-Encrypted: i=1; AL+hErHkCRMcdUVzIpD6kf4HR4OarAr3d+l0I3i2AShqtBEfqF7in0sPeQPGBjler0GkRWrxhXj+hke+4rRTLxHXweOXIN0K@vger.kernel.org
-X-Gm-Message-State: APuU4Z+INV8gZUxN/bt/OV3tmfiGGQGoJgaWe3mTyNy3KcgOuFfrZOeq
-	+ZMzgTz1bF4puhUiGWemTD/A0z84bG8m5xSJuCMSpb3clNXu36V4RdWkn2FU4ZPvYdxkXVbtJca
-	2hZyfKSAO3/nBIDUOj6osWnYBwG3Kpg0=
-X-Gm-Gg: AYBFou2HtsYmxAfxs2a/KKa5eXLw7TsnwAsj5X++uM/jOFDNwRzdJtbfVRON5r3PwgO
-	JdZ5JxH+7OWLv149TVbiICQGBeqJuLwh2k3kWaCPasu7sHstOuO9+C+MmpRnLj+TAEhb2C7+Un+
-	+hXEVlBHyvgPuRh1sLP7DFS5riPkCghzJqtil+MV9IpSW4KMqiy6hfhu+IfeuYgCcJVjz9xdr72
-	xj6pMQinuxcKgC3wnMdQcBlzBHTClf7yNvdsyQk7z/eEloYP0S1QnG99j6sHjmahVoE+HykXcfU
-	jzdI5LmVpvHzFIP9tC9w582ctYVcm5tGVLz/NG+aRqfiWEMK8vW1pC/EhzQpfOkJPQuy3jrx6lN
-	7Ekj/3Txg3QPGxr82dla5zIn3mtxsic36ObmV
-X-Received: by 2002:a05:701b:4558:10b0:1ac:f84d:4036 with SMTP id
- a92af1059eb24-1b3c02f34fdmr2668936c88.9.1794418058188; Wed, 11 Nov 2026
- 09:27:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q9TyrzvW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C651F00A05;
+	Wed, 11 Nov 2026 17:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794418626;
+	bh=9YexrO60oS4rlt/r0sleJ/GTAqTd7929wk1Rl5ZS/8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Q9TyrzvWwkKy0snZ8tnWKZTnaDpYaaBhQ/FTfYtllzq2kg3B8Kg1lJ7D4EmfqMADS
+	 lpvblbRBAUZV6WB197EVlwvfkkIaZ7yuHJnoDQh1/1vqbNcUz7SbWLbfKwKPuPvKbz
+	 x+zIqg/bba7rKXTM05zOMO3Xz/2qrMHiP8wFvTAxQ66L3/dodmRJYDBc4Q+n8i2ZMz
+	 fHa0zma96nLMquaWSIVJRZBtA5FSV6vfqyhW3amy5MEdIMsu9SIzENYJcY6WhUt9rV
+	 No+AFGP0oV+MeWOkwsfdHBZwpaRvNUnF48jk/++qEA8eW6skYS23CDf0VGaoiHSfRH
+	 ZEy/LZgYaE6cw==
+Date: Wed, 11 Nov 2026 17:36:59 +0000
+From: Lee Jones <lee@kernel.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>, Ike Panhc <ikepanhc@gmail.com>,
+	Rong Zhang <i@rong.moe>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	Vishnu Sankar <vsankar@lenovo.com>, linux-leds@vger.kernel.org,
+	Netdev <netdev@vger.kernel.org>, linux-doc@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v7 00/13] leds: Add support for hardware-initiated
+ hardware control trigger transition
+Message-ID: <20261111173659.GD6323@joneslee-macbookpro.roam.internal>
+References: <20260921-leds-trigger-hw-changed-v7-0-fe3cdb6dec51@rong.moe>
+ <179425319974.10927.7190572777719580956.b4-ty@b4>
+ <20261110090105.GA6323@joneslee-macbookpro.roam.internal>
+ <b19ef65f-c563-07f8-1be8-9a0a0689da22@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -103,69 +76,123 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261109-legion-lighting-rfc-v1-0-a87e1db8c5e3@gmail.com>
- <71ecff766a91670d509b1286efd995b71efc21f4.camel@rong.moe> <CAPKD0HduW_atYsz47Nv-9A_88K1B33xENUnZgQAKcH4VHqV9PA@mail.gmail.com>
- <db41708e7676697fda99573a31d7747dee112403.camel@rong.moe>
-In-Reply-To: <db41708e7676697fda99573a31d7747dee112403.camel@rong.moe>
-From: Ciro Pedrini <ciro.pedrini@gmail.com>
-Date: Wed, 11 Nov 2026 14:27:26 -0300
-X-Gm-Features: AclHuK-k_YZiigppKf1NhmY5lI_KumHaoapWssTv6Uvn4FXhXg28fO9lUyYHPbk
-Message-ID: <CAPKD0Hdt7WNC5n47Bpug=DMsJ8m63UnGprm+-cLaUh3tb=4vCg@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/2] Keyboard lighting for the Lenovo Legion Pro 7 Gen 10
-To: Rong Zhang <i@rong.moe>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-	Werner Sembach <wse@tuxedocomputers.com>, Aaron Erhardt <aer@tuxedocomputers.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b19ef65f-c563-07f8-1be8-9a0a0689da22@linux.intel.com>
 
-Hey Rong,
+--- checkpatch.pl (27 issues) ---
+Line 1: ERROR: spaces required around that ':' (ctx:VxE)
+Line 3: ERROR: spaces required around that ':' (ctx:VxE)
+Line 5: ERROR: spaces required around that ':' (ctx:VxE)
+Line 7: ERROR: need consistent spacing around '+' (ctx:WxV)
+Line 7: ERROR: spaces required around that ':' (ctx:VxE)
+Line 10: WARNING: space prohibited between function name and open parenthesis '('
+Line 13: WARNING: space prohibited between function name and open parenthesis '('
+Line 14: ERROR: spaces required around that ':' (ctx:VxE)
+Line 24: ERROR: space required before that '-' (ctx:VxV)
+Line 28: ERROR: spaces required around that ':' (ctx:VxE)
+Line 29: ERROR: spaces required around that ':' (ctx:VxW)
+Line 31: ERROR: spaces required around that ':' (ctx:VxW)
+Line 33: ERROR: spaces required around that ':' (ctx:VxW)
+Line 35: ERROR: spaces required around that ':' (ctx:VxW)
+Line 37: ERROR: spaces required around that ':' (ctx:VxW)
+Line 39: ERROR: spaces required around that ':' (ctx:VxW)
+Line 41: ERROR: spaces required around that ':' (ctx:VxW)
+Line 43: ERROR: spaces required around that ':' (ctx:VxW)
+Line 45: ERROR: spaces required around that ':' (ctx:VxW)
+Line 47: ERROR: spaces required around that ':' (ctx:VxW)
+Line 50: ERROR: space required before that '!' (ctx:VxE)
+Line 57: ERROR: trailing whitespace
+Line 60: ERROR: trailing whitespace
+Line 61: ERROR: trailing whitespace
+Line 71: ERROR: trailing whitespace
+Line 72: ERROR: trailing whitespace
+Line 84: ERROR: spaces required around that '?' (ctx:VxE)
+----------------------------------
 
-On Wed, 2026-11-11 at 20:10 +0800, Rong Zhang wrote:
-> What if (four permutations):
->
-> - c197 sends 07 AA 02 00 00/01 00
-> - c193 sends autonomous_mode=on/off
->
-> And what if the sequence is reversed (another four permutations)?
+On Tue, 10 Nov 2026, Ilpo Järvinen wrote:
 
-I tried all eight. Before each one the LEDs were back to the
-controller's effect (AA 01, autonomous on). "host" below means
-autonomous off plus all lamps set to green.
+> On Tue, 10 Nov 2026, Lee Jones wrote:
+> 
+> > On Mon, 09 Nov 2026, Ilpo Järvinen wrote:
+> > 
+> > > On Mon, 21 Sep 2026 03:40:14 +0800, Rong Zhang wrote:
+> > > 
+> > > > Some laptops can tune their keyboard backlight according to ambient
+> > > > light sensors (auto mode). This capability is essentially a hardware
+> > > > control trigger. Meanwhile, such laptops also offer a shrotcut for
+> > > > cycling through brightness levels and auto mode. For example, on
+> > > > ThinkBook, pressing Fn+Space ("shortcut") cycles keyboard backlight
+> > > > levels in the following sequence:
+> > > > 
+> > > > [...]
+> > > 
+> > > Thank you for your contribution, it has been applied to my local
+> > > review-ilpo-next branch. Note it will show up in the public
+> > > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> > > local branch there, which might take a while.
+> > > 
+> > > FYI [if applicable to your patch], as per Linus' policy change, also
+> > > fixes are mostly routed through for-next unless the fix is for a
+> > > commit introduced in the most recent cycle or is clearly a regression
+> > > fix.
+> > > 
+> > > The list of commits applied:
+> > > [01/13] leds: class: Always protect brightness_show() with led_access
+> > >         (no commit info)
+> > > [02/13] leds: trigger: Move led_trigger_is_hw_controlled() to the right place
+> > >         (no commit info)
+> > > [03/13] leds: class: Remove hardware control trigger when writing brightness
+> > >         (no commit info)
+> > > [04/13] leds: trigger: Move led_trigger_group to the right place
+> > >         (no commit info)
+> > > [05/13] leds: trigger: Add hw_offloaded() callback and provide trigger_may_offload_to_hw attribute
+> > >         (no commit info)
+> > > [06/13] leds: cros_ec: Implement hw_offloaded() trigger callback
+> > >         (no commit info)
+> > > [07/13] leds: turris-omnia: Implement hw_offloaded() trigger callback and declare hw_control_trigger
+> > >         (no commit info)
+> > > [08/13] leds: trigger: netdev: Implement hw_offloaded() callback
+> > >         (no commit info)
+> > > [09/13] leds: trigger: Enforce strict checks in led_trigger_is_hw_controlled()
+> > >         (no commit info)
+> > > [10/13] leds: trigger: Add led_trigger_notify_hw_control_changed() interface
+> > >         (no commit info)
+> > 
+> > This is super confusing!
+> 
+> I know it is but it's how b4 thankyou mails appear.
+> 
+> > Where does this list come from?
+> 
+> The list comes from the original series that b4 caches somewhere.
+> I deleted the patches 1-10 and only applied mbox that contained patches 
+> 11-13.
+> 
+> When constructing thankyou mail, b4 seems to take the cached list of 
+> patches the series had and does not find 1-10 applied into my tree by me 
+> so it says (no commit info). The rest appear as expected:
+> 
+> > > [11/13] platform/x86: ideapad-laptop: Serialize keyboard backlight tracking
+> > >         commit: d288a6f989b7b9e6a730140c601987b886af327e
+> > > [12/13] platform/x86: ideapad-laptop: Decouple hardware & classdev brightness for keyboard backlight
+> > >         commit: 7d6c073d181d7855561831cb4bba17dc9b7d4aa9
+> > > [13/13] platform/x86: ideapad-laptop: Fully support auto keyboard backlight
+> > >         commit: 5d805ca01382d63d54c9984e7f19922c4ae6f3dc
+> 
+> Of course it would be much less confusing if it never showed those no 
+> commit info entries at all but unfortunately I don't think I can control 
+> that, sorry.
 
-  c197 first:   AA 00, host  -> green
-                AA 00, auto  -> controller's effect
-                AA 01, host  -> controller's effect
-                AA 01, auto  -> controller's effect
+Take a look at my reply to the 0th patch.
 
-  c193 first:   host, AA 00  -> green
-                auto, AA 00  -> controller's effect
-                host, AA 01  -> controller's effect
-                auto, AA 01  -> controller's effect
+For some reason my b4 doesn't do this.  It must be an option?
 
-So the order doesn't matter. The LampArray only shows with AA 00 and
-autonomous off. c193 keeps the colours it gets while AA is 01, and they
-show up as soon as AA 00 is sent, without sending them again. AA 01
-takes the LEDs back even when c193 is not in autonomous mode.
+What command do you use?
 
-> My implementation connects the LampArray application to hid-input, so any
-> HID driver with hid_hw_start(HID_CONNECT_DEFAULT) or
-> hid_hw_start(HID_CONNECT_HIDINPUT | ...) will initialize the LampArray
-> application. Therefore, I suppose the only thing we need is a simple glue
-> driver[1] for c193.
+My assumption is that you omit `b4 am`s `-P` option, so it thinks it's
+working on the whole set, rather than just the sub-set?
 
-[...]
-
-> Does that make sense to you?
-
-Yes, it makes sense to me.
-
-> I will CC you when I submit it. For now let's focus on the driver for
-> c197 first.
-
-Thanks, I'll test it here when it's out.
-
-Ciro
+-- 
+Lee Jones
