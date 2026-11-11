@@ -1,97 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794401470;
-	b=YnWDuaBduU8anrroxQC+/vdWoTAcVNVOobTO/lD4j4G0Y1kF8ktN6LY0hciyOvPo7vn1
-	 TeYA4NCivY/lZ7WnDAs2gb664F004WCKUSYvRGc4U1IIfjdP3bHZZayHHtfkF4PA98Ht/
-	 94m86Q7cTN0RDFlcLhx2BjuIWK6O257yAoGvytqoer5k3AEK5uyoWNFG/am0ZoJbsfXiP
-	 FSW0eieKMlI2gW8AQ/gt7u4Vba3RVIKaUNlt07APr91/SSZcXk4ZJro9ByoCvgBNAH7ns
-	 WDVEBZJaccDJs7M5nB/DmjbFTfV7C4p9aJ4dwnSZZuyG7JYkreZdYphIbA7FPpB5AbA==
+	t=1794402542;
+	b=5cjRxPhKtubbWlSeG8HRnjLz2cKWnAhnPDvHFYhkg93eHl0soQsntrOkM2nn9AUsiNl2
+	 dVlGvcuMRp3BAD6RLy0eecu75vJSbWPVv+tCff3Cw/7PC/DQgDVXJY75fYXnaTBKG1Wk+
+	 N3+59VKw7wIvkKaa92LTQzmt0YqmhY6XEm7FzZY29buu5CzOwUwNDNcBRDX08IKRNEaWJ
+	 KUOgxLDk+30eEWjn8f7Dpukwl9MHc6m3zIKfR1AWJ0BEZNkzloRWRaBaT03zhab8bZLWU
+	 u1VrPqCAMF0Gtrt9KPvz6U/K0yk0DCP4rDhShb5u0Jqhth6Wh8Vm8E0whkMPeV1bWDw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794401470;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=Uapr75yZLj7Tv4B9SqUwtXKVvOOX4yQmtXhP7eAjMSc=;
-	b=0F8bUc6U1k15VFI//gSqWly3IFSSFu9JszxKrFrZSuTv6Nnn8GX9bYawsxN/sjdoHHDD
-	 HeOtlHutG9wqKvG654sSvk+jiIN+EIbHFNJI5EbFpfdD8KhvQM4OCpt+sBtbLd64h14GG
-	 mgy8gcWrIMYw/ap2YbHAqzcKBxNCYTMKjxuPtg18+gbWvWmwCmsubNDGTYzpHNbULBc1Y
-	 is/4VbXPahgLNFDAnQNJsaIjYYrvGDcF0IvRqjNCBTUOq8Xz4/f006tkhwCrfspE6yoOj
-	 Tl89mkXoNCnqXOkwlvH8K+24g9S8Tm5NZDrVJJkmoT3Ofr9xiDqy+MySmgu1LIhTnpg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794402542;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=5+jBvJl/Ix9vAglpQXYTZoWyiW+U4BJ8ZU+Ewy5ieI4=;
+	b=48BT3Po7SBV6j5WKigpOhqadu3Akw8SaORXJvjyXPpyBRzQIEyZBxbTEHbW1V/4dUnOJ
+	 Niu8w8otje8MZGjRMh+VibVP5FjFmPbHqUP3ASVOr998DlbUgqL1ADAnDMkNCPNUc1VVv
+	 mD8RNHCYqN6xzWr4URt3cEDk8vw+2Shww7sZDtYjDrJYVxla623ZuOnlZCYm93Uf+3gRl
+	 Umfc+Sf6dXbeqvyjb+ne7nRCtWtG/HLiVeYz1M6rzXwB9T3euqfyRea9U5h8JNsIt8Yx+
+	 /+ITOserYXR2pByq3KjDb0u8QrdsSTquCs06pQOeHSByQ9ZTN6CDmEbBeGIlWGUk58A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bMLfuTgj;
-	arc=none smtp.remote-ip=209.85.128.45
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FBaToKoi;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A9C606A326
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 12:51:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 95A9C606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C019C606A326;
+	Wed, 11 Nov 2026 13:09:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bMLfuTgj
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a214af2076so23203525e9.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 04:51:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794401468; x=1795006268; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Uapr75yZLj7Tv4B9SqUwtXKVvOOX4yQmtXhP7eAjMSc=;
-        b=bMLfuTgjGwNqjCK3J5qEDY7VJ62o8iUt8dcjlb/akdFWQvLLdUT4nOkdYJz4yFDYTs
-         vVWpozvbFq+LAN7CUMigA6Jweua8VGK/3CfZuoiQFp/Ye4k4qYBctBOgjlvxoPFjWh7+
-         6Ncqp74M+hBo8ekz+l/uhj6RA4U/0gemFtknNiwM2QT0uTLHchgvYKBlqZoEANWgeq/Q
-         6ORYr6NPWoVuduIAq1jsjgExk45gvyWl+8XPhV5gvlfGg9yMU87+m45dgNxDM5oOWBmI
-         c/UTQPDrn7sj3yNwSFioahR+kTWvDrNGAPYxK/FOKPKYdeJrcCY8qZ7GyiQFv7V8krna
-         eTFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794401468; x=1795006268;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Uapr75yZLj7Tv4B9SqUwtXKVvOOX4yQmtXhP7eAjMSc=;
-        b=pKTh8dh7bFqROewoVdP63drYS3+M42lpZiUv9/+ROnCEWm20FfKyzLnEKfAhm0KJik
-         LjDcLVzQwbQZh7nWClgkQFdoQgEFJ96ZJccxopqi3y63UUqpyaQu1Jl9gNE5EQsQbo/i
-         pQGmGGRV3WCABKLjMJEsgZd72sf7uEZlkWZx9V7+BzPsJCT823BOo/MVApaq763Fp1Z0
-         +sO1j8Bh9fO0H2agxJu3F3e8lZ0uqCNknrxek1v1CuHHBOhCK5yPetsVzh+vwTOKCH7F
-         q6ZES93fXObYTbrgzkLpZvCxsF+N0Ruw5vAimxhQw2h2Aj4lWYoh1rYSZlQnkY+eGJ9o
-         NEvA==
-X-Gm-Message-State: APuU4Z/tf5wkB9Zdcs/Y+fuoNYxn4E+wrtv6i9oDOtmrCsmMlIGSSze4
-	Y7OdN/MwB0Dz4JFyILjbglx4EQbdPIZETbzdfq60GUKrNH7uqY0RHA8z
-X-Gm-Gg: AYBFou0sS/osKJry9WvqIz7lUPGELn5FiDvxHe6kPSaCi596aDQlMRN6ZMAuHb/1AVb
-	NKkq3Y+hURSN5WVQTeV9eaUoLDl/yRydOwmuornXAZq1QQGWtJt/x2attF98eX7hb3Q3TSmUGbn
-	Ubkotg2neGfo3CA/J+zLUj4pAh8h2J9o3wecOHRWsRwg2HIV0E0Ka/HPlQM3gQwMeWQnJMioQIX
-	lVZHosM/x+fSyGPAA7GC2l5c4KP04vVbp9RR67M/MZHTf930PlKvtlfxKePQM0ebeQapyT9/+Yk
-	6J4x174wzC7Uzck4/4l9IPFWu1DJVexiVqAE+o7bOdeltoM/lPISEZYi60DomVah07d2SrbWFAY
-	BCKG7VLd1CdPbpUXVHt79JybBzvX+30fAKC5bU3/SYH54tF/bGaPRaFiQLkCpi9RxYSzmlKYzmL
-	GRjO2GQFXIdQB7hLropAM0b3Y4LxcoSUQHCmsfzSaQD7y5hsGGHxvku4gGyy5vWo+SGMtAYzX14
-	N0FDlZo/KcFAXxz35MdWqJYmWUnlV9qdmyC+PMk2E38XlBd+H4J9P4w7zoIaK2lydYTYKLEXo9I
-	pm0cO/iqRJBuK6Iox5ZKeo3y76L4aQ42bBA=
-X-Received: by 2002:a05:600c:3f08:b0:49e:7c8c:361d with SMTP id 5b1f17b1804b1-4ba0937820cmr39696135e9.22.1794401467873;
-        Wed, 11 Nov 2026 04:51:07 -0800 (PST)
-Received: from redmibook ([143.246.42.147])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba09517bc7sm39028095e9.3.2026.11.11.04.51.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2026 04:51:05 -0800 (PST)
-From: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-To: qby140326@gmail.com
-Cc: platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	shlyapugin@gmail.com,
-	Musaev Ibragim <atomicus.xyz@gmail.com>,
-	Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-Subject: [RFC PATCH] platform/x86: bitland-mifs-wmi: Add Redmi Book Pro 15 2023 (TM2209) quirk
-Date: Wed, 11 Nov 2026 15:48:49 +0300
-Message-ID: <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
-References: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FBaToKoi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98C851F00A07;
+	Wed, 11 Nov 2026 13:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794402542;
+	bh=5+jBvJl/Ix9vAglpQXYTZoWyiW+U4BJ8ZU+Ewy5ieI4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=FBaToKoiU1IGr1H0R8eaC0QuhhXh/uuJ4Z3/sed2qFNbQzjkPyDyTDAN+3LtE4ocG
+	 B5rJR0cnU53R2YosX7msMS/6nxDjHpL5pDOCod6sU1Bpb/y64T2MJxP6Eu+6h+ltQD
+	 JSyNbTQpAMLcYjtkhgw0voObZ3aBqRpgqzQA7k2DJmCTtSxwx/KWh+KbhzvGvrCPIw
+	 CJvMfjB4yzlauCf94p+Vux2iWCyMFtWIGsi7N0bx6tDfsA1OrEGYvLbif/+9oWO84T
+	 kgrrGIJmv4tpq2Ick2QQm+w/xzZeIkwaMF0bj9mtoyELgY65oJ5cI5nj0rT6XgZeXf
+	 D93H3Ua9POOFg==
+Message-ID: <c4e4c30d-ebb6-42fa-b957-dcbfa10d3e5e@kernel.org>
+Date: Wed, 11 Nov 2026 14:08:57 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -101,168 +51,134 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] platform: arm64: lenovo-thinkpad-t14s: Add Gen 7 EC
+ support
+To: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abelvesa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20261107-t14s-gen7-ec-v1-0-f4a8edaac447@oss.qualcomm.com>
+ <20261107-t14s-gen7-ec-v1-2-f4a8edaac447@oss.qualcomm.com>
+ <44e4ede9-3eb8-418a-b1f1-7e9dc75e2e75@kernel.org>
+ <o55caq7vadrcc6ioc7n7aplbyh55n63mqgno6j2mgcksrjzb35@ptnencuakeo6>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <o55caq7vadrcc6ioc7n7aplbyh55n63mqgno6j2mgcksrjzb35@ptnencuakeo6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On TM2209 the power mode is the STNM byte in EC RAM. Fn+K rotates it
-in EV20 and the EC0._Q24 handler then applies the matching SoC limits
-with HPTC. SystemPerMode does not affect STNM, so changing the platform
-profile had no effect on power.
+Hi,
 
-Read the mode from STNM and, on set, write STNM and evaluate EC0.HPTC
-as the Fn+K handler does. HPTC returns AE_AML_BUFFER_LIMIT because SVRP
-declares its ALIB buffer one byte longer than its data; the limits are
-already sent at that point, so treat it as success.
+On 9-Nov-26 22:59, Abel Vesa wrote:
+> On 26-11-09 15:52:16, Hans de Goede wrote:
+>> Hi Abel,
+>>
+>> On 6-Nov-26 23:01, Abel Vesa wrote:
+>>> The embedded controller of the ThinkPad T14s Gen 7 uses the same
+>>> register layout and event codes as the Gen 6 one, but a different set
+>>> of I2C commands. Going by the ACPI EC accessors in the Gen 7 firmware:
+>>>
+>>>   - register read:  write {0x80, reg}, then write {0x80} + read 1 byte
+>>>   - register write: write {0x81, reg, val}
+>>>   - event read:     write {0x84, 0x00}, then write {0x84} + read 1 byte
+>>>> With the Gen 6 commands the EC never reports any event and the LED
+>>> and keyboard backlight accesses have no effect.
+>>
+>> Thank you for working in this. I've been testing this and my own T14s gen7
+>> and also I've taken a closer look at the DSDT leading to a bunch of
+>> improvements. Instead of making these as suggested I've just gone ahead and
+>> implemented these as fixup-s to be squashed into a v2 patch.
+>>
+>> For easier review by you I've split the improvements into 4 patches (attached):
+>>
+>> 1: Fix Fn-F12 not emitting a key-press + filter out some EC codes being reported
+>> when pressing Fn + Fxx key combos which already send an I2C-HID kbd event.
+>>
+>> 2: Add Gen 7 suspend/resume handling
+>>
+>> 3: Cleanup: has_kbd_bl2_and_standby and mic_mute_led_generic checks are
+>> really just checks for the original (gen6) support vs gen7 support
+>> drop the bools and directly check which variant ec->variant points
+>> at instead.
+>> 4: Cleanup: has_kbd_bl2_and_standby and mic_mute_led_generic checks are
+>> really just checks for the original (gen6) support vs gen7 support
+>> drop the bools and directly check which variant ec->variant points
+>> at instead.
+>>
+>>> Describe the bus accessors and event read per variant and add one for
+>>> the Gen 7. The Gen 7 firmware does not use the second keyboard backlight
+>>> register or the modern standby register, it drives the mic mute LED as a
+>>> generic LED (id 0x0e) instead of a bit in the audio register and, when
+>>> the keyboard backlight is cycled with Fn+Space, it also reports 3 for
+>>> the high level, so handle those differences too. Also handle the Gen 7
+>>> only events as known ones.
+>>
+>> So about these differences:
+>>
+>> 1: For the spk / mic mute LEDs, on a hunch I tried using std LED controls
+>> with a LED idx/id of 15 for the spk mute LED and that also works.
+>>
+>> I did not find either way (REG_AUD vs REG_LED) for the spk mute LED in
+>> the DSDT, instead the DSDT ends up sending an ACPI notify event, relying
+>> on some windows driver to handle this.
+>>
+>> How did you find that REG_AUD still works, did you just try the gen 6
+>> method ?
+> 
+> Yep, just tried the Gen 6 method and it worked. Nothing in the DSDT
+> for it either.
+> 
+> Re-checked just now: the speaker mute led lights up both via REG_AUD bit 6
+> and as generic led 15 via REG_LED. Since the mic mute led is already a generic
+> led (0x0e) on Gen 7, I'm fine with moving the speaker mute one to 15 too,
+> if you prefer. Otherwise I'll keep REG_AUD, since that path is shared with Gen 6.
 
-The board reports DMI_SYS_VENDOR "XIAOMI" with TM2209 in
-DMI_BOARD_NAME, returns the WMI return code at the end of the buffer
-and charges over USB-C only.
+I don't have a preference either way.
 
-Signed-off-by: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
----
-Based on v15 of "Merge redmi-wmi into bitland-mifs-wmi":
-https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
+I tried both methods (REG_LED and REG_AUD) for the spkr mute LED and both
+work. Which ever one is written last wins and gets to determine the actual
+LED state.
 
-Tested on BIOS RMAPH5B0P0909 only.
+This means that the spk-mute bit in REG_AUD may not actually reflect the LED
+state, since it stays set when disabling the LED through REG_LED.
 
- drivers/platform/x86/bitland-mifs-wmi.c | 83 ++++++++++++++++++++++++-
- 1 file changed, 81 insertions(+), 2 deletions(-)
+>> 2: For the kbd backlight, again the DSDT ends up sending an ACPI notify event
+>> and does not access the EC itself at all.
+>>
+>> How did you find that T14S_EC_REG_KBD_BL1 also works on gen 7?
+> 
+> Same, tried the Gen 6 register and it worked. Writes change the level
+> and reads follow the Fn+Space changes, which is how I noticed the extra
+> level.
+> 
+>>
+>> 3: For suspend/resume the DSDT does have modern-standby handling both
+>> making the LEDS glow and setting some magic bit (which presumably makes
+>> the EC use less power or maybe makes it send less wakeup events if we
+>> were to make the EC IRQ a wakeup source) ?  This is implemented in
+>> my second fixup patch.
+> 
+> Squashed it in, thanks. Haven't been able to verify this path on my
+> unit though, suspend has some unrelated other issues. Will try tomorrow.
+> 
+>>
+>> Regards,
+>>
+>> Hans
+> 
+> All four fixups are squashed into patch 2 for v2, with your
+> Co-developed-by and Signed-off-by.
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index a431d3fef..b63b139a6 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -21,6 +21,7 @@
- #include <linux/input-event-codes.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-+#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-@@ -99,6 +100,10 @@ struct bitland_mifs_quirks {
- 
- 	bool return_code_at_end;
- 	bool skip_ac_type_check;
-+
-+	const char *ec_mode_field;
-+	const char *ec_mode_apply;
-+	phys_addr_t ec_mode_addr;
- };
- 
- static const struct bitland_profile_entry default_profile_entries[] = {
-@@ -113,7 +118,30 @@ static const struct bitland_mifs_quirks default_quirks = {
- 	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
- };
- 
-+static const struct bitland_profile_entry tm2209_profile_entries[] = {
-+	{ PLATFORM_PROFILE_LOW_POWER,   2 },
-+	{ PLATFORM_PROFILE_BALANCED,    1 },
-+	{ PLATFORM_PROFILE_PERFORMANCE, 3 },
-+};
-+
-+static const struct bitland_mifs_quirks tm2209_quirks = {
-+	.profile_entries = tm2209_profile_entries,
-+	.num_profile_entries = ARRAY_SIZE(tm2209_profile_entries),
-+	.return_code_at_end = true,
-+	.skip_ac_type_check = true,
-+	.ec_mode_field = "\\_SB.PCI0.LPC0.EC0.STNM",
-+	.ec_mode_apply = "\\_SB.PCI0.LPC0.EC0.HPTC",
-+	.ec_mode_addr = 0xFE0B0300 + 0x7E,
-+};
-+
- static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2209"),
-+		},
-+		.driver_data = (void *)&tm2209_quirks,
-+	},
- 	{}
- };
- 
-@@ -271,6 +299,48 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
- 	return 0;
- }
- 
-+static int bitland_ec_mode_get(const struct bitland_mifs_quirks *quirks, u8 *val)
-+{
-+	unsigned long long v;
-+	acpi_status status;
-+
-+	status = acpi_evaluate_integer(NULL, (acpi_string)quirks->ec_mode_field,
-+				       NULL, &v);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	*val = v;
-+	return 0;
-+}
-+
-+static int bitland_ec_mode_set(const struct bitland_mifs_quirks *quirks, u8 val)
-+{
-+	void __iomem *addr;
-+	acpi_status status;
-+	u32 glk;
-+
-+	addr = ioremap(quirks->ec_mode_addr, 1);
-+	if (!addr)
-+		return -ENOMEM;
-+
-+	status = acpi_acquire_global_lock(1000, &glk);
-+	if (ACPI_FAILURE(status)) {
-+		iounmap(addr);
-+		return -EBUSY;
-+	}
-+	writeb(val, addr);
-+	acpi_release_global_lock(glk);
-+	iounmap(addr);
-+
-+	status = acpi_execute_simple_method(NULL, (char *)quirks->ec_mode_apply, val);
-+	if (status == AE_AML_BUFFER_LIMIT)
-+		return 0;
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- static int laptop_profile_get(struct device *dev,
- 			      enum platform_profile_option *profile)
- {
-@@ -282,14 +352,20 @@ static int laptop_profile_get(struct device *dev,
- 	};
- 	struct bitland_mifs_output_head_rc result;
- 	size_t i;
-+	u8 val;
- 	int ret;
- 
--	ret = bitland_mifs_wmi_call(data, &input, &result);
-+	if (quirks->ec_mode_field) {
-+		ret = bitland_ec_mode_get(quirks, &val);
-+	} else {
-+		ret = bitland_mifs_wmi_call(data, &input, &result);
-+		val = result.data[0];
-+	}
- 	if (ret)
- 		return ret;
- 
- 	for (i = 0; i < quirks->num_profile_entries; i++) {
--		if (quirks->profile_entries[i].wmi_val == result.data[0]) {
-+		if (quirks->profile_entries[i].wmi_val == val) {
- 			*profile = quirks->profile_entries[i].profile;
- 			return 0;
- 		}
-@@ -350,6 +426,9 @@ static int laptop_profile_set(struct device *dev,
- 	for (i = 0; i < quirks->num_profile_entries; i++) {
- 		if (quirks->profile_entries[i].profile == profile &&
- 		    !quirks->profile_entries[i].no_set) {
-+			if (quirks->ec_mode_addr)
-+				return bitland_ec_mode_set(quirks,
-+							   quirks->profile_entries[i].wmi_val);
- 			input.payload[0] = quirks->profile_entries[i].wmi_val;
- 			return bitland_mifs_wmi_call(data, &input, NULL);
- 		}
--- 
-2.56.0
+Thank you.
+
+Regards,
+
+Hans
 
