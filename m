@@ -1,57 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.28.97
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.121
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794371913;
-	b=aLOYaQUJRRCYY1JPn2AjDK0iCWKHMjKkBQAg6Ez5B32bsEcrEZAwmCsu9w6/xzB/DHi9
-	 hGI7isgpG3fcJMD9XNemVDh2J1co2vkqN6b5yoZ+jVKaeF9ITPL7snVGuoKWFvUB+DxM5
-	 xE4BZn71Bj0aG8FRuVZiWj3h1BQh1lCF3rz3BAngksl6dZwc9TV8WbF8fMp1mkq+OjGYT
-	 dAS2mRUbpRV1z74i9TdxHc6+KFBDEzA3m1dYUeg9yXdX9YtFR9AkTgE70oapJVCOeEtox
-	 TXMqWe1YgbOzCk7++WSrLaOFWRgPs6+gAoCeR2Jh538m7GPCr5+Gy9zfxlaERUgtfow==
+	t=1794378847;
+	b=Wd4IrjR1e7CIEYqGuqeBZl1aSt5pmtqN8hHRdNuCmPMLLAAbmp7oshEbnAKXb52FHd+E
+	 SAZzq8f4H0DLtBYsE4zHwJXJb8chPGHaRZFWli/oax64RPuI0o6Q/WsUX+a/urdaQhSRh
+	 XH8c7HNCaZlVa6QvOHETaHso1paZk8xcvu1S2MIIDypmcAdidd+gfL+A3NI/Tb3EgHzpd
+	 HDtEluUHNfVrcPK1NAVMPmG9fwzmS7nH5XZLqHwg72maI3OJSa5CD5/YmCBjzUSa+PlCt
+	 zn5iAfQpI2suqOfJmbq1i22syhsIav+EahkD5q4rfNgDHPJi4WEWd+y2286vNlxcApg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794371913;
-	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
-	 Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=8fRv/jrTdWY76QICf0NPNF8q1S43YPpzmnfQf9/0gcE=;
-	b=Qtf2A5Zv5Va5+GlDk237MLA2kJLfdv0te0byyHMmMtWu9rT1pWWAS86/UGDMEqtSwQQ5
-	 PMseyDhJbLMJywHCKkneThGgLpb0ia+vLoAyRuyQ8mmHYCVNVI/Ok1oYCpvIo1ENTz7p0
-	 naIr7Uvjiis+jR8MNSvUeJ2o9CUlnsoiXo6qXftA/Zs30t23CZ4dRLYiPRkU+hmecFbXs
-	 j3/syPtutth772wwXie9NjKXFh2Qrm6bMYfiAJYPxAWRrsSD31m0hUjjG7l/beg7vopGd
-	 4EJSe4GgX4v0DbFDBIF+pN1P4Nnj/l5XW+r2w7KRNlfhBr765cZIQzAKHHivpZazlwg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794378847;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=Wf/iTe9pX4L/jZu7Xph7OgCfAvGN68jDjp1bp7bfRVM=;
+	b=oi5Ou06fLVQiOcpBsl1JlB6BojiJOQcODHWO3RyfNhf3B441S6XW8DFbaVSyH6alcr4X
+	 pc762TLwu/kE+a7JNr0YeHmSRVpofBsOPZ/yXD7CDGXcCjy5kjhjPOB+1IQZ1Zl7Jbv61
+	 F3mX6udDmXldHfmC2tJhJMGBGZgBZZwFfPSwgppGUXm+f44bELNOQKcH78b0zVx+VPZ2f
+	 Y0dS5AbO8wq8XgN6Oomw6MM22tYZtiePR4Ezb+jGQmWhAOEHZKfNAfvC9ohHTVEEzz8ab
+	 ZrmJ4Ld7gcuQ6FRFXVwT0/D7DPxsl9uSExI66zG0RuaRLLjZuYHtYmfjo1XRR7W+KPA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=awinic.com;
-	spf=pass smtp.mailfrom=awinic.com;
-	dkim=pass header.d=awinic.com header.i=@awinic.com header.a=rsa-sha256 header.s=default header.b=eDIlu5Tf;
-	arc=none smtp.remote-ip=115.124.28.97
-Received: from out28-97.mail.aliyun.com (out28-97.mail.aliyun.com [115.124.28.97])
+	dmarc=pass header.from=pm.me;
+	spf=pass smtp.mailfrom=pm.me;
+	dkim=pass header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=QLoCwMfp;
+	arc=none smtp.remote-ip=79.135.106.121
+Received: from mail-106121.protonmail.ch (mail-106121.protonmail.ch [79.135.106.121])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7CF606A31C;
-	Wed, 11 Nov 2026 04:38:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EE7CF606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EEA606A321;
+	Wed, 11 Nov 2026 06:34:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A8EEA606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=awinic.com header.i=@awinic.com header.a=rsa-sha256 header.s=default header.b=eDIlu5Tf
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=awinic.com; s=default;
-	t=1794371902; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=8fRv/jrTdWY76QICf0NPNF8q1S43YPpzmnfQf9/0gcE=;
-	b=eDIlu5Tf+COeS2GoQpnjG4J0B1HgXdF3AEDkuCOO54cQ5enGev1vFrN5IK9xRlLWBPFpGJ9nAm2Qz+nlYr6Wf7QDRMIGW0uVMK5eZa3UH99Mk2TMfA2NliJP36QJSUUW0Sh4uoAI3H4VZ9o6uCm1A5YD0UWxnFAYZARn0aBP5I0P2S3TipZzRYzjKztQRmNfI6bisBuqmTF+JtrsU/FA+n+fkImn//8/nK7bDPOB4gE46wdphyzobTTpdx1E98S4u2kjiR9xFu40wC/Ksi2rQd6RMXGOfO5YO9Y14vQ4pDFx3PyUDs8HoMbKJ5mNpEBN5JWN6joY+HQBTUsqJ/jMuw==
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1624513|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00234802-3.15815e-05-0.99762;FP=2858016219476978982|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037034020;MF=guanlan@awinic.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.k.PQ8R4_1794371881;
-Received: from ChromeBook..(mailfrom:guanlan@awinic.com fp:SMTPD_---.k.PQ8R4_1794371881 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Wed, 11 Nov 2026 12:38:21 +0800
-From: guanlan@awinic.com
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org (open list:ACPI SERIAL MULTI INSTANTIATE DRIVER),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Tao Xiao <guanlan@awinic.com>
-Subject: [PATCH] platform/x86: serial-multi-instantiate: Do not request IRQ for AW88399
-Date: Wed, 11 Nov 2026 12:37:58 +0800
-Message-Id: <20261111043759.306458-1-guanlan@awinic.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=QLoCwMfp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1794378844; x=1794638044;
+	bh=Wf/iTe9pX4L/jZu7Xph7OgCfAvGN68jDjp1bp7bfRVM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=QLoCwMfpM9LRKb7MQE1nR0jsr3FKwsjAJJkDEmpXH44Yp5YJOABhzzW3CHtCNEaxr
+	 M2875Gh7Sx4tQAAOZU1FrTb+IrXDBPLfWD/z7wdiYxd/uzq8cFTdfEC66ujV7SKLc2
+	 SJqxOLHWIvRDPxXIY07N8wJOwHOoscmtuqBkmN5Kk/jlgO7Hz11raFiVWXxncDDP/g
+	 gUHDa88w3i4fJRcRem6mbb3Q+N1EUfm8GZW2ZVn4WX1wnySRlcV/OYDN0if3i0GOHx
+	 2wTCzKge9lrmtZfNXFtP1a5Y71fJBWIwth8rhIhAa6yV22ZLXgDigU+0uLJcTjTN5R
+	 bX3p7Kujc/RWA==
+Date: Wed, 11 Nov 2026 06:33:57 +0000
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Sylvain Petinot <sylvain.petinot@foss.st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Dan Scally <dan.scally@ideasonboard.com>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Peter Marshall <pm@petermarshall.ca>, George Neacsu <geocausa@gmail.com>, Hao Yao <hao.yao@intel.com>, Fernando Rimoli <fernandorimoli11@gmail.com>, "D. Manresa" <dmanresa@gmail.com>, Jizhou Tong <fqwqf@fqwqf.xyz>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] platform/x86: int3472: Map the VD55G0 supplies to "vddio" and "vana"
+Message-ID: <20261111063351.96951-1-lsa.uz@pm.me>
+In-Reply-To: <20261110195454.48176-4-lsa.uz@pm.me>
+References: <20261110195454.48176-1-lsa.uz@pm.me> <20261110195454.48176-4-lsa.uz@pm.me>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: 6879e178a9ed61d0489c95e0d779dae40845883f
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -61,35 +64,21 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Tao Xiao <guanlan@awinic.com>
+This patch is on v7.4-rc1. On media-committers next it needs a change:
+Hans's series, applied there on 11-10, renames type 0x10 to
+INT3472_GPIO_TYPE_AVDD, and INT3472_GPIO_TYPE_DOVDD is now 0x0f:
+https://lore.kernel.org/all/20261020142243.25072-1-johannes.goede@oss.qualc=
+omm.com/
 
-Set the IRQ resource type to IRQ_RESOURCE_NONE for both instances so
-the device instantiates regardless of the ACPI interrupt description.
+The patch still applies and builds there, but its "vana" entry then
+matches 0x0f. Tested on the Surface Pro 11 with int3472 from next: as
+posted, the sensor's 0x10 line becomes "avdd", vana is a dummy, and
+probe fails with -121. With the entry on INT3472_GPIO_TYPE_AVDD, the
+sensor gets vana and vddio, binds and streams.
 
-Signed-off-by: Tao Xiao <guanlan@awinic.com>
----
- drivers/platform/x86/serial-multi-instantiate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-index ffec4f0a4992..f69ad3815c8c 100644
---- a/drivers/platform/x86/serial-multi-instantiate.c
-+++ b/drivers/platform/x86/serial-multi-instantiate.c
-@@ -309,8 +309,8 @@ static void smi_remove(struct platform_device *pdev)
- 
- static const struct smi_node aw88399_hda = {
- 	.instances = {
--		{ "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
--		{ "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
-+		{ "aw88399-hda", IRQ_RESOURCE_NONE, 0 },
-+		{ "aw88399-hda", IRQ_RESOURCE_NONE, 0 },
- 		{}
- 	},
- 	.bus_type = SMI_AUTO_DETECT,
-
-base-commit: 067c5c24cef23d913b67eaaf71ae67e7169a6620
--- 
-2.34.1
+v5 will be on next with that change, and its commit message will simply
+say that int3472 calls type 0x10 AVDD.
 
