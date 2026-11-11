@@ -1,93 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794433494;
-	b=i80GMfyDcpDGWHZ2mR6/PiA7NKnsE9/iLNzqRDGiz+0g/bAqxQ9BeUDUAWQC/e76CNeN
-	 uouGEakluZUSZW5BFDMlKSEmt6TgpgleA4vlWrLoLV2TXkez8TQowChCaez7JBRhSCbIG
-	 BLtI5H9pkdRKe5XU/PYna/WmqOLRN+kJhhsoeR17RdS0rsHJvNqVc/lDvbR4Jw2KR4GOR
-	 yauGJ2hquNME1SCPHEIRyHAmR+NAvwJtzyABgoRDOw0ERZTfX/ZvP+TyrGQDFDMwnFG5M
-	 57UGInqaPV7Y3lNRVbbApo60bw547poG9HU+bgOzjmC/N7fmjxZorNANQrZiEjuW5NA==
+	t=1794433725;
+	b=0RyxkhrDeig6Cram+ef3x6meXdraF9XVwxWrpVgc4+18VFWEpOiH22Fe7Ji8bzilmi3c
+	 JNCVApCYA/M4G5D76GfiKwUq7bvTvsCMVllnsovrmbHfnsXH17i7K33z76xLWc/RIhLGM
+	 U8jSRhHHcBAMuchH61gyQoGZdCAiVAUoZVHSJFtUQG8oUZJeCLrZTStzptSe4Jt+KzUwZ
+	 IFt0LTfpdlf+jnVO4KoRt2bfQAMX4T46kIHUzpAQgyAg1URoh/t0wuicaVxRD1TkXtYwQ
+	 CHsebF9i8/YI1Wc0/rnme4ArgLa5k/NhBJo+78f82NRluZmvNstI1arnwsoZr+Mv1bA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794433494;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794433725;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=Ob+rHnVcyvihM2cjsMId5sTJmUmQkH+KTxRLQJzqkyI=;
-	b=jJx5gwUSjsl/HiAN396RpnGDdTXSaOb1NishkEpw4FTkfY0NfbYTx0TJ1QT/FQq5NyNL
-	 pMPTjqwgxg4OqAOmpzaa7khULY3g2UDNNMZtgcZVtlIfZ30+PRCXSwMbU0p6XKmMDQQSv
-	 l63o91jZERP+sp/xRZCtEI74rTiM1R4nU5RDl6gSskuplZPVD8tOvFGDmR/u2ob5LTB6G
-	 9vwO6mfDRxugIC3tn0Yw9dsrdvTMI6z2qbPgaCtiWylh+rEPNekN+kYFNRCVlXSsss0N+
-	 EPLYtF+WUxiNVXS7g5woW2+RagheiAWbCKqf/CPeFq3oI2Uw4X4sR7u41dYIOybO2rQ==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=KqvT//ywRZvyN5aUarjR+h8osuwosZKu+ejEl3vYsLU=;
+	b=Peih0aMZXu9Atc4iWPVcdlmtK5zAI2ONB1j4kuYdXAJo0Ur3nzfJQFNQwiDhLJsW/vju
+	 J9OMSbJzo433y559ey/xZl8lcgaUyNZeLbteNyUsQ91UwOAnFH72W1XcDp67BfPoDhPDA
+	 USAEOZZy6u80GKeYHnXKepAiTG47l3+dZerag+nlKbz21YzklRjjilrdM3wHRHVzYtUkY
+	 d6bBcBmnFKjzoO3GFI7rCL95rD25P2esmgJ51r28O2k7ZtCUbmIFYhtexhxOs36Twm4sm
+	 bWHFh1fTegFoOchGtplJlCgowRg4lbrU0ZPYG+etd8XTEpSeHhAZPlnZHERAsuhlL2Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=B1GXhTJD;
-	arc=none smtp.remote-ip=209.85.215.180
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ake94c02;
+	arc=none smtp.remote-ip=209.85.216.43
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A283606A332
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 21:44:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9A283606A332
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE78606A326
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 21:48:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1BE78606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=B1GXhTJD
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cc1bc88a20eso2527681a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 13:44:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ake94c02
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3b10ca4e3f9so2054882a91.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 13:48:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794433493; x=1795038293; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794433724; x=1795038524; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Ob+rHnVcyvihM2cjsMId5sTJmUmQkH+KTxRLQJzqkyI=;
-        b=B1GXhTJDLSH/sbuUa5jSEc+ggEJT593kzWdFrcMoAqEoM6d3UXG6ql5ltwv3OrBuZ0
-         cnlFkbVj9eTIzQn47Oj9GCJuhTNYrbJa0uhwQaZJKceq7u1OS6q5PpizzHsHhD+3IWpm
-         ntIgZSYAXRCivMYSI4bXIsqQXp41ZJY4jwKgdwypUf2hI8uN17gXzHnqqcI0pFnZsNjY
-         yP3TX6XN6I5gMij+OlupZQW06YhzGt9HL2s+uz3ekUDWQGmLKm9QuKeWxBENxYGbZFj8
-         Z3lpXpG6iJ9wS84sHBVsd/+1L8uBs3vYpI46cGQn0QRyZ2zq8Yims5Ns6GADY0JQAos6
-         5t9g==
+        bh=KqvT//ywRZvyN5aUarjR+h8osuwosZKu+ejEl3vYsLU=;
+        b=ake94c025Pcg8BInjOErVqxBlmWTqqVgqg2H4GFWuVtFOV/VA8AOF5EBhpeakZxZqM
+         giPzK+C4b4BCW0QcvuFW+11krFPw8NRmt2qHNei4AJA+wEGJxHcLoCbUetZYQN0+RQEQ
+         auoNJD0qDQ1224vXtoxj4YIhPRw3Lwz6jbl+AmvKRfENbmldxiMBKhxW4swAovAv91d5
+         xBs1BjwShouGoiwRJcn4uqBK8DGCmnrpCbNWOh8ohmFQSP5pQ7p3KJU5OqgwSdRBgKTm
+         AGTXCghXyc0r2OUchoSUzlmzorZbSOFkVWhPW6QPwyDlfQU2bB7OREnhzMFMXYii55Dv
+         YgKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794433493; x=1795038293;
+        d=1e100.net; s=20260707; t=1794433724; x=1795038524;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Ob+rHnVcyvihM2cjsMId5sTJmUmQkH+KTxRLQJzqkyI=;
-        b=ldvFjBsk9xlDw698VH2KUgGt86jaUIfoZQQLlWO+cb7c14uwm944yutT9iTV7WM2N1
-         c6jFORzB7pxPqT145EIn7d1s6hp41we17qny/Z0+TyyiTytMJ3f/0M7b2YCJoYu2cWFA
-         vIz92OGaZXae/3d6PT2lKwaKpvaq5y1R09ZiBl20fVlrkXhsJmjEBO3EonuDJk/Hshep
-         5jHC8c1TZV1urtFSFtIbrpG646cY0+oXHwaK8ef/iQCdh+m85qf93ejlYFMgnfbLQmaC
-         JkOtjDtc1S92H5HMNZubptP1c15UZimvLKVkA70T5Koy+fUVts7PauhB07L9SfKXt0j5
-         A+JA==
-X-Gm-Message-State: APuU4Z/X26zUL7HH4TnsJ+n3MjiOo6ln9+8KbZB71a+L0pa/xin63Hvg
-	qxHtMGwmq+0wWYEIaxZHg4PU6k57QVC0qlBtMeN2K74VVbUV91QsVJMB
-X-Gm-Gg: AYBFou3HFHAKKtb1HXyUovt4Bn/A8svTy6VX6oiZ0gMSqV8/No8JT+XfCdV2byFt8Mu
-	oOK3Of4f2mmGplBHbAFlLO5Cz/MTNFfSZDfy3DIWlZsV36zxjHUHGB46MzPz07FXGEyYey+ep2B
-	EDjAhaOiBUbBwpo99Vz8E1XvV3SZftsXmbDnVFqiw8ILN+c4+o3KfhjeeykKUrwX2CkdV61WMdj
-	v6UvdegbAiqgUVKoe3JSesubVRR+o08nHknA7Mp6lJQAEfSCD/p5e2VVmvUDNOJok/jdynjxI+Z
-	P47ZQBz5iH457bRiZsuPqTUiA7xJY4Dg3d6zYcy6aCzrgvwVNXtFZ6A6vzMx81jC6uPmJsC2ZBf
-	/hHrGLYZtg4qdAfK55lvraEQotuk3gHupRwZg9HmFtwFJHEa4BJ4Drg08oC7hvVtvYiD5yTXnBk
-	HufT5pdk/GD0hMKhI1Uqj3s+Dh43+32bEGoKqNAIK+yrP8M/jhXzDatVA6bDeVjLUEbFpQQN0qg
-	oopsj+y/cocQOgvh3AhGF1fy8EQJbRuR8ci1k9jZfVvu4M5RGu+EdWbyN1AmQsT+kszYt/pGmjP
-	2FBtxYkzvJ8qRwKw48HLIn6U1wN4swYNKPLvJa1t8i7E9kBCpQs/HJDKjKd91u+OdE3gRwMQhDo
-	Znumgt/Y5dB4q7Mj0ecZN4kAmb1MgRjyq28vCeQK4tsFJYSB3V1HMKfaGUgihobXTPhwtYTinze
-	jFKw==
-X-Received: by 2002:a05:6300:670b:b0:3dd:85aa:452d with SMTP id adf61e73a8af0-3f2fe0a3583mr3945379637.31.1794433492804;
-        Wed, 11 Nov 2026 13:44:52 -0800 (PST)
+        bh=KqvT//ywRZvyN5aUarjR+h8osuwosZKu+ejEl3vYsLU=;
+        b=0PPNxX9lco54UWp/U1XtuIjoyvSk+8AZTnypeY6rOC1bMYWcNsMkCJHxbK01m01cff
+         0WlfHzMOLxhUPTHi6QhcnVO7Q9cNn5/xLeFBzxJe+YaBBzdXMiYczEt3T5335dZz+rk4
+         O4BMDbWObE4eP16gq/+6JuZfB9TSEeY8PhrFop1X9iTyQ7rvHbV5lmKgnilbD+yd9yrN
+         zFK0XQlzoJPU/FESRw5Q7Yz5j65uQuLAuIDDssxLAk9nBTKXbkav9rx4c4dI7MobmYrn
+         wtzZiVC96IC3tljeBijlFiG5GI5Qy9GlxgwnYqmE1rQ3cGywRm7683SPLrF4Ggbcm/UI
+         WVtQ==
+X-Forwarded-Encrypted: i=1; AL+hErE6DS4ec53ZQbZuH3JLDZCx8uZOdBDsa+0OykfvXFkEDwBQLayOcv2iHk3GnbyJclL07z6lE4/DO9f1LFJgAi8RDEIS@vger.kernel.org
+X-Gm-Message-State: APuU4Z/iAeEmxb4JrHCF3AuIQDAkfT1pIVMIVMTIk/8MJvc1nCsXYUjH
+	XHMOLY/PT7YK9e9M7UgDttRKBcBO07wTlrml3zu9uVXQ11yCo/pAFfxj
+X-Gm-Gg: AYBFou3XMzzip363BN0HB1D577RJseqnJhgr/VsfX0Vf4+Wu3fbQLNSTWdmIbYHAiuD
+	e2p+vpQ3hGhlk7wBVx0Out1AUM2tlkJ4dBApf+PSCYUr5+yP8rSoW5WIKmVjInk2yM3NTddHP5C
+	3D6qw1Dye1NShoE9uZ9o9512lexqoROOoz0XzeOts2AU8LvBxwNBxoRcPeT8E8ljDAny4VaQgVx
+	pHI2V/RLq+xfC5rBYtjQ9CgDfXecv2LKNe7PBHhsYTN5e9oJ8FzqmCBocE8ZR5jTuBJCR/59p43
+	VK2o2Q4mkqBQsGGWXC2PW6vI3yBtSQPBWUnvZI5+eW9NePxNpqlnAHQE94G7xROCE+9Ov/XuT33
+	FvBRLRpL8ZOiOBfuEcqmxwVx9lBUMYVpXsdpziDczthbzBHCp/MElKBsbzFbyNCZrDGq86j+XcT
+	vxmrqxywjT0dQsVYYr9E1rtNnDbe++k4UWqbB6emUW75nz1psw70KXtXscL76gRbY0NA4kYMfy6
+	WcIA0efQ0vxTAgzZKr8bJ6JiHRsdxH5qP5+emPpIRDNn6AT/OHG7AOtsChgDTbmxOgaxXJTFLhl
+	vEz/MqNaGwVLrbFRN2l6MWsktrTADIREhF+w7ubprBbIRPFTRHZyx/Ntq2ZtTqw0mKBa5fYnlJ+
+	a4NY4H6YYnJiUJ6eDIPAp47URHqXxsphFY40iZYGzwPObVFzToMXn8jb/rCkHz7P2Qz22Bup69g
+	i4mZRypuvQuRfGRvCkF5sgiIo=
+X-Received: by 2002:a17:90b:2649:b0:3b0:d070:3c4b with SMTP id 98e67ed59e1d1-3b182f235c3mr3064154a91.33.1794433724406;
+        Wed, 11 Nov 2026 13:48:44 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cdd8d6940f6sm2042637a12.12.2026.11.11.13.44.50
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b182de1dafsm2754761a91.3.2026.11.11.13.48.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2026 13:44:51 -0800 (PST)
+        Wed, 11 Nov 2026 13:48:42 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
-To: Hans de Goede <hansg@kernel.org>,
+To: Jonathan Corbet <corbet@lwn.net>,
+	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Edward O'Callaghan" <quasisec@google.com>,
-	Mario Limonciello <mario.limonciello@dell.com>,
-	"Darren Hart (VMware)" <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-smbios: Accumulate supported commands across 0xDA tables
-Date: Wed, 11 Nov 2026 13:44:40 -0800
-Message-ID: <20261111214440.5473-1-rosenp@gmail.com>
+	Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH 0/2] platform/x86: dell_rbu: make usable
+Date: Wed, 11 Nov 2026 13:48:24 -0800
+Message-ID: <20261111214826.6577-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -100,50 +104,20 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-parse_da_table() runs once for every SMBIOS 0xDA structure and assigns
-da_supported_commands from each one, so the last structure wins. Some
-systems expose several 0xDA structures where only some fill in
-supportedCmds. On a Dell Precision M4800 there are seven: the first six
-report 0x40361f5f and the last reports 0, which leaves
-da_supported_commands at 0.
+First commit updates the API to one not disabled by default on many distros.
 
-As a result dell_smbios_call_filter() rejects every call made through
-/dev/wmi/dell-smbios, even token reads from root:
+Second commit fixes upload of firmware more than 4MB in size, which is most
+modern ones,
 
-  dell-smbios ...: invalid command, supported commands: 0x       0
-  dell-smbios ...: Invalid call 0/0:      5c
+Rosen Penev (2):
+  platform/x86: dell_rbu: Use the firmware upload API
+  platform/x86: dell_rbu: Allocate large monolithic images contiguously
 
-and dell_smbios_class_is_supported(CLASS_INFO) returns false, so dell-pc
-refuses to load.
+ Documentation/admin-guide/dell_rbu.rst |  25 ++--
+ drivers/platform/x86/dell/Kconfig      |   2 +-
+ drivers/platform/x86/dell/dell_rbu.c   | 161 ++++++++++++++++++-------
+ 3 files changed, 131 insertions(+), 57 deletions(-)
 
-OR the field across all 0xDA structures instead. With this change the
-token read succeeds and dell-pc registers its cool/quiet/balanced/
-performance platform profiles on the M4800.
-
-Fixes: 1f8543a5d602 ("platform/x86: dell-smbios: Add filtering support")
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/platform/x86/dell/dell-smbios-base.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-index c8e93c12c445..f79847f0bfe2 100644
---- a/drivers/platform/x86/dell/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell/dell-smbios-base.c
-@@ -406,7 +406,12 @@ static void __init parse_da_table(const struct dmi_header *dm)
- 	if (dm->length < 17)
- 		return;
- 
--	da_supported_commands = table->supportedCmds;
-+	/*
-+	 * Systems may expose several 0xDA structures, and not all of them
-+	 * fill in supportedCmds, so accumulate rather than letting the last
-+	 * one win.
-+	 */
-+	da_supported_commands |= table->supportedCmds;
- 
- 	new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
- 				 sizeof(struct calling_interface_token),
 -- 
 2.56.1
 
