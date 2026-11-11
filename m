@@ -1,86 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794405636;
-	b=5ffgLVU7nPztZJzVNQwTgtv36yODM3bs/Qa9T7TSlhnOsgvW6fllKsveaA7GBCNZrIiZ
-	 VsmQOCfLVLolM+JowcnLKw2nFm1HvQ+DpvPvjgs0am5tgtB/ro5sx3HE8m2ZdtvTwrUKM
-	 cY4P6PY3ApCfsTbaMHGO0vh7cpmy2yQ50b0VMxWQMwksIkvktzDGywjK7SOUrthBr0TMr
-	 0nHffxFiYWFnXSNKmKoKNDvjmrCPnJn3M3HQK4m2y9rVBpLtYcNTLAJTz4QLrgkLd1UDB
-	 W0rBykfcNJkRpRw40Ydym5VzuRdTgxv2jePeriBjzH6Ad7+vWHSy7oYyaln8xY7QKaQ==
+	t=1794406376;
+	b=TR0ufQQbWuflQFRNyFLi7w0HApwqG0RY5vTOMzie1TBplbelFDZRT/VMq+y93w4D0/dn
+	 nuNCQ2WDxwO4gPy9RPaHQvF+CTqN49SnLnUwYtAbMTXhSjAOfLQVmfFrPCDmNQUzjwNUV
+	 G2p209UTlJEca8gL5e51oZJOJkR8uEB5CqFjzU6wHyXxDVWHybVbLPVycqIyn7sucnxaT
+	 lM8YJYPo2cR1K27qdi6TTo7kCsKmBZV23pT3DqiJNY7a2JSv55S0CasjHSb89MBkQEFHf
+	 xaG7A31MK6nZtDA3YHfaYDB9vrilbArWndu6vkSk85DHXUjPwqS38MUxBDIa3SZ1Wlw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794405636;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=hOEg+KiA5RHiEpPwHLrMOrGKfu+Rl73QO4WqM3TOCZ0=;
-	b=cegob4XHxYbjzTqCrWWfa+aq6orLMbn8gCbcX+gg6N4qTWVLgkJe0JpDV9q71YvfR93Z
-	 gmnG79Giv4dY+VOA2mKggBSTfuB1AoKGATMlyQrmh4wr9XY0vtUU8734O602mNZ402AOv
-	 E/i+pPpdVclm0tU+BvC+oqI5zITotIjNeuOIYgOvGXqIFRHiDpd9KM7eARAeRwTpolkhw
-	 jMFfWRFlnbXRu/UR9nA8xBNPdoYz54oSw8qNsCuNi1gEtieDfrA253lZ3jGsFD7B/ve8j
-	 Yfkxa4UttHdWFikZgrydMh6/PMRAFQy8WUjduTV/NmG+9uzavXm9TTLtb8NiNJfZl3w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794406376;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=RyaNr0cCFD9SOnyOAkomip6CQoV5it2GgjFP5fUVLZc=;
+	b=uUyWgLvtI175Rz5VwYRBY5DuRv0Z6plnpOpHXUpemYKVQEIzgxib4Ju2qn9zaJu5Eqx4
+	 u+yOWMKxfYBN2jEv7YkUueJZ+2U2aBugBoZkUeko5M9KwSODwxdjaVNd+FQWSlT3746D9
+	 dqX9o0F4xdmRRZj286UQ/rNVr2eCII3ROU08atuCA6e8HOod6U9/T2wfN+Dze9bqhdqXM
+	 R9EPGYckI/M9Y9jWMbCBTPoL3ZyhrMDxyOxpMZQajNLoKUigfmUfGYxVffUi2SFLm7Iz2
+	 6osBxYzdYnphblvo8fE8cR67iXutc6p/Fs+W8x8Hrx4oSbVT85u6TZihkUOCOyRwjpA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gIpA4rC3;
-	arc=none smtp.remote-ip=192.198.163.15
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=I4WFNAqw;
+	arc=none smtp.remote-ip=209.85.215.175
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203F5606A324;
-	Wed, 11 Nov 2026 14:00:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 203F5606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A9E606A321
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 14:12:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A2A9E606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gIpA4rC3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794405636; x=1825941636;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SXLSfDbyDW2uzDv/HB5mXeXl4gpER1RjNAJIXqDsRpk=;
-  b=gIpA4rC3Rf6aR4F4qaVQYqeQ8feA/vDBEJNKd2++amrZ3Il77VDbpo90
-   G/Skn9IGjHXdZMfB/YD7ZDQULnY+1JyPwqMsZx9QrGTtiYpz/h9a2kSKs
-   GG/aN1pOngZO+tXJHfHvVWuevhu0t0v/jKZ7hb1fNDWN/dgJu3p/kGA+7
-   MZMAiouSF1FKx4EH7ece0YkFkYQIa9f2nAVGOgg49+h7QLHimLgUjE+fx
-   julkqRlkrbpiPtHwM+QmVMRO2siNbLSM90yXD8iqEBg6UXIsXyBlAMwas
-   tXQ0YsCPsRaUPYMbQ1BcAID/FCiZZXU0pAWEyxKSkDrM4U2Z+g02L3wt0
-   g==;
-X-CSE-ConnectionGUID: U2e/EwO/QtSyVRlsq2/czg==
-X-CSE-MsgGUID: 0JbYvjvxSW6coAIrugs0YA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11963"; a="3181828"
-X-IronPort-AV: E=Sophos;i="6.27,207,1787036400"; 
-   d="scan'208";a="3181828"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 06:00:35 -0800
-X-CSE-ConnectionGUID: InUtgy/gThuyckrHKRxeNw==
-X-CSE-MsgGUID: Tju7GcQISOOoUapakpNX9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,207,1787036400"; 
-   d="scan'208";a="8288927"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.192])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 06:00:29 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Nov 2026 16:00:25 +0200 (EET)
-To: Mingyou Chen <qby140326@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, 
-    Ilya Gladyshev <ilya.gladyshev@linux.dev>, KentoNion <kento@kekto.ru>, 
-    platform-driver-x86@vger.kernel.org, ted eric <ericted8810@gmail.com>, 
-    Armin Wolf <W_Armin@gmx.de>, LKML <linux-kernel@vger.kernel.org>, 
-    Chris Taraszka <chris@miget.com>, 
-    Matias Civadda <matias.civadda2342001@gmail.com>, 
-    =?ISO-2022-JP?Q?=1B$B9b=1B=28J_=1B$B=3DSJ8=1B=28J?= <btx342@gmail.com>, 
-    powerfullz <wleizc7319@gmail.com>, 
-    =?GB2312?B?y+8g0/7D+g==?= <wolf109909@outlook.com>, 
-    =?ISO-8859-15?Q?Milo=A8_Vlku?= <vlku.milos.fun@gmail.com>, 
-    Rsplwe <i@rsplwe.com>, Bozhen Peng <bozhenpeng93@gmail.com>, 
-    Anton Karasev <uselessfire@gmail.com>, Jame Jao <jaojame6@gmail.com>, 
-    Serhiy Shliapuhin <shlyapugin@gmail.com>, okluar <okluar@gmail.com>
-Subject: Re: [PATCH v15 0/6] Merge redmi-wmi into bitland-mifs-wmi
-In-Reply-To: <2153e57f-c28d-4f33-b497-ea7cb60fd9f4@gmail.com>
-Message-ID: <edf6786f-093d-8bd1-3acf-f0d0cfab1409@linux.intel.com>
-References: <20261028112742.674847-1-qby140326@gmail.com> <c502f0d3-9ae1-51e2-4410-9f3d532a5d49@linux.intel.com> <5baeb1e2-7cc5-43dd-9408-e5f0365a08b1@gmail.com> <12efd5a9-8da0-6294-4514-7e26e15737da@linux.intel.com>
- <2153e57f-c28d-4f33-b497-ea7cb60fd9f4@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=I4WFNAqw
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-cc147d86bebso1826068a12.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Nov 2026 06:12:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794406375; x=1795011175; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=RyaNr0cCFD9SOnyOAkomip6CQoV5it2GgjFP5fUVLZc=;
+        b=I4WFNAqwqxvempASyT1z5T5B0ADkS9xre7QOdQZk3GdZ6ziNDcILW2I+2oAUcOQC42
+         fUqhbc1kg/i/ozB/syT3mj8dMDUAQeIwXw2BmDBQhhsrCfKNOFD5qGns2o425Y4tf+P/
+         76qBL1XJ5Oi4iCIG8F7tDRTkcEqVnuwEcmwT98kCwV/kJsWDvIA8E15FMNJuM4iuuRNI
+         p1iNCvUArJj9drgyee1kfju9vAPbJBeb3EhknHz/ErPwNjq21CnD6N8ALvilIQPqJARv
+         4xw9JrkarAe/dP4f9szVM1u4fk41Rpz6AKhl+KbJ19Wf2DHS7XiN7PqoWF5Eqi/l4tkx
+         V8TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794406375; x=1795011175;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=RyaNr0cCFD9SOnyOAkomip6CQoV5it2GgjFP5fUVLZc=;
+        b=pYlSFihC+oolRO5ojG8OFhA0/ijyjPnzXbSrVU1GsJAVjcO1hFsfHnUrM3e66IhuYL
+         sU+qK8AWQ8bOwUwKyApGzMiVfeO9kwGEWTg7ufVk38ZtQeDMv8xQgXJgHLxvrxMfcaGA
+         FS7rv9WUjN0A11SW7iVp2ovwV4IGxpDsMYTlrGfD/nCE1YfoPlhMZOVEFc3F1uOuQyAU
+         FgS4O5AdB4ZbSY1DIfZi+j2768xXqHQZ0rQhgZWa70WMlXp4/iOECzYJO5CykpTP9Sv+
+         ZEfkDl2t55NfG6j4bSIVbbRbZ/w4QRF3ya/7Ra+yfSYsNOVaYlZhPYEkxDOjzRjxmRWq
+         27Fg==
+X-Forwarded-Encrypted: i=1; AL+hErFXGdJKdSinG0z8BD2Zo4qOzRLsfvL+n+OEVISveHSJZbPfTISX/KMwkueQguHEvLvfVCkX6+u/y+cnIelX7O1DJjAt@vger.kernel.org
+X-Gm-Message-State: APuU4Z9d4F4cAKECwCxpWDyN7YdXDxoan2KI34Wa57cEe+Z6bJ4XNty1
+	3ItkDvmQas5cZLCkv0Ta60+VH8UNI8uGmRMmTcRiy6DVK1nXXdVibb15
+X-Gm-Gg: AYBFou3i1qYdZTE2Z5LKT2oegT3Mr5J64o3belHfu6kdogQKElkVC3jzmOG0RgoyNC3
+	yVwaSdmjSKUfILC94FkMIRglDXa2FnJyDlPBbrW9MyRgAiDxyKmJnFVnOetH4w0dhmSd/LlRqAR
+	4A598RkXpQFpFZ49vE4gBS/Nzl3P7wHwn32zMoCqDWFEKnxnXBZtJyaouuvUZuPf6FaDV4CdvfS
+	otk7/FW2A/dKaCHY/OyLYh1Ud/kYMc+JTWHFIBmiNyZK1yugLW1Ngxic5CPrSGKBrJ9t3LTbwgT
+	VzffVxy5h8kuY4Qcr/XNAPJ2sXZsvuWBGngya9hAyxFPc6uD0kyfXUmBpd4ib/x5EiHiy37El07
+	DGo5gW8i2SsTSUU5ng/lbyUTT/Z17qqeC0c5H8bKXMEkWxd44LfuZw5KEuX3NfDoB6ZBXVasdgL
+	svlAcfl/OHyt4afnaVnky2i65Zf0L+1Q4i53NehbThh5G6og1HHfr7XjIFrtPCZqAFXHrUd16Ul
+	/lTWDk9fsyBIHWt85flV17qVx4GsbOs4gRS52ukbQ6AIFP/BwvRohr01n+N2B8QB8rqZoHaiWmB
+	yjNH
+X-Received: by 2002:a17:90b:55cd:b0:3ab:d26b:c2df with SMTP id 98e67ed59e1d1-3b182f2d866mr1703829a91.27.1794406374864;
+        Wed, 11 Nov 2026 06:12:54 -0800 (PST)
+Received: from qby-laptop ([2a13:edc0:18:16f::a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17db319bdsm4789970a91.6.2026.11.11.06.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Nov 2026 06:12:53 -0800 (PST)
+From: Mingyou Chen <qby140326@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilya Gladyshev <ilya.gladyshev@linux.dev>
+Cc: KentoNion <kento@kekto.ru>,
+	platform-driver-x86@vger.kernel.org,
+	ted eric <ericted8810@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	linux-kernel@vger.kernel.org,
+	Chris Taraszka <chris@miget.com>,
+	Matias Civadda <matias.civadda2342001@gmail.com>,
+	=?UTF-8?q?=E9=AB=98=20=E4=BF=8A=E6=96=87?= <btx342@gmail.com>,
+	powerfullz <wleizc7319@gmail.com>,
+	=?UTF-8?q?=E5=AD=99=20=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
+	=?UTF-8?q?Milo=C5=A1=20Vlku?= <vlku.milos.fun@gmail.com>,
+	Rsplwe <i@rsplwe.com>,
+	Bozhen Peng <bozhenpeng93@gmail.com>,
+	Anton Karasev <uselessfire@gmail.com>,
+	Jame Jao <jaojame6@gmail.com>,
+	Serhiy Shliapuhin <shlyapugin@gmail.com>,
+	okluar <okluar@gmail.com>,
+	Mingyou Chen <qby140326@gmail.com>
+Subject: [PATCH v16 0/6] Merge redmi-wmi into bitland-mifs-wmi
+Date: Wed, 11 Nov 2026 22:12:20 +0800
+Message-ID: <20261111141226.9482-1-qby140326@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -90,329 +112,119 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-852869589-1794405625=:1170"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This patch series consolidates the standalone 'redmi-wmi' driver into the
+'bitland-mifs-wmi' driver to eliminate code duplication and centralize
+the maintenance of overlapping ACPI WMI event streams.
 
---8323328-852869589-1794405625=:1170
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Bitland is the ODM manufacturer for various Xiaomi Redmibook models. Both
+platforms share the exact same keyboard event stream WMI GUID
+(46C93E13-EE9B-4262-8488-563BCA757FEF). While redmi-wmi previously parsed
+the 4-byte payload as a bulk u32 scancode, bitland-mifs-wmi deconstructed
+it into discrete type/id/value fields.
 
-On Wed, 11 Nov 2026, Mingyou Chen wrote:
+Redmi operations were not contained in this patch series, future reverse
+engineering is required.
 
->=20
-> On 11/11/26 21:35, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 11 Nov 2026, Mingyou Chen wrote:
-> >=20
-> > > On 11/9/26 21:09, Ilpo J=C3=A4rvinen wrote:
-> > > > On Wed, 28 Oct 2026, Mingyou Chen wrote:
-> > > >=20
-> > > > > > And I've got a question, from sashiko's comment in my v12
-> > > > > >=20
-> > > > > > https://sashiko.dev/#/patchset/20261012133648.132363-1-qby14032=
-6%40gmail.com
-> > > > > >=20
-> > > > > > > Will this result in the loss of KEY_PERFORMANCE events on
-> > > > > > > event-only
-> > > > > > > legacy
-> > > > > > > devices?
-> > > > > > > Looking at bitland_mifs_wmi_probe() in
-> > > > > > > drivers/platform/x86/bitland-mifs-wmi.c,
-> > > > > > > if dev_type =3D=3D BITLAND_WMI_EVENT, it returns early after
-> > > > > > > registering
-> > > > > > > the input
-> > > > > > > device:
-> > > > > > > =09if (dev_type =3D=3D BITLAND_WMI_EVENT) {
-> > > > > > > =09=09/* Register input device for hotkeys */
-> > > > > > > =09=09drv_data->input_dev =3D
-> > > > > > > devm_input_allocate_device(&wdev->dev);
-> > > > > > > =09=09...
-> > > > > > > =09=09return input_register_device(drv_data->input_dev);
-> > > > > > > =09}
-> > > > > > > When the performance key is pressed, bitland_mifs_wmi_notify(=
-)
-> > > > > > > intercepts it,
-> > > > > > > invokes the bitland_notifier_list, and returns without report=
-ing
-> > > > > > > an
-> > > > > > > input event:
-> > > > > > > =09case WMI_EVENT_PERFORMANCE_PLAN:
-> > > > > > > =09case WMI_EVENT_PERFORMANCE_PLAN_ALT:
-> > > > > > > =09=09blocking_notifier_call_chain(&bitland_notifier_list,
-> > > > > > > =09=09=09=09=09     BITLAND_NOTIFY_PLATFORM_PROFILE,
-> > > > > > > =09=09=09=09=09     NULL);
-> > > > > > > =09=09return;
-> > > > > > > Because the platform profile and notifier were not registered
-> > > > > > > during
-> > > > > > > probe
-> > > > > > > for event-only devices, does this mean the events are silentl=
-y
-> > > > > > > dropped
-> > > > > > > instead
-> > > > > > > of emitting KEY_PERFORMANCE like the old driver did?
-> > > > > > I ackknowledged that KEY_PERFORMANCE (WMI_EVENT_PERFORMANCE_PLA=
-N_ALT
-> > > > > > in
-> > > > > > bitland-mifs-wmi) looks like an event in this LKML thread
-> > > > > >=20
-> > > > > > > Since the event reports a change that has already happened,
-> > > > > > > platform_profile_notify() is the natural way to pass it on, a=
-s
-> > > > > > > suggested in my v6 reply: power-profiles-daemon then re-reads=
- the
-> > > > > > > profile, which is harmless after the driver's own writes too.=
- If
-> > > > > > > KEY_PERFORMANCE should stay for on-screen displays (Ibragim a=
-sked
-> > > > > > > to
-> > > > > > > keep these events observable), it may be worth not reporting =
-it
-> > > > > > > for
-> > > > > > > the
-> > > > > > > event that echoes the driver's own write, or at least saying =
-in a
-> > > > > > > comment that it reports a mode change that already happened. =
-On
-> > > > > > > Ibragim's TM2209 the profile SET is reported not to work [3],=
- so
-> > > > > > > there
-> > > > > > > 0x16 can only come from Fn+K and the echo does not exist; Ibr=
-agim,
-> > > > > > > can
-> > > > > > > you confirm?
-> > > > > > https://lore.kernel.org/all/20261008152647.1510152-1-uselessfir=
-e@gmail.com/
-> > > > > >=20
-> > > > > > So should I follow sashiko's advice?
-> > > > Do you find Hans' earlier feedback on this not actionable? Or did y=
-ou
-> > > > miss
-> > > > it.
-> > You did not reply to this question (which is my only remaining concern
-> > with this series)!?
-> >=20
-> >=20
-> > > > Copying long walls of text from sashiko's findings for an older ver=
-sion
-> > > > to
-> > > > the cover letter might not be the best approach in general. Usually=
-, we
-> > > > want to get the issues addressed before sending the next version so=
- that
-> > > > discussion should have occurred in the thread for the previous vers=
-ion.
-> > > >=20
-> > > > > > And some remaining comments from sashiko's review of my v13:
-> > > > > >=20
-> > > > > > > > -=09/* Keyboard backlight: Off / Auto / Low / High (new sta=
-te in
-> > > > > > > > byte 2) */
-> > > > > > > > -=09{KE_KEY, 0x00000501,=09{KEY_KBDILLUMTOGGLE}},
-> > > > > > > > -=09{KE_KEY, 0x00800501,=09{KEY_KBDILLUMTOGGLE}},
-> > > > > > > > -=09{KE_KEY, 0x00050501,=09{KEY_KBDILLUMTOGGLE}},
-> > > > > > > > -=09{KE_KEY, 0x000a0501,=09{KEY_KBDILLUMTOGGLE}},
-> > > > > > > > -
-> > > > > > > > -=09/* Xiaomi G Command Center */
-> > > > > > > > -=09{KE_KEY, 0x00010a01,=09{KEY_VENDOR}},
-> > > > > > > > -
-> > > > > > > > -=09/* OEM preset power mode: 1=3DBalanced 2=3DSilent 3=3DT=
-urbo 4=3DFull
-> > > > > > > > speed */
-> > > > > > > > -=09{KE_KEY, 0x00011601,=09{KEY_PERFORMANCE}},
-> > > > > > > > -=09{KE_KEY, 0x00021601,=09{KEY_PERFORMANCE}},
-> > > > > > > > -=09{KE_KEY, 0x00031601,=09{KEY_PERFORMANCE}},
-> > > > > > > > -=09{KE_KEY, 0x00041601,=09{KEY_PERFORMANCE}},
-> > > > > > > In drivers/platform/x86/redmi-wmi.c, redmi_wmi_notify() repor=
-ted
-> > > > > > > these
-> > > > > > > keyboard backlight events (event_id 0x05) as KEY_KBDILLUMTOGG=
-LE
-> > > > > > > and
-> > > > > > > OEM preset
-> > > > > > > power mode events (event_id 0x16) as KEY_PERFORMANCE through
-> > > > > > > sparse_keymap_report_entry().
-> > > > > > > In drivers/platform/x86/bitland-mifs-wmi.c,
-> > > > > > > bitland_mifs_wmi_keymap
-> > > > > > > defines
-> > > > > > > the four WMI_EVENT_KBD_BRIGHTNESS entries for KEY_KBDILLUMTOG=
-GLE:
-> > > > > > > =09{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0),
-> > > > > > > {KEY_KBDILLUMTOGGLE} },
-> > > > > > > =09{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0=
-),
-> > > > > > > {KEY_KBDILLUMTOGGLE} },
-> > > > > > > =09{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 5, 0),
-> > > > > > > {KEY_KBDILLUMTOGGLE} },
-> > > > > > > =09{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x0a, 0=
-),
-> > > > > > > {KEY_KBDILLUMTOGGLE} },
-> > > > > > > However, bitland_mifs_wmi_notify() returns early for both
-> > > > > > > WMI_EVENT_KBD_BRIGHTNESS and WMI_EVENT_PERFORMANCE_PLAN_ALT b=
-efore
-> > > > > > > reaching
-> > > > > > > bitland_mifs_wmi_report_key():
-> > > > > > > =09switch (event->event_id) {
-> > > > > > > =09case WMI_EVENT_KBD_BRIGHTNESS:
-> > > > > > > =09=09brightness =3D event->value_low;
-> > > > > > > =09=09blocking_notifier_call_chain(&bitland_notifier_list,
-> > > > > > > =09=09=09=09=09     BITLAND_NOTIFY_KBD_BRIGHTNESS,
-> > > > > > > =09=09=09=09=09     &brightness);
-> > > > > > > =09=09return;
-> > > > > > > =09case WMI_EVENT_PERFORMANCE_PLAN:
-> > > > > > > =09case WMI_EVENT_PERFORMANCE_PLAN_ALT:
-> > > > > > > =09=09blocking_notifier_call_chain(&bitland_notifier_list,
-> > > > > > > =09=09=09=09=09     BITLAND_NOTIFY_PLATFORM_PROFILE,
-> > > > > > > =09=09=09=09=09     NULL);
-> > > > > > > =09=09return;
-> > > > > > > =09...
-> > > > > > > =09}
-> > > > > > > =09payload =3D get_unaligned_le32(buffer->data);
-> > > > > > > =09bitland_mifs_wmi_report_key(wdev, payload);
-> > > > > > > Does this early return leave the WMI_EVENT_KBD_BRIGHTNESS ent=
-ries
-> > > > > > > in
-> > > > > > > bitland_mifs_wmi_keymap unreachable and cause a regression on
-> > > > > > > Redmibook
-> > > > > > > laptops (especially models that only expose BITLAND_EVENT_GUI=
-D
-> > > > > > > without
-> > > > > > > the
-> > > > > > > BITLAND_MIFS_GUID control device) when pressing the keyboard
-> > > > > > > backlight
-> > > > > > > or
-> > > > > > > power mode hotkeys?
-> > > > > > > [ ... ]
-> > > > > > Don't actually agree with sashiko, if we report the key to the
-> > > > > > userspace, when WMs handle the KEY_KBDILLUMTOGGLE key, the keyb=
-oard
-> > > > > > light will be triggered twice if the firmware already respond t=
-o the
-> > > > > > event,
-> > > > > > which is not expected.
-> > > > > >=20
-> > > > > > So the question is, does the firmware respond the KBD_BRIGHTNES=
-S
-> > > > > > event?
-> > > > > > And should we report this key to userspace?
-> > > > > >From Chris' comment:
-> > > > >=20
-> > > > > > - Fn+Space (keyboard backlight) sends no WMI event at all, neit=
-her
-> > > > > > 0x05
-> > > > > >     nor anything else, and does not change the backlight under
-> > > > > > Linux. So
-> > > > > >     this model cannot tell whether the firmware handles
-> > > > > > KBD_BRIGHTNESS.
-> > > > > >=20
-> > > > > > - Fn+K sends event 0x28 with value_low 0x01 on every press (01 =
-28 01
-> > > > > > 00),
-> > > > > >     not 0x16. The firmware does not change the mode by itself: =
-the
-> > > > > >     SystemPerMode value (EC 0x68) stays the same across the pre=
-sses.
-> > > > > > If
-> > > > > >     0x28 is the performance mode key on this model, it is a req=
-uest
-> > > > > > rather
-> > > > > >     than a notification, so platform_profile_cycle() would fit.=
- 0x28
-> > > > > > is
-> > > > > >     currently logged as "Unknown WMI event".
-> > > > > >=20
-> > > > > > - On Windows on the same machine, with Xiaomi PC Manager not ru=
-nning
-> > > > > >     (it fails to start on this install), neither Fn+K nor Fn+Sp=
-ace
-> > > > > > does
-> > > > > >     anything either. So Fn+K looks like a request that Xiaomi's
-> > > > > > software
-> > > > > >     normally acts on, not a mode change made by the firmware.
-> > > > > I think different models have different behaviors on this.
-> > > > > Should we add a quirk item?
-> > > > For different behaviors, it may well be possible we need a quirk.
-> > > This is included in Chris' patch series.
-> > >=20
-> > > https://lore.kernel.org/r/20261106114300.936782-5-chris@miget.com
-> > I know, so it shouldn't be a concern in the context of _this series_.
-> >=20
-> > We'll be applying Chris' series after this one (and relatively soon aft=
-er
-> > it too, I think).
-> >=20
-> > > > But it would be nice to get this refactoring out of the way relativ=
-ely
-> > > > soon as it has been blocking lots of other bitland patches and I'm =
-a bit
-> > > > worried the scope of this work is expanding beyond what an initial
-> > > > refactor change would need.
-> > > >=20
-> > > > If Chris' device lacks support without his series, this refactoring
-> > > > shouldn't have to care about that yet as long as it doesn't
-> > > > intentionally
-> > > > make decisions we need to change right away. New quirks on top of t=
-his
-> > > > refactoring to support a previously unsupported model is not a prob=
-lem
-> > > > but
-> > > > too limiting thermal profile mapping would have been problematic as=
- we'd
-> > > > have immediately had to rework the mapper.
-> > > I think it's enough for the known cases except this [1].
-> > >=20
-> > > [1]
-> > > https://lore.kernel.org/all/CAFbNUuLmaoq22pQPzrUidJ+RC2xf2u5Ovxzy5d0L=
-QZ7owH52OA@mail.gmail.com/
-> > >=20
-> > > I'm confused with this bug report, everything looks correctly.
-> > My point is, that we should focus on getting this refactor series appli=
-ed
-> > first.
-> >=20
-> > This again, while nice you're trying to help the report, looks future w=
-ork
-> > from the perspective of this refactor series as you again had to add
-> > another profile table. That is, it is not supported until more work is
-> > done, which will only happen after this series in terms of applied
-> > commits.
-> >=20
-> > Also, we don't need to make the rework series perfect, it will take
-> > forever that way. We might still need to refactor something but I think
-> > the major problem with the profiles is already dealt with and we're goo=
-d
-> > to go in that front.
-> >=20
-> > So the only remaining concern I have is the one I reflagged above. Plea=
-se
-> > share your thoughts on that.
->=20
-> Hi,
->=20
-> Sorry for missing your question (I only looked at the bottom, sorry about
-> that), here's my opinion:
->=20
-> There are two behaviors on Fn+K as far as I know:
->=20
-> - Hardware report 0x28 and leave the profile unchanged (this is covered i=
-n
-> Chris' series)
->=20
-> - Hardware change the profile and report 0x16 [1], the driver should refr=
-esh
-> the platform profile state, and don't report key scancode to userspace, I=
-'ve
-> already done this in my series (in the WMI_EVENT_PERFORMANCE_PLAN_ALT cas=
-e).
+This series introduce a newly reported mic-mute hotkey definition
+for Redmibooks, dropped the previous redmi-wmi driver and intrudoced
+the quirks table for the bitland-mifs-wmi driver.
 
-Okay. Sadly, v15 fails to apply in too many places cleanly on top of=20
-review-ilpo-next so I don't have confidence in my ability to reproduce the=
-=20
-same result as what you sent.
+I don't have a Redmi or other Bitland device. So I cannot work on the
+real device.
 
-Please respin v16.
+Features are working properly on my device (Lecoo Bellator N176).
 
---=20
- i.
+I leave the future reverse engineering work to the community.
 
---8323328-852869589-1794405625=:1170--
+Tests are welcome.
+
+And by the way, the no_set member in bitland_profile_entry means a
+platform profile is only report by the firmware but not available for
+set.
+
+v16:
+Rebased onto review-ilpo-next branch
+
+v15:
+Fix the build issue reported by kernel-test-bot
+https://lore.kernel.org/oe-kbuild-all/202610270608.l51GVbZ8-lkp@intel.com/
+
+v14:
+Drop the accept_zero_function quirk based on Chris' comment
+https://lore.kernel.org/lkml/CAAcRvKPSk5FYzZGkw12cPVGkxWVGFACwRvupBDDNae7B_JwF0A@mail.gmail.com/
+
+v13:
+Fix the zero function value problem find on my device
+Fix the memcpy size issue
+Remove WMI_EVENT_PERFORMANCE_PLAN_ALT in the keymap
+Select BITLAND_MIFS_WMI and deprecate REDMI_WMI instead remove the
+config entry
+
+v12:
+Fix the issues mentioned in https://lore.kernel.org/all/20261008152647.1510152-1-uselessfire@gmail.com/ .
+Copy payload_data to output->data at bitland_mifs_wmi_call, not
+overwrite the entire struct.
+Correct the key name (Mic Mute) in the commit message of
+"platform/x86: bitland-mifs-wmi: Add Redmi mic-mute key entries"
+and my device doesn't have a FN-ESC key, so I renamed the enum variant to
+WMI_EVENT_MIC_MUTE.
+
+v11:
+Add missing return_code_at_end and accept_zero_function logic
+Fallback to balanced platform profile if resume to performance failed
+
+v10:
+Replace the previous "profile table" with dmi quirk table
+
+v9:
+Add the missing feature introduced in the commit
+e0d6312578e1 ("platform/x86: redmi-wmi: report EC state change events").
+
+v8:
+Correct Ilya Gladyshev's email address in the MAINTAINERS entry
+
+v7:
+Swap low bit and high bit for WMI_EVENT_KBD_BRIGHTNESS
+in bitland_mifs_wmi_keymap
+0x00800501 -> BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0),
+
+Report KEY_FN_ESC when WMI_EVENT_FNLOCK_STATE events received
+Rename the reserved names
+Use Xmas tree order in bitland_mifs_wmi_notify
+Collect the Tested-by and Reviewed-by tags
+
+v6:
+Drop the wrong Redmi ops
+
+v5:
+Correct Xiaomi DMI vendor name
+
+v4:
+Map PLATFORM_PROFILE_PERFORMANCE to wmi performance mode if the device
+doesn't support full-speed mode.
+
+Mingyou Chen (6):
+  MAINTAINERS: Add maintainer entry of bitland-mifs-wmi driver
+  platform/x86: bitland-mifs-wmi: Merge the function of redmi-wmi into
+    the bitland driver
+  platform/x86: bitland-mifs-wmi: Add Redmi mic-mute key entries
+  platform/x86: redmi-wmi: Drop redmi-wmi driver
+  platform/x86: bitland-mifs-wmi: Add quirks table
+  platform/x86: bitland-mifs-wmi: Fallback to balanced platform profile
+    if last performance profile is not available
+
+ MAINTAINERS                             |   7 +-
+ drivers/platform/x86/Kconfig            |  13 +-
+ drivers/platform/x86/Makefile           |   1 -
+ drivers/platform/x86/bitland-mifs-wmi.c | 353 +++++++++++++++++-------
+ drivers/platform/x86/redmi-wmi.c        | 154 -----------
+ 5 files changed, 256 insertions(+), 272 deletions(-)
+ delete mode 100644 drivers/platform/x86/redmi-wmi.c
+
+
+base-commit: 5680519168f65666d2c03cc6ed8fe2b7052aee12
+-- 
+2.56.0
+
