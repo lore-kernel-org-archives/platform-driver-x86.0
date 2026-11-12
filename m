@@ -1,77 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.201.19.191
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794516847;
-	b=RI/y2pv4pIXZPv0EwzMvtM6jnhZaNAN7iWPahA904yxAHr7auc+Bot/AEMoDhd+jaKHH
-	 fGeZiNJIBL9Jf65MgtTVdbRn6HIrqC1D9qXeCIrFDCkh6Ihw8LiZFV6BzBnHRo2Bx8Oor
-	 dUU1tYMOVreDyGbgSQKfG+4vmiyZKjnS9YFR8ygYeY7sJ1LttXdM6GwIhYwFbE8mSadDN
-	 j0eK4+EiXKyX/JeOUgXQs+o64VAwKE0KHeR5ByUb8MNbjFc/8QcUXeTpcUgKK7b9i6kXp
-	 VX/j8jr8ysyLQsCL0CrGjWzOt+FKyXYDhEzKyuFndu0hYQO/VfbsLow4ILzgJOrrGEg==
+	t=1794517282;
+	b=DWRAMgftQrSDkTCysFU/IP55YdJdAeOeQwaf9wFqZxr0rvMBpwtN8YYU9pLW6Qzuz6wF
+	 GXLvOOUG8ghPJ63+C2EPDrJi0UfGiS/BlI+MHNmKYAWSIXiqEBisqNqCBKASH67mwviXt
+	 HvThaYoyTuacDmOAuuugN/Eij2UsGk+ouuosCb9E7bUNOMRFvuWAXGDqqaly6/8x9/nD9
+	 ZZxAfHqoLmtbMk1PKtw+NEqR7eaLme+NARvYyffFeEOfsRMrQSqse3hwOJHDG84WUsKoY
+	 vYGurzLiyCrUwmmTIV+PJ+y5ise9qD1KrFykYpM5dV0ywqHltP06uVNbJoFdkHoNL9w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794516847;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=3mWl5DSuTvnWy0h2ls1NCfIua9/rwmVVE5LGpPkf7D0=;
-	b=NvGpK/gSjr9EiCyDyAbvYC1GK3U2fVuyZZ8ZsA/P2ydG05Tipm2mURDsXoNeHmKvTi6Y
-	 a77RPyS8160EyItIa5vsnbOePTQ9aniaZkplYzLagQ3oOLn9SXLpkxpAI04L5dj2yquvr
-	 6p10ZV7a++TUgJxIB70HOB22QlQ0fU6S2xRuzgmBdwkuIu7UlDmfp/kJZxtuHZDxE4f2J
-	 ezmuWRDM4BU3glcg7WHweVAROo2w++AIk4fLc8N3uOcFI4kGT/yCrxgFFg+zsJrrRCfBQ
-	 NHbh6GmZfkL4FHYA4yQJJrn3KTuo4cmfhYOR9zzlM5UlliWkS/S8CBHRRbPXIcXyVrA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794517282;
+	h=DMARC-Filter:Received:Received:Received-SPF:Message-ID:Subject:From:
+	 To:Cc:Date:Disposition-Notification-To:Content-Type:
+	 Content-Transfer-Encoding:User-Agent:MIME-Version:X-PPP-Message-ID:
+	 X-PPP-Vhost:X-Originating-IP:X-N-ableSpamExperts-Domain:
+	 X-N-ableSpamExperts-Username:X-N-ableSpamExperts-Outgoing-Class:
+	 X-N-ableSpamExperts-Outgoing-Evidence:X-Recommended-Action:
+	 X-Filter-ID:X-Report-Abuse-To:X-Complaints-To;
+	bh=9immSZOD87dCypLWchrdrPTqBUoshVr20N6AqKGy0t0=;
+	b=DVv6VD3cQbRCLueuMXFoA3nEwN3fISd36f/mDk4vjA9ET0uu+BxFIvJHvOZRnxrYF3fP
+	 EdTgba0eyFXTJ8kilYjsEwPWRL48yn1zo7SxO1fUppbUvyzAJs/N2zY/OPJWrfSUY0ieg
+	 hLzaocc1dAGMeMQ80paf7KgiGvRLyIZUfxS9D4aimeD+tOhUT9Uf2w8/J2Y6MCHKhfNWN
+	 KAx+9IJbwXR1MM3ErsjbO/s9USleJBXFiHoXCC3ju8LIa+pc8ZVyNEWmOCC57S4dARfUj
+	 MhZYlXRNO8jA1s/26m5nvZ2K1rbljR2Fr56L3RSUYiSbRstTd6eDbQbdejM50/LSEvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="Zt/K322W";
-	arc=none smtp.remote-ip=198.175.65.16
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=feldmeth.de;
+	spf=pass smtp.mailfrom=feldmeth.de;
+	arc=none smtp.remote-ip=185.201.19.191
+Received: from out15-191.antispamcloud.com (out15-191.antispamcloud.com [185.201.19.191])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEAC606A31C;
-	Thu, 12 Nov 2026 20:54:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AEEAC606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Zt/K322W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794516847; x=1826052847;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xHK6ula+VTAFn4Hmpzn0u/uLw0J2RO7ovDl+ruyXvbc=;
-  b=Zt/K322W6ntvUV7FrDVHw56eQpDNVBJzIPXOO0TUPpyJCj+BsyGkaYqW
-   I1XSyj4sPmTVP2qGItmgwC8M/27V7SKgWVVu5VA/BL1zOVt4HYYulW5u0
-   95vCVIE1yMZC0U8TSX5dIiGYpguCd7MKRKkoX0SPDMjEuhCC0sS9nMrJ/
-   KZ95UK5Ti4TZfxcdikCbv3ehB51ls/4Q771XYHMxjJpnyLiiwUdxaQmU4
-   5vefObPI6M5DZzBlFpdpFcCVU1QW+MACXomU1rm3tRHaUbxZI9ha8VKh2
-   +GfMv20zpR0roxJItrxFiwebvpZL7GOZnry7xAte5GZHjRJno/t2x9okF
-   g==;
-X-CSE-ConnectionGUID: +CDI5VfiRI6OtCOVXsiwUQ==
-X-CSE-MsgGUID: 8an0XzgwSQqgKkjjEuLWTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11964"; a="3306032"
-X-IronPort-AV: E=Sophos;i="6.27,210,1787036400"; 
-   d="scan'208";a="3306032"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 12:54:07 -0800
-X-CSE-ConnectionGUID: 9xo6y2YmT2uKDRz/TmRliQ==
-X-CSE-MsgGUID: Cj/NGy0+Sk+59SZpw77cYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,210,1787036400"; 
-   d="scan'208";a="9309090"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.68])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 12:54:03 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 12 Nov 2026 22:53:59 +0200 (EET)
-To: Yun Wang <7z0423arsenova@proton.me>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Mingyou Chen <qby140326@gmail.com>, 
-    Ilya Gladyshev <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>, 
-    Chris Taraszka <chris@miget.com>, Yu Pan <neko205@aosc.io>
-Subject: Re: [PATCH v2] platform/x86: bitland-mifs-wmi: Add Redmi G 2022
- (TM2135) quirk
-In-Reply-To: <20261112195915.875137-1-7z0423arsenova@proton.me>
-Message-ID: <4ab5da2a-6e4a-4574-9236-2a5ec43a13da@linux.intel.com>
-References: <20261112195915.875137-1-7z0423arsenova@proton.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1105606A321
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 21:01:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B1105606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=feldmeth.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=feldmeth.de
+Received: from www131.webspace.hosting ([195.242.102.131])
+	by mx294.antispamcloud.com with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <tobias@feldmeth.de>)
+	id 1xRbuq-00Dscu-0e; Thu, 12 Nov 2026 22:01:06 +0100
+Received: from tobias-XPS.fritz.box (p5dd137f6.dip0.t-ipconnect.de [93.209.55.246])
+	by www131.webspace.hosting (Postfix) with ESMTPSA id B46E7866B6;
+	Thu, 12 Nov 2026 22:01:02 +0100 (CET)
+Authentication-Results: www131.webspace.hosting;
+        spf=pass (sender IP is 93.209.55.246) smtp.mailfrom=tobias@feldmeth.de smtp.helo=tobias-XPS.fritz.box
+Received-SPF: pass (www131.webspace.hosting: connection is authenticated)
+Message-ID: <412372e989bcb3d2376bc4437a9257bfe94ec850.camel@feldmeth.de>
+Subject: dell-smm-hwmon: Dell XPS 13 7390 =?UTF-8?Q?=E2=80=93?= fans never
+ spin up in EC auto mode (CPU reaches 82 =?UTF-8?Q?=C2=B0C?= at 0 RPM)
+From: Tobias <tobias@feldmeth.de>
+To: platform-driver-x86@vger.kernel.org
+Cc: W_Armin@gmx.de, pali@kernel.org
+Date: Thu, 12 Nov 2026 22:01:02 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-9
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,94 +64,74 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-PPP-Message-ID: 
+ <179451726300.1918265.2976691183246060007@www131.webspace.hosting>
+X-PPP-Vhost: feldmeth.de
+X-N-ableSpamExperts-Domain: www131.webspace.hosting
+X-N-ableSpamExperts-Username: 195.242.102.131
+Authentication-Results: antispamcloud.com; auth=pass smtp.auth=195.242.102.131@www131.webspace.hosting
+X-N-ableSpamExperts-Outgoing-Class: ham
+X-N-ableSpamExperts-Outgoing-Evidence: Combined (0.07)
+X-Recommended-Action: accept
+X-Filter-ID: 9kzQTOBWQUFZTohSKvQbgI7ZDo5ubYELi59AwcWUnuXGhrAjtRMA38q4afffC8LhZtdY4an1cgMF
+ sMZL03Hctyu2SmbhJN1U9FKs8X3+Nt2pRmlebSALpIQ19PKbPIpilZbyMm38AjouuRSQIqjxL9cV
+ PSoHm0W/3adFfiYl2numgqmqhGsbtbKyB9oCx22u0xFuTxT4zj7FZjRutUGTvzFyLdg06ZXED6UM
+ nC21PwfXqeq4d9UOAhmwl3wi5kP0SWDshiesHrcEYBdmJouoxVhCb5pPGZiFDLd++yjSyMCRVYKU
+ 9W9tbmVXJBqdHHDmFMezBtsH+Fr5latICLxKTLVn5uVOziAob7UesvhGecnH3nfv/utnYfV8/jAb
+ G6uKQ7uD0x/9Y/MF6exFt7k4K/hhiKkY5DM9o76pUDkoCG1MgBJQ06ZysZrotEbTlMSOLyi+iP6q
+ F/sZfiHdy2sjhcLLzYa/aWu2M+Frs39a2pecgdLW1FiHdhy+9H6d8wNbt8C9mOBdONdnsxgsk1D2
+ p3PDeigk86fj3jQywcHPhURFfRcBF4mo1QiiDttRPor8+VAiE6sDDd3gcu2iId2CZ43hxnsWt7dS
+ hgOsXo3GkC53IT05PNbdeIwvWH1XotnfCAV4AnLnR+CLS7X5DFvk8Ea8fDgSYs8UeSpbn8mj1swg
+ JoEZMUcYxZFeBZEze/nH++DuIQUs/5JJj4C/n4CILjxuIh8qTfO6qZt5CzBwP4tSO6midWr+Zq99
+ 81Psv2yTFn3cSKxlzZLFVMK9GpkuRp/ZEFdgfl/gg4TaPUbxShTMcBD+xgRcQ+e8uudAGzOaK45l
+ +jUTbuIYv2jJlQ/BvPdjzQ6YC7Heg3Xf7O1TOd4CH5ECrSLFh2HCgica+BGSvkainE8H6zlmDx3V
+ YDvijm74zir6iGPriIuaZMcqU+GzJI08tx0Crd0/OBtNxm3KctgzcDoFd+96Xw4QUNtTnVVZLFVw
+ 6Dmnj3QCRGIK6hdCRj4ywSA0O+Ogz6LfGp3ThR9AdpeKaPilpr2EXra32z7oTjUHHkoBY97heHiF
+ slup2WfZg2TjRY4KmuGwUkkLyL5t17QvLNvMpzWnzJcUvCERbInMiTBIUBbQ/Dy6Ip5M3CX+EMng
+ eOWzKGDI8fgeEhyHH+vrgzY0G4w7kRbdyi1XjqQpAPwxr6GC+a8l8Lg=
+X-Report-Abuse-To: spam@quarantine14.antispamcloud.com
+X-Complaints-To: abuse@antispamcloud.com
 
-On Thu, 12 Nov 2026, Yun Wang wrote:
+Hello,
 
-> The Redmi G 2022 (board TM2135, BIOS RMGAD6T0P1313) implements only
-> three modes: 0x02 for quiet, 0x01 for balanced and 0x03 for performance.
-> The default profile table maps balanced to 0x00, but this firmware
-> recognizes it as the performance mode. Because the firmware does not
-> implement the AC adapter type query, setting balanced-performance or
-> performance fails with -ENODATA.
-> 
-> Add a DMI entry with a three-entry profile table for this model and
-> enable skip_ac_type_check. 0x04 is not used for performance: writing it
-> succeeds and the value reads back as 0x04, but in three test runs on
-> 7.2.11 the firmware did not emit WMI event 0x16, which it emits after
-> every other mode change. The Fn+K hotkey also cycles only through the
-> three modes above.
-> 
-> Tested on this machine with this patch and the series it depends on,
-> built as an out-of-tree module and loaded on a 7.2.14 kernel. Writing
-> low-power, balanced, and performance succeeds, the profile reads back
-> correctly, and the firmware emits one 0x16 event for each (values 2, 1,
-> and 3). Writing balanced-performance is rejected, and Fn+K cycles
-> through low-power, balanced, and performance.
-> 
-> Claude Code (claude-opus-5-5) analyzed the ACPI tables, wrote the test
-> scripts, specified the change and corrected this changelog. I wrote the
-> code and the changelog and ran the tests on this machine.
-> 
-> Link: https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYdW-TUgdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50ISIc=@proton.me/
-> Link: https://lore.kernel.org/all/BelDdF5woNEBX6dZ3_zJDEbVkifs1pdxEjtQ1yC-aKyZahijFJCllxm0l_SqZ5Hsj61D8wfJNa7uDSuNKmyyxo2S0tZp9QS5yaafeZUxvxE=@proton.me/
-> Suggested-by: Mingyou Chen <qby140326@gmail.com>
-> Tested-by: Yu Pan <neko205@aosc.io>
-> Signed-off-by: Yun Wang <7z0423arsenova@proton.me>
-> ---
-> Changes in v2:
-> - Rebased onto review-ilpo-next, which now has Mingyou Chen's merge
->   series (v16) and Chris Taraszka's Xiaomi Book Pro 14 series. The
->   TM2135 entries now follow the TM2424 ones; the added lines are the
->   same as in v1.
-> - Added Yu Pan's Tested-by.
-> - Retested with this patch on top of review-ilpo-next, built as an
->   out-of-tree module and loaded on a 7.4-rc2 based kernel: the results
->   are the same as described in the changelog.
-> 
-> v1: https://lore.kernel.org/all/20261106143114.95008-1-7z0423arsenova@proton.me/
-> 
->  drivers/platform/x86/bitland-mifs-wmi.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-> index d834168381..3aac9d17ff 100644
-> --- a/drivers/platform/x86/bitland-mifs-wmi.c
-> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -128,6 +128,18 @@ static const struct bitland_mifs_quirks tm2424_quirks = {
->  	.skip_ac_type_check = true,
->  };
->  
-> +static const struct bitland_profile_entry tm2135_profile_entries[] = {
-> +	{ PLATFORM_PROFILE_LOW_POWER,		0x02 },
-> +	{ PLATFORM_PROFILE_BALANCED,		0x01 },
-> +	{ PLATFORM_PROFILE_PERFORMANCE,		0x03 },
-> +};
-> +
-> +static const struct bitland_mifs_quirks tm2135_quirks = {
-> +	.profile_entries = tm2135_profile_entries,
-> +	.num_profile_entries = ARRAY_SIZE(tm2135_profile_entries),
-> +	.skip_ac_type_check = true,
-> +};
-> +
->  static const struct dmi_system_id bitland_mifs_dmi_table[] = {
->  	{
->  		.matches = {
-> @@ -136,6 +148,13 @@ static const struct dmi_system_id bitland_mifs_dmi_table[] = {
->  		},
->  		.driver_data = (void *)&tm2424_quirks,
->  	},
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TIMI"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2135"),
-> +		},
-> +		.driver_data = (void *)&tm2135_quirks,
-> +	},
+on my Dell XPS 13 7390 (BIOS 1.29.0, 12/17/2024, Ubuntu, kernel 7.0.0-
+43-generic) the embedded controller does not engage automatic fan
+control. In EC auto mode the fans stay at 0 RPM even under full CPU
+load.
 
-Thanks, but I already took v1 resolving the conflict myself. I used the 
-opposite order than you so that the board names are "increasing".
+Observations:
 
--- 
- i.
+The dell_smm hwmon device is present, with fan1/fan2 (fan*_min=3D0,
+fan*_max=3D7300), pwm1, pwm1_enable, pwm2 and temp1..temp7.
+At idle (28=E2=80=9335 =C2=B0C) both fans report 0 RPM. This is expected.
+Test: I stopped my userspace fan controller, wrote pwm1_enable=3D2
+(accepted without error) and loaded all cores with yes > /dev/null. CPU
+package temperature rose from 34 =C2=B0C to 63 =C2=B0C after 5 s, 73 =C2=B0=
+C after 30
+s and 82 =C2=B0C after 65 s, at which point I aborted the test. Both fans
+stayed at 0 RPM the whole time.
+pwm1_enable cannot be read back (Permission denied, even as root), only
+written.
+Platform profile is balanced (choices: cool quiet balanced
+performance). I did not test whether other profiles change the fan
+behaviour.
+thermald is running and has no effect on this.
 
+Workaround: a small userspace daemon polls the CPU package temperature
+every 2 s and writes pwm1_enable=3D1 plus a PWM value to pwm1/pwm2 (off
+below 45 =C2=B0C, 128 from 50 =C2=B0C, 255 from 65 =C2=B0C, with hysteresis=
+). On exit
+it leaves the fans at full speed. With it, the system cools normally.
+
+Questions:
+
+Is this a known firmware issue on the XPS 13 7390, and is there a BIOS
+version that fixes it?
+Is a different SMM call needed on this model to re-enable EC auto
+control, or should the driver do something on probe/resume?
+Which additional data would help? I can provide dmidecode and sensors
+output and test with dell_smm_hwmon module options (debug, force,
+restricted) if needed.
+
+Thanks and best regards,
+Tobias Feldmeth-Walter
