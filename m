@@ -1,59 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.182.113.132
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794501892;
-	b=LFhY3i2gcF1e0K3LfjijBzCMpftPqHe3tPzJHhtSdNdhu6UlNZO+CSr2PK5GEnDaytM5
-	 SQoAl13RleRB0ru2H//4juihUBWtZtawqyQ6dxC+lve3T+zh3AoZ09Iyb3dSvf6o3r+Ea
-	 G45q7/SERtnYaFPIW11TnOXZ5G0NNEBNE7FcHFfNNo419jbX0eqSjxfzRZkLkBK1KpBn/
-	 9yP6QLJWL05ZvRaXghdf9IN2yQQxRo0FxZJuSMXXx4AJXMYT5OfvjY7nulNXw1mc4xbsy
-	 YF3NfMw/+nyEnKAhTIdSV4YSzMQrz7cOTyYPgGGICDixFgaSUojELwI7PxKhuz6npAA==
+	t=1794502492;
+	b=1L7iJ13SeDMKfEqcm0pIdse6NcG4FCnggugMLNNHi110mf7XegWdZLpuxy6S4eukh1cI
+	 UE1Q7P0kbpnMayk9ugWtzwtKuSjcKbsXFSk6nWygt44s7j8bGX02FYCC/iroW9Y4kdodc
+	 sC4+aGhtHI48oyLcOk8ZXI7F76z9uZd82gaY2WCLhqc/mG0k90BLxFwVjTMB6eLuTLZQd
+	 7ygqFd/ZtWBjLHjZO+Kw2ALZeoX94k4NJahnd1roP6NTXiG5MEpYRcVF6IQBILfPUN76h
+	 43xiDKH7rLnNHj0nUtqU4gIe5CT0p6wl2Kn9K428C2AxQ7sC0l2Wg3s+Hn2cSglJpjg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794501892;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Rspamd-Queue-Id:
-	 X-Spamd-Result:X-Rspamd-Action:X-Rspamd-Server;
-	bh=dFbMb8AE6Yw9DziHA4r7D3bkKIOzfPramIwPHQ+C3N4=;
-	b=vFKrVql0UFiZaM04g0pDdOstsnXvIpTz/oEes42mBbPKW3g0YN7/oU0ZxYOzYSf1jDU1
-	 BnivZnhZGeoc76husL5yo4bucxPisGWZHBDTA34N+8wx3d/0COWawdPatxb0qFHbbwe4v
-	 QmWuDXic8cmpRZCAA2AGOEMP0x3WZ/iue9OYcPosFXoIA9VnLO7IsHpzAQ5Txm1jn7S3m
-	 17UcA9G0IWJxhN2V/C65VcNAaHXwnr5cktRCY46wv20fLlWh4nJrCNvvAq/Nx1MEsSVwW
-	 QRVD4DC1ROrHPvI752L9Njuzv3JSfkzWBQb+gDSEQqpZR3qoY6JLRmz6Q0thPzdzfwg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794502492;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=fqqhsv4HNVlwlDwd/MGgk5Abc7qDWDaQ0rMfWr6u7Ms=;
+	b=odQkjUGZCsKaoxBaP//fZrNDA1DWYxNv3lkOhlgjSaKyOpeXFgvOuQvxAokmm7sMpvrB
+	 xp3A6+P0ITtqeK4jf7xpeC5cK8k4S6BIP+dZXfwoIYaYUNUu6SsEf2tGZTTwplGvRTObU
+	 hIpgMebWXXkVgw4s0N6aToXgHWmUHcWwL9kj4g2K1db0m/EwLogmP4zzYtumHxrBunSpu
+	 NDBX97tT5NL1kJ0Eda8PmXBa7DVSXLjYrav+QeOSt1LaII7AtDlzKl94qXt4AwWcjh2UG
+	 RITnH37Xa64uStc4zKgKOhjBSc7Oh0kYH3DahnlZUlPHZnsiRZXoQF10gs9MIFB/vIg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=aosc.io;
-	spf=pass smtp.mailfrom=aosc.io;
-	dkim=pass header.d=aosc.io header.i=@aosc.io header.a=rsa-sha256 header.s=default header.b=mxHObK1L;
-	arc=none smtp.remote-ip=217.182.113.132
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.113.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="xtwj/7nB";
+	arc=none smtp.remote-ip=74.125.82.54
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE2E606A32E;
-	Thu, 12 Nov 2026 16:44:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7AE2E606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129FF606A327
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 16:54:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 129FF606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=aosc.io header.i=@aosc.io header.a=rsa-sha256 header.s=default header.b=mxHObK1L
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 5FE1F3E89F;
-	Thu, 12 Nov 2026 16:44:44 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.38.223.107])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 10762400EE;
-	Thu, 12 Nov 2026 16:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=default;
-	t=1794501878; bh=dFbMb8AE6Yw9DziHA4r7D3bkKIOzfPramIwPHQ+C3N4=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=mxHObK1L/yKmRdMyPGn8PagqYJTC/hVNYOHGYs347oIUZWf5hlZUtx/psXbnAY4rj
-	 LI5RIVyMxGghcOJ/LqVz6kKy/x5btKOt3cGRfzi5vLgkZnMd+AfH1LRQZpv8D/Fkw/
-	 bybDniU4gN5GfVtkO3Sblm8CgQCdd7+BkXgxurow=
-Received: from [192.168.13.5] (pool-108-27-76-52.nycmny.fios.verizon.net [108.27.76.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 3B02FE1E52;
-	Thu, 12 Nov 2026 16:44:31 +0000 (UTC)
-Message-ID: <9a26c741-6217-4155-a3dc-e34b4015f71c@aosc.io>
-Date: Fri, 13 Nov 2026 00:44:27 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xtwj/7nB
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-170135e43c7so3297966c88.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 08:54:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794502491; x=1795107291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fqqhsv4HNVlwlDwd/MGgk5Abc7qDWDaQ0rMfWr6u7Ms=;
+        b=xtwj/7nB6IzT+eKvlx6Vm43h+xfCwnWN/lGVIPTbiPNj38G8BAwDbdPde+nLaRu2ao
+         B6W696dENvc30r8NzhdXvLebPnOkJWNUQsbi2WPOBg5PJJi8aw8CuR/VuvjFyV5gb9GX
+         XvYB7h5OUTHesjQjsuxR56vez1Sab9M4Qq8G39ywpM2APZzlcYCBAZEKHAnWmScxmGXJ
+         0vv2LX95vMnt5/knfwqwW15ACi2bXGWSThqnwAFqsgPnVd5dItvu/4Lm780hsporRRa4
+         A1DxT0UcPRPgujkpTyeBlC3if61c9pOiKItUUMrtz4beGK4ZpJTfQXevC+E6ea8wmTUq
+         g+3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794502491; x=1795107291;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fqqhsv4HNVlwlDwd/MGgk5Abc7qDWDaQ0rMfWr6u7Ms=;
+        b=WPIZH6zu1ifrNTzo7ZCGaKqcLQ5lzLW7vzagWNSK6hNIlieh42Tfyn1sF7yktQXZY2
+         LD0qdJeQe8TBmAFl6mNspoWASYe84sK99THmhLp0f4gDqCRygBOdznZbMw8E4kZjtHSl
+         YgbgTuDKMPxtuvRH2etx4QWGh7Odn9XTt3mBnm52dRWIRC3S6tSXZgUoXtgAsa1sSH8F
+         jZ7hx58V+WvT6iS5AyCR1bdlta75or4fmXh6O+JctAgaLJo+4LXC0TNj3JaR6Xc2AWPC
+         Hp5GGdogqHOQ1Ch1h/yGJwVFs+sHhzQxYQtCcmPh8zHuvXgkQsDjfUccdXhm3RQlJm0l
+         QzGA==
+X-Forwarded-Encrypted: i=1; AL+hErHZ0aIRknQrgSYno4Ra/iRqK6Dn9+D3msawBeE6yWD+lUW9XV+9+b8eCIrDV2LC2I3v8VedXxhDyvw+Q6eTvp/I6MMB@vger.kernel.org
+X-Gm-Message-State: APuU4Z//FSKuKJvjhA4lzSJfF5WEzgLgTOfQ0xwL2oVgfjABzrE+AhfS
+	nqx8CfqIefUAsyR1+Va7Q90OobRRXa7qVlHQoPaPAZEx2MKRiMyE6I6i
+X-Gm-Gg: AYBFou0kayliqVeXuf+4a7A7LhaV89PVcvISWC49JoxxUYWJDG3FhjWv1E11hl0qxG3
+	Z8Kb3e7CZ1lfYcHzfWNproQlQUQDjS9qnX/KutLNQVG2CT4Z6ln6RDsLru/wRr62hw1I2Iw4EDq
+	27PM8yzT5uFoUx0Wu0kXpGXeWlrlP88nYPQnURJ3z7MltkMWKW8iOJrOGY6HhbSXcREV1GzDqmH
+	1iAgIth4MhPbybaQhxGDNFW4R8uvhHcfgUrl+JNSJZxR96r1lQfM85Ix9XD5UWZnVMYi5Nk7BRP
+	UgyCCe0YdP8+qButT3VywA3usf/B1U6iZ6jF+TMdJhvN453odXNls3UFkFEDByyf48bOVJFcqln
+	/EzivU8opNM4w9nQy2P5BLPfDbuT3sVBEGQyO4yKOmKNlh66cvXafYGw39WXpi4c1qtOykxk2Ye
+	B4jbD8ZGUnBr1/VuXDmtwqAwexc4LeW3DA3Kqzpmu6m64AR1K9X2uRutLv3XTLdW/z/7fWJyTG1
+	MdU16c12wqrfzp6PbUpjGBJldS39zIyqoKPK/G2JL4aDv9kvu8j0uaUODAMmBPxr16yddKuiqTu
+	XonBDFRmlXNA7IkD5fRHO1aWQwkjogCs
+X-Received: by 2002:a05:701a:844d:20b0:16d:1e24:5cc3 with SMTP id a92af1059eb24-1b50312ef36mr116784c88.19.1794502490931;
+        Thu, 12 Nov 2026 08:54:50 -0800 (PST)
+Received: from omarchy ([157.10.22.132])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5031468b7sm332905c88.5.2026.11.12.08.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2026 08:54:50 -0800 (PST)
+From: Jamil Khan <khanjamilahmed202@gmail.com>
+To: Joshua Grisham <josh@joshuagrisham.com>
+Cc: Jamil Khan <khanjamilahmed202@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: samsung-galaxybook: Re-enable ACPI features on resume
+Date: Thu, 12 Nov 2026 22:24:32 +0530
+Message-ID: <20261112165433.64461-1-khanjamilahmed202@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -63,84 +97,103 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neko <neko205@aosc.io>
-Subject: Re: [PATCH] platform/x86: bitland-mifs-wmi: Add Redmi G 2022 (TM2135)
- quirk
-To: Yun Wang <7z0423arsenova@proton.me>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mingyou Chen <qby140326@gmail.com>, Ilya Gladyshev
- <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
- Chris Taraszka <chris@miget.com>, kexybiscuit@aosc.io, jeffbai@aosc.io
-References: <20261106143114.95008-1-7z0423arsenova@proton.me>
-In-Reply-To: <20261106143114.95008-1-7z0423arsenova@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 10762400EE
-X-Spamd-Result: default: False [-0.30 / 10.00];
-	R_SPF_ALLOW(-0.10)[+mx];
-	MIME_GOOD(-0.10)[text/plain];
-	R_DKIM_ALLOW(-0.10)[aosc.io:s=default];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.38.0.0/16, country:FR];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DMARC_POLICY_ALLOW(0.00)[aosc.io,quarantine];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_DKIM_ALIGNED(0.00)[strict];
-	RCVD_TLS_ALL(0.00)[];
-	LOCAL_OUTBOUND(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,linux.dev,gmx.de,miget.com,aosc.io];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	DKIM_TRACE(0.00)[aosc.io:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: nf2.mymailcheap.com
 
-Hi Yun,
+The driver enables the ACPI device (SDLS) and its features (notifications,
+power management, keyboard backlight, block recording) only at probe time.
+On a Galaxy Book4 (750XGK, SAM0430) this state is lost across hibernation,
+and after restore every CSFI call fails:
 
-在 2026/11/6 22:33, Yun Wang 写道:
-> The Redmi G 2022 (board TM2135, BIOS RMGAD6T0P1313) implements only
-> three modes: 0x02 for quiet, 0x01 for balanced and 0x03 for performance.
-> The default profile table maps balanced to 0x00, but this firmware
-> recognizes it as the performance mode. Because the firmware does not
-> implement the AC adapter type query, setting balanced-performance or
-> performance fails with -ENODATA.
-> 
-> Add a DMI entry with a three-entry profile table for this model and
-> enable skip_ac_type_check. 0x04 is not used for performance: writing it
-> succeeds and the value reads back as 0x04, but in three test runs on
-> 7.2.11 the firmware did not emit WMI event 0x16, which it emits after
-> every other mode change. The Fn+K hotkey also cycles only through the
-> three modes above.
-> 
-> Tested on this machine with this patch and the series it depends on,
-> built as an out-of-tree module and loaded on a 7.2.14 kernel. Writing
-> low-power, balanced, and performance succeeds, the profile reads back
-> correctly, and the firmware emits one 0x16 event for each (values 2, 1,
-> and 3). Writing balanced-performance is rejected, and Fn+K cycles
-> through low-power, balanced, and performance.
-> 
-> Claude Code (claude-opus-5-5) analyzed the ACPI tables, wrote the test
-> scripts, specified the change and corrected this changelog. I wrote the
-> code and the changelog and ran the tests on this machine.
-> 
-> Link: https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYdW-TUgdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50ISIc=@proton.me/
-> Link: https://lore.kernel.org/all/BelDdF5woNEBX6dZ3_zJDEbVkifs1pdxEjtQ1yC-aKyZahijFJCllxm0l_SqZ5Hsj61D8wfJNa7uDSuNKmyyxo2S0tZp9QS5yaafeZUxvxE=@proton.me/
-> Suggested-by: Mingyou Chen <qby140326@gmail.com>
-> Signed-off-by: Yun Wang <7z0423arsenova@proton.me>
+  acpi SAM0430:00: failed to execute CSFI; device responded with failure code 0xff
 
-I have tested this patch on my Redmi G 2022 (board model TM2135) and 
-have confirmed that I can now switch between "performance", "balanced", 
-and "power-saver" power profiles via the KDE power manager tray.
+so charge_control_end_threshold, the keyboard backlight and the
+firmware-attributes all return -ENXIO until the driver is re-bound.
+The performance mode (CSXI) is not affected.
 
-Stress testing with s-tui also shows different power draw under 
-different profiles.
+Add a resume callback that repeats the probe-time enable sequence in the
+same order, and use it for both system resume and restore from
+hibernation.
 
-Tested-by: Yu Pan <neko205@aosc.io>
+Tested with a hibernate/restore cycle on a Galaxy Book4 750XGK
+(BIOS P11CFP.025.251116.HQ): without this patch all CSFI calls fail after
+restore, with it they keep working.
+
+Link: https://github.com/joshuagrisham/samsung-galaxybook-extras/issues/12
+Signed-off-by: Jamil Khan <khanjamilahmed202@gmail.com>
+---
+ drivers/platform/x86/samsung-galaxybook.c | 45 +++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index b150e1f..27a2d27 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -1381,6 +1381,7 @@ static int galaxybook_probe(struct platform_device *pdev)
+ 
+ 	galaxybook->platform = pdev;
+ 	galaxybook->acpi = adev;
++	platform_set_drvdata(pdev, galaxybook);
+ 
+ 	/*
+ 	 * Features must be enabled and initialized in the following order to
+@@ -1432,6 +1433,49 @@ static int galaxybook_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++/*
++ * The firmware forgets that the ACPI device and its features were enabled
++ * when the system is restored from hibernation, after which every CSFI call
++ * fails with 0xff. Repeat the enable sequence from probe, in the same order.
++ */
++static int galaxybook_resume(struct device *dev)
++{
++	struct samsung_galaxybook *galaxybook = dev_get_drvdata(dev);
++	acpi_status status;
++	int err;
++
++	status = acpi_execute_simple_method(galaxybook->acpi->handle, GB_ACPI_METHOD_ENABLE,
++					    GB_ACPI_METHOD_ENABLE_ON);
++	if (ACPI_FAILURE(status)) {
++		dev_warn(dev, "failed to re-enable ACPI device on resume\n");
++		return 0;
++	}
++
++	err = galaxybook_enable_acpi_notify(galaxybook);
++	if (err)
++		dev_dbg(dev, "failed to re-enable ACPI notifications, error %d\n", err);
++
++	err = galaxybook_enable_acpi_feature(galaxybook, GB_SASB_POWER_MANAGEMENT);
++	if (err)
++		dev_dbg(dev, "failed to re-enable power management features, error %d\n", err);
++
++	if (galaxybook->has_kbd_backlight) {
++		err = galaxybook_enable_acpi_feature(galaxybook, GB_SASB_KBD_BACKLIGHT);
++		if (err)
++			dev_dbg(dev, "failed to re-enable kbd_backlight, error %d\n", err);
++	}
++
++	if (galaxybook->has_block_recording) {
++		err = galaxybook_enable_acpi_feature(galaxybook, GB_SASB_BLOCK_RECORDING);
++		if (err)
++			dev_dbg(dev, "failed to re-enable block_recording, error %d\n", err);
++	}
++
++	return 0;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(galaxybook_pm_ops, NULL, galaxybook_resume);
++
+ static const struct acpi_device_id galaxybook_device_ids[] = {
+ 	{ "SAM0426" },
+ 	{ "SAM0427" },
+@@ -1447,6 +1491,7 @@ static struct platform_driver galaxybook_platform_driver = {
+ 	.driver = {
+ 		.name = DRIVER_NAME,
+ 		.acpi_match_table = galaxybook_device_ids,
++		.pm = pm_sleep_ptr(&galaxybook_pm_ops),
+ 	},
+ 	.probe = galaxybook_probe,
+ };
+-- 
+2.56.0
+
