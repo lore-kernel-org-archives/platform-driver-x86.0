@@ -1,65 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794496470;
-	b=ylDSoZ3c5M7ZHHXu8W+DSSXK0ZZWwbNyWVAN3E77mKXrnJduzpCwwHRf9BT5/06z2LaP
-	 jrhuQu0mpMtnAs50X7+AiwgG2cQrQpKwHheWpWOP9lJWE5oQ2uBoQUjyayIWJziNniDuY
-	 DduBFJbz1fPGQPtX5JjYEjd8sykI3nXtRFVibUsTR/8bzXc9Ky8s9VjXKs7mJqxrjhUUq
-	 UMqFV9zD6SEsVLe11ZukAqvMSsBuKZQd+PVvx8PwoDlwmfbjcv2CjyeiFH+cM6CJuhE2O
-	 KpfpGUeU/Xj5SEOtFxSuU9bFhPwPsDP2JTet0VzntAsBdZzDZ+HXVQDGchiEJ5Nrbeg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794496470;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:
-	 In-Reply-To:References:Content-Type:Date:MIME-Version:User-Agent:
-	 X-Zoho-Virus-Status:X-Zoho-AV-Stamp:X-ZohoMailClient;
-	bh=z6+BkSmoaAnoOhnm1VUY7FmsTBO81Z8PQQf2B1LU31o=;
-	b=StvP+8rqRbk/v03OHLoquKnDoSE317gNLGzllaZ9lYHbB7XKpOZJq2PR1LM/6AYl0/cp
-	 JKyEjmD9ZFnPLCI9UwwwV4OIJmZj15TaZgGlkEO6TcVEpvumSbxmug4eiktOCp4vSJz3b
-	 eyklqrjs9gUrKwb/ln49DglCTVUTfoTE/Zd7rL9DVZQreuHEDuuM0BRnQIqLpzSRgrW8l
-	 2rR4Sv/GnzN1TBx2T7zHYhH0AwRC8GE8vVNYBLykfg66YtGEVlcZDW507o/aqFYB8Tb/9
-	 5Pm9gb7uYCxURcNpLCilYt3pQs7wmTJmFOFj9vJ2N76VHvSfING8yCbhREc/N/gk/3w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=ZURrwkAk;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.182.113.132
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794501892;
+	b=LFhY3i2gcF1e0K3LfjijBzCMpftPqHe3tPzJHhtSdNdhu6UlNZO+CSr2PK5GEnDaytM5
+	 SQoAl13RleRB0ru2H//4juihUBWtZtawqyQ6dxC+lve3T+zh3AoZ09Iyb3dSvf6o3r+Ea
+	 G45q7/SERtnYaFPIW11TnOXZ5G0NNEBNE7FcHFfNNo419jbX0eqSjxfzRZkLkBK1KpBn/
+	 9yP6QLJWL05ZvRaXghdf9IN2yQQxRo0FxZJuSMXXx4AJXMYT5OfvjY7nulNXw1mc4xbsy
+	 YF3NfMw/+nyEnKAhTIdSV4YSzMQrz7cOTyYPgGGICDixFgaSUojELwI7PxKhuz6npAA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794501892;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Rspamd-Queue-Id:
+	 X-Spamd-Result:X-Rspamd-Action:X-Rspamd-Server;
+	bh=dFbMb8AE6Yw9DziHA4r7D3bkKIOzfPramIwPHQ+C3N4=;
+	b=vFKrVql0UFiZaM04g0pDdOstsnXvIpTz/oEes42mBbPKW3g0YN7/oU0ZxYOzYSf1jDU1
+	 BnivZnhZGeoc76husL5yo4bucxPisGWZHBDTA34N+8wx3d/0COWawdPatxb0qFHbbwe4v
+	 QmWuDXic8cmpRZCAA2AGOEMP0x3WZ/iue9OYcPosFXoIA9VnLO7IsHpzAQ5Txm1jn7S3m
+	 17UcA9G0IWJxhN2V/C65VcNAaHXwnr5cktRCY46wv20fLlWh4nJrCNvvAq/Nx1MEsSVwW
+	 QRVD4DC1ROrHPvI752L9Njuzv3JSfkzWBQb+gDSEQqpZR3qoY6JLRmz6Q0thPzdzfwg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=aosc.io;
+	spf=pass smtp.mailfrom=aosc.io;
+	dkim=pass header.d=aosc.io header.i=@aosc.io header.a=rsa-sha256 header.s=default header.b=mxHObK1L;
+	arc=none smtp.remote-ip=217.182.113.132
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.113.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338C6606A33B;
-	Thu, 12 Nov 2026 15:14:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 338C6606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE2E606A32E;
+	Thu, 12 Nov 2026 16:44:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7AE2E606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=ZURrwkAk
-ARC-Seal: i=1; a=rsa-sha256; t=1794496454; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ZGetVIQ0WD9HRw5UUpzlHxwqJivovwAZvFM/EHSItVo+Ks1LHYdeAoVzWSxtbUzFN3wUBg+makmMeONHl7DpoR5qMEGZYCGhnEkfzf0aGWmLwwoFWdSOPVYWVFu9HhSZK7hhMeNjqDWyZiA+dws8C0Tr9I277JTxKjZNr4dRR48=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1794496454; h=Content-Type:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=z6+BkSmoaAnoOhnm1VUY7FmsTBO81Z8PQQf2B1LU31o=; 
-	b=GFE2CRYmi2Fwi2g32tM52kP+CO9rguIr6RtncJa1B25G3VEvjJ4rV9uu6HJaSev9OLbQg/wVBGGq7aWlffeT90EEOezJbopxJcEV2/2N7cz0cPDWTyHm1pSoirOIiut/Sp2nncBJww8AT3EY2Q1dElAzNnlgQ25rwwAiv8I0FJk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=ZURrwkAkPHuxnpf8Vx6QugxmCwHZUFtKk2Kr+Xd0vnRa1fdMlu2MIYepyfoUE8iiRrm79LD2Ims0lI7Ijj3llBOIbOEJ4m9B5spWqlhCSc3vp9sV7lhyNizj7AoyjIIf4/+gw7bVbryd8cYJ+RG4igGhZlwhtHcc4t+Csv/gas6dBzrflzdtzhXjMzPOyTkic0b+OSds3flh4kcENOD6i+KYH8R5X4avmtFpXxJEe+ugCxFVMkTUaTgUNqfPbrBSHKylnAWYKgrTVhEiEA66YdEebUPGV7KhTqTUWb4rkSfEs6iNWBtTz6h0+HWt7uJZ7/5HUK+DwyN616Iqt6y8Rg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=z6+BkSmoaAnoOhnm1VUY7FmsTBO81Z8PQQf2B1LU31o=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1794496452453851.9618914473282;
-	Thu, 12 Nov 2026 07:14:12 -0800 (PST)
-Message-ID: <18febc1a4ca8191d1374c586998611952ff0cf75.camel@rong.moe>
-Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-other: Deconflict battery
- with thinkpad_acpi
-From: Rong Zhang <i@rong.moe>
-To: Aaron Ma <aaron.ma@canonical.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>,  "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-In-Reply-To: <20261112074823.853819-1-aaron.ma@canonical.com>
-References: <20261112074823.853819-1-aaron.ma@canonical.com>
-Content-Type: multipart/mixed; boundary="=-YoFgjqYu05G0v8u/Zazg"
-Date: Thu, 12 Nov 2026 23:13:55 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=aosc.io header.i=@aosc.io header.a=rsa-sha256 header.s=default header.b=mxHObK1L
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id 5FE1F3E89F;
+	Thu, 12 Nov 2026 16:44:44 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.38.223.107])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 10762400EE;
+	Thu, 12 Nov 2026 16:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=default;
+	t=1794501878; bh=dFbMb8AE6Yw9DziHA4r7D3bkKIOzfPramIwPHQ+C3N4=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=mxHObK1L/yKmRdMyPGn8PagqYJTC/hVNYOHGYs347oIUZWf5hlZUtx/psXbnAY4rj
+	 LI5RIVyMxGghcOJ/LqVz6kKy/x5btKOt3cGRfzi5vLgkZnMd+AfH1LRQZpv8D/Fkw/
+	 bybDniU4gN5GfVtkO3Sblm8CgQCdd7+BkXgxurow=
+Received: from [192.168.13.5] (pool-108-27-76-52.nycmny.fios.verizon.net [108.27.76.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 3B02FE1E52;
+	Thu, 12 Nov 2026 16:44:31 +0000 (UTC)
+Message-ID: <9a26c741-6217-4155-a3dc-e34b4015f71c@aosc.io>
+Date: Fri, 13 Nov 2026 00:44:27 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -69,260 +63,84 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-3 
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-0.2.13.1.5.4/294.473.96
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+From: Neko <neko205@aosc.io>
+Subject: Re: [PATCH] platform/x86: bitland-mifs-wmi: Add Redmi G 2022 (TM2135)
+ quirk
+To: Yun Wang <7z0423arsenova@proton.me>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mingyou Chen <qby140326@gmail.com>, Ilya Gladyshev
+ <ilya.gladyshev@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
+ Chris Taraszka <chris@miget.com>, kexybiscuit@aosc.io, jeffbai@aosc.io
+References: <20261106143114.95008-1-7z0423arsenova@proton.me>
+In-Reply-To: <20261106143114.95008-1-7z0423arsenova@proton.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 10762400EE
+X-Spamd-Result: default: False [-0.30 / 10.00];
+	R_SPF_ALLOW(-0.10)[+mx];
+	MIME_GOOD(-0.10)[text/plain];
+	R_DKIM_ALLOW(-0.10)[aosc.io:s=default];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.38.0.0/16, country:FR];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_POLICY_ALLOW(0.00)[aosc.io,quarantine];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_DKIM_ALIGNED(0.00)[strict];
+	RCVD_TLS_ALL(0.00)[];
+	LOCAL_OUTBOUND(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,linux.dev,gmx.de,miget.com,aosc.io];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	DKIM_TRACE(0.00)[aosc.io:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: nf2.mymailcheap.com
 
---=-YoFgjqYu05G0v8u/Zazg
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Yun,
 
-Hi Aaron,
+在 2026/11/6 22:33, Yun Wang 写道:
+> The Redmi G 2022 (board TM2135, BIOS RMGAD6T0P1313) implements only
+> three modes: 0x02 for quiet, 0x01 for balanced and 0x03 for performance.
+> The default profile table maps balanced to 0x00, but this firmware
+> recognizes it as the performance mode. Because the firmware does not
+> implement the AC adapter type query, setting balanced-performance or
+> performance fails with -ENODATA.
+> 
+> Add a DMI entry with a three-entry profile table for this model and
+> enable skip_ac_type_check. 0x04 is not used for performance: writing it
+> succeeds and the value reads back as 0x04, but in three test runs on
+> 7.2.11 the firmware did not emit WMI event 0x16, which it emits after
+> every other mode change. The Fn+K hotkey also cycles only through the
+> three modes above.
+> 
+> Tested on this machine with this patch and the series it depends on,
+> built as an out-of-tree module and loaded on a 7.2.14 kernel. Writing
+> low-power, balanced, and performance succeeds, the profile reads back
+> correctly, and the firmware emits one 0x16 event for each (values 2, 1,
+> and 3). Writing balanced-performance is rejected, and Fn+K cycles
+> through low-power, balanced, and performance.
+> 
+> Claude Code (claude-opus-5-5) analyzed the ACPI tables, wrote the test
+> scripts, specified the change and corrected this changelog. I wrote the
+> code and the changelog and ran the tests on this machine.
+> 
+> Link: https://lore.kernel.org/platform-driver-x86/OT2JfRLDi6yHShYvywRZoFBYdW-TUgdKqKtahRM5b0cZxNo6eGZHnO5dKf4oYFaEtZhEsqU-Q-2OFe0D-qToJMVUrS5_d2aa2Q5LD50ISIc=@proton.me/
+> Link: https://lore.kernel.org/all/BelDdF5woNEBX6dZ3_zJDEbVkifs1pdxEjtQ1yC-aKyZahijFJCllxm0l_SqZ5Hsj61D8wfJNa7uDSuNKmyyxo2S0tZp9QS5yaafeZUxvxE=@proton.me/
+> Suggested-by: Mingyou Chen <qby140326@gmail.com>
+> Signed-off-by: Yun Wang <7z0423arsenova@proton.me>
 
-Thanks for working on this.
+I have tested this patch on my Redmi G 2022 (board model TM2135) and 
+have confirmed that I can now switch between "performance", "balanced", 
+and "power-saver" power profiles via the KDE power manager tray.
 
-On Thu, 2026-11-12 at 15:48 +0800, Aaron Ma wrote:
-> ThinkPads expose battery charge thresholds and charge_behaviour through
-> thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups. The
-> Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
-> charge_behaviour and charge_types on systems advertising those WMI
-> capabilities.
->=20
-> When lenovo-wmi-other registers first, thinkpad_acpi fails to create a
-> duplicate charge_behaviour sysfs attribute and unregisters its battery
-> extension. Conversely, registering or updating any power_supply_ext on
-> the same battery runs sysfs_update_groups(), which removes standard
-> power-supply attributes not owned by power_supply_core and wipes out
-> thinkpad_acpi's charge_control_start_threshold,
-> charge_control_end_threshold, and charge_behaviour files.
->=20
-> Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
-> thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
-> table check when the corresponding driver is enabled in Kconfig, and
-> update the force_load_psy_ext description accordingly.
->=20
-> Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI battery ch=
-arge limiting")
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> ---
-> Changes in v2:
-> - Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
->   device IDs, method pairs, and driver configuration checks, as suggested
->   by Derek J. Clark.
-> - Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
->   instead of relying only on ThinkPad ACPI device presence.
-> - Check whether the corresponding driver is enabled before looking up
->   its ACPI device, including for ideapad_laptop.
-> - Update the force_load_psy_ext description to cover both drivers.
->=20
-> v1: https://lore.kernel.org/platform-driver-x86/20261111083529.727285-1-a=
-aron.ma@canonical.com/
->=20
->  drivers/platform/x86/lenovo/wmi-other.c | 51 ++++++++++++++++++-------
->  1 file changed, 38 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x=
-86/lenovo/wmi-other.c
-> index bd64e7b44669d..14b2c3f4cc7ae 100644
-> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
->  static bool force_load_psy_ext;
->  module_param(force_load_psy_ext, bool, 0444);
->  MODULE_PARM_DESC(force_load_psy_ext,
-> -=09"This option will skip checking if the ideapad_laptop driver will con=
-flict "
-> +=09"This option will skip checking if the ideapad_laptop or thinkpad_acp=
-i driver will conflict "
->  =09"with adding an extension to set the battery charge behavior and batt=
-ery charge "
->  =09"control end threshold. It will also skip checking if the BIOS report=
-s that "
-> -=09"those features are fully supported. It is recommended to blacklist t=
-he ideapad "
-> +=09"those features are fully supported. It is recommended to blacklist t=
-he conflicting "
->  =09"driver before using this option.");
-> =20
->  /* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00 & fa=
-n) =3D=3D=3D=3D=3D=3D=3D=3D */
-> @@ -905,17 +905,32 @@ static acpi_status lwmi_acpi_match(acpi_handle hand=
-le, u32 lvl,
->  =09return AE_CTRL_TERMINATE;
->  }
-> =20
-> +struct lwmi_psy_deconflict {
-> +=09const char *hid;
-> +=09char * const *methods;
-> +=09bool driver_enabled;
+Stress testing with s-tui also shows different power draw under 
+different profiles.
 
-Why is this required?
-
-IMO the relevant items should be wrapped by #if IS_ENABLED(CONFIG_*). In
-this manner, lwmi_om_psy_ext_init() doesn't need to iterate through
-useless items in vain.
-
-> +};
-> +
-> +static char * const lwmi_ideapad_psy_methods[] =3D { "GBMD", "SBMC" };
-> +static char * const lwmi_thinkpad_psy_methods[] =3D { "BDSG", "BICG" };
-> +
-> +static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] =3D {
-> +=09{ "VPC2004", lwmi_ideapad_psy_methods, IS_ENABLED(CONFIG_IDEAPAD_LAPT=
-OP) },
-> +=09{ "LEN0268", lwmi_thinkpad_psy_methods, IS_ENABLED(CONFIG_THINKPAD_AC=
-PI) },
-> +=09{ "LEN0068", lwmi_thinkpad_psy_methods, IS_ENABLED(CONFIG_THINKPAD_AC=
-PI) },
-> +=09{ "IBM0068", lwmi_thinkpad_psy_methods, IS_ENABLED(CONFIG_THINKPAD_AC=
-PI) },
-> +};
-
-It could be flattened and simplified into a 2-items array. See the
-attached patch (untested, may be completely nonsense).
-
-If you adopt my approach, feel free to add
-
-   Co-developed-by: Rong Zhang <i@rong.moe>
-   Signed-off-by: Rong Zhang <i@rong.moe>
-
-Thanks,
-Rong
-
-> +
->  /**
->   * lwmi_om_psy_ext_init() - Hooks power supply extension to device batte=
-ry
->   * @priv: Pointer to the lwmi_om_priv drvdata.
->   *
-> - * Checks if the ideapad_laptop driver is going to manage charge attribu=
-tes first,
-> - * then if not, hooks the battery to our WMI methods if they are support=
-ed.
-> + * Checks if the ideapad_laptop or thinkpad_acpi driver is going to mana=
-ge
-> + * charge attributes first, then if not, hooks the battery to our WMI me=
-thods
-> + * if they are supported.
->   */
->  static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
->  {
-> -=09static const char * const ideapad_hid =3D "VPC2004";
-> -=09acpi_handle handle =3D NULL;
->  =09unsigned int props =3D 0;
->  =09int ret;
-> =20
-> @@ -928,14 +943,24 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_pri=
-v *priv)
->  =09if (force_load_psy_ext)
->  =09=09goto load_psy_ext;
-> =20
-> -=09/* Deconflict ideapad_laptop driver */
-> -=09ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL)=
-;
-> -=09if (ret)
-> -=09=09return;
-> +=09for (unsigned int i =3D 0; i < ARRAY_SIZE(lwmi_psy_deconflict_list); =
-i++) {
-> +=09=09const struct lwmi_psy_deconflict *entry =3D &lwmi_psy_deconflict_l=
-ist[i];
-> +=09=09acpi_handle handle =3D NULL;
-> =20
-> -=09if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(hand=
-le, "SBMC")) {
-> -=09=09dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery f=
-or device\n");
-> -=09=09return;
-> +=09=09if (!entry->driver_enabled)
-> +=09=09=09continue;
-> +
-> +=09=09ret =3D acpi_get_devices(entry->hid, lwmi_acpi_match, &handle, NUL=
-L);
-> +=09=09if (ret || !handle)
-> +=09=09=09continue;
-> +
-> +=09=09if (acpi_has_method(handle, entry->methods[0]) &&
-> +=09=09    acpi_has_method(handle, entry->methods[1])) {
-> +=09=09=09dev_dbg(&priv->wdev->dev,
-> +=09=09=09=09"ACPI device %s manages battery for device\n",
-> +=09=09=09=09entry->hid);
-> +=09=09=09return;
-> +=09=09}
->  =09}
-> =20
->  load_psy_ext:
-
---=-YoFgjqYu05G0v8u/Zazg
-Content-Disposition: attachment; filename="flattened-charpp.patch"
-Content-Type: text/x-patch; name="flattened-charpp.patch"; charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2xlbm92by93bWktb3RoZXIuYyBiL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2xlbm92by93bWktb3RoZXIuYwppbmRleCBiZDY0ZTdiNDQ2Njku
-LjAxNzJjNGNlZWQ1OCAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvbGVub3ZvL3dt
-aS1vdGhlci5jCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2xlbm92by93bWktb3RoZXIuYwpA
-QCAtMTg5LDEwICsxODksMTAgQEAgTU9EVUxFX1BBUk1fREVTQyhyZWxheF9mYW5fY29uc3RyYWlu
-dCwKIHN0YXRpYyBib29sIGZvcmNlX2xvYWRfcHN5X2V4dDsKIG1vZHVsZV9wYXJhbShmb3JjZV9s
-b2FkX3BzeV9leHQsIGJvb2wsIDA0NDQpOwogTU9EVUxFX1BBUk1fREVTQyhmb3JjZV9sb2FkX3Bz
-eV9leHQsCi0JIlRoaXMgb3B0aW9uIHdpbGwgc2tpcCBjaGVja2luZyBpZiB0aGUgaWRlYXBhZF9s
-YXB0b3AgZHJpdmVyIHdpbGwgY29uZmxpY3QgIgorCSJUaGlzIG9wdGlvbiB3aWxsIHNraXAgY2hl
-Y2tpbmcgaWYgdGhlIGlkZWFwYWRfbGFwdG9wIG9yIHRoaW5rcGFkX2FjcGkgZHJpdmVyIHdpbGwg
-Y29uZmxpY3QgIgogCSJ3aXRoIGFkZGluZyBhbiBleHRlbnNpb24gdG8gc2V0IHRoZSBiYXR0ZXJ5
-IGNoYXJnZSBiZWhhdmlvciBhbmQgYmF0dGVyeSBjaGFyZ2UgIgogCSJjb250cm9sIGVuZCB0aHJl
-c2hvbGQuIEl0IHdpbGwgYWxzbyBza2lwIGNoZWNraW5nIGlmIHRoZSBCSU9TIHJlcG9ydHMgdGhh
-dCAiCi0JInRob3NlIGZlYXR1cmVzIGFyZSBmdWxseSBzdXBwb3J0ZWQuIEl0IGlzIHJlY29tbWVu
-ZGVkIHRvIGJsYWNrbGlzdCB0aGUgaWRlYXBhZCAiCisJInRob3NlIGZlYXR1cmVzIGFyZSBmdWxs
-eSBzdXBwb3J0ZWQuIEl0IGlzIHJlY29tbWVuZGVkIHRvIGJsYWNrbGlzdCB0aGUgY29uZmxpY3Rp
-bmcgIgogCSJkcml2ZXIgYmVmb3JlIHVzaW5nIHRoaXMgb3B0aW9uLiIpOwogCiAvKiA9PT09PT09
-PSBIV01PTiAoY29tcG9uZW50OiBsZW5vdm8td21pLWNhcGRhdGEgMDAgJiBmYW4pID09PT09PT09
-ICovCkBAIC05MDUsMTcgKzkwNSwzOSBAQCBzdGF0aWMgYWNwaV9zdGF0dXMgbHdtaV9hY3BpX21h
-dGNoKGFjcGlfaGFuZGxlIGhhbmRsZSwgdTMyIGx2bCwKIAlyZXR1cm4gQUVfQ1RSTF9URVJNSU5B
-VEU7CiB9CiAKK3N0cnVjdCBsd21pX3BzeV9kZWNvbmZsaWN0IHsKKwljb25zdCBjaGFyICpjb25z
-dCAqaGlkczsKKwljb25zdCBjaGFyICpjb25zdCAqbWV0aG9kczsKK307CisKKyNkZWZpbmUgTFdN
-SV9QU1lfREVDT05GTElDVF9TVFJTKC4uLikgXAorCShjb25zdCBjaGFyICpbXSl7IF9fVkFfQVJH
-U19fLCBOVUxMIH0KKworc3RhdGljIGNvbnN0IHN0cnVjdCBsd21pX3BzeV9kZWNvbmZsaWN0IGx3
-bWlfcHN5X2RlY29uZmxpY3RfbGlzdFtdID0geworI2lmIElTX0VOQUJMRUQoQ09ORklHX0lERUFQ
-QURfTEFQVE9QKQorCXsKKwkJLmhpZHMgPSBMV01JX1BTWV9ERUNPTkZMSUNUX1NUUlMoIlZQQzIw
-MDQiKSwKKwkJLm1ldGhvZHMgPSBMV01JX1BTWV9ERUNPTkZMSUNUX1NUUlMoIkdCTUQiLCAiU0JN
-QyIpLAorCX0sCisjZW5kaWYgLyogSVNfRU5BQkxFRChDT05GSUdfSURFQVBBRF9MQVBUT1ApICov
-CisjaWYgSVNfRU5BQkxFRChDT05GSUdfVEhJTktQQURfQUNQSSkKKwl7CisJCS5oaWRzID0gTFdN
-SV9QU1lfREVDT05GTElDVF9TVFJTKCJMRU4wMjY4IiwgIkxFTjAwNjgiLCAiSUJNMDA2OCIpLAor
-CQkubWV0aG9kcyA9IExXTUlfUFNZX0RFQ09ORkxJQ1RfU1RSUygiQkRTRyIsICJCSUNHIiksCisJ
-fSwKKyNlbmRpZiAvKiBJU19FTkFCTEVEKENPTkZJR19USElOS1BBRF9BQ1BJKSAqLworfTsKKwog
-LyoqCiAgKiBsd21pX29tX3BzeV9leHRfaW5pdCgpIC0gSG9va3MgcG93ZXIgc3VwcGx5IGV4dGVu
-c2lvbiB0byBkZXZpY2UgYmF0dGVyeQogICogQHByaXY6IFBvaW50ZXIgdG8gdGhlIGx3bWlfb21f
-cHJpdiBkcnZkYXRhLgogICoKLSAqIENoZWNrcyBpZiB0aGUgaWRlYXBhZF9sYXB0b3AgZHJpdmVy
-IGlzIGdvaW5nIHRvIG1hbmFnZSBjaGFyZ2UgYXR0cmlidXRlcyBmaXJzdCwKLSAqIHRoZW4gaWYg
-bm90LCBob29rcyB0aGUgYmF0dGVyeSB0byBvdXIgV01JIG1ldGhvZHMgaWYgdGhleSBhcmUgc3Vw
-cG9ydGVkLgorICogQ2hlY2tzIGlmIHRoZSBpZGVhcGFkX2xhcHRvcCBvciB0aGlua3BhZF9hY3Bp
-IGRyaXZlciBpcyBnb2luZyB0byBtYW5hZ2UKKyAqIGNoYXJnZSBhdHRyaWJ1dGVzIGZpcnN0LCB0
-aGVuIGlmIG5vdCwgaG9va3MgdGhlIGJhdHRlcnkgdG8gb3VyIFdNSSBtZXRob2RzCisgKiBpZiB0
-aGV5IGFyZSBzdXBwb3J0ZWQuCiAgKi8KIHN0YXRpYyB2b2lkIGx3bWlfb21fcHN5X2V4dF9pbml0
-KHN0cnVjdCBsd21pX29tX3ByaXYgKnByaXYpCiB7Ci0Jc3RhdGljIGNvbnN0IGNoYXIgKiBjb25z
-dCBpZGVhcGFkX2hpZCA9ICJWUEMyMDA0IjsKLQlhY3BpX2hhbmRsZSBoYW5kbGUgPSBOVUxMOwog
-CXVuc2lnbmVkIGludCBwcm9wcyA9IDA7CiAJaW50IHJldDsKIApAQCAtOTI4LDE0ICs5NTAsMzAg
-QEAgc3RhdGljIHZvaWQgbHdtaV9vbV9wc3lfZXh0X2luaXQoc3RydWN0IGx3bWlfb21fcHJpdiAq
-cHJpdikKIAlpZiAoZm9yY2VfbG9hZF9wc3lfZXh0KQogCQlnb3RvIGxvYWRfcHN5X2V4dDsKIAot
-CS8qIERlY29uZmxpY3QgaWRlYXBhZF9sYXB0b3AgZHJpdmVyICovCi0JcmV0ID0gYWNwaV9nZXRf
-ZGV2aWNlcyhpZGVhcGFkX2hpZCwgbHdtaV9hY3BpX21hdGNoLCAmaGFuZGxlLCBOVUxMKTsKLQlp
-ZiAocmV0KQotCQlyZXR1cm47Ci0KLQlpZiAoaGFuZGxlICYmIGFjcGlfaGFzX21ldGhvZChoYW5k
-bGUsICJHQk1EIikgJiYgYWNwaV9oYXNfbWV0aG9kKGhhbmRsZSwgIlNCTUMiKSkgewotCQlkZXZf
-ZGJnKCZwcml2LT53ZGV2LT5kZXYsICJpZGVhcGFkX2xhcHRvcCBkcml2ZXIgbWFuYWdlcyBiYXR0
-ZXJ5IGZvciBkZXZpY2VcbiIpOwotCQlyZXR1cm47CisJZm9yICh1bnNpZ25lZCBpbnQgaSA9IDA7
-IGkgPCBBUlJBWV9TSVpFKGx3bWlfcHN5X2RlY29uZmxpY3RfbGlzdCk7IGkrKykgeworCQljb25z
-dCBzdHJ1Y3QgbHdtaV9wc3lfZGVjb25mbGljdCAqZW50cnkgPSAmbHdtaV9wc3lfZGVjb25mbGlj
-dF9saXN0W2ldOworCQlhY3BpX2hhbmRsZSBoYW5kbGUgPSBOVUxMOworCisJCWZvciAodW5zaWdu
-ZWQgaW50IGogPSAwOyBlbnRyeS0+aGlkc1tqXTsgaisrKSB7CisJCQljb25zdCBjaGFyICpoaWQg
-PSBlbnRyeS0+aGlkc1tqXTsKKwkJCWJvb2wgaGFzX21ldGhvZHMgPSB0cnVlOworCisJCQlyZXQg
-PSBhY3BpX2dldF9kZXZpY2VzKGhpZCwgbHdtaV9hY3BpX21hdGNoLCAmaGFuZGxlLCBOVUxMKTsK
-KwkJCWlmIChyZXQgfHwgIWhhbmRsZSkKKwkJCQljb250aW51ZTsKKworCQkJZm9yICh1bnNpZ25l
-ZCBpbnQgayA9IDA7IGVudHJ5LT5tZXRob2RzW2tdOyBrKyspIHsKKwkJCQloYXNfbWV0aG9kcyA9
-IGFjcGlfaGFzX21ldGhvZChoYW5kbGUsIChjaGFyICopZW50cnktPm1ldGhvZHNba10pOworCQkJ
-CWlmICghaGFzX21ldGhvZHMpCisJCQkJCWJyZWFrOworCQkJfQorCQkJaWYgKCFoYXNfbWV0aG9k
-cykKKwkJCQljb250aW51ZTsKKworCQkJZGV2X2RiZygmcHJpdi0+d2Rldi0+ZGV2LCAiQUNQSSBk
-ZXZpY2UgJXMgbWFuYWdlcyBiYXR0ZXJ5IGZvciBkZXZpY2VcbiIsCisJCQkJaGlkKTsKKwkJCXJl
-dHVybjsKKwkJfQogCX0KIAogbG9hZF9wc3lfZXh0Ogo=
-
-
---=-YoFgjqYu05G0v8u/Zazg--
+Tested-by: Yu Pan <neko205@aosc.io>
