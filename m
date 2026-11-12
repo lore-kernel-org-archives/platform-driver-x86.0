@@ -1,64 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794472348;
-	b=HY4KJCGZueEoDhoCZUGrXeNNmL41WvSBJPTi2kaqNjF+P8G0Gt12QsyvAEIdIBHmzIBz
-	 bnji2GVznOBHJ5vtX2Di6DREhsYGM+XR+2ql5anGIe3rUcKXs7IlLTeutXtw8u9sibm0g
-	 pLl15oH55nLD05mLXyXyeU4ym9gVW0FRKGY2uW3l7rLOl9QErfO1RpUAbJ3qIxjiqVRYj
-	 Uje0VEzthGiElvvm6YBVUqYMjihnUF4lrEfzitS3LVZGRQLbVfZ04AA0Umvc29hGWf6IJ
-	 ji3SlyB9VYSwnvJbm9fiUQCxXQVtqkH7jGk7M4HVS6bWyqgvV4LsUnoNlxov4hLh7sA==
+	t=1794478869;
+	b=eVAO48T7XfszppyRIu7SnsLYbfkaakZ3WRi3i9lPWWZn2ZG2oT10MfPAVRAMCeNBx8kL
+	 z2xqb/Q6/Ab02vlJdgxQYogRK2IuDRD29ROY8yu5mX18EDC7Dj1RiGjsUWduq8a1NvLm6
+	 YGK/HB1mduDGoPg4QKjF0fIfwc7nsm77e7dxgcFA0gw3qJKqBTZo0mGEpkIPY1JX+4Q/O
+	 ZmHddpk5uS1En3yVLTPvnVHmIpy0pbU775S96RRbbWE1OSTGv2nRzGuyV9D0NN7zz00Oy
+	 WrfwWEUM5rLVg6C4uvbfHQbW4wkrjzqzHEW1RkCKwpjgLonZCsO60u2bw++s3dGMvnw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794472348;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794478869;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Message-ID:In-Reply-To:
 	 References:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:X-Correlation-ID;
-	bh=OexHV2jkzmUB3KUYxDmJ9ACHH6etmTUSSH2bbmegmmo=;
-	b=EaVhc/HcrsI7H8kqdNwpybqUcOCUsjjSrzHHhrbIOovaVCSD/YYsZdZnzvp4FmdwDChh
-	 JyTNphOfGLPWyFqnTLojDXXH2ZgC0aznCXWNMEel+raQEevhTNnx0QlfXlkGwviDj5+5u
-	 B64S00N5kYrXHPtqdLwRqCGek6JRAOHXFQdlshGzCpFZvMLAu5lpbjf7/q8QiNwv2h6Gg
-	 JSGe6LhjglYNv7O7Xw9v2rMwbdtiYlFI5h2d9k4cp5N/qmeSVj9U2rWAviHEXvr+Q9mfd
-	 M3o5DGoZn0N+G97xRybFrGbGd+JDAfyCRpCqqiejgUyXNTlsLA/kkiUIdibX4y0e7pw==
+	bh=Bd80MeNM9pTxoWBwGXjsknndsrAkhTF783e+5nYvx28=;
+	b=HHvpBwYrHsybsDxgjusMzV/B5f4nWgAuukRtjr6pSfVFhpSW1JK0ZYcvZH74cpfHyUcc
+	 F3V0rkhZKn1a+hJ/SLft8W4OWoDUg/EBnNobpCugcPcUDiZZgTAN4Y7olZuW1i6gDLL43
+	 FMH8WcPyLSNHJ++tT78OF88wLSukdU9BRm8Jas/s4ztUrDvgy+JRz6Osk9sJPtOu3fj77
+	 VIq+o+LvWstQFVARjRGDRPHDsuwmpted7gMJPWwMkYtypNspMZioLbEgUZzGkPBhlGSbj
+	 DsdaEJ7LXD4YOedupXBQuw9ziAETHVRNIx8uAWKjByctMl7jaaIiEk0H2BWZHOQIMEg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="YexZpL/G";
-	arc=none smtp.remote-ip=95.215.58.178
-Received: from mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Dpohe1Kq;
+	arc=none smtp.remote-ip=91.218.175.71
+Received: from mta0.migadu.com (out-71.mta0.migadu.com [91.218.175.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F8D606A8BC
-	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 08:32:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B5F8D606A8BC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CE3606A321
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 10:21:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 60CE3606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=YexZpL/G
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Dpohe1Kq
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=OexHV2jkzmUB3KUYxDmJ9ACHH6etmTUSSH2bbmegmmo=;
+DKIM-Signature: a=rsa-sha256; bh=Bd80MeNM9pTxoWBwGXjsknndsrAkhTF783e+5nYvx28=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794472344; v=1; x=1795077144;
- b=YexZpL/GbOXSNExWWu391KEx4IBGVDGoRFSoV4hfOCJVcHIAL4H2mrOT53bARYl4uv8JwMIX
- lI4L9GHGPEz726dJoedOf7aZXodbwSC2lCTXVATqVLcsT9B7KZ3WaB9fYmrY1z7zfgE/UAIdXsp
- FouudAlCtwI4WVwAaSWTaeZI=
+ t=1794478865; v=1; x=1795083665;
+ b=Dpohe1KqNJ+Q6KzplHoBcMd6A4Oe5YEaiqEtbSCYa0dXH+kmo/W//CyXqTEePnZFPr/ZcWDF
+ tgSD/YudXICtqbKF3v8NvWnSafcQ586C1hx3VdzGKLd6f6V0XM+AmLbYWukhCX5H3EkH1+WipA1
+ NOAwgOHNoT1fbjWaQfEYD6C4=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5d4ba3925192b16f;
-	Thu, 12 Nov 2026 08:32:24 +0000
-X-Mizu-Trace-ID: 5d4ba3925192b16f
+Received: by smtp.migadu.com with ESMTPS id cc48a1a792d15d12;
+	Thu, 12 Nov 2026 10:21:05 +0000
+X-Mizu-Trace-ID: cc48a1a792d15d12
 X-Migadu-Flow: FLOW_OUT
-Date: Thu, 12 Nov 2026 09:32:21 +0100
+Date: Thu, 12 Nov 2026 11:20:56 +0100
 From: Denis Benato <denis.benato@linux.dev>
-To: Andrei Rusu de Castro <arc@empyreal.works>
+To: tarrihmoad@proton.me
 Cc: Corentin Chary <corentin.chary@gmail.com>,
 	"Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <ec9515fb-6698-4e7e-8a88-5b3fa2f50c51@linux.dev>
-In-Reply-To: <20261111-asus-wmi-tpolicy-5fbc4e09@empyreal.works>
-References: <20261111-asus-wmi-tpolicy-5fbc4e09@empyreal.works>
-Subject: Re: [PATCH] platform/x86: asus-wmi: write the thermal policy only
- when it changes
+	Antheas Kapenekakis <lkml@antheas.dev>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Sercan GOKMEN <gokmensercan@gmail.com>,
+	Burak Goncu <burakgon12@gmail.com>,
+	Denis Benato <benato.denis96@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Message-ID: <04c46822-9baa-4152-8193-d8aa9d757b4e@linux.dev>
+In-Reply-To: <20261111-asus-wmi-kbd-readback-v4-1-79df1567476d@proton.me>
+References: <20261111-asus-wmi-kbd-readback-v4-1-79df1567476d@proton.me>
+Subject: Re: [PATCH v4] platform/x86: asus-wmi: Ignore unusable kbd
+ backlight WMI device on ROG Strix G814FP
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -70,125 +76,174 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <ec9515fb-6698-4e7e-8a88-5b3fa2f50c51@linux.dev>
+X-Correlation-ID: <04c46822-9baa-4152-8193-d8aa9d757b4e@linux.dev>
 
-11 nov 2026 22:44:03 Andrei Rusu de Castro <arc@empyreal.works>:
+12 nov 2026 00:36:34 Moad Tarrih via B4 Relay <devnull+tarrihmoad.proton.me=
+@kernel.org>:
 
-> On the ROG Flow Z13 (GZ302EA), writing the throttle thermal policy makes
-> the firmware re-apply its own package power limits for that mode, also
-> when the written mode is the one already set. Userspace re-asserts the
-> current platform profile on events such as AC plug and unplug, so power
-> limits tuned after a profile change are silently replaced by the
-> firmware's table for the unchanged mode.
+> From: Moad Tarrih <tarrihmoad@proton.me>
+>
+> On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
+> backlight brightness in sysfs works, but reading it back always gives
+> 0, and the read makes the Fn brightness keys misbehave.
+>
 
-Hi Andrei,
+With "works" do you mean the write report success but does nothing or that =
+it is actually changing the brightness?
 
-Thanks for spotting this!
+I assumed the #1 but from this message it's unclear (to me, and I assume fo=
+r others as well).
 
->=20
-> Remember whether the firmware is known to be in the cached mode and skip
-> the WMI call in the platform_profile handler when the requested profile
-> matches it. A failed write clears that state, and so does restore from
-> hibernation, where the firmware starts afresh, so the next profile write
-> reaches it again. The throttle_thermal_policy attribute and the fan
-> curve reset still write the mode every time.
+See below.
 
-I don't agree with this: if the userspace requests a power profile change t=
-he driver must honor that request.
+> The firmware reports the keyboard backlight WMI device as present
+> without implementing it, and the backlight is actually driven by
+> hid-asus. DSTS(0x00050021) always returns 0x50000, which is level 0
 
-The core issue here is not the application of the requested power profile b=
-ut the fact that asus-armoury can get out-of-sync with what is set versus w=
-hat is reported.
+Always returns level zero with the presence bit set.
 
-I would suggest fixing that issue instead: when the platform profile is cha=
-nged, if a custom tdp is set you should make limits re-apply (or, perhaps e=
-ven easier, reflect the fact custom TDP got disabled, albeit I am not sure =
-this is true for every laptop and I highly doubt that).
 
-This way the kernel honors requests from the user without reporting false i=
-nformation, with the added bonus that even if the profile switched (without=
- unplugging/plugging in the laptop) the reported status is faithful.
+> regardless of what the actual level is, and every DEVS(0x00050021)
+> write is rejected as an unsupported method.
+>
+> Add a kbd_led_no_wmi quirk that makes asus-wmi treat the keyboard
+> backlight WMI device as absent, and set it for this board, matched on
+> the DMI board name. asus-wmi then keeps the LED registered for hid-asus
+> and no longer reads from or writes to the WMI device.
+>
+> As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
+> no longer created on this board, they never worked here since the firmwar=
+e
+> rejects those writes as well.
 
-Best regards,
-Denis B.
+Isn't this a contraddiction to what is written above? That writes actually =
+succeeds?
 
->=20
-> On a GZ302EA running 7.4-rc2 with this change, re-asserting the current
-> profile, as happens on AC unplug, leaves package power limits set from
-> userspace in place.
->=20
-> An LLM assisted with finding the cause, writing this change and its
-> description, and running the test above on my GZ302EA.
->=20
-> Signed-off-by: Andrei Rusu de Castro <arc@empyreal.works>
+>
+> Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kb=
+d led handlers")
+> Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
+> Suggested-by: Denis Benato <denis.benato@linux.dev>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
+> Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
 > ---
-> drivers/platform/x86/asus-wmi.c | 17 +++++++++++++++++
-> 1 file changed, 17 insertions(+)
->=20
+> Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317) on
+> 7.2.14: the brightness attribute reads back the level that was set, the
+> Fn keys step from it, and this survives suspend and reboot. W=3D1 and
+> checkpatch --strict are clean. v4 only changes the commit message.
+>
+> Sercan GOKMEN's B9406CAA patch also adds a field to struct quirk_entry
+> and a DMI entry, so whichever lands second may need a trivial rebase.
+>
+> AI assistance: Claude Code (Claude Opus 5.5) was used to trace the
+> asus-wmi code, write the patch and draft the commit message. I reviewed
+> it and tested it on the hardware.
+> ---
+> Changes in v4:
+> - Trim the commit message and move the AI assistance note below the
+> =C2=A0 --- line (Ilpo).
+> - Link to v3: https://patch.msgid.link/20261110-asus-wmi-kbd-readback-v3-=
+1-646adf2b8629@proton.me
+>
+> Changes in v3:
+> - Drop the comment on kbd_led_no_wmi (Antheas).
+> - Don't set wmi_backlight_set_devstate for this board: the firmware
+> =C2=A0 rejects both DSTS and DEVS on 0x00050012, so the write did nothing
+> =C2=A0 (Antheas).
+> - Add Antheas's Reviewed-by.
+> - Link to v2: https://patch.msgid.link/20261109-asus-wmi-kbd-readback-v2-=
+1-c048fc53d8ee@proton.me
+>
+> Changes in v2:
+> - Add a quirk that makes asus-wmi skip the keyboard backlight WMI
+> =C2=A0 device on this board instead of detecting rejected writes at
+> =C2=A0 runtime (Antheas), so no more WMI writes that are known to fail
+> =C2=A0 are issued (Denis).
+> - Link to v1: https://patch.msgid.link/20261108-asus-wmi-kbd-readback-v1-=
+1-bf38f6400ade@proton.me
+> ---
+> drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+> drivers/platform/x86/asus-wmi.c=C2=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
+> drivers/platform/x86/asus-wmi.h=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> 3 files changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/as=
+us-nb-wmi.c
+> index 3b0f3346dc60..9b2a4b829885 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -93,6 +93,10 @@ static struct quirk_entry quirk_asus_unknown =3D {
+> =C2=A0=C2=A0=C2=A0 .wmi_backlight_set_devstate =3D true,
+> };
+>
+> +static struct quirk_entry quirk_asus_g814fp =3D {
+> +=C2=A0=C2=A0 .kbd_led_no_wmi =3D true,
+> +};
+> +
+> static struct quirk_entry quirk_asus_q500a =3D {
+> =C2=A0=C2=A0=C2=A0 .filter_i8042_e1_extended_codes =3D true,
+> =C2=A0=C2=A0=C2=A0 .wmi_backlight_set_devstate =3D true,
+> @@ -167,6 +171,15 @@ static int dmi_matched(const struct dmi_system_id *d=
+mi)
+> }
+>
+> static const struct dmi_system_id asus_quirks[] =3D {
+> +=C2=A0=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .callback =3D dmi_matched,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ident =3D "ASUS ROG Strix G18 G814=
+FP",
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .matches =3D {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMI_MATCH(D=
+MI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMI_MATCH(D=
+MI_BOARD_NAME, "G814FP"),
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 },
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .driver_data =3D &quirk_asus_g814fp=
+,
+> +=C2=A0=C2=A0 },
+> =C2=A0=C2=A0=C2=A0 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .callback =3D dmi_matched,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ident =3D "ASUSTeK COMPUTER I=
+NC. Q500A",
 > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
 wmi.c
-> index b33ebdb21..4f37a83c2 100644
+> index b33ebdb21aa2..51fea21ff247 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -315,6 +315,8 @@ struct asus_wmi {
->=20
-> =C2=A0=C2=A0=C2=A0 u8 throttle_thermal_policy_mode;
-> =C2=A0=C2=A0=C2=A0 u32 throttle_thermal_policy_dev;
-> +=C2=A0=C2=A0 /* the firmware is known to be in throttle_thermal_policy_m=
-ode */
-> +=C2=A0=C2=A0 bool throttle_thermal_policy_synced;
->=20
-> =C2=A0=C2=A0=C2=A0 bool cpu_fan_curve_available;
-> =C2=A0=C2=A0=C2=A0 bool gpu_fan_curve_available;
-> @@ -4183,9 +4185,11 @@ static int throttle_thermal_policy_write(struct as=
-us_wmi *asus)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "throt=
-tle_thermal_policy");
->=20
-> =C2=A0=C2=A0=C2=A0 if (err) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 asus->throttle_thermal_policy_synce=
-d =3D false;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("Failed to set throttl=
-e thermal policy: %d\n", err);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
-> =C2=A0=C2=A0=C2=A0 }
-> +=C2=A0=C2=A0 asus->throttle_thermal_policy_synced =3D true;
->=20
-> =C2=A0=C2=A0=C2=A0 /* Must set to disabled if mode is toggled */
-> =C2=A0=C2=A0=C2=A0 if (asus->cpu_fan_curve_available)
-> @@ -4302,6 +4306,16 @@ static int asus_wmi_platform_profile_set(struct de=
-vice *dev,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EOPNOTSUPP;
-> =C2=A0=C2=A0=C2=A0 }
->=20
-> +=C2=A0=C2=A0 /*
-> +=C2=A0=C2=A0=C2=A0 * Write the mode only when it changes. The firmware a=
-pplies its whole
-> +=C2=A0=C2=A0=C2=A0 * power table for a mode each time the mode is writte=
-n, replacing
-> +=C2=A0=C2=A0=C2=A0 * package power limits tuned since then (ROG Flow Z13=
- GZ302EA), and
-> +=C2=A0=C2=A0=C2=A0 * userspace re-asserts the current profile on power-s=
-upply events.
-> +=C2=A0=C2=A0=C2=A0 */
-> +=C2=A0=C2=A0 if (asus->throttle_thermal_policy_synced &&
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 asus->throttle_thermal_policy_mode =
-=3D=3D tp)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
-> +
-> =C2=A0=C2=A0=C2=A0 asus->throttle_thermal_policy_mode =3D tp;
-> =C2=A0=C2=A0=C2=A0 return throttle_thermal_policy_write(asus);
-> }
-> @@ -5404,6 +5418,9 @@ static int asus_hotk_restore(struct device *device)
-> =C2=A0=C2=A0=C2=A0 struct asus_wmi *asus =3D dev_get_drvdata(device);
-> =C2=A0=C2=A0=C2=A0 int bl;
->=20
-> +=C2=A0=C2=A0 /* The firmware booted afresh; the next profile write must =
-reach it. */
-> +=C2=A0=C2=A0 asus->throttle_thermal_policy_synced =3D false;
-> +
-> =C2=A0=C2=A0=C2=A0 /* Refresh both wlan rfkill state and pci hotplug */
-> =C2=A0=C2=A0=C2=A0 if (asus->wlan.rfkill)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 asus_rfkill_hotplug(asus);
-> --=20
-> 2.56.0
+> @@ -2165,7 +2165,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+> =C2=A0=C2=A0=C2=A0 asus->kbd_led.brightness_set_blocking =3D kbd_led_set;
+> =C2=A0=C2=A0=C2=A0 asus->kbd_led.brightness_get =3D kbd_led_get;
+> =C2=A0=C2=A0=C2=A0 asus->kbd_led.max_brightness =3D ASUS_EV_MAX_BRIGHTNES=
+S;
+> -=C2=A0=C2=A0 asus->kbd_led_avail =3D !kbd_led_read(asus, &led_val, NULL)=
+;
+> +=C2=A0=C2=A0 asus->kbd_led_avail =3D !asus->driver->quirks->kbd_led_no_w=
+mi &&
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 !kbd_led_read(asus, &led_val, NULL);
+> =C2=A0=C2=A0=C2=A0 INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
+>
+> =C2=A0=C2=A0=C2=A0 if (asus->kbd_led_avail) {
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-=
+wmi.h
+> index b45f81b38a47..e53c6b3fc619 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -41,6 +41,7 @@ struct quirk_entry {
+> =C2=A0=C2=A0=C2=A0 bool wmi_force_als_set;
+> =C2=A0=C2=A0=C2=A0 bool wmi_ignore_fan;
+> =C2=A0=C2=A0=C2=A0 bool filter_i8042_e1_extended_codes;
+> +=C2=A0=C2=A0 bool kbd_led_no_wmi;
+> =C2=A0=C2=A0=C2=A0 int key_wlan_event;
+> =C2=A0=C2=A0=C2=A0 enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+> =C2=A0=C2=A0=C2=A0 int wapf;
+>
+> ---
+> base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+> change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
+>
+> Best regards,
+> --=C2=A0
+> Moad Tarrih <tarrihmoad@proton.me>
+
