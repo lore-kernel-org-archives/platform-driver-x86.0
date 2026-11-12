@@ -1,94 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.13.23
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794493698;
-	b=xXp+k6h0Iy0CE941QT01rD8Q11KbiwmHmtRKzvGYi/C6kaMzIv2XK+TxTl17ZgbudzGz
-	 xOUiB/fv0dhC9VzUFbgynNRRO3k+JHNPVkRXzaZlzRJCY2LHOH4gwEOT/OMRYyr7CsPMz
-	 1nsthlKUtgiPHlYXYeHD4KwO0jmpYR/Ixtogi5442ILbyXEPtvybltHgapROSHPF+imLg
-	 SycQyIEjToziv2viCQl6KMUbPyCgh8/LOqqAO4JbiEmNT4FXrEuqV678WEjKrfYJ245Hn
-	 +rLAYNqRPY5ZsqwgQqIm+k4kAXipVH7rHJuRDfiEcVrVRf2yzUEoJCU5Nsnu6qWGQMg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794493698;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 Content-Transfer-Encoding:Content-Type:X-ClientProxiedBy:
-	 X-Microsoft-Original-Message-ID:MIME-Version:
-	 X-MS-Exchange-MessageSentRepresentingType:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=+02LkofJOlb7nN0tHnPm/L/qcZfKiboREpzNLGcBZpA=;
-	b=Yx5gEZ/dOP9ve768vddXgDoP8taGN988ixUxupXyt2mGCYfb7JU96e509Ohjdd44G/tL
-	 CMdVw4FGtP1+zeHKzFx3BzJO5lfJeI/El+0rQdcDwRBPuots0ey3Cn/IaPTdYnL56/uo0
-	 R093mHIE3f9kEWAMmswzDtNtm8e0T2T1hpLixeGyzXv1E7g0HqRPdrCw4QRppt3wfQWDP
-	 gp75ZpgPdo3NlxGJV7UyoEochCIEbnMcn+aEeulLeeW1oVFBfqLOtmxfjFn0TOmOKDIuC
-	 mmVrcUOesgemcDsUgicnFTvJ95NTfSR9OcP6QRaFNp71lF5qZ2TVTWo586sX5dsT5eQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=outlook.it;
-	spf=pass smtp.mailfrom=outlook.it;
-	dkim=pass header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.a=rsa-sha256 header.s=selector1 header.b=RYLnOpxv;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.13.23
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazolkn19010023.outbound.protection.outlook.com [52.103.13.23])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794494810;
+	b=eULF8/q5vohXO2+/lg8TAh/NcgdCmq0SNpLUzyXJhbSSI51Fov0kCXhYcJhfQJCxjLQg
+	 JDev1plk8pzB370gR42I6ahK8MQwuAti/Gx1f/atFOJdAvtOmW6PKm9YcvqILIVrFMEQo
+	 YpukU+sNuEpFomK/owTCPQyk+iFR/zoeDH84Stye52QUaxyYIvaKGij9ldNUFs0qqBjhC
+	 w0IGhyRLd+DRCbVKkrwQnsmRfbWIypaL61dFAaD8LLFTaS4My6m2IQj+rK/wnuV1TC4Ym
+	 2aF4+yGYiQ1mOvxqtUwbhoDNNBvCd48R9vixXldvSIf0nZBaL73Wqn7nmSSty68Sjbw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794494810;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Subject:User-Agent:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=GW1J6s7aL2zvtC13WpFK94wE9d4airqES1RCBPqtr2M=;
+	b=gPGcHNEwz6K8vLCgAEAa2hCo6ii4Q4glVFIc1e5NhVganFgwXqrgs8Pko7+RLC53ccqw
+	 zwi6bgeeN4cmn3pWAtXtKJ6t3eOXMFASJ0L+/0HQRqx+a0WFuxrySehkXruaOaEFC5ZOd
+	 shSZndZ2uwID3HQIaxD9C9zFuE3kCpU9G2iu4mVYMJ7T0yKB7d8z2q+aCdqErV/rXzHgo
+	 lo/UR2zADwB+KiZm/qB54s9PBpmn7h83DjYl1Wd821OwFxBIHpPiIoxqW3oWAv01/QMky
+	 hmf7T839Hu5jfdS/scK4QK8jb4o5t2vwQ48S3mOggvUbZC8NycK0fM7P2n+l7/ntAnA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=B5ie9Sbk;
+	arc=none smtp.remote-ip=74.125.82.177
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396E6606D55E;
-	Thu, 12 Nov 2026 14:28:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 396E6606D55E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F6F606A335
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 14:46:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38F6F606A335
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.a=rsa-sha256 header.s=selector1 header.b=RYLnOpxv
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B/Ge6GuvxGbjCMkIk8wG0G4BbIIhB4HcvWl4PZXOuhPxph0Yo5ANZyVNr5tQF0IZpsJz/oBiKqv4qFSxYlH34Gr5Sumq5X9nkBfor6wJlNrrk9vUmDJxJaUhdWDT0yfqry1sAH6iF//40pvrPDANYuIEO45nhXaava8HFodc52FNB/8a1JzgnYENCu+q0e5BXIUhQYUY3k96DKS4trupgSzmlyVtSuZbC1oZufIV2DX+CJZ5a8Rj58TKki84qzhXwXbRxC04S8J/Lr7VzURTanLxqwlO4cbX+pry7Eh4beCAm/w37NK9Ydf5vkqHo9YODI84pmyI1IzRyabU9myB0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+02LkofJOlb7nN0tHnPm/L/qcZfKiboREpzNLGcBZpA=;
- b=YeISyXhJfdfhbAdwAXX3o4+4/pDa/ps8tuVXGlkbrbcSb29waBcqMaUkzpCllBXatT/HDxwxFWRelImyc+Pws58E8UepQJv8vNYwLZMi+uKeQQjHK+lg0gC17SMArjRm7CpBQz7Ml47h5qrLJjztMkz/2dOgW6ZZGchVJHeDOXU7RJ5EOJPGMLP32anOCO6Nym1jrYEEit74wfEMCMcBBFj3Ag6eMpLj1hPIuLphYgMgPCfc06I9JimI/KorXmOQ1F4ss9nLiaOUVKk+/Ra3vcVxFg9F26Cya1SrZmTWsN8cSOJ7bP4iYOVk2NnMI2GPr18LhyLIGBKci6aBx06hNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+02LkofJOlb7nN0tHnPm/L/qcZfKiboREpzNLGcBZpA=;
- b=RYLnOpxvQdyM06yvPmIKix7ZZMnukq8hM1Sx8UsQf6VM1m9mptGguxjPMr9wJrzCp2WfOFJ/DkReneaCEZPZHBcY+pAx+TwfXFgbgxD6mXbEUy7ICkmlPIX/l30pxlmBw3iLbTUlzJzyhi/YDOMNtB20t4WVXH1p93JPQHg3o8unXnXDDcGc28Uavwvjy2bLRgZHLP93FabyIlcpnVw51IB0+imfa/n5Vqfur0SbLQk4jN2VehM3GuR0nqMeVq2c04wCSxjpJ8WjJKeHYYFhPOucttSZtcvipW9FJj0EGNW6QA0rllFIVU6oRaflLFKPF4j3ENCO2qoJfeXhJDbPYg==
-Received: from BYAPR19MB2293.namprd19.prod.outlook.com (2603:10b6:a02:be::11)
- by SA1PR19MB4895.namprd19.prod.outlook.com (2603:10b6:806:187::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.9; Thu, 12 Nov
- 2026 14:28:09 +0000
-Received: from BYAPR19MB2293.namprd19.prod.outlook.com
- ([fe80::c4e4:5169:dd46:c0f0]) by BYAPR19MB2293.namprd19.prod.outlook.com
- ([fe80::c4e4:5169:dd46:c0f0%7]) with mapi id 15.21.0615.009; Thu, 12 Nov 2026
- 14:28:09 +0000
-From: Marco Giunta <marco_giunta@outlook.it>
-To: ilpo.jarvinen@linux.intel.com
-Cc: guanlan@awinic.com,
-	hansg@kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: serial-multi-instantiate: Do not request IRQ for AW88399
-Date: Thu, 12 Nov 2026 15:27:32 +0100
-Message-ID:
- <SN6PR19MB2303434E2E267790D5DC2858FC702@SN6PR19MB2303.namprd19.prod.outlook.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <ccd77135-cb25-d49f-7e30-1777682485e9@linux.intel.com>
-References: <ccd77135-cb25-d49f-7e30-1777682485e9@linux.intel.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: FR4P281CA0272.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e6::13) To SN6PR19MB2303.namprd19.prod.outlook.com
- (2603:10b6:805:56::19)
-X-Microsoft-Original-Message-ID:
- <20261112142732.18305-1-marco_giunta@outlook.it>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=B5ie9Sbk
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-36dbde64409so8541408eec.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 06:46:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794494809; x=1795099609; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=GW1J6s7aL2zvtC13WpFK94wE9d4airqES1RCBPqtr2M=;
+        b=B5ie9Sbk0h0ROlG5e70AX9jsL+iKEdl5R+SqOO+0e/f+zcG2//r+6xJSJaXzM7yXmB
+         bZgvfZ+iA2nav/8AycjLNu1CizbhripoJ642uoYr4akc+mggEeGuliAIXpvvTeIELebu
+         vvh8f3EZjTlIb+HBY+QtvI2Kf889Ei1fVf5Nj5AbQZABx97e4ot0IqJBv0kHaVVP2Pkt
+         +rVxIrhMsygSJJr4glSnP/OTNlK61vufHrXiE+jfwW82wKO17ULrO3RLaSVkyvhe0aC+
+         ahPcvS3VAY6mJgU6TvtX3cBIC+fPVWfPwJk78TBWJv2ms8TuYcKg0j4Zeg/aNtxqHq6b
+         nQCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794494809; x=1795099609;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GW1J6s7aL2zvtC13WpFK94wE9d4airqES1RCBPqtr2M=;
+        b=MsQDGLYjjBn+LDcLFJrOq6HdeFgKMdgvYBEUtkQjm2D+Jdsl3YjzulqUMRKlVhA2Va
+         sg9mTxegKviCapeZt/DJIJ1Dp6ntKdAd8WrqfQR7V8lolPn+fRjOPKtodeum5LeQor1G
+         zJNvrKiJVbi3pddIAqc9M+urFaeZexqIK2ZssS4PifTXJHOo152/bUfSJRV2gBPuJCAa
+         Tx+Kip4LFVpq073J+nzuAuPxbrI/X06COJQgjUWMXjqCwrQwtUik8VWT5EJ56guXsVI+
+         MREoWsRGQCC05zXa4Z+6fWlOPux5Yut/s11Dw/sHyzsdS3sv2QmCp1Kr3di8VGEMG2MF
+         0c7g==
+X-Forwarded-Encrypted: i=1; AL+hErHKEY/isILK70FdlH9NfdXQZpv9pPWFraMxEihDavwHvbkLvAHb4vphyu1QFqz8DQfG6PECLztd6p6k7ERaVrrDH171@vger.kernel.org
+X-Gm-Message-State: APuU4Z8aTFfIRqk1g3a5osiy2UpfOBAMZslPCZ7CJKqagKM+T/0FVDRT
+	W+29xU6fT1hQwHNuOK3PXYLCEkQQLyOnHIhnpXxbDdMs+RBpvi6nL5sP
+X-Gm-Gg: AYBFou1/6xtsKYmEIqhzndQf3oSqiEWR/WeO7TDhYwqKdIe0C5HAal8EVotmmSPU7P5
+	26p5uV/qpd+cw0boYO7X8k0iStlmFHrUo9+rO/K416c4y/5zr0Q9MQaUujNPKiJxKPg4QKjBPAF
+	qOTDNK+y6UMHuQQcf6IUcJRgc0uYrrlK2kvC2eEZIczkp0Wy9/lQyedoIAvrj3hhgs8Nzf8VdZ7
+	iwj6xbX9H6vhUR8jtRfZS3gty13r1ru8bYGcwUhBSwNP1XWLnl/WnkLYK3IlscRxuUefgEXnedn
+	bmECHqZx6+ECtPU55HaqdBsSjWAb4WCkuMwt3dL7IZUAoYHvwIN74SFuP5m6eRvCfyu/0D1InWw
+	jEk72cj0LEHQs4A5bw2q1GWmtxBUbUxw9mcdz8ietbrbisWUW9QLmTtplMF3rd7vDiL1TJ9m/yw
+	PprhMgxYOQyl6sD6VSZnHGfnExzD5QWfEyaijZ/K8T/n35rDeUSGd70pyYk3tKUNVEdi7q+Lgv4
+	DokQLR3U6CsGiAh7Plwwtn7zojwzVDkmUPhc1loxpv5zrzPvzbpwiTYmUMTzSoNLz5Tvgvti1Cl
+	I+HY/CdBAOKG+tTW7nI3P4YJkA2mngs+diDzLLXux6RYQEKBABpGaHGvaEWA7F8jEXdSBUNr6UA
+	K7IW7seQU961X2MHbmCDXSwc=
+X-Received: by 2002:a05:7301:470c:b0:36a:12c4:8bd6 with SMTP id 5a478bee46e88-37686171f1bmr5787039eec.22.1794494809135;
+        Thu, 12 Nov 2026 06:46:49 -0800 (PST)
+Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37925e611e4sm285392eec.20.2026.11.12.06.46.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Nov 2026 06:46:48 -0800 (PST)
+Date: Thu, 12 Nov 2026 06:46:47 -0800
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Aaron Ma <aaron.ma@canonical.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Rong Zhang <i@rong.moe>, Hans de Goede <hansg@kernel.org>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_platform/x86=3A_lenovo-wmi-ot?=
+ =?US-ASCII?Q?her=3A_Deconflict_battery_with_thinkpad=5Facpi?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20261112074823.853819-1-aaron.ma@canonical.com>
+References: <20261112074823.853819-1-aaron.ma@canonical.com>
+Message-ID: <68B20AF1-0037-4810-98B8-49E3CBF17E92@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -98,110 +101,173 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR19MB2293:EE_|SA1PR19MB4895:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9219d91-ec77-4734-dfdf-08df40c9203a
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8022599003|23021999003|5072599009|15080799012|19110799012|8060799015|24021099003|260925184616899003|25010399006|440099028|4302099013|3412199025|1602099012|10035399007|3071699003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ad33hctNah34U+tfPAQnDw1EIeN35Qe2GC1ltxEEukmP0+j8aX8SmZxNxHRp?=
- =?us-ascii?Q?9auuoDQIHVUJ67++D9+V0jVPOLZfmWgStf6ngdHcK7JcexSnEErdAJkfaA1V?=
- =?us-ascii?Q?y1bXAVRdZH72+pD8q0ddWsahfWFv9Sqx9cl42eE5Sl7oh8K/YF6Pun4bzPyE?=
- =?us-ascii?Q?XixwNfKl5A/nf+OISUxGyEslabRhJE7mfPz2dNmYWHLs0LFBNC8KCuGgs3Hf?=
- =?us-ascii?Q?cxuPqVziIXuHBE2t+rqiyeUcvuWptLRTaXuz66ls7iMrPTCNDYpxCtvOLE8E?=
- =?us-ascii?Q?qP3Gdvt0kekpss7vMxHnXCp2vWCTddsaUVqG73E4YzsPE6OctujTv2KF6Gpx?=
- =?us-ascii?Q?L0J7iOD/wE9awkU/aFShAbNN6GljmSlr0Xq/u7vmgWpvQmgSxWpGz8Co0X0w?=
- =?us-ascii?Q?BkTkn8zx1Xvr5imVhuUZpGTOXmyzPL8n0y8vKn8R6wpwUNX3FGfZopx4pc+1?=
- =?us-ascii?Q?dTh2lvphwd5dpnIFMECQiagfvqQrHGZeK78+/kTTdKVOp4G2CFHy5diX3cUf?=
- =?us-ascii?Q?e5H/QNpZQ628Br5PAPSov1B9HqecVbV4+kHMOEqYsFRU89IqVHXi1Sct4G17?=
- =?us-ascii?Q?LYnMExHHa2eUtuSLpgQo8R5pnP49OWjmtaowzT0BWASnxb8A7YuP/ve9KdM9?=
- =?us-ascii?Q?Wfy5JkTeOQB8KTy4JmrlQO/2stSZWADwTpPRT+H8LMa8F4fjRFaNSXCE4QL4?=
- =?us-ascii?Q?keU7r8cKZQO1FmrMD+uXMU8MZPBDYoH4eUBd0sickPk590ayUhBfiYZom/Qr?=
- =?us-ascii?Q?hg6KDJRRskTe4yHK1HOiTV7lsFaPqRWrD1KvrWt/kavWYHrOoB2O4DfUjPee?=
- =?us-ascii?Q?AUcYt//KBe2vwVS8ch28zHGLlRQPHFBx8/GtXgly5g5d5THJhwdVBDnC4lNd?=
- =?us-ascii?Q?lFXq/oQrw0VERSmgOPnW8MwHg77LXWQ8SeHuVNJkismJzyFm7SjfoLcOwBOl?=
- =?us-ascii?Q?LM4N/+xj4cwqElSuGQ++RIT+lcVte6JSBQUkFMeIIyk=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?z8437htzkl7O+oUV2pKk7GwY1ZuIjTy1K18ZAElGYOI1kDeSwpfWZYo9CJxZ?=
- =?us-ascii?Q?TFeCkkN/6tCDJaEQJRIQBlIAgsVOQnPCssK8R4h5dEPRy6Se1K26KxS9NBjC?=
- =?us-ascii?Q?nvNcH+Rlk6mqj2JUZFWxYxRnkVZcMIYucPBhSepOulV572mXsLwXewU/DRHm?=
- =?us-ascii?Q?saS2NcvcyCKLZnOwY+OWPvZijGuADDgnSSmvJjPoQdRi6++ke1jh9xnbSMbb?=
- =?us-ascii?Q?uABKdTUgcdGcV3Vjb3ty6ZIV4h/PXhdfDRkD/P8Q22BmRdg09phaE5ddZnI0?=
- =?us-ascii?Q?GQ+5hOE0jqbGZ6KyMR6l0ObWMHd3+P8WTu3HMpu5UTBRP0xc7AJadKdmXDNT?=
- =?us-ascii?Q?X0bzDGSiSLLtRV4V3nQQPl1N45XmoeSJ4YrcWaQotf16fdr/xVA19QsbUrvN?=
- =?us-ascii?Q?75KkkTQZr3iF4+mw/fRUchlQUsfrIiJxRXDVAj9eFOAKfnRqnrhYFqL8CUEo?=
- =?us-ascii?Q?is/sQ7++Dzb8jI6Q0kC3Abxwp7qWuJa5E95A9DT2VcOf1xwJ63BgqWcx4vhx?=
- =?us-ascii?Q?30HCbAsAkRi9wtt+ITrXa8BYtKYCErPW6CO9bf+0u2FRwb8B95b/cM/QKBuc?=
- =?us-ascii?Q?mSau5bu2a1Sk1SmZsSC8vHkJESVM7rGc45WQFxmrkRdnSbvqBLKSJwfTNpmC?=
- =?us-ascii?Q?k5okWQ9DXU43x870uoxlyaAvMVT8gDLB7txlJPSfXEkdu9BeqX9fv+Pc2f81?=
- =?us-ascii?Q?hh7YAjwEswkZ1Rp7K88CRLt4V5xt9IPaX8GsHltmAH1azZBVV9nPAqn/7oOB?=
- =?us-ascii?Q?68jux5QuwOu05/7q0Af3vxtriqwqBhWnvZpdkqQaK5yuYi8/O2vBpLHVJPED?=
- =?us-ascii?Q?JCicGo+zMmSun2Q0xCqpTj9zR1OT/1ycPS7qd96+/9oFRdslqIl5Jc1PUH9u?=
- =?us-ascii?Q?QN2CIAPBdJq076lJgIkhX58nhl5YGa1/KBtt9oiwVd/oDcAAWNmnoTf09o9N?=
- =?us-ascii?Q?TwTGMXiWmGpx8FDRsYWkj6bgcBjEgLdw07bkTvSe7ZaqKW+m4xydh9o3mQiI?=
- =?us-ascii?Q?zzX72HaWiUfgGb/ytFPqcpgqoT6n759eerijARe3/s9exUFOzGVrBhJhB+YH?=
- =?us-ascii?Q?r9vFBG3C52aJtmjfydO1WvwwiSukkgIYVjxWOqn5tSkOkwth8Bis+OJFZb7m?=
- =?us-ascii?Q?l5ruTHdkpjAuHt0Tp+HQVResbWNEMULbAi1bdqQspMoiuIoZN+ceZ39aaV+r?=
- =?us-ascii?Q?4MEWkWafVoEWzyV+EqC2sgHEfbKtpBNKW7hVMW0gI9qIAeVuq3O2fkKR1txn?=
- =?us-ascii?Q?4oC+Io5KSoti2CP0s17NIvK8tO39qN9kuiKtafeA2+desYBthXTgYYdlN8rE?=
- =?us-ascii?Q?+fwDyGH4lCm/VNJzFy1xe2BGI9D5+sFTDzPtKfl8sx90+2dxpJm0A6yvbxSl?=
- =?us-ascii?Q?xgVR8fJdrKEbbxZcasXMJk5U/YYn?=
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9219d91-ec77-4734-dfdf-08df40c9203a
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR19MB2303.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2026 14:28:08.8821
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR19MB4895
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On November 11, 2026 11:48:23 PM PST, Aaron Ma <aaron=2Ema@canonical=2Ecom>=
+ wrote:
+>ThinkPads expose battery charge thresholds and charge_behaviour through
+>thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups=2E The
+>Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
+>charge_behaviour and charge_types on systems advertising those WMI
+>capabilities=2E
+>
+>When lenovo-wmi-other registers first, thinkpad_acpi fails to create a
+>duplicate charge_behaviour sysfs attribute and unregisters its battery
+>extension=2E Conversely, registering or updating any power_supply_ext on
+>the same battery runs sysfs_update_groups(), which removes standard
+>power-supply attributes not owned by power_supply_core and wipes out
+>thinkpad_acpi's charge_control_start_threshold,
+>charge_control_end_threshold, and charge_behaviour files=2E
+>
+>Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
+>thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
+>table check when the corresponding driver is enabled in Kconfig, and
+>update the force_load_psy_ext description accordingly=2E
+>
+>Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI battery ch=
+arge limiting")
+>Signed-off-by: Aaron Ma <aaron=2Ema@canonical=2Ecom>
 
-chiming in as the AW88399 HDA side-codec driver maintainer.
-I agree with Ilpo that more context is needed. What's the issue with
-IRQ_RESOURCE_AUTO exactly? For all supported Lenovo laptops, so far no one
-has reported problems with SMI i2c device instantiation (as far as I'm
-aware). On my own Legion Pro 7 16AFR10H with debugging enabled, the SMI
-driver simply prints "Using gpio irq".
+Hi Aaron,
 
-Based on this:
-https://lore.kernel.org/linux-sound/20261111043601.306427-1-guanlan@awinic.com/
-I know awinic is adding support for a new Lenovo device. Does this laptop
-have issues in its ACPI firmware, that cause SMI to error out before
-instantiating the I2C devices?
+Looks good, thanks=2E I'll test it in a couple of days=2E I have one quest=
+ion below but it's not blocking for me, I just want to check my assumption =
+is correct=2E
 
-That said, given that we currently aren't really using anything
-IRQ-related in the HDA driver, this change doesn't look particularly
-problematic if this new Lenovo laptop lacks a GPIO assigned for IRQ.
-However, I think IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT would be more
-appropriate than IRQ_RESOURCE_NONE, as we can keep IRQ resolution on the
-laptops where ACPI firmware provides one, while avoiding SMI erroring out
-on those where it's missing.
-This is the same approach taken for tas2781 in commit 1d1b8b0734af
-("platform/x86: serial-multi-instantiate: Add IRQ_RESOURCE_OPT for IRQ
-missing projects"), which addresses the same situation.
-The corresponding HDA driver also doesn't make use of IRQ, so I think
-the tas2781 precedent applies here cleanly.
+Reviewed-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
 
-Tao, can you confirm if this is the case (no IRQ assignment in the ACPI
-tables for this new device)? And could you share the ACPI DSDT excerpt
-for the AWDZ8399 node of the device in question? For reference, my
-Legion's one can be found here:
-https://github.com/marco-giunta/lenovo-acpi-dump
-If the above is correct, then please submit a v2 with this change (with my
-Suggested-by); alternatively, I can submit it myself if preferred (e.g.
-with your Reported-by).
+>---
+>Changes in v2:
+>- Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
+>  device IDs, method pairs, and driver configuration checks, as suggested
+>  by Derek J=2E Clark=2E
+>- Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
+>  instead of relying only on ThinkPad ACPI device presence=2E
+>- Check whether the corresponding driver is enabled before looking up
+>  its ACPI device, including for ideapad_laptop=2E
+>- Update the force_load_psy_ext description to cover both drivers=2E
+>
+>v1: https://lore=2Ekernel=2Eorg/platform-driver-x86/20261111083529=2E7272=
+85-1-aaron=2Ema@canonical=2Ecom/
+>
+> drivers/platform/x86/lenovo/wmi-other=2Ec | 51 ++++++++++++++++++-------
+> 1 file changed, 38 insertions(+), 13 deletions(-)
+>
+>diff --git a/drivers/platform/x86/lenovo/wmi-other=2Ec b/drivers/platform=
+/x86/lenovo/wmi-other=2Ec
+>index bd64e7b44669d=2E=2E14b2c3f4cc7ae 100644
+>--- a/drivers/platform/x86/lenovo/wmi-other=2Ec
+>+++ b/drivers/platform/x86/lenovo/wmi-other=2Ec
+>@@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
+> static bool force_load_psy_ext;
+> module_param(force_load_psy_ext, bool, 0444);
+> MODULE_PARM_DESC(force_load_psy_ext,
+>-	"This option will skip checking if the ideapad_laptop driver will confl=
+ict "
+>+	"This option will skip checking if the ideapad_laptop or thinkpad_acpi =
+driver will conflict "
+> 	"with adding an extension to set the battery charge behavior and batter=
+y charge "
+> 	"control end threshold=2E It will also skip checking if the BIOS report=
+s that "
+>-	"those features are fully supported=2E It is recommended to blacklist t=
+he ideapad "
+>+	"those features are fully supported=2E It is recommended to blacklist t=
+he conflicting "
+> 	"driver before using this option=2E");
+>=20
+> /* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00 & fa=
+n) =3D=3D=3D=3D=3D=3D=3D=3D */
+>@@ -905,17 +905,32 @@ static acpi_status lwmi_acpi_match(acpi_handle hand=
+le, u32 lvl,
+> 	return AE_CTRL_TERMINATE;
+> }
+>=20
+>+struct lwmi_psy_deconflict {
+>+	const char *hid;
+>+	char * const *methods;
+>+	bool driver_enabled;
+>+};
+>+
+>+static char * const lwmi_ideapad_psy_methods[] =3D { "GBMD", "SBMC" };
+>+static char * const lwmi_thinkpad_psy_methods[] =3D { "BDSG", "BICG" };
+>+
+>+static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] =3D {
+>+	{ "VPC2004", lwmi_ideapad_psy_methods, IS_ENABLED(CONFIG_IDEAPAD_LAPTOP=
+) },
+>+	{ "LEN0268", lwmi_thinkpad_psy_methods, IS_ENABLED(CONFIG_THINKPAD_ACPI=
+) },
+>+	{ "LEN0068", lwmi_thinkpad_psy_methods, IS_ENABLED(CONFIG_THINKPAD_ACPI=
+) },
+>+	{ "IBM0068", lwmi_thinkpad_psy_methods, IS_ENABLED(CONFIG_THINKPAD_ACPI=
+) },
+>+};
+>+
+> /**
+>  * lwmi_om_psy_ext_init() - Hooks power supply extension to device batte=
+ry
+>  * @priv: Pointer to the lwmi_om_priv drvdata=2E
+>  *
+>- * Checks if the ideapad_laptop driver is going to manage charge attribu=
+tes first,
+>- * then if not, hooks the battery to our WMI methods if they are support=
+ed=2E
+>+ * Checks if the ideapad_laptop or thinkpad_acpi driver is going to mana=
+ge
+>+ * charge attributes first, then if not, hooks the battery to our WMI me=
+thods
+>+ * if they are supported=2E
+>  */
+> static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
+> {
+>-	static const char * const ideapad_hid =3D "VPC2004";
+>-	acpi_handle handle =3D NULL;
 
-Also, I know the get_maintainer script won't print my name for changes
-like this, but please CC me anyway for anything impacting the HDA AW88399
-driver; I'd like to catch potential regressions early. Or at the very
-least, I can provide Tested-by tags since I actually own one of the
-affected laptops.
+I'm assuming this was moved to avoid handling cleanup each loop?
 
-Best regards,
-Marco
+Thanks,=20
+- Derek
+
+> 	unsigned int props =3D 0;
+> 	int ret;
+>=20
+>@@ -928,14 +943,24 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_pri=
+v *priv)
+> 	if (force_load_psy_ext)
+> 		goto load_psy_ext;
+>=20
+>-	/* Deconflict ideapad_laptop driver */
+>-	ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL);
+>-	if (ret)
+>-		return;
+>+	for (unsigned int i =3D 0; i < ARRAY_SIZE(lwmi_psy_deconflict_list); i+=
++) {
+>+		const struct lwmi_psy_deconflict *entry =3D &lwmi_psy_deconflict_list[=
+i];
+>+		acpi_handle handle =3D NULL;
+>=20
+>-	if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(handle=
+, "SBMC")) {
+>-		dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery for d=
+evice\n");
+>-		return;
+>+		if (!entry->driver_enabled)
+>+			continue;
+>+
+>+		ret =3D acpi_get_devices(entry->hid, lwmi_acpi_match, &handle, NULL);
+>+		if (ret || !handle)
+>+			continue;
+>+
+>+		if (acpi_has_method(handle, entry->methods[0]) &&
+>+		    acpi_has_method(handle, entry->methods[1])) {
+>+			dev_dbg(&priv->wdev->dev,
+>+				"ACPI device %s manages battery for device\n",
+>+				entry->hid);
+>+			return;
+>+		}
+> 	}
+>=20
+> load_psy_ext:
+
