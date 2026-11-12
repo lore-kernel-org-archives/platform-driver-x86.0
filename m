@@ -1,70 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794478869;
-	b=eVAO48T7XfszppyRIu7SnsLYbfkaakZ3WRi3i9lPWWZn2ZG2oT10MfPAVRAMCeNBx8kL
-	 z2xqb/Q6/Ab02vlJdgxQYogRK2IuDRD29ROY8yu5mX18EDC7Dj1RiGjsUWduq8a1NvLm6
-	 YGK/HB1mduDGoPg4QKjF0fIfwc7nsm77e7dxgcFA0gw3qJKqBTZo0mGEpkIPY1JX+4Q/O
-	 ZmHddpk5uS1En3yVLTPvnVHmIpy0pbU775S96RRbbWE1OSTGv2nRzGuyV9D0NN7zz00Oy
-	 WrfwWEUM5rLVg6C4uvbfHQbW4wkrjzqzHEW1RkCKwpjgLonZCsO60u2bw++s3dGMvnw==
+	t=1794478887;
+	b=EaBpQbMCiEIxgJCrIPvxCDhSxG7j5sroFM5aMrTXFiAUp4xEwl5zLzVPcu4aCmDc2H/H
+	 ijtZzTk10NBL6ERMbhQ2EeABND6tnHp4HfLp3QwmwrJUmKO2VuTeuOdR7rW7yLVJ0xbVk
+	 0NL81RzsrR/oW+ZpH0fzfE2rOXJMWEGcwVQgaHgi8PDyPOAQyq1OKpFgoraTUU8sCmULb
+	 hhPISmq47eXhVVKB58eupLX3B3mNS2kSdd0iBBgaT6ZcVNZol8h8QSNfexz4eb13766Hb
+	 earKi+Zz99Gen4JuUW8aNoJS1IuUAsMCuKGBkKHskD/MY/0AcqIIhoMwfX+ok5hQtPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794478869;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Message-ID:In-Reply-To:
-	 References:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Correlation-ID;
-	bh=Bd80MeNM9pTxoWBwGXjsknndsrAkhTF783e+5nYvx28=;
-	b=HHvpBwYrHsybsDxgjusMzV/B5f4nWgAuukRtjr6pSfVFhpSW1JK0ZYcvZH74cpfHyUcc
-	 F3V0rkhZKn1a+hJ/SLft8W4OWoDUg/EBnNobpCugcPcUDiZZgTAN4Y7olZuW1i6gDLL43
-	 FMH8WcPyLSNHJ++tT78OF88wLSukdU9BRm8Jas/s4ztUrDvgy+JRz6Osk9sJPtOu3fj77
-	 VIq+o+LvWstQFVARjRGDRPHDsuwmpted7gMJPWwMkYtypNspMZioLbEgUZzGkPBhlGSbj
-	 DsdaEJ7LXD4YOedupXBQuw9ziAETHVRNIx8uAWKjByctMl7jaaIiEk0H2BWZHOQIMEg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794478887;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=NVbji0KZV1uYZUK4TZCgFQxar91nD/H9oFtItu7ZRyY=;
+	b=S4OYhJdctklN7E6/5i3eDbwjCaMN/AqH/MndBbbMvOtsIWbPQ1WpXlbEuxpeqn8d6yzX
+	 NPjc5x9M0cE9tdC2lwYxYLx30sWiyMdbUY3jXIC40p5o6SsKw1WzTG4dECb+sIBWHNwek
+	 udlh9buZJ0RRLyENB6l0fKI/v+OUAdVmiJZTUO17N/hAguRAd2N0C4sXp3Hkxnm6YMjd9
+	 o/BSq3SZXxX4s7u939sR0a/GXQKclhsjorZ87DOk+aJPQ6PAaw/35Lo0QySdSvpETeVLq
+	 ZqNky0+gKsouaN4Lj8heQd8Na/00Air6cQE5wp/W4+94AKJNAY8hpVIIYfbQLI1MuaA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Dpohe1Kq;
-	arc=none smtp.remote-ip=91.218.175.71
-Received: from mta0.migadu.com (out-71.mta0.migadu.com [91.218.175.71])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JFa1Uo6g;
+	arc=none smtp.remote-ip=192.198.163.10
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CE3606A321
-	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 10:21:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 60CE3606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7BD606A33B;
+	Thu, 12 Nov 2026 10:21:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD7BD606A33B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Dpohe1Kq
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=Bd80MeNM9pTxoWBwGXjsknndsrAkhTF783e+5nYvx28=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794478865; v=1; x=1795083665;
- b=Dpohe1KqNJ+Q6KzplHoBcMd6A4Oe5YEaiqEtbSCYa0dXH+kmo/W//CyXqTEePnZFPr/ZcWDF
- tgSD/YudXICtqbKF3v8NvWnSafcQ586C1hx3VdzGKLd6f6V0XM+AmLbYWukhCX5H3EkH1+WipA1
- NOAwgOHNoT1fbjWaQfEYD6C4=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id cc48a1a792d15d12;
-	Thu, 12 Nov 2026 10:21:05 +0000
-X-Mizu-Trace-ID: cc48a1a792d15d12
-X-Migadu-Flow: FLOW_OUT
-Date: Thu, 12 Nov 2026 11:20:56 +0100
-From: Denis Benato <denis.benato@linux.dev>
-To: tarrihmoad@proton.me
-Cc: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Sercan GOKMEN <gokmensercan@gmail.com>,
-	Burak Goncu <burakgon12@gmail.com>,
-	Denis Benato <benato.denis96@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Message-ID: <04c46822-9baa-4152-8193-d8aa9d757b4e@linux.dev>
-In-Reply-To: <20261111-asus-wmi-kbd-readback-v4-1-79df1567476d@proton.me>
-References: <20261111-asus-wmi-kbd-readback-v4-1-79df1567476d@proton.me>
-Subject: Re: [PATCH v4] platform/x86: asus-wmi: Ignore unusable kbd
- backlight WMI device on ROG Strix G814FP
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JFa1Uo6g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794478887; x=1826014887;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9ryvtv+3D0u7ZmUKVKxFugtxHQCXrLGXh6W32QRNzjY=;
+  b=JFa1Uo6ghSC6xIev84cCaylQslA7hOsf+RLg340XAKdjA5XmZKlTjh1/
+   iGiMjZl+cXUZM51DWUYjetSU9YKSKAp472mkqYssg1l224iKtLnCI9zoe
+   aHUpMJXvveSM59HbhCNDJrvfOr2Mtp7chc3oARQ8paPAYckWb7AhK+tHX
+   k7cjjYxZU7NC8+6IwGTQTytLkHe40H1CKte/WDz06NbhYF88qbbkLCnj+
+   1QzHfNRUph+ICuCqgcutdH4cbGpCoFWs1olXksY0GUFTVeQA7k6ABhiJ0
+   bTjnDAsmu6DAbzZK7LVFQ7rQDU5g1qx8i42PB9pxIYsnuGNd9U4nqxS7h
+   g==;
+X-CSE-ConnectionGUID: 33oAaIa7ToaEXr+nv+c1IQ==
+X-CSE-MsgGUID: HXZWRI9dRaedbeORUFlJ5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11963"; a="3160356"
+X-IronPort-AV: E=Sophos;i="6.27,209,1787036400"; 
+   d="scan'208";a="3160356"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 02:21:26 -0800
+X-CSE-ConnectionGUID: 65ZHtRybSxOdws+e3pTDYg==
+X-CSE-MsgGUID: 57Vuhv93R72AniB1yhhDCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,209,1787036400"; 
+   d="scan'208";a="10352280"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.68])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 02:21:22 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 12 Nov 2026 12:21:19 +0200 (EET)
+To: Hans de Goede <johannes.goede@oss.qualcomm.com>
+cc: Armin Wolf <W_Armin@gmx.de>, 
+    Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
+    Han Gao <gaohan@iscas.ac.cn>, Han Gao <rabenda.cn@gmail.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+    linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] platform/wmi: Allow wmi module to load when acpi_disabled
+ is set
+In-Reply-To: <20261111131613.6290-1-johannes.goede@oss.qualcomm.com>
+Message-ID: <8382881b-f2d4-7909-d7d1-3a2c74f3b123@linux.intel.com>
+References: <20261111131613.6290-1-johannes.goede@oss.qualcomm.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -74,176 +83,77 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <04c46822-9baa-4152-8193-d8aa9d757b4e@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
 
-12 nov 2026 00:36:34 Moad Tarrih via B4 Relay <devnull+tarrihmoad.proton.me=
-@kernel.org>:
+On Wed, 11 Nov 2026, Hans de Goede wrote:
 
-> From: Moad Tarrih <tarrihmoad@proton.me>
->
-> On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
-> backlight brightness in sysfs works, but reading it back always gives
-> 0, and the read makes the Fn brightness keys misbehave.
->
+> The core wmi module provides symbols which may be used by other modules.
+> These other modules may still function when acpi_disabled is set, but
+> the current behavior of acpi_wmi_init() returning -ENODEV when it is set
+> causes loading these modules to fail because the wmi module these depend
+> on fails to load with -ENODEV.
+> 
+> One example of this is booting a kernel with both DT and ACPI/WMI support
+> on an arm64 systems with devicetree which will lead to acpi_disabled being
+> set. Trying to load the amdgpu module will fail in this case because it
+> uses symbols from the drivers/acpi/video module which in turn uses symbols
+> from the wmi module. Note the video module itself already contains handling
+> to still load when acpi_disables is set for similar reasons.
+> 
+> Fix this by allowing the wmi module to still load and also register
+> the class and bus instances since some exported functions like
+> wmi_driver_register() rely on these being valid.
+> 
+> Signed-off-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
-With "works" do you mean the write report success but does nothing or that =
-it is actually changing the brightness?
+No Fixes tag?
 
-I assumed the #1 but from this message it's unclear (to me, and I assume fo=
-r others as well).
+Doesn't this fix a real issue and we want this go through the fixes 
+branch?
 
-See below.
+-- 
+ i.
 
-> The firmware reports the keyboard backlight WMI device as present
-> without implementing it, and the backlight is actually driven by
-> hid-asus. DSTS(0x00050021) always returns 0x50000, which is level 0
-
-Always returns level zero with the presence bit set.
-
-
-> regardless of what the actual level is, and every DEVS(0x00050021)
-> write is rejected as an unsupported method.
->
-> Add a kbd_led_no_wmi quirk that makes asus-wmi treat the keyboard
-> backlight WMI device as absent, and set it for this board, matched on
-> the DMI board name. asus-wmi then keeps the LED registered for hid-asus
-> and no longer reads from or writes to the WMI device.
->
-> As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
-> no longer created on this board, they never worked here since the firmwar=
-e
-> rejects those writes as well.
-
-Isn't this a contraddiction to what is written above? That writes actually =
-succeeds?
-
->
-> Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kb=
-d led handlers")
-> Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
-> Suggested-by: Denis Benato <denis.benato@linux.dev>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
-> Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
 > ---
-> Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317) on
-> 7.2.14: the brightness attribute reads back the level that was set, the
-> Fn keys step from it, and this survives suspend and reboot. W=3D1 and
-> checkpatch --strict are clean. v4 only changes the commit message.
->
-> Sercan GOKMEN's B9406CAA patch also adds a field to struct quirk_entry
-> and a DMI entry, so whichever lands second may need a trivial rebase.
->
-> AI assistance: Claude Code (Claude Opus 5.5) was used to trace the
-> asus-wmi code, write the patch and draft the commit message. I reviewed
-> it and tested it on the hardware.
-> ---
-> Changes in v4:
-> - Trim the commit message and move the AI assistance note below the
-> =C2=A0 --- line (Ilpo).
-> - Link to v3: https://patch.msgid.link/20261110-asus-wmi-kbd-readback-v3-=
-1-646adf2b8629@proton.me
->
-> Changes in v3:
-> - Drop the comment on kbd_led_no_wmi (Antheas).
-> - Don't set wmi_backlight_set_devstate for this board: the firmware
-> =C2=A0 rejects both DSTS and DEVS on 0x00050012, so the write did nothing
-> =C2=A0 (Antheas).
-> - Add Antheas's Reviewed-by.
-> - Link to v2: https://patch.msgid.link/20261109-asus-wmi-kbd-readback-v2-=
-1-c048fc53d8ee@proton.me
->
-> Changes in v2:
-> - Add a quirk that makes asus-wmi skip the keyboard backlight WMI
-> =C2=A0 device on this board instead of detecting rejected writes at
-> =C2=A0 runtime (Antheas), so no more WMI writes that are known to fail
-> =C2=A0 are issued (Denis).
-> - Link to v1: https://patch.msgid.link/20261108-asus-wmi-kbd-readback-v1-=
-1-bf38f6400ade@proton.me
-> ---
-> drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
-> drivers/platform/x86/asus-wmi.c=C2=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
-> drivers/platform/x86/asus-wmi.h=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> 3 files changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/as=
-us-nb-wmi.c
-> index 3b0f3346dc60..9b2a4b829885 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -93,6 +93,10 @@ static struct quirk_entry quirk_asus_unknown =3D {
-> =C2=A0=C2=A0=C2=A0 .wmi_backlight_set_devstate =3D true,
-> };
->
-> +static struct quirk_entry quirk_asus_g814fp =3D {
-> +=C2=A0=C2=A0 .kbd_led_no_wmi =3D true,
-> +};
+>  drivers/platform/wmi/core.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+> index 529825dcfbfe..412f2e23b01d 100644
+> --- a/drivers/platform/wmi/core.c
+> +++ b/drivers/platform/wmi/core.c
+> @@ -1573,9 +1573,6 @@ static int __init acpi_wmi_init(void)
+>  {
+>  	int error;
+>  
+> -	if (acpi_disabled)
+> -		return -ENODEV;
+> -
+>  	error = class_register(&wmi_bus_class);
+>  	if (error)
+>  		return error;
+> @@ -1584,6 +1581,9 @@ static int __init acpi_wmi_init(void)
+>  	if (error)
+>  		goto err_unreg_class;
+>  
+> +	if (acpi_disabled)
+> +		return 0;
 > +
-> static struct quirk_entry quirk_asus_q500a =3D {
-> =C2=A0=C2=A0=C2=A0 .filter_i8042_e1_extended_codes =3D true,
-> =C2=A0=C2=A0=C2=A0 .wmi_backlight_set_devstate =3D true,
-> @@ -167,6 +171,15 @@ static int dmi_matched(const struct dmi_system_id *d=
-mi)
-> }
->
-> static const struct dmi_system_id asus_quirks[] =3D {
-> +=C2=A0=C2=A0 {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .callback =3D dmi_matched,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ident =3D "ASUS ROG Strix G18 G814=
-FP",
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .matches =3D {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMI_MATCH(D=
-MI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMI_MATCH(D=
-MI_BOARD_NAME, "G814FP"),
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 },
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .driver_data =3D &quirk_asus_g814fp=
-,
-> +=C2=A0=C2=A0 },
-> =C2=A0=C2=A0=C2=A0 {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .callback =3D dmi_matched,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ident =3D "ASUSTeK COMPUTER I=
-NC. Q500A",
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index b33ebdb21aa2..51fea21ff247 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2165,7 +2165,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
-> =C2=A0=C2=A0=C2=A0 asus->kbd_led.brightness_set_blocking =3D kbd_led_set;
-> =C2=A0=C2=A0=C2=A0 asus->kbd_led.brightness_get =3D kbd_led_get;
-> =C2=A0=C2=A0=C2=A0 asus->kbd_led.max_brightness =3D ASUS_EV_MAX_BRIGHTNES=
-S;
-> -=C2=A0=C2=A0 asus->kbd_led_avail =3D !kbd_led_read(asus, &led_val, NULL)=
-;
-> +=C2=A0=C2=A0 asus->kbd_led_avail =3D !asus->driver->quirks->kbd_led_no_w=
-mi &&
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 !kbd_led_read(asus, &led_val, NULL);
-> =C2=A0=C2=A0=C2=A0 INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
->
-> =C2=A0=C2=A0=C2=A0 if (asus->kbd_led_avail) {
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-=
-wmi.h
-> index b45f81b38a47..e53c6b3fc619 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -41,6 +41,7 @@ struct quirk_entry {
-> =C2=A0=C2=A0=C2=A0 bool wmi_force_als_set;
-> =C2=A0=C2=A0=C2=A0 bool wmi_ignore_fan;
-> =C2=A0=C2=A0=C2=A0 bool filter_i8042_e1_extended_codes;
-> +=C2=A0=C2=A0 bool kbd_led_no_wmi;
-> =C2=A0=C2=A0=C2=A0 int key_wlan_event;
-> =C2=A0=C2=A0=C2=A0 enum asus_wmi_tablet_switch_mode tablet_switch_mode;
-> =C2=A0=C2=A0=C2=A0 int wapf;
->
-> ---
-> base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
-> change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
->
-> Best regards,
-> --=C2=A0
-> Moad Tarrih <tarrihmoad@proton.me>
+>  	error = platform_driver_register(&acpi_wmi_driver);
+>  	if (error) {
+>  		pr_err("Error loading mapper\n");
+> @@ -1603,7 +1603,8 @@ static int __init acpi_wmi_init(void)
+>  
+>  static void __exit acpi_wmi_exit(void)
+>  {
+> -	platform_driver_unregister(&acpi_wmi_driver);
+> +	if (!acpi_disabled)
+> +		platform_driver_unregister(&acpi_wmi_driver);
+>  	bus_unregister(&wmi_bus_type);
+>  	class_unregister(&wmi_bus_class);
+>  }
+> 
+
+-- 
+ i.
 
