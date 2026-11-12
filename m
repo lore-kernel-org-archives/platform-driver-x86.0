@@ -1,79 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794478887;
-	b=EaBpQbMCiEIxgJCrIPvxCDhSxG7j5sroFM5aMrTXFiAUp4xEwl5zLzVPcu4aCmDc2H/H
-	 ijtZzTk10NBL6ERMbhQ2EeABND6tnHp4HfLp3QwmwrJUmKO2VuTeuOdR7rW7yLVJ0xbVk
-	 0NL81RzsrR/oW+ZpH0fzfE2rOXJMWEGcwVQgaHgi8PDyPOAQyq1OKpFgoraTUU8sCmULb
-	 hhPISmq47eXhVVKB58eupLX3B3mNS2kSdd0iBBgaT6ZcVNZol8h8QSNfexz4eb13766Hb
-	 earKi+Zz99Gen4JuUW8aNoJS1IuUAsMCuKGBkKHskD/MY/0AcqIIhoMwfX+ok5hQtPw==
+	t=1794486225;
+	b=MXqOZmhBZ55gZnKRxZdh1QrVSPbzRnrIrE0XjRXVvou0k1H8L8eyIeW5+L5H47Tcbi3J
+	 XoYDGLageA2Ghqeaa48zEfUvMQWLkrD6EWU1qR3IoEd5lpG9MsLGCQSMIMCIrtScOg7TK
+	 GvCdjrUSOaRa37xJhrL8dcey8jGaAn7ha3NYNb320SaudoktTzYWll/vXUUa5y9NJPhX9
+	 mYofpSxWRObeF41Xu70ATrwzNvcX9nFwQWliMpJFQJyRbFJboae6sqYfurW5/tkR3zQNy
+	 WtQfVeXu6KcpjVMB2oNuMrcdZpzgwH5DKg0dKCP8+4BJbhuw2jchhrMNzy3CLM4dpjQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794478887;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=NVbji0KZV1uYZUK4TZCgFQxar91nD/H9oFtItu7ZRyY=;
-	b=S4OYhJdctklN7E6/5i3eDbwjCaMN/AqH/MndBbbMvOtsIWbPQ1WpXlbEuxpeqn8d6yzX
-	 NPjc5x9M0cE9tdC2lwYxYLx30sWiyMdbUY3jXIC40p5o6SsKw1WzTG4dECb+sIBWHNwek
-	 udlh9buZJ0RRLyENB6l0fKI/v+OUAdVmiJZTUO17N/hAguRAd2N0C4sXp3Hkxnm6YMjd9
-	 o/BSq3SZXxX4s7u939sR0a/GXQKclhsjorZ87DOk+aJPQ6PAaw/35Lo0QySdSvpETeVLq
-	 ZqNky0+gKsouaN4Lj8heQd8Na/00Air6cQE5wp/W4+94AKJNAY8hpVIIYfbQLI1MuaA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794486225;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=tcIPG4+3YqX+OOpMdjytCOm0jqolCq/25POtF+O6LTw=;
+	b=xVjtDoz8lJK9S1km/pqpStkZ3Y3vcvhGLVCs+PumBUkv+e62SQIikHUDHfZEah1J5o8k
+	 f4IUjKp1ihGzB9t0PNlkeA/2bQQoHE6IxFzHGVm/bllY1SHcSzQOYy0N5u7ZuG4eP8FX8
+	 ElJxs5WFAqqpJMUiLyJS8qyViwPhE+stq5m5klbbbuEw9+ciWnSPBXiigPQfe72gz5nD0
+	 1DYdXnttrg6XBEwUc6D455BoB5wxBn1QGXHzame/jap0e37bZUqCeaXJl2jAYJ5MViRy5
+	 ozkcll4QdNkqeftoD/SaT3b6lpaBes2n8rwZsjFEpZ7caiZQcNdE40LdowJNL3Rmbgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JFa1Uo6g;
-	arc=none smtp.remote-ip=192.198.163.10
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cOz5m2fS;
+	arc=none smtp.remote-ip=209.85.208.47
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7BD606A33B;
-	Thu, 12 Nov 2026 10:21:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD7BD606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8247F606A880
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 12:23:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8247F606A880
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JFa1Uo6g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794478887; x=1826014887;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9ryvtv+3D0u7ZmUKVKxFugtxHQCXrLGXh6W32QRNzjY=;
-  b=JFa1Uo6ghSC6xIev84cCaylQslA7hOsf+RLg340XAKdjA5XmZKlTjh1/
-   iGiMjZl+cXUZM51DWUYjetSU9YKSKAp472mkqYssg1l224iKtLnCI9zoe
-   aHUpMJXvveSM59HbhCNDJrvfOr2Mtp7chc3oARQ8paPAYckWb7AhK+tHX
-   k7cjjYxZU7NC8+6IwGTQTytLkHe40H1CKte/WDz06NbhYF88qbbkLCnj+
-   1QzHfNRUph+ICuCqgcutdH4cbGpCoFWs1olXksY0GUFTVeQA7k6ABhiJ0
-   bTjnDAsmu6DAbzZK7LVFQ7rQDU5g1qx8i42PB9pxIYsnuGNd9U4nqxS7h
-   g==;
-X-CSE-ConnectionGUID: 33oAaIa7ToaEXr+nv+c1IQ==
-X-CSE-MsgGUID: HXZWRI9dRaedbeORUFlJ5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11963"; a="3160356"
-X-IronPort-AV: E=Sophos;i="6.27,209,1787036400"; 
-   d="scan'208";a="3160356"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 02:21:26 -0800
-X-CSE-ConnectionGUID: 65ZHtRybSxOdws+e3pTDYg==
-X-CSE-MsgGUID: 57Vuhv93R72AniB1yhhDCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,209,1787036400"; 
-   d="scan'208";a="10352280"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.68])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 02:21:22 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 12 Nov 2026 12:21:19 +0200 (EET)
-To: Hans de Goede <johannes.goede@oss.qualcomm.com>
-cc: Armin Wolf <W_Armin@gmx.de>, 
-    Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
-    Han Gao <gaohan@iscas.ac.cn>, Han Gao <rabenda.cn@gmail.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
-    linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] platform/wmi: Allow wmi module to load when acpi_disabled
- is set
-In-Reply-To: <20261111131613.6290-1-johannes.goede@oss.qualcomm.com>
-Message-ID: <8382881b-f2d4-7909-d7d1-3a2c74f3b123@linux.intel.com>
-References: <20261111131613.6290-1-johannes.goede@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cOz5m2fS
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6b408f2d936so6485827a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 04:23:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794486224; x=1795091024; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tcIPG4+3YqX+OOpMdjytCOm0jqolCq/25POtF+O6LTw=;
+        b=cOz5m2fSTQw3xNO/z09nHL23qax5v5ampFLLVEOHikCCqnbs2i4KvUSMlhukxVUZw2
+         RJeTSfz1fksSqKEgdfcWRoQREV3mPELuF+omgtnZYSJrbmBP8JuXaidB4zgc/uUMunkJ
+         FAWmAPfqArWPYTG8Hus+zkkKc/5A7e2gzP0J6dEsT4jBf+FvmfkPonEUBRuo6C+hZIgD
+         /YqP7BDgv0TK5FS+2ItOG+e1aNDUFeySa9lWy+a2U3/SNxQmkwDQ5nyhsb1seciLEYrh
+         m9LlWqALW2ol7DG4A04QpTrQDfOPGP6aI0vYCsJF3aO0R2gleMNXPbwFmhKa+vWzBwWE
+         P38g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794486224; x=1795091024;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=tcIPG4+3YqX+OOpMdjytCOm0jqolCq/25POtF+O6LTw=;
+        b=M3PxMW2P4jFPd5Yt/57AHKj+9NzsWxUoNEWPRXSOtk3wm2wK0JEwANcHk4DWaJZnQl
+         gsKtA6btyNjLCRctvdEZN4UQlFD7Mafg/rTCxLw+r9tvXaego3gJFIa8EpV+nrqCK8hU
+         1HjJtfGHkrNnYOGEID0mI13ny/YqgZDwQ/t6/sTEOaeSJ36/Z2tcUeYBqFlrwXvzsKf4
+         CEymIwa9Pyp0VtP3GZNAvY0R9Rw+y+UyCfg+/FdRMCaKUKRreuUrkyInM3cROykTUFbb
+         sMDxLldssYz0l11wIGZA/mjFCPZpMMc8kZ4N5PQo22SVSH/gG5jNrLEGO1fuJ81Hji98
+         rIpQ==
+X-Forwarded-Encrypted: i=1; AL+hErE1LSEW/6BiELHxezj8q67aWNkqVCGJgciPpOog/XNux+F0MDGwHD1COq22ak8j2BkWmd7FPF3ToUwUMrYowUgW4SS5@vger.kernel.org
+X-Gm-Message-State: APuU4Z/CCliA0M64zII97kkJfgxc395xNrdkCHm/lQgYVyjEKQGuIak5
+	+vUtfucoV95bRoRMHFSUFKRHC1d4Y7I2neb4yQn2Dnmv67YsmHs/VzPfl0g+lA==
+X-Gm-Gg: AYBFou0jDpR2ODOSoVzDgiVEEqC0oFYrlp7poZ3wSUsvUo/AL3yWa8zsJAoIS43rgwC
+	Ka139C9XH24SkNPZSkVGA1urSWAdI/Us91jz4IhAI/vBIqONX9Cm6ovgiLeW8HkxtrLE5xJESbp
+	I2PY1NzkjdMOOeoa7Tgn9XSGbBROHxTCKeNlAsvUYSiNC8lZcvcy33tTQr4ALEh1QZXPdSZNZu6
+	cFwt7gaS3iBj9Atm2uUN0nLWbaPsRS/1K12gruxqcZz+EPEeIjiTPdVe25atB3Qu5bwhNeVjpyd
+	jXniFOnzZtJsWKqW8u7ejaOCtiq270dLHcNcVqJqzLQ61to0VGje9CsED9xJK5UgTXSz0KRZm7u
+	qhwmhM8vG4m0nBjNdd4wsSCG2WYAmo2zdo9oJ0WWyO0mbzUTZH/C7zJ/7MPOa+9hS518JjtIqAJ
+	E25WR8/AnDXfSu+2wHpoSUHXPXDghD4BFuYTgQvKHhyo7C7ywiHi+tpJ+i3i2wKVcLCWM0+OZsr
+	xXupo4ms75XMEbbPpArwg2+8Lkw7dnV0XAxlAyUSOfLhhBgtnFRtWIHsTtx3klavim9FD2fECYs
+	K4QUjYlGDdsSc3OW4j+686YwuDVp4WsLWyMpsPY=
+X-Received: by 2002:a05:6402:158b:b0:6b7:1c:eae0 with SMTP id 4fb4d7f45d1cf-6b7775f01b5mr4085605a12.24.1794486223563;
+        Thu, 12 Nov 2026 04:23:43 -0800 (PST)
+Received: from [192.168.226.72] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b75775fcf0sm3486965a12.0.2026.11.12.04.23.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Nov 2026 04:23:43 -0800 (PST)
+Message-ID: <910d8bf6-f05d-4887-b21d-f28fffe8d471@gmail.com>
+Date: Thu, 12 Nov 2026 13:23:41 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,77 +92,46 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] surface: aggregator: propagate -EPROBE_DEFER from
+ ssam_irq_setup()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Chris Simpson <chris@nilk.net>, Konrad Dybcio <quic_kdybcio@quicinc.com>,
+ Hans de Goede <hansg@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: janussss@163.com, luzmaximilian@gmail.com,
+ platform-driver-x86@vger.kernel.org
+References: <7d51f80e-9552-957f-f32c-1d608042b647@linux.intel.com>
+ <d0bb21cc-6d3c-4526-8204-2511da51a6ac@nilk.net>
+ <2faa9857-9d55-a607-bd46-588598b64ca4@linux.intel.com>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@gmail.com>
+In-Reply-To: <2faa9857-9d55-a607-bd46-588598b64ca4@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 11 Nov 2026, Hans de Goede wrote:
-
-> The core wmi module provides symbols which may be used by other modules.
-> These other modules may still function when acpi_disabled is set, but
-> the current behavior of acpi_wmi_init() returning -ENODEV when it is set
-> causes loading these modules to fail because the wmi module these depend
-> on fails to load with -ENODEV.
+On 10/26/26 11:42 AM, Ilpo Järvinen wrote:
+> + Konrad, Hans, Andy.
 > 
-> One example of this is booting a kernel with both DT and ACPI/WMI support
-> on an arm64 systems with devicetree which will lead to acpi_disabled being
-> set. Trying to load the amdgpu module will fail in this case because it
-> uses symbols from the drivers/acpi/video module which in turn uses symbols
-> from the wmi module. Note the video module itself already contains handling
-> to still load when acpi_disables is set for similar reasons.
+> On Fri, 23 Oct 2026, Chris Simpson wrote:
+
+[...]
+
+> I have to admit this was not exactly what I meant (I only meant to not 
+> use -Exx literal in the return statement), but now that I see this v2, 
+> I'm not saying your approach is wrong either (I'm left unsure).
 > 
-> Fix this by allowing the wmi module to still load and also register
-> the class and bus instances since some exported functions like
-> wmi_driver_register() rely on these being valid.
+> Are there some legimate cases where error other than -EDEFER_PROBE should 
+> end up into this else like it previously did? The return on error was 
+> removed by b27622f13172 ("platform/surface: Add OF support") so I assume 
+> there was some good reason for that but the commit message isn't helpful 
+> at all... :-(
 > 
-> Signed-off-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> Konrad, you did that change, can you explain the reason why the return was 
+> removed from the error path?
 
-No Fixes tag?
+I believe that might have simply been oversight.
 
-Doesn't this fix a real issue and we want this go through the fixes 
-branch?
+I tested the v2 and it still works on the Qualcomm-based SL7.
 
--- 
- i.
-
-> ---
->  drivers/platform/wmi/core.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
-> index 529825dcfbfe..412f2e23b01d 100644
-> --- a/drivers/platform/wmi/core.c
-> +++ b/drivers/platform/wmi/core.c
-> @@ -1573,9 +1573,6 @@ static int __init acpi_wmi_init(void)
->  {
->  	int error;
->  
-> -	if (acpi_disabled)
-> -		return -ENODEV;
-> -
->  	error = class_register(&wmi_bus_class);
->  	if (error)
->  		return error;
-> @@ -1584,6 +1581,9 @@ static int __init acpi_wmi_init(void)
->  	if (error)
->  		goto err_unreg_class;
->  
-> +	if (acpi_disabled)
-> +		return 0;
-> +
->  	error = platform_driver_register(&acpi_wmi_driver);
->  	if (error) {
->  		pr_err("Error loading mapper\n");
-> @@ -1603,7 +1603,8 @@ static int __init acpi_wmi_init(void)
->  
->  static void __exit acpi_wmi_exit(void)
->  {
-> -	platform_driver_unregister(&acpi_wmi_driver);
-> +	if (!acpi_disabled)
-> +		platform_driver_unregister(&acpi_wmi_driver);
->  	bus_unregister(&wmi_bus_type);
->  	class_unregister(&wmi_bus_class);
->  }
-> 
-
--- 
- i.
-
+Konrad
