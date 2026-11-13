@@ -1,101 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.4
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794554983;
-	b=P38v7gZqltakhS76j6q1YO42t9KP9F2FoJ42pZFLj5zjmgHphjdVqgZKLdZp+0rM+lme
-	 mCtq0RGTmwlsIqeVTJWmYUNtwpR4vVHaoFld7pb2uusfw1Q4myPycPNbFcNEGBJ3NoWkj
-	 fj/NE6w80kP3W9+xkqWVw0rDS9Qdfxv5mkvOMx2+lWMmPP/S1aNwp9r85r3Oq71WFl2F5
-	 lpJ3FZQQxd8NoNNmv543z/0wIX3hpDFE+8skWmIZFd7E8J0DLZ12XyQs2PG/JoNcOb8P2
-	 lg43+lt+Zhnbodq0A/0xCLIDJ3tGOrNhCzcFuBQfv6q4ulGjNUTIqa1iyYJ7XZWtaGw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794554983;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:
-	 CC:References:Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=wRIcrpyDWChJDcVNPHacjJnD4RBw7RagVq+Z557Scy0=;
-	b=Bupb19jYkduxdaoNBLbMlkk3y3srCq5+6OeR6fivvImD+j9ert9MNfT9vndK/KSUaQda
-	 /GNE+p6GiSGpgN7AmMYOGGrilUmEqq2yVESP48KaXzBT5UeJfd50eGuYA2dBKVUc8oFio
-	 7VCLB5Hon5PJwA86cUdBN3aAfogKsgFojA3Z8iZOiw3yKwVQ4YTLtGUjMDpQ5t+ULbNmD
-	 iXSlzrgrBzLcEqKAerjctjZZDmH3fmkw/t+oICRkoMgOpUVBW22YujOoH8ahgJH2A6Ut2
-	 Xiv7tpQbL0+gIYM59H9lN0mjT7N0cIAopYb5sJW09qk9dAxmzZhwqAWbeUphg9FBClQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=mVdCM2bk;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.4
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012004.outbound.protection.outlook.com [52.101.53.4])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.33.251.19
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794555894;
+	b=2dbFgPjahMdbdr7sd8Qsbjv0QaULBL72dzNs5igo++X1518K9D8OR171YKgQTWX3Ecaa
+	 d4U9QKecSO7E3MmP3XxyXKCbk7WZbcEhDpeUBiz9MSuxHosjTeAjwPfzAKIbnQwdAfbbr
+	 +5rKfw+LvHEksFBGgmDLBoMYsy1SzPtJSkZK9bZrn11lQunMg/x9XZqjHVBhMqaMrta22
+	 h1ElgDH4D1J7cjPmFr4416kvH5QbTOU7maHLhbmWGZtsXM2jwe4TttM9x7R2XQIAXS7vL
+	 8GZG0QeJIXFo/yJJWd87ezzHy1F266S9RjK8HLhi1ONIgufO7Bs/k7Nh8MRnHR46Ubg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794555894;
+	h=DMARC-Filter:Received:Received:Received:X-OVh-ClientIp:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:x-ovh-tracer-id:X-VR-SPAMSTATE:
+	 X-VR-SPAMSCORE:X-VR-SPAMCAUSE:DKIM-Signature;
+	bh=KaTTHc3w8R6rF7gqqWlw2mFxpaUpNPS0l+rvQI9X3UA=;
+	b=eMQJHAnD70fUqW1pNJ8TEAwe4IhsY7LPvOwb48uVERy4IiyipuRaF/0rl/y+ce+yThPI
+	 TBQW8T2W/ydChgRHoeXqclwOS7tUetjAgGCIFQPNE8i7Px3bp9ynbSwZKFYicfXMzUY9s
+	 L+H87nG2SZqSwh8rVTuEeSmsbdu/ZsqV4qIA/HaIzntmXgHIuZe4nHuk4s4d20c5HG2e+
+	 kmSup8+yfuVFnQW8zy6+7JEgHupazDmTimmZauA8f+Kz1OkUT5wlITIrR11mv4z4lYXyh
+	 VgIiozXkEi/D+wxi58KUJ8Fs1y+6Eqkr/ymxaG4MVlz8hmuwaSPyTUG+AioRboAdKWQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=3mdeb.com;
+	spf=pass smtp.mailfrom=3mdeb.com;
+	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b="Wm8/urQe";
+	arc=none smtp.remote-ip=178.33.251.19
+Received: from 14.mo581.mail-out.ovh.net (14.mo581.mail-out.ovh.net [178.33.251.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E429B606A323;
-	Fri, 13 Nov 2026 07:29:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E429B606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A90606A32E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 07:44:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 58A90606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=mVdCM2bk
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dICK/NGK6AB+xyFln+RI0+IwZh2N+iRlwZp8ClyQPlRzVTZme23kUBguj4H29R4p/scL/OfnKV3NVadK0eudCVyzSKsnjxb8HPS8SXYAhnbvARRnI4OGAcPFNqqeYLhY1i3sslvOdHW/sfpo+Iv5BWvRM52n96E+IMzf/Zt1+5zTh5FVtWcY7b61MfbjpgaS9wjzqLvj6ihDc8ps58tcArakMHLdUNtjl2i8osmeUKkWc9en5YEPaIadYJOXScGgjhnHYU5kx+nIE1M1AreZep61t8hCmq6OMug35uZszkYoZ+49bJb1zUJ3MKVpdkA+G4XZv8fjYI50Nz5dRG7HPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wRIcrpyDWChJDcVNPHacjJnD4RBw7RagVq+Z557Scy0=;
- b=vEJoiUyZmVPOU+KrJPjooL5ZgO+oc69K+elEzXExfHo/VqVKE4whUjBKIBbC2uP0BFiRhiKsCOkqsWPup7ejbt9gqwxxT2d7i23Q4/gvPBu2SahSAgunuUsB2vA9HuB6zckMHg2CWu0FReEtcCYCt0Uoxx3IXHxwJMiKoL0LhQJ36TKfWCPKg4dqhvlSJ13GU679G2oPVKyILZeQNkpq0hji9HiaT3kQF3gNyNuZQTNr+R7qbEBtk0SoP4qcDBKH16PNAP4VfA7KLEl/lyw7rf4Esppc6UZqXfcRn4ha6xowFMmYYYbEOL8CcvFYhmuM83Xm5e8qNP/dNZVxnfCSOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wRIcrpyDWChJDcVNPHacjJnD4RBw7RagVq+Z557Scy0=;
- b=mVdCM2bkRT9RpHrbQEBOYLiwOzo2lTCCbc/wOpvcTthYeznqSGSQNdvjJXSOYOajUPvqKwR+AvAxXwsZBMOlxNIlqFKHo6ubmSXbRd0MAJL0BhKGLREfDibZvFKNsxdnL5z42fijFDJfs2uUPg/3IAsSuiaLUwZ69QML4ZKVAmw=
-Received: from SN7PR04CA0025.namprd04.prod.outlook.com (2603:10b6:806:f2::30)
- by LV2PR12MB683086.namprd12.prod.outlook.com (2603:10b6:408:414::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.10; Fri, 13 Nov
- 2026 07:26:18 +0000
-Received: from SN1PEPF000397AE.namprd05.prod.outlook.com
- (2603:10b6:806:f2:cafe::4b) by SN7PR04CA0025.outlook.office365.com
- (2603:10b6:806:f2::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.615.8 via Frontend Transport; Fri, 13
- Nov 2026 07:26:18 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- SN1PEPF000397AE.mail.protection.outlook.com (10.167.248.52) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Fri, 13 Nov 2026 07:26:18 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Fri, 13 Nov
- 2026 01:15:46 -0600
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Fri, 13 Nov
- 2026 01:15:46 -0600
-Received: from [10.136.34.22] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.53 via Frontend
- Transport; Fri, 13 Nov 2026 01:15:41 -0600
-Message-ID: <bd326953-f693-4994-91e4-f8301430557a@amd.com>
-Date: Fri, 13 Nov 2026 12:45:40 +0530
+	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=Wm8/urQe
+Received: from director8.ghost.mail-out.ovh.net (unknown [10.110.54.164])
+	by mo581.mail-out.ovh.net (Postfix) with ESMTP id 4jQq663B6wz62XY
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 07:44:46 +0000 (UTC)
+Received: from ghost-submission-7ccd8bbbb6-cl275 (unknown [10.108.42.118])
+	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 4B8D9C01BC;
+	Fri, 13 Nov 2026 07:44:45 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.109])
+	by ghost-submission-7ccd8bbbb6-cl275 with ESMTPSA
+	id Hrv+B+u/9mr5jjgAjijQbg:T2
+	(envelope-from <filip.golas@3mdeb.com>); Fri, 13 Nov 2026 07:44:45 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-109S0030e054812-a7f2-40ce-adf0-051fe7a7f619,
+                    F6EB7A3E9421D9EE3A955D9585EDAC62A977302C) smtp.auth=filip.golas@3mdeb.com
+X-OVh-ClientIp:37.47.248.243
+From: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
+To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	=?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
+Subject: [PATCH 1/3] platform/x86: dasharo-acpi: Extract dasharo_call() from dasharo_read_channel()
+Date: Fri, 13 Nov 2026 08:43:45 +0100
+Message-ID: <20261113074347.2301465-2-filip.golas@3mdeb.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261113074347.2301465-1-filip.golas@3mdeb.com>
+References: <20261113074347.2301465-1-filip.golas@3mdeb.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,260 +71,102 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] cpufreq: amd-pstate: Enable hybrid CPU capacity
- scaling on heterogeneous Zen CPUs
-To: Aiden Hecker <heckeraiden@gmail.com>, Huang Rui <ray.huang@amd.com>, Mario
- Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, Viresh Kumar
-	<viresh.kumar@linaro.org>, Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Vishal Badole
-	<Vishal.Badole@amd.com>
-CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	<linux-pm@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20261113022934.13397-1-heckeraiden@gmail.com>
- <20261113022934.13397-2-heckeraiden@gmail.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20261113022934.13397-2-heckeraiden@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397AE:EE_|LV2PR12MB683086:EE_
-X-MS-Office365-Filtering-Correlation-Id: 467328c0-bbf5-4ea1-f35e-08df415768d3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|23010399003|1800799024|376014|7416014|18002099003|22082099003|6133799003|261009221227099003|261009223027099003|4143699003|11063799006|56012099006|10067099003|261102123227099003|261022105027099003|261026121527099003|261022075727099003|261028144727099003|261021121427099003|261026140227099003;
-X-Microsoft-Antispam-Message-Info:
-	xq4Y7V2QOddS73U2Y0PN8Ayx7oAPdO6uV8bk936vUNMAgrgu8mq7PBTNqOnvO0TWSPnr6tIBUNnC09zW6CYOLoD9iTkLKSqA0tpZtTNclSrbIcoNJeNoC3ITiY8xAFMYf7vHzM1tzpXyyFvL2ysa64ZTSPcVC5/4l3mjXv964RMZByjtdDYCXxihOfgWOSF9AumrG0cfWYGVl0YFHwppWfCz6UoUeedWxtP3sZOUixyEZtLxX3A4iRno4aC3iFHTcSmW1UCFR+4swu3sGlRVFYzJnkHuWLXRQ6bu2ULrqw9UQtZBINdOSe4UJT8lJMJOkJW8nk2Kql1h/i02yk1EOzwmA5wQpX+oTj5eVxzPOWACR8T/YTI2LrMkzICIagF9wCKyGyrwKVbVuB8wrBg5M2rTxO4WC2eBq6lwgneWEwPAoGfvoqiUT52lut+aQ4HzC9EcBJZohEGUrtFpDAWw4XJMXkq0Bv55XU7EoQV7JE0UnozcWhPfTnyQp63JqoAfrJpsWZiAHD3YpnwBDL/xr5NH3FOYey0kWv/0Ky8gDY4EUGOACOr3xp/ECX3YhJiFMD5LL7U0GmCQ8GNO8pdTvSDIsR7MZQnkxnmv7virxLrL4mMHPCL8JTyo69ao6KS9rDd0u05Z7vc0hBHNxqbLUvRMUqtqomPpqlDtbKio3fETX8V4nJ47E38+6QcHe8T9ngaNZYOnBrudqqtOFKhM1g==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(23010399003)(1800799024)(376014)(7416014)(18002099003)(22082099003)(6133799003)(261009221227099003)(261009223027099003)(4143699003)(11063799006)(56012099006)(10067099003)(261102123227099003)(261022105027099003)(261026121527099003)(261022075727099003)(261028144727099003)(261021121427099003)(261026140227099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	eoc1eP99d1gtyG/ovZYLBl1K+xwe/sBbTSfqZDN3XHh2HkWHaQeJ07H2xbykB/o3wAJWTEC8rhYZ6EIE8+OFnT3LY69nGvVkJXrG0Y4bjl9Bvi8v8VBNt4dkISoFL44s9lxy4f+pmfxjhpBTYoHDALy/8UbVbzY0ZD09f7swJ6AY05aD9j1fDPPzcDsO99qcSn/9CZ0AaZ7o5R+oEPs0qCqq0xaAddj2snX3QHeEBWaRxUSUbUX4OxDwrjDxHJKJSpNxicwvOeuJVM8+8Hc9XSGUcrMGIBgyYzU8xhu4anYBBvGEEHqqi2FJP4iSlflcGqDDq2umcMUNQ1ahfx5NI7WK2daYaE3LiTbccUY0g3pes7P3ao04tsjj5ooJwsGHHQZvsbcMPBN0XHw+QK4VER90JsCuyRU0et5K3xIQbF0aIsMkV3XrtkZJe/dTVVSE
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2026 07:26:18.6220
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 467328c0-bbf5-4ea1-f35e-08df415768d3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397AE.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB683086
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+x-ovh-tracer-id: 13829991506800209903
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: dmFkZTFlXx8+5JEVtbgskvn0mQwqwMiiUHVSJhKYYHJKacS3OogXmGYQzZSvElqTpv7MA26TfMZE1aPnucRMMWpnPSw7cwpUpV9rYonc9FqEtY61eI5P65EfaAQB/GOcsu7ZjW2myG0aC1gnunV1nnjJBGnnAsK0TkmGoLJIuPsr4F4fA2qwl88bGdgsMxS7EVKZg43uq6VXwrzV2kFOSXfG7oTtmCSoBgXxZoCX4RzDSQ9QvszATqN7V42JtdM/TvGtGIkflSyaaIIY+NgpBUKDrAdUM3dRwZpsTnxNDPnyiOSSBb0tAL7kcmZZYphQ1Sf8nd69ZMtjv5V27+oqMmiRpQ/8Jwjts/2RcbSBxuzn7tXmcISjWFuC/oFYF+dTiZuuDailwWoR7awGjQnZ0uAUCDRhZ3dE7wv75xZ2rXaZswE9VhME8wKi9ie4C8Q3XXRAo2sQfAcq6UIxlHHer4ozYleBGXfDb9PjLye1fPCdlypCYGdJ3PYfDAkMGf5yOD9R/1PTIq+k76IafVcaZf5IPefCmDDT9r7noo4seWsqwoHZRPRPaNS2/2mfgBBwcZyaaPyIHC4Ts0TEVa8PqKpsamupANfi0uaVKuV9RSVYAFf+eAnK4D3OFemzwhF98KAIgEz6jH2nbzp2S3qvu3MCL27/h/Csd+Xr/vPk0wh9lY5l+g
+DKIM-Signature: a=rsa-sha256; bh=KaTTHc3w8R6rF7gqqWlw2mFxpaUpNPS0l+rvQI9X3UA=;
+ c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
+ t=1794555886; v=1;
+ b=Wm8/urQebOGxivJXPn87IKUjBmkg82NhnYQIGZWgXa34yBrzSrRxO9ZnZWVKxFsj1HP1lNmS
+ XHpYCnB/4vs4I2ZmobO3+G6xNHcGTfW5Agk2dALbBqJAbj+0lFJYKquVBVrdUtnCLCO7GgiKQnW
+ 4zNIPlREhpghsreEl8YoxdCX6S+b0lJ96JMiLON4RusPpLddISzHXWkd4ltpLdiH7OQvEg9zV41
+ FmVhP4kdr7tviKKb3BIOK91JSk+WdwNMrxNoXKq3xwqP1BChRnf82xMenm629QdEG/aTvunRZRg
+ TStYrARB1jAiXx0tNwqxbykWG3isAYSqPU1xMckLrJIBA==
 
-(+ Vishal who too was working on this)
+Move the ACPI method evaluation out of dasharo_read_channel() into a new
+dasharo_call() helper, which additionally accepts up to two extra integer
+arguments after the channel's group and index. This allows the upcoming
+write and fan curve support to reuse the same code path.
 
-On 11/13/2026 7:59 AM, Aiden Hecker wrote:
-> +struct amd_hybrid_cpu_cap {
-> +	u32 highest_perf;
-> +	u32 nominal_perf;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct amd_hybrid_cpu_cap, amd_hybrid_caps);
-> +static DEFINE_MUTEX(amd_hybrid_cap_lock);
-> +static u32 amd_hybrid_max_perf;
-> +static bool amd_hybrid_cap_enabled;
-> +
-> +static void amd_hybrid_cap_workfn(struct work_struct *work)
-> +{
-> +	rebuild_sched_domains();
-> +}
-> +
-> +static DECLARE_WORK(amd_hybrid_cap_work, amd_hybrid_cap_workfn);
+No functional change intended.
 
-This is probably not necessary - more on that later ...
+Signed-off-by: Filip Gołaś <filip.golas@3mdeb.com>
+---
+ drivers/platform/x86/dasharo-acpi.c | 40 +++++++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 10 deletions(-)
 
-> +
->  /*
->   * The numeric EPP value programmed for each named preference. First dimension
->   * is CPU type (TOPO_CPU_TYPE_ANY for non-hybrid, TOPO_CPU_TYPE_PERFORMANCE/
-> @@ -969,6 +990,99 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
->  	sched_set_itmt_core_prio((int)READ_ONCE(cpudata->prefcore_ranking), cpudata->cpu);
->  }
->  
-> +static void amd_pstate_record_hybrid_cap(struct amd_cpudata *cpudata)
-> +{
-> +	struct amd_hybrid_cpu_cap *cap;
-> +	union perf_cached perf;
-> +	u32 highest_perf;
-> +
-> +	if (!cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES))
-> +		return;
-> +
-> +	perf = READ_ONCE(cpudata->perf);
-> +	highest_perf = READ_ONCE(cpudata->prefcore_ranking);
-> +	if (!highest_perf)
-> +		highest_perf = perf.highest_perf;
-
-I think it is a terrible idea to mix the preferred core rankings
-with asym capacities. You should just stick to using the
-highest freq as a reference fot capacity.
-
-> +
-> +	guard(mutex)(&amd_hybrid_cap_lock);
-> +	cap = per_cpu_ptr(&amd_hybrid_caps, cpudata->cpu);
-> +	cap->highest_perf = highest_perf;
-> +	cap->nominal_perf = perf.nominal_perf;
-> +}
-> +
-> +static void amd_pstate_sync_hybrid_capacity(void)
-> +{
-> +	u32 max_perf = 0, min_perf = U32_MAX;
-> +	bool updated = false;
-> +	int cpu;
-> +
-> +	if (!cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES))
-> +		return;
-> +
-> +	guard(mutex)(&amd_hybrid_cap_lock);
-> +
-> +	for_each_online_cpu(cpu) {
-> +		const struct cpumask *sib_mask = topology_sibling_cpumask(cpu);
-> +		u32 sib_max = 0;
-> +		int sib;
-> +
-> +		/*
-> +		 * SMT siblings share SD_SHARE_CPUCAPACITY and must expose identical
-> +		 * arch_scale_cpu_capacity() values to avoid scheduler warnings.
-> +		 */
-> +		for_each_cpu(sib, sib_mask) {
-> +			u32 p = per_cpu(amd_hybrid_caps, sib).highest_perf;
-> +
-> +			if (p > sib_max)
-> +				sib_max = p;
-
-This should never happen - even with preferred "core", both
-siblings will have same ranking (but you should use the
-amd_get_effective_highest_perf() - more on that below).
-
-> +		}
-> +		if (!sib_max)
-> +			continue;
-> +
-> +		for_each_cpu(sib, sib_mask)
-> +			per_cpu(amd_hybrid_caps, sib).highest_perf = sib_max;
-> +
-> +		if (sib_max > max_perf)
-> +			max_perf = sib_max;
-> +		if (sib_max < min_perf)
-> +			min_perf = sib_max;
-> +	}
-> +
-> +	if (!max_perf || min_perf >= max_perf)
-> +		return;
-> +
-> +	if (!amd_hybrid_cap_enabled) {
-> +		if (!arch_enable_hybrid_capacity_scale())
-> +			return;
-
-Capacity of a core derived from the fact whether it is classic or
-dense, should not change at runtime and you can do this full setup at
-amd_pstate_init() when the driver loads at boot.
-
-That way you don't need to rebuild sched domains for mode switch
-since it is done before the sched domains are built.
-
-> +		amd_hybrid_cap_enabled = true;
-> +		updated = true;
-> +	}
-> +
-> +	if (max_perf != amd_hybrid_max_perf) {
-> +		amd_hybrid_max_perf = max_perf;
-> +		updated = true;
-> +	}
-> +
-> +	for_each_online_cpu(cpu) {
-> +		struct amd_hybrid_cpu_cap info = per_cpu(amd_hybrid_caps, cpu);
-> +		unsigned long prev_cap;
-> +
-> +		if (!info.highest_perf || !info.nominal_perf)
-> +			continue;
-> +
-> +		prev_cap = arch_scale_cpu_capacity(cpu);
-> +		arch_set_cpu_capacity(cpu, info.highest_perf, max_perf,
-> +				      info.highest_perf, info.nominal_perf);
-
-Nope! Please don't use preferred core rankings for capacity.
-Use amd_get_effective_highest_perf() to get the largest perf
-value use that as a reference.
-
-> +		topology_set_cpu_scale(cpu, arch_scale_cpu_capacity(cpu));
-> +
-> +		if (arch_scale_cpu_capacity(cpu) != prev_cap)
-> +			updated = true;
-> +	}
-> +
-> +	if (updated)
-> +		schedule_work(&amd_hybrid_cap_work);
-> +}
-> +
->  static void amd_pstate_update_limits(struct cpufreq_policy *policy)
->  {
->  	struct amd_cpudata *cpudata;
-> @@ -1130,6 +1244,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->  	if (ret)
->  		goto free_cpudata1;
->  
-> +	amd_pstate_record_hybrid_cap(cpudata);
->  	amd_pstate_init_prefcore(cpudata);
->  
->  	ret = amd_pstate_init_freq(cpudata);
-> @@ -1769,11 +1884,14 @@ static int amd_pstate_register_driver(int mode)
->  	if (amd_pstate_prefcore)
->  		sched_set_itmt_support();
->  
-> +	amd_pstate_sync_hybrid_capacity();
-> +
->  	return 0;
->  }
->  
->  static int amd_pstate_unregister_driver(int dummy)
->  {
-> +	cancel_work_sync(&amd_hybrid_cap_work);
->  	cpufreq_unregister_driver(current_pstate_driver);
->  	amd_pstate_driver_cleanup();
->  	return 0;
-> @@ -1985,6 +2103,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->  	if (ret)
->  		goto free_cpudata1;
->  
-> +	amd_pstate_record_hybrid_cap(cpudata);
->  	amd_pstate_init_prefcore(cpudata);
->  
->  	ret = amd_pstate_init_freq(cpudata);
-> @@ -2149,6 +2268,8 @@ static int amd_pstate_cpu_online(struct cpufreq_policy *policy)
->  		return ret;
->  
->  	cached_floor_perf = freq_to_perf(perf, cpudata->nominal_freq, cpudata->floor_freq);
-> +	amd_pstate_record_hybrid_cap(cpudata);
-> +	amd_pstate_sync_hybrid_capacity();
-
-Apparently boot CPU can now be a dense core which means if someone
-boots with "maxcpus=1" and then decides to online rest of the CPUs
-this bit must go and adjust capaity for rest of the system since
-reference capacity has changed.
-
-On MSR systems, you cannot find the core characteristics / highest
-perf since it requires reading CPUID / CPPC_CAP MSR of an offline
-core which isn't possible so you must account for it here.
-
-Sched domain rebuild comes later so just adjusting capacities
-should be enough.
-
-Also, it all the classic cores go offline, in a system with
-Dense and Low-power core, you'll have to start using the capacity
-of the dense core as reference and adjust accordingly.
-
->  	return amd_pstate_set_floor_perf(policy, cached_floor_perf);
->  }
->  
-
+diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
+index dfea00cdde18..13d97eb43511 100644
+--- a/drivers/platform/x86/dasharo-acpi.c
++++ b/drivers/platform/x86/dasharo-acpi.c
+@@ -93,13 +93,18 @@ static int dasharo_get_feature_cap_count(struct dasharo_data *data, enum dasharo
+ 	return count;
+ }
+ 
+-static int dasharo_read_channel(struct dasharo_data *data, char *method, enum dasharo_feature feat, int channel, long *value)
++/*
++ * Evaluate a DASH method taking the group and index of a channel, followed by
++ * up to two more integer arguments, and returning an integer.
++ */
++static int dasharo_call(struct dasharo_data *data, const char *method, enum dasharo_feature feat,
++			int channel, const u64 *args, unsigned int n_args, u64 *ret)
+ {
+ 	struct acpi_object_list obj_list;
+-	union acpi_object obj[2];
++	union acpi_object obj[4];
+ 	acpi_handle handle;
+ 	acpi_status status;
+-	u64 val;
++	unsigned int i;
+ 
+ 	if (feat >= ARRAY_SIZE(data->capabilities))
+ 		return -EINVAL;
+@@ -107,20 +112,35 @@ static int dasharo_read_channel(struct dasharo_data *data, char *method, enum da
+ 	if (channel >= data->caps_found[feat])
+ 		return -EINVAL;
+ 
++	if (n_args > ARRAY_SIZE(obj) - 2) // 2 fixed args always at obj[0] and obj[1]
++		return -EINVAL;
++
+ 	obj[0].type = ACPI_TYPE_INTEGER;
+ 	obj[0].integer.value = data->capabilities[feat][channel].group;
+ 	obj[1].type = ACPI_TYPE_INTEGER;
+ 	obj[1].integer.value = data->capabilities[feat][channel].index;
+-	obj_list.count = 2;
+-	obj_list.pointer = &obj[0];
++	for (i = 0; i < n_args; ++i) {
++		obj[2 + i].type = ACPI_TYPE_INTEGER;
++		obj[2 + i].integer.value = args[i];
++	}
++	obj_list.count = 2 + n_args;
++	obj_list.pointer = obj;
+ 
+ 	handle = ACPI_HANDLE(&data->pdev->dev);
+-	status = acpi_evaluate_integer(handle, method, &obj_list, &val);
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
++	status = acpi_evaluate_integer(handle, (acpi_string)method, &obj_list, ret);
++	return ACPI_FAILURE(status) ? -ENODEV : 0;
++}
+ 
+-	*value = val;
+-	return 0;
++static int dasharo_read_channel(struct dasharo_data *data, const char *method,
++				enum dasharo_feature feat, int channel, long *value)
++{
++	u64 val;
++	int ret;
++
++	ret = dasharo_call(data, method, feat, channel, NULL, 0, &val);
++	if (!ret)
++		*value = val;
++	return ret;
+ }
+ 
+ static int dasharo_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
 -- 
-Thanks and Regards,
-Prateek
+2.56.0
 
