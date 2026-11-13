@@ -1,77 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.19
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794607681;
-	b=e3cNMZcUgrgJmlIHVT+xPNPqnftdHzCd34hq4gixmKYCRaHW+zuzRzKnL4Jdl7TKsRC7
-	 W/PsCnN9zvl32fL4gd7iQsDdg/QZIHdHYnWaU+balQ+az+7hM8Q90jfl/yQGCqt24BmY2
-	 xWXr2p8DFKhYWn8qYH2OUxxpbng76hJtix8uKsJRmi8djJqxheMjOWqnHtuU+wNKu4g6C
-	 IuhgHoBhgu2mIUhxEYfi3VBoMRp03i+y+bV5l8BQjtjECCyWQo+NIHWpNDyuff/4ozNL0
-	 DcC4hSgI0YvzbJVdn4cjE+oA38eKfR7p0i6DxVZSwjIWxR8+aw3fZCPvXeb4hTxAddw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794607681;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
-	 UI-OutboundReport;
-	bh=WxQcdAlVpgZUOFc0uQg2No2XTcpgL4fwS0Q2ronuQeo=;
-	b=bumdKMjhg8bpuF6v6jc+65s7xQFgWsryvVaC8dbqocIzhrTCn8EZ3UuXszN4hD0j8IT1
-	 SVKkns7GeBfF1gSxmYnpujs/ZU9dFHtNFZEBKPXT3UTMy5nLSSDTvTMVYjqcXV0Y2ogvm
-	 AnHrH9Mi8ecYF6+LfqKRYXQaN2whmJodIqUu25uvWsuyhVyDlplMZlvJZjomfLQXYn2yz
-	 mTSgcYb+BsiLaxwrsy+XF+/axIMVyDipqKFayCay/VZ/+Mlml998mIoC7qH/i9yjTBi/g
-	 G/JnrDAE/2+us1quoEuXLrXRorDBFH9p3MMQ9zjyInLPg44wkcyrHvEMB7qjPhr+ELg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmx.de;
-	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=AwC+QMeQ;
-	arc=none smtp.remote-ip=212.227.15.19
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.29
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794608888;
+	b=42Gh0NV56pE/FYGL+SjEuKn8rryqLIO2ggOxDO5IWxRWs8NHOM2Py2BU81P9i6alLf1L
+	 rQqg3rFJCjGT6VKJQgbjHrNHI5+bCeBKUpURM5PtLDZwAnjr0chZdewKF9gJeI+/lzYP+
+	 8IW9O/+GG0JcQTk8IpqlTwdCbk4C4hHk+hTbP7jsA8MRM57BfxVW6QQG+5LFTnxOCt4IC
+	 dfMoioLSLx9Hjz9WmJ/r6Day5bPGgfrX4v2jlOguFNtBtlUMIWVSPxLkD5MN8njvbzcIO
+	 LjnbrVKusuFxBrRMDNeQH5BX1EU3PlPig5HF0EMBjsH6DJs17+KhA9pL/9yF8V6v2ig==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794608888;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:Content-Transfer-Encoding:Content-Type:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	bh=RqIEWjfG4J6PmmibRxaZso0rmJQgfGOK0OLkrIkYtvI=;
+	b=CNkmlwl+VqP5c9FYS5UTNdqSyVYF83465i97ZZUN9IRpB8wgUU3E5ZyBcNBFb4U7AJa0
+	 pBst1fb9cJffqq+MAzA5Ezf5/mpgExqu5M7Od6iEkwShOaJefK3cloPuplRhGUVWSUWf+
+	 0PZg47PT3C89rSiwlxmWykgyeTLjrgOPb7oiu1Z8kN6UUVPAq+B48hubErOrP4ZJ4cxbk
+	 brygY6nnEhm1CtexG/p2OOhkauq59eYYj9V3nD4lWIkjNoPPzAerYF5fe/vWc98UyA6U+
+	 ZDl6HBcSeoSES1FzJlXLiGbBYeDIA9AX8Oa4xeaLp7yMf0+5p7YhJYOOIn4knHPl/Tg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=HGXFYVZD;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.29
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011029.outbound.protection.outlook.com [40.93.194.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6D2606A33A
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:07:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1E6D2606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA515606A88E;
+	Fri, 13 Nov 2026 22:28:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA515606A88E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=AwC+QMeQ
-DKIM2-Signature:  i=1; m=1; t=1794607678;
- mf=PFdfQXJtaW5AZ214LmRlPg==;
- rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
- d=gmx.de;
- s=s31663417:rsa-sha256:gDwdpXjvAY/nNERMQGm2tlezlMw0
-   gXR7r3B8+YLkp27UTtYW0GnFLQOVtlneoxzQAWtNRlc2wyz+wUMfq/JQk2nqzYeE354wKzfGh8W
-   YOZFKRvoS0NRxEw9vZpTOeKDRgaZ7jZxC6nL/FyNb1mAPjEkLEzz097DVrFGiqIDV+VRKDBVgHx
-   Y6HxNR64j36YX1pIgZX9OZQFJR2+4qHSAJ+oDdBTmqOwAydeC+d06vGdDsB6d7BktcXRYwxUKuv
-   6icbLcn/3ve78MFXLIvAfNQEs300v7ZFA6F+8De90SnZmLpmEG0IBqRwkxVZKaxxreIZx9GdzVv
-   M4Wg3Aa6ki/uIg==;
-Message-Instance:  m=1;
- h=sha256:
-   zusS48Vq+kadndUuFDXvvB8wmTw5Wf9+yGdCgJ4sGA4=:
-   WUYU8XWIVc4eeuBnRjQwNhv1q6rrBPeHc6epgxTfd/g=,
-  sha512:
-   VxVANZp1cPnc41JB+Qe69QKnwLRWoHjejGf5tyHDRgP/L4NWM7TLGeErf+QMjpWt3ATcrLB+eh6xuG3w+TEFNw==:
-   WJQAu4pwFfp0kDXcjkL4iRFatFUZsQRZkJn2WD4IEXsDK58HrZAg+K9sNwj4YKNeLTfSuPQfKhGEfE4YGGYMrw==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1794607673; x=1795212473; i=w_armin@gmx.de;
-	bh=WxQcdAlVpgZUOFc0uQg2No2XTcpgL4fwS0Q2ronuQeo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=AwC+QMeQE5Zdvr33uvpJmmy7L1NYe9haQKgC5GQg9ufr6fqcMnrDN3eTDcOP9SBx
-	 +yVLmKclkI/ecBVMQqbOBMbryU9Tz2y2W4wGxk/vu/Rjx0WvQBOVi3smfpURU8Pl2
-	 te5LLda4WV3Rsh1QE+E39JBBXQiClULJMNLrV26In1N3dkIP09b45BVWEDMxM5yg7
-	 zMHyTPoQMaCqgB3asttGESfIDazl8iXHIKeOxbk0x8vUpaRP4ni6I60bZzXFCiHU7
-	 cB0Me/9gkZzpWrurhSwHLp0SZt5U3vOxsANi6LghvlBz8ibupWo6aO/6yrxT11jOy
-	 msQQP3+QIJ9MVqi0sQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MNKm0-1x7iUN2ZWU-00JMri; Fri, 13
- Nov 2026 23:07:53 +0100
-Message-ID: <e68f1db6-0cd4-4cf2-83cc-68f28d1568b1@gmx.de>
-Date: Fri, 13 Nov 2026 23:07:52 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=HGXFYVZD
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mOm+F2jaT3S3XnctW+dPVcuo+nB4XyL+RsHXGTzalf16LWbazw33LqbYvaHDfimk2SyZh1/erk9z/Q89pMaeBXSS5ttNIBek35Y08OV4Q2R7AxO0QYGDYe6Ra0bMTpgLuMs/r1VA4oMdAzdBhSHyt7v6CuYExgrvsZxGCNB3RrsYYBA5T1GWVn/5u4pvQWhcd/9dXqbdjHBVqJyYnCwIth3AZ44FUL3KuSmQi2xGdV1B6Lf2yyRSEdb+eer4EAOOLk09pRNdxt7ASI0Ymp4YtRALzyhoutdn5yZhW9NmG7Mh1+vHhHmJdm0Kmks98k1ET+CWvb2vywaNjddCrkPenQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RqIEWjfG4J6PmmibRxaZso0rmJQgfGOK0OLkrIkYtvI=;
+ b=fa71gLDeARGvWw2P+7I/qAVWRTTNZaDHoP0eKcwlqjoqb/RaZecPVAVp2cTYIEs47J1md+ytFPUwZl4RqUjRxMq5mkSggmpVflWDVC/rNoJB3X12NXHbX8m0+hDThnFjLh/sOUf9VapXt1Hg05dI/Ar+gcsKd6fUB9G53kYvIpPlqYXeifK+dcMBSlqjnBiBh+UeMfZL+UMW1vmD+/14hT09ULjPTtyTLT9rf2728h3CFiGb7q6JsfUW2N6Vufm+fCL+jrt5BOcbum8ILvMG3yXjbsy7DM8LZ+mCOLtALdXR/VhOPrWcSWYJ1ARXdCUWzP2A7GUCmbxPs8vHJovARQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RqIEWjfG4J6PmmibRxaZso0rmJQgfGOK0OLkrIkYtvI=;
+ b=HGXFYVZDWpTpYDQhsx9MJISati8Sf0cuji0+0b3YUhYkeFJMolq8wdvnaFD4ykV7sJEGyp1koBcM6W9jSx5bGi/t+SeoJoTTxZMrfJxSL511eylhrT+T7B675eupFDTfawNM9X5AYlm+Jxd5HQd9fN7JucGQTxBUMvdaN7NPUEjzLm/ms0rH1Kdwh7MlGk+nJ4hRqdhLFdyquGEBnBNhhj8gVJZ+sM4nIW+jX1HkmesTcRy7BCewY8y6HIQYhk6zKhKHXn6NNGI9/ucdWwML74xX21LHeYBEqy3Ou2mYQMofSuyBqHEO8k8xrDgQ23V4XoNtfg8/G8U0T0NU4dznew==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH0PR12MB5089.namprd12.prod.outlook.com (2603:10b6:610:bc::8)
+ by IA3PR12MB660778.namprd12.prod.outlook.com (2603:10b6:208:61d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.9; Fri, 13 Nov
+ 2026 22:28:01 +0000
+Received: from CH0PR12MB5089.namprd12.prod.outlook.com
+ ([fe80::cb31:7ebf:51e3:d9f6]) by CH0PR12MB5089.namprd12.prod.outlook.com
+ ([fe80::cb31:7ebf:51e3:d9f6%4]) with mapi id 15.21.0615.008; Fri, 13 Nov 2026
+ 22:28:01 +0000
+From: David Cemin <dcemin@nvidia.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	W_Armin@gmx.de
+Cc: mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com,
+	xy-jackie@139.com,
+	ikepanhc@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ldemarchi@nvidia.com
+Subject: [RFC PATCH 0/3] platform: lenovo: architecture independent home for the Lenovo WMI drivers
+Date: Fri, 13 Nov 2026 14:27:52 -0800
+Message-ID: <20261113222755.1696567-1-dcemin@nvidia.com>
+X-Mailer: git-send-email 2.56.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0245.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0::10) To CH0PR12MB5089.namprd12.prod.outlook.com
+ (2603:10b6:610:bc::8)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,204 +101,159 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: HP OMEN MAX 16 (board 8D41): backlight PWM is generated by the
- EC, no Linux path reaches it
-To: "robert123m@gmail.com" <robert123m@gmail.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <df721493257c41338324f0bcf37e4b4d2d0ef7a0.camel@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <df721493257c41338324f0bcf37e4b4d2d0ef7a0.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1S/hMxBNz9KM1UkFOs0FpyzKmDPyKCPtp+N9CNjQezXXo1nQcIG
- yx7jiUN1Va2IprHeDM/mx1QSDSC+MUWDvG1xc77fSQL/cPWU1D3C5YxvCKWkrfEcroVi6fo
- guzsng/DFqrbwMYKIl/ic5tnab92YWc4PnLifFGlrLWCK3m6vXDQrRjQbmhKDpI4ElOxyEm
- fQd++HkKgM/sVI/wuFnew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LEoAb6kabQQ=;zMvT8eBOJJXkTheDB6C141W6cep
- vpUUPGopvxm5Oibx/osHgSBgFit2+mZ0x3lx7Brxp2sw83q6FcUKCkN/MdPxqUeLIm3v26alO
- bqSbUaGezFeNE7QRCyCcXodCOo8fIpI6dK/rys03SSQC85JpRE9xO+281I831e2qdNlKKqUdY
- p8sNYDnffhGM0hlYjO7pxUPzyB3qFCgF4oVNS5EjHCUG4/EBvXlEuTTzHMa6VNfJKtmR7kncr
- JUsPNVadLhlwvcAXxtVph6cZo+SdB/gJuvfM4tPXWHckYLBjhsRHyp94iTBCZ9BZDj4hCwI4X
- CCuza0LRR1kzqsdCglMbJ1MiVV9RUocTgc8iTvdbs5IIRXp7coDt7AnqO0h1adGbOMnHIaQnw
- bmTeozPv6e+Xd5BIc9YfT42xODsJ+temytTa3mln0PTx1kUyXNF9/iEko6DvxheAdPGY08Djm
- 6wRor16BemK1br4i2h9RiBoejFL7qfDiyFPmYMvw1mKL6xoHViEGBH+FyyLDD8CahFAhjMWMn
- O3rrB/M8uMBm89IaeT74kS9PqxlawfXywLPzT2HUbIpULFatE00tv0UmAtDExU8VAp9diGCva
- yMDkKNZT1Zi28VgL1DuzUSoPgYX7LIdG2YKCBYNZfnGDsXns3bsSeR5TNavMa2EP8dt5HXAZb
- vp3y8CtodNz28PqHKDBy9kHGbGmOUVh/HGMaMOojzLPpy8JEUOkvSHR1ExxNSmRbAuboEHS0L
- ITramU2YB8fft5Pr6IOx2DvqPL59oUiFGrk0CtdkgT3fc+g41mwREh8P4mx1s70yj9yI5ygpA
- N4V2c3e6C6aEksJGoY2Org89XmUbhURP6NNCrZMxdug3oyctjitvBSzQzllTP17FbCLdQMpNZ
- JCKvdbUKrbpGqZ31SPgglylBTn8uKDh623Ndswo7qxMkL/c6D7+sPhpMx55KG2PNAFJ7si0//
- 48bkrx07HQQFDlTdJScfvpH7/e/7CUe7Pt5/LTauPL7jcpiPHTv0hydd/9ENT0zkYcqnjZeIy
- GlcdDGUe5Cat/71pMlGAfmr88tvgO2QgeVtGuocK2Koa2qqvrMYfhT3zHhl/Mx3GpYLQA+O8A
- zBMbCtukEokuLAO+WfrCr6sPvN3iJCNbv1trN8jMIF0APLImKP4znQHuXUVHPkUPGkPqlnQ33
- 5DpngqETRy8twl++uA67nP18c0yF9KpHDOKtRNIVBnoUeBgPPBHlLNr+5pnMEiygvDcPzuyvQ
- ous6X2Sq4NLJm0N7j3L33OWYX+S3cCpT1SsT13M9cK2RG6xwoimixSaXBkJaWW1y7EkyYuE68
- Cdgr0tx8R1hOS0qVc5u7mM6MVQeR/rGmGDvNUQzmXLrEySNFmbiA6Pld7mQ8NSRSB9jkO0GoC
- o1qjPdBf2AjLajyAKjHhwapy2wjFbMYg7m+gdcqI4FRXPQMeQAzWU9kOD+9qlkm7wn9cD+fP4
- I6m1YpNlCWAcb4QMHor/BM3A7dL5caukudCLa6F3W28M6SxJKBjWwSjYX4yEk6rQWtYwxleYH
- hvJYl33RG55rZGFc9dGwAl7wzmM1p4y0NfqrKzZiBsCcFeBuLXjjqGKN0N0bp794mdD/yMKog
- JI6ecyPSTmsq79f5uOg1PTrNNtX+ke/R+CpiNUGiO97AZXq3ivPBF3Xyr+XeBnnX5hc63kOL8
- 5mrCpxaDl3yw7nPA2q8MD7XbETqjn6NPRLwiqqlB9KTgRnHLwpZ/dqVjoYMjXANU2DD1zyxhn
- vs4FrqlVWByYdI2Mb1N4nLcdIq2qQtDKv9U5ULPIX3Uizvh0xmueuwI9q5NPDbACStOs45Tbi
- n0825g38KiSB+8DXz6905HLcdG0PX04wtBP+ekAxAx9fmAWZ8+RA5c3TqhSfD4CGLyEeBcmoO
- Wuehzd2wtNR4vQNMBZS5RKvBbrcarGd94FsCfdpCb9kJ+xDl50SpNcUtM2Uk/r8lcMzW4FykA
- QkaCM7R4hlfvUv7YV+FUhiFf8T2OtFpRHSXy2eMgH6fNl3neZ5JhS/Utjcn1aZlJGLQEpFrpL
- SE9D7W04xFamwkCFhPbCb7XA6YNP30toPCgYjivWQpV5nMvqDkUqGqnhYO/M0sQSaF2W66GVG
- jpqC15nH+nRZ5WBhifkYjtzcKpwr+VRRpbFJtOgL5UWFadzwjZVRmWWlXv4xxCs+/QrLyW+UT
- jVyIuVB3KWTglV/veQjz18vxWcUkfPeOJ/KsSZ+0YpQu8xZGH9yf7PE/HDqT5XtwnapvC7nCr
- eZ+cp6D6qZuhU6+w6gSlaAv5ONqc5ACOb5BKvIziU4NI2pd2e7srdWfuKHKZmlPEaF8oS1Lk0
- vrOjscqVtjQ2fMVA3lUsuUpRw1fkTnT9c8eqa5suAQVsEpawrs208KfsjHHI2elH7L4F9gvU9
- bCEGP4v6FfopOSnU/UdR/EoIcLp5wbXlT7YbYk4h/BzT02jz8tHu2AUnyGAxriIIa28ikGfqb
- Ne/tZ3S7N8qkIQgxiPrShLwj+6MAwBAbXogkPG3MG/+uiH/qtKXOsHT2lxl4MDXwAYHIvFCGz
- ABvAxWqzTHJn3dHFfHtDDmHDJmIV5G5d0g4nV19Q/yqs+Al5rgOx2IkRRIPgS1VPgHVrzortg
- Mb8Jp/SwoErCMw89gPUnj6Y1dKoc6sSXV7GV2Grkvj5Oo1mE9HApnPFJ58rkI5HuSMNVjJerU
- D72Ql8tE+s3SCkgDEDiBJh0UTVa75QQCBlRRutBhqbp4eSPL1MW5/l3QKh+TZJ2EBZVcWdUj+
- JjSjhBABzOIqg2MxBsk62hExckO6IShvzRYNGFTlL8NgMxdgnk5kwSnzOcTKaUVVFniAq++nj
- vcE7+9wI0mNWgPPTSwcOkAACV2g82hAmBTKC92VuQm3fcufTswtaIm1+Hd0qoMRS7KJBycq6s
- WbzeyzRvS597JYzuGAPY1yxXoFtDK+GOsWIzOG1thZpi5jPpAVGxGNVSpPSbmhXwvFtneV6L1
- CFfnfInGU4m/32OxBbHNW6QdHAzX/kcsp3a0TpBgTOhwe8P9R7cGYIrLtsuniij8LCQqtEBkB
- ZN7lZH67/mEs0ANGLW4uuPCunA6ZdK0h5qJSoCW8MZL7FOcPUKbVyDwGyf34UMaFMGWxJT7d4
- zcsEpSY76jzdjnb6vQNlVggXlrjbTfC7tVAz1k+VLbHNEfglIYW69Hf1oLlhTQKckEKe7QtIx
- WCEWrdyeYo0E28lgnM4518Z21XeuH4nf7cK/1s3iPemnDoKDpKSdZY87Qdq8gZVhXxazTIiS8
- liDYndnYJAob7XMvtYSvcETtGFugIvG0IRTjE4cymc8+c4VxcinDktNVYdfNsO+sAx5WGVGae
- +xGUYArwnLzyeIS6bKCTaixdYn63Njnaq1b0U9E8o3g9el/AeiNkfS4vrKXYUAHYzEsKQGsuU
- FyHsxbuit0VqPQpl4roPIPVdAJg/Z7NIcUQSvFXEWVDuW1cT4+c0CUEidiOGzyNhxbRqPjVEs
- /bj2zT1aL5nKsA6Qp3vSlqx6Mtd4YM2NgBHz3CRcxLjzOMZvFBnOiKkou590J+VipI4Vqkdy5
- +3LFBEbnifQmh3ok931909HD29dZpTy7X/xbnyryJdVEM5WFXkOhkG2zalMD7/5xE8vgMGgG0
- lxTJr5QVL0tM0mrM6S14fx2nRNmOwqsNpooksBgmAGz53ankTuhvy7ZlomRr2dbNe0Xjv8XE3
- 8Qty8dDZwMI4Jzso6Mva4wo0ugGQmCwy34hae2Yr+EeZ9P4zipdNqfeER93PN1dC3lc1t+YXr
- P+wzv7whkktuOaMPulv4jQXHE5gzfl3YLp8n1ZuQpGW5IatbgtpxVgTf52Q4XnxdV3VNH+xpU
- 4XjWjCF1YoWRl2mBxGxtzokkTbfwyYTHzoJNDCaLTsu3jf444Y2aZrTyCxoGgsXhqm1l0kGbK
- orEhZ6DeYMlKYWzbFgAcy/J0dApF1mwIolFCRMNUw/xC8k3+gqZZ0JeVj/MT0fa3WqiONi0KO
- MZVHHaLJ8AeHk2XiN6qpm0KNLogte7CX9BG+HZNgtbxDXMEnO7prxdsd1fvLVhWoEic59h0ia
- nMp3NGZBhuaIMH7UmqcIZiMwQ7OVMtsMlr8bJZAKn7BtvNatd3OTmh5UbR5lf55F3bJyTyKDe
- of1IbDSEJ69GBClTmQELj14MqKpEB8RpkJorBQ6VmBy16clsnOIR5BznCJT6JUo2P0cfc0HEb
- Jm5RYS9EjqvcvdYvGhgp8i/Vtbzh3QnlGA7CsvlgT5ItWGi6aQUsXOxS4Iq0NfzImLcR6s/8t
- rXsM5W6u0kwTmEKcZQV5H5/ItWACxhsz7e3IdH8CiL3+X5KlFZ2t07wA5QCTrwag8RgXPXvVW
- yRojyhBixMyfnoF4HdIVxZJ0bnqDucNMHwXrjClzyt5oA4VqQCjAih0+ipfx9KS1nmmaY6Sbx
- 7QwpvJeHQi1vvni4JSdekEO2b7e2QMW6hEVl8p0lHbWgNDGNddov5YlcR7ueWDZl/jqtY4pM9
- 9Q2RyJybiJJ7D2A/NQOgaO/9jTIa14Tf+mykeQSdZkkBwm14vZdOSn78Z0CnL2dKSLpBhxVNe
- Viz+zHboWqFp++rEojQ4lMxTgH1zehErq5KCb36n1+H2kKtSDWw8hpLPfdMKiG1UZ87hQTXbG
- +OzIUgHjOPlXwceN9SH8xsCV+4kcf6q49furLWcLFJRio3irLLqLhbhbUYqDZTg9ARZc/HMW8
- McxO/xBM7U9h58tNDJ8MTYEsrKIpYphubmE4lZ3MDRzOrxW00x8/v5FZw4/PShSaVqcBM5rT0
- qboUxiBmMGuHUeIrYVJq0A4/PBt2jb7Sq9ZYmgRdEuooRu3hDpeqYD9t5Wv0nocLG8jgiv5tt
- YUI3Y4qVDkY36wWOa564+BQa94lAJhU55FNpf41LwkmmXiHEaMcVvnHbVxvfhNptnOVlKsQoe
- Q76jml+LCX48BWM4QpMSaPfASDsW1+mdKbDicVBVt5lc2bBefI8AQ58Uy7j0L28sPiwZgVbsz
- +Hxz6wbtIQQCyIyhxvCgBEH0WnM+Z40CvEFwsdkeoqxx1GMiXkTtmaJHTTEPvLj2+TICBePyC
- Y+NetroQxr+gT3ClT1GyrP8M5ZMptZJK/AJua6GRxAsv5P5LkemyotrKjCKom7Mny2q+kNdS+
- Z1/AcUkxHYu0RvlsKut+mblVpvqT6FTnTtdPTJjtGgikVF4gqD2pGGfgbZEJmSCcUzdW4Srwd
- ae8Bk2zm3jVcztksGcJH1o7/bxWf3fpkl2W8NU/nDmvEDGD9TNFi5na+403l6IPN/psjOmmss
- Uk0Q361yGAtPnJUgAQRfFmtfG0pOY481XjQpDfGiI7OcoFfmZXzVUEPS54Ul4subWnW49DeEx
- LIHrPSxM8aMmG/Gup0DM5d78eYEaS6EfL287DgKXMOfC2cNWhzcjbtlrhf7qK6GsDVbk9XLDJ
- h4jb5Me0skfP5ii9dtZEdTBvKQ23zvyS25CnErE3unISOdcNhVh+zzo++eSxb50h9dl8e4bys
- 6EWPoMV3rBVqwZYkDYiWoaWN9P48x90cRWRYHvJuQM1RE7wEQ1NNxaQYyBkBv0TRFL7Ja7zrF
- tAyz6+2PsI6ErCIRY5GH/vLtfU35PNgxKrg5uA8fbYKO1em9D3ARt5h7fbSHP1sBPutl96Rb3
- qK7oEd1YAvEin7bzxYcJUmQa544V3brdIVmK7UTvStJ64UHFDEHwhSzXvGDbVPRiuCFW85CZo
- heLghr8CqE7GbEexuwu58VIQ0yjYgJsj6KDaDCvA/7bTjTroSMsj+LCxCU+dpVmy6yKxkz6Pt
- Q6WT6ZR+SpGqymSYGJLuiRa7dtKlGqoOCLP83X+dOy4UO1KmLMqGw4lwYd0qZR6YyNsyhItFQ
- kh8wh6Du0V5LuB9x5NNof7/M3zs2oy4EH+np/pymEEu2JCdq12+wCsXfL/0+YsuBJvCpwsfPn
- xsbOSlh+B0yAT8QWev450cvofvGVugO9/eHqsB1mhEhnwyyb6mDaoEhA3+thsDSoEiAI+lTE5
- NckyN3MhAdXMXRgiKs5bG2AoQf8eJyGyL3gxKEIgZTdBKGjnZdyeA0uBujyEv2prP8JoQxxeu
- Y95QZUeZtUrkxNHxHl9dBkqFYnTA+kz07sqmO8v7PTdcevvRiCoUIobTRvQMqVV8DjdZX46IN
- DaHkcWN4HE/LW9A+VIC4mP0mCpfoGmgRWTbymf2JJ1A3s6ACoXLPa6kDopvspYdnRCp3i+VVt
- QUFHHQlzJEnuGlKtOMzllygWkKGldjzp3G2F7Uw8bwjRVE9PzFcpcL1HQDlqvF26O3lVIOYWD
- x3r7Do5kt/UlAIMMUlNZL1X00S7yAdFPSK2lhaFsu2dQwhOMX5wgk4wSz34ADYx73hH2TUbmt
- VVHxYTur49cvzzpfww2gX2sjabN6F3OECiObrc16h3iX1iybYoAFeilm29sPQrXf50x1SytNG
- cBLtD/5zsm9PFNkxd2pWamXnPmE531ipSO1tZthwFiV1q0g8KUBwb3W3kBmQS3Nk8NXxRIYOS
- VIB3UAu1B/xxEnn3SwoT8zBXjkQaoodEQqCqOgdC4zNNvPJKEISW1CxYGeaihgZYLqm5xUwYR
- p+V6xHABMMxbOBdzo1UcvH45jE47XvQi16OGOibtlxEslM7+Y8O7RTc5qM8eKTmfuXqbHpJ/W
- 9xXaDoO2h39XgbaW6zxu1k6atQLbb+X8p6YMxfrAdxp/fLrpJHWt8i/V4kbNYK4FzrFdrNzU/
- KOGlLs+d2l1jyvzR+1qHNr7PnqVog+Pwwp+WKZmlDSu1H3Pm0UJ6SfKg2CM0U/Vovmm4/gkTw
- xEODmSz3NeMeTUyM5m09FJz8EljzS5PC7+3BE5aCFP12LRob8AB1mx4Hj7CSdr0pd7wLk/ErP
- oLo8xcec2bTHecJDvsC6kWRcnoB/VDAr561aHj1jyd7/d2nuwbxIq8Pm8JM/4MSCqpGMgIzRC
- FRoTW7uZc17zsU6Fvs4Vs34B9x77tcHDL+tiQjrD+M1ZgTrZbzUu6MHFQ9SVv/l6A1Hqq3Lyp
- g/Ie37a5uwXAmruVEl5rqpZMjfNnMXGmhxG3qw3RsVeiteC6lfdIKgKD2AYRK7bdEhbZAJZ72
- 8p/3Cv1m5/xl7L6naA8k5+6HDud7RJxVIX86VVPa8Ffw9MbPxSaZMh7fiYJRp0dJJdUNrfHTl
- 1uec+ssX7zuImgZMHhRd7oWr8ApORKFFiEmovNA8so2T2iE6OTLfXOZFk4Jj6bsawnh/waX3a
- SSxMSWz9S/xKmx+YiBEvkasZ9xlkHsJIqcGXm/O7p7B6EkVK/IlB6Ub1Caw00akiz2A/2BWhc
- DnZrU2Va8da2BtJVYIW9U77fuBANAB4oUf8A5EJUl/BUoYNePRb2Ip+nvkSu/rWMaKWjIuSnt
- SPFOGIqiSfdFzE7aP14NMOVUSsMElprisnR5mAMrEE85FjfOc64lt1wK6nTmaFhQ1x7tuyh0n
- 2ffPpp8n1+YqVT94f3HaCU6gqATtw2IYRjf8vogZt89ehLQHi2QV7TU3R8uLWV621kxYUxtfp
- yj2lU8xkkWD//KPnbj4wm1aEjvynOrfN/dZkwtGfy5xpLhIC/+/Fo47GYfmOq6/T4gipWaJ1c
- IY2TKaUcd5VScpXd5pwEQsdWEHRhso+n//Z7ccIrdM+Vitd5FD/ddNFmL5SeS163XtmiVMS/0
- 1fLriWHDgQPrnTTUu0nIq8=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5089:EE_|IA3PR12MB660778:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2238761d-a862-4d03-f8a7-08df41d5606a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|18002099003|6133799003|261009223027099003|11063799006|10067099003|56012099006|261022075727099003|261021123027099003|261102123227099003|261102130727099003|261028144727099003|261021121427099003|261026121527099003|261022105027099003|261026140227099003;
+X-Microsoft-Antispam-Message-Info:
+ AW+C4mQoXNBYt2o7sYaKD7tCDve0EKaVdYoxY7hmU5pfX3AM68DdhGAMmgSBed0dxxMGWj7zHajSQgb/qZDI7YCFnu7Xes7Dc0tzo4XudrTmdIRRycM+myXyV3WNUT7AtrwkHn3bF9QTt7Xhljtc4dUDobmk9j6KDRaGzYb1ODqrOaqqRGOUi34xX7eQhGjyktBTyOS2771njb8wz+LGBy5ipAls9FYLXVsCxMh4giTw/wYo53ActtZOIBvStfveGM0hkk9EkrLcu7j+WxbUjN+bI5bMgHtZMBaNosE/1F4SHC0/3w6AK859ok26613tc/8Of5DmtHqwPwbUXUqF+k/EBUzCRAomfg42rcCHTD6niOwIHcaQUVCP3HhDsZfehFvCTH4B/lw7bJ2CoFw1WB/apiEBOmBsGfjVqvBYysY1eFF8AZOxOOa5ZotkBQTjALhF1kTD5SvTaAE9/grKh90QZs1639gCf64A5XFC8YrW1xz3AKUoJ7Bos2PKd1yOWhrcBuuArmQxiC3YmDsWgg0iosoNwWhOtZNIy/IJum/eEwE5e/cAcT3A/GY0Y49bVIaGC+nx5QzBtnHIvytMROMhuwL2A4SEyUkwBfkoIhPOfrnORKLF3nNTpb47fSdgoREvg+qU2bMnTjIeZc3OjC/Na8cTntHF5TmfRwR7hD8=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR12MB5089.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(18002099003)(6133799003)(261009223027099003)(11063799006)(10067099003)(56012099006)(261022075727099003)(261021123027099003)(261102123227099003)(261102130727099003)(261028144727099003)(261021121427099003)(261026121527099003)(261022105027099003)(261026140227099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?4ftU+UnfmgI1hIq1BeEwb0RK6Ffeh1rMbrh+XWBpxbEhL6G1DfePZ41SYk/f?=
+ =?us-ascii?Q?Sxtk2VZCb8DtsnVGmJP9IcD7ax3f6U2j160e/UGe/fRg70I4yviH2Dk79uZN?=
+ =?us-ascii?Q?k7WUz9cJmj5Ru85k0Wp4pzKxxiyX+L8RXWGbQB+jkA0VjwEcWXhNtR7bcCW+?=
+ =?us-ascii?Q?E9nIbEW+hQWgtY50pD0wPxkUaa1/9c5QUWwd6glKKVmIfct4s9De3Y+z5x80?=
+ =?us-ascii?Q?GNrMxBaT/jzxBvR/36hoegPBotCFuRsjtRvxBxEfMX6lIAiurddzZqb8E/6w?=
+ =?us-ascii?Q?J+Pt3xwh4sk6hXQgK/0O34VV2vwgHoRKwnEgl2HyHYjZGGbI9DJKywQ11OIS?=
+ =?us-ascii?Q?QM/cYLyK7FekD1JJ8R9nFJAPWknpKXCn708/RuddGo7Euor87UVWrbUWJZJe?=
+ =?us-ascii?Q?Iu18J+zhcU3QNEdZ9UO+mBoVEvq0lTnrsYyWErlfA0X7Gp/EggGxCD7eMr4e?=
+ =?us-ascii?Q?TsYz0tmx4rXqYzOH9Iz1y2gvhRqLswfvDh7YEYEGFn0pRYIj8kXhAuS7wqyZ?=
+ =?us-ascii?Q?W+Kf6dSwyyWFFETbdYRcPn7J3EzspMYefYbIrnIG+sfT4EMyHYiQC7cDjS7j?=
+ =?us-ascii?Q?5psvOKcAowPd4rypeuHmqjjGWgvkrmQZEmHS0+UC4KvdSAVn7klCCGBicbaF?=
+ =?us-ascii?Q?ZzuR51v0MbOWr6cv4zyhuPtno53O+BbED/GI9dZKUDKG1Ef9LBRHN//vtL3a?=
+ =?us-ascii?Q?09MalL7Sa+lzv/HGy32EyTKL70cKfc2dzXDHsLorCzmr3yg1yiRrTruigIQO?=
+ =?us-ascii?Q?op8UFbD/Ytn0mqjIP+JlLeEJBFJ/c1VJS7xi0jaSBKtulWF1Tp9MsX5dE1TX?=
+ =?us-ascii?Q?PVm6MWdfUrUwrK/a4hMvQgoyzm8hFWFj/NTwtRUBBCqMUki2tazBwx7z699n?=
+ =?us-ascii?Q?TRVBIujwWMmZof2b5ZXvuReGQlShXr04B0g9lKEjx1YvPitmnONqX1pDwynA?=
+ =?us-ascii?Q?ETSLPFTPTbVylz9uRHLJmhc/RiemWs2D6r4ePz25Fu3xGC9MOoPRPboQXnfg?=
+ =?us-ascii?Q?9vPIiTb7VZxdo4o1uYBax9kQfzgP4AddVf+dBA9WfTG84y/nnfMANes6Gy2o?=
+ =?us-ascii?Q?7DnSUiAcxLsO/XSHPA9KrC7fhTsBmBZPMpAzMXPnlNzCMRBd2Xj4RRZgu5jb?=
+ =?us-ascii?Q?RaKcQABMbo8x90QCca9lD9wklgQweKD/4zK8U7YoPGbVoblVyuJb8F/UxXdm?=
+ =?us-ascii?Q?/2tXLwt7LaTJEo4ibHF7msuj4hv9t3sZsc3dOgwiJB+lVTbTWkSjEV1w0YWk?=
+ =?us-ascii?Q?h2F3e+YajE+187fFztG3qKvbZG6RZZEKBlpTT9wevVTNxox3ymjssIZIKPm3?=
+ =?us-ascii?Q?L+tP8pBA2SXD62WNnBV+n7IhMyuW62UM6MSjnbqSOhjWq1oephzhhDWv0Brs?=
+ =?us-ascii?Q?VQMAt5u6WX4f/zqYfPWMoHAPrWMXbUAljBwrGCMURRRohhrjTsnd+/91usx8?=
+ =?us-ascii?Q?W3ipxAvqPOXTMBXTd4uOn6ru4D+U8mtVkOkf4zgegB+zO9W2EfA/ui2ogf3/?=
+ =?us-ascii?Q?C9oBtVWZdmpH0wkRrfAgiGlqT/jmL/jHH0NYANvt9GKUOQYyzaTz1WIlAAcj?=
+ =?us-ascii?Q?xwQJ465MmSTn0WPvrEEUdxdlw3hM9MjVEu88hSehXuD6mM4PWlhjV0IDcbDI?=
+ =?us-ascii?Q?yC5Iosr5zyNz1yh5zOirWMMsamsocsAjgg2zpozBId+j4uN51g6QJkDtr7W0?=
+ =?us-ascii?Q?gsJKtAyjoftJT3Neg7WIpBrMlOO/Wa7xh9bsIJIkBHxy87VuK2az91LypF6C?=
+ =?us-ascii?Q?bd2qiDbm/g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2238761d-a862-4d03-f8a7-08df41d5606a
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR12MB5089.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2026 22:28:01.2923
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CPTyRlVsdoIUixk114R/LEme/OCd6Pw6I+zR6SGdVa+6d0pkP+2URyq0HiE/XzAsEmBOSmm9lQ5gAIM8KfExmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR12MB660778
+X-OriginatorOrg: Nvidia.com
 
-Am 13.11.26 um 21:45 schrieb robert123m@gmail.com:
+Lenovo now ships ACPI based arm64 laptops whose firmware exposes the
+same ACPI-WMI interfaces as the x86 IdeaPad and Legion machines: the Fn
+key event GUID consumed by ideapad-laptop, the hotkey utility GUID used
+for the microphone mute LED, and the GameZone, Other Mode and capability
+data GUIDs behind the thermal operation modes. Since 884d53763d30
+("platform/wmi: Remove dependency on CONFIG_X86") the ACPI-WMI core
+builds on arm64, but the Lenovo WMI drivers still live under
+drivers/platform/x86, which is gated by X86_PLATFORM_DEVICES, so none of
+that code can be used where the firmware is.
 
-> Hi Hans, Ilpo,
->
-> On the HP OMEN MAX 16-ah0xxx (DMI board 8D41, BIOS F.20, Arrow Lake
-> iGPU + RTX 5080 in hybrid mode) screen brightness has never worked on
-> Linux: intel_backlight, nvidia_0 and nvidia_wmi_ec all change their
-> sysfs value, the panel does not change. I found where the brightness
-> actually goes and would like advice on what a proper fix should look
-> like.
->
-> Findings (DSDT and the steps to check them by hand are in the repo
-> below):
->
-> - The panel PWM is generated by the EC. The duty cycle is the 8-bit
->  =C2=A0 field ECPW in OperationRegion EWRM (SystemMemory 0xFD400C00, off=
-set
->  =C2=A0 0xF5), range 0..200. ECOE (offset 0xF4, bit 0) reads 1, i.e. "EC=
- owns
->  =C2=A0 the backlight". Writing ECPW directly dims the panel at once.
-> - The WMI method \_SB.PC00.AWMI.WMAA (GUID
->  =C2=A0 603E9613-EF25-4338-A3D0-C46177516DB7, the one nvidia-wmi-ec-back=
-light
->  =C2=A0 binds to) ignores the level passed by the caller and does
->  =C2=A0 ECPW =3D GFX0.CBL1 * 2, i.e. it copies a field from the Intel Op=
-Region
->  =C2=A0 that i915 does not write.
-> - The panel's DPCD advertises PWM-pin brightness only (0x701 =3D 0x83,
->  =C2=A0 0x702 =3D 0x81), so AUX backlight is not an option.
-> - After boot and resume the firmware resets ECPW to 100.
->
-> Workaround I use now: acpi_backlight=3Dnative plus a udev rule that maps
-> intel_backlight to 2..200 and writes ECPW through /dev/mem, and a
-> system-sleep hook that re-applies it after resume. That works, but it
-> obviously isn't something for the kernel.
->
-> Questions:
-> 1. Would a quirk be acceptable in which a small backlight device
->  =C2=A0=C2=A0 (e.g. in hp-wmi, or keyed on DMI board 8D41) writes ECPW, =
-together
->  =C2=A0=C2=A0 with a video_detect quirk that selects it? Or is fixing it=
- through
->  =C2=A0=C2=A0 the OpRegion CBL1 path in i915 preferable?
-> 2. Separately: on this board the LPS0 _DSM puts the keyboard MCU into a
->  =C2=A0=C2=A0 mode where the backlight and F2/F3/F4 are handed to Window=
-s software
->  =C2=A0=C2=A0 (all three then send F13, until a full power-off).
->  =C2=A0=C2=A0 acpi_x86.sleep_no_lps0=3D1 avoids it, but then the EC is n=
-ot told that
->  =C2=A0=C2=A0 the system sleeps and the fans stay loud. Is a DMI quirk o=
-n the LPS0
->  =C2=A0=C2=A0 path the right place for this, or is that firmware behavio=
-ur you'd
->  =C2=A0=C2=A0 rather leave alone?
->
-> Code, DSDT excerpts and test notes:
-> https://github.com/RobRobM/omen-max-16-linux-fixes
->
-> I'm happy to test patches on this machine.
->
-> Thanks,
-> Robert
+This series:
+  1. moves the architecture independent Lenovo WMI drivers into a new
+     drivers/platform/lenovo directory, following drivers/platform/surface
+     which exists for the same reason (Surface ships x86 and arm64);
+     ideapad-laptop, thinkpad_acpi, think-lmi and the Yoga tablet drivers
+     stay under x86 because they need i8042, port I/O or x86 only devices;
+  2. adds a small WMI hotkeys driver for the Fn key event GUID on machines
+     where ideapad-laptop cannot bind;
+  3. makes ideapad-laptop's own WMI event driver decline the GUIDs when
+     the IdeaPad VPC device is absent, since it can never report events
+     there.
 
-Hi,
+Patch 2 was tested on a Lenovo Yoga 9 2-in-1 16 (arm64): microphone
+mute, airplane mode, the Smart Key, the Smart Connect key and the Fn+Q
+operation mode key all report input events. The same key set is dead on
+a Lenovo Yoga Pro 9 (arm64) today and uses the same GUID.
+Patches 1 and 3 are compile tested on x86_64 and arm64 (defconfig plus
+all LENOVO_WMI options as modules).
 
-can you share the full output of acpidump as an attachment? IMHO the corre=
-ct fix for the backlight issue
-would be to add support for GFX0.CBL1 to the intel GPU driver and update t=
-he nvidia-wmi-ec-backlight driver
-to work in parallel of the other backlight devices.
+Two questions I would like the maintainers' view on before this goes
+further:
 
-Thanks,
-Armin Wolf
+  a. Is a vendor directory (drivers/platform/lenovo, like surface) the
+     right home, or should the architecture independent Lenovo WMI
+     drivers move under drivers/platform/wmi next to the core instead?
+  b. Should the Fn key event handling stay a separate small driver, or
+     be factored out of ideapad-laptop so x86 and arm64 share one path?
+     ideapad-laptop handles the event only when its VPC platform driver
+     is bound, and the arm64 machines expose none of the VPC interface
+     it is built on (no _CFG, VPCR/VPCW, DYTC or HALS/SALS), so making
+     it the single driver means gating most of its probe. Two smaller
+     options: lift ideapad-laptop's own Fn key wmi_driver and keymap
+     into this file and let ideapad-laptop register for the events it
+     still wants (Fn lock LED, DYTC cycle), or the hid-asus/asus-wmi
+     shape where a companion WMI module exports the event to a
+     subsystem driver. The keymap in patch 2 duplicates entries of
+     ideapad-laptop's table on purpose until that is decided.
+
+Patch 2 declines to bind when the IdeaPad VPC device (VPC2004) is
+present, so machines handled by ideapad-laptop keep it; patch 3 is the
+mirror on the ideapad-laptop side. The new MAINTAINERS entry uses
+platform-driver-x86, the list that already covers drivers/platform/arm64,
+the ACPI-WMI core and the other Lenovo WMI drivers.
+
+
+David Cemin (3):
+  platform: lenovo: move the architecture independent WMI drivers out of
+    x86
+  platform: lenovo: add WMI hotkeys driver
+  platform/x86: ideapad-laptop: do not bind the WMI event devices
+    without the VPC
+
+ MAINTAINERS                                   |   9 +-
+ drivers/platform/Kconfig                      |   2 +
+ drivers/platform/Makefile                     |   1 +
+ drivers/platform/lenovo/Kconfig               | 101 ++++++++++++
+ drivers/platform/lenovo/Makefile              |  23 +++
+ .../platform/{x86 => }/lenovo/wmi-camera.c    |   0
+ .../platform/{x86 => }/lenovo/wmi-capdata.c   |   0
+ .../platform/{x86 => }/lenovo/wmi-capdata.h   |   0
+ .../platform/{x86 => }/lenovo/wmi-events.c    |   0
+ .../platform/{x86 => }/lenovo/wmi-events.h    |   0
+ .../platform/{x86 => }/lenovo/wmi-gamezone.c  |   0
+ .../platform/{x86 => }/lenovo/wmi-helpers.c   |   0
+ .../platform/{x86 => }/lenovo/wmi-helpers.h   |   0
+ .../{x86 => }/lenovo/wmi-hotkey-utilities.c   |   0
+ drivers/platform/lenovo/wmi-hotkeys.c         | 151 ++++++++++++++++++
+ drivers/platform/{x86 => }/lenovo/wmi-other.c |   0
+ drivers/platform/x86/lenovo/Kconfig           |  67 --------
+ drivers/platform/x86/lenovo/Makefile          |   7 -
+ drivers/platform/x86/lenovo/ideapad-laptop.c  |   8 +
+ 19 files changed, 294 insertions(+), 75 deletions(-)
+ create mode 100644 drivers/platform/lenovo/Kconfig
+ create mode 100644 drivers/platform/lenovo/Makefile
+ rename drivers/platform/{x86 => }/lenovo/wmi-camera.c (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-capdata.c (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-capdata.h (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-events.c (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-events.h (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-gamezone.c (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-helpers.c (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-helpers.h (100%)
+ rename drivers/platform/{x86 => }/lenovo/wmi-hotkey-utilities.c (100%)
+ create mode 100644 drivers/platform/lenovo/wmi-hotkeys.c
+ rename drivers/platform/{x86 => }/lenovo/wmi-other.c (100%)
+
+
+base-commit: 2800868f63227c8237d70c41e70d441c919620d6
+-- 
+2.56.1
 
