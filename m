@@ -1,106 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794605654;
-	b=XP++pAfFs/UPfZMnCUZQWRM44eEhns5cuzQAYM6wizdB9toFpScqsMJzKnWCVZ6NcCCc
-	 P8d/Jhm4+0eFPbdCxwQ1cfdrW0z6fgomH7E6KrA1eVCBaX/0mpwwboco49Qqgn2NHqCJy
-	 YvCm1GpqsvGft2nYhvru4WXgHNXwZT7xyAJsfrSpsM+BzJqzA3vc+Cj9re3rf4fHAHRk9
-	 Rb6Kpv7JZb1Hi4JwXvTni70o4n7A6ymx8CQ9ykdGyuZ39KbxBwGLkscrFVc6SDqTBwqt8
-	 CTmWviXQygP6A97Tg0D8+0Wffit8AkzpxUJUb4TfUyFd1H/aTuQ9RPrq85jYuGCFCYQ==
+	t=1794607681;
+	b=e3cNMZcUgrgJmlIHVT+xPNPqnftdHzCd34hq4gixmKYCRaHW+zuzRzKnL4Jdl7TKsRC7
+	 W/PsCnN9zvl32fL4gd7iQsDdg/QZIHdHYnWaU+balQ+az+7hM8Q90jfl/yQGCqt24BmY2
+	 xWXr2p8DFKhYWn8qYH2OUxxpbng76hJtix8uKsJRmi8djJqxheMjOWqnHtuU+wNKu4g6C
+	 IuhgHoBhgu2mIUhxEYfi3VBoMRp03i+y+bV5l8BQjtjECCyWQo+NIHWpNDyuff/4ozNL0
+	 DcC4hSgI0YvzbJVdn4cjE+oA38eKfR7p0i6DxVZSwjIWxR8+aw3fZCPvXeb4hTxAddw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794605654;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:
-	 Organization:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=AfGkZPNe0g6Nw9LmU0I8+cKHSNqAZxOuxjNAJhbRjIw=;
-	b=YxUGlg/z+qtCv9p6G8BUQ/FdWHYZuS17M2ghE/Kxv8w2XKSJuH4wpBpjsIBDGoqxA5DJ
-	 MfU4+348KLpVWBV/eIRrmgw4+EALSBvYEd8V6Nsk5Oyq5Vn19ZoGkiioaI5WFPij1B1Vi
-	 N6d7g76uGz4xyL7Uj/acwZ8kZzfWGfv9713rskEwfmLLOPpFMC16rvGSDknoC6UbPQsC9
-	 5QAUEB9tKKoIUJGNdDud7OL3VH1UpAJrdB3E9fxUoUndl9Iq4bETbj/ocIB9RyMB1qYIm
-	 AZycvSE/AfWdagROzta9+TtOBd3wb9aZksGe7XuQUWiuJUau/I5bzQ+5lTyc3a8xefA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794607681;
+	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
+	 X-UI-Sender-Class:Received:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
+	 UI-OutboundReport;
+	bh=WxQcdAlVpgZUOFc0uQg2No2XTcpgL4fwS0Q2ronuQeo=;
+	b=bumdKMjhg8bpuF6v6jc+65s7xQFgWsryvVaC8dbqocIzhrTCn8EZ3UuXszN4hD0j8IT1
+	 SVKkns7GeBfF1gSxmYnpujs/ZU9dFHtNFZEBKPXT3UTMy5nLSSDTvTMVYjqcXV0Y2ogvm
+	 AnHrH9Mi8ecYF6+LfqKRYXQaN2whmJodIqUu25uvWsuyhVyDlplMZlvJZjomfLQXYn2yz
+	 mTSgcYb+BsiLaxwrsy+XF+/axIMVyDipqKFayCay/VZ/+Mlml998mIoC7qH/i9yjTBi/g
+	 G/JnrDAE/2+us1quoEuXLrXRorDBFH9p3MMQ9zjyInLPg44wkcyrHvEMB7qjPhr+ELg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kVy3Le0q;
-	arc=none smtp.remote-ip=198.175.65.16
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmx.de;
+	spf=pass smtp.mailfrom=gmx.de;
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=AwC+QMeQ;
+	arc=none smtp.remote-ip=212.227.15.19
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476AC606A889;
-	Fri, 13 Nov 2026 21:34:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 476AC606A889
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6D2606A33A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:07:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1E6D2606A33A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kVy3Le0q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794605653; x=1826141653;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5H18aAry4/GXJ6hd2/WDeC5xY+R/z+QH0pzgy9iRGOQ=;
-  b=kVy3Le0qh2EnrkBBmHiVtyIxrqVoNnkk+N3X68mUvHqQAdjH1TgoEeu4
-   YezJ6Je3WUz4UTzDkJlEItV+T9g7xjmRvRy0p4zAPFXA58LjXy++h97wp
-   c1NKsKoxDt+P4KfbUjs10cT0NlClEMmuGfl5solZxem/2E0uMWEgWjyeq
-   fTs+eYj2rSpo8UJdNuNTEFC2yUHdLmqSeg2s92ftTlDy+X9CbOYErUFmM
-   RvHfpTs7QrrKeb6Hi5L2oUUN3YigiE/IPBPdUkNvSxK6blmkhCpITAPXk
-   gMnpM1D0jBhZp5/adF1341hufASYfnkKgCJBMB8MudlN5bTLm4zvXrLsO
-   Q==;
-X-CSE-ConnectionGUID: jA+ZCfHoSPaWk2BfJA6oSw==
-X-CSE-MsgGUID: Ln2bkXw/SAS5VY9O2fUYnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11965"; a="3410644"
-X-IronPort-AV: E=Sophos;i="6.27,212,1787036400"; 
-   d="scan'208";a="3410644"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 13:34:13 -0800
-X-CSE-ConnectionGUID: 5uaN0zGOSKClUoi4WnQggg==
-X-CSE-MsgGUID: v1L1tUjtRSSjwXDnysT+fA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,212,1787036400"; 
-   d="scan'208";a="8829869"
-Received: from ettammin-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.254])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 13:34:06 -0800
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 5F3FB11F7E7;
-	Fri, 13 Nov 2026 23:34:07 +0200 (EET)
-Date: Fri, 13 Nov 2026 23:34:07 +0200
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Pavel Popov <pavel.e.popov@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Arnd Bergmann <arnd@arndb.de>, Len Brown <lenb@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	"David S . Miller" <davem@davemloft.net>, x86@kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] ACPI: mipi-disco-img: Include <asm/cpu_device_id.h>
- unconditionally
-Message-ID: <aveCT1hwhMcJ_Efm@kekkonen.localdomain>
-References: <20261111234821.4814-1-pavel.e.popov@intel.com>
- <20261111234821.4814-2-pavel.e.popov@intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=AwC+QMeQ
+DKIM2-Signature:  i=1; m=1; t=1794607678;
+ mf=PFdfQXJtaW5AZ214LmRlPg==;
+ rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+ d=gmx.de;
+ s=s31663417:rsa-sha256:gDwdpXjvAY/nNERMQGm2tlezlMw0
+   gXR7r3B8+YLkp27UTtYW0GnFLQOVtlneoxzQAWtNRlc2wyz+wUMfq/JQk2nqzYeE354wKzfGh8W
+   YOZFKRvoS0NRxEw9vZpTOeKDRgaZ7jZxC6nL/FyNb1mAPjEkLEzz097DVrFGiqIDV+VRKDBVgHx
+   Y6HxNR64j36YX1pIgZX9OZQFJR2+4qHSAJ+oDdBTmqOwAydeC+d06vGdDsB6d7BktcXRYwxUKuv
+   6icbLcn/3ve78MFXLIvAfNQEs300v7ZFA6F+8De90SnZmLpmEG0IBqRwkxVZKaxxreIZx9GdzVv
+   M4Wg3Aa6ki/uIg==;
+Message-Instance:  m=1;
+ h=sha256:
+   zusS48Vq+kadndUuFDXvvB8wmTw5Wf9+yGdCgJ4sGA4=:
+   WUYU8XWIVc4eeuBnRjQwNhv1q6rrBPeHc6epgxTfd/g=,
+  sha512:
+   VxVANZp1cPnc41JB+Qe69QKnwLRWoHjejGf5tyHDRgP/L4NWM7TLGeErf+QMjpWt3ATcrLB+eh6xuG3w+TEFNw==:
+   WJQAu4pwFfp0kDXcjkL4iRFatFUZsQRZkJn2WD4IEXsDK58HrZAg+K9sNwj4YKNeLTfSuPQfKhGEfE4YGGYMrw==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1794607673; x=1795212473; i=w_armin@gmx.de;
+	bh=WxQcdAlVpgZUOFc0uQg2No2XTcpgL4fwS0Q2ronuQeo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=AwC+QMeQE5Zdvr33uvpJmmy7L1NYe9haQKgC5GQg9ufr6fqcMnrDN3eTDcOP9SBx
+	 +yVLmKclkI/ecBVMQqbOBMbryU9Tz2y2W4wGxk/vu/Rjx0WvQBOVi3smfpURU8Pl2
+	 te5LLda4WV3Rsh1QE+E39JBBXQiClULJMNLrV26In1N3dkIP09b45BVWEDMxM5yg7
+	 zMHyTPoQMaCqgB3asttGESfIDazl8iXHIKeOxbk0x8vUpaRP4ni6I60bZzXFCiHU7
+	 cB0Me/9gkZzpWrurhSwHLp0SZt5U3vOxsANi6LghvlBz8ibupWo6aO/6yrxT11jOy
+	 msQQP3+QIJ9MVqi0sQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MNKm0-1x7iUN2ZWU-00JMri; Fri, 13
+ Nov 2026 23:07:53 +0100
+Message-ID: <e68f1db6-0cd4-4cf2-83cc-68f28d1568b1@gmx.de>
+Date: Fri, 13 Nov 2026 23:07:52 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -110,20 +81,204 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261111234821.4814-2-pavel.e.popov@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: HP OMEN MAX 16 (board 8D41): backlight PWM is generated by the
+ EC, no Linux path reaches it
+To: "robert123m@gmail.com" <robert123m@gmail.com>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <df721493257c41338324f0bcf37e4b4d2d0ef7a0.camel@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <df721493257c41338324f0bcf37e4b4d2d0ef7a0.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1S/hMxBNz9KM1UkFOs0FpyzKmDPyKCPtp+N9CNjQezXXo1nQcIG
+ yx7jiUN1Va2IprHeDM/mx1QSDSC+MUWDvG1xc77fSQL/cPWU1D3C5YxvCKWkrfEcroVi6fo
+ guzsng/DFqrbwMYKIl/ic5tnab92YWc4PnLifFGlrLWCK3m6vXDQrRjQbmhKDpI4ElOxyEm
+ fQd++HkKgM/sVI/wuFnew==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:LEoAb6kabQQ=;zMvT8eBOJJXkTheDB6C141W6cep
+ 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
+ 1fLriWHDgQPrnTTUu0nIq8=
 
-On Wed, Nov 11, 2026 at 04:48:14PM -0700, Pavel Popov wrote:
-> <asm/cpu_device_id.h> now has a generic version, so the #ifdef
-> CONFIG_X86 around the include is no longer needed.
-> 
-> <asm/intel-family.h> is included by <asm/cpu_device_id.h>. The CPU
-> match table still needs CONFIG_X86 for the INTEL_* model defines.
-> 
-> Signed-off-by: Pavel Popov <pavel.e.popov@intel.com>
+Am 13.11.26 um 21:45 schrieb robert123m@gmail.com:
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Hi Hans, Ilpo,
+>
+> On the HP OMEN MAX 16-ah0xxx (DMI board 8D41, BIOS F.20, Arrow Lake
+> iGPU + RTX 5080 in hybrid mode) screen brightness has never worked on
+> Linux: intel_backlight, nvidia_0 and nvidia_wmi_ec all change their
+> sysfs value, the panel does not change. I found where the brightness
+> actually goes and would like advice on what a proper fix should look
+> like.
+>
+> Findings (DSDT and the steps to check them by hand are in the repo
+> below):
+>
+> - The panel PWM is generated by the EC. The duty cycle is the 8-bit
+>  =C2=A0 field ECPW in OperationRegion EWRM (SystemMemory 0xFD400C00, off=
+set
+>  =C2=A0 0xF5), range 0..200. ECOE (offset 0xF4, bit 0) reads 1, i.e. "EC=
+ owns
+>  =C2=A0 the backlight". Writing ECPW directly dims the panel at once.
+> - The WMI method \_SB.PC00.AWMI.WMAA (GUID
+>  =C2=A0 603E9613-EF25-4338-A3D0-C46177516DB7, the one nvidia-wmi-ec-back=
+light
+>  =C2=A0 binds to) ignores the level passed by the caller and does
+>  =C2=A0 ECPW =3D GFX0.CBL1 * 2, i.e. it copies a field from the Intel Op=
+Region
+>  =C2=A0 that i915 does not write.
+> - The panel's DPCD advertises PWM-pin brightness only (0x701 =3D 0x83,
+>  =C2=A0 0x702 =3D 0x81), so AUX backlight is not an option.
+> - After boot and resume the firmware resets ECPW to 100.
+>
+> Workaround I use now: acpi_backlight=3Dnative plus a udev rule that maps
+> intel_backlight to 2..200 and writes ECPW through /dev/mem, and a
+> system-sleep hook that re-applies it after resume. That works, but it
+> obviously isn't something for the kernel.
+>
+> Questions:
+> 1. Would a quirk be acceptable in which a small backlight device
+>  =C2=A0=C2=A0 (e.g. in hp-wmi, or keyed on DMI board 8D41) writes ECPW, =
+together
+>  =C2=A0=C2=A0 with a video_detect quirk that selects it? Or is fixing it=
+ through
+>  =C2=A0=C2=A0 the OpRegion CBL1 path in i915 preferable?
+> 2. Separately: on this board the LPS0 _DSM puts the keyboard MCU into a
+>  =C2=A0=C2=A0 mode where the backlight and F2/F3/F4 are handed to Window=
+s software
+>  =C2=A0=C2=A0 (all three then send F13, until a full power-off).
+>  =C2=A0=C2=A0 acpi_x86.sleep_no_lps0=3D1 avoids it, but then the EC is n=
+ot told that
+>  =C2=A0=C2=A0 the system sleeps and the fans stay loud. Is a DMI quirk o=
+n the LPS0
+>  =C2=A0=C2=A0 path the right place for this, or is that firmware behavio=
+ur you'd
+>  =C2=A0=C2=A0 rather leave alone?
+>
+> Code, DSDT excerpts and test notes:
+> https://github.com/RobRobM/omen-max-16-linux-fixes
+>
+> I'm happy to test patches on this machine.
+>
+> Thanks,
+> Robert
 
--- 
-Sakari Ailus
+Hi,
+
+can you share the full output of acpidump as an attachment? IMHO the corre=
+ct fix for the backlight issue
+would be to add support for GFX0.CBL1 to the intel GPU driver and update t=
+he nvidia-wmi-ec-backlight driver
+to work in parallel of the other backlight devices.
+
+Thanks,
+Armin Wolf
+
