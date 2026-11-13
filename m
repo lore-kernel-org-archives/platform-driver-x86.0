@@ -1,73 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.201.17.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.125.188.123
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794548970;
-	b=Bg4bXarYGHGmm6DAZP5X525DFNTbo8LDO2OcXLpviwVtn1QvV8T80OvDult465Eou/hP
-	 1s6VYg8Cg7yGcyJ952Sp4uxDghmOXaYOh2OcsGZcz9vXZnl6j4hY9Eb2ZoByTepnehuZi
-	 VFVnc0gX7D/XxRh2xH2gjG3KhhpLswGPPVAxszFRdxX0jJ2uAhBrP3RtzO/uZJip/oean
-	 DfaxDbsgF0NBIZbR1sdrzzlwUfG/VPbFVpv0NT3orC0ozZ56ByPqoKkOoXBQcBo325+cx
-	 aCZZwtlVrg9y4S9sbJwqOSqTiye2yrf/EGXr5jC12s8GpdX4J1rwzKzjKaNpUeCsJjA==
+	t=1794549464;
+	b=guPiySeFPUj/C+uhxiHwYNtOSuZKD5+TWE1bIa6qJ9B/Mx6/bTEEO27Nm1RPYXeMdxHy
+	 3+Ez2IsIHYWeXJPFAdS+DAMMAQ8w21iEjbby3rcCLJ4PW7Uc0R54AFPE/Q0Sf3uLGGx1v
+	 y6buSaSAeFvYymanSEx7d6ZqGR+5UaxXw09cNKZkrClHTZZhCUBzvijF0sE7kH6XvRheO
+	 0nEWWcQ3SiXgKMSEQEk+ML6vrV1lkWCMpO8nHfdBERNInhhEUlaAcUUtNje+3xg4tmxRB
+	 62csq0lttGRySMx8OuEMPsMR+581m4awGOoHocOwxmWa7bLDw6zjgK15rmTS3nxVgjg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794548970;
-	h=DMARC-Filter:Received:Received:Received-SPF:Message-ID:Subject:From:
-	 To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version:X-PPP-Message-ID:
-	 X-PPP-Vhost:X-Originating-IP:X-N-ableSpamExperts-Domain:
-	 X-N-ableSpamExperts-Username:X-N-ableSpamExperts-Outgoing-Class:
-	 X-N-ableSpamExperts-Outgoing-Evidence:X-Recommended-Action:
-	 X-Filter-ID:X-Report-Abuse-To:X-Complaints-To;
-	bh=z3U/DmgEn+ArJNQl5AE8MJlIy2HYtKSotmVVNyWg8TA=;
-	b=gdoBWileFWLIAV7df2Ffod2i2mOlhuvDFjOCywZ9folvDhdVBjU5LyjsZDqeGYjrAZX/
-	 va1EW2Ms6CUpQMrkQYlpUUz1KvSvzfxIGo0VrI8A9KyH4I6UABpfrOtm1BzQfnJjW5d2x
-	 XQgGHCumESNbX3cx15y66cXVAk48RagROSoPiY8djFDJUQkyeSHxLevwc9AlZApFSEXij
-	 czymX0VhCBYpn+f8jAMRLr4FMw9Yv1P0WttejIAaXoib6wEZ2exV1uWt6rUYjGDvFc7NQ
-	 oJyQgCreQ0o72N1XCYiNJt7/lOyqIx5Wv9b+Enez+/HFMLCCcEVEvajBNDXac/WU8OA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794549464;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:
+	 X-Google-DKIM-Signature:X-Forwarded-Encrypted:X-Gm-Message-State:
+	 X-Gm-Gg:X-Received:X-Received:Received:From:To:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=SZhpgh6Yq01P39/1qSrQzNSaVxZcNgrejNPHx6b5Ek0=;
+	b=sgF647cKT8oD7AdWRyYsaN+WJoWrUVFye4dDiw4msU0kL1RF700fzzuUvOArSogaFydK
+	 kM359Qw1FxM9LRKVRaF8B/RURDPTYSZ77unXnJXhe7wxClqqhYPRvXIxRAKq4KNUUGMTS
+	 0RRC/lp2i98kEqgGRNgwwy13u7I0jDtl41AVa5C88r73SirWENe/10yAc4KBjB+h9UmUN
+	 YrgwZzoPFl8DLjFjQsjTzy78LWY91wk9C6EH8aw1obDp9qPAjbu5pMprubXwXjBF+em8K
+	 Hf3GhRZ03NUpT5vibo6TzBRt5vRLSqLYQkWunBcXgqeknvXAojlIr/BxAaQ6NeHEmJg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=feldmeth.de;
-	spf=pass smtp.mailfrom=feldmeth.de;
-	arc=none smtp.remote-ip=185.201.17.18
-Received: from out13-18.antispamcloud.com (out13-18.antispamcloud.com [185.201.17.18])
+	dmarc=pass header.from=canonical.com;
+	spf=pass smtp.mailfrom=canonical.com;
+	dkim=pass header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=DHK9g3r4;
+	arc=none smtp.remote-ip=185.125.188.123
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F7A606A31C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 05:49:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B9F7A606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=feldmeth.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=feldmeth.de
-Received: from www131.webspace.hosting ([195.242.102.131])
-	by mx294.antispamcloud.com with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <tobias@feldmeth.de>)
-	id 1xRk9z-0024mi-C0; Fri, 13 Nov 2026 06:49:17 +0100
-Received: from tobias-XPS.fritz.box (p5dd137f6.dip0.t-ipconnect.de [93.209.55.246])
-	by www131.webspace.hosting (Postfix) with ESMTPSA id 6E43B814CA;
-	Fri, 13 Nov 2026 06:49:14 +0100 (CET)
-Authentication-Results: www131.webspace.hosting;
-        spf=pass (sender IP is 93.209.55.246) smtp.mailfrom=tobias@feldmeth.de smtp.helo=tobias-XPS.fritz.box
-Received-SPF: pass (www131.webspace.hosting: connection is authenticated)
-Message-ID: <edaa26fd20c89589f42d73c922cfa51d2707ebaf.camel@feldmeth.de>
-Subject: Re: dell-smm-hwmon: Dell XPS 13 7390 =?UTF-8?Q?=E2=80=93?= fans
- never spin up in EC auto mode (CPU reaches 82 =?UTF-8?Q?=C2=B0C?= at 0 RPM)
-From: Tobias <tobias@feldmeth.de>
-To: Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org
-Cc: pali@kernel.org
-Date: Fri, 13 Nov 2026 06:49:13 +0100
-In-Reply-To: <b402f1b8-31ed-4c62-838a-670e47d142c8@gmx.de>
-References: <412372e989bcb3d2376bc4437a9257bfe94ec850.camel@feldmeth.de>
-	 <4c98aa15-c9a5-4e48-a9f4-66abba17744b@gmx.de>
-	 <1ae16be741d52ae3cb79fdb014b88a5d778bbaea.camel@feldmeth.de>
-	 <0303be37-e67e-46d2-973d-0111a0bf828e@gmx.de>
-	 <d3d1bd34785a5cbe81f55d8a1bfd58b9806da5f6.camel@feldmeth.de>
-	 <a7844c49-41cf-49ec-92af-a236e902afdc@gmx.de>
-	 <cb91fd25dcd8d5154916222113c20941c0e14127.camel@feldmeth.de>
-	 <70a4e095-1b3b-42d0-9a1e-392b93679e0d@gmx.de>
-	 <15a07747836da90be73baa39dbf13ffeeedbe9b3.camel@feldmeth.de>
-	 <b2c6c2b8-0996-4697-977b-c71ac39375e9@gmx.de>
-	 <6d550fe087628fe9e7dbb4cc3324549bbbbcf051.camel@feldmeth.de>
-	 <b402f1b8-31ed-4c62-838a-670e47d142c8@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16037606A321
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 05:57:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16037606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=DHK9g3r4
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 40CCE40CD4
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 05:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1794549461;
+	bh=SZhpgh6Yq01P39/1qSrQzNSaVxZcNgrejNPHx6b5Ek0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=DHK9g3r4ddk1k9N0M6ToMb+990a/BtpM8f66rMTPl60gOK3uzpBahVd+q8Eey6quW
+	 FcusPpKKTxtqJsndm3oEzoxjdADD2r0kUxlYCpUfJSiTnOQLv8DwAH4Nc4N2WZLNOl
+	 km7KT4HTJIWzX7gvSiTKYCYtB8UTcB33DVj5EoCqB8fyg7KBwoaeTmIil1xklWxC5F
+	 q5mlsIrw8EqNdBRfT0xko4AsVQUWoQ63tnJMThnXV2Qcad0LFuCNMWQxXAjXMGr1R1
+	 y+YkHAH2rcU5TViI3NQSiYXFnDyDxmCo8E9N22/NLkr6Vkf6lGddbJ9U6R25EWBXFI
+	 bxYFFVIIyaiJuntbsEN6VhNo1Xc/qThW3eRy4MMJaaV2fpP+zYgJVNq7z9GtN5CxvO
+	 SEkBDyOSO/fcw6X+/DC4twgKqYpT5fZJ+0NFtCztkEgo1bYlyi/KgKdINg/m0zkxwJ
+	 caGSpyPGiUZpscaJVFZ3qoorwMQznG9IEt969/0ec1/9XJ5aL0LMhSJ8jBwWrLpdcJ
+	 RFrRBeUM3IFHwg8QR8E+LzacyRy8f9EpOtMkZAVdJHVbEu28qWgMFQYbCs6DU49SYk
+	 dXvbxompLP4zj2biK88edgnL3HwkjmrH9Gg0Zx3ODl0ZUcMbOryJXr0ksI/jK2dJ1C
+	 uPUA9Hu8VzOdrJr2Ghvq0uMc=
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3b18a173e48so427909a91.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Nov 2026 21:57:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794549459; x=1795154259;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=SZhpgh6Yq01P39/1qSrQzNSaVxZcNgrejNPHx6b5Ek0=;
+        b=b1XL34gtvFUvDuQsqKCa70Pna+0hb/2SIl71DK2ESjyQUmvLnD4BxyYuT86LMautAn
+         pJJSwnMYmvYM+DW5gEa+POsLEqDP3E57FLDgTwTqRC3QuFxNapSd9fytnplhAthtlgRQ
+         k9sRFCDijG2ShHpnC7VQRgz7svQUSS2+4kSsk3uOVjZuZfV2cUX08+69FVloin6IYX3Q
+         /zEn+N6ftKrPmR87NjdykqnAt9eYVtHqinxKaTSbDNftXZuvMcI0j+GW1ICtt2vTQMQu
+         Yhopm5p5n+HfLNiXn8VSYPae6GzRhndklxVQwIqaxo9kxqeQ+1b4mi6m8uSTN5d+rOEa
+         2mvw==
+X-Forwarded-Encrypted: i=1; AL+hErExc06BncvYLOMDrGyddlNHer4j6RvyuCvxOecWPTq3U1BlK3rECpLWBwHcc9y56ES68LcQh2hQAzRuwJrogWKmsh4J@vger.kernel.org
+X-Gm-Message-State: APuU4Z8NXhh//jwGTl6DZOSVdjr6f+tmqdkNvbQoyfIWXUVAX1SGkd+d
+	3GReyv4ggI6S4h3GOZ/i5TRIvPWmwSuP2Vng3wZIpM3XUPEbD4SIBjTYdCn4Uglz7CUTXuR8Pah
+	Hqp2tU2I6wfbo+gzMt/P5IysTgeW9ft/L9PM5Uinc3h7mBYlneM5b1rLO9InRGlc/urJF7SHDTA
+	G/9rGJbh9b3HQJEa0=
+X-Gm-Gg: AYBFou1WvV8CF0kafLT4adN8Ian4dIKJUoA47ql1XxHFu+pKoMJdMfcG/bdqRmbGx9a
+	biPKTIeOXM/ZgBJ8V7gm5qFvBbB2N+7elNA+wR/XqLdQNuTEiCxiuVYy80bFanZzJSjPzMP54/j
+	9cW/DRI6hFYpZk6AWIAQE3bA50MK4gLqvXy2hrm6dUJ1DfDUwQSEzjZvW17lwIvLsZmekd1ksAs
+	m0iIubbudqs89CF96nfRA8ZlJTDUq+u3Ez3YonHAVLrni1+Qnf9iCZ/ltd/5Fn0U/a4ea6Ajpo7
+	flzvh8X3jNJ4VBcOpTCeJom891O3nGJTK2zsDXZiCD0beJaOejrT7uDOgRqLxlcLGzwYeo4lTa6
+	VRlBhBil0/Yv1pH2JsFAVYmbrrbpTds+WOTN4xryXjCgvV8SXg+YvxDu6M+FtUvR88eqzw7E1EE
+	j0qo4dN8yOb1VlC53hqQuIdnjrn48umuV4jZ7puTATv1wgDOCUbAohxGOUxhVi4Hq6xzWRJq1ss
+	XyhXrDKKUfuZwI1/ssTJBGrTKP1SZmj+l5GFNRUsEEr9/WFPdhhiUxmZeZNKoBO0iiu8OXVopGo
+	AS5NzQlBldM9pQ==
+X-Received: by 2002:a17:90b:2251:b0:3a0:7261:d58e with SMTP id 98e67ed59e1d1-3b1b0a408bamr1337228a91.22.1794549459285;
+        Thu, 12 Nov 2026 21:57:39 -0800 (PST)
+X-Received: by 2002:a17:90b:2251:b0:3a0:7261:d58e with SMTP id 98e67ed59e1d1-3b1b0a408bamr1337206a91.22.1794549458569;
+        Thu, 12 Nov 2026 21:57:38 -0800 (PST)
+Received: from u-ThinkPad-X1-Extreme-Gen-4i ([103.155.100.2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1b3eaf732sm756324a91.3.2026.11.12.21.57.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2026 21:57:38 -0800 (PST)
+From: Aaron Ma <aaron.ma@canonical.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Rong Zhang <i@rong.moe>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/x86: lenovo-wmi-other: Deconflict battery with thinkpad_acpi
+Date: Fri, 13 Nov 2026 13:57:26 +0800
+Message-ID: <20261113055726.952551-1-aaron.ma@canonical.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -77,540 +112,155 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-PPP-Message-ID: 
- <179454895474.3396856.10977539386849015272@www131.webspace.hosting>
-X-PPP-Vhost: feldmeth.de
-X-N-ableSpamExperts-Domain: www131.webspace.hosting
-X-N-ableSpamExperts-Username: 195.242.102.131
-Authentication-Results: antispamcloud.com; auth=pass smtp.auth=195.242.102.131@www131.webspace.hosting
-X-N-ableSpamExperts-Outgoing-Class: ham
-X-N-ableSpamExperts-Outgoing-Evidence: SB/global_tokens (0.000445191865246)
-X-Recommended-Action: accept
-X-Filter-ID: 9kzQTOBWQUFZTohSKvQbgI7ZDo5ubYELi59AwcWUnuWP/FRR3PQH9B+Z31rGhw4tfC2fBPVrv85U
- jgfGkeCDoiu2SmbhJN1U9FKs8X3+Nt2pRmlebSALpIQ19PKbPIpilZbyMm38AjouuRSQIqjxL9cV
- PSoHm0W/3adFfiYl2ntRHGLc2tBr3bIy9GYy9/cG0xFuTxT4zj7FZjRutUGTvzFyLdg06ZXED6UM
- nC21PwfXqeq4d9UOAhmwl3wi5kP0SWDshiesHrcEYBdmJouoxVhCb5pPGZiFDLd++yjSyMCRVYKU
- 9W9tbmVXJBqdHHDmFMezBtsH+Fr5latICLxKTLVn5uVOziAob7UesvhGecmd63xajD2SJVrooumr
- 0SMbRwUEC+5/fjk2d+y2XyP7FnWFL1ZmDWWXJaBpi+mn53e8pYrql2bx94ttenELpteubhsQsniv
- psqmceDUZWfzySCys+KP9bxH+zXSoubCr/GlxuBZ+Mv4vxGKHhd8si+EwZFNLpbyGKrt66kMI/5L
- 80x/83z9OxMxfMDd9s2+hv6t553Y9rP8NmlA1EmdFNN/QMigu7ctOfwYfBYIVTl0R+rPD2U01ycQ
- 3WkJG63gzCboI3ZArDcir3GLN+QMUJlahX6Kk3busV8ZB9hJUTuWZd4MrCWpE67+MrnaaTUD+E4g
- 7d8n0MZYQminPHKCRVPvHlsU0TpFTeZpATQdm1IUKRKOhcObZXWnkEw+6F9CGyZ/TnaodseT0EAP
- 2y/xzJt2vcshiUJTGZY1yfZ17+fQxniQ4ApFQKQRG9WpbbNtmh3qf32HRAIXLxSxjQIuPQZeLfrx
- 5PFsTfKxskFcVpzxUkJBwZhasgYY61uwCfKnz/3kgTtbIGX4Gktj7c2CONol2o6vbb47UXwKX42N
- rbzFOw+kiSjdFZbmgdHzdo93IZkbsz9Ax/yx71UgxdYZARllvy6VqyxAMjf284u7KU0cBlz1pRXW
- hjh9fdbl44I0Df3BdiBVZ2fx4UthCP41eYYLR16WkeVaYs8lGUqqeyZWMWAvzBOQtUfVQcJ2YodL
- OtCxsdjH/zmWzquleeuME+/gu1BPvx965LDA8wKypYER2qX3nl0H7g+xXLBf1o+2KLby3deP8vNn
- mz84mDUvZqxnXmHRaj3V403wS9rCCUpVHLAXVgHs1585NKI2gNsSU06RyE20TLg+oK/FJcdZU/J8
- MS+4ayUpOtEhdxekWDmK9g==
-X-Report-Abuse-To: spam@quarantine14.antispamcloud.com
-X-Complaints-To: abuse@antispamcloud.com
+Content-Transfer-Encoding: 8bit
 
-Guten Morgen,
+ThinkPads expose battery charge thresholds and charge_behaviour through
+thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups. The
+Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
+charge_behaviour and charge_types on systems advertising those WMI
+capabilities.
 
-das vorl=C3=A4ufige Endergebnis
+When lenovo-wmi-other registers first, thinkpad_acpi fails to create a
+duplicate charge_behaviour sysfs attribute and unregisters its battery
+extension. Conversely, registering or updating any power_supply_ext on
+the same battery runs sysfs_update_groups(), which removes standard
+power-supply attributes not owned by power_supply_core and wipes out
+thinkpad_acpi's charge_control_start_threshold,
+charge_control_end_threshold, and charge_behaviour files.
 
-noch ausprobiert:
-- Akku abkoppeln
-- BIOS zur=C3=BCcksetzen
+Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
+thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
+per-driver table guarded by IS_ENABLED() in Kconfig, and update the
+force_load_psy_ext description accordingly.
 
-Laut KI (Claude Sonnet)
-Liegt der Fehler im Embedded Controller, verursacht durch den defekten
-L=C3=BCfter, und ist irreversibel.
-Die Notl=C3=B6sung mit dem Skript ist also vorerst eine Dauerl=C3=B6sung
+Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI battery charge limiting")
+Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Co-developed-by: Rong Zhang <i@rong.moe>
+Signed-off-by: Rong Zhang <i@rong.moe>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+---
+Changes in v3:
+- Wrap deconfliction table entries in #if IS_ENABLED(CONFIG_*) and drop
+  driver_enabled, as suggested by Rong Zhang.
+- Group deconfliction entries per driver (HIDs list + methods list).
 
-Nun folgt der Kontakt zum H=C3=A4ndler
+Changes in v2:
+- Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
+  device IDs, method pairs, and driver configuration checks, as suggested
+  by Derek J. Clark.
+- Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
+  instead of relying only on ThinkPad ACPI device presence.
+- Check whether the corresponding driver is enabled before looking up
+  its ACPI device, including for ideapad_laptop.
+- Update the force_load_psy_ext description to cover both drivers.
 
-Danke erstmal f=C3=BCr die tolle und super schnelle Unterst=C3=BCtzung :)
-Gru=C3=9F
-Tobias=20
+v2: https://lore.kernel.org/platform-driver-x86/20261112074823.853819-1-aaron.ma@canonical.com/
+v1: https://lore.kernel.org/platform-driver-x86/20261111083529.727285-1-aaron.ma@canonical.com/
 
-Am Freitag, dem 13.11.2026 um 00:31 +0100 schrieb Armin Wolf:
-> Am 13.11.26 um 00:21 schrieb Tobias:
-> > Das ist korrekt. Wir haben vorhin von "balanced" auf "cool"
-> > umgestellt.
-> > Jetzt l=C3=A4uft der L=C3=BCfter nicht mehr st=C3=A4ndig an.
-> >=20
-> > Kurz nochmal was ich gemacht habe:
-> > - L=C3=BCfter hat, wenn er schnell gedreht hat, Ger=C3=A4usche gemacht.=
- Hab
-> > ihn
-> > aufgemacht und zu h=C3=B6ren, welcher Probleme macht. Hatte ihn
-> > vollst=C3=A4ndig
-> > ausgebaut.
-> > - Beim wieder anschlie=C3=9Fen kam eine BIOS Meldung. Ich bin der
-> > Meinung,
-> > dass diese sagte, er kennt den L=C3=BCfter nicht und muss ihn
-> > registrieren.
-> > - Dann hab ich auf den neuen L=C3=BCfter gewartet und heute haben wir
-> > ihn
-> > getauscht. Leider stellte sich heraus, dass der neue L=C3=BCfter defekt
-> > war.
-> > Ein L=C3=BCfter macht mega l=C3=A4rm, der andere zuckt nur. Die Dell-Di=
-agnose
-> > (F12) hat ihn auch nicht sauber erkannt (Critial Error)
-> > - Schon da lief der L=C3=BCfter nicht mehr freiwillig an und die KI
-> > (Claude)
-> > hat mir ein Notskript geschrieben, was den L=C3=BCfter ansteuert, weil
-> > der
-> > Embedded Controller das wohl nicht mehr automatisch macht.
-> > - Dann haben wir den Original geputzt und wieder eingebaut. Der
-> > lief
-> > das sch=C3=B6n und tut es noch, aber eben nicht automatisch sondern mit
-> > dem
-> > Not-L=C3=BCfterdienst.
-> >=20
-> > Vielleicht hilft das ja auch weiter
-> > Danke
-> > Tobias
->=20
-> Hmm, merkw=C3=BCrdig.
->=20
-> Schau dir mal das an:=20
-> https://www.dell.com/community/en/conversations/xps/xps-13-reporting-fan-=
-failed-after-replacement/647f98bbf4ccf8a8debe3697
->=20
-> Ich vermute mal das entweder:
->=20
-> A: Der L=C3=BCfter nicht richtig eingesteckt ist un deshalb kein RPM-
-> Signal=20
-> liefert
->=20
-> B: Das BIOS denkt das der L=C3=BCfter defekt ist und nicht mirbekommen
-> hat,
-> dass ein neuer L=C3=BCfter eingebaut wurde
->=20
-> Versuche mal wie im verlinkten Artikel beschrieben die=20
-> BIOS-Einstellungen zur=C3=BCckzusetzen. Sonst kannst du vlt. nochmal die=
-=20
-> Preboot-Diagnose (erreichbar mit F12 beim Start) ausf=C3=BChren und hoffe=
-n
-> das ein erfolgreicher Test den Fehlerzustand zur=C3=BCcksetzt.
->=20
-> Vielen Dank,
-> Armin Wolf
->=20
-> >=20
-> > Am Freitag, dem 13.11.2026 um 00:13 +0100 schrieb Armin Wolf:
-> > > Am 12.11.26 um 23:53 schrieb Tobias:
-> > > > Sehr gut, das erleichtert die Konversation
-> > > >=20
-> > > > anbei der output.
-> > > >=20
-> > > > Danke schon mal f=C3=BCr die schnelle Unterst=C3=BCtzung
-> > > > Gru=C3=9F
-> > > > Tobias
-> > >=20
-> > > Danke, so wie ich das sehe wird auf diesem Ger=C3=A4t der L=C3=BCfter
-> > > komplett
-> > > vom
-> > > Embedded Controller gesteuert, kannst du mal versuchen =C3=BCber die
-> > > platform_profile-Schnittstelle ein anderes Profil auszuw=C3=A4hlen?
-> > >=20
-> > > Tipp:
-> > > https://wiki.archlinux.org/title/Dell_XPS_13_(7390)=C2=A0Abschnitt
-> > > "Change thermal settings to reduce fan noise"
-> > >=20
-> > > Danke,
-> > > Armin Wolf
-> > >=20
-> > > >=20
-> > > > Am Donnerstag, dem 12.11.2026 um 23:49 +0100 schrieb Armin
-> > > > Wolf:
-> > > > > Am 12.11.26 um 23:16 schrieb Tobias:
-> > > > >=20
-> > > > > > Do you speak German?
-> > > > >=20
-> > > > > Ja
-> > > > >=20
-> > > > > >=20
-> > > > > > This is the final block of the output. It does not all fit
-> > > > > > into
-> > > > > > the
-> > > > > > console.
-> > > > >=20
-> > > > > I suggest that you save the output inside a file compressed
-> > > > > file
-> > > > > and
-> > > > > send
-> > > > > it as an attachment:
-> > > > >=20
-> > > > > sudo acpidump -o <file>
-> > > > >=20
-> > > > > (Ich empfehle dir die Ausgabe von "acpidump" in einer Datei
-> > > > > zu
-> > > > > speichern
-> > > > > und als Anhang zu senden, wenn n=C3=B6tig komprimiert.)
-> > > > >=20
-> > > > > Thanks,
-> > > > > Armin Wolf
-> > > > >=20
-> > > > > > SSDT @ 0x0000000000000000
-> > > > > > 0000: 53 53 44 54 A2 05 00 00 02 A8 50 6D 52 65 66 00
-> > > > > > SSDT......PmRef.
-> > > > > > 0010: 43 70 75 30 49 73 74 00 00 30 00 00 49 4E 54 4C
-> > > > > > Cpu0Ist..0..INTL
-> > > > > > 0020: 27 05 16 20 A0 31 00 15 5C 2E 5F 53 42 5F 4F 53 '..
-> > > > > > .1..\._SB_OS
-> > > > > > 0030: 43 50 01 00 15 5C 54 43 4E 54 05 00 15 5C 2E 5F
-> > > > > > CP...\TCNT...\._
-> > > > > > 0040: 53 42 5F 43 50 50 43 05 00 15 5C 2E 5F 53 42 5F
-> > > > > > SB_CPPC...\._SB_
-> > > > > > 0050: 50 52 30 30 06 00 10 4B 54 5C 2E 5F 53 42 5F 50
-> > > > > > PR00...KT\._SB_P
-> > > > > > 0060: 52 30 30 14 11 5F 50 50 43 00 A4 5C 2E 5F 53 42
-> > > > > > R00.._PPC..\._SB
-> > > > > > 0070: 5F 43 50 50 43 08 5F 50 43 54 12 2C 02 11 14 0A
-> > > > > > _CPPC._PCT.,....
-> > > > > > 0080: 11 82 0C 00 7F 00 00 00 00 00 00 00 00 00 00 00
-> > > > > > ................
-> > > > > > 0090: 79 00 11 14 0A 11 82 0C 00 7F 00 00 00 00 00 00
-> > > > > > y...............
-> > > > > > 00A0: 00 00 00 00 00 79 00 14 23 5F 50 53 53 00 A0 15
-> > > > > > .....y..#_PSS...
-> > > > > > 00B0: 7B 5C 2E 5F 53 42 5F 4F 53 43 50 0B 00 04 00 A4
-> > > > > > {\._SB_OSCP.....
-> > > > > > 00C0: 54 50 53 53 A1 06 A4 4C 50 53 53 08 4C 50 53 53
-> > > > > > TPSS...LPSS.LPSS
-> > > > > > 00D0: 12 43 21 10 12 20 06 0C FD 08 00 00 0C 98 3A 00 .C!..
-> > > > > > ........:.
-> > > > > > 00E0: 00 0C 0A 00 00 00 0C 0A 00 00 00 0C 00 31 00 00
-> > > > > > .............1..
-> > > > > > 00F0: 0C 00 31 00 00 12 20 06 0C FC 08 00 00 0C 98 3A
-> > > > > > ..1...
-> > > > > > ........:
-> > > > > > 0100: 00 00 0C 0A 00 00 00 0C 0A 00 00 00 0C 00 17 00
-> > > > > > ................
-> > > > > > 0110: 00 0C 00 17 00 00 12 20 06 0C 98 08 00 00 0C 08
-> > > > > > .......
-> > > > > > ........
-> > > > > > 0120: 37 00 00 0C 0A 00 00 00 0C 0A 00 00 00 0C 00 16
-> > > > > > 7...............
-> > > > > > 0130: 00 00 0C 00 16 00 00 12 20 06 0C D0 07 00 00 0C
-> > > > > > ........
-> > > > > > .......
-> > > > > > 0140: AE 30 00 00 0C 0A 00 00 00 0C 0A 00 00 00 0C 00
-> > > > > > .0..............
-> > > > > > 0150: 14 00 00 0C 00 14 00 00 12 20 06 0C 08 07 00 00
-> > > > > > .........
-> > > > > > ......
-> > > > > > 0160: 0C 22 2B 00 00 0C 0A 00 00 00 0C 0A 00 00 00 0C
-> > > > > > ."+.............
-> > > > > > 0170: 00 12 00 00 0C 00 12 00 00 12 20 06 0C A4 06 00
-> > > > > > ..........
-> > > > > > .....
-> > > > > > 0180: 00 0C E7 27 00 00 0C 0A 00 00 00 0C 0A 00 00 00
-> > > > > > ...'............
-> > > > > > 0190: 0C 00 11 00 00 0C 00 11 00 00 12 20 06 0C 40 06
-> > > > > > ...........
-> > > > > > ..@.
-> > > > > > 01A0: 00 00 0C 46 25 00 00 0C 0A 00 00 00 0C 0A 00 00
-> > > > > > ...F%.........
-> > > > > > 01B0: 00 0C 00 10 00 00 0C 00 10 00 00 12 20 06 0C DC
-> > > > > > ............
-> > > > > > ...
-> > > > > > 01C0: 05 00 00 0C B2 22 00 00 0C 0A 00 00 00 0C 0A 00
-> > > > > > ....."............
-> > > > > > 01D0: 00 00 0C 00 0F 00 00 0C 00 0F 00 00 12 20 06 0C
-> > > > > > .............
-> > > > > > ..
-> > > > > > 01E0: 14 05 00 00 0C 2F 1D 00 00 0C 0A 00 00 00 0C 0A
-> > > > > > ...../........
-> > > > > > 01F0: 00 00 00 0C 00 0D 00 00 0C 00 0D 00 00 12 20 06
-> > > > > > .............. .
-> > > > > > 0200: 0C B0 04 00 00 0C C7 1A 00 00 0C 0A 00 00 00 0C
-> > > > > > ................
-> > > > > > 0210: 0A 00 00 00 0C 00 0C 00 00 0C 00 0C 00 00 12 20
-> > > > > > ...............
-> > > > > > 0220: 06 0C 4C 04 00 00 0C E9 17 00 00 0C 0A 00 00 00
-> > > > > > ..L.............
-> > > > > > 0230: 0C 0A 00 00 00 0C 00 0B 00 00 0C 00 0B 00 00 12
-> > > > > > ................
-> > > > > > 0240: 20 06 0C 84 03 00 00 0C 5B 13 00 00 0C 0A 00 00
-> > > > > > .......[.......
-> > > > > > 0250: 00 0C 0A 00 00 00 0C 00 09 00 00 0C 00 09 00 00
-> > > > > > ................
-> > > > > > 0260: 12 20 06 0C 20 03 00 00 0C AB 10 00 00 0C 0A 00 . ..
-> > > > > > ...........
-> > > > > > 0270: 00 00 0C 0A 00 00 00 0C 00 08 00 00 0C 00 08 00
-> > > > > > ................
-> > > > > > 0280: 00 12 20 06 0C BC 02 00 00 0C 86 0E 00 00 0C 0A ..
-> > > > > > .............
-> > > > > > 0290: 00 00 00 0C 0A 00 00 00 0C 00 07 00 00 0C 00 07
-> > > > > > ................
-> > > > > > 02A0: 00 00 12 20 06 0C F4 01 00 00 0C EA 09 00 00 0C ...
-> > > > > > ............
-> > > > > > 02B0: 0A 00 00 00 0C 0A 00 00 00 0C 00 05 00 00 0C 00
-> > > > > > ................
-> > > > > > 02C0: 05 00 00 12 20 06 0C 90 01 00 00 0C EC 07 00 00 ....
-> > > > > > ...........
-> > > > > > 02D0: 0C 0A 00 00 00 0C 0A 00 00 00 0C 00 04 00 00 0C
-> > > > > > ................
-> > > > > > 02E0: 00 04 00 00 08 54 50 53 53 12 48 2B 15 12 20 06
-> > > > > > .....TPSS.H+.. .
-> > > > > > 02F0: 0C FD 08 00 00 0C 98 3A 00 00 0C 0A 00 00 00 0C
-> > > > > > ......:........
-> > > > > > 0300: 0A 00 00 00 0C 00 31 00 00 0C 00 31 00 00 12 20
-> > > > > > ......1....1...
-> > > > > > 0310: 06 0C FC 08 00 00 0C 98 3A 00 00 0C 0A 00 00 00
-> > > > > > ........:.......
-> > > > > > 0320: 0C 0A 00 00 00 0C 00 17 00 00 0C 00 17 00 00 12
-> > > > > > ................
-> > > > > > 0330: 20 06 0C 98 08 00 00 0C 08 37 00 00 0C 0A 00 00
-> > > > > > ........7......
-> > > > > > 0340: 00 0C 0A 00 00 00 0C 00 16 00 00 0C 00 16 00 00
-> > > > > > ................
-> > > > > > 0350: 12 20 06 0C 34 08 00 00 0C 1C 34 00 00 0C 0A 00 .
-> > > > > > ..4.....4.....
-> > > > > > 0360: 00 00 0C 0A 00 00 00 0C 00 15 00 00 0C 00 15 00
-> > > > > > ................
-> > > > > > 0370: 00 12 20 06 0C D0 07 00 00 0C AE 30 00 00 0C 0A ..
-> > > > > > ........0....
-> > > > > > 0380: 00 00 00 0C 0A 00 00 00 0C 00 14 00 00 0C 00 14
-> > > > > > ................
-> > > > > > 0390: 00 00 12 20 06 0C 6C 07 00 00 0C E1 2D 00 00 0C ...
-> > > > > > ..l.....-
-> > > > > > ...
-> > > > > > 03A0: 0A 00 00 00 0C 0A 00 00 00 0C 00 13 00 00 0C 00
-> > > > > > ................
-> > > > > > 03B0: 13 00 00 12 20 06 0C 08 07 00 00 0C 22 2B 00 00 ....
-> > > > > > ......."+..
-> > > > > > 03C0: 0C 0A 00 00 00 0C 0A 00 00 00 0C 00 12 00 00 0C
-> > > > > > ................
-> > > > > > 03D0: 00 12 00 00 12 20 06 0C A4 06 00 00 0C E7 27 00 .....
-> > > > > > .......'.
-> > > > > > 03E0: 00 0C 0A 00 00 00 0C 0A 00 00 00 0C 00 11 00 00
-> > > > > > ................
-> > > > > > 03F0: 0C 00 11 00 00 12 20 06 0C 40 06 00 00 0C 46 25
-> > > > > > ......
-> > > > > > ..@....F%
-> > > > > > 0400:0
-> > > > > >=20
-> > > > > > Thanks,
-> > > > > > Tobias Feldmeth-Walter
-> > > > > >=20
-> > > > > > Am Donnerstag, dem 12.11.2026 um 23:13 +0100 schrieb Armin
-> > > > > > Wolf:
-> > > > > > > Am 12.11.26 um 23:08 schrieb Tobias:
-> > > > > > >=20
-> > > > > > > > tobias@tobias-XPS:~$ acpidump
-> > > > > > > > Could not open table file:
-> > > > > > > > /sys/firmware/acpi/tables/SSDT4
-> > > > > > > > Could not get ACPI tables, AE_ACCESS
-> > > > > > > >=20
-> > > > > > > > Thanks
-> > > > > > > > Tobias Feldmeth-Walter
-> > > > > > > You need root privileges.
-> > > > > > >=20
-> > > > > > > Thanks,
-> > > > > > > Armin Wolf
-> > > > > > >=20
-> > > > > > > > Am Donnerstag, dem 12.11.2026 um 23:06 +0100 schrieb
-> > > > > > > > Armin
-> > > > > > > > Wolf:
-> > > > > > > > > Am 12.11.26 um 23:03 schrieb Tobias:
-> > > > > > > > >=20
-> > > > > > > > > > Hello,
-> > > > > > > > > >=20
-> > > > > > > > > > thanks for the quick response.
-> > > > > > > > > > thermald is already set up.
-> > > > > > > > > >=20
-> > > > > > > > > > tobias@tobias-XPS:~$ sudo apt install thermald
-> > > > > > > > > > thermald is already the newest version (2.5.11-
-> > > > > > > > > > 0ubuntu1.1).
-> > > > > > > > > > thermald set to manually installed.
-> > > > > > > > > > Summary:
-> > > > > > > > > > Upgrade: 0, Install: 0, Remove: 0, Not upgraded: 44
-> > > > > > > > > > tobias@tobias-XPS:~$ sudo systemctl enable --now
-> > > > > > > > > > thermald
-> > > > > > > > > > tobias@tobias-XPS:~$ sudo systemctl status thermald
-> > > > > > > > > > =E2=97=8F thermald.service - Thermal Daemon Service
-> > > > > > > > > > Loaded: loaded
-> > > > > > > > > > (/usr/lib/systemd/system/thermald.service;
-> > > > > > > > > > enabled;
-> > > > > > > > > > preset: enabled)
-> > > > > > > > > > Active: active (running) since Thu 2026-11-12
-> > > > > > > > > > 21:46:07
-> > > > > > > > > > CET;
-> > > > > > > > > > 1h
-> > > > > > > > > > 10min
-> > > > > > > > > > ago
-> > > > > > > > > > Invocation: ab085f7c1cae4d9aa4ae51d6ebe8ea5d
-> > > > > > > > > > Main PID: 1274 (thermald)
-> > > > > > > > > > Tasks: 5 (limit: 16591)
-> > > > > > > > > > Memory: 3M (peak: 3.7M)
-> > > > > > > > > > CPU: 17.761s
-> > > > > > > > > > CGroup: /system.slice/thermald.service
-> > > > > > > > > > =E2=94=94=E2=94=801274 /usr/sbin/thermald --systemd --d=
-bus-enable -
-> > > > > > > > > > -
-> > > > > > > > > > adaptive
-> > > > > > > > > >=20
-> > > > > > > > > > Nov 12 21:46:06 tobias-XPS systemd[1]: Starting
-> > > > > > > > > > thermald.service -
-> > > > > > > > > > Thermal Daemon Service...
-> > > > > > > > > > Nov 12 21:46:06 tobias-XPS thermald[1274]: 22 CPUID
-> > > > > > > > > > levels;
-> > > > > > > > > > family:model:stepping 0x6:8e:c (6:142:12)
-> > > > > > > > > > Nov 12 21:46:07 tobias-XPS thermald[1274]: 22 CPUID
-> > > > > > > > > > levels;
-> > > > > > > > > > family:model:stepping 0x6:8e:c (6:142:12)
-> > > > > > > > > > Nov 12 21:46:07 tobias-XPS thermald[1274]: Polling
-> > > > > > > > > > mode
-> > > > > > > > > > is
-> > > > > > > > > > enabled:
-> > > > > > > > > > 4
-> > > > > > > > > > Nov 12 21:46:07 tobias-XPS systemd[1]: Started
-> > > > > > > > > > thermald.service
-> > > > > > > > > > -
-> > > > > > > > > > Thermal Daemon Service.
-> > > > > > > > > > Nov 12 22:56:29 tobias-XPS systemd[1]: Started
-> > > > > > > > > > thermald.service
-> > > > > > > > > > -
-> > > > > > > > > > Thermal Daemon Service.
-> > > > > > > > > >=20
-> > > > > > > > > > Thanks for the feedback.
-> > > > > > > > > > Regards,
-> > > > > > > > > > Tobias Feldmeth-Walter
-> > > > > > > > > Strange, can you please share the output of acpidump?
-> > > > > > > > >=20
-> > > > > > > > > Thanks,
-> > > > > > > > > Armin Wolf
-> > > > > > > > >=20
-> > > > > > > > > > Am Donnerstag, dem 12.11.2026 um 22:52 +0100
-> > > > > > > > > > schrieb
-> > > > > > > > > > Armin
-> > > > > > > > > > Wolf:
-> > > > > > > > > > > Am 12.11.26 um 22:01 schrieb Tobias:
-> > > > > > > > > > >=20
-> > > > > > > > > > > > Hello,
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > on my Dell XPS 13 7390 (BIOS 1.29.0,
-> > > > > > > > > > > > 12/17/2024,
-> > > > > > > > > > > > Ubuntu,
-> > > > > > > > > > > > kernel
-> > > > > > > > > > > > 7.0.0-
-> > > > > > > > > > > > 43-generic) the embedded controller does not
-> > > > > > > > > > > > engage
-> > > > > > > > > > > > automatic
-> > > > > > > > > > > > fan
-> > > > > > > > > > > > control. In EC auto mode the fans stay at 0 RPM
-> > > > > > > > > > > > even
-> > > > > > > > > > > > under
-> > > > > > > > > > > > full
-> > > > > > > > > > > > CPU
-> > > > > > > > > > > > load.
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > Observations:
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > The dell_smm hwmon device is present, with
-> > > > > > > > > > > > fan1/fan2
-> > > > > > > > > > > > (fan*_min=3D0,
-> > > > > > > > > > > > fan*_max=3D7300), pwm1, pwm1_enable, pwm2 and
-> > > > > > > > > > > > temp1..temp7.
-> > > > > > > > > > > > At idle (28=E2=80=9335 =C2=B0C) both fans report 0 =
-RPM. This
-> > > > > > > > > > > > is
-> > > > > > > > > > > > expected.
-> > > > > > > > > > > > Test: I stopped my userspace fan controller,
-> > > > > > > > > > > > wrote
-> > > > > > > > > > > > pwm1_enable=3D2
-> > > > > > > > > > > > (accepted without error) and loaded all cores
-> > > > > > > > > > > > with
-> > > > > > > > > > > > yes
-> > > > > > > > > > > > >=20
-> > > > > > > > > > > > /dev/null.
-> > > > > > > > > > > > CPU
-> > > > > > > > > > > > package temperature rose from 34 =C2=B0C to 63 =C2=
-=B0C
-> > > > > > > > > > > > after
-> > > > > > > > > > > > 5 s,
-> > > > > > > > > > > > 73
-> > > > > > > > > > > > =C2=B0C
-> > > > > > > > > > > > after
-> > > > > > > > > > > > 30
-> > > > > > > > > > > > s and 82 =C2=B0C after 65 s, at which point I
-> > > > > > > > > > > > aborted
-> > > > > > > > > > > > the
-> > > > > > > > > > > > test.
-> > > > > > > > > > > > Both
-> > > > > > > > > > > > fans
-> > > > > > > > > > > > stayed at 0 RPM the whole time.
-> > > > > > > > > > > > pwm1_enable cannot be read back (Permission
-> > > > > > > > > > > > denied,
-> > > > > > > > > > > > even as
-> > > > > > > > > > > > root),
-> > > > > > > > > > > > only
-> > > > > > > > > > > > written.
-> > > > > > > > > > > > Platform profile is balanced (choices: cool
-> > > > > > > > > > > > quiet
-> > > > > > > > > > > > balanced
-> > > > > > > > > > > > performance). I did not test whether other
-> > > > > > > > > > > > profiles
-> > > > > > > > > > > > change
-> > > > > > > > > > > > the
-> > > > > > > > > > > > fan
-> > > > > > > > > > > > behaviour.
-> > > > > > > > > > > > thermald is running and has no effect on this.
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > Workaround: a small userspace daemon polls the
-> > > > > > > > > > > > CPU
-> > > > > > > > > > > > package
-> > > > > > > > > > > > temperature
-> > > > > > > > > > > > every 2 s and writes pwm1_enable=3D1 plus a PWM
-> > > > > > > > > > > > value
-> > > > > > > > > > > > to
-> > > > > > > > > > > > pwm1/pwm2
-> > > > > > > > > > > > (off
-> > > > > > > > > > > > below 45 =C2=B0C, 128 from 50 =C2=B0C, 255 from 65 =
-=C2=B0C,
-> > > > > > > > > > > > with
-> > > > > > > > > > > > hysteresis).
-> > > > > > > > > > > > On
-> > > > > > > > > > > > exit
-> > > > > > > > > > > > it leaves the fans at full speed. With it, the
-> > > > > > > > > > > > system
-> > > > > > > > > > > > cools
-> > > > > > > > > > > > normally.
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > Questions:
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > Is this a known firmware issue on the XPS 13
-> > > > > > > > > > > > 7390,
-> > > > > > > > > > > > and
-> > > > > > > > > > > > is
-> > > > > > > > > > > > there
-> > > > > > > > > > > > a
-> > > > > > > > > > > > BIOS
-> > > > > > > > > > > > version that fixes it?
-> > > > > > > > > > > > Is a different SMM call needed on this model to
-> > > > > > > > > > > > re-
-> > > > > > > > > > > > enable
-> > > > > > > > > > > > EC
-> > > > > > > > > > > > auto
-> > > > > > > > > > > > control, or should the driver do something on
-> > > > > > > > > > > > probe/resume?
-> > > > > > > > > > > > Which additional data would help? I can provide
-> > > > > > > > > > > > dmidecode
-> > > > > > > > > > > > and
-> > > > > > > > > > > > sensors
-> > > > > > > > > > > > output and test with dell_smm_hwmon module
-> > > > > > > > > > > > options
-> > > > > > > > > > > > (debug,
-> > > > > > > > > > > > force,
-> > > > > > > > > > > > restricted) if needed.
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > Thanks and best regards,
-> > > > > > > > > > > > Tobias Feldmeth-Walter
-> > > > > > > > > > > Hi,
-> > > > > > > > > > >=20
-> > > > > > > > > > > i think we had a similar case not too long ago,
-> > > > > > > > > > > and
-> > > > > > > > > > > the
-> > > > > > > > > > > solution
-> > > > > > > > > > > was
-> > > > > > > > > > > to setup
-> > > > > > > > > > > thermald.
-> > > > > > > > > > >=20
-> > > > > > > > > > > Thanks,
-> > > > > > > > > > > Armin Wolf
+ drivers/platform/x86/lenovo/wmi-other.c | 66 ++++++++++++++++++++-----
+ 1 file changed, 53 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+index bd64e7b44669d..340159df5f7cc 100644
+--- a/drivers/platform/x86/lenovo/wmi-other.c
++++ b/drivers/platform/x86/lenovo/wmi-other.c
+@@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
+ static bool force_load_psy_ext;
+ module_param(force_load_psy_ext, bool, 0444);
+ MODULE_PARM_DESC(force_load_psy_ext,
+-	"This option will skip checking if the ideapad_laptop driver will conflict "
++	"This option will skip checking if the ideapad_laptop or thinkpad_acpi driver will conflict "
+ 	"with adding an extension to set the battery charge behavior and battery charge "
+ 	"control end threshold. It will also skip checking if the BIOS reports that "
+-	"those features are fully supported. It is recommended to blacklist the ideapad "
++	"those features are fully supported. It is recommended to blacklist the conflicting "
+ 	"driver before using this option.");
+ 
+ /* ======== HWMON (component: lenovo-wmi-capdata 00 & fan) ======== */
+@@ -905,17 +905,41 @@ static acpi_status lwmi_acpi_match(acpi_handle handle, u32 lvl,
+ 	return AE_CTRL_TERMINATE;
+ }
+ 
++struct lwmi_psy_deconflict {
++	char * const *hids;
++	char * const *methods;
++};
++
++#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) || IS_ENABLED(CONFIG_THINKPAD_ACPI)
++#define LWMI_PSY_DECONFLICT_STRS(...) \
++	((char * const[]) { __VA_ARGS__, NULL })
++#endif
++
++static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] = {
++#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
++	{
++		.hids = LWMI_PSY_DECONFLICT_STRS("VPC2004"),
++		.methods = LWMI_PSY_DECONFLICT_STRS("GBMD", "SBMC"),
++	},
++#endif /* IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) */
++#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
++	{
++		.hids = LWMI_PSY_DECONFLICT_STRS("LEN0268", "LEN0068", "IBM0068"),
++		.methods = LWMI_PSY_DECONFLICT_STRS("BDSG", "BICG"),
++	},
++#endif /* IS_ENABLED(CONFIG_THINKPAD_ACPI) */
++};
++
+ /**
+  * lwmi_om_psy_ext_init() - Hooks power supply extension to device battery
+  * @priv: Pointer to the lwmi_om_priv drvdata.
+  *
+- * Checks if the ideapad_laptop driver is going to manage charge attributes first,
+- * then if not, hooks the battery to our WMI methods if they are supported.
++ * Checks if the ideapad_laptop or thinkpad_acpi driver is going to manage
++ * charge attributes first, then if not, hooks the battery to our WMI methods
++ * if they are supported.
+  */
+ static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
+ {
+-	static const char * const ideapad_hid = "VPC2004";
+-	acpi_handle handle = NULL;
+ 	unsigned int props = 0;
+ 	int ret;
+ 
+@@ -928,14 +952,30 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
+ 	if (force_load_psy_ext)
+ 		goto load_psy_ext;
+ 
+-	/* Deconflict ideapad_laptop driver */
+-	ret = acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL);
+-	if (ret)
+-		return;
++	for (unsigned int i = 0; i < ARRAY_SIZE(lwmi_psy_deconflict_list); i++) {
++		const struct lwmi_psy_deconflict *entry = &lwmi_psy_deconflict_list[i];
+ 
+-	if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")) {
+-		dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery for device\n");
+-		return;
++		for (unsigned int j = 0; entry->hids[j]; j++) {
++			const char *hid = entry->hids[j];
++			acpi_handle handle = NULL;
++			bool has_methods = true;
++
++			ret = acpi_get_devices(hid, lwmi_acpi_match, &handle, NULL);
++			if (ret || !handle)
++				continue;
++
++			for (unsigned int k = 0; entry->methods[k]; k++) {
++				has_methods = acpi_has_method(handle, entry->methods[k]);
++				if (!has_methods)
++					break;
++			}
++			if (!has_methods)
++				continue;
++
++			dev_dbg(&priv->wdev->dev, "ACPI device %s manages battery for device\n",
++				hid);
++			return;
++		}
+ 	}
+ 
+ load_psy_ext:
+-- 
+2.53.0
+
