@@ -1,76 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794589963;
-	b=zicpHkcappc33tb7TpC59Auvy9wg3brxiCs2Yu4Uo3l9bJvqVuYCt8V469YeipRQoeQl
-	 0oQHNseDFdljA+6AoIpvP70p4/hdYq17PLtRVTeb7ECDKuuElBtCE3THrMFeGWHF+uQ0T
-	 QVfz0tpenRE35gf6EWnfLKn3BbGgCxm+K5pjRAIAi04U/Cy+3kAWvdv2V+jZgZDyPp6T6
-	 Z+t77fLVNhu644IY/WbV8H0bZjkT2T3h0D+PVHb0/7EhsAi3NFAoWrtAaL7zhSumu4aMS
-	 7PptAbc70WcKoCNoEM4Il1V5zJ1JDiJP3FIQlgLnHqFmtms6Tj28GkAwpWeuKKoscbw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794589963;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=PRLdZLsIiXp4iVTHjVz/J/jye1WxfVmEHCV53LClaWU=;
-	b=XhcYfdp7jlAqD7xaHsgWielNcFMBgqNvVLsEZCS8wcqZz7D5mGcfCyxzkFyYPFZ4Dy0T
-	 Mgxey84AANq/ACKiDpvguW1bWdyAO2VRjh/TMrIjL6+z7AmVcaKSTjxD/r+hnUqpcjCqM
-	 4p1t8DSs0YeqMn4IpuHZOA6Wvvpym0I3Kbfl0uSnjDi2Syz4QZDapVEjIui2FuOQFQPMc
-	 L3zgS7j/LDkl5zF5QQn0bv/AmiaiFqRq7pmVOVs9FCXoox6vbCH+iNJ85K7qc1hcOtwma
-	 mhwr4UsC1Ur9QgUogHBoEyuYmoWkHHfGliUDPmEt0f9gCD6GNEcfQhUCGc3LxZWzokg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hXKnIaFC;
-	arc=none smtp.remote-ip=198.175.65.15
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794592893;
+	b=sADS1IlNF4yCRGZcDrv55fzCQRCNVdpt/XthkiWw0oTddVrkw7iq7vyMRgPplTBQ/WWU
+	 Sm2+gE63PLN8ap9Sw6LWruXz2MOZOi5JFjcEFgVAskXdP7JvkFlhSD9DvSZGTM53dBNwC
+	 QYw0u+JUnTm0VpSJw+f0wu3yCpoCyPcdl9GP2vLJ0Gs01cxGKrkjs+aRP+Q3tvLQLlDZ9
+	 yElwocYTqiKcvujJp46x24ioP6wMDj3Keyu09vCyzWLTxktdSa7FTGrYPfg2+pFb7nMh0
+	 ZLUPPcaoxijvAu3z7HIfYVrOZAu+7oyGz0SJZ+vT+JRW/5ZIM7K+uCe1piGD5RE2yVA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794592893;
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To;
+	bh=DMlyh2YqL6xpLQBuXBy51QwOYGRyp3w79pXs9p6wjXo=;
+	b=rvlB0WBffdH4J4+TEYazVbabznAMJh5RQeDJtkGRXebcU8dDaFd6V7K61di319U37LnG
+	 azqVNJQQxeTpDoOZgKHEjv7fJ36sSTWsnOIi8xGWG/+O7qg7iCOYeNp29Rnz/KHzFF6nd
+	 6ZTTyKv2sdr7BYYqGi9N/w9E7U40XmEk4BoVPqysXn1apKOTQiv/2AbbegfHij6wPh44R
+	 f7Zif4uBASWMXe0jXRHSjteXTQhhgG766TulIL/wgp4D38mHlhbLF/fSWyyic9igV2uUr
+	 G0tpQ5jyEarNSSfrG+051Mrm3iJfbPcXGWqYLvV3As4VWp8Jgg37+KdIammsjIwA+kQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TsUjYLey;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2497606A339
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 17:12:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E2497606A339
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF01606A8A8;
+	Fri, 13 Nov 2026 18:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hXKnIaFC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794589963; x=1826125963;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=8ZFouv0fstGL2xR1VfL0HN+n0p/gLWeLR8w34WdzKPE=;
-  b=hXKnIaFCFOLhoN0XH99lt5oGforItawzBJF5DNcQN1V+iRFHUDLdDyvE
-   eaBTNw48kwNWY4qki2ZK4cfqcuau/dPoBsMstWw9F/EQKSWCmKhcKrnLf
-   iaDeVRnW3XEAQ7wNje8l5NDrIw/x3Rr1XTKbk0n1k/wTUu9kcLYUU6hND
-   ETglEKFk7UdJItqobPuZxxT97pJs6fa2lVaR5UrEfcR2zcz1o9jOOjt6H
-   3gK2gJn6fG8BF3matH5bpT0Wl1JtNdExlJb2ZjfZbt11T1KSe6lOeQQyp
-   mZM5+9ySU6ZYRwwP39SEKskwNyNjIN6Q4UeLTiMWYHEF1KDhIacHw9XDO
-   Q==;
-X-CSE-ConnectionGUID: 2m2rEbz1Tiq1OJNp9w/wxQ==
-X-CSE-MsgGUID: jHbs5hhUQqOY9Ayt1lHMUQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11965"; a="3394809"
-X-IronPort-AV: E=Sophos;i="6.27,212,1787036400"; 
-   d="scan'208";a="3394809"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 09:12:43 -0800
-X-CSE-ConnectionGUID: w70p+vIORXazoL7kCD8liw==
-X-CSE-MsgGUID: KjPw8I2iTwifIAKtD4cOBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,212,1787036400"; 
-   d="scan'208";a="8882092"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.214])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 09:12:40 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 13 Nov 2026 19:12:36 +0200 (EET)
-To: Suma Hegde <suma.hegde@amd.com>, Erwan Velu <erwanaliasr1@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, 
-    Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>, 
-    NaveenKrishna.Chatradhi@amd.com, 
-    Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
-Subject: Re: [PATCH 0/8] platform/x86/amd/hsmp: Unify socket/cpu sysfs
-In-Reply-To: <20261014111430.23156-1-suma.hegde@amd.com>
-Message-ID: <bf9f4104-6e1f-9782-37f0-23a720cea35f@linux.intel.com>
-References: <20261014111430.23156-1-suma.hegde@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TsUjYLey
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794592892;
+	b=rj2zsa8eO5mkJG3osjkfXD2a0GnWCptRX5kY2esMnZyH+n/KZU/CFhzOd0hPSQx9qycB
+	 G+zn5MGMB8pAGo8WrgyV/5TXRQBI0Tgwq1INp8NBMNo6Q0p4KCENsPnnm3X9i33SQdhOB
+	 QdxVIB85I7fyoD5WwChkck03MyBJzL1kfz+MafeV64p1B3J8k/yNcOUzaqGn4wnm8Rg89
+	 Mc5zz3wsakT8XeCw+aZTAURS3oXdRqZFeoM8J6nMHxguH1jgI+4Favghj09TEyjwGFzW7
+	 gfsl+2H9r13s9v/K1OqZm7L3HDlyoI6WwoLscJWXrqpbbzFrD2/ktKAHLaZO49MfZcA==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794592892;
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=DMlyh2YqL6xpLQBuXBy51QwOYGRyp3w79pXs9p6wjXo=;
+	b=CUVh1FXnixYtQopMy1/P4P28FTrdkEIGnss+xmRjsy6bikY/WXH95qrjMWSE0BmaLq5U
+	 FzrA+BjaQNzj689Hlr48xnEWQY/VwfXuOnbY14YRzqflI0dQ2yVTk9K1NLFchya7eBuKA
+	 anCtHi6QG9iI0as28KSoNhaoeVNanPhn2FFTexpPgAHuVKzeo2HIUeXACaVPmND864Reu
+	 MO/xzOQgk+6lOpDPcVS1ZntPE2ioXtq1DcPf/3m8oIj3Q1kf/lMPb/tDZavVl7HANTk6J
+	 OZJVILTgfrOZfkUos4rT+EwRniOZTtT9T2WXUZzL6p6NSnLN+ihPfKafSXSHrM8zaAw==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id 296671F000C4;
+	Fri, 13 Nov 2026 18:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794592892;
+	bh=DMlyh2YqL6xpLQBuXBy51QwOYGRyp3w79pXs9p6wjXo=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=TsUjYLeyQJp4FHkRBunhDPm6OJFaxGckWE+c5lcMda0N95cRQ2j4F7yT4NzxXZAWt
+	 lQ08zdYvzkZDElGIhf3o3hGT5LE7zWsDynzCKNrKViJWzobefhXnS3plK1TNSqC/VY
+	 Zz2kwJ6OtZfd/fofL/rs0jy+cWLf0iCpCsDF8nSmdK82TWXgDqwd0sdE4V7oWn5KKs
+	 TlcTi0JQoV1CdMFlOiWttYc0I9dQpM+x4s18nWrvoMt9kWO3SKxkHWq99KORR/uKMh
+	 EuSp+A4rGwmHgN45yrIfv31mZ/qUJT7t0Lx0v3i/NFPoiyUFrG5OpwZzXW0kWPMY4s
+	 UtMwzSoIAx2Ig==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id AF0F149A58;
+	Fri, 13 Nov 2026 18:01:31 +0000 (UTC)
+From: Ziqiang Xia via B4 Relay <devnull+xiazq123666.gmail.com@kernel.org>
+Subject: [PATCH RFC 0/2] platform/x86: Add Emdoor Intel EWMI platform
+ driver
+Date: Fri, 13 Nov 2026 10:01:29 -0800
+Message-Id: <20261113-emdoor-intel-wmi-rfc-v1-0-d77ecf23693b@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,187 +84,99 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-126927015-1794589956=:6498"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMywrCMBAAf6Xs2YVugi14FfwAr6UHm2zqik3Kp
+ j6g9N+NepyBmRUyq3CGQ7WC8lOypFiAdhW46yWOjOILg6lNQ0QWefIpKUpc+I6vSVCDQ0Ot3dt
+ 6sD40UNJZOcj7t+3gfDpC/5f5MdzYLd8hbNsHtGM+i30AAAA=
+X-Change-ID: 20261113-emdoor-intel-wmi-rfc-2173530b3df6
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Guenter Roeck <linux@roeck-us.net>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, Ziqiang Xia <xiazq123666@gmail.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794592890; l=3693;
+ i=xiazq123666@gmail.com; s=20261113; h=from:subject:message-id;
+ bh=JQbOY3rncIfzbhs1rsCFzoXeGSybYu6siuyOH4uu5Fk=;
+ b=PmOVtzXO3VOIls9JiNhmhESX3vzKn2G50R9MMhIwLxp6XiKbrbcMiMGYYUiFTYr//wMM8JNph
+ Y0NDJUd4XbICTpmjpd6ZD4YvKKPu31YWcYuhv1EDmK40YBF4LGX9Awc
+X-Developer-Key: i=xiazq123666@gmail.com; a=ed25519;
+ pk=mrJQOUoyemvqamFAwqXZF59Z8eZnI11ZI+BEtDNxq7Q=
+X-Endpoint-Received: by B4 Relay for xiazq123666@gmail.com/20261113 with
+ auth_id=1513
+X-Original-From: Ziqiang Xia <xiazq123666@gmail.com>
+Reply-To: xiazq123666@gmail.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This RFC patch series adds initial Linux support for the Intel EWMI
+(\_SB.EWMI) WMI interface found on Emdoor-based Intel laptops, initially
+matched strictly by DMI and BIOS version to the MECHREVO Wujie 14 2026
+(WUJIE Series-Lark4-LNL, Intel Core Ultra 5 226V Lunar Lake, BIOS
+EM_LNL326_V1.0.19).
 
---8323328-126927015-1794589956=:6498
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Note on naming and scope:
+- Community out-of-tree projects such as fewtarius/emdoor-wmi target AMD
+  Emdoor platforms using different WMI GUIDs (8600ACCE-...) and AMD SMU
+  ports. This Intel EWMI implementation (0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39,
+  0B30FD67-1B62-4FCA-B10B-50DC7ADE6DDD, C75665A3-4382-4646-ADC8-C81AE146E455)
+  is unrelated in protocol and EC register layout, so the driver is named
+  emdoor-intel-wmi.
+- Legacy WMAA-WMCA WMI methods on this DSDT trigger AE_AML_BUFFER_LIMIT due
+  to an out-of-bounds CreateField() and are deliberately unused. The driver
+  only uses the clean WMCD, _WED(0xD0), and WMCC interfaces through modern
+  wmi_driver / wmidev_invoke_method().
 
-On Wed, 14 Oct 2026, Suma Hegde wrote:
+Hardware quirks handled and verified on real hardware:
+1. Shared EC5D mailbox lag and hotkey collision:
+   AML methods GWLS (0x03/01) and GFLS (0x03/03) time out after 20 ms on
+   this BIOS and return the previous mailbox byte on the call itself. After
+   invoking WMCD and waiting 100 ms, the driver reads the settled mailbox
+   register directly and retries up to 3 times if concurrent _QF6/_QF9
+   hotkey events overwrite EC5D in flight.
+2. SPFM stale-EC5F drop race:
+   AML method SPFM (0x03/0a) arms ZZTT/TIZZ before Notify(IETM, 0x88) and
+   before writing EC5F, so an EC scan during the notify can consume a stale
+   EC5F and return RTNC=0 without updating PPMD (or return RTNC=1). The
+   driver verifies 03/09 readback and reissues the absolute mode up to 3 times.
 
-> From: Suma Hegde <Suma.Hegde@amd.com>
->=20
-> This series aligns the ACPI and platform HSMP drivers on a common
-> sysfs layout and reduces duplication.
->=20
->   - Create /sys/devices/platform/amd_hsmp/socket/socketN/ for the
->     platform driver, and matching socketN links from the ACPI path
->   - Add platform telemetry sysfs, then move shared show handlers into
->     a new sysfs.c used by both drivers
->   - Expose per-CPU boost_limit under amd_hsmp/cpu/cpuX/
->   - Gate read and write visibility on separate message IDs
->   - Add sysfs for additional HSMP control and telemetry messages, and
->     document the shared socket path and the new files
+Validation summary on Linux 7.3.4 (MECHREVO WUJIE Series-Lark4-LNL,
+EM_LNL326_V1.0.19):
+- 1500 readonly attribute/hwmon stress reads (battery & AC online): 0 errors
+- 20 platform_profile switches + 40 idempotent writes: 0 errors
+- Fn-lock, Win-lock, and auto_power_on write/readback cycles: pass
+- High-frequency Fn+Esc / F8 hotkey concurrency stress & s2idle: pass
 
-Hi,
+Specific RFC questions for reviewers:
+1. Should fn_lock, win_lock, and auto_power_on stay as WMI device sysfs
+   attributes (documented in Patch 1), or would pdx86 maintainers prefer a
+   firmware-attributes class interface or moving any of them?
+2. Event codes 0xA1 (F7 mic-mute hotkey, _QF8) and 0xA2 (Fn+R refresh rate,
+   _QF5) are conservatively mapped to KEY_PROG2 / KEY_PROG3 for now while
+   verifying whether i8042 also emits scancodes on some desktops/DEs. Is
+   KEY_MICMUTE / KEY_REFRESH_RATE_TOGGLE preferred once verified, or
+   separate input mapping?
+3. Exact DMI_BIOS_VERSION matching is used because board EC offsets (0x5d,
+   0xf5, temp_regs {0x70, 0x73, 0x72, 0x62}) are board/BIOS-specific. Is
+   this strict match appropriate for initial upstreaming?
 
-This seems to largely overlap with Erwan's series:
+Signed-off-by: Ziqiang Xia <xiazq123666@gmail.com>
+---
+Ziqiang Xia (2):
+      Documentation: ABI: testing: Add emdoor-intel-wmi sysfs ABI
+      platform/x86: Add Emdoor Intel EWMI platform driver
 
-  https://lore.kernel.org/platform-driver-x86/20261007125908.321186-1-erwan=
-aliasr1@gmail.com/
+ .../ABI/testing/sysfs-bus-wmi-devices-emdoor-ewmi  |  28 +
+ MAINTAINERS                                        |   7 +
+ drivers/platform/x86/Kconfig                       |  18 +
+ drivers/platform/x86/Makefile                      |   1 +
+ drivers/platform/x86/emdoor-intel-wmi.c            | 873 +++++++++++++++++++++
+ 5 files changed, 927 insertions(+)
+---
+base-commit: 5680519168f65666d2c03cc6ed8fe2b7052aee12
+change-id: 20261113-emdoor-intel-wmi-rfc-2173530b3df6
 
-=2E..I don't know what are Erwan's plans as there has not been an update=20
-but at least the approach he used in the first patch seems better than=20
-yours (I don't know why you didn't put the common code into common?).
+Best regards,
+--  
+Ziqiang Xia <xiazq123666@gmail.com>
 
-Your series didn't even apply cleanup because of the deps so sashiko=20
-didn't get to review it at all but it likely finds some of the problem=20
-that I got when LLM compared these series, about your series it says:
 
-  1. Build failure when both drivers are built in (patch=C2=A05). sysfs.o i=
-s linked into both  =20
-     the amd_hsmp and hsmp_acpi modules, and its functions are not static. =
-With           =20
-     AMD_HSMP_PLAT=3Dy and AMD_HSMP_ACPI=3Dy (both tristates, so this is al=
-lowed) the kernel  =20
-     link should fail with "multiple definition" errors. As modules, it's s=
-till a         =20
-     duplicated object. Erwan avoided this by putting sysfs.o in hsmp_commo=
-n.             =20
-  2. Mismatched function types (patches 4 and=C2=A08). The device-style fil=
-e handlers (struct  =20
-     device_attribute) are attached to a plain kobject. Plain kobjects call=
- their file    =20
-     handlers through kobj_attr_show()/kobj_attr_store(), which expect stru=
-ct             =20
-     kobj_attribute handlers. It only works because the two structs happen =
-to have the same
-     layout and the handlers never actually use the dev argument. With kCFI=
- enabled       =20
-     (CONFIG_CFI_CLANG), this indirect call should trip the CFI check.     =
-               =20
-  3. Possible deadlock on removal (patches 1 and=C2=A06). Removing sysfs fi=
-les waits for any   =20
-     reads or writes still running, and those take hsmp_sock_rwsem for read=
- inside        =20
-     hsmp_send_message(). Suma removes files while holding that lock for wr=
-ite:           =20
-     - in hsmp_pltdrv_release() (the platform probe-failure path);         =
-               =20
-     - more importantly, the hsmp_remove_per_cpu_kobjects() calls in ACPI r=
-emove and      =20
-       probe-failure cleanup.                                              =
-               =20
-                                                                           =
-               =20
-     Erwan's patch 2 commit message describes exactly this problem and adds=
-               =20
-     lockdep_assert_not_held() to guard against it. The base tree isn't vis=
-ible to me, so =20
-     I'm inferring from the context lines that ACPI remove holds the lock a=
-t that point.  =20
-  4. Breaks an existing path. /sys/devices/platform/amd_hsmp/socketN/metric=
-s_bin is       =20
-     documented, and patch 1 moves it to .../socket/socketN/ without leavin=
-g anything at  =20
-     the old location.                                                     =
-               =20
-  5. Plain directories under /sys/devices. This applies to socket/, cpu/, c=
-puX/, and to the
-     ACPI driver creating its own amd_hsmp directory under platform_bus. Th=
-ey produce no  =20
-     uevents, so udev never sees them, and sysfs maintainers usually reject=
- this. The     =20
-     cpu/cpuX names also look like /sys/devices/system/cpu/cpuX.           =
-               =20
-  6. Per-CPU implementation (patch=C2=A06).                                =
-                    =20
-     - It uses a static cpu_kobj_info[NR_CPUS] table, which is large on big=
- configs and,  =20
-       because of item 1, duplicated in both modules.                      =
-               =20
-     - Every read, write and visibility check scans the whole table to find=
- its CPU.      =20
-     - It loops with for_each_possible_cpu, so CPUs that are possible but n=
-ot present get =20
-       entries too, and x86_cpu_to_apicid for those is probably not a valid=
- APIC ID.      =20
-     - The cpu_id field is never used.                                     =
-               =20
-  7. Duplicates existing hwmon files (patch=C2=A08). socket_power, socket_p=
-ower_limit and      =20
-     socket_power_limit_max repeat what hwmon.c already exposes as power1_i=
-nput, power1_cap
-     and power1_cap_max.                                                   =
-               =20
-  8. apb_disable looks wrong (patch=C2=A08).                               =
-                    =20
-     - It reads with "bit 31 =3D get" and uses bit 8 on HSMP_SET_DF_PSTATE.=
- In the upstream =20
-       descriptor table that message is SET-only, with one argument and no =
-response.      =20
-     - Turning APB back on normally goes through HSMP_SET_AUTO_DF_PSTATE.  =
-               =20
-     - With response_sz =3D 1 the message probably fails the driver's own m=
-essage-format    =20
-       check.                                                              =
-               =20
-                                                                           =
-               =20
-     Unless a newer protocol version redefines this message, it's worth che=
-cking against
-     the spec.
-  9. Minor.
-     - In patch 4, freqlimit_srcnames is a static array in a header, so eve=
-ry file that
-       includes it gets a copy. Patch 5 fixes this.
-     - Patch 4's doc says the platform path is amd_hsmp/socketX/, though pa=
-tch 1 already
-       moved it. Patch 8 fixes this too.
-     - The value ranges checked on writes (100=E2=80=9310000 MHz, 1=E2=80=
-=931000 W) are arbitrary.
-
-I haven't spent time on checking each these individually.
-
---=20
- i.
-=20
-> This series applies on top of HSMP client series v8 and a rebase of the H=
-SMP
-> dynamic bitmap series onto client v8. The rebased patch set for dynamic
-> bitmap series has not been posted. Based on the changes in client series,
-> dynamic bitmap series and this series(unify sysfs) will be rebased again =
-and
-> sent.
->
-> Signed-off-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
-> Signed-off-by: Suma Hegde <Suma.Hegde@amd.com>
->=20
-> Suma Hegde (8):
->   platform/x86/amd/hsmp: Create socket sysfs directory in platform
->     driver
->   platform/x86/amd/hsmp: Add amd_hsmp/socket sysfs links for ACPI
->     devices
->   platform/x86/amd/hsmp: Rename the HSMP_BIN_ATTR_GRP macro
->   platform/x86/amd/hsmp: plat: Add sysfs files to display HSMP telemetry
->   platform/x86/amd/hsmp: Move common sysfs show handlers to sysfs.c
->   platform/x86/amd/hsmp: Add per-CPU sysfs attributes for ACPI and
->     platform
->   platform/x86/amd/hsmp: Add wr_msg_id for sysfs attribute visibility
->   platform/x86/amd/hsmp: Add sysfs support for new HSMP messages
->=20
->  Documentation/arch/x86/amd_hsmp.rst    |  33 +-
->  drivers/platform/x86/amd/hsmp/Makefile |   4 +-
->  drivers/platform/x86/amd/hsmp/acpi.c   | 331 ++++-------
->  drivers/platform/x86/amd/hsmp/plat.c   | 412 ++++++++++++-
->  drivers/platform/x86/amd/hsmp/sysfs.c  | 762 +++++++++++++++++++++++++
->  drivers/platform/x86/amd/hsmp/sysfs.h  | 112 ++++
->  6 files changed, 1420 insertions(+), 234 deletions(-)
->  create mode 100644 drivers/platform/x86/amd/hsmp/sysfs.c
->  create mode 100644 drivers/platform/x86/amd/hsmp/sysfs.h
->=20
->=20
---8323328-126927015-1794589956=:6498--
