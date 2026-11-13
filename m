@@ -1,67 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.33.111.247
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=52.35.192.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794555897;
-	b=LFAVYAnVzW1agPLGn6v+sdMhoqmlaDFfLYvM3g+UZDxuP+6BQyQiLs2GEiS7O9caFu34
-	 b4yScdZnAbmfBzejzigYqitzv35FBqWyhObalpN8RLFbjCfkA5HU8nakjCcXab3MeTPsn
-	 sqzbHp/bBGGvRRHqAn+lmdTn/M9I+fWrxXCg8oLon7gJgsMdrjcxRK+IIIM5PlIYx9gJ+
-	 5kVUwYdMjYBe0KyWhKUQlTV6akSdibn3zdYgc72/35Yilv1vXcak3R/uf/0iDvGAwLgpE
-	 H7GQqOJ+mBIOOWQqct/CqATQMCMiYBzMihVURB5qz6A9b79az8KPqinrayti3jFkVpA==
+	t=1794566550;
+	b=EoS1Swo17jtQ5dwCbhqQOIoNhyhKkzy8UFzU9YOCI7odHUTevzw0PGnlM2LZmij6snPZ
+	 E6Uc2Wt8G7aPIc1RTHUHXrYnf6tEwhSb37GuNM2KM8BpSU0nPKA/+Mh+9MnA0rbGheyLo
+	 xRVuvTFD90lyWTP9cueWuQRf5m8MQRMrSnFyf6mXEBV+0b43jYD4ASumr5rKkHg7AmT2N
+	 GEfRY5Q2GzBI1IOdwDqaZXISmfEyccTzI7/2gCE+eHMX1KLid1T/Js4/Z8ckHlvHynUP7
+	 PADMdRJY8yGB/f8a7JR5R3GOpKrOenAZOTzVi/5J8KpgjQr6HFOpoqYoGFXmAwkILMA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794555897;
-	h=DMARC-Filter:Received:Received:Received:X-OVh-ClientIp:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:x-ovh-tracer-id:X-VR-SPAMSTATE:
-	 X-VR-SPAMSCORE:X-VR-SPAMCAUSE:DKIM-Signature;
-	bh=I6NQHNIrOREz+LL53sawxYWAYz0PghEBcXdBCvTu60M=;
-	b=M7SAsfS5TCQonf7D5d99UpVwTNaD8oWFPLlhTxki+pFm7sUbeGXPzajjQ25LBc58TV6c
-	 JArQVStpWcpm/xLhtkiNrtmklJukhUK1NW0PsgeAl4KQNlZojlsySQk7xC0Fi/mTtHrOW
-	 4Wi+bI9S/wLgOGqYDPynitaOhkZwUHd46KZFGeL+lJBdCzQn/ManAKOP7YskJPfujyPCD
-	 R7tP/6doCZBczG+hLOWWY6GwVYBz76fQCPrnzORouPgQPYjpZXH+q0jSCraNQ27ZxgMP1
-	 u9SXqrGf+yKNpphh41pgpSFVTplBRjMDavClc2mo5hVliWz2PReX8B2i6TXGnFr14og==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794566550;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:Received:Received:X-Farcaster-Flow-ID:Received:Received:
+	 From:To:CC:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+	bh=Imm14NIi8H5Q16VyabkUWRdp71FBLi9E+jVS7X0zunk=;
+	b=f5/xOPu1vdUWfnc+8Wq7aGTewmRgcHh56jxSL64zUZGI4gG0NP8pP4QiWTGGtx8qMwJS
+	 R5uhYyO8APYf7AyZJIjqvg8q46DZIGSojzd+4P87vCKLzpmLgcI//5POw01QkgVdH1FVw
+	 NHb9a0+bBVyAwMrgNpyDT5EsQD/bioaSsY5bsbjnx7eCTrEKMreJytEa7FD20wdXpwY7d
+	 T+oGVqKNcZwQ0ZaX8lxR3/q7gGQpRJzWv/3+4x0KN7FDvH0glF9SOoSXpk6eJ2fG5qWRe
+	 /B1k+KKfSS0LIR2CG18Tf7qz+Yq/SeWycZcdYBFPePP44r9w8l2hGJtMhyw72oiHwlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=3mdeb.com;
-	spf=pass smtp.mailfrom=3mdeb.com;
-	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=RIzAUR3U;
-	arc=none smtp.remote-ip=178.33.111.247
-Received: from 4.mo583.mail-out.ovh.net (4.mo583.mail-out.ovh.net [178.33.111.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=amazon.com;
+	spf=pass smtp.mailfrom=amazon.com;
+	dkim=pass header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b=reA+jITP;
+	arc=none smtp.remote-ip=52.35.192.45
+Received: from pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.35.192.45])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9EE606A88B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 07:44:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5E9EE606A88B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3119606A330;
+	Fri, 13 Nov 2026 10:42:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3119606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=RIzAUR3U
-Received: from director8.ghost.mail-out.ovh.net (unknown [10.110.54.164])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4jQq692d4xz63WK
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 07:44:49 +0000 (UTC)
-Received: from ghost-submission-7ccd8bbbb6-cl275 (unknown [10.108.42.118])
-	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 3F3DBC012D;
-	Fri, 13 Nov 2026 07:44:48 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.109])
-	by ghost-submission-7ccd8bbbb6-cl275 with ESMTPSA
-	id Hrv+B+u/9mr5jjgAjijQbg:T4
-	(envelope-from <filip.golas@3mdeb.com>); Fri, 13 Nov 2026 07:44:48 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-109S0039e8f4dc2-aa38-4e0f-9dbe-5b7c469e15a9,
-                    F6EB7A3E9421D9EE3A955D9585EDAC62A977302C) smtp.auth=filip.golas@3mdeb.com
-X-OVh-ClientIp:37.47.248.243
-From: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	=?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-Subject: [PATCH 3/3] platform/x86: dasharo-acpi: Add EC fan curve support
-Date: Fri, 13 Nov 2026 08:43:47 +0100
-Message-ID: <20261113074347.2301465-4-filip.golas@3mdeb.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261113074347.2301465-1-filip.golas@3mdeb.com>
-References: <20261113074347.2301465-1-filip.golas@3mdeb.com>
+	dkim=pass (2048-bit key, unprotected) header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b=reA+jITP
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1794566549; x=1826102549;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Imm14NIi8H5Q16VyabkUWRdp71FBLi9E+jVS7X0zunk=;
+  b=reA+jITP9DjAZRJuSf7pnGSH1UnfFSovyqcnc+b8AirmkISaiq8t0lyR
+   kHLyN5Zymfbv0KoeQwrHwB7H9AP1+/Y2cTw+d3uRiBug4qVmlCa8beQTD
+   +x973psOm7QPBrnPPgI50GcxjIRJG1+5NmF6LN3k57zwXwHyqUfMQpdpJ
+   /Ccnp3RJDSAv7ZZNPbfVevJpoxtPSnk7RE7Ci7iwTefhLv3ZfOmq6Xzv3
+   TJHFAokyMlgpNIIjrzQUiVQAz0yBsKQ3yr8pofyPRnJHBDu+beQjj+6yp
+   +XUoUb4SkBWINCvcfU7jTPOPAnGB3k6bOWU+zTZpXCCiaM76ADomDyyjp
+   g==;
+X-CSE-ConnectionGUID: 3vMfAQYVS5y5mJHrnHx35Q==
+X-CSE-MsgGUID: Fl042saRRQq7q41xme99Ng==
+X-IronPort-AV: E=Sophos;i="6.27,211,1787011200"; 
+   d="scan'208";a="33648523"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 10:42:26 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.178:3217]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.46.128:2525] with esmtp (Farcaster)
+ id 6d236261-7775-4822-b4c6-309f8ed89251; Fri, 13 Nov 2026 10:42:26 +0000 (UTC)
+X-Farcaster-Flow-ID: 6d236261-7775-4822-b4c6-309f8ed89251
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.56;
+ Fri, 13 Nov 2026 10:42:26 +0000
+Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
+ (172.19.116.181) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.56; Fri, 13 Nov 2026
+ 10:42:23 +0000
+From: Eliav Farber <farbere@amazon.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Dmitry Torokhov
+	<dmitry.torokhov@gmail.com>, Laurent Pinchart
+	<laurent.pinchart@ideasonboard.com>, Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Armin Wolf
+	<W_Armin@gmx.de>, Sebastian Reichel <sre@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>
+CC: Eliav Farber <farbere@amazon.com>, <linux-acpi@vger.kernel.org>,
+	<acpica-devel@lists.linux.dev>, <linux-input@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+	<platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Jonathan Cameron
+	<jonathan.cameron@oss.qualcomm.com>, Andy Shevchenko <andy@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Subject: [PATCH v6 0/7] notifier: convert remaining drivers to device-managed registration
+Date: Fri, 13 Nov 2026 10:42:02 +0000
+Message-ID: <20261113104218.32566-1-farbere@amazon.com>
+X-Mailer: git-send-email 2.47.3
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,238 +92,142 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-x-ovh-tracer-id: 13830835932285235183
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: dmFkZTFlXx8+5JEVtbgskvn0mQwqwMiiUHVSJhKYYHJKacS3OogXmGYQzZSvElqTpv7MA26TfMZE1aPnucRMMWpnPSw7cwpUpV9rYonc9FqEtY61eI5P65EfaAQB/GOcsu7ZjW2myG0aC1gnunV1nnjJBGnnAsK0TkmGoLJIuPsr4F4fA2qwl88bGdgsMxS7EVKZg43uq6VXwrzV2kFOSXfG7oTtmCSoBgXxZoCX4RzDSQ9QvszATqN7V42JtdM/TvGtGIkflSyaaIIY+NgpBUKDrAdUM3dRwZpsTnxNDPnyiOSSBb0tAL7kcmZZYphQ1Sf8nd69ZMtjv5V27+oqMmiRpQ/8eBfx43qG6ijwLteUd+Fwx7SL3imWTGI0IzRNISwOMVC5PdaAFiBBZdKvMyHEBI+jbiLOx+A20Bs4XneA7CrAorgsjMz1tK3Xyy5IKHCsJDPmBkwPWl+AQKA2cyhtanyfa+CZuzvFzWD1/iTIavHpOZJ5U+3Nogvf34ljT6nJiA/pmFw6QcwUAjfC7FPALFshJRGq5imrpM4JqtITOJJAQfeitciKVgnu/VR14V2CM+Up/e+fagdR86RolQNHmxN0e90CkiKj1xko3mVtZ5cx0E0d2RWT60eJ6lagKyYdKKJrLg8c5hJA8Qa+Tw6SiwhZ9AN80MdCHKsf8nVc8T3FXw
-DKIM-Signature: a=rsa-sha256; bh=I6NQHNIrOREz+LL53sawxYWAYz0PghEBcXdBCvTu60M=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1794555889; v=1;
- b=RIzAUR3UoBbnp8q1sX9Ws4bkkmDfZFokSs9Pmbjo1DFJTdB4mG6mqYzyJBpSK8M1zM/QbQU8
- 6piFdBT8t9QWEFkfJB0n6E0mezqyRHlOiaoQXkEOTyeFRkq/QXDheh0/rEsYzMQwZMdTGeDLHiS
- XgDnSixq22quVAyIApqj6cDntxxpnWIPVx4MNV+umsashnbsVcp7wQIyutZEQeoIgQXxl38NsSI
- qauXbLrbpk12Ehc9UL+D3pYTKXpWKeNjfc0Imikv0dspXDbmKIGEtqzd76oNZIgpMqsItWJ7//q
- mVVSNQY/IiFsMqLb0n5XNQakGZ2Mb4eZcwAWjxz5HIrvw==
+X-ClientProxiedBy: EX19D031UWA004.ant.amazon.com (10.13.139.19) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Expose the four-point fan curve run by the EC as pwmN_auto_pointM_temp
-and pwmN_auto_pointM_pwm, so that userspace can read and change it.
-The EC validates the curve on every write and keeps running the
-previous one if the new curve is invalid.
+The devm_atomic_notifier_chain_register() and
+devm_blocking_notifier_chain_register() helpers this series added in v5
+are now in mainline, together with 6 of the 11 driver conversions. This
+revision carries the 6 conversions that were never picked up, plus one
+new conversion for a driver that grew the old pattern after v5 was
+posted.
 
-On shutdown, ask the firmware to store the current curve, so that it is
-restored on the next boot.
+Background, unchanged from v5. Many drivers repeat the same boilerplate
+when registering notifiers with device lifetime:
 
-Fan curve control is only exposed for fans on which the firmware reports
-support for it.
+  1. Register the notifier with *_notifier_chain_register()
+  2. Check for error
+  3. Register a devm action to unregister on teardown
+  4. Implement a per-driver static unregister callback
 
-Signed-off-by: Filip Gołaś <filip.golas@3mdeb.com>
----
- drivers/platform/x86/dasharo-acpi.c | 160 +++++++++++++++++++++++++++-
- 1 file changed, 159 insertions(+), 1 deletion(-)
+The devm_*_notifier_chain_register() helpers reduce that to a single
+call with one error path, eliminating the per-driver unregister
+callback. Each conversion drops ~15 lines; this revision removes 117
+lines and adds 18.
 
-diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
-index 29afcf78564c..7b21577158cb 100644
---- a/drivers/platform/x86/dasharo-acpi.c
-+++ b/drivers/platform/x86/dasharo-acpi.c
-@@ -6,6 +6,8 @@
- #include <linux/acpi.h>
- #include <linux/array_size.h>
- #include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/kstrtox.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/types.h>
-@@ -378,6 +380,150 @@ static const struct hwmon_chip_info dasharo_hwmon_chip_info = {
- 	.info = dasharo_hwmon_info,
- };
- 
-+static int dasharo_curve_point_store(struct dasharo_data *data, int channel, const char *method,
-+				     unsigned int point, u64 value)
-+{
-+	u64 args[2] = { point, value };
-+	u64 ret;
-+	int err;
-+
-+	// set of temp/duty
-+	err = dasharo_call(data, method, DASHARO_FEATURE_FAN_POINTS, channel, args, 2, &ret);
-+	if (err)
-+		return err;
-+	if (ret)
-+		return -EPERM;
-+
-+	// commit
-+	err = dasharo_call(data, "CFCV", DASHARO_FEATURE_FAN_POINTS, channel, NULL, 0, &ret);
-+	if (err)
-+		return err;
-+
-+	// The EC rejected the curve
-+	return ret ? -EINVAL : 0;
-+}
-+
-+static ssize_t curve_point_temp_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	u64 point = sattr->index;
-+	u64 val;
-+	int err;
-+
-+	err = dasharo_call(data, "GFPT", DASHARO_FEATURE_FAN_POINTS, sattr->nr, &point, 1, &val);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%llu\n", val * MILLIDEGREE_PER_DEGREE);
-+}
-+
-+static ssize_t curve_point_temp_store(struct device *dev, struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	long val;
-+	int err;
-+
-+	err = kstrtol(buf, 10, &val);
-+	if (err)
-+		return err;
-+
-+	val /= MILLIDEGREE_PER_DEGREE;
-+	if (val < 0 || val > U8_MAX)
-+		return -EINVAL;
-+
-+	err = dasharo_curve_point_store(data, sattr->nr, "SFPT", sattr->index, val);
-+	return err ?: count;
-+}
-+
-+static ssize_t curve_point_pwm_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	u64 point = sattr->index;
-+	u64 val;
-+	int err;
-+
-+	err = dasharo_call(data, "GFPD", DASHARO_FEATURE_FAN_POINTS, sattr->nr, &point, 1, &val);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%llu\n", DIV_ROUND_CLOSEST(val * 255, 100));
-+}
-+
-+static ssize_t curve_point_pwm_store(struct device *dev, struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	long val;
-+	int err;
-+
-+	err = kstrtol(buf, 10, &val);
-+	if (err)
-+		return err;
-+
-+	if (val < 0 || val > 255)
-+		return -EINVAL;
-+
-+	err = dasharo_curve_point_store(data, sattr->nr, "SFPD", sattr->index,
-+				  DIV_ROUND_CLOSEST(val * 100, 255));
-+	return err ?: count;
-+}
-+
-+#define DASHARO_POINT_ATTRS(ch, pt) \
-+	SENSOR_DEVICE_ATTR_2_RW(pwm##ch##_auto_point##pt##_temp, curve_point_temp, \
-+				(ch) - 1, (pt) - 1); \
-+	SENSOR_DEVICE_ATTR_2_RW(pwm##ch##_auto_point##pt##_pwm, curve_point_pwm, \
-+				ch - 1, pt - 1)
-+
-+#define DASHARO_POINT_ATTR_PTRS(ch, pt) \
-+	&sensor_dev_attr_pwm##ch##_auto_point##pt##_temp.dev_attr.attr, \
-+	&sensor_dev_attr_pwm##ch##_auto_point##pt##_pwm.dev_attr.attr
-+
-+DASHARO_POINT_ATTRS(1, 1);
-+DASHARO_POINT_ATTRS(1, 2);
-+DASHARO_POINT_ATTRS(1, 3);
-+DASHARO_POINT_ATTRS(1, 4);
-+DASHARO_POINT_ATTRS(2, 1);
-+DASHARO_POINT_ATTRS(2, 2);
-+DASHARO_POINT_ATTRS(2, 3);
-+DASHARO_POINT_ATTRS(2, 4);
-+
-+static struct attribute *dasharo_point_attrs[] = {
-+	DASHARO_POINT_ATTR_PTRS(1, 1),
-+	DASHARO_POINT_ATTR_PTRS(1, 2),
-+	DASHARO_POINT_ATTR_PTRS(1, 3),
-+	DASHARO_POINT_ATTR_PTRS(1, 4),
-+	DASHARO_POINT_ATTR_PTRS(2, 1),
-+	DASHARO_POINT_ATTR_PTRS(2, 2),
-+	DASHARO_POINT_ATTR_PTRS(2, 3),
-+	DASHARO_POINT_ATTR_PTRS(2, 4),
-+	NULL
-+};
-+
-+static umode_t dasharo_curve_point_is_visible(struct kobject *kobj, struct attribute *attr, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	struct device_attribute *dattr = container_of(attr, struct device_attribute, attr);
-+	int channel = to_sensor_dev_attr_2(dattr)->nr;
-+
-+	return channel < data->caps_found[DASHARO_FEATURE_FAN_POINTS] ? attr->mode : 0;
-+}
-+
-+static const struct attribute_group dasharo_point_group = {
-+	.attrs = dasharo_point_attrs,
-+	.is_visible = dasharo_curve_point_is_visible,
-+};
-+
-+static const struct attribute_group *dasharo_groups[] = {
-+	&dasharo_point_group,
-+	NULL
-+};
-+
- static void dasharo_fill_feature_caps(struct dasharo_data *data, enum dasharo_feature feat)
- {
- 	struct dasharo_capability *cap;
-@@ -413,16 +559,27 @@ static int dasharo_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 	data->pdev = pdev;
-+	platform_set_drvdata(pdev, data);
- 
- 	for (unsigned int i = 0; i < DASHARO_FEATURE_MAX; ++i)
- 		dasharo_fill_feature_caps(data, i);
- 
- 	hwmon = devm_hwmon_device_register_with_info(&pdev->dev, "dasharo_acpi", data,
--						     &dasharo_hwmon_chip_info, NULL);
-+						     &dasharo_hwmon_chip_info, dasharo_groups);
- 
- 	return PTR_ERR_OR_ZERO(hwmon);
- }
- 
-+static void dasharo_shutdown(struct platform_device *pdev)
-+{
-+	struct dasharo_data *data = platform_get_drvdata(pdev);
-+	u64 ret;
-+
-+	/* Let the firmware persist the fan curve the EC runs */
-+	if (data->caps_found[DASHARO_FEATURE_FAN_POINTS])
-+		dasharo_call(data, "SFCS", DASHARO_FEATURE_FAN_POINTS, 0, NULL, 0, &ret);
-+}
-+
- static const struct acpi_device_id dasharo_device_ids[] = {
- 	{"DSHR0001", 0},
- 	{}
-@@ -435,6 +592,7 @@ static struct platform_driver dasharo_driver = {
- 		.acpi_match_table = dasharo_device_ids,
- 	},
- 	.probe = dasharo_probe,
-+	.shutdown = dasharo_shutdown,
- };
- module_platform_driver(dasharo_driver);
- 
+Already in mainline, so dropped from this revision:
+
+  v5       commit        subject
+  1/13     e38b9eda475f  notifier: add device-managed registration APIs
+  2/13     6b0c6ff76795  pwm: iqs620a
+  3/13     8c77589a7274  iio: light: iqs621-als
+  4/13     c9f54ead5793  iio: position: iqs624
+  5/13     870f46a42afd  gpio: adp5585
+  11/13    323906906101  gpio: eic-sprd
+  12/13    df6501bf6fc4  gpio: gpiolib-kunit
+
+What is left, with the v5 numbering for anyone who reviewed it then:
+
+  v6   v5      subject
+  1/7  6/13    platform/x86: bitland-mifs-wmi
+  2/7  7/13    Input: adp5585
+  3/7  8/13    ACPI: APEI: GHES: remove unused ghes_{,un}register_...
+  4/7  9/13    ACPI: APEI: GHES: use devm_...
+  5/7  10/13   platform/x86: uniwill-wmi
+  6/7  13/13   reboot
+  7/7  -       power: supply: cros_pchg (new in v6)
+
+The patches are independent and can go through their own trees. The only
+ordering constraint is that patch 3 must precede patch 4: patch 3 removes
+the unused exports, patch 4 converts what is left. The devm helpers are
+already upstream, so unlike v5 this revision needs no base commit or
+pull request to build.
+
+Suggested routing, since the series now spans five trees:
+
+  1/7, 5/7  platform-drivers-x86
+  2/7       input
+  3/7, 4/7  acpi, in this order
+  6/7       kernel/reboot.c has no MAINTAINERS entry, so it falls to
+            THE REST
+  7/7       power-supply
+
+Each patch is Cc'd to its own subsystem lists only, so no list receives
+patches it does not own. linux-kernel receives all of them.
+
+v5: https://lore.kernel.org/all/20260816060648.4030-1-farbere@amazon.com/
+
+Changes in v6:
+- Dropped the 7 patches now in mainline, listed above.
+- Rebased onto v7.4-rc1. No conflicts; the 6 carried patches are
+  functionally unchanged from v5.
+- Patch 3: replaced an em dash in the commit message with an ASCII
+  hyphen. No change to the code.
+- Patch 6: the commit message now records that the removed callback's
+  WARN_ON() on a failed unregister goes away, because
+  devm_blocking_notifier_chain_register() ignores the unregister return
+  value. No in-tree caller can trigger it. No change to the code.
+- Patch 7: new. cros_pchg grew the
+  blocking_notifier_chain_register() + devm_add_action_or_reset()
+  pattern in 631adfa03595 ("power: supply: cros_pchg: unregister EC
+  notifier"), which reached mainline in v7.3-rc1, five days after v5
+  was posted.
+- Carried forward the Acked-by and Reviewed-by tags given on v1 and v4.
+  Each was checked against the patch it was given for: all four are
+  byte-identical to the version here.
+
+Changes in v5:
+- Patch 1: rename notifier_block parameter from 'n' to 'nb' to match
+  the devres struct field name (Uwe Kleine-König)
+- Patch 2: remove extra blank line left after deleting the unregister
+  callback (Uwe Kleine-König)
+
+Changes in v4:
+- Patch 8: split the removal of unused
+  ghes_register_vendor_record_notifier() and
+  ghes_unregister_vendor_record_notifier() into a separate preceding
+  patch (Andy Shevchenko)
+
+Changes in v3:
+- Patch 1: drop devm_raw_notifier_chain_register() since raw notifiers
+  require caller-provided locking which is incompatible with the devres
+  teardown callback (Sashiko)
+- Patch 12: fix commit message to accurately describe the old code as
+  using devres_alloc() + register_reboot_notifier() (Sashiko)
+
+Changes in v2:
+- Patch 1: drop 'extern' from new function prototypes (Bart Van Assche)
+- Patch 1: fix kerneldoc to use 'Return:' format (Bart Van Assche)
+- Patch 1: use <linux/device/devres.h> instead of <linux/device.h>
+  (Andy Shevchenko)
+- Patch 8: also remove unused ghes_register_vendor_record_notifier() and
+  ghes_unregister_vendor_record_notifier() along with their exports and
+  ghes.h declarations (Jonathan Cameron)
+
+Eliav Farber (7):
+  platform/x86: bitland-mifs-wmi: use
+    devm_blocking_notifier_chain_register()
+  Input: adp5585: use devm_blocking_notifier_chain_register()
+  ACPI: APEI: GHES: remove unused
+    ghes_{,un}register_vendor_record_notifier()
+  ACPI: APEI: GHES: use devm_blocking_notifier_chain_register()
+  platform/x86: uniwill-wmi: use devm_blocking_notifier_chain_register()
+  reboot: use devm_blocking_notifier_chain_register()
+  power: supply: cros_pchg: use devm_blocking_notifier_chain_register()
+
+ drivers/acpi/apei/ghes.c                      | 27 +++----------------
+ drivers/input/keyboard/adp5585-keys.c         | 18 +++----------
+ drivers/platform/x86/bitland-mifs-wmi.c       | 17 +++---------
+ drivers/platform/x86/uniwill/uniwill-wmi.c    | 17 +++---------
+ .../power/supply/cros_peripheral_charger.c    | 16 +++--------
+ include/acpi/ghes.h                           | 16 -----------
+ kernel/reboot.c                               | 24 ++---------------
+ 7 files changed, 18 insertions(+), 117 deletions(-)
+
+
+base-commit: 067c5c24cef23d913b67eaaf71ae67e7169a6620
 -- 
-2.56.0
+2.47.3
 
