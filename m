@@ -1,91 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794637615;
-	b=CwDsNSjw8nxosZx0O4QG5ZAxvL2TMmZsXB7xqCX114GDMkxD6B/UY1neB2LnstAVm3My
-	 CMCqg/uCib/mwUOjZf1blVDlvPmDSPh4EHnrejAp4FtjBF2nh6vnJKhc5yjkz/x5sBwHV
-	 +V8prUC2IK9bnZwZOjc3J/cN2g7ifxu91EMxr5VaSTRGnXOx1c/Or+fLmaLPbyC540+RQ
-	 moYQdCQ0QOjOX6mW9JvgBOe25y7SysCenKpemwQC9Dacvjh+xFDzAh79wZ7syDbZPHywN
-	 bXZXZzzxrbB0DGaOoSiwkIBNRjjF32fMUjTzMs8IJifGGM3AiQcxDbIEfgEj2ZfGKnA==
+	t=1794637776;
+	b=MebZBEj+oRXb5xQzu5pjW26IDl9ynqyHJ6eiFCOlS+MUg8OjBB5OkbjN3nAuGdovmx3W
+	 gGyiy4UVlKH6jqCFLAxGGIRFTFyiU/vVACUIYr0ocRQKsL3RuUMubjgW+vrmxfjl1O4uI
+	 /M0jy1l/dVuQ3LpF7HgZB7gXkO7ba9MYlDqLjFtKYsjfW6ZRKTGiOcAXH+ec/EqNBlcH1
+	 nA4j0WT35ixRP3oKXRfjT5aOXczKsjMiY+ij0lhNGpbcvfnFSnjXa0V4NLV8t+NQDtbDa
+	 ypam4C8oMlsVFB4f0JKmw686bF7I3FVT1CJ/d+Ejx1/Af1kbW0mCGRi3ChdNSqv26AQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794637615;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794637776;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=bxBLjEs863AOQJyjFQT8wZX0uAHa+N/y/eBxALEdB90=;
-	b=BsxxB4BkaffRl/H6hjPsTnuS8cJ92yUMDz83WBRobbAQJYnglZcHF7GC2KT+RmZUt7Sd
-	 Eb0yKnrF46VhLpRWQJ+w0FMh1bGFiPcUhOSNOpMaAv6rTzdXAePl7OTfpt80nkwMUbYwP
-	 wsPCElutb8ViocECk/getEmWJHhNTYj3HPZtdn7Gpm6qpurfxbPlDUBKxx6uMkM2wKWvU
-	 jWgjdoJL7b8Vr1fE7Nm5KCyESW6+nIaJr/fIoDOo6nD1uc9l8wsZod2JzinXdNFajOCGe
-	 IHDr0dDju6osftnIqmrCtUBHQ4HV2vB0kNgQVscAJbXCxdtbjXPKVfXyzIVtFkmKa2Q==
+	bh=i9+suZUiW2w1H/nLvdwr8UFe/AqgIN0hpaBbLaNfQrY=;
+	b=gkVlqThTtIi9epw1RX8WI2ukz0tfdI3P9Kfhgp03vSoriNdjeLPCa2qjcSWPC0CtFxRI
+	 Dlnq6q73urO9DVOmmz2Ga96GuSjQnT3emzavv3YU3Ns09F0LrVX+9MXgBk3S517w8Mr7v
+	 3Ng7LvJI1ee4zHEbqSkvSOtlqiZc/IZ9n83dFzWcFsehyGMLlz4QkcgM4XxfpEp+ZQBMh
+	 yyvG8KECcrbRyQHuhbvKM5a0pmjddObQY5NCSGEqx0x5IvZR8zt/0BI2ejCWe/CkvgaqO
+	 9gy92r9zZSgw8TbRwuM2rTaC0auIEW+lmr9CcLsrFypglMHSSqkcH141KyJYKNsrOYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VLHfSk5r;
-	arc=none smtp.remote-ip=209.85.215.181
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wdakY2AI;
+	arc=none smtp.remote-ip=209.85.214.177
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DC0606A88F
-	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 06:26:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49DC0606A88F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF898606A323
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 06:29:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DF898606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VLHfSk5r
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cdb2e0062bbso871792a12.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:26:55 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wdakY2AI
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2e95bd1c14cso27778035ad.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:29:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794637614; x=1795242414; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794637775; x=1795242575; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=bxBLjEs863AOQJyjFQT8wZX0uAHa+N/y/eBxALEdB90=;
-        b=VLHfSk5r3zezAWag9cJkqsAK8egkEX2cdFSYA/LZTrWyWnEMcQdNqXtbzbPQq/cBFh
-         FiMIdIhp+WBAxCTJikQGiUAFYcUCK5fVM0DFuKknI5KI8Ch1l4OytOo11HmKqW6T9+dD
-         SSzefxz5zBO4CVsOSGjGP7Cgx5QOwhFZca6nC6yejBc1XgPIMpdfR/UYE4/HWnsD6HSs
-         dhUYaPX71/dZTwCrc38YyoCQbFUvQNwFzRdYR6TbtRch2qX9qGjEJI+5veMb8BEAI+zF
-         6DcCuiwcbYnW5FVcMf02tG6AZoR4ZxJCyUpNuZv1lYDbkTCTO4Ja1dsW/5za7SsPuNdo
-         mGJA==
+        bh=i9+suZUiW2w1H/nLvdwr8UFe/AqgIN0hpaBbLaNfQrY=;
+        b=wdakY2AIl5dU8gPIjU7P1qXU7P8hQIaIlWiyB6RVVH61maO+QZli+X7JbADKU/T3Xp
+         rKQd1H6/6pb8zkAQg3shBm+UkilFvFahy+IeKa/ixDcE/oA70rgmQ6elP/E/0tqnzEOZ
+         KfbjS0fH6qTekJXB3Mu2Ewp75BgLqUHpYzBr/9ZNRFdEyFlscqlnLHlqBp/onsXC2XDp
+         t2jT/IHOLZ7OjK0SiLCFfh4nxGVGEvHHQJlEbwXHzmXgS2WBMNPP1ffIO06WOMjmGNoR
+         02VHm3oOWmRXL3iAOCnyvR85hXKxXDafrJMW4l8RH+mFvhCnNYW+xSA+o/gPN0WGE0KG
+         ZY+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794637614; x=1795242414;
+        d=1e100.net; s=20260707; t=1794637775; x=1795242575;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=bxBLjEs863AOQJyjFQT8wZX0uAHa+N/y/eBxALEdB90=;
-        b=NTQqTlh16eEVDWoAqcz4XeielFs15Q59vO1pLBMdW5BiqVkjaDaKOhYhLOhHpqMXFb
-         mVZyrD7yGOBfXboDfpOajoDs17TIorztHIDbghaOEU/TDK6sTvHZhtUT9NrQ2TV1NaDq
-         pM76yCyxPugGv02ptch5uEDrB7Y6BDXkwYH63r+vEv1TwAHzQv0T5i9Lvs2D4EPff5xE
-         G/w4Cpa1GzhlCq+Rt/8TiAwDbty2FRuNtNDpVofXEb1zb5VaqC0DmME3SBPLgASehxK1
-         SXBUmrQDxKVP2bD4+o30Fl5gIiuMpvtM80rxTDnZtu0rIE8DlJciq3eZ/M36AcvGAnXA
-         RCfw==
-X-Gm-Message-State: APuU4Z8p3MLd1ZXSbBw5HFwqG1pnbLNVGArpk7/xlw3A9pjbjAlb4oK3
-	ARqVjiP5OeMDc7MVPzmjRgR3O1fPlbY/6r9KkGMl4ZwZii2K45Xrl8Uq
-X-Gm-Gg: AYBFou2Nh7TN3oEwKuXq9hDC3tpeCKSp+LEOyA0cqtIvThVqD4QjQmYn630AUfWTVeR
-	OmmIqvXiVEzX3kpztG2LSOzHOvx6YCzyloRPqmR/ZJ/+Fwbm+gg/j82Z/ZycX/fUkpurqMVmzdP
-	woyXfrIe8/LeBVPhj2Tk/yt7yWZ3e4abGfL2mFNqMhsxbEIb55WtO5bYSDu9tDe6WmDsrNbYTXg
-	Qm+gfMa5ocy+c5r7VtIBkw3Xxr0LE9J2f6O/Z5Si54/B9NWegqfqLSvM6zIN3qm6WBa1nzLs1Xa
-	Tm9hOAnWU59lQcGzHzuIYDTJuKmugaNdjDns/B8dGsQ9258MUS4+2lx4fStML2xzRFtr3TGds++
-	O5r6ejn90Qi/XKcGvKQRO9CWTvAbNqFmxtbonYnl4uF7n5opMOxwz2BdxQk9Ae6E4P1i5qvibno
-	mvZkOPfSVme5u9uM1TOg1iMawb1AdtiVhcAwYbsGtYmJTAf04SmA394+nqvxHCf90MlBmwNFG9Y
-	ze33J+J1pxifcXdvW6WRcypXoFL+u/EzdYNACfKgYvYz91o1bnC4zNVy9TAhCuZHclZKENwey9P
-	7cfS+BSMwxc8U3h+cQfnlB2XKvzWlS4Tyh4eh2v3AlPqBO0hxWPsG3B0H/U9qRoI4VHh+Tew4Ca
-	qjL5youGtnZyu32XajIsNQeNxgGu3USGioQTyrwnpXA7J5JQWQFEZRKSLGEpmcM1+ZU2LE693Xe
-	kK/g==
-X-Received: by 2002:a17:90b:1d03:b0:3ab:c80:9365 with SMTP id 98e67ed59e1d1-3b1b0b4cdf7mr4172862a91.42.1794637614509;
-        Fri, 13 Nov 2026 22:26:54 -0800 (PST)
+        bh=i9+suZUiW2w1H/nLvdwr8UFe/AqgIN0hpaBbLaNfQrY=;
+        b=aRYZR2s8IPeVSQBuyX434oi74wZZ1LhJQ+v5f0UgqKcU/+1xtcgma6BPH++5HqVLt1
+         yZnapvWpm2D3h34IsOLSOsQ5z7jvteqzPO7jx3MA1xnum8dh8KFzAk4l8mEum1zEXOIH
+         kNVGuCT+p9dimP0uYoWr+ZWH6muX+lesYcOFr4oJit5h8TMdZQM36nX0L34hegNWbgje
+         RKH0rAGcjoUmqpDx8Wz4OcU+WonYt0VzW4om0th5T+AodNIupWEX0xGVvI33Z9mqr6NX
+         2Wz6isOGVvqjP8DBmtumrSk5xoD+h4xXCKM/6hS8cHXxeUZEHqffztNV6+ehJCEiskET
+         I3Zw==
+X-Gm-Message-State: APuU4Z9Lxy30Jp1e1bUMlH5mTefixJgeCd82Y72QKdF2HCwXY55OeaHs
+	2y9h8KGlcmpHDDwD8L9OF0rvQbUcuLDQUDShIGJapYL/+xSwm/DcKRvvd5qnGq25
+X-Gm-Gg: AYBFou0fIHozvyX0J2ObeHCdk0eoEOF0bf5CnYz+AuZSSbvIhl6d3h6GP/bHIUQaSSv
+	ievCyubjSKitCKoSrT8wmw5Zqg6cXrXJx6UXnRUWW/JxRfE41zVccEeg+tKKeBp4fkHmHZ2UCBm
+	KwBqLws+wJTMVRXr5wpATw1bCc7GU2DBOFJG+aZqHlMJLbEE+aZlHLhU0Jb3pbeeKYBojDeBH8G
+	Yd0cNPCnWNUIh24p+Ckb1dAi2+I1eIBMZmtsCuvMxH0OygtUsYpxRSsfH4r9C9jF1UgKYYhQr4g
+	Bm+MwjaCrBZuOuZbOVu3yNupYt3ZTHdEttgQmsgzMVFyvE/JiCdE0aF35mADXq3wILfbswzCIzq
+	T4iQnB/9qrXVar6NsXDEVjHfYgstr/fWuflHu0KoDfl4LySvu5xKDpaQvZOXGa8fhYMW3g8Y5c4
+	YS7AAk23bxTdWQ3tcqCYW/w+bIlUc+WQZTABJ//2XE4JsQ2t5+WUSU0bxKOWNf/2CtpyBhsRGlM
+	NMV+V88yPHZH52033lp92UEwiz6sVRxrmNyPW3zo9ri8mdqm9qziLhwT/9fS/xLEvJhenaHqMKa
+	KgaXc89glVFVCvN3sXv9kafyJAjZKOwSjXZw19lAxx/n1OGEPUTQIA8T1uQOaacyEUiRpeH2qEj
+	C47JAGMi1SuhopLpsIEA7er+aC0/BkzRGTDQpE3xTfMzWjZXB589cmqD13m8OOzoP3wl88h8lAS
+	n4iw==
+X-Received: by 2002:a17:903:1aab:b0:2ed:3ca1:848d with SMTP id d9443c01a7336-2ee0ddb1fc5mr52433425ad.25.1794637775107;
+        Fri, 13 Nov 2026 22:29:35 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b197b76ccesm12817446a91.0.2026.11.13.22.26.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ee0f224370sm18382465ad.0.2026.11.13.22.29.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 22:26:54 -0800 (PST)
+        Fri, 13 Nov 2026 22:29:34 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
-To: Lyndon Sanche <lsanche@lyndeno.ca>,
+To: Matthew Garrett <mjg59@srcf.ucam.org>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Darren Hart <dvhart@linux.intel.com>,
+	Gabriele Mazzotta <gabriele.mzt@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-pc: Read the AAC mode from cbRes3
-Date: Fri, 13 Nov 2026 22:26:46 -0800
-Message-ID: <4fa7525f8f8d4c85aff4ee7320e5b5a86e79cda8.1794633180.git.rosenp@gmail.com>
+Subject: [PATCH 0/3] platform/x86: dell-laptop: Fix keyboard backlight and charge threshold handling
+Date: Fri, 13 Nov 2026 22:29:24 -0800
+Message-ID: <cover.1794633179.git.rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -98,44 +101,35 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-thermal_set_mode() keeps the current Active Acoustic Controller (AAC)
-mode when changing the thermal mode, by reading it back with
-thermal_get_acc_mode() and passing it in byte 1 of cbArg2. As
-documented at the top of the driver, and as libsmbios'
-smbios-thermal-ctl implements it, the current AAC mode is byte 2 of
-cbRes3, which is output[2]. thermal_get_acc_mode() reads output[3]
-(cbRes4) instead, so every profile change, including the one done at
-probe to sync the mode, writes back an AAC mode taken from the wrong
-register.
+Three fixes for dell-laptop: keyboard backlight timeouts that overflow
+during unit conversion were silently accepted, an unread keyboard state
+was used at init when the SMBIOS call failed, and the charge end
+threshold was parsed as unsigned into an int.
 
-Read it from output[2].
+These patches were developed with the help of an AI coding assistant
+(Claude Opus 5.5): it reviewed the drivers, found the issues and drafted
+the fixes and changelogs. I reviewed every change and I am responsible
+for them.
 
-Fixes: 996ad4129810 ("platform/x86: dell-pc: Implement platform_profile")
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
-Developed with the help of an AI coding assistant (Claude Opus 5.5),
-which found the issue and drafted the fix; I reviewed it and am
-responsible for it. Builds cleanly with W=1.
+All patches build cleanly with W=1.
+
 Tested on a Dell Precision M4800 running v7.2.15, using the equivalent
-backports built as out-of-tree modules: switching between all four platform profiles works.
-I did not independently verify the AAC value read back.
+backports built as out-of-tree modules:
+ - writing 4424214d / 18989323d to stop_timeout set 4m / 2m before
+   patch 1 and is rejected with -EINVAL after it; 5m still works
+ - charge_control_end_threshold rejects -1 and 101, accepts 85
+The kbd_get_state() failure path of patch 2 was not triggered.
 
- drivers/platform/x86/dell/dell-pc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
-index becdd9aaef29..3b2089e5cf6c 100644
---- a/drivers/platform/x86/dell/dell-pc.c
-+++ b/drivers/platform/x86/dell/dell-pc.c
-@@ -162,7 +162,7 @@ static int thermal_get_acc_mode(int *acc_mode)
- 	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
- 	if (ret)
- 		return ret;
--	*acc_mode = FIELD_GET(DELL_ACC_GET_FIELD, buffer.output[3]);
-+	*acc_mode = FIELD_GET(DELL_ACC_GET_FIELD, buffer.output[2]);
- 	return 0;
- }
- 
+Rosen Penev (3):
+  platform/x86: dell-laptop: Reject keyboard backlight timeouts that
+    overflow
+  platform/x86: dell-laptop: Don't use an unread keyboard state at init
+  platform/x86: dell-laptop: Parse the charge end threshold as an int
+
+ drivers/platform/x86/dell/dell-laptop.c | 30 ++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
+
 
 base-commit: 2800868f63227c8237d70c41e70d441c919620d6
 -- 
