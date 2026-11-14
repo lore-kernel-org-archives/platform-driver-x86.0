@@ -1,60 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794650353;
-	b=lr2HoU29c+ZnyxE3kHEwuVBHOqyub4dG3/1SHU7U0eMGjxp835mQdqK/paNBSaa0lE+C
-	 rBgaFeR2zFkeeGTd7cMRzj1djGtNaIeLlGXPdlPgv/VrOLKDGOwo6mZnZYYSxjTeUfp20
-	 U66w/gYfIoMtuEIo1K0hmSfsLAUMgqBazpr0Ylxe3IOIes7ZZdiRCoC8eAEIWd4I9bYCQ
-	 5goxOTVor53TDpczWchLTfXBEengCdS7S3xUPTHL+G4EzEVwPAY5nMw1GHgrFBWpuX00w
-	 eUIfuyUbgYWYJVA8skgnLW9QO1ZEWQU1IHxAH+w14CU5YrRfC3ZqaHDnb6ZatasJVwQ==
+	t=1794666587;
+	b=bPGZ+YkpPHX+ikaxxl07gXa1jQRyc/mV5xkKi120JTNh1Jm+8Ew6o7mJ8zpvyaO5xQ5t
+	 v78f4Tp598W4SOU8OZBnhxCgos8kYmg7kSR5o2I63rIHdBXq9aJjsLL0Jb/tFSXGWheW2
+	 MmdcrY8cdIgQMY/d5JhbbiTkovzSGT5LALFWghk/5wj/9avAO2PAJ4lCrcg+qTsZ4R1cr
+	 /YB425n/Zv4d2YnUPhW/6pZ/3pRJsn3iu2UDR0+zXkl5sQDSr7JC5HjfeesmOFoetW3Ew
+	 xnR47KUe+Q46faARwlkWCoq/fubEmCwMUmlAswGBfhCPG+5enh2DoZmfhFvRrA2Vp+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794650353;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=y5ahDu/LB87CaZQzFchRv3LOKn/cvSr/kuogsWG99kc=;
-	b=Gpv2yIkvByToMzOiFH/nKeFYNPpi2HEB0vzSnr2a2pAa4A+ZC0eXBCd5FyDcEgaEkbRP
-	 x7auvIdQL9wRRK2oXw2FL6VgQCXHOQCsyZz3xWINfF5wY7lIXQ94p7kyeGGu87yLXQSf/
-	 uziLFMzuPcSoCdyfTXt5onrg+lhEx7xF3/MPaqs7fQYz9g4NPSdQUhBIsyVFMqyXn9o4+
-	 fZGdEpV4qK1cXGvlJkzismWaBPABXOkUtEgv3V/3efuLCsiqcEYkOUmhtdajz0mwp5Rty
-	 /5K6WFW72CCMmm70gifiLPbOxRW8lcb73GheV4fw3PcHGp7YmotjiT0WgInlc5u//Hw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794666587;
+	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:X-Originating-IP:X-ClientProxiedBy:
+	 DKIM-Signature;
+	bh=JYNVOy/GqvW8kE8fjjHBdlZDsLmr0/eu9Y1WunOrsDw=;
+	b=u8Dc4apGGnlJNiNYt4yd+7bteOBqcLUfIbJK2o8s30GzyjeLVr+cXhtVw8hQfuNm1/yg
+	 sq3xvcdm4/Q8YdqpVifN77OYW/rajFhZeYTtyHfKLICGcLx1iWv/OF7imBZ1+ghPkFUkg
+	 lCBasCVaHH/fPqm0BarGYkvyxQ9ZuNaOjb283hjNbIHJiUwtI5Nd2elf2zf0D5Zien+xJ
+	 Xbag2wslTJ7ySRoUU8Jhqip9Fv/Z0vs0VFNsMuddEfL5chpxYQnCouOAVyMm+wkJO3rA+
+	 yVuX4zyqhULcqz31HnUIqdrzb7fZHjcu6TKhrM3YeJ7/7+dLPg898TJu3/XKrZEWHPw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=pm.me;
-	spf=pass smtp.mailfrom=pm.me;
-	dkim=pass header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=JQfqGFAq;
-	arc=none smtp.remote-ip=79.135.106.28
-Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CDC606A333;
-	Sat, 14 Nov 2026 09:59:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B7CDC606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	dmarc=pass header.from=baidu.com;
+	spf=pass smtp.mailfrom=baidu.com;
+	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=oG0T5IyQ;
+	arc=none smtp.remote-ip=180.76.5.236
+Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id AB965606A329;
+	Sat, 14 Nov 2026 14:29:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB965606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=JQfqGFAq
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1794650350; x=1794909550;
-	bh=y5ahDu/LB87CaZQzFchRv3LOKn/cvSr/kuogsWG99kc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=JQfqGFAqharJqgkFj6y+CjFO92dmo05fb2KYOzjte59GBrHQaaNnn8Vx7ClfjHFkT
-	 yw3qBq9mz7Df8FWSqK3SZCnGhjoq/J/9Tp+puWvX1eb27d/hziyn+7aoQsMAujKiUB
-	 /egOqA4Ozhej39QB+/hCfMH6fz45KO+O0+fC/19fINdxeGuZ4R5SQewleHWzZ32ZFX
-	 lBTCoVMalwWINY5jYUNrkt0RKRSWVFr9UU4gG/9RGUvLzZ8a/0H5+p9XIr2CGKwTed
-	 7WFU4jlKEsaSAXeC0SJ2NvO2nnUJVfNvukbuWg0NauF77OO+daf3VSJ7m2d28axY5e
-	 6QTiDgHfMx+uw==
-Date: Sat, 14 Nov 2026 09:59:05 +0000
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Sylvain Petinot <sylvain.petinot@foss.st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: Dan Scally <dan.scally@ideasonboard.com>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Peter Marshall <pm@petermarshall.ca>, George Neacsu <geocausa@gmail.com>, Hao Yao <hao.yao@intel.com>, Fernando Rimoli <fernandorimoli11@gmail.com>, Emfox Zhou <emfox@debian.org>, "D. Manresa" <dmanresa@gmail.com>, Jizhou Tong <fqwqf@fqwqf.xyz>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/6] media: ipu-bridge: Add the Surface Pro 8, 9 and 11 infrared illuminator
-Message-ID: <20261114095815.74012-7-lsa.uz@pm.me>
-In-Reply-To: <20261114095815.74012-1-lsa.uz@pm.me>
-References: <20261114095815.74012-1-lsa.uz@pm.me>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: 9fd48edfb60329c2b9574410e9a26116f02e32b2
+	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=oG0T5IyQ
+X-MD-Sfrom: lirongqing@baidu.com
+X-MD-SrcIP: 172.31.50.47
+From: lirongqing <lirongqing@baidu.com>
+To: Hans de Goede <hansg@kernel.org>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, Kristen Carlson Accardi
+	<kristen.c.accardi@intel.com>, Srinivas Pandruvada
+	<srinivas.pandruvada@linux.intel.com>, Li RongQing <lirongqing@baidu.com>,
+	Tero Kristo <tero.kristo@linux.intel.com>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] platform/x86/intel/tpmi: Clean up CPU mappings on offline
+Date: Sat, 14 Nov 2026 22:29:14 +0800
+Message-ID: <20261114142914.2595-1-lirongqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,188 +53,86 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: bjkjy-exc4.internal.baidu.com (172.31.50.48) To
+ bjkjy-exc3.internal.baidu.com (172.31.50.47)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
+	s=selector1; t=1794666582;
+	bh=JYNVOy/GqvW8kE8fjjHBdlZDsLmr0/eu9Y1WunOrsDw=;
+	h=From:To:Subject:Date:Message-ID:Content-Type;
+	b=oG0T5IyQyBn5zQIO2DZDonJ911X2e09wFkibKpuRKn19WyXZg5SB93SYSCrwpIYtT
+	 sDdERH3M+Ij8xOSl0fXag9Pg5eFEzdnwumuFFAF6mk01SS5AX8utdxAB7LDIHWXjWY
+	 eqVjGka26yL78l/MLYloo0tOK2aenzdAGfiB9VcvTLSvtPZj+MGZ/O3b0CUTT+ySK2
+	 S3mSm6iCh1qK5rdUsInI+00J9g64S3xK2QHf7LTyiN5mltdU6AjxLy6xE3i+9CkuXJ
+	 Fn3+q6chupL4ovkbZBC6xNbgneRt+gRJurxvKSBUTHgrahfoBLeg/tbQ54OV1wJQYH
+	 EvjrlmCLmr0Ew==
 
-On the Surface Pro 8, 9 and 11 with Intel, the infrared illuminator is
-driven by the VD55G0's GPIO 1, which strobes it during the exposure. The
-ACPI tables do not describe it, so the sensor driver finds no st,leds
-and offers no V4L2_CID_FLASH_LED_MODE.
+From: Li RongQing <lirongqing@baidu.com>
 
-Give the sensor's software node st,leds from a DMI match, as the
-upside-down quirk gives a rotation, in a dev_properties entry after
-lens-focus. The software nodes outlive the module, so the property name
-goes into struct ipu_property_names and the GPIO numbers into struct
-ipu_sensor, where nothing points into the module image.
+The driver adds each online CPU to tpmi_cpu_hash and to its power domain
+mask. Neither entry is removed when the CPU goes offline, so the next
+online transition calls hash_add() on an hlist node that is still
+linked, corrupting the hash list.
 
-Tested-by: Emfox Zhou <emfox@debian.org>
-Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+Register an offline callback that removes the hash entry and clears the
+CPU from its power domain mask.
+
+The TPMI feature does not depend on CPU online/offline and can update the
+MMIO area while a CPU is offline. There is currently no consumer that
+reads the mapping data of an offlined CPU; if such a use case appears,
+retaining the offline mapping can be added on top.
+
+Fixes: 17ca2780458c ("platform/x86/intel: TPMI domain id and CPU mapping")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
-v5: the Surface Pro 8, and Emfox's Tested-by: he ran v4 with this
-entry added.
-v4: the st,leds entry takes its index through 5/6. Fernando's Tested-by
-is off, as the code changed.
-v3: no change.
-v2: the st,leds name and GPIO numbers live in the bridge's own
-structs, as the software nodes outlive the module (Fernando); the
-Surface Pro 9 is added (Fernando).
+Changes in v2:
 
- drivers/media/pci/intel/ipu-bridge.c | 71 ++++++++++++++++++++++++++++
- include/media/ipu-bridge.h           |  5 ++
- 2 files changed, 76 insertions(+)
+- Add Acked-by from Srinivas Pandruvada
+- Rename the title
+- Add a new line after guard()
 
-diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel=
-/ipu-bridge.c
-index 4fa9d533e5e..9a3c78b056c 100644
---- a/drivers/media/pci/intel/ipu-bridge.c
-+++ b/drivers/media/pci/intel/ipu-bridge.c
-@@ -305,6 +305,49 @@ static const struct dmi_system_id upside_down_sensor_d=
-mi_ids[] =3D {
- =09{} /* Terminating entry */
- };
-=20
-+/*
-+ * Sensor GPIOs that drive an illuminator, for machines whose ACPI tables =
-do
-+ * not say which. They reach the sensor driver as its own leds property.
-+ */
-+struct ipu_sensor_leds {
-+=09const char *hid;
-+=09u32 gpios[IPU_MAX_LED_GPIOS];
-+=09unsigned int nr_gpios;
-+};
-+
-+/* The infrared illuminator, strobed by the VD55G0's GPIO 1 */
-+static const struct ipu_sensor_leds surface_pro_ir_leds =3D {
-+=09.hid =3D "SMO55F0",
-+=09.gpios =3D { 1 },
-+=09.nr_gpios =3D 1,
-+};
-+
-+static const struct dmi_system_id sensor_leds_dmi_ids[] =3D {
-+=09{
-+=09=09.matches =3D {
-+=09=09=09DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+=09=09=09DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 8"),
-+=09=09},
-+=09=09.driver_data =3D (void *)&surface_pro_ir_leds,
-+=09},
-+=09{
-+=09=09.matches =3D {
-+=09=09=09DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+=09=09=09DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 9"),
-+=09=09},
-+=09=09.driver_data =3D (void *)&surface_pro_ir_leds,
-+=09},
-+=09{
-+=09=09.matches =3D {
-+=09=09=09DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+=09=09=09DMI_EXACT_MATCH(DMI_PRODUCT_NAME,
-+=09=09=09=09=09"Surface Pro for Business 11th Edition with Intel"),
-+=09=09},
-+=09=09.driver_data =3D (void *)&surface_pro_ir_leds,
-+=09},
-+=09{} /* Terminating entry */
-+};
-+
- static const struct ipu_property_names prop_names =3D {
- =09.clock_frequency =3D "clock-frequency",
- =09.rotation =3D "rotation",
-@@ -314,6 +357,7 @@ static const struct ipu_property_names prop_names =3D {
- =09.remote_endpoint =3D "remote-endpoint",
- =09.link_frequencies =3D "link-frequencies",
- =09.clock_noncontinuous =3D "clock-noncontinuous",
-+=09.st_leds =3D "st,leds",
- };
-=20
- static const char * const ipu_vcm_types[] =3D {
-@@ -585,6 +629,22 @@ int ipu_bridge_parse_ssdb(struct acpi_device *adev, st=
-ruct ipu_sensor *sensor)
+ drivers/platform/x86/intel/tpmi_power_domains.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
+index ebe052c..457abac 100644
+--- a/drivers/platform/x86/intel/tpmi_power_domains.c
++++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+@@ -220,6 +220,24 @@ static int tpmi_cpu_online(unsigned int cpu)
+ 	return 0;
  }
- EXPORT_SYMBOL_NS_GPL(ipu_bridge_parse_ssdb, "INTEL_IPU_BRIDGE");
-=20
-+static const struct ipu_sensor_leds *
-+ipu_bridge_get_leds(const struct ipu_sensor_config *cfg)
+ 
++static int tpmi_cpu_offline(unsigned int cpu)
 +{
-+=09const struct dmi_system_id *dmi_id;
-+=09const struct ipu_sensor_leds *leds;
++	struct tpmi_cpu_info *info = &per_cpu(tpmi_cpu_info, cpu);
++	int index;
 +
-+=09for (dmi_id =3D dmi_first_match(sensor_leds_dmi_ids); dmi_id;
-+=09     dmi_id =3D dmi_first_match(dmi_id + 1)) {
-+=09=09leds =3D dmi_id->driver_data;
-+=09=09if (!strcmp(cfg->hid, leds->hid))
-+=09=09=09return leds;
-+=09}
++	if (hlist_unhashed(&info->hnode) || !tpmi_domain_is_valid(info))
++		return 0;
 +
-+=09return NULL;
++	index = info->pkg_id * MAX_POWER_DOMAINS + info->punit_domain_id;
++
++	guard(mutex)(&tpmi_lock);
++
++	cpumask_clear_cpu(cpu, &tpmi_power_domain_mask[index]);
++	hash_del(&info->hnode);
++
++	return 0;
 +}
 +
- static void ipu_bridge_create_fwnode_properties(
- =09struct ipu_sensor *sensor,
- =09struct ipu_bridge *bridge,
-@@ -592,6 +652,7 @@ static void ipu_bridge_create_fwnode_properties(
+ static int __init tpmi_init(void)
  {
- =09struct ipu_property_names *names =3D &sensor->prop_names;
- =09struct software_node *nodes =3D sensor->swnodes;
-+=09const struct ipu_sensor_leds *leds;
- =09unsigned int i =3D 0, d =3D 0;
-=20
- =09sensor->prop_names =3D prop_names;
-@@ -647,6 +708,16 @@ static void ipu_bridge_create_fwnode_properties(
- =09=09=09PROPERTY_ENTRY_REF_ARRAY("lens-focus", sensor->vcm_ref);
- =09}
-=20
-+=09leds =3D ipu_bridge_get_leds(cfg);
-+=09if (leds) {
-+=09=09memcpy(sensor->led_gpios, leds->gpios,
-+=09=09       sizeof(sensor->led_gpios));
-+=09=09sensor->dev_properties[IPU_BRIDGE_NEXT_PROPERTY(d, DEV_ST_LEDS)] =3D
-+=09=09=09PROPERTY_ENTRY_U32_ARRAY_LEN(names->st_leds,
-+=09=09=09=09=09=09     sensor->led_gpios,
-+=09=09=09=09=09=09     leds->nr_gpios);
-+=09}
-+
- =09sensor->ep_properties[IPU_BRIDGE_NEXT_PROPERTY(i, EP_BUS_TYPE)] =3D
- =09=09PROPERTY_ENTRY_U32(names->bus_type,
- =09=09=09=09   V4L2_FWNODE_BUS_TYPE_CSI2_DPHY);
-diff --git a/include/media/ipu-bridge.h b/include/media/ipu-bridge.h
-index 284e0d6cc93..46c7583ef4d 100644
---- a/include/media/ipu-bridge.h
-+++ b/include/media/ipu-bridge.h
-@@ -12,6 +12,7 @@
- #define IPU_MAX_LANES=09=09=09=094
- #define IPU_MAX_PORTS=09=09=09=094
- #define MAX_NUM_LINK_FREQS=09=09=093
-+#define IPU_MAX_LED_GPIOS=09=09=094
-=20
- /* Values are educated guesses as we don't have a spec */
- #define IPU_SENSOR_ROTATION_NORMAL=09=090
-@@ -94,6 +95,7 @@ enum ipu_bridge_dev_props {
- =09IPU_BRIDGE_DEV_ROTATION,
- =09IPU_BRIDGE_DEV_ORIENTATION,
- =09IPU_BRIDGE_DEV_LENS_FOCUS,
-+=09IPU_BRIDGE_DEV_ST_LEDS,
- =09IPU_BRIDGE_DEV_NUM_OF,
- =09IPU_BRIDGE_DEV_NUM_ENTRIES
- };
-@@ -145,6 +147,7 @@ struct ipu_property_names {
- =09char remote_endpoint[16];
- =09char link_frequencies[17];
- =09char clock_noncontinuous[20];
-+=09char st_leds[8];
- };
-=20
- struct ipu_node_names {
-@@ -187,6 +190,8 @@ struct ipu_sensor {
- =09const char *vcm_type;
-=20
- =09struct ipu_property_names prop_names;
-+=09/* The software nodes outlive the module, so these values live here */
-+=09u32 led_gpios[IPU_MAX_LED_GPIOS];
- =09struct property_entry ep_properties[IPU_BRIDGE_EP_NUM_ENTRIES];
- =09struct property_entry dev_properties[IPU_BRIDGE_DEV_NUM_ENTRIES];
- =09struct property_entry ipu_properties[3];
---=20
-2.54.0
-
+ 	const struct x86_cpu_id *id;
+@@ -249,7 +267,7 @@ static int __init tpmi_init(void)
+ 
+ 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+ 				"platform/x86/tpmi_power_domains:online",
+-				tpmi_cpu_online, NULL);
++				tpmi_cpu_online, tpmi_cpu_offline);
+ 	if (ret < 0)
+ 		goto free_domain_map;
+ 
+-- 
+2.9.4
 
