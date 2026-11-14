@@ -1,99 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794637779;
-	b=QwRy3nZJQ+29oYVsPSg2B9STUHoXlR2S4hQGqsDrjCKk0YxSUvG+AfZQmbAiU3xnK2a8
-	 DeXpGXvEQ8Ht+C7ns/oumGNrZJjZ4pel61So+JAa7POUABGBJ6kEBkk5MTqPAOSFoX3Qx
-	 y8JcjrZHApE5o7kgKMSCSoLG3DI7Ffqa0bpRb+O2cXbBATpqIJT121L0ustWqhUJFfzgn
-	 5gJghaG0WAymM1RdeI+oTvX5gWUpPH0J2rzqnjc/T7e1ricw2IpIOiWPhN2PaZOCBNQck
-	 Oap3DHn4tm3BJjR1BlQgheGWiAi0TBOOZXc+wpVmuHWAWARkyjat3uujpNYx6AlQHqg==
+	t=1794647345;
+	b=LDGhjCzE8Vz9O8fSox9J1+h97LFEsVc+JxUDJza0baBDR4Zg4YRbgWyEqsOtV6cFhu74
+	 CFg7hCQ6ky6XFTgYWfeq69OZ4S9XAXOA+TOGoWl7895JpVjb74bZCmkD13bRWlw2owSQ9
+	 9RG+akHpEHX82rCS7OinACo6l+jytmKc0G9vYMuJgAkXs6PH0NHQB5Y1ZXDnTiIySGuiH
+	 XoKF3dz5pzGtWUqfiNjSg1W3kanP85gi7UBQIjOM1OGJGwPgzwO27VD7hfCwcU6asAjGd
+	 QZVWFQkTgSqJiLg3oVOrAxwS2N0SHW+2kkJMIiHFj8fgjrEu8Wj0HjcYzQ59zRccgmQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794637779;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794647345;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Lo9RrpZDu+xmeeItRofeFQQIM7/msHlPwqtAcJHtB2I=;
-	b=hRClKJ/UN6605qormiwHA4WMpl5Ayesit8cooae2caOK0O+VWQSRpwEfUg1yO2lNHsmG
-	 KMiEATopmLM4uLQzrEIVhoY9oXm22s7P72dR/lGsjkTFY2ZeiDHj6FphVmr63xMmh5WDB
-	 t7ujO8E8Rqw0tUurdWGuKicP7DDUKShPvYiEwx0lq7iyIGrpO0ha49zHGyKoCXQFlCw4r
-	 gpzpNXRxxER26tLTYdN5fXxcX1+snQ5C4dybNUQqnO2Q3ucA8RaarkPRKWsQliqAoeiH1
-	 sISwnyhd8Kta+1TUiNhAT1E5AT6UDYa+lAIvsWR/GWT2+roVbPebRy4NMmPkBc01Q+Q==
+	bh=zp/vkQyPzI5pRFIXlYz1ZDuX/xuXzNa/22vdFr/uK3Q=;
+	b=PuW5m4Zpz8qUFyuh7GkM3UAIaQatPcY60fz65PgtS7lt+euxy0VVpxXv2jPbwhar3NH3
+	 mLu7sDoXVEnK0HcNJyREGlZKdkA2k50KlEdpmyayHDaMlptabGt8zIUJRaOhVOOATLXcD
+	 KaN/Z09xQvMSCzk3kN+K/G8oKd76OZH+JaOaeBherAdm6JyJLPxBdnWg/kJKYJlIms3YN
+	 L1XvxlBeNoTpYMpHwb5NGsOVMTP+TmNDtqQSYb4TvGcKhz3zi/WENdoRsrHKs8gvCIqzX
+	 50zTYQFs2hpeob0z03SFMm/HFT8+DdU9acYFfrFWrJ6cUyRNZqRMsP+6hyJq0b1MtRQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qDA+YNhC;
-	arc=none smtp.remote-ip=209.85.214.170
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=i69q62HH;
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C57E606A89E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 06:29:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C57E606A89E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC34E606A334
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 09:09:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AC34E606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qDA+YNhC
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ed1e9ae5a8so6068125ad.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:29:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=i69q62HH
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4b79502c27aso13217275e9.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 01:09:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794637779; x=1795242579; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794647343; x=1795252143; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Lo9RrpZDu+xmeeItRofeFQQIM7/msHlPwqtAcJHtB2I=;
-        b=qDA+YNhCDqQ5cvNYHPK4O+K5Meiju3IEvGc3XX2y7izqZXS0Dq/9eyUY70QLGMDByW
-         hXD1EGYP4kgl1kqAKcQblg3k6Y0GhXKlJSOfqpfD4l8uYaqQqOchi9S5pYtiLWlEBubK
-         qdrS3RuQGEaMoPO6sUh/p/nEm1AiyfbC1Gk+ySw1dWK7CBM9Sdre6svsoDqV4me0uNdi
-         7jIkPorweWLsmj7vWntk4hWRhVQjqFRG1aIonPJ8QBQTEAyUR9ItAmC8tk2JS++t7wkh
-         MSo7EDJS/dHm9yXuAcAsFoxgDtJ0H1zP6bLonWeurOh1mmHM2iIj3H0y8WeLq+68ZS/g
-         divg==
+        bh=zp/vkQyPzI5pRFIXlYz1ZDuX/xuXzNa/22vdFr/uK3Q=;
+        b=i69q62HHFhkHKTVK/qXfvHQDtYRrPDkAB+9osvNwwBzwdlTFuJHb3Bvt8HGM+i3EiG
+         75rJYcCRNOzqyNzbBY8UmtEz7qDA2ywDPpBaGXfIg8yMVOz91AL4adWgp747OPpbbEmc
+         r3EyGC3dnat7RRerjWsYF32siAdNIKujMMFrc1T4bCrEO4JSEonohLjQ/M3Bd+VI5x6H
+         1gxZEtjz88AxMz9vst9NY343rGkNB5C/CExJhwovMzngUammcIefIDZufS8sfc9w/igm
+         fCTjndUkRmhW0PEv7zdEe24SIEnRqxAC5ri17h14mULBZLLHnjp5PEhNtyygqMHySX5H
+         7ssw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794637779; x=1795242579;
+        d=1e100.net; s=20260707; t=1794647343; x=1795252143;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Lo9RrpZDu+xmeeItRofeFQQIM7/msHlPwqtAcJHtB2I=;
-        b=pT0slqU3FeJUsA14KO08D4SKuGdSJxqsULBzhT+3F1BaUAsNlX9IeS8rgIcqCc94Vh
-         R3o1AKDVrKzG3eBSxhx9xXJdRNOmynMsgU1nsIFKFdgvnQDPHFKIDSl99GKLDpks4zVj
-         +h6EF8znLvnSbrPU2/vw+rT2gshubEPlwqCwf/eiv+3x9QOfnBWcDpvnAoi9EBIrCrYO
-         IIptI89ZTvvarBKuDtabmFXBLK0VqsR9Hu3tJGLYqNhn6lbGCEW3lmmmh1y6uOQ/oR+M
-         /8TIbfrkLc62J3DRJtBGq8nJ9dxwNGnBbdyuJkTLAqBsEV99wZHUgOVl8n6UDlg7/8I8
-         3vcQ==
-X-Gm-Message-State: APuU4Z9+Xz/1p3nsBTxRl8cy68jmgdoA1DGqxdbcYEPKdkJv+YguSTdL
-	Ukx1f2m57xYiUbqwsRQkZh1iG2XL7rws5zuozcHzXBQD4j/WiY3dLQfh
-X-Gm-Gg: AYBFou1munhjW105qrjHcsLQcXmku1RK6HO1iWdHmEHERqxMi2buJ0MQW5LZROFm0dw
-	1bxhDaUsbX38Vton//HmZXpK+XGalEz8ugIocsXC7IPRnaXjvwzxu/v9BNqd4QldLWwpEpc1BkX
-	dJRccrIno0ZmJ0ORYZgRF5hm/t+MQwdH0l5ZMqGfrt1oOFvDyJ0bENOn0F4ZB4+43xVO4qfR2Lo
-	0NztwQTQseVZqrIKDOP+ZNHRSG7dZAp7hjVdqk7CqkdygyobhqMlZZ0Pqw6d6gEnCSNcA47cO5V
-	4QPKpPU8pYtxByffaTqp5w3MiqYkN/SKy+Sfqd0NZXDHAchAfjj7cXYyF6B9Os8NdD7KYrPVLsw
-	d/+2GeV5zs07VJHpAt0yfK2m+RabFRMCJu8MZ2+3vBpvIBuVxRNTsn53qDMst40issfI0Pijm0M
-	x0rwtm8k3DmKLkq/SVFJnzb6MgCf6ZKDeCOrU+kUWUhfJmP1tXmBDebB+vTibBkO93qnFWJyGQ+
-	BMB57AXdsgo+VWnhXDSGP7tUDyQyqCFxK+ZIPbcBP87XpauU5gdIK+MsunPQoR5qdt4JDL2wEVY
-	5jFtMdv4duFmXOXkHC3yYDBIXQ0WLdKpsBsUYdJKPkBpQu6yA6aKyauPWCy90EkqoVPAJP3U7Rq
-	eMjIZyCszsDaKjbYyMdLeVwhz3tsAoN3+7G38Ptn4JetyhY+VIsaq6a2hzTyG1U9/bHdCJgSUEm
-	EZJQ==
-X-Received: by 2002:a17:903:2b0e:b0:2e9:5ed2:c38f with SMTP id d9443c01a7336-2ee0dc03234mr52576665ad.36.1794637778894;
-        Fri, 13 Nov 2026 22:29:38 -0800 (PST)
-Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ee0f224370sm18382465ad.0.2026.11.13.22.29.37
+        bh=zp/vkQyPzI5pRFIXlYz1ZDuX/xuXzNa/22vdFr/uK3Q=;
+        b=vIydCWCO9bD+hQwONwiyLtHujVDVhYzh+3hQQeBzWAZQBatKBFanJ/GxpZ67uM3U6u
+         BUPU3UCKrS9I5E9zSu21FHmcRtEIa9vlyvhzDvb56iHoZXEKazza1tQfDxqk1WY2yg7T
+         5E8I9JNFsxs1H49z8D38MtLE7MQ4TF1nLtmLJ5x9ZfKc0+3hFMtpg58G7WTyCkOiP/h1
+         ZP2nMFGOb/Gs0h4GuLyauW6xvMJXPFy5MmNBDC9qj0Zt8dYbig3nhHAsBAXrwlM2UZ2n
+         2boRC5m45/WTiyIx8oOukMkt02f5nellCusGCDh+Dcd49gngQtA6eKNipsy0enRc84jI
+         1uvQ==
+X-Gm-Message-State: APuU4Z+Y7fRDQlQZAqT/WG/8hsZQkfC/ltZojRDnWRTaDP2MCADjzQAl
+	qTtSNW/JDpRO+1Mh1Hh5ACIYySmrny5xv/EzUj06vUsItl+L4O41Q8F4
+X-Gm-Gg: AYBFou3Haba76hR+BxNkeWquuuJVQbYReqTmWaXmpnhB0i0Kqlk6DycDk6kQQAvkDFl
+	WwnLDwL6L4GFaq6cskWqDod9+nHOJgQZnOjkXR/t21nkQtI5Ju2duJYJNVj97NEyxMNtmSqvudL
+	ev4hP7W5UMNGIQh6r3Q8pkhAOpwpgoure031zX4AVh2rWbIoGpFPZzxAvHg56A+Zlugyxy2Rwe3
+	NHyY0XIFDGIlal+iOtDgKIHZ3NdZkoduRd/ZmD8k9rQY7Z55kpjfCDWy2azlnDNbGHhYA0LUdax
+	8bKOPJwm3ndTquM5iq4bwIFiaKxoZ1cz4EekvL5P6z+dViHpF3EQQCnJvX81HnZF0dR3S/IfOHW
+	sCilCxvuPHFynoLL0TCfnx53RHK/lHCcvUQ+Lh+TdF05qJ+w4TRuFulHVlh9HxxijN69cxrTv3Z
+	hJs9ANteIpKMziZz/inVFjJIUxIE4eUFVfEE+iiVLVDpWk+6X+/w2NIuiKd4t+l2Bf9epk/Etct
+	nGNiz/TtB83yTvOi1za2Q+EdciiQs4Ss9gIWWblWEKlwYsE32Wj1pLquyICDCTsvXr7Bgut8BzR
+	bkhQalvgC13Ln+6kv7xNiGRxyn8VjpVpnwY7siqP2OGTMF/emhetJWzTp884somxD3LbrgHQvus
+	=
+X-Received: by 2002:a05:600c:8b4c:b0:4b7:6b96:e431 with SMTP id 5b1f17b1804b1-4bb55ab56ffmr106570305e9.28.1794647342762;
+        Sat, 14 Nov 2026 01:09:02 -0800 (PST)
+Received: from ahmad-HP-ZBook-17-G3 ([37.63.208.236])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb62d5ec30sm60877895e9.15.2026.11.14.01.09.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 22:29:38 -0800 (PST)
-From: Rosen Penev <rosenp@gmail.com>
-To: Matthew Garrett <mjg59@srcf.ucam.org>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Darren Hart <dvhart@linux.intel.com>,
-	Gabriele Mazzotta <gabriele.mzt@gmail.com>
+        Sat, 14 Nov 2026 01:09:01 -0800 (PST)
+From: ahmad baghereslami <ahmad.b1995@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86: dell-laptop: Parse the charge end threshold as an int
-Date: Fri, 13 Nov 2026 22:29:27 -0800
-Message-ID: <29edd5de9d2d7f90adfd5f9c889e50ad032d2d9c.1794633179.git.rosenp@gmail.com>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <cover.1794633179.git.rosenp@gmail.com>
-References: <cover.1794633179.git.rosenp@gmail.com>
+Subject: Re: [PATCH] platform/x86: wireless-hotkey: Drive the HP airplane mode LED
+Date: Sat, 14 Nov 2026 12:38:44 +0330
+Message-ID: <20261114090844.2573200-1-ahmad.b1995@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261030051839.1625859-1-ahmad.b1995@gmail.com>
+References: <20261030051839.1625859-1-ahmad.b1995@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,30 +100,11 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-charge_control_end_threshold_store() passes a pointer to an int to
-kstrtouint(), which only builds because the kernel disables
--Wpointer-sign, and makes the following "end < 0" check dead code.
-Use kstrtoint() like charge_control_start_threshold_store(). Values
-outside 0 to 100 are rejected either way.
+Hi Hans, Ilpo,
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/platform/x86/dell/dell-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+A gentle ping on this patch from October 30. Is there anything you
+would like me to change? It has been running on my ZBook 17 G3 since
+then, across suspends and a kernel update, without problems.
 
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index 171728d63c81..2ebfef8e5bbe 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -2385,7 +2385,7 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
- {
- 	int ret, end;
- 
--	ret = kstrtouint(buf, 10, &end);
-+	ret = kstrtoint(buf, 10, &end);
- 	if (ret)
- 		return ret;
- 	if (end < 0 || end > 100)
--- 
-2.56.0
-
+Thanks,
+Ahmad
