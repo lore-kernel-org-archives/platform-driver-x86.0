@@ -1,99 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794637109;
-	b=eO2mH45j1+rStWpBKbMk/UnPhTe+imowMpMUyqQgt9uzjUZhOSYYpfdFsbFYIf1TMh0b
-	 +wWi3twwXEKZ/S8y/tLugZW4P9QPwN99ICzIxeNlK60mE7HJNI10eWZB3VfZ/uqrssmfD
-	 nqOLh4IDGf40pE4IWVaiyeoAwmHUC+knmFZC/TD68aQyNa1NlRc/X7GKO4TVa3qG1gRm/
-	 +TbA4e1XHWGYV8bVp+kVJJ0obUklOcUBQlws2UFCORvi0e64VaRSjpM3XGmoIHVKZ58eQ
-	 BA9gCaKCGJPnI3zRBfw8DfefemcQGgO/nKSnujEcszumzl0ZZN8sQc4kJpB4+Mqe0cA==
+	t=1794637353;
+	b=P42oJM0QToMpUocm0W95zvd5L0jCoIgIYja+2xl3oVB+CDPYgFHoH2ear8RLv/pR2vPZ
+	 qWnFBLaTUYKTvjb2J6H5P6kRuMixa7c321+o0NyY68QYO2496K/9gk1Slq+JadAB00Vxp
+	 r2oMRL8/I/VASuU/zl5ZPJvMRzfKcygzMKbPvKUvmOZOEEV59120H6BJaO1UgQXF4tsY7
+	 EN6mvGn7KxToj7mLkqsmHfqvh1dTmdZsVbCpfi7BvytYMKfltVXWqYuWyX2JipYdsDWJz
+	 WHeVqU72BuKZvpAKVVk5clFGnKWlWZF7PlgqA7rFVTzkoa7nLwWt1EhaTTZYFPgA9mg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794637109;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794637353;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=grc2+M/hmuGZdiW2psJxXnm4//i3gJPfipJw6YvpPE0=;
-	b=GkiGPtdsoba4aFhqtBFahyNvRfrsEW8aoqPunSfanHq4hCRNIXKtAYETaRkx3lRj+5Ou
-	 CEBiNELYn2zVHOXHWSg+9P3hH4xQ3oQ+OMb4kvoBcu3vLaT5ig5N4EuTJAbwXJUXDDkjA
-	 wDJiJFt1PuRAuPj3OC23DSt/t18CD4p+Th4UeFspIi8Z0fn7xQgNw1oCiIvmI5jvfwvpj
-	 2kn0e0IiBhDc6QBXAA5dBDJgl0JIlpqj3nBKANKVvn9DZr/Z4YeeYlHz677Ht3lqVP7xS
-	 MrQRxBN9RZ+/byeO6yK4h+FhZaEBzj5Spigv+6dCqoJKug/3aoUxAtmn6E646xIVtDA==
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=a54BQTIFjPW8P0xkuWanHjV3ZdgHWnaMz+Ldxn8PqvM=;
+	b=JcVR9vptl1+/8hDXetcUl0ckuh04osml5VxM3QMCopnjaLMczCu1qoIILQQOGHNY9Op8
+	 KnZhyNih/dHMFt9qPVjfV9HA8Xd/bUvnXSN8zrxAAIj7tv3FDYibkMWcGjXQj6z8sYblw
+	 IbUA4hbgYzWrzD8DQX4D0igSNGdLmXQHg3co6vdgFi7XKdHeSiCnqu9lWuLyhTZvQJFCt
+	 fHuQqKgP0SoQcF/+vFUaGL49vWC8rFzgavP0dJNeCjUwJB53jeBoj8u9LA8aP45jybXhD
+	 3Y++kiw0YgNUX74rUiS7K2l3oqyl6nJdA4nh0Df2u1pb3MjaiIrtDEQtfSJAtpnin1g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YhWluKqR;
-	arc=none smtp.remote-ip=74.125.82.52
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k3ze6GhO;
+	arc=none smtp.remote-ip=209.85.216.51
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9488260A2615
-	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 06:18:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9488260A2615
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27AF606A332
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 06:22:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C27AF606A332
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YhWluKqR
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1b3a05f8b5bso2116062c88.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:18:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=k3ze6GhO
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3adac5b29ebso1742250a91.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:22:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794637109; x=1795241909; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=grc2+M/hmuGZdiW2psJxXnm4//i3gJPfipJw6YvpPE0=;
-        b=YhWluKqRJPBNKjLSnwMxbWoOzal/gMqZKRwXfTGY1HxJBJWSOZWJU3IrIPRtgkOZbK
-         d/D0JsJZ3LaPP5Ff5TzSCMb6UBZQ87Cd+eVcQIzJKymJ9WgT//EEEaFVknNWEBbaYEIl
-         7DgUvoFXfHWNwajj/j4tf3hnZBSFlAOexaLUhwVvy6EC1CrPT/IETZKY6F9NaznafgaQ
-         Cvb+mmtJP3cB0Xtfx8VkKuGPRDjhyI2uKkvg1/PJly9hzyGNDNT7yvIVcSjxK78Qit5v
-         Npn5KAczLorFi15UnddrmuCQc5oBsXxRL6gJdouv/ob5hO7azf2sra728M8Qa7HXNSAz
-         3jvA==
+        d=gmail.com; s=20260707; t=1794637352; x=1795242152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=a54BQTIFjPW8P0xkuWanHjV3ZdgHWnaMz+Ldxn8PqvM=;
+        b=k3ze6GhOGxdLUFgZdt5Z9OexSj/i0OwBosPzmqlA8R7gXojUX8g2ifJvekL56/ipEC
+         1slzLFYh8mjaHI8hiiQhezREESOCUb08P6TrheUqWCmdCjs+ajpNDhnwPhvoD7C/7RDT
+         IH899UI2TPF4ztJugZDmVoaY0oWd8UEYNAMx0ujAkp8SkNOLmufPiGidpxV5jZfSLPgs
+         xuzLgizr2dsBLu8pL0SuEdbebpXDJytvipoV0aZ5F8uo2Pw47VHpL/co0jqvAdGBtXB4
+         TT2poLH6FIZkotwJqXaWxK+wUf/JaXlHJe3SfXpyIrDRuASGGdm4bm5HyMHftF6lPfdC
+         ALUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794637109; x=1795241909;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=grc2+M/hmuGZdiW2psJxXnm4//i3gJPfipJw6YvpPE0=;
-        b=A1VVEwuzNBWyjqR1DgrrQrQ9za+QPWekywodn0qECHrPDfliTC7/rvSIOWOKPnNUbm
-         nGqawPQ2RUB5Xpf3PSSwQaV6G0+nhk3/QAqvNEIenXCiVvnnFUNlyvtGDboEcRE9aWB5
-         pwNzIbFPxpSz10DnR7e31H92r0M0tPn5JxNGcHnY7GX/Ofe5TAPyZTMoWzhaH2QZYoDI
-         uOuWFBNE0thXdp/5D1aqzwueK0D+8S+k2qEUelRzAlhRitOdOdNupCn/v85nz5sxpdwC
-         xe8RIf0WMtkkd3W0Jtx5P1TQ7B8vcTsAl2D5QVZ3nt3tVrqOebPSvYXBuJW4afY36gSt
-         ysuA==
-X-Gm-Message-State: APuU4Z+6bLn95PT0rxplYJH/AdBEpuM/bMkPGmnFJ9MW6wnUsKjRzIPl
-	xge8CrSqFxMzvHui2nkQZA348Vb6mx8/coZtDoqDmSQxt9FdcmvoSt73
-X-Gm-Gg: AYBFou0cXMLlPPhCrc3oflGQK+D0zAFgCdLC+xhw2UBPEGLOFUthKA8JwarjX00hmOW
-	LOoF35tjJP4duN79qXTB9GUWHSAIg2yQd2l0MoSiPOwhY4X9Y1vu+P4SOZNt6Zwnuc5bKz7wEoG
-	yO5T7WS3b7sCYzlIDG4MIQAY1YfkBYBEoIgl32c9EmrrSoEIknllR2H+b059aTu94NtNay698Y6
-	RriOp7FpO1QAqijIOpGOh5Xq5gZRktbitJNnBSMZlVrtMuEO6f3M9JgtGdCPofL8SjiO2mVJDRU
-	gRuavnx9qfiF1J+ogDMGge974b0vpOh6wG/ZcGBme3a2ti6XpT4dEGS7Cz11MgO9Nd8kQS32Y6H
-	la5q7B+jCCmGLsZQWt1OR17INxVOhjspdeuVM2rfPrh1UrxLnunV/gyln8Vl1DdBKy6A1JA+vy8
-	zLdoK8jgFZGe/M2g7TRkbHmQa8icldTAXNU7R0SzQNQ5MG0h+vWaeZACBJNV5ksxaUy/fHuayxZ
-	EFgoiTWFuLhkNCqYSCtEe9jURnwn26Zgmv1DxHp5wpMOwkgPl/Wbp3ThRAEvOm7sLHdraW4T7rj
-	aKAmUqrg+lxjX4KwYZcE+xqRlN/zL+RigkzcjwMEkN4jlBLJpWu1Nd8wXmJqjHlJLwxRNRcQtjf
-	LXPFrNma23fUIEpzQ3LoAVsG+pMN4w5CCKtyF5rLd4+GbpPIDs6TVT8g11nRVRrI5k8Ags+8H6w
-	PZ0w==
-X-Received: by 2002:a05:701b:2810:b0:137:5b9d:cf87 with SMTP id a92af1059eb24-1b502f99235mr4416928c88.0.1794637108636;
-        Fri, 13 Nov 2026 22:18:28 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794637352; x=1795242152;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=a54BQTIFjPW8P0xkuWanHjV3ZdgHWnaMz+Ldxn8PqvM=;
+        b=p1XlvcPsaiFRGHYgZquDA/twAVSjTiK0IpJqdwgZOx8xbj8hUiEHrhhreKlMHyVBfh
+         Q+Iod1Hx4D8H4ft5vgfNAFluv2ojZUlErNw9qkM1c0OglnhNcPYiDTZ/H8dDJ/jB0xQu
+         miaSqUX1SQkDi/pXfxAOyMVpwyghDmsBq9aCEUmxtuSk/Dq6U+xle/OtGfJctJHBHNhj
+         ij9tD9PcDsyjqBuTMOrxnlYcR0aftGQbi3tMs3Fn/V6h76l1IReZgy9ijWzU07wWbme5
+         fbMyGVgpeQGOqOGi0Hmc6cxwLoFaiW+eYjm14rtG0VXy43TCOQiM19O5KUD1DTI0O4dF
+         7/gQ==
+X-Gm-Message-State: APuU4Z9doiyRJXJPLO0VbjSg9mgoyEI0whp/8pGmfxYRLpYx0AYQon9Z
+	WR08iwxHfzre8X5YDxu2ysUVNghuFgan/4NqGAS43bkR5AFHoA/xJCb6
+X-Gm-Gg: AYBFou37IpYZCTLMXdNFDdo32vlJ8+JqKSLfubWqLbefuAipxRANPRakih3ESqE2pWk
+	fOKp5F5GSrlWia0++MYULjC0Byq6cqAkWJ752f5EjijkEDjWJuEyqSeD3WLarSbOlLMzLqsp0u8
+	KJ94cPq26SEA+ouzbtRwSwttOBMFcBFQQ4s69EPzx2vDRLeeRvTZOnhQZlpOInlO+eucjjtY9GY
+	oT482rXnS73RuruCVSUKqOichrsiLiZFNgpzXc8e7rXM3YSeJrf0hTFmLJgcE/p7SDjmBbTBd+Y
+	480PVJQWyE+PVkYkqbIrnhEgepSN39szu6+ThQTTxcwblPvBRmosvka7Q0QmmoSZppEZVBiP9qT
+	dlbwmSzvcfuD6BAjpkoaCf9VQHf1iCOs5Rt1wFq7c2r1wLhgsH2Wp4AgjgfKKRxFlwwIb3Eh2Dn
+	c35hUt5WaD/sL9Q9JXVMQQ9nrk8EhJPxGpjspriNAjx3p6lYBlZ+mTs887CE2vbGQuzbEgDUYQn
+	l152ncVmPsV7B1sguBG5igBB94wOrxPxzrzLiHGFOaK6uS2NBSBbWLmvCT3hU/bkVoiYHaP/7w2
+	O2EtmejO6qqAFiVrqjB/yJZD2AxhYODPVu2kJjn9OmZDFisfQ3RtOS/PaHIfBKponH9wnnnbUkt
+	99XDTX0pUykGeOE9GfTre38j3SZnNbxr1Iled/ufCBiWiEOwHCLZdFmFII6CpbcxBJyVAowUjqn
+	qVsw==
+X-Received: by 2002:a17:90b:4cc9:b0:3b1:82fb:7e03 with SMTP id 98e67ed59e1d1-3b1b09e665emr4584940a91.11.1794637351981;
+        Fri, 13 Nov 2026 22:22:31 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37955e0d966sm13200536eec.15.2026.11.13.22.18.26
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1b266d873sm3457653a91.1.2026.11.13.22.22.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 22:18:27 -0800 (PST)
+        Fri, 13 Nov 2026 22:22:31 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
-To: Stuart Hayes <stuart.w.hayes@gmail.com>,
+To: Matthew Garrett <mjg59@srcf.ucam.org>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Doug Warzecha <Douglas_Warzecha@dell.com>,
-	Andrew Morton <akpm@osdl.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	Troy Rollo <linux2021@troy.rollo.name>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] platform/x86: dell: dcdbas: Use read_poll_timeout_atomic() for the type 1 SMI
-Date: Fri, 13 Nov 2026 22:17:58 -0800
-Message-ID: <6380dadbc5d515b4ce0d3322210ac44e4d541200.1794633178.git.rosenp@gmail.com>
+Subject: [PATCH] platform/x86: dell-wmi-base: Fix the data pointer for event sequences
+Date: Fri, 13 Nov 2026 22:22:19 -0800
+Message-ID: <5fa10b9dbe351074e61493c0ba3344ba6106137a.1794633180.git.rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
-In-Reply-To: <cover.1794633178.git.rosenp@gmail.com>
-References: <cover.1794633178.git.rosenp@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,65 +100,46 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For SMI type 1, host_control_smi() polls the APM status port in a loop
-that counts down TIMEOUT_USEC_SHORT_SEMA_BLOCKING iterations and relies
-on each inb() taking about a microsecond. Use
-read_poll_timeout_atomic() with a 1us delay instead, like the type 2
-and 3 path, so the timeout is in microseconds and does not depend on
-how long a port read takes. With the delay plus the port read, the
-worst-case wait grows from about 10ms to about 20ms, which only matters
-when the BIOS never answers.
+dell_wmi_process_key() expects its buffer argument to point at the
+data that follows the event code. The 0x0000 and 0x0012 callers pass
+buffer_entry + 3 for a code at buffer_entry[2], and commit
+392c19faec6b ("platform/x86: dell-wmi-base: Fix handling of ultra performance key")
+relies on this. The remaining count passed for event sequences
+(len - i - 1) also counts from the word after the code.
 
-This removes the last users of num_ticks and EXPIRED_TIMER.
+For sequences of type 0x0010 and 0x0011, however, buffer_entry + i is
+passed, which points at the code itself. The tablet mode switch event
+(type 0x0011, code 0xe070) then reports !0xe070, so SW_TABLET_MODE is
+always 0 and tablet mode is never reported.
 
+Pass the word after the code.
+
+Fixes: 5fbd827eb9c2 ("platform/x86: dell-wmi: Recognise or support new switches")
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/platform/x86/dell/dcdbas.c | 12 +++++-------
- drivers/platform/x86/dell/dcdbas.h |  1 -
- 2 files changed, 5 insertions(+), 8 deletions(-)
+Developed with the help of an AI coding assistant (Claude Opus 5.5),
+which found the issue and drafted the fix; I reviewed it and am
+responsible for it. Builds cleanly with W=1.
+Not runtime tested: the M4800 does not send the tablet mode event.
 
-diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
-index af4c1d2fe497..edc210852f2d 100644
---- a/drivers/platform/x86/dell/dcdbas.c
-+++ b/drivers/platform/x86/dell/dcdbas.c
-@@ -394,7 +394,6 @@ static int host_control_smi(void)
- 	struct apm_cmd *apm_cmd;
- 	u8 *data;
- 	unsigned long flags;
--	u32 num_ticks;
- 	s8 cmd_status;
- 	u8 index;
- 
-@@ -424,12 +423,11 @@ static int host_control_smi(void)
- 		spin_unlock_irqrestore(&rtc_lock, flags);
- 
- 		/* wait a few to see if it executed */
--		num_ticks = TIMEOUT_USEC_SHORT_SEMA_BLOCKING;
--		while ((s8)inb(PCAT_APM_STATUS_PORT) == ESM_STATUS_CMD_UNSUCCESSFUL) {
--			num_ticks--;
--			if (num_ticks == EXPIRED_TIMER)
--				return -ETIME;
--		}
-+		if (read_poll_timeout_atomic(inb, cmd_status,
-+					     cmd_status != ESM_STATUS_CMD_UNSUCCESSFUL,
-+					     1, TIMEOUT_USEC_SHORT_SEMA_BLOCKING,
-+					     false, PCAT_APM_STATUS_PORT))
-+			return -ETIME;
- 		break;
- 
- 	case HC_SMITYPE_TYPE2:
-diff --git a/drivers/platform/x86/dell/dcdbas.h b/drivers/platform/x86/dell/dcdbas.h
-index a05d7f667586..d5ad2363dd9e 100644
---- a/drivers/platform/x86/dell/dcdbas.h
-+++ b/drivers/platform/x86/dell/dcdbas.h
-@@ -42,7 +42,6 @@
- #define MAX_SYSMGMT_LONGCMD_SGENTRY_NUM		(16)
- 
- #define TIMEOUT_USEC_SHORT_SEMA_BLOCKING	(10000)
--#define EXPIRED_TIMER				(0)
- 
- #define SMI_CMD_MAGIC				(0x534D4931)
- #define SMM_EPS_SIG				"$SCB"
+ drivers/platform/x86/dell/dell-wmi-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
+index 44857e99fdfe..c778409ca099 100644
+--- a/drivers/platform/x86/dell/dell-wmi-base.c
++++ b/drivers/platform/x86/dell/dell-wmi-base.c
+@@ -523,7 +523,7 @@ static void dell_wmi_notify(struct wmi_device *wdev, const struct wmi_buffer *bu
+ 			for (i = 2; i < len; ++i)
+ 				i += dell_wmi_process_key(wdev, le16_to_cpu(buffer_entry[1]),
+ 							  le16_to_cpu(buffer_entry[i]),
+-							  buffer_entry + i,
++							  buffer_entry + i + 1,
+ 							  len - i - 1);
+ 			break;
+ 		case 0x0012:
+
+base-commit: 2800868f63227c8237d70c41e70d441c919620d6
 -- 
 2.56.0
 
