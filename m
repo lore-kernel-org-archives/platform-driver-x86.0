@@ -1,60 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794617430;
-	b=mUeQGBgLPdQy1oqhb49a5fuyV6Lu5Z27zVSRWsT9ZY5viiAR5AIrRP0LTtMegjbv3BHa
-	 4cNEAgiFpuN3wGLH9bw+uFfGtpTnh+m2SiMpj/fa0gEDPnfOjOQHT2fnbOhS/PR9xpdFE
-	 +Twfb/JKPUAcnlIrf8iP0tNupSjvhpPYybGrzQiUPuwTkpsjxrdpRo7r919Nrb+bHaTZP
-	 OnAKaGJVJBrlRpOMg1gjQ5qcXdFBK67CkfCEMQ99AhrvYxMn78BrmNh9rdN6U7rX2CrJi
-	 /PWPHKoZle10rdhyuLgCL4EqZCTODL/cyYaxTSV76nunu/k1sjn7hqBo3hpdaP4HwiQ==
+	t=1794622119;
+	b=NP4bUEL4VDLJG1XiTZMbKvXsazOV3eTP4FVKMplb4bFwarWrHZaFfi9scVSTLp6iGFnn
+	 sve3ClsDUPcK/ZWj/IhzYUB/l4Ur1Ex5TJtxLkFgE8dPmF8b2DAjYqOSKoLQskga5FJ26
+	 eU/BmoTOJCToE92ZAKPuJeSFpKdoWVpWxgkOJSL3npcfYNQJulSySoNFqjlzBjSvmoFd6
+	 XzITzoAiDYdL0MskCxhNRgUWviGuTuFnDmzTPwetVUv1JZ/h1sFjP3JNi3T4+jC91jfbZ
+	 CSjksbPx0AMzXPGGCS47t3eDtACNgJdHycQkQs6pFNVqEf2MQYtBwGAl5Eala6CL7cA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794617430;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=rLSKJAjdQ30Vjky7tJx+bCFWc1SyvtYYvxDMUVTLXvE=;
-	b=Ebd1hkoqh/MyMAP4vmPAqakQp5danaw7pMeFrJAzQpvhjenPKnlKXIt4vCVsUpguis4v
-	 rkpng7nqpwGt96MjQAptwisULbI///LZo0ymQaMZnxrY3RdJNepThRy1ssFNSrklIk2oR
-	 nlI5SK2TfmveSom+xilZYWWcaGTmADptCIeGtVTQg9sRq1Dg42ZTkfkCQC/A+rnuTctCG
-	 uUAUd4Y7VwhroikKS7iihh4o3fPNyDSgwt94tUgQ1hxvaxsz1svC7BOqYvbkJEwx5nBLE
-	 HV6i1ePnNaTK4YBWV/tXewsH9wyByc7luSTgth87jVwxAcLyVSQ2D8xX2fS3/+A1scQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794622119;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=XeTY8NwbUCIb5XggB4uHl0AKr+krf2v/zuQTgZl5q1I=;
+	b=rfEmK7M5z9BMWl/K4FuhSJ/6oEpjUy2aiYu6zU/IKU578HXellTHskTvLExqejmEBLxg
+	 Ye39KBgqQQTsT7sW1VU+xVhSWURoKCRAhOrjmpFoQhwSo9MzXVGf9Gkkp6/qyOGJ5a7w4
+	 m7OAPIPHPkXClmmRUtYtFHpGdwgHfdAJr0/lf/WDcHQ7e2k+oHU/P2E9bxoibt9Syihdk
+	 mM68ej1sHn4NIo5u/w1cmLFMWfh2Rw2YYQAfmqxE8yN1wIdCSz4uxRI0EWDr2Wmpf1J7x
+	 9KHmIuNuJy8MUBUZPt3nqEGpwX/5Q1y7CsQ6h+/0A/3JnXv6WDHVG5eAL8XnvL8v1/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=S7p3BxY3;
-	arc=none smtp.remote-ip=185.70.43.19
-Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uuOZEsG8;
+	arc=none smtp.remote-ip=74.125.82.180
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D61606A327;
-	Sat, 14 Nov 2026 00:50:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0D61606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77706606A89E
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 02:08:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 77706606A89E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=S7p3BxY3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1794617426; x=1794876626;
-	bh=rLSKJAjdQ30Vjky7tJx+bCFWc1SyvtYYvxDMUVTLXvE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=S7p3BxY3+zyWG/4+usTUelBlt7jQ6oBsNBXH/4O6QaTuZmKuXpVmIJplfewyYqC1h
-	 h2Tka5t8M2ZG+gm6FPVItdZKB5BS12DpknnHXvTSuY3g0T15EUWiQtfvPkgaHWtZp4
-	 RY4BsPFKOxuW2XlxZQvD90xWPUoI7Add3baCMhsqG6e67AMetYGmFRGie8FM9XksGr
-	 2AiMNWcIqEMJUDD69BSN0wyBVbg5AbpWMSHgOr+wYZLDaLVsX36i+pK763j4G8fOVY
-	 etE4OabbVX7H/FVVVkUaI2COUASETuRtQp5eAzOynOJrB8mWHqclx+fbbiaov1sB1B
-	 NnDxnBv2F7UQQ==
-Date: Sat, 14 Nov 2026 00:50:19 +0000
-To: Denis Benato <denis.benato@linux.dev>
-From: Aspecky <tarrihmoad@proton.me>
-Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Antheas Kapenekakis <lkml@antheas.dev>, Benjamin Tissoires <bentiss@kernel.org>, Sercan GOKMEN <gokmensercan@gmail.com>, Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v4] platform/x86: asus-wmi: Ignore unusable kbd backlight WMI device on ROG Strix G814FP
-Message-ID: <-sHRKK56awNgHWFUXMcBVRL0SSag0CruNAfbxPNPYJJC8qqk_N74k3wCldWqNkfw-CBwHj-6CvkYhrkCsBYqgNNUQV2oT31VbehOxMbR87E=@proton.me>
-In-Reply-To: <04c46822-9baa-4152-8193-d8aa9d757b4e@linux.dev>
-References: <20261111-asus-wmi-kbd-readback-v4-1-79df1567476d@proton.me> <04c46822-9baa-4152-8193-d8aa9d757b4e@linux.dev>
-Feedback-ID: 110671326:user:proton
-X-Pm-Message-ID: a91a08dbf9326579b6cc51664856e37e4569519b
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uuOZEsG8
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-3704d30b84fso2147127eec.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 18:08:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794622108; x=1795226908; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XeTY8NwbUCIb5XggB4uHl0AKr+krf2v/zuQTgZl5q1I=;
+        b=uuOZEsG8WWZxqYAyLJEbOteJLzRbKeB1yMqlQVeytRpsEwgTVKMITpypNt3OnidQoh
+         pZCQk0AvcA4scQvJEQ47GwY1deGsW3iMJea2R/8w9RkuFQfsJHfbOn1jpzO/wskJ9ule
+         B7tJFz2W/txKyLhqx3l1uCgrgj0XHPur6PYwJHuFOlt1py3U3+H8XizQeUzZGEPuqWMj
+         iPG6MenxfXP8YXrFUG9WCRk0OEsXbFgKJSVeXHmaLQEH6LhmJGOSXBKkg2kVEDGaMHVa
+         AWT3UjUM9aoW6kZsophhX16E+Ked4761jH6+GYO0zxj6eE89xCJulsQf0MIVTL9/+9Z6
+         xGEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794622108; x=1795226908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XeTY8NwbUCIb5XggB4uHl0AKr+krf2v/zuQTgZl5q1I=;
+        b=SpNzmw12NTCsgIs9WZvw2pI5sebkZuDBqo3BS0CYxglx6YoCazCI3LuU8v+fR+pAAw
+         kxNcKXADqoqMunR+o5KlO/l4QwfUJCnD3wzf27JSSRmGU7P02TT9nmy9aZTXhUEAE1xp
+         ImiC8Yvmbf9tUIVOAkPTpbPuw2rcWAbSXKwsCpMYXUPqh0OD4yKa0udRgTzo+AiQeMen
+         8kc5m98HaXOAHP0iFV8qHYH2LxTiww210uliF4gwy7OXxj1TjQ2CF1Rv9jyfl8nKFY/i
+         6PRg9tYcIRuAZpTBySi5ZubDwfhr02/us8b/0JbeP3aZlkEO5p69RAH19ItdNK9dSFq7
+         0wCQ==
+X-Forwarded-Encrypted: i=1; AL+hErFX7YKztMEg3RSVHMX832F8/abfLzg5QJM+5Pw+sHuJMrSz8AboIZUejRmLt4bZETh6Vk3q39Ph5h9W4Yc9T8LM7uK7@vger.kernel.org
+X-Gm-Message-State: APuU4Z/d5ytgUfzmQUUbYHskKwM/Utb/OTi03eak3Z8aFnokfaqzCVg7
+	5aEusfDXf02x3oXKjZLZPaQOVKNN16g0tJn9b/o1BUKO2ZflPFYL5GsJ
+X-Gm-Gg: AYBFou2uPuQcOsttjvUC5DzWDFbU3VWfbmegr8mGb+v58Xj4RN4+iw/yrrrEr3nWf6R
+	jT49K/BXEsyBzlqhAbsE2Y9WxeC6oTHT2Hll5k/AaobAWqCoLRzRgE0Bh+I5FMRu+BHa+4OOoMF
+	cDVopQmY4nTjRL3R3zptdY0ctbZdIt0W2tbePWygDtvfMCvwvP0Q6+QGcVSVUi5QxJ1ocVYQpBA
+	D/OUxcTNzpTIJQmB3ipSlqoIPk707SKHH+ls8/SfFTDzp/kxDw8RM06DTwxbcWNCG7RfWq6Kx3+
+	KAJZdbY+PInmLAPGfamchuW/vpH+TBsrn4eFUoND3lbKIkD9/wKZg14CidEEwQmBCcZoRk4SkLM
+	JDNSS0uJVytQi2kxsIBTWPdD8LHl/U1fSRhWpN9+vdFbd2ZBDEriCcoK7ON/dlXjjCpdToONtLN
+	9FBI3IK/UiiEhvHZ3QSK0OZObjcsaNmHLwj3w89wmtrriSIjD5UrFLbWWf1/Jld5UVUff3eHQ5v
+	GDlDgNhfAgeT1O4DMi8tMQqumyTOy/W1HQBbnpMUgNpR1w91b4brKidIRcH7TWaitja4z0y/FU4
+	gplnRl8RnSfNi8pShCTVpCsxbkxeKn3mOn1frwDPPfQjuOXDHVPUSQyZxFI0dx1QuUn9dPSwVm5
+	0bNj386bAb+yS88ml71v8P6YNj5483F+/yC5HCu1Uf9h9HzoM1UCKSL8fZIxxR9qA7q6FQ13yTn
+	WGZb0=
+X-Received: by 2002:a05:7300:f544:b0:36a:1788:3d1c with SMTP id 5a478bee46e88-3796879f0bemr4131136eec.34.1794622108507;
+        Fri, 13 Nov 2026 18:08:28 -0800 (PST)
+Received: from ryzen.lan ([2601:644:8000:37f::e34])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-379563e6b6dsm18875218eec.21.2026.11.13.18.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Nov 2026 18:08:27 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 0/2] platform/x86: dell_rbu: make usable
+Date: Fri, 13 Nov 2026 18:08:13 -0800
+Message-ID: <20261114020815.75539-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,50 +102,24 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thursday, November 12th, 2026 at 10:21 AM, Denis Benato <denis.benato@li=
-nux.dev> wrote:
+First commit updates the API to one not disabled by default on many distros.
 
->> On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
->> backlight brightness in sysfs works, but reading it back always gives
->> 0, and the read makes the Fn brightness keys misbehave.
->
-> With "works" do you mean the write report success but does nothing or
-> that it is actually changing the brightness?
+Second commit fixes upload of firmware more than 4MB in size, which is most
+modern ones,
 
-Sorry about the confusion, the write does actually change the brightness.
-Writing 3 to /sys/class/leds/asus::kbd_backlight/brightness turns the
-LEDs to high. asus-wmi passes the level both to the WMI device and to
-hid-asus, the latter is the one that registers as a listener on the LED.
-The DEVS(0x00050021) write to the WMI device fails with -ENODEV and
-changes nothing, hid-asus is what actually sets the LEDs:
+v2: remove Co-Authored-By: tags
 
-sysfs write -> asus-wmi |- DEVS(0x00050021) -> firmware -> rejected
-                        |_ hid-asus -> USB HID report -> LEDs
+Rosen Penev (2):
+  platform/x86: dell_rbu: Use the firmware upload API
+  platform/x86: dell_rbu: Allocate large monolithic images contiguously
 
->> DSTS(0x00050021) always returns 0x50000, which is level 0
->
-> Always returns level zero with the presence bit set.
+ Documentation/admin-guide/dell_rbu.rst |  25 ++--
+ drivers/platform/x86/dell/Kconfig      |   2 +-
+ drivers/platform/x86/dell/dell_rbu.c   | 161 ++++++++++++++++++-------
+ 3 files changed, 131 insertions(+), 57 deletions(-)
 
-Correct, always returns level zero with the presence bit set,
-i'll say that in v5.
-
->> As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
->> no longer created on this board, they never worked here since the firmwa=
-re
->> rejects those writes as well.
->
-> Isn't this a contraddiction to what is written above? That writes
-> actually succeeds?
-
-It's not a contradiction, the sysfs brightness write succeeds because
-of hid-asus, while the WMI DEVS(0x00050021) writes are rejected and
-so are the ones behind kbd_rgb_mode. The commit message doesn't make
-that clear, I'll reword it in v5 and wait a day or so in case there
-are more comments.
-
-Thanks,
-Moad
+--
+2.56.1
 
