@@ -1,89 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794672497;
-	b=N8Tkv6nQMaJ751oAUrVhFSbiUreV4BIDRAsG6k9apnTH96lbMTG1X51IOVE082K+CPdk
-	 sqBX+ucHdsDyctZmA/AAXn1PXcphw8yIOYe2+CuFYdHSboS+VtEKn2QppMZq6b5XSL69D
-	 wosVqdspQ4WLh4yZskQU5zQ8rioosr1xzP2yxqMRR8utRFZSvgMVH7z41ZXuiNKlCjIY0
-	 raC+K8ug9UK6iajU/zOtmbWqeg7zg7KBB9GA3Zn6rPur5h3kaP7pxcnzCNt48XyRcVxvC
-	 QurHvOQKUMo6fC/D86psHvg9I9pn5byBCWxBUXFs5Y2O+mN1KJga/cIQqBekxk7+Y5w==
+	t=1794672510;
+	b=PTjOGWhXAe63oWZ4nzT7snSv6zDEMAd/hJPnhBemYnTuORsw0n3ryeufnuiJpnodFmva
+	 jejFtD0rimtvRWvq1w8lptpCPpsdt0ZuzKFL6l7HrJ0iaeq6J/Tf8A16rlatHkSmsF6WD
+	 V8bF6BnQdL0XtO9QvTnrSc6mgLSFU7Y4kkJzsUBWWQrpgLZ7ca1FvUymASoCumSTQF5PQ
+	 5TJ9DngYsf/UuZrUz0+MvVTt/uCZG0hP/E4QOKVeIImk/bPtQoN4w2jOiB4QzvWxEFg6s
+	 pLZqk88M8OSORVoeSwJO66+hGqBha17BhCHV16678AuHHV/MbvNBcTyrzGlGREqgrVw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794672497;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794672510;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=rwXxXGuI8odA6JxbQFYflPGUh67I5rWeLK+lGKx8MRg=;
-	b=AwfXyloWHqAqeXEACz4O0WWe27nSBVMnFRjt2Fy1GthD7Q1hpL95FZu93FG5XNFLN4gZ
-	 g4BRtwPvMBknmHRMoSJTwAGGB+Z8RwfB1crr7earujp/XyF7cpWM1DFaig+9Dxuc5YFqD
-	 j0WgMqfJwvxFv7wvHXO/ne3Yw8QO5y7GzU+G9e99C7Uht15yYBdxDWVMmXS1zXeM8mKTj
-	 v1gLvNDF06Z/Wclq0Azq9sI8HPmrlNwoM8EkkSwooKgqSSmeYswbu8BEipWZ1ZN28i+bH
-	 /N2DwmKQY5qitDAQx5iL+woCwBAqZw1ChF1sqJi0XKQo6Bq1w7EA2dX7yUmrM1iHMXg==
+	bh=57QGYlJp5ubvUnaSXRDvNGBB3M2Beb8mEN3QVUFhP3Q=;
+	b=RqMMJQS6VxxgUePHEo1z9guqaV/ML+QLCguzMGFPuEo9AcJBwltJYCeT5nP6wild9wAa
+	 EoW8c/zYcyQQqWQDvwxY/p+0v4mMKm+HXg4svxJVRPDcHm/6BVaIDGjhaBPdRtXG2urxi
+	 a1VOERQQ/3I9jjvsaSBCFSSw4h0ruuOyAFAXazVbH4jC7ckXT3dcGL9xKtLfPi+SSAmQb
+	 Uh76Ra8t7heIVk0M4Vuebz/mHZ9/PtH+u9G7Y/uXXcmtRo3VknINjfOENXOJBTMpdbmA9
+	 zOeRtefMbdN3Qy2CmK5deg2lbjZBm5psqWWII+UrnUHrcMvD9yGk7eC/s6FctA+iZTQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JUATBPgc;
-	arc=none smtp.remote-ip=74.125.82.54
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tbQbi1gd;
+	arc=none smtp.remote-ip=74.125.82.178
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A445606A32E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 16:08:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8A445606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728CC606A32E
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 16:08:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 728CC606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JUATBPgc
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-1a2761c69fbso1927015c88.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 08:08:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tbQbi1gd
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-3704d30b84fso2580576eec.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 08:08:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794672497; x=1795277297; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794672509; x=1795277309; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=rwXxXGuI8odA6JxbQFYflPGUh67I5rWeLK+lGKx8MRg=;
-        b=JUATBPgcbaAuoqwm5WV3BftjHR9KY/MUzFFG94cT7BDRMW3hoPqv5EvsyQSLRrn8ss
-         M1Wu9utj5vBeyJr1ud6UvudnqwG+8auSi4j0FlagRJRezQpKIQlEgl1fC2ir6keJ3hUh
-         Mrg+oIFQBtrJaWy6ZIBLTkDs28300QvpG32cMEwJeIkxNFBvTi9yExnoznm5buZ2C3zW
-         GcZOvldR9i1ta06NvOPz4ynHPiZ2YJ4NJaXHlhXuWzhbx59oHOfbyIuaI1UnpAs7W9iU
-         fSQsnrI0UicMxjBDNbYCzKg+pW8B7M/KNnOZyhIryGNRHmMCy0Uk+5SQonsR2LMR3iDl
-         XC8w==
+        bh=57QGYlJp5ubvUnaSXRDvNGBB3M2Beb8mEN3QVUFhP3Q=;
+        b=tbQbi1gdIC6/6HaGRuQ6NdTOfpXgDybDtxfF3N17V0BDjnvKhlWgVO8zpSUMHehkay
+         C/ZZMI7Wyt1MHl3lC4/ZFhoyOFviS7f81UlMhCS1uT+w6L4DUAd8SdECRH3ZQk75ObMn
+         KHjTAObVD4CLG9k08HoNhZWOrwIL9E6dBuay8QPtR+HcvS1PkoONye3PVKLtIG2zPQtt
+         pUMwuj/9uJoYqsltFOzDfY6TpIIli8wtlkDFhafCkBw+wn9jU9mioZpYnPCzFgG2OtUX
+         sa2gIHeeIQ4a6Fhqdk4/rJV7g8KsGaSW7ebH/J7t0lnazJOcoJQeXwbhje/URz8VoFi2
+         jipA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794672497; x=1795277297;
+        d=1e100.net; s=20260707; t=1794672509; x=1795277309;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=rwXxXGuI8odA6JxbQFYflPGUh67I5rWeLK+lGKx8MRg=;
-        b=LWC+6wFYv9vvaSG7Fl6m0E3JNjJL1zxOybUCD39f9RJ/7FAnkTkxeQzHvhrxNCfiO4
-         G2o8esdReygQSqOLiPNNq9zWl0gPI7wIAeCtnke7uAbLRYe4+pPRvkCx/2RtQiDWRL+E
-         2nKzW5ovlhOkMZE5PJInxfFw7ULXRYt6VJ+HG2vytrNcCgMkeDLjnJ7MUHDZwt25TKed
-         XVIw57g7GsjdtLnw11E9G/hxcls/9xIp1u1DCnUVvC4TA2HUoQfA6Iy0zR7iDSTQzu6/
-         ZZly4M7wzA42jPi2XkHO/ZRKSLSWkvy5b0iuIiEsOkjJiEC6oQrULgRjkZedr59DW4JI
-         akvg==
-X-Forwarded-Encrypted: i=1; AL+hErHpVqhQrTLwZ/iTnZYWlnPdZHy5wBnk2gJdmGRX9ahXTxFeUeWASyrFjLx51UeJdTwPLRBtq3I24C3CupsiR03NNDV4@vger.kernel.org
-X-Gm-Message-State: APuU4Z+HcNdlEjWsaL1vyW/aUOWY3M62h2tXMIYABD5ihx61Y5FnIJhw
-	1jAwwBLQnbF9PMF1GfIkx6zwGMA/gYN5n6H6ksYzOGHVJaWRj4TfZIg=
-X-Gm-Gg: AYBFou0k/8OY7Cn8GmjZCkzA42stmlJRK7D68yD2/DpXQ4DZ+q7p+qGjX+hp9ixradX
-	3B6LPDeEP756FAzht9kmyjDlHU43tjUPSVNCSCmRzLxqwMBY7LdZBeAnLyOZKRQSQYKK49IeZ+J
-	HCE1yw7pNxeR2fHcUYMnHYhb+qwQbMtqbgv0M22ZaCBWGAlYmCzE62IDWkwT494cV+pot2liyXe
-	3vLlEcCPDfJtLlYDKIkyDE1kKriwB79cjdZlJt5I5fEg8gVhECwGoDev0mqSnVfRIoTS1JmDvST
-	tmlnABqZUkPh2Ts3GYWcRCTlTAoC4y0g3daQUPyfzIfIXPnapJlzUiYFt8MEKMGOfpscX6SI+S8
-	2NSKqiaUYPi47I3DoySQmLZG8soeETsphGaMOm0TAXDH8YYvSoLTAeufPUJowim5389M3IWEvLc
-	jbwvYnXvaz1byJtvLdhnJWxAZmKeDmR2tGiJfBiMa2XFLzKTM29zlA+RGgpIebSimAvbHXCUFCS
-	xNc0noLxg7dHH7+ozennPzbxC77QbhJM121ygw4ae7SyPYzxVWshgTTcqfRtjssm5hHHDCMnnKn
-	5pyjG0Td5+08FVRwUlbe6Q2FogVKN0EHBNwV7wOlIa0pTJnsR18kGBjY7bKOgxgs7g==
-X-Received: by 2002:a05:7022:b054:20b0:1b3:b6d3:b91c with SMTP id a92af1059eb24-1b50314c8b1mr6305593c88.7.1794672496336;
-        Sat, 14 Nov 2026 08:08:16 -0800 (PST)
+        bh=57QGYlJp5ubvUnaSXRDvNGBB3M2Beb8mEN3QVUFhP3Q=;
+        b=xsqUlSlXdlXg7zBaQ7I47lDXWJxAXz7s3/ndOJdLfl7OJV/egawMe2d6rxeJ+wksDr
+         H8yat4Y4RHEN1GpGoowGJCtrpvbpDD1kGb2pt2VQEOle9IgkHiNHVVvzNhsoGirmJ49M
+         XRjLkThvtHBEN4BaOKVZ5Z8f44d9WzxnmZSWlWMzlY/+ACO8wLFDZEgi60iQ8CmXEaGS
+         JBO3WvmvY1g0GtzXz7vuEGgz9YyTU0Ra6E6Aaspmz29O/50Yd6K947OM7lzO/8eJKd+8
+         T1ygesDFODWXjTyAVbqtbNos6SNq3z3hBJjxDeG9laaCuBWir9Vmf9QBwDBuTG8YAgqo
+         OA8Q==
+X-Forwarded-Encrypted: i=1; AL+hErH6/jhSPRRmfEKtbu7SefWXKldK5K25ZjXp+pEDzKf1uASUcCIsYLpobvpmh/zBUWpofzkHiEmpdG8e1UCooczJHyP2@vger.kernel.org
+X-Gm-Message-State: APuU4Z9hH0TxCr0t9Px4Pr+Rc+SkGuHOfP7/algdCnyQrI3q+Ng9+uhB
+	mOTLS3rOqyEbFf95tKq5p1lQAVRRtHwwXTMlqUp9Iog+L7BOw5GCRKM=
+X-Gm-Gg: AYBFou1gHoG3M6xsRI0Hswq2leAxL9L2Ua6u8gWkOStOF/khevhbwW3fyBiKZHs6Z5M
+	66e7cz6f+26uXWHt6Le+pbGqdELruN4yMadi+vapcrpLQzcOrTPMij2M9M/uSySvganSqABmBp2
+	tQy95GDEw82aeFSV9Neu50dB6jiXsIZ4s1eGSvAfUdgmE/Z2s/5qMH8JKPpmfTN7XHKkQMz14+R
+	xpblQlNCO6GZZi+9HVz1Tt8s2lzf15GqRxFJvHpX3SAFZSs1Nq1AvRB+WBdk2OMCi1Ok+GRII/1
+	gnUMqe5Iv0Uw68tIUgY+HhFSsd73CU9sAm9TsSy9ozzugMXBr00pESuD23pPAD6gwGNdK0ew4up
+	Wg//cduDDqBJNMGYwAcnZaUmiv+9d664eG0/2VfLuH9EkMr+6uwMNsKMv1zP1D6l9KsVr3KfZZS
+	6LIqZ6lVSLocw2Gn8lU2oTsrhlEToKrROgiSZCPHOK93H++DccXpITW0N3nsFprxuemfCGQUoSO
+	sMKDPCnsXKy5d5CaYseN7YDZDTHvWXS8VdqSanRngHF8AedysxYcwRcCVNHfstfn420e+kck++2
+	CSxXPhB0gZIMkRqcvxeKZ9cKndv5Y4dWmpfuKXUUAIw00QengZDDN4qoSCwP0UAGFg==
+X-Received: by 2002:a05:7300:f18e:b0:375:894f:2524 with SMTP id 5a478bee46e88-37966b52646mr7220639eec.12.1794672509407;
+        Sat, 14 Nov 2026 08:08:29 -0800 (PST)
 Received: from at-Standard-PC-Q35-ICH9-2009 ([106.202.127.108])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37956bb0919sm17567582eec.29.2026.11.14.08.08.06
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37956bb0919sm17567582eec.29.2026.11.14.08.08.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 08:08:15 -0800 (PST)
+        Sat, 14 Nov 2026 08:08:29 -0800 (PST)
 From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 To: 
 Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
 	Sebastian Zygadlo <szgit@icloud.com>,
 	Yossef Osman <yossef.osman@proton.me>,
-	Andre Eikmeyer <dev@deq.rocks>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -101,14 +100,15 @@ Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
 	Kenneth Feng <kenneth.feng@amd.com>,
 	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andre Eikmeyer <dev@deq.rocks>,
 	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
 	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
 	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
 	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
 	platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS)
-Subject: [PATCH v2 01/12] platform/apple-gmux: Fix power for MMIO systems
-Date: Sat, 14 Nov 2026 11:06:25 -0500
-Message-ID: <20261114160731.3756-2-atharvatiwarilinuxdev@gmail.com>
+Subject: [PATCH v2 02/12] PCI: Disable pcie port on specific amd devices
+Date: Sat, 14 Nov 2026 11:06:26 -0500
+Message-ID: <20261114160731.3756-3-atharvatiwarilinuxdev@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261114160731.3756-1-atharvatiwarilinuxdev@gmail.com>
 References: <20261114160731.3756-1-atharvatiwarilinuxdev@gmail.com>
@@ -123,238 +123,105 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently The dGPU on MMIO Systems, dies when we write the gmux values
-to turn off the gpu.
-
-On MMIO macs Using only gmux dosent work, instead we have to use PWRD
-method + GMUX, which turns off the entire bridge, and completely messes the
-pci config, so we can't use pci to traverse through it. we save the
-entire bridge using ACPI addresses then we run PWRD(1) to turn off
-the bridge, then we write gmux states, and resume we do the vice
-versa, but here we dont need to retrain the link and write the
-MMIO variable.
+As mentioned in the previous commit, PWRD turns off the entire
+bridge, and if we read/write anything to the config space
+or the PCIE space when the bridge is dead, the CPU CATERR's,
+so to avoid interaction when the bridge is dead,
+we remove pcieport support for the bridges..
 
 Tested-by: Sebastian Zygadlo <szgit@icloud.com>
 Tested-by: Yossef Osman <yossef.osman@proton.me>
-Co-developed-by: Andre Eikmeyer <dev@deq.rocks>
-Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
 Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 ---
- drivers/platform/x86/apple-gmux.c | 159 ++++++++++++++++++++++++++++--
- 1 file changed, 152 insertions(+), 7 deletions(-)
+ arch/x86/pci/fixup.c       | 43 ++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/portdrv.c |  2 +-
+ include/linux/pci.h        |  1 +
+ 3 files changed, 45 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 9c728ac4e..34e94f2b2 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -65,6 +65,10 @@ struct apple_gmux_data {
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 795d81c7a..b1697cc4a 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -1094,6 +1094,48 @@ static void asus_disable_nvme_d3cold(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a09, asus_disable_nvme_d3cold);
  
- 	struct backlight_device *bdev;
- 
-+	/* power handling data */
-+	struct pci_dev *discrete_pdev;
-+	enum apple_gmux_type type;
++static const struct dmi_system_id quirk_disable_pcie_port_dmi_table[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,1"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,3"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
++		},
++	},
++	{}
++};
 +
- 	/* switcheroo data */
- 	acpi_handle dhandle;
- 	int gpe;
-@@ -502,23 +506,158 @@ static int gmux_switch_ddc(enum vga_switcheroo_client_id id)
- /**
-  * DOC: Power control
-  *
-- * gmux is able to cut power to the discrete GPU. It automatically takes care
-+ * gmux is able to cut power to the discrete GPU. On most
-+ * Systems the gmux automatically takes care
-  * of the correct sequence to tear down and bring up the power rails for
-  * core voltage, VRAM and PCIe.
-+ *
-+ * But on MMIO systems, the standard gmux writes does not work instead we
-+ * have to use a combination of ACPI and GMUX,
-+ * and Using PWRD (the method that used in macOS to turn on/off the dGPU and its bridges),
-+ * which turns off the entire bridge and messes up the PCI config,
-+ * so we can't use pci_upstream_bridge to traverse
-+ * through the bridge, so we use ACPI addresses to save/restore bridges.
-+ *
-+ * NOTE: Communication to these bridges (not the dGPU/HDA) in any form
-+ * when the bridge is off, will result in CPU CATERR.
-  */
- 
-+static int gmux_save_restore_pci(acpi_handle parent_handle, const char *name,
-+				bool save, acpi_handle *out_handle)
++static void quirk_disable_pcie_port(struct pci_dev *pdev)
 +{
-+	acpi_status status;
-+	acpi_handle handle;
-+	struct acpi_device *adev;
-+	struct device *dev;
-+	struct pci_dev *pdev;
++	struct pci_dev *upstream = pdev;
 +
-+	if (name) {
-+		status = acpi_get_handle(parent_handle, name, &handle);
-+		if (ACPI_FAILURE(status))
-+			return -EIO;
-+
-+		if (out_handle)
-+			*out_handle = handle;
-+	} else
-+		handle = parent_handle;
-+
-+	adev = acpi_fetch_acpi_dev(handle);
-+	if (!adev)
-+		return -EIO;
-+
-+	dev = acpi_get_first_physical_node(adev);
-+	if (!dev || !dev_is_pci(dev))
-+		return -EIO;
-+
-+	pdev = to_pci_dev(dev);
-+
-+	if (save) {
-+		pci_save_state(pdev);
-+		pdev->current_state = PCI_D3cold;
-+	} else {
-+		pdev->current_state = PCI_D0;
-+		pci_restore_state(pdev);
++	if (dmi_check_system(quirk_disable_pcie_port_dmi_table)) {
++		while ((upstream = pci_upstream_bridge(upstream)))
++			upstream->no_pcie_port = 1;
 +	}
-+	return 0;
 +}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x67ef, quirk_disable_pcie_port);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x69af, quirk_disable_pcie_port);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x7340, quirk_disable_pcie_port);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x7360, quirk_disable_pcie_port);
 +
- static int gmux_set_discrete_state(struct apple_gmux_data *gmux_data,
- 				   enum vga_switcheroo_state state)
- {
- 	reinit_completion(&gmux_data->powerchange_done);
-+	acpi_handle discrete_handle;
-+	acpi_status status;
-+	unsigned long long result;
-+
-+	if (!gmux_data->discrete_pdev)
-+		return -ENODEV;
-+
-+	discrete_handle = ACPI_HANDLE(&gmux_data->discrete_pdev->dev);
-+	if (!discrete_handle)
-+		return -ENODEV;
- 
- 	if (state == VGA_SWITCHEROO_ON) {
--		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
--		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 3);
-+		if (gmux_data->type == APPLE_GMUX_TYPE_MMIO) {
-+			acpi_handle handle;
-+			u16 vendor;
-+			int i;
-+
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 2);
-+			msleep(100);
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 3);
-+
-+			status = acpi_execute_simple_method(discrete_handle, "PWRD", 0);
-+			if (ACPI_FAILURE(status))
-+				return -EIO;
-+			msleep(20);
-+
-+			if (gmux_save_restore_pci(NULL, "\\_SB_.PCI0.PEG0", 0, &handle))
-+				return -EIO;
-+
-+			if (gmux_save_restore_pci(handle, "EGP0", 0, &handle))
-+				return -EIO;
-+
-+			if (gmux_save_restore_pci(handle, "EGP1", 0, &handle))
-+				return -EIO;
-+
-+			for (i = 0; i < 1000; i++) {
-+				pci_read_config_word(gmux_data->discrete_pdev,
-+							PCI_VENDOR_ID, &vendor);
-+				if (vendor != 0xffff)
-+					break;
-+				msleep(1);
-+			}
-+			if (vendor == 0xffff)
-+				return -ETIMEDOUT;
-+
-+			if (gmux_save_restore_pci(handle, "GFX0", 0, NULL))
-+				return -EIO;
-+
-+			if (gmux_save_restore_pci(handle, "HDAU", 0, NULL))
-+				return -EIO;
-+		} else {
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 3);
-+		}
- 		pr_debug("Discrete card powered up\n");
- 	} else {
--		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
--		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 0);
-+		if (gmux_data->type == APPLE_GMUX_TYPE_MMIO) {
-+			acpi_handle parent_handle = discrete_handle;
-+			bool saved_hda = false;
-+
-+			/* If the power state was OFF, then we only do
-+			 * PWRD and we do not save registers, as the
-+			 * registers are already saved
-+			 */
-+			if (gmux_data->power_state == VGA_SWITCHEROO_OFF)
-+				goto do_pwrd;
-+
-+			while (ACPI_SUCCESS(acpi_get_parent(parent_handle,
-+							&parent_handle))) {
-+				if (!saved_hda) {
-+					if (!gmux_save_restore_pci(parent_handle,
-+								"HDAU", true, NULL)) {
-+						saved_hda = true;
-+						pci_save_state(gmux_data->discrete_pdev);
-+						gmux_data->discrete_pdev->current_state =
-+								PCI_D3cold;
-+					}
-+				}
-+				if (gmux_save_restore_pci(parent_handle, NULL, true, NULL))
-+					break;
-+			}
-+do_pwrd:
-+			status = acpi_execute_simple_method(discrete_handle, "PWRD", 1);
-+			if (ACPI_FAILURE(status))
-+				return -EIO;
-+			msleep(20);
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
-+			mdelay(10);
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 0);
-+		} else {
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 0);
-+		}
- 		pr_debug("Discrete card powered down\n");
+ #ifdef CONFIG_SUSPEND
+ /*
+  * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
+@@ -1179,4 +1221,5 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
  	}
- 
-@@ -552,10 +691,14 @@ static enum vga_switcheroo_client_id gmux_get_client_id(struct pci_dev *pdev)
- 	else if (pdev->vendor == PCI_VENDOR_ID_NVIDIA &&
- 		 pdev->device == 0x0863)
- 		return VGA_SWITCHEROO_IGD;
--	else
-+	else {
-+		if (!apple_gmux_data->discrete_pdev)
-+			apple_gmux_data->discrete_pdev = pci_dev_get(pdev);
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
 +
- 		return VGA_SWITCHEROO_DIS;
--}
+ #endif /* CONFIG_SUSPEND */
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index a9cbfc1d2..d2f19e566 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -688,7 +688,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+ 	int type = pci_pcie_type(dev);
+ 	int status;
  
-+	}
-+}
- static const struct vga_switcheroo_handler gmux_handler_no_ddc = {
- 	.switchto = gmux_switchto,
- 	.power_state = gmux_set_power_state,
-@@ -803,6 +946,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	if (!gmux_data)
- 		return -ENOMEM;
- 	pnp_set_drvdata(pnp, gmux_data);
-+	gmux_data->type = type;
- 
- 	switch (type) {
- 	case APPLE_GMUX_TYPE_MMIO:
-@@ -993,6 +1137,7 @@ static void gmux_remove(struct pnp_dev *pnp)
- 
- 	gmux_fini_debugfs(gmux_data);
- 	vga_switcheroo_unregister_handler();
-+	pci_dev_put(gmux_data->discrete_pdev);
- 	gmux_disable_interrupts(gmux_data);
- 	if (gmux_data->gpe >= 0) {
- 		acpi_disable_gpe(NULL, gmux_data->gpe);
+-	if (!pci_is_pcie(dev) ||
++	if (!pci_is_pcie(dev) || dev->no_pcie_port ||
+ 	    ((type != PCI_EXP_TYPE_ROOT_PORT) &&
+ 	     (type != PCI_EXP_TYPE_UPSTREAM) &&
+ 	     (type != PCI_EXP_TYPE_DOWNSTREAM) &&
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d31a8d107..fcb4f5893 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -420,6 +420,7 @@ struct pci_dev {
+ 	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
+ 	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
+ 	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
++	unsigned int	no_pcie_port:1; /* PCIE Port driver is forbidden */
+ 	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
+ 	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
+ 						   decoding during BAR sizing */
 -- 
 2.55.0
 
