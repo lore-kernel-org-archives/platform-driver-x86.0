@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794637104;
-	b=H0KmSCMmh3LW0XD9Z7Ia3AD7+TqGXGSxuoKsqcVKjBe/denrvA4sZk0w7cj5XCEgB171
-	 rYhZ1PZbvUPiBH9C5YBPeM2Bg+cjFZrduSQAm9P21GI6iZpKfjeuqU+58EAL0lVn5KsPV
-	 4ZH18QvGrpxFOG6XXlBU2l1q+0O2fMvJVxr50eWRuj1ZvSVvdwr+rLvPK2rQBO9k5jnEr
-	 67SdzV8fSckF2bixjk3OW/LJ5wcXSOu0wDlLoQA8kpn9dQaE/LdM7Hv+CF/r9LSry8sHI
-	 4u0w+f91QMn1vEAHaeJmlv0uSBpX88mnZHJDfBJ+uff/pweNgr69uAA5yygorPfZx7A==
+	t=1794637109;
+	b=eO2mH45j1+rStWpBKbMk/UnPhTe+imowMpMUyqQgt9uzjUZhOSYYpfdFsbFYIf1TMh0b
+	 +wWi3twwXEKZ/S8y/tLugZW4P9QPwN99ICzIxeNlK60mE7HJNI10eWZB3VfZ/uqrssmfD
+	 nqOLh4IDGf40pE4IWVaiyeoAwmHUC+knmFZC/TD68aQyNa1NlRc/X7GKO4TVa3qG1gRm/
+	 +TbA4e1XHWGYV8bVp+kVJJ0obUklOcUBQlws2UFCORvi0e64VaRSjpM3XGmoIHVKZ58eQ
+	 BA9gCaKCGJPnI3zRBfw8DfefemcQGgO/nKSnujEcszumzl0ZZN8sQc4kJpB4+Mqe0cA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794637104;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794637109;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=/TclRQyw8P3XuUaC5KJPN4mF+Cw73WG2hCQ7XKkVl9s=;
-	b=cK1C79qznve8hKFOEZx9pfFUCirljj+xOAgTMOJ+DzeW8jQGkLYdLsOCAU2iGXH2hxpb
-	 UPYpGuFI810AT5h1/C76+7M50S+stLPK7zcqpd5bj7hoMBZEyxhoW8nuPGwXBg/YQFg2H
-	 U1SJZdYbHZShr33q7kzG83MRV9p2ImJgK6iegivn4rJ9URMM7Z564MISiFj0l4UcANk4n
-	 RKrbdZ1/mPff220f8diywZ44awyDMntgp6+5AHbY28JRBjIA2VniywUfpxEaOivOH+AqG
-	 PRLYGTOeg6eLlOBWW9JHmq7Hm+L+6BzY5XYX4++5lNDnj34zZ04tYOPuLl84qwY4YmA==
+	bh=grc2+M/hmuGZdiW2psJxXnm4//i3gJPfipJw6YvpPE0=;
+	b=GkiGPtdsoba4aFhqtBFahyNvRfrsEW8aoqPunSfanHq4hCRNIXKtAYETaRkx3lRj+5Ou
+	 CEBiNELYn2zVHOXHWSg+9P3hH4xQ3oQ+OMb4kvoBcu3vLaT5ig5N4EuTJAbwXJUXDDkjA
+	 wDJiJFt1PuRAuPj3OC23DSt/t18CD4p+Th4UeFspIi8Z0fn7xQgNw1oCiIvmI5jvfwvpj
+	 2kn0e0IiBhDc6QBXAA5dBDJgl0JIlpqj3nBKANKVvn9DZr/Z4YeeYlHz677Ht3lqVP7xS
+	 MrQRxBN9RZ+/byeO6yK4h+FhZaEBzj5Spigv+6dCqoJKug/3aoUxAtmn6E646xIVtDA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D9xKTYcK;
-	arc=none smtp.remote-ip=74.125.82.182
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YhWluKqR;
+	arc=none smtp.remote-ip=74.125.82.52
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B61606A89D
-	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 06:18:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49B61606A89D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9488260A2615
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Nov 2026 06:18:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9488260A2615
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D9xKTYcK
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-3704d30b84fso2255817eec.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:18:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YhWluKqR
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1b3a05f8b5bso2116062c88.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Nov 2026 22:18:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794637103; x=1795241903; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794637109; x=1795241909; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/TclRQyw8P3XuUaC5KJPN4mF+Cw73WG2hCQ7XKkVl9s=;
-        b=D9xKTYcKB+TRK1GKdN3JbOtEgASNTYzA/4mvcqKVOXo6+ynYFx0uSAF2HDNkXo8wIz
-         g1oRsXosGiTw3tQje1vGcm7V/fmqqhE9M5Eljjf3okLo39R8tWO148oeDHgKlJZ4ZR4R
-         OjDIz1ZEfa5kfpqY2p4pne4sBSuIkJN7Ik09/3Qm/6S7C9Es3LZzWi7TyzFm5jdgdHWn
-         2reu0F9/ZEcpIxoqyknWlrkmxI/ef8MMJdbbGtg/MIOVXMPoeUFQmRrDVUUg/za/I0cO
-         JTafUfihMNuc2aWGqaksb4LX57mwEAD4zkVgZjhu+aT2FVEi49qOWNPyezMeziicHJzD
-         OT9w==
+        bh=grc2+M/hmuGZdiW2psJxXnm4//i3gJPfipJw6YvpPE0=;
+        b=YhWluKqRJPBNKjLSnwMxbWoOzal/gMqZKRwXfTGY1HxJBJWSOZWJU3IrIPRtgkOZbK
+         d/D0JsJZ3LaPP5Ff5TzSCMb6UBZQ87Cd+eVcQIzJKymJ9WgT//EEEaFVknNWEBbaYEIl
+         7DgUvoFXfHWNwajj/j4tf3hnZBSFlAOexaLUhwVvy6EC1CrPT/IETZKY6F9NaznafgaQ
+         Cvb+mmtJP3cB0Xtfx8VkKuGPRDjhyI2uKkvg1/PJly9hzyGNDNT7yvIVcSjxK78Qit5v
+         Npn5KAczLorFi15UnddrmuCQc5oBsXxRL6gJdouv/ob5hO7azf2sra728M8Qa7HXNSAz
+         3jvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794637103; x=1795241903;
+        d=1e100.net; s=20260707; t=1794637109; x=1795241909;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/TclRQyw8P3XuUaC5KJPN4mF+Cw73WG2hCQ7XKkVl9s=;
-        b=tXk6cPddRlYQvXYzUamx0agpPdi8bdBHvRGMAIUoBm1RwLJuzDRmn+EZDNwyNtBF0H
-         aCMAtqxvUbRMOpq44tmaKSlRNHILkq/mE/DR5WD1G/6axGUV2z7t9Su3LzP/Sf0bMj/1
-         e+ynOc68IyJ3bd+vz1mOSPItiYP51FGTb3xbx1mg6jqKpC6XllwgJeQ9zHwkmLUwRTYY
-         fbF7oT65oXPkYKCjdCKlXdjGejNM0oj9OaYMnRGu85nXxplDxbuUcqWAtLmC/GSda/o8
-         a5ZRzT08ZAZYabMkyqHsOZKeb0yvEB5wo72sC6aXjk64y2bT7Bhf9bm8gl2WFh1XEbzj
-         xCjQ==
-X-Gm-Message-State: APuU4Z/GKuuGsz2q5jSmnRCYiK/8XgO4+XVMpP2WvLzNbEUxF5ENhRMa
-	4PF0OWy+9lo04/V25c3r5/rNupsnJ2v5qF8akMGjFvBsfQEfyV7pG/qK
-X-Gm-Gg: AYBFou2UZhiU+kLF1d/E7RMmJHeVv6Zz6W73AqIbw48dbGvQWI8AwS+t+teBZQ+gvIK
-	vksdtcEOCI0zC5/mUvWy28IvJkMSvbl3k2JxhYcDnSwtXB1H+LsSjzY56lrRSNWSmhwfkCmYaY4
-	KWaDu/6q/l5km+0UhGpk3wZk7ONPbN13S/PeczYAh1VCvnspIJoXGVbsj95XsG97oWSdx/wHBBn
-	nqEa38LNfLyvQIRCPPCaf+c3VpZLRZRswKeRhWJnQb7L7/RfIBc1rBXK3mO8dAORVKw6UsXQ/1w
-	bNuJNuMO5YxXu/bZPyQIHhI0ujcZh5+ef+4dgfwtB6GuP32KHPYiKQ+8Rw1usx/8jP3RDBBt1aO
-	vrs1BYkTiPOo4YyF/mWywOFHROe5IsZgxA9JV9M6LSTgoWy9mq4iUrtOzD6DL5FJBC/Aj9O8LiF
-	qvweNwNBnY/rPTvG+Nm8vNL94pQt8rV55AMH1dWQhBqYYjT7Bjqup4PnpS1Lw9TsSWgTpbjY0hZ
-	8s4vIBzyhCNUiaq/+5tZoxFaBc47V5zLXD+oRzNrOyMGHwUoqnL4Jbf7Gzp38x+HUQSCVAUUwaO
-	+w+M+3cJ/G/iLyEEtQPw1brQbr3AnLNpda59zeaOQnmhFpYruFmXVwsuuyYq5XIO4mkZxCPmV4s
-	4occnbX6gQZb5JpoEALxG2W76B4oM2WQ3NdjqpuenyyFLrqX1htxoHTSPiv5Wa23XoZ65ghmJxX
-	ZF1g==
-X-Received: by 2002:a05:7300:f18e:b0:375:894f:2524 with SMTP id 5a478bee46e88-37966b52646mr5653813eec.12.1794637103365;
-        Fri, 13 Nov 2026 22:18:23 -0800 (PST)
+        bh=grc2+M/hmuGZdiW2psJxXnm4//i3gJPfipJw6YvpPE0=;
+        b=A1VVEwuzNBWyjqR1DgrrQrQ9za+QPWekywodn0qECHrPDfliTC7/rvSIOWOKPnNUbm
+         nGqawPQ2RUB5Xpf3PSSwQaV6G0+nhk3/QAqvNEIenXCiVvnnFUNlyvtGDboEcRE9aWB5
+         pwNzIbFPxpSz10DnR7e31H92r0M0tPn5JxNGcHnY7GX/Ofe5TAPyZTMoWzhaH2QZYoDI
+         uOuWFBNE0thXdp/5D1aqzwueK0D+8S+k2qEUelRzAlhRitOdOdNupCn/v85nz5sxpdwC
+         xe8RIf0WMtkkd3W0Jtx5P1TQ7B8vcTsAl2D5QVZ3nt3tVrqOebPSvYXBuJW4afY36gSt
+         ysuA==
+X-Gm-Message-State: APuU4Z+6bLn95PT0rxplYJH/AdBEpuM/bMkPGmnFJ9MW6wnUsKjRzIPl
+	xge8CrSqFxMzvHui2nkQZA348Vb6mx8/coZtDoqDmSQxt9FdcmvoSt73
+X-Gm-Gg: AYBFou0cXMLlPPhCrc3oflGQK+D0zAFgCdLC+xhw2UBPEGLOFUthKA8JwarjX00hmOW
+	LOoF35tjJP4duN79qXTB9GUWHSAIg2yQd2l0MoSiPOwhY4X9Y1vu+P4SOZNt6Zwnuc5bKz7wEoG
+	yO5T7WS3b7sCYzlIDG4MIQAY1YfkBYBEoIgl32c9EmrrSoEIknllR2H+b059aTu94NtNay698Y6
+	RriOp7FpO1QAqijIOpGOh5Xq5gZRktbitJNnBSMZlVrtMuEO6f3M9JgtGdCPofL8SjiO2mVJDRU
+	gRuavnx9qfiF1J+ogDMGge974b0vpOh6wG/ZcGBme3a2ti6XpT4dEGS7Cz11MgO9Nd8kQS32Y6H
+	la5q7B+jCCmGLsZQWt1OR17INxVOhjspdeuVM2rfPrh1UrxLnunV/gyln8Vl1DdBKy6A1JA+vy8
+	zLdoK8jgFZGe/M2g7TRkbHmQa8icldTAXNU7R0SzQNQ5MG0h+vWaeZACBJNV5ksxaUy/fHuayxZ
+	EFgoiTWFuLhkNCqYSCtEe9jURnwn26Zgmv1DxHp5wpMOwkgPl/Wbp3ThRAEvOm7sLHdraW4T7rj
+	aKAmUqrg+lxjX4KwYZcE+xqRlN/zL+RigkzcjwMEkN4jlBLJpWu1Nd8wXmJqjHlJLwxRNRcQtjf
+	LXPFrNma23fUIEpzQ3LoAVsG+pMN4w5CCKtyF5rLd4+GbpPIDs6TVT8g11nRVRrI5k8Ags+8H6w
+	PZ0w==
+X-Received: by 2002:a05:701b:2810:b0:137:5b9d:cf87 with SMTP id a92af1059eb24-1b502f99235mr4416928c88.0.1794637108636;
+        Fri, 13 Nov 2026 22:18:28 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37955e0d966sm13200536eec.15.2026.11.13.22.18.22
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37955e0d966sm13200536eec.15.2026.11.13.22.18.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 22:18:22 -0800 (PST)
+        Fri, 13 Nov 2026 22:18:27 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
 To: Stuart Hayes <stuart.w.hayes@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -88,9 +88,9 @@ To: Stuart Hayes <stuart.w.hayes@gmail.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] platform/x86: dell: dcdbas: Suppress bind attributes of the platform driver
-Date: Fri, 13 Nov 2026 22:17:55 -0800
-Message-ID: <fa93ff8c72aa9f8a12d032dfc8422d77782f2c6d.1794633178.git.rosenp@gmail.com>
+Subject: [PATCH 5/5] platform/x86: dell: dcdbas: Use read_poll_timeout_atomic() for the type 1 SMI
+Date: Fri, 13 Nov 2026 22:17:58 -0800
+Message-ID: <6380dadbc5d515b4ce0d3322210ac44e4d541200.1794633178.git.rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <cover.1794633178.git.rosenp@gmail.com>
 References: <cover.1794633178.git.rosenp@gmail.com>
@@ -105,36 +105,65 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The dcdbas platform device is created by the module itself and stays
-in use for as long as the module is loaded: dell-smbios-smm allocates
-its SMI buffers against it through dcdbas_smi_alloc() whether or not
-the driver is bound.
+For SMI type 1, host_control_smi() polls the APM status port in a loop
+that counts down TIMEOUT_USEC_SHORT_SEMA_BLOCKING iterations and relies
+on each inb() taking about a microsecond. Use
+read_poll_timeout_atomic() with a 1us delay instead, like the type 2
+and 3 path, so the timeout is in microseconds and does not depend on
+how long a port read takes. With the delay plus the port read, the
+worst-case wait grows from about 10ms to about 20ms, which only matters
+when the BIOS never answers.
 
-Binding the driver again after an unbind also leaks state:
-dcdbas_check_wsmt() runs a second time and memremap()s the firmware
-SMI buffer again, overwriting bios_buffer and leaking the previous
-mapping.
-
-Unbinding or rebinding the device by hand is not useful, so hide the
-bind and unbind files.
+This removes the last users of num_ticks and EXPIRED_TIMER.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/platform/x86/dell/dcdbas.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/dell/dcdbas.c | 12 +++++-------
+ drivers/platform/x86/dell/dcdbas.h |  1 -
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
-index a5917093d539..601ee8ca92e4 100644
+index af4c1d2fe497..edc210852f2d 100644
 --- a/drivers/platform/x86/dell/dcdbas.c
 +++ b/drivers/platform/x86/dell/dcdbas.c
-@@ -708,6 +708,7 @@ static void dcdbas_remove(struct platform_device *dev)
- static struct platform_driver dcdbas_driver = {
- 	.driver		= {
- 		.name	= DRIVER_NAME,
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe		= dcdbas_probe,
- 	.remove		= dcdbas_remove,
+@@ -394,7 +394,6 @@ static int host_control_smi(void)
+ 	struct apm_cmd *apm_cmd;
+ 	u8 *data;
+ 	unsigned long flags;
+-	u32 num_ticks;
+ 	s8 cmd_status;
+ 	u8 index;
+ 
+@@ -424,12 +423,11 @@ static int host_control_smi(void)
+ 		spin_unlock_irqrestore(&rtc_lock, flags);
+ 
+ 		/* wait a few to see if it executed */
+-		num_ticks = TIMEOUT_USEC_SHORT_SEMA_BLOCKING;
+-		while ((s8)inb(PCAT_APM_STATUS_PORT) == ESM_STATUS_CMD_UNSUCCESSFUL) {
+-			num_ticks--;
+-			if (num_ticks == EXPIRED_TIMER)
+-				return -ETIME;
+-		}
++		if (read_poll_timeout_atomic(inb, cmd_status,
++					     cmd_status != ESM_STATUS_CMD_UNSUCCESSFUL,
++					     1, TIMEOUT_USEC_SHORT_SEMA_BLOCKING,
++					     false, PCAT_APM_STATUS_PORT))
++			return -ETIME;
+ 		break;
+ 
+ 	case HC_SMITYPE_TYPE2:
+diff --git a/drivers/platform/x86/dell/dcdbas.h b/drivers/platform/x86/dell/dcdbas.h
+index a05d7f667586..d5ad2363dd9e 100644
+--- a/drivers/platform/x86/dell/dcdbas.h
++++ b/drivers/platform/x86/dell/dcdbas.h
+@@ -42,7 +42,6 @@
+ #define MAX_SYSMGMT_LONGCMD_SGENTRY_NUM		(16)
+ 
+ #define TIMEOUT_USEC_SHORT_SEMA_BLOCKING	(10000)
+-#define EXPIRED_TIMER				(0)
+ 
+ #define SMI_CMD_MAGIC				(0x534D4931)
+ #define SMM_EPS_SIG				"$SCB"
 -- 
 2.56.0
 
