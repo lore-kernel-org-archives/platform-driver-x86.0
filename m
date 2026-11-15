@@ -1,78 +1,75 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794707392;
-	b=cL06dH+sManpGY4bbDLj5SNUnlO9kCt1yDN/CyonL1cMB7Z51V/K9qKabAJzVixIDv9g
-	 QWBnH1dbcCsd9R698zSwav0qy31rCLnDvq3m803T+L6HMS+Bu2nNm0M+U/izp40i6dA/b
-	 8tV18mP8aEJXlbsdvnyFPAtHg7bzar7seucdLqdx4tzEHjS0rFrD8TbtoE4myNtjxl94z
-	 gPDyxQRVZGzawYBYHfQtytW+51MLEYTqubelzH8hCprQ+DE2CsNHK8BGvMJ9E7rkol2je
-	 WkkNQlcvnCf8UfcRuu1/u4ygCyJ2zKReAGT0SMB6yK412gjqvxeJx79h7JqPQ5vk2qA==
+	t=1794708018;
+	b=1h8qdgNTbhXYeHf2G61UWmUb8B6yKzc7mVUv019dd1PbqAAN4FfL5MKq6458uaZTJA58
+	 en4Qcb+4z6xBEv3W/I9IsuShje1oxmzojcaSuJ0/T0X/cXt65urrhX7vwItqNKJfjNv95
+	 Ttk5rDCOqMVaKexL4lYdIFj/Wz9tHhgoyYhUfKH9J0POtgAxWA4ZVzQRmemv0ZS/ZyIIY
+	 q0XHyCdw43bwD+jr2rZvDBiqvpwPwSHBvPm/XXgnFfKsGKi8WywzLgMZP7Az1MrTJLzgV
+	 S+ukbyo3oPyx9Vm/K2d0vGs5oKBhAuaaooutmWNM2vH107fhGCHd/osJaQXUAPUlPDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794707392;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794708018;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=Otzma9vCv7j0/AHpd0p99dn7imhWfAapg4Er/Y7/7fE=;
-	b=i0yYnqfLf4oIR2OdkC8KvDvx+ksZo1oPnt6mYpFSwwUymkuI9ib4UOUjJGmGq1eppKdS
-	 HGe0rF20+RE6idWzSbEJdf5w+Yky4NM1xYKdSCDZNvwarK+92RnP1Y1srA38/tXQZI/73
-	 JDkrUDpsV4irwUc1ISLRbiOE19/WFnhOhDIFQ+KCw2na4iMm8+eISyUzR9yA4R51yvFvi
-	 D8De3naio0a2sw1ql0qmd5Nlk/HUyFeSiZBsAMHMZ2kRciH5pzOClhLMFRBGRHP4JnZsZ
-	 VB9DBo8KS8IX61fxXryjNNHtgl7CJETf0zwSCqIZyQ+fezoZrOKrsESUWvYNaS0E/2w==
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=P7Glu6ZJzmA9TW+nAmORFcdgVf1KdQKTeaWvtFvicEw=;
+	b=kjevRsiPXjVG5z0z4vWvz+bM0XCFNXH/QuHwvRFZ7Wb1CQ2sYFCFCP8xYSxDfxHrIC0F
+	 sBpqSCI/PIw1WusrsbEypXjt6Ri/Rpbetyaenw7oPjGVtoH7pZ1cn6FoZVAprf/ZDrqiB
+	 UpdXQGfRRlyPQyu9NYcu5SkJN4jKkSYVmV8ApebJy1BUfQc0V8SPtCPRWl/84979hgiov
+	 ZkkgX3GEGMm/G3O9hSLpP+Y+c5wYE88xfhRjyrahl614hlY7jArR58GewiTIi17xKpbk7
+	 u43VTV/sp4nB1EF+/dgqlE+jTtYTmR7HYA+QVBhqDLEKi41K8mz1xVzhIYdmDI45xlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IjcsxfRP;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JfRUytLN;
 	arc=none smtp.remote-ip=198.175.65.15
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772F7606A32E;
-	Sun, 15 Nov 2026 01:49:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 772F7606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C85606A327;
+	Sun, 15 Nov 2026 02:00:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35C85606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IjcsxfRP
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JfRUytLN
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794707392; x=1826243392;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XllZZknxafj3mpwUzGZApICQsB0DSXg81aQnGpKiEHk=;
-  b=IjcsxfRPAfbkHy98nHjzgUBbKXmHDfHkOcfSZo+5bgWv/N5q3l9PbUTZ
-   XP4oPwrFxoKOlcgp1TfU1AMNUmsXrMGGCJJlDjVjrMo9m3oGNqaQjF2mi
-   DxDr6FAX2f3DiBvjfYJLBhxLGktoRUMWjk34kCCHEPp6Z3FRKNAypUCq1
-   ZdQCWvZdogUzb+XS00qi45qdKBicN5G0XVBR77Iv7cr1ynsbKSuW2lJn0
-   fkxmPz26kQH/EeQFtutrMKAmdVQxq/mmxi/1XehFRmevQFVz4hNBP3ODq
-   TjLo1SAtSgnszjE9Mlirw6LBZnNKEpOzMubhtqdhSG7HpB8B5SjRN1R6C
-   A==;
-X-CSE-ConnectionGUID: 5XYMH46/TD+MVL2F56fMkQ==
-X-CSE-MsgGUID: X5Y9IIOPTwmiL+EHp1/j4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11966"; a="3476605"
+  t=1794708017; x=1826244017;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Lzcz4BRVuH2aPh8wmrZy4z4sHdJcmT6Z30ltuzvhGIQ=;
+  b=JfRUytLNClrlcuWJMuoQ39bz97I2WHU6HTK/T3Tc6iHAB4RUrabU/xK2
+   XI7NyOCUU5o0kbjM/y/BfEAFfiBExDkHIHc1yl6PuQP8co9LFKjVp7Cl7
+   1EJgahQzjv5bVMWT8zgCD9GBMQ7xSHVUtJd9hY9ke6JqZrPOkUN74hhsl
+   TU6O9CxFINCXnRzeljxwmJx+cTR+XhqcjKVD5kPnASIzGO77quFNdHMZd
+   rHNVq4/PiotWFJ8M2IHF2qT46MwNEyEiMagKADnSg+VdC435phZ5XXhcb
+   si0idqJ1LUkRJOJ5H7FEvZHVsWK/fmLZXByEcP4W6mEcGwzB2sXXw9JMx
+   w==;
+X-CSE-ConnectionGUID: UhVtn+/qSN+Db0QFdF4nvg==
+X-CSE-MsgGUID: uV1C5CoXRvq1duSTplkWrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11966"; a="3476868"
 X-IronPort-AV: E=Sophos;i="6.27,214,1787036400"; 
-   d="scan'208";a="3476605"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2026 17:49:50 -0800
-X-CSE-ConnectionGUID: 0htPdH2SR/+8FlKO/Pg4Gw==
-X-CSE-MsgGUID: 9dtPmQBdReGe5vRwdlIgKA==
+   d="scan'208";a="3476868"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2026 18:00:17 -0800
+X-CSE-ConnectionGUID: EjShwE4vRYmXe4CMdm2vjA==
+X-CSE-MsgGUID: B0DvsWVRR8CgTsePJ5toAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,214,1787036400"; 
-   d="scan'208";a="9492167"
+   d="scan'208";a="9397844"
 Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by fmviesa008.fm.intel.com with ESMTP; 14 Nov 2026 17:49:50 -0800
+  by fmviesa002.fm.intel.com with ESMTP; 14 Nov 2026 18:00:16 -0800
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 1/2] platform/x86/intel-uncore-freq: Don't remove entries which are not added
-Date: Sat, 14 Nov 2026 17:49:47 -0800
-Message-ID: <20261115014948.2517688-2-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel-uncore-freq: Use the same IO domain IDs as ISST
+Date: Sat, 14 Nov 2026 18:00:15 -0800
+Message-ID: <20261115020015.2518047-1-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261115014948.2517688-1-srinivas.pandruvada@linux.intel.com>
-References: <20261115014948.2517688-1-srinivas.pandruvada@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -84,66 +81,298 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When uncore_probe() fails, remove_cluster_entries() removes the entries of
-all clusters of every mapped power domain. But not all of them are added:
+The uncore frequency driver and the Intel Speed Select (ISST) driver both
+present power domain IDs, which are unique in a package. Compute die
+domain IDs are the same in both drivers, as they come from the hardware
+provided cdie_mask.
 
-- When the allocation of cluster_infos fails, cluster_count is already
-  set. So remove_cluster_entries() dereferences the NULL cluster_infos.
+The Intel Speed Select user space tool shows the uncore frequency limits
+of IO dies, which are set using the uncore frequency sysfs interface. To
+find the uncore frequency entry of an IO die, user space needs the same
+power domain ID from both drivers. Otherwise it needs to rely on platform
+specific knowledge to map IO dies between the two interfaces.
 
-- When uncore_freq_add_entry() fails for a cluster, this cluster and all
-  later clusters were not added. uncore_freq_remove_die_entry() still
-  removes their attribute group, which doesn't exist. As domain_id of
-  these clusters is not UNCORE_DOMAIN_ID_INVALID, it also frees their
-  seqnum_id with ida_free(). The seqnum_id is 0 from allocation, which
-  can be in use by an entry of another device.
+But IO domain IDs are assigned differently:
 
-Skip removing an entry in uncore_freq_remove_die_entry(), when it is not
-valid, which means that it was not added or is already removed. Also
-skip power domains without cluster_infos in remove_cluster_entries().
+ISST: IO domain IDs start after the highest compute die ID of the last
+partition, which is fls() of its cdie_mask, and are assigned in partition
+order.
 
-Fixes: 01c10f88c9b7 ("platform/x86/intel-uncore-freq: tpmi: Provide cluster level control")
+Uncore: IO domain IDs start at the maximum of
+topology_max_dies_per_package() and the compute die range of the
+partition which is probed first, and are assigned in probe order.
+
+So on a partitioned system, the IO domain IDs of the two drivers differ:
+
+- When partition 1 is probed before partition 0. For example with
+  cdie_mask 0b0011 and 0b1100 and one IO die in each partition, ISST
+  uses 4 for the IO die of partition 0 and 5 for partition 1, while
+  uncore uses 5 and 4.
+
+Use the same method as ISST, which doesn't depend on the probe order or
+the CPU topology. As a partition only knows its own cdie_mask, store the
+cdie_mask and the number of IO dies of each partition at probe, and
+resolve the IO domain ID when the domain_id attribute is read.
+
+When the hardware doesn't provide cdie_mask, the system is not
+partitioned. Use the resource index as the domain ID, same as ISST.
+
+There is no change in the domain IDs presented to user space on
+non-partitioned systems with cdie_mask. On partitioned systems there is
+no change, when partition 0 is probed first and the number of dies from
+the CPU topology covers all compute dies. Without cdie_mask, there is no
+change when the CPU doesn't enumerate dies.
+
+Fixes: a191224186ec ("platform/x86/intel-uncore-freq: Present unique domain ID per package")
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel/uncore-frequency/uncore-frequency-common.c     | 5 +++++
- .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c       | 3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ .../uncore-frequency-common.c                 |  14 +-
+ .../uncore-frequency-common.h                 |   1 +
+ .../uncore-frequency/uncore-frequency-tpmi.c  | 142 ++++++++++++------
+ 3 files changed, 106 insertions(+), 51 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-index 4bcafedf68ef..6051aa040abf 100644
+index 22019099a857..060414d9bbfe 100644
 --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
 +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -312,12 +312,17 @@ EXPORT_SYMBOL_NS_GPL(uncore_freq_add_entry, "INTEL_UNCORE_FREQUENCY");
- void uncore_freq_remove_die_entry(struct uncore_data *data)
+@@ -25,8 +25,20 @@ static int (*uncore_write)(struct uncore_data *data, unsigned int input, enum un
+ static ssize_t show_domain_id(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
  {
- 	mutex_lock(&uncore_lock);
-+	/* Nothing to remove, if the entry was not added or already removed */
-+	if (!data->valid)
-+		goto uncore_unlock;
-+
- 	delete_attr_group(data, data->name);
- 	data->control_cpu = -1;
- 	data->valid = false;
- 	if (data->domain_id != UNCORE_DOMAIN_ID_INVALID)
- 		ida_free(&intel_uncore_ida, data->seqnum_id);
+ 	struct uncore_data *data = container_of(attr, struct uncore_data, domain_id_kobj_attr);
++	unsigned int value;
++	int ret;
  
-+uncore_unlock:
- 	mutex_unlock(&uncore_lock);
+-	return sysfs_emit(buf, "%u\n", data->domain_id);
++	/*
++	 * Some domain IDs can only be resolved after all partitions are
++	 * probed. The driver uses its own lock for the domain IDs.
++	 */
++	ret = uncore_read(data, &value, UNCORE_INDEX_DOMAIN_ID);
++	if (ret == -EOPNOTSUPP)
++		value = data->domain_id;
++	else if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", value);
  }
- EXPORT_SYMBOL_NS_GPL(uncore_freq_remove_die_entry, "INTEL_UNCORE_FREQUENCY");
+ 
+ static ssize_t show_instance_id(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
+index e319448dc1a4..c77e4d98e3ca 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
+@@ -108,6 +108,7 @@ enum uncore_index {
+ 	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE,
+ 	UNCORE_INDEX_EFF_LAT_CTRL_FREQ,
+ 	UNCORE_INDEX_DIE_ID,
++	UNCORE_INDEX_DOMAIN_ID,
+ };
+ 
+ int uncore_freq_common_init(int (*read)(struct uncore_data *data, unsigned int *value,
 diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index 753ddfe8c759..73e0b0a94eaf 100644
+index 73e0b0a94eaf..27221b66be2e 100644
 --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
 +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -524,7 +524,8 @@ static void remove_cluster_entries(struct tpmi_uncore_struct *tpmi_uncore)
- 		int j;
+@@ -52,6 +52,8 @@ struct tpmi_uncore_cluster_info {
+ 	bool elc_supported;
+ 	u8 __iomem *cluster_base;
+ 	u16 cdie_id;
++	bool io_domain;
++	u8 partition;
+ 	struct uncore_data uncore_data;
+ 	struct tpmi_uncore_struct *uncore_root;
+ };
+@@ -376,13 +378,16 @@ static void uncore_set_agent_type(struct tpmi_uncore_cluster_info *cluster_info)
  
- 		pd_info = &tpmi_uncore->pd_info[i];
--		if (!pd_info->uncore_base)
-+		/* Probe may fail before cluster_infos is allocated */
-+		if (!pd_info->uncore_base || !pd_info->cluster_infos)
- 			continue;
+ #define MAX_PARTITIONS	2
  
- 		for (j = 0; j < pd_info->cluster_count; ++j) {
+-/* IO domain ID start index for a partition */
+-static u8 io_die_start[MAX_PARTITIONS];
+-
+-/* Next IO domain ID index after the current partition IO die IDs */
+-static u8 io_die_index_next;
++/*
++ * Compute die mask and number of IO dies of each partition. The layout is
++ * the same for all packages. A partition only knows its own compute dies,
++ * so IO domain IDs are resolved at read time once all partitions are known.
++ */
++static u16 part_cdie_mask[MAX_PARTITIONS];
++static u8 part_io_dies[MAX_PARTITIONS];
++static u8 part_mask;
+ 
+-/* Lock to protect io_die_start, io_die_index_next */
++/* Lock to protect part_cdie_mask, part_io_dies and part_mask */
+ static DEFINE_MUTEX(domain_lock);
+ 
+ static inline void set_instance_id(int id, struct tpmi_uncore_cluster_info *cluster_info)
+@@ -397,64 +402,89 @@ static inline void set_instance_id(int id, struct tpmi_uncore_cluster_info *clus
+ 	cluster_info->uncore_data.instance_id = id;
+ }
+ 
+-static void set_domain_id(int id, int num_resources,
+-			  struct oobmsm_plat_info *plat_info,
+-			  struct tpmi_uncore_cluster_info *cluster_info)
++static u8 get_cdie_range(u16 cdie_mask)
+ {
+-	u8 part_io_index, cdie_range, pkg_io_index, max_dies;
++	/* Unlikely but cdie_mask may have holes, so take range */
++	return fls(cdie_mask) - ffs(cdie_mask) + 1;
++}
+ 
+-	if (plat_info->partition >= MAX_PARTITIONS) {
+-		cluster_info->uncore_data.domain_id = id;
+-		return;
+-	}
++/*
++ * Get the IO domain ID of a cluster, which is unique in a package. Same as
++ * the Intel Speed Select driver, IO domain IDs start after the highest
++ * compute die ID of the last partition and are then assigned in partition
++ * order. For example:
++ *
++ * Partition 0: cdie_mask 0b0011 with 1 IO die
++ * Partition 1: cdie_mask 0b1100 with 1 IO die
++ *
++ * Domain IDs 0-3 are compute dies, 4 is the IO die of partition 0 and 5 is
++ * the IO die of partition 1.
++ *
++ * Until all partitions are probed, the returned ID may change.
++ */
++static unsigned int get_io_domain_id(struct tpmi_uncore_cluster_info *cluster_info)
++{
++	u8 part = cluster_info->partition;
++	unsigned int io_start, i;
+ 
+-	if (cluster_info->uncore_data.agent_type_mask & AGENT_TYPE_CORE) {
+-		cluster_info->uncore_data.domain_id = cluster_info->cdie_id;
+-		return;
+-	}
++	lockdep_assert_held(&domain_lock);
+ 
+-	/* Unlikely but cdie_mask may have holes, so take range */
+-	cdie_range = fls(plat_info->cdie_mask) - ffs(plat_info->cdie_mask) + 1;
+-	max_dies = topology_max_dies_per_package();
++	io_start = fls(part_cdie_mask[fls(part_mask) - 1]);
+ 
+-	/*
+-	 * If the CPU doesn't enumerate dies, then use current cdie range
+-	 * as the max.
+-	 */
+-	if (cdie_range > max_dies)
+-		max_dies = cdie_range;
++	for (i = 0; i < part; i++)
++		io_start += part_io_dies[i];
++
++	/* Compute dies are first in a partition, followed by IO dies */
++	return io_start + cluster_info->uncore_data.instance_id -
++	       get_cdie_range(part_cdie_mask[part]);
++}
++
++/*
++ * Record the compute die mask and number of IO dies of a partition. This is
++ * done for every partition, including partitions without IO dies, as IO
++ * domain IDs depend on the compute dies of all partitions.
++ */
++static void set_partition_info(struct oobmsm_plat_info *plat_info, int num_resources)
++{
++	u8 part = plat_info->partition;
++
++	if (part >= MAX_PARTITIONS || !plat_info->cdie_mask)
++		return;
+ 
+ 	guard(mutex)(&domain_lock);
+ 
+-	if (!io_die_index_next)
+-		io_die_index_next = max_dies;
++	/* Keep partition data on unbind, so that IDs stay stable */
++	part_cdie_mask[part] = plat_info->cdie_mask;
++	part_io_dies[part] = num_resources - get_cdie_range(plat_info->cdie_mask);
++	part_mask |= BIT(part);
++}
+ 
+-	if (!io_die_start[plat_info->partition]) {
+-		io_die_start[plat_info->partition] = io_die_index_next;
+-		/*
+-		 * number of IO dies = num_resources - cdie_range. Hence
+-		 * next partition io_die_index_next is set after IO dies
+-		 * in the current partition.
+-		 */
+-		io_die_index_next += (num_resources - cdie_range);
+-	}
++static void set_domain_id(int id, struct oobmsm_plat_info *plat_info,
++			  struct tpmi_uncore_cluster_info *cluster_info)
++{
++	u8 part = plat_info->partition;
+ 
+ 	/*
+-	 * Index from IO die start within the partition:
+-	 * This is the first valid domain after the cdies.
+-	 * For example the current resource index 5 and cdies end at
+-	 * index 3 (cdie_cnt = 4). Then the IO only index 5 - 4 = 1.
++	 * Without the hardware provided compute die mask, power domain IDs
++	 * are the same as the resource index, same as the Intel Speed Select
++	 * driver.
+ 	 */
+-	part_io_index = id - cdie_range;
++	if (part >= MAX_PARTITIONS || !plat_info->cdie_mask) {
++		cluster_info->uncore_data.domain_id = id;
++		return;
++	}
++
++	if (cluster_info->uncore_data.agent_type_mask & AGENT_TYPE_CORE) {
++		cluster_info->uncore_data.domain_id = cluster_info->cdie_id;
++		return;
++	}
+ 
+ 	/*
+-	 * Add to the IO die start index for this partition in this package
+-	 * to make unique in the package.
++	 * The domain ID is resolved in uncore_read() as it depends on all
++	 * partitions. domain_id is zero initialized, which marks it valid.
+ 	 */
+-	pkg_io_index = io_die_start[plat_info->partition] + part_io_index;
+-
+-	/* Assign this to domain ID */
+-	cluster_info->uncore_data.domain_id = pkg_io_index;
++	cluster_info->io_domain = true;
++	cluster_info->partition = part;
+ }
+ 
+ /* Callback for sysfs read for TPMI uncore values. Called under mutex locks. */
+@@ -487,6 +517,16 @@ static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncor
+ 		*value = ret;
+ 		return 0;
+ 
++	case UNCORE_INDEX_DOMAIN_ID: {
++		cluster_info = container_of(data, struct tpmi_uncore_cluster_info, uncore_data);
++		if (!cluster_info->io_domain)
++			break;
++
++		guard(mutex)(&domain_lock);
++		*value = get_io_domain_id(cluster_info);
++		return 0;
++	}
++
+ 	default:
+ 		break;
+ 	}
+@@ -610,6 +650,8 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 
+ 	pkg = plat_info->package_id;
+ 
++	set_partition_info(plat_info, num_resources);
++
+ 	for (i = 0; i < num_resources; ++i) {
+ 		struct tpmi_uncore_power_domain_info *pd_info;
+ 		bool auto_ufs_enabled;
+@@ -702,7 +744,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 
+ 			set_cdie_id(i, cluster_info, plat_info);
+ 
+-			set_domain_id(i, num_resources, plat_info, cluster_info);
++			set_domain_id(i, plat_info, cluster_info);
+ 			set_instance_id(i, cluster_info);
+ 
+ 			cluster_info->uncore_root = tpmi_uncore;
 -- 
 2.55.0
 
