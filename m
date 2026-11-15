@@ -1,75 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794708018;
-	b=1h8qdgNTbhXYeHf2G61UWmUb8B6yKzc7mVUv019dd1PbqAAN4FfL5MKq6458uaZTJA58
-	 en4Qcb+4z6xBEv3W/I9IsuShje1oxmzojcaSuJ0/T0X/cXt65urrhX7vwItqNKJfjNv95
-	 Ttk5rDCOqMVaKexL4lYdIFj/Wz9tHhgoyYhUfKH9J0POtgAxWA4ZVzQRmemv0ZS/ZyIIY
-	 q0XHyCdw43bwD+jr2rZvDBiqvpwPwSHBvPm/XXgnFfKsGKi8WywzLgMZP7Az1MrTJLzgV
-	 S+ukbyo3oPyx9Vm/K2d0vGs5oKBhAuaaooutmWNM2vH107fhGCHd/osJaQXUAPUlPDQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794708018;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=P7Glu6ZJzmA9TW+nAmORFcdgVf1KdQKTeaWvtFvicEw=;
-	b=kjevRsiPXjVG5z0z4vWvz+bM0XCFNXH/QuHwvRFZ7Wb1CQ2sYFCFCP8xYSxDfxHrIC0F
-	 sBpqSCI/PIw1WusrsbEypXjt6Ri/Rpbetyaenw7oPjGVtoH7pZ1cn6FoZVAprf/ZDrqiB
-	 UpdXQGfRRlyPQyu9NYcu5SkJN4jKkSYVmV8ApebJy1BUfQc0V8SPtCPRWl/84979hgiov
-	 ZkkgX3GEGMm/G3O9hSLpP+Y+c5wYE88xfhRjyrahl614hlY7jArR58GewiTIi17xKpbk7
-	 u43VTV/sp4nB1EF+/dgqlE+jTtYTmR7HYA+QVBhqDLEKi41K8mz1xVzhIYdmDI45xlg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JfRUytLN;
-	arc=none smtp.remote-ip=198.175.65.15
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794729498;
+	b=WeGzt63SXz0P+ZumCWP1pFXp8ym681TNOso8AlQO5KynbQfmIgREnJ/wguutqdMOV3YZ
+	 EwW1Kult8O+vlpipM9AgGswdrwhLI4tQw9PDdA9gPsuOsxiRZJNJfLZOYIlTV0bC/lmwJ
+	 7Ea1yGmyH7j8/zAM2cK8d3z9Fwi9xxUekeBOcrJ4ztnjvxfJwpEFmWBxln3tkLZfw4SfN
+	 sxIuDIVDd/8Ef7O8CneuFFNNiI+2S68RCleQff4QZWC8M/Lwo+6Bn/8g+9F9Wl876BSjq
+	 90T2IWKc7iRK2w41Etv+uvM8cKvUNFO2WzjNuceFtrpLxCIH5IxoqKnj0EZFGKF3zYg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794729498;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=05IOe9HqJkWhqKvUBJVfU/SAL+xPCR/Byzx9O7+JrPI=;
+	b=TblDrCG36J7mvVd0o/cCUBva543HOPMIjSqi8ojwt2fq8sK1F4AtwX1ZJCGlsZS2U4yV
+	 de2VD6MvsHSf8dJ3fs0Dh+WS/DTY2GVizW7yufVRogtGbcC0gWi6PoSMEcoNpxNoRC1pK
+	 P+dmpK8ImUMN07tKLdqoSl7XVjH8btskxAkvtg0HojSgFQG334vNCzy1dVhurQaEH8VS2
+	 0Y702+aQCtk7wLr10o4h60dHWlATmhiJBr7BgfcGNS3KB9c0plCLArH6wcOQmYyVwzhpf
+	 iet+nZJeJcY5IcQVS9xF2llp6YHHP4xsxIL5iGUKO+IJWkGOJIfoQA+W8PaxkE/ypaA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=nU6PyZVn;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C85606A327;
-	Sun, 15 Nov 2026 02:00:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35C85606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB9B606A31D;
+	Sun, 15 Nov 2026 07:58:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BBB9B606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JfRUytLN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794708017; x=1826244017;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Lzcz4BRVuH2aPh8wmrZy4z4sHdJcmT6Z30ltuzvhGIQ=;
-  b=JfRUytLNClrlcuWJMuoQ39bz97I2WHU6HTK/T3Tc6iHAB4RUrabU/xK2
-   XI7NyOCUU5o0kbjM/y/BfEAFfiBExDkHIHc1yl6PuQP8co9LFKjVp7Cl7
-   1EJgahQzjv5bVMWT8zgCD9GBMQ7xSHVUtJd9hY9ke6JqZrPOkUN74hhsl
-   TU6O9CxFINCXnRzeljxwmJx+cTR+XhqcjKVD5kPnASIzGO77quFNdHMZd
-   rHNVq4/PiotWFJ8M2IHF2qT46MwNEyEiMagKADnSg+VdC435phZ5XXhcb
-   si0idqJ1LUkRJOJ5H7FEvZHVsWK/fmLZXByEcP4W6mEcGwzB2sXXw9JMx
-   w==;
-X-CSE-ConnectionGUID: UhVtn+/qSN+Db0QFdF4nvg==
-X-CSE-MsgGUID: uV1C5CoXRvq1duSTplkWrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11966"; a="3476868"
-X-IronPort-AV: E=Sophos;i="6.27,214,1787036400"; 
-   d="scan'208";a="3476868"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2026 18:00:17 -0800
-X-CSE-ConnectionGUID: EjShwE4vRYmXe4CMdm2vjA==
-X-CSE-MsgGUID: B0DvsWVRR8CgTsePJ5toAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,214,1787036400"; 
-   d="scan'208";a="9397844"
-Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by fmviesa002.fm.intel.com with ESMTP; 14 Nov 2026 18:00:16 -0800
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86/intel-uncore-freq: Use the same IO domain IDs as ISST
-Date: Sat, 14 Nov 2026 18:00:15 -0800
-Message-ID: <20261115020015.2518047-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=nU6PyZVn
+ARC-Seal: i=1; a=rsa-sha256; t=1794729471; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XPA4K2S0K4QuFahjL33GNLMjMak11iOF+0O3K8CZzyVUxt63zy9FOfgQRgUJnlaMP2PsqjMkKnGgcnvw8lBU8MU4Jp79rfw6GHXAXELvkZd/Kxne3nKKQo72T/fK/X8xPu4Ec3vGaoBqboYP/JTD1vuqy0wtiNiOgO4+BuaJVF0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1794729471; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=05IOe9HqJkWhqKvUBJVfU/SAL+xPCR/Byzx9O7+JrPI=; 
+	b=b8vkkqmjt9GPNV3u/hMyltOfymeSXgcfyMjj50ofBBdOwHichO+29yWNFb8MCPjYFXF/rIEkII4/Zx78SUUqaPfSg/RnFx/iTwcOkqVE91J2OCEYhTqfuJPPLxWdqZMnUqRSpzxuC75HXVBaGsh/12Rw1OvCWTS+sRGEO8zpu4U=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=nU6PyZVnjwX2D9OAqkeq7xjUUrh0RJSnsJuLLguBdBZwkMqI7put65BfMZ5iw3DaAu1/Kny0M/z/Mq+weG1QIFAIuV/N5LaYfshAvFOEwaq7cNnyp+X9XzUwbg3YKf3544bYjFbWNyMOJ63XX0CGT5JDBZoj9RVet7KdGfDjuwnH5HNT8jlnR77ypJKy0UV0q+AKAcN0fn/l4G/EUFTXsHsxcLT+rjY8d9S9oclBpZBhm4fSbUBTrl2d9qNSKcgC1uQ1YKvIsTzUDGaE0pu31HIQTTVkRv5G2xGZ9Jg9nEo0U5ErRgRKS8RxdC6qYLg91Hz7y1w70+JHlP78vRlTqg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=05IOe9HqJkWhqKvUBJVfU/SAL+xPCR/Byzx9O7+JrPI=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1794729468897515.208258334714;
+	Sat, 14 Nov 2026 23:57:48 -0800 (PST)
+Message-ID: <230263171c25c322d97fa29439a01922db47f913.camel@rong.moe>
+Subject: Re: [PATCH v3 0/7] platform/x86: thinkpad_acpi: Add support for
+ auto keyboard backlight
+From: Rong Zhang <i@rong.moe>
+To: Qiling Zhu <kmatzkaczor244@gmail.com>, Mark Pearson	
+ <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  Henrique de Moraes Holschuh	
+ <hmh@hmh.eng.br>
+Cc: Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>, Lee Jones
+	 <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Griffin Kroah-Hartman
+	 <griffin@kroah.com>, vishnuocv@gmail.com, vsankar@lenovo.com, 
+	platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261114174814.62153-1-kmatzkaczor244@gmail.com>
+References: <20261102151211.40701-1-kmatzkaczor244@gmail.com>
+	 <20261114174814.62153-1-kmatzkaczor244@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 15 Nov 2026 15:52:36 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -79,300 +76,158 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.62.1-3 
+X-ZohoMailClient: External
 
-The uncore frequency driver and the Intel Speed Select (ISST) driver both
-present power domain IDs, which are unique in a package. Compute die
-domain IDs are the same in both drivers, as they come from the hardware
-provided cdie_mask.
+Hi Qiling,
 
-The Intel Speed Select user space tool shows the uncore frequency limits
-of IO dies, which are set using the uncore frequency sysfs interface. To
-find the uncore frequency entry of an IO die, user space needs the same
-power domain ID from both drivers. Otherwise it needs to rely on platform
-specific knowledge to map IO dies between the two interfaces.
+Thanks for working on this.
 
-But IO domain IDs are assigned differently:
+On Sun, 2026-11-15 at 01:48 +0800, Qiling Zhu wrote:
+> Hi all,
+>=20
+> Thanks, Rong, for the two rounds of detailed review, Vishnu and Mark
+> for the firmware-side answers, and Andrea for the bug report that
+> became the first patch. This v3 addresses the feedback in full; the
+> series grew from two to seven patches to pick up the suggested
+> structure and to make the fixes independently backportable.
 
-ISST: IO domain IDs start after the highest compute die ID of the last
-partition, which is fls() of its cdie_mask, and are assigned in partition
-order.
+The next time when you send a series (i.e., PATCH x/n, n > 1), please do
+not reply to the previous thread to keep it tidy.
 
-Uncore: IO domain IDs start at the maximum of
-topology_max_dies_per_package() and the compute die range of the
-partition which is probed first, and are assigned in probe order.
+>=20
+> The series in short:
+>=20
+>   1/7  Report auto mode as brightness 0 instead of 3          (stable fix=
+)
+>   2/7  Extract kbdlight_notify_change() helpers               (refactor)
+>   3/7  Sync LED core state on level writes          (write-path sync)
+>   4/7  Detect auto-mode capability via MLCG bit 20            (groundwork=
+)
+>   5/7  Skip LED suspend/resume on auto-mode machines
+>   6/7  Add support for auto keyboard backlight                 (the featu=
+re)
+>   7/7  Reconcile EC level on resume
+>=20
+> Changes since v2, by comment:
+>=20
+> * The notification path is now split as suggested: a helper that accepts
+>   a level and a wrapper that queries the EC (2/7), and the proc write
+>   path goes through it (3/7), like commit 07f48f668fac did for the
+>   ideapad FnLock LED. The manual check-then-act trigger removal is gone
+>   entirely; leaving auto mode through either interface now drops the
+>   trigger through the LED core.
+>=20
+> * LED suspend/resume is skipped entirely on machines that support auto
+>   mode, keyed on the capability bit rather than the current level (5/7),
+>   as suggested. My testing confirms the firmware restores the previous
+>   level on its own in all cases except auto mode across hibernation;
+>   less state remains in the driver, and the class of races around
+>   LED_SUSPENDED disappears.
+>=20
+> * activate() is now a one-liner with no read-back verification (6/7);
+>   it only writes the level, using the plain set helper. I did not use
+>   the updating wrapper there on purpose: the trigger core is in the
+>   middle of its own activation flow at that point, and the 0x1012 event
+>   that follows the level change is expected to bring the state back in
+>   sync through the regular notify path.
+>=20
+> * Trigger registration is gated on MLCG bit 20 as per Vishnu's
+>   confirmation (4/7 + 6/7).
+>=20
+> * Andrea's report is fixed by 1/7, which reports auto mode as 0 to the
+>   LED classdev and is marked for stable. It is deliberately minimal -
+>   a single check, no further splitting - to keep backporting easy.
+>=20
+> * On the proc attribute deprecation: I support the idea, deferring to
+>   the thinkpad_acpi maintainers.
+>=20
+> One addition that was not in v2: testing showed that the firmware does
+> not restore auto mode across hibernation
+>=20
 
-So on a partitioned system, the IO domain IDs of the two drivers differ:
+How about s2idle? And what if hw brightness =3D [0,2] before hibernation?
 
-- When partition 1 is probed before partition 0. For example with
-  cdie_mask 0b0011 and 0b1100 and one IO die in each partition, ISST
-  uses 4 for the IO die of partition 0 and 5 for partition 1, while
-  uncore uses 5 and 4.
+Meanwhile, could you test s2idle, hibernation and cold boots with
+thinkpad_acpi blacklisted to see if hw brightness ([0,2] and 3) is
+preserved? We need the raw behavior to determine our strategy.
 
-Use the same method as ISST, which doesn't depend on the probe order or
-the CPU topology. As a partition only knows its own cdie_mask, store the
-cdie_mask and the number of IO dies of each partition at probe, and
-resolve the IO domain ID when the domain_id attribute is read.
+>  - the EC comes back with the
+> backlight off, without an event. Rather than re-attaching the trigger
+> from the pre-suspend state,=C2=A0
+>=20
 
-When the hardware doesn't provide cdie_mask, the system is not
-partitioned. Use the resource index as the domain ID, same as ISST.
+"re-attaching"
 
-There is no change in the domain IDs presented to user space on
-non-partitioned systems with cdie_mask. On partitioned systems there is
-no change, when partition 0 is probed first and the number of dies from
-the CPU topology covers all compute dies. Without cdie_mask, there is no
-change when the CPU doesn't enumerate dies.
+I am not familiar with hibernation, so I am not sure if the LED core
+would detach the trigger before entering hibernation. If not, why did you
+say that?
 
-Fixes: a191224186ec ("platform/x86/intel-uncore-freq: Present unique domain ID per package")
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../uncore-frequency-common.c                 |  14 +-
- .../uncore-frequency-common.h                 |   1 +
- .../uncore-frequency/uncore-frequency-tpmi.c  | 142 ++++++++++++------
- 3 files changed, 106 insertions(+), 51 deletions(-)
+Thanks,
+Rong
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-index 22019099a857..060414d9bbfe 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -25,8 +25,20 @@ static int (*uncore_write)(struct uncore_data *data, unsigned int input, enum un
- static ssize_t show_domain_id(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
- {
- 	struct uncore_data *data = container_of(attr, struct uncore_data, domain_id_kobj_attr);
-+	unsigned int value;
-+	int ret;
- 
--	return sysfs_emit(buf, "%u\n", data->domain_id);
-+	/*
-+	 * Some domain IDs can only be resolved after all partitions are
-+	 * probed. The driver uses its own lock for the domain IDs.
-+	 */
-+	ret = uncore_read(data, &value, UNCORE_INDEX_DOMAIN_ID);
-+	if (ret == -EOPNOTSUPP)
-+		value = data->domain_id;
-+	else if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%u\n", value);
- }
- 
- static ssize_t show_instance_id(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-index e319448dc1a4..c77e4d98e3ca 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-@@ -108,6 +108,7 @@ enum uncore_index {
- 	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE,
- 	UNCORE_INDEX_EFF_LAT_CTRL_FREQ,
- 	UNCORE_INDEX_DIE_ID,
-+	UNCORE_INDEX_DOMAIN_ID,
- };
- 
- int uncore_freq_common_init(int (*read)(struct uncore_data *data, unsigned int *value,
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index 73e0b0a94eaf..27221b66be2e 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -52,6 +52,8 @@ struct tpmi_uncore_cluster_info {
- 	bool elc_supported;
- 	u8 __iomem *cluster_base;
- 	u16 cdie_id;
-+	bool io_domain;
-+	u8 partition;
- 	struct uncore_data uncore_data;
- 	struct tpmi_uncore_struct *uncore_root;
- };
-@@ -376,13 +378,16 @@ static void uncore_set_agent_type(struct tpmi_uncore_cluster_info *cluster_info)
- 
- #define MAX_PARTITIONS	2
- 
--/* IO domain ID start index for a partition */
--static u8 io_die_start[MAX_PARTITIONS];
--
--/* Next IO domain ID index after the current partition IO die IDs */
--static u8 io_die_index_next;
-+/*
-+ * Compute die mask and number of IO dies of each partition. The layout is
-+ * the same for all packages. A partition only knows its own compute dies,
-+ * so IO domain IDs are resolved at read time once all partitions are known.
-+ */
-+static u16 part_cdie_mask[MAX_PARTITIONS];
-+static u8 part_io_dies[MAX_PARTITIONS];
-+static u8 part_mask;
- 
--/* Lock to protect io_die_start, io_die_index_next */
-+/* Lock to protect part_cdie_mask, part_io_dies and part_mask */
- static DEFINE_MUTEX(domain_lock);
- 
- static inline void set_instance_id(int id, struct tpmi_uncore_cluster_info *cluster_info)
-@@ -397,64 +402,89 @@ static inline void set_instance_id(int id, struct tpmi_uncore_cluster_info *clus
- 	cluster_info->uncore_data.instance_id = id;
- }
- 
--static void set_domain_id(int id, int num_resources,
--			  struct oobmsm_plat_info *plat_info,
--			  struct tpmi_uncore_cluster_info *cluster_info)
-+static u8 get_cdie_range(u16 cdie_mask)
- {
--	u8 part_io_index, cdie_range, pkg_io_index, max_dies;
-+	/* Unlikely but cdie_mask may have holes, so take range */
-+	return fls(cdie_mask) - ffs(cdie_mask) + 1;
-+}
- 
--	if (plat_info->partition >= MAX_PARTITIONS) {
--		cluster_info->uncore_data.domain_id = id;
--		return;
--	}
-+/*
-+ * Get the IO domain ID of a cluster, which is unique in a package. Same as
-+ * the Intel Speed Select driver, IO domain IDs start after the highest
-+ * compute die ID of the last partition and are then assigned in partition
-+ * order. For example:
-+ *
-+ * Partition 0: cdie_mask 0b0011 with 1 IO die
-+ * Partition 1: cdie_mask 0b1100 with 1 IO die
-+ *
-+ * Domain IDs 0-3 are compute dies, 4 is the IO die of partition 0 and 5 is
-+ * the IO die of partition 1.
-+ *
-+ * Until all partitions are probed, the returned ID may change.
-+ */
-+static unsigned int get_io_domain_id(struct tpmi_uncore_cluster_info *cluster_info)
-+{
-+	u8 part = cluster_info->partition;
-+	unsigned int io_start, i;
- 
--	if (cluster_info->uncore_data.agent_type_mask & AGENT_TYPE_CORE) {
--		cluster_info->uncore_data.domain_id = cluster_info->cdie_id;
--		return;
--	}
-+	lockdep_assert_held(&domain_lock);
- 
--	/* Unlikely but cdie_mask may have holes, so take range */
--	cdie_range = fls(plat_info->cdie_mask) - ffs(plat_info->cdie_mask) + 1;
--	max_dies = topology_max_dies_per_package();
-+	io_start = fls(part_cdie_mask[fls(part_mask) - 1]);
- 
--	/*
--	 * If the CPU doesn't enumerate dies, then use current cdie range
--	 * as the max.
--	 */
--	if (cdie_range > max_dies)
--		max_dies = cdie_range;
-+	for (i = 0; i < part; i++)
-+		io_start += part_io_dies[i];
-+
-+	/* Compute dies are first in a partition, followed by IO dies */
-+	return io_start + cluster_info->uncore_data.instance_id -
-+	       get_cdie_range(part_cdie_mask[part]);
-+}
-+
-+/*
-+ * Record the compute die mask and number of IO dies of a partition. This is
-+ * done for every partition, including partitions without IO dies, as IO
-+ * domain IDs depend on the compute dies of all partitions.
-+ */
-+static void set_partition_info(struct oobmsm_plat_info *plat_info, int num_resources)
-+{
-+	u8 part = plat_info->partition;
-+
-+	if (part >= MAX_PARTITIONS || !plat_info->cdie_mask)
-+		return;
- 
- 	guard(mutex)(&domain_lock);
- 
--	if (!io_die_index_next)
--		io_die_index_next = max_dies;
-+	/* Keep partition data on unbind, so that IDs stay stable */
-+	part_cdie_mask[part] = plat_info->cdie_mask;
-+	part_io_dies[part] = num_resources - get_cdie_range(plat_info->cdie_mask);
-+	part_mask |= BIT(part);
-+}
- 
--	if (!io_die_start[plat_info->partition]) {
--		io_die_start[plat_info->partition] = io_die_index_next;
--		/*
--		 * number of IO dies = num_resources - cdie_range. Hence
--		 * next partition io_die_index_next is set after IO dies
--		 * in the current partition.
--		 */
--		io_die_index_next += (num_resources - cdie_range);
--	}
-+static void set_domain_id(int id, struct oobmsm_plat_info *plat_info,
-+			  struct tpmi_uncore_cluster_info *cluster_info)
-+{
-+	u8 part = plat_info->partition;
- 
- 	/*
--	 * Index from IO die start within the partition:
--	 * This is the first valid domain after the cdies.
--	 * For example the current resource index 5 and cdies end at
--	 * index 3 (cdie_cnt = 4). Then the IO only index 5 - 4 = 1.
-+	 * Without the hardware provided compute die mask, power domain IDs
-+	 * are the same as the resource index, same as the Intel Speed Select
-+	 * driver.
- 	 */
--	part_io_index = id - cdie_range;
-+	if (part >= MAX_PARTITIONS || !plat_info->cdie_mask) {
-+		cluster_info->uncore_data.domain_id = id;
-+		return;
-+	}
-+
-+	if (cluster_info->uncore_data.agent_type_mask & AGENT_TYPE_CORE) {
-+		cluster_info->uncore_data.domain_id = cluster_info->cdie_id;
-+		return;
-+	}
- 
- 	/*
--	 * Add to the IO die start index for this partition in this package
--	 * to make unique in the package.
-+	 * The domain ID is resolved in uncore_read() as it depends on all
-+	 * partitions. domain_id is zero initialized, which marks it valid.
- 	 */
--	pkg_io_index = io_die_start[plat_info->partition] + part_io_index;
--
--	/* Assign this to domain ID */
--	cluster_info->uncore_data.domain_id = pkg_io_index;
-+	cluster_info->io_domain = true;
-+	cluster_info->partition = part;
- }
- 
- /* Callback for sysfs read for TPMI uncore values. Called under mutex locks. */
-@@ -487,6 +517,16 @@ static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncor
- 		*value = ret;
- 		return 0;
- 
-+	case UNCORE_INDEX_DOMAIN_ID: {
-+		cluster_info = container_of(data, struct tpmi_uncore_cluster_info, uncore_data);
-+		if (!cluster_info->io_domain)
-+			break;
-+
-+		guard(mutex)(&domain_lock);
-+		*value = get_io_domain_id(cluster_info);
-+		return 0;
-+	}
-+
- 	default:
- 		break;
- 	}
-@@ -610,6 +650,8 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 
- 	pkg = plat_info->package_id;
- 
-+	set_partition_info(plat_info, num_resources);
-+
- 	for (i = 0; i < num_resources; ++i) {
- 		struct tpmi_uncore_power_domain_info *pd_info;
- 		bool auto_ufs_enabled;
-@@ -702,7 +744,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 
- 			set_cdie_id(i, cluster_info, plat_info);
- 
--			set_domain_id(i, num_resources, plat_info, cluster_info);
-+			set_domain_id(i, plat_info, cluster_info);
- 			set_instance_id(i, cluster_info);
- 
- 			cluster_info->uncore_root = tpmi_uncore;
--- 
-2.55.0
-
+> 7/7 simply re-reads the EC level on resume
+> and routes it through the regular notification path. If the firmware
+> exits auto mode across hibernation, the driver simply reflects the
+> resulting EC state rather than restoring the previous mode: it stays
+> out of the firmware's way and only synchronizes, which keeps the code
+> simple. Happy to hear opinions.
+>=20
+> A few notes on the result:
+>=20
+> * Writing a level through either interface now also emits
+>   brightness_hw_changed: both write paths share the same notify helper,
+>   which keeps the LED core and userspace listeners consistent with the
+>   new level no matter which interface was used. Rewriting the current
+>   level emits nothing, matching the firmware's own
+>   no-event-on-same-level semantics. Extending the notification to
+>   userspace-initiated changes seemed reasonable to me - the OSD then
+>   also reflects echo-based changes - but I'm happy to restrict it to
+>   hardware-initiated transitions if that is considered the better
+>   semantics.
+>=20
+> * All state transitions now run under kbdlight_mutex in single
+>   critical sections (query + reconcile, write + reconcile), with the
+>   set and notify helpers expecting the caller to hold it. On the
+>   ordering with the LED core's trigger_lock, my reasoning is that the
+>   trigger callbacks (activate, hw_offloaded) are reached with
+>   trigger_lock held and then take kbdlight_mutex, while the
+>   notification helper is lock-free (it only queues the worker), so I
+>   don't see a reverse nesting. Extra eyes on this are welcome.
+>=20
+> * The cached level is now the raw EC level including auto mode, so the
+>   kbdlight_brightness name has drifted a bit from what it holds.
+>   Renaming it would touch quite a few places; I left it as is for now
+>   and can do the rename as a follow-up if preferred.
+>=20
+> One open question, mainly for Mark and Vishnu: the skip of LED
+> suspend/resume assumes the firmware turns the backlight off on suspend
+> and restores it on resume on all auto-mode capable machines, which is
+> what I observed here for manual levels (suspend and hibernation), auto
+> across suspend, and auto across hibernation coming back off. My belief
+> is that most machines handle this fine, but more testing on other
+> models or a look at the EC documentation from the Lenovo side would be
+> needed to be sure; if an exception turns up, a DMI quirk could restore
+> the old path for that machine.
+>=20
+> Tested on my ThinkPad X1 Carbon Gen 14 (linux-next next-20261030).
+>=20
+> I'm still learning the ways of upstream; thank you all for your time
+> and reviews, and any further comments are most welcome.
+>=20
+> This series was developed with LLM assistance; I reviewed every design
+> decision against the framework sources and validated the behavior on
+> real hardware myself.
+>=20
+> Regards,
+> Qiling Zhu
+>=20
+> Qiling Zhu (7):
+>   platform/x86: thinkpad_acpi: Report auto keyboard backlight mode as off
+>   platform/x86: thinkpad_acpi: Extract kbdlight_notify_change() helpers
+>   platform/x86: thinkpad_acpi: Sync LED core state on level writes
+>   platform/x86: thinkpad_acpi: Detect auto-mode capability via MLCG
+>   platform/x86: thinkpad_acpi: Skip LED suspend/resume on auto-mode machi=
+nes
+>   platform/x86: thinkpad_acpi: Add support for auto keyboard backlight
+>   platform/x86: thinkpad_acpi: Reconcile EC level on resume
