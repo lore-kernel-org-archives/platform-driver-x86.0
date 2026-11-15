@@ -1,56 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794770966;
-	b=ZzC2nixHvxC5pk9yBJj5Pr+Uu6UZVoFkSMDyjs45n1oMgslgC0KYffklPHkdlxQd6ONH
-	 IxWrhVxEujBcZgS2u4zIHDap4M4qxoEu2+kZ+KoprBYtTv7NtSsvsH6RgkZtBM/7m3TCX
-	 V1EemcfJbSxHkHcRtIKCTVf4L3D2akmsPHeD9+phk1daiyBvA/LFtltWiAeV5Y7HTEea8
-	 CFJderkYc78X1gSfoLkg7ceDlsCAGmpXD+F0Pf+DhQieZe78EfL90fKzMXiotylFkvoZL
-	 O35yJDOXPl04szD2or5f7Da3a1sVrUD6TNEThwMdng/XkXLlv3a6XVsqr7igIdYGavQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794770966;
-	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer:X-ZohoMailClient;
-	bh=aJG9aj/1TNxRxMtd3MVG3wRoVr7tWOPu4qXnQ1r3U9Q=;
-	b=26L023IgJRYLIZBCtieH0THE/3vt0FMONIZ6FrqHe0qeac2s4+n/odqJ7MunfIspCzye
-	 ePHu4mhhbHPjd0RKtwsoChiRbbqBM+ppwGnyUUczNNlaDRfiyF4xAIizneLi6/YXHYKud
-	 vfyI0H2kWY/TE4OULIRPOeI/qyNUWHVS0TYbbmP8c7/4dCfh9iZHr76ZFq19wK3rurk9Q
-	 obrV2TAILLVJe9DpFnzADczZC1kcd/bP+L7fLsbUlwmNDJMDcEjPCR2l5kH/stwxVKY1L
-	 IwLdF5/B3I58TU5hnqZNUTsUmD9WPCaaVdDmVL49138qdBWOz8d7xra5XWWQE0H4fgA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=B5jHQ2BU;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794773437;
+	b=S05vFRXoAB9LztzXEBCp+NJToRVvTBAgWd87e/BhzxZs/VFccrv6iNlNOslompsZQHRv
+	 EPFfvgf8Q2MbBdSuvJ3aFjff48fgQwsfMAW1M2XTnO7J3P2kXBWED3h9XKMQ/CK93H8So
+	 OU71nn19BaHKhrzFoYwuRXlz2xff167n3wDSvVmjvM1yEQ6VWNAb+B5RluC4jKvEOWUkK
+	 phzoUbrDmZHkjGqyu4yeZHgJmgwlMyDbTbd1CQnhj0tgYFQ6IBOMvYPUuNrcLCySlSBOR
+	 4tatKIl5j73hsdbK/ci8Z2E1vdblc3B9Ci5k8lRQXGQBrOealfZWpxQaX+XqBhlwBCw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794773437;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:From:To:Cc:References:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=fY6ts3UpdKSZekbZMfUpiIB2uSyNAubM1Fu0CpHtkJQ=;
+	b=1ahcugU3fef5Td4xhGDVra78juE9f2+cqskjTfE4BIVSeubu/3dMoEx3/At8dLQvwM8n
+	 FFOZH69XHyVuRQftDZnN3q6IatXMUwkTFy0L1eZBcqhKcetqpjucnlx7uRP570Qbo4JnU
+	 nf/rGRi2/khdME+A0Qw7bSO43AcrkbJ16PIMo+v94F7b9WDvFokLxNU0fXWxG4g5Vp8p4
+	 /WLZX5jvYJvXJC7vN9lBM5ugZVNG5jVIcEmzQ9v6j+HlKQjpvSZrwjR/0C+UbkSxC60FU
+	 VzYbt4L+pABbsmkc38s841D82YEmor5UtzpCEE/kq05nUKH35VCJ1LNf4bROH8bXT/Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bI1fnjK5;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294FA606A883;
-	Sun, 15 Nov 2026 19:29:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 294FA606A883
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9860D606A31F;
+	Sun, 15 Nov 2026 20:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=B5jHQ2BU
-ARC-Seal: i=1; a=rsa-sha256; t=1794770901; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Yu9bYdaTYGLoCt+3inZTQAGJ/AuDdMOU6R4Dn0+CVMlf1RMTdozHkZOjUXYEjebNLLub8W7SDZoruW6dLzgN9Bh0CaB1hfJoY0lhg0TgJIDmJOoj6ELbDCGIz+MbAVj1qtzK9UfRXHmnlYln3kCsRgci7qG0qZwBXn4owKEuZBo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1794770901; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=aJG9aj/1TNxRxMtd3MVG3wRoVr7tWOPu4qXnQ1r3U9Q=; 
-	b=ZyZq2lgfBwJn4SjaeQ2hDShwVDDbYu1KALYRdGLVSh9pZXfEKteRc8mWEgRGB/r6MqWuVVU8tSzvlwviIA6UYNODQcP+kMKL8H960KWMkFZmBuK0Wq3KlzUFGbzqswEM+K/MG9x2d9y6sAGnxTKHxB1w1W+AjpbK2CAclG1i9sI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=B5jHQ2BU6sAqbpKBmMPZGjR30jTobn/QWqj6jztBNYP+9R4Pr7wTXhWEmzwPjv86rz5hsFV9Lb6LXkhR+knUYm76ITBHCSWUXu9nRVgHtiZkSCkrkZLPdbyVvviaOI/yYr2NMFFw6/7iCsx1Ev8841UhTUf7h7nEkAugM5KcnpB0Y5tN19+R4GOzspcszkvc5UJapOoJ61hIBtHdnetP5P1vuYWgvUW3TKQpFjGTzH1WRdxrLLrrW6j3UN5sI8OwUJC2qtFJxW9cV30/bV+h346taYf8eWOFDm3c92R+m0kYKhK1XszNqadV9qMGxvbZzg15PpkcGfwx3sbEUCFH7A==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=aJG9aj/1TNxRxMtd3MVG3wRoVr7tWOPu4qXnQ1r3U9Q=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1794770898495628.9551538154195;
-	Sun, 15 Nov 2026 11:28:18 -0800 (PST)
-From: Rong Zhang <i@rong.moe>
-Date: Mon, 16 Nov 2026 03:27:08 +0800
-Subject: [PATCH 7/7] platform/x86: ideapad-laptop: Enable ymc_ec_trigger
- for Lenovo Yoga 7 14IRL8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bI1fnjK5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF8F1F000C4;
+	Sun, 15 Nov 2026 20:10:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794773437;
+	bh=fY6ts3UpdKSZekbZMfUpiIB2uSyNAubM1Fu0CpHtkJQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=bI1fnjK5sCe4qRQGt1y5+5mzEpKJ6o0HtTvflIZaEQ79P6FQFECI4DoLnPR69fLTE
+	 R7go47rbypxBaprDTSP+waqbT2cTPg2UD9QJYZZiFFn5Ih2MgCIlrrdq5LkmH7qwyn
+	 sXR6L2uXiy/dXfatKvGVV6oFc/AHgSuMDwNytsR+OnIF9el5rE96iIO8jiSX67X/jh
+	 2uucix7sfS1XzThMsWG9oqnGQDFy8E8OFAHcRlVwSWpAyxmzZK/5qC3vwqDrpFL6DO
+	 cpTZiNdUqHEbdYCIDz5VOm3EdYi+s3eVnAlYgLT+W7oLgtEUvU9H0Cful6WkEz6M4b
+	 0l7gCifupZbDQ==
+Message-ID: <8aa1533d-8f9c-4c69-aa34-266ea3beb54e@kernel.org>
+Date: Sun, 15 Nov 2026 21:10:33 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -60,54 +51,81 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/3] platform: lenovo: architecture independent home
+ for the Lenovo WMI drivers
+From: Hans de Goede <hansg@kernel.org>
+To: David Cemin <dcemin@nvidia.com>, ilpo.jarvinen@linux.intel.com,
+ W_Armin@gmx.de
+Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, xy-jackie@139.com,
+ ikepanhc@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ldemarchi@nvidia.com
+References: <20261113222755.1696567-1-dcemin@nvidia.com>
+ <e8cef61a-2864-4749-a734-3c42c2f32f28@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <e8cef61a-2864-4749-a734-3c42c2f32f28@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261116-ymc-82yl-v1-7-fac1a2b01a84@rong.moe>
-References: <20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe>
-In-Reply-To: <20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Gergo Koteles <soyer@irl.hu>, Ike Panhc <ikepanhc@gmail.com>, 
- Andrew Kallmeyer <kallmeyeras@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mahir Faisal <mahirfaisalantiq33@gmail.com>, Rong Zhang <i@rong.moe>
-X-Mailer: b4 0.17-dev-ce4c1
-X-ZohoMailClient: External
 
-The Lenovo Yoga 7 14IRL8's EC must be triggered by software on YMC
-events, or else the enable state of touchpad, keyboard, and keyboard
-backlight become out of sync.
+On 15-Nov-26 16:33, Hans de Goede wrote:
 
-Add a DMI quirk table entry for the said device.
+<snip>
 
-Reported-by: Mahir Faisal <mahirfaisalantiq33@gmail.com>
-Closes: https://msgid.link/CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n8Cp3AzhVQ@mail.gmail.com
-Signed-off-by: Rong Zhang <i@rong.moe>
----
- drivers/platform/x86/lenovo/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+>>   b. Should the Fn key event handling stay a separate small driver, or
+>>      be factored out of ideapad-laptop so x86 and arm64 share one path?
+>>      ideapad-laptop handles the event only when its VPC platform driver
+>>      is bound, and the arm64 machines expose none of the VPC interface
+>>      it is built on (no _CFG, VPCR/VPCW, DYTC or HALS/SALS), so making
+>>      it the single driver means gating most of its probe. Two smaller
+>>      options: lift ideapad-laptop's own Fn key wmi_driver and keymap
+>>      into this file and let ideapad-laptop register for the events it
+>>      still wants (Fn lock LED, DYTC cycle), or the hid-asus/asus-wmi
+>>      shape where a companion WMI module exports the event to a
+>>      subsystem driver. The keymap in patch 2 duplicates entries of
+>>      ideapad-laptop's table on purpose until that is decided.
+> 
+> IIRC the ideapad-laptop driver is a bit of a mess atm, so factoring
+> a common handling for the the Fn key events out of this and sharing
+> that sounds like a nice cleanup.
+> 
+> I see that patch 2/3 uses the new wmi-driver/-bus infra which is
+> nice and clean.
+> 
+> So maybe just keep your existing stand-alone driver for both x86_64 +
+> arm64 and drop the WMI event handling from ideapad-laptop.
+> 
+> I guess this may hit some problems where WMI event handlig is used
+> in ideapad-laptops integrating with some VPC functionality.
+> 
+> For that purpose I think that the new
+> drivers/platform/lenovo/wmi-hotkeys.c could maybe expose some
+> notifier and call that for events it does not handle itself
+> and then ideapad-laptop can depend on some function to register
+> a listener on that notifier (1) and register a notifier handler
+> staying out of WMI handling itself.
+> 
+> No idea if this is feasible / how clean the end result will be,
+> just brainstorming and saying yes to doing some refactoring of
+> the somewhat messy ideapad-laptop code.
+> 
+> Note that https://github.com/systemd/systemd/blob/main/hwdb.d/60-keyboard.hwdb
+> has some mappings for "Ideapad extra buttons" input devices
+> (+ DMI match), so if any of the buttons remapped there end up
+> under the new WMI driver then that should probably give its
+> input device the same name, to make sure those mappings still
+> apply.
 
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index 4f9dc95d8c65..f9453de6df76 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -1872,6 +1872,13 @@ static const struct dmi_system_id ymc_ec_trigger_quirk_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82N7"),
- 		},
- 	},
-+	{
-+		/* Lenovo Yoga 7 14IRL8 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82YL"),
-+		},
-+	},
- 	{ }
- };
+Also see this just posted ideapad-laptop series which does
+something similar for handling YMC events:
+
+https://lore.kernel.org/platform-driver-x86/20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe/
+
+Regards,
  
+Hans
 
--- 
-2.55.0
 
+
+
+> 1) +Kconfig dep, which will also avoid regressions by wrong
+> Kconfig
