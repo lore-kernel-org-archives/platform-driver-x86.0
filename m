@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794729626;
-	b=kaB09Gh78OfBS5LhASB/LrJA1OcD9eqwFN4bVIPCQC3Gvz6JzjXzYQ4cr7lpy6St1/Sf
-	 ZnM8JBIDUrverZM3oZkjDWDe/xOHsL/hLVK2InpOVJMh2JSiXJSgS3Zz69QytK665Rdvv
-	 5T9HkMjXq+TnC1DFAdRTmvW97HHCfbWh536z0AWY4wmqHWOnqOc3KWtxH+kphMob8q7Yu
-	 Gyc7RcAl8JQ1Ob28FM4B1Ihb2sQkEHyIl6VGyekE7V8EP+bIs1tjiPEFl1wb2RXpvErPl
-	 1oxeKwt5MbMY7NigVhUZJpZzgMR+zA9U0+w5I25dUUGd+iaVfgmXIqqs6BeWBc6eCrg==
+	t=1794730261;
+	b=UZZU/ajjru+nQ12QbZYEEA3N8a+n8VW4MyfD8QTjYaisPZbyKfNeW5N49IaR/7PTqfvu
+	 D3HsJeMdreYMfpfBLTzZDGjiL3ht6/PyxmCqqLu2mZEyRI7er/oP8NOloyUQzjhR+oVrf
+	 Mmdj8aR8AgeDXgLlCZeGtaEl1fPB5+iTS8AtZoAg9WzyxkBUNUWR5qkO0ePvwTfZK0blJ
+	 3HF1BS811TVVbr0SZXYv/LuktzeFbD/U0yXjT0i7TjuMwb4IhKA17jnt+SCWmLVHQMVtT
+	 WKQU6P8pYvuouyjW9wntA2dj/jAJJqNHUBChPd3w5W3X7PitnRNac6rfvZJ8yKdhocg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794729626;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794730261;
 	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
 	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=myjoLXazwLDRkDTG3hloKil1Y8hRKK3sJ0fuXOKFC4I=;
-	b=aKaQe5wDqzrhPSuydSa3ojChNbsrpjz65ONjt2+DpWknM1236saSMbLbHoLhPTN4p9yO
-	 zJsYhMt6xCGtAMMgjg0uJ2KcJ9HGZnIFfmYIrs5nj9Kso6USFpJelm2mgjpHuxfwSZUgV
-	 1kowqMBA1NfI8Gx/i5f0hSxU3Yw8YMyYp855M3UOGVSKD/tFyVjClchqsaC+HLpMKxSfH
-	 CL0bK1EBHwpbNdUJuKKIz15lUdhXkZ1+kASQI6OmNsheok6nriWN4vy6ew6+kPOnNtDl2
-	 hf7coGHBpQk6pBLepJPZvFp7iTcntfIPwp1yiKTo9iYBwmpSjgj3izGC8HLxDeCQePg==
+	bh=kJT09pvCBTtbQI/0vVu9v6aSrAM1U/36HarANVoKMKE=;
+	b=ZQ1d7psmTe4WU8kVG+Gm57gqUERChwEgg7dcZfS/gHKz/YzL+YGnJACM3qmk4/tdrBrq
+	 pBlEktBd/ETBUfmHLBCuFuzUK5eZdHXHFABTNtqvUmNzmoIN7duWpGRbKCNuP587nBhnl
+	 9Fm/cDEwnySAnrW61FSJw1XklxaQJNXj4UYuNMf7YOuLJmLe8xiWOZfKJjJcBliXKJh6V
+	 IUqCbevPKC/+i+ABw9wBd9QXzipPMHpogDuuyID804Me2ooem3d7s3HwUYWL0s6mNbW/U
+	 T6YaDB664nn77r90gKpPmFq1peYX6H3RmAEfiNhtxxFb5/BwMEu8mREqRoGufVsuffw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=rong.moe;
 	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=jBMuGrT6;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=m6kLPRvs;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325AC606A880;
-	Sun, 15 Nov 2026 08:00:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 325AC606A880
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C327606A323;
+	Sun, 15 Nov 2026 08:11:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C327606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=jBMuGrT6
-ARC-Seal: i=1; a=rsa-sha256; t=1794729597; cv=none; 
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=m6kLPRvs
+ARC-Seal: i=1; a=rsa-sha256; t=1794730238; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Zybz6GG/9n4CpLrvLN/T23j/kwqAi63vqgXhKFQxXalMBnUUs2XaULc1/atztLOEMrP5z7Ary2FhAJwse3XRiZfbi6LEaFomo+5qYpPhJLc1t07wmkibdyvWJzBmdam2DYzHR2jZrPOF5Qgy7jrnPxaC+aPVWWpZYZUt6KP1IHc=
+	b=S8O6ACBvgk8lyymsZPCQ6B5RqHncVpm0pywJpoIg7dNxM7IsLsOMG/JJ1z+NN4oQp3jAakSlB+mrn7fVCYXo3vF8cZz3b1m2sTThbM9E2wg3x1DAtfTZy4l9acI27qBc6F6wBirE7Fqi1ka9aN8qZuglNpG58ntZNv2d5utcrnc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1794729597; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=myjoLXazwLDRkDTG3hloKil1Y8hRKK3sJ0fuXOKFC4I=; 
-	b=JaEfl/UZoUdZ8RoNvCpkVjjb+aWg0/HAv0faoP0K88YLnelsspOUir8PBXWZeMzBw+RaOhrrXM9y9sTklVP/ZKRP2x6Nbelp5qJGQR3oBbtsih9zWiBKKAjBj5Y8SYvFO32iNBxTyj08CftPMwJZba1dhbCmVUopzJ+87VN6/vU=
+	t=1794730238; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kJT09pvCBTtbQI/0vVu9v6aSrAM1U/36HarANVoKMKE=; 
+	b=N3A7GYh7l1D3AskD2q2MnQyPLbjlWTPzvCZBqz45ZJA17il2qygNMxXtTlwpYyLZdW4vdhfgH7gzdBEFxs0P6OJGAZ0WJ04lOaq8duVWT2ztHad0odB07lJ8W0ZYV29JC8kPZ4YGM7pd9ED21MVdaOlraXa9erSl8+lrkBm8N1U=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=jBMuGrT6NDMeabv6H6M7VUvobawAYc6M9b3MtXULJmEHKnqTf+LK4/sZEvrUmRqkRFOAoZwKcPr785fKO0pQtajmZ2WF6xf31pHM6/06f5WkwflVsY2Net+MEZrws3JYJEQ8zaR+21YHywBA7OMx6axIa8kaiLWd4zZ8IcS82Jech0ZDPrRgVtfcikLh5VXsFXmb6+iu9lEH91sBXMAVM9tLPLEmVap2crFN1u25sSeGWZ1kSJLs+wHrg4KKx5Ww+0r3tkk1QRm982okc9Clrj/G2gGn69StO78XiKNTUOlP3VcqbHX8QOiblGQFkZl0wocwpOa+/FKJHelxrJjxjw==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=myjoLXazwLDRkDTG3hloKil1Y8hRKK3sJ0fuXOKFC4I=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1794729595779702.6758341281636;
-	Sat, 14 Nov 2026 23:59:55 -0800 (PST)
-Message-ID: <ac0a08c2f831dab0e08fe0097ddfa77a32b8b04d.camel@rong.moe>
-Subject: Re: [PATCH v3 2/7] platform/x86: thinkpad_acpi: Extract
- kbdlight_notify_change() helpers
+DKIM-Signature: a=rsa-sha256; b=m6kLPRvspjp2kNNNBVZ0hmRUbfF4Mne4mjn4gbu4XGkk6jwCxkcoyqbvMNyR4n461xx518zGFLH+Z/pwG5S9zuPFfjgGpM9TE9wKeWpjeIAhY1Fc838MMWOO6KKz2svObFzHl3DjBJ1zCG2jmdSBGrnBEI/znB9W1Ck/P3YBXO6qCuZZv9+aPwfCJ/p4Y+K/eBkqLRaDZ+MZznT3dAh+H2cmZa9INAtBgbAKaRvS9SNHBXbhngUOzs90Vm5KdejgMPtIRcxR3QxDx3EM6IpK70z5MzZu7wnv6UpFttv0UJRU3tHobjUEcfOLSZJora8eMEM7//1txGCiGR2DLW2isA==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=kJT09pvCBTtbQI/0vVu9v6aSrAM1U/36HarANVoKMKE=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1794730235830887.3843527419489;
+	Sun, 15 Nov 2026 00:10:35 -0800 (PST)
+Message-ID: <34d2115e347e5c33df2027ac26cfa259fc47091a.camel@rong.moe>
+Subject: Re: [PATCH v3 3/7] platform/x86: thinkpad_acpi: Sync LED core
+ state on level writes
 From: Rong Zhang <i@rong.moe>
 To: Qiling Zhu <kmatzkaczor244@gmail.com>, Mark Pearson	
  <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
@@ -61,13 +61,13 @@ Cc: Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>, Lee Jones
 	 <griffin@kroah.com>, vishnuocv@gmail.com, vsankar@lenovo.com, 
 	platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
 	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261114174814.62153-3-kmatzkaczor244@gmail.com>
+In-Reply-To: <20261114174814.62153-4-kmatzkaczor244@gmail.com>
 References: <20261102151211.40701-1-kmatzkaczor244@gmail.com>
 	 <20261114174814.62153-1-kmatzkaczor244@gmail.com>
-	 <20261114174814.62153-3-kmatzkaczor244@gmail.com>
+	 <20261114174814.62153-4-kmatzkaczor244@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 15 Nov 2026 15:53:16 +0800
+Date: Sun, 15 Nov 2026 16:05:28 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,99 +82,141 @@ X-ZohoMailClient: External
 
 Hi Qiling,
 
-You are extracting two helpers with different names. Let's retitle:
+The title is confusing. How about:
 
-   Extract kbdlight notify helpers
+   Don't poke keyboard backlight's LED core brightness
 
 On Sun, 2026-11-15 at 01:48 +0800, Qiling Zhu wrote:
-> TP_HKEY_EV_KBD_LIGHT handling in tpacpi_driver_event() reads back the EC
-> level, updates the cached brightness and notifies the LED core inline.
-> Extract this block into separate kbdlight_notify_level() and
-> kbdlight_notify_change() helpers, in preparation for reusing the former
-> when writing a level through the proc interface in a subsequent change.
+> kbdlight_set_level_and_update() pokes the led_classdev brightness cache
+> directly after writing the new EC level, without notifying userspace and
+> without any locking.  Commit 06da5325d02e ("platform/x86: thinkpad_acpi:
+> Stop setting led_classdev brightness directly") already removed this
+> pattern from the sysfs path but had to keep it for the proc interface,
+> which has no LED core path of its own.
 >=20
-> kbdlight_notify_level() expects the caller to hold kbdlight_mutex;
-> kbdlight_notify_change() queries the EC and notifies under the same
-> mutex, like the original inline code did.
+> Move the LED core state update into kbdlight_notify_level(): stop
+> updating the cached level in kbdlight_set_level() and have both the
+> sysfs and the proc write paths go through kbdlight_set_level_and_update()=
+,
+> which writes the EC level and updates the cache under kbdlight_mutex,
+> and reports the new level through the LED core, like commit
+> 07f48f668fac ("platform/x86: ideapad-laptop: add FnLock LED class
+> device") did for the ideapad FnLock LED.
 >=20
-> No functional change intended.
+> As a result, writing a level through either interface now emits a
+> brightness_hw_changed notification, so userspace listeners see level
+> changes from both of them.
 >=20
 > Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
+
+Sashiko complains:
+
+   Does replacing the led_cdev->brightness update with
+   kbdlight_notify_level() leave tpacpi_led_kbdlight.led_classdev.brightnes=
+s
+   stale after writes to /proc/acpi/ibm/kbdlight?
+  =20
+   kbdlight_notify_level() calls
+   led_classdev_notify_brightness_hw_changed(), which only sets led_cdev-
+   >brightness_hw_changed and never updates led_cdev->brightness.  When
+   kbdlight_write() changes the level via procfs, in-kernel consumers that
+   read led_cdev->brightness without calling led_update_brightness(), such
+   as led_set_software_blink(), will see the old brightness value.
+
+IMO this is acceptable. Please add a section separated with `---' after
+your Signed-off-by, explaining why this is acceptable.
+
 > ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 40 +++++++++++++--------
->  1 file changed, 26 insertions(+), 14 deletions(-)
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 23 +++++++++++++--------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
 >=20
 > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
 rm/x86/lenovo/thinkpad_acpi.c
-> index 2c3f8cf32..c8098f317 100644
+> index c8098f317..657a19d11 100644
 > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
 > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -5317,6 +5317,31 @@ static void kbdlight_resume(void)
->  =09led_classdev_resume(&tpacpi_led_kbdlight.led_classdev);
->  }
+> @@ -5108,17 +5108,17 @@ static struct ibm_struct video_driver_data =3D {
+>  static enum led_brightness kbdlight_brightness;
+>  static DEFINE_MUTEX(kbdlight_mutex);
 > =20
 > +/*
 > + * Caller must hold kbdlight_mutex.
-
-Annotate it with lockdep instead of comments.
-
 > + */
-> +static void kbdlight_notify_level(int level)
-> +{
-> +=09struct led_classdev *led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
+
+Annotate it with lockdep.
+
+>  static int kbdlight_set_level(int level)
+>  {
+>  =09if (!hkey_handle)
+>  =09=09return -ENXIO;
+> =20
+> -=09guard(mutex)(&kbdlight_mutex);
+> -
+>  =09if (!acpi_evalf(hkey_handle, NULL, "MLCS", "dd", level))
+>  =09=09return -EIO;
+> =20
+> -=09kbdlight_brightness =3D level;
+>  =09return 0;
+>  }
+> =20
+> @@ -5183,10 +5183,12 @@ static bool kbdlight_is_supported(void)
+>  =09return status & BIT(9);
+>  }
+> =20
+> +static int kbdlight_set_level_and_update(int level);
+
+The function is modified a lot. Let's simply move it.
+
 > +
-> +=09/*
-> +=09 * Check the brightness actually changed, setting the brightness
-> +=09 * through kbdlight_set_level() also triggers this event.
-> +=09 */
-> +=09if (level =3D=3D kbdlight_brightness)
-> +=09=09return;
+>  static int kbdlight_sysfs_set(struct led_classdev *led_cdev,
+>  =09=09=09enum led_brightness brightness)
+>  {
+> -=09return kbdlight_set_level(brightness);
+> +=09return kbdlight_set_level_and_update(brightness);
+>  }
+> =20
+>  static enum led_brightness kbdlight_sysfs_get(struct led_classdev *led_c=
+dev)
+> @@ -5245,18 +5247,21 @@ static void kbdlight_exit(void)
+>  =09led_classdev_unregister(&tpacpi_led_kbdlight.led_classdev);
+>  }
+> =20
+> +static void kbdlight_notify_level(int level);
+
+What not add it to the right position in PATCH 2?
+
 > +
-> +=09kbdlight_brightness =3D level;
-> +=09led_classdev_notify_brightness_hw_changed(led_cdev, level);
-> +}
+>  static int kbdlight_set_level_and_update(int level)
+>  {
+>  =09int ret;
+> -=09struct led_classdev *led_cdev;
 > +
-> +static void kbdlight_notify_change(void)
-> +{
 > +=09guard(mutex)(&kbdlight_mutex);
-> +
-> +=09kbdlight_notify_level(kbdlight_sysfs_get(NULL));
-> +}
-> +
->  static struct ibm_struct kbdlight_driver_data =3D {
->  =09.name =3D "kbdlight",
->  =09.read =3D kbdlight_read,
-> @@ -11586,20 +11611,7 @@ static bool tpacpi_driver_event(const unsigned i=
-nt hkey_event)
->  =09=09return false;
->  =09case TP_HKEY_EV_KBD_LIGHT:
->  =09=09if (tp_features.kbdlight) {
-> -=09=09=09enum led_brightness brightness;
-> -
-> -=09=09=09guard(mutex)(&kbdlight_mutex);
-> -
-> -=09=09=09/*
-> -=09=09=09 * Check the brightness actually changed, setting the brightnes=
-s
-> -=09=09=09 * through kbdlight_set_level() also triggers this event.
-> -=09=09=09 */
-> -=09=09=09brightness =3D kbdlight_sysfs_get(NULL);
-> -=09=09=09if (kbdlight_brightness !=3D brightness) {
-> -=09=09=09=09kbdlight_brightness =3D brightness;
-> -=09=09=09=09led_classdev_notify_brightness_hw_changed(
-> -=09=09=09=09=09&tpacpi_led_kbdlight.led_classdev, brightness);
-> -=09=09=09}
-> +=09=09=09kbdlight_notify_change();
->  =09=09}
+> =20
+>  =09ret =3D kbdlight_set_level(level);
+> -=09led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
+> +=09if (ret)
+> +=09=09return ret;
+> =20
+> -=09if (ret =3D=3D 0 && !(led_cdev->flags & LED_SUSPENDED))
+> -=09=09led_cdev->brightness =3D level;
+> +=09kbdlight_notify_level(level);
 
-Remove the {}.
+Nah. I didn't mean this. We only want to notify brightness_hw_changed on
+procfs kbdlight writes, but you are notifying it on sysfs LEDs writes.
 
-With them fixed,
+Please call kbdlight_notify_level() in kbdlight_write() instead of
+messing up with this function.
 
-Reviewed-by: Rong Zhang <i@rong.moe>
+This function should only update kbdlight_brightness (when
+!LED_SUSPENDED).
 
 Thanks,
 Rong
 
->  =09=09/* Key events are suppressed by default hotkey_user_mask */
->  =09=09return false;
+> =20
+> -=09return ret;
+> +=09return 0;
+>  }
+> =20
+>  static int kbdlight_read(struct seq_file *m)
