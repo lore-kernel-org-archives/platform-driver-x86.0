@@ -1,58 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.254.49.198
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794743278;
-	b=h5mtYhLkKdoljRiCD3fhyxsjkgzdNRHLtoSSYP5BgcJJsU5c4OICrqBKbKb4vmswABrr
-	 2Lm7H8qdji38e7mjWSqgS7+n/E1PKXcK5sqtyIpu9a7TLd2jdh0rlPH0b7vM1W8f+jk97
-	 Ywe/QWqSv5MZfHNW2Q1RKN2CYpJmOldmSMkotl4mLJKYClVUumHv62utISUJlQwnfMSp/
-	 R6rdsTIejkh04jAvsFV4v4ayc4hlTsyE5RZ2UqKAPaPAmOxgmVxmOj/otq/E8YfTA/saw
-	 QjichJx171OVzIqidFCLiYnyoDi5fTMtbkCuBRWJYZL7cQN8o8BeR2zJ0s4kuoCxP2Q==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794743278;
-	h=DMARC-Filter:Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:MIME-Version:
-	 X-HM-Tid:X-HM-MType:X-HM-Spam-Status:DKIM-Signature;
-	bh=RU/JFtl3t2fQyM9MGmpqoQqoNW5efmsBFP2qUPrWTuI=;
-	b=qq4+4yr0s6t85ANhjTw6wC6AdXsSp1988cMXEd5uRWtU9HnbsROH0RY4Aog1lDFYmWcW
-	 unr41UX2xVUrziKYLV7GbJm4i2K2s8e1ENdObm0vsEiOCkqO76z9xvk3qHRTyOdcVGL0F
-	 0696KsyqPK0FNFT9W5r97GJJHEnHJzy8Z7FMRU1EpQuhOgpSHxS/qHJdEZ5UHgdsSCWEC
-	 fT6QLoGGjupVLG/dvdzaV+LWuq6WCTLHNkRvVTIEgJOo3sGTi7N1AX+Xc127qD+AFRRnR
-	 KB+3sP8xfhKIt4z9/j+aIFCz28blsv1pqd9I3aOp5xz6l2gSC+AE8yC8x+/I98pO9Qg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=seu.edu.cn;
-	spf=pass smtp.mailfrom=seu.edu.cn;
-	dkim=pass header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=kAxxGKMw;
-	arc=none smtp.remote-ip=45.254.49.198
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794743763;
+	b=Xd4TcG9HxJLYZHJjfHwu8PVp+lIpwmOplMFq5MCDwIkOZQYZ3h44XC9zfyuCVxMlOPFe
+	 qa7yXyHXwGBByNStNmj+MsyzQm3GwvXUY8FOnG2L1mWnGtqXy53TDCb0sIiaVoGHhLDcl
+	 /O3N3E2xVxDXXFHmVyleNP6nvPDEenTeVVkFfrRiNVtRCiC4XeWRD6R7jlz+J8BjpWL+r
+	 VmQTyDqy4xKSoxGuKy48xaGp+seqPTM9f3F9WvZ3PtoFuq/i3CjqJDPon3y+H42xlfjDZ
+	 EwF7xfM1iWd1XGWT5uPaolDaUjMGsxgCXySEIDAL7GdvrPBy7Vu5u+OS+MIH6shv9Ng==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794743763;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=DcZj323bZhr2RPb3W8Nx/e4hADQ8eqTgk8RkWPbabR4=;
+	b=i16Vj3dneDSCpLbiJzhnB4G34FAvMnqKHQ4l+gAkzr7fKLUVkxMtCGbe36JZgbwNLMMl
+	 cW4xTVSQ58/jYJTMQzKJPvgM4JYJ+NlEi5ePaAuOeop4tBVbg3ucL1gXo3q794LEdPgjA
+	 6AHbrcm8WBdl/R/oyVL2byr5Kx8yWA6amrEoY5oSC6DIyXz9m9p9w1po1RTRIFUnIh7bX
+	 RyBHXf7Cqi3zGVUzm3I8n4d2WE42fkMjnWmygX0DUXClCW0bvir7rOKPPiP4+NJd3vQF6
+	 wdbxtVqGN7PvJW4HrjB/kBjvsmix3eVWWIXeUYNXT+26auLggh3EQK29w0WWOHTjXrw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=y9Q+sl4U;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.54
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5673D606A88C;
-	Sun, 15 Nov 2026 11:47:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5673D606A88C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB3D606A33D
+	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Nov 2026 11:56:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4EB3D606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=kAxxGKMw
-Received: from [192.168.17.1] (unknown [124.79.98.159])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 54b7e04da;
-	Sun, 15 Nov 2026 19:47:47 +0800 (GMT+08:00)
-From: Hongyan Xu <getshell@seu.edu.cn>
-To: Ilpo =?utf-8?b?SumQqeeeqHZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>,
- Derek J. Clark <derekjohn.clark@gmail.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, Rong Zhang <i@rong.moe>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject:
- [PATCH v2 2/2] platform/x86: lenovo: cancel fastcharger work on detach
-Date: Sun, 15 Nov 2026 19:47:44 +0800
-Message-ID: <179474326460.103840.3845211906644469212@seu.edu.cn>
-In-Reply-To: <179474326098.103840.15531040789536968458@seu.edu.cn>
-References: <179474326098.103840.15531040789536968458@seu.edu.cn>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=y9Q+sl4U
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c50cc7540b7so57023366b.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 15 Nov 2026 03:56:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794743761; cv=none;
+        d=google.com; s=arc-20260327;
+        b=JmiThdk2U7SOcE+r92vCTcpgDGOVZnETqbR4K40FwBOIxIoTg2MJjn/RYAwl3lpOQ+
+         L6UXhMHfrXZyqI9vxAPldGwMByhRI6qpVnb5cIA0ZYyZNop2RU0wwvPTSrhnWlGxf6Lr
+         Em2Vt3KLJTLhVwcd5me9t2OR4KpH/TMi4zYDzxhKoFeWGYpeZJS2VBBXhpBH4WPnX5oJ
+         Ko9+tTZhw3jillf4FpkpBSKlMWWnFyiltvKrClAaldKjpfGsFik7pVTo7OOkykBnJXbr
+         oMJIaRejhtG1Evxv9nW/CgQZPQA/El0Cb/FAOvFVtcmtfCIY1ueGC8fbohIw+XBF0pc4
+         hV0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=DcZj323bZhr2RPb3W8Nx/e4hADQ8eqTgk8RkWPbabR4=;
+        fh=z8ob/cwuasDAfa+r4DzpjG6nJftdUT6QynZVuVGs+Lo=;
+        b=rKDA651DxzfCb794OFAkRBXlmUEX9WUsEr4reyAcLw1VB7jRHU1/ZRG6qU5eIC6vIu
+         GwjnZH1yhmwy+uOb91jXKR+SzQDkWKkbKQIYfC6UDHsUkHLtg3UXmTKpUXCQy6BlPvlL
+         AfJEMyE+upE3GgHEU35+PG0H7EzXVTQ3xRI1xtomJl5ddkHSR0tmIr4aAg9H826NRPfh
+         sT1esCtB3JaDKpV3kEaW4PdNJNKJZCfma0/qlUqm1hCzU6OaoplT7Htdmf2KlsQY/aSg
+         IQTqTEtvfwql4HRKyM8LqY+jGIPC4mU4jCQe0jBj2ZbVD6vOZNZv+qwoVhfr7Rvw/kHG
+         Najg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794743761; x=1795348561; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DcZj323bZhr2RPb3W8Nx/e4hADQ8eqTgk8RkWPbabR4=;
+        b=y9Q+sl4UDdP1dZ+RGdjjMnFg1HIgE9Gjk8kPMowSI1RTz8naQMREXIHKlXV9N8aX2q
+         eZhrPrcocLRcLN9WYCTOsQ1HOddvv/LB0Z8bttXyZMAi3uS2IjYD6TEAIt8wG2lKW5Hx
+         i7wVarSD8JGN1r9thN+JGyAxfZdG/vHHwwJF6A0CtDX5KTKsbagnBtJlxHla/RwbBAHa
+         mx6JPXQ9a5gOLBs1EDW5IBC9JvVtWd+7qEDdjdrpNe8OmkhzDSbZn0gsce2/wK9yKHTJ
+         vSAAjPwnT5qWMFwSMwEsVSMuUhhvtzlj4QCT/+oP3kA64IjTouyy/VsJ7uLwwEH6P7wQ
+         qC6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794743761; x=1795348561;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=DcZj323bZhr2RPb3W8Nx/e4hADQ8eqTgk8RkWPbabR4=;
+        b=qyFJTtqk4AhPOr9faQmxAMGQUEwMembLEFbk8VRyLLxMt3tl7Hm2bdF5SJAxdXyh9k
+         QZMW2kixTYz70rjy1dGV7tuqHwns2PUj62we3PIxpmx/THtNeMW/ZvdeHydhVxyxcpO6
+         xo28XQSrroi3vyla9IsfmJ83wUlLS5hvbKKvKIGhT6OiHRck36q7MOa0Uk8z674Q+Cdp
+         hmD8B+prlQAf3SgE/tl7X09n/MG95CBJld0064fNTmN2POUOMOxA3SZwVAGwovXY0ZwC
+         mdAnLsNNlL8L6tHlGN4uOa4y0NSO8Pbfz4wpeFI+wqgCiOSnX9leknYhKuquWxyHiEjH
+         ZUsw==
+X-Forwarded-Encrypted: i=1; AL+hErEowYzBzHP+Uid0oiXUTzc2zlj/NPraxZi2QyhIyg63tHj97NbHfcbCd1q+SBdiAhv288QFjy+B3EaxdbwgtSfrhnWH@vger.kernel.org
+X-Gm-Message-State: APuU4Z/6CXATJW39+Z7thcf7BHarPMc/En8pJjHP1gf04YSO/umDFVjk
+	pH6eqjb1u/IfrQ6IUUzJcAvq55x62x6QDc0b7/zWtiN5rSYRJA5Edrj6fUNeFRkXEbz09dsYwGx
+	/xhdfoEK8OZZckWUBe4xTnppzfBNzq3rmwYC6m6U=
+X-Gm-Gg: AYBFou2w2pu/BawpBlXHX4gtHaM7N7UmbZa9ViqQLETM4nE/6bmrdSUhW6NqvKheoU5
+	jLao725Xirr2VN2hJzBvHVxlSbGMxkuykHmPTySfslZm0lCCpCwAvOakliByN1V+IluPeX00+wR
+	j4nXoqq75ccFzQjjDWVXo/zKXIGhDMSAJlWKhA6UT5jwQ++G4oAkOGoRDqcp1ShESlbmkCzB2TA
+	DBr03NO0+jHgwLjOtvgG9fcRFtrcJN9J4hiVbEgb4XXQFqRXTBkRzuODHAnlpuJOFbZ5YOxjupQ
+	QevyHFFBfWXGtbse5XZ8UalZZO8iWyANtxBZBDDVMGVSgJrDraS1/x74n5kwiFY/D/972nWDqUX
+	95bLr+k32BX7GnH45El/oO7ndPH9p+Jak6zcmkSk=
+X-Received: by 2002:a17:907:60d3:b0:c46:d493:501a with SMTP id
+ a640c23a62f3a-c50963427abmr712093866b.22.1794743761122; Sun, 15 Nov 2026
+ 03:56:01 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -62,76 +103,65 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-HM-Tid: 0aa1df08ef6503a1kunmbac61c98bf774
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVlCS0tMVk8ZGEkYT0NOHR1CSlYeHw
-	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKSU9VTEJVQkNVSk5CWVdZFhoPEhUdFFlBWU9LSFVKS0lCQ0
-	JKVUpLS1VLWQY+
-DKIM-Signature: a=rsa-sha256;
-	b=kAxxGKMwu40CGR48f1pV5d/EnzMC5gTA5G65i+Zby2KGDHV8i7QumPaVxH3cYzKJbTBSxyndr/cXysgMJ6Q0mCC/hdKWaOO9T2OxaDPUryGCAyijnapp6i374EXB0cZVE9SuueOhqpcedltSe6Qh90gLFxjPi2vsI9QD5RKTdDc=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
-	bh=RU/JFtl3t2fQyM9MGmpqoQqoNW5efmsBFP2qUPrWTuI=;
-	h=date:mime-version:subject:message-id:from;
+From: skyedryv <skyedryv@gmail.com>
+Date: Sun, 15 Nov 2026 19:55:49 +0800
+X-Gm-Features: AclHuK_8g57vUNNcN8WCMoxcQIvtE3ah3lY4yYDivjNSAjpdIXdf2fRwg08yWIQ
+Message-ID: <CA+Bqb3R2ZCrZZr6pUqLmw3qXMSA13Ft3nYqCx7jv+5PDEuH0uw@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/x86: asus-wmi: fix camera key LED on Zenbook S14
+To: i@rong.moe, jose.guilherme.cr.bh@gmail.com, git@turtledev.nz
+Cc: denis.benato@linux.dev, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	linux-kernel@vger.kernel.org, luke@ljones.dev, 
+	platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The extcon callback schedules a worker which uses managed serdev,
-pinctrl and GPIO resources. Releasing those resources while the
-worker remains pending or running can access invalid state.
+Hi Rong, Zane, Jos=C3=A9,
 
-Install managed work cancellation after the UART is opened and
-before registering the managed notifier. Reverse devres order
-then unregisters and waits for notifier callbacks, drains the
-worker and only afterwards closes the UART and frees its pin
-resources. This depends on the preceding all-connector notifier
-synchronization patch; resource order alone is insufficient.
+On Wed, 2026-10-21 at 20:34 +0800, Rong Zhang wrote:
+> Still, could you confirm whether pressing the camera key during s2idle
+> toggles the camera state without emitting a WMI event or not? If so, a
+> resync should be performed on resume.
 
-The actual lc824206xa supplier notifies from work context, and
-this consumer callback only schedules work. The callback must not
-outlive synchronized unregister or republish after cancellation.
+Data from another model: Zenbook S14 UX5406AA (Panther Lake), BIOS
+UX5406AA.310. I applied v4 to the asus-wmi in CachyOS's 7.3.4 kernel
+(cachyos-7.3.4-1) and loaded it in place of the stock module.
 
-Found by the author's in-house static analysis tool.
+On this machine, pressing the camera key during s2idle does toggle the
+camera, and the WMI event isn't lost, so v4's event-driven resync covers
+it. I tried it twice:
 
-Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/all/20260806060526.1189-1-getshell@seu.edu.cn/
-Signed-off-by: Hongyan Xu <getshell@seu.edu.cn>
-Signed-off-by: Zehao Gao <gaozehao@iie.ac.cn>
----
+  - Stock asus-wmi, with a userspace logger on KEY_CAMERA: the press did
+    not wake the machine. On resume, KEY_CAMERA (WMI 0x85) arrived
+    within about a second of "PM: suspend exit", and the camera was
+    disabled.
+  - v4: the camera was enabled and the LED off before suspend. The press
+    during s2idle lit the LED straight away (it seems to have woken the
+    machine this time), and after resume asus::camera read 1, matching
+    the camera state. No userspace resync was involved: a CAMERA_LED_NEG
+    read a second after resume returned the "LED on" value, so the LED
+    was already correct by then.
 
-Discovery: found by the author's in-house static analysis tool.
+With v4, the rest also behaves as described:
 
- .../platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c    | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+  - asus::camera is registered (max_brightness 1). CAMERA_LED
+    (0x00060079) is absent here, as on the UX5406SA
+  - the LED matches the camera state at load
+  - on camera key presses, the LED, brightness and brightness_hw_changed
+    follow the camera (1 =3D disabled), and video goes black and comes
+    back
+  - KEY_CAMERA still reaches userspace (WMI code 0x85)
 
-diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-index 9e2ac80..51ff383 100644
---- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-+++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-@@ -8,6 +8,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/delay.h>
-+#include <linux/devm-helpers.h>
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/extcon.h>
-@@ -160,7 +161,6 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
- 
- 	fc->dev = dev;
- 	fc->nb.notifier_call = yt2_1380_fc_extcon_evt;
--	INIT_WORK(&fc->work, yt2_1380_fc_worker);
- 
- 	/*
- 	 * Do this first since it may return -EPROBE_DEFER.
-@@ -209,6 +209,10 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
- 	serdev_device_set_baudrate(serdev, 600);
- 	serdev_device_set_flow_control(serdev, false);
- 
-+	ret = devm_work_autocancel(dev, &fc->work, yt2_1380_fc_worker);
-+	if (ret)
-+		return ret;
-+
- 	ret = devm_extcon_register_notifier_all(dev, fc->extcon, &fc->nb);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "registering extcon notifier\n");
--- 
-2.50.1.windows.1
+Cold boot: on this model the firmware re-enables the camera across a
+full power-off. With the camera disabled (LED lit) before shutting
+down, it came back enabled (UVC privacy 0, video working), with the
+camera and mic-mute LEDs both dark, which is correct. So the "dark LED
+with the camera disabled after cold boot" case doesn't occur here. Not
+tested: anything on a model that has both device IDs.
+
+Tested-by: Sky Dy <skyedryv@gmail.com>
+
+I worked through this with help from an AI assistant (Claude); the
+observations and logs are from my own laptop.
+
+Thanks,
+Sky Dy
