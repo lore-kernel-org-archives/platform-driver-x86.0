@@ -1,41 +1,41 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.254.49.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794743276;
-	b=0dcPujgUwrZf9RyxVQW317P+JZwSD9A57ug1ZhHxaZEDS5TQL1GhRlsTq444pYNrIyD8
-	 IhX6csvHUZ6avda1TLK09PXGIRlxhKQpC37m1PDj1EzLwrw2NARHhpwIMHYC8pLd9Q+I3
-	 iFSR+T3SwjTaBURJSU9Ue/KSVKRdmyeKVVtPpfhJfRiYaUfY+MDD3ZjOlXdUOhHL+A3+g
-	 v+zwsdu4nmmjuv+p5EFz50kiei8qLO6OGY57BDF1dLiPA8Wb5d6Q+j0jMOhdhpg6EKukr
-	 XJ4iZdc2qSOIlPfSbuIZu+wIs/jHA1VMFcZVr/nLf9vBU5Kejl9JFM8O5W43pLjHpsg==
+	t=1794743278;
+	b=h5mtYhLkKdoljRiCD3fhyxsjkgzdNRHLtoSSYP5BgcJJsU5c4OICrqBKbKb4vmswABrr
+	 2Lm7H8qdji38e7mjWSqgS7+n/E1PKXcK5sqtyIpu9a7TLd2jdh0rlPH0b7vM1W8f+jk97
+	 Ywe/QWqSv5MZfHNW2Q1RKN2CYpJmOldmSMkotl4mLJKYClVUumHv62utISUJlQwnfMSp/
+	 R6rdsTIejkh04jAvsFV4v4ayc4hlTsyE5RZ2UqKAPaPAmOxgmVxmOj/otq/E8YfTA/saw
+	 QjichJx171OVzIqidFCLiYnyoDi5fTMtbkCuBRWJYZL7cQN8o8BeR2zJ0s4kuoCxP2Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794743276;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794743278;
 	h=DMARC-Filter:Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
 	 References:Content-Type:Content-Transfer-Encoding:MIME-Version:
 	 X-HM-Tid:X-HM-MType:X-HM-Spam-Status:DKIM-Signature;
-	bh=jIuQ2XzzPvxfqNg2q/0pDp2CIsPqv3IJ/p3RhjsKioU=;
-	b=SdR4Rik4IRbxx5kSBFAjpzkAbU2bC6OD+NkjWuPB+T6QKsF6mdSrxkG3zAw+jzRNCdjl
-	 HkNrxmzjdH3DjcK4Lb6fC/GKK1wDfa+fsnB0DkYeFD3iNrCYTpD/AYoXKB1QQ6cwsL3+C
-	 gJMi/agqEB1gU0mTWzzqw5B5p12XVmSTe7exOUt9531zD/RtqyxO8e1NhNoMm856R2tmx
-	 F7hhms7cSiuaJijgbUbP+gV5Q2YxSv4L4HwZJEQHzeg/whaFKmrSgFgMT2qFTH86X/YAk
-	 XKEwUbVuzShy/+Q7BtofHRrltCA5eKc70cErKLv8JDh94o7nW9d8IgOWYffyvhYcUVw==
+	bh=RU/JFtl3t2fQyM9MGmpqoQqoNW5efmsBFP2qUPrWTuI=;
+	b=qq4+4yr0s6t85ANhjTw6wC6AdXsSp1988cMXEd5uRWtU9HnbsROH0RY4Aog1lDFYmWcW
+	 unr41UX2xVUrziKYLV7GbJm4i2K2s8e1ENdObm0vsEiOCkqO76z9xvk3qHRTyOdcVGL0F
+	 0696KsyqPK0FNFT9W5r97GJJHEnHJzy8Z7FMRU1EpQuhOgpSHxS/qHJdEZ5UHgdsSCWEC
+	 fT6QLoGGjupVLG/dvdzaV+LWuq6WCTLHNkRvVTIEgJOo3sGTi7N1AX+Xc127qD+AFRRnR
+	 KB+3sP8xfhKIt4z9/j+aIFCz28blsv1pqd9I3aOp5xz6l2gSC+AE8yC8x+/I98pO9Qg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=seu.edu.cn;
 	spf=pass smtp.mailfrom=seu.edu.cn;
-	dkim=pass header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=JSU5vpc4;
-	arc=none smtp.remote-ip=101.71.155.101
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+	dkim=pass header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=kAxxGKMw;
+	arc=none smtp.remote-ip=45.254.49.198
+Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E73606A33D;
-	Sun, 15 Nov 2026 11:47:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 99E73606A33D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5673D606A88C;
+	Sun, 15 Nov 2026 11:47:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5673D606A88C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=JSU5vpc4
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=kAxxGKMw
 Received: from [192.168.17.1] (unknown [124.79.98.159])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 54b7e04d8;
-	Sun, 15 Nov 2026 19:47:45 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 54b7e04da;
+	Sun, 15 Nov 2026 19:47:47 +0800 (GMT+08:00)
 From: Hongyan Xu <getshell@seu.edu.cn>
 To: Ilpo =?utf-8?b?SumQqeeeqHZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
  Hans de Goede <hansg@kernel.org>
@@ -45,9 +45,10 @@ Cc: MyungJoo Ham <myungjoo.ham@samsung.com>,
  Mark Pearson <mpearson-lenovo@squebb.ca>, Rong Zhang <i@rong.moe>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
-Subject: [PATCH v2 1/2] extcon: synchronize all-connector notifier removal
-Date: Sun, 15 Nov 2026 19:47:42 +0800
-Message-ID: <179474326273.103840.4798359664806814358@seu.edu.cn>
+Subject:
+ [PATCH v2 2/2] platform/x86: lenovo: cancel fastcharger work on detach
+Date: Sun, 15 Nov 2026 19:47:44 +0800
+Message-ID: <179474326460.103840.3845211906644469212@seu.edu.cn>
 In-Reply-To: <179474326098.103840.15531040789536968458@seu.edu.cn>
 References: <179474326098.103840.15531040789536968458@seu.edu.cn>
 Content-Type: text/plain; charset="utf-8"
@@ -61,169 +62,76 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-HM-Tid: 0aa1df08e81e03a1kunmbac61c98bf771
+X-HM-Tid: 0aa1df08ef6503a1kunmbac61c98bf774
 X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkaTkkYVk8aTE9KTBkYGklMGlYeHw
-	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKSU9VTEJVQkNVSk5CWVdZFhoPEhUdFFlBWUtVS1VLVUtZBg
-	++
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVlCS0tMVk8ZGEkYT0NOHR1CSlYeHw
+	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKSU9VTEJVQkNVSk5CWVdZFhoPEhUdFFlBWU9LSFVKS0lCQ0
+	JKVUpLS1VLWQY+
 DKIM-Signature: a=rsa-sha256;
-	b=JSU5vpc4KiFptaiw1Czv6/2IvXCYaQAgXRhvW95sxMbHL7kEKO8mJFM5bWDCDyAT2A3lK2rzqRO420C+lQ8da2ysqrJVc3u5oJfYyYDWoSu0eYoxrhNx9gqlNxUJVFaEsNTVJULiuMdn0P1s46EiXkQCniBGsUNuisideIup4v4=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
-	bh=jIuQ2XzzPvxfqNg2q/0pDp2CIsPqv3IJ/p3RhjsKioU=;
+	b=kAxxGKMwu40CGR48f1pV5d/EnzMC5gTA5G65i+Zby2KGDHV8i7QumPaVxH3cYzKJbTBSxyndr/cXysgMJ6Q0mCC/hdKWaOO9T2OxaDPUryGCAyijnapp6i374EXB0cZVE9SuueOhqpcedltSe6Qh90gLFxjPi2vsI9QD5RKTdDc=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
+	bh=RU/JFtl3t2fQyM9MGmpqoQqoNW5efmsBFP2qUPrWTuI=;
 	h=date:mime-version:subject:message-id:from;
 
-extcon_sync() invokes the all-connector raw notifier chain after
-dropping edev->lock. Unregister unlinks a block under that lock but
-does not wait for an in-flight callback, so managed consumers can
-release their state while a callback still publishes work.
+The extcon callback schedules a worker which uses managed serdev,
+pinctrl and GPIO resources. Releasing those resources while the
+worker remains pending or running can access invalid state.
 
-Use an atomic notifier chain for the all-connector notifications.
-Its RCU read section and synchronized unregister provide the
-required callback quiescence. Use the notifier implementation's
-own writer lock and perform its grace-period wait outside edev's
-spinlock. Document callback and unregister context requirements.
+Install managed work cancellation after the UART is opened and
+before registering the managed notifier. Reverse devres order
+then unregisters and waits for notifier callbacks, drains the
+worker and only afterwards closes the UART and frees its pin
+resources. This depends on the preceding all-connector notifier
+synchronization patch; resource order alone is insufficient.
 
-The current all-connector consumers defer their operations to work
-items and their callbacks do not sleep. Per-ID raw chains retain
-their existing behavior: some OMAP callbacks perform regulator
-operations and need a separate context-compatible repair.
+The actual lc824206xa supplier notifies from work context, and
+this consumer callback only schedules work. The callback must not
+outlive synchronized unregister or republish after cancellation.
 
 Found by the author's in-house static analysis tool.
 
-Fixes: 815429b39d94 ("extcon: Add new extcon_register_notifier_all() to monitor all external connectors")
+Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/all/2ef4ad43-497f-c40f-b18a-f5b75799d95d@linux.intel.com/
+Link: https://lore.kernel.org/all/20260806060526.1189-1-getshell@seu.edu.cn/
 Signed-off-by: Hongyan Xu <getshell@seu.edu.cn>
 Signed-off-by: Zehao Gao <gaozehao@iie.ac.cn>
 ---
 
 Discovery: found by the author's in-house static analysis tool.
 
- Documentation/driver-api/extcon.rst |  2 +-
- drivers/extcon/extcon.c             | 28 +++++++++-------------------
- drivers/extcon/extcon.h             |  2 +-
- include/linux/extcon.h              |  4 ++++
- 4 files changed, 15 insertions(+), 21 deletions(-)
+ .../platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c    | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/driver-api/extcon.rst b/Documentation/driver-api/extcon.rst
-index d3217b9..384d743 100644
---- a/Documentation/driver-api/extcon.rst
-+++ b/Documentation/driver-api/extcon.rst
-@@ -70,7 +70,7 @@ The core structure representing an Extcon device::
-         /* Internal data */
-         struct device dev;
-         unsigned int id;
--        struct raw_notifier_head nh_all;
-+        struct atomic_notifier_head nh_all;
-         struct raw_notifier_head *nh;
-         struct list_head entry;
-         int max_supported;
-diff --git a/drivers/extcon/extcon.c b/drivers/extcon/extcon.c
-index 98d85cc..b8d8c2a 100644
---- a/drivers/extcon/extcon.c
-+++ b/drivers/extcon/extcon.c
-@@ -456,10 +456,10 @@ int extcon_sync(struct extcon_dev *edev, unsigned int id)
- 	raw_notifier_call_chain(&edev->nh[index], state, edev);
+diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
+index 9e2ac80..51ff383 100644
+--- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
++++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
+@@ -8,6 +8,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/delay.h>
++#include <linux/devm-helpers.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/extcon.h>
+@@ -160,7 +161,6 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
+ 
+ 	fc->dev = dev;
+ 	fc->nb.notifier_call = yt2_1380_fc_extcon_evt;
+-	INIT_WORK(&fc->work, yt2_1380_fc_worker);
  
  	/*
--	 * Call functions in a raw notifier chain for the all supported
-+	 * Call functions in the atomic notifier chain for all supported
- 	 * external connectors.
- 	 */
--	raw_notifier_call_chain(&edev->nh_all, state, edev);
-+	atomic_notifier_call_chain(&edev->nh_all, state, edev);
+ 	 * Do this first since it may return -EPROBE_DEFER.
+@@ -209,6 +209,10 @@ static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
+ 	serdev_device_set_baudrate(serdev, 600);
+ 	serdev_device_set_flow_control(serdev, false);
  
- 	spin_lock_irqsave(&edev->lock, flags);
- 	/* This could be in interrupt handler */
-@@ -967,6 +967,7 @@ EXPORT_SYMBOL_GPL(extcon_unregister_notifier);
-  *
-  * Note that this function registers a notifier block in order to receive
-  * the state change of all supported external connectors from extcon device.
-+ * Callbacks run under the RCU read-side critical section and must not sleep.
-  * And the second parameter given to the callback of nb (val) is
-  * the current state and the third pameter is the pointer of extcon device.
-  *
-@@ -975,17 +976,10 @@ EXPORT_SYMBOL_GPL(extcon_unregister_notifier);
- int extcon_register_notifier_all(struct extcon_dev *edev,
- 				struct notifier_block *nb)
- {
--	unsigned long flags;
--	int ret;
--
- 	if (!edev || !nb)
- 		return -EINVAL;
- 
--	spin_lock_irqsave(&edev->lock, flags);
--	ret = raw_notifier_chain_register(&edev->nh_all, nb);
--	spin_unlock_irqrestore(&edev->lock, flags);
--
--	return ret;
-+	return atomic_notifier_chain_register(&edev->nh_all, nb);
- }
- EXPORT_SYMBOL_GPL(extcon_register_notifier_all);
- 
-@@ -995,21 +989,17 @@ EXPORT_SYMBOL_GPL(extcon_register_notifier_all);
-  * @nb:		a notifier block to be registered
-  *
-  * Returns 0 if success or error number if fail.
-+ *
-+ * Waits for in-flight callbacks. Must be called from process context and
-+ * outside a notifier callback.
-  */
- int extcon_unregister_notifier_all(struct extcon_dev *edev,
- 				struct notifier_block *nb)
- {
--	unsigned long flags;
--	int ret;
--
- 	if (!edev || !nb)
- 		return -EINVAL;
- 
--	spin_lock_irqsave(&edev->lock, flags);
--	ret = raw_notifier_chain_unregister(&edev->nh_all, nb);
--	spin_unlock_irqrestore(&edev->lock, flags);
--
--	return ret;
-+	return atomic_notifier_chain_unregister(&edev->nh_all, nb);
- }
- EXPORT_SYMBOL_GPL(extcon_unregister_notifier_all);
- 
-@@ -1300,7 +1290,7 @@ int extcon_dev_register(struct extcon_dev *edev)
- 	for (index = 0; index < edev->max_supported; index++)
- 		RAW_INIT_NOTIFIER_HEAD(&edev->nh[index]);
- 
--	RAW_INIT_NOTIFIER_HEAD(&edev->nh_all);
-+	ATOMIC_INIT_NOTIFIER_HEAD(&edev->nh_all);
- 
- 	dev_set_drvdata(&edev->dev, edev);
- 	dev_set_name(&edev->dev, "extcon%d", edev->id);
-diff --git a/drivers/extcon/extcon.h b/drivers/extcon/extcon.h
-index 9461826..5a3f0c4 100644
---- a/drivers/extcon/extcon.h
-+++ b/drivers/extcon/extcon.h
-@@ -48,7 +48,7 @@ struct extcon_dev {
- 	/* Internal data. Please do not set. */
- 	struct device dev;
- 	unsigned int id;
--	struct raw_notifier_head nh_all;
-+	struct atomic_notifier_head nh_all;
- 	struct raw_notifier_head *nh;
- 	struct list_head entry;
- 	int max_supported;
-diff --git a/include/linux/extcon.h b/include/linux/extcon.h
-index e596a0a..869bac9 100644
---- a/include/linux/extcon.h
-+++ b/include/linux/extcon.h
-@@ -209,6 +209,10 @@ void devm_extcon_unregister_notifier(struct device *dev,
- 				struct extcon_dev *edev, unsigned int id,
- 				struct notifier_block *nb);
- 
-+/*
-+ * All-connector callbacks must not sleep. Unregister waits for callbacks and
-+ * must be called from process context, outside a notifier callback.
-+ */
- int extcon_register_notifier_all(struct extcon_dev *edev,
- 				struct notifier_block *nb);
- int extcon_unregister_notifier_all(struct extcon_dev *edev,
++	ret = devm_work_autocancel(dev, &fc->work, yt2_1380_fc_worker);
++	if (ret)
++		return ret;
++
+ 	ret = devm_extcon_register_notifier_all(dev, fc->extcon, &fc->nb);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "registering extcon notifier\n");
 -- 
 2.50.1.windows.1
