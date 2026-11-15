@@ -1,111 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.150
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794782410;
-	b=cZiII9QX3MR4PI/7AGc/nru3iTJU0SH/bXL2sI1fNdHEHrJOQSJDg4NospLVDMzzfLDs
-	 L6S1MFeE0c6q/P6TfkpfwcY5/R7k4eQJwHrtGzugbA5FE332i29HExndyojKo1vIW7aew
-	 57PEP5X42TY9HPx31FfDyR/bitRU1OkJ8bra7EWcalkFvdL5zt4GuU6maPRlsbtmg482f
-	 AHmQ9K+58p/34ep+vegrCJ74W8z3QpY3PtoPvT0vPXYm2aOWtj4FncF9sQ7rnIy3RPb7W
-	 3GTjfWGoGR7fi/y7F0jRQlu/RurC/jbOFWIXEzodKJUPGsJKUsUZttBUjUjGd566+TQ==
+	t=1794784589;
+	b=lrt1NOdgm6J6zHHSQW1Ov6c1V2KztkgWxy02y2TRQlwDOvxkXSK6wK1iiydoEuPFbB3x
+	 V3iwh9yA3/nxS57Danu9YMuqiFe3fgcOFgcqhcHJKtVDAmhPIXubVwEi5YAd969jAIuo0
+	 k0PSSmGRem/RhVIq4UVJCuusBp7poSIqKVlC+IJh+U4ULAtNBiexr3r/C8ByyxMnDLb/x
+	 HWItmBHGYqzG+5eLYn0uiwK+xZ4bjEWdO2FzPCpb92CI66MRLtjljZp6tQJl6Y5/7PNIh
+	 W4TWZAPNayG2lXRRoS8CuKAiW5hGJp49uA7YGWAleBSqr82gBFzueQHA4J8deGIRdsQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794782410;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=2NFthcya1a66R8ebfxDjnh0H+W5qbjiXYgOAVLzY/Qw=;
-	b=dIon1gLGdHUeJqxUxSrR6SHJKywpucv/PQLYm+ceenTnfCfqcZTr+60a/e5bKY8SzSiP
-	 cKAmS8D43bmds0E2j/otNe2wAaIHtM3P191eGMP3GOhEs95/lGl+1L4WTP5WvEpMTADNO
-	 3JJ0F1tKxcMOuZJi6kIYP3CG/CPyiufSTk1HV9YGiXQKuHfA2obwweH01Gr4heTyTql+A
-	 cBf1R0a7p8nyXCilyhC4A8N6WR/EVoYaaJmn6RpXRRh1aHJgqUQE55SAfHm8NL7QHLoQj
-	 KOzen+qqFgB+0aT73F4ExEElQ+rCAZDo1jUK6RtWIMP8JGnWSblhOW80agHEyEO9j8g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794784589;
+	h=Received:Received:From:To:Cc:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer;
+	bh=a+w238kPtYPJFlKbG68YXn27xRXOoOY7E6OIISLXm1k=;
+	b=wwE1MkKtz35hMFW4YzyUroAiVtcrIjyVrdEY3k5wsRaJnGZIrLh9Xw/rOPxiuZeAzqPZ
+	 LnLk3o4q7gxkhYTf7uwL/LQR/JTnkjU1HgHtauBr7I8CzCHkw0fXfTen/i1Nh1jBlzGZK
+	 tMApKcMe3X7Y/B81Gg7JOFGiE8GRHr3fMcKMA7ucF+qG0KQ/0KTEqhFrDfmaEZ2QcV1uc
+	 /PlNITyaPNlcp/smJnMuYQ3rR559LbiifL9Dm6wseMNyU3gUrAunKPd0lW683f4sYLCCr
+	 lrbw+n989twGn62WXMlvrH3E0m2UCYxSKYdUd4Hn0Qeyr5aFHFaKfGgdb6vfhvKeXVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=squebb.ca;
-	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=T0wAXKGW;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=LGI2pzuY;
-	arc=none smtp.remote-ip=202.12.124.150
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E337606A339
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Nov 2026 22:40:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E337606A339
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=T0wAXKGW;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=LGI2pzuY
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfout.stl.internal (Postfix) with ESMTP id A722B1D000DA
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Nov 2026 17:40:09 -0500 (EST)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Sun, 15 Nov 2026 17:40:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1794782409;
-	 x=1794868809; bh=2NFthcya1a66R8ebfxDjnh0H+W5qbjiXYgOAVLzY/Qw=; b=
-	T0wAXKGWt5x2sebykbycdYNga26eKKv3oQcMxQs1MERTjcDkO6wPdpmA8acwq61A
-	mPEMF5Z0Ax+vI4VHMoMYSCXsx7gm4NUmuhC7zXz4y9gLsHAoSc/YL55Z/Ugbxb0K
-	/JbUkQYiilFvxq0N5p77nFQf9NKofwDoWrSB1k3+Bea8G7OZULoqHyqWnzGiRyzr
-	+kge1UTr2lg3iDIkCqZuX0dhdxFv9BAZsqrGaVUzNpwpidCgwhwFn0PNryAqLA97
-	GL5hV7VpQ3jtRldPnIcC3hwF6HKyIIYqR8rYO9O2AsRQ+ao0BEm5YegCEEs+sBEB
-	6NmFKgXtkWADy8bg08pG4A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1794782409; x=
-	1794868809; bh=2NFthcya1a66R8ebfxDjnh0H+W5qbjiXYgOAVLzY/Qw=; b=L
-	GI2pzuYVlvSPtXpVpnaSxB4wY/Ph91aLb8vLLbHm+79lFO0jVj404aXtZhNmBevi
-	k/mGNJmvJQ4e8CdZYkS9zcvLq49m+/zXqP3YLat3IISZ0XtXHxwahWLV4TMUBvyX
-	Nch/zUGbh5Fa7Dg0LZe5om5bJKqW+oGeCbbWeXufxI+qpeJ1dTo6D+l/WilfKjz5
-	jYA/qjdYH3eT6WF7BlZd9p7hO4p2OfTGmY8L1KRuzUXxl7qsX9NXLerBVY9AzZzs
-	kah9IX5cGbm69rnpEOaS6T06F5fFdFAZHGoGCRBtEIvbbcywvtdOaCsBheMKDQgW
-	c7veHRLCxwrTv+YKW1BpA==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1794782409; d=squebb.ca;
-	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:WX7x4fEwyHryKCWV3E5yPHW3Ev3IFnVd7XVQc8lC43djKSH
-	zdPH5SNggTUwVEqq9L3h6oH74DE4OPH0H1WrtUDCLEmL21iqzzM7bzjJ4+PBmbNB
-	pBaXLou3oc8uCAaY3lzUGm9MAvHZ8P5LNxlJk3f9ep9jLOOwqWN3RtS9oDUazSmW
-	dvdsujHyf60yae1BrJIKjQcf9xB7qs/dn5w5++DQY6yK9O4iKdY0Z83ckpVpAwsA
-	1n2iGFT9jN3QQL5YZM4yPQRpeoiWMvOI0UKorl9Bad2LEJP4uE68tfzjyGfKBNoC
-	M55sU6IRCiYKi2/TBYe6NeH0+Y4AsMHYFHVoqjA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:inem2IeyncJLIfsz0LnE4wBE4J61G137aPTQ8OiX6x0=:/zk5tCjydG7YuTD0dmXiFowmvfjG1P7JtO8599w1W30=;
-X-ME-Sender: <xms:yTT6aqeKk9vjXfg3Zmz7o58VqWs48m9yqCXRN_Z0csOKzIDzPzyaXA>
-    <xme:yTT6avDm5ov8p8wRHvw7zRlYSdlFL95tbk4YfpNkCr_DY95lxSRf37UjeMpC2PEEy
-    i66h3Vlam_yDIziRPRzhwqB5WLw3sivTZGwxrrUDpLQcjh68SuQEVao>
-X-ME-Proxy-Cause: dmFkZTGyEn2hwp2H41gw2dmlbCKOthRCfkpaB/Tx62XyEiWowdHujXesiUBjAyMacUc6yP
-    W9oW2S+/SUhw8f1QrHwav0BpJR9P0Dqmc43NZE95k6KtDYEf5ndPqac/OUUBa5QhY2sfjO
-    LSgFvdotvUccS1orVGJIdEQDa3yY9CzwxBEqseDQP4dDULVWgP84gml7NOERuckjJUkpJE
-    4bhHPfzIvD28rGEVCOOhydSUAb+btwgh4nKZEGFK+wTX4JA1/d/09J1K7gobcaTzug6DNd
-    YAkAmgZwCwhllvqjqj9M7KFSaKd9szaO+opOO92Lx/HjwwUdX7YjEkY8DHS8Yi7wOsa+Zy
-    PbdPo3M3V63CeJi1eKRV46kCRFBnfh26RHyXEgLJdMOIkw1xUbQ5hYcxbO9zlikW22TFG/
-    lTal6q5d5NlxQ9tsthldR9hGCETu+Zg+8gdOpxEv7+ck5/Iit0hehnsQU5EiBT/LvZaOx5
-    tGNU+IxAQNLsy5iRlJw2+TGxzKuph3/02K2K7bkz3+Tz+royyaaKqHSB3pI1Sxsnx+wzax
-    pQESrBU8iZM+yWPiGmjvvtk33vqH/KzIn2WWN7mKPAXLuimdanYG9bd0qCWoD6hO08+L9C
-    sEisOIzeuewpoaHeU9xOh2RkyfHkEL6KsLeajRoUiTidUtVSNUDHC7Mvghyw
-X-ME-Proxy: <xmx:yTT6agB205kAH3jGCfnWOlDMtBZZXlSpm1cJy36V_biuvF0ntSE54g>
-    <xmx:yTT6akF7u3WLvdc95PNvurgNS7vSeZijZZGf2XbsGIaXf_EPF1cclg>
-    <xmx:yTT6ai13BtZ8ZCxp8IolUj1ElRFZkQ_QOm8A2Uzs1nMMwsnVYqroEA>
-    <xmx:yTT6atP9Tf4cocwvTUgsLiYBgqEKFF9qDuazFod2fr0EFAzUjakdAQ>
-    <xmx:yTT6ahgyiy2GKB_rhqM90N5Ux7_76jmdIS4uSYvMsvp9BWnWpJvWyrBN>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 5167C2C00085; Sun, 15 Nov 2026 17:40:09 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9863E606A323;
+	Sun, 15 Nov 2026 23:16:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A65A1F000C7;
+	Sun, 15 Nov 2026 23:16:29 +0000 (UTC)
+Received: by venus (Postfix, from userid 1000)
+	id 9397C181BFB; Mon, 16 Nov 2026 00:16:27 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>, Sebastian Reichel <sre@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Eliav Farber <farbere@amazon.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+In-Reply-To: <20261113104459.35839-1-farbere@amazon.com>
+References: <20261113104459.35839-1-farbere@amazon.com>
+Subject: Re: (subset) [PATCH v6 5/7] platform/x86: uniwill-wmi: use
+ devm_blocking_notifier_chain_register()
+Message-Id: <179478458759.205616.10010504977852392294.b4-ty@b4>
+Date: Mon, 16 Nov 2026 00:16:27 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,89 +55,23 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AFJahWOVFX37
-Date: Sun, 15 Nov 2026 17:38:35 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Gergo Koteles" <soyer@irl.hu>, "Ike Panhc" <ikepanhc@gmail.com>,
- "Andrew Kallmeyer" <kallmeyeras@gmail.com>
-Cc: 
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, "Mahir Faisal" <mahirfaisalantiq33@gmail.com>,
- stable@vger.kernel.org
-Message-Id: <859daa2c-e891-410c-a528-58fc49a2ccea@app.fastmail.com>
-In-Reply-To: <20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe>
-References: <20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe>
-Subject: Re: [PATCH 0/7] platform/x86: ideapad-laptop: Trigger the EC on YMC events
- following Windows behavior
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16.0
 
 
+On Fri, 13 Nov 2026 10:44:53 +0000, Eliav Farber wrote:
+> Replace the blocking_notifier_chain_register() +
+> devm_add_action_or_reset() pattern with a single call to
+> devm_blocking_notifier_chain_register(), removing the
+> devm_uniwill_wmi_unregister_notifier() callback.
 
-On Sun, Nov 15, 2026, at 2:27 PM, Rong Zhang wrote:
-> Currently, the ideapad-laptop driver triggers the EC with YMC command
-> 0x01, which seems to be randomly chosen with trail-and-error and turns
+Applied, thanks!
 
-typo: trial-and-error (this is in patch 6 too)
+[7/7] power: supply: cros_pchg: use devm_blocking_notifier_chain_register()
+      commit: 1937d7bfbae4268a293043589c0954fe16f98ae6
 
-> out to be not a command for YMC events. While the devices in the DMI
-> quirk table recognize it, some other devices do not, making the
-> trigger_ec functionality a no-op.
->
-> Lenovo's YMC driver for Windows (YMC.exe) emits YMC command 0x08/0x09 on
-> fold/unfold YMC events, in which "unfold" means laptop mode and "fold"
-> means other modes.
->
-> Adopt the said sequence to make it work on all relevant devices. For the
-> sake of caution, only emit YMC command 0x08 only for the known fold
-> postures. For all other postures (including unknown ones), emit 0x09 to
-> make sure the touchpad and keyboard are still functional.
->
-> Beforehand, also fix pre-existing issues, modernize relevant WMI
-> drivers, and add a resume callback refreshing the posture and poke
-> ideapad-laptop to trigger the EC. See each patch for details.
->
-> With these changes, add a DMI quirk table entry the Lenovo Yoga 7
-> 14IRL8 as its EC must be triggered by software on YMC events properly
-> (i.e., with command 0x08/0x09), or else the enable state of touchpad,
-> keyboard, and keyboard backlight become out of sync.
->
-> Reported-by: Mahir Faisal <mahirfaisalantiq33@gmail.com>
-> Closes: 
-> https://msgid.link/CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n8Cp3AzhVQ@mail.gmail.com
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
-> Rong Zhang (7):
->       platform/x86: lenovo-ymc: Use enumeration to represent device 
-> posture
->       platform/x86: lenovo-ymc: Serialize WMI event handling
->       platform/x86: lenovo-wmi-events: Modernize WMI event handling
->       platform/x86: lenovo-ymc: Modernize WMI driver and factor out 
-> events
->       platform/x86: lenovo-ymc: Refresh posture on resume
->       platform/x86: ideapad-laptop: Trigger the EC on YMC events 
-> following Windows behavior
->       platform/x86: ideapad-laptop: Enable ymc_ec_trigger for Lenovo 
-> Yoga 7 14IRL8
->
->  drivers/platform/x86/lenovo/Kconfig          |   2 +
->  drivers/platform/x86/lenovo/ideapad-laptop.c |  42 +++++++++-
->  drivers/platform/x86/lenovo/ideapad-laptop.h |   9 ++
->  drivers/platform/x86/lenovo/wmi-events.c     |  38 +++++----
->  drivers/platform/x86/lenovo/wmi-events.h     |   1 +
->  drivers/platform/x86/lenovo/ymc.c            | 118 +++++++++++++++++----------
->  6 files changed, 147 insertions(+), 63 deletions(-)
-> ---
-> base-commit: 7e1392a42ea288d70a266f6553fe06f57f8647ea
-> change-id: 46a18a06-ymc-82yl-d59b4f8f891e
->
-> Thanks,
-> Rong
+Best regards,
+-- 
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
-I feel like I should be able to find some more formal documentation on this, but as these platforms aren't in the Linux program not sure what I'll get (or how long it will take) and the series looks good to me. I'll see what I can find so hopefully we can avoid a long list of quirks (as needed in patch 7).
-
-One open question on patch 4 - but patches 1 to 3 and 5 to 7 look good to me. For those:
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
