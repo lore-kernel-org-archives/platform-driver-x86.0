@@ -1,61 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.136.65.227
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=101.71.155.101
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794839036;
-	b=lPCSvjtBEeFcwj1RVOIpSI+sEDcUEn14dZORtL11lVoyvMoTz4IsgKr8F3g6ol0MUBk6
-	 +mTJ+O6laXZY7QuTgnwRxmDRWQBxVf1o3vRLAA39B7Eb7kpwjSIZVxrC80ycZjL7Arks6
-	 MqFOQpilYod/jTU7IEbVIFz7d/X9thqC185hxPyJUHTTEdcZGV51civ/mSn74B3xbwO99
-	 qLXYGxQSubhbF6FLkn8df8jSWZyPL1WztK/uwXL+TCRbOTWdllVjQCAQQ6L46iQWAMUWO
-	 qgeok6yhhoiwITWW+MpX04asxXgx+ctuxXSLDxIWRDNycLfBv4X2IFKUP9UqjYAka2w==
+	t=1794839458;
+	b=sx3Pq5UGkRScdQbCTBOojmn5n+BAXjhG9mnRhI9f9U7ArvB8uI9MQrwgIJHPGdyCvmFU
+	 HuYydJNdIOV08d6fTp7YCJitPk/zeYu/GdCUZo9fcMd/07PvKFyPXEaTmwYYIWQM9gMXq
+	 MCJouuJ5G5Iip5vkTjrfPA5DrZGxKFWs8wllOJLVJy+CJ9SyxdqgpFvTYADLfj79zJ/0P
+	 DkC0bY/6psn9uhM0WRBVbX4GoLdnTnS1zJL+rN7vSAvxapQi0qLouCzwlOXMJmW81yBlc
+	 sKcxvQ/ZalghtBSQq2hdrlq3g5pbqX7hopc8BFRfV4/KT6UtrBfZMmmD/iXsCo4nlXw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794839036;
-	h=DMARC-Filter:Received:DKIM-Signature:From:To:Cc:Subject:Date:
-	 Message-ID:MIME-Version:Content-Transfer-Encoding:
-	 X-Flowmailer-Platform:Feedback-ID;
-	bh=ddEhTbfvQPyKSOzq6hatj6Y2eqBZl6lG5KHY2ccF3Mk=;
-	b=wQW3LVXGx1EJVZOWn0JYrobuZX0aD8sRqAGy01GWDI0I1E2xfumfR9grenlZBCl40Mc2
-	 i9j8icUpZgbe/D+QllMk805x8mpGQkE4OHPMTnPPy2mnCUYpYZGh+hWe8zCDpBwCRDpND
-	 ACb1NNmEdInjoECOCLD9es3S2hFc2a3ZAvtfxLEZ99g3HQFfYXTc3PuH709gZ4UiDUs/A
-	 mvJ1LvVALvoocrtPMq1GI/6Sh/E25rkWpjFinCyVvdtZBDkYub5T3j90Ms0r0654qXO5p
-	 icrXdqFCA1QNwaGf+yWKxcj0DtO9yNOxPPrE9JzzDmO1bpLofdZ0RfClUzI/O0/MRDw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794839458;
+	h=DMARC-Filter:Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:MIME-Version:
+	 X-HM-Tid:X-HM-MType:X-HM-Spam-Status:DKIM-Signature;
+	bh=EDjYfGPnM8OA9NW+LY9ifZknUEbTkV8FfqZSHX3i64U=;
+	b=iou2pnc5QByCgZKirfNR/m3BGVhbHA0lLdkhVGywGMHn1s/iPXjH2/IVySvpevVKcd6D
+	 GwvznctFkeyNZWJLF6FFAd1t0dPEv3V0z4G20Y6SqueJvzHpLKUdJz0WR9LDQ6Hkgg6vN
+	 BB48xgQuX4O2eziST43+3WLQmLA7/mY/H1RHnKqHpdtGAu1GQRnQweQQEDTu+ZTkrmMj5
+	 dgj4SNU4bdLYJNdZrwY5CS3cGFqxYW0IurEC9chu3DzueJwe8INwIJyD/4fEkxTlXzOqY
+	 ZBTZWHwSpSVrVL64+UCDI2qtDBfkz/HqASn9qZIElb0AAeUcBdSvX9d7JvFbUgSzYSw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=siemens.com;
-	spf=pass smtp.mailfrom=rts-flowmailer.siemens.com;
-	dkim=pass header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=BwtL7XL5;
-	arc=none smtp.remote-ip=185.136.65.227
-Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=seu.edu.cn;
+	spf=pass smtp.mailfrom=seu.edu.cn;
+	dkim=pass header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=C+FjJx+R;
+	arc=none smtp.remote-ip=101.71.155.101
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C27606A32F
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 14:23:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 29C27606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612E0606A323;
+	Mon, 16 Nov 2026 14:30:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 612E0606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=BwtL7XL5
-Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 20261116142352c23c8595fd000207ab
-        for <platform-driver-x86@vger.kernel.org>;
-        Mon, 16 Nov 2026 15:23:52 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=benedikt.niedermayr@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=ddEhTbfvQPyKSOzq6hatj6Y2eqBZl6lG5KHY2ccF3Mk=;
- b=BwtL7XL55IQJXRFPlbiL6Pd19VXP8izD8IwXc3VW8TJxbK4KDmCK3QV21S9XOmWrqaJTge
- ctGrqv+pxAlsiksoUC3k+J9IajFAdbpaMA/SSKnhGKBiGldHTCotSFkjCQ4P/EEZBLMjGkmk
- xdoPCv77NFN8fK0CvpNOZR7G8QAQSjIpPKbxSrdAfLTBoR2vyWaTTNQ+DMwiLMcmFWA0ftLj
- Skf4SCWO0KFghYsMr99ti17bmOZOSjgvZL8GrYvfcXABI/URKiIAlokaul/deKmObrm/2YhA
- i/6KLST6CMnRu6P9jtpj4k5/YfAByKH88+zwyjZPGwBvMnpuVUI+PSfQ==;
-From: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
-To: andi.shyti@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: baocheng.su@siemens.com,
-	tobias.schaffner@siemens.com,
-	linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 0/3] Enable fan monitoring support for Simatic IPC BX-59A
-Date: Mon, 16 Nov 2026 15:23:48 +0100
-Message-ID: <20261116142351.1228943-1-benedikt.niedermayr@siemens.com>
+	dkim=pass (1024-bit key, unprotected) header.d=seu.edu.cn header.i=@seu.edu.cn header.a=rsa-sha256 header.s=default header.b=C+FjJx+R
+Received: from [192.168.17.1] (unknown [124.79.98.159])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 54dbcb553;
+	Mon, 16 Nov 2026 22:30:50 +0800 (GMT+08:00)
+From: Hongyan Xu <getshell@seu.edu.cn>
+To: Rong Zhang <i@rong.moe>,
+ Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Zehao Gao <gaozehao@iie.ac.cn>, Hyunjung <hj351016@gmail.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Derek J. Clark <derekjohn.clark@gmail.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] extcon: synchronize all-connector removal and fix
+ Lenovo fastcharger teardown
+Date: Mon, 16 Nov 2026 22:30:46 +0800
+Message-ID: <179483944681.43652.9539572356847924730@seu.edu.cn>
+In-Reply-To: <179474326098.103840.15531040789536968458@seu.edu.cn>
+References: <179474326098.103840.15531040789536968458@seu.edu.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -65,88 +61,60 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1323861:519-21489:flowmailer
+X-HM-Tid: 0aa1e4c4936c03a1kunm61f671b610e989
+X-HM-MType: 10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVlDHk9CVh9PQkpKTk9JQh5OTVYeHw
+	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKSU9VTEJVQkNVSk5CWVdZFhoPEhUdFFlBWU9LSFVKS0lCQ0
+	JKVUpLS1VLWQY+
+DKIM-Signature: a=rsa-sha256;
+	b=C+FjJx+RiELijSZqmtcGsgoCxEddZ589YNzIyXsFjyv0JpazDHNPexOEk7NB3CK15jj6XYD5GEymgmdDZ1U1n2aGBlrdfV7ZXlb/b5zeashZhjT97USQZac4pHjaCBPStVWIkayNs0hOmf7GvUQIUAVcwuHU+rRrSxEjrYTWv0E=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
+	bh=EDjYfGPnM8OA9NW+LY9ifZknUEbTkV8FfqZSHX3i64U=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi,
+Hi Rong, Ilpo,
 
-I need to add this basic platform enablement for Simatic IPC RW-548A. Since a lot
-of time went by, this enablemend piled up for a different patchset, which I
-currently prepare for the HWMON subsystem, and i would like to route it through this
-tree (since it would conflict with it).
+Thanks for the review, and sorry for the mess. Let me answer the questions, and also put one thing on the record about where the extcon part came from, because the timeline matters here.
 
-I hope this is ok.
+v1 link: https://msgid.link/20260806060526.1189-1-getshell@seu.edu.cn
 
+That is the patch I posted on 2026-08-06. I should have put it in the cover letter - my mistake.
 
-Changes since v2:
+Why the extcon patch exists at all, and why it is in this series:
 
-- Added basic platform enablement for Simatic IPC RW-548A
+v1 only cancelled the work inside the lenovo driver (devm_work_autocancel). After sending it I went back over the teardown path and realized the patch itself was not correct: cancelling the work is not enough, because the all-connector raw notifier in extcon can still be running a callback after the consumer unregistered, and that callback can publish the work again. So the root cause sits in extcon's notifier handling, and that is what 1/2 fixes. That is also why 2/2 says it depends on the preceding synchronization patch.
 
-Changes since v1:
+On the origin of the idea - I understand the suspicion, so here are the dates:
 
-- Refactored commit message of Patch 1/2 (Removed "TODO:")
-- Use SZ_32 and include required header
-- Use include for BIT() (linux/bits.h)
-- Fix inconsistent spacing all over the code and use reverse xmas
-  tree ordering
-- Replaced BIT(0) with appropriate and meaningful define
-- Check via IS_ALIGNED for smbus master base address
-- Remove verbose info message (success path should be quiet)
-- Use iopoll.h instead of own polling implementation
-- Simplify struct nct6126_pdev pointer assignment (just use a simple
-  single pointer)
+My v1 is from 2026-08-06 (link above). It is also the patchset referenced by the Closes: link Ilpo posted in the 1/2 thread.
 
-Regarding the write access during initialization I would like to add what I
-already answered in the original submission:
+sashiko reviewed that patchset back then and raised exactly this "extcon uses raw notifiers, the synchronization is insufficient" concern. I never received that report in my mailbox; I first learned about it from Ilpo's reply on 2026-11-09:
+https://lore.kernel.org/all/2ef4ad43-497f-c40f-b18a-f5b75799d95d@linux.intel.com/
+That is why 1/2 carries a Link: to that message.
 
-Regarding this specific point, I'm not entirely sure. I wasn't considering
-that during implementation because I was leaning heavily on the
-gpio-f7188x.c driver, which implements the GPIO part of this chip.
-It performs the probing/init in a very similar way.
-Since the driver **must be loaded explicitly** by the user or by other platform
-detection mechanisms (like the simatic-ipc.c detection driver in this case),
-I felt safe copying this logic.
+Hyunjung's patch is from 2026-11-16:
+https://msgid.link/20261116122001.3096223-1-hj351016@gmail.com
+i.e. three months later.
 
-I'm not sure if using DMI_MATCH tables would be the right choice here?
+So this did not come from Hyunjung's patch; if anything the order is the other way round. I am not trying to win an argument - I just do not want the record to say I took someone else's work.
 
-While it would restrict write access to only whitelisted platforms,
-it wouldn't scale well as the number of supported platforms increases.
+The attribution Ilpo suggested is right, and I will use it:
 
-The request_muxed_region() call at least helps by locking against other drivers
-already using this region.
-The critical scenario would be if no other driver has gained access to the
-region yet, but that would generally only happen if the user intentionally
-loaded the driver.
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://sashiko.dev/#/patchset/20260806060526.1189-1-getshell%40seu.edu.cn
 
-Using ACPI-based detection seems impossible on this platform
-(no proper ACPI table support for this chip).
+On the other points - all fair, all my fault:
 
-IIRC, these Super I/O chips generally aren't suitable for probing via ACPI if
-they need to be shared across different drivers, as ACPI detection would
-exclusively occupy the I/O port region [1].
+S-o-b order: fixed. Zehao Gao co-audited this series with me, so his Signed-off-by comes first and mine (the submitter) last:
 
-How should I proceed here?
-And in case this is a no-go, what about the *gpio-f7188x.c* approach, which is
-mainline?
+Signed-off-by: Zehao Gao <gaozehao@iie.ac.cn>
+Signed-off-by: Hongyan Xu <getshell@seu.edu.cn>
 
-[1] https://lore.kernel.org/linux-watchdog/df8d53db-0056-434d-953b-991025e6cd34@roeck-us.net/
+The mangled "Jarvinen": my git-send-email setup on Windows encoded the Cc display names as GBK instead of UTF-8. Fixed now (i18n.commitEncoding=utf-8, sendemail encoding, UTF-8 console), and I checked the headers of a test message before posting. Sorry for the noise, and thanks for fixing my Cc line.
 
-Benedikt Niedermayr (3):
-  i2c: i2c-nct6126: add support for NCT6126D Super I/O
-  platform/x86/siemens: simatic-ipc: add fan monitoring support for
-    BX-59A
-  platform/x86/siemens: simatic-ipc: enable support for RW-548A
+On Ilpo's point that the extcon fix is not pdx86 material - agreed. I will take 1/2 out of this series; if the extcon change is still wanted, I will repost it to the extcon list on its own with the attribution above. And since Hyunjung is already working on this, I am happy to let her series go first - if her approach covers it, mine can be dropped entirely.
 
- MAINTAINERS                                   |   5 +
- drivers/i2c/busses/Kconfig                    |  11 +
- drivers/i2c/busses/Makefile                   |   1 +
- drivers/i2c/busses/i2c-nct6126.c              | 441 ++++++++++++++++++
- drivers/platform/x86/siemens/simatic-ipc.c    |  17 +-
- .../platform_data/x86/simatic-ipc-base.h      |   2 +
- include/linux/platform_data/x86/simatic-ipc.h |   1 +
- 7 files changed, 471 insertions(+), 7 deletions(-)
- create mode 100644 drivers/i2c/busses/i2c-nct6126.c
+Although I do not have the hardware, the change has been build-tested and manually audited. The analysis and the patch text were produced with LLM assistance, then reviewed and edited by me.
 
---
-2.43.0
+Thanks,
+Hongyan
