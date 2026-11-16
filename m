@@ -1,67 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794827938;
-	b=ptySJy5U3hB+zLSBWlSWrewSEK+en3eDR8dxxQXgkQxzMadxFCrW0ua6Z2aa02CZm9YW
-	 pzUjeeFWZvwBCerXJ3IhNWJn03EI0YAvq7PQl4L5uAzUm31f2MDHB14WqhtY359gF60Ls
-	 z04THH/he0sqkrxkJ+6p970+Z/N8YZUrT5Ti1cAzo+v1WxKjHfjINQElfKJgc/ZzRd/Nq
-	 r29pc/ULSPz0wblClqCheYRQh3kDFAAl9ZB4/R1ivSU7glC5Y5+/7YNvMeBlrq0WPVYwq
-	 nqd19FCwGYa4gZ2AxE6Ba6u0vB+DxMRv9YrFBoYG/zUMyO8J76hUt1TJJBpoSpwKFGA==
+	t=1794828259;
+	b=1k7cBOUe27QVpaO0b3JAd1juiwTAJrnV6qARSDTDTfduiK1McQUxrJ3+Whb1GqeQzDNc
+	 rgyxRTSL5JnMu1tatT8iji9ACD7U6FMaqNsobl0xVRujAoSGrDUTb6vwxD3qHim5J0E/C
+	 UzO463dtIIZFT9KylRrPm0hv+LRboo3NbXIMWkv3rPHNWHI4CBPMwfkgHHjqn502ej73V
+	 x+OARNvrGoabcD+jMpsc58KgIqiGLQKMG9r/t9YPPYOHWjR+7+oCmLwsqsuww1Psjud6j
+	 LdhGxZVJNwTVxbmMDM52duVkNSBc/E+sQcjPhcZ2PqDLlvB8I33rN7hECT1760LHitQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794827938;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794828259;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To:Organization;
-	bh=P/CRFemaXndNEM33d16ggcxdjl+Ibzhkj3L2X3afg1U=;
-	b=ni7wMJEL+seOr2W9lOPbnOjFGxTKmLz2E4vj/UqcPA28tfoqrLQbwZewDL47Hyunr0Oj
-	 mofS96CLc93xdGpaGUaAgvR5xcqWTrJ7n9VNQ6Gf+ogOhFLLPaojZIcCEz3sjH1sR1GUT
-	 RbY+UU0wtcbpqRWaTaSTpgrhJU+EYfvsGzIlyEb8WNYvOSNphRx98no+0c5P74M74fl2c
-	 dM5ozs/bSWYmF/mtuK9tfDzGAKKZNzM7XTxmZoT3kz9WW4Qn2IAhGMactJWAd3qySZzKQ
-	 JPC5CeKlQobgVODUt22U6PRMTxpw9wbetLm7PCocBm72HNOBuYb+1SQlOrxVR6IiT5Q==
+	bh=qS8X9zY4g75Ph9TyTHh9JXIcSypVMVgi0PbT8Mv/YYY=;
+	b=HyxXWQQqV7vMIBfe4Tk0q4wWOBfc+H/6j026Obdfh3GcphhGqjVR2qlLveUYmR6y5yvF
+	 Re1I+Jgajdp2CB8ph+wLa2GI6I1wPQaIejuFpenFVDgoZK/REE6rl3vko0f4aWLmtzPNI
+	 11MXBQPseg1/YQxk+EMVZfFQS4jjoPOO0E0YRUXn5mW7ha1rd+Z3wSkeGeG87NeBaSuoq
+	 fSZ7yluTTh3mGYDh1TVWBYyPxtt3oL/7wBcJuDJmh1pglos+eke4wUiKEJFAP13HaCyf4
+	 V9ny/QTHyn3ef1bgc7xztPeFE8Q85JOZMTQpPlDryT4WvH2pctBG9cfZ215xjsTikHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HipKgwAh;
-	arc=none smtp.remote-ip=192.198.163.12
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=F9L89PkZ;
+	arc=none smtp.remote-ip=198.175.65.18
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D98A6070712;
-	Mon, 16 Nov 2026 11:18:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4D98A6070712
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F18606A8AD;
+	Mon, 16 Nov 2026 11:24:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 77F18606A8AD
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HipKgwAh
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=F9L89PkZ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794827938; x=1826363938;
+  t=1794828259; x=1826364259;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=6EJ1ZqmTmH8fJTuJbmT+hxkwuFML9xxmKKLG6umMngU=;
-  b=HipKgwAhn/SUBuPLId7ZzF/wd6Ee25b1CitHVeTKL/2ymBGIn0CTkutg
-   6r8+SR44nkZfeLqLhaGsDoFsVTBZwMiUmP2/JnSRfd4/OiZZ/8QqWeAqD
-   1zv146N5xqXs9YuXNb2I/TFDQpEYLhFTmJJ8F30X1EW4HcRJC6hB26sc4
-   voyyyMWFqEjOWd9x7g19V2cz6VECD3rH6FBbzW7pNcsyhiEU1ITJpk9zT
-   L3sG+0wFbNkGJDej2BXPCBQaqKce57XqooTmc2EZboEKAJ8PIQE6XUpiX
-   tnXlQ7srCdIwuQN+qIb+0FK9I40/NVugKxSq6lXI3TVPOytG4M/C8J+e8
-   g==;
-X-CSE-ConnectionGUID: QyzCiYCuQrS3kIn4fiYWUQ==
-X-CSE-MsgGUID: hKY7pJpiT5uXgBFnv8MooA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3463711"
+  bh=jmpwFgSQDJgOv8SI7+IJoXnvaUEcUwmlHF1P1RLN5wc=;
+  b=F9L89PkZ/uLv/j1mpRhtqrnPwVimDX7vmhX7na0b+6nI9+2Q6wYsCsIL
+   6LfsKfvKpJwV74Kyfk+TiNIrdH64Q9I2fE3EdhjXNfln1TTjTWJfnWw1p
+   ZRRoUl3r2rRPRnQCr0vGUQZL7nbJThVywXHeYyN/vNrfnl2s+c+VFdB4i
+   yD+/diPZM0UfYpL/hWBEz+bXTG1k2zMCEU7a2jCga2x2ZyjcpdIYpb0sq
+   HuzFLy+RBVftAwR2Yz/NFysaB5MOZoBSHZTB2eLNj8J6x7QaUc47TEv4u
+   5hNX7LCeEGzweg2p1SJpuuwK8qFW5hiJnLLa9PO8ajO00nxIvmQ3v6Of5
+   w==;
+X-CSE-ConnectionGUID: 5WcpvMXEQUqGqGK9Q/H2Og==
+X-CSE-MsgGUID: eeYWDiIVR6K1e7tVye3obA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3574107"
 X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="3463711"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:18:57 -0800
-X-CSE-ConnectionGUID: Jf2Zmy6uRC2W/wveXiTOAA==
-X-CSE-MsgGUID: rdsZ+U5ARAWRONBulXfw9w==
+   d="scan'208";a="3574107"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:24:18 -0800
+X-CSE-ConnectionGUID: SWR86sO2SDqickORTQVMFw==
+X-CSE-MsgGUID: R6rtWsKsSMe6UmlwmjUkvQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="9657294"
+   d="scan'208";a="9769293"
 Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.90])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:18:55 -0800
-Date: Mon, 16 Nov 2026 13:18:53 +0200
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:24:15 -0800
+Date: Mon, 16 Nov 2026 13:24:13 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Rosen Penev <rosenp@gmail.com>
 Cc: Stuart Hayes <stuart.w.hayes@gmail.com>,
@@ -70,11 +70,11 @@ Cc: Stuart Hayes <stuart.w.hayes@gmail.com>,
 	Doug Warzecha <Douglas_Warzecha@dell.com>,
 	Andrew Morton <akpm@osdl.org>, platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] platform/x86: dell: dcdbas: Suppress bind attributes
- of the platform driver
-Message-ID: <avrmnVSm2xk3dAT4@ashevche-desk.local>
+Subject: Re: [PATCH 3/5] platform/x86: dell: dcdbas: Release the SMI buffer
+ in remove
+Message-ID: <avrn3cn5yX2LTZ2u@ashevche-desk.local>
 References: <cover.1794633178.git.rosenp@gmail.com>
- <fa93ff8c72aa9f8a12d032dfc8422d77782f2c6d.1794633178.git.rosenp@gmail.com>
+ <a486b9714c8e58761e6368e7d75169441ce87e96.1794633178.git.rosenp@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -86,25 +86,34 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa93ff8c72aa9f8a12d032dfc8422d77782f2c6d.1794633178.git.rosenp@gmail.com>
+In-Reply-To: <a486b9714c8e58761e6368e7d75169441ce87e96.1794633178.git.rosenp@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Nov 13, 2026 at 10:17:55PM -0800, Rosen Penev wrote:
-> The dcdbas platform device is created by the module itself and stays
-> in use for as long as the module is loaded: dell-smbios-smm allocates
-> its SMI buffers against it through dcdbas_smi_alloc() whether or not
-> the driver is bound.
+On Fri, Nov 13, 2026 at 10:17:56PM -0800, Rosen Penev wrote:
+> dcdbas_exit() frees the SMI data buffer before
+> platform_device_unregister() removes the sysfs attributes, and without
+> holding smi_data_lock. The comment claims that only at module exit can
+> all sysfs attributes be released, but device attributes do not pin the
+> module: while rmmod runs, smi_data_write() or smi_data_buf_size_store()
+> can still be executing. They can then memcpy() into the buffer as it is
+> freed, or allocate a new buffer that is never freed.
 > 
-> Binding the driver again after an unbind also leaks state:
-> dcdbas_check_wsmt() runs a second time and memremap()s the firmware
-> SMI buffer again, overwriting bios_buffer and leaking the previous
-> mapping.
-> 
-> Unbinding or rebinding the device by hand is not useful, so hide the
-> bind and unbind files.
+> sysfs_remove_group() in dcdbas_remove() waits for running attribute
+> handlers, and dcdbas_pdev is still valid at that point. Free the buffer
+> there, or unmap the firmware-provided buffer when WSMT is in use, and
+> also do it when probe fails after dcdbas_check_wsmt() mapped the
+> firmware buffer. Reset the WSMT state with it so a later probe starts
+> clean.
 
-Sounds like Fixes tag is needed.
+...
+
+> +/**
+
+Really? If so, can you validate this with kernel-doc?
+
+> + * dcdbas_release_buffer: free the SMI data buffer or unmap the WSMT one
+> + */
 
 -- 
 With Best Regards,
