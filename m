@@ -1,79 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.175
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794829700;
-	b=xXUxXFp6WXUsALwRO5qTqdiBwmDGv7qFkVSHLD6xbh89ITgLxdBhHLr7IfEnl84frZqR
-	 /on5TAfeA/D1mFIhoxED4Aaq+1Ktny1HPwZmwJzixbRPyggB4xvidW76agDU6t0kua6sQ
-	 WEffj9BFQIRV7/Xf6BPiPZYWfbJQsaIRTsZGIRDRI3vEZkFlGxhCZn83pEzl7bOnZL9U8
-	 +jM4QoSyqZL9We64RdvbT3W23QZf4W0aiV2QLMI6YBMi1qc2hz8R5B9e+ZhQxOEA85TaH
-	 SFRSMmbBBEBb8LVNBVM/lAlnOV+JFEgf2i+4bV5jtY0g2BLd+a8auKq+iWxqjDRLVFA==
+	t=1794831607;
+	b=uoFiRnH823pleJCreSezMlH727b902u52so+fmfNDGW6HXv9wALPCvWTrRVCkz1ko0NR
+	 N80rmXmlo/+wPPqlMZGgY0gBVPuBGOd0615iLwbOWtq+7IdAsJSJIa5ZlJQLOHGNyw7Ic
+	 VIhijWu+ckCb6fZaYR+sDpX7itnZPFFFyQjDeIpzJLApSsMV47xFh8urf6Qy1mZmSPQYf
+	 9N3W45mTYh7VlNsCv5kPtaZ9KFsdPSFPB9Q3IK8Fv6qsMqqcss/GbzB3wYO2S+GJQzU6Q
+	 7N2uxct/S9lSowlu+2w3CieLHL+mq6FpeanoDNEN9hpDBVqPpWas7S4la1KAYTPGegA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794829700;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=jtELbdJR4zGF+dqbQswzGUFJCLtGbxQUtZG2xjdVLiM=;
-	b=MMOeSG2otj019dd6VKxGF+XNtPTX72+h5nNG76kk3+TzKL7VmE79ZjNgi4m5czeGQOia
-	 o0jDPrmIPAFIwiroWZ9tFugZ63mXF3ks18PLXCAQ2nI3C1W+mFot6LkPTzssLrTRsgVJJ
-	 3nKd1FjZ2YZn8CwJ5h2HyRkhXJi2F6f6M8iPyGJJ502gFNIUDzBWyFSZ5X897uFGSuw1u
-	 M7Sdm/WUEO+Jd2jJOc3lpQK0CX6KiZqHqgt4KkB45C4KBdyHNimlHXgk4eGZ3riSM01qP
-	 TRO/PCgpDVRlvZ7QhlnDyJsebKLYU8oM+ClAcW6laDIQEB4LRLcpbbm/8sJCtGVZfvA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794831607;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=ThqMa+Cp5rT1AxTJtuViQctpO4Z1h4bDlUNe0sOzkYo=;
+	b=zsMtqpXfaf7BcmWUKjGr3oNu6dDY+mRDYMayjUVuaYHCV/7kPTgPA1M8yocVRSZ3eFFG
+	 8SG/UbFjnfopGpuHlMoDrLY7BUoTYUJTSZu2fjAUIqKqRZXWBsqg5ZoiRHtUnf8cm70l9
+	 HY2WhLcEM8bfjoIzyTRi58wng4h6NCIDiMaO1GTDex31cvywwQGs6ipDibPnbvfHweMIw
+	 bLC7+TWICi77zgC4UbfgTC/3f0hGg0e+DYhSJulDea3PPSu5W/1S2WIZ2hADz9QK64Nrh
+	 pfEe9lMraRufrn184E5p+KKgrA79fP6eUyriyIt531DHFQHzdEsnz17CPWJpzS1+AXw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="PyLTBj/T";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DAE606A323;
-	Mon, 16 Nov 2026 11:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PyLTBj/T
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794829699;
-	b=GG7VZp+VIGWnzcCLVU+je10HIGVoTl98bnB182nqqAbr2k2AdvOh42ELt7WU0paKTGRp
-	 WVq6zMeQlD8PsOmz5LvwYqT4KSxj8ncr69Bn1Lswm424HoSUt8rURcMbLwpkaz7S+/eEI
-	 OvT/fSk5H9muIcSJEVjLzf1pr0rXWqrY5BtzCmo+kuhRHTLubyj1oae96wQDAejziURr2
-	 3cL93oaymEY69D7eSR2GVFBhBqVPy6+DbflAGmZFKFZRrpI8eRKX787tTS5/009uV3rm+
-	 ba6vaPX3RN6cqMXhSXaZPLWByOb/3kFWJo69tYipYqUso3TRT6WMs5KkgqxC8ImWoeg==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794829699;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=jtELbdJR4zGF+dqbQswzGUFJCLtGbxQUtZG2xjdVLiM=;
-	b=nZnFZz8H/PyCZqVnGyXJC64dQf6voWkaBCgD/bWHKR7skKyJD1WZdMBqZBoCpdxb2cME
-	 Q7FZtVh/wParKLoEbd0VNBYcvXiIGIAkG4wfCzO/xSk8ftcb6rGb+mE26+xNkRGiMFNui
-	 BRVhodVdhQQNsrAlQV6V3Ie//fNvKI6uEfD8lGxhEhx3oRsTc00N1MUXEbE8gCAo3GCh1
-	 YqE8SReb1PK7KILrH+xZNFFT6coAFM80QfKeuZWgfO/oX8DWHKKyCwhRLHtf3yvGlfBBX
-	 RMLP4BfUg5W+rELdCYOF6jsCL9vvB8tWae13QRPZO2d/2lj0CrG5Fv7Vk8Oxn+y6W7g==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YP0q+c5D;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.175
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 27F891F000C4;
-	Mon, 16 Nov 2026 11:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794829699;
-	bh=jtELbdJR4zGF+dqbQswzGUFJCLtGbxQUtZG2xjdVLiM=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=PyLTBj/TkfGtMPO7kk0uDTpPQ8FTRWmQ9X7WYQzniLtx8enLz0boAVt/9Hj3xkhRR
-	 KRBVNbHTlGWqO6qgmIEW9KOfVuB9L01mAcFn3mRMSJRRRGJNaRR/kofYJ+RSWVa+iv
-	 kjeSo9kycpZtjB6D8JKqTxFN76fcD3YpwH/ms1uBIdvVaq1SwU3uzAfX7IHQ8Ns4xy
-	 Kozy50FgwtFMTSg3f1104gLZnCy22/9+pLgot/gOTWWUxTd1bKul9El6HYMuITN6mT
-	 xJq9P5qRzAcmBz5yrxfCtYs37Eq7SyQFDxvxMQ6rueJ43u1LQYKGGFeLCm0CA1eEs4
-	 Dd4M+R3QV9yeQ==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 8054C4A444;
-	Mon, 16 Nov 2026 11:48:18 +0000 (UTC)
-From: Moad Tarrih via B4 Relay <devnull+tarrihmoad.proton.me@kernel.org>
-Date: Mon, 16 Nov 2026 11:48:12 +0000
-Subject: [PATCH v5] platform/x86: asus-wmi: Ignore unusable kbd backlight
- WMI device on ROG Strix G814FP
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025B7606A323
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 12:20:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 025B7606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YP0q+c5D
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-380c28f9e35so34842eec.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 04:20:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794831606; cv=none;
+        d=google.com; s=arc-20260327;
+        b=OzL9UwlbS2eU1GDsRoC5i6UvTdIpI0455jeS0A3KVXeh7YlfR8w7zw3z6PpQRPn4oN
+         RjTKm4fxM+JFdeGp6pbj6ffS5wyk1qgTs8VM93+XGaBfqkDqUi8miDfNaO06jBJjvOSo
+         zF3fNIjp7rrtURI70Uo2kw98feGGOP0wuy06Tj5ZFri1ZF92kQL1J7BA+df09LK7G1d8
+         70BEil449KWWzi09YyuxyeCWWGX0Rx4juNL9IC7JaNTZ40lFXsoPSjH4f9vOSeAOdQjf
+         RV2/L+Js6UJBuobv7oY27wuJyBNDmy4LkeMfNopuMcTTOwHiHLBvGtdPY1HUp8l6RhsX
+         dY/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ThqMa+Cp5rT1AxTJtuViQctpO4Z1h4bDlUNe0sOzkYo=;
+        fh=Il7rl7xgGhotfqhXH9A/ximQEKFsVNavQSgFjYrO7m4=;
+        b=bSaWL1FV/HQQZNKSvc+QIUYQb1vrUqcQ4SL0llGVgoPqBRRl4F2/GxSsyb+MG8bN7K
+         1BuD7nNiL9Md8//IJdbFZzUdMi8uchSLKT3+/VYTwN5BhJvrlq34hXxHoOEWsnqaZHX2
+         8kuCroNdCL9X0VX7dCh80Ox5ZyCtz1h7lpak59Ln5zj+fp5caPUA5VJ8dotNt31OijUQ
+         DS5cKpBRGCVfIurC6OwQtc6s5GA4IIkcqBo3SYOnfZvc/8KsEAHDYUS4KJKygfcqcMGc
+         J2vYHg+Hb+qz9FnUDrwurhqxnCKoDxEGMOcAPqrL/+Wxoh516ixgvYosloxfO9qWSm9P
+         IRzA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794831606; x=1795436406; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ThqMa+Cp5rT1AxTJtuViQctpO4Z1h4bDlUNe0sOzkYo=;
+        b=YP0q+c5DiPP+pGsJld3fJfzdtEhWj1PKCzybA7s8F54w02EiZAWYbIiLlBag3EaQLK
+         znrv4XXPNYdvd3hpesHSQHBr6j6PqScpc4Vy0vRT8tt+YCEwbBP40lfrwoHlMKmk2Bnl
+         kekCCTJQ9DnVrxUv7a6gAb2wOGWEGz/6mJvPkru+9ib5BB8hxFn33elEu+hr29cGzGxO
+         YtTzXUwz3CVbacnGAMtywLjA6jrDtV74ZAcW/mGOWvZlUxWCHNt9xpsmeIkQlfy6RxYv
+         Bl0qipYTYDlUnuG3LKfwG15aG+ilexeUNl0JkVNbyXY37nXP2SrpOZWUQ9BTq6lEqoHE
+         qwZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794831606; x=1795436406;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ThqMa+Cp5rT1AxTJtuViQctpO4Z1h4bDlUNe0sOzkYo=;
+        b=alp412wuJEjtlv/SKuq3C5p9biWcHGy8xDpBzEn+5/vBCYKiDeJSxQ1Va+UnNhvfCy
+         rYniC5mU6BU+P33DM3DRvVKNaW0sRdfvXogT/UvZKggB51lqLhqQUoBa5WHdxy9IVGJZ
+         LPzopblwRlfz2eeIJ8sfNe9SWC/UU0RCiep9UsFU/fw3pOLcl3SS6z6y1PWm/yUR6mNZ
+         fH9Drqyv4gDGZaCU7SHpqMAzOZNrmmwKl5WBiLlEFigXzizjPUxrIgDd3BtBwUw0e3Ui
+         y4UuaZ4t6gkuaAuxz6w6tTuidpcdpAdigBZbChTpggEp4vfa/ia70DuklVLhjKpcnjGk
+         DW3Q==
+X-Forwarded-Encrypted: i=1; AL+hErHRqiFHHwE7p6p5apFxCSvRs3sHAOvmi+LLaWZybT4f7raOJJL1RcTvcBSSZ8QgdP5cv2DQHGEF2pVJWNehG4Vu1yP5@vger.kernel.org
+X-Gm-Message-State: APuU4Z8QVxe4cI7lwVawRVCK1e0+Rp13OQUS+mIYyscn9WVL/bjmOSi/
+	nK3LTGjovJg1yPI/AyDtPHbFFRlCK66r9ejCy5AOEn8/MxgjH/vCdAoJoGdtew8vTpdWvQXimiZ
+	Va6DNnDS60h/8ugnJe9FR/2IuTpgtjR0iHtKx
+X-Gm-Gg: AZFdTZcdCFlDX6fOcUBw3VJxiKkZuVz5kMhp0DB0E2Y/1CnQXF/rnuR8+2pm6H8ALFc
+	IMyEcgYd2RRMgTvulJsqV/MEVjsJEB7G5bmt75goc2GPOM9fj74Jzt3wjSzjHynKfBqc8pYllLh
+	8Hpv0hTkgSZ8xpba/dy1WbTf6YxTQLxrTAIAfxjP3H8e3QPFC+SxMEyUsxmii6QJxs3xXwgOZCJ
+	7ge810Putcb4bsoPs7EkiHN3hMw+lzyrAUr+SrApvuy5VjZhHH1Op5Ag/RMWqJpNNbTgCcq2hCK
+	Xjzhw8jg6soxERtMMrS15WAGkAYcvoNeBL0bld7LHUu8ODf68rMLa6lkwC0D0JG9IOx0J5g75+X
+	ud7UhyqDNS5LuXjZxhOuXDqVOc2lq6GVxHX+HeVWK61DVvDE0oyvL3kmRwdIk307BHbp/CPORP4
+	Ukdmir4oS9CJDnow==
+X-Received: by 2002:a05:7300:c00b:10b0:36a:647b:2d7a with SMTP id
+ 5a478bee46e88-377db7c8ac3mr14514561eec.0.1794831605962; Mon, 16 Nov 2026
+ 04:20:05 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,175 +105,141 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261116-asus-wmi-kbd-readback-v5-1-f2f170836bf4@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4XRTW7CMBAF4Ksgr+vKf3EcVtyj6sL2jIuLSMBOA
- gjl7jjQRdQq6vJJM9+TZu4kY4qYyXZzJwnHmGPXllC9bYjf2/YLaYSSiWBCc84MtXnI9HKM9OC
- AJrTgrD9QIbVQFRoBaEjZPSUM8fp0Pz5fOQ/uG30/Y/PEPua+S7dn8cjnuf86Rk45dUGaoBVjF
- nB3Sl3fte9HJHPHKJZKs6aIonimTPCVBIN/FLlQOFtTZFG00haCcEaL5reilgpfU1RR6gYCr3S
- tag1LZXqdLeF5KF/pf245TQ9XfvwtswEAAA==
-X-Change-ID: 20261108-asus-wmi-kbd-readback-236245e82de8
-To: Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Antheas Kapenekakis <lkml@antheas.dev>, 
- Benjamin Tissoires <bentiss@kernel.org>
-Cc: Sercan GOKMEN <gokmensercan@gmail.com>, 
- Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Moad Tarrih <tarrihmoad@proton.me>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794829702; l=5701;
- i=tarrihmoad@proton.me; s=20261108; h=from:subject:message-id;
- bh=3nGZnubAyvz6LHpt+pJHAhYjFwDOuh3QCXEfuWLUP48=;
- b=TU1qjWk4F4/ItjYisO1i5iKWQwNqMsFCBU33o2CipCt7EFQTzX3TF1s4ZnbuTV+qfUGpoquAk
- Pdgiiz66DvuCLf8dqI+/S/46EIXMXLrofXVU5cVd80YzilnaxiLhpyY
-X-Developer-Key: i=tarrihmoad@proton.me; a=ed25519;
- pk=wtwpmYxZldK7Qebavgtx7P5WmSQOiWjicK0506NOKLg=
-X-Endpoint-Received: by B4 Relay for tarrihmoad@proton.me/20261108 with
- auth_id=1453
-X-Original-From: Moad Tarrih <tarrihmoad@proton.me>
-Reply-To: tarrihmoad@proton.me
-Content-Transfer-Encoding: 7bit
+References: <20261106043621.1903211-1-hj351016@gmail.com> <20261106074316.2204392-1-hj351016@gmail.com>
+ <6857ee54-81b3-4c8e-106f-d5c871f44375@linux.intel.com>
+In-Reply-To: <6857ee54-81b3-4c8e-106f-d5c871f44375@linux.intel.com>
+From: khj <hj351016@gmail.com>
+Date: Mon, 16 Nov 2026 21:19:54 +0900
+X-Gm-Features: Aa3M54pVVjYR42whJPeh4iY9-bRtomZTkPyisKrDYdR3jFietSTG2pxyOQFxoak
+Message-ID: <CAGr5VtO-tOv5GMMfbipQYYiAEbQOZ882QFL7QWZ=9HRt+9iLMQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger:
+ cancel work on teardown
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Derek J. Clark" <derekjohn.clark@gmail.com>, Rong Zhang <i@rong.moe>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Moad Tarrih <tarrihmoad@proton.me>
+Thanks, v3 uses devm_work_autocancel() now.
 
-On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
-backlight brightness in sysfs changes the LED brightness, but reading
-it back always gives 0, and the read makes the Fn brightness keys
-misbehave.
+I put it after devm_serdev_device_open()/devm_pinctrl_get() and before the
+extcon notifier (not at the INIT_WORK() spot), so on teardown the work is
+cancelled while fc->pinctrl and the serdev are still live -- the worker
+touches both. Details in the v3 changelog.
 
-The firmware reports the keyboard backlight WMI device as present
-without implementing it, and the backlight is actually driven by
-hid-asus. DSTS(0x00050021) always returns 0x50000, which is level 0
-with the presence bit set, regardless of the actual level, and every
-DEVS(0x00050021) write is rejected as an unsupported method.
-
-Add a kbd_led_no_wmi quirk that makes asus-wmi treat the keyboard
-backlight WMI device as absent, and set it for this board, matched on
-the DMI board name. asus-wmi then keeps the LED registered for hid-asus
-and no longer reads from or writes to the WMI device.
-
-As a side effect, the kbd_rgb_mode and kbd_rgb_mode_index attributes are
-no longer created on this board, they never worked here since the firmware
-rejects those writes as well.
-
-Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
-Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
-Suggested-by: Denis Benato <denis.benato@linux.dev>
-Cc: stable@vger.kernel.org
-Signed-off-by: Moad Tarrih <tarrihmoad@proton.me>
-Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
----
-Tested on an ASUS ROG Strix G18 (board G814FP, BIOS G814FP.317) on
-7.2.14: the brightness attribute reads back the level that was set, the
-Fn keys step from it, and this survives suspend and reboot. W=1 and
-checkpatch --strict are clean. v5 only changes the commit message.
-
-Sercan GOKMEN's B9406CAA patch also adds a field to struct quirk_entry
-and a DMI entry, so whichever lands second may need a trivial rebase.
-
-AI assistance: Claude Code (Claude Opus 5.5) was used to trace the
-asus-wmi code, write the patch and draft the commit message. I reviewed
-it and tested it on the hardware.
----
-Changes in v5:
-- Say that the sysfs write changes the LED brightness, and that
-  DSTS(0x00050021) returns level 0 with the presence bit set (Denis).
-- Add Denis's Reviewed-by.
-- Link to v4: https://patch.msgid.link/20261111-asus-wmi-kbd-readback-v4-1-79df1567476d@proton.me
-
-Changes in v4:
-- Trim the commit message and move the AI assistance note below the
-  --- line (Ilpo).
-- Link to v3: https://patch.msgid.link/20261110-asus-wmi-kbd-readback-v3-1-646adf2b8629@proton.me
-
-Changes in v3:
-- Drop the comment on kbd_led_no_wmi (Antheas).
-- Don't set wmi_backlight_set_devstate for this board: the firmware
-  rejects both DSTS and DEVS on 0x00050012, so the write did nothing
-  (Antheas).
-- Add Antheas's Reviewed-by.
-- Link to v2: https://patch.msgid.link/20261109-asus-wmi-kbd-readback-v2-1-c048fc53d8ee@proton.me
-
-Changes in v2:
-- Add a quirk that makes asus-wmi skip the keyboard backlight WMI
-  device on this board instead of detecting rejected writes at
-  runtime (Antheas), so no more WMI writes that are known to fail
-  are issued (Denis).
-- Link to v1: https://patch.msgid.link/20261108-asus-wmi-kbd-readback-v1-1-bf38f6400ade@proton.me
----
- drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
- drivers/platform/x86/asus-wmi.c    |  3 ++-
- drivers/platform/x86/asus-wmi.h    |  1 +
- 3 files changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 3b0f3346dc60..9b2a4b829885 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -93,6 +93,10 @@ static struct quirk_entry quirk_asus_unknown = {
- 	.wmi_backlight_set_devstate = true,
- };
- 
-+static struct quirk_entry quirk_asus_g814fp = {
-+	.kbd_led_no_wmi = true,
-+};
-+
- static struct quirk_entry quirk_asus_q500a = {
- 	.filter_i8042_e1_extended_codes = true,
- 	.wmi_backlight_set_devstate = true,
-@@ -167,6 +171,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
- }
- 
- static const struct dmi_system_id asus_quirks[] = {
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS ROG Strix G18 G814FP",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "G814FP"),
-+		},
-+		.driver_data = &quirk_asus_g814fp,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. Q500A",
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index b33ebdb21aa2..51fea21ff247 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2165,7 +2165,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 	asus->kbd_led.brightness_set_blocking = kbd_led_set;
- 	asus->kbd_led.brightness_get = kbd_led_get;
- 	asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
--	asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
-+	asus->kbd_led_avail = !asus->driver->quirks->kbd_led_no_wmi &&
-+			      !kbd_led_read(asus, &led_val, NULL);
- 	INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
- 
- 	if (asus->kbd_led_avail) {
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index b45f81b38a47..e53c6b3fc619 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -41,6 +41,7 @@ struct quirk_entry {
- 	bool wmi_force_als_set;
- 	bool wmi_ignore_fan;
- 	bool filter_i8042_e1_extended_codes;
-+	bool kbd_led_no_wmi;
- 	int key_wlan_event;
- 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
- 	int wapf;
-
----
-base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
-change-id: 20261108-asus-wmi-kbd-readback-236245e82de8
-
-Best regards,
---  
-Moad Tarrih <tarrihmoad@proton.me>
-
-
+2026=EB=85=84 11=EC=9B=94 16=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 8:30, =
+Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>=EB=8B=98=EC=9D=B4 =EC=9E=
+=91=EC=84=B1:
+>
+> On Fri, 6 Nov 2026, hyunjungg wrote:
+>
+> > From: Hyunjung Ko <hj351016@gmail.com>
+> >
+> > fc->work is scheduled from the extcon notifier callback
+> > yt2_1380_fc_extcon_evt() (and once from probe), but it is never cancell=
+ed.
+> > The containing struct yt2_1380_fc and the extcon notifier are both
+> > device-managed on the serdev device, and the serdev driver has no
+> > ->remove callback, so teardown happens entirely via devres unwinding
+> > when yt2_1380_fc_pdev_remove() calls serdev_device_remove().
+> >
+> > devm_extcon_register_notifier_all() unregistering on teardown only stop=
+s
+> > future notifications; it does not drain a work item that the notifier h=
+as
+> > already queued. A fast-charger extcon event that races device unbind ca=
+n
+> > therefore queue fc->work just before teardown; the work then runs after
+> > devres has torn the device down. yt2_1380_fc_worker() dereferences not
+> > only fc itself but also fc->pinctrl (pinctrl_select_state()) and the
+> > serdev (serdev_device_write_buf()), so it must be drained before those
+> > device-managed resources are released, not merely before fc is freed.
+> >
+> > Cancel the work via devm_add_action_or_reset(), registered after the
+> > serdev is opened and pinctrl is acquired but before
+> > devm_extcon_register_notifier_all(). Because devres runs cleanup in
+> > reverse order, teardown then unregisters the notifier first (so it can =
+no
+> > longer queue the work), next cancels the work while fc->pinctrl and the
+> > serdev are still valid, and only then closes the serdev, releases pinct=
+rl
+> > and frees fc. This closes both the re-arm window and the use-after-free
+> > of fc and of its sub-resources in the worker.
+> >
+> > Found by static analysis / code review; compile-tested only, not
+> > reproduced on hardware (requires the Lenovo Yoga Tablet 2 1380 charger)=
+.
+> >
+> > Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastc=
+harger driver")
+> > Signed-off-by: Hyunjung Ko <hj351016@gmail.com>
+> > ---
+> > v2:
+> >  - Move the devm_add_action_or_reset(cancel_work) registration from rig=
+ht
+> >    after INIT_WORK to after devm_serdev_device_open()/devm_pinctrl_get(=
+)
+> >    and before devm_extcon_register_notifier_all(). The v1 placement
+> >    registered the cancel action first, so devres (LIFO) drained the wor=
+k
+> >    last - after the serdev was closed and pinctrl released - leaving th=
+e
+> >    worker's fc->pinctrl / serdev dereferences racing freed resources.
+> >    The new placement drains the work while those resources are still li=
+ve.
+> >
+> >  drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c | 17 ++++=
++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger=
+.c b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
+> > --- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
+> > +++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
+> > @@ -148,6 +148,11 @@
+> >       .write_wakeup =3D serdev_device_write_wakeup,
+> >  };
+> >
+> > +static void yt2_1380_fc_cancel_work(void *data)
+> > +{
+> > +     cancel_work_sync(data);
+> > +}
+> > +
+> >  static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
+> >  {
+> >       struct device *dev =3D &serdev->dev;
+> > @@ -209,6 +214,18 @@
+> >       serdev_device_set_baudrate(serdev, 600);
+> >       serdev_device_set_flow_control(serdev, false);
+> >
+> > +     /*
+> > +      * Register work cancellation after the serdev is opened and pinc=
+trl
+> > +      * is acquired, but before the extcon notifier.  devres unwinds i=
+n
+> > +      * reverse, so teardown unregisters the notifier first (no new wo=
+rk
+> > +      * can be queued), then cancels the work while fc->pinctrl and th=
+e
+> > +      * serdev are still valid, and only then closes the serdev and
+> > +      * releases pinctrl.
+> > +      */
+> > +     ret =3D devm_add_action_or_reset(dev, yt2_1380_fc_cancel_work, &f=
+c->work);
+> > +     if (ret)
+> > +             return ret;
+>
+> Why not devm_work_autocancel() ?
+>
+> > +
+> >       ret =3D devm_extcon_register_notifier_all(dev, fc->extcon, &fc->n=
+b);
+> >       if (ret)
+> >               return dev_err_probe(dev, ret, "registering extcon notifi=
+er\n");
+> >
+>
+> --
+>  i.
+>
