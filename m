@@ -1,101 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794844371;
-	b=iek/ZobibIJ4wRJjgHrstE4mNdeVSxJyWyqvj+LrBrbHr/0pkfvugRXTrr6vnn8T3c9B
-	 KkQTCeXgIeXnJx1OFqs2Blcj8ooTYHFWqlmLxWxwOyjG5oT9HKj5u6jmTXbmnNBJ9+XG8
-	 G/rN0PVtCZeC7y3432lNZii+dknnHCuNzSf9MkwhbwBSpFXOBABMGuKJ19EihhD78eMGT
-	 MegrzRGb9cyw7/so9OuILuhje807kQFRh2/PvvNnnIO/wF+k7DWBGLwSd/bAWmSqb5k6b
-	 fGSWIG/xBrpoiwSz90dIsYgig+Kmk4OFLoBOA6ubYVlN0E27d8BByTauFxckBJqJeuA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794844371;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=fVIxw3KdjaFwPWNVyNJpp091xF6vEmNQsw9KKoomNs0=;
-	b=YDO2+jzrzSHUmwDSDrCmq6Ux4+r+rz6aYexjRVDpCq0DE7KiW+m+O37WgebQ90sfn/aU
-	 ozJ5/qLugHYXcUcYOuob6TWlfn1x+lhp8+DGFthBrGxfUfxLeE120ZozjFEDy8HYWGw2G
-	 4E71lZDWRxeA776PVFfiH0x3xvkRP+0xMpNSK9d8NJhV41eTfJ2MHRBbTthlouI+dPwvh
-	 Hg+ycS4RZeeddYTtudS3gfsEZMDEox18ideWv3b8pS+/0W/a5zcwW3ArvxdxhfOtWuTGn
-	 RW0B7Y2BtOG/3cIKPxUPmkWXI/bz4x50y4yT19j1L+pRpSBDxwOJsbMOozU3GguqwEA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ytUYfLC7;
-	arc=none smtp.remote-ip=209.85.128.51
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794848097;
+	b=AekaJcsju9ARunGa3GitMYeGPTexxvWDxZRnsf4IzevchCmikEk//8OMPwl2x6/flGo8
+	 NN+UmGHBCdSd8OnuGh7qPzaMtc4Wphk1AhK/2t08dC05oCNQikzN8sv3tv7cdKYMRrxyu
+	 3lpVYIb5IE6SicAO/WG4nSis3sb8kUcXN7UVv9fkaAfoVcvo58UHVKKBFeoiQRueS9D5c
+	 1k7MX2L9oMliOw5b0jWnn18D07832ugvwgsUAgVQZk4MCbTcCuRlW6aJXPpURKdtJlnyV
+	 btnh1gbZY5wfHNlXSjizgTkFwav3qUXG00szIyZWlQ+mw7U7W2WhQzRTa3fScOhjw8w==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794848097;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=ZSzyp4lFwlreLUU4PejF2EMnCKVfR/iyAWf8TtqgbQ0=;
+	b=1bn2IopS1GXVVL/ozH0HeIXGtn88o0O8S8+9L6tfCgRolYqvew5LOUmAFFXA4aLButdy
+	 F0gXGZ2/69xE6uyNNGgY4PGG2/3KTEyFycpzN/8kkRIfOoAxrcRUMW4cGBiEYxUbeCRkt
+	 Hgqtkf9qnJE+A+trWYCdQU7qJ97w0imJzhoQfcATk4uvz7iQg5NEf1jljaJ+VXf+NI4ni
+	 QtYdsQa6uJGWEUhSCSwZrH5uvIOh8sOioszC8GvPfxMbMQrsug8RnltHtKr7/o0kzB2DL
+	 JdVnpG+tBlA3hJEmEQeDgk+kx48qStHXweeLVNQ39Mt6dRoEpesBFjl37mthM3hR1Fw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=C6zquPRs;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1424E606A33A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 15:52:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1424E606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6286E606A33B;
+	Mon, 16 Nov 2026 16:54:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6286E606A33B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ytUYfLC7
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a2000d5fb1so18088685e9.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 07:52:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794844368; x=1795449168; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=fVIxw3KdjaFwPWNVyNJpp091xF6vEmNQsw9KKoomNs0=;
-        b=ytUYfLC7AuCNwrjsVln9ZSKNSpkWPyvqf6elPKHS5kiK/eAqYsy2O7sUJYQ5x1ctE0
-         Iri+d4ML4aCpHUbdcJviqyB3zu2/sxvJf17kxvlJ0NIRpF70deVM9ifON1zVK0h57h25
-         qybHbBCFwtmJzuhwh6EkNOXYsgTRWlDp/ZAZKZek9yJZtHZicJ8M1i8Tw0dC9xJpgSEd
-         C8m3ynVp0r41rc1tKT2Xo1IPNFR3eRT8R7Lwk1GcCzyuCuas/Gt7jSmG3LN0vbpfmDJe
-         BWyQo2H6SxUuuXkRO4483aToPRWcW0oEkdzmkA3IuugZzd6VwKGfNOfpJVGBcvN7mkgI
-         Cscw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794844368; x=1795449168;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fVIxw3KdjaFwPWNVyNJpp091xF6vEmNQsw9KKoomNs0=;
-        b=dUK7tnS6IXCS23q0upiTM+7HMoTYO8xf/mOCOEXamM0qIXncgtNn7C4E4UMg4+PYPY
-         ub/lj3z/GpQ/AgIWsaX4HLORdOwzjuCscwISaqUjVCMHQ7NU3T0413SD7jsKf9CEL5Qu
-         yCbZkzEN83kS5x2qWNm6o+VZRqo1ex/E+eKcenxjUPsM9zt6YH4LJIoZm9v+fwICeVBM
-         CGbeDGg1pblMCfDkofSFUxczb5oX0J14cGtmbMSh5LNyaZDmwmWE1HaLpLykrUIFDgX+
-         UgwrVWactqcH36JWcUVM6Fgo/ecRwqV9ubbzfYRMo2u/1WhqpTa4OaJROkVR+VBQ1/S2
-         dXXg==
-X-Forwarded-Encrypted: i=1; AL+hErHG+Pdem6YcxvdZKLRhptf+7pGGjCCgJyFSQUYLGFaY9jBA4Uqg4L/Nqfj1zW5z5w8ebLQLs1WDkx6gsKk5Xh1rGB8L@vger.kernel.org
-X-Gm-Message-State: APuU4Z+tj/3kI9UE4Nw7stWXqWZ53YXOUvavQHVkIbd0aQreFC7MPgqh
-	ARjPUj8UKeN5gvMSaYvGNn6uwnc/yfAqq5e2af78Jrf5eh18RGJ/i2Kc
-X-Gm-Gg: AYBFou1lQfnrpsk7c05tPU5HbPDIb8tpcpZMvwz7Zxp4gc8tt2VBJQtsegoIKAc3St8
-	FUkLvCm/DhnYYN8jTojC2vE1MV9EE8bvEnX2bKRVywIxcff5haB/7yB4j7ScLWuJH/9fc/CBzD2
-	iNzA40SsenUBwRYYmolSFGPyIuNXZOkZUKmkKgI8U1HlXotLqpld3WJrgAUiV4RQ2GyJU0J4iW1
-	paNJ7L0iSLvyuEdibT6ZEBc1QWoSz7NFUtNsHMlJiRuXmTi9Ckr+M9vfK5LyTe/BQu2dFn8W+SG
-	MYloKsPf8yPrFI1CO/Q/yfiNlsgbtcCd7UfNkkbONsxrI6GSKanZoXMC+VlsujYWMfMv6Rvc+vu
-	GNRJemyU92MrIRwfN6j0zcQmmYEt8MHIbDBZkjVvaQeyP0ApT4JqSKrTZ6i157Hsj2+s7bAg6NT
-	eilt/H9qWQGOcmwzgteDHzXRZhBrj/Ai4a75GkMkqnlCVPnpNlpj8R0YQ1Zou0/rwTSywRB2WfO
-	anjlAmdfuvhBS9y4CjaiuwBYhGjw9yy5KA5u3bcKb1wSsTJdnV8IfelRPp0tCuozGwbzcZLECWD
-	4EWUrA6P/IO7yUnf2PW0Pjpmy+PVDcwplXMfuKvMcI77Tn6sbb4aYSdjbGNtZOFR7rNSayGQ0qV
-	19VxTeLCOXpG9BYOq6u0C7JWCS5I4xr0wMo/Z/SEX
-X-Received: by 2002:a05:600c:1389:b0:4b7:dc0:89c with SMTP id 5b1f17b1804b1-4bb55ae7737mr228579805e9.32.1794844368269;
-        Mon, 16 Nov 2026 07:52:48 -0800 (PST)
-Received: from B87454BG30364.retailmedia.com (284035233.box.freepro.com. [82.96.134.200])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4bb55ae501bsm321279415e9.10.2026.11.16.07.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2026 07:52:46 -0800 (PST)
-From: Erwan Velu <erwanaliasr1@gmail.com>
-To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Carlos Bilbao <carlos.bilbao@kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>,
-	Suma Hegde <suma.hegde@amd.com>,
-	Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Erwan Velu <e.velu@criteo.com>
-Subject: [PATCH v2 5/5] Documentation/ABI: Add sysfs-class-amd_hsmp
-Date: Mon, 16 Nov 2026 16:51:47 +0100
-Message-ID: <20261116155147.769630-6-erwanaliasr1@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261116155147.769630-1-erwanaliasr1@gmail.com>
-References: <20261116155147.769630-1-erwanaliasr1@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=C6zquPRs
+ARC-Seal: i=1; a=rsa-sha256; t=1794848083; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JD4ydr1iuiHowzpMJSrv8Q6GfZX0KYDc7G3D7m1tSwHAwd8zPUCzXY+5hZva6xFS4OnbIc+IBlbS3JJIF5Q5Jbd8hlcJyRWbXxLIXYXfcfRMlpbsFmL1O+q2h8lB9ZEpCDKcIVLN3n1Awmmb/aNS2KB5bczq3VTKPitwqUUBtmI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1794848083; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZSzyp4lFwlreLUU4PejF2EMnCKVfR/iyAWf8TtqgbQ0=; 
+	b=nI4G34cyRCkGjcEc2RF6lA5n1vRelRbVgHgOZy9Ko6nK6j6SixkIdGszxe+jqJFXrbbKoLCpvWWFqR6FNGFjmUHQnMjqhgRS5aUr6HrLVfckr/EeCnumoXAMpn5RB8ajZXa9fMux4yghlnaO1p09eWCqzTdoYPLLStLubJdUUvc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=C6zquPRsGZfuwy6/Qpi0D4VvD+o2x369ORaqRuMb5i4H+GvkWfbd9dLqJyyYqlF7vPwydqeEYz3DA3fzPLiGTpSMvbZ449tKKzk/DkEKAx6uwB3JwTgKwvj4/rKIQJFzppG8sChyGOw4RuUW2Pf2ptplzolGx+QATXoHlbDJNl91maAXNYmz/hU6UQg9zi9GOXUVgeP179jhQp4hWKSJiiRIUSNh/bgOI9EXCKM1NjAE3SlGA6+jS0BB63lPVripxzkZOkDXA3ttekRlU1jeHlWKHOHi5zFAZGIM8T+EcMXJ8RuvFT57d3pK4aPhdY//F7dCx+JVQZhE5HHr1wyQig==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=ZSzyp4lFwlreLUU4PejF2EMnCKVfR/iyAWf8TtqgbQ0=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 179484808123116.622750164090803;
+	Mon, 16 Nov 2026 08:54:41 -0800 (PST)
+Message-ID: <c5dd1ebfb0b359663636b76d3f61c9fd9fefd661.camel@rong.moe>
+Subject: Re: [PATCH 0/7] platform/x86: ideapad-laptop: Trigger the EC on
+ YMC events following Windows behavior
+From: Rong Zhang <i@rong.moe>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J . Clark"	
+ <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Gergo Koteles
+ <soyer@irl.hu>, Ike Panhc <ikepanhc@gmail.com>, Andrew Kallmeyer	
+ <kallmeyeras@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org"
+	 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Mahir
+ Faisal <mahirfaisalantiq33@gmail.com>, stable@vger.kernel.org
+In-Reply-To: <859daa2c-e891-410c-a528-58fc49a2ccea@app.fastmail.com>
+References: <20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe>
+	 <859daa2c-e891-410c-a528-58fc49a2ccea@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 17 Nov 2026 00:49:31 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,165 +74,109 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.62.1-3 
+X-ZohoMailClient: External
 
-From: Erwan Velu <e.velu@criteo.com>
+Hi Mark,
 
-The per-socket HSMP attributes are only described in
-Documentation/arch/x86/amd_hsmp.rst, and have no entry in
-Documentation/ABI/.
+On Sun, 2026-11-15 at 17:38 -0500, Mark Pearson wrote:
+>=20
+> On Sun, Nov 15, 2026, at 2:27 PM, Rong Zhang wrote:
+> > Currently, the ideapad-laptop driver triggers the EC with YMC command
+> > 0x01, which seems to be randomly chosen with trail-and-error and turns
+>=20
+> typo: trial-and-error (this is in patch 6 too)
 
-Document /sys/class/amd_hsmp/socketX/ and its attributes as the
-interface for userspace, whichever driver probed. The historical
-/sys/devices/platform/AMDI0097:0X/ and
-/sys/devices/platform/amd_hsmp/socketX/ locations keep working.
+Whoops, I will fix it in the next revision.
 
-Assisted-by: claude-opus-5-5
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
----
- .../ABI/testing/sysfs-class-amd_hsmp          | 120 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 121 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-amd_hsmp
+>=20
+> > out to be not a command for YMC events. While the devices in the DMI
+> > quirk table recognize it, some other devices do not, making the
+> > trigger_ec functionality a no-op.
+> >=20
+> > Lenovo's YMC driver for Windows (YMC.exe) emits YMC command 0x08/0x09 o=
+n
+> > fold/unfold YMC events, in which "unfold" means laptop mode and "fold"
+> > means other modes.
+> >=20
+> > Adopt the said sequence to make it work on all relevant devices. For th=
+e
+> > sake of caution, only emit YMC command 0x08 only for the known fold
+> > postures. For all other postures (including unknown ones), emit 0x09 to
+> > make sure the touchpad and keyboard are still functional.
+> >=20
+> > Beforehand, also fix pre-existing issues, modernize relevant WMI
+> > drivers, and add a resume callback refreshing the posture and poke
+> > ideapad-laptop to trigger the EC. See each patch for details.
+> >=20
+> > With these changes, add a DMI quirk table entry the Lenovo Yoga 7
+> > 14IRL8 as its EC must be triggered by software on YMC events properly
+> > (i.e., with command 0x08/0x09), or else the enable state of touchpad,
+> > keyboard, and keyboard backlight become out of sync.
+> >=20
+> > Reported-by: Mahir Faisal <mahirfaisalantiq33@gmail.com>
+> > Closes:=20
+> > https://msgid.link/CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n8Cp3AzhVQ@=
+mail.gmail.com
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> > Rong Zhang (7):
+> >       platform/x86: lenovo-ymc: Use enumeration to represent device=20
+> > posture
+> >       platform/x86: lenovo-ymc: Serialize WMI event handling
+> >       platform/x86: lenovo-wmi-events: Modernize WMI event handling
+> >       platform/x86: lenovo-ymc: Modernize WMI driver and factor out=20
+> > events
+> >       platform/x86: lenovo-ymc: Refresh posture on resume
+> >       platform/x86: ideapad-laptop: Trigger the EC on YMC events=20
+> > following Windows behavior
+> >       platform/x86: ideapad-laptop: Enable ymc_ec_trigger for Lenovo=
+=20
+> > Yoga 7 14IRL8
+> >=20
+> >  drivers/platform/x86/lenovo/Kconfig          |   2 +
+> >  drivers/platform/x86/lenovo/ideapad-laptop.c |  42 +++++++++-
+> >  drivers/platform/x86/lenovo/ideapad-laptop.h |   9 ++
+> >  drivers/platform/x86/lenovo/wmi-events.c     |  38 +++++----
+> >  drivers/platform/x86/lenovo/wmi-events.h     |   1 +
+> >  drivers/platform/x86/lenovo/ymc.c            | 118 +++++++++++++++++--=
+--------
+> >  6 files changed, 147 insertions(+), 63 deletions(-)
+> > ---
+> > base-commit: 7e1392a42ea288d70a266f6553fe06f57f8647ea
+> > change-id: 46a18a06-ymc-82yl-d59b4f8f891e
+> >=20
+> > Thanks,
+> > Rong
+>=20
+> I feel like I should be able to find some more formal documentation on th=
+is, but as these platforms aren't in the Linux program not sure what I'll g=
+et (or how long it will take) and the series looks good to me.=C2=A0I'll se=
+e what I can find so hopefully we can avoid a long list of quirks (as neede=
+d in patch 7).
 
-diff --git a/Documentation/ABI/testing/sysfs-class-amd_hsmp b/Documentation/ABI/testing/sysfs-class-amd_hsmp
-new file mode 100644
-index 000000000000..32da798dd2ad
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-amd_hsmp
-@@ -0,0 +1,120 @@
-+What:		/sys/class/amd_hsmp/socketX/
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	One directory per CPU socket exposing the AMD Host System
-+		Management Port (HSMP) per-socket attributes. X is the socket
-+		index, starting at 0.
-+
-+		The directory is a link to a device whose parent is the device
-+		of the driver that probed the socket, so the attributes below
-+		are the same whichever driver is in use:
-+
-+		- ACPI driver:
-+		  /sys/devices/platform/AMDI0097:0X/amd_hsmp/socketX/
-+		- plat driver:
-+		  /sys/devices/platform/amd_hsmp/amd_hsmp/socketX/
-+
-+		The historical /sys/devices/platform/AMDI0097:0X/ attributes
-+		and /sys/devices/platform/amd_hsmp/socketX/ (now a symlink to
-+		the socket device) keep working.
-+
-+		On client platforms, only smu_fw_version and protocol_version
-+		are visible.
-+
-+What:		/sys/class/amd_hsmp/socketX/metrics_bin
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Binary HSMP metrics table of the socket, as defined by
-+		struct hsmp_metric_table in arch/x86/include/uapi/asm/amd_hsmp.h.
-+
-+		Only supported with HSMP protocol version 6. On protocol version
-+		7 and later, a read returns -EOPNOTSUPP and the table must be
-+		read with the HSMP_IOCTL_GET_TELEMETRY_DATA ioctl on /dev/hsmp.
-+		lseek() is not supported, the whole table is read at once.
-+
-+What:		/sys/class/amd_hsmp/socketX/smu_fw_version
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) SMU firmware version, as "major.minor.debug".
-+
-+What:		/sys/class/amd_hsmp/socketX/protocol_version
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) HSMP interface version.
-+
-+What:		/sys/class/amd_hsmp/socketX/c0_residency_input
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Percentage of cores in C0 state.
-+
-+What:		/sys/class/amd_hsmp/socketX/prochot_status
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) 1 if the processor is at its thermal threshold value
-+		(PROCHOT asserted), 0 otherwise.
-+
-+What:		/sys/class/amd_hsmp/socketX/ddr_max_bw
-+What:		/sys/class/amd_hsmp/socketX/ddr_utilised_bw_input
-+What:		/sys/class/amd_hsmp/socketX/ddr_utilised_bw_perc_input
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) DDR bandwidth of the socket:
-+
-+		==========================	=================================
-+		ddr_max_bw			Theoretical maximum, in GB/s
-+		ddr_utilised_bw_input		Currently utilized, in GB/s
-+		ddr_utilised_bw_perc_input	Currently utilized, in percent
-+		==========================	=================================
-+
-+What:		/sys/class/amd_hsmp/socketX/mclk_input
-+What:		/sys/class/amd_hsmp/socketX/fclk_input
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Memory clock (mclk_input) and fabric clock (fclk_input),
-+		in MHz.
-+
-+What:		/sys/class/amd_hsmp/socketX/clk_fmax
-+What:		/sys/class/amd_hsmp/socketX/clk_fmin
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Maximum (clk_fmax) and minimum (clk_fmin) frequency of
-+		the socket, in MHz.
-+
-+What:		/sys/class/amd_hsmp/socketX/cclk_freq_limit_input
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Core clock frequency limit of the socket, in MHz.
-+
-+What:		/sys/class/amd_hsmp/socketX/pwr_current_active_freq_limit
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Current active frequency limit of the socket, in MHz.
-+
-+What:		/sys/class/amd_hsmp/socketX/pwr_current_active_freq_limit_source
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Sources of the current active frequency limit, one name
-+		per line, among: cHTC-Active, PROCHOT, TDC limit, PPT Limit,
-+		OPN Max, Reliability Limit, APML Agent, HSMP Agent.
-+
-+What:		/sys/class/amd_hsmp/socketX/pwr_current_active_freq_limit_source_raw
-+Date:		November 2026
-+KernelVersion:	7.5
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:	(RO) Sources of the current active frequency limit, as a
-+		hexadecimal bitmask (e.g. "0x0003"). Bits 0 to 7 are, in order:
-+		cHTC-Active, PROCHOT, TDC limit, PPT Limit, OPN Max, Reliability
-+		Limit, APML Agent, HSMP Agent. The bit assignment comes from the
-+		HSMP specification: new sources are only appended.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ccbcdc0799b9..1e23f4e5c902 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1193,6 +1193,7 @@ M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
- R:	Carlos Bilbao <carlos.bilbao@kernel.org>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-class-amd_hsmp
- F:	Documentation/arch/x86/amd_hsmp.rst
- F:	arch/x86/include/asm/amd/hsmp.h
- F:	arch/x86/include/uapi/asm/amd_hsmp.h
--- 
-2.53.0
+Thanks. I have a faint feel that the 0x08/0x09 sequence should be
+generic, and removing the quirk table is on my plan, too.
 
+My decision when I wrote this was to figure out a compromise before
+confirming how generic the sequence is. As a compromise, PATCH 6 applied
+the sequence to devices that were already in the quirk table but did not
+apply to all devices by removing the table.
+
+Would you prefer to defer to the documentation, or we can figure out a
+follow-up patch afterward?
+
+>=20
+> One open question on patch 4 - but patches 1 to 3 and 5 to 7 look good to=
+ me.=C2=A0
+>=20
+
+I will answer it there.
+
+> For those:
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Thanks for the tag ;-)
+
+Thanks,
+Rong
