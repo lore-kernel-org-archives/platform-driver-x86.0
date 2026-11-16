@@ -1,76 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794828618;
-	b=dODo9evauVWaidzDQjJ7ow79+eFoP+btQ2sGxCaKCm/qQUFZq7vxyMjPFsS/Babcm+CR
-	 02HsgXCIqY6bgmCay9H+VI14lqXALXPpe8ILIrlSxG2RwuzTDiZ3+M5xPFZVqGdb4Z+UU
-	 WQl91uV5M5XAazezUHRqxXcds6wvshg4KoU/mVOE+sn+A313FE4GMBXVmiyyNxmZE4WSv
-	 E8p8mD3wPFm5e+9MDZ3EM4nH5o6TRk7HsOEUgaysEiO2ES2YVmtFCfWakNj+OnWcC00pY
-	 hcYggPZDj3rKvUzCYkzVI5+IzBbXLZRyiBub5yFvs+HdOkW8xK5lYjOnA4gJvsWhNfQ==
+	t=1794829413;
+	b=qHTcswqJO5uSmjvQ+dQTTLeAw3Tsfg3/lo/UlawL9u1gaF4HY/WO3kLI5hrCDCt/GrAt
+	 3zOEtLto5dsLBF0eKCVjX/jBuGlS5vpWq7FFitReE9FSfIEDoWEh1vs3/Sb7vVfVzzRhT
+	 quoKY0um10YKO0KIChxeiw7oRJIIMSeiprjwBM1zCXYDA4f+KqHVKiATuUY47K4zM6aex
+	 odliQ/3O/Fydtp3FQm58i1XrTIpEYx2rhlAUB9A654JV2OpZZeg+ouPE9e3fAlUf//udi
+	 JSZkmisLNCQSKETxMAke+fNDans/FHocstf9BCVc2pplzD2KTXUGRDP1dIeJguNJQ9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794828618;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794829413;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=rBI0xKCFSwQwaGtUO8dGutiqQgQZ6MHPL54xhDwdbMQ=;
-	b=BuymJGoeQAhfFP7oT6yeCajenSp8Xc2KKoJQ3fKeuzZXdQqZIFjXM7qBsRQB9hP+xb1o
-	 WQN7ZrdqSJjcA20kixrNCH/D9SHr7zRgEmMB9gVCJ3tbur/0drtbq1EGBsbDnvCPc0h2C
-	 JFPu3ENKh5kQRN+wqN7zsfzYIAq8Nysr31nZgbQqEJXGnyyIeSHm0pSHiMePKFaxyU3el
-	 x5bscEu9k3a3y4+li10tbuKCGpvmLyiD+I32uzPm6VqCvi4A3Yb6U+6FT2r+9MBGIQ9OI
-	 a7c6mqsZQLuSTEDdTCXlJ5Q4UaIvSzpWexqbVDM8MRbX5fxpVaE8cojthrzpzr+5oSw==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=2Wj+yn8QlQUflfZuSQzQHgoH1oSaK3NVTLidTi2Td/o=;
+	b=i1Y/58CwyUoKhXRmMOHBqFkrwJg9yIdvCD9eqr1f5GhtIPEFrTxC9GYx87ma/Ydb4nK+
+	 Nq5HsPkE61t9EU2k2+umg3SKu8vfYHrWm+iYaovav9NksHhq2kWY4e2846tJxGLkBl9sb
+	 AO9ijK1VMx9DRDDnLQwsVVd6uzFik/XVjSgSYugrwtOBjiZ/eRYxViGEEvRV9G1DxV8lm
+	 0lrAa4OknEMK042KP+IMKXaQhTA6YdbSb/MhJ+hbyX87nE8/n4h3LYY2x42mJWP7Me8NB
+	 jEf8S61tDm57CzEVrUSCtxLN2P+B2l/1GH3YJkv/yQAUcfCG0tAiepd8sXyf1hyznTg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=a9lboo9f;
-	arc=none smtp.remote-ip=192.198.163.17
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="KgYj/ayv";
+	arc=none smtp.remote-ip=192.198.163.18
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFF8606A333;
-	Mon, 16 Nov 2026 11:30:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AFF8606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476FF606A32F;
+	Mon, 16 Nov 2026 11:43:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 476FF606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=a9lboo9f
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KgYj/ayv
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794828618; x=1826364618;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9XOSwT5JW2ijSJUIYeVtIP4yMnEK9GMSIOyn+dx9S4I=;
-  b=a9lboo9fAYYPrOdO+8savLEIgFCrjPtSEpD7HePToSSO5ctxgaWr/kfg
-   kD6451pkwjtP/LedmWLfvqkwF27Z+rXX4DoRGi95PJ/Mwo/06IP7l1/+T
-   Z6CTrZh3ke25qivCtutpQEliN2+huoZrAU49/BkVmjFEHKrajZGB2QeOp
-   LH4e/jhUb0aLNZzR87BZ6M0a7IcOhcQaXG/piLBa1j6acFU4qTaQqtNhL
-   kwiYI53LxRTgBwKuJgKt23bMr15mtsuOqiLNH3CZB5YlT57mYHwm03W5j
-   RWpr+XLsXRGdRQf0JrbAx2mezQYO+spfYdCJH1TVXZe5l0MZOCQ1RUu+o
-   Q==;
-X-CSE-ConnectionGUID: M5goKHFkQvG4Rs9uiU16Ng==
-X-CSE-MsgGUID: 2gyOZVpYS2ORTc9d9xESKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3549603"
+  t=1794829413; x=1826365413;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lBUzR8jSNFcECeOX/ponr8buD5Qli9Oi1aoxol1EQ0M=;
+  b=KgYj/ayvKgAuooITZwGTWq337Mu4/IGSihjOheb1WCfpdljYHehJl7vU
+   enBNh/On34zC1uAY3eCYSmz0LpA8cHO6lIrv3w9I1uLYn/wWDhrS8DY46
+   Rl9Lwdw1Ia0R9K0e1uZDpoL8RBJqT8LUa98UyyC/kS6gYRw/jxXgGM5wf
+   jK6SXjPMbt0PhJxy1zHXBZxPNC3UMF/TedO6rLnfD1JjEeezwm79R814G
+   gHlYJ8dwGr+YGhnH0ROdsg71f8M1HafMcmHo7O32rxUzwtioF8X+9DAs/
+   AZI+BHljI1TsSV0PJQMmGQBxEHcxkLFWHwXPK6T86g385eA749hdF1DRm
+   g==;
+X-CSE-ConnectionGUID: 3DWmaOhRSMOukomHyspUGA==
+X-CSE-MsgGUID: rKAsUs8UT3+SQzXnkQqpdA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3591793"
 X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="3549603"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:30:17 -0800
-X-CSE-ConnectionGUID: lLLbJStWQBSlUSn99xC9zA==
-X-CSE-MsgGUID: sVTXLZzlR4++YckX4vGqpg==
+   d="scan'208";a="3591793"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:43:32 -0800
+X-CSE-ConnectionGUID: NoyjPf8gS86H7Pja39udXA==
+X-CSE-MsgGUID: B5k3/gSbQOOmvdemGtUKaA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="9711855"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.151])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:30:14 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 16 Nov 2026 13:30:10 +0200 (EET)
-To: hyunjungg <hj351016@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, Rong Zhang <i@rong.moe>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger:
- cancel work on teardown
-In-Reply-To: <20261106074316.2204392-1-hj351016@gmail.com>
-Message-ID: <6857ee54-81b3-4c8e-106f-d5c871f44375@linux.intel.com>
-References: <20261106043621.1903211-1-hj351016@gmail.com> <20261106074316.2204392-1-hj351016@gmail.com>
+   d="scan'208";a="11421176"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.90])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 03:43:30 -0800
+Date: Mon, 16 Nov 2026 13:43:27 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Doug Warzecha <Douglas_Warzecha@dell.com>,
+	Andrew Morton <akpm@osdl.org>, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] platform/x86: dell: dcdbas: Validate the WSMT buffer
+ description
+Message-ID: <avrsX3FsTveIu8fJ@ashevche-desk.local>
+References: <cover.1794633178.git.rosenp@gmail.com>
+ <e2f8ce920d1fe503bf8b506f3cea2a0b72187261.1794633178.git.rosenp@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,94 +84,54 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e2f8ce920d1fe503bf8b506f3cea2a0b72187261.1794633178.git.rosenp@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, 6 Nov 2026, hyunjungg wrote:
+On Fri, Nov 13, 2026 at 10:17:57PM -0800, Rosen Penev wrote:
+> dcdbas_check_wsmt() takes the address and size of the firmware SMI
+> buffer from an SMBIOS OEM string or from an EPS table in the BIOS area,
+> and sets
+> 
+> 	smi_buf.size = remap_size - 8;
+> 	max_smi_data_buf_size = smi_buf.size;
+> 
+> without checking that remap_size is larger than the 8 byte semaphore.
+> An OEM string such as "30[addr;0]" or an EPS table with
+> num_of_4k_pages == 0 makes the size wrap to almost 2^64, and smi_data
+> reads and writes can then access memory well past the mapping.
+> 
+> check_eps_table() also accepts a table with length 0, since the
+> checksum of zero bytes is zero, and then trusts the rest of it.
+> 
+> Reject buffers of 8 bytes or less, and EPS tables shorter than
+> struct smm_eps_table.
 
-> From: Hyunjung Ko <hj351016@gmail.com>
-> 
-> fc->work is scheduled from the extcon notifier callback
-> yt2_1380_fc_extcon_evt() (and once from probe), but it is never cancelled.
-> The containing struct yt2_1380_fc and the extcon notifier are both
-> device-managed on the serdev device, and the serdev driver has no
-> ->remove callback, so teardown happens entirely via devres unwinding
-> when yt2_1380_fc_pdev_remove() calls serdev_device_remove().
-> 
-> devm_extcon_register_notifier_all() unregistering on teardown only stops
-> future notifications; it does not drain a work item that the notifier has
-> already queued. A fast-charger extcon event that races device unbind can
-> therefore queue fc->work just before teardown; the work then runs after
-> devres has torn the device down. yt2_1380_fc_worker() dereferences not
-> only fc itself but also fc->pinctrl (pinctrl_select_state()) and the
-> serdev (serdev_device_write_buf()), so it must be drained before those
-> device-managed resources are released, not merely before fc is freed.
-> 
-> Cancel the work via devm_add_action_or_reset(), registered after the
-> serdev is opened and pinctrl is acquired but before
-> devm_extcon_register_notifier_all(). Because devres runs cleanup in
-> reverse order, teardown then unregisters the notifier first (so it can no
-> longer queue the work), next cancels the work while fc->pinctrl and the
-> serdev are still valid, and only then closes the serdev, releases pinctrl
-> and frees fc. This closes both the re-arm window and the use-after-free
-> of fc and of its sub-resources in the worker.
-> 
-> Found by static analysis / code review; compile-tested only, not
-> reproduced on hardware (requires the Lenovo Yoga Tablet 2 1380 charger).
-> 
-> Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
-> Signed-off-by: Hyunjung Ko <hj351016@gmail.com>
-> ---
-> v2:
->  - Move the devm_add_action_or_reset(cancel_work) registration from right
->    after INIT_WORK to after devm_serdev_device_open()/devm_pinctrl_get()
->    and before devm_extcon_register_notifier_all(). The v1 placement
->    registered the cancel action first, so devres (LIFO) drained the work
->    last - after the serdev was closed and pinctrl released - leaving the
->    worker's fc->pinctrl / serdev dereferences racing freed resources.
->    The new placement drains the work while those resources are still live.
-> 
->  drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> --- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> +++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> @@ -148,6 +148,11 @@
->  	.write_wakeup = serdev_device_write_wakeup,
->  };
-> 
-> +static void yt2_1380_fc_cancel_work(void *data)
-> +{
-> +	cancel_work_sync(data);
-> +}
-> +
->  static int yt2_1380_fc_serdev_probe(struct serdev_device *serdev)
->  {
->  	struct device *dev = &serdev->dev;
-> @@ -209,6 +214,18 @@
->  	serdev_device_set_baudrate(serdev, 600);
->  	serdev_device_set_flow_control(serdev, false);
-> 
-> +	/*
-> +	 * Register work cancellation after the serdev is opened and pinctrl
-> +	 * is acquired, but before the extcon notifier.  devres unwinds in
-> +	 * reverse, so teardown unregisters the notifier first (no new work
-> +	 * can be queued), then cancels the work while fc->pinctrl and the
-> +	 * serdev are still valid, and only then closes the serdev and
-> +	 * releases pinctrl.
-> +	 */
-> +	ret = devm_add_action_or_reset(dev, yt2_1380_fc_cancel_work, &fc->work);
-> +	if (ret)
-> +		return ret;
+Are they real or just based on the code reading?
 
-Why not devm_work_autocancel() ?
+> Fixes: 12c956c4f32e ("firmware: dcdbas: Add support for WSMT ACPI table")
+> Fixes: 47a94c551a74 ("platform/x86: dcdbas: Check SMBIOS for protected buffer address")
 
-> +
->  	ret = devm_extcon_register_notifier_all(dev, fc->extcon, &fc->nb);
->  	if (ret)
->  		return dev_err_probe(dev, ret, "registering extcon notifier\n");
-> 
+If they are only based on the code reading, I would drop these fixes tags and
+make commit message to sound that it's hardening of the existing code.
+
+...
+
+> +	/* The first 8 bytes are a semaphore, so there must be room after them */
+> +	if (remap_size <= 8) {
+
+Why '=' is here? We probably should rely on memremap() to complain on 0 length.
+
+> +		dev_warn(&dcdbas_pdev->dev, "found WSMT, but buffer size %llu is too small\n",
+> +			 remap_size);
+> +		return -EINVAL;
+> +	}
+
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
