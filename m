@@ -1,71 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794860625;
-	b=O0cqYyQuEkUugECLCr1VtFLWNhbQ6+GpkFFjA52zgjWWJIbnMIC8ntnpXqYidkktXsRy
-	 HLlzoEDeclvPQbPyWy4gSDXQhC0prIwcd50nemZ5Yd6HzGsZIGt519zVKzfwIyJ/IzrPc
-	 xL67emykm81r/oZ6R8TknYHW6RC33c8P7ur99A4GpSDf3Y5CFKUyezq2bYMs6kXwpoR9V
-	 FRTQeKEq8a3tQJgvJQXYfiM6c2x31vVxPUIF81lV+6zmGKY8/YGrniJFvwOp+Mz9Esz4c
-	 da+v0vk576l9BtNB60zj+bcwCDVdbBZjVLPjI2FNTPkqOor/zkOMIiJPQs8/dzVjLeQ==
+	t=1794861662;
+	b=0H87sm0jdpqpw/Gt5lLO27EW8t3LMKqv8xuivbFbG/e95u6m27T1pkwLo7oE1iTDJIjj
+	 AnU0wX60iE1ZdVC9AxctAJmXVcefgBsDd/ITUq3+tMkLm5+5NvJmRBkjf25biaRbkmlDa
+	 4UXooGskGcf4+jqK/jPzBazMytI39tphRjLQXOWKEAFyr16rHfcemtl3Picb/B4/Dh5xs
+	 eKb1fKnhGJCNNiXm53iyocDfaxfNUKu8jRNOecPMZSHVkiURkAbjrl1E2FbShavwhVjaR
+	 ceBKMi7Mxgfi3oMkGm0rOU2pCCNemhit4go+1UCdbcvF/4hGzjnI1QXDT9tL1kQtphQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794860625;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Z3v2Fdi5knvShxlL6luSo+yW+hrEoKkQcOMpcIN//6U=;
-	b=4/OsqQkiNPR4UMKQzlYH94fY1VdYCIMwhy830qf5QlfxN18ZnT2gkgxNcSUjSMUPg5Ja
-	 e1XcOMlahMWJ2uAfJMtkznJM2xmtxqG0g1rTnsYhSRp5bvhETY0+MVH3kdhMAWXPeLZIf
-	 O2zIq4HGKeqyCAv9AQ67VuNHrmmqzQpWQVA612CVOyk5Qn575t5baDW9A6a9pCXwbShZV
-	 Q+re67Cx4S8DH4vP4ykgtNx+L3NL4sKBU4K8VgjxByGdJ32YaVmMe3dDETY83xEFYG8Nr
-	 lQ+JF8yPEMwsRnKtlRf/PbYwbSi8QrvN2OkxFD6DW+VSC6vaG8BnD1NbxrKDtLJi0uQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794861662;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=KwupKsUiOqn7cLay4MlUcBS/p/Juvy45qENBSa3w+E8=;
+	b=blXD8B/QrKXZpitRkJ4iDr5xruxejSH+mVAbs0OtR6+MoDflOsnKXV+W7V5ofgC4S/jh
+	 nkDvxEPSCm/8ylvTgz6lGp/EOlyztF3xURNMVJi1QLx2A2h0fOs3CuXwYMzGwpcJw/36j
+	 j2ulBeQ2xpsaNgjF1DuUEuaZYsJeat5tUmB2b5GH+oXS4RoyN1i7fFCpQHgb0fOtym+rR
+	 eWxGjhmF5I9p/KorcAyKOjreRjxz15DtCW1Pw+zFKoG6dYG1O6Of0pw0ioc8RvnxgeFyO
+	 nP9cdG2VQ9fGY0va/js9KyzDoiIwCrb84wytt8MLaRJF4WRqqe6sCZ5Jae+4Lqt/CgA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G31L1HzH;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QgJq43AU;
+	arc=none smtp.remote-ip=209.85.214.174
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D6D606A322;
-	Mon, 16 Nov 2026 20:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E65606A323
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 20:41:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3E65606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G31L1HzH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6CD1F000C8;
-	Mon, 16 Nov 2026 20:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794860625;
-	bh=Z3v2Fdi5knvShxlL6luSo+yW+hrEoKkQcOMpcIN//6U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=G31L1HzHZLpv7LltQKlqqdOkkjPa7E+nyJ8S3uVY5uQ3rrkZ5bY8ahACP5Xyk4Oyy
-	 gzT4Q0qx2+2NA25jSfMFe0gUrmkM9yADzZkEPVpXsHxLbtaDQ9+zt+sOWqLPNNtCjL
-	 1tHTZiW2jk4f6FnJ7Cv8TYzGwkzw1ZHwIQZJBkb3v31BWGi/3Xzy/6K4bfDvJLDRCl
-	 SwDznO4D2l70OtS8BfDIr+0LPdZh+TbWbagCKZ/55u8WO2nGlPqwUya9JHRqhRgKLp
-	 daMN1gLJmLHuumVObY8XQI41437GxOO22Dr4wI2Qpq+0hEHIP2z8lAKYz9+F0sO8TX
-	 77srtzrVxrnoQ==
-Date: Mon, 16 Nov 2026 14:23:43 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Sebastian Zygadlo <szgit@icloud.com>,
-	Yossef Osman <yossef.osman@proton.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
-	Kenneth Feng <kenneth.feng@amd.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QgJq43AU
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ed1414df17so18916365ad.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 12:41:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794861661; x=1795466461; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=KwupKsUiOqn7cLay4MlUcBS/p/Juvy45qENBSa3w+E8=;
+        b=QgJq43AUWZHaO8+QO4KXF8guoz9iXvueKPsr3RlpasNEDj24iCSCWKMJMeh4SpSbCx
+         3Xm/m6fFLHiuZkg5SKbrQcrByCo4I4fWpCeS+EvU5YxmHmRT8eQqzC74WwxmIsHPkZUN
+         Z2vjCWbWBtw2r5cyfyX20/MzcpsdlgqN7xeaU5OE2jKUVIhYK/hYdNgfkJTRwbfElg6H
+         UctodA/hcFpcGcZLgGIaOmGDXoYcW+CYUQ19J7nj5qzXD9kxFLhRfIx4ljr64fQZWv/u
+         zlKJBqszvvCZeRI1lxKOl0V2FgeDQKhZqTPVIGnxQlDwy9Ufsm5mn23vCHArggZ67ZoO
+         aTmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794861661; x=1795466461;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=KwupKsUiOqn7cLay4MlUcBS/p/Juvy45qENBSa3w+E8=;
+        b=g15/GGInn1kmvHnPaYD/zDhrexQH70nX7+NfLFL+ECg1kuG4HfLKvYdfB4V7JySgcI
+         rY6GNYMtGEDG1tUdMjiVTV19V6Y8VljZYD9KlDHOprXimckz/D2pAueYb5CWPGEDcMiI
+         fm9sD1c27AxcAE53zx87kQekUQLxPfsw8gn0VNd/+6bVI+EjOC5dRxtmzSIf00KiF7WR
+         PSL3xgZorNJ8u3SmQLjaUn0gY/B7HF1w/+oribASGj+XpmBR/6i5x+aIhg5SmiuNeJze
+         6wGBy6sAVSCX2otYz70G5xtoB6nAWfKMyj69GfQd1Xkx5sgkB0SdWYFdKEzSlAK0uaKr
+         aYew==
+X-Gm-Message-State: APuU4Z+Uww5v5vLcaamFnECrGrpV4MV3PFsmljfKEnST/y4glLPGemus
+	3qAm92xI28ONKr6h88EqWLix/kScophIClWyu+R4LmCbdSVtwJk2GbmK
+X-Gm-Gg: AZFdTZeZp2/R1VDbtoEuB1vSFQxpKFFPztr+EQJgAB1exZIUxdCncHLnDyPJ81gp851
+	EEFS1JPnCGSxcuf+mGXGsgtKmIDTnmDXK9/o/5NX5DBs1/xro1XrQnvKtE9JSYm6QPM0BbaDzpX
+	auFSSBjwcEs7tkuQZM94d1gKrWNbPVZAP1oigYMsWk6z5trJ4+KG6NDk6Xv97Lcp1P3pk4mIsDA
+	xoKpZcgVblzrJBZHopkspajQ4tkUNcAxchiwV5mk2ZReCaKzG/bF2h4+ZiHysv0ytWm6WAFhpPF
+	bkD4FCbFzCIBmcIamMcMVnXWNozFNn+cVUj+czGqyiZejsqhBIY3atnJTUVw3fg1mL5JM1DGOAw
+	yFa6LVpmPKT/lyTT09NITeVySsg4NDP+CaoPX/7+8fzX6C9fwufdETdkDTU3YNZZZam8NEDSLtz
+	TdVz0UVhfpUn9esep9i6P5+RMA9UawtoPjnRhrjUXoqZ4wWbrIPWKPfUnktoNPJXYLW/BDQlG4Z
+	JKJYWmuJJRfVzg9B7OpysZYaW2XnuupssOSVW/uBksBFfTEjWGaPKzIJ8cvA12p2eS6QClycG1+
+	KEHg+p82mx0xZ/bWR6xRWRq7R/ASf2AhMCDo9XmYw+SF56QHE8UVYBJ+aGb5TbCi8fPf/eecpcR
+	PE008Mmb647I86vhMMV0WLpNo0ZGTNAKVm9gEVH92msmkuRcr8idFsugA8FCrcpZ8gdNZCbBry6
+	789A==
+X-Received: by 2002:a17:903:1b47:b0:2ed:3db6:2eb0 with SMTP id d9443c01a7336-2ee0e0ba6f7mr102960155ad.48.1794861660818;
+        Mon, 16 Nov 2026 12:41:00 -0800 (PST)
+Received: from ryzen.lan ([2601:644:8000:37f::e34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2efd7a87202sm3833645ad.58.2026.11.16.12.40.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2026 12:41:00 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: Stuart Hayes <stuart.w.hayes@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andre Eikmeyer <dev@deq.rocks>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	"open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2 02/12] PCI: Disable pcie port on specific amd devices
-Message-ID: <20261116202343.GA205416@bhelgaas>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andrew Morton <akpm@osdl.org>,
+	Doug Warzecha <Douglas_Warzecha@dell.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] platform/x86: dell: dcdbas: Fix SMI completion wait and buffer handling
+Date: Mon, 16 Nov 2026 12:40:48 -0800
+Message-ID: <cover.1794861287.git.rosenp@gmail.com>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -75,123 +99,56 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261114160457.3034-3-atharvatiwarilinuxdev@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Nov 14, 2026 at 11:03:49AM -0500, Atharva Tiwari wrote:
-> As mentioned in the previous commit, PWRD turns off the entire
-> bridge, and if we read/write anything to the config space
-> or the PCIE space when the bridge is dead, the CPU CATERR's,
-> so to avoid interaction when the bridge is dead,
-> we remove pcieport support for the bridges..
+Fixes for dcdbas.
 
-I don't know what's going on here, but it doesn't sound like typical
-PCIe behavior.  If a device is powered off, accesses to it end with
-some kind of PCIe error that is not normally fatal.
+Patch 1 fixes the host control SMI wait for types 2 and 3, which the
+compiler removed entirely because the status was a plain memory read,
+and converts the type 1 wait along with it. Patches 2 and 3 fix the SMI
+buffer lifetime on unbind and module removal. Patch 4 hardens the
+validation of the firmware-provided WSMT buffer description.
 
-It's basically the same thing that happens when the OS enumerates
-devices by reading the Vendor and Device IDs.  This has to work even
-if there's no device present, which is essentially the same as a
-device being powered off.
+These patches were developed with the help of an AI coding assistant
+(Claude Opus 5.5): it reviewed the drivers, found the issues and drafted
+the fixes and changelogs. I reviewed every change and I am responsible
+for them.
 
-So I'm not in favor of trying to avoid some accesses to devices based
-on DMI checks.  Even if that works, it doesn't cover other paths like
-sysfs.
+All patches build cleanly with W=1.
 
-> Tested-by: Sebastian Zygadlo <szgit@icloud.com>
-> Tested-by: Yossef Osman <yossef.osman@proton.me>
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> ---
->  arch/x86/pci/fixup.c       | 43 ++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pcie/portdrv.c |  2 +-
->  include/linux/pci.h        |  1 +
->  3 files changed, 45 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index 795d81c7a..b1697cc4a 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -1094,6 +1094,48 @@ static void asus_disable_nvme_d3cold(struct pci_dev *pdev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a09, asus_disable_nvme_d3cold);
->  
-> +static const struct dmi_system_id quirk_disable_pcie_port_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,3"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +
-> +static void quirk_disable_pcie_port(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *upstream = pdev;
-> +
-> +	if (dmi_check_system(quirk_disable_pcie_port_dmi_table)) {
-> +		while ((upstream = pci_upstream_bridge(upstream)))
-> +			upstream->no_pcie_port = 1;
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x67ef, quirk_disable_pcie_port);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x69af, quirk_disable_pcie_port);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x7340, quirk_disable_pcie_port);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ATI, 0x7360, quirk_disable_pcie_port);
-> +
->  #ifdef CONFIG_SUSPEND
->  /*
->   * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
-> @@ -1179,4 +1221,5 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
->  	}
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
-> +
->  #endif /* CONFIG_SUSPEND */
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index a9cbfc1d2..d2f19e566 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -688,7 +688,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	int type = pci_pcie_type(dev);
->  	int status;
->  
-> -	if (!pci_is_pcie(dev) ||
-> +	if (!pci_is_pcie(dev) || dev->no_pcie_port ||
->  	    ((type != PCI_EXP_TYPE_ROOT_PORT) &&
->  	     (type != PCI_EXP_TYPE_UPSTREAM) &&
->  	     (type != PCI_EXP_TYPE_DOWNSTREAM) &&
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d31a8d107..fcb4f5893 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -420,6 +420,7 @@ struct pci_dev {
->  	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
->  	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
->  	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
-> +	unsigned int	no_pcie_port:1; /* PCIE Port driver is forbidden */
->  	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
->  	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
->  						   decoding during BAR sizing */
-> -- 
-> 2.55.0
-> 
+Tested on a Dell Precision M4800 running v7.2.15, using the equivalent
+backports built as out-of-tree modules:
+the driver probes, and growing smi_data_buf_size and then unloading and
+reloading dcdbas with dell-smbios on top is clean, with the buffer freed
+on remove. The host control SMI (only used at power-off) and the WSMT
+paths were not exercised.
+
+Changes in v2:
+- Squash the type 1 read_poll_timeout_atomic() conversion (v1 patch 5)
+  into patch 1, so both waits in host_control_smi() change at once.
+- Patch 1: include iopoll.h instead of io.h, and return the error from
+  read_poll_timeout_atomic() (-ETIMEDOUT) instead of -ETIME.
+- Patch 2: add a Fixes tag.
+- Patch 3: make the dcdbas_release_buffer() comment a plain comment
+  instead of malformed kernel-doc.
+- Patch 4: the problems were found by code reading, so drop the Fixes
+  tags and describe the patch as hardening; reject remap_size < 8
+  instead of <= 8, as an 8 byte mapping just gives an empty buffer.
+- v1: https://lore.kernel.org/platform-driver-x86/cover.1794633178.git.rosenp@gmail.com/
+
+Rosen Penev (4):
+  platform/x86: dell: dcdbas: Actually wait for the host control SMI
+  platform/x86: dell: dcdbas: Suppress bind attributes of the platform
+    driver
+  platform/x86: dell: dcdbas: Release the SMI buffer in remove
+  platform/x86: dell: dcdbas: Validate the WSMT buffer description
+
+ drivers/platform/x86/dell/dcdbas.c | 82 ++++++++++++++++++------------
+ drivers/platform/x86/dell/dcdbas.h |  1 -
+ 2 files changed, 50 insertions(+), 33 deletions(-)
+
+
+base-commit: 2800868f63227c8237d70c41e70d441c919620d6
+-- 
+2.56.1
+
