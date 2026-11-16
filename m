@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794861666;
-	b=sHoQtg8IzUDcu0H3bCARKYGoIvZ1Uv9gUZEyoktzsVqsqdwqlq1wpYbGMvQiSRsxM0YQ
-	 1/uCOWyL1Ci0DP7brfQdiA4me5BVoQ1zSoUSs3JClPBl2UZgcvNFgMJPDatIMe6hkdu/S
-	 p2ylMThCrUhsEbPE/Xukn0qxyepS4GTrdApmrRFsT5NwsrtPgU5/NVfQUYQr38SL5Uryc
-	 BokuMIQgDbrfxHsE6yc1rWPcAV0vh39J4tptILwEZf4VVPeSJ1xivi1JDEH+zVFB2Oopl
-	 tIE6M81p359ZtBLDLbaLC9iUhCxJOjEUtkSPMXk/RL1LB53zdYyhIrE9jBEDSq1b4+A==
+	t=1794861667;
+	b=dgJliOH72izZ5EgwkQQADudaCUT/hc3A4GqB04ITcdlgHUjvTEJcBvnnCZgWmoHOdqpv
+	 oq6VVVCdXFBfC/CL8CStxfPrLiqafjVV3RCSE+WF0VasYklSBIklqAjSexoeFgm0NCdZj
+	 sukHynQL2e4BG4Ucgb08k5POgN3908IWB9NXGOGM1gajeVpadllSUFoin/kt9v5U0l75l
+	 k7g3qZG+BWzBtN70hNqKy+mdfwjAoFMp1Ens9zLbTbvDFrlOIjX55jWCOzStu8ZWDfQt1
+	 +CLm6tVYh2JNseFA8fcIdn74OkuSkkWf5G9on5/p4WG2KUV708wiUrab/Y6IusGaQww==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794861666;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794861667;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=1JOVMxOFhUKnmlrcXwJX+d7zl/tg9wPLTTafKHk50+8=;
-	b=RKrmWFlW8wlLAmpQjGmk7GF/wwz8L46ErebDEGl+qcADU6YuIlo7YbjQEcS5xjl65uRq
-	 ylZ/qC2TgSGrks2IyMzx3JXW9KWTH/QREOIk6RabK8BKccThBf8abTIv1LqcAWTD6Hcv8
-	 B/Lz8uVh7lqbSRGh9b8kes3LkU11kvDhkYOgvY7BbtU71LQnL8VQufhoHCM2QiR25VcJR
-	 q1IeE04exgo474wB1zgWgB/B/vyngQNcxWyd072I1bwnZjZ8I17aA0rHOGw+Dfs8Z8rR1
-	 73hHdafGol5Cp7FmCZQDS+m683sExRRahDJGyCK7F71IpFpWeLaZTFiuXL9x8LWGh0g==
+	bh=b6aAotgSj2ida9OGwpvLAhTzVh2WT+T+YjpuCGXLu00=;
+	b=B5BCjKUNZ8Cqnw4CTpXuifjmQoIxqneVnM0kEWy92Nx+uW01Dl4qHwEO5p17YLfOAqbW
+	 AGYSx5kpJdhfifAnHCvqHdfnfi6RfzWSwIAzPon+D5QUrBzDwvPyaW7/ZVOujTcELyySs
+	 d/VATqOvDUAIwSOlqdPTUrwnwAetxs2FjjMSrulIBhpC0s6QPB3/+GxRlsYasTY3EO+f+
+	 ZFiz1E71CoMXsPYWx7hu6TUydP7AXG63SSoOG5CTuX5mpgmJg/MjiqI9fKC/53ArM67SK
+	 nR47YHJKHOxdYtAvYL7zB35SBdooPb8oW7PeCKi3cwuAttKMZNblWG76pFyUgw9aAyw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=oRsrEEi4;
-	arc=none smtp.remote-ip=209.85.214.171
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JCH9XbpY;
+	arc=none smtp.remote-ip=209.85.214.169
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A331606A32F
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 20:41:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9A331606A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44EB606A8A3
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 20:41:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C44EB606A8A3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=oRsrEEi4
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2ee0533d249so13869615ad.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 12:41:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JCH9XbpY
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2ed1f1a7695so13722535ad.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 12:41:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794861665; x=1795466465; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794861666; x=1795466466; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=1JOVMxOFhUKnmlrcXwJX+d7zl/tg9wPLTTafKHk50+8=;
-        b=oRsrEEi4vtbNNz7BLgW3CjImVCA3A5qud/olh+ckIJF27znjYAO1y9GHnLyJ6qZ7Dg
-         ubfHsRVtcJ3RagFplrkVK1pl9xM0HfLto3WfFFwMuP69Ns4I4AwAfb6cqHrRr8qibOev
-         Q99Dv81eutPXIS6be6uSh4RST38TzuP1l1DOl7DYxO2k855R6TOei1lz6LUn6kyRw6d6
-         aPKcVe0khuS2bWw3WKAJrQKF7pvkGHNP8qvgRVGr/VFlKsnfXujdzl9OkkFZgfeQ50ru
-         9N2OFxy1djoKbNgJT8HUHoN8azGwck/MarpTx+5lv4cGdQlzp0fCmGARKXIgHqi/rfXU
-         BaIg==
+        bh=b6aAotgSj2ida9OGwpvLAhTzVh2WT+T+YjpuCGXLu00=;
+        b=JCH9XbpYqo1mukAvoY8Hc0s2uA1GcBPgf9FDCa5NhK6xVbX9qRpPCEqyb1CBrrRyhE
+         ssB/QC2IYCbao6hC4DCZbW5r3AqAnENTkaSvBbrWMfxWIgWMfk6orW2nAh4r9IovUVpM
+         BCdLlZoQsKw2fyB9rdIqa/bHfoafMHpGeuQ2AUeYwhTJJl9EVvXPeBoe2Nuk5F8/v0s9
+         VEkZnw4XrAEQeUSjFHVhi08AytOgezkn+6yyPPPmAfABYR6Vq3nrG/fexNa9frwFw60O
+         k7GhKhxBXKJaFao8wYrCtKp5yWYO8K6vFsEVq+RuSrPVGKoH6BH58hOeuEJSCfdPIjH3
+         KkHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794861665; x=1795466465;
+        d=1e100.net; s=20260707; t=1794861666; x=1795466466;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=1JOVMxOFhUKnmlrcXwJX+d7zl/tg9wPLTTafKHk50+8=;
-        b=ZpZ3RVxVUKJW8FpErqzYBiuWSD6YY1Y+YGadRfBFHfrRJUM3GvyaDaqhIkuR7nRoLq
-         RPN2qpEqcYikq56Wvw2jJ9NKK/S2eO0TTMomLRvuI0rTx9eq/CZOQa5/2eEMyRLajjsv
-         X1dIQU5G+mEO5URPHNQCEziIQVneatgb5P88k+cWGvGqoH67YKrKHFUkrFwJLEIFNYvZ
-         QkuP+VCmHATf+756BwOnY9FFHDCXyRIkMpzkeQZzkfzqGoviM7QJhfHwp9WqcKMGglH2
-         oxrdWsy8x0PwlLmPf64jK7/i+iRFBQEu4ttGCxiNDm5x65C865dd0OSaoJQbuHDajK2z
-         IEHw==
-X-Gm-Message-State: APuU4Z8os7G/znpAL/D5lwIX6B/jIkeXjwMnDg/DCxWQ+zDpKUfKfvuG
-	jAZ3qD14SqMH2bDclk9a/MvVTRz1JUi3umaQ6tlGAnbg76q6225Mk4kB
-X-Gm-Gg: AZFdTZdhjkMobU4WLP9BChwiekqTnDS8C5gPDA+nAqwZRdAyXMLsDfkY9wGLqXB16jW
-	CfuQ1yRWDAWzd9r8YkLMlTyoR2qhV5GWR4UW1tk5+JaWO9K0cA7oLEQOhsuZW6uHA5GBElN60ML
-	ZqfnmMUaClDrYbaPttTlOfhidO1Or2Ud3YtLy8zy7OgwWZOS9lgDPXLV8OvfihfJpAMg/WACB6G
-	zWdOBAVYLDy9pBvCnywQf7CTLTEbRvkNAb9Rg5Aa5LT2/ySeM62OhU5Kkzfvcf1nFz4+8XbPgZc
-	BQM6NArP2YpihlraxxjqzD/bjWRuMn4NpnIFSAlJjc3lRp2fEoCo1L5tS8zOgcWWrKKeWYi0cla
-	lWPZVctXi+m0JMCqHir50anNvpyt5v4HpKB+EV82/d9IRxhQhW8ePlbNWHmbOol9pfkXqeS+uGn
-	6i/R8jecaSt71VHl2raG1nRo5XweU69EBvZDn6TbOP4X5uyi02fhWiy9WK9CtxVz3shLazEXmep
-	MgqWt3GDNoMpvX7/haILgVHe3yQhcls4wKgn/uxwEGCGnU31ZtpxTytOc1dki9+pKEt3NGvYEkB
-	5iym0OCGu6BPeusSIbl1znJOLFn5S56e7ldpjsGKK8JyZa63gBz/7tJOYlPDm0L7FgmbVZUJH+N
-	nbRE75rFEg8ybn6O0YGLn53yvFIj45RtP3LdaNY7BQvGPG9KRfd80ozJSb3myJG9E1wv1ltbLyD
-	typLGSWDtPyEtDrXFrtf3S1Fc=
-X-Received: by 2002:a17:903:1904:b0:2e9:61bf:6587 with SMTP id d9443c01a7336-2ee0df758b3mr113876965ad.49.1794861664780;
-        Mon, 16 Nov 2026 12:41:04 -0800 (PST)
+        bh=b6aAotgSj2ida9OGwpvLAhTzVh2WT+T+YjpuCGXLu00=;
+        b=dn+vzZoawBjLdhfqOMcbcxMeAVOttipjYYP1GkSV5LN0XJE61Ugrhe8chX1Gi8bQdJ
+         0PFROvtjsV6/RwFZ0vrbMjDhr5iuYQlrpnxKp2ub6E+XOCoPgCPtZeWvBb+zam1SD8Ut
+         9IOH7hnYRg3ZJRMNBDJXDeEK0Wd7aXMMxSDU1e46ejN9xwy1LqqEMRDWufb43t0xquJZ
+         0HYGCiZ/dwKHTHLEJ/OOgmYVWpRKic2tEAlKy4GyrLSVMOgOl6SUPUya+9xTi5qdGVmQ
+         lwRZ2exC9Lw9zD6PJw9s20YfycDyCV2z2N1bnnVcKUHt9hAZ+HvJ7Wa8Zitt1gghYrQo
+         ejDg==
+X-Gm-Message-State: APuU4Z+2SAa5IIoBIx913IjREQbKp4SQwI8UObGU77j49U8uVtothhUf
+	dw8Xyx2C38/S+Ioj6qjyUT2rjZepRj9s5p+zEfhHSC4zmQdQgA3ZuxJn
+X-Gm-Gg: AZFdTZcrps+Md0WNSFhhqAAGh2B9Qe+iiPMLauYDFLQB8tPfuOh3qASrYZnW+O+aOfE
+	gvDAFLQPC08IgVNObT6mhUEaAWWfiI/uI37yBVKlzEVVv6XdgGNH+hPMnCEQsstvT7HTvZk+VJJ
+	Xamv92mNG9yBaI/JwJVBgoHZFJxA1XLG5v4XG0iLqYu3n+htAyHuuHKUYIYQ2bGr1Xchfqe9OvW
+	m142o47VYaOxijX4RJKeymkGJk9namGFDHpVnZLC44c/1epwlGoZnOTrIw7gjlY4AJR1RsorIB6
+	u0zusWLAbvP0pC/gZAEWYAg5JEHSfy952Df1Uzxa7TDpYXRKikFvFnC/lMPjThdwmMdKNNDHM2C
+	daZWBt/ah4DvwlElagkduSg3LOjcTd3kkHwVG1J2Juyd1wNdPfGWCyiL74HXsU4t/fO4/h2qjzy
+	xBTmdMTLoe2LiE9JUm4UlcsxZW9VotfdPzbbvosIo2Ck1WcLKPziuPWlwHdYGCPKz3Q3sE7FCFo
+	RgyKir7c7KqpPhNHAhoiWZHEt1n4NO26gQGKz+fXCu2k/g6wAw/SZsKWju/WykpvN34PDiG3Xv+
+	qgUIpSlkj5yRyp2oi2wUGI6w2Fxh4Ki8VKvA9LVK8L7L+gdearJNVXPtWqK+jktuHdBTCvR1pDn
+	f3k9br3TeyXN+YL4dO+RD150hhmHYOU/dHMYx7317JDrUTRFUrKzlN4lV8UhFR5quQvx5N6Fire
+	TpF0JVLkYWU1kqVmTnhu2HGww=
+X-Received: by 2002:a17:903:984:b0:2e6:c39:b25b with SMTP id d9443c01a7336-2ee0da7f5acmr106014125ad.14.1794861666125;
+        Mon, 16 Nov 2026 12:41:06 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2efd7a87202sm3833645ad.58.2026.11.16.12.41.03
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2efd7a87202sm3833645ad.58.2026.11.16.12.41.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2026 12:41:04 -0800 (PST)
+        Mon, 16 Nov 2026 12:41:05 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
 To: Stuart Hayes <stuart.w.hayes@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -88,9 +88,9 @@ To: Stuart Hayes <stuart.w.hayes@gmail.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] platform/x86: dell: dcdbas: Release the SMI buffer in remove
-Date: Mon, 16 Nov 2026 12:40:51 -0800
-Message-ID: <d9c1df9c5f28848f77beec2b4cbabc0eb4da6c70.1794861287.git.rosenp@gmail.com>
+Subject: [PATCH v2 4/4] platform/x86: dell: dcdbas: Validate the WSMT buffer description
+Date: Mon, 16 Nov 2026 12:40:52 -0800
+Message-ID: <aa437d954b48790ef8a3d770c2ec4207aec4d8f7.1794861287.git.rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <cover.1794861287.git.rosenp@gmail.com>
 References: <cover.1794861287.git.rosenp@gmail.com>
@@ -105,111 +105,58 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-dcdbas_exit() frees the SMI data buffer before
-platform_device_unregister() removes the sysfs attributes, and without
-holding smi_data_lock. The comment claims that only at module exit can
-all sysfs attributes be released, but device attributes do not pin the
-module: while rmmod runs, smi_data_write() or smi_data_buf_size_store()
-can still be executing. They can then memcpy() into the buffer as it is
-freed, or allocate a new buffer that is never freed.
+dcdbas_check_wsmt() takes the address and size of the firmware SMI
+buffer from an SMBIOS OEM string or from an EPS table in the BIOS area,
+and sets
 
-sysfs_remove_group() in dcdbas_remove() waits for running attribute
-handlers, and dcdbas_pdev is still valid at that point. Free the buffer
-there, or unmap the firmware-provided buffer when WSMT is in use, and
-also do it when probe fails after dcdbas_check_wsmt() mapped the
-firmware buffer. Reset the WSMT state with it so a later probe starts
-clean.
+	smi_buf.size = remap_size - 8;
+	max_smi_data_buf_size = smi_buf.size;
+
+without checking that remap_size covers the 8 byte semaphore. An OEM
+string such as "30[addr;4]" would make the size wrap to almost 2^64,
+and smi_data reads and writes could then access memory well past the
+mapping.
+
+check_eps_table() also accepts a table with length 0, since the
+checksum of zero bytes is zero, and then trusts the rest of it.
+
+No firmware is known to describe the buffer like this, so this is
+hardening against malformed tables rather than a fix for a reported
+problem. Reject buffers smaller than the semaphore, and EPS tables
+shorter than struct smm_eps_table.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/platform/x86/dell/dcdbas.c | 44 ++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+ drivers/platform/x86/dell/dcdbas.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
-index cd72f8c29a86..0db278eed5d8 100644
+index 0db278eed5d8..1e854f02e171 100644
 --- a/drivers/platform/x86/dell/dcdbas.c
 +++ b/drivers/platform/x86/dell/dcdbas.c
-@@ -97,6 +97,20 @@ static void smi_data_buf_free(void)
- 	dcdbas_smi_free(&smi_buf);
- }
+@@ -538,6 +538,9 @@ static inline struct smm_eps_table *check_eps_table(u8 *addr)
+ 	if (strncmp(eps->smm_comm_buff_anchor, SMM_EPS_SIG, 4) != 0)
+ 		return NULL;
  
-+/* Free the SMI data buffer, or unmap the firmware one when WSMT is in use */
-+static void dcdbas_release_buffer(void)
-+{
-+	if (wsmt_enabled) {
-+		memunmap(bios_buffer);
-+		bios_buffer = NULL;
-+		smi_buf = (struct smi_buffer){};
-+		max_smi_data_buf_size = MAX_SMI_DATA_BUF_SIZE;
-+		wsmt_enabled = false;
-+	} else {
-+		smi_data_buf_free();
++	if (eps->length < sizeof(*eps))
++		return NULL;
++
+ 	if (checksum(addr, eps->length) != 0)
+ 		return NULL;
+ 
+@@ -598,6 +601,12 @@ static int dcdbas_check_wsmt(void)
+ 		dev_warn(&dcdbas_pdev->dev, "found WSMT, but buffer address is above 4GB\n");
+ 		return -EINVAL;
+ 	}
++	/* The first 8 bytes are a semaphore, not part of the data buffer */
++	if (remap_size < 8) {
++		dev_warn(&dcdbas_pdev->dev, "found WSMT, but buffer size %llu is too small\n",
++			 remap_size);
++		return -EINVAL;
 +	}
-+}
-+
- /**
-  * smi_data_buf_realloc: grow SMI data buffer if needed
-  */
-@@ -685,11 +699,11 @@ static int dcdbas_probe(struct platform_device *dev)
- 	 */
- 	error = dma_set_coherent_mask(&dcdbas_pdev->dev, DMA_BIT_MASK(32));
- 	if (error)
--		return error;
-+		goto err_release_buffer;
- 
- 	error = sysfs_create_group(&dev->dev.kobj, &dcdbas_attr_group);
- 	if (error)
--		return error;
-+		goto err_release_buffer;
- 
- 	register_reboot_notifier(&dcdbas_reboot_nb);
- 
-@@ -697,12 +711,22 @@ static int dcdbas_probe(struct platform_device *dev)
- 		 DRIVER_DESCRIPTION, DRIVER_VERSION);
- 
- 	return 0;
-+
-+err_release_buffer:
-+	dcdbas_release_buffer();
-+	return error;
- }
- 
- static void dcdbas_remove(struct platform_device *dev)
- {
- 	unregister_reboot_notifier(&dcdbas_reboot_nb);
- 	sysfs_remove_group(&dev->dev.kobj, &dcdbas_attr_group);
-+
-+	/*
-+	 * sysfs_remove_group() waited for any attribute handler still
-+	 * running, so nothing else uses the buffer now.
-+	 */
-+	dcdbas_release_buffer();
- }
- 
- static struct platform_driver dcdbas_driver = {
-@@ -751,22 +775,6 @@ static int __init dcdbas_init(void)
-  */
- static void __exit dcdbas_exit(void)
- {
--	/*
--	 * make sure functions that use dcdbas_pdev are called
--	 * before platform_device_unregister
--	 */
--	unregister_reboot_notifier(&dcdbas_reboot_nb);
--
--	/*
--	 * We have to free the buffer here instead of dcdbas_remove
--	 * because only in module exit function we can be sure that
--	 * all sysfs attributes belonging to this module have been
--	 * released.
--	 */
--	if (dcdbas_pdev)
--		smi_data_buf_free();
--	if (bios_buffer)
--		memunmap(bios_buffer);
- 	platform_device_unregister(dcdbas_pdev_reg);
- 	platform_driver_unregister(&dcdbas_driver);
- }
+ 	/*
+ 	 * Limit remap size to MAX_SMI_DATA_BUF_SIZE + 8 (since the first 8
+ 	 * bytes are used for a semaphore, not the data buffer itself).
 -- 
 2.56.1
 
