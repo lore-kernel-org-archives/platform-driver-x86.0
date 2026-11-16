@@ -1,69 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794848656;
-	b=g9JjtKAZH+RTff6T3vNxdJWuSAavDzRbZGJt1Z03sbRjfKORXlPxR5rSH17mZjA0LhMz
-	 Ee9limsLqcWoY5drEjY39ZgqJcl2IsxxwmS79CpZfpqH9rNDO+Uds1JKAqrzTDi/t2V4J
-	 ln9DTTAOZbLMmA1UwPIJFV+q74LKVTlWr4D+1p7+igVeS5cXBvVnx1RbyQVjG3mZdSeFk
-	 yGZBA5CIuMZMe5YL9jSCZAUXLKeomvtqBRf/gNfdklIyNxQwFU+keEQf502vsWVc3PMyK
-	 DBGhz8zPnll1NDBxT4ee2JgKFGzVJCKy1D4xGWvf4+rwoBunj/g9ekqU0GNeycthN8Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794848656;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=9+FgtBZ/fgAtXmF/vc2cwUtP4DVh+tbC2GegKg8i34Y=;
-	b=zZdL7iB5qrg1wZtQe9RGwr07Sv6mYmla8uomuMmH8XBRCWO+0hxwISFPi9Blb8U13YU9
-	 oRFfVWFqOX51fPqfPY3K0ICVAB8EVsbsKdJMrfFH95VCBYhTjUEO/0ELCohLC7VHKtS56
-	 lMw38Wlw+nt4yG89fv1Uum2f9jQMxotgCfT5NNufzGEy9W3l6tqTn5ouMTJ9BibGWJwfW
-	 QUdwijnxf48ChDVCRGQns0t3fUuYdRDo4sU+Tbf2+JDZmnvi3wYAmzK7jtu+iuQbM968s
-	 FohwUrepWGvamxtt1vOCd4xjW9O5l1sIQNyH3Vp4TpdFPfLIQkOKMssishqhX3vT7nA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=TQ+2x7zA;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.49
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794849125;
+	b=QjIQDA57Uw6gjJ81Mgm+OhCOfLzXhywzVtXZ/XsP/1OO4Oo2Ho5kP10n+jcJ4FqYgphW
+	 B9L3EH6WEub0FtZPXfTUBZGVQbAIcbyNYGH26ZSduudlj/T1MjBfRPZxheQEmo4ctGTmD
+	 kcs7TQui8N1xHbonJzFEZzcucdHK+DhvR3FRUxrEq3ncSkPrq9ymKUwpl7ne+LYcJHVRB
+	 nQcxRaLqVuQUVncxlRwFeTBXW68VbZlrQKhBVN1hv5E9EU+j8sXElNzcrALHTN+G6LScD
+	 uFX7ZXUKtI6sEJdKFibdCxu2tfZd4pt5Gi6n+CUGCianXgx7hydbS6msVtAPGXE5vrw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794849125;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=6vR4KfclXf/MksyiSXjSnNtmzfaMI4MQnwqin6ectd0=;
+	b=2XdQIHL3EaBRYuHv16y5nJzG5/uZPLwZjII1WqN1s39Cp4Bp30Jxl505yIHGDt8hM9nL
+	 P9646L7lKo2MYhlKrJi1Xahz1+4b2ifWSoDq6LiFJC3tGS82eqbzCyHsRG4FNue10lR5D
+	 EO+uk5QbvqrablbHwozTHvWjVMEBg5CjrsuQITnT8bmmoOq29aSmH/gMyLGY5t0TuABa4
+	 wVrTGOoO4bAoTRyDKj6HdD/G717aiVBK5j7gwoHAGdTFXxo32SEUN8R4BI3aWXeVqTpuq
+	 t1ZlXBlRJhC9VBqh5bEpOjUOemxJ4RjrphWZPLQ/ODu3uyeL1yjMjhjAUHdps7rEx7A==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="TlkUUbd/";
+	arc=none smtp.remote-ip=74.125.82.49
+Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF89B606A323;
-	Mon, 16 Nov 2026 17:04:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DF89B606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B6A606A322
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 17:12:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B8B6A606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=TQ+2x7zA
-ARC-Seal: i=1; a=rsa-sha256; t=1794848639; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mugcjsulB+R4/ah2QRtVL1rTC6jjgEM0e9LTvMa/+4Bkp0nWw9DHKf9qe7AMd2MxSHjtrhbiBOmoLh5Uk3+27t/qM9BIL9nqhaW2j4aPMcaTB8SpnuAa7od8bXDRLrXcd0WczutN8uToqNQ3bs9duEd7h9KqMYUcNpfSgHUmBv4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1794848639; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=9+FgtBZ/fgAtXmF/vc2cwUtP4DVh+tbC2GegKg8i34Y=; 
-	b=IXEHlVwwhW7Xtbw34f6dMoPuj9Er4YMg1JPuqAyCZD38dSTqXPhcXRLpakI0qBDEJmk3J9TawNWyoEjpDgBOGTLR50SJCamDG1s4/ctgJlSfIylk0QVZLhe/ZqXFqTS/dg1uYpOv6xeOHffmDUJY3gNzD3uP+t3ohap1R0T/pck=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=TQ+2x7zAAnK1j7iNcPwSWsCJDpAuhIkJJ7HLVVcXHVMFELLbRK5iWG7aiY0G7SJgQ/roAXyjQe1m0qwehbaTbs4XZXWhfvIuzKQS2162dhFRCMK55JiDBQQNGiijiGhwAj6NqoYwBqtZhQR4aj7HNNUc8mZUEYnr/7ComhAO1sZ1BDFv7Zf1Lypsa8AhF+EaXfv6pwnpbW3YPerzOlDgHNBK6L3x9oXD47FlhGKMWqe65YUuhEBeWCbCFHt6UhHbYhEJu3vlruRz9kWZ/4PM2LEyd98aEgY1yYHAa4zUPQfx6MkUNrlpflFAwzkCpk1KO4kAIFxFolptZwxvopgiug==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=9+FgtBZ/fgAtXmF/vc2cwUtP4DVh+tbC2GegKg8i34Y=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1794848636443780.4537740716285;
-	Mon, 16 Nov 2026 09:03:56 -0800 (PST)
-Message-ID: <fd3c041e94347571dcbaadbadcc1c27530f53286.camel@rong.moe>
-Subject: Re: [PATCH v2 0/2] extcon: synchronize all-connector removal and
- fix Lenovo fastcharger teardown
-From: Rong Zhang <i@rong.moe>
-To: Hongyan Xu <getshell@seu.edu.cn>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>
-Cc: Zehao Gao <gaozehao@iie.ac.cn>, Hyunjung <hj351016@gmail.com>, MyungJoo
- Ham	 <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
- "Derek J.Clark" <derekjohn.clark@gmail.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>, 	platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <179483944681.43652.9539572356847924730@seu.edu.cn>
-References: <179474326098.103840.15531040789536968458@seu.edu.cn>
-	 <179483944681.43652.9539572356847924730@seu.edu.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 00:58:50 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=TlkUUbd/
+Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1a8cc11ac42so3581091c88.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 09:12:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794849124; x=1795453924; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6vR4KfclXf/MksyiSXjSnNtmzfaMI4MQnwqin6ectd0=;
+        b=TlkUUbd/UUd8L7T+3ZF8nI2o08TzXT3DHk3PiFXiZLf7FtdtG2TyxlKY543CMZ3/sY
+         yyqHXXY5hldAPcZ2F4AekvZEsNP4rSj9x7l1Ip8nr4VbJtwpVOMsl/7wxq48C1KXeyPX
+         9HA5pPBWxgGhj25RVo6ZTLXy4EpkXonrf8P4kRNdfi6t7Q6yw53KLNFQutWz8KZ1qiK2
+         rEY0TMXhCPqeeZja+o1loWSocqUNGBxMqAv/DEYWtPZD7ImnqZAecO4jpqIxdl4yUPnf
+         cJnWf55Re4qXprVuXXruGn9oRLJLx5WGJMB/Ulje5pShH99jnKmdPzfIeZi84lAF1y1B
+         JXeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794849124; x=1795453924;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6vR4KfclXf/MksyiSXjSnNtmzfaMI4MQnwqin6ectd0=;
+        b=KrCGR/tx1LWpuR5P/7FhAO+26KBvr66vrL71EiAsll1i4SOionuh34+HR7v1f76B+p
+         Y4X9HjGw4v3qskJI3rzVJfxCgwUKLXOrQEFKrFBLUJcntTvxdH+x94nmfBmJo/ews8F4
+         /2yPz3MalVd/d4XBvnuq+1nkZwR+J20itxkWTo/v76XhL+BDE1KY0GNO5NOZ28oUTaf1
+         TQpaFhG6D11WdwSjV2UVCPmSrTlk+j2kFA1TDdfArc9SUiZDF7I2mg40Jd0R7IIKS1rz
+         lmthK11z2pQKz6Hm0uNZGiYUlL9mIwG3bzykiDUvTCMqt1vgrLwvJNhh3gq6qoEMgOCV
+         4mGg==
+X-Forwarded-Encrypted: i=1; AL+hErEHGEpBcUWklpLzIKTU048JzMtlXkKFX3/h9lCiTasf3UUG9LK3jdvVBlw792E/0LP/rdwXHozv7g84hYlcocZPXvOZ@vger.kernel.org
+X-Gm-Message-State: APuU4Z8HZpA3OiP75VdK6ilNJQ3+vonh6E7Z2TkdHoWC5rOOvRRQIemC
+	00VfewCaKZ3XOA7IF7UBrOUe6b5PTDkIkcM1EYTo07ijAPkJkieVnc3E9eaILpDH2GE=
+X-Gm-Gg: AYBFou2/nPQel2/IsMxND/5wDnviD1C045hFQWaAy2Pky1dYixS6MZOOAxa4FXNrOJv
+	DfFCpumkuG5bmSWa+Qu2PVWwRFK/TjZwhVIBmfMakJJK6J6TofWI52Ptmcz5m8t9wT3K2sMStpy
+	rwhjbTSNsOnS4c5shAapSCycWdCDSs8CD5tj4NGOxvT7+Fz72D/vxdZY19dJCQqPNn/gSOBtvS3
+	ws8LbZLsHD3F/ikdnO6iu+slTw5lQVHHZjF2WFrnOjwRhiVuRD0TWHNZGoTGB8XO8tRdR80HJMj
+	pblv2cri9z36KdN02HWDHZUIPF1qyFn3HKobAXlebJ6cnk4t3NIOAjGTSayYL0Pfv/KLSS+jae/
+	+61hm1Czcyo3UPdTWrJ9XReVjHS3ztQZyVTDuRR8XXtuhp5REEmE8WwOOObabTv7yQVt30+DIt1
+	YbbHFH2Fl9ISWN0QaxPJBbOGdkU4U/WRzbxK8VfGHrX3K62OQoa5HuzcWoWh6EcA/mmud10SleS
+	UC+8XXA+HDM6HrXciO6eTeXPawZLvs+r53Bx3TQJSMoeLweHwmG67iUK4LcV3WTOxlW7eP1EoVp
+	C+0egaEYV4IjzVGj5uECvK9aqCRg7ubk5ZHEQGzh78AZjwwc6pQxW2TCVyynmkkOUSKW80ePQjV
+	tn3Fb/L+P8C0ZWkoUkBhNPeEPJv+08A03siNNshCYcuq9d559fpaODdMVpUjgVeCVKbJbRQb/e4
+	RGH6Nvj7XobvIBvU1RjANMilGHjAo+/B62Nke6JPusPg==
+X-Received: by 2002:a05:701b:465f:20b0:1b5:281e:1702 with SMTP id a92af1059eb24-1b5281e1b1cmr4125651c88.41.1794849123703;
+        Mon, 16 Nov 2026 09:12:03 -0800 (PST)
+Received: from kapoor.iiserb.ac.in ([203.18.51.239])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b505b5bf76sm27976466c88.10.2026.11.16.09.12.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2026 09:12:03 -0800 (PST)
+From: Arnav Kapoor <kapoorarnav43@gmail.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] platform/x86/intel-uncore-freq: Fix error handling
+Date: Mon, 16 Nov 2026 22:41:57 +0530
+Message-ID: <20261116171158.19754-1-kapoorarnav43@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261115014948.2517688-1-srinivas.pandruvada@linux.intel.com>
+References: <20261115014948.2517688-1-srinivas.pandruvada@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -73,131 +101,25 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-3 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Hongyan,
+On Sat, Nov 14, 2026 at 05:49:46PM -0800, Srinivas Pandruvada wrote:
+> While reviewing the driver code with AI models, identified a few corner
+> cases during the device probe and removal paths where error handling and
+> resource cleanup were insufficient or improperly ordered.
 
-On Mon, 2026-11-16 at 22:30 +0800, Hongyan Xu wrote:
-> Hi Rong, Ilpo,
->=20
-> Thanks for the review, and sorry for the mess. Let me answer the question=
-s, and also put one thing on the record about where the extcon part came fr=
-om, because the timeline matters here.
->=20
-> v1 link: https://msgid.link/20260806060526.1189-1-getshell@seu.edu.cn
->=20
-> That is the patch I posted on 2026-08-06. I should have put it in the cov=
-er letter - my mistake.
->=20
-> Why the extcon patch exists at all, and why it is in this series:
->=20
-> v1 only cancelled the work inside the lenovo driver (devm_work_autocancel=
-). After sending it I went back over the teardown path and realized the pat=
-ch itself was not correct: cancelling the work is not enough, because the a=
-ll-connector raw notifier in extcon can still be running a callback after t=
-he consumer unregistered, and that callback can publish the work again. So =
-the root cause sits in extcon's notifier handling, and that is what 1/2 fix=
-es. That is also why 2/2 says it depends on the preceding synchronization p=
-atch.
+Tested the series on a Tiger Lake laptop (Lenovo V14 G2 ITL), which uses
+the MSR based driver, so the TPMI hunk of 1/2 is not covered:
 
-I haven't look into the issue seriously, but I have an intuition that no
-one can reschedule fc->work after devm unregistering fc->nb. Could you
-elaborate why PATCH 2 depends on PATCH 1?
+- max_freq_khz write to min_freq_khz and back
+- 50 rounds of rmmod/insmod of intel-uncore-frequency while two loops
+  kept reading the package_00_die_00 attributes
+- offlining all CPUs but CPU0 and bringing them back; the entry stayed
+  and current_freq_khz still read through CPU0
 
-Even if it does, using disable_work_sync() should make PATCH 2
-independent anyway.
+No hangs and nothing in dmesg.
 
-Even if it's dependent, the two patches can still be applied separately
-in any order from my perspective. Applying either one alone is a gain,
-and it becomes a complete fix when both are applied.
-
->=20
-> On the origin of the idea - I understand the suspicion, so here are the d=
-ates:
->=20
-> My v1 is from 2026-08-06 (link above).=C2=A0It is also the patchset refer=
-enced by the Closes: link Ilpo posted in the 1/2 thread.
->=20
-> sashiko reviewed that patchset back then and raised exactly this "extcon =
-uses raw notifiers, the synchronization is insufficient" concern. I never r=
-eceived that report in my mailbox; I first learned about it from Ilpo's rep=
-ly on 2026-11-09:
-> https://lore.kernel.org/all/2ef4ad43-497f-c40f-b18a-f5b75799d95d@linux.in=
-tel.com/
-> That is why 1/2 carries a Link: to that message.
->=20
-> Hyunjung's patch is from 2026-11-16:
-> https://msgid.link/20261116122001.3096223-1-hj351016@gmail.com
-> i.e. three months later.
->=20
-> So this did not come from Hyunjung's patch; if anything the order is the =
-other way round.=C2=A0
->=20
-
-That's why you should've provide enough background information when
-revisioning.
-
-> I am not trying to win an argument - I just do not want the record to say=
- I took someone else's work.
->=20
-> The attribution Ilpo suggested is right, and I will use it:
->=20
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://sashiko.dev/#/patchset/20260806060526.1189-1-getshell%40s=
-eu.edu.cn
->=20
-> On the other points - all fair, all my fault:
->=20
-> S-o-b order: fixed. Zehao Gao co-audited this series with me,=C2=A0
->=20
-
-Then it'd be better to state that in the commit message.
-
-> so his Signed-off-by comes first and mine (the submitter) last:
->=20
-> Signed-off-by: Zehao Gao <gaozehao@iie.ac.cn>
-> Signed-off-by: Hongyan Xu <getshell@seu.edu.cn>
->=20
-> The mangled "Jarvinen": my git-send-email setup on Windows encoded the Cc=
- display names as GBK instead of UTF-8. Fixed now (i18n.commitEncoding=3Dut=
-f-8, sendemail encoding, UTF-8 console),
->=20
-
-IMHO simply using GNU/Linux helps you get rid of the trouble. Anything
-other than UTF-8 is dead de facto, but apparently Windows has its own
-thoughts on messing up users. But maybe your college's mailbox has its
-own thoughts, too...
-
->  and I checked the headers of a test message before posting. Sorry for th=
-e noise, and thanks for fixing my Cc line.
->=20
-> On Ilpo's point that the extcon fix is not pdx86 material - agreed. I wil=
-l take 1/2 out of this series; if the extcon change is still wanted, I will=
- repost it to the extcon list on its own with the attribution above. And si=
-nce Hyunjung is already working on this, I am happy to let her series go fi=
-rst - if her approach covers it, mine can be dropped entirely.
-
-As for Lenovo part, I slightly prefer Hyunjung's, which provided more
-context and elaboration, though it seemed that they are also flooding
-LKML using LLM agent... What a wonderful era!
-
->=20
-> Although I do not have the hardware, the change has been build-tested and=
- manually audited. The analysis and the patch text were produced with LLM a=
-ssistance, then reviewed and edited by me.
-
-Usually I don't complain about the use of LLM as long as the code/text
-quality is good (that was why I didn't complain that in Hyunjung's
-thread), though my carbon-based stomach always feels uncomfortable when
-eating tokens...
-
-But may be you could be more honest here - your reply was also LLM-
-assisted, wasn't it? Admitting the use of LLM is not shameful.
+Tested-by: Arnav Kapoor <kapoorarnav43@gmail.com>
 
 Thanks,
-Rong
-
->=20
-> Thanks,
-> Hongyan
+Arnav
