@@ -1,49 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.136.64.226
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.136.65.227
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794839041;
-	b=OUjFhbtjplkbAbyA+WVanTFaTVMzwk41z0YxD2GM3I+Zbt0cYk5G3CmdYXVEQi90HTjS
-	 YGY1Bdt1SgVd09LTo6DQjitJrC3h59zDsOBJgRVqo0kvM26HQmXiQz7g9dpjmyibjKfnK
-	 Abf7aC6Ff3bMwUrhoKCbFpP7vHMgGMUb7dsAC+eDzxTIPHHKXaITPI2BdegPmXu4/6S4B
-	 DqXxip7snML9BWOjh7TTOOGsucGMPA1hrDlNTYpfez++VRVB+HwfUQ5rfh9O4O/MsT3n9
-	 0epzbstHfuPkkoVotYdRu/AaiBKZ1DlNOcpcPKG6o8cIDc0DBMfF14B6OkvsMJfznvw==
+	t=1794839036;
+	b=lPCSvjtBEeFcwj1RVOIpSI+sEDcUEn14dZORtL11lVoyvMoTz4IsgKr8F3g6ol0MUBk6
+	 +mTJ+O6laXZY7QuTgnwRxmDRWQBxVf1o3vRLAA39B7Eb7kpwjSIZVxrC80ycZjL7Arks6
+	 MqFOQpilYod/jTU7IEbVIFz7d/X9thqC185hxPyJUHTTEdcZGV51civ/mSn74B3xbwO99
+	 qLXYGxQSubhbF6FLkn8df8jSWZyPL1WztK/uwXL+TCRbOTWdllVjQCAQQ6L46iQWAMUWO
+	 qgeok6yhhoiwITWW+MpX04asxXgx+ctuxXSLDxIWRDNycLfBv4X2IFKUP9UqjYAka2w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794839041;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794839036;
 	h=DMARC-Filter:Received:DKIM-Signature:From:To:Cc:Subject:Date:
-	 Message-ID:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-Flowmailer-Platform:Feedback-ID;
-	bh=EoaRfVjB+wiF8oKOlK4L7ySxFsN81xtIauFrg21540Q=;
-	b=30MZJKHjkbYfUEnW1Y1TAmOZbwm64hxUfFHm05uvEQE8umNjbaBvh0HCAX3gJbbjgsIP
-	 +jJGtAX4xeDDHmQrujGH4rdWhU2PsJonRktTrkTcZg4fZzazcAl77iLYtGi5jn7krjIQ4
-	 lHO5PNrSs/E/qKASRcQMxGVLoDs0WOqlw31c+xID949j6sXHfqSfBDRFCMJgKYZN6D4i0
-	 x39TL+EXAIi3Ujg2/1CCS5vDO/sTD+/NEZ1kfCOvvZlV754xw1nB0uLR64oaV5my9hH9/
-	 vqEuuaY8mHDlTBWJ/Q/ngWOyHBW65Mb54IPmNXCF3+X2L0Q09r9k477vEQLbjiMeJgA==
+	 Message-ID:MIME-Version:Content-Transfer-Encoding:
+	 X-Flowmailer-Platform:Feedback-ID;
+	bh=ddEhTbfvQPyKSOzq6hatj6Y2eqBZl6lG5KHY2ccF3Mk=;
+	b=wQW3LVXGx1EJVZOWn0JYrobuZX0aD8sRqAGy01GWDI0I1E2xfumfR9grenlZBCl40Mc2
+	 i9j8icUpZgbe/D+QllMk805x8mpGQkE4OHPMTnPPy2mnCUYpYZGh+hWe8zCDpBwCRDpND
+	 ACb1NNmEdInjoECOCLD9es3S2hFc2a3ZAvtfxLEZ99g3HQFfYXTc3PuH709gZ4UiDUs/A
+	 mvJ1LvVALvoocrtPMq1GI/6Sh/E25rkWpjFinCyVvdtZBDkYub5T3j90Ms0r0654qXO5p
+	 icrXdqFCA1QNwaGf+yWKxcj0DtO9yNOxPPrE9JzzDmO1bpLofdZ0RfClUzI/O0/MRDw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=siemens.com;
 	spf=pass smtp.mailfrom=rts-flowmailer.siemens.com;
-	dkim=pass header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=WkyY1K4n;
-	arc=none smtp.remote-ip=185.136.64.226
-Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+	dkim=pass header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=BwtL7XL5;
+	arc=none smtp.remote-ip=185.136.65.227
+Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BEB606A335
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 14:24:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30BEB606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C27606A32F
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 14:23:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 29C27606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=WkyY1K4n
-Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 2026111614235316ac55103400020739
+	dkim=pass (2048-bit key, unprotected) header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=BwtL7XL5
+Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 20261116142352c23c8595fd000207ab
         for <platform-driver-x86@vger.kernel.org>;
-        Mon, 16 Nov 2026 15:23:54 +0100
+        Mon, 16 Nov 2026 15:23:52 +0100
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
  d=siemens.com; i=benedikt.niedermayr@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=EoaRfVjB+wiF8oKOlK4L7ySxFsN81xtIauFrg21540Q=;
- b=WkyY1K4nA4fnMTreG6yN44Wnr81nn+eCydr4/qctmmDy/L87HS2HlZ9ifD2SfJhs0C53E6
- T08sJC/0QGq47diHmVj75R0zyn0NsoNVs8f2NK0FhFvDPD/D9IVolYGwIt+fft40ASa5la9M
- Kx+mza9L4b/VMdfxW79jBo2Or57bymZqSBYxuxuBCSxr099c7eAndnLu4CBlxQ3yEYifwYsY
- 4o8UfkxwX9S3HEz9lysf+xAl3jjoi3Bxzl89NHrgWYx3Mm4FSQfvPrKPqPJroJn7J4/oy01G
- +llpmNIeWUVDUDCnxG9b1ko4iIspAoXrMpNcGhg6cEfLd9K9djJ4DRbw==;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=ddEhTbfvQPyKSOzq6hatj6Y2eqBZl6lG5KHY2ccF3Mk=;
+ b=BwtL7XL55IQJXRFPlbiL6Pd19VXP8izD8IwXc3VW8TJxbK4KDmCK3QV21S9XOmWrqaJTge
+ ctGrqv+pxAlsiksoUC3k+J9IajFAdbpaMA/SSKnhGKBiGldHTCotSFkjCQ4P/EEZBLMjGkmk
+ xdoPCv77NFN8fK0CvpNOZR7G8QAQSjIpPKbxSrdAfLTBoR2vyWaTTNQ+DMwiLMcmFWA0ftLj
+ Skf4SCWO0KFghYsMr99ti17bmOZOSjgvZL8GrYvfcXABI/URKiIAlokaul/deKmObrm/2YhA
+ i/6KLST6CMnRu6P9jtpj4k5/YfAByKH88+zwyjZPGwBvMnpuVUI+PSfQ==;
 From: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
 To: andi.shyti@kernel.org,
 	hansg@kernel.org,
@@ -53,11 +53,9 @@ Cc: baocheng.su@siemens.com,
 	linux-kernel@vger.kernel.org,
 	linux-i2c@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 3/3] platform/x86/siemens: simatic-ipc: enable support for RW-548A
-Date: Mon, 16 Nov 2026 15:23:51 +0100
-Message-ID: <20261116142351.1228943-4-benedikt.niedermayr@siemens.com>
-In-Reply-To: <20261116142351.1228943-1-benedikt.niedermayr@siemens.com>
-References: <20261116142351.1228943-1-benedikt.niedermayr@siemens.com>
+Subject: [PATCH v3 0/3] Enable fan monitoring support for Simatic IPC BX-59A
+Date: Mon, 16 Nov 2026 15:23:48 +0100
+Message-ID: <20261116142351.1228943-1-benedikt.niedermayr@siemens.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,58 +69,84 @@ Content-Transfer-Encoding: 8bit
 X-Flowmailer-Platform: Siemens
 Feedback-ID: 519:519-1323861:519-21489:flowmailer
 
-This patch enables the platform detection of Siemens Simatic
-RW-548A IPCs.
+Hi,
 
-The nct6775 driver is used for hwmon support and needs to be loaded
-during platform detection.
+I need to add this basic platform enablement for Simatic IPC RW-548A. Since a lot
+of time went by, this enablemend piled up for a different patchset, which I
+currently prepare for the HWMON subsystem, and i would like to route it through this
+tree (since it would conflict with it).
 
-Signed-off-by: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
----
- drivers/platform/x86/siemens/simatic-ipc.c         | 3 +++
- include/linux/platform_data/x86/simatic-ipc-base.h | 2 ++
- include/linux/platform_data/x86/simatic-ipc.h      | 1 +
- 3 files changed, 6 insertions(+)
+I hope this is ok.
 
-diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
-index 8f99032897dd..2efaf9ac2be5 100644
---- a/drivers/platform/x86/siemens/simatic-ipc.c
-+++ b/drivers/platform/x86/siemens/simatic-ipc.c
-@@ -84,6 +84,9 @@ static struct {
- 	{SIMATIC_IPC_IPCBX_59A,
- 		SIMATIC_IPC_DEVICE_BX_59A, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_BX_59A,
- 		{ "i2c-nct6126", "nct6775", "adt7475", "emc1403", "w83627hf_wdt"  }},
-+	{SIMATIC_IPC_IPCRW_548A,
-+		SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_NONE,
-+		{ "nct6775" }},
- };
- 
- static int register_platform_devices(u32 station_id)
-diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h b/include/linux/platform_data/x86/simatic-ipc-base.h
-index 2d7f7120ba6b..214a13d42ef2 100644
---- a/include/linux/platform_data/x86/simatic-ipc-base.h
-+++ b/include/linux/platform_data/x86/simatic-ipc-base.h
-@@ -23,6 +23,8 @@
- #define SIMATIC_IPC_DEVICE_BX_21A 6
- #define SIMATIC_IPC_DEVICE_BX_39A 7
- #define SIMATIC_IPC_DEVICE_BX_59A 8
-+#define SIMATIC_IPC_DEVICE_RW_548A 9
-+
- 
- struct simatic_ipc_platform {
- 	u8	devmode;
-diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
-index 8d8b3b919674..4cdcf865a7f1 100644
---- a/include/linux/platform_data/x86/simatic-ipc.h
-+++ b/include/linux/platform_data/x86/simatic-ipc.h
-@@ -38,6 +38,7 @@ enum simatic_ipc_station_ids {
- 	SIMATIC_IPC_IPCBX_21A = 0x00001101,
- 	SIMATIC_IPC_IPCBX_56A = 0x00001201,
- 	SIMATIC_IPC_IPCBX_59A = 0x00001202,
-+	SIMATIC_IPC_IPCRW_548A = 0x00001402,
- };
- 
- static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
--- 
+
+Changes since v2:
+
+- Added basic platform enablement for Simatic IPC RW-548A
+
+Changes since v1:
+
+- Refactored commit message of Patch 1/2 (Removed "TODO:")
+- Use SZ_32 and include required header
+- Use include for BIT() (linux/bits.h)
+- Fix inconsistent spacing all over the code and use reverse xmas
+  tree ordering
+- Replaced BIT(0) with appropriate and meaningful define
+- Check via IS_ALIGNED for smbus master base address
+- Remove verbose info message (success path should be quiet)
+- Use iopoll.h instead of own polling implementation
+- Simplify struct nct6126_pdev pointer assignment (just use a simple
+  single pointer)
+
+Regarding the write access during initialization I would like to add what I
+already answered in the original submission:
+
+Regarding this specific point, I'm not entirely sure. I wasn't considering
+that during implementation because I was leaning heavily on the
+gpio-f7188x.c driver, which implements the GPIO part of this chip.
+It performs the probing/init in a very similar way.
+Since the driver **must be loaded explicitly** by the user or by other platform
+detection mechanisms (like the simatic-ipc.c detection driver in this case),
+I felt safe copying this logic.
+
+I'm not sure if using DMI_MATCH tables would be the right choice here?
+
+While it would restrict write access to only whitelisted platforms,
+it wouldn't scale well as the number of supported platforms increases.
+
+The request_muxed_region() call at least helps by locking against other drivers
+already using this region.
+The critical scenario would be if no other driver has gained access to the
+region yet, but that would generally only happen if the user intentionally
+loaded the driver.
+
+Using ACPI-based detection seems impossible on this platform
+(no proper ACPI table support for this chip).
+
+IIRC, these Super I/O chips generally aren't suitable for probing via ACPI if
+they need to be shared across different drivers, as ACPI detection would
+exclusively occupy the I/O port region [1].
+
+How should I proceed here?
+And in case this is a no-go, what about the *gpio-f7188x.c* approach, which is
+mainline?
+
+[1] https://lore.kernel.org/linux-watchdog/df8d53db-0056-434d-953b-991025e6cd34@roeck-us.net/
+
+Benedikt Niedermayr (3):
+  i2c: i2c-nct6126: add support for NCT6126D Super I/O
+  platform/x86/siemens: simatic-ipc: add fan monitoring support for
+    BX-59A
+  platform/x86/siemens: simatic-ipc: enable support for RW-548A
+
+ MAINTAINERS                                   |   5 +
+ drivers/i2c/busses/Kconfig                    |  11 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-nct6126.c              | 441 ++++++++++++++++++
+ drivers/platform/x86/siemens/simatic-ipc.c    |  17 +-
+ .../platform_data/x86/simatic-ipc-base.h      |   2 +
+ include/linux/platform_data/x86/simatic-ipc.h |   1 +
+ 7 files changed, 471 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-nct6126.c
+
+--
 2.43.0
-
