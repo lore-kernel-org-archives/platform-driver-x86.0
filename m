@@ -1,62 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794866218;
-	b=hum1PSt8O7RhubOn1sHb6eTZ1OgeyXsqkFW5eO2oRw4VhW9fK+M+Ui9MT226uM38707F
-	 JYkGpc/Oe3BgaSxfxYr7+UB713NU00qk3z8apc/No23FAYSwmLypsYH7RHP+NV5dxo2Q+
-	 ZdQhSSSN9cphlhyCUQxb0yCZjpd7P50YAy5ReATtl9nA1fmdlVq/LPLt3CcDG9gFDkq5U
-	 vULeEzTFnOECdutP4dwO73bQPJvvzKkPy8JLy5M1UrnlMqNshK9nX2WtGrVApbNKFtA3D
-	 n9P28WQn43a59riH9I3AbRdBkjaWPKP9KVq8A+Kb4oMRrVvge9xx5oo8OG4RSbsbVWA==
+	t=1794866427;
+	b=HAjlzUWKmKxdmEDKgBATlbl8xAUqqEb1hxCVqjkqz062m9tFbJ8eV1rfWgB3MDJp7h+m
+	 63Infvac290b/IRoSms4gok08dmrP1txn03pmYQ7EdNyMifjAJUASGnQzr1euK4kKndv0
+	 qD6pseWe7/86Ctzvf412fJfBbRhjK5/ANEvJDFrdqjkK5IiQtyPqKlNa6aF18HJQmAbaA
+	 qkdz21TDY3d1M5Aqg4IPXOp/1GLUPKiJTh0S/hJCW+qubTUB5HEsJHsebZ8wx8J+kLDN1
+	 KgyeJe+N/SOUyLhJFVfNDiQwtjVqcaM/4DDUkk4wD512IaqssUBjmHIZ1mCBu7ksnZA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794866218;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=O+Af/O1KOS+3yVT+ztxCO4Vlx6y9GiaWxCfrUb0JAjg=;
-	b=Ka6WQlrJU/lRwSkPm65tAgAHMIAONQJNT/k833eGrwbPWv6CgnpmtcaCWD5EscIFmnrf
-	 IhRbBZZG5j3DKZp3/7VzzTETgkAJdXGyvsbUzCWqD4aod87Oca35uUxWopro+ZbxE6PUD
-	 +qunWA85rEZZAZ/AeF5XDJm/KYay9aOc2z4Vt726ZOkdGW+wnQX6jbA1NK+GTJajwVH3h
-	 TFb+1ByBhS+r7UUNMlDogeGnyRJNZ08x6p9KQZx+pN/CNFjcI2v6tV11nRjE3V9jLh0lW
-	 EunIeYQLCpT2TXIybUhnr6pZG/zdBWN3CVM7YCBwip65i0hNPYlXJtRVM/YeFm5pWhQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794866427;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=BTPE9Q1KzFgXOzghIcy1Do+zsJcn2B9P+6aO9CoEBkg=;
+	b=wQB8zNxwqKXWF0Wo4hDKPzObdyAqgD4Gu9kIHUT686j+MuUsJitCmrW++Qg0tENQvxJp
+	 5keeBPbE5mZv6fNkGvcI1ANa57qVhceJm8yw7qMFIHCp6zGhxB46x2G8A81CwnQUFwqck
+	 8T10iOSknSEBtv55aSTjYl0EobGBtBMX0Pihz77JqW5i/x3toB9sGVvCZXy9BPcx1/vo9
+	 K2vklexPTDPBpg8XFZEU2x+U0nGQyPblbAJu5vTn6wFTT6JihpQlDw71TnrCPm1gAQbDq
+	 z6pmytIIoVHqyJHKB1XeBULj+8TVN9Ag+8QChagTRyEMIvPAMxnqHTGTyCRQsHaAqcQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dds2rHjx;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Wgaz3sxI;
+	arc=none smtp.remote-ip=209.85.128.48
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF20F606A31C;
-	Mon, 16 Nov 2026 21:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF47606A32C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 22:00:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9CF47606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dds2rHjx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EE41F000C4;
-	Mon, 16 Nov 2026 21:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794866217;
-	bh=O+Af/O1KOS+3yVT+ztxCO4Vlx6y9GiaWxCfrUb0JAjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dds2rHjxOJshfzf88zP+wXAMH865aEz0gH9Dv2+/Pm7lD7NjXKocWXlz148tY5D+Q
-	 R6lPZona4Kf3mTDMPvr8+lx2zr+NUnViBQLP4MOWUOEzHhsvkqXKXcRbtE8W5w3bTA
-	 ktvSZd5WkkpDO/+Hy3Tw9wj+IjDNduKaGkA9jwuvxKxHhOt3r9rJt62kyh7NU4kFq8
-	 jnLmiCVh2E4NdLx42CAHiFcYa+S1dHNelphRxgzU2cXaKN7wN1jYzibJY9tdLt8RV1
-	 Vp0TRvVenEVPvJfTfK+F8dhCBF/e20cg1t0K5b7jUdHBMPspCiOSpRJzcNkiCozDoG
-	 nfdITYqRlskKw==
-Date: Mon, 16 Nov 2026 15:56:52 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-Cc: Anvesh Jain P <anvesh.p@oss.qualcomm.com>, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Sibi Sankar <sibi.sankar@oss.qualcomm.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: glymur: Add EC thermal zones
-Message-ID: <avt6-driUZyXA_9N@zenbook>
-References: <20260928-ec_thermistor_support-v1-0-d9c1bae4cd0d@oss.qualcomm.com>
- <20260928-ec_thermistor_support-v1-3-d9c1bae4cd0d@oss.qualcomm.com>
- <e77c0255-6299-4718-aaa6-04f4366fe749@oss.qualcomm.com>
- <5d84ee1b-a765-4d6c-ab01-ca1a06a0e3d0@oss.qualcomm.com>
- <c3de7659-726c-4fbe-989e-148bcd13bc49@oss.qualcomm.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Wgaz3sxI
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4a140e7405dso41247795e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 14:00:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794866425; x=1795471225; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BTPE9Q1KzFgXOzghIcy1Do+zsJcn2B9P+6aO9CoEBkg=;
+        b=Wgaz3sxIxWZLDFT7xVEdmX1ppNgZ14lH2Bd/pkkQY8LuwSm23WSJcoASZdiEoRzwgY
+         NrDnUGRd8QWiPBQaGHTSVC3t/pfUMPwHHDcS6QN4v/rhN4wcNK+PQW58WH9kQyQh51/m
+         dodS6K1TM1o95Uso14CGLlGiQg+16nqE76ucJu+hS8G1eDddvX5CmuQKKYzcYv+lHhiW
+         QsraJwnG1B74v4hIV4DQcwYn+NAEt5Px5tM+fx+hA/Li4DkDMHyRmupnWh4tg+1nAAGd
+         PX1eRA47BtO4ClJlF/DMwUrc9Bnw4tkHBPbbcwTtOdOOCduf50BdrndDMGZh5wGc0uyb
+         ELFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794866425; x=1795471225;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=BTPE9Q1KzFgXOzghIcy1Do+zsJcn2B9P+6aO9CoEBkg=;
+        b=yp9fCeK1RtDL/Vt9OA/fcgNozOGO9ZXb0UyuVI+bYR470j+PhSYBQqCi5YnqNEv8f/
+         v66D75k2tz/6AIclzhsTRObJc3Jp/4edikPfNWHdh1l3dkW/P9ABrpT4I0M6LoF/kQH3
+         Kr5HGWxbmsutIlEuKNmgmNFcghsHOJlY3JHt8sYEHnLe1EIHE1ug3uezUN92v1oPvQu4
+         XDGPrrsVUCzNzAstwFddaBLmcRsvYPF7FUl0rDyILoC8aYGiFOQuXxuQm2iAwdQeUXdU
+         lCDymB+u3LGHnbmaSKI1w238Uc8Ar6Q/pBN2Nl5a+H84Bn1v4zPGjEizkn1L4QmQk4Dx
+         w7gg==
+X-Forwarded-Encrypted: i=1; AL+hErFfq9ojUvOB35yYo7IBiNfvIcBRPyUpc7a+cxmRDpUJEay9Gdcq24wbW92Nb5LmOgJHpbc6n4DNe3M8u2CWBy8hPWUE@vger.kernel.org
+X-Gm-Message-State: APuU4Z/npvcdNvkjghGWMBYDOjXoisTBvewPRR5OwWMsQKV82w+v3UWH
+	yo0FswQ6/ODogPC5YnX26kuHMpMpK/S3v3F4C8RWPvp+5Kd+1lm8cQoG
+X-Gm-Gg: AYBFou0QVRpMEqijjXd4KL2yl/Y/iMO5uU3DtfCaETTj/73tWq52c2ZZW5c5inCP/Ee
+	/L5CmA7KVKSWYHDQgfW8y5saZ7VYLbYtOG7cG4iujIH3iIPArsUAPUcjdKy/oOotCccOFUmYmVG
+	iTeYclFFDtDSF4Nc7FsBGXXs7NXSLKy1ISfCHlDZ9FN/GLTQ2VmAzwDJGKDGI14m2fnD9txgm0C
+	bW4tpneDWv0npNYLVmepG9rDlRUM/qLaWzKy7QxBGRQoRk0kkv2qxtNzAX0MdCVTnA1tHyELN/5
+	wllGd8OIhEzjvejOz9TNUmPJN2jAZjdrSDp30aMaR6agnfWGMx7TnuouoOOubsugTHVIA9TB/v9
+	vNXJP/M0W5Kvf48RsWPzhc76E0iNm2ttcxX1sz+S37tA8lZB+wfbQmJvDvjLRK5jFa1cl5ubFWZ
+	yQL/pmmFYOqFbXJbmuW8x9AVHzsJPKzaBz1qKRuJovkJ2EbaQsoSx+8uV4qdeak2cAUiAkiF/Px
+	sSVj4lqnAO4S5PI0f9P+WzXrzsUQXPC8QEiEQsI6Ho7n9dGhz2hkyRhrisUe0M9dLxzzHaRbznj
+	VJDoWP/xr5B8CmjO+RM+w/rQSrIwdA==
+X-Received: by 2002:a05:600c:34d0:b0:4a2:133:45e1 with SMTP id 5b1f17b1804b1-4bb55a59f41mr249245185e9.24.1794866424901;
+        Mon, 16 Nov 2026 14:00:24 -0800 (PST)
+Received: from [10.10.0.26] ([85.105.252.11])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb56f97257sm207857645e9.4.2026.11.16.14.00.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Nov 2026 14:00:24 -0800 (PST)
+Message-ID: <228df241-da5e-49cb-b29f-6b9158557f55@gmail.com>
+Date: Tue, 17 Nov 2026 01:00:20 +0300
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -66,99 +92,81 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] platform/x86: asus-wmi: add TUF keyboard RGB
+ readback support
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Denis Benato <denis.benato@linux.dev>
+Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-api@vger.kernel.org, Denis Benato <benato.denis96@gmail.com>
+References: <20261029-asus-tuf-rgb-v4-v4-0-0d3b877d2c30@gmail.com>
+ <20261029-asus-tuf-rgb-v4-v4-1-0d3b877d2c30@gmail.com>
+ <cc9c8655-6f7c-05f9-ad09-4ea30f1dda95@linux.intel.com>
+Content-Language: en-US
+From: bartu alev <bartualev@gmail.com>
+In-Reply-To: <cc9c8655-6f7c-05f9-ad09-4ea30f1dda95@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c3de7659-726c-4fbe-989e-148bcd13bc49@oss.qualcomm.com>
 
-On Mon, Nov 02, 2026 at 04:36:16PM +0530, Manaf Meethalavalappu Pallikunhi wrote:
-> Hi Konrad,
-> 
-> On 10/29/2026 2:38 PM, Anvesh Jain P wrote:
-> > 
-> > 
-> > On 10/20/2026 1:33 PM, Konrad Dybcio wrote:
-> > > > Add support for back cover, keyboard, and SoC thermal zones through
-> > > > temperature sensors hosted on the EC for Glymur and Mahua CRDs.
-> > > > 
-> > > > Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-> > > > ---
-> > > >   arch/arm64/boot/dts/qcom/glymur-crd.dtsi | 45 +++++++++++++++++++++++++++++++-
-> > > >   1 file changed, 44 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/qcom/glymur-crd.dtsi b/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
-> > > > index e27c697e3170..571c98124a40 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
-> > > > +++ b/arch/arm64/boot/dts/qcom/glymur-crd.dtsi
-> > > > @@ -594,10 +594,12 @@ &i2c9 {
-> > > >   	status = "okay";
-> > > > -	embedded-controller@76 {
-> > > > +	ec: embedded-controller@76 {
-> > > "ec" is a super short label, perhaps let's spell out
-> > > embedded_controller
-> > > 
-> > 
-> > Thanks for you review, I will rename the label to embedded_controller.
-> > > [...]
-> > > 
-> > > > +&thermal_zones {
-> > > > +	ec-back-cover {
-> > > > +		polling-delay = <10000>;
-> > > > +		thermal-sensors = <&ec 2>;
-> > > > +
-> > > > +		trips {
-> > > > +			trip-point0 {
-> > > > +				temperature = <90000>;
-> > > This is *really* hot!
-> > > 
-> > 
-> > The 90�C trip value was suggested by thermal team(Manaf Meethalavalappu
-> > Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>). We are open to using a
-> > lower value if this is too high for the keyboard and back-cover sensors.
-> 
-> These sensors are intended to be controlled primarily from userspace by the
-> thermal governor in thermald, through the powercap sysfs interface [1]. We
-> do not plan to add cooling bindings for these thermal zones.
-> 
+On 11/9/26 9:02 PM, Ilpo Järvinen wrote:
+> What do you (or Denis) think on sashiko's mention about 
+> asus_wmi_evaluate_method_buf() casting integer.value to int which might 
+> end up aliasing high-bit on return values with errnos?
+> 
+> The other caller seems to also return that value directly out of _store 
+> function().
 
-I don't plan to merge settings that will cause physical harm to people
-who for some reason doesn't run your userspace tool.
+Hi Ilpo and Denis,
 
-> Based on discussions with the tuning team, we agreed on a hot-trip threshold
-> of 90�C for these sensors.
-> 
+I checked the DSDTs across 102 ASUS models we have dumped as well as the
+UEFI/SMM path on my FA507NV (BIOS 318) to see what firmware actually
+returns on the DSTS path:
 
-Please make tuning team that the user might/will bring their own
-userspace, with or without this configuration.
+1. Across the 102 DSDTs, no static DSTS branch returns 0xFFFFFFFF or
+   Ones. Models without 0x0010005B either hit a DSTS tail of
+   0xFFFFFFFE (15), fall through to WMNB's trailing 0xFFFFFFFE (45),
+   or return Zero (3 older models: GL553VD, GL553VE, FX505DT).
 
-E.g. on my system there doesn't seem to be anything called "thermald":
+2. On modern models (including FA507NV, FX517, GA403, GA605WI), DSTS
+   delegates unlisted DEVIDs via WCHK/W15H (SW SMI 0xAA, cmd 0x9603).
+   Disassembling the FA507NV modules (AsusSmmService ->
+   AsusWmiToProtocol -> QuantaDxeWrapperPkg) shows that this dynamic
+   chain also returns 0 (unmatched consumer / missing table entry), 1,
+   capability/presence bits (e.g. 0x00010000 for 0x00100056/57), MMIO
+   reads, or 0xFFFFFFFE -- never 0xFFFFFFFF.
 
-$ pacman -Ss thermald |wc -l
-0
+   (Note: on FA507NV, 0x0010005B itself is static in AML and calls
+   EC0.KBLS(), while 0x00100056/57 go through WCHK/W15H and return
+   0x00010000 on DSTS.)
+
+However, checking those tables did uncover one real mismatch and a clean
+reason to still harden asus_wmi_evaluate_method_buf():
+
+- On models like FX505DT, DSTS(0x00100056/57) returns 0x00010000 (so
+  kbd_rgb_mode/kbd_rgb_state are registered), while 0x0010005B hits the
+  DSTS tail Return (Zero).  asus_wmi_evaluate_method_buf() turns 0 into
+  -ENODATA, so v4's `err < 0 ? err : -ENODEV` would return -ENODATA
+  instead of -ENODEV as documented in the ABI patch.  The same happens
+  if W15H hits an unmatched consumer/table miss in SMM (returns 0).
+
+- Even though 0xFFFFFFFF didn't show up in this set, an unseen BIOS or
+  SMM branch returning 0xFFFFFFFF or any bit-31-set integer would still
+  alias a negative errno in asus_wmi_evaluate_method_buf().
+
+To avoid disturbing older devices, would a minimal approach like this be
+acceptable for v5?
+
+1. Add a small prep patch to asus_wmi_evaluate_method_buf() using a u32
+   retval: keep 0xFFFFFFFE -> -ENODEV and 0 -> -ENODATA as today, also
+   map (u32)~0 (0xFFFFFFFF) -> -ENODEV (matching asus_wmi_get_devstate()),
+   and return -ENODATA for any other unexpected integer (matching the
+   `default:` case; the only existing caller fan_curve_get_factory_default()
+   already treats any non-zero return as failure).
+
+2. In kbd_rgb_read_status(), translate -ENODATA to -ENODEV so FX505DT /
+   0-returning firmware matches the ABI while preserving -EIO / -ENOSPC.
 
 Thanks,
-Bjorn
-
-> [1] https://github.com/intel/thermal_daemon/pull/614/commits/7f3dd62353e039957e52eeb40c67ec388d543ebe
-> 
-> Thanks,
-> Manaf
-> 
-> > > > +				hysteresis = <5000>;
-> > > > +				type = "hot";
-> > > > +			};
-> > > > +		};
-> > > > +	};
-> > > > +
-> > > > +	ec-keyboard {
-> > > > +		polling-delay = <10000>;
-> > > > +		thermal-sensors = <&ec 1>;
-> > > > +
-> > > > +		trips {
-> > > > +			trip-point0 {
-> > > > +				temperature = <90000>;
-> > > Likewise
-> > > 
-> > > Konrad
-> > 
-> 
+Bartu
