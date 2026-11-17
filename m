@@ -1,96 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.0
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794885012;
-	b=0R6TL7OKp+oYACHwJkF6FFYJ0/qZlG4xr1wwCZdXSSzO7DkEwomaaHjUbvMzc6MtktkT
-	 axeVehVEughvW3cOj7zBCMoD4185CDz5CunBLFbcvYFXn2JcxLs3rSEITt40pIbi5Nhty
-	 GEOOeYuMs0xprAZPQXcdCuhekqTY0I1Zl85tpzAOrAvtIZXLKEaBz3aVV1UgztUoFWNXL
-	 uX6QfvkvjEGrXP/gyuABi34kD4wkNWA1NAr1M7FgVMIgP72SAh1Cue21kJTuQ8vVBLCfL
-	 3HKshXpedto3ko1yzYQU4r2UjWrR7fnjFpKHaVxG/K4Cmr2AyrmhyegvLXRIgTcwKeA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794885012;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-ID:X-B4-Tracking:X-Change-ID:To:CC:X-Mailer:X-Originating-IP:
-	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=oA7O14IM+YD2brFAcN8SRBdlXCv9bpJFILn+gKNWszQ=;
-	b=VFVu1Az2RTISI3vxgGazNuetWFKGOg5dwx9adSK0m5qUyTmFKNST9iDYKWNl/vsag1DW
-	 83aUghLkiNqHo3wby5QTGkz1qmBLRWaH8C68TBN3srjPR3xX9wVH56BcWTTATkYp6JBEa
-	 wfJ7n1k10he7GtNH384y/fQRA4X2jblaQLD2VqPYGF4hHYo7L5rgYUCwdNN4amE55WRFo
-	 nrTTh4Amty2Xg+AY6YNJjearDMY+j6kz0h2747ht2mWuTvEl6E70uWgYLuwKuCviiWo7s
-	 ydX1lxFNxNHrO65MmTV1UgV8wL56r3aYSp02C20tRb+etmUkKD5cG3OvR3S+6cBwi5g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=dF3q7GWL;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.194.0
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011000.outbound.protection.outlook.com [40.93.194.0])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=120.232.169.111
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794886087;
+	b=CSTVyZH59C57buxtUi5YcdELY0GvtD4D6ZuBCBfXdtka4t2tRRhlyDM29zKk5BOcP1Dg
+	 4YfekFKbQpkuodB9al4IK5xW4t7713fS+O1898AcmQ7y5aWN1DwAGHF5pud2AOmJAEiw9
+	 HuKyxdR4c7sLqWFROOD51x7t144Y/QyQ5jmFLwLYMQzh+n1Hjrd+mq8FQSMfWRNR23ti/
+	 KDC3+tAR0UU1jgNT22PSMyQ8Oua+9gKae88XRd6smHCilZ6O4uYvsolPtY+5YYj7vEwuY
+	 0rIZSDP6Hf+kGbpEElmz7sleJ5rwLXsrhgxymfEoFlecJee0kZR8jIxWWZT2faiFbbA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794886087;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM:X-RM-SPAM-FLAG:
+	 Received:X-RM-TRANSID:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:User-Agent:
+	 MIME-Version;
+	bh=rFhIyzmOP7RDcncPCj9pgTGy6qRn55zCgfTjFBol9wc=;
+	b=vyB2QtyPBIqysLRskvpwAmUBEWCOHaaRG+Q6e5j4Igle8JjhVoOxoeT42rLAalDMfJep
+	 JEfU6vpaSFz/Aw0uGI6tsedEiqyKlRTyx6FqbdqqV9SuTeaLBQpciDVz/s87uApVgtFdv
+	 i33FPbN8ezly/MUqMX07oWSPvRVBUbvDOpCrv9D6DvO3Ohhv+JwcKy0DRzQBjaXhq6qIG
+	 BlBWeRUUkXg6xuI5tzuQI0m7DEWoME65+WdLftUZUagTg1yVs3rqxjdTBI4Ho1kROqayF
+	 821Q4JBogMEYvTSNcSr9WyLbOcSX/cpVc9K9ts5MIsPxL8v06MUvHmmlGPyJ3VAV1LA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=139.com;
+	spf=pass smtp.mailfrom=139.com;
+	dkim=pass header.d=139.com header.i=@139.com header.a=rsa-sha256 header.s=dkim header.b=duDhBXe3;
+	arc=none smtp.remote-ip=120.232.169.111
+Received: from n169-111.mail.139.com (n169-111.mail.139.com [120.232.169.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AA2606A31C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 03:10:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09AA2606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE40606A323;
+	Tue, 17 Nov 2026 03:28:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5EE40606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=dF3q7GWL
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rpJIWPccbu8qsNIH+A7cEB1cEWFLisFoYGEk+HwKDpDjfqU1/kyLLagDZ8vb/SnfnO3FumVrxKHPFwiLsVD7yNUVJHUrG+rpS6Ai03w7XDXkSOdxfguzW+2NxZhQj6rEKsXwzvxYS1NSC1nSxlFevGFcYOLZVlNylmB0kYGz0CONivfnHhO6FJS2ojRj23eddySDa13PyAdimNk/9z4toLhXTWBeiXAl19swkyTMNKFsUK6jUaclHMDeFRYMj+d7bZPoW3awZAkwDHF38mcyJtkOOjGDQZwI9+gURPd7SZrlJEjwNxEzOSC3h0lI8y/3hwmQ5wJoz4yxnrN9xg2kmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oA7O14IM+YD2brFAcN8SRBdlXCv9bpJFILn+gKNWszQ=;
- b=sSU2JT3vaQvsUpjKfMQKKIrN98XMVf+zJMcS3k5SXKUrEHQcfuf3uDis4xLw8Qu4bmda0y3h0D1P++ab7CWA3gvrhgfWLmE8lfH+5P5rp0IYAm3tNxgfsoNIeAQ00r0QUZsT2/+LNnKOPoZe2eQPD65vIQvbnIXlOgzWsijSBNroom863UdcTys7V2zbzxX/3kxKkRC/3lK/um0QMdMd2NGfKCBrklXwD/H8Qn1xyi6QaNPU9ItU3j8N4h8EPvAd6EVUj4g/VxdU69hP+c2sFkeXK+imoLYpPqh9lZBX9uL+7fF/S4yGInaEjKbbCPmJlZdxyeJ94FI2mIRpqqfCyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oA7O14IM+YD2brFAcN8SRBdlXCv9bpJFILn+gKNWszQ=;
- b=dF3q7GWLrRQDbGMxJiRxQnbWOp3RqHDhem8x7ZISQmmIFqW3gxra5WEi86+PkmB+uxpc6stSLbpz4TIEYah4WvaK1O7dTeClQcqKlZGqgyyNC21mUgabZkqhw+DSM483tW/PK9E6UpdLyKw1ee9Q6v24vdNMwVkQXh5MLYPzBUg=
-Received: from MW4PR04CA0216.namprd04.prod.outlook.com (2603:10b6:303:87::11)
- by CY1PR12MB9627.namprd12.prod.outlook.com (2603:10b6:930:104::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Tue, 17 Nov
- 2026 03:10:07 +0000
-Received: from BY1PEPF0002696B.namprd05.prod.outlook.com
- (2603:10b6:303:87:cafe::83) by MW4PR04CA0216.outlook.office365.com
- (2603:10b6:303:87::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.615.9 via Frontend Transport; Tue, 17
- Nov 2026 03:10:06 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BY1PEPF0002696B.mail.protection.outlook.com (10.167.244.155) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Tue, 17 Nov 2026 03:10:06 +0000
-Received: from [127.0.1.1] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Mon, 16 Nov
- 2026 21:10:05 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-Date: Mon, 16 Nov 2026 21:09:52 -0600
-Subject: [PATCH] platform/x86/amd/hfi: Reject zero workload classes at
- probe
+	dkim=pass (1024-bit key, unprotected) header.d=139.com header.i=@139.com header.a=rsa-sha256 header.s=dkim header.b=duDhBXe3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=139.com; s=dkim; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=duDhBXe3mhPI8z51cXotpm5PH4QKBklY3ih+EgsdzPH3nm/A1NUOlbfe/cUUPMKS0zU2bZrpdpJSR
+	 TZxabTjZ11JAaW8QjhOlEpy5nAQgM26uqq1vvNzCdqaRm1f3td4qls9GadrmrfmCKPR3KYv8uEPpIA
+	 2leogIMJxlAzznM8=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM:                                                                                        
+X-RM-SPAM-FLAG:00000000
+Received:from [10.103.151.114] (unknown[36.110.60.243])
+	by rmsmtp-lg-appmail-18-12021 (RichMail) with SMTP id 2ef56afbc9b7b81-07c22;
+	Tue, 17 Nov 2026 11:27:54 +0800 (CST)
+X-RM-TRANSID:2ef56afbc9b7b81-07c22
+Message-ID: <3edf04da92dfa33b2f7e9abf78447dd12fd7c228.camel@139.com>
+Subject: Re: [RFC PATCH 2/3] platform: lenovo: add WMI hotkeys driver
+From: Jackie Dong <xy-jackie@139.com>
+To: David Cemin <dcemin@nvidia.com>, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de
+Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com,
+ ikepanhc@gmail.com,  platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  ldemarchi@nvidia.com
+Date: Tue, 17 Nov 2026 11:27:53 +0800
+In-Reply-To: <20261113222755.1696567-3-dcemin@nvidia.com>
+References: <20261113222755.1696567-1-dcemin@nvidia.com>
+	 <20261113222755.1696567-3-dcemin@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -100,85 +72,295 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20261116-superm1-linux-30bea57c-97e7-4889-8d3b-f6e37b4ccc48-v1-1-d16f095d56b0@amd.com>
-X-B4-Tracking: v=1; b=H4sIAH/F+2oC/yXNQQ7CIBBA0as0s3YSptQCXqVxUWCqY7Q2IKZJ0
- 7uLunyb/zfInIQznJoNEr8ly3OuoEMD4TrOF0aJ1dCqtieiHnNZOD0I7zKXFbXyPB5NQGfYYGe
- tQxu1x6lnbXwXQugsOjUZbal1pCLU8JJ4kvU3Hc5/5+JvHF7fE+z7B68s8/KWAAAA
-X-Change-ID: 20261116-superm1-linux-30bea57c-97e7-4889-8d3b-f6e37b4ccc48-90f73812910d
-To: Hans de Goede <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, Sashiko <sashiko-bot@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-X-Mailer: b4 0.15.1
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY1PEPF0002696B:EE_|CY1PR12MB9627:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ae0f626-6429-4338-40fb-08df4458481a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|23010399003|36860700016|1800799024|376014|18002099003|261009223027099003|56012099006|11063799006|5023799004|261102123227099003|261028144727099003|261026140227099003|261026121527099003|261022105027099003|261022075727099003|261021121427099003|261021123027099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	Q6cFP2XBnQNnsi2+pfXPj/mLK6dVs7SnXFRjy6GDAW2az+SpLxv0qKb8iftbyWIBLp+rWmFMVXJx+iAE5o3TS5jV1HIJ+p+z3gO26zjAoClOUuSCzr91uoY6xaCz0t+qs0UfyqjcLnMcbu4EPxLn06Q9Y0yJKLz2yLkDGXZeqKoDk0z07JQTDflWU3YcBr2xjsHB4ODWEVt+ru8wracxol80H5FLEu2/8GXHBLwTk0syDWyKVFkyN12vqzD5wqZo4tNw2bQqGcxmhgITYqQPSxp3gIkzvMVoV9ECJAoFi48Y6rBCVO/pZnWxi0W4HHMqFAwKE/ObFDPWU/RJcrxVJ6F6VVyyJKa9/RUjG0Ka/XGHl/pVb1uyX+WMonU5fIIxCanN1kyJenz3iNM93Ofp/c6Ga7EQjwTFpLOLwBtwpWsQPdn3xyIl5AcY8xfBG0OzhUIl7EQD784rn4XFPc7AZEJX6KYzrhbnc5nRx1abjev0KVkoPxnpT8NkdNaYCAsZFTaNL10rYUGpqHgOIfD2T6Ue2CY7Cclef5Hi+Ufm0SzaZ7zlPkA2TbjrB83GAm929Og/S600p/wvhHT7KFqK3Aj96JDbeeGpYN0N3Okj1PuUoy34c2ZVXAOtVL8UfM5/fRfKTKYUAaB/r0UaYAxKcQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(23010399003)(36860700016)(1800799024)(376014)(18002099003)(261009223027099003)(56012099006)(11063799006)(5023799004)(261102123227099003)(261028144727099003)(261026140227099003)(261026121527099003)(261022105027099003)(261022075727099003)(261021121427099003)(261021123027099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	q8vpqha594jGOkxSIU9de6AqICt+eSVXMHmmyyDwUx4Rr9ee1r+4OtIkEfpZsdAKuL5+U/h+qEuiuMlXrbQVbAg7PCPAQSOB9wUViDnseZvFaVa698FOy/ANTD5HtNcwIMCZelWTAFHxp/Jve4MLotQQjU1RUlgR2IOuTIC1jB5nKZHWBGYG6SIjGKJ3hvn7qpukFgGkUBjW7s1OAYqm018J+V1yrr0fL2EYmFuyd6Bcv3jPBqOvwbGvB+b0VuMHJm19FWhur/7nfe78whk1e0FpI3lG+ZniGyq/edjXf/Gmo99Qg0k5ZoXbCTwTXT8SSuA781vzZ3LFjbD047dI/89HooRlUL6J3ZjBzn8Db60z5/KnUM3qrIcKH8worWJTZKc8SQ7YWpax8dLgkcQPWUs3HLYWI7TgTq33yfsgZgs6yprBQFc3OCpM+jCC+cwF
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2026 03:10:06.6131
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ae0f626-6429-4338-40fb-08df4458481a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BY1PEPF0002696B.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9627
 
-amd_hfi_alloc_class_data() reads the number of workload classes from
-CPUID and only rejects values above 255. If the CPUID leaf reports 0,
-devm_kzalloc_objs() returns ZERO_SIZE_PTR (non-NULL), so probe carries on.
-amd_set_hfi_ipcc_score() then skips its loop but unconditionally reads
-ipcc_scores[0], dereferencing ZERO_SIZE_PTR and faulting.
-
-A device with no workload classes has nothing for the driver to do, so
-fail probe with -EINVAL when the count is zero.
-
-Fixes: 5d902ee5609a ("platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver")
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Link: https://sashiko.dev/#/bug/linux-30bea57c-97e7-4889-8d3b-f6e37b4ccc48
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/hfi/hfi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-index 86a7f4332c35a..15ab340390471 100644
---- a/drivers/platform/x86/amd/hfi/hfi.c
-+++ b/drivers/platform/x86/amd/hfi/hfi.c
-@@ -224,8 +224,8 @@ static int amd_hfi_alloc_class_data(struct platform_device *pdev)
- 	int idx;
- 
- 	nr_class_id = cpuid_eax(AMD_HETERO_CPUID_27);
--	if (nr_class_id > 255) {
--		dev_err(dev, "number of supported classes too large: %d\n",
-+	if (!nr_class_id || nr_class_id > 255) {
-+		dev_err(dev, "invalid number of supported classes: %u\n",
- 			nr_class_id);
- 		return -EINVAL;
- 	}
-
----
-base-commit: 141b164bbe186423e295b139e40e8e2d11cf1341
-change-id: 20261116-superm1-linux-30bea57c-97e7-4889-8d3b-f6e37b4ccc48-90f73812910d
-
-Best regards,
---  
-Mario Limonciello <mario.limonciello@amd.com>
+On Fri, 2026-11-13 at 14:27 -0800, David Cemin wrote:
+> Lenovo consumer laptops deliver their vendor specific Fn keys
+> (microphone
+> mute, airplane mode, performance mode, the Smart Key and Smart
+> Connect
+> keys) as WMI events on GUID 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294
+> instead
+> of keyboard usages. On x86, ideapad-laptop consumes these events, but
+> it
+> depends on i8042 and on the IdeaPad VPC ACPI device, neither of which
+> exist on the ACPI based arm64 models. Add a small WMI driver that
+> reports
+> the same key codes through a sparse keymap, so desktops see the
+> generic
+> input events.
+>=20
+> The key map follows ideapad-laptop. One code seen on the Yoga 9 2-in-
+> 1
+> 16 (arm64) is new: 0x48 for the Smart Connect key.
+>=20
+> Both drivers match the same GUID. The probe declines when the IdeaPad
+> VPC device (VPC2004) is present, so machines handled by ideapad-
+> laptop,
+> including its Fn lock LED and DYTC performance mode handling, keep
+> that
+> driver.
+>=20
+> Signed-off-by: David Cemin <dcemin@nvidia.com>
+> ---
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 6 +
+> =C2=A0drivers/platform/lenovo/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0 14 +++
+> =C2=A0drivers/platform/lenovo/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0=C2=A0 1 +
+> =C2=A0drivers/platform/lenovo/wmi-hotkeys.c | 151
+> ++++++++++++++++++++++++++
+> =C2=A04 files changed, 172 insertions(+)
+> =C2=A0create mode 100644 drivers/platform/lenovo/wmi-hotkeys.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3b0ad5a3debe..207684aeaf69 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15173,6 +15173,12 @@ F:	Documentation/wmi/devices/lenovo-
+> wmi-other.rst
+> =C2=A0F:	drivers/platform/lenovo/
+> =C2=A0F:	drivers/platform/x86/lenovo/*
+> =C2=A0
+> +LENOVO WMI HOTKEYS DRIVER
+> +M:	David Cemin <dcemin@nvidia.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/platform/lenovo/wmi-hotkeys.c
+> +
+> =C2=A0LENOVO WMI HOTKEY UTILITIES DRIVER
+> =C2=A0M:	Jackie Dong <xy-jackie@139.com>
+> =C2=A0L:	platform-driver-x86@vger.kernel.org
+> diff --git a/drivers/platform/lenovo/Kconfig
+> b/drivers/platform/lenovo/Kconfig
+> index 8222322ca671..ba4248d56e5f 100644
+> --- a/drivers/platform/lenovo/Kconfig
+> +++ b/drivers/platform/lenovo/Kconfig
+> @@ -41,6 +41,20 @@ config LENOVO_WMI_HOTKEY_UTILITIES
+> =C2=A0	=C2=A0 such as LED control for audio/mic mute event for Ideapad,
+> YOGA, XiaoXin,
+> =C2=A0	=C2=A0 Gaming, ThinkBook and so on.
+> =C2=A0
+> +config LENOVO_WMI_HOTKEYS
+> +	tristate "Lenovo WMI hotkeys driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	select INPUT_SPARSEKMAP
+> +	help
+> +	=C2=A0 Say Y or M here to enable the vendor specific Fn keys
+> (microphone
+> +	=C2=A0 mute, airplane mode, performance mode, star key) on Lenovo
+> laptops
+> +	=C2=A0 that deliver them as WMI events and are not handled by the
+> +	=C2=A0 ideapad-laptop driver, such as the ACPI based arm64
+> models.
+> +
+> +	=C2=A0 To compile this driver as a module, choose M here: the
+> module will
+> +	=C2=A0 be called lenovo-wmi-hotkeys.
+> +
+> =C2=A0config LENOVO_WMI_CAMERA
+> =C2=A0	tristate "Lenovo WMI Camera Button driver"
+> =C2=A0	depends on ACPI_WMI
+> diff --git a/drivers/platform/lenovo/Makefile
+> b/drivers/platform/lenovo/Makefile
+> index 1cac115dd735..d3f5e3ac14c2 100644
+> --- a/drivers/platform/lenovo/Makefile
+> +++ b/drivers/platform/lenovo/Makefile
+> @@ -8,6 +8,7 @@ lenovo-target-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D
+> wmi-helpers.o
+> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D wmi-events.o
+> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_CAPDATA)	+=3D wmi-capdata.o
+> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+=3D wmi-
+> hotkey-utilities.o
+> +lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEYS)	+=3D wmi-hotkeys.o
+> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D wmi-camera.o
+> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_GAMEZONE)	+=3D wmi-gamezone.o
+> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_TUNING)	+=3D wmi-other.o
+> diff --git a/drivers/platform/lenovo/wmi-hotkeys.c
+> b/drivers/platform/lenovo/wmi-hotkeys.c
+> new file mode 100644
+> index 000000000000..fc18867d8144
+> --- /dev/null
+> +++ b/drivers/platform/lenovo/wmi-hotkeys.c
+> @@ -0,0 +1,151 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Lenovo WMI hotkey driver
+> + *
+> + * Lenovo consumer laptops deliver their vendor specific Fn keys
+> (microphone
+> + * mute, airplane mode, performance mode, the star key and others)
+> as WMI
+> + * events on GUID 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 instead of
+> keyboard
+> + * usages.=C2=A0 On x86 ideapad-laptop consumes these events; that drive=
+r
+> depends
+> + * on i8042 and the IdeaPad VPC device, neither of which exist on
+> the arm64
+> + * platforms.=C2=A0 This driver consumes the same event and reports the
+> keys the
+> + * same way, so desktops see the usual generic key codes.
+> + *
+> + * The key codes follow the mapping used by ideapad-laptop.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/input.h>
+> +#include <linux/input/sparse-keymap.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +#define LENOVO_FN_KEYS_WMI_GUID	"8FC0DE0C-B4E4-43FD-B0F3-
+> 8871711C1294"
+> +
+> +static const struct key_entry lenovo_wmi_hotkeys_keymap[] =3D {
+> +	/* Customizable Lenovo Hotkey ("star" with 'S' inside) */
+> +	{ KE_KEY, 0x01, { KEY_FAVORITES } },
+> +	/* Fn lock toggled on / off, firmware handles the LED */
+> +	{ KE_IGNORE, 0x02 },
+> +	{ KE_IGNORE, 0x03 },
+> +	{ KE_KEY, 0x04, { KEY_SELECTIVE_SCREENSHOT } },
+> +	/* Lenovo Support */
+> +	{ KE_KEY, 0x07, { KEY_HELP } },
+> +	{ KE_KEY, 0x0a, { KEY_REFRESH_RATE_TOGGLE } },
+> +	{ KE_KEY, 0x0e, { KEY_PICKUP_PHONE } },
+> +	{ KE_KEY, 0x0f, { KEY_HANGUP_PHONE } },
+> +	{ KE_KEY, 0x10, { KEY_REFRESH_RATE_TOGGLE } },
+> +	/* Sound profile switch */
+> +	{ KE_KEY, 0x12, { KEY_PROG2 } },
+> +	/* Dark mode toggle */
+> +	{ KE_KEY, 0x13, { KEY_PROG1 } },
+> +	/* Lenovo Support */
+> +	{ KE_KEY, 0x27, { KEY_HELP } },
+> +	/* Lenovo Virtual Background application */
+> +	{ KE_KEY, 0x28, { KEY_PROG3 } },
+> +	{ KE_KEY, 0x29, { KEY_TOUCHPAD_TOGGLE } },
+> +	{ KE_KEY, 0x2a, { KEY_ROOT_MENU } },
+> +	/* Shift + PrtSc */
+> +	{ KE_KEY, 0x2d, { KEY_SELECTIVE_SCREENSHOT } },
+> +	/* Performance mode, Fn+Q */
+> +	{ KE_KEY, 0x3d, { KEY_PROG4 } },
+> +	{ KE_KEY, 0x3e, { KEY_MICMUTE } },
+> +	{ KE_KEY, 0x3f, { KEY_RFKILL } },
+> +	/*
+> +	 * Keyboard backlight level after Fn+Space, handled by the
+> firmware:
+> +	 * 0x40 off, 0x41 low, 0x42 high, 0x43 also seen
+> +	 */
+> +	{ KE_IGNORE, 0x40 },
+> +	{ KE_IGNORE, 0x41 },
+> +	{ KE_IGNORE, 0x42 },
+> +	{ KE_IGNORE, 0x43 },
+> +	/* Star, user assignable key */
+> +	{ KE_KEY, 0x44, { KEY_PROG1 } },
+> +	/* Eye care */
+> +	{ KE_KEY, 0x45, { KEY_PROG3 } },
+> +	/* Smart Connect, phone to PC link */
+> +	{ KE_KEY, 0x48, { KEY_PROG2 } },
+> +	{ KE_END },
+> +};
+> +
+> +struct lenovo_wmi_hotkeys {
+> +	struct input_dev *input;
+> +};
+> +
+> +static int lenovo_wmi_hotkeys_probe(struct wmi_device *wdev, const
+> void *context)
+> +{
+> +	struct lenovo_wmi_hotkeys *priv;
+> +	int ret;
+> +
+> +	/*
+> +	 * ideapad-laptop binds the same GUID and handles these
+> events together
+> +	 * with the IdeaPad VPC device (Fn lock LED, DYTC
+> performance mode
+> +	 * cycling).=C2=A0 Leave those machines to it.
+> +	 */
+> +	if (acpi_dev_found("VPC2004")) {
+> +		dev_dbg(&wdev->dev, "IdeaPad VPC present, deferring
+> to ideapad-laptop\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->input =3D devm_input_allocate_device(&wdev->dev);
+> +	if (!priv->input)
+> +		return -ENOMEM;
+> +
+> +	priv->input->name =3D "Lenovo WMI hotkeys";
+> +	priv->input->phys =3D "wmi/input0";
+> +	priv->input->id.bustype =3D BUS_HOST;
+> +	priv->input->dev.parent =3D &wdev->dev;
+> +
+> +	ret =3D sparse_keymap_setup(priv->input,
+> lenovo_wmi_hotkeys_keymap, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D input_register_device(priv->input);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static void lenovo_wmi_hotkeys_notify(struct wmi_device *wdev, union
+> acpi_object *data)
+> +{
+> +	struct lenovo_wmi_hotkeys *priv =3D dev_get_drvdata(&wdev-
+> >dev);
+> +	u32 code;
+> +
+> +	if (!data || data->type !=3D ACPI_TYPE_INTEGER) {
+> +		dev_dbg(&wdev->dev, "event data is not an
+> integer\n");
+> +		return;
+> +	}
+> +
+> +	code =3D data->integer.value;
+> +	dev_dbg(&wdev->dev, "hotkey event 0x%x\n", code);
+> +
+> +	if (!sparse_keymap_report_event(priv->input, code, 1, true))
+> +		dev_info_ratelimited(&wdev->dev, "unknown hotkey
+> event 0x%x\n", code);
+> +}
+> +
+> +static const struct wmi_device_id lenovo_wmi_hotkeys_id_table[] =3D {
+> +	{ LENOVO_FN_KEYS_WMI_GUID, NULL },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_hotkeys_id_table);
+> +
+> +static struct wmi_driver lenovo_wmi_hotkeys_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lenovo-wmi-hotkeys",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D lenovo_wmi_hotkeys_id_table,
+> +	.probe =3D lenovo_wmi_hotkeys_probe,
+> +	.notify =3D lenovo_wmi_hotkeys_notify,
+> +	.no_singleton =3D true,
+> +};
+> +module_wmi_driver(lenovo_wmi_hotkeys_driver);
+> +
+> +MODULE_DESCRIPTION("Lenovo WMI hotkey driver");
+> +MODULE_LICENSE("GPL");
+Hi David,
+This wmi-hotkeys.c is for suspecific Fn keys(microphone mute, airplane
+mode, performance mode, the star key and others) with WMI and wmi-
+hotkey-utilities.c is the same target. Now the two file names are=20
+similar and easy to confuse for developers and maintainer.=C2=A0
+Would you merge them into one file?=20
+If yes, developers can support Lenovo product other hotkeys and new
+functions by wmi in one file in future.
+Jackie Dong
 
