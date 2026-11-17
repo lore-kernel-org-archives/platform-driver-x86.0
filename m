@@ -1,68 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=120.232.169.111
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794886087;
-	b=CSTVyZH59C57buxtUi5YcdELY0GvtD4D6ZuBCBfXdtka4t2tRRhlyDM29zKk5BOcP1Dg
-	 4YfekFKbQpkuodB9al4IK5xW4t7713fS+O1898AcmQ7y5aWN1DwAGHF5pud2AOmJAEiw9
-	 HuKyxdR4c7sLqWFROOD51x7t144Y/QyQ5jmFLwLYMQzh+n1Hjrd+mq8FQSMfWRNR23ti/
-	 KDC3+tAR0UU1jgNT22PSMyQ8Oua+9gKae88XRd6smHCilZ6O4uYvsolPtY+5YYj7vEwuY
-	 0rIZSDP6Hf+kGbpEElmz7sleJ5rwLXsrhgxymfEoFlecJee0kZR8jIxWWZT2faiFbbA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794886087;
-	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM:X-RM-SPAM-FLAG:
-	 Received:X-RM-TRANSID:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:User-Agent:
-	 MIME-Version;
-	bh=rFhIyzmOP7RDcncPCj9pgTGy6qRn55zCgfTjFBol9wc=;
-	b=vyB2QtyPBIqysLRskvpwAmUBEWCOHaaRG+Q6e5j4Igle8JjhVoOxoeT42rLAalDMfJep
-	 JEfU6vpaSFz/Aw0uGI6tsedEiqyKlRTyx6FqbdqqV9SuTeaLBQpciDVz/s87uApVgtFdv
-	 i33FPbN8ezly/MUqMX07oWSPvRVBUbvDOpCrv9D6DvO3Ohhv+JwcKy0DRzQBjaXhq6qIG
-	 BlBWeRUUkXg6xuI5tzuQI0m7DEWoME65+WdLftUZUagTg1yVs3rqxjdTBI4Ho1kROqayF
-	 821Q4JBogMEYvTSNcSr9WyLbOcSX/cpVc9K9ts5MIsPxL8v06MUvHmmlGPyJ3VAV1LA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=139.com;
-	spf=pass smtp.mailfrom=139.com;
-	dkim=pass header.d=139.com header.i=@139.com header.a=rsa-sha256 header.s=dkim header.b=duDhBXe3;
-	arc=none smtp.remote-ip=120.232.169.111
-Received: from n169-111.mail.139.com (n169-111.mail.139.com [120.232.169.111])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794887380;
+	b=LnGMoDqP1VzDspVbuN/8cWd+nqsEh06+M6WlWRbRtkl0eGtBE+IeFbsO1TLBThzwDElE
+	 i2qAbRTfBeemR1TwrsZvgaqMTLvcx7yCRSkDBbVJPcG9DME2TcXhKWFWhCnl6chGGqsEL
+	 +pisKqkxuzQo3lhloldNsO/TlVvwM//F32LloyfWWeM/QZhF4b8iEdy7AnlQCfcdc8Rq7
+	 qR7kNRDmSWgLVmBDTuLxKvaLLTCIJWJGuDoAs/edjRFOx3AkbIpCGtoP6uuwKveZWvGR9
+	 5WcyN/bliuYwxMIj0x8RX6BYy0l5fp02UeZQ6AqUah36H3RGkEdyIGnBx2JNfc9D6ew==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794887380;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=MN3C3MGCf8Imu8QLEA+7sVBZ3ldYiqOZRhR0QkEwU2Q=;
+	b=qBj88mDS/o6MrpV29MCJXL6sPA2Zvjp6dad5d7QD0BjkMPWvn55AXfXoDp3A01oR+lXD
+	 UFwFCyrm5sO2baomCwDLR3x1/2QGFdwFkwoFuiUfqA5/pFD8tAudQICiwlW+NIz0kQ0oT
+	 gnDvWRuQOWofHJH+bXRWkoLDns80AyJVF6DGQxLrfpC46MiqFOybjCVQ8r1QdVC3e7LpA
+	 x80Nt01+glnXou0Bw6ymlA2UpCdijtjXcjMkHtxx6luRoGBgjJgSBHl3o1JVq5CMwAQxp
+	 hU7ofbvbXa6LLlm5AoFxE3R9fvoEkqVLJKjKChALvtmyY9TL0B1vX4MqNybm/GSvnvQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ItfBG9SK;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADB6606A31C;
+	Tue, 17 Nov 2026 03:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ItfBG9SK
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794887379;
+	b=qTocz3N1g+BGG3kKYWva9/onA7YmziyMiX7QTpRsj8wk8HVVBxgQgKFa0P09M9cbnYLc
+	 brBD/jfThUl8B0uoDrAqO5/QLIGx4132HcBS8kqu+ZkhfHOO4b+gP2KIPptndJ8qGmA1C
+	 h/jLcz8aMYU1tW/dneYyBQ9uYdWMWN181qlEjQ1My/rwuglHg6td5vdF7Q6/vw7fCREbO
+	 o3UGy8mi74yh7kBQ/k7zWKWwQ5WP2ePIa5iLKqSazk/g0c3aWX+Zmza+o2TO5SCT3bA4S
+	 0YedLphcvUBzAZRA8RlKpm7MEkyMDddhyW2L0rJFhELZ7qYzZn1veIzaoRNRMgsR/HQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794887379;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=MN3C3MGCf8Imu8QLEA+7sVBZ3ldYiqOZRhR0QkEwU2Q=;
+	b=PzzxxiBl9PU6QGgiQe5froXy6HIpiblNiij8hvtUF1rJL2jZv412qF6H9tlF47+88Quc
+	 vv9qNsGSHvRNEwt1arsuxyA5ubj6DICM2vYATY7x3xfeI/gE2W4SXLyXvI2+80Rf6Dbfn
+	 UaSZjzi0N6CsMv4K+rknmIxPjJp6N8TIEnS69zFT4m2oxnebxRc6knyP07JM2EM4T/rBd
+	 Dy/cr4ikWbIfCw0H0VAQjReRO3TadY83/QYoPZec0GcmMdMs2eiujWclAMDiKHl2A26Bi
+	 dikjh1p8qjyQTULQkadpwVHc7lvp4XSvdgL4srjJOq0ouMq7oAQol/8YEavOBRVjI3Q==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE40606A323;
-	Tue, 17 Nov 2026 03:28:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5EE40606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=139.com header.i=@139.com header.a=rsa-sha256 header.s=dkim header.b=duDhBXe3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=139.com; s=dkim; l=0;
-	h=from:subject:message-id:to:cc:mime-version;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	b=duDhBXe3mhPI8z51cXotpm5PH4QKBklY3ih+EgsdzPH3nm/A1NUOlbfe/cUUPMKS0zU2bZrpdpJSR
-	 TZxabTjZ11JAaW8QjhOlEpy5nAQgM26uqq1vvNzCdqaRm1f3td4qls9GadrmrfmCKPR3KYv8uEPpIA
-	 2leogIMJxlAzznM8=
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM:                                                                                        
-X-RM-SPAM-FLAG:00000000
-Received:from [10.103.151.114] (unknown[36.110.60.243])
-	by rmsmtp-lg-appmail-18-12021 (RichMail) with SMTP id 2ef56afbc9b7b81-07c22;
-	Tue, 17 Nov 2026 11:27:54 +0800 (CST)
-X-RM-TRANSID:2ef56afbc9b7b81-07c22
-Message-ID: <3edf04da92dfa33b2f7e9abf78447dd12fd7c228.camel@139.com>
-Subject: Re: [RFC PATCH 2/3] platform: lenovo: add WMI hotkeys driver
-From: Jackie Dong <xy-jackie@139.com>
-To: David Cemin <dcemin@nvidia.com>, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de
-Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com,
- ikepanhc@gmail.com,  platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org,  ldemarchi@nvidia.com
-Date: Tue, 17 Nov 2026 11:27:53 +0800
-In-Reply-To: <20261113222755.1696567-3-dcemin@nvidia.com>
-References: <20261113222755.1696567-1-dcemin@nvidia.com>
-	 <20261113222755.1696567-3-dcemin@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+	by smtp.kernel.org (Postfix) with ESMTPS id 3F6031F000C4;
+	Tue, 17 Nov 2026 03:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794887379;
+	bh=MN3C3MGCf8Imu8QLEA+7sVBZ3ldYiqOZRhR0QkEwU2Q=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=ItfBG9SKk8ZnV8XtlD3i6HWovB902rbC8pQ4bOG2hCV5GRxAP4BZ9/1Ptv+nUd6xy
+	 Vtkao+8FWHP6wZ8W8XIEsSSJcxVD+kI7e24dvycOQgNJWxdBjpAP10SCk+YELVzmJ1
+	 dsRmGG+FNfXaMGW1+S7ZptN8OXB81JeAfWIgs2p5uT/aFFeP1YkTkQrMINGeMpFchl
+	 sbSm1qIRjebs9GvFaGE9HwORZmRAh2MyuOMbz9zvkOkblyVnu3S1s8JGxqAyCAqDOs
+	 qtNc0NIyS/ADPfzakJFb0/AJoxiPeW0VkVUdUcN02ksTMoTNEyAeMJBlnrlkca9mmk
+	 Vg5FuN51y8Xfg==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 9614E4A6AB;
+	Tue, 17 Nov 2026 03:49:38 +0000 (UTC)
+From: Ricky Sorrell via B4 Relay <devnull+rmsorrell.gmail.com@kernel.org>
+Date: Mon, 16 Nov 2026 20:49:39 -0700
+Subject: [PATCH] power: supply: surface_battery: Defer AC-triggered update
+ across suspend
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -72,295 +83,96 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261116-surface-battery-suspend-v1-1-71862c94435f@gmail.com>
+X-B4-Tracking: v=1; b=H4sIANLO+2oC/yXMQQrCMBBG4auUWRtoChbxKuJikvzRcRHLTCqV0
+ rs31eW3eG8lgwqMrt1Kio+YvEuDP3UUn1wecJKaaeiH0Xs/Ops1c4QLXCv022wTSnLhzCmEjEv
+ PmVo9KbIsv/Pt/rfN4YVYjx1t2w5aWWcpewAAAA==
+X-Change-ID: 20261116-surface-battery-suspend-b5adbbfe80af
+To: Maximilian Luz <luzmaximilian@gmail.com>, 
+ Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ricky Sorrell <rmsorrell@gmail.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794887378; l=3169;
+ i=rmsorrell@gmail.com; s=20261117; h=from:subject:message-id;
+ bh=Nm4oDrkT9c+zgZKLqwTPIM9uMxM/qKmEf83Eim2ZI+A=;
+ b=Y/O3bQAP6wvKxqeZvxMj+O34ZAGKVr0Z9f4ZHmbJSD4q8f09awao2RXW0CsywUS10qWtfOPRh
+ JXPLjkuhkpuA/ySi39H12X22FcsudwpHfdfxAS2dK2BdKJ3Ghv2iU29
+X-Developer-Key: i=rmsorrell@gmail.com; a=ed25519;
+ pk=iB5I4ZV9deYinB0dHWz2x12lFRsMIymvzUMBcvlbAKs=
+X-Endpoint-Received: by B4 Relay for rmsorrell@gmail.com/20261117 with
+ auth_id=1546
+X-Original-From: Ricky Sorrell <rmsorrell@gmail.com>
+Reply-To: rmsorrell@gmail.com
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2026-11-13 at 14:27 -0800, David Cemin wrote:
-> Lenovo consumer laptops deliver their vendor specific Fn keys
-> (microphone
-> mute, airplane mode, performance mode, the Smart Key and Smart
-> Connect
-> keys) as WMI events on GUID 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294
-> instead
-> of keyboard usages. On x86, ideapad-laptop consumes these events, but
-> it
-> depends on i8042 and on the IdeaPad VPC ACPI device, neither of which
-> exist on the ACPI based arm64 models. Add a small WMI driver that
-> reports
-> the same key codes through a sparse keymap, so desktops see the
-> generic
-> input events.
->=20
-> The key map follows ideapad-laptop. One code seen on the Yoga 9 2-in-
-> 1
-> 16 (arm64) is new: 0x48 for the Smart Connect key.
->=20
-> Both drivers match the same GUID. The probe declines when the IdeaPad
-> VPC device (VPC2004) is present, so machines handled by ideapad-
-> laptop,
-> including its Fn lock LED and DYTC performance mode handling, keep
-> that
-> driver.
->=20
-> Signed-off-by: David Cemin <dcemin@nvidia.com>
-> ---
-> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 6 +
-> =C2=A0drivers/platform/lenovo/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 14 +++
-> =C2=A0drivers/platform/lenovo/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0=C2=A0 1 +
-> =C2=A0drivers/platform/lenovo/wmi-hotkeys.c | 151
-> ++++++++++++++++++++++++++
-> =C2=A04 files changed, 172 insertions(+)
-> =C2=A0create mode 100644 drivers/platform/lenovo/wmi-hotkeys.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3b0ad5a3debe..207684aeaf69 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15173,6 +15173,12 @@ F:	Documentation/wmi/devices/lenovo-
-> wmi-other.rst
-> =C2=A0F:	drivers/platform/lenovo/
-> =C2=A0F:	drivers/platform/x86/lenovo/*
-> =C2=A0
-> +LENOVO WMI HOTKEYS DRIVER
-> +M:	David Cemin <dcemin@nvidia.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/lenovo/wmi-hotkeys.c
-> +
-> =C2=A0LENOVO WMI HOTKEY UTILITIES DRIVER
-> =C2=A0M:	Jackie Dong <xy-jackie@139.com>
-> =C2=A0L:	platform-driver-x86@vger.kernel.org
-> diff --git a/drivers/platform/lenovo/Kconfig
-> b/drivers/platform/lenovo/Kconfig
-> index 8222322ca671..ba4248d56e5f 100644
-> --- a/drivers/platform/lenovo/Kconfig
-> +++ b/drivers/platform/lenovo/Kconfig
-> @@ -41,6 +41,20 @@ config LENOVO_WMI_HOTKEY_UTILITIES
-> =C2=A0	=C2=A0 such as LED control for audio/mic mute event for Ideapad,
-> YOGA, XiaoXin,
-> =C2=A0	=C2=A0 Gaming, ThinkBook and so on.
-> =C2=A0
-> +config LENOVO_WMI_HOTKEYS
-> +	tristate "Lenovo WMI hotkeys driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	select INPUT_SPARSEKMAP
-> +	help
-> +	=C2=A0 Say Y or M here to enable the vendor specific Fn keys
-> (microphone
-> +	=C2=A0 mute, airplane mode, performance mode, star key) on Lenovo
-> laptops
-> +	=C2=A0 that deliver them as WMI events and are not handled by the
-> +	=C2=A0 ideapad-laptop driver, such as the ACPI based arm64
-> models.
-> +
-> +	=C2=A0 To compile this driver as a module, choose M here: the
-> module will
-> +	=C2=A0 be called lenovo-wmi-hotkeys.
-> +
-> =C2=A0config LENOVO_WMI_CAMERA
-> =C2=A0	tristate "Lenovo WMI Camera Button driver"
-> =C2=A0	depends on ACPI_WMI
-> diff --git a/drivers/platform/lenovo/Makefile
-> b/drivers/platform/lenovo/Makefile
-> index 1cac115dd735..d3f5e3ac14c2 100644
-> --- a/drivers/platform/lenovo/Makefile
-> +++ b/drivers/platform/lenovo/Makefile
-> @@ -8,6 +8,7 @@ lenovo-target-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D
-> wmi-helpers.o
-> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D wmi-events.o
-> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_CAPDATA)	+=3D wmi-capdata.o
-> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+=3D wmi-
-> hotkey-utilities.o
-> +lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEYS)	+=3D wmi-hotkeys.o
-> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D wmi-camera.o
-> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_GAMEZONE)	+=3D wmi-gamezone.o
-> =C2=A0lenovo-target-$(CONFIG_LENOVO_WMI_TUNING)	+=3D wmi-other.o
-> diff --git a/drivers/platform/lenovo/wmi-hotkeys.c
-> b/drivers/platform/lenovo/wmi-hotkeys.c
-> new file mode 100644
-> index 000000000000..fc18867d8144
-> --- /dev/null
-> +++ b/drivers/platform/lenovo/wmi-hotkeys.c
-> @@ -0,0 +1,151 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Lenovo WMI hotkey driver
-> + *
-> + * Lenovo consumer laptops deliver their vendor specific Fn keys
-> (microphone
-> + * mute, airplane mode, performance mode, the star key and others)
-> as WMI
-> + * events on GUID 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 instead of
-> keyboard
-> + * usages.=C2=A0 On x86 ideapad-laptop consumes these events; that drive=
-r
-> depends
-> + * on i8042 and the IdeaPad VPC device, neither of which exist on
-> the arm64
-> + * platforms.=C2=A0 This driver consumes the same event and reports the
-> keys the
-> + * same way, so desktops see the usual generic key codes.
-> + *
-> + * The key codes follow the mapping used by ideapad-laptop.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/input.h>
-> +#include <linux/input/sparse-keymap.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +
-> +#define LENOVO_FN_KEYS_WMI_GUID	"8FC0DE0C-B4E4-43FD-B0F3-
-> 8871711C1294"
-> +
-> +static const struct key_entry lenovo_wmi_hotkeys_keymap[] =3D {
-> +	/* Customizable Lenovo Hotkey ("star" with 'S' inside) */
-> +	{ KE_KEY, 0x01, { KEY_FAVORITES } },
-> +	/* Fn lock toggled on / off, firmware handles the LED */
-> +	{ KE_IGNORE, 0x02 },
-> +	{ KE_IGNORE, 0x03 },
-> +	{ KE_KEY, 0x04, { KEY_SELECTIVE_SCREENSHOT } },
-> +	/* Lenovo Support */
-> +	{ KE_KEY, 0x07, { KEY_HELP } },
-> +	{ KE_KEY, 0x0a, { KEY_REFRESH_RATE_TOGGLE } },
-> +	{ KE_KEY, 0x0e, { KEY_PICKUP_PHONE } },
-> +	{ KE_KEY, 0x0f, { KEY_HANGUP_PHONE } },
-> +	{ KE_KEY, 0x10, { KEY_REFRESH_RATE_TOGGLE } },
-> +	/* Sound profile switch */
-> +	{ KE_KEY, 0x12, { KEY_PROG2 } },
-> +	/* Dark mode toggle */
-> +	{ KE_KEY, 0x13, { KEY_PROG1 } },
-> +	/* Lenovo Support */
-> +	{ KE_KEY, 0x27, { KEY_HELP } },
-> +	/* Lenovo Virtual Background application */
-> +	{ KE_KEY, 0x28, { KEY_PROG3 } },
-> +	{ KE_KEY, 0x29, { KEY_TOUCHPAD_TOGGLE } },
-> +	{ KE_KEY, 0x2a, { KEY_ROOT_MENU } },
-> +	/* Shift + PrtSc */
-> +	{ KE_KEY, 0x2d, { KEY_SELECTIVE_SCREENSHOT } },
-> +	/* Performance mode, Fn+Q */
-> +	{ KE_KEY, 0x3d, { KEY_PROG4 } },
-> +	{ KE_KEY, 0x3e, { KEY_MICMUTE } },
-> +	{ KE_KEY, 0x3f, { KEY_RFKILL } },
-> +	/*
-> +	 * Keyboard backlight level after Fn+Space, handled by the
-> firmware:
-> +	 * 0x40 off, 0x41 low, 0x42 high, 0x43 also seen
-> +	 */
-> +	{ KE_IGNORE, 0x40 },
-> +	{ KE_IGNORE, 0x41 },
-> +	{ KE_IGNORE, 0x42 },
-> +	{ KE_IGNORE, 0x43 },
-> +	/* Star, user assignable key */
-> +	{ KE_KEY, 0x44, { KEY_PROG1 } },
-> +	/* Eye care */
-> +	{ KE_KEY, 0x45, { KEY_PROG3 } },
-> +	/* Smart Connect, phone to PC link */
-> +	{ KE_KEY, 0x48, { KEY_PROG2 } },
-> +	{ KE_END },
-> +};
-> +
-> +struct lenovo_wmi_hotkeys {
-> +	struct input_dev *input;
-> +};
-> +
-> +static int lenovo_wmi_hotkeys_probe(struct wmi_device *wdev, const
-> void *context)
-> +{
-> +	struct lenovo_wmi_hotkeys *priv;
-> +	int ret;
-> +
-> +	/*
-> +	 * ideapad-laptop binds the same GUID and handles these
-> events together
-> +	 * with the IdeaPad VPC device (Fn lock LED, DYTC
-> performance mode
-> +	 * cycling).=C2=A0 Leave those machines to it.
-> +	 */
-> +	if (acpi_dev_found("VPC2004")) {
-> +		dev_dbg(&wdev->dev, "IdeaPad VPC present, deferring
-> to ideapad-laptop\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->input =3D devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->input)
-> +		return -ENOMEM;
-> +
-> +	priv->input->name =3D "Lenovo WMI hotkeys";
-> +	priv->input->phys =3D "wmi/input0";
-> +	priv->input->id.bustype =3D BUS_HOST;
-> +	priv->input->dev.parent =3D &wdev->dev;
-> +
-> +	ret =3D sparse_keymap_setup(priv->input,
-> lenovo_wmi_hotkeys_keymap, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D input_register_device(priv->input);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static void lenovo_wmi_hotkeys_notify(struct wmi_device *wdev, union
-> acpi_object *data)
-> +{
-> +	struct lenovo_wmi_hotkeys *priv =3D dev_get_drvdata(&wdev-
-> >dev);
-> +	u32 code;
-> +
-> +	if (!data || data->type !=3D ACPI_TYPE_INTEGER) {
-> +		dev_dbg(&wdev->dev, "event data is not an
-> integer\n");
-> +		return;
-> +	}
-> +
-> +	code =3D data->integer.value;
-> +	dev_dbg(&wdev->dev, "hotkey event 0x%x\n", code);
-> +
-> +	if (!sparse_keymap_report_event(priv->input, code, 1, true))
-> +		dev_info_ratelimited(&wdev->dev, "unknown hotkey
-> event 0x%x\n", code);
-> +}
-> +
-> +static const struct wmi_device_id lenovo_wmi_hotkeys_id_table[] =3D {
-> +	{ LENOVO_FN_KEYS_WMI_GUID, NULL },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_hotkeys_id_table);
-> +
-> +static struct wmi_driver lenovo_wmi_hotkeys_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "lenovo-wmi-hotkeys",
-> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table =3D lenovo_wmi_hotkeys_id_table,
-> +	.probe =3D lenovo_wmi_hotkeys_probe,
-> +	.notify =3D lenovo_wmi_hotkeys_notify,
-> +	.no_singleton =3D true,
-> +};
-> +module_wmi_driver(lenovo_wmi_hotkeys_driver);
-> +
-> +MODULE_DESCRIPTION("Lenovo WMI hotkey driver");
-> +MODULE_LICENSE("GPL");
-Hi David,
-This wmi-hotkeys.c is for suspecific Fn keys(microphone mute, airplane
-mode, performance mode, the star key and others) with WMI and wmi-
-hotkey-utilities.c is the same target. Now the two file names are=20
-similar and easy to confuse for developers and maintainer.=C2=A0
-Would you merge them into one file?=20
-If yes, developers can support Lenovo product other hotkeys and new
-functions by wmi in one file in future.
-Jackie Dong
+From: Ricky Sorrell <rmsorrell@gmail.com>
+
+When the AC adapter is plugged in or removed, spwr_external_power_changed()
+schedules a battery state update after five seconds, on system_wq. That
+workqueue is not frozen for system suspend. If the system starts to
+suspend within those five seconds, for example when the charger is
+unplugged and the lid closed straight away, the work runs after the
+Surface Aggregator controller has been suspended. The request then trips
+the WARN_ON() in ssam_request_do_sync_with_buffer() and fails:
+
+  WARNING: drivers/platform/surface/aggregator/controller.c:1703 at ssam_request_do_sync_with_buffer+0x15a/0x180 [surface_aggregator]
+  Workqueue: events spwr_battery_update_bst_workfn [surface_battery]
+  surface_battery 01:02:02:01:00: failed to update battery state: -19
+
+Queue the work on system_freezable_wq instead. Freezable workqueues are
+frozen before devices are suspended and thawed after they have resumed,
+so a pending update now runs only once the controller is reachable again.
+Nothing is lost by the delay: surface_battery_resume() already rechecks
+the full battery state.
+
+The problem was found, and this change written and tested, with the help
+of an AI coding assistant (Claude Opus 5.5 in Claude Code). It was found
+by reading the kernel log after suspend tests on a Surface Book 3, then
+confirmed in the source. Reproduced and tested on a Surface Book 3 with
+Linux 7.3.4: unplug the charger and close the lid within five seconds.
+Before the change the warning above appeared; after it, the same test
+gave no warning and correct battery state after resume.
+
+Fixes: 167f77f7d0b3 ("power: supply: Add battery driver for Surface Aggregator Module")
+Signed-off-by: Ricky Sorrell <rmsorrell@gmail.com>
+---
+Not done, so reviewers know: the change was built and tested against
+Linux 7.3.4 only. Mainline's surface_battery.c differs from 7.3.4 only in
+an unrelated devm_kzalloc_obj() line, and the patch applies to mainline,
+but it was not built or run there.
+---
+ drivers/power/supply/surface_battery.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/supply/surface_battery.c
+index dac19932c..a9b0cdfe3 100644
+--- a/drivers/power/supply/surface_battery.c
++++ b/drivers/power/supply/surface_battery.c
+@@ -417,9 +417,14 @@ static void spwr_external_power_changed(struct power_supply *psy)
+ 	 * event for the state (charging/discharging) change. Furthermore it
+ 	 * may take some time until the state is updated on the battery.
+ 	 * Schedule an update to solve this.
++	 *
++	 * Use the freezable workqueue so that the update does not run while
++	 * the system is suspending, when the EC can no longer be reached.
++	 * surface_battery_resume() rechecks the full state anyway.
+ 	 */
+ 
+-	schedule_delayed_work(&bat->update_work, SPWR_AC_BAT_UPDATE_DELAY);
++	queue_delayed_work(system_freezable_wq, &bat->update_work,
++			   SPWR_AC_BAT_UPDATE_DELAY);
+ }
+ 
+ 
+
+---
+base-commit: 666539eecdf4db623f5e3c3e55cf9f2dfad24aa4
+change-id: 20261116-surface-battery-suspend-b5adbbfe80af
+
+Best regards,
+--  
+Ricky Sorrell <rmsorrell@gmail.com>
+
 
