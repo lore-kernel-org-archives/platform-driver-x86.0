@@ -1,95 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.182
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794955944;
-	b=b65ju9ZeELMegFViCSBbLKBb0z0f37/MpC+6JO3ko8wIxkFcuHHCdgR887Kf1gd75/TH
-	 JNsiw2wj13aqBnhGiDBqc5YUl+c3d+7SMEpDCFTx9HPwGf9CFK/g7gWJ826cK9ta+cCL9
-	 +zu82itrbmeKjkY/wzaxHdkdisXh72jS7c9aWmTRXx9v+Hg/gx8k2xHdITYyEhOjs94x9
-	 /acX05ken2hdKK4A/D5MAXyo0UWqZ+xYY5QtHlLH5TwYZ8W2mYH+sXjamvElcqPyAdtDC
-	 0Dp373PnOTDWbLjbssmA/BVPDkcHgkdChVZi0oMoYNBs0m1Ys39yyFmF/iEn5oKQ6UQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794955944;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
-	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
-	bh=nAXqlha57/BySkBu84yaIoC40sFnXR9x2ALMrfUK9MM=;
-	b=pvjTmwq/bN1U40zeNFfhfMaAU5Gs9lwyAUreXz95FsMi1/0dA8UALOC8TAv7cstdcg+Y
-	 /P0m6eK2YBlQXEyO7KajvhWtih2Ya0ov8z1b23lHVx2RNHz+PwUgUzJVHAfETmzZyVBe/
-	 TRmW3Qt1c2ZJ7ZBe9JX/owP7lRCU5yi7Sxx0DLk0y12l0ObBd0iQ6pjCk9GU1AbmMRtML
-	 tcbHjUSs27c9Fg0k8b3y2/Jw1xhuUl8fFIoB4Jn6SumZ9ufQYWAn7GdpUv/Mxqxe2D+n3
-	 ESdpAxsfGBiH3FnOK1U/LgxmtZ1KUTC8mLf/hc2m2DKCWcY/hAqIX6JEe37KSxxGtOA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HlzYWFN0;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.182
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794956965;
+	b=446/Ta5ILhhqXRest0ELYtoQ8khT+wq9iU99lh9tjI2bLmHlTRLftx1f1roqRGdIIjr1
+	 GkCq34dJM2ULncluFR6BtyFj+CeTv0gMxSqc7XR/tZh4CZ6srwAyE/rqjVqF2gDZlaxdS
+	 sPB5CkbmZ1rzTk4rhJDsvNXDNwnh+LcjTrHvRzKv+uwJkaIp39L4DTgoLyz+8XPVcwQFz
+	 5eNxv5LOfKl7zyp7T8gWkCJKrycULnVBksMtbxfQ1U8DGKf2SqDt9Qu51UOD8ICFqc8Hu
+	 A0MCoQoY1uyxT2kGqidGfq5mGrarNetokSZ+rf1br8hkczo3Gz72GVYKNNXjQlcoxpg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794956965;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=dFkPeqI1YsZpwMuujURc1wVh0W1MRwBf/9b3hgnBI8M=;
+	b=BfGhRseVTSo7A5Y28ZcXHNm6j87FJjb4EmEMmy6aTF7+UwqTHyScEpQPdkUzG1Lj94IS
+	 SngSCDtxnMz8A1aV3kcEEuYGETPJjRdDYg8pmBD6BI/Gvy9QpqazbHGsKXRLAlwXEHV53
+	 /7hgV/9FTGpok0QntpU42I3rDfcX3pOjQz3Rimldbe5kfXkeekA2gFlGWujQnBkMknLIC
+	 Nxc0iVD9ABmfe60qWh7KjrD7oJJwZtnthdBjHsxLc1URv2zq5QuaIQDI7gSNMLgcfOY7i
+	 QRNiIq7qISO9FDmn/qSuwPF7ioNe9Ftstj9G0NSpekPOJ69oxsXL8W4Jz+brP2/HRmg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U0V3eQPb;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D6B606A31C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 22:52:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1D6B606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4161606A31C;
+	Tue, 17 Nov 2026 23:09:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F4161606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HlzYWFN0
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-8b4d07494b0so18840547b3.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 14:52:23 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794955942; cv=none;
-        d=google.com; s=arc-20260327;
-        b=oGO8p1jFnN+ktoYCPwnOw5NdY6Nehc26McTPI0ovamgtBSq5044p+WTZ0XxjlUJ+o3
-         MDjIwvbOs12ohNmoeI3LtkIjNONM5uL3u+I+RQHBsT18jEyC+VVofbb+RwVxwUXDoWOm
-         Vb+XZ8qLQ/iJ6WY7UTZHZblwI2hvoXpDhMbZJy28ED8fVOm+K0tj7pe9byi0bPNEHc9z
-         LgyIvpW8SGBOvghDaJINjeaQYdpKaD/zph3BFb9XbOzOnHmsxmyEtQnCJ59ikYYe7hdd
-         cGd1Tjyy71WSxCvXpk02g5RqxBppDTdxymBbEFVJBzZvqM+oPZJLkhFliauQ4Nw2SyCr
-         LDEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=nAXqlha57/BySkBu84yaIoC40sFnXR9x2ALMrfUK9MM=;
-        fh=4zCxmfUAYXFKWlhrg3yega2iIWJe7umuyYnue3h3g2g=;
-        b=JselJOknvyzoBxO6kJIUCCcV0x8O6psKROhLBaJ9uvgsQsvOW7Q4gLqp+9gz8tuc6N
-         gz3OOHy8B5q8UyW4nbk2KqHMla7ziGNllM30ixQm3+RNkYAB86Z1+l1NEY4LHuVXvrZw
-         XrRu0DIzBRFw8VZqVVvXk+nkFQmnJVKRUhs9zdO04zRzpmgHfBBpNXBeaSLx5IbtfgZE
-         jsIVQTfiN7M+TrgcIn46tDeckT3Y088mF7x2j/pbZLkK0ajcM+lg78RB0NkbumKnP8ma
-         nFEyRLfF+OafYEQ5g+XJhL7AmakBwjHCCBuCv1dK++7nR9CJufwmPrQVLlod7XXkiplh
-         t7Sg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794955942; x=1795560742; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=nAXqlha57/BySkBu84yaIoC40sFnXR9x2ALMrfUK9MM=;
-        b=HlzYWFN0UnAINJ+f8PX3s2UsJJFwkvU0Jt/TX/TzRzI8lEiTvP+Dnt3KkFgO50xyTx
-         vFMAtPYkvy0fCWAPHe1TbDOVzw5fb+/POuSJ4sQxtyms8fEHM0HRrdFmnmHlEkEpCUzp
-         Sp/BnZqz3p5Hk9M08yn/tjU/qc/y3vEh5gleMba76yLDSKIFxUWTbsLOm4CDVLgouEqA
-         NhV3OxOLJI10KU+SfUqiOXP2NMU3jkg69Vu1jTOZPtAG8ux5cZCAUu3+zT2vL4YS9zaI
-         1WKgXjMQtbjeHB7w2Qg8iUmPmRiOVHKO+oWTYu4ojJ/T4TeTMcsCyJ5+B/k0eXr14cci
-         zdyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794955942; x=1795560742;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=nAXqlha57/BySkBu84yaIoC40sFnXR9x2ALMrfUK9MM=;
-        b=ezPNG3I30RrzR8qMyf87NIGuH3RMJgMKYkk71O7ErVXVW+tXzz+qxTtqUwitlH0Uwu
-         MUvd+f+k4Fj9PJAWSZKcHjPFuN3JC0enZuPB7HaaH5/OQjD9kuL4ZRs5tI/82tVpCx5L
-         m25DAJ7gRUy1kq1Kl0PynmiNXRjXWyjPGhjGQ1YbyZ0U9ehgBgrqcou0lBHdiS0aRmSG
-         mV1JUzQB7Auzso0DwffIJzQQWiiqzKKggEFGLKtGD2RLL2vqh3g0bgOzOZgv5EEWHt6F
-         iOCYksLp56kfHMQISgEs4dLsPnMoFuhd0v3ZGbx86uaqrV+DwRmBClFZGm9gygkUeunH
-         0CHg==
-X-Gm-Message-State: APuU4Z949Z8TVbQtIwukwnFn8RhRVCIMsw5GcSh2E7GlJ12Fcor/NM1X
-	4/MMTbXhhCOiEWcWBbMTt5WcrdiZg1KiYWdPq6Jp7cM+jZFDBjWS9Rpc//WU8DkL5exvLYG2cFL
-	XnakPH+epYEm/dvy7ShhV43wGassuG7KQFraJ74arUQ==
-X-Gm-Gg: AZFdTZe6IQ5B3TENo7h23NbfaKphUjE2Qm6zCnu/HJJVS/Sh1+o479tupobbCqx3USS
-	2DKvz6ylJxSVi5lmGHnRRchGoVayiQ7vHeq/Ska0kxDH5c6kVzJt9jIMlL61YjtR8yWqsknzCuv
-	sZqwTkO26YZxSax4VLeJDdWrFvWYa1Lsck5h/Qu5/kcXo6V7mb9nZB7ZOIIXDsyrM0Zv8GHzDlR
-	v7geOaxdbYmjs7MTaRVVRxOnxnwv8R/kliQ56kA1ZoRQXGaAoykjFZw3tJKRxRQQX94UKroVzVZ
-	U+fEOYKkR+TxOMF29BuSnpvx0HiIKdwIi7mzp/9nbbqhY0cozNlyF05tiTulO8QQVZdbq4XVIOC
-	jDy4tcKkryBPkz5Y+2L3rK9/Uj3Sai6aZoyMYU9kEyhjCgWfVuhSgDtuZblw=
-X-Received: by 2002:a05:690c:607:b0:8b2:26d5:7878 with SMTP id
- 00721157ae682-8b4fed748e7mr3622077b3.25.1794955942073; Tue, 17 Nov 2026
- 14:52:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U0V3eQPb
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794956965; x=1826492965;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ibKdoUuCga2+n4HXehZ/zu9gXI8pFOg/f+UavUylCEk=;
+  b=U0V3eQPbZngUyWZz7DjYfxeE7cMhPJw9cC3CZLdjtUKzTm2XTOLxB1A0
+   GmbDH9XxyiXjxMp9mZk2GpyQLB3HtKR37KtMEdqYFJ/laxm06wFmUoLjt
+   yyf4Y7Lks2C/J1d3dizyDV5HwWbW+dua8NZvNcR8/Po/cvGLHG80d8wEj
+   rQz2VZdBgAHaXDCNd3RAA0K950muUW7GUaXlKlKqHs8JBrEZulawrOkk6
+   q9ztQbLWiETUGpS+I1hSYNnIkWHoinslmw3iZB6Zw8Re5K2Igy+QWcH7G
+   gOZCfqnLiqRAAHl4NgQaWQEdvwqQeLoM28zPIpnniF7uFnfdFFVYLTgVf
+   Q==;
+X-CSE-ConnectionGUID: 0vLjLevnRpSau51iC5GOZQ==
+X-CSE-MsgGUID: Zdc3Tc5ZRmGe7XWHfQUvng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3633081"
+X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
+   d="scan'208";a="3633081"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 15:09:23 -0800
+X-CSE-ConnectionGUID: oo2SD/NsTM6za1MGSbWH6Q==
+X-CSE-MsgGUID: pDsslFIHTye8x2DeCOgHyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
+   d="scan'208";a="11780726"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.79])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 15:09:20 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 18 Nov 2026 01:09:17 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, teolyub@gmail.com
+Subject: Re: [PATCH 1/2] platform/x86: dell: Add new dell-wmi-pega driver
+In-Reply-To: <848ebb18-b9bf-4747-9403-fa8da4fba2ad@gmx.de>
+Message-ID: <25490090-1d6e-725b-04e1-659faec01db2@linux.intel.com>
+References: <20261117214604.397131-1-W_Armin@gmx.de> <f71860dd-cf85-ddd9-8e47-7279205f46ab@linux.intel.com> <848ebb18-b9bf-4747-9403-fa8da4fba2ad@gmx.de>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -99,115 +78,380 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-From: Ali Aliyev <aliyov.code@gmail.com>
-Date: Tue, 17 Nov 2026 23:52:11 +0100
-X-Gm-Features: AclHuK9gh5u11yy94495WShlr5adp6cSc4zpxXnRJin2PUJqvRnPNk1fGNoIdhU
-Message-ID: <CAMKDk=m+B2cDgMmBH4w2z-ei6=W6ZU3KRaP+qdOpMstaO246pQ@mail.gmail.com>
-Subject: asus-wmi: UX535QE BIOS GPU_FAN_CTRL (0x00110014) writes the CPU fan
- EC byte
-To: platform-driver-x86@vger.kernel.org
-Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-122444894-1794956957=:1563"
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On the ASUS Zenbook UX535QE, the BIOS implementation of the WMI device
-ASUS_WMI_DEVID_GPU_FAN_CTRL (0x00110014) changes the CPU fan's EC
-control byte instead of the GPU fan's. Requesting "GPU fan full speed"
-therefore spins up the CPU fan, and the GPU fan stays on automatic.
+--8323328-122444894-1794956957=:1563
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Machine:
-  Product: Zenbook UX535QE_UM535QE (board UX535QE)
-  CPU/GPU: Ryzen 7 5800H + RTX 3050 Ti (fan is EC-driven; nvidia-smi
-           reports no fans)
-  BIOS:    AMI, UX535QE_UM535QE.310, 11/21/2022
-  Kernel:  7.2.13-200.fc44.x86_64 (Fedora 44)
+On Tue, 17 Nov 2026, Armin Wolf wrote:
 
-DSDT (OEM ID "_ASUS_", OEM Table ID "Notebook", rev 0x01072009), DEVS
-method of the ATK WMI device:
+> Am 17.11.26 um 23:17 schrieb Ilpo J=C3=A4rvinen:
+> > On Tue, 17 Nov 2026, Armin Wolf wrote:
+> >=20
+> > > A user has reported that the WMI hotkey events on Dell All-In-One
+> > > machines need to be manually enabled on some models thru a separate
+> > > WMI device. This WMI device seems to be present on many other models
+> > > but has no effect on them.
+> >=20
+> > Can you rephrase this to not textually depend on "user" or "user's
+> > report", just state what the problem is, not how you became aware of it=
+=2E
+> >=20
+> > > Add a small driver for enabling support for this WMI device. This
+> > > enables the HDMI Input key on the Dell OptiPlex 7400 All-in-One
+> > > machine.
+> > >=20
+> > > Reported-by: Teodora <teolyub@gmail.com>
+> > > Closes:
+> > > https://lore.kernel.org/platform-driver-x86/0TZENT.54P2IBFQRED22@gmai=
+l.com
+> > > Tested-by: Teodora <teolyub@gmail.com>
+> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > > ---
+> > >   Documentation/wmi/devices/dell-wmi-pega.rst | 82 ++++++++++++++++++
+> > >   MAINTAINERS                                 |  6 ++
+> > >   drivers/platform/x86/dell/Kconfig           | 13 +++
+> > >   drivers/platform/x86/dell/Makefile          |  1 +
+> > >   drivers/platform/x86/dell/dell-wmi-pega.c   | 93 ++++++++++++++++++=
++++
+> > >   5 files changed, 195 insertions(+)
+> > >   create mode 100644 Documentation/wmi/devices/dell-wmi-pega.rst
+> > >   create mode 100644 drivers/platform/x86/dell/dell-wmi-pega.c
+> > >=20
+> > > diff --git a/Documentation/wmi/devices/dell-wmi-pega.rst
+> > > b/Documentation/wmi/devices/dell-wmi-pega.rst
+> > > new file mode 100644
+> > > index 000000000000..935c8511594b
+> > > --- /dev/null
+> > > +++ b/Documentation/wmi/devices/dell-wmi-pega.rst
+> > > @@ -0,0 +1,82 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0-or-later
+> > > +
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +Dell All-In-One Series Platform Integration (dell-wmi-pega)
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +
+> > > +Introduction
+> > > +------------
+> > > +
+> > > +Many Dell All-In-One devices contain a WMI device for notifying the
+> > > underlying platform
+> > > +of various OS-specific events like power up, shutdown and backlight
+> > > brightness control.
+> > > +
+> > > +Not implementing support for this WMI device might prevent hotkeys
+> > > exposed over WMI from
+> > > +working on some models.
+> > > +
+> > > +WMI interface description
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > > +
+> > > +The WMI interface description can be decoded from the embedded binar=
+y MOF
+> > > (bmof)
+> > > +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+> > > +
+> > > +::
+> > > +
+> > > + [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),
+> > > +  Description("Class used to operate method - WMBC"),
+> > > +  guid("{2D703EE8-36AC-4F88-BDB5-7556CE6B2946}") : ToInstance]
+> > > + class AcpiOSD_WMBC_method : WMIMethod {
+> > > +
+> > > +   [key, read]
+> > > +   string InstanceName;
+> > > +
+> > > +   [read]
+> > > +   boolean Active;
+> > > +
+> > > +   [WmiMethodId(1), Implemented, read, write,
+> > > +    Description("Invoked by AP when system up.")]
+> > > +   void PegaOemNotificationStartUp([out, Description("Return Value")=
+]
+> > > uint32 RetVal);
+> > > +
+> > > +   [WmiMethodId(2), Implemented, read, write,
+> > > +    Description("Invoked by AP when system is going to off state.")]
+> > > +   void PegaOemNotificationStop([out, Description("Return Value")] u=
+int32
+> > > RetVal);
+> > > +
+> > > +   [WmiMethodId(3), Implemented, read, write,
+> > > +    Description("Invoked by Application to tune up brightness.")]
+> > > +   void PegaOemNotificationBrightnessUP([out, Description("Return
+> > > Value")] uint32 RetVal);
+> > > +
+> > > +   [WmiMethodId(4), Implemented, read, write,
+> > > +    Description("Invoked by Application to tune down brightness.")]
+> > > +   void PegaOemNotificationBrightnessDown([out, Description("Return
+> > > Value")] uint32 RetVal);
+> > > +
+> > > +   [WmiMethodId(5), Implemented, read, write, Description("Reserved.=
+")]
+> > > +   void PegaOemNotificationRSVD1([out, Description("Return Value")]
+> > > uint32 RetVal);
+> > > +
+> > > +   [WmiMethodId(6), Implemented, read, write, Description("Reserved.=
+")]
+> > > +   void PegaOemNotificationRSVD2([out, Description("Return Value")]
+> > > uint32 RetVal);
+> > > + };
+> > > +
+> > > +The return value of each WMI method should be equal to the WMI metho=
+d ID.
+> > > +
+> > > +WMI method PegaOemNotificationStartUp()
+> > > +---------------------------------------
+> > > +
+> > > +Notifies the platform that the OS is operational. On some models thi=
+s WMI
+> > > method also enables
+> > > +reporting of hotkey events over WMI.
+> > > +
+> > > +WMI method PegaOemNotificationStop()
+> > > +------------------------------------
+> > > +
+> > > +Notifies the platform that the OS is shutting down.
+> > > +
+> > > +WMI method PegaOemNotificationBrightnessUP()
+> > > +--------------------------------------------
+> > > +
+> > > +Notifies the platform that the user wants to increase the backlight
+> > > brightness. This WMI method
+> > > +usually only forwards this request to the acpi-video driver, so the
+> > > dell-wmi-pega driver does
+> > > +not use it.
+> >=20
+> > Could these paragraphs be reflowed to 80 chars as long textual lines ar=
+e
+> > harder to read (eye movement required).
+>=20
+> Sure, will do.
+>=20
+> > > +WMI method PegaOemNotificationBrightnessDown()
+> > > +----------------------------------------------
+> > > +
+> > > +Notifies the platform that the user wants to decrease the backlight
+> > > brightness. See
+> > > +``PegaOemNotificationBrightnessUP()`` for details.
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index bd31e734669e..fb9a80f96900 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -7534,6 +7534,12 @@ M:=09Pali Roh=C3=A1r <pali@kernel.org>
+> > >   S:=09Maintained
+> > >   F:=09drivers/platform/x86/dell/dell-wmi-base.c
+> > >   +DELL WMI PEGA DRIVER
+> > > +M:=09Armin Wolf <W_Armin@gmx.de>
+> > > +S:=09Odd Fixes
+> > > +F:=09Documentation/wmi/devices/dell-wmi-pega.rst
+> > > +F:=09drivers/platform/x86/dell/dell-wmi-pega.c
+> > > +
+> > >   DELL WMI SYSMAN DRIVER
+> > >   M:=09Prasanth Ksr <prasanth.ksr@dell.com>
+> > >   L:=09Dell.Client.Kernel@dell.com
+> > > diff --git a/drivers/platform/x86/dell/Kconfig
+> > > b/drivers/platform/x86/dell/Kconfig
+> > > index 9f0016056d7e..289379383ccb 100644
+> > > --- a/drivers/platform/x86/dell/Kconfig
+> > > +++ b/drivers/platform/x86/dell/Kconfig
+> > > @@ -228,6 +228,7 @@ config DELL_WMI_AIO
+> > >   =09depends on ACPI_WMI
+> > >   =09depends on INPUT
+> > >   =09select INPUT_SPARSEKMAP
+> > > +=09imply DELL_WMI_PEGA
+> > >   =09help
+> > >   =09  Say Y here if you want to support WMI-based hotkeys on Dell
+> > >   =09  All-In-One machines.
+> > > @@ -262,6 +263,18 @@ config DELL_WMI_LED
+> > >   =09  This adds support for the Latitude 2100 and similar
+> > >   =09  notebooks that have an external LED.
+> > >   +config DELL_WMI_PEGA
+> > > +=09tristate "Dell WMI AIO Platform Support"
+> > > +=09default m
+> > > +=09depends on ACPI_WMI
+> > > +=09help
+> > > +=09  This option adds support for WMI-based platform integration on =
+Dell
+> > > All-In-One machines.
+> > > +=09  This driver is necessary for enabling the delivery of hotkey ev=
+ents
+> > > to the dell-wmi-aio
+> > > +=09  driver on some machines.
+> > > +
+> > > +=09  To compile this drivers as a module, choose M here: the module =
+will
+> > > be called
+> > > +=09  dell-wmi-pega.
+> > > +
+> > >   config DELL_WMI_SYSMAN
+> > >   =09tristate "Dell WMI-based Systems management driver"
+> > >   =09default m
+> > > diff --git a/drivers/platform/x86/dell/Makefile
+> > > b/drivers/platform/x86/dell/Makefile
+> > > index 470874c6e6e6..46c91c240a2c 100644
+> > > --- a/drivers/platform/x86/dell/Makefile
+> > > +++ b/drivers/platform/x86/dell/Makefile
+> > > @@ -27,5 +27,6 @@ obj-$(CONFIG_DELL_WMI_AIO)=09=09=09+=3D
+> > > dell-wmi-aio.o
+> > >   obj-$(CONFIG_DELL_WMI_DESCRIPTOR)=09=09+=3D dell-wmi-descriptor.o
+> > >   obj-$(CONFIG_DELL_WMI_DDV)=09=09=09+=3D dell-wmi-ddv.o
+> > >   obj-$(CONFIG_DELL_WMI_LED)=09=09=09+=3D dell-wmi-led.o
+> > > +obj-$(CONFIG_DELL_WMI_PEGA)=09=09=09+=3D dell-wmi-pega.o
+> > >   obj-$(CONFIG_DELL_WMI_SYSMAN)=09=09=09+=3D dell-wmi-sysman/
+> > >   obj-$(CONFIG_DELL_DW5826E_RESET)=09=09+=3D dell-dw5826e-reset.o
+> > > diff --git a/drivers/platform/x86/dell/dell-wmi-pega.c
+> > > b/drivers/platform/x86/dell/dell-wmi-pega.c
+> > > new file mode 100644
+> > > index 000000000000..ddb1b6cc6b1c
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/dell/dell-wmi-pega.c
+> > > @@ -0,0 +1,93 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * WMI platform integration for Dell All-In-One series.
+> > > + *
+> > > + * Copyright (C) 2026 Armin Wolf <W_Armin@gmx.de>
+> > > + *
+> > > + * Based on earlier work by Teodora <teolyub@gmail.com>.
+> > > + */
+> > > +
+> > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > > +
+> > > +#include <linux/cleanup.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/device/driver.h>
+> > > +#include <linux/dev_printk.h>
+> > > +#include <linux/kernel.h>
+> >=20
+> > What for is this?
+> >=20
+> > I suspect direct device.h include isn't necessary either (and it's
+> > anyway guaranteed to come through wmi.h).
+>=20
+> Good question, i copied it from one of the other WMI drivers.
 
-    If ((IIA0 == 0x00110013))                     // CPU fan
-    {
-        Local0 = ^^PCI0.SBRG.EC0.RRAM (0xCC, 0x30)
-        If ((IIA1 == Zero))
-            { Local1 = (Local0 & 0xFFFFFFFFFFFFFFBF) }
-        ElseIf ((IIA1 == One))
-            { Local1 = (Local0 | 0x40) }
-        ^^PCI0.SBRG.EC0.WRAM (0xCD, 0x30, Local1)
-        Return (One)
-    }
+Thanks how they usually end up everywhere. kernel.h is very rarely=20
+needed these days.
 
-    If ((IIA0 == 0x00110014))                     // GPU fan
-    {
-        Local0 = ^^PCI0.SBRG.EC0.RRAM (0xCC, 0x10)
-        If ((Local0 & 0x02))
-        {
-            Local0 = ^^PCI0.SBRG.EC0.RRAM (0xCC, 0x30)   // <-- 0x30
-            If ((IIA1 == Zero))
-                { Local1 = (Local0 & 0xFFFFFFFFFFFFFFBF) }
-            ElseIf ((IIA1 == One))
-                { Local1 = (Local0 | 0x40) }
-            ^^PCI0.SBRG.EC0.WRAM (0xCD, 0x30, Local1)    // <-- 0x30
-            Return (One)
-        }
-        Return (Zero)
-    }
+> I will remove both includes in the next revision.
+>=20
+> >=20
+> > > +#include <linux/module.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/types.h>
+> > > +#include <linux/wmi.h>
+> > > +
+> > > +#define PEGA_GUID=09"2D703EE8-36AC-4F88-BDB5-7556CE6B2946"
+> > > +
+> > > +enum dell_pega_method {
+> > > +=09DELL_PEGA_NOTIFICATION_STARTUP=09=09=3D 0x01,
+> > > +=09DELL_PEGA_NOTIFICATION_STOP=09=09=3D 0x02,
+> > > +=09DELL_PEGA_NOTIFICATION_BRIGHTNESS_UP=09=3D 0x03,
+> > > +=09DELL_PEGA_NOTIFICATION_BRIGHTNESS_DOWN=09=3D 0x04,
+> > > +=09DELL_PEGA_NOTIFICATION_RESERVED_1=09=3D 0x05,
+> > > +=09DELL_PEGA_NOTIFICATION_RESERVED_2=09=3D 0x06,
+> > > +};
+> > > +
+> > > +static int dell_wmi_pega_invoke(struct wmi_device *wdev, enum
+> > > dell_pega_method method)
+> > > +{
+> > > +=09struct wmi_buffer input =3D { };
+> > > +=09struct wmi_buffer output;
+> > > +=09int ret;
+> > > +
+> > > +=09ret =3D wmidev_invoke_method(wdev, 0x0, method, &input, &output,
+> > > sizeof(__le32));
+> > > +=09if (ret < 0)
+> > > +=09=09return ret;
+> > > +
+> > > +=09__le32 *result __free(kfree) =3D output.data;
+> > > +=09/* The return value should always be equal to the WMI method ID *=
+/
+> > > +=09if (le32_to_cpu(*result) !=3D method)
+> >=20
+> > Include for le32_to_cpu()
+>=20
+> What would be the correct include for this?
 
-The GPU branch is a copy of the CPU branch with a dGPU-present check
-added, but the EC address was not changed. The DSTS side is correct:
-it reads CPU RPM with RTAH (Zero) and GPU RPM with RTAH (One).
+linux/byteorder/generic.h
 
-The EC has a separate GPU fan block that mirrors the CPU block
-(CPU 0x30.., GPU 0x37..). I tested by hand, through the BIOS's own
-RRAM/WRAM methods:
+--=20
+ i.
 
-  EC RAM 0x37 = 0x8b (auto)  -> GPU fan ~1900 RPM
-  EC RAM 0x37 = 0xcb (|0x40) -> GPU fan ~5700 RPM
-  back to 0x8b               -> returns to auto cleanly
+> > > +=09=09return -EIO;
+> > > +
+> > > +=09return 0;
+> > > +}
+> > > +
+> > > +static int dell_wmi_pega_probe(struct wmi_device *wdev, const void
+> > > *context)
+> > > +{
+> > > +=09int ret;
+> > > +
+> > > +=09ret =3D dell_wmi_pega_invoke(wdev, DELL_PEGA_NOTIFICATION_STARTUP=
+);
+> > > +=09if (ret < 0)
+> > > +=09=09dev_err(&wdev->dev,
+> > > +=09=09=09"Failed to notify platform of startup, some hotkeys
+> > > might not work\n");
+> >=20
+> > braces for multiline constructs.
+> >=20
+> > > +
+> > > +=09return ret;
+> > > +}
+> > > +
+> > > +static void dell_wmi_pega_shutdown(struct wmi_device *wdev)
+> > > +{
+> > > +=09int ret;
+> > > +
+> > > +=09ret =3D dell_wmi_pega_invoke(wdev, DELL_PEGA_NOTIFICATION_STOP);
+> > > +=09if (ret < 0)
+> > > +=09=09dev_warn(&wdev->dev, "Failed to notify platform of
+> > > shutdown\n");
+> > > +}
+> > > +
+> > > +static const struct wmi_device_id dell_wmi_pega_id_table[] =3D {
+> > > +=09{ PEGA_GUID, NULL },
+> > > +=09{ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(wmi, dell_wmi_pega_id_table);
+> > > +
+> > > +static struct wmi_driver dell_wmi_pega_driver =3D {
+> > > +=09.driver =3D {
+> > > +=09=09.name =3D "dell-wmi-pega",
+> > > +=09=09.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> > > +=09},
+> > > +=09.id_table =3D dell_wmi_pega_id_table,
+> > > +=09.probe =3D dell_wmi_pega_probe,
+> > > +=09.remove =3D dell_wmi_pega_shutdown,
+> > > +=09.shutdown =3D dell_wmi_pega_shutdown,
+> > > +=09.no_singleton =3D true,
+> > > +};
+> > > +module_wmi_driver(dell_wmi_pega_driver);
+> > > +
+> > > +MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
+> > > +MODULE_DESCRIPTION("Dell All-In-One series platform integration");
+> > > +MODULE_LICENSE("GPL");
+> >=20
+> > Just the mandatory nitpicking :-), seems fine otherwise.
+>=20
+> Thanks,
+>=20
+> i will wait with sending a v2 until Teodora has tested the second patch.
+>=20
+> Thanks,
+> Armin Wolf
+>=20
 
-So bit 0x40 of EC 0x37 is the GPU equivalent of bit 0x40 of EC 0x30,
-and the BIOS method should be using 0x37.
-
-Impact on asus-wmi: because DSTS reports 0x00110014 as present,
-asus-wmi sets gpu_fan_type = FAN_TYPE_SPEC83 and exposes pwm2_enable
-in the asus hwmon device on this model. pwm2_enable_store() calls
-asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_FAN_CTRL, ...), which goes
-into the branch above, so writing pwm2_enable changes the CPU fan
-(EC 0x30) and leaves the GPU fan unchanged. fan2_input (GPU RPM) reads
-correctly. pwm1_enable (CPU, 0x00110013) works as expected.
-
-Tested on this kernel, with the dGPU kept awake (power/control = on,
-runtime_status = active), idle and cool:
-
-  before:               fan1_input 0     fan2_input 0
-  echo 0 > pwm2_enable: fan1_input 5500  fan2_input 0   (after 6 s)
-  echo 2 > pwm2_enable: back to auto
-
-So "GPU fan full speed" through pwm2_enable runs the CPU fan at full
-speed, and the GPU fan doesn't move.
-
-Two smaller things seen along the way:
-
-- When the dGPU is runtime-suspended, the BIOS check on EC 0x10 bit
-  0x02 fails and the method returns 0, so every write to pwm2_enable
-  fails with -EIO. On this machine the dGPU is suspended most of the
-  time, so the attribute normally just returns I/O errors.
-
-- After both of those writes failed, pwm2_enable still read back 0
-  ("full speed"), even though nothing had been set. The value shown
-  doesn't reflect the hardware state.
-
-I have a small out-of-tree module that works around this by calling
-\_SB.PCI0.SBRG.EC0.RRAM/WRAM with address 0x37. It only loads on this
-DMI board and refuses to load unless EC 0x37 already reads 0x8b or 0xcb.
-I'm not proposing it for mainline as-is. I'm raising this mostly so
-it's on record, and to ask whether a DMI quirk in asus-wmi (skip or
-redirect GPU_FAN_CTRL on UX535QE) would be acceptable. If so, I'm happy
-to test patches.
-
-I've reported this to ASUS as well. I can provide the full DSDT, acpidump
-output, or EC RAM dumps if useful.
-
-Thanks,
-Ali Aliyev
+--8323328-122444894-1794956957=:1563--
