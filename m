@@ -1,117 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.50
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794940564;
-	b=NNBFULZYD++QT+sHF3snbCldMuYkUGcucC06rac9KlwQSpvfoOYiIGHSVxAJ1CRMWdIa
-	 NfdguHGNW0sST2nxcy8Q0YO9Secr5tuYbwuv9FLqJ3L6h5kzmyNPfecqfFZwA2X/vT78n
-	 s2ncC6avjNc9WE88UaQ5C/RR+cnpxm3l1sU+x07esitFJIeMNJp5Ah9L01HK7sfbYlNaR
-	 OoiDQOLLEh8pdOgdSFNIo2wXdnacKIfp1IFbPEDH955MziIXQK5+R+WZO3BbhDYtLqq6M
-	 KO9VXoiiBnMXzHENbXGWfyFJTm8w+UV4HEKSYbgsxVB/OzYFog+w/iJiDovRcl0DpcA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794940564;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.178
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794943152;
+	b=lVjQNbwX9eTxaAk2EcBzP5G8HFSUvNo+jXYghNELEIxGz34D7j5NYACXlu/ecbPqJjmw
+	 vtiJnWZ8ArJLesYRWM6vPiHrIqTMFeqcEAFusRIE83v/Uh+zn2uhdP4gNx9MRAX8YbfjY
+	 qi517P3qSSj79E65m/NQF4qvBLLXF7NGR85yucZrzybIVYpXzUTGUZfUKVI4keAGhAkEJ
+	 1RyI+JSYBfeNDYbQf33/WrPvWMu8Snqtr4nq3SAQ+qA/zeK+aD7flsaYSEQQ+I5Yod8vY
+	 kYsE2apQcsmF4fvrdD0eCVSQeJPPRe9sOwmyPIvylthhL8RFsvvCU0mlClFxSylFhRg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794943152;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=Rd0/jqMJRNHoYlSsIu6TbBr2fty8j4sVOq9BB4+EiWo=;
-	b=IrYYXfZuxEIWuAMMBS43xRzYphxR7NhS8CdzojbXNG+5jCyzVFvMOIQKkUWACv70QlYj
-	 pTN20CKLStjzzUB/31QfpT9NNpAeI3lQ9tS5qB3vG0VL0BpZl/Wr2dKTeo/AE2xlRAHrm
-	 B0oFrN1c7B9KQxM2EGFBQM6TS7jiH5MzVusw7T09wvn6IbJ6Fos4CPg7JLbFWYJp/+Hhz
-	 klZ76uBagbZoe5r0NTUMY/TRPpRbxDC0JOtXtvswqz6enXTISP1Lt+poCZhzsZe/pImTh
-	 fseznu5acFJN3URohkhe1XR1NPhzZhPYQDPeh+KL0LZR+NJP5ZQSoUXG0UtOB2a2YzQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
+	bh=LMTPzjShjCPD69osaUUpYC4vaplqgyOI3+4p6kklAx0=;
+	b=hMyKa4P7Vp2mFt6BDVC8de2mzUNOIFtpKUMkxTEaLYnRSN6jdLZay9O8vmRAHUTCYVAa
+	 KhoH+omGW8rKKN41E6R42BOkR3C7u8Rw0P4ypr+UufJjfd5yBFiqWNzck8NQyDgkUlVBY
+	 O4Yxk0DfxLDCEYstGQzeZGes/RbhC/TaMoFhtk/mENsgk3qWdinllIRpAX4oqiT50y2m1
+	 Bvjy5g6j7zv1qMD6D2cODGnlt7kKQrfFgxPI1I02Tfm1LR0KNNnkt4wromWY82XVSv2iS
+	 /2KnVFHQ56Bc7QrTopT1XEBoDMC0Whydoc+IUZKbtvbkL1zZ0etT/vLFiBetCfpH6hA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=NY7Dxxv6;
-	arc=none smtp.remote-ip=74.125.82.50
-Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=OF0a8zmh;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.178
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A31606A32F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 18:36:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 90A31606A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC88606A32F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 19:19:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6BC88606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=NY7Dxxv6
-Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-1ae58d17cd9so124313c88.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 10:36:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=OF0a8zmh
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-53ec2cc397aso39765b6e.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 11:19:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794943151; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Jmap+vji2PRiS9Q8GM/HtiuFooK659h8YMGuWZ6lQAbY6sXnZi4yAoCR3am0vECO7g
+         85hTS/VzhsMFjUTePdwa9+5WyQvorCLxJ6RX8qmFONDHHbXb0qGkW3s4CpVJhsEAb8Nm
+         h60qeozfEuY4fNY7VoYx4znVsYXO79Vg01yvJ/oF/qGTbdME5Qwi1wAt5F9J47nKKa5E
+         694rnU5w0WznJ4KKYB7VGnvaOPCAcLVR5cAmXVJ8Nv8QIQKo2tEFGZCMhsE+K3lVcdzA
+         37HCmX37b9Sv6I4wjiaaPxCJBbcZD2xmvcVBUHbF+m8XTB9bvapQTNeUj5v7DTEAx7vU
+         2syw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=LMTPzjShjCPD69osaUUpYC4vaplqgyOI3+4p6kklAx0=;
+        fh=xZh46pr9wBI3TG1zPzVO3FoaL2aiEvOQmuc2pE8ykVo=;
+        b=f58MGy9Wgk7zp7Mw0PQoFOpMYuK+H1g6pTPlhoFfxN/Ke2JsiEFsQZmrvOFJzn3PB9
+         Ii0RTK28KkYBSMuFlTgQgb7Uc2HdLsuKDIQR0vgg+UDXm4Y55rVBf3IXJ50b7uVietiu
+         DnwSZPf4AGP1H2xd7Ktno+S7Ky0EZDavX1GhHmBtKIuFCkL18jWXB9feWliJdtEXXka7
+         ZWKc+8RT4H3d7WZtY84igT3v+VJLXJSp22QdDcRBJg+pcN8/QX0UKXJNzF6MWPCtUZT/
+         yVxiWR2Z+x9lVCta0ZnpG9lnJVtsqCSDwHgspGcnWFmTKBoZg/96lgRoVe5XcD6GQ+S6
+         f+iw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794940563; x=1795545363; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Rd0/jqMJRNHoYlSsIu6TbBr2fty8j4sVOq9BB4+EiWo=;
-        b=NY7Dxxv6aQyYfqSCSaWjfqzlhJ/a0bl+46/lxBlI2EQayiWmonn8eCPcSEZESRGl0F
-         O5M4p500Fwjpz7EkNJxewnz1RFnmp2RNQ6T6l3lGogC/6kpQz/SrhY1etzeEU7KoM8VW
-         TncEYyGUqKYYcl/u7ZaJkylK4s+Nt4kHmmvGgb6Nra/zO5O2y70qeP3K4xK2/Kt9cKo9
-         Bi0FGRThL5Anv71ugGpHxJ0kxJFN5dGESl0yy0qgweB88IJmtB7O992TmZlIxiCvp3GS
-         uZ1VgIfPe3oU1M9MuZxrdUZAsf5vEmCymebCYp6MKnqLQVDQNIkJ7vlM3HZF34F7+9b1
-         BSPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794940563; x=1795545363;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=gmail.com; s=20260707; t=1794943151; x=1795547951; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Rd0/jqMJRNHoYlSsIu6TbBr2fty8j4sVOq9BB4+EiWo=;
-        b=MCtQ8IUgFMk5G3pll1IhwyRPZIxcVrnCe8t82CGaFQsj8CqRQTy/dGRxUqvcCRRdDz
-         TUbQTM36oMcBFUjbWgu3L9KrxnmDGMfldVGf52lLsurCKRnz5DFxc56iYF1CDzmM0WpN
-         jRwCVkCWfnP4w+YxpB/W/jSvN89MwZdAPWkBdc0cg1nXkxrivcy0pVyERr7pWDmzcVpO
-         Bs6WxIG4jKebWJwCj3Gw/9mOxtriYVT1Zd53Jkas7eu93anNiE8SEmC1qz6nVx+ASTmB
-         4pXm4gEW3/01dO6QWOGK2lKtLN3yGgx4agycIJ3TvhoZj5OZzJROfEPylnSpL7esyqAl
-         Pvhw==
-X-Forwarded-Encrypted: i=1; AL+hErGHOw2mIcm7vSfVHUGkL9nwxd5S/emjCwuW7TDdVbZFt+bqtSGaCEqPu5ExlTU+Hh80rMNuC8SupBCrVH+m2YjBYHEG@vger.kernel.org
-X-Gm-Message-State: APuU4Z80cNxcUFL9gCI154XPOgpPPLHdvH1w5dVS3LId+AJe5Jsv4b7s
-	WOwiPkUtK/0mwjOk7P0zE+FMqZ/PX05VWn59nsLE3qlP5Erc4WL1N78=
-X-Gm-Gg: AYBFou0auo/s1uAuFPSx+Jtr97M3YSCqAnWScyQiDncJw0TWxpOTzsiAFzs3rs6xSGn
-	HKfW4SudeCSsAekTiLngq5FIGzWN5o+6kjNO5zojklmrj/otJf7Eq/xU43IPTgmM7cAb44zDmf+
-	tuOlWJ4PuiZbIfHD1lpmwmDATJ3JW4cS8+CE7S9/BHPJlocXTDvzynvZe4PFuRsqC/xl4pRgnkX
-	lhzuQ6v1cI6ZEyLNcRqjNmSBZgZYi/lXkx2ex/MO9D4hF7SnIkd/E3+XDFfONZJSQ0+jkL5aAMe
-	KNtg3Z1rB8QX3+KP14zTV3sXUOVF+mgXNqj+qX4g7DDiK5q2DiWPmD1MH8lQTTvSf0TFbBnwSXp
-	yI1hVmjgazlMVD0in+pehJ6LCTbpJjp5ECZRvTjTjCVei2i9MIQLkWvxo9IIS368G0131FshJyx
-	voo2u77AcCxTvsDaxO13wpw8j/eZPJCSDeV6A49z0Dfpfb5YqJ9smpasPF16PBzvkVa9csYKglU
-	LowsYfEegr143DEyeRe9dxxXU6SMAWpitfbtnvnveP7rWEJ79iiZw4V+LsvZCQou3CFm4+O4dSV
-	4OD0Re3b54HkOlankXaUm54mlZ1tln/G2dN8FTzhMmmswzyXaT1AbIXbr9CGXtM=
-X-Received: by 2002:a05:701b:2409:b0:1b3:b833:6565 with SMTP id a92af1059eb24-1b543cd7213mr469644c88.20.1794940563273;
-        Tue, 17 Nov 2026 10:36:03 -0800 (PST)
-Received: from at-Standard-PC-Q35-ICH9-2009 ([27.59.94.173])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-380d5135221sm10562926eec.24.2026.11.17.10.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 10:36:02 -0800 (PST)
-From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-To: helgaas@kernel.org
-Cc: airlied@gmail.com,
-	alexander.deucher@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	atharvatiwarilinuxdev@gmail.com,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	christian.koenig@amd.com,
-	dave.hansen@linux.intel.com,
-	dev@deq.rocks,
-	dri-devel@lists.freedesktop.org,
-	hansg@kernel.org,
-	harry.wentland@amd.com,
-	hpa@zytor.com,
-	ilpo.jarvinen@linux.intel.com,
-	kenneth.feng@amd.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	mingo@redhat.com,
-	platform-driver-x86@vger.kernel.org,
-	simona@ffwll.ch,
-	siqueira@igalia.com,
-	sunpeng.li@amd.com,
-	szgit@icloud.com,
-	tglx@kernel.org,
-	x86@kernel.org,
-	yossef.osman@proton.me
-Subject: Re: [PATCH v2 02/12] PCI: Disable pcie port on specific amd devices
-Date: Tue, 17 Nov 2026 13:35:46 -0500
-Message-ID: <20261117183546.1214-1-atharvatiwarilinuxdev@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261116202343.GA205416@bhelgaas>
-References: <20261116202343.GA205416@bhelgaas>
+        bh=LMTPzjShjCPD69osaUUpYC4vaplqgyOI3+4p6kklAx0=;
+        b=OF0a8zmhI/ezuJwFG35FCyje2Ub40UTqp4YuEEikrb7TCfF41li/SthOAW5zvETTHq
+         Q2PneylCaI5h/L11vpfiUKw/MTP/3Huu7oCyJbNw9/4a1S6kac5Q9rRP0RIOWSSb0gkp
+         0F1se9z8P+zVFX1sOHQzB2mAY6WM7RXyPTZU7hwqRMZvJKuezkAdRnl3m4AZKIXKKE0k
+         EC+WwOagMiNaH04168ax/NaNRRfic0RMH5Zx7G7WyTOok6R/q+yfTkSl3I3YZJorSFpl
+         tZErSx1w/y2rq8HrPObtTOZnfOCzTmmHOhKErV+N1zoJkeJ99vFOK1sdpvwAezeLlW8b
+         iRag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794943151; x=1795547951;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=LMTPzjShjCPD69osaUUpYC4vaplqgyOI3+4p6kklAx0=;
+        b=QWaNWfj4lWeM2mfkpd05DhoM6hiACABIhaii7MNUE7TAXZ6nMa9vPdGb16HN7wuuwH
+         DKHKd0z2Ekom6jhCl0T27HZFvuuTMB5C3ZyuQCcWuR2RIHcO6w9RWVVBEQz60w6mGo6u
+         IU2fH2V1NL/i+R7RbEviO7y08NZ+YdZcgKyYW2qRJtt+UeqxAS/MI6rKAxg/2itUH8KS
+         kZcJn4SCdOFf5rbO4qkEdPEoEu1LxloQ6OKiA7w0whg/2HV/cut7ilyqoKLRdsi1nNbF
+         ajsxj/EKYkqKdaJ4Y21FyuPGCR5IPtlnA6Ljmpal2fldlqrkzrijrNH+k5tfx5vJeckr
+         5uJQ==
+X-Gm-Message-State: APuU4Z/UYAURemLrU7qI9DRMzK4PT7Jn7fHIPUl2Xfx+LLhFtsthbR7d
+	zvPM/TYCPXVWDBB05zTt8lqN4ockcfkSPKuA7dNs5OIAEmHRlB7xrgBtxj3YXsaHw/P/VtezKTU
+	RQpCKmaUQNVYMAiE9YDvhNRfZjiA/NoZzYBcp
+X-Gm-Gg: AYBFou1pA1BUDYsrTT4W7G8HHIFZRZQVgSuYNaJg+8s1T3SD4yfvfcEBYwYbMk6UG0A
+	0soomUs5HbEVcgq3O85ZnoIHnHxlorAQ/SHOLfPOFntrxTigjNV7Z9zuEVIY1J9PCCgzNbOy0nv
+	GBKXEWhKK2wE8/0+zaw1Sgto9dMGAjJPr+zg57xeZ/dO+a+kRQGB9/aqVxPlAltTJB386uVPRju
+	+4tPf3Zf3nkgPX94CJTUaSpz66V0h8YTYnCT0YTzuTnde+nRYAerjf68z3nFEUKZr4Td8xSEPFs
+	E1PWAIKHpYhnGO9rFFyH2I3Djg/cyCKIex51tKFwvHlKIw87pMmSxfJaHTqKUWIf+kJ0u9klinJ
+	ukWXrXs9/vCdo79JBQrENUxg4BOdwXpLCK9klBdEJeY+DWIY9vZwTumkj38udqsrLj4eITQ==
+X-Received: by 2002:a05:6808:6415:b0:564:3fe1:2f87 with SMTP id
+ 5614622812f47-5773a8ecb37mr870048b6e.4.1794943151323; Tue, 17 Nov 2026
+ 11:19:11 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -121,26 +99,39 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Vorname Nachname <ivanhoe18109@gmail.com>
+Date: Tue, 17 Nov 2026 20:18:59 +0100
+X-Gm-Features: Aa3M54rdgeQxZG65QoPSbr3SCg6VScFXGGRJL0zZM49XX9vGUbf0Y8eIH9LGlKs
+Message-ID: <CAF1sT3XO1qAubErt+85t316XyoqAW3LttUmKUHVBsrVYt7Y1NQ@mail.gmail.com>
+Subject: platform/x86: lg-laptop: Add LG Gram 16T90TP to keyboard backlight
+ quirk table
+To: platform-driver-x86@vger.kernel.org
+Cc: W_Armin@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 
-> I don't know what's going on here, but it doesn't sound like typical
-> PCIe behavior.  If a device is powered off, accesses to it end with
-> some kind of PCIe error that is not normally fatal.
-> 
-> It's basically the same thing that happens when the OS enumerates
-> devices by reading the Vendor and Device IDs.  This has to work even
-> if there's no device present, which is essentially the same as a
-> device being powered off.
-> 
-> So I'm not in favor of trying to avoid some accesses to devices based
-> on DMI checks.  Even if that works, it doesn't cover other paths like
-> sysfs.
+Hi Armin, hi platform-driver-x86 maintainers,
 
-I agree, this is not standard behaviour, this only happens when we use
-GMUX to turn off the rails (which is the thing that causes power savings).
+I am using an LG Gram Pro 2-in-1 (model 16T90TP-K.AA78G) on Fedora Workstation
+(Kernel 7.2.13-200.fc44.x86_64).
 
-Accessing PCIe space after GMUX has cut power to the rails will cause a
-CPU CATERR.
+Just like the 16T90SP model, the keyboard backlight is detected under
+/sys/class/leds/kbd_backlight (via LGEX0820:00), and changing brightness values
+updates the sysfs file, but the physical LEDs do not react at all.
 
-Also i dont really have ideas, im not really familiar with PCI core.
-Can you give ideas, you have please?
+Could you please add the 16T90TP DMI entry to the new keyboard backlight quirk
+table in drivers/platform/x86/lg-laptop.c (alongside 16T90SP)?
+
+Here are the exact DMI identifiers from /sys/class/dmi/id/:
+
+grep . /sys/class/dmi/id/{sys_vendor,product_name,product_family,board_name}
+2>/dev/null
+/sys/class/dmi/id/sys_vendor:LG Electronics
+/sys/class/dmi/id/product_name:16T90TP-K.AA78G
+/sys/class/dmi/id/product_family:gram Pro 360
+/sys/class/dmi/id/board_name:16T90TP
+
+If you need any additional ACPI tables, dmesg logs, or testing for a patch,
+please let me know and I will gladly provide them.
+
+Best regards,
+Gabor
