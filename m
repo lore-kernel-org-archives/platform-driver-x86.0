@@ -1,76 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.147
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794954758;
-	b=SOLSZ3h00MCIVOHEZuY35wlNi/4K0MRF7JSVJXooJWQIQwKBY8/Q3fiPdc+QmIa9AkCH
-	 O9/96OmcgTsBwPXH6aPTswRqK6zAzjfCfQ5hPAuQhJqcRUdxQQNGiQm+MYYlIN3+4UuZK
-	 NroBGNQci06g6MO/MRYNX0294831bpYAs4kZRcSpeA41BNnppxCyDp1X3FLXCD3EHt3zo
-	 o2uyeTx8W/gNVGdcosJYH53CD5/ndy1OzdllAkHEqSfcigxc8Hn9LhuLk8DxMv8dpEX0V
-	 ScxN4ctcT5OyKxkK8E3lAIrgou/vxQgGiNtfZ6h3W9KHiqumU5DCHi//mpDRubdnv5Q==
+	t=1794954827;
+	b=kDsLEPnAZEgAYJqfk802B2OwNf6tEeIE7IWT2wLrPcCjbITmKz0v5tW0bvuKY2gogYRP
+	 YP5hrGrImE0H10x/WheZWGK6SIsV1ZRWbt9Idg5XBJ2dfhUxOAh83+HZRS6IM5QQ6g0f5
+	 cxXVREDJ2AuAW1AfUh2Aa6Dsaq3KAb7x4uvKu8Y6Hb1DcQTgJ9WVFdUBHX5eQe8Dc4otD
+	 LVoBD8GjBeHRsaXsO6QUBTXwS7R2mJ9QBq58qp+msWtaEPNPaPH++ki4pdyUeKSBiyrMO
+	 zDn0FtXblEgYzzWo60Lq37FoXkmOep0Ko6nH1Be0kZcjuVtJc6D2386JPR6e6MsU6ag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794954758;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:From:To:Cc:References:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
-	 UI-OutboundReport;
-	bh=PpR1rIGXMu8V5mFk/2ZfcnZZfQ9plWQHvtsGWc0msa0=;
-	b=qmAbffuE5m10RZyudONOhfoGCbfJsVKauFjYYt1P5ul8H6Bl+IWuqKiChwOrJq8yaXRO
-	 STysAOr06YJ+nQqdjbP2YHM8FZFKQhMZDbYMb4oC00CeyrOTcxOkx1BOk8G7H0AzrBOZ2
-	 t8lkALFnl2FzMSvMZte0iomdDXkDmShCIVP4DX78phkPOXbHZ45UAaQdSDzGUmVtqs6U5
-	 o0c92S+4Ccq21j/b9EmrBL8DHrVepSeGkkjPYwTBDVvLb2HF9eJpqMhmnSy9e5wW0PM2F
-	 vji9HZy7u1oGnId6jl/H6gNzAbNsA68VszDWUeOLf0DEgLMeRAb39GD3jAy1Pkkn9WA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794954827;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=eEh+NFvf3dfHmWpSq1NVWb1dZK08XL1af+slj7PMhJk=;
+	b=rraj1NqjEvGXy6joDXao63sE0fXh7qq+ylznft/dcR1nowpHdDwoD9+FLe5S2rzTJzXW
+	 9Rnrotob9e3BoNyJw0fAxrmwW2qyu1ZCT62hnsgCJ0k+iJL7btrS4N02GWzOHY6l6u3PU
+	 hnx8GvN/sL4Kis0EG/vxo7zqFbRQFhCh860aAB1h8p9ZJeuBBM4TO+G4Kq7dz5i6PiMEZ
+	 4KVof/lEhPjpjqSfv7cf56uSL9X3ffOhpcsoTw0NeOEuMJKC7pXKd6aD43yF+FL+j9soL
+	 9YujVT02Swqnv3pkeG0cB5bhTyvgEMCM61DNLlrSkIxwEeIzS3zpj8vgFGsriCf71RQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmx.de;
-	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=DJRYYgkB;
-	arc=none smtp.remote-ip=212.227.17.22
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	dmarc=pass header.from=squebb.ca;
+	spf=pass smtp.mailfrom=squebb.ca;
+	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b="ld/vC5oR";
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=WqODdRhL;
+	arc=none smtp.remote-ip=103.168.172.147
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86703606A33F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 22:32:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86703606A33F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07829606A338
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 22:33:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 07829606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=DJRYYgkB
-DKIM2-Signature:  i=1; m=1; t=1794954755;
- mf=PFdfQXJtaW5AZ214LmRlPg==;
- rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
- d=gmx.de;
- s=s31663417:rsa-sha256:uJOr03gXSaWx1El/U+pYsTnTqWNd
-   +5aNbqAI9+uPQgtk4YY1Uapnm98QcJBtiJ4DUmOeOLH5frXwJCWARX0M1P3CYv8wVK+VO4dXPKm
-   m+CDzkYOjq6iPDxVohH7quRBi4kEVJs7xKQLK6jJSiFVhLxbNx/sy++Lth1KJ05IHUnFdYJtIGK
-   7rYseIPmLV/RjguvXujLMZ8PdX/MnPJJai/Ze7wFRDBxXF2rS69QIvqEwWPyZF3bIr73uAqbVlU
-   cCnqJmXyQl30zBIjHwg9vAbN5pTQeg3VezUQnSkWZJrSJMn6PcjgsEA2WNgwmZiyKRLiI+nIXqW
-   fCH/sVvTdc/R0Q==;
-Message-Instance:  m=1;
- h=sha256:
-   lF33lsANSs95QTkoo5/n1Nzci9hDOwjcL6XgLJCGu3w=:
-   NIGf7RBcW3tMQdnTX0RchxOeXQSh/0zNb6gpWvoyP1U=,
-  sha512:
-   KKZ9Z18bxl9aEuCXChtaPUT9dS8FOAzY/16cLJOAXBKs0M4hgKV+trUlCPvgJzjx0Xq5qWl4aYkepsB5rnCa7Q==:
-   0WaOj36e87AUjK/y6xTtA4extk7VjqNjQY9L/YBNAVngIerfgCisEps4Puc++aYN+009CTyhqeg4P1au+NH1dw==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1794954744; x=1795559544; i=w_armin@gmx.de;
-	bh=PpR1rIGXMu8V5mFk/2ZfcnZZfQ9plWQHvtsGWc0msa0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=DJRYYgkBSAuI3XIFOTnDYRYVRAWxl+NYedL9B255V6j8YSKJYpShlWoghY1vLqOj
-	 42K2HDLaZ4DOkwD6G1AOvXRQ+Px0WJ9TAz0dCt5ii8wrE/2u5dYT++LuFY4g4Wsc2
-	 XFg4VmB2+dyiJlIaxTojdkIL+uff24UD29ga+fGk9lWF6zDvZu3lme5tmX12+vQIV
-	 Sv0jHa3E15LtPEWPoSg2YqX4vQYtzqYP1a1j5BwMGywAFhhD8lygTLPY1uqhuvKoq
-	 N7rhPheFpt4/SB+sSKCnK0KgRaNMkTeTVJ6J4BJsP+IP20FRb0WpOb4rIdFCA0DTW
-	 l64YxzQafpL61KGG9w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MTABT-1x0XlX1Trj-00TPUT; Tue, 17
- Nov 2026 23:32:24 +0100
-Message-ID: <26f1d116-479b-414a-856e-290e4775274c@gmx.de>
-Date: Tue, 17 Nov 2026 23:32:23 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=ld/vC5oR;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=WqODdRhL
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfout.phl.internal (Postfix) with ESMTP id 2EB6AEC08F8
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 17:33:45 -0500 (EST)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Tue, 17 Nov 2026 17:33:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1794954823;
+	 x=1795041223; bh=eEh+NFvf3dfHmWpSq1NVWb1dZK08XL1af+slj7PMhJk=; b=
+	ld/vC5oR/vrIgATY+OVj/qc+Hho5ywu6/tj8+b0Sd+dh8+/TTjOopCad0qpjn9cU
+	difKR3oFUWkm9MDhrkcsAVWBaSAAdfVJVhO2P9RZOJXdA3IYaMxeQ4LE5jEjtj9z
+	wIokBt+3FJajscUELfSblV++bfxDmymVgKrC9LqcWWXYzJoiKFuPLXQ8rIICTbVq
+	ehCwiYEIzINzF+1aHaetbmGGVSFJXmqTevM3G+2ecWuFMh1gkLPlZ7lhAlzNgTS3
+	K8FrmLctRNaJpf528I88QvEiAv/cPfsUJdz2wLS2BpXsSPeivqDqM4hpbfj2wrOI
+	1aL1cgVEUNzdC8OctvdZnQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1794954823; x=
+	1795041223; bh=eEh+NFvf3dfHmWpSq1NVWb1dZK08XL1af+slj7PMhJk=; b=W
+	qODdRhL6M3J/WFuI9+GZLkc9CdY3cWlSWVuAd/6HIvXY8NSGC1+WuFVP37esZ9OP
+	i5XlW8akJR8hfbW4x17JqBwOcLy79sp/ZnupH88ZJzosim5c29wJ4jl2WypRM0Gw
+	9I5hDMcOWuqFtO5OQd0DqmjCYRYHfxLvEbusp9hBn3YV8y5L5CLGRodCkjrHJAGF
+	vYjVxyiutqApKs66rDz+xWFfc7M5cy6ERCLVY1M0XPbuuPoiJLncZZZv8SCpwzEG
+	ih1vblNTID0hWu50ay72FiMg//0cXChI9brU+h8SiX4SqVnLI9k3+pUQ59u5hTIl
+	eoNx/wkBLX0aWsxQOHuyA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=squebb.ca a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1794954823; d=squebb.ca;
+	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm1:rsa-sha256:HnsHWXkyturu1hys8h39v3paxoEVR5PloQ2mwE3mIXLBDhX
+	UVn6cXJqyyrKWpDiWNq0QBZgU+sRynjT7CB5FM8rmTobsKLn2xWPrDAwFxHcV20z
+	q+nA0rz8fphuk3iPzCAJP0ecaNxUeHlxQc+KWKIH97ByCwd+SEcqDOVzwTL/UXGo
+	G6FgaovsV7bxPEIBcFfP3lk0tLTcW0On4cO3GK9l4tBA3bsGovTc5HNiaAxswD0S
+	fdMc33JtvCRQD5Y9ZD6bl1mtxTV1Vs9iUWya6Sxfw9ZhyVjtwe0RMfoxtRgaiEfY
+	gjR8LJAHBBPM5+jZ17wMG0FP4qIhHfIy5+ypX2Q==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:/29E0rMkG6QwwJB0Vo96j/CR2HEK+fR97AUEyxTSEwc=:Q8wyGNlXH66pl9Z5IrPyKgTgBPJnp2vG20gMvyhrZzU=;
+X-ME-Sender: <xms:Rtb8arsZt_0gMfygLeM2KJHqkSL1acjfPYDmH9mofJXmuP1YQY6m-Q>
+    <xme:Rtb8anTKBkaQbI52Qjzdqtfck-Tw63oHD8EmgPiiVMXBW5sVEjRlq7tD5sjeV0vYe
+    O17bImMTQf2oBddMGZ621WigfkyYutGMETiqWB7rhET75-fbTvhtomu>
+X-ME-Proxy-Cause: dmFkZTE/yjuYLIFSQFeRg1BnSUnw8LIJEaMzScgnhP/RSNnRjGPYPdeDiiZFiDCSHCzjXy
+    BsodOHwxFxYmGw/DuEfxbFJs2h75U5KRZQtbSGPEoEypYar5BRoJy6MY4Ir98sSD8q1dBR
+    7ywSDlTEdYU+xe4GW7KN3i2Cw58lKBBbWZwgFLNWoWtsaqvyErmtC3U6PS0KJgdcNd55Fy
+    HcKySEcds8r+jIbdPlO8BILImOHdqvXJmZpquS/V3mboWk0zJTsJSORh45On/ns/D47Dpf
+    q1FJVIJ6r1lIDHcgsI1kBqGvRI83o8/vlIFNLNVKAzcw0roEGYY055MPFgTURqbjyODqfU
+    l5j/2cwCLwOf7ymZMtwNQclUipiagyp9lolCjecibymIKezmjBWbOomWiSXU+4EDF11qHZ
+    JJZQndJZkhb32j8qTc7FQLgWrdeQaK0mcnA43mT5aRYRyKmtAm+5nUQwJoUEh2vtxnzoi1
+    KLA7X1TbxeRgcvzzYST8EjCqO1U3ToXmwdIDg2lkboCUFlMGYtVbcC1D2UJ7QzwI0w8sv1
+    1oNUMIjWBjritgDy57fRS1lXyjAXipBU4kwSHZ2yZUNv+HIbBRM2HL0i6m8BftcHrwUuaV
+    X5r1xI9SCSy5pI+YL4/HK2i/hKSv9cKsexQmCHHaZ44n2K3mI49dMel+ZY8w
+X-ME-Proxy: <xmx:Rtb8aqS9vTp5QO_5m9fOSyefaO5l0w-YUK2kj0qqpAiLwPrU-BtqAw>
+    <xmx:Rtb8an8nzUj5y-cGyndhfEM-U4walkrBbz9L9a6D-zHYzjZrFZJmnA>
+    <xmx:Rtb8ajatZGWXetH72qEd4UujcNjEIPB7HC6l0_5PCnun7px1oSGqYA>
+    <xmx:Rtb8agrKvINc-IIPmvqKNeEhU_J-S-Jj9ZnF9CCHGn3D4p3s-u1-4A>
+    <xmx:R9b8as5hMG8vihJsErFQLcUyb5BFJMJ6Tzhj50FRYtgMbE5tUju-SdQm>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id A79F92C00085; Tue, 17 Nov 2026 17:33:42 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,166 +115,356 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: lg-laptop: Fix input of super key
-From: Armin Wolf <W_Armin@gmx.de>
-To: matan@svgalib.org
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- helian.caumeil@clever.cloud
-References: <20261103180750.228116-1-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20261103180750.228116-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: AZf8LQYQVgsF
+Date: Tue, 17 Nov 2026 17:33:22 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Gergo Koteles" <soyer@irl.hu>, "Ike Panhc" <ikepanhc@gmail.com>,
+ "Andrew Kallmeyer" <kallmeyeras@gmail.com>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, "Mahir Faisal" <mahirfaisalantiq33@gmail.com>
+Message-Id: <e6d2efbc-7ea0-4115-bfb7-c2731dabb62d@app.fastmail.com>
+In-Reply-To: <55377800b9338b153d776ab8728a557f682a234a.camel@rong.moe>
+References: <20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe>
+ <20261116-ymc-82yl-v1-4-fac1a2b01a84@rong.moe>
+ <e39bd69c-9953-4154-8938-313e6fb0b26a@app.fastmail.com>
+ <55377800b9338b153d776ab8728a557f682a234a.camel@rong.moe>
+Subject: Re: [PATCH 4/7] platform/x86: lenovo-ymc: Modernize WMI driver and factor out
+ events
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:446J4OA2DkdT3ok+EwJO3wCw9fnzAABcHWAlbncmxHn8nkQXks4
- rZFXKFzpMZT12tY+7auF2ytJ8EkwdIFS55RbOkusgchhzPHguqw3SsrcZgUeOESzYqvNOQ/
- 8Rno4PaCMknT39mJ+2a1qPSIOLwHZd4T5OH5ouwBSNL7x6re6iK2+L1YAWiU2jvepNM+3Z+
- orvP1lkhcgesLu6U6xUsA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:x5v0L4mxRK0=;CjEeDvX5qDD6x6XisN6UFtu/30s
- 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
 
-Am 03.11.26 um 19:07 schrieb Armin Wolf:
-> From: Helian Caumeil <helian.caumeil@clever.cloud>
->=20
-> Some devices emit special event codes when the super key is pressed.
-> Mapping those events onto KEY_UNKNOWN by the sparse keymap seems to
-> confuse userspace, causing duplicated super key input events.
->=20
-> Prevent this by ignoring those event codes.
 
-Any updates on this? More users have reported the same issue.
 
-Thanks,
-Armin Wolf
+On Mon, Nov 16, 2026, at 11:51 AM, Rong Zhang wrote:
+> Hi Mark,
+>
+> On Sun, 2026-11-15 at 17:39 -0500, Mark Pearson wrote:
+>>=20
+>> On Sun, Nov 15, 2026, at 2:27 PM, Rong Zhang wrote:
+>> > The lenovo-ymc driver is a legacy WMI driver. It binds to the events
+>> > GUID as a WMI driver but calls the query GUID with the deprecated G=
+UID-
+>> > based interface.
+>> >=20
+>> > Handle YMC events in lenovo-wmi-event, and coordinate relevant driv=
+ers
+>> > with notifier chains:
+>> >=20
+>> >                 +---LWMI_EVENT_THERMAL_MODE---> wmi-gamezone
+>> >                 |
+>> >   wmi-events ---+
+>> >                 |
+>> >                 +---LWMI_EVENT_YMC---> ymc=20
+>> > ---IDEAPAD_LAPTOP_YMC_EVENT---> ideapad-laptop
+>> >=20
+>> > Modernize the lenovo-ymc driver by adopting lwmi_dev_evaluate_int()=
+ from
+>> > lenovo-wmi-helpers, which has adopted the modern WMI core interface=
+s and
+>> > taken care of buffer's lifecycle. This should hopefully improve
+>> > robustness on various firmware as it aligns with the Windows behavi=
+or
+>> > that ACPI object type doesn't matter but the size does.
+>> >=20
+>> > Note that the WMI core does not verify min_event_size for the legacy
+>> > notify() callback (it only ensures the event has data). By factorin=
+g out
+>> > YMC events to lenovo-wmi-events with the new notify_new() callback,=
+ now
+>> > the WMI core can finally verify the size of event data:
+>> >=20
+>> >   [WmiDataId(1), read, Description("Lenovo Yoga Mode Change Event")=
+]=20
+>> > uint32 ModeDataVal;
+>> >=20
+>> > With these changes, the lenovo-ymc driver become a no_singleton
+>> > asynchronous-probe driver that only binds to the query GUID. It also
+>> > retrieve event data as a fallback data source when the query method
+>>=20
+>> Minor typo: retrieves?
+>
+> Will fix it, thanks.
+>
+>>=20
+>> > fails, so that the EC is always triggered on valid events (i.e., pa=
+ssing
+>> > the min_event_size check). On probe it's always triggered, too, as =
+we
+>> > want the EC to initialize the state of keyboard and touchpad on boo=
+t.
+>> >=20
+>> > The input device's phys string also adopts the query GUID rather th=
+an
+>> > the events one. It shouldn't break anything, as nothing actually ma=
+tches
+>> > the previous phys string.
+>> >=20
+>> > The DMI quirk tables are left untouched, as the contained devices s=
+hould
+>> > have both GUIDs.
+>> >=20
+>> > Signed-off-by: Rong Zhang <i@rong.moe>
+>> > ---
+>> >  drivers/platform/x86/lenovo/Kconfig      |  2 +
+>> >  drivers/platform/x86/lenovo/wmi-events.c |  7 +++
+>> >  drivers/platform/x86/lenovo/wmi-events.h |  1 +
+>> >  drivers/platform/x86/lenovo/ymc.c        | 85 ++++++++++++++++++--=
+------------
+>> >  4 files changed, 58 insertions(+), 37 deletions(-)
+>> >=20
+>> > diff --git a/drivers/platform/x86/lenovo/Kconfig=20
+>> > b/drivers/platform/x86/lenovo/Kconfig
+>> > index 516594993073..f16b09bab082 100644
+>> > --- a/drivers/platform/x86/lenovo/Kconfig
+>> > +++ b/drivers/platform/x86/lenovo/Kconfig
+>> > @@ -63,6 +63,8 @@ config LENOVO_YMC
+>> >  	depends on INPUT
+>> >  	depends on IDEAPAD_LAPTOP
+>> >  	select INPUT_SPARSEKMAP
+>> > +	select LENOVO_WMI_EVENTS
+>> > +	select LENOVO_WMI_HELPERS
+>> >  	help
+>> >  	  This driver maps the Tablet Mode Control switch to SW_TABLET_MO=
+DE=20
+>> > input
+>> >  	  events for Lenovo Yoga notebooks.
+>> > diff --git a/drivers/platform/x86/lenovo/wmi-events.c=20
+>> > b/drivers/platform/x86/lenovo/wmi-events.c
+>> > index 01ad5bcf0437..a0ddea01213f 100644
+>> > --- a/drivers/platform/x86/lenovo/wmi-events.c
+>> > +++ b/drivers/platform/x86/lenovo/wmi-events.c
+>> > @@ -21,6 +21,7 @@
+>> >  #include "wmi-helpers.h"
+>> >=20
+>> >  #define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151=
+B5F"
+>> > +#define YOGA_MODE_CHANGE_EVENT_GUID "06129D99-6083-4164-81AD-F092F=
+9D773A6"
+>> >=20
+>> >  #define LWMI_EVENT_DEVICE(guid, type)                        \
+>> >  	.guid_string =3D (guid), .context =3D &(enum lwmi_events_type) \
+>> > @@ -123,6 +124,7 @@ static void lwmi_events_notify(struct wmi_devic=
+e=20
+>> > *wdev, const struct wmi_buffer
+>> >  	struct lwmi_events_priv *priv =3D dev_get_drvdata(&wdev->dev);
+>> >  	void *notif_data =3D NULL;
+>> >  	int sel_prof;
+>> > +	u32 ymc_mode;
+>> >  	int ret;
+>> >=20
+>> >  	switch (priv->type) {
+>> > @@ -143,6 +145,10 @@ static void lwmi_events_notify(struct wmi_devi=
+ce=20
+>> > *wdev, const struct wmi_buffer
+>> >  			return;
+>> >  		}
+>> >  		break;
+>> > +	case LWMI_EVENT_YOGA_MODE_CHANGE:
+>> > +		ymc_mode =3D le32_to_cpup(buf->data);
+>> > +		notif_data =3D &ymc_mode;
+>> > +		break;
+>> >  	default:
+>> >  		return;
+>> >  	}
+>> > @@ -175,6 +181,7 @@ static int lwmi_events_probe(struct wmi_device=20
+>> > *wdev, const void *context)
+>> >=20
+>> >  static const struct wmi_device_id lwmi_events_id_table[] =3D {
+>> >  	{ LWMI_EVENT_DEVICE(THERMAL_MODE_EVENT_GUID, LWMI_EVENT_THERMAL_M=
+ODE)=20
+>> > },
+>> > +	{ LWMI_EVENT_DEVICE(YOGA_MODE_CHANGE_EVENT_GUID,=20
+>> > LWMI_EVENT_YOGA_MODE_CHANGE) },
+>> >  	{}
+>> >  };
+>> >=20
+>> > diff --git a/drivers/platform/x86/lenovo/wmi-events.h=20
+>> > b/drivers/platform/x86/lenovo/wmi-events.h
+>> > index cd34e886912c..592da08ff2a3 100644
+>> > --- a/drivers/platform/x86/lenovo/wmi-events.h
+>> > +++ b/drivers/platform/x86/lenovo/wmi-events.h
+>> > @@ -10,6 +10,7 @@ struct notifier_block;
+>> >=20
+>> >  enum lwmi_events_type {
+>> >  	LWMI_EVENT_THERMAL_MODE =3D 1,
+>> > +	LWMI_EVENT_YOGA_MODE_CHANGE =3D 2,
+>> >  };
+>> >=20
+>> >  int lwmi_events_register_notifier(struct notifier_block *nb);
+>> > diff --git a/drivers/platform/x86/lenovo/ymc.c=20
+>> > b/drivers/platform/x86/lenovo/ymc.c
+>> > index eba22600161e..cb3ae49dfd9e 100644
+>> > --- a/drivers/platform/x86/lenovo/ymc.c
+>> > +++ b/drivers/platform/x86/lenovo/ymc.c
+>> > @@ -3,22 +3,25 @@
+>> >   * lenovo-ymc.c - Lenovo Yoga Mode Control driver
+>> >   *
+>> >   * Copyright =C2=A9 2022 Gergo Koteles <soyer@irl.hu>
+>> > + * Copyright =C2=A9 2026 Rong Zhang <i@rong.moe>
+>> >   */
+>> >=20
+>> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> >=20
+>> > -#include <linux/acpi.h>
+>> >  #include <linux/bitfield.h>
+>> >  #include <linux/bits.h>
+>> >  #include <linux/cleanup.h>
+>> > +#include <linux/container_of.h>
+>> >  #include <linux/dmi.h>
+>> >  #include <linux/input.h>
+>> >  #include <linux/input/sparse-keymap.h>
+>> >  #include <linux/mutex.h>
+>> > +#include <linux/notifier.h>
+>> >  #include <linux/wmi.h>
+>> >  #include "ideapad-laptop.h"
+>> > +#include "wmi-events.h"
+>> > +#include "wmi-helpers.h"
+>> >=20
+>> > -#define LENOVO_YMC_EVENT_GUID	"06129D99-6083-4164-81AD-F092F9D773A=
+6"
+>> >  #define LENOVO_YMC_QUERY_GUID	"09B0EE6E-C3FD-4243-8DA1-7911FF80BB8=
+C"
+>> >=20
+>> >  #define LENOVO_YMC_QUERY_INSTANCE 0
+>> > @@ -61,8 +64,10 @@ static const struct dmi_system_id=20
+>> > allowed_chasis_types_dmi_table[] =3D {
+>> >  };
+>> >=20
+>> >  struct lenovo_ymc_private {
+>> > +	struct wmi_device *wdev;
+>> >  	struct input_dev *input_dev;
+>> >  	struct mutex mutex; /* Protects event handling. */
+>> > +	struct notifier_block nb;
+>> >  };
+>> >=20
+>> >  static const struct key_entry lenovo_ymc_keymap[] =3D {
+>> > @@ -75,49 +80,44 @@ static const struct key_entry lenovo_ymc_keymap=
+[] =3D {
+>> >  	{ KE_END },
+>> >  };
+>> >=20
+>> > -static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_=
+object *data)
+>> > +static void lenovo_ymc_refresh(struct lenovo_ymc_private *priv, u3=
+2 code)
+>> >  {
+>> > -	struct lenovo_ymc_private *priv =3D dev_get_drvdata(&wdev->dev);
+>> > -	u32 input_val =3D 0;
+>> > -	struct acpi_buffer input =3D { sizeof(input_val), &input_val };
+>> > -	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+>> > -	union acpi_object *obj;
+>> > -	acpi_status status;
+>> > -	int code;
+>> > +	struct wmi_device *wdev =3D priv->wdev;
+>> > +	u32 input =3D 0, output;
+>> > +	int ret;
+>> >=20
+>> >  	guard(mutex)(&priv->mutex);
+>> >=20
+>> > -	status =3D wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
+>> > -				LENOVO_YMC_QUERY_INSTANCE,
+>> > -				LENOVO_YMC_QUERY_METHOD,
+>> > -				&input, &output);
+>> > -
+>> > -	if (ACPI_FAILURE(status)) {
+>> > -		dev_warn(&wdev->dev,
+>> > -			"Failed to evaluate query method: %s\n",
+>> > -			acpi_format_exception(status));
+>> > -		return;
+>> > -	}
+>> > -
+>> > -	obj =3D output.pointer;
+>> > -
+>> > -	if (obj->type !=3D ACPI_TYPE_INTEGER) {
+>> > -		dev_warn(&wdev->dev,
+>> > -			"WMI event data is not an integer\n");
+>> > -		goto free_obj;
+>> > -	}
+>> > +	ret =3D lwmi_dev_evaluate_int(wdev, LENOVO_YMC_QUERY_INSTANCE,=20
+>> > LENOVO_YMC_QUERY_METHOD,
+>> > +				    (unsigned char *)&input, sizeof(input), &output);
+>> > +	if (ret)
+>> > +		dev_warn(&wdev->dev, "Failed to invoke query method: %d\n", ret);
+>>=20
+>> Should it not bomb out here? Otherwise the chances are high it's repo=
+rting an incorrect status isn't it?
+>
+> It's intentional to fall back to the `code' passed by the argument:
+>
+> - On probe, fall back to YMC_POSTURE_UNKNOWN
+>   - sparse_keymap_report_event() becomes a no-op
+>   - trigger the EC to ensure the keyboard and touchpad are enabled=C2=A0
+>     (PATCH=C2=A06), or else the user may be unable to input anything
+> - On resume (PATCH 5), same as above
+> - On event, fall back to the event data
+>   - the event carries data as per the MOF (see below)
+>   - the WMI core has verified that the event has 4-byte-or-more data
+>   - if the event data is correct, everything is fine
+>   - if the event data is bogus, it's probably either YMC_POSTURE_UNKNO=
+WN
+>     (0) or an undefined value (>4). In either case, trigger the EC to
+>     ensure the keyboard and touchpad are enabled for the same reason
+>
+> The MOF of the relevant WMI devices:
+>
+>    [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),=20
+> Description("Lenovo Yoga Mode Change Event"),=20
+> guid("{06129D99-6083-4164-81AD-F092F9D773A6}")]
+>    class LENOVO_GSENSOR_EVENT : WMIEvent {
+>      [key, read] String InstanceName;
+>      [read] Boolean Active;
+>      [WmiDataId(1), read, Description("Lenovo Yoga Mode Change Event")=
+]=20
+> uint32 ModeDataVal;
+>    };
+>  =20
+>    [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),=20
+> Description("LENOVO_GSENSOR_DATA class"),=20
+> guid("{09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C}")]
+>    class LENOVO_GSENSOR_DATA {
+>      [key, read] String InstanceName;
+>      [read] Boolean Active;
+>  =20
+>      [WmiMethodId(1), Implemented, Description("Mode Data")] void=20
+> GetUsageMode([out, Description("Mode Data")] uint32 Data);
+>      [WmiMethodId(2..7), DON'T CARE, USUALLY UNIMPLEMENTED]
+>    };
+>
+> If I were the original author of lenovo-ymc, I would not call
+> GetUsageMode() on events, but would solely rely on the event data
+> (ModeDataVal).
+>
+> I believe the driver was implemented in the opposite way (i.e., calling
+> GetUsageMode() in events and ignore event data) simply because this was
+> how https://github.com/lukas-w/yoga-usage-mode was implemented. It was
+> more like a preference of the original author rather than a technical
+> issue.
+>
+> I preserved the call to GetUsageMode() simply because I didn't want to=
+ be
+> too radical here. Prioritizing GetUsageMode() results and falling back=
+ to
+> event data on failure seems safe anyway.
+>
+> Does this make sense to you now? Maybe I should've elaborated more in =
+the
+> commit message...
+>
+> OTOH, if you don't like the fallback, I can ignore event data (again) =
+and
+> pass YMC_POSTURE_UNKNOWN to ideapad-laptop on error (IMO we need to
+> trigger the EC anyway to enable keyboard and touchpad anyway if we can=
+'t
+> trust event data).
+>
+Thanks for the explainer - all good.
 
-> Signed-off-by: Helian Caumeil <helian.caumeil@clever.cloud>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
-> Co-developed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->   drivers/platform/x86/lg-laptop.c | 4 ++++
->   1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-=
-laptop.c
-> index 36ad1e269443..49e3029d4b95 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -138,6 +138,10 @@ static const struct key_entry wmi_keymap[] =3D {
->   	{ KE_IGNORE,	0x30010001,	{ KEY_UNKNOWN }},
->   	/* Change fan mode */
->   	{ KE_KEY,	0x30010051,	{ KEY_PERFORMANCE }},
-> +	/* Super key pressed */
-> +	{ KE_IGNORE,    0x30020000,     { KEY_LEFTMETA }},
-> +	/* Super key released */
-> +	{ KE_IGNORE,    0x30020001,     { KEY_LEFTMETA }},
->   	/* Disable camera */
->   	{ KE_KEY,	0x40020000,	{ KEY_CAMERA_ACCESS_TOGGLE }},
->   	/* Mute microphone */
+With that:
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Mark
 
