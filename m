@@ -1,101 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.7
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.42
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794896386;
-	b=RxB09NBuiaYMN2hH3eVPe0F6bas8qskiVLa787YM/8qtz93abuSQTTYtJV3e8wZHPo7O
-	 MiUXxTPIQyJ9mNuj2fODGSkd2KM/WjnpC/0wqp3vkqqk7ccNQXrKEKLjtcjWXRgk55M5H
-	 DUbBZM3NXGmek3LLlMr5qLPddBqeCFMKsziE8Dk7cLSnaYyL1ZvvQNcTwI+sqk+DURUJW
-	 Tsp2qkvZBmVXhOGTlWV3CzM4akZj5wgcBtPdfD8P7kzLes388omgcenLrglALgyr8vIpO
-	 wZMkQPLSvzNV0Yn4g7SMoQINPbEKYskFbjbp3aUSjOP//Y9cnF5c+H2s/b2xzamHlwA==
+	t=1794898687;
+	b=D9aKMnq1oOlOwYJug8u+rjfBJvRlVAkZfyEFd6o+bA+4t1T3UOmTtUSVNbmiYLmd9kFu
+	 C2kQOHFr89ZUnPc7nbTNfkKEa8KTru7e8VKIZY7g/lqEY/zXynpiOzszIRfmo45MgqHCO
+	 sys3hNTFzLT7iCKilcC7Qz6kslmnueKIWmwBEciQ6T63/3hbJerbzeuexeZ5NmV0765cb
+	 FIouauf1T37XSzyO1pS6oqXT4lIlppPcUrvJSQAX9tPJAH5Q6paI4b4+lRDaeCVqYtuCO
+	 0RIEk2xQMJYS4wDqr3fJ1nZL2Jzo40g9DOPdcQuKUPRDrnHRw4yy+ty+JjmHwo6qnpA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794896386;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:
-	 References:Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=SjlZ78p7wLFEhCXJKZ4jBcn71CYeVjc3jXvLt2HGIow=;
-	b=LWGtXhd1cStOCYuzU9LOwUE2jcwlRy2k2wVvSoQf4Rec5kJxdGsmggKzWz5FO8wUGrcZ
-	 gtMroCgaZ2mMX4kkeUPMA/0Al9Mlpgd1nxJj6yNY94T/JNgOerFtJOuhFlkAPlYYdvlcg
-	 KcQHcBvzBeb3dBmhpBFkthMgoAGAtY7JvcCq79NJiT7vhYjvZfth+g3kAw4hHhBt3rxD6
-	 L4Z91gjDYIn515zriZd8+4CBS/X4aKxqZqWJqPWINnE4gzL7MrpLIAr6h16h86FqMf33P
-	 t74XYfD6CZ0GacB1wsemIjOHauUlYZZgJCxp2Vw9QUpka90r4IFfUY1g6k5eHefOQnw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794898687;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=kxEt8vG+DRrVDcd2eXyG/fDAKs1GojQKFTKXDjvZyvM=;
+	b=QszB7kMjk6tJr7mXH8xks1GYSVLysXMxcVNHYe6JaWMBCz7FRpW/jc29IcDMsvhWj4C3
+	 4aHV9pAwC+iFNvXMqN7QTtjHGPs27ib+m7JGkXjHWhhPFPZSgqC402PYALGhHoyeW9VIy
+	 iKvpaYonf9GH/JDwZDbjPuTviU+GeaJnJN5MdoOZjtEroRDgFy5d1VPTASnljWi+xp033
+	 BgrIdDu5FnEwGZ7vXfilqg3t2Td3OVCYwKqcNQIH14JLs0vhEFGYwtvjt0W4y1ryhwwr7
+	 8lvzmksd34dxwX1OAa/JvjNcj+fpTSgKyF0sytQH3hwgABaO8RLkI+eoSdmFEZv/8IQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=mHCDa8Fi;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.7
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011007.outbound.protection.outlook.com [40.107.208.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x4rM+d5e;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.42
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8B8606A31C;
-	Tue, 17 Nov 2026 06:19:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E8B8606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1588A606A31C
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 06:58:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1588A606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=mHCDa8Fi
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jTRJ1GtlhQLOUd4OKvg9TjsO41HEubfrCHb4+RGlLOQkVkxRa16mrzY1rgqzmtQpqsx8vzYIysaQK8G7GFK+0JE93RmbaW2wCyB/APqmpwltsxA/LHnwghH02v6rF2Uy1+eDylaWtSbqPClzlVA3CwkfOJthmen6eX3MJZ/54hK+F/Uivx+sodTroRMTMjqrmeYXN4cptxMfwIjhsJONAFMTsWdUCGO/gvDcvzUucaprXKx9Nq2IE0XlktNE1q4TfF8/NQ/OT0eN+Mun+o5/Oc3EDBrrkcR6PW1DSgxdZ3udwWUX8yuX6hMfjP0czzbAhx5ACiPcJVyfKQw5RvbhKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SjlZ78p7wLFEhCXJKZ4jBcn71CYeVjc3jXvLt2HGIow=;
- b=RA+D7KMXC+2L6LBvZ5hlntB+Z/Lq0RxibS5KDfjsyGShGyOhwHWSB6zAmOB6Ik4bVcoSFvZdPs1q29dPZUFpx4BPi3cAZ+YHn5t0dv2cLuBbPDAUVF5SOc4nZpvv0PZWtCuOua0IX0HnlDlBOTS01Nj3k1q2NUnTwyKGSNQb5JowCVE6IXyxiqRQ/8U9WCDI5DE5utIYROUcrwWUl1dLeasHLMhwZnIYNwThIjirQchwK1F/TMRAbfEfNlYfekav9bvrTfQjAj7F3RUShpveqAvziTK62EOsKugHApXN+CluCPzPiMWXqBa6wyTmplspuf/MzuvGt5rqWOpOS96TZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SjlZ78p7wLFEhCXJKZ4jBcn71CYeVjc3jXvLt2HGIow=;
- b=mHCDa8Fi/do2Tofw0FIfaATZNOeZg6Gm+tvhh9JnSN6Zlxem9q/2Q5QzaiOU51o2sFbUyUgAp/oQWAcKu1bS1yudWaAsJg+APdoy6ZOXJtx/hi6eKeRPZ8tz1FtQf1ZRO+2zPnKZaoSSD+NBUn/BRFL/gWC1OCOHM1Uul+EbTw0=
-Received: from BN9PR03CA0050.namprd03.prod.outlook.com (2603:10b6:408:fb::25)
- by PH0PR12MB7959.namprd12.prod.outlook.com (2603:10b6:510:282::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Tue, 17 Nov
- 2026 06:19:41 +0000
-Received: from BN6PEPF00000076.namprd03.prod.outlook.com
- (2603:10b6:408:fb:cafe::7d) by BN9PR03CA0050.outlook.office365.com
- (2603:10b6:408:fb::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.615.13 via Frontend Transport; Tue,
- 17 Nov 2026 06:19:40 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BN6PEPF00000076.mail.protection.outlook.com (10.167.248.203) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Tue, 17 Nov 2026 06:19:40 +0000
-Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Tue, 17 Nov
- 2026 00:19:40 -0600
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb09.amd.com
- (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Tue, 17 Nov
- 2026 00:19:40 -0600
-Received: from [10.136.43.35] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.57 via Frontend
- Transport; Tue, 17 Nov 2026 00:19:37 -0600
-Message-ID: <69aee432-502b-4013-83c6-dde70cb59629@amd.com>
-Date: Tue, 17 Nov 2026 11:49:31 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x4rM+d5e
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5c10dc41270so4538051e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Nov 2026 22:58:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794898685; cv=none;
+        d=google.com; s=arc-20260327;
+        b=IhFIyhx7rjvmMLLANESCmkmH2uGhH3kOjmKD1V7Wy9pFc4q1UQn6O/pPtuNhEWfVTk
+         UGXA0Mqj/LTsoTgXpQgvDBAxbclSf3rQmEcWYCEeL2yvza6bscZ9BlJsMmSEAnbrJo2i
+         J1nNxDuL+gXjN8siuyKVX/pKHyplZvXb5XKXlHk44Kox3bTxsFrEaQ/YoxzyhKdPvEVs
+         cpsawocBdvrOJ6iMUfqVSXrvRDslTjjvTtmOtoPO0TVb5NsRcj9lIWzc7omkX+5wQNKk
+         oKH1xNjUm7JLCajyfcl8EwIkiiF+fTFqYUiYfX/1puMjB94dFMuGbJ3puHrQQKLMZUNf
+         2xnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=kxEt8vG+DRrVDcd2eXyG/fDAKs1GojQKFTKXDjvZyvM=;
+        fh=bl3oaCkJqJLi1976U6daTIbmpx9cT8+79DLB542x7lw=;
+        b=Acj3zCH6hftU4FbUoRpiGx2gyxwrxILIq4jfHedczvmKXk0pDD9OsNtO6mZAsJTGbb
+         Bk7gWzxijbMQXdD/F9n4JFAjEzpLkSR136t6o47h9qwIZFBuPVmCSRLivkjvXT60MKqn
+         Ge2UHAD+Xq+5BOrGDdXlHhWRgWsY4mAEyh/ES4Dzs8GXNoaok7batPAxmGZBcMpo6tZ2
+         RoFZ7+pODqnUWlUwIm4VuqJWFXE3l1zKQxOsW8H6BeKR4oOIsRnS/iGWtZjzoeaCoDWU
+         7fJOElhcQh64VDrBlRXeUAhjMvK+j2THiLwWlP7sNvAPJi6MrLftNS+0IaLGhRfxavaG
+         BGlA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794898685; x=1795503485; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kxEt8vG+DRrVDcd2eXyG/fDAKs1GojQKFTKXDjvZyvM=;
+        b=x4rM+d5eQf4pNGW78XWsyX1n5/EENz1y9C582ayOUP3S4yXFLe4ti1OMdst2hKDcNR
+         H0MZ59d+v5p7RRpmZsCUYqwPVdiI15zMWLgPo1dyKoAbznFIEsa0VRqbBWGkFJm4pDjZ
+         TdabPI9bMHH4aGyrZlCqZVYl76Kme+lPQfoBD5xEUz0itaR7Mj/8FciSX+cfIZ+RrWKA
+         CXqm0Ou5VOpQDOiwcyXzsiGTsBbHStSxve4GGZCDrfNumM9QQpQhYF8vZA/zcS3HuQ6T
+         tT2fD5ZjpETcM4oSA5+HNYJSGq43pV6EAIUsl5A1AsbI9HLnXPRes8GdxUsuCOdnscWb
+         iCUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794898685; x=1795503485;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kxEt8vG+DRrVDcd2eXyG/fDAKs1GojQKFTKXDjvZyvM=;
+        b=L/hQcqwhL91pptPLLWZ/i6UQn1K7yB9xHTlKWmDCjycZILYGGhgQI1FgSc4hVhNcMC
+         29JBnSubGCyTGIfp0kNjdo8JPdbA3lJmzF4HtXd5ICTpi1oZBt4Vez5rihddU7aficy5
+         nrFewQrTg8jHpz7qTqyGg5Ac2sFXYVz0vlMKhXxtw0m1iSmTY3oZi7A5ShLZxC2lhHqK
+         D5sIdUdfF3Y15KbebnYZvaNjCR2CNKEYG1C0XbllnUGBe/TVB4rkT6iUL2QX3z6SfMFr
+         QsDJHIMRXaXRiLVd01LTYg0QHQ9tRYavLDvLQUY+aJnS6F3rRIcUqcOMmMiM5FEvcoBV
+         HJcg==
+X-Gm-Message-State: APuU4Z+mQL5XhSfTX+vpH9Or88Xtjwgv7nZ93RVS6krzCRkDwYbaKDtc
+	+P7AS9gmmZABSotSWRqngXcGEEA5zw81TWBvc79v/T6+9B5U5yMTt5X3JNJhE80tWOlrh5TOZWy
+	LSao1m3BiXi4JX4LXzmqWoZxmGnaKgAXdWIzh
+X-Gm-Gg: AYBFou2ZkrPiOqSlgFGE6mA+4Y4mbC7ANKOQBtymYHAHp/yYMjwrhMRrZ7jFlfPbZU9
+	ClmDZuK2dk0ntY2wqoWBlwNmtLkLOM/Mn/5jDhLMolaeUaIVsp/M50zy8xjE6GE3+wZjEoq34lH
+	FyRQPh6Z4vQnOlbvL0WPfs4mphWaJaClBEfkLhuUaufGB9A9oY0YSJYnSgUJPWWfCDqJgiw4LLY
+	QcuxXMKJ3QWgva1SbQzjA7J46wwMd62NxrYEAoTWf1tqG85W9vp9ZGSa3109Z2At0UYMoHGARg1
+	hECQLpZ1CLsQwqDGmkMpxCQB4TAMrFoTy8uq53cR9CeOoNqh/2jx3DElgRvcln6cDrTMSJ/sGM8
+	Iw6+988HpCR4XKFY86ayXSsQLSQ+M6KNG/BK2XLUK2grunfITfxpqVYfsYkn50rKTXCPqyoko/d
+	v0l9OmYMyGGVQLM1sRTaP8JpSYN7rN/B0pPTkLWtlbii3bHjo4hSTtnxDHzf9EFYJHyUuyLaBBm
+	M6GCFyMia0DaYos/FOzAUx3LTYg5YHD8N1kvDoTX9uFzt/aLf1b0fUr0MwYnqxXK2k4VEywFOIo
+	gFp58yA7gohR4lib+l2MhupBTmhmilo/XgEgsLWShFY6pPAWkrHXx0xKa09paJG0g96Queo14lA
+	ZM6ihLTptpibdM2xAlA==
+X-Received: by 2002:a05:6512:b97:b0:5c1:57b6:c791 with SMTP id
+ 2adb3069b0e04-5c170589d1emr5037922e87.0.1794898684865; Mon, 16 Nov 2026
+ 22:58:04 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,350 +107,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] cpufreq: amd-pstate: Set asymmetric CPU capacity on
- hybrid platforms
-To: Vishal Badole <Vishal.Badole@amd.com>, <ray.huang@amd.com>,
-	<mario.limonciello@amd.com>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
-	<perry.yuan@amd.com>, <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20261114150310.1377654-1-Vishal.Badole@amd.com>
- <20261114150310.1377654-2-Vishal.Badole@amd.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20261114150310.1377654-2-Vishal.Badole@amd.com>
+References: <CANsc=4Uec03px3_Q+4YQDwL9H5FugS_QyEGPKAOy0Nq5tTOmPg@mail.gmail.com>
+ <d6ef8523-6e72-4fba-bf99-3cc24ff41af7@gmx.de>
+In-Reply-To: <d6ef8523-6e72-4fba-bf99-3cc24ff41af7@gmx.de>
+From: =?UTF-8?Q?Adrien_Verg=C3=A9?= <adrienverge@gmail.com>
+Date: Tue, 17 Nov 2026 07:57:53 +0100
+X-Gm-Features: AclHuK_M93myyz_s31T6nIztoB1qp7oIKlQgJaoLk0bHFnYH7WMISZ9qDdqaqqQ
+Message-ID: <CANsc=4XWjHcDTiK907_Pu=JKBgcLi0R7OPkMhqSddpE9gYFRwQ@mail.gmail.com>
+Subject: Re: [BUG] platform/x86: lg-laptop: Windows key not working since
+ native ACPI events
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PEPF00000076:EE_|PH0PR12MB7959:EE_
-X-MS-Office365-Filtering-Correlation-Id: accae8cc-3663-48a2-81ef-08df4472c37d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|23010399003|376014|36860700016|1800799024|921020|56012099006|4143699003|11063799006|261102130727099003|261026121527099003|261026140227099003|10067099003|261028144727099003|261022105027099003|261022075727099003|261021121427099003|261102123227099003|261009223027099003|18002099003|22082099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	d/EyDdlc/v16nQrbOgxuLNdyNw3rT/XxFNOf7DXv0qn7BdzNU2H6htAtFV5ij2xDLMR4oE1nLMMFBwIJc3OqmGzeajNBU7dhFUfjt94+g2uQpsu2qLHN9nPPi9FNPPVuibDouwEJniVem4phSo1Qkd+j6sWo3+FYj+Bxwi+NGTSBUbPXblsBjsFvEQ9/SDIzh1stIpOwtOuyag57sG0udDSOv/lKSUXsLnQf1s2t319ZczuXeeNG1aXu3QG6x7wLo+MrxPj7PxfdmYdQhJAhJGEjVM15WY8CjjDSU6uygTrGlN2UrFxu5Xqt3rnAEHDG3/l66PeE11hchbDzNdF4+seqB0VESkVsykaQPBzf0RtBHDAo2g35lTGKetcL2j3lG57+2UpCvDODy31YTcS/yIeACldlP6Ke+6LicHZKNBcC7x9Ju+qWP5zwdIiDiTqQ5xXB6X1Fy7hX0BVg9aNUJUOZj/mphVA4XW3VTCktGEyDTO/tVKUrKlyiZSLFZxrmctVN944BJBFITBfskK/OgNpwdF7eSJQOfVhr7+2i+5sf7H/630m4UFuscvsLqFCn9fM36YSu80ccjxR7DvJnf9M5I337K60UBzWWN9W7pzBpP9EcPnLILaZ4o0devp4BoigBvUK6+b9/QoTpqyeo3buPtB/s8VtkwkawBI5WAYZIPGeBE511J99bl0W85PnCOXb00IlR/X9E1RIE8o5ry6GM3ekJHpq2in2aT5JYsb1VSc5AKpV7Q7M0SDsOUuP/
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(23010399003)(376014)(36860700016)(1800799024)(921020)(56012099006)(4143699003)(11063799006)(261102130727099003)(261026121527099003)(261026140227099003)(10067099003)(261028144727099003)(261022105027099003)(261022075727099003)(261021121427099003)(261102123227099003)(261009223027099003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	9QrmrPkpeJZQHs8BKlFxkBFaaOaJ5bUG+Mu0pWZGBxmQn48ac3nCjHcIt9okwlZtZNC4WOuKZS4MqoH1oOXQQX7JlMWhpU+kxmjcZcCnZ33EcYbldF01oYLDZrO8U9XbCa5oanO7j3m+KqDWf+sXt+e0hf/uPCpAQa+6nSNF+7+PXZjUZUkVX8GtNUZU1x5uee2GGabeP75s9hgYfOovinvxTLCU/ed8wnKHJ2CnlWyqh1LjYqJhtU++KEn71tpr9UlsERkAhNLXppMOdqFj7UDq2HWUaZv6fDVqLZYON9mQXZo3ogxDCesRchiMyeOGDRYaRGEaxwEAspjz0uCPvfdktSBIpQiRkOKtQNaQM9E293LEdCf6WhFTKxVYwx/wwU6vOvw0MyWCLRI7csrvl80KwxclJa2d5w+UJ7PfjPphSAH1AxgF5OWojGM7culI
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2026 06:19:40.6222
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: accae8cc-3663-48a2-81ef-08df4472c37d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN6PEPF00000076.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7959
+Content-Transfer-Encoding: quoted-printable
 
-Hello Vishal,
+Hello Armin,
 
-On 11/14/2026 8:33 PM, Vishal Badole wrote:
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 4bedfbfc18b6..59eb2c4c7867 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -29,6 +29,7 @@
->  #include <linux/smp.h>
->  #include <linux/sched.h>
->  #include <linux/cpufreq.h>
-> +#include <linux/sched/smt.h>
->  #include <linux/compiler.h>
->  #include <linux/dmi.h>
->  #include <linux/slab.h>
-> @@ -39,6 +40,8 @@
->  #include <linux/power_supply.h>
->  #include <linux/static_call.h>
->  #include <linux/topology.h>
-> +#include <linux/cpuset.h>
-> +#include <linux/amd-pstate.h>
->  
->  #include <acpi/processor.h>
->  #include <acpi/cppc_acpi.h>
-> @@ -86,6 +89,10 @@ static struct cpufreq_driver amd_pstate_driver;
->  static struct cpufreq_driver amd_pstate_epp_driver;
->  static int cppc_state = AMD_PSTATE_UNDEFINED;
->  static bool amd_pstate_prefcore = true;
-> +static bool amd_pstate_cas = true;
-> +static bool amd_pstate_cas_initialized;
-> +static u32 amd_pstate_ref_freq_khz;
-> +static u32 amd_pstate_ref_highest_perf;
->  static struct quirk_entry *quirks;
->  
->  /*
-> @@ -957,8 +964,8 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
->  		return;
->  
->  	/* should use amd-hfi instead */
-> -	if (cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS) &&
-> -	    IS_ENABLED(CONFIG_AMD_HFI)) {
-> +	if ((cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS) &&
-> +	     IS_ENABLED(CONFIG_AMD_HFI)) || amd_pstate_cas) {
+> take a look at https://lore.kernel.org/platform-driver-x86/20261103180750=
+.228116-1-W_Armin@gmx.de
 
-This keeps getting uglier. I think you should have a preperatory patch to
-negotiate this and maybe a late initcall like Mario suggested to actually
-toggle the itmt support.
+Thanks! I found it shortly after posting my initial message. I applied the =
+patch
+on top of kernel 7.3.3 and I confirm it fixes the bug introduced by commit
+ad873d634095 ("platform/x86: lg-laptop: Add support for native ACPI events"=
+).
 
-I was thinking something like folows to negotiate the who / what gets
-the owenership:
+Thanks again. I hope it can be merged upstream and backported to 7.3.
 
-diff --git a/arch/x86/include/asm/amd/hfi.h b/arch/x86/include/asm/amd/hfi.h
-new file mode 100644
-index 000000000000..2a86d0049b8f
---- /dev/null
-+++ b/arch/x86/include/asm/amd/hfi.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef __ASM_X86_AMD_HFI_H__
-+#define __ASM_X86_AMD_HFI_H__
-+
-+enum amd_hfi_mode {
-+	AMD_HFI_UNDEFINED,
-+	AMD_HFI_PREFCORE,	/* amd-pstate defined preferred core. */
-+	AMD_HFI_ACPI,		/* amd_hfi defined from ACPI PCCT. */
-+	AMD_HFI_ASYM_CAPACITY,	/* Amd-pstate defined asymmetric capacity. */
-+};
-+
-+static enum amd_hfi_mode amd_hfi_current_mode = AMD_HFI_UNDEFINED;
-+
-+static void amd_hfi_set_mode(enum amd_hfi_mode mode)
-+{
-+	if (mode <= amd_hfi_current_mode)
-+		return;
-+
-+	amd_hfi_current_mode = mode;
-+}
-+
-+static enum amd_hfi_mode amd_hfi_get_mode(enum amd_hfi_mode mode)
-+{
-+	return amd_hfi_current_mode;
-+}
-+
-+#endif /* __ASM_X86_AMD_HFI_H__ */
----
-
->  		amd_pstate_prefcore = false;
->  		return;
->  	}
-> @@ -969,6 +976,64 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
->  	sched_set_itmt_core_prio((int)READ_ONCE(cpudata->prefcore_ranking), cpudata->cpu);
->  }
->  
-> +bool amd_pstate_cas_active(void)
-> +{
-> +	return READ_ONCE(amd_pstate_cas_initialized);
-> +}
-> +EXPORT_SYMBOL_GPL(amd_pstate_cas_active);
-
-You can then just use amd_hfi_get_mode() instead of this.
-
-> +
-> +static bool __init amd_pstate_init_cas(void)
-> +{
-> +	int highest_perf, max_freq;
-> +
-> +	highest_perf = amd_get_effective_highest_perf(0);
-
-Didn't you mention an efficiency core / LP core could also be
-the boot CPU? How are you considering it as your highest
-reference then?
-
-I think we can tak a page from how intel_pstate does a
-hybrid_set_cpu_capacity() which iterates all online CPUs after driver
-registration / if onlining changes the hybrid_max_perf_cpu.
-
-> +	if (highest_perf <= 0) {
-> +		pr_warn("Invalid reference highest performance (%d)\n", highest_perf);
-> +		return false;
-> +	}
-> +
-> +	max_freq = amd_get_max_frequency(0);
-> +	if (max_freq < 0 || (u32)max_freq > U32_MAX / 1000) {
-> +		pr_warn("Invalid reference maximum frequency (%d)\n", max_freq);
-> +		return false;
-> +	}
-> +
-> +	amd_pstate_ref_highest_perf = highest_perf;
-> +	amd_pstate_ref_freq_khz = max_freq * 1000U;
-> +
-> +	return arch_enable_hybrid_capacity_scale();
-> +}
-> +
-> +static void amd_pstate_set_cpu_capacity(struct amd_cpudata *cpudata,
-> +					bool highest_freq_available)
-> +{
-> +	unsigned long capacity, max_capacity, capacity_freq, base_freq;
-> +
-> +	if (!IS_ENABLED(CONFIG_SMP))
-> +		return;
-
-What is the CONFIG_SMP dependnecy for?
-
-> +
-> +	if (highest_freq_available && amd_pstate_ref_freq_khz) {
-> +		capacity = cpudata->max_freq;
-> +		max_capacity = amd_pstate_ref_freq_khz;
-> +		capacity_freq = capacity;
-> +		base_freq = max_capacity;
-> +	} else {
-> +		union perf_cached perf = READ_ONCE(cpudata->perf);
-> +
-> +		capacity = perf.highest_perf;
-> +		max_capacity = amd_pstate_ref_highest_perf;
-
-You can just cache the freq corresponding to
-amd_pstate_ref_highest_perf and not need two seperate global
-variables. 
-
-> +		capacity_freq = perf_to_freq(perf, cpudata->nominal_freq, perf.highest_perf);
-> +		base_freq = perf_to_freq(perf, cpudata->nominal_freq, max_capacity);
-> +	}
-> +
-> +	guard(mutex)(&sched_domains_mutex);
-
-Why "sched_domains_mutex"? Probably means you are setting
-x86_topology_update at the wrong time.
-
-> +	arch_set_cpu_capacity(cpudata->cpu, capacity, max_capacity,
-> +			      capacity_freq, base_freq);
-> +	topology_set_cpu_scale(cpudata->cpu, arch_scale_cpu_capacity(cpudata->cpu));
-> +	x86_topology_update = true;
-> +	WRITE_ONCE(amd_pstate_cas_initialized, true);
-> +}
-> +
->  static void amd_pstate_update_limits(struct cpufreq_policy *policy)
->  {
->  	struct amd_cpudata *cpudata;
-> @@ -1043,6 +1108,7 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
->  	u32 min_freq, max_freq, nominal_freq, lowest_nonlinear_freq;
->  	struct cppc_perf_caps cppc_perf;
->  	union perf_cached perf;
-> +	bool highest_freq_available;
->  	int ret;
->  
->  	ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
-> @@ -1069,6 +1135,7 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
->  
->  	/* try to look up from BIOS/quirk first, fall back to (nominal_freq * highest_perf)/nominal_perf */
->  	max_freq = amd_get_max_frequency(cpudata->cpu) * 1000;
-> +	highest_freq_available = !!max_freq;
->  	if (!max_freq)
->  		max_freq = perf_to_freq(perf, nominal_freq, perf.highest_perf);
->  	WRITE_ONCE(cpudata->max_freq, max_freq);
-> @@ -1100,6 +1167,9 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
->  			 bios_min_freq, cpudata->cpu);
->  	}
->  
-> +	if (amd_pstate_cas)
-> +		amd_pstate_set_cpu_capacity(cpudata, highest_freq_available);
-> +
->  	return 0;
->  }
->  
-> @@ -1923,12 +1993,20 @@ static ssize_t prefcore_show(struct device *dev,
->  	return sysfs_emit(buf, "%s\n", str_enabled_disabled(amd_pstate_prefcore));
->  }
->  
-> +static ssize_t cas_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	return sysfs_emit(buf, "%s\n", str_enabled_disabled(amd_pstate_cas_active()));
-> +}
-> +
->  static DEVICE_ATTR_RW(status);
->  static DEVICE_ATTR_RO(prefcore);
-> +static DEVICE_ATTR_RO(cas);
->  
->  static struct attribute *pstate_global_attributes[] = {
->  	&dev_attr_status.attr,
->  	&dev_attr_prefcore.attr,
-> +	&dev_attr_cas.attr,
->  	NULL
->  };
->  
-> @@ -2438,12 +2516,23 @@ static int __init amd_pstate_init(void)
->  			return ret;
->  	}
->  
-> +	amd_pstate_cas = amd_pstate_cas && IS_ENABLED(CONFIG_SMP) &&
-> +			cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES);
-> +
-> +	/* Enable CAS for processors with heterogeneous cores. */
-> +	if (amd_pstate_cas)
-> +		amd_pstate_cas = amd_pstate_init_cas();
-
-That two step disable is pretty ugly. Why couldn't you push the
-feature checks into amd_pstate_init_cas()?
-
-> +
->  	ret = amd_pstate_register_driver(cppc_state);
->  	if (ret) {
->  		pr_err("failed to register with return %d\n", ret);
->  		return ret;
->  	}
->  
-> +	/* Per-CPU capacities are set during registration; rebuild domains once. */
-> +	if (amd_pstate_cas)
-> +		rebuild_sched_domains();
-> +
-
-Isn't this super early into the boot? You don't need to rebuild sched
-domains here since they will be done later (I'm having a deja vu moment
-from a previous review)
-
->  	dev_root = bus_get_dev_root(&cpu_subsys);
->  	if (dev_root) {
->  		ret = sysfs_create_group(&dev_root->kobj, &amd_pstate_global_attr_group);
-> @@ -2484,8 +2573,17 @@ static int __init amd_prefcore_param(char *str)
->  	return 0;
->  }
->  
-> +static int __init amd_cas_param(char *str)
-> +{
-> +	if (!strcmp(str, "disable"))
-> +		amd_pstate_cas = false;
-> +
-> +	return 0;
-> +}
-> +
->  early_param("amd_pstate", amd_pstate_param);
->  early_param("amd_prefcore", amd_prefcore_param);
-> +early_param("amd_cas", amd_cas_param);
->  
->  MODULE_AUTHOR("Huang Rui <ray.huang@amd.com>");
->  MODULE_DESCRIPTION("AMD Processor P-state Frequency Driver");
-> diff --git a/include/linux/amd-pstate.h b/include/linux/amd-pstate.h
-
-Why not arch/x86/include/asm/amd/amd-pstate.h since all of this is
-AMd related?
-
-> new file mode 100644
-> index 000000000000..eb750abd20f7
-> --- /dev/null
-> +++ b/include/linux/amd-pstate.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Public interface for the AMD P-state driver.
-> + */
-> +#ifndef __LINUX_AMD_PSTATE_H__
-> +#define __LINUX_AMD_PSTATE_H__
-> +
-> +#if IS_ENABLED(CONFIG_X86_AMD_PSTATE)
-> +bool amd_pstate_cas_active(void);
-> +#else
-> +static inline bool amd_pstate_cas_active(void) { return false; }
-> +#endif
-> +
-> +#endif /* __LINUX_AMD_PSTATE_H__ */
-
--- 
-Thanks and Regards,
-Prateek
-
+Adrien Verg=C3=A9
