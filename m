@@ -1,113 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794931401;
-	b=SxTZK9dvQvKeQwragn7s/7nd4p3XfC/0rFo3P/MaGvwZK42YvYFWTKxh44McH9OkhBRz
-	 lFRArNlSKhRGK6LvSqwAhXlsy7RCJtseerLscUnEQMiVmWxJsJjWfqKkgfL95abG2/xBZ
-	 lx/JVVNrBTkzI2kQb98+lbMoS1ojrGFRJe6gbxr1Cg7g7FB0DKq89wm83S7RCpU/G5O0e
-	 HtdmrA8SPDqJl3OS0Hus+U3iG7LgDDMDfOZlYO145JVOn3NXNfzYdFbVIUL3j17JgD7fP
-	 j0MhcPwb9fAPAkH2k6pU1AXZArb37DAeESsSSZouQn5ZgbsE3dMW6f670OuyTUrgXAQ==
+	t=1794934003;
+	b=s7piHkl/QG3lKajQAOa1haQphwBzpTx/eWh6RE+2xYIAMGMFKpX4fWwLx25IQJJrdGZP
+	 61oWUbMjNXyqx9NfowltKnB6lZHoyLITn0UyD05KPjcvIkwCRK5g7bsDyCQ8t/r+9GTq+
+	 Stgn+DsOX/x4xeOAsar68IyUg//InfOj5EoLt0jtkbBT1iCLE/8g7xJ/i0PqWXmzW0nTs
+	 gpRdSt1JZ7B7fbQpg4zepVHFlCaeEmaiBvnNzM9T6BNjwoMzDdJp8qufMh4qdPm/b9k6Q
+	 R+D3kXSYM8YwyogkDhCDn/WrtXsgri+N3fUOc3evgXbCJmdamwzaUSzFeH9ZUV2v/2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794931401;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-GUID:X-Authority-Analysis:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=K44g9D+a319XGB4PD7ytYAYG94h2IajymOEoYGpnvQY=;
-	b=u+ov6AFD2LMz/8biGTSJzKUifo7+Tc7TzyISuoEe83Tn1m1KnIndlpsE7pxbMnQX8d37
-	 lh2LStAZGd0AjHDxl+d6ke7o7YEnvCFdktA5y/YjVHAW2j946in+Lq8ax9plUWsqDKxW8
-	 GQunwGJ4S7t/VOq0HZxXR2GgKjNJA9sX062NBu2DqwrZ/NPVaGtVtyLyKWYuGCrA98HGP
-	 usraUWXFK11oFRA+WM7ZWCPpm3lfGne0qORYGplK3gAI1n3VHpAgup7qGga4k7sM3rUes
-	 ubLWc3TfriZM98Ywpp6/INnmc1bXZf+nL9bZGnLHzE+RiQ5I1LoCJeUvuRSetS4wzPw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794934003;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Received:
+	 X-Forwarded-Encrypted:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type;
+	bh=Z/XV0mK39zFS7JOXvDWInmC0g759RMa7DDlWP4M3P5A=;
+	b=SAmxuPT0FzjF5LJ1taAYk0qgfoM8LrPwqRXsNklVMbKURnequOGKA5grR/VF0oeD5Lx5
+	 BE8hyqkXawF6eGV77sSEJ32YmHeU41Q5hiMIRPXoOmPRCOgkA0iwxWlrwj6iXbnQyb6y1
+	 H61YZRtTiKSechgtTGstNANbig8l4dr2WTTVu1SUm75beZtAVPQqheRJTxVeqq4HnjUwR
+	 6FOW+Vti7RjKsuH67v2f3tuBScLK9/TtzIiCToG2GiW7MRPUic+vU7qTkjYx+6TeswwNk
+	 cwz2hFhheK87+AT7jBHswNqHNW9AZo2cRotqiO9XVQKdYckx2DumdRCSG2EJ5imSCYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=DjH7rE7r;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=ciYjquy3;
-	arc=none smtp.remote-ip=205.220.180.131
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=none header.from=linux-m68k.org;
+	spf=pass smtp.mailfrom=gmail.com;
+	arc=none smtp.remote-ip=209.85.215.170
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC8606A31C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 16:03:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EDBC8606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=DjH7rE7r;
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=ciYjquy3
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AHFR6K51663618
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 16:03:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	K44g9D+a319XGB4PD7ytYAYG94h2IajymOEoYGpnvQY=; b=DjH7rE7rXPUt1HX/
-	wnWqhTKgUG6zzAcP2cdBB7rOkK0/+hINtf+imirMNoaJtRDUnJ6GJb7GyFaOpjIO
-	DR+JPWNr/nHrNC8SnvdajhhbziVtD9nfokhUnKeKZ9Pm1LN4OVc+GAm2ejBf0BrK
-	G/KE3JbWvMOWvCtl4BJrotWwIw7RRQCqd8RUY3cQ2ak0kTF/07bgIpx+yTqlXtyC
-	ZLCXpZP/09lMbCe5ZBtHOgfzf1eeYWqfJXAtktIOGUaVa4wj9hlUpi4sPRFsj5Vl
-	tTsiOUuNbGvZnZqnlL0NZtgOauxcjfa8LEYVvD83+GRsYMf0S+N4STCQB6yuRuUQ
-	o+xvvg==
-Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com [209.85.222.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j0kcc9u80-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 16:03:18 +0000 (GMT)
-Received: by mail-ua1-f70.google.com with SMTP id a1e0cc1a2514c-99077a0be0bso1600398241.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 08:03:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1794931393; x=1795536193; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=K44g9D+a319XGB4PD7ytYAYG94h2IajymOEoYGpnvQY=;
-        b=ciYjquy3mKYpLBVYOeTMAYxKZKY6SRXCfL/ZSMmqwB7SPFgttRv3pq9U7tXw+tc5Er
-         IZRye7Ac27Iymk8RRwprZq3ML4zcbdlBHgXDlqKURd3F3APYAGHTqsstP+U+qFHLFtK3
-         wWPk/Kh3/6tbc/mQNNmdyOedmc7lbjJ45dGtVxiDZTltfw2tAEnEKIBt9TQGfMM+75Uo
-         rYMkgeYAgWCBEWRStnRbB5fCp6WfywXdGHxPdhIr70vVblZ/G0zjL61XA92zb/so+INV
-         yLMELCp4OGyEZx84qoG0VnQcrJs4ag1ZqNmngV6P7o9oVg70AACd3hi77HSY8w0eojp3
-         ySGQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBF3606A885
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 16:46:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6DBF3606A885
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-cdac6d19ddaso20228a12.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 08:46:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794931393; x=1795536193;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=K44g9D+a319XGB4PD7ytYAYG94h2IajymOEoYGpnvQY=;
-        b=qP+E5t76HYX+Hc2Yd10mxOn7D5lzZUEtVqDxgoyvJK4AZBivFP5gx+fOz5ro9NC1R1
-         dHETVwoDtZFpZQPP670nRUVVRvf2NSl5ZGgJa2/e96UteShUTD7lUpEz0DAL/zYprJyO
-         k56x+UkS9qt6wx8gRkvrGevqScFIrkhj8PSjcrobSJOyCGicHq8dOGrJEEeYM/ZTqDQ/
-         PX7Im7BECAxmbK4tCCU+B7MZIssbYAOe3WfVSiIWQsXyHvPwGZn7hlSgA3a+egV4bjsz
-         YwqQ/hwVMYkSpJmLLkR4XX76CK9ikZymRvhHHxcAGimEb0UYLqn4gUgzjwM+iMZ5cU4N
-         ntYw==
-X-Forwarded-Encrypted: i=1; AL+hErG2Ns8VW4vpBJ1t587SNpOhT/vyPFXlRTbHrl3a4G213sSSVitNOUVpQ02y4WXeSSkdHD3Mb/aF+nAfk4VMjUoVg2cJ@vger.kernel.org
-X-Gm-Message-State: APuU4Z+hRdUZ1XK1dbHBH8cb4Gwz4oBN8Ud0bLgXtS98HkEUc9Pteio+
-	hsO1nHzMldICvoCfXi3se/Z4oCqQ50X1e1fFSgsrzpqfsvFMh1333s3q2NUkp6HqFhE8581CwXT
-	U1A6stg3EaSYgajR5DpskPE8uH50ncI6FMyZfreud8CDjAmQkWNi05O7QaTsY1XuVNhWMHQpC2h
-	Y3
-X-Gm-Gg: AYBFou3xYOnA1jak8gpcDVMI0Eq2ZoXBgMcWGK5mPnZAtRGWG1mJ6pGXMk3r+LNmigo
-	1tGmtzCZ6+aICcf/ryvdegApP1yC5QSqElf4G2q08cp6DmsswBduLGsFMkyOZ8jJf/BVexH0unf
-	XzTTDFE+A+Aouiz8TNzZe+zzUss3M8eb4ur0N0tGs5XizonEvqiQ92Cy2RmNyp7NVqqeNEHQZS4
-	K5y0LAqy3DAno8bvveAvbO62gPpqsnxEA5m630AHVrqSX0vBzLzU6DiLqFWZC+x7vvIs1Zk4kfP
-	zMw5g9uJ1hjQQQGsSZwaUg4+wLPKzqkKjKqlVdaxEERZNuGrMZwtwk2VgSfPIRJ60tbNoN8CHZM
-	zrc57VCg868tUNJG/or1bSx/+0q7YijdWCT0FGig3Cizkt9qJj1YqYwqcAFYbE7jndcicusHYCM
-	4EWnC8KHAHvTufsTAQzb20LCHPA/L4nOMdC+K9ng==
-X-Received: by 2002:a67:e7cc:0:b0:7cc:33c9:b3d2 with SMTP id ada2fe7eead31-7d64d84039emr4314641137.25.1794931392767;
-        Tue, 17 Nov 2026 08:03:12 -0800 (PST)
-X-Received: by 2002:a67:e7cc:0:b0:7cc:33c9:b3d2 with SMTP id ada2fe7eead31-7d64d84039emr4314573137.25.1794931392102;
-        Tue, 17 Nov 2026 08:03:12 -0800 (PST)
-Received: from ?IPV6:2a0d:e487:16f:e583:d991:ba24:64f2:e39e? ([2a0d:e487:16f:e583:d991:ba24:64f2:e39e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb78422d2dsm111459425e9.10.2026.11.17.08.03.07
+        d=1e100.net; s=20260707; t=1794934003; x=1795538803;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Z/XV0mK39zFS7JOXvDWInmC0g759RMa7DDlWP4M3P5A=;
+        b=EMt4oqgTyCe/FEgkP4hnHlq17k159jEUpZOLLvLHWNcSCo8EogNW0+Ct/FVfBxbbDf
+         xyNyvqsPezaXEtnlU9Vo9Wkv2cf+mICfhxg81KCfPKOg3ccfDMDz5LJarGyBtY1bO5kZ
+         hay5u1Uxr/O61538YF1UxtibmSo4hVIGiSGOlNdak9yeoYZ54XLgKFRouZ++jBq831m7
+         uzqfCsIjJsWfzUq7NXAbcHfrdh72rvrRhTtdhXUpawAKwdmh6DMwrrwda0tBeR6DLYz1
+         AxKf9QK2bB/xCgAVyuT+i7+cTTOhWiByew+ekAH0SYpBCLCMN5DQSQGGtKeChCRJeV+I
+         eGIw==
+X-Forwarded-Encrypted: i=1; AL+hErGOjsQKnrrM/PIt6GJcEqagBxu4GqW/u3Wcbo6fJrYShYfYmgxIG8mBnYFhqwwSruw7jGDlcnGFkVxyWrOzasIZrHZd@vger.kernel.org
+X-Gm-Message-State: APuU4Z+yCsWpnMEdi1SfODfSySBO9eAGvDxKFYBzImyRQqS6bkQSJRdi
+	zMM+oawx1e++/nCTAjrx4BVyeyJ4ZsDJWa6Izw5PW7KBgYu635AE52R7JCHugOLj
+X-Gm-Gg: AZFdTZeL9S0/Mz5s7E0YFr+RTVD974ejjVjrI0QNrufURjWCQOPtDyZ02leGoFU83f3
+	uBoiS5GiiW9rqtlbz7xXB4b3dpuFJDQ+K6NVQXMk0MiRPrLv/R7JHlJ63SHUF1lAXjL582Lcc7D
+	pv/4NCIVUMgoxAa5sA20BaHuyNaFqx6sqAjr5ZLpk2vmdeI+40Rf8LugIMQHe49Volv96/XzB/+
+	atqf2UoYmpK8BgiOkQBoOTrwelrOhpVwoxIGz1YqqMApmb5cPvmr5MTtpYXgwEbAdGT4E7MZOXU
+	8uVPY4UEXoJQH6zOVqzgFckfMQW6RR1ylPAtx/QO1Ujio1aAcyX5KPmczswleYdTZSU4LEIfPzi
+	D4/AVaprNXh8T8I4CoE2j1PTC4DC6spJ+B9YiMFR2Kc7GDmtT8z3QMlFYV42LhnX0437Kz6Ude0
+	yp4r0gS0nQf29Zl96VLeHQABdJKLRnq3O5HMTQCE37Jwx5TraojeKeQs72Utt0GRsQ3aEZVQN0b
+	fSanOYoI2PfegZdJw2cUOef4TxJhf/ShD0H8ExGhSJCGsK0aH1ruZm3PCVaclBZJiKh7KRWPuCe
+	jpLP76+3ra0/xAE9WAY+G5utCVPRs5DG+ZoMQCTvx86qZkG/ahtEnv3IPV2lljox4PWIBA==
+X-Received: by 2002:a17:90b:388c:b0:3b3:b92a:aff9 with SMTP id 98e67ed59e1d1-3b3b92ab483mr2175981a91.56.1794934002668;
+        Tue, 17 Nov 2026 08:46:42 -0800 (PST)
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com. [74.125.82.179])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3abd06666sm4905476a91.5.2026.11.17.08.46.42
+        for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Nov 2026 08:03:10 -0800 (PST)
-Message-ID: <0de1444a-a0ba-4e16-a480-74a39c865ab6@oss.qualcomm.com>
-Date: Tue, 17 Nov 2026 17:03:05 +0100
+        Tue, 17 Nov 2026 08:46:42 -0800 (PST)
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-33bf40b0c8bso235852eec.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 08:46:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErH73Kj/BJyolNGkZjl+8kAalTXQhNtvJ4ytEBj4jdKrgL1ddvg2L+xN+qZjJ40tinAKRSA2ynGnjjvmlsMya2+OnbF/@vger.kernel.org
+X-Received: by 2002:a05:6102:50a4:b0:7cc:1ace:fd06 with SMTP id
+ ada2fe7eead31-7d64d7a9d5amr4459124137.20.1794933540494; Tue, 17 Nov 2026
+ 08:39:00 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -117,110 +80,86 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] platform profile: Extract the core from ACPI
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: rafael@kernel.org, Len Brown <lenb@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Viresh Kumar
- <viresh.kumar@linaro.org>,
-        Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        "Derek J. Clark" <derekjohn.clark@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Armin Wolf <W_Armin@gmx.de>, Jai Luthra <jai.luthra@ideasonboard.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jack Wu <jackbb_wu@compal.com>,
-        "Mario Limonciello (AMD)"
- <superm1@kernel.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
 References: <20261024223501.1420953-1-daniel.lezcano@oss.qualcomm.com>
  <20261024223501.1420953-2-daniel.lezcano@oss.qualcomm.com>
- <CAMuHMdXJOpcC3a6wMXF_m=uNjuqSO1Z3kyM7Az1uP_2GBurOvA@mail.gmail.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-In-Reply-To: <CAMuHMdXJOpcC3a6wMXF_m=uNjuqSO1Z3kyM7Az1uP_2GBurOvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE3MDA2MyBTYWx0ZWRfX6rNgk1/lTRIg
- 9DU+wLH6euloM7ze+8Ti19ddTku5lqprPQqJTOAOoz5HiKq380NY3F0l5M7lahHjiGiGUhHX6u3
- xyNtHLWM6IjQUivJ5tgF62Fzh97IEhU=
-X-Proofpoint-ORIG-GUID: JJDhNwtYg8s5VBmsNdBZKk2ozk9JqKa_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE3MDA2MyBTYWx0ZWRfX9C51a8HdugUz
- 9Bp/ynRf7ef3fEevcratWWG8NvBEUCo0Ix1nbyH969sknlpn8ONES1+wPPJa6RHQfmIZd+fdGuG
- Wmpsne0LsuOKZxkY0RlGj2F+thTHZba+6FMMpPlE63P1R9R8v4fxApGUX6Y2JX6SbDe7SMBW1Sx
- WoqlF0R2BiisWu/j8fDQuyKu9/M9G6zuyC3bK/+mVHEXdk6r6oZe+wiud9Kf/LOymeGT7wQDoww
- vxQmSZvdlFs/7/o5YZ6PKNG9oggaQVfCc1yi1nSaEYbZVGJ56KhucXhRe8l9Ej8BVgDnJRe3NI8
- ch12mB6viG64Ad2zMmRNhtpybTqz1TYYnxtmsPnFDUv8Q/+gII8INiCcXz5d5vlE/z7R8Q3FvOv
- B3ZITAqRwue4L3lbYS2XCAhkAT0HRwEyCuONw0uFYjDlKNF0TYLHsUSxDyfQV+NqgoOAK0PjwpM
- c3Jhn9ZL6ABaamZkPtg==
-X-Proofpoint-GUID: JJDhNwtYg8s5VBmsNdBZKk2ozk9JqKa_
-X-Authority-Analysis: v=2.4 cv=ZP1CCn7b c=1 sm=1 tr=0 ts=6afc7ac6 cx=c_pps
- a=R6oCqFB+Yf/t2GF8e0/dFg==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=EUspDBNiAAAA:8
- a=XpNdnCcgRucV5c9rQ-UA:9 a=QEXdDO2ut3YA:10 a=TD8TdBvy0hsOASGTdmB-:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-17_03,2026-11-16_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 spamscore=0 bulkscore=0
- adultscore=0 malwarescore=0 clxscore=1015 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611170063
+ <CAMuHMdXJOpcC3a6wMXF_m=uNjuqSO1Z3kyM7Az1uP_2GBurOvA@mail.gmail.com> <0de1444a-a0ba-4e16-a480-74a39c865ab6@oss.qualcomm.com>
+In-Reply-To: <0de1444a-a0ba-4e16-a480-74a39c865ab6@oss.qualcomm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 17 Nov 2026 17:38:49 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWfH+_4ijxko=LS_P6b1Y76WWDc8m4xL6qW1H+qKRQ98A@mail.gmail.com>
+X-Gm-Features: Aa3M54oLa7UUmy4CFc0JRC-Lz0IWxEH7iP1kR67WyO7NUNvhNNuybpNvCvDbePk
+Message-ID: <CAMuHMdWfH+_4ijxko=LS_P6b1Y76WWDc8m4xL6qW1H+qKRQ98A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] platform profile: Extract the core from ACPI
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: rafael@kernel.org, Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Armin Wolf <W_Armin@gmx.de>, 
+	Jai Luthra <jai.luthra@ideasonboard.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jack Wu <jackbb_wu@compal.com>, 
+	"Mario Limonciello (AMD)" <superm1@kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Daniel,
 
-Hi Geert,
+On Tue, 17 Nov 2026 at 17:03, Daniel Lezcano
+<daniel.lezcano@oss.qualcomm.com> wrote:
+> On 11/17/26 12:48, Geert Uytterhoeven wrote:
+> > On Sun, 25 Oct 2026 at 00:56, Daniel Lezcano
+> > <daniel.lezcano@oss.qualcomm.com> wrote:
+> >> Platform profile providers already use device-based callbacks and do not
+> >> need ACPI types. The core is nevertheless confined to the ACPI build and
+> >> refuses to initialize when ACPI is disabled.
+> >>
+> >> Move the implementation to drivers/platform/profile and introduce the
+> >> firmware-independent PLATFORM_PROFILE symbol. Update all provider
+> >> selectors. Keep provider-specific ACPI dependencies and the
+> >> platform_profile module name.
+> >>
+> >> Isolate access to the legacy ACPI kobject in an optional compatibility
+> >> object linked into the same module. Retain the legacy ABI on active ACPI
+> >> systems, and initialize the class even when ACPI is absent or disabled.
+> >>
+> >> Use subsys_initcall_sync so the class is ready before built-in thermal
+> >> and CPUFreq providers, but after ACPI has initialized its compatibility
+> >> kobject.
+> >>
+> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+> >
+> > Thanks for your patch, which is now commit 699041135f75b13a
+> > ("platform profile: Extract the core from ACPI") in pm/linux-next/
+> >
+> >> --- a/drivers/platform/Kconfig
+> >> +++ b/drivers/platform/Kconfig
+> >> @@ -1,4 +1,20 @@
+> >>   # SPDX-License-Identifier: GPL-2.0-only
+> >> +config PLATFORM_PROFILE
+> >> +       tristate "Platform profile support"
+> >
+> > I guess this can be invisible (perhaps "... if COMPILE_TEST"?), as
+> > you have updated all provider selectors?
+> >
+> > If not, I guess this needs a "depend on X86 || COMPILE_TEST", so people
+> > configuring kernels for different architectures do not see this option?
+>
+> The goal of this series is to make the platform profile firmware
+> agnostic so it is available for all architectures
 
-On 11/17/26 12:48, Geert Uytterhoeven wrote:
-> Hi Daniel,
-> 
-> On Sun, 25 Oct 2026 at 00:56, Daniel Lezcano
-> <daniel.lezcano@oss.qualcomm.com> wrote:
->> Platform profile providers already use device-based callbacks and do not
->> need ACPI types. The core is nevertheless confined to the ACPI build and
->> refuses to initialize when ACPI is disabled.
->>
->> Move the implementation to drivers/platform/profile and introduce the
->> firmware-independent PLATFORM_PROFILE symbol. Update all provider
->> selectors. Keep provider-specific ACPI dependencies and the
->> platform_profile module name.
->>
->> Isolate access to the legacy ACPI kobject in an optional compatibility
->> object linked into the same module. Retain the legacy ABI on active ACPI
->> systems, and initialize the class even when ACPI is absent or disabled.
->>
->> Use subsys_initcall_sync so the class is ready before built-in thermal
->> and CPUFreq providers, but after ACPI has initialized its compatibility
->> kobject.
->>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-> 
-> Thanks for your patch, which is now commit 699041135f75b13a
-> ("platform profile: Extract the core from ACPI") in pm/linux-next/
-> 
->> --- a/drivers/platform/Kconfig
->> +++ b/drivers/platform/Kconfig
->> @@ -1,4 +1,20 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->> +config PLATFORM_PROFILE
->> +       tristate "Platform profile support"
-> 
-> I guess this can be invisible (perhaps "... if COMPILE_TEST"?), as
-> you have updated all provider selectors?
-> 
-> If not, I guess this needs a "depend on X86 || COMPILE_TEST", so people
-> configuring kernels for different architectures do not see this option?
+Sure... Are there any users of it on these architectures?
 
-The goal of this series is to make the platform profile firmware 
-agnostic so it is available for all architectures
+Gr{oetje,eeting}s,
 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
