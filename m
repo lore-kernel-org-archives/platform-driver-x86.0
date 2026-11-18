@@ -1,103 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.57
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795016167;
-	b=guBeAYF828ApFh42rgyk640rode0Cp8jNf9m/p/vg6fSzf7HKoZNJbNgLA/UWSLbA67P
-	 vB8dhm9Y/seHfdQsbYxe9BNO0BuVt0yr6uabjpE+nx1w6BIpD6w6gcozJ125TyKKPwX6r
-	 OSqThyL9+JazVbrwbmqkGaiw6Da6jLVcVFwkrMSvsYg0GiZJnwNUeoqVeM4cNQ9TvWG/R
-	 aeJUksHx3ash2mFkLfD7EzNrmNAer2p8RealUO8qkwtM6MbcjEwUH7P97brYd69PzN0vV
-	 j7j0GGqUFeYUo9iqJhb1M9Jw8uPRpDyspzQX6JWeXiLFcqii21VlfcOMK8Fm9qQJNfw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795016167;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=kfdbb0Lq12H1RxauWT8y+qwdtuaZqWWb2KzQ3t5XEgQ=;
-	b=Y3SVW1A42pNhn84uf10TQhI+8J3WewfEYQyufiiQZgZYBa2W1gHmGUI+k+ZLa0tkqpbl
-	 xUfFhaPlcSq3xcsIdPZ37kIf5vubHmYAXl7ayLlFa6QEELJwsSGqhLqEAa6PLOpPYPDVg
-	 91rIxNPgdXrk7q7bH01Aw4zbLQHYhCJP4QxaOm42+ZFJuPbFeCF2Wk7daH93ZLdQ+cLmO
-	 8RMGHIryAJ8pruX/YJONyu6Ax/yTGXT4KzHxZyaVjVJ+ewPP8hwTYfZ5g6I72FkmwZYuf
-	 QFMSgjEqOfjg++TQ0J56YBSW3SvxyUvJyK41ZAwmOgGLL+jwa7ERBLnCqqaYtKMm6tA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=FSJekugq;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.57
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011057.outbound.protection.outlook.com [52.101.52.57])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795016299;
+	b=D8h0B5IgCFKzskOtenxeR8Gr+fxOzrpbdWN+Bdhtgfqz50N7n6W2CKZ0g5wZKtqONy0U
+	 tiC7K/mFW1rV4SK20EYpW07Ebt6ZvNMjcnJHV6TjBJA4ZLfCqScB32Ne9i/C5jeqr2htl
+	 hMlSSZeQwj1aJAa+P2vK8iNukmgDrRvmnC6tNHxkrswam1+M5Q28+/aCzID947kOfz2J3
+	 tV9H8XgBPHKg16xyyyt5p8dpEPq3M6nIwzWVTc5cfByRlxX0/CtEU9OJtSo5MhiZ4ydU+
+	 n0LkURZDmFu7i+nljTasx/pjaYKXiAuumgseCpKz8qCzRlFfiC39T2cZVq/l0DBX4hg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795016299;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=r5CGEVAkf2MMq2Xy68c1srFZ145fIMmiNbBIi1wTp/U=;
+	b=DHjkFDq7VWQ4Bt/Glue+opHhm1y9BUY5yHMW7KPGV6gxKrZLTsyJgf/rA2kcSUrUymaO
+	 X53vl1f1hQhDoekQglhJ1Dhya3Z7Kh/W+JzXuWUK6yh/Bc6fsUB8i5sUoFAPZMzXkMCb1
+	 tvRLLIQLB2mpjPjVzO0wN8JJl/8NOLwb4e9roXJEVQuuEKLFCLBFhWMsN627Bc9joPR/x
+	 hNATflQo2bYGh0dhe3yZtpkU4eJ7xY2VSy80NavZfJ2KF/WyZ1zE6J4udLnz1O4VFZilO
+	 fdlOTXFfw1d2sXnc+YRV2FbnF2CzQGcjmAl+n8Gc5eQZdP/+5r3GobkS3WqykadlKZg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gSgr+4+n;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509E3606A333
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 15:36:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 509E3606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E5460A3812;
+	Wed, 18 Nov 2026 15:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=FSJekugq
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X3DZxEmnOs3RAeFSdd69JIgQyQ3aMpBIAhN/0T3Enc/WSoN6zKO58k87fquuI2u6Lw2Z4se582SySjc5ZtWLM4nu/lHf5UABqf3tcxqtXab6BjwL55VdlZUvCG41Klstm83XVk6n8rQsknxVBRN7vTnes/RWJ2jGhNUH3wV0DhhXPWhRRKbPDvIvAxbMlK73AaBP+lsJZDxMPOb42cnMg330qvgGhEnjAnZGAcaaXsqhXVC2gKq1Xvb+mnUJco+FwBNQJMSbDoD0+0qN66FQ0z5y7QGE2MjkQvkwASuK5JTuBxC8xkPW8qeOOi16c81q4tRrUkupDXRK7Dd1YaPfrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kfdbb0Lq12H1RxauWT8y+qwdtuaZqWWb2KzQ3t5XEgQ=;
- b=wYDsiOqopj1ah9JBku9s5R0uCmb0me58OAt6TpTxadNn8zjquLO1vL/NHz+4UN76A4t/R7/VkuTJisHcpTrPBhwf5K7dbONm1N8T6rvQZCgd542Gyf3Pa/4sxYdcTJDNHVnRXdqcE3WHAqrO2lpnbgQxGt7XBFj/4XMiTuKJWEuYOp9IGCi+DNsz+rQC2wOSZo7lcSx5VooYYpNZXA3/Id6mjC0m5IRprriQgXl/MYQzuuRTJUB/x6a+OGOgS4o07jHcJDm5aibgsNgLbKedKgMezhPYZa8e39VglIizZ1sQml0c4YatB/F1gH7s2JL+JIqZvPsc5NMFPSs+DiaijA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kfdbb0Lq12H1RxauWT8y+qwdtuaZqWWb2KzQ3t5XEgQ=;
- b=FSJekugqv3/uSIpy65jc0g+6rWmj9xQMdUJU6dIinpmSg/K5iFvkFDW5Les0RENC7c1slPYueODC8EN90D3IyeAqlqDw4c/GQn6yKWMA/mjOnKbATOqTAWYb5lpuyQzqSHKicomqZj3Sk5qQBjPceUoaC/lseD6mWFE4MZIjyMA=
-Received: from PH8PR22CA0022.namprd22.prod.outlook.com (2603:10b6:510:2d1::17)
- by CH2PR12MB9457.namprd12.prod.outlook.com (2603:10b6:610:27c::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Wed, 18 Nov
- 2026 15:35:58 +0000
-Received: from PH7PEPF00000009.namprd04.prod.outlook.com
- (2603:10b6:510:2d1:cafe::92) by PH8PR22CA0022.outlook.office365.com
- (2603:10b6:510:2d1::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.615.13 via Frontend Transport; Wed,
- 18 Nov 2026 15:35:58 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- PH7PEPF00000009.mail.protection.outlook.com (10.167.243.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.615.4 via Frontend Transport; Wed, 18 Nov 2026 15:35:57 +0000
-Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Wed, 18 Nov
- 2026 09:35:55 -0600
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>, <W_Armin@gmx.de>
-CC: <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>, "Shyam
- Sundar S K" <Shyam-sundar.S-k@amd.com>, Mario Limonciello
-	<superm1@kernel.org>
-Subject: [PATCH v2 3/3] platform/x86/amd/wmi: aod: Document the WMI interface
-Date: Wed, 18 Nov 2026 21:05:23 +0530
-Message-ID: <20261118153523.3627870-4-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261118153523.3627870-1-Shyam-sundar.S-k@amd.com>
-References: <20261118153523.3627870-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gSgr+4+n
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1F61F000CC;
+	Wed, 18 Nov 2026 15:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795016299;
+	bh=r5CGEVAkf2MMq2Xy68c1srFZ145fIMmiNbBIi1wTp/U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=gSgr+4+nnxQjPIiEFrAUk+riDwqGodfuwjoDFEhg7ykT2yO+0QRfSj5XYZ/hctiko
+	 qbqKfdDQ3QOXDyyy+lT4PPQYaPYlFMVggIDwzMoZXrzsQwSjg71DxlobK8Fp2rvpwA
+	 tv7mGzTnJj64dq0v9jx9lbT/UrJzooXA3FvJtQVshZGs0OifS6/0x5M3urB+6vSD6r
+	 p4914adKzIDXtNTYsVuX8uUijHYGgx5dgSYkezWjFXO3PDuQHLwrLN4LGfvRY/Foqb
+	 ekdRuPrMhBmeTreTHC9Njijbty7fVMhgIITOgCawn7KR7Akkrv7RLnCldUTdWZafFJ
+	 tWtZICU2HgFlA==
+Message-ID: <fa625e27-a1bd-4a22-8611-cca13fc9d11a@kernel.org>
+Date: Wed, 18 Nov 2026 09:38:14 -0600
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -107,478 +51,187 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PEPF00000009:EE_|CH2PR12MB9457:EE_
-X-MS-Office365-Filtering-Correlation-Id: 06bfb439-9725-4ea4-e49e-08df4589a426
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|23010399003|6133799003|22082099003|18002099003|261009223027099003|3023799007|261022075727099003|261022105027099003|261021121427099003|261026121527099003|261026140227099003|261102123227099003|261028144727099003|11063799006|56012099006|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	ABvs43zHKmnRHqjT/VdNtgjgVOrqvPo3VqxD8h1WwI0FCtQASXBb/dOqeyV8Pu5t0SVTgORp8hUi1Czf94qUoH8AKwbsJGuPB+B1Lzd4v0BENz+nrYOqMXCdpOVD7XuG/uzVFjkwSdpkq3kKuV7K2S6sRLtT6CIeCkriWb5kMiQtQ7Thkg7ZgFpdCF1C/oscN6Z3rqejTTqzrhuI24gcUYhOJIMxjoRks+H+JLPHxQr5Jg5aeOfq2blZJA5vcaqSXUjbvOJa0lEcPtsDFm5NRawGbUWlrwbmYVSvkSKZx/EwdYpCL7JmPkublDO6pgmGdhsdw/ElsXANnun9PhgXd2Q+F40H/+M06ovq1srf46c2XaIaWq792LDVLBoXh7Fh4bX+I8YVYx1LULcn++oDX1wtheETEC+Yg0392jHKzNNQYW9oHRk9FBPWWmAwZxvcAnwCsP847pAzitS/WC+NbKFfu+X/4FRo2g7Ugfc3P545iXBZzYsqiwmQjv6jkNZsBnPWYOk2Jj6twcE+YLOoUhFKiWjDqfnUQ20lPd/n2XS8HeyhZiVTFQm/w+h17Wufnn5y4M9IDF4gynHTYR83TkLZokJSfTqUGprgmn1c4/5ApR7wY4Cslt5ThxgPAxeVr2xcCeSvv1I0MHaQdaAKJevg/aqRGG/6eKyQmaX70+96tILLVMBvVdPBswSCxlivXc4p0muB93SSmrefsuffJw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(23010399003)(6133799003)(22082099003)(18002099003)(261009223027099003)(3023799007)(261022075727099003)(261022105027099003)(261021121427099003)(261026121527099003)(261026140227099003)(261102123227099003)(261028144727099003)(11063799006)(56012099006)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	6KQ+K/USgv7+UWmNLFgKIx1hXDiPVO5ep+4uxblEJtapK/dabaufKDPatGcugiFUEWGGrHASlQWsOXDg60MJImt4zqHkyTrnLYO9L1O09PAASU9kiHAiySfKB0TGriLCLUHtr4Jq8NtDw+yknRPwS/wLUcyq63tXWeGI7f70KxFYCikRoZrnhQG34jcLXQVnr39YEQGp53dsIaXM+M4BU3Y27ixrfw7IGEtl0QNkJ+kThNUbV1gf+ktXpJE6JVgwSyRi/tY7gNZHHraVdugbo9lNSLBFlKQ+nDvGKXSiMS6iIME6v6QLfyu9y9TP47mh8CKQPUUs2cyIhhri5/nrngwgp7ZZDuokHqRcu/FrZw6VTCcT4dmh6qy/N9EMoaeodB0dVoJQGOxct63xpGOLWJvsV6iXJT7o5Og4rn5EePUxMfSkp9PsFdsG+KjjSJIj
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2026 15:35:57.5849
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06bfb439-9725-4ea4-e49e-08df4589a426
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	PH7PEPF00000009.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB9457
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86/amd: send WBRF DSM payload as buffer
+Content-Language: en-US
+To: Mario Limonciello <superm1@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, Ma Jun <Jun.Ma2@amd.com>,
+ Evan Quan <quanliangl@hotmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261102-superm1-wbrf-v2-1-28b02bb4ce61@kernel.org>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20261102-superm1-wbrf-v2-1-28b02bb4ce61@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Describe the AMD Overclocking WMI interface, the commands used for the
-sysfs attributes and the debugfs interface.
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- Documentation/wmi/devices/amd-wmi-aod.rst | 412 ++++++++++++++++++++++
- MAINTAINERS                               |   1 +
- 2 files changed, 413 insertions(+)
- create mode 100644 Documentation/wmi/devices/amd-wmi-aod.rst
 
-diff --git a/Documentation/wmi/devices/amd-wmi-aod.rst b/Documentation/wmi/devices/amd-wmi-aod.rst
-new file mode 100644
-index 000000000000..c7ab9058c9ae
---- /dev/null
-+++ b/Documentation/wmi/devices/amd-wmi-aod.rst
-@@ -0,0 +1,412 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+=========================================
-+AMD Overclocking WMI driver (amd-wmi-aod)
-+=========================================
-+
-+Introduction
-+============
-+
-+AMD Ryzen platforms implement the AMD Overclocking (AOD) interface
-+in the platform firmware. The firmware exposes it through a WMI device with
-+the GUID ``95F20B61-3D44-41F8-87E1-03CBF94C4E8F``. All platforms that
-+implement the AOD interface use this GUID. On Windows this interface is
-+used by AMD Ryzen Master.
-+
-+The interface is command based. The firmware reports a list of supported
-+commands, each with a numeric command ID and a property flag. Commands with
-+a linear range of values (property 1) report their minimum, maximum and step
-+size, commands with discrete values (property 0) report the list of values
-+they accept. A new value is applied by executing the command.
-+
-+The firmware stores new values in its setup variables, so they only take
-+effect after a reboot. Some commands also report their current value, but
-+this depends on the firmware: on the systems tested so far the memory clock
-+and SMT report their current value, the PPT, TDC and EDC limits do not.
-+
-+The driver exposes a selected set of these commands as sysfs attributes,
-+see Documentation/ABI/testing/sysfs-platform-amd-wmi-aod. An attribute is
-+only created if the firmware lists the matching command. All attributes
-+call into the firmware and are only accessible by root. More attributes
-+can be added later as needed.
-+
-+WMI interface description
-+=========================
-+
-+The WMI interface description can be decoded from the embedded binary MOF
-+(bmof) data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-+
-+::
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of the package used in other classes"),
-+   guid("{ABBC0F58-8EA1-11d1-00A0-C90629100000}")
-+  ]
-+  class OIDPackage
-+  {
-+      [WmiDataId(1),
-+       read, write,
-+       Description("Number of ID")
-+      ] uint8 Length;
-+      [WmiDataId(2),
-+       read, write,
-+       Description("64*4 bytes of data")
-+      ] uint32 ID[64];
-+      [WmiDataId(3),
-+       read, write,
-+       Description("64*4 bytes of data")
-+      ] uint32 property[64];
-+      [WmiDataId(4),
-+       read, write,
-+       Description("64 strings")
-+      ] string IDstring[64];
-+  };
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of the package used in other classes"),
-+   guid("{ABBC0F65-8EA1-11d1-00A0-C90629100000}")
-+  ]
-+  class GetdValuesPackage
-+  {
-+   [WmiDataId(1),
-+       read, write,
-+       Description("ID")
-+      ] uint32 ID;
-+   [WmiDataId(2),
-+      read, write,
-+      Description("Current")
-+      ] uint32 Current;
-+   [WmiDataId(3),
-+       read, write,
-+       Description("Number of ID")
-+      ] uint32 Length;
-+   [WmiDataId(4),
-+       read, write,
-+       Description("100*4 bytes of data")
-+      ] uint32 DValuesBuffer[100];
-+  };
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of the package used in other classes"),
-+   guid("{7BF6AE1F-85CC-4ee5-94FD-394B5FE7E710}")
-+  ]
-+  class OutBuffer
-+  {
-+   [WmiDataId(1),
-+       read, write,
-+       Description("ID")
-+      ] uint8 result[200];
-+  };
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of the package used in other classes"),
-+   guid("{F7B20E14-30F4-41FA-BDF9-77DC09CFFFF1}")
-+  ]
-+  class DimmSpdBuffer
-+  {
-+   [WmiDataId(1),
-+       read, write,
-+       Description("ID")
-+      ] uint8 DimmSpd[532];
-+  };
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of the package used in other classes"),
-+   guid("{ABBC0F63-8EA1-11d1-00A0-C90629100000}")
-+  ]
-+  class GetMinMaxSteppingPackage
-+  {
-+      [WmiDataId(1),
-+          read, write,
-+          Description("ID")
-+          ] uint32 Value;
-+          [WmiDataId(2),
-+           read, write,
-+           Description("Current")
-+          ] uint32 Current;
-+          [WmiDataId(3),
-+           read, write,
-+           Description("Min")
-+          ] uint32 Min;
-+          [WmiDataId(4),
-+           read, write,
-+           Description("Max")
-+          ] uint32 Max;
-+          [WmiDataId(5),
-+           read, write,
-+           Description("Stepping")
-+          ] uint32 Stepping;
-+  };
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of RMP data"),
-+   guid("{ABBC0F66-8EAA-11d1-00A0-C90629100000}")
-+  ]
-+  class RMPPackage
-+  {
-+          [WmiDataId(1),
-+          read, write,
-+          Description("Is RMP available")
-+          ] uint8 IsRmpAvailable;
-+          [WmiDataId(2),
-+          read, write,
-+          Description("Number of RMP Profiles")
-+          ] uint8 NumberOfProfiles;
-+          [WmiDataId(3),
-+          read, write,
-+          Description("Basic Info : Profile Enable State in RMP SPD ")
-+          ] uint8 IsProfileEnable[2];
-+          [WmiDataId(4),
-+          read, write,
-+          Description("Basic Info : Profile Memory Clock units MHz")
-+          ] uint16 MemoryClock[2];
-+          [WmiDataId(5),
-+          read, write,
-+          Description("Basic Info : CAS Latency in CLK")
-+          ] uint16 CASLatency[2];
-+          [WmiDataId(6),
-+           read, write,
-+           Description("RMP SPD Data")
-+          ] uint8 Data[128];
-+  };
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of OPP Profile data"),
-+   guid("{CDD45862-4A60-4B6F-81CF-F9A826756408}")
-+  ]
-+  class OPPProfole
-+  {
-+      [WmiDataId(1),
-+        read, write,
-+        Description("Profile data")
-+      ] uint8 Data[192];
-+  };
-+
-+  [WMI,
-+   Locale("MS\\0x409"),
-+   Description("This class contains the definition of OPP Header"),
-+   guid("{E0DB04D9-AF36-473A-85B2-AE31B851406E}")
-+  ]
-+  class OPPHeader
-+  {
-+          [WmiDataId(1),
-+          read, write,
-+          Description("Is OPP available")
-+          ] uint8 IsOppAvailable;
-+          [WmiDataId(2),
-+          read, write,
-+          Description("OPP Revision")
-+          ] uint8 OppRevision;
-+          [WmiDataId(3),
-+          read, write,
-+          Description("Number of OPP Profiles")
-+          ] uint8 OppCount;
-+  };
-+
-+  [WMI,
-+   Dynamic,
-+   Provider("WmiProv"),
-+   Locale("MS\\0x409"),
-+   Description("Class to Query/Set a CLKValue"),
-+   guid("{95F20B61-3D44-41F8-87E1-03CBF94C4E8F}")
-+  ]
-+  class AMD_ACPI
-+  {
-+      [key, read]
-+       string InstanceName;
-+      [read] boolean Active;
-+
-+      [WmiMethodId(1),
-+       Implemented,
-+       read, write,
-+       Description("Get version")
-+      ] void QueryVersion([out,Description("version")]uint32 version);
-+
-+      [WmiMethodId(2),
-+       Implemented,
-+       read, write,
-+       Description("WMI function init.")
-+      ] void Init([out,Description("status")]uint8 status);
-+
-+      [WmiMethodId(3),
-+       Implemented,
-+       read, write,
-+       Description("Get BIOS ACPI support function table.")
-+      ] void GetObjectID([out,Description("Get BIOS support Object ID table")]OIDPackage pack);
-+
-+      [WmiMethodId(4),
-+       Implemented,
-+       read, write,
-+       Description("Bios request data")
-+      ] void Getdvalues([in,Description("ID used to identify")]uint32 ID,[out,Description("status")]GetdValuesPackage pack);
-+
-+      [WmiMethodId(5),
-+       Implemented,
-+       read, write,
-+       Description("Command Run")
-+      ] void RunCommand([in,Description("In buffer")]uint8 Inbuf[8],[out,Description("Out buffer")]OutBuffer Outbuf);
-+
-+      [WmiMethodId(6),
-+       Implemented,
-+       read, write,
-+       Description("Get Min/Max/Stepping values")
-+      ] void GetMinMaxSteppingValues([in,Description("ID used to identify")]uint32 ID,[out,Description("status")]GetMinMaxSteppingPackage pack);
-+
-+      [WmiMethodId(7),
-+       Implemented,
-+       read, write,
-+       Description("Get DIMM SPD data")
-+      ] void GetDimmSpdData([in,Description("DIMM Index")]uint32 Index,[out,Description("SPD Data Buffer")]DimmSpdBuffer DimmSpdData);
-+
-+       [WmiMethodId(8),
-+       Implemented,
-+       read, write,
-+       Description("Get BIOS ACPI support function table2.")
-+      ] void GetObjectID2([out,Description("Get BIOS support Object ID table2")]OIDPackage pack);
-+
-+       [WmiMethodId(9),
-+       Implemented,
-+       read, write,
-+       Description("Get RMP table")
-+      ] void GetRmpData([out,Description("Get RMP table")]RMPPackage pack);
-+
-+       [WmiMethodId(10),
-+       Implemented,
-+       read, write,
-+       Description("Get OPP Heaer")
-+      ] void GetOppTable([out,Description("Get Opp Heaer")]OPPHeader pack);
-+
-+       [WmiMethodId(11),
-+       Implemented,
-+       read, write,
-+       Description("Get OPP Data")
-+      ] void GetOppData([in,Description("Profile Index")]uint32 Index,[out,Description("Opp Profile")]OPPProfole pack);
-+  };
-+
-+Newer firmware versions may implement additional WMI methods.
-+
-+WMI method usage
-+================
-+
-+All WMI methods use instance 0. The firmware reads a 32-bit input argument
-+even for WMI methods that take no arguments, so the driver always passes
-+at least a 32-bit argument. Unless noted otherwise, all integers are 32-bit
-+little-endian values.
-+
-+QueryVersion (method ID 1)
-+--------------------------
-+
-+Returns the version of the AOD interface implemented by the firmware as
-+a single integer. The driver reads it once during probe.
-+
-+Init (method ID 2)
-+------------------
-+
-+Prepares the firmware for the other WMI methods, for example by clearing
-+the buffer used to pass data to the firmware. The driver calls it once
-+during probe, before any other WMI method. The returned status byte is not
-+used by the driver.
-+
-+GetObjectID (method ID 3) and GetObjectID2 (method ID 8)
-+--------------------------------------------------------
-+
-+Return the list of supported general (GetObjectID) and overclocking
-+(GetObjectID2) commands as a package with 193 elements:
-+
-+- the number of valid entries
-+- 64 command IDs
-+- 64 property flags
-+- 64 command names as strings
-+
-+The driver uses both lists during probe to find out which of its sysfs
-+attributes are supported.
-+
-+Getdvalues (method ID 4)
-+------------------------
-+
-+Takes a command ID and returns the discrete values supported by this
-+command:
-+
-+- the command ID
-+- the current value
-+- the number of valid discrete values
-+- 100 discrete values
-+
-+RunCommand (method ID 5)
-+------------------------
-+
-+Takes a command ID and a new value, and applies the new value. The
-+firmware returns a 200 byte buffer, with the 32-bit status of the
-+operation (AodSmiStatus) located at offset 2. A status of 0 means
-+success.
-+
-+GetMinMaxSteppingValues (method ID 6)
-+-------------------------------------
-+
-+Takes a command ID and returns the range of values supported by this
-+command:
-+
-+- the command ID
-+- the current value, or 0 if the firmware does not report it
-+- the minimum value
-+- the maximum value
-+- the step size
-+
-+Commands with discrete values return all fields as 0. In the same way,
-+Getdvalues returns an ID and a length of 0 for commands with a linear range.
-+
-+The WMI methods 7 (GetDimmSpdData), 9 (GetRmpData), 10 (GetOppTable) and
-+11 (GetOppData) are not used by the driver.
-+
-+Commands used by the driver
-+===========================
-+
-+============	================	==============	==========
-+Command ID	sysfs attribute		Firmware unit	sysfs unit
-+============	================	==============	==========
-+0x00050001	ppt_limit		mW		uW
-+0x00050002	tdc_limit		mA		mA
-+0x00050003	edc_limit		mA		mA
-+0x00020001	mem_clock		MHz		MHz
-+0x00020026	smt_enable		0/1		0/1
-+============	================	==============	==========
-+
-+Debugfs interface
-+=================
-+
-+For debugging and for tools that need access to commands without a
-+dedicated sysfs attribute, the driver exposes the raw WMI methods in
-+``/sys/kernel/debug/amd-wmi-aod-<device>/``. This interface is not a
-+stable ABI and is only accessible by root.
-+
-+``query_version``
-+  Reads the AOD interface version reported by the firmware during probe.
-+
-+``get_object_id``, ``get_object_id2``
-+  Read the command lists in text form, one line per command.
-+
-+``get_object_id_raw``, ``get_object_id2_raw``
-+  Read the command lists as a 4612 byte binary structure: the number of
-+  entries (u32), 64 command IDs (u32), 64 property flags (u32) and 64
-+  NUL-terminated command names of 64 bytes each. The firmware is queried
-+  when the file is read.
-+
-+``get_dvalues``, ``get_minmax_stepping``
-+  Write a command ID, then read the result of Getdvalues or
-+  GetMinMaxSteppingValues for this command.
-+
-+``run_command``
-+  Write ``"<command id> <value>"`` to execute a command. The driver does
-+  not check the command ID or the value, so using this file taints the
-+  kernel (``TAINT_CPU_OUT_OF_SPEC``).
-+
-+``run_command_status``
-+  Reads the status reported by the firmware for the last command executed
-+  using ``run_command``.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6a5dd872fbe4..8211e904b1b0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1360,6 +1360,7 @@ M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Supported
- F:	Documentation/ABI/testing/sysfs-platform-amd-wmi-aod
-+F:	Documentation/wmi/devices/amd-wmi-aod.rst
- F:	drivers/platform/x86/amd/wmi/
- 
- AMD XDNA DRIVER
--- 
-2.34.1
+On 11/2/26 14:58, Mario Limonciello wrote:
+> Spec defines the WBRF record _DSM argument as a single buffer that packs
+> the header and frequency ranges. The driver instead built a package of
+> integers, so firmware on some systems abort \WBRF with AE_AML_OPERAND_TYPE
+> when dereferencing Arg2[0].
+> 
+> Encode the payload into a little-endian buffer and hand it as the lone
+> package element.
+> 
+> Fixes: 58e82a62669d ("platform/x86/amd: Add support for AMD ACPI based Wifi band RFI mitigation feature")
+> Signed-off-by: Mario Limonciello <superm1@kernel.org>
+> ---
+> Changes in v2:
+> - Declare payload with __free(kfree) at the kzalloc() site, after input
+>    validation, instead of initializing it to NULL at the top of
+>    wbrf_record() (Sashiko)
+> - Compute payload length with struct_size_t() so it no longer depends on
+>    payload being declared earlier (Sashiko)
+> - Link to v1: https://patch.msgid.link/20261102-superm1-wbrf-v1-1-b58d8d85277c@kernel.org
+
+Ilpo,
+
+FYI - this was found on some existing systems in the wild so I would 
+prefer if it could go to -fixes.
+
+I sent right after the merge window so just wanted to make sure it's 
+still in your queue.
+
+Thanks,
+
+> ---
+>   drivers/platform/x86/amd/wbrf.c | 75 +++++++++++++++++++++++------------------
+>   1 file changed, 43 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/wbrf.c b/drivers/platform/x86/amd/wbrf.c
+> index 3281357185d1f..2afb574e4327d 100644
+> --- a/drivers/platform/x86/amd/wbrf.c
+> +++ b/drivers/platform/x86/amd/wbrf.c
+> @@ -6,6 +6,8 @@
+>   
+>   #include <linux/acpi.h>
+>   #include <linux/acpi_amd_wbrf.h>
+> +#include <asm/byteorder.h>
+> +#include <linux/slab.h>
+>   
+>   /*
+>    * Functions bit vector for WBRF method
+> @@ -29,6 +31,17 @@ struct amd_wbrf_ranges_out {
+>   	struct freq_band_range	band_list[MAX_NUM_OF_WBRF_RANGES];
+>   } __packed;
+>   
+> +struct wbrf_record_entry {
+> +	__le64		start;
+> +	__le64		end;
+> +} __packed;
+> +
+> +struct wbrf_record_payload {
+> +	__le32			num_of_ranges;
+> +	__le32			action;
+> +	struct wbrf_record_entry	ranges[];
+> +} __packed;
+> +
+>   static const guid_t wifi_acpi_dsm_guid =
+>   	GUID_INIT(0x7b7656cf, 0xdc3d, 0x4c1c,
+>   		  0x83, 0xe9, 0x66, 0xe7, 0x21, 0xde, 0x30, 0x70);
+> @@ -42,8 +55,9 @@ static BLOCKING_NOTIFIER_HEAD(wbrf_chain_head);
+>   static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ranges_in_out *in)
+>   {
+>   	union acpi_object argv4;
+> +	union acpi_object args[1];
+>   	u32 num_of_ranges = 0;
+> -	u32 num_of_elements;
+> +	size_t payload_len;
+>   	u32 arg_idx = 0;
+>   	int ret;
+>   	u32 i;
+> @@ -64,45 +78,39 @@ static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ran
+>   	if (num_of_ranges != in->num_of_ranges)
+>   		return -EINVAL;
+>   
+> -	/*
+> -	 * Every input frequency band comes with two end points(start/end)
+> -	 * and each is accounted as an element. Meanwhile the range count
+> -	 * and action type are accounted as an element each.
+> -	 * So, the total element count = 2 * num_of_ranges + 1 + 1.
+> -	 */
+> -	num_of_elements = 2 * num_of_ranges + 2;
+> -
+> -	union acpi_object *tmp __free(kfree) = kzalloc_objs(*tmp,
+> -							    num_of_elements);
+> -	if (!tmp)
+> +	payload_len = struct_size_t(struct wbrf_record_payload, ranges, num_of_ranges);
+> +	struct wbrf_record_payload *payload __free(kfree) =
+> +		kzalloc(payload_len, GFP_KERNEL);
+> +	if (!payload)
+>   		return -ENOMEM;
+>   
+> -	argv4.package.type = ACPI_TYPE_PACKAGE;
+> -	argv4.package.count = num_of_elements;
+> -	argv4.package.elements = tmp;
+> -
+> -	/* save the number of ranges*/
+> -	tmp[0].integer.type = ACPI_TYPE_INTEGER;
+> -	tmp[0].integer.value = num_of_ranges;
+> -
+> -	/* save the action(WBRF_RECORD_ADD/REMOVE/RETRIEVE) */
+> -	tmp[1].integer.type = ACPI_TYPE_INTEGER;
+> -	tmp[1].integer.value = action;
+> +	payload->num_of_ranges = cpu_to_le32(num_of_ranges);
+> +	payload->action = cpu_to_le32(action);
+>   
+> -	arg_idx = 2;
+> +	arg_idx = 0;
+>   	for (i = 0; i < ARRAY_SIZE(in->band_list); i++) {
+>   		if (!in->band_list[i].start || !in->band_list[i].end)
+>   			continue;
+>   
+> -		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
+> -		tmp[arg_idx++].integer.value = in->band_list[i].start;
+> -		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
+> -		tmp[arg_idx++].integer.value = in->band_list[i].end;
+> +		payload->ranges[arg_idx].start = cpu_to_le64(in->band_list[i].start);
+> +		payload->ranges[arg_idx].end = cpu_to_le64(in->band_list[i].end);
+> +		arg_idx++;
+>   	}
+>   
+> +	argv4.package.type = ACPI_TYPE_PACKAGE;
+> +	argv4.package.count = ARRAY_SIZE(args);
+> +	argv4.package.elements = args;
+> +
+> +	args[0].type = ACPI_TYPE_BUFFER;
+> +	args[0].buffer.length = payload_len;
+> +	args[0].buffer.pointer = (u8 *)payload;
+> +
+>   	union acpi_object *obj __free(kfree) =
+> -		acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
+> -				  WBRF_REVISION, WBRF_RECORD, &argv4);
+> +		acpi_evaluate_dsm(adev->handle,
+> +				  &wifi_acpi_dsm_guid,
+> +				  WBRF_REVISION,
+> +				  WBRF_RECORD,
+> +				  &argv4);
+>   
+>   	if (!obj)
+>   		return -EINVAL;
+> @@ -236,8 +244,11 @@ int amd_wbrf_retrieve_freq_band(struct device *dev, struct wbrf_ranges_in_out *o
+>   	param.string.length = 0;
+>   	param.string.pointer = NULL;
+>   
+> -	obj = acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
+> -							WBRF_REVISION, WBRF_RETRIEVE, &param);
+> +	obj = acpi_evaluate_dsm(adev->handle,
+> +				&wifi_acpi_dsm_guid,
+> +				WBRF_REVISION,
+> +				WBRF_RETRIEVE,
+> +				&param);
+>   	if (!obj)
+>   		return -EINVAL;
+>   
+> 
+> ---
+> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+> change-id: 20261029-superm1-wbrf-d94050a28212
+> 
+> Best regards,
+> --
+> Mario Limonciello <superm1@kernel.org>
 
