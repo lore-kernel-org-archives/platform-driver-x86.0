@@ -1,65 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.206.16.166
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795038504;
-	b=RToXdSJ0Wzn8EvAIFpNeRXd75qMp5JLq9KUsm8iAYhgjLD/Qt6qlLuokPYlI0QADYGuh
-	 6x85Edqo/pAuPG0xFd3ml3YbUa89bNRd4M1Jth996O23Sg9D66gxxKAUg5c2aCrULyH9h
-	 ZKKuGkDqOFxOnQH2P2driC6g2sTFtQYorIspiyOKsDB3ynTNedpgsX6S3qZ1eWDm46+Gy
-	 zTX3DXNdBUZvmBIJYsqffc3qu9MCRhVPG/gQMQ0qayaeR5wexINly9vvW2iThromTgmhd
-	 ZTG8vfjyeaUf/Hh7BnVq5a2+M43XHuOCB0nD/XPjvHZy1iHCpep5Vll91EjZwX9WYfA==
+	b=wcRZOwP2PRMe3Bd2mb9ax074NUzZ0TKfm9E5PyPp77HH8Lj7LxXoNLX8KueU2wjFxqx0
+	 fEiAhDgD+dK9W4Wm8aBWmuwimf9HigJPQvvKaDZUmD4swDFEV1HEdHlEm/Pq2+TeAxjWY
+	 LUqnbUv7zvfVr59K74kBsqRWlVPvaFcn8iBCdVAvouPrNVtRO+7bOD0UJPBIxEhdikPdJ
+	 JyquMZPhu7L+xKsZkpXDHUHhmiJHw0GvH6aPwr5xnCgJbB4UU3GcjSXYRTMhwBqKf6hkt
+	 mioRAK6Bb4fIL9zTrI/NTQqWEDgs0yBYiofgevFYRKv8QDCYs8i5a8Eb8w88vZrQaRA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795038504;
 	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
-	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:EX-QQ-RecipientCnt:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
-	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=sDRr5A3BhsB2AMX0WaX6ORpZcarQ2sA86dIzKWZ6YS4=;
-	b=Rdqfbj9nRudTyON4A4SXxGcTBg9uyqD9mv/dx1MrBNs47Wu6mGJqB9ojxOGtAxArJNV9
-	 qsMWWzzuN6fdH1wPKivTutsaBVIgTK+nY8Q32AHAslrv2VuL9gZur0cmesmYbahylKPsT
-	 yHFiiuiAkUBPd7njnCGzK3QsZ2+iVuNbrE+rVVOeD7b8FfClJBtwmgAlVrqA3k8EVyo3n
-	 EK1MC7fWLxOci8VlhcyN3Pmxq7YCWiPXnpytFsL/8EiuaD0jvpgDKZA00tvnkWkk/MT1u
-	 dy6CHAJY5psvINUoCzlm09VmnCxzLG8xMznvAuA6hUdeTcowRdIyuV02wvXOoLPNz6w==
+	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-QQ-SENDSIZE:
+	 Feedback-ID:X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
+	bh=dMzWrLAsLsiZVdZfhpeKx6ZFMvefQZ9ZvGw+l9QAydA=;
+	b=CS4SAwDMzpNB5tZUYvSh7rNgtrt0oFU6QDcgrg2gFsHMHetr0+lObOFB+jHo9vmaNIse
+	 NitGaqhhBRLsuJUMpPDHTq/Ve0FgVxZjGkHL6kAF2ONeNaviw3ckgKWiUAgx82jd508k2
+	 PlR+mKcYdXzDCepDt6+xB8eGUCLdUcl/nJnKW5xY4hDCGaILhY2qmlUw7fOFoPtSozq9Z
+	 Z9yT9ixwzPGdd73fvJMbdrC8yBHCd2HXq3hL3Cs0Tq5b7DHTqFjWFudUk0J48TDeaynkM
+	 huAsbhqCPKHPHx5PsDbSWd6aECqoIGRbf8mw35hqNzHnjZqhNeU3NUSfwCb6xTyzvSw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mail.sustech.edu.cn;
 	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
-	arc=none smtp.remote-ip=54.92.39.34
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+	arc=none smtp.remote-ip=54.206.16.166
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86566606A32C;
-	Wed, 18 Nov 2026 21:48:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86566606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CFA606A32F;
+	Wed, 18 Nov 2026 21:48:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 31CFA606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
-	s=oemc2211; t=1795038458;
-	bh=sDRr5A3BhsB2AMX0WaX6ORpZcarQ2sA86dIzKWZ6YS4=;
+	s=oemc2211; t=1795038454;
+	bh=dMzWrLAsLsiZVdZfhpeKx6ZFMvefQZ9ZvGw+l9QAydA=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=pyETMSSrWDTbTK8Wi5QQrJj3KGsqQfoQH061KEC3ephOnZ7eYzXot2zzALgmozg1D
-	 cNs+/Y5HL4bEPCIseS+mpI0kohJqT/sglLpiJod9rOYpe/gEDzHBIfeLk7SMJ8SSjL
-	 hiBkA/JxKKiMLBsalCzrmm8ZMsTvEVfqcMiu/8Co=
-X-QQ-mid: zesmtpsz2t1795038454t7d4b1dbf
-X-QQ-Originating-IP: 4wQHYptWq511bTn5RSNJPpVtuJNnHUVOLDdeeU1Sihw=
+	b=FFRuPDNqhDAKWcnSL+oi/GtGkzt03qdmp9050POWl/63dVqi5lnOZA+vA8HOGUAt4
+	 t7xinhHgiWdf6VPiE8WxTfmZ/WryuI/rBIZmkIyE2tdkCkxCeKB0Ahoo/p/nQT7mOw
+	 FuS9gAf9uAs3xJiTvFoTnIH925yfp9Mlm8di6Axk=
+X-QQ-mid: zesmtpsz2t1795038449t919f6a1a
+X-QQ-Originating-IP: MmNCNnHa3Y0I+KLcy6s02vr5TZkVMZ1CP9j9ZIYH+r0=
 Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.242])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 19 Nov 2026 05:47:33 +0800 (CST)
+	id ; Thu, 19 Nov 2026 05:47:27 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 1251732040003436441
-EX-QQ-RecipientCnt: 6
+X-BIZMAIL-ID: 12249567471895196813
 From: Fuwei Xie <12313607@mail.sustech.edu.cn>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	erenozen@protonmail.com,
-	Fuwei Xie <12313607@mail.sustech.edu.cn>
-Subject: [RFC PATCH v2 2/2] platform/x86: huawei-wmi: expose native Turbo mode as platform_profile
-Date: Thu, 19 Nov 2026 00:13:11 +0800
-Message-ID: <A081DE0C3A165563+20261118161311.17252-3-12313607@mail.sustech.edu.cn>
+	erenozen@protonmail.com
+Subject: [RFC PATCH v2 0/2] platform/x86: huawei-wmi: native Turbo profiles with capability detection
+Date: Thu, 19 Nov 2026 00:13:09 +0800
+Message-ID: <69C3BBDEF214121E+20261118161311.17252-1-12313607@mail.sustech.edu.cn>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261118161311.17252-1-12313607@mail.sustech.edu.cn>
-References: <20261118161311.17252-1-12313607@mail.sustech.edu.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -72,338 +67,169 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpsz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: MALXGmGsaHY4Pt2LgPxpQ6+xOB7izTnGiI6OtI40r6QTe7VcEYFdpsAY
-	dFUsAe7G9Q4Z/pXUMP/saTo7vvAY5SseeTXa9dsmwVBImjDjF/sFGzAJcPtThgIenKZskLf
-	CJyB+bVtTpYEO71DnyP8/Nf2bVJxaMhx/igb+o7T9LkyznUmUOWXrEbA9IdIpj9EgEjD2St
-	NBMqCLSggTIL2W9VTqR/fmulJtLFB28IJa7oqAzcu+XtNxAWHtgrhLmDIuli+A1xlu9pPwj
-	N6qjCqvh5+EcKSI7GIznX59Wy4rax65b0m8hZQ5CBmkXKoJTojQaNDWq9hT4mySvpA4xVxU
-	5toKhgBAZgdfTbCJGa55vFxED1kb0ST4pOp7Z/WNt/XrK2LoIpgwe83Ebpy3flvlsnqNJ7b
-	a8D0LT1i2kJQ8Frpb3JyfwaaPmq1cEAQ8SLZZ2EHRw3y8UsxVKI7RVI+OklNhY/mij5pwe7
-	R50lsAWQb5HQ4c/p0a/ds9bBaINhuT5TwoFl+Fa7iIl4PhhsX/+5fOpI0nCfrX3vghT+dC2
-	jBeFMaz/8RsXoUVc6+1dBNj0dTCFKdz+w5zPpNBM/0zfRPMsunSMzX3TeFN5v9fTxgjybBd
-	Q6KvieQN13iHvH6DZCu7+kqoKsfN6tcJsd2ySf1wnQ+2R8FhecHqNDFaW8XpzPCb/nLtTau
-	lGmEg1XEZF2tneVqUeQa86q7AOVtxfxsDFxEKpFhfQgKs6nmfZgqYChmXhVrSrCjDxBLFKy
-	eYkM0d0W6mhQt9rkH8+UBpQTdKhm2JsuvQQE12kQv7Byf/EGN3+B4Lxcc5etC9wOSAf5EJ5
-	Cn3swkzjLQziQCWX4GAdxSCfISBZ2d2xILQlKHGA7e3KXgztvxa7TjrF217Ano7lIuV8UIf
-	LDWA2GhU2uJQdhv1OVdvMbEKCjxYgToqD2CZ+SPzAphWxO+FQfbuoFYCzO/ouPaHU2Qt2D9
-	dO36CPq7TFCCMkXuMjPMrCQEFDRyDvsGQgEVyFtEnRmHu0GfbkYEyUDUGf+Nkf5yCZbP+9A
-	osJtrBafCDN+UMzhYcxFAk7oHaHMAehZurAu/wNIxorR/GrJhM6tMaL1vwWi0=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ylTmHUqvI8+Wpn+Gzalws3A==
+X-QQ-XMAILINFO: NcfXIs+Ms1qHhu8uuxFn4YtUVkG3T2oLRxztvHWXkkc9kMrDpSleXVyj
+	RZCcQTfwvE8Fh6F93nQSvNkLB6hwn9o251vlBeJgqomnkMDt8K9v2zkgaohYmAEaVb46OVC
+	LatAetsmGr/UkFCKyouSJwhAx2KqLPcr4UfApaX2316L/1syIlJ+NzjELdLQJoMXw4OzAeG
+	5dZyEmBKqVTlhJSPsqQ2Lr5LIjs1BdCZQJwrOTn+WeOUrQXnrWXtfNglQurBj5hCFvGzCXH
+	mHNwXe+D+VcigAzqdDgaIOLJeeUlSQMhWlwLm9/UzSBsMs79LGb9+O/VLF5khLtJHHDNdxl
+	h7ptzNWbW9ubLaFtOe0J8squBJRXTIzUkAyRPJKErhEiLMNLgAvFZ9w3e/J8DBQadL9vod4
+	ZZtWDc8Nx3Dz2YA4SFzVdVFNCOHHJ/p/hrJGMftjiR7C/c4Anyrm5uDQkGO09xLZx7D8qT0
+	swlZsV19vVRtVUWD/C0c3GzEom02Rk9vvOZVg2cD+89oPKicmXQizD2ams+KMBlKDJ0T5ia
+	Ahl58cgL/FEdd8qXcBVZKz4O85zCngaWLVSIUJSOP3PaomFmyS1SnWeZSJLdaA7G3n0xKCq
+	0obes3cT774vegn2IK/fSw5xNKc4/AiwYShOj535YotGOfdZHvcWs+Yad4nKI5X2RLWT6d5
+	1qguDNKEkXE3/fpbwtM75V6RkrfpW5Kt1yBMZphodIxVpP4jP2Z57my5UVRdfCzrYEEcP37
+	GXiDkAABDYp9BqjcOuAHZI8GBYiiOUIo82RqSRlYCQuNGmY6fNopdw1V753eLMRvvc0vt8y
+	3f4xlZL7E9eFlLk5KFRW1axCyZWwBMYnjlrx1RmHAdbIFR2+lvviygw1fZMTNhlzLCIc9m5
+	Iq3jF4dzkEi6/HygMO8gP80yTX/IvmzFaVYsuyyCrhozjezbc/tKvhLEc8JvrqwO6sZMHPQ
+	N1oxlEsEt7Vj7GjuWQqEqmJ++GhLd33heT3eMJX2tFy/UJLzAP2ReutWY7HPYq85TArhT2p
+	kL92rnLBJRMiNmoItMR/7TabhYHwg=
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
 X-QQ-RECHKSPAM: 0
 
-The firmware on Huawei NbF-XX and MateBook 16 CREM-WXX9 exposes GTUB/STUB
-behind WMI commands 0x00000e04 and 0x00000f04. The driver does not expose
-this state through platform_profile, so userspace cannot select the
-native firmware profile through the standard interface.
+Hi Hans, Ilpo, and Eren,
 
-Map Turbo off/on to balanced/performance and read back the state after
-a set. CREM-WXX9 firmware can return status zero even when it refuses a
-request; the resulting state must determine whether the change succeeded.
+This is RFC v2. Thank you for the comments on v1.
 
-Detect support within the existing Huawei WMI method device, requiring
-both ACPI methods and a successful query of a known state (0 or 1).
-Do not switch modes during detection. Unsupported or malformed responses
-leave profiles unavailable without disabling the driver's other features.
-This replaces a model/BIOS allowlist: the same interface was reported on
-both Intel NbF-XX BIOS 3.07 and AMD CREM-WXX9 BIOS 2.32.
+1. What this series does
 
-Refresh the reported state through deferred work on WMI notifications,
-power-supply changes and resume. The power-supply notifier also covers
-CREM-WXX9 firmware turning Turbo off on unplug without a 0x2a0 event.
-Re-query on 0x2a6, which was observed on refused requests on that model,
-without assigning a universal meaning to the notification.
+   It exposes the firmware's own Turbo mode through platform_profile, so
+   the desktop power mode control can switch it.
 
-Leave AC and battery restrictions to the firmware. NbF-XX BIOS 3.07 checks
-AC power and a minimum battery charge, whereas CREM-WXX9 BIOS 2.32 was
-reported to check AC power only. Do not enforce a fixed wattage, write
-power-limit registers, or override the fan policy.
+   The driver only maps states and refreshes what it reports. It does not
+   write RAPL limits, does not force a fixed wattage, and does not add a
+   background daemon.
 
-Eren Ozen reported working mode readback, tuned-ppd integration, Fn+P
-and AC transitions on CREM-WXX9 using v1 plus a DMI entry. Testing the
-revised capability-based probe on that machine is still requested.
+2. What changed since v1
 
-Signed-off-by: Fuwei Xie <12313607@mail.sustech.edu.cn>
----
+   2.1 Capability detection instead of an allowlist.
+       v1 only worked on the exact model and BIOS I happened to own. The
+       driver now checks, inside the Huawei WMI method device, that both
+       GTUB and STUB exist and that a query returns a known state (0 or 1).
+       The probe never changes the mode. If the check fails, no profile
+       device is created and the rest of the driver keeps working as before.
+
+   2.2 Short firmware replies are accepted.
+       Some of the existing features receive short WMI packages. The
+       transaction now accepts a package that is short but still contains a
+       complete result, and requires GTUB/STUB to be ACPI methods before the
+       Turbo query is attempted.
+
+   2.3 Event handling follows Eren's observations.
+       Eren reported firmware that returns status zero while refusing a
+       request, that turns Turbo off on unplug without sending 0x2a0, and
+       that sends two 0x2a1 events for one set. The read-back after a set,
+       the power-supply notifier and the deferred refresh already cover all
+       three cases.
+
+3. What the two patches do
+
+   Patch 1 keeps the two-call WMI handshake under the driver mutex, frees
+   each reply before a retry, checks the payload shape and rejects replies
+   that are too short to be complete.
+
+   Patch 2 adds the Turbo get/set helpers, registers platform_profile with
+   balanced and performance, and refreshes the reported state on WMI
+   events, power-supply changes and resume.
+
+4. What I tested
+
+   4.1 Switching, on two systems.
+       Ubuntu 26.04 (7.0.0-43) and Ubuntu 26.10 (7.3.0-10), NbF-XX BIOS
+       3.07, Intel i5-1240P. The earlier runs used MOK-signed modules with
+       Secure Boot enabled. The final v2 revision was re-tested on 26.10
+       with Secure Boot disabled, after the module's MOK signature had been
+       verified.
+
+       On both systems: native switching, all three desktop modes, Fn+P in
+       both directions, unplug and replug, battery power-saver, and one
+       suspend/resume cycle passed. Each run restored the original module,
+       the daemon and the original mode.
+
+   4.2 Load, three desktop modes, 60 seconds each.
+       Last-window package power:
+
+         Ubuntu 26.04: 10.21 / 20.21 / 28.02 W
+         Ubuntu 26.10:  9.94 / 19.97 / 25.20 W
+         (power-saver / balanced / performance)
+
+       Power-saver produced only 8 and 9 late samples, below my own
+       10-sample bar, so those two numbers are descriptive only. This
+       machine exposes no fan RPM sensor, so fan behaviour is not measured.
+
+   4.3 The 25.20 W figure depends on thermald, not on this driver.
+       Ubuntu's thermald 2.5.12-1 holds PL1 at a ceiling the firmware
+       declares. With thermald_next (8eeddcff786b, which includes
+       f9411e884698 "cdev_rapl: put PL1 at the PL1MAX ceiling when the
+       device is not throttling") the same mode returned about 28 W on the
+       same laptop. So the ceiling I measure is set outside this driver.
+       That fix is currently in the thermald_next development branch only;
+       it is not in a released thermald package yet, so reproducing the
+       28 W result currently needs that branch built locally.
+
+   4.4 Build and host tests.
+       Both commits build as modules with W=1 against Ubuntu 7.0.0-43 and
+       7.3.0-10 headers. 47 host-side cases passed with ASan and UBSan,
+       covering missing methods, wrong ACPI object types, short replies,
+       retries, silent refusal, and read-only probing.
+
+5. What I did not test
+
+   - any other model, BIOS version or firmware revision
+   - machines without GTUB/STUB; the series should leave those untouched,
+     but I could not verify it
+   - long runs, repeated suspend cycles, or concurrent stress
+   - fan RPM
+
+6. Separate change: PPD state cache
+
+   With only balanced and performance exposed by the firmware,
+   power-profiles-daemon 0.30 maps power-saver to balanced but remembers
+   the desktop mode that was asked for. A later balanced notification can
+   then reset the desktop selection.
+
+   I reproduced this in isolated PPD integration tests without the Huawei
+   module, and caching the mapped platform mode fixes it. All 129
+   integration tests passed on both systems. That change belongs to PPD
+   and is not part of these kernel patches. Power-saver used firmware
+   balanced and CPU EPP power in the hardware tests.
+
+7. About Eren's test
+
+   Eren reported that v1 plus a CREM-WXX9 / BIOS 2.32 DMI entry works on
+   his Ryzen 7 5800H MateBook 16, with tuned-ppd, Fn+P and AC transitions.
+   That report is why I moved from an allowlist to capability detection.
+
+   That result is not carried into v2 as a Tested-by, because the probe
+   changed. A retest of this version on CREM-WXX9 would be welcome.
+
+8. Questions
+
+   1. Is a capability gate on GTUB/STUB acceptable, or would you prefer a
+      DMI quirk list in addition?
+   2. Should 0x2a6 stay in the refresh path, even though its meaning is
+      only known on one firmware? I do not assign it a general meaning.
+   3. Would you like these two patches split differently, for example the
+      transport fix sent on its own first?
+
+9. AI assistance
+
+   OpenAI Codex helped with firmware analysis, the code changes, test
+   tooling and wording, in a debugging session that I directed. I set the
+   scope and ran the hardware tests; the observations above are mine.
+
+Thanks,
+Fuwei
+
+Fuwei Xie (2):
+  platform/x86: huawei-wmi: serialize WMI retries and validate responses
+  platform/x86: huawei-wmi: expose native Turbo mode as platform_profile
+
  drivers/platform/x86/Kconfig      |   1 +
- drivers/platform/x86/huawei-wmi.c | 190 +++++++++++++++++++++++++++++-
- 2 files changed, 189 insertions(+), 2 deletions(-)
+ drivers/platform/x86/huawei-wmi.c | 328 ++++++++++++++++++++++++++++++--------
+ 2 files changed, 261 insertions(+), 68 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9ce384e04..05e65a483 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -22,6 +22,7 @@ config HUAWEI_WMI
- 	depends on ACPI_EC
- 	depends on ACPI_WMI
- 	depends on INPUT
-+	select ACPI_PLATFORM_PROFILE
- 	select INPUT_SPARSEKMAP
- 	select LEDS_CLASS
- 	select NEW_LEDS
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 9894424e7..9e79f7452 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -16,9 +16,11 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/platform_profile.h>
- #include <linux/power_supply.h>
- #include <linux/sysfs.h>
- #include <linux/wmi.h>
-+#include <linux/workqueue.h>
- #include <acpi/battery.h>
- 
- /*
-@@ -39,6 +41,8 @@ enum {
- 	FN_LOCK_GET			= 0x00000604, /* \GFRS */
- 	FN_LOCK_SET			= 0x00000704, /* \SFRS */
- 	MICMUTE_LED_SET			= 0x00000b04, /* \SMLS */
-+	POWER_MODE_GET			= 0x00000e04, /* \GTUB */
-+	POWER_MODE_SET			= 0x00000f04, /* \STUB */
- };
- 
- union hwmi_arg {
-@@ -68,6 +72,9 @@ struct huawei_wmi {
- 	struct device *dev;
- 
- 	struct mutex wmi_lock;
-+	struct device *profile_dev;
-+	struct work_struct profile_work;
-+	struct notifier_block power_notifier;
- };
- 
- static struct huawei_wmi *huawei_wmi;
-@@ -264,6 +271,170 @@ static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- 	return huawei_wmi_cmd_min(arg, buf, buflen, buflen);
- }
- 
-+/* Native firmware profiles: no RAPL writes and no periodic enforcement. */
-+
-+static int huawei_wmi_profile_get(struct device *dev,
-+				  enum platform_profile_option *profile)
-+{
-+	u8 ret[2];
-+	int err;
-+
-+	err = huawei_wmi_cmd(POWER_MODE_GET, ret, sizeof(ret));
-+	if (err)
-+		return err;
-+	if (ret[1] > 1)
-+		return -ENODATA;
-+	*profile = ret[1] ? PLATFORM_PROFILE_PERFORMANCE : PLATFORM_PROFILE_BALANCED;
-+	return 0;
-+}
-+
-+static int huawei_wmi_profile_set(struct device *dev,
-+				  enum platform_profile_option profile)
-+{
-+	enum platform_profile_option actual;
-+	union hwmi_arg arg = { .cmd = POWER_MODE_SET };
-+	int err;
-+
-+	if (profile != PLATFORM_PROFILE_BALANCED &&
-+	    profile != PLATFORM_PROFILE_PERFORMANCE)
-+		return -EOPNOTSUPP;
-+
-+	err = huawei_wmi_profile_get(dev, &actual);
-+	if (err || actual == profile)
-+		return err;
-+
-+	/* Firmware enforces model-specific AC and battery requirements. */
-+	arg.args[2] = profile == PLATFORM_PROFILE_PERFORMANCE;
-+	err = huawei_wmi_cmd(arg.cmd, NULL, 0);
-+	if (err)
-+		return err;
-+	/* Some firmware returns success even when it refuses the change. */
-+	err = huawei_wmi_profile_get(dev, &actual);
-+	if (err)
-+		return err;
-+	return actual == profile ? 0 : -EAGAIN;
-+}
-+
-+static bool huawei_wmi_has_profile_method(char *path)
-+{
-+	acpi_object_type type;
-+	acpi_handle handle;
-+
-+	return ACPI_SUCCESS(acpi_get_handle(NULL, path, &handle)) &&
-+	       ACPI_SUCCESS(acpi_get_type(handle, &type)) &&
-+	       type == ACPI_TYPE_METHOD;
-+}
-+
-+static int huawei_wmi_profile_detect(struct device *dev)
-+{
-+	enum platform_profile_option profile;
-+
-+	if (!huawei_wmi_has_profile_method("\\GTUB") ||
-+	    !huawei_wmi_has_profile_method("\\STUB"))
-+		return -ENODEV;
-+
-+	/* Query a known state; never switch modes to probe firmware support. */
-+	return huawei_wmi_profile_get(dev, &profile);
-+}
-+
-+static int huawei_wmi_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+	return 0;
-+}
-+
-+static const struct platform_profile_ops huawei_profile_ops = {
-+	.probe = huawei_wmi_profile_probe,
-+	.profile_get = huawei_wmi_profile_get,
-+	.profile_set = huawei_wmi_profile_set,
-+};
-+
-+static void huawei_wmi_profile_work(struct work_struct *work)
-+{
-+	struct huawei_wmi *huawei = container_of(work, struct huawei_wmi, profile_work);
-+	/* Pairs with release publication after profile/notifier registration. */
-+	struct device *dev = smp_load_acquire(&huawei->profile_dev);
-+	enum platform_profile_option profile;
-+	int err;
-+
-+	if (!dev)
-+		return;
-+	err = huawei_wmi_profile_get(dev, &profile);
-+	if (err) {
-+		dev_warn_ratelimited(huawei->dev, "Cannot refresh firmware profile: %d\n", err);
-+		return;
-+	}
-+	/* A cached value can miss a quick userspace change followed by Fn+P. */
-+	platform_profile_notify(dev);
-+}
-+
-+static void huawei_wmi_profile_refresh(struct huawei_wmi *huawei)
-+{
-+	/* Pairs with release publication after profile/notifier registration. */
-+	if (smp_load_acquire(&huawei->profile_dev))
-+		schedule_work(&huawei->profile_work);
-+}
-+
-+static int huawei_wmi_power_changed(struct notifier_block *nb,
-+				    unsigned long event, void *data)
-+{
-+	struct huawei_wmi *huawei = container_of(nb, struct huawei_wmi, power_notifier);
-+
-+	if (event == PSY_EVENT_PROP_CHANGED)
-+		huawei_wmi_profile_refresh(huawei);
-+	return NOTIFY_OK;
-+}
-+
-+static void huawei_wmi_profile_setup(struct huawei_wmi *huawei)
-+{
-+	struct device *dev;
-+	int err;
-+
-+	err = huawei_wmi_profile_detect(huawei->dev);
-+	if (err == -ENODEV)
-+		return;
-+	if (err)
-+		goto fail;
-+	dev = platform_profile_register(huawei->dev, "huawei-wmi", huawei,
-+					&huawei_profile_ops);
-+	if (IS_ERR(dev)) {
-+		err = PTR_ERR(dev);
-+		goto fail;
-+	}
-+	huawei->power_notifier.notifier_call = huawei_wmi_power_changed;
-+	err = power_supply_reg_notifier(&huawei->power_notifier);
-+	if (err) {
-+		platform_profile_remove(dev);
-+		goto fail;
-+	}
-+	/* Publish only after both registration steps succeed. */
-+	smp_store_release(&huawei->profile_dev, dev);
-+	huawei_wmi_profile_refresh(huawei);
-+	return;
-+fail:
-+	dev_warn(huawei->dev, "Native platform profiles unavailable: %d\n", err);
-+}
-+
-+/* Call after removing the WMI event handlers. */
-+static void huawei_wmi_profile_exit(struct huawei_wmi *huawei)
-+{
-+	if (!huawei->profile_dev)
-+		return;
-+	power_supply_unreg_notifier(&huawei->power_notifier);
-+	cancel_work_sync(&huawei->profile_work);
-+	platform_profile_remove(huawei->profile_dev);
-+	huawei->profile_dev = NULL;
-+}
-+
-+static int huawei_wmi_resume(struct device *dev)
-+{
-+	huawei_wmi_profile_refresh(dev_get_drvdata(dev));
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(huawei_wmi_pm, NULL, huawei_wmi_resume);
-+
- /* LEDs */
- 
- static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
-@@ -830,6 +1001,18 @@ static void huawei_wmi_process_key(struct input_dev *idev, int code)
- 		kfree(response.pointer);
- 	}
- 
-+	/*
-+	 * Refresh on mode events and 0x2a6, observed on refused STUB requests
-+	 * on CREM-WXX9. Do not infer a mode or a universal error from the event.
-+	 */
-+	if (code == 0x2a0 || code == 0x2a1 || code == 0x2a6) {
-+		/* Pairs with release publication after profile/notifier registration. */
-+		if (smp_load_acquire(&huawei_wmi->profile_dev)) {
-+			huawei_wmi_profile_refresh(huawei_wmi);
-+			return;
-+		}
-+	}
-+
- 	key = sparse_keymap_entry_from_scancode(idev, code);
- 	if (!key) {
- 		dev_info(&idev->dev, "Unknown key pressed, code: 0x%04x\n", code);
-@@ -904,6 +1087,8 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, huawei_wmi);
- 	huawei_wmi->dev = &pdev->dev;
-+	mutex_init(&huawei_wmi->wmi_lock);
-+	INIT_WORK(&huawei_wmi->profile_work, huawei_wmi_profile_work);
- 
- 	while (*guid->guid_string) {
- 		if (wmi_has_guid(guid->guid_string)) {
-@@ -918,12 +1103,11 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 	}
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
--		mutex_init(&huawei_wmi->wmi_lock);
--
- 		huawei_wmi_leds_setup(&pdev->dev);
- 		huawei_wmi_fn_lock_setup(&pdev->dev);
- 		huawei_wmi_battery_setup(&pdev->dev);
- 		huawei_wmi_debugfs_setup(&pdev->dev);
-+		huawei_wmi_profile_setup(huawei_wmi);
- 	}
- 
- 	return 0;
-@@ -940,6 +1124,7 @@ static void huawei_wmi_remove(struct platform_device *pdev)
- 		guid++;
- 	}
- 
-+	huawei_wmi_profile_exit(huawei_wmi);
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		huawei_wmi_debugfs_exit(&pdev->dev);
- 		huawei_wmi_battery_exit(&pdev->dev);
-@@ -950,6 +1135,7 @@ static void huawei_wmi_remove(struct platform_device *pdev)
- static struct platform_driver huawei_wmi_driver = {
- 	.driver = {
- 		.name = "huawei-wmi",
-+		.pm = pm_sleep_ptr(&huawei_wmi_pm),
- 	},
- 	.probe = huawei_wmi_probe,
- 	.remove = huawei_wmi_remove,
+
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
 -- 
-2.55.0
+2.53.0
 
