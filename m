@@ -1,58 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794986127;
-	b=0Ht4l1lkm0+yHImtbnrvWeVzBp6DSAC4jcj+MYIXA8OkJmWOc6G2d00y4910khasP94t
-	 hcN6oykaanBPI9KEUzCYbFNDfW21zzAYbw9wiTCxj4k7mfNbXOUfpH9g5P35xvmOyYDwQ
-	 j1p8M+4RWMBa80R+Kxemtt7uHBeJez/mKSmaSwLhlxdCe/I4jkNwm4uEN6waBR0Sds7vR
-	 sqhRpfTcrWliOKJZBW0bNM5pJaE2CPv7eA5o/6XUnqljayDtCCR8P51Iu4ADWBGFcDJ+Y
-	 kDyl4SvjY4jnIx9/6hCttZrftHfbdQmalobe649axneqFJQKBC89aMDajA6LMil1ECA==
+	t=1794986592;
+	b=z/aRjhZoA3VjvDziGj24HIGR00RBPIXWABqys3FmfXKAKbFvdacshW9Rnm4aAfsVe6Nt
+	 yfoO/I+SKhXmkTewHystD+Szar0Tx3yynRV9YKJDr5MT47c0CdEOpBg6f3g8XjOyYUOKU
+	 XK7Sj6+JgsCmvE+96NtwjJ0BFzkeJGZNmykx1u5trWmceNTqRnM0EDHu3VMUzwO6gdytN
+	 edX7r9gzhY4j9mzRE1pUfD1tCNRso5KoF0bqs8DITtdDEwPGyfIvHLswkgSt1GwzbvLUx
+	 k0Dexnt+eNVXQM9TrmXYS2lxR9vJXzgxdLA2WRQv6WZd2cT7qmM4SwJnYvsthNrZwTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794986127;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=lxc5C/rcdQue0n3+xWexsGKdaIIXMJcugF2brKPXT7s=;
-	b=d1S31eJsF69XT6x/Tf6H2luOpXivZm1l4hCW3oYHSgzHZx8IdaNvIrvinrh21sIjAuz2
-	 r2ytLAOS8w0NttgUEHrrfx2vbuVUgG/18KQC2LlAu119bc3jWoLvSdjpTpDI68lcgpx41
-	 R3wFCUsf6XSwjVZaDQftjpQoq0ZGBNeAoUGsiHlkeY4DzonnkCpy+6+rcQk/rdn2LFdPS
-	 7hG/HUD9LKNXQHNfBBMDy7LXvbZUbYOHZJuj/zcQlO45pmYcE2JoNRVIHdl4I3cOMrqlF
-	 Rr8BME/RVE5XNI0Hp8EwCrzjU8PKpxFizRAYv3x3eyA2/GymawPUwWZtqXBZbgnmPgA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794986592;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=b8jhD9NyOgBY8U4+x22CAnEoBAUGT7c8YHeC5TZXIJI=;
+	b=oW3HQTb5lEMe1yBBN/x/elcZmB0I3sgfJcQ+XcnNOE+uUrbKMUhJJklJPWc1lPRRb1eg
+	 0LTdq8zWq0ufrvItnIE+2fynkYg4ypnGL/3aJC6+9GIqEQJY5FmrGWoj/zbtt7mUz/jRW
+	 8eTolh+/gHiPSsXd12MWoChqlMPYd/ZondE7RqYhC+EfHQHWdPNXwNLjw208TukgNXK6S
+	 XMo/zjHhWYc7XgETqmgtUpXSPO4fxOwnkSiRsOS5M3zAn0IhEEmbvSTkcTPB3h3gyVib1
+	 lYkfTCp3OgEFJOlX5XbT5S9xjscldu0DpBY8cdbCQRqVEyG26sBzVDZu6eaMUDe23sQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JrRaaoIF;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Z1frDFoe;
+	arc=none smtp.remote-ip=209.85.216.45
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42AD606A31C;
-	Wed, 18 Nov 2026 07:15:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6A6606A32C
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 07:23:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2C6A6606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JrRaaoIF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455C81F000C4;
-	Wed, 18 Nov 2026 07:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794986126;
-	bh=lxc5C/rcdQue0n3+xWexsGKdaIIXMJcugF2brKPXT7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=JrRaaoIFaSOD5t6kboBSP7BZs3R2KKNc3fuC2BNowlQKocnCK/Mkaf6aCfesU0QiX
-	 b4hI+GmYB/KgwQHeO+uPUqHKCvJki7TFAzY4NHwFPwAIJuiaajRupojIAdTuc2UZM8
-	 eXWnWpSpTxFsFEzPkwD8CCBw2BrPffPCA2IVhjTMxHfuDpUn9192nGdJONbl3NH/7U
-	 vfske3UD9n6vKG45vNX9MbZ5RPH+GWYlUO15VbLdDpVEtcr8vQmfDmlv/zfxuNXFVl
-	 UZrBNTQeY4nedFFH4BM9pi2/ZCk80AtTZHwaH6eyTp/loL+TzzRz6ftgdbZs9ip8cZ
-	 v+coIylV8WqHg==
-Date: Wed, 18 Nov 2026 07:15:23 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Xi Pardee <xi.pardee@linux.intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Z1frDFoe
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3ae6b4c669fso1262011a91.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 23:23:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794986590; x=1795591390; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=b8jhD9NyOgBY8U4+x22CAnEoBAUGT7c8YHeC5TZXIJI=;
+        b=Z1frDFoem+7o/vGx2nbbSolor5KaZatEeUez6FRBzfmKkNIGkihGO9242gyljdFDrw
+         P67bp1EjuAjEpwpwMw7T9kvfvVNpt7vjBOgI3BPtTAIR0Y8e8LFuUjX/COS7qFddQs/C
+         vK5twTT7XHWS/D93Fvp9IF7aK8f4Ct3iV26cEJzS/V2VSERAZrxC61e4yDZiZKC3/dMn
+         9iklpy1phor7eFJOg9GogU9VlxAVTnVRqA/SARD5y1Ok0c/MKmumhOkcsi8tFv44uEYw
+         cm6cdKCA3F0BlaAhc66siWJbWTOOueL+xRIz4YMwbOgvvyeHJiNn0ib1MTjMgprZIeYb
+         TyOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794986590; x=1795591390;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=b8jhD9NyOgBY8U4+x22CAnEoBAUGT7c8YHeC5TZXIJI=;
+        b=SlUM5+Ah8vUbllSdq9HYKqL9QB678pi7q7KbAnzbsfKLYYatVKsyPWm0cIXkQf+wuB
+         o+Iq8EF6R9Z/uwD0e6PhzBSB0HUQtJti7+8fDaRZQrILNUz00KaKsipEgaXoh6amOzt/
+         3bcF/jSxQvZDKTTDoyhUm0MKVuw0g/KHL8MWDsefu0hb8EO5xLxq9dVT25nC1ty+BA3j
+         nH0t0V1umuGZJFEIZcj+lFjhqXBqSIj7QDhMk+JnJ2GbzONfq76ADdOCEC65WWgc89V7
+         87iXx4kC2AkA4abWoYJggbHn1gxQdyPK7MgyKILbQjs+pyNpvWqYSQYsRGtJF4a5S7ak
+         pCBQ==
+X-Forwarded-Encrypted: i=1; AL+hErH88Tnh8F/vNjqCQI5c6Jt8qklydh10EH3N9zNI0n9MMra2ZcM/f5ARzC0rs/QzkFxr5F0tW9ejXPFPIPuOWSRwbCKO@vger.kernel.org
+X-Gm-Message-State: APuU4Z8x3AfT+zFVvipPpNXAG1Oa0Q1NTDqfOKUVCfeFKCFYLAVm3sbX
+	1SorO6Gxj3X2Lx4pb23Lp6llKYEAXC6rQIHhbhuymm+U/8lXUe0LXIs5
+X-Gm-Gg: AZFdTZf+HZGAuyclvBgVIajG6mT/+y4afN8/xEcQ63eqcM7Oy+L0hVcxZf8WCd5QhQW
+	9IszCJS1w/p+I8gS6VnzsiY2DrFQ5ttXcpk/sLPfIllhkDZV4SiQTQs4kLX8I5U+b959GS3VAKw
+	vf/SYDPCw7f7/LMydw7e5l9EO8pd5XaF4cT7AkvNn/kNfdVo0Iq0rkRi+7EZEHsGvgAJ2K9K4hQ
+	X21iQp+XQkwwetlbGLSxfsWZoUerwiExw2JsjbTl3pZn4DmnVhPJwfb3SdZIaXJa5bUU6wS3NxF
+	x1K/qzklG8NSxnutemfE9N7aNnUcyy1mLrb8+yWWzk3Zcq3Ms5x8LAOntlYaIBPZaJY5ZVuzWO0
+	ooBRYE1Zo0wI1pwMrz0hHxu3HnlkoyQuApRgjL38R0+7wugC5LzDfnGaWMPZDG7vtRmXiHoy1c3
+	6iQ8oYA2frT5rsJJXz2YpHYPZj26nbOh+A4xtPKR1CWPnKQgDDNzORDkKZF9aJ4dieVOXxwpzPb
+	l26XcqDlpssiAbDDOf9oQyOGu8LrVQu6bgImqusL+Z0I7uYx3yQGy8StrEp49nIhQwIiC8NtwkA
+	Z+ih29jMmPEiY4CYsFW2vD25ef8hfFPXimrJWpyMdf2AxpVT1IYlNgn24mHX3gDGet1fRg==
+X-Received: by 2002:a17:90b:3147:b0:3ac:7406:b49 with SMTP id 98e67ed59e1d1-3b3d07bef84mr1108974a91.15.1794986588823;
+        Tue, 17 Nov 2026 23:23:08 -0800 (PST)
+Received: from hj.. ([163.239.22.29])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3d56c9c2csm1031783a91.3.2026.11.17.23.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Nov 2026 23:23:08 -0800 (PST)
+From: Hyunjung Ko <hj351016@gmail.com>
+To: Prasanth Ksr <prasanth.ksr@dell.com>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tfiga@chromium.org
-Subject: Re: [PATCH v3] platform/x86/intel/pmc: Disable ACPI PM timer during
- suspend on Panther Lake
-Message-ID: <av1Qi2MGB4asm0ks@google.com>
-References: <20261112032040.930597-1-tzungbi@kernel.org>
- <766daa32-2247-40c2-980f-2a2317733b96@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Dell.Client.Kernel@dell.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Hyunjung Ko <hj351016@gmail.com>
+Subject: [PATCH] platform/x86: dell-wmi-sysman: fix heap OOB when scanning for a newline
+Date: Wed, 18 Nov 2026 16:22:53 +0900
+Message-ID: <20261118072253.896390-1-hj351016@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -62,65 +99,54 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <766daa32-2247-40c2-980f-2a2317733b96@linux.intel.com>
 
-On Mon, Nov 16, 2026 at 09:17:13PM -0800, Xi Pardee wrote:
-> Hi Tzung-Bi,
-> 
-> Thanks for the v3. Avoiding  pmcdev->lock  and the tick_freeze()  atomic
-> context resolves the problem behind the revert in 5fa607880168, and the save
-> and restore logic looks correct.
-> 
-> Two requests:
-> 
-> 1. Ordering vs. the  acpi_pm  clocksource.
-> • The reverted code toggled the timer from the clocksource's own callbacks.
-> These run inside  timekeeping_suspend()  after the last read and inside 
-> timekeeping_resume()  before the first read, so the counter is never read
-> while stopped.
-> • Here the timer is stopped in  suspend_late  and restarted in resume_early
-> . That is before  timekeeping_forward_now()  on suspend and after 
-> tk_clock_read()  on resume.
-> • If  acpi_pm  is the active clocksource, for example when TSC is unstable,
-> timekeeping can read a stopped counter, and ktime_get()  stops advancing
-> from  suspend_late  on.
-> • Have you tested with  clocksource=acpi_pm ? If TSC is always used on PTL,
-> please say so in the commit message.
+The current_value and new_password store handlers copy the input with
+kstrdup(), which stops at the first NUL, and then search the copy for a
+newline with memchr() over the full write size. If the written data
+contains an embedded NUL, memchr() reads past the end of the copy, and
+a newline found there is overwritten with a NUL byte.
 
-Good catch.  I haven't tested with clocksource=acpi_pm since our test
-kernel has CONFIG_X86_PM_TIMER=n and uses TSC.
+The copy is NUL-terminated, so use strchr() instead.
 
-To preserve proper ordering when CONFIG_X86_PM_TIMER=y, in v4 I will
-move the lockless toggle helper into pmc_core and register it via
-acpi_pmtmr_register_suspend_resume_callback() when CONFIG_X86_PM_TIMER=y
-(falling back to pmc_core_suspend()/pmc_core_resume() when disabled).
+This is the same issue that was fixed in hp-bioscfg by commit
+ea146aaac690 ("platform/x86: hp-bioscfg: fix heap OOB in
+hp_enforce_single_line_input()").
 
-I will send out v4 after re-running the s2idle test with the updated
-patches.
+Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hyunjung Ko <hj351016@gmail.com>
+---
+ drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h    | 2 +-
+ drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> 2. Evidence for S0i2.2.
-> • Please share S0i2.1 and S0i2.2 residency with and without the patch.
-> • Include the platform, firmware and kernel version, and say whether
-> firmware enabled the timer and  wdat_wdt  was active.
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+index eb48ced55823..808ff9e70add 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+@@ -144,7 +144,7 @@ static ssize_t curr_val##_store(struct kobject *kobj,				\
+ 	buf_cp = kstrdup(buf, GFP_KERNEL);					\
+ 	if (!buf_cp)								\
+ 		return -ENOMEM;							\
+-	p = memchr(buf_cp, '\n', count);					\
++	p = strchr(buf_cp, '\n');						\
+ 										\
+ 	if (p != NULL)								\
+ 		*p = '\0';							\
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+index be939b731063..9677811436bc 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+@@ -79,7 +79,7 @@ static ssize_t new_password_store(struct kobject *kobj,
+ 	buf_cp = kstrdup(buf, GFP_KERNEL);
+ 	if (!buf_cp)
+ 		return -ENOMEM;
+-	p = memchr(buf_cp, '\n', count);
++	p = strchr(buf_cp, '\n');
+ 
+ 	if (p != NULL)
+ 		*p = '\0';
+-- 
+2.43.0
 
-Here are the current results from v3 on a Panther Lake Android desktop
-device (coreboot with CONFIG_USE_PM_ACPI_TIMER=y, kernel 6.18 with
-CONFIG_X86_PM_TIMER=n, wdat_wdt not active):
-
-- Without patch:
-    S0i2.1: 100.00% (345,477 ms), S0i2.2: 0.00% (0 ms)
-- With patch:
-    S0i2.1: 0.00% (11 ms), S0i2.2: 100.00% (338,628 ms)
-
-I will include the residency results in the v4 commit message as well.
-
-> 
-> Also, does WCL, which reuses the PTL ops, need the same fix?
-
-I'm not sure whether WCL has the same behavior, and I don't have WCL
-hardware to verify it.  In v4, I'll move the support into pmc_core via
-opt-in fields in struct pmc_reg_map and enable it for Panther Lake, so
-WCL (or other platforms) can easily opt in if needed.
