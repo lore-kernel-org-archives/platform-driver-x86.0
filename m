@@ -1,68 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795006715;
-	b=TZpQr+RuW4pAt7xb1HjfjGf6h7wLs/GTQTP2/Dc3fEe3U7Bq+pF3iG9ZxWGV+YDtgsw5
-	 z8MyBlc3gavcwOxyVbYegfsl1ccxHJrC+7JE7H6+sDAwKwl20LZsj3NeECI/qvwBPu4ix
-	 5brhu+6D1mKRBWTPH5gPTlcRX8HhRpyLcbCHZgs+Wn8QkiuhV3HpWbV7KWWkZGDb40Bs5
-	 MZjWJvL+D4CjpnOlJcjdNFEoFqm+OqPcAs3EDXZtm5jz28ZaR3AvcQ34uUCg+E4EnsZAG
-	 iiuqokc1NPF2B8rSrUq50k1NiC/zU0iPZyYOpFEZv1uLwkaJDEIgGvMbu2OvND2V+SQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795006715;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=8XT1cvzNiwoIOGohopm0lYzR1BPX6LSyeupTZjaM8Y8=;
-	b=sRBBYBOnLDoxJ82U0RAbK43RiZ1dDAsBVxDkMV3lGfOPVHmfU4kScdKelERgIeSGhIYF
-	 JUG7yF+x3LENXElBJNzTz/jQz9EH+90Wxgs9xx+D16ek6OVTs5+pBzSrODnLvpEhshNU5
-	 A+3rHsT+ixo8QJdZGPnbfnSBuwfJMzQGLQdL/MH2RhDssHhvKMlFB/N3ZCEFChOvMuZtK
-	 T9KWtlLMUnoJBiv0evFaH+Me84cCzz5V30Rq5jNXLQmq6uSL31IMZEAHQRJtU4vLhsWLK
-	 CRkDtw1xunEomo6artO+hJcq0YbjFtVoikawCDrSDxMcV5idXwxtZmJNAFhMfo5weGg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=WsNE5bFe;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795011389;
+	b=2aaAAOH4JjANE5NdsrxlDQimq8SPlzx4TB/J0dArF8q/aYF4fC/0G2axlikLhyee4aM7
+	 D+6/8NFVoEBRSWOisFKluWmN3NNdLYZ9IX/7KNmiF/wcFulAY4q13TvO6ZbOMkzXkpPSY
+	 aGflZxkvAlctBOFva/8scV7ql0lapmRXR5YywdWtFk0bKTe6RJz/JYZQLYqOyJBtkjcHf
+	 R6B1P4GHAsLmo9+TcVFGTZPui8H/ajF+BuQXomV70yPDUVoZ8KgNiMvijyX1fDGBU5OKP
+	 r9eC5y51+EBrQ2Y/bHQUN7vWFdJi9EcQ2utousCNEso3uo5fTbFrlKj0iLLoODrfqYw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795011389;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:Content-Language:From:To:References:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=E2uE6U5IlqqJIzgsEYgTj5XtWyRrbITzWSv2dlW7rWI=;
+	b=yv2lmzyGY4FPHPrCB3L9UXfhBv7/oUisqVFCUDTl/fKds8uXEMBrDs9k+6Py+xxis5Ga
+	 wIrvOZUxg+cq1PUahISlmuX1HUcMfAG1XfhLIK5/WpT0i3D0x6cWz04o2YkE3MWp9f2zH
+	 HwcXzMpXzLDytCc0wJzejA+FrAcJxOSLIdB+kLFI0k4aG1MHdXlmO3oTcXmd4M2RimQdY
+	 Op4f2ElH8xYXfXRTzQKLgjf/cElIiOkA9PZCNKJt0doz6weD8kLKW98HlcUJkyuV3dubt
+	 Ez+r5oRjk2xTbXplOKYV8AjpsKR9240tCndh+Vrv0ByMnh7uNbj0C0bgk3KzZxUh/oA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tj5JoK7y;
+	arc=none smtp.remote-ip=209.85.128.54
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D39606A320;
-	Wed, 18 Nov 2026 12:58:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 53D39606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF49860A2626
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 14:16:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CF49860A2626
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=WsNE5bFe
-ARC-Seal: i=1; a=rsa-sha256; t=1795006704; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=CKpG2/Eontr1gKLhROX8sEYsy8bQCwDdXjOIVsKZ4x8mMWQXGVNQLk26roopYIyUoswhM2rGosHWDW/lMqUKs4fEuy2aApFOFKksAh52znF7tBV1TH3fCfmOhzHoxToA4rBZIxFRZB+Yvml5rY9niSByEmLoUc+88CYu6WTp3hU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795006704; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8XT1cvzNiwoIOGohopm0lYzR1BPX6LSyeupTZjaM8Y8=; 
-	b=M4dfwNwQfMiK57OR1ejUv9fY2x5Vzv1UChCzwU+z5UqvPuQY/SwB+xChykeAWphTqUbFkx1cqRA++tnqf9nOFqjV99whz0cYfjx1qTMaDm7e09ulTuDaESxXyhXzOt+YVNADuWP+XcPguBJJAxLFweAnNGZY1QEMblUjWV8lRSA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=WsNE5bFe4XY+h/fMWyzCdT5/09+SRzuLWxFUtWUz2R7mRsV9gOR77liCFOyK3gpUhmoeNxWQYWTkTNkDLDsdLggK6s/pHx55F3cLssbL3WLpFLo5dP8dfcK4vCujijl6ci7hmH0RALixUoCe271ccY2phR9y9+Ty+G7Ry7YpH5GBCR6c+gTbXWLTByJWiBAEyeFhW5spnab0+/0wkUaKarn/8x5kMf3O3uG6o+HAWzz/gmM0nkEewwUVpYDVjaegh5PZ22RSOu6QXG77EZs7nPyZ2XyM2Vov37jKqWA2Xlzzd2Q10lf6NDkE5CJyT3daR5hMqfCN0n9xwFOFuP7LlQ==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=8XT1cvzNiwoIOGohopm0lYzR1BPX6LSyeupTZjaM8Y8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795006700764579.5976253290352;
-	Wed, 18 Nov 2026 04:58:20 -0800 (PST)
-Message-ID: <abac3ec77879eb7443f09853e419aedab974c603.camel@rong.moe>
-Subject: Re: [PATCH v4] platform/x86: lenovo-wmi-other: Deconflict battery
- with thinkpad_acpi
-From: Rong Zhang <i@rong.moe>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Aaron Ma <aaron.ma@canonical.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>,  "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
- LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <8f0225a2-2fbb-db6b-a4e7-bed783de5088@linux.intel.com>
-References: <20261118063058.157862-1-aaron.ma@canonical.com>
-	 <1acc12bacafe9d454b284d095709ed0d90dd465e.camel@rong.moe>
-	 <8f0225a2-2fbb-db6b-a4e7-bed783de5088@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 20:53:13 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tj5JoK7y
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4b79502c27aso10352655e9.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 06:16:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795011387; x=1795616187; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:references:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=E2uE6U5IlqqJIzgsEYgTj5XtWyRrbITzWSv2dlW7rWI=;
+        b=tj5JoK7yWf2+AJvSsuONNrWbO5LqmSj5OaCsC0jZe6JP9Rne/Sk6CKDCcwv/9NJhN5
+         gxBpGDczt3a57lDNrlHjpbxP3r79iF+dzqA9qtKEaHXYwQMWfyZO+HpZk+ZOYepAnDJN
+         eW5QILUUK3WKTpnONqdknmggc73Il/50Pc27aWZRLQJy+X4tdqJR85pvOHlKiz7Brhl9
+         v++OERogRzy4Shwzj58YE8MwQjuVh2K+jnE5xf5fo27cpk93e3quKYwNLlIC271MBn+g
+         bW8zN88XbUpug3SLyhQfwFRAnXPd8KRh5EwRuL28SbMqIRI5anKi6fUVuLkLsjhuZvEq
+         5oGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795011387; x=1795616187;
+        h=content-transfer-encoding:content-type:in-reply-to:references:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=E2uE6U5IlqqJIzgsEYgTj5XtWyRrbITzWSv2dlW7rWI=;
+        b=bIcTb+C5h09Lb8EkZL87JvAPAuCiyFHH/KAgJfJ8fFrQo6Evm65DTgsnzLjm9FWE7C
+         mZki1PiJJjpDNu88LCTsEzhcNoFbWsy7lM1s0W8QvrlW6fFkLXwakrfeb2C0J6dScM6Z
+         Kdi3EbTlXp83Rp7w+SR4qioGyp4PTMYQTKa2bo6MzROEwlgsEiW75sFIxqcgxtAa1Eqs
+         saVQYFDptmP06HS2WpO6i0dFHhQ2V5KuA+HfWzkxCN/hwZsp8fiSM8SLF65pnfPeqtjf
+         0L4BSmJ4NBz2TH7o+V2YPGwqoYdUTNtirT9x4sXCkgvzd94i3SQ4LuDhmyHeGhTN/UMA
+         eA5g==
+X-Gm-Message-State: APuU4Z9tuPamXMHrgvYJSwx0Sr9FxHJydwAPAtkxORVzGiZmMjo9r65C
+	P+8llMhauGnsLA8VAlM3siLvIotNPnsyvCR8OH76VIzNkv82E0GLUvIbK7sIxg==
+X-Gm-Gg: AYBFou0LsoOD6CKEW7bqttoogReQxxOn1lDDn2BJrzJ8rbZS9glbcwpWfIw3HXYutEg
+	9b40ROo50nvVCM4PSsU0KizIYpAun/Ygl3N6dPjHtiIWsH1mYxVeElmbxcdVgYIC2zvOmMtGd2S
+	RfgPgNkAgo4qax8ogkE3nHkoLA/n6KOVy60GiM4GuyvcRch0jQt5l2S86mZWFa6f7eTWQkaIFZm
+	LmScC9xB4N+OTqdI8Q5XOsDl2Bn2G5gxP2vTBT+XaQz6YErNoTFt090ph5VIKPyl7ns79Yw3DpE
+	Whlxlaj7NNuCg5ZUzi2OA8Oq+BggMy9r2FJxqZqqMty9FsP9YfuTFvJ3Mnl0B+pLl3ScEq8ZJCY
+	zQDNMNGpvDm9Ti2HRblRtB4H8JceoYvag8CiWe2JrtqYZALZCC2OWLyFYA/lKpnmQmus3MxLNab
+	iL8tRLUvxuLGV5dyj0kRy6tdMPU2LRVYcSfQmudfFHA9hAgvdTAwE0X8eNWq43zEvXALENxf6ka
+	GMZQYfu6ysrccSTxs/CD6R2dZ7z+km0QFvKtsGChE26e4ws2SQo0y371qA7/oPqeQizKCASeJCW
+	MVeww7+0O239uJC1YjNsBSfoYwJhl+CvQMPIJMQoeRxCPTmAM5GrJrJp6Q==
+X-Received: by 2002:a05:600c:19d0:b0:4bb:5de1:e923 with SMTP id 5b1f17b1804b1-4bb7d6d1de3mr52114915e9.4.1795011387053;
+        Wed, 18 Nov 2026 06:16:27 -0800 (PST)
+Received: from [192.168.50.22] (windsurfer1001.plus.com. [81.174.251.1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb7d28ec3asm76304525e9.0.2026.11.18.06.16.26
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Nov 2026 06:16:26 -0800 (PST)
+Message-ID: <e416b334-a364-4289-b90d-6ff189c33e29@gmail.com>
+Date: Wed, 18 Nov 2026 14:16:26 +0000
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -72,264 +90,152 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-3 
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] acer_wmi: Aspire A16-61M reports KEY_TOUCHPAD_OFF for both
+ toggle states
+Content-Language: en-GB
+From: mike <mike.sapsard@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+References: <f74ce9e7-34f6-4dec-bfc1-4e65941365d3@gmail.com>
+In-Reply-To: <f74ce9e7-34f6-4dec-bfc1-4e65941365d3@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
+> Hello,
+>
+> I would like to report a possible Acer WMI firmware/driver 
+> compatibility issue affecting the touchpad Fn key on my Acer Aspire 16 
+> AI laptop.
+>
+> *System details*
+>
+>  *
+>
+>    Manufacturer: Acer
+>
+>  *
+>
+>    Model: Aspire A16-61M
+>
+>  *
+>
+>    BIOS: V1.20
+>
+>  *
+>
+>    OS: Linux Mint 22.3
+>
+>  *
+>
+>    Kernel: 7.0.0-43-generic
+>
+>  *
+>
+>    Desktop: Cinnamon 6.6.9 (X11)
+>
+>  *
+>
+>    Touchpad: PixArt PIXA382A:00 093A:382A
+>
+>  *
+>
+>    Kernel module: acer_wmi (in-tree)
+>
+> *Problem*
+>
+> The Acer touchpad Fn key correctly alternates between enabling and 
+> disabling the physical touchpad.
+>
+> However, the Acer WMI hotkeys input device reports |KEY_TOUCHPAD_OFF 
+> (532)|on both presses, regardless of the resulting touchpad state.
+>
+> Consequently, Cinnamon always displays a "Disabled" notification, even 
+> when the touchpad has just been enabled.
+>
+> *Steps to reproduce*
+>
+> 1.
+>
+>    Start with the touchpad enabled.
+>
+> 2.
+>
+>    Run |sudo libinput debug-events --show-keycodes|.
+>
+> 3.
+>
+>    Press the touchpad Fn key to disable the touchpad.
+>
+> 4.
+>
+>    Press it again to re-enable the touchpad.
+>
+> 5.
+>
+>    Observe the reported events.
+>
+> *Actual diagnostic output*
+>
+> |event13 KEYBOARD_KEY +0.000s KEY_TOUCHPAD_OFF (532) pressed event13 
+> KEYBOARD_KEY +0.000s KEY_TOUCHPAD_OFF (532) released event13 
+> KEYBOARD_KEY +9.430s KEY_TOUCHPAD_OFF (532) pressed event13 
+> KEYBOARD_KEY +9.430s KEY_TOUCHPAD_OFF (532) released|
+>
+> Both events originate from the |Acer WMI hotkeys|device.
+>
+> *Additional findings*
+>
+>  *
+>
+>    The Fn key correctly toggles the physical touchpad.
+>
+>  *
+>
+>    Both PixArt X11 devices retain |Device Enabled: 1|in either state.
+>
+>  *
+>
+>    Cinnamon's touchpad |send-events|setting remains
+>    |disabled-on-external-mouse|in both states.
+>
+>  *
+>
+>    Libinput's disable-while-typing function works correctly.
+>
+>  *
+>
+>    The problem is reproducible with BIOS V1.20 and kernel 
+> 7.0.0-43-generic.
+>
+>  *
+>
+>    An earlier invalid local libinput quirks override has been disabled,
+>    and libinput now loads without that configuration error.
+>
+> *Possible explanation*
+>
+> The |acer_wmi|driver appears to determine whether to emit 
+> |KEY_TOUCHPAD_ON|or |KEY_TOUCHPAD_OFF|from a firmware-reported device 
+> state.
+>
+> I wonder whether the A16-61M firmware reports that state incorrectly, 
+> or whether the driver requires a model-specific workaround.
+>
+> This is only a hypothesis; I have not established whether the issue 
+> originates in the firmware or driver.
+>
+> *Expected behaviour*
+>
+> The system should report the correct touchpad state, or an appropriate 
+> toggle event, allowing desktop environments to display an accurate 
+> notification.
+>
+> I would be grateful if this could be investigated. I am happy to 
+> perform further diagnostic tests if required.
+>
+> Kind regards
+>
 
-On Wed, 2026-11-18 at 14:21 +0200, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 18 Nov 2026, Rong Zhang wrote:
->=20
-> > Hi Aaron,
-> >=20
-> > On Wed, 2026-11-18 at 14:30 +0800, Aaron Ma wrote:
-> > > ThinkPads expose battery charge thresholds and charge_behaviour throu=
-gh
-> > > thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups. T=
-he
-> > > Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
-> > > charge_behaviour and charge_types on systems advertising those WMI
-> > > capabilities.
-> > >=20
-> > > When lenovo-wmi-other registers first, thinkpad_acpi fails to create =
-a
-> > > duplicate charge_behaviour sysfs attribute and unregisters its batter=
-y
-> > > extension. Conversely, registering or updating any power_supply_ext o=
-n
-> > > the same battery runs sysfs_update_groups(), which removes standard
-> > > power-supply attributes not owned by power_supply_core and wipes out
-> > > thinkpad_acpi's charge_control_start_threshold,
-> > > charge_control_end_threshold, and charge_behaviour files.
-> > >=20
-> > > Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
-> > > thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
-> > > per-driver table guarded by IS_ENABLED() in Kconfig, and update the
-> > > force_load_psy_ext description accordingly.
-> > >=20
-> > > Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI batter=
-y charge limiting")
-> > > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > > Co-developed-by: Rong Zhang <i@rong.moe>
-> > > Signed-off-by: Rong Zhang <i@rong.moe>
-> > > Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> > > ---
-> > > Changes in v4:
-> > > - Make hids const char * const * with separate HIDs and methods macro=
-s,
-> > >   as noted by Ilpo J=C3=A4rvinen.
-> > > - Move HID lookup and method checks into lwmi_acpi_device_has_methods=
-(),
-> > >   as suggested by Ilpo J=C3=A4rvinen.
-> > >=20
-> > > Changes in v3:
-> > > - Wrap deconfliction table entries in #if IS_ENABLED(CONFIG_*) and dr=
-op
-> > >   driver_enabled, as suggested by Rong Zhang.
-> > > - Group deconfliction entries per driver (HIDs list + methods list).
-> > >=20
-> > > Changes in v2:
-> > > - Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
-> > >   device IDs, method pairs, and driver configuration checks, as sugge=
-sted
-> > >   by Derek J. Clark.
-> > > - Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
-> > >   instead of relying only on ThinkPad ACPI device presence.
-> > > - Check whether the corresponding driver is enabled before looking up
-> > >   its ACPI device, including for ideapad_laptop.
-> > > - Update the force_load_psy_ext description to cover both drivers.
-> > >=20
-> > > v3: https://lore.kernel.org/platform-driver-x86/20261113055726.952551=
--1-aaron.ma@canonical.com/
-> > > v2: https://lore.kernel.org/platform-driver-x86/20261112074823.853819=
--1-aaron.ma@canonical.com/
-> > > v1: https://lore.kernel.org/platform-driver-x86/20261111083529.727285=
--1-aaron.ma@canonical.com/
-> > >=20
-> > >  drivers/platform/x86/lenovo/wmi-other.c | 84 ++++++++++++++++++++---=
---
-> > >  1 file changed, 70 insertions(+), 14 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platfo=
-rm/x86/lenovo/wmi-other.c
-> > > index bd64e7b44669d..485e9a9e4afbd 100644
-> > > --- a/drivers/platform/x86/lenovo/wmi-other.c
-> > > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> > > @@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
-> > >  static bool force_load_psy_ext;
-> > >  module_param(force_load_psy_ext, bool, 0444);
-> > >  MODULE_PARM_DESC(force_load_psy_ext,
-> > > -=09"This option will skip checking if the ideapad_laptop driver will=
- conflict "
-> > > +=09"This option will skip checking if the ideapad_laptop or thinkpad=
-_acpi driver will conflict "
-> > >  =09"with adding an extension to set the battery charge behavior and =
-battery charge "
-> > >  =09"control end threshold. It will also skip checking if the BIOS re=
-ports that "
-> > > -=09"those features are fully supported. It is recommended to blackli=
-st the ideapad "
-> > > +=09"those features are fully supported. It is recommended to blackli=
-st the conflicting "
-> > >  =09"driver before using this option.");
-> > > =20
-> > >  /* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00 =
-& fan) =3D=3D=3D=3D=3D=3D=3D=3D */
-> > > @@ -905,19 +905,69 @@ static acpi_status lwmi_acpi_match(acpi_handle =
-handle, u32 lvl,
-> > >  =09return AE_CTRL_TERMINATE;
-> > >  }
-> > > =20
-> > > +struct lwmi_psy_deconflict {
-> > > +=09const char * const *hids;
-> > > +=09char * const *methods;
-> > > +};
-> > > +
-> > > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) || IS_ENABLED(CONFIG_THINKPAD_=
-ACPI)
-> >=20
-> > The #if did not exist in my original patch. Please don't increase the
-> > maintenance burden simply because of a W=3D2 warning.
-> >=20
-> > See also my reply to v3.
-> >=20
-> > > +#define LWMI_PSY_DECONFLICT_HIDS(...) \
-> > > +=09((const char * const[]) { __VA_ARGS__, NULL })
-> > > +#define LWMI_PSY_DECONFLICT_METHODS(...) \
-> > > +=09((char * const[]) { __VA_ARGS__, NULL })
-> >=20
-> > My original patch safely dropped the const qualifier with cast when
-> > calling acpi_has_method(). If you really don't want to introduce new
-> > cast, please refactor acpi_has_method() instead of abusing the .data
-> > section.
-> >=20
-> > > +#endif
-> > > +
-> > > +static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] =
-=3D {
-> > > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
-> > > +=09{
-> > > +=09=09.hids =3D LWMI_PSY_DECONFLICT_HIDS("VPC2004"),
-> > > +=09=09.methods =3D LWMI_PSY_DECONFLICT_METHODS("GBMD", "SBMC"),
-> > > +=09},
-> > > +#endif /* IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) */
-> > > +#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
-> > > +=09{
-> > > +=09=09.hids =3D LWMI_PSY_DECONFLICT_HIDS("LEN0268", "LEN0068", "IBM0=
-068"),
-> > > +=09=09.methods =3D LWMI_PSY_DECONFLICT_METHODS("BDSG", "BICG"),
-> > > +=09},
-> > > +#endif /* IS_ENABLED(CONFIG_THINKPAD_ACPI) */
-> > > +};
-> > > +
-> > > +/**
-> > > + * lwmi_acpi_device_has_methods() - Check if an ACPI device has all =
-methods
-> > > + * @hid: ACPI hardware ID to match
-> > > + * @methods: NULL-terminated array of required ACPI method names
-> > > + *
-> > > + * Return: true if a matching ACPI device is present and exposes all=
- @methods,
-> > > + * or false otherwise.
-> > > + */
-> > > +static bool lwmi_acpi_device_has_methods(const char *hid, char * con=
-st *methods)
-> > > +{
-> > > +=09acpi_handle handle =3D NULL;
-> > > +=09int ret;
-> > > +
-> > > +=09ret =3D acpi_get_devices(hid, lwmi_acpi_match, &handle, NULL);
-> > > +=09if (ret || !handle)
-> > > +=09=09return false;
-> > > +
-> > > +=09for (unsigned int i =3D 0; methods[i]; i++) {
-> > > +=09=09if (!acpi_has_method(handle, methods[i]))
-> > > +=09=09=09return false;
-> > > +=09}
-> > > +
-> > > +=09return true;
-> > > +}
-> > > +
-> > >  /**
-> > >   * lwmi_om_psy_ext_init() - Hooks power supply extension to device b=
-attery
-> > >   * @priv: Pointer to the lwmi_om_priv drvdata.
-> > >   *
-> > > - * Checks if the ideapad_laptop driver is going to manage charge att=
-ributes first,
-> > > - * then if not, hooks the battery to our WMI methods if they are sup=
-ported.
-> > > + * Checks if the ideapad_laptop or thinkpad_acpi driver is going to =
-manage
-> > > + * charge attributes first, then if not, hooks the battery to our WM=
-I methods
-> > > + * if they are supported.
-> > >   */
-> > >  static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
-> > >  {
-> > > -=09static const char * const ideapad_hid =3D "VPC2004";
-> > > -=09acpi_handle handle =3D NULL;
-> > >  =09unsigned int props =3D 0;
-> > > -=09int ret;
-> > > =20
-> > >  =09if (lwmi_psy_prop_is_supported(priv, POWER_SUPPLY_PROP_CHARGE_BEH=
-AVIOUR))
-> > >  =09=09props |=3D LWMI_PSY_PROP_BEHAVIOUR;
-> > > @@ -928,14 +978,20 @@ static void lwmi_om_psy_ext_init(struct lwmi_om=
-_priv *priv)
-> > >  =09if (force_load_psy_ext)
-> > >  =09=09goto load_psy_ext;
-> > > =20
-> > > -=09/* Deconflict ideapad_laptop driver */
-> > > -=09ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, N=
-ULL);
-> > > -=09if (ret)
-> > > -=09=09return;
-> > > +=09for (unsigned int i =3D 0; i < ARRAY_SIZE(lwmi_psy_deconflict_lis=
-t); i++) {
-> > > +=09=09const struct lwmi_psy_deconflict *entry =3D &lwmi_psy_deconfli=
-ct_list[i];
-> > > =20
-> > > -=09if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(=
-handle, "SBMC")) {
-> > > -=09=09dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages batte=
-ry for device\n");
-> > > -=09=09return;
-> > > +=09=09for (unsigned int j =3D 0; entry->hids[j]; j++) {
-> > > +=09=09=09const char *hid =3D entry->hids[j];
-> > > +
-> > > +=09=09=09if (!lwmi_acpi_device_has_methods(hid, entry->methods))
-> > > +=09=09=09=09continue;
-> >=20
-> > Flip the branch to drop the `continue'.
->=20
-> No, continue is preferred if there's no work to do with the current entry=
-=20
-> and we want to look the next entry. It's more obvious (analoguos to handl=
-e=20
-> error early with return) than nesting if construct that would require=20
-> looking what comes after it.
+-- 
+*Mike Sapsard*
 
-Fine. This also makes sense.
-
-Thanks,
-Rong
-
->=20
-> --
->  i.
->=20
-> >=20
-> > Thanks,
-> > Rong
-> >=20
-> > > +
-> > > +=09=09=09dev_dbg(&priv->wdev->dev,
-> > > +=09=09=09=09"ACPI device %s manages battery for device\n",
-> > > +=09=09=09=09hid);
-> > > +=09=09=09return;
-> > > +=09=09}
-> > >  =09}
-> > > =20
-> > >  load_psy_ext:
-> >=20
