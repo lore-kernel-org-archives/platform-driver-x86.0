@@ -1,110 +1,110 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.149
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795040393;
-	b=S2H5hVUtyrD6KfrffWlrpABqpvvUlE6tbaMmp7w998CXJr6fxlyTf7F8ZxgtUYXdr6wm
-	 ZRGC10ggnEVMGfCfj7wsUbvpPGbalAkwC8juL3E89+Exf56R0cXrOlsmbRMrZcTUCYuCj
-	 eaStjoIH3VW0DFCxfwFCXWQw7nGzkkpiSDsQApmQr2iew9W1FvDHAuXMBof/NZSdCTy6Y
-	 J77cOhungTTXuMX3ixjRqq4IIa1Az9F3KzZmViDn7/q8wOa7/DyHykFgSyTdbyppZPmpE
-	 PvxOj0x96lusJ6r94v6fBulApMxs9ZcBwr+8vHllBq26tmk5dPZLjtOl75wgD+/kjSQ==
+	t=1795040406;
+	b=sRQzAJC+AuGQOtK/SCK4epm2R/hPMdWUhs4b6NlVtUxs5Hw49EdEwT+ReupLIngkAv4W
+	 pLob5nvVgWw5lXjnwIJiTek+/YD8J/Fltqm0UESpRED0zXRrEdeYicsTC5fEq5xfOXsx6
+	 yJXj4+EX/0SF6fBk6RVQkW+Dja2RAN8yMDC0uO2YgknrYNoJVQ6w+QDGGCI46ZG9v0S04
+	 2Bx3WE4CnFDcBnoYt1nmMeUwjTulU7C22daQ9S30jdvjWxrj9xMEue5UqCrVqDwnAl9Wr
+	 0ZXqijx4frUrUydREeYV1EWvZtS3bW9/b5aOEiBO47tDrt+Y+u8KGVLWT1RYasj65kQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795040393;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795040406;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
 	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
 	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
 	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
 	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=N5Nd6NRwnlmfXiSw9MhoLKkEZSiLiKpd+AJ+PzSDigs=;
-	b=nEtRTYI9bvRgKr3fzVmbSZ5ykwZLTD4VOm/GBHsBhuXw66CsitZiruVlmASrospUclSn
-	 hBhTmjcGykzuvqyqIlcNVMP0O/ynff1DZIL+dyelLEvzZvWyzgNYKgqh9vL+cdkGEiyW0
-	 ruz/+lQVR1fq09B3c73p9Sb7C+3lM3CLZPA061yZjkjuTsiILVW0/gXmSTAH8r0eimTah
-	 pgFUQdjQFbmkBEXtb/T1DtEMKVxHiUr3+dNM82o2lp3IJMdgDFE66wKHax1wk4vnA0mWP
-	 cCi02bDs6HQdt1dAfDPTDIr9N6JzzpFS6hJEggnKv5hWmCizOb7a7m5S/di/UblpsoQ==
+	bh=7KNBieCwl5sfYbIk+Jomg7UKzL9YbjjiplZfciCEJAM=;
+	b=WJ4SH2KuT4Uav1iYs09tdgzMXWrFNDkgfyqU+mYdDjdppp0fcMQMGaciXWiGA6JUKSkA
+	 DG6MezVYr/V0yDKz0KY20iltMcR9giwCHUENBiw0px/0d+PWoCEhMFlR6zu90YjVhnx1F
+	 4If/egE9MhkfsUM7SDtoW6xTJa6CCSDwKKMLlCX7e0pAv1nU41B9U4MBqHGjseJS6d6Mm
+	 e4yHFjVY/3TYxL56Cr3t7HkRxNM0X9Q7qfnaOYx5UavSZ6cSKw/l4/X8SAybO++wc41pj
+	 MOB+nXJDzB6PCNEVsbcH3CwyEMhNw467wyjbinXB3bhZj2iQncZiO94WWL82UCZ1wgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=squebb.ca;
 	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=USfqscl3;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=Rnx1V6AT;
-	arc=none smtp.remote-ip=103.168.172.156
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=XgYjIUJ8;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=FllMtLow;
+	arc=none smtp.remote-ip=103.168.172.149
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B11606A335
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 22:19:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35B11606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0141606A31C
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 22:20:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0141606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=USfqscl3;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=Rnx1V6AT
+	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=XgYjIUJ8;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=FllMtLow
 Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 7548D140018E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 17:19:52 -0500 (EST)
+	by mailfout.phl.internal (Postfix) with ESMTP id DDFB6EC0633
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 17:20:04 -0500 (EST)
 Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Wed, 18 Nov 2026 17:19:52 -0500
+  by stl-compute-04.internal (MEProxy); Wed, 18 Nov 2026 17:20:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795040391;
-	 x=1795126791; bh=N5Nd6NRwnlmfXiSw9MhoLKkEZSiLiKpd+AJ+PzSDigs=; b=
-	USfqscl3ryzMJbcOuTR03Ev38wG7G3x7Wt5zMGBAweH+JyJcU4aZ+XH+pXKOxDE/
-	vKXamQIS/Sa72yu0PvsMCssQps0RtGcqfLYX5TT0fsGVeuK732uGP/zDsnAHi6CV
-	6hX1huVlq17lkau6HYG2qgTzDLsN8izSDEBQxT2D2a5kiTSxVOwvx2P9oa2u/avW
-	3hfLmvzRgTD4j7AU/UThUrhS5n7IqpYzB9GV/7zOn0xvI7cy+0yeMJYiUIioSXSA
-	8GvDcmfr596h8GJafo5rb4Cgj7U0PXeL/UPnICxTbKDPsKwvWZ56WsJmhtYc1TA9
-	d4ivkbakKo5E+Dc8VyUYWw==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1795040403;
+	 x=1795126803; bh=7KNBieCwl5sfYbIk+Jomg7UKzL9YbjjiplZfciCEJAM=; b=
+	XgYjIUJ8RNIw/tzI9VwSY0fYve/Hh6LAdgOuaaN69FaBZV2GQTA0twpnhfaWyYwk
+	v9gpNKR3I4Q/Dw5AdwLcg+sd72hKMk45F3lPrm1HZyuSLy6Yun24r3ULsLZoikKh
+	hFHP0pgKo/ayf5nuu6f4v2Jtr+JkNXw9k5p3LPOOS25UXca7Q8G3FcwLzm1Dha4h
+	GxcDtdkeuFgTKK5wxiNWSad/0dhyvsuMW1drEleeG1H+4HhY+Qq4sI/LBcVj1Bnd
+	MUGRz7jaf0cblQsoNAzEzN7hwhYaDm1uSuS4weC+Sz/LUYbypkdXS8H5BX1fSePj
+	MmUlDlDPeCOt9i1SOXoTog==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795040391; x=
-	1795126791; bh=N5Nd6NRwnlmfXiSw9MhoLKkEZSiLiKpd+AJ+PzSDigs=; b=R
-	nx1V6ATSVHpngXQ6vKwbk6v2BmE6RlcwKn/Y3HPkuTUUh8JiTpQy+cvr10K5yOmK
-	6WUSDCUyRKbildX8/J98pTYgpa1xSino2Sy96VaFqudXnkPFonSH2vexnFnGIUbL
-	36M+OGGGCWz0SktN0577q2Thsj3UbEbsREPNYqobQVbRlRfiph4zYHFZ15kCyQXS
-	6gHHwKl3Lym/JFusgHPxMIo7htwbhl5DTuaR0SlolVlRc8sqlH+3hS+VZTNrab7R
-	sYToogOpvF766r+rSIApcdeiaTYIpVO1fhYDP0BK++iVe6BvL+iYwZH8zcsH/Squ
-	vN3yy925ursWIUIpWTSOw==
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795040403; x=
+	1795126803; bh=7KNBieCwl5sfYbIk+Jomg7UKzL9YbjjiplZfciCEJAM=; b=F
+	llMtLow1H0kTMfGakr3YLDFQ0cz1orldM/A/HtjIteJflIXr/ebl0zLmXe06P2zu
+	Ctc9Auakh6mxbRrmPu0SmeB9AbEjXZqBHgDfxlYNtR53rPDZA7diueXs4Dk375Rk
+	iW4SVItVvywM180vaZ3r1CgOuVdW371xoAtuDhaQnU3GVdNcRWl2IdIgVbu9/msG
+	oVeUzYyBZLmDElI2SpUz/jnput5o9g4xOVH8+a8RSFLTuvysBbiqp6jaBCjKH/P1
+	vR2stXGKMW/POOmBHaxr2L/hfrho5vDJinJuHpFWA2aG3wvlz0nCflEMUL7vYbCk
+	CLQHraW3ynw5udTbFZagQ==
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795040391; d=squebb.ca;
+DKIM2-Signature: i=1; m=1; t=1795040403; d=squebb.ca;
 	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
 	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:csFKMs4OTbew8BsgoWP5tKxduxCaUEyLW2LLrhTnVsVDkki
-	SfJyAtvdE4ej6bT8fNFHigVYtdvQetYCONkM7pNJbzSOeQHixC9IoppCtbV5N0U/
-	inxidle4M2zncKObJRU4lCTemMVR9t2UDHbPTYMDtCgxSgsXbjULKzDxHQ330UXp
-	49LqpXDOIEo5VAocoHKKH43PQDF3ZjmpUcQ11YIsWv+axsZSR+D5AZZPwIEptxEA
-	z/wAPpEiqyV+MzRy8dWO3RgZA4ciBbwAt03LUYnG5TLfYAIEl8p++ZAJvKSxkzmx
-	Qd1hw0il2i3GmqUo5sGRKAtKw3DpdQJCAF13PsA==;
+	s=fm1:rsa-sha256:RzdOdcEYx5JwsQ9GQj8FC/JPTmIqOBtpHfda+9kWdocma9p
+	cWOVP1AT99iK7+AsgnQYi+ynDynKSnG8DzFHB+/N7oqMJ3OX+8G5UvlLSpjhs0Fv
+	6DKOshTPZeL5yJy1Unss0oAjlSImUw4Eh0avYyzvg5E5Vm1W40pEUCi4xBipF7gg
+	3kJsYYBX0/791P9mY6gqWXY3gw/uzPJa8l12Z6fnODrwxzGE7asMjraccl2e+QzO
+	fKuotCAXyhzOdeb5zMLXz3INgpHP1GWOAC2j8wKKqdDU+Ojvvq9ja92Z/nYtSxM6
+	ewp/dT9D7NcIccbs4HPrRnp9g8zphYr4bW9Envg==;
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=mi-m=1; hc=12;
 	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
 	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:+ENiAJTKQIhYSg1yltMC/8er7LYRXDEkfDCObsgnr/Q=:Z7AsfKQ+GFsvSW2c9hErHOfafE5JD7w0KWc47M/JB6U=;
-X-ME-Sender: <xms:hiT-atpmMlfhkiZsjKcV2mgDmEEC0pIZNWQGa9sJ0iPqcL9RvaSgNQ>
-    <xme:hiT-aqd6ZCFsQSAlpb5DoctTSohhqta7WJD232zoyZS9CzLDEArMmyQYYtUGzR2KB
-    7wjx4We_-ZbfLLOk1bmJuHOa9KsQMP85AqGVXa8jvzJYznr5AxFSjmf>
-X-ME-Proxy-Cause: dmFkZTFoPArDBxOCK1AYHTSca6Zv38zXYox5GT75kd+QgHP6/JstF3WLFF+u40HMYZ8rMh
-    uwPrqKEuIvhNZYD0yunSLyre1Zb98Sl2/F0ymrph4C4hHmvy8wd370HsDCjYWX+c897BtG
-    5trxNhqkqPlv+AFXI9vx7FFulE6ROAY2cR1rEuYNc3y0mkqCDkTWIaeScTaRRZe+mgwSpJ
-    I4d7++wxofqxgMEJZk1dfqnALNGDXO4CA88W8NjZiqmo3w19MyGq3PWwltF0iH4ud/wJxH
-    GgxQq6QavYBE8vuXYdOLBDmLuJ086A8MXsU92eCuJk9O7nsYyS0bQOyxLmIcdF0t1xL8Kp
-    A0u1ZcSGqZsklFVGoX4IIJnM7ubPSaVpQKC1lp/XAtA2QlPusj7wBtBlyp8MECj2SgaT+y
-    3v+Ez5X2fp0zGx5an7eUWtZMvj46+oGgKlzAY0h137yKqT6PXzZeTLMF7uTCFmK0ILP3O/
-    2UJxfnxRRp/kDosnppbneR8TYuiSVtyaxEmykKIe4uik1zbfu6j3mRXu6mdpSNhYrSAqsk
-    bPZJEAQJua9VEVzdZn19IAS5vBRsoZMDxU1FtMzBJY7pVNoC3OGtb07BH/M0BzhUy0REbE
-    6268aaLr9HBOxwqeSXuBJTho46pRwiBrGebg43xTziQCUMyPkv5T/TDTcPSA
-X-ME-Proxy: <xmx:hyT-akZQuIAT_oLjb9ANEyUp1jR3I80tBIcpbCEAK4fJEbpcIikLMw>
-    <xmx:hyT-ah_y1E3id58XZLXbzuPUwhYU_Kkaur7eaWqD5jjznsITXJleyg>
-    <xmx:hyT-ainG5BJaRDuIFYE4HXWzjtvfvCSXpGQtcwV1XIKxH2MrTQwYhw>
-    <xmx:hyT-auzqyd4WQpWBL2ivoLYwOPo2iekIkZd17CV-jhcwCz7BycKqVg>
-    <xmx:hyT-asTjFhE6b6n7ozFHhI4ESRAw9rUEwU8cBI2C-8Vw3uYpvbbsDvH4>
+Message-Instance: m=1; h=sha256:tYr/aWXAogHJFI7XHZxyQT0dr9qWbgxXf1unaFp58Ms=:KK3Iht5pdOL6eECQcrvytrSjwdnBpIPObtTG5kmcSIs=;
+X-ME-Sender: <xms:kyT-agRaNm8z9npxkj5FhbQE5v6mMpvGu9fmCq2-6W1EnUbP3zhXOg>
+    <xme:kyT-aom_Qn7x5d8FSZ98moaayyoEjL_bIXQQ_4dgYZ5R1Y94ns56bGCPfsGq4QKeN
+    lJzJ6e1ryGZH43ocmJlNCMsu8MSQkPfZ6UHdILlnNxl6B6vAv4GnjrL>
+X-ME-Proxy-Cause: dmFkZTFPvEAGP2ZO3YrRY5Gmsq1YOSp07g41kQmIBJS2DiYuCZT/nDBeB9y8g/j4NbZw7v
+    vhpJcI5d/35aDe9EeXSYdEbKz0BTvKdj57IGRjkG/rfC5FdQII7vdx67mstnOKc/8kuCnd
+    VIWlzRO2WiADZdk5xhWOIBJT69xaiejtSYWTolsvFrnWrjSazl9J1JvoQM+gZsaXxYxXVs
+    ME0ktk70wKUGp2uuHsbS44yaqFSIQOxcfAnnLpC4S1XS/tX6C5Uu+NCUx5TXhVbDas5vrC
+    i6MvJMM2BR7yZR0DsISSpyDwbqnnp1Mkx0OO94Sb1H3HivTpquZFKWBUYz0fL7nr+s9UMR
+    u1sg/dG/BMULfpa0CLnwIBaW+0wxJJjwBkDqVA8GwNdR6jrnHj0q0LiG6rzgDm9UacM0zA
+    yrWqOR1z//C9WHSGprxDh9/1tDOevsXVxY5wESH1xTVnWhLiTuHJ1pP/jnryUOMwtubFcU
+    g5yIRmpojPILJjwjjH8oCUSLNyC0K+V0pO5s0mxgSTZfoay5WTpy3i4cJr7bcNfxciWGgt
+    xmGfKmEot4naiM8ZzsY+erSbkzHmPbFl3ljNPq4sEETqzH2x3PqmBJbw9G4K9bj7R2/6gL
+    9+mFzvp5vw1vvlht+zKG26L6nEGDDc+kqcxkoCAoFW+akosMjrvkAWZ23iXQ
+X-ME-Proxy: <xmx:kyT-ajDq5jEEgng0YKqXQZ4xFFOJRqLutLtw2XrxrQruG-7uQ6ujwg>
+    <xmx:kyT-asG2rGx51HFa4P_MhgwAdT9_meRY6VEaj4Urf4VUnwJzkon8mA>
+    <xmx:kyT-aiMLxdBF_dPO-WoGWUYXAlc-3sunrLzCW8sRKBg6sNhEFD-ocw>
+    <xmx:kyT-al7lt5ejfc_aXxWZ6DiCOJME710ifNJividH_IY1_4uJfwcvNw>
+    <xmx:kyT-aub42Om8kr33ZW2ZT0CuE9JuKYZte6_HHd18unn_jm_7g2AJItI1>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id E3C2E2C0008E; Wed, 18 Nov 2026 17:19:50 -0500 (EST)
+	id 5AA532C0008E; Wed, 18 Nov 2026 17:20:03 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -115,8 +115,8 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AzKAGT4dNZUw
-Date: Wed, 18 Nov 2026 17:17:37 -0500
+X-ThreadId: AOpiVLqPvChg
+Date: Wed, 18 Nov 2026 17:19:42 -0500
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
  "Hans de Goede" <hansg@kernel.org>,
@@ -125,471 +125,250 @@ To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
 Cc: 
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
  linux-kernel@vger.kernel.org
-Message-Id: <6eaa6dc3-3997-423d-997d-e673872c3e86@app.fastmail.com>
-In-Reply-To: <20261119-lwmi-no-singleton-v1-2-6b06fcfb5126@rong.moe>
+Message-Id: <2a87d4a1-b494-455f-984a-e8b93d5df70a@app.fastmail.com>
+In-Reply-To: <20261119-lwmi-no-singleton-v1-3-6b06fcfb5126@rong.moe>
 References: <20261119-lwmi-no-singleton-v1-0-6b06fcfb5126@rong.moe>
- <20261119-lwmi-no-singleton-v1-2-6b06fcfb5126@rong.moe>
-Subject: Re: [PATCH 2/5] platform/x86: lenovo-wmi-other: Eliminate attribute-specific
- callbacks
+ <20261119-lwmi-no-singleton-v1-3-6b06fcfb5126@rong.moe>
+Subject: Re: [PATCH 3/5] platform/x86: lenovo-wmi-other: Factor out tunable_attr_01
+ definition into a macro
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
 
 On Wed, Nov 18, 2026, at 1:58 PM, Rong Zhang wrote:
-> Currently, all firmware-attributes are backed by numerous
-> attribute-specific wrapper callbacks generated by macros. Besides,
-> every firmware attribute has the same type "integer" and shares the same
-> show callback int_type_show(), but LWMI_ATTR_GROUP_TUNABLE_CAP01()
-> defines attr_*_type over and over again.
+> Currently, all definitions of statically allocated tunable_attr_01
+> variables are open-coded, making them hard to refactor.
 >
-> As a result, the definition of attributes significantly bloats up the
-> module size.
+> Add a macro to define statically allocated tunable_attr_01 variables so
+> that further refactoring only touches the macro itself.
 >
-> Eliminating these attribute-specific callbacks by moving their data into
-> a newly-introduced container struct capdata01_attr, and utilize
-> container_of_const() to retrieve the required data in the corresponding
-> callbacks, which are adjusted to make them generic and shared among
-> different attributes. Also introduce a unified attr_int_type attribute
-> to replace all attr_*_type attributes.
+> Meanwhile, move the definition of statically allocated tunable_attr_01
+> variables before the definition of struct lwmi_om_priv, so that upcoming
+> changes can reference the former as needed.
 >
-> With these, all firmware-attributes now use generic callbacks directly
-> and are constified.
->
-> This shrinks the module size by 23.8K (42.7%).
->
->       text       data        bss      total filename (before)
->      23463      32197          3      55663 lenovo-wmi-other.ko
->
->       text       data        bss      total filename (after)
->       5816      26059          3      31878 lenovo-wmi-other.ko
+> No functional change intended.
 >
 > Signed-off-by: Rong Zhang <i@rong.moe>
 > ---
->  drivers/platform/x86/lenovo/wmi-other.c | 217 ++++++++++++++++----------------
->  1 file changed, 108 insertions(+), 109 deletions(-)
+>  drivers/platform/x86/lenovo/wmi-other.c | 178 +++++++-------------------------
+>  1 file changed, 38 insertions(+), 140 deletions(-)
 >
 > diff --git a/drivers/platform/x86/lenovo/wmi-other.c 
 > b/drivers/platform/x86/lenovo/wmi-other.c
-> index c31a8bd08a85..4d51b05a5acf 100644
+> index 4d51b05a5acf..252ef775f300 100644
 > --- a/drivers/platform/x86/lenovo/wmi-other.c
 > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -981,7 +981,7 @@ struct tunable_attr_01 {
->   *
->   * Return: encoded capability data attribute ID.
->   */
-> -static u32 tunable_attr_01_id(struct tunable_attr_01 *attr, u8 mode)
-> +static u32 tunable_attr_01_id(const struct tunable_attr_01 *attr, u8 
-> mode)
->  {
+> @@ -130,6 +130,44 @@ struct lwmi_fan_info {
+>  	long max_rpm;
+>  };
+> 
+> +struct tunable_attr_01 {
+> +	u8 feature_id;
+> +	u8 device_id;
+> +	u8 type_id;
+
+Really just a minor note that everywhere else in the code goes device, feature, type.
+If you end up doing a v2 can you swap the order of feature and device in the above - purely for universal karma?
+
+> +	u8 cd_mode_id; /* mode arg for searching capdata */
+> +	u8 cv_mode_id; /* mode arg for set/get current_value */
+> +};
+> +
+> +#define DEFINE_TUNABLE_ATTR_01(_name, _device, _feature, _type)	\
+> +	static struct tunable_attr_01 _name = {			\
+> +		.device_id = LWMI_DEVICE_ID_##_device,		\
+> +		.feature_id = LWMI_FEATURE_ID_##_feature,	\
+> +		.type_id = LWMI_TYPE_ID_##_type,		\
+> +	}
+> +
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl1_spl, CPU, CPU_SPL, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl1_spl_cl, CPU, CPU_SPL, CROSSLOAD);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl2_sppt, CPU, CPU_SPPT, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl2_sppt_cl, CPU, CPU_SPPT, CROSSLOAD);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl3_fppt, CPU, CPU_FPPT, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl3_fppt_cl, CPU, CPU_FPPT, CROSSLOAD);
+> +DEFINE_TUNABLE_ATTR_01(cpu_temp, CPU, CPU_TEMP, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl1_apu_spl, CPU, CPU_APU, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_cpu_cl, CPU, CPU_CL, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl1_tau, CPU, CPU_TAU, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl4_ipl, CPU, CPU_IPL, NONE);
+> +DEFINE_TUNABLE_ATTR_01(ppt_pl4_ipl_cl, CPU, CPU_IPL, CROSSLOAD);
+> +DEFINE_TUNABLE_ATTR_01(gpu_nv_ppab, GPU, GPU_NV_PPAB, NONE);
+> +DEFINE_TUNABLE_ATTR_01(gpu_nv_ctgp, GPU, GPU_NV_CTGP, NONE);
+> +DEFINE_TUNABLE_ATTR_01(gpu_temp, GPU, GPU_TEMP, NONE);
+> +DEFINE_TUNABLE_ATTR_01(gpu_nv_ac_offset, GPU, GPU_AC_OFFSET, NONE);
+> +DEFINE_TUNABLE_ATTR_01(dgpu_boost_clk, GPU, DGPU_BOOST_CLK, NONE);
+> +DEFINE_TUNABLE_ATTR_01(dgpu_enable, GPU, DGPU_EN, NONE);
+> +DEFINE_TUNABLE_ATTR_01(gpu_mode, GPU, GPU_MODE, NONE);
+> +DEFINE_TUNABLE_ATTR_01(dgpu_didvid, GPU, DGPU_DIDVID, NONE);
+> +DEFINE_TUNABLE_ATTR_01(gpu_nv_bpl, GPU, GPU_NV_BPL, NONE);
+> +DEFINE_TUNABLE_ATTR_01(gpu_nv_cpu_boost, GPU, GPU_NV_CPU_BOOST, NONE);
+> +
+>  struct lwmi_om_priv {
+>  	struct component_master_ops *ops;
+> 
+> @@ -966,14 +1004,6 @@ static void lwmi_om_psy_remove(struct lwmi_om_priv *priv)
+> 
+>  /* ======== fw_attributes (component: lenovo-wmi-capdata 01) ======== */
+> 
+> -struct tunable_attr_01 {
+> -	u8 feature_id;
+> -	u8 device_id;
+> -	u8 type_id;
+> -	u8 cd_mode_id; /* mode arg for searching capdata */
+> -	u8 cv_mode_id; /* mode arg for set/get current_value */
+> -};
+> -
+>  /**
+>   * tunable_attr_01_id() - Formats a tunable_attr_01 to a capdata 
+> attribute ID
+>   * @attr: The tunable_attr_01 to format.
+> @@ -986,138 +1016,6 @@ static u32 tunable_attr_01_id(const struct 
+> tunable_attr_01 *attr, u8 mode)
 >  	return lwmi_attr_id(attr->device_id, attr->feature_id, mode, 
 > attr->type_id);
 >  }
-> @@ -1118,6 +1118,15 @@ static struct tunable_attr_01 gpu_nv_cpu_boost = 
-> {
->  	.type_id = LWMI_TYPE_ID_NONE,
->  };
 > 
-> +struct capdata01_attr {
-> +	struct kobj_attribute kobj_attr;
-> +	struct tunable_attr_01 *tunable_attr;
-> +	union {
-> +		enum attribute_property prop;
-> +		const char *display_name;
-> +	};
-> +};
-> +
->  struct capdata01_attr_group {
->  	const struct attribute_group *attr_group;
+> -static struct tunable_attr_01 ppt_pl1_spl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_SPL,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl1_spl_cl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_SPL,
+> -	.type_id = LWMI_TYPE_ID_CROSSLOAD,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl2_sppt = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_SPPT,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl2_sppt_cl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_SPPT,
+> -	.type_id = LWMI_TYPE_ID_CROSSLOAD,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl3_fppt = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_FPPT,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl3_fppt_cl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_FPPT,
+> -	.type_id = LWMI_TYPE_ID_CROSSLOAD,
+> -};
+> -
+> -static struct tunable_attr_01 cpu_temp = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_TEMP,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl1_apu_spl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_APU,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_cpu_cl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_CL,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl1_tau = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_TAU,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl4_ipl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_IPL,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 ppt_pl4_ipl_cl = {
+> -	.device_id = LWMI_DEVICE_ID_CPU,
+> -	.feature_id = LWMI_FEATURE_ID_CPU_IPL,
+> -	.type_id = LWMI_TYPE_ID_CROSSLOAD,
+> -};
+> -
+> -static struct tunable_attr_01 gpu_nv_ppab = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_GPU_NV_PPAB,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 gpu_nv_ctgp = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_GPU_NV_CTGP,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 gpu_temp = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_GPU_TEMP,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 gpu_nv_ac_offset = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_GPU_AC_OFFSET,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 dgpu_boost_clk = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_DGPU_BOOST_CLK,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 dgpu_enable = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_DGPU_EN,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 gpu_mode = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_GPU_MODE,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 dgpu_didvid = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_DGPU_DIDVID,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 gpu_nv_bpl = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_GPU_NV_BPL,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+> -static struct tunable_attr_01 gpu_nv_cpu_boost = {
+> -	.device_id = LWMI_DEVICE_ID_GPU,
+> -	.feature_id = LWMI_FEATURE_ID_GPU_NV_CPU_BOOST,
+> -	.type_id = LWMI_TYPE_ID_NONE,
+> -};
+> -
+>  struct capdata01_attr {
+>  	struct kobj_attribute kobj_attr;
 >  	struct tunable_attr_01 *tunable_attr;
-> @@ -1128,6 +1137,12 @@ static inline struct lwmi_om_priv 
-> *kobj_to_om_priv(const struct kobject *kobj)
->  	return dev_get_drvdata(kobj_to_dev(kobj->parent));
->  }
-> 
-> +static inline const struct capdata01_attr *
-> +kobj_attr_to_cd01_attr(const struct kobj_attribute *kattr)
-> +{
-> +	return container_of_const(kattr, struct capdata01_attr, kobj_attr);
-> +}
-> +
->  /* Attribute Methods */
-> 
->  /**
-> @@ -1138,36 +1153,54 @@ static inline struct lwmi_om_priv 
-> *kobj_to_om_priv(const struct kobject *kobj)
->   *
->   * Return: Number of characters written to buf.
->   */
-> -static ssize_t int_type_show(struct kobject *kobj, struct 
-> kobj_attribute *kattr,
-> +static ssize_t int_type_show(struct kobject *kobj, const struct 
-> kobj_attribute *kattr,
->  			     char *buf)
->  {
->  	return sysfs_emit(buf, "integer\n");
->  }
-> 
-> +static const struct kobj_attribute attr_int_type = __KOBJ_ATTR(type, 
-> 0444, int_type_show, NULL);
-> +
-> +/**
-> + * attr_display_name_show() - Get the display name of the given 
-> attribute
-> + * @kobj: Pointer to the driver object.
-> + * @kattr: Pointer to the attribute calling this function.
-> + * @buf: The buffer to write to.
-> + *
-> + * Retrieves the display name from the capdata01_attr struct for the 
-> specified
-> + * attribute. This function is intended to be generic so it can be 
-> called from
-> + * any integer attributes.
-> + *
-> + * Return: Number of characters written to buf.
-> + */
-> +static ssize_t attr_display_name_show(struct kobject *kobj,
-> +				      const struct kobj_attribute *kattr, char *buf)
-> +{
-> +	const struct capdata01_attr *cd01_attr = 
-> kobj_attr_to_cd01_attr(kattr);
-> +
-> +	return sysfs_emit(buf, "%s\n", cd01_attr->display_name);
-> +}
-> +
->  /**
->   * attr_capdata01_show() - Get the value of the specified attribute 
-> property
->   *
->   * @kobj: Pointer to the driver object.
->   * @kattr: Pointer to the attribute calling this function.
->   * @buf: The buffer to write to.
-> - * @tunable_attr: The attribute to be read.
-> - * @prop: The property of this attribute to be read.
->   *
->   * Retrieves the given property from the capability data 01 struct for 
-> the
->   * specified attribute's "custom" thermal mode. This function is 
-> intended
-> - * to be generic so it can be called from any integer attributes 
-> "_show"
-> - * function.
-> - *
-> - * If the WMI is success the sysfs attribute is notified.
-> + * to be generic so it can be called from any integer attributes.
->   *
->   * Return: Either number of characters written to buf, or an error 
-> code.
->   */
->  static ssize_t attr_capdata01_show(struct kobject *kobj,
-> -				   struct kobj_attribute *kattr, char *buf,
-> -				   struct tunable_attr_01 *tunable_attr,
-> -				   enum attribute_property prop)
-> +				   const struct kobj_attribute *kattr, char *buf)
->  {
->  	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
-> +	const struct capdata01_attr *cd01_attr = 
-> kobj_attr_to_cd01_attr(kattr);
-> +	const struct tunable_attr_01 *tunable_attr = cd01_attr->tunable_attr;
-> +	enum attribute_property prop = cd01_attr->prop;
->  	struct capdata01 capdata;
->  	u32 attribute_id;
->  	int value, ret;
-> @@ -1204,26 +1237,23 @@ static ssize_t attr_capdata01_show(struct 
-> kobject *kobj,
->   * @kattr: Pointer to the attribute calling this function.
->   * @buf: The buffer to read from, this is parsed to `int` type.
->   * @count: Required by sysfs attribute macros, pass in from the callee 
-> attr.
-> - * @tunable_attr: The attribute to be stored.
->   *
->   * Sets the value of the given attribute when operating under the 
-> "custom"
->   * smartfan profile. The current smartfan profile is retrieved from the
->   * lenovo-wmi-gamezone driver and error is returned if the result is 
-> not
->   * "custom". This function is intended to be generic so it can be 
-> called from
-> - * any integer attribute's "_store" function. The integer to be sent 
-> to the WMI
-> - * method is range checked and an error code is returned if out of 
-> range.
-> - *
-> - * If the value is valid and WMI is success, then the sysfs attribute 
-> is
-> - * notified.
-> + * any integer attributes. The integer to be sent to the WMI method is 
-> range
-> + * checked and an error code is returned if out of range.
->   *
->   * Return: Either count, or an error code.
->   */
->  static ssize_t attr_current_value_store(struct kobject *kobj,
-> -					struct kobj_attribute *kattr,
-> -					const char *buf, size_t count,
-> -					struct tunable_attr_01 *tunable_attr)
-> +					const struct kobj_attribute *kattr,
-> +					const char *buf, size_t count)
->  {
->  	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
-> +	const struct capdata01_attr *cd01_attr = 
-> kobj_attr_to_cd01_attr(kattr);
-> +	const struct tunable_attr_01 *tunable_attr = cd01_attr->tunable_attr;
->  	struct wmi_method_args_32 args = {};
->  	struct capdata01 capdata;
->  	enum thermal_mode mode;
-> @@ -1266,22 +1296,20 @@ static ssize_t attr_current_value_store(struct 
-> kobject *kobj,
->   * @kobj: Pointer to the driver object.
->   * @kattr: Pointer to the attribute calling this function.
->   * @buf: The buffer to write to.
-> - * @tunable_attr: The attribute to be read.
->   *
->   * Retrieves the value of the given attribute for the current smartfan 
-> profile.
->   * The current smartfan profile is retrieved from the 
-> lenovo-wmi-gamezone driver.
->   * This function is intended to be generic so it can be called from 
-> any integer
-> - * attribute's "_show" function.
-> - *
-> - * If the WMI is success the sysfs attribute is notified.
-> + * attributes.
->   *
->   * Return: Either number of characters written to buf, or an error 
-> code.
->   */
->  static ssize_t attr_current_value_show(struct kobject *kobj,
-> -				       struct kobj_attribute *kattr, char *buf,
-> -				       struct tunable_attr_01 *tunable_attr)
-> +				       const struct kobj_attribute *kattr, char *buf)
->  {
->  	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
-> +	const struct capdata01_attr *cd01_attr = 
-> kobj_attr_to_cd01_attr(kattr);
-> +	const struct tunable_attr_01 *tunable_attr = cd01_attr->tunable_attr;
->  	struct wmi_method_args_32 args = {};
->  	enum thermal_mode mode;
->  	int retval;
-> @@ -1382,128 +1410,99 @@ static bool lwmi_attr_01_is_supported(struct 
-> lwmi_om_priv *priv,
->  }
-> 
->  /* Lenovo WMI Other Mode Attribute macros */
-> -#define __LWMI_ATTR_RO(_func, _name)                                  \
-> -	{                                                             \
-> -		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-> -		.show = _func##_##_name##_show,                       \
-> -	}
-> 
-> -#define __LWMI_ATTR_RO_AS(_name, _show)                               \
-> -	{                                                             \
-> -		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-> -		.show = _show,                                        \
-> +/* Attribute current value read/write */
-> +#define __LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname)                  
->                       \
-> +	static const struct capdata01_attr 
-> ext_attr_##_attrname##_current_value = {          \
-> +		.kobj_attr = __KOBJ_ATTR(current_value, 0644,                        
->         \
-> +					 attr_current_value_show, attr_current_value_store), \
-> +		.tunable_attr = &_attrname,                                          
->         \
->  	}
-> 
-> -#define __LWMI_ATTR_RW(_func, _name) \
-> -	__ATTR(_name, 0644, _func##_##_name##_show, _func##_##_name##_store)
-> -
-> -/* Shows a formatted static variable */
-> -#define __LWMI_ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)             
->         \
-> -	static ssize_t _attrname##_##_prop##_show(                            
->  \
-> -		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-> -	{                                                                     
->  \
-> -		return sysfs_emit(buf, _fmt, _val);                            \
-> -	}                                                                     
->  \
-> -	static struct kobj_attribute attr_##_attrname##_##_prop =             
->  \
-> -		__LWMI_ATTR_RO(_attrname, _prop)
-> +/* Attribute property read only */
-> +#define __LWMI_TUNABLE_RO_CAP01(_prop, _attrname, _prop_type)          
->                      \
-> +	static const struct capdata01_attr ext_attr_##_attrname##_##_prop = { 
->               \
-> +		.kobj_attr = __KOBJ_ATTR(_prop, 0444, attr_capdata01_show, NULL),    
->        \
-> +		.tunable_attr = &_attrname,                                          
->        \
-> +		.prop = _prop_type,                                                  
->        \
-> +	}
-> 
-> -/* Attribute current value read/write */
-> -#define __LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname)                  
->         \
-> -	static ssize_t _attrname##_current_value_store(                       
->  \
-> -		struct kobject *kobj, struct kobj_attribute *kattr,            \
-> -		const char *buf, size_t count)                                 \
-> -	{                                                                     
->  \
-> -		return attr_current_value_store(kobj, kattr, buf, count,       \
-> -						&_attrname);                   \
-> -	}                                                                     
->  \
-> -	static ssize_t _attrname##_current_value_show(                        
->  \
-> -		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-> -	{                                                                     
->  \
-> -		return attr_current_value_show(kobj, kattr, buf, &_attrname);  \
-> -	}                                                                     
->  \
-> -	static struct kobj_attribute attr_##_attrname##_current_value =       
->  \
-> -		__LWMI_ATTR_RW(_attrname, current_value)
-> +/* Attribute display name */
-> +#define __LWMI_DISPLAY_NAME(_attrname, _val)                           
->                      \
-> +	static const struct capdata01_attr 
-> ext_attr_##_attrname##_display_name = {          \
-> +		.kobj_attr = __KOBJ_ATTR(display_name, 0444, attr_display_name_show, 
-> NULL), \
-> +		.tunable_attr = &_attrname,                                          
->        \
-> +		.display_name = _val,                                                
->        \
-> +	}
-> 
-> -/* Attribute property read only */
-> -#define __LWMI_TUNABLE_RO_CAP01(_prop, _attrname, _prop_type)          
->         \
-> -	static ssize_t _attrname##_##_prop##_show(                            
->  \
-> -		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-> -	{                                                                     
->  \
-> -		return attr_capdata01_show(kobj, kattr, buf, &_attrname,       \
-> -					   _prop_type);                        \
-> -	}                                                                     
->  \
-> -	static struct kobj_attribute attr_##_attrname##_##_prop =             
->  \
-> -		__LWMI_ATTR_RO(_attrname, _prop)
-> -
-> -#define LWMI_ATTR_GROUP_TUNABLE_CAP01(_attrname, _fsname, _dispname)   
->    \
-> +#define LWMI_ATTR_GROUP_TUNABLE_CAP01(_attrname, _dispname)            
->    \
->  	__LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname);                    \
->  	__LWMI_TUNABLE_RO_CAP01(default_value, _attrname, DEFAULT_VAL);   \
-> -	__LWMI_ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname); \
-> +	__LWMI_DISPLAY_NAME(_attrname, _dispname);                        \
->  	__LWMI_TUNABLE_RO_CAP01(max_value, _attrname, MAX_VAL);           \
->  	__LWMI_TUNABLE_RO_CAP01(min_value, _attrname, MIN_VAL);           \
->  	__LWMI_TUNABLE_RO_CAP01(scalar_increment, _attrname, STEP_VAL);   \
-> -	static struct kobj_attribute attr_##_attrname##_type =            \
-> -		__LWMI_ATTR_RO_AS(type, int_type_show);                   \
-> -	static struct attribute *_attrname##_attrs[] = {                  \
-> -		&attr_##_attrname##_current_value.attr,                   \
-> -		&attr_##_attrname##_default_value.attr,                   \
-> -		&attr_##_attrname##_display_name.attr,                    \
-> -		&attr_##_attrname##_max_value.attr,                       \
-> -		&attr_##_attrname##_min_value.attr,                       \
-> -		&attr_##_attrname##_scalar_increment.attr,                \
-> -		&attr_##_attrname##_type.attr,                            \
-> +	static const struct attribute *const _attrname##_attrs[] = {      \
-> +		&ext_attr_##_attrname##_current_value.kobj_attr.attr,     \
-> +		&ext_attr_##_attrname##_default_value.kobj_attr.attr,     \
-> +		&ext_attr_##_attrname##_display_name.kobj_attr.attr,      \
-> +		&ext_attr_##_attrname##_max_value.kobj_attr.attr,         \
-> +		&ext_attr_##_attrname##_min_value.kobj_attr.attr,         \
-> +		&ext_attr_##_attrname##_scalar_increment.kobj_attr.attr,  \
-> +		&attr_int_type.attr,                                      \
->  		NULL,                                                     \
->  	};                                                                \
->  	static const struct attribute_group _attrname##_attr_group = {    \
-> -		.name = _fsname, .attrs = _attrname##_attrs               \
-> +		.name = #_attrname,                                       \
-> +		.attrs_const = _attrname##_attrs,                         \
->  	}
-> 
->  /* CPU tunable attributes */
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(cpu_temp, "cpu_temp",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(cpu_temp,
->  			      "Set the CPU thermal load limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_cpu_cl, "ppt_cpu_cl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_cpu_cl,
->  			      "Set the CPU cross loading power limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_apu_spl, "ppt_pl1_apu_spl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_apu_spl,
->  			      "Set the APU sustained power limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl, "ppt_pl1_spl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl,
->  			      "Set the CPU sustained power limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl_cl, "ppt_pl1_spl_cl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl_cl,
->  			      "Set the CPU cross loading sustained power limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt, "ppt_pl2_sppt",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt,
->  			      "Set the CPU slow package power tracking limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt_cl, "ppt_pl2_sppt_cl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt_cl,
->  			      "Set the CPU cross loading slow package power tracking limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt, "ppt_pl3_fppt",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt,
->  			      "Set the CPU fast package power tracking limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt_cl, "ppt_pl3_fppt_cl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt_cl,
->  			      "Set the CPU cross loading fast package power tracking limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_tau, "ppt_pl1_tau",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_tau,
->  			      "Set the CPU sustained power limit exceed duration");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl, "ppt_pl4_ipl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl,
->  			      "Set the CPU instantaneous power limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl_cl, "ppt_pl4_ipl_cl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl_cl,
->  			      "Set the CPU cross loading instantaneous power limit");
-> 
->  /* GPU tunable attributes */
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_boost_clk, "dgpu_boost_clk",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_boost_clk,
->  			      "Set the dedicated GPU boost clock");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_didvid, "dgpu_didvid",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_didvid,
->  			      "Get the GPU device identifier and vendor identifier");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_enable, "dgpu_enable",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_enable,
->  			      "Set the dedicated Nvidia GPU enabled status");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_mode, "gpu_mode",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_mode,
->  			      "Set the GPU mode by power limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ac_offset, "gpu_nv_ac_offset",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ac_offset,
->  			      "Set the Nvidia GPU AC total processing power baseline offset");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_bpl, "gpu_nv_bpl",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_bpl,
->  			      "Set the Nvidia GPU base power limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_cpu_boost, "gpu_nv_cpu_boost",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_cpu_boost,
->  			      "Set the Nvidia GPU to CPU dynamic boost limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ctgp, "gpu_nv_ctgp",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ctgp,
->  			      "Set the GPU configurable total graphics power");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ppab, "gpu_nv_ppab",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ppab,
->  			      "Set the Nvidia GPU power performance aware boost limit");
-> -LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_temp, "gpu_temp",
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_temp,
->  			      "Set the GPU thermal load limit");
-> 
->  static struct capdata01_attr_group cd01_attr_groups[] = {
 >
-This one made my head hurt...but I think it's all good.
+> -- 
+> 2.55.0
+
+Looks good to me (I'm OK if my comment above is ignored)
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Mark
