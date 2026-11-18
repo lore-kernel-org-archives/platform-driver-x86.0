@@ -1,88 +1,113 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794983078;
-	b=1NcnFq1F2oWuq+TLDOKw/qDdqdE+LvdNTrnPJNtxIT9MHBMBPypIh0onw38PvXREdiP0
-	 4+0J604D4oFlb3kblcng5zd9lESaa14Vf00Wt+K3pODrYgKSQ9aNrf5xGsjYwhEMWaQYi
-	 Dmzvwp8hOy5pPGDRWVe/Lli5/f1BKpQvV/PHOfSb40MpwRfLeZYF8VSqAdqSIvNtXZRz7
-	 Tk9wuWoEv83s46B+x3r+tzVX5rf9tfVwpLS1sVIBOOP21E3ijWBePCQF+BtI05k/XGd5J
-	 B+cQ25bt55gjBb/i8V/Ixpuw/0rsnMyo3iltFbZ7w6L6ZkeW2lOlIRtqYh55vU3LoGg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794983078;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Content-Transfer-Encoding:From:Mime-Version:Subject:Date:
-	 Message-Id:References:Cc:In-Reply-To:To:X-Mailer;
-	bh=na/KvaP9r6HHnCtVPiRJkOHiqbHZrFGDFwAb0LX3mh0=;
-	b=XO0PeYyhpkd/9/0I748wcYn1TW202pFOqLXKMTQ4Ik/Lj3M4MPFCwoaaG0E3xWiq0Hib
-	 zZI2ITt32/o45YiO0WgRQHTt/QCZ28eMPODzw4rKfF6npNd+3v+/1xIguwBX/awxFu+Xu
-	 wEYCrUpBCxcIryLW1wgyVhOQ4HxaQvy3PylMvbpuV0xc3HsmW11Q0rZUDnC3SUqkisA/T
-	 fqT4WPwq9Tup2txxSbt22+XjBUzbBRbWLCIMCLNW90QNF0ijOK8dZ6ZQnjP7T/RtvB3+/
-	 QyUuUfbc+arBOgjLZ3oWC6228RUjKwnT0rxe7l5cqZTK/ktfuJt9ZOCbgzBQH9qw/+Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AztHoGjR;
-	arc=none smtp.remote-ip=209.85.221.49
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=185.125.188.122
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794983274;
+	b=yDFmObUy9cEB55VInoDkzjzeBjY5aiNSh8hKoVjlvgyPhkVHiWe5+iRtqZhmVAASYSZk
+	 nKwP8SErLY32xF21gByQV32N5xXlL4JIaQWf3L7Zb9EIqIDwFwRvzejYApkPgdhN+ykhu
+	 +S4F1I9IKkTDEfxJEFmXSYJ9QunRfTg7qaO63b7hghc/vyPPS995Qe30GO+hbkemXg0zA
+	 boWPPaBx08wFRN+pvbPIMjxOMvXtip5iVYtm5brSNm+Wcx752bHYD3DjK9bTSxD3vZLxw
+	 kNyjJ5jKjbRUDRjs84N+3uOM9YSVSjagG4yX2cdD7OQKdZsNpNpLuO3w12wZsJ8Rv2A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794983274;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:
+	 X-Google-DKIM-Signature:X-Forwarded-Encrypted:X-Gm-Message-State:
+	 X-Gm-Gg:X-Received:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=ZYCK2Pu0V+U7jvnnJDNAiZFUh2/yzCMoxjajdOtv3Vk=;
+	b=DjxRfcxoGGZdmlv74exzQjrXCg2WYNECd4O5MbVKWpuhyIPmQQhbJQRczOSpvcaZaef3
+	 B9+1a7uMzxwEi9cpWBbi0CMt/dH2kAFuzo8iRQVZGWyOKs106WBp4REJq2xXHgpxXIi/O
+	 u5ipn7x8ecr5tnnBE86oZMmUqsgYKB6b1SoRojlDDNqnAJevdgCtFk+wjv6sHoTOemyO+
+	 FI/RGf21aFgQ31UB/l64JHYv4RKP6YvN46qO9oHMXJLObe/1EyfkXtopmfuxX/Ysyo3Ko
+	 BP+fsGwOWoeQju4KUuDA9yq+YV9lczYwF4MXU0cxEJybEhSDbPFdlKbGS6m5ch1Nx7A==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=canonical.com;
+	spf=pass smtp.mailfrom=canonical.com;
+	dkim=pass header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=IUB13+EG;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=185.125.188.122
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC54D606A31C
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 06:24:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC54D606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F182A606A32A
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 06:27:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F182A606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AztHoGjR
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-491971ac844so504297f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 22:24:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794983076; x=1795587876; darn=vger.kernel.org;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:content-type:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=na/KvaP9r6HHnCtVPiRJkOHiqbHZrFGDFwAb0LX3mh0=;
-        b=AztHoGjRjFnPNy5DkAr00cNJqNbqzrXZSUaXAuai7KIeM8cqlWxyYmJoZp+NzNNzAX
-         EP2Ue1M6w+ySbbDzoVCysgvgkynYoMX9NoCZ3uspbrx9bjdjAGXvKwnMZwNx4qvt4Vnw
-         i6I9Z+b2DPJOh2Kz+TYg7vl45VpSabfQWg7OI4QSJ8Nln2pO9VUxqjZt8HSRP3tLA6cy
-         8glPMVNCJeE1+OqCEcuWGuVxetJ7/b959CY2XItoIpOVdeEFe1u/vQQyiNQsby6KdGU0
-         zo8Ad7d8jIu3MGdeCwcklXRk+5C7RP3vk2OMYEQW3qlbpm1aCwFRBLYVo4PkTg3QEisb
-         lRRg==
+	dkim=pass (4096-bit key, unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=IUB13+EG
+Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 293C43F46F
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 06:27:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1794983265;
+	bh=ZYCK2Pu0V+U7jvnnJDNAiZFUh2/yzCMoxjajdOtv3Vk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=IUB13+EGJcVYtOj724ymwMmLTcehCG5O4BbjM22+B0rGTZH8+a9O3REMueV6rCOnT
+	 eqgmCBXmLS5soKV2sm9yfwEz1nUUmuN43oT+xd0t/EqIoCsrlrfeEKwCH5s7FITgrX
+	 bTudTJbpfjqPpvsExqjIm6h74kNBXN3Hor2+kdoH9lkzHnxKdePdX56Kcv61kRQ1ds
+	 RYwpLIbQzz1wy0gQ1VEq4gl0nPKMubZ49Xy+S/+2p+NZ9bT9zT/a9yVx7KLz1d0HW9
+	 3f1i3m8aLp0l5NVS7TJO6RpVuFv8ksYNz9VcZjRST42ETQf1r27YwoF6b8W19QKcp8
+	 lYGDWyo3Sm2XGvpi4OKNhEo6pBj7yf/KGrZ4AlGqurAZG49j//KJCmwRUr0y0QrLPz
+	 6vVZYr2bQJajfPfgWgtAtO2ATjmauGXpb/zFYUn1kaMjwLRy60Ui6dUvZcLyag2iZP
+	 hxtQLe05iRaFcgJLiTs+6zGpq+d1F4ZDrZ46SAIGuUdDQXg4PvbLFgQI7fZ3XeLbb2
+	 AuYTfL7/j3UEGAXaLxnZJ4hF4LTOGF2kkfwCIR0r2Q9pIWdlso0LFQ5DvGM4TrltZA
+	 AKFtxVRuXsCxI2cwoyYUmC3ROlV5NxzPgMuSBujLFCywFf/P9kyr/ESGMZ9MCOkq9Z
+	 9YW7JHIIWwDUOUyGLqoEka9A=
+Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-139b62317d0so2017114c88.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 22:27:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794983263; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ESLrg9liDwDrVZ57oG3c7pg2BoTkFDnIZUWtsk38SRJy93kF1zR+0B55L6e2CrLJib
+         AvWKycYkTwx8vsGIARbDsouAiwfCTR0jytUY3ab1djTMc9zMW1AzFvRPfo1r23qJJaOF
+         rZeqTsiy3KQnOuj06zm+Ule/hQLmrEet+7uMgW003R6tRrAljS1U9y1UnAaUNeEeuL2D
+         6r9JjvdSCjpAAkkB/iQSNGg0zx/ZDPTWZi7txSWoZ1Y9dNV/oD2uNgvCV4nKmMvh8wJi
+         gXDKJnI/6OhoRiZoFa6fdZKWrQxpF5iZ9B6SeVVzGggyWGH7PXA45fD76kcWX9ECpz7D
+         C5fQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=ZYCK2Pu0V+U7jvnnJDNAiZFUh2/yzCMoxjajdOtv3Vk=;
+        fh=OOgvlC4ob/0a5pQxMtOdT3nb9wDz+m06h9r9cCnSJ5w=;
+        b=PBiTkRX2KqOGfZuTyeIDw5Q+KGh538MnG38h7DZpMWe8UKX1UgSNaNalncgzvdHEwd
+         O7rCjcqdK6P84Apf1/dIRof+w7JQLxJar+nL7eWLM1JFkdudb8AKjq173RJBeNdYqudZ
+         fnkx9G0Gm1S9+ic5iTJax/Fl3TwIVkGMqOP/Xzdv3JaQueqYexrwhzmFM2ezqKYqGvtu
+         XMtYNdTMilBoIrLbYTqFAB1z1x26UgFLfCq1P9NXveK1gPeDIHdLV4RkULJZ/zdUvU4Y
+         6emFs691HU6492nUmLfQBYIHa4OVH7ObMs8SF6E4Ods+YX7fIbbHeNstzChXz2CIpIoU
+         yRAA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794983076; x=1795587876;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:content-type:x-gm-gg
+        d=1e100.net; s=20260707; t=1794983263; x=1795588063;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=na/KvaP9r6HHnCtVPiRJkOHiqbHZrFGDFwAb0LX3mh0=;
-        b=H0VKSaQX2vtTST/TUZIOiQ2uFyUG69LlO2uTcGi9k8IE3xa08NhSanQPPLmgpJDimX
-         sYfqsFqAh99crt85D2MKoNX5ItMDWwWBn/S19xi80721+Sbj8hcfxAXq65y1DezQ51n4
-         Bv9YwJWsx8njF1WE3htm9gr7I+9c1kllh904NFxtkI6dqHbQ7MIMc4WTidKIdyd7q5iO
-         TCOKNQ/GddQVBD/eBA7ZpWWAsiQEFyBUZa6xEokRyiWCUeEH7dh92K4t1e1y0qFrv0It
-         nVix4P2jYbXBgV3KGC0xOkTEDpAjs3QBy1dXPCw/MVwUizCkkRuwiMo0l/yNOGLiqwWm
-         VjPQ==
-X-Forwarded-Encrypted: i=1; AL+hErFn+NS93dvJFXscJxl6VlDESF+k28ZsF2SlWPHE+8zqVU4Dc7Q4q+6DxvC8QkLZihAiWvtWu5kZDold9tpWlYb1yhY1@vger.kernel.org
-X-Gm-Message-State: APuU4Z/piAMgXV2nyKYoNcFJfbK0Gh3FPd7qWrNMyh5g0SSh5z4IvIHv
-	ofIlpgQj9MTbVdm9Mt/v4y9Rfneep+AnDm42pJUfJZzzrnV9vks1zFKk
-X-Gm-Gg: AZFdTZfU69zgcem6enEQ5fgge6WdhWetvCKidpCwTbV3R59Ez1cs8a80FeUmq2R+wKT
-	mqvWTslRn9Fx3cDJJSn9r7d/Yvq9LCFhHawoVwPoDKJv4PS8WydhfrOJzDcXV62QgT1bcHfxHRM
-	hcHPE49w004/KsQXNYkU2lZBchSBcfC9Yttm5t6kHu6Asn+pJwajaPeSUmPgD9PdpeO/rPOcnsb
-	yfk/V9JyHSzam7QB0Gd2NPFnYMZgLf1TqrN/3HGOYVh4KS7T2disenkIVOM1FCSJ29MLsOkhhXH
-	oSzMMXKRhOWAeurFiIgfiiWnYynrXbTbD9f1xuJOM6gp+KwWoKjiCbYui/s2xGkwI4lPkKiR1wJ
-	9GGB7SnMCvNcsgK060blq/sbWLsO/Q+5sS9DfdYCza1ytqFeaF02p9ah8ofXZ5D9flA71SKuMIm
-	iMD5A+GCZzOCyHkYkzwuFdbvJNATB+bnIzI11kILNVPHYFGlhjNZAoXHSqnp3OVlPmgEk2eMGTs
-	jwNDzQS4pstgvSX6JIH7opp5/abLYD31BpjwobnY7skKvfJXZ4uGKVGwUoTOucx6XN/gmfZIi1Y
-	po06YMQFdr5opNOlS/huy53mwINzV7kKqW8wi2sE9VI7KPtNW6T+8X8XvTY5TE7GnMftD9t6R0Q
-	YrFz1b7TxxSqAJI3wsjwgW38biu5xba2AP+o=
-X-Received: by 2002:a05:6000:4812:b0:490:6fbc:9457 with SMTP id ffacd0b85a97d-4a63c18831bmr3346488f8f.41.1794983075935;
-        Tue, 17 Nov 2026 22:24:35 -0800 (PST)
-Received: from smtpclient.apple ([2a05:b100:188e:3c00:e0ee:5dba:4f48:db8d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4a654997681sm2289481f8f.15.2026.11.17.22.24.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 22:24:34 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: teolyub@gmail.com
+        bh=ZYCK2Pu0V+U7jvnnJDNAiZFUh2/yzCMoxjajdOtv3Vk=;
+        b=O5oE8vZAUPHLB3ukwk/FoICmVoNgvECKdKh+Kh23SbfE3WM8c5Pc+5HmJmxSGwvXDE
+         8gyusm/smtz7TBq0L8bXPSeoGrvtvbhK/Yv4kp7BqtRceyhhrPO8E0y2/9oaLhR7UeZq
+         5NeirJ1e/nNFyTDD1hDfibw0YytigVoum6y+KFfhCRzmNSfEvXCD4uZIu/XFfUY6ic+R
+         vnyqTkA9q+yPb9YwbKwVrARAAz6WtktLTZjuh2VuhYTOIKLVr3ob2GNJhxQxzEMDo4ay
+         Nr0Q01LwDHAnj32xkJaNU0+N+Im3emBYUJfSLMePJ5xglh2TXb7KbHFaSr+bYvH/0kGH
+         bo4w==
+X-Forwarded-Encrypted: i=1; AL+hErE6hIX/jqdgJt4+SMju/5uoXTDkw8zIZohFTxD036xQR8HIuJuEo8FIaTCAOE6gGj82dY7r7lU+d3dp4xGASrp1ho8g@vger.kernel.org
+X-Gm-Message-State: APuU4Z8lWBXgSIDkCGoTbN9MOSBzTrBJrNIqzBT/NYQ/weqjAHvyrREs
+	oplBXaDKZOC7UxrreQI81xPI09falNAHUfJRDu8cDSzuVYcHJmH7UbYm19yC5O8Y90+6/tcIMWM
+	U2LQJri0opEcVO5fmT/nsqCvh8Xqw+UJtoLKpDI0CuSVwOJ7JJe7ctDLmFAv2pPfux15pzzEelp
+	FTKN+n63jRDM956TJ51IqrC+4tM2Iz87vNarSrysgWX06hdRNzFXqQvAM4v9zyK4gzhA==
+X-Gm-Gg: AYBFou3U8eGx52KDNeyoMG4P59ZggpLgwA1ZKcTgelvDlyGuPUgj22u3x1lmdzcbANh
+	KkdsFeeHcgitsTiHzx6UeKZS0yEWIyhdjA+6VYBH9n+cYOpnKiEB/FYrGnlao8bTwv8skpX7tbe
+	Hw0TLJ1yPEvL5firrLJFqbfRiSbu8afv6SxB8+VT6kgIiyJsZNKvjF6eJ2RDIdYsyHZr1IUz5lt
+	XnvuCHzctz4R5Hr78zT5qho4r8sX9PbCxtMJ30521GYCbFit0GGmZTtt4vJKxOp/b3vikXPY4h8
+	xQ7PgyEgFUtB2gNzZGL2ZZRr+f4F/hN5f0R1u/PUYLUK6jszrJOjAMFgbtKsGOIFCyfTfYVR
+X-Received: by 2002:a05:7022:f90b:b0:18d:96e8:b913 with SMTP id a92af1059eb24-1b543c4a944mr1572605c88.47.1794983263150;
+        Tue, 17 Nov 2026 22:27:43 -0800 (PST)
+X-Received: by 2002:a05:7022:f90b:b0:18d:96e8:b913 with SMTP id
+ a92af1059eb24-1b543c4a944mr1572580c88.47.1794983262609; Tue, 17 Nov 2026
+ 22:27:42 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -91,353 +116,248 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/2] platform/x86: dell: Add new dell-wmi-pega driver
-Date: Wed, 18 Nov 2026 06:24:22 +0000
-Message-Id: <5C8178E2-6BDF-4110-82FA-0AA4628DEFB6@gmail.com>
-References: <848ebb18-b9bf-4747-9403-fa8da4fba2ad@gmx.de>
-Cc: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <848ebb18-b9bf-4747-9403-fa8da4fba2ad@gmx.de>
-To: Armin Wolf <W_Armin@gmx.de>
-X-Mailer: iPhone Mail (24A446)
+MIME-Version: 1.0
+References: <20261113055726.952551-1-aaron.ma@canonical.com> <b4feb4ce-d818-c6b0-a749-4e58b92c2573@linux.intel.com>
+In-Reply-To: <b4feb4ce-d818-c6b0-a749-4e58b92c2573@linux.intel.com>
+From: Aaron Ma <aaron.ma@canonical.com>
+Date: Wed, 18 Nov 2026 14:27:31 +0800
+X-Gm-Features: AclHuK8VgyeeoUXEKHXZd76ln6Mizm3zIiggFq-UHwvrPWqWaYx_3r4qTvsztGA
+Message-ID: <CAJ6xRxVLMmK6Vk8h8FYbeuDSKhd_hhN=HKEkF=E5CUisimKtZw@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86: lenovo-wmi-other: Deconflict battery
+ with thinkpad_acpi
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Rong Zhang <i@rong.moe>, Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi all - please proceed with the patch and thank you all for your work!
+Hi,
 
-Sent from my mighty iPhone 13 mini
+On Fri, Nov 13, 2026 at 7:04=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Fri, 13 Nov 2026, Aaron Ma wrote:
+>
+> > ThinkPads expose battery charge thresholds and charge_behaviour through
+> > thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups. The
+> > Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
+> > charge_behaviour and charge_types on systems advertising those WMI
+> > capabilities.
+> >
+> > When lenovo-wmi-other registers first, thinkpad_acpi fails to create a
+> > duplicate charge_behaviour sysfs attribute and unregisters its battery
+> > extension. Conversely, registering or updating any power_supply_ext on
+> > the same battery runs sysfs_update_groups(), which removes standard
+> > power-supply attributes not owned by power_supply_core and wipes out
+> > thinkpad_acpi's charge_control_start_threshold,
+> > charge_control_end_threshold, and charge_behaviour files.
+> >
+> > Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
+> > thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
+> > per-driver table guarded by IS_ENABLED() in Kconfig, and update the
+> > force_load_psy_ext description accordingly.
+> >
+> > Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI battery =
+charge limiting")
+> > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > Co-developed-by: Rong Zhang <i@rong.moe>
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+> > ---
+> > Changes in v3:
+> > - Wrap deconfliction table entries in #if IS_ENABLED(CONFIG_*) and drop
+> >   driver_enabled, as suggested by Rong Zhang.
+> > - Group deconfliction entries per driver (HIDs list + methods list).
+> >
+> > Changes in v2:
+> > - Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
+> >   device IDs, method pairs, and driver configuration checks, as suggest=
+ed
+> >   by Derek J. Clark.
+> > - Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
+> >   instead of relying only on ThinkPad ACPI device presence.
+> > - Check whether the corresponding driver is enabled before looking up
+> >   its ACPI device, including for ideapad_laptop.
+> > - Update the force_load_psy_ext description to cover both drivers.
+> >
+> > v2: https://lore.kernel.org/platform-driver-x86/20261112074823.853819-1=
+-aaron.ma@canonical.com/
+> > v1: https://lore.kernel.org/platform-driver-x86/20261111083529.727285-1=
+-aaron.ma@canonical.com/
+> >
+> >  drivers/platform/x86/lenovo/wmi-other.c | 66 ++++++++++++++++++++-----
+> >  1 file changed, 53 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform=
+/x86/lenovo/wmi-other.c
+> > index bd64e7b44669d..340159df5f7cc 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > @@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
+> >  static bool force_load_psy_ext;
+> >  module_param(force_load_psy_ext, bool, 0444);
+> >  MODULE_PARM_DESC(force_load_psy_ext,
+> > -     "This option will skip checking if the ideapad_laptop driver will=
+ conflict "
+> > +     "This option will skip checking if the ideapad_laptop or thinkpad=
+_acpi driver will conflict "
+> >       "with adding an extension to set the battery charge behavior and =
+battery charge "
+> >       "control end threshold. It will also skip checking if the BIOS re=
+ports that "
+> > -     "those features are fully supported. It is recommended to blackli=
+st the ideapad "
+> > +     "those features are fully supported. It is recommended to blackli=
+st the conflicting "
+> >       "driver before using this option.");
+> >
+> >  /* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00 & =
+fan) =3D=3D=3D=3D=3D=3D=3D=3D */
+> > @@ -905,17 +905,41 @@ static acpi_status lwmi_acpi_match(acpi_handle ha=
+ndle, u32 lvl,
+> >       return AE_CTRL_TERMINATE;
+> >  }
+> >
+> > +struct lwmi_psy_deconflict {
+> > +     char * const *hids;
+>
+> Who is only the pointer const, not the char?
+>
 
-> On 17 Nov 2026, at 22:31, Armin Wolf <W_Armin@gmx.de> wrote:
->=20
-> =EF=BB=BFAm 17.11.26 um 23:17 schrieb Ilpo J=C3=A4rvinen:
->>> On Tue, 17 Nov 2026, Armin Wolf wrote:
->>> A user has reported that the WMI hotkey events on Dell All-In-One
->>> machines need to be manually enabled on some models thru a separate
->>> WMI device. This WMI device seems to be present on many other models
->>> but has no effect on them.
->> Can you rephrase this to not textually depend on "user" or "user's
->> report", just state what the problem is, not how you became aware of it.
->>> Add a small driver for enabling support for this WMI device. This
->>> enables the HDMI Input key on the Dell OptiPlex 7400 All-in-One
->>> machine.
->>>=20
->>> Reported-by: Teodora <teolyub@gmail.com>
->>> Closes: https://lore.kernel.org/platform-driver-x86/0TZENT.54P2IBFQRED22=
-@gmail.com
->>> Tested-by: Teodora <teolyub@gmail.com>
->>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>> ---
->>>  Documentation/wmi/devices/dell-wmi-pega.rst | 82 ++++++++++++++++++
->>>  MAINTAINERS                                 |  6 ++
->>>  drivers/platform/x86/dell/Kconfig           | 13 +++
->>>  drivers/platform/x86/dell/Makefile          |  1 +
->>>  drivers/platform/x86/dell/dell-wmi-pega.c   | 93 +++++++++++++++++++++
->>>  5 files changed, 195 insertions(+)
->>>  create mode 100644 Documentation/wmi/devices/dell-wmi-pega.rst
->>>  create mode 100644 drivers/platform/x86/dell/dell-wmi-pega.c
->>>=20
->>> diff --git a/Documentation/wmi/devices/dell-wmi-pega.rst b/Documentation=
-/wmi/devices/dell-wmi-pega.rst
->>> new file mode 100644
->>> index 000000000000..935c8511594b
->>> --- /dev/null
->>> +++ b/Documentation/wmi/devices/dell-wmi-pega.rst
->>> @@ -0,0 +1,82 @@
->>> +.. SPDX-License-Identifier: GPL-2.0-or-later
->>> +
->>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> +Dell All-In-One Series Platform Integration (dell-wmi-pega)
->>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> +
->>> +Introduction
->>> +------------
->>> +
->>> +Many Dell All-In-One devices contain a WMI device for notifying the und=
-erlying platform
->>> +of various OS-specific events like power up, shutdown and backlight bri=
-ghtness control.
->>> +
->>> +Not implementing support for this WMI device might prevent hotkeys expo=
-sed over WMI from
->>> +working on some models.
->>> +
->>> +WMI interface description
->>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
->>> +
->>> +The WMI interface description can be decoded from the embedded binary M=
-OF (bmof)
->>> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
->>> +
->>> +::
->>> +
->>> + [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),
->>> +  Description("Class used to operate method - WMBC"),
->>> +  guid("{2D703EE8-36AC-4F88-BDB5-7556CE6B2946}") : ToInstance]
->>> + class AcpiOSD_WMBC_method : WMIMethod {
->>> +
->>> +   [key, read]
->>> +   string InstanceName;
->>> +
->>> +   [read]
->>> +   boolean Active;
->>> +
->>> +   [WmiMethodId(1), Implemented, read, write,
->>> +    Description("Invoked by AP when system up.")]
->>> +   void PegaOemNotificationStartUp([out, Description("Return Value")] u=
-int32 RetVal);
->>> +
->>> +   [WmiMethodId(2), Implemented, read, write,
->>> +    Description("Invoked by AP when system is going to off state.")]
->>> +   void PegaOemNotificationStop([out, Description("Return Value")] uint=
-32 RetVal);
->>> +
->>> +   [WmiMethodId(3), Implemented, read, write,
->>> +    Description("Invoked by Application to tune up brightness.")]
->>> +   void PegaOemNotificationBrightnessUP([out, Description("Return Value=
-")] uint32 RetVal);
->>> +
->>> +   [WmiMethodId(4), Implemented, read, write,
->>> +    Description("Invoked by Application to tune down brightness.")]
->>> +   void PegaOemNotificationBrightnessDown([out, Description("Return Val=
-ue")] uint32 RetVal);
->>> +
->>> +   [WmiMethodId(5), Implemented, read, write, Description("Reserved.")]=
+It only lacked const because it shared LWMI_PSY_DECONFLICT_STRS() with
+methods. I made hids const char * const * in v4.
 
->>> +   void PegaOemNotificationRSVD1([out, Description("Return Value")] uin=
-t32 RetVal);
->>> +
->>> +   [WmiMethodId(6), Implemented, read, write, Description("Reserved.")]=
+> > +     char * const *methods;
+>
+> If acpi_has_method would input const char * (to me it seems convertable
+> as it only calls acpi_get_handle that takes const char *), this too could
+> be const char.
+>
 
->>> +   void PegaOemNotificationRSVD2([out, Description("Return Value")] uin=
-t32 RetVal);
->>> + };
->>> +
->>> +The return value of each WMI method should be equal to the WMI method I=
-D.
->>> +
->>> +WMI method PegaOemNotificationStartUp()
->>> +---------------------------------------
->>> +
->>> +Notifies the platform that the OS is operational. On some models this W=
-MI method also enables
->>> +reporting of hotkey events over WMI.
->>> +
->>> +WMI method PegaOemNotificationStop()
->>> +------------------------------------
->>> +
->>> +Notifies the platform that the OS is shutting down.
->>> +
->>> +WMI method PegaOemNotificationBrightnessUP()
->>> +--------------------------------------------
->>> +
->>> +Notifies the platform that the user wants to increase the backlight bri=
-ghtness. This WMI method
->>> +usually only forwards this request to the acpi-video driver, so the del=
-l-wmi-pega driver does
->>> +not use it.
->> Could these paragraphs be reflowed to 80 chars as long textual lines are
->> harder to read (eye movement required).
->=20
-> Sure, will do.
->=20
->>> +WMI method PegaOemNotificationBrightnessDown()
->>> +----------------------------------------------
->>> +
->>> +Notifies the platform that the user wants to decrease the backlight bri=
-ghtness. See
->>> +``PegaOemNotificationBrightnessUP()`` for details.
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index bd31e734669e..fb9a80f96900 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -7534,6 +7534,12 @@ M:    Pali Roh=C3=A1r <pali@kernel.org>
->>>  S:    Maintained
->>>  F:    drivers/platform/x86/dell/dell-wmi-base.c
->>>  +DELL WMI PEGA DRIVER
->>> +M:    Armin Wolf <W_Armin@gmx.de>
->>> +S:    Odd Fixes
->>> +F:    Documentation/wmi/devices/dell-wmi-pega.rst
->>> +F:    drivers/platform/x86/dell/dell-wmi-pega.c
->>> +
->>>  DELL WMI SYSMAN DRIVER
->>>  M:    Prasanth Ksr <prasanth.ksr@dell.com>
->>>  L:    Dell.Client.Kernel@dell.com
->>> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/de=
-ll/Kconfig
->>> index 9f0016056d7e..289379383ccb 100644
->>> --- a/drivers/platform/x86/dell/Kconfig
->>> +++ b/drivers/platform/x86/dell/Kconfig
->>> @@ -228,6 +228,7 @@ config DELL_WMI_AIO
->>>      depends on ACPI_WMI
->>>      depends on INPUT
->>>      select INPUT_SPARSEKMAP
->>> +    imply DELL_WMI_PEGA
->>>      help
->>>        Say Y here if you want to support WMI-based hotkeys on Dell
->>>        All-In-One machines.
->>> @@ -262,6 +263,18 @@ config DELL_WMI_LED
->>>        This adds support for the Latitude 2100 and similar
->>>        notebooks that have an external LED.
->>>  +config DELL_WMI_PEGA
->>> +    tristate "Dell WMI AIO Platform Support"
->>> +    default m
->>> +    depends on ACPI_WMI
->>> +    help
->>> +      This option adds support for WMI-based platform integration on De=
-ll All-In-One machines.
->>> +      This driver is necessary for enabling the delivery of hotkey even=
-ts to the dell-wmi-aio
->>> +      driver on some machines.
->>> +
->>> +      To compile this drivers as a module, choose M here: the module wi=
-ll be called
->>> +      dell-wmi-pega.
->>> +
->>>  config DELL_WMI_SYSMAN
->>>      tristate "Dell WMI-based Systems management driver"
->>>      default m
->>> diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/d=
-ell/Makefile
->>> index 470874c6e6e6..46c91c240a2c 100644
->>> --- a/drivers/platform/x86/dell/Makefile
->>> +++ b/drivers/platform/x86/dell/Makefile
->>> @@ -27,5 +27,6 @@ obj-$(CONFIG_DELL_WMI_AIO)            +=3D dell-wmi-ai=
-o.o
->>>  obj-$(CONFIG_DELL_WMI_DESCRIPTOR)        +=3D dell-wmi-descriptor.o
->>>  obj-$(CONFIG_DELL_WMI_DDV)            +=3D dell-wmi-ddv.o
->>>  obj-$(CONFIG_DELL_WMI_LED)            +=3D dell-wmi-led.o
->>> +obj-$(CONFIG_DELL_WMI_PEGA)            +=3D dell-wmi-pega.o
->>>  obj-$(CONFIG_DELL_WMI_SYSMAN)            +=3D dell-wmi-sysman/
->>>  obj-$(CONFIG_DELL_DW5826E_RESET)        +=3D dell-dw5826e-reset.o
->>> diff --git a/drivers/platform/x86/dell/dell-wmi-pega.c b/drivers/platfor=
-m/x86/dell/dell-wmi-pega.c
->>> new file mode 100644
->>> index 000000000000..ddb1b6cc6b1c
->>> --- /dev/null
->>> +++ b/drivers/platform/x86/dell/dell-wmi-pega.c
->>> @@ -0,0 +1,93 @@
->>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>> +/*
->>> + * WMI platform integration for Dell All-In-One series.
->>> + *
->>> + * Copyright (C) 2026 Armin Wolf <W_Armin@gmx.de>
->>> + *
->>> + * Based on earlier work by Teodora <teolyub@gmail.com>.
->>> + */
->>> +
->>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>> +
->>> +#include <linux/cleanup.h>
->>> +#include <linux/device.h>
->>> +#include <linux/device/driver.h>
->>> +#include <linux/dev_printk.h>
->>> +#include <linux/kernel.h>
->> What for is this?
->> I suspect direct device.h include isn't necessary either (and it's
->> anyway guaranteed to come through wmi.h).
->=20
-> Good question, i copied it from one of the other WMI drivers.
->=20
-> I will remove both includes in the next revision.
->=20
->>> +#include <linux/module.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/types.h>
->>> +#include <linux/wmi.h>
->>> +
->>> +#define PEGA_GUID    "2D703EE8-36AC-4F88-BDB5-7556CE6B2946"
->>> +
->>> +enum dell_pega_method {
->>> +    DELL_PEGA_NOTIFICATION_STARTUP        =3D 0x01,
->>> +    DELL_PEGA_NOTIFICATION_STOP        =3D 0x02,
->>> +    DELL_PEGA_NOTIFICATION_BRIGHTNESS_UP    =3D 0x03,
->>> +    DELL_PEGA_NOTIFICATION_BRIGHTNESS_DOWN    =3D 0x04,
->>> +    DELL_PEGA_NOTIFICATION_RESERVED_1    =3D 0x05,
->>> +    DELL_PEGA_NOTIFICATION_RESERVED_2    =3D 0x06,
->>> +};
->>> +
->>> +static int dell_wmi_pega_invoke(struct wmi_device *wdev, enum dell_pega=
-_method method)
->>> +{
->>> +    struct wmi_buffer input =3D { };
->>> +    struct wmi_buffer output;
->>> +    int ret;
->>> +
->>> +    ret =3D wmidev_invoke_method(wdev, 0x0, method, &input, &output, si=
-zeof(__le32));
->>> +    if (ret < 0)
->>> +        return ret;
->>> +
->>> +    __le32 *result __free(kfree) =3D output.data;
->>> +    /* The return value should always be equal to the WMI method ID */
->>> +    if (le32_to_cpu(*result) !=3D method)
->> Include for le32_to_cpu()
->=20
-> What would be the correct include for this?
->=20
->>> +        return -EIO;
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int dell_wmi_pega_probe(struct wmi_device *wdev, const void *con=
-text)
->>> +{
->>> +    int ret;
->>> +
->>> +    ret =3D dell_wmi_pega_invoke(wdev, DELL_PEGA_NOTIFICATION_STARTUP);=
+Agreed. acpi_has_method() still takes char *, so I kept methods as
+char * const * in v4.
 
->>> +    if (ret < 0)
->>> +        dev_err(&wdev->dev,
->>> +            "Failed to notify platform of startup, some hotkeys might n=
-ot work\n");
->> braces for multiline constructs.
->>> +
->>> +    return ret;
->>> +}
->>> +
->>> +static void dell_wmi_pega_shutdown(struct wmi_device *wdev)
->>> +{
->>> +    int ret;
->>> +
->>> +    ret =3D dell_wmi_pega_invoke(wdev, DELL_PEGA_NOTIFICATION_STOP);
->>> +    if (ret < 0)
->>> +        dev_warn(&wdev->dev, "Failed to notify platform of shutdown\n")=
-;
->>> +}
->>> +
->>> +static const struct wmi_device_id dell_wmi_pega_id_table[] =3D {
->>> +    { PEGA_GUID, NULL },
->>> +    { }
->>> +};
->>> +MODULE_DEVICE_TABLE(wmi, dell_wmi_pega_id_table);
->>> +
->>> +static struct wmi_driver dell_wmi_pega_driver =3D {
->>> +    .driver =3D {
->>> +        .name =3D "dell-wmi-pega",
->>> +        .probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
->>> +    },
->>> +    .id_table =3D dell_wmi_pega_id_table,
->>> +    .probe =3D dell_wmi_pega_probe,
->>> +    .remove =3D dell_wmi_pega_shutdown,
->>> +    .shutdown =3D dell_wmi_pega_shutdown,
->>> +    .no_singleton =3D true,
->>> +};
->>> +module_wmi_driver(dell_wmi_pega_driver);
->>> +
->>> +MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
->>> +MODULE_DESCRIPTION("Dell All-In-One series platform integration");
->>> +MODULE_LICENSE("GPL");
->> Just the mandatory nitpicking :-), seems fine otherwise.
->=20
-> Thanks,
->=20
-> i will wait with sending a v2 until Teodora has tested the second patch.
->=20
-> Thanks,
-> Armin Wolf
+> > +};
+> > +
+> > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) || IS_ENABLED(CONFIG_THINKPAD_AC=
+PI)
+> > +#define LWMI_PSY_DECONFLICT_STRS(...) \
+> > +     ((char * const[]) { __VA_ARGS__, NULL })
+> > +#endif
+>
+> What exactly does ifdef'ing this construct achieve? Does something hunt
+> unused macros?
+>
+
+Yes, W=3D2 enables -Wunused-macros. The guard avoids the warning when
+both drivers are disabled.
+
+> > +
+> > +static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] =3D=
+ {
+> > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
+> > +     {
+> > +             .hids =3D LWMI_PSY_DECONFLICT_STRS("VPC2004"),
+> > +             .methods =3D LWMI_PSY_DECONFLICT_STRS("GBMD", "SBMC"),
+> > +     },
+> > +#endif /* IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) */
+> > +#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
+> > +     {
+> > +             .hids =3D LWMI_PSY_DECONFLICT_STRS("LEN0268", "LEN0068", =
+"IBM0068"),
+> > +             .methods =3D LWMI_PSY_DECONFLICT_STRS("BDSG", "BICG"),
+> > +     },
+> > +#endif /* IS_ENABLED(CONFIG_THINKPAD_ACPI) */
+> > +};
+> > +
+> >  /**
+> >   * lwmi_om_psy_ext_init() - Hooks power supply extension to device bat=
+tery
+> >   * @priv: Pointer to the lwmi_om_priv drvdata.
+> >   *
+> > - * Checks if the ideapad_laptop driver is going to manage charge attri=
+butes first,
+> > - * then if not, hooks the battery to our WMI methods if they are suppo=
+rted.
+> > + * Checks if the ideapad_laptop or thinkpad_acpi driver is going to ma=
+nage
+> > + * charge attributes first, then if not, hooks the battery to our WMI =
+methods
+> > + * if they are supported.
+> >   */
+> >  static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
+> >  {
+> > -     static const char * const ideapad_hid =3D "VPC2004";
+> > -     acpi_handle handle =3D NULL;
+> >       unsigned int props =3D 0;
+> >       int ret;
+> >
+> > @@ -928,14 +952,30 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_p=
+riv *priv)
+> >       if (force_load_psy_ext)
+> >               goto load_psy_ext;
+> >
+> > -     /* Deconflict ideapad_laptop driver */
+> > -     ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, N=
+ULL);
+> > -     if (ret)
+> > -             return;
+> > +     for (unsigned int i =3D 0; i < ARRAY_SIZE(lwmi_psy_deconflict_lis=
+t); i++) {
+> > +             const struct lwmi_psy_deconflict *entry =3D &lwmi_psy_dec=
+onflict_list[i];
+> >
+> > -     if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(=
+handle, "SBMC")) {
+> > -             dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages =
+battery for device\n");
+> > -             return;
+> > +             for (unsigned int j =3D 0; entry->hids[j]; j++) {
+> > +                     const char *hid =3D entry->hids[j];
+> > +                     acpi_handle handle =3D NULL;
+> > +                     bool has_methods =3D true;
+> > +
+> > +                     ret =3D acpi_get_devices(hid, lwmi_acpi_match, &h=
+andle, NULL);
+> > +                     if (ret || !handle)
+> > +                             continue;
+> > +
+> > +                     for (unsigned int k =3D 0; entry->methods[k]; k++=
+) {
+> > +                             has_methods =3D acpi_has_method(handle, e=
+ntry->methods[k]);
+> > +                             if (!has_methods)
+> > +                                     break;
+>
+> So this goes to dev_dbg + return, why complicate the code flow with extra
+> break + check that is never true?
+>
+> If indentation is the worry here, the innermost bodies don't seem to
+> require much from the outer ones so they could be moved to a function
+> (j body + k loop).
+>
+
+When missing a method then try the next HID. In v4, I moved the lookup
+and method checks into a helper.
+
+Thanks,
+Aaron
+
+> > +                     }
+> > +                     if (!has_methods)
+> > +                             continue;
+> > +
+> > +                     dev_dbg(&priv->wdev->dev, "ACPI device %s manages=
+ battery for device\n",
+> > +                             hid);
+> > +                     return;
+> > +             }
+> >       }
+> >
+> >  load_psy_ext:
+> >
+>
+> --
+>  i.
+>
