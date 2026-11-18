@@ -1,98 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.176
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794974211;
-	b=KN4uDBu9B1qdbnq/fMsG5eJGJ+dX+iKo3uQ29kPtvPHQCAkMp6skZ97VERaRMs3n+LU0
-	 LQV3XyB83e21JknXFxUeBeXMDuNWeJAJtNG3bkqHexBAku/lJNBBSWQaVo9VIGyUutvI0
-	 NZhuqGrzLEYuqug7dPJPbNxZGiS47zyx5CrB+YYj5pgpJJSOZAVw5Ue+2tLddvWZuMBQV
-	 FMTcJm398704RsNWoweSAh7yEKVaHo3J3Fewj3oErhlm15+9oak6S5YeguYPT4IVXtIe2
-	 LS7Y+wSwaClEPYGfzcIPa8k+QHc7yqQATPGkjpUPqndkIoa0q9baZ4GEkv94NUEALDw==
+	t=1794975946;
+	b=pMfr+YSt7WTZpj1H9yBnSyg5CpcECrv+SxN2v6tA71/YM+WweCaNKH7P2ZUNh4I2GZSY
+	 9snLbx/tiebdPy1cosFS/0K8n2KDJ49TjXvD8Ipf+bzilTE0IOHseM26ygDnnKzf3JyMs
+	 /WKE4AvJzyg+yv7oo3Z9Wa82xfrYPMrcsabCJmViqdz1mYYUx1/cLXBkRxULVhRDCotsO
+	 KqV60b0C9aSpr57sfL4KwElhx02ZrsntcIlf/dDYLgqri8v1UPX7IJfAOCEJeMYmoKXrv
+	 RAQ+gjFG8p1LEOzKtH1hK+fl0n03DxaahHRcx+0GZ1JUaVDOH0DNbYHd3re0jOXxP2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794974211;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794975946;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=wBYhC98lGgyZwfCdqc/0NpvYQ8xNJdgsZQ7BBTKHb/8=;
-	b=mgxFOmcETfWeEwdAuJrQFyMSU3P7Ng4QJKRl9bzirWsbaR26S2x37CdIM96co8hEUseo
-	 gXLctwAHSmHR88wxfzjI6MU/hGtIu0JWNw5ma9FSGydV9UYvKHzxm8Lzf3BhKaVVjx733
-	 zlE8JcuWCLkvtMONDBQSOOJylSzEgCowhM6JQV6WBHzQWWIiT837pVVp+cXkIrsoEvbfL
-	 P6Q3s6WRFRyDX6tN4osT6xb1JJgUyGFSJRvsPDyOQf35FmByN8JkIBF9kQlEfvafDpT43
-	 m1s+wTx+4aldQh3lIrJJ0/LDGW2LH91jFYr61h9+cc0TYcWkplbPB9dF/vW1+x9fo6Q==
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=Zh4vAArBhLb0ta8dNyLSApnPR+DcxZGFY4YNGl0nkXg=;
+	b=Cyow+xNxIlbvi7+SDVrCZR5QGD7fcS8N5ll/mzsfMd5QC0ZHKGlmDt7YuCiFlOnOyfq8
+	 e1nFa5HnaMyvkk2C/Y7qhrYawrTJ7bbE4+2WJ6vmmcAVzd6FYe3YRFG11/P6OE4Vxy4mS
+	 AO1HixvPc3m2lOACrcFjKbY7YUQB7TIC0LX3HJpDAxw466gyfU0TMCxJBA9vXohZV6ZMB
+	 B3T1tPqEKRzpFPLbguPv5Fg5IO13y2oavO1Dh9LIw6Xkiqf27WTFUazykLuUoYC7ft0rC
+	 gS3AeYfhmREDdqAb3SyMf088wVpqtFEt9TCNuy2Ao0XiqwZVoZ0B5tbQI46WjhuvLfw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="uxS/HoqK";
-	arc=none smtp.remote-ip=209.85.215.181
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pu6swxVu;
+	arc=none smtp.remote-ip=209.85.215.176
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92185606A31C
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 03:56:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92185606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9C5606A31C
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 04:25:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E9C5606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uxS/HoqK
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cdb75699c7cso276182a12.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 19:56:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pu6swxVu
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-cc147d86bebso300493a12.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Nov 2026 20:25:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794974211; x=1795579011; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wBYhC98lGgyZwfCdqc/0NpvYQ8xNJdgsZQ7BBTKHb/8=;
-        b=uxS/HoqKDCPUE1RYWpqkTWOmHiicUhQIQRroGrZ0qvyRW1envs1IoaQHKwghnEPwxa
-         BQXIHeaDbcig7Tge4Sr6b2dx0Mcgp6AiEUbvnjuntF6JmoRtztAcoKH/Aptn0tQpb1tE
-         KiiY3IceS2/SX5UT5F1Mb9e4/DfONwR2r8OIye/aDgPaHSgEDPc9C9BGCAp5m1ulBoGG
-         KBgzzUPYxDwgbdzsfrW4gyt1jCgD7YkjbbIWlk5UISMN0cF1iwMrtmeRzLvna2FR33mB
-         1OYKiSlW6F0tH0g/skIGONkdIGfFAwuLy5+OX/k/5QquoQ3RgyLC97OkIZTcK5weRND5
-         ov7g==
+        d=gmail.com; s=20260707; t=1794975945; x=1795580745; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Zh4vAArBhLb0ta8dNyLSApnPR+DcxZGFY4YNGl0nkXg=;
+        b=pu6swxVum+ojaLLTaZHUnSmDTqTuyomcXvhqLiaNjGJAYaDGl3HDyFGAvy/MqibZ5g
+         sTr65M04aoTVEo/FsQSe2yZn5Rv+rNvbIVRRlvj3zG2jlAzgSz4yAJAWGgYdT0KWPjba
+         G/ZRiSu9IBov8va092gCX5rkDmUOnJf1/nh8m53/c34DECnEzAXCvxjpZ4FoaXMIZDI9
+         ao2Fdi/QcnF5RLR9CVXbScBK9YrstznP9i2fz/8hNdOZH2/lP1mEssvYplJTYmLlaLLE
+         V96YD0lg1IEq6UPj5mXB2PKX6s058BJDpMd9snEP6KFjTQMuAb4WeoynE3xwvcn1cfsY
+         zODg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794974211; x=1795579011;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wBYhC98lGgyZwfCdqc/0NpvYQ8xNJdgsZQ7BBTKHb/8=;
-        b=Zta48bTkCHulrFr/yTL5SFq+KnF/I6GzEdf+2Kqj+XioSL00tuHlM4E7zwqjQUBDxU
-         VntngiNxOjLo1jrKRm/lN28EpGSgYCooqHx3522wOcA2wZXc58nLzuiKJYlfwVJkxYa7
-         Y3Q773CQHfzcTgEMWPZB5u2LG/g4ZiQ85cJvt76b9V9zikjcIgMSlBzDsmMYAIwi6sx/
-         dukgRBWNo31ka8DabBgtVuoax8GjVFX6dSZ4IkX1Ox00kCoQ91e9ztizOrROoQSrHWh0
-         mdH4Lp7Pm77TnfUIlRKIu/9gBwp9IfAXbguh6pcZOaBVe45cQaqczpaU7bg+uF+oTuKG
-         Cykg==
-X-Gm-Message-State: APuU4Z9UiBovnqi/UfpWMC78kZPIGOCbD4p/xoY73je0ByadpqDX2P+d
-	Qa5awXUpNi9Qf72/Q72XdecWFW0JUcYVkC9rSz6mkZpAN+BBBGKAJeLx
-X-Gm-Gg: AZFdTZdFFIFoGcsmMTn25od+hfre1byu+4CRR2wlSGjmG9pGQQZQt812MTeoToFqPLT
-	EWJRYKl9i0WsH2jecDNb3OCtkywWQkqVklByOrIwvJijHDdIny8ancT50bsR/8DKiRr3Pjg7cES
-	Deqzg4o9K/LOkqI3D9hOCEHiI5AGchFinnm7F4S4BOcH+AVx08/nS7eyQBHR1wHeJaVVA/quj7x
-	9ZKh9l0wR/V+mD/rLogq6rWcMKyt7aEOw8+gcTJasxHRw0X4XZctrHmK0MC72ll8QueryWTx1Wr
-	qcDJzOGHuJ6cQ5l5BMsR5zwzey4FujtwwovbUwcT5wlKa07UA1hPI8tCOJwTMFXUPRgZyYP40r1
-	eTeUbY+nY+GLNW4A4cY3YHObbekEbVCzffgyzV74kmmveZbg8c3vbngjsjBs6Zpu5yWBmgEplYS
-	cyavxqxrCrVPZ67eTaMAJQncpfNE8l+/P39lDKe3w5/RQsUVCYQz2sl4AdKicABblPEJjJtgmM5
-	oLxCEBsFDWaZ2GLZn4EOz2Jh+4KYLv2s3gwzO6P9GjUf4xnrxwFnsNGRQs3+f96H6WN7L4j87j7
-	tW6AulnzWxYt2wr7SEGIEmgVUxRVQ5dCinueUoowpd3iDB13o1gnCnW06YH1V8ChmbS+fuFpHLS
-	dbRTNvvNlHe7Z9Bn3cUpbcVhGrIkxezJ5nNhpaPbE58Fs4LT+j0WwJJseKJNR+XC+8X5L6RWpwU
-	4NYQ==
-X-Received: by 2002:a17:90b:1fc7:b0:39e:4c80:f67b with SMTP id 98e67ed59e1d1-3b3d0764959mr1419011a91.26.1794974210893;
-        Tue, 17 Nov 2026 19:56:50 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794975945; x=1795580745;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Zh4vAArBhLb0ta8dNyLSApnPR+DcxZGFY4YNGl0nkXg=;
+        b=npcpYt3UqU6EX6m4FvtoUso/VN+cao6lWjiRPF+dJXP3CuI/94nOsDlOPaymlA8J1O
+         RdlgNjMx69quqv7lKa6+TtIB2OrFfYJlr83hvLEnedo3MYso05SYXXWcGBm29lUjQ8UR
+         5VKV8LmYd5uPuCC8Bsg+7cBJ5u876/6TxgcRShEA2rj1cY7spmAMg8I+TjnIn6Nq5g0t
+         fBjlt6hLlEVEZ9GUlQlG3KsEsK937tRB+XCY1uOdeBMaCwMX4oGKBQF4QuxvWqTshhD8
+         li2w36TdqGScQFxw0GLpWHEEq3DUWcLuZth1Wm79H7gxj2UQMDWQhPEYUd5/X5PVUYIw
+         HxAg==
+X-Gm-Message-State: APuU4Z9EmEkc2gbjZqksEbIL0UVowL6PiGpS8iIjxIipbuMrofryI7hE
+	5mLbSDWN2NIIvlh2m5BiWvHI3NweYevvhY2P6ns2+JVlC+QE31Agd6Oi5JQSiA==
+X-Gm-Gg: AZFdTZc30tBgm1R2whSMdLXNU3wNsOk8sr9wARH5vSRw1wp1fWiVsqDdaaAOHnmBbGV
+	SbVHE1kAIgILynHyY/8Om3F0PT2LpVVZXjolGWidAX4XLLnT1hHVMVE69xMxyDgc3c2aVyKR1sN
+	RZAzsk6mdVuPEVB5gbkRQ+Susxq3YbC76XSRYBe69yaKyHCvG3kyE1ZQj2pv6HKxAWxlgbQU+p5
+	x0AXSlYfUz1j2EnOFZdOh3KbOkPMSF0oUeDuEF6NdG6TZmEoUsaj2yGpfbDsTpL0UwZ5ttrdLid
+	9Yw08nz4m9Ch6Mg7n2Y18uv98zfEqsb89RE1SxlKi6P6Gek6kGHjkIxOfwWpqDu3jZv4QH3LiF3
+	pIvaoDTcALbg0vZR64c60E2ZdPv0awqzXjtu1XNJCiDrX6riHfPViDCm+Q5/5EJv9Pd/oeU7K8H
+	gXJXYKGhKlcfwMa2GY8Syenkhe3jFnmZPBJ3APp6mzUYXXLukdA8xgTQdSFwXfrmMF9oxlZm5fd
+	J7KRXcU3XBjeOhLJPvshxCqA9sARGmBGioUEkdU65zQuqtRG3WKqe1TQvu8CS0XFy6JWsemGlYP
+	i2mnesjrEDuhBlwuhTpbZR7gTv607pxfBy6UwNnzPQPA2P8wQX4r8TYcBQzGQYs29GTB3bH6U9i
+	Zh/1NQtdRZvZ/eL3DMFPL4Fo9LwhGgIPcHq/BYqMwHvyKai9Wl9iV74YaI2Za2/PDXFMEeTS1Ie
+	nnCw==
+X-Received: by 2002:a17:902:ce89:b0:2e9:6333:fba8 with SMTP id d9443c01a7336-2eff740e7a2mr10281945ad.16.1794975944699;
+        Tue, 17 Nov 2026 20:25:44 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3d5570208sm598227a91.0.2026.11.17.19.56.49
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eff61b7b32sm6052975ad.41.2026.11.17.20.25.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 19:56:50 -0800 (PST)
+        Tue, 17 Nov 2026 20:25:44 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
-To: Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
+To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Doug Warzecha <Douglas_Warzecha@dell.com>,
-	Andrew Morton <akpm@osdl.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 4/4] platform/x86: dell: dcdbas: Validate the WSMT buffer description
-Date: Tue, 17 Nov 2026 19:56:38 -0800
-Message-ID: <20261118035638.11773-5-rosenp@gmail.com>
+	"Edward O'Callaghan" <quasisec@google.com>,
+	Mario Limonciello <mario.limonciello@dell.com>,
+	"Darren Hart (VMware)" <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Subject: [PATCH v2 00/16] platform/x86: dell-smbios: Fix call filtering, lifetime and error handling
+Date: Tue, 17 Nov 2026 20:25:22 -0800
+Message-ID: <cover.1794975827.git.rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261118035638.11773-1-rosenp@gmail.com>
-References: <20261118035638.11773-1-rosenp@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -104,58 +100,84 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-dcdbas_check_wsmt() takes the address and size of the firmware SMI
-buffer from an SMBIOS OEM string or from an EPS table in the BIOS area,
-and sets
+Fixes for the dell-smbios dispatcher and its SMM and WMI backends.
 
-	smi_buf.size = remap_size - 8;
-	max_smi_data_buf_size = smi_buf.size;
+Patch 1 is security relevant: /dev/wmi/dell-smbios is mode 0444, and the
+WSMT tokens are whitelisted without a capability for both reads and
+writes, so any local user can write to the WSMT token location and
+change the BIOS setting. Patch 2 closes the related gap where tokens
+sharing a location were filtered by whichever came first. Both were
+found by code review; I have no WSMT-capable machine to reproduce them on.
 
-without checking that remap_size covers the 8 byte semaphore. An OEM
-string such as "30[addr;4]" would make the size wrap to almost 2^64,
-and smi_data reads and writes could then access memory well past the
-mapping.
+Patches 3-11 fix a use-after-free when the dell-smbios.1 device is
+unbound, an empty token sysfs group, use of an unpopulated SMI port,
+unchecked SMI and registration errors, and a WMI buffer size underflow.
 
-check_eps_table() also accepts a table with length 0, since the
-checksum of zero bytes is zero, and then trusts the rest of it.
+Patches 1-11 carry Fixes: tags and come first so they can be applied
+on their own. Patches 12-16 are hardening and cleanups for the next
+merge window: they stop unprivileged users from flooding the log,
+restrict the token sysfs files by mode, and tidy up the rest.
 
-No firmware is known to describe the buffer like this, so this is
-hardening against malformed tables rather than a fix for a reported
-problem. Reject buffers smaller than the semaphore, and EPS tables
-shorter than struct smm_eps_table.
+These patches were developed with the help of an AI coding assistant
+(Claude Opus 5.5): it reviewed the drivers, found the issues and drafted
+the fixes and changelogs. I reviewed every change and I am responsible
+for them.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/platform/x86/dell/dcdbas.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+All patches build cleanly with W=1.
 
-diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
-index 1f64f707744c..7fa6faead7c3 100644
---- a/drivers/platform/x86/dell/dcdbas.c
-+++ b/drivers/platform/x86/dell/dcdbas.c
-@@ -536,6 +536,9 @@ static inline struct smm_eps_table *check_eps_table(u8 *addr)
- 	if (strncmp(eps->smm_comm_buff_anchor, SMM_EPS_SIG, 4) != 0)
- 		return NULL;
- 
-+	if (eps->length < sizeof(*eps))
-+		return NULL;
-+
- 	if (checksum(addr, eps->length) != 0)
- 		return NULL;
- 
-@@ -596,6 +599,12 @@ static int dcdbas_check_wsmt(void)
- 		dev_warn(&dcdbas_pdev->dev, "found WSMT, but buffer address is above 4GB\n");
- 		return -EINVAL;
- 	}
-+	/* The first 8 bytes are a semaphore, not part of the data buffer */
-+	if (remap_size < 8) {
-+		dev_warn(&dcdbas_pdev->dev, "found WSMT, but buffer size %llu is too small\n",
-+			 remap_size);
-+		return -EINVAL;
-+	}
- 	/*
- 	 * Limit remap size to MAX_SMI_DATA_BUF_SIZE + 8 (since the first 8
- 	 * bytes are used for a semaphore, not the data buffer itself).
+Tested on a Dell Precision M4800 running v7.2.15, using the equivalent
+backports built as out-of-tree modules:
+ - token sysfs files are 0400; unprivileged reads fail, root reads work
+ - unprivileged non-whitelisted token reads through /dev/wmi/dell-smbios
+   are rejected, and 503 rejected calls logged 10 lines; root calls work
+ - dell-laptop, dell-pc and dell-wmi work on top, and three unload/reload
+   cycles of the whole stack are clean
+The WSMT write fix (patch 1) could not be exercised: this machine has no
+WSMT tokens. Its seven 0xDA structures all report SMI port 0xb2.
+
+
+Changes in v2:
+- Patch 3: don't leak token_entries when kasprintf() or
+  sysfs_create_group() fails; fall through to its kfree() and return
+  ret from a single exit
+- v1: https://lore.kernel.org/platform-driver-x86/cover.1794871007.git.rosenp@gmail.com/
+
+Rosen Penev (16):
+  platform/x86: dell-smbios: Only allow unprivileged reads of
+    whitelisted tokens
+  platform/x86: dell-smbios: Filter every token at the requested
+    location
+  platform/x86: dell-smbios: Return the real error from
+    build_tokens_sysfs()
+  platform/x86: dell-smbios: Skip 0xDA structures without tokens
+  platform/x86: dell-smbios: Use dev_driver_string() in debug messages
+  platform/x86: dell-smbios-smm: Use the first 0xDA structure with an
+    SMI port
+  platform/x86: dell-smbios-smm: Propagate SMI request errors
+  platform/x86: dell-smbios-smm: Clear platform_device when it is
+    released
+  platform/x86: dell-smbios-wmi: Don't unregister a driver that failed
+    to register
+  platform/x86: dell-smbios-wmi: Reject buffer sizes too small for a
+    call
+  platform/x86: dell-smbios: Don't tie dispatcher entries to the device
+    driver
+  platform/x86: dell-smbios-smm: Set the WSMT test call after clearing
+    the buffer
+  platform/x86: dell-smbios-wmi: Don't let unprivileged users flood the
+    log
+  platform/x86: dell-smbios: Suppress bind attributes of the platform
+    driver
+  platform/x86: dell-smbios: Restrict token sysfs files with their mode
+  platform/x86: dell-smbios: Drop smbios_mutex from module exit
+
+ drivers/platform/x86/dell/dell-smbios-base.c | 162 +++++++++++--------
+ drivers/platform/x86/dell/dell-smbios-smm.c  |  24 ++-
+ drivers/platform/x86/dell/dell-smbios-wmi.c  |  23 ++-
+ 3 files changed, 136 insertions(+), 73 deletions(-)
+
+
+base-commit: 2800868f63227c8237d70c41e70d441c919620d6
 -- 
 2.56.1
 
