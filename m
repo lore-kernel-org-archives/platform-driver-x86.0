@@ -1,96 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.200.58
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795036661;
-	b=fL8gMcOG5KrPSjx8N3z0Svh//HHS0OzHU2eHBlM53biAYv/qWhtALz9h02hWfTwAYdId
-	 sKcMGeTRLklP0jRSzP018VgIJTm85Oywls9JhtotZzDLpfkw8Hx7zRCCJfu6wx2I++B9/
-	 NDd2JN/xvrf17BAWRILZxcxp60Sqq7vo+3SQUH24uYqbi4YXXRuIUUdJLpBhficQ3Kh4q
-	 lgTZBnrer4c9DnTSEmIR0/BjCQLwwkZ9vRS+UWJRYxhP82jDRdL9YqPkWeIzmbB32JUXE
-	 9qCKcW7qNNDGsU2/RecRJ0qNCS7R9xUwsdsvF5oJ9RuMzqmd/FJPwveiG3N3NdnheLg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795036661;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:Content-Type:Content-Disposition:
-	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=QnPKHPKTWPiAM7Inyfm4PID0cxtOM5ttpr7auZya7aA=;
-	b=OJrtFK75VFgrOp8kPePn8ggHHbHLlMAucwsb5VpwCjKv0ebXc2xvLS5DBDGBK6aF+qsT
-	 5ExJz11NyuVakQ44MM49DGr7menqx4G2lFvGM7Ccpr3PQgY5rixIb56gPf887XggTJz/Q
-	 rpaFQAQnmoZmM2lzPL5wfkJSuzBnes6cJ8J85M72vq+4bvNQakcARzYHaj8o3vTT0xsAW
-	 zTtHUNCA4s0fcRJUXvd6vndOGBFg5bCVwqxzlsHqsbD6ONqNwbChso4Udahd2ekWf/d+N
-	 mkrP48ONiMcmW/1ya1jlGxCngDfmGKFGAhFlgCGBD+Qs/v7/BbNJg7T+npm9iRoGT6A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=VwrADqkS;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.200.58
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012058.outbound.protection.outlook.com [40.107.200.58])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.204.34.130
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795038504;
+	b=ePecpZ/eqY0bjS8FRWx3Nq+6FeycYpPohaFPM29/3N5qvi2RcwqJhVVjBGdFBwBdSn1Q
+	 qmYdNbOrq79zr8LKV0y0WFiH4RGjx7u/En6G7H7RZJBFZOt+Iwd1yzbriDhVSL67G2DBn
+	 TVYsrNYM0wVK7Lx0/oKD4VTB+V021W2YpBkK07lypuJhUxor5YDaWKs4zZ0pR+Hlq6Rci
+	 doiG1Vt2MCaY0dluHRYxXw5HlaeRQ6uZnjVRzmcBcMfji4cRIADqQb2IJIQ6k8xkuCYaL
+	 7lUkBnqCie5ASUqeX4TE+OU3lHVBIAGLKC9poy1vlhSnXOM4snb/d5DpjIrNENh+1vw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795038504;
+	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
+	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:EX-QQ-RecipientCnt:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
+	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
+	bh=St5MdENNCFcWUVKuAFqEirQyEEEyxwKVjqFS3xJm34M=;
+	b=vJc+Hbdu3i+4oZHOWckDLKYn9mwCN+ozEAApMULcedoraM+9guaBkHA0kJYZ7Lm6BNJd
+	 k73gbgjTWFqEzBo5iT5b1kL5+aenp4ruvAuApz3KFeC5OZ1hy2kDzUvxEqoiPZyrXqEPB
+	 xh1+9ghd8ES5hDXB8wK7eQG7WIx9cbcpGxrUTgHm0bjQkiwMWpsigBmrs4CqWio/TNjlc
+	 4dH5TXcGzOGq+rnVNDOLNDh7hcsmM1C6YSb5a/F05Tks2QEuf8fb7MVmXkA2/DyjC3YGc
+	 J7y86T6veumdg96HYyGM7nM4FNtzx8BFcCgIVk5AKeqczR6Shpvd7vUydXdoD4a7SXg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mail.sustech.edu.cn;
+	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
+	arc=none smtp.remote-ip=54.204.34.130
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4CC606A31C;
-	Wed, 18 Nov 2026 21:17:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E4CC606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=VwrADqkS
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eQlTpcFoMKsemSQ0d9qYaME7f6VWRFLmMYoV++yUsr1TEoUwLv8p+LthMQKa7Q45Z0o1MvI8mocAOw1vjMW8cx6KC8WTldyx6KaTQsSRPHh46cfvWVVYNHeKcPc2sg0dr/gV7L+8Uy04KBMFzFaElj7TRfuLYZ5v0mdFBdoenAHa/7qH0SctyzKTf1WwnrH6Cgj4Bo/go7N5jCMt2v19kynFCzh0u0kv1807gj4nShBAAMVqs500KOdq1DbNEZy6+4oa3vf7PhRPqsEKU0vrxj+4l8D6Tiyf0CNNfbXb9Mqw4gfyi4o+2fAcNjWiGfQpw/BZuUVrOqLpqPMTTzxE7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QnPKHPKTWPiAM7Inyfm4PID0cxtOM5ttpr7auZya7aA=;
- b=r5vv2VY5PjwtQRRdaMNy6g70LQC532bI9iqfVUY/ylVF9DjMaV64aG0i1t4gHAOCluJFZx0+0I20ruXWPaXOshb+tbizz976E1JEmPay/KgCi7gTNHGR+Fc4H1X0rXhUaT4bntVl+t/hTy5GXRlk7RAVmWmPI6LPLFO4dRTf35p/RGmK2pIN6Oe7UK72qnbOBZgULtChvXiq/IXNAOoLBQwzgl4gNv9unt7GnNIPMGJk6FeWZfRh+iQUmYw3StJPf2riHdHS3Bn4j1YsJY5jj0o6qDJEHgMGl09PfGjH/kTSYGhraVW5Mt8YuOc93D4L7zy0NUYq3ZhPvue7UpE6Lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QnPKHPKTWPiAM7Inyfm4PID0cxtOM5ttpr7auZya7aA=;
- b=VwrADqkS/xiXmFHLQv8HDhAxS81NZ8DyN+Ni8+xcHalmbtGp0fZA1o5WYqZ0Y0F1qhHeF7mz9F5BDUUERyTZNbp4xo2mrqkurVEeC3Hd7qL2L46UUBnXtp04eEpNn4stQz8va4R0MyumCFxs/sZghDqLMDziMKT50rQ93VyvlmcxtHo/Z40pLsLV4usfuo1TVMLZmNAnx3Zzr2la4cTBeUG/WmEUkJcbc4C+H5opfPuYw7vcw3WM2U96Ue6Vwjj+TBZJ9V15Ce3jM8xWMlndmt3HsojkWVzcMxRHanzptdMy8eUgTUM1+CnW1xWXsg3vF6IROFtdo/gRFUblE6eIog==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com (2603:10b6:408:20c::21)
- by SJ0PR12MB6854.namprd12.prod.outlook.com (2603:10b6:a03:47c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Wed, 18 Nov
- 2026 21:17:30 +0000
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286]) by LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286%4]) with mapi id 15.21.0615.012; Wed, 18 Nov 2026
- 21:17:29 +0000
-Date: Wed, 18 Nov 2026 16:17:26 -0500
-From: Yury Norov <ynorov@nvidia.com>
-To: Matthew Garrett <mjg59@srcf.ucam.org>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	open list <linux-kernel@vger.kernel.org>
-Cc: Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH 0/2] platform/x86: dell-laptop: rework
- kbd_led_level_{get,set}()
-Message-ID: <av4V5sNfXGEaoKKD@yury>
-References: <20260925193239.248779-1-ynorov@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260925193239.248779-1-ynorov@nvidia.com>
-X-ClientProxiedBy: BN0PR04CA0102.namprd04.prod.outlook.com
- (2603:10b6:408:ec::17) To LV3PR12MB9356.namprd12.prod.outlook.com
- (2603:10b6:408:20c::21)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D251B606A331;
+	Wed, 18 Nov 2026 21:48:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D251B606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
+	s=oemc2211; t=1795038456;
+	bh=St5MdENNCFcWUVKuAFqEirQyEEEyxwKVjqFS3xJm34M=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=3DRVLVyL6p6xvbb68t1uEBuEfBmvCnMUCIKG70lK6tWQBEgFrtmxE6B/fYUbJdTP0
+	 8RQf3lpb75ZXepHt1/ir+BgrH6eurvfNoV4toG7gFIciFidXv8MynRD56bqPnqGoH+
+	 jFOWjutUKPyUdKeIlql/0ihWbCL5es+8XJ0j/iXA=
+X-QQ-mid: zesmtpsz2t1795038451t33687f4c
+X-QQ-Originating-IP: Hyb9dL6ithX70TD5b7D7s7YwJ047D/JddMm+YCUDYJw=
+Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.242])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 19 Nov 2026 05:47:30 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 15444619097910276890
+EX-QQ-RecipientCnt: 6
+From: Fuwei Xie <12313607@mail.sustech.edu.cn>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	erenozen@protonmail.com,
+	Fuwei Xie <12313607@mail.sustech.edu.cn>
+Subject: [RFC PATCH v2 1/2] platform/x86: huawei-wmi: serialize WMI retries and validate responses
+Date: Thu, 19 Nov 2026 00:13:10 +0800
+Message-ID: <B27C5CB9EBA10EE0+20261118161311.17252-2-12313607@mail.sustech.edu.cn>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261118161311.17252-1-12313607@mail.sustech.edu.cn>
+References: <20261118161311.17252-1-12313607@mail.sustech.edu.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -100,74 +69,250 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR12MB9356:EE_|SJ0PR12MB6854:EE_
-X-MS-Office365-Filtering-Correlation-Id: a2b2d55d-b812-4d6e-92a4-08df45b95a2e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|23010399003|10067099003|56012099006|11063799006|261021123027099003|261022113327099003|261021121427099003|261102123227099003|261009223027099003|22082099003|18002099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	2w9Ml0dzvVPTITiWf1KdwN9PRjPf4M0qsL9Z7nRHpI8obQrco39qHuIDi0qMacmB+rzTz2vJmJImw4lsxn5Aixlzr0oJxH/y2owZ8aYtchZKhaHEzHf8mhsOB3xfwTbgbr5N7WASqGxZLd6ZOQsNrN8Pb4cgYDANXT5JaB82YPuKtggc6a5vb4eqCsRjBZ89yZvA5as7QCEzjjs94ekoqYyyieknO8PX/XgNxQnWuq/USnvSoguYusebqKN/MEgOx2lAltkAbVJNN/HNV9jmcyP0RRKz1zo4BNR6n/xLG70m3TG1TK/wfGHuqxq0drVWcglexvJySEzHN44YcVPD8HjUvLDG/I3rlSxZN7hETQbFPME5aJbzHTEhCBzR7UeTYEnBVIE+Hz1c4UuTnGI4Fi7lKQoraRYkOMR8zpUEwEFSrBgd8T68z1H9fuRFp5xArcLfuZFEVHAcdA23WdmdLGbRgcIlG5dHBOKziHg994MeeTNaZLLQpC06/5jItBbN50ZmgtQps8sWdMGzru9UIa0JEgBdFQyP06ZnHhuDfFbzbKEFq/nRiPMpAnnNcw+ry84ZTiZWL5RoZSZ7UNAHFMmw9SyLzuwEUigS+KnOMqDClmfNjBAQElEXQSZ54sQhFrii2vqxOSYZLM3mDueUfg9JyDIJqtI9HXOGUJHeMhU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(23010399003)(10067099003)(56012099006)(11063799006)(261021123027099003)(261022113327099003)(261021121427099003)(261102123227099003)(261009223027099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SSSBsPeIH29jlCIYGiI5kFzhg/2inevq5ikDdI4mkhUAOqioKZMqc8Rn6k+n?=
- =?us-ascii?Q?tL4igRm084HIPBLdL/4tf9Hf/fgd6LSebgZkWwdudiYFQvxfnu6IyEc8+GH4?=
- =?us-ascii?Q?c4WSPGEEVfMJM+vS4RuEQXrM1xl2zvbA7DDDKrDNW/VU343dEiiVedAbOYMH?=
- =?us-ascii?Q?41/149kT5lXPJjVVzVykbodS3KZZMC9TGA4rwP/wVBHh1BWoQql+Bu40F0+q?=
- =?us-ascii?Q?hObjixc7DUhorUTjY0ea+2id/kQpa5SmXWhrSWv2/IZBlOSfcXy8yV2TV+GS?=
- =?us-ascii?Q?cK+8X9hoFd6M+6pFCu6+lGLmbqHimdezggBXDutrwzLq1RYn6AIu6vJoHGR6?=
- =?us-ascii?Q?SkfjGStjytmYXHSgYDJQaWP4zUYsw+Zh7bML2jhUPWmlQ9CMb1G6Twm3HAoA?=
- =?us-ascii?Q?utky4ZDx4ltxEtS9zWdI/kwUDpD2ooWVOw6ZwTC9o82jLUFMYtlXgabHMHub?=
- =?us-ascii?Q?U9tsJ4+griIsaS7vdMgkYBMxqYjfV10VflR1tiSD5GcCqD/y76pMoblQvrct?=
- =?us-ascii?Q?cH0wZ0/2s3CObqLdNqQIrxHzZsjY3mvlAjJqCJbd3xex3+tZs4zeglCU7tdf?=
- =?us-ascii?Q?NK3OQ1uyCruk1QqfKt+sHLoQfsXI9oikKx3D3eXCUcLJdkW6IveiOA7JOAKq?=
- =?us-ascii?Q?uWcigHsZz5cgQGAHJoPXURcWfMUXN918Hpy8DD2JdfEEw29inpJ/njYO9pjV?=
- =?us-ascii?Q?xC8HO/9u0EiCYJcCppQAVTTNo8G8SCK6Ov03bLKYNY6bWZdLPwG2V5kwufHs?=
- =?us-ascii?Q?J0HUW7tlMUi3lWp2HdxPlJ772/Itct4H7sBjvn1kTGD4W/++CvNXv7t04qRR?=
- =?us-ascii?Q?gRV25f5jCSm3OHMY6q9ANI853ZSOAoIkGf4Adhf0lk8qlcsWUQjK20KCp81w?=
- =?us-ascii?Q?NfWnlIENWFHEXG1TChhwmWWeojqplMj62/gmSMrZr3GhdyR2KHuqxaRVVESV?=
- =?us-ascii?Q?ViaVph0jRKPjZILuGl504Y/BrhlNA5T/+ybo+coopaUGcepZA5iVapC+knxw?=
- =?us-ascii?Q?Uduw6rrok3M1eOVr5l0nZnnTAVAJSQdC9ckUA+tzf5LXxjhTe5ssX8fx9i23?=
- =?us-ascii?Q?moCoth9trAVGD7XhUsW5X91IqOuUXH+hKY3nDAV6uyI636bgBnRTlPr0/UOA?=
- =?us-ascii?Q?XfL1GYBgGtSQLgSmzfIWKWcGFEav8rGEgRtC+VgXscUA07YKF/BdHMnal5dw?=
- =?us-ascii?Q?v75hr82il/+TXqbrcNKegG60oBbYbgmlfXARbTD6ALTKyo2E9y4vV/U26q+i?=
- =?us-ascii?Q?40oiE5m7PNJ6w8auwor71GKNgRT03GiTJ4pcMj8oNQAeMrks2qO5A85p4EwK?=
- =?us-ascii?Q?cfTX4XdyC08d/Oc6MeNcrvvnkcSJTJwmEgArger6ZjP5740oM8h13XAml5sJ?=
- =?us-ascii?Q?5+Fdsy3qFIq8ax79j4aQNVb7+CBpaeJ0oP41b5ujUBwAzNRxn/ujp2SrmI0Z?=
- =?us-ascii?Q?Xz0ocec3Rrrap24ivheMKUHjyPYFx5CDE5EP9P8yzGWHBV8r3rOtjcigvCOd?=
- =?us-ascii?Q?F17fptyiIao0lYzdF1mjlzUA/MiTFs8HxEzkzJLn8UyEh+N8SYT0h1Tb8zaX?=
- =?us-ascii?Q?Jzfi5LEm9zvWkJYzwBAth8r3mjgILZLjoA1vwbCJ+ktXK83jaswgApGopQpD?=
- =?us-ascii?Q?snKGmlg8pGoW4JIjftpDcTLY3thmwVIK44CKA6ANHwbtkFT7RfXl/6s11t3S?=
- =?us-ascii?Q?SglxWb4DAo2EHTjnzoISvTtgAiNbs9Y5vTNbhweFsNxpOZFQueYDQpFpaFQ7?=
- =?us-ascii?Q?E8tWhaMooft+HrzQ60vaB98rh6v77/1yVfj5uB8hXdtnbo+IUR8H?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2b2d55d-b812-4d6e-92a4-08df45b95a2e
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9356.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2026 21:17:29.8781
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4FKEsp+Ap5GTigQ6UHLz1zm9W3M7azN9OqPbokytB2qfs1kXY2/EQQTGemCb/yGKAz599OTsSho3ESuApe7KoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6854
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: M5znx2hx04lbDGFU9UC5So7KS3HiQxXsDQsHvkAGo31RLNXW6DtQ4L6X
+	7HP4VAJuQhnn8Uz7v0lWr23uShPXKygQrKD0hXsHXqSKujvWXP+T03vU+x/Wk9FmDoRbAUa
+	FmLylVWEqLzpZikurmXdQj0XfvQAc2VFNgdyjdEzvM5+irFKJePghrIga9lAPPqrPYzDYxy
+	hlSvEnmYHYLO9+szsWVEUAEuISEs9VjfAqHBSzqlY/ksdwgcLvoIlWqmQKI7wtJzOAzfGO4
+	RnY4N3YhwK8ZuIn7YwHcYlD7PDvHexdR3Sw0J4YmjOTjt8KxN+Jj9LQsEBR9tXWBjYq1Y6D
+	AofBntmXWiiFZJs+o+DYf86U5Qtb1agfmuNria7VlNpzvLwgAx24sQctVnyyulOQIEQ8vlr
+	HoU+M1dYGtSbFhV9m2/cflaDaT2OGCzDUAWt42YsNqRdf2Tg8nP4hdy6tplxNUut91vwrpo
+	5+uHWkLZFWgeb72hUuRU3FcOifXpZu+Czy9TizWHMJOoIOveDvJ71w7BJ3I+oqR6lR1Iqdm
+	kElHoe0EDfLJoss1mPGOfIYoatwysD6tABxm9C3caGxRiYzNX9SUd3nViNJTU8W63pOj60Y
+	lnOP/3kO6/ocjHUrBta5ao6shtJzrmxnCM5nm5Fs/zJkC40uJU+LZhhmq3fIHDKSuDVGbwh
+	Mi4V922FdWKQyU2FbOzKitXIgcZoVXivjijPoSwm3Se5ROJ5DCWNDch62wb/3/thWtDRxCd
+	Sh4kjNvohiQ3EKpT7Ifw0rWxQLmWTsElFWpHlwM6o7+QBzv2VUkc/ju1zBEO1BrEcQ/Xf5j
+	vLM5KzwgnQWfHmwaZDSzwBH/sJ8ZuOyP89H0l0fNnM6Y9LwvysV5qcP8edW6pAqTUqsxCYy
+	c1Yjj8Z0xVbV1aWUbCo3xQf3sYsie9pumx17SCCs/XwytYTPSfU0QJUnTHRnYvcrulh2ewN
+	5jeVhi1iDemdKrKXaqEKojvUU9Q7xYi4jmTf8sBeZjU2pGH1IFjyG+J7q7s9x6b7NxyLlxL
+	bERL1ZxBWS/Cvt3ha11vfopDUQlbFcgMHzTc+6ag==
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
+X-QQ-RECHKSPAM: 0
 
-Ping?
+Serialize the two-call firmware handshake and release the first
+ACPI allocation before retrying. Check the response shape before
+reading the firmware status.
 
-On Fri, Sep 25, 2026 at 03:32:37PM -0400, Yury Norov wrote:
-> Simplify both functions by replacing open-coded loops and fix
-> brightness readback for sparse token masks.
-> 
-> Yury Norov (2):
->   platform/x86: dell-laptop: Use fns() in kbd_led_level_set()
->   platform/x86: dell-laptop: Fix token-based keyboard brightness
->     readback
-> 
->  drivers/platform/x86/dell/dell-laptop.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
-> 
-> -- 
-> 2.53.0
+Accept short package payloads for Fn lock and battery thresholds
+when they contain the required fields. Zero-fill the rest of the
+destination so the legacy parsers can scan their buffers safely.
+
+Signed-off-by: Fuwei Xie <12313607@mail.sustech.edu.cn>
+---
+ drivers/platform/x86/huawei-wmi.c | 144 ++++++++++++++++--------------
+ 1 file changed, 75 insertions(+), 69 deletions(-)
+
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 96ee9a97c..9894424e7 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -150,14 +150,12 @@ static const struct dmi_system_id huawei_quirks[] = {
+ 
+ /* Utils */
+ 
+-static int huawei_wmi_call(struct huawei_wmi *huawei,
+-			   struct acpi_buffer *in, struct acpi_buffer *out)
++static int __huawei_wmi_call(struct huawei_wmi *huawei,
++			     struct acpi_buffer *in, struct acpi_buffer *out)
+ {
+ 	acpi_status status;
+ 
+-	mutex_lock(&huawei->wmi_lock);
+ 	status = wmi_evaluate_method(HWMI_METHOD_GUID, 0, 1, in, out);
+-	mutex_unlock(&huawei->wmi_lock);
+ 	if (ACPI_FAILURE(status)) {
+ 		dev_err(huawei->dev, "Failed to evaluate wmi method\n");
+ 		return -ENODEV;
+@@ -166,98 +164,106 @@ static int huawei_wmi_call(struct huawei_wmi *huawei,
+ 	return 0;
+ }
+ 
+-/* HWMI takes a 64 bit input and returns either a package with 2 buffers, one of
+- * 4 bytes and the other of 256 bytes, or one buffer of size 0x104 (260) bytes.
+- * The first 4 bytes are ignored, we ignore the first 4 bytes buffer if we got a
+- * package, or skip the first 4 if a buffer of 0x104 is used. The first byte of
+- * the remaining 0x100 sized buffer has the return status of every call. In case
+- * the return status is non-zero, we return -ENODEV but still copy the returned
+- * buffer to the given buffer parameter (buf).
++static int huawei_wmi_call(struct huawei_wmi *huawei,
++			   struct acpi_buffer *in, struct acpi_buffer *out)
++{
++	int ret;
++
++	mutex_lock(&huawei->wmi_lock);
++	ret = __huawei_wmi_call(huawei, in, out);
++	mutex_unlock(&huawei->wmi_lock);
++	return ret;
++}
++
++/* Return a borrowed payload without modifying the ACPI allocation. */
++static int huawei_wmi_response(const union acpi_object *obj,
++			       const u8 **data, size_t *len)
++{
++	if (!obj)
++		return -EIO;
++
++	if (obj->type == ACPI_TYPE_BUFFER) {
++		if (obj->buffer.length != 0x104 || !obj->buffer.pointer)
++			return -EIO;
++		*data = obj->buffer.pointer + 4;
++		*len = 0x100;
++	} else if (obj->type == ACPI_TYPE_PACKAGE) {
++		if (obj->package.count != 2 || !obj->package.elements)
++			return -EIO;
++		obj = &obj->package.elements[1];
++		if (obj->type != ACPI_TYPE_BUFFER || !obj->buffer.length ||
++		    !obj->buffer.pointer)
++			return -EIO;
++		*data = obj->buffer.pointer;
++		*len = obj->buffer.length;
++	} else {
++		return -EIO;
++	}
++
++	return 0;
++}
++
++/*
++ * The payload starts with the firmware status byte. Legacy variable-length
++ * replies may omit trailing zeroes. Require the fields used by the caller
++ * and zero-fill any unused part of its destination.
+  */
+-static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
++static int huawei_wmi_cmd_min(u64 arg, u8 *buf, size_t buflen, size_t minlen)
+ {
+ 	struct huawei_wmi *huawei = huawei_wmi;
+ 	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	struct acpi_buffer in;
+-	union acpi_object *obj;
++	const u8 *data;
+ 	size_t len;
+ 	int err, i;
+ 
+ 	in.length = sizeof(arg);
+ 	in.pointer = &arg;
++	/* Keep both halves of the firmware handshake in one transaction. */
++	mutex_lock(&huawei->wmi_lock);
+ 
+ 	/* Some models require calling HWMI twice to execute a command. We evaluate
+ 	 * HWMI and if we get a non-zero return status we evaluate it again.
+ 	 */
+ 	for (i = 0; i < 2; i++) {
+-		err = huawei_wmi_call(huawei, &in, &out);
++		out.length = ACPI_ALLOCATE_BUFFER;
++		out.pointer = NULL;
++		err = __huawei_wmi_call(huawei, &in, &out);
+ 		if (err)
+ 			goto fail_cmd;
+ 
+-		obj = out.pointer;
+-		if (!obj) {
+-			err = -EIO;
++		err = huawei_wmi_response(out.pointer, &data, &len);
++		if (err)
+ 			goto fail_cmd;
+-		}
+-
+-		switch (obj->type) {
+-		/* Models that implement both "legacy" and HWMI tend to return a 0x104
+-		 * sized buffer instead of a package of 0x4 and 0x100 buffers.
+-		 */
+-		case ACPI_TYPE_BUFFER:
+-			if (obj->buffer.length == 0x104) {
+-				// Skip the first 4 bytes.
+-				obj->buffer.pointer += 4;
+-				len = 0x100;
+-			} else {
+-				dev_err(huawei->dev, "Bad buffer length, got %d\n", obj->buffer.length);
+-				err = -EIO;
+-				goto fail_cmd;
+-			}
+-
+-			break;
+-		/* HWMI returns a package with 2 buffer elements, one of 4 bytes and the
+-		 * other is 256 bytes.
+-		 */
+-		case ACPI_TYPE_PACKAGE:
+-			if (obj->package.count != 2) {
+-				dev_err(huawei->dev, "Bad package count, got %d\n", obj->package.count);
+-				err = -EIO;
+-				goto fail_cmd;
+-			}
+-
+-			obj = &obj->package.elements[1];
+-			if (obj->type != ACPI_TYPE_BUFFER) {
+-				dev_err(huawei->dev, "Bad package element type, got %d\n", obj->type);
+-				err = -EIO;
+-				goto fail_cmd;
++		if (!data[0] || i == 1) {
++			err = data[0] ? -ENODEV : 0;
++			if (buf) {
++				if (len < minlen) {
++					if (!err)
++						err = -ENODATA;
++					goto fail_cmd;
++				}
++				len = min(len, buflen);
++				memcpy(buf, data, len);
++				memset(buf + len, 0, buflen - len);
+ 			}
+-			len = obj->buffer.length;
+-
+-			break;
+-		/* Shouldn't get here! */
+-		default:
+-			dev_err(huawei->dev, "Unexpected obj type, got: %d\n", obj->type);
+-			err = -EIO;
+ 			goto fail_cmd;
+ 		}
+-
+-		if (!*obj->buffer.pointer)
+-			break;
+-	}
+-
+-	err = (*obj->buffer.pointer) ? -ENODEV : 0;
+-
+-	if (buf) {
+-		len = min(buflen, len);
+-		memcpy(buf, obj->buffer.pointer, len);
++		kfree(out.pointer);
++		out.pointer = NULL;
+ 	}
+ 
+ fail_cmd:
+ 	kfree(out.pointer);
++	mutex_unlock(&huawei->wmi_lock);
+ 	return err;
+ }
+ 
++static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
++{
++	return huawei_wmi_cmd_min(arg, buf, buflen, buflen);
++}
++
+ /* LEDs */
+ 
+ static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
+@@ -329,7 +335,7 @@ static int huawei_wmi_battery_get(int *start, int *end)
+ 	u8 ret[0x100];
+ 	int err, i;
+ 
+-	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, sizeof(ret));
++	err = huawei_wmi_cmd_min(BATTERY_THRESH_GET, ret, sizeof(ret), 3);
+ 	if (err)
+ 		return err;
+ 
+@@ -627,7 +633,7 @@ static int huawei_wmi_fn_lock_get(int *on)
+ 		return huawei_acpi_fn_lock_get(on);
+ 
+ 	/* WMI fallback */
+-	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
++	err = huawei_wmi_cmd_min(FN_LOCK_GET, ret, sizeof(ret), 2);
+ 	if (err)
+ 		return err;
+ 
+-- 
+2.55.0
+
