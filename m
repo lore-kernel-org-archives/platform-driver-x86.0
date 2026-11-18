@@ -1,47 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795018219;
-	b=X8g+BagRGUtR56a8I3f6Xm5vKikrq7c8q2GwEz9ulOA6Q3Mhys4FmbgmE38bUZs4sToN
-	 ggBpSQQs5hcfVaxWI/aUjY7kLy0/66156NO/vD6hK3VbW7UDkHVHvhRr0/8LGwx7+v6XH
-	 XOfEW7fLkMHF6mtV+SuSA8+DhR04dmAK8vKRGEnY7EpctVYVoyPSsVv0SgXc+o5NqCwLl
-	 RN6gulVyINUf6VzKToKWypco8lyExhlgJXK9N03HIy8pvISTrMKo6O4xbr6FUwDnyUhdE
-	 EJXn4Y9eqfJAEulFhkJ8SKvVUeed/qdwaT7dbaP3qZSOQxzizW4HRsK52QMLcSshqgA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795018219;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=OfBmMKlkmBzZs+0Sd10+8uWEyF/5b2rwRxFqeRYlL9I=;
-	b=RxuKz7hLmIJXhWQ2A3KhFlskHmwR962TBKi0SrEzDiPDHvUghu+y4A3b5i7eV77p0mAI
-	 oBDZnActHm91Jv84rVcrPdBpLbdx9wbTtwjXeKHqzy6qXvejNTpvDgCZiaw1BO13Ss9uN
-	 bjBrpD/VxC7wHkIysAmXG6KyLs3FLB6+V330LJDlTVOEwMzUu6SfXPy/L6QbCqdZ6e7Y9
-	 TEnU1p4zeltNR4cdDxOj/LkUElqu5WCPZFIpaleoj3+AwV7zOSO5MAieX3B8cXxEb43FR
-	 FfMMQSK4KhaqQCQ6tW+M0xTq8JtyzfH28xee3zxNcaulqnt4ewChCluR6985ZQhbptQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jhs2c3G0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795028448;
+	b=fnjAwhF1NQ5RNuKGB/ALAv0vCHp6msORAcRfQfs4nERSP53aI0JarJkChUmhYzcOyugV
+	 RrlZ6RsmKXc5lVGwMaJHlcHGQxllBQOuBNvmjJ3gDkj8RFr+0jJYq8dvSlbcgclDjbrzg
+	 5UgKF6AJ2ecUV2P8HlMdhN9FwvnsMd6FJbJdlt8yaTRh+A+mVBPyCSCRqL5PQ1+3QndHy
+	 dms6Og+QtDl+fgJ4CjdnY6x1/HlDUZ332QHtNQzHq6xVJuPQQVAKxtgeIAIlk5NniWlP2
+	 vfCeaMQgVYPr6EFPWP41Z0XJ86RRke87e5gpdtab/3bEVCrlMLv6wsOc2oWi19/hxSA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795028448;
+	h=DMARC-Filter:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-ZohoMailClient;
+	bh=CiwIV9xoh89iJC9E8ziLzlqU3QJaE1orFVy7Jgr/CN8=;
+	b=YoEQ6bSWIY07r9OAX+dXOjuYyRRJ+l6OV0T2jTDhdNuAx0CLYvi2I5qaIN7NCmH8ePZJ
+	 8ZGDptcRCHmu5jdDyW920Qzi8qQol68s23I1vieNnM4ktS/zogPMl1e+5TA44RLU48KM0
+	 34etA17DtPbDZDXVtuNFld14QXZcMVusoO+1tXcnuUU34f8Lre5B08GPmVHr5XWhoyrzn
+	 OpC+UZbs79SiV55xFirM37FbgGMlkCZgt1R1UfeesaBI7WEE5+0xk402LIaA4GRziT3gP
+	 8NNDGGJA+m9BvBdJgrUqySX/Pamu6BnZ7VW9SC7x4o3kS8JapyLG4cmlVlzr23Fch1g==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=BmGr8ekB;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3A1606A325;
-	Wed, 18 Nov 2026 16:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76102606A320;
+	Wed, 18 Nov 2026 19:00:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 76102606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jhs2c3G0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B58E91F000C4;
-	Wed, 18 Nov 2026 16:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795018219;
-	bh=OfBmMKlkmBzZs+0Sd10+8uWEyF/5b2rwRxFqeRYlL9I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Jhs2c3G0veAQ+V3ThkgTnWf9B6NtfD/6DrpHWp1fFlW5MjlkmALNxqmlg348Xf4z3
-	 wFwqg5WmylsIRceLT3NGNZcf9EnzS/e95L51wFTKOslVvRcoSiPTwCK/S2JTNIMjxK
-	 yry3In+VxhDEEOyJ58O4Y9nkHHPNodJG0Q8MV0aPTpm60SO/86SLaDb1Es3rpLN89Z
-	 0pWBFonb7nUvssunjafgweIMBJ5mqTFI8+DwVkWEbsAb7jsaGnrpSI4086KTZFkWIm
-	 sf8NXLgmSWMRx5G6kPW+71Njtjomt5mow19h8RzKStiAlqHGqL6rn3a5QM9+emptnl
-	 p2hMq7Oy7wOIg==
-Message-ID: <9cb574c7-aa23-442a-be12-49142f2ee6ed@kernel.org>
-Date: Wed, 18 Nov 2026 17:10:16 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=BmGr8ekB
+ARC-Seal: i=1; a=rsa-sha256; t=1795028436; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iY8ARmmkGAgQ/e1z7jSw4FxUH4PFRQX0tShPQnYKcpKKGYaILaenyQFViJ6vT3UPvDW2mcw1oZ1JNKKS7IB5XANKrc6kC5gxCgqLkwMfHOk5fKOS6wTo/tZfuob9VF+yawSmRNj9SBvoboeEVvo+emlr6jk2UiK1miWIIDlvSrw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795028436; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CiwIV9xoh89iJC9E8ziLzlqU3QJaE1orFVy7Jgr/CN8=; 
+	b=iaMOvppYqILYzSYQPBahU/KPB1jtVLgFanVRb+d2ACFIN2jdSrYk6rhLq9tYWYuuinsAMmCmttzL0VoZ1IYNDd6sFTgvWLLKLjl3cDEaaJ3xDjBqGrW9H3fRmqBQHV24SkkMJLKwPT5iWmlKDf9kIErpP4ENIvd4XmAg0vg+CVY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=BmGr8ekBxVFTmoyBbHZQlWY83tBmzxdlPRDBay9wpy8OXvx6UahjRdEofAqODhV87mMNUDSZ/WKhuyEDRNdUSMmNGGPmBpod3MfnYJkV4N/y6EqHqr9UVXLxy9LHkxWmw9pY/cXU5dTlZj8W45quok6+l4pIqaFXSgGU5Pu+QEzdWqxUv6iWy6A0Qo4wUGR60YXemqyBAedsKc4YRolT4UPgC9B8T4IGW6nwu/lboZ9luYG7BqEGY9CYkrAUZ0OfDh7utlJLdTLHDDsiReUunL9OVEExySvAqTfiu2gJQ0LmmHuj9UYmCmc0SNERSty4PZ2yRi7wTzJ5OCwna3gL4w==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=CiwIV9xoh89iJC9E8ziLzlqU3QJaE1orFVy7Jgr/CN8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795028434736607.6230374627213;
+	Wed, 18 Nov 2026 11:00:34 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+Subject: [PATCH 0/5] platform/x86: lenovo-wmi-other: Refine
+ firmware_attributes interface
+Date: Thu, 19 Nov 2026 02:58:43 +0800
+Message-Id: <20261119-lwmi-no-singleton-v1-0-6b06fcfb5126@rong.moe>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -51,117 +61,56 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform: arm64: lenovo-thinkpad-t14s: Keep the interrupt
- off while suspended
-To: Abel Vesa <abel.vesa@oss.qualcomm.com>, Sebastian Reichel
- <sre@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-References: <20261118-platform-arm64-t14s-ec-irq-suspended-v1-1-635eb3e7325e@oss.qualcomm.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20261118-platform-arm64-t14s-ec-irq-suspended-v1-1-635eb3e7325e@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMSw6DMAwA0asgr7FE+KiFq1RdhGCoK3CqmAIS4
+ u4NdPkWMzsoBSaFJtkh0MLKXiJMmoB7WRkIuYuG3GXk7qbEcZ0YxaOyDCPNXtAWfV1W5lbbKoP
+ YfQL1vF3Px/Nv/bZvcvM5guP4AepMbNV1AAAA
+X-Change-ID: 2c0ec814-lwmi-no-singleton-a3f945179a50
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Alok Tiwari <alok.a.tiwari@oracle.com>, Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Rong Zhang <i@rong.moe>
+X-Mailer: b4 0.17-dev-ce4c1
+X-ZohoMailClient: External
 
-Hi,
+The driver declares `.no_singleton = true' but stores device-specific
+data to statically allocated tunable_attr_01 variables. This makes the
+driver depend on the frigile fact that no device in wild has more than
+one LENOVO_OTHER_MODE WMI devices.
 
-On 18-Nov-26 16:39, Abel Vesa wrote:
-> The interrupt handler reads the event from the EC over I2C. Nothing
-> keeps it from running while the system is suspending or resuming, when
-> the I2C controller cannot be used.
-> 
-> On resume the interrupts are enabled again after the noirq phase, while
-> runtime PM of the I2C controller stays disabled until its early resume.
-> An EC interrupt that is pending by then fails, and so does every further
-> one until the controller is back. On the ThinkPad T14s Gen 7 that showed
-> up as more than a thousand of these in a few milliseconds when resuming
-> from hibernation:
-> 
->   geni_i2c a84000.i2c: error turning SE resources:-13
->   thinkpad-t14s-ec 7-0028: Failed to read event
-> 
-> Disable the interrupt when suspending and enable it at the end of
-> resume, once the EC can be talked to. An event that arrives in between
-> is handled then.
-> 
-> Fixes: 60b7ab6ce030 ("platform: arm64: thinkpad-t14s-ec: new driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+The series moves tunable_attr_01.device to the firmware_attributes
+device's drvdata and introcdces a tunable_attr_01_ctx array to struct
+to store c[dv]_mode_id. In this manner, all statically allocated
+variables relevant to our firmware_attributes interface are constified.
 
-Right, this is pretty standard for i2c drivers with a non wakeup-source
-IRQ. IOW: Thanks, patch looks good to me:
+This also eliminates all attribute-specific callbacks by moving their
+data into a newly-introduced container struct capdata01_attr, so that
+all remaining attribute callbacks becomes generic and are shared among
+different attributes, which shrinks the module size by 42.7%.
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+To further follow the common practice of sysfs attributes, all attribute
+groups are now created and removed at once using sysfs_create_groups()
+and sysfs_remove_groups() by providing an is_visible() callback.
 
-Regards,
+Signed-off-by: Rong Zhang <i@rong.moe>
+---
+Rong Zhang (5):
+      platform/x86: lenovo-wmi-other: Retrieve private data from firmware_attributes device
+      platform/x86: lenovo-wmi-other: Eliminate attribute-specific callbacks
+      platform/x86: lenovo-wmi-other: Factor out tunable_attr_01 definition into a macro
+      platform/x86: lenovo-wmi-other: Properly implement no_singleton driver
+      platform/x86: lenovo-wmi-other: Hide unsupported attributes using is_visible() callback
 
-Hans
+ drivers/platform/x86/lenovo/wmi-other.c | 566 +++++++++++++++-----------------
+ 1 file changed, 259 insertions(+), 307 deletions(-)
+---
+base-commit: 20eef29b7c8465ac98d7dd6d6f2ac07a8d8056ca
+change-id: 2c0ec814-lwmi-no-singleton-a3f945179a50
 
-
-
-> ---
-> The EC interrupt handler talks to the EC over I2C, and nothing stops it
-> from running while the I2C controller is not usable during a system
-> sleep transition.
-> 
-> This was found on the ThinkPad T14s Gen 7 while getting hibernation to
-> work there. The support for the EC of that machine is not upstream yet,
-> but the interrupt handler and the suspend and resume callbacks are the
-> ones the X1E based ThinkPad T14s uses.
-> 
-> Resuming from hibernation failed the read of the EC event more than a
-> thousand times in a few milliseconds there. That many, because the
-> interrupt was level triggered in the GIC at that point, as the SPI
-> configuration is not restored after hibernation [1]. With that fixed,
-> the handler still runs once before the I2C controller is back.
-> 
-> With this patch there are no failed reads on the ThinkPad T14s Gen 7
-> when resuming from hibernation. It was not tested on the X1E based
-> ThinkPad T14s.
-> 
-> [1] https://lore.kernel.org/r/20261024144720.113165-2-zhuling2709@phytium.com.cn
-> 
-> Prepared with help from an LLM-based assistant.
-> ---
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> index 873747838a4f..a291daba0577 100644
-> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> @@ -616,6 +616,12 @@ static int t14s_ec_suspend(struct device *dev)
->  {
->  	struct t14s_ec *ec = dev_get_drvdata(dev);
->  
-> +	/*
-> +	 * The handler needs the I2C controller, which is not available
-> +	 * again until this device is resumed.
-> +	 */
-> +	disable_irq(to_i2c_client(dev)->irq);
-> +
->  	led_classdev_suspend(&ec->kbd_backlight);
->  
->  	t14s_ec_write_sequence(ec, T14S_EC_REG_MODERN_STANDBY,
-> @@ -633,6 +639,8 @@ static int t14s_ec_resume(struct device *dev)
->  
->  	led_classdev_resume(&ec->kbd_backlight);
->  
-> +	enable_irq(to_i2c_client(dev)->irq);
-> +
->  	return 0;
->  }
->  
-> 
-> ---
-> base-commit: 749a4de370409464cf8501ec5b2451df45c84eb4
-> change-id: 20261118-platform-arm64-t14s-ec-irq-suspended-5fd6892d7e26
-> 
-> Best regards,
-> --  
-> 
-> Abel
+Thanks,
+Rong
 
