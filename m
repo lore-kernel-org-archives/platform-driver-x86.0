@@ -1,86 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.42
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795002316;
-	b=jwCghn/x5jN1s6Xzksc+GtXqWATh2pFledkD1t86Of3JMnBM1tFQLD/Kim16pj7OJ/gH
-	 zIvSxKrvnCN0jXRssV2fAYPZvdHHUL4p+kGKLoMEFUkBfnmPSexZASnBi3/ZxgGUnJUsa
-	 eexTt6KfnOHkjNakcslsdaKJa4aoVX44wfC2GUd+ub2PPtYwaceaQVSkN3qAEFbyKy5Mb
-	 XkygEvWu/Vf8Rzi0cLVxld/ns8n+09OcJ4L7ZOAfHnsZwWnJdA6ORgxFqnVCyTxaSYOhk
-	 x8EjeBxUUQlPeL9DJ0kF2PQq9XGmhIJ8Bd83cPxThAAxO7+hxNZQqj9QMCWwoAFmiLQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795002316;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
-	b=DooLYhJxysQm9WNVnBjFLOO5ZphwGQZvn7T/BEAWW/Ruq24aXEHPeHbtXLP3IZ0WD03w
-	 TI8RxFCcH1a7e2jYgl2kDAYx8BlbzyDrbNEnw0Oa3gBAT1MZVaDU6MFYYbzKInebOv2Sa
-	 eumkGlmr1oVC2shC0h0DcEYCPJ9eZ/zSH4v35THPM5YtMSw2/5ddtf/cAk74IkEmyRjtH
-	 Ac/tljZlvVqF4gTSOkTN7gXGy9euNhyLZC3dD4FYaFeYEBnTaTSIgC+DaHGEqnEr9dhbc
-	 W/SLvtFo1EKwROzdZUcWzgAtjXNLy9j47jgUmhjnGWgoWVUDX9EqwwlI6zX6AeHJcKg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ESi73pff;
-	arc=none smtp.remote-ip=209.85.216.42
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795002897;
+	b=lmWzKeCZqMvNl/wEQ/uumTFU6HzehMcVKxBG6L9WNzOhCujJzMhBSR8irOpDD6Cnwx1A
+	 dGINXPtE3dZ0TE/ewkQ7n4hthLYVjnS92beCb0owo18/pDcAxqQKgvKA3CPFo2SlOGPqw
+	 S9yOdYYTNUa3Q5V5leMVVK/AfadsLc+ogqYpQBBY54d3ELvR59mc50cttn7tF714a4Trs
+	 /6I7ARRKO0yqG7dCL6mq19vI8gTBvORdep3B1iJxWrhpfSV9qPnOl6NGTE/hONnw3gdbD
+	 0swsUpAP78AJ+JIASGtpZ1SNZOBgD/cKQLOhFhsOFMHJGYqGY4CjleIBoBHtw2X4HEA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795002897;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=qEycYkVKBZ6AFwtyn7K8dWaa7W+xI0dgQEc7SQN+y1k=;
+	b=hwUNFjGcZ3t5QuCcHUksiFaYkEGBQjJDfvFtJifK3w9Ls2H7kCkr7p+V68reQ6rgadzz
+	 c8VbWf3vSkronBakfO+mwbq8BCV8/UT3hyDW63SFD8XhtPHSwhAtWIGuzw1Gl0XhMGTIN
+	 IN9nm3MRvpIKTfUGxzBs26i6XLoOnoOH+bnvAzYpus0LFNfitvqRY+RbubOIQSIgX3xLa
+	 Zsp9BVG4mEy1JNJ9A9rp3qcqiXqnDLZemstD5eyyEVslLYEBv7oaQOxOO6lgRE1UgyOc+
+	 kJ4untcFvSCAwwdxkEh5AkKxNp8+nAs2qMg5gQfS/H7bjCoWMpikQWxo+hLo8a3o61w==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=C4Wq3bp1;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.188.112
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B30606A320
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 11:45:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70B30606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DF0606A320;
+	Wed, 18 Nov 2026 11:54:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 37DF0606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ESi73pff
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3b3a914e4c8so491665a91.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 03:45:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795002316; x=1795607116; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
-        b=ESi73pff1GSFfSwx4JNdxGydjGTeDNw8o0GckIIxaN/K7q3lQGbF9XZbt+3k00z9yG
-         0b+37vzSD/gHg1SyAHITKOLTDe64sW2VSCjcFs34RiiPSgy8b28RVixYt7MEjBM74+Kg
-         TKfsdmunNcJvV0d8AXdQB7Oq5Q5YGZk9QB2Lr6fB9EwmuvwDCxcbK+9r5+va1QGXL28p
-         xvzM39xUf+yV1fsnuGn286vDcAo+lkkU8D9BhHJ0Z38CzWt9APvRLqsffg3TL67Wcb7s
-         PmXhOepiu2yJZ+lTNhCX+m5zIBkuzdcwfBMLZeA5f5GhCybk6Cf4NOkkpG4emHxnR02x
-         BaBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795002316; x=1795607116;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
-        b=rmkL9uRbFE3QCT0vCO6cuExaoF3CLmI7zhE6k6/m9C1Fqmn5+rBIP9I5x6NKGlCcTv
-         hGlH3grK1FNdKjl+68BIEnerf8PDCQLXf4FjK5jiGf8m2FM63SkehNtkzEZyZpg1Cy7E
-         rA+zXFrwuWg0ZJlSBJIcnRA5TDEwIMWketWBHzwIGCg5inLlgVIKkf7sQ/aFExL6+8v/
-         UMOKTd8HA6mgylvl+Huar/wISMoxqg2jKc84Y/HlpUydL4OveJbl+txG52QULys1W/8w
-         9gl5VVuujN9JUFwIZCedeWdvhqGTbN/1Hz0FXsSPrd6vQbM1TW5DxDHHXCskIAqP2+FX
-         7qRg==
-X-Gm-Message-State: APuU4Z/EHelcY1cBPk2zA99dDjtEge4rJHQQmEbG3HG7Y/8JIKMXwO6F
-	I09MrKfZSGfhXzXI0z9PUCHb70KPfNZVDpa5COXEQxGmrnW+bGIkWlS+2WGXiw==
-X-Gm-Gg: AZFdTZfC2s0Cl4xwfVc9TjXA0OdY0++8GpGwllIQQzdYVupij44syCSvr++m51/Yt23
-	+fumd6KIopnulMhsRX8b1Z8jRIggOgbiYJupqMgf1v5Yf052GhV8/y2dHlm7Rs55o3+cG+K4MMX
-	HeKQRubb1SYuczWPJFnwK5bN4FsU+0RyMWArJJDzJEjzI2EKgQMJDTDI42+d1VnvhrchXIV3SLT
-	Nq63JaJoF86BXtqx+ZPov/ZqHYuWy8yR/jeV1/MFS1j1jKcsuhc/l1Cx/RAsNHraZHTlSyL9L07
-	K7f46eRVWHrpMOF/tQWEdkV6lDn/43HfBmqpVLSu5vwr/6+nF6x6vX8hTmlceH91QS1Jfznn13C
-	wo3ciEk4aD0QhtV7Yi6FZ9pOkfCyHGKpAeAJ9Ue03pzUFHcb0+N14yzWHALAhfQxs0Q2EytGAz/
-	v2WLzNwA8OOaHv7JHLCYrnuIF7Rmfe4JJIjXaywGAsBVUrMBJykfwX7CwiIKSXCnXipAZkMOY6j
-	bDx1eLt/iwGeKn75s83P1fHFw/QZd4ATBZO35i23l4deGxfIDdxsH0kPahORDTEdCiSzeOU9nV1
-	yI9NaXqJc+XrN8lIuHa8bg==
-X-Received: by 2002:a17:90b:448b:b0:3b0:9782:8721 with SMTP id 98e67ed59e1d1-3b3d07b9f34mr2444000a91.36.1795002315663;
-        Wed, 18 Nov 2026 03:45:15 -0800 (PST)
-Received: from [0.0.0.0] ([20.89.137.63])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3ac2550e1sm8966783a91.3.2026.11.18.03.45.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Nov 2026 03:45:14 -0800 (PST)
-Message-ID: <bd605c87-542f-43be-8e3c-01f2f3c14f28@gmail.com>
-Date: Wed, 18 Nov 2026 19:45:11 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=C4Wq3bp1
+ARC-Seal: i=1; a=rsa-sha256; t=1795002881; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=TKAvjCM5TlttLfeI6jjAFhKAqbrX5+HKbWZoHs+kY6GZ/ymzDoJOOsCT5VXlyPwy+LgcPiTC2F7VIM5QfuQg0FI/jRIr4RBtV8ka0RWQXaGGxWMoZ9Ao0M4mHCmqRpniIPcaLn54DCvbiPhh0z4trrpD1LBLGStNuVJLu+CfhRI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795002881; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=qEycYkVKBZ6AFwtyn7K8dWaa7W+xI0dgQEc7SQN+y1k=; 
+	b=k4Hwi39ALzrI+xZ/VF7HtWWuuPNL/eREPBhqD1vC3oxwuUPecEPFfVPX20wBzXqcWQOxnuL0eIIAkB2ETC8F3yPaC+0DUQ5kF0uo1N+qis/nSptNLELp+JJiNHjfmg5a/emlbw4Q5Ejqhkjq0uMT3rASMTFQeV+Z88qnpTBcWIo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=C4Wq3bp1GCbIJv9TsOy/47/TT+kiHG0G3qVgkxZDu65wJPw1OD2SdYjb7bYP+fDhZWBN4k4ZnyHkqnoB9uXv9JG7U678A0s07G3MVpUBUi2N9z/8mGMrj0CCCZSaA9UFxYKMDpKSBnPxUYLY1iJ8gFzqYQFTK5O0wQtqfo3E9vUAofkxMNvTNdk+AMxMyRNfQd9mTqPpi3KBAEOX8b3EhJ3GroGIJJYS43WfXbrfi4i73UpU4HR8Ip/1rXpMQdu4hja+ACRrdozlx3iegHCQ8GifMhvQMm7H8tMbiBwLhxTAqsOcmqKY6QzdvbQoH+RvAyTA2Be4auvOKvYme4qUbg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=qEycYkVKBZ6AFwtyn7K8dWaa7W+xI0dgQEc7SQN+y1k=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795002878859924.8127584992199;
+	Wed, 18 Nov 2026 03:54:38 -0800 (PST)
+Message-ID: <5a31d0457534bafc37f8a84c02720ba5f4515180.camel@rong.moe>
+Subject: Re: [PATCH v3] platform/x86: lenovo-wmi-other: Deconflict battery
+ with thinkpad_acpi
+From: Rong Zhang <i@rong.moe>
+To: Aaron Ma <aaron.ma@canonical.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	 <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"
+	 <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAJ6xRxVLMmK6Vk8h8FYbeuDSKhd_hhN=HKEkF=E5CUisimKtZw@mail.gmail.com>
+References: <20261113055726.952551-1-aaron.ma@canonical.com>
+	 <b4feb4ce-d818-c6b0-a749-4e58b92c2573@linux.intel.com>
+	 <CAJ6xRxVLMmK6Vk8h8FYbeuDSKhd_hhN=HKEkF=E5CUisimKtZw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Nov 2026 19:49:32 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -90,184 +72,258 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] platform/x86: bitland-mifs-wmi: Add Redmi Book Pro 15
- 2023 (TM2209) quirk
-To: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- regressions@leemhuis.info, regressions@lists.linux.dev,
- shlyapugin@gmail.com, Musaev Ibragim <atomicus.xyz@gmail.com>
-References: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
- <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
-Content-Language: en-US
-From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Evolution 3.62.1-3 
+X-ZohoMailClient: External
 
-On 11/11/26 20:48, Oleg Rybalov wrote:
-> On TM2209 the power mode is the STNM byte in EC RAM. Fn+K rotates it
-> in EV20 and the EC0._Q24 handler then applies the matching SoC limits
-> with HPTC. SystemPerMode does not affect STNM, so changing the platform
-> profile had no effect on power.
->
-> Read the mode from STNM and, on set, write STNM and evaluate EC0.HPTC
-> as the Fn+K handler does. HPTC returns AE_AML_BUFFER_LIMIT because SVRP
-> declares its ALIB buffer one byte longer than its data; the limits are
-> already sent at that point, so treat it as success.
->
-> The board reports DMI_SYS_VENDOR "XIAOMI" with TM2209 in
-> DMI_BOARD_NAME, returns the WMI return code at the end of the buffer
-> and charges over USB-C only.
->
-> Signed-off-by: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-> ---
-> Based on v15 of "Merge redmi-wmi into bitland-mifs-wmi":
-> https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
->
-> Tested on BIOS RMAPH5B0P0909 only.
->
->   drivers/platform/x86/bitland-mifs-wmi.c | 83 ++++++++++++++++++++++++-
->   1 file changed, 81 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-> index a431d3fef..b63b139a6 100644
-> --- a/drivers/platform/x86/bitland-mifs-wmi.c
-> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -21,6 +21,7 @@
->   #include <linux/input-event-codes.h>
->   #include <linux/input.h>
->   #include <linux/input/sparse-keymap.h>
-> +#include <linux/io.h>
->   #include <linux/kernel.h>
->   #include <linux/leds.h>
->   #include <linux/module.h>
-> @@ -99,6 +100,10 @@ struct bitland_mifs_quirks {
->   
->   	bool return_code_at_end;
->   	bool skip_ac_type_check;
-> +
-> +	const char *ec_mode_field;
-> +	const char *ec_mode_apply;
-> +	phys_addr_t ec_mode_addr;
->   };
->   
->   static const struct bitland_profile_entry default_profile_entries[] = {
-> @@ -113,7 +118,30 @@ static const struct bitland_mifs_quirks default_quirks = {
->   	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
->   };
->   
-> +static const struct bitland_profile_entry tm2209_profile_entries[] = {
-> +	{ PLATFORM_PROFILE_LOW_POWER,   2 },
-> +	{ PLATFORM_PROFILE_BALANCED,    1 },
-> +	{ PLATFORM_PROFILE_PERFORMANCE, 3 },
-> +};
-> +
-> +static const struct bitland_mifs_quirks tm2209_quirks = {
-> +	.profile_entries = tm2209_profile_entries,
-> +	.num_profile_entries = ARRAY_SIZE(tm2209_profile_entries),
-> +	.return_code_at_end = true,
-> +	.skip_ac_type_check = true,
-> +	.ec_mode_field = "\\_SB.PCI0.LPC0.EC0.STNM",
-> +	.ec_mode_apply = "\\_SB.PCI0.LPC0.EC0.HPTC",
-> +	.ec_mode_addr = 0xFE0B0300 + 0x7E,
-> +};
+Hi Aaron,
 
-I think this is an anti-pattern.
+On Wed, 2026-11-18 at 14:27 +0800, Aaron Ma wrote:
+> Hi,
+>=20
+> On Fri, Nov 13, 2026 at 7:04=E2=80=AFPM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >=20
+> > On Fri, 13 Nov 2026, Aaron Ma wrote:
+> >=20
+> > > ThinkPads expose battery charge thresholds and charge_behaviour throu=
+gh
+> > > thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups. T=
+he
+> > > Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
+> > > charge_behaviour and charge_types on systems advertising those WMI
+> > > capabilities.
+> > >=20
+> > > When lenovo-wmi-other registers first, thinkpad_acpi fails to create =
+a
+> > > duplicate charge_behaviour sysfs attribute and unregisters its batter=
+y
+> > > extension. Conversely, registering or updating any power_supply_ext o=
+n
+> > > the same battery runs sysfs_update_groups(), which removes standard
+> > > power-supply attributes not owned by power_supply_core and wipes out
+> > > thinkpad_acpi's charge_control_start_threshold,
+> > > charge_control_end_threshold, and charge_behaviour files.
+> > >=20
+> > > Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
+> > > thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
+> > > per-driver table guarded by IS_ENABLED() in Kconfig, and update the
+> > > force_load_psy_ext description accordingly.
+> > >=20
+> > > Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI batter=
+y charge limiting")
+> > > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > Co-developed-by: Rong Zhang <i@rong.moe>
+> > > Signed-off-by: Rong Zhang <i@rong.moe>
+> > > Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+> > > ---
+> > > Changes in v3:
+> > > - Wrap deconfliction table entries in #if IS_ENABLED(CONFIG_*) and dr=
+op
+> > >   driver_enabled, as suggested by Rong Zhang.
+> > > - Group deconfliction entries per driver (HIDs list + methods list).
+> > >=20
+> > > Changes in v2:
+> > > - Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
+> > >   device IDs, method pairs, and driver configuration checks, as sugge=
+sted
+> > >   by Derek J. Clark.
+> > > - Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
+> > >   instead of relying only on ThinkPad ACPI device presence.
+> > > - Check whether the corresponding driver is enabled before looking up
+> > >   its ACPI device, including for ideapad_laptop.
+> > > - Update the force_load_psy_ext description to cover both drivers.
+> > >=20
+> > > v2: https://lore.kernel.org/platform-driver-x86/20261112074823.853819=
+-1-aaron.ma@canonical.com/
+> > > v1: https://lore.kernel.org/platform-driver-x86/20261111083529.727285=
+-1-aaron.ma@canonical.com/
+> > >=20
+> > >  drivers/platform/x86/lenovo/wmi-other.c | 66 ++++++++++++++++++++---=
+--
+> > >  1 file changed, 53 insertions(+), 13 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platfo=
+rm/x86/lenovo/wmi-other.c
+> > > index bd64e7b44669d..340159df5f7cc 100644
+> > > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > > @@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
+> > >  static bool force_load_psy_ext;
+> > >  module_param(force_load_psy_ext, bool, 0444);
+> > >  MODULE_PARM_DESC(force_load_psy_ext,
+> > > -     "This option will skip checking if the ideapad_laptop driver wi=
+ll conflict "
+> > > +     "This option will skip checking if the ideapad_laptop or thinkp=
+ad_acpi driver will conflict "
+> > >       "with adding an extension to set the battery charge behavior an=
+d battery charge "
+> > >       "control end threshold. It will also skip checking if the BIOS =
+reports that "
+> > > -     "those features are fully supported. It is recommended to black=
+list the ideapad "
+> > > +     "those features are fully supported. It is recommended to black=
+list the conflicting "
+> > >       "driver before using this option.");
+> > >=20
+> > >  /* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00 =
+& fan) =3D=3D=3D=3D=3D=3D=3D=3D */
+> > > @@ -905,17 +905,41 @@ static acpi_status lwmi_acpi_match(acpi_handle =
+handle, u32 lvl,
+> > >       return AE_CTRL_TERMINATE;
+> > >  }
+> > >=20
+> > > +struct lwmi_psy_deconflict {
+> > > +     char * const *hids;
+> >=20
+> > Who is only the pointer const, not the char?
+> >=20
+>=20
+> It only lacked const because it shared LWMI_PSY_DECONFLICT_STRS() with
+> methods. I made hids const char * const * in v4.
+>=20
+> > > +     char * const *methods;
+> >=20
+> > If acpi_has_method would input const char * (to me it seems convertable
+> > as it only calls acpi_get_handle that takes const char *), this too cou=
+ld
+> > be const char.
+> >=20
+>=20
+> Agreed. acpi_has_method() still takes char *, so I kept methods as
+> char * const * in v4.
+>=20
+> > > +};
+> > > +
+> > > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) || IS_ENABLED(CONFIG_THINKPAD_=
+ACPI)
+> > > +#define LWMI_PSY_DECONFLICT_STRS(...) \
+> > > +     ((char * const[]) { __VA_ARGS__, NULL })
+> > > +#endif
+> >=20
+> > What exactly does ifdef'ing this construct achieve? Does something hunt
+> > unused macros?
+> >=20
+>=20
+> Yes, W=3D2 enables -Wunused-macros. The guard avoids the warning when
+> both drivers are disabled.
 
-Do we get a WMI method for this?
+Usually we don't particularly care about W=3D2, otherwise our lives would
+be too tough to continue.
 
-> +
->   static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2209"),
-> +		},
-> +		.driver_data = (void *)&tm2209_quirks,
-> +	},
->   	{}
->   };
->   
-> @@ -271,6 +299,48 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
->   	return 0;
->   }
->   
-> +static int bitland_ec_mode_get(const struct bitland_mifs_quirks *quirks, u8 *val)
-> +{
-> +	unsigned long long v;
-> +	acpi_status status;
-> +
-> +	status = acpi_evaluate_integer(NULL, (acpi_string)quirks->ec_mode_field,
-> +				       NULL, &v);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	*val = v;
-> +	return 0;
-> +}
-> +
-> +static int bitland_ec_mode_set(const struct bitland_mifs_quirks *quirks, u8 val)
-> +{
-> +	void __iomem *addr;
-> +	acpi_status status;
-> +	u32 glk;
-> +
-> +	addr = ioremap(quirks->ec_mode_addr, 1);
-> +	if (!addr)
-> +		return -ENOMEM;
-> +
-> +	status = acpi_acquire_global_lock(1000, &glk);
-> +	if (ACPI_FAILURE(status)) {
-> +		iounmap(addr);
-> +		return -EBUSY;
-> +	}
-> +	writeb(val, addr);
-> +	acpi_release_global_lock(glk);
-> +	iounmap(addr);
-> +
-> +	status = acpi_execute_simple_method(NULL, (char *)quirks->ec_mode_apply, val);
-> +	if (status == AE_AML_BUFFER_LIMIT)
-> +		return 0;
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
->   static int laptop_profile_get(struct device *dev,
->   			      enum platform_profile_option *profile)
->   {
-> @@ -282,14 +352,20 @@ static int laptop_profile_get(struct device *dev,
->   	};
->   	struct bitland_mifs_output_head_rc result;
->   	size_t i;
-> +	u8 val;
->   	int ret;
->   
-> -	ret = bitland_mifs_wmi_call(data, &input, &result);
-> +	if (quirks->ec_mode_field) {
-> +		ret = bitland_ec_mode_get(quirks, &val);
-> +	} else {
-> +		ret = bitland_mifs_wmi_call(data, &input, &result);
-> +		val = result.data[0];
-> +	}
->   	if (ret)
->   		return ret;
->   
->   	for (i = 0; i < quirks->num_profile_entries; i++) {
-> -		if (quirks->profile_entries[i].wmi_val == result.data[0]) {
-> +		if (quirks->profile_entries[i].wmi_val == val) {
->   			*profile = quirks->profile_entries[i].profile;
->   			return 0;
->   		}
-> @@ -350,6 +426,9 @@ static int laptop_profile_set(struct device *dev,
->   	for (i = 0; i < quirks->num_profile_entries; i++) {
->   		if (quirks->profile_entries[i].profile == profile &&
->   		    !quirks->profile_entries[i].no_set) {
-> +			if (quirks->ec_mode_addr)
-> +				return bitland_ec_mode_set(quirks,
-> +							   quirks->profile_entries[i].wmi_val);
->   			input.payload[0] = quirks->profile_entries[i].wmi_val;
->   			return bitland_mifs_wmi_call(data, &input, NULL);
->   		}
+W=3D2/3 only makes sense when you are looking for potential bugs or
+optimizations. If the code doesn't fall into either category, the
+warnings can be safely ignored.
+
+Thanks,
+Rong
+
+>=20
+> > > +
+> > > +static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] =
+=3D {
+> > > +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
+> > > +     {
+> > > +             .hids =3D LWMI_PSY_DECONFLICT_STRS("VPC2004"),
+> > > +             .methods =3D LWMI_PSY_DECONFLICT_STRS("GBMD", "SBMC"),
+> > > +     },
+> > > +#endif /* IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) */
+> > > +#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
+> > > +     {
+> > > +             .hids =3D LWMI_PSY_DECONFLICT_STRS("LEN0268", "LEN0068"=
+, "IBM0068"),
+> > > +             .methods =3D LWMI_PSY_DECONFLICT_STRS("BDSG", "BICG"),
+> > > +     },
+> > > +#endif /* IS_ENABLED(CONFIG_THINKPAD_ACPI) */
+> > > +};
+> > > +
+> > >  /**
+> > >   * lwmi_om_psy_ext_init() - Hooks power supply extension to device b=
+attery
+> > >   * @priv: Pointer to the lwmi_om_priv drvdata.
+> > >   *
+> > > - * Checks if the ideapad_laptop driver is going to manage charge att=
+ributes first,
+> > > - * then if not, hooks the battery to our WMI methods if they are sup=
+ported.
+> > > + * Checks if the ideapad_laptop or thinkpad_acpi driver is going to =
+manage
+> > > + * charge attributes first, then if not, hooks the battery to our WM=
+I methods
+> > > + * if they are supported.
+> > >   */
+> > >  static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
+> > >  {
+> > > -     static const char * const ideapad_hid =3D "VPC2004";
+> > > -     acpi_handle handle =3D NULL;
+> > >       unsigned int props =3D 0;
+> > >       int ret;
+> > >=20
+> > > @@ -928,14 +952,30 @@ static void lwmi_om_psy_ext_init(struct lwmi_om=
+_priv *priv)
+> > >       if (force_load_psy_ext)
+> > >               goto load_psy_ext;
+> > >=20
+> > > -     /* Deconflict ideapad_laptop driver */
+> > > -     ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle,=
+ NULL);
+> > > -     if (ret)
+> > > -             return;
+> > > +     for (unsigned int i =3D 0; i < ARRAY_SIZE(lwmi_psy_deconflict_l=
+ist); i++) {
+> > > +             const struct lwmi_psy_deconflict *entry =3D &lwmi_psy_d=
+econflict_list[i];
+> > >=20
+> > > -     if (handle && acpi_has_method(handle, "GBMD") && acpi_has_metho=
+d(handle, "SBMC")) {
+> > > -             dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manage=
+s battery for device\n");
+> > > -             return;
+> > > +             for (unsigned int j =3D 0; entry->hids[j]; j++) {
+> > > +                     const char *hid =3D entry->hids[j];
+> > > +                     acpi_handle handle =3D NULL;
+> > > +                     bool has_methods =3D true;
+> > > +
+> > > +                     ret =3D acpi_get_devices(hid, lwmi_acpi_match, =
+&handle, NULL);
+> > > +                     if (ret || !handle)
+> > > +                             continue;
+> > > +
+> > > +                     for (unsigned int k =3D 0; entry->methods[k]; k=
+++) {
+> > > +                             has_methods =3D acpi_has_method(handle,=
+ entry->methods[k]);
+> > > +                             if (!has_methods)
+> > > +                                     break;
+> >=20
+> > So this goes to dev_dbg + return, why complicate the code flow with ext=
+ra
+> > break + check that is never true?
+> >=20
+> > If indentation is the worry here, the innermost bodies don't seem to
+> > require much from the outer ones so they could be moved to a function
+> > (j body + k loop).
+> >=20
+>=20
+> When missing a method then try the next HID. In v4, I moved the lookup
+> and method checks into a helper.
+>=20
+> Thanks,
+> Aaron
+>=20
+> > > +                     }
+> > > +                     if (!has_methods)
+> > > +                             continue;
+> > > +
+> > > +                     dev_dbg(&priv->wdev->dev, "ACPI device %s manag=
+es battery for device\n",
+> > > +                             hid);
+> > > +                     return;
+> > > +             }
+> > >       }
+> > >=20
+> > >  load_psy_ext:
+> > >=20
+> >=20
+> > --
+> >  i.
+> >=20
