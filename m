@@ -1,100 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.229.6
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794999763;
-	b=xlk6gM8FwKL9ZUVKOVgVQoZmWupJlbkJLQEnehaEPLSsg5lqD4FUjnQ/FnczE90qrRV8
-	 dVSnLXRa9DUhvnceetjm7gMaRVvZxxayCnsKrhLRgWmzO6CNPxNAkJvSrx/WigonVKne1
-	 AHbVbWET8BOEmQC+xVZyREKuHltPjb+BsVsrb6KoxJmhx5krHiXtF+qdxIdNsIht4jNtL
-	 KYoXz/ySQ2JluGEsU12BOdlgXOaL1dfSO8aTZgGmasgqpVH0SpMrsNPYw6DW5HF8a+mBy
-	 c6+CRaf/dT7lhWGt36gWIZlqRe3BOLd4q8J03fnPoIjNU0JheXPjQFIeBDFNoh24cGQ==
+	t=1795002316;
+	b=jwCghn/x5jN1s6Xzksc+GtXqWATh2pFledkD1t86Of3JMnBM1tFQLD/Kim16pj7OJ/gH
+	 zIvSxKrvnCN0jXRssV2fAYPZvdHHUL4p+kGKLoMEFUkBfnmPSexZASnBi3/ZxgGUnJUsa
+	 eexTt6KfnOHkjNakcslsdaKJa4aoVX44wfC2GUd+ub2PPtYwaceaQVSkN3qAEFbyKy5Mb
+	 XkygEvWu/Vf8Rzi0cLVxld/ns8n+09OcJ4L7ZOAfHnsZwWnJdA6ORgxFqnVCyTxaSYOhk
+	 x8EjeBxUUQlPeL9DJ0kF2PQq9XGmhIJ8Bd83cPxThAAxO7+hxNZQqj9QMCWwoAFmiLQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794999763;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795002316;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=byVP+MQq7ChvGBwilcmaxcWIWInzE1cO9w8bw3Vvmhk=;
-	b=XC9KKJU/Ce/1bjZUATmbu/fEY4TqdGLeHMdDoHPZzTd9BczXkZemRAn0NMNrMDpfDbaV
-	 AmjByTPhQtl0ccnz2v5K7WP2Ory27iXPmYUBFyAuJv0UxuDopSk0/kjOsvYtrrtozQDIQ
-	 eq8VmqTSS8FE54Sqj3RHE/0xz4F1kQvTJzzBM5MckKAKo7LVBZD6ANOJm72+0sEagH5zw
-	 Q2GYsbRWpKhvNNVNSm84YEt60+p/SyjcFKXWsi7+ywnwP7Lpt+wlGpQp8Q0DBt+2hn4+W
-	 pEGkwDUZY0Mfb0x7i6j/eA/WyprXGzVDRqT1/2KfuDOiXbloYvdzjtLr6CJHOyAiiLg==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
+	b=DooLYhJxysQm9WNVnBjFLOO5ZphwGQZvn7T/BEAWW/Ruq24aXEHPeHbtXLP3IZ0WD03w
+	 TI8RxFCcH1a7e2jYgl2kDAYx8BlbzyDrbNEnw0Oa3gBAT1MZVaDU6MFYYbzKInebOv2Sa
+	 eumkGlmr1oVC2shC0h0DcEYCPJ9eZ/zSH4v35THPM5YtMSw2/5ddtf/cAk74IkEmyRjtH
+	 Ac/tljZlvVqF4gTSOkTN7gXGy9euNhyLZC3dD4FYaFeYEBnTaTSIgC+DaHGEqnEr9dhbc
+	 W/SLvtFo1EKwROzdZUcWzgAtjXNLy9j47jgUmhjnGWgoWVUDX9EqwwlI6zX6AeHJcKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QEtz2yHm;
-	arc=none smtp.remote-ip=74.125.229.6
-Received: from mail-dy2-f6.google.com (mail-dy2-f6.google.com [74.125.229.6])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ESi73pff;
+	arc=none smtp.remote-ip=209.85.216.42
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDED606A330
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 11:02:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ABDED606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B30606A320
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 11:45:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70B30606A320
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QEtz2yHm
-Received: by mail-dy2-f6.google.com with SMTP id 5a478bee46e88-35adc681e1aso981598eec.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 03:02:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ESi73pff
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3b3a914e4c8so491665a91.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 03:45:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794999762; x=1795604562; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=byVP+MQq7ChvGBwilcmaxcWIWInzE1cO9w8bw3Vvmhk=;
-        b=QEtz2yHm+x8bxgtMqAYZHJZx/JxioxYHnbyX4xaUoO8p9nYoRH8yO42yy9P+WihZIh
-         gu8AbuZF2f1ju6N6MLwdIkpSBjPxgvfeSdWiQLJvcq37viOG/WICOo7ni1qGQ/OxAtHC
-         aZv03+IZdfj1E7yOWFa9aJxkduwgnSK9WqFdr5pyYRCjk/uqAcfY+MakjbRNS4WcyXYf
-         6z5En5T8tDPvMN+8AyndPAPAkW3FLhyUEkKbi3mYcP9Sq0Z/Q5qX4N1JJnrAwoGwLp0W
-         rRY9GwetdBsU72X24GAkqgipK770l5M/BaNnBNauGTT1e5awZ4k+I4xOK2vMhaPQvWS6
-         bq7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794999762; x=1795604562;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20260707; t=1795002316; x=1795607116; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=byVP+MQq7ChvGBwilcmaxcWIWInzE1cO9w8bw3Vvmhk=;
-        b=wBl84F63095kk3aT+uQS4JWAs9dJzuO7QG2SFGUWYFC53D46ehUIzmJBa4iHwlHIRO
-         gxQW5+MLM2SEUBaxUeFF6oHoKWpD3Ne0C92j2n0mjUqVRpjtdtDATn86sKLMEqaoJgbi
-         c1tqgZK/QSylsLQB9WXx5H8e56xyUmxLmdhqMd0T2rV0h01p5Cb5ufEolsVRQWiCz8MN
-         LN4WjtYw367lOnxDF2QuE1/oCaGdkA/4adqLj0l+4lqsZOUA69shp7uBIfy3YWYYow8j
-         PsP9zVcjepvoLbK2Uaqp58wnI6YlqsCJneyrRn3QNztIMT+Xby3qhOx0XHhkAhBaL1Ah
-         Ia/Q==
-X-Forwarded-Encrypted: i=1; AL+hErFMUELze19BGUU610hZf8WLDA660gi/r147uYt8MrSh/jBReH3kW1NHR2pYSBivoBwQ8ZtPlEPMPdHaMIP8OrppesyM@vger.kernel.org
-X-Gm-Message-State: APuU4Z9UNZ/eOFlIWgSou9mjtnMwSZvFxX+1XoiM87W4GmJt/P16iWGQ
-	8HPda71yaMHxCn5Q+dl79gwKl0LFDqM3yJVDoeb5crWqkrfLkAR3SQTg
-X-Gm-Gg: AZFdTZf2Qzc9BgxFAsA32mdhqam5U9357644u9zYeUMqQtTGKt7MsQnm7bxxjyo+Xeh
-	2hq2h59bJbP2QQZhmLmUmXKyNPhZixHcOvLTyXWNm2MEfheezNkmfY94uUby2nSIcbzXvn5mlgO
-	nrTzuK88k6OsYy5MwsVwuP6S7w5kpwIKcI+vFuDWWxyFDyDHV189ZM+NWVmI6vkv6T1maxqxzBt
-	sVtmKfTGP0NOBRQt5KpSEan9jc9QIdGO+X0jogpnxV3ES+hBtadrgmMHu8VabZ79LENQugC5Tg3
-	l60kldMapa4aQipkQSxDWzELrN2M5c7VwZ/snqWfw+lzu6cJNXDy2fLZXNCsnK07JiX5XDGVaKI
-	B7ZaANhfFERpaOH0CyaAuFrZ2KDdQ1cCmW/o4/xot0q4Sw6RWLboCbPQctEB71xPjnzwz05Du8J
-	Fzf6A31os2XBYeqVUTfzFYsDLv9UrNzmo0iYfnlI6CHVMQFEzdh6U2gX6VdndtlM5eIBWGJ8PUv
-	fMnXSs4v/8/5DFWsLBX/mUcxV1vZwDSLMG458SLhkbAxRLW2Iq9Ilr/yTHJ6/uG45PHpZYct1dB
-	JVF1UeFt+KkGp6zK4MaKXCo5bqeD
-X-Received: by 2002:a05:7300:de41:b0:382:520c:fddf with SMTP id 5a478bee46e88-3827f597329mr2379486eec.11.1794999761514;
-        Wed, 18 Nov 2026 03:02:41 -0800 (PST)
-Received: from ThinkPad ([192.220.23.71])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-382a172a0a8sm6061818eec.0.2026.11.18.03.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2026 03:02:40 -0800 (PST)
-Date: Wed, 18 Nov 2026 19:02:26 +0800
-From: Qiling Zhu <kmatzkaczor244@gmail.com>
-To: Rong Zhang <i@rong.moe>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Griffin Kroah-Hartman <griffin@kroah.com>, vishnuocv@gmail.com, vsankar@lenovo.com, 
-	platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, linux-leds@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] platform/x86: thinkpad_acpi: Add support for auto
- keyboard backlight
-Message-ID: <av14Sp6_nKwU5F-i@ThinkPad>
-References: <20261102151211.40701-1-kmatzkaczor244@gmail.com>
- <20261114174814.62153-1-kmatzkaczor244@gmail.com>
- <230263171c25c322d97fa29439a01922db47f913.camel@rong.moe>
+        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
+        b=ESi73pff1GSFfSwx4JNdxGydjGTeDNw8o0GckIIxaN/K7q3lQGbF9XZbt+3k00z9yG
+         0b+37vzSD/gHg1SyAHITKOLTDe64sW2VSCjcFs34RiiPSgy8b28RVixYt7MEjBM74+Kg
+         TKfsdmunNcJvV0d8AXdQB7Oq5Q5YGZk9QB2Lr6fB9EwmuvwDCxcbK+9r5+va1QGXL28p
+         xvzM39xUf+yV1fsnuGn286vDcAo+lkkU8D9BhHJ0Z38CzWt9APvRLqsffg3TL67Wcb7s
+         PmXhOepiu2yJZ+lTNhCX+m5zIBkuzdcwfBMLZeA5f5GhCybk6Cf4NOkkpG4emHxnR02x
+         BaBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795002316; x=1795607116;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
+        b=rmkL9uRbFE3QCT0vCO6cuExaoF3CLmI7zhE6k6/m9C1Fqmn5+rBIP9I5x6NKGlCcTv
+         hGlH3grK1FNdKjl+68BIEnerf8PDCQLXf4FjK5jiGf8m2FM63SkehNtkzEZyZpg1Cy7E
+         rA+zXFrwuWg0ZJlSBJIcnRA5TDEwIMWketWBHzwIGCg5inLlgVIKkf7sQ/aFExL6+8v/
+         UMOKTd8HA6mgylvl+Huar/wISMoxqg2jKc84Y/HlpUydL4OveJbl+txG52QULys1W/8w
+         9gl5VVuujN9JUFwIZCedeWdvhqGTbN/1Hz0FXsSPrd6vQbM1TW5DxDHHXCskIAqP2+FX
+         7qRg==
+X-Gm-Message-State: APuU4Z/EHelcY1cBPk2zA99dDjtEge4rJHQQmEbG3HG7Y/8JIKMXwO6F
+	I09MrKfZSGfhXzXI0z9PUCHb70KPfNZVDpa5COXEQxGmrnW+bGIkWlS+2WGXiw==
+X-Gm-Gg: AZFdTZfC2s0Cl4xwfVc9TjXA0OdY0++8GpGwllIQQzdYVupij44syCSvr++m51/Yt23
+	+fumd6KIopnulMhsRX8b1Z8jRIggOgbiYJupqMgf1v5Yf052GhV8/y2dHlm7Rs55o3+cG+K4MMX
+	HeKQRubb1SYuczWPJFnwK5bN4FsU+0RyMWArJJDzJEjzI2EKgQMJDTDI42+d1VnvhrchXIV3SLT
+	Nq63JaJoF86BXtqx+ZPov/ZqHYuWy8yR/jeV1/MFS1j1jKcsuhc/l1Cx/RAsNHraZHTlSyL9L07
+	K7f46eRVWHrpMOF/tQWEdkV6lDn/43HfBmqpVLSu5vwr/6+nF6x6vX8hTmlceH91QS1Jfznn13C
+	wo3ciEk4aD0QhtV7Yi6FZ9pOkfCyHGKpAeAJ9Ue03pzUFHcb0+N14yzWHALAhfQxs0Q2EytGAz/
+	v2WLzNwA8OOaHv7JHLCYrnuIF7Rmfe4JJIjXaywGAsBVUrMBJykfwX7CwiIKSXCnXipAZkMOY6j
+	bDx1eLt/iwGeKn75s83P1fHFw/QZd4ATBZO35i23l4deGxfIDdxsH0kPahORDTEdCiSzeOU9nV1
+	yI9NaXqJc+XrN8lIuHa8bg==
+X-Received: by 2002:a17:90b:448b:b0:3b0:9782:8721 with SMTP id 98e67ed59e1d1-3b3d07b9f34mr2444000a91.36.1795002315663;
+        Wed, 18 Nov 2026 03:45:15 -0800 (PST)
+Received: from [0.0.0.0] ([20.89.137.63])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3ac2550e1sm8966783a91.3.2026.11.18.03.45.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Nov 2026 03:45:14 -0800 (PST)
+Message-ID: <bd605c87-542f-43be-8e3c-01f2f3c14f28@gmail.com>
+Date: Wed, 18 Nov 2026 19:45:11 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -104,153 +90,184 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <230263171c25c322d97fa29439a01922db47f913.camel@rong.moe>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] platform/x86: bitland-mifs-wmi: Add Redmi Book Pro 15
+ 2023 (TM2209) quirk
+To: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ regressions@leemhuis.info, regressions@lists.linux.dev,
+ shlyapugin@gmail.com, Musaev Ibragim <atomicus.xyz@gmail.com>
+References: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
+ <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
+Content-Language: en-US
+From: Mingyou Chen <qby140326@gmail.com>
+In-Reply-To: <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Rong, Mark,
-
-On Sun, Nov 15, 2026 at 03:52:36PM +0800, Rong Zhang wrote:
-> The next time when you send a series (i.e., PATCH x/n, n > 1), please do
-> not reply to the previous thread to keep it tidy.
-
-First, my apologies for sending v3 as a reply to the v2 thread. I caught
-that mistake shortly after sending it out, and I will make sure v4 starts
-a clean thread. Please do let me know if I am getting anything else wrong
-with the workflow; I am still learning the process and really appreciate
-your guidance.
-
-Thank you both for the reviews, Rong for another patient and detailed
-round, and Mark for the Reviewed-by tags and the sleep/wake input. I will
-apply all the requested changes in v4 (including moving
-kbdlight_level_to_brightness() with an int return type into 1/7, adding
-the lockdep annotations and symbolic macro, fixing the helper placements
-and indentation, updating kbdlight_brightness in
-kbdlight_set_level_and_update() and using it in
-kbdlight_auto_trigger_activate(), and adding the note below '---' for
-Sashiko's report).
-
-> > One addition that was not in v2: testing showed that the firmware does
-> > not restore auto mode across hibernation
+On 11/11/26 20:48, Oleg Rybalov wrote:
+> On TM2209 the power mode is the STNM byte in EC RAM. Fn+K rotates it
+> in EV20 and the EC0._Q24 handler then applies the matching SoC limits
+> with HPTC. SystemPerMode does not affect STNM, so changing the platform
+> profile had no effect on power.
 >
-> How about s2idle? And what if hw brightness = [0,2] before hibernation?
+> Read the mode from STNM and, on set, write STNM and evaluate EC0.HPTC
+> as the Fn+K handler does. HPTC returns AE_AML_BUFFER_LIMIT because SVRP
+> declares its ALIB buffer one byte longer than its data; the limits are
+> already sent at that point, so treat it as success.
 >
-> Meanwhile, could you test s2idle, hibernation and cold boots with
-> thinkpad_acpi blacklisted to see if hw brightness ([0,2] and 3) is
-> preserved? We need the raw behavior to determine our strategy.
-
-Here is the raw hardware behavior data you asked for.
-
-Test setup:
-- Machine: ThinkPad X1 Carbon Gen 14 (21V8A028CD), BIOS N4OET53W (1.16),
-  EC N4OHT42W.
-- Kernels: 7.3.4-arch1-2 and 7.3.0-next-20261030 (identical results).
-- Method: For the s2idle and hibernation cycles, thinkpad_acpi was
-  unloaded with rmmod before each cycle so the driver was absent
-  throughout sleep and wakeup (my kernels are built as UKIs with a
-  baked-in cmdline, so I used rmmod rather than a boot-time blacklist).
-  Backlight levels were cycled only via Fn+Space and read back by
-  evaluating MLCG directly via acpi_call. This machine only exposes
-  s2idle (no S3), so "suspend" below means s2idle/S0ix.
-
-Results without the driver loaded:
-
-- s2idle: The firmware turns the backlight off on suspend and restores the
-  previous level on resume across all levels (0, 1, 2, and 3/auto).
-
-- Hibernation (S4): The firmware turns the backlight off on entry, and on
-  resume the EC comes back at level 0 for every pre-sleep level, manual
-  levels 1 and 2 included. My apologies for the wrong statement in the v3
-  cover letter where I said manual levels survived S4 on their own; my
-  earlier test was likely interfered with when the driver/userspace was
-  still active. Please take this clean test as the accurate result, which
-  also aligns with the concerns you both raised.
-
-- Cold boot and warm reboot: The EC always initializes to level 0. Since
-  kbdlight_init() only reads MLCG without writing MLCS, and the pre-resume
-  hibernation logs show the same reset to 0, this is firmware behavior.
-
-So on this machine, the firmware handles s2idle by itself, and S4 resume
-is the case where the driver needs to restore the pre-sleep level.
-
-Regarding S3: as far as I could find in public sources, modern ThinkPads
-essentially only support s2idle and S4 (ThinkPads moved to S0ix-only
-around Gen 11 in 2023). I do not have an older S3-capable machine to
-test, so I can only speak for this platform.
-
-(One small side observation from logging raw MLCG values: bit 22 was 1
-whenever level 3/auto was active and 0 across manual levels 0-2 on this
-machine. Just sharing as a single-machine data point in case it is useful.)
-
-> >  - the EC comes back with the
-> > backlight off, without an event. Rather than re-attaching the trigger
-> > from the pre-suspend state,
+> The board reports DMI_SYS_VENDOR "XIAOMI" with TM2209 in
+> DMI_BOARD_NAME, returns the WMI return code at the end of the buffer
+> and charges over USB-C only.
 >
-> "re-attaching"
+> Signed-off-by: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
+> ---
+> Based on v15 of "Merge redmi-wmi into bitland-mifs-wmi":
+> https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
 >
-> I am not familiar with hibernation, so I am not sure if the LED core
-> would detach the trigger before entering hibernation. If not, why did you
-> say that?
+> Tested on BIOS RMAPH5B0P0909 only.
+>
+>   drivers/platform/x86/bitland-mifs-wmi.c | 83 ++++++++++++++++++++++++-
+>   1 file changed, 81 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+> index a431d3fef..b63b139a6 100644
+> --- a/drivers/platform/x86/bitland-mifs-wmi.c
+> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
+> @@ -21,6 +21,7 @@
+>   #include <linux/input-event-codes.h>
+>   #include <linux/input.h>
+>   #include <linux/input/sparse-keymap.h>
+> +#include <linux/io.h>
+>   #include <linux/kernel.h>
+>   #include <linux/leds.h>
+>   #include <linux/module.h>
+> @@ -99,6 +100,10 @@ struct bitland_mifs_quirks {
+>   
+>   	bool return_code_at_end;
+>   	bool skip_ac_type_check;
+> +
+> +	const char *ec_mode_field;
+> +	const char *ec_mode_apply;
+> +	phys_addr_t ec_mode_addr;
+>   };
+>   
+>   static const struct bitland_profile_entry default_profile_entries[] = {
+> @@ -113,7 +118,30 @@ static const struct bitland_mifs_quirks default_quirks = {
+>   	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
+>   };
+>   
+> +static const struct bitland_profile_entry tm2209_profile_entries[] = {
+> +	{ PLATFORM_PROFILE_LOW_POWER,   2 },
+> +	{ PLATFORM_PROFILE_BALANCED,    1 },
+> +	{ PLATFORM_PROFILE_PERFORMANCE, 3 },
+> +};
+> +
+> +static const struct bitland_mifs_quirks tm2209_quirks = {
+> +	.profile_entries = tm2209_profile_entries,
+> +	.num_profile_entries = ARRAY_SIZE(tm2209_profile_entries),
+> +	.return_code_at_end = true,
+> +	.skip_ac_type_check = true,
+> +	.ec_mode_field = "\\_SB.PCI0.LPC0.EC0.STNM",
+> +	.ec_mode_apply = "\\_SB.PCI0.LPC0.EC0.HPTC",
+> +	.ec_mode_addr = 0xFE0B0300 + 0x7E,
+> +};
 
-Sorry for the poor wording in my cover letter. The LED core does not
-detach the trigger across hibernation; what I meant to say was "writing
-level 3 back to the EC", not re-attaching the trigger in the LED core.
+I think this is an anti-pattern.
 
-Following the comments from you and Mark on 7/7, I agree that restoring the
-cached level in the driver on resume is the right approach: calling
-kbdlight_set_level(kbdlight_brightness) in kbdlight_resume() without
-emitting notifications. Since the LED core's own brightness cache only
-stores the translated brightness (where auto mode is 0), restoring from
-kbdlight_brightness in the driver handles both manual and auto modes
-cleanly. I prototype-tested this on my machine: after S4 resume the EC
-was restored to the pre-hibernation level for both manual levels and
-auto mode; when the pre-sleep level was auto, the auto trigger stayed
-attached across the whole cycle; and on s2idle resume, rewriting the
-unchanged level was a harmless no-op.
+Do we get a WMI method for this?
 
-Regarding your suggestion on 7/7 about dropping led_classdev_suspend() and
-led_classdev_resume() across all models: since I only have this one
-machine to test, my tentative plan is to keep the new behavior gated on
-tp_features.kbdlight_auto (so non-auto machines stay on
-led_classdev_{suspend,resume}(), while auto-capable machines skip
-kbdlight_suspend() and restore kbdlight_brightness in kbdlight_resume()).
-If you and Mark prefer replacing led_classdev_{suspend,resume}() across
-all models and handling suspend/resume in the driver ourselves, I am happy
-to widen it.
-
-Lastly, I have two small questions on 3/7 and 6/7 to make sure I
-understand everything properly:
-
-1. Calling kbdlight_notify_level() in kbdlight_write() vs. sysfs writes
-   (patch 3/7):
-   I will change kbdlight_write() to call kbdlight_notify_level() and have
-   kbdlight_set_level_and_update() only update kbdlight_brightness as
-   requested. Just for my own understanding of the design principle here
-   (and in commit 07f48f668fac): since leds-class.rst describes
-   brightness_hw_changed as being for hardware-initiated changes, is the
-   idea that a legacy out-of-band interface like /proc/acpi/ibm/kbdlight
-   changes the level behind the LED core's back (so the LED core and
-   UPower need to be notified to stay in sync), whereas sysfs writes
-   already go through the LED core and shouldn't echo a notification back
-   to userspace?
-
-2. Keeping the default_trigger check in kbdlight_init() (patch 6/7):
-   Since the EC resets to 0 on cold and warm boots on my machine, I agree
-   that no LED_RETAIN_AT_SHUTDOWN / exit-retention logic is needed.
-   However, if a user presses Fn+Space into auto mode before the driver
-   loads (for example, at the BIOS or disk-encryption password prompt, or
-   while the module is unloaded between rmmod and modprobe, which I hit
-   during testing), setting default_trigger keeps the initial trigger
-   state synchronized with the EC. Would it be okay to keep that check in
-   kbdlight_init() for those cases, or would you prefer dropping it?
-
-(One minor hardware note: occasionally my unit retries entering S4 a few
-times before succeeding, and resumes after those aborted attempts can show
-timing oddities. All data above comes from clean hibernate cycles, but I
-am happy to dig into the retry case if it is of interest.)
-
-Thanks again to both of you for your time and patience; I have learned a
-lot from your reviews.
-
-Best regards,
-Qiling
+> +
+>   static const struct dmi_system_id bitland_mifs_dmi_table[] = {
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2209"),
+> +		},
+> +		.driver_data = (void *)&tm2209_quirks,
+> +	},
+>   	{}
+>   };
+>   
+> @@ -271,6 +299,48 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+>   	return 0;
+>   }
+>   
+> +static int bitland_ec_mode_get(const struct bitland_mifs_quirks *quirks, u8 *val)
+> +{
+> +	unsigned long long v;
+> +	acpi_status status;
+> +
+> +	status = acpi_evaluate_integer(NULL, (acpi_string)quirks->ec_mode_field,
+> +				       NULL, &v);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	*val = v;
+> +	return 0;
+> +}
+> +
+> +static int bitland_ec_mode_set(const struct bitland_mifs_quirks *quirks, u8 val)
+> +{
+> +	void __iomem *addr;
+> +	acpi_status status;
+> +	u32 glk;
+> +
+> +	addr = ioremap(quirks->ec_mode_addr, 1);
+> +	if (!addr)
+> +		return -ENOMEM;
+> +
+> +	status = acpi_acquire_global_lock(1000, &glk);
+> +	if (ACPI_FAILURE(status)) {
+> +		iounmap(addr);
+> +		return -EBUSY;
+> +	}
+> +	writeb(val, addr);
+> +	acpi_release_global_lock(glk);
+> +	iounmap(addr);
+> +
+> +	status = acpi_execute_simple_method(NULL, (char *)quirks->ec_mode_apply, val);
+> +	if (status == AE_AML_BUFFER_LIMIT)
+> +		return 0;
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+>   static int laptop_profile_get(struct device *dev,
+>   			      enum platform_profile_option *profile)
+>   {
+> @@ -282,14 +352,20 @@ static int laptop_profile_get(struct device *dev,
+>   	};
+>   	struct bitland_mifs_output_head_rc result;
+>   	size_t i;
+> +	u8 val;
+>   	int ret;
+>   
+> -	ret = bitland_mifs_wmi_call(data, &input, &result);
+> +	if (quirks->ec_mode_field) {
+> +		ret = bitland_ec_mode_get(quirks, &val);
+> +	} else {
+> +		ret = bitland_mifs_wmi_call(data, &input, &result);
+> +		val = result.data[0];
+> +	}
+>   	if (ret)
+>   		return ret;
+>   
+>   	for (i = 0; i < quirks->num_profile_entries; i++) {
+> -		if (quirks->profile_entries[i].wmi_val == result.data[0]) {
+> +		if (quirks->profile_entries[i].wmi_val == val) {
+>   			*profile = quirks->profile_entries[i].profile;
+>   			return 0;
+>   		}
+> @@ -350,6 +426,9 @@ static int laptop_profile_set(struct device *dev,
+>   	for (i = 0; i < quirks->num_profile_entries; i++) {
+>   		if (quirks->profile_entries[i].profile == profile &&
+>   		    !quirks->profile_entries[i].no_set) {
+> +			if (quirks->ec_mode_addr)
+> +				return bitland_ec_mode_set(quirks,
+> +							   quirks->profile_entries[i].wmi_val);
+>   			input.payload[0] = quirks->profile_entries[i].wmi_val;
+>   			return bitland_mifs_wmi_call(data, &input, NULL);
+>   		}
