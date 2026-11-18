@@ -1,110 +1,110 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.157
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795040615;
-	b=0anf1muio3x1ZqQ4E/0w5WHhybPltfolNwztXJDBe7/zWGnYew7kk2YQNQsQLzKU1onP
-	 mzgF8VuV6F4fthkt49b0pmCAY9VoL0v1z8sunCzrX31ZAUY9qj+sw8kGjT0krHSZGv7j9
-	 jUiRRyg9S2dgV/BGXHyH1p9H16Hs63IYJy1zxTq/WufVEeJAvhsdrA+xPQvOu1LpHwZ2G
-	 syPT7y1w7EqbXhBYB3HB+yCvybtwNqAmMHxlrwxSxm8Y0zLBCYZn7eF2EAQDfu5VxkRS7
-	 I+SsEoa90IAszCCnkj+CaxLHU9vgjOu77/cOR57wEX+oW+/UM0xEdzvrbZRULRSEijQ==
+	t=1795040874;
+	b=XvAAM8nHnoEsKOr7EjJq9QYR5QBbMLJsXS6pAW5/vLEW9/I0boM/wH2bOsqsymzuRQ0t
+	 zI6003wjqnqqbDMOytQfK6g/YWaz0Jqka6RumY6J6v+R89x6BmQSKZi3O0BKdsw8YynX9
+	 FDxlOs+8YmwqECyLQsp9pEXxw9HFzAQ4hX8haIvorUwMo4oKYQVFvwhxziPpsNRGOydlD
+	 FSum+bmSGKAFykOjJgmL8ljBn4PyT8R8CRX6pqnvoxPN4MdWjwslX5lx3LhJeWwP8ltWb
+	 xJWLjLLJv6cHDBgivd174gq60GqMdjn3cMapoMnCovU6j85fCMNJbLKNiBe1YAIWjQw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795040615;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795040874;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
 	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
 	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
 	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
 	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=GeOWSIs+WFAlcLOlvyJg3ui9WYpfBC2HNmmLSnk4aYw=;
-	b=bG61U3XANhAg3TFwGq3Y5Jmyvkdqmn00oxXqcER7B1FXP84fe6fSlSv19V5aGP1vOIxN
-	 qkyt9td2fxBR8sJd7tBReAxrqRmtDU8YlTe/VBIbCIymoF8ladVez4jfOqizyWKqXi3/p
-	 o3CHRV3eo0p9ocBTU7AxiO8QNA/GdXjCngByd/xN3Kam6ZpI3cTdGprFJDvmjKKyfPJdw
-	 83/wJUsAF/llR4jV7xaOigHrgw/cHUBPNFG4u2e9KAOJGfsf5sQAm5voqtDCr5qRzi6xx
-	 /SwE7WDROEa09yGsKygauvPpFIFfa/etcNG8hyqw3jr1UNiQ8QU+N7YHYfKm8c5PIzg==
+	bh=vvUWFa2J5qwS6mcHcRJdQ/F9mm7gUHOHWpHh3iiQ2xw=;
+	b=3l8aSd7X3dtY89Q4qSz79b0qW8QKjd6pkJ4hxFQQad4B9JeRY7ms0JClqueMctPtG+WG
+	 8g5O8k+JPu2bQ72kn2Pkv1Uz0zxZmAp2MqmAlZNPC9mnVjjjV65UkWQlYpk0k1RXQZ/ZP
+	 29/IoOgpzUYHxsuqPVgDUsCbpmeuE8LYJlUiF5MqAC6BvMVfQ1ijPjnyOThL3w/RJ3izp
+	 l+HDLJJWeIGnkvhi2WAKjZanZsNdkrYIzyADTa5O2jmre1tYySND2hAMb74OS0b7tXOE+
+	 dkvXobS9lRKFV/NJ4ftzglmCqoDURWhlDM7hFdlvYRTJ1+0hvNE3dZk47kiMnElmIfg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=squebb.ca;
 	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=NzNMmabJ;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=AhMW1DUd;
+	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=RE1cA7xC;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=a2g1hfrO;
 	arc=none smtp.remote-ip=103.168.172.157
 Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABA9606A320
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 22:23:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BABA9606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075A4606A330
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 22:27:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 075A4606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=NzNMmabJ;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=AhMW1DUd
+	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=RE1cA7xC;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=a2g1hfrO
 Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id F268E1400126
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 17:23:33 -0500 (EST)
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 451411400167
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 17:27:53 -0500 (EST)
 Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Wed, 18 Nov 2026 17:23:34 -0500
+  by stl-compute-04.internal (MEProxy); Wed, 18 Nov 2026 17:27:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795040612;
-	 x=1795127012; bh=GeOWSIs+WFAlcLOlvyJg3ui9WYpfBC2HNmmLSnk4aYw=; b=
-	NzNMmabJk/ngtInIeTXWV8Jg+14YQjXAtEmKU8mrIQPQRS/L8nWjzDpE4fcbOnNv
-	aLfIpwVNMThxaVj8Yo2Ky8YegVGGmCunevYS8JLJs25DoDoXFXtw9a+KzvJdvpG4
-	jssHMKR/PiL1HYeX4HIc9nFOzO991rgLP3nvJNWZIP/XXaHx1zg/CnPzcJBGEiJO
-	/66s0LsVJIj6Ok2Sn6ENwgNjK4qPNu5mYYvZX4ovWUug/nFgbkONJBYZCAJd5XU5
-	a1NXRsVbx5gS02rctjj8SGZ42LKqXagvveP0UlJojpiCw/YbGOID2QjrTp0vhFrD
-	GwD6W+z4Mm/NgFe012EwNw==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1795040871;
+	 x=1795127271; bh=vvUWFa2J5qwS6mcHcRJdQ/F9mm7gUHOHWpHh3iiQ2xw=; b=
+	RE1cA7xCgYutzGbEp6Bb1IUVKloxan0DJoFfiN89WZ/pGidhNEVXd1kxbvLcBciu
+	6Zb/AysRBEeQz2oT14CQRKcody3kQQCLd4G1XwhauGvsRGMHuKqoShVnQHA+nIDG
+	5we4Y4zxK/p3WKt8i1S9RPg2jGIzJFTMQwrHcYR8bQN5p8JrmzolU8Y7tLaSQh7Y
+	kLZk+kGS2wgrds+R8BQmIjv53YLxyvlgtUxlw9Q7W7rPE0SFOuykDjqcPUbr2wWZ
+	bMJUqXhwyVP6U6gInm2vFY41l4DGt4qUU4C6cXniye0XZvOp3/PvYvEboEVXPLE5
+	LkFnTvVgfMkQ8UaGer59Vw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795040612; x=
-	1795127012; bh=GeOWSIs+WFAlcLOlvyJg3ui9WYpfBC2HNmmLSnk4aYw=; b=A
-	hMW1DUdAgKPzMr3IKxvg6UNwzQKJK1SJb5ZdCzw2Us9EINDg9RItzkPsIy0cAqGh
-	icbSv9EJyjTzuW2q7goJECycS3gZQpquPKhN39VEdGbMegXdLboJivqp9vfnPNYj
-	q5HglaxIKFBNiY8tuxjo2cORbQnOuy0kZLv6/WB1AG30fsvsXG1fDf3NJxKAn0Wm
-	XCnFiW8N8NgixGDrvSJvnfNi2quzdQXnx+Q8DABXzAjcJrMmOphoXvhjrAKLuzB2
-	84Qg+PAVusHhnmsmG/NGUxXUVQ/Sa84zo0VEZGJ+Jc8iXQBzSidqjc2gTKqFlaUF
-	K8iF2SUn7ONVVrQLPBDTA==
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795040871; x=
+	1795127271; bh=vvUWFa2J5qwS6mcHcRJdQ/F9mm7gUHOHWpHh3iiQ2xw=; b=a
+	2g1hfrOMhJDJLPJaQVEdLRxnsO15fPmc9BcQZoutHLuAOca1wx4fqePljoh5Ji1z
+	5v48kwolF0uNYGz8zjjeDWBYh1jTx/67a1CV7LQ0uxX50a0wRNKz46dLaHNzmZSl
+	tIzQQKHYZnZrOTnpfR6k2IUEuzdKE9DtcNLL/VHUy+1WCqswd6Xiz4xT788tpmT6
+	EbGaFFladVsrCtrKTx3VR0CJ1WUvBcuTZmuvWa102fwLFPhrDmbSb9Sho4gC4lGk
+	7adqWl8TPjz9viOpzjhzO3mLIT+spiEt78IuRWwnOTXTAYoogOpVmauOdjCJnBfy
+	GwXdA+eMTOMU0CEmHYMuA==
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795040612; d=squebb.ca;
+DKIM2-Signature: i=1; m=1; t=1795040871; d=squebb.ca;
 	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
 	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:NJLeTIOBQtabqpe3igt2CObIPUbv+0xZ48G3IEKPKnrMPAV
-	U4nr2jQfD0NSulsCxpqOelkMCH2giRnCAg7Me86McChcI3GnfnmzXBqsKlFaCOFM
-	rfD7c7U0rDez3soryoXlOyonrqRYNe/VkF9mgdw9MoOFgdDutyCI/Xr0DJxQWt3H
-	o7s8FJVC2+Bf+rseP29sCZMvIMYfYJJoAGNBMd3nmPF4/gnxPgp+K4we/zywdqCA
-	VyeXU1AzlcxbywKCX7bELP/D0ioXvX4c+LMPgUXNJUDtAnoITjLmkh3v1P0g9WA7
-	j/itmOe0uz5X9+JO4QSBjKVcKLVskzl3pc2jM7A==;
+	s=fm1:rsa-sha256:Y7SQme4qyAiekj1ZDoGAy2S8wTOiEGc9h8qTe/nNVXCiZVI
+	dkGUY4DFEP7j9yTixNvq6WpLU+gnrpeCLvvu5dKo/BBZujG/LlmSGyU3KPSJYSBR
+	WujQIhVLipXLtfxXYxKZof1NZZSCpgDfv1NCjUlyIthsZFBHRq/gclvRncijJH3V
+	e1sfWhYL2O+co5QQrlZRPYXNi9gJyHGyPPKylfbTbH3GUkTcGqMJKUz0PIIspGfa
+	9LiBago2ubOKzQdd0pykeUYmh7omHmuD4AMZcIqlijBYP/E3OEiioT3+4VDHq0AJ
+	AtXh36ovkzZ5eC6VOoxQbJHd/ozIUk4MxEwPllg==;
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=mi-m=1; hc=12;
 	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
 	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:uU1iodwr6PmmULaF+oq5irniuJYvXoQIAFVapHITAJE=:Z7mrX53OrQAu+XKuXoorHJKvWJJ8bKrvMHehMh87jtI=;
-X-ME-Sender: <xms:ZCX-aqicS3TRuFJYAjoxabZ8clbu2VA9XiJoBdEpEjtkDpO1tfas3A>
-    <xme:ZCX-al13X2nwV-29V0gAP9KNqtj24Ol7o4VjcYGMBQGGMQfOAVVaAS0e2VDxr1di6
-    Ek2O47zuwf94CwdfDHadyZOTQqzu-gyZtw1B8Imcl3VjjJJX2YYUCcs>
-X-ME-Proxy-Cause: dmFkZTF9S1+LeZt01p4KO4e+fLkt041wT1zZ2J+9UjqUIyYmpCwWhYcPdGGRV6bKhrdATc
-    yJOUBsVt3HQuVWCNRmQ3ONILB5XOYHxX5AZjze8rHJEUNV3Q+TP9k3yVRY9MtdNwv1Uj8S
-    CzbT/moL9tTlAjO+b+HvJkGlmZjQ/ny3j4mgdKfZhtR+lENqOdKPaeTg+rC0I7o5IN5TzJ
-    XwIOc5kwFuaNHENgT1IJ21FasPi13q0ZTvnjkgU2RbAbOSEuZJCNtrz7hRh0V481pGStlb
-    dkdEQm6tDae1Hd1UMgIadLTjz+I17AhBFvXV/Xf2/O4fljKEtlrw4AjIQooZ145kci0jnp
-    5seo2GpjVqvvKQ5brhx1bLfWsrJZ0AfBcS53/2KA1JFKEZtTmUlQTEBY/3dVti1wyyn8wK
-    EboIwP+S/MpVuczQzmq3NzW9VSwVHZCAOp8GXK7lZJFhVWCpAmcy90VbvgHwN+74VraFn3
-    hlcG6XL+m3L2dbj+d/34+077AlLzdy4Cworl1ew5NicmHA6BgwA4h5wpIG4iAxNv7xztEk
-    7P9S3zgQ1C4eeF3GTtr11vquKj4jjyVGi6pKJuy2y3j3kSHNYf2cnYRRQSWO7NshRGaL5k
-    dm92B8yYt0LyPgd0Y4MJ81evooTcsk4m62th62ZAwbMh41JD/aavuHT/9uHw
-X-ME-Proxy: <xmx:ZCX-alRQOHTbm7vZq8oxOo8YmgpGX4r4ZmukTPD6liwEftrDnQo-8A>
-    <xmx:ZCX-ahWMSSyjcLh6h-HnWdp_E8CK6w-XTSjBH86roN-ZO9dYSs_u0Q>
-    <xmx:ZCX-audXpc8k258D_8JnNnFyNuRQhzM3-1kxigoePFEbcs8DJJWPzQ>
-    <xmx:ZCX-atKs4F5tzCafYJR_rCQ8r68WrL4T0KLCahlqOnXNZF5X2CZz5A>
-    <xmx:ZCX-atmsdUIZtV7y3EwhWkR9OF0k_YPbqYC3W-dyGRWyAPgdCNX2Wh-k>
+Message-Instance: m=1; h=sha256:MUsAw1YOO/Jc34zhcpWUedVkkBFVFNY5nkM583bm844=:bx8zVtb0Od4YS0PY6USmneqZC91uKX/sxFlODAf8Q18=;
+X-ME-Sender: <xms:Zyb-aoYBeT4G62sAxtE7RghTbU9yaU-1zGwW3iSOWU9YcHnH_KtK3g>
+    <xme:Zyb-auPd-sfT6Wlt6GkXocgOHFIvyL4CM7hNtWTMA5ukH01fCHWSvUkMI96nDYZS0
+    b5Th5WvyLsWxFImYGCv6l5dfabs8ze15_rofZ2gK-56E-ih0CG-FTl3>
+X-ME-Proxy-Cause: dmFkZTF8OUZ9i8qFX0RiyrICzzEuZfYiQXUZAUEXTHtf/KJZtLd9Y9f4a8ySJucb9HLGcE
+    fLO4zFy+38fXQ11QasQ2zZkTMp3bvEbDajy2rkbQikIGHPY2QAo+3+mrWJkbv9Qj7C0Thc
+    kFSpmwew5oR9E0xBSBzcHxXfO07DgP7wcQqj8Y98RxwiqCoC/7yTrzZzH3E7ox6V+qoYdx
+    Sxe73JYYYhKGOYJKTl+IVdrKAkPfPmHnwNa/3yXUS/Yjgoek5jr2ghZQQPIfxmxSaUI0Ku
+    e4iWTJSvzh2W8VI67jhovf12/v8DoBlcDB8vaoI6Mm3mM90vj7G9+WKiAJ7Amz1WAXzace
+    UIZCQRxj8aa2wtvFEPHe0npF3weZTHf8entOkPdKIxck71rOGAsEZW3ZAM9v37VnlJWhOV
+    vDHfpRs4KrUkEtmc64J74AzuQS/3IaZyIpAp+nCn5hgvpVR5sa1baAOQMJ6zlvyINYzI7J
+    EtjZzaai00bByd63SqEJTGtxDAfW4SfKWnziPyXG+oJ9s5CxdLeqBU7z0Xz9gTMawdjuVH
+    +fY6HYZeqwGEORiKD6qhkZIowsfbASYDdz4bkxeIcD1Ltdt58IfeDaStwhmgshtmTYJWcu
+    a+8HxHSVSTiuORrTTaUhUMTdZYvCo/+A4X79BwUs6mpqc/xR5WeedACv2tCg
+X-ME-Proxy: <xmx:Zyb-anJ9x-PG4t1BTDt0NcoODZtAKJhx4XsuRa-iJVzYQSDZlhfzvg>
+    <xmx:Zyb-atu1cOrUg1uNgwDN-dJ3UTZwuih_VpRfSYQsKAdmhtjO7xrE6g>
+    <xmx:Zyb-ajUFYizwW__Sme6fRbWU-MTtStRxm5XKxZxjqKrinv8gGJf2DA>
+    <xmx:Zyb-agiL0sbBhSKNtNBWABYoddZt5ThxYzWoUnP2VimFaG_prNSGdg>
+    <xmx:Zyb-aoBG9dP4I_djWglODDaaEWm4Isy3BuABeNHcn1uEkEYIoZtoP7n6>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 004152C00085; Wed, 18 Nov 2026 17:23:31 -0500 (EST)
+	id 720A42C00085; Wed, 18 Nov 2026 17:27:51 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -115,8 +115,8 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AieRt5HShkzB
-Date: Wed, 18 Nov 2026 17:23:11 -0500
+X-ThreadId: AWoTwGnPVW4R
+Date: Wed, 18 Nov 2026 17:27:31 -0500
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
  "Hans de Goede" <hansg@kernel.org>,
@@ -125,251 +125,278 @@ To: "Rong Zhang" <i@rong.moe>, "Derek J . Clark" <derekjohn.clark@gmail.com>,
 Cc: 
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
  linux-kernel@vger.kernel.org
-Message-Id: <b6f3d294-6be4-4d01-99a3-9d41c3c010a0@app.fastmail.com>
-In-Reply-To: <20261119-lwmi-no-singleton-v1-5-6b06fcfb5126@rong.moe>
+Message-Id: <b5c81884-73b0-4d43-98e5-cd2fedcf583f@app.fastmail.com>
+In-Reply-To: <20261119-lwmi-no-singleton-v1-4-6b06fcfb5126@rong.moe>
 References: <20261119-lwmi-no-singleton-v1-0-6b06fcfb5126@rong.moe>
- <20261119-lwmi-no-singleton-v1-5-6b06fcfb5126@rong.moe>
-Subject: Re: [PATCH 5/5] platform/x86: lenovo-wmi-other: Hide unsupported attributes
- using is_visible() callback
+ <20261119-lwmi-no-singleton-v1-4-6b06fcfb5126@rong.moe>
+Subject: Re: [PATCH 4/5] platform/x86: lenovo-wmi-other: Properly implement
+ no_singleton driver
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
 
 On Wed, Nov 18, 2026, at 1:58 PM, Rong Zhang wrote:
-> Currently, all attribute groups are created individually with support
-> check beforehand. This is unnecessary as unsupported attributes can be
-> hidden by returning SYSFS_GROUP_INVISIBLE in the is_visible() callback of
-> the attribute group.
+> The driver declares `.no_singleton = true' but stores device-specific
+> data to statically allocated tunable_attr_01 variables. This makes the
+> driver depend on the frigile fact that no device in wild has more than
+
+Minor typo - frigile/fragile
+
+> one LENOVO_OTHER_MODE WMI devices.
 >
-> Refactor the lwmi_attr_01_is_supported() function, and wrap it with
-> lwmi_attr_01_is_visible(). In this manner, the capdata01_attr_group
-> array is now replaced by a standard attribute_group array, which can be
-> created and removed at once using sysfs_create_groups() and
-> sysfs_remove_groups().
+
+As an aside - is this really fragile? I mean realistically it's never going to happen is it?
+
+> Add unique indexes to all statically allocated tunable_attr_01 variables
+> with some __COUNTER__ tricks, and use them to access lwmi_om_priv's
+> newly-introduced tunable_attr_01_ctx array. In this manner, move all
+> device-specific data to the tunable_attr_01_ctx array, and constify all
+> statically allocated tunable_attr_01 variables to make the driver a
+> truly no_singleton driver.
 >
-> A new field `initialized' is added to tunable_attr_01_ctx to prevent it
-> from being initialized twice, as lwmi_attr_01_is_visible() is called
-> twice with n == 0, in which once is against the group and the other is
-> against the first attribute. The field is cleared on unbind to make sure
-> the next rebind caused by userspace writing to the sysfs bind file won't
-> get leaked data.
->
+> Fixes: 03bb5147da08 ("platform/x86: lenovo-wmi-other: Limit adding 
+> attributes to supported devices")
 > Signed-off-by: Rong Zhang <i@rong.moe>
 > ---
->  drivers/platform/x86/lenovo/wmi-other.c | 118 +++++++++++++++++++-------------
->  1 file changed, 72 insertions(+), 46 deletions(-)
+>  drivers/platform/x86/lenovo/wmi-other.c | 54 
+> ++++++++++++++++++++++++---------
+>  1 file changed, 39 insertions(+), 15 deletions(-)
 >
 > diff --git a/drivers/platform/x86/lenovo/wmi-other.c 
 > b/drivers/platform/x86/lenovo/wmi-other.c
-> index f37dca7db034..6df6669e426e 100644
+> index 252ef775f300..f37dca7db034 100644
 > --- a/drivers/platform/x86/lenovo/wmi-other.c
 > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -140,6 +140,8 @@ struct tunable_attr_01 {
->  struct tunable_attr_01_ctx {
+> @@ -134,15 +134,23 @@ struct tunable_attr_01 {
+>  	u8 feature_id;
+>  	u8 device_id;
+>  	u8 type_id;
+> +	u8 ctx_id; /* Index to tunable_attr_01_ctx[] */
+> +};
+> +
+> +struct tunable_attr_01_ctx {
 >  	u8 cd_mode_id; /* mode arg for searching capdata */
 >  	u8 cv_mode_id; /* mode arg for set/get current_value */
+>  };
+> 
+> +enum { TUNABLE_ATTR_01_COUNTER_BASE = __COUNTER__ + 1 };
+> +#define TUNABLE_ATTR_01_COUNTER (__COUNTER__ - TUNABLE_ATTR_01_COUNTER_BASE)
 > +
-> +	bool initialized;
+>  #define DEFINE_TUNABLE_ATTR_01(_name, _device, _feature, _type)	\
+> -	static struct tunable_attr_01 _name = {			\
+> +	static const struct tunable_attr_01 _name = {		\
+>  		.device_id = LWMI_DEVICE_ID_##_device,		\
+>  		.feature_id = LWMI_FEATURE_ID_##_feature,	\
+>  		.type_id = LWMI_TYPE_ID_##_type,		\
+> +		.ctx_id = TUNABLE_ATTR_01_COUNTER,		\
+>  	}
+> 
+>  DEFINE_TUNABLE_ATTR_01(ppt_pl1_spl, CPU, CPU_SPL, NONE);
+> @@ -168,6 +176,10 @@ DEFINE_TUNABLE_ATTR_01(dgpu_didvid, GPU, 
+> DGPU_DIDVID, NONE);
+>  DEFINE_TUNABLE_ATTR_01(gpu_nv_bpl, GPU, GPU_NV_BPL, NONE);
+>  DEFINE_TUNABLE_ATTR_01(gpu_nv_cpu_boost, GPU, GPU_NV_CPU_BOOST, NONE);
+> 
+> +enum { TUNABLE_ATTR_01_NR = TUNABLE_ATTR_01_COUNTER };
+> +
+> +static_assert(TUNABLE_ATTR_01_NR > 0 && TUNABLE_ATTR_01_NR < U8_MAX);
+> +
+>  struct lwmi_om_priv {
+>  	struct component_master_ops *ops;
+> 
+> @@ -183,6 +195,8 @@ struct lwmi_om_priv {
+> 
+>  	struct lwmi_fan_info fan_info[LWMI_FAN_NR];
+> 
+> +	struct tunable_attr_01_ctx tunable_attr_ctx[TUNABLE_ATTR_01_NR];
+> +
+>  	struct {
+>  		bool capdata00_collected : 1;
+>  		bool capdata_fan_collected : 1;
+> @@ -1018,7 +1032,7 @@ static u32 tunable_attr_01_id(const struct 
+> tunable_attr_01 *attr, u8 mode)
+> 
+>  struct capdata01_attr {
+>  	struct kobj_attribute kobj_attr;
+> -	struct tunable_attr_01 *tunable_attr;
+> +	const struct tunable_attr_01 *tunable_attr;
+>  	union {
+>  		enum attribute_property prop;
+>  		const char *display_name;
+> @@ -1027,7 +1041,7 @@ struct capdata01_attr {
+> 
+>  struct capdata01_attr_group {
+>  	const struct attribute_group *attr_group;
+> -	struct tunable_attr_01 *tunable_attr;
+> +	const struct tunable_attr_01 *tunable_attr;
 >  };
 > 
->  enum { TUNABLE_ATTR_01_COUNTER_BASE = __COUNTER__ + 1 };
-> @@ -1039,11 +1041,6 @@ struct capdata01_attr {
->  	};
->  };
-> 
-> -struct capdata01_attr_group {
-> -	const struct attribute_group *attr_group;
-> -	const struct tunable_attr_01 *tunable_attr;
-> -};
-> -
 >  static inline struct lwmi_om_priv *kobj_to_om_priv(const struct 
 > kobject *kobj)
->  {
->  	return dev_get_drvdata(kobj_to_dev(kobj->parent));
-> @@ -1055,6 +1052,13 @@ kobj_attr_to_cd01_attr(const struct 
+> @@ -1041,6 +1055,12 @@ kobj_attr_to_cd01_attr(const struct 
 > kobj_attribute *kattr)
 >  	return container_of_const(kattr, struct capdata01_attr, kobj_attr);
 >  }
 > 
-> +static inline const struct capdata01_attr *attr_to_cd01_attr(const 
-> struct attribute *attr)
+> +static inline struct tunable_attr_01_ctx *tunable_to_ctx(struct 
+> lwmi_om_priv *priv,
+> +							 const struct tunable_attr_01 *tunable_attr)
 > +{
-> +	const struct kobj_attribute *kattr = container_of_const(attr, struct 
-> kobj_attribute, attr);
-> +
-> +	return kobj_attr_to_cd01_attr(kattr);
+> +	return &priv->tunable_attr_ctx[tunable_attr->ctx_id];
 > +}
 > +
->  static inline struct tunable_attr_01_ctx *tunable_to_ctx(struct 
-> lwmi_om_priv *priv,
->  							 const struct tunable_attr_01 *tunable_attr)
+>  /* Attribute Methods */
+> 
+>  /**
+> @@ -1098,12 +1118,13 @@ static ssize_t attr_capdata01_show(struct kobject *kobj,
+>  	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
+>  	const struct capdata01_attr *cd01_attr = kobj_attr_to_cd01_attr(kattr);
+>  	const struct tunable_attr_01 *tunable_attr = cd01_attr->tunable_attr;
+> +	struct tunable_attr_01_ctx *ctx = tunable_to_ctx(priv, tunable_attr);
+>  	enum attribute_property prop = cd01_attr->prop;
+>  	struct capdata01 capdata;
+>  	u32 attribute_id;
+>  	int value, ret;
+> 
+> -	attribute_id = tunable_attr_01_id(tunable_attr, tunable_attr->cd_mode_id);
+> +	attribute_id = tunable_attr_01_id(tunable_attr, ctx->cd_mode_id);
+> 
+>  	ret = lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdata);
+>  	if (ret)
+> @@ -1152,6 +1173,7 @@ static ssize_t attr_current_value_store(struct 
+> kobject *kobj,
+>  	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
+>  	const struct capdata01_attr *cd01_attr = 
+> kobj_attr_to_cd01_attr(kattr);
+>  	const struct tunable_attr_01 *tunable_attr = cd01_attr->tunable_attr;
+> +	struct tunable_attr_01_ctx *ctx = tunable_to_ctx(priv, tunable_attr);
+>  	struct wmi_method_args_32 args = {};
+>  	struct capdata01 capdata;
+>  	enum thermal_mode mode;
+> @@ -1165,7 +1187,7 @@ static ssize_t attr_current_value_store(struct 
+> kobject *kobj,
+>  	if (mode != LWMI_GZ_THERMAL_MODE_CUSTOM)
+>  		return -EBUSY;
+> 
+> -	args.arg0 = tunable_attr_01_id(tunable_attr, tunable_attr->cd_mode_id);
+> +	args.arg0 = tunable_attr_01_id(tunable_attr, ctx->cd_mode_id);
+> 
+>  	ret = lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata);
+>  	if (ret)
+> @@ -1178,7 +1200,7 @@ static ssize_t attr_current_value_store(struct 
+> kobject *kobj,
+>  	if (value < capdata.min_value || value > capdata.max_value)
+>  		return -EINVAL;
+> 
+> -	args.arg0 = tunable_attr_01_id(tunable_attr, tunable_attr->cv_mode_id);
+> +	args.arg0 = tunable_attr_01_id(tunable_attr, ctx->cv_mode_id);
+>  	args.arg1 = value;
+> 
+>  	ret = lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_SET,
+> @@ -1208,6 +1230,7 @@ static ssize_t attr_current_value_show(struct 
+> kobject *kobj,
+>  	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
+>  	const struct capdata01_attr *cd01_attr = 
+> kobj_attr_to_cd01_attr(kattr);
+>  	const struct tunable_attr_01 *tunable_attr = cd01_attr->tunable_attr;
+> +	struct tunable_attr_01_ctx *ctx = tunable_to_ctx(priv, tunable_attr);
+>  	struct wmi_method_args_32 args = {};
+>  	enum thermal_mode mode;
+>  	int retval;
+> @@ -1218,8 +1241,8 @@ static ssize_t attr_current_value_show(struct 
+> kobject *kobj,
+>  		return ret;
+> 
+>  	/* If "no-mode" is the supported mode, ensure we never send current mode */
+> -	if (tunable_attr->cv_mode_id == LWMI_GZ_THERMAL_MODE_NONE)
+> -		mode = tunable_attr->cv_mode_id;
+> +	if (ctx->cv_mode_id == LWMI_GZ_THERMAL_MODE_NONE)
+> +		mode = ctx->cv_mode_id;
+> 
+>  	args.arg0 = tunable_attr_01_id(tunable_attr, mode);
+> 
+> @@ -1243,21 +1266,22 @@ static ssize_t attr_current_value_show(struct 
+> kobject *kobj,
+>   * First check if the attribute has a corresponding data table under 
+> custom mode
+>   * (0xff), then under no mode (0x00). If either of those passes, check 
+> if the
+>   * supported field of the capdata struct is > 0. If it is supported, 
+> store the
+> - * successful mode in the cd_mode_id field of tunable_attr.
+> + * successful mode in the cd_mode_id field of tunable_attr_01_ctx.
+>   *
+>   * If the attribute capdata shows it is supported, attempt to 
+> determine the mode
+>   * for the current value property get/set methods using a similar 
+> pattern to the
+>   * capdata table check. If the value returned by either mode is 0 or 
+> an error,
+>   * assume that mode is not supported. Otherwise, store the successful 
+> mode in the
+> - * cv_mode_id field of tunable_attr.
+> + * cv_mode_id field of tunable_attr_01_ctx.
+>   *
+>   * If any of the above checks fail then the attribute is not fully 
+> supported.
+>   *
+>   * Return: true if capdata and set/get modes are found, otherwise 
+> false.
+>   */
+>  static bool lwmi_attr_01_is_supported(struct lwmi_om_priv *priv,
+> -				      struct tunable_attr_01 *tunable_attr)
+> +				      const struct tunable_attr_01 *tunable_attr)
 >  {
-> @@ -1289,6 +1293,9 @@ static bool lwmi_attr_01_is_supported(struct 
+> +	struct tunable_attr_01_ctx *ctx = tunable_to_ctx(priv, tunable_attr);
+>  	u8 modes[2] = { LWMI_GZ_THERMAL_MODE_CUSTOM, 
+> LWMI_GZ_THERMAL_MODE_NONE };
+>  	struct wmi_method_args_32 args = {};
+>  	bool cd_mode_found = false;
+> @@ -1265,7 +1289,7 @@ static bool lwmi_attr_01_is_supported(struct 
 > lwmi_om_priv *priv,
 >  	struct capdata01 capdata;
 >  	int retval, ret, i;
 > 
-> +	if (ctx->initialized)
-> +		return true;
-> +
->  	/* Determine cd_mode_id  */
+> -	/* Determine tunable_attr->cd_mode_id */
+> +	/* Determine cd_mode_id  */
 >  	for (i = 0; i < ARRAY_SIZE(modes); i++) {
 >  		args.arg0 = tunable_attr_01_id(tunable_attr, modes[i]);
-> @@ -1328,7 +1335,32 @@ static bool lwmi_attr_01_is_supported(struct 
-> lwmi_om_priv *priv,
->  	dev_dbg(&priv->wdev->dev, "cv_mode_id: %#010x, attribute support 
-> level: %#010x\n",
->  		args.arg0, capdata.supported);
 > 
-> -	return capdata.supported > 0;
-> +	ctx->initialized = true;
-> +	return true;
-> +}
-> +
-> +/**
-> + * lwmi_attr_01_is_visible() - Determine if the given attribute is 
-> visible.
-> + * @kobj: Pointer to the driver object.
-> + * @attr: Pointer to the attribute calling this function.
-> + * @n: @attr is the N-th attribute.
-> + *
-> + * Return: umode_t or SYSFS_GROUP_INVISIBLE.
-> + */
-> +static umode_t lwmi_attr_01_is_visible(struct kobject *kobj, const 
-> struct attribute *attr, int n)
-> +{
-> +	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
-> +
-> +	/* Only grab tunable_attr here as not all attributes are cd01_attr. */
-> +	if (n == 0) {
-> +		const struct capdata01_attr *cd01_attr = attr_to_cd01_attr(attr);
-> +		const struct tunable_attr_01 *tunable_attr = cd01_attr->tunable_attr;
-> +
-> +		if (!lwmi_attr_01_is_supported(priv, tunable_attr))
-> +			return SYSFS_GROUP_INVISIBLE;
-> +	}
-> +
-> +	return attr->mode;
->  }
-> 
->  /* Lenovo WMI Other Mode Attribute macros */
-> @@ -1377,6 +1409,7 @@ static bool lwmi_attr_01_is_supported(struct 
+> @@ -1273,7 +1297,7 @@ static bool lwmi_attr_01_is_supported(struct 
 > lwmi_om_priv *priv,
->  	static const struct attribute_group _attrname##_attr_group = {    \
->  		.name = #_attrname,                                       \
->  		.attrs_const = _attrname##_attrs,                         \
-> +		.is_visible_const = lwmi_attr_01_is_visible,              \
+>  		if (ret || !capdata.supported)
+>  			continue;
+> 
+> -		tunable_attr->cd_mode_id = modes[i];
+> +		ctx->cd_mode_id = modes[i];
+>  		cd_mode_found = true;
+>  		break;
 >  	}
+> @@ -1283,7 +1307,7 @@ static bool lwmi_attr_01_is_supported(struct 
+> lwmi_om_priv *priv,
 > 
->  /* CPU tunable attributes */
-> @@ -1427,30 +1460,30 @@ LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ppab,
->  LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_temp,
->  			      "Set the GPU thermal load limit");
+>  	dev_dbg(&priv->wdev->dev, "cd_mode_id: %#010x\n", args.arg0);
 > 
-> -static struct capdata01_attr_group cd01_attr_groups[] = {
-> -	{ &cpu_temp_attr_group, &cpu_temp },
-> -	{ &dgpu_boost_clk_attr_group, &dgpu_boost_clk },
-> -	{ &dgpu_didvid_attr_group, &dgpu_didvid },
-> -	{ &dgpu_enable_attr_group, &dgpu_enable },
-> -	{ &gpu_mode_attr_group, &gpu_mode },
-> -	{ &gpu_nv_ac_offset_attr_group, &gpu_nv_ac_offset },
-> -	{ &gpu_nv_bpl_attr_group, &gpu_nv_bpl },
-> -	{ &gpu_nv_cpu_boost_attr_group, &gpu_nv_cpu_boost },
-> -	{ &gpu_nv_ctgp_attr_group, &gpu_nv_ctgp },
-> -	{ &gpu_nv_ppab_attr_group, &gpu_nv_ppab },
-> -	{ &gpu_temp_attr_group, &gpu_temp },
-> -	{ &ppt_cpu_cl_attr_group, &ppt_cpu_cl },
-> -	{ &ppt_pl1_apu_spl_attr_group, &ppt_pl1_apu_spl },
-> -	{ &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
-> -	{ &ppt_pl1_spl_cl_attr_group, &ppt_pl1_spl_cl },
-> -	{ &ppt_pl1_tau_attr_group, &ppt_pl1_tau },
-> -	{ &ppt_pl2_sppt_attr_group, &ppt_pl2_sppt },
-> -	{ &ppt_pl2_sppt_cl_attr_group, &ppt_pl2_sppt_cl },
-> -	{ &ppt_pl3_fppt_attr_group, &ppt_pl3_fppt },
-> -	{ &ppt_pl3_fppt_cl_attr_group, &ppt_pl3_fppt_cl },
-> -	{ &ppt_pl4_ipl_attr_group, &ppt_pl4_ipl },
-> -	{ &ppt_pl4_ipl_cl_attr_group, &ppt_pl4_ipl_cl },
-> -	{},
-> +static const struct attribute_group *const cd01_attr_groups[] = {
-> +	&cpu_temp_attr_group,
-> +	&dgpu_boost_clk_attr_group,
-> +	&dgpu_didvid_attr_group,
-> +	&dgpu_enable_attr_group,
-> +	&gpu_mode_attr_group,
-> +	&gpu_nv_ac_offset_attr_group,
-> +	&gpu_nv_bpl_attr_group,
-> +	&gpu_nv_cpu_boost_attr_group,
-> +	&gpu_nv_ctgp_attr_group,
-> +	&gpu_nv_ppab_attr_group,
-> +	&gpu_temp_attr_group,
-> +	&ppt_cpu_cl_attr_group,
-> +	&ppt_pl1_apu_spl_attr_group,
-> +	&ppt_pl1_spl_attr_group,
-> +	&ppt_pl1_spl_cl_attr_group,
-> +	&ppt_pl1_tau_attr_group,
-> +	&ppt_pl2_sppt_attr_group,
-> +	&ppt_pl2_sppt_cl_attr_group,
-> +	&ppt_pl3_fppt_attr_group,
-> +	&ppt_pl3_fppt_cl_attr_group,
-> +	&ppt_pl4_ipl_attr_group,
-> +	&ppt_pl4_ipl_cl_attr_group,
-> +	NULL
->  };
+> -	/* Determine tunable_attr->cv_mode_id, returns 1 if supported */
+> +	/* Determine cv_mode_id, returns 1 if supported  */
+>  	for (i = 0; i < ARRAY_SIZE(modes); i++) {
+>  		args.arg0 = tunable_attr_01_id(tunable_attr, modes[i]);
 > 
->  /**
-> @@ -1459,7 +1492,6 @@ static struct capdata01_attr_group cd01_attr_groups[] = {
->   */
->  static void lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
->  {
-> -	unsigned int i;
->  	int err;
+> @@ -1293,7 +1317,7 @@ static bool lwmi_attr_01_is_supported(struct 
+> lwmi_om_priv *priv,
+>  		if (ret || !retval)
+>  			continue;
 > 
->  	err = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
-> @@ -1485,21 +1517,14 @@ static void lwmi_om_fw_attr_add(struct 
-> lwmi_om_priv *priv)
-> 
->  	dev_set_drvdata(priv->fw_attr_dev, priv);
-> 
-> -	for (i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
-> -		if (!lwmi_attr_01_is_supported(priv, cd01_attr_groups[i].tunable_attr))
-> -			continue;
-> +	err = sysfs_create_groups(&priv->fw_attr_kset->kobj, cd01_attr_groups);
-> +	if (err)
-> +		goto err_remove_kset;
-> 
-> -		err = sysfs_create_group(&priv->fw_attr_kset->kobj,
-> -					 cd01_attr_groups[i].attr_group);
-> -		if (err)
-> -			goto err_remove_groups;
-> -	}
->  	return;
-> 
-> -err_remove_groups:
-> -	while (i--)
-> -		sysfs_remove_group(&priv->fw_attr_kset->kobj,
-> -				   cd01_attr_groups[i].attr_group);
-> +err_remove_kset:
-> +	memset(priv->tunable_attr_ctx, 0, sizeof(priv->tunable_attr_ctx));
-> 
->  	kset_unregister(priv->fw_attr_kset);
-> 
-> @@ -1525,9 +1550,10 @@ static void lwmi_om_fw_attr_remove(struct 
-> lwmi_om_priv *priv)
->  	if (priv->ida_id < 0)
->  		return;
-> 
-> -	for (unsigned int i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++)
-> -		sysfs_remove_group(&priv->fw_attr_kset->kobj,
-> -				   cd01_attr_groups[i].attr_group);
-> +	sysfs_remove_groups(&priv->fw_attr_kset->kobj, cd01_attr_groups);
-> +
-> +	/* Don't leak ctx->initialized to the next rebind from userspace. */
-> +	memset(priv->tunable_attr_ctx, 0, sizeof(priv->tunable_attr_ctx));
-> 
->  	kset_unregister(priv->fw_attr_kset);
->  	device_unregister(priv->fw_attr_dev);
+> -		tunable_attr->cv_mode_id = modes[i];
+> +		ctx->cv_mode_id = modes[i];
+>  		cv_mode_found = true;
+>  		break;
+>  	}
 >
-Looks good to me
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> -- 
+> 2.55.0
+
+This one defeated me I'm afraid (the counter bits in particular) - I need to look at it with fresh eyes as my brain has packed up for the day.
+
 Mark
