@@ -1,60 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795038504;
-	b=wcRZOwP2PRMe3Bd2mb9ax074NUzZ0TKfm9E5PyPp77HH8Lj7LxXoNLX8KueU2wjFxqx0
-	 fEiAhDgD+dK9W4Wm8aBWmuwimf9HigJPQvvKaDZUmD4swDFEV1HEdHlEm/Pq2+TeAxjWY
-	 LUqnbUv7zvfVr59K74kBsqRWlVPvaFcn8iBCdVAvouPrNVtRO+7bOD0UJPBIxEhdikPdJ
-	 JyquMZPhu7L+xKsZkpXDHUHhmiJHw0GvH6aPwr5xnCgJbB4UU3GcjSXYRTMhwBqKf6hkt
-	 mioRAK6Bb4fIL9zTrI/NTQqWEDgs0yBYiofgevFYRKv8QDCYs8i5a8Eb8w88vZrQaRA==
+	t=1795039100;
+	b=fJQFJ2BLExMOWsh41fdqtm0mFt+8Deq9nVG6mKAzJsVy4SyyVznuxhMg7cHBlYar6ZjE
+	 osP2MD3HpjrdyZpVw7yYPACUVycZt5PG0UJaE7JL9HZUA+cSRvoj8MSIVhhDe1TO97TPm
+	 FLK+ChOR9OnacHkAKe1aL1qbxR1Is6oZD2TnSISwpXGiCTdhfsNJiqfR/0VzO/tdbgW0z
+	 U2pJiSkEdsRQIypulvzArtIUze+Bsj03e4joKhyaIoRcYa6tuyqMQ0DZXJn1QHTExiTyg
+	 n1S4WGsPmY07kNE8F3v3mBGkPM6hEaTCuJENUROg4iU2YxodiRKZIbiG8fZrW5t52SQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795038504;
-	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
-	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-QQ-SENDSIZE:
-	 Feedback-ID:X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=dMzWrLAsLsiZVdZfhpeKx6ZFMvefQZ9ZvGw+l9QAydA=;
-	b=CS4SAwDMzpNB5tZUYvSh7rNgtrt0oFU6QDcgrg2gFsHMHetr0+lObOFB+jHo9vmaNIse
-	 NitGaqhhBRLsuJUMpPDHTq/Ve0FgVxZjGkHL6kAF2ONeNaviw3ckgKWiUAgx82jd508k2
-	 PlR+mKcYdXzDCepDt6+xB8eGUCLdUcl/nJnKW5xY4hDCGaILhY2qmlUw7fOFoPtSozq9Z
-	 Z9yT9ixwzPGdd73fvJMbdrC8yBHCd2HXq3hL3Cs0Tq5b7DHTqFjWFudUk0J48TDeaynkM
-	 huAsbhqCPKHPHx5PsDbSWd6aECqoIGRbf8mw35hqNzHnjZqhNeU3NUSfwCb6xTyzvSw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795039100;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=rChBRqqSVBT9e1P75bUhE8ESuw1nkQkXwil9ljzhOmw=;
+	b=hf9cIHwlMVA8qqW9pDGAXA22HAaFabUCGt4tL7SGnrFksIHtdjd/NtWL/Ap83vOEt0iv
+	 KdOr65MMICpvi6YXHzsG6S/tQOF9X/3VyKX93PHOWV9SrIktVu2Mam4j56Ilhkqq2WmY1
+	 yGIxXNQPjtnEG7EdzPe9dYyFcV/PG+Z+1v8hHhZ7EW5h5MAsiAar458LFROg1MrvlShti
+	 2NfGo1dDo2iitTpIhGWN3ZJA1MBcUome9/YxJTmlglxuUjLrndMlpLVTnFacWMTaY3Mv1
+	 nYyB46U1LKHHRxIxyHhkfIw7dcJe9QafcY6STT3ocRSHrTU/Sn1b2SoziHM6xPfoGjg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mail.sustech.edu.cn;
-	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
-	arc=none smtp.remote-ip=54.206.16.166
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=protonmail.com;
+	spf=pass smtp.mailfrom=protonmail.com;
+	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=VkDexxKW;
+	arc=none smtp.remote-ip=185.70.43.16
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CFA606A32F;
-	Wed, 18 Nov 2026 21:48:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 31CFA606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
-	s=oemc2211; t=1795038454;
-	bh=dMzWrLAsLsiZVdZfhpeKx6ZFMvefQZ9ZvGw+l9QAydA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=FFRuPDNqhDAKWcnSL+oi/GtGkzt03qdmp9050POWl/63dVqi5lnOZA+vA8HOGUAt4
-	 t7xinhHgiWdf6VPiE8WxTfmZ/WryuI/rBIZmkIyE2tdkCkxCeKB0Ahoo/p/nQT7mOw
-	 FuS9gAf9uAs3xJiTvFoTnIH925yfp9Mlm8di6Axk=
-X-QQ-mid: zesmtpsz2t1795038449t919f6a1a
-X-QQ-Originating-IP: MmNCNnHa3Y0I+KLcy6s02vr5TZkVMZ1CP9j9ZIYH+r0=
-Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.242])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 19 Nov 2026 05:47:27 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 12249567471895196813
-From: Fuwei Xie <12313607@mail.sustech.edu.cn>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	erenozen@protonmail.com
-Subject: [RFC PATCH v2 0/2] platform/x86: huawei-wmi: native Turbo profiles with capability detection
-Date: Thu, 19 Nov 2026 00:13:09 +0800
-Message-ID: <69C3BBDEF214121E+20261118161311.17252-1-12313607@mail.sustech.edu.cn>
-X-Mailer: git-send-email 2.55.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDDA606A320;
+	Wed, 18 Nov 2026 21:58:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CCDDA606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=VkDexxKW
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1795039098; x=1795298298;
+	bh=rChBRqqSVBT9e1P75bUhE8ESuw1nkQkXwil9ljzhOmw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=VkDexxKWJMJVnleSYjAEjp9CFgAwAQjVB5mRLnm70v1muEW0lNE/GLnlQwLI/jXtt
+	 E96grVy0NAtAzaCrjxGnrdQmjy8f5SDlYausxhjYc+c1DLmgDs81qE7vn+/Fius2Od
+	 6+SoAkrCBkDYM+g1/Ajvw43YEw4pgPxSnwXRX1SLCX3AiDcEQ43RLHLKEyavcqVrmh
+	 obpvnRROVlaoaJL4E8ueOI9aRnlBEu6NAD1r6YkQZI6QcToOD8uLnKMpjwT7zyKSsu
+	 5ppzp8rT2xjlqmn0MUNfderVIMxdM1SVmfY2sz8FUrHidSGANbEf3uFFCLHItSW4vx
+	 5sqmpj1TfvCRQ==
+Date: Wed, 18 Nov 2026 21:58:14 +0000
+To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: =?utf-8?Q?Eren_=C3=96zen?= <erenozen@protonmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: huawei-wmi: Set battery charge thresholds through \SBCM
+Message-ID: <gR5eRejUrFL8r_avvKgYV4tymr9pYj-ekkfPoBHzguyCAh2rG-LABv8fUn0FjEhllk4xzDNyBE259vwg4vEwTaM6mRM0VoBKNB2lV3c5kNU=@protonmail.com>
+In-Reply-To: <20261112-huawei-wmi-charge-mode-v1-1-89974ab1e859@protonmail.com>
+References: <20261112-huawei-wmi-charge-mode-v1-1-89974ab1e859@protonmail.com>
+Feedback-ID: 19860221:user:proton
+X-Pm-Message-ID: 5ffb264db3ceedd8b221e0c3f8f69030ab840d1a
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,172 +64,29 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NcfXIs+Ms1qHhu8uuxFn4YtUVkG3T2oLRxztvHWXkkc9kMrDpSleXVyj
-	RZCcQTfwvE8Fh6F93nQSvNkLB6hwn9o251vlBeJgqomnkMDt8K9v2zkgaohYmAEaVb46OVC
-	LatAetsmGr/UkFCKyouSJwhAx2KqLPcr4UfApaX2316L/1syIlJ+NzjELdLQJoMXw4OzAeG
-	5dZyEmBKqVTlhJSPsqQ2Lr5LIjs1BdCZQJwrOTn+WeOUrQXnrWXtfNglQurBj5hCFvGzCXH
-	mHNwXe+D+VcigAzqdDgaIOLJeeUlSQMhWlwLm9/UzSBsMs79LGb9+O/VLF5khLtJHHDNdxl
-	h7ptzNWbW9ubLaFtOe0J8squBJRXTIzUkAyRPJKErhEiLMNLgAvFZ9w3e/J8DBQadL9vod4
-	ZZtWDc8Nx3Dz2YA4SFzVdVFNCOHHJ/p/hrJGMftjiR7C/c4Anyrm5uDQkGO09xLZx7D8qT0
-	swlZsV19vVRtVUWD/C0c3GzEom02Rk9vvOZVg2cD+89oPKicmXQizD2ams+KMBlKDJ0T5ia
-	Ahl58cgL/FEdd8qXcBVZKz4O85zCngaWLVSIUJSOP3PaomFmyS1SnWeZSJLdaA7G3n0xKCq
-	0obes3cT774vegn2IK/fSw5xNKc4/AiwYShOj535YotGOfdZHvcWs+Yad4nKI5X2RLWT6d5
-	1qguDNKEkXE3/fpbwtM75V6RkrfpW5Kt1yBMZphodIxVpP4jP2Z57my5UVRdfCzrYEEcP37
-	GXiDkAABDYp9BqjcOuAHZI8GBYiiOUIo82RqSRlYCQuNGmY6fNopdw1V753eLMRvvc0vt8y
-	3f4xlZL7E9eFlLk5KFRW1axCyZWwBMYnjlrx1RmHAdbIFR2+lvviygw1fZMTNhlzLCIc9m5
-	Iq3jF4dzkEi6/HygMO8gP80yTX/IvmzFaVYsuyyCrhozjezbc/tKvhLEc8JvrqwO6sZMHPQ
-	N1oxlEsEt7Vj7GjuWQqEqmJ++GhLd33heT3eMJX2tFy/UJLzAP2ReutWY7HPYq85TArhT2p
-	kL92rnLBJRMiNmoItMR/7TabhYHwg=
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hans, Ilpo, and Eren,
+Hi Hans, Ilpo,
 
-This is RFC v2. Thank you for the comments on v1.
+Gentle ping on this patch. It still  applies cleanly on the current
+for-next (9c82959c37bf); huawei-wmi.c hasn't changed since I sent it.
 
-1. What this series does
+It fixes the charge limit on the MateBook 16 (CREM-WXX9): once GNOME's
+"Preserve Battery Health" has been turned off, turning it back on
+leaves the EC in its smart-charge mode, and the battery charges past
+the end threshold.
 
-   It exposes the firmware's own Turbo mode through platform_profile, so
-   the desktop power mode control can switch it.
+Fuwei Xie's RFC v2 [1] also touches huawei_wmi_battery_get(), so the
+two patches conflict in three lines there. The fix is to keep my
+charge-mode check and Fuwei's huawei_wmi_cmd_min(..., 3) call; with
+that, the combined driver builds cleanly with W=3D1. I'm happy to rebase
+on top of whichever goes in first, or to send a v2 if anything else
+needs changing.
 
-   The driver only maps states and refreshes what it reports. It does not
-   write RAPL limits, does not force a fixed wattage, and does not add a
-   background daemon.
-
-2. What changed since v1
-
-   2.1 Capability detection instead of an allowlist.
-       v1 only worked on the exact model and BIOS I happened to own. The
-       driver now checks, inside the Huawei WMI method device, that both
-       GTUB and STUB exist and that a query returns a known state (0 or 1).
-       The probe never changes the mode. If the check fails, no profile
-       device is created and the rest of the driver keeps working as before.
-
-   2.2 Short firmware replies are accepted.
-       Some of the existing features receive short WMI packages. The
-       transaction now accepts a package that is short but still contains a
-       complete result, and requires GTUB/STUB to be ACPI methods before the
-       Turbo query is attempted.
-
-   2.3 Event handling follows Eren's observations.
-       Eren reported firmware that returns status zero while refusing a
-       request, that turns Turbo off on unplug without sending 0x2a0, and
-       that sends two 0x2a1 events for one set. The read-back after a set,
-       the power-supply notifier and the deferred refresh already cover all
-       three cases.
-
-3. What the two patches do
-
-   Patch 1 keeps the two-call WMI handshake under the driver mutex, frees
-   each reply before a retry, checks the payload shape and rejects replies
-   that are too short to be complete.
-
-   Patch 2 adds the Turbo get/set helpers, registers platform_profile with
-   balanced and performance, and refreshes the reported state on WMI
-   events, power-supply changes and resume.
-
-4. What I tested
-
-   4.1 Switching, on two systems.
-       Ubuntu 26.04 (7.0.0-43) and Ubuntu 26.10 (7.3.0-10), NbF-XX BIOS
-       3.07, Intel i5-1240P. The earlier runs used MOK-signed modules with
-       Secure Boot enabled. The final v2 revision was re-tested on 26.10
-       with Secure Boot disabled, after the module's MOK signature had been
-       verified.
-
-       On both systems: native switching, all three desktop modes, Fn+P in
-       both directions, unplug and replug, battery power-saver, and one
-       suspend/resume cycle passed. Each run restored the original module,
-       the daemon and the original mode.
-
-   4.2 Load, three desktop modes, 60 seconds each.
-       Last-window package power:
-
-         Ubuntu 26.04: 10.21 / 20.21 / 28.02 W
-         Ubuntu 26.10:  9.94 / 19.97 / 25.20 W
-         (power-saver / balanced / performance)
-
-       Power-saver produced only 8 and 9 late samples, below my own
-       10-sample bar, so those two numbers are descriptive only. This
-       machine exposes no fan RPM sensor, so fan behaviour is not measured.
-
-   4.3 The 25.20 W figure depends on thermald, not on this driver.
-       Ubuntu's thermald 2.5.12-1 holds PL1 at a ceiling the firmware
-       declares. With thermald_next (8eeddcff786b, which includes
-       f9411e884698 "cdev_rapl: put PL1 at the PL1MAX ceiling when the
-       device is not throttling") the same mode returned about 28 W on the
-       same laptop. So the ceiling I measure is set outside this driver.
-       That fix is currently in the thermald_next development branch only;
-       it is not in a released thermald package yet, so reproducing the
-       28 W result currently needs that branch built locally.
-
-   4.4 Build and host tests.
-       Both commits build as modules with W=1 against Ubuntu 7.0.0-43 and
-       7.3.0-10 headers. 47 host-side cases passed with ASan and UBSan,
-       covering missing methods, wrong ACPI object types, short replies,
-       retries, silent refusal, and read-only probing.
-
-5. What I did not test
-
-   - any other model, BIOS version or firmware revision
-   - machines without GTUB/STUB; the series should leave those untouched,
-     but I could not verify it
-   - long runs, repeated suspend cycles, or concurrent stress
-   - fan RPM
-
-6. Separate change: PPD state cache
-
-   With only balanced and performance exposed by the firmware,
-   power-profiles-daemon 0.30 maps power-saver to balanced but remembers
-   the desktop mode that was asked for. A later balanced notification can
-   then reset the desktop selection.
-
-   I reproduced this in isolated PPD integration tests without the Huawei
-   module, and caching the mapped platform mode fixes it. All 129
-   integration tests passed on both systems. That change belongs to PPD
-   and is not part of these kernel patches. Power-saver used firmware
-   balanced and CPU EPP power in the hardware tests.
-
-7. About Eren's test
-
-   Eren reported that v1 plus a CREM-WXX9 / BIOS 2.32 DMI entry works on
-   his Ryzen 7 5800H MateBook 16, with tuned-ppd, Fn+P and AC transitions.
-   That report is why I moved from an allowlist to capability detection.
-
-   That result is not carried into v2 as a Tested-by, because the probe
-   changed. A retest of this version on CREM-WXX9 would be welcome.
-
-8. Questions
-
-   1. Is a capability gate on GTUB/STUB acceptable, or would you prefer a
-      DMI quirk list in addition?
-   2. Should 0x2a6 stay in the refresh path, even though its meaning is
-      only known on one firmware? I do not assign it a general meaning.
-   3. Would you like these two patches split differently, for example the
-      transport fix sent on its own first?
-
-9. AI assistance
-
-   OpenAI Codex helped with firmware analysis, the code changes, test
-   tooling and wording, in a debugging session that I directed. I set the
-   scope and ran the hardware tests; the observations above are mine.
+[1] https://lore.kernel.org/all/69C3BBDEF214121E+20261118161311.17252-1-123=
+13607@mail.sustech.edu.cn/
 
 Thanks,
-Fuwei
-
-Fuwei Xie (2):
-  platform/x86: huawei-wmi: serialize WMI retries and validate responses
-  platform/x86: huawei-wmi: expose native Turbo mode as platform_profile
-
- drivers/platform/x86/Kconfig      |   1 +
- drivers/platform/x86/huawei-wmi.c | 328 ++++++++++++++++++++++++++++++--------
- 2 files changed, 261 insertions(+), 68 deletions(-)
-
-
-base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
--- 
-2.53.0
+Eren
 
