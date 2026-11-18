@@ -1,78 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795032243;
-	b=b10yIwBwNfh4czNqNaJssxM/54yfEkxUPHSYsbxoOM4RzcDo0v0VXsr23YT6l/fGnjZR
-	 p/9Lz50gygV+j8atqVpZBqdm3VmierXgbw1FlZKA9b16erSAL8ujREE1CiKjFbaxsExpw
-	 e8UfFPbzJ/VOw6lldPybRu3dCQM/NiVbEWP6HMNFCfSL2wyQmOphWOoHiOZDEBuQDZ7iH
-	 YlHhuigaombV0oYBp01zvAg1fu44rEaY3TmaGS6FYK8DBLvX3sdYbSLTISGS0flQ8kOZa
-	 EUYCJ11mI0vqUnSlH9bIx88qwwvJWY1DSuxF4kGhfu6AfTdx6mMI57vglKEmhX5NtuA==
+	t=1795034745;
+	b=ODfKVOMQOx/iRwz4dyihMbByFFUZdMqYc+tMHMDgjGWZISQn+vd9MDQDLSgfuXxdwDnf
+	 zScS4UlcQCnHkCFfPBZ6+fQyEfxxAWsbhiB0A8JOQFjTDsoXV/FjYoYZ59DmVI/USJbhd
+	 DeVtSk2gzN/ltFgsO1F0eQe/nXAM/ssc6iOggXWbC1z1iNpnO16+2Bd4HTDpsIzrJRaJ5
+	 iIR9McLGKGA4bdER1RtbIjKvcqY/vwQMb6cTwPiAad9wSj0vZLtnzlRyTaZZU9sXplQuj
+	 1MtdDN5IUZcPtzNL1X/Qx5x9ABG7DkNxQ4+j04Wateq8Uw5BCIfzPkP/vXWwFc0zeLA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795032243;
-	h=Received:DKIM-Signature:Received:From:To:Subject:Date:
-	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
-	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
-	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
-	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
-	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
-	 Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
-	bh=RbbaZNlZFzkMihVmry6njIzcuh8gZkdOrZUAodIhjSk=;
-	b=DFmmoIibHStNde6DGKULdWecc+5pXxgW+gWVxF4JvXeY2FETaL881CM+AQk2ErFuJMn7
-	 5fNwlruiKkndXKJZo921eVqx/0IohTwubLvfsooRP+jKDu6yrvMvrhJuTckYu49H+rf20
-	 q6OA2to/HyJ09LoTx8EfXw/KiLIvrJItFkdfwYRf54TD6BlvKozVG7Z/DFSJvc5mRUJ7i
-	 oH/s6SediGFxtgDJJxlgANkmQ6xvj/CrEh54ldH8Tf5ndJVQHfJp5IbEOMiwyxs/728QN
-	 K4CIhbuDKxXyfYUpqpXvPxuMNiHRhTrpJpAD9sCL1tCo7lVrT3fFTKEwGt80Ty4uS6A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795034745;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=QbybTSOHowhM6+drpSBiOiKPoSPcQxenEWxGQaVFFZ4=;
+	b=UrO8vsL7zJeIOZsg/Gr6jkaxYZS5cr/Hdbc7kn/ODtA5eEcYdU+8Xc/2wOiB61raTv2T
+	 AJQ8imIhmlsFKIiCOmavreVtxa5qYmEC4TOvlwwx88P0S/FMnmiQHruYj+qgHa5B5VAlN
+	 ogQBFAUK8Aegd+lDK8nqyyz57fL2PbHd058XyHp3T8Qe0dpRmeQn0S7PkNDw8lzbW2ANN
+	 4Ne7qekdzHFG9OqWzunCPKHl2F8Zrx5K6zWtvREQN1XxGLvGO+pW5HdzXJewxpf6Ug5ox
+	 9y3KyAVpvHK3pexvfPOEOyCAiuI95tOstXdkTL88YX3Cq7yF8q+FQZRHBuMbEPBXuVQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lPWTrWiG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PURilTs9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3DA606A32F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 20:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8811C606A320;
+	Wed, 18 Nov 2026 20:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lPWTrWiG
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DD56C1F000C5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Nov 2026 20:04:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PURilTs9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304A21F000C4;
+	Wed, 18 Nov 2026 20:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795032242;
-	bh=RbbaZNlZFzkMihVmry6njIzcuh8gZkdOrZUAodIhjSk=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=lPWTrWiGZYTo2KgwrHk14VayQ+p4mlWp7ZHb5SJcf0uUUsp6Wge2zbJbEuvxbHHTN
-	 Y5mFmB17jExayDD39D6BNZOfHthe8I/gqb3UAf5AUzdCm/SYKOFbS/O/OkWdjMcSMZ
-	 eP88bXKfwFkevCcq44TBk4eIaq/2rJm7AjB2KCOCLaacEt0v+NIHiXvoKfNf90W9lW
-	 HWJ8+cO0BL+kFK/f0anow+mw7nMMz+MnfWIc7aSFbNG2q6h5QHjAfFWU1iZaiaQB3M
-	 TvwUTKrJS22H6t83RfmnYfwKlfu7gIuh56eMEm34H/HLQ5mDfDXEDTBJc7b4qL/97C
-	 /ZXSITEYxK9Jw==
-Received: by aws-us-west-2-korg-bugzilla-alma10-1.codeaurora.org (Postfix, from userid 48)
-	id D0D36240040D; Wed, 18 Nov 2026 20:04:02 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
-Date: Wed, 18 Nov 2026 20:04:02 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jvallep@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-222161-215701-PLp5i9BHCq@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
-References: <bug-222161-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20260515; t=1795034745;
+	bh=QbybTSOHowhM6+drpSBiOiKPoSPcQxenEWxGQaVFFZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=PURilTs9qUY+9JKfys+WdrOIjfVfRogk4QEubI+D81/MQKsccgM7jVVlfZsljbGYa
+	 ZkwHn0B8q6p44BRkLNw4mlvCDowwG4KeNy5mcPrvC6ehWJgfN9WdJJ7HRV3aSiJtrf
+	 d5ztM7s4P7jpCxwPyfjxKEHgI83QxykAMGlet1HfEfRN6ZG4CuOdP6joKh5oIcLXI4
+	 kZDfKPqTaaNgtMn5Uxzl5Povk4ILpY7L71tvnAuZHyknnpWPL2B+sacYPgWShRGfKQ
+	 xksywGO/XI4IAEqjjMRdzWDGJJ/ATw3PlbNen9Hs6wjYN9TMtMDukYn+o3eUInH0kD
+	 fLFqyC8PW+Kmw==
+Received: by venus (Postfix, from userid 1000)
+	id 1A8FC18044A; Wed, 18 Nov 2026 21:45:43 +0100 (CET)
+Date: Wed, 18 Nov 2026 21:45:43 +0100
+From: Sebastian Reichel <sre@kernel.org>
+To: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Cc: Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] platform: arm64: lenovo-thinkpad-t14s: Keep the
+ interrupt off while suspended
+Message-ID: <av4OAxLNIIXWBz9F@venus>
+References: <20261118-platform-arm64-t14s-ec-irq-suspended-v1-1-635eb3e7325e@oss.qualcomm.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,41 +60,135 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="b5izatejbdld364i"
+Content-Disposition: inline
+In-Reply-To: <20261118-platform-arm64-t14s-ec-irq-suspended-v1-1-635eb3e7325e@oss.qualcomm.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
 
-jvallep@gmail.com (jvallep@gmail.com) changed:
+--b5izatejbdld364i
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] platform: arm64: lenovo-thinkpad-t14s: Keep the
+ interrupt off while suspended
+MIME-Version: 1.0
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jvallep@gmail.com
+Hi,
 
---- Comment #19 from jvallep@gmail.com (jvallep@gmail.com) ---
-I can confirm this issue on an LG Gram 16Z90TL-G.AU88B running Fedora 45.
+On Wed, Nov 18, 2026 at 05:39:25PM +0200, Abel Vesa wrote:
+> The interrupt handler reads the event from the EC over I2C. Nothing
+> keeps it from running while the system is suspending or resuming, when
+> the I2C controller cannot be used.
+>=20
+> On resume the interrupts are enabled again after the noirq phase, while
+> runtime PM of the I2C controller stays disabled until its early resume.
+> An EC interrupt that is pending by then fails, and so does every further
+> one until the controller is back. On the ThinkPad T14s Gen 7 that showed
+> up as more than a thousand of these in a few milliseconds when resuming
+> from hibernation:
+>=20
+>   geni_i2c a84000.i2c: error turning SE resources:-13
+>   thinkpad-t14s-ec 7-0028: Failed to read event
+>=20
+> Disable the interrupt when suspending and enable it at the end of
+> resume, once the EC can be talked to. An event that arrives in between
+> is handled then.
+>=20
+> Fixes: 60b7ab6ce030 ("platform: arm64: thinkpad-t14s-ec: new driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+> ---
+> The EC interrupt handler talks to the EC over I2C, and nothing stops it
+> from running while the I2C controller is not usable during a system
+> sleep transition.
+>=20
+> This was found on the ThinkPad T14s Gen 7 while getting hibernation to
+> work there. The support for the EC of that machine is not upstream yet,
+> but the interrupt handler and the suspend and resume callbacks are the
+> ones the X1E based ThinkPad T14s uses.
+>=20
+> Resuming from hibernation failed the read of the EC event more than a
+> thousand times in a few milliseconds there. That many, because the
+> interrupt was level triggered in the GIC at that point, as the SPI
+> configuration is not restored after hibernation [1]. With that fixed,
+> the handler still runs once before the I2C controller is back.
+>=20
+> With this patch there are no failed reads on the ThinkPad T14s Gen 7
+> when resuming from hibernation. It was not tested on the X1E based
+> ThinkPad T14s.
+>=20
+> [1] https://lore.kernel.org/r/20261024144720.113165-2-zhuling2709@phytium=
+=2Ecom.cn
+>=20
+> Prepared with help from an LLM-based assistant.
+> ---
 
-Test results:
+Reviewed-by: Sebastian Reichel <sre@kernel.org>
 
-Kernel 7.2.15-300.fc45: the integrated keyboard Super key works correctly.
+Greetings,
 
-Kernel 7.3.3-300.fc45: the Super key does not work.
+-- Sebastian
 
-Kernel 7.3.4-300.fc45: the issue is still present with the original lg_lapt=
-op
-module.
+>  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/plat=
+form/arm64/lenovo-thinkpad-t14s.c
+> index 873747838a4f..a291daba0577 100644
+> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> @@ -616,6 +616,12 @@ static int t14s_ec_suspend(struct device *dev)
+>  {
+>  	struct t14s_ec *ec =3D dev_get_drvdata(dev);
+> =20
+> +	/*
+> +	 * The handler needs the I2C controller, which is not available
+> +	 * again until this device is resumed.
+> +	 */
+> +	disable_irq(to_i2c_client(dev)->irq);
+> +
+>  	led_classdev_suspend(&ec->kbd_backlight);
+> =20
+>  	t14s_ec_write_sequence(ec, T14S_EC_REG_MODERN_STANDBY,
+> @@ -633,6 +639,8 @@ static int t14s_ec_resume(struct device *dev)
+> =20
+>  	led_classdev_resume(&ec->kbd_backlight);
+> =20
+> +	enable_irq(to_i2c_client(dev)->irq);
+> +
+>  	return 0;
+>  }
+> =20
+>=20
+> ---
+> base-commit: 749a4de370409464cf8501ec5b2451df45c84eb4
+> change-id: 20261118-platform-arm64-t14s-ec-irq-suspended-5fd6892d7e26
+>=20
+> Best regards,
+> -- =20
+>=20
+> Abel
+>=20
 
-I applied Armin Wolf's modified patch, adding the two KE_IGNORE entries for=
- WMI
-events 0x30020000 and 0x30020001, mapped to KEY_LEFTMETA.
+--b5izatejbdld364i
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The patched lg_laptop module compiled successfully against
-kernel-devel-7.3.4-300.fc45 and fixed the issue.
+-----BEGIN PGP SIGNATURE-----
 
-I installed the patched module under
-/lib/modules/7.3.4-300.fc45.x86_64/updates/ and confirmed that the Super key
-works correctly, including after reboot.
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmr+DnMACgkQ2O7X88g7
++ppOkA//aIBrZEoYRI0N4spyPKuZ3/aU2T1SuY5JsTJGd226Rrbd1vh92h0VqVfy
+1Cy0MOvr4GPrDewHV/VU/TPkuejillNUFOrTnNqX/Kk+3fPmIJS8+9RMhIfrqNWv
+JRxAkBpsR+qLwwzaelymVV25S5BleqPGecs6PHNdgIz0WqwFdAeRigHI0CyzFnLM
+IsEpkuS4RZMezpyi3Qbzake02CLP4CgZR9KQGVbLjxx2IVT7HYiFURmbI4v2bQXV
+VS32/KkPNqHWTulE1H3c+2Ce6rHkZhrvC6EN7ZF+MQNpjyO1Yc/7OOUs96NkzTW6
+Vn+N/+8LJMsJ4TuBAT4y9u4ZiAWk7Os9mBREA37sVRoZu8wqHPd/dbgmp+MknF1g
+IcRXQrTjJujfocCiCzhNbjEgDQDDX5bIYvkkfXN3dAy9srlZU91b+vvaB9Gx/tSA
+S/RNj7S4ndG018n7WgivrSKoq+LGApxg5K1biSMiNaonp1wFN7/5lMpKGS+q2mad
+4z1OVakGRmIWXPO4aJN8WVw9cv8+y7Z0oXEQYXQ0aZ6A9BJpmEkEIMXJB5CUuoL3
+B6zwIXE74oNVL8MM/09kmufa1rxp+ohCwwVEkIUXYiGEI+jJE5HhZTve3Oj7BfIl
+XV/tg8Kf1YnjSUoE2jbhPBq/gjHIF0Vxy/SYLRZs1Qr1GIVnM9Y=
+=IZ3w
+-----END PGP SIGNATURE-----
 
-Hardware: LG Electronics 16Z90TL-G.AU88B.
-
---=20
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--b5izatejbdld364i--
