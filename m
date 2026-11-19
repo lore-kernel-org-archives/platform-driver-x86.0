@@ -1,78 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795104191;
-	b=lD9D97uIdylKfgK1VWDW2a8BYRZvW7j+SnJxDoSZGCmByMG2uf2YfMoSEqErUe8v827i
-	 6YZWafttOcHlNQZxc86LrWJwRuEO9+VIJgm8XKrtBtUIrXghGWsJnNm46FgVNYXbeiRxD
-	 /F9CxO6nDj+41Kz4vuAwmHsMTpG79KzMKqqG6dixCu73gGuZpP6djTzKxHp1JrSX6WTHf
-	 rPTPRnjS6NY3Bpc509esL8rE2lOYJ3JlL6MEkAHCFVup64WP2JuwILzJkbxyWFuo/eS6l
-	 GOtd1DzcPsmMgoG87TiDT43rq4OmIPnGLmJySph8LBh3iogGQJWiKH2X6JhAXB8JcdA==
+	t=1795104192;
+	b=y2F9NKtXW7umAl9+5eMwpz1TLi0g1vkjdnve8qJrJpeU19OPiMouIvKM3Wh78PuJO4Ov
+	 fJvpG9CKk1SgmCnBmQy+rWmI1RpAxtbSvUOdwf0C6fu38rKt7vNwjU2MgqlsuI+9mDD+W
+	 bn1a6Mdk/MCQ7T6bpxK+ocYSrEk4wY85YHeCZsDMjgCelZb8sHs54GFUBKH0sD3YstrKd
+	 kJ0T610eGA0j6msGWy1q0MPZvV956dEAHiZZ8xQURx62RuTbV/cC5KuDNyqnPQX4HQ+Fr
+	 3HES+D5/uKupjBxoCVCKE0mMdDWw9KYSQNXrnT7tUV6TMLCsSv5ycDnULTSPetFfx5w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795104191;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795104192;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
-	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=ZEuZOC5eyWUu0W/0P4LA1qekTK2eHdfizQnodyDXm80=;
-	b=Uzk7CCYsrLSmeSuLTwkVQQ6ZCSsBhXJS7dJT1X+KlEPuC7sN6tQNx+M14DvYjkJlyWbC
-	 FdTZ5qNP9hmhdREyWLcqP7+tfHIFxXe0lepwBp7Kf/bZy1Jwe/pg7pQG0DMg6KaBAmpMI
-	 Lo3rPp9QKj1BK4sRWT56QhQFE9c2AnEPmZyH8ikxPy5HUFyTRZHn1xdNILX/+oRVSdFAB
-	 pJwGF0kM2PdLL/03xdTe51Zeh5iBdFgQjNH4J7tCW//+HAIeCB5WfiY4BjYWTssWNfxK2
-	 VwkKW41/4yjnO/dE834X84XfI+jjB+w9LNG/j8OPNZKcvAMrYeSnuwgMOzCIA6fnJOA==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:In-Reply-To:
+	 References:Subject:Message-Id:Date:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Mailer;
+	bh=hhOOBMXr5wtj46XQR4Zg1xmlLi9F4CT0RmWwx/avMSs=;
+	b=47uFTgwdS2d1ES9pQJsORqIZczLPR6LOF0/YHKuOrV6mato1NjzWbb8gT4MQ4bOtuup/
+	 8JDBTWR35mBHXv9TKpNOccpzyhjD3dydC2RWC8Emr7LJkQ6aJyl3DdMG2Qs4rbc3Aw39G
+	 odUanQcnUCdfOn03TLNnjDv7xGLIYXGybCcFx8Oq+TIZUHXvMJKhHSNmGd8YXbiwkSXan
+	 J8ZcNzZ5EQ/pVNBY2I3LVs7htTDitxnbjvCb++S2mHKcrc/4sWpD5H4Nyn5RLEEd4my37
+	 AgFm1KFPMpUuzmz5vnR/0g128iBuDTylWcBhevG1ErCqL3eR0CWeE5a7CW3gN5DJPdQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="j9jUD/yq";
-	arc=none smtp.remote-ip=198.175.65.10
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=m7sSYhfc;
+	arc=none smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA70C606A335;
-	Thu, 19 Nov 2026 16:03:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA70C606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92B560A260B;
+	Thu, 19 Nov 2026 16:03:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C92B560A260B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=j9jUD/yq
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=m7sSYhfc
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795104191; x=1826640191;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=aKIYVp0HF7RoYlDQ9Z1YxNxs6aSGy49KFvQMa1mVgXY=;
-  b=j9jUD/yqL9hGbCORWvnjf2cpru3Ti6Pwt2xsH310xdPrwsDVr3oXlgfC
-   qHKM6RewHyzawr+jzQ5QQgKRf2FfATnr8v7/cXrmCv9JpFMyIxEMpp+Cm
-   A0NmDFkgEcemETy+ZxQWixmkVC8sUeNcUDdnxNP0UanMHb7meAM7kj415
-   bo81Yr2u1fkJ64T2PId5lOwvPalNq5kITf3KmyWaXYoHwUMTy6aY7Cw/6
-   l4WiUfu0sQ0ppzmOluHHWvOzymS7kas9kEHqACIt5SHeAMS5uC9w7PdGJ
-   TDQYp49om/EA8wCsQlznGXjP15xaDYkUUK53nbIMSN0qxt3ni06Hb4l8F
-   Q==;
-X-CSE-ConnectionGUID: N8TlsAObRyCdKqsafcqJeA==
-X-CSE-MsgGUID: Vu5DuIyHSsmZjhnpw6dxKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3874211"
+  t=1795104192; x=1826640192;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=RSikVu+3rSFNr00EL4rtFc6YziDlGRNiW6MKNpXQk7w=;
+  b=m7sSYhfcg/yB5lkSUP00kE1OstU1Q3cU8mj2pEoap6TqBV7ekgnjIqLC
+   NXtC86cv8Knijhpcd/7lXHpRh1Lv4bKwRKgFUTVgXQlO6OB/QHZf84uIN
+   SBSYEU1Ys3fQDWa7WoGk53aHkgseyZkE/KnrDfxEuhy5yJSwDWKeXy8tr
+   e0K8+4ZeSRnv2WE2guS4bwLR3d7rYVBsKBxN47FpluQdP3U6f5XWDzQ/i
+   u2lJpBW6UTJDk570NeXRVYZdmz4YQosqnWRsTLVtAgRA9lGAJ9JRKjFik
+   pFiUK08U35+DZEXUMcAfT2CDDrJOJj1Zq9JoRvMreeTuBWtX5SsPYPRDt
+   A==;
+X-CSE-ConnectionGUID: Rj4vlikeQoegCtj+Zun72Q==
+X-CSE-MsgGUID: cL4fheZuS66uQQPRvXKsVA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3951262"
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="3874211"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:11 -0800
-X-CSE-ConnectionGUID: 9kmDwDmGQ+OkVjFS0nO1ZQ==
-X-CSE-MsgGUID: D1knF3rKQG2Ihtsiw3NJfA==
+   d="scan'208";a="3951262"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:03 -0800
+X-CSE-ConnectionGUID: 5Set2TcLT3qmdltsVBv73w==
+X-CSE-MsgGUID: CtmhTDOCSAO1LQMSmttYTw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="10371027"
+   d="scan'208";a="10459492"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:07 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:59 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Hans de Goede <hansg@kernel.org>, Awal Awal <awal.nova@gmail.com>
-Cc: Lizhi Hou <lizhi.hou@amd.com>, Mario Limonciello <superm1@kernel.org>, 
+To: prasanth.ksr@dell.com, hansg@kernel.org, Dell.Client.Kernel@dell.com, 
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20261023-amd-pmf-npu-leak-v1-1-798e7161bfba@gmail.com>
-References: <20261023-amd-pmf-npu-leak-v1-1-798e7161bfba@gmail.com>
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix memory leak in NPU metrics
- query
-Message-Id: <179510418102.21358.12243474789880136526.b4-ty@b4>
-Date: Thu, 19 Nov 2026 18:03:01 +0200
+ Ava <ava@oven.ninja>
+In-Reply-To: <20261024103604.319624-1-ava@oven.ninja>
+References: <20261024103604.319624-1-ava@oven.ninja>
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: replace deprecated
+ strlcpy with strscpy
+Message-Id: <179510417381.21358.12284492079106710215.b4-ty@b4>
+Date: Thu, 19 Nov 2026 18:02:53 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -86,20 +84,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Fri, 23 Oct 2026 10:08:45 +0200, Awal Awal wrote:
+On Sat, 24 Oct 2026 21:36:03 +1100, Ava wrote:
 
-> amd_pmf_get_smu_metrics() calls amd_pmf_set_dram_addr() with
-> alloc_buffer set to true on every NPU metrics request. Each call
-> devm_kzalloc()s a new metrics table buffer and overwrites dev->buf with
-> it. The previous buffer stays on the devres list and is only released
-> when the device is unbound, so every request leaks one buffer.
+> The kernel has deprecated the use of strlcpy wrappers in favor of
+> the safer strscpy variants. Replace the internal driver helper
+> function strlcpy_attr() with strscpy_attr() across all
+> dell-wmi-sysman attribute parser files.
 > 
-> amdxdna calls amd_pmf_get_npu_data() for its sensor query, so any
-> userspace monitor that polls NPU utilisation through
-> DRM_IOCTL_AMDXDNA_GET_INFO leaks memory for as long as it runs. On a
-> Ryzen AI 9 365 (family 1Ah model 20h) laptop with a system monitor
-> polling about 1.4 times per second, the kmalloc-512 cache grew to 5.8
-> million objects (2.8 GiB) over 38 days of uptime.
+> Ensure explicit destination buffer sizes are passed using sizeof()
+> to prevent potential out-of-bounds array writes during ACPI object
+> evaluations.
 > 
 > [...]
 
@@ -114,8 +108,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/amd/pmf: Fix memory leak in NPU metrics query
-      commit: 3f1be6b854af29f030e3199d85e79d28cfe766a6
+[1/1] platform/x86: dell-wmi-sysman: replace deprecated strlcpy with strscpy
+      commit: a2b19337b0da259ba22226440eaa56518ae0571d
 
 --
  i.
