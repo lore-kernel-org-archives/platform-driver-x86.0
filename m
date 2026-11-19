@@ -1,74 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795098440;
-	b=I5AoyXIAEsvExugt63DLFD17zIEP+OXcpsRRx+nvQTdYfV2kRgBlfiSi/269rOwA0hhl
-	 OcBQ8Zwwfyi23lRyYkH/X7gpIYEoOog0XBW+iochVJgJqFBmc8rZOBQvmSMHanfCr59wg
-	 qUbxGGJBuji4Z428rNQXtxBscKO6En+YDSoCVzqnQct4Pvk4Yy1C6fjyBlZ2/kSz72vqd
-	 tfS7UHUZJzn+Lr+4aAxMEmp7c188wbeGoBBGRbw9axmQ9JdYBXaYZPbB7RFT41NwbVcmx
-	 qaamTAk92bIky3U3LWajnhGvD6SrjxceCmwstO9TrdroQEaOGd3689+3TYczx/Cyymg==
+	t=1795098620;
+	b=YmResd1cQo4renfjbIyW+frdAJvgHpoGtN7/JnP1pt0sos/OoJpFfdd31pxGWhvDHc2Q
+	 rXAtTIPFekqPKkDvbAo/bXx+DtyoNOz817j757pt/cDN0UPaPEo3Hx7ei96RXZsQbDRcU
+	 8ZJFjZZX6K/aiFqqNXgo5z0hvb6FOXhVvg/SnXRDWNpB5GM1+MxrplApebigkXUF4j6/i
+	 qxZkXDoujMtyhDneOEYjHAfZPSSwmnUAjeu+WAh6tTB/3PFeVceSRIRNBxzAtUZwdQHck
+	 iiptDX8YlctP4B+Lx1GPQd0xD7lNpX8m7xJLcVhSk/ZxXUI8YuBQXcE51+KIqQ26dcg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795098440;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795098620;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
 	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=yeZaOOJQmxIdsD84RVLJrAVDq+lcoQB9tL9dTj0IG0U=;
-	b=GQBsbEdR65QWU9U29TtXXoF3i1q7S6XSUSGgqMahKQLKFRp8k9n+VPeiZOKcwZwkoy93
-	 9cNryXVb1ko5OqAa9omr6YioiyA0dlbZcFdhyyor9E/y0E/MRXHlj1Ww8O04ZyoiaPeOr
-	 PBYCwvCKwKXy+A4nB5pNgKDsvgsolY2ZKlVS4VWwQTb5CfD8Ig/0mc6oGoMzFpdy7grNZ
-	 NCse2Mf51au5Cr6ffVG3dH9aQ72PbsRaSqOHpfHnQxAkINaUBxICwTV4blIUySJGhJ4M9
-	 jjkpSSaA7D0npMxEKFlFNT03WlIpciwmCuPKn8w3nBQOEhzpaP31BkNd51hcoOAhZTA==
+	bh=gXUh9NgRXsUvVhlhdHrD3K+LvJHIeDDuq0BHIzoUtIE=;
+	b=TSgRMjcCN4HqzHlVOtRP7QNwzNPeuCtIlGQhESybyhOO5B5xGhoOWf5rascGxwzkDoX8
+	 Sr22f1NDp1xT7SNnvpMKWm6+D34BY+O7spCdYZyslV3eE++vqMnS0VFZc5Sd9h1Qa4/+b
+	 nt/AG5/VlW/clz/qIu4jNF0ASOa5LOYZwU3KhIfdowD0Kc1JTtymmGiTq3HDELiBL41Fb
+	 yx0vuPeu3kqnGm1k2o0QpYTroo/Xtg8hHcII3Vo6C+P1TWWGCf6YjtevneOQ37kTYdTdN
+	 9wLHrEfPGCqkXyLZ3wbQpAvL7Iv+1v+tKikYZRPM5sPy4q5vrsVnsBBHc2dOegvUPKg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=rong.moe;
 	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=digZSmql;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
-Received: from sender6-pp-f112.zoho.com (sender6-pp-f112.zoho.com [165.173.180.112])
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=pTyR+c5O;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBA4606A320;
-	Thu, 19 Nov 2026 14:27:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DBA4606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14685606A324
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 14:30:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14685606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=digZSmql
-ARC-Seal: i=1; a=rsa-sha256; t=1795098413; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=pTyR+c5O
+ARC-Seal: i=1; a=rsa-sha256; t=1795098608; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Daq+THbxZb077fjeH+m9cljFpBxsmOQxeJmFZv/Il/aJcd6krl6BBDkwKTb7cw77SNSuy5VOGr6q1Olnoma40hPeFS13HBWunC3fxoCtZ5pcCV5xtFKArXV2DKd9S/e3yqdHp9cF/pyQ3dyrq01eSN1GNeuIb9mtm53EmMVenXg=
+	b=fxee2Ntb3h9u6LSUHECtepHud0TeN+tUu7S+xQbuccwk2T2UoYtHVeZ1dNyrYC/UDUzzoIt7iNHj1Q8Hg834y342lwPfFsMJUH7HMZbBZhAyY3m46bxB6/gO0/QF4O2lgCUiS7t0T/N7pW9TFziyFdoM352KhtmVoe7uEALCeHM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795098413; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yeZaOOJQmxIdsD84RVLJrAVDq+lcoQB9tL9dTj0IG0U=; 
-	b=E7VqDoqUkc4Zy2ZilY8NPvnTpBrQIlH8DSRwwNz8Nv3kzf1zxoKo7iUJEx+95S0vJ2cl63YTUrYnvkx4x/palfLVNbChDgCr93BOogQVwflBS2sroEws0UeuZDslzs7iYF8qdVRgOTFt394FfsY2pz+NKZwBlToUxBqj7o9y0jY=
+	t=1795098608; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=gXUh9NgRXsUvVhlhdHrD3K+LvJHIeDDuq0BHIzoUtIE=; 
+	b=SsG2tDoC3epE4IKBXqwWV7rIUboYL6QIZL9jVn2WWr0E+KT55vq+82FBNEgKUsBJJWgpYp1QJ4AoFzUSlLwyjkftX0zKjjgidvZfE4BvJBOU5tAkGRqBM3qA4XmWpG84HhzOx/RIQqfWR1kUBk9shT14bBJLUh0rBkcAM2fWi6w=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=digZSmqlcdfB19lz34NtCtjnRYz7rHa/+yXX/eqC/0D/rhQSED1yP4Zc9Em+BRI5YAzVJibOdHzihOWSX/rjfxqKSponX+Jk+Q+Gl69LNQbScp+7GJMBdKgDgLmZK5R3UReOpCfwJPX6lng2CsWBlvuhXTxcyxaAvKmtFXvHOJ4i3qYDpu1LX2Hg+BHhdoLT0DZ1HKmP5c3RkbR9rKbdeZDEHD5gl3sZKDCsc5zz6Zlbv2spqdt4b0dw1OoNPfkQ4573QOByhx3nf49KuSwlq52nveaj0+qI+SotCIQz4npI+FpsdaSzoBZAhDjdh4Pi0w3OAwW4Sd5NXgx7+124eQ==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=yeZaOOJQmxIdsD84RVLJrAVDq+lcoQB9tL9dTj0IG0U=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795098411700405.2739567587512;
-	Thu, 19 Nov 2026 06:26:51 -0800 (PST)
-Message-ID: <be1dc7e529d82725e6fc528975a9ba0126436a73.camel@rong.moe>
-Subject: Re: [PATCH v3 0/7] platform/x86: thinkpad_acpi: Add support for
- auto keyboard backlight
+DKIM-Signature: a=rsa-sha256; b=pTyR+c5OwGyqivYwQpFZOW/1KPwcGd+7z5H8BJxMfhOoiRtdvQuKTurh5t+TWh6Euv6DV4nroGoziR98+wy7zwMvWgTjPTxZ6mv8TyzKSUX/U9azcOLe0dHlE+fULcem7+BIqRyWmOZe+q+h2E4mcpHM5xNeoOn4NzhgtgQTJl2dwPxj4N/f3mA3ShGWq/Dt6xUs5j1XArL59PnjddX77DsyTNi4ApqPhALBNrt+TKflY0S43CXkm6w1TaG5EF13kRhquLcrkzngQQSwY1yEoEoJDG3aOY5X0Xc+rYtHiDsu+EgJeBJC8caBzTxCZxk1KyrpjdeCwZ8KGifMAqVhqA==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=gXUh9NgRXsUvVhlhdHrD3K+LvJHIeDDuq0BHIzoUtIE=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795098603859177.4593189418008;
+	Thu, 19 Nov 2026 06:30:03 -0800 (PST)
+Message-ID: <9878245f401ed1cd129435865b28e5dc06401d3a.camel@rong.moe>
+Subject: Re: [PATCH v5] platform/x86: lenovo-wmi-other: Deconflict battery
+ with thinkpad_acpi
 From: Rong Zhang <i@rong.moe>
-To: Qiling Zhu <kmatzkaczor244@gmail.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Henrique de
- Moraes Holschuh <hmh@hmh.eng.br>, Andrea Rabbaglietti	
- <rabbagliettiandrea@gmail.com>, Lee Jones <lee@kernel.org>, Pavel Machek	
- <pavel@kernel.org>, Griffin Kroah-Hartman <griffin@kroah.com>, 
-	vishnuocv@gmail.com, vsankar@lenovo.com,
- platform-driver-x86@vger.kernel.org, 	ibm-acpi-devel@lists.sourceforge.net,
- linux-leds@vger.kernel.org, 	linux-kernel@vger.kernel.org
-In-Reply-To: <av14Sp6_nKwU5F-i@ThinkPad>
-References: <20261102151211.40701-1-kmatzkaczor244@gmail.com>
-	 <20261114174814.62153-1-kmatzkaczor244@gmail.com>
-	 <230263171c25c322d97fa29439a01922db47f913.camel@rong.moe>
-	 <av14Sp6_nKwU5F-i@ThinkPad>
+To: Aaron Ma <aaron.ma@canonical.com>, Mark Pearson
+ <mpearson-lenovo@squebb.ca>,  "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20261119072516.309524-1-aaron.ma@canonical.com>
+References: <20261119072516.309524-1-aaron.ma@canonical.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 22:21:42 +0800
+Date: Thu, 19 Nov 2026 22:24:07 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,201 +72,219 @@ MIME-Version: 1.0
 User-Agent: Evolution 3.62.1-3 
 X-ZohoMailClient: External
 
-Hi Qiling,
+Hi Aaron,
 
-On Wed, 2026-11-18 at 19:02 +0800, Qiling Zhu wrote:
-> Hi Rong, Mark,
+On Thu, 2026-11-19 at 15:24 +0800, Aaron Ma wrote:
+> ThinkPads expose battery charge thresholds and charge_behaviour through
+> thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups. The
+> Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
+> charge_behaviour and charge_types on systems advertising those WMI
+> capabilities.
 >=20
-> On Sun, Nov 15, 2026 at 03:52:36PM +0800, Rong Zhang wrote:
-> > The next time when you send a series (i.e., PATCH x/n, n > 1), please d=
-o
-> > not reply to the previous thread to keep it tidy.
+> When lenovo-wmi-other registers first, thinkpad_acpi fails to create a
+> duplicate charge_behaviour sysfs attribute and unregisters its battery
+> extension. Conversely, registering or updating any power_supply_ext on
+> the same battery runs sysfs_update_groups(), which removes standard
+> power-supply attributes not owned by power_supply_core and wipes out
+> thinkpad_acpi's charge_control_start_threshold,
+> charge_control_end_threshold, and charge_behaviour files.
 >=20
-> First, my apologies for sending v3 as a reply to the v2 thread. I caught
-> that mistake shortly after sending it out, and I will make sure v4 starts
-> a clean thread. Please do let me know if I am getting anything else wrong
-> with the workflow; I am still learning the process and really appreciate
-> your guidance.
+> Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
+> thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
+> per-driver table guarded by IS_ENABLED() in Kconfig, and update the
+> force_load_psy_ext description accordingly.
 >=20
-> Thank you both for the reviews, Rong for another patient and detailed
-> round, and Mark for the Reviewed-by tags and the sleep/wake input. I will
-> apply all the requested changes in v4 (including moving
-> kbdlight_level_to_brightness() with an int return type into 1/7, adding
-> the lockdep annotations and symbolic macro, fixing the helper placements
-> and indentation, updating kbdlight_brightness in
-> kbdlight_set_level_and_update() and using it in
-> kbdlight_auto_trigger_activate(), and adding the note below '---' for
-> Sashiko's report).
->=20
-> > > One addition that was not in v2: testing showed that the firmware doe=
-s
-> > > not restore auto mode across hibernation
-> >=20
-> > How about s2idle? And what if hw brightness =3D [0,2] before hibernatio=
-n?
-> >=20
-> > Meanwhile, could you test s2idle, hibernation and cold boots with
-> > thinkpad_acpi blacklisted to see if hw brightness ([0,2] and 3) is
-> > preserved? We need the raw behavior to determine our strategy.
->=20
-> Here is the raw hardware behavior data you asked for.
->=20
-> Test setup:
-> - Machine: ThinkPad X1 Carbon Gen 14 (21V8A028CD), BIOS N4OET53W (1.16),
->   EC N4OHT42W.
-> - Kernels: 7.3.4-arch1-2 and 7.3.0-next-20261030 (identical results).
-> - Method: For the s2idle and hibernation cycles, thinkpad_acpi was
->   unloaded with rmmod before each cycle so the driver was absent
->   throughout sleep and wakeup (my kernels are built as UKIs with a
->   baked-in cmdline, so I used rmmod rather than a boot-time blacklist).
->   Backlight levels were cycled only via Fn+Space and read back by
->   evaluating MLCG directly via acpi_call. This machine only exposes
->   s2idle (no S3), so "suspend" below means s2idle/S0ix.
->=20
-> Results without the driver loaded:
->=20
-> - s2idle: The firmware turns the backlight off on suspend and restores th=
-e
->   previous level on resume across all levels (0, 1, 2, and 3/auto).
->=20
-> - Hibernation (S4): The firmware turns the backlight off on entry, and on
->   resume the EC comes back at level 0 for every pre-sleep level, manual
->   levels 1 and 2 included. My apologies for the wrong statement in the v3
->   cover letter where I said manual levels survived S4 on their own; my
->   earlier test was likely interfered with when the driver/userspace was
->   still active. Please take this clean test as the accurate result, which
->   also aligns with the concerns you both raised.
->=20
-> - Cold boot and warm reboot: The EC always initializes to level 0. Since
->   kbdlight_init() only reads MLCG without writing MLCS, and the pre-resum=
-e
->   hibernation logs show the same reset to 0, this is firmware behavior.
->=20
-> So on this machine, the firmware handles s2idle by itself, and S4 resume
-> is the case where the driver needs to restore the pre-sleep level.
->=20
-> Regarding S3: as far as I could find in public sources, modern ThinkPads
-> essentially only support s2idle and S4 (ThinkPads moved to S0ix-only
-> around Gen 11 in 2023). I do not have an older S3-capable machine to
-> test, so I can only speak for this platform.
->=20
-> (One small side observation from logging raw MLCG values: bit 22 was 1
-> whenever level 3/auto was active and 0 across manual levels 0-2 on this
-> machine. Just sharing as a single-machine data point in case it is useful=
-.)
+> Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI battery ch=
+arge limiting")
+> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Co-developed-by: Rong Zhang <i@rong.moe>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
 
-Let me conclude in short:
-
-- S0ix preserves everything
-- S4/S5 resets everything
-
->=20
-> > >  - the EC comes back with the
-> > > backlight off, without an event. Rather than re-attaching the trigger
-> > > from the pre-suspend state,
-> >=20
-> > "re-attaching"
-> >=20
-> > I am not familiar with hibernation, so I am not sure if the LED core
-> > would detach the trigger before entering hibernation. If not, why did y=
-ou
-> > say that?
->=20
-> Sorry for the poor wording in my cover letter. The LED core does not
-> detach the trigger across hibernation; what I meant to say was "writing
-> level 3 back to the EC", not re-attaching the trigger in the LED core.
->=20
-> Following the comments from you and Mark on 7/7, I agree that restoring t=
-he
-> cached level in the driver on resume is the right approach: calling
-> kbdlight_set_level(kbdlight_brightness) in kbdlight_resume() without
-> emitting notifications. Since the LED core's own brightness cache only
-> stores the translated brightness (where auto mode is 0), restoring from
-> kbdlight_brightness in the driver handles both manual and auto modes
-> cleanly. I prototype-tested this on my machine: after S4 resume the EC
-> was restored to the pre-hibernation level for both manual levels and
-> auto mode; when the pre-sleep level was auto, the auto trigger stayed
-> attached across the whole cycle; and on s2idle resume, rewriting the
-> unchanged level was a harmless no-op.
-
-Yeah, we don't need to differentiate S0ix and S4, but simply restore hw
-brightness regardless.
-
->=20
-> Regarding your suggestion on 7/7 about dropping led_classdev_suspend() an=
-d
-> led_classdev_resume() across all models: since I only have this one
-> machine to test, my tentative plan is to keep the new behavior gated on
-> tp_features.kbdlight_auto (so non-auto machines stay on
-> led_classdev_{suspend,resume}(), while auto-capable machines skip
-> kbdlight_suspend() and restore kbdlight_brightness in kbdlight_resume()).
-> If you and Mark prefer replacing led_classdev_{suspend,resume}() across
-> all models and handling suspend/resume in the driver ourselves, I am happ=
-y
-> to widen it.
-
-AFAICS, the reason why thinkpad_acpi's current implementation needs to
-call led_update_brightness() and led_classdev_{suspend,resume}() is
-exactly because it pokes led_cdev->brightness.
-
-Since your series will remove the fragile behavior and track hw
-brightness using kbdlight_brightness, we no longer need to rely on the
-LED core to store and resume the last brightness for us. That's why I
-prefer to unify the routine among all models.
-
-You might still call led_classdev_{suspend,resume}() to set/clear
-LED_SUSPENDED if you would like to gate brightness changes from the LED
-core somehow to make our jobs undisturbed. But I am very unsure if we
-really need to gate changes from the LED core like that...
-
->=20
-> Lastly, I have two small questions on 3/7 and 6/7 to make sure I
-> understand everything properly:
->=20
-> 1. Calling kbdlight_notify_level() in kbdlight_write() vs. sysfs writes
->    (patch 3/7):
->    I will change kbdlight_write() to call kbdlight_notify_level() and hav=
-e
->    kbdlight_set_level_and_update() only update kbdlight_brightness as
->    requested. Just for my own understanding of the design principle here
->    (and in commit 07f48f668fac): since leds-class.rst describes
->    brightness_hw_changed as being for hardware-initiated changes, is the
->    idea that a legacy out-of-band interface like /proc/acpi/ibm/kbdlight
->    changes the level behind the LED core's back (so the LED core and
->    UPower need to be notified to stay in sync), whereas sysfs writes
->    already go through the LED core and shouldn't echo a notification back
->    to userspace?
-
-Exactly.
-
->=20
-> 2. Keeping the default_trigger check in kbdlight_init() (patch 6/7):
->    Since the EC resets to 0 on cold and warm boots on my machine, I agree
->    that no LED_RETAIN_AT_SHUTDOWN / exit-retention logic is needed.
->    However, if a user presses Fn+Space into auto mode before the driver
->    loads (for example, at the BIOS or disk-encryption password prompt,=C2=
-=A0or
->    while the module is unloaded between rmmod and modprobe,=C2=A0which I =
-hit
->    during testing), setting default_trigger keeps the initial trigger
->    state synchronized with the EC. Would it be okay to keep that check in
->    kbdlight_init() for those cases, or would you prefer dropping it?
-
-Makes sense. For this specific use case you can keep the default_trigger
-probing routine, with a brief comment explaining the purpose.
+Now the patch looks good to me.
 
 Thanks,
 Rong
 
+> ---
+> Changes in v5:
+> - Drop the outer #if guard around the macro definition, as requested by
+>   Rong Zhang and Ilpo J=C3=A4rvinen.
+> - Make methods const char * const * as well with a single
+>   LWMI_PSY_DECONFLICT_STRS() macro, casting at acpi_has_method(), as
+>   suggested by Rong Zhang.
 >=20
-> (One minor hardware note: occasionally my unit retries entering S4 a few
-> times before succeeding, and resumes after those aborted attempts can sho=
-w
-> timing oddities. All data above comes from clean hibernate cycles, but I
-> am happy to dig into the retry case if it is of interest.)
+> Changes in v4:
+> - Make hids const char * const * with separate HIDs and methods macros,
+>   as noted by Ilpo J=C3=A4rvinen.
+> - Move HID lookup and method checks into lwmi_acpi_device_has_methods(),
+>   as suggested by Ilpo J=C3=A4rvinen.
 >=20
-> Thanks again to both of you for your time and patience; I have learned a
-> lot from your reviews.
+> Changes in v3:
+> - Wrap deconfliction table entries in #if IS_ENABLED(CONFIG_*) and drop
+>   driver_enabled, as suggested by Rong Zhang.
+> - Group deconfliction entries per driver (HIDs list + methods list).
 >=20
-> Best regards,
-> Qiling
+> Changes in v2:
+> - Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
+>   device IDs, method pairs, and driver configuration checks, as suggested
+>   by Derek J. Clark.
+> - Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
+>   instead of relying only on ThinkPad ACPI device presence.
+> - Check whether the corresponding driver is enabled before looking up
+>   its ACPI device, including for ideapad_laptop.
+> - Update the force_load_psy_ext description to cover both drivers.
+>=20
+> v4: https://lore.kernel.org/platform-driver-x86/20261118063058.157862-1-a=
+aron.ma@canonical.com/
+> v3: https://lore.kernel.org/platform-driver-x86/20261113055726.952551-1-a=
+aron.ma@canonical.com/
+> v2: https://lore.kernel.org/platform-driver-x86/20261112074823.853819-1-a=
+aron.ma@canonical.com/
+> v1: https://lore.kernel.org/platform-driver-x86/20261111083529.727285-1-a=
+aron.ma@canonical.com/
+>=20
+>  drivers/platform/x86/lenovo/wmi-other.c | 81 ++++++++++++++++++++-----
+>  1 file changed, 67 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x=
+86/lenovo/wmi-other.c
+> index bd64e7b44669d..33be29bafabf5 100644
+> --- a/drivers/platform/x86/lenovo/wmi-other.c
+> +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> @@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
+>  static bool force_load_psy_ext;
+>  module_param(force_load_psy_ext, bool, 0444);
+>  MODULE_PARM_DESC(force_load_psy_ext,
+> -=09"This option will skip checking if the ideapad_laptop driver will con=
+flict "
+> +=09"This option will skip checking if the ideapad_laptop or thinkpad_acp=
+i driver will conflict "
+>  =09"with adding an extension to set the battery charge behavior and batt=
+ery charge "
+>  =09"control end threshold. It will also skip checking if the BIOS report=
+s that "
+> -=09"those features are fully supported. It is recommended to blacklist t=
+he ideapad "
+> +=09"those features are fully supported. It is recommended to blacklist t=
+he conflicting "
+>  =09"driver before using this option.");
+> =20
+>  /* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00 & fa=
+n) =3D=3D=3D=3D=3D=3D=3D=3D */
+> @@ -905,19 +905,66 @@ static acpi_status lwmi_acpi_match(acpi_handle hand=
+le, u32 lvl,
+>  =09return AE_CTRL_TERMINATE;
+>  }
+> =20
+> +struct lwmi_psy_deconflict {
+> +=09const char * const *hids;
+> +=09const char * const *methods;
+> +};
+> +
+> +#define LWMI_PSY_DECONFLICT_STRS(...) \
+> +=09((const char * const[]) { __VA_ARGS__, NULL })
+> +
+> +static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] =3D {
+> +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
+> +=09{
+> +=09=09.hids =3D LWMI_PSY_DECONFLICT_STRS("VPC2004"),
+> +=09=09.methods =3D LWMI_PSY_DECONFLICT_STRS("GBMD", "SBMC"),
+> +=09},
+> +#endif /* IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) */
+> +#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
+> +=09{
+> +=09=09.hids =3D LWMI_PSY_DECONFLICT_STRS("LEN0268", "LEN0068", "IBM0068"=
+),
+> +=09=09.methods =3D LWMI_PSY_DECONFLICT_STRS("BDSG", "BICG"),
+> +=09},
+> +#endif /* IS_ENABLED(CONFIG_THINKPAD_ACPI) */
+> +};
+> +
+> +/**
+> + * lwmi_acpi_device_has_methods() - Check if an ACPI device has all meth=
+ods
+> + * @hid: ACPI hardware ID to match
+> + * @methods: NULL-terminated array of required ACPI method names
+> + *
+> + * Return: true if a matching ACPI device is present and exposes all @me=
+thods,
+> + * or false otherwise.
+> + */
+> +static bool lwmi_acpi_device_has_methods(const char *hid,
+> +=09=09=09=09=09 const char * const *methods)
+> +{
+> +=09acpi_handle handle =3D NULL;
+> +=09int ret;
+> +
+> +=09ret =3D acpi_get_devices(hid, lwmi_acpi_match, &handle, NULL);
+> +=09if (ret || !handle)
+> +=09=09return false;
+> +
+> +=09for (unsigned int i =3D 0; methods[i]; i++) {
+> +=09=09if (!acpi_has_method(handle, (char *)methods[i]))
+> +=09=09=09return false;
+> +=09}
+> +
+> +=09return true;
+> +}
+> +
+>  /**
+>   * lwmi_om_psy_ext_init() - Hooks power supply extension to device batte=
+ry
+>   * @priv: Pointer to the lwmi_om_priv drvdata.
+>   *
+> - * Checks if the ideapad_laptop driver is going to manage charge attribu=
+tes first,
+> - * then if not, hooks the battery to our WMI methods if they are support=
+ed.
+> + * Checks if the ideapad_laptop or thinkpad_acpi driver is going to mana=
+ge
+> + * charge attributes first, then if not, hooks the battery to our WMI me=
+thods
+> + * if they are supported.
+>   */
+>  static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
+>  {
+> -=09static const char * const ideapad_hid =3D "VPC2004";
+> -=09acpi_handle handle =3D NULL;
+>  =09unsigned int props =3D 0;
+> -=09int ret;
+> =20
+>  =09if (lwmi_psy_prop_is_supported(priv, POWER_SUPPLY_PROP_CHARGE_BEHAVIO=
+UR))
+>  =09=09props |=3D LWMI_PSY_PROP_BEHAVIOUR;
+> @@ -928,14 +975,20 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_pri=
+v *priv)
+>  =09if (force_load_psy_ext)
+>  =09=09goto load_psy_ext;
+> =20
+> -=09/* Deconflict ideapad_laptop driver */
+> -=09ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL)=
+;
+> -=09if (ret)
+> -=09=09return;
+> +=09for (unsigned int i =3D 0; i < ARRAY_SIZE(lwmi_psy_deconflict_list); =
+i++) {
+> +=09=09const struct lwmi_psy_deconflict *entry =3D &lwmi_psy_deconflict_l=
+ist[i];
+> =20
+> -=09if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(hand=
+le, "SBMC")) {
+> -=09=09dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery f=
+or device\n");
+> -=09=09return;
+> +=09=09for (unsigned int j =3D 0; entry->hids[j]; j++) {
+> +=09=09=09const char *hid =3D entry->hids[j];
+> +
+> +=09=09=09if (!lwmi_acpi_device_has_methods(hid, entry->methods))
+> +=09=09=09=09continue;
+> +
+> +=09=09=09dev_dbg(&priv->wdev->dev,
+> +=09=09=09=09"ACPI device %s manages battery for device\n",
+> +=09=09=09=09hid);
+> +=09=09=09return;
+> +=09=09}
+>  =09}
+> =20
+>  load_psy_ext:
