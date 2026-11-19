@@ -1,78 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795119778;
-	b=ltC8uZ7XSr2lBmuZu602TDU+zdy9X5SuQxUHdJRPay0VcvOTMsJ9z4r7lVw4qLcTFtKr
-	 LE4+eWWb2Ww5uj3Kg4NSA1+pt9ecC74/k4MHaFtze0dBmYbAe/iMoZFaGs6+em3WVGrVO
-	 zl4CY9jmNk+CIxeJPuLIys8VAnfNYZlr4twTeywWdcqREG0x2AkrjgvgsEuNsUhoGvlPA
-	 P0WoCE53IPtZ8crngRexq/mofQBhJoMH57lf22Vm05xWlZyJTFwpmEsrMohthHavQQBIc
-	 yLHwuZztumcO6Q+PMTSR7j369n2kiuFsDWQ097GxOe0PGpx/hk9XLvaF9OMQr7cL5jg==
+	t=1795120452;
+	b=DmHqWcQJWMV9ehD6DQyQihaySbL7gKQMg98YSKCrlu+1yql07E/I/uNE/1X/H5wKtYQJ
+	 YzyXwbqtHcLUT2nB31OyzFknY33rKIB94m4S3nQBkt3wFFHT0/8gdyOCXOjPQj5Nmgz+1
+	 K3S/90MTxjAytFZxfNEfIAcFbDaofnzSS+lQUXU9XzrzZdoRZmmMJ+ibc/Clic0qA5a34
+	 4SzcDyeNsXg6nJZkwffiWS9+FJlv/ZoRd3ol70wBUKSfv03dlYqWUG3bezCXeL0o5aODt
+	 ZMvUFOmPYcStulO2INjfEIAL1+S9Cqs/9C5cFsrhQO9PZ9nGBM3tupjcYDo//DRpolQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795119778;
-	h=Received:DKIM-Signature:Received:From:To:Subject:Date:
-	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
-	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
-	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
-	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
-	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
-	 Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
-	bh=NW1Y9iusFPqV3bBFE/vtoR6SlOxKgbmxarzyii9vMT0=;
-	b=1kItzvEeRyM17DnAoYabrSF48b8NlP0F2ZDiYRc+lKFDGKg3ZH39ZucNQw6tr0yYjfEe
-	 spjfoOfq7MNhTjNBeg42xdDbp10bZ20tHSK02ExXl9abkTiml+FsEtH8/F4hdOFi9sjxB
-	 V3KE69hWAiyNzPRLvc5u8zZAMhm/jlhATzNJixGZNzaQgz2FzfQ6WSenjmp6JxImKVX/G
-	 KjuOp8O+d8KEsyPUTFwW6DQnBZCPkkmg5JhKOB76j28cxNlv+M+kLxgigUNB0uHPnYEsc
-	 5a0NNSQXFIEdAlkRmLnMcn5Oi5BorRFt3+5Mubx+9e5HhAjBtoz7pu93+JgsbClGlrw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795120452;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=LcC9I+RA90w4+HxiFBhw3WISTN7AOJKhjKKc/4C8RWA=;
+	b=iZSMKfYVYJuStOUEGUMeFkESWBIZvxqCpIrzWwqWlMUUUznLIDkt/tA53gcU5J4y7IiQ
+	 Ylh/pVegNvjcnLGWVhOyY6a5N9h1sxQ9V9UrZ12uXy655uJIKq4zhjz87DCjuX4eCfos4
+	 SCf15lq4VJDENiAHgnV95lDC6DnoCNtL/JyvBuMCHDJFfO+rZru2Ps1z2weBCFioEst9/
+	 I2l+tJQxkKpgp9OopB0NWSdR1D5PodpgPni1yTzMDW7dgfMRSi7uDjBdneroBD+QI2BaF
+	 7Sn35mLlT4fZsl+sOeSFhBQzPVelQ7CEvVuK38zlzJ8ZuYwK1A2DZZCsxPusEU9QpBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Iq++8A0h;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="Xdwc2aY/";
+	arc=none smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7CD606E4CA
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 20:22:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7261560A6F51
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 20:34:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7261560A6F51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Iq++8A0h
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3FF541F000D0
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 20:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795119778;
-	bh=NW1Y9iusFPqV3bBFE/vtoR6SlOxKgbmxarzyii9vMT0=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=Iq++8A0hXw3G5+yNJy61vNnS8vcULvblZi2336ZHDH24v8BpxJXpzdBkAUlZ5x7Kz
-	 IvBZucJfjKgrogn9Zs2pawQ7+TuR/XTyM0AYAFo0dU9LNKLYJsrnBhd2ZDeb+lkE5Y
-	 QbRxCJReRLYB5zHrZ3rOZx5HTHmgr9qdkLW2CkB4ziqKhRQTKnE3qSHcB/4h68cj8A
-	 E6g9pibKlINmMQzFfhw+/yKYLX0x2tUlpNrqNasLjl6Sg/ZMP62VhNZsLMGsM2zuh2
-	 XGOybnYBJlMO2Yc4yYCwi8JLk8cqvoRZCj+0T9q4DxTusDdMzKIXvoVne0+MTFqCe3
-	 VVynID0P8Kerw==
-Received: by aws-us-west-2-korg-bugzilla-alma10-1.codeaurora.org (Postfix, from userid 48)
-	id 39071240040F; Thu, 19 Nov 2026 20:22:58 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 222161] platform/x86: lg-laptop: Double input of super key
-Date: Thu, 19 Nov 2026 20:22:57 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: deep.seat6734@fastmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-222161-215701-PUTu7Pxqy5@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-222161-215701@https.bugzilla.kernel.org/>
-References: <bug-222161-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Xdwc2aY/
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795120453; x=1826656453;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9Tz7zpcTShjgRl7cInnCF2+Ir3OfcpWYuoHofnPv44Y=;
+  b=Xdwc2aY/IRXs1hYmvmpji7B9j6pqbN5IYlqfLXViaKFY4dM7b3A88S4E
+   b1PqMdL9WAevTjRP33Pplw2KdT6N0mD3OSu+VVUcP0kCb/CUIsqDMtQDS
+   b8Y0UF/H6iHWCib5tDMrFkHm7kKRjLu9VqtC8jIsVRP9cnpNRA7hmYeYq
+   dwmm91oUdMLx8zKU4NMxbx+OzZluz0kRO8f6cN52Eof29/4l+wUSC8jjF
+   t30WJgk9d1/cUTcbVeZzPpbYBdQll/235YoRKlDovwcae3mLjEZgHE6aM
+   HVi7yGXqzZMHgEKhnbiYScIVJSD0kC+SiUH5FHP6KiUMrsaB/dWG7aIrg
+   Q==;
+X-CSE-ConnectionGUID: 8EgRtkNDRRqFJTepxQk69w==
+X-CSE-MsgGUID: A/iVNm1hQkSDr+AiMT2smA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3982520"
+X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
+   d="scan'208";a="3982520"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:34:12 -0800
+X-CSE-ConnectionGUID: C1dPOeAxSoGsARIblv5CZg==
+X-CSE-MsgGUID: w/qehlNhS+WH547+NhkZrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
+   d="scan'208";a="10522111"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.61])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:34:10 -0800
+Date: Thu, 19 Nov 2026 22:34:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Doug Warzecha <Douglas_Warzecha@dell.com>,
+	Andrew Morton <akpm@osdl.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] platform/x86: dell: dcdbas: Actually wait for the
+ host control SMI
+Message-ID: <av9dP5sFa6J5Bpv4@ashevche-desk.local>
+References: <20261118035638.11773-1-rosenp@gmail.com>
+ <20261118035638.11773-2-rosenp@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,21 +83,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261118035638.11773-2-rosenp@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D222161
+On Tue, Nov 17, 2026 at 07:56:35PM -0800, Rosen Penev wrote:
+> For SMI types 2 and 3, host_control_smi() writes the command status as
+> -1, raises the SMI and then waits for the BIOS to change the status:
+> 
+> 	while (apm_cmd->status == ESM_STATUS_CMD_UNSUCCESSFUL) {
+> 
+> apm_cmd->status is a plain memory read, and neither outb() nor inb()
+> tells the compiler that memory may have changed, so the compiler
+> assumes status is still -1. The loop then has no side effects and its
+> return value is not used, so it is removed entirely: in the generated
+> code, the read of the control port is followed directly by the return.
+> The kernel goes on to power off right after raising the host control
+> SMI, without waiting for the BIOS to accept it.
+> 
+> The type 1 wait polls the APM status port instead, in a loop that
+> counts down TIMEOUT_USEC_SHORT_SEMA_BLOCKING iterations and relies on
+> each inb() taking about a microsecond.
+> 
+> Convert both waits to readx_poll_timeout_atomic(), using READ_ONCE() for
+> the status in memory and inb() for the status port, 1us apart for up to
+> TIMEOUT_USEC_SHORT_SEMA_BLOCKING microseconds as the name suggests, and
+> return its error. That is -ETIMEDOUT rather than -ETIME, but both
+> callers ignore the return value. With the delay plus the port read, the
+> type 1 worst-case wait grows from about 10ms to about 20ms, which only
+> matters when the BIOS never answers.
+> 
+> This removes the last users of num_ticks and EXPIRED_TIMER.
 
-Nicolas C. (deep.seat6734@fastmail.com) changed:
+Looks good now.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |deep.seat6734@fastmail.com
+-- 
+With Best Regards,
+Andy Shevchenko
 
---- Comment #20 from Nicolas C. (deep.seat6734@fastmail.com) ---
-I am following up and can also confirm that the Super Key does not work on
-7.3.4-300.fc45.x86_64 (Fedora 45).
 
-I just tested on 7.2.15-300.fc45.x86_64 (Fedora 45) and it works well.
-
---=20
-You are receiving this mail because:
-You are watching the assignee of the bug.=
