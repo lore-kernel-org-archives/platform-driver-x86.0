@@ -1,77 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.22
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795068657;
-	b=b5oxqPcbnkQKDfPRw1pCboe4CYPLKtFKj4W1VU2yG8ZTpKcaCAe9L/47mahOo5nGODLb
-	 2d6XVRsxXRBvH6TbQdVEtdP97rM6vrWnHB7aEbt4CBdwaRqPv+wSYqqp4uTCzYp+OPUV7
-	 d4oXnjBcDdVd+jpqqAnrP4dvDR733/L3rmq75h3X2mv4VyjtbDFPtWm8GJMF1I+OQoJPj
-	 cIolvxHxvXsNTrnA3NRp02qCWBbNcjQ/zk7HUTuatBc+XzCNgloVXa/SiL3Cz7L4fvFvp
-	 Nv/Fg0EgbGbz2Q4RF+AXTqk96Vc1Ye0K/uXor6+B7QUHmdFaWGHvKwvkSKloE48PrqQ==
+	t=1795068991;
+	b=HcfpZYzi4Jfj4XXxpMjIAU8i6sXkyqTn1u+TZGZXh7E3R6sToqUOU6C/BA5AY1WnW2xr
+	 gwbsNYIL8xYmPzklzBI2H2YGzUNGMAuh8OYu7rAy1GljpvAoMR0z8So9fgzRdKuw2TYDL
+	 C3B6X7nZ7WiAPQDrJCwHgzNScxk4d6/rd7PVmbWXohdG5oNM9aaitmD+ya9GNt5PdA/TF
+	 pBJf3pZDrQJYCNnOYKI2efHnD0lPK2MGuywi/5BO801LgiCWrxSimfzL9EnBEuZpL3vNm
+	 7LBzpItDwyQjRolaNNEQ3bacJC0Ip6+U9Dp8GUhLEsqqPn8j3LYjZOH8rjGdxnnJ4hw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795068657;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795068991;
 	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
 	 X-UI-Sender-Class:Received:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
 	 UI-OutboundReport;
-	bh=LVayetwvBdjCid3milUZu8gE/Xa9+JvwtNmwQVAFWPE=;
-	b=DqBHFEMNamL41yShK0YMS2Topl68ojTy4BX1IAXqmHzr4OvL4Y0QTwNwN9+v0LzpcOxj
-	 1DY9qJcgtwNY6fYqXwFMBPjjFgUjOHkfNQ/9UDqiqeqFdTpiCsk0JIwbCS3ZfIDB6TV5I
-	 U2vuThJzwJGiR25oyGKnpDgfQlqKRnc6FW4ZkZECbM1eesOneCl6Cusk0GG8fe8EqYWJc
-	 nKTUCIvh6neQUw0MrOsYzQ/5j68j2tpuGz8R5wOq/FoyOcl7VIjzAIPouTkdmIBkgoY0V
-	 KzDspMpEKZbN51bl4I3S+xAWRYz1bSjeoA2i4ZYgpnZ/a/3x5W02aiEb7pGJysWGM8w==
+	bh=CVOrRRuiD90diC1/WMj8+JwojnBmKcf3PhtWmatz21o=;
+	b=FY6LsxParOaZZji/Os81T1nyvShIx8UJB3y3O1H4tasm4atgo4ZLD9YiCJF+J1g3Kq5e
+	 SjR9LSKAJR/sAp4hdyskLtU625sBASQFDLCpnHc0+KTjdiI4s5+UZk0S6xswmyR2ny3Qf
+	 L5KVr/yhtLLCXRbXCjWVCr9uC4HPurk/LA2OwWF8DLOp+uJK6+q6zi5VC3HaYAhnqjB4Y
+	 QZq+BCkJX5Cg00FDnSw/abXTgWVYaNDECfMxLW3x6MqesojwpFYu2U04vGJaLv5J7WNCC
+	 0mcO3PFPtaF04kdjnEYSgdRXf1Li1a9MD5aBuwYXhuwiZGJeSv9bS+b8rRtrCNInWCw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmx.de;
 	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=mTrnBQ1j;
-	arc=none smtp.remote-ip=212.227.17.20
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b="nQl5//Gq";
+	arc=none smtp.remote-ip=212.227.17.22
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2C8606A333
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 06:10:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD2C8606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FCB606A325
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 06:16:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81FCB606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=mTrnBQ1j
-DKIM2-Signature:  i=1; m=1; t=1795068654;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=nQl5//Gq
+DKIM2-Signature:  i=1; m=1; t=1795068987;
  mf=PFdfQXJtaW5AZ214LmRlPg==;
  rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
  d=gmx.de;
- s=s31663417:rsa-sha256:O6D3rUthTtQUVxUvP6/y1YV0I4vg
-   BZ/dNCtT+LvMWLbtVw0Z7xMAdl8Xdqx5GIV1tM8f71up3eDLzjJg+Txs+vqKn6jIR8uz/y9QCng
-   RLSpuZ5b6xwHEeM+ZU6D36LdjWlo59XMFOQ/d45vp7roxELuI/XBRkg6bOiwHTwa+AEtmeilBwo
-   rZGPsPn8FAYxqKUzFhV6QXbEYYj3lVGqVBwJaSHLrqHZx91jKjr/EqpLkkOGX/a2ST5JEOQ/Uyw
-   iUY3GCf5TxK3gVgazyzYuEO9sWisd8TTMBEcKMAqkOVNMEafoxZwQkRYOBoqia0/db3NX7uTvcU
-   MFFqmidX59Th5Q==;
+ s=s31663417:rsa-sha256:E9vR2ahW9/ZOBuePQmgNtrmah53n
+   3pOwJ29kTxwhD4KIOeoYuiv5gBFwDJj7K29bUV+ehMa/p/i1krTLzyJIMtCVnZNCDnkNetqhgmM
+   DSiM2aZwbYAKxDhZNMZWO1fLk9EpYhy3z95h2pqdnRDJQGFuYKgE1DQqJS3wO/TuR9vB0PhC1BT
+   xMBK1sG+6L69xbCaQxqCPzYnHGw3XiwDRFtI15JsN3QuBpRA9iVmG05rSYprL4wk8iEAM6cpRE7
+   RJJ0LlNvK8IS/iQv2HVuOOz6Mo0B7h69JntRP81+gsFD5xBv6h3y59qP2AObxXCUdaQNOn0VJf4
+   SGXSmVknrwV2Cg==;
 Message-Instance:  m=1;
  h=sha256:
-   xlux87mzfl1UimEm0OZArWXwB6Gb4oZ8N9WksUFe8Uw=:
-   2iVhFLHjGoxdsS9Xbc10pK29TxkHSEGrVxf33oT1NRk=,
+   07d0lxSihfGwT8+Qu1u0S8Y9G1oBXq73B+8hTqm5FnU=:
+   xAjVstDK/ppLLTzQJJ+7GHQWgNGeG/B3z848vj85PSM=,
   sha512:
-   PR9eAQDxHgYP6mZKfIsn13KnnYzr7yoiv29gAraRvdv0osnHc+HPn091zCehAD3Dd2kSyT0b6pDn0uGmxX73PQ==:
-   pbPgxNoZLk9efYn/ENCsFpfNiwuD+vtygU5HJDWS3hGSPsU8xcnwY2nvA1MU00FukDGgG5KEirw6BDYoScrwEQ==;
+   nASaIwO4KoeTH6U5UI0Qp7LJvZhtChHIY0wSXJEZ+4GWbWTKWBM/3yD/Q2UhJo4798tU0/OEZ9025U1UHqdCXQ==:
+   9guKzBqRzt8NfBAIJsRK9a77aUKoJEAl3TdLsW1v0tjssgMsnfBKv0CkSGLZo5QXWgC5pTLqG/lwT/nZP01rCA==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1795068642; x=1795673442; i=w_armin@gmx.de;
-	bh=LVayetwvBdjCid3milUZu8gE/Xa9+JvwtNmwQVAFWPE=;
+	s=s31663417; t=1795068970; x=1795673770; i=w_armin@gmx.de;
+	bh=CVOrRRuiD90diC1/WMj8+JwojnBmKcf3PhtWmatz21o=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=mTrnBQ1j4JRbVBFR0kC4HGSsOfE8eqKoMn9o9A01VyRmpk4/WxnxUbw6ccnaYUA0
-	 czD7Px39w5LYQFB0ZPvBE0M/WUTyM+/s5FmZyowLF9kToYJkNCrYsCbmfQ4vhIjO+
-	 3mOWnHgsl+htiQz9kWIB1HhNZnJyySDUfyv/U9Q29mIPX+QNYNQQ9QnDJBeSzkgZI
-	 KY0fvpfv2vxjzT3cOIimBDe2+wHG8yGhBgqt10PpvGb5Y/twPbN3oBIrM+NgAtqMB
-	 z4IJAqndHWWYsL2qSwQVVNrycfJeYOP6E+/NfunOCd1byph8q2HJxLLcNcwPrvzDK
-	 HF7Ll5kQI3+ipHS0Jg==
+	b=nQl5//GqIYtnBG+IgM+FsVYOdtjOqy5R22qBO6znN6bRzoo93Vb0KBppcoF+xFL+
+	 tRgjUtbCfk65M9+nXoUANZWgUorO+uH6Ab0du587OAk7CDgia0wuTm1X0bFraOz8/
+	 8Tozo8HVJ8D/XUzUiHof6IvS4kCWeZL7T/mgkYG5riQghYrxcdvdYaGuwltvKEGW/
+	 7Y/gl55cd3zMOC+0KT+jji1eTtEbxtE6cXroHEOIpZnkxVepcKf3YURZID327svUH
+	 8vVC7C7hYZTGw3qaTnETI7cHGu2sctZ/meW5Zr8WpAwqSh/sOh97zQV90nZbJNMKB
+	 GoDRMjoV9MP8NfWyPw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MeU4y-1wtUbm1wF2-00ZUyF; Thu, 19
- Nov 2026 07:10:42 +0100
-Message-ID: <5a959dbd-b8a9-41e9-b829-5ce3a425988d@gmx.de>
-Date: Thu, 19 Nov 2026 07:10:39 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MUXtY-1x3d9737I0-00S2a6; Thu, 19
+ Nov 2026 07:16:09 +0100
+Message-ID: <fd00719e-930e-4f6d-b642-ec3430491fb7@gmx.de>
+Date: Thu, 19 Nov 2026 07:16:07 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,7 +82,8 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] platform: lenovo: add WMI hotkeys driver
+Subject: Re: [PATCH v2 3/3] platform/x86: ideapad-laptop: consume the Fn key
+ events from the WMI hotkeys driver
 To: David Cemin <dcemin@nvidia.com>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
 Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, xy-jackie@139.com,
@@ -91,546 +92,498 @@ Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, xy-jackie@139.com,
  ldemarchi@nvidia.com
 References: <20261113222755.1696567-1-dcemin@nvidia.com>
  <20261119022719.3089229-1-dcemin@nvidia.com>
- <20261119022719.3089229-3-dcemin@nvidia.com>
+ <20261119022719.3089229-4-dcemin@nvidia.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20261119022719.3089229-3-dcemin@nvidia.com>
+In-Reply-To: <20261119022719.3089229-4-dcemin@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WeYj8ER1jo7bVE5T262bMyI/morW3SIFK4QIpWCOSLIUNhWKFPj
- Ynre78Vx6y/10p8s94QhNh+T3ri1/cDg/17+Kw6zkGy1oHiQwLbbr/lT2m21aFUVOPtyMIW
- 7X6K9RzEFMHDmzMrdQ+RXp0i3voCxSLzSRwG14fLbunOFNF8WPiiE4hmtrZFYUuuTrhbyoa
- OUzUj4zX7XIRRozuHG50Q==
+X-Provags-ID: V03:K1:3KN0k0iAfpfHDzR5+mx0fw1ffVqMtceB9aZx/AUXN1HKf4h9O6b
+ MFKU1oHkvLdZkFeXydFMXkx5AhRkfw7m598NO4da0JRpiSXTxP7B2v1tKsigisNOnRqK2+8
+ MNLE9Dkv3p1QJPf9T/K1NMXEwn3ekc+qtFM+6cL23HArkP+eDsE3ECJx9gMUF3Y7WfYcJBs
+ uEO5ugB/QL3PPLHkyxwkg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2eool+DTm88=;qWg+CsiUxeWYt4Z+ccUJbp72Lcx
- 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
- vBIPEQQZVeZLk+kxaPWsrEaFUcMBv0=
+UI-OutboundReport: notjunk:1;M01:P0:H+7F/VnHuQ4=;gEsBPOa/rXmnjayWUYByz4+0XjH
+ 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
+ TxSglm/2ugLrg8Ba
 
 Am 19.11.26 um 03:27 schrieb David Cemin:
 
-> Lenovo consumer laptops deliver their vendor specific Fn keys (microphon=
-e
-> mute, airplane mode, performance mode, the Smart Key, Smart Connect and
-> others) as WMI events on GUID 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294
-> instead of keyboard usages, and the Yoga 3 and Yoga 700 generations
-> report Fn+Esc on two dedicated event GUIDs that carry no data. On x86
-> ideapad-laptop consumes these events together with the IdeaPad VPC
-> device; that driver depends on i8042 and the VPC, neither of which exist
-> on the ACPI based arm64 models, so the keys do nothing there.
+> ideapad-laptop binds the Fn key and Fn+Esc WMI event GUIDs itself and
+> reports the keys through its own keymap, but the arm64 Lenovo laptops
+> expose the Fn key GUID without the VPC device this driver is built on,
+> and now have the lenovo-wmi-hotkeys driver reporting those keys on every
+> architecture.
 >
-> Add a small WMI driver that owns these event GUIDs on every architecture
-> and reports the keys through a sparse keymap, using the key codes
-> ideapad-laptop has used for them, including code 128 for the Fn+Esc
-> events. The input device keeps the ideapad-laptop name so that the
-> existing hwdb mappings for these keys continue to apply.
+> Drop the WMI event driver from ideapad-laptop and subscribe to the
+> lenovo-wmi-hotkeys notifier instead. The notifier callback keeps the two
+> platform specific behaviours: it refreshes the Fn lock LED from the EC
+> on every event, and on the performance button (0x3d) it cycles the
+> platform profile through DYTC and returns NOTIFY_STOP so that no key is
+> reported, as before. All other key codes, the Fn+Esc events and the
+> camera lens cover switch are reported by lenovo-wmi-hotkeys with the
+> same key codes this driver used, so the WMI entries of the keymap are
+> dropped and ideapad-laptop no longer registers any WMI driver.
 >
-> Drivers with platform knowledge can subscribe to a notifier chain that
-> is called with the event code before the key is reported; a subscriber
-> that handles the event itself returns NOTIFY_STOP and no key is
-> reported. ideapad-laptop uses this for the Fn lock LED and the
-> performance mode button, which cycles the platform profile instead of
-> producing a key.
+> ideapad-laptop now depends on LENOVO_WMI_HOTKEYS being enabled or
+> disabled consistently; without it the Fn keys are not reported, as on a
+> kernel without ACPI_WMI.
 >
-> The camera lens cover switch (events 0x0c and 0x0d) is reported as
-> SW_CAMERA_LENS_COVER, as ideapad-laptop does today.
+> Signed-off-by: David Cemin <dcemin@nvidia.com>
+> ---
+>   drivers/platform/x86/lenovo/Kconfig          |   1 +
+>   drivers/platform/x86/lenovo/ideapad-laptop.c | 225 ++++---------------
+>   2 files changed, 39 insertions(+), 187 deletions(-)
 >
-> Tested on a Lenovo Yoga 9 2-in-1 16 (arm64): microphone mute, airplane
-> mode, the Smart Key, the Smart Connect key and the Fn+Q performance key
-> report input events. The Esc event GUIDs are not exposed by that
-> firmware, so that path is compile tested only.
+> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/=
+lenovo/Kconfig
+> index 4d9a25d0e3b5..25817e2f0e1a 100644
+> --- a/drivers/platform/x86/lenovo/Kconfig
+> +++ b/drivers/platform/x86/lenovo/Kconfig
+> @@ -12,6 +12,7 @@ config IDEAPAD_LAPTOP
+>   	depends on BACKLIGHT_CLASS_DEVICE
+>   	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
+>   	depends on ACPI_WMI || ACPI_WMI =3D n
+
+Hi,
+
+i think you can drop the dependency on ACPI_WMI here now, because
+LENOVO_WMI_HOTKEYS already takes care of that.
+
+With this being addressed:
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-> Signed-off-by: David Cemin <dcemin@nvidia.com>
-> ---
->   MAINTAINERS                                   |   7 +
->   drivers/platform/lenovo/Kconfig               |  14 +
->   drivers/platform/lenovo/Makefile              |   1 +
->   drivers/platform/lenovo/wmi-hotkeys.c         | 244 ++++++++++++++++++
->   .../platform_data/x86/lenovo-wmi-hotkeys.h    |  28 ++
->   5 files changed, 294 insertions(+)
->   create mode 100644 drivers/platform/lenovo/wmi-hotkeys.c
->   create mode 100644 include/linux/platform_data/x86/lenovo-wmi-hotkeys.=
-h
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3b0ad5a3debe..1d5b08c033b1 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15173,6 +15173,13 @@ F:	Documentation/wmi/devices/lenovo-wmi-other.r=
-st
->   F:	drivers/platform/lenovo/
->   F:	drivers/platform/x86/lenovo/*
->  =20
-> +LENOVO WMI HOTKEYS DRIVER
-> +M:	David Cemin <dcemin@nvidia.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/lenovo/wmi-hotkeys.c
-> +F:	include/linux/platform_data/x86/lenovo-wmi-hotkeys.h
-> +
->   LENOVO WMI HOTKEY UTILITIES DRIVER
->   M:	Jackie Dong <xy-jackie@139.com>
->   L:	platform-driver-x86@vger.kernel.org
-> diff --git a/drivers/platform/lenovo/Kconfig b/drivers/platform/lenovo/K=
-config
-> index 8222322ca671..2810c995ee8c 100644
-> --- a/drivers/platform/lenovo/Kconfig
-> +++ b/drivers/platform/lenovo/Kconfig
-> @@ -41,6 +41,20 @@ config LENOVO_WMI_HOTKEY_UTILITIES
->   	  such as LED control for audio/mic mute event for Ideapad, YOGA, Xia=
-oXin,
->   	  Gaming, ThinkBook and so on.
->  =20
-> +config LENOVO_WMI_HOTKEYS
-> +	tristate "Lenovo WMI hotkeys driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	select INPUT_SPARSEKMAP
-> +	help
-> +	  Say Y or M here to enable the vendor specific Fn keys (microphone
-> +	  mute, airplane mode, performance mode, star key, Fn+Esc) on Lenovo
-> +	  laptops that deliver them as WMI events. ideapad-laptop subscribes
-> +	  to this driver for its Fn lock LED and performance mode handling.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called lenovo-wmi-hotkeys.
-> +
->   config LENOVO_WMI_CAMERA
->   	tristate "Lenovo WMI Camera Button driver"
->   	depends on ACPI_WMI
-> diff --git a/drivers/platform/lenovo/Makefile b/drivers/platform/lenovo/=
-Makefile
-> index 1cac115dd735..d3f5e3ac14c2 100644
-> --- a/drivers/platform/lenovo/Makefile
-> +++ b/drivers/platform/lenovo/Makefile
-> @@ -8,6 +8,7 @@ lenovo-target-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D wmi-help=
-ers.o
->   lenovo-target-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D wmi-events.o
->   lenovo-target-$(CONFIG_LENOVO_WMI_CAPDATA)	+=3D wmi-capdata.o
->   lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+=3D wmi-hotkey-ut=
-ilities.o
-> +lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEYS)	+=3D wmi-hotkeys.o
->   lenovo-target-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D wmi-camera.o
->   lenovo-target-$(CONFIG_LENOVO_WMI_GAMEZONE)	+=3D wmi-gamezone.o
->   lenovo-target-$(CONFIG_LENOVO_WMI_TUNING)	+=3D wmi-other.o
-> diff --git a/drivers/platform/lenovo/wmi-hotkeys.c b/drivers/platform/le=
-novo/wmi-hotkeys.c
-> new file mode 100644
-> index 000000000000..f412652e9f72
-> --- /dev/null
-> +++ b/drivers/platform/lenovo/wmi-hotkeys.c
-> @@ -0,0 +1,244 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Lenovo WMI hotkeys driver
-> + *
-> + * Lenovo consumer laptops deliver their vendor specific Fn keys (micro=
-phone
-> + * mute, airplane mode, performance mode, the star key and others) as W=
-MI
-> + * events on GUID 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 instead of keybo=
-ard
-> + * usages, and the older Yoga models report Fn+Esc on two dedicated eve=
-nt
-> + * GUIDs that carry no data. This driver owns these event GUIDs on ever=
-y
-> + * architecture and reports the keys through a sparse keymap. Drivers w=
-ith
-> + * platform knowledge, such as ideapad-laptop, subscribe to the notifie=
-r chain
-> + * to act on an event and may stop the key from being reported.
-> + *
-> + * The key codes follow the mapping historically used by ideapad-laptop=
-.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/export.h>
-> +#include <linux/input.h>
-> +#include <linux/input/sparse-keymap.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
+> +	depends on LENOVO_WMI_HOTKEYS || LENOVO_WMI_HOTKEYS =3D n
+>   	select ACPI_PLATFORM_PROFILE
+>   	select INPUT_SPARSEKMAP
+>   	select NEW_LEDS
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/plat=
+form/x86/lenovo/ideapad-laptop.c
+> index f9453de6df76..7461f4a59347 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -34,7 +34,7 @@
+>   #include <linux/string_choices.h>
+>   #include <linux/sysfs.h>
+>   #include <linux/types.h>
+> -#include <linux/wmi.h>
 > +#include <linux/platform_data/x86/lenovo-wmi-hotkeys.h>
-> +#include <linux/types.h>
-> +#include <linux/wmi.h>
-> +
-> +#include <asm/byteorder.h>
-> +
-> +#define LENOVO_FN_KEYS_WMI_GUID	"8FC0DE0C-B4E4-43FD-B0F3-8871711C1294"
-> +/* Fn+Esc on the Yoga 3 and Yoga 700 generations, no event data */
-> +#define LENOVO_ESC_WMI_GUID_YOGA3	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6=
-"
-> +#define LENOVO_ESC_WMI_GUID_YOGA700	"56322276-8493-4CE8-A783-98C991274F=
-5E"
-> +
-> +/*
-> + * The Esc event GUIDs carry no key code; they are reported under
-> + * LENOVO_WMI_HOTKEYS_ESC_CODE, the code ideapad-laptop has always used=
- for
-> + * them, so the existing hwdb mappings keep applying. The Fn key GUID c=
-odes
-> + * are all below 0x80.
-> + */
-> +
-> +enum lenovo_wmi_hotkeys_type {
-> +	LENOVO_WMI_HOTKEYS_FN_KEYS,
-> +	LENOVO_WMI_HOTKEYS_ESC,
-> +};
-> +
-> +static const enum lenovo_wmi_hotkeys_type lenovo_wmi_hotkeys_fn_keys =
-=3D LENOVO_WMI_HOTKEYS_FN_KEYS;
-> +static const enum lenovo_wmi_hotkeys_type lenovo_wmi_hotkeys_esc =3D LE=
-NOVO_WMI_HOTKEYS_ESC;
-> +
-> +static BLOCKING_NOTIFIER_HEAD(lenovo_wmi_hotkeys_chain);
-> +
-> +static const struct key_entry lenovo_wmi_hotkeys_keymap[] =3D {
-> +	/* Fn+Esc from the Esc event GUIDs */
-> +	{ KE_KEY, LENOVO_WMI_HOTKEYS_ESC_CODE, { KEY_ESC } },
-> +	/* Customizable Lenovo Hotkey ("star" with 'S' inside) */
-> +	{ KE_KEY, 0x01, { KEY_FAVORITES } },
-> +	/* Fn lock toggled on / off, handled by the firmware */
-> +	{ KE_IGNORE, 0x02 },
-> +	/* Esc, handled by the firmware */
-> +	{ KE_IGNORE, 0x03 },
-> +	{ KE_KEY, 0x04, { KEY_SELECTIVE_SCREENSHOT } },
-> +	/* Lenovo Support */
-> +	{ KE_KEY, 0x07, { KEY_HELP } },
-> +	/* Refresh Rate Toggle */
-> +	{ KE_KEY, 0x0a, { KEY_REFRESH_RATE_TOGGLE } },
-> +	/* Camera lens cover closed / opened */
-> +	{ KE_SW, 0x0c, .sw =3D { SW_CAMERA_LENS_COVER, 0 } },
-> +	{ KE_SW, 0x0d, .sw =3D { SW_CAMERA_LENS_COVER, 1 } },
-> +	{ KE_KEY, 0x0e, { KEY_PICKUP_PHONE } },
-> +	{ KE_KEY, 0x0f, { KEY_HANGUP_PHONE } },
-> +	/* Refresh Rate Toggle (Fn+R) */
-> +	{ KE_KEY, 0x10, { KEY_REFRESH_RATE_TOGGLE } },
-> +	/* Sound profile switch */
-> +	{ KE_KEY, 0x12, { KEY_PROG2 } },
-> +	/* Dark mode toggle */
-> +	{ KE_KEY, 0x13, { KEY_PROG1 } },
-> +	/* Lenovo Support */
-> +	{ KE_KEY, 0x27, { KEY_HELP } },
-> +	/* Lenovo Virtual Background application */
-> +	{ KE_KEY, 0x28, { KEY_PROG3 } },
-> +	{ KE_KEY, 0x29, { KEY_TOUCHPAD_TOGGLE } },
-> +	{ KE_KEY, 0x2a, { KEY_ROOT_MENU } },
-> +	/* Shift + PrtSc */
-> +	{ KE_KEY, 0x2d, { KEY_SELECTIVE_SCREENSHOT } },
-> +	/* Performance mode toggle, Fn+Q */
-> +	{ KE_KEY, 0x3d, { KEY_PERFORMANCE } },
-> +	{ KE_KEY, 0x3e, { KEY_MICMUTE } },
-> +	{ KE_KEY, 0x3f, { KEY_RFKILL } },
-> +	/*
-> +	 * Keyboard backlight level after Fn+Space, handled by the firmware:
-> +	 * 0x40 off, 0x41 low, 0x42 high, 0x43 also seen
-> +	 */
-> +	{ KE_IGNORE, 0x40 },
-> +	{ KE_IGNORE, 0x41 },
-> +	{ KE_IGNORE, 0x42 },
-> +	{ KE_IGNORE, 0x43 },
-> +	/* Star, user assignable key */
-> +	{ KE_KEY, 0x44, { KEY_PROG1 } },
-> +	/* Eye care */
-> +	{ KE_KEY, 0x45, { KEY_PROG3 } },
-> +	/* Mode, opens a profile chooser; the Fn+Q button cycles the profile *=
+>   #include "ideapad-laptop.h"
+>  =20
+>   #include <acpi/battery.h>
+> @@ -185,6 +185,7 @@ struct ideapad_private {
+>   	struct input_dev *inputdev;
+>   	struct backlight_device *blightdev;
+>   	struct ideapad_dytc_priv *dytc;
+> +	struct notifier_block hotkeys_nb;
+>   	struct dentry *debug;
+>   	struct acpi_battery_hook battery_hook;
+>   	const struct power_supply_ext *battery_ext;
+> @@ -1317,8 +1318,6 @@ static void ideapad_unregister_rfkill(struct ideap=
+ad_private *priv, int dev)
+>   /*
+>    * input device
+>    */
+> -#define IDEAPAD_WMI_KEY 0x100
+> -
+>   static const struct key_entry ideapad_keymap[] =3D {
+>   	{ KE_KEY,   6, { KEY_SWITCHVIDEOMODE } },
+>   	{ KE_KEY,   7, { KEY_CAMERA } },
+> @@ -1331,65 +1330,6 @@ static const struct key_entry ideapad_keymap[] =
+=3D {
+>   	{ KE_KEY,  65, { KEY_PROG4 } },
+>   	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
+>   	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
+> -	{ KE_KEY, 128, { KEY_ESC } },
+> -
+> -	/*
+> -	 * WMI keys
+> -	 */
+> -
+> -	/* FnLock (handled by the firmware) */
+> -	{ KE_IGNORE,	0x02 | IDEAPAD_WMI_KEY },
+> -	/* Esc (handled by the firmware) */
+> -	{ KE_IGNORE,	0x03 | IDEAPAD_WMI_KEY },
+> -	/* Customizable Lenovo Hotkey ("star" with 'S' inside) */
+> -	{ KE_KEY,	0x01 | IDEAPAD_WMI_KEY, { KEY_FAVORITES } },
+> -	{ KE_KEY,	0x04 | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+> -	/* Lenovo Support */
+> -	{ KE_KEY,	0x07 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+> -	{ KE_KEY,	0x0e | IDEAPAD_WMI_KEY, { KEY_PICKUP_PHONE } },
+> -	{ KE_KEY,	0x0f | IDEAPAD_WMI_KEY, { KEY_HANGUP_PHONE } },
+> -	/* Refresh Rate Toggle (Fn+R) */
+> -	{ KE_KEY,	0x10 | IDEAPAD_WMI_KEY, { KEY_REFRESH_RATE_TOGGLE } },
+> -	/* Dark mode toggle */
+> -	{ KE_KEY,	0x13 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> -	/* Sound profile switch */
+> -	{ KE_KEY,	0x12 | IDEAPAD_WMI_KEY, { KEY_PROG2 } },
+> -	/* Lenovo Virtual Background application */
+> -	{ KE_KEY,	0x28 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+> -	/* Lenovo Support */
+> -	{ KE_KEY,	0x27 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+> -	/* Refresh Rate Toggle */
+> -	{ KE_KEY,	0x0a | IDEAPAD_WMI_KEY, { KEY_REFRESH_RATE_TOGGLE } },
+> -	/* Specific to some newer models */
+> -	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+> -	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+> -	/* Star- (User Assignable Key) */
+> -	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> -	/* Eye */
+> -	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+> -	/* Lenovo Smart Connect */
+> -	{ KE_KEY,	0x48 | IDEAPAD_WMI_KEY, { KEY_LINK_PHONE } },
+> -	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() *=
 /
-> +	{ KE_KEY, 0x46, { KEY_PROG4 } },
-> +	/* Lenovo Smart Connect */
-> +	{ KE_KEY, 0x48, { KEY_LINK_PHONE } },
-> +	{ KE_END },
-> +};
-> +
-> +struct lenovo_wmi_hotkeys {
-> +	struct input_dev *input;
-> +	enum lenovo_wmi_hotkeys_type type;
-> +};
-> +
-> +/**
-> + * lenovo_wmi_hotkeys_register_notifier() - Subscribe to the hotkey eve=
-nts.
-> + * @nb: The notifier_block to register.
-> + *
-> + * The callback runs in process context with the WMI event code as the
-> + * action. Return NOTIFY_STOP from the callback to consume the event.
-> + *
-> + * Return: 0 on success, or a negative error code.
-> + */
-> +int lenovo_wmi_hotkeys_register_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&lenovo_wmi_hotkeys_chain, nb)=
-;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(lenovo_wmi_hotkeys_register_notifier, "LENOVO_WMI_=
-HOTKEYS");
-> +
-> +/**
-> + * lenovo_wmi_hotkeys_unregister_notifier() - Unsubscribe from the hotk=
-ey events.
-> + * @nb: The notifier_block to unregister.
-> + *
-> + * Return: 0 on success, or a negative error code.
-> + */
-> +int lenovo_wmi_hotkeys_unregister_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_unregister(&lenovo_wmi_hotkeys_chain, n=
-b);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(lenovo_wmi_hotkeys_unregister_notifier, "LENOVO_WM=
-I_HOTKEYS");
->
-> +static void devm_lenovo_wmi_hotkeys_unregister_notifier(void *data)
-> +{
-> +	lenovo_wmi_hotkeys_unregister_notifier(data);
-> +}
-> +
-> +/**
-> + * devm_lenovo_wmi_hotkeys_register_notifier() - Device managed subscri=
-ption.
-> + * @dev: The device whose lifetime bounds the subscription.
-> + * @nb: The notifier_block to register.
-> + *
-> + * Return: 0 on success, or a negative error code.
-> + */
-> +int devm_lenovo_wmi_hotkeys_register_notifier(struct device *dev,
-> +					      struct notifier_block *nb)
-> +{
-> +	int ret;
-> +
-> +	ret =3D lenovo_wmi_hotkeys_register_notifier(nb);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, devm_lenovo_wmi_hotkeys_unregiste=
-r_notifier, nb);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_lenovo_wmi_hotkeys_register_notifier, "LENOVO=
-_WMI_HOTKEYS");
-> +
-> +static int lenovo_wmi_hotkeys_probe(struct wmi_device *wdev, const void=
- *context)
-> +{
-> +	struct lenovo_wmi_hotkeys *priv;
-> +	int ret;
-> +
-> +	priv =3D devm_kzalloc_obj(&wdev->dev, *priv);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->type =3D *(const enum lenovo_wmi_hotkeys_type *)context;
-> +
-> +	priv->input =3D devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->input)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * Same name as the ideapad-laptop input device so that the existing
-> +	 * hwdb keyboard mappings for these keys keep applying.
-> +	 */
-> +	priv->input->name =3D "Ideapad extra buttons";
-> +	priv->input->phys =3D priv->type =3D=3D LENOVO_WMI_HOTKEYS_ESC ? "wmi/=
-input1" : "wmi/input0";
-> +	priv->input->id.bustype =3D BUS_HOST;
-> +	priv->input->dev.parent =3D &wdev->dev;
-> +
-> +	ret =3D sparse_keymap_setup(priv->input, lenovo_wmi_hotkeys_keymap, NU=
-LL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	return input_register_device(priv->input);
-> +}
-> +
-> +static void lenovo_wmi_hotkeys_notify(struct wmi_device *wdev, const st=
-ruct wmi_buffer *buf)
-> +{
-> +	struct lenovo_wmi_hotkeys *priv =3D dev_get_drvdata(&wdev->dev);
-> +	u32 code;
-> +	int ret;
-> +
-> +	if (priv->type =3D=3D LENOVO_WMI_HOTKEYS_ESC) {
-> +		code =3D LENOVO_WMI_HOTKEYS_ESC_CODE;
-> +	} else {
-> +		if (buf->length < sizeof(u32)) {
-> +			dev_dbg(&wdev->dev, "short hotkey event (%zu bytes)\n", buf->length)=
-;
-> +			return;
-> +		}
-> +		code =3D le32_to_cpup(buf->data);
+> -	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+> -	/* Mode, opens a profile chooser; the Fn+Q button cycles the profile *=
+/
+> -	{ KE_KEY,	0x46 | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+> -	/* shift + prtsc */
+> -	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+> -	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+> -	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+> -
+> -	/*
+> -	 * WMI switches
+> -	 *
+> -	 * Some devices come with physical switches. Whenever a switch is
+> -	 * toggled, an WMI event is emitted to inform the software about the
+> -	 * switch's latest state.
+> -	 */
+> -
+> -	/* Camera switch */
+> -	{ KE_SW,	0x0c | IDEAPAD_WMI_KEY, .sw =3D { SW_CAMERA_LENS_COVER, 0 } }=
+,
+> -	{ KE_SW,	0x0d | IDEAPAD_WMI_KEY, .sw =3D { SW_CAMERA_LENS_COVER, 1 } }=
+,
+> -
+>   	{ KE_END },
+>   };
+>  =20
+> @@ -2297,123 +2237,52 @@ static int ideapad_check_features(struct ideapa=
+d_private *priv)
+>   	return 0;
+>   }
+>  =20
+> -#if IS_ENABLED(CONFIG_ACPI_WMI)
+> +#if IS_ENABLED(CONFIG_LENOVO_WMI_HOTKEYS)
+>   /*
+> - * WMI driver
+> + * The vendor specific Fn keys arrive as WMI events owned by the Lenovo=
+ WMI
+> + * hotkeys driver, which reports them as input events. Subscribe to act=
+ on the
+> + * ones that touch the VPC state: the Fn lock LED and the performance m=
+ode
+> + * button, which cycles the platform profile through DYTC instead of
+> + * reporting a key.
+>    */
+> -enum ideapad_wmi_event_type {
+> -	IDEAPAD_WMI_EVENT_ESC,
+> -	IDEAPAD_WMI_EVENT_FN_KEYS,
+> -};
+> -
+> -struct ideapad_wmi_private {
+> -	enum ideapad_wmi_event_type event;
+> -};
+> -
+> -static int ideapad_wmi_probe(struct wmi_device *wdev, const void *conte=
+xt)
+> -{
+> -	struct ideapad_wmi_private *wpriv;
+> -
+> -	wpriv =3D devm_kzalloc_obj(&wdev->dev, *wpriv);
+> -	if (!wpriv)
+> -		return -ENOMEM;
+> -
+> -	*wpriv =3D *(const struct ideapad_wmi_private *)context;
+> -
+> -	dev_set_drvdata(&wdev->dev, wpriv);
+> -	return 0;
+> -}
+> -
+> -static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_obje=
+ct *data)
+> +static int ideapad_hotkeys_notify(struct notifier_block *nb, unsigned l=
+ong code,
+> +				  void *data)
+>   {
+> -	struct ideapad_wmi_private *wpriv =3D dev_get_drvdata(&wdev->dev);
+> -	struct ideapad_private *priv;
+> -
+> -	guard(mutex)(&ideapad_shared_mutex);
+> -
+> -	priv =3D ideapad_shared;
+> -	if (!priv)
+> -		return;
+> +	struct ideapad_private *priv =3D container_of(nb, struct ideapad_priva=
+te, hotkeys_nb);
+>  =20
+> -	switch (wpriv->event) {
+> -	case IDEAPAD_WMI_EVENT_ESC:
+> -		ideapad_input_report(priv, 128);
+> -		break;
+> -	case IDEAPAD_WMI_EVENT_FN_KEYS:
+> -		if (priv->features.set_fn_lock_led) {
+> -			int brightness =3D ideapad_fn_lock_get(priv);
+> +	if (priv->features.set_fn_lock_led) {
+> +		int brightness =3D ideapad_fn_lock_get(priv);
+>  =20
+> -			if (brightness >=3D 0) {
+> -				ideapad_fn_lock_set(priv, brightness);
+> -				ideapad_fn_lock_led_notify(priv, brightness);
+> -			}
+> +		if (brightness >=3D 0) {
+> +			ideapad_fn_lock_set(priv, brightness);
+> +			ideapad_fn_lock_led_notify(priv, brightness);
+>   		}
+> -
+> -		if (data->type !=3D ACPI_TYPE_INTEGER) {
+> -			dev_warn(&wdev->dev,
+> -				 "WMI event data is not an integer\n");
+> -			break;
+> -		}
+> -
+> -		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+> -			data->integer.value);
+> -
+> -		/* performance button triggered by 0x3d */
+> -		if (data->integer.value =3D=3D 0x3d && priv->dytc) {
+> -			platform_profile_cycle();
+> -			break;
+> -		}
+> -
+> -		/* 0x02 FnLock, 0x03 Esc */
+> -		if (data->integer.value =3D=3D 0x02 || data->integer.value =3D=3D 0x0=
+3)
+> -			ideapad_fn_lock_led_notify(priv, data->integer.value =3D=3D 0x02);
+> -
+> -		ideapad_input_report(priv,
+> -				     data->integer.value | IDEAPAD_WMI_KEY);
+> -
+> -		break;
+>   	}
+> -}
+> -
+> -static const struct ideapad_wmi_private ideapad_wmi_context_esc =3D {
+> -	.event =3D IDEAPAD_WMI_EVENT_ESC
+> -};
+>  =20
+> -static const struct ideapad_wmi_private ideapad_wmi_context_fn_keys =3D=
+ {
+> -	.event =3D IDEAPAD_WMI_EVENT_FN_KEYS
+> -};
+> +	dev_dbg(&priv->platform_device->dev, "WMI fn-key event: 0x%lx\n", code=
+);
+>  =20
+> -static const struct wmi_device_id ideapad_wmi_ids[] =3D {
+> -	{ "26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", &ideapad_wmi_context_esc }, =
+/* Yoga 3 */
+> -	{ "56322276-8493-4CE8-A783-98C991274F5E", &ideapad_wmi_context_esc }, =
+/* Yoga 700 */
+> -	{ "8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", &ideapad_wmi_context_fn_keys=
+ }, /* Legion 5 */
+> -	{},
+> -};
+> -MODULE_DEVICE_TABLE(wmi, ideapad_wmi_ids);
+> +	/* performance button triggered by 0x3d */
+> +	if (code =3D=3D 0x3d && priv->dytc) {
+> +		platform_profile_cycle();
+> +		return NOTIFY_STOP;
 > +	}
-> +
-> +	dev_dbg(&wdev->dev, "hotkey event 0x%x\n", code);
-> +
-> +	ret =3D blocking_notifier_call_chain(&lenovo_wmi_hotkeys_chain, code, =
-NULL);
-> +	if (ret & NOTIFY_STOP_MASK)
-> +		return;
-> +
-> +	if (!sparse_keymap_report_event(priv->input, code, 1, true))
-> +		dev_info_ratelimited(&wdev->dev, "unknown hotkey event 0x%x\n", code)=
-;
+>  =20
+> -static struct wmi_driver ideapad_wmi_driver =3D {
+> -	.driver =3D {
+> -		.name =3D "ideapad_wmi",
+> -	},
+> -	.id_table =3D ideapad_wmi_ids,
+> -	.min_event_size =3D sizeof(u32),
+> -	.probe =3D ideapad_wmi_probe,
+> -	.notify =3D ideapad_wmi_notify,
+> -};
+> +	/* 0x02 FnLock, 0x03 Esc */
+> +	if (code =3D=3D 0x02 || code =3D=3D 0x03)
+> +		ideapad_fn_lock_led_notify(priv, code =3D=3D 0x02);
+>  =20
+> -static int ideapad_wmi_driver_register(void)
+> -{
+> -	return wmi_driver_register(&ideapad_wmi_driver);
+> +	return NOTIFY_OK;
+>   }
+>  =20
+> -static void ideapad_wmi_driver_unregister(void)
+> +static int ideapad_hotkeys_register(struct ideapad_private *priv)
+>   {
+> -	return wmi_driver_unregister(&ideapad_wmi_driver);
+> -}
+> +	priv->hotkeys_nb.notifier_call =3D ideapad_hotkeys_notify;
+>  =20
+> +	return devm_lenovo_wmi_hotkeys_register_notifier(&priv->platform_devic=
+e->dev,
+> +							 &priv->hotkeys_nb);
 > +}
+>   #else
+> -static inline int ideapad_wmi_driver_register(void) { return 0; }
+> -static inline void ideapad_wmi_driver_unregister(void) { }
+> +static inline int ideapad_hotkeys_register(struct ideapad_private *priv=
+) { return 0; }
+>   #endif
+>  =20
+>   /*
+> @@ -2496,6 +2365,10 @@ static int ideapad_acpi_add(struct platform_devic=
+e *pdev)
+>   			dev_info(&pdev->dev, "DYTC interface is not available\n");
+>   	}
+>  =20
+> +	err =3D ideapad_hotkeys_register(priv);
+> +	if (err)
+> +		dev_warn(&pdev->dev, "Could not subscribe to the WMI hotkey events: %=
+d\n", err);
 > +
-> +static const struct wmi_device_id lenovo_wmi_hotkeys_id_table[] =3D {
-> +	{ LENOVO_FN_KEYS_WMI_GUID, &lenovo_wmi_hotkeys_fn_keys },
-> +	{ LENOVO_ESC_WMI_GUID_YOGA3, &lenovo_wmi_hotkeys_esc },
-> +	{ LENOVO_ESC_WMI_GUID_YOGA700, &lenovo_wmi_hotkeys_esc },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_hotkeys_id_table);
-> +
-> +static struct wmi_driver lenovo_wmi_hotkeys_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "lenovo-wmi-hotkeys",
-> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table =3D lenovo_wmi_hotkeys_id_table,
-> +	.probe =3D lenovo_wmi_hotkeys_probe,
-> +	.notify_new =3D lenovo_wmi_hotkeys_notify,
-> +	.no_singleton =3D true,
-> +};
-> +module_wmi_driver(lenovo_wmi_hotkeys_driver);
-> +
-> +MODULE_DESCRIPTION("Lenovo WMI hotkeys driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/platform_data/x86/lenovo-wmi-hotkeys.h b/incl=
-ude/linux/platform_data/x86/lenovo-wmi-hotkeys.h
-> new file mode 100644
-> index 000000000000..cf07eb00f3bb
-> --- /dev/null
-> +++ b/include/linux/platform_data/x86/lenovo-wmi-hotkeys.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Lenovo WMI hotkeys driver, notifier interface for drivers that want =
-to act
-> + * on the vendor specific Fn key events before a key is reported.
-> + */
-> +
-> +#ifndef _LENOVO_WMI_HOTKEYS_H_
-> +#define _LENOVO_WMI_HOTKEYS_H_
-> +
-> +struct device;
-> +struct notifier_block;
-> +
-> +/* Code reported for the Fn+Esc event GUIDs, as ideapad-laptop always d=
-id */
-> +#define LENOVO_WMI_HOTKEYS_ESC_CODE	128
-> +
-> +/*
-> + * Notifier callbacks receive the WMI event code as the action and no d=
-ata:
-> + * the Fn key code from the Fn key event GUID, or LENOVO_WMI_HOTKEYS_ES=
-C_CODE
-> + * for the Fn+Esc event GUIDs, which carry none. A callback that handle=
-s the
-> + * event itself returns NOTIFY_STOP to suppress the input report; NOTIF=
-Y_OK or
-> + * NOTIFY_DONE let it through.
-> + */
-> +int lenovo_wmi_hotkeys_register_notifier(struct notifier_block *nb);
-> +int lenovo_wmi_hotkeys_unregister_notifier(struct notifier_block *nb);
-> +int devm_lenovo_wmi_hotkeys_register_notifier(struct device *dev,
-> +					      struct notifier_block *nb);
-> +
-> +#endif /* _LENOVO_WMI_HOTKEYS_H_ */
+>   	if (acpi_video_get_backlight_type() =3D=3D acpi_backlight_vendor) {
+>   		err =3D ideapad_backlight_init(priv);
+>   		if (err && err !=3D -ENODEV)
+> @@ -2600,31 +2473,9 @@ static struct platform_driver ideapad_acpi_driver=
+ =3D {
+>   	},
+>   };
+>  =20
+> -static int __init ideapad_laptop_init(void)
+> -{
+> -	int err;
+> -
+> -	err =3D ideapad_wmi_driver_register();
+> -	if (err)
+> -		return err;
+> -
+> -	err =3D platform_driver_register(&ideapad_acpi_driver);
+> -	if (err) {
+> -		ideapad_wmi_driver_unregister();
+> -		return err;
+> -	}
+> -
+> -	return 0;
+> -}
+> -module_init(ideapad_laptop_init)
+> -
+> -static void __exit ideapad_laptop_exit(void)
+> -{
+> -	platform_driver_unregister(&ideapad_acpi_driver);
+> -	ideapad_wmi_driver_unregister();
+> -}
+> -module_exit(ideapad_laptop_exit)
+> +module_platform_driver(ideapad_acpi_driver);
+>  =20
+>   MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
+>   MODULE_DESCRIPTION("IdeaPad ACPI Extras");
+> +MODULE_IMPORT_NS("LENOVO_WMI_HOTKEYS");
+>   MODULE_LICENSE("GPL");
