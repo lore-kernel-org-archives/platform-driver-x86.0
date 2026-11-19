@@ -1,65 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795098620;
-	b=YmResd1cQo4renfjbIyW+frdAJvgHpoGtN7/JnP1pt0sos/OoJpFfdd31pxGWhvDHc2Q
-	 rXAtTIPFekqPKkDvbAo/bXx+DtyoNOz817j757pt/cDN0UPaPEo3Hx7ei96RXZsQbDRcU
-	 8ZJFjZZX6K/aiFqqNXgo5z0hvb6FOXhVvg/SnXRDWNpB5GM1+MxrplApebigkXUF4j6/i
-	 qxZkXDoujMtyhDneOEYjHAfZPSSwmnUAjeu+WAh6tTB/3PFeVceSRIRNBxzAtUZwdQHck
-	 iiptDX8YlctP4B+Lx1GPQd0xD7lNpX8m7xJLcVhSk/ZxXUI8YuBQXcE51+KIqQ26dcg==
+	t=1795099142;
+	b=RpCfwfCft2/l10rCqIZ0/yJUqLqRf/xG4vj/QVJKacsutVj9Af6kDpG48EHPPmvS2ksM
+	 9OMvP87GxVruZhLUlkpnDrhJmzsEmEi8XIMkZ+irPZ9beIlEu1pCnPL4qoGS2A1joT9uu
+	 +Owh/Ve2LvU9Cfh98eRzHEkFFcZZ/JAXpvuLHyZShDHDVTC3XrsYH+/eAtAjuXw5uEhmQ
+	 3JFwUHk6AvW9+1Ff9GUY4SxfTL8deJ/YcFyL4ntw7dg/TIjfQo6fparO9dx9/0ifnUebH
+	 XKGklNhEY+9SBmWIu+V3jXGlVJeZ4ubc/WsNU1rxnPqzW8QIgt4HBmOlMTLbZkiU6+A==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795098620;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795099142;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
 	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=gXUh9NgRXsUvVhlhdHrD3K+LvJHIeDDuq0BHIzoUtIE=;
-	b=TSgRMjcCN4HqzHlVOtRP7QNwzNPeuCtIlGQhESybyhOO5B5xGhoOWf5rascGxwzkDoX8
-	 Sr22f1NDp1xT7SNnvpMKWm6+D34BY+O7spCdYZyslV3eE++vqMnS0VFZc5Sd9h1Qa4/+b
-	 nt/AG5/VlW/clz/qIu4jNF0ASOa5LOYZwU3KhIfdowD0Kc1JTtymmGiTq3HDELiBL41Fb
-	 yx0vuPeu3kqnGm1k2o0QpYTroo/Xtg8hHcII3Vo6C+P1TWWGCf6YjtevneOQ37kTYdTdN
-	 9wLHrEfPGCqkXyLZ3wbQpAvL7Iv+1v+tKikYZRPM5sPy4q5vrsVnsBBHc2dOegvUPKg==
+	bh=MMHHkkoxc23bBjQy826GU8NQcyL5syhIWVgroKMdpRk=;
+	b=SQ4uy/oQMVzsJWBv/i+jxQSPekruncq7n5O0wA7NkqZKQAh3JKDGd2NIoPd1aPBGXnlH
+	 O+/vNGorfkRYkjQ18DESdTqkgoBQJqIhxfaX5wbMyQDaUewjc8TpfyoM50A5cP08LBLpi
+	 l18vrFY+rXkUylN53yea8nvwzZzTOnxQJ5DJ+DhCYBRYo50BkWPYgP3etxkpeGGFz+Sxu
+	 K4oe6AKpz9Mj7H4WBdNmTgontNHUGGojQDR0MF4K4Baj5Ug4LRfpBfJm1ly7Oe/lkXWNh
+	 8E3RhoIK1q37pxj9csoe+0VKN9WwIXuU0wLhW0uF1sZyZB9zHB7FikTaVipxxHrkkcQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=rong.moe;
 	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=pTyR+c5O;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=HfnrFIii;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
+Received: from sender6-pp-f112.zoho.com (sender6-pp-f112.zoho.com [165.173.180.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14685606A324
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 14:30:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14685606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0A606A320;
+	Thu, 19 Nov 2026 14:39:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4FB0A606A320
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=pTyR+c5O
-ARC-Seal: i=1; a=rsa-sha256; t=1795098608; cv=none; 
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=HfnrFIii
+ARC-Seal: i=1; a=rsa-sha256; t=1795099110; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=fxee2Ntb3h9u6LSUHECtepHud0TeN+tUu7S+xQbuccwk2T2UoYtHVeZ1dNyrYC/UDUzzoIt7iNHj1Q8Hg834y342lwPfFsMJUH7HMZbBZhAyY3m46bxB6/gO0/QF4O2lgCUiS7t0T/N7pW9TFziyFdoM352KhtmVoe7uEALCeHM=
+	b=STGpgWs6TUGcrB82dxbjxb9hFNGTFLSACFC4L+iccChP1x5sjuQWEbtM3BUHpPxIB0D7tpHvKRAOJKQN3OLOcLh7Qkw3KVslZXyc7QBLIi5QwWsN0Oh+8+O7jmxJOAu4JBL0Vx2pu7y+r4lgZMOd1tEoZoUf2gE5ltNzd2vvp7o=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795098608; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=gXUh9NgRXsUvVhlhdHrD3K+LvJHIeDDuq0BHIzoUtIE=; 
-	b=SsG2tDoC3epE4IKBXqwWV7rIUboYL6QIZL9jVn2WWr0E+KT55vq+82FBNEgKUsBJJWgpYp1QJ4AoFzUSlLwyjkftX0zKjjgidvZfE4BvJBOU5tAkGRqBM3qA4XmWpG84HhzOx/RIQqfWR1kUBk9shT14bBJLUh0rBkcAM2fWi6w=
+	t=1795099110; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=MMHHkkoxc23bBjQy826GU8NQcyL5syhIWVgroKMdpRk=; 
+	b=Hklt22I6KIl47qF+Ix9Zr8MB/bxSFg1ChM2UPfnAafGo0SneFzVnH2TVLuAHdWvVzsOxBcwPlx/VrgmCUy2A7Cz4C53SUeuA280yNmLiCfuv40GjKwsokvvi6Q+O33k1lZfAOQVz3gX81Fh9K7zQNn8QQfjzt0SoTFXIYR1+lls=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=pTyR+c5OwGyqivYwQpFZOW/1KPwcGd+7z5H8BJxMfhOoiRtdvQuKTurh5t+TWh6Euv6DV4nroGoziR98+wy7zwMvWgTjPTxZ6mv8TyzKSUX/U9azcOLe0dHlE+fULcem7+BIqRyWmOZe+q+h2E4mcpHM5xNeoOn4NzhgtgQTJl2dwPxj4N/f3mA3ShGWq/Dt6xUs5j1XArL59PnjddX77DsyTNi4ApqPhALBNrt+TKflY0S43CXkm6w1TaG5EF13kRhquLcrkzngQQSwY1yEoEoJDG3aOY5X0Xc+rYtHiDsu+EgJeBJC8caBzTxCZxk1KyrpjdeCwZ8KGifMAqVhqA==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=gXUh9NgRXsUvVhlhdHrD3K+LvJHIeDDuq0BHIzoUtIE=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795098603859177.4593189418008;
-	Thu, 19 Nov 2026 06:30:03 -0800 (PST)
-Message-ID: <9878245f401ed1cd129435865b28e5dc06401d3a.camel@rong.moe>
-Subject: Re: [PATCH v5] platform/x86: lenovo-wmi-other: Deconflict battery
- with thinkpad_acpi
+DKIM-Signature: a=rsa-sha256; b=HfnrFIii510blYu7F9zn1BLGVaJYDe/6daREztsEftjgX0X9jbb9xWfmkVPEikxj3Lcqb3QpEpO9jvLBOzCY99vuajdXgoD6FxrnP84tNlMwGYHrHoTVMqLFtlGFYWU3eroV2wjxSQvqBqCNntWPf8jhmphwcGE1H5lpdJvjR0rCA+kCwq7U5NHcn7/WcGygOwq5adp3UbJrz92RKDMsKsMUZDP+j69yOyijM7+5wE4Gq9QLhMulAhgOdssP2SojiNTrb+/f76/LwbxbRqaAQ71bwxEEPgiHP24/pRdashhEEg3X4F/BOugPHePSh/bt+4KTvviiiRH0gteiV2BuFw==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=MMHHkkoxc23bBjQy826GU8NQcyL5syhIWVgroKMdpRk=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795099109111716.6663432809851;
+	Thu, 19 Nov 2026 06:38:29 -0800 (PST)
+Message-ID: <85a6f4cf8b9a1409d343705886afe935952fdf62.camel@rong.moe>
+Subject: Re: [PATCH v4] platform/x86: asus-wmi: fix camera key LED on
+ Zenbook S14
 From: Rong Zhang <i@rong.moe>
-To: Aaron Ma <aaron.ma@canonical.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>,  "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+To: Devin Bayer <dev@doubly.so>, Denis Benato <denis.benato@linux.dev>, 
+ skyedryv <skyedryv@gmail.com>, git@turtledev.nz, Corentin Chary
+ <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, Hans de
+ Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
  <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
-In-Reply-To: <20261119072516.309524-1-aaron.ma@canonical.com>
-References: <20261119072516.309524-1-aaron.ma@canonical.com>
+Cc: =?ISO-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues
+	 <jose.guilherme.cr.bh@gmail.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <b4d1f79d-770a-4e28-86cb-c3a5fd9187f6@doubly.so>
+References: <20261019-asus-wmi-camera-led-v4-1-7744c125bcc9@turtledev.nz>
+	 <e212e07006249d68aa7b9df25c95581b307b10e2.camel@rong.moe>
+	 <395209cded20a0bdc069b7bc19a68366b62a3f39.camel@rong.moe>
+	 <a35a487b-7932-41f7-bbd5-0d0fad2035c4@linux.dev>
+	 <4c7d100f18820cba7c4fe6f6fe50c6e3324504cc.camel@rong.moe>
+	 <9cbdb61b-9c49-4b31-a28d-022500b271a5@doubly.so>
+	 <73a6179232b6db07014d78508c441a6013912e69.camel@rong.moe>
+	 <b4d1f79d-770a-4e28-86cb-c3a5fd9187f6@doubly.so>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 22:24:07 +0800
+Date: Thu, 19 Nov 2026 22:33:21 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -72,219 +82,61 @@ MIME-Version: 1.0
 User-Agent: Evolution 3.62.1-3 
 X-ZohoMailClient: External
 
-Hi Aaron,
+Hi Devin,=20
 
-On Thu, 2026-11-19 at 15:24 +0800, Aaron Ma wrote:
-> ThinkPads expose battery charge thresholds and charge_behaviour through
-> thinkpad_acpi's ACPI battery hook using raw sysfs attribute groups. The
-> Lenovo WMI "Other Mode" driver also registers a power_supply_ext for
-> charge_behaviour and charge_types on systems advertising those WMI
-> capabilities.
->=20
-> When lenovo-wmi-other registers first, thinkpad_acpi fails to create a
-> duplicate charge_behaviour sysfs attribute and unregisters its battery
-> extension. Conversely, registering or updating any power_supply_ext on
-> the same battery runs sysfs_update_groups(), which removes standard
-> power-supply attributes not owned by power_supply_core and wipes out
-> thinkpad_acpi's charge_control_start_threshold,
-> charge_control_end_threshold, and charge_behaviour files.
->=20
-> Deconflict both ideapad_laptop (VPC2004 with GBMD and SBMC) and
-> thinkpad_acpi (LEN0268, LEN0068, or IBM0068 with BDSG and BICG) via a
-> per-driver table guarded by IS_ENABLED() in Kconfig, and update the
-> force_load_psy_ext description accordingly.
->=20
-> Fixes: 9ca8fc065b88b ("platform/x86: lenovo-wmi-other: Add WMI battery ch=
-arge limiting")
-> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Co-developed-by: Rong Zhang <i@rong.moe>
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Thanks for your information.
 
-Now the patch looks good to me.
+On Thu, 2026-11-19 at 14:57 +0100, Devin Bayer wrote:
+>=20
+> On 19/11/2026 14.12, Rong Zhang wrote:
+> > > I don't know about query=C2=A0and notifications.
+> >=20
+> > Could you test if any event is emitted when you press the camera key? S=
+ee
+> > is_camera_toggle() in Zane's patch for the corresponding event codes.
+>=20
+> Is this what you are looking for?
+>=20
+> bpftrace -e '
+>    kprobe:asus_wmi:asus_wmi_notify {
+>        $obj =3D (union acpi_object *)arg0;
+>        printf("_WED type=3D%u value=3D0x%016llx\n",
+>               $obj->type, $obj->integer.value);
+>    }'
+>=20
+> When I press the camera key, doesn't matter if it's disabled (LED on) or=
+=20
+> disabled (LED off):
+>=20
+> Attached 1 probe
+> _WED type=3D1 value=3D0x0000000000000085
+> _WED type=3D1 value=3D0x0000000000000085
+>=20
+
+This is exactly what I am looking for! Your device can take the advantage
+of brightness_hw_changed though CAMERA_NEG, which proves the viability of
+my proposal.
+
+>=20
+> > > The hardware key doesn't do anything if it's remapped, at least in my=
+ setup.
+> >=20
+> > How to "remap" the "hardware key"? Isn't the LED device only "remaps" t=
+he
+> > status LED?
+>=20
+> I mean the hardware key does nothing - it doesn't control the LED or=20
+> camera.=C2=A0
+>=20
+
+Got it. This is also what I expect. I misinterpreted your word as
+remapping the key though hardware (i.e., EC).
 
 Thanks,
 Rong
 
-> ---
-> Changes in v5:
-> - Drop the outer #if guard around the macro definition, as requested by
->   Rong Zhang and Ilpo J=C3=A4rvinen.
-> - Make methods const char * const * as well with a single
->   LWMI_PSY_DECONFLICT_STRS() macro, casting at acpi_has_method(), as
->   suggested by Rong Zhang.
+> The desktop keyboard key is remapped in software so the desktop=20
+> doesn't disable the camera when it's pressed.
 >=20
-> Changes in v4:
-> - Make hids const char * const * with separate HIDs and methods macros,
->   as noted by Ilpo J=C3=A4rvinen.
-> - Move HID lookup and method checks into lwmi_acpi_device_has_methods(),
->   as suggested by Ilpo J=C3=A4rvinen.
->=20
-> Changes in v3:
-> - Wrap deconfliction table entries in #if IS_ENABLED(CONFIG_*) and drop
->   driver_enabled, as suggested by Rong Zhang.
-> - Group deconfliction entries per driver (HIDs list + methods list).
->=20
-> Changes in v2:
-> - Consolidate IdeaPad and ThinkPad deconfliction into a table of ACPI
->   device IDs, method pairs, and driver configuration checks, as suggested
->   by Derek J. Clark.
-> - Check GBMD and SBMC for IdeaPads, and BDSG and BICG for ThinkPads,
->   instead of relying only on ThinkPad ACPI device presence.
-> - Check whether the corresponding driver is enabled before looking up
->   its ACPI device, including for ideapad_laptop.
-> - Update the force_load_psy_ext description to cover both drivers.
->=20
-> v4: https://lore.kernel.org/platform-driver-x86/20261118063058.157862-1-a=
-aron.ma@canonical.com/
-> v3: https://lore.kernel.org/platform-driver-x86/20261113055726.952551-1-a=
-aron.ma@canonical.com/
-> v2: https://lore.kernel.org/platform-driver-x86/20261112074823.853819-1-a=
-aron.ma@canonical.com/
-> v1: https://lore.kernel.org/platform-driver-x86/20261111083529.727285-1-a=
-aron.ma@canonical.com/
->=20
->  drivers/platform/x86/lenovo/wmi-other.c | 81 ++++++++++++++++++++-----
->  1 file changed, 67 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x=
-86/lenovo/wmi-other.c
-> index bd64e7b44669d..33be29bafabf5 100644
-> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -189,10 +189,10 @@ MODULE_PARM_DESC(relax_fan_constraint,
->  static bool force_load_psy_ext;
->  module_param(force_load_psy_ext, bool, 0444);
->  MODULE_PARM_DESC(force_load_psy_ext,
-> -=09"This option will skip checking if the ideapad_laptop driver will con=
-flict "
-> +=09"This option will skip checking if the ideapad_laptop or thinkpad_acp=
-i driver will conflict "
->  =09"with adding an extension to set the battery charge behavior and batt=
-ery charge "
->  =09"control end threshold. It will also skip checking if the BIOS report=
-s that "
-> -=09"those features are fully supported. It is recommended to blacklist t=
-he ideapad "
-> +=09"those features are fully supported. It is recommended to blacklist t=
-he conflicting "
->  =09"driver before using this option.");
-> =20
->  /* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00 & fa=
-n) =3D=3D=3D=3D=3D=3D=3D=3D */
-> @@ -905,19 +905,66 @@ static acpi_status lwmi_acpi_match(acpi_handle hand=
-le, u32 lvl,
->  =09return AE_CTRL_TERMINATE;
->  }
-> =20
-> +struct lwmi_psy_deconflict {
-> +=09const char * const *hids;
-> +=09const char * const *methods;
-> +};
-> +
-> +#define LWMI_PSY_DECONFLICT_STRS(...) \
-> +=09((const char * const[]) { __VA_ARGS__, NULL })
-> +
-> +static const struct lwmi_psy_deconflict lwmi_psy_deconflict_list[] =3D {
-> +#if IS_ENABLED(CONFIG_IDEAPAD_LAPTOP)
-> +=09{
-> +=09=09.hids =3D LWMI_PSY_DECONFLICT_STRS("VPC2004"),
-> +=09=09.methods =3D LWMI_PSY_DECONFLICT_STRS("GBMD", "SBMC"),
-> +=09},
-> +#endif /* IS_ENABLED(CONFIG_IDEAPAD_LAPTOP) */
-> +#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
-> +=09{
-> +=09=09.hids =3D LWMI_PSY_DECONFLICT_STRS("LEN0268", "LEN0068", "IBM0068"=
-),
-> +=09=09.methods =3D LWMI_PSY_DECONFLICT_STRS("BDSG", "BICG"),
-> +=09},
-> +#endif /* IS_ENABLED(CONFIG_THINKPAD_ACPI) */
-> +};
-> +
-> +/**
-> + * lwmi_acpi_device_has_methods() - Check if an ACPI device has all meth=
-ods
-> + * @hid: ACPI hardware ID to match
-> + * @methods: NULL-terminated array of required ACPI method names
-> + *
-> + * Return: true if a matching ACPI device is present and exposes all @me=
-thods,
-> + * or false otherwise.
-> + */
-> +static bool lwmi_acpi_device_has_methods(const char *hid,
-> +=09=09=09=09=09 const char * const *methods)
-> +{
-> +=09acpi_handle handle =3D NULL;
-> +=09int ret;
-> +
-> +=09ret =3D acpi_get_devices(hid, lwmi_acpi_match, &handle, NULL);
-> +=09if (ret || !handle)
-> +=09=09return false;
-> +
-> +=09for (unsigned int i =3D 0; methods[i]; i++) {
-> +=09=09if (!acpi_has_method(handle, (char *)methods[i]))
-> +=09=09=09return false;
-> +=09}
-> +
-> +=09return true;
-> +}
-> +
->  /**
->   * lwmi_om_psy_ext_init() - Hooks power supply extension to device batte=
-ry
->   * @priv: Pointer to the lwmi_om_priv drvdata.
->   *
-> - * Checks if the ideapad_laptop driver is going to manage charge attribu=
-tes first,
-> - * then if not, hooks the battery to our WMI methods if they are support=
-ed.
-> + * Checks if the ideapad_laptop or thinkpad_acpi driver is going to mana=
-ge
-> + * charge attributes first, then if not, hooks the battery to our WMI me=
-thods
-> + * if they are supported.
->   */
->  static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
->  {
-> -=09static const char * const ideapad_hid =3D "VPC2004";
-> -=09acpi_handle handle =3D NULL;
->  =09unsigned int props =3D 0;
-> -=09int ret;
-> =20
->  =09if (lwmi_psy_prop_is_supported(priv, POWER_SUPPLY_PROP_CHARGE_BEHAVIO=
-UR))
->  =09=09props |=3D LWMI_PSY_PROP_BEHAVIOUR;
-> @@ -928,14 +975,20 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_pri=
-v *priv)
->  =09if (force_load_psy_ext)
->  =09=09goto load_psy_ext;
-> =20
-> -=09/* Deconflict ideapad_laptop driver */
-> -=09ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL)=
-;
-> -=09if (ret)
-> -=09=09return;
-> +=09for (unsigned int i =3D 0; i < ARRAY_SIZE(lwmi_psy_deconflict_list); =
-i++) {
-> +=09=09const struct lwmi_psy_deconflict *entry =3D &lwmi_psy_deconflict_l=
-ist[i];
-> =20
-> -=09if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(hand=
-le, "SBMC")) {
-> -=09=09dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery f=
-or device\n");
-> -=09=09return;
-> +=09=09for (unsigned int j =3D 0; entry->hids[j]; j++) {
-> +=09=09=09const char *hid =3D entry->hids[j];
-> +
-> +=09=09=09if (!lwmi_acpi_device_has_methods(hid, entry->methods))
-> +=09=09=09=09continue;
-> +
-> +=09=09=09dev_dbg(&priv->wdev->dev,
-> +=09=09=09=09"ACPI device %s manages battery for device\n",
-> +=09=09=09=09hid);
-> +=09=09=09return;
-> +=09=09}
->  =09}
-> =20
->  load_psy_ext:
+> Cheers,
+> Devin
