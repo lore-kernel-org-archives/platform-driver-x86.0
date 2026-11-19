@@ -1,67 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795118781;
-	b=hyAfK9xyKaDHBxAs3r1RITC2zgm0RlsXOjfcPnaFqGItN638RxaeDkyBa3bKaYrJuvJ5
-	 0t4qz7lhRp3pEC2BOG50TtbmbtPw4Qp/WMWDunmGRBof9rD16Jf+NzldnuK810n5jA2l7
-	 75LTQE4ciD7v45eBvOyaiwnQfLxVDnZmMuGXv+a03+CQK0XSvhHH5wI11tnB07Vlj9sAK
-	 EDSVnxq68DQoIg2cfuZFCQWFH59GojhcQmeaYiqYgo8+l9OCYTzmRxqAiu2b/WYcGULHk
-	 S/4DtoDXQmZFCfscTH3HoqxyDAEfyM1UTQk3AU8Uuz0eJbwgBgSTqaZTg5aDtQjhJZQ==
+	t=1795119197;
+	b=RAOEHrXm7jkb3oEYx77eotFazQV2u0ZA8PyeAdb3R/YcTw8ig1h2pt0tXaYirtKoG+T3
+	 QOoXLsni0FMs9x8Y6FE9Bz9i4Y8862HSFx5Uk/T2g+zNWOutwTzH+UWJ/5dLBh+jisT2F
+	 5/qsr1onI3cfQQ6ocjy69gFbRZ8EcBXXS4GV8We1MYgR4s9r59ZkL+TwVWVJVWLK09emZ
+	 m5ZoYyMYoLpkoDB3ExtMlllG6JmDuTjmdWQyH33XCq1f3JzwRckT1Avely1ancTy5xstp
+	 MatpPX3tXcrZOTYyvKRP4K9KpHwUHeLkwyx0n0BDDvUXnJGR7V9ld1MyDBwCk3HlnIA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795118781;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795119197;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=wu1CvrUICSbkFrhJ2A1a2S5M/9R0urNxXACOQZxZAko=;
-	b=GxpsSrWeRRLGr1ceULH01fuFrty7SOV/Amzo5Y7S2rzS+5IXsGSIsUsx7XPFiskacRDq
-	 JA1J4kpal/3pHj12INnfCrpJs7lrNkZgX8eXbZGDdsnnxd5iuJwvA46gTnQ1iBGhi9hGl
-	 3i+Aht7FvQGzb19tNVnC7bcK4z2ZqFI00mSsiyhdWDsfuG4ZKjn2gO/Ir3xdf0uBB6GKQ
-	 eA9dtOBLTlDxIVb9Qtl7RDj02zGNLqyLth0fOBHoqfb2trISJbbfdqBCOb+/AkrD5Xh9z
-	 zXfMsDAj4V0pokOP5SfD89mntwM/9hfUf9rJwne6UA+Ac0blmAA+32010yhiY8n5C/Q==
+	bh=BwUenS+Geb0AtiReQAxExDU6dCfdpa1N0e5DSjboT/g=;
+	b=pZnoVlnHZf4jdow+9zogNMhPNOhDg51EoxGuwWfjgbmkdo+NaPO7Bhd9hjT844YOO/78
+	 cRlGCmLefuDsKz7j5Shkbgmt6Ya5+qCLgDKaApypEvjyR1cDRXqspeLU+6Z2f55MMIYX/
+	 dyXhkSXY1faLXNggt0Y6IzxG557nHMp+/k0YD/sGgxjteuKXKnXBNNAqlYzd1A7u4mxiS
+	 RmHxtFV0QvzE98hR5hD0dRl0TXfeeasjOuKoItXM4sk+4RbKAHZ5udvujeTpKL+ulq/AS
+	 0xl6jTxLdrD8uW9WzgCbBuEFMk0SclyCzrCrJKxAhDhYcPSK6bZNdpWP0AvfTLLmOlA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iMvwbD2H;
-	arc=none smtp.remote-ip=198.175.65.18
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N4o87HWI;
+	arc=none smtp.remote-ip=192.198.163.11
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828A5606A320
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 20:06:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 828A5606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C63606A320
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 20:13:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9C63606A320
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iMvwbD2H
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N4o87HWI
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795118781; x=1826654781;
+  t=1795119197; x=1826655197;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=vsR2EGP7SeexplW+kxReTrZsPbOybEyDEK433F6aF/I=;
-  b=iMvwbD2HQp1vAR3XAMt3bcSVeBb86E29jBVxujQt92rUR3qybTX2eM+h
-   VpdO+SXTJFzt6EVYOSpjMmqGtWpQsfCi8PtOpL85O+Xh66BEes6c4K9rv
-   nRoaGa+2TQoDwf7UdY6Es4P9nwRMw8b1Elg3hu8zXAWCQAMzKUgnti0my
-   kJKqo8p8+yB67965RrwGTwe8mcqGy7mARfXqyatg5P7jLA/2CPszfmapq
-   cIhhmDcmxQYXIRVbU10KZeiOAswmRznw80Q+wPZkJvPhJULgdNNUDQl1V
-   1Ai+Y1IUFAC+KaqGFG7lSAPFXcJ4dyE5ROOhd2/N53rQUE8gaTPdFxY5Q
-   g==;
-X-CSE-ConnectionGUID: UGNucUdNQlumKpIlgYkn6g==
-X-CSE-MsgGUID: RqZ/OK0tQESRYhmUh/Q1Yw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="4004231"
+  bh=EIHDLR1csYhiV76SQwovzWT4Wb6Xa2UFFWOPDv9NJPY=;
+  b=N4o87HWIo09yz1V9n4qB5iSo33AAFaiu7PxjHv3wXImOEC9HASJEK719
+   sQpSvLFmzk8s2fXvGDrpkbm82I/H7i5UyEo6g+kxMDKND9JJay87SRJlg
+   idK0hUSGsGVlLiQKuNfF1naRxqfUOt5XdAfD2ZYAzZMaPrg98i+P73/FT
+   njkGoAvnPEjaVD8fgUudDlLtBYIibnA7cfOmNpFDrC0I59Oqodz5eNcos
+   kbrA1UK1EsCHcBdY5HxUQgzDXMqS/CwRpfFWy7/WxOmGd+Cd8Ee7l8qbT
+   kyHE7KMp2SZv5y8y3XzGVueqF4hK8TdHTtDWqRvsT+3dg5Xr20ousARfK
+   w==;
+X-CSE-ConnectionGUID: spYZXGUlRKysPmk/c+CK6w==
+X-CSE-MsgGUID: 629y1xHNQMuv2S7gMtM69g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3908001"
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="4004231"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:06:20 -0800
-X-CSE-ConnectionGUID: 426KpIHTTcCmYUzosU5wCw==
-X-CSE-MsgGUID: /QC5P606SO+Og54tJIqJyA==
+   d="scan'208";a="3908001"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:13:17 -0800
+X-CSE-ConnectionGUID: zFGTUZYXShSR6wSyTn3Z9Q==
+X-CSE-MsgGUID: A5Fgj4X3SaO0gMHlKt59gg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="12374082"
+   d="scan'208";a="10608249"
 Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.54.77.98])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:06:20 -0800
-Date: Thu, 19 Nov 2026 12:06:19 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:13:16 -0800
+Date: Thu, 19 Nov 2026 12:13:15 -0800
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 Cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
@@ -69,11 +69,11 @@ Cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
 	rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, airlied@gmail.com, 
 	simona@ffwll.ch, anoop.c.vijay@intel.com, badal.nilawar@intel.com, 
 	matthew.d.roper@intel.com, james.ausmus@intel.com
-Subject: Re: [PATCH v19 01/19] platform/x86/intel/pmt: Introduce a callback
- for discovery data
-Message-ID: <av9VBvyYtp_XmAMZ@debox1-desk4>
+Subject: Re: [PATCH v19 02/19] platform/x86/intel/pmt: Use the pre-populated
+ header info for crashlog
+Message-ID: <av9XYlK6ljNjnmg3@debox1-desk4>
 References: <20261119155438.40762-21-michael.j.ruhl@intel.com>
- <20261119155438.40762-22-michael.j.ruhl@intel.com>
+ <20261119155438.40762-23-michael.j.ruhl@intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,120 +85,86 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261119155438.40762-22-michael.j.ruhl@intel.com>
+In-Reply-To: <20261119155438.40762-23-michael.j.ruhl@intel.com>
 
-Hi Mike,
-
-
-On Thu, Nov 19, 2026 at 07:54:39AM -0800, Michael J. Ruhl wrote:
-> Some devices require special handling to access discovery data.
+On Thu, Nov 19, 2026 at 07:54:40AM -0800, Michael J. Ruhl wrote:
+> Discovery data is pre-populated.
 >
-> Provide a callback to allow for the special handling.
+> Use the data for crashlog probe.
 
-The commit message could say why the handling is needed: On CRI the
-discovery entries sit behind the shared PMT window, so a direct read
-from the PMT drivers isn't safe, and the entry is identified by
-capability and index because its GUID isn't known until it has been
-read.
+Please say why: Crashlog read its discovery fields directly from
+disc_table, which isn't valid on a parent that provides read_discovery().
+Decoding from the disc_header copy that pmt_get_headers() already filled
+works for both cases and it's what telemetry already does.
 
 >
-> Suggested-by: David E. Box <david.e.box@linux.intel.com>
 > Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 > ---
->  drivers/platform/x86/intel/pmt/class.c | 18 ++++++++++++------
->  include/linux/intel_vsec.h             |  6 ++++++
->  2 files changed, 18 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/intel/pmt/crashlog.c | 24 +++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 >
-> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-> index 2b11c4012f6a..601cdf68f0bc 100644
-> --- a/drivers/platform/x86/intel/pmt/class.c
-> +++ b/drivers/platform/x86/intel/pmt/class.c
-> @@ -466,12 +466,17 @@ static int pmt_get_headers(struct intel_vsec_device *ivdev, int idx,
->  	switch (ivdev->src) {
->  	case INTEL_VSEC_DISC_PCI: {
->  		struct resource *disc_res = &ivdev->resource[idx];
-> +		struct pmt_callbacks *cb = ivdev->priv_data;
->  		void __iomem *disc_table;
-> +		int ret = 0;
+> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+> index d7018b495217..f7c391d145ff 100644
+> --- a/drivers/platform/x86/intel/pmt/crashlog.c
+> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
+> @@ -27,10 +27,10 @@
+>  #define CRASH_TYPE_OOBMSM	1
 >  
->  		disc_table = devm_ioremap_resource(dev, disc_res);
->  		if (IS_ERR(disc_table))
->  			return PTR_ERR(disc_table);
+>  /* Crashlog Discovery Header */
+> -#define CONTROL_OFFSET		0x0
+> -#define GUID_OFFSET		0x4
+> -#define BASE_OFFSET		0x8
+> -#define SIZE_OFFSET		0xC
+> +#define STATUS_IDX		0
+> +#define GUID_IDX		1
+> +#define BASE_IDX		2
+> +#define SIZE_IDX		3
+
+For STATUS_IDX I'd call it ACCESS_IDX instead. Dword 0 holds the access
+type, crashlog type and version, which is what this file reads it for. It
+is only the status register on type 1 v2, and on v0 it is also the control
+register, so STATUS is confusing here. It also matches GET_ACCESS().
+
+>  #define GET_ACCESS(v)		((v) & GENMASK(3, 0))
+>  #define GET_TYPE(v)		(((v) & GENMASK(7, 4)) >> 4)
+>  #define GET_VERSION(v)		(((v) & GENMASK(19, 16)) >> 16)
+> @@ -208,10 +208,10 @@ static int pmt_crashlog_disabled(struct crashlog_entry *crashlog, bool *state)
 >  
-> +		/* Used by crashlog driver */
-> +		entry->disc_table = disc_table;
-> +
->  		/*
->  		 * The mapped resource is sized by the namespace's DVSEC
->  		 * entry_size (in dwords), which can be less than the default
-> @@ -480,13 +485,14 @@ static int pmt_get_headers(struct intel_vsec_device *ivdev, int idx,
->  		 * region.
->  		 */
->  		memset(entry->disc_header, 0, header_bytes);
-> -		memcpy_fromio(entry->disc_header, disc_table,
-> -			      min(header_bytes, resource_size(disc_res)));
-> -
-> -		/* Used by crashlog driver */
-> -		entry->disc_table = disc_table;
+>  static bool pmt_crashlog_supported(struct intel_pmt_entry *entry, u32 *crash_type, u32 *version)
+>  {
+> -	u32 discovery_header = readl(entry->disc_table + CONTROL_OFFSET);
+> +	u32 *disc_header = entry->disc_header;
 >  
-> -		return 0;
-> +		if (cb && cb->read_discovery)
-> +			ret = cb->read_discovery(ivdev->dev, ivdev->cap_id, idx,
-> +						 entry->disc_header);
-> +		else
-> +			memcpy_fromio(entry->disc_header, disc_table,
-> +				      min(header_bytes, resource_size(disc_res)));
-> +		return ret;
+> -	*crash_type = GET_TYPE(discovery_header);
+> -	*version = GET_VERSION(discovery_header);
+> +	*crash_type = GET_TYPE(disc_header[STATUS_IDX]);
+> +	*version = GET_VERSION(disc_header[STATUS_IDX]);
+>  
+>  	/*
+>  	 * Currently we only recognize OOBMSM (type 1) and version 0 or 2
+> @@ -608,15 +608,15 @@ static int pmt_crashlog_pre_decode(struct intel_vsec_device *ivdev,
+>  static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
+>  				      struct device *dev)
+>  {
+> -	void __iomem *disc_table = entry->disc_table;
+>  	struct intel_pmt_header *header = &entry->header;
+> +	u32 *disc_header = entry->disc_header;
+>  
+> -	header->access_type = GET_ACCESS(readl(disc_table));
+> -	header->guid = readl(disc_table + GUID_OFFSET);
+> -	header->base_offset = readl(disc_table + BASE_OFFSET);
+> +	header->access_type = GET_ACCESS(disc_header[STATUS_IDX]);
+> +	header->guid = disc_header[GUID_IDX];
+> +	header->base_offset = disc_header[BASE_IDX];
+>  
+>  	/* Size is measured in DWORDS, but accessor returns bytes */
+> -	header->size = GET_SIZE(readl(disc_table + SIZE_OFFSET));
+> +	header->size = GET_SIZE(disc_header[SIZE_IDX]);
+>  
+>  	return 0;
+>  }
 
-The resource_size() cap only applies to the MMIO path, so the callback
-is expected to fill exactly PMT_DISC_DWORDS dwords. Fine for CRI, but
-please document that (see below), since there's no length argument.
-
->  	}
->  	case INTEL_VSEC_DISC_ACPI: {
->  		memcpy(entry->disc_header, &ivdev->acpi_disc[idx][0], header_bytes);
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index 8686e79c4f75..400231989b49 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -94,6 +94,11 @@ enum intel_vsec_quirks {
->   * * data:  buffer for the data to be copied
->   * * off:   offset into the requested buffer
->   * * count: size of buffer
-> + * @read_discovery: when specified called by client driver to read PMT discovery structs
-> + * * dev:     device reference for the callback's use
-> + * * cap_id: telem, crashlog, etc, ilog2 of VSEC_CAP value
-> + * * idx:     element to access
-> + * * disc_data:  buffer for the discovery data to be copied
-
-A few things for the kernel-doc:
-
-- disc_data: say it holds PMT_DISC_DWORDS dwords.
-
-- idx: say it is the index of the entry within its capability header,
-  as enumerated by intel_vsec_register().
-
-- The sub-items are not aligned
-
->   * @read_reg: when specified called by client driver to read PMT state
->   * * dev:      device reference for the callback's use
->   * * guid:     ID of data to access
-> @@ -107,6 +112,7 @@ enum intel_vsec_quirks {
->   */
->  struct pmt_callbacks {
->  	int (*read_telem)(struct device *dev, u32 guid, u64 *data, loff_t off, u32 count);
-> +	int (*read_discovery)(struct device *dev, unsigned long cap_id, u32 idx, u32 *disc_data);
->  	int (*read_reg)(struct device *dev, u32 guid, u32 *reg_data, u32 offset);
->  	int (*write_reg)(struct device *dev, u32 guid, u32 reg_data, u32 offset);
->  };
-
-Most important, please document the calling context. With this change
-the callbacks can be called from the client driver's probe, which is
-what the crashlog notification relies on. Something like this after
-the member list:
-
- * The callbacks may be called from the client driver's probe and remove
- * paths. A parent must not hold a lock taken by its callbacks across
- * the registration path or while its devices are being removed.
+With STATUS_IDX renamed and the commit message expanded, this looks good to
+me.
 
 David
