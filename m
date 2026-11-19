@@ -1,115 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.147
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795077738;
-	b=RWlD/RhgWdzjv7VH1T7QSztKpsqQD9upNIsRKgf4/hz91UDyxAHMlUwpnooP0umXR3fi
-	 hcwP+4OKAZl/cY8/wLWrU0nMSptbcZKPqDUh2TtjDBcErRzWas8Z8/6UG4A5Y9u8AEiOX
-	 LlBVc4AgkUTqd2JfwVHAZGD6oxzhDjs8HoEkK0YcJGzWuV9AFMxIrp+mNs5LogWClPHSu
-	 5Mw7/ngVaJRHqjbtx00kdelPb9vTyh8HxB7DjkTVgHTur7rbdGzzSb3LgIDOT7gIZf0p9
-	 HBg0wDLohIEwZm3chf7AZ4eCGRDi6yW+HvhFVHF9JS0UPY+6ISZRnkH9m7ABf6T9cgg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795077738;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
-	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:Content-Language:From:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=1XJavdPEzPCN0EQYi/Zq+Ti1eZf4zPgm0LQ123f3vYg=;
-	b=0DHSRF9s+5DX66UjImrjlnl2IR1lbzvC5F7hiuwksbDWmUo+XuFqS7d2AFx2fooRMS84
-	 LCLMxSHRjSft7YcBNcPUgWTPjHr2f/ojB6MN2J7NpdxtKIwrxjYscyCniv7Y2k1b1vL7R
-	 y0mQTRy/bwKf/zLr+7Q1vC05GFN+PKyLwgjl2ItHxf8HbSeqLXQ3ceOSFXTE7JvhyEqhF
-	 0od90mpr546qVO39E1+IYZYXBTPK9VHgeMAC8TJTmMM5JRD6efdD/PGI/ASxVwym1RagU
-	 0C1Y1g4d7PrdWzRbSrjvHSWFBkUpbZyoRcxHY0+1a7jDugQghC4GkSDMqNX8X4spGdQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=vdwaa.nl;
-	spf=pass smtp.mailfrom=vdwaa.nl;
-	dkim=pass header.d=vdwaa.nl header.i=@vdwaa.nl header.a=rsa-sha256 header.s=fm1 header.b="LgTZ/xjC";
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=syZKrsZ0;
-	arc=none smtp.remote-ip=202.12.124.147
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.33
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795078286;
+	b=x5Dz9S7JSzsn7kuyn+nkKruw18wf1G3VHwtz2cYYNEfg2+Hqo2tFlpGN+Q7wx6U33pQk
+	 cw1K6U+YI223R7SJYFdeDI1HOj3vDvmqG+3eJqfz/LSiOnx6BabR9Vup8q0vOhItIVZVx
+	 ieePQTU8FvFBKAHygy0Qwa4kbz7PLqUkl7mMq0BKWZC8nd0g122uVObPWsJdP2DtRi/za
+	 vwrx+Iq0YjGuE3mC0DcBVvV+QELc7gq3gYhqnv0VrmQwtYYPHDOO8xHbjOSpitfyH32gG
+	 iY4Y1JQCD24S4YTU4YNaxnPYwoebtSQBlaPI3XjavZ6bUrVRhSsl1AZgr6xEBrm6RcQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795078286;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-Originating-IP:
+	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=IRgLfR505dC/7jLqmhXvSKxmqCK337sSIfWOhbat6m0=;
+	b=NCLJ0Crd43YzQhX21917fFa7i9i8Ec+mYX2aJsW6nVAC4ibbuU0cVy3YdgwwCw9V+Cwn
+	 l6GiLgGOWSHgN2cQ+Ha0Guh40ExOu2UGSmecSN0rCOL9p4Y3BDeEYLEy9sft8rL3zkE+1
+	 Cl1+YiVANXqcdtbBBA2hEUlay95FMuxz1iky8MS+J7BU5I/FrZ10TTfF6zwyFnLzpKxQw
+	 yhV9NC0CxxRlbyuz23qxHjBGmHyJ8Zq339WNirkv41bBrHo9srchuQIsGw8NiAPdsU2ol
+	 L+/yMRBNrtgY1rZzNubjY1zAZYgaJQEycU8zoHLXNKEYNl7B3kZuUV6Blw1z/Ms6HYA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=GtkZIu18;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.33
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011033.outbound.protection.outlook.com [52.101.57.33])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ADF606A326
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 08:42:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23ADF606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vdwaa.nl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C27606A320
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 08:51:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10C27606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=vdwaa.nl header.i=@vdwaa.nl header.a=rsa-sha256 header.s=fm1 header.b=LgTZ/xjC;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=syZKrsZ0
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 3D99E1D0028A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Nov 2026 03:42:16 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Thu, 19 Nov 2026 03:42:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdwaa.nl; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795077735;
-	 x=1795164135; bh=1XJavdPEzPCN0EQYi/Zq+Ti1eZf4zPgm0LQ123f3vYg=; b=
-	LgTZ/xjCa+RLREZRDU+2vrk3cclrWlBUkVOm41cqIjTZ4VygLyUrvm49+tmn4+X+
-	YNT1MlJcAj4l80ZQ+VzGV+pdsDYa3gNCitiLFwZaxYWEhwl98PWHAl63kRK8DFMB
-	nQ4jxLgeMIjUKRyetpcXbp0UezQG9wHIbfo2fADCvj61cELmSjO06HSA0HNd4dIE
-	CjQHJu2+NKzPFQetjyOOqIPwP34e2BLQNIn0/8eeZr0H29RY7jyOdJh+gbIPMCMK
-	3azQsLhQ/wFG2wDAPtLod1J12XSUa0w7zIzWdVzxGGEIQgUX65EYTpV4td32qAmM
-	cJoGsqR7Lz8kDQ/AW2a3Gg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795077735; x=
-	1795164135; bh=1XJavdPEzPCN0EQYi/Zq+Ti1eZf4zPgm0LQ123f3vYg=; b=s
-	yZKrsZ0d6/HTXeRKKwL7FRROcDAKXnf3NA2UFAHIgPCpvVdun9t/U2gZvR0X9klm
-	lEVpry9WgNna5pcVzgiwe2RlTHIrtkv4fyz5b4XKB7viWoXtlqzG+sbnLY+9GHFP
-	ZQiNGqaJE9Z1wYbf35rkrbOmibDq4FL/bv+kGdgiNGyx0EjE6O4M+Vi2QoNV6f7j
-	NyXXICUREtM6arNsP3uEvB3cdsAphjONDNLP8sXIefbLOg3lPVA5+1AmYeku9bPS
-	LeNVInkOxPQYHKkGEeMWNo6L2Sr93G3FygIQ80hYnwlfl1Q3n/b9isy6S1y4w/Lq
-	VMLXBwt5Uh/++gRcx5L8g==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=vdwaa.nl a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795077735; d=vdwaa.nl;
-	mf=PGplbGxlQHZkd2FhLm5sPg==;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:MCzOJuUGHz8SQ1gfQhgHdqVq8AUvAaVMKlT32Bnym/y5waZ
-	FmpUe/MSD8bYarc/WDGvjbAFmvDYopCwVCMcvCXhk8urYI082ArMarz0CBUCskO6
-	bGAvHOkbbrLWJaUBAjJbZL0bzy74gfZIz7Xdzgny7X2s7WtlNYoM4wL308ju9KhD
-	xZHqH90RPVAKj1kkZYJwUXI8yb+efnkF5CXwhDPObyinaGIyDh/Mhny4YsJpx8tJ
-	1pXiG4rkj6PKk8mxikZ8CrUzGnKfv6a/v9HjWRocQJ3W7EF7Nks1eS5WnXtG6bg/
-	MGWVIQzWqfw6mo2llabo/EKwaLAGgcEAk6FH4bg==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=15;
-	hn=autocrypt,cc,content-language,content-transfer-encoding,
-	content-type,date,feedback-id,from,in-reply-to,message-id,
-	mime-version,references,subject,to,user-agent;
-Message-Instance: m=1; h=sha256:AoEIlr4BfBBl0+QzWLEeonTqNHBvSZkJ5mS+9zhjPVc=:1A3Y9cVz5VDyGc4psE6hQuMCwrVwTzkrdxmE8ZrD0oY=;
-X-ME-Sender: <xms:Zbb-aoa8tMFJu4sfMHg_nJ4IIA8Nw1iwqV5Ni3KK9YPorY0D0S9aeQ>
-    <xme:Zbb-auXHDGpGeWRBd_7OwJs4mrKi5GHL28dAKxhaKhFxU4c18WhOxrsrg9dfLscTy
-    MiXUd9Z6ciGltX86PHnimzXWAU2NolzJBZPvC9PH_O3Xokheso-FhFAxQ>
-X-ME-Received: <xmr:Zbb-ah9RLY6oV8BW3miQGDoRvqBsd4wlOLAXEB4OQHnPEG43MY2HrsBdMnUykbXP1itqJgOSXz-hWVNcFWT3HWgRMdSZWg>
-X-ME-Proxy-Cause: dmFkZTG0D1KYly65ASh4Pth/K5DpuLXXMar1p2iWZvGpKVRCfslbSly9oLnaUGGLl1DQFc
-    xp1F+mVgddRVBLE2YBv/JuHugNJ0N/06GKG9hXFovLyMujVxQArKPFi036v9XIGFNP56IG
-    RKfpcnpdYJOLqYYMz3gh91oa7g1ZG1AUp69sCM2rWZ9g2J5MXXIqtWHL6Qc23YTgNSrBg8
-    GLE0/f1OWEUYCmCutoyNTgw3ptZyR3BXITxJ88U9K+4vI2FUjnC2G+yHk3aJfiN7/LDv1T
-    akECfqgCGxvzF9NvXdCqEUnG+Ht34sGJKIt/ApN75blE8aZfcDEo2syFKG43d8o41SqFBh
-    Z28gEc4z3u+s5/zjkjDjNilTWi+5/pYe4Q2/hfM6zVFtodG0DMZ7p5UW3GRe5BhAxrVBpI
-    QyL62VKXJuwigTlfVkmRkszBrivPJIWX+6YVal3oAdOqiHKf5lSWpY0lx91cy3PRCyC12m
-    Ug50roGxkOjQ74z2PGQ850yGrJoi3TFzCYqOsZm/CKDzRTjzqj1Pw+0WGAeXC2Tzg/izmE
-    iUnzeT1ozJ7T2YdBH7LkKUcl+V8zvxN5SSfIq1Wxab3hW8OZAbqWF1rCqVJ2stMrg7CLRu
-    0xygdVtCwWUWsG62wQn1Hc8xI7gVn3KND4RLaMnj7DRtz3NH/EFhs7WsyVJg
-X-ME-Proxy: <xmx:Zbb-an9oj-kw0uMotz57fZ5C1oE8_e3CQejYU5g6M01vr44QFJcO2w>
-    <xmx:Zbb-ahR0Saw11NUGLapLsmxotyMkgahARhabelRr6fuR32PjgMja8A>
-    <xmx:Zbb-arfSr0JIhzTVkw-jXMq6vQzGj0uaqgcTxA6PLuJTZ_GLzxX4NQ>
-    <xmx:Zbb-alD2lZZAcJ6-1idamhJk1UIxliCQRnSSGufLRdNOhlfVbBN7Cg>
-    <xmx:Z7b-ampyiVtcIwx1AXQhd8Yjl3u5UMhwvv9_EAtrZi2hWOGl0ISMWmgs>
-Feedback-ID: i2d0446dd:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Nov 2026 03:42:12 -0500 (EST)
-Message-ID: <5aca5abc-329a-48ca-a8d5-eb05678a6f43@vdwaa.nl>
-Date: Thu, 19 Nov 2026 09:42:12 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=GtkZIu18
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IFdmp094ls7WG+K84GqJS56kfNuA5T8ubypDHOzL/j5ExxC4cumsS8eeBf8KVFIm3TyPri0jaWQcjwkBjYk4/kdjTe69zoqJk3Xr/I97mNnK0Jtey0XjaojTz+s1WoiaWjQaxyvFFaGC7LN2uOEUV9diS9dBscrzm7g9dblWHY1u1BLVK9giWx40FlB7I36Vk1BPCPS/MfOsLqXNj2H0Cs5WxHL62ZpQc+PZNt+J3iTftGsUlbYmvzMt4zbe0zBl4/Kl3kcedO8XJD9o7BRS8dH1GNB0RCfOXsasDjJraVzXek+0fX9NTzdIVDrIvrvPQWQYGKHZevOWfUzdCfvAOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IRgLfR505dC/7jLqmhXvSKxmqCK337sSIfWOhbat6m0=;
+ b=VRKzvnX/+NwAcdXIcAzpmCmTQqJok6zUhtFvyjrcn39DGr06y+HNojGPmwLiwLplVZy/m5isJtZIAieV2Ttatyt7f8NiT5CLwKFfzHoCpuLrMaC7eDq+ZNCwfc4urSnhAuWdS7bzWWfUL2M8wIL1ExUbYKQuZdNwvlgCMc/d1trzmZf0e5L9F9QgJ8uN7vfXd12aYN0MiaI6Owu943WVXZTRDBplzwMbmm1BSTbdJWanUQxPr9g16UBEZcQHmd+Fdrclby5ouVOSC1Z9fZ3O/fJ9ebs9hfRBoJun6SIHZLjadICGp/15VAsyQ8qNFP7eDC4xn0Wo790G/6JMStXr4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IRgLfR505dC/7jLqmhXvSKxmqCK337sSIfWOhbat6m0=;
+ b=GtkZIu18ZPXThBDOh1gpvb3d57k2w8k59+qtyF+hiuSSXBeApFncpr4lfnoJSUlh7Yz97i/g5B7I4ehK8jgIDh5jtNSoaqPH9Oi6LNrvaO9Izx8EmyLSBxb/Y3sZTh0/1rLb+sFG+mZhPlPGM9z2NPnUhihm8tiqDmM7J7j7g50=
+Received: from CH0PR03CA0430.namprd03.prod.outlook.com (2603:10b6:610:10e::15)
+ by MN0PR12MB6004.namprd12.prod.outlook.com (2603:10b6:208:380::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Thu, 19 Nov
+ 2026 08:51:22 +0000
+Received: from MN1PEPF000793FE.namprd05.prod.outlook.com
+ (2603:10b6:610:10e:cafe::8) by CH0PR03CA0430.outlook.office365.com
+ (2603:10b6:610:10e::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.615.14 via Frontend Transport; Thu,
+ 19 Nov 2026 08:51:22 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ MN1PEPF000793FE.mail.protection.outlook.com (10.167.249.202) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.639.5 via Frontend Transport; Thu, 19 Nov 2026 08:51:22 +0000
+Received: from trento15c5.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Thu, 19 Nov
+ 2026 02:51:19 -0600
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <Muthusamy.Ramalingam@amd.com>,
+	<NaveenKrishna.Chatradhi@amd.com>, <Anand.Umarji@amd.com>, Suma Hegde
+	<Suma.Hegde@amd.com>
+Subject: [PATCH v2 01/11] platform/x86/amd/hsmp: Fix sock_ind bounds check in hsmp_is_sock_attr_visible()
+Date: Thu, 19 Nov 2026 08:50:35 +0000
+Message-ID: <c9d9f0594eeed2c860be7d3354eab8f38bb7a1d5.1795061419.git.Suma.Hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1795061419.git.Suma.Hegde@amd.com>
+References: <cover.1795061419.git.Suma.Hegde@amd.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -119,110 +107,79 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_=5Bacer-wmi-battery=5D_ANV15-51_BIOS_V1=2E25_?=
- =?UTF-8?Q?=E2=80=93_DMI_matching_and_health-mode_compatibility?=
-To: DIPESH SAUD <080bct026.dipesh@pcampus.edu.np>
-Cc: W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, frederik@harwath.name, moh53n@moh53n.net
-References: <CAJP_a1ZH305H52ciUinxacQtVe1xC=DLS2H7ErF5g7AHt+Q8rQ@mail.gmail.com>
-Content-Language: en-US
-From: Jelle van der Waa <jelle@vdwaa.nl>
-Autocrypt: addr=jelle@vdwaa.nl; keydata=
- xsBNBE6QLAIBCAC3O6LmF+GKvOh7IV00TG+EKAQHAwjESnHGJOW58lKK7eAYn62ZM1uy0+6h
- yCMu5PD7+ND6U1gcgTTHYwNK8AaJt7yY4FRssgdcJk59uJBwROZtllotClJ893CuB6Wgr68b
- 07gIRbENYrB8rEoGfpUG//8/ep7sY8PS03jnFb4ll6mPlUE2oQVdYOlXgF4f9qkkIi4SQeE2
- MTuERaOrDuUNDlroJ7Yfx3J/rL5Qjn578/TKCAxg0pns6VIA/P9spRGmLhT4zP+OxZXeSZme
- IxcwFdJJXHr4oGaZvqe1yHlMmKR98rrIfPWhkw2Ls/XIZIxf6prT0XyczbzBnC2y1JyNABEB
- AAHNIkplbGxlIHZhbiBkZXIgV2FhIDxqZWxsZUB2ZHdhYS5ubD7CwHsEEwECACUCGwMGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheABQJUX8WhAhkBAAoJEMBghjN8UHc+mFwH/jjN+Qob4O36
- YiieajRwVLGuYdUDt9Z655oQYU8V4qbWf2tjUtqTYXrxLnaY6xQoYouRz9yFbh9dIKZb67ir
- 7AeVgCOtWVesGxAlGH6EY5JBZcsN0v0ScsivqQAv/Mv+4HK+XM57YlyRagD8tkprYskioWHg
- OwQfXAO6nlm4BJHWO9bHJUMgiGs7I190IKQG7iLBnJuGjsOFuy5KTLpnv+w7twmz0H+pkUPe
- jVHfJlJWdN4v1PigpgpjOR6ZepSIggMk7dHsa6GNLUOzi61yYVFe60+EGXhwyJIqSt56a4oR
- jMUcXaOugGr+JwC8Eq7Pg2+aFk+8fbe0oUzZJucHGnDOwE0ETpAsAgEIAK4Usb7B00WRxCZG
- HtM973F7V4OhOKv4kZKduxtu71bVUZsTuzn4h+m8guJ51uY/I2icUrN9gJG5aEzRqPuQi2L7
- KmZUjs3pscZWgUgiT8UZFDR6RuQ4k3CcWobsRCjYZdSblSZ8ccrLJE7xSbwKMXjAh2PEiaQT
- lS6wQbn6mHv4y3H9QVHs7+jXbmfHCxnVcwLqRmpuegSmezDaL5TlSc102voiXinhrWEZUvAB
- KDh6VuJ/60Y6zelCXVsEjRaApz90iXY1nifLhkHM8B2wG7Pum3V3X0Y0QTVD+z3EL1iq5mFu
- epKp//IOeeJN5iwHcRSJGy2s1oOzjRDyPv6v1AUAEQEAAcLAXwQYAQIACQUCTpAsAgIbDAAK
- CRDAYIYzfFB3PvDuB/0dI13hSYHW27c2Rq8BaGbIhXYYETtPD5B25/P1JJ5OQZkPmVq+vSHw
- uzUaDZHy3ZcwE+xFXzlkwXGdWos07JUGo74zV3HfeZxVEPv0HB9ACqQVU/JKjLZNj2SfhgzL
- 4F+O4Zgdsf0YaZG09F5PbMvbhoCZLfAaKWz/4fLEfhrDJLhrphUyPDXosn0UxPkDv0iiixn4
- V+bEZ5/wd8dRWi58R/iND+gRGsBREm5SpzdhnsarwoX6YdsQ449379enDNUN7jV4C3Gkon2s
- VwI2ZZbS10cY8rFSAV/CJA2E9daRoz40DI0tgXgLBAVhy7y5HWZJsDZexU0HFKJfkDi7RUPj
-In-Reply-To: <CAJP_a1ZH305H52ciUinxacQtVe1xC=DLS2H7ErF5g7AHt+Q8rQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF000793FE:EE_|MN0PR12MB6004:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa409ef6-e51e-423b-7d47-08df461a492a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|376014|1800799024|82310400026|36860700016|261021123027099003|10067099003|56012099006|11063799006|261021121427099003|261102123227099003|261009223027099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	27HDmvoapDQYuDXlApbgzEQRQT/IRc8C8uaeX92j6RQ+VRSrzhxays4vls4W6qink8IF6XRNyYN3t93mzb3YmTlhr5MDdg8GfRTSQw3hZLXrqqML27w4nkmPZblwnKA9cBaLc5tsu+twoMoqWuZgsDJVEqwfZKjilZS3My+qx+OBjCDDWIbQ7xVgSOMBHJy8EPODip837Ey8Zrr0oUtk1Q7A4jpexPvU0kCBDyZEdBVvqIG6TF8Mc0jzmu6SYHHRBCKxe630io9UkBHXjb11MX0122ngq6vuB/4YZWMooF9ALGb42UCkrzdX6n4UPN4mV8wYSwpn8PYQe50Cs18FlLsi9dTyrJY6ltuure/f47ITTL28aLhROWK2lzZTCKj0/0AQSlA1Wr4rw8YnNi2RZHYHZqfXmRW3P5K8DaUL5WPpLrG4cj2cbrMb36ZszHxKzwlxQvHsYbXBOVMqv43iA+ECYETdb/d1LXKHEEizsK0tdApvs1mfYfE1qGDbaDcCja9D5nhSAzaj+RsPbQefyTB7bZAzSHpGTL70EwyxnGcWWhAr4rRBlmesJub6aCUsBta2iiR0Q6J4hN5EhS8O6wmtXyYI5nhLanQL+p6U6cUTLvkJcQo+Cr3zA0H5nXBHYAfzXMdG9tHY5IF3nyWn3lfLXfLkllUYq8rXDiW0YV2LLdzeSPPJbsIEepjbQMdh9OlWyOwwRl24jvWANUYFrg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(82310400026)(36860700016)(261021123027099003)(10067099003)(56012099006)(11063799006)(261021121427099003)(261102123227099003)(261009223027099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	j5eCvRwjYt9eS1NwdUjngIoKYhAfXRhgd2nNK1Qargh/UUIeaC+eYZN6SU1sXewZTRFsWyOLmq2XSAgITAgIKTFzKVa43sAq71kh8lw4JyzqkMZ2lMR3VN3+dLNvBkv6yKYPPRq/85MUWa7bOSH4iH1/YuhFQrPmjMiSQuGksmOK7J4oyUSHvO/immMVnb9p9lcKNUM6o4M30hArlYCq/VlHB/cFosHY3L/+Wv+uEmD1GqGL1fplBXqmhToZYaa6y/O86GHAECLfj54uCJ2yKGfOKG+j0snRAQhCaVXfkqzNYCRDD6oePt8h/YuV8D0tZuVjgOuQY3K6QPNf9nDT0GuSQPqud1zFRmtXecPE3dyOEg8x2tyrgim8NplpMGtnvtzB0kf1Pif84Ja0c09QY0GhzGk7p4SLOXBgSbfXuzx4OAMqGfxvZZwnBs4xee2j
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2026 08:51:22.0084
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa409ef6-e51e-423b-7d47-08df461a492a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF000793FE.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6004
 
-Hi,
+From: Suma Hegde <Suma.Hegde@amd.com>
 
-On 11/19/26 02:52, DIPESH SAUD wrote:
-> Hello Jelle, Armin, Ilpo and platform-driver-x86 developers,
-> 
-<snip>
-> 
->     The upstream driver’s DMI health-mode table contains the product entry:
-> 
->     DMI_MATCH(DMI_PRODUCT_NAME, “Nitro ANV15-51”)
-> 
->     However, my system reports:
-> 
->     NITRO ANV15-51
+The bounds check in hsmp_is_sock_attr_visible() only ran when id == 0.
+SYSFS_GROUP_INVISIBLE is only valid for the group-visibility call
+(id == 0), but sock_ind must still be validated for every attribute
+so a later bin attribute cannot use an out-of-range socket index.
 
-What exactly reports this? Is that from DMI?
+Always bounds-check sock_ind first; return SYSFS_GROUP_INVISIBLE for
+id == 0 and 0 otherwise.
 
-cat /sys/class/dmi/id/sys_vendor
-cat /sys/class/dmi/id/product_name
+Co-developed-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
+Signed-off-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
+Signed-off-by: Suma Hegde <Suma.Hegde@amd.com>
+---
 
->     This appears to be a potential case-sensitive DMI matching issue.
-> 
-> Questions
-> 
->  1. Is the Acer Nitro ANV15-51 known to support the battery health/long-
->     life mode implemented by this driver?
+Changes since v1:
+- Update subject with name hsmp_is_sock_attr_visible() instead of
+  is_bin_visible.
 
-Not by me, I have relied on the out of tree driver GitHub issues were 
-users have verified it works on their hardware. [1]
-The driver only adds user tested laptops to the DMI allowlist.
+ drivers/platform/x86/amd/hsmp/plat.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
->  2. Has this functionality been verified on BIOS V1.25?
+diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+index e9b2b809c0f52..af8aee1fb22ba 100644
+--- a/drivers/platform/x86/amd/hsmp/plat.c
++++ b/drivers/platform/x86/amd/hsmp/plat.c
+@@ -71,8 +71,13 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+ 
+ 	sock_ind = (uintptr_t)battr->private;
+ 
+-	if (id == 0 && sock_ind >= hsmp_pdev->num_sockets)
+-		return SYSFS_GROUP_INVISIBLE;
++	/*
++	 * Always bounds-check sock_ind. SYSFS_GROUP_INVISIBLE is only
++	 * meaningful for id == 0 (group visibility); for later attributes
++	 * just hide the file.
++	 */
++	if (sock_ind >= hsmp_pdev->num_sockets)
++		return id == 0 ? SYSFS_GROUP_INVISIBLE : 0;
+ 
+ 	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6)
+ 		return battr->attr.mode;
+-- 
+2.34.1
 
-Can't answer this for you.
-
->  3. Would adding a DMI match for NITRO ANV15-51 be appropriate, provided
->     firmware compatibility is confirmed?
-
-It would be appropriate after you have tested that it functions 
-properly, this can be done with "modprobe acer-wmi-battery force=1" so 
-the DMI allowlist check is overridden.
-
->  4. Is there a safe, read-only method to query whether this firmware
->     advertises health-mode support before enabling the feature?
-
-The driver does not automatically set a charge limit but tries to read 
-from WMI, alternative you could dump ACPI and see if the methods are 
-available but that does not imply they actually work.
-
->  5. Does the driver’s HEALTH_MODE correspond to Acer’s commonly
->     advertised 80% charging limit on this model, or is the actual
->     charging limit firmware-dependent?
-
-In my testing on my Acer laptop it sticks to 80% charging limit.
-
->  6. Is there any additional information or testing you would recommend
->     before considering this laptop supported?
-> 
-> I have not loaded a custom driver, used the force module parameter, or 
-> invoked the firmware write method. Secure Boot is enabled, and I would 
-> prefer to keep it enabled.
-
-If you don't want to load the driver then I am afraid we can't help further.
-
-> I am particularly interested in establishing whether the firmware 
-> supports this feature before attempting any driver installation or 
-> configuration.
-
-
-
-[1] https://github.com/frederik-h/acer-wmi-battery/issues/92
