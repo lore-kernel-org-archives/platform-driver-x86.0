@@ -1,79 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.8
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795099363;
-	b=rJJNIMLKP5hPuSPHHA/sVeO+7vMNGfFKiJaHbbev1FS4yomdpiodvLW6UcbI1nb0fs7g
-	 cOV+Dc06sbJ9SimxEVHyAQIHbUjQ6WwrYvyI9bww8H6PluybvOzMhqTlPaYnfVSLF8zRM
-	 oois7kEei2++AlfDJjoQbaxWkKrbO6yLUgPZTon5GoLGuS0uf9dJMrs7ktIdnXI+sAMUy
-	 7Gxn+LyFTEzUyPEoEv1HW+PcM0qXagHcQjmWUHzdLNgLjkBkrspEtTN4HUol/+/ulRQ68
-	 KwwnIkNjGO7sVycapfSSoHc6zwvQoothF0Ju+gJfgWCYjfglt9ZcU+/ZnHLBwdUkH9Q==
+	t=1795099364;
+	b=OsnxKoW+vz0yxZdyB6FsGim3yYmymzMcagU0jr5hzfkAfb5x87Gl51IiAf5fOe8DKfDz
+	 wCCRKiiPCWSAsNAL1PZtxYEZGDnMRu1ifZAFJNg3A6/w4x1t5il9xmH9QxCTB0Y+G5Q5n
+	 /zpWjZwbLRoT6boAH/FIbHpGXpfCyDh8+sj6KuxqWaDut7czwJtXWKs0EOOLlEc86Dtie
+	 NwPg1rU1oeHbF4f9AwreRsAgACI8OMoEJYaHA1j4nvdw2cZZZLR/l3HiaheDzMJwB5PEb
+	 NGZLl7OvZ/BfzcHH0BNoYExlN50n2lr6+JIZwaTfEp8Ymns5os551ShKm4Kps046jpA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795099363;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795099364;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
 	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=B/3acB7R2OBwnLU7FlZ0iEJoNT1YWh89GEBXawmZA+4=;
-	b=NQQi+w2O5yxLMkwVwQ0n8JhG2l3h1CHiMFQ6bMuDXrnVUqDcME1YgkyLtWsJW4kUy8h8
-	 4dut98SX9mQzP0q34C64X/G0SL0G/IoQvHdjd/sT3a1eQp+WM0OLvSo+YazAioFOgiBC3
-	 EPH4e4GBmdJwbMYcrGni7B8qo0fhDY9nDH5a1aGlPvsl1hnl1ObFqDWywGvgu7YH2hgcO
-	 UDavyEMnPBrNAOTdR8cujIXGoS3luYVsZocqhajR6R6JYfkUCp+TUH7g7wBgeyufyucDz
-	 e8vk7mhi5Mb/G4PMvziINk0YnnA+VuBpb0/KwcLOccSzDjT4aHmZwMuD+YHOx7Xn4tg==
+	bh=14iPF+5T5I/FxqB+l3ZD0CzV8VhEdP7xoO5GaQox4Og=;
+	b=yW5q9AriPSEJUGq9Gjjc+tYfHv6A/34FZK0E/3We0oNnsNFuGicc+qQufKOqKdJ4EJbO
+	 pNkEvA/Q180mBwkaxHj84rRh1uQ+dYfCGDVY/fJWyP9O/2uXDvnMWPA2z00r1ICyRpIfF
+	 WhOhxeppdhRAqs/UrBGhNX/jQTwmXTQLDMahNCfjBKIvV671tNYrQcS0qMNXtHnhopH+1
+	 a1mS56RuQiutTfJlwDjoLfYdTPnlTb8ZixRMBvTRskzWFyPSCqs0mufp4zcEF3iwMjbzv
+	 7Rv8m2DXpf/IamVTUqnsE/ZFhdHHsbs9O69PV/ZFW8w9+J1WLGLGziDT2QnzhecSfZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=a3M2W+Bj;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lqGZ+ZdG;
 	arc=none smtp.remote-ip=192.198.163.8
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6A3606A320;
-	Thu, 19 Nov 2026 14:42:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF6A3606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD63F606A324;
+	Thu, 19 Nov 2026 14:42:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CD63F606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=a3M2W+Bj
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lqGZ+ZdG
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795099363; x=1826635363;
+  t=1795099364; x=1826635364;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=hJMdHhsLClrpqhCamU1k8zmXkE45r6ARdLiMo8wmyV4=;
-  b=a3M2W+BjanmFaKrXtHHt5kfiifuO5JkS3K/CNKYad96cOrYUJNEf/gLo
-   0jzTMknHzhzCKyYjfoqsCwjAiqsC2iy8uRGbnNIRQh+FzYRAO1a6JFwU8
-   ed4Q7QtsaT85Kr2ZUkPiz+pDjHm8xmRAPt4oOLpr7tMqEO0Cen9BsYrxF
-   zv8LuohrpIa2SC4CyLd+di0eraOa6jw2MOyzi4dmeXIvBBgJ7KRUrrHry
-   2LRxZJ3c3zhc/gh9Mfb3nUFfRadKUtGwls9A1B2z/A3lj/NcXwnzm8TX2
-   XtkjBvAmV5V7QvNldf7Z5UtMZO4wX9SZMOEmojVdWl4gNgo52Z8c8z0y2
+  bh=tUQRoH/1bDrWAv6uI4Lz6SZ/WXSLqaY1NZs8G9VZ+i0=;
+  b=lqGZ+ZdGd0pzLd3MDD3AjIIZUCeFZmwbDdHBFfIyqopO/olGcOqnP+zq
+   nzTBMtZCUAL3n4ggNQqPj70yI+xErXKYqQWPmKaCaHDgt5AAKbSaKTET7
+   Ak8ggIIR5tEBi+6xdtFtY0s4kbCvpAuS+Ja0ee7cRO4L52lmsSF8180pA
+   tF5DaNB//G8ucpAqnR5FuSD5thYCNXDM1qZ3jizr9QIaHxCgWHqZ7C8x6
+   G0sZvivYm7ZjdqIGY+YX5mc1j/jqqQGdN1oyHN7OmCqMHFf7BFbFINAmm
+   zDofj2dEhTBy/FWzrxQflw56N4MuqJN6eW/xOqvmXxdssmJs7uHlG4Z7K
    g==;
-X-CSE-ConnectionGUID: LwAIiRJNS8aHb6JVZYWdvg==
-X-CSE-MsgGUID: zFO5rEfnRnGleO7O/7iORA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3849537"
+X-CSE-ConnectionGUID: ozJWBCoBSVGG0iEnEEnJhA==
+X-CSE-MsgGUID: L0v6sRIFTWmY7Mx+PtVUaw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3849546"
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="3849537"
+   d="scan'208";a="3849546"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 06:42:29 -0800
-X-CSE-ConnectionGUID: EyD5h7K9R66WTSVPwZJ+gQ==
-X-CSE-MsgGUID: fWNSePyzS9SiyT3+HkSIUA==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 06:42:33 -0800
+X-CSE-ConnectionGUID: ULzRL87RR5mPCyZz87Cl3g==
+X-CSE-MsgGUID: 5C87le8lRnGQ9HP46PzFxA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="10786327"
+   d="scan'208";a="10786329"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 06:42:23 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 06:42:31 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, Rong Zhang <i@rong.moe>
-Cc: Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar <vsankar@lenovo.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ike Panhc <ikepanhc@gmail.com>
-In-Reply-To: <20261110-leds-trigger-hw-changed-v8-0-2717115d612c@rong.moe>
-References: <20261110-leds-trigger-hw-changed-v8-0-2717115d612c@rong.moe>
-Subject: Re: [PATCH v8 0/3] platform/x86: ideapad-laptop: Fully support
- auto keyboard backlight
-Message-Id: <179509933622.9442.14269678577307602965.b4-ty@b4>
-Date: Thu, 19 Nov 2026 16:42:16 +0200
+To: platform-driver-x86@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20261102031910.82286-1-rosenp@gmail.com>
+References: <20261102031910.82286-1-rosenp@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-lis3lv02d: Add Precision M4800
+Message-Id: <179509934509.9442.15011303718987100760.b4-ty@b4>
+Date: Thu, 19 Nov 2026 16:42:25 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -87,18 +82,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 10 Nov 2026 23:47:01 +0800, Rong Zhang wrote:
+On Sun, 01 Nov 2026 19:19:10 -0800, Rosen Penev wrote:
 
-> Currently, the auto brightness mode of keyboard backlight maps to
-> brightness=0 in LED classdev. The only method to switch to such a mode
-> is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
-> is a multiplexed brightness value; writing 0 simply results in the
-> backlight being turned off.
+> The Dell Precision M4800 has an accelerometer on the i801 SMBus which
+> is not described by ACPI, so the driver currently skips it:
 > 
-> Decouple brightness processing code from LED classdev, and add full
-> support for the auto brightness mode. In this mode, the keyboard
-> backlight is controlled by the EC according to the ambient light sensor
-> (ALS).
+>   dell_lis3lv02d: accelerometer is present on SMBus but its address is unknown, skipping registration
+> 
+> Reading the WHO_AM_I register at address 0x29 returns 0x33 (LIS3DC),
+> the same address as the sibling Precision M6800. With this entry the
+> sensor is detected and reports sane values:
 > 
 > [...]
 
@@ -113,12 +106,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/3] platform/x86: ideapad-laptop: Serialize keyboard backlight tracking
-      commit: 1f002f1c187a9fd774da3238a663fa521fcfc759
-[2/3] platform/x86: ideapad-laptop: Decouple hardware & classdev brightness for keyboard backlight
-      commit: 456108d0cd4d63801006ba7df7d458be27108da9
-[3/3] platform/x86: ideapad-laptop: Fully support auto keyboard backlight
-      commit: 074d1042a084d77bede64298143680da16833e6e
+[1/1] platform/x86: dell-lis3lv02d: Add Precision M4800
+      commit: 83a2e41dd85b426008016c09f56523cf5951b3da
 
 --
  i.
