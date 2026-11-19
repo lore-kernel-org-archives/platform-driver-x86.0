@@ -1,76 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795104192;
-	b=y2F9NKtXW7umAl9+5eMwpz1TLi0g1vkjdnve8qJrJpeU19OPiMouIvKM3Wh78PuJO4Ov
-	 fJvpG9CKk1SgmCnBmQy+rWmI1RpAxtbSvUOdwf0C6fu38rKt7vNwjU2MgqlsuI+9mDD+W
-	 bn1a6Mdk/MCQ7T6bpxK+ocYSrEk4wY85YHeCZsDMjgCelZb8sHs54GFUBKH0sD3YstrKd
-	 kJ0T610eGA0j6msGWy1q0MPZvV956dEAHiZZ8xQURx62RuTbV/cC5KuDNyqnPQX4HQ+Fr
-	 3HES+D5/uKupjBxoCVCKE0mMdDWw9KYSQNXrnT7tUV6TMLCsSv5ycDnULTSPetFfx5w==
+	t=1795104198;
+	b=liOBZ9CM25F6jLiEn1ZL9mmFphpmzXJtJyksj1TYPGOFjZaPfmcj2ZiFm1jw4xUJmgQt
+	 phKx7lVXt6ncqBO1072dida2C262CEwoBpKueLElobuJOQ/VZXKWZnmfH6J6I3XwlVGGR
+	 bXPr3EMSG+9tRP/qXqP8eE2cZk9xRXzFdUC7Pu/eD4FOTKMzBqfSiAY3/+/CTRwulmE9q
+	 xlH/2DfNQRa9ylnkIKcIDLMsgPnIA4QlSTFMcsSAQI8q8MLUO08S6ZlsGeUHZ8sh0etdc
+	 Dt+dHE1c0z2xirmWxCyvQliW/PJDsjiLTgg2eAQ3PKgE43pY117zBn93XNaIOQa4dNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795104192;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795104198;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:In-Reply-To:
-	 References:Subject:Message-Id:Date:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Mailer;
-	bh=hhOOBMXr5wtj46XQR4Zg1xmlLi9F4CT0RmWwx/avMSs=;
-	b=47uFTgwdS2d1ES9pQJsORqIZczLPR6LOF0/YHKuOrV6mato1NjzWbb8gT4MQ4bOtuup/
-	 8JDBTWR35mBHXv9TKpNOccpzyhjD3dydC2RWC8Emr7LJkQ6aJyl3DdMG2Qs4rbc3Aw39G
-	 odUanQcnUCdfOn03TLNnjDv7xGLIYXGybCcFx8Oq+TIZUHXvMJKhHSNmGd8YXbiwkSXan
-	 J8ZcNzZ5EQ/pVNBY2I3LVs7htTDitxnbjvCb++S2mHKcrc/4sWpD5H4Nyn5RLEEd4my37
-	 AgFm1KFPMpUuzmz5vnR/0g128iBuDTylWcBhevG1ErCqL3eR0CWeE5a7CW3gN5DJPdQ==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
+	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Mailer;
+	bh=laitjI9MWmGrB5sqWh2UVHDh2r0BGep5oylTD1ZNQHA=;
+	b=hbT78n351b2SC2YBxq5cHJu2JH38abq7Ag6QVL0muSQDyVFkH2UJ0iKFVagX+IGCUWLK
+	 pelySXAICmxrJW/oW8ahfQatqWrmOKEL7oqxV/zV8D9oUIaY/bUq3JPWe781GwRpf9+ag
+	 Q3svzPGUZ2ztXhPLyWFk0xhua/geIUYZWTUjWTgaTUyEAxEZRhE7ejSCrFeNLCdtOnMUP
+	 9DSdQSRWTS+ApmVsrP2nCzNctnNELhE8XSD3gyoPaDu3lbdJ/jTHxsC9NSJLLzonvpw1U
+	 uLFwPndQxd70FW0jbnAzOsEufCUXVEUKybczTidbpioZKJKoGF6dp92rPQ9F5XQ95DA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=m7sSYhfc;
-	arc=none smtp.remote-ip=192.198.163.13
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=LLthqUeE;
+	arc=none smtp.remote-ip=198.175.65.10
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92B560A260B;
-	Thu, 19 Nov 2026 16:03:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C92B560A260B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B908D606A325;
+	Thu, 19 Nov 2026 16:03:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B908D606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=m7sSYhfc
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=LLthqUeE
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795104192; x=1826640192;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=RSikVu+3rSFNr00EL4rtFc6YziDlGRNiW6MKNpXQk7w=;
-  b=m7sSYhfcg/yB5lkSUP00kE1OstU1Q3cU8mj2pEoap6TqBV7ekgnjIqLC
-   NXtC86cv8Knijhpcd/7lXHpRh1Lv4bKwRKgFUTVgXQlO6OB/QHZf84uIN
-   SBSYEU1Ys3fQDWa7WoGk53aHkgseyZkE/KnrDfxEuhy5yJSwDWKeXy8tr
-   e0K8+4ZeSRnv2WE2guS4bwLR3d7rYVBsKBxN47FpluQdP3U6f5XWDzQ/i
-   u2lJpBW6UTJDk570NeXRVYZdmz4YQosqnWRsTLVtAgRA9lGAJ9JRKjFik
-   pFiUK08U35+DZEXUMcAfT2CDDrJOJj1Zq9JoRvMreeTuBWtX5SsPYPRDt
-   A==;
-X-CSE-ConnectionGUID: Rj4vlikeQoegCtj+Zun72Q==
-X-CSE-MsgGUID: cL4fheZuS66uQQPRvXKsVA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3951262"
+  t=1795104198; x=1826640198;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=bZemFlHvRhws+Fnyge/8nInPKTKD3Jvj6918Io0liSI=;
+  b=LLthqUeEqao1qdD3flfhnIjtCfLhTi2v5+khNHUbxZTzSSiiJQ6wpM/s
+   hxUSchDls0QMgEvc/qEb4y5UXIj6tspRBiHz4AzgyA0Z+3+sUsndsL7nM
+   23ZUvRulJbWvXiL8rlwSqrQlXwjTMQUFUvsVu21D7/9xZwqqrBjIooRLk
+   1L8ghzRNS4nnvuw4FfKNIETGqdHg9/HyyP/s2CkPKzBHCnZ3nJFS/ZGUi
+   DKhAZIctX2LA/a7LhPVBHi5CzCdYZgXR85V9U2MxsG3+QBG5K7Cm4Ge1v
+   XS/abZ2Qi1cGaPnjfKEgpDUUFvfgVwH5NQEfSRA9Eftoa8grGJzgI4LRM
+   g==;
+X-CSE-ConnectionGUID: g0hi/m7KQgCrs8BW6IDGhA==
+X-CSE-MsgGUID: wNN0hk3MSpSd2pM1Z4iDNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3874234"
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="3951262"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:03 -0800
-X-CSE-ConnectionGUID: 5Set2TcLT3qmdltsVBv73w==
-X-CSE-MsgGUID: CtmhTDOCSAO1LQMSmttYTw==
+   d="scan'208";a="3874234"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:18 -0800
+X-CSE-ConnectionGUID: 6tcfMu3HToGmDzd0UTkVkQ==
+X-CSE-MsgGUID: cuzP3XVZSnSgD2JxkBRJMw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="10459492"
+   d="scan'208";a="10371054"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:59 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:15 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: prasanth.ksr@dell.com, hansg@kernel.org, Dell.Client.Kernel@dell.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ava <ava@oven.ninja>
-In-Reply-To: <20261024103604.319624-1-ava@oven.ninja>
-References: <20261024103604.319624-1-ava@oven.ninja>
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: replace deprecated
- strlcpy with strscpy
-Message-Id: <179510417381.21358.12284492079106710215.b4-ty@b4>
-Date: Thu, 19 Nov 2026 18:02:53 +0200
+To: Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
+ Lucy Wong <lucywong2778@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261102204611.63792-1-lucywong2778@gmail.com>
+References: <20261102204611.63792-1-lucywong2778@gmail.com>
+Subject: Re: [PATCH v3] platform/x86: add Xiaomi WMI key driver
+Message-Id: <179510418947.21358.15541567230710778334.b4-ty@b4>
+Date: Thu, 19 Nov 2026 18:03:09 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -84,16 +83,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sat, 24 Oct 2026 21:36:03 +1100, Ava wrote:
+On Tue, 03 Nov 2026 04:46:11 +0800, Lucy Wong wrote:
 
-> The kernel has deprecated the use of strlcpy wrappers in favor of
-> the safer strscpy variants. Replace the internal driver helper
-> function strlcpy_attr() with strscpy_attr() across all
-> dell-wmi-sysman attribute parser files.
+> Certain Xiaomi laptops expose extra function keys through a single WMI
+> event GUID (B74AF83F-8B2F-4069-ACAC-36D176F62FC0). Unlike the existing
+> xiaomi-wmi driver where each key has its own GUID, here all keys share
+> one GUID and the event buffer encodes both an event type and a keycode:
 > 
-> Ensure explicit destination buffer sizes are passed using sizeof()
-> to prevent potential out-of-bounds array writes during ACPI object
-> evaluations.
+>   buffer[1] = event type
+>     0x01: keyboard backlight level (EC handled)
+>     0x02: press/release keys (5 keys with abstract icons)
+>     0x03: firmware-handled toggles (touchpad, Fn lock)
+>   buffer[2] = keycode within that type
 > 
 > [...]
 
@@ -108,8 +109,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: dell-wmi-sysman: replace deprecated strlcpy with strscpy
-      commit: a2b19337b0da259ba22226440eaa56518ae0571d
+[1/1] platform/x86: add Xiaomi WMI key driver
+      commit: 9a48682bdf4eac3286bad27d6e0cd6a5ab80255d
 
 --
  i.
