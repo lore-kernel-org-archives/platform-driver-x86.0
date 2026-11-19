@@ -1,79 +1,76 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795104130;
-	b=QC0QnJ37gqtGUtTBM9pafz/AHNyABkO8fJaSPLoNsnlphKNGR7G21PWuHerS0Xp8TBaH
-	 Bs4vRizB1NwEh3NXBF5Pq7jK+mZQZM0eDXO833U0kNGx3Oq7/07uInl014UXaQxFMj0pO
-	 581ApIorqGtpAobM+cAKlbS4NsvdcfyYNaYyUvuiOqpETTP8sR5iqEJRDisTq6SsNxjis
-	 W07K8uaPce2h7U7oXzeW02LSb84PuNKsK3+kaAwIEgPZLKf9FJJKRSklVZCxxY/FWxlhM
-	 sLZ513tyouCwITr14xgsns+y0QuN2iB73vKq2o7Dn2pkB2htapo4t6dD0qh+Cd4zQ0w==
+	t=1795104136;
+	b=J0/sQBgpt2gUcf9PaO7q/lMEnsTKLojHGjkonUcC+JYEU81en+CaskQvMz1TalQXHRe6
+	 8nNLZ4xv0DS9FR+XTqJqLXIWA9W9XXUtGLPm7WxOJ2qR8gFw5sSRsTw5b0AMmveCc6EsC
+	 8P0NB9cZ+Ap/Z/xkr/8Sy6ruBFF8Ujg2IQu0KXAcffL0aAXAL2v8rcI5FHHe3NMg+mXXY
+	 elXXuiL2bdtBJ8Enf4ben27TMQPZTmHNWUP7P3GRqKoFuaGrWBqKwXR7SuYfmvYjGWJ3b
+	 /IJzMQx1DRyAEVPF8kVhSDoNkmSSRl/HpCrFUFYuhTe2F8W7Tr8POl47fYaDhrRjWWQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795104130;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795104136;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
 	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=jwti4s5rITv8xU0s69yI5rBwfOqDxIGRtEOMN/ujo+k=;
-	b=gQCugkaFSRdpvggtJyU0R2hnWySrus8OwHNbKSx0CFKv2+Hy0VVi9yxeWOm2cWIxXSa7
-	 AmyRYr93P821HBjBSwScQz+3Tnc0ApUrzBRscx/M3fGNPLG6In8SpcX5vp0TjRm85pGzI
-	 0mF3ZldUMg98hXQdSktK1PlkWwmjNPWw77tIA0RWTk34QjuwXKatekqu7Tb3xs8a8UHpw
-	 AcU5LuTn6ZFEQKQaWLhoxPOpYJHmugKyz5JrbAdb7hP7eJOntww7GmZEsR8zge0DJa3Mk
-	 XgmlzP4sjaWW3jqGCJ4OQ34Bjx4MBglSb3AAs+Rk1ZMVr4r8Q612fGfmWpsIObQFnQA==
+	bh=mDvse5R8AxeYe6zn9yAAjd2BMUY88kuaQ6OkBnlSymk=;
+	b=FXveaUGVdENbr1O3owX/RIl8jTlLnZ69JWY6p8v4gYao/K/VtcHyBMR5+s2T/HTohpoc
+	 u61XzYCEElhDFfvg+57E5AfNA+4YdbUoTZD39OHuBRPoCT28Y/NCaFd31a0RW+NaLtBkB
+	 VeURbZjXwbGH54srd29F2ExrAH3M70jFx3te8imgcy5Qz0GUiyXeVWmU6898yLOKftuB0
+	 JtSPvGfl/FIabwG5TNliMfMpw9B0AQqa3bwMss2injVnr8ad+tMqNgRVYTSj18E2i/2LJ
+	 PdiumTaejeHXIPSN0em0vDkyauxdUyMQeAzEUVvIx5IyF2bwtclBRPB9TcRWrdHImGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=f7qFXtRN;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=H5vYThdb;
 	arc=none smtp.remote-ip=198.175.65.9
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D73D606A331;
-	Thu, 19 Nov 2026 16:02:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6D73D606A331
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B2C606A335;
+	Thu, 19 Nov 2026 16:02:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2B2C606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=f7qFXtRN
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=H5vYThdb
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795104129; x=1826640129;
+  t=1795104136; x=1826640136;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=tnVEEQtn6BF+eiDIsVITBHXOFEqTebTSJBmNrc5ej3E=;
-  b=f7qFXtRNyp2BfBRjCpTciMLnLHQ8KN0NFDTTTTP5hWrdz5uznaE5YWxC
-   IwCfASBT0VcMVVeGCYmQphbzSWaW4aoegAy1HsMzf9GEM6lDlL2KtV52o
-   zKlzFqQGAjP28fAhQRp8Bx1YfZXoqeI7vCWYhPoLabfuaSQlMPCLcIclZ
-   C7HhZRWo5a9KD0vrpXYLZFVF1eMxEt/Er24fjk8y0mW5ADZRain/dYV2e
-   yJKb4Y4ZVtgLavrGgoLQ1GLqfVHUjX9u7AJjYTwAYYZPgYmKCsuoWkR3e
-   ZUUKfOwnJGkb3/0PRzfpBgP4yohMcMN5zyJYXOqsCxbZ5lr/m7Iu2D0AK
-   A==;
-X-CSE-ConnectionGUID: 2isjHS/WTpmJokZmXx8rCw==
-X-CSE-MsgGUID: VTUMtJA+Th+TEX4mrwM4Eg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3803245"
+  bh=C5Tjv/kIrjR/cCe6hwqJUwTZwQKZwZh+mQREB8PDzoI=;
+  b=H5vYThdbvjomZzMz1yGtH0GHjQCtrSn3IdGuQ5ioa3qNSUnhxl8LIAsf
+   OiLx13vXsD3VfI4/nJZEZuir47PndGWI9wOehND/5NINMqxukuHJo4Kvq
+   e9FiXdHE+SEbNggORurxI5zMDAyIsOzxSBuYj8XA4lsrUbNBdxhGRxymI
+   dxeHEEar0Ka/NTY+djwOEzrZpu3H8jsRLvra2W5l0uOqo5rMcG/8ELXjr
+   8q3nQZTHdC6cme4GMkVTtGcoS8wZv4SztjF3Aih7PlbNGUxj6JFm5To/T
+   9oRCE1aTUiEG52njTC4LOf0gbl/Mdt5GEeXkiMje4zUOJQQ01gt/aGN4B
+   g==;
+X-CSE-ConnectionGUID: +0hmoP1MSz2x/kA/KWHRqQ==
+X-CSE-MsgGUID: Pui98Bj1QUuCrcDp5F0X5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3803264"
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="3803245"
+   d="scan'208";a="3803264"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:09 -0800
-X-CSE-ConnectionGUID: BwhIC+gSQ+GTzgLYtRLX4g==
-X-CSE-MsgGUID: m4pZe/h2QtO88atbIbPl3Q==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:15 -0800
+X-CSE-ConnectionGUID: Hf+6IlvCQbSx10Bi2ORj6w==
+X-CSE-MsgGUID: kRYo0/SsR9+TveZY7eoozg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="10590988"
+   d="scan'208";a="10591048"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:05 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:13 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Hans de Goede <hansg@kernel.org>, 
- Christian Aurich Zanettini Martins <christian.aurichzm@gmail.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, 
- Sanket Goswami <Sanket.Goswami@amd.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20261102053503.102598-1-christian.aurichzm@gmail.com>
-References: <20261102053503.102598-1-christian.aurichzm@gmail.com>
-Subject: Re: [PATCH] platform/x86/amd/pmc: Fix S2D message ID on Rembrandt
-Message-Id: <179510411959.21358.4834449524709551919.b4-ty@b4>
-Date: Thu, 19 Nov 2026 18:01:59 +0200
+To: "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hansg@kernel.org>, 
+ Pedro Caldeira <pdrocaldeira@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261101192446.5615-1-pdrocaldeira@gmail.com>
+References: <20261101192446.5615-1-pdrocaldeira@gmail.com>
+Subject: Re: [PATCH] platform/x86: acer-wmi: Keep Bluetooth powered on
+ Aspire E5-573
+Message-Id: <179510412763.21358.3739867579073133249.b4-ty@b4>
+Date: Thu, 19 Nov 2026 18:02:07 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -87,14 +84,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Mon, 02 Nov 2026 02:35:02 -0300, Christian Aurich Zanettini Martins wrote:
+On Sun, 01 Nov 2026 16:24:44 -0300, Pedro Caldeira wrote:
 
-> Commit 382fe403dc31 ("platform/x86/amd/pmc: Add STB support for AMD
-> Desktop variants") added S2D message ID 0x9B for Granite Ridge (family
-> 1Ah, model 44h), but only checks the model. Rembrandt is family 19h,
-> model 44h and goes through the same AMD_CPU_ID_YC case, so it sends 0x9B
-> instead of 0xBE. The firmware then reports a telemetry size of 1 instead
-> of 0x100000 and amd_stb_s2d_init() fails with -EIO.
+> The SMBIOS type AAh table of the Aspire E5-573 reports a communication
+> button bitmap of 0x1 (WiFi only), although the laptop has internal
+> Bluetooth.
+> 
+> wmid3_set_device_status() reads the device states using this bitmap and
+> writes the result back, which loses the Bluetooth bit. Any write to the
+> acer-wireless rfkill device therefore powers Bluetooth off, even if the
+> WiFi state does not change. Userspace does such writes during boot, and
+> Bluetooth cannot be turned back on as it has no rfkill device.
 > 
 > [...]
 
@@ -109,8 +109,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/amd/pmc: Fix S2D message ID on Rembrandt
-      commit: 918b3cafc1eeda758a21b1a21c6517722a4a6f94
+[1/1] platform/x86: acer-wmi: Keep Bluetooth powered on Aspire E5-573
+      commit: 9b5a2d0e91c806dae2001c029c77c4228223c2dd
 
 --
  i.
