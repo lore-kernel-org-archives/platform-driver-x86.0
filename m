@@ -1,81 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795104188;
-	b=StAKRsouO2YlH/sPYHqKt5VvDtA7/EVDKvZwhjWYwu0XbPaIHel09bMb0+3FgwuG0vOo
-	 EPsKO2FAC6IKCiM39cCdIctjGoRaxV7N+uB75Sk5zVrilaD/lmUUEXDJK1ej25F+ROfvN
-	 2y/0ox8RpkrMMxqTvm2xUNi1uE3Bpl45MW+xiUWohxGETgVKaXIRj6Xjo2GtI10Q8psed
-	 WrGfE1AgEEppLcZbWdl9XHj8szh9ow6ttTXbLi53S2EJDB886ey9HKjMzzSPOOuRShuj2
-	 I17FNOvfcF8mHhzeLPVhjrNGBfumpJj8rUR648asz1272Grm7y1bqKroEdhYcAspLPQ==
+	t=1795104191;
+	b=lD9D97uIdylKfgK1VWDW2a8BYRZvW7j+SnJxDoSZGCmByMG2uf2YfMoSEqErUe8v827i
+	 6YZWafttOcHlNQZxc86LrWJwRuEO9+VIJgm8XKrtBtUIrXghGWsJnNm46FgVNYXbeiRxD
+	 /F9CxO6nDj+41Kz4vuAwmHsMTpG79KzMKqqG6dixCu73gGuZpP6djTzKxHp1JrSX6WTHf
+	 rPTPRnjS6NY3Bpc509esL8rE2lOYJ3JlL6MEkAHCFVup64WP2JuwILzJkbxyWFuo/eS6l
+	 GOtd1DzcPsmMgoG87TiDT43rq4OmIPnGLmJySph8LBh3iogGQJWiKH2X6JhAXB8JcdA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795104188;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795104191;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
 	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=4zi2JWHeWfDfX39NlxX3oX9HxXWlhyFS95IVW8A7s5g=;
-	b=tbnEo19vYvGIH4nFbojHi+IdMuUGJ+eUu27kLhI0ZfSADieu/hajuavxgplKE0rUAwcf
-	 D1LzZeUrEBQDvURh8vRQ8RqoagNBb4Wm7iYM+/vlMb8IJl+29r2bnPhC3/5/Vton0Jz8E
-	 8ledknDJzjIj286hAq4rUNqEP6Hrw2DQsYxI1f47DLhopjMPZpD5C1P2EAmohd9NxEcG5
-	 rzuTXI5m4oo/DWRYhbX++AJffD94NWY1dsKF9gc2WToX3QKUV57U5584vDA3Fiiu9c1a9
-	 WNag2/xLIdH0Jpkft//EWCn3AUr00YiPc0xRFbIz7zYZm2O4K8brflRhN0jtYKKqu3Q==
+	bh=ZEuZOC5eyWUu0W/0P4LA1qekTK2eHdfizQnodyDXm80=;
+	b=Uzk7CCYsrLSmeSuLTwkVQQ6ZCSsBhXJS7dJT1X+KlEPuC7sN6tQNx+M14DvYjkJlyWbC
+	 FdTZ5qNP9hmhdREyWLcqP7+tfHIFxXe0lepwBp7Kf/bZy1Jwe/pg7pQG0DMg6KaBAmpMI
+	 Lo3rPp9QKj1BK4sRWT56QhQFE9c2AnEPmZyH8ikxPy5HUFyTRZHn1xdNILX/+oRVSdFAB
+	 pJwGF0kM2PdLL/03xdTe51Zeh5iBdFgQjNH4J7tCW//+HAIeCB5WfiY4BjYWTssWNfxK2
+	 VwkKW41/4yjnO/dE834X84XfI+jjB+w9LNG/j8OPNZKcvAMrYeSnuwgMOzCIA6fnJOA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N5giJBrI;
-	arc=none smtp.remote-ip=192.198.163.13
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="j9jUD/yq";
+	arc=none smtp.remote-ip=198.175.65.10
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8C8606A325;
-	Thu, 19 Nov 2026 16:03:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C8C8606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA70C606A335;
+	Thu, 19 Nov 2026 16:03:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA70C606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N5giJBrI
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=j9jUD/yq
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795104188; x=1826640188;
+  t=1795104191; x=1826640191;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=r0qzl1l2ZjBbaSVw+4tulftWf87xepvCgmvPesxSJqU=;
-  b=N5giJBrIl4oTng7dIlXEDzaIMfdioMAdVrKAJkt5tqF4XzHsWSaqgS/9
-   yxYhhgqeEs+bj7TvDjZfbgF566tM4qa9cUvHu1xytGmFameEnRxiK68in
-   1u9K0M4IHgtmj9ZTfXznwCRgakka1snTIJ5epX2sabf49MU4hlRBqmxIo
-   RXWpon2Cl0x4OFAXZ4WMuaWTP43clpK1BUGDtWHxLVyBnSSvsXsER4Rh7
-   CRFjgchoUxAxc70cyBZh1Yl4iUdoRP/9rhGH7srF2xU/U4CDJIepis5qd
-   gW3nkiAho1tgF5HbEpkb0d2VX9VsPF5HYfaQ2f7OBsf5PiuCTG0SlbeEk
+  bh=aKIYVp0HF7RoYlDQ9Z1YxNxs6aSGy49KFvQMa1mVgXY=;
+  b=j9jUD/yqL9hGbCORWvnjf2cpru3Ti6Pwt2xsH310xdPrwsDVr3oXlgfC
+   qHKM6RewHyzawr+jzQ5QQgKRf2FfATnr8v7/cXrmCv9JpFMyIxEMpp+Cm
+   A0NmDFkgEcemETy+ZxQWixmkVC8sUeNcUDdnxNP0UanMHb7meAM7kj415
+   bo81Yr2u1fkJ64T2PId5lOwvPalNq5kITf3KmyWaXYoHwUMTy6aY7Cw/6
+   l4WiUfu0sQ0ppzmOluHHWvOzymS7kas9kEHqACIt5SHeAMS5uC9w7PdGJ
+   TDQYp49om/EA8wCsQlznGXjP15xaDYkUUK53nbIMSN0qxt3ni06Hb4l8F
    Q==;
-X-CSE-ConnectionGUID: mno0lg49QGOicspK9uizig==
-X-CSE-MsgGUID: kzF60MdMRvqu2B5O/awMUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3951233"
+X-CSE-ConnectionGUID: N8TlsAObRyCdKqsafcqJeA==
+X-CSE-MsgGUID: Vu5DuIyHSsmZjhnpw6dxKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3874211"
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="3951233"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:55 -0800
-X-CSE-ConnectionGUID: jJS52iEIT6iakYqFwr1/AQ==
-X-CSE-MsgGUID: mQv+4zpvTbeL+TTVy1a05g==
+   d="scan'208";a="3874211"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:11 -0800
+X-CSE-ConnectionGUID: 9kmDwDmGQ+OkVjFS0nO1ZQ==
+X-CSE-MsgGUID: D1knF3rKQG2Ihtsiw3NJfA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
-   d="scan'208";a="10459450"
+   d="scan'208";a="10371027"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:02:50 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 08:03:07 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mika Westerberg <westeri@kernel.org>, 
- Andi Shyti <andi.shyti@kernel.org>, Corey Minyard <corey@minyard.net>, 
- Hans de Goede <hansg@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
- openipmi-developer@lists.sourceforge.net, 
- platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-In-Reply-To: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
-References: <20261024-i2c-smbus-read-block-data-v1-0-19bb97467982@gmail.com>
-Subject: Re: [PATCH 0/8] i2c: convert i2c_smbus_read_block_data() users to
- pass buffer length
-Message-Id: <179510416419.21358.12676315877277601381.b4-ty@b4>
-Date: Thu, 19 Nov 2026 18:02:44 +0200
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Hans de Goede <hansg@kernel.org>, Awal Awal <awal.nova@gmail.com>
+Cc: Lizhi Hou <lizhi.hou@amd.com>, Mario Limonciello <superm1@kernel.org>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20261023-amd-pmf-npu-leak-v1-1-798e7161bfba@gmail.com>
+References: <20261023-amd-pmf-npu-leak-v1-1-798e7161bfba@gmail.com>
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix memory leak in NPU metrics
+ query
+Message-Id: <179510418102.21358.12243474789880136526.b4-ty@b4>
+Date: Thu, 19 Nov 2026 18:03:01 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -89,16 +86,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sat, 24 Oct 2026 19:48:40 -0700, Dmitry Torokhov wrote:
+On Fri, 23 Oct 2026 10:08:45 +0200, Awal Awal wrote:
 
-> Convert callers of i2c_smbus_read_block_data() across input, ACPI,
-> IPMI, platform, and power supply drivers to pass destination buffer
-> sizes, adopting the 4-argument form introduced in commit 68f382641f8c
-> ("i2c: smbus: make i2c_smbus_read_block_data() safer").
+> amd_pmf_get_smu_metrics() calls amd_pmf_set_dram_addr() with
+> alloc_buffer set to true on every NPU metrics request. Each call
+> devm_kzalloc()s a new metrics table buffer and overwrites dev->buf with
+> it. The previous buffer stays on the devres list and is only released
+> when the device is unbound, so every request leaks one buffer.
 > 
-> Because the prerequisite commit 68f382641f8c is in mainline now,
-> subsystem maintainers are encouraged to pick up their respective
-> patches directly into their trees.
+> amdxdna calls amd_pmf_get_npu_data() for its sensor query, so any
+> userspace monitor that polls NPU utilisation through
+> DRM_IOCTL_AMDXDNA_GET_INFO leaks memory for as long as it runs. On a
+> Ryzen AI 9 365 (family 1Ah model 20h) laptop with a system monitor
+> polling about 1.4 times per second, the kmalloc-512 cache grew to 5.8
+> million objects (2.8 GiB) over 38 days of uptime.
 > 
 > [...]
 
@@ -113,22 +114,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/8] i2c: acpi: use 4-argument i2c_smbus_read_block_data()
-      (no commit info)
-[2/8] i2c: docs: update i2c_smbus_read_block_data() prototype in writing-clients
-      (no commit info)
-[3/8] Input: cyapa - use 4-argument i2c_smbus_read_block_data()
-      (no commit info)
-[4/8] Input: elan_i2c - use 4-argument i2c_smbus_read_block_data()
-      (no commit info)
-[5/8] Input: synaptics-rmi4 - use 4-argument i2c_smbus_read_block_data()
-      (no commit info)
-[6/8] ipmi: ssif: use 4-argument i2c_smbus_read_block_data()
-      (no commit info)
-[7/8] platform/x86: x86-android-tablets: use 4-argument i2c_smbus_read_block_data()
-      commit: 2a1d56a31ce503ee12bcf6d76bde99f2aab7c7d6
-[8/8] power: supply: sbs-battery: use 4-argument i2c_smbus_read_block_data()
-      (no commit info)
+[1/1] platform/x86/amd/pmf: Fix memory leak in NPU metrics query
+      commit: 3f1be6b854af29f030e3199d85e79d28cfe766a6
 
 --
  i.
