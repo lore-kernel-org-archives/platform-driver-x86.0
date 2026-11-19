@@ -1,81 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=120.232.169.111
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795090340;
-	b=4GMlENfmkEcOjbv0fFl4YZUf5720KMPhHUY4cSboo8Lmb4iVGioU0O+7D5FmvnuSdFk9
-	 XLKGWVUbVEYZpDgRywm8VTohFqwUjs1YtuNAZSkCYyFpBA89Y0C1pBIflNnGQ88280p6Q
-	 Lu7wauQQ9gw/YpxqIGwCw7yKGe2tvwNKrFTS/E62uMCaEl9z86LGsvr7pun9HkC+nkVOD
-	 LncUonOnCcJiusbtg4SpD7HqZ5my2z82ZjHOGwBP236sWEaSVLS2W8OP32x2UPBCGqWvY
-	 JK5RYi96GxQVzPmeaF/g/2MI5ZDnZDUFlMpKgoCnJakdw9bj92TRwCYdVRhYDRYeoeA==
+	t=1795090343;
+	b=CVhJMZEPrgl+ImDMSaiiHOq/noRneCiEY6mZFdod5sMUyxYxzKRj3zdXSXxK2WNRLNVc
+	 /FrQs9uvtb39suHuANoBe8b4MnhCguI9GefOJyEAIEZYONsNozmNsBnrvKDrg3YUoDWct
+	 HAyrZQRtbfBPieFxHyGTI/8I8rm8SPsQn93W4t/QetUWwjrplfp9sE7mjXaz90hmdGS9e
+	 FTqWRLcy5Xr232k8yXvZxg/o+nEWMsvEsnGG4E158u5I/S1y6mDc207HSAOX8GXb0dYu1
+	 KLH4GalGavG5xekeguEeUVDHJe4qpt7e0v1TICETAcH6+kLyu/TZrzY7TRGFPibWReA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795090340;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=54Y4ecze88dJ+VUmulk5r9qxRmugtiqy7i59RBM6cro=;
-	b=VCQ3HCRfAuxJ1/Hb+dd5Fb3nwYSsjMPK5OE2UZhnaUSEAVVDOO/SWsX6jrcVXbYvc9HS
-	 a2MaAevm1ss0VpqUo/iJHqLZqQXzrFh3Cd5nE5ewwTeLzHyUkJLSJJaRgcJIRc/WRwipb
-	 mcKiN7DWCtcy9gKC2hn0KyEoTA/uactEBaSEE01oO7T2iQsgawLkL8ybb5WoNszgsrRfD
-	 q6SrXeMJnF1z2tDSJHhRqYesFcTBIHG75FGd6RfWR8xErYDFaaUUgX12lMaIcLDAWW61S
-	 PQ0RwZywZxwTbWruply2RfhB5Iea///Y/SPQhln8ND+h2bKD0ZmajnNiIDa1RuaaWaA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795090343;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM:X-RM-SPAM-FLAG:
+	 Received:X-RM-TRANSID:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:User-Agent:
+	 MIME-Version;
+	bh=oWdhl+3A4logPSwrT8mcDtJzFFpOpMg+JsoMjrGrs5A=;
+	b=3UDT6PgaXWYSoA4XhDp8ckEPHzj+0r3CXOrlysgydqF6AyEI2xq7r98NFGWmAcj2oSE8
+	 dbzQEHDMFwPK7avkSnvdaE/g0X2DAuuY7cuxKk3OOmuK+lGUVwrFRMw1iBRNfkPgh8UYr
+	 9CnAuCmYaOMJhDlsE0kq31rdxHmRpKL9xkJmPFKpCMs028eHfqD4Nq0IxCdhXuxwdwOtF
+	 1ZwIqdOC9wMeMU/xo2C6NbFRs4hoDRGDtaTz+UCJ4E0y7FMqi6qIdSRa+7g32pv7p+/mq
+	 cXJEss9WmumE5x9/1YhplTQhuAbkLu7Pu4rhBKstYXf82kXoJ5ZjgmfTvuO82wwKgFQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=M7QBCr4d;
-	arc=none smtp.remote-ip=192.198.163.12
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=139.com;
+	spf=pass smtp.mailfrom=139.com;
+	dkim=pass header.d=139.com header.i=@139.com header.a=rsa-sha256 header.s=dkim header.b=V2NBtlXU;
+	arc=none smtp.remote-ip=120.232.169.111
+Received: from n169-111.mail.139.com (n169-111.mail.139.com [120.232.169.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E9A606A32F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF30A60A2610;
 	Thu, 19 Nov 2026 12:12:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 07E9A606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BF30A60A2610
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=M7QBCr4d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795090341; x=1826626341;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=yzKRHGdYy3i0l2rFeJCfddhxcVB8qBD49ukJulLf7Wg=;
-  b=M7QBCr4dC5lzOg8R+8ubG/8DcIMThQZe3+P7Y+eczQpVmaIQo3sn5oTi
-   QOZtI38udVU9fmDA2NSv3vJDXOsLSuSXqOq+bXR+LUXTT4muef5C6vdQS
-   xKRE7mWdgFw+KdB9Wjn8dWWQwT8crEsmvAqNJ7DCvqDqCk/RRbDz5ydEh
-   E3o2tMjpAQO0vR1pfoSZPRMRCfgKPhgSMfrMiIjOnOm4m5vbUhPTCY3Vj
-   T0DTicO/lR2rw6AnaQiocnULJw9ToJJKX4S8KTRUhnYCkoqSR/BKWOCSy
-   aKS2RaogEwajgNEzhC4ZBZAHgL5wWiemjqOilkTU0AyFL8JnHad401bxX
-   g==;
-X-CSE-ConnectionGUID: r7nfQ2nmS3u+s5ly5oY84Q==
-X-CSE-MsgGUID: ze6vpmhkRW2Um7TYaVs2LA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3826769"
-X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="3826769"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 04:12:20 -0800
-X-CSE-ConnectionGUID: J1wTducRTS+oN5FaO6p6pg==
-X-CSE-MsgGUID: sDOhBMfBQh2yA4cF5Svhmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="10329030"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 04:12:13 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 19 Nov 2026 14:12:09 +0200 (EET)
-To: Ehab Ababneh <ehab.ababneh@intel.com>
-cc: Hans de Goede <hansg@kernel.org>, tony.luck@intel.com, 
-    ashok.raj.linux@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, tglx@kernel.org, mingo@redhat.com, 
-    bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-    rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-    linux-trace-kernel@vger.kernel.org, peterz@infradead.org, 
-    sathyanarayanan.kuppuswamy@linux.intel.com, pengfei.xu@intel.com, 
-    ravi.v.shankar@intel.com
-Subject: Re: [PATCH v2 16/17] platform/x86/intel/ifs: Update IFS
- documentation
-In-Reply-To: <20261118193259.519568-17-ehab.ababneh@intel.com>
-Message-ID: <28f3b7a5-aea5-3298-63a3-cf1e7290e5de@linux.intel.com>
-References: <20261118193259.519568-1-ehab.ababneh@intel.com> <20261118193259.519568-17-ehab.ababneh@intel.com>
+	dkim=pass (1024-bit key, unprotected) header.d=139.com header.i=@139.com header.a=rsa-sha256 header.s=dkim header.b=V2NBtlXU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=139.com; s=dkim; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=V2NBtlXUNPZs2iLulaPVkSvvuul8KfpgxLcD4qb4tWzkxZoJm3RXa12qusXYIvj1DltmYaS8mV8ng
+	 Qhnv+chUW4EbPjIHqX57LCqzpKviKIgH2hM+NB97W3TpHKIvNFNRZ3PA5eDf/PJp3EV3QNoLO74nTi
+	 omSj9kP3JmGq8mH4=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM:                                                                                        
+X-RM-SPAM-FLAG:00000000
+Received:from [10.103.150.92] (unknown[36.110.60.250])
+	by rmsmtp-lg-appmail-11-12089 (RichMail) with SMTP id 2f396afee7966a6-016c3;
+	Thu, 19 Nov 2026 20:12:08 +0800 (CST)
+X-RM-TRANSID:2f396afee7966a6-016c3
+Message-ID: <29824d258033bd712497e2e1e0f9612bf98325fb.camel@139.com>
+Subject: Re: [RFC PATCH 2/3] platform: lenovo: add WMI hotkeys driver
+From: Jackie Dong <xy-jackie@139.com>
+To: David Cemin <dcemin@nvidia.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de, 
+	mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, ikepanhc@gmail.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ldemarchi@nvidia.com
+Date: Thu, 19 Nov 2026 20:12:07 +0800
+In-Reply-To: <20261119022922.3090399-1-dcemin@nvidia.com>
+References: <20261113222755.1696567-1-dcemin@nvidia.com>
+	 <20261113222755.1696567-3-dcemin@nvidia.com>
+	 <20261119022922.3090399-1-dcemin@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,152 +73,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 18 Nov 2026, Ehab Ababneh wrote:
+On Wed, 2026-11-18 at 18:29 -0800, David Cemin wrote:
+> Hi Jackie,
+>=20
+> Thanks for the review and the Reviewed-by on patch 1.
+>=20
+> On merging wmi-hotkeys.c with wmi-hotkey-utilities.c: I kept them
+> separate because they are different interfaces. wmi-hotkey-
+> utilities.c
+> drives the method GUID (microphone mute LED, Fn lock state), while
+> wmi-hotkeys.c owns the event GUIDs and only turns events into input
+> reports; the notifier chain is how the two sides meet, and ideapad-
+> laptop
+> uses it. If the maintainers prefer a single file the merge is
+> mechanical
+> and I am happy to do it in v3; otherwise I would keep the method and
+> event
+> sides apart, as the other Lenovo WMI drivers do.
+>=20
+> v2 is out as 20261119022719.3089229-1-dcemin@nvidia.com=C2=A0and includes
+> your tag.
+>=20
+> Thanks,
+> David
+Hi David,
+I agree that wmi-hotkeys.c and wmi-hotkey-utilities.c are different
+interfaces. But I stick on my point that the two file names are
+similar and easy to confuse for developers and maintainer.
+I suggest another file name should be a solution, such as wmi-hotkeys-
+switches.c, wmi-FnKey-event-report.c, FYR.
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> Update the simultaneous IFS testing domain in the IFS documentation from
-> a core to a group that shares the same SCAN engine, which works for both
-> the traditional Hyper-Threading (HT) systems and the Dual-Core Module (DCM)
-> based systems (e.g., Diamond Rapids).
-> 
-> Add documentation for the new sysfs interfaces {status, details,
-> addnl_details, cpus_ran}_list.
-> 
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
-> Tested-by: Yi Lai <yi1.lai@intel.com>
-> ---
->  drivers/platform/x86/intel/ifs/ifs.h | 66 ++++++++++++++++++----------
->  1 file changed, 44 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-> index 10eea2c6b871..46461cc69f94 100644
-> --- a/drivers/platform/x86/intel/ifs/ifs.h
-> +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> @@ -14,11 +14,11 @@
->   * Introduction
->   * ------------
->   *
-> - * In Field Scan (IFS) is a hardware feature to run circuit level tests on
-> - * a CPU core to detect problems that are not caught by parity or ECC checks.
-> - * Future CPUs will support more than one type of test which will show up
-> - * with a new platform-device instance-id.
-> - *
-> + * In-Field Scan (IFS) is a hardware feature that runs circuit-level tests on
-> + * all CPUs in a group, where all CPUs share the same SCAN test engine to
-> + * detect problems that are not caught by parity or ECC checks. Future CPUs
-> + * will support more than one type of test, which will show up with a new
-> + * platform-device instance-id.
->   *
->   * IFS Image
->   * ---------
-> @@ -59,19 +59,19 @@
->   * Running tests
->   * -------------
->   *
-> - * Tests are run by the driver synchronizing execution of all threads on a
-> - * core and then writing to the ACTIVATE_SCAN MSR on all threads. Instruction
-> - * execution continues when:
-> + * Tests are run by the driver synchronizing execution of all CPUs in a group
-> + * that share the same SCAN test engine, then writing to the ACTIVATE_SCAN MSR
-> + * on all CPUs. Instruction execution continues when:
->   *
->   * 1) All tests have completed.
->   * 2) Execution was interrupted.
->   * 3) A test detected a problem.
->   *
-> - * Note that ALL THREADS ON THE CORE ARE EFFECTIVELY OFFLINE FOR THE
-> + * Note that ALL CPUs IN THE GROUP ARE EFFECTIVELY OFFLINE FOR THE
->   * DURATION OF THE TEST. This can be up to 200 milliseconds. If the system
-> - * is running latency sensitive applications that cannot tolerate an
-> + * is running latency-sensitive applications that cannot tolerate an
->   * interruption of this magnitude, the system administrator must arrange
-> - * to migrate those applications to other cores before running a core test.
-> + * to migrate those applications to other CPUs before running a group test.
->   * It may also be necessary to redirect interrupts to other CPUs.
->   *
->   * In all cases reading the corresponding test's STATUS MSR provides details on what
-> @@ -81,30 +81,52 @@
->   * The IFS driver provides sysfs interfaces via /sys/devices/virtual/misc/intel_ifs_<n>/
->   * to control execution:
->   *
-> - * Test a specific core::
-> + * Test a specific group::
->   *
->   *   # echo <CPU#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
->   *
-> - * when HT is enabled any of the sibling CPU# can be specified to test
-> - * its corresponding physical core. Since the tests are per physical core,
-> - * the result of testing any thread is same. All siblings must be online
-> - * to run a core test. It is only necessary to test one thread.
-> + * Any CPU in the same group that shares the same SCAN test engine can be
-> + * specified to test its corresponding group. Offline CPUs in the group do
-> + * not take part in the test; if the test then does not pass, the driver
-> + * warns. It is only necessary to test one CPU in the group.
->   *
-> - * For e.g. to test core corresponding to CPU5
-> + * For e.g. to test a group corresponding to CPU5
->   *
->   *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
->   *
-> - * Results of the last test is provided in /sys::
-> + * The result of the last test for the primary CPU in the group is provided in /sys::
->   *
->   *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/status
->   *   pass
->   *
-> - * Status can be one of pass, fail, untested
-> + * Status can be one of pass, fail, untested.
->   *
-> - * Additional details of the last test is provided by the details file::
-> + * Additional details of the last test for the primary CPU in the group are provided in /sys::
+Regards,
 
-Does kerneldoc require long lines for :: ? If not, please reflow to 80 
-chars (and all similar cases you touch in this patch).
-
->   *
->   *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/details
-> - *   0x8081
-> + *   0x7f0080
-> + *
-> + * For intel_ifs_0, there are following additional sysfs files:
-> + *
-> + * All CPUs in the same group that ran the test are provided in /sys::
-> + *
-> + *   $ cat /sys/devices/virtual/misc/intel_ifs_0/cpus_ran_list
-> + *   5,149
-> + *
-> + * The results of the last test for all CPUs in the same group are provided in /sys::
-> + *
-> + *   $ cat /sys/devices/virtual/misc/intel_ifs_0/status_list
-> + *   pass pass
-> + *
-> + * Additional details of the last test for all CPUs in the same group are provided in /sys::
-> + *
-> + *   $ cat /sys/devices/virtual/misc/intel_ifs_0/details_list
-> + *   0x7f0080 0x7f0080
-> + *
-> + * More additional details of the last test for all CPUs in the same group are provided in /sys::
-> + *
-> + *   $ cat /sys/devices/virtual/misc/intel_ifs_0/addnl_details_list
-> + *   0xc44191a 0xc44191a
->   *
->   * The details file reports the hex value of the test specific status MSR.
->   * Hardware defined error codes are documented in volume 4 of the Intel
-> @@ -125,7 +147,7 @@
->   * uses the subrange feature to restart an interrupted test.
->   *
->   * 2) Hardware allows for some number of cores to be tested in parallel.
-> - * The driver does not make use of this, it only tests one core at a time.
-> + * The driver does not make use of this, it only tests one group at a time.
->   *
->   */
->  #include <linux/device.h>
-> 
-
--- 
- i.
+Jackie
 
