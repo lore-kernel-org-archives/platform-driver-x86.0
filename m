@@ -1,58 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.182.83.82
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795210826;
-	b=BvA3DhIEe1Ir+pXi9QUKN3XWH7KlNM+5PwjX6Z4f05k/8Dt82erLYbt4sc9DZni78dOt
-	 obZrhKfFINFABV7PzXtIBCp8gzlhCDZjQyQKwlPIpl3oybCqcRYcvvctt0rpVDz43ewnL
-	 6cTQhOdkAhL/7dDZnWbicgEgyN4SvOhar4iNW1JfrKqU1EhLEEqok/yGUm9C+O2hZDMsx
-	 0P+nt+SdthCbtmYF338f9aZy3TD3inRD5hXwGwbV4OiVCXyHayqPKs4cywBOCWYx1E9ha
-	 ZU2nLz2yao33jMVlINjdCXUwZfJl9hxBD8gQXAmLf6542gM98uBDKdrow4hrkUYhzdw==
+	t=1795210965;
+	b=i9Lcvj4EYa0w+dJh1k0rWkKhAflIgH+jCWN05OYLTVGKxCJYiRtxMBCts+lG21OnfvVV
+	 +gq5aYROiWJlOYfN/sC65o8FNJ27pWii5gSt5fe4+OH2Bi6hzFEohCtl3ljjjTJiziVuy
+	 7Eys8rvP2pyeD9pU4yt/nQ4I62JesKkJqiV5BXuz6bECoyEd9qT0q7eh1iszzz1Y80mKC
+	 xjrovyiDsC0/MnX/kHatQefxElQQvJz38WI7MS0GXRG4zIDzA935BqW1xlaq2H5D2Ywks
+	 EiksUw7BDFUC4y9YC9xdP4SM7DHVAT7M1t0CNzA18q2kQZsma/JK0I2SQvWEtKQ77IQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795210826;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=WFa5WHgpW47vaoVGNUPRaCjoECy3gOkiUbC8bbiOE2o=;
-	b=PORIVTFKF3Ja04ZgrzQUgmTc5K5d2dr3+RE/7lkMnd1w2RPSh0X4u9iGGpkEZqhqDO+T
-	 0k5VkIP9AzLQP+lyNm2Jam5xNP92ga3TdOG/KqbqJrepajlMbGCuOVsRT8EWV7XffS1s1
-	 B7+reQsByhwQ8k6MLFm1K0OprC35XJKMXDedkqUQxIHWK1Fec0W1Ypk+S+gYW9eFp8jU2
-	 uIrj+dcpZ/WI/3gJrTUQ+xaCc41P7jaJMrzIBwS53+Okewg5UxKc7NsWmXeIx81noBlMi
-	 RA6ystioAS2319cIdwJ02B55kyNvb9l7VETiypxLTYCvmPK0rHHB4cq7s1KYX84kAMQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795210965;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=aR8UDv+47K++yUoDlU50BxWptzQ7MVDDJcNW48Jvpqg=;
+	b=QbrKR7JBujrjDmC0ntKupGXBfJRpTh8wHzWPjia+vAboeatveskiUW62wivGYndXk4r1
+	 D+10AIhJj/T7Kh+zycmF4kC+2b7YHxI3rfyasHE1q49IJVuiP6d1CxgGkjJE4zX+HNJXN
+	 b4KEdBjz9bQjB0NXIsB4ymmeHAIZ+gTg+sYBk2yCPoqKQQTMe5sEnN2IcltxXNAcLrgse
+	 MYeKuLlBd7sBa3nUoyWxIn0x33jUjRlRf246IrIfK3akVGIuWj2CO8EBV9naVeS7YIJeE
+	 3tS0bV2oUbvJxjKsT3aMKovN7Gk0ucZdk+KSXm8+sLO5b0nim3bKYJaaI6sYj629wbg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zary.sk;
-	spf=pass smtp.mailfrom=zary.sk;
-	dkim=pass header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=E4odMl6E;
-	arc=none smtp.remote-ip=194.182.83.82
-Received: from mail.zary.sk (mail.zary.sk [194.182.83.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=CF+NNqJ8;
+	arc=none smtp.remote-ip=192.198.163.14
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC45606A697;
-	Fri, 20 Nov 2026 21:40:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BCC45606A697
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=zary.sk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zary.sk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699E0606A6A0;
+	Fri, 20 Nov 2026 21:42:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 699E0606A6A0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=E4odMl6E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=zary.sk; s=key1;
-	t=1795210821; bh=1cU2J+MwOubhU76CnR9RyR5VppbMiZWF/rALIfBoLBc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E4odMl6EbhLGzgET/7aa5F2cTAvdIUzQG3Ud01fVY+pBWt/r+Zoo4d45uy4yjWB2w
-	 Rw0fJ3C4QBZ+gznyZFD1udohRTEqXG8DpgPAG2CpUhvIMaHRn4gYINQEOtofFnZzUQ
-	 O97jCS87y2bjlKjrUSnk154QWcDsucC1ZjfgnQ36DMoTSOpb+A0hUxoaqPxUKc+Y/w
-	 KAFKEUgFX8W5z4++tOAar0tyVNObOIRWQ/is5rIbObtCQpT6/yE3mxxIbjO5K9H2ar
-	 dIiQ0S9Zs/xsRmW7xFgOVAadAaPfa1O9vXB8D1TdBysXXXHp5yjWAFO+Sj83h5tjGK
-	 lycP7Q8IW6Z8A==
-Received: from gweb1.ggedos.sk (off-7.infotel.telecom.sk [212.5.213.7])
-	by mail.zary.sk (Postfix) with ESMTPSA id 5922EBEDE0;
-	Fri, 20 Nov 2026 22:40:21 +0100 (CET)
-From: Ondrej Zary <linux@zary.sk>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Introduce Synology NAS x86 platform driver
-Date: Fri, 20 Nov 2026 22:33:00 +0100
-Message-ID: <20261120214014.4188702-1-linux@zary.sk>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=CF+NNqJ8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795210960; x=1826746960;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uNXAh5poC50WYU+EWy35yqL9KuLdt66I8wkni2AeE2w=;
+  b=CF+NNqJ8lrbNfUCzukFBrDDVCn3PPVhzIsq27B1l4/1Or2PbXP5IGzm6
+   O13bWsv4FJfu5udtZ9KLo46KCNsl/wq96rBFfxH3T5jdVtj9NGKb1r8LG
+   EKUKKB1kB/DK9KIm3mEiYMzTo+YRJ8QjWM6QGX9pXMG5UkndGO/A6C0We
+   QJ720+J3DIGt+hsu97ZX0DW7XIzppK4OegihAjV/M5nHCxVO5hXUw5iA5
+   x0OS7MMXslVo+QUoLeUlVzzn/XdYCl+nsn8s6CM31f/q2REp/RWhLuAp4
+   ICrRN+cJLS7/nM4I50dYXZnmVGi5iXM12y5c9QSDYVTFhu7w9TLeqFYjg
+   w==;
+X-CSE-ConnectionGUID: J8Jzo5piSuSiSMvPKuxKtQ==
+X-CSE-MsgGUID: d5cS8EFaTmuKWBswxhybpQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="3987427"
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="3987427"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 13:42:39 -0800
+X-CSE-ConnectionGUID: Pkd4JHxuREqIinlA/PmXgA==
+X-CSE-MsgGUID: fLyMe3iISE2pGUryopp/og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="10689840"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.16])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 13:42:38 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 20 Nov 2026 23:42:35 +0200 (EET)
+To: Sourav Nayak <nonameblank007@gmail.com>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH V2] platform/x86: hp-wmi: fix platform profile values
+ for Victus 15-fb0xxx (8A3D)
+In-Reply-To: <20261025034539.4565-1-nonameblank007@gmail.com>
+Message-ID: <1061c0e1-9e05-a09f-3eb6-5702f4fbcf08@linux.intel.com>
+References: <20261024202658.13149-1-nonameblank007@gmail.com> <20261025034539.4565-1-nonameblank007@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -62,208 +78,125 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Add platform driver for Synology x86-based NAS devices to support HDD LEDs
-controller by ICH9 GPIO pins.
+On Sun, 25 Oct 2026, Sourav Nayak wrote:
 
-Only DS411+II is supported for now (DS411+ should be the same except CPU).
+> Currently Victus 15-fb0xxx (8A3D) takes victus_s_thermal_params,
+> which causes it to register as incorrect EC layout while cold boot.
+> 
+> - On other hand windows Omen Gaming Hub registers EC offset as 0x95,
+> - which is set in driver as HP_OMEN_EC_THERMAL_PROFILE_OFFSET.
+> - So, address it by adding victus_s_ec_thermal_params.
+> 
+> - Also perfcontrol modes as performance (0x1), default (0x0), quiet
+> (0x3) registers. So, add support for quiet mode.
+> 
+> Also, hp_wmi_fan_speed_max_reset() caused fans to freeze during loads at
+> 0RPM, introduce a 'if' statement to resolve it by calling hp_wmi_fan_speed_max_set(0),
+> and passing platform active again to reactive curves. Test data:
+> 
+> auto/max:
+> hp-isa-0000
+> Adapter: ISA adapter
+> fan1:        5400 RPM
+> fan2:        5200 RPM
+> 
+> mannual[255]:
+> hp-isa-0000
+> Adapter: ISA adapter
+> fan1:        5800 RPM
+> fan2:        5800 RPM
+> 
+> Tested-by: Sourav Nayak <nonameblank007@gmail.com>
+> Signed-off-by: Sourav Nayak <nonameblank007@gmail.com>
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 615b4cf6fc45..ee6de96b3280 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -121,6 +121,13 @@ static const struct thermal_profile_params victus_s_thermal_params = {
+>  	.ec_tp_offset	= HP_EC_OFFSET_UNKNOWN,
+>  };
+>  
+> +static const struct thermal_profile_params victus_s_ec_thermal_params = {
+> +	.performance	= HP_VICTUS_THERMAL_PROFILE_PERFORMANCE,
+> +	.balanced	= HP_VICTUS_THERMAL_PROFILE_DEFAULT,
+> +	.low_power	= HP_VICTUS_THERMAL_PROFILE_QUIET,
+> +	.ec_tp_offset	= HP_OMEN_EC_THERMAL_PROFILE_OFFSET,
+> +};
+> +
+>  static const struct thermal_profile_params omen_v1_thermal_params = {
+>  	.performance	= HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE,
+>  	.balanced	= HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
+> @@ -164,6 +171,11 @@ static const struct hp_wmi_board_params victus_s_board_params = {
+>  	.fan_profile		= &victus_s_fan_profile_params,
+>  };
+>  
+> +static const struct hp_wmi_board_params victus_s_ec_board_params = {
+> +	.thermal_profile	= &victus_s_ec_thermal_params,
+> +	.fan_profile		= &victus_s_fan_profile_params,
+> +};
+> +
+>  static const struct hp_wmi_board_params omen_v1_board_params = {
+>  	.thermal_profile	= &omen_v1_thermal_params,
+>  	.fan_profile		= &victus_s_fan_profile_params,
+> @@ -245,7 +257,7 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+>  	},
+>  	{
+>  		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
+> -		.driver_data = (void *)&victus_s_board_params,
+> +		.driver_data = (void *)&victus_s_ec_board_params,
+>  	},
+>  	{
+>  		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
+> @@ -2121,10 +2133,14 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+>  	 * but logically it should have tp == 0x30 || tp == 0x31, as
+>  	 * corrected by the Omen Gaming Hub on windows. Hence accept both
+>  	 * of these values.
+> +	 * Since boards like 8A3D write 0x3 to EC offset 0x95 to
+> +	 * engage quiet mode. Map this to PLATFORM_PROFILE_LOW_POWER.
+>  	 */
+>  	if (tp == victus_s_thermal_params.performance ||
+>  	    tp == omen_v1_thermal_params.performance) {
+>  		*profile = PLATFORM_PROFILE_PERFORMANCE;
+> +	} else if (tp == victus_s_ec_thermal_params.low_power) {
+> +		*profile = PLATFORM_PROFILE_LOW_POWER;
+>  	} else if (tp == victus_s_thermal_params.balanced ||
+>  		   tp == omen_v1_thermal_params.balanced) {
+>  		/*
+> @@ -2657,7 +2673,17 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+>  				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+>  		return 0;
+>  	case PWM_MODE_AUTO:
+> -		if (hp_wmi_fan_control_supported()) {
+> +		/*
+> +		 * Victus models like 8A3D, calling hp_wmi_fan_speed_max_reset()
+> +		 * freezes fans at 0 RPM under load. Instead, disable max fans and re-apply
+> +		 * the active platform profile, so the EC firmware thermal curves regain control.
+> +		 */
+> +		if (hp_wmi_thermal_profile() == &victus_s_ec_thermal_params) {
 
-Unfortunately, the DMI data in BIOS is not very helpful to identify the
-device as almost all strings are "To be filled by O.E.M.". Match also the
-BIOS date and then check presence of the onboard SiI3531 SATA controller
-and i82574L ethernet controller to avoid activation on other systems.
+Please do not add magic if's like this.
 
-Buttons and other LEDs are not supported by this driver because they're
-controlled by a PIC MCU (connected through serial port).
+Instead, use the board params data structure to store the information in a 
+more generic way (add a quirk there?).
 
-Signed-off-by: Ondrej Zary <linux@zary.sk>
----
-Changes in v2:
- - fixed includes (order, added missing, removed kernel.h)
- - added missing DMI and PCI dependencies to Kconfig
- - added PCI device presence check details to changelog
- - used %pe for error message
+> +			ret = hp_wmi_fan_speed_max_set(0);
+> +			if (ret < 0)
+> +				return ret;
+> +			ret = platform_profile_victus_s_set_ec(active_platform_profile);
+> +		} else if (hp_wmi_fan_control_supported()) {
+>  			ret = hp_wmi_get_fan_count_userdefine_trigger();
+>  			if (ret < 0)
+>  				return ret;
+> 
+> base-commit: 5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f
+> 
 
----
- drivers/platform/x86/Kconfig        |  16 ++++
- drivers/platform/x86/Makefile       |   3 +
- drivers/platform/x86/synology-x86.c | 128 ++++++++++++++++++++++++++++
- 3 files changed, 147 insertions(+)
- create mode 100644 drivers/platform/x86/synology-x86.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9ce384e0475e..14b366cca2dd 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1059,6 +1059,22 @@ config OXP_EC
- 
- source "drivers/platform/x86/tuxedo/Kconfig"
- 
-+config SYNOLOGY_X86
-+	tristate "Synology x86 NAS Platform Driver"
-+	depends on DMI
-+	depends on GPIOLIB
-+	depends on LPC_ICH
-+	depends on GPIO_ICH
-+	depends on LEDS_CLASS
-+	depends on PCI
-+	select LEDS_GPIO
-+	help
-+	  This driver provides support for the HDD LEDs on Synology x86 NAS
-+	  devices.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called synology-x86.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config P2SB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 229057234d00..a1806eb0efc9 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -166,3 +166,6 @@ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
- 
- # OneXPlayer
- obj-$(CONFIG_OXP_EC)			+= oxpec.o
-+
-+# Synology
-+obj-$(CONFIG_SYNOLOGY_X86)		+= synology-x86.o
-diff --git a/drivers/platform/x86/synology-x86.c b/drivers/platform/x86/synology-x86.c
-new file mode 100644
-index 000000000000..80831c8c45d8
---- /dev/null
-+++ b/drivers/platform/x86/synology-x86.c
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Synology x86 NAS platform driver
-+ *
-+ * Inspired by platform/x86/meraki-mx100.c
-+ *
-+ * Copyright (C) 2026 Ondrej Zary <linux@zary.sk>
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/dmi.h>
-+#include <linux/err.h>
-+#include <linux/gpio/machine.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/pci_ids.h>
-+#include <linux/platform_device.h>
-+#include <linux/printk.h>
-+#include <linux/string.h>
-+
-+static const struct gpio_led synology_leds[] = {
-+	{ .name = "synology:green:hdd1"	},
-+	{ .name = "synology:amber:hdd1" },
-+	{ .name = "synology:green:hdd2" },
-+	{ .name = "synology:amber:hdd2"	},
-+	{ .name = "synology:green:hdd3" },
-+	{ .name = "synology:amber:hdd3"	},
-+	{ .name = "synology:green:hdd4" },
-+	{ .name = "synology:amber:hdd4" },
-+};
-+
-+static const struct gpio_led_platform_data synology_leds_pdata = {
-+	.num_leds	= ARRAY_SIZE(synology_leds),
-+	.leds		= synology_leds,
-+};
-+
-+#define GPIO_ICH_DRIVER_NAME "gpio_ich"
-+
-+static struct gpiod_lookup_table synology_leds_table = {
-+	.dev_id = "leds-gpio",
-+	.table = {
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 16, NULL, 0, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 18, NULL, 1, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 20, NULL, 2, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 32, NULL, 3, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 33, NULL, 4, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 34, NULL, 5, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 49, NULL, 6, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 55, NULL, 7, GPIO_ACTIVE_HIGH),
-+		{}
-+	}
-+};
-+
-+static const struct dmi_system_id synology_systems[] __initconst = {
-+	{
-+		.ident = "DS411+",	/* DS411+II is the same with faster CPU */
-+		.matches = {
-+			/* Synology did not put anything in DMI strings */
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "To Be Filled By O.E.M."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "To Be Filled By O.E.M."),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
-+			DMI_EXACT_MATCH(DMI_BIOS_DATE, "05/21/2012"),
-+		},
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, synology_systems);
-+
-+static struct platform_device *synology_leds_pdev;
-+
-+static int __init synology_init(void)
-+{
-+	int ret;
-+
-+	static const struct pci_device_id pci_sii3531[] = {
-+		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CMD, 0x3531, PCI_VENDOR_ID_CMD, 0x3531) },
-+		{ }
-+	};
-+
-+	static const struct pci_device_id pci_i82574l[] = {
-+		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x10d3, PCI_VENDOR_ID_INTEL, 0x0000) },
-+		{ }
-+	};
-+
-+	const struct dmi_system_id *dmi = dmi_first_match(synology_systems);
-+
-+	if (!dmi)
-+		return -ENODEV;
-+
-+	/* DS411+ DMI match is too generic, confirm by onboard PCI devices */
-+	if (!strcmp(dmi->ident, "DS411+")) {
-+		if (!pci_dev_present(pci_sii3531) ||
-+		    !pci_dev_present(pci_i82574l))
-+			return -ENODEV;
-+	}
-+
-+	pr_info("Detected Synology NAS %s\n", dmi->ident);
-+
-+	gpiod_add_lookup_table(&synology_leds_table);
-+
-+	synology_leds_pdev = platform_device_register_data(NULL,
-+		"leds-gpio", PLATFORM_DEVID_NONE, &synology_leds_pdata,
-+		sizeof(synology_leds_pdata));
-+	if (IS_ERR(synology_leds_pdev)) {
-+		pr_err("error registering platform device: %pe\n", synology_leds_pdev);
-+		ret = PTR_ERR(synology_leds_pdev);
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	gpiod_remove_lookup_table(&synology_leds_table);
-+	return ret;
-+}
-+module_init(synology_init);
-+
-+static void __exit synology_exit(void)
-+{
-+	platform_device_unregister(synology_leds_pdev);
-+	gpiod_remove_lookup_table(&synology_leds_table);
-+}
-+module_exit(synology_exit);
-+
-+MODULE_AUTHOR("Ondrej Zary <linux@zary.sk>");
-+MODULE_DESCRIPTION("Synology x86 NAS Platform Driver");
-+MODULE_LICENSE("GPL");
 -- 
-Ondrej Zary
+ i.
 
