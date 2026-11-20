@@ -1,87 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.139
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795141188;
-	b=mpWSNB2YKGoOtwj2jKjggZlWYcO96dt8552hU9vB3pGvZqxJ6MHkYlQFBuPm5qqM+fhM
-	 Wlj6MFWlhmniRzvMYt9gYSKyOlAB48b0KDXd2oE/d48I6JZSveSoC4bRP3UTeK43z/u8r
-	 k5SCPiCAsRLy3cvCgkD0GEn7a0AiMKkcJ/A6Qs/kAe6QuWUF+RZV4m5cUX4jZ+C0maeKH
-	 dOrcBXRbaJ8FdalErStyHT+XK75cTz1E2riQpW2gvkEVSvl8E2mGEVOueN8e6oTMP0qeN
-	 BEg5n1JhV57qAnt/INsy1z4NlZiT0c+ZDaooaQZPJ3oJzG047KmUVOtZe0yp/YZ+y+g==
+	t=1795155574;
+	b=zIR9It/z3Rq6JUWWrBe9j2GirJoYCMi/8LsmifAoTMJrTai72nx8Ex0NlqEQlEKsMm6T
+	 Lpmd8bwLvPLLG9J8gx4wVDTiRGp35INFNVsO89SdyUs/9XroT5Gzt1An2d66KGFteBOXh
+	 /U8VCq9Z0UrPnGBOMwFS3XL1ykH7JhbTA7hjNZXCjrBqPdeXWDpZ5/WhkRQTSK/rYVqhr
+	 dSc1bCp4fP562phZgpXSlBegI54hO9N4JQeqxpo+zMpHe32Fny2Y/hDU7babnlzM9243c
+	 yBQPDolS1VTafOtWEGMVTf/45frp2UUaF8rA6vt5lNOSiwOW9nztRXNY4WayU9asyrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795141188;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795155574;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
+	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=yeL/mknrAlcgqUNfBfUorWTn9czD5hUKYQaoSBaI6JA=;
-	b=dZlrSVA11n+YdcCW2jo0p+/v5ZHHXJH9A2WaSjtSzrTsejbbpYiaLrb5THWSS5AAnLvS
-	 i5VgZL9NMoSE9jpQMkv81SB6t4BRIPN5DrlRv5ZpDMBHxageDetik1F8YuC+vGXnXklen
-	 RpiVtet2leqd69z2cdnQl3k8Y4jEQca5MhByu0M/OcDE5v7jmtZFb52YfEK0ARUuLx2bI
-	 0UIfndWB6QvnQcrQmeNVZtlPXQB03yN80XYNniWrXzBFp3DW0+8mXfXRVRFX5SmFHDYoS
-	 pdCgRU5jCKZFnqePNcBd4TeHeyKz5//8NayFnlQRI284G66Y9HM0GmnAxJ/euwIILWQ==
+	bh=uV/KI5F6xsEv55mt6+QsO3UqSg499egnSZIDp22G8xA=;
+	b=l2Jojsy/BcYvdcG3NeFNbw3BPRGjrK4jtQ/grX1fiCZkgHqIqy6YJu1XFNAZeToFMaaN
+	 jnbITvsfKrFgwOs0EciV7BCkF4z25UsYoxc/EGYra1gwen3kiIq43jOeVFYuocG0xo3Ed
+	 UY/9kh+tkU/nSDp8D3rWiqQ7Y/VAYxCj3q3nv6an7wk2v4/Ihy31QmCYPa1A/sTxF6XyJ
+	 l3keK6zRuxxZY72qGcYKogIC5+an8NLSa9GuQy4rAk4Bfsvz5/b/MjlmJcO2CRmYIlZp9
+	 gC+e3vFnsbmobYuIV1GlooYFf8PcTm5QZaEceJSkoS+MDoaDY7T88K3whyWGWfuFiRw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=liu1UePs;
-	arc=none smtp.remote-ip=192.198.163.9
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA48B606A336
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 02:19:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA48B606A336
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	dmarc=pass header.from=cmss.chinamobile.com;
+	spf=pass smtp.mailfrom=cmss.chinamobile.com;
+	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=Y7qykj2p;
+	arc=none smtp.remote-ip=111.22.67.139
+Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED84606A500;
+	Fri, 20 Nov 2026 06:19:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BED84606A500
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=liu1UePs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795141188; x=1826677188;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=/kBGMrssRh2yTUhQm/sPJ/df6e/awn0xoRhGx8CJ7SQ=;
-  b=liu1UePsQkd2BR4NYeRduCvEHhYYOARgbCIzdPxY1UmtbTE+xYv+6b7V
-   J034wRQbI8qSvQyOYwjnchKlBVTGyYCn9l236742P4Ddpnu/RAp0l5KIB
-   /9HCq+8RAgGMLKP4wPpmdoIK56ugG2B3h8zdOGpfsAJ23OORPVjZtiaIG
-   k3KjHOlasYp+D2oz99wTowau3EwmhIBPAmFkZ6j22HZ487yhzb/ViJG7n
-   0gUHOetCO7gWAfXH5XN34GQjnBeFS89YUQgtTMcYpB57fArzdNtmgFwRL
-   Cb77oQLoXXO8LsxsdKcTTTlFIcINNacqcp6XUyUvKAmAJCPNAxmY5J9tE
-   A==;
-X-CSE-ConnectionGUID: YiFLucQoRJ6j01jm7epJDw==
-X-CSE-MsgGUID: /llWevW8TSylzjmdXq1A6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3898484"
-X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
-   d="scan'208";a="3898484"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 18:19:47 -0800
-X-CSE-ConnectionGUID: tUjkffEvQ9CJaIX00YvhIA==
-X-CSE-MsgGUID: dfonmF9BSG+ewwPjXhTICQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
-   d="scan'208";a="10487167"
-Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 18:19:47 -0800
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	intel-xe@lists.freedesktop.org,
-	hansg@kernel.org,
+	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=Y7qykj2p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=cmss.chinamobile.com; s=default; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=Y7qykj2phD3G7vYtYv7eNWoyRBjltJEe+jt2EXANTbFE3rDG+J0J8EsK++p2Iaz5RFUrmos2TjmOV
+	 XXDC0ujwnqTLGTOzoEdWAPy1z0s4+OtSYQwkV10pg9hbgBknewxhPm9MiYHbKirtHefoQFsSXXPFuI
+	 GRjXxmUWRH+IR66c=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee96affe670b3f-2a57d;
+	Fri, 20 Nov 2026 14:19:28 +0800 (CST)
+X-RM-TRANSID:2ee96affe670b3f-2a57d
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from devin-VMware-Virtual-Platform.localdomain (unknown[10.55.1.71])
+	by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee16affe66f4df-1837c;
+	Fri, 20 Nov 2026 14:19:28 +0800 (CST)
+X-RM-TRANSID:2ee16affe66f4df-1837c
+From: Zhu Jun <zhujun2@cmss.chinamobile.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com,
-	rodrigo.vivi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	david.e.box@linux.intel.com,
-	anoop.c.vijay@intel.com,
-	badal.nilawar@intel.com,
-	matthew.d.roper@intel.com,
-	james.ausmus@intel.com
-Subject: [PATCH v20 19/19] drm/xe/vsec: Support survivability mode for CRI
-Date: Thu, 19 Nov 2026 18:19:49 -0800
-Message-ID: <20261120021929.473553-40-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261120021929.473553-21-michael.j.ruhl@intel.com>
-References: <20261120021929.473553-21-michael.j.ruhl@intel.com>
+	Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org,
+	Zhu Jun <zhujun2@cmss.chinamobile.com>
+Subject: [PATCH] tools/wmi: Check the Dell SMBIOS buffer size read
+Date: Fri, 20 Nov 2026 14:19:27 +0800
+Message-ID: <20261120061927.98196-1-zhujun2@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.51.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -93,114 +72,51 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For survivability mode, CRI can only support access to the
-PUNIT CRASHLOG PMT function.
+query_buffer_size() ignores an incomplete read, and main() can use a
+partial size or reach free() before buffer has been initialized.
+Require a complete size read and return failure before allocating or
+freeing a buffer when the size is unavailable.
 
-Create a special config to support survivability mode.
-
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Fixes: 9d64fc08f6fe ("tools/wmi: add a sample for dell smbios communication over WMI")
+Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
 ---
- drivers/gpu/drm/xe/xe_device_types.h |  2 ++
- drivers/gpu/drm/xe/xe_vsec.c         | 34 +++++++++++++++++++++++++++-
- 2 files changed, 35 insertions(+), 1 deletion(-)
+ tools/wmi/dell-smbios-example.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-index be6feaff4baa..ae5426717eb4 100644
---- a/drivers/gpu/drm/xe/xe_device_types.h
-+++ b/drivers/gpu/drm/xe/xe_device_types.h
-@@ -494,6 +494,8 @@ struct xe_device {
- 		u32 retry_count;
- 		/** @pmt.punit_guid_cache: cache of the PUNIT GUID */
- 		u32 punit_guid_cache;
-+		/** @pmt.survivability_mode: cache of survivability mode state */
-+		bool survivability_mode;
- 	} pmt;
- 
- 	/** @soc_remapper: SoC remapper object */
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index dacd9d271a6b..a8715057ab2f 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -20,6 +20,7 @@
- #include "xe_mmio.h"
- #include "xe_platform_types.h"
- #include "xe_pm.h"
-+#include "xe_survivability_mode.h"
- #include "xe_sysctrl.h"
- #include "xe_vsec.h"
- 
-@@ -102,10 +103,26 @@ static struct intel_vsec_header *cri_capabilities[] = {
- 	NULL
- };
- 
-+static struct intel_vsec_header cri_survivability_crashlog = {
-+	.rev = 1,
-+	.length = SZ_16,
-+	.id = VSEC_ID_CRASHLOG,
-+	.num_entries = 1,
-+	.entry_size = 6,
-+	.tbir = 0,
-+	.offset = CRI_PMT_OFFSET + CRI_CRASHLOG_PUNIT_DISC_OFFSET,
-+};
-+
-+static struct intel_vsec_header *cri_survivability_capabilities[] = {
-+	&cri_survivability_crashlog,
-+	NULL
-+};
-+
- enum xe_vsec {
- 	XE_VSEC_UNKNOWN = 0,
- 	XE_VSEC_BMG,
- 	XE_VSEC_CRI,
-+	XE_VSEC_CRI_SURVIVABILITY,
- };
- 
- static struct intel_vsec_platform_info xe_vsec_info[] = {
-@@ -117,6 +134,10 @@ static struct intel_vsec_platform_info xe_vsec_info[] = {
- 		.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_CRASHLOG,
- 		.headers = cri_capabilities,
- 	},
-+	[XE_VSEC_CRI_SURVIVABILITY] = {
-+		.caps = VSEC_CAP_CRASHLOG,
-+		.headers = cri_survivability_capabilities,
-+	},
- 	{ }
- };
- 
-@@ -320,7 +341,7 @@ static bool wait_for_fw(struct xe_device *xe)
+diff --git a/tools/wmi/dell-smbios-example.c b/tools/wmi/dell-smbios-example.c
+index 1f3e7ab14b68..a4c63a6a0ee3 100644
+--- a/tools/wmi/dell-smbios-example.c
++++ b/tools/wmi/dell-smbios-example.c
+@@ -143,13 +143,15 @@ static int activate_token(struct dell_wmi_smbios_buffer *buffer,
+ static int query_buffer_size(__u64 *buffer_size)
  {
- 	int retries = VSEC_LATE_BIND_RETRY;  /* wait up to 20 secs */
+ 	FILE *f;
++	int ret;
  
--	if (xe->info.platform != XE_CRESCENTISLAND)
-+	if (xe->info.platform != XE_CRESCENTISLAND || xe->pmt.survivability_mode)
- 		return true;
- 
- 	while (retries--) {
-@@ -612,6 +633,10 @@ static enum xe_vsec get_platform_info(struct xe_device *xe)
- 	     xe->info.platform == XE_CRESCENTISLAND))
- 		return XE_VSEC_UNKNOWN;
- 
-+	if (xe_survivability_mode_is_boot_enabled(xe) &&
-+	    xe->info.platform == XE_CRESCENTISLAND)
-+		return XE_VSEC_CRI_SURVIVABILITY;
+ 	f = fopen(ioctl_devfs, "rb");
+ 	if (!f)
+-		return -EINVAL;
+-	fread(buffer_size, sizeof(__u64), 1, f);
++		return -errno;
++	ret = fread(buffer_size, sizeof(*buffer_size), 1, f) == 1 ? 0 : -EIO;
+ 	fclose(f);
+-	return EXIT_SUCCESS;
 +
- 	return vsec_platforms[xe->info.platform];
++	return ret;
  }
  
-@@ -733,6 +758,13 @@ void xe_vsec_init(struct xe_device *xe)
- 		}
- 		break;
+ int main(void)
+@@ -159,9 +161,9 @@ int main(void)
+ 	__u64 value = 0;
  
-+	case XE_VSEC_CRI_SURVIVABILITY:
-+		xe->pmt.base_offset = CRI_PMT_OFFSET;
-+		xe->pmt.survivability_mode = true;
-+		info->priv_data = &xe_cri_pmt_cb;
-+		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
-+		break;
-+
- 	default:
- 		drm_err(&xe->drm, "Unsupported platform: %u\n", platform);
- 		return;
--- 
-2.43.0
+ 	ret = query_buffer_size(&value);
+-	if (ret == EXIT_FAILURE || !value) {
++	if (ret || !value) {
+ 		printf("Unable to read buffer size\n");
+-		goto out;
++		return EXIT_FAILURE;
+ 	}
+ 	printf("Detected required buffer size %lld\n", value);
+ 
+
 
