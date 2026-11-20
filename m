@@ -1,79 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795208424;
-	b=XAsNtPTUEWQ5jwZdScQt4DjE0qxSnZwDMwoHaLLMdqyW6guQ1M78CD8/fe/jTdfvlBus
-	 Qx4iPW5p9yF9EY2pc+g4P5U0YFBDOfmDfc5sdbwq7sDfDSrs8aqzMDBOQpscVR6CcAkFA
-	 Fa3JZGDuFkWDRh+UGmFx5Dxc+O8vCia5WB7le+xFL1XLX+cD/+NZ1neHf7PD2fy3V9a0x
-	 9rFwaTo0UU4GOmOSTmvKJatsuh/yCa0PO5NNHUekfuugswgkQmw85VGuyInpMT2mmqeI0
-	 NRJqjuoVNT6VkgkbYHfoSES+9ETdpwNShuI/yQ8+lQQotu6yRB5lH1E1tzvesosg7ZQ==
+	t=1795208499;
+	b=rAy9tWkPFEchaGPxlDwF35PBT0N0pnvymK2WF2m8AS+1KRoOqP2cHXiC96kFZ4ZMGWkM
+	 h9Ag6w30+uVIiHAhfrM/TJ1CMT5fj+OGI5Clex2UPrZ2tJGhMBpvtzNqakhIx8GHvncXZ
+	 zhEtGx5lGfGxoES9VC8qsleSKrMu5PoB7JG8CExmVwh7scSfQ4Fy335do3zVKSuWGIhHY
+	 sE+rEza91kS6Jl/W4teUiudgAKr1UlnLnub4HArCwa8BvnhdOy1+6hkLuXTaE5QtU3vUy
+	 NrprhAqfZqxZqqmdvuMnuBNplfzKiNgMqsRxpTOrlJmS8j6q11/WDuAbJ7OPg3rKelg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795208424;
-	h=Received:DKIM-Signature:Received:From:To:Subject:Date:
-	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
-	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
-	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
-	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
-	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
-	 Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:MIME-Version;
-	bh=hJ6RozSRUw4ivHBTA8k+q5gM1fF1Y1lZwF60YuAm90k=;
-	b=4nxsF1l6jQ8V5gJdblbXpSkv5syufOWMarOog3UAw5owUX+0xX0i30OJvbX828jeLp9O
-	 BL9VFF4jYo/8+tegS9B7Q/tw3DWhWjobLSQaV7ZKpzLVfReUfTJx4PzNp5lSMzJdzBxiw
-	 nYftYrwZimbOg3qNj4MKXrTQ5NbtBOGIKqhbnqZiUQGQoWEc/u8HgDbBER+6rgco5D9EA
-	 i0whlqJxDnlMcF29qDqo5K0Fkuq9GUFe5w+UocdL9D1QAlI7ofO+MbFfvKW4eSI1veEyc
-	 O7iPk8mZoUsDGHlIS/Bw8V3kX1cYJcgufsx2YcF+vqOTPSvCklVMrFVxjyEInMEzojA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795208499;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=EBnO+H7xZqK0qeWWVKiHIXvTaFdbiFOH4V29QtEeAlw=;
+	b=W5pa09YxloEU2BBShogumy5rONiHYTZ3ipaqHmP0DKfcpI4TO8xOEgGZRg9pgvqRThhH
+	 OSc1adXQjTj6cw8ytKyJp0a1iuMNXAy1DIjwnbtcsHgucQpGUlikf2smgSs0ACO+ll2Wv
+	 ONzxjLDnj8CRoguoHBfO2qPGvF6dVA2uKtiViNjET9sZzr3JpiaeabshqgtWsLleAG7hD
+	 vUZ5+9sbw9erzUtE2Qkqswb1IZyunywWZDtPYT5KDprUUMlU5gy79wBUp3c+4OLBI+8eY
+	 7mDkGlYNqhNJFjlGazUcnnRrb65W87gGPc4A0GOgjKQ2kY2hRdKIoOdCXaFYg1Tdc3g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P2CKvJvG;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W2aFG3Ou;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B05606A331
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 21:00:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1E6606A6B5;
+	Fri, 20 Nov 2026 21:01:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC1E6606A6B5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P2CKvJvG
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 47A6F1F000D4
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 21:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795208424;
-	bh=hJ6RozSRUw4ivHBTA8k+q5gM1fF1Y1lZwF60YuAm90k=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=P2CKvJvGQWPuzviI6lrR+xjeeD3xSZpvsfrXQBJ5VaPUWjaAlJf0CdApedABfqD12
-	 c3xMzcXT/1XnbCzu5mvgaUbYkqxOU81KeKzwpfUw+oUP4jYUABITx750Yo1hwQNHOX
-	 Tu7M9yIRVtSqF1g4oJCCxKvAEJdYP1hNzhZrtPLJOkMfG1JejK+jkai3Ikx/Zvq20Z
-	 HJNwZTYedUdnguSGJXN9F95ppHLNgLvfRYhO40dIjsMyMOl3ERvXj0kyL+ekWkeKfV
-	 pixniysyqqIGfw4agb4t/dZLyhzJ+F+j8oay7FaWILgFFvIAyYIuFhLYBX062EUtLD
-	 eYTXrdHZPcUng==
-Received: by aws-us-west-2-korg-bugzilla-alma10-1.codeaurora.org (Postfix, from userid 48)
-	id 44242240040E; Fri, 20 Nov 2026 21:00:24 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 222275] lg_laptop: LG gram 16UD55U - kbd_backlight has no
- effect, unknown WMI scancodes on Super key
-Date: Fri, 20 Nov 2026 21:00:22 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: daxter1992@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-222275-215701-RzmzO3qJHv@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-222275-215701@https.bugzilla.kernel.org/>
-References: <bug-222275-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=W2aFG3Ou
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795208495; x=1826744495;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=fGpmQ5d2dc6tiMz8KyrMGQZrtNUylTF5HqxkZYhPbUs=;
+  b=W2aFG3OuX0Bstm+PN2du4c+42oWyiTpEWXPRftW6adrxF2/OUulH2CnG
+   8bwr1/SbcHluLrGG8yRyJ7xmEg6MD8gOvu8qqP7PzbShpnzpCADhq+QAf
+   ZYYiwz7xl0/U6UBZfLy/If0c5l/OY2z1PdCon7jvclhmGhwv2BEu5EGDw
+   IkE/BgT+/k8q4M9nZGRjYd1wJ4c1GAlR5dc1sEL/ftqCv+WI+KFniihMy
+   d05EHlVF0h+z43S3Bm98ec6iBWCdLBrrxthbtnRE3mlzADr4DrZtbUZjU
+   VaNmqfXF3/i4xBRGCU6V5eCbRuNjc9ASwLaDokUpWLCFgipaLd4wkb/zU
+   A==;
+X-CSE-ConnectionGUID: csbXL3HrQoiQ4NI8L0LWig==
+X-CSE-MsgGUID: ZcLSoAv6R0q50BrjHJp08w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="3979960"
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="3979960"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 13:01:32 -0800
+X-CSE-ConnectionGUID: yKlolyxGQOaRp0t7l3ysyA==
+X-CSE-MsgGUID: 3kP5zmj6TqajGGx24HQM9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="10862622"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.16])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 13:01:28 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 20 Nov 2026 23:01:25 +0200 (EET)
+To: Ondrej Zary <linux@zary.sk>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Introduce Synology NAS x86 platform driver
+In-Reply-To: <20261120201139.4148644-1-linux@zary.sk>
+Message-ID: <bec26cfe-c01e-9050-14da-69287d584fef@linux.intel.com>
+References: <20261120201139.4148644-1-linux@zary.sk>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,12 +78,230 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D222275
+On Fri, 20 Nov 2026, Ondrej Zary wrote:
 
---- Comment #10 from daxter1992@gmail.com ---
-Yes! My name is Carlos Javier Alvarez
+> Add platform driver for Synology x86-based NAS devices to support HDD LEDs
+> controller by ICH9 GPIO pins.
+> 
+> Only DS411+II is supported for now (DS411+ should be the same except CPU).
+> 
+> Buttons and other LEDs are not supported by this driver because they're
+> controlled by a PIC MCU (connected through serial port).
+> 
+> Signed-off-by: Ondrej Zary <linux@zary.sk>
+> ---
+>  drivers/platform/x86/Kconfig        |  14 ++++
+>  drivers/platform/x86/Makefile       |   3 +
+>  drivers/platform/x86/synology-x86.c | 126 ++++++++++++++++++++++++++++
+>  3 files changed, 143 insertions(+)
+>  create mode 100644 drivers/platform/x86/synology-x86.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 9ce384e0475e..04f6452b5a32 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1059,6 +1059,20 @@ config OXP_EC
+>  
+>  source "drivers/platform/x86/tuxedo/Kconfig"
+>  
+> +config SYNOLOGY_X86
+> +	tristate "Synology x86 NAS Platform Driver"
+> +	depends on GPIOLIB
+> +	depends on LPC_ICH
+> +	depends on GPIO_ICH
+> +	depends on LEDS_CLASS
+> +	select LEDS_GPIO
+> +	help
+> +	  This driver provides support for the HDD LEDs on Synology x86 NAS
+> +	  devices.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called synology-x86.
+> +
+>  endif # X86_PLATFORM_DEVICES
+>  
+>  config P2SB
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 229057234d00..a1806eb0efc9 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -166,3 +166,6 @@ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
+>  
+>  # OneXPlayer
+>  obj-$(CONFIG_OXP_EC)			+= oxpec.o
+> +
+> +# Synology
+> +obj-$(CONFIG_SYNOLOGY_X86)		+= synology-x86.o
+> diff --git a/drivers/platform/x86/synology-x86.c b/drivers/platform/x86/synology-x86.c
+> new file mode 100644
+> index 000000000000..2fcf735ba3be
+> --- /dev/null
+> +++ b/drivers/platform/x86/synology-x86.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +
 
---=20
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Extra empty line.
+
+> +/*
+> + * Synology x86 NAS platform driver
+> + *
+> + * Inspired by platform/x86/meraki-mx100.c
+> + *
+> + * Copyright (C) 2026 Ondrej Zary <linux@zary.sk>
+> + */
+> +
+> +#include <linux/dmi.h>
+> +#include <linux/pci.h>
+
+Please order alphabetically.
+
+> +#include <linux/err.h>
+> +#include <linux/gpio/machine.h>
+> +#include <linux/kernel.h>
+
+What for is this?
+
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +static const struct gpio_led synology_leds[] = {
+> +	{ .name = "synology:green:hdd1"	},
+> +	{ .name = "synology:amber:hdd1" },
+> +	{ .name = "synology:green:hdd2" },
+> +	{ .name = "synology:amber:hdd2"	},
+> +	{ .name = "synology:green:hdd3" },
+> +	{ .name = "synology:amber:hdd3"	},
+> +	{ .name = "synology:green:hdd4" },
+> +	{ .name = "synology:amber:hdd4" },
+> +};
+> +
+> +static const struct gpio_led_platform_data synology_leds_pdata = {
+> +	.num_leds	= ARRAY_SIZE(synology_leds),
+
+Add include.
+
+> +	.leds		= synology_leds,
+> +};
+> +
+> +#define GPIO_ICH_DRIVER_NAME "gpio_ich"
+> +
+> +static struct gpiod_lookup_table synology_leds_table = {
+> +	.dev_id = "leds-gpio",
+> +	.table = {
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 16, NULL, 0, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 18, NULL, 1, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 20, NULL, 2, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 32, NULL, 3, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 33, NULL, 4, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 34, NULL, 5, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 49, NULL, 6, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 55, NULL, 7, GPIO_ACTIVE_HIGH),
+> +		{}
+> +	}
+> +};
+> +
+> +static const struct dmi_system_id synology_systems[] __initconst = {
+> +	{
+> +		.ident = "DS411+",	/* DS411+II is the same with faster CPU */
+> +		.matches = {
+> +			/* Synology did not put anything in DMI strings */
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "To Be Filled By O.E.M."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "To Be Filled By O.E.M."),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
+> +			DMI_EXACT_MATCH(DMI_BIOS_DATE, "05/21/2012"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(dmi, synology_systems);
+> +
+> +static struct platform_device *synology_leds_pdev;
+> +
+> +static int __init synology_init(void)
+> +{
+> +	int ret;
+> +
+> +	static const struct pci_device_id pci_sii3531[] = {
+> +		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CMD, 0x3531, PCI_VENDOR_ID_CMD, 0x3531) },
+
+Some include is surely missing.
+
+> +		{ }
+> +	};
+> +
+> +	static const struct pci_device_id pci_i82574l[] = {
+> +		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x10d3, PCI_VENDOR_ID_INTEL, 0x0000) },
+> +		{ }
+> +	};
+> +
+> +	const struct dmi_system_id *dmi = dmi_first_match(synology_systems);
+
+Are you missing DMI dep from Kconfig?
+
+> +
+> +	if (!dmi)
+> +		return -ENODEV;
+> +
+> +	/* DS411+ DMI match is too generic, confirm by onboard PCI devices */
+> +	if (!strcmp(dmi->ident, "DS411+")) {
+
+Include.
+
+> +		if (!pci_dev_present(pci_sii3531)
+> +		 || !pci_dev_present(pci_i82574l))
+
+|| should be on the previous line.
+
+Should this depend on PCI too?
+
+Details missing from the changelog.
+
+> +			return -ENODEV;
+> +	}
+> +
+> +	pr_info("Detected Synology NAS %s\n", dmi->ident);
+
+Missing include.
+
+> +
+> +	gpiod_add_lookup_table(&synology_leds_table);
+> +
+> +	synology_leds_pdev = platform_device_register_data(NULL,
+> +		"leds-gpio", PLATFORM_DEVID_NONE, &synology_leds_pdata,
+> +		sizeof(synology_leds_pdata));
+> +	if (IS_ERR(synology_leds_pdev)) {
+> +		pr_err("error registering platform device: %ld\n", PTR_ERR(synology_leds_pdev));
+
+Use %pe
+
+> +		ret = PTR_ERR(synology_leds_pdev);
+> +		goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	gpiod_remove_lookup_table(&synology_leds_table);
+> +	return ret;
+> +}
+> +module_init(synology_init);
+> +
+> +static void __exit synology_exit(void)
+> +{
+> +	platform_device_unregister(synology_leds_pdev);
+> +	gpiod_remove_lookup_table(&synology_leds_table);
+> +}
+> +module_exit(synology_exit);
+> +
+> +MODULE_AUTHOR("Ondrej Zary <linux@zary.sk>");
+> +MODULE_DESCRIPTION("Synology x86 NAS Platform Driver");
+> +MODULE_LICENSE("GPL");
+> 
+
+-- 
+ i.
+
