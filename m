@@ -1,97 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.219.41
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795175926;
-	b=v5QKyeczKrzpTrP99cbDRIIeYg3b91nyZ6+SD3n3JlkBvvkPgAYCVNqjdGzcW1zH6ncv
-	 NPvVliPej8VygnqRgwtCRioT267um4xJnySWcRxD/XB63pNzP5gf4dLhh/B8YIn9FGVnE
-	 bJLrAaJvdGvNxpDYDsaDz8gPOO/t0b8fXrcAb0+URALu6vtGYD/MKEMtdno4AqkBYIwFl
-	 We1Ap6WrhvmvNwY+AotfaCiRyfclf+LLaO+qrGslaEuay1HUdaYDdGieT0D6nmJO2qSqD
-	 oqhBx7xNx5ehIOlkYZYl9luZiBBkCYcKnOHXtrjzuJFUQ502xFvdpvOYMoYXCRkRNWA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795175926;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:MIME-Version:From:Date:
-	 X-Gm-Features:Message-ID:Subject:To:Content-Type;
-	bh=NvuhaCDUWlRxm9BE4zHRrvko7BhHP1S1x7oYjGM6wyM=;
-	b=IQsqqMWFiKL4BXd0tF+3+VpDNB2xR24boHCMU1BU2j34AK56vt+X5llEO1rjYJ8vynoq
-	 WQ76yNhFa5Fv4EAx0IgjlGoLqZWGLHzJvuN5Kv3NuveHS4bYIUW/3Bh5CoRaQKwFf1fpz
-	 1ufza2cCH0jBp86gl04vAxjsp2W3MmfVyOzzCiA2y2lE9sNwwWNP0h8OqJAYuuaIoyWvM
-	 OVAKtE8a7GOb2ToOx6SeucJ0POfs9EuyufIDXPrCwQGsiqo/DAhehGAjGkBF1hJuXGvPC
-	 LMGhmPpZ0IY9d66dawqiliTSj2Qm7YjuQkpd+UPdANkRP4g7otzdXK3TjUdCBfLG+nw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yZGxdVby;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.219.41
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=145.253.228.164
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795176467;
+	b=zY5yDKPnQBwsIO2d3GoruAvKfjiW5kMZqXHZlEZhzEZqmrqcQ6I9o2ZGIEMFKsFhaQzW
+	 slV1MTFksHKHNrNxkvozjaTVrya4Ic0r50cJQWoK7+RvdKNa5qQvwDsWVZxWu6NqeP65c
+	 SgGelGSjxOyMY+LVLljmzJQ1z5O9mxOUDhLtRaAZTc844CRRuo+SKXr6FeF5SVeGtmKHq
+	 4k4n9JEy2G7kLjEQWGooYjC8hMj8haJxALPVLLq9i9KYsz3KDyczzOupNoZUp1CX1BzSt
+	 wp3AggzybvT0s12qAiXkuPXaFsM0Dg6Npc8pIBRZ1WZb0ZHi+dsuZnjKC0PNGJHOH6w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795176467;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-purgate-server:X-purgate-type:X-purgate:X-purgate-size:
+	 X-purgate-ID;
+	bh=+0zLlHjY/KwNiTQOkB+1Oym5SXmdA90TlYnMhoyXusk=;
+	b=HpDNOdrb4iimVdb05BVjR4syirLbhDARq5QOlJUGdqDK7u7oaRVZIlphFr0ml9khZJ2q
+	 E/lfmieWTxOwnT9ZaQvMQV3enfD23HdOXnjv4hZjMxP+yntdnuD6OVHP6iOi5o4Gri4Du
+	 9NARbHQphJg55ms5cWX1F591gMM6biKEmTuYdKSknBAL2s2IildZlqfcUvvOb6XQAa0wZ
+	 Wk+YJvFHwKxRjaWuEi4GwFelB9qIpFUw63QfujA0T5IHL/WjhfjVjRQzJ8o4p0YC6U7U4
+	 kjMzIigaVC8BsxxdohiQGXcckDStayTNnLEu/pFad7V+7FKlc1CmvT0Kc4Q22v21Sjg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=arcor.de;
+	spf=pass smtp.mailfrom=arcor.de;
+	dkim=pass header.d=arcor.de header.i=@arcor.de header.a=rsa-sha256 header.s=vfde-mb-mr2-23sep header.b=b2eVrhrq;
+	arc=none smtp.remote-ip=145.253.228.164
+Received: from mr4.vodafonemail.de (mr4.vodafonemail.de [145.253.228.164])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A0C606A325
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 11:58:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 78A0C606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16ED606A326
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 12:07:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E16ED606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arcor.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arcor.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yZGxdVby
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-9210f2622ccso10909636d6.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 03:58:46 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795175925; cv=none;
-        d=google.com; s=arc-20260327;
-        b=KCxTxJiemax040kjP0N30L5ZwNdcCK6SDNs4LPTGySkePpCvb0sL2haSI7tvny26Vx
-         jZRNTQ4mbEWd3y45FRiC3G4v7DSJnY9Y2NwIyzrjJ26YqR4TGj91wLOP7EGYR9UHSTFV
-         A1r0b2WQRRYKZm+9W7a8SjGpffTnUTblLYS+rWTJk9PBDpmvFGPgGbyv32rMxEJW1n9N
-         r1GAR4BActBIP4R0V65qcvHbOs8cURQ8/30OSpj1L4vWZRZ+hMtJ2rOTOsCqUX3DnoD9
-         hZuTn+lZfa3fONmp1uMKSOS/qguNRRCl4Yh+N9qQDil52eQVTLZWcveYvWVWV4h16k42
-         dddQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=NvuhaCDUWlRxm9BE4zHRrvko7BhHP1S1x7oYjGM6wyM=;
-        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
-        b=IpJpeYqrJp4O3qU9DfBMGR8U272/Uwr92mQy3Sd8l3/VdWu4WkoDjzz3h5oaDXVFL1
-         DkvNYNnqsExfM0lJV0HJKXCxrKe6U1E8q76B0l+8uwzSSnmR18HhdUT6Cl8Yz3jXrI4y
-         h0zTME6gJMDDGhU9RF7Lu6ll8WtfOxO2Ws00UjwHhl53Twv5cmNQGyx3BXXes/u8styi
-         odRRDYIgC5DU1vXagPkwueRbFCoQYLPPZGOw039mJvegZco7KyV68LCpJR7/GIxbwCbs
-         jUfR32mAi7WMZWfekbEUHd9gvNQ5I0aV5eTxHrbPbuiOJUcEphYQSf/545CWrBTgJOeM
-         7tzQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795175925; x=1795780725; darn=vger.kernel.org;
-        h=content-type:to:subject:message-id:date:from:mime-version:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=NvuhaCDUWlRxm9BE4zHRrvko7BhHP1S1x7oYjGM6wyM=;
-        b=yZGxdVbytBCgcL5bgfRDcoxievf4qCa5Lm5sE+izq5X8PJmjBu0I01aEnPXelUGG+6
-         xy4U3V5ABe0wARx+IW1H3KvSVReT9UQd8ekLzv1XkzsR4x5nQg7ioPEi5Pl4qrHyZaoc
-         0j4XovwyOITKPjAQe6Z7c8fyEPS9nrZChpQwZMUnE4F97zvLGDcTxfEmIjrANJhNb29k
-         LKxStnLp6SBnsR8ixkSvvoKDCj+r/82wLN/ZV9nzPcxvG01HJwkEMkNRnsvjqwQNKPCM
-         Bek7YcbbVmWtr7FTqalPzHVN8szJ8m58tIwpRLhqtWvFGHm9uz1WAkzK8h4yk5GwZ4HW
-         AGlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795175925; x=1795780725;
-        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NvuhaCDUWlRxm9BE4zHRrvko7BhHP1S1x7oYjGM6wyM=;
-        b=n/eoaGYg2+FGJEK8UY9EN5KPmX13WfT8HcEIlfYToJ9ht3YXjDplx63jiXCv3lLLi7
-         zL9OXx4I575iz/jS6vdyBMmcuKxclXVJoEotNBdzvcwqJ2eambBt7QIz2qyR34aOXbiZ
-         RUrFAq2wQBQD/6VJ8t9RTKhbEy0q+PQeX8H1GFCIAxwgC1sjjEZhgHAVnN10kPBA3MJx
-         AGKVRPwEudPtpadwNKEnp7YSAVN3/wuPTyOTJTERV+cquZgK2O6LuUQmPMyOCCHaEh3R
-         5LKB1hrOFEq/jjLMXEENsaKsWgLMqRmtlYsSIAvExB1Q/wXhpxYRTi5I5iQET9n7VGLW
-         kwGw==
-X-Gm-Message-State: APuU4Z9tenr2SvUy4r8kJNYDZ2FyewglmxT54mjJWQnpZL159zpxjXQ7
-	QqqQcrxVzQVBF5UQrMoIZtsUCmiAhTqp1GDGMPuFeQNptaKSaBvSOo45Ig5HzthaUTzwyrOo7e0
-	r9+KOeEb9m7Gi3V9px0ScY3ArRYKVXUKb3g==
-X-Gm-Gg: AZFdTZcCbZkz4N9B3vXIPNUqOJwxlVe3+SZTUlf36IhURiNq4N4AvKvNMOdrtVQqzsE
-	TMe+ykbZKy3tmD94vpIya/C+TU8a+JlN5qXPJkrvkoA6vslLTHcxabtb326YdnMOkO5LcvRC0jU
-	vL7rdWdNOCZWovmULsBWNJKYnIrI/bSXmcXUirBoc2w1KGWRL0j2J/JpRU4+qLxdiA6o4JmQztS
-	RwgmI5c8q65zKQfFTioajhx6ZwbvMQ7Qcbs2cNFtMN5emxvnSYzkCeUNUycTO/SdG40iTUBqHXQ
-	rcAYzGgEs7mE7NBaj+LmnkZa+UzLmp++FuXYAvh8+S30rIrDHFvZAsAVpXd7LKHglYzCSRn8tXY
-	MH9Od9+KV0wn7gVLDstKM4+9xwZk4iNXsZ6R4fA==
-X-Received: by 2002:a05:6214:8616:b0:91f:2374:d001 with SMTP id
- 6a1803df08f44-92134aef4e6mr46090596d6.25.1795175924318; Fri, 20 Nov 2026
- 03:58:44 -0800 (PST)
-Received: from 1087654160852 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 20 Nov 2026 03:58:43 -0800
+	dkim=pass (1024-bit key, unprotected) header.d=arcor.de header.i=@arcor.de header.a=rsa-sha256 header.s=vfde-mb-mr2-23sep header.b=b2eVrhrq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arcor.de;
+	s=vfde-mb-mr2-23sep; t=1795176458;
+	bh=+0zLlHjY/KwNiTQOkB+1Oym5SXmdA90TlYnMhoyXusk=;
+	h=From:To:Subject:Date:Message-ID:X-Mailer:From;
+	b=b2eVrhrqHACB53ZAHfaZlQ4JNysWH6JRHO+Tg1Pf/j4tFz+ERqlGh0V11vNY8UAzQ
+	 tu03eV7EC7qL/N6U5ztWdd3hpyiyhvJmo04ud5RdKUPk8G6xlBdguwoNKbSlyuAjVf
+	 C+HFNKjH9py8qwCwmclX5hfXAVbE1v7ryqEPd33c=
+Received: from smtp.vodafone.de (unknown [10.5.0.33])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mr4.vodafonemail.de (Postfix) with ESMTPS id 4jWDcB0bVcz3sTnm;
+	Fri, 20 Nov 2026 12:07:38 +0000 (UTC)
+Received: from floian-LIFEBOOK-U9311X (p549c28b0.dip0.t-ipconnect.de [84.156.40.176])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.vodafone.de (Postfix) with ESMTPSA id 4jWDbw68zdz92kY;
+	Fri, 20 Nov 2026 12:07:20 +0000 (UTC)
+From: Florian Schmidt <kewl0@arcor.de>
+To: Jonathan Woithe <jwoithe@just42.net>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Florian Schmidt <kewl0@arcor.de>
+Subject: [PATCH] platform/x86: fujitsu-laptop: Report Windows Ink button on LIFEBOOK U9311X
+Date: Fri, 20 Nov 2026 13:06:55 +0100
+Message-ID: <20261120120655.40295-1-kewl0@arcor.de>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -101,63 +72,106 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-From: Eduard Aliman <edialiman20@gmail.com>
-Date: Fri, 20 Nov 2026 03:58:43 -0800
-X-Gm-Features: Aa3M54qCuMoidSecJk02Vb-Tk4IkDHHUqJ221kfGK131OaeCfKXmmOVKzx4Krtk
-Message-ID: <CAA4HgYKab7_GMCNdHF9+E=9ECVBHRs_axefeCOnZbUNUoyVSoQ@mail.gmail.com>
-Subject: ideapad_laptop / lenovo_ymc: keyboard backlight stays on in tablet
- mode on Lenovo Yoga 7 14ARP8 (82YM)
-To: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-purgate-server: smtpa02
+X-purgate-type: clean
+X-purgate: clean
+X-purgate-size: 3824
+X-purgate-ID: 155817::1795176457-63C6AA3B-85CE5D1E/0/0
 
-Hello,
+The LIFEBOOK U9311X has a hardware button for Microsoft Windows Ink.
+Pressing it does not queue an entry in the FUNC_BUTTONS ring buffer.
+Instead, bit 20 of the FUNC_FLAGS status (op 0x4) is set while the
+button is held down and cleared on release, and an ACPI notify is
+raised on both edges. The FUNC_FLAGS event value (op 0x1) reports
+bit 20 on both edges, so it cannot be used to tell press from release.
 
-I am reporting an issue / missing behavior on a Lenovo Yoga 7 14ARP8 (82YM)
-running Linux 7.3.4-300.fc45.x86_64 (Fedora):
+FUNC_FLAGS op 0x0 returns 0x66120120 on this machine, so bit 20 is
+advertised as supported. Bit 30 follows the Fn lock state and is not
+touched by this change.
 
-System details:
-- Product: Lenovo Yoga 7 14ARP8 (DMI product_name: 82YM)
-- BIOS: LCCN26WW (06/25/2025), EC firmware: 1.26
-- Kernel: 7.3.4-300.fc45.x86_64
-- Relevant modules: ideapad_laptop, lenovo_ymc, amd_sfh, amd_sfh_tabletmode
+Track the level of bit 20 and report press and release as KEY_PROG1
+so the button can be bound in userspace.
 
-Symptom:
-On Windows 11, folding the laptop past 180 degrees into tablet mode disables
-the keyboard and touchpad AND automatically turns off the keyboard backlight.
+Tested on a LIFEBOOK U9311X (BIOS 2.42) with this change backported
+to v7.0: libinput shows KEY_PROG1 pressed/released for each button
+press, independent of the Fn lock state.
 
-On Linux, SW_TABLET_MODE is reported properly and GNOME/libinput disables the
-keyboard and touchpad as intended, but the keyboard backlight
-(/sys/class/leds/platform::kbd_backlight) stays physically ON.
+The analysis of the dynamic debug output, the code change and this
+changelog were produced with the help of an AI coding assistant
+(Claude Code by Anthropic) on my request to make this button usable
+under Linux. I reviewed the change and tested it on the hardware.
 
-Crucially, even a userspace daemon listening for SW_TABLET_MODE cannot turn
-the backlight off once tablet mode is entered: writing "0" to
-/sys/class/leds/platform::kbd_backlight/brightness immediately after
-SW_TABLET_MODE=1 changes the sysfs readback to 0, yet the physical keyboard
-LEDs remain ON.
+Signed-off-by: Florian Schmidt <kewl0@arcor.de>
+---
+ drivers/platform/x86/fujitsu-laptop.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Test log (listening on both SW_TABLET_MODE input devices while folding and
-unfolding):
-  [ 2.681s] Lenovo Yoga Tablet Mode Control switch -> 1 | cur=1
-           wrote 0 -> readback=0   (physical LED stayed ON)
-  [ 2.763s] AMD SFH tablet mode switch -> 1 | cur=0
-  [ 3.748s] Lenovo Yoga Tablet Mode Control switch -> 0 | cur=0
-           restored 1 -> readback=1
-  [ 3.803s] AMD SFH tablet mode switch -> 0 | cur=1
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 8e909cb..0bcb92e 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -81,6 +81,7 @@
+ #define FLAG_TOUCHPAD_TOGGLE		BIT(26)
+ #define FLAG_MICMUTE			BIT(29)
+ #define FLAG_SOFTKEYS			(FLAG_RFKILL | FLAG_TOUCHPAD_TOGGLE | FLAG_MICMUTE)
++#define FLAG_INK_BUTTON			BIT(20)
+ 
+ /* FUNC interface - LED control */
+ #define FUNC_LED_OFF			BIT(0)
+@@ -140,6 +141,7 @@ struct fujitsu_laptop {
+ 	spinlock_t fifo_lock;
+ 	int flags_supported;
+ 	int flags_state;
++	bool ink_button_pressed;
+ 	bool charge_control_supported;
+ };
+ 
+@@ -585,6 +587,7 @@ static const struct key_entry keymap_default[] = {
+ 	{ KE_KEY, FLAG_RFKILL,          { KEY_RFKILL } },
+ 	{ KE_KEY, FLAG_TOUCHPAD_TOGGLE, { KEY_TOUCHPAD_TOGGLE } },
+ 	{ KE_KEY, FLAG_MICMUTE,         { KEY_MICMUTE } },
++	{ KE_KEY, FLAG_INK_BUTTON,      { KEY_PROG1 } },
+ 	{ KE_END, 0 }
+ };
+ 
+@@ -957,6 +960,7 @@ static void acpi_fujitsu_laptop_notify(acpi_handle handle, u32 event, void *data
+ 	unsigned long flags;
+ 	int scancode, i = 0;
+ 	unsigned int irb;
++	bool pressed;
+ 
+ 	if (event != ACPI_FUJITSU_NOTIFY_CODE) {
+ 		acpi_handle_info(handle, "Unsupported event [0x%x]\n", event);
+@@ -990,6 +994,20 @@ static void acpi_fujitsu_laptop_notify(acpi_handle handle, u32 event, void *data
+ 		for_each_set_bit(i, &flags, BITS_PER_LONG)
+ 			sparse_keymap_report_event(priv->input, BIT(i), 1, true);
+ 	}
++
++	/*
++	 * On some models (e.g. LIFEBOOK U9311X) the Windows Ink button is
++	 * only reported as a level in the status flags: the bit is set while
++	 * the button is held down. Report press and release on each change.
++	 */
++	if (priv->flags_supported & FLAG_INK_BUTTON) {
++		pressed = priv->flags_state & FLAG_INK_BUTTON;
++		if (pressed != priv->ink_button_pressed) {
++			sparse_keymap_report_event(priv->input, FLAG_INK_BUTTON,
++						   pressed, false);
++			priv->ink_button_pressed = pressed;
++		}
++	}
+ }
+ 
+ static int acpi_fujitsu_laptop_probe(struct platform_device *pdev)
+@@ -1037,6 +1055,7 @@ static int acpi_fujitsu_laptop_probe(struct platform_device *pdev)
+ 	if (priv->flags_supported)
+ 		priv->flags_state = call_fext_func(fext, FUNC_FLAGS, 0x4, 0x0,
+ 						   0x0);
++	priv->ink_button_pressed = priv->flags_state & FLAG_INK_BUTTON;
+ 
+ 	/* Suspect this is a keymap of the application panel, print it */
+ 	acpi_handle_info(device->handle, "BTNI: [0x%x]\n",
+-- 
+2.53.0
 
-Note that "Lenovo Yoga Tablet Mode Control switch" (lenovo_ymc) fires ~80 ms
-before "AMD SFH tablet mode switch", and by that point the EC appears to
-already ignore physical backlight changes via VPC0.KBLC (KBLM/KBLS).
-
-ACPI DSDT notes for this machine:
-- VPC2004:00 exposes Method (KBLC, 1, Serialized) which writes EC fields
-  KBLM and KBLS.
-- EC0 has Device (CYMC) with _HID "YMC2017" and \_SB.WMIY (_UID "YMC")
-  exposes WMAB returning EC0.PCMD.
-
-Is there an ACPI/WMI call or EC command that should be issued before or upon
-entering tablet mode (or a quirk in ideapad_laptop / lenovo_ymc) to turn off
-the keyboard backlight like Windows does? I can provide the full acpidump or
-test patches if needed.
-
-Thanks,
-Aliman Eduard
