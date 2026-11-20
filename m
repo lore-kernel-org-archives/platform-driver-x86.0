@@ -1,22 +1,22 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.201.17
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.36
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795197157;
-	b=1CWaRkKb6Ye0zJCrGeOLbw9IKe464RaV+AmEanV7eoGHH1gAM9YKQ9lwSZNUCCHbeGrG
-	 qSMaNHuYxvGTjZVu4Eaq41CkeGean9kBDrtJx96X6MMzIv+d4Gh73gISqLvUdP3LLc0uu
-	 fN8Ao7PsW1wH6roxYwwwy+P7OuUbySt+YgG94P7MmZ9LCd8Kl8XQ8UwUuYBVo1Jo7OS96
-	 C1jZWT6AlDYQ1zIpj+GuwsuRVXNVDQvzVe7UkL0xbXHG5pbi/RsqMZ9wC3RHrUJVdz0IH
-	 G3/ZOqPeBrXOKRcfODSkdVlxZxDx/w8iP05gJM6oNgQ3ps5Yz68eMY/fPccGma3CAJQ==
+	t=1795197163;
+	b=UcUA1+yjaNASvTJVQ5cymMGFoscvOWSwzMajvxHnO1x9Furx6OPYM81Aak8E944n22gl
+	 Pdp0PuPhy7QxP+Euf21vIcnIgvjBcgTYFPhq6TYft1t7CqPWFQGLpY7UGIfUy/g/hy4+f
+	 4pyoxGnrm2Gk4VV/Ku/IhpeWGMFxX+qwl+NUcfvoH0hJc+GrDU8HZ1TdL0sFDrDqCpp1N
+	 9BBmrM1iWuwISQ82CShSv7ldQBZdZe870u/Sz0euXE+SpQXcVHhykhiCUXQ1TeK7QXCri
+	 qOllnQiCzlS/0RzjMBJiQJFd5v2JQvJ6fxO2o+H7rTHXN6Ml+v3Oeoj7+QmZ3liA+ug==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795197157;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795197163;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:
 	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 From:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:CC:X-Mailer:
-	 X-Originating-IP:X-ClientProxiedBy:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-ID:References:In-Reply-To:To:CC:X-Mailer:X-Originating-IP:
+	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
 	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
 	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
 	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
@@ -26,52 +26,53 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=1ygXtcGwTE8vlSQJnSZfTiVFOnpbPDPJw1GD0zV2xTs=;
-	b=PA2/UH0JhIx0DnviwIWn/NceTqv2mnp8PvfyfWqrWA2b0VGWIHHrZ+3FneLSbFbqQkPJ
-	 o5dRDjvWh/oqPp9XlTj5SK/vSS42jfrZMs7KEn9+QMwo1g3rzljuA2FluzCA0Ol9DhDzO
-	 StN1ncfq/Q25punU/F22frBCUXuLjfWNgi5hbjM8czf5aKzsc1Ieg8IjR4CZ/5acVgZJa
-	 8jdWVMWXN/gZbO2V/L+90MSrVHpxvC6MdUqNil64jdnZKxckJFOqCHTE7IPoH65o06tgC
-	 xUaaL0tKWyVLnXkjlVA1LvxxOc/J8AUrHJlp3PW9x2UipqY2bKa3SDWUWunKIf2KqnA==
+	bh=VkAxFaK0rEyfxoM2PYJn5im1fxj92QmEq4D5jpjQK2c=;
+	b=fv3UuwNrx6KjH+3W9zLPAP8Rl+5rW//HldM9jj/ggBlPvXfJsZ/hqxG7Stwd/aNLsDZx
+	 GrlSKMQL6vTmZPlQPwryTVIEqU3bt9SdHIGoRKQhswH1NYFP8twwoharmwG3pDXjHTvwK
+	 c3cSA6BtZwcfHg2Unk6lZwuO9Y1VJk8tWwKM+iIXwWdAO+Fy9mIgyV1jSq2Ml+w9Jdha6
+	 s/JJg5ZZYa3lwWzRF02/M3Fj3lL/A71WYEoEZiPMTuE74VNWupgPihOq6RWEvTIRTILrx
+	 SvMx6rE3hIu3UnUAe1xnRVU/zw11pHpI34cj4kvEnTKw/kuVCag3gDII9q1yuvt1GXw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=amd.com;
 	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=K3A462yZ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.201.17
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013017.outbound.protection.outlook.com [40.107.201.17])
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b="o4GBMB/q";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.36
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013036.outbound.protection.outlook.com [40.93.201.36])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B24606A334;
-	Fri, 20 Nov 2026 17:52:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 58B24606A334
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73A8606A32A;
+	Fri, 20 Nov 2026 17:52:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C73A8606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=K3A462yZ
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=o4GBMB/q
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FaksS0cdty/W/W6EnrVuAU6tcRSdNO0ovRSqVLsmyluwJtulYHxDZgQDlCeaz+4n/70G7FFduWa8GqaRj0ICzB04HWvqU11vxV2bjjBZNkJlWx0KOqDzsXALgxLhmvVtyC0EX3Nz5VRGemqcCMWFlUXR/4qBUNzWyG+w84Upu+CeI9tSHqfNOLY2HBK7WA3c3Mq3YAotwCnIf0l5al3PszypP24g9YVvO8xK/bduQy4bmRxlOgmpayXthwT5Lr8ZBwE3uHERvtbCT8uKFDqTj5CQQZn7EFsZ2KXUk+fg3AkKyBSyWlJrLQS+SZr80S98ZHtMKoQhnbrpW7mdTZxxtw==
+ b=bD07Qrbqm2zd5OjNganVpDJVG+ouwmdcFXhFVe2D6naR/fJW+nrfeP7j64+d4H2Uahef/HzxQkC3kLBhJuOBhFGyqcUmnPglk/SXpxd+k/fkenJbjRlaU6LhGG9t9rAqN6sM3GTsfHBnNiDRVXStJtrwMwy5LFRjDZkd1kHPqYx4jNFyfpt85fSCqsN6yNBRAIunKDb29dBldov38chrC/VjElqhBzfqjILY+CaXHNqB2MLWynAEiDDuP1Dd3fTtFdgCRxTFwGJzEbWko5BLvWtcJJABjorxPqqjJFmBCeKXI2fQ6jp2QjduwxNCeD4395p9zMCzCWeramWd63NSPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1ygXtcGwTE8vlSQJnSZfTiVFOnpbPDPJw1GD0zV2xTs=;
- b=QnRP+ZrfpTLhm5rAft7JrbRmt3e9KPMDXDPUQHgK+/DIr27FJPY7fuA1cKkgdNcoZR8fRX/0Krfly+ETBRntrtAy4TFSyXo1tz7A4fx+wYBt/O4b/AZmlpQ0cWvxkDq/7DV2BmrFRm+NLnkwbizh+pxJj2Bw9DBPE1yLcBEfs0Cytb+YjNH0V9ogvwq7ci0NlKgUyDUwXioco+PRv8Rka3X5djGFNRroomhwqXObWk7cP1ufgNG15rhDMpQ/HNcrBrP8nKw19sii80xa0HpFnEscxBnp1PLjltlP+jKdOjS7UflkuG5U04gdFKZkN36dMSFWRQ5IprBV/bsnkCrW6w==
+ bh=VkAxFaK0rEyfxoM2PYJn5im1fxj92QmEq4D5jpjQK2c=;
+ b=n9xgonYLLff4TULDq84/of6X5ovkeO7j/03uOyPqV6b5WRl++0fH2eX70/jqUHa0tBL9pN9NUkfVSW5H2l5twkc6GXAJ3oMSKi9JHD5+Dg0g6A8Ml4JrI80G3yEZthVKdQP0A1mFQ+EPfqjIxeuOmFXibmOL9ed54fJvDHBvYV5lD0E0muLOeQwrTRgNx0rgT9XiQu+9SYktv2t8osyRUO61vMYMcQlNnDKUwPdGj2Rcke5nRDc0SmI9+y4ePsWtInuF9zTzkUiQogOYb/HNzWI9gxiPHpFbW0NKR+wFBxlnd/g+UDZDatGjKfX90w11bv5bE7sXFndzcN5nn6M5Pg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1ygXtcGwTE8vlSQJnSZfTiVFOnpbPDPJw1GD0zV2xTs=;
- b=K3A462yZeyG9sZzHAJ8lPmb0AjpQypGixMfRwcyFFVw2aWbvEYZzCZn8XliW18c4jUzsB/dB0ghidqU6w8+a4nAtv0/WH1s7lkvCKKJ8Bb5jpm2kwQ2Hh7+F5ereMLuMGoSzhLVHTD3/GGQTgh4ZiaIRobxFKkPihicGlHRfYwI=
-Received: from CY5PR22CA0082.namprd22.prod.outlook.com (2603:10b6:930:80::27)
- by DS7PR12MB6117.namprd12.prod.outlook.com (2603:10b6:8:9b::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.639.10; Fri, 20 Nov 2026 17:52:31 +0000
+ bh=VkAxFaK0rEyfxoM2PYJn5im1fxj92QmEq4D5jpjQK2c=;
+ b=o4GBMB/qizHY8a5Iek6DeAvBASyzPdxCC2jCkk1PpJczcdcHaOoZ2x+rSjjAQlVqfUb6JAAV+HNHxB0qQjt9uqpsuvnQ3rk7RuWMa6BH0TICW+9YyULpQ4t6csHtuvUDx2HBmqKvrI/4rGWchziYdgTzSopRxD/qgUGFJNsIQyI=
+Received: from CY5PR22CA0071.namprd22.prod.outlook.com (2603:10b6:930:80::16)
+ by PH7PR12MB6739.namprd12.prod.outlook.com (2603:10b6:510:1aa::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.12; Fri, 20 Nov
+ 2026 17:52:36 +0000
 Received: from PH3PEPF0005961A.namprd05.prod.outlook.com
- (2603:10b6:930:80:cafe::6c) by CY5PR22CA0082.outlook.office365.com
- (2603:10b6:930:80::27) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:930:80:cafe::2b) by CY5PR22CA0071.outlook.office365.com
+ (2603:10b6:930:80::16) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.639.12 via Frontend Transport; Fri,
- 20 Nov 2026 17:52:31 +0000
+ 20 Nov 2026 17:52:33 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -81,15 +82,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  PH3PEPF0005961A.mail.protection.outlook.com (10.167.243.24) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.639.5 via Frontend Transport; Fri, 20 Nov 2026 17:52:30 +0000
+ 15.21.639.5 via Frontend Transport; Fri, 20 Nov 2026 17:52:33 +0000
 Received: from [127.0.1.1] (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Fri, 20 Nov
- 2026 11:52:29 -0600
+ 2026 11:52:31 -0600
 From: Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v3 0/2] platform/x86/amd: send WBRF DSM payload as buffer
-Date: Fri, 20 Nov 2026 11:52:23 -0600
-Message-ID: <20261120-superm1-wbrf-v3-0-f6c872816dbb@amd.com>
+Date: Fri, 20 Nov 2026 11:52:25 -0600
+Subject: [PATCH v3 2/2] platform/x86/amd: send WBRF DSM payload as buffer
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -101,11 +101,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANeIAGsC/32Nyw6CMBBFf4V0bU078nTlfxgXtAxQH0CmUDWEf
- 7eFFRszq5Pcc2ZmFsmgZedoZoTOWNN3Hk6HiOm27BrkpvLMQEAqBRTcTgPSS/K3oppXRSwSUUI
- OEphXBsLafNbc9baxndQd9RgaYdEaO/b0Xf85GXZb2rf3aSe55CrJK38JZJm+PJA6fB57alhoO
- /hng7chVwKUijWmcmcvy/ID0uhF8fkAAAA=
-X-Change-ID: 20261029-superm1-wbrf-d94050a28212
+Message-ID: <20261120-superm1-wbrf-v3-2-f6c872816dbb@amd.com>
+References: <20261120-superm1-wbrf-v3-0-f6c872816dbb@amd.com>
+In-Reply-To: <20261120-superm1-wbrf-v3-0-f6c872816dbb@amd.com>
 To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Mario
  Limonciello" <mario.limonciello@amd.com>
 CC: Hans de Goede <hansg@kernel.org>, Ma Jun <Jun.Ma2@amd.com>, Evan Quan
@@ -116,64 +114,157 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH3PEPF0005961A:EE_|DS7PR12MB6117:EE_
-X-MS-Office365-Filtering-Correlation-Id: 251d4894-61d5-4261-b984-08df472f0c4f
+X-MS-TrafficTypeDiagnostic: PH3PEPF0005961A:EE_|PH7PR12MB6739:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e6780d4-9af6-4b29-bf3c-08df472f0dff
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|23010399003|36860700016|376014|1800799024|32650700020|6133799003|18002099003|13003099007|11063799006|56012099006|261021121427099003|261021123027099003|261009223027099003|261102123227099003|10067099003;
+	BCL:0;ARA:13230040|36860700016|1800799024|82310400026|376014|32650700020|23010399003|6133799003|18002099003|22082099003|261009223027099003|261028144727099003|261026140227099003|261022105027099003|261021123027099003|261021121427099003|261026121527099003|56012099006|10067099003|261102130727099003|261102123227099003|11063799006;
 X-Microsoft-Antispam-Message-Info:
-	VPVe6Hn3w/PbW5AtZ75opugX8j2TT7YyzZDHVgKLVXYe/mJ99kBjhwfBbtwvN5/SptCWIdd/F2n+kbeMh+hsvz3Si4y2RfElXTT4rLUJw5Y3HzzFEX7n10L23xa8I5Ig33X8vmnkK1f96E8jPh3L+vIJf4U8ZaB5Ltsbre5B9p/E40Ab9E9QQXJkBZ89yeahUHqDGykcoeuST3MNbhPmx7BRKonlroX4DCBBkCDX8nWSB5xInQZoeyewt0rdXCjfcUkk2KsAnkt1oTtweJYhg4OCaaE+9ctOGL2YHQwsas3dtJ6vYQ+9wLRvWJPlmtIYVWZtsix/dp1R5CTzSlTmL0h5Ce4aRr+NfXg50U4RrKtAR8Q4k8gKYw/QCWtaam0BEDhsv2ObSPpuzT19NCQMPnKPliY+7yQpR9gi7A2fRQatthTyiGAhmnbASGLRzBYCvyXOhoaJHi2lUqVWcd9gRDZzJbcuK0BISeqkIQtPKr5arYXkpSmZ/Ph00dxOLoylg45v5aecAVc5zIeXKRtJoBXVCgKiinCG9LQnBSu3eC38QLPbQuQOPws/8N9jIeeYbuL7FGG5eu6BYXHRd8fRWEYgOSh+tDJSmCTEg0e5gJayRevNSaQIsNWef/OdY7lJsucpLNJCE0SXkkidEgKNjdyaK3zx6bTDSLdPCvUeax8=
+	uQpM3lujbmwOnvG0TFEEh0ACGr9S9FplqnuGdGL3eGOi6FDhrJgRxO1Ldn9X6Hr+eKrPjWwR1Wn/GnnS94ZfbiqKurwIJMAvHbd3GI7szmTtKaZGJGsmycldM1u9TyPklKiC8GpAMHjnTra+27fMPbPFdYmG275guCBbA0Fo4QLqcgJjIi/9aFEujCr4TMVBb+ugpWqRvFkwA879ywidpDAI4MJazOVetUImwHMTLErvjpQtrWvNv8IlvBvPqjIT1RFAWtWIUMc9uVvAePbWYcyT/V2ec0E5ukcijeGqcorxNnqthw/a0gjfpIgub5qNuYXvo0V6h8k/i2QcMJ6Ae3Wr/ullODXwNrQZvL21cwA0YQ6xtOxmfvk2YLN6kB7IMzKXpx6lBY39CwB6aj2ShRhl818k7RggvTDqx5QamenS8wFs3BmM6OR2LG9+NjhKkoxaQRJ9FDtJK5/Gk/Dr5XmKgbgNE9T7hm4LGssYMux46NiKt8fZn1SCPatUKLA004ubtysbwhj0QLPDJA6jbKLJfylc1d2xRsxn1UdXjIoQLiesJLnIm2HyImmpJ2Fsjt3yKWlI9KkWLWVnqvUnsaT8nxZv5tiTqQElcmCDo0iI19Hj6pi9uGU8URuSWxH62K9zgexdl9JHkK1DuFi+GjckZXo1TIr1u7+oGV6Xv/nQpTlgegR3q3hihn2JRKpvnrHkIW5EHadD5UaWE7xSZg==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(23010399003)(36860700016)(376014)(1800799024)(32650700020)(6133799003)(18002099003)(13003099007)(11063799006)(56012099006)(261021121427099003)(261021123027099003)(261009223027099003)(261102123227099003)(10067099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(82310400026)(376014)(32650700020)(23010399003)(6133799003)(18002099003)(22082099003)(261009223027099003)(261028144727099003)(261026140227099003)(261022105027099003)(261021123027099003)(261021121427099003)(261026121527099003)(56012099006)(10067099003)(261102130727099003)(261102123227099003)(11063799006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	0xpM++4Trx3XhYNVlTwYKx1kV++M+Jr3t9yacaz5pZQ8xEaEYe556DnsxtX4b5cPAkO2bjD15Qzd9rt9HUX5C8zPA+XwNjvvzlnWCS7x5PDwyvOzIJaO2alTEUJHzHXpvcQhEQu0F9wNKLMzOGu7Ozg3n09OOzdX3DCqXWjE+5kiDqgNkfxg56s630zje+QFcl8kHi50q9spNKDjgNlviG43gSfQnSCxjyeEd1r5Vnb6lVg/tHjgQrJwWi6j86WJCZhrhDR2UmHflWdLK0e8xeZ6ykMAm9dTfrAymKkFm7aUosZpBquTt/2Mqao/ma1jMSrPZoOR7Nr7SgkpHikaDhPs8HkWtJbUYMhgORsmHPCv0acYjegP5d1mPgm8VV5aeeYxQiS99nXt4/rDY8fJK2V1ezq1eot0eq3vJjQaIBfxbo8lr3AMz5Z+j6iPPX14
+	6NSN8TEWLJniw4gpk7JkbrID/RIy6+IftUY6gGQte31YJRyrQE9KtgqXF9W3AKWRfON4aoZh1hoXa2evlipTpRYjsWPnJFbOeB9sNvj3fcnX1Xgp9azZPLXdm0VBLTQdo20p7sjMWXmmYzOTYi7fXV17Z+D44tvfVlVX0hjBaP179SRuYh0eBYxxZS8or4sMrc5Y8hV5ZmArtsxBvR84yPugfaRkAm2J2p1pRY7RPIt2yFK4NBoCP5Hz2jPrKY1F6fwfu9GKiKhwB/tzBHCte+2xkR19zv1evJ2BD3jR96c51W582PrxHbBtqlUPsJlTklahVd9A1s0W9aDIS7CxZf623pHXnQtvWPL0r0AiU43hx5zZSajruglM53eZSixe08Alo5D7MJYcdqUQxrsoxRrp7KMYWEUGSv5W1307cSl4XSaDts16YFLf2cFI22Sk
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2026 17:52:30.4312
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2026 17:52:33.2621
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 251d4894-61d5-4261-b984-08df472f0c4f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e6780d4-9af6-4b29-bf3c-08df472f0dff
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	PH3PEPF0005961A.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6117
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6739
 
+From: Mario Limonciello <superm1@kernel.org>
+
+Spec defines the WBRF record _DSM argument as a single buffer that packs
+the header and frequency ranges. The driver instead built a package of
+integers, so firmware on some systems abort \WBRF with AE_AML_OPERAND_TYPE
+when dereferencing Arg2[0].
+
+Encode the payload into a little-endian buffer and hand it as the lone
+package element.
+
+Fixes: 58e82a62669d ("platform/x86/amd: Add support for AMD ACPI based Wifi band RFI mitigation feature")
 Signed-off-by: Mario Limonciello <superm1@kernel.org>
 ---
-Changes in v3:
-- Drop unrelated whitespace-only changes to acpi_evaluate_dsm() calls
-  (Ilpo, David)
-- Drop __packed from the new payload structs; they are naturally aligned
-  (David)
-- Add a new prerequisite patch adding the includes the driver was already
-  missing (Ilpo)
-- Add the includes needed by the new code and put <asm/byteorder.h> into
-  its own group (Ilpo)
-- Link to v2: https://patch.msgid.link/20261102-superm1-wbrf-v2-1-28b02bb4ce61@kernel.org
+ drivers/platform/x86/amd/wbrf.c | 62 ++++++++++++++++++++++-------------------
+ 1 file changed, 34 insertions(+), 28 deletions(-)
 
-Changes in v2:
-- Declare payload with __free(kfree) at the kzalloc() site, after input
-  validation, instead of initializing it to NULL at the top of
-  wbrf_record() (Sashiko)
-- Compute payload length with struct_size_t() so it no longer depends on
-  payload being declared earlier (Sashiko)
-- Link to v1: https://patch.msgid.link/20261102-superm1-wbrf-v1-1-b58d8d85277c@kernel.org
+diff --git a/drivers/platform/x86/amd/wbrf.c b/drivers/platform/x86/amd/wbrf.c
+index e3795f8a9ad84..191eb5d30083c 100644
+--- a/drivers/platform/x86/amd/wbrf.c
++++ b/drivers/platform/x86/amd/wbrf.c
+@@ -13,11 +13,14 @@
+ #include <linux/errno.h>
+ #include <linux/export.h>
+ #include <linux/notifier.h>
++#include <linux/overflow.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+ #include <linux/uuid.h>
+ 
++#include <asm/byteorder.h>
++
+ /*
+  * Functions bit vector for WBRF method
+  *
+@@ -40,6 +43,17 @@ struct amd_wbrf_ranges_out {
+ 	struct freq_band_range	band_list[MAX_NUM_OF_WBRF_RANGES];
+ } __packed;
+ 
++struct wbrf_record_entry {
++	__le64		start;
++	__le64		end;
++};
++
++struct wbrf_record_payload {
++	__le32			num_of_ranges;
++	__le32			action;
++	struct wbrf_record_entry	ranges[];
++};
++
+ static const guid_t wifi_acpi_dsm_guid =
+ 	GUID_INIT(0x7b7656cf, 0xdc3d, 0x4c1c,
+ 		  0x83, 0xe9, 0x66, 0xe7, 0x21, 0xde, 0x30, 0x70);
+@@ -53,8 +67,9 @@ static BLOCKING_NOTIFIER_HEAD(wbrf_chain_head);
+ static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ranges_in_out *in)
+ {
+ 	union acpi_object argv4;
++	union acpi_object args[1];
+ 	u32 num_of_ranges = 0;
+-	u32 num_of_elements;
++	size_t payload_len;
+ 	u32 arg_idx = 0;
+ 	int ret;
+ 	u32 i;
+@@ -75,42 +90,33 @@ static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ran
+ 	if (num_of_ranges != in->num_of_ranges)
+ 		return -EINVAL;
+ 
+-	/*
+-	 * Every input frequency band comes with two end points(start/end)
+-	 * and each is accounted as an element. Meanwhile the range count
+-	 * and action type are accounted as an element each.
+-	 * So, the total element count = 2 * num_of_ranges + 1 + 1.
+-	 */
+-	num_of_elements = 2 * num_of_ranges + 2;
+-
+-	union acpi_object *tmp __free(kfree) = kzalloc_objs(*tmp,
+-							    num_of_elements);
+-	if (!tmp)
++	payload_len = struct_size_t(struct wbrf_record_payload, ranges, num_of_ranges);
++	struct wbrf_record_payload *payload __free(kfree) =
++		kzalloc(payload_len, GFP_KERNEL);
++	if (!payload)
+ 		return -ENOMEM;
+ 
+-	argv4.package.type = ACPI_TYPE_PACKAGE;
+-	argv4.package.count = num_of_elements;
+-	argv4.package.elements = tmp;
+-
+-	/* save the number of ranges*/
+-	tmp[0].integer.type = ACPI_TYPE_INTEGER;
+-	tmp[0].integer.value = num_of_ranges;
+-
+-	/* save the action(WBRF_RECORD_ADD/REMOVE/RETRIEVE) */
+-	tmp[1].integer.type = ACPI_TYPE_INTEGER;
+-	tmp[1].integer.value = action;
++	payload->num_of_ranges = cpu_to_le32(num_of_ranges);
++	payload->action = cpu_to_le32(action);
+ 
+-	arg_idx = 2;
++	arg_idx = 0;
+ 	for (i = 0; i < ARRAY_SIZE(in->band_list); i++) {
+ 		if (!in->band_list[i].start || !in->band_list[i].end)
+ 			continue;
+ 
+-		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
+-		tmp[arg_idx++].integer.value = in->band_list[i].start;
+-		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
+-		tmp[arg_idx++].integer.value = in->band_list[i].end;
++		payload->ranges[arg_idx].start = cpu_to_le64(in->band_list[i].start);
++		payload->ranges[arg_idx].end = cpu_to_le64(in->band_list[i].end);
++		arg_idx++;
+ 	}
+ 
++	argv4.package.type = ACPI_TYPE_PACKAGE;
++	argv4.package.count = ARRAY_SIZE(args);
++	argv4.package.elements = args;
++
++	args[0].type = ACPI_TYPE_BUFFER;
++	args[0].buffer.length = payload_len;
++	args[0].buffer.pointer = (u8 *)payload;
++
+ 	union acpi_object *obj __free(kfree) =
+ 		acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
+ 				  WBRF_REVISION, WBRF_RECORD, &argv4);
 
----
-Mario Limonciello (2):
-      platform/x86/amd: Add missing includes to wbrf
-      platform/x86/amd: send WBRF DSM payload as buffer
-
- drivers/platform/x86/amd/wbrf.c | 73 +++++++++++++++++++++++++----------------
- 1 file changed, 45 insertions(+), 28 deletions(-)
----
-base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
-change-id: 20261029-superm1-wbrf-d94050a28212
-
-Best regards,
---  
-Mario Limonciello <mario.limonciello@amd.com>
+-- 
+2.43.0
 
