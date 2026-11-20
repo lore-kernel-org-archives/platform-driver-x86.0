@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795180687;
-	b=bueLJPoFGaInZoSPjLTwnUGxjrvIxjFnDY7BJrC+qy/223mZCTqcH0E0rCCboVra6U3d
-	 /s1jwDTqj6+BtFehrUbjae4wbL1ZtK8z8PJDxs5kr24ueONB8Gp9bHLepWns4nP5TuLKl
-	 dIe/RQ81yy0lFDLqrt5+usYq03VdaabLotWju5OvC1NuO4z+G51Ez9HsAmC225CVf2hQr
-	 Cm4pO/sMCRVzZLnlM8+2FKLGioT6TLDP0pPxL+tgdQxpv4ssx2mT7X6V5RWqG/2rGwt24
-	 MGm+LY8ptayOIDEvNfWZ//XQtofO/eH9EqoqzQDQntNfsLAdV+z8W7g5EZestfOgbyw==
+	t=1795181300;
+	b=3+wiqINEHuPGZjnGgol11qXqKtPccLfJAfOdcvRSLQJ05ihBWLuNdif9z2IGgTWkEcrc
+	 mMwx3rDG9DW2RaEmZtH0f0l6dUqTfSHmW+lwaER5nX+jDJzQteAwMKo1tBcUKGagj0lI/
+	 0NEtbLTNVER8YtfMBV/p5M9iOZmVHl7Isc5U8YEdSLjchCz+1EkvuH90hh91nlHqW5SAq
+	 oCWlyXZFXIQQMYkjeWJFkAFwRYUjY4/EUWFwoVo5M0L2aEFz+sHsAlxgJzJ4PJwVXjkCM
+	 nI495ebRvqg+AIeepX0uuI25F7lPgQ0DQyIhcBag40r+IRtnAeVCaB7GZG0FkLHfRYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795180687;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795181300;
 	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
 	 User-Agent;
-	bh=RJMdmAoTUYUMgooSN2/iHY4Pm4mSitqFt4ugCfpqnJI=;
-	b=nz4j2u5sd1Vr5wjgg0IXX/9EbWScjCDLvEN9grEu0Fj9QWBOlzvvndQUzKTR6OzofymM
-	 a4UviW1yW+kVujbDYLZlV8riNj1CBCmxex9G95nJgVijH83l0S7GwZEKJpMB+dbQQAA9j
-	 VYeraSqwqEqts/j7vxuxDByBm/e0dC18TS9OdshJEMa7SfhTYXk1CMIp8NoeOZFibH8ZA
-	 dnzqN76GO3sRhr/Esv7rjLLghcge51aL7MxLUWc+iVugUWHWG3nIc68ftFNex4DXr5W+Y
-	 ZVNGi5N+5UEX9W+MMJChEi5VlBRcqKUFvHwIIuibXmNRDJqCrgpgJ7UlePVa4yxR4rw==
+	bh=qfOmk5g8WOhg5omRZE5PZ9/eCljQ9jAhHJ+Xtm7TR/0=;
+	b=BFQHPsy47reaMGWlyUYWTB2oBgf1o9t1Iw4Cl2zmu7oA0kDecgt8w3RJ8+/kqu0i0Gww
+	 HU2my9jQ0hT9r25HQnejRx83FclgVODyFHNgOC7gdkqlLO9sZ3zHEjPnp0EC0/7AFzqwi
+	 VsI5MUy6p2jio2IJnRiqGHw1rPELi0GMfn59EUMr546YHRVEi9dO7fRWMwoTC14yBvkh1
+	 HNFXHqLkAa900G29XcWnfJTdcEzrtlgcnNaQdFRRttiyTgOFTkR38r+SAM8cnyHbiCmoh
+	 m2qpvHu4cwduSbTZRe3fvFaP8fc9As7IyhfV3GM3W3YPrY/sgJFUURRbLbzG6te8AOg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="i4w4/749";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fVieoqR0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E8E606A320;
-	Fri, 20 Nov 2026 13:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54B3606A320;
+	Fri, 20 Nov 2026 13:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i4w4/749
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C970C1F000CF;
-	Fri, 20 Nov 2026 13:18:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fVieoqR0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7551F000D0;
+	Fri, 20 Nov 2026 13:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795180687;
-	bh=RJMdmAoTUYUMgooSN2/iHY4Pm4mSitqFt4ugCfpqnJI=;
+	s=k20260515; t=1795181300;
+	bh=qfOmk5g8WOhg5omRZE5PZ9/eCljQ9jAhHJ+Xtm7TR/0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=i4w4/749keQEybvYAK+r+eh7WhhFNZ5BSW/AkqFLosBCA0S3rdEPK6QRQwYeYFVfD
-	 7Pgnbcqy+7uqsQPY/UNG3y05nMxNOBsua6cKqjybgZgNdfHYeKBdsFpzWLogRiAu8M
-	 VAAAwPkK6/Z7c7x+vG7HpVn3b0tC/Qi4RlX95TeV1N07RmCKpcD3Q0UknibLjfWS6i
-	 AjXVOE/vDs7fRQntEam3FfHWK+pMOBU4TDf+d1Rds0gYez0u1VKKr7n0rhcLT+ehxa
-	 C/WlGuMhuLyVHhddH9KJ2ONIGG0QNhCRD/KF+w4PDad7yNVvEeeWghED4NH9jGanFr
-	 EH25JEnmnsodw==
+	b=fVieoqR0a4YvsxpVD6Krj2vcLw8hMNIsRtxaOFmgjec4bsmYGsawIM+LsthejH+gY
+	 AJYZnnQ1TJhfygJAe1VeATFcRCPhmNsUgi+z13DlGtBb8AQL+rasda413SYxQbuCzA
+	 wJf4LQPoZJYvRBUA9Nu5/oCWazLimNokOwzjQXsmlTy8Rz6grV0vQSi9PXdUpQke1O
+	 93GQRSe30ZDtXylyb3llDPrC6d6o14huacpzZkMvbrttEhe4cMjdfEBtEvP7Ckd7C1
+	 tJwreI549qMWEJLBvzQQoIAZ4yZBwbK5LS0TpxQeMp6YWVyaeYJMezqRNuWyLNivPq
+	 i+HgPcSSwHrUQ==
 Received: by pali.im (Postfix)
-	id BD65236C; Fri, 20 Nov 2026 14:18:03 +0100 (CET)
-Date: Fri, 20 Nov 2026 14:18:03 +0100
+	id 47D7436C; Fri, 20 Nov 2026 14:28:17 +0100 (CET)
+Date: Fri, 20 Nov 2026 14:28:17 +0100
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To: Rosen Penev <rosenp@gmail.com>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Hans de Goede <hansg@kernel.org>,
@@ -50,11 +50,11 @@ Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Hans de Goede <hansg@kernel.org>,
 	Darren Hart <dvhart@linux.intel.com>,
 	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] platform/x86: dell-laptop: Reject keyboard backlight
- timeouts that overflow
-Message-ID: <20261120131803.dejsr2ip3djtoj2p@pali>
+Subject: Re: [PATCH 2/3] platform/x86: dell-laptop: Don't use an unread
+ keyboard state at init
+Message-ID: <20261120132817.mffko5sujvg2lsjd@pali>
 References: <cover.1794633179.git.rosenp@gmail.com>
- <1e1cc5a497ca95a0b34e45738f81a4be681675fd.1794633179.git.rosenp@gmail.com>
+ <7d253bc056c2d6f68992d0d046affef331c57830.1794633179.git.rosenp@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -66,80 +66,62 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1e1cc5a497ca95a0b34e45738f81a4be681675fd.1794633179.git.rosenp@gmail.com>
+In-Reply-To: <7d253bc056c2d6f68992d0d046affef331c57830.1794633179.git.rosenp@gmail.com>
 User-Agent: NeoMutt/20180716
 
-On Friday 13 November 2026 22:29:25 Rosen Penev wrote:
-> kbd_led_timeout_store() converts a timeout that is too large for its
-> unit to seconds with plain int multiplication. A large enough value
-> wraps, and if the wrapped number happens to be a valid timeout it is
-> accepted. On a Precision M4800, writing "4424214d" (over 12000 years)
-> to stop_timeout sets the timeout to 4 minutes, and "18989323d" sets it
-> to 2 minutes.
+On Friday 13 November 2026 22:29:26 Rosen Penev wrote:
+> kbd_init_info() ignores the return value of kbd_get_state(). If the
+> call fails, the uninitialized state on the stack is used to set
+> kbd_previous_level and kbd_previous_mode_bit, which are later sent to
+> the BIOS when triggers are enabled or the backlight is turned back on.
 > 
-> Convert with check_mul_overflow() and return -EINVAL on overflow.
-> 
+> Return the error instead. kbd_get_info() has already filled in
+> kbd_info at that point, so clear it as well: level control through
+> kbd_get_state() cannot work, and kbd_init() then still registers the
+> LED if at least two keyboard backlight tokens are available, which
+> works without it.
+
+Why returning the hard error here? At this stage we know that the LED
+tokens are available, kbd_get_info() returned success for us. The
+kbd_get_state() could have temp issues.
+
+The only problem is with the uninitialized kbd_previous_level and
+kbd_previous_mode_bit variables.
+
+What about this?
+
+if (kbd_get_state(&state) == 0) {
+	kbd_previous_level = kbd_get_level(&state);
+	kbd_previous_mode_bit = state.mode_bit;
+} else {
+	kbd_previous_level = 0;
+	kbd_previous_mode_bit = 0;
+}
+
 > Fixes: 02b2aaaa57ab ("platform: x86: dell-laptop: Add support for keyboard backlight")
 > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 > ---
->  drivers/platform/x86/dell/dell-laptop.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/dell/dell-laptop.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index 89e85c7f7132..bee347e1d60c 100644
+> index bee347e1d60c..171728d63c81 100644
 > --- a/drivers/platform/x86/dell/dell-laptop.c
 > +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -25,6 +25,7 @@
->  #include <linux/sysfs.h>
->  #include <linux/acpi.h>
->  #include <linux/mm.h>
-> +#include <linux/overflow.h>
->  #include <linux/i8042.h>
->  #include <linux/debugfs.h>
->  #include <linux/seq_file.h>
-> @@ -1554,6 +1555,7 @@ static ssize_t kbd_led_timeout_store(struct device *dev,
->  	struct kbd_state state;
->  	bool convert;
->  	int value;
-> +	int mult;
->  	int ret;
->  	char ch;
->  	u8 unit;
-> @@ -1602,16 +1604,23 @@ static ssize_t kbd_led_timeout_store(struct device *dev,
->  		/* Convert value from current units to seconds */
->  		switch (unit) {
->  		case KBD_TIMEOUT_DAYS:
-> -			value *= 24;
-> -			fallthrough;
-> +			mult = 24 * 60 * 60;
-> +			break;
->  		case KBD_TIMEOUT_HOURS:
-> -			value *= 60;
-> -			fallthrough;
-> +			mult = 60 * 60;
-> +			break;
->  		case KBD_TIMEOUT_MINUTES:
-> -			value *= 60;
-> -			unit = KBD_TIMEOUT_SECONDS;
-> +			mult = 60;
-> +			break;
-> +		default:
-> +			mult = 1;
-> +			break;
->  		}
+> @@ -1455,7 +1455,12 @@ static inline int kbd_init_info(void)
+>  	    dell_smbios_find_token(KBD_LED_AC_TOKEN))
+>  		kbd_timeout_ac_supported = true;
 >  
-> +		if (check_mul_overflow(value, mult, &value))
-> +			return -EINVAL;
-> +		unit = KBD_TIMEOUT_SECONDS;
-> +
->  		if (quirks && quirks->needs_kbd_timeouts) {
->  			for (i = 0; quirks->kbd_timeouts[i] != -1; i++) {
->  				if (value <= quirks->kbd_timeouts[i]) {
+> -	kbd_get_state(&state);
+> +	ret = kbd_get_state(&state);
+> +	if (ret) {
+> +		/* Leave level control to the SMBIOS tokens, if there are any */
+> +		memset(&kbd_info, 0, sizeof(kbd_info));
+> +		return ret;
+> +	}
+>  
+>  	/* NOTE: timeout value is stored in 6 bits so max value is 63 */
+>  	if (kbd_info.seconds > 63)
 > -- 
 > 2.56.0
 > 
-
-This change does not work correctly. The code below the quoted change is
-then dividing the value by (60 * 60 * 24) again (after being multiplied
-above). So the newly adding check_mul_overflow() will reject valid
-inputs, just because they do not fit into the "value" variable.
