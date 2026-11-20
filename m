@@ -1,74 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.181.231.80
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795167953;
-	b=MZFBQ/1Ibbxl05/jW5wfbsyLultyuMyayX3BxNkudDs2UX1rMJe4RxK49VTIZVamdKO/
-	 ozmVcIrXDEJkH29aB9gCngViaIOYnButjiMu2SBf94DJumKbCBlHbf7ZEDECsSgiToKbk
-	 kEXYAnIiOQer9sIqghUF9F62XgU23JFEB5rbK+G4rLdadDLEoVRBzcqB5kuhH8ZIvoIfh
-	 ss/KdhyS5VUHuWux3kZvbsPJNbPDJm+O4DJmEwmZNRIvk57QWvG2aUcJSmgmkRsai+fqX
-	 xaDjTDVanf2P0MMtH0OeHEL5CIBtT2SIDSC4SVbqO/bgKByrC5Z4mjMExmXsD/jGjpA==
+	t=1795168461;
+	b=Bu3nmLAXOVJGGZlQgt3Qhk3qZFJ3tnA3cLkD4vmFjEYzsEkDzrNi7/UfoJ73MIELhoj/
+	 09vs+5N+lPj6ibEzLJNZkk/ZjyOU89ND7Q79JnfnYIq9G+1ZefNsiMkQTiRJFk6IolQnG
+	 FSQmd5Ywt2x+ai6Oia6yhsAvQPjIRMEgPk+Lo+A8R5qbM/Rxw3zWMk+kQCodrGR2G6aOF
+	 knzFtbYsRKe3T+VD4JKXeFbgPr20Dk6Wf49Ji0lnqWKD6H892wR+yQMuIs858nqwUxAS9
+	 DBCr+KRMfs0IxWZSB5GcqLwqcdIm1q5FzUh7RHJIb192b4juTbcY0JRePlHj2TRgM1w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795167953;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=JFHD9SkIi5VJCArvPWS4nRA3Es9mY7tuwEEoOHhS0oI=;
-	b=C2UQ2f8fMcrD2Iwe48mX4blREhROEzbq5akZA/1qdrAZ+WE8HwSCQXlq3VmXyNKKsFIs
-	 wxgqLRUIMt1gASq2LsZsGXiSG6m+fCsAsFFOQoWIrD53MIgrrOipZI6NcB5uJw/IfrRr9
-	 OzudnV5nCDTO2cE9JciFC9KJxvFYEl03GOOd9d2cQ3RkGag+4iZWDUX9oNSoHFSPrucCS
-	 OPwHZ+Ul4lmOXpqHMCCpjcXr/MWeNIWAIQnj1+2oDPU83syGpuaKD7TS6jdLCyWDr6Gge
-	 xKL8/dkBdvse6c/kzyhgcxKCxtPtCAD11lg1J1JVx8413WSzosUQi3BZEdu7SZDxSMw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795168461;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=5H4SaiSHQZbbitE0VP8DxeDHKADjdTBjB65w822tiJo=;
+	b=sXeEWgUdH093BahQJUGYn4Tlet0ErzgUtvJeeW73ghltMEGCBtP5TsrKrfC9XGjuBTqj
+	 V6RCIe7k2QVq45a4q2LhZ9ApjjW4sLgwClfWu9oHnyUNcbCjxoD0H5FDIxRh1GF6Mh4Hu
+	 d+PWY7AZqVQmgCW/wZ7z3xmjD1Hlhl3zsRhGwzOmi9ETCRZmbTwJDhrTk0YWE6cqXkfev
+	 2yF9tTPi/U7DCEi24kCvpjatGgyVZ3RhbK5j/oy4fxk5XlfNFYh8lL1rT0V2vi/sJnaFe
+	 qnQGO4nEku3ZsJvonpW0MVAJ1FeU0d3qMhc8sr03aG4aex4vmxqd9Hh6mTa0BgacELg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TiU2rgDw;
-	arc=none smtp.remote-ip=192.198.163.12
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gondor.apana.org.au;
+	spf=pass smtp.mailfrom=gondor.apana.org.au;
+	dkim=pass header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.a=rsa-sha256 header.s=h01 header.b=EcAwf6j0;
+	arc=none smtp.remote-ip=180.181.231.80
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2789606A320;
-	Fri, 20 Nov 2026 09:45:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B2789606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A363F60A262A;
+	Fri, 20 Nov 2026 09:54:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A363F60A262A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TiU2rgDw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795167953; x=1826703953;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OIrT2TMMhf91zdOdYOZljSEXIwMa0ETIGVelH2cE1GI=;
-  b=TiU2rgDwOiEcLB1H7PpzbGNmgmz6vnjtdXqv9cvy7K/Qo7zfaHQtwfQ7
-   L33zXGIKFyCB9wsKf/zyP2+hdd3FC5vT0oH4Ms2OrHoQ0VEupWdcPjJpE
-   ebSIJuEdFYSgfOoDCfTBNTg+Hb+xL0WjzrG3hjGxBRq2jrJ87HWVXmMi+
-   KVp0lWjTLoEd1QI1YNV9MlxSop3zuhEWBR2ow1IRS1MqJAZ5g4Y3wwYzL
-   6TU0pNN6K2BDPoffYtYC1J2WGEh/vtSyFwNDvIQ78fRc3P+9FOZszhoYr
-   o06PHUqNtQLIOD8AFQAmA4rPsfc+/JVWM/KWHksEquKELSdjpv8yx2qQR
-   g==;
-X-CSE-ConnectionGUID: YHMg46WDS5au2I1LAWu8JQ==
-X-CSE-MsgGUID: 6ylut2zRSwaYXNemavWZTg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3929156"
-X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
-   d="scan'208";a="3929156"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 01:45:52 -0800
-X-CSE-ConnectionGUID: 1DUkpQpXQbGOLY3N7Ta/jw==
-X-CSE-MsgGUID: HBxS0tTpTAaTDeCAo4yLSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
-   d="scan'208";a="10953396"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.16])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 01:45:49 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 20 Nov 2026 11:45:46 +0200 (EET)
-To: Zhu Jun <zhujun2@cmss.chinamobile.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    Dell.Client.Kernel@dell.com, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tools/wmi: Check the Dell SMBIOS buffer size read
-In-Reply-To: <20261120061927.98196-1-zhujun2@cmss.chinamobile.com>
-Message-ID: <3cbdaae9-d586-ceb3-e035-5f734080b0a9@linux.intel.com>
-References: <20261120061927.98196-1-zhujun2@cmss.chinamobile.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.a=rsa-sha256 header.s=h01 header.b=EcAwf6j0
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=5H4SaiSHQZbbitE0VP8DxeDHKADjdTBjB65w822tiJo=; 
+	b=EcAwf6j0CntvZ07zEBA0EK7mGtRM6Ty9kNZvBf6cSfeCnUQIxwN3OjQZDd7K6GdsFR2OzUkBpsV
+	c7TDp/i9LBg2XdYy1M6gNr3XFwEoyPSvrmRyLrfHOzRxWmDr342iLO9fZuqzeXHpsfU+A7EaF7Z/9
+	YCt7WXWWR1eYd/GtGSpSHeME+zRUKqvXx12OjgFVjKGvNT0AAEIi2XlnD3uSg2pO53snN/fLlIaJq
+	moAsgef5vq2jLcET6rJBrKnshrbeueOTP7zzuVY4SINFGmkc1TTjpLMQDUkt0VbWKbp9pRFZbps9i
+	w46W2VEge/e+dJ3yg715glnlttUEofgA4hZA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.98.2 #2 (Debian))
+	id 1xULJc-0000000HYhH-3TYH;
+	Fri, 20 Nov 2026 17:53:57 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Nov 2026 17:53:56 +0800
+Date: Fri, 20 Nov 2026 17:53:56 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Pavel Popov <pavel.e.popov@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Arnd Bergmann <arnd@arndb.de>, Len Brown <lenb@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	"David S . Miller" <davem@davemloft.net>, x86@kernel.org,
+	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] crypto: ccp - Drop unused <asm/cpu_device_id.h>
+ include
+Message-ID: <awAYtBlS9Fg8iBDz@gondor.apana.org.au>
+References: <20261111234821.4814-1-pavel.e.popov@intel.com>
+ <20261111234821.4814-8-pavel.e.popov@intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -78,77 +92,22 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261111234821.4814-8-pavel.e.popov@intel.com>
 
-In Fri, 20 Nov 2026, Zhu Jun wrote:
-
-> query_buffer_size() ignores an incomplete read, and main() can use a
-> partial size or reach free() before buffer has been initialized.
-
-Huh?
-
-free() doesn't care whether buffer is initialized or not, as long as it's 
-allocated?!?
-
-> Require a complete size read and return failure before allocating or
-> freeing a buffer when the size is unavailable.
+On Wed, Nov 11, 2026 at 04:48:20PM -0700, Pavel Popov wrote:
+> Nothing in ccp-dev.c uses <asm/cpu_device_id.h>; the CPU match table
+> it was included for is long gone. Drop the include and the #ifdef
+> CONFIG_X86 around it.
 > 
-> Fixes: 9d64fc08f6fe ("tools/wmi: add a sample for dell smbios communication over WMI")
-> Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
+> Signed-off-by: Pavel Popov <pavel.e.popov@intel.com>
 > ---
->  tools/wmi/dell-smbios-example.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/wmi/dell-smbios-example.c b/tools/wmi/dell-smbios-example.c
-> index 1f3e7ab14b68..a4c63a6a0ee3 100644
-> --- a/tools/wmi/dell-smbios-example.c
-> +++ b/tools/wmi/dell-smbios-example.c
-> @@ -143,13 +143,15 @@ static int activate_token(struct dell_wmi_smbios_buffer *buffer,
->  static int query_buffer_size(__u64 *buffer_size)
->  {
->  	FILE *f;
-> +	int ret;
->  
->  	f = fopen(ioctl_devfs, "rb");
->  	if (!f)
-> -		return -EINVAL;
-> -	fread(buffer_size, sizeof(__u64), 1, f);
-> +		return -errno;
+>  drivers/crypto/ccp/ccp-dev.c | 3 ---
+>  1 file changed, 3 deletions(-)
 
-Look unreleated change to me.
-
-Please make a proper series, with minimal, logical change done in each 
-patch instead.
-
-> +	ret = fread(buffer_size, sizeof(*buffer_size), 1, f) == 1 ? 0 : -EIO;
-
-Could we like write this so it follows the normal style.
-
->  	fclose(f);
-> -	return EXIT_SUCCESS;
-> +
-> +	return ret;
->  }
->  
->  int main(void)
-> @@ -159,9 +161,9 @@ int main(void)
->  	__u64 value = 0;
->  
->  	ret = query_buffer_size(&value);
-> -	if (ret == EXIT_FAILURE || !value) {
-> +	if (ret || !value) {
->  		printf("Unable to read buffer size\n");
-> -		goto out;
-> +		return EXIT_FAILURE;
-
-So this longer frees the buffer?
-
->  	}
->  	printf("Detected required buffer size %lld\n", value);
->  
-> 
-> 
-
+Patch applied.  Thanks.
 -- 
- i.
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
