@@ -1,88 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795168461;
-	b=Bu3nmLAXOVJGGZlQgt3Qhk3qZFJ3tnA3cLkD4vmFjEYzsEkDzrNi7/UfoJ73MIELhoj/
-	 09vs+5N+lPj6ibEzLJNZkk/ZjyOU89ND7Q79JnfnYIq9G+1ZefNsiMkQTiRJFk6IolQnG
-	 FSQmd5Ywt2x+ai6Oia6yhsAvQPjIRMEgPk+Lo+A8R5qbM/Rxw3zWMk+kQCodrGR2G6aOF
-	 knzFtbYsRKe3T+VD4JKXeFbgPr20Dk6Wf49Ji0lnqWKD6H892wR+yQMuIs858nqwUxAS9
-	 DBCr+KRMfs0IxWZSB5GcqLwqcdIm1q5FzUh7RHJIb192b4juTbcY0JRePlHj2TRgM1w==
+	t=1795169530;
+	b=UDoXgrErcTgL0F1t6psTWjC7UefpB98MnmjMBin0/vvLnxMpayLFE14+8Q3bjZNcF/nu
+	 vurSqqyVh+mijpsmVa6UK8RkHQApswgVjD5VHjEEYzrXcxsnouvFk6jY8tFz6Ux9ReDak
+	 fKZbwIZZFHOOq9AgGDX0e/S85ejznT1PL+91JALd54Jb2FK86yZhXBh9gT3WZM9lvT5xV
+	 7k2Ria39eJzO+pAU/ZtYDkGujNW51hNr2kzQAsJMsmbPvOigbSarGiyqV/f9iWWHoVQU3
+	 mcjuM9DyOVU3ibi7aC0olI0Y5gne+S+e2qNp4etjrRrO55S0WXZq4MAyWe/aMEAgMqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795168461;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=5H4SaiSHQZbbitE0VP8DxeDHKADjdTBjB65w822tiJo=;
-	b=sXeEWgUdH093BahQJUGYn4Tlet0ErzgUtvJeeW73ghltMEGCBtP5TsrKrfC9XGjuBTqj
-	 V6RCIe7k2QVq45a4q2LhZ9ApjjW4sLgwClfWu9oHnyUNcbCjxoD0H5FDIxRh1GF6Mh4Hu
-	 d+PWY7AZqVQmgCW/wZ7z3xmjD1Hlhl3zsRhGwzOmi9ETCRZmbTwJDhrTk0YWE6cqXkfev
-	 2yF9tTPi/U7DCEi24kCvpjatGgyVZ3RhbK5j/oy4fxk5XlfNFYh8lL1rT0V2vi/sJnaFe
-	 qnQGO4nEku3ZsJvonpW0MVAJ1FeU0d3qMhc8sr03aG4aex4vmxqd9Hh6mTa0BgacELg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795169530;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
+	bh=H3MuRZzFr5ou/OalDJ9VEoSCw1Kf/TF2fcG92pANMt0=;
+	b=dvNy3nmr2/WwlX67Ae2F30YQRzWPTgf6FSng5x598/hE9MHu/hW9AN+NYPmHKXu26t2F
+	 gpUWBgCn7NyH93bwh+E/hfbz+0GPurQOCU422m69O9IxvYr4FBBMc/rvuqCTTxJ2brGXy
+	 OIEYV7NgClF04Fbwc1Bl7ibb+Mzn25l6/FZYQsNGtUNxtfTq7/p5ShtyLAgRxzmCJ5Zyy
+	 rWYPYT+Sgu8LvTsMKZ90lKLuXuw2E7KqKDJaoZqQK9mqm2KU90BPjEpxbST7SbKc+4D/2
+	 /yzCoDFGLKGcZlYG29xqFGvoB/zBvKztP90x6Og+9088IIL22LGa0uGeBePTx1D4NNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gondor.apana.org.au;
-	spf=pass smtp.mailfrom=gondor.apana.org.au;
-	dkim=pass header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.a=rsa-sha256 header.s=h01 header.b=EcAwf6j0;
-	arc=none smtp.remote-ip=180.181.231.80
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FCPQiAkk;
+	arc=none smtp.remote-ip=198.175.65.10
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A363F60A262A;
-	Fri, 20 Nov 2026 09:54:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A363F60A262A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8858606A325;
+	Fri, 20 Nov 2026 10:12:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8858606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.a=rsa-sha256 header.s=h01 header.b=EcAwf6j0
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=5H4SaiSHQZbbitE0VP8DxeDHKADjdTBjB65w822tiJo=; 
-	b=EcAwf6j0CntvZ07zEBA0EK7mGtRM6Ty9kNZvBf6cSfeCnUQIxwN3OjQZDd7K6GdsFR2OzUkBpsV
-	c7TDp/i9LBg2XdYy1M6gNr3XFwEoyPSvrmRyLrfHOzRxWmDr342iLO9fZuqzeXHpsfU+A7EaF7Z/9
-	YCt7WXWWR1eYd/GtGSpSHeME+zRUKqvXx12OjgFVjKGvNT0AAEIi2XlnD3uSg2pO53snN/fLlIaJq
-	moAsgef5vq2jLcET6rJBrKnshrbeueOTP7zzuVY4SINFGmkc1TTjpLMQDUkt0VbWKbp9pRFZbps9i
-	w46W2VEge/e+dJ3yg715glnlttUEofgA4hZA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.98.2 #2 (Debian))
-	id 1xULJc-0000000HYhH-3TYH;
-	Fri, 20 Nov 2026 17:53:57 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Nov 2026 17:53:56 +0800
-Date: Fri, 20 Nov 2026 17:53:56 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Pavel Popov <pavel.e.popov@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Arnd Bergmann <arnd@arndb.de>, Len Brown <lenb@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	"David S . Miller" <davem@davemloft.net>, x86@kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] crypto: ccp - Drop unused <asm/cpu_device_id.h>
- include
-Message-ID: <awAYtBlS9Fg8iBDz@gondor.apana.org.au>
-References: <20261111234821.4814-1-pavel.e.popov@intel.com>
- <20261111234821.4814-8-pavel.e.popov@intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FCPQiAkk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795169530; x=1826705530;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=z3a2wY9Cv9mFoR0oX0nPw+Bkp4VC7ZFQZ008/e0tRnY=;
+  b=FCPQiAkkdltsw6ns6Es3ufTNRSM0hORXsL/AUAgK0DYdqRSTRkDsx5/f
+   1dVBKcoAs+sWD/46nOBSjJ7W+NhPyN/myipVgoIHCDH1iCCbPSVi2cQtX
+   iobh0H1B6JqqGE4qFdzdhczKb1iu1rc+sDqbHVTfDVzVIPQ5SK+0keBst
+   SGMnhzOdrIPvMHF0RApMaEriZDbZeX753tZ5b+S9uzLIl+EBuXcbRTgRJ
+   8bWm2PBAsNxnohhaAAh+ofT8UfmAJ5bIPFkp1JX2ySz0BzToRIbgrswK2
+   bIrxdE8WF67S/74BMMajDhKTdsrXXu/bVWwRp4OTAJB45ZtH0uFAPMYux
+   A==;
+X-CSE-ConnectionGUID: YhEay1mSR5+h2FsTLg6MJA==
+X-CSE-MsgGUID: A8xoSgqqS9mqDFWcjku02w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3957860"
+X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
+   d="scan'208";a="3957860"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 02:12:09 -0800
+X-CSE-ConnectionGUID: rAiprtyYTd2jVN8dTK7Tzg==
+X-CSE-MsgGUID: zfeIKBhoQWqlbZniEsTqXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
+   d="scan'208";a="11006928"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.16])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 02:12:06 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 20 Nov 2026 12:12:03 +0200 (EET)
+To: Mario Limonciello <superm1@kernel.org>
+cc: Mario Limonciello <mario.limonciello@amd.com>, 
+    Hans de Goede <hansg@kernel.org>, Ma Jun <Jun.Ma2@amd.com>, 
+    Evan Quan <quanliangl@hotmail.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86/amd: send WBRF DSM payload as buffer
+In-Reply-To: <20261102-superm1-wbrf-v2-1-28b02bb4ce61@kernel.org>
+Message-ID: <65fb4293-0c29-266b-28bb-7f7540735a70@linux.intel.com>
+References: <20261102-superm1-wbrf-v2-1-28b02bb4ce61@kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -92,22 +80,188 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261111234821.4814-8-pavel.e.popov@intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Nov 11, 2026 at 04:48:20PM -0700, Pavel Popov wrote:
-> Nothing in ccp-dev.c uses <asm/cpu_device_id.h>; the CPU match table
-> it was included for is long gone. Drop the include and the #ifdef
-> CONFIG_X86 around it.
+On Mon, 2 Nov 2026, Mario Limonciello wrote:
+
+> Spec defines the WBRF record _DSM argument as a single buffer that packs
+> the header and frequency ranges. The driver instead built a package of
+> integers, so firmware on some systems abort \WBRF with AE_AML_OPERAND_TYPE
+> when dereferencing Arg2[0].
 > 
-> Signed-off-by: Pavel Popov <pavel.e.popov@intel.com>
+> Encode the payload into a little-endian buffer and hand it as the lone
+> package element.
+> 
+> Fixes: 58e82a62669d ("platform/x86/amd: Add support for AMD ACPI based Wifi band RFI mitigation feature")
+> Signed-off-by: Mario Limonciello <superm1@kernel.org>
 > ---
->  drivers/crypto/ccp/ccp-dev.c | 3 ---
->  1 file changed, 3 deletions(-)
+> Changes in v2:
+> - Declare payload with __free(kfree) at the kzalloc() site, after input
+>   validation, instead of initializing it to NULL at the top of
+>   wbrf_record() (Sashiko)
+> - Compute payload length with struct_size_t() so it no longer depends on
+>   payload being declared earlier (Sashiko)
+> - Link to v1: https://patch.msgid.link/20261102-superm1-wbrf-v1-1-b58d8d85277c@kernel.org
+> ---
+>  drivers/platform/x86/amd/wbrf.c | 75 +++++++++++++++++++++++------------------
+>  1 file changed, 43 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/wbrf.c b/drivers/platform/x86/amd/wbrf.c
+> index 3281357185d1f..2afb574e4327d 100644
+> --- a/drivers/platform/x86/amd/wbrf.c
+> +++ b/drivers/platform/x86/amd/wbrf.c
+> @@ -6,6 +6,8 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/acpi_amd_wbrf.h>
+> +#include <asm/byteorder.h>
+> +#include <linux/slab.h>
 
-Patch applied.  Thanks.
+Please put asm one into own group.
+
+>  
+>  /*
+>   * Functions bit vector for WBRF method
+> @@ -29,6 +31,17 @@ struct amd_wbrf_ranges_out {
+>  	struct freq_band_range	band_list[MAX_NUM_OF_WBRF_RANGES];
+>  } __packed;
+>  
+> +struct wbrf_record_entry {
+> +	__le64		start;
+> +	__le64		end;
+
+Include
+
+> +} __packed;
+
+Include
+
+> +
+> +struct wbrf_record_payload {
+> +	__le32			num_of_ranges;
+> +	__le32			action;
+> +	struct wbrf_record_entry	ranges[];
+> +} __packed;
+> +
+>  static const guid_t wifi_acpi_dsm_guid =
+>  	GUID_INIT(0x7b7656cf, 0xdc3d, 0x4c1c,
+>  		  0x83, 0xe9, 0x66, 0xe7, 0x21, 0xde, 0x30, 0x70);
+> @@ -42,8 +55,9 @@ static BLOCKING_NOTIFIER_HEAD(wbrf_chain_head);
+>  static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ranges_in_out *in)
+>  {
+>  	union acpi_object argv4;
+> +	union acpi_object args[1];
+>  	u32 num_of_ranges = 0;
+> -	u32 num_of_elements;
+> +	size_t payload_len;
+>  	u32 arg_idx = 0;
+>  	int ret;
+>  	u32 i;
+> @@ -64,45 +78,39 @@ static int wbrf_record(struct acpi_device *adev, uint8_t action, struct wbrf_ran
+>  	if (num_of_ranges != in->num_of_ranges)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * Every input frequency band comes with two end points(start/end)
+> -	 * and each is accounted as an element. Meanwhile the range count
+> -	 * and action type are accounted as an element each.
+> -	 * So, the total element count = 2 * num_of_ranges + 1 + 1.
+> -	 */
+> -	num_of_elements = 2 * num_of_ranges + 2;
+> -
+> -	union acpi_object *tmp __free(kfree) = kzalloc_objs(*tmp,
+> -							    num_of_elements);
+> -	if (!tmp)
+> +	payload_len = struct_size_t(struct wbrf_record_payload, ranges, num_of_ranges);
+
+Include.
+
+> +	struct wbrf_record_payload *payload __free(kfree) =
+
+Include for __free()
+
+> +		kzalloc(payload_len, GFP_KERNEL);
+> +	if (!payload)
+>  		return -ENOMEM;
+>  
+> -	argv4.package.type = ACPI_TYPE_PACKAGE;
+> -	argv4.package.count = num_of_elements;
+> -	argv4.package.elements = tmp;
+> -
+> -	/* save the number of ranges*/
+> -	tmp[0].integer.type = ACPI_TYPE_INTEGER;
+> -	tmp[0].integer.value = num_of_ranges;
+> -
+> -	/* save the action(WBRF_RECORD_ADD/REMOVE/RETRIEVE) */
+> -	tmp[1].integer.type = ACPI_TYPE_INTEGER;
+> -	tmp[1].integer.value = action;
+> +	payload->num_of_ranges = cpu_to_le32(num_of_ranges);
+> +	payload->action = cpu_to_le32(action);
+
+Include
+
+> -	arg_idx = 2;
+> +	arg_idx = 0;
+>  	for (i = 0; i < ARRAY_SIZE(in->band_list); i++) {
+>  		if (!in->band_list[i].start || !in->band_list[i].end)
+>  			continue;
+>  
+> -		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
+> -		tmp[arg_idx++].integer.value = in->band_list[i].start;
+> -		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
+> -		tmp[arg_idx++].integer.value = in->band_list[i].end;
+> +		payload->ranges[arg_idx].start = cpu_to_le64(in->band_list[i].start);
+> +		payload->ranges[arg_idx].end = cpu_to_le64(in->band_list[i].end);
+> +		arg_idx++;
+>  	}
+>  
+> +	argv4.package.type = ACPI_TYPE_PACKAGE;
+> +	argv4.package.count = ARRAY_SIZE(args);
+
+Include.
+
+You're missing lots of headers, admittedly, many are pre-existing 
+problems.
+
+> +	argv4.package.elements = args;
+> +
+> +	args[0].type = ACPI_TYPE_BUFFER;
+> +	args[0].buffer.length = payload_len;
+> +	args[0].buffer.pointer = (u8 *)payload;
+> +
+
+
+
+>  	union acpi_object *obj __free(kfree) =
+> -		acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
+> -				  WBRF_REVISION, WBRF_RECORD, &argv4);
+> +		acpi_evaluate_dsm(adev->handle,
+> +				  &wifi_acpi_dsm_guid,
+> +				  WBRF_REVISION,
+> +				  WBRF_RECORD,
+> +				  &argv4);
+>  
+>  	if (!obj)
+>  		return -EINVAL;
+> @@ -236,8 +244,11 @@ int amd_wbrf_retrieve_freq_band(struct device *dev, struct wbrf_ranges_in_out *o
+>  	param.string.length = 0;
+>  	param.string.pointer = NULL;
+>  
+> -	obj = acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
+> -							WBRF_REVISION, WBRF_RETRIEVE, &param);
+> +	obj = acpi_evaluate_dsm(adev->handle,
+> +				&wifi_acpi_dsm_guid,
+> +				WBRF_REVISION,
+> +				WBRF_RETRIEVE,
+> +				&param);
+>  	if (!obj)
+>  		return -EINVAL;
+
+Two unrelated space only changes.
+
+I don't think the n line version is even an improvement in the former 
+case.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+ i.
+
