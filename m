@@ -1,74 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.69.209
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795211510;
-	b=mPxpbhPp2FsOHOorQr9Votvg/Km40dL1HnZuuCK+ij9N2Z6TPkFGLVPOdPJJ9FNX0+ku
-	 CqC9WHGKudSTKVpURMCcuumRR3RAQZ9A3MPSYyOFz3gljAjcgWdCIcYNnLWz5ZQAZvcOq
-	 fZVxTLgaPNODd9AXs9OK7qDGLgyk21tXFYWZZjNAU+2lL5d9eLp/C0jXKOKeHP7c+Y3KK
-	 z/gtGmtvSETk4HCkWUlj21RNBzS38c2tgy5xAQOiojGzj7/xt2GMUnsHsaE4qELm8WsIY
-	 +nIEdHrTSBCIWXY4WiYgUpipY48390cqrjN85xfA6FY3ALW/gEy4AK48b7FE94U0Orw==
+	t=1795216600;
+	b=NZfFsrqpTkXzR0Mb7/B2KphZ3FDDN0/m62DTVAtrFP6JDxATCV+EWDqbYoV8iVUZER9E
+	 NdJVcFvqv8u81gea2R74wuN0xziAvYjDKzp93TZDN2G/l/NROB5381iidxtn8DIitatDN
+	 cobtQgvdMPua3ZU1Et0VNmjtNCHsbTeMxHnez44l3ZEHUq+3bVfhscPMzuV1MOo81VDlE
+	 5S2OKoEr+VTYR+MshA+/G3lUDTjWjzyxRsFYaUXQRoVjgGEvhi0LQx7VZxBg3PmAkkAw+
+	 IERfU411ugCW2N/Qy2mPKnkiRVPxHWbler7UOzt/NxFW5MpLL+mjIR7Th6ysPREalCA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795211510;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=vb0BtL0SwPfR29AbCMJeyoaWqzNe8n8+/BbGnf3liw8=;
-	b=ZSe7V1jNdpZGIF+7vH9dJoznrshd/UImeeljI4GE6Tem5WIgmDd//Vd0pVPegPtLNMYL
-	 jeQjeEF1v57wm7XCFCMOeFMcyDs8Grt5Hs2VC+EtjLoJNQuyZZlzTZismxrg7Nw3vphEe
-	 3O1RxwwVMFfFGxASmhCTUEVArhikorRaBMjurEwY6s/8bO2b4woMU67tFW4zjY/CYAY0p
-	 zhIF/GFtr6ekLEyvy5nQlqDlJj5TdtMrWMMRkFpU595e2X4oxtZ08oXIfuqKiYeAs3RdQ
-	 tGe2f81fQw0hrfu9HwI33AsQUmr7Q9E/uelzdVSFpptXzC95uuWbqpo62O0X5FD4z6g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795216600;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-Report-Abuse:Feedback-ID:X-smtpcorp-track;
+	bh=1iPf5YilaXEpOW76uWldyD93lQGtquY7HiJvpfuAXVY=;
+	b=RuaGLwHAC0rO8oOFBDeA4JhNptsbG5+SYDV/H5UyDw4tNx2ofBgmrPFyLQszBIZWMjM4
+	 ogWfeoBK0n97q2Ve6W55OwKxotWVzd+ChiROI4j6zVJEzzuOA0ycBYV0f+NRe1xfO8EYR
+	 7qCMC18ojGd2avItGlbxeFDXfzQFje6ucPjGGtumHEbvgpIaY/PuCm3T1cW6A9F40KvjF
+	 kcQIYnuTo7cRqdgxfnoCAHK7uMpFCmKrLmnKusucYPvMMUqD0XTQq0WjaKUBIkLqxb8ME
+	 5dE/K/bgJHj/Y4vT/vKBa2tN0ateORX5ac5vTbjZsYbJThkHs9RLGo+HvUoEO1lQIgw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lCMP2b9Q;
-	arc=none smtp.remote-ip=198.175.65.14
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=oven.ninja;
+	spf=pass smtp.mailfrom=em762108.oven.ninja;
+	dkim=pass header.d=oven.ninja header.i=@oven.ninja header.a=rsa-sha256 header.s=s762108 header.b=YMqapBT4;
+	arc=none smtp.remote-ip=170.10.69.209
+Received: from o1i465.smtp2go.com (o1i465.smtp2go.com [170.10.69.209])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEC9606A6B6;
-	Fri, 20 Nov 2026 21:51:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3AEC9606A6B6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D6B606A325
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 23:16:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0D6B606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oven.ninja
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em762108.oven.ninja
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lCMP2b9Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795211508; x=1826747508;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=BSy9VGRSNIwqBEbRYwLTCL5barbmZqz/wRpxdNRBijs=;
-  b=lCMP2b9Qxag15Rwwq/Twx2vyMHMZpuzDRaRubtqrjiHBnU1i6y4jxhbh
-   rnYC8r0h5BDhVOK0dxHA9E86uV1oJDDs0tWl8NItJ+/0xMWhTFXyRHnli
-   tEG/+QH3wf7iSFI6ANvCpUWpvcSv7ZxfwbvQlGV5SBXNj/ug31efhCMWZ
-   HGQyQQZfEwJKu7xNQ2HDmTnwBE2s4R30M898l4nm+BsPrb7aB2/9r6bbe
-   1g1zpyPbFgZNJcVkspDPNyNXjPhYfHuEMmfNeNJQyIuVREeXGeicgxpEL
-   f7ckQjFXAFWxMCaRX8NuIUDdgPBB2cLTdzfJlVS8c+Kacv7XGpOGazwIe
-   g==;
-X-CSE-ConnectionGUID: zRne1lBvQoenms+bpjyfsQ==
-X-CSE-MsgGUID: DEEJKLWdTp+5jaW3SAqTqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="3988988"
-X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
-   d="scan'208";a="3988988"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 13:51:47 -0800
-X-CSE-ConnectionGUID: yi0fD+64SXaM/L/OYLziGQ==
-X-CSE-MsgGUID: e4z9353ITQSEpBwhCh+aIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
-   d="scan'208";a="11009868"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.16])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 13:50:11 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 20 Nov 2026 23:50:08 +0200 (EET)
-To: Ondrej Zary <linux@zary.sk>, Hans de Goede <hansg@kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Introduce Synology NAS x86 platform driver
-In-Reply-To: <20261120214014.4188702-1-linux@zary.sk>
-Message-ID: <b3be68b5-b363-85bb-513a-733ab31cf1b7@linux.intel.com>
-References: <20261120214014.4188702-1-linux@zary.sk>
+	dkim=pass (2048-bit key, unprotected) header.d=oven.ninja header.i=@oven.ninja header.a=rsa-sha256 header.s=s762108 header.b=YMqapBT4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oven.ninja;
+ i=@oven.ninja; q=dns/txt; s=s762108; t=1795216590; h=from : subject :
+ to : message-id : date : list-unsubscribe : list-unsubscribe-post;
+ bh=1iPf5YilaXEpOW76uWldyD93lQGtquY7HiJvpfuAXVY=;
+ b=YMqapBT45kmpK3Zwh23UsYFiHuSTaBMsrYf90oqEj3xAHDLGxf8Xjg56u2MZWdzMyGZee
+ QUBIgJ227QbVr84u+8wMyUM+hb2KGgo6As9O3gSqducwNVTSUgQQ0dU/VZy/rGdZedtg0Y+
+ VZ2aMWyp0QU/pnupY5ntQZDkSLyywBGeDURxvqfoKt5+jSkrnsdawMqxOSKGdnm/i7NPgXv
+ nyLgkvOEFc070MdIg78wkR8MxuHbrNGIXCUXN5DOaY6J+AcJIifupfMKeaRel0B7i86RhHi
+ NpCkV/AOwthLe2ZjddK1OsYhWNT74r2KnKWctGWDLDWZbea0Me7zu3p8Q76w==
+Received: from [10.240.242.228] (helo=oven-pc)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256:X25519)
+	(Exim 4.100.1)
+	(envelope-from <ava@oven.ninja>)
+	id 1xUXqB-FnQW0hPoboc-ZiLO;
+	Fri, 20 Nov 2026 23:16:23 +0000
+From: Ava Green <ava@oven.ninja>
+To: Prasanth Ksr <prasanth.ksr@dell.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Dell.Client.Kernel@dell.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ava Green <ava@oven.ninja>
+Subject: [PATCH v3] platform/x86: dell-wmi-sysman: replace deprecated strlcpy with strscpy
+Date: Sat, 21 Nov 2026 10:16:07 +1100
+Message-ID: <20261120231607.7908-1-ava@oven.ninja>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -78,219 +69,229 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 762108m:762108aX0MQon:762108sZnAUST3i1
+X-smtpcorp-track: kbVHQMlEbO10.KR-cKJAQpNRR.FxtN2QATDc5
 
-On Fri, 20 Nov 2026, Ondrej Zary wrote:
+The kernel has deprecated the use of strlcpy wrappers in favor of
+the safer strscpy variants. Replace the internal driver helper
+function strlcpy_attr() with strscpy_attr() across all
+dell-wmi-sysman attribute parser files.
 
-> Add platform driver for Synology x86-based NAS devices to support HDD LEDs
-> controller by ICH9 GPIO pins.
-> 
-> Only DS411+II is supported for now (DS411+ should be the same except CPU).
-> 
-> Unfortunately, the DMI data in BIOS is not very helpful to identify the
-> device as almost all strings are "To be filled by O.E.M.". Match also the
-> BIOS date and then check presence of the onboard SiI3531 SATA controller
-> and i82574L ethernet controller to avoid activation on other systems.
+Ensure explicit destination buffer sizes are passed using sizeof()
+to prevent potential out-of-bounds array writes during ACPI object
+evaluations.
 
-Hans, Andy,
+Signed-off-by: Ava Green <ava@oven.ninja>
+---
+Changes in v3:
+- Fix kernel doc formatting (reported by kernel robot)
+Changes in v2:
+- Send accidently, Please ignore this version
 
-Do you have an opinion on the selected approach?
+ .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 +-
+ .../dell/dell-wmi-sysman/enum-attributes.c    | 25 +++++++++++--------
+ .../x86/dell/dell-wmi-sysman/int-attributes.c | 20 +++++++++------
+ .../dell/dell-wmi-sysman/passobj-attributes.c |  5 ++--
+ .../dell/dell-wmi-sysman/string-attributes.c  | 25 +++++++++++--------
+ .../x86/dell/dell-wmi-sysman/sysman.c         | 18 ++++++-------
+ 6 files changed, 54 insertions(+), 41 deletions(-)
 
-> Buttons and other LEDs are not supported by this driver because they're
-> controlled by a PIC MCU (connected through serial port).
-> 
-> Signed-off-by: Ondrej Zary <linux@zary.sk>
-> ---
-> Changes in v2:
->  - fixed includes (order, added missing, removed kernel.h)
->  - added missing DMI and PCI dependencies to Kconfig
->  - added PCI device presence check details to changelog
->  - used %pe for error message
-> 
-> ---
->  drivers/platform/x86/Kconfig        |  16 ++++
->  drivers/platform/x86/Makefile       |   3 +
->  drivers/platform/x86/synology-x86.c | 128 ++++++++++++++++++++++++++++
->  3 files changed, 147 insertions(+)
->  create mode 100644 drivers/platform/x86/synology-x86.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 9ce384e0475e..14b366cca2dd 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1059,6 +1059,22 @@ config OXP_EC
->  
->  source "drivers/platform/x86/tuxedo/Kconfig"
->  
-> +config SYNOLOGY_X86
-> +	tristate "Synology x86 NAS Platform Driver"
-> +	depends on DMI
-> +	depends on GPIOLIB
-> +	depends on LPC_ICH
-> +	depends on GPIO_ICH
-> +	depends on LEDS_CLASS
-> +	depends on PCI
-> +	select LEDS_GPIO
-> +	help
-> +	  This driver provides support for the HDD LEDs on Synology x86 NAS
-> +	  devices.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called synology-x86.
-> +
->  endif # X86_PLATFORM_DEVICES
->  
->  config P2SB
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 229057234d00..a1806eb0efc9 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -166,3 +166,6 @@ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
->  
->  # OneXPlayer
->  obj-$(CONFIG_OXP_EC)			+= oxpec.o
-> +
-> +# Synology
-> +obj-$(CONFIG_SYNOLOGY_X86)		+= synology-x86.o
-> diff --git a/drivers/platform/x86/synology-x86.c b/drivers/platform/x86/synology-x86.c
-> new file mode 100644
-> index 000000000000..80831c8c45d8
-> --- /dev/null
-> +++ b/drivers/platform/x86/synology-x86.c
-> @@ -0,0 +1,128 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Synology x86 NAS platform driver
-> + *
-> + * Inspired by platform/x86/meraki-mx100.c
-> + *
-> + * Copyright (C) 2026 Ondrej Zary <linux@zary.sk>
-> + */
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/dmi.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/machine.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/printk.h>
-> +#include <linux/string.h>
-> +
-> +static const struct gpio_led synology_leds[] = {
-> +	{ .name = "synology:green:hdd1"	},
-> +	{ .name = "synology:amber:hdd1" },
-> +	{ .name = "synology:green:hdd2" },
-> +	{ .name = "synology:amber:hdd2"	},
-> +	{ .name = "synology:green:hdd3" },
-> +	{ .name = "synology:amber:hdd3"	},
-> +	{ .name = "synology:green:hdd4" },
-> +	{ .name = "synology:amber:hdd4" },
-> +};
-> +
-> +static const struct gpio_led_platform_data synology_leds_pdata = {
-> +	.num_leds	= ARRAY_SIZE(synology_leds),
-> +	.leds		= synology_leds,
-> +};
-> +
-> +#define GPIO_ICH_DRIVER_NAME "gpio_ich"
-> +
-> +static struct gpiod_lookup_table synology_leds_table = {
-> +	.dev_id = "leds-gpio",
-> +	.table = {
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 16, NULL, 0, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 18, NULL, 1, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 20, NULL, 2, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 32, NULL, 3, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 33, NULL, 4, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 34, NULL, 5, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 49, NULL, 6, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 55, NULL, 7, GPIO_ACTIVE_HIGH),
-> +		{}
-> +	}
-> +};
-> +
-> +static const struct dmi_system_id synology_systems[] __initconst = {
-> +	{
-> +		.ident = "DS411+",	/* DS411+II is the same with faster CPU */
-> +		.matches = {
-> +			/* Synology did not put anything in DMI strings */
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "To Be Filled By O.E.M."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "To Be Filled By O.E.M."),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
-> +			DMI_EXACT_MATCH(DMI_BIOS_DATE, "05/21/2012"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(dmi, synology_systems);
-> +
-> +static struct platform_device *synology_leds_pdev;
-> +
-> +static int __init synology_init(void)
-> +{
-> +	int ret;
-> +
-> +	static const struct pci_device_id pci_sii3531[] = {
-> +		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CMD, 0x3531, PCI_VENDOR_ID_CMD, 0x3531) },
-> +		{ }
-> +	};
-> +
-> +	static const struct pci_device_id pci_i82574l[] = {
-> +		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x10d3, PCI_VENDOR_ID_INTEL, 0x0000) },
-> +		{ }
-> +	};
-> +
-> +	const struct dmi_system_id *dmi = dmi_first_match(synology_systems);
-> +
-> +	if (!dmi)
-> +		return -ENODEV;
-> +
-> +	/* DS411+ DMI match is too generic, confirm by onboard PCI devices */
-> +	if (!strcmp(dmi->ident, "DS411+")) {
-> +		if (!pci_dev_present(pci_sii3531) ||
-> +		    !pci_dev_present(pci_i82574l))
-> +			return -ENODEV;
-> +	}
-> +
-> +	pr_info("Detected Synology NAS %s\n", dmi->ident);
-> +
-> +	gpiod_add_lookup_table(&synology_leds_table);
-> +
-> +	synology_leds_pdev = platform_device_register_data(NULL,
-> +		"leds-gpio", PLATFORM_DEVID_NONE, &synology_leds_pdata,
-> +		sizeof(synology_leds_pdata));
-> +	if (IS_ERR(synology_leds_pdev)) {
-> +		pr_err("error registering platform device: %pe\n", synology_leds_pdev);
-
-Won't these be prefixless and you should add the usual pr_fmt line?
-
-> +		ret = PTR_ERR(synology_leds_pdev);
-> +		goto err;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	gpiod_remove_lookup_table(&synology_leds_table);
-> +	return ret;
-> +}
-> +module_init(synology_init);
-> +
-> +static void __exit synology_exit(void)
-> +{
-> +	platform_device_unregister(synology_leds_pdev);
-> +	gpiod_remove_lookup_table(&synology_leds_table);
-> +}
-> +module_exit(synology_exit);
-> +
-> +MODULE_AUTHOR("Ondrej Zary <linux@zary.sk>");
-> +MODULE_DESCRIPTION("Synology x86 NAS Platform Driver");
-> +MODULE_LICENSE("GPL");
-> 
-
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+index eb48ced55..f82e07efc 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+@@ -162,7 +162,7 @@ static ssize_t curr_val##_store(struct kobject *kobj,				\
+ 
+ union acpi_object *get_wmiobj_pointer(int instance_id, const char *guid_string);
+ int get_instance_count(const char *guid_string);
+-void strlcpy_attr(char *dest, char *src);
++int strscpy_attr(char *dest, char *src, size_t size);
+ 
+ int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
+ 			struct kobject *attr_name_kobj, u32 enum_property_count);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+index a85639d8a..27291261c 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+@@ -165,24 +165,29 @@ int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
+ 	wmi_priv.enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(enumeration, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].attribute_name,
+-		enumeration_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].attribute_name,
++		enumeration_obj[ATTR_NAME].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].attribute_name));
+ 	if (check_property_type(enumeration, DISPL_NAME_LANG_CODE, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].display_name_language_code,
+-		enumeration_obj[DISPL_NAME_LANG_CODE].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].display_name_language_code,
++		enumeration_obj[DISPL_NAME_LANG_CODE].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].display_name_language_code));
+ 	if (check_property_type(enumeration, DISPLAY_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].display_name,
+-		enumeration_obj[DISPLAY_NAME].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].display_name,
++		enumeration_obj[DISPLAY_NAME].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].display_name));
+ 	if (check_property_type(enumeration, DEFAULT_VAL, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].default_value,
+-		enumeration_obj[DEFAULT_VAL].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].default_value,
++		enumeration_obj[DEFAULT_VAL].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].default_value));
+ 	if (check_property_type(enumeration, MODIFIER, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.enumeration_data[instance_id].dell_modifier,
+-		enumeration_obj[MODIFIER].string.pointer);
++	strscpy_attr(wmi_priv.enumeration_data[instance_id].dell_modifier,
++		enumeration_obj[MODIFIER].string.pointer,
++		sizeof(wmi_priv.enumeration_data[instance_id].dell_modifier));
+ 
+ 	next_obj = MODIFIER + 1;
+ 
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+index ab5c24722..a32630a33 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+@@ -144,24 +144,28 @@ int populate_int_data(union acpi_object *integer_obj, int instance_id,
+ 	wmi_priv.integer_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(integer, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].attribute_name,
+-		integer_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].attribute_name,
++		integer_obj[ATTR_NAME].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].attribute_name));
+ 	if (check_property_type(integer, DISPL_NAME_LANG_CODE, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].display_name_language_code,
+-		integer_obj[DISPL_NAME_LANG_CODE].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].display_name_language_code,
++		integer_obj[DISPL_NAME_LANG_CODE].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].display_name_language_code));
+ 	if (check_property_type(integer, DISPLAY_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].display_name,
+-		integer_obj[DISPLAY_NAME].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].display_name,
++		integer_obj[DISPLAY_NAME].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].display_name));
+ 	if (check_property_type(integer, DEFAULT_VAL, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.integer_data[instance_id].default_value =
+ 		(uintptr_t)integer_obj[DEFAULT_VAL].string.pointer;
+ 	if (check_property_type(integer, MODIFIER, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.integer_data[instance_id].dell_modifier,
+-		integer_obj[MODIFIER].string.pointer);
++	strscpy_attr(wmi_priv.integer_data[instance_id].dell_modifier,
++		integer_obj[MODIFIER].string.pointer,
++		sizeof(wmi_priv.integer_data[instance_id].dell_modifier));
+ 	if (check_property_type(integer, MIN_VALUE, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.integer_data[instance_id].min_value =
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+index be939b731..79b8f1e34 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+@@ -163,8 +163,9 @@ int populate_po_data(union acpi_object *po_obj, int instance_id, struct kobject
+ 	wmi_priv.po_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(po, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.po_data[instance_id].attribute_name,
+-		     po_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.po_data[instance_id].attribute_name,
++		     po_obj[ATTR_NAME].string.pointer,
++		     sizeof(wmi_priv.po_data[instance_id].attribute_name));
+ 	if (check_property_type(po, MIN_PASS_LEN, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.po_data[instance_id].min_password_length =
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+index 41e19f039..2634f6cce 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+@@ -128,24 +128,29 @@ int populate_str_data(union acpi_object *str_obj, int instance_id, struct kobjec
+ 	wmi_priv.str_data[instance_id].attr_name_kobj = attr_name_kobj;
+ 	if (check_property_type(str, ATTR_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].attribute_name,
+-		     str_obj[ATTR_NAME].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].attribute_name,
++		     str_obj[ATTR_NAME].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].attribute_name));
+ 	if (check_property_type(str, DISPL_NAME_LANG_CODE, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].display_name_language_code,
+-		     str_obj[DISPL_NAME_LANG_CODE].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].display_name_language_code,
++		     str_obj[DISPL_NAME_LANG_CODE].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].display_name_language_code));
+ 	if (check_property_type(str, DISPLAY_NAME, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].display_name,
+-		     str_obj[DISPLAY_NAME].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].display_name,
++		     str_obj[DISPLAY_NAME].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].display_name));
+ 	if (check_property_type(str, DEFAULT_VAL, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].default_value,
+-		     str_obj[DEFAULT_VAL].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].default_value,
++		     str_obj[DEFAULT_VAL].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].default_value));
+ 	if (check_property_type(str, MODIFIER, ACPI_TYPE_STRING))
+ 		return -EINVAL;
+-	strlcpy_attr(wmi_priv.str_data[instance_id].dell_modifier,
+-		     str_obj[MODIFIER].string.pointer);
++	strscpy_attr(wmi_priv.str_data[instance_id].dell_modifier,
++		     str_obj[MODIFIER].string.pointer,
++		     sizeof(wmi_priv.str_data[instance_id].dell_modifier));
+ 	if (check_property_type(str, MIN_LEN, ACPI_TYPE_INTEGER))
+ 		return -EINVAL;
+ 	wmi_priv.str_data[instance_id].min_length = (uintptr_t)str_obj[MIN_LEN].string.pointer;
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index ae89670f7..0a5410bd9 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -229,23 +229,21 @@ static const struct kobj_type attr_name_ktype = {
+ 	.sysfs_ops	= &kobj_sysfs_ops,
+ };
+ 
++
+ /**
+- * strlcpy_attr - Copy a length-limited, NULL-terminated string with bound checks
++ * strscpy_attr - Copy a length limited, NULL-terminated string with bound checks
+  * @dest: Where to copy the string to
+  * @src: Where to copy the string from
++ * @size: Size of the destination buffer
+  */
+-void strlcpy_attr(char *dest, char *src)
++int strscpy_attr(char *dest, char *src, size_t size)
+ {
+-	size_t len = strlen(src) + 1;
+-
+-	if (len > 1 && len <= MAX_BUFF)
+-		strscpy(dest, src, len);
++	ssize_t rc = strscpy(dest, src, size);
+ 
+-	/*len can be zero because any property not-applicable to attribute can
+-	 * be empty so check only for too long buffers and log error
+-	 */
+-	if (len > MAX_BUFF)
++	if (rc == -E2BIG)
+ 		pr_err("Source string returned from BIOS is out of bound!\n");
++
++	return rc;
+ }
+ 
+ /**
 -- 
- i.
+2.56.0
 
