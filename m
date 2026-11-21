@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795222112;
-	b=YrBGg2XLS4DVxlsG+je8VR5+fan3RPBGGmi7gQSjrEudtJlU0JjsPpkooArKoIO8v9Wm
-	 z6xdC7UNeAiXK6G67PVuSSMNndxv4HyI+vRyJeNY4CtUMFvej+l+JPVtZzVK37Bm0FTgd
-	 hMO+mt2vTOBq17CU8Shigg6qMQtGetJIkgojE5Qv1Xk3Lc2wJdA+NbF0dMVHHQ64iJU4R
-	 OIUP0D+no0fIBT57eHY3B6jOclj46MFrwvKmJpy1KjIpLvUbtIi84olPFeci01H5NvmdD
-	 UYPDxmnTcUqEsxiRrt3jhPy0dgZAIjkv/xUZUYRhGz11jwi7SgCyNjufgNUl0IdnVHA==
+	t=1795222282;
+	b=PGUwTNPLPLPVzdXU1dSq6r/HQurB/stkhR9Jaze7tzpGZ0mIzg/YO19LUFVHn5+TEDQL
+	 9SU+2SuMXzYo5TD8tcCz6sZIxwWRRGe1KicdRfWM/0pUiU4WuTXNv7PMo6Zx27lI89yvs
+	 HX/to6ludajFwqUFVUrZ1xkLZ4Jm+uzdVX039SPyMbbQKfQUPo1KvSz79mWDayd7mT6fS
+	 7OVwmGoSTEyUtiP4zwc5PZwzrSTySkZD7OaG+5eZ2yvHvUXMdUqh4lhJS05sG6WnIlTc7
+	 Zz1RXS0PV/kalvw/31sTAj8JnC92GQ2Mc9bDalqWREjSRzR8EvKp8fwGVqcScCAwjag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795222112;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795222282;
 	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 User-Agent;
-	bh=xZCuNtiE/RvgUGlq9aWOLBkXGZW67SdG7iTq4KVsRT0=;
-	b=36Home8HvwI772l8Tpuy3joqqGNuJPNRE/JlWZzHmI1Ns+DSbEsdEERhxTm4vGkc8uyA
-	 2HIgFwHEPU84LWp5sVYZ15WGZ0AFXY7kInjb9REs44u2iMcV0nfhp24jReW0u/WhLH3h+
-	 BYB6vLTGTJimnx97UX2eU8XKw6bbpJzIpVGlb+FwAVgRhfR1Tv4CH2ciwrfP9/x65rMMt
-	 L3s4ZWreetZTGNYdGby1P3chCXc13+MVJaHI7l9ujXBikvjO5YnER3wbBBlX+yiZmQAuY
-	 MweIDaT7UVWv1PTy428KrEWzevnsGXXa9SLanxkF7S9N1ySnZK73bgDNKLVh3YqrtuA==
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To:User-Agent;
+	bh=vY870kw8ac+V2Wuq0fL1wIEtKJAiuF/qk+3277HWEQ8=;
+	b=z1XTpa8s+Lgo9tJMciUad1dZz7V8SrfwnOBFkElDvhx074HbwLsuc2SJgEeR8F9yeIQu
+	 qiTqWxPZNiNzaDrFr4nyUxldRxqhLi9yTCJfyoCLnnBMuVqWk/f2Siw0/OL7IvrEbJALP
+	 qBmfFoTdaHBZBu4W+lkYrrp1H0pUAjk6ZPmXHmlYwUXKiNrUqQwhev1uhpYqUUHGCY8QI
+	 c9jUZ3DwN2TtJI7CEnuu69uV4TSFYx0rs78f3Agy7DTZygdMeixYnzf/Bo2Qnx63/M0SQ
+	 zbyon0sM/lrWFoW6NjyYjt/Ozy9Z00fbeNz2P2SfKInUglOx1t78bimZD+j6KqLITFg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CgRXbhxB;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PYfR2e1b;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD4760A2637;
-	Sat, 21 Nov 2026 00:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C3E606A6B1;
+	Sat, 21 Nov 2026 00:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CgRXbhxB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58E71F01570;
-	Sat, 21 Nov 2026 00:48:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PYfR2e1b
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 691981F000C6;
+	Sat, 21 Nov 2026 00:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795222111;
-	bh=xZCuNtiE/RvgUGlq9aWOLBkXGZW67SdG7iTq4KVsRT0=;
+	s=k20260515; t=1795222280;
+	bh=vY870kw8ac+V2Wuq0fL1wIEtKJAiuF/qk+3277HWEQ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=CgRXbhxBV2XXdfOFv+augDdnz8IFkIp4M0qr+nj8Q977ELdnUdYlZHQqy14fOmZdp
-	 z5ZY8Qm3ykWQ/aj35iKD/uRYKmojimDEI4U4lzUi8pPFPczhK2Q3FL8iYFtjDCIisH
-	 qpUQcKZQabnPBiijcBLsbVFiM5cuvFuvKUNWVLUoU9ASxT59RttAwv3bj8MzoX/Epn
-	 fJatvT9wtsjNygQno791zULziz20T8NLC9vqvvABSYlnsUZBBX9MAa7hjXcIwqHgEZ
-	 pjddEpZE+Qs49ukqQy8eXy0SgGX+dxZO4cqOQSgNlwBCbqt42Y0luK4wuJLqJ9QewJ
-	 /O2q1vbscoLMw==
+	b=PYfR2e1b5TYz8yA4iUSeCORk0MGfcGRYfFFLBfISXEGgu/k6qbxfRUbSwZSgk6yU1
+	 Bqbg7clCILbcezOmlMk3IdNTCJA2R36c/c5ZC48Av9BSSnTIOUg9u37+V6COGs6f1o
+	 ityP1SoHn7wGcrqY8mBLijA7aUFbriL5FB2ZFTxSYTxcKCRuglQ5l9iptmuinJLiu9
+	 10YG2gmsaFPlw6bzKJKxLOAIHwwrQlT9M5967AVd82764aZ9nIK7+l5hgKkNzVbPqn
+	 j4h4GXephOP0X+FGZ0SNnhS6Vnw1Qqhw5rgLjOxs9odpeS91rcra7E8Y3WMc+T3bDU
+	 KT/e93C4xaahQ==
 Received: by pali.im (Postfix)
-	id C8C114A0; Sat, 21 Nov 2026 01:48:28 +0100 (CET)
-Date: Sat, 21 Nov 2026 01:48:28 +0100
+	id BEC004A0; Sat, 21 Nov 2026 01:51:17 +0100 (CET)
+Date: Sat, 21 Nov 2026 01:51:17 +0100
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To: Brian Mak <bmak@nvidia.com>
 Cc: Hans de Goede <hansg@kernel.org>,
@@ -55,13 +55,17 @@ Cc: Hans de Goede <hansg@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
-	platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] platform: dell: Allow DELL_LAPTOP to be
- arch-independent
-Message-ID: <20261121004828.rk2k2cq4id2ixkal@pali>
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"Dell.Client.Kernel@dell.com" <Dell.Client.Kernel@dell.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/8] platform: dell: smbios: Add quirk for non-functional
+ calling interface
+Message-ID: <20261121005117.k7kozibkdqfo2aty@pali>
 References: <20261121000556.173028-1-bmak@nvidia.com>
- <20261121000556.173028-5-bmak@nvidia.com>
+ <20261121000556.173028-7-bmak@nvidia.com>
+ <20261121003835.uemb2uaqm6enjqrq@pali>
+ <bba7e3b3-65fc-43dd-a9f0-b092c2cc0a32@nvidia.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,51 +75,29 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261121000556.173028-5-bmak@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bba7e3b3-65fc-43dd-a9f0-b092c2cc0a32@nvidia.com>
 User-Agent: NeoMutt/20180716
 
-On Friday 20 November 2026 16:05:50 Brian Mak wrote:
-> CONFIG_DELL_LAPTOP is currently not available on ARM64, due to a
-> dependency on CONFIG_SERIO_I8042. This dependency is actually not
-> necessary, as there is a fallback. Make it optional.
-
-i8042 is used for controlling touchpad LED and for receiving rfkill
-events when the dell-rbtn is not supported on the particular machine.
-
-Touchpad led is available on more Vostro and Inspirion machines and
-there is no fallback or detection of i8042 at all. Even there is no
-error checking.
-
-And for receiving rfkill events it is same situation.
-
-So the dell-laptop driver expects that the SERIO_I8042 is enabled and
-compiled in.
-
-If none of these functionality is available on arm64 HW, then it makes
-sense to make the SERIO_I8042 only for x86. And then in the dell-laptop
-driver marking the x86 specific dependency via ifdefs. Which allows to
-compile driver on arm64 without those specific functionalities.
-
-> Signed-off-by: Brian Mak <bmak@nvidia.com>
-> ---
->  drivers/platform/dell/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Saturday 21 November 2026 00:45:05 Brian Mak wrote:
+> On 11/20/26 16:38, Pali Rohár wrote:
+> > On Friday 20 November 2026 16:05:52 Brian Mak wrote:
+> >> On Dell RTX Spark laptops, the SMBIOS calling interface completes every
+> >> request with an all-zero buffer, even for requests that should fail.
+> >> Drivers that rely on it, such as dell-laptop and dell-pc, end up
+> >> reporting bogus state, like battery charge modes and thermal modes.
+> > 
+> > Hello, is Dell aware of this firmware issue? And it is going to be fixed?
 > 
-> diff --git a/drivers/platform/dell/Kconfig b/drivers/platform/dell/Kconfig
-> index 7030f817b6af..0223e2373508 100644
-> --- a/drivers/platform/dell/Kconfig
-> +++ b/drivers/platform/dell/Kconfig
-> @@ -77,7 +77,7 @@ config DELL_LAPTOP
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
->  	depends on RFKILL || RFKILL = n
->  	depends on DELL_WMI || DELL_WMI = n
-> -	depends on SERIO_I8042
-> +	depends on SERIO_I8042 || SERIO_I8042 = n
->  	depends on DELL_SMBIOS
->  	select POWER_SUPPLY
->  	select LEDS_CLASS
-> -- 
-> 2.53.0
+> I will be reporting this to Dell and will update back when I hear back.
 > 
+> Thanks,
+> Brian
+
+Perfect, thank you! It is important to report any such issue because lot
+of times hardware / firmware developers do not know about such issues
+which linux driver development uncover. This also helps with maintenance
+of linux drivers, because there is a chance that new models would have
+bugs fixed and the list of affected machines in driver would not grow up.
