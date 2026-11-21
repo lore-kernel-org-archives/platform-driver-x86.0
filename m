@@ -1,68 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795258245;
-	b=EXWgYWin92y14bP+Lp2VuLEmLetF9bYRJuhnFOZT5ktI5cQsDED/GJwR3Fi1b3zJFZiN
-	 Q1TeS4N1oEoYEdithT4U8gVqmxPtxJnhPlVNK/Xk16aUN4YI4MUCBqmDh0Ns7nqZZpVf7
-	 WuKwpwnjLh/tW0MIny+TRZE/i9Luqou5HcowxNvVhfol1tKqoo4Bk/mjiASGxjLxsZZkh
-	 xgSNi54pC1Yv7SIQ5wt/3M12ACigQeRjGrE7zLy7LL677zIy/SgkZKa61TeOPLV0gsYB6
-	 oRdyqg3h68aJOCEj+bxdko8so9anY9sEtsS+EFiCrPz7/grbZALtKpUBy8dtW2vxtYg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795258245;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=Ywnc0CTZOV3pbLzdUSs5Z9tSv4Vo3Fp1Ux+4oxaBsmI=;
-	b=vZs5IsP4L8jMMowZDM79A/ihGZJc7MLketuSEIs36uAMnjD2kmhTMhB9w70KAhFvMbw2
-	 QEmxiLamRMcXp+34fH+vzAQoTswCQPf3bdliM+KX9c/N0T9wZx6l8rgFKnS+VVIumlWA6
-	 BhielH4oxTCpA/IH75/nSdm2wYff2ru2hsOY4ywbOXwwwqBfQ3ZYT2zvK3OGHB+x03X1E
-	 zxUx00XK286+9cmoJEMlvOVSMRv+PwfYJDQRnTVPi05K5pDKSGvmBQnmYGr17vuv8iF2K
-	 OiOE5jS8Vl6Jy2CGBg5nUdgHEAIEILNRKSbBOrzXVXhS4zYYm6n6DGD5A1ZXTfwES0g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=KbHY7d6B;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.225.139
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795265642;
+	b=qI3TWabxo7IO6atjFakBO+sikCMcEu+Ja1hQcvpEGP6hmqWgunGUmothZzyEcLTMiy6R
+	 OpFu9ePl6+44uCW1/iSFxUb309GOQE7Ec+3xzO07LHhPS8Z8hS7l/QFt9T1z8clIkJ5hO
+	 qdvR/70jjjD+nhC5xDIw+bggUiIvKWCjr4XuiJT0IPmaOpFKRbBsLQeHwhOQe+bFQQQih
+	 w2UrRfWUoO+5H5NflFL9bH98NJFkKz5Fv8muWQ8PS8xT7ad6jVNMVXrsnQn+CveXc81Mo
+	 WKETEX9UKIjbpyy6DDo7aOy1COgJLKNUTQQHuyyD6ZS0riTlMnL3/XHNcTgRPzkMOkQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795265642;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:
+	 X-Google-Original-From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=FgvFBR0X911CFkft+m8BaNuu7kHa0PuRcgZI2MmyPWU=;
+	b=3od7DNPyRrFtRsyO38x2a6O+ov47TVY9PVqUSxrhEmb8CPNx8sDHXZ2aaoq6EXo3iyWq
+	 shWMTT6asGr47SwYjztCErziAoAf1wcKp+nxIG6dVErdNrdZKaMczaJA2nhMl7ga5Btps
+	 WFyVsaVJpZmPUzy5UKqu+p1x7DCDiN1l+hDcK2SelFOomrVms8hZYnf2TcIFeX4sq6VOW
+	 cCfROsERvdsO/UtcSFmYfgnu18ihGUsg5fUQG4rVXzWHpJ5YHkYevwozSwAGco/03fGb/
+	 wlI+Grk/WCyayBHpg/HANOBrY+BOmiHFFypQwlKcWkTcplQBN/RKa8i8PrWHNLvb7dw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=z39VZU0d;
+	arc=none smtp.remote-ip=74.125.225.139
+Received: from mail-wm2-f11.google.com (mail-wm2-f11.google.com [74.125.225.139])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C240606A320;
-	Sat, 21 Nov 2026 10:50:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C240606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E58E606A320
+	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Nov 2026 12:54:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1E58E606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=KbHY7d6B
-ARC-Seal: i=1; a=rsa-sha256; t=1795258233; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Xv0WLLHlFqE1dSPAITov/L4a/rkxxFBjp6NQa8FdmYbtN45aqPdy1B0JJpHIJ9z0PQbXsf6BTWBhPFMPkWEwvgZvbh/6hSEkrGtyPx2pj/H0fIZr/h6MDbBmGonvsHGiFyxPP37mvUpjah+/DRylrJrn/MNMpG6E7YAXnGF76CM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795258233; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Ywnc0CTZOV3pbLzdUSs5Z9tSv4Vo3Fp1Ux+4oxaBsmI=; 
-	b=WVB5NBSK7y79U/8mZhYvV2jUkiDNLdKUZWoxxiADM5oPsCCZQ5mUGoxlJ9C9GvNismzH6zDPw8ThowhDpmQ1JYTyvWoRgqvcNUTj1Oc7y2wM01n3HihX48LAMP+1VLx/bYpJynZPwnD3jqRz5Pg9ZN3Gri3L0Lk1zBQ5BAbb/h8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=KbHY7d6BbKuKxNDy7NR/JqFOyG9XMA8g1ru0FT1wuLOhWxFOCJbaS3jH4VeQI7V2O7lxyTPhsDJ2ThMo5Y+uxe99AeoIGBdzvzPCxwtgb8ahPMgP+8Zd9/5x+fsT69uYYNRQhN8nJA7VJLIPQJh2jlPCQBxAMRshJXdUp5/VdLEsumWb7ZmeSx+FdyTckM4WVqnNM1qbhKvYApUXkmi3K9eLK5msi1MoKLIGFQ4cDkijn1no8aDGb2izav5sEiGIO70XVpiI8TIy6VOrpavqbYL3pX97ev9mzWOS3P4IWWQYmKMXshQ3h440gbANEL7g1zPe9ZDCRjfpmhkWWJQDbA==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=Ywnc0CTZOV3pbLzdUSs5Z9tSv4Vo3Fp1Ux+4oxaBsmI=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795258230846802.4236118435841;
-	Sat, 21 Nov 2026 02:50:30 -0800 (PST)
-Message-ID: <2066ef36b62fa875914753b43124e668d8de47ea.camel@rong.moe>
-Subject: Re: [PATCH v3 3/3] platform: lenovo: wmi-fn-keys: ignore the
- keyboard backlight level events
-From: Rong Zhang <i@rong.moe>
-To: David Cemin <dcemin@nvidia.com>, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de
-Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com,
- xy-jackie@139.com, 	marco_giunta@outlook.it, ldemarchi@nvidia.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261121033322.974635-4-dcemin@nvidia.com>
-References: <20261119022719.3089229-1-dcemin@nvidia.com>
-	 <20261121033322.974635-1-dcemin@nvidia.com>
-	 <20261121033322.974635-4-dcemin@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 21 Nov 2026 18:44:32 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=z39VZU0d
+Received: by mail-wm2-f11.google.com with SMTP id 5b1f17b1804b1-4a5f76661b5so6536875e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 21 Nov 2026 04:54:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795265639; x=1795870439; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=FgvFBR0X911CFkft+m8BaNuu7kHa0PuRcgZI2MmyPWU=;
+        b=z39VZU0dqtn9kYyfaDyAKgib3xIksgKtBeCjirM1HX6p41OyYALNbz1anmDI2lV8LF
+         Er9SMg2QxA8pNL0XSCDYLp50q/ehl6lm6xmPAjJyQVdMVw3nhODjnd5YFEKd93DV8cVE
+         ewCsLFReMnfVYa2rT1INKMu+Deo0yNvgCIhpJXm/rZTvRfej8J0T8vX0EouyRm2xr25f
+         35liin1vll/j4c0WcQh4FiACL0sU88kujT5RMucj+EsoG4i2oNdOpHZR+e33VkKqQNcA
+         XxBDviTStAyGK3xU7B3UmZitisOjzCleyhmAGtXrx0Ekv9cHQECCED63DgpR8bQpurn5
+         iutQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795265639; x=1795870439;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=FgvFBR0X911CFkft+m8BaNuu7kHa0PuRcgZI2MmyPWU=;
+        b=Qch5AwXIjxCl86O3RrQRi1K6bsNVNyfObjHT+1P1xfTF2ZfIOar66ue7gWGweA4QVx
+         3wkPjsFwFXFlHDglBLv7/RDbvqdG1jHi/vJq2ivz+hn8IqAXS/lrq1hAxVIM8hBLsG6o
+         PbC8s7UEC6n6Tuoa43q+GBL8b8o+Oq1t7p9vqxgKgtfntHdTHma16oHvrsclUUHW5W78
+         /CGUGeDDDlJKeHN5svR8RDXb/tPzV/2DIri3+N4l3qI7siKdHYBcTgZOphPvAQdw7J2d
+         HZ1Y9AmT8z8FMP3ba1mbnGyFt/c/njgAZlozdSc2265jyDzpx1T44JmGqrOaHfJc1kzF
+         q7zQ==
+X-Gm-Message-State: APuU4Z9FOJ+EaXkrSNLOCeI6At3tIevzcSjB9S+itMn/yySGPI6oas7c
+	2thz+2EPDLePcGn8NNqQY5dMR+cDodvhPGzWPqEN1cWuJCJfu6GY9RzSWbMHer/LBEVNEw==
+X-Gm-Gg: AZFdTZeTnWDs0Mo54tfyuNHxTFYYSi99kqyK5Lw83ljxPWwX8lbOaOEw1Q9O0kcomyg
+	fgR9eNgOnx4k7f8PRyhoFZSEhKJzPBvs/Unj8sh5MPHV+PLV8FXe/qCPnNSs1TLnKUddmDCM46d
+	ZGevnK3ToKbNXgzJ821XeprXnP4ZHoOI/j6UegWtwAIk6wOgAd5sB63nGPw5NG87tfDvpWrdsbt
+	NhdqGvd28B3be3lsw2ykBUWXLT0Ytld73tFWT1gket52cOEn1OMXZLYoP2cdv0c4whpOICOEu1w
+	CuxhH8rfx7dB90Uq0F1I97Q7f4eLveQsBb8zTes/OYNf1UKHyPBVdzmK+Q+NVvLt3pIE1zNsG9Z
+	fPbSLN6n/RNOnve30PDO6FC+2JImkPVyZlNKqD05vXgKcvhm4Inqr99pg1k9iIwUWRbgo4gf8G6
+	bua5KNQZMkdL4+5F1dwnfmEIzQ4zvQoEfDBvYGCFw3Km4+9JB+GY7TKrPx9bWOWt39PmZf83Ibf
+	qlHCqypuf9c4xC+5HPRmh9MsdsKECglDLLakXHcvB/meerT5WeJ6o1w5kUyGUoqgIcjQXOU+GIi
+	TDTjXcH93YAhS6GQO+AgUhIdIPGG6xWrVkhSKPesnzCHdw==
+X-Received: by 2002:a05:600c:674d:b0:4a0:1fb9:2f51 with SMTP id 5b1f17b1804b1-4bb88808263mr145949025e9.14.1795265639269;
+        Sat, 21 Nov 2026 04:53:59 -0800 (PST)
+Received: from bullo-XPS.home ([2a01:e11:1020:c3f0:892:8c82:19f1:6d0d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb9066f6e6sm40009215e9.3.2026.11.21.04.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2026 04:53:58 -0800 (PST)
+From: Bullo27 <matteo.bulloni.27@gmail.com>
+X-Google-Original-From: Bullo27 <matteo.bulloni@mail.polimi.it>
+To: platform-driver-x86@vger.kernel.org
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Matteo Bulloni <matteo.bulloni.27@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86/amd/pmc: Add T14s Gen2 AMD (20XG) to s2idle quirk list
+Date: Sat, 21 Nov 2026 13:52:07 +0100
+Message-ID: <20261121125207.12284-1-matteo.bulloni@mail.polimi.it>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -72,54 +97,44 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-3 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi David,
+From: Matteo Bulloni <matteo.bulloni.27@gmail.com>
 
-Thanks for your work.
+The ThinkPad T14s Gen 2 AMD is sold under two machine types, 20XF and
+20XG, but only 20XF is in the s2idle quirk list. On 20XG machines the
+Lenovo BIOS SMI handler runs during the NVMe D3->D0 transition, so every
+resume from s2idle stalls for about 10 seconds with a black screen.
 
-On Fri, 2026-11-20 at 19:33 -0800, David Cemin wrote:
-> The Yoga 9 2-in-1 16 reports the keyboard backlight level selected with
-> Fn+Space on the Fn key event GUID: 0x40 for off, 0x41 for low, 0x42 for
-> high, and 0x43 was seen once while cycling. The firmware changes the
-> backlight itself, so these events carry no action for the OS; add them
-> as KE_IGNORE entries so they stop being logged as unknown key codes.
->=20
-> Signed-off-by: David Cemin <dcemin@nvidia.com>
-> ---
->  drivers/platform/lenovo/wmi-fn-keys.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/platform/lenovo/wmi-fn-keys.c b/drivers/platform/len=
-ovo/wmi-fn-keys.c
-> index 330de9529a87..21d36e798ba5 100644
-> --- a/drivers/platform/lenovo/wmi-fn-keys.c
-> +++ b/drivers/platform/lenovo/wmi-fn-keys.c
-> @@ -108,6 +108,14 @@ static const struct key_entry lwmi_fn_keys_keymap[] =
-=3D {
->  =09{ KE_KEY,=090x2d | LWMI_FN_KEY, { KEY_SELECTIVE_SCREENSHOT } },
->  =09{ KE_KEY,=090x29 | LWMI_FN_KEY, { KEY_TOUCHPAD_TOGGLE } },
->  =09{ KE_KEY,=090x2a | LWMI_FN_KEY, { KEY_ROOT_MENU } },
-> +=09/*
-> +=09 * Keyboard backlight level after Fn+Space, handled by the firmware:
-> +=09 * 0x40 off, 0x41 low, 0x42 high
-> +=09 */
-> +=09{ KE_IGNORE,=090x40 | LWMI_FN_KEY },
-> +=09{ KE_IGNORE,=090x41 | LWMI_FN_KEY },
-> +=09{ KE_IGNORE,=090x42 | LWMI_FN_KEY },
-> +=09{ KE_IGNORE,=090x43 | LWMI_FN_KEY },
+Measured on a 20XGS08D00 (BIOS R1NET68W 1.38, Ryzen 7 PRO 5850U) with
+pm_print_times: every PCI endpoint's pci_pm_resume_noirq returned after
+~10.32 s, all finishing at the same moment. With the s2idle_bug_mmio
+workaround applied for 20XG, the same callbacks take 38-82 ms and the
+stall is gone.
 
-Could you please place all KE_IGNORE entries together? I.e., following
-0x03.
+Cc: stable@vger.kernel.org
+Signed-off-by: Matteo Bulloni <matteo.bulloni.27@gmail.com>
+---
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-With it fixed, the patch looks good to me:
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -56,6 +56,14 @@
+ 		}
+ 	},
+ 	{
++		.ident = "T14s Gen2 AMD",
++		.driver_data = &quirk_s2idle_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20XG"),
++		}
++	},
++	{
+ 		.ident = "X13 Gen2 AMD",
+ 		.driver_data = &quirk_s2idle_spurious_8042,
+ 		.matches = {
+-- 
+2.43.0
 
-Reviewed-by: Rong Zhang <i@rong.moe>
-
-Thanks,
-Rong
-
-> =20
->  =09/*
->  =09 * WMI switches
