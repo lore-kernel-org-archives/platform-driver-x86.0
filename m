@@ -1,20 +1,20 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.43.0
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.25
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795219664;
-	b=15sAVllkEMyurZKb/VYF0qfWXFv30GAPnSWg8veLfQdqqFhSr4/amPWTAXYn+nVI1ahL
-	 E0Rrtiah3XkuhPjwsu6B4sVPhAx5qztdZvFOWhAcSVfJp+961ZERZM0eLg2WV61Z6tm39
-	 zgZ5KEKcVVvEj8/sHeMIq0Ut/hcuv4ylqDg8aF8UuEaVKeUOTIMU3ED/KRu/Spr6M7nES
-	 MxB+kW7gL8V+1k2+fZcps2TNDgZwFkK9r99zQpYB2wKB//uOKfiAyrOONbyyFCB13Rucn
-	 AJvD1LF7MglKx/QktTfaa/5V38EOklHi4NtcHkiJ2EVWa6MipC0FKPuEzrL8hXWe4jA==
+	t=1795219686;
+	b=IJk73AjAZafRQWf72MlBP+OP8zMqBzGESC3C553SMVQWwwquudVw3ZzNo+nLPurN8+D0
+	 GDWCvtSiACg3kO8hGnMUYo7Gv6Av0bfYRG7sB3+Gg96JuqQzHp31o+wS/i7g842DCQOze
+	 YY03BGrUba0w8kw86aEwQ7Ky/LDF/I4mUos+On7bE6wl7OeTjfspiY8b17N+BvglRzNVu
+	 vYbYAKjR1Znme9NbrCwo/DGDol3Y1EHZ2YslGivtoJINJQxL1tXbFEZ//YXdU92chIFbO
+	 T4NY1Hqleh1GnKMPJufsYIFOSeL4BIXBia881F0zoaWyTtwOx++/l5wGNlKIahNO8nw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795219664;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795219686;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:Content-Transfer-Encoding:Content-Type:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
 	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
 	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
 	 X-MS-Exchange-CrossTenant-Network-Message-Id:
@@ -24,54 +24,54 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=PqiPqb4oTcJedb9oVCQx37PK5UqQ/VLv5I577QLTMI0=;
-	b=15yLuNQl22zg4X43Ceb3wEz42d0vXUKMd3Z+LZseSYILb7ey9FEbmoc53tcHjyc+SRO+
-	 B85BN9UjCiZUW5lKjDhUhiCMLZ0IJ9iNMiEuMZT/RBoG1lEulLO4pUCLcxWou2G5yAH5G
-	 qQnFllnUqe8MW0dwFznOMqT1cBWPnOxojaNBDzZ1KSa8Cr/Sxz0xf4wjEaz1ihAAYfIwc
-	 xipaCu6uoGYTldgJ5NTL9//hX6YfrdHbvwT5VBaDJNTXCHC52NEkI0SKA9JpNPSvKiUMp
-	 ZCTRIRnA6FzzgRR7aQ5uHfTptZbe0bl5tPTGY6lwMRWPiKZewgpOe2uE6Sfw4OwwOvw==
+	bh=EjdmTJCyqE7i+oeTR0PBenIaEGPmZWEAi9Nx+/OK6OU=;
+	b=b3LH0O1PGECZni9qIBJwGvoWQIrAigg3bitGLdRwoTT4wAJeY8OANT17so427YyWGsq6
+	 b1BEWRhDuN/zxoFvygyFB8lhxoCXfnzlYUSgx8Q7TVGlzUsTFy5NzayO2EoGddijMo6RS
+	 fD+ANTUgH5w+cwbQ44ACGCaEYMgxwRnk1fVZ/Onb0Pv5ljudkyMO3nP1ycBIh8rsHdRlY
+	 lW0huWSxrhr5iO/gW9sDupPgq56V2HwFwjfxxbnoVTUqK+ECXyrxCImX4DpBb5xRdXDYR
+	 v/MoN7/fvsx57BJ7fdMRxhBtI9Qkhvo80wspkTSPYuhQVtpijGQt9BX/kYL5O+UD6zA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=nvidia.com;
 	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b="ENr/VQq6";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.43.0
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012000.outbound.protection.outlook.com [52.101.43.0])
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=AKleOnsB;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.25
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011025.outbound.protection.outlook.com [40.107.208.25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7FC606A695;
-	Sat, 21 Nov 2026 00:07:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7B7FC606A695
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FBA606A6A1;
+	Sat, 21 Nov 2026 00:08:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14FBA606A6A1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=ENr/VQq6
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=AKleOnsB
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rvVRnrt4ESbYHG7ZUdlQS2JkUtAS4LoKYCcWjXtSXq5Lz18kcy4VY73G9YZPZdcQD4oYhFNd/p+TqFhAEexLkT5rq7plk5yLxiBJ4Mxq5VPtfeOMy9Kjl2JmglzF5tI3r6+QgOkQerdQYAI9EpGCPzqCSH7aSJs2w1SrpllKxrVhOitN7o5iq4CPrNVsb47piR5Qd3qjfndeMkcrgyxGYdRs1eQS6DljROedaE5DgGAD/5Z7kpLfha7Bc69OW15gCGiba4mf9dQHRgspx+P6XlW1L1QBC5XhdRBBxjAdCnCsnZPfLVpbwxYCwmxoOpK6W1gMZDO+vx8kHvpuREImoA==
+ b=HeVvWtiGptQZfgVI/E+L/7+cuMtDsnreu13dbNrRh3iQoF1k0Ttt44vAWfYWtYfKD17SbNTGwR/3YqRkyL+RMVBO4BFbk339EoCj3/9kQklR3DePTPNFgEW6hr2WoscFvXYfLSjSIDVKeqao+FsZojRAwusWc29k/LPkyBz17q1qNTdgwGhs8YTRpGRWBDcaqjV8mOzMhxspC2gEvS65vkM8XpuTFtOZHqWcIuiJzLluq6CRXSuIrnHEGOGGVg3+1uk8SUVJ3FSVq8sdFfUpXQdVEzsmpOjqqC9pRivUDOZcLcFrWBizgoupbI8s6qT9k7VasZbSn7alpNfKnTUPlQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PqiPqb4oTcJedb9oVCQx37PK5UqQ/VLv5I577QLTMI0=;
- b=dH8GqxlfCk0+5yjKAutOrjQPQaQUplg+FyGSBTiZAy476SCu6iuJOZ5BbSjsOYvrAJlTqxlA4qPrIWIbJlS5XN04p12ZcFlQWzU3VhCFkA4oHnF52WgmtgVW8di4vM8Wo4Fgk3RsIlYT+JS43BbZlRli2HdbjP0erLsv/JaCAdJSWHsOwIGKROD8EJD2GObllTO5dKm1nyjotnfd8MqINpypR9/YCHRE6bHOY2HHNxO24Cn4I+6Uq21BgVOKxo9v0AZ5kOQTDMVkXKOX3QGnu3/1cxsn5ugpWfvh4SycoEDCls9coVoLN2Y7SEPh3PTjkWQWjQBTUyVcksR2e22xsw==
+ bh=EjdmTJCyqE7i+oeTR0PBenIaEGPmZWEAi9Nx+/OK6OU=;
+ b=og7r8ToBJkqpDdg/jVXsn8Wxk4Ux5BhyJUX8XTL/dCeIKdvzxXQBtPN52bUvNSXwTNNUJWw88dF5xgc4wd4ArfcPdZOPF/KoKkbe+8aFeI6hEShk9dL1TpAwT8uB5IjHsZyRXpfG1A3PodOhMU1EZ8uzo10gncYNQ6AO0urWQ4iYweadOpdJrQIxwlbgn3NN1KV/DtQQmd8Ld/2guVnyPenfNtiYjcRhUNvX6gcwZEsfLuHYJdGpnB8ewMTCtMFhzI1IVf1uOJO+P0EnEq3rLQzrvkKGd7D5oIHebUA7MBJetn+HO+wpY0ZSY1AOQ0MriliSKjCA7Ogsm1ghJsuJ2A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PqiPqb4oTcJedb9oVCQx37PK5UqQ/VLv5I577QLTMI0=;
- b=ENr/VQq6UUvJJq8OjsEx3aL1lFngmxx81jBBkLsF6VbPvOIhlrEg5RGmawJKq4C/6nEpYGoa9bvO64IXSe4ZtpLHtYwOIaQyBZiS6wXnsOTQkxYDd+KblY4Fd61ZWm5l+uzmUi/G8Hj+gJ4baO73nM/NZP8FTLWum96LZpZWLKOBiXB9/9qce0j5sMNtOOdgc9lF+eNUCLy3rp4eQBbS3m5pv+MiOTqiJBm5zjCMaZ1QfEt0nRw9h3/qEwA5e30Ua9BIm8lvkbf5NKlvtqLbL5dVyUHffTqZTMvfP93Ec1IpRQDQDduFqQeVONpsQUoc7BJICCeH0G1js2IqfBimTg==
+ bh=EjdmTJCyqE7i+oeTR0PBenIaEGPmZWEAi9Nx+/OK6OU=;
+ b=AKleOnsBDy/HukX4eSWsnYtgmYnde3bJem8AvaANfBmG5i+kqeADWGFzjqTem+bCebyKDy6/d4JW1CzSwK1J8W/oJa/f/KMoW+IX0Xw9DiU6eiUIti/znnWfak3T8JMGRDLMe1UjODpJm9uMgHP75Zvh3QHadt8H/jS5L079uVS9WSAj5i8k6lyroLOAdY/MPU1r5nSNDLDYw/mqvb7SYkm6/4FTy6tNb+qjrXuvo688eTuFzC/kQTDl+Tm+W0FPxA/ZgnAuZk1akIv/X/tMr29rL1tQjj4+nSV+eq5JiL7CdEmSpCR/GhIKFFMfZD7goahx+hZObGd5WBCwjsmmYw==
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from MN0PR12MB5786.namprd12.prod.outlook.com (2603:10b6:208:375::13)
  by SA0PR12MB4446.namprd12.prod.outlook.com (2603:10b6:806:71::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Sat, 21 Nov
- 2026 00:07:40 +0000
+ 2026 00:07:46 +0000
 Received: from MN0PR12MB5786.namprd12.prod.outlook.com
  ([fe80::ae61:c9b4:847b:4854]) by MN0PR12MB5786.namprd12.prod.outlook.com
  ([fe80::ae61:c9b4:847b:4854%5]) with mapi id 15.21.0639.011; Sat, 21 Nov 2026
- 00:07:39 +0000
+ 00:07:46 +0000
 From: Brian Mak <bmak@nvidia.com>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -90,12 +90,14 @@ Cc: Kurt Borja <kuurtb@gmail.com>,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Brian Mak <bmak@nvidia.com>
-Subject: [PATCH 0/8] platform: dell: Move out of x86 and support Dell XPS 16 Creator Edition
-Date: Fri, 20 Nov 2026 16:05:46 -0800
-Message-ID: <20261121000556.173028-1-bmak@nvidia.com>
+Subject: [PATCH 2/8] platform: dell: Move out of x86 directory
+Date: Fri, 20 Nov 2026 16:05:48 -0800
+Message-ID: <20261121000556.173028-3-bmak@nvidia.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261121000556.173028-1-bmak@nvidia.com>
+References: <20261121000556.173028-1-bmak@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: MW4PR04CA0058.namprd04.prod.outlook.com
  (2603:10b6:303:6a::33) To MN0PR12MB5786.namprd12.prod.outlook.com
  (2603:10b6:208:375::13)
@@ -110,138 +112,84 @@ Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: MN0PR12MB5786:EE_|SA0PR12MB4446:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02df6193-a968-46d5-002e-08df476374cc
+X-MS-Office365-Filtering-Correlation-Id: 4ca53bf5-3de6-4eab-5da1-08df4763789a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|23010399003|366016|7416014|376014|18002099003|6133799003|261009223027099003|261021121427099003|5023799004|11063799006|56012099006|261028144727099003|261026140227099003|261021123027099003|261022105027099003|261026121527099003|261102130727099003|10067099003|261102123227099003;
+	BCL:0;ARA:13230040|1800799024|23010399003|366016|7416014|376014|18002099003|6133799003|22082099003|3023799007|261009223027099003|261021121427099003|11063799006|261021135927099003|56012099006|261022075727099003|261028144727099003|261026140227099003|261021123027099003|261022105027099003|261026121527099003|10067099003|261102123227099003;
 X-Microsoft-Antispam-Message-Info:
-	qXezYDiA5ApdurI6vca701TQn4QDPSa07fG+ceFtFD3rjQdKEhnylQzp5Tb4T+OqylM4kIQ2j9BE29tizgdNn7mfPtnG4Cpv4fLNeh76wq9YJt/2AZgcrNGVyXtG8ysAOSZIvVNMvCrm3jZxi2KamKEENDr5xQgRvnxffSfxaH8AIHVbnGiDP76hD3bcXZdEL5pI/wlFDqfzMcHPmSy4SM1j+yAdPH6ZwKNeP219YHOenAgYYGejrfFoPzd/qcWzW+xfxz8WCyOvmByVqVhhjBK6jfKMsciAMXu+Y97L5DVvNyNanRanFx6Cy5Mlc3E9NV4ZRbz43eKTv+9/wZdeOj7g2JTRT55n+UVQOkXYLmV5evvlcQj+KBh9uWKqxv+nSVfARhcbNBY+kxRc8eynSNo30y3XdQ9rNkOinIiZzomiS1N9/ljBnHfOByf2VgMTZO/Q8ykclqDCxwIVcUqYEeTLJ6OlpL87zLUNBJ0tbzb2hfXN/s8zZH7xPBii/qUt2vVXmV29+oYD4sjA72pEu75vEAI+zzqWJdFV5eGQgw2Bnz3qiVrDF+o7A7wLz6N866bKZuTDU2+nH0YAb+Ywg9TeTPeMF4dWY3jjAD+79bKHUj68ZdC2cNyJA1TdSXXXKtHkqOgH8BDz21pbBfjgeud5kRXN27V917LhxrmfoJU=
+	Z+s0pqod3qqJnKnNPe+MjH0oqC62kc3/rYsMNZw3A58npr9tM6LyW59nFrY1P9X//ik9HiQia1jMCjM0/4JsqZKTiIX6gpRPZXSl1tsWTDlOd/194J4LU4sri4cYws79vvCxxvrTKqCwswSzO8uY+u7Q6DNLNp9mSOejhzlA1pQVbPH7PrGmu1AMwI+wwI90YFXFsXJHn8EFdmcn2qAjObnI+Y6sADI6kNsYrdGgy1OFYrZ3jqltSRNYIphlkCDRP1j2Y2Am0KE4XWMxuIhEn9PkgU8k8UHz5n0Zyx26bhcSATj0RsvlGOOS5AEfIvzrm9qCSHNi4hdGz7CzZnY/PaPxvkdCLEYZaZlivKdtEfwJZwCllVyF7JShIWt2xdv3wIe5DFPXETvsDHKHBS79OsUrlJm683IsJN9jNRL1I3mFwGa4h+Xb1M1Kd6yf3mtYTnqpZARnKpl8SP/Bcp3QespGtpP+oXRrsMVra0X10hiESyjVkzBA37n5IHfy6f23pMZXDy7kR0FNdMfTkPQgt2G6teTR6mgHdW1HYvEZ6mpgxU1Egkr2bL0597FjBdAKuCN5Q32CLu+RKRtnCU571QvyKWD5swXWpe36hy9JnDUUee0SjtuAwfIMfZdONBM0Dn/1y8RaVEujmDXEEm+utKK1AvgOguv2NHVcmjpW5VE=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5786.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(7416014)(376014)(18002099003)(6133799003)(261009223027099003)(261021121427099003)(5023799004)(11063799006)(56012099006)(261028144727099003)(261026140227099003)(261021123027099003)(261022105027099003)(261026121527099003)(261102130727099003)(10067099003)(261102123227099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5786.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(7416014)(376014)(18002099003)(6133799003)(22082099003)(3023799007)(261009223027099003)(261021121427099003)(11063799006)(261021135927099003)(56012099006)(261022075727099003)(261028144727099003)(261026140227099003)(261021123027099003)(261022105027099003)(261026121527099003)(10067099003)(261102123227099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9gC+shtPBwm+C27SyJov0ctr2iprxEnz3aRZyKQTdegiZNU53LgyeJiSuruO?=
- =?us-ascii?Q?fcGN4o0IcIkgQEMYT0pw4ltA/JaOCkVjJ+l2AM6fCFY+DXff3t5uJ+cjhDvL?=
- =?us-ascii?Q?4Fk6fSQS3ND2q3CmtuiR039OgJ2KppRPUZk0LEC6tokSvr7EGxHSvncp/Qr1?=
- =?us-ascii?Q?FLF4KXji9LlcgRU6dU3DDmkVAfivpEHJgdxhU8WNtkeJ64k7LT9eCHR2neaT?=
- =?us-ascii?Q?mQoEuM911PtTn92y8S+T0HqeAv7ZOAAHe5cUSvGXfjNWfIyYC9q+lzOiBCui?=
- =?us-ascii?Q?eMsDMdy0SbJth35ilYDmQr09cFqMf8+2MgWVttK7RrbFoMvaCvT9g6jqnyiV?=
- =?us-ascii?Q?E0siKcsAAIa9qYMQW2mrISP3ebcMQxTpmd0Q2BbvaO7Amz+yV8x4wheLnugS?=
- =?us-ascii?Q?22n9xPMBoHAzXrtI48TShWKpF1j8CnV2oMWmDMUamMMaAY6qz4yINNzyGbId?=
- =?us-ascii?Q?NekUcvsDCIp+deCs9Y6uux9PPyQR7tsCsdu+x8XWyzdwZRu5XSIUELCek2Z7?=
- =?us-ascii?Q?kX9/A2ISWOA4ueyFC6rWM1XkmK/8iVpP+9yX6CkLiaUN/SEumHD9GzcIxh4j?=
- =?us-ascii?Q?JWdAP3CtMtI4BjILkLzrcJVNPfpiCRET+afig/4rP0/+mxJjO/kR+YxI7vx3?=
- =?us-ascii?Q?tekYHKc8MayRnMk2OOWIBIk3MhL+nIST8R1rZyulS7gb1AUn1QNooP5u/KuA?=
- =?us-ascii?Q?ei3f0CPGMfBitynj35y9a0ss4YDyim4S+rRnKJCbKSQ7/9NLOaiRPDkB51gK?=
- =?us-ascii?Q?MjIcNelTd4fuKEgtTQ9MbjkoPouMhfGoRyVzPKvuNPKp/HPJiRPGG+0eGsOy?=
- =?us-ascii?Q?7vLBq/yoqONZ04//6Cy+v9Nh5LdnNFL5x+sDOppBueM2PXUQCYktGJLwakk/?=
- =?us-ascii?Q?iK9bLolAo27eao/l1NAuMwKNlkj7t/6RrsmNQszFMWSzsOylaKA0UNY37Koj?=
- =?us-ascii?Q?kTpirECCUnHPH/2u0SVcWyO/04s8hZvLbWlWM6iW87m2ZGBKr2GrxhU26Ndn?=
- =?us-ascii?Q?+2dQfOiOnaO6+b+TsPbH1GpAZHZXAlCMwlEmhv25Ob7iPt6yyznDWYiGPjdM?=
- =?us-ascii?Q?MzGR6KM9rLlG/i0xEgmvKxqILe+E2ENd8gZVX58xqwAHhDuitxl3YyUhpXbJ?=
- =?us-ascii?Q?kyZtWH90PRX392PnvQrBTm0ECWiEopmiMReVH4fCLOmzxLjrWgrwXrBBLfwU?=
- =?us-ascii?Q?ryYdncX+4hM7xzcXV2c1z4FIBwlzjwrOUi+wPQf33YPFWNmiwFIxCGJ2RDIP?=
- =?us-ascii?Q?hFK1je87+WdvVqwWn1BYE6BEgEIdcLo743QXmSCnfJ07pKu4BubCnBwXIpQX?=
- =?us-ascii?Q?S0u8LvS+KCr2HQ+SzNiYo/W+U+s1phn4MA5ArDIVJGm6joXPd7iJt8uVU5hG?=
- =?us-ascii?Q?a+TjlmyLcyyjc/Qwcb5I7GP1QdRsM5wUaNFhqVwCVkFrm6oiSfCyCL7DwHep?=
- =?us-ascii?Q?m2qwbgbIXGpZrU9Wky9S8h5FujMnxoUDlzfkxzojbrVZMsTBDeS7ioLjI5wi?=
- =?us-ascii?Q?YjUsCm61Am1CqvRtilH9jsFIayfltfalBy0AWnpdqDny2kxifkzlbHdUDqpr?=
- =?us-ascii?Q?1SOTsXEI+e8pgss2POBjq2vnpB6BvxtD1slor6PqvZSmbTZnhipe2bgcUF7y?=
- =?us-ascii?Q?3UqL1VXxw/wCutPybVmhiMNh+lmuwdrcewKH5EU5Y8cpLs4PdyYy6aB2XEvS?=
- =?us-ascii?Q?4llYXERgVYlrf1n3JE2YkWYaWhO2Pf7xXO1IT7nAdx93Kp0u8wkmdKiHzJVB?=
- =?us-ascii?Q?iilX3Yru+A=3D=3D?=
+	=?utf-8?B?MmovQmQ3cWRzb0RISzlvaDhEOTJ4bFpxdnpFMGtXc21BVWh2eTZhbitVVVd4?=
+ =?utf-8?B?aVNGTmZ4WWdvN1RYRG1iMTBoNmdURE90TytLM1I0QUFiWmxkcXlhTmZ1SnhJ?=
+ =?utf-8?B?WnRIU3JzZm9DUnVNdWRkMmRubnZ0NVFsbGNKVEkwbWRwbjF1ekQ4WVRlRi9L?=
+ =?utf-8?B?c2g3OFhlSmNKenVRY1pIbm1KblRBNm5JMEF2aE1nS1diSTNmM21qTHVjOWth?=
+ =?utf-8?B?Rjl1c2VtZHRDcDRKZklIS0ROVW5lY1JLK0ZHZUdSVCsvTFpwSnQvVlJmWGth?=
+ =?utf-8?B?eVBUVk1HNWFTdGJvdGdCblBqSEpXMjA2WE14UnFseGx0djNxNGE2a0FlWmdV?=
+ =?utf-8?B?ZjFGeHAzRjBpTVM4YXdHcWN4TG1MaFVWR0lBanJtQlJvWWRjWC90Sml4WDdv?=
+ =?utf-8?B?VGFmMFBucDhYcUNWVFJEQVVwWjRlcWx5dFhBbTdLV3BMaWpFTENxOWJlZkJQ?=
+ =?utf-8?B?TnE2R1BsbkZKSjF5TWlYeEQxNVE3ME96K0lURWx6emhmaWM0b3hzVDFRSFdO?=
+ =?utf-8?B?Q1Z3VGlPS1dLbUFBTEgydzdKdk0zWFFSdG00dFQ5NExENWdlbnZMakFjKzJj?=
+ =?utf-8?B?d0hweUR4cjRMT2dKcUl4aDVYU3RiWmduZGZWUnpOWTYyc0c4OHhoQ1JzcFMw?=
+ =?utf-8?B?TlpwTzBnQWVyaGRZbVFRN3ZLWWNOanBGOEE1MC9aWkV2WTRSbm9temFuWGda?=
+ =?utf-8?B?TFVKS1lPTGNrdHNOZHRuQ2czeTFHVVRGVFp4c3Y2dVlLU1BaMldrMENzc1Iy?=
+ =?utf-8?B?dHpNQklwQ05LNVlLS0dHT0UzZjc4ZEdkaVZMSUVxK2twY1V1ZjR4YjdSNmZa?=
+ =?utf-8?B?aUZuUUxNd3UycjR2a3h3Nm9uSTJPYXVRZzJEbFU3S3d3Q0EzRy94L0pOMUhG?=
+ =?utf-8?B?T3VJYlJvaXYzZmtzRHlZNVJGdjRTNlJQMjk0TXc0LzNRMU52NGVHSzg0Q3Uw?=
+ =?utf-8?B?OUVSZC9lWEVzUEZSelgyUWJ6M1Z5amxFQ0N4KzQ3RXFmZmE5eGN5UktNanpG?=
+ =?utf-8?B?cTQ0WXZyRWIwcGFiNkp3NGcxSGpsMkhldW9lVTg1bjFiUkEyUy9mdS9zZko2?=
+ =?utf-8?B?VVFFNE13NlFzVlRQcHhMMmI0MnVtRXpyNk9UNVNWWlM5NnhWa3VTU084b1R0?=
+ =?utf-8?B?d3ZDUC9CWXBHYzc4QnU2bjFYOU12ODAxYUpQRy9ZcnpPZlZHR2JMMkZGZUU5?=
+ =?utf-8?B?YmVNNXVaUEpYbUNaT0R6TXVPcDdyMm55NDlHaHVrYmhBTXJzZ3ZCUVdtQkZi?=
+ =?utf-8?B?QzlzdW5tRnluRVRPcGx1RVRqTTR2NXE0UFNob2hjMWV5NmtsMXdOKzc2YXRP?=
+ =?utf-8?B?Q04yUzlDbnFnWVk2d2MxOXlDSzUvY1pxbERUVGlxUmdOMkZLUWRtSnRQazZ0?=
+ =?utf-8?B?VWpPNk0xYTlYenhWdjRMVEtOV05VY1RFT0pkWEZTUkZadEVQUTNBNWVrbVpk?=
+ =?utf-8?B?bnI4SFNPRENLOS9wTm1aSjFSM2FaNG9VRHBhaFJSNEM2U2RrTVIvaktPQXpp?=
+ =?utf-8?B?U2VTUW10SS9nNk12K0ZIaEY2RExpdTc1dklBK1JRN2MweVc0cTBGcDZaUU9Z?=
+ =?utf-8?B?amFQaEJkamNSOERQSzVUdkVlSkMrdStNVTA3QUxHS21WWHgybkJzNklVakJ1?=
+ =?utf-8?B?cmVCcVpCakVMd2FvRmEyT3N0dHpuOUNjazRVbitWeUNQWklsN0NSenBUTms3?=
+ =?utf-8?B?bURMaERoOUQzUVlCQ0h2YktiL3ZwVUdPdis2VFV1V0lNK1ZicS8rdlE3SWZL?=
+ =?utf-8?B?Y0tKdStWbWFMc3lJNjVzRTJFNjNSUWtCVHRFK3R2QTFoN1QvWk9xY3UzNk15?=
+ =?utf-8?B?eDI3VWRPREJxUXJIZ1dDcW9IRlhXS1I0NURUU3RvY1pOK0k3TXFVWENwK2kw?=
+ =?utf-8?B?VmVtUUpmWURXQit1TWxvNFNIeFhTRGQrSXF2MVhTS0JHK2QxRWhRNjYraGFX?=
+ =?utf-8?B?TjR2dmJwdXhXamxkcVBtN0I3OExyMmc3d0kxU2xDRE12bFpFd1QzTGppbGNL?=
+ =?utf-8?B?Um44UTRmOFlGaFU5SjRCUE1OQjM2bUs5eHQ4SVhCUWxyVDVleWZKcUd5ZmFv?=
+ =?utf-8?B?Um1uRnpmQTBYV3VzYU1RZjBHejBRM0JaY3hDd3RaWUwrWUxvcENhMFdad2VE?=
+ =?utf-8?B?TlZ6d1o2N0FMSmFDNTBuSFMzYVdQU3FxMFRoNVpoc3QvTE1YWHhJUGxnaWVx?=
+ =?utf-8?B?Y2c1SDZ1aWVmdGpIV2ZJbytCSlI3bTJrM0pCdnIvZEh3NFlDdWxmdjFYbzFQ?=
+ =?utf-8?B?bnkyWGpYVFVsQi9QY2E2RC9YUmZRTktnSmZ5M0lob0ZxM3N2UGZyZ1Y0Vjlu?=
+ =?utf-8?B?K3U0WXdxRUlYOEFmMk5CVjM5UWdRU2xDbUxrWk5WNnpFSkY1TW5Ydz09?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02df6193-a968-46d5-002e-08df476374cc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ca53bf5-3de6-4eab-5da1-08df4763789a
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5786.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2026 00:07:39.8578
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2026 00:07:46.2390
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lSyZ49LilXqRlN23585uKbugrsAqYbv7g5w9wGWJxWJiTzNFXTohjcIIR9Y8+K/i
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q6qfN7sUi3jxSv+5DN4sGYs6njFSimWmPIIffLN3jLKq8UqJkpsc9lV0nEsFjR6/
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4446
 
-The Dell XPS 16 Creator Edition (DX16263) is an ARM64 laptop based on
-NVIDIA RTX Spark. Its firmware exposes the same ACPI-WMI and SMBIOS
-interfaces as Dell's x86 laptops, so existing Dell platform drivers
-apply to it as-is. Today, they live under drivers/platform/x86/ and are
-gated on X86_PLATFORM_DEVICES, so they can't be enabled on ARM64.
+With the introduction of the Dell XPS 16 Creator Edition, Dell platform
+drivers are no longer just applicable to x86, but also ARM64. Move Dell
+platform drivers out of the x86 directory, so they can be reused for
+ARM64.
 
-This series moves the Dell drivers to drivers/platform/dell/, makes the
-ones that work there available on ARM64, and works around some firmware
-quirks found on the Dell XPS 16 Creator Edition.
+Rename CONFIG_X86_PLATFORM_DRIVERS_DELL to CONFIG_DELL_PLATFORMS, and
+add a transitional config.
 
-Patch 1 makes DELL_UART_BACKLIGHT depend on X86 before the move. The
-driver relies on the DELL0501 handling in
-acpi_quirk_skip_serdev_enumeration(), which only exists in
-drivers/acpi/x86/utils.c, and on drivers/platform/x86/serdev_helpers.h.
-Without that quirk, no serdev controller or platform device is created,
-so the driver wouldn't work on other architectures.
-
-Patches 2-3 move the drivers to drivers/platform/dell/, rename
-X86_PLATFORM_DRIVERS_DELL to DELL_PLATFORMS (keeping the old symbol as a
-transitional config so existing .configs carry over), and add a
-MAINTAINERS entry for the new directory. The per-driver MAINTAINERS
-entries are updated to the new paths. DCDBAS, DELL_RBU and
-DELL_SMBIOS_SMM keep their X86 dependency.
-
-Patch 4 makes DELL_LAPTOP's SERIO_I8042 dependency optional, as there is
-a fallback stub, which returns -ENODEV.
-
-Patch 5 fixes dell-smbios-wmi probe on the XPS 16 Creator Edition. The
-driver looks for the misc BIOS flags (SMBIOS type 0xB1) only at the
-hardcoded handle 0xB100, but firmware numbers it differently. Handle
-0xB100 is still used whenever it exists. Otherwise, the driver falls
-back to the only type 0xB1 structure, if there is exactly one.
-
-Patches 6-8 handle a firmware problem on the same machine: the SMBIOS
-calling interface completes every request to the Dell-proprietary
-interface with all zeroes, even for requests that should fail. As a
-result, dell-laptop reports bogus battery charge modes and thresholds
-and registers mic mute/mute LEDs that do nothing, and dell-pc fails with
-"platform_profile probe failed". Patch 6 adds a DMI quirk list and
-exports dell_smbios_calls_functional(). Patches 7-8 make dell-laptop and
-dell-pc refuse to load on affected platforms. dell-smbios itself still
-loads, since dell-wmi depends on it.
-
-Testing done:
-- Build-tested x86-64 and arm64 with all Dell platform drivers enabled.
-- Runtime-tested on Dell XPS 16 Creator Edition. Mic mute key is
-  working.
-
-Need help testing:
-- x86 Dell laptops/desktops for regressions.
-
-Outstanding issues (outside of this series):
-- When spamming the keyboard backlight key, then pressing the mic mute
-  key, the mic mute event is spammed. This is a multi-part issue between
-  the EC and DSDT. I have a DSDT patch to fix this. I will be working
-  with Dell to get it resolved.
-- When the dell-wmi driver is not loaded and the keyboard backlight
-  button is spammed, it will eventually stop working and FF-A
-  notifications stop firing. This is likely an issue with the EC's event
-  queue filling up and not notifying anymore after being full (since
-  there's no consumers). I will be working with Dell to get this
-  resolved too.
-
-Brian Mak (8):
-  platform/x86: dell: Make uart-backlight x86 only
-  platform: dell: Move out of x86 directory
-  MAINTAINERS: Add Dell platform drivers entry
-  platform: dell: Allow DELL_LAPTOP to be arch-independent
-  platform: dell: smbios-wmi: Fix probe on RTX Spark
-  platform: dell: smbios: Add quirk for non-functional calling interface
-  platform: dell: laptop: Don't load if SMBIOS calls are non-functional
-  platform: dell: pc: Don't load if SMBIOS calls are non-functional
-
- .../admin-guide/laptops/alienware-wmi.rst     |  4 +-
- MAINTAINERS                                   | 36 ++++++++++--------
- drivers/platform/Kconfig                      |  2 +
+Signed-off-by: Brian Mak <bmak@nvidia.com>
+---
+ .../admin-guide/laptops/alienware-wmi.rst     |  4 +--
+ MAINTAINERS                                   | 30 +++++++++----------
+ drivers/platform/Kconfig                      |  2 ++
  drivers/platform/Makefile                     |  1 +
- drivers/platform/{x86 => }/dell/Kconfig       | 21 +++++++----
- drivers/platform/{x86 => }/dell/Makefile      |  4 +-
+ drivers/platform/{x86 => }/dell/Kconfig       | 18 +++++++----
+ drivers/platform/{x86 => }/dell/Makefile      |  4 +--
  .../{x86 => }/dell/alienware-wmi-base.c       |  0
  .../{x86 => }/dell/alienware-wmi-legacy.c     |  0
  .../{x86 => }/dell/alienware-wmi-wmax.c       |  0
@@ -249,15 +197,15 @@ Brian Mak (8):
  drivers/platform/{x86 => }/dell/dcdbas.c      |  0
  drivers/platform/{x86 => }/dell/dcdbas.h      |  0
  .../{x86 => }/dell/dell-dw5826e-reset.c       |  0
- drivers/platform/{x86 => }/dell/dell-laptop.c |  3 ++
+ drivers/platform/{x86 => }/dell/dell-laptop.c |  0
  .../platform/{x86 => }/dell/dell-lis3lv02d.c  |  0
- drivers/platform/{x86 => }/dell/dell-pc.c     |  3 ++
+ drivers/platform/{x86 => }/dell/dell-pc.c     |  0
  drivers/platform/{x86 => }/dell/dell-rbtn.c   |  0
  drivers/platform/{x86 => }/dell/dell-rbtn.h   |  0
- .../{x86 => }/dell/dell-smbios-base.c         | 22 +++++++++++
+ .../{x86 => }/dell/dell-smbios-base.c         |  0
  .../platform/{x86 => }/dell/dell-smbios-smm.c |  0
- .../platform/{x86 => }/dell/dell-smbios-wmi.c | 37 +++++++++++++++----
- drivers/platform/{x86 => }/dell/dell-smbios.h |  1 +
+ .../platform/{x86 => }/dell/dell-smbios-wmi.c |  0
+ drivers/platform/{x86 => }/dell/dell-smbios.h |  0
  .../{x86 => }/dell/dell-smo8800-ids.h         |  0
  .../platform/{x86 => }/dell/dell-smo8800.c    |  0
  .../{x86 => }/dell/dell-uart-backlight.c      |  2 +-
@@ -279,11 +227,11 @@ Brian Mak (8):
  .../dell/dell-wmi-sysman/string-attributes.c  |  0
  .../{x86 => }/dell/dell-wmi-sysman/sysman.c   |  0
  drivers/platform/{x86 => }/dell/dell_rbu.c    |  0
- drivers/platform/x86/Kconfig                  |  2 -
+ drivers/platform/x86/Kconfig                  |  2 --
  drivers/platform/x86/Makefile                 |  3 --
- .../x86/dell-uart-backlight-emulator/README   |  4 +-
- 46 files changed, 103 insertions(+), 42 deletions(-)
- rename drivers/platform/{x86 => }/dell/Kconfig (95%)
+ .../x86/dell-uart-backlight-emulator/README   |  4 +--
+ 46 files changed, 37 insertions(+), 33 deletions(-)
+ rename drivers/platform/{x86 => }/dell/Kconfig (96%)
  rename drivers/platform/{x86 => }/dell/Makefile (93%)
  rename drivers/platform/{x86 => }/dell/alienware-wmi-base.c (100%)
  rename drivers/platform/{x86 => }/dell/alienware-wmi-legacy.c (100%)
@@ -292,15 +240,15 @@ Brian Mak (8):
  rename drivers/platform/{x86 => }/dell/dcdbas.c (100%)
  rename drivers/platform/{x86 => }/dell/dcdbas.h (100%)
  rename drivers/platform/{x86 => }/dell/dell-dw5826e-reset.c (100%)
- rename drivers/platform/{x86 => }/dell/dell-laptop.c (99%)
+ rename drivers/platform/{x86 => }/dell/dell-laptop.c (100%)
  rename drivers/platform/{x86 => }/dell/dell-lis3lv02d.c (100%)
- rename drivers/platform/{x86 => }/dell/dell-pc.c (99%)
+ rename drivers/platform/{x86 => }/dell/dell-pc.c (100%)
  rename drivers/platform/{x86 => }/dell/dell-rbtn.c (100%)
  rename drivers/platform/{x86 => }/dell/dell-rbtn.h (100%)
- rename drivers/platform/{x86 => }/dell/dell-smbios-base.c (97%)
+ rename drivers/platform/{x86 => }/dell/dell-smbios-base.c (100%)
  rename drivers/platform/{x86 => }/dell/dell-smbios-smm.c (100%)
- rename drivers/platform/{x86 => }/dell/dell-smbios-wmi.c (90%)
- rename drivers/platform/{x86 => }/dell/dell-smbios.h (98%)
+ rename drivers/platform/{x86 => }/dell/dell-smbios-wmi.c (100%)
+ rename drivers/platform/{x86 => }/dell/dell-smbios.h (100%)
  rename drivers/platform/{x86 => }/dell/dell-smo8800-ids.h (100%)
  rename drivers/platform/{x86 => }/dell/dell-smo8800.c (100%)
  rename drivers/platform/{x86 => }/dell/dell-uart-backlight.c (99%)
@@ -323,8 +271,427 @@ Brian Mak (8):
  rename drivers/platform/{x86 => }/dell/dell-wmi-sysman/sysman.c (100%)
  rename drivers/platform/{x86 => }/dell/dell_rbu.c (100%)
 
-
-base-commit: d0f871bfb831705d9f55479f5b2b40f636ea7b16
+diff --git a/Documentation/admin-guide/laptops/alienware-wmi.rst b/Documentation/admin-guide/laptops/alienware-wmi.rst
+index e532c60db8e2..2156d46e4b74 100644
+--- a/Documentation/admin-guide/laptops/alienware-wmi.rst
++++ b/Documentation/admin-guide/laptops/alienware-wmi.rst
+@@ -40,8 +40,8 @@ parameters:
+ 
+ If the module loads successfully with these parameters, consider submitting a
+ patch adding your model to the ``awcc_dmi_table`` located in
+-``drivers/platform/x86/dell/alienware-wmi-wmax.c`` or contacting the maintainer
+-for further guidance.
++``drivers/platform/dell/alienware-wmi-wmax.c`` or contacting the maintainer for
++further guidance.
+ 
+ Status
+ ------
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3ed1991cac46..0de02594cd30 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -868,7 +868,7 @@ F:	Documentation/ABI/testing/debugfs-alienware-wmi
+ F:	Documentation/ABI/testing/sysfs-platform-alienware-wmi
+ F:	Documentation/admin-guide/laptops/alienware-wmi.rst
+ F:	Documentation/wmi/devices/alienware-wmi.rst
+-F:	drivers/platform/x86/dell/alienware-wmi*
++F:	drivers/platform/dell/alienware-wmi*
+ 
+ ALLEGRO DVT VIDEO IP CORE DRIVER
+ M:	Michael Tretter <m.tretter@pengutronix.de>
+@@ -7452,17 +7452,17 @@ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+ M:	Pali Rohár <pali@kernel.org>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-laptop.c
++F:	drivers/platform/dell/dell-laptop.c
+ 
+ DELL LAPTOP FREEFALL DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-smo8800.c
++F:	drivers/platform/dell/dell-smo8800.c
+ 
+ DELL LAPTOP RBTN DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-rbtn.*
++F:	drivers/platform/dell/dell-rbtn.*
+ 
+ DELL LAPTOP SMM DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+@@ -7475,32 +7475,32 @@ DELL PC DRIVER
+ M:	Lyndon Sanche <lsanche@lyndeno.ca>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-pc.c
++F:	drivers/platform/dell/dell-pc.c
+ 
+ DELL REMOTE BIOS UPDATE DRIVER
+ M:	Stuart Hayes <stuart.w.hayes@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell_rbu.c
++F:	drivers/platform/dell/dell_rbu.c
+ 
+ DELL SMBIOS DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+ L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-smbios.*
++F:	drivers/platform/dell/dell-smbios.*
+ 
+ DELL SMBIOS SMM DRIVER
+ L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-smbios-smm.c
++F:	drivers/platform/dell/dell-smbios-smm.c
+ 
+ DELL SMBIOS WMI DRIVER
+ L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-smbios-wmi.c
++F:	drivers/platform/dell/dell-smbios-wmi.c
+ F:	tools/wmi/dell-smbios-example.c
+ 
+ DELL SYSTEMS MANAGEMENT BASE DRIVER (dcdbas)
+@@ -7508,7 +7508,7 @@ M:	Stuart Hayes <stuart.w.hayes@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/userspace-api/dcdbas.rst
+-F:	drivers/platform/x86/dell/dcdbas.*
++F:	drivers/platform/dell/dcdbas.*
+ 
+ DELL WMI DDV DRIVER
+ M:	Armin Wolf <W_Armin@gmx.de>
+@@ -7516,24 +7516,24 @@ S:	Maintained
+ F:	Documentation/ABI/testing/debugfs-dell-wmi-ddv
+ F:	Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
+ F:	Documentation/wmi/devices/dell-wmi-ddv.rst
+-F:	drivers/platform/x86/dell/dell-wmi-ddv.c
++F:	drivers/platform/dell/dell-wmi-ddv.c
+ 
+ DELL WMI DESCRIPTOR DRIVER
+ L:	Dell.Client.Kernel@dell.com
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-wmi-descriptor.c
++F:	drivers/platform/dell/dell-wmi-descriptor.c
+ 
+ DELL WMI HARDWARE PRIVACY SUPPORT
+ L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-wmi-privacy.c
++F:	drivers/platform/dell/dell-wmi-privacy.c
+ 
+ DELL WMI NOTIFICATIONS DRIVER
+ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+ M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+-F:	drivers/platform/x86/dell/dell-wmi-base.c
++F:	drivers/platform/dell/dell-wmi-base.c
+ 
+ DELL WMI SYSMAN DRIVER
+ M:	Prasanth Ksr <prasanth.ksr@dell.com>
+@@ -7541,7 +7541,7 @@ L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
+-F:	drivers/platform/x86/dell/dell-wmi-sysman/
++F:	drivers/platform/dell/dell-wmi-sysman/
+ 
+ DELTA AHE-50DC FAN CONTROL MODULE DRIVER
+ M:	Zev Weiss <zev@bewilderbeest.net>
+diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+index 312788f249c9..92a395bbd9ab 100644
+--- a/drivers/platform/Kconfig
++++ b/drivers/platform/Kconfig
+@@ -15,6 +15,8 @@ source "drivers/platform/olpc/Kconfig"
+ 
+ source "drivers/platform/surface/Kconfig"
+ 
++source "drivers/platform/dell/Kconfig"
++
+ source "drivers/platform/x86/Kconfig"
+ 
+ source "drivers/platform/arm64/Kconfig"
+diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+index fa322e7f8716..385c33c94f24 100644
+--- a/drivers/platform/Makefile
++++ b/drivers/platform/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_GOLDFISH)		+= goldfish/
+ obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
+ obj-$(CONFIG_CZNIC_PLATFORMS)	+= cznic/
+ obj-$(CONFIG_SURFACE_PLATFORMS)	+= surface/
++obj-$(CONFIG_DELL_PLATFORMS)	+= dell/
+ obj-$(CONFIG_ARM64_PLATFORM_DEVICES)	+= arm64/
+ obj-$(CONFIG_BCM2835_VCHIQ)	+= raspberrypi/
+ obj-$(CONFIG_ACPI_WMI)		+= wmi/
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/dell/Kconfig
+similarity index 96%
+rename from drivers/platform/x86/dell/Kconfig
+rename to drivers/platform/dell/Kconfig
+index 4c28d4c008fc..7030f817b6af 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/dell/Kconfig
+@@ -1,18 +1,20 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+-# Dell X86 Platform Specific Drivers
++# Dell Platform Specific Drivers
+ #
+ 
+-menuconfig X86_PLATFORM_DRIVERS_DELL
+-	bool "Dell X86 Platform Specific Device Drivers"
++menuconfig DELL_PLATFORMS
++	bool "Dell Platform Specific Device Drivers"
++	depends on X86 || ARM64 || COMPILE_TEST
++	default X86_PLATFORM_DRIVERS_DELL
+ 	help
+ 	  Say Y here to get to see options for device drivers for various
+-	  Dell x86 platforms, including vendor-specific laptop extension drivers.
++	  Dell platforms, including vendor-specific laptop extension drivers.
+ 	  This option alone does not add any kernel code.
+ 
+ 	  If you say N, all options in this submenu will be skipped and disabled.
+ 
+-if X86_PLATFORM_DRIVERS_DELL
++if DELL_PLATFORMS
+ 
+ config ALIENWARE_WMI
+ 	tristate "Alienware Special feature control"
+@@ -282,4 +284,8 @@ config DELL_DW5826E_RESET
+ 	depends on ACPI
+ 	help
+ 	  This adds support for the Dell DW5826e PLDR reset via ACPI
+-endif # X86_PLATFORM_DRIVERS_DELL
++endif # DELL_PLATFORMS
++
++config X86_PLATFORM_DRIVERS_DELL
++	bool
++	transitional
+diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/dell/Makefile
+similarity index 93%
+rename from drivers/platform/x86/dell/Makefile
+rename to drivers/platform/dell/Makefile
+index 470874c6e6e6..115511258924 100644
+--- a/drivers/platform/x86/dell/Makefile
++++ b/drivers/platform/dell/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ #
+-# Makefile for linux/drivers/platform/x86/dell
+-# Dell x86 Platform-Specific Drivers
++# Makefile for linux/drivers/platform/dell
++# Dell Platform-Specific Drivers
+ #
+ 
+ obj-$(CONFIG_ALIENWARE_WMI)			+= alienware-wmi.o
+diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/dell/alienware-wmi-base.c
+similarity index 100%
+rename from drivers/platform/x86/dell/alienware-wmi-base.c
+rename to drivers/platform/dell/alienware-wmi-base.c
+diff --git a/drivers/platform/x86/dell/alienware-wmi-legacy.c b/drivers/platform/dell/alienware-wmi-legacy.c
+similarity index 100%
+rename from drivers/platform/x86/dell/alienware-wmi-legacy.c
+rename to drivers/platform/dell/alienware-wmi-legacy.c
+diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/dell/alienware-wmi-wmax.c
+similarity index 100%
+rename from drivers/platform/x86/dell/alienware-wmi-wmax.c
+rename to drivers/platform/dell/alienware-wmi-wmax.c
+diff --git a/drivers/platform/x86/dell/alienware-wmi.h b/drivers/platform/dell/alienware-wmi.h
+similarity index 100%
+rename from drivers/platform/x86/dell/alienware-wmi.h
+rename to drivers/platform/dell/alienware-wmi.h
+diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/dell/dcdbas.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dcdbas.c
+rename to drivers/platform/dell/dcdbas.c
+diff --git a/drivers/platform/x86/dell/dcdbas.h b/drivers/platform/dell/dcdbas.h
+similarity index 100%
+rename from drivers/platform/x86/dell/dcdbas.h
+rename to drivers/platform/dell/dcdbas.h
+diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/dell/dell-dw5826e-reset.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-dw5826e-reset.c
+rename to drivers/platform/dell/dell-dw5826e-reset.c
+diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/dell/dell-laptop.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-laptop.c
+rename to drivers/platform/dell/dell-laptop.c
+diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/dell/dell-lis3lv02d.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-lis3lv02d.c
+rename to drivers/platform/dell/dell-lis3lv02d.c
+diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/dell/dell-pc.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-pc.c
+rename to drivers/platform/dell/dell-pc.c
+diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/dell/dell-rbtn.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-rbtn.c
+rename to drivers/platform/dell/dell-rbtn.c
+diff --git a/drivers/platform/x86/dell/dell-rbtn.h b/drivers/platform/dell/dell-rbtn.h
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-rbtn.h
+rename to drivers/platform/dell/dell-rbtn.h
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/dell/dell-smbios-base.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-smbios-base.c
+rename to drivers/platform/dell/dell-smbios-base.c
+diff --git a/drivers/platform/x86/dell/dell-smbios-smm.c b/drivers/platform/dell/dell-smbios-smm.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-smbios-smm.c
+rename to drivers/platform/dell/dell-smbios-smm.c
+diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/dell/dell-smbios-wmi.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-smbios-wmi.c
+rename to drivers/platform/dell/dell-smbios-wmi.c
+diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/dell/dell-smbios.h
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-smbios.h
+rename to drivers/platform/dell/dell-smbios.h
+diff --git a/drivers/platform/x86/dell/dell-smo8800-ids.h b/drivers/platform/dell/dell-smo8800-ids.h
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-smo8800-ids.h
+rename to drivers/platform/dell/dell-smo8800-ids.h
+diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/dell/dell-smo8800.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-smo8800.c
+rename to drivers/platform/dell/dell-smo8800.c
+diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/dell/dell-uart-backlight.c
+similarity index 99%
+rename from drivers/platform/x86/dell/dell-uart-backlight.c
+rename to drivers/platform/dell/dell-uart-backlight.c
+index bbb270ae3697..da43e25200cd 100644
+--- a/drivers/platform/x86/dell/dell-uart-backlight.c
++++ b/drivers/platform/dell/dell-uart-backlight.c
+@@ -21,7 +21,7 @@
+ #include <linux/types.h>
+ #include <linux/wait.h>
+ #include <acpi/video.h>
+-#include "../serdev_helpers.h"
++#include "../x86/serdev_helpers.h"
+ 
+ /* The backlight controller must respond within 1 second */
+ #define DELL_BL_TIMEOUT		msecs_to_jiffies(1000)
+diff --git a/drivers/platform/x86/dell/dell-wmi-aio.c b/drivers/platform/dell/dell-wmi-aio.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-aio.c
+rename to drivers/platform/dell/dell-wmi-aio.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/dell/dell-wmi-base.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-base.c
+rename to drivers/platform/dell/dell-wmi-base.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/dell/dell-wmi-ddv.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-ddv.c
+rename to drivers/platform/dell/dell-wmi-ddv.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-descriptor.c b/drivers/platform/dell/dell-wmi-descriptor.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-descriptor.c
+rename to drivers/platform/dell/dell-wmi-descriptor.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-descriptor.h b/drivers/platform/dell/dell-wmi-descriptor.h
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-descriptor.h
+rename to drivers/platform/dell/dell-wmi-descriptor.h
+diff --git a/drivers/platform/x86/dell/dell-wmi-led.c b/drivers/platform/dell/dell-wmi-led.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-led.c
+rename to drivers/platform/dell/dell-wmi-led.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platform/dell/dell-wmi-privacy.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-privacy.c
+rename to drivers/platform/dell/dell-wmi-privacy.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.h b/drivers/platform/dell/dell-wmi-privacy.h
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-privacy.h
+rename to drivers/platform/dell/dell-wmi-privacy.h
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/Makefile b/drivers/platform/dell/dell-wmi-sysman/Makefile
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/Makefile
+rename to drivers/platform/dell/dell-wmi-sysman/Makefile
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c b/drivers/platform/dell/dell-wmi-sysman/biosattr-interface.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+rename to drivers/platform/dell/dell-wmi-sysman/biosattr-interface.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/dell/dell-wmi-sysman/dell-wmi-sysman.h
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+rename to drivers/platform/dell/dell-wmi-sysman/dell-wmi-sysman.h
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c b/drivers/platform/dell/dell-wmi-sysman/enum-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+rename to drivers/platform/dell/dell-wmi-sysman/enum-attributes.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c b/drivers/platform/dell/dell-wmi-sysman/int-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+rename to drivers/platform/dell/dell-wmi-sysman/int-attributes.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/dell/dell-wmi-sysman/passobj-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+rename to drivers/platform/dell/dell-wmi-sysman/passobj-attributes.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c b/drivers/platform/dell/dell-wmi-sysman/passwordattr-interface.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+rename to drivers/platform/dell/dell-wmi-sysman/passwordattr-interface.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c b/drivers/platform/dell/dell-wmi-sysman/string-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+rename to drivers/platform/dell/dell-wmi-sysman/string-attributes.c
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/dell/dell-wmi-sysman/sysman.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+rename to drivers/platform/dell/dell-wmi-sysman/sysman.c
+diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/dell/dell_rbu.c
+similarity index 100%
+rename from drivers/platform/x86/dell/dell_rbu.c
+rename to drivers/platform/dell/dell_rbu.c
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9ce384e0475e..42ffe63d0a39 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -392,8 +392,6 @@ config EEEPC_WMI
+ 	  If you have an ACPI-WMI compatible Eee PC laptop (>= 1000), say Y or M
+ 	  here.
+ 
+-source "drivers/platform/x86/dell/Kconfig"
+-
+ config AMILO_RFKILL
+ 	tristate "Fujitsu-Siemens Amilo rfkill support"
+ 	depends on RFKILL
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 229057234d00..3bb983a641ca 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -44,9 +44,6 @@ obj-$(CONFIG_AYANEO_EC)		+= ayaneo-ec.o
+ # Cisco/Meraki
+ obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
+ 
+-# Dell
+-obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
+-
+ # Fujitsu
+ obj-$(CONFIG_AMILO_RFKILL)	+= amilo-rfkill.o
+ obj-$(CONFIG_FUJITSU_LAPTOP)	+= fujitsu-laptop.o
+diff --git a/tools/arch/x86/dell-uart-backlight-emulator/README b/tools/arch/x86/dell-uart-backlight-emulator/README
+index c0d8e52046ee..d38d91abcf8c 100644
+--- a/tools/arch/x86/dell-uart-backlight-emulator/README
++++ b/tools/arch/x86/dell-uart-backlight-emulator/README
+@@ -13,8 +13,8 @@ With the DELL0501 indicating that we are dealing with an UART with
+ the backlight controller board attached.
+ 
+ This small emulator allows testing
+-the drivers/platform/x86/dell/dell-uart-backlight.c driver without access
+-to an actual Dell All In One.
++the drivers/platform/dell/dell-uart-backlight.c driver without access to
++an actual Dell All In One.
+ 
+ This requires:
+ 1. A (desktop) PC with a 16550 UART on the motherboard and a standard DB9
 -- 
 2.53.0
 
