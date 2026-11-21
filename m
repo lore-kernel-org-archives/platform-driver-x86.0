@@ -1,99 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795219792;
-	b=gxoVxbq9J3OOeRkWaUGQsOvU9p9MDw4wxqChZLddNUC1D3dhXtuX74Em4vXb3Dnb3Q1Q
-	 b3JVB3LHPkiFZNDOudNauJ/dv2q8cuE6smXksl9Tx/VoF7k8oYPhTDx4jzXlWQQsydsAP
-	 Sxj9UU/foiqm5Z2yrhG44YYHdFaHslLmTziK5Lv9UBoUvgiTvilHTkJKs57YYxpaChuQL
-	 VStqbeKLqi8nqWQL8Ri/CAkZtoeDmiNbwSGlMxCm24CXk8s9G25AWs8nCQ5osEHSGxGt3
-	 nQI0+RHmNR6eNO9UGrdTrVgb4jTYkCK4n3H9F8Lzna1abyv5z4D3EFCO4tXh6+MbYXQ==
+	t=1795221519;
+	b=nW9E9mNxQMBjIuZtALUoY4+5+CMF3I6Q1bZqLqo0k83Q8HiGF+LCsFUwxG0S3GMSYADQ
+	 NIFYsi+5shIDccC5fWfHVEHWk9mCu8El+GX3YhPO8WdQJdsjxIRXuzo8mVkcIdpW1hoZg
+	 ABJbsPE1s9keEQQoOy9AJSN5FFJC2Ale1lqKmJa7HEwaZgj93OumzhdMEfl2fysjqArSK
+	 uvZk/9QI/WpghferCvP4qkNMMQ/EpH/mQr/RdR1IaVryyFkOmh/bnUTqbAZ57OocGhaKp
+	 +KDrpsVonUxX6qef0aCg4/QLiWmasWFoQw3sc6O46VX3JSPdY5+l+iYF2CKLsDJoOIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795219792;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=1CzFBBszFhkiIIYt9wFudFnmrxdhz1D8UxoY045S5U4=;
-	b=Cqrlzh2+fPLeOY1kxkeyF7EV2f9hjX31pn4GH7o2R22RhS+OqMWc4hN2YwpqfIBUyrcY
-	 cv6vM31hn/nxgUZbxrDZq1+1bhXRxIvIP8cLp0nCe4LmCRdRsXVHN7zJ1TVXqRAjEcP5A
-	 DTyckMoE9N1YWz/FByhoDgFlDel6nfXR6n40iO9WQcYqE2MPVM6xq+ljExEnasoiadKx6
-	 aQyF+dMYXS1RHd3xWpStmV9IPk6nYdTEplNO3rbBI5Iiq1H0urPWbTKIW0HjanyV9dhRY
-	 t9GhL7iFpqqOljeXbVMc8z7bYe4gAvKqfMjBCE7D04Ah5RjwlbmT/4vGttAnlrasJXg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795221519;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+	 User-Agent;
+	bh=QV8D7ilUELbg/fg6EIzobLLMXxhaxLG1vZzySCiqx3s=;
+	b=w6h+13VmtxCHWUxp85vIry80dShvQL6zqVZgG0DPrFV4j9+86I9aoIp4c39NI6FogRrJ
+	 0lhFD+8gzYeI2Dhr5skS/YWg8HhhpDF+kcpjjBggr1F4MMTLUmjM7H0S477pzwKaLAjjP
+	 7cNg89e7v8q5XzrwgQDliJx3XTwP/3PwWvo7zUvES0HUnW1+dHoxbsgTzbDsz5rSpT2xb
+	 y/TiSYE1k35oLMbgG9Fs44IcESY+TpkNhlm6B7hWd/Ooj5qF91RrpRb+MdJ0TftNWANbX
+	 sdkoLIet0x93QWTGI2Xsct2vl+8gpxh/FBXnimnpRnxgGRQyt3q+jUCuc1fnFB+KiRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=p1CJsbYh;
-	arc=none smtp.remote-ip=209.85.216.54
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IalQirY3;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D09960A261B
-	for <platform-driver-x86@vger.kernel.org>; Sat, 21 Nov 2026 00:09:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D09960A261B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B41606A6B9;
+	Sat, 21 Nov 2026 00:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=p1CJsbYh
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3b421e8d111so920750a91.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2026 16:09:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795219782; x=1795824582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=1CzFBBszFhkiIIYt9wFudFnmrxdhz1D8UxoY045S5U4=;
-        b=p1CJsbYhNdt1bUXy8sOs/aU1AzB93Z8SwfZnyJ80pjKaY/Ut4gkjV1UrUeeT5GGiEp
-         87vbB0ar0Rvu/6eNeanyRdnyO4TLs51vfExQbO2oWcfHlhb/0ZW+PcI+X6iwZjA0M59j
-         EmaO8EtlkvLNMLuJ86iPV6bUIcKqWxiCfu3HFOGqgyfgaEZi7m+b8XD18Ybp3cbncnvk
-         Biz7lKVfUGhWAdnCEfQ6EnzkZUxKw5hVE4boN6mA23YBs1CLap1SZ8MZbbyNMv6Fytpn
-         ybdx1KkBxLSPsydnwE3MyoZQwpDfpUKbfC+iwQa+zaQWBW/9V126jyXsRCDop7NfXeJa
-         FRxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795219782; x=1795824582;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=1CzFBBszFhkiIIYt9wFudFnmrxdhz1D8UxoY045S5U4=;
-        b=puyfZvJM81dg4/5eVMeh3/XBL8p4JV8hYjLENjjzprKQFQr0YjIjet6aZQ96CrUxuH
-         r8sTvf+DM5KQtWz0W0Mzcc1QeOcqJ/NN5PnxfvMK3qLuKAYwGT4jLj1+RKqj9/c6Ox7t
-         mv7EmKPd4fLACXcWfHTTfkmb8rJAYTx+R3Xi0kQdl0kmWTtXZgm6Ari0llMxtcV07eBd
-         PTZSCCz2jasLemEdTenQmibD4FYyZYtf8a4hwVR+EarZBfBh9dRH7u8myE+AHd0YaMKk
-         60a8HHItJa12IZuybJtP2Wk23YRDS1JEdpdUv+GxTDS4qFZYJ63KgtTIKV2SOujcZ3+Q
-         1DyA==
-X-Gm-Message-State: APuU4Z9urdSmsokeRSYVwjp9ThB1lfEWT1wyDNUybH80Lu7C3IpusBYE
-	jzM2oM4ZJHwFXw0BYbivPK9i6oa+Z9+Dn4FyBcYsNexiC3Kk2WWmTjud
-X-Gm-Gg: AZFdTZd4PxSAWGqqcXk0EEVLkWQe7GhCynA2CfPobA+rsJ25eJoUuoKDAM9sP+t9+zz
-	RQo+ZcAp2HMXZMzk0q2G1wxno7Qh9KYPxdl2dplZIKUhd1d+RAiLv8SVm4QSmwU1ZYdGp2hqKh2
-	K2vKZCQ/AbsNoVTUqGvZMhiHFz4+qQtw9cmEYOvWHyCCIyYTg+eglmyrnlVdN8/vcpJr3i5wNy2
-	Rvt4iexZ0kly/jRQpXz01+Wygt5TJFNhDz3qmE8ALKXfZM7xvbe8Uf+hAIdLw+NaP2d6XzDRVPM
-	Ka7+g1DkIMMkDp/ujXz0Og2/6e5797v7Zb9YI8HtgTUwB5ABrGIeG8muYqWBqucGg0Kq2OPivk6
-	EYnwB0zZ2ItkI4xx9wDMNGXG2UklTVaFsg+Dn48y0rw/HcXApzIQ6sQoe+GE7yXBj2q0PQgv+5g
-	NzdzIeJX8lEbmg4GiKZNV4IQy+hBOvcW8ygo/dYff8E7SM1P+RPKGEv/bPbX3GOK/HE10SDnqmH
-	U0dQkuO59GjtrmwEGDPQCaBZv/sW63qFCF8rAT4RVjCSQUwpqK7HRpFfn+ocjsbZ+59lslaa9s+
-	JKQo0zJe8Wej4asUfn0KbdXcOl8n7/DHaI3kYWgge9XU2lvBlRDQsMBeD9PhvvlfG5V5CZMEQ7Z
-	kE/6opbinOGcA7WcJu//AhtVDb9lCN9lzRVHzaN6gD5sw4zV0U42RAUwrq5QEE6gmyFzuydnrlC
-	rOhQ8=
-X-Received: by 2002:a17:90b:2e8c:b0:3ab:884b:65a9 with SMTP id 98e67ed59e1d1-3b41c9e430fmr4919985a91.25.1795219781727;
-        Fri, 20 Nov 2026 16:09:41 -0800 (PST)
-Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cde6cfc613csm1920509a12.5.2026.11.20.16.09.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 16:09:40 -0800 (PST)
-From: Rosen Penev <rosenp@gmail.com>
-To: Matthew Garrett <mjg59@srcf.ucam.org>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-	Darren Hart <dvhart@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] platform/x86: dell-laptop: Fix keyboard backlight timeout overflow
-Date: Fri, 20 Nov 2026 16:09:29 -0800
-Message-ID: <ee9e976209ac07dd390676c4cf9d0643719ff2af.1795219225.git.rosenp@gmail.com>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <cover.1795219225.git.rosenp@gmail.com>
-References: <cover.1795219225.git.rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IalQirY3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D9631F000C0;
+	Sat, 21 Nov 2026 00:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795221518;
+	bh=QV8D7ilUELbg/fg6EIzobLLMXxhaxLG1vZzySCiqx3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=IalQirY3i3ZnT1uQl8cusJxa9oyi8QWJr3n7xNa9xVMtvl882mORIfuEm7GpMncNB
+	 986MKFLgh8xXQ5KTId7d070QIjTQVGO7owjQZcplyKTJD2k+YSe1qRf8ww3LKM0+It
+	 QVjbPn5TE/UPkrk7EiHdaAhZmzEnc5Ffb3HiCYNWHOuxbG/2kn8kSxZsOlq1KXFmdd
+	 ngjWxrO5rGkLunabeJm3vaz16qzC63rWtSyVnT7rHknojWHeXHQ7LBFnPMKztxiXae
+	 ocUcCAHUoOT901armeduxP5ErR3OLdr9lOfosFWnq9/hZfRvLQqzHIcHS9V2W23+0b
+	 eAVwlosEUqMmA==
+Received: by pali.im (Postfix)
+	id 82C3F4A0; Sat, 21 Nov 2026 01:38:35 +0100 (CET)
+Date: Sat, 21 Nov 2026 01:38:35 +0100
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Brian Mak <bmak@nvidia.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Kurt Borja <kuurtb@gmail.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	Lyndon Sanche <lsanche@lyndeno.ca>, Armin Wolf <W_Armin@gmx.de>,
+	Prasanth Ksr <prasanth.ksr@dell.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/8] platform: dell: smbios: Add quirk for non-functional
+ calling interface
+Message-ID: <20261121003835.uemb2uaqm6enjqrq@pali>
+References: <20261121000556.173028-1-bmak@nvidia.com>
+ <20261121000556.173028-7-bmak@nvidia.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -103,105 +71,75 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261121000556.173028-7-bmak@nvidia.com>
+User-Agent: NeoMutt/20180716
 
-kbd_led_timeout_store() converts a timeout that is too large for its
-unit to seconds with plain int multiplication. A large enough value
-wraps, and if the wrapped number happens to be a valid timeout it is
-accepted. On a Precision M4800, writing "4424214d" (over 12000 years)
-to stop_timeout sets the timeout to 4 minutes, and "18989323d" sets it
-to 2 minutes.
+On Friday 20 November 2026 16:05:52 Brian Mak wrote:
+> On Dell RTX Spark laptops, the SMBIOS calling interface completes every
+> request with an all-zero buffer, even for requests that should fail.
+> Drivers that rely on it, such as dell-laptop and dell-pc, end up
+> reporting bogus state, like battery charge modes and thermal modes.
 
-Do the conversion and the following unit selection on a u64 seconds
-value instead. With value <= INT_MAX this cannot overflow, so such
-inputs are now rejected with -EINVAL like any other timeout that is too
-large for the hardware, and nothing that was valid before is rejected.
+Hello, is Dell aware of this firmware issue? And it is going to be fixed?
 
-Fixes: 02b2aaaa57ab ("platform: x86: dell-laptop: Add support for keyboard backlight")
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
-v2: use a u64 seconds value instead of check_mul_overflow() on the int
-
- drivers/platform/x86/dell/dell-laptop.c | 34 +++++++++++++++----------
- 1 file changed, 20 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index cad2bd06f28a..c1a51bf95c25 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -25,6 +25,7 @@
- #include <linux/sysfs.h>
- #include <linux/acpi.h>
- #include <linux/mm.h>
-+#include <linux/math64.h>
- #include <linux/i8042.h>
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-@@ -1553,6 +1554,7 @@ static ssize_t kbd_led_timeout_store(struct device *dev,
- 	struct kbd_state new_state;
- 	struct kbd_state state;
- 	bool convert;
-+	u64 seconds;
- 	int value;
- 	int ret;
- 	char ch;
-@@ -1599,38 +1601,42 @@ static ssize_t kbd_led_timeout_store(struct device *dev,
- 		convert = true;
- 
- 	if (convert) {
--		/* Convert value from current units to seconds */
-+		/*
-+		 * Convert value from current units to seconds. This is done in
-+		 * 64 bits so that it cannot overflow: value <= INT_MAX.
-+		 */
-+		seconds = value;
- 		switch (unit) {
- 		case KBD_TIMEOUT_DAYS:
--			value *= 24;
-+			seconds *= 24;
- 			fallthrough;
- 		case KBD_TIMEOUT_HOURS:
--			value *= 60;
-+			seconds *= 60;
- 			fallthrough;
- 		case KBD_TIMEOUT_MINUTES:
--			value *= 60;
--			unit = KBD_TIMEOUT_SECONDS;
-+			seconds *= 60;
- 		}
- 
- 		if (quirks && quirks->needs_kbd_timeouts) {
- 			for (i = 0; quirks->kbd_timeouts[i] != -1; i++) {
--				if (value <= quirks->kbd_timeouts[i]) {
--					value = quirks->kbd_timeouts[i];
-+				if (seconds <= quirks->kbd_timeouts[i]) {
-+					seconds = quirks->kbd_timeouts[i];
- 					break;
- 				}
- 			}
- 		}
- 
--		if (value <= kbd_info.seconds && kbd_info.seconds) {
-+		if (seconds <= kbd_info.seconds && kbd_info.seconds) {
-+			value = seconds;
- 			unit = KBD_TIMEOUT_SECONDS;
--		} else if (value / 60 <= kbd_info.minutes && kbd_info.minutes) {
--			value /= 60;
-+		} else if (div_u64(seconds, 60) <= kbd_info.minutes && kbd_info.minutes) {
-+			value = div_u64(seconds, 60);
- 			unit = KBD_TIMEOUT_MINUTES;
--		} else if (value / (60 * 60) <= kbd_info.hours && kbd_info.hours) {
--			value /= (60 * 60);
-+		} else if (div_u64(seconds, 60 * 60) <= kbd_info.hours && kbd_info.hours) {
-+			value = div_u64(seconds, 60 * 60);
- 			unit = KBD_TIMEOUT_HOURS;
--		} else if (value / (60 * 60 * 24) <= kbd_info.days && kbd_info.days) {
--			value /= (60 * 60 * 24);
-+		} else if (div_u64(seconds, 60 * 60 * 24) <= kbd_info.days && kbd_info.days) {
-+			value = div_u64(seconds, 60 * 60 * 24);
- 			unit = KBD_TIMEOUT_DAYS;
- 		} else {
- 			return -EINVAL;
--- 
-2.56.1
-
+> Add a DMI quirk list for platforms with a non-functional calling
+> interface, and export dell_smbios_calls_functional() so that consumers
+> can avoid loading on them. dell-smbios itself still loads, as dell-wmi
+> depends on it.
+> 
+> Signed-off-by: Brian Mak <bmak@nvidia.com>
+> ---
+>  drivers/platform/dell/dell-smbios-base.c | 22 ++++++++++++++++++++++
+>  drivers/platform/dell/dell-smbios.h      |  1 +
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/platform/dell/dell-smbios-base.c b/drivers/platform/dell/dell-smbios-base.c
+> index c8e93c12c445..e07cbb0e8a6a 100644
+> --- a/drivers/platform/dell/dell-smbios-base.c
+> +++ b/drivers/platform/dell/dell-smbios-base.c
+> @@ -390,6 +390,28 @@ bool dell_smbios_class_is_supported(u16 class)
+>  }
+>  EXPORT_SYMBOL_GPL(dell_smbios_class_is_supported);
+>  
+> +/*
+> + * Some Dell firmware completes its proprietary SMBIOS calls with all zeroes,
+> + * so any value read through it (tokens, battery and thermal modes)
+> + * is invalid.
+> + */
+> +static const struct dmi_system_id dell_smbios_calls_broken_list[] = {
+> +	{
+> +		.ident = "Dell XPS 16 DX16263",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 16 DX16263"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+> +bool dell_smbios_calls_functional(void)
+> +{
+> +	return !dmi_check_system(dell_smbios_calls_broken_list);
+> +}
+> +EXPORT_SYMBOL_GPL(dell_smbios_calls_functional);
+> +
+>  static void __init parse_da_table(const struct dmi_header *dm)
+>  {
+>  	/* Final token is a terminator, so we don't want to copy it */
+> diff --git a/drivers/platform/dell/dell-smbios.h b/drivers/platform/dell/dell-smbios.h
+> index 1e64803bc00d..26f54364ffde 100644
+> --- a/drivers/platform/dell/dell-smbios.h
+> +++ b/drivers/platform/dell/dell-smbios.h
+> @@ -89,6 +89,7 @@ int dell_laptop_register_notifier(struct notifier_block *nb);
+>  int dell_laptop_unregister_notifier(struct notifier_block *nb);
+>  void dell_laptop_call_notifier(unsigned long action, void *data);
+>  bool dell_smbios_class_is_supported(u16 class);
+> +bool dell_smbios_calls_functional(void);
+>  
+>  /* for the supported backends */
+>  #ifdef CONFIG_DELL_SMBIOS_WMI
+> -- 
+> 2.53.0
+> 
