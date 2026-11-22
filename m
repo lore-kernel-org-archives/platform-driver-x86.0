@@ -1,54 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.226
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795368093;
-	b=D5WCjzvOIhdb3K13MKjB8/S7pDiDrtg5xuNxksNWW+idZCorcz/Qyp1F0Re0UwC8bORV
-	 fYlDt/RkXEpbEkkAs2Vbt2D+Fi5YCdXRv2BtUIxkLgega/MzI9bnAQTsPdxwmOIXcO7N9
-	 XOmDkdvw6HzjZOHA36ljJHeGCTdYUnlPZUJFI3fCTfxcc8ZiZVmS/uAN1q+LaoXdnebOo
-	 pB0clNEoAsaYxdokvuA4SPXTwFD9eUOx/AjdQPVTQvSGOx4grdN9EQxLoDdWg695viB2/
-	 10iRYhmXbSsqvd/ShNlJsHhY2SBYbolbU0lnyCIjVAjSEo23AbduthcPgHZJkuT8IWQ==
+	t=1795370376;
+	b=E5TATb+3EllwWVoFW8MmyIWX51bIIRbXZG9XC+R5tiR5PYN79/+Fl4s4ysNdyAdAplr8
+	 sMKPHcYLCiMvwNHNISohyGkquGpEbP/U/0OrN+tCNCQR6R2iolrYRataZRYPKqwGQWjST
+	 5MGTUL2DaP/+QTQOOrxJ7EcxsGB96TS4rw92McwEPsVB7TlEVei0MajqVWntVJyjNMrcj
+	 P7GGSnQIYLmCMZqau0eEixbQ8wSbz/DlXBxBMqAMdYqa8Kcz7pnosE76wqwO5RBfiWLmD
+	 XhVQwnG979zgAAh7trJWTgF0yRm7A3bNzNd7es1HEg68ztvYgh9upODcK5cikHZD7LQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795368093;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=Pj8YvDMDeKH+fDYKsLpW8TZoTP9euV7VLhnta8kxn0w=;
-	b=lqxQ2O0L6ZTpVgi0rBoH7xQHhW2J72Nn5p8t6bV8ot3Djpcvibeh4BuImGk6XTA6hYdm
-	 1h/KmXRUHVkkkGVsrzYGnEDRwFDWO/P2qmnQDWHGAcbjzJSztFUO8e/P62RZ86AR5AgYR
-	 nml0sCe94pKFdioWdjF0/FPq+jArTceYMP2htE27kmxo7SmsAaNwMsqgKsk99XoXk3e7M
-	 64qSpD4s0v/306bLKy8pMkFg2jfXFy1Y6u959Xeg+UHTEdwHHkFLbiVbY8PdqSbzr/KO0
-	 v9G35h3ozyNeDqB8tHs/D4zlSonPXsK7R48akSycTYj6WmXYJwZFY3h1JvwrYVBSxVg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795370376;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=kRG8CHsOFvzuA+tHkN4sv4XPLOr4+r/vBSrY1/yx2Nw=;
+	b=Rg3VSsKpDHHQkR4A7Zv6o77yYoJDWs/XNr5rtgaOdyYtqdBcRVLjeEdgYZTRcr6oNgPU
+	 29mKEzfJgrgSA9AaKL83ZTNDUsTovz741s7rgmTxKNWJqs58o0C0R1ZMgPIgpafbzm1UA
+	 8DmR08PLgzFeZS6xE6HRRpevOTU3xI+VOsr0P95XH3SqpBbS94O6X7O4XcSGfQKjRB+PB
+	 drmwtdCwEoV/HjHP2de8kQbebdaVPvKrweJF+IyBpe1CeZ+A1OMwelwuNMlVHqVM/s2QJ
+	 FTPqKlK/oJGiFGed/YDY+ANenhDCJP199xV3PdGvNcJ2AOrKH9YkJhW1LL89IPMHH3Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WHgeljPZ;
-	arc=none smtp.remote-ip=91.218.175.226
-Received: from mta0.migadu.com (out-226.mta0.migadu.com [91.218.175.226])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qVJ5rxXq;
+	arc=none smtp.remote-ip=74.125.82.174
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD838606A32C
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 17:21:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD838606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EBA606A32A
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 17:59:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06EBA606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WHgeljPZ
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=GygogghYSmx+xDdwfNJEaMRbWV2/oicuQJJTgC+g5tY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795368090; v=1; x=1795972890;
- b=WHgeljPZlMNyMuVCkFxwP8oTmbWQ1l+Imk3D2HtR+YE0rzaPOamcg0B0tmh0eJ6woY1sbyfc
- +vT2CKll8n/dYnwhPWE1+ticBj8AuypnetGy1IoFTzRXDn0G2nzxgI9f1bSkL7VuLQtKLOpg1SC
- uu8r8QoNvWhj3OsBVIWmkVjU=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 8ac64e723e6f0344;
-	Sun, 22 Nov 2026 17:21:30 +0000
-X-Mizu-Trace-ID: 8ac64e723e6f0344
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <3487c5c2-59f1-479b-bae6-152f408b52a6@linux.dev>
-Date: Sun, 22 Nov 2026 18:21:29 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qVJ5rxXq
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-380b40312e2so6107330eec.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 09:59:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795370375; x=1795975175; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kRG8CHsOFvzuA+tHkN4sv4XPLOr4+r/vBSrY1/yx2Nw=;
+        b=qVJ5rxXqnS1fjgjpNp27xj5ZpmGhDJHHUxsU/JQcEVQwffiESTTdoknttaATciXmpe
+         StsjSRH3B0sokcr5x5thT6B0cyQFRNIsqQ4h+w3N33c3ftRucp9X0N2bO7goWi0/4WY+
+         7PEDc9NY0UPJtEuuCcLVIHzreMnMp4rI/vWQex3QjNmEPmMyZ0wWa+IyPQvd7hpDmJMw
+         9HTOEdhufNe1uza7HWFBUC84H2A0iFjVIuqoogxkuQERLH8L3m/GDSsUE5Cr15MF2IZ6
+         3RYF1x0p8TrhRb5dQXvVAVod2gzAfO2a/g7V2cK0qla5u/WwNOVWLsr6MS5oZ8NazMx+
+         vNWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795370375; x=1795975175;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kRG8CHsOFvzuA+tHkN4sv4XPLOr4+r/vBSrY1/yx2Nw=;
+        b=0xhwZY/DeQIzVqIu0AOUcrm0qi+QtsSb726MJgBCJwY47IXcuZvvWn/KpkFDB94VUR
+         6Narb6+zjNAeuZAbGd4zDz9RTi9N0SmXb+unPCpWq7k3lYpvHS9weTit1qE10hNGFo0/
+         8uX7kwf6vBJnWnOHTvYgIsKotZcZ22jUNAgDupBaxAlsk7mBliUP0UyjnlYv/f6QYUv7
+         paERmIFzH6VaVbfjt8U9VfjnPODCUgJFi7MIfJ+cuDJp9HNR3JGyVwNSSLVIO3DdlMqg
+         0LGOFBF3N2OPSdvgdSV3N8WZHzk+MqZT04wp9OQMU26AQ2e6nEE6TImM+dbIiKKD9lQV
+         S2zA==
+X-Gm-Message-State: APuU4Z+LOf1B5Y6InQdJcHIXPX196sWX5h9217BfQa7rqtUChjLTFzdS
+	VysONlJpKHpIMZJlC5b9J0nhuo0LYfoINGuLHGDiYniCwlVK+Jre/Vbs
+X-Gm-Gg: AZFdTZeS6lg0+QBw9fZ+HP7d4p1mqSuJlVxkplvMHpqFxEUFmS/iAx3GaiIU0P4IOxI
+	mR33OND+lczUv+55W0jhqjH7T+yNA7JMnzxJ54JPs6LRtNCI7wOYqolfn3RCfCudkn+GvhrTdqU
+	RQQKFzcqijPG2cXYlog24g3gOFVz38um1hG4tESJ3pMOT3izbRXwr+lol0br5bpMGoVjBSBAAK/
+	A970fIQYRxEMojpNXhF++l3+QuHD3jg0K6qZHX0ic28l+0zQRFZLgl5riHyZjf+tfC4Wttal0zu
+	wGTXqxuGkUf3I2EZkba7Ru+iaXXdmMb/x5p5zFklLMXqarMPl89zKy7qHD2tRYlWCqmEAEfqfT5
+	Zrxwiy2rERyU+zQdzsORsY4FGKrvJ2jOvbkBtLVxn2qeYx/sRBuMBAOcVajvP8xCfREy0agi1EK
+	iATeQ1v1Ostx64aUZkjN7pU7lhhKMWieFWeHdLwAotkbHs3Y0lGW+6GtSM86JZbjIO4xGDBKw13
+	LxA3k99KxDBOKxcCDLfgCXlC87k4IILJWrLxIKqD29m5IwmJVL0pZZu/CtKJpZotDwrS0cBBDpe
+	b71w+5Pd9lwe5uEx5IeEnS60qcUQfM+hYJr7maGKCPRa29/odhFcaqwVPgsqWFZRyIyDisotIJl
+	wclqk2dmc1DB5fCDVUZVH/Q==
+X-Received: by 2002:a05:7300:f68e:b0:369:f291:49da with SMTP id 5a478bee46e88-38571814b1dmr9847720eec.40.1795370374954;
+        Sun, 22 Nov 2026 09:59:34 -0800 (PST)
+Received: from archlinux ([2405:201:1b:2287:f57:f0d3:878f:6f93])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38566cd4efesm29194449eec.12.2026.11.22.09.59.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Nov 2026 09:59:34 -0800 (PST)
+Date: Sun, 22 Nov 2026 23:29:12 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: David William Richmond Davies-Jones <david@exultantmonkey.co.uk>
+Cc: platform-driver-x86@vger.kernel.org, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: hp-wmi: Enable cTGP in performance mode on
+ OMEN 15-en1xxx
+Message-ID: <awMir9K1nuO772x4@archlinux>
+References: <20261030005724.84507-1-david@exultantmonkey.co.uk>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -58,185 +98,158 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/asus: asus-wmi: Add quirk for on/off-only
- keyboard backlight
-To: Martin Szathmari <martin.szathmari@gmail.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>
-Cc: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-References: <20261122164034.7175-1-martin.szathmari@gmail.com>
- <20261122171818.9948-1-martin.szathmari@gmail.com>
-Content-Language: en-US
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20261122171818.9948-1-martin.szathmari@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20261030005724.84507-1-david@exultantmonkey.co.uk>
 
+Hi David,
 
-On 11/22/26 18:18, Martin Szathmari wrote:
-> asus-wmi always registers asus::kbd_backlight with max_brightness = 3
-> (ASUS_EV_MAX_BRIGHTNESS). On the ASUS ExpertBook B7402FEA the keyboard
-> backlight only supports two states: levels 1, 2 and 3 all produce the
-> same, full brightness. Userspace therefore shows a 4-step control where
-> the top three steps are identical, and the backlight hotkey cycles
-> through steps that visibly do nothing.
+Thanks for sending the patch.
+
+On Fri, Oct 30, 2026 at 12:57:24AM +0000, David William Richmond Davies-Jones wrote:
+> On the OMEN 15-en1xxx (board 88D2) the GPU power limit stays at its
+> 80 W default in every platform profile, including performance.
 >
-> This matches the vendor-supplied review unit tested by Notebookcheck,
-> which describes the B7402FEA as having "single-level key illumination".
+> The firmware's SET_PERFORMANCE_MODE handler (GM1A in the DSDT) stores
+> the mode byte in EC register 0x95 (HPCM) and enables NVIDIA cTGP through
+> the NPCF device only when that byte is 0x01:
 >
-> Add a kbd_led_on_off quirk which registers the LED with
-> max_brightness = 1, and use the LED's max_brightness instead of
-> ASUS_EV_MAX_BRIGHTNESS when clamping and when wrapping around on the
-> toggle hotkey. Also clamp the level read back from firmware to the LED's
-> max_brightness. Enable the quirk for the B7402FEA via an exact DMI board
-> name match, keeping the default wmi_backlight_set_devstate behaviour.
+> 	If ((HPCM == One)) { NPCF.CTGP = One ... }
+> 	Else { NPCF.CTGP = Zero ... }
 >
-> On models without the quirk the clamp is to 3, so it only has an
-> effect if firmware reports an out-of-range level.
+> 0x01 is the thermal policy v0 performance value. This board reports
+> policy v1 (byte 3 of GET_SYSTEM_DESIGN_DATA is 1), so the driver sends
+> 0x31 for performance and cTGP is never enabled. NPCF only reports the
+> cTGP offset to nvidia-powerd (ACBT = 0xA0, i.e. +20 W) when CTGP is set.
+
+This is interesting because the patch does not make any changes to the
+HPWMI_SET_PERFORMANCE_MODE path. So, if I'm following correctly, the
+call tree would roughly look like this:
+platform_profile_omen_set()
+   platform_profile_omen_set_ec()
+     omen_get_thermal_policy_version()		(you say this returns 1)
+       switch-case (performance) => tp = HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE
+       omen_thermal_profile_set(0x31)
+
+So perhaps policy v1 is not entirely wrong? The HPCM == 1 check in GM1A
+only tells us how this particular method handles the performance mode
+value. Have you checked the other consumers of HPCM, particularly GM22
+and the NVIDIA-related SSDT methods? They may interpret the v1 value
+(0x31) differently. Given that the firmware reports thermal policy v1,
+I'd be hesitant to conclude that it is incorrect based solely on this
+check.
+
+> For boards in a new omen_ctgp_boards[] list, set cTGP explicitly with
+> SET_GPU_THERMAL_MODES after setting the profile: enabled in performance,
+> disabled otherwise, with Dynamic Boost (PPAB) left enabled. The Victus S
+> code already uses this command. platform_profile_omen_set_ec() is also
+> called at probe time and when AC power returns, so cTGP follows the
+> profile in those cases too.
+
+The diff follows Victus S code consistently. However, have you considered
+adding an entry to hp_wmi_feature_boards[] and using the corresponding
+omen_v1_legacy_thermal_params mapping instead? I'd prefer reusing
+the existing feature-board handling rather than introducing another
+board-specific list for functionality that already has an implementation.
+
+If I'm not mistaken, board 88D2 should also support fan curves, right? By
+keeping the board ID in omen_thermal_profile_boards[], wouldn't you also
+be missing the manual PWM mode support?
+
+> A report for the Victus 16 board 8934 shows the same HPCM check in its
+> GM1A method, so other v1 boards may be affected. Only 88D2 has been
+> tested, hence the list.
 >
-> I tested this personally on my own ASUS ExpertBook B7402FEA (BIOS WMI
-> version 9.0) with the change backported to v7.3.4: max_brightness reads
-> 1, writing 1/0 turns the backlight fully on/off, the Fn backlight hotkey
-> toggles on/off, and KDE Plasma's keyboard brightness control shows
-> 0%/100%.
-
-Perhaps this should also contain a Fixes tag as the original commit doesn't
-consider some hardware like yours but I will defer this decision to Ilpo.
-
-As far as I'm concerned:
-
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
-
-> Link: https://www.notebookcheck.net/Asus-ExpertBook-B7-Flip-in-review-2-in-1-laptop-with-5G-modem-and-long-battery-life.600053.0.html
-> Signed-off-by: Martin Szathmari <martin.szathmari@gmail.com>
+> Tested on an OMEN Laptop 15-en1xxx (board 88D2, BIOS F.20, RTX 3070
+> Laptop GPU) on AC: nvidia-smi reports a 100 W power limit in
+> performance and 80 W in balanced and cool. Without this change it
+> reports 80 W in every profile.
+>
+> The firmware analysis and this patch were prepared with the help of an
+> AI coding assistant (Claude Opus 5.5 in Claude Code). The result was
+> reviewed and tested on the hardware by the submitter.
+>
+> Link: https://lore.kernel.org/platform-driver-x86/CA+LW3S2g4E971by7WhfFZGuyLT47141_Zn+eJ=wyqxB_+4G95A@mail.gmail.com/
+> Fixes: 286e937efbc7 ("platform/x86: hp-wmi: support omen thermal profile policy v1")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: David William Richmond Davies-Jones <david@exultantmonkey.co.uk>
 > ---
-> Changes in v3:
-> - Clamp the level read back in kbd_led_read() to max_brightness
->   unconditionally instead of only for quirked models (Denis Benato)
-> - Re-tested on the B7402FEA
+> drivers/platform/x86/hp/hp-wmi.c | 34 ++++++++++++++++++++++++++++++++
+> 1 file changed, 34 insertions(+)
 >
-> v2: https://lore.kernel.org/platform-driver-x86/20261122164034.7175-1-martin.szathmari@gmail.com/
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 52077833ac89..e09a6d261144 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -235,6 +235,14 @@ static const char * const omen_timed_thermal_profile_boards[] = {
+> 	"8BAD",
+> };
 >
-> Changes in v2:
-> - Use a ternary for the quirked clamp in kbd_led_read() (Denis Benato)
-> - Drop the comment on the new quirk_entry field (Denis Benato)
-> - Re-tested on the B7402FEA
->
-> v1: https://lore.kernel.org/platform-driver-x86/20261122144147.7916-1-martin.szathmari@gmail.com/
->
-> Based on pdx86 for-next; happy to rebase if other keyboard lighting
-> changes need to go in first.
->
-> Note: This patch was developed with the help of an AI coding assistant
-> (Claude Opus 5.5). I reviewed the change and tested it myself on my
-> ASUS ExpertBook B7402FEA as described above.
->
->  drivers/platform/asus/asus-nb-wmi.c | 14 ++++++++++++++
->  drivers/platform/asus/asus-wmi.c    | 13 +++++++------
->  drivers/platform/asus/asus-wmi.h    |  1 +
->  3 files changed, 22 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/platform/asus/asus-nb-wmi.c b/drivers/platform/asus/asus-nb-wmi.c
-> index 3b0f3346d..9204213be 100644
-> --- a/drivers/platform/asus/asus-nb-wmi.c
-> +++ b/drivers/platform/asus/asus-nb-wmi.c
-> @@ -154,6 +154,11 @@ static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
->  	.key_wlan_event = ASUS_WMI_KEY_IGNORE,
->  };
->  
-> +static struct quirk_entry quirk_asus_kbd_led_on_off = {
-> +	.wmi_backlight_set_devstate = true,
-> +	.kbd_led_on_off = true,
+> +/* DMI board names of Omen laptops whose firmware only enables NVIDIA cTGP
+> + * from SET_PERFORMANCE_MODE for the v0 performance value. With v1 values cTGP
+> + * stays disabled, so it has to be set with SET_GPU_THERMAL_MODES instead.
+> + */
+> +static const char * const omen_ctgp_boards[] = {
+> +	"88D2",
 > +};
 > +
->  static struct quirk_entry quirk_asus_z13 = {
->  	.key_wlan_event = ASUS_WMI_KEY_ARMOURY,
->  	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
-> @@ -585,6 +590,15 @@ static const struct dmi_system_id asus_quirks[] = {
->  		},
->  		.driver_data = &quirk_asus_proart_px13,
->  	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "ASUS ExpertBook B7402FEA",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "B7402FEA"),
-> +		},
-> +		.driver_data = &quirk_asus_kbd_led_on_off,
-> +	},
->  	{},
->  };
->  
-> diff --git a/drivers/platform/asus/asus-wmi.c b/drivers/platform/asus/asus-wmi.c
-> index b33ebdb21..f99512d29 100644
-> --- a/drivers/platform/asus/asus-wmi.c
-> +++ b/drivers/platform/asus/asus-wmi.c
-> @@ -1837,14 +1837,14 @@ int asus_hid_event(enum asus_hid_event event)
->  		brightness -= 1;
->  		break;
->  	case ASUS_EV_BRTTOGGLE:
-> -		if (brightness >= ASUS_EV_MAX_BRIGHTNESS)
-> +		if (brightness >= asus->kbd_led.max_brightness)
->  			brightness = 0;
->  		else
->  			brightness += 1;
->  		break;
->  	}
->  
-> -	asus->kbd_led_wk = clamp_val(brightness, 0, ASUS_EV_MAX_BRIGHTNESS);
-> +	asus->kbd_led_wk = clamp_val(brightness, 0, asus->kbd_led.max_brightness);
->  	asus->kbd_led_notify = true;
->  	queue_work(asus->led_workqueue, &asus->kbd_led_work);
->  	return 0;
-> @@ -1923,7 +1923,7 @@ static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
->  		return retval;
->  
->  	if (level)
-> -		*level = retval & 0x7F;
-> +		*level = min(retval & 0x7F, asus->kbd_led.max_brightness);
->  	if (env)
->  		*env = (retval >> 8) & 0x7F;
->  	return 0;
-> @@ -1937,7 +1937,7 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
->  	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
->  
->  	scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> -		asus->kbd_led_wk = clamp_val(value, 0, ASUS_EV_MAX_BRIGHTNESS);
-> +		asus->kbd_led_wk = clamp_val(value, 0, led_cdev->max_brightness);
->  
->  	if (asus->kbd_led_avail)
->  		kbd_led_update(asus);
-> @@ -2164,7 +2164,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  	asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
->  	asus->kbd_led.brightness_set_blocking = kbd_led_set;
->  	asus->kbd_led.brightness_get = kbd_led_get;
-> -	asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
-> +	asus->kbd_led.max_brightness = asus->driver->quirks->kbd_led_on_off ?
-> +				       1 : ASUS_EV_MAX_BRIGHTNESS;
->  	asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
->  	INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
->  
-> @@ -4706,7 +4707,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->  		return;
->  	}
->  	if (code == NOTIFY_KBD_BRTTOGGLE) {
-> -		if (led_value >= ASUS_EV_MAX_BRIGHTNESS)
-> +		if (led_value >= asus->kbd_led.max_brightness)
->  			kbd_led_set_by_kbd(asus, 0);
->  		else
->  			kbd_led_set_by_kbd(asus, led_value + 1);
-> diff --git a/drivers/platform/asus/asus-wmi.h b/drivers/platform/asus/asus-wmi.h
-> index b45f81b38..74e30a2d7 100644
-> --- a/drivers/platform/asus/asus-wmi.h
-> +++ b/drivers/platform/asus/asus-wmi.h
-> @@ -41,6 +41,7 @@ struct quirk_entry {
->  	bool wmi_force_als_set;
->  	bool wmi_ignore_fan;
->  	bool filter_i8042_e1_extended_codes;
-> +	bool kbd_led_on_off;
->  	int key_wlan_event;
->  	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
->  	int wapf;
+> /* DMI Board names of Victus 16-d and 16-e laptops */
+> static const char * const victus_thermal_profile_boards[] = {
+> 	"88EE",
+> @@ -2035,6 +2043,17 @@ static bool has_omen_thermal_profile_ec_timer(void)
+> 			    board_name) >= 0;
+> }
+>
+> +static bool has_omen_ctgp_control(void)
+> +{
+> +	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+> +
+> +	if (!board_name)
+> +		return false;
+> +
+> +	return match_string(omen_ctgp_boards, ARRAY_SIZE(omen_ctgp_boards),
+> +			    board_name) >= 0;
+> +}
+> +
+> inline int omen_thermal_profile_ec_flags_set(enum hp_thermal_profile_omen_flags flags)
+> {
+> 	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET, flags);
+> @@ -2045,6 +2064,10 @@ inline int omen_thermal_profile_ec_timer_set(u8 value)
+> 	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET, value);
+> }
+>
+> +static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
+> +					    bool ppab_enable,
+> +					    u8 dstate);
+> +
+> static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+> {
+> 	int err, tp, tp_version;
+> @@ -2096,6 +2119,17 @@ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+> 			return err;
+> 	}
+>
+> +	/*
+> +	 * Enable cTGP only in performance mode and keep Dynamic Boost enabled.
+> +	 * dstate 1 means 100%, as on Victus S.
+> +	 */
+> +	if (has_omen_ctgp_control()) {
+> +		err = victus_s_gpu_thermal_profile_set(profile == PLATFORM_PROFILE_PERFORMANCE,
+> +						       true, 1);
+
+Why enable Dynamic Boost unconditionally when the firmware would almost
+certainly disable it in case of low-power/equivalent modes? Wouldn't it
+be better to make PPAB follow the selected platform profile instead?
+
+> +		if (err)
+> +			pr_warn("Failed to set GPU cTGP state: %d\n", err);
+> +	}
+> +
+> 	return 0;
+> }
+>
+>
+> base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+> -- 
+> 2.56.0
+>
