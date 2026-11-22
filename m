@@ -1,79 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795321703;
-	b=livi6I/y9ObladnMzEWq+ephqDOneF1KL0mJOKW/1Y/e3Prlf3XTd2J7l1MCnm+XzMgF
-	 hWnAcNyPw83ovsOZKjucG03s/YO1IqXl38xstNEN9dkRf/g1DP0VhoHZY/Eth7qcHTeUU
-	 n7bOfdDOY5M2oNyN2pkqy72xPiquLmnwmDau+9rXv9dkAF/nrdY8FV2lAVZihakMUW8VK
-	 Bw8AUZ+Q2bRPH4ijjCSEEeIWaWX9XL++7HXbglNpAXb1c3v6N6vPSChWe2qQIS/pCcoYc
-	 zMAToshjHugtziDW5Q39iIxOUs4iIv2B32CuEeweB3KTidjIv3bvQ+niL5iOreCW/tQ==
+	t=1795321704;
+	b=WvDwyJrDgz66MKizgv5UWVmlcxdxZLdfvkQBATV7l3BcCfjokYmPHHt2gQL8dzhevG6V
+	 JQ8Dx71CYYQ04g3KZPpx9jlPjOWThtveZ2RlYYR7AQsGi96iL6gUsS0cbHzUuIz98qY6f
+	 BiWfEdNV1PXS/Uk71hZdrekBHn8A3ZEfxeSm9mtcPDvPGW0v0d5soieP91BcBuV05FTLe
+	 PLs2b0Ufe7GXwvGdaRfhFAGF95UDlt8JQ8JiC/VIvHYTZJCePzF3o+hkW+fT63Nn3hasc
+	 Kp1fEegE5AtUA88V12sWl4iQf9JlYM0pRE1i9N/XLfn7DhTkF/sA27c53kKV/N2M7Gw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795321703;
-	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
-	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To;
-	bh=pv8hSrBH0kUGdgNR8aDVgpBqcmVx2hyw6K/lDBuUZy8=;
-	b=Eja/5rJ9mR6LoEE8Pu1aOht96sRDMc566DlquQtOimsxzBUcN/lAQg5a2Ti+lhm87Luc
-	 9iqwCHMs4OH8JvxDJyeCkkSNlLWL8hJuE+t4RhQhecRvlXMg95JQTUihhNAD9qffnrR39
-	 8emUTb8g3ToKR8OVGSAgUXx98mrD6sp8K+KeB+tUUfbplb7DCBl8NeevqoWgO+LasRXTN
-	 fXuwKEyxQy/ASBydLAKc/nL2BeWBWd8Lg5WwAAogoEs/R6Q+5xoAu084svQArvQhk40v4
-	 6zJh8kbe9H/ypp2A5oeqWI23uucZ/1TScR02bijpYTsGhZrgWRhMJ5RUjCmowCmOn7A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795321704;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=XQww88CE4ncPleHQjKDJrOVK2foStslcNvThU2QtO2s=;
+	b=QulAJxLMKENkB1gYP2YYbxNN7/X9LqU6eFOCXsUpHWzCBL2KNMo70WRohvo/C1L6o0RJ
+	 G2AjwScKSFiv3W67TmJ2C53hY6rxH8zy8RErNqNLs3P/sIsc2DSgEMFTTx6Ypj0t7pP71
+	 aOLdKFT9w3MmqyfoLX3y+5+HWC/aWagCrFH/4SRnLUu5PRnHQ7lxpt0lOlS2TBOqsfO7O
+	 LMK5a7VLylzxuk9HVZ1GaS7HXD/9I2wt4ED/UBp3znMWt1ELVueRcN/wSvdZU10j8ohoB
+	 ETta1Hyz9wL1s4MFNDdMWQxmgE1m0X+kkSjdeVLxrKMcDgZWVaI/i85uRYGHoj9Q5/Q==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SiGoR6A5;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nV908r26;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B887606A320;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED579606A333;
 	Sun, 22 Nov 2026 04:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SiGoR6A5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nV908r26
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
 	t=1795321703;
-	b=DxdQqwEfoQr8gO/jodFOES/eAa8xJJjyJ0rIGuslpTZGblgwkS71OyRsbpaSIqTuemN8
-	 po+HgT23X9ZkKn5RIrH4jVQFFVzkDsAuKkoN/wgA9o9K9GqECFu1sxFv8iWP8sXiFZ6wb
-	 U6hc/RJJvozzCVd6o9dhShP2Duy5CKkCyu9i1/4FIUJXJOZk1GY2JpHk2mkzDi0+wjm04
-	 QjHieAqIWqe2QaHeXUEmF4FPhOPgW4lIu0irTWynTVM2ObJvkCjB1VwKGNI/DChl7JsMb
-	 PWvoaWOv8IVNCyYjrQc7xgT0IRUBgRNyI+kEb90T0GIJTbsbADrSHrUUA2IoUjY2bXg==
+	b=G8cdanOL8Yx0KgZKHM9d0e8TOWEM2aZfjaMNoo8JQH8jpCtqhM7bguYy7JrOes1LFE99
+	 qlFNloTkEJq4qJqKvo+OHRMNHmKWk14j2XU3FSD85NK56LgXEA94WF//Nuto2mjIotHUf
+	 EMlqKVHF7nDOkNMgVURdcWHpHY2UGd99dfw94LZYGR304yS+ED5QZ/qYulDVRzrNl15vm
+	 9YaUYQxD36hKrN87LJTgDDlkLM1NB/KnOhVHTo1B8VCtM+Q68WRLPYMJs0WoEnnZfBBzA
+	 vkwO2MWVd9sBIW6SB5ezep5l/oXbhHF+RaLH6KTLr5HzzNkVzvADj2YYFGJLfjhHYoQ==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
 	c=relaxed/relaxed; t=1795321703;
-	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
-	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To;
-	bh=pv8hSrBH0kUGdgNR8aDVgpBqcmVx2hyw6K/lDBuUZy8=;
-	b=dEfSVFSPprICUFyKbXaQCibyezrQw6bNsa4VtuHEIXbXWBtli+rJQcy7426vMYKN0mHb
-	 fgMRUex1nIEisIJmAriBgaY4Wl2aPYpnpea69CLffoZ92TwjBgFNC7tNVK6rI7Vxz0FtL
-	 IaNS3FsptDPJMq42zLDQ5PxLBNP84zHnjSnpjNKsDUU6mdVTfHSs4s2ex8LGMTI3JFFvC
-	 neFigXBwCYYF+YLIw9lYE/J8HJUuzNEqXnwYZHdBnchXuXUzg6JsIhcI7g1eWB29BOZqY
-	 EInMU8UWIrn52C6C8m8hZCH94ewiqi+EzWjcK+EmL/WISwnny0xLFvzL8U7hQe3LJBA==
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=XQww88CE4ncPleHQjKDJrOVK2foStslcNvThU2QtO2s=;
+	b=IHtggPR1/12AEd6XvPCkCrdYfzoCiWj50sk1zICccad7qnWblQlYpqAp+9aUKfIYCekz
+	 kEGqtbJj2h5CfHiNZEpw8c9SSrl2dA4pGwhE4lcZoSWCIK8bkZ9q5xE4dgiesGFxaGOxW
+	 Gf95OQ6DWILmu/qZqCeFZsHpFNuWRY0AqwVDyTYG/SUwZ5sjWYdECTerddJ0v3X/EugXW
+	 ZssCG6g6nXS0DAz6p3dR/r74WQaAw8T2i0tA9uJl4P3gb/vZH96OvpdP5GsOGdCDO4xH7
+	 sGOdWdxZY8xIOMbyKC/EmkWM0vJFEu/k7Iih66vNNex6fwrJyGfBbJ/2gif3VLHW94A==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id ADCF41F000C4;
+	by smtp.kernel.org (Postfix) with ESMTPS id ADD071F000C6;
 	Sun, 22 Nov 2026 04:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1795321703;
-	bh=pv8hSrBH0kUGdgNR8aDVgpBqcmVx2hyw6K/lDBuUZy8=;
-	h=From:Subject:Date:To:Cc:Reply-To;
-	b=SiGoR6A5XKVEXj859PhPC0+cF5au7271fHTqsx9LYdLvTLJ6LNlYhI6p9jJu+L+3A
-	 do8NZ+QgCyEWBU94GiXXPV+iAwb5+WcVXmb8W0m5ezjCovikE1DULkr275Azau2z8o
-	 Bdo9SW5/xXGSZGqhyesWNb8G9ZqmUXeCqti0wPYzcBblI3rmNWfCaeTiKpgVv6xrc9
-	 bWGckS8DUDDc5VLP8CCKpCLHuKt/k30v70jKLTsh2Lfrp9FbVkpG1JUFfCUDEzCIcY
-	 MciWRH//Rkskg5fwEC4MUNOv5/kBeBrPIPPVDNV6J6OSibz9t2NjalOZWCMA2+qfy6
-	 3ahh7fUWxf/0Q==
+	bh=XQww88CE4ncPleHQjKDJrOVK2foStslcNvThU2QtO2s=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=nV908r26mYpXgNVOTvfdL/61cQrUNL6Zltl+dT/C17pQvp1NyKqDjaRzEijH3PLUA
+	 JEtz4JUgPH1IbXJijOi1sS03TGiXDQkyach0EOcCMBQq0gHF3vpOCOA2+E12EvDyW+
+	 hhpJ8dCuYLQwIev0l55CrmxyEq4fX9NKJfNeluPbApequ/o2jNeoEWzmfeJnfx3zmr
+	 hx+10zmqgzBBIanetpoLeCRPTJmWyjgEhEKNUg4YHz9ZJfQ0SZo0zfUzupmZ/VNmYf
+	 U+L9XjkhpomJmYo13gEvvRjHTI9ECJtsNF9gcz6Er2WBxzsaJFScwAdcFcsdsLVQgF
+	 B+6xJze46RPzA==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 121BE4BEE6;
+	by lkml.kernel.org (Postfix) with ESMTP id 3C99F4BEAC;
 	Sun, 22 Nov 2026 04:28:22 +0000 (UTC)
 From: Nick Dowsett via B4 Relay <devnull+nick42d.gmail.com@kernel.org>
-Subject: [PATCH 0/4] rust: wmi: add MVP of WMI abstractions
-Date: Sun, 22 Nov 2026 12:28:13 +0800
-Message-Id: <20261122-rust-wmi-v1-0-63111d9e824c@gmail.com>
+Date: Sun, 22 Nov 2026 12:28:14 +0800
+Subject: [PATCH 1/4] rust: wmi: add basic WMI device abstraction
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -84,11 +83,9 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMywqAIBCF4VeJWSdoC6NeJVqUjTVBFk43EN89q
- +UH/zkBGD0hQ50F8HgS0+oSVJ6BmTo3oqAhGQpZaKVUJfzBu7gWEkb3EqXFquxKSPnm0dL9XTX
- tbz76Gc3+7iHGB1gJyq5sAAAA
-X-Change-ID: 20261119-rust-wmi-c6b0e0fe97a7
+Message-Id: <20261122-rust-wmi-v1-1-63111d9e824c@gmail.com>
+References: <20261122-rust-wmi-v1-0-63111d9e824c@gmail.com>
+In-Reply-To: <20261122-rust-wmi-v1-0-63111d9e824c@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
  Gary Guo <gary@garyguo.net>, 
  =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
@@ -104,57 +101,168 @@ Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  platform-driver-x86@vger.kernel.org, Nick Dowsett <nick42d@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795321700; l=1620;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795321700; l=5566;
  i=nick42d@gmail.com; h=from:subject:message-id;
- bh=LRMshCFfcJPtFSPE/6v1bGuREgTWrrb4IAOq+iyX/Wc=;
- b=DLa0YILKrbgNriQJag537mI/mDpfQWW8SXl8SpcnVXH6tnkBsyBCjMPtp1+BlmtTjqOBVkWFR
- 033bHYyzf1WC3ZaoD5IQn+66GiZgZ4j27BG9yh4hVXKrOR9SVQ0k4UK
+ bh=Knm+6RNcLG75vWsIc9eLMNWmCBTmuerBtZDTKnVEFGg=;
+ b=n+pCEhCVmKsQB10xdz/YmZv8Cc7AcFnoTejFJim4VEsR8a+g4bplx3nGdD5+siFFy2/kV4JjW
+ 8/l4ATrSiORAhXR/KB5LvDAlDS/n8mMvsAo2Vp9SuG6TgZYiRzEQfnt
 X-Developer-Key: i=nick42d@gmail.com; a=ed25519;
  pk=1uIkNexEofzEXNN3Y3QW5z8IrgjWaP0yH6Es51jxWOg=
 X-Endpoint-Received: by B4 Relay for nick42d@gmail.com/default with
  auth_id=1596
 X-Original-From: Nick Dowsett <nick42d@gmail.com>
 Reply-To: nick42d@gmail.com
+Content-Transfer-Encoding: 7bit
 
-Hi there; new to the LKML here, long time Rustacean and Linux user.
+From: Nick Dowsett <nick42d@gmail.com>
 
-I have implemented this series to add an MVP of Rust abstractions for the
-WMI subsystem with the bare-minimum implemented to support an in-tree
-user, a Clevo laptop keyboard backlight driver
-(`https://github.com/nick42d/linux/pull/4`).
-
-Patches to follow for the driver. Note it has two other dependencies:
-Markus Probst's LED classdev abstractions (v28) and basic DMI matching
-abstractions.
-
-This was not directly influenced by Ilya Gladyshev's previous attempt as
-I was not aware of it, upon review, the key difference is that I have
-used the newer buffer-based interface (no `acpi_object`), and implemented
-less functionality/callbacks.
-
-What's covered is driver probe, registration and unregistration, device
-id table, and a safe implementation of `wmidev_invoke_method` that
-returns an owned RAII buffer.
+- Adds the `kernel::wmi` module
+- Exposes `linux/wmi.h` to bindgen.
+- Adds `rust/kernel/wmi.rs` to MAINTAINERS.
+- Implements `wmi::Device<Ctx>` wrapper around `struct wmi_device`.
 
 Signed-off-by: Nick Dowsett <nick42d@gmail.com>
 ---
-Nick Dowsett (4):
-      rust: wmi: add basic WMI device abstraction
-      rust: wmi: add DeviceId and wmi_device_table! macro
-      rust: wmi: add Driver trait, Adapter and implement RegistrationOps
-      rust: wmi: add Buffer and Device::invoke_method()
+ MAINTAINERS                     |  1 +
+ rust/bindings/bindings_helper.h |  1 +
+ rust/kernel/lib.rs              |  2 +
+ rust/kernel/wmi.rs              | 89 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 93 insertions(+)
 
- MAINTAINERS                     |   1 +
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/lib.rs              |   2 +
- rust/kernel/wmi.rs              | 361 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 365 insertions(+)
----
-base-commit: 4843f6873f7c4835e62f2c73ba0fd538e57a2f22
-change-id: 20261119-rust-wmi-c6b0e0fe97a7
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 44540a1eb2b8..f58a44003d78 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -422,6 +422,7 @@ F:	Documentation/driver-api/wmi.rst
+ F:	Documentation/wmi/
+ F:	drivers/platform/wmi/
+ F:	include/uapi/linux/wmi.h
++F:	rust/kernel/wmi.rs
+ 
+ ACRN HYPERVISOR SERVICE MODULE
+ M:	Fei Li <fei1.li@intel.com>
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index 3791af0aadc7..81652d0dfed1 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -94,6 +94,7 @@
+ #include <linux/tracepoint.h>
+ #include <linux/usb.h>
+ #include <linux/wait.h>
++#include <linux/wmi.h>
+ #include <linux/workqueue.h>
+ #include <linux/xarray.h>
+ #include <net/genetlink.h>
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 1ab41129d557..b9713bd16313 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -147,6 +147,8 @@
+ pub mod uaccess;
+ #[cfg(CONFIG_USB = "y")]
+ pub mod usb;
++#[cfg(CONFIG_ACPI_WMI = "y")]
++pub mod wmi;
+ pub mod workqueue;
+ pub mod xarray;
+ 
+diff --git a/rust/kernel/wmi.rs b/rust/kernel/wmi.rs
+new file mode 100644
+index 000000000000..5f1d8c9803d6
+--- /dev/null
++++ b/rust/kernel/wmi.rs
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Abstractions for WMI.
++//!
++//! C header: [`include/linux/wmi.h`](srctree/include/linux/wmi.h)
++
++use crate::{
++    bindings,
++    device,
++    sync::aref::AlwaysRefCounted,
++    types::Opaque, //
++};
++use core::{
++    marker::PhantomData,
++    ptr::NonNull, //
++};
++
++/// A WMI bus device ([`struct wmi_device`]).
++///
++/// # Invariants
++/// - `Device` wraps an in-place `Opaque<bindings::wmi_device>` allocated and always
++///   reference-counted in a thread-safe way by the C subsystem.
++/// - Instances are never constructed or moved by value in Rust, they are only accessed behind
++///   `&Device<Ctx>` or `ARef<Device<device::Normal>>`.
++///
++/// [`struct wmi_device`]: srctree/include/linux/wmi.h
++#[repr(transparent)]
++pub struct Device<Ctx: device::DeviceContext = device::Normal> {
++    ptr: Opaque<bindings::wmi_device>,
++    _marker: PhantomData<Ctx>,
++}
++
++// SAFETY: `Device<Ctx>` is a transparent wrapper of `Opaque<bindings::wmi_device>` whose
++// representation does not depend on `Ctx`.
++crate::impl_device_context_deref!(unsafe { Device });
++crate::impl_device_context_into_aref!(Device);
++
++// SAFETY: By the invariant, `Device<Normal>` is never moved by value in Rust.
++// If sent to another thread as `ARef<Device<Normal>>`, the reference-counting
++// is performed in a thread-safe way.
++unsafe impl Send for Device<device::Normal> {}
++
++// SAFETY:
++// - All that `&Device<Normal>` can do is increment its reference count (thread-safe)
++// and perform a reference conversion to `&device::Device<Normal>`.
++// - All methods on `&device::Device<Normal>` are thread safe.
++unsafe impl Sync for Device<device::Normal> {}
++
++// SAFETY:
++// - By the type invariant, all instances of `Device` are reference-counted.
++// - Increments to the reference count keep the object alive in memory at least
++//   until matching decrements (`dec_ref` via `put_device`) are performed.
++unsafe impl AlwaysRefCounted for Device<device::Normal> {
++    fn inc_ref(&self) {
++        self.as_ref().inc_ref();
++    }
++    unsafe fn dec_ref(obj: NonNull<Self>) {
++        // CAST: `Device` is a `#[repr(transparent)]` wrapper of `Opaque<bindings::wmi_device>`.
++        let wdev: *mut bindings::wmi_device = obj.cast().as_ptr();
++        // SAFETY:
++        // - The safety requirements of `dec_ref` guarantee that `obj` is a valid pointer with a
++        //   non-zero reference count.
++        // - `put_device` safely decrements the refcount and triggers release cleanup when it
++        //   reaches 0.
++        unsafe { bindings::put_device(&raw mut (*wdev).dev) };
++    }
++}
++impl<Ctx: device::DeviceContext> Device<Ctx> {
++    /// Returns the raw pointer to the underlying `bindings::wmi_device`.
++    fn as_raw(&self) -> *mut bindings::wmi_device {
++        self.ptr.get()
++    }
++}
++
++impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
++    fn as_ref(&self) -> &device::Device<Ctx> {
++        // SAFETY:
++        // - By the type invariant on `Device<Ctx>`, `self.as_raw()` is a valid pointer to
++        //   a `wmi_device which embeds a `device`.
++        // - If you have a reference to a `Device<Ctx>`, then the reference count must be
++        //   non-zero.
++        // - If you have a reference to a `Device<Ctx>`, it is either:
++        //   - Borrowed from an `ARef<Device<Normal>>` that cannot be dropped and decrement
++        //     reference count to zero whilst the reference is held.
++        //   - Derived from a scope (such as a callback) that guarantees that reference count
++        //     will not be reduced to zero whilst that reference is held.
++        unsafe { device::Device::from_raw(&raw mut (*self.as_raw()).dev) }
++    }
++}
 
-Best regards,
---  
-Nick Dowsett <nick42d@gmail.com>
+-- 
+2.56.1
 
 
