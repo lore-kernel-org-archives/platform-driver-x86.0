@@ -1,87 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.48
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795348582;
-	b=SHpdQ8S2t3o4QabQjXHsU/PGERLyNn+u6Pul7hsUtjy1JoeIyCXhuWvf+wGJCjL1znXm
-	 I1GhSGwHSVRIJm9CxXuE0cwDQHsCvIhPyzuzzz6gw4jyg23RQm+c0hpRuE3/TvdFvGypt
-	 CjJ60ZNgQtShO00ma/5Jlr+STV2mdq0ckkMOyXgEpXLKDI0TyJnFpSA56tobStHIatwro
-	 QCb84JIS/pSy1z5v0kjIgJfDsSUURXy6VrljQlBOpZCoZZuS2zO1t2aJz8qxtzs48KgDn
-	 CypRZRhThBRdHKCVYy+n5Y0PUdOjiSRdVXW0aQ66zvItB5mr+c4mFYBdsjX/V4uoisg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795348582;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:Autocrypt:In-Reply-To:Content-Type;
-	bh=ukt8Gk4DLOLYIyt4G+IT9Thvj+8TqIkl+QNbsvaRca4=;
-	b=bbga4h9RaD70peu7I2J42fm9UyaTLE/knuMUscvwlbz7e+istO1Ni3WDlqK6EnRor1io
-	 pRCrCyH6LiRrCyl6WdU3Z2eQ2oB7IUoKkOVYY6F9Wsn/xtzMFRvNj4l8cp4oZmejsy8oD
-	 RN6/EKCTtawWtHgLgQgV7sknZvCQ/bJo/f0Bl3/xN9IBYfDTGOOgnc2hbau8CWoTIGJ5R
-	 PNapTGFWyOpDagohtYutcT3s/u+kLd3kbpGq2/zJBZIpWX8h4nHYoh1lLHacGtgdL85at
-	 uRt/J+5xstm1hjLC3oLRecCwcXHSOEY/clmV4+ne9h9YSRdQCTlpJsrMsS+pbfzNANw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.com;
-	spf=pass smtp.mailfrom=suse.com;
-	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=f+VRP2Wm;
-	arc=none smtp.remote-ip=209.85.208.48
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.74.85
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795353608;
+	b=vUzkR9CCSpJMxiPmfyXJRO8pRwK7p2MEXqp4lfc1cSQb/29JcxgQl6x+2J8S04cK0oeo
+	 ruKYkF+F0e6KaPoYNkWBTJhWHwXyAi9J9+xWlBNneaWSNH0Vb+0kP5DpvWKrs5q/lxMv2
+	 pZFcGYfYkuuMi5+KV3C86V48ltQa7l+UIQpSRItX3uudZXAGvzG30M9NwM6SfeY0e7Drd
+	 CxGxmhtHu6KP3mEoBsUm1zKCqAPU75k+ykMFL6jnxKXiirzY75ATh67u2MtGWkU/9z//G
+	 I+xQ/Xy6aUmPA1anJqVuBrZ/jJwUMLDZrLg4ZmhHiv1Gmhku+SZ7QosR7+bTSz4WTbw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795353608;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:X-ClientProxiedBy:
+	 X-Microsoft-Original-Message-ID:MIME-Version:
+	 X-MS-Exchange-MessageSentRepresentingType:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=iaBMOxdCUXXpoycTI6EJHvmGtrRjeWMwkYRGAKtdT0w=;
+	b=hL1yRcLKm1HFQHQUAeIhgoVup04qJ/E0W7byFrjBJPoG6GEBFkFxPRab8cccGn8B7tjR
+	 egxmk3qVmYZvwA9tWGtOthIBLnMVbh3PIdeS02uRs4RB7UJZ17YR0I5wW7gtCE77ikz5T
+	 yLu8AzF/NY7UjUH4fSnySfG0BlH5zATAOw4O8oAk5NO8hj2xHWadhuzqrgNpnSsbLqZtV
+	 rQ51TpCDFDBuGIq7xJ6gkJWJWNa1ovgHj4QRvYkiuQFXzbji2PXbvd03Sz79tl3dd2345
+	 7S0FoXoY2KE/jTMUelUMJ2zmZSiAFEF/hz3+JSzmMVZnN+TxeT3srpl0o+Jj3SDpsZQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=outlook.com;
+	spf=pass smtp.mailfrom=outlook.com;
+	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=MSWBZl4i;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.74.85
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazolkn19013085.outbound.protection.outlook.com [52.103.74.85])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0C0606A33B
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 11:56:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1B0C0606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA99606A320;
+	Sun, 22 Nov 2026 13:20:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BCA99606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=f+VRP2Wm
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6a642495d81so3768587a12.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 03:56:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1795348580; x=1795953380; darn=vger.kernel.org;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=ukt8Gk4DLOLYIyt4G+IT9Thvj+8TqIkl+QNbsvaRca4=;
-        b=f+VRP2Wm7iSaE3D4Pz4X34YYrxV8EkxwbUe2DZQe5XRn9j4lYGNPJxLK7VL3JkPzOF
-         zthR+ALThzhE+LTzEYXpeiZGIqjm50XYF4C3xqOMwFuNrK73e3LAp+npA2Nqq24CS1sl
-         v+pFV3zOmozO3a+XHumB3THeH8p2e5DHgeGgWdJn+LDLpHl1EGTfBc/bkAmsvTRYvkZU
-         ahR0YT6tE+VhlmcJmReDk/tRyERrxz0QYQCiSpytgvTwgP4FSKQSP1fqdnAkH5D6O0ei
-         OdsR4XhniYb4fR7i4PVJ+k/n1z3f7ZEnN7bcRbT7ZNmB1UqkxHdFkx4WqKpdjEyVLBlw
-         sspw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795348580; x=1795953380;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ukt8Gk4DLOLYIyt4G+IT9Thvj+8TqIkl+QNbsvaRca4=;
-        b=azadM3VZ1ycrenW2jqlJR/0ULMX5Bm2EGHPgQea4odN/zq66Gis5FO7v61mwSshUWL
-         3YDijCP1YhBDfpxmB1mVTOP3udAQHIkRZ7QSf3VjV5ovNLz0toW8jxuw+HEyh+7Gf+2J
-         WKBuh4+nAsk/na1B4Oc0mLxFOy8pHsxr1aGd35BDdpUMmSo4RcluAOiQID9jHnw1vsEn
-         0SvqWfkY9PbiKpdUHcZZWQ4lY9IrF3+xdYODSIegaOYVpmIX+8od7aK4rp//CGwp67zh
-         b/iHbOPZ09n0BRuOTRulAq+tGoHWwktZyhlRFQ1FxFNlkizI5tPdC9a61hHxjhRxRySw
-         3k5A==
-X-Forwarded-Encrypted: i=1; AL+hErGY9z0hOysPTzmh/7SDxV9C6s1ekAUy/r7uim4J72Q+Yuhm4o4YsdL1x45tSihNIj81dGbeuN6DAashwOGBeSulr8cD@vger.kernel.org
-X-Gm-Message-State: APuU4Z+wRcJugm13V8da6mLoUKvUGJGgpgHczG84QX+9ITL+bHEO+X1z
-	LBwedB+ld3qV8zSKLVOO5/7Kt+/RgSBUaZ5t9BREpBmt36gVSWN8sEMIZtPDQfQkagY=
-X-Gm-Gg: AZFdTZeEeORp/Jdxr3Q7mM3kF8462YPj4bn2hGUHeJnSGlIfh0aaiWpziR3eKKHbHwk
-	5MROtSOljP/w5inI1FyWotkj3KlmuG2TCKFigKSDdshu7S3c3x/fZ9LpgwZPXj78oiYMtnpXmYJ
-	QMeUl6oaFmMpJWR3lGL4PegGdJgxwDj4iXgauKio8xv6HcIftRKMVqcOzrDTBI8Z16FzbwtjlIF
-	aNNKJfPjF6kQrNjr1D/ZhgP2rRn18f5vI8KE9ch5/mkznnBHUXtkw0XGm6JZb2PPGv7z5DQyzKH
-	YlSCcbavpcdGffszTp+oIldfQHchhMbVIeQazNE2hmZrSk29/Zkjj4llDVpZ9AyVfHAdji2tL3d
-	27qOQ+lAgHwPB8SSvnaJptfXYm8HU6SQUrlSpCJcRuIaJN99Mb4Sttpv73TJDo1c26oalzk7o93
-	U4umPl9G01gxlTuA5d5XY2Ro40o5e4j6YqXacKHXLOBktkmhi2AQoUIiFspyinM4tM5Du09fXg1
-	ry2HoYu8byahuW2nTJizmIhsg0YnKDCmMQ+gmjS5AsqrA51ycSZMNkk+uLmx+WfzEEOUQe4DksI
-	/36kOp/zdyPIuX/s5d1aKRd8aEzO35F+NffqZFlhMoZhoh1Kj4jitSogeq/GfyqlaQWff5C6sSq
-	M94xQMVNXAzZHnrpCxJITa/7sauiOp08qwE3MkjAz9y1VzEGQM1w=
-X-Received: by 2002:a05:6402:51d4:b0:6b5:8cb3:5e19 with SMTP id 4fb4d7f45d1cf-6ba37e8826emr6733045a12.38.1795348580410;
-        Sun, 22 Nov 2026 03:56:20 -0800 (PST)
-Received: from ?IPV6:2a00:12d0:afa3:c01:92cc:e257:77ba:97a1? (2a00-12d0-afa3-c01-92cc-e257-77ba-97a1.ip.tng.de. [2a00:12d0:afa3:c01:92cc:e257:77ba:97a1])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6ba370fc020sm3845321a12.25.2026.11.22.03.56.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Nov 2026 03:56:19 -0800 (PST)
-Message-ID: <9f0278ed-70d2-44e6-b897-dc7a968782ed@suse.com>
-Date: Sun, 22 Nov 2026 12:56:18 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=MSWBZl4i
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Uy5vt5xNh31CwLaQhk6SVOashj++sC+BtunBYoG0XRZLqvG5VFVAEGWGmlXefl2LskLjTXmckkrHlZ3WY/HNfAaN31WlWe2uuSCrSuF2Ga4e2DBuntdO2hQbUOAtvuiJBaiude7B+LJFEsa3Sg2By1cPds5+UdR4q6+zJ+tQnEwW5+kKoBlvUhZmZUDATsvbC0pZn5aWUPj9ZcML1mj3X4naBw6AblI88DSiWUOGXdHFWxXbQHxs+vkuvQHTURxkJO/H/kZFuDBXZ4AV1RpRDmceSgkI/+G1go/z5FfPQZ0rMJNXv7tlrLuimurYl5JWpCZcVlCD++KmYlzrk5/3Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iaBMOxdCUXXpoycTI6EJHvmGtrRjeWMwkYRGAKtdT0w=;
+ b=i8X04slx+IliC0XEpx7PlId24LD8MdEp1uNHvJ1B6QlFUU7UfddOtxuZ+dbtcq4C57q9XXyMuBr8lS9oFd9B53ry1P2D4djLP4tvoiXsDpVVAuv3vufkyCJ26P0pnsMMYRkh9NWhNDcNM/Igfy1JjtrxXAYL+ZSnaxDnni9HfWTI/Kq+UMo4u11xevPAqusJOwMRn2DCVD6cg5ZXBkHgFrVekMWFWjk1E/fkJ+A8SEv6Qh8meZCKPSTVtNK6GqbQnyb+p3143WAv6xQlNnn/jaMp6PbUidjDOcOXqp8kvcpJ3R6vNgkStRbHLZnY+jjYwk9vKMxy2mw3McWempkssQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iaBMOxdCUXXpoycTI6EJHvmGtrRjeWMwkYRGAKtdT0w=;
+ b=MSWBZl4ipBiWylQWKuLYCJkZg0BfuoRpCL+/7H5MbkI1DIn3EKVPh9irceVfIrFFPAc4crsfgVDLxYOZzrYDB88DgK5QQgCThalnbF242wpF4TB6B7x0WPW8YCQX/u0GPwDcTGi3hzYQQrJK+Td6kCN0wfno8KvhbYAQVdKcHkfBM9HSO1nqaFX0gQb+nqRL5NABSxZiIW0dKYpWclhxIGXzJ6bny/eiuGJeSDVltvMX++yr3VTUWgg0jAplpZf02EAYlKOxTI2y8yMrXBA1eGwYLx1Jkt2cViVySEmtLTNUOcOymr/vTmUGv0PTn2cyQS/7/soTYYo7ALp+uvNLwg==
+Received: from SI2PR04MB5895.apcprd04.prod.outlook.com (2603:1096:4:1eb::6) by
+ SEYPR04MB8997.apcprd04.prod.outlook.com (2603:1096:101:2d8::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Sun, 22 Nov
+ 2026 13:20:02 +0000
+Received: from SI2PR04MB5895.apcprd04.prod.outlook.com
+ ([fe80::eca5:8fa:ae90:10b9]) by SI2PR04MB5895.apcprd04.prod.outlook.com
+ ([fe80::eca5:8fa:ae90:10b9%3]) with mapi id 15.21.0615.009; Sun, 22 Nov 2026
+ 13:20:01 +0000
+From: Shuwen Bao <baoshuwen2013@outlook.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: baoshuwen2013@outlook.com,
+	emreleno@gmail.com,
+	hansg@kernel.org,
+	hello@kursatabayli.dev,
+	krishna.chomal108@gmail.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	radheykalra901@gmail.com,
+	technosfan14@gmail.com
+Subject: [PATCH] platform/x86: hp-wmi: keep platform profile alive on OMEN 16-am2xxx
+Date: Sun, 22 Nov 2026 21:19:40 +0800
+Message-ID:
+ <SI2PR04MB58957F8A19D5E552E9BFB03CA2462@SI2PR04MB5895.apcprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <f7612110-b309-2c81-690f-0f43e0520ab8@linux.intel.com>
+References: <f7612110-b309-2c81-690f-0f43e0520ab8@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PH7P220CA0177.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:33b::25) To SI2PR04MB5895.apcprd04.prod.outlook.com
+ (2603:1096:4:1eb::6)
+X-Microsoft-Original-Message-ID:
+ <20261122131940.17276-1-baoshuwen2013@outlook.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -91,238 +103,325 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: treewide: Re: [PATCH v6 00/12] msr: Drop 32-bit MSR interfaces
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
- linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>,
- Tony Luck <tony.luck@intel.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Ben Horgan <ben.horgan@arm.com>,
- Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
- Babu Moger <babu.moger@amd.com>, Drew Fustini <fustini@kernel.org>,
- Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Huang Rui <ray.huang@amd.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Guenter Roeck <linux@roeck-us.net>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Artem Bityutskiy <dedekind1@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- Xi Pardee <xi.pardee@linux.intel.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, xen-devel@lists.xenproject.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20261116150208.1572254-1-jgross@suse.com>
- <awLVzKJWWfC3eJsH@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <awLVzKJWWfC3eJsH@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------AaknyoBFimMKchSGvZQ4WGjM"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SI2PR04MB5895:EE_|SEYPR04MB8997:EE_
+X-MS-Office365-Filtering-Correlation-Id: 440b9094-b4d2-405b-d329-08df489b4fef
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|24021099003|25010399006|51005399006|260925184616899003|6090799003|23021999003|41001999006|15080799012|8060799015|19110799012|5072599009|25031999004|22091999003|1602099012|10035399007|40105399003|440099028|3412199025|4302099013|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bGdyWTJyMWxDMzdzOUs4VTZtemNmMkU3dytGb2pJUmFaV1JqUTVOZE4rUWE0?=
+ =?utf-8?B?WExldVptS0g4QTlBVWE5aW10Y2RPUkMwM1Q2MHdTZjhjY0p1dUNaVldFUzB3?=
+ =?utf-8?B?Q0s1NHJEN2tPRUpOWTJIeTlGSHh6dllvTHpmYU4zdEFza1FNTmZ4ZUlxT09l?=
+ =?utf-8?B?cVRhanlmZ2g5Q1hwb25vcUdDclVJRkYvMmtRdXBxemQ5ajdST1IrWngxYk43?=
+ =?utf-8?B?eHJnQ0V4YyswUWs3VTgwa3hNbUVkcEUwZTVXaERiZngySmx5L1gzOW82K2Fq?=
+ =?utf-8?B?WDRyV2V2SUZJbWh0Z0k5VGhCVDZTTU1oOFoxUHFUeDA0cEI1eTZtT1RSWFA2?=
+ =?utf-8?B?TVA4Rnc0Wkh3SEhXQXdUUVNWcVdGbU9rblZoY1YrZFZjbkl1RlVKZ1lpWFVK?=
+ =?utf-8?B?SENuVmR6aWd3TGFISVJSTEw2eXg1Q29vYjBaOG9zeGN3eDljdGJvU3dyU2VM?=
+ =?utf-8?B?QktkT2JpUEFwSGNRLzdiaWdVSmdhcFRQQTN6Z3Fpa2ZrOUxZQXBuSHBOcy9o?=
+ =?utf-8?B?cjlhSmdEdUc0VTlqVlYzaEg2RldITk1CZHhwbHptbDlSdEhPK1VPcnFuazB2?=
+ =?utf-8?B?Y2ZzRkQvcEhmUXhPSXBmdE5QUUVJYUJpVnlvaXU4RkovSi96Q2Z5Z3o0NFFk?=
+ =?utf-8?B?TGlLMFpIUlZjaUY4T2xVaEkxeTdVNXBrdXZlZUlTTDR6YmNuUCsvRVp2emVB?=
+ =?utf-8?B?elFXTjIrWUoyWHYzaVRoTnhKQkwrUUkzOU5mMXpqSCtSWVRRV1cyU0gwcG9i?=
+ =?utf-8?B?aXJjNTIvOGJKWkc1Mmo0b2V0RXg3K21wUE5kN05nQytLQVB0cVJYNkZocmdr?=
+ =?utf-8?B?SmpNazBoU2hSYllycDZra0VBVmIvWFNHL0c1ZFUwT1BEOHlEMWExakVZUHU4?=
+ =?utf-8?B?YVVlUWs4d3lHcTZTV3dLcEl5S0tBMCs4QnlPOVBSb29kNHdUUkUrWmo3YlMw?=
+ =?utf-8?B?OHpLZEJQWjFwcHI4WW80NFpZSzJ1ckRvRHdxbHRVZXFBKzQxdWhpRXF6RmJs?=
+ =?utf-8?B?dG85dGFSQ2JYTnRxeVY3WlNzSzg3cmxpOHhwK0g2dUhwZUFzWUVXWFBvUjhz?=
+ =?utf-8?B?ZEJTVEVMVGxjU3A2TkpTekNmSnd3ckF5azJ4SzNVdDE5aGhodm96ZkpyQlM0?=
+ =?utf-8?B?SDdxVnRHRU82TjdML0VNMEd5OGxvSWFjSENLd2poalBSdG1waHZDV0QxRDdt?=
+ =?utf-8?B?SlB5VGRVcXJ4TWNXeHFkRlZyS2RGdFVlQXduOG5VU1NxWHprVFJBUC9qdkYv?=
+ =?utf-8?B?Y2Q5Wmt2d0RYenF2eElYMS9UQXlVWGlPT1liM3pBUXU1bmc0eDF1bHM5MVFi?=
+ =?utf-8?B?ZlNEcnlMOHRSOWMrWk85ZWNoOGpxVXd2cm44QWhQSUxTQ3NIUzJrWWxaVW1x?=
+ =?utf-8?B?cWZQS2gvUCtlQitROS9CNnlOUVNyWGEyYXZXdndoZGdVWUFCMncwVmI5UHJE?=
+ =?utf-8?B?OHpESysvazdzVGdqS1hQWXRrYXdGdFQ5MUJ6Q0FBVlFFVjZvYWlPSlBFWVBu?=
+ =?utf-8?Q?wRXt7kttdQvRJBbUOPVQ+tNDm3+?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cTRFZ1pxQnZ5KzJXdjNTc2F4SnE2WmY0bFMyc1FBTlgzMklLbmcwR3lYRk9u?=
+ =?utf-8?B?Uy96QjRMOVpFNWtrNGNQTVVFTkhRbUFBRTE0S1lIU1RLTlhXU1BwUzlSeFlj?=
+ =?utf-8?B?dFBZVXEvR2lBNmJyTmcwS1dwdW1BQ2gwWndjWHdaVllLUGFKY0QvTlRQRTBJ?=
+ =?utf-8?B?SG5MR3NGWXJwWGpBL0ZDQlVtZjhrS1Y1cVM3K1FIeWdIYnhBNkNKZWNyMHdy?=
+ =?utf-8?B?Z1ZtVG5mc3Z1WkFBV24wRTR0UWgzZ0JNQ3pFdEZzMDR6YVh4bVhVcGh3SjNL?=
+ =?utf-8?B?VUFGeit0TldsNGJDUFhaNUtWN3gyQU1LK0ZPTHozbEdJWVZHeFRWa1dSRTIz?=
+ =?utf-8?B?Y3NwM2R5YzlpZFhKeGZDdlVMQTltR0dTZkd2MjZWeGFvWFFQV0hKSjZ0bnFn?=
+ =?utf-8?B?SFpuMFp5R3N6djhxWWlYaWpQaW4xRUk5dzNJZUtDOVZVSWpRb0RQRThXbWRR?=
+ =?utf-8?B?Q1JOYnZZNDN6akZQSDBTZUNLUUdBMTFOY1dwVVFNQmRMUTBicVJOdlFRZWpl?=
+ =?utf-8?B?a00rNWZCVHZSTU5FZmRuOFNJZXJwd3FvTVNLSnBTeWk3d0pwbWNlcVowY0d6?=
+ =?utf-8?B?TzFic1Z0K3pZdnUrZWpOdWVCOXFWMnNlS2JSVkJiUVkra0VDUmNPNlhrdkVi?=
+ =?utf-8?B?V2RzS3h6WXhuK2NDazRMMUFkMFNNUnphN21qK0VzWVpjTmgwMzJvM1pPOGdl?=
+ =?utf-8?B?Nkl6VDZ5bFdEcDU3RmgwQnJ4YXZxQks4eEUzTGNHdzdGUkJQQ1pMVlVDZEEv?=
+ =?utf-8?B?R2ZJcGszSndlV0VSd1hWRFdLTlJUUEdKVGlVVjEvOWFOd1FpcXJ4OXluM1Ba?=
+ =?utf-8?B?NGF3UjRoNjJVblVPVUNkZ0F2MEtRTFZVTkxYOEZWd2N0NGhGRUFLSTI0N21a?=
+ =?utf-8?B?aGhicTRLZy8vWVNXbFVOcTY3bklXQWhZbk5kcEU2ZnVFMk1rUkFNYnhMcGt3?=
+ =?utf-8?B?ZTA0a0pCY2lLek93Vi9IRkt0QkFsNGlxem5VUmFUcVFySzBSNXlTSkQyNC9V?=
+ =?utf-8?B?RVRaYUpxREhMekJRUlBKT09PaSsveXoyOWlHT3lRRUdiMnZqbUdDR0lSa2Rl?=
+ =?utf-8?B?UXNwNnFiR2V0YkdSMTd0K1lWYWg2eVV5dVFvcERaMDU5QmF6M3NrelI0Um5v?=
+ =?utf-8?B?ejRGdW84eERyQ1RaYVp5em5PMmozOVhOZ0xNT2lnYUJ1N0lnaHFKZHN0dGx3?=
+ =?utf-8?B?T2xoY2tJR1lIUVdOWkJhekUxbzZMKzJ3UjdyUFIzSmVYL0d2N25JK1Y0bzFi?=
+ =?utf-8?B?NW9SS3poQ0Zxd01aMHpkRlVPbVIzR3JkZGtYYVQ3eHJuMG9pNnhocFkrdHVv?=
+ =?utf-8?B?WmsySkVnRHZocDh0Z2ZVQlBLbERPNDVWSEVxOGVpUFhTNmZjSWhxVUFnVXJP?=
+ =?utf-8?B?SXY0WEVqdlM4QU5INkNWYVR2YjJ3YjRXVVRCRVFwa1ptMzM5eUhPODJrZmRC?=
+ =?utf-8?B?QzNiQzYxT0NEakhLNmd0eVF0U3RFazlnR0huTWpmTjBWK3N5RmkxU3k0SmhR?=
+ =?utf-8?B?dmx1dzAyOXNlTVp2akhVSG9FMVVQcU5XYjJyLzNmWldPNXA5VGczcGVPOTZR?=
+ =?utf-8?B?WGlTNitkODhTUGFkQm16QmRyYmVaQlZheGo2bWFzNVBjeVVNODlQMlg1Yzlh?=
+ =?utf-8?B?SlNPeTVWLzFLakJOaXB5TjJmUVZRb2t5dXZrdnRxdnB6eGN6Q05sWUUzaDB0?=
+ =?utf-8?B?SEVwV3BLYmpnUnp3RFh1TTB6L0ZvL2ZJOFc5enhHRFkrMXRTV3B4R2VVcWZk?=
+ =?utf-8?B?aldCVXpTQytUaHFIeUlTbUZoQVFrWHRlOU03UXRXenZSV0xGM2RKREpTeGdG?=
+ =?utf-8?B?bk1pN2J4K1paQXhSMjdzRHBVMk4vV2RLSkJ4T0dDTGdJYzJ2ckIvMFUyWlZs?=
+ =?utf-8?B?elROWnBQWlBGQk90NmdrWUhsK3FQbHZ1b2pnWWFxVEozSFVRWE9xUC9TUURk?=
+ =?utf-8?B?U0NNMGZuK2FWN1V4eWVxMmpxUE80OUIyZ0VhcWpHTkJyTzlLM1p4OGxoVGkr?=
+ =?utf-8?B?MGlTRm5tNm9BPT0=?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 440b9094-b4d2-405b-d329-08df489b4fef
+X-MS-Exchange-CrossTenant-AuthSource: SI2PR04MB5895.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2026 13:20:01.4613
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR04MB8997
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------AaknyoBFimMKchSGvZQ4WGjM
-Content-Type: multipart/mixed; boundary="------------hSBst9k3JSozt0eq4tpFbjs8";
- protected-headers="v1"; hp="clear"
-Message-ID: <9f0278ed-70d2-44e6-b897-dc7a968782ed@suse.com>
-Date: Sun, 22 Nov 2026 12:56:18 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: treewide: Re: [PATCH v6 00/12] msr: Drop 32-bit MSR interfaces
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
- linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>,
- Tony Luck <tony.luck@intel.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Ben Horgan <ben.horgan@arm.com>,
- Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
- Babu Moger <babu.moger@amd.com>, Drew Fustini <fustini@kernel.org>,
- Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Huang Rui <ray.huang@amd.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Guenter Roeck <linux@roeck-us.net>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Artem Bityutskiy <dedekind1@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- Xi Pardee <xi.pardee@linux.intel.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, xen-devel@lists.xenproject.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20261116150208.1572254-1-jgross@suse.com>
- <awLVzKJWWfC3eJsH@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <awLVzKJWWfC3eJsH@gmail.com>
+The HP OMEN 16-am2xxx (board 8F1C) embedded controller resets the
+thermal profile to balanced when its profile timer expires, about
+90-120 seconds after the profile was last written.  When the
+performance profile is active this silently drops the CPU and GPU back
+to their default power limits.
 
---------------hSBst9k3JSozt0eq4tpFbjs8
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+The existing omen_timed_thermal_profile_boards[] workaround cannot be
+used here because it is only consulted on the is_omen_thermal_profile()
+path, while this board is handled through hp_wmi_feature_boards[].
 
-T24gMjIuMTEuMjYgMTI6NDUsIEluZ28gTW9sbmFyIHdyb3RlOg0KPiANCj4gKiBKdWVyZ2Vu
-IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+IHdyb3RlOg0KPiANCj4+IEZvciBhY2Nlc3Npbmcg
-dGhlIE1TUiByZWdpc3RlcnMgb24gdGhlIGxvY2FsIENQVSwgdGhlcmUgYXJlIDIgdHlwZXMg
-b2YNCj4+IGludGVyZmFjZXM6IHRoZSAibW9kZXJuIiA2NC1iaXQgb25lcyAocmRtc3JxKCkg
-ZXRjLikgYW5kIHRoZSAzMi1iaXQNCj4+IG9uZXMgKHJkbXNyKCkgZXRjLikgd2hpY2ggYXJl
-IHVzaW5nIHRoZSB1cHBlciBhbmQgbG93ZXIgMzItYml0IGhhbHZlcw0KPj4gb2YgdGhlIDY0
-LWJpdCB3aWRlIE1TUiByZWdpc3RlciB2YWx1ZXMuDQo+IA0KPj4gICAxNDAgZmlsZXMgY2hh
-bmdlZCwgNTcyIGluc2VydGlvbnMoKyksIDY5MCBkZWxldGlvbnMoLSkNCj4gDQo+IFNvIEkn
-dmUgYXBwbGllZCB0aGlzIHRvIGEgc2VwYXJhdGUgYnJhbmNoL3RyZWUgdW5kZXIgdGlwOmNv
-cmUvbXNyLA0KPiBiZWNhdXNlIEkgdGhpbmsgdGhpcyBzZXJpZXMgaXMgbWF0dXJlIGVub3Vn
-aCBhbmQgYWZ0ZXIgYWJvdXQgYSB5ZWFyDQo+IHdvcnRoIG9mICh2ZXJ5IHBhdGllbnQpIGl0
-ZXJhdGlvbnMgYnkgeW91IHdlJ3ZlIHJlYWNoZWQgdGhlIGxpbWl0IG9mDQo+IHdoYXQgd2ls
-bCBiZSBwaWNrZWQgdXAgYnkgbWFpbnRhaW5lcnMuDQo+IA0KPiBUaGUgY29tbWl0IHdpdGgg
-dGhlIHdpZGVzdCBpbXBhY3QgaXMgYXV0b21hdGljYWxseSBnZW5lcmF0ZWQNCj4gdmlhIGEg
-c2VtYW50aWMgcGF0Y2g6DQo+IA0KPiAgICB0cmVld2lkZTogQ29udmVydCByZG1zcnEoKSBm
-cm9tIGEgbWFjcm8gdG8gYW4gaW5saW5lIGZ1bmN0aW9uDQo+IA0KPiAgICAxMzkgZmlsZXMg
-Y2hhbmdlZCwgNDkzIGluc2VydGlvbnMoKyksIDQ5NSBkZWxldGlvbnMoLSkNCj4gDQo+IGFu
-ZCBJJ20gcmVhc29uYWJseSBjZXJ0YWluIHRoYXQgd2hhdGV2ZXIgbWVyZ2UgaW1wYWN0IHRo
-aXMgbWF5IGhhdmUNCj4gb24gLW5leHQgY2FuIGJlIGFkZHJlc3NlZCBxdWlja2x5IGFuZCBp
-biBhIHNpbXBsZSBmYXNoaW9uLiBMZXQncyBzZWUNCj4gaG93IHRoaXMgZ29lcy4NCllheSEN
-Cg0KVGhhbmtzLA0KDQoNCkp1ZXJnZW4NCg==
+Add a profile_keepalive quirk to the board data in the central DMI
+matching table and a generic keepalive that periodically re-applies the
+active platform profile, well before the EC timer expires.  The
+keepalive is stopped when balanced is selected and is restarted after
+the initial profile setup.
 
---------------hSBst9k3JSozt0eq4tpFbjs8--
+Set the quirk for board 8F1C.
 
---------------AaknyoBFimMKchSGvZQ4WGjM
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Fixes: 2cd10a35f3f0 ("platform/x86: hp-wmi: add support for OMEN 16-am2xxx boards")
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/platform-driver-x86/f7612110-b309-2c81-690f-0f43e0520ab8@linux.intel.com/
+Signed-off-by: Shuwen Bao <baoshuwen2013@outlook.com>
+---
 
------BEGIN PGP SIGNATURE-----
+Hi Ilpo, Hans,
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmsC2GIFAwAAAAAACgkQsN6d1ii/Ey+U
-/Qf/V7wsSss4hIhzlYSEbAn3m9hHxZeeL5FKmbgPgVrLfYK4nlHwa3EJ6R8VEbsBCrSAEDukOo+1
-y+40nF5zk5Cd2x6ZzPoqHY51FPya4j+4EVDSl5V+nbl4SIiJvGDLi4ihESYNx1mvWW5gH6+Vuufs
-OnzP6T4CmZFJXVONAuCrvQmcpuKCQ2grE/lndqutElRto4ptfTedEbY9e75ofBpzPdznr2II1ouD
-tHveoDTySHC4GW3oe56/QxE/nsNs4UzA7yTyiXJKF8L7waOzxaNxh/HChdvWlA5MFcc8008Gc5fJ
-dVj2v83uXCziMzSDhFA+P0ilK02fXgpsKkJqlb/r1A==
-=ZBGv
------END PGP SIGNATURE-----
+This is a follow-up to the 8F1C support added by 2cd10a35f3f0.  As you
+suggested, instead of extending omen_timed_thermal_profile_boards[], the
+keepalive is now driven by a per-board quirk in the central
+hp_wmi_feature_boards[] data and re-applies the active platform profile
+every 60 seconds.
 
---------------AaknyoBFimMKchSGvZQ4WGjM--
+Only 8F1C sets the quirk.  The work is dispatched through the per-backend
+set_ec function, so it is not tied to the omen/victus/victus_s submodel
+paths.  The existing omen_timed_thermal_profile_boards[] handling is
+untouched.
+
+Tested on a HyperX OMEN 16-am2xxx (8F1C) with 7.4.0-rc3: with the
+performance profile selected and a 150-second stress-ng run on all 20
+CPUs, the maximum CPU frequency stayed at or above 4.3 GHz after the
+90-120 second mark (mostly 4.3-4.7 GHz), with no fallback to the
+~2.9 GHz balanced cap and no "Failed to refresh platform profile"
+messages.
+
+One question: would you prefer that the legacy timed boards
+(8A15/8A17/8A42/8BAD) be migrated to this keepalive in the same series,
+or is it fine to keep this patch scoped to the central feature-board
+table for now?  I left them on the existing EC timer workaround to avoid
+changing behavior without hardware to test it.
+
+Thanks,
+Shuwen
+
+ drivers/platform/x86/hp/hp-wmi.c | 80 ++++++++++++++++++++++++++++++--
+ 1 file changed, 77 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 0069af868..b22108dbd 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -154,6 +154,8 @@ struct hp_wmi_fan_profile_params {
+ struct hp_wmi_board_params {
+ 	const struct thermal_profile_params *thermal_profile;
+ 	const struct hp_wmi_fan_profile_params *fan_profile;
++	/* The EC resets the thermal profile to balanced after a timeout. */
++	bool profile_keepalive;
+ };
+ 
+ static int hp_wmi_get_fan_speed_victus_s(int fan);
+@@ -178,6 +180,12 @@ static const struct hp_wmi_board_params omen_v1_legacy_board_params = {
+ 	.fan_profile		= &victus_s_fan_profile_params,
+ };
+ 
++static const struct hp_wmi_board_params omen_v1_legacy_keepalive_board_params = {
++	.thermal_profile	= &omen_v1_legacy_thermal_params,
++	.fan_profile		= &victus_s_fan_profile_params,
++	.profile_keepalive	= true,
++};
++
+ static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
+ 	.thermal_profile	= &omen_v1_no_ec_thermal_params,
+ 	.fan_profile		= &victus_s_fan_profile_params,
+@@ -193,6 +201,11 @@ static const struct thermal_profile_params *hp_wmi_thermal_profile(void)
+ 	return active_board_params->thermal_profile;
+ }
+ 
++static bool hp_wmi_profile_keepalive_supported(void)
++{
++	return active_board_params && active_board_params->profile_keepalive;
++}
++
+ /* DMI board names of devices that should use the omen specific path for
+  * thermal profiles.
+  * This was obtained by taking a look in the windows omen command center
+@@ -375,7 +388,7 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8F1C") },
+-		.driver_data = (void *)&omen_v1_legacy_board_params,
++		.driver_data = (void *)&omen_v1_legacy_keepalive_board_params,
+ 	},
+ 	{},
+ };
+@@ -581,8 +594,8 @@ static const struct key_entry hp_wmi_keymap[] = {
+ };
+ 
+ /*
+- * Mutex for the active_platform_profile variable,
+- * see omen_powersource_event.
++ * Mutex protecting the active_platform_profile variable and serializing
++ * platform profile updates, see omen_powersource_event.
+  */
+ static DEFINE_MUTEX(active_platform_profile_lock);
+ 
+@@ -594,6 +607,53 @@ static struct notifier_block platform_power_source_nb;
+ static enum platform_profile_option active_platform_profile;
+ static bool zero_insize_support;
+ 
++/*
++ * Some boards reset the user-selected thermal profile back to balanced when
++ * the EC profile timer expires.  Re-apply the active profile periodically to
++ * keep it alive.  The timer on the known affected boards expires after 90 to
++ * 120 seconds.
++ */
++#define PROFILE_KEEP_ALIVE_DELAY_SECS	60
++
++static struct delayed_work profile_keep_alive_dwork;
++static int (*hp_wmi_profile_set_ec)(enum platform_profile_option profile);
++
++static void hp_wmi_profile_keepalive_update(void)
++{
++	if (!hp_wmi_profile_keepalive_supported())
++		return;
++
++	/*
++	 * The EC only reverts to balanced, so there is nothing to keep
++	 * alive once balanced is the active profile.
++	 */
++	if (active_platform_profile == PLATFORM_PROFILE_BALANCED) {
++		cancel_delayed_work(&profile_keep_alive_dwork);
++		return;
++	}
++
++	mod_delayed_work(system_dfl_wq, &profile_keep_alive_dwork,
++			 secs_to_jiffies(PROFILE_KEEP_ALIVE_DELAY_SECS));
++}
++
++static void hp_wmi_profile_keep_alive_handler(struct work_struct *work)
++{
++	int err;
++
++	guard(mutex)(&active_platform_profile_lock);
++
++	if (!hp_wmi_profile_set_ec ||
++	    active_platform_profile == PLATFORM_PROFILE_BALANCED)
++		return;
++
++	err = hp_wmi_profile_set_ec(active_platform_profile);
++	if (err < 0)
++		pr_warn_ratelimited("Failed to refresh platform profile: %d\n",
++				    err);
++
++	hp_wmi_profile_keepalive_update();
++}
++
+ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+ static struct rfkill *wwan_rfkill;
+@@ -2111,6 +2171,7 @@ static int platform_profile_omen_set(struct device *dev,
+ 		return err;
+ 
+ 	active_platform_profile = profile;
++	hp_wmi_profile_keepalive_update();
+ 
+ 	return 0;
+ }
+@@ -2492,6 +2553,7 @@ static int platform_profile_victus_s_set(struct device *dev,
+ 		return err;
+ 
+ 	active_platform_profile = profile;
++	hp_wmi_profile_keepalive_update();
+ 
+ 	return 0;
+ }
+@@ -2508,6 +2570,7 @@ static int platform_profile_victus_set(struct device *dev,
+ 		return err;
+ 
+ 	active_platform_profile = profile;
++	hp_wmi_profile_keepalive_update();
+ 
+ 	return 0;
+ }
+@@ -2703,6 +2766,12 @@ static int thermal_profile_setup(struct platform_device *device)
+ 	const struct thermal_profile_params *params;
+ 	int err, tp;
+ 
++	err = devm_delayed_work_autocancel(&device->dev,
++					   &profile_keep_alive_dwork,
++					   hp_wmi_profile_keep_alive_handler);
++	if (err)
++		return err;
++
+ 	if (is_omen_thermal_profile()) {
+ 		err = platform_profile_omen_get_ec(&active_platform_profile);
+ 		if (err < 0)
+@@ -2716,6 +2785,7 @@ static int thermal_profile_setup(struct platform_device *device)
+ 		if (err < 0)
+ 			return err;
+ 
++		hp_wmi_profile_set_ec = platform_profile_omen_set_ec;
+ 		ops = &platform_profile_omen_ops;
+ 	} else if (is_victus_thermal_profile()) {
+ 		err = platform_profile_victus_get_ec(&active_platform_profile);
+@@ -2730,6 +2800,7 @@ static int thermal_profile_setup(struct platform_device *device)
+ 		if (err < 0)
+ 			return err;
+ 
++		hp_wmi_profile_set_ec = platform_profile_victus_set_ec;
+ 		ops = &platform_profile_victus_ops;
+ 	} else if (is_victus_s_thermal_profile()) {
+ 		params = hp_wmi_thermal_profile();
+@@ -2758,6 +2829,7 @@ static int thermal_profile_setup(struct platform_device *device)
+ 		if (err < 0)
+ 			return err;
+ 
++		hp_wmi_profile_set_ec = platform_profile_victus_s_set_ec;
+ 		ops = &platform_profile_victus_s_ops;
+ 	} else {
+ 		tp = thermal_profile_get();
+@@ -2776,6 +2848,8 @@ static int thermal_profile_setup(struct platform_device *device)
+ 		ops = &hp_wmi_platform_profile_ops;
+ 	}
+ 
++	hp_wmi_profile_keepalive_update();
++
+ 	platform_profile_device = devm_platform_profile_register(&device->dev, "hp-wmi",
+ 								 NULL, ops);
+ 	if (IS_ERR(platform_profile_device))
+-- 
+2.53.0
+
