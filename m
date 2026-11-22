@@ -1,64 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795376060;
-	b=uIsKv/FL8k7z4N85baJ0R3rHlAbZUxQxEaBc3fUNNmdySMR1Ey/XcTTzhQkN+m4Qz78N
-	 6USl26hYaUnilxhk8HuYKozkVBNcs0dEDeYwAywTP2hpet7NXjwa1FSJBsywRGZmZbiqE
-	 h3Z28tPZoeRVMXjLsUGjia9ECq1ypqf7iEG64YK3Gq6oLZHFxti42CSbWzH7h+g3Jn/ST
-	 QRqxnkwCQA6uw0OORJ47CjzzuPDyfuYqKIRynMB4MPpdfJbcL28Teqs9T0IJdvZXoJBJy
-	 z2pRSRJWizXqm7F/SADEX+0q11bBi1NDBwVXjmsXxRDOEeF9YmiYAZmOLIAd57sW7og==
+	b=HO0DBT0KRQf+LbrudWA8UaYQ8PMhJtr6JMmic2C0p09LvkSJ578cQRorFacBFJUZD5Uu
+	 hsN5URaulRQTQkDP6CHUBmszcZzPCZNLc9vbTzU9rHidi0/YWpxDrEjDOTbDjF4LrOGs7
+	 RRTmk9Mp1S451cfszfzmS52w02UWw3mQSK4NnvukwYRL0hwGdfQeRIfUoKbjjvns9dMst
+	 2y4sLXa86a2Fy0tjENLoDpmQ/NwfBEr9PDuqXBxBKgtsB94iPfuXnGiBNZbFBWj723FZb
+	 enBdCE86NlP7SVpuP8kDTkb3EFUYpCzUbBEHGv2ZU1Zpg/QEKpfQjcwj+PtF+nHViwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795376060;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=ULicIa4N045djpBg+N+owj6l70eR+oLJUtpQhb3nDCc=;
-	b=Jt5zcRP36dz0uDDRErld/Ky6nixN7EAj2LmZjH1Pm7bQJNIRI+6krRGigMrXr7/SgKBg
-	 soMti+wvQgrSdXImk0OHD7gNTurNPnUIC3EYhXnAoeNWWjI6qnI40WOhokzXv3VOaMg23
-	 Tt6g43si979aBlK604qBVZ2PsgI4FD7sqod90Jiurvfp9WHQaTQzKJYRPEshATLTKUgvG
-	 XiTPJatpPb8tGxiEKj9hxmScbmlgRHBzYxDRrprrEZYwOJNeZomfjNn7JXiVmSqwtaj+n
-	 tjKVgOd0UQT2fHZV+0yiHo9+/iBTHNbJRcxlM2zWKNfyRORJJd9nJd00hf+XjgzenIQ==
+	 Content-Transfer-Encoding;
+	bh=5P+7tBedBIdwQSGY2GkLGv3XTyNXbKGIOLqLjYKCNQ4=;
+	b=zGCetfEs3uk478LSDFRJp8ro0nCF+Ck0P9cyhDEAh/D+uUqF+MfAGfmA9TbkzChSFbVl
+	 KPji3urTkX+Wgk4MpSc03BClPJR7vbuE/SDZtXmc7aVCHCY7uQhZplfMwrOb7VLG82ySR
+	 uvxV/LOELLoNVsygetzhY5WOQ/KlkIncZKRrB6msxxAEBe/V5c3kWJvwGXo7+qBmadEbb
+	 6DUvObzdmcRT94Tdwurw3m/r9mForFVrZC3RpZ+IfAXK5iikXLN/HCdf/8gVcJ9s9jy9K
+	 3kkgX4uU2w2GTidKwW6DbuikZGG8egnYGZZzkECj8huSUEKrfvi72dV2axV8SOYbbyA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VBulqJDK;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8TzuuMw;
 	arc=none smtp.remote-ip=192.198.163.18
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47090606A330;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63E6606A33B;
 	Sun, 22 Nov 2026 19:34:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 47090606A330
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C63E6606A33B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VBulqJDK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8TzuuMw
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1795376059; x=1826912059;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tTd8+9TE00/MiwfqfbLFpR/3N6T7UxU8CbZI6vWOf6I=;
-  b=VBulqJDKiUsTyEna/0Sp9rDicaQxcjD3jmDVuCzZirGVHW0H+yapLFHU
-   KIK3EG9E0ridAZBOScMt13cZSrFZoNbxnXormLY7DBovteVAfJ8aGANaJ
-   KC3og41JtLBMffvY/R6e9GjasodrQbaJuwky8FWPqz/sHJRHdD1D3dTxK
-   cdvL5n5Mg2vv6soMcalsb/BM7y3LemBnMgpGLiKVqouwoJ2ysi519mNjh
-   3Iop6PMxGWWDYjX0SE1QUOlQv5s5xRwK7oJpY3EyRvKnMb1Sm6cJkYSOB
-   /teXNn5nvBRp+fmmaSy6Zf2TUxzhVW2l03OeDNV8SnRY4+1AwDHoGXWGa
-   A==;
-X-CSE-ConnectionGUID: 3a9MYWlwSqaDrNUpIAjmSQ==
-X-CSE-MsgGUID: MgB9ifh1RZS1OPfvFD29VQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4217507"
+  bh=BG2gzCHnt9oFAjZiqbSwnEbVMvdnKd/0xby1+p5ZVl8=;
+  b=U8TzuuMwL1W44wryWwDEaDGfGdx85DS3Zsp+FrRdHjfp7NdslltAtbSZ
+   re+EOld744JgsNDa+ZHO0uaZulU4MVajUbeUVb/KufSqKYPMcfgCV0B4z
+   BIzD8QJ0H2pMNJnyBkx6nSOmVHEe9+qZKAkvDx1ZikiJLLFMAGB5UhE21
+   PNXMTGhsNp9NsKyrA59x0C7PJtGrHKf6FjENLlJDsP/oqQ2WnJWgjR4Wl
+   ZX/17xIfFShydD0vq6A7Q9blTfpyQsJUlHOzf7fqoVvazl149mwFhc1mA
+   uYMfwM3ODpTkNJ06lKEThQcsirG2zGv9x4YzfrxeCSSMx6VGsvvmNfYyS
+   g==;
+X-CSE-ConnectionGUID: 3nw2GBVeSzW8fHMlmKg+jg==
+X-CSE-MsgGUID: 0UKwMLYbQWmQFO3rIFmODQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4217510"
 X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="4217507"
+   d="scan'208";a="4217510"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2026 11:34:18 -0800
-X-CSE-ConnectionGUID: JS8zkJP3QlWYVYBoWF6USQ==
-X-CSE-MsgGUID: RhVISWzURuSAc9MUbame4A==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2026 11:34:19 -0800
+X-CSE-ConnectionGUID: FHMOa7JITg2E18fpr20kKQ==
+X-CSE-MsgGUID: tl8NZPL7S86cPCEHTAS+OQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="11109789"
+   d="scan'208";a="11109794"
 Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.54.77.98])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2026 11:34:19 -0800
 From: "David E. Box" <david.e.box@linux.intel.com>
@@ -68,9 +68,9 @@ Cc: "David E. Box" <david.e.box@linux.intel.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/12] tools/arch/x86/pmtctl: Add pmtxml2json conversion tool
-Date: Sun, 22 Nov 2026 11:33:58 -0800
-Message-ID: <82b74c6bcc8da5d08bce4cec8757b048d69dac17.1795374925.git.david.e.box@linux.intel.com>
+Subject: [PATCH v2 04/12] tools/arch/x86/pmtctl: Add JSON metric definition loading
+Date: Sun, 22 Nov 2026 11:33:59 -0800
+Message-ID: <57cd5d4e4774ba815decccdd3d62a4abacfad1ea.1795374925.git.david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1795374925.git.david.e.box@linux.intel.com>
 References: <cover.1795374925.git.david.e.box@linux.intel.com>
@@ -83,1048 +83,657 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-The layout of each PMT telemetry region is described by aggregator XML
-files published in the Intel-PMT repository
-(https://github.com/intel/Intel-PMT). Each file lists the samples of
-one GUID with their sample ID, bit range and description.
+The telemetry data of a PMT device is an array of 64-bit samples
+whose meaning, its telemetry semantic space (TSS), is identified by the
+device's GUID. pmtxml2json.py converts the published layouts into one
+JSON file per GUID, listing the metrics as bit ranges of samples.
 
-Add pmtxml2json.py, which converts these files into JSON metric
-definitions that pmtctl can load at runtime. Each aggregator becomes a
-pmt_<guid>.json file holding the GUID, its platform and description,
-and one event per sample with its name, description, sample ID and bit
-range. Event names are derived from the sample names. Where a name
-would collide, the samples of the subgroups involved are all prefixed
-with their subgroup, so the members of a subgroup are named alike.
-Reserved samples are skipped. The rules are described in
-pmtxml2json.md.
+Add loading of these files with libjansson. A path may name a single
+definition file or a directory of them. Each file becomes one entry of
+a TSS database in struct pmtctl_ctx, holding the GUID's platform,
+description and metrics, sorted by name, so the metrics of a device
+are found with a single lookup of its GUID. pmt_tss_db_load_json()
+loads the database, and pmtctl_ctx_free() frees it with the rest of the
+context.
 
-The aggregator files include shared data type definitions from a
-*_common.xml file through an external XML entity. pmtxml2json doesn't
-need those definitions, so it parses the XML with lxml with entity
-resolution turned off, leaving the entity unresolved. The standard
-library parser can't do that.
+Definition files are validated: each must have a GUID not defined by
+another file, and each event a unique name, a 32-bit sample ID and a bit
+range within the 64-bit sample (lsb <=3D msb <=3D 63). Otherwise the file is
+rejected with a message naming the event. In a directory every file is
+checked and any bad file fails the load, so a partial set of definitions
+is never used.
 
-Add Makefile targets to fetch the repository into a local cache and
-convert it into defs/, replacing the definitions of an earlier run:
-
-  make defs-json-fetch   # clone (once) and convert
-  make defs-json-pull    # update the clone and convert again
-  make defs-clean        # remove defs/
-
-The fetch targets are not part of the default build, to avoid
-unexpected network access.
+Building pmtctl now requires libjansson.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
 V2 changes:
-  - Replaces v1 15.
-  - New output format: one pmt_<guid>.json per GUID with only what
-    pmtctl uses. The perf-style PMU, ConfigCode and MetricGroup fields
-    and the pmt_guids.json sidecar are gone.
-  - GUIDs written without 0x and with decimal digits only are read as
-    hex; v1 converted 7 published GUIDs under the wrong number.
-  - Names that differ only in case are disambiguated, and all members
-    of a subgroup with a colliding name are prefixed together.
-  - XML is parsed with entity resolution turned off; lxml is checked
-    for and documented.
-  - Fetching again removes stale definitions; the Makefile has fetch
-    targets only, with no C code generation.
-  - Dead code removed.
+  - Replaces v1 04 and 07.
+  - A TSS database with one entry per GUID, sorted and searched with
+    bsearch(), replaces the metric blocks, the flat-index accessors and
+    the GUID registry.
+  - No string pool, casts or realloc(+1) growth.
+  - Files are validated strictly. A bad file fails a directory load,
+    where v1's result depended on readdir order, and errors name the
+    file and event.
 
- tools/arch/x86/pmtctl/.gitignore             |   1 +
- tools/arch/x86/pmtctl/Makefile               |  55 +-
- tools/arch/x86/pmtctl/scripts/pmtxml2json.md | 189 ++++++
- tools/arch/x86/pmtctl/scripts/pmtxml2json.py | 639 +++++++++++++++++++
- 4 files changed, 883 insertions(+), 1 deletion(-)
- create mode 100644 tools/arch/x86/pmtctl/scripts/pmtxml2json.md
- create mode 100755 tools/arch/x86/pmtctl/scripts/pmtxml2json.py
+ tools/arch/x86/pmtctl/Makefile             |  13 +
+ tools/arch/x86/pmtctl/include/lib/pmtctl.h |   2 +
+ tools/arch/x86/pmtctl/include/lib/tss.h    |  43 +++
+ tools/arch/x86/pmtctl/lib/pmtctl.c         |   2 +
+ tools/arch/x86/pmtctl/lib/tss.c            |  45 +++
+ tools/arch/x86/pmtctl/lib/tss_json.c       | 406 +++++++++++++++++++++
+ 6 files changed, 511 insertions(+)
+ create mode 100644 tools/arch/x86/pmtctl/include/lib/tss.h
+ create mode 100644 tools/arch/x86/pmtctl/lib/tss.c
+ create mode 100644 tools/arch/x86/pmtctl/lib/tss_json.c
 
-diff --git a/tools/arch/x86/pmtctl/.gitignore b/tools/arch/x86/pmtctl/.giti=
-gnore
-index 3bd0d7c1b61a..45f94e0b3900 100644
---- a/tools/arch/x86/pmtctl/.gitignore
-+++ b/tools/arch/x86/pmtctl/.gitignore
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- pmtctl
-+defs/
 diff --git a/tools/arch/x86/pmtctl/Makefile b/tools/arch/x86/pmtctl/Makefile
-index bf422b84fd34..2d66e4e036cc 100644
+index 2d66e4e036cc..8b723f96904b 100644
 --- a/tools/arch/x86/pmtctl/Makefile
 +++ b/tools/arch/x86/pmtctl/Makefile
-@@ -19,7 +19,60 @@ pmtctl: $(OBJS)
+@@ -7,11 +7,24 @@ CFLAGS =3D -Wextra
 =20
- $(OBJS): $(wildcard include/*.h include/lib/*.h)
+ override CFLAGS +=3D -O2 -Wall -D_GNU_SOURCE -Iinclude -I../../../include
 =20
--.PHONY: clean install
-+# --- XML -> JSON step (network-bound; opt-in) ---
-+#
-+# Fetches the Intel-PMT git repo (cached under $(PMT_CACHE_DIR)) and
-+# converts every aggregator XML into JSON under $(DEFS_DIR)/,
-+# for use with 'pmtctl -J $(DEFS_DIR)'.
-+# Not wired into 'all' on purpose: avoid surprise network access.
-+PYTHON		?=3D python3
-+DEFS_DIR	?=3D defs
-+PMT_CACHE_DIR	?=3D $(HOME)/.cache/pmtctl
++# The jansson check is skipped for targets that don't compile anything
++ifneq ($(filter-out clean defs-json-fetch defs-json-pull defs-clean,$(or $=
+(MAKECMDGOALS),pmtctl)),)
++JANSSON_CFLAGS :=3D $(shell pkg-config --cflags jansson 2>/dev/null)
++JANSSON_LIBS :=3D $(shell pkg-config --libs jansson 2>/dev/null)
++ifeq ($(JANSSON_LIBS),)
++$(error jansson not found: install libjansson-dev (Debian/Ubuntu) or janss=
+on-devel (Fedora/RHEL))
++endif
++override CFLAGS +=3D $(JANSSON_CFLAGS)
++LDLIBS +=3D $(JANSSON_LIBS)
++endif
 +
-+XML2JSON_SCRIPT	:=3D scripts/pmtxml2json.py
-+
-+# Stamp marks "the XML->JSON conversion has run". The exact set of
-+# generated files is not known up front, so we depend on a single stamp.
-+# It is redone when the script changes; use defs-json-pull to update the
-+# XML, or defs-clean to start over.
-+DEFS_JSON_STAMP	:=3D $(DEFS_DIR)/.stamp
-+
-+defs-json-fetch: $(DEFS_JSON_STAMP)
-+
-+# Fail early, with the package to install, if python3 or lxml is missing
-+XML2JSON_CHECK =3D @$(PYTHON) -c 'import lxml' 2>/dev/null || { \
-+	echo "$(XML2JSON_SCRIPT) needs $(PYTHON) with lxml (package python3-lxml)=
-" >&2; \
-+	exit 1; }
-+
-+$(DEFS_JSON_STAMP): $(XML2JSON_SCRIPT)
-+	@echo "defs-json-fetch: converting Intel-PMT XML from $(PMT_CACHE_DIR) (c=
-loned if missing)"
-+	$(XML2JSON_CHECK)
-+	@mkdir -p $(DEFS_DIR)
-+	@rm -f $(DEFS_DIR)/pmt_*.json
-+	$(PYTHON) $(XML2JSON_SCRIPT) \
-+		--fetch-pmt-repo \
-+		--pmt-cache-dir $(PMT_CACHE_DIR) \
-+		--output-dir $(DEFS_DIR)
-+	@touch $@
-+
-+# Run 'git pull' on the cached Intel-PMT repo, then regenerate JSON.
-+defs-json-pull: $(XML2JSON_SCRIPT)
-+	@echo "defs-json-pull: running 'git pull' on $(PMT_CACHE_DIR)"
-+	$(XML2JSON_CHECK)
-+	@mkdir -p $(DEFS_DIR)
-+	@rm -f $(DEFS_DIR)/pmt_*.json
-+	$(PYTHON) $(XML2JSON_SCRIPT) \
-+		--fetch-pmt-repo --refresh-pmt-repo \
-+		--pmt-cache-dir $(PMT_CACHE_DIR) \
-+		--output-dir $(DEFS_DIR)
-+	@touch $(DEFS_JSON_STAMP)
-+
-+# Separate from 'clean' so a routine clean does not throw away the
-+# (potentially slow) fetched/converted JSON tree.
-+defs-clean:
-+	rm -rf $(DEFS_DIR)
-+
-+.PHONY: clean install defs-json-fetch defs-json-pull defs-clean
- clean:
- 	@rm -f pmtctl $(OBJS)
+ OBJS :=3D \
+ 	lib/common.o \
+ 	lib/device_telem.o \
+ 	lib/log.o \
+ 	lib/pmtctl.o \
++	lib/tss.o \
++	lib/tss_json.o \
+ 	src/main.o
 =20
-diff --git a/tools/arch/x86/pmtctl/scripts/pmtxml2json.md b/tools/arch/x86/=
-pmtctl/scripts/pmtxml2json.md
+ pmtctl: $(OBJS)
+diff --git a/tools/arch/x86/pmtctl/include/lib/pmtctl.h b/tools/arch/x86/pm=
+tctl/include/lib/pmtctl.h
+index e3a2c862bc78..9da9e1f221ca 100644
+--- a/tools/arch/x86/pmtctl/include/lib/pmtctl.h
++++ b/tools/arch/x86/pmtctl/include/lib/pmtctl.h
+@@ -5,11 +5,13 @@
+ #include <stddef.h>
+=20
+ #include "lib/device.h"
++#include "lib/tss.h"
+=20
+ /* State for one pmtctl command, owned by the command */
+ struct pmtctl_ctx {
+ 	struct pmt_device *devices;
+ 	size_t num_devices;
++	struct pmt_tss_db tss;
+ };
+=20
+ int pmtctl_ctx_init(struct pmtctl_ctx *ctx);
+diff --git a/tools/arch/x86/pmtctl/include/lib/tss.h b/tools/arch/x86/pmtct=
+l/include/lib/tss.h
 new file mode 100644
-index 000000000000..edfaab6fd2f7
+index 000000000000..3f5238540240
 --- /dev/null
-+++ b/tools/arch/x86/pmtctl/scripts/pmtxml2json.md
-@@ -0,0 +1,189 @@
-+# pmtxml2json: XML =E2=86=92 JSON conversion
++++ b/tools/arch/x86/pmtctl/include/lib/tss.h
+@@ -0,0 +1,43 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef PMTCTL_TSS_H
++#define PMTCTL_TSS_H
 +
-+[`pmtxml2json.py`](pmtxml2json.py) converts Intel PMT (Platform Monitoring
-+Technology) Aggregator XML files into JSON metric definitions
-+that `pmtctl` loads with `-J <dir>`.
++#include <stddef.h>
++#include <stdint.h>
 +
-+This document focuses on the **EventName naming convention** =E2=80=94 the=
- rule used
-+to derive an event name from each `<TELC:sample>` element.
++/* Every PMT telemetry sample is one 64-bit word */
++#define PMT_SAMPLE_BITS		64
 +
-+## Requirements and usage
++/* A metric: bits [lsb, msb] of sample sample_id */
++struct pmt_metric_def {
++	char *name;
++	char *description;	/* may be NULL */
++	uint32_t sample_id;
++	unsigned int lsb;
++	unsigned int msb;
++};
 +
-+The script needs Python 3 and [lxml](https://lxml.de). The aggregator files
-+include their `*_common.xml` data types through an external entity; lxml c=
-an
-+leave it unresolved, which the standard library XML parser cannot.
++/*
++ * The telemetry semantic space (TSS) identified by a GUID: the meaning of
++ * the samples in a telemetry region with that GUID.
++ */
++struct pmt_tss_info {
++	uint32_t guid;
++	char *platform;		/* may be NULL */
++	char *description;	/* may be NULL */
++	struct pmt_metric_def *metrics;	/* sorted by name */
++	size_t num_metrics;
++};
 +
-+Normally it is run by `make defs-json-fetch`, which clones the Intel-PMT
-+repository into a cache directory and writes the definitions to `defs/`. It
-+can also convert a local copy:
++/* The telemetry semantic spaces with known metric definitions */
++struct pmt_tss_db {
++	struct pmt_tss_info *tss_info;	/* sorted by GUID */
++	size_t num_tss_info;
++};
 +
-+```sh
-+scripts/pmtxml2json.py --by-path <Intel-PMT>/xml --output-dir defs
-+```
++int pmt_tss_db_load_json(const char *path, struct pmt_tss_db *db);
++void pmt_tss_info_free(struct pmt_tss_info *info);
++void pmt_tss_db_free(struct pmt_tss_db *db);
++const struct pmt_tss_info *pmt_tss_db_lookup(const struct pmt_tss_db *db, =
+uint32_t guid);
 +
-+See `--help` for all options. The exit status is 0 on success, 1 if any
-+aggregator could not be converted, and 2 for a usage or fetch error.
++#endif
+diff --git a/tools/arch/x86/pmtctl/lib/pmtctl.c b/tools/arch/x86/pmtctl/lib=
+/pmtctl.c
+index 9a6fd2a303f4..b218bac15824 100644
+--- a/tools/arch/x86/pmtctl/lib/pmtctl.c
++++ b/tools/arch/x86/pmtctl/lib/pmtctl.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include "lib/device.h"
+ #include "lib/pmtctl.h"
++#include "lib/tss.h"
+=20
+ /**
+  * pmtctl_ctx_init - discover PMT devices
+@@ -16,6 +17,7 @@ int pmtctl_ctx_init(struct pmtctl_ctx *ctx)
+=20
+ void pmtctl_ctx_free(struct pmtctl_ctx *ctx)
+ {
++	pmt_tss_db_free(&ctx->tss);
+ 	telem_free(ctx->devices, ctx->num_devices);
+ 	ctx->devices =3D NULL;
+ 	ctx->num_devices =3D 0;
+diff --git a/tools/arch/x86/pmtctl/lib/tss.c b/tools/arch/x86/pmtctl/lib/ts=
+s.c
+new file mode 100644
+index 000000000000..7555b76c3ded
+--- /dev/null
++++ b/tools/arch/x86/pmtctl/lib/tss.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <stdlib.h>
 +
-+## Inputs
++#include "lib/tss.h"
 +
-+For each sample, only two XML inputs participate in naming:
-+
-+| Input             | XML source                                | Example =
-value             |
-+| ----------------- | ----------------------------------------- | --------=
------------------ |
-+| `name`            | `name=3D` attribute on `<TELC:sample>`      | `IA_SC=
-ALABILITY`          |
-+| `sampleSubGroup`  | `<TELC:sampleSubGroup>` child text        | `IA_SCAL=
-ABILITY_CORE7`    |
-+
-+The aggregator's `<TELEM:uniqueid>` (GUID) is used for the output filename
-+(`pmt_<guid>.json`), **not** for naming.
-+
-+`sampleID`, `sampleGroupID`, `lsb`, `msb`, and `productid` are not used to
-+build `EventName`. They describe bit layout, packaging, or platform
-+identity rather than the metric's identity, and using them would either
-+produce names that change when the XML is regenerated or names that
-+duplicate information already stored in `guid`, `sample_id`, `lsb` and
-+`msb`.
-+
-+## Pre-filter: reserved samples
-+
-+Before naming, a sample is dropped if
-+
-+- its `name` attribute or `<TELC:sampleSubGroup>` text contains `reserved`
-+  or `rsvd` (case-insensitive, optionally with trailing digits) as a separ=
-ate
-+  token, or
-+- its sample or group `<TELC:description>` is just `reserved` or `rsvd`
-+  (optionally with digits). Descriptions are prose, so a mention elsewhere=
- in
-+  the text doesn't count.
-+
-+Reserved samples never receive an `EventName`.
-+
-+## Naming rule (lazy prefix, per subgroup)
-+
-+Within a single aggregator XML, a `name` **collides** if more than one
-+non-reserved sample has it after `sanitize()`, so names that differ only in
-+case collide. A subgroup is **prefixed** if any of its samples has a colli=
-ding
-+name. For each surviving sample:
-+
-+1. If its subgroup is prefixed and the subgroup differs from `name`:
-+   `EventName =3D sanitize(sampleSubGroup) + "." + sanitize(name)`
-+2. Otherwise:
-+   `EventName =3D sanitize(name)`
-+
-+All samples of a prefixed subgroup are named alike, so related metrics stay
-+together in `pmtctl list`, which sorts them by name.
-+
-+### Why lazy?
-+
-+`sampleSubGroup` plays two different roles in practice:
-+
-+- A **metric-instance index** =E2=80=94 e.g. `IA_SCALABILITY_CORE7` qualif=
-ies a
-+  per-core copy of `IA_SCALABILITY`. Prefixing is meaningful and useful.
-+- A **container alias** =E2=80=94 e.g. `INTEL_VERSION_2` is just an enclos=
-ing
-+  container around an already-unique `RTL_VERSION`. Prefixing here would
-+  produce a confusing label like `intel_version_2.rtl_version`.
-+
-+The lazy rule borrows `sampleSubGroup` **only for subgroups with a collidi=
-ng
-+name**, yielding clean labels in the common case and disambiguated ones wh=
-en
-+needed.
-+
-+### `sanitize()`
-+
-+`_sanitize_token()` lowercases the text and replaces each run of characters
-+other than letters and digits with a single `_`, without a leading or
-+trailing `_`. A sanitized token therefore never contains `__` or `.`.
-+
-+When concatenating subgroup and name, **each part is sanitized
-+separately** and joined with a literal `.`, so the dot is preserved in the
-+final `EventName` (e.g. `ia_scalability_core7.ia_scalability`).
-+
-+## Worked example
-+
-+Consider an aggregator XML containing three samples:
-+
-+```xml
-+<TELC:sampleGroup sampleID=3D"0x0">
-+  <TELC:sample name=3D"RTL_VERSION" ...>
-+    <TELC:sampleSubGroup>INTEL_VERSION_2</TELC:sampleSubGroup>
-+    <TELC:lsb>0</TELC:lsb><TELC:msb>15</TELC:msb>
-+  </TELC:sample>
-+</TELC:sampleGroup>
-+
-+<TELC:sampleGroup sampleID=3D"0x10">
-+  <TELC:sample name=3D"IA_SCALABILITY" ...>
-+    <TELC:sampleSubGroup>IA_SCALABILITY_CORE0</TELC:sampleSubGroup>
-+    <TELC:lsb>0</TELC:lsb><TELC:msb>7</TELC:msb>
-+  </TELC:sample>
-+</TELC:sampleGroup>
-+
-+<TELC:sampleGroup sampleID=3D"0x11">
-+  <TELC:sample name=3D"IA_SCALABILITY" ...>
-+    <TELC:sampleSubGroup>IA_SCALABILITY_CORE7</TELC:sampleSubGroup>
-+    <TELC:lsb>0</TELC:lsb><TELC:msb>7</TELC:msb>
-+  </TELC:sample>
-+</TELC:sampleGroup>
-+```
-+
-+Per-aggregator name counts:
-+
-+| `name`           | count |
-+| ---------------- | ----- |
-+| `RTL_VERSION`    | 1     |
-+| `IA_SCALABILITY` | 2     |
-+
-+Resulting `EventName`s:
-+
-+| Sample                   | Rule                      | EventName        =
-                     |
-+| ------------------------ | ------------------------- | -----------------=
--------------------- |
-+| `RTL_VERSION`            | (2) subgroup not prefixed | `rtl_version`    =
-                     |
-+| `IA_SCALABILITY` (CORE0) | (1) prefixed subgroup     | `ia_scalability_c=
-ore0.ia_scalability` |
-+| `IA_SCALABILITY` (CORE7) | (1) prefixed subgroup     | `ia_scalability_c=
-ore7.ia_scalability` |
-+
-+Note that `RTL_VERSION` is **not** prefixed with its `INTEL_VERSION_2`
-+container, even though `sampleSubGroup` is set =E2=80=94 because no sample=
- of that
-+subgroup has a colliding name.
-+
-+The prefix applies to a whole subgroup. With samples `CORE0` and `GT` in
-+subgroup `IA_CLUSTER_CSTATES`, and `CORE0` and `MODULE0` in `CDYN_LEVEL`,
-+only `CORE0` collides, but both subgroups are prefixed:
-+`ia_cluster_cstates.core0`, `ia_cluster_cstates.gt`, `cdyn_level.core0` and
-+`cdyn_level.module0`.
-+
-+## Output shape
-+
-+Each aggregator becomes one `pmt_<guid>.json` file:
-+
-+```json
++void pmt_tss_info_free(struct pmt_tss_info *info)
 +{
-+  "guid": "0x<guid>",
-+  "platform": "<optional, from the --by-path directory>",
-+  "description": "<optional, the aggregator's <TELEM:description>>",
-+  "events": [
-+    {
-+      "EventName": "<name per rule above>",
-+      "description": "<sample or group description>",
-+      "sample_id": <sampleID>,
-+      "lsb": <lsb>,
-+      "msb": <msb>
-+    }
-+  ]
++	for (size_t i =3D 0; i < info->num_metrics; i++) {
++		free(info->metrics[i].name);
++		free(info->metrics[i].description);
++	}
++	free(info->metrics);
++	free(info->platform);
++	free(info->description);
 +}
-+```
 +
-+`sample_id` selects a 64-bit sample of the telemetry region and `lsb` and
-+`msb` give the event's bit range within it.
++void pmt_tss_db_free(struct pmt_tss_db *db)
++{
++	for (size_t i =3D 0; i < db->num_tss_info; i++)
++		pmt_tss_info_free(&db->tss_info[i]);
++	free(db->tss_info);
 +
-+`platform` is the first directory under the `--by-path` root, uppercased
-+(`PTL/0/ptl_aggregator.xml` gives `PTL`). An event without a description in
-+the XML gets one made from its name and width, such as `Core Temp (8b)`.
++	*db =3D (struct pmt_tss_db){};
++}
 +
-+## EventName uniqueness
++static int tss_info_guid_cmp(const void *key, const void *elem)
++{
++	const uint32_t *guid =3D key;
++	const struct pmt_tss_info *info =3D elem;
 +
-+Within a single aggregator XML the rule above resolves the collisions in t=
-he
-+Intel-PMT data. If two samples still share the same `EventName` =E2=80=94 =
-for example
-+because neither has a usable `sampleSubGroup` =E2=80=94 the converter appl=
-ies a
-+last-resort ordinal suffix
-+`__0`, `__1`, =E2=80=A6 and emits a `WARN` line to stderr.  The double-und=
-erscore is
-+chosen to be visually distinct from any XML field so it is not mistaken fo=
-r a
-+meaningful part of the metric name.
++	if (*guid !=3D info->guid)
++		return *guid < info->guid ? -1 : 1;
 +
-+Across **different** GUIDs, names may repeat =E2=80=94 they live in distin=
-ct
-+files and are disambiguated by the file's `guid`.
-diff --git a/tools/arch/x86/pmtctl/scripts/pmtxml2json.py b/tools/arch/x86/=
-pmtctl/scripts/pmtxml2json.py
-new file mode 100755
-index 000000000000..144aed9894c4
++	return 0;
++}
++
++/* Return: the entry for @guid, or NULL if no definitions were loaded for =
+it */
++const struct pmt_tss_info *pmt_tss_db_lookup(const struct pmt_tss_db *db, =
+uint32_t guid)
++{
++	if (!db->num_tss_info)
++		return NULL;
++
++	return bsearch(&guid, db->tss_info, db->num_tss_info, sizeof(*db->tss_inf=
+o),
++		       tss_info_guid_cmp);
++}
+diff --git a/tools/arch/x86/pmtctl/lib/tss_json.c b/tools/arch/x86/pmtctl/l=
+ib/tss_json.c
+new file mode 100644
+index 000000000000..32343f233aff
 --- /dev/null
-+++ b/tools/arch/x86/pmtctl/scripts/pmtxml2json.py
-@@ -0,0 +1,639 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0-only
-+"""Convert Intel PMT aggregator XML files into pmtctl JSON metric definiti=
-ons.
-+
-+Provides core XML-to-event conversion plus optional Intel-PMT repository
-+fetch/cache support.
-+"""
-+
-+import argparse
-+import glob
-+import json
-+import os
-+import re
-+import subprocess
-+import sys
-+
-+from collections import Counter
-+from dataclasses import dataclass
-+from typing import Dict, List, Optional, Set, Tuple
-+
-+from lxml import etree  # pylint: disable=3Dc-extension-no-member
-+
-+INTEL_PMT_REPO_URL =3D "https://github.com/intel/Intel-PMT"
-+
-+# Every PMT sample is one 64-bit word
-+SAMPLE_BITS =3D 64
-+
-+
-+def _expand_path(path: str) -> str:
-+    """Return an absolute path with user home expansion applied."""
-+    return os.path.abspath(os.path.expanduser(path))
-+
-+
-+def _base_dir(path: str) -> str:
-+    """Return path if it is a directory, else the directory containing it.=
-"""
-+    if os.path.isfile(path):
-+        return os.path.dirname(path) or "."
-+    return path
-+
-+
-+def _repo_dir_name_from_url(repo_url: str) -> str:
-+    """Return a deterministic cache directory name for a git repository UR=
-L."""
-+    cleaned =3D repo_url.rstrip("/")
-+    if cleaned.endswith(".git"):
-+        cleaned =3D cleaned[: -len(".git")]
-+
-+    base =3D os.path.basename(cleaned) or "repo"
-+    base =3D re.sub(r"[^0-9A-Za-z._-]+", "-", base).strip("-")
-+    return base or "repo"
-+
-+
-+def _fetch_intel_pmt_xml_root(
-+    cache_dir: str,
-+    refresh: bool =3D False,
-+    debug: bool =3D False,
-+    repo_url: str =3D INTEL_PMT_REPO_URL,
-+) -> Optional[str]:
-+    """Ensure Intel-PMT exists in cache and return its xml root path."""
-+    cache_root =3D _expand_path(cache_dir)
-+    repo_dir =3D os.path.join(cache_root, _repo_dir_name_from_url(repo_url=
-))
-+
-+    os.makedirs(cache_root, exist_ok=3DTrue)
-+
-+    try:
-+        if not os.path.isdir(repo_dir):
-+            if debug:
-+                print(
-+                    f"# fetch: cloning {repo_url} into {repo_dir}",
-+                    file=3Dsys.stderr,
-+                )
-+            subprocess.run(
-+                ["git", "clone", "--depth", "1", repo_url, repo_dir],
-+                check=3DTrue,
-+                stdout=3Dsubprocess.PIPE,
-+                stderr=3Dsubprocess.PIPE,
-+                text=3DTrue,
-+                timeout=3D300,
-+            )
-+        elif refresh:
-+            if debug:
-+                print(f"# fetch: refreshing cached repo at {repo_dir}", fi=
-le=3Dsys.stderr)
-+            subprocess.run(
-+                ["git", "-C", repo_dir, "pull", "--ff-only"],
-+                check=3DTrue,
-+                stdout=3Dsubprocess.PIPE,
-+                stderr=3Dsubprocess.PIPE,
-+                text=3DTrue,
-+                timeout=3D300,
-+            )
-+        elif debug:
-+            print(f"# fetch: using cached repo at {repo_dir}", file=3Dsys.=
-stderr)
-+    except FileNotFoundError:
-+        print("ERROR: git is not installed or not found in PATH.", file=3D=
-sys.stderr)
-+        return None
-+    except subprocess.TimeoutExpired:
-+        print("ERROR: fetching Intel-PMT timed out.", file=3Dsys.stderr)
-+        return None
-+    except subprocess.CalledProcessError as ex:
-+        err =3D (ex.stderr or "").strip()
-+        print("ERROR: failed to fetch Intel-PMT repository.", file=3Dsys.s=
-tderr)
-+        if err:
-+            print(f"       git stderr: {err}", file=3Dsys.stderr)
-+        return None
-+
-+    xml_root =3D os.path.join(repo_dir, "xml")
-+    if not os.path.isdir(xml_root):
-+        print(
-+            (
-+                "ERROR: fetched repository does not contain expected xml "
-+                f"directory: {xml_root}"
-+            ),
-+            file=3Dsys.stderr,
-+        )
-+        return None
-+
-+    return xml_root
-+
-+
-+# ---------- Reserved/RSVD skipping ----------
-+# Name: match 'reserved' or 'rsvd' with optional digits, not embedded in l=
-arger tokens
-+RESERVED_RX =3D re.compile(
-+    r"(?<![a-z0-9])(reserved|rsvd)(?:\d+)?(?![a-z0-9])", re.IGNORECASE
-+)
-+# Description: exact 'reserved' or 'rsvd' with optional trailing digits/wh=
-itespace
-+DESC_RESERVED_RX =3D re.compile(r"\s*(?:reserved|rsvd)(?:\s*\d+)?\s*$", re=
-.IGNORECASE)
-+
-+
-+@dataclass(frozen=3DTrue)
-+class SampleDef:
-+    """Normalized representation of one PMT sample field definition."""
-+
-+    sample_id: int
-+    sample_name: str
-+    lsb: int
-+    msb: int
-+    description: Optional[str]
-+    sample_subgroup: Optional[str]
-+
-+
-+def norm(tag) -> str:
-+    """Return XML tag name without namespace prefix.
-+
-+    Non-element nodes (comments, unresolved entities) have no string tag
-+    and return an empty name.
-+    """
-+    if not isinstance(tag, str):
-+        return ""
-+    return tag[tag.rfind("}") + 1 :] if "}" in tag else tag
-+
-+
-+def _text(el) -> str:
-+    """Return the stripped text of an XML element."""
-+    return (el.text or "").strip()
-+
-+
-+def parse_xml(xml_path: str):
-+    """Parse and return the XML root element for the given file path.
-+
-+    The aggregator files include their *_common.xml data types through an
-+    external entity. Those definitions are not needed for the conversion,
-+    so entities are left unresolved.
-+    """
-+    # pylint: disable-next=3Dc-extension-no-member
-+    parser =3D etree.XMLParser(resolve_entities=3DFalse)
-+    # pylint: disable-next=3Dc-extension-no-member
-+    root =3D etree.parse(xml_path, parser).getroot()
-+
-+    return root
-+
-+
-+def get_guid(root) -> int:
-+    """Extract the telemetry GUID from <uniqueid>."""
-+    for e in root.iter():
-+        if norm(e.tag).lower() =3D=3D "uniqueid":
-+            v =3D _text(e)
-+            if not v:
-+                break
-+
-+            # GUIDs are hex, with or without the 0x prefix
-+            return int(v, 16)
-+
-+    raise ValueError("Missing <TELEM:uniqueid>")
-+
-+
-+def get_description(root) -> Optional[str]:
-+    """Return the aggregator's top-level <TELEM:description>, if any."""
-+    for e in root:
-+        if norm(e.tag).lower() =3D=3D "description":
-+            return _text(e) or None
-+
-+    return None
-+
-+
-+def _is_reserved(sname: str, ssubgroup: Optional[str], desc: Optional[str]=
-) -> bool:
-+    """Return True for reserved/rsvd samples by name, sampleSubGroup, or d=
-escription."""
-+    if RESERVED_RX.search(sname):
-+        return True
-+    if ssubgroup and RESERVED_RX.search(ssubgroup):
-+        return True
-+    return bool(desc and DESC_RESERVED_RX.fullmatch(desc))
-+
-+
-+def parse_sample(s, sample_id: int, group_desc: Optional[str]) -> Optional=
-[SampleDef]:
-+    """Parse one <Sample> element; return None for reserved samples."""
-+    sname =3D (s.attrib.get("name") or f"sample_{sample_id}").strip()
-+
-+    lsb =3D None
-+    msb =3D None
-+    sdesc =3D None
-+    ssubgroup =3D None
-+
-+    for ch in s:
-+        t =3D norm(ch.tag).lower()
-+        if t =3D=3D "lsb":
-+            lsb =3D int(_text(ch), 0)
-+        elif t =3D=3D "msb":
-+            msb =3D int(_text(ch), 0)
-+        elif t =3D=3D "description":
-+            sdesc =3D _text(ch)
-+        elif t =3D=3D "samplesubgroup":
-+            ssubgroup =3D _text(ch)
-+
-+    if lsb is None or msb is None:
-+        raise ValueError(f"{sname} (sampleID=3D{sample_id}): missing lsb/m=
-sb")
-+
-+    if not 0 <=3D lsb <=3D msb < SAMPLE_BITS:
-+        raise ValueError(
-+            f"{sname} (sampleID=3D{sample_id}): invalid bit range {lsb}-{m=
-sb}"
-+        )
-+
-+    desc_text =3D sdesc if sdesc else group_desc
-+
-+    if _is_reserved(sname, ssubgroup, desc_text):
-+        return None
-+
-+    return SampleDef(
-+        sample_id=3Dsample_id,
-+        sample_name=3Dsname,
-+        lsb=3Dlsb,
-+        msb=3Dmsb,
-+        description=3Ddesc_text,
-+        sample_subgroup=3Dssubgroup,
-+    )
-+
-+
-+def parse_sample_group(sg) -> List[SampleDef]:
-+    """Parse one <SampleGroup> element into its non-reserved samples."""
-+    sid_txt =3D sg.attrib.get("sampleID") or sg.attrib.get("sampleid")
-+    if sid_txt is None:
-+        raise ValueError("SampleGroup missing sampleID")
-+
-+    sample_id =3D int(sid_txt, 0)
-+    group_name =3D (sg.attrib.get("name") or "").strip() or f"group_{sampl=
-e_id}"
-+    group_len =3D None
-+    group_desc =3D None
-+
-+    for child in sg:
-+        t =3D norm(child.tag).lower()
-+        if t =3D=3D "length":
-+            group_len =3D int(_text(child), 0)
-+        elif t =3D=3D "description":
-+            group_desc =3D _text(child)
-+
-+    if group_len is not None and group_len !=3D SAMPLE_BITS:
-+        raise ValueError(
-+            f"{group_name} sampleID=3D{sample_id} length=3D{group_len} "
-+            f"(expected {SAMPLE_BITS})"
-+        )
-+
-+    out: List[SampleDef] =3D []
-+    for s in sg:
-+        if norm(s.tag).lower() !=3D "sample":
-+            continue
-+        sample =3D parse_sample(s, sample_id, group_desc)
-+        if sample:
-+            out.append(sample)
-+
-+    return out
-+
-+
-+def parse_samples(root) -> List[SampleDef]:
-+    """Parse SampleGroup/Sample entries into filtered SampleDef records."""
-+    out: List[SampleDef] =3D []
-+
-+    for sg in root.iter():
-+        if norm(sg.tag).lower() =3D=3D "samplegroup":
-+            out.extend(parse_sample_group(sg))
-+
-+    return out
-+
-+
-+def _sanitize_token(s: str) -> str:
-+    """Lowercase s, replacing each run of non-alphanumerics with one '_'."=
-""
-+    return re.sub(r"[^0-9a-zA-Z]+", "_", s).strip("_").lower()
-+
-+
-+def event_description(s: SampleDef) -> str:
-+    """Build the description of an event, with whitespace collapsed."""
-+    if s.description:
-+        return re.sub(r"\s+", " ", s.description)
-+
-+    width =3D s.msb - s.lsb + 1
-+
-+    return f"{s.sample_name.replace('_', ' ').title()} ({width}b)"
-+
-+
-+def make_event(s: SampleDef, prefixed: Set[str]) -> Dict[str, object]:
-+    """Create one event dictionary for a sample.
-+
-+    A sample of a subgroup in @prefixed is named subgroup.name, unless the
-+    subgroup has the sample's own name.
-+    """
-+    name =3D _sanitize_token(s.sample_name)
-+    group =3D _sanitize_token(s.sample_subgroup) if s.sample_subgroup else=
- ""
-+    if s.sample_subgroup in prefixed and group and group !=3D name:
-+        name =3D f"{group}.{name}"
-+
-+    return {
-+        "EventName": name,
-+        "description": event_description(s),
-+        "sample_id": s.sample_id,
-+        "lsb": s.lsb,
-+        "msb": s.msb,
-+    }
-+
-+
-+def _resolve_duplicate_event_names(
-+    out: List[Dict[str, object]], guid: int, agg_xml: str
-+) -> None:
-+    """Detect duplicate EventNames and rename collisions as name__0, name_=
-_1, ...
-+
-+    The subgroup-prefix disambiguation in make_event covers the common cas=
-e.
-+    This function is a last-resort safety net for names that could not be
-+    disambiguated there (e.g. no usable sampleSubGroup).  The double-under=
-score
-+    suffix is intentionally distinct from any XML field so it is not mista=
-ken
-+    for a meaningful part of the metric name.
-+    """
-+    seen: Dict[str, List[int]] =3D {}
-+    for i, e in enumerate(out):
-+        name =3D e["EventName"]
-+        seen.setdefault(name, []).append(i)
-+
-+    for name, indices in seen.items():
-+        if len(indices) <=3D 1:
-+            continue
-+        print(
-+            f"WARN: {agg_xml}: GUID=3D0x{guid:08x}: "
-+            f"EventName '{name}' collision ({len(indices)} entries); "
-+            f"renaming as {name}__0 .. {name}__{len(indices) - 1}",
-+            file=3Dsys.stderr,
-+        )
-+        for ordinal, idx in enumerate(indices):
-+            out[idx]["EventName"] =3D f"{name}__{ordinal}"
-+
-+
-+def _parse_args(argv: List[str]) -> argparse.Namespace:
-+    """Parse command-line arguments."""
-+    ap =3D argparse.ArgumentParser(
-+        description=3D"Convert Intel PMT Aggregator XML to pmtctl JSON met=
-ric definitions"
-+    )
-+    ap.add_argument(
-+        "xml",
-+        nargs=3D"?",
-+        help=3D"Input PMT Aggregator XML file (optional when using --by-pa=
-th)",
-+    )
-+    ap.add_argument(
-+        "--by-path",
-+        default=3DNone,
-+        help=3D(
-+            "Directory to auto-discover PMT XMLs. When used without a "
-+            "positional XML, processes all *_aggregator.xml recursively "
-+            "and emits one output per directory."
-+        ),
-+    )
-+    ap.add_argument(
-+        "--output-dir",
-+        default=3DNone,
-+        help=3D(
-+            "Directory where JSON output files will be placed. Used "
-+            "verbatim (files are written flat by GUID). If omitted, "
-+            "the deepest folder name from --by-path is used (lowercased)."
-+        ),
-+    )
-+    ap.add_argument(
-+        "--fetch-pmt-repo",
-+        action=3D"store_true",
-+        help=3D(
-+            "Fetch Intel-PMT repository and use its xml folder when "
-+            "local xml/by-path inputs are not provided."
-+        ),
-+    )
-+    ap.add_argument(
-+        "--pmt-cache-dir",
-+        default=3D"~/.cache/pmtctl",
-+        help=3D(
-+            "Cache directory for Intel-PMT repository clone "
-+            "(default: ~/.cache/pmtctl)."
-+        ),
-+    )
-+    ap.add_argument(
-+        "--refresh-pmt-repo",
-+        action=3D"store_true",
-+        help=3D(
-+            "Refresh cached Intel-PMT repository before conversion "
-+            "(used with --fetch-pmt-repo)."
-+        ),
-+    )
-+    ap.add_argument(
-+        "--pmt-repo-url",
-+        default=3DINTEL_PMT_REPO_URL,
-+        help=3D(
-+            "Git URL of the Intel-PMT repository used by --fetch-pmt-repo "
-+            f"(default: {INTEL_PMT_REPO_URL})."
-+        ),
-+    )
-+    ap.add_argument("--debug", action=3D"store_true")
-+
-+    return ap.parse_args(argv)
-+
-+
-+def _rel_parts_from_root(d: str, root: str) -> List[str]:
-+    """Return sanitized relative path segments from root to d."""
-+    try:
-+        rel =3D os.path.relpath(os.path.normpath(d), os.path.normpath(root=
-))
-+    except ValueError:
-+        return []
-+    if rel in (".", "") or rel.startswith(".."):
-+        return []
-+
-+    def _seg(s: str) -> str:
-+        s =3D (s or "").strip().lower()
-+        s =3D re.sub(r"[^0-9a-z]+", "-", s)
-+        return re.sub(r"-+", "-", s).strip("-")
-+
-+    out: List[str] =3D []
-+    for seg in rel.split(os.sep):
-+        if seg in (".", ".."):
-+            continue
-+        s =3D _seg(seg)
-+        if s:
-+            out.append(s)
-+    return out
-+
-+
-+def _discover_all_xml_sets_by_path(p: str) -> List[Tuple[str, List[str]]]:
-+    """Return a (aggregator, rel_parts) work item for each *_aggregator.xm=
-l under p."""
-+    base =3D _base_dir(p)
-+    aggs =3D glob.glob(os.path.join(base, "**", "*_aggregator.xml"), recur=
-sive=3DTrue)
-+
-+    return [(a, _rel_parts_from_root(os.path.dirname(a), base)) for a in s=
-orted(aggs)]
-+
-+
-+def _collect_work_items(args: argparse.Namespace) -> List[Tuple[str, List[=
-str]]]:
-+    """Return the (aggregator, rel_parts) items selected by the arguments.=
-"""
-+    if args.by_path and args.xml is None:
-+        work_items =3D _discover_all_xml_sets_by_path(args.by_path)
-+        if args.debug:
-+            print(
-+                f"# by-path discovered {len(work_items)} aggregator(s)",
-+                file=3Dsys.stderr,
-+            )
-+        return work_items
-+
-+    if not args.xml:
-+        return []
-+
-+    # Single file, optionally placed relative to --by-path
-+    rel_parts: List[str] =3D []
-+    if args.by_path:
-+        rel_parts =3D _rel_parts_from_root(os.path.dirname(args.xml) or ".=
-", args.by_path)
-+    return [(args.xml, rel_parts)]
-+
-+
-+def _deepest_by_path_folder(by_path: str) -> str:
-+    """Return the last component of the --by-path directory."""
-+    return os.path.basename(os.path.normpath(_base_dir(by_path)))
-+
-+
-+def _output_dir_for(args: argparse.Namespace) -> Optional[str]:
-+    """Determine the output directory.
-+
-+    If --output-dir is given, use it verbatim; outputs are written flat
-+    by GUID (pmt_<guid>.json). If omitted, fall back to a folder
-+    named after the deepest --by-path directory (lowercased).
-+    """
-+    if args.output_dir:
-+        return args.output_dir
-+
-+    if args.by_path:
-+        deepest_folder =3D _deepest_by_path_folder(args.by_path)
-+        return "jsons" if deepest_folder.lower() =3D=3D "xml" else deepest=
-_folder.lower()
-+
-+    return None
-+
-+
-+def _platform_group_for(rel_parts: List[str], by_path: Optional[str]) -> O=
-ptional[str]:
-+    """Return the platform group for an aggregator.
-+
-+    Derived from the aggregator's location under the discovery root
-+    (e.g. "alderlake-s"). Falls back to the by-path basename for the
-+    single-mode case.
-+    """
-+    if rel_parts:
-+        return rel_parts[0].upper()
-+
-+    if by_path:
-+        deepest_folder =3D _deepest_by_path_folder(by_path)
-+        if deepest_folder and deepest_folder.lower() !=3D "xml":
-+            return deepest_folder.upper()
-+
-+    return None
-+
-+
-+def make_events(root, guid: int, agg_xml: str) -> List[Dict[str, object]]:
-+    """Return the events of an aggregator, with unique EventNames."""
-+    samples =3D parse_samples(root)
-+
-+    # When a name is shared by several samples, every sample of their
-+    # subgroups is prefixed, so the members of a subgroup are named alike
-+    name_counts =3D Counter(_sanitize_token(s.sample_name) for s in sample=
-s)
-+    prefixed =3D {
-+        s.sample_subgroup
-+        for s in samples
-+        if name_counts[_sanitize_token(s.sample_name)] > 1
-+    }
-+
-+    events =3D [make_event(s, prefixed) for s in samples]
-+
-+    _resolve_duplicate_event_names(events, guid, agg_xml)
-+
-+    return events
-+
-+
-+def convert_aggregator(
-+    agg_xml: str,
-+    rel_parts: List[str],
-+    args: argparse.Namespace,
-+    output_dir: Optional[str],
-+    written_by_guid: Dict[int, str],
-+) -> None:
-+    """Convert one aggregator XML into a pmt_<guid>.json file."""
-+    root =3D parse_xml(agg_xml)
-+    guid =3D get_guid(root)
-+
-+    out_filename =3D os.path.join(output_dir or "", f"pmt_{guid:08x}.json")
-+
-+    # GUIDs are globally unique to a telemetry layout; a duplicate
-+    # across aggregators indicates a source-data bug, not something
-+    # to silently paper over by namespacing the output.
-+    prior =3D written_by_guid.get(guid)
-+    if prior is not None:
-+        raise ValueError(
-+            f"duplicate GUID 0x{guid:08x} from {agg_xml}; "
-+            f"previously emitted by {prior}"
-+        )
-+
-+    events =3D make_events(root, guid, agg_xml)
-+    platform_group =3D _platform_group_for(rel_parts, args.by_path)
-+
-+    doc: Dict[str, object] =3D {"guid": f"0x{guid:08x}"}
-+    if platform_group:
-+        doc["platform"] =3D platform_group
-+    description =3D get_description(root)
-+    if description:
-+        doc["description"] =3D description
-+    doc["events"] =3D events
-+
-+    with open(out_filename, "w", encoding=3D"utf-8") as f:
-+        json.dump(doc, f, indent=3D2)
-+        f.write("\n")
-+
-+    written_by_guid[guid] =3D agg_xml
-+    print(f"# wrote {out_filename}", file=3Dsys.stderr)
-+    print(f"# GUID=3D0x{guid:08x} events=3D{len(events)}", file=3Dsys.stde=
-rr)
-+
-+
-+def main(argv: List[str]) -> int:
-+    """CLI entry point: discover XML files, convert, and write JSON output=
-s."""
-+    args =3D _parse_args(argv)
-+
-+    if args.refresh_pmt_repo and not args.fetch_pmt_repo:
-+        print(
-+            "ERROR: --refresh-pmt-repo requires --fetch-pmt-repo.",
-+            file=3Dsys.stderr,
-+        )
-+        return 2
-+
-+    fetched_xml_root: Optional[str] =3D None
-+    if args.fetch_pmt_repo:
-+        fetched_xml_root =3D _fetch_intel_pmt_xml_root(
-+            cache_dir=3Dargs.pmt_cache_dir,
-+            refresh=3Dargs.refresh_pmt_repo,
-+            debug=3Dargs.debug,
-+            repo_url=3Dargs.pmt_repo_url,
-+        )
-+        if fetched_xml_root is None:
-+            return 2
-+        if args.debug:
-+            print(f"# fetch: xml root=3D{fetched_xml_root}", file=3Dsys.st=
-derr)
-+        if args.by_path is None and args.xml is None:
-+            args.by_path =3D fetched_xml_root
-+
-+    work_items =3D _collect_work_items(args)
-+
-+    if not work_items:
-+        print(
-+            (
-+                "ERROR: No aggregator XML specified or discovered. "
-+                "Provide a file or use --by-path."
-+            ),
-+            file=3Dsys.stderr,
-+        )
-+        return 2
-+
-+    output_dir =3D _output_dir_for(args)
-+    if output_dir:
-+        os.makedirs(output_dir, exist_ok=3DTrue)
-+        if args.debug:
-+            print(f"# output directory: {output_dir}", file=3Dsys.stderr)
-+
-+    any_failed =3D False
-+    written_by_guid: Dict[int, str] =3D {}
-+
-+    for agg_xml, rel_parts in work_items:
-+        try:
-+            convert_aggregator(agg_xml, rel_parts, args, output_dir, writt=
-en_by_guid)
-+        # pylint: disable-next=3Dc-extension-no-member
-+        except (ValueError, OSError, etree.XMLSyntaxError) as ex:
-+            any_failed =3D True
-+            print(
-+                f"ERROR: failed processing aggregator=3D{agg_xml}: {ex}",
-+                file=3Dsys.stderr,
-+            )
-+
-+    return 1 if any_failed else 0
-+
-+
-+if __name__ =3D=3D "__main__":
-+    sys.exit(main(sys.argv[1:]))
++++ b/tools/arch/x86/pmtctl/lib/tss_json.c
+@@ -0,0 +1,406 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Load metric definitions from the JSON files written by
++ * scripts/pmtxml2json.py: one pmt_<guid>.json per telemetry semantic
++ * space, with the GUID's platform, description and events.
++ */
++#include <dirent.h>
++#include <errno.h>
++#include <jansson.h>
++#include <limits.h>
++#include <stdbool.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/stat.h>
++
++#include "lib/common.h"
++#include "lib/log.h"
++#include "lib/tss.h"
++
++static bool is_regular_file(const char *path)
++{
++	struct stat st;
++
++	if (stat(path, &st))
++		return false;
++
++	return S_ISREG(st.st_mode);
++}
++
++static const char *obj_get_string(json_t *obj, const char *key)
++{
++	return json_string_value(json_object_get(obj, key));
++}
++
++/* Read the integer @key of @obj into @val if it is in the range [0, @max]=
+ */
++static int obj_get_uint(json_t *obj, const char *key, uint32_t max, uint32=
+_t *val)
++{
++	json_t *v =3D json_object_get(obj, key);
++	json_int_t n;
++
++	if (!json_is_integer(v))
++		return -EINVAL;
++
++	n =3D json_integer_value(v);
++	if (n < 0 || n > max)
++		return -ERANGE;
++
++	*val =3D n;
++
++	return 0;
++}
++
++/* Duplicate @s into @dst, or set @dst to NULL if @s is NULL */
++static int dup_optional(const char *s, char **dst)
++{
++	*dst =3D NULL;
++	if (!s)
++		return 0;
++
++	*dst =3D strdup(s);
++	if (!*dst)
++		return -ENOMEM;
++
++	return 0;
++}
++
++/* Read the sample and bit range of an event into @def */
++static int parse_location(json_t *ev, struct pmt_metric_def *def)
++{
++	uint32_t sample_id, lsb, msb;
++	int ret;
++
++	ret =3D obj_get_uint(ev, "sample_id", UINT32_MAX, &sample_id);
++	if (ret)
++		return ret;
++
++	ret =3D obj_get_uint(ev, "lsb", PMT_SAMPLE_BITS - 1, &lsb);
++	if (ret)
++		return ret;
++
++	ret =3D obj_get_uint(ev, "msb", PMT_SAMPLE_BITS - 1, &msb);
++	if (ret)
++		return ret;
++
++	if (lsb > msb)
++		return -EINVAL;
++
++	def->sample_id =3D sample_id;
++	def->lsb =3D lsb;
++	def->msb =3D msb;
++
++	return 0;
++}
++
++/* Fill @def from event @idx of @path. On failure @def may be partly fille=
+d. */
++/*
++ * Fill @def from event @ev. On failure @def may be partly filled; the
++ * caller frees it with the rest of the metrics array.
++ */
++static int parse_event(json_t *ev, const char *path, size_t idx, struct pm=
+t_metric_def *def)
++{
++	const char *name;
++	int ret;
++
++	name =3D obj_get_string(ev, "EventName");
++	if (!name) {
++		log_err("%s: event %zu: missing EventName", path, idx);
++		return -EINVAL;
++	}
++
++	ret =3D parse_location(ev, def);
++	if (ret) {
++		log_err("%s: event %zu (%s): missing or invalid sample_id, lsb or msb",
++			path, idx, name);
++		return ret;
++	}
++
++	def->name =3D strdup(name);
++	if (!def->name)
++		return -ENOMEM;
++
++	return dup_optional(obj_get_string(ev, "description"), &def->description);
++}
++
++static int metric_cmp(const void *a, const void *b)
++{
++	const struct pmt_metric_def *ma =3D a;
++	const struct pmt_metric_def *mb =3D b;
++
++	return strcmp(ma->name, mb->name);
++}
++
++/* Sort the metrics of @info by name and reject duplicate names */
++static int sort_metrics(struct pmt_tss_info *info, const char *path)
++{
++	if (!info->num_metrics)
++		return 0;
++
++	qsort(info->metrics, info->num_metrics, sizeof(*info->metrics), metric_cm=
+p);
++
++	for (size_t i =3D 1; i < info->num_metrics; i++) {
++		if (!strcmp(info->metrics[i - 1].name, info->metrics[i].name)) {
++			log_err("%s: event %s is defined more than once", path,
++				info->metrics[i].name);
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
++static int parse_file_guid(json_t *root, const char *path, uint32_t *guid)
++{
++	const char *s;
++
++	s =3D obj_get_string(root, "guid");
++	if (!s || parse_u32(s, 0, guid)) {
++		log_err("%s: missing or invalid guid", path);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++/*
++ * Add the telemetry semantic space of @root. @db->tss_info has room for o=
+ne
++ * more entry. On failure nothing is added.
++ */
++static int parse_file(struct pmt_tss_db *db, json_t *root, const char *pat=
+h)
++{
++	struct pmt_tss_info info =3D {};
++	json_t *events;
++	json_t *ev;
++	size_t idx;
++	int ret;
++
++	if (!json_is_object(root)) {
++		log_err("%s: expected an object", path);
++		return -EINVAL;
++	}
++
++	ret =3D parse_file_guid(root, path, &info.guid);
++	if (ret)
++		return ret;
++
++	events =3D json_object_get(root, "events");
++	if (!json_is_array(events)) {
++		log_err("%s: missing events array", path);
++		return -EINVAL;
++	}
++
++	if (json_array_size(events)) {
++		info.metrics =3D calloc(json_array_size(events), sizeof(*info.metrics));
++		if (!info.metrics)
++			return -ENOMEM;
++
++		/* Zeroed, so pmt_tss_info_free() can free a partly parsed array */
++		info.num_metrics =3D json_array_size(events);
++	}
++
++	ret =3D dup_optional(obj_get_string(root, "platform"), &info.platform);
++	if (ret)
++		goto err_free;
++
++	ret =3D dup_optional(obj_get_string(root, "description"), &info.descripti=
+on);
++	if (ret)
++		goto err_free;
++
++	json_array_foreach(events, idx, ev) {
++		ret =3D parse_event(ev, path, idx, &info.metrics[idx]);
++		if (ret)
++			goto err_free;
++	}
++
++	ret =3D sort_metrics(&info, path);
++	if (ret)
++		goto err_free;
++
++	db->tss_info[db->num_tss_info++] =3D info;
++
++	return 0;
++
++err_free:
++	pmt_tss_info_free(&info);
++
++	return ret;
++}
++
++/* Read @path into *@root. fopen() rather than json_load_file() keeps its =
+errno. */
++static int read_json_file(const char *path, json_t **root)
++{
++	json_error_t error;
++	FILE *fp;
++
++	fp =3D fopen(path, "r");
++	if (!fp)
++		return log_ret(-errno, "unable to open %s", path);
++
++	*root =3D json_loadf(fp, 0, &error);
++	fclose(fp);
++	if (!*root) {
++		log_err("%s: line %d: %s", path, error.line, error.text);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int load_file(struct pmt_tss_db *db, const char *path)
++{
++	json_t *root;
++	int ret;
++
++	ret =3D read_json_file(path, &root);
++	if (ret)
++		return ret;
++
++	ret =3D parse_file(db, root, path);
++	json_decref(root);
++
++	return ret;
++}
++
++/* Select the definition files of a directory: *.json, except hidden files=
+ */
++static int is_definition_file(const struct dirent *de)
++{
++	const char *ext =3D strrchr(de->d_name, '.');
++
++	if (de->d_name[0] =3D=3D '.')
++		return 0;
++
++	return ext && !strcmp(ext, ".json");
++}
++
++static int load_dir_entry(struct pmt_tss_db *db, const char *dir, const ch=
+ar *name)
++{
++	char path[PATH_MAX];
++	int ret;
++
++	ret =3D path_printf(path, sizeof(path), "%s/%s", dir, name);
++	if (ret) {
++		log_err("%s/%s: path too long", dir, name);
++		return ret;
++	}
++
++	if (!is_regular_file(path))
++		return 0;
++
++	return load_file(db, path);
++}
++
++/*
++ * Load every definition file in @dir, in name order. A file that fails to
++ * load is reported and the remaining files are still checked, but the load
++ * as a whole fails.
++ */
++static int load_dir(struct pmt_tss_db *db, const char *dir)
++{
++	struct dirent **names;
++	int ret =3D 0;
++	int n;
++
++	n =3D scandir(dir, &names, is_definition_file, alphasort);
++	if (n < 0)
++		return log_ret(-errno, "unable to read %s", dir);
++
++	/* Each file adds at most one entry */
++	if (n) {
++		db->tss_info =3D calloc(n, sizeof(*db->tss_info));
++		if (!db->tss_info) {
++			ret =3D -ENOMEM;
++			goto out_free_names;
++		}
++	}
++
++	for (int i =3D 0; i < n; i++) {
++		int err;
++
++		err =3D load_dir_entry(db, dir, names[i]->d_name);
++		if (err =3D=3D -ENOMEM) {
++			ret =3D err;
++			break;
++		}
++
++		if (err)
++			ret =3D err;
++	}
++
++out_free_names:
++	for (int i =3D 0; i < n; i++)
++		free(names[i]);
++	free(names);
++
++	return ret;
++}
++
++static int tss_info_cmp(const void *a, const void *b)
++{
++	const struct pmt_tss_info *ia =3D a;
++	const struct pmt_tss_info *ib =3D b;
++
++	if (ia->guid !=3D ib->guid)
++		return ia->guid < ib->guid ? -1 : 1;
++
++	return 0;
++}
++
++/* Check that no two files of directory @path define the same GUID; @db is=
+ sorted */
++static int check_unique_guids(const struct pmt_tss_db *db, const char *pat=
+h)
++{
++	for (size_t i =3D 1; i < db->num_tss_info; i++) {
++		if (db->tss_info[i].guid =3D=3D db->tss_info[i - 1].guid) {
++			log_err("guid 0x%08x is defined by more than one file in %s",
++				db->tss_info[i].guid, path);
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * pmt_tss_db_load_json - load metric definitions
++ * @path: a definition file, or a directory of them
++ * @db:   zero-initialized, filled on success
++ *
++ * Return: 0 on success, or a negative errno with @db left empty.
++ */
++int pmt_tss_db_load_json(const char *path, struct pmt_tss_db *db)
++{
++	struct stat st;
++	int ret;
++
++	if (stat(path, &st))
++		return log_ret(-errno, "unable to access %s", path);
++
++	if (S_ISDIR(st.st_mode)) {
++		ret =3D load_dir(db, path);
++	} else if (S_ISREG(st.st_mode)) {
++		db->tss_info =3D calloc(1, sizeof(*db->tss_info));
++		if (db->tss_info)
++			ret =3D load_file(db, path);
++		else
++			ret =3D -ENOMEM;
++	} else {
++		log_err("%s: not a file or directory", path);
++		ret =3D -EINVAL;
++	}
++
++	if (!ret && db->num_tss_info > 1) {
++		qsort(db->tss_info, db->num_tss_info, sizeof(*db->tss_info), tss_info_cm=
+p);
++		ret =3D check_unique_guids(db, path);
++	}
++
++	if (ret) {
++		pmt_tss_db_free(db);
++		return log_ret(ret, "unable to load metric definitions from %s", path);
++	}
++
++	if (!db->num_tss_info)
++		log_warn("no metric definitions found in %s", path);
++
++	return 0;
++}
 --=20
 2.53.0
 
