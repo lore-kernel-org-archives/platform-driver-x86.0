@@ -1,64 +1,126 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795347198;
-	b=A0hLihXNeOp6SwhlN4sFiJ02croPpq5squQZAvn3RaZ87Y3o4Di5igkaoO1zmmayiTn4
-	 b5zbI0IaROARUenkC1kALJtseSX49OgnlxApUjqW8mRJ40RZrMY4v9goxulNvhNDMthzJ
-	 /7mQ7pH72R3N5Kd+I1POVwlMVBWmGp6pnoELkX3Nu0rz1Fucn1m7s0himhGq0mZnUBxcq
-	 R8EPirKeOd4gA15oo1uspFcFmZQhMiQCR5YK3oSOqJKaj/rcBlhewj/G/IaxKR55OJLez
-	 1+Dq/RDxRawUfSDUFnCNmW0xQ0T/YFUuY298FYO2ne5McDMkDfgk96kne3uA6nGztyQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795347198;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=OWJZvJF97PyJJA9qKFe3vk9WBlv8TeagHe/2VChyqYU=;
-	b=OGss0CwbSfQhEny+00m5l8e4xepYe4TXEsf5DiCaup0vSyFHS5Da5QNnzwp+x/5UQrlE
-	 5DP8OYglrfD14X0n1AKQpcTGAYBblxITIc9Ja1xDHNkRPZ95hGDTsCSZTMQEb7Ac95f0h
-	 HS0I+vAae9gLbeRArhasL+AI+lryi9OtXi9I3HciSPv4omFaliJQslfHXUIVSZuGCh1sF
-	 oxCx3McDOtkd41evSdptPCH5VcbZ6liLRPpu3N0eEyoZYrlZLjMPX1j8Giy65AqtmPs1t
-	 NS5dZbMPGg+6+C6pD0ivaPRfepqT+GCXQCO8/sK96Bs6//jkeP/AxpHYXiZnXxJKQaw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b="UwMCfVB/";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795347938;
+	b=m3crKOkMRZDaCSG4SYDo5VxQNoSb0Nq+zGjFyeVLT2/Lt+oEdVt55o7TiIU3xtyEFQdt
+	 QGAPKjBInMUf3i+CXCVFxFp65rwS2a6/Wu/U8dm8BgYbgu118uV7qpZ9HzDdEJ1g0NHcp
+	 47X/NKXwAsR0JLppJX4meAgWKof6gplYxc1GBwKwh80GYpFZYKiznzFjZIgDxfADr9Khb
+	 V4vd6fIbXUyPl1JeIsXr4t+RCI+EAw0bpwfo21yVdhw58DyODEIv8EDSGKMaBNr8SzUBo
+	 yI5IB/UDdobgiit0Ghn2h3aeRC46349OswrhHqRkWnG57EIpw/VZLuHor99c19w2Rtw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795347938;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=cLMcqM1+ID1GgGq+PerrzsvqYkDe3KsyjwqtE/Ytfio=;
+	b=KUnpO4+r9c5mZjgDZWSyQcnD9//TVtxyJvTg31aOdWKdo07+4BbgoUJhBS/5k0/Un+98
+	 vEwR2AdnZvz6PdeAYUucvK6SoChEkN9MMq7ooFz6PqECuxZZ/IQMbPMKr3Gz3sbrLW9/l
+	 o/2Tu+0GVYrl535iXuc3MXL9s+kplovnjA+VqYRZ4xK6EQ5OX4OD8LLkKt1yMO2Y6hNSt
+	 8Iii0S7e81ncxSm1uyaiA2Wu8fGzxd9hmxEDNN0VTUAyCVbCntVMCPLefPYi3+wrcm++t
+	 aB4DpaHVRiKpd5WK/zdJTL0OyWdAFVYdnD670my4JpDEbYSVaZxnHVAxbzcQR3XR1Ng==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JBZbk8ZB;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E87B606A320
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 11:33:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E87B606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6462E606A33F;
+	Sun, 22 Nov 2026 11:45:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=UwMCfVB/
-ARC-Seal: i=1; a=rsa-sha256; t=1795347194; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kYLwjDdBQTUcEEUO4SGOzcH3YGA7/u+WNvafJlQhcGJ3IXpDhaOO0xNZ8F53aHb57f3j/LUcpiww650KP9a5jrwQak2EKY2pCDQ5CCAK1lkR8QZ38+AWj8uEiNCnjvF57QjKhhU95FDi9ap31KgCbDAaJDIdCNYExXJuyeaVWo4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795347194; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=OWJZvJF97PyJJA9qKFe3vk9WBlv8TeagHe/2VChyqYU=; 
-	b=MWECixQmVjo3hJL87IOs+qqCWT03mVE8IaMQ7M7jkuF2V5aL4AMMraEAx8TYRgTC1VYXqDtw86xZFhp84rrLz/Dwc2RLgWvReCYOfTCXF1dbWrL2wH9lUS4EZl9o2Gxou1eDQNkjoG/Woetj3yCUPsF4DXwD9anzxuNrDJxNAbs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=UwMCfVB/dsu5+LvyMuwWYRtmQK4RUHBAG0nW2pSMU+/ZHG6MXojiuLnoCIo13t8t5kpjMHTclpfyX+Lka5ELhQLMfsIZJWyjLStDysNnffK5PgUZX6XClgUkqwFlwi69XbcMG43RWbbFZKT+Ch+XPL3bwu8UYAcw8lgqijvixe/js5cwC/MGWpYNKJguiL5CtgGSpgVXNyC5pnkenlhPQd3IrR53tTb0D0b0mU8Nfl+lne6JzeBzYHF60mi48KbFJiUtfxrjaPWc/ct6O3u5ETUG9aMJKD5noR3FpLMZoXVoDqhC6EsRsaVVG/dxcykPijhHfxoH3XxVCzBQ+7jzZQ==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=OWJZvJF97PyJJA9qKFe3vk9WBlv8TeagHe/2VChyqYU=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795347191522171.95950337813008;
-	Sun, 22 Nov 2026 03:33:11 -0800 (PST)
-Message-ID: <d0ea78f359fb06fcf1e7b57d6062c4c67dd70dcf.camel@rong.moe>
-Subject: Re: ideapad_laptop / lenovo_ymc: keyboard backlight stays on in
- tablet mode on Lenovo Yoga 7 14ARP8 (82YM)
-From: Rong Zhang <i@rong.moe>
-To: Eduard Aliman <edialiman20@gmail.com>, 
-	platform-driver-x86@vger.kernel.org
-In-Reply-To: <CAA4HgYKab7_GMCNdHF9+E=9ECVBHRs_axefeCOnZbUNUoyVSoQ@mail.gmail.com>
-References: 
-	<CAA4HgYKab7_GMCNdHF9+E=9ECVBHRs_axefeCOnZbUNUoyVSoQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 22 Nov 2026 19:28:05 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JBZbk8ZB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C711F000C0;
+	Sun, 22 Nov 2026 11:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795347938;
+	bh=cLMcqM1+ID1GgGq+PerrzsvqYkDe3KsyjwqtE/Ytfio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=JBZbk8ZBopVc78PPFvWeVTIg2CMujdUlqemdavr/HCyWWlIQmFZkcrGxwSI3F8Lj7
+	 DNLer9OUFPLbOa4J4Swvhd/E17PbHJNYpl75QSvfOs502Qnq+SIVf6x8BaBZgxP/BT
+	 TLhC5kAcmMHclzMqgFcvdBPgsnO0el8R7pGYvxVYVMfFAdpjXa9S5pH5onsvDFitkW
+	 F7xoQFwGUBjexAU1BbMzjGktImA7HZrErJM176ZMcRKXKM7Cl6WdGzAwr72CinZqC4
+	 cUMiH2XukT43gci2XSUdvkVEDyb0hb22fl5gp/8fIaWZ7ym7dU5tWM0l+OzRL/g3Qu
+	 BJv0P33zLAReA==
+Date: Sun, 22 Nov 2026 12:45:16 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Juergen Gross <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-coco@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
+	linux-geode@lists.infradead.org,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Pu Wen <puwen@hygon.cn>, Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Ben Horgan <ben.horgan@arm.com>, Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <fustini@kernel.org>,
+	Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Kiryl Shutsemau <kas@kernel.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+	Huang Rui <ray.huang@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	Artem Bityutskiy <dedekind1@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Ashok Raj <ashok.raj.linux@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	Xi Pardee <xi.pardee@linux.intel.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	xen-devel@lists.xenproject.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: treewide: Re: [PATCH v6 00/12] msr: Drop 32-bit MSR interfaces
+Message-ID: <awLVzKJWWfC3eJsH@gmail.com>
+References: <20261116150208.1572254-1-jgross@suse.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -68,80 +130,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-4 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261116150208.1572254-1-jgross@suse.com>
 
-Hi Eduard,
 
-On Fri, 2026-11-20 at 03:58 -0800, Eduard Aliman wrote:
-> Hello,
->=20
-> I am reporting an issue / missing behavior on a Lenovo Yoga 7 14ARP8 (82Y=
-M)
-> running Linux 7.3.4-300.fc45.x86_64 (Fedora):
->=20
-> System details:
-> - Product: Lenovo Yoga 7 14ARP8 (DMI product_name: 82YM)
-> - BIOS: LCCN26WW (06/25/2025), EC firmware: 1.26
-> - Kernel: 7.3.4-300.fc45.x86_64
-> - Relevant modules: ideapad_laptop, lenovo_ymc, amd_sfh, amd_sfh_tabletmo=
-de
->=20
-> Symptom:
-> On Windows 11, folding the laptop past 180 degrees into tablet mode disab=
-les
-> the keyboard and touchpad AND automatically turns off the keyboard backli=
-ght.
->=20
-> On Linux, SW_TABLET_MODE is reported properly and GNOME/libinput disables=
- the
-> keyboard and touchpad as intended, but the keyboard backlight
-> (/sys/class/leds/platform::kbd_backlight) stays physically ON.
->=20
-> Crucially, even a userspace daemon listening for SW_TABLET_MODE cannot tu=
-rn
-> the backlight off once tablet mode is entered: writing "0" to
-> /sys/class/leds/platform::kbd_backlight/brightness immediately after
-> SW_TABLET_MODE=3D1 changes the sysfs readback to 0, yet the physical keyb=
-oard
-> LEDs remain ON.
->=20
-> Test log (listening on both SW_TABLET_MODE input devices while folding an=
-d
-> unfolding):
->   [ 2.681s] Lenovo Yoga Tablet Mode Control switch -> 1 | cur=3D1
->            wrote 0 -> readback=3D0   (physical LED stayed ON)
->   [ 2.763s] AMD SFH tablet mode switch -> 1 | cur=3D0
->   [ 3.748s] Lenovo Yoga Tablet Mode Control switch -> 0 | cur=3D0
->            restored 1 -> readback=3D1
->   [ 3.803s] AMD SFH tablet mode switch -> 0 | cur=3D1
->=20
-> Note that "Lenovo Yoga Tablet Mode Control switch" (lenovo_ymc) fires ~80=
- ms
-> before "AMD SFH tablet mode switch", and by that point the EC appears to
-> already ignore physical backlight changes via VPC0.KBLC (KBLM/KBLS).
->=20
-> ACPI DSDT notes for this machine:
-> - VPC2004:00 exposes Method (KBLC, 1, Serialized) which writes EC fields
->   KBLM and KBLS.
-> - EC0 has Device (CYMC) with _HID "YMC2017" and \_SB.WMIY (_UID "YMC")
->   exposes WMAB returning EC0.PCMD.
->=20
-> Is there an ACPI/WMI call or EC command that should be issued before or u=
-pon
-> entering tablet mode (or a quirk in ideapad_laptop / lenovo_ymc) to turn =
-off
-> the keyboard backlight like Windows does? I can provide the full acpidump=
- or
-> test patches if needed.
+* Juergen Gross <jgross@suse.com> wrote:
 
-Please test
-https://msgid.link/20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe with
-ideapad-laptop's module parameter "ymc_ec_trigger" set.
+> For accessing the MSR registers on the local CPU, there are 2 types of
+> interfaces: the "modern" 64-bit ones (rdmsrq() etc.) and the 32-bit
+> ones (rdmsr() etc.) which are using the upper and lower 32-bit halves
+> of the 64-bit wide MSR register values.
+
+>  140 files changed, 572 insertions(+), 690 deletions(-)
+
+So I've applied this to a separate branch/tree under tip:core/msr,
+because I think this series is mature enough and after about a year
+worth of (very patient) iterations by you we've reached the limit of
+what will be picked up by maintainers.
+
+The commit with the widest impact is automatically generated
+via a semantic patch:
+
+  treewide: Convert rdmsrq() from a macro to an inline function
+
+  139 files changed, 493 insertions(+), 495 deletions(-)
+
+and I'm reasonably certain that whatever merge impact this may have
+on -next can be addressed quickly and in a simple fashion. Let's see
+how this goes.
 
 Thanks,
-Rong
 
->=20
-> Thanks,
-> Aliman Eduard
+	Ingo
