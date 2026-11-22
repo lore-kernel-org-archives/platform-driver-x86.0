@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795313948;
-	b=yZJ3uYDPrUv5i/HktFWmgljaNDR3Z6XpOiGXHp1lcrcqc3vZXGFJFKH6XeKUFeJ3jOcq
-	 VsHPGE7fo0OKkER2Opa1aVuKa0W80QFFv5/oQgPjeqiDnsSJU/2zSHJNIWJRgOEio3g6W
-	 0EdgYt50qziCaJF+vAyK6MTKteq7HKzZa+Hl0645VY/Ld3qxvq6AjkxE5eFcjQqovZaBH
-	 pwBKQ/AnFkcW2v+CGu8FbOhM02RKHR3FNocYpoLcAAsZ+TxvQrYIcUieDwmqMgn0X4fbZ
-	 1LeUYqNxqIfksRD3/cy2UJYlDTFEDWDuAxXDZ18Rz0uCRP+YOFWhXI/+EcdvtFSeV5g==
+	t=1795313943;
+	b=gGoaouTXSPUzbkGqtKgdK6uXksGXjKhUloCVefUDzFr3scTAQWP+iGSb81gTv+fFISw/
+	 ar22IBonh2CeNeuL9GPcgRIk55ss0wKTgAQub1DoHPeP//KlvJOjUkpY6TJBVcw4iO6wr
+	 sNg+GfhKezbIkfMRERJDZ/SYyPoFunS6+p7EdwJnV8yxFDSxBKfaD+8CFeOYGAdvxVURR
+	 5ADzcxje9G+cRDhiNHdIEvqToYnNepsmCeC1i0wSSG2ilf89013h+RZVdKTgSLW8Ba5I7
+	 aqtJXNsLZ8y3IbgmkD7KhPJ/pEGpPBVrP8xln0XxNGw2oPzH3T7sJ4c7Sky4iZfGv3w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795313948;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795313943;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Xn6WLQX+6lT6YNEiB0nuR/3vyCCotBJk3Ltaf6TAkNw=;
-	b=MshbhfpjU/D09ZeVh5JBFq7ga21ZZkDMhTUjXLb4TNgBu5jbctmcWLfDhT9VCnbcsbcV
-	 Mx36KoK/wIn3e++A/cV6wRQQUmxePqsa6dYYGQi4u9IKAZW4Q3E8f56EMFn/GQ0X+PDL+
-	 gEhKj3B+CHXwZYe3NAVZFrM/07lZuI/H2GmBA8VV+hUhxaBm4IBGAMlqBhuGDeRE7VyUP
-	 e8UVTpWpGb1xHJaedUDvvNM2HsXnXMX6YCoz37hIhh2LpGAkNZyzUvuDmNAEHRSuE9lXK
-	 BtMXFXh4Wx3f5KWnhp+MBdzs7E+WR6lgnX+INwPEH/dBpbxh4TH45sgAAkL+aU+Q3ZQ==
+	bh=4Izwto6c7kiPaCk4gIIZ9/XoHNvQdG2uJIE2sRo1svQ=;
+	b=US2v00APM4B0kjizmdfUBs5xbq5mCiDVgUjLTktPQSwclAYO/VihWvtWq2bG0J8ET6bi
+	 /HkzACj5iiE6n7+6uE05ZNymf7CxyHXY7LiBhjc/sQBxx3MY/2Q69wiGKKzaxLvwQkhNw
+	 JaRlVxO32SaYhrFI3Zlt1iulkSIFPBC+Ai4XfPg5GccBb8tUYbi0zlyAoCo3sHY9MsuU8
+	 DoauDhzi3Nka74Tm+s6cPlJZjkg8vjr8sdfiMN3Ffi4KX146d3/qZQB9bVoE1U/CNqr3o
+	 mbAuAENW3diOydjoQNPssmTrgN6+zQhfBSNxrCD0jeYYV8pUPHBNZ0+DGCXb29j7+Lw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=KmRX+Ykv;
-	arc=none smtp.remote-ip=95.215.58.47
-Received: from mta1.migadu.com (out-47.mta1.migadu.com [95.215.58.47])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=r+8hgliF;
+	arc=none smtp.remote-ip=95.215.58.11
+Received: from mta1.migadu.com (out-11.mta1.migadu.com [95.215.58.11])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4646606A339
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 02:19:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4646606A339
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B614A606A68C
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 02:19:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B614A606A68C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=KmRX+Ykv
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=r+8hgliF
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=k0//X6beq4+Lm7eM0hAS13PGKpDyR1zxk7fmfNtY5QA=;
+DKIM-Signature: a=rsa-sha256; bh=lkzFOpAo6slKxND0Pdw1C3XCZRhLLmNmdUj3yKH3XYU=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795313946; v=1; x=1795918746;
- b=KmRX+YkvsGegKUBrmOBDkkEfOl1jnxtcIwxgkvCBK18oe81DqS0qFkdOv9JGy2zmVSB3YrbU
- ba8DMD4DqHh/G2GAbu/daieRuZNX28wQPgClAIYf2U0Eeo0cIiJ7+/PO0SAs7tU8TIO96VrlIex
- qeGYHFW/orAwGd6uvUfeRoIo=
+ t=1795313940; v=1; x=1795918740;
+ b=r+8hgliFpojcIcaAxHKZ/tWGXr4K6q/Shz33nt8a/d5CxL65OaHO9pxVa90q7AZPibG9shBk
+ 0sbS9jVK+CB9fuDKprMc47BRgI3fCG1XdG79swmMvDzSIL9YFIzv2R2N/gaWdHwOjM1zXau0sT6
+ x27/qQB7eA5rfGiTMTOPkMts=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 57f388bbf49f577c;
-	Sun, 22 Nov 2026 02:19:06 +0000
-X-Mizu-Trace-ID: 57f388bbf49f577c
+Received: by smtp.migadu.com with ESMTPS id 08d858d7f45bf5c9;
+	Sun, 22 Nov 2026 02:19:00 +0000
+X-Mizu-Trace-ID: 08d858d7f45bf5c9
 X-Migadu-Flow: FLOW_OUT
 From: Denis Benato <denis.benato@linux.dev>
 To: linux-kernel@vger.kernel.org
@@ -68,9 +68,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Hans de Goede" <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v16 08/19] HID: asus: add joysticks anti-deadzone configuration
-Date: Sun, 22 Nov 2026 02:18:37 +0000
-Message-ID: <20261122021849.57863-9-denis.benato@linux.dev>
+Subject: [PATCH v16 04/19] HID: asus: add gamepad configuration
+Date: Sun, 22 Nov 2026 02:18:33 +0000
+Message-ID: <20261122021849.57863-5-denis.benato@linux.dev>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20261122021849.57863-1-denis.benato@linux.dev>
 References: <20261122021849.57863-1-denis.benato@linux.dev>
@@ -85,219 +85,451 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ROG Ally devices allow configuring the anti-deadzone parameter for
-the resistive joysticks devices as over time those develops drift,
-therefore allow userspace to configure the anti-deadzone by exposing
-relevant sysfs attributes.
+Add the base configuration structures for the gamepad configuration,
+detect capabilities and initialize the device in a known state.
+
+The configuration interface exposes xbox_controller. Reading it
+reports whether the handheld is presenting an Xbox gamepad, and
+writing it switches that mode.
+
+hid_asus_ally_reset_resume() now waits for the gamepad MCU to report
+ready and returns that error. A reset resume can fail with -ENODEV
+where it previously always succeeded.
 
 Signed-off-by: Denis Benato <denis.benato@linux.dev>
 Co-developed-by: Luke Jones <luke@ljones.dev>
 Signed-off-by: Luke Jones <luke@ljones.dev>
+Signed-off-by: Jonathan LoBue <jlobue10@gmail.com>
 ---
- drivers/hid/hid-asus.c | 157 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 157 insertions(+)
+ drivers/hid/hid-asus.c | 332 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 330 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index cc915ab543db..35f4cdbf78e7 100644
+index 78254fc22754..4b233c3aa1a4 100644
 --- a/drivers/hid/hid-asus.c
 +++ b/drivers/hid/hid-asus.c
-@@ -108,6 +108,9 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
- #define ASUS_ALLY_INNER_THRESHOLD_MIN 0
- #define ASUS_ALLY_INNER_THRESHOLD_MAX 50
+@@ -28,6 +28,7 @@
+ #include <linux/err.h>
+ #include <linux/hid.h>
+ #include <linux/jiffies.h>
++#include <linux/kstrtox.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+@@ -38,6 +39,7 @@
+ #include <linux/platform_profile.h>
+ #include <linux/rcupdate.h>
+ #include <linux/stddef.h>
++#include <linux/sysfs.h>
+ #include <linux/leds.h>
+ #include <linux/types.h>
+ #include <linux/unaligned.h>
+@@ -79,6 +81,11 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
  
-+#define ASUS_ALLY_ANTI_DEADZONE_MIN 0
-+#define ASUS_ALLY_ANTI_DEADZONE_MAX 100
-+
- #define ASUS_ALLY_TRIGGER_RANGE_LOWER_MIN 0
- #define ASUS_ALLY_TRIGGER_RANGE_LOWER_MAX 50
- #define ASUS_ALLY_TRIGGER_RANGE_UPPER_MIN 70
-@@ -872,6 +875,9 @@ static struct ally_prefs {
- 	u8 left_trigger_max;
- 	u8 right_trigger_min;
- 	u8 right_trigger_max;
-+
-+	u8 left_anti_deadzone;
-+	u8 right_anti_deadzone;
- } ally_prefs = {
- 	.lock = __MUTEX_INITIALIZER(ally_prefs.lock),
- };
-@@ -1355,11 +1361,153 @@ static struct device_attribute dev_attr_right_joystick_outer_threshold =
- static struct device_attribute dev_attr_right_joystick_outer_threshold_range =
- 	__ATTR(outer_threshold_range, 0444, right_joystick_outer_threshold_range_show, NULL);
+ #define HID_ALLY_READY_MAX_TRIES 6
  
-+/**
-+ * ally_set_anti_deadzone() - Send the joystick anti-deadzone values to the device
-+ * @hdev: HID device the packet is sent on
-+ * @left: Anti-deadzone of the left joystick
-+ * @right: Anti-deadzone of the right joystick
++#define ASUS_ALLY_XBOX_CONTROLLER_ENABLE 0x01
++#define ASUS_ALLY_XBOX_CONTROLLER_DISABLE 0x00
++
++#define ASUS_ALLY_CAPABILITY_SUPPORTED 0x01
++
+ #define HID_INPUT_KEY_DELETE 0x4c
+ #define HID_INPUT_KEY_F20 0x6f
+ #define HID_INPUT_LCTRL_MODIFIER 0x01
+@@ -207,6 +214,13 @@ struct ally_intf {
+ 	u8 cad_state;
+ 	unsigned long cad_last_event_time;
+ 	struct delayed_work resume_work;
++	/*
++	 * Sysfs groups hang off this interface's hdev. Numbers live in
++	 * ally_prefs so a re-probe can restore them; ownership of the
++	 * attributes is per device.
++	 */
++	bool sysfs_live;
++	bool cal_sysfs_live;
+ 	/* Deferred free through ally_free(): keeps the memory valid for RCU
+ 	 * readers that loaded drvdata->ally before the teardown unpublished
+ 	 * it (see hid_asus_ally_terminate()).
+@@ -221,7 +235,7 @@ struct asus_drvdata {
+ 	struct input_dev *tp_kbd_input;
+ 	struct asus_worker *worker;
+ 	unsigned int kbd_backlight_brightness;
+-	struct ally_intf *ally;
++	struct ally_intf __rcu *ally;
+ 	const struct asus_touchpad_info *tp;
+ 	struct power_supply *battery;
+ 	struct power_supply_desc battery_desc;
+@@ -803,6 +817,280 @@ static int ally_get_endpoint_address(struct hid_device *hdev)
+ 	return ep->desc.bEndpointAddress;
+ }
+ 
++/*
++ * Settings that must survive the controller powering off and coming back.
++ * No device or input pointers live here: every transfer uses the interface
++ * that is bound right now.
 + *
-+ * Context: Caller must hold ally_prefs.lock.
-+ *
-+ * Return: 0 on success, -%EOPNOTSUPP if the device does not support
-+ * anti-deadzone, -%ENOMEM if the command buffer cannot be allocated, or a
-+ * negative error code if sending the packet fails.
++ * One set for the machine is by design. The Ally controller is
++ * part of the PC, so two ROG Ally HID devices are not bound at
++ * once. The only way to see a second one is to emulate it with
++ * uhid, but that would get rejected by the driver meaning that
++ * this struct can be used on a per-machine basis.
 + */
-+static int ally_set_anti_deadzone(struct hid_device *hdev, u8 left, u8 right)
++static struct ally_prefs {
++	/* Guards every field below, including across the feature report. */
++	struct mutex lock;
++
++	bool initialized;
++
++	bool is_ally_x;
++	bool xbox_controller_support;
++	bool user_cal_support;
++	bool turbo_support;
++	bool resp_curve_support;
++	bool dir_to_btn_support;
++	bool gyro_support;
++	bool anti_deadzone_support;
++
++	bool xbox_controller_enabled;
++	u8 gamepad_mode;
++} ally_prefs = {
++	.lock = __MUTEX_INITIALIZER(ally_prefs.lock),
++};
++
++/**
++ * ally_check_capability() - Check if a specific capability is supported
++ * @hdev: HID device to query
++ * @check_cmd: capability command code
++ *
++ * Return: 1 if the capability is supported, 0 if not, negative on error.
++ */
++static int ally_check_capability(struct hid_device *hdev,
++				  enum ally_command_codes check_cmd)
 +{
-+	const u8 payload[] = { left, right };
++	const u8 payload[] = {};
 +	size_t buf_len;
 +	int ret;
 +
-+	if (!ally_prefs.anti_deadzone_support) {
-+		hid_dbg(hdev, "Anti-deadzone not supported on this device\n");
-+		return -EOPNOTSUPP;
++	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, check_cmd, payload,
++					       sizeof(payload), &buf_len);
++
++	if (!buf) {
++		hid_err(hdev, "Failed to allocate buffer for capability check.\n");
++		return -ENOMEM;
 +	}
 +
-+	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_ANTI_DEADZONE,
++	if (buf_len < 5) {
++		hid_err(hdev, "Capability check response too short.\n");
++		return -EINVAL;
++	}
++
++	ret = ally_gamepad_send_receive_packet(hdev, buf, buf_len);
++	if (ret < 0) {
++		hid_err(hdev, "Failed to check capability 0x%02x: %d\n", check_cmd, ret);
++		return ret;
++	}
++
++	return buf[1] == HID_ALLY_FEATURE_CODE_PAGE && buf[2] == check_cmd &&
++	       buf[4] == ASUS_ALLY_CAPABILITY_SUPPORTED;
++}
++
++static int ally_detect_capabilities(struct hid_device *hdev)
++{
++	int ret;
++
++	guard(mutex)(&ally_prefs.lock);
++
++	ally_prefs.is_ally_x = (hdev->product == USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X);
++
++	ret = ally_check_capability(hdev, CMD_CHECK_XBOX_SUPPORT);
++	if (ret < 0)
++		return ret;
++	ally_prefs.xbox_controller_support = ret;
++
++
++	ret = ally_check_capability(hdev, CMD_CHECK_USER_CAL_SUPPORT);
++	if (ret < 0)
++		return ret;
++	ally_prefs.user_cal_support = ret;
++
++	ret = ally_check_capability(hdev, CMD_CHECK_TURBO_SUPPORT);
++	if (ret < 0)
++		return ret;
++	ally_prefs.turbo_support = ret;
++
++	ret = ally_check_capability(hdev, CMD_CHECK_RESP_CURVE_SUPPORT);
++	if (ret < 0)
++		return ret;
++	ally_prefs.resp_curve_support = ret;
++
++	ret = ally_check_capability(hdev, CMD_CHECK_DIR_TO_BTN_SUPPORT);
++	if (ret < 0)
++		return ret;
++	ally_prefs.dir_to_btn_support = ret;
++
++	ret = ally_check_capability(hdev, CMD_CHECK_GYRO_TO_JOYSTICK);
++	if (ret < 0)
++		return ret;
++	ally_prefs.gyro_support = ret;
++
++	ret = ally_check_capability(hdev, CMD_CHECK_ANTI_DEADZONE);
++	if (ret < 0)
++		return ret;
++	ally_prefs.anti_deadzone_support = ret;
++
++	return 0;
++}
++
++/**
++ * ally_set_xbox_controller() - Enable or disable Xbox controller mode
++ * @hdev: HID device on which the command packet is sent
++ * @enabled: true to enable Xbox controller mode, false to disable it
++ *
++ * Builds a %CMD_SET_XBOX_CONTROLLER packet and sends it to the device. On
++ * success, the new state is stored in ally_prefs.xbox_controller_enabled.
++ *
++ * Context: Caller must hold ally_prefs.lock.
++ *
++ * Return: 0 on success, -%EOPNOTSUPP if Xbox controller mode is not
++ * supported, -%ENOMEM if the command buffer allocation fails, or a negative
++ * errno from ally_gamepad_send_packet() if sending the packet fails.
++ */
++static int ally_set_xbox_controller(struct hid_device *hdev, bool enabled)
++{
++	const u8 payload[] = { enabled ?
++				ASUS_ALLY_XBOX_CONTROLLER_ENABLE :
++				ASUS_ALLY_XBOX_CONTROLLER_DISABLE };
++	size_t buf_len;
++	int ret;
++
++	if (!ally_prefs.xbox_controller_support)
++		return -EOPNOTSUPP;
++
++	u8 *buf __free(kfree) = ally_alloc_cmd(hdev, CMD_SET_XBOX_CONTROLLER,
 +					       payload, sizeof(payload),
 +					       &buf_len);
++
 +	if (!buf)
 +		return -ENOMEM;
 +
 +	ret = ally_gamepad_send_packet(hdev, buf, buf_len);
 +	if (ret < 0) {
-+		hid_err(hdev, "Failed to set anti-deadzone values: %d\n", ret);
++		hid_err(hdev, "Failed to set Xbox controller mode: %d\n", ret);
 +		return ret;
++	}
++
++	ally_prefs.xbox_controller_enabled = enabled;
++	return 0;
++}
++
++static ssize_t xbox_controller_show(struct device *dev,
++				    struct device_attribute *attr, char *buf)
++{
++	guard(mutex)(&ally_prefs.lock);
++
++	if (!ally_prefs.xbox_controller_support)
++		return -EOPNOTSUPP;
++
++	return sysfs_emit(buf, "%d\n", ally_prefs.xbox_controller_enabled ? 1 : 0);
++}
++
++static ssize_t xbox_controller_store(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t count)
++{
++	struct hid_device *hdev = to_hid_device(dev);
++	bool enabled;
++	int ret;
++
++	ret = kstrtobool(buf, &enabled);
++	if (ret)
++		return ret;
++
++	guard(mutex)(&ally_prefs.lock);
++
++	if (!ally_prefs.xbox_controller_support)
++		return -EOPNOTSUPP;
++
++	ret = ally_set_xbox_controller(hdev, enabled);
++	if (ret < 0)
++		return ret;
++
++	sysfs_notify(&dev->kobj, NULL, "xbox_controller");
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(xbox_controller);
++
++static struct attribute *ally_config_attrs[] = {
++	&dev_attr_xbox_controller.attr,
++	NULL
++};
++
++static const struct attribute_group ally_attr_groups[] = {
++	{
++		.attrs = ally_config_attrs,
++	},
++};
++
++static int ally_prefs_setup(struct hid_device *hdev, struct ally_intf *intf)
++{
++	int ret, i;
++
++	ret = ally_detect_capabilities(hdev);
++	if (ret) {
++		hid_err(hdev, "Failed to detect capabilities: %d\n", ret);
++		return ret;
++	}
++
++	scoped_guard(mutex, &ally_prefs.lock) {
++		if (!ally_prefs.initialized) {
++			ally_prefs.gamepad_mode = 0x01;
++			ally_prefs.xbox_controller_enabled = true;
++			ally_prefs.initialized = true;
++		}
++
++		if (intf->sysfs_live)
++			return 0;
++	}
++
++	/*
++	 * Create and remove sysfs groups without ally_prefs.lock. Attribute
++	 * methods take that lock while holding a kernfs active reference;
++	 * removing a group drains those references, so locking here would
++	 * invert the order and deadlock.
++	 */
++	for (i = 0; i < ARRAY_SIZE(ally_attr_groups); i++) {
++		ret = sysfs_create_group(&hdev->dev.kobj, &ally_attr_groups[i]);
++		if (ret) {
++			hid_err(hdev, "Failed to create Ally sysfs group '%s': %d\n",
++				ally_attr_groups[i].name ?: "", ret);
++			while (i--)
++				sysfs_remove_group(&hdev->dev.kobj, &ally_attr_groups[i]);
++			return ret;
++		}
++	}
++
++	scoped_guard(mutex, &ally_prefs.lock) {
++		intf->sysfs_live = true;
 +	}
 +
 +	return 0;
 +}
 +
-+/* Indices into ally_anti_deadzones[] */
-+enum ally_joystick {
-+	ALLY_LEFT_JOYSTICK,
-+	ALLY_RIGHT_JOYSTICK,
-+};
-+
-+static u8 *const ally_anti_deadzones[] = {
-+	[ALLY_LEFT_JOYSTICK]  = &ally_prefs.left_anti_deadzone,
-+	[ALLY_RIGHT_JOYSTICK] = &ally_prefs.right_anti_deadzone,
-+};
-+
-+static ssize_t ally_anti_deadzone_show(struct device *dev, char *buf,
-+				       enum ally_joystick which)
++static void ally_sysfs_remove(struct hid_device *hdev, struct ally_intf *intf)
 +{
-+	guard(mutex)(&ally_prefs.lock);
++	int i;
 +
-+	if (!ally_prefs.anti_deadzone_support) {
-+		hid_dbg(to_hid_device(dev), "Anti-deadzone not supported on this device\n");
-+		return -EOPNOTSUPP;
-+	}
++	if (!intf)
++		return;
 +
-+	return sysfs_emit(buf, "%u\n", *ally_anti_deadzones[which]);
-+}
-+
-+static ssize_t ally_anti_deadzone_store(struct device *dev, const char *buf,
-+					size_t count, enum ally_joystick which,
-+					const char *group)
-+{
-+	u8 value, dz[ARRAY_SIZE(ally_anti_deadzones)];
-+	struct hid_device *hdev = to_hid_device(dev);
-+	unsigned int i;
-+	int ret;
-+
-+	ret = kstrtou8(buf, 10, &value);
-+	if (ret || value > ASUS_ALLY_ANTI_DEADZONE_MAX)
-+		return -EINVAL;
++	if (ally_get_endpoint_address(hdev) != HID_ALLY_INTF_CFG_IN)
++		return;
 +
 +	scoped_guard(mutex, &ally_prefs.lock) {
-+		if (!ally_prefs.anti_deadzone_support) {
-+			hid_dbg(hdev, "Anti-deadzone not supported on this device\n");
-+			return -EOPNOTSUPP;
-+		}
++		if (!intf->sysfs_live)
++			return;
 +
-+		for (i = 0; i < ARRAY_SIZE(dz); i++)
-+			dz[i] = *ally_anti_deadzones[i];
-+		dz[which] = value;
-+
-+		ret = ally_set_anti_deadzone(hdev, dz[ALLY_LEFT_JOYSTICK],
-+					dz[ALLY_RIGHT_JOYSTICK]);
-+		if (ret)
-+			return ret;
-+
-+		*ally_anti_deadzones[which] = value;
++		intf->sysfs_live = false;
 +	}
 +
-+	sysfs_notify(&dev->kobj, group, "anti_deadzone");
-+
-+	return count;
++	for (i = 0; i < ARRAY_SIZE(ally_attr_groups); i++)
++		sysfs_remove_group(&hdev->dev.kobj, &ally_attr_groups[i]);
 +}
 +
-+/* Generates <side>_joystick_anti_deadzone_{show,store,range_show}. */
-+#define ALLY_ANTI_DEADZONE_FUNCS(side, SIDE)						\
-+static ssize_t side##_joystick_anti_deadzone_show(struct device *dev,			\
-+						struct device_attribute *attr,		\
-+						char *buf)				\
-+{											\
-+	return ally_anti_deadzone_show(dev, buf, ALLY_##SIDE##_JOYSTICK);		\
-+}											\
-+											\
-+static ssize_t side##_joystick_anti_deadzone_store(struct device *dev,			\
-+						struct device_attribute *attr,		\
-+						const char *buf, size_t count)		\
-+{											\
-+	return ally_anti_deadzone_store(dev, buf, count, ALLY_##SIDE##_JOYSTICK,	\
-+					#side "_joystick_axis");			\
-+}											\
-+											\
-+static ssize_t side##_joystick_anti_deadzone_range_show(struct device *dev,		\
-+							struct device_attribute *attr,	\
-+							char *buf)			\
-+{											\
-+	return sysfs_emit(buf, "%u %u\n", ASUS_ALLY_ANTI_DEADZONE_MIN,			\
-+			  ASUS_ALLY_ANTI_DEADZONE_MAX);					\
-+}
-+
-+ALLY_ANTI_DEADZONE_FUNCS(left, LEFT)
-+ALLY_ANTI_DEADZONE_FUNCS(right, RIGHT)
-+
-+static struct device_attribute dev_attr_left_joystick_anti_deadzone =
-+	__ATTR(anti_deadzone, 0644, left_joystick_anti_deadzone_show,
-+	       left_joystick_anti_deadzone_store);
-+
-+static struct device_attribute dev_attr_left_joystick_anti_deadzone_range =
-+	__ATTR(anti_deadzone_range, 0444, left_joystick_anti_deadzone_range_show, NULL);
-+
-+static struct device_attribute dev_attr_right_joystick_anti_deadzone =
-+	__ATTR(anti_deadzone, 0644, right_joystick_anti_deadzone_show,
-+	       right_joystick_anti_deadzone_store);
-+
-+static struct device_attribute dev_attr_right_joystick_anti_deadzone_range =
-+	__ATTR(anti_deadzone_range, 0444, right_joystick_anti_deadzone_range_show, NULL);
-+
- static struct attribute *left_joystick_axis_attrs[] = {
- 	&dev_attr_left_joystick_inner_threshold.attr,
- 	&dev_attr_left_joystick_outer_threshold.attr,
- 	&dev_attr_left_joystick_inner_threshold_range.attr,
- 	&dev_attr_left_joystick_outer_threshold_range.attr,
-+	&dev_attr_left_joystick_anti_deadzone.attr,
-+	&dev_attr_left_joystick_anti_deadzone_range.attr,
- 	NULL
- };
+ struct ally_x_input_report {
+ 	__le16 x, y;
+ 	__le16 rx, ry;
+@@ -979,12 +1267,25 @@ static int hid_asus_ally_init(struct hid_device *hdev)
+ {
+ 	int ret;
  
-@@ -1368,6 +1516,8 @@ static struct attribute *right_joystick_axis_attrs[] = {
- 	&dev_attr_right_joystick_outer_threshold.attr,
- 	&dev_attr_right_joystick_inner_threshold_range.attr,
- 	&dev_attr_right_joystick_outer_threshold_range.attr,
-+	&dev_attr_right_joystick_anti_deadzone.attr,
-+	&dev_attr_right_joystick_anti_deadzone_range.attr,
- 	NULL
- };
++	/*
++	 * The sysfs attributes are already live when this runs: hold the
++	 * lock across both feature report transfers so they cannot
++	 * interleave with the set report of xbox_controller_store().
++	 */
++	guard(mutex)(&ally_prefs.lock);
++
+ 	/* Failure at this point is non-critical. The packet goes to this interface. */
+ 	ret = ally_gamepad_send_packet(hdev, ally_force_feedback_off,
+ 				       sizeof(ally_force_feedback_off));
+ 	if (ret < 0)
+ 		hid_err(hdev, "Ally failed to init force-feedback off: %d\n", ret);
  
-@@ -1946,6 +2096,13 @@ static int hid_asus_ally_init(struct hid_device *hdev)
- 			hid_warn(hdev, "Failed to restore trigger ranges: %d\n", ret);
- 	}
- 
-+	if (ally_prefs.initialized && ally_prefs.anti_deadzone_support) {
-+		ret = ally_set_anti_deadzone(hdev, ally_prefs.left_anti_deadzone,
-+					     ally_prefs.right_anti_deadzone);
++	if (ally_prefs.initialized && ally_prefs.xbox_controller_support) {
++		ret = ally_set_xbox_controller(hdev, ally_prefs.xbox_controller_enabled);
 +		if (ret < 0)
-+			hid_warn(hdev, "Failed to restore anti-deadzone: %d\n", ret);
++			hid_warn(hdev, "Failed to apply Xbox controller mode: %d\n", ret);
 +	}
 +
  	return 0;
  }
  
+@@ -1072,6 +1373,9 @@ static struct ally_intf *hid_asus_ally_probe(struct hid_device *hdev)
+ 		/*
+ 		 * This function assumes the asus-specific initialization
+ 		 * to have been performed already at this point.
++		 *
++		 * The sysfs group does not exist yet, so this handshake
++		 * cannot race xbox_controller_store(): no lock needed.
+ 		 */
+ 		ret = ally_gamepad_check_ready(hdev);
+ 		if (ret < 0) {
+@@ -1079,6 +1383,12 @@ static struct ally_intf *hid_asus_ally_probe(struct hid_device *hdev)
+ 			return ERR_PTR(ret);
+ 		}
+ 
++		ret = ally_prefs_setup(hdev, intf);
++		if (ret < 0) {
++			hid_err(hdev, "Failed to create Ally cfg: %d\n", ret);
++			return ERR_PTR(ret);
++		}
++
+ 		hid_asus_ally_init(hdev);
+ 		break;
+ 	case HID_ALLY_X_INTF_IN:
+@@ -1099,7 +1409,7 @@ static struct ally_intf *hid_asus_ally_probe(struct hid_device *hdev)
+ 
+ static int hid_asus_ally_reset_resume(struct hid_device *hdev, struct ally_intf *intf)
+ {
+-	int ep;
++	int ep, ret;
+ 
+ 	/*
+ 	 * The extensions failed to probe and the device is operating as a
+@@ -1112,6 +1422,23 @@ static int hid_asus_ally_reset_resume(struct hid_device *hdev, struct ally_intf
+ 	if (ep != HID_ALLY_INTF_CFG_IN)
+ 		return 0;
+ 
++	/*
++	 * The sysfs attributes stay live across suspend: hold the lock while
++	 * running the ready handshake so xbox_controller_store() cannot
++	 * interleave its set report between the check-ready set and get
++	 * report, or send a command before the MCU is ready. Release before
++	 * hid_asus_ally_init(): it takes the lock itself and re-applies the
++	 * stored configuration, so a store landing in between is applied
++	 * against an MCU that already passed the ready check and is then
++	 * restored by the init itself.
++	 */
++	scoped_guard(mutex, &ally_prefs.lock)
++		ret = ally_gamepad_check_ready(hdev);
++	if (ret < 0) {
++		hid_err(hdev, "ROG Ally device is not ready: %d\n", ret);
++		return ret;
++	}
++
+ 	return hid_asus_ally_init(hdev);
+ }
+ 
+@@ -1141,6 +1468,7 @@ static struct ally_intf *hid_asus_ally_terminate(struct asus_drvdata *drvdata)
+ 
+ 	ally_quiesce(ally);
+ 	ally_unregister_gamepad(ally);
++	ally_sysfs_remove(drvdata->hdev, ally);
+ 
+ 	return ally;
+ }
 -- 
 2.47.3
 
