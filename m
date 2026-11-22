@@ -1,95 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795362179;
-	b=3KtsjrDnG9GQwlBEX/0UCYzj54QYHI0Ql+/jkHPgu+5Fc5epWl53zQlrfKlVu4Nm4yKD
-	 ueph3g/+dao2Qjrzd9fOCnV0Iwed4nJjcu39Ss1ZDDA24WC7J2LgU0zEFrUi7FP/5ISpH
-	 d0l1VjkVhv5BEd7smYu32C8wWdlHc1BTLbnksNuav47972Ai5Q1ZKrfO59/QEB2iprgx8
-	 CmGQoZ/0GSU1Bqs835e/8CZX3st/J6s56t/t6wvnUm1VBWjl7o5g4AyvIR87RuQDw+NzQ
-	 C7rR/nE+mBXveoIA4oYZDLdAPD7/IV/0Q40+JfEVlRh/fabHuV+TwLvvIiQ7bSnU32Q==
+	t=1795365442;
+	b=Ikkr081Z/An0ED3mEhUCGEtyApEUElM1YjSvgTh8YOQWm5pPQzzrV+uG9tqK9VJRmRhh
+	 gajcSzXjPPhnEJHyJuDpuCZlNVl9iPw8dfWaECoRksZqyF3tsnfYJw4+faTYi/tTeRycg
+	 Fs2ZJad9hmA/4L7DA18Vz4KYk+O/1xYIn7CUSBx9XAqXc2zYEZ6oC6YSnUlJSYYlpUYGQ
+	 YmCh87lFdLC8VkNdaFBUhO2/AAmVP4SkiZgS1+0OQy2Ihnd424p4k8EM9nqVfs0nVLq7N
+	 QjwV/D1MWl4jVSDT1wcOQYzVSz9lYlj6AIRg4EtmczBqec3DTLvSdo/ChuFpVHbX8DQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795362179;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795365442;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=Qg4/Aednj/XG4EIdIsplSfVHGYfdioykpq0fUbEC4c4=;
-	b=QIwYN7p+JY6iv570GtEdgh+3b1OJriP2df0YicRDrC/nvyG+z83Jy7j/2BC4M3dh0Den
-	 5c/bkW/cXYC85jL+EDFT6O+szzYFMBiSn0l8J/JJuTAo5NS8VAoS7rMRa1ib03WnE5j64
-	 BbIgkpQ+hE2DM+jvDI6McmzH6D2NWtK44MEFpJL++U+kCCKYpKWxTDr2yB5ZPgqzBVRP4
-	 OVy3EWaVIZB5UAk085hKO1VDeDpU5+Hy49w1P03CIZhEz6i53gboMZvFL8ma4UoYYFv8Y
-	 zeQsZo6nqlg+Gv+d771u/r7caneqCPq5mM3drGpo6A7B/YTf9j12AEcsoWxewvNeSyg==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:
+	 X-Google-Original-From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=8ufGsgXYRoTqCqKkjsY7U1unPcdM+P1wYZp31Z9S+g4=;
+	b=SnO6Wd7azV5eGsKbu5l5zdHjtEpHqfp63M6YSS7xxVTjciV3dyhm6QX3VcDRoU4woHys
+	 nUuWhye1rr8Zcor7J+7rCorhXULwcA0rViCx9lyBKR/FwoSrZEGrAbfQEzrYN3CiV5BOt
+	 xiGCMojX+BAM3YZcR3veAYs2ItPvEJZfWre2DsKJBquwrG9R5XJWysdSfoowuJZp0Q9DN
+	 pTFrXjeqNyXE4FFHc7Lv+6JLlY7lJC4aHNxPMaxF/wxH5xeat+NAFAkyOwCFUox2WFtv/
+	 UuZEiwZiAzZTK2uUrdboy0+8MGVftsEW4xXVz4jYfNo6sAg1WkZZSbweQZEOl15mQVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Yn0xwyza;
-	arc=none smtp.remote-ip=209.85.128.41
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=d5Frq663;
+	arc=none smtp.remote-ip=209.85.221.43
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51E6606A320
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 15:42:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C51E6606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5350E606A32C
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 16:37:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5350E606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Yn0xwyza
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a5b2be99a8so20932325e9.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 07:42:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=d5Frq663
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48e09aa5264so1326585f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 08:37:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795362177; x=1795966977; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Qg4/Aednj/XG4EIdIsplSfVHGYfdioykpq0fUbEC4c4=;
-        b=Yn0xwyzaH00vML+x15n1390maFMo51yzPaL8K1Px6tajx6AWux6+deHyyN+PMB/LSx
-         t4KO9cwu18hDj9ixdI/B6N508y6VMx480ThS8603Cy8lV8shrtcRWZLu8KZBe8QKvtGO
-         0ByaHSmJijRe5CYt/5BvGcqaPeQ8FkoC3i0Sl1WqscA8kSsIl2QRE/9RKqg0WkTq2whm
-         oC22Nofm11fTePCQZjuec/zJRIe7vDWmfo4mCknnyQqjGbLpXVC/vyKIulUEiCWqdIFc
-         5X5Dt0xa7zqby/HnTY+wNVRdBMTs+zebwQxmVSoW9HQwuB0dLGmvzVE6SF2fgJQ4dTgs
-         Zh/Q==
+        d=gmail.com; s=20260707; t=1795365441; x=1795970241; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=8ufGsgXYRoTqCqKkjsY7U1unPcdM+P1wYZp31Z9S+g4=;
+        b=d5Frq663VF/DKXgvILXztLu+WE4FqNgzcIj03Tsxs49CAKNwK5MgZFxPEJl8EPFpNI
+         QMJP/LhqR9QhIKyPEZjzx/Bi+xBoeZUlctU73dWqHpxOIlnsee4drR+e5dDPA1l9ggbV
+         c28n/eGzDTHopgLB7+5Y/CGxUFc8NRpKWTZL9z6mhIcx6XNfUt2R/sD6xCSjIg96Nkm9
+         TdGUWrMYJFbzUewCttfGNVTdvd9YeGGTVcBciBw7NzEOzASt+WiK0pqPY1RcI6crfASB
+         6O79VqKxrA3pKhxWUJO8fD7l5pIHD7QKjhHq4tkgtppHMdimfcBUbysDNBplCQnakpJn
+         +x2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795362177; x=1795966977;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Qg4/Aednj/XG4EIdIsplSfVHGYfdioykpq0fUbEC4c4=;
-        b=SPCjbY2Wh2tL6hberrEa9bazibOK6M9qheDlXRzsB6SoqNR8lyg3DtPcZVeNTj5qhx
-         TX+wdESxJKivC3nyifBOaRuU1oBSzDghbzMDJWcoZC0E5x5IkvMj/hb7VhYCWptdnL1U
-         3d7dH58XtuWZRgIs7Fsk3zAhWn6Ieaf725B9q519oIPcvBjJNYkFUJ2T4deFVUafHesd
-         9qBnBAzLwfVcBHoZzmhKE3WAWxrpHtDgBpfwgNsSJ6Z70Iu/ZwUR83ikjOhDZ4s1g0Ck
-         6RAtEoFVGpeyNtrCyQfjKeoxxA/lEkZkfnnOMg7ZpUR2jZnHqTfvJBjVT7qhR/Vaouc9
-         epqw==
-X-Forwarded-Encrypted: i=1; AL+hErEqkYEKLJnkpx99cK3jg8JGY4Xc6CQZmQ1K5F8aRdmPBE2+wsb1REGxi416CQBsn0fzJDXGXioJhTPO/PBqbNPQr4M+@vger.kernel.org
-X-Gm-Message-State: APuU4Z+MET4BkJ0WEKIN9oqw6azUApVk4hZWCOSsS1+8UoCvygil98ko
-	HDJhdLGuEk6ASxGF05KTCP9y/GKPYm8KzKGdFU2j1PZjRCmthYiiqxLeT/hbvkslfKS0TA==
-X-Gm-Gg: AZFdTZegoJs4b45HCBtV4kRSzkU6Hve1h/0fLyJyjnZSMWxi4Dqg4Q5wx7taJrTOBrk
-	exK6g+hoGqDpjh7ZV+eulDPuA7Miy5RuU/l1pJ4jJICSvBEh1T9X6a4vuu2UKccGBkq0ClrN/Cv
-	dEe1XMTWvv4TCzm3B/Anmm5gH7NVdBauvAY0MLgKdZt51gGePnyDufKEqS836duVefwUf8OLlVa
-	/j4dQWqBqVAc8zff90ltoUDTRCKF1nE65EyXZdnrhUqHqw8myIv3UdRaELASs+Y976ChXy8dG3I
-	jcru7FZchdpmW+Z9R8F599Qh08juENxzMslr6bwGeNPkQWbf0NTyzmLwWV4eLuc3PWL1b6Wdusq
-	q6bwjZhjGvB3LSY0XJuKCadvNI4PK+eEEh4zXn3hmD0yNX+TKBTxNqI8+qR3DihkSGNIH/OabSX
-	SrB6aYVqsYo3DFarqz9W9zaVTfaId4a9+6wm0+pkwuy44vFriURMkO7tMVREB7F0EfglvjNwJjO
-	hHOB8CC0kVdpA9FeNwoxEUVRk0Lq/cEDdqwIF8BCfTOejQ7WgYcmQLtcokLSH+6wmPD4GY0jO5K
-	NxKIN2ZQmCTXbbV+jYq5tXp7ksZlDD+MSh79oj4mEfYJK0uxLV2SY/1mpryOyllvNhL/
-X-Received: by 2002:a05:600c:468b:b0:4ab:cc03:7f60 with SMTP id 5b1f17b1804b1-4bb8881b511mr191548225e9.18.1795362177050;
-        Sun, 22 Nov 2026 07:42:57 -0800 (PST)
-Received: from Zbook (178.115.144.251.wireless.dyn.drei.com. [178.115.144.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b2c5sm278469065e9.5.2026.11.22.07.42.56
+        d=1e100.net; s=20260707; t=1795365441; x=1795970241;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=8ufGsgXYRoTqCqKkjsY7U1unPcdM+P1wYZp31Z9S+g4=;
+        b=O51W1BX8CP4UP1pSO6xCAg/3qxWj5mHdMKXq1iTM369P45x4dDbvLzfaL/1TfRIjwa
+         Hbl22rcD5z/U621YwJOWxJEEjnISxtiUCkl7Unz7GQS1AgexN1hf5qmbctUbcwSNIGwV
+         ih8q0Ey/00dyRNFRAzNyi5PRCXEXy+jlcu9NLKi0IG2DX7mjMdKuOG1yUIBN3TCr/RsG
+         k98CZXB1SsPcbypzF0nL/hO7hoaPDUv4y/0sqzt7bVuC5yMViePsn2EselCJR6gIhMNz
+         i6iw2rck3SqiCl3403vKTvk97ohMwle/mYiCBj1ITb3ivFydtGK97Zvs6YFWGl22FQb5
+         cduQ==
+X-Gm-Message-State: APuU4Z/oKriqTKzb7OmBTBc8AYcFxVg6W8tKSJhEIxqMtnMrRFBhCOHt
+	UIuxKESA/5RJkFPQlcnfpAAOCWhFYNBEzHu3nzH+hxQDUsGjq1tD6OWROQKAu3z+o7oBk30g
+X-Gm-Gg: AZFdTZeWua5PDU23jzzMXCOBlaLmpR/1MyAtL8wNyw22tLoo7bnZ2RUHvKfAJf4RZTW
+	7X4cKhdz3KAWLn1X0HNtrheBp3UsctnomTjdgoZwhRKfL2IOMu8Jdn5NVYwCIlprnNOnYdRsBg3
+	4WPkNmXsbtHqhugo+HYnegHFhEVSPTj58GGtiCdfl0Caeffki7eQux1xIkmjJrAi0LpW3AGh85P
+	cdX+rw8ZQtuZKnDcpEnjfcjlzTunjTo5Umowi+Mym+jeeeRzHNw5WRNEUtnFLNrnbnnTMUOKDq7
+	0rUNQ5Ch9kZuiBFuTXVGsVCcOhaqETXHKCNfJgAhphfmupxL9GJXDrvnLwgj4e2yfTV/iDD20z2
+	8D6UdURuBUDWHKvFTOZQT71RCksFgHHWNSsG+kCL0m0nblX5u+WLrTkAw0bdanSdMTHZKkkiNMM
+	jE1xxEeo05nDbgC/lvNprl82K6lE9FwxdiwkXPzS8VGjY+Rz9WcJ0isjD+J1hh/mbzaERdva4Ca
+	bWkKOUjcnSF2pnv7nms2/EzhV+/bWFQ9oVH91MPru1sy9VMCw2ETczkbu0g0KHVH0geyIsyQkW/
+	hSHT5APNgDnVAKcQizZTLZZtnA==
+X-Received: by 2002:a05:6000:2b93:b0:4a4:c39a:1d51 with SMTP id ffacd0b85a97d-4abb4b85ac7mr11098704f8f.44.1795365440425;
+        Sun, 22 Nov 2026 08:37:20 -0800 (PST)
+Received: from archlinux ([84.233.195.51])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4abbd84e661sm15813953f8f.18.2026.11.22.08.37.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Nov 2026 07:42:56 -0800 (PST)
-From: =?UTF-8?q?Hasan-H=C3=BCseyin=20Kayisci?= <kayiscihasan@gmail.com>
-To: kayiscihasan@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 2/2] platform/x86: hp-wmi: Support max fan mode on ZBook Studio G8
-Date: Sun, 22 Nov 2026 16:42:25 +0100
-Message-ID: <20261122154225.61211-3-kayiscihasan@gmail.com>
+        Sun, 22 Nov 2026 08:37:20 -0800 (PST)
+From: Martiya Aryan Mehr <martiya.ar@gmail.com>
+X-Google-Original-From: Martiya Aryan Mehr <Martiya.ar@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: qby140326@gmail.com,
+	ilya.gladyshev@linux.dev,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Subject: [PATCH 0/1] platform/x86: bitland-mifs-wmi: add TM2309 profile support
+Date: Sun, 22 Nov 2026 20:06:57 +0330
+Message-ID: <20261122163658.23920-1-Martiya.ar@gmail.com>
 X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261122154225.61211-1-kayiscihasan@gmail.com>
-References: <20261122154225.61211-1-kayiscihasan@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -99,116 +96,47 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On the ZBook Studio G8 the HPWMI_FAN_SPEED_MAX_SET_QUERY command fails,
-so writing pwm1_enable fails with -EINVAL and hwmon init logs "Failed
-to apply initial fan settings: -22".
+Add platform profile support for the Xiaomi Redmi Book Pro 16 2024
+(TM2309) using its firmware QFAN values:
 
-The EC on this board has a fan mode register at offset 0x2d, which the
-DPTF IETM.IMOK method writes on Windows. The low nibble selects the mode
-for the CPU fan and the high nibble for the GPU fan. Mode 0 is the
-automatic fan curve and mode 1 holds the fans at the highest fixed
-level the EC offers (about 4700 RPM on this machine, versus about 4100
-RPM reached in automatic mode under sustained full CPU load). The EC
-also accepts mode 2, a lower fixed level, which has no hwmon
-equivalent and isn't exposed. Writes of other values are ignored.
+  QFAN 2: low-power
+  QFAN 1: balanced
+  QFAN 3: performance
+  QFAN 4: max-power
 
-Add an optional set_fan_speed_max callback to the fan profile
-parameters and implement it for this board by writing the EC fan mode
-register, so pwm1_enable 0 (full speed) and 2 (automatic) work. Manual
-control (pwm1_enable 1) stays unsupported: the EC ignores host writes to
-its fan target registers.
+The firmware can report QFAN 0 as a stale balanced state after
+resume. The entry maps it to balanced for readback but marks it
+non-settable, ensuring that selecting balanced writes QFAN 1.
 
-Tested on a ZBook Studio G8 with BIOS T92 01.25.00.
+A battery-specific performance entry keeps performance selectable
+on battery. The AC-type check is skipped because this firmware
+does not implement that WMI function.
 
-This patch was written with the help of an AI coding assistant (Claude
-Opus 5.5, via Claude Code), which found the register by disassembling
-the DSDT and probing the EC, and drafted the code and this changelog.
-All of it was reviewed and tested on hardware by the submitter.
+Testing:
+- Exercised the profile/QFAN mappings on TM2309 using the local
+  development driver. That build contains additional local changes;
+  this exact standalone patch was not independently loaded.
+- Built both patched and unmodified bitland-mifs-wmi.o against
+  linux-next-20261120. Both builds completed without warnings.
+- Full module link/modpost and runtime testing of this exact
+  standalone patch have not been performed.
 
-Signed-off-by: Hasan-Hüseyin Kayisci <kayiscihasan@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 34 ++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+AI assistance:
+ChatGPT (GPT-6) assisted with source analysis, interpretation of
+firmware observations, drafting the profile table and DMI match,
+and preparation of the changelog. The submitter reviewed the
+resulting changes and performed the hardware and build tests.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index c4896435c..9e1729af4 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -63,6 +63,15 @@ enum hp_ec_offsets {
- 	HP_OMEN_EC_THERMAL_PROFILE_OFFSET		= 0x95,
- };
- 
-+/*
-+ * EC fan mode register on ZBook boards, also written by the DPTF IETM.IMOK
-+ * method. Low nibble is the CPU fan, high nibble the GPU fan. 0 selects the
-+ * automatic fan curve, 1 the highest fixed fan level.
-+ */
-+#define HP_EC_FAN_MODE_OFFSET	0x2d
-+#define HP_EC_FAN_MODE_AUTO	0x00
-+#define HP_EC_FAN_MODE_MAX	0x11
-+
- #define HP_FAN_SPEED_AUTOMATIC	 0x00
- #define HP_POWER_LIMIT_DEFAULT	 0x00
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-@@ -151,6 +160,8 @@ struct hp_wmi_fan_profile_params {
- 	int (*get_fan_speed)(int fan);
- 	/* Number of fans, 0 to query it with HPWMI_FAN_COUNT_GET_QUERY */
- 	int fan_count;
-+	/* Optional, defaults to HPWMI_FAN_SPEED_MAX_SET_QUERY */
-+	int (*set_fan_speed_max)(int enabled);
- 	bool fan_table;
- };
- 
-@@ -187,14 +198,17 @@ static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
- };
- 
- static int hp_wmi_get_fan_speed_thermal_status(int fan);
-+static int hp_wmi_ec_fan_speed_max_set(int enabled);
-+static const struct hp_wmi_fan_profile_params *hp_wmi_fan_profile(void);
- 
- /*
-  * Business notebooks (e.g. ZBook) without the gaming fan commands, which
-  * report fan tachometer readings through the thermal status query.
-  */
- static const struct hp_wmi_fan_profile_params thermal_status_fan_profile_params = {
--	.get_fan_speed	= hp_wmi_get_fan_speed_thermal_status,
--	.fan_count	= 2,
-+	.get_fan_speed		= hp_wmi_get_fan_speed_thermal_status,
-+	.fan_count		= 2,
-+	.set_fan_speed_max	= hp_wmi_ec_fan_speed_max_set,
- };
- 
- static const struct hp_wmi_board_params thermal_status_board_params = {
-@@ -1226,10 +1240,26 @@ static int omen_thermal_profile_get(void)
- 	return data;
- }
- 
-+static int hp_wmi_ec_fan_speed_max_set(int enabled)
-+{
-+	int ret;
-+
-+	ret = ec_write(HP_EC_FAN_MODE_OFFSET,
-+		       enabled ? HP_EC_FAN_MODE_MAX : HP_EC_FAN_MODE_AUTO);
-+	if (ret)
-+		return ret;
-+
-+	return enabled;
-+}
-+
- static int hp_wmi_fan_speed_max_set(int enabled)
- {
-+	const struct hp_wmi_fan_profile_params *params = hp_wmi_fan_profile();
- 	int ret;
- 
-+	if (params && params->set_fan_speed_max)
-+		return params->set_fan_speed_max(enabled);
-+
- 	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
- 				   &enabled, sizeof(enabled), 0);
- 
+Martiya Aryan Mehr (1):
+  platform/x86: bitland-mifs-wmi: add profile support for Xiaomi TM2309
+
+ drivers/platform/x86/bitland-mifs-wmi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+
+base-commit: 2268d837dea13a78639fa3dad60472bb67478709
 -- 
 2.56.1
 
