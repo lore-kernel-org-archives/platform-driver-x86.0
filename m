@@ -1,79 +1,80 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
 	t=1795322143;
-	b=YNVxsnyQAPUWipX4huXnpxDRbpxzdgKOgPEtu8LHLqRShtj+KJXVOJm3SCVWuCuhF246
-	 D2imGkwTHNbCxIe5xZU6QVJy7Td6H6ynLNUIspy+gInKGWTbbHzG+ciWFjyBKmTkP0rne
-	 cUm0ngX2ocz0h96vn5DIBPo2hQ6icjid4kMGdyrGQKO9cL+BCTkwy0ZG/iRg//1dMw8bi
-	 bvekJDwHQxTLFsYXmeyHoMqpsSk/zU4ke/j4S6dtGT2XzasR20sahGAfr54iOx8v4241+
-	 xHDlCT26r8yakH6hBX6keAYKxICqOswwF+0cDkOSbJBRNpY/2RbHUl5oq+qxGjiM5IQ==
+	b=uNPo0vGQh7raU8nblKZjnDoDPAeIviDIbcBrWXChiRyN0pYJyo7dN4f/MR75ZuaIKORA
+	 5+MP77FAmmT+df7bJj2KhPR1ULAuBYK4nlRu7PMJ6gE7gmZ23onSREHFD+DoZ6Ws4oHOa
+	 Q82ooZTU7RnHeDFUzzcW9pTHGuxrOFO9TDnTu/5PUALIfhIsWZLcr12tq0wGPx9OmE0y2
+	 H+P+GlUk6M2ziupM3ivArkYlLAoy8cQUPK+Ge4iDTJQ2OQcbhq4seda2Hf8ZzYHU2Ywh3
+	 dLL9a/bXV/O3vgDCi5aP1eGOSzOHi4oNfKQH9CxMPM5RvAdaL64YP3rAP2w3pfutrzw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795322143;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=hDT/aECBwNbW2NyGACBkXyKf6xBKy+F1zx00muMQwYk=;
-	b=MZyvpAJpSFwuTbZTL9fFBdZjLZbMwKSd73QOLKKzmeKo0gPiYGAPH/eMTR+XfBDr7YuO
-	 4Yr/z7ZDe/GG23OOoiUNRIs3Upkv/zQIBPfUDWwiXSh9aITpSFsRUAucXldhFZA9RvF9+
-	 2os9g7NdmuFZawH1Kd47fd5H0p8RKjAwqj8xYS6HXixlbiulALgGljDTLdeqna4sYzyXf
-	 pPFuuUMhWm92MinHt2dQFuM1tYhTZoAnuWRttqez4ntJsa95DVi5hiFt/Wmf8QSGNyDvk
-	 FDj35kcogEGQljghMR+dhq8130a2PKWU7qU1BHYEzk2N4t191Sug1aI8ou9Abx8HcBw==
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To;
+	bh=89VLhvuRQZuA273RQaix65r3d730rv0xXXofbKFdTsk=;
+	b=bb99sib2jNNfMdebC117EW8UTD5vZtYrHAxuSIss3DgYu4/23y3hrFcESA1jHNGUGIjf
+	 6HxTvpvNpaLDh4HjrdF0eGbHIq7pLC3g/rHer3t3Q/neMp/HQc1EOVvPPhYRHboo1FRF/
+	 rCi7zvTx4WtjIJsQkhdUfiY4458FGgryDJteD3nWfSMe/Br7a8GisWNsZOGNHyBVn8j8N
+	 vxKXYXZaE4F0T2lcbIFCJI+WQCldk1RtrY1yupW7n5oEOXsTKoJ0bsX06T1fuybEOmV9T
+	 gBvCY1R0pxd67NYdaeEwK0svIBrW2O89cgcvyYKIpYposZk2BHzLYIHxPo/ScyqLAYg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyafLCx9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hT4ma0Kf;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C40D606A32A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F593606A331;
 	Sun, 22 Nov 2026 04:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyafLCx9
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hT4ma0Kf
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
 	t=1795322143;
-	b=B4j4WMZIlOCuFk7fde5NWU8ou5jZFQJoaNlaD7JcfGyuBLohgVDg1SHpgTr5pXFAv5Ut
-	 6G2DHvI2SltWHSYDGpaJ9zQwJkWlfVC8nwzywk8oBBROrRS0cLUpn8KiHRCUkWJcRUSCy
-	 81HbLis0WiPAB6cegPv1n+qc56DFZjSi3RLev1E+0SRvGdqzifAjUNb11TNhJagehdk0v
-	 Vr/jLn+VpFDr0HI6u3uYZnKsTfRv8So6AtPhBlF3Kv01vclrjfI59qSBC8shISj37xe+y
-	 tv1HqriWxA6L3D/6vFrDtseEdq7tP9w7VFKdSP6KBNIyQdAWDdq1ZvyhUqcujU9jCFA==
+	b=nofHqT/hamlnGFM345FLrnbH/UjSdvb/urQWLqN6AqahuW9IJvGjUfbVOT9Ia48vmjWD
+	 f7nr5IsEa3txXiIc+NsJbxT0407FhyfkOfwsbzTPRFUY9vTcgWH3qZb02uegZznP1/6bH
+	 yaZ+wnUOUZSjlbBv5xbnABOYBp6ydPiVCIOXmDao0Ap74i/l9fRCnp1VhV9ZRoInY6ehG
+	 FabjAgAfchW9SnhyncGxDe1LJSKEZZvJcKkruKu6qrtmuzA4oU7vstYASYwX7FPQhslfU
+	 g1k9gwa/pzoSXb+it8fb2dI9sWoLS611Ogullib3foSLNpS0Yu2PtM9kntvdQPGbllQ==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
 	c=relaxed/relaxed; t=1795322143;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=hDT/aECBwNbW2NyGACBkXyKf6xBKy+F1zx00muMQwYk=;
-	b=EH4J8jK6o6I5Swfys09n7YnZHgSaeo9O4qFe3ZpFDFm4b0LVHO28lCuZgBe2fRmeI7dx
-	 lTPTCVzpb2qWmkGp6cwMr9p6j1sNH/bQ/iLUM5v57vTteWAqGOyj3Y6a+xcv8XhsvV9eW
-	 lo0l7DO6TrkZHyCzUJp31MfZWIoFJmenr2a5fTCgUv/TIUTPUXnrK2arFO04yVWUcxh2j
-	 t6aSN7Uxvx2pyR1l+Y1BHuHtnShtEXtuAZTZb265+r68XofD211zaKkTA4KmHXsZePBUo
-	 c/zrTggyX057rq/xnEwTisglrugt7rG4pHGDTaHoPRidAzwAWU/ZAbHeoy7scCdt59A==
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=89VLhvuRQZuA273RQaix65r3d730rv0xXXofbKFdTsk=;
+	b=Ma2HGNd5oSUBbbsIIxjGJvFfAgg1IJ4dQkjvzYrBMrMSYgUGGbUUrr3F8gysj1h3gn8q
+	 qg1J6TySwPYjP2vQQIsAi1xMo0Iu2cODt+6bMOM/MWPEKC1QEOI9PdqG7nAzGG0XbDOmM
+	 88yT+96KU8pFa0WGsReRofM5RbQaEMRtW+9q5kjWpOUPbojPcJqRlnZpq+Jr2V8bqz3K2
+	 HzEIx90k30IBymkThOct1qTE9epZVGtC6q48TBXkNfVM6sfEvWo/fBwSD8YGFKE7zFFCU
+	 VbfqZY0zMyZ7YLu9IB8dXMfyE5ggyaM5loCz31BBvE4IrMHjaTrXBoR3OiaNhbImJeQ==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 8CCA61F000C6;
+	by smtp.kernel.org (Postfix) with ESMTPS id 8D01E1F000CA;
 	Sun, 22 Nov 2026 04:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1795322143;
-	bh=hDT/aECBwNbW2NyGACBkXyKf6xBKy+F1zx00muMQwYk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=lyafLCx9VdmFPDGV06vNOjyFIG/zP2a04VGJTajolsDiXcFaxJxmvo6AjkfBUmleo
-	 TSeQPly3kbS8qw2q8RKo40bZvFH5j3SOQpysHm54RbdW3CyHsoORGUKsfNz6BwqvCS
-	 dELTPwGI6rktaYOK0/R+M282MizdVU10sdEe+zLpVhZqPzNEe1Tv/eLl66zqJLjq+n
-	 6cHk4ETeMZ4Bgp4zP+6MTQdre0d5w6zYnRekkpn4CcuzfKGNicKRemt9TlwCSHwqe+
-	 i3xFJzbe7JctHBwPUJB6qVHEGTvSJedCzpcQEyAWymyhsyb1/hwMpQoM11JOVvioKE
-	 Wj7CS3rnMB4VQ==
+	bh=89VLhvuRQZuA273RQaix65r3d730rv0xXXofbKFdTsk=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=hT4ma0KfAlOMBL372wwLa54uQQxYGkEEP/yiP2eSKfJFIGAdlPUJlwqq0wW9IfkJ6
+	 Zkm+/hb2axAXXVbxIqQrLzvGD+HjTf3sr2OW+wUC9VQaGHFAH/e7bH9yWhcKZvV+p8
+	 xGUEQjYDSyc1mGxNiDvg3KBdb41+0b+IGvrbiMyZTm6BmpxtLQ2iMOiAU66bBuw2s1
+	 FIvdvKiyWLvCBkbZD0DGBfJtBRTyXYR6cIPH8fm7oU7AxlgtxyWH4CZDt70WKmhXvp
+	 xXsWXeQBdY07GJcdvX+8pZMqThQhwZRNMgzUF1w2qUhlddXBNrXD/QlXB/o7vnSDgC
+	 oMeIIG6krbOcA==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 0FD594BEEE;
-	Sun, 22 Nov 2026 04:35:42 +0000 (UTC)
+	by lkml.kernel.org (Postfix) with ESMTP id E189C4BEFB;
+	Sun, 22 Nov 2026 04:35:41 +0000 (UTC)
 From: Nick Dowsett via B4 Relay <devnull+nick42d.gmail.com@kernel.org>
-Date: Sun, 22 Nov 2026 12:35:38 +0800
-Subject: [PATCH 1/4] platform/x86: clevo-laptop: add minimal WMI driver
- skeleton and Kbuild plumbing
+Subject: [PATCH 0/4] platform/x86: clevo-laptop: add initial Rust driver
+ for keyboard backlight
+Date: Sun, 22 Nov 2026 12:35:37 +0800
+Message-Id: <20261122-clevo-laptop-v1-0-881debf4d4b0@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -84,9 +85,11 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261122-clevo-laptop-v1-1-881debf4d4b0@gmail.com>
-References: <20261122-clevo-laptop-v1-0-881debf4d4b0@gmail.com>
-In-Reply-To: <20261122-clevo-laptop-v1-0-881debf4d4b0@gmail.com>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQqAIBBA0avErBNUyKSrRIvSqSYkRSuC6O5ZL
+ d/i/wsSRsIETXFBxIMS+TVDlAWYuV8nZGSzQXKphJCcGYeHZ64Pmw9M1NyqShurag05CRFHOr9
+ d2/1O+7Cg2d4H3PcD8Wxb43AAAAA=
+X-Change-ID: 20261120-clevo-laptop-170d658cd678
 To: Hans de Goede <hansg@kernel.org>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
  Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
@@ -103,172 +106,62 @@ Cc: Armin Wolf <W_Armin@gmx.de>, Werner Sembach <wse@tuxedocomputers.com>,
  linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
  rust-for-linux@vger.kernel.org, Nick Dowsett <nick42d@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795322140; l=4849;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795322140; l=1960;
  i=nick42d@gmail.com; h=from:subject:message-id;
- bh=e9AdSz41EP3ywu8H4Pe835LANDmSykHvhG+wsu9VTm0=;
- b=anPBWXAgeDelXVKsG1nyDfq5seJYrlBDPkqh3KwKnpA+NHh8NhWsZkOp8Ma8DT8s/zy84t9RA
- rOGeCqw3QfpCihA5a8gVD9q+r1aJgvG9SSAbJGB4mhukqD3/VjtEWSA
+ bh=p78MTrTYwQzdn9dfkJDldtBDVtC1Y5FQDIFCazyzkhc=;
+ b=1LfJha8InVu8PtbAMRzAgT44KCMkucZ+h4g8DHDeSIe8mBmk4tAmSA6rBrrrMhHVJczjmHvfs
+ T3z8LUxxnoZBx5vDonouDhQs6oABs4w5yQ+l3UbUu+56foRJTsD3+/v
 X-Developer-Key: i=nick42d@gmail.com; a=ed25519;
  pk=1uIkNexEofzEXNN3Y3QW5z8IrgjWaP0yH6Es51jxWOg=
 X-Endpoint-Received: by B4 Relay for nick42d@gmail.com/default with
  auth_id=1596
 X-Original-From: Nick Dowsett <nick42d@gmail.com>
 Reply-To: nick42d@gmail.com
-Content-Transfer-Encoding: 7bit
 
-From: Nick Dowsett <nick42d@gmail.com>
+This series adds a new Rust platform driver MVP (`clevo-laptop`) for
+Clevo barebones and rebranded laptops (Metabox, Tuxedo, Sager, XMG,
+etc.), starting with 5-step white keyboard backlight control.
 
-- Add `drivers/platform/x86/clevo-laptop.rs` with module implementation,
-  DMI board check, and Driver registration.
-- Add Kconfig and MAINTAINERS entries and Makefile wiring.
+It is intended as the first in-tree user of the Rust WMI abstractions,
+and a starting point to be extended to additional Clevo models and EC
+features.
+
+What's included:
+- Minimal driver skeleton, Kconfig/Makefile plumbing, and MAINTAINERS
+  entry.
+- Type-safe EC WMI query interface.
+- Driver registration and backlight type detection following
+  tuxedo-drivers business rules.
+
+Dependencies (not yet merged):
+- Markus Probst's Rust LED classdev abstractions (v28):
+  https://lore.kernel.org/all/20261113-rust_leds-v28-0-b8cf2f74fa57@posteo.de/
+- Rust WMI abstractions (change-id: 20261119-rust-wmi-c6b0e0fe97a7)
+  https://lore.kernel.org/all/20261122-rust-wmi-v1-0-63111d9e824c@gmail.com/
+- Rust DMI abstractions (change-id: 20261121-rust-dmi-c49d2041d7e2)
+  https://lore.kernel.org/all/20261122-rust-dmi-v1-1-4ace9449f872@gmail.com/
+
+Tested on a Clevo/Metabox NL57AU laptop.
 
 Signed-off-by: Nick Dowsett <nick42d@gmail.com>
 ---
- MAINTAINERS                          |  6 +++
- drivers/platform/x86/Kconfig         | 17 +++++++++
- drivers/platform/x86/Makefile        |  3 ++
- drivers/platform/x86/clevo-laptop.rs | 72 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 98 insertions(+)
+Nick Dowsett (4):
+      platform/x86: clevo-laptop: add minimal WMI driver skeleton and Kbuild plumbing
+      platform/x86: clevo-laptop: add EC WMI query interface and BIOS feature check
+      platform/x86: clevo-laptop: probe keyboard backlight type and detect 5-step white backlight
+      platform/x86: clevo-laptop: register 5-step white keyboard backlight LED device
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 44540a1eb2b8..1130c293e84d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6566,6 +6566,12 @@ F:	scripts/Makefile.clang
- F:	scripts/clang-tools/
- K:	\b(?i:clang|llvm)\b
- 
-+CLEVO LAPTOP DRIVER
-+M:	Nick Dowsett <nick42d@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/clevo-laptop.rs
-+
- CLK API
- M:	Russell King <linux@armlinux.org.uk>
- L:	linux-clk@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9ce384e0475e..18aa4550c9f4 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1059,6 +1059,23 @@ config OXP_EC
- 
- source "drivers/platform/x86/tuxedo/Kconfig"
- 
-+config CLEVO_LAPTOP
-+	tristate "Clevo Laptop Platform Driver"
-+	depends on RUST
-+	depends on ACPI_WMI=y
-+	depends on DMI
-+	depends on LEDS_CLASS
-+	help
-+	  This driver provides platform support for Clevo barebones and
-+	  rebranded laptops (Tuxedo, Metabox, Sager, XMG, etc.).
-+	  Currently only Clevo NLx0AU boards (e.g. Metabox Edge NL57AU)
-+	  with a 5-step white keyboard backlight are supported over WMI.
-+	  It is intended to be extended with additional Clevo models and
-+	  EC features over time.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called clevo-laptop.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config P2SB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 229057234d00..070af05a2064 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -158,6 +158,9 @@ obj-$(CONFIG_SILICOM_PLATFORM)		+= silicom-platform.o
- # TUXEDO
- obj-y					+= tuxedo/
- 
-+# Clevo
-+obj-$(CONFIG_CLEVO_LAPTOP)		+= clevo-laptop.o
-+
- # Winmate
- obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
- 
-diff --git a/drivers/platform/x86/clevo-laptop.rs b/drivers/platform/x86/clevo-laptop.rs
-new file mode 100644
-index 000000000000..1d862c57b3fe
---- /dev/null
-+++ b/drivers/platform/x86/clevo-laptop.rs
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Clevo Laptop Driver.
-+//!
-+//! Currently supports only the 5-step white keyboard backlight on Clevo
-+//! NLx0AU boards (e.g., Metabox Edge NL57AU).
-+//!
-+//! Copyright (C) 2026 Nick Dowsett <nick42d@gmail.com>.
-+//!
-+//! Inspired by Tuxedo Computers' drivers.
-+
-+use kernel::{
-+    device,
-+    dmi,
-+    prelude::*,
-+    wmi, //
-+};
-+
-+/// # Note
-+///
-+/// This GUID is non-unique (shared by Uniwill for example) and cannot be trusted
-+/// to uniquely identify a Clevo device.
-+const CLEVO_WMI_METHOD_GUID: &CStr = c"ABBC0F6D-8EA1-11D1-00A0-C90629100000";
-+/// DMI board name allowlist, restricted to tested boards since the WMI GUID is not
-+/// unique.
-+const SUPPORTED_BOARDS: &[&CStr] = &[c"NLx0AU"];
-+
-+module! {
-+    type: ClevoLaptopModule,
-+    name: "clevo-laptop",
-+    authors: ["Nick Dowsett <nick42d@gmail.com>"],
-+    description: "Clevo Laptop Driver (Keyboard Backlight)",
-+    license: "GPL",
-+}
-+
-+/// RAII guard for Clevo Laptop Module holding all subsystem drivers e.g WMI.
-+#[pin_data]
-+struct ClevoLaptopModule {
-+    #[pin]
-+    _wmi_driver: wmi::Registration<WmiDriver>,
-+}
-+
-+impl kernel::InPlaceModule for ClevoLaptopModule {
-+    fn init(module: &'static ThisModule) -> impl PinInit<Self, Error> {
-+        pin_init::pin_init_scope(move || {
-+            if dmi::get_system_info(dmi::Field::BoardName)
-+                .is_none_or(|board| !SUPPORTED_BOARDS.contains(&board))
-+            {
-+                return Err(ENODEV);
-+            }
-+            Ok(try_pin_init!(Self {
-+                _wmi_driver <- wmi::Registration::new(c"clevo-laptop", module),
-+            }))
-+        })
-+    }
-+}
-+
-+/// RAII guard for Clevo WMI driver holding all subsystem devices e.g LED device.
-+#[pin_data]
-+struct WmiDriver {}
-+
-+kernel::wmi_device_table!(WMI_TABLE, [wmi::DeviceId::new(CLEVO_WMI_METHOD_GUID)]);
-+
-+impl wmi::Driver for WmiDriver {
-+    type Data<'bound> = WmiDriver;
-+    const ID_TABLE: wmi::IdTable = &WMI_TABLE;
-+    fn probe<'bound>(
-+        _dev: &'bound wmi::Device<device::Core<'_>>,
-+    ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-+        try_pin_init!(WmiDriver {})
-+    }
-+}
+ MAINTAINERS                          |   6 +
+ drivers/platform/x86/Kconfig         |  17 ++
+ drivers/platform/x86/Makefile        |   3 +
+ drivers/platform/x86/clevo-laptop.rs | 387 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 413 insertions(+)
+---
+base-commit: 4843f6873f7c4835e62f2c73ba0fd538e57a2f22
+change-id: 20261120-clevo-laptop-170d658cd678
 
--- 
-2.56.1
+Best regards,
+--  
+Nick Dowsett <nick42d@gmail.com>
 
 
