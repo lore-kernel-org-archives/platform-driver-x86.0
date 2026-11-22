@@ -1,110 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795391066;
-	b=4gVcNrioc53BdDIzm7ky1zMeWFU4aqqrklcEdLIgVnyRP0sQx2qgqA+2pm5AN6Mm1PoU
-	 noQaBAdt4bh4lv34DuGbaIUnu2aIyOM9lOXnbqFpTWe99o0PPbgRC0HVJ6GCPNZ0DbnM4
-	 +xV5hWHcci1N2kV/kQmMcGhd81+aGUFBswsJRnEGAAWlcaiQbccdyownM3k+79f3pNAoH
-	 FImHvMLxj2zKErzQQ1uOs9JiZovotOqLjtYdJxkeaa5JM18X4EwRCsohtpMyoMhbur46E
-	 HGfu3eQSkVwTn1a8Iau+WwEmaXaQfb3riraNZ2wzNFYQb4WPvdXPHJJk/FOCmj59VbA==
+	t=1795391078;
+	b=DqMhE2mTPUUxuEG0ijOueDRQEMxf4hb9kmjeUF6sYRq+Qm9QvXnHmnR2sRGrNg9TtVum
+	 Qq062L2gETu0C5T9XR0mt79DWKJwZXd7DL3DGKexjl5g0IhcPhhkO5zP+0rb/fTwf/Myy
+	 niXFZw3tt9P82EfLd0TO+7rhSsodGX+mo/DPmiaTdf1unZf8eUyUsSrbc2n6UI61szTZF
+	 fGyUiC/rxdQF0liiK85o3zTbZAyzYo3umevYNpTkmqZMbxZodA1ELu0OguQ9GfSbt37PY
+	 VnJN9SvTX2ziwWcRRYfOOLmrMfzepM7vnsYYyudmlK3IMCqbs/xkPfhVI8MpAAIBuqg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795391066;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795391078;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
 	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
 	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
-	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=ehoD6iN22FSTTuILrvLE59/ojDkeQ3MbAGSvUPqQK6k=;
-	b=TmQw60HMq5Q5ECKhgKoGnvR/oj4+rP6xCAmWJbPcdJcJShw9/Ot5Ei/kr9K1xnnIRelc
-	 8l9JeMCl6mgm8FXYdzjuiRc21ztBvJd+4rqZEBdTwk1WQovNJvDtQ6bwnIv8uF69jZGdQ
-	 HhHryFLo57HphWrdpAu0S0c44ZktHU6asR5rjJLDJgNqvUgzV2Y6jWTv4z6NawlISN5Ba
-	 6L3utqOXdJXDaM4+Vn/BTE5hsftICM4LRNxFCpsp98Wq+iweA/i8wL6si8gTbsWbeHBY1
-	 JXD05FfvCXZJckgvGzZvV9HYUa1oP90Vqxu1NH+OiPyxeqX8ZHvFXxn8RsXhSlBfWTw==
+	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding;
+	bh=k/T26OxvbNctIsKGzjvokIqLK02u3kx0ZSGmrsNkkuI=;
+	b=WGBtB5mKMAE+IK1kYCOm5krK5rbDbNXDX+8Tndum/tw2ZHXxFhZ3GErj1/Q6JgnTHMB6
+	 iToCvFrK08oE0vmI/L653ZiV5sCEVUwuuqObhsW3qDd8gJYoYyAEY/hyZCYae0hgLJyuc
+	 8/w3b4KuB0bc5/pxF/zUlBRqZAhCZ1PcvIZG6CpbMV0j1eurElnokngLF9M31eEUfjXvU
+	 HvJpSTshDAQa5m7Atuk+jDNUHjjBDbKo3qXjMSFg2wOgg8UlUy4zi2MU+2GRxY1eP4u6W
+	 /tzSl5+y96auWJBuZJR0KRXAgA1XpIeyCjSZWnfgYZIhgxP/8jorCqQRHlJdcMOJM8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=exultantmonkey.co.uk;
 	spf=pass smtp.mailfrom=exultantmonkey.co.uk;
-	dkim=pass header.d=exultantmonkey.co.uk header.i=@exultantmonkey.co.uk header.a=rsa-sha256 header.s=fm2 header.b=X5GJb50A;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=sCs0dVaF;
-	arc=none smtp.remote-ip=103.168.172.144
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	dkim=pass header.d=exultantmonkey.co.uk header.i=@exultantmonkey.co.uk header.a=rsa-sha256 header.s=fm2 header.b=D67+4kaC;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=g4iG4yrV;
+	arc=none smtp.remote-ip=103.168.172.152
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4CC606A31D
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 23:44:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C4CC606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251CF606A31E
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 23:44:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 251CF606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exultantmonkey.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exultantmonkey.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=exultantmonkey.co.uk header.i=@exultantmonkey.co.uk header.a=rsa-sha256 header.s=fm2 header.b=X5GJb50A;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=sCs0dVaF
+	dkim=pass (2048-bit key, unprotected) header.d=exultantmonkey.co.uk header.i=@exultantmonkey.co.uk header.a=rsa-sha256 header.s=fm2 header.b=D67+4kaC;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=g4iG4yrV
 Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id 72D82EC08B2
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 18:44:24 -0500 (EST)
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 5AAF51400282
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 18:44:37 -0500 (EST)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Sun, 22 Nov 2026 18:44:24 -0500
+  by phl-compute-04.internal (MEProxy); Sun, 22 Nov 2026 18:44:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	exultantmonkey.co.uk; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to; s=fm2; t=
-	1795391064; x=1795477464; bh=ehoD6iN22FSTTuILrvLE59/ojDkeQ3MbAGS
-	vUPqQK6k=; b=X5GJb50AzdBmLAqAfa2dPALSY4dFpyhQc9j7zT/Man8s84gB2EU
-	y93HXmtVP2chOJpp1JXADmtxeycALP+sjGIR5QpXwv+ioIgc0DJXkq7712LVSD1i
-	kYFapAfzHAtchZJy7fYZB8ffm1WbsMHRUIiGmkFzvODe3iTdjZwub00Kh3VN4Rui
-	gzWx2mU9nxfjdM4WpCRP0f11qURA2i7ER3QchCz7yYpk4Rq/37NZNy3vUi76ycKi
-	LFB0T5RfP0ndN51/EiZ2FSahmMHipxqbyaY5ZpYlSWHvsliawVydMfbfZOrxgK9Y
-	W8o5F1LQ0DYaHzDMQCsVXZIg+YcpBORLZvw==
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to; s=fm2; t=1795391077; x=1795477477; bh=k/T26OxvbNctIsKGzjvok
+	IqLK02u3kx0ZSGmrsNkkuI=; b=D67+4kaCUB6PKAk8c1gJm/oZmZOr/RB+rPh5J
+	f8fIcQmctfEQpwN3mJfYNp6fLrtxWBw85i5iBpZRk9sjb6LjfmHxbQMTr8FYaiBN
+	nUhK8F2E2qOTPLIxhKkOmrqhyMkRkjbum+j06+oe02WWy+M4/B7ytYq/7RGezdcU
+	aOwFr2ZH8YB/FDCMLx/x0LpMQrTKTKByiZa/cI8DNs2CDEdLs5yJu3Y3lI+Hwlxx
+	Vu26qaCmcTsd8KsQKNgFQuPdCQDbxX7W/uWo5KMspU5sVhVOn551f/Rq8KTpejzb
+	0A0VHFdcaUQI6PiNMX1ARn/i5drFvMC0R3f7TFbOnViA7e5Eg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1795391064; x=1795477464; bh=ehoD6iN22FSTTuILrvLE59/ojDkeQ3MbAGS
-	vUPqQK6k=; b=sCs0dVaFTWhCtFBMP7U6rz0zYiSj6A8sz2Qka1MmC3jxRgowPM0
-	d8APkjUKKxT0BBXFKiCuBghIB2MIwpCNz21hrlvhjiUm0sMbQHRfc2H4tafcNUe5
-	scHHeTZMDVLEio4YW0dqB+yKogMO693uem+qKJGbZ/Tld3ZwYsBhjL9AINH49GbS
-	V+mEAiVVNq8QzeoNLD3YTbEECmTluiY0yW4R9hIIVpfLx+vs7odPjcdFMQKi6kjy
-	Jz8x6KdOQLL29jYl3klhKfEK/UMEJdshihAIDODHotE4U4QSk23xGFoR1Nw1t3eS
-	jP1r3zBcToXs4jh27MXjcdv2WK88qGKPl1Q==
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1795391077; x=1795477477; bh=k
+	/T26OxvbNctIsKGzjvokIqLK02u3kx0ZSGmrsNkkuI=; b=g4iG4yrVJCC9uDwPU
+	+gyqPN/KHa2UchUfCnTEee/pK/z1i1vtppq9g2B3xMYOl6zDguE+1qbI3Sh2ZmAD
+	6Y3g/wAstksosnwufQMUJuhT2z+Ol35S1S2XZNLiLkRMx+hoSLyLGBJ8ij+Lg3ly
+	Agr/R8qporWuZtz4My5I/TpMsMyjpahbrr98KTNevGluI8qJWXqrLmUNUkGHyX0F
+	pGXvieNokZ4kJZtcMkMv5VWC4ncbj19+x6XP+Kv5ZFik1ry6XlBLQm9xST50ko11
+	xZYKtYh3ktZelIQbXIvHjyPGOwn41cGl4SGPpJcQDd0LtRIfojt1Tl4RpE8CpnMG
+	F/a4A==
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=sign d=exultantmonkey.co.uk a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795391064; d=exultantmonkey.co.uk;
+DKIM2-Signature: i=1; m=1; t=1795391077; d=exultantmonkey.co.uk;
 	mf=PGRhdmlkQGV4dWx0YW50bW9ua2V5LmNvLnVrPg==;
 	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm2:rsa-sha256:LqmxiSNH08wbmRg+ThX1bTbLdbGI8LaNdZg68/HYaIMBqmh
-	BQI89syMCoBfjnVFNqJKWLEFoYkAeucyYZwN+zRBMLa9x46LQm1Urjnw5Kw3ampn
-	//c8VT9xuOpKRwO7dxer5QJN4VKta/vHuSUSCefog8V0W38zRrK03WO+y69aOKzw
-	3fUxmKHXOvdMRpukOR0yQLfX0dOabN48PXYf/tmdHfrMsN5vM/s+3WmfJBAsJwiN
-	kQ/LW+vhrncht6Wva8/3jD+9GtMzgrvYNwL5mgeSSqeS1JknnBKBdehwDHtaA//y
-	hT/nbin/UteKz6tEb4S8my24r4N1qYRxCQDL+0w==;
+	s=fm2:rsa-sha256:Sopk3PEHZrkeMUIoCSexk8sjLmo2OwjHRZRrZM0Is4DTcR3
+	BojhavhYQM43J8bIi03KaiG/sdZCsN8ymBc+AA5Vi1ouyf0tWFAE2xbfO9JaHcad
+	rqb4LJe3ZmSmfysJFrrwvJpDBMjTaQbuialujogh0Xj84FHaYL4XIGj9MnX7ZjFn
+	Qx6vvPc+JBQ+eefydi8ixX75SI4KoT2MuftyGU/ZOTx9iOQQK4PteWzjKi4NgaN9
+	zzAxyyofEshwUUYVBuk0kM5G0qHXLcmxRP8ouQQsPNIrt1N7Jc3px+WDf72sAHia
+	ctGxkxOXVbr9BWIlokPIhznuGhveEhcKU32HD6Q==;
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=9;
+	action=mi-m=1; hc=11;
 	hn=cc,content-transfer-encoding,date,feedback-id,from,
-	message-id,mime-version,subject,to;
-Message-Instance: m=1; h=sha256:L1iQabQlcvo+mLEYBHzAflzrAOHFZAMKCxwd2LVsTuc=:VSdPRvXKlhy+9MQk93OseNQ2q9RuCylEGCzYHRAenLg=;
-X-ME-Sender: <xms:V34Da5s9_oZ5QcV2QooIaozUVBA6pRccFQvO_qBC5MnIYAQzkPtX1g>
-    <xme:V34Daxh45qgVHNq0XBLzuPHPBb8nBLJKyJ9_v9UPElmeZdxhCDk2HY6FqQjv4Ww8I
-    yJmTJhkI7mgQIjJN-1GgRhpz_oevKpjURXx9WU1L3uf8zKP1HiD5Dyi>
-X-ME-Received: <xmr:V34Day9wsxMzI-K7PtQXL-AP82GLV1uIghR4eC7GGs9uaKfgJYP8hHoLDGnqxu5Fg5iDm1k>
-X-ME-Proxy-Cause: dmFkZTFVxStWS0xLnyER3sBe3Iu351hUn2jjwGKTsp+qI3a2HH2s9BMh/3Qb1LYqV3qsvz
-    k7dPS8Q09XYVJc0FWZ2mF5qdzKkVJGqmu6+emkzzJ3hUhZATkvVS5VQ4DpMrr5uZ48UOfb
-    k/KQAzCxf8rEIQeHwxHhY2/6HhwfeAYOkEzcrFUk+oCRzJbuDaKc3GEnUqPqOKc7Kajwe5
-    KwoF4miF3WB3BOzptcsmaQAAH9bK0naTqSDfSTkUn9s4kRBkqfZfNgAdxWVcPCzunYISPO
-    9AwZ1fLIw3/GMBxhjKK8fD6fWAITlJfEzHH7PfoZfuw13XC2nXD9qrPPLjUKCDiCnzeGQu
-    0RAdvaeIuJRzEocHQE9VmbW7g9U2wZAg5nFyAY0Ns+E87cN5xfsWHJcIsxXvpKaCYOPjMS
-    35o//jRKYWaAkAMtc1Kc/5bSb/Y9Amu2BnW4dwoZz23UGVB/KzwXsWr+f2xo3Sjbn2I7tb
-    WtZKMrt6cN0j+QwITqicWL2IJRMyZEBmpwl90XibOdZGHryDcdeQ8KBQ4/FJIezfOkKDQn
-    MQjv3jBemN7DbqDZAaT6XtZ9I2ncp+oF9LOU6b6LSPgd+epE6ebpij14bjCfTVnwmFEfji
-    //p/KFyWw6mY0IZaC8uXppX8ciwoOkkJsYpDgvZNfA7qPv5h55IqhF39zHoQ
-X-ME-Proxy: <xmx:V34Da8sbbjwyV4-6mGvGhE9-0l8dfp6iAJzOVvAbBLtsNmhuYBRoSA>
-    <xmx:V34Da-rFPHmVMvgBAq3etll-tR_UQtD5R8Hi3A0pbA0Xe_CQkVTpbQ>
-    <xmx:V34Da4p-IHlN_e_BZhKs_qwtB9LB_mwX1Y7aSRDnZnfKqvnUkm0P3g>
-    <xmx:V34Da1YtgZpTNrjqCAJ0TWWJ0O0NLdbaXwV5sJ06qURH4D-3yRm5kQ>
-    <xmx:WH4Da1RqOWVgJ3lcprqEza0qgqve-Wx8AzS3U_MCysBrHlrBL8Z2iToL>
+	in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:fOHYAzEW3P8qkxybIoh1URCJLF9/pIbGOREh8QGWm2o=:Bsl5btFfgbKOsXe6vKvtpw4Mv+QDBq2MsHuGMUSy+lE=;
+X-ME-Sender: <xms:ZX4Da0c7YYDp6UhbfPHXlIif3NZ7eqngsIB92BgCIVnSAlMykvlazg>
+    <xme:ZX4Da7K8qEmnpHYlZDNuY0RgecGJudBiD-uyGwpABxzYsfQ03PioMJFBAorTz6Umn
+    hWSC2B6sZNzHGB83B1ecaWfywl0AftMVZsTwhTQq8hFNNHOC020Gxr7>
+X-ME-Received: <xmr:ZX4Da5xz-McJOwekptPfj0SiS_OZRJsmvk_TSs_4CdjCh6E7Y90lMtn9YR5NdQjToE4ikIQ>
+X-ME-Proxy-Cause: dmFkZTFYWImQZD5h/0h2BDkRJnm+1ULP7PkoTxZhqi02ukXjOFk6st1R0JV8LW2xp1xXP0
+    wRcoRn0ncjlsgSsEIAgRXwIjEpdInNWiVEMD9fRNCUNSeUr8+a5+eJy1V6xfO8svGHH2yB
+    UBtKsYeRWOSpt7VUzUt3iNrDbnN4BhWbJaewO8TVpMsRJu+soneOayUFOSwnPp6rWhSaiO
+    01mPGmQ4Oc7OCJQwmyj0tlNE1MMUqSm3H3ql7tpcvgCqeqaRLbThRg+awU2v9uZyU91X4Z
+    EiHXN5mNQmdKYzryyECRusQIuGEaLnSFobRPZxOVqPXkidXO8Zkzg64BPQkKbv55yPs/qL
+    XcTC3gxQtkTN3vQW94Auz3bwr7pwxNRUtYMC8geQNquYBjaThWtJ4pxjPsYOY+XoEVALLF
+    mpkMsGW8TN/FIkITzEhPMjuVUivTSd43+m7kfTf/2ktJ76mSPMKnJVKnXy4d8ImZg2TkGc
+    H4mm70pc6NuaRoUbz3jUUuJdnGBi8xj5j0jT9q1qPg0HhXP5PhuZ3LVzKLXXf8sAKhjlcv
+    hDX7IiSusiUx1kvD6eUdDOZ2u66/gg1n4R6E+B4HZprNoKqg7luz/5eHd1LUT2YGa3ZqqD
+    JSiJcQfN0tVoX2BW2knpxeXhhD+kp8R4NOCsxgiADgebCxUeL6YyKXUCUW4g
+X-ME-Proxy: <xmx:ZX4Da5sXGUphvoFjDyXBzNRULa-w3TtLXrl0rKWRGdHBs5a2MOPPhw>
+    <xmx:ZX4Da0BLzw0baDk7pLWOsvIGGPsPVAlDr0Ygpb047rjMNNYxAhgYEw>
+    <xmx:ZX4DazFxqnV8gHkKWbRm80ZAgJqndqoYMyAt4GJ_iO9JR6kKeUDXVw>
+    <xmx:ZX4Da8BwFobpUS1r8IgThpka2NmXUdqRVfeOM8gkDBGQRj14lnl2-g>
+    <xmx:ZX4DayJh92SnY0rrQh5ruKzRfe5DND5pxCX7jOICFIBKpxO-LfhwBSql>
 Feedback-ID: i8d5147ae:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 22 Nov 2026 18:44:22 -0500 (EST)
+ 22 Nov 2026 18:44:36 -0500 (EST)
 From: David William Richmond Davies-Jones <david@exultantmonkey.co.uk>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -112,11 +113,14 @@ Cc: Krishna Chomal <krishna.chomal108@gmail.com>,
 	Julien ROBIN <julien.robin28@free.fr>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	David William Richmond Davies-Jones <david@exultantmonkey.co.uk>
-Subject: [PATCH v2 0/2] platform/x86: hp-wmi: Fix cTGP and power limits on OMEN 15-en1xxx (88D2)
-Date: Sun, 22 Nov 2026 23:43:49 +0000
-Message-ID: <20261122234351.278694-1-david@exultantmonkey.co.uk>
+	David William Richmond Davies-Jones <david@exultantmonkey.co.uk>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 2/2] platform/x86: hp-wmi: Move OMEN 15-en1xxx (board 88D2) to feature board list
+Date: Sun, 22 Nov 2026 23:43:51 +0000
+Message-ID: <20261122234351.278694-3-david@exultantmonkey.co.uk>
 X-Mailer: git-send-email 2.56.1
+In-Reply-To: <20261122234351.278694-1-david@exultantmonkey.co.uk>
+References: <20261122234351.278694-1-david@exultantmonkey.co.uk>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -128,40 +132,95 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On the OMEN 15-en1xxx (board 88D2) the GPU stays at its 80 W default in
-every platform profile because the board is handled by the Omen profile
-path, which never enables cTGP on thermal policy v1 firmware.
+On the OMEN 15-en1xxx (board 88D2) the GPU power limit stays at its
+80 W default in every platform profile, including performance, and
+manual fan control is not available.
 
-Patch 2 moves the board to hp_wmi_feature_boards[] so it uses the
-Victus S path, which sets cTGP and Dynamic Boost per profile and enables
-fan control. On this firmware the power-limit refresh that path does on
-power source changes sets the CPU limits to 0 W, so patch 1 adds a
-per-board flag to skip it.
+The board is only listed in omen_thermal_profile_boards[], so the
+driver uses the Omen path and sets the profile with SET_PERFORMANCE_MODE
+alone. The firmware's handler for that (GM1A) stores the mode byte in
+EC register 0x95 (HPCM) and enables NVIDIA cTGP only for the v0
+performance value 0x01. The board reports thermal policy v1, so the
+driver sends 0x31 and cTGP stays off.
 
-Other AMD boards in hp_wmi_feature_boards[] may have the same
-SET_POWER_LIMITS handler. Only 88D2 has been tested, so the flag is set
-for it alone.
+HPCM has no other consumer in the DSDT or the SSDTs. On v1 the firmware
+expects cTGP and Dynamic Boost to be set with SET_GPU_THERMAL_MODES
+(GM22), which writes NPCF.CTGP and NPCF.DTGP directly. NPCF only
+reports the cTGP offset (ACBT = 0xA0, i.e. +20 W) when CTGP is set, and
+Dynamic Boost only when DTGP is set. The firmware also implements the
+fan speed get/set and fan table methods (GM2D, GM2E, GM2F).
 
-Changes in v2:
-- Drop the omen_ctgp_boards[] list and the extra cTGP call. Move 88D2
-  from omen_thermal_profile_boards[] to hp_wmi_feature_boards[] and
-  reuse the existing Victus S path instead (suggested in review).
-- Dynamic Boost (PPAB) now follows the profile.
-- Manual fan control and fan table support are enabled as a result.
-- New patch 1: skip the power limit refresh on AC changes, which set
-  0 W CPU limits on this board.
-- Rebased on pdx86/fixes.
+Drop 88D2 from omen_thermal_profile_boards[] and add it to
+hp_wmi_feature_boards[] with the omen_v1_legacy thermal parameters,
+matching the HPCM offset at 0x95. The board then uses the Victus S
+profile path, which sets cTGP and Dynamic Boost according to the
+profile, reads the profile back from the EC, and enables manual fan
+control and the fan table.
 
-v1: https://lore.kernel.org/platform-driver-x86/20261030005724.84507-1-david@exultantmonkey.co.uk/
+The firmware's SET_POWER_LIMITS handler applies HP_POWER_LIMIT_DEFAULT
+as a 0 W CPU limit, which held the CPU at its minimum clock on battery
+in the performance profile, so set no_power_limit_reset for this board.
 
-David William Richmond Davies-Jones (2):
-  platform/x86: hp-wmi: Allow boards to skip the power limit refresh
-  platform/x86: hp-wmi: Move OMEN 15-en1xxx (board 88D2) to feature
-    board list
+As on the other feature boards, the available profiles change from
+cool/balanced/performance to low-power/balanced/performance.
 
- drivers/platform/x86/hp/hp-wmi.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+Tested on an OMEN Laptop 15-en1xxx (board 88D2, BIOS F.20, Ryzen 7
+5800H, RTX 3070 Laptop GPU). On AC, nvidia-smi reports a 100 W power
+limit in performance and 80 W in balanced and low-power, and each
+profile reads back correctly. Manual PWM, maximum and automatic fan
+modes work through hwmon. Under full CPU load in performance, package
+power is about 25 W on battery and returns to about 50 W on AC. Without
+no_power_limit_reset it drops below 5 W at 399 MHz on battery.
 
+The firmware analysis and this patch were prepared with the help of an
+AI coding assistant (Claude Opus 5.5 in Claude Code). The result was
+reviewed and tested on the hardware by the submitter.
+
+Link: https://lore.kernel.org/platform-driver-x86/CA+LW3S2g4E971by7WhfFZGuyLT47141_Zn+eJ=wyqxB_+4G95A@mail.gmail.com/
+Fixes: 286e937efbc7 ("platform/x86: hp-wmi: support omen thermal profile policy v1")
+Cc: stable@vger.kernel.org
+Signed-off-by: David William Richmond Davies-Jones <david@exultantmonkey.co.uk>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index c7960de7ac0f..f29bdf9639b7 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -184,6 +184,12 @@ static const struct hp_wmi_board_params omen_v1_legacy_board_params = {
+ 	.fan_profile		= &victus_s_fan_profile_params,
+ };
+ 
++static const struct hp_wmi_board_params omen_v1_legacy_no_pl_reset_board_params = {
++	.thermal_profile	= &omen_v1_legacy_thermal_params,
++	.fan_profile		= &victus_s_fan_profile_params,
++	.no_power_limit_reset	= true,
++};
++
+ static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
+ 	.thermal_profile	= &omen_v1_no_ec_thermal_params,
+ 	.fan_profile		= &victus_s_fan_profile_params,
+@@ -214,7 +220,7 @@ static const char * const omen_thermal_profile_boards[] = {
+ 	"8600", "8601", "8602", "8603", "8604", "8605", "8606", "8607", "860A",
+ 	"8746", "8747", "8748", "8749", "874A", "8786", "8787", "8788", "878A",
+ 	"878B", "878C", "87B5",
+-	"886B", "886C", "88C8", "88CB", "88D1", "88D2", "88F4", "88F5", "88F6",
++	"886B", "886C", "88C8", "88CB", "88D1", "88F4", "88F5", "88F6",
+ 	"88F7", "88FD", "88FE", "88FF",
+ 	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
+ 	"8A15", "8A17", "8A18", "8A42", "8A43",
+@@ -251,6 +257,10 @@ static const char * const victus_thermal_profile_boards[] = {
+ 
+ /* DMI board-specific feature data for Omen and Victus laptops. */
+ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "88D2") },
++		.driver_data = (void *)&omen_v1_legacy_no_pl_reset_board_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8902") },
+ 		.driver_data = (void *)&omen_v1_legacy_board_params,
 -- 
 2.56.1
 
