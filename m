@@ -1,78 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=157.90.84.7
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795437329;
-	b=HMRbMC+3ZXkgIhh1kxdxjAsSdxXK0fnMqvGjbQd1o6wU1PO/xTUwm2C1F/5cn4iY4iEh
-	 yacide33BckjqVNEhjBFtkFeMWz/yO/dVYN6W4Gddk2mR2P97x3cXgqGwduclsLkxHlej
-	 aI8fsr8ib7JCFORl84509XvezWzbIfKuasAuUgVuQENIYeNoA1BY4wbwR/H4oL58EtB7N
-	 a0Mkd7itOtkFj71yt0LmGWL6Je17QO68q20xklFl0Y/4t1xnxmI1sCxN+s9o/C+VS4fen
-	 l6gqb1bomPtvK5BJiAb6Z0K6voCkA/EGkVMBiHkyDc4YOAEAqGNCpnYVQLoELNlRHKw==
+	t=1795437347;
+	b=oNvLOZ+GI9Drvr8iAmIVOYCqJNBr6OECWVtTZ0zDiOyAwIzNisF7ZGnj1Ld6pBJz4KPo
+	 a+G9L+633r0FQyCABfwWc8vSFOFWZPdlhz2fW+ZqK579MSq4D8N9MbQGSoWxGVNZv6spi
+	 lhFuD0ACYwm7yVXqlPMt0nyIgo7chVmF6eUY6XC0xsRO/QWHh0Lq8pde3aWBh4KoapGqe
+	 w6qMMHYWyFyy15OR/brVVB6GAN3MdlK4MlYDMHBIZ5aKAnVW2oRIzNkVuVxhluoVOtgfu
+	 /kGnnGt6s1zTxkqR90jwb4Q1gd6n/LDFr65QL/rIF2oazg/cvlGoKACLhlNv4G4GkmQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795437329;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=ApFgw7+o3U9zs2dyYUlSp5SAIMfdWHuDTcKP7e9pINk=;
-	b=MVsxSfj2U6FterVKXdhZysIf6HKGXSyfba731sE0/3Cq19tC/X1mREF+MTeMrQXE2WT6
-	 zJ/ETXO8jX4O8AB9YjHZfGk2gFXFyff5ilUnffk4Efjp/xzua+HbJoj6gtzO+hCbgRs9i
-	 TAf8sDZdxFIMWjXmydgKYAV9YjYl1LqfdaDPCRkJDieSTf66GedZ71FAErnfGx8ACshl7
-	 xETfPFlXZifg4bmOp4QuWY6hUaozHyEzR4X6BcY3wcE8rSQbpRKacDlJwUA/ymorJ6m7n
-	 ZJBFpW526jRj7kslaLKW0k4Mg88XJ+aflpByhO0p28Ox8BIvz1Ik4ERvLyIO7a7JZIw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795437347;
+	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=ZmCCRQusvsXGyr2u9vwai022ihV6pki3kZGYIGlrzHc=;
+	b=n3WZb+rgMZsqXt/7oWM7DyYPmMYjQvlM/HSjQjYZjG+ryhhtd7O1dwtKhJ4/mzaMCSgG
+	 rg10rWKazULtBEaTLeTyqcGQ9PiM9aVQBdIYv1x9daY1h0KO0RiBJER3h6khfyNH4QM9b
+	 YBJPPmC9vaXIGYaCdoIgXm8xWAyb6Psz6idvzk1GVpfR31M0Kd0bcAlrzEEQRHx4XrzCe
+	 DBtzltCI25VTXmDIi3N5MeFkWib7HSV9RsfACM0GN8VBwTQnVvaaixWwLoMJTuAOeecAV
+	 nj5o5g9UZIaLch9TypmNg+fyjP/p2UZ8F+tzZD5ZAOEIksqgpnbKSaly6XDkUacrUVg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZnoisja;
-	arc=none smtp.remote-ip=192.198.163.15
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=tuxedocomputers.com;
+	spf=pass smtp.mailfrom=tuxedocomputers.com;
+	dkim=pass header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.a=rsa-sha256 header.s=default header.b=mgcGY2W8;
+	arc=none smtp.remote-ip=157.90.84.7
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4616D606A31A;
-	Mon, 23 Nov 2026 12:35:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4616D606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB76606A31E;
+	Mon, 23 Nov 2026 12:35:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CAB76606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZnoisja
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795437330; x=1826973330;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=JMzHUPNU5wsmSvP3Lub0OYgKpsZUan5IFXp32manYDM=;
-  b=hZnoisjaKXL5t54dQv17t+ccGBdvesRMOEv/ZLad4XAc9V2tN6mKkXhr
-   oRocgaUT4iaTsZkZ3BFUpuBcQH0CogU7n9yn4ECMbHElLlY6hX1aC2w2W
-   sQ2o+jOxg08TEXMk3nC1A5FZax2cH63LSgAjfXBmUOOBdc5rMt/qxNhsT
-   R+5if36Uex4FyatvpN6KX+V0rpVk71UI+Qdwx6E1PD5e7Ap3MKGqULhaW
-   +RLXP6eixBen6FrIQMwvwCaqii7Up6hUUCpUH/qTPi0FCKkc6XN9kzcVi
-   rIPxtaIa8cEyVGkK+attMjPXUXWkyupirl3A8GI3CHZUBWE65wVy33hw/
-   Q==;
-X-CSE-ConnectionGUID: whn3luujQTWwdgoKVavivQ==
-X-CSE-MsgGUID: gxRPB7v+S+KSgMUzgCsbHg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4224070"
-X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="4224070"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 04:35:29 -0800
-X-CSE-ConnectionGUID: GvW2UXRUS2Ka1XD4Msxv8A==
-X-CSE-MsgGUID: Xw/RlPSlTpunuAHDMMEhYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="11704730"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 04:35:24 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Nov 2026 14:35:20 +0200 (EET)
-To: Rong Zhang <i@rong.moe>
-cc: Alan Pluto <alanpluto@163.com>, platform-driver-x86@vger.kernel.org, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, derekjohn.clark@gmail.com, 
-    W_Armin@gmx.de, corbet@lwn.net, skhan@linuxfoundation.org, 
-    rdunlap@infradead.org, Hans de Goede <hansg@kernel.org>, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw GetDataByPackage
- interface
-In-Reply-To: <fcabaf8647e0c1ab487cd612d5a290082613ec0b.camel@rong.moe>
-Message-ID: <983f2e32-cc6e-fa3f-3aee-6aad1e5fa7c8@linux.intel.com>
-References: <20261116040532.154928-1-alanpluto@163.com>  <20261123061120.18740-1-alanpluto@163.com> <fcabaf8647e0c1ab487cd612d5a290082613ec0b.camel@rong.moe>
+	dkim=pass (1024-bit key, unprotected) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.a=rsa-sha256 header.s=default header.b=mgcGY2W8
+Received: from [10.10.12.8] (business-024-134-105-141.24.134.pools.vodafone-ip.de [24.134.105.141])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 4CDA32FC0049;
+	Mon, 23 Nov 2026 13:35:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1795437338;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZmCCRQusvsXGyr2u9vwai022ihV6pki3kZGYIGlrzHc=;
+	b=mgcGY2W8vKiekPU5g9qW/Wx9CuBVx3ylP0DhWAWEiBeDvLhLntgTEHXz75cHjkoluD3bXz
+	IHp9H+ygEEW3LtcCcH0wKhZ8jj6RqDTE5KdqZSY/dix8dXvzouQlvD0/34sNlc69A1RX+5
+	jl0z2+nTZGEWNACo8sfvLTh8C1D6ZIE=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <7f1ff901-42de-4d93-b8d3-419253c68753@tuxedocomputers.com>
+Date: Mon, 23 Nov 2026 13:35:37 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,348 +60,142 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-731521474-1795437320=:1065"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: uniwill-laptop: Remove cTGP control from
+ unsupported devices
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261113144749.59958-1-wse@tuxedocomputers.com>
+ <6ac5ca43-25db-4843-8317-dee4cd55c627@gmx.de>
+ <da9b330c-a04e-4029-9abf-59fc4356da99@tuxedocomputers.com>
+ <af509fc1-33c8-45a8-a787-c7a9ef91a580@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <af509fc1-33c8-45a8-a787-c7a9ef91a580@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-731521474-1795437320=:1065
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Am 20.11.26 um 22:04 schrieb Armin Wolf:
+> Am 17.11.26 um 11:29 schrieb Werner Sembach:
+>
+>> Am 13.11.26 um 21:42 schrieb Armin Wolf:
+>>> Am 13.11.26 um 15:47 schrieb Werner Sembach:
+>>>> Some devices like the InfinityBook Pro series have Dynamic Boost support,
+>>>> but the cTGP setting is actually ignored.
+>>>>
+>>>> This commit adds the ability to still initialize DB, but hide the noop cTGP
+>>>> sysfs attribute and applies this to the respective devices.
+>>>
+>>> IMHO the cTGP setting only works with the official NVidia driver and 
+>>> nvidia-powerd running in the background.
+>> Yes I know, but so does DB and that one works, so the setup is correct.
+>>> Also there currently is a tiny
+>>> issue with cTGP support, do you have a acpidump from one of the affected 
+>>> machines?
+>> Can generate one, I will send in a separate email because I will just sent 
+>> the binary files, and want to make sure that this message doesn't get blocked 
+>> by spam filters.
+>
+> Thanks, got it.
+>
+> As far as i can tell the cTGP suport is correctly wired up inside the ACPI 
+> firmware,
+> so it _should_ work.
+>
+> Maybe it has to do something with 
+> https://github.com/NVIDIA/open-gpu-kernel-modules/discussions/1447,
+> can you check if changing the cTGP limit triggers ACPI events? You should be 
+> able to observe such
+> events using acpi_listen.
 
-On Mon, 23 Nov 2026, Rong Zhang wrote:
+Double checked the windows side: the official windows cc for at least the ibp 
+gen7 does not have the cTGP setting. So it really doesn't seem to be officially 
+supported and tbh: I would leave it at that for the time being.
 
-> Hi Alan,
->=20
-> On Mon, 2026-11-23 at 14:11 +0800, Alan Pluto wrote:
-> > Lenovo's userspace utility uses the Other Mode WMI GetDataByPackage
->=20
-> What's the purpose of the utility? Could you provide some context? You
-> can ignore this question if it's confidential, but in general providing
-> necessary context can help maintainers and reviewers learn about the
-> intent.
->=20
-> > method (99) to check device readiness. Expose the method through debugf=
-s
-> > so the firmware request and response can be inspected on Linux without
-> > adding a stable userspace ABI.
-> >=20
-> > The interface is disabled by default and can be enabled by passing
-> > enable_get_data_by_package=3D1 when loading the module.
-> >=20
-> > Signed-off-by: Alan Pluto <alanpluto@163.com>
-> > ---
-> > Changes in v2:
-> > - Replace the character device with a debugfs file, disabled by default=
-=2E
-> > - Allow one open per WMI device and require a single read for the respo=
-nse.
-> > - Use scoped locks, lockdep checks, automatic buffer cleanup, and the
-> >   WMI helper's minimum response size check.
-> >=20
-> >  Documentation/wmi/devices/lenovo-wmi-other.rst |  12 +-
-> >  drivers/platform/x86/lenovo/wmi-other.c        | 208 +++++++++++++++++=
-++++++++
-> >  2 files changed, 219 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documenta=
-tion/wmi/devices/lenovo-wmi-other.rst
-> > index 011054d64eac5b601333373c4d405f9c5117ffc2..42e1525a8852bd7c8ddc04c=
-c4047b1f09c5b770f 100644
-> > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > @@ -33,6 +33,15 @@ under the following path:
-> > =20
-> >  Additionally, this driver also exports attributes to HWMON.
-> > =20
-> > +GetDataByPackage diagnostics
-> > +~~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> Missing a ~
->=20
-> > +
-> > +The driver does not create the diagnostic file by default. To enable i=
-t,
-> > +pass ``enable_get_data_by_package=3D1`` when loading ``lenovo-wmi-othe=
-r``.
-> > +The file is at ``lenovo_wmi/<WMI device>/get_data_by_package``.
-> > +Not all devices support the method. Use only commands whose behavior a=
-nd
-> > +side effects are understood.
-> > +
-> >  LENOVO_CAPABILITY_DATA_00
-> >  -------------------------
-> > =20
-> > @@ -107,7 +116,8 @@ WMI interface description
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> > =20
-> >  The WMI interface description can be decoded from the embedded binary =
-MOF (bmof)
-> > -data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-> > +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility. Thi=
-s older
-> > +example lists ``Max(40)`` for GetDataByPackage; newer firmware uses 10=
-0 bytes.
->=20
-> ??? Could you move the sentence to the right place?
->=20
-> > =20
-> >  ::
-> > =20
-> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform=
-/x86/lenovo/wmi-other.c
-> > index bd64e7b44669db684145298ae088dd2c7f539d29..827b4215c612fbfc052bbad=
-ff0672e68e65517f0 100644
-> > --- a/drivers/platform/x86/lenovo/wmi-other.c
-> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> > @@ -27,13 +27,16 @@
-> >   */
-> > =20
-> >  #include <linux/acpi.h>
-> > +#include <linux/atomic.h>
-> >  #include <linux/bitfield.h>
-> >  #include <linux/cleanup.h>
-> >  #include <linux/component.h>
-> >  #include <linux/container_of.h>
-> > +#include <linux/debugfs.h>
-> >  #include <linux/device.h>
-> >  #include <linux/export.h>
-> >  #include <linux/firmware_attributes.h>
-> > +#include <linux/fs.h>
-> >  #include <linux/gfp_types.h>
-> >  #include <linux/hwmon.h>
-> >  #include <linux/idr.h>
-> > @@ -41,9 +44,12 @@
-> >  #include <linux/kobject.h>
-> >  #include <linux/limits.h>
-> >  #include <linux/module.h>
-> > +#include <linux/mutex.h>
-> >  #include <linux/platform_profile.h>
-> >  #include <linux/power_supply.h>
-> > +#include <linux/slab.h>
-> >  #include <linux/types.h>
-> > +#include <linux/uaccess.h>
-> >  #include <linux/wmi.h>
-> > =20
-> >  #include <acpi/battery.h>
-> > @@ -90,6 +96,8 @@ enum lwmi_feature_id_psu {
-> > =20
-> >  #define LWMI_FEATURE_VALUE_GET 17
-> >  #define LWMI_FEATURE_VALUE_SET 18
-> > +#define LWMI_DATA_PACKAGE_GET 99
-> > +#define LWMI_DATA_PACKAGE_INPUT_MAX 100
-> > =20
-> >  #define LWMI_FAN_ID_BASE 1
-> >  #define LWMI_FAN_NR 4
-> > @@ -141,6 +149,8 @@ struct lwmi_om_priv {
-> >  =09struct device *fw_attr_dev;
-> >  =09struct kset *fw_attr_kset;
-> >  =09struct wmi_device *wdev;
-> > +=09struct dentry *debugfs_dir;
-> > +=09atomic_t package_opened;
-> >  =09int ida_id;
-> > =20
-> >  =09struct lwmi_fan_info fan_info[LWMI_FAN_NR];
-> > @@ -156,6 +166,23 @@ struct lwmi_om_priv {
-> >  =09bool bh_registered;
-> >  };
-> > =20
-> > +struct lwmi_package_response {
-> > +=09__le32 data_size;
-> > +=09u8 data[];
-> > +};
->=20
-> Even though there is no gap between data_size and data, please add a
-> __packed annotation to clearly indicate your intent.
->=20
-> > +
-> > +struct lwmi_package_file {
-> > +=09struct lwmi_om_priv *priv;
-> > +=09/* Protects the pending response on shared descriptors. */
-> > +=09struct mutex lock;
-> > +=09struct lwmi_package_response *response;
-> > +=09size_t response_len;
-> > +};
-> > +
-> > +static bool enable_get_data_by_package;
-> > +module_param(enable_get_data_by_package, bool, 0400);
-> > +MODULE_PARM_DESC(enable_get_data_by_package, "Enable the GetDataByPack=
-age debugfs interface");
-> > +
-> >  /*
-> >   * Visibility of fan channels:
-> >   *
-> > @@ -1611,6 +1638,174 @@ static void lwmi_om_fw_attr_remove(struct lwmi_=
-om_priv *priv)
-> > =20
-> >  /* =3D=3D=3D=3D=3D=3D=3D=3D Self (master: lenovo-wmi-other) =3D=3D=3D=
-=3D=3D=3D=3D=3D */
-> > =20
-> > +static int lwmi_package_open(struct inode *inode, struct file *file)
-> > +{
-> > +=09struct lwmi_om_priv *priv =3D inode->i_private;
-> > +=09struct lwmi_package_file *state __free(kfree) =3D NULL;
->=20
-> The declarations of __free() pointers should be placed at where it's
-> allocated, i.e., ...
->=20
-> > +
-> > +=09if ((file->f_mode & (FMODE_READ | FMODE_WRITE)) !=3D (FMODE_READ | =
-FMODE_WRITE))
-> > +=09=09return -EINVAL;
-> > +
-> > +=09state =3D kzalloc_obj(*state);
->=20
-> ...here.
->=20
-> Meanwhile,=C2=A0opening the file while priv->package_opened =3D=3D 1 allo=
-cates
-> memory in vain. Could you move it below the package_opened check? In this
-> manner you don't need the __free() either.
->=20
-> > +=09if (!state)
-> > +=09=09return -ENOMEM;
-> > +
-> > +=09if (atomic_cmpxchg(&priv->package_opened, 0, 1))
->=20
-> atomic_cmpxchg_acquire()
->=20
-> > +=09=09return -EBUSY;
-> > +
-> > +=09mutex_init(&state->lock);
-> > +=09state->priv =3D priv;
-> > +=09file->private_data =3D no_free_ptr(state);
-> > +
-> > +=09return stream_open(inode, file);
-> > +}
-> > +
-> > +static int lwmi_package_release(struct inode *inode, struct file *file=
-)
-> > +{
-> > +=09struct lwmi_package_file *state =3D file->private_data;
-> > +=09struct dentry *dentry =3D file->f_path.dentry;
-> > +
-> > +=09kfree_sensitive(state->response);
->=20
-> You didn't explain what data it is in your replies. "Can contain
-> sensitive data" is not an acceptable explanation.
->=20
-> Please grep the occurrence of kfree_sensitive() in the kernel tree, and
-> you'll find that they are mostly credentials. Does the data passed by the
-> interface fall into the same category?=20
->=20
-> TBH, anything goes through WMI is *never* secret. If a manufacturer ever
-> decided to use it to deliver "sensitive" data, it either misunderstood
-> the word or chose the wrong interface.
->=20
-> An ACPI-WMI method goes through the ACPICA, then the WMI core, and
-> finally here. The former two's temporary buffers are either on stack or
-> freed by the vanilla kfree(). If leaking "sensitive" response were really
-> a concern, it must had been leaked before it reached your code.
->=20
-> Please don't use kfree_sensitive() unless you really understand the data
-> flow path and have a strong reason to use it. If you insist on it, please
-> answer both questions.
->=20
-> > +=09mutex_destroy(&state->lock);
-> > +
-> > +=09/* Unlike read and write, release can run after debugfs removal. */
->=20
-> The comment is not helpful, as it's just repeating well-known knowledge.
-> Please explain what it protects:
->=20
->    The release() callback may be called after state->priv has been freed.
->    Only when the debugfs file hasn't been removed is the pointer valid.
->=20
-> > +=09if (!debugfs_file_get(dentry)) {
-> > +=09=09atomic_set(&state->priv->package_opened, 0);
->=20
-> atomic_set_release()
->=20
-> > +=09=09debugfs_file_put(dentry);
-> > +=09}
-> > +
-> > +=09kfree(state);
-> > +=09return 0;
-> > +}
-> > +
-> > +static int lwmi_package_invoke(struct lwmi_package_file *state, u8 *da=
-ta)
-> > +{
-> > +=09struct lwmi_om_priv *priv =3D state->priv;
-> > +=09struct wmi_buffer input =3D { .length =3D LWMI_DATA_PACKAGE_INPUT_M=
-AX, .data =3D data };
-> > +=09struct wmi_buffer output;
-> > +=09u32 data_size;
-> > +=09int ret;
-> > +
-> > +=09lockdep_assert_held(&state->lock);
-> > +
-> > +=09/* The tested firmware needs two calls before its response is usabl=
-e. */
-> > +=09ret =3D wmidev_invoke_method(priv->wdev, 0, LWMI_DATA_PACKAGE_GET,
-> > +=09=09=09=09   &input, &output, 0);
-> > +=09if (ret)
-> > +=09=09return ret;
-> > +
-> > +=09kfree_sensitive(output.data);
-> > +
-> > +=09ret =3D wmidev_invoke_method(priv->wdev, 0, LWMI_DATA_PACKAGE_GET,
-> > +=09=09=09=09   &input, &output, sizeof(struct lwmi_package_response));
-> > +=09if (ret)
-> > +=09=09return ret;
-> > +
-> > +=09struct lwmi_package_response *response __free(kfree_sensitive) =3D =
-output.data;
-> > +
-> > +=09data_size =3D le32_to_cpu(response->data_size);
-> > +=09if (data_size > output.length - sizeof(*response))
->=20
-> Why not use struct_size() here? Considering that...
->=20
-> > +=09=09return -EPROTO;
-> > +
-> > +=09state->response_len =3D struct_size(response, data, data_size);
->=20
-> ...you've used it here, you may introduce a on-stack variable to
-> temporarily store the calculated size and use it here and there.
->=20
-> > +=09state->response =3D no_free_ptr(response);
-> > +=09return 0;
-> > +}
-> > +
-> > +static ssize_t lwmi_package_write(struct file *file, const char __user=
- *buffer,
-> > +=09=09=09=09  size_t count, loff_t *ppos)
-> > +{
-> > +=09struct lwmi_package_file *state =3D file->private_data;
-> > +=09u8 input[LWMI_DATA_PACKAGE_INPUT_MAX] =3D {};
-> > +=09int ret;
-> > +
-> > +=09if (!count || count > sizeof(input))
-> > +=09=09return -EINVAL;
-> > +
-> > +=09ACQUIRE(mutex_try, state_guard)(&state->lock);
-> > +=09if (ACQUIRE_ERR(mutex_try, &state_guard) || state->response)
-> > +=09=09return -EBUSY;
->=20
-> I don't think it's a good idea to share the same errno between the two
-> cases.
->=20
-> While ACQUIRE_ERR(mutex_try, &state_guard) should return -EBUSY, a
-> pending state->response should return something like -EALREADY or
-> -ENOTEMPTY.
-
-Generally, one should be mostly be returning the error from ACQUIRE_ERR()=
-=20
-for that case.
-
-=09ret =3D ACQUIRE_ERR(..);
-=09if (ret)
-=09=09return ret;
-
---=20
- i.
-
---8323328-731521474-1795437320=:1065--
+>
+> Thanks,
+> Armin Wolf
+>
+>>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>> ---
+>>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 26 ++++++++++++++-------
+>>>>   1 file changed, 17 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
+>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> index e2a6a704e942e..c0a75bc6e66db 100644
+>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> @@ -366,10 +366,12 @@
+>>>>   #define UNIWILL_FEATURE_PRIMARY_FAN        BIT(8)
+>>>>   #define UNIWILL_FEATURE_SECONDARY_FAN        BIT(9)
+>>>>   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL    BIT(10)
+>>>> -#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY    BIT(11)
+>>>> -#define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT    BIT(12)
+>>>> -#define UNIWILL_FEATURE_AC_AUTO_BOOT        BIT(13)
+>>>> -#define UNIWILL_FEATURE_USB_POWERSHARE        BIT(14)
+>>>> +/* Mutually exclusive with the cTGP control feature */
+>>>> +#define UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY    BIT(11)
+>>>> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY    BIT(12)
+>>>> +#define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT    BIT(13)
+>>>> +#define UNIWILL_FEATURE_AC_AUTO_BOOT        BIT(14)
+>>>> +#define UNIWILL_FEATURE_USB_POWERSHARE        BIT(15)
+>>>>     enum usb_c_power_priority_options {
+>>>>       USB_C_POWER_PRIORITY_CHARGING = 0,
+>>>> @@ -1004,7 +1006,9 @@ static int uniwill_nvidia_ctgp_init(struct 
+>>>> uniwill_data *data)
+>>>>   {
+>>>>       int ret;
+>>>>   -    if (!uniwill_device_supports(data, 
+>>>> UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
+>>>> +    if (!uniwill_device_supports_any(data,
+>>>> +                     UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
+>>>> + UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY))
+>>>>           return 0;
+>>>>         ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, 0);
+>>>> @@ -2577,7 +2581,9 @@ static int uniwill_suspend_usb_powershare(struct 
+>>>> uniwill_data *data)
+>>>>     static int uniwill_suspend_nvidia_ctgp(struct uniwill_data *data)
+>>>>   {
+>>>> -    if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
+>>>> +    if (!uniwill_device_supports_any(data,
+>>>> +                     UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
+>>>> + UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY))
+>>>>           return 0;
+>>>>         return regmap_clear_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
+>>>> @@ -2686,7 +2692,9 @@ static int uniwill_resume_usb_powershare(struct 
+>>>> uniwill_data *data)
+>>>>     static int uniwill_resume_nvidia_ctgp(struct uniwill_data *data)
+>>>>   {
+>>>> -    if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
+>>>> +    if (!uniwill_device_supports_any(data,
+>>>> +                     UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
+>>>> + UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY))
+>>>>           return 0;
+>>>>         return regmap_set_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
+>>>> @@ -2910,7 +2918,7 @@ static struct uniwill_device_descriptor 
+>>>> phxtqxx_phxagxx_phxaqxx_phxpgxx_descript
+>>>>               UNIWILL_FEATURE_GPU_TEMP |
+>>>>               UNIWILL_FEATURE_PRIMARY_FAN |
+>>>>               UNIWILL_FEATURE_SECONDARY_FAN |
+>>>> -            UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
+>>>> +            UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY |
+>>>>               UNIWILL_FEATURE_USB_C_POWER_PRIORITY |
+>>>>               UNIWILL_FEATURE_KEYBOARD_BACKLIGHT,
+>>>>       .kbd_led_single_color = true,
+>>>> @@ -3106,7 +3114,7 @@ static int phxarxx_phxaqxx_probe(struct uniwill_data 
+>>>> *data)
+>>>>         if (value & HAS_GPU)
+>>>>           data->features |= UNIWILL_FEATURE_GPU_TEMP |
+>>>> -                  UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL;
+>>>> +                  UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY;
+>>>>         return 0;
+>>>>   };
+>>>
+>>
