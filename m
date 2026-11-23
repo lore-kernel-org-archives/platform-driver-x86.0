@@ -1,124 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=150.101.241.2
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795391139;
-	b=PM7qnq2HV5eY1MKKY6YAJXz3WdaCvy9Eh1bbGGhQjTPe6R03M/B5rdlYrgK/oMJPKbV4
-	 uPEiGloKGCCHevpxKZ3P51nExF+aQ3FC7Dg72lUOQAZTInlZsQJQv912IQgBTcHGDPSV/
-	 isw5cPXGT34gPhNcXWvYP3sZceb1Jh8U/rL4whCLMdYGWs4dTDAcMHP4CCBQiIODFoPyY
-	 A7uUpXBeZHcA3a0Y/A9jc3vFxxkybaZvMzTKEH3bTRHapf1t8E2ADLawQapDYEat03LKg
-	 IPiRKay/CmizeB7BMHlm1WBGeoVCIzFvBoBiKUC4IagePzlKhbvUSdYfmbfdkaDxzxw==
+	t=1795393142;
+	b=uotgknG5crMxfqBharj2svh0jxkE7S0CECf7OvrnwNOhqmHqh44PR4LUwSx964w/3z64
+	 9A6mo6JhUVFjsEQrtG1YesV0KKYOVPs71c/4GEohIQ8r19efmi6yVZkX9JlfwCrz142eL
+	 iVo/RQvN85gikYgxMQ0AEHMj1qJ5/btuFTkXlifjKW2yP2eE6wViUXRxLiSKjOpff0XFW
+	 ZVDuQGJhw8qseayMPXrNPKkrXIWU1ldCkqPwauTyOmXIQyvhppxzHKRy/Qz9Rd4KtLAWt
+	 NgVChL1//xVlThfOxIXcXYNtH5sFePQVt85TXZKZbNtnmzVR+YNoQVYcZzHvSmSgKjA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795391139;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
-	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding;
-	bh=1fjKKCEnZwYosmBHPEBZrD2de+0UdG6NDmDLNg2rOq4=;
-	b=tA1vtcR1wesT3+RUNIdNxGhAsdMfTzxu4en2eqbfw/vjfZ2muCW4JCqAtnmdPK/pXHuK
-	 L9nTpvVrsihtxyE3SmrvjrQKDxHFv9iHddoGVQN4bvsqvBfmEb5Ol9k0n3dsKYl4yyPuP
-	 dpKQAmUqDXdgWm8cJd6+Cf/tvNEqWPXlSrnOp5grnwiyP92K14+GgQ3pWycw6LtZjrYBu
-	 PaMNbkNQVwMwms2CZEo4l0bM5MJ1M5AXjMjtdEujexRd05fc0PK5F3g/CvwvNl5tTxTXC
-	 fkPAXc6aWw3iJZ96rACmQgaFbfwyf0ODxaAjkULldLnCzDOTq7sOLQmNvkwWz9pHMpg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795393142;
+	h=DMARC-Filter:Received:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+	 X-MIMEDefang-action:X-Scanned-By;
+	bh=Hlsfe9wT7MTVNMTOIhOML2Y9+D05NV5Bu137g1/Gj/w=;
+	b=Yyj1BK17AmtJm6lguEHd22Qf7ZbdOpENJpLMlvXhniu4N9c576gLlqmCHE7rf+JGr7Yz
+	 HrMhdr1e+pzg5OFHY1Ysg8oCPJlXCFXqAdZKMYkbsJEOSAadhKqWZ4rSn6Mwa/Vd9w/J8
+	 Fm28IyIqPmXuKzNH3IMeJf0bMM791Jv4i9bV47DjMA2WN3fEwwmnZ10yIaNosbDer3Kvz
+	 s3NrymZj8ckKFAP9EwsNEk3Gu2TjvpIugD49gbtEW1TZaUxebLYybeAByNImHsBVK4pXZ
+	 KbsUKxV3A10C16E8eWpmRd6WZUbpctoeCGj+y6CYD4nH7ndmiP8LRMC4haMsns7SE5A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=exultantmonkey.co.uk;
-	spf=pass smtp.mailfrom=exultantmonkey.co.uk;
-	dkim=pass header.d=exultantmonkey.co.uk header.i=@exultantmonkey.co.uk header.a=rsa-sha256 header.s=fm2 header.b=cli9yrWu;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=fVumczo+;
-	arc=none smtp.remote-ip=103.168.172.144
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	dmarc=pass header.from=just42.net;
+	spf=pass smtp.mailfrom=just42.net;
+	arc=none smtp.remote-ip=150.101.241.2
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F709606A31E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 23:45:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8F709606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exultantmonkey.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exultantmonkey.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=exultantmonkey.co.uk header.i=@exultantmonkey.co.uk header.a=rsa-sha256 header.s=fm2 header.b=cli9yrWu;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=fVumczo+
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id BF778EC08C8
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2026 18:45:37 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Sun, 22 Nov 2026 18:45:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	exultantmonkey.co.uk; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to; s=fm2; t=1795391137; x=1795477537; bh=1fjKKCEnZwYosmBHPEBZr
-	D2de+0UdG6NDmDLNg2rOq4=; b=cli9yrWucWhH9/2waEFmvQGC+WTRzXvnEAgu6
-	iYvtYv0xiDYuM69gBjKfrDtVBTP0qVTCmpbM7ixjvpkzlb17k3m+doSrCBFgiRjn
-	GTDYzAagGNzFApNWqx+MWH7NjoYvw9WxmTvMcqAFJlK2u04nFr1Vu4EF9WHIeg/3
-	j42ZwX3nu5i8HFsAwFvFk1YmGMIG1iD6fHFa7Fr0LEh2vtgZiJmqL5eWwe2RXExZ
-	JGImyDBQgiJ3KYLEf5VXcCIF1+73NrD1ujfp1Uwsj71NGflDm0Bq9T0orWvQMJqF
-	3bg5zQbJ6oeJJIGqlbthntrXslfrdp2aTgwUhjCjh0Nothe8w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1795391137; x=1795477537; bh=1
-	fjKKCEnZwYosmBHPEBZrD2de+0UdG6NDmDLNg2rOq4=; b=fVumczo+eHO912pw0
-	kbM3CuxBk46E1Pz/TEzqbB8/5Qdh4SBcuvN7EdhHZJtowNru51W0KV/1Vx2bnNGw
-	uWkJfJBhXY+apGlbkNAl9j2ZM4PShUGTegSDGKj6sWhAB54oWKN5kw2JIQTy+ffW
-	6yhjgDfj+ZhYADYGYcmrNQNaTdjHesHPUbZeO7j04ubIdjuH+W47vZr+bZdfCxXX
-	PfOtBS0OhVnYJDqyQPeMUjJrZVACcB+3NKuAHnhxhErvWUbziJ/4QVhqDwtR4djM
-	hWQWGWoNCkVm4O4tJXqhr5OMSIWRs3dU600AGd1i+P56k6zVOL+5rQAJwfJpmLCC
-	KXT0w==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=exultantmonkey.co.uk a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795391137; d=exultantmonkey.co.uk;
-	mf=PGRhdmlkQGV4dWx0YW50bW9ua2V5LmNvLnVrPg==;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm2:rsa-sha256:fIj4FTT0AuS3YjKcCZfZXyh52j72e0RWqzLGgOreCPrM81u
-	g2WjJliqwGU/rw7cV6mjVClkc40z9S2Z/Lm/YdNvbb464YN5omHTWy0obdbs33Ep
-	unxxgRKwPjhlkSnAcNJF+0QiI7kqSfLFtL5bhHL/ttBUGAI3/cG4GmKz6bnN9DcT
-	l1OKPluQftolEK8aHhBtwlyP7WLxGRi07s+FYGCPZMeqPtP/58JhlbwbODmJjdb7
-	+YVMh7xH1/mc+mEAWJ8z5GfAK1B3B4fFK+LyamVbz7F9RxSojY0/ReR4dyD1CxbZ
-	MYryMLm5KH//PCVRFJPo92VTkVi7hdqDphTC/SA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=11;
-	hn=cc,content-transfer-encoding,date,feedback-id,from,
-	in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:G0GCyGbexGc/D8VW5PXNRPAiCnzCwSi2m7sH+nN0ibk=:1fjKKCEnZwYosmBHPEBZrD2de+0UdG6NDmDLNg2rOq4=;
-X-ME-Sender: <xms:oX4DaxINla0HgcZeYwOI0l-yr_w9pQEYDXxtpw-EhrpTsjBevlKtSQ>
-    <xme:oX4Da_bAmnn-dOA6kjQ6KgtFb0fqldZIx4SgwcU7bHuPjXe2lB7fBynIXdbo03ETF
-    SP2tH2w3ap7gw5gGctIU1wCZ4Px0aBAcXBoB7bZK-ZzxkjAHNcxsgV1>
-X-ME-Received: <xmr:oX4Da78ITfIu0qYFSuwhfIzlR0SZvYuavN_wBb6oxYx1C4UA6FWT2GalDSyTitQpNTkI42o>
-X-ME-Proxy-Cause: dmFkZTGLo4htkBeGweAzxLoOR8g74zf4vF4R/EJ7bPJfkEMuMPo52T+7HEdJdeljAsumUs
-    yy1F2//hSMakJVv2yxrqfiWB1WhmFUbJx+bAqRcrRgKjRQ18acWCt3paLYUl7x0wet92un
-    iRrKYtXDlfWBCYdzg6B3STRM4rLcMaspN4tBvnDdL6jgbPCTn4MA8UKYzW+ufDWlpBBUMT
-    YGL9NXPzdUAQTfy5fhHjvZa7TA7OCXzrHE6ydTDWftrZ1OEMW0inw0NKz7mgCc6Xhos7uz
-    N5tvgff6gTQHuWavIrAkWPxwliuLVp8xSBG35zHVDa355qr+I6lHQqMMoJzQS2l6r78dct
-    U+ZFaC9VzeEDwsPfVLrgE0bGjOYdOIX1oKI6Qs4Gc9mHLxE0eSORoiHZ73Dq6XQfTDljPM
-    xQ8AspQNdbWc9+HAC73bCPwjTIqLM6HxSeyIQLcU/GHv9qPqTukB6ZC8e2R5xZXoiBwaDC
-    hgweP0q2a9DiTCZgQsgcB3sKc1JoN/+frIbHpN7f0UtmcoYOMqxUdOR+d2RuTf25bmDLWE
-    rfFKX8f1Y5j0VHNxvYCSpZFzE51Wdi2ZfoU72j+jSdbRCySo6rfbAaSSa1JZMubjbeTtUE
-    h6OUCn434I5twvn8qxPnumB94CdcLO30yBruaGUw94F/F2EZwNlKnhIjQp9g
-X-ME-Proxy: <xmx:oX4Da4bBa6FEdJFCsenfFwvj8GAovRLoMF2YF-Wfrtg0QOVpq3INEw>
-    <xmx:oX4Da3Oe_G2vop2rLMab8SKhBDmLwNQVt7eljH3hbV76f6j3FGwOMQ>
-    <xmx:oX4Da8AoPOkrNr4SenJBMN5ewlZbFWN3mB_jvhZJwKRrx6n4PiGZgg>
-    <xmx:oX4Da2I1FOB7SCI_OSjT_VAhUbEW3ln00-5C4caHcVvehIwPf9x9pA>
-    <xmx:oX4Da4VDKJgssMvliq7Uq0gJ21FHEZWC_LhO5YR-x3DnT9U-ot-Zz02n>
-Feedback-ID: i8d5147ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 22 Nov 2026 18:45:36 -0500 (EST)
-From: David William Richmond Davies-Jones <david@exultantmonkey.co.uk>
-To: Krishna Chomal <krishna.chomal108@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C15606A31A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 00:19:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6C15606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 6AN0I9El013949
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Mon, 23 Nov 2026 10:48:11 +1030
+Date: Mon, 23 Nov 2026 10:48:09 +1030
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Florian Schmidt <kewl0@arcor.de>
 Cc: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: hp-wmi: Enable cTGP in performance mode on OMEN 15-en1xxx
-Date: Sun, 22 Nov 2026 23:45:16 +0000
-Message-ID: <20261122234516.279112-1-david@exultantmonkey.co.uk>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <awMir9K1nuO772x4@archlinux>
-References: <awMir9K1nuO772x4@archlinux>
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Report Windows Ink button
+ on LIFEBOOK U9311X
+Message-ID: <awOGQQCmV09y11gB@marvin.atrad.com.au>
+References: <20261120120655.40295-1-kewl0@arcor.de>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -128,77 +53,114 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261120120655.40295-1-kewl0@arcor.de>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-Hi Krishna,
+On Fri, Nov 20, 2026 at 01:06:55PM +0100, Florian Schmidt wrote:
+> The LIFEBOOK U9311X has a hardware button for Microsoft Windows Ink.
+> Pressing it does not queue an entry in the FUNC_BUTTONS ring buffer.
+> Instead, bit 20 of the FUNC_FLAGS status (op 0x4) is set while the
+> button is held down and cleared on release, and an ACPI notify is
+> raised on both edges. The FUNC_FLAGS event value (op 0x1) reports
+> bit 20 on both edges, so it cannot be used to tell press from release.
+> 
+> FUNC_FLAGS op 0x0 returns 0x66120120 on this machine, so bit 20 is
+> advertised as supported. Bit 30 follows the Fn lock state and is not
+> touched by this change.
+> 
+> Track the level of bit 20 and report press and release as KEY_PROG1
+> so the button can be bound in userspace.
+> 
+> Tested on a LIFEBOOK U9311X (BIOS 2.42) with this change backported
+> to v7.0: libinput shows KEY_PROG1 pressed/released for each button
+> press, independent of the Fn lock state.
+> 
+> The analysis of the dynamic debug output, the code change and this
+> changelog were produced with the help of an AI coding assistant
+> (Claude Code by Anthropic) on my request to make this button usable
+> under Linux. I reviewed the change and tested it on the hardware.
+> 
+> Signed-off-by: Florian Schmidt <kewl0@arcor.de>
 
-Thanks for the review. You were right on all points. I've sent v2 as a
-new thread, "[PATCH v2 0/2] platform/x86: hp-wmi: Fix cTGP and power
-limits on OMEN 15-en1xxx (88D2)".
+I don't have suitable hardware to test this myself.  However, the proposed
+changes look reasonable and they are reported to work.
 
-On Sun, Nov 22, 2026 at 11:29:12PM +0530, Krishna Chomal wrote:
-> So perhaps policy v1 is not entirely wrong? The HPCM == 1 check in GM1A
-> only tells us how this particular method handles the performance mode
-> value. Have you checked the other consumers of HPCM, particularly GM22
-> and the NVIDIA-related SSDT methods?
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-Policy v1 is correct for this board. I went through the DSDT and all the
-SSDTs, and GM1A is the only consumer of HPCM. GM22 doesn't look at HPCM
-at all: it writes NPCF.CTGP and NPCF.DTGP directly from bytes 0 and 1 of
-its input, notifies NPCF, then applies the D-state (byte 2) and GPST
-(byte 3). GM21 reads them back. NPCF only reports the cTGP offset (ACBT)
-when CTGP == 1, and only reports Dynamic Boost when DTGP == 1. So on v1
-this firmware expects cTGP to be set with SET_GPU_THERMAL_MODES, and the
-HPCM check in GM1A looks like the v0 route.
 
-> However, have you considered adding an entry to hp_wmi_feature_boards[]
-> and using the corresponding omen_v1_legacy_thermal_params mapping
-> instead?
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 8e909cb..0bcb92e 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -81,6 +81,7 @@
+>  #define FLAG_TOUCHPAD_TOGGLE		BIT(26)
+>  #define FLAG_MICMUTE			BIT(29)
+>  #define FLAG_SOFTKEYS			(FLAG_RFKILL | FLAG_TOUCHPAD_TOGGLE | FLAG_MICMUTE)
+> +#define FLAG_INK_BUTTON			BIT(20)
+>  
+>  /* FUNC interface - LED control */
+>  #define FUNC_LED_OFF			BIT(0)
+> @@ -140,6 +141,7 @@ struct fujitsu_laptop {
+>  	spinlock_t fifo_lock;
+>  	int flags_supported;
+>  	int flags_state;
+> +	bool ink_button_pressed;
+>  	bool charge_control_supported;
+>  };
+>  
+> @@ -585,6 +587,7 @@ static const struct key_entry keymap_default[] = {
+>  	{ KE_KEY, FLAG_RFKILL,          { KEY_RFKILL } },
+>  	{ KE_KEY, FLAG_TOUCHPAD_TOGGLE, { KEY_TOUCHPAD_TOGGLE } },
+>  	{ KE_KEY, FLAG_MICMUTE,         { KEY_MICMUTE } },
+> +	{ KE_KEY, FLAG_INK_BUTTON,      { KEY_PROG1 } },
+>  	{ KE_END, 0 }
+>  };
+>  
+> @@ -957,6 +960,7 @@ static void acpi_fujitsu_laptop_notify(acpi_handle handle, u32 event, void *data
+>  	unsigned long flags;
+>  	int scancode, i = 0;
+>  	unsigned int irb;
+> +	bool pressed;
+>  
+>  	if (event != ACPI_FUJITSU_NOTIFY_CODE) {
+>  		acpi_handle_info(handle, "Unsupported event [0x%x]\n", event);
+> @@ -990,6 +994,20 @@ static void acpi_fujitsu_laptop_notify(acpi_handle handle, u32 event, void *data
+>  		for_each_set_bit(i, &flags, BITS_PER_LONG)
+>  			sparse_keymap_report_event(priv->input, BIT(i), 1, true);
+>  	}
+> +
+> +	/*
+> +	 * On some models (e.g. LIFEBOOK U9311X) the Windows Ink button is
+> +	 * only reported as a level in the status flags: the bit is set while
+> +	 * the button is held down. Report press and release on each change.
+> +	 */
+> +	if (priv->flags_supported & FLAG_INK_BUTTON) {
+> +		pressed = priv->flags_state & FLAG_INK_BUTTON;
+> +		if (pressed != priv->ink_button_pressed) {
+> +			sparse_keymap_report_event(priv->input, FLAG_INK_BUTTON,
+> +						   pressed, false);
+> +			priv->ink_button_pressed = pressed;
+> +		}
+> +	}
+>  }
+>  
+>  static int acpi_fujitsu_laptop_probe(struct platform_device *pdev)
+> @@ -1037,6 +1055,7 @@ static int acpi_fujitsu_laptop_probe(struct platform_device *pdev)
+>  	if (priv->flags_supported)
+>  		priv->flags_state = call_fext_func(fext, FUNC_FLAGS, 0x4, 0x0,
+>  						   0x0);
+> +	priv->ink_button_pressed = priv->flags_state & FLAG_INK_BUTTON;
+>  
+>  	/* Suspect this is a keymap of the application panel, print it */
+>  	acpi_handle_info(device->handle, "BTNI: [0x%x]\n",
+> -- 
+> 2.53.0
 
-Done. v2 drops 88D2 from omen_thermal_profile_boards[] and adds it to
-hp_wmi_feature_boards[] with the omen_v1_legacy thermal parameters. GM1A
-stores the mode in EC 0x95, which matches
-HP_OMEN_EC_THERMAL_PROFILE_OFFSET. The new list is gone.
-
-> If I'm not mistaken, board 88D2 should also support fan curves, right?
-
-Yes. GM2D, GM2E and GM2F are implemented on this BIOS. GM2F returns a
-2-fan, 15-entry table with a maximum of 5900 rpm. With v2, manual PWM
-goes from 1200 to 5900 rpm, and max and auto modes work.
-
-> Why enable Dynamic Boost unconditionally when the firmware would almost
-> certainly disable it in case of low-power/equivalent modes? Wouldn't it
-> be better to make PPAB follow the selected platform profile instead?
-
-Agreed. On the Victus S path PPAB now follows the profile: enabled in
-performance and balanced, disabled in low-power. For what it's worth,
-GM1A on this firmware never touches DTGP, so it stays at its default of
-1 unless GM22 clears it.
-
-Moving the board to the Victus S path turned up one more problem, which
-is the new patch 1 in v2. When the power source changes in performance,
-victus_s_powersource_event() sends SET_POWER_LIMITS with PL1 = PL2 = 0.
-That was added for the 8C9C as "restore the defaults". On this AMD
-firmware GM29 multiplies both values by 1000 and passes them to ALIB as
-the SPPT and FPPT limits whenever the EC power level (OCPC) is 0. Under
-full CPU load on battery that held the CPU at 399 MHz and below 5 W.
-This firmware already sets these limits itself from the EC power-source
-event (_Q20): 25 W on battery and up to 54 W on AC. So v2 adds a
-per-board flag to skip the refresh and sets it for 88D2. With it the
-CPU holds about 25 W on battery and recovers to about 50 W on AC.
-
-Other AMD boards in hp_wmi_feature_boards[] may have the same GM29.
-I've only been able to test 88D2, so I set the flag for that board
-alone. It may be worth checking the others.
-
-One user-visible change: on 88D2 the profile choices go from
-cool/balanced/performance to low-power/balanced/performance. That's
-consistent with the other feature boards, and I've noted it in the
-commit message.
-
-Tested on 88D2 (BIOS F.20, Ryzen 7 5800H, RTX 3070 Laptop GPU): 100 W GPU
-limit in performance and 80 W in balanced and low-power, correct profile
-readback in each, and the fan and power-source results above.
-
-Thanks,
-David
+-- 
