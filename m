@@ -1,79 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.12
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795428412;
-	b=WhzZZb1BCPeNTFAWO3EiC2qf0AhK2Yw2OLeuz6c8BVje1X0FfXXOXq9mSwmIGflgzwoq
-	 GvGKWwT0YkSVesf0SsUP957xQTwV8EgztK8vlNLytmPbcTw4pxrpGN+tUgvPdIsSv5v2s
-	 pyOSmpEwBj7cIj/NsV6DlheJ8r2FuXnGbZSBMrYn0gtNNe1H3UM9kq3j9t2fdavXpDbf3
-	 3HT9uquHpp+gpMy8R5JA6JN0sK1k4A2GGWNWh2oWBgzRY4PHIMKYzVRVxGRBZBvtajfMp
-	 r50vKa1SesLQTkrbRlyvcIbLJSrGU8Tef3gT9ceR/jlgG8Iq9+3Ez7U2ODM2a01WQ2Q==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795428412;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=KXp8naU/etmC1VzahAxeSl9qV7f97STu4n9jviVbfzQ=;
-	b=yYWq2n1h2+o67dk908UunKlIGJ55yC3yq9kOrN+XCaRPMyr9f07JkeYOWMtXIQ+yox5C
-	 lse7l563ASbKklFjsPf+nvihe4szuO/tPIbLqWEARWNHRQ0aTVkMXxEdso7zdkF+XRQ5Q
-	 OFmnQV9GphXf6EkNuVu5Mz5OyNw4T2tXiJp2MLSlhQKp5T/cIMMn1TbNuAqUhk9i20/S6
-	 pttDpZqCMRCpF0qXOmX+QrT08OFoYkhrDFgjFoX1foFD4OhphMxmHh6xwjSvSjZwlB/JJ
-	 e5dFNF9n6vBhgMTCaYICcFkWHSQuDJI6AOuuMlihJhdIhCrYUtdvenhsoWzGKFzu8YA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=a65fkKFL;
-	arc=none smtp.remote-ip=192.198.163.12
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.17
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795430728;
+	b=mLvrw10Is9WJTVvXL/7SQpzHcOAuZqVvrL4tfQubvXtk3EQ8hDm0P9pgzavNCWyNnZXC
+	 ZV2TAFQwxCK4CYKppTVx0U2Rp/jZA0i38T2eX/kDRNt2dMKvwFPpV3ufCU497f4dXJg6U
+	 /V6Gus/4i/5LwokiqYPPg07/vixl+KU0fN+ooD8bOatEfPmPnDSSaYrca8dP4wsUQMzG1
+	 aay/JpP/KI8KsiTzDBgD+bKe32dDoYdhhoOfUqYoWP+/hqV8iCLXvQL/4EVZ96Jz+Idtg
+	 ZN79rUyKgLpO/D9ox/3ma7TiNXcYU9XaSK4ulPvEt5NFeNfDQ1scgHUIDOyXzXjQT1w==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795430728;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 User-Agent:Subject:To:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=1zzUVvttSHESavHFUCsRteQXsjlmTPHJS+g3HT2pUEE=;
+	b=Wkk6u0+NZgceOEH5aZQ857otoPtzIFhumAvpQrTHNXaXMxsGVGThGXOqzwz7CgQuBTrI
+	 JsuwqRO1kPM6aVrtMJ8xwc8jO5VxIBTP6Q1JV5daLVQjuW9hiYmWp1z9zcpNHDG9Zq0w7
+	 QwNKZtqWdVNpUCmlYG+US5fc4QOAgh50nfBKNLO0PlQatkLCUHcwHaTWXOkqo6CPTVwl+
+	 sogOX7OOC4byQkCr6r1LcBZHorNLseNPInQRl3n7F/c3ZGsskHsLHYZdPGbZMIm4Z2R9x
+	 norrobsZHlYOEYUwu7mnGIy6G61kmDczulykBkwVmHGZ6UBfZ7XbUoHrVcN1kfGpTyg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=SKlaU3c9;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.17
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010017.outbound.protection.outlook.com [52.101.85.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BFA606A31E;
-	Mon, 23 Nov 2026 10:06:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 91BFA606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E548606A333;
+	Mon, 23 Nov 2026 10:45:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1E548606A333
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=a65fkKFL
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795428412; x=1826964412;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ess3+l1NPR4G1pg355/cS8UNqaTJ67pbJVkEocweOh8=;
-  b=a65fkKFL9X7mJSYWGvD1dh8BvjOhmYLQip+1G0OoFPs05hO6diMyMFJX
-   zkp+/rCGjg7ONzZFud4/W/wiQ1Vifcus6tM4ZMAZSB7W9ZtO8Vy1t+L0Z
-   esCmVRVMQdtjo6Qks0vBZfWCZilsrHcltMDGfSEsssHPwaLbJbUG2TCle
-   dei7x1UM1K9yy+9esoumUi4wbRNGIX23BGoIpaBcOlJKeCv35qa1yWzV5
-   01zWJAR3gNBmbcwmGasumfgWJB52k7hNSucFzk0UX86K5/n5qutz8QV8n
-   u3HKQHkSXF2h87kK2VYgsBdMcJGNYlrlaL/L2NF+h8nLWng8zAiVhoNxS
-   g==;
-X-CSE-ConnectionGUID: KxwPW3efTMiyAYp3JUYlOg==
-X-CSE-MsgGUID: 7550G2oUR0iwR+m/58GHjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4102001"
-X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="4102001"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 02:06:50 -0800
-X-CSE-ConnectionGUID: OnwBYAuqSRKz2YcAMp3Ikw==
-X-CSE-MsgGUID: K6uXUYQsQrWbleJJoA80lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="11672414"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 02:06:45 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Nov 2026 12:06:42 +0200 (EET)
-To: alan <alanpluto@163.com>
-cc: Rong Zhang <i@rong.moe>, platform-driver-x86@vger.kernel.org, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, derekjohn.clark@gmail.com, 
-    W_Armin@gmx.de, Hans de Goede <hansg@kernel.org>, corbet@lwn.net, 
-    skhan@linuxfoundation.org, rdunlap@infradead.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, 
-    linux-api@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: lenovo-wmi-other: Add raw GetDataByPackage
- interface
-In-Reply-To: <06c29ea2-c9d4-4e9b-bbe8-651ad868a9c4@163.com>
-Message-ID: <600d2462-c586-3b58-3176-64a1330c583c@linux.intel.com>
-References: <20261116040532.154928-1-alanpluto@163.com> <4377ff90ffd0b030de7d4d33c188ba4b7551ad03.camel@rong.moe> <06c29ea2-c9d4-4e9b-bbe8-651ad868a9c4@163.com>
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=SKlaU3c9
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i7ctfhuPgyE2wTDjGJoVAvZZA0T9WblFZaguSZ6Otw9zyRAhtUwVrB3bVyivjvETCbxEgHXf4KAIroUkJ6tRDQrsf9sXTFB2Mg1O7uNX9mCHebKxOyVX5G5q7w6OblB5g6IzQgt7C2Fyw1bocuDBA5UN+IBqT4R4gpbzS+0hGsrHa3QJEB+0z26P8ezc/olQ9DhKCqgItvgZjRzqayLyMTOa+q+ZfwcDuD8YosnEYCi3qO3aCpMjyjFVTZAvgNWNrT2kfBAYEPNewE4Dp9YrTf8Za0RDNFQpeNetKKmH4lsjU7FpM4D7YpXXw4v2Wmv68vNHFzrrvN4umdnf6+tTqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1zzUVvttSHESavHFUCsRteQXsjlmTPHJS+g3HT2pUEE=;
+ b=lZwNCk/UP/GcfpclFzMObn2pW/xZkbi1Bu3rceeMUj3hszIhKH8reIoejM52Fwat7X4Z0bC4rdsVUDjVRH5GV/N/qTsbAL6WSlX+n7XPhFcgHCYHZrJNoetzUSshDjvZAboyStoooKknFsWVW6qvuILOAqPuZt+OCn1FdQkR9O8T4JPrptbVrY9ACV8sTluC9eO/oNd+Sn4pz3cUJsN52GMs5XmlrIi67fiVJQqD4PG8DemTJA1Sk8m23iwV9lPSS6ciHO0LPyHaUKpK3W332YGHj38V9GLhMgpQ7j02vUqPQrZ0h667dgDc4LsziDkxQLfTkFPO7UuL6aRVKyRKCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1zzUVvttSHESavHFUCsRteQXsjlmTPHJS+g3HT2pUEE=;
+ b=SKlaU3c9kJbl/Jb0LA8N2LU7grJKSbbkpdOTS88u6zMTpU/OStNg9ANjMIa3pERuDOAx9yC+oBUlez+BUZIstjn9RqnHIFX0H0A8y/OLVFWsM+9vhQwEozalJ27IcTGmb/2ouCUDo39ArEEt7bnPJw1hDfHb5ZgZEfLJCcIBaOk=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB292992.namprd12.prod.outlook.com
+ (2603:10b6:208:5a1::21) by PH7PR12MB7163.namprd12.prod.outlook.com
+ (2603:10b6:510:202::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.12; Mon, 23 Nov
+ 2026 10:45:20 +0000
+Received: from IA1PR12MB292992.namprd12.prod.outlook.com
+ ([fe80::4b88:460d:65c0:def1]) by IA1PR12MB292992.namprd12.prod.outlook.com
+ ([fe80::4b88:460d:65c0:def1%6]) with mapi id 15.21.0639.012; Mon, 23 Nov 2026
+ 10:45:18 +0000
+Message-ID: <2b15c0ee-39de-4050-a830-b709c7c19213@amd.com>
+Date: Mon, 23 Nov 2026 16:15:10 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] cpufreq: amd-pstate: Set asymmetric CPU capacity on
+ hybrid platforms
+To: Mario Limonciello <mario.limonciello@amd.com>, ray.huang@amd.com,
+ rafael@kernel.org, viresh.kumar@linaro.org, perry.yuan@amd.com,
+ kprateek.nayak@amd.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261114150310.1377654-1-Vishal.Badole@amd.com>
+ <20261114150310.1377654-2-Vishal.Badole@amd.com>
+ <ea92861f-cdf6-4828-9292-b49ad6c21590@amd.com>
+Content-Language: en-US
+From: "Badole, Vishal" <vishal.badole@amd.com>
+In-Reply-To: <ea92861f-cdf6-4828-9292-b49ad6c21590@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MA5P287CA0226.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:1b4::11) To IA1PR12MB292992.namprd12.prod.outlook.com
+ (2603:10b6:208:5a1::21)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,820 +101,405 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-171610986-1795428402=:1065"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB292992:EE_|PH7PR12MB7163:EE_
+X-MS-Office365-Filtering-Correlation-Id: 171f9b87-70dc-4c91-63c6-08df494edd50
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|1800799024|376014|366016|6133799003|22082099003|18002099003|921020|4143699003|11063799006|56012099006|261026121527099003|261102123227099003|261102130727099003|261026140227099003|261009223027099003|261022105027099003|261022075727099003|261021121427099003|261021123027099003|261009221227099003|10067099003|261028144727099003;
+X-Microsoft-Antispam-Message-Info:
+	+0fyiytTpBKBl6hP6OpbnyjjmEUp8azBkBpG7oOO+y00bGoy76Poj6WkCuXXXoeKgNWwrk933V4v04/C5SdIgNZO2eSKyhzMG69c8jGBmNp0zYQ23N6rtBSE6qb8qvK5QuQKM+GlmS7gn5AmOSaUREuVi9o2xGdENc7zocJ5W7oz9RGYXzH4OCA1q9DcDicmyN4el12nZDRf1GUesTc57cSoQUwOX/Y0Qefgd+kuq4ooSjCu82bGYCZyx0DFlyLvOeCufQ3RSl0ZIPh47Y9NVigePKUKEdyzqrA54FDbGaIeYeIwTbLkbSzXNYaAnHFZKByX97Afy+hYXa35ZzRsidXoqJL5iSRp8X+q7fxSDPTpDvL1L6OLVSWLmQV/F72DHMiVFazvC9ZmQVOx0I3JOck+qGFshTnOaLMtBtzxKrCX26VgPAbg0+xnPoSXQGRSVsxA/sA3/9J9qU85jrKYA44zwC9KDBHC5athp1TzlECBMKSC9g1Z+dJNa627ajWwcY9KLMpulCBlKa/AN+IxbfxVegeFdSAi5o21RgPt95MltV9OMSu3ntCyH6XiK8cUo6+9hHO/GUSwrX3sZa8/M1Q3coBLpyYo4LmC3Z5aIjj+Nojzm+jey6lA/IFNtlqoT+03OZug5xJz/IwOt/22q10mPnTKOB86BB5V5PQmGNP0rCOBpm60xtJtMx0XpqGD5pa75k3RtrIfiMF8f5Lvbg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB292992.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(366016)(6133799003)(22082099003)(18002099003)(921020)(4143699003)(11063799006)(56012099006)(261026121527099003)(261102123227099003)(261102130727099003)(261026140227099003)(261009223027099003)(261022105027099003)(261022075727099003)(261021121427099003)(261021123027099003)(261009221227099003)(10067099003)(261028144727099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cGRTVkZSak5OTm84L0ozL04xbjkraVpOa2tIbEVMOVVPcjRsU2YwQmlkVzRC?=
+ =?utf-8?B?MEhEdDFIaVF5cUNmYi9QdVM0WUZzb2dUMTdEUFBuNHVRYVZsemJ6M0RiUXNC?=
+ =?utf-8?B?SXFKS0Z0cWgwK0hBRG5GV3RhZGVnamd0VVpTUGJpbjh4Rk05dGpKUEczMUZI?=
+ =?utf-8?B?d1dGTWFSdVBDV0xoT3NwbFFmY2pSNWF3MlJSY25xemdoSEozRm1VdVFtU3hz?=
+ =?utf-8?B?ZDZTaUYzbXlpeGViUkNvbHJ3L2ZRVFBUN3FmdnpUdVdha0g4NnJKdWxxdmND?=
+ =?utf-8?B?eUFoR3FRSUxRM1lldFQ4SlBIZ2xuV05zbWl2M2ZZckptakdLN0o1RkZadFdV?=
+ =?utf-8?B?RnNHMmJLSTZuTDZIUTN4UmZzS0JtSTI0VExpNU9ZUW54citQVTdub2ZndXVL?=
+ =?utf-8?B?am12bWNJTnZCOFhEbWVlamZDczNva05RM1FPV3lQY3pDSkQ1UlhZT0VnOWEr?=
+ =?utf-8?B?Tnk1bFVkZEovbVcrVm02eEUwODk1OENDemN1L2R4YTVEbGFrSXQwTHV0VGh2?=
+ =?utf-8?B?VnpnOE9EWEgvei9rTHova0J5T3FIeG1Wd2pzVlhFcG5pRU1McDJtR1lKSFVH?=
+ =?utf-8?B?bGdlZk0vNVBvRmxoVERsRHlvQVJWaHE3dXBnekNScnozMlVaeU9NN3ArbXht?=
+ =?utf-8?B?a1NBSTBsNzhRZm1ldTJxVkF3N25qK1NHWDJTQnpqSUxzcHhJdVFHdlJoekov?=
+ =?utf-8?B?dUx1RmVuRWZycXlIMkdyN283N3pvUVFycVhRckhDVDExSVJnSWZPcU1mSkhk?=
+ =?utf-8?B?TW1CUEtwcVEycCtXL2EvNC9ocGpxUjNDVFlpNnBUMndpKzVxbWhCRnZOM0JZ?=
+ =?utf-8?B?VGpXc2Y4THVNeEtqdHJrZHcxbVFXMDdFNEpRRG5oT0FJWk5IbnFNM0RKT2lC?=
+ =?utf-8?B?WEZNRkZ4cGhRNnhyUkZIaGt3VWtnYkNDM1ZVWWtab2FaNE5pNU11MUh4Z3I4?=
+ =?utf-8?B?SXZ4cnVzNy9Hb0lSMUNScW91d0p0ZXQxUDhwQ081ZnRORnhvUzFxb2drVlMx?=
+ =?utf-8?B?eVhXZlZXRVh6ZVJiOERiTHJwNW9FY2o0SVlGNGNJYU1PMEVKZkFHN1I0dHIr?=
+ =?utf-8?B?c3BLUy9YYWNsMis5NXV0WFRxdDhJVFljaEJDdTVWUjVQU1dXL0FxL2FORUdL?=
+ =?utf-8?B?Wm5kS2lCL2pUdnI3N3Z1Y1RpYmZEN0FMS3F2L3pNTFc3ZTV4ZytaUEVMZkVj?=
+ =?utf-8?B?M0hyU2RpRXc4cTY1ZHYwamJCaEVZMnZVa1RIOWc2d2x0UzAvQTUyMnpxeFIr?=
+ =?utf-8?B?ODFnQWNib00wS3BUYllKR3BsNFkvcTVoek5tSEcxQnd6YzNQR2lpRTB1VTF5?=
+ =?utf-8?B?Vnk0ZllPem4yVmdoamc5OVFVUVBKL1NzTTYyR3RhSVFSRC9aRkN1RDh0YU40?=
+ =?utf-8?B?RHFwYWxneUJlU201NTEzeGlPRXVodDJCRjVrYlhPejFpbytFSmpGSzdNVVBJ?=
+ =?utf-8?B?UGt2WGdGbmdnVWs2Y25LQWU1Vktta0dNS3RTVmQ2SFY2ZXJ6eXZ3MlJ6Qy9M?=
+ =?utf-8?B?RmNLMjlZU05iYmU2Qld2UUx3bEF1a3BOZVd3NnplajJhcVdNZm1GQnVVVXVp?=
+ =?utf-8?B?bUFVV0VUd3RmeXVGeDdVUUZhZUx6cXd1VFM0VVdlaHM4eW94Sm5ObEtIcnFU?=
+ =?utf-8?B?UGt3enRyL0IyWEVPa1pqRElGbmgyeWYrVkVrOGk2NnFMWE9uRVFpMjk0dzFi?=
+ =?utf-8?B?emgyT0dmVllYbjhVYXo1N2RkVHBzL0VURXNKanBUS2xpaC9HMldpc24xeFMx?=
+ =?utf-8?B?aklsMlI3UFc3RW12QzZscm9lM1dyZE13QjRWK0V6bmhrb1BHOFh3bHoveUQy?=
+ =?utf-8?B?SkZQeUNjY3FxOHBIR2EwYUliYkdZMitEenNmNkFNamJUQ3R0WWZrc2hZeTBw?=
+ =?utf-8?B?U0lIaUN4d3BWbHdMV2llaFdWUUNwQ0Rjd0E2blpSRzU2WnJjSUQ1ZmRMcVNx?=
+ =?utf-8?B?c3R0YmxXaHJYWHVGcE9tOE9lbE9kRkQ3TlM0VG03U3lxVzlKdlFBSi9PSUhh?=
+ =?utf-8?B?UXdEOUR4bXhSZGU2aWhIQVpCTXlsck1VR0N2dHhGdGtLdFpNV1BZSmFQMmxM?=
+ =?utf-8?B?bmRVWkp0NkpmcTFpakFDNjQ4Tk1yTHpRUG43bzdsVUJhTGFraDJONVd1czR5?=
+ =?utf-8?B?NndQdjhHNFYwSzlkaW1xYytOajZEMU85UTdHMWtYeDdOMStwUzV6eHNMakdo?=
+ =?utf-8?B?N2JJcVVjaUwzYkREVllMVTY4TGptVHdJc1N6R1YwQm16MXd2UTY4VGtDdjlt?=
+ =?utf-8?B?TDRwblFiVmhndFNhWlA2dTRoTk9wZnhZaDQzWFpEMGwxVGI4cFFKU3ZXK21y?=
+ =?utf-8?Q?8i+SGRJJgX0+aEbdj0?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 171f9b87-70dc-4c91-63c6-08df494edd50
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB292992.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2026 10:45:18.2503
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ncl4uuF42HFj8x7Tx7biESDMFOCapYMO2eUL7l7NOapO6iKzHaNP14dzVWaOhhIbuQix2ph2XFPpO/A6U7dUqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7163
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello Mari,
+Thanks for reiviewing this patch.
 
---8323328-171610986-1795428402=:1065
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On 11/15/2026 9:24 PM, Mario Limonciello wrote:
+> 
+> 
+> On 11/14/26 09:03, Vishal Badole wrote:
+>> AMD heterogeneous processors combine multiple core types (e.g.
+>> performance and efficiency cores) whose maximum sustained performance
+>> and frequency differ. On such platforms the Linux scheduler relies on
+>> per-CPU capacity values to place and balance tasks across cores.
+>>
+>> Today amd-pstate does not export any per-CPU capacity information. As a
+>> result the scheduler sees every CPU as having identical capacity and
+>> treats performance and efficiency cores as interchangeable. Tasks are
+>> therefore placed and balanced without regard to core strength, which
+>> hurts both throughput and energy efficiency on hybrid systems.
+>>
+>> This happens because the scheduler defaults to a uniform
+>> SCHED_CAPACITY_SCALE when no arch- or driver-supplied capacity exists,
+>> and amd-pstate never feeds the asymmetry it knows (via CPPC highest
+>> frequency or the effective highest performance register) into the arch
+>> hybrid capacity scaling interface.
+>>
+>> Enable capacity aware scheduling on AMD heterogeneous-core processors.
+>> Use CPU 0 as the capacity reference, assuming it is a highest-performance
+>> CPU on the supported platforms. Cache its maximum frequency in kHz and
+>> effective highest performance once before driver registration, treating
+>> these reference capabilities as fixed for the lifetime of the system.
+>> During per-CPU initialization, compute each CPU's capacity relative to 
+>> the
+>> cached reference and publish it:
+>>
+>>   - When maximum-frequency data is available for both CPUs, scale by
+>>      frequency via arch_set_cpu_capacity().
+>>   - Otherwise, fall back to performance-register based scaling using the
+>>     effective highest_perf values.
+>>
+>> Record frequency availability before applying the per-CPU fallback. Keep
+>> frequency and performance references separate instead of interpreting a
+>> boost-ratio numerator in performance units as MHz. The fallback base
+>> frequency still depends on each CPU's nominal frequency and performance,
+>> so calculate that conversion per CPU. Disable CAS if reference setup 
+>> fails
+>> without preventing normal CPUFreq registration.
+>>
+>> Capacity aware scheduling is enabled by default on supported hardware and
+>> can be turned off with the "amd_cas=disable" boot parameter. Its 
+>> effective
+>> state is exposed through the "cas" sysfs attribute, and also exported via
+>> amd_pstate_cas_active() so amd-hfi can stand down when capacity aware
+>> scheduling owns the heterogeneous cores.
+>>
+>> Signed-off-by: Vishal Badole <Vishal.Badole@amd.com>
+>> ---
+>>   MAINTAINERS                  |   1 +
+>>   drivers/cpufreq/amd-pstate.c | 102 ++++++++++++++++++++++++++++++++++-
+>>   include/linux/amd-pstate.h   |  14 +++++
+>>   3 files changed, 115 insertions(+), 2 deletions(-)
+>>   create mode 100644 include/linux/amd-pstate.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 222b7fc2c3aa..26217272be95 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1324,6 +1324,7 @@ L:    linux-pm@vger.kernel.org
+>>   S:    Supported
+>>   F:    Documentation/admin-guide/pm/amd-pstate.rst
+>>   F:    drivers/cpufreq/amd-pstate*
+>> +F:    include/linux/amd-pstate.h
+>>   F:    tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
+>>   AMD PTDMA DRIVER
+>> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+>> index 4bedfbfc18b6..59eb2c4c7867 100644
+>> --- a/drivers/cpufreq/amd-pstate.c
+>> +++ b/drivers/cpufreq/amd-pstate.c
+>> @@ -29,6 +29,7 @@
+>>   #include <linux/smp.h>
+>>   #include <linux/sched.h>
+>>   #include <linux/cpufreq.h>
+>> +#include <linux/sched/smt.h>
+>>   #include <linux/compiler.h>
+>>   #include <linux/dmi.h>
+>>   #include <linux/slab.h>
+>> @@ -39,6 +40,8 @@
+>>   #include <linux/power_supply.h>
+>>   #include <linux/static_call.h>
+>>   #include <linux/topology.h>
+>> +#include <linux/cpuset.h>
+>> +#include <linux/amd-pstate.h>
+>>   #include <acpi/processor.h>
+>>   #include <acpi/cppc_acpi.h>
+>> @@ -86,6 +89,10 @@ static struct cpufreq_driver amd_pstate_driver;
+>>   static struct cpufreq_driver amd_pstate_epp_driver;
+>>   static int cppc_state = AMD_PSTATE_UNDEFINED;
+>>   static bool amd_pstate_prefcore = true;
+>> +static bool amd_pstate_cas = true;
+> 
+> As this strictly requires SMP support, what do you think about this 
+> instead to pick the default.
+> 
+> static bool amd_pstate_cas = IS_ENABLED(CONFIG_SMP);
+> 
+Ack!
+>> +static bool amd_pstate_cas_initialized;
+>> +static u32 amd_pstate_ref_freq_khz;
+>> +static u32 amd_pstate_ref_highest_perf;
+>>   static struct quirk_entry *quirks;
+>>   /*
+>> @@ -957,8 +964,8 @@ static void amd_pstate_init_prefcore(struct 
+>> amd_cpudata *cpudata)
+>>           return;
+>>       /* should use amd-hfi instead */
+>> -    if (cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS) &&
+>> -        IS_ENABLED(CONFIG_AMD_HFI)) {
+>> +    if ((cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS) &&
+>> +         IS_ENABLED(CONFIG_AMD_HFI)) || amd_pstate_cas) {
+>>           amd_pstate_prefcore = false;
+>>           return;
+>>       }
+>> @@ -969,6 +976,64 @@ static void amd_pstate_init_prefcore(struct 
+>> amd_cpudata *cpudata)
+>>       sched_set_itmt_core_prio((int)READ_ONCE(cpudata- 
+>> >prefcore_ranking), cpudata->cpu);
+>>   }
+>> +bool amd_pstate_cas_active(void)
+>> +{
+>> +    return READ_ONCE(amd_pstate_cas_initialized);
+>> +}
+>> +EXPORT_SYMBOL_GPL(amd_pstate_cas_active);
+>> +
+>> +static bool __init amd_pstate_init_cas(void)
+>> +{
+>> +    int highest_perf, max_freq;
+>> +
+>> +    highest_perf = amd_get_effective_highest_perf(0);
+>> +    if (highest_perf <= 0) {
+>> +        pr_warn("Invalid reference highest performance (%d)\n", 
+>> highest_perf);
+>> +        return false;
+>> +    }
+>> +
+>> +    max_freq = amd_get_max_frequency(0);
+>> +    if (max_freq < 0 || (u32)max_freq > U32_MAX / 1000) {
+>> +        pr_warn("Invalid reference maximum frequency (%d)\n", max_freq);
+>> +        return false;
+>> +    }
+>> +
+>> +    amd_pstate_ref_highest_perf = highest_perf;
+>> +    amd_pstate_ref_freq_khz = max_freq * 1000U;
+>> +
+>> +    return arch_enable_hybrid_capacity_scale();
+>> +}
+>> +
+>> +static void amd_pstate_set_cpu_capacity(struct amd_cpudata *cpudata,
+>> +                    bool highest_freq_available)
+>> +{
+>> +    unsigned long capacity, max_capacity, capacity_freq, base_freq;
+>> +
+>> +    if (!IS_ENABLED(CONFIG_SMP))
+>> +        return;
+> 
+>  From what I can tell; I don't think this is realistically something 
+> that can get called since you already check to enable CAS based on this 
+> same check (IS_ENABLED(CONFIG_SMP)).
+> 
+> So please drop this check here.  More later about IS_ENABLED(CONFIG_SMP).
+> 
+Sure, I will update it in the next patch revision.
+>> +
+>> +    if (highest_freq_available && amd_pstate_ref_freq_khz) {
+>> +        capacity = cpudata->max_freq;
+>> +        max_capacity = amd_pstate_ref_freq_khz;
+>> +        capacity_freq = capacity;
+>> +        base_freq = max_capacity;
+>> +    } else {
+>> +        union perf_cached perf = READ_ONCE(cpudata->perf);
+>> +
+>> +        capacity = perf.highest_perf;
+>> +        max_capacity = amd_pstate_ref_highest_perf;
+>> +        capacity_freq = perf_to_freq(perf, cpudata->nominal_freq, 
+>> perf.highest_perf);
+>> +        base_freq = perf_to_freq(perf, cpudata->nominal_freq, 
+>> max_capacity);
+>> +    }
+>> +
+>> +    guard(mutex)(&sched_domains_mutex);
+>> +    arch_set_cpu_capacity(cpudata->cpu, capacity, max_capacity,
+>> +                  capacity_freq, base_freq);
+>> +    topology_set_cpu_scale(cpudata->cpu, 
+>> arch_scale_cpu_capacity(cpudata->cpu));
+>> +    x86_topology_update = true;
+>> +    WRITE_ONCE(amd_pstate_cas_initialized, true);
+>> +}
+>> +
+>>   static void amd_pstate_update_limits(struct cpufreq_policy *policy)
+>>   {
+>>       struct amd_cpudata *cpudata;
+>> @@ -1043,6 +1108,7 @@ static int amd_pstate_init_freq(struct 
+>> amd_cpudata *cpudata)
+>>       u32 min_freq, max_freq, nominal_freq, lowest_nonlinear_freq;
+>>       struct cppc_perf_caps cppc_perf;
+>>       union perf_cached perf;
+>> +    bool highest_freq_available;
+>>       int ret;
+>>       ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+>> @@ -1069,6 +1135,7 @@ static int amd_pstate_init_freq(struct 
+>> amd_cpudata *cpudata)
+>>       /* try to look up from BIOS/quirk first, fall back to 
+>> (nominal_freq * highest_perf)/nominal_perf */
+>>       max_freq = amd_get_max_frequency(cpudata->cpu) * 1000;
+>> +    highest_freq_available = !!max_freq;
+>>       if (!max_freq)
+>>           max_freq = perf_to_freq(perf, nominal_freq, perf.highest_perf);
+>>       WRITE_ONCE(cpudata->max_freq, max_freq);
+>> @@ -1100,6 +1167,9 @@ static int amd_pstate_init_freq(struct 
+>> amd_cpudata *cpudata)
+>>                bios_min_freq, cpudata->cpu);
+>>       }
+>> +    if (amd_pstate_cas)
+>> +        amd_pstate_set_cpu_capacity(cpudata, highest_freq_available);
+>> +
+>>       return 0;
+>>   }
+>> @@ -1923,12 +1993,20 @@ static ssize_t prefcore_show(struct device *dev,
+>>       return sysfs_emit(buf, "%s\n", 
+>> str_enabled_disabled(amd_pstate_prefcore));
+>>   }
+>> +static ssize_t cas_show(struct device *dev,
+>> +            struct device_attribute *attr, char *buf)
+>> +{
+>> +    return sysfs_emit(buf, "%s\n", 
+>> str_enabled_disabled(amd_pstate_cas_active()));
+>> +}
+>> +
+>>   static DEVICE_ATTR_RW(status);
+>>   static DEVICE_ATTR_RO(prefcore);
+>> +static DEVICE_ATTR_RO(cas);
+>>   static struct attribute *pstate_global_attributes[] = {
+>>       &dev_attr_status.attr,
+>>       &dev_attr_prefcore.attr,
+>> +    &dev_attr_cas.attr,
+>>       NULL
+>>   };
+>> @@ -2438,12 +2516,23 @@ static int __init amd_pstate_init(void)
+>>               return ret;
+>>       }
+>> +    amd_pstate_cas = amd_pstate_cas && IS_ENABLED(CONFIG_SMP) &&
+>> +            cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES);
+>> +
+>> +    /* Enable CAS for processors with heterogeneous cores. */
+>> +    if (amd_pstate_cas)
+>> +        amd_pstate_cas = amd_pstate_init_cas();
+>> +
+> 
+> This seem to be a pointless variable initialization, especially as it's 
+> a global variable and this runs on non-hetero systems too.  Maybe 
+> something like this:
+> 
+> 0) See my previous comment about where to use IS_ENABLED(CONFIG_SMP).
+> 
+> 1) Change amd_pstate_init_cas return type to void.
+> 
+>  > +static void __init amd_pstate_init_cas(void)
+> 
+> 2) Add checks into the function like this:
+> 
+> static void __init amd_pstate_init_cas(void) {
+>      if (!amd_pstate_cas)
+>          return;
+>      if (!cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES))
+>          return;
+>      .
+>      .
+>      .
+>      amd_pstate_cas = arch_enable_hybrid_capacity_scale();
+> 
+> }
+> 
+> 3) Change the call in this function to just:
+> amd_pstate_init_cas();
+> 
+Sure, I will include these changes in patch revision.
 
-On Mon, 23 Nov 2026, alan wrote:
+> That should help avoid some extra variable writes.
+> 
+>>       ret = amd_pstate_register_driver(cppc_state);
+>>       if (ret) {
+>>           pr_err("failed to register with return %d\n", ret);
+>>           return ret;
+>>       }
+>> +    /* Per-CPU capacities are set during registration; rebuild 
+>> domains once. */
+>> +    if (amd_pstate_cas)
+>> +        rebuild_sched_domains();
+>> +
+>>       dev_root = bus_get_dev_root(&cpu_subsys);
+>>       if (dev_root) {
+>>           ret = sysfs_create_group(&dev_root->kobj, 
+>> &amd_pstate_global_attr_group);
+>> @@ -2484,8 +2573,17 @@ static int __init amd_prefcore_param(char *str)
+>>       return 0;
+>>   }
+>> +static int __init amd_cas_param(char *str)
+>> +{
+>> +    if (!strcmp(str, "disable"))
+>> +        amd_pstate_cas = false;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   early_param("amd_pstate", amd_pstate_param);
+>>   early_param("amd_prefcore", amd_prefcore_param);
+>> +early_param("amd_cas", amd_cas_param);
+>>   MODULE_AUTHOR("Huang Rui <ray.huang@amd.com>");
+>>   MODULE_DESCRIPTION("AMD Processor P-state Frequency Driver");
+>> diff --git a/include/linux/amd-pstate.h b/include/linux/amd-pstate.h
+>> new file mode 100644
+>> index 000000000000..eb750abd20f7
+>> --- /dev/null
+>> +++ b/include/linux/amd-pstate.h
+>> @@ -0,0 +1,14 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +/*
+>> + * Public interface for the AMD P-state driver.
+>> + */
+>> +#ifndef __LINUX_AMD_PSTATE_H__
+>> +#define __LINUX_AMD_PSTATE_H__
+>> +
+>> +#if IS_ENABLED(CONFIG_X86_AMD_PSTATE)
+>> +bool amd_pstate_cas_active(void);
+>> +#else
+>> +static inline bool amd_pstate_cas_active(void) { return false; }
+>> +#endif
+>> +
+>> +#endif /* __LINUX_AMD_PSTATE_H__ */
+> 
 
-> Hi Rong,
->=20
-> =E5=9C=A8 2026/11/16 20:44, Rong Zhang =E5=86=99=E9=81=93:
-> > Hi Alan,
-> >=20
-> > Thanks for working on this.
-> >=20
-> > On Mon, 2026-11-16 at 12:05 +0800, Alan Pluto wrote:
-> >> Expose Lenovo Other Mode WMI GetDataByPackage, method 99, through a
-> >> root-only character device so userspace can access the raw firmware
-> >> interface. And document the interface.
-> >=20
-> > What's the practical purpose of the interface? Did you use this to tune
-> > anything on your device?
-> >=20
-> >>
-> >> The upstream driver was build-tested with W=3D1 and checked with Spars=
-e.
-> >> A backport using the five-argument wmidev_invoke_method() interface
-> >> was tested on Ubuntu 7.0.0-42 with Lenovo hardware. The upstream 7.4
-> >> driver has not been tested on hardware.
-> >=20
-> > Don't include this in the commit message, but rather send a cover lette=
-r
-> > or place it under `---'.
-> >=20
-> >>
-> >> Signed-off-by: Alan Pluto <alanpluto@163.com>
-> >=20
-> > Is the work assisted by LLM?
-> >=20
-> >> ---
-> >>  Documentation/ABI/testing/dev-tac             |  49 +++
-> >>  .../wmi/devices/lenovo-wmi-other.rst          |   8 +
-> >>  MAINTAINERS                                   |   1 +
-> >>  drivers/platform/x86/lenovo/wmi-other.c       | 325 +++++++++++++++++=
-+
-> >>  4 files changed, 383 insertions(+)
-> >>  create mode 100644 Documentation/ABI/testing/dev-tac
-> >>
-> >> diff --git a/Documentation/ABI/testing/dev-tac b/Documentation/ABI/tes=
-ting/dev-tac
-> >> new file mode 100644
-> >> index 00000000000..a8be8e95e2d
-> >> --- /dev/null
-> >> +++ b/Documentation/ABI/testing/dev-tac
-> >> @@ -0,0 +1,49 @@
-> >> +What:           /dev/tac[0-9]*
-> >> +Date:           November 2026
-> >> +Contact:        platform-driver-x86@vger.kernel.org
-> >> +Description:
-> >> +                Lenovo Other Mode WMI GetDataByPackage (method 99).
-> >> +                Each firmware WMI instance gets a misc character devi=
-ce with
-> >> +                mode 0600.=C2=A0
-> >>
-> >=20
-> > Why would you need to add a character device instead of a debugfs file?
-> > See also lwmi_debugfs_create_dir().
-> >=20
-> > IMHO the interface is quite internal and undocumented. Exposing it as a
-> > character device makes it too reachable for users, unnecessarily
-> > increases the complexity of the driver, and requires some sorts of ABI
-> > stability.
-> >=20
-> >> Numbering follows allocation order, not necessarily
-> >> +                the firmware instance number.=C2=A0
-> >>
-> >=20
-> > You must be using a wordy LLM if you are using one. Isn't this just
-> > obvious and natural for most character devices?
-> >=20
-> >> Registration does not probe
-> >> +                support for method 99. The parent is the bound WMI de=
-vice.
-> >=20
-> > If it can't be probed, gate it unless a module parameter is set.
-> >=20
-> >> +
-> >> +                Open with O_RDWR. One write submits one complete requ=
-est of
-> >> +                1..100 raw bytes; shorter requests are padded with ze=
-roes to
-> >> +                100 bytes. Empty and oversized writes fail with EINVA=
-L without
-> >=20
-> > sed -E 's/\bE[A-Z]+\b/-\0/g'
-> >=20
-> >> +                calling firmware. Successful writes return the full s=
-ubmitted
-> >> +                length and execute two identical WMI calls for the BI=
-OS
-> >> +                duplicate-call workaround.=C2=A0
-> >>
-> >=20
-> >> Request pairs through this
-> >> +                interface are serialized; calls made by other driver
-> >> +                interfaces are not covered by this serialization.
-> >=20
-> > Why would you need to mention cross-interface implementation details in=
- a
-> > user-facing documentation?
-> >=20
-> >> +                Evaluation failures abort the pair; the driver does n=
-ot
-> >> +                automatically retry.
-> >> +
-> >> +                Each open file description owns its response.=C2=A0
-> >>
-> >=20
-> > Why would you need to support multiple writers? Couldn't you simply
-> > return -EBUSY when there is a pending writer/reader?
-> >=20
-> >> A write while
-> >> +                that response remains unread fails with EBUSY, includ=
-ing after
-> >> +                partial reads.=C2=A0
-> >>
-> >=20
-> > If userspace must write all data at once, why would you need to support
-> > partial reads?
-> >=20
-> >> A new open cannot read another open's response.
-> >> +                Descriptors shared by dup/fork share the same transac=
-tion;
-> >> +                applications must coordinate the complete write/read =
-sequence.
-> >=20
-> > Aren't these just obvious and natural for most character devices, too?
-> >=20
-> >> +
-> >> +                Read returns little-endian u32 DataSize followed by e=
-xactly
-> >> +                DataSize data bytes. Response storage is erased when =
-fully
-> >> +                read or closed. Further reads return EOF until a new =
-successful
-> >> +                write. Before a successful write, or after a failed f=
-irmware
-> >> +                evaluation, reads return ENODATA. A zero-length read =
-returns
-> >> +                zero without consuming data.
-> >> +
-> >> +                Requests are synchronous even with O_NONBLOCK. Seekin=
-g and
-> >> +                positional I/O are not supported.=C2=A0
-> >>
-> >=20
-> > Aren't these just the default characteristic for most non-block charact=
-er
-> > devices?
-> >=20
-> >> There is no ioctl interface.
-> >=20
-> > Too verbose. If you don't say it has some, it's obvious that it has non=
-e.
-> >=20
-> >> +                A removed WMI device causes nonempty reads and valid =
-writes
-> >> +                on existing descriptors to fail with ENODEV.
-> >> +
-> >> +                Firmware evaluation failures map to EIO. WMI marshall=
-ing
-> >> +                failures return the error reported by the WMI subsyst=
-em.
-> >> +                A truncated response or invalid DataSize maps to EPRO=
-TO.
-> >> +                Bad userspace memory maps to EFAULT. Failure does not=
- imply
-> >> +                firmware had no side effects; never blindly resubmit =
-commands.
-> >> +                Interrupted waits can return EINTR before firmware ev=
-aluation.
-> >=20
-> > Obvious, no?
-> >=20
-> >> +
-> >> +                The WMI subsystem converts returned ACPI objects to a=
- buffer.
-> >=20
-> > Yet another implementation detail.
-> >=20
-> >> +                This raw firmware interface may change device state. =
-Use only
-> >> +                commands whose behavior and side effects are understo=
-od.
-> >> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Document=
-ation/wmi/devices/lenovo-wmi-other.rst
-> >> index 011054d64ea..ec85fdeeb7a 100644
-> >> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> >> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> >> @@ -33,6 +33,10 @@ under the following path:
-> >> =20
-> >>  Additionally, this driver also exports attributes to HWMON.
-> >> =20
-> >> +The driver also exposes GetDataByPackage (method 99) through a raw ch=
-aracter
-> >> +device for each WMI instance. See Documentation/ABI/testing/dev-tac f=
-or the
-> >> +request and response format and its access restrictions.
-> >> +
-> >>  LENOVO_CAPABILITY_DATA_00
-> >>  -------------------------
-> >> =20
-> >> @@ -109,6 +113,10 @@ WMI interface description
-> >>  The WMI interface description can be decoded from the embedded binary=
- MOF (bmof)
-> >>  data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-> >> =20
-> >> +The example below describes an older firmware revision and specifies =
-a
-> >> +40-byte maximum input for GetDataByPackage. Newer firmware uses a 100=
--byte
-> >> +input, which is the size used by the raw interface described above.
-> >> +
-> >>  ::
-> >> =20
-> >>    [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Descriptio=
-n("LENOVO_OTHER_METHOD class"), guid("{dc2a8805-3a8c-41ba-a6f7-092e0089cd3b=
-}")]
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 981eb3fdbef..84b1545f525 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -15168,6 +15168,7 @@ M:=09Derek J. Clark <derekjohn.clark@gmail.com=
->
-> >>  M:=09Rong Zhang <i@rong.moe>
-> >>  L:=09platform-driver-x86@vger.kernel.org
-> >>  S:=09Maintained
-> >> +F:=09Documentation/ABI/testing/dev-tac
-> >>  F:=09Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-> >>  F:=09Documentation/wmi/devices/lenovo-wmi-other.rst
-> >>  F:=09drivers/platform/x86/lenovo/*
-> >> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platfor=
-m/x86/lenovo/wmi-other.c
-> >> index bd64e7b4466..c15b3a2a758 100644
-> >> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> >> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> >> @@ -34,16 +34,23 @@
-> >>  #include <linux/device.h>
-> >>  #include <linux/export.h>
-> >>  #include <linux/firmware_attributes.h>
-> >> +#include <linux/fs.h>
-> >>  #include <linux/gfp_types.h>
-> >>  #include <linux/hwmon.h>
-> >>  #include <linux/idr.h>
-> >>  #include <linux/kdev_t.h>
-> >>  #include <linux/kobject.h>
-> >> +#include <linux/kref.h>
-> >>  #include <linux/limits.h>
-> >> +#include <linux/miscdevice.h>
-> >>  #include <linux/module.h>
-> >> +#include <linux/mutex.h>
-> >>  #include <linux/platform_profile.h>
-> >>  #include <linux/power_supply.h>
-> >> +#include <linux/slab.h>
-> >>  #include <linux/types.h>
-> >> +#include <linux/uaccess.h>
-> >> +#include <linux/unaligned.h>
-> >>  #include <linux/wmi.h>
-> >> =20
-> >>  #include <acpi/battery.h>
-> >> @@ -91,6 +98,9 @@ enum lwmi_feature_id_psu {
-> >>  #define LWMI_FEATURE_VALUE_GET 17
-> >>  #define LWMI_FEATURE_VALUE_SET 18
-> >> =20
-> >> +#define LWMI_DATA_PACKAGE_GET 99
-> >> +#define LWMI_DATA_PACKAGE_INPUT_MAX 100
-> >> +
-> >>  #define LWMI_FAN_ID_BASE 1
-> >>  #define LWMI_FAN_NR 4
-> >>  #define LWMI_FAN_ID(x) ((x) + LWMI_FAN_ID_BASE)
-> >> @@ -115,6 +125,27 @@ enum lwmi_feature_id_psu {
-> >> =20
-> >>  static DEFINE_IDA(lwmi_om_ida);
-> >> =20
-> >> +static DEFINE_IDA(lwmi_tac_ida);
-> >> +static DEFINE_MUTEX(lwmi_tac_lock);
-> >> +
-> >> +struct lwmi_tac {
-> >> +=09struct miscdevice misc;
-> >> +=09struct kref ref;
-> >> +=09struct wmi_device *wdev;
-> >> +=09u8 instance;
-> >> +=09int id;
-> >> +};
-> >> +
-> >> +struct lwmi_tac_file {
-> >> +=09struct lwmi_tac *tac;
-> >> +=09/* Protects the per-open response and its position. */
-> >> +=09struct mutex lock;
-> >> +=09void *result;
-> >> +=09size_t result_len;
-> >> +=09loff_t position;
-> >> +=09bool completed;
-> >> +};
-> >> +
-> >>  enum attribute_property {
-> >>  =09DEFAULT_VAL,
-> >>  =09MAX_VAL,
-> >> @@ -1609,6 +1640,295 @@ static void lwmi_om_fw_attr_remove(struct lwmi=
-_om_priv *priv)
-> >>  =09priv->ida_id =3D -EIDRM;
-> >>  }
-> >> =20
-> >> +/**
-> >> + * lwmi_tac_free() - Free an unregistered endpoint after its last clo=
-se
-> >> + * @ref: Reference belonging to the endpoint.
-> >> + */
-> >> +static void lwmi_tac_free(struct kref *ref)
-> >> +{
-> >> +=09struct lwmi_tac *tac =3D container_of(ref, struct lwmi_tac, ref);
-> >> +
-> >> +=09ida_free(&lwmi_tac_ida, tac->id);
-> >> +=09kfree(tac->misc.name);
-> >> +=09kfree(tac);
-> >> +}
-> >> +
-> >> +/**
-> >> + * lwmi_tac_open() - Allocate independent response state for an open =
-file
-> >> + * @inode: Character device inode.
-> >> + * @file: File initially pointing to the registered miscdevice.
-> >> + *
-> >> + * The misc core serializes open against deregistration, so the regis=
-tration
-> >> + * reference remains valid while the file acquires its own reference.
-> >> + *
-> >> + * Return: 0 on success, or -ENOMEM.
-> >> + */
-> >> +static int lwmi_tac_open(struct inode *inode, struct file *file)
-> >> +{
-> >> +=09struct lwmi_tac *tac =3D container_of(file->private_data, struct l=
-wmi_tac, misc);
-> >> +=09struct lwmi_tac_file *state;
-> >> +
-> >> +=09state =3D kzalloc_obj(*state);
-> >> +=09if (!state)
-> >> +=09=09return -ENOMEM;
-> >> +=09mutex_init(&state->lock);
-> >> +=09state->tac =3D tac;
-> >> +=09kref_get(&tac->ref);
-> >> +=09file->private_data =3D state;
-> >> +=09return stream_open(inode, file);
-> >=20
-> > Add line breaks to improve readability. Same for the following methods.
-> >=20
-> >> +}
-> >> +
-> >> +/**
-> >> + * lwmi_tac_release() - Erase the response and drop the endpoint refe=
-rence
-> >> + * @inode: Character device inode.
-> >> + * @file: File holding the endpoint state.
-> >> + *
-> >> + * Return: 0.
-> >> + */
-> >> +static int lwmi_tac_release(struct inode *inode, struct file *file)
-> >> +{
-> >> +=09struct lwmi_tac_file *state =3D file->private_data;
-> >> +
-> >> +=09kfree_sensitive(state->result);
-> >=20
-> > Why on earth is it sensitive?
-> >=20
-> >> +=09mutex_destroy(&state->lock);
-> >> +=09kref_put(&state->tac->ref, lwmi_tac_free);
-> >> +=09kfree(state);
-> >> +=09return 0;
-> >> +}
-> >> +
-> >> +/**
-> >> + * lwmi_tac_invoke() - Execute GetDataByPackage and retain the respon=
-se
-> >> + * @state: Open file whose response buffer is empty.
-> >> + * @data: Zero-padded 100-byte input buffer.
-> >> + *
-> >> + * The caller holds state->lock and lwmi_tac_lock.=C2=A0
-> >>
-> >=20
-> > Add lockdep assertions instead of stating them in comments.
-> >=20
-> >> The latter serializes call
-> >> + * pairs across instances and keeps the WMI device valid during evalu=
-ation.
-> >> + *
-> >> + * Return: 0 on success, or a negative error code.
-> >> + */
-> >> +static int lwmi_tac_invoke(struct lwmi_tac_file *state, u8 *data)
-> >> +{
-> >> +=09struct lwmi_tac *tac =3D state->tac;
-> >> +=09struct wmi_buffer input =3D { .length =3D LWMI_DATA_PACKAGE_INPUT_=
-MAX, .data =3D data };
-> >> +=09struct wmi_buffer output;
-> >> +=09u32 data_size;
-> >> +=09int ret;
-> >> +
-> >> +=09if (!tac->wdev)
-> >> +=09=09return -ENODEV;
-> >> +=09/*
-> >> +=09 * Duplicated call required to match BIOS workaround for behavior
-> >> +=09 * seen when WMI accessed via scripting on other OS.
-> >=20
-> > Reference? Where is the script?
-> >=20
-> >> +=09 */
-> >> +=09for (unsigned int call =3D 0; call < 2; call++) {
-> >> +=09=09ret =3D wmidev_invoke_method(tac->wdev, tac->instance,
-> >> +=09=09=09=09=09   LWMI_DATA_PACKAGE_GET, &input, &output, 0);
-> >> +=09=09if (ret)
-> >> +=09=09=09return ret;
-> >> +=09=09if (!call)
-> >> +=09=09=09kfree_sensitive(output.data);
-> >> +=09}
-> >> +=09/* Validate DataSize before preserving the complete firmware respo=
-nse. */
-> >=20
-> > Don't retell what the code does, but rather explain why.
-> >=20
-> >> +=09if (output.length < sizeof(__le32)) {
-> >=20
-> > Why not use wmidev_invoke_method()'s min_size argument?
-> >=20
-> >> +=09=09ret =3D -EPROTO;
-> >> +=09=09goto free_output;
-> >> +=09}
-> >> +=09data_size =3D get_unaligned_le32(output.data);
-> >=20
-> > wmidev_invoke_method() returns aligned data.
-> >=20
-> >> +=09if (data_size > output.length - sizeof(__le32)) {
-> >> +=09=09ret =3D -EPROTO;
-> >> +=09=09goto free_output;
-> >> +=09}
-> >> +=09/* Transfer ownership without another allocation after firmware ra=
-n. */
-> >> +=09state->result =3D output.data;
-> >=20
-> > Use __free() and no_free_ptr().
-> >=20
-> >> +=09state->result_len =3D sizeof(__le32) + data_size;
-> >=20
-> > Couldn't you declare a struct with a flex array member to represent thi=
-s?
-> >=20
-> >> +=09state->position =3D 0;
-> >> +=09state->completed =3D true;
-> >> +=09return 0;
-> >> +free_output:
-> >> +=09kfree_sensitive(output.data);
-> >> +=09return ret;
-> >> +}
-> >> +
-> >> +/**
-> >> + * lwmi_tac_write() - Submit one complete TAC request
-> >=20
-> > "complete"
-> >=20
-> > Obvious.
-> >=20
-> >> + * @file: Open TAC endpoint with independent response state.
-> >> + * @buffer: Userspace input bytes.
-> >> + * @count: Input size, from 1 to 100 bytes.
-> >> + * @ppos: Unused;=20
-> >>
-> >=20
-> >> TAC is a nonseekable request/response stream.
-> >=20
-> > Obvious.
-> >=20
-> >> + *
-> >> + * Short inputs are zero-padded. An unread response must be consumed =
-before
-> >> + * submitting another request. A failed firmware call is never retrie=
-d here.
-> >> + *
-> >> + * Return: @count on success, or a negative error code.
-> >> + */
-> >> +static ssize_t lwmi_tac_write(struct file *file, const char __user *b=
-uffer,
-> >> +=09=09=09      size_t count, loff_t *ppos)
-> >> +{
-> >> +=09struct lwmi_tac_file *state =3D file->private_data;
-> >> +=09u8 input[LWMI_DATA_PACKAGE_INPUT_MAX] =3D {};
-> >> +=09int ret;
-> >> +
-> >> +=09if (!count || count > sizeof(input))
-> >> +=09=09return -EINVAL;
-> >> +=09if (copy_from_user(input, buffer, count)) {
-> >> +=09=09ret =3D -EFAULT;
-> >> +=09=09goto clear_input;
-> >> +=09}
-> >> +=09ret =3D mutex_lock_interruptible(&state->lock);
-> >> +=09if (ret)
-> >> +=09=09goto clear_input;
-> >> +=09ret =3D mutex_lock_interruptible(&lwmi_tac_lock);
-> >> +=09if (ret)
-> >> +=09=09goto unlock;
-> >=20
-> > Use scoped_cond_guard() or ACQUIRE().
-> >=20
-> >> +=09if (!state->tac->wdev) {
-> >> +=09=09ret =3D -ENODEV;
-> >> +=09} else if (state->result) {
-> >> +=09=09ret =3D -EBUSY;
-> >> +=09} else {
-> >> +=09=09state->completed =3D false;
-> >> +=09=09ret =3D lwmi_tac_invoke(state, input);
-> >> +=09}
-> >> +=09mutex_unlock(&lwmi_tac_lock);
-> >> +unlock:
-> >> +=09mutex_unlock(&state->lock);
-> >> +clear_input:
-> >> +=09memzero_explicit(input, sizeof(input));
-> >=20
-> > Why on earth is it sensitive, too?
-> >=20
-> >> +=09if (ret)
-> >> +=09=09return ret;
-> >> +=09return count;
-> >> +}
-> >> +
-> >> +/**
-> >> + * lwmi_tac_read() - Read only this open file's firmware response
-> >=20
-> > "only"
-> >=20
-> > Obvious, no?
-> >=20
-> >> + * @file: Open TAC endpoint.
-> >> + * @buffer: Userspace destination.
-> >> + * @count: Maximum number of bytes to return.
-> >> + * @ppos: Unused;=C2=A0the response position is protected by state->l=
-ock.
-> >> + *
-> >> + * Responses contain little-endian u32 DataSize followed by Data. Par=
-tial
-> >> + * reads advance the response position. Consuming the result erases i=
-ts
-> >> + * storage immediately; subsequent reads return EOF until another wri=
-te.
-> >> + *
-> >> + * Return: Bytes read, 0 at EOF or for zero @count, or a negative err=
-or code.
-> >> + */
-> >> +static ssize_t lwmi_tac_read(struct file *file, char __user *buffer,
-> >> +=09=09=09     size_t count, loff_t *ppos)
-> >> +{
-> >> +=09struct lwmi_tac_file *state =3D file->private_data;
-> >> +=09ssize_t ret;
-> >> +
-> >> +=09if (!count)
-> >> +=09=09return 0;
-> >> +=09ret =3D mutex_lock_interruptible(&state->lock);
-> >> +=09if (ret)
-> >> +=09=09return ret;
-> >> +=09ret =3D mutex_lock_interruptible(&lwmi_tac_lock);
-> >> +=09if (ret)
-> >> +=09=09goto unlock;
-> >> +=09if (!state->tac->wdev)
-> >> +=09=09ret =3D -ENODEV;
-> >> +=09mutex_unlock(&lwmi_tac_lock);
-> >> +=09if (ret) {
-> >> +=09=09kfree_sensitive(state->result);
-> >> +=09=09state->result =3D NULL;
-> >> +=09=09goto unlock;
-> >> +=09}
-> >> +=09if (!state->completed) {
-> >> +=09=09ret =3D -ENODATA;
-> >> +=09=09goto unlock;
-> >> +=09}
-> >> +=09if (!state->result)
-> >> +=09=09goto unlock;
-> >> +=09ret =3D simple_read_from_buffer(buffer, count, &state->position,
-> >> +=09=09=09=09      state->result, state->result_len);
-> >> +=09if (state->position =3D=3D (loff_t)state->result_len) {
-> >> +=09=09kfree_sensitive(state->result);
-> >> +=09=09state->result =3D NULL;
-> >> +=09}
-> >> +unlock:
-> >> +=09mutex_unlock(&state->lock);
-> >> +=09return ret;
-> >=20
-> > The entire method is in a horrible mess. Drop the support for partial
-> > reads, and use scoped_cond_guard()/ACQUIRE(), and __free() to tidy it u=
-p.
-> >=20
-> >> +}
-> >> +
-> >> +static const struct file_operations lwmi_tac_fops =3D {
-> >> +=09.owner =3D THIS_MODULE,
-> >> +=09.open =3D lwmi_tac_open,
-> >> +=09.release =3D lwmi_tac_release,
-> >> +=09.read =3D lwmi_tac_read,
-> >> +=09.write =3D lwmi_tac_write,
-> >> +};
-> >> +
-> >> +/**
-> >> + * lwmi_tac_remove() - Unregister an endpoint and block further firmw=
-are calls
-> >> + * @data: Endpoint registered as a device-managed cleanup action.
-> >> + *
-> >> + * Stop new opens before waiting for an in-flight call pair. Existing=
- files
-> >> + * retain the endpoint state, but their subsequent reads/writes retur=
-n -ENODEV.
-> >> + */
-> >> +static void lwmi_tac_remove(void *data)
-> >> +{
-> >> +=09struct lwmi_tac *tac =3D data;
-> >> +
-> >> +=09misc_deregister(&tac->misc);
-> >> +=09mutex_lock(&lwmi_tac_lock);
-> >> +=09tac->wdev =3D NULL;
-> >> +=09mutex_unlock(&lwmi_tac_lock);
-> >> +=09kref_put(&tac->ref, lwmi_tac_free);
-> >> +}
-> >> +
-> >> +/**
-> >> + * lwmi_tac_add() - Register TAC endpoints independently of capabilit=
-y data
-> >> + * @wdev: Bound Lenovo Other Mode WMI device.
-> >> + *
-> >> + * No capability describes method 99, so registration does not probe =
-firmware
-> >> + * support. Each firmware instance gets an endpoint; unsupported meth=
-od calls
-> >> + * are reported to userspace when requested.
-> >> + *
-> >> + * Return: 0 on success, or a negative error code. Device-managed cle=
-anup
-> >> + * unregisters earlier endpoints if a later registration or probe ste=
-p fails.
-> >> + */
-> >> +static int lwmi_tac_add(struct wmi_device *wdev)
-> >=20
-> > devm_
-> >=20
-> >> +{
-> >> +=09unsigned int instances =3D wmidev_instance_count(wdev);
-> >> +=09int ret;
-> >> +
-> >> +=09for (unsigned int instance =3D 0; instance < instances; instance++=
-) {
-> >> +=09=09struct lwmi_tac *tac;
-> >> +
-> >> +=09=09tac =3D kzalloc_obj(*tac);
-> >> +=09=09if (!tac)
-> >> +=09=09=09return -ENOMEM;
-> >> +=09=09ret =3D ida_alloc(&lwmi_tac_ida, GFP_KERNEL);
-> >> +=09=09if (ret < 0) {
-> >> +=09=09=09kfree(tac);
-> >> +=09=09=09return ret;
-> >> +=09=09}
-> >> +=09=09tac->id =3D ret;
-> >> +=09=09kref_init(&tac->ref);
-> >> +=09=09tac->wdev =3D wdev;
-> >> +=09=09tac->instance =3D instance;
-> >> +=09=09tac->misc.minor =3D MISC_DYNAMIC_MINOR;
-> >> +=09=09tac->misc.name =3D kasprintf(GFP_KERNEL, "tac%d", tac->id);
-> >> +=09=09tac->misc.fops =3D &lwmi_tac_fops;
-> >> +=09=09tac->misc.parent =3D &wdev->dev;
-> >> +=09=09tac->misc.mode =3D 0600;
-> >> +=09=09if (!tac->misc.name) {
-> >> +=09=09=09kref_put(&tac->ref, lwmi_tac_free);
-> >> +=09=09=09return -ENOMEM;
-> >> +=09=09}
-> >> +=09=09ret =3D misc_register(&tac->misc);
-> >> +=09=09if (ret) {
-> >> +=09=09=09kref_put(&tac->ref, lwmi_tac_free);
-> >> +=09=09=09return ret;
-> >> +=09=09}
-> >> +=09=09/* Unregister before the WMI device and its managed state disap=
-pear. */
-> >> +=09=09ret =3D devm_add_action_or_reset(&wdev->dev, lwmi_tac_remove, t=
-ac);
-> >> +=09=09if (ret)
-> >> +=09=09=09return ret;
-> >> +=09}
-> >> +=09return 0;
-> >> +}
-> >> +
-> >>  /* =3D=3D=3D=3D=3D=3D=3D=3D Self (master: lenovo-wmi-other) =3D=3D=3D=
-=3D=3D=3D=3D=3D */
-> >> =20
-> >>  /**
-> >> @@ -1693,6 +2013,7 @@ static int lwmi_other_probe(struct wmi_device *w=
-dev, const void *context)
-> >>  {
-> >>  =09struct component_match *master_match =3D NULL;
-> >>  =09struct lwmi_om_priv *priv;
-> >> +=09int ret;
-> >> =20
-> >>  =09priv =3D devm_kzalloc_obj(&wdev->dev, *priv);
-> >>  =09if (!priv)
-> >> @@ -1708,6 +2029,10 @@ static int lwmi_other_probe(struct wmi_device *=
-wdev, const void *context)
-> >>  =09if (IS_ERR(master_match))
-> >>  =09=09return PTR_ERR(master_match);
-> >> =20
-> >> +=09ret =3D lwmi_tac_add(wdev);
-> >> +=09if (ret)
-> >> +=09=09return ret;
-> >=20
-> > Why is this fatal?
-> >=20
-> > Thanks,
-> > Rong
-> >=20
-> >> +
-> >>  =09return component_master_add_with_match(&wdev->dev, &lwmi_om_master=
-_ops,
-> >>  =09=09=09=09=09       master_match);
-> >>  }
-> >>
-> >> base-commit: 5680519168f65666d2c03cc6ed8fe2b7052aee12
->=20
-> Thanks for the detailed review. I sent v2 patch separately by referring
-> your suggestion. Please help review it.
-> My replies to your points are below.
->=20
-> 1. Practical purpose and tuning
->=20
-> The known use is for Lenovo utility to communicate with firmware.
-> In v2 I use a default-off debugfs interface instead of stable userspace
-> interface.
->=20
-> 2. Test information in the commit message
->=20
-> I removed the build and test details from the v2 commit message.
->=20
-> 3. LLM assistance
->=20
-> Yes, I used AI assistance for the port and review. I reviewed the
-> changes and am responsible for the submission.
->
-> 4. Character device versus debugfs, and the module parameter
->=20
-> I replaced the character device with a 0600 debugfs file created under
-> lwmi_debugfs_create_dir(). There is no non-invasive probe for method 99,
-> so creation is disabled by default and requires
-> enable_get_data_by_package=3D1 when loading the module. I removed the v1
-> ABI document and its MAINTAINERS entry.
->=20
-> 5. ABI documentation and verbosity
->=20
-> Removed the character-device ABI document change.
->=20
-> 6. Multiple writers and partial reads
->=20
-> The debugfs file permits one open only per WMI device.
->=20
-> 7. Readability and comments
->=20
-> I simplified the handlers and removed the redundant kernel-doc and
-> comments that merely described normal file operations. I also removed
-> the unsupported reference to a script on another OS.
->=20
-> 8. Locking
->=20
-> With one open per WMI device, a per-open lock protects the response and
-> serializes operations through shared descriptors. lwmi_package_invoke()
-> uses lockdep_assert_held() for that lock.
->=20
-> 9. Sensitive data
->=20
-> The firmware response can contain sensitive data, so I retained
-> kfree_sensitive() for buffers returned successfully by WMI.
-
-Vague and broad statements like that are unacceptable for me.
-
-Either provide clear and unambiguous justification or do not use=20
-_sensitive. I'll not accept doing it using "just in case" reasoning.
-You might want to split code path for the sensitive case for clarity.
-
-> 10. Duplicate calls
->=20
-> You can refer as think-lmi.c, same duplicated call. The reason is
-> invoking WMI under Windows OS will result the BIOS ACPI code execute
-> twice, so BIOS implemented the workaround, thus Linux driver will need
-> the duplicated call to match the BIOS workaround.
->=20
-> 11. Response size, alignment and cleanup
->=20
-> The second wmidev_invoke_method() call passes the response header size
-> as min_size. The driver separately validates DataSize against the
-> returned buffer length. The response is represented by an aligned
-> structure with a flexible array; after the successful call I declare it
-> with __free(kfree_sensitive) and transfer ownership with no_free_ptr().
->=20
-> 12. Scoped locking and probe failure
->=20
-> Read and write use ACQUIRE()/ACQUIRE_ERR(). The device-managed debugfs
-> cleanup action handles removal and setup rollback. A debugfs setup error
-> is reported with dev_warn(), but does not by itself fail driver probe.
-
-In future, please reply properly to the review comments (inline), not=20
-adding an LLM-generated reply to tail. Tail (or head) replies makes it=20
-hard to connect the reviewer comment to your reply and you don't want=20
-to upset the acting maintainer with that. ;-)
-
---=20
- i.
-
---8323328-171610986-1795428402=:1065--
