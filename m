@@ -1,56 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=157.90.84.7
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795443155;
-	b=a5OUGrqcxftlzzlyV2tjLrvBOZa38ag0D4j8j3Ck8ME5wW3BXT+wzTCI41bazE9/UDq6
-	 qSA1BHXVvB9ppOLah7OdAbqfNc2SnLwwbvJLTCfwG79y1RnQQu+1g4n9gca+hnpqTOJgT
-	 uuxvFxeNaHxynIQebHo/U7E0qpe5ytNpEnan7OJodZ1LvNULrfNVDKxw866F8f7UKJh2m
-	 qO7KESkKB0UoElx2TI0s5/IbfBVIo1Z9sEhjj7kf1FX0QWBPYTT5wmHxetrCBXAD1m5lM
-	 XV35zKwRpiDaZ0vOrELZ3CtEkG5+w7CDhmiMxRRhYhtTB/bQ8SJpfw+vNzhKRMK2y0A==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795443155;
-	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=5zJGdb0taAzL83pUSPdPIFK41PcMxbxbayAH1/2w8bw=;
-	b=FXNN01jdLvrEDY5ImDFJzOmMDpNmeywb8KZ/mnDST0axZVYEXg/IC48FtS1NQBybV0om
-	 KCN6n8iSKOJYVDaX5lVv71tZw+gyLEZaFT5yBUq10kzWS8wc+B8xLSS1B7xxdffVW7IUD
-	 6LWmZT5ZqteLHHph/1BhuyB9szrVIJ6zoTkKI7llycp0reFAZ9iLgeZRY3RMX0LeTiBY8
-	 be/Dd1gz5V1uXvTu60crzGxSVTPe0+73baG35TEAnnplPAcKic4Oa2Vmck0K29S0kt1z0
-	 OCghxAm00l2naVzgjVC7z4hbYQUJTYBkp2Q6vkuaGcHvZ2xxk/IFCyO1Xp+kc+sQ0iQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=tuxedocomputers.com;
-	spf=pass smtp.mailfrom=tuxedocomputers.com;
-	dkim=pass header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.a=rsa-sha256 header.s=default header.b=NoVMhOMv;
-	arc=none smtp.remote-ip=157.90.84.7
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.195.45
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795446924;
+	b=lTTpr5GelvLxQRAPV008N4v/MrS6oeein9tB+SupLHlNxJZ1Yy+TvazaoiRzxxaAJ5zT
+	 Ygmn8EzydF3eYWmp+093KVX2jSt3zL3zSthoOGR6z/Zo6VnmrcxISBIX0/F6hG+MjO7M8
+	 LyICCiHqzSs6jBD0Z3nJ07WsbrzwKgCAzz9n8NIsxBTlh0klzkoSgmBSTgCvazBXvX92K
+	 JPHO3vNeP2o0q47k82SlKP3OufWW68PgM6YlOpzeCTk7uBkRaiHSy1vnfTgETLa4aQg1v
+	 TNLgyxR2pGEX8ObsKzVPnQnUoaznE2JUY3LOmQp13FHlwYOJIw3IPQt/Yt7Dp8nWYrw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795446924;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Originating-IP:X-ClientProxiedBy:X-EOPAttributedMessage:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=l42YlKuqEjs2tRqcpKjp92NI3zf3jIm+D31OzuGNHYc=;
+	b=U/7+0LATc8xUAVXpteuop6/7tA9HwCgtW2ZqvsYpH7vGqRvEP8TdCV+RcJZySVFu0qk1
+	 t6xMALQs5BeZ+R5UU8DA4kXcysnOmo/zFcZUHONhiLWmb6/zadQdkTLosLpsTMiRc4s4N
+	 nSl0Ix2vIKQ1I25pdtBfIU9IPb5zjKObw5IecaENmb8YiM30542L13GFftKBgPqJAqQx9
+	 e1HExp/HJbOF1ioaILZxxe13emdIZ5TIaSAHFXW59bKkiUdJfYyh/QAuGu7Yewo6djfn1
+	 jrYXlvnZMa3/ZTt7dAqAiWhwlTnfAq3VRQvJ9ceuBnvvA+Lf8Ox9ynMoTrnolB7yyzA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=NW4u1F8n;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.195.45
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012045.outbound.protection.outlook.com [40.93.195.45])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83789606A31E;
-	Mon, 23 Nov 2026 14:12:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 83789606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09653606A32D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 15:15:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09653606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.a=rsa-sha256 header.s=default header.b=NoVMhOMv
-Received: from [10.10.12.8] (business-024-134-105-141.24.134.pools.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 01E562FC0049;
-	Mon, 23 Nov 2026 15:12:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1795443152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zJGdb0taAzL83pUSPdPIFK41PcMxbxbayAH1/2w8bw=;
-	b=NoVMhOMvEZzJDP8kbZWNq53uQKVF3ZvJQdSFMC9wPonzxeDdIeUJ0u+Tv116lQbUK6nOsd
-	5NOwBUb/9L4loq6RpVy+D+p+j3xhVkwd/OhaVwbu+GWRMu5xSgUcfJlpfEQq4VgJ/YTumN
-	g2lGMKRixbl3xWbkhCxOcl2ybp1M62Q=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <b5f96ec9-ee4c-44c8-8451-9f40bed43290@tuxedocomputers.com>
-Date: Mon, 23 Nov 2026 15:12:30 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=NW4u1F8n
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ReFnQ19niC5WMKd86DoeUB7LJ/2LUgLHfjAFmNtv9/E80+PwAwtgqT7M1N9akD1jTHnLDoB9E9cFeggmPkt7xT0XCpxKibGvgUybDzmC0Qw7RHWQaze8M3OZXnKxtCYoKxLG8iWrZSAeHY4Wbed5mXJHVn/kT7ZaHFnhoaT7bWxL/dX89/m5dt1buI9n7iiUkNPQ+lPg6uGrXSITEOzHnyI3BNpIsZNRaLQZSt2m0x/vB9uaBMyeWCjXaHohTag0XGkMEyOjkrtTLvRbZjWSsz0iFOd42+1DVaBVQb5mkWZZhXNEiaHZ4s5lGYpxUCtaWhm4Gg09+cLVqv8E7hjPiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l42YlKuqEjs2tRqcpKjp92NI3zf3jIm+D31OzuGNHYc=;
+ b=anZFlCeH/Cih+lk8EhpvwIfLheunHLUD1tAzV7W+aporrl1Tgzwz8GJL3CJuOSw7HoZtK4mjUPnla688NmWPcZkCdVPgUVE9ZMZ+JH75TUFEKuA6oBN+hfoG/G5bZ7TZlOQAG8iu/FpN1/5CgZLcE/aA8L50ssfMyU3YParoRG1lF+qcbsFKnLbv4AsU1E+bMTzv96jBv2PHWVALeZEAkn9yDX0CU2EJV4LV0/lUykh7Vz3xgDc5LMEJU4Mh3/PZWz4asFngDF6npc+UBgz3BcEvp3oRQMCy5ZZLFyybbqjHe4vzxdERU+0UQOdheI3d11AoRwiqF95n+iVaxV5o3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l42YlKuqEjs2tRqcpKjp92NI3zf3jIm+D31OzuGNHYc=;
+ b=NW4u1F8nULS47EfOmgjUjyomd0t5tJ47XpbtZA1q1OPLp4JBMjCCY0bqb5viOve2iCJMe4QU8X9FBQ0qTN5axxHEsG/ynH9xnNGsI1RxumBhw0uqIit1C2LcKWnbv2Rq3ybi8FCf268nL7HYqPs+pexMe00SrC5YuLFS8NeXbP5BbWZ06TyRv9vGThDGFodefYQGlbt9sfb5VXlBGOwUTqjPmBwT3iCmEe87hmeYvN4ao/FQbIAlJwWmr7czdbAk9TG5sgvJKJT3CCTivjwUj8XSZeOFR8wEWGnuTJcicrttrIOfrZ92NsN92XJuvH+4JevDrxN7/7WQdrk+iwYk7g==
+Received: from PH8PR05CA0022.namprd05.prod.outlook.com (2603:10b6:510:2cc::10)
+ by CHBPR12MB319464.namprd12.prod.outlook.com (2603:10b6:610:409::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.14; Mon, 23 Nov
+ 2026 15:15:19 +0000
+Received: from PH4PEPF0000B610.namprd21.prod.outlook.com
+ (2603:10b6:510:2cc:cafe::6b) by PH8PR05CA0022.outlook.office365.com
+ (2603:10b6:510:2cc::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.662.5 via Frontend Transport; Mon, 23
+ Nov 2026 15:15:19 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 216.228.117.161) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ PH4PEPF0000B610.mail.protection.outlook.com (10.167.243.91) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.662.0 via Frontend Transport; Mon, 23 Nov 2026 15:15:18 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Mon, 23 Nov
+ 2026 07:14:54 -0800
+Received: from r-build-bsp-06.mtr.labs.mlnx (10.126.231.37) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.57; Mon, 23 Nov 2026 07:14:52 -0800
+From: Felix Radensky <fradensky@nvidia.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hansg@kernel.org>, Vadim Pasternak <vadimp@nvidia.com>,
+	Felix Radensky <fradensky@nvidia.com>, <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH platform-next v3 3/3] platform/mellanox: nvsw-host-spc6: Add support for SPC6 air cooled switches
+Date: Mon, 23 Nov 2026 17:14:25 +0200
+Message-ID: <20261123151425.2617731-1-fradensky@nvidia.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <7f7a0477-95b1-c2d8-a9ef-6b11b740a51c@linux.intel.com>
+References: <20261020172756.4160946-1-fradensky@nvidia.com> <20261020172756.4160946-4-fradensky@nvidia.com> <7f7a0477-95b1-c2d8-a9ef-6b11b740a51c@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -60,193 +111,68 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] platform/x86: clevo-laptop: add minimal WMI driver
- skeleton and Kbuild plumbing
-To: nick42d@gmail.com, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot
- <acourbot@nvidia.com>, =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
-Cc: Armin Wolf <W_Armin@gmx.de>, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, rust-for-linux@vger.kernel.org
-References: <20261122-clevo-laptop-v1-0-881debf4d4b0@gmail.com>
- <20261122-clevo-laptop-v1-1-881debf4d4b0@gmail.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20261122-clevo-laptop-v1-1-881debf4d4b0@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH4PEPF0000B610:EE_|CHBPR12MB319464:EE_
+X-MS-Office365-Filtering-Correlation-Id: df08a17d-ef1c-4e04-fb42-08df497495ef
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700016|23010399003|18002099003|22082099003|261009223027099003|261021121427099003|261026121527099003|261102123227099003|261022075727099003|56012099006|10067099003|4143699003|11063799006|5023799004;
+X-Microsoft-Antispam-Message-Info:
+	UA7Odw9cp2BvcZRrBZFgeZ7Tvd+gVA+ddfPmTD+WgbX4FxgfJ7bHwv4RHySuNnDUZIRMUGraJh1ucC4INZFp8QgnoaIBY917uXss85pLcl3yUs3i9zrPlRrKEXgMn6X7oRQeRBcuysSsDAtEYlAlscDo/PSb6JYoEOJYQjMkRgtoJndLl20KrAZK7pGJM7ENzdbSTJpaSV3dEk8B7QIeSTcFx9cgSAvwMWDmU0dty2ixEsPu+Dyl4nAl1EbKhU/oiXmls5jMF55t2n2/EQ6Tm0XUcCipQzi2/yyadjCNpfVhIJfTvp71QxeI7ZzBJCiXBHjnKRXjPa63Z9rLbvyWptfYWmNxlk2DymYxOCZVOtIe96zAvbsyspnLUxTUciXUKc4dAYRafKhdHlLGQjS3hDCnD3hvrDBPygzOJpgilmvBX3El0NPtyrmDzc5OdbJTKHNCsI4VA2dTKkBuRAGdCQfAkUq01DfPMHXH+Mr6AChSZ0vcLs6HoFugazqCfy3zVaK53JsnWkD3TfwCzW6TdHaekNX9hN4az7C97phwFj78bTbZ9cF1RuY4yE95DtdUxiOOsyf1h6WLQVh5aC2f2wFC7cMf/taLlkn/iZcodDgqb5+jh+S4JmXKyfSD+u/qXOPOYeVCtcZBAlhTS1P58fpGXRd4o9ypn2/HIK9b0+Fw4lC41bqrTW1ShWZ3Uh7Q0FtzgTEbmXUif8G56GnVEg==
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700016)(23010399003)(18002099003)(22082099003)(261009223027099003)(261021121427099003)(261026121527099003)(261102123227099003)(261022075727099003)(56012099006)(10067099003)(4143699003)(11063799006)(5023799004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	6WWQM0kzHAcOY9xfS5pDnZ5WUzYxEAfF/Kgh3cjqhU3BdHI/3dZMlgqE066Xc2dYtSKcRSCBFHNJO05JCKzawo2Gi4zOEn9Y9Eoe9r7l6OkhfmPXRExRAG8nOTI4LYnEfaH6LyNZmPQuxt0tGuktZK3f2z6H1aAu4XuZS6wAMHn4teqJPRb+EkpnBHfo6D9/3cINdUA+0e7hV/MT1HSXc4c9g6tRGgZCDeUtUIDa3bPR6yaHpJkkWxJ11/aVOdH+3sxJpjogAo5C3xwyBYOVjDUHup02YjJjOyVbXEYB/vXWVsfhyHnsJnwMLmMhXA6PE8/AczyZpc6A4TOP051pT1xGDogTeRFfpFiP1AKict9Ow/F1axO7GC5WJxfyvK+QErIc8OrovmCK2C02FnRRCDf3H6peGZdP8cNYNM+rjqwD8R7+bb3p9KD32Bve8rjH
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2026 15:15:18.9620
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: df08a17d-ef1c-4e04-fb42-08df497495ef
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	PH4PEPF0000B610.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CHBPR12MB319464
 
+On Mon, 23 Nov 2026, Ilpo Järvinen wrote:
 
-Am 22.11.26 um 05:35 schrieb Nick Dowsett via B4 Relay:
-> From: Nick Dowsett <nick42d@gmail.com>
->
-> - Add `drivers/platform/x86/clevo-laptop.rs` with module implementation,
->    DMI board check, and Driver registration.
-> - Add Kconfig and MAINTAINERS entries and Makefile wiring.
->
-> Signed-off-by: Nick Dowsett <nick42d@gmail.com>
-> ---
->   MAINTAINERS                          |  6 +++
->   drivers/platform/x86/Kconfig         | 17 +++++++++
->   drivers/platform/x86/Makefile        |  3 ++
->   drivers/platform/x86/clevo-laptop.rs | 72 ++++++++++++++++++++++++++++++++++++
->   4 files changed, 98 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 44540a1eb2b8..1130c293e84d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6566,6 +6566,12 @@ F:	scripts/Makefile.clang
->   F:	scripts/clang-tools/
->   K:	\b(?i:clang|llvm)\b
->   
-> +CLEVO LAPTOP DRIVER
-> +M:	Nick Dowsett <nick42d@gmail.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/clevo-laptop.rs
-> +
->   CLK API
->   M:	Russell King <linux@armlinux.org.uk>
->   L:	linux-clk@vger.kernel.org
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 9ce384e0475e..18aa4550c9f4 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1059,6 +1059,23 @@ config OXP_EC
->   
->   source "drivers/platform/x86/tuxedo/Kconfig"
->   
-> +config CLEVO_LAPTOP
-> +	tristate "Clevo Laptop Platform Driver"
-> +	depends on RUST
-> +	depends on ACPI_WMI=y
-> +	depends on DMI
-> +	depends on LEDS_CLASS
-> +	help
-> +	  This driver provides platform support for Clevo barebones and
-> +	  rebranded laptops (Tuxedo, Metabox, Sager, XMG, etc.).
-> +	  Currently only Clevo NLx0AU boards (e.g. Metabox Edge NL57AU)
-> +	  with a 5-step white keyboard backlight are supported over WMI.
-> +	  It is intended to be extended with additional Clevo models and
-> +	  EC features over time.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called clevo-laptop.
-> +
+> Please check if sashiko's comment this patch is valid or not.
 
-TUXEDO is officially all caps.
+It is valid, and it is already fixed, in the LED tree rather than here.
 
-Technically all clevo barebones are rebranded and it is sometimes more then just 
-rebranding.
+The finding is that the ten fan drawer LEDs this patch describes are
+never registered, because mlxreg_led_config() decides whether a LED is
+present by testing a bit of the capability register, and these entries
+carry a slot index instead of a bit. The capability register of these
+systems reports a count of the fan drawers present rather than a
+bitmap, as the cover letter described.
 
-Maybe just drop everything behind the "and".
+Nothing in that is specific to this patch. The same description style
+is used by mlxplat_mlxcpld_xdr_led_data[] in mlx-platform.c, which has
+been losing all twenty of its fan LEDs since the table was introduced
+in v6.16, so the gap is in leds-mlxreg and the fix belongs there. Lee
+has applied it:
 
->   endif # X86_PLATFORM_DEVICES
->   
->   config P2SB
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 229057234d00..070af05a2064 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -158,6 +158,9 @@ obj-$(CONFIG_SILICOM_PLATFORM)		+= silicom-platform.o
->   # TUXEDO
->   obj-y					+= tuxedo/
->   
-> +# Clevo
-> +obj-$(CONFIG_CLEVO_LAPTOP)		+= clevo-laptop.o
-> +
->   # Winmate
->   obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
->   
-> diff --git a/drivers/platform/x86/clevo-laptop.rs b/drivers/platform/x86/clevo-laptop.rs
-> new file mode 100644
-> index 000000000000..1d862c57b3fe
-> --- /dev/null
-> +++ b/drivers/platform/x86/clevo-laptop.rs
-> @@ -0,0 +1,72 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Clevo Laptop Driver.
-> +//!
-> +//! Currently supports only the 5-step white keyboard backlight on Clevo
-> +//! NLx0AU boards (e.g., Metabox Edge NL57AU).
-> +//!
-> +//! Copyright (C) 2026 Nick Dowsett <nick42d@gmail.com>.
-> +//!
-> +//! Inspired by Tuxedo Computers' drivers.
-> +
-> +use kernel::{
-> +    device,
-> +    dmi,
-> +    prelude::*,
-> +    wmi, //
-> +};
-> +
-> +/// # Note
-> +///
-> +/// This GUID is non-unique (shared by Uniwill for example) and cannot be trusted
-> +/// to uniquely identify a Clevo device.
-> +const CLEVO_WMI_METHOD_GUID: &CStr = c"ABBC0F6D-8EA1-11D1-00A0-C90629100000";
-> +/// DMI board name allowlist, restricted to tested boards since the WMI GUID is not
-> +/// unique.
-> +const SUPPORTED_BOARDS: &[&CStr] = &[c"NLx0AU"];
-> +
-> +module! {
-> +    type: ClevoLaptopModule,
-> +    name: "clevo-laptop",
-> +    authors: ["Nick Dowsett <nick42d@gmail.com>"],
-> +    description: "Clevo Laptop Driver (Keyboard Backlight)",
-> +    license: "GPL",
-> +}
-> +
-> +/// RAII guard for Clevo Laptop Module holding all subsystem drivers e.g WMI.
-> +#[pin_data]
-> +struct ClevoLaptopModule {
-> +    #[pin]
-> +    _wmi_driver: wmi::Registration<WmiDriver>,
-> +}
-> +
-> +impl kernel::InPlaceModule for ClevoLaptopModule {
-> +    fn init(module: &'static ThisModule) -> impl PinInit<Self, Error> {
-> +        pin_init::pin_init_scope(move || {
-> +            if dmi::get_system_info(dmi::Field::BoardName)
-> +                .is_none_or(|board| !SUPPORTED_BOARDS.contains(&board))
+  68a2bfdf7b4d ("leds: mlxreg: Fix missing fan LEDs on systems
+                 reporting a unit count")
 
-We most likely need more complex matching here in the future.
+currently in for-leds-next, so it is queued for the same merge window
+as this series. It teaches mlxreg_led_config() the counter flavour of
+the capability register, mirroring what mlxreg_fan_connect_verify()
+has done since commit 1e11552ee54d ("hwmon: (mlxreg-fan) Add support
+for new flavour of capability register").
 
-Is dmi_system_id table matching available in rust for the linux kernel?
+There is no build or apply dependency between the two. They only have
+to meet in the same release for the LEDs to appear, so this patch
+needs no change for it and the LED table is unchanged in v4.
 
-> +            {
-> +                return Err(ENODEV);
-> +            }
-> +            Ok(try_pin_init!(Self {
-> +                _wmi_driver <- wmi::Registration::new(c"clevo-laptop", module),
-> +            }))
-> +        })
-> +    }
-> +}
-> +
-> +/// RAII guard for Clevo WMI driver holding all subsystem devices e.g LED device.
-> +#[pin_data]
-> +struct WmiDriver {}
-> +
-> +kernel::wmi_device_table!(WMI_TABLE, [wmi::DeviceId::new(CLEVO_WMI_METHOD_GUID)]);
-> +
-> +impl wmi::Driver for WmiDriver {
-> +    type Data<'bound> = WmiDriver;
-> +    const ID_TABLE: wmi::IdTable = &WMI_TABLE;
-> +    fn probe<'bound>(
-> +        _dev: &'bound wmi::Device<device::Core<'_>>,
-> +    ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-> +        try_pin_init!(WmiDriver {})
-> +    }
-> +}
->
+-- 
+Felix
