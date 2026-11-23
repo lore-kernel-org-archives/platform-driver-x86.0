@@ -1,108 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795421315;
-	b=u/wUosvcttJ/uEs/CmPUeRpK+h+onr+U1zSo06qmIzFNjUa1iSDPinTzlepR7eW9qLb0
-	 ic8TgC5j7jPYxZFcavZ/pbT1KF4EzwZml5PHEmWTieS0w9EmoiNqXL69gssuj+3MyjZYh
-	 DTLpUAp1japtJFi0hyPZzwSUQnp1qdRjMR2x6rd9iK2FS4XgpD/0yrmwhQ3Yp20fAjpM+
-	 A+XbTIaP4iLrTf6ZKq5dHWQlQ0ZeSwjOc3zdHX/mRxMDHbqfMhoN1aUyCpMWM+gEHfKo5
-	 PBUb/jeD0yC8pnB9+BpPTC4cOstQuQXPsvx8QB+ulCwNZFHBhWdrChUmpqnWAUIx+aQ==
+	t=1795422431;
+	b=h2weotyJZqijo+2YtRrBVkHfsklVlBEfYYgTdd4bY9bZMK6g32KmyFoqfEgv485gXHxX
+	 2PVGcyRpXokLYfDOlxO6YlNmIRIhC3IS+/SmM1KseVddOJ2rAqtmXF7XpuaMdLkLsBjV0
+	 tV9IP7QQTgeZ1YQOVe6kQ0lsHuZlunzrik5wCE9onykrl6ut0SJ/1BRvAX2euHKgVVFTQ
+	 FHqIic3Y3P9XeqUQ2+fNNIVW9jRTwSkGruY4wIPo15vwk+zvynYwv76RAzmTXEFuKEkt8
+	 UsDIlTC8GmKONtw9o+W5jQdFkK+gDWqFYAwxuLxH0oBYPddHy9nuvGVCAI6s2ANGW1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795421315;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:Received:
-	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Spam-Level:
-	 X-Rspamd-Server:X-Rspamd-Action:X-Spam-Flag:X-Spamd-Result:
-	 X-Spam-Score;
-	bh=8XFStxtIyu/bWdCANZfW2ox1JdG4p0sGe2XRHxMcJOI=;
-	b=daQzAqPnxXuAh1pFT52q53A6fJxaaYQlaBHC6SOz3VrkT1Z/MO0MkkYvCf0zahzkgcpR
-	 qUQ0EsKf5dj+bVxCYD7f3Yi7u24BAbW0w4zwKMprUU6xaI3MDr9c9oyWXScViBf+uBDEh
-	 MJ1zi/Wcj0uMg9HWBKLlJ8me3ksdWY6qZHmUNjLXB/5iJ+aTN0Luj3FarRTK6gr945YHA
-	 N6Wdex9RtAF3dzfIelAaxViut2iV+PlQ5/7B8WRGot9sDmMBYD6x6P1lKA5qQrAeliYCg
-	 6AEhx35PFsYgoTIaGs6kbzfA6HPR09P6+pAW4DvGDGgb0mPGDztXGpPodOEsAT77ykQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795422431;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=iaKJpebPoWiTy3xYOH8r5uGcGdu++drvzYa6KsXjvYI=;
+	b=p0Bll4wqPoNdpIFupUkP0kU73gdc8jST5yK1UzZrbgNuNN3YJIHb3ScN+jRHjv9Bt9uK
+	 BxTio5HuhE+QLKF9yw8MQVUtupAZN6naQ8iNpUW8CFv9fgVEO1yF6k/I0+n8F/yCET+Ez
+	 5AoVJRgsIGp4uc2w2vL1gxF78jaZANj+rLJX0tFHh7Lr0qZglC76x+94PiWmTkg5rERoX
+	 U/XBtFaFZKLYoHr7tShNhkGAc3HsICaFSPfEFHE7y5MYFuiBRfAJVRzg4Olow0JL4n7Yu
+	 X+9BmZprKdZyi71QWIXdEYSDITDAU+fYxJAsmsGmATGgF1qhMGubhpofF2oagIQL0hA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.com;
-	spf=pass smtp.mailfrom=suse.com;
-	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=ujBumtdu;
-	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=ujBumtdu;
-	arc=none smtp.remote-ip=195.135.223.130
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=j3HPGSp4;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E7C606A31A;
-	Mon, 23 Nov 2026 08:08:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A2E7C606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9226F606A31A;
+	Mon, 23 Nov 2026 08:27:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9226F606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=ujBumtdu;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=susede1 header.b=ujBumtdu
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6EE2722091;
-	Mon, 23 Nov 2026 08:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1795421306; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=8XFStxtIyu/bWdCANZfW2ox1JdG4p0sGe2XRHxMcJOI=;
-	b=ujBumtdu5qabRFa2EmZPloprrS6teEXfopGm/yvpXJYyt6wNfXMayH4+fb3exsccFOlZIr
-	BM1l/Dm0zvtd1Be+DIZvinUM9QLsKwWD9ldAKQpAMZ3DJSiyCElSJmvGEv8x9eMnbCoR7Z
-	fvTdcMI9CBnl3MnQrxFh29ojEf/WVJE=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=ujBumtdu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1795421306; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=8XFStxtIyu/bWdCANZfW2ox1JdG4p0sGe2XRHxMcJOI=;
-	b=ujBumtdu5qabRFa2EmZPloprrS6teEXfopGm/yvpXJYyt6wNfXMayH4+fb3exsccFOlZIr
-	BM1l/Dm0zvtd1Be+DIZvinUM9QLsKwWD9ldAKQpAMZ3DJSiyCElSJmvGEv8x9eMnbCoR7Z
-	fvTdcMI9CBnl3MnQrxFh29ojEf/WVJE=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 949B713510;
-	Mon, 23 Nov 2026 08:08:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ezOKG3n0A2u9TwAAD6G6ig
-	(envelope-from <jgross@suse.com>); Mon, 23 Nov 2026 08:08:25 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Tony Luck <tony.luck@intel.com>,
-	Ashok Raj <ashok.raj.linux@gmail.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=j3HPGSp4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795422430; x=1826958430;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WiUTeEmdKlq/QgGj49FvwDtTeW5BpnQOdZls9z+zFNk=;
+  b=j3HPGSp463MCW9Ai3awYHP/6BoRO38jOB3F6c0iUVRGeO8J9gw58pjOK
+   hSGbb81u2FW+03rIk5PTUt8T48bsaSFqdwUvvdb6yufiGZyWL9zvLmGZ8
+   uEsaiLxjKKklzmJs+13NCy9h4AG6klGHrVSVD0Ak4hIICyz5qSCUEDLWa
+   Ya8ep2YPchHQN4jXAI9zHuHFYdUtp5Q+tK345Evws+BdvCyzHZ4i8GiDN
+   8kqxAQg9JhIwhsBzAn4LXDNhYahDJZRjAnEqrfv+HcHDntuYJIq/xoW6x
+   fZLXKNuUEa07LaMLTkJJxOiTmnwxKRI4F5y2q0Nh3ooNT45ZsS953DyK5
+   g==;
+X-CSE-ConnectionGUID: /HdvkTkRRaK3DM3EHTkylg==
+X-CSE-MsgGUID: D0rb60WBTVaaWl59EFh/gg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4108152"
+X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
+   d="scan'208";a="4108152"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 00:26:56 -0800
+X-CSE-ConnectionGUID: MB7dB4WDQ7yF7vVZ4K+IhQ==
+X-CSE-MsgGUID: pHpiAhb6REuVofPLzY441Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
+   d="scan'208";a="11448062"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.204])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 00:26:54 -0800
+Date: Mon, 23 Nov 2026 10:26:51 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	Xi Pardee <xi.pardee@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH] msr: replace rdmsr()/wrmsr() in comments
-Date: Mon, 23 Nov 2026 09:08:22 +0100
-Message-ID: <20261123080822.3426355-1-jgross@suse.com>
-X-Mailer: git-send-email 2.56.0
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/x86/intel/pmc: Do not decode the summary
+ rows in ltr_show
+Message-ID: <awP4y1W38Nd-atua@ashevche-desk.local>
+References: <20261121090614.677144-1-pmenzel@molgen.mpg.de>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -112,182 +83,77 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 6EE2722091
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-10.51 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_CC(0.00)[suse.com,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,lwn.net,linuxfoundation.org,infradead.org,arm.com,google.com,intel.com,linaro.org,roeck-us.net,gmail.com];
-	DKIM_TRACE(0.00)[suse.com:+];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Score: -10.51
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261121090614.677144-1-pmenzel@molgen.mpg.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Replace all mentioning of rdmsr() and wrmsr() in comments with
-rdmsrq() and wrmsrq(), as the former functions are no longer
-existing.
+On Sat, Nov 21, 2026 at 10:06:11AM +0100, Paul Menzel wrote:
+> On an Intel Tiger Lake laptop Dell XPS 13 9310, the first read of
+> `/sys/kernel/debug/pmc_core/ltr_show` after loading the driver logs:
+> 
+>     intel_pmc_core: Invalid LTR scale factor 7 (only 0-5 are valid per PCIe spec)
+> 
+> The value comes from the last row, AGGREGATED_SYSTEM (CNP_PMC_LTR_CUR_ASLT,
+> 0x1b54). In 120 reads over 30 seconds, it read 0x7fffdff, 0x7fffc1f or
+> 0x7fffc23 (117 times), and 0x40201ff or 0x402001f (3 times); another read
+> gave 0x7ffffff. Decoded as an LTR message, the snoop half of the first
+> group has the reserved bits 14:13 set and scale 7, and the second group is
+> CURRENT_PLATFORM (0x40201) shifted left by eight with the low byte filled.
+> So these two PMC registers do not seem to hold the PCIe LTR payload the
+> per-IP rows carry, and decoding them only produces the warning (the decoded
+> value is 0 anyway).
+> 
+> All ltr_show maps end with CURRENT_PLATFORM and AGGREGATED_SYSTEM, which
+> pmc_core_send_ltr_ignore() already relies on. Print only the raw value of
+> these two rows, as for rows without a requirement bit set, and keep the
+> warning for the per-IP rows.
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
-To be applied on top of current core/msr branch of the tip tree.
+> With the change, 200 reads with AGGREGATED_SYSTEM bit 15 set in 199 of them
+> log nothing, and the CNV row is still decoded (0x89fe89fe, 522240 ns).
 
- Documentation/arch/x86/microcode.rst  | 2 +-
- arch/x86/events/amd/ibs.c             | 2 +-
- arch/x86/events/intel/core.c          | 2 +-
- arch/x86/events/intel/lbr.c           | 6 +++---
- arch/x86/include/asm/shared/msr.h     | 2 +-
- arch/x86/kernel/cpu/feat_ctl.c        | 2 +-
- drivers/hwmon/coretemp.c              | 2 +-
- drivers/platform/x86/intel/ifs/load.c | 5 +++--
- 8 files changed, 12 insertions(+), 11 deletions(-)
+This paragraph better to be in the comment block, after '---' line below.
+We will have this information being archived by lore.kernel.org.
 
-diff --git a/Documentation/arch/x86/microcode.rst b/Documentation/arch/x86/microcode.rst
-index b627c6f36bcf..df1fb2c82333 100644
---- a/Documentation/arch/x86/microcode.rst
-+++ b/Documentation/arch/x86/microcode.rst
-@@ -151,7 +151,7 @@ are also treated as fatal by the kernel.
- On certain Intel machines, MCEs are also broadcast to all threads in a
- system. If one thread is in the middle of executing WRMSR, a MCE will be
- taken at the end of the flow. Either way, they will wait for the thread
--performing the wrmsr(0x79) to rendezvous in the MCE handler and shutdown
-+performing the wrmsrq(0x79) to rendezvous in the MCE handler and shutdown
- eventually if any of the threads in the system fail to check in to the
- MCE rendezvous.
- 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index f43949bde19c..2ef0530b6561 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -591,7 +591,7 @@ static void perf_ibs_start(struct perf_event *event, int flags)
- 		 *  o Set VAL bit            CTL2[Dis] = 1
- 		 *  o Raise NMI --.        o ...
- 		 *                 \       o ->start()
--		 *                  \        wrmsr(IBS_{FETCH|OP}_CTL, new value);
-+		 *                  \        wrmsrq(IBS_{FETCH|OP}_CTL, new value);
- 		 *                   \       (wrmsr clears the VAL bit)
- 		 *                    `--> o Receives delayed NMI
- 		 *                           (Unknown NMI since VAL bit is cleared)
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 96bcbf823aec..1b6213ef2ced 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -6963,7 +6963,7 @@ static bool check_msr(unsigned long msr, u64 mask)
- 		return false;
- 
- 	/*
--	 * Quirk only affects validation in wrmsr(), so wrmsrq()'s value
-+	 * Quirk only affects validation in wrmsrq(), so wrmsrq()'s value
- 	 * should equal rdmsrq()'s even with the quirk.
- 	 */
- 	if (val_new != val_tmp)
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index beac04502b73..760d5e465a56 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -222,7 +222,7 @@ enum {
-  * are the TSX flags when TSX is supported, but when TSX is not supported
-  * they have no consistent behavior:
-  *
-- *   - For wrmsr(), bits 61:62 are considered part of the sign extension.
-+ *   - For wrmsrq(), bits 61:62 are considered part of the sign extension.
-  *   - For HW updates (branch captures) bits 61:62 are always OFF and are not
-  *     part of the sign extension.
-  *
-@@ -231,8 +231,8 @@ enum {
-  *   1) LBR format LBR_FORMAT_EIP_FLAGS2
-  *   2) CPU has no TSX support enabled
-  *
-- * ... then any value passed to wrmsr() must be sign extended to 63 bits and any
-- * value from rdmsr() must be converted to have a 61 bits sign extension,
-+ * ... then any value passed to wrmsrq() must be sign extended to 63 bits and
-+ * any value from rdmsrq() must be converted to have a 61 bits sign extension,
-  * ignoring the TSX flags.
-  */
- static inline bool lbr_from_signext_quirk_needed(void)
-diff --git a/arch/x86/include/asm/shared/msr.h b/arch/x86/include/asm/shared/msr.h
-index a20b1c08c99f..c46188ca5403 100644
---- a/arch/x86/include/asm/shared/msr.h
-+++ b/arch/x86/include/asm/shared/msr.h
-@@ -13,7 +13,7 @@ struct msr {
- };
- 
- /*
-- * The kernel proper already defines rdmsr()/wrmsr(), but they are not for the
-+ * The kernel proper already defines rdmsrq()/wrmsrq(), but they are not for the
-  * boot kernel since they rely on tracepoint/exception handling infrastructure
-  * that's not available here.
-  */
-diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
-index 7228fc2bb43e..0c10b1f35270 100644
---- a/arch/x86/kernel/cpu/feat_ctl.c
-+++ b/arch/x86/kernel/cpu/feat_ctl.c
-@@ -36,7 +36,7 @@ static void init_vmx_capabilities(struct cpuinfo_x86 *c)
- 	 * features that can be turned off.  Ignore the allowed-0 settings,
- 	 * if a feature can be turned on then it's supported.
- 	 *
--	 * Use raw rdmsr() for primary processor controls and pin controls MSRs
-+	 * Use raw rdmsrq() for primary processor controls and pin controls MSRs
- 	 * as they exist on any CPU that supports VMX, i.e. we want the WARN if
- 	 * the RDMSR faults.
- 	 */
-diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
-index 96d57fe12de6..83bad446ecc2 100644
---- a/drivers/hwmon/coretemp.c
-+++ b/drivers/hwmon/coretemp.c
-@@ -67,7 +67,7 @@ enum coretemp_attr_index {
-  * @last_updated: The time when the current temperature value was updated
-  *		earlier (in jiffies).
-  * @cpu_core_id: The CPU Core from which temperature values should be read
-- *		This value is passed as "id" field to rdmsr/wrmsr functions.
-+ *		This value is passed as "id" field to rdmsrq/wrmsrq functions.
-  * @status_reg: One of IA32_THERM_STATUS or IA32_PACKAGE_THERM_STATUS,
-  *		from where the temperature values should be read.
-  * @attr_size:  Number of sysfs attributes in this temperature data group.
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 6320a0e45d38..74041a3410c3 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -110,8 +110,9 @@ static void auth_err_message(struct device *dev, u32 err_code)
- /*
-  * To copy scan hashes and authenticate test chunks, the initiating cpu must point
-  * to the EDX:EAX to the test image in linear address.
-- * Run wrmsr(MSR_COPY_SCAN_HASHES) for scan hash copy and run wrmsr(MSR_AUTHENTICATE_AND_COPY_CHUNK)
-- * for scan hash copy and test chunk authentication.
-+ * Run wrmsrq(MSR_COPY_SCAN_HASHES) for scan hash copy and run
-+ * wrmsrq(MSR_AUTHENTICATE_AND_COPY_CHUNK) for scan hash copy and test chunk
-+ * authentication.
-  */
- static void copy_hashes_authenticate_chunks(struct work_struct *work)
- {
+> Fixes: 8122e7cd806d ("platform/x86: intel_pmc_core: Decode Snoop / Non Snoop LTR")
+> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> ---
+> 
+> Notes:
+>     Claude Code (claude-opus-5-5) helped analyse the register values, write
+>     the patch, and test it on the Dell XPS 13 9310.
+
+>  drivers/platform/x86/intel/pmc/core.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+
+...
+
+> +/*
+> + * Every ltr_show map ends with CURRENT_PLATFORM and AGGREGATED_SYSTEM. Unlike
+> + * the per-IP rows, these PMC registers do not hold an LTR message payload as
+> + * defined by PCIe; on Tiger Lake, for example, AGGREGATED_SYSTEM has the
+> + * reserved bits 14:13 set and reads 0x7fffdff. Do not decode them.
+> + */
+> +static bool pmc_core_ltr_is_summary(const struct pmc_bit_map *map,
+> +				    unsigned int index)
+> +{
+> +	return !map[index + 1].name || !map[index + 2].name;
+
+How do we know that the index is not out-of-boundary?
+
+> +}
+
+...
+
+>  		for (index = 0; map[index].name; index++) {
+>  			bool ltr_ign_data;
+> +			bool summary = pmc_core_ltr_is_summary(map, index);
+
+Same question and keep this to be in reversed xmas tree order.
+
 -- 
-2.56.0
+With Best Regards,
+Andy Shevchenko
+
 
