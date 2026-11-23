@@ -1,75 +1,75 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795434979;
-	b=lqzIyhR30/08atIPVZhqdtRJmDQb5GO4X4q2xdYosDINFqsFhUjYLMHwAbWdNMUemoAf
-	 wn45bSPMRDK56BOBEbjTgX4Ilm4Y+uBuBFkH+IxswY3SHHQZCrJABSQ4yDtjjtWZi1FSU
-	 G6an1/XNQz4on+DIxUWU8KwjX1nKGa6n8UBSrPCvLpoc2CjV3iIyQma5+eF3PteZxtV7I
-	 X4bhRr2fPOHMN79KaNOiJ5L4Dmv4f2D/9Hw3YI90Oh/boPu1ZXjoAR8lbnNCLxCHtpVen
-	 1ZAWmNfmT4aYlnf4FIk0MiVKZ9Sb6OXO0WXvW6r43bByvugKjcMDW3J4kW2q7d08wQw==
+	t=1795435155;
+	b=nvqH3Pf4PNDiIfvZp+FtiZQxi9fkCYuLaMyPrP1FJNJe0MJl2faehejeOzO9p4fQZ+si
+	 8zrISyGoIp5IQMEMLw+glGN4ngY7+JvWBjbc6zSpA7GWyZ0pcVo2dUK3eD8LJvepDtI9e
+	 wsupDWGYy+wYArX7oki2XCAWyd7tzmIFQWJje1P31BPSl7fi0ubrVr21ya+M+0vSfQOIn
+	 pA9kBVl4ofwHyzE7U7UwMHc1+ywal5aODNlKuKqLTJnWA+DLv7KQXZHNSoYOT6jSjIQbh
+	 kEeYgKuIaFrxjiSEkxujIHl9U9ILZKLT95DUyntxn/nKlgm9CzJIdde85t+RMgQZtCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795434979;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795435155;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
 	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=erJS+WwhMzT0wh3HanYAg8PFawrNriJEWp/57t3Aquc=;
-	b=ZRtlRw1qmf7xQ+4VB0ZY+ht1WCuixC1O8C45PO/uZF9GAmki7uDNeUsZnAxNmK6E0QdB
-	 C2GtF0ochiBVI5ZSAo+teFKRpVHF1E0E++oZFNpyv02Y+OdR7Y6OzwlNynujiiMI89yEH
-	 yRlTNECxk7hcnQjnEQqu0PF4snEw65YG8sj/Vcfwoc5scOzVJxQ4vh+e07LX8rQzyP16B
-	 9I4/UaduuK+aixabU2K1MqC2LcCYhiGF50NMrmrWfP3dJc248l/z/ICdxwegNxnY/rYIl
-	 +FHogJJO05TrJ7B0kvYgFzrXbniJ35MNvDu4P9kgUULEet4ve6L2xwD9GD/jGSE2nVQ==
+	bh=vCHHL8GtZxUcBgElveCjjiFk0Z1GDSoAFMR2e2tq3JI=;
+	b=R+5HhqbPar2gyq9/FvSfz28oIjCw43iM9quLq+VqzPKJyGdWInsWs7lEUdFqP9caNEHy
+	 mMi93BQPr3sSiM6rJXagNeVRJL8iWc4BuQtaxm8DX7KWjgOko/+gkmkDTl60dYn7VThwn
+	 2+49tkrgwmpUlkEqQsOMs+JWK8yiB2bxHi4pd8mFmaUfcYs3hl8N+lfS6Y9yr3vcmjy+Z
+	 EhJZkYOYhUgAdJe8rIjNc4zhG/v6u5ZMc17ewFU04TxeCtOvSMf2yyoPJ0Suk5u04i8OV
+	 F5Du9CVk8qYr4JJwT2Svvt8c9zM9P+8eHNJj3K6WsYCn26uDRHkGklpXpk6o9KXWg7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C3kRfv1s;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TFpUFl1W;
 	arc=none smtp.remote-ip=198.175.65.17
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59341606A31A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 11:56:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59341606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC56C606A32C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 11:59:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CC56C606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C3kRfv1s
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TFpUFl1W
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795434980; x=1826970980;
+  t=1795435155; x=1826971155;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=0aHtNrdfF/sedCqq6OxZ2RqUqx7gMrTP4gyGZQ/Mb+0=;
-  b=C3kRfv1s/XshlvTtPEI6MHbbIREjlGRzmSr+OfDae+OkJcAhCZVNV+3n
-   Lw6JU6O5kfIPl3epQ5LOXYMe1Ye4xD37WBkc7VE9fFCoMbb886Yz0/ivc
-   KdvkO/5ZkQj9477sNrpWi5Nehell6IyNDlRnPHHhzFpFraBO5NOdzS1GS
-   gU7L5dDEiWk0Cs/yfn66i+KEsFIUUfWiUoqiScG9qDlF1rzdQAZ8SY9Iq
-   fXmQjYVL2VJ+kOTITfZQPBAxucuzOrUBFR+jUdgUx/DItZK+c444m88Py
-   n87nAhk6ihR8GZE7I95uOJcyQSKylitNOx6VId24rENz3mFchIRaThqHD
-   g==;
-X-CSE-ConnectionGUID: DX0YLPF/SWSRlo6IzvQ1Fg==
-X-CSE-MsgGUID: aUjF4llpS0KkEzn5ME1L5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4251541"
+  bh=jCDYA0CNTZQGQQOmOwup7KXAqLwzr4Kg8soDwUgu1HI=;
+  b=TFpUFl1Wsi1oddxQku7bCyoVEoNTMrjsGKrJTdCXB+b+SACXvBEVT/NG
+   O5GSDWJUGNTgYdv9n3MX49UF2MFWh5lqf+VC5BYXZWKODAjnlsz6volhy
+   8/vlh/ff/p8v2SqIGL75pjjWK5TAS7fLVIN7TlmMGmATasPxqocx/FA35
+   346LogXW01HWS/54aQKnZvq6DrOzzxD27+N367wh9aRpT7jnP2wLjr3Qh
+   g5g2Aqe8/3Qo9IAuT4e4Oe68wfkXn62/T4GDi95BMEA6iLKZMw8iDGCYk
+   G+et+2doIzjYOEXUlndtp8Iu2YJBtrL0b8n3iQ3k8V/ih1vHwFMoMecjn
+   w==;
+X-CSE-ConnectionGUID: C4uB2hVFTrKpHFvxXwFL4g==
+X-CSE-MsgGUID: 0kRUNVVjQgezp+2RDTEAEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4251677"
 X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="4251541"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:56:19 -0800
-X-CSE-ConnectionGUID: QBTiVHkEQ/K0K4bvspUIEA==
-X-CSE-MsgGUID: jGSrX8gpS4iyZbrya9T19g==
+   d="scan'208";a="4251677"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:59:15 -0800
+X-CSE-ConnectionGUID: G4UV9MbOSZ+awukjlmeRSA==
+X-CSE-MsgGUID: QDLJ8X1DQNCM8c3E1ibT6g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="11220188"
+   d="scan'208";a="11379646"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:56:17 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:59:12 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Nov 2026 13:56:13 +0200 (EET)
+Date: Mon, 23 Nov 2026 13:59:09 +0200 (EET)
 To: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
-cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
-    Suma.Hegde@amd.com, NaveenKrishna.Chatradhi@amd.com
-Subject: Re: [PATCH 19/26] platform/x86/amd/hsmp: Add cclk_floor_limit sysfs
- file
-In-Reply-To: <48c77463a94a754dc700365f617f79ccbdf5f5fb.1793602633.git.Muthusamy.Ramalingam@amd.com>
-Message-ID: <91521140-c12d-e0f6-9912-859cef4611a4@linux.intel.com>
-References: <cover.1793602633.git.Muthusamy.Ramalingam@amd.com> <48c77463a94a754dc700365f617f79ccbdf5f5fb.1793602633.git.Muthusamy.Ramalingam@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Suma.Hegde@amd.com, 
+    NaveenKrishna.Chatradhi@amd.com
+Subject: Re: [PATCH 00/26] platform/x86/amd/hsmp: Extend socket and per-CPU
+ sysfs
+In-Reply-To: <cover.1793602633.git.Muthusamy.Ramalingam@amd.com>
+Message-ID: <56a6c02d-e68b-2cb8-a83c-ca8679bc5a4f@linux.intel.com>
+References: <cover.1793602633.git.Muthusamy.Ramalingam@amd.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,159 +83,63 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Mon, 2 Nov 2026, Muthusamy Ramalingam wrote:
 
-> Expose HSMP_SET_GET_FLOOR_LIMIT as a write-only socket file on both the
-> ACPI and platform drivers. A write uses operation 01 and sets the floor
-> for every core on the socket. The frequency is a 16-bit MHz field.
+> This series extends the AMD HSMP sysfs interface on both the ACPI and
+> platform drivers. It starts with socket attribute naming cleanup and a
+> parser-friendly store error helper, then adds the remaining
+> message-backed socket and per-CPU attributes used on server platforms.
 > 
-> Co-developed-by: Suma Hegde <Suma.Hegde@amd.com>
-> Signed-off-by: Suma Hegde <Suma.Hegde@amd.com>
-> Signed-off-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
-> ---
->  Documentation/arch/x86/amd_hsmp.rst   |  2 ++
->  drivers/platform/x86/amd/hsmp/acpi.c  |  3 ++
->  drivers/platform/x86/amd/hsmp/plat.c  |  3 ++
->  drivers/platform/x86/amd/hsmp/sysfs.c | 47 +++++++++++++++++++++++++--
->  drivers/platform/x86/amd/hsmp/sysfs.h |  3 ++
->  5 files changed, 56 insertions(+), 2 deletions(-)
+> Later patches cover link/bandwidth, DIMM, SVI3, power-efficiency, and
+> per-CPU files. Attribute visibility follows the enabled-message bitmaps.
+> Probe-time discovery for optional DIMM/IO/xGMI hardware is quieted so
+> expected firmware misses do not flood dmesg.
 > 
-> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-> index 093468aa52eb2..30401c168c503 100644
-> --- a/Documentation/arch/x86/amd_hsmp.rst
-> +++ b/Documentation/arch/x86/amd_hsmp.rst
-> @@ -189,6 +189,8 @@ write-only when the platform enables only that direction of the message.
->  * socket_power_limit_max: Maximum socket power limit in mWatts (read only).
->  * cclk_boost_limit: Socket boost limit in MHz (write only). Accepted range
->    is 100-10000 MHz.
-> +* cclk_floor_limit: Socket floor limit in MHz (write only). A write sets
-> +  the floor for every core on the socket. It is a 16-bit value.
->  * tdelta: Socket thermal behaviour (read only).
->  * apb_disable: Read/write. 1 disables APB, 0 enables it.
->  * dfc_enable: Read/write DF C-state enable. 1 enables, 0 disables.
-> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index 935cca42b642b..35c2085b67e42 100644
-> --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -666,6 +666,8 @@ HSMP_SYS_ATTR(svi3_max_temperature, svi3_max_temperature, 0444,
->  	      HSMP_GET_SVI3_VR_CTRL_TEMP, HSMP_GET_SVI3_VR_CTRL_TEMP);
->  HSMP_DEV_ATTR_W(cclk_boost_limit, HSMP_SET_BOOST_LIMIT_SOCKET,
->  		hsmp_cclk_boost_limit_store, 0200);
-> +HSMP_DEV_ATTR_W(cclk_floor_limit, HSMP_SET_GET_FLOOR_LIMIT,
-> +		hsmp_cclk_floor_limit_store, 0200);
->  HSMP_DEV_ATTR_RW(apb_disable, HSMP_SET_DF_PSTATE, HSMP_SET_DF_PSTATE,
->  		 hsmp_apb_disable_show, hsmp_apb_disable_store, 0644);
->  HSMP_DEV_ATTR_RW(dfc_enable, HSMP_DFC_ENABLE_CTRL, HSMP_DFC_ENABLE_CTRL,
-> @@ -832,6 +834,7 @@ static struct attribute *hsmp_dev_attr_list[] = {
->  	&hattr_dimm_sb_set.dattr.attr,
->  	&hattr_socket_power.dattr.attr,
->  	&hattr_cclk_boost_limit.dattr.attr,
-> +	&hattr_cclk_floor_limit.dattr.attr,
->  	&hattr_tdelta.dattr.attr,
->  	&hattr_apb_disable.dattr.attr,
->  	&hattr_cc6_enable.dattr.attr,
-> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index 2c6d460c56d3a..aedc71027b28c 100644
-> --- a/drivers/platform/x86/amd/hsmp/plat.c
-> +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -1862,6 +1862,8 @@ HSMP_DEV_ATTR_X8(socket_power, HSMP_GET_SOCKET_POWER, hsmp_msg_resp32_show,
->  		 0444);
->  HSMP_DEV_ATTR_W_X8(cclk_boost_limit, HSMP_SET_BOOST_LIMIT_SOCKET,
->  		   hsmp_cclk_boost_limit_store, 0200);
-> +HSMP_DEV_ATTR_W_X8(cclk_floor_limit, HSMP_SET_GET_FLOOR_LIMIT,
-> +		   hsmp_cclk_floor_limit_store, 0200);
->  HSMP_DEV_ATTR_X8(tdelta, HSMP_READ_TDELTA, hsmp_msg_resp32_show, 0444);
->  HSMP_DEV_ATTR_RW_X8(apb_disable, HSMP_SET_DF_PSTATE, HSMP_SET_DF_PSTATE,
->  		    hsmp_apb_disable_show, hsmp_apb_disable_store, 0644);
-> @@ -1906,6 +1908,7 @@ static struct attribute _name[] = {					       \
->  	&hattr_dimm_sb_set##_sock_ind.dattr.attr,			       \
->  	&hattr_socket_power##_sock_ind.dattr.attr,			       \
->  	&hattr_cclk_boost_limit##_sock_ind.dattr.attr,		       \
-> +	&hattr_cclk_floor_limit##_sock_ind.dattr.attr,		       \
->  	&hattr_tdelta##_sock_ind.dattr.attr,				       \
->  	&hattr_apb_disable##_sock_ind.dattr.attr,			       \
->  	&hattr_cc6_enable##_sock_ind.dattr.attr,			       \
-> diff --git a/drivers/platform/x86/amd/hsmp/sysfs.c b/drivers/platform/x86/amd/hsmp/sysfs.c
-> index 8fe67421ef6fc..8872f63e218df 100644
-> --- a/drivers/platform/x86/amd/hsmp/sysfs.c
-> +++ b/drivers/platform/x86/amd/hsmp/sysfs.c
-> @@ -560,6 +560,48 @@ ssize_t hsmp_cclk_boost_limit_store(struct device *dev,
->  	return count;
->  }
->  
-> +ssize_t hsmp_cclk_floor_limit_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_message msg = {};
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret) {
-> +		hsmp_err(dev, "cclk_floor_limit", HSMP_ERR_PARSE, "unit=MHz");
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * Op 01 sets the floor for every core on the socket. The frequency
-> +	 * is a 16-bit MHz field. Firmware clamps it to the platform minimum
-> +	 * and maximum, so reject only a field overflow.
-> +	 */
-> +	if (val > U16_MAX) {
-> +		hsmp_err(dev, "cclk_floor_limit", HSMP_ERR_RANGE,
-> +			 "got=%lu valid=0-%u unit=MHz", val, U16_MAX);
-> +		return -EINVAL;
-> +	}
-> +
-> +	msg.msg_id = HSMP_SET_GET_FLOOR_LIMIT;
-> +	msg.sock_ind = hsmp_sysfs_sock_ind(dev, hattr);
-> +	msg.num_args = 1;
-> +	msg.response_sz = 0;
-> +	msg.args[0] = BIT(30) | val;
+> The series ends with socket_temperature (HSMP_GET_TEMP_MONITOR).
+> 
+> 
+> Muthusamy Ramalingam (26):
+>   platform/x86/amd/hsmp: Drop _input from socket sysfs names
+>   platform/x86/amd/hsmp: Rename clk_fmax and clk_fmin sysfs files
+>   platform/x86/amd/hsmp: Add hsmp_err helper for parser-friendly store
+>     errors
+>   platform/x86/amd/hsmp: Treat socket_power_limit as firmware-clamped
+>   platform/x86/amd/hsmp: Print protocol_version as hexadecimal
+>   platform/x86/amd/hsmp: Add sdps_limit sysfs file
+>   platform/x86/amd/hsmp: Add df_pstate_range sysfs file
+>   platform/x86/amd/hsmp: Add xgmi_width sysfs file
+>   platform/x86/amd/hsmp: Add gmi3_link_width sysfs file
+>   platform/x86/amd/hsmp: Add pcie_link_rate sysfs file
+>   platform/x86/amd/hsmp: Add lclk DPM sysfs files
+>   platform/x86/amd/hsmp: Add io_bw and xgmi_bw sysfs files
+>   platform/x86/amd/hsmp: Add DIMM sideband sysfs files
+>   platform/x86/amd/hsmp: Add per-CPU floor limit sysfs files
+>   platform/x86/amd/hsmp: Add metric_version sysfs file
+>   platform/x86/amd/hsmp: Add enabled command sysfs files
+>   platform/x86/amd/hsmp: Add DIMM power and temperature sysfs files
+>   platform/x86/amd/hsmp: Add SVI3 temperature sysfs files
+>   platform/x86/amd/hsmp: Add cclk_floor_limit sysfs file
+>   platform/x86/amd/hsmp: Add xgmi_pstate_range sysfs file
+>   platform/x86/amd/hsmp: Quiet probe-time firmware status dmesg spam
+>   platform/x86/amd/hsmp: Add powereff_mode sysfs file
+>   platform/x86/amd/hsmp: Add svi_power sysfs file
+>   platform/x86/amd/hsmp: Add per-CPU ccd_power sysfs file
+>   platform/x86/amd/hsmp: Add per-CPU freq_limit sysfs file
+>   platform/x86/amd/hsmp: Add socket_temperature sysfs file
+> 
+>  Documentation/arch/x86/amd_hsmp.rst   |  116 +-
+>  arch/x86/include/asm/amd/hsmp.h       |    7 +
+>  arch/x86/include/uapi/asm/amd_hsmp.h  |   11 +-
+>  drivers/platform/x86/amd/hsmp/acpi.c  |  645 ++++++-
+>  drivers/platform/x86/amd/hsmp/hsmp.c  |  298 +++-
+>  drivers/platform/x86/amd/hsmp/hsmp.h  |   31 +
+>  drivers/platform/x86/amd/hsmp/plat.c  | 2346 +++++++++++++++++++++++--
+>  drivers/platform/x86/amd/hsmp/sysfs.c | 1858 +++++++++++++++++++-
+>  drivers/platform/x86/amd/hsmp/sysfs.h |  116 +-
+>  9 files changed, 5260 insertions(+), 168 deletions(-)
+> 
+> This series is rebased on top of https://lore.kernel.org/platform-driver-x86/20261014111430.23156-1-suma.hegde@amd.com/T/#t
 
-Is this mistyped GET ?
-
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret) {
-> +		hsmp_err(dev, "cclk_floor_limit", HSMP_ERR_HW,
-> +			 "val=%lu unit=MHz rc=%d", val, ret);
-> +		return ret;
-> +	}
-> +
-> +	return count;
-> +}
-> +
->  /* APB disable show function - reads current APB enable/disable status */
->  ssize_t hsmp_apb_disable_show(struct device *dev,
->  			      struct device_attribute *attr,
-> @@ -1909,8 +1951,9 @@ static struct hsmp_cpu_info *hsmp_cpu_from_kobj(struct kobject *kobj)
->  /*
->   * HSMP_SET_GET_FLOOR_LIMIT args[0]:
->   * op[31:30] + apic id[27:16] + floor frequency MHz[15:0].
-> - * op 0 sets the per-core floor, op 2 reads it, op 3 reads the
-> - * effective floor. The frequency field is reserved on a get.
-> + * op 0 sets the per-core floor, op 1 sets every core on the socket,
-> + * op 2 reads the per-core floor, and op 3 reads the effective floor.
-> + * The frequency field is reserved on a get.
->   */
->  static u32 hsmp_floor_arg(u32 op, u32 apic_id, u32 mhz)
->  {
-> diff --git a/drivers/platform/x86/amd/hsmp/sysfs.h b/drivers/platform/x86/amd/hsmp/sysfs.h
-> index 716d9e4493a1b..8d3a9021ef18e 100644
-> --- a/drivers/platform/x86/amd/hsmp/sysfs.h
-> +++ b/drivers/platform/x86/amd/hsmp/sysfs.h
-> @@ -112,6 +112,9 @@ ssize_t hsmp_rail_iso_freq_policy_store(struct device *dev,
->  ssize_t hsmp_cclk_boost_limit_store(struct device *dev,
->  				       struct device_attribute *attr,
->  				       const char *buf, size_t count);
-> +ssize_t hsmp_cclk_floor_limit_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count);
->  ssize_t hsmp_apb_disable_show(struct device *dev, struct device_attribute *attr,
->  			      char *buf);
->  ssize_t hsmp_apb_disable_store(struct device *dev, struct device_attribute *attr,
-> 
+Similar problems were repeated in a large number of patches, please fix 
+them all even if I didn't end up marking them all.
 
 -- 
  i.
