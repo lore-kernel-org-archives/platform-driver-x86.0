@@ -1,74 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795433732;
-	b=4rpXyEzY/hfYr/GinstUDFUMpqUAQH4DgRXg0deRIQtpq+RbLJSeUJvAx1QtLUqZ2UZe
-	 a3M2fZMRrj7JGIpV0GhyneqSqkgXlK8ku3QH7J0C6cLrov60RZHWxTXkvdYQ0s5d3y39R
-	 T4+IUk0uHTu7kQpFGCy++RMQu9OOwBrQRFfhOTpB6iYfr7sG+Udoic8MFhbvbF+Y0DAKC
-	 up4Eg5kF2uATy/65lla8wA1au0pAZ28XKM6LWFNq+CexCEkAQ5gHCadrjeHLMhbU6ZiAF
-	 ZSdLGtyWauYW1ocq4MjfE5ElPSH9Wf9dtsMBQyeGOTTS/Md7DUIKtE0LGZMZfujLdOg==
+	t=1795433796;
+	b=exFG+U9ueGtFeIxhFgd5AV1RmBQTI9hyvKLpV4anCRHNSWScSu0NyJVmUSTjffoSrFmH
+	 1te5tpX94WMsSQPvjcxKdY+v9PJTBNpmXi3VnoVvbGoKinuB5pplo5syrfmA8W/XwWV3Y
+	 ot8gWUf2U99qWTdirn1geYu9jOXpSj/RpDKZlQDuNx4A8Q8RF1wcaruKiGxLUtGyBW6jf
+	 nzABB4BA2ccYj1f3rXp6qGHTvHg9Y7bspUNqrmJxbOwLyOu5JYuz8Ifn/VjvQYQfBQ7q1
+	 E2Nf2FtYGttUl/eaZUIHI7Wk+WzUoc9OhDFv/vcJEzU8dxy0UJjrodcP7pZ0T9Gb3zA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795433732;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795433796;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
 	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=QRnMCivR4v5kyJzcxPn+FgtOW/7wyaAl3UH5BD3U1Nc=;
-	b=Fq2+eq97WSaUwAwUxckDxIRnl8pk2gofSfSvDS8W359PBqqufRCao37lH/jx10wSSCAp
-	 cgDUup2JnFOR6h4EiAO1DJVFfO8Yc7v8IkdH3v7v7pIVzojHFnF0tSiMvY7IzxLKxp+/n
-	 x4qhs1+skPZ6hAEhQbTAzQkr0DNypnA2jNyHkNgHEkOUM2mHimiPOlbFGvKeGULdKDFWo
-	 QnW+nORGFf23AqTT8bQJfNW5Q6cvDgslWisantuNf67fUskNRpRdI65aAD10vSg6+u3Dj
-	 EIJjIijSnFV3ipbD/FwDOHpDL0G1bLonxYW0o9ZSnRL4AVuGT7tA+2JPLEglpvhk5Jw==
+	bh=p2yackOVtXVBuNZ33IwauMILS5krDqJSWVl5MUjlJlQ=;
+	b=0BoIyxNlhtIawFmwTckOjTzdovdywI/SXvUzWse8EfU4X7i+aS07KGfZD1e3jFB0xVBa
+	 Bkq9gb+30GqU5DqUl547QvQCLb8swf2OsTQDUjLJ3ibJJcl21fE4rZJcygvcXOVpel0Z2
+	 WhRKk2x885slwsOAivnDwbSto/4nhEWT0u4DD2PWALvzNjDf+yRZsFpPuedOnPx+izgl2
+	 pV7tmpa7XulZyVYKxjo7Ly/Wx4NJO3/RXCuYHOJAR4Bkif4A6qxxj5n7Fg3GQ7CAiU8Bn
+	 L80xwbomGyzmobP+mRHkW/2yT17lXns4rRu4u04SO1MSlqHnYIOt6jlF2ZVEFE+tQ9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IvnQw+Zt;
-	arc=none smtp.remote-ip=192.198.163.10
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="XxE0Ur5/";
+	arc=none smtp.remote-ip=192.198.163.15
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDC8606A31E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 11:35:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3CDC8606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB416606A31E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 11:36:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DB416606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IvnQw+Zt
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XxE0Ur5/
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795433733; x=1826969733;
+  t=1795433796; x=1826969796;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=m5BhJM2HKtAeU7ApvzSoEDdHApe9m8hGttUSWV4IbnA=;
-  b=IvnQw+Zt6iAtGAPCMR6koxNfh+TF3ObzLtvnRgkGK8GIEK4+mrIk6uVI
-   uKPwMga/zoCuX/VPLDAWZqTz5Lx3X/+hSMSMFD8c87YMFIIp0yLie8qyX
-   qyB/tRt2UzIN7yg5zEA8hzOFM1NT0KOjvBS6MzjGPq+4gEKq58audtEfb
-   BsfhMUGglECsOtWILNaKA3KeU4i+o7nrM5MFBZbg+coJkmFusqfuFZn8k
-   M99qW+JU+mc+WlX3yfLFj4hY/PmTDdDRyJ0U/C8Ni3RCZIPJMReh6gdZD
-   m7F1P6ThIth707iNryX3OE0GJUAI7ebZ6Y5rT2afieRGnQaaXntjxNHf1
-   w==;
-X-CSE-ConnectionGUID: 3N5jxG+FT+CieCV9WQkq9Q==
-X-CSE-MsgGUID: j5I9QveSR8qNbNADvoL1oA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4111502"
+  bh=0ZdZ5V6aq/JPKsVJv2Ym0QjrIwr3t0e3o1UfnrLB5/g=;
+  b=XxE0Ur5/o7d2CwLK6z1AYLQpBFWoaCnq1nAvOtbp4jxsiFdGZnO8UptV
+   jWsZblGWLe3IU8vFxEHoNAwe0fxJQ9wkUD/peXQjtM3YuP7DyRvHZjMl8
+   +PzN50JxobLSgjL9Z25l/B0G8DMg2yrXyW7kqWz6D9u+1mwZD42UAkZcB
+   H5yJJBmJzwhqhw8XnmoP1GaUHKzgzwJ7uOn+yNtjvWqttpgPQ9awlvFZk
+   7L+s8BBZdSu9yRxdGF1K7YDt57lMDW2jFwbd7W7lTfsJd2ayK3XqUUp1O
+   HxarYUrK21R0iUD7k4xr9sGyk5/Swf2bzaijvE11wWhyON/h3whS+mspn
+   Q==;
+X-CSE-ConnectionGUID: d9FkYPhuROq1O9hynDzwIA==
+X-CSE-MsgGUID: 0Kglpm3nSrWejiumo6Xprw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4219503"
 X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="4111502"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:35:32 -0800
-X-CSE-ConnectionGUID: 5GM2mUFkRMy3NhbN98K0lg==
-X-CSE-MsgGUID: ZqSbQgrmTBGkLuvJgdc+sw==
+   d="scan'208";a="4219503"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:36:36 -0800
+X-CSE-ConnectionGUID: Re9bNQGESteBaLHnMYgTOg==
+X-CSE-MsgGUID: WQKEPeETRR+BhL/NdWroOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
-   d="scan'208";a="11475024"
+   d="scan'208";a="11697289"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:35:30 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:36:30 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Nov 2026 13:35:26 +0200 (EET)
+Date: Mon, 23 Nov 2026 13:36:26 +0200 (EET)
 To: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
 cc: platform-driver-x86@vger.kernel.org, Suma.Hegde@amd.com, 
     NaveenKrishna.Chatradhi@amd.com
-Subject: Re: [PATCH 08/26] platform/x86/amd/hsmp: Add xgmi_width sysfs file
-In-Reply-To: <cdaa48d5e1d276de212ead62d9ddcc7316411d15.1793602633.git.Muthusamy.Ramalingam@amd.com>
-Message-ID: <69c9f6ce-7927-4ee2-ab68-0f0d3a17ead1@linux.intel.com>
-References: <cover.1793602633.git.Muthusamy.Ramalingam@amd.com> <cdaa48d5e1d276de212ead62d9ddcc7316411d15.1793602633.git.Muthusamy.Ramalingam@amd.com>
+Subject: Re: [PATCH 01/26] platform/x86/amd/hsmp: Drop _input from socket
+ sysfs names
+In-Reply-To: <129415f212369a0581b48c1992191c0fb61b4a0d.1793602633.git.Muthusamy.Ramalingam@amd.com>
+Message-ID: <eed1215c-533a-c2d0-60f7-099052ab2a77@linux.intel.com>
+References: <cover.1793602633.git.Muthusamy.Ramalingam@amd.com> <129415f212369a0581b48c1992191c0fb61b4a0d.1793602633.git.Muthusamy.Ramalingam@amd.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,209 +83,252 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Mon, 2 Nov 2026, Muthusamy Ramalingam wrote:
 
-> Add a read/write socket file for the xGMI link-width range on both the
-> ACPI and platform drivers.
-> 
-> Read and write are differentiated by bit 31. Setting the bit selects a
-> read, and resetting it selects a write. A read returns the minimum and
-> maximum widths. A write takes "min max", with the minimum in bits
-> [15:8] and the maximum in bits [7:0]. 0 is x4, 1 is x8, and 2 is x16.
-> Each value is an 8-bit field. Extra arguments are rejected. Firmware
-> rejects an unsupported width.
-> 
+> These socket files are not hwmon attributes. Name them for the value
+> they report.
+>
 > Co-developed-by: Suma Hegde <Suma.Hegde@amd.com>
 > Signed-off-by: Suma Hegde <Suma.Hegde@amd.com>
 > Signed-off-by: Muthusamy Ramalingam <Muthusamy.Ramalingam@amd.com>
 > ---
->  Documentation/arch/x86/amd_hsmp.rst   |  3 +
->  drivers/platform/x86/amd/hsmp/acpi.c  |  3 +
->  drivers/platform/x86/amd/hsmp/plat.c  |  4 ++
->  drivers/platform/x86/amd/hsmp/sysfs.c | 79 +++++++++++++++++++++++++++
->  drivers/platform/x86/amd/hsmp/sysfs.h |  4 ++
->  5 files changed, 93 insertions(+)
+>  Documentation/arch/x86/amd_hsmp.rst  |  12 +--
+>  drivers/platform/x86/amd/hsmp/acpi.c |  24 +++---
+>  drivers/platform/x86/amd/hsmp/plat.c | 112 +++++++++++++--------------
+>  3 files changed, 74 insertions(+), 74 deletions(-)
 > 
 > diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-> index 694997308ffa9..134c94e71b006 100644
+> index bd29ab9dd2385..6384935e7fe16 100644
 > --- a/Documentation/arch/x86/amd_hsmp.rst
 > +++ b/Documentation/arch/x86/amd_hsmp.rst
-> @@ -122,6 +122,9 @@ write-only when the platform enables only that direction of the message.
->  * df_pstate_range: Read/write DF P-state range as "min max". Each value
->    is an 8-bit field. 0 is the highest performance. Extra arguments are
->    rejected. Firmware rejects unsupported P-states.
-> +* xgmi_width: Read/write xGMI link width range as "min max".
-> +  0 is x4, 1 is x8, and 2 is x16. Each value is an 8-bit field.
-> +  Extra arguments are rejected. Firmware rejects unsupported widths.
->  * socket_power_limit_max: Maximum socket power limit in mWatts (read only).
->  * cclk_boost_limit: Socket boost limit in MHz (write only). Accepted range
->    is 100-10000 MHz.
+> @@ -97,19 +97,19 @@ directory under amd_hsmp/socket/.
+>  A file that is normally readable and writable is created read-only or
+>  write-only when the platform enables only that direction of the message.
+>  
+> -* c0_residency_input: Percentage of cores in C0 state.
+> +* c0_residency: Percentage of cores in C0 state.
+>  * prochot_status: Reports 1 if the processor is at thermal threshold value,
+>    0 otherwise.
+>  * smu_fw_version: SMU firmware version.
+>  * protocol_version: HSMP interface version.
+>  * ddr_max_bw: Theoretical maximum DDR bandwidth in GB/s.
+> -* ddr_utilised_bw_input: Current utilized DDR bandwidth in GB/s.
+> -* ddr_utilised_bw_perc_input(%): Percentage of current utilized DDR bandwidth.
+> -* mclk_input: Memory clock in MHz.
+> -* fclk_input: Fabric clock in MHz.
+> +* ddr_utilised_bw: Current utilized DDR bandwidth in GB/s.
+> +* ddr_utilised_bw_perc: Percentage of current utilized DDR bandwidth.
+> +* mclk: Memory clock in MHz.
+> +* fclk: Fabric clock in MHz.
+>  * clk_fmax: Maximum frequency of socket in MHz.
+>  * clk_fmin: Minimum frequency of socket in MHz.
+> -* cclk_freq_limit_input: Core clock frequency limit per socket in MHz.
+> +* cclk_freq_limit: Core clock frequency limit per socket in MHz.
+>  * pwr_current_active_freq_limit: Current active frequency limit of socket
+>    in MHz.
+>  * pwr_current_active_freq_limit_source: Source of current active frequency
 > diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index 417fca04a722f..4f4170d191850 100644
+> index 9da4d9fb88be2..d7a7c40e40ccf 100644
 > --- a/drivers/platform/x86/amd/hsmp/acpi.c
 > +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -541,6 +541,8 @@ HSMP_DEV_ATTR_RW(sdps_limit, HSMP_SDPS_LIMIT, HSMP_SDPS_LIMIT,
->  		 hsmp_sdps_limit_show, hsmp_sdps_limit_store, 0644);
->  HSMP_DEV_ATTR_RW(df_pstate_range, HSMP_SET_PSTATE_MAX_MIN, HSMP_SET_PSTATE_MAX_MIN,
->  		 hsmp_df_pstate_range_show, hsmp_df_pstate_range_store, 0644);
-> +HSMP_DEV_ATTR_RW(xgmi_width, HSMP_SET_XGMI_LINK_WIDTH, HSMP_SET_XGMI_LINK_WIDTH,
-> +		 hsmp_xgmi_width_show, hsmp_xgmi_width_store, 0644);
->  HSMP_DEV_ATTR_W(cclk_boost_limit, HSMP_SET_BOOST_LIMIT_SOCKET,
->  		hsmp_cclk_boost_limit_store, 0200);
->  HSMP_DEV_ATTR_RW(apb_disable, HSMP_SET_DF_PSTATE, HSMP_SET_DF_PSTATE,
-> @@ -574,6 +576,7 @@ static struct attribute *hsmp_dev_attr_list[] = {
->  	&hattr_socket_power_limit.dattr.attr,
->  	&hattr_sdps_limit.dattr.attr,
->  	&hattr_df_pstate_range.dattr.attr,
-> +	&hattr_xgmi_width.dattr.attr,
->  	&hattr_socket_power.dattr.attr,
->  	&hattr_cclk_boost_limit.dattr.attr,
->  	&hattr_tdelta.dattr.attr,
+> @@ -515,16 +515,16 @@ static const struct bin_attribute *hsmp_attr_list[] = {
+>  	HSMP_SYS_ATTR(_name, _name, _mode, NULL, _store, U16_MAX,	\
+>  		      _msg_id, _msg_id)
+>  
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444);
+>  HSMP_DEV_ATTR(prochot_status, HSMP_GET_PROC_HOT, hsmp_msg_resp32_show, 0444);
+>  HSMP_DEV_ATTR(smu_fw_version, HSMP_GET_SMU_VER, hsmp_msg_fw_ver_show, 0444);
+>  HSMP_DEV_ATTR(protocol_version, HSMP_GET_PROTO_VER, hsmp_msg_resp32_show, 0444);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444);
+>  HSMP_DEV_ATTR(ddr_max_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_max_bw_show, 0444);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_perc_show, 0444);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444);
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_perc_show, 0444);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444);
+>  HSMP_DEV_ATTR(clk_fmax, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmax_show, 0444);
+>  HSMP_DEV_ATTR(clk_fmin, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmin_show, 0444);
+>  HSMP_DEV_ATTR(pwr_current_active_freq_limit, HSMP_GET_SOCKET_FREQ_LIMIT,
+> @@ -552,16 +552,16 @@ HSMP_DEV_ATTR_RW(rail_iso_freq_policy, HSMP_CPU_RAIL_ISO_FREQ_POLICY,
+>  		 hsmp_rail_iso_freq_policy_show, hsmp_rail_iso_freq_policy_store, 0644);
+>  
+>  static struct attribute *hsmp_dev_attr_list[] = {
+> -	&hattr_c0_residency_input.dattr.attr,
+> +	&hattr_c0_residency.dattr.attr,
+>  	&hattr_prochot_status.dattr.attr,
+>  	&hattr_smu_fw_version.dattr.attr,
+>  	&hattr_protocol_version.dattr.attr,
+> -	&hattr_cclk_freq_limit_input.dattr.attr,
+> +	&hattr_cclk_freq_limit.dattr.attr,
+>  	&hattr_ddr_max_bw.dattr.attr,
+> -	&hattr_ddr_utilised_bw_input.dattr.attr,
+> -	&hattr_ddr_utilised_bw_perc_input.dattr.attr,
+> -	&hattr_fclk_input.dattr.attr,
+> -	&hattr_mclk_input.dattr.attr,
+> +	&hattr_ddr_utilised_bw.dattr.attr,
+> +	&hattr_ddr_utilised_bw_perc.dattr.attr,
+> +	&hattr_fclk.dattr.attr,
+> +	&hattr_mclk.dattr.attr,
+
+Does this break ABI?
+
+>  	&hattr_clk_fmax.dattr.attr,
+>  	&hattr_clk_fmin.dattr.attr,
+>  	&hattr_pwr_current_active_freq_limit.dattr.attr,
 > diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index 3deb5480495dc..2c09a48b70471 100644
+> index 2385827b7ae8a..c246a996e2d4c 100644
 > --- a/drivers/platform/x86/amd/hsmp/plat.c
 > +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -377,6 +377,9 @@ HSMP_DEV_ATTR_RW_X8(df_pstate_range, HSMP_SET_PSTATE_MAX_MIN,
->  		    HSMP_SET_PSTATE_MAX_MIN,
->  		    hsmp_df_pstate_range_show, hsmp_df_pstate_range_store,
->  		    0644);
-> +HSMP_DEV_ATTR_RW_X8(xgmi_width, HSMP_SET_XGMI_LINK_WIDTH,
-> +		    HSMP_SET_XGMI_LINK_WIDTH,
-> +		    hsmp_xgmi_width_show, hsmp_xgmi_width_store, 0644);
->  HSMP_DEV_ATTR_X8(socket_power, HSMP_GET_SOCKET_POWER, hsmp_msg_resp32_show,
->  		 0444);
->  HSMP_DEV_ATTR_W_X8(cclk_boost_limit, HSMP_SET_BOOST_LIMIT_SOCKET,
-> @@ -415,6 +418,7 @@ static struct attribute _name[] = {					       \
->  	&hattr_socket_power_limit##_sock_ind.dattr.attr,		       \
->  	&hattr_sdps_limit##_sock_ind.dattr.attr,			       \
->  	&hattr_df_pstate_range##_sock_ind.dattr.attr,			       \
-> +	&hattr_xgmi_width##_sock_ind.dattr.attr,			       \
->  	&hattr_socket_power##_sock_ind.dattr.attr,			       \
->  	&hattr_cclk_boost_limit##_sock_ind.dattr.attr,		       \
->  	&hattr_tdelta##_sock_ind.dattr.attr,				       \
-> diff --git a/drivers/platform/x86/amd/hsmp/sysfs.c b/drivers/platform/x86/amd/hsmp/sysfs.c
-> index 8f10281cb97c1..4726b3dcdda3d 100644
-> --- a/drivers/platform/x86/amd/hsmp/sysfs.c
-> +++ b/drivers/platform/x86/amd/hsmp/sysfs.c
-> @@ -812,6 +812,85 @@ ssize_t hsmp_df_pstate_range_store(struct device *dev,
->  	return count;
->  }
+> @@ -215,14 +215,14 @@ HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 5); \
+>  HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 6); \
+>  HSMP_DEV_ATTR_W(_name, _msg_id, _store, _mode, 7)
 >  
-> +/* xGMI width show function - reads current min and max link width */
-> +ssize_t hsmp_xgmi_width_show(struct device *dev,
-> +			     struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_message msg = {};
-
-This is the correct form :-).
-
-> +	u32 min_width, max_width;
-> +	int ret;
-> +
-> +	/* Set bit 31 to indicate GET operation for HSMP_SET_GET type messages */
-
-Drop.
-
-> +	msg.msg_id = HSMP_SET_XGMI_LINK_WIDTH;
-> +	msg.sock_ind = hsmp_sysfs_sock_ind(dev, hattr);
-> +	msg.num_args = 1;
-> +	msg.response_sz = 1;
-> +	msg.args[0] = BIT(31);  /* GET operation */
-
-You know the drill.
-
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Extract min width[15:8] and max width[7:0] */
-> +	min_width = (msg.args[0] >> 8) & 0xFF;
-> +	max_width = msg.args[0] & 0xFF;
-
-As with the other patches.
-
-> +
-> +	return sysfs_emit(buf, "%u %u\n", min_width, max_width);
-> +}
-> +
-> +/* xGMI width store function - sets min and max link width */
-> +ssize_t hsmp_xgmi_width_store(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_message msg = {};
-> +	u32 min_width, max_width;
-> +	u32 vals[2];
-> +	int ret;
-> +	int got;
-> +
-> +	/* Parse input in format: "min_width max_width" */
-> +	ret = hsmp_parse_u32_args(buf, vals, 2, 10, &got);
-> +	if (ret) {
-> +		hsmp_err(dev, "xgmi_width", HSMP_ERR_ARGC,
-> +			 "want=2 got=%d fmt=\"min max\"", got);
-> +		return -EINVAL;
-> +	}
-> +	min_width = vals[0];
-> +	max_width = vals[1];
-> +
-> +	/* Min and max are 8-bit fields. Firmware rejects unsupported widths. */
-> +	if (min_width > 0xFF || max_width > 0xFF) {
-> +		hsmp_err(dev, "xgmi_width", HSMP_ERR_RANGE,
-> +			 "min=%u max=%u valid=0-255", min_width, max_width);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Clear bit 31 for SET operation, pack min[15:8] and max[7:0] */
-> +	msg.msg_id = HSMP_SET_XGMI_LINK_WIDTH;
-> +	msg.sock_ind = hsmp_sysfs_sock_ind(dev, hattr);
-> +	msg.num_args = 1;
-> +	msg.response_sz = 1;
-> +	msg.args[0] = (min_width << 8) | max_width;
-
-Same, the same times n in the above.
-
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret) {
-> +		if (max_width < min_width)
-
-Here you have this the expected way around.
-
-Braces.
-
-> +			hsmp_err(dev, "xgmi_width", HSMP_ERR_ORDER,
-> +				 "min=%u max=%u rule=max>=min rc=%d",
-> +				  min_width, max_width, ret);
-> +		else
-> +			hsmp_err(dev, "xgmi_width", HSMP_ERR_HW,
-> +				 "min=%u max=%u rc=%d", min_width, max_width, ret);
-> +		return ret;
-> +	}
-> +
-> +	return count;
-> +}
-> +
->  static ssize_t boost_limit_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
->  {
->  	struct hsmp_cpu_info *cpu_info = NULL;
-> diff --git a/drivers/platform/x86/amd/hsmp/sysfs.h b/drivers/platform/x86/amd/hsmp/sysfs.h
-> index 9631b9067c142..58340e0544af6 100644
-> --- a/drivers/platform/x86/amd/hsmp/sysfs.h
-> +++ b/drivers/platform/x86/amd/hsmp/sysfs.h
-> @@ -115,6 +115,10 @@ ssize_t hsmp_df_pstate_range_show(struct device *dev,
->  ssize_t hsmp_df_pstate_range_store(struct device *dev,
->  				   struct device_attribute *attr,
->  				   const char *buf, size_t count);
-> +ssize_t hsmp_xgmi_width_show(struct device *dev, struct device_attribute *attr,
-> +			     char *buf);
-> +ssize_t hsmp_xgmi_width_store(struct device *dev, struct device_attribute *attr,
-> +			      const char *buf, size_t count);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 0);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 1);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 2);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 3);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 4);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 5);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 6);
+> -HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 7);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 0);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 1);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 2);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 3);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 4);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 5);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 6);
+> +HSMP_DEV_ATTR(c0_residency, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444, 7);
 >  
->  void hsmp_create_per_cpu_kobjects(struct device *dev, struct kobject *cpu_parent,
->  				  struct hsmp_socket *sock);
+>  HSMP_DEV_ATTR(smu_fw_version, HSMP_GET_SMU_VER, hsmp_msg_fw_ver_show, 0444, 0);
+>  HSMP_DEV_ATTR(smu_fw_version, HSMP_GET_SMU_VER, hsmp_msg_fw_ver_show, 0444, 1);
+> @@ -260,58 +260,58 @@ HSMP_DEV_ATTR(ddr_max_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_max_bw_show, 0444, 5)
+>  HSMP_DEV_ATTR(ddr_max_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_max_bw_show, 0444, 6);
+>  HSMP_DEV_ATTR(ddr_max_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_max_bw_show, 0444, 7);
+>  
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 0);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 1);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 2);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 3);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 4);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 5);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 6);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 7);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 0);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 1);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 2);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 3);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 4);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 5);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 6);
+> +HSMP_DEV_ATTR(ddr_utilised_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444, 7);
+>  
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 0);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 1);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 2);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 3);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 4);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 5);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 6);
+> -HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH,
+> +HSMP_DEV_ATTR(ddr_utilised_bw_perc, HSMP_GET_DDR_BANDWIDTH,
+>  	      hsmp_ddr_util_bw_perc_show, 0444, 7);
+>  
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 0);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 1);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 2);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 3);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 4);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 5);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 6);
+> -HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 7);
+> -
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 0);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 1);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 2);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 3);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 4);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 5);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 6);
+> -HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 7);
+> -
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 0);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 1);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 2);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 3);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 4);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 5);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 6);
+> -HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 7);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 0);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 1);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 2);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 3);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 4);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 5);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 6);
+> +HSMP_DEV_ATTR(cclk_freq_limit, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444, 7);
+> +
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 0);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 1);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 2);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 3);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 4);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 5);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 6);
+> +HSMP_DEV_ATTR(fclk, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444, 7);
+> +
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 0);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 1);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 2);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 3);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 4);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 5);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 6);
+> +HSMP_DEV_ATTR(mclk, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444, 7);
+>  
+>  HSMP_DEV_ATTR(clk_fmax, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmax_show, 0444, 0);
+>  HSMP_DEV_ATTR(clk_fmax, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmax_show, 0444, 1);
+> @@ -391,16 +391,16 @@ HSMP_DEV_ATTR_RW_X8(rail_iso_freq_policy, HSMP_CPU_RAIL_ISO_FREQ_POLICY,
+>  
+>  #define HSMP_DEV_ATTR_LIST(_name, _sock_ind)				       \
+>  static struct attribute _name[] = {					       \
+> -	&hattr_c0_residency_input##_sock_ind.dattr.attr,		       \
+> +	&hattr_c0_residency##_sock_ind.dattr.attr,		       \
+>  	&hattr_prochot_status##_sock_ind.dattr.attr,			       \
+>  	&hattr_smu_fw_version##_sock_ind.dattr.attr,			       \
+>  	&hattr_protocol_version##_sock_ind.dattr.attr,			       \
+> -	&hattr_cclk_freq_limit_input##_sock_ind.dattr.attr,		       \
+> +	&hattr_cclk_freq_limit##_sock_ind.dattr.attr,		       \
+>  	&hattr_ddr_max_bw##_sock_ind.dattr.attr,			       \
+> -	&hattr_ddr_utilised_bw_input##_sock_ind.dattr.attr,		       \
+> -	&hattr_ddr_utilised_bw_perc_input##_sock_ind.dattr.attr,	       \
+> -	&hattr_fclk_input##_sock_ind.dattr.attr,			       \
+> -	&hattr_mclk_input##_sock_ind.dattr.attr,			       \
+> +	&hattr_ddr_utilised_bw##_sock_ind.dattr.attr,		       \
+> +	&hattr_ddr_utilised_bw_perc##_sock_ind.dattr.attr,	       \
+> +	&hattr_fclk##_sock_ind.dattr.attr,			       \
+> +	&hattr_mclk##_sock_ind.dattr.attr,			       \
+>  	&hattr_clk_fmax##_sock_ind.dattr.attr,				       \
+>  	&hattr_clk_fmin##_sock_ind.dattr.attr,				       \
+>  	&hattr_pwr_current_active_freq_limit##_sock_ind.dattr.attr,	       \
 > 
 
 -- 
