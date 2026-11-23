@@ -1,77 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795458041;
-	b=3eLu43vMXrdVg85MusTRc12NuacDy8725KECQSG6Rva+jjWTdJL0ctZ/+Mo31IJCDs6U
-	 +q4Ab+HiK7Gid6OQH0mAXvZ6Drx+QX/oCg9Mp8TGvtTC+lG+mOFG7KFQ0CPUT5B8NIQfs
-	 L3JXdy0CJX52pD2KXn8uBt1U3PiQXeTkrIpu0MVWPlWKyt0JTUm/RV3UjNDyKNlxHMJIK
-	 aXb3ljSXcmWvB/B/Ly0WHU6bGbYRoZLaZ+r1zLPsV2OwAR/OUwrnmgeUScSxIkZFhLMpx
-	 gzVcu24O9RcSpPr4LoTWSPzxZ6q5sbjb5Lsq31wxO79IEg8iG/12DO09ynkGgYh7JNw==
+	t=1795458042;
+	b=4lwdyD+1+tn/nwupW5kuuyIiQQ2XJN/7BHj45u2nAq3mM5cKbiHs6+x9399YlaE2uMda
+	 Hm7KPB88XuPCibDa8na3gieMImAOoZ1+3vvXGwbuAhDM9IgbV8ja7PvSOtTseVPSuUhUM
+	 53HtpKx/siA9PQCeQbOIEmIZH6xA0X+Rl0J4q/zw+3I4uEK0LiFzfYz5RvfEPoLdeyGNQ
+	 +3/TdW7Bj3Zj3Zg2agRqgl2ojF1h7VPPdvcNclWOtx757H/KxLB0/esAh+QXrx4yjqvbG
+	 2kQ/OmQvZX6fCURFLFx+yVsFBn7J8rF6EC4aFWyfvttaEY4IIEyI9Yj5OLr7XnPy9hw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795458041;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795458042;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
 	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=1QWGXdyVGyj0nIa2fw+QwUp1+gEhSnwoEOg+0cQbjQA=;
-	b=EGZKyfIH6taqM4gWwvdpAVU2h+1zpjdl/nBF6O9M1/iZ2Vg+FDzCLukdSRGfJCGWb2fM
-	 CUhAj+lGQvg0B5Q+OPBaFtUEEbPu7QePUp0aoCZyfq/1ppWGn7Me97YlWskHErBemVCJV
-	 iWdpkBdnZEU/8CqS42IShtox21fH/zNXuJB1PFmX28cQHv1bQohLbszft0fP2aN+HTpXN
-	 TX2ni6vfrU03ZBUfk4hlYgipDO1vJfS37oV9CSVXJ/pwheHlgEKltR20V5gq35e05RhkI
-	 Bj6ZE8j/b0IleZc0WSPYrdEcae2fFbODMEiRULqUJvR4nbeJE6vAQvEaZC4/cPd6Zrw==
+	bh=zmlCqUbDNFNA4OODZ2MgAX3LgBaFyVbAcAyLNu0hp14=;
+	b=bNdVutkDzRWDu/oGXvTK1OUzRXW+WWjjrys3XAbnTBipDJ+dWFVtWNI0Qtp+537EZqZK
+	 Hxf1BQrwNpEgWZRSSDDNDNkYtkyTA8BSvI1qJ7rCz5Rjix/VI8ARoMuNUzw7CcXIfj3i2
+	 zz07vWzSuvUNAhJIowCGeSswH4HrRKZuRpK0pAKHGjHZ1Ok/UBmKU7fIvF8nsgcOXEdts
+	 oJzYSYBAhh5EpkE61oO23O4+IxVj9IEWYCg1k8mBIXTB30aTxh2lWwnwjpsDsHWx8w1Wt
+	 Ut0Pr1jJTy3RBIggKiUd/ecr7+OoINAYASGqlb23hN2YS/8G9yK42X6+aj/Yo4iISJw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KrHIBOYb;
-	arc=none smtp.remote-ip=192.198.163.16
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=SsrWGmJ9;
+	arc=none smtp.remote-ip=198.175.65.12
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE51606A31E;
-	Mon, 23 Nov 2026 18:20:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3DE51606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF0F606A327;
+	Mon, 23 Nov 2026 18:20:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3AF0F606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KrHIBOYb
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=SsrWGmJ9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1795458042; x=1826994042;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=g5vmfKziU23s5E76Ba1UJgJASQtkmpMHmmyUd676ZMo=;
-  b=KrHIBOYbLQCQIniHWp2RcBxTGAHKQ+sItRQT96d2pDALQ61QLQYhn98x
-   8tMauhuUF9oq5q4085yzfUK5EAA54NEFrVUw3mv7H0nUCf0mz3BV1tISV
-   5NvPTgXr4VaFaHB9sQfcWu9w9tq8HgLFybsaTtbF54ZZQCJS29ph6k+cY
-   p2lEMq6ORqzPP+YawVuk52A5uSuPgfj2k/WhEM6rd+58oYqfkIl6ryIiy
-   FITCfk3y22ZagQhLhj/dZj0lUQY+SYCXfHAawHW//y3hQrq+T6/q0w7gC
-   Jhl73MeLKiTKiJa2bOMvwUuEL2det4o2x3OK5KKhz96SMxLANrKOiv8ik
-   Q==;
-X-CSE-ConnectionGUID: Gj72ecLgQ3yrC2xjY76owg==
-X-CSE-MsgGUID: +6FX8iMNQnuhWb6uroao3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11975"; a="4313702"
+  bh=5OczcCF5EfYyIfpB07md1eQdOqgb4w/CK7Wj3lSmQ38=;
+  b=SsrWGmJ9zhrwjNHFuNIUA13uPgOjluoWaSOP3hGICutABKFNOAMheJVx
+   maKkbBdlW70kz+44OknJNjfe4sXFbqmjVW1t+WjvEluT9HK1HE9TJex4k
+   XJ4AcA28294NMlrV2cQZ7nDBrhR72m1gQglxu2uLNYdL/ZgXHimTGPRIM
+   bzCJv3KGgJErUgXRB0sjDsQUzHbZMxCPbw0umB+sVSlwww2a0uU7bX0j9
+   U3SDOFeAFDZpLbQW+cJUGS6ppnEJcRHp2tBP2y0oEJiTTTNMzqW8kGVyZ
+   XxXlcNwkqDa8w4vojPKgpVwQ/Y//0SaIuMdHJG5439S45TDkGbXgORxiY
+   A==;
+X-CSE-ConnectionGUID: zf7C7xFTRDu+DyiJfhtgmA==
+X-CSE-MsgGUID: aY4uEmYtRve/IY5kzfdzPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11975"; a="4165863"
 X-IronPort-AV: E=Sophos;i="6.27,229,1787036400"; 
-   d="scan'208";a="4313702"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 10:20:41 -0800
-X-CSE-ConnectionGUID: kpXsyVdwSli3WUek9ytOMA==
-X-CSE-MsgGUID: I48vrKBJTKiLEYNgK9oezw==
+   d="scan'208";a="4165863"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 10:20:42 -0800
+X-CSE-ConnectionGUID: idc+AQ5RRvqusNPLUj9gUw==
+X-CSE-MsgGUID: mKwowQc7R3qj7rmPooMOtg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,229,1787036400"; 
-   d="scan'208";a="11738225"
+   d="scan'208";a="11442774"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 10:20:38 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 10:20:28 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Joshua Grisham <josh@joshuagrisham.com>, 
- Jamil Khan <khanjamilahmed202@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20261112165433.64461-1-khanjamilahmed202@gmail.com>
-References: <20261112165433.64461-1-khanjamilahmed202@gmail.com>
-Subject: Re: [PATCH] platform/x86: samsung-galaxybook: Re-enable ACPI
- features on resume
-Message-Id: <179545803285.12968.5318331181096127448.b4-ty@b4>
-Date: Mon, 23 Nov 2026 20:20:32 +0200
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Antheas Kapenekakis <lkml@antheas.dev>, Alex Bogusta <alex@bogusta.com>
+Cc: Denis Benato <benato.denis96@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261016015117.32174-1-alex@bogusta.com>
+References: <20261016015117.32174-1-alex@bogusta.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Clamp keyboard backlight level
+ from hotkeys
+Message-Id: <179545802362.12968.4790919218516193227.b4-ty@b4>
+Date: Mon, 23 Nov 2026 20:20:23 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,14 +87,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Thu, 12 Nov 2026 22:24:32 +0530, Jamil Khan wrote:
+On Thu, 15 Oct 2026 21:51:16 -0400, Alex Bogusta wrote:
 
-> The driver enables the ACPI device (SDLS) and its features (notifications,
-> power management, keyboard backlight, block recording) only at probe time.
-> On a Galaxy Book4 (750XGK, SAM0430) this state is lost across hibernation,
-> and after restore every CSFI call fails:
+> Pressing the keyboard backlight down key at level 0 drives the cached
+> level negative, so the backlight then needs one extra up press per
+> extra down press before it turns back on. brightness_hw_changed also
+> reports out-of-range values: 4 after pressing up at the maximum level,
+> and ENODATA or values like 4294967294 below 0.
 > 
->   acpi SAM0430:00: failed to execute CSFI; device responded with failure code 0xff
+> kbd_led_set_by_kbd() stores the new level without clamping it, and
+> kbd_led_update_all() skips do_kbd_led_set() for negative levels and
+> notifies userspace with the unclamped value. The level is computed in
+> enum led_brightness, which is unsigned, so the subtraction at level 0
+> wraps around.
 > 
 > [...]
 
@@ -107,8 +114,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: samsung-galaxybook: Re-enable ACPI features on resume
-      commit: 94b6cb8cada6c91b9d070a815348f3ca900ca144
+[1/1] platform/x86: asus-wmi: Clamp keyboard backlight level from hotkeys
+      commit: 1d963a4a54fa1caa58895a15e6c205e4fd014579
 
 --
  i.
