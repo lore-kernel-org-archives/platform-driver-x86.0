@@ -1,113 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795426531;
-	b=oa3Gg4H+2rgoTUEZnm3YTeaxZbqi1xu1zPPxNy0QFbWTPEaZfX9TU7Tdjbu2l6cYv18O
-	 km/gzbBDZ2aHmbDTCrCoHITNOFP3RkzLQnwxnQ2ppAoU0bILGWvbd1XkJlDoVcGWTC7zp
-	 Yg6fh3ogJR/8mx0GkpdpCbDLBG9ldBGhadJ9az1POCv2RzXpTPR6R8oEGKaDTFtzPrR41
-	 I2IoOZVwIUllz0f+UAmCrdeqy9WRGgfmLT78GaibAm74QP9a7iAntCUqLXSAaNFejED5i
-	 N5QiEMeZSv8AzEKlHnePiFOQ9yqfrlSEXY1VZPpSH7WCPrnMPAIDtxEiKJnSUGmlcoQ==
+	t=1795426931;
+	b=4A48vvQAeaobqx1xxtIntQTc08VN8cVLT65lOIIZgw646GQZXyUMz9Hemz1dtb58E2DJ
+	 APQv/xpjrOLchQE/b0Ety9WEcibWhdXo8vpYDFC7ViA2uBLpphVkV/iiboIcFm4U3VL2f
+	 rVO7U7kNkCH2F1wHMLubMVEzMAcM8EFrDMi/j4pjApQkmNiGjKI17/6cBWsI5Vq9+Z3gR
+	 zaZ/HMBIADhGghnt+UdfUhHQ0miFzqK5rRL7nyAXjxiWGSTpJ/ubSwqc0ltTGrhu7Ktyx
+	 iQekORX7cudoJIE7LYCb02p5ydF2jOLQL9BoVj0TKVagR2Qz1RocRgy9Z22MZSbH0zg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795426531;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:From:Date:
-	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
-	 X-Authority-Analysis:X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=9zQsPrR6eGS5MgOGAOaluCJvyD3N58t9WLN33C3BzZ0=;
-	b=HsxQ4N/7v0uvdFzBFH75bBr3NYOR9gRA0gB3l5XywL1ZkiNPhKF+r+shGXgZUpZqZljw
-	 XUXfyNKjQOL/vVo/fctKDKTydG8uQs1u6qar7R6zXYnGfC75zie9wwXmxaVOW2p47ktxy
-	 XMvcaF7fucuX1+S00JQr3H1S0D+Azycq44OvHemBtJFaTLjJyyw4pFzAv3n7mtPlCTHeE
-	 e80F9o4jsPXOrbpN3HBIqohXb2Jwh8e5ggpreb28K8zR/40lue7FQLlQxfEXKZajX4W7K
-	 n9N82J0n+/3brl4KDE3ZVH0vqRiiLDjAB+G/JGxRJqI992NcE28CxR6kH5YM7zTL2UA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795426931;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key;
+	bh=Uwclkd70WMb7Wc7NZ9jA+4hNfpuCqx21LkN7LDxWsVQ=;
+	b=T8Rtp/7ATmFPSa8qtcLLkHlDdx8gHvsIjhevr6eD2N079u4AyKIZT1DARMRsQCmLuwO/
+	 I3JBeidAVvlm7WMv1bKodA6tzhrF4PzwB3lDa/RGcQ+I+G0sTDRYKIt7+ZRe6fU85y9am
+	 7/DBmQCmUZ80EjjcjhvqYFlhTG7FA7ROfvq8JJse+IlJIXwz1s12J3zfDi/KSia0QWX8Q
+	 5WY7y179K7+UKgZu0zPKKXFTjnJcp5Q1S3eXYgvRGysd3gRjqX/uWpiGBKYnofiB1dJW2
+	 LQGyLzmJ3wcC4tjyxVZa/ntqkeWL1QQZWaaoKgCTC3Cl0GeplDmgQw77966o56odW6g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=gKvFzjA2;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=BneBB+0S;
-	arc=none smtp.remote-ip=205.220.168.131
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AuIktz7s;
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AAA606A696
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 09:35:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65AAA606A696
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFE7606A31A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 09:42:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DCFE7606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=gKvFzjA2;
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=BneBB+0S
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AN9Fx9Z917180
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 09:35:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9zQsPrR6eGS5MgOGAOaluCJvyD3N58t9WLN33C3BzZ0=; b=gKvFzjA2TTKhwh4c
-	RUJa/iwce2xs0gmJYMBL3ewnpFV7UZefdnlx5p0b6gXiJV+h+clCjzyYJ87mqySf
-	9crtw7uZIR6Va6Xc/C/230s5xheSxKN29AupelqAjvl1XNiO/aY+XFE6F9Wr3/vO
-	4onMQrg1wMe57ss1Putu4zdDDB4m0mGQufDwyixln+JapuOgwFTzwRM7QWROFPWz
-	MTqTjGCi57lib1twDAlADvhFeVwBgQFOfC2cfRT/QG6KFIaRtuzWjn3UujzGhG6d
-	xdun3Zme195z8wO2zXvn6/w2QEJNVLGW7OVWiowRvQ3BGCj8G8cgd6oA48PrTXp1
-	CELlHg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j4g9a0nvn-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 09:35:30 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-542fc619afaso37274871cf.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 01:35:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AuIktz7s
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4bb9d8e8e90so1504925e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 01:42:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1795426530; x=1796031330; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=9zQsPrR6eGS5MgOGAOaluCJvyD3N58t9WLN33C3BzZ0=;
-        b=BneBB+0ShYifV048NpCQQuY8vYZ2E/VtcdFnXMgQ8triwsX9dmuq30+1lbbR8E4aKz
-         pSOqYnwd6EPX32dOQbN+uYnTPol5q59oZaLdhiN+lAyFDSDCrlqQpIY9JbMe6/ltluK8
-         8IXQnucOdg+H5bRzBXw9sLvmwcrJyjodbqLYxTQdl0Wtq5Sg/KEglecHXyQLUAAtyjBc
-         zPqH5BmJfG55AnI4WoHw7Djxc3hQpYmA2beVmTxT2iEfxR7CXSuC/bZlf7BLb3s4S5tq
-         gdWsv3+MPqT80ABXN/4jEqV2d0WJAWMlZV8//nREQYaTam4OuY3bvZfCvImHm93z+JhN
-         gAJA==
+        d=gmail.com; s=20260707; t=1795426929; x=1796031729; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Uwclkd70WMb7Wc7NZ9jA+4hNfpuCqx21LkN7LDxWsVQ=;
+        b=AuIktz7syzWPH8OqGO16+pChAtFpQRDoo2mpuAl8u9DlWKEE1sUfsFHoShkvM9Xu5/
+         /EgCzn0IzHxG0v0ShzWMyJ01cLLfUpp9T82HK1JL57Kzx7JmkVZ/yhwnNYB/JXw0g91+
+         p7XzdwZmdZ3wAJBBPHzC82JB96Dol6T7MUyH6cdkx3/iaMEa0m1GqEz5WyRMnut8vVGf
+         gJpeTQQlkUrFTktXNgjfm82CqfmmjV2wOhRKL/cSncWKn8xoMeRxHk3e8y25AzFCu/06
+         aHoiAaFCitU3Xqj7a2cD0ARHGjQaMdlcOLmVd0Ni98GC8tF9jZICJbUUSUAkJoTk9KQ9
+         KlYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795426530; x=1796031330;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=9zQsPrR6eGS5MgOGAOaluCJvyD3N58t9WLN33C3BzZ0=;
-        b=c74jD6mmjF99ciV8fhMNJoigxUlI+Y4+eeI8xeVkiw1ryK/gyV/hfOJ0YtBrJVo6lm
-         RklKyzemA132XB0lP4l++R20jls7EqTNKQaaVhqYnKhqaUNhjG7sCg9EFyrlDPUWWQt+
-         LI9QxUYRjMqBA0wPq0U9AYXKfEZg+sZ4N04ApPPO10tzVwrCj/SmJ9VNMoAyl5TTdHlg
-         lhS/2iCmON+hBLOkNp0Vf+bWve01EQywUZDgFXn4aT43GOiCkWEriAID+l63ag34nqmm
-         0VP93dqZvdQlULcMVyRG4ONME1y/K+n5byiWoUj8cxk9NbI65ooVQW9B4AIHjlqo5EiI
-         vuDw==
-X-Forwarded-Encrypted: i=1; AL+hErHEKwJpU9VRGDtjZNgqtLIBV1ZIDSh2mbzlEFKSjV7JZsESGtI7qHTDCQx6JRppTZwO86USeZfw7LRU6wrSNGVBGZ9B@vger.kernel.org
-X-Gm-Message-State: APuU4Z+Gg9j03gq1T0wNN4B6OJSPenXrbnb2TGhQWtUZmyLjRY20IF0/
-	Pnm55ToodY7++H+NsLjCN4rcsO13X04BVdvjXofFIgEs13Euxv1bWPdKKTXBqQ4qgfhSTSj1ru7
-	HcXMZy7YWgXkQskpVmPoFkgmG+4O4TlFOLlbS9DHFjSHi6uGG6FNfI3bBmQsrheTF4ifmuX+osZ
-	af
-X-Gm-Gg: AZFdTZcaLDz0cgvxlZNTf5EZVZvf5+lUd4/whFr8UvbUTNLk9xz7jmu5peor20SO3T9
-	OFxTVKnUnhH0tCPou5gFetU0zUfFkrzS1PcMF0BFdBXUrzw+rEjwosX+X4e03OT9mX3b7p+JPwl
-	Iu0Qz1V9S6JVD+RUEFed78P+VQpbEbBM7l7CFmMY5znqQ9+CILS3+XyMznvThc+/odmQemhph01
-	tArZamlQCOdDC/puzSbF6raZ18f9RptsNeNibHT80uW3oXlrm5T9tNxlW6zgZ06oJ6TObk1Zyla
-	XUrp2V6xuYknJVvB7LfQsueYyFrfhx3ic/pX08iQfaGSsu+6kmKb0xeTnuhEti3Db2VleQlGxTi
-	WoDW5oJ7cpCvCtJ2AHoTmDICpiEJ8cB91jq6CODm31Jldpz1w3ymGAchhog==
-X-Received: by 2002:a05:622a:a10c:b0:55d:84ac:5791 with SMTP id d75a77b69052e-55d84ac6b5fmr130773591cf.62.1795426529565;
-        Mon, 23 Nov 2026 01:35:29 -0800 (PST)
-X-Received: by 2002:a05:622a:a10c:b0:55d:84ac:5791 with SMTP id d75a77b69052e-55d84ac6b5fmr130773231cf.62.1795426528909;
-        Mon, 23 Nov 2026 01:35:28 -0800 (PST)
-Received: from [127.0.1.1] ([188.27.161.77])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8960068fsm123208315e9.4.2026.11.23.01.35.27
+        d=1e100.net; s=20260707; t=1795426929; x=1796031729;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Uwclkd70WMb7Wc7NZ9jA+4hNfpuCqx21LkN7LDxWsVQ=;
+        b=fcLH0QscGd2E4U/3XoND87HcBh2s9t9er2GsQy+EF39a7gUvQn/oyxM1ekeEO9RLJB
+         lp2SEBB0Wsl/El+FoBeIeA/DjjE7T75QLFxbshgzYCPB2xvmYkJzsGa3XtdJskfbMeos
+         07pMa5nvsfshIRsg1QTKsBqrqvii3IgJ4lCkbbkfxKkO+K+6f629urmYCJXYbjMa5MNn
+         i9gpKdl1sL3/NkdxQdGstu4rZP7I4pC93Bv61e/P0qj+/Jy8iRMROBs0RSAQJkn60h4w
+         VKg78aAY1xhvCkLKh4vuGXPPhMYMer+6fup2z81zhP4BMbRVF1t9Gn+tRKUQHSdf9iag
+         2RMw==
+X-Forwarded-Encrypted: i=1; AL+hErGoAxuHTG1/cb0OD+fF1d04AK3iURfhvoyD70N/USfLVGgx/pV3yYwMuBt5oKJOxphUc/OV6e70PWpRMARQ8r6ObkYN@vger.kernel.org
+X-Gm-Message-State: APuU4Z+AvDEGzB6YxobO9d/UOqq35h0jRX9zX6uZcWMimHgKbFiYri5j
+	ouL11Xz8vHwLGrcgUnEkrTaHEkJtAoAWUGvobJZ9zJ9n+b/Zd8/GTXo8
+X-Gm-Gg: AZFdTZeVH18FyH/KOJt0m3V2yLuNyXdtj04J4UYOcnX7HIbsVmjvlPxwBMQlfgazU6d
+	iS66Eo50Jc9A1piFcgNT/Sv8VV/GRkijHPlq2xvC3lUZcD3ip6r/Od+krnWQSXCfMOSiCaRQXuM
+	GF0jLEUsegCs9xX1vJdIts/VU4F+G4bKBVsus+HLRC2dj/ThNldlGwEJv9bUR8fEHNXRP7yYXw1
+	sFX37w6iqHlacIW5BP/ooxNbglQdU1ln3Wdev0HODus+n4U40vWMmYYLwcVb06YpU7gNX6lMTyU
+	8pzNMEXGScwYle8uFMMXlBDQL7KILhOMKkK8AlvTM47R77W2ozjrwUSYaTM8Rpp1ri9uaI+lvoJ
+	p7i15HtUwD1x7Edmtm1MVGXypzaZSXT8sElk7sv6htsLtvE6+VHYTH+34cgSGKOFveL+jotOD7g
+	q5Wh43BEFdTKV8HAeI4mZeR4u+/IRGx9VtiradIzY9vi0yY35UGKM9LqPQcxy9W59Y5UZ66Yfq+
+	P/XzWd6rHGMtHueHqy5iW7bM3OVGbByvMfoUC+aF08svyTHlX8c1XsW6lTZBIsuQNQXdSNmYMs/
+	HHYKnMW6FFn49FLNrXcokfI5W6pY1n4teJBQKy6dbkzEhM8IYEtQ5hj6wcYX4/V+Tj3N3NZ0y/8
+	jgnRR7OuEn52B3BrKB/qvnRZYcoB1AO9D1ggpsCChruNscXY=
+X-Received: by 2002:a05:600c:3f0a:b0:4a5:75d2:c104 with SMTP id 5b1f17b1804b1-4bb8880cde7mr213486475e9.22.1795426929109;
+        Mon, 23 Nov 2026 01:42:09 -0800 (PST)
+Received: from [127.0.1.1] ([85.97.71.213])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8849247asm334955785e9.7.2026.11.23.01.42.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 01:35:28 -0800 (PST)
-From: Abel Vesa <abel.vesa@oss.qualcomm.com>
-Date: Mon, 23 Nov 2026 11:35:17 +0200
-Subject: [PATCH v2 4/4] arm64: dts: qcom: mahua-lenovo-thinkpad-t14s-gen7:
- Describe the Embedded Controller
+        Mon, 23 Nov 2026 01:42:08 -0800 (PST)
+From: Sercan GOKMEN <gokmensercan@gmail.com>
+Date: Mon, 23 Nov 2026 12:42:07 +0300
+Subject: [PATCH v3] platform/asus: asus-wmi: Skip keyboard backlight
+ read-back on B9406CAA
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -119,126 +95,147 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261123-t14s-gen7-ec-v2-4-3420a6202366@oss.qualcomm.com>
-References: <20261123-t14s-gen7-ec-v2-0-3420a6202366@oss.qualcomm.com>
-In-Reply-To: <20261123-t14s-gen7-ec-v2-0-3420a6202366@oss.qualcomm.com>
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Abel Vesa <abelvesa@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Abel Vesa <abel.vesa@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.15.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1819;
- i=abel.vesa@oss.qualcomm.com; h=from:subject:message-id;
- bh=BAVqgS/qgUxiqab4nI54FtnixP0O4Z6zoFxM5h+c0Bo=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBrBAjW5TM/NoCLzhtz3zqVQlL5Uql6ptQ/zdwHl
- 10qsnARGayJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCawQI1gAKCRAbX0TJAJUV
- VopbEACHyaDNyjMFdq4gV8+iQhzyeSr3cwsVm9D1JhQl1IqfA5MxZ1BPphZi+DDVvbGHHNWID8X
- ahVHWHcHd1JhdsVv+mdlWqhIcgHLOpsxkciio0AvY8txfylk44RmEn39fONU1UAUsvCcmIX4v8z
- kal1f3kbiQUgQ6M2LAiPjfKpG1tHQRLwspzlLI8VfchClzFiS/7utJkR/hCVuQLzzG9LDuYdT7W
- 7EZVhA2CBDsuA2Aq470x/PooiNDduc2UeV03g17r9Yv3/4iFfQHzlNxwnaZG/EKNVdphN+Nwmgs
- DvpKJEaa45HD7qjjrWN1mgecfAQbzRWwx+i+/zOz+AKsjyGZ4dJuAGP7LCJxky6iUNfxW1z0u9h
- w/Pm8s1T12rybBUdqhbi1Yvhbn2HLHBe9GSblAmmYwfICaP6B/yyz5LiTiSQDhMfByJ/RETP2wN
- hbM0gbEfUepoTQcRVWzpMR+3O2lvSgDWGoCPuNVqrT8vl7Bg3Lfrs01vEZWzc+cLl9ZTI5VVOgc
- 0MKo1yggVdlPSo0VV8J4o5nkEMb23EqnBkDL2HcRsg3DUKq5wJVYg5FSjmREtpLzuhfIxHMWXfP
- HN1tOryA85CEGlbUV13ppdvLpUlH4BrvT24asRXz3fmcL5D5yUwRFzectm5zPHvUFKLF5A0H8uj
- Dauq7pbH2jbyUfg==
-X-Developer-Key: i=abel.vesa@oss.qualcomm.com; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIzMDAzNyBTYWx0ZWRfX3UzIGzFFfaI3
- CdFNN4DjbbPLm0m2JAs122KAcypzAiOL2HT0jAmBga/KPao/cC5H8YJClW/OwzyApRv4qkwEPTW
- Wvqyd7GAMM6EfriO4tdh5URxZxSx3hs=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIzMDAzNyBTYWx0ZWRfX/L3rqJNeYch2
- QexaysFz5kM4OfMHR/0NK4YR7ZA7Hm4xJG0JgqaA9957dWTXpEZGt5mYfkNz3WgE/9nIMSJoGRb
- Vn1YeHlE5vPPqw3qGEcAXH3P2IO3pZ61EyQTtGqE/mS/iFhFIEvL3wGVoQ2mH6Zl9HztHXUZIYU
- u1Ma3OM/3vYCQEuBAYLbcVBiQcBdFeKfWyAHzEicDE0Y6iwDTAqZdWDBuphepw8t13oilAzCqMm
- vXdfO7iZVAl2ZLa9t0i9C6HSLJ1ghsAPZfuqGO0PjhqTCPt6HfWblQIBszThXHbZuFQpEg2lWnr
- j4UBM/ODFFmuXUH0RBIaHohlMPuzRSTVzDoHgLvjnYduK1WCxFGBLdqZHBDz0fOHu2Qc6OmyK14
- 5SO2Yx9OvufM6q+br64XSdRiuSUM7og9/vlz3hs+ElH/Onf5irzq87U9YDWM9afZprohrzlugpS
- +irxmwPKjqI4qqJjuHA==
-X-Proofpoint-ORIG-GUID: TeFwxs7ywm8xqA09OYoM4VJMeS4WQVp2
-X-Authority-Analysis: v=2.4 cv=cYJHPXDM c=1 sm=1 tr=0 ts=6b0408e2 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=asF+/XNaGoxFafzDDLC1GQ==:17
- a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
- a=EUspDBNiAAAA:8 a=-ko0rdnKxUD0urDMsK4A:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-GUID: TeFwxs7ywm8xqA09OYoM4VJMeS4WQVp2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-23_02,2026-11-22_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
- definitions=main-2611230037
+Message-Id: <20261123-b4-asus-wmi-b9406caa-kbd-readback-v3-1-1e6875af3703@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/5WOyw6CMBBFf8V07Zg+kFBX/odxMW0HqAiYFlBD+
+ HcBN7rT5UluzrkjixQ8RXbYjCzQ4KNvmxnUdsNsiU1B4N3MTHKZCi4lmAQw9hHutQejE55aRKi
+ Mg0DoDNoKkFwm9V65TGk2e26Bcv9YG6fzm2NvLmS7RbwsSh+7NjzXE4NYdv/0BgECcqMUOZ05J
+ 9JjUaO/7mxbs6U3yA+j4r8Y5Wy0qJUxmiudfxmnaXoBUeK9lDYBAAA=
+X-Change-ID: 20261022-b4-asus-wmi-b9406caa-kbd-readback-aed82953d839
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Moad Tarrih <tarrihmoad@proton.me>, Burak Goncu <burakgon12@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sercan GOKMEN <gokmensercan@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795426927; l=4769;
+ i=gokmensercan@gmail.com; s=20261022; h=from:subject:message-id;
+ bh=V/Am6+fbXbJkDo7e2qx/4cM5ZZeA3AaF52oI6Qyyu4I=;
+ b=hmm8VSWeyUoWR4KByn1xNXfl0UiZ+b8uLlR2Wn68E3ZDfBIp/X6Iv3RHGNigB11rn5TtMUMgE
+ oT2Wn5Q176IBSL/oj4FXCWMQCo3crvT47YZ9un1BnWH+I6HbgEMbvXB
+X-Developer-Key: i=gokmensercan@gmail.com; a=ed25519;
+ pk=nFIlLCcGouUfBov8xxW0K4qUtEjdhJniMOO8WCSqghU=
 
-The ThinkPad T14s Gen 7 has its embedded controller at 0x28 on QUP
-i2c9 (ACPI \_SB.IC10). It uses a different command protocol than the
-Gen 6 one, so describe it with the Gen 7 compatible. Its interrupt is
-GPIO 66, as on the Gen 6, but the firmware describes it as edge
-triggered, active low. Using a level trigger makes the handler fire
-continuously while the EC holds the line low, with no event pending.
+On the ASUS ExpertBook Ultra B9406CAA (BIOS 312), DSTS(0x00050021)
+always returns 0x550000: the presence bit is set and the level is 0,
+whatever level the EC is driving. The DSDT builds this reply from
+constants and never reads the EC. Writes work.
 
-This provides the EC hotkeys, LEDs and keyboard backlight.
+kbd_led_get() stores every read in asus->kbd_led_wk, so each sysfs read
+resets the cached level to 0. sysfs, UPower and brightnessctl then
+report 0, systemd-backlight restores a dark keyboard at boot, and the
+next Fn backlight key press always gives level 1.
 
-Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Add a kbd_led_no_readback quirk that makes kbd_led_get() return the
+cached level, as the !kbd_led_avail path already does, and set it for
+this board. Every path that changes the level keeps kbd_led_wk current.
+Until the first write after probe, the driver still reports the 0 it
+read at probe time.
+
+Signed-off-by: Sercan GOKMEN <gokmensercan@gmail.com>
 ---
- .../qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts   | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Tested on the B9406CAA (BIOS 312) on Linux 7.2.3: brightness reads back
+the level written to it, UPower reports the same value, and the Fn
+backlight key steps 2 -> 3 -> 0 -> 1 from level 2. On 7.3.0 and 7.3.5,
+with the same change built as a DKMS module, writes of 3/1/0/2 read back
+unchanged.
+Build-tested on review-ilpo-next (2268d837dea1) with W=1 (clang).
 
-diff --git a/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts b/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts
-index 9bda86f82a99..7e7e9b861899 100644
---- a/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts
-+++ b/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts
-@@ -735,6 +735,24 @@ ptn3222_fpr: redriver@4f {
- 	};
+This conflicts trivially with Moad Tarrih's G814FP patch, which adds a
+quirk_entry field and a DMI entry at the same places:
+https://lore.kernel.org/r/20261116-asus-wmi-kbd-readback-v5-1-f2f170836bf4@proton.me
+Applied after it, only asus-nb-wmi.c needs the two entries merged.
+
+The patch was prepared with the help of an AI coding assistant (Claude
+Code). I reviewed it and tested it on the hardware.
+---
+Changes in v3:
+- Rebase onto review-ilpo-next, after the move to drivers/platform/asus/,
+  and use the platform/asus prefix.
+- Trim the commit message.
+- Drop the comment on the quirk_entry field and shorten the one on the
+  quirk.
+- Link to v2: https://patch.msgid.link/20261030-b4-asus-wmi-b9406caa-kbd-readback-v2-1-ca93bb9039f6@gmail.com
+
+Changes in v2:
+- Shorten the subject (Burak Goncu).
+- Say that kbd_led_wk keeps the 0 read at probe until the first write
+  (Burak Goncu).
+- Move the test details below the cut (Burak Goncu).
+- Rebase on current for-next.
+- Link to v1: https://patch.msgid.link/20261022-b4-asus-wmi-b9406caa-kbd-readback-v1-1-fb33ed98dd16@gmail.com
+---
+ drivers/platform/asus/asus-nb-wmi.c | 15 +++++++++++++++
+ drivers/platform/asus/asus-wmi.c    |  3 ++-
+ drivers/platform/asus/asus-wmi.h    |  1 +
+ 3 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/asus/asus-nb-wmi.c b/drivers/platform/asus/asus-nb-wmi.c
+index 3b0f3346dc..420fdced34 100644
+--- a/drivers/platform/asus/asus-nb-wmi.c
++++ b/drivers/platform/asus/asus-nb-wmi.c
+@@ -93,6 +93,12 @@ static struct quirk_entry quirk_asus_unknown = {
+ 	.wmi_backlight_set_devstate = true,
  };
  
-+&i2c9 {
-+	clock-frequency = <400000>;
-+
-+	status = "okay";
-+
-+	embedded-controller@28 {
-+		compatible = "lenovo,thinkpad-t14s-gen7-ec";
-+		reg = <0x28>;
-+
-+		interrupts-extended = <&tlmm 66 IRQ_TYPE_EDGE_FALLING>;
-+
-+		pinctrl-0 = <&ec_int_n_default>;
-+		pinctrl-names = "default";
-+
-+		wakeup-source;
-+	};
++/* B9406CAA: DSTS(0x00050021) always reports level 0 */
++static struct quirk_entry quirk_asus_b9406caa = {
++	.wmi_backlight_set_devstate = true,
++	.kbd_led_no_readback = true,
 +};
 +
- &lpass_vamacro {
- 	pinctrl-0 = <&dmic01_default>;
- 	pinctrl-names = "default";
-@@ -1007,6 +1025,12 @@ edp_bl_reg_en: edp-bl-reg-en-state {
- 		bias-disable;
- 	};
+ static struct quirk_entry quirk_asus_q500a = {
+ 	.filter_i8042_e1_extended_codes = true,
+ 	.wmi_backlight_set_devstate = true,
+@@ -167,6 +173,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
+ }
  
-+	ec_int_n_default: ec-int-n-state {
-+		pins = "gpio66";
-+		function = "gpio";
-+		bias-disable;
-+	};
-+
- 	kybd_default: kybd-default-state {
- 		pins = "gpio67";
- 		function = "gpio";
+ static const struct dmi_system_id asus_quirks[] = {
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ExpertBook Ultra B9406CAA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUS"),
++			DMI_MATCH(DMI_BOARD_NAME, "B9406CAA"),
++		},
++		.driver_data = &quirk_asus_b9406caa,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. Q500A",
+diff --git a/drivers/platform/asus/asus-wmi.c b/drivers/platform/asus/asus-wmi.c
+index b33ebdb21a..725f827a17 100644
+--- a/drivers/platform/asus/asus-wmi.c
++++ b/drivers/platform/asus/asus-wmi.c
+@@ -1975,7 +1975,8 @@ static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+ 	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+ 
+ 	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+-		if (!asus->kbd_led_avail)
++		if (!asus->kbd_led_avail ||
++		    asus->driver->quirks->kbd_led_no_readback)
+ 			return asus->kbd_led_wk;
+ 	}
+ 
+diff --git a/drivers/platform/asus/asus-wmi.h b/drivers/platform/asus/asus-wmi.h
+index b45f81b38a..72a43586ff 100644
+--- a/drivers/platform/asus/asus-wmi.h
++++ b/drivers/platform/asus/asus-wmi.h
+@@ -52,6 +52,7 @@ struct quirk_entry {
+ 	 */
+ 	int no_display_toggle;
+ 	u32 xusb2pr;
++	bool kbd_led_no_readback;
+ };
+ 
+ struct asus_wmi_driver {
 
--- 
-2.54.0
+---
+base-commit: 2268d837dea13a78639fa3dad60472bb67478709
+change-id: 20261022-b4-asus-wmi-b9406caa-kbd-readback-aed82953d839
+
+Best regards,
+--  
+Sercan GOKMEN <gokmensercan@gmail.com>
 
