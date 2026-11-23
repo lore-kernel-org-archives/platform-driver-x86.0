@@ -1,67 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=87.98.174.144
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.8
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795431530;
-	b=on8bGJYjeAM61Omsyw1tV+B6FzVk8WgQWxFmMm5D55fCGR/bJKqQNMnqkci7l3ETgpmX
-	 mkLaf/A0IqX6OL/x/RHcqXYYfLfhiocdZJszz1sSuGoKnqAwfxiej6todQW2kxauuJHBb
-	 ncrSoQL/jDt3y0/ijf/fdHiRFAufcW/gEKEym1GHXy/mQWPB2BeJBLxoe15ACFRruuitu
-	 gbTEjIj6P32Z0mtn1rtFIwoBtyanlmVG3RKHqNDKh1N/PbVroWtwm6xRtY6wbVUs4zzvA
-	 JYp6p0QZK95vdN3Y42Tqhev4aqTqB2iWGOvLvC/frrMHcf6XgcxMyB0/nHWze/NjVQQ==
+	t=1795431769;
+	b=iQebFueOtvgzLnUI/hDcYA+eU2hDKOJx/eZzY60RimywWCq/8EVW/u6lk5qxVB+PdD+a
+	 6MJlKktFwfL+zBHh2A7VkQEaACXYUXLglvm8K8CrPdhGlEAqmcwegHkF5u7eObfrfG2bX
+	 WXCz+svSupZd2Y4gG1o2cvbxoLWqITJPVvAzNS3nIn7Ou+iEIlCr+smjOBSrNuCAwL5Rg
+	 nk3FI6CifySyinvqbjWAsLlCRBbZISZ/aROzohDPJFENJWlXRqR4vzqQmXP8aUuG8Rmrm
+	 RVdZKZKMIM+hN4xcR73NUm6BvTp2Hs6Eix6zTsx+hglNuWhOsXwOI/ary+SjwevjZlA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795431530;
-	h=DMARC-Filter:Received:Received:Received:X-OVh-ClientIp:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:x-ovh-tracer-id:X-VR-SPAMSTATE:
-	 X-VR-SPAMSCORE:X-VR-SPAMCAUSE:DKIM-Signature;
-	bh=0gho2H7c9c060AZnIgfNrfz9s8r4MMmYNS2CJZLRFqA=;
-	b=lni/EzWMSi6ISyxKJLGgpMZkHkqqaopeaW0uFMInvO8AxM66eRUq244UOcOcReAgZp94
-	 cdjnpEY1E9MvobNNMxNHvY6irv+0YoJXnF8EOBKqYVHEHwWu0MtuJI3MVnr1XPOAi+bvl
-	 MFfcRPQZAYw/hBLy4nWlRWBECUASBNgQKb++gH1X8wT8/5jF1qOyXSHD+AOfi3mSRQYho
-	 Er1zKfavwcs0INJXaDnAOjNdByXCylNgdZrtTRrsrZWRf54+RfKNaViX2mRIEzlLwZKnH
-	 CMXWt/Eg3kDKLH5fbdrVttSnGGmMmOqY9rOSBmkM3S353rHA7XoHo7yb9vNQZRa8MUQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795431769;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:
+	 Organization;
+	bh=3K3SdUj3JwWWepPg9rr3kbx+dxUkOhrE6gER+eC/FuI=;
+	b=QNFP/1OzldfV7A6ASQatN5SqiL+IWVolR8FYKu53vzWGgwgD8c4uDKgQO2Ogpi2gIp/v
+	 1GZ/gri2ZpAO27FkmklOLu+XMvZQvTwBmWKce7LbOZGNodPIpOGXrEmaytzcmeCJt1G1H
+	 CpcY1PhFVjS+Yop6d3OPuw8EvzJvCnL20I1JKN5qL9k1uXl4mrhPQtM68WldxlgdFlbqf
+	 t0gfZfGJDXYrL0Tu/iuQi2gYsj3GyAC8x5S89+Nccczvgj7edR5BJnhxvIMtCCEjP7ovd
+	 ylZ9hBNGu+8T/WKF1cSVTrBzEldcL+VDoIQAKeAH8hBYOvyp+nZdIWFOBUGuOZXtLog==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=3mdeb.com;
-	spf=pass smtp.mailfrom=3mdeb.com;
-	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=iChZwMsd;
-	arc=none smtp.remote-ip=87.98.174.144
-Received: from 16.mo583.mail-out.ovh.net (16.mo583.mail-out.ovh.net [87.98.174.144])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bXwBCzOt;
+	arc=none smtp.remote-ip=192.198.163.8
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81C4606A32E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 10:58:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E81C4606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6217A606A33D;
+	Mon, 23 Nov 2026 11:02:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6217A606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=iChZwMsd
-Received: from director3.ghost.mail-out.ovh.net (unknown [10.109.254.91])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4jY2xF1cqDz5xNg
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 10:58:41 +0000 (UTC)
-Received: from ghost-submission-7ccd8bbbb6-n2gw4 (unknown [10.110.168.167])
-	by director3.ghost.mail-out.ovh.net (Postfix) with ESMTPS id BA583C013A;
-	Mon, 23 Nov 2026 10:58:40 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.97])
-	by ghost-submission-7ccd8bbbb6-n2gw4 with ESMTPSA
-	id ObWlFF4cBGvNugsAptLdCg:T4
-	(envelope-from <filip.golas@3mdeb.com>); Mon, 23 Nov 2026 10:58:40 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-97G0020f2781da-6eb1-4bd0-834a-c08ec5051f9b,
-                    0A512C1CF0928FB71961449F2A077E304137B0E5) smtp.auth=filip.golas@3mdeb.com
-X-OVh-ClientIp:213.192.77.249
-From: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bXwBCzOt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795431769; x=1826967769;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=PMvGXM24+YAzr+Vo5Xdliur1cF2wjMWZvGWFVWM2Zaw=;
+  b=bXwBCzOtlU9sg061FZ1lzgktM8HF14kAsE3EEKBK+OHNBaxo0xc51XV0
+   jV8RYI7BcOb2lkTnCW19DsYbH8BO1qiySMvyin5Cz8ghlsep4Dogip3z0
+   pyOWW6Euw8oNytehktxxMDbJ1+wrHmtNiOasU108TwxhhQm3kDonsJomd
+   C7HMLTXtD9XNOKwC7fJJUWS/VgJWZ75Ax0BUe4iKOTpW5jF3LseUWvdsD
+   X9Sy6IIU3VXnSptkOektMR7ACRPr2VPfB+3UzeLLlcQgTQqVBScuMF4xo
+   aPq8fkuC7wLFpcv4KXIA15aIcUf92Eks0YRYSZbEzCjcmRgu90zkhKpNH
+   w==;
+X-CSE-ConnectionGUID: HcQHFHt1Sb+6Si8GpvQVvw==
+X-CSE-MsgGUID: 9NGSqb0PS3e5Ouah+EdJtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11974"; a="4128363"
+X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
+   d="scan'208";a="4128363"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:02:48 -0800
+X-CSE-ConnectionGUID: /zKTeBfNRYebpLxtGW4ytg==
+X-CSE-MsgGUID: VfYkf8ujT+ybiRg9Psk3LQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
+   d="scan'208";a="11689719"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.204])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 03:02:46 -0800
+Date: Mon, 23 Nov 2026 13:02:44 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ondrej Zary <linux@zary.sk>
+Cc: linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	=?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-Subject: [PATCH v2 3/3] platform/x86: dasharo-acpi: Add EC fan curve support
-Date: Mon, 23 Nov 2026 11:58:21 +0100
-Message-ID: <20261123105821.305527-4-filip.golas@3mdeb.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261123105821.305527-1-filip.golas@3mdeb.com>
-References: <20261123105821.305527-1-filip.golas@3mdeb.com>
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] Introduce Synology NAS x86 platform driver
+Message-ID: <awQdVBHiNY_J-A4y@ashevche-desk.local>
+References: <20261120214014.4188702-1-linux@zary.sk>
+ <b3be68b5-b363-85bb-513a-733ab31cf1b7@linux.intel.com>
+ <202611231025.06940.linux@zary.sk>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,291 +83,222 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-x-ovh-tracer-id: 2044915706218934255
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: dmFkZTFDblFX0lx0QRW1JKa5GExgvRc8EfAmGpZCa+mczr64uGFbhOUDNDRjGumNpw1ewf38CiuDwcWBe2ksOTz2vgBG/OiQfIRySeImPlGnBaN/NhaVBJcI0R0wiJZ05v/JgVIK6iF8FdDs4paOTnHT0UKtcfyQnnoEHkbJplb8AAmbCQ9anws2PovtC1vetouu4esjSK9/7AKz4dEqFuZzYfu9hDntJhu7xuegqj+tPpuZ1RhtmyCUSIcP8LBva1zYL6sFArph+EvMDv9DjODHblGBXMhTfQmi0aTZNEufLRK0995CYUMgwFWztvqoKHu9U1DZt+zFLszdo6g6L37VIcSPqJ8992/QAO2cs9NBeJoCjUlRkFAUTgd0uKgQFr+u2n7MudPso3Y2b1UMjh5uwWp53N4il3JrZPZ358jwekLG8Y4d2U00pmhkJzTleLigxnnuwY7VqkkxMgt0+lPyhMU0MRbYDDnEtiw1BXF/PJ7JwHzV84uVKzKbYanX1BW/yi3h1sZhH+CqXItN5c7Qdtm9Fn4C/XRgAhHlse6MPIABr+P386s+kW/WUYqrPeSATG1JpYqoE2P4Nu8x+gWFarHAJus+Ym7mFesgOx1GHAupdtfdg4KN+ANKkudQTtNnKs9e833Lj0rjfROrP78rMoxpyhF6BsUByCdDuzO06B3ZjQ
-DKIM-Signature: a=rsa-sha256; bh=0gho2H7c9c060AZnIgfNrfz9s8r4MMmYNS2CJZLRFqA=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1795431521; v=1;
- b=iChZwMsdJbgIQmRvXbMLB0cBzdIuAO6u5NO7xiK2J3LhTdqWCnZITu989fgBCjrSgYjv85/T
- 2XteIkpdSgRujsSe0O4p7KAo/7sK2qvWvsz3k7bSGB0hu8irOH6Oyn161a1yXXTV45WPdBmal1P
- FpUEiFNKkgZv7jxYU6Yrm2PiwRMk5M9toRFP/jc63hksIARmBzgmrW1rK+KKdaBvWMLyLADune8
- AA2J5esblPCsCIaVKk+DZ6pCP8dtjR5GfJTl14wfg1H35Ibjui+dPSgc23bJ/CAZXkRMK9L6A0r
- EceumhUyNYNVYfH15DhYm9d7pAa49xM+oBFWs9BtQtuZg==
+In-Reply-To: <202611231025.06940.linux@zary.sk>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Expose the four-point fan curve run by the EC as pwmN_auto_pointM_temp
-and pwmN_auto_pointM_pwm, so that userspace can read and change it.
-The EC validates the curve on every write and keeps running the
-previous one if the new curve is invalid.
+On Mon, Nov 23, 2026 at 10:25:06AM +0100, Ondrej Zary wrote:
+> On Friday 20 November 2026, Ilpo J�rvinen wrote:
+> > On Fri, 20 Nov 2026, Ondrej Zary wrote:
+> > 
+> > > Add platform driver for Synology x86-based NAS devices to support HDD LEDs
+> > > controller by ICH9 GPIO pins.
 
-On shutdown, ask the firmware to store the current curve, so that it is
-restored on the next boot.
+We usually host more than that in PDx86, you need to rephrase to point that
+this code only supports HDD LEDs on the platform in question.
+Same for the Kconfig help text.
 
-Fan curve control is only exposed for fans on which the firmware reports
-support for it.
+> > > Only DS411+II is supported for now (DS411+ should be the same except CPU).
+> > > 
+> > > Unfortunately, the DMI data in BIOS is not very helpful to identify the
+> > > device as almost all strings are "To be filled by O.E.M.". Match also the
+> > > BIOS date and then check presence of the onboard SiI3531 SATA controller
+> > > and i82574L ethernet controller to avoid activation on other systems.
+> > 
+> > Hans, Andy,
+> > 
+> > Do you have an opinion on the selected approach?
 
-Signed-off-by: Filip Gołaś <filip.golas@3mdeb.com>
----
-Changes in v2:
-- Make the curve point attributes static, so DASHARO_POINT_ATTRS()
-  does not define 16 global symbols.
-- Reject negative fan curve temperatures before converting them to
-  degrees, which can round to positive.
-- Use DIV_ROUND_CLOSEST_ULL() for showing curve PWM instead of
-  DIV_ROUND_CLOSEST(), so it links on 32-bit x86.
-- Setting a curve point stages it, applying it is a separate ACPI call.
-  Add a mutex to prevent staging more changes before the first set is
-  applied.
-- Use dasharo_fan_channel to find correct channel for DASHARO_FEATURE_FAN_POINTS.
-- SFCS now takes no arguments and saves all fans. The Dasharo dev
-  build previously was accepting and ignoring the argument.
----
- drivers/platform/x86/dasharo-acpi.c | 186 +++++++++++++++++++++++++++-
- 1 file changed, 185 insertions(+), 1 deletion(-)
+Let me briefly look into this...
 
-diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
-index 85f88b11fcf9..38dd3fc8dcee 100644
---- a/drivers/platform/x86/dasharo-acpi.c
-+++ b/drivers/platform/x86/dasharo-acpi.c
-@@ -6,7 +6,10 @@
- #include <linux/acpi.h>
- #include <linux/array_size.h>
- #include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/kstrtox.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/types.h>
- #include <linux/units.h>
-@@ -78,6 +81,7 @@ struct dasharo_capability {
- 
- struct dasharo_data {
- 	struct platform_device *pdev;
-+	struct mutex curve_lock;
- 	int caps_found[DASHARO_FEATURE_MAX];
- 	struct dasharo_capability capabilities[DASHARO_FEATURE_MAX][MAX_CAPS_PER_FEAT];
- };
-@@ -407,6 +411,169 @@ static const struct hwmon_chip_info dasharo_hwmon_chip_info = {
- 	.info = dasharo_hwmon_info,
- };
- 
-+static int dasharo_curve_point_call(struct dasharo_data *data, int pwm_channel, const char *method,
-+				    const u64 *args, unsigned int n_args, u64 *ret)
-+{
-+	int channel = dasharo_fan_channel(data, DASHARO_FEATURE_FAN_POINTS, pwm_channel);
-+
-+	if (channel < 0)
-+		return channel;
-+
-+	return dasharo_call(data, method, DASHARO_FEATURE_FAN_POINTS, channel, args, n_args, ret);
-+}
-+
-+static int dasharo_curve_point_store(struct dasharo_data *data, int channel, const char *method,
-+				     unsigned int point, u64 value)
-+{
-+	u64 args[2] = { point, value };
-+	u64 ret;
-+	int err;
-+
-+	guard(mutex)(&data->curve_lock);
-+
-+	// set of temp/duty
-+	err = dasharo_curve_point_call(data, channel, method, args, 2, &ret);
-+	if (err)
-+		return err;
-+	if (ret)
-+		return -EPERM;
-+
-+	// commit
-+	err = dasharo_curve_point_call(data, channel, "CFCV", NULL, 0, &ret);
-+	if (err)
-+		return err;
-+
-+	// The EC rejected the curve
-+	return ret ? -EINVAL : 0;
-+}
-+
-+static ssize_t curve_point_temp_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	u64 point = sattr->index;
-+	u64 val;
-+	int err;
-+
-+	err = dasharo_curve_point_call(data, sattr->nr, "GFPT", &point, 1, &val);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%llu\n", val * MILLIDEGREE_PER_DEGREE);
-+}
-+
-+static ssize_t curve_point_temp_store(struct device *dev, struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	long val;
-+	int err;
-+
-+	err = kstrtol(buf, 10, &val);
-+	if (err)
-+		return err;
-+
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	val /= MILLIDEGREE_PER_DEGREE;
-+	if (val > U8_MAX)
-+		return -EINVAL;
-+
-+	err = dasharo_curve_point_store(data, sattr->nr, "SFPT", sattr->index, val);
-+	return err ?: count;
-+}
-+
-+static ssize_t curve_point_pwm_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	u64 point = sattr->index;
-+	u64 val;
-+	int err;
-+
-+	err = dasharo_curve_point_call(data, sattr->nr, "GFPD", &point, 1, &val);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%llu\n", DIV_ROUND_CLOSEST_ULL(val * 255, 100));
-+}
-+
-+static ssize_t curve_point_pwm_store(struct device *dev, struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	long val;
-+	int err;
-+
-+	err = kstrtol(buf, 10, &val);
-+	if (err)
-+		return err;
-+
-+	if (val < 0 || val > 255)
-+		return -EINVAL;
-+
-+	err = dasharo_curve_point_store(data, sattr->nr, "SFPD", sattr->index,
-+				  DIV_ROUND_CLOSEST(val * 100, 255));
-+	return err ?: count;
-+}
-+
-+#define DASHARO_POINT_ATTRS(ch, pt) \
-+	static SENSOR_DEVICE_ATTR_2_RW(pwm##ch##_auto_point##pt##_temp, curve_point_temp, \
-+				       (ch) - 1, (pt) - 1); \
-+	static SENSOR_DEVICE_ATTR_2_RW(pwm##ch##_auto_point##pt##_pwm, curve_point_pwm, \
-+				       ch - 1, pt - 1)
-+
-+#define DASHARO_POINT_ATTR_PTRS(ch, pt) \
-+	&sensor_dev_attr_pwm##ch##_auto_point##pt##_temp.dev_attr.attr, \
-+	&sensor_dev_attr_pwm##ch##_auto_point##pt##_pwm.dev_attr.attr
-+
-+DASHARO_POINT_ATTRS(1, 1);
-+DASHARO_POINT_ATTRS(1, 2);
-+DASHARO_POINT_ATTRS(1, 3);
-+DASHARO_POINT_ATTRS(1, 4);
-+DASHARO_POINT_ATTRS(2, 1);
-+DASHARO_POINT_ATTRS(2, 2);
-+DASHARO_POINT_ATTRS(2, 3);
-+DASHARO_POINT_ATTRS(2, 4);
-+
-+static struct attribute *dasharo_point_attrs[] = {
-+	DASHARO_POINT_ATTR_PTRS(1, 1),
-+	DASHARO_POINT_ATTR_PTRS(1, 2),
-+	DASHARO_POINT_ATTR_PTRS(1, 3),
-+	DASHARO_POINT_ATTR_PTRS(1, 4),
-+	DASHARO_POINT_ATTR_PTRS(2, 1),
-+	DASHARO_POINT_ATTR_PTRS(2, 2),
-+	DASHARO_POINT_ATTR_PTRS(2, 3),
-+	DASHARO_POINT_ATTR_PTRS(2, 4),
-+	NULL
-+};
-+
-+static umode_t dasharo_curve_point_is_visible(struct kobject *kobj, struct attribute *attr, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	struct device_attribute *dattr = container_of(attr, struct device_attribute, attr);
-+	int channel = to_sensor_dev_attr_2(dattr)->nr;
-+
-+	if (dasharo_fan_channel(data, DASHARO_FEATURE_FAN_POINTS, channel) < 0)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group dasharo_point_group = {
-+	.attrs = dasharo_point_attrs,
-+	.is_visible = dasharo_curve_point_is_visible,
-+};
-+
-+static const struct attribute_group *dasharo_groups[] = {
-+	&dasharo_point_group,
-+	NULL
-+};
-+
- static void dasharo_fill_feature_caps(struct dasharo_data *data, enum dasharo_feature feat)
- {
- 	struct dasharo_capability *cap;
-@@ -437,21 +604,37 @@ static int dasharo_probe(struct platform_device *pdev)
- {
- 	struct dasharo_data *data;
- 	struct device *hwmon;
-+	int ret;
- 
- 	data = devm_kzalloc_obj(&pdev->dev, *data);
- 	if (!data)
- 		return -ENOMEM;
- 	data->pdev = pdev;
-+	platform_set_drvdata(pdev, data);
-+
-+	ret = devm_mutex_init(&pdev->dev, &data->curve_lock);
-+	if (ret)
-+		return ret;
- 
- 	for (unsigned int i = 0; i < DASHARO_FEATURE_MAX; ++i)
- 		dasharo_fill_feature_caps(data, i);
- 
- 	hwmon = devm_hwmon_device_register_with_info(&pdev->dev, "dasharo_acpi", data,
--						     &dasharo_hwmon_chip_info, NULL);
-+						     &dasharo_hwmon_chip_info, dasharo_groups);
- 
- 	return PTR_ERR_OR_ZERO(hwmon);
- }
- 
-+static void dasharo_shutdown(struct platform_device *pdev)
-+{
-+	struct dasharo_data *data = platform_get_drvdata(pdev);
-+	u64 ret;
-+
-+	/* Let the firmware persist the fan curve the EC runs */
-+	if (data->caps_found[DASHARO_FEATURE_FAN_POINTS])
-+		acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev), "SFCS", NULL, &ret);
-+}
-+
- static const struct acpi_device_id dasharo_device_ids[] = {
- 	{"DSHR0001", 0},
- 	{}
-@@ -464,6 +647,7 @@ static struct platform_driver dasharo_driver = {
- 		.acpi_match_table = dasharo_device_ids,
- 	},
- 	.probe = dasharo_probe,
-+	.shutdown = dasharo_shutdown,
- };
- module_platform_driver(dasharo_driver);
- 
+> Thinking more about that, maybe we should check the PCI host bridge (CPU) and
+> ISA bridge (ICH9R) too. And if we also check the bus and device number of the
+> onboard devices (02:00 and 03:00), the chance of false detection is almost
+> zero.
+> 
+> Unfortunately, the subsystem IDs are not set either. Only the ethernet
+> interface has subsystem device ID 0x0000 (how common is that?)
+
+Usually Ethernet cards need a specific ROM part (where MAC address is written
+and possible other configuration pieces) that usually IFWI has and the proper
+ID of the Ethernet is updated with that information (yes, there are some stub
+PCI IDs are used for Intel Ethernet cards). But I haven't checked if 10d3 is
+a stub ID. And assuming device is recognized and working, I can simply guess
+that this is a miss in the BIOS (non-critical BIOS bug when they forgot to file
+that data into PCI configuration space).
+
+> # lspci -vnn | egrep '^0|Subsystem'
+> 00:00.0 Host bridge [0600]: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx DMI Bridge [8086:a000] (rev 02)
+>         Subsystem: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx DMI Bridge [8086:a000]
+> 00:02.0 VGA compatible controller [0300]: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx Integrated Graphics Controller [8086:a001] (rev 02) (prog-if 00 [VGA controller])
+>         Subsystem: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx Integrated Graphics Controller [8086:a001]
+> 00:02.1 Display controller [0380]: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx Integrated Graphics Controller [8086:a002] (rev 02)
+>         Subsystem: Intel Corporation Device [8086:a001]
+> 00:1a.0 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #4 [8086:2937] (rev 02) (prog-if 00 [UHCI])
+>         Subsystem: Intel Corporation Optiplex 755 [8086:2937]
+> 00:1a.1 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #5 [8086:2938] (rev 02) (prog-if 00 [UHCI])
+>         Subsystem: Intel Corporation Optiplex 755 [8086:2938]
+> 00:1a.2 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #6 [8086:2939] (rev 02) (prog-if 00 [UHCI])
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #6 [8086:2939]
+> 00:1a.7 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB2 EHCI Controller #2 [8086:293c] (rev 02) (prog-if 20 [EHCI])
+>         Subsystem: Intel Corporation Optiplex 755 [8086:293c]
+> 00:1c.0 PCI bridge [0604]: Intel Corporation 82801I (ICH9 Family) PCI Express Port 1 [8086:2940] (rev 02) (prog-if 00 [Normal decode])
+>         Subsystem: Intel Corporation Optiplex 755 [8086:2940]
+>         Capabilities: [90] Subsystem: Intel Corporation Optiplex 755 [8086:2940]
+> 00:1c.1 PCI bridge [0604]: Intel Corporation 82801I (ICH9 Family) PCI Express Port 2 [8086:2942] (rev 02) (prog-if 00 [Normal decode])
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) PCI Express Port 2 [8086:2942]
+>         Capabilities: [90] Subsystem: Intel Corporation 82801I (ICH9 Family) PCI Express Port 2 [8086:2942]
+> 00:1c.4 PCI bridge [0604]: Intel Corporation 82801I (ICH9 Family) PCI Express Port 5 [8086:2948] (rev 02) (prog-if 00 [Normal decode])
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) PCI Express Port 5 [8086:2948]
+>         Capabilities: [90] Subsystem: Intel Corporation 82801I (ICH9 Family) PCI Express Port 5 [8086:2948]
+> 00:1d.0 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #1 [8086:2934] (rev 02) (prog-if 00 [UHCI])
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #1 [8086:2934]
+> 00:1d.1 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #2 [8086:2935] (rev 02) (prog-if 00 [UHCI])
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #2 [8086:2935]
+> 00:1d.2 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #3 [8086:2936] (rev 02) (prog-if 00 [UHCI])
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) USB UHCI Controller #3 [8086:2936]
+> 00:1d.7 USB controller [0c03]: Intel Corporation 82801I (ICH9 Family) USB2 EHCI Controller #1 [8086:293a] (rev 02) (prog-if 20 [EHCI])
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) USB2 EHCI Controller #1 [8086:293a]
+> 00:1e.0 PCI bridge [0604]: Intel Corporation 82801 PCI Bridge [8086:244e] (rev 92) (prog-if 01 [Subtractive decode])
+>         Subsystem: Intel Corporation 82801 PCI Bridge [8086:244e]
+>         Capabilities: [50] Subsystem: Intel Corporation 82801 PCI Bridge [8086:244e]
+> 00:1f.0 ISA bridge [0601]: Intel Corporation 82801IR (ICH9R) LPC Interface Controller [8086:2916] (rev 02)
+>         Subsystem: Intel Corporation 82801IR (ICH9R) LPC Interface Controller [8086:2916]
+> 00:1f.2 SATA controller [0106]: Intel Corporation 82801IR/IO/IH (ICH9R/DO/DH) 6 port SATA Controller [AHCI mode] [8086:2922] (rev 02) (prog-if 01 [AHCI 1.0])
+>         Subsystem: Intel Corporation 82801IR/IO/IH (ICH9R/DO/DH) 6 port SATA Controller [AHCI mode] [8086:2922]
+> 00:1f.3 SMBus [0c05]: Intel Corporation 82801I (ICH9 Family) SMBus Controller [8086:2930] (rev 02)
+>         Subsystem: Intel Corporation 82801I (ICH9 Family) SMBus Controller [8086:2930]
+> 02:00.0 Mass storage controller [0180]: Silicon Image, Inc. SiI 3531 [SATALink/SATARaid] Serial ATA Controller [1095:3531] (rev 01)
+>         Subsystem: Silicon Image, Inc. SiI 3531 [SATALink/SATARaid] Serial ATA Controller [1095:3531]
+> 03:00.0 Ethernet controller [0200]: Intel Corporation 82574L Gigabit Network Connection [8086:10d3]
+>         Subsystem: Intel Corporation Device [8086:0000]
+
+...
+
+> > > + * Synology x86 NAS platform driver
+
+Make this line same as tristate in Kconfig.
+
+...
+
+> > > +#include <linux/array_size.h>
+> > > +#include <linux/dmi.h>
+> > > +#include <linux/err.h>
+> > > +#include <linux/gpio/machine.h>
+> > > +#include <linux/leds.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/pci.h>
+
+> > > +#include <linux/pci_ids.h>
+
+It's assumed by pci.h.
+
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/printk.h>
+> > > +#include <linux/string.h>
+
+...
+
+> > > +static struct gpiod_lookup_table synology_leds_table = {
+> > > +	.dev_id = "leds-gpio",
+> > > +	.table = {
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 16, NULL, 0, GPIO_ACTIVE_HIGH),
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 18, NULL, 1, GPIO_ACTIVE_HIGH),
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 20, NULL, 2, GPIO_ACTIVE_HIGH),
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 32, NULL, 3, GPIO_ACTIVE_HIGH),
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 33, NULL, 4, GPIO_ACTIVE_HIGH),
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 34, NULL, 5, GPIO_ACTIVE_HIGH),
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 49, NULL, 6, GPIO_ACTIVE_HIGH),
+> > > +		GPIO_LOOKUP_IDX(GPIO_ICH_DRIVER_NAME, 55, NULL, 7, GPIO_ACTIVE_HIGH),
+> > > +		{}
+> > > +	}
+> > > +};
+
+Please, switch to use GPIO swnodes.
+
+...
+
+> > > +static const struct dmi_system_id synology_systems[] __initconst = {
+> > > +	{
+> > > +		.ident = "DS411+",	/* DS411+II is the same with faster CPU */
+> > > +		.matches = {
+> > > +			/* Synology did not put anything in DMI strings */
+> > > +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "To Be Filled By O.E.M."),
+> > > +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "To Be Filled By O.E.M."),
+> > > +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
+> > > +			DMI_EXACT_MATCH(DMI_BIOS_DATE, "05/21/2012"),
+> > > +		},
+
+This needs a better comment assuring that this is unique enough. See what Hans
+did elsewhere for the similar DMI case.
+
+> > > +	},
+> > > +	{}
+> > > +};
+
+...
+
+> > > +static int __init synology_init(void)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	static const struct pci_device_id pci_sii3531[] = {
+> > > +		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CMD, 0x3531, PCI_VENDOR_ID_CMD, 0x3531) },
+> > > +		{ }
+> > > +	};
+> > > +
+> > > +	static const struct pci_device_id pci_i82574l[] = {
+> > > +		{ PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x10d3, PCI_VENDOR_ID_INTEL, 0x0000) },
+> > > +		{ }
+> > > +	};
+> > > +
+> > > +	const struct dmi_system_id *dmi = dmi_first_match(synology_systems);
+
+> > > +
+
+Unneeded blank line.
+
+> > > +	if (!dmi)
+> > > +		return -ENODEV;
+> > > +
+> > > +	/* DS411+ DMI match is too generic, confirm by onboard PCI devices */
+> > > +	if (!strcmp(dmi->ident, "DS411+")) {
+> > > +		if (!pci_dev_present(pci_sii3531) ||
+> > > +		    !pci_dev_present(pci_i82574l))
+> > > +			return -ENODEV;
+> > > +	}
+> > > +
+> > > +	pr_info("Detected Synology NAS %s\n", dmi->ident);
+> > > +
+> > > +	gpiod_add_lookup_table(&synology_leds_table);
+> > > +
+> > > +	synology_leds_pdev = platform_device_register_data(NULL,
+> > > +		"leds-gpio", PLATFORM_DEVID_NONE, &synology_leds_pdata,
+> > > +		sizeof(synology_leds_pdata));
+
+	ret = PTR_ERR_OR_ZERO(...);
+
+> > > +	if (IS_ERR(synology_leds_pdev)) {
+> > > +		pr_err("error registering platform device: %pe\n", synology_leds_pdev);
+> > 
+> > Won't these be prefixless and you should add the usual pr_fmt line?
+> > 
+> > > +		ret = PTR_ERR(synology_leds_pdev);
+> > > +		goto err;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +
+> > > +err:
+> > > +	gpiod_remove_lookup_table(&synology_leds_table);
+> > > +	return ret;
+> > > +}
+
 -- 
-2.56.0
+With Best Regards,
+Andy Shevchenko
+
 
