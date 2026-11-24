@@ -1,84 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795480228;
-	b=fukrjjU9dSs/z1r+Bx1anbviPMxUaecZ7+4xQsg38qvE9A+K8wxhtqg36lF0MK+/ZmbV
-	 9svISj9lRLPgCQs/9f5JtrskQ+a5ZX8qO6XX+gxJaiHHBj8q0XJ9xpLS7FaUkjyBQlb7k
-	 JfhwjVC3a09i5nQ/HLmR23HsPSXDC4T1EwEqvtkr6LbqYU5i0/TXP4XVFwKYjJ5J034wE
-	 5VFHQWR7NbZ/6yfMXdITOzLWi8itQbM16lDAbEHIVnDt2Iwv83//LdP2UDKUg22OtBEmw
-	 6v4i3xghzsVZ+fGErPEnTFFaCAFWkPzmBqiuf4yRpiB1G9KPVMI1S3bi+oQRPLp2scw==
+	t=1795480748;
+	b=Ms4pqtjpzHMGFAXaat6+IjpOi/2VsXRsdqpiMUC5Q4ej0NSh29793c2fXeYdkzx5FDKm
+	 v6ZxfXyuT+HRHmHkVb/X1VNG9SbAoaVB3YgBLsNYU+8xgA9fda1mTRDaLBUEvaj2fJcA3
+	 ZZn9zqIPcr86Z2UWrf5HBf8BKaVYhSZiW96e/JLZchXGMwO+s8HXbYlk0E3sFdeBYfxB9
+	 GhB12VIDqUvx0sWX97+lbJKkVjlZImqvM38XDuTDkw/JnWaHR9DsHqVv2l+unoT3Sganb
+	 JsrTVQoVUOWuftSMhx24dupi5R7OCj3U6r9uy0eX3Uzu37hophRHBGoBZgvQVauhQ8Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795480228;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Mime-Version:Content-Transfer-Encoding:Content-Type:Date:Message-Id:
-	 Subject:From:To:Cc:X-Mailer:References:In-Reply-To;
-	bh=MzipZ8odBG4jdrhH2ZJejfMmjUk7sUkd+9+WpxV2B+M=;
-	b=CGL5KR0ZReuIMU3z85tO6j72FKi/bTPynVjIBLf/DvlluM8DdZoPFT7BhEGLuk8kX/tD
-	 biNk1imshEebDJ1Ub9maloS66trleCdFYXvNaY3deHwd1Q9HU3PvtBUbh2RizCv4Otg3i
-	 QsKenkXxVxHY5VoW2yom57VqA58AR+QvSo2Vrd+xFM/FYvSIIORTHffaXXL6zpwKlBcxC
-	 LdhaaXexWs0mcB8DHJLXkQQh5NXZdnUyjN8cvHvE/i+Q/Ix56w8cX+ah1osJl8LrkkEqk
-	 Sk5hqFxEZNiiLGMtXR/Ijxs5K04RQyTtOmr6bVvtoVVmx80ll2QgEzwwXvzl/djTEhQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795480748;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Subject:Date:
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=0l1Bzpc9zw5KbnrzQuTunx9lYtQSKDxuLKvRXakouWw=;
+	b=sFZ1QCUXZqI77vf9Ccwsfq8f2e8atTC9iulI+Z4kywon4oDKfFpy2V6sONAD/NS3z/+I
+	 1Fk2BHXn4G6TvCwZFhowMsJr0YhYJDbcPCdygshsOyxxPFFN1475Dm+3SEQgdF0bSkKad
+	 FXkZfF07LedBuk1KlulosdlXLsGwQv6g4m8hbfkxB2CcukqfnmRi0hxbAEX60GLx+U5Um
+	 wi8b0+2yxrt55Rez+V8FJ6yjUMTlgmrZ5Dyn9lmGMrn14g7liNXfoapWpxKiSokqcz/qR
+	 5yo5wg2nvI3upS5dJ/CBDeS2/QrIaWc9AdrLE5x4ZiXZUmh8Wh3PP6FqSqb91dyxntw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nHmCKCeW;
-	arc=none smtp.remote-ip=74.125.82.182
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GAxWHCHL;
+	arc=none smtp.remote-ip=192.198.163.18
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBDF606A31E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 00:30:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4DBDF606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367F2606A321
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 00:39:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 367F2606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nHmCKCeW
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-386ab9ab619so3500194eec.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 16:30:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795480227; x=1796085027; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=MzipZ8odBG4jdrhH2ZJejfMmjUk7sUkd+9+WpxV2B+M=;
-        b=nHmCKCeWqvmzQA2LdmWMoIutUf95eOE0JytLF45VaLqPVqSomrbHwXD6J/kqx0k2uO
-         UgxUClZJQD8n6VvySSnKAgpfQd5y7WBOH9ubnOzp7ZdY4iDmCwvXf6Wj1kFOgQG2oGRn
-         4rga4sIj+PdC9twy0WyYf7KxaXnZZUx9Tm5bShwj2C4R4ic2lT/xb5yR62tKvCW9ylQq
-         f7kgT/uZu1AK6Tru5Q1lLKWIrwfGKpVv5istLs+vETD3vIcpC/FB68TLNuM9STZfSUHF
-         7Ts5YIEHK4fwP1khdsGNR4ThInjEPOkYWOh56LJdZAXRZ2WeZ2cuo0BmH/BqL76J5Ldn
-         kIPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795480227; x=1796085027;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=MzipZ8odBG4jdrhH2ZJejfMmjUk7sUkd+9+WpxV2B+M=;
-        b=2E543kHoi7IwqQ8kxIJkYNBW6bmQWrLyrmnCmytE2yRk0FU9C5e30vkPNpYII+h4+J
-         fscbRKWBjMhgD6o92c9Pzm8pVHIgYKOgaksMgLEIQKSgaMP7N5Sf7A4h2CVIzyQXfCsS
-         w8evc5+19+MVwHA6X/SlGzaVs9KKCHenwefM+jtbOG+fmLkD/oCCU2Cu/tMNri0KsNsl
-         0xnqrw2tJ7BIiHLsoT0jhcql3NRXI74UGc2og8SYopIu2LQxevoxhYcvXLS7GJsJniPg
-         EGB51AhAhY1ZpFIAmn6wfn+elFLWNbtyLAILFMAST8EcNC3IYO6N78l1Til6kPce3N2Z
-         m0oA==
-X-Forwarded-Encrypted: i=1; AL+hErE3AD8p4Pv3OZAAcXIZDUnr+nRBBcKZHwY3riBby/IEcdrshokzWvw08yw/zIZFc+Bf4UuOAx/UxGadIm2mu1QWJ5gq@vger.kernel.org
-X-Gm-Message-State: APuU4Z/r6occnjig8nlv89sW/hWviNFkEd9nqb+nFjnc3eSEdu7bkM/b
-	fmpCe+baNqvbi0ejJ+byPzwKMGzBBlpLYUIiRY56FPJZ+OsdIdlVEfFJ
-X-Gm-Gg: AZFdTZeSTlNreRQ031ouCwLlg7CHfNOqHN248LI8FL9DDUyTkP7dzEdHIDGQ35TMr06
-	1aq0jKJyAZedVNYQHiKkuNkOIUQNaHnemPE7R2/7p5J9mSxgVHs2YeVmBYcMC1edYa0T5seUhSO
-	zWQ+IXV7uBDEz3uq48Fo4xvuAiwj25NtAhCoT1bkqUypYJaua69I/eaPMmX3sj5eMQ7hlFCkffd
-	KkYifUIi724jeYVd8emndHD+HIYMjw1Btc5Z24ZchKY3RcVKcqhwPt6o8DQDUFeO9XEAAP2tynU
-	SJ5jNRzIJdb7x5u3iLXiyT3nb//H22TUmq6J2+PpX/+Gc4TwROyrQbUS3E6k78CBcFaGbUy2neR
-	44kERska4LhTX0LMJ8gMM+enErwiUFN+hQTIoRnsZkYu8K/FbndkaXxFVzHZB8ebD+G/ZIzWahB
-	NFhFf406ILE7EmjaWLlu/7Uh/2zsfBiNKzTSYBxyxCDJVYHfqE8fPAR02Hv0DpNgZb2l8gZv5dZ
-	1m28V5kISag+fki10Ka1hwsl4ockcNUTZJYsLHe6b0xInKtmR6GkEdAyvXkQVbI/P9ccNMPBCL7
-	mjF08X2g+XS/eq3vD2wDyOcl7dA=
-X-Received: by 2002:a05:7300:1486:b0:383:6eb6:5730 with SMTP id 5a478bee46e88-38570e24c0fmr16179852eec.32.1795480226923;
-        Mon, 23 Nov 2026 16:30:26 -0800 (PST)
-Received: from localhost ([2001:8004:6c10:7f51:567e:69bc:1f6e:349a])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385666e99fdsm49453974eec.5.2026.11.23.16.30.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Nov 2026 16:30:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=GAxWHCHL
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795480747; x=1827016747;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=vdYjeiryOcvMslvJXkQiNrklhhsQczKbeZnsj7m8VGE=;
+  b=GAxWHCHLOj85/NLus8PpklEBuGD2krPYGDrnBLBrsnc+RmUeJe18KxUz
+   n8tlOzjuq2oGlOoo7J4n/6qD8XP5XFtVF1uJn4TAuqn00RE9TE56gfwdA
+   csq20/P3GU6CIeZRwuVCNpj3wqKE1iItFfoZoC0LY9rsHhtp3PQOMd0Tc
+   Yur7ECCJMV6y2iz+AqSOD0bGPxHJ9zR5bRwfuYnOs1N2MSa3Hbg5RDPn/
+   tC3t8enyq8H9ekEsBG6Y7ErJS8/ptbIhkEjMDVwliVijpdZBeDGlDtE+q
+   4o9sSv3LFwcnIrJw5uIjKnDspGBL+CmsIp8hcMfpttjeL5bin0mfMbdFB
+   Q==;
+X-CSE-ConnectionGUID: NKgOReQJSNqelhCWUCafdQ==
+X-CSE-MsgGUID: YRaardOER9Kyip7cUVbLqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11975"; a="4332827"
+X-IronPort-AV: E=Sophos;i="6.27,229,1787036400"; 
+   d="scan'208";a="4332827"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 16:39:05 -0800
+X-CSE-ConnectionGUID: i2ObtDKYQJOJDQw29J3uWw==
+X-CSE-MsgGUID: 1G7t23grQIirJCLaJ5/H+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,229,1787036400"; 
+   d="scan'208";a="11805733"
+Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 16:39:06 -0800
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: platform-driver-x86@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	rodrigo.vivi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	david.e.box@linux.intel.com,
+	anoop.c.vijay@intel.com,
+	badal.nilawar@intel.com,
+	matthew.d.roper@intel.com,
+	james.ausmus@intel.com
+Subject: [PATCH v22 02/19] platform/x86/intel/pmt: Use the pre-populated header info for crashlog
+Date: Mon, 23 Nov 2026 16:38:58 -0800
+Message-ID: <20261124003856.4145635-23-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261124003856.4145635-21-michael.j.ruhl@intel.com>
+References: <20261124003856.4145635-21-michael.j.ruhl@intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -87,106 +90,77 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 24 Nov 2026 08:30:13 +0800
-Message-Id: <DN30M72ZZA9J.3VPYTARKK218H@gmail.com>
-Subject: Re: [PATCH 0/4] platform/x86: clevo-laptop: add initial Rust driver
- for keyboard backlight
-From: "Nick Dowsett" <nick42d@gmail.com>
-To: "Werner Sembach" <wse@tuxedocomputers.com>, <nick42d@gmail.com>, "Hans
- de Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun
- Feng" <boqun@kernel.org>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Tamir Duberstein" <tamird@kernel.org>,
- "Alexandre Courbot" <acourbot@nvidia.com>, =?utf-8?q?Onur_=C3=96zkan?=
- <work@onurozkan.dev>
-Cc: "Armin Wolf" <W_Armin@gmx.de>, <linux-kernel@vger.kernel.org>,
- <platform-driver-x86@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-X-Mailer: aerc 0.22.0-0-gc2f86b7abde3
-References: <20261122-clevo-laptop-v1-0-881debf4d4b0@gmail.com>
- <a07938a4-32e8-4aa5-984c-d17df8054df1@tuxedocomputers.com>
-In-Reply-To: <a07938a4-32e8-4aa5-984c-d17df8054df1@tuxedocomputers.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Werner,
+Crashlog reads discovery data directly from the discovery table.
 
-Thanks for the reply. I guess for some context for those that aren't
-aware, Werner/TUXEDO maintain an out-of-tree driver (`tuxedo-drivers`)
-that includes support for TUXEDO-branded Clevo drivers. This driver
-was influenced by their work, and I reached out to Werner briefly by
-email before submitting this series to the mailing list.
+For parents that provide a read_discovery callback, this data may
+not be readable with this method.
 
-On Mon Nov 23, 2026 at 9:58 PM AWST, Werner Sembach wrote:
-> Hi,
->
-> First: I never have touched rust code, but I'm not opposed to it in princ=
-iple.=20
-> Just to excuse a little bit of knowledge gap.
->
-> Am 22.11.26 um 05:35 schrieb Nick Dowsett via B4 Relay:
->> This series adds a new Rust platform driver MVP (`clevo-laptop`) for
->> Clevo barebones and rebranded laptops (Metabox, Tuxedo, Sager, XMG,
->> etc.), starting with 5-step white keyboard backlight control.
->
-> The driver will have to interact at least with these subsystems when fini=
-shed=20
-> (If I haven't forgotten any):
->
-> - Platform/ACPI
-> - WMI
-> - Power Supply/Battery
-> - LEDs
-> - Input
-> - HWMon
->
-> And maybe:
->
-> - Thermal
-> - HID
-> - Component
->
-> I don't know how much this influences the feasibility of doing it in rust=
-.
+Update to use the pre-populated discovery data (disc_header), rather
+than reading directly (disc_table) for probe.
 
-I understand this is referring to the feasibility of rewriting the
-entire `tuxedo-drivers` package in Rust. Perhaps someone more experienced
-on the RFL front could jump in here in terms of the feasibility of
-writing the mentioned bindings (from what I can see, workable patches
-exist already for LEDs and WMI), but I'll give my perspective:
- - This is a beneficial effort regardless of full compatibility for
-   now; even this MVP solves a real problem for users with this specific
-   non-TUXEDO branded, Clevo laptop.
- - Some modularity between C and Rust may still be able to exist, for
-   example, perhaps the existing HID keyboard backlight drivers may be
-   better to remain in C.
- - In terms of feasibilty, whilst some waiting for bindings to reach
-   full parity with `tuxedo-drivers` may be required, this is still
-   more feasible for myself than writing and maintaining significant
-   amounts of C.
+Reviewed-by: David E. Box <david.e.box@linux.intel.com>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+---
+ drivers/platform/x86/intel/pmt/crashlog.c | 24 +++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
->> It is intended as the first in-tree user of the Rust WMI abstractions,
->> and a starting point to be extended to additional Clevo models and EC
->> features.
->>
->> What's included:
->> - Minimal driver skeleton, Kconfig/Makefile plumbing, and MAINTAINERS
->>    entry.
->> - Type-safe EC WMI query interface.
->> - Driver registration and backlight type detection following
->>    tuxedo-drivers business rules.
->
-> Just wanna make sure what you are referring to here exactly?
+diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+index d7018b495217..e2af09732dd6 100644
+--- a/drivers/platform/x86/intel/pmt/crashlog.c
++++ b/drivers/platform/x86/intel/pmt/crashlog.c
+@@ -27,10 +27,10 @@
+ #define CRASH_TYPE_OOBMSM	1
+ 
+ /* Crashlog Discovery Header */
+-#define CONTROL_OFFSET		0x0
+-#define GUID_OFFSET		0x4
+-#define BASE_OFFSET		0x8
+-#define SIZE_OFFSET		0xC
++#define ACCESS_IDX		0
++#define GUID_IDX		1
++#define BASE_IDX		2
++#define SIZE_IDX		3
+ #define GET_ACCESS(v)		((v) & GENMASK(3, 0))
+ #define GET_TYPE(v)		(((v) & GENMASK(7, 4)) >> 4)
+ #define GET_VERSION(v)		(((v) & GENMASK(19, 16)) >> 16)
+@@ -208,10 +208,10 @@ static int pmt_crashlog_disabled(struct crashlog_entry *crashlog, bool *state)
+ 
+ static bool pmt_crashlog_supported(struct intel_pmt_entry *entry, u32 *crash_type, u32 *version)
+ {
+-	u32 discovery_header = readl(entry->disc_table + CONTROL_OFFSET);
++	u32 *disc_header = entry->disc_header;
+ 
+-	*crash_type = GET_TYPE(discovery_header);
+-	*version = GET_VERSION(discovery_header);
++	*crash_type = GET_TYPE(disc_header[ACCESS_IDX]);
++	*version = GET_VERSION(disc_header[ACCESS_IDX]);
+ 
+ 	/*
+ 	 * Currently we only recognize OOBMSM (type 1) and version 0 or 2
+@@ -608,15 +608,15 @@ static int pmt_crashlog_pre_decode(struct intel_vsec_device *ivdev,
+ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
+ 				      struct device *dev)
+ {
+-	void __iomem *disc_table = entry->disc_table;
+ 	struct intel_pmt_header *header = &entry->header;
++	u32 *disc_header = entry->disc_header;
+ 
+-	header->access_type = GET_ACCESS(readl(disc_table));
+-	header->guid = readl(disc_table + GUID_OFFSET);
+-	header->base_offset = readl(disc_table + BASE_OFFSET);
++	header->access_type = GET_ACCESS(disc_header[ACCESS_IDX]);
++	header->guid = disc_header[GUID_IDX];
++	header->base_offset = disc_header[BASE_IDX];
+ 
+ 	/* Size is measured in DWORDS, but accessor returns bytes */
+-	header->size = GET_SIZE(readl(disc_table + SIZE_OFFSET));
++	header->size = GET_SIZE(disc_header[SIZE_IDX]);
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
 
-Specifically, I am referring to the logic used for board capability
-detection; ie how to determine if a device supports fixed colour vs.
-RGB backlight etc. TUXEDO has already done a significant volume of work
-here.
-
-Any questions or concerns please shout out.
-
-Cheers Nick
