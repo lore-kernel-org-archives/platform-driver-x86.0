@@ -1,76 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.19
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795532300;
-	b=0P/yev6zNCtdiCHqKas1CytuP6c55kltnHhglRwWvYFbxs8FX7leMBGigShUSh1eiDFi
-	 YdU4Tw+3q7k2r+mWqq92wvo6xo7VvOGLZW5Qsg11L3qweFulBXAq/27lobjnXpqExNjn0
-	 UbvoUNmHmfDeHMsdCnodjXad9XmSnstPRdlgSorpR19HNassHGn9DO6OSuE95QXbYTcWl
-	 gDvwdgptEHrkF0pKhUbLk93beV04S0MBBYV23UoHS9tC/Bj0/5fTEYpzyj2GmT9xe/9fR
-	 kLSP/Z4spzbGrqiseO+BSAOJ2kPFUdxUb/OZhkokxPTp5Wn+5woD5eQF5vBQbQpUECw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795532300;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:From:To:Cc:References:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
-	 UI-OutboundReport;
-	bh=nw1HJ1rYH0om1Cll57QBh5/myBqA0mV9sEjrJO/Tvyw=;
-	b=jDzvl+xbjiCkBWhvr4EcrfVJ4iOeOYTyeOk+EUwTgSovt/OQ/JCzUke1xOEghdO5RRz0
-	 atB8rMXAWj32DzH5YKQsXSsRAIYhDuQD0hxzx+TOKNu7oqz1Eplf7FGW1EFx+5UbUGZbY
-	 uj4rWdm/Xm4arPMY3mYiC+BsR0raCUMFSkIDjzhD4BZBEwKWAazWkB3Jn7DW5XqwI3d4p
-	 tI5fhFlCZh8/hII3foubMa/Hzw8pobBE6n85XMO5GZyrsZLRlI1iNTV28YxtZqw1tYbgY
-	 IMHPZ/qqKYPAOaROAXIHwnFkAI8H4mq4K+MpJDlRaTZ/gru8GJtAe7t+0aaqRNIoCBg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmx.de;
-	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=ioD1yLkd;
-	arc=none smtp.remote-ip=212.227.15.19
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795533136;
+	b=QTrEJTU2ksw9ln+a1poVTWZSxADk4J5FWWUI6dXjtW0urkP15/pkE+0hEXN9LTVv6t6I
+	 jsfFmzXSHAFJhUMeg4M/lqDkolyNUjM77uzOX13XEptCP/8f9GLdOM/QtlG0Da1LPwc0h
+	 YrLgxXERkLdrXGv5vHdKIHfN2BTanovM12YmFPht07ZoF30nfKpcyktM94a9BbNAd7U4c
+	 W+6AamtWkdqYkxOikxlD6xMwDNmyTOPlR4ElqAZmFIcsgkO69YY7afhSW5UOIWC8HM5QU
+	 d6HcmC0iolRfzcjZCx/5VfykiJ5CZRvDoQM6E/gdrHWBQ61RBdXiw8/IhfYVlblvqkw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795533136;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=vcHFZWa5sEjZR4uixpqN7VW4XhMZHoN1fCuTYjNwSpk=;
+	b=HlBgkMIt0XA5tMfAQokPXuZfcVRFJJ7IcTCofnzi/EtjzQktRmLxpntcmlIkp4zd7ErT
+	 6u1mgYysWpK1qmyNQVKLePNNO/rCgMGRnxW2rPZmpGnOkafglHVkdFhZjJb36MNPH7L+j
+	 54Omc3OsDqxM8wrpiz9g9V/2Tda3d39Elffi+4yAzVDBuIaEgxCZyZ/7i8mJkZlJVaO9q
+	 oy2vyK7JRzq59Id6Hsfj/Q1UmngjFqBt+X3e/M0vkd7/oWxQbyuq4e3gurGghi000QzJy
+	 JFes4S721MrRpkywsz919hbx3VelTMlrs6Yc74mMWRmFZV+9Zz031LleUoHg804xsSw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=htNEGTY+;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
+Received: from sender6-pp-f112.zoho.com (sender6-pp-f112.zoho.com [165.173.180.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A489606A31E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 14:58:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A489606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC9B606A31E;
+	Tue, 24 Nov 2026 15:12:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AAC9B606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=ioD1yLkd
-DKIM2-Signature:  i=1; m=1; t=1795532297;
- mf=PFdfQXJtaW5AZ214LmRlPg==;
- rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
- d=gmx.de;
- s=s31663417:rsa-sha256:BvXXl1133J1uh0DTDhDA2ORJt2kQ
-   dURhZAOdFmFcWt4eIUYpJ92xz+DB48+KXE1Lvjj0+uojAzW/K6UWP2XOK6UwicsAJ/UfKnNEs0O
-   9LpEHPvG05Bc6WE/3Sx7nowhhUgzJMoxdH7NwWKfWLGgIX5MhgOzzDyLwlVVg5kUKhBnTR59O5e
-   8um34mr/LNi8B6TriUE2Xgkb+3YGHZb6jxTUzqkUIfO76v9JgmqKTAM1tiCZahr6WGzXcRCZsRj
-   8mJflIj78cf41zJHKmEFQ6UCOzgW8jEz1TAkneAZveTruJ5HHYceCIGsrDjDf7TeFCmlUSAxHGF
-   SxmvVWNMhnT8GA==;
-Message-Instance:  m=1;
- h=sha256:
-   FuIrUOKldo05j14qRYAbAwspo+pkP97aPw3FzVECCSc=:
-   nw1HJ1rYH0om1Cll57QBh5/myBqA0mV9sEjrJO/Tvyw=,
-  sha512:
-   GS/O3MxWRF+5DN+MMFHyfYiDzg7EYm2uUHfNsH7dmIYZlKKnQWf6loF4WilWvceVvRPQzwWzbcH7vX4n2MvYQg==:
-   oZ37l+6+9++RQfHjgJ7f8I697CnZxE4rs4SLku24WhlrafKrrXVbr5k6WEk9fQs5/ckVmr+BWmQ+FQ+DMYfRZQ==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1795532266; x=1796137066; i=w_armin@gmx.de;
-	bh=nw1HJ1rYH0om1Cll57QBh5/myBqA0mV9sEjrJO/Tvyw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ioD1yLkd2R7cXGQWoxHP5HSNxVMR8z/hC+X04KTy7/JB7CX7OEfsHkN3IjzCs1Zs
-	 ax4X8djCZ71xLw3V+DUR9zHZReSrGrb9gp8QxZNSDdB80niWpuAyfH3Wn8fw646Lk
-	 eb/wDXy6mAqJ22xOa4kakXX9wTQXcbcWF6AVWoYLHCVvfeVnL+mcInqDtGZ5eFp+B
-	 FyfemEerGaDxr10zbGf+Z2Xgfy5nHfnYe/kAlUmWQbc6/RIzb7uFLRtO/OdZD6O97
-	 j8ngdJLyi+Ubk8Qe9nAjRE+bB3OIDzt3nvQT/3OQsa0CrSbQ0gcOUNkqcCcjqsFHC
-	 KNYJplGI3CZkB6MnvQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDhhN-1xdo2n0nUV-00GFLG; Tue, 24
- Nov 2026 15:57:46 +0100
-Message-ID: <a851c757-3110-4ecc-b920-a98736b190b5@gmx.de>
-Date: Tue, 24 Nov 2026 15:57:43 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=htNEGTY+
+ARC-Seal: i=1; a=rsa-sha256; t=1795533097; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=FOpODvSBCubD0eoKvqHpoP6aMPan024J+CElYzdDamcbDL/wHGjdzPs4B8MQNz1eu43792MzqvQg3/8ZCR42x/tsAnOWZEFxM+y1YQtxDbXiFwLzg4DWpPCKNy2ZTfVjDwanSvV/S2GnvwoxApEMqp1yF8DQoHVhdFYpVjE2Qsw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795533097; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vcHFZWa5sEjZR4uixpqN7VW4XhMZHoN1fCuTYjNwSpk=; 
+	b=jaIvnGOBCxFlZ4eeD5TvTCqO2zqBwwIbNEccMGl50WvuyaoCwaJJfN+SLKV6t+QURlp9Ql0K2WyeY9ie92T8f+SLDACTLgAxfys2CBbm6uSz3sQR4/S3WmROMJf7n04lO/PedSwcH0aSCkEmVzRi22RPwkQA0VGzxgJD8vIPaZc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=htNEGTY+kF2QqRwkk02Bh5GdX4/j5YWL8JK1pn8nL6aJBe5pDZoZQEEBdiwraYl49e+AD9XkmRfa7YIyFWRPd8CeuyqdPWtB2ZxKCQIJCweFKvQPpuICxgHGOIMrcds55cZRm/GyG+l8wMcHCUAv7VR6qXgFDMnS4/OQla1vPf0/Vb1rFXet1Z86r/dCqtAZJqHMET3rzVxHTjQDeqtmP0jRM4403hSIxOLHOEgP+TvyfSTaPRMbf5RZZLoFj/xZTjwbgrK1AdD0usfgXzWKxXmZJwIXAQRlnsPi9aLryCKxL9sCij1QkK2LdWfJ8A4J462Ykh7L+s/9fuy0sfXeTg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=vcHFZWa5sEjZR4uixpqN7VW4XhMZHoN1fCuTYjNwSpk=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795533093851277.1277137915863;
+	Tue, 24 Nov 2026 07:11:33 -0800 (PST)
+Message-ID: <3318369400ef4498abf984e53e0ffddbebefcd6a.camel@rong.moe>
+Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw
+ GetDataByPackage interface
+From: Rong Zhang <i@rong.moe>
+To: Alan <alanpluto@163.com>, platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, W_Armin@gmx.de, 
+	corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
+ hansg@kernel.org, 	ilpo.jarvinen@linux.intel.com,
+ linux-doc@vger.kernel.org, 	linux-kernel@vger.kernel.org
+In-Reply-To: <f5b36363-45a8-43f6-863b-5c7df6cee7eb@163.com>
+References: <20261116040532.154928-1-alanpluto@163.com>
+	 <20261123061120.18740-1-alanpluto@163.com>
+	 <fcabaf8647e0c1ab487cd612d5a290082613ec0b.camel@rong.moe>
+	 <5b327bf279357b68b91ec66b465501a2760b23eb.camel@rong.moe>
+	 <7442b878b63d67c44af0bdb379a9de04dae76669.camel@rong.moe>
+	 <f5b36363-45a8-43f6-863b-5c7df6cee7eb@163.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 24 Nov 2026 23:06:21 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,221 +75,605 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] platform: dell: smbios: Add quirk for non-functional
- calling interface
-From: Armin Wolf <W_Armin@gmx.de>
-To: Brian Mak <bmak@nvidia.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Kurt Borja <kuurtb@gmail.com>, Stuart Hayes <stuart.w.hayes@gmail.com>,
- Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Lyndon Sanche <lsanche@lyndeno.ca>,
- Prasanth Ksr <prasanth.ksr@dell.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap
- <rdunlap@infradead.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Dell.Client.Kernel@dell.com" <Dell.Client.Kernel@dell.com>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20261121000556.173028-1-bmak@nvidia.com>
- <20261121000556.173028-7-bmak@nvidia.com>
- <f3dc7e25-9c22-4b1d-9555-e83db82d05a1@gmx.de>
- <792a7fdd-b2a0-4a2d-88b3-7aecf1af3d7c@nvidia.com>
- <12ff3c7e-0425-42ea-9994-69f9d56a4591@gmx.de>
-Content-Language: en-US
-In-Reply-To: <12ff3c7e-0425-42ea-9994-69f9d56a4591@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ld8ZVesk+gj1QBy8nsMrbZb2a2UaH7Z4WtfF1PRjh3zadifidaN
- 5uQc3S379qzEyMm8TjFyAvUaYH6Gn3lSF3xr75cPZ8FRpUocyBoOFzXNLSi435bXyZMBPMn
- dsOAGnD/slIWRVGBBAgMar/JHcqaGLRGkFVMgwZjQjHq6FZyn55ux2si5GjS2mlCEPluN3Z
- A17vFwVXV3Au3qvUwpgeQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mERlOi2wNA8=;dEloxCMpmtFyqni2ri7PxK87ngD
- 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
+User-Agent: Evolution 3.62.1-4 
+X-ZohoMailClient: External
 
-Am 24.11.26 um 15:29 schrieb Armin Wolf:
-> Am 24.11.26 um 00:43 schrieb Brian Mak:
->> On 11/21/26 05:49, Armin Wolf wrote:
->>> Am 21.11.26 um 01:05 schrieb Brian Mak:
->>>
->>>> On Dell RTX Spark laptops, the SMBIOS calling interface completes eve=
-ry
->>>> request with an all-zero buffer, even for requests that should fail.
->>>> Drivers that rely on it, such as dell-laptop and dell-pc, end up
->>>> reporting bogus state, like battery charge modes and thermal modes.
->>>>
->>>> Add a DMI quirk list for platforms with a non-functional calling
->>>> interface, and export dell_smbios_calls_functional() so that consumer=
+Hi Alan,
+
+On Tue, 2026-11-24 at 16:05 +0800, Alan wrote:
+> Hi Rong,
+>=20
+> On 11/23/2026 11:36 PM, Rong Zhang wrote:
+> > Hi Alan,
+> >=20
+> > On Mon, 2026-11-23 at 20:34 +0800, Rong Zhang wrote:
+> > > Hi Alan,
+> > >=20
+> > > On Mon, 2026-11-23 at 20:21 +0800, Rong Zhang wrote:
+> > > > Hi Alan,
+> > > >=20
+> > > > On Mon, 2026-11-23 at 14:11 +0800, Alan Pluto wrote:
+> > > > > Lenovo's userspace utility uses the Other Mode WMI GetDataByPacka=
+ge
+> > > >=20
+> > > > What's the purpose of the utility? Could you provide some context? =
+You
+> > > > can ignore this question if it's confidential, but in general provi=
+ding
+> > > > necessary context can help maintainers and reviewers learn about th=
+e
+> > > > intent.
+> > > >=20
+> > > > > method (99) to check device readiness. Expose the method through =
+debugfs
+> > > > > so the firmware request and response can be inspected on Linux wi=
+thout
+> > > > > adding a stable userspace ABI.
+> > > > >=20
+> > > > > The interface is disabled by default and can be enabled by passin=
+g
+> > > > > enable_get_data_by_package=3D1 when loading the module.
+> > > > >=20
+> > > > > Signed-off-by: Alan Pluto <alanpluto@163.com>
+> > > > > ---
+> > > > > Changes in v2:
+> > > > > - Replace the character device with a debugfs file, disabled by d=
+efault.
+> > > > > - Allow one open per WMI device and require a single read for the=
+ response.
+> > > > > - Use scoped locks, lockdep checks, automatic buffer cleanup, and=
+ the
+> > > > >   WMI helper's minimum response size check.
+> > > > >=20
+> > > > >  Documentation/wmi/devices/lenovo-wmi-other.rst |  12 +-
+> > > > >  drivers/platform/x86/lenovo/wmi-other.c        | 208 +++++++++++=
+++++++++++++++
+> > > > >  2 files changed, 219 insertions(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Doc=
+umentation/wmi/devices/lenovo-wmi-other.rst
+> > > > > index 011054d64eac5b601333373c4d405f9c5117ffc2..42e1525a8852bd7c8=
+ddc04cc4047b1f09c5b770f 100644
+> > > > > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > > > > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > > > > @@ -33,6 +33,15 @@ under the following path:
+> > > > > =20
+> > > > >  Additionally, this driver also exports attributes to HWMON.
+> > > > > =20
+> > > > > +GetDataByPackage diagnostics
+> > > > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > >=20
+> > > > Missing a ~
+> > > >=20
+> > > > > +
+> > > > > +The driver does not create the diagnostic file by default. To en=
+able it,
+> > > > > +pass ``enable_get_data_by_package=3D1`` when loading ``lenovo-wm=
+i-other``.
+> > > > > +The file is at ``lenovo_wmi/<WMI device>/get_data_by_package``.
+> > > > > +Not all devices support the method. Use only commands whose beha=
+vior and
+> > > > > +side effects are understood.
+> > > > > +
+> > > > >  LENOVO_CAPABILITY_DATA_00
+> > > > >  -------------------------
+> > > > > =20
+> > > > > @@ -107,7 +116,8 @@ WMI interface description
+> > > > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> > > > > =20
+> > > > >  The WMI interface description can be decoded from the embedded b=
+inary MOF (bmof)
+> > > > > -data using the `bmfdec <https://github.com/pali/bmfdec>`_ utilit=
+y:
+> > > > > +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utilit=
+y. This older
+> > > > > +example lists ``Max(40)`` for GetDataByPackage; newer firmware u=
+ses 100 bytes.
+> > > >=20
+> > > > ??? Could you move the sentence to the right place?
+> > > >=20
+> > > > > =20
+> > > > >  ::
+> > > > > =20
+> > > > > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/pl=
+atform/x86/lenovo/wmi-other.c
+> > > > > index bd64e7b44669db684145298ae088dd2c7f539d29..827b4215c612fbfc0=
+52bbadff0672e68e65517f0 100644
+> > > > > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > > > > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > > > > @@ -27,13 +27,16 @@
+> > > > >   */
+> > > > > =20
+> > > > >  #include <linux/acpi.h>
+> > > > > +#include <linux/atomic.h>
+> > > > >  #include <linux/bitfield.h>
+> > > > >  #include <linux/cleanup.h>
+> > > > >  #include <linux/component.h>
+> > > > >  #include <linux/container_of.h>
+> > > > > +#include <linux/debugfs.h>
+> > > > >  #include <linux/device.h>
+> > > > >  #include <linux/export.h>
+> > > > >  #include <linux/firmware_attributes.h>
+> > > > > +#include <linux/fs.h>
+> > > > >  #include <linux/gfp_types.h>
+> > > > >  #include <linux/hwmon.h>
+> > > > >  #include <linux/idr.h>
+> > > > > @@ -41,9 +44,12 @@
+> > > > >  #include <linux/kobject.h>
+> > > > >  #include <linux/limits.h>
+> > > > >  #include <linux/module.h>
+> > > > > +#include <linux/mutex.h>
+> > > > >  #include <linux/platform_profile.h>
+> > > > >  #include <linux/power_supply.h>
+> > > > > +#include <linux/slab.h>
+> > > > >  #include <linux/types.h>
+> > > > > +#include <linux/uaccess.h>
+> > > > >  #include <linux/wmi.h>
+> > > > > =20
+> > > > >  #include <acpi/battery.h>
+> > > > > @@ -90,6 +96,8 @@ enum lwmi_feature_id_psu {
+> > > > > =20
+> > > > >  #define LWMI_FEATURE_VALUE_GET 17
+> > > > >  #define LWMI_FEATURE_VALUE_SET 18
+> > > > > +#define LWMI_DATA_PACKAGE_GET 99
+> > > > > +#define LWMI_DATA_PACKAGE_INPUT_MAX 100
+> > > > > =20
+> > > > >  #define LWMI_FAN_ID_BASE 1
+> > > > >  #define LWMI_FAN_NR 4
+> > > > > @@ -141,6 +149,8 @@ struct lwmi_om_priv {
+> > > > >  =09struct device *fw_attr_dev;
+> > > > >  =09struct kset *fw_attr_kset;
+> > > > >  =09struct wmi_device *wdev;
+> > > > > +=09struct dentry *debugfs_dir;
+> > > > > +=09atomic_t package_opened;
+> > > > >  =09int ida_id;
+> > > > > =20
+> > > > >  =09struct lwmi_fan_info fan_info[LWMI_FAN_NR];
+> > > > > @@ -156,6 +166,23 @@ struct lwmi_om_priv {
+> > > > >  =09bool bh_registered;
+> > > > >  };
+> > > > > =20
+> > > > > +struct lwmi_package_response {
+> > > > > +=09__le32 data_size;
+> > > > > +=09u8 data[];
+> > > > > +};
+> > > >=20
+> > > > Even though there is no gap between data_size and data, please add =
+a
+> > > > __packed annotation to clearly indicate your intent.
+> > > >=20
+> > > > > +
+> > > > > +struct lwmi_package_file {
+> > > > > +=09struct lwmi_om_priv *priv;
+> > > > > +=09/* Protects the pending response on shared descriptors. */
+> > > > > +=09struct mutex lock;
+> > > > > +=09struct lwmi_package_response *response;
+> > > > > +=09size_t response_len;
+> > > > > +};
+> > > > > +
+> > > > > +static bool enable_get_data_by_package;
+> > > > > +module_param(enable_get_data_by_package, bool, 0400);
+> > > > > +MODULE_PARM_DESC(enable_get_data_by_package, "Enable the GetData=
+ByPackage debugfs interface");
+> > > > > +
+> > > > >  /*
+> > > > >   * Visibility of fan channels:
+> > > > >   *
+> > > > > @@ -1611,6 +1638,174 @@ static void lwmi_om_fw_attr_remove(struct=
+ lwmi_om_priv *priv)
+> > > > > =20
+> > > > >  /* =3D=3D=3D=3D=3D=3D=3D=3D Self (master: lenovo-wmi-other) =3D=
+=3D=3D=3D=3D=3D=3D=3D */
+> > > > > =20
+> > > > > +static int lwmi_package_open(struct inode *inode, struct file *f=
+ile)
+> > > > > +{
+> > > > > +=09struct lwmi_om_priv *priv =3D inode->i_private;
+> > > > > +=09struct lwmi_package_file *state __free(kfree) =3D NULL;
+> > > >=20
+> > > > The declarations of __free() pointers should be placed at where it'=
 s
->>>> can avoid loading on them. dell-smbios itself still loads, as dell-wm=
-i
->>>> depends on it.
->>>
->>> Hi,
->>>
->>> do you have access to such a machine? I would be _very_ interested in
->>> the output
->>> of acpidump on this machine, maybe this could be an issue with ACPICA.
->>
->> Hi Armin,
->>
->> I've attached the acpidump.
+> > > > allocated, i.e., ...
+> > > >=20
+> > > > > +
+> > > > > +=09if ((file->f_mode & (FMODE_READ | FMODE_WRITE)) !=3D (FMODE_R=
+EAD | FMODE_WRITE))
+> > > > > +=09=09return -EINVAL;
+> > > > > +
+> > > > > +=09state =3D kzalloc_obj(*state);
+> > > >=20
+> > > > ...here.
+> > > >=20
+> > > > Meanwhile,=C2=A0opening the file while priv->package_opened =3D=3D =
+1 allocates
+> > > > memory in vain. Could you move it below the package_opened check? I=
+n this
+> > > > manner you don't need the __free() either.
+> > > >=20
+> > > > > +=09if (!state)
+> > > > > +=09=09return -ENOMEM;
+> > > > > +
+> > > > > +=09if (atomic_cmpxchg(&priv->package_opened, 0, 1))
+> > > >=20
+> > > > atomic_cmpxchg_acquire()
+> > > >=20
+> > > > > +=09=09return -EBUSY;
+> > > > > +
+> > > > > +=09mutex_init(&state->lock);
+> > > > > +=09state->priv =3D priv;
+> > > > > +=09file->private_data =3D no_free_ptr(state);
+> > > > > +
+> > > > > +=09return stream_open(inode, file);
+> > > > > +}
+> > > > > +
+> > > > > +static int lwmi_package_release(struct inode *inode, struct file=
+ *file)
+> > > > > +{
+> > > > > +=09struct lwmi_package_file *state =3D file->private_data;
+> > > > > +=09struct dentry *dentry =3D file->f_path.dentry;
+> > > > > +
+> > > > > +=09kfree_sensitive(state->response);
+> > > >=20
+> > > > You didn't explain what data it is in your replies. "Can contain
+> > > > sensitive data" is not an acceptable explanation.
+> > > >=20
+> > > > Please grep the occurrence of kfree_sensitive() in the kernel tree,=
+ and
+> > > > you'll find that they are mostly credentials. Does the data passed =
+by the
+> > > > interface fall into the same category?=20
+> > > >=20
+> > > > TBH, anything goes through WMI is *never* secret. If a manufacturer=
+ ever
+> > > > decided to use it to deliver "sensitive" data, it either misunderst=
+ood
+> > > > the word or chose the wrong interface.
+> > > >=20
+> > > > An ACPI-WMI method goes through the ACPICA, then the WMI core, and
+> > > > finally here. The former two's temporary buffers are either on stac=
+k or
+> > > > freed by the vanilla kfree(). If leaking "sensitive" response were =
+really
+> > > > a concern, it must had been leaked before it reached your code.
+> > > >=20
+> > > > Please don't use kfree_sensitive() unless you really understand the=
+ data
+> > > > flow path and have a strong reason to use it. If you insist on it, =
+please
+> > > > answer both questions.
+> > > >=20
+> > > > > +=09mutex_destroy(&state->lock);
+> > > > > +
+> > > > > +=09/* Unlike read and write, release can run after debugfs remov=
+al. */
+> > > >=20
+> > > > The comment is not helpful, as it's just repeating well-known knowl=
+edge.
+> > > > Please explain what it protects:
+> > > >=20
+> > > >    The release() callback may be called after state->priv has been =
+freed.
+> > > >    Only when the debugfs file hasn't been removed is the pointer va=
+lid.
+> > > >=20
+> > > > > +=09if (!debugfs_file_get(dentry)) {
+> > > > > +=09=09atomic_set(&state->priv->package_opened, 0);
+> > > >=20
+> > > > atomic_set_release()
+> > > >=20
+> > > > > +=09=09debugfs_file_put(dentry);
+> > > > > +=09}
+> > > > > +
+> > > > > +=09kfree(state);
+> > > > > +=09return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int lwmi_package_invoke(struct lwmi_package_file *state, =
+u8 *data)
+> > > > > +{
+> > > > > +=09struct lwmi_om_priv *priv =3D state->priv;
+> > > > > +=09struct wmi_buffer input =3D { .length =3D LWMI_DATA_PACKAGE_I=
+NPUT_MAX, .data =3D data };
+> > > > > +=09struct wmi_buffer output;
+> > > > > +=09u32 data_size;
+> > > > > +=09int ret;
+> > > > > +
+> > > > > +=09lockdep_assert_held(&state->lock);
+> > > > > +
+> > > > > +=09/* The tested firmware needs two calls before its response is=
+ usable. */
+> > > > > +=09ret =3D wmidev_invoke_method(priv->wdev, 0, LWMI_DATA_PACKAGE=
+_GET,
+> > > > > +=09=09=09=09   &input, &output, 0);
+> > > > > +=09if (ret)
+> > > > > +=09=09return ret;
+> > >=20
+> > > If you don't care about the first call's response, use
+> > > wmidev_invoke_procedure().
+> > >=20
+> > > Thanks,
+> > > Rong
+> > >=20
+> > > > > +
+> > > > > +=09kfree_sensitive(output.data);
+> > > > > +
+> > > > > +=09ret =3D wmidev_invoke_method(priv->wdev, 0, LWMI_DATA_PACKAGE=
+_GET,
+> > > > > +=09=09=09=09   &input, &output, sizeof(struct lwmi_package_respo=
+nse));
+> > > > > +=09if (ret)
+> > > > > +=09=09return ret;
+> > > > > +
+> > > > > +=09struct lwmi_package_response *response __free(kfree_sensitive=
+) =3D output.data;
+> > > > > +
+> > > > > +=09data_size =3D le32_to_cpu(response->data_size);
+> > > > > +=09if (data_size > output.length - sizeof(*response))
+> > > >=20
+> > > > Why not use struct_size() here? Considering that...
+> > > >=20
+> > > > > +=09=09return -EPROTO;
+> > > > > +
+> > > > > +=09state->response_len =3D struct_size(response, data, data_size=
+);
+> > > >=20
+> > > > ...you've used it here, you may introduce a on-stack variable to
+> > > > temporarily store the calculated size and use it here and there.
+> > > >=20
+> > > > > +=09state->response =3D no_free_ptr(response);
+> > > > > +=09return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static ssize_t lwmi_package_write(struct file *file, const char =
+__user *buffer,
+> > > > > +=09=09=09=09  size_t count, loff_t *ppos)
+> > > > > +{
+> > > > > +=09struct lwmi_package_file *state =3D file->private_data;
+> > > > > +=09u8 input[LWMI_DATA_PACKAGE_INPUT_MAX] =3D {};
+> > > > > +=09int ret;
+> > > > > +
+> > > > > +=09if (!count || count > sizeof(input))
+> > > > > +=09=09return -EINVAL;
+> > > > > +
+> > > > > +=09ACQUIRE(mutex_try, state_guard)(&state->lock);
+> > > > > +=09if (ACQUIRE_ERR(mutex_try, &state_guard) || state->response)
+> > > > > +=09=09return -EBUSY;
+> > > >=20
+> > > > I don't think it's a good idea to share the same errno between the =
+two
+> > > > cases.
+> > > >=20
+> > > > While ACQUIRE_ERR(mutex_try, &state_guard) should return -EBUSY, a
+> > > > pending state->response should return something like -EALREADY or
+> > > > -ENOTEMPTY.
+> > > >=20
+> > > > > +
+> > > > > +=09if (copy_from_user(input, buffer, count))
+> > > > > +=09=09return -EFAULT;
+> > > > > +
+> > > > > +=09ret =3D lwmi_package_invoke(state, input);
+> > > > > +=09if (ret)
+> > > > > +=09=09return ret;
+> > > > > +
+> > > > > +=09return count;
+> > > > > +}
+> > > > > +
+> > > > > +static ssize_t lwmi_package_read(struct file *file, char __user =
+*buffer,
+> > > > > +=09=09=09=09 size_t count, loff_t *ppos)
+> > > > > +{
+> > > > > +=09struct lwmi_package_file *state =3D file->private_data;
+> > > > > +=09size_t len;
+> > > > > +
+> > > > > +=09if (!count)
+> > > > > +=09=09return 0;
+> > > > > +
+> > > > > +=09ACQUIRE(mutex_try, state_guard)(&state->lock);
+> > > > > +=09if (ACQUIRE_ERR(mutex_try, &state_guard))
+> > > > > +=09=09return -EBUSY;
+> > > > > +
+> > > > > +=09if (!state->response)
+> > > > > +=09=09return 0;
+> > > >=20
+> > > > Reading the file without writing to it in prior is a mistake, isn't=
+ it?
+> > > > Thus:
+> > > >=20
+> > > > =09=09return -ENODATA;
+> > > >=20
+> > > > > +
+> > > > > +=09len =3D state->response_len;
+> > > > > +=09if (len > count)
+> > > > > +=09=09return -ENOSPC;
+> > > >=20
+> > > > Returning -ENOSPC is confusing as there is nothing to allocate duri=
+ng
+> > > > read. How about -ENOBUFS?
+> > > >=20
+> > > > > +
+> > > > > +=09if (copy_to_user(buffer, state->response, len))
+> > > > > +=09=09return -EFAULT;
+> > > > > +
+> > > > > +=09kfree_sensitive(state->response);
+> > > > > +=09state->response =3D NULL;
+> > > > > +=09return len;
+> > > > > +}
+> > > > > +
+> > > > > +static const struct file_operations lwmi_package_fops =3D {
+> > > > > +=09.owner =3D THIS_MODULE,
+> > > > > +=09.open =3D lwmi_package_open,
+> > > > > +=09.release =3D lwmi_package_release,
+> > > > > +=09.read =3D lwmi_package_read,
+> > > > > +=09.write =3D lwmi_package_write,
+> > > > > +};
+> > > > > +
+> > > > > +static void lwmi_package_debugfs_remove(void *data)
+> > > > > +{
+> > > > > +=09debugfs_remove_recursive(data);
+> > > > > +}
+> > > > > +
+> > > > > +static int devm_lwmi_package_debugfs_add(struct lwmi_om_priv *pr=
+iv)
+> > > > > +{
+> > > > > +=09struct device *dev =3D &priv->wdev->dev;
+> > > > > +=09struct dentry *dir, *entry;
+> > > > > +=09int ret;
+> > > > > +
+> > > > > +=09if (!wmidev_instance_count(priv->wdev))
+> > > > > +=09=09return 0;
+> >=20
+> > Is the bail-out reachable? See commit cbf54f37600e ("platform/x86: wmi:
+> > Skip blocks with zero instances").
+> >=20
+> > > > > +
+> > > > > +=09dir =3D lwmi_debugfs_create_dir(priv->wdev);
+> > > > > +=09if (IS_ERR(dir))
+> > > > > +=09=09return PTR_ERR(dir);
+> >=20
+> > IIRC, usually any error returned by debugfs methods can (and should) be
+> > blindly (yeah!) ignored by passing the returned pointer to the next
+> > debugfs method regardless.
+> >=20
+> > See the kdoc of debugfs_create_dir() and debugfs_create_file().
+> >=20
+> > > > > +
+> > > > > +=09atomic_set(&priv->package_opened, 0);
+> > > >=20
+> > > > Why would you need this? The struct is kzalloc()-allocated.
+> > > >=20
+> > > > > +
+> > > > > +=09ret =3D devm_add_action_or_reset(dev, lwmi_package_debugfs_re=
+move, dir);
+> > > > > +=09if (ret)
+> > > > > +=09=09return ret;
+> >=20
+> > Technically, by postponing devm_add_action_or_reset() after
+> > debugfs_create_file(), we can blindly ignore the former's error, too.
+> > Several drivers have already been doing so.
+> >=20
+> > That being said, if doing so seems weird, it's also acceptable to store=
+ a
+> > pointer in priv and manage it manually instead of using devres.
+> >=20
+> > > > > +
+> > > > > +=09entry =3D debugfs_create_file("get_data_by_package", 0600, di=
+r, priv, &lwmi_package_fops);
+> > > > > +=09if (IS_ERR(entry)) {
+> > > > > +=09=09devm_release_action(dev, lwmi_package_debugfs_remove, dir)=
+;
+> > > > > +=09=09return PTR_ERR(entry);
+> >=20
+> > This error should also be ignored.
+> >=20
+> > > > > +=09}
+> > > > > +
+> > > > > +=09priv->debugfs_dir =3D dir;
+> > > >=20
+> > > > Why would you need this? The dir is devm-managed.
+> > > >=20
+> > > > > +=09return 0;
+> > > > > +}
+> > > > > +
+> > > > >  /**
+> > > > >   * lwmi_om_master_bind() - Bind all components of the other mode=
+ driver
+> > > > >   * @dev: The lenovo-wmi-other driver basic device.
+> > > > > @@ -1693,6 +1888,7 @@ static int lwmi_other_probe(struct wmi_devi=
+ce *wdev, const void *context)
+> > > > >  {
+> > > > >  =09struct component_match *master_match =3D NULL;
+> > > > >  =09struct lwmi_om_priv *priv;
+> > > > > +=09int ret;
+> > > > > =20
+> > > > >  =09priv =3D devm_kzalloc_obj(&wdev->dev, *priv);
+> > > > >  =09if (!priv)
+> > > > > @@ -1708,12 +1904,24 @@ static int lwmi_other_probe(struct wmi_de=
+vice *wdev, const void *context)
+> > > > >  =09if (IS_ERR(master_match))
+> > > > >  =09=09return PTR_ERR(master_match);
+> > > > > =20
+> > > > > +=09if (enable_get_data_by_package) {
+> >=20
+> > It'd be better to move the check inside the helper function.
+> >=20
+> > > > > +=09=09ret =3D devm_lwmi_package_debugfs_add(priv);
+> > > > > +=09=09if (ret)
+> > > > > +=09=09=09dev_warn(&wdev->dev, "failed to create GetDataByPackage=
+ debugfs files: %d\n",
+> > > >=20
+> > > > The file is named get_data_by_package.
+> > > >=20
+> > > > > +=09=09=09=09 ret);
+> >=20
+> > With error paths removed, the dev_warn() is no longer needed.
+> >=20
+> > Thanks,
+> > Rong
+> >=20
+> > > > > +=09}
+> > > > > +
+> > > > >  =09return component_master_add_with_match(&wdev->dev, &lwmi_om_m=
+aster_ops,
+> > > > >  =09=09=09=09=09       master_match);
+> > > > >  }
+> > > > > =20
+> > > > >  static void lwmi_other_remove(struct wmi_device *wdev)
+> > > > >  {
+> > > > > +=09struct lwmi_om_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> > > > > +
+> > > > > +=09if (priv->debugfs_dir)
+> > > > > +=09=09devm_release_action(&wdev->dev, lwmi_package_debugfs_remov=
+e, priv->debugfs_dir);
+> > > >=20
+> > > > Why would you need this? The interface does not depend on the compo=
+nents.
+> > > >=20
+> > > > Thanks,
+> > > > Rong
+> > > >=20
+> > > > > +
+> > > > >  =09component_master_del(&wdev->dev, &lwmi_om_master_ops);
+> > > > >  }
+> > > > > =20
+> Thanks a lot for the detailed suggestions. I need some more time to go
+> through them carefully and respond.
 >=20
-> Thank you very much.
+> There is one important issue I'd like to discuss first: the userspace
+> interface.
 >=20
->>
->>> Alternatively, maybe the wrong backend get selected. Currently the del=
-l-
->>> smbios-smm
->>> backend will try to read a specific token in test_wsmt_enabled() to
->>> determine if
->>> the WSMT ACPI table is active. This might not work on arm64 machines, =
-so
->>> maybe parsing
->>> the real WSMT ACPI table would fix this problem?
->>
->> dell-smbios-smm is not available outside of x86, as it depends on
->> DCDBAS, which depends on X86. It would only be using the WMI backend.
->>
->> Thanks,
->> Brian
->=20
-> If i understand the ACPI code correctly, then it seems that the WMI=20
-> interface interacts with a OperationRegion handled by the ARML0002=20
-> device, associated with the ARM FFA interface.
->=20
-> AFAIK the linux kernel currently does not support this device, maybe=20
-> this is the reason why all SMBIOS calls fail.
+> V1 used a character device, and V2 switched to debugfs. However, we have
+> since realized that debugfs is not suitable for our use case. We have a
+> production userspace application that needs read/write access to this
+> WMI interface, while access to debugfs is restricted when Secure Boot is
+> enabled.
 
-After doing some more research it seems that the associated WMI method
-tries to call a ARM FFA service using a FFixedHardware opregion.=20
-Theoretically Linux already supports this, did you enable CONFIG_ACPI_FFH?
+Well, that's a legit reason of using another interface instead of
+debugfs.
+
+OTOH, restricting access to sensitive data is the intentional behavior of
+kernel lockdown mode. That is, if accessing the data in kernel lockdown
+mode is acceptable, it must be non-sensitive.
+
+>=20
+> So we need to reconsider the interface. Would exposing it through sysfs
+> be acceptable, for example as a binary attribute under
+> /sys/bus/wmi/devices/DC2A8805-.../, similar to
+> drivers/platform/x86/dell/dcdbas.c?
+>=20
+> What do you think?
+
+ACK.
+
+I originally suggested debugfs because you seemed to prefer a fine-
+grained protocol, but sysfs is also OK as long as the protocol can be
+simplified. IMO it's fine, as the original protocol seemed overdesigned.
+
+Simplifying the protocol should may the patch easier to review, too.
+
+Note that introducing a sysfs attribute usually needs a stronger reason
+than introducing a debugfs one, so it's now more suggested to describe
+the purpose of the "production userspace application".
 
 Thanks,
-Armin Wolf
-
-> I also noticed that the device supports the WMI interface used by the
-> dell-smm-hwmon driver. If you want i can try to enable this driver on
-> arm64 too, but IMHO it should be considered optional at best.
->=20
-> Thanks,
-> Armin Wolf
->=20
->>> Thanks,
->>> Armin Wolf
->=20
->=20
+Rong
