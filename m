@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795480749;
-	b=VOxRIdQYQ2amGaaDHPmERC6Xr73TOVJZNBiRNc3lbEn8sAcsyVH4ODM6QwHNA0DfFnq+
-	 KMrk72wywK6F+HUGcsBozVvFTc7nmIZdjZuxuss9nxPNpeb7wR+eEcDfPjkEljfhQLe+q
-	 kX+mdOV1R1WLNeaVjt1v+2GNZIh5bZzU08BIjQGsnA/ppLQJ7mWdsDfA2Krp7NHSh1TMm
-	 btFoe/A8MlfwtGDuzyyO2kChDbZWGcKrrM2x6W3NLstyeT22Rkfl9IUdd7nGoZI21Jj+s
-	 FWl7ATXMaktxj1cBVvXnhaSTCrqGf2aba+Ijge/lRPwPEsWyGTyOO6Vwe8X2bkGQn3Q==
+	b=QTVF4VGxh7DkaSwfevQCnmr5vwFIm2zqYloTiAweYJ9WOOJE6/A1YYPMfL+3zzoJS6f+
+	 p9EZJGusXZu2O/xNy/wEis/yIaoJaKKzA26N+6YnPHT+Lj25yqqtVLPZerAhRkKGxn9/r
+	 pMCElIpvengq6W0iUR6Sby54MwfhNY1Mrv+6mV5kVQukffBAbTQYK9IKk+kweDi9h3vMF
+	 e+HIdUU8vaE521lp2nEecieEuEmR9sDElSXIhUB+jdPK5NJJa7ylnog6tJnVyhB5mYFsc
+	 zAb2Vxr8TrTgvinNnQn+4yvx56MN1pFU36UB/AOyNh+lHMqd9HulbC/Q7FlPfw8R2sw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795480749;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,52 +13,52 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Subject:Date:
 	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=WmCRnPyQcqGAmc/KbyZJiRmgyIXqLORtIwWeIT6hugs=;
-	b=AhPCIP/TLPhd00D057GhTzzOEflVusk90PdsQfMbintdNlgDgWDB29kvOJRsTAfPi0wq
-	 n9HonZckJhZbfkYv/VlIenc6/FzUqA1og+us1ywrymG2lnO3UsiR6HfkI7XCZz+v83QXL
-	 5sFzH9rzwqpQVWsx9SUsjbQtjepdtUOKWGdc6ab4v1iKede0CMd7Vf8P6542HFb1QoVb2
-	 Y9QHv0mdC1B83sJCGPXLnp+GIHR8cKQFTlDrTZ0/i+l0klSo7EAYq4Azt/fLsdVehr2Br
-	 EGyCQuUpmDHe3P4gdW17AtBDC9gkqXot2/hlfrwAwIsYljLkCbuCA5HgOTzyirrf1xQ==
+	bh=zcIhMhLvqz1V7EZaXdVU5C4RHSq/J9OX65mpQmpvZGE=;
+	b=ygu2JD32U/eL2bdJ5YwUrXNbShyvjz1ZHlOjfmpxCpjcuIG9rvLjewnWtOjkSrcpsRNc
+	 EIcrreoEOaA/vTzOboAbKXE5yKofHFDhr28Y0NjMeuzocNJ3BjhZbuxRTNCDEbBxDIVEC
+	 iRqnCo878Mqq+lhNaOuXR3oMY8VU0PnjzlBOmQDl3h5MsEvon96T7FnJdLpUL20utRJYp
+	 GGNWIzaSdU2k0nz9OLPjQZW7o/sevx1VpLJ/gGX5dQ3DG4yyFZzUtHaJV937GHdTmgTSl
+	 oIXEPYROORjnBAP3aA7AXnlAREoHcyTQWggbgLMqN99rdESjealcVnXF/uYKOaKoX9g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cMUG2jvT;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=l+PXguhG;
 	arc=none smtp.remote-ip=192.198.163.18
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35BC606A330
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 00:39:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E35BC606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F9D606A32E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 00:39:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16F9D606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=cMUG2jvT
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=l+PXguhG
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795480748; x=1827016748;
+  t=1795480749; x=1827016749;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=NuDV/lqBLFYg5Wc4D4u773Li/GKPyfBWlL8alEGMaRM=;
-  b=cMUG2jvT/Nf+ybSPFeBkRO0SxC7NuoyINGSv4kFzooG5jUSBJzj6YxH2
-   BVja9eKMtzxEXEGFe3JWM6oOQRerb0ELuKMQkp6+GQ5jY6mapkAaMF1b9
-   1JlucajsJ1vpimG28/SKmMlHAiA0BmyX+1n37ghq7B6DObkxgfYWZaEYI
-   cNp0ZTmYEAsBPLNm6v7BNRNTqOePelQRiFyhiA7mgfQwESQ06WTTgn1m9
-   SPzeod4yRt3605ETb2GBXNTRGELMvtw3PDMuiQh5lRwwPA6Zlz6BkPhzH
-   +9Vyfc8q6l2f3ay9jLcnpMopfiU1AYLMpympIaAwBVBLjjepWt4TRnT95
-   Q==;
-X-CSE-ConnectionGUID: NxGtCOBjT1eaQVN1hTrZYQ==
-X-CSE-MsgGUID: GxXoNBEFRs2n0D0+WhBv/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11975"; a="4332832"
+  bh=ezlzVcHtVeoHglV01p3bjkxy2KglS2VRWAzc2hftpZw=;
+  b=l+PXguhG6L85nzBboPXIiaBmRU+Gjn5zCW7VoGfvcEjHxgeo8zVzMaOf
+   Emd/26yC4+N057VxkXCpPRam65CpJF8yEqycoLNzAIGvZsif/Q20aIMyN
+   9g6b6jOdu7qVY/muLdqzO9a2oqyZ0lRM9/VDTgtn+XYF8Z4x8RlS66kwN
+   E6p4hsFhoZA1hHkgc0tb5wC7csaAh4z7MqpI3AklkpNqr+Wb6DMkmS4Ui
+   lK8iMz7DlnfQWEq7AG4IkULYk0cqc05b6dX7ItlyTCSm0jssa3Svg4GH0
+   WPTZKEKFCuHfC9bvmK9GIZ0NIY4REINuBbKq3Uibb35z4d64GPvE8CZK0
+   A==;
+X-CSE-ConnectionGUID: X7/dPAvKTkSvmLeiZsGxhw==
+X-CSE-MsgGUID: fyUbKHu+R0avPpz9Faspsw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11975"; a="4332852"
 X-IronPort-AV: E=Sophos;i="6.27,229,1787036400"; 
-   d="scan'208";a="4332832"
+   d="scan'208";a="4332852"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
   by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 16:39:05 -0800
-X-CSE-ConnectionGUID: nZOVbKWuS0ChNRQpziio7g==
-X-CSE-MsgGUID: ApLMyS4ZQneVXDDKXjWwQQ==
+X-CSE-ConnectionGUID: PkebOAZUS8eyuSdVhGhjSQ==
+X-CSE-MsgGUID: qjxu1OM1QaymydoDgU9EQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,229,1787036400"; 
-   d="scan'208";a="11805737"
+   d="scan'208";a="11805749"
 Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 16:39:06 -0800
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
@@ -76,9 +76,9 @@ To: platform-driver-x86@vger.kernel.org,
 	badal.nilawar@intel.com,
 	matthew.d.roper@intel.com,
 	james.ausmus@intel.com
-Subject: [PATCH v22 03/19] drm/xe/vsec: VSEC requires soc-remapper
-Date: Mon, 23 Nov 2026 16:38:59 -0800
-Message-ID: <20261124003856.4145635-24-michael.j.ruhl@intel.com>
+Subject: [PATCH v22 07/19] drm/xe/vsec: Add DOC text for VSEC
+Date: Mon, 23 Nov 2026 16:39:03 -0800
+Message-ID: <20261124003856.4145635-28-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261124003856.4145635-21-michael.j.ruhl@intel.com>
 References: <20261124003856.4145635-21-michael.j.ruhl@intel.com>
@@ -93,38 +93,88 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Survivability mode includes xe_vsec_init().  VSEC requires
-the soc remapper to be initialized.
-
-Add the correct init to allow correct VSEC behavior.
+Add the necessary files and text to use the DOC system.
 
 Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Fixes: 32eab46a6160 ("drm/xe/soc_remapper: Use SoC remapper helper from VSEC code")
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/gpu/drm/xe/xe_survivability_mode.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/gpu/xe/index.rst   |  1 +
+ Documentation/gpu/xe/xe_vsec.rst | 14 ++++++++++++++
+ drivers/gpu/drm/xe/xe_vsec.c     | 24 ++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+)
+ create mode 100644 Documentation/gpu/xe/xe_vsec.rst
 
-diff --git a/drivers/gpu/drm/xe/xe_survivability_mode.c b/drivers/gpu/drm/xe/xe_survivability_mode.c
-index 91a0680e449b..10f9de4eb03b 100644
---- a/drivers/gpu/drm/xe/xe_survivability_mode.c
-+++ b/drivers/gpu/drm/xe/xe_survivability_mode.c
-@@ -21,6 +21,7 @@
- #include "xe_nvm.h"
- #include "xe_pcode_api.h"
- #include "xe_printk.h"
-+#include "xe_soc_remapper.h"
- #include "xe_vsec.h"
- #include "xe_wedge.h"
+diff --git a/Documentation/gpu/xe/index.rst b/Documentation/gpu/xe/index.rst
+index 497a0a4b12f6..de829aecf8f1 100644
+--- a/Documentation/gpu/xe/index.rst
++++ b/Documentation/gpu/xe/index.rst
+@@ -37,3 +37,4 @@ The display, or :ref:`drm-kms`, support for drm/xe is provided by
+    xe_gt_stats
+    xe_sigid
+    xe_pci_error
++   xe_vsec
+diff --git a/Documentation/gpu/xe/xe_vsec.rst b/Documentation/gpu/xe/xe_vsec.rst
+new file mode 100644
+index 000000000000..1a87548489ea
+--- /dev/null
++++ b/Documentation/gpu/xe/xe_vsec.rst
+@@ -0,0 +1,14 @@
++.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++=====
++VSEC
++=====
++
++.. kernel-doc:: drivers/gpu/drm/xe/xe_vsec.c
++   :doc: VSEC
++
++Internal API
++============
++
++.. kernel-doc:: drivers/gpu/drm/xe/xe_vsec.c
++   :internal:
+diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+index 38081dacd307..082b25b017db 100644
+--- a/drivers/gpu/drm/xe/xe_vsec.c
++++ b/drivers/gpu/drm/xe/xe_vsec.c
+@@ -19,6 +19,17 @@
  
-@@ -354,6 +355,7 @@ static int enable_boot_survivability_mode(struct pci_dev *pdev)
+ #include "regs/xe_pmt.h"
  
- 	xe_heci_gsc_init(xe);
++/**
++ * DOC: VSEC
++ *
++ * Some GPUs support the PMT feature.  For those that do, this API provides
++ * probe, discovery and usage (control and access) for GPUs that have PMT.
++ *
++ * PMT is usually accessed through a PCI function.  However, that is not always
++ * available, so the PMT intel_vsec_register() function can be used to set up
++ * PMT usage.
++ */
++
+ /* PMT GUID value for BMG devices.  NOTE: this is NOT a PCI id */
+ #define BMG_DEVICE_ID 0xE2F8
  
-+	xe_soc_remapper_init(xe);
- 	xe_vsec_init(xe);
+@@ -140,6 +151,19 @@ static int xe_guid_decode(u32 guid, int *index, u32 *offset)
+ 	return 0;
+ }
  
- 	if (survivability->fdo_mode) {
++/**
++ * xe_pmt_telem_read - Given a device and a PMT GUID, read data into a buffer
++ * @dev: valid Xe device
++ * @guid: PMT GUID (from the PMT discovery struct)
++ * @data: buffer to place data in
++ * @user_offset: a user offset relative to the beginning of the data to read
++ * @count: bytes to read
++ *
++ * Return:
++ * * -ENODATA for incorrect power state
++ * * -EINVAL for unsupported PMT feature
++ * * count   number of bytes read on success
++ */
+ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset,
+ 		      u32 count)
+ {
 -- 
 2.43.0
 
