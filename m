@@ -1,23 +1,23 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795516813;
-	b=3jZhltzNJBz4OLY+20eDwViKzZKj7nY6v5DgcKk5SLqa4MmXZyiDLumb3vQKOhSHHFAn
-	 FOheupjVheCSrHyTK0sPmYkPHPi4K7Eo3/HMe5/jG76m+iCyX3ehIHvLrxyDctoZLaX8q
-	 2X1M5VOXVE9wf1DUN0R9qRGCqXWjLhfACzZnb6QLMOwplKaWpZTMoBeD28q54Cd8wVtVd
-	 5hedcgooNELjfCCXTFHhCAOt33cgA1eG2w5qaJHBLh9ALG/IYIdG9HXlYhcFWqdQ4ZsGf
-	 R7r05/S8ttvRsBqGUN/hm4J24m9CfmMa41xkDOyO13dWc4Bi9wN/6gLhlop5m/Z0BLQ==
+	t=1795516817;
+	b=bN/j0Y2ngmaj5oYKqLx2/u3xk8Ogz5S73SqHo8VtpTYvVFJlIAIZAD/vywMtzp8wm0P4
+	 pyUgs4njZAcU6VjOL7NDkp2aLsrQF7oI7QOOzgx/MFtiN+LdpOuKdCjRfU0iBVsEyudD3
+	 YeJdOoHDPoUVwTr19pN+h2dK4xXZzrLpuKk/q9D0nZiPVO0LGo7XuCVFWdPx7PHGXKLEm
+	 xR4M3xisPSMYcsRiVIDpTb+PXg7HUP9x5c2XIAofcp1NpPtPofGUKhOLVc3FkuBLpZS/R
+	 MOqwuFOPQLc/UeO6mpvOoVXV4UKbASqW004GAdEJBjz52FJ1v6dEGwaJY20Oj7gAgRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795516813;
-	h=DMARC-Filter:X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-META:X-CID-BVR:
-	 X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:From:To:Cc:
-	 Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795516817;
+	h=DMARC-Filter:X-UUID:X-CID-CACHE:X-CID-P-RULE:X-CID-O-INFO:X-CID-META:
+	 X-CID-BVR:X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
 	bh=QxsB3bf/Ce84fX8xRs2YrrShTAJHmg2rR46h79gKFU0=;
-	b=tfFfiehawhWN/XknucTMzStA/9QTyuAY3oU81+Rw8DdK3YWHJPNvkZdaVdrSnO4neKbm
-	 ShdPOsuk9F3f9nJhsTAKdroQz8SSbFxbEFowOz+0+RJWbd7wUKcf+fvcyFUmySK2aQgMi
-	 qJqts6UxeP2xVlx+xS/W6jpQsdNLXbA02c/oFKfhe1ZBODFUZfYrEhv4ritgrSCnSUbE3
-	 OSUyGuPKmicHxo/ZvNMqDn1Y1DiwGj8X8wiotv95EGRF0AjviYAPiSp5pG5IKSTDDE0SU
-	 pLwpheNPAn/NMynSPqSoim1vrvSXi3wbufn5LtJI0GFCYNBMqYaVIA3T7LOIvQt47yQ==
+	b=WHGAOtAJLa/J5j7h7ZsB0NEX4n29IqZqc7zpzJ+FtkAhWGaVzdh57xamFrGXneYT9XYn
+	 58ra43lssBaGQZRst5aSvdDiReunZdUrjjkTeOqWXv24ZrXvAGbKQ4EQtHXS2mOvypQNB
+	 WndnuTIOOkkYDkLw8uEatnFbyEUzMX3hmsT4LWRdGN0lwif7VfLcWdP97MVP1/9azJSq9
+	 MmC0j0HXWNosJrlMLocydusUJj5WTWBur7BhwJ5CZGYY0VCT8RY7bhWqtHcLoAU9bM53x
+	 E2fmVp7Nuxh7i4I120tL0TBp04Yz+f0OYF9/I/RPwTd01M8D+pTNYX0mZDONmlmqM/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=kylinos.cn;
 	spf=pass smtp.mailfrom=kylinos.cn;
@@ -26,14 +26,15 @@ Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D8A606A326;
-	Tue, 24 Nov 2026 10:40:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 26D8A606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2890D606A327;
+	Tue, 24 Nov 2026 10:40:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2890D606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 64984a44e7f311f19a56ed5b684f684d-20261124
+X-UUID: 6af58618e7f311f19a56ed5b684f684d-20261124
+X-CID-CACHE: Type:Local,Time:202611241840+08,HitQuantity:1
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:ef6b8d20-7f63-4bdd-9202-8e4b0db2cfd8,IP:0,U
+X-CID-O-INFO: VERSION:1.3.19,REQID:859d0e6e-6289-4e94-88f6-26f4d9919eed,IP:0,U
 	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
 	N:release,TS:20
 X-CID-META: VersionHash:7db8b62,CLOUDID:fb9cedf8be987cd424c12f0e8300b60a,BulkI
@@ -44,12 +45,12 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 64984a44e7f311f19a56ed5b684f684d-20261124
+X-UUID: 6af58618e7f311f19a56ed5b684f684d-20261124
 X-User: huxiaoying@kylinos.cn
 Received: from thinksys.. [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <huxiaoying@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1917889131; Tue, 24 Nov 2026 18:39:57 +0800
+	with ESMTP id 966444487; Tue, 24 Nov 2026 18:40:08 +0800
 From: Tom Hu <huxiaoying@kylinos.cn>
 To: linux-kernel@vger.kernel.org
 Cc: hmh@hmh.eng.br,
@@ -62,8 +63,8 @@ Cc: hmh@hmh.eng.br,
 	xiaoying_hu@126.com,
 	huxiaoying <huxiaoying@kylinos.cn>
 Subject: [PATCH 1/2] platform/x86: thinkpad_acpi: Update charge_stop only after it was applied
-Date: Tue, 24 Nov 2026 18:39:34 +0800
-Message-Id: <20261124103935.897624-1-huxiaoying@kylinos.cn>
+Date: Tue, 24 Nov 2026 18:39:45 +0800
+Message-Id: <20261124103946.897642-1-huxiaoying@kylinos.cn>
 X-Mailer: git-send-email 2.34.1
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
