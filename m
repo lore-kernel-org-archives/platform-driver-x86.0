@@ -1,11 +1,11 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.254.200.92
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795541283;
-	b=bWxcXbvzrWzU9zPZ4u2/KNGM8UGG4fFNVExPL7lQIVhIhQQBVgz32pTjhx4GH73Z309O
-	 RP1ksNdNfgZtK5Z63bBk9GNCmeX+Vd06vT25ydfGatF1HcCs9wn66hbhekkK15UDyBq4Q
-	 xLx2rSPrdmc/2ltWlD8XkocsvJlQCnZJP4zYS/Vu4a0+pNcxyySzFNwpnk/duiFFr5GMu
-	 qwOZmQ0P0xyB4ITOTdqoll+a+k3X1+vMuaTG8BHiARYV++fJY8Drg35NiOAz4rFYNbJyu
-	 SQ0zQ4AX4n8u3pGfpXREpkvaSk1iaxHDsoQj9iD5fK2U8eHOKI7avUfOGBxLa7buElg==
+	b=znF4zRwpWvr5H5/nfqwk5JpsrmHHwamDHGFpU22Ud+BMRxqLzs8iJQhauKwXK0HoWLFz
+	 OrpLhXsLA/VD2zxNQfI9s0//nl52IXzlVIKijEX56rSWiTJTxxmuLjbtUgqOFy1pYkD5Y
+	 JcKHo0ZMla74THhCQiMhwLzIeCVb3owmmXm3YjV/vX3/bw5LBbpMtZ6BlgjjUVSCWmL3Y
+	 nKk3KufKA8KcoLhs9NvSL+AgXWr3Ec4cWqwghguI2L5/xosRovD+xYoeWWzIpYlghtz03
+	 4eygLBd2SgTkvIVZt4SdeIwxv3wcGJvTji82BlgNQj9FGvx1SQ/ragzlMhxS924aPcw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795541283;
 	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
@@ -13,42 +13,42 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
 	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=XDPue297Z7phT3YK13k7pD563oe2avvfX9y7NzMqnKY=;
-	b=TTEEsUm6LjB7DQj8ah1Ew/UgPL1FP7KIL4AgBIAYdESgHCRqSvHVK5T8eixofOoPItNe
-	 ATcJpB8XVXsDJ3rXjmYs0ThXXTeTqpIayLFjrLjpHpwmROy8K/lLGF+18sKrIpI2br7cf
-	 4rRw/thbHAT5nlVVVXiBYbDyMJvb5jm749mQNX2Q1Ya1HLQZxfsrzrvzgul32qRUcT6LV
-	 iCHg2ODw8JyVSdF6nUme28N82lzQzEVSj2ElI3rSqEsfVsKp4hEl1e1r7ZA7OahvyFls8
-	 kVr8ulKKi+TUKDUxOILumwK2Q6Cm0osC+duEaYwCeBWTHktgweI/nmWKHWUBwgPiQtw==
+	bh=umues63wH7jbsbumI5KNs6T4Yj4M+7oybHqjPtUUOIk=;
+	b=xoVOlfpSAiNZGnY8Q4oT3AcgzPiCtASQu1+o58zYTUcQTXWrLlatpTY8iVvWtMNfao8/
+	 t9BOnJOEVh5MqjQoQuWLlqSyfDq1AXiXFGBLYHlm2f9rRhxav9cmvGATr+k5qgSlYgxOM
+	 tWZxuqD2zBj+FZR3uJSkDucZ87oxrLSW4k11i3v7d2a+cNM+YX9mWLy/Sv3ebKHQXoc2A
+	 FofPGTzD6w0wERXpRPOBO/wNP8q4ugN1LAkfvMqgmNv3l+ntzdLdLIvdY92S6zbSh7b1o
+	 L0VsU+bPRKPXBuJPldMDBXrdB+Uob9tyu0aLgeMWW8TpP7PpwWPvNMIiCa7GSABa+eQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mail.sustech.edu.cn;
 	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
-	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b="HCnqcdx/";
-	arc=none smtp.remote-ip=54.206.34.216
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=HqJKCysx;
+	arc=none smtp.remote-ip=54.254.200.92
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F871606A321;
-	Tue, 24 Nov 2026 17:27:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5F871606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA1F606A326;
+	Tue, 24 Nov 2026 17:27:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CDA1F606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=HCnqcdx/
+	dkim=pass (1024-bit key) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=HqJKCysx
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
-	s=oemc2211; t=1795541227;
-	bh=XDPue297Z7phT3YK13k7pD563oe2avvfX9y7NzMqnKY=;
+	s=oemc2211; t=1795541225;
+	bh=umues63wH7jbsbumI5KNs6T4Yj4M+7oybHqjPtUUOIk=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=HCnqcdx/SMI4g4WGbTzAJBcg+fAm6ZxGPjOT1OoggfwNR9XU3SpiDn0HyokHBbIfE
-	 tx5+BvVfCv/bZSQwHdz+4dYpq67mc86a1qjtAxqxPZcOfTPLBw1Ytz8Yw1Pd616WON
-	 uAf80YzPgMUO2qt7tor4COFFnxcZuBuqeD54+9JY=
-X-QQ-mid: zesmtpgz9t1795541222tc493f853
-X-QQ-Originating-IP: qs0zQbqD06Mj85/MKw5YEEG1PmYKiZr3ZVyKcLknd5M=
+	b=HqJKCysxyQA1U/vG6jeO5U5AYlnRjDffdiBaPi5R9VE+rwfgWCI47+cfVNmu4FQYX
+	 sgsY0O9OK7Aiz45aN2EkQHTmqhv4ZpKEbsS32RhkRLaP3hHPNAIux8bTM1wT7ti8Kv
+	 S/Fw7ajxaYOLjglB40rXnJNpIXAmgF4yGQBcGmJo=
+X-QQ-mid: zesmtpgz9t1795541220t893dc80b
+X-QQ-Originating-IP: K/3y/atdbX8o9h2nkVJA2iD2ZW1tv7gvwJawJpixFNQ=
 Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.244])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 25 Nov 2026 01:27:01 +0800 (CST)
+	id ; Wed, 25 Nov 2026 01:26:59 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 12639114203277216364
+X-BIZMAIL-ID: 6108143953703836400
 EX-QQ-RecipientCnt: 7
 From: Fuwei Xie <12313607@mail.sustech.edu.cn>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -58,9 +58,9 @@ Cc: Fuwei Xie <12313607@mail.sustech.edu.cn>,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Eren=20=C3=96zen?= <erenozen@protonmail.com>,
 	Zheng Shuyang <yhshzh0@gmail.com>
-Subject: [RFC PATCH v3 3/5] platform/x86: huawei-wmi: use the sized WMI method interface
-Date: Wed, 25 Nov 2026 01:25:30 +0800
-Message-ID: <4A5D129D738884E9+20261124172651.37716-4-12313607@mail.sustech.edu.cn>
+Subject: [RFC PATCH v3 2/5] platform/x86: huawei-wmi: bind the Huawei method device
+Date: Wed, 25 Nov 2026 01:25:29 +0800
+Message-ID: <1B65BDB3A7AABFF5+20261124172651.37716-3-12313607@mail.sustech.edu.cn>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261124172651.37716-1-12313607@mail.sustech.edu.cn>
 References: <20261124172651.37716-1-12313607@mail.sustech.edu.cn>
@@ -76,270 +76,218 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NUn4eCFdhkFQqDqbSyfPqIZjft4aPfKQsd89318NaEuYIMfgMIjADvEY
-	4e4wjoB1ksX2exgHXOnh2i6ZkLq1f+piw5A6Zd+8oCXXlBewEl5XW22o/eaTrge/OOZXlMD
-	lAi0w1sJa8bZ6ILlnNDa/OZy58tjnYL5OftCF7h31nw8iH2TzrlKTTyYwZzPpQw3UPBbDPb
-	1kvcsTwzuqMFRA0YioF3rLq/YikmEDaYgHwmaqe2aYWSeRGjlmFrCs+xI0TRmY/ScJVl/la
-	eacgd17HG254GLc5j/uSZQ3KXfkXY7DZos1MID+dFmtYiyb516YQCPoW/TSpP0bfUrEYIE0
-	66fCNUIggbNo/yV7bW2cXobOpgB8iG8eubmm1HO9CqoV8a55zvKT0RboDRpQMSbpgz/SRtr
-	MmXm7C6sQA0xPAx9RLIqkRbB1SAuxqGRdfXWxX062QXeeyAulSz2PmJJHimmBWSyu4daeM5
-	t17Ns0SiiOjSFdglkDrFD1bomHtRJvEv9+NTb79IEACYwEbhHTu730qBiHzdDmTa2awxkRo
-	Uqph3aEI6+mV6nUnsIGvK4iC4eD6V5JAVCzqlNA26vnTzCWD1fzPjC7hWtlEANIPHbIEeCr
-	Nr/76yaElv8dfgT41f1Goe0r1HBGXhyZYDTDcfZxHOD01/ENaB5V/NKqOv5vx94G8558gOM
-	WonGfJ7dJF0vCIwU+8w1ar7clCn4Z0WdFm4e7HqBFFfZob5MQv2KsMinBf9E6JHe3JK790M
-	riRIUVJAd+Q/3Y1nJyhPbXBlvA5DwdWRb2lg+9SbMNp5GJEfp5IZd0mhQIOsVu4Oo+vJBpm
-	JKkigmEPbnQTVbtT0AEElFVMEBtHA36GNNyLYg/a1O7sELo69LyYRvtdPfBon7K+iiRg+QE
-	k+w6AhEFJgWM2qO2jAZnU/5WMq3CmXbcxJjMrHOGotBYaHyN48G6l9aurvo0c9UWArWFfWu
-	4Q34CupU/zA0VIGIrmqvI/bm39hGpwHMBvE9bp11cXv17nuzRPT7FlZKqijZs10UhXIU/3I
-	/vk5UFphlfvBkD677atRz1cPEVl41c8gkSiPsar1w8st2j7w2WIwfdzOL1cBd28w53IvFEm
-	EFwlb1lRq2X
-X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
+X-QQ-XMAILINFO: NzSDQCFWCzVT008q7Gogg7lls1PPIziJ9ql9G179Zr7e9kG5itU+Yddj
+	wjBPD+iEWXc53Zwc0Li8IBGC5V658fnFn04thxSOzkQhuAtgPvWopanaNkZhKe2CkyK/VLt
+	g9VoksvX6Sp6ZiNBKwFkvKdKIK4pHMo6NP3p/dv297/v9z4FrMJBZOXi+zh0D81UPAKNCJ9
+	Cv5apo8+WBbfs2SjiptMk98pVUf2ITiZsZa7hHtZDou+lsMkNFdU5xr/NQdAtbo2qvEBfW6
+	wkkrPGPYeRvAQwDQw30KFtQgtcf/VwyNAJDG9shBEfte3lM4077VyarhkR3pkYSpTPcgD7x
+	UlExcXkY/WeN3Q9OSktUWQOe279dY9AhftPxRnVztXDXnRMEeYvcg6ot9vkYXkErc1msm0p
+	89aHeGsTQOvMKJueEc2NrfXqe3sApviDW/4759HHFNTK1yI/jBHMZiiRoBI3J6AmoDrEnrL
+	sTSOPBJeLExyZnI9dWlfxPlZRWUFq9wq5AOrn7pI1hturAlt/FHEQa9ME/lyjGQn9jC9MYg
+	weuNkGiBLuENEqSsabrtU2ra1uM8+YOZm7OQl8tYcBj7gCT6520S2MOb5SI4aGJKrfsDlda
+	e78up126NWB3jR8FFRvpcNSn6DuhXmmNJjDsJOZoUYkjPmAECplrGTgl5FRpqn051e0K3La
+	mlKTyyVYavdpro9o+NR4AlwcMgslh10jy1WXynxArW4bMACL45ODBLR6vDnqlHK+X1xc56L
+	suvFdESFMALCHGGYnH7cFl0PSKGpPDvwMWyHF3DIk5wtbPx9EvTiyMRh6fBvPV7TLy/o1Mo
+	vRx0tmHTUqI+2v9D9DzLm3xdSx95XxHu3LEDYroeeluoACSQ7q1eeM9b5RDF0R7QerEwKMc
+	qIUUzyaIBMTNHnf5IsvVsPUmg7xU67/KLR1v/Ri4h8lA0tJ9hrpTa2vMvpP5lMJadZGNJ4g
+	oUi8upsWM21r0lJ7zCVvgzRw7g8vQQsGafZmp2FvIZCCHc8SJu3IXwaKc4JKK5d5NJE/hup
+	W8s7IBqfOkL50vIl9OeR7va/WjBijex76pczkMbUGQmoHS1r+VLJZX5NUowhg=
+X-QQ-XMRINFO: NyFYKkN4Ny6FuXrnB5Ye7Aabb3ujjtK+gg==
 X-QQ-RECHKSPAM: 0
 
-Let the WMI core unpack method replies and require enough bytes for
-the common header. Hold the mutex across both attempts. A retry status
-may arrive without any command data, so validate each successful query
-against the fields its caller needs. Scan only bytes actually returned.
+Bind the method GUID on the WMI bus and give its platform device the
+bound wdev for method calls. Unregister the platform device before the
+method driver releases the binding. Keep the platform sysfs location
+and the input-only path on machines without the method GUID.
 
-Keep the raw debugfs dump on the device-based ACPI interface so it can
-display the original object types.
+Allocate platform state on probe and unwind previously registered
+input handlers if a later input device fails to register.
 
 Signed-off-by: Fuwei Xie <12313607@mail.sustech.edu.cn>
 ---
- drivers/platform/x86/huawei-wmi.c | 170 +++++++++++-------------------
- 1 file changed, 59 insertions(+), 111 deletions(-)
+ drivers/platform/x86/huawei-wmi.c | 109 ++++++++++++++++++++----------
+ 1 file changed, 75 insertions(+), 34 deletions(-)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 690bd0abc..209066260 100644
+index 559731d15..690bd0abc 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -151,101 +151,42 @@ static const struct dmi_system_id huawei_quirks[] = {
+@@ -60,6 +60,7 @@ struct huawei_wmi_debug {
+ };
  
- /* Utils */
+ struct huawei_wmi {
++	struct wmi_device *wdev;
+ 	bool battery_available;
+ 	bool fn_lock_available;
  
--static int huawei_wmi_call(struct huawei_wmi *huawei,
--			   struct acpi_buffer *in, struct acpi_buffer *out)
--{
--	acpi_status status;
--
--	mutex_lock(&huawei->wmi_lock);
--	status = wmidev_evaluate_method(huawei->wdev, 0, 1, in, out);
--	mutex_unlock(&huawei->wmi_lock);
--	if (ACPI_FAILURE(status)) {
--		dev_err(huawei->dev, "Failed to evaluate wmi method\n");
--		return -ENODEV;
--	}
--
--	return 0;
--}
-+/* Both HWMI reply formats start with four reserved bytes and a status. */
-+struct hwmi_reply {
-+	u8 reserved[4];
-+	u8 status;
-+	u8 data[];
-+};
+@@ -156,7 +157,7 @@ static int huawei_wmi_call(struct huawei_wmi *huawei,
+ 	acpi_status status;
  
--/* HWMI takes a 64 bit input and returns either a package with 2 buffers, one of
-- * 4 bytes and the other of 256 bytes, or one buffer of size 0x104 (260) bytes.
-- * The first 4 bytes are ignored, we ignore the first 4 bytes buffer if we got a
-- * package, or skip the first 4 if a buffer of 0x104 is used. The first byte of
-- * the remaining 0x100 sized buffer has the return status of every call. In case
-- * the return status is non-zero, we return -ENODEV but still copy the returned
-- * buffer to the given buffer parameter (buf).
-- */
-+/* Return the number of command data bytes copied, or a negative errno. */
- static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
+ 	mutex_lock(&huawei->wmi_lock);
+-	status = wmi_evaluate_method(HWMI_METHOD_GUID, 0, 1, in, out);
++	status = wmidev_evaluate_method(huawei->wdev, 0, 1, in, out);
+ 	mutex_unlock(&huawei->wmi_lock);
+ 	if (ACPI_FAILURE(status)) {
+ 		dev_err(huawei->dev, "Failed to evaluate wmi method\n");
+@@ -880,25 +881,36 @@ static const struct wmi_device_id huawei_wmi_events_id_table[] = {
+ 
+ static int huawei_wmi_probe(struct platform_device *pdev)
  {
- 	struct huawei_wmi *huawei = huawei_wmi;
--	struct acpi_buffer in;
--	size_t len;
--	int err, i;
--
--	in.length = sizeof(arg);
--	in.pointer = &arg;
-+	struct wmi_buffer in = { .length = sizeof(arg), .data = &arg };
-+	int i;
+-	const struct wmi_device_id *guid = huawei_wmi_events_id_table;
++	const struct wmi_device_id *guid;
++	struct wmi_device **method = dev_get_platdata(&pdev->dev);
+ 	int err;
  
--	/* Some models require calling HWMI twice to execute a command. We evaluate
--	 * HWMI and if we get a non-zero return status we evaluate it again.
--	 */
-+	guard(mutex)(&huawei->wmi_lock);
- 	for (i = 0; i < 2; i++) {
--		struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
-+		struct wmi_buffer out;
-+		size_t len;
-+		int err;
++	huawei_wmi = devm_kzalloc(&pdev->dev, sizeof(*huawei_wmi), GFP_KERNEL);
++	if (!huawei_wmi)
++		return -ENOMEM;
++
++	huawei_wmi->wdev = method ? *method : NULL;
+ 	platform_set_drvdata(pdev, huawei_wmi);
+ 	huawei_wmi->dev = &pdev->dev;
  
--		err = huawei_wmi_call(huawei, &in, &out);
-+		err = wmidev_invoke_method(huawei->wdev, 0, 1, &in, &out,
-+					   sizeof(struct hwmi_reply));
- 		if (err)
- 			return err;
- 
--		union acpi_object *allocation __free(kfree) = out.pointer;
--		union acpi_object *obj = allocation;
--
--		if (!obj)
--			return -EIO;
--
--		switch (obj->type) {
--		/* Models that implement both "legacy" and HWMI tend to return a 0x104
--		 * sized buffer instead of a package of 0x4 and 0x100 buffers.
--		 */
--		case ACPI_TYPE_BUFFER:
--			if (obj->buffer.length == 0x104) {
--				// Skip the first 4 bytes.
--				obj->buffer.pointer += 4;
--				len = 0x100;
--			} else {
--				dev_err(huawei->dev, "Bad buffer length, got %d\n", obj->buffer.length);
--				return -EIO;
+-	while (*guid->guid_string) {
+-		if (wmi_has_guid(guid->guid_string)) {
+-			err = huawei_wmi_input_setup(&pdev->dev, guid->guid_string);
+-			if (err) {
+-				dev_err(&pdev->dev, "Failed to setup input on %s\n", guid->guid_string);
+-				return err;
 -			}
--
--			break;
--		/* HWMI returns a package with 2 buffer elements, one of 4 bytes and the
--		 * other is 256 bytes.
--		 */
--		case ACPI_TYPE_PACKAGE:
--			if (obj->package.count != 2) {
--				dev_err(huawei->dev, "Bad package count, got %d\n", obj->package.count);
--				return -EIO;
--			}
--
--			obj = &obj->package.elements[1];
--			if (obj->type != ACPI_TYPE_BUFFER) {
--				dev_err(huawei->dev, "Bad package element type, got %d\n", obj->type);
--				return -EIO;
--			}
--			len = obj->buffer.length;
--
--			break;
--		/* Shouldn't get here! */
--		default:
--			dev_err(huawei->dev, "Unexpected obj type, got: %d\n", obj->type);
--			return -EIO;
 -		}
-+		struct hwmi_reply *reply __free(kfree) = out.data;
++	for (guid = huawei_wmi_events_id_table; *guid->guid_string; guid++) {
++		if (!wmi_has_guid(guid->guid_string))
++			continue;
  
--		if (*obj->buffer.pointer && !i)
-+		/* Some machines require a second call after a nonzero status. */
-+		if (reply->status)
- 			continue;
- 
--		if (buf)
--			memcpy(buf, obj->buffer.pointer, min(buflen, len));
-+		len = min(buflen, out.length - sizeof(*reply));
-+		if (len)
-+			memcpy(buf, reply->data, len);
- 
--		return *obj->buffer.pointer ? -ENODEV : 0;
-+		return len;
+-		guid++;
++		err = huawei_wmi_input_setup(&pdev->dev, guid->guid_string);
++		if (!err)
++			continue;
++
++		dev_err(&pdev->dev, "Failed to setup input on %s\n", guid->guid_string);
++		while (guid != huawei_wmi_events_id_table) {
++			guid--;
++			if (wmi_has_guid(guid->guid_string))
++				huawei_wmi_input_exit(&pdev->dev, guid->guid_string);
++		}
++		return err;
  	}
  
- 	return -ENODEV;
-@@ -319,21 +260,22 @@ static void huawei_wmi_leds_setup(struct device *dev)
+-	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++	if (huawei_wmi->wdev) {
+ 		mutex_init(&huawei_wmi->wmi_lock);
  
- static int huawei_wmi_battery_get(int *start, int *end)
- {
--	u8 ret[0x100];
--	int err, i;
-+	u8 data[0xff];
-+	int len;
- 
--	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, sizeof(ret));
--	if (err)
--		return err;
-+	len = huawei_wmi_cmd(BATTERY_THRESH_GET, data, sizeof(data));
-+	if (len < 0)
-+		return len;
-+	if (len < 2)
-+		return -ENODATA;
- 
--	/* Find the last two non-zero values. Return status is ignored. */
--	i = ARRAY_SIZE(ret) - 1;
--	do {
--		if (start)
--			*start = ret[i-1];
--		if (end)
--			*end = ret[i];
--	} while (i > 2 && !ret[i--]);
-+	/* The threshold pair can be followed by zero padding. */
-+	while (len > 2 && !data[len - 1])
-+		len--;
-+	if (start)
-+		*start = data[len - 2];
-+	if (end)
-+		*end = data[len - 1];
- 
- 	return 0;
- }
-@@ -612,24 +554,24 @@ static int huawei_acpi_fn_lock_set(int on)
- 
- static int huawei_wmi_fn_lock_get(int *on)
- {
--	u8 ret[0x100] = { 0 };
--	int err, i;
-+	u8 data[0xff];
-+	int len;
- 
--	/* Newer models: use direct ACPI \GFRS method */
- 	if (acpi_has_method(NULL, "\\GFRS"))
- 		return huawei_acpi_fn_lock_get(on);
- 
--	/* WMI fallback */
--	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
--	if (err)
--		return err;
-+	len = huawei_wmi_cmd(FN_LOCK_GET, data, sizeof(data));
-+	if (len < 0)
-+		return len;
-+	if (!len)
-+		return -ENODATA;
- 
--	/* Find the first non-zero value. Return status is ignored. */
--	i = 1;
--	do {
--		if (on)
--			*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
--	} while (i < 0xff && !ret[i++]);
-+	if (on) {
-+		const u8 *state = memchr_inv(data, 0, len);
-+
-+		/* -1 undefined, 0 off, 1 on. */
-+		*on = state ? *state - 1 : -1;
-+	}
- 
- 	return 0;
- }
-@@ -741,19 +683,25 @@ static void huawei_wmi_debugfs_call_dump(struct seq_file *m, void *data,
+ 		huawei_wmi_leds_setup(&pdev->dev);
+@@ -921,7 +933,7 @@ static void huawei_wmi_remove(struct platform_device *pdev)
+ 		guid++;
  	}
- }
  
-+/* The raw debugfs dump also prints the original ACPI object types. */
-+static acpi_status huawei_wmi_debugfs_call(struct huawei_wmi *huawei,
-+					   struct acpi_buffer *in, struct acpi_buffer *out)
-+{
-+	guard(mutex)(&huawei->wmi_lock);
-+	return wmidev_evaluate_method(huawei->wdev, 0, 1, in, out);
-+}
+-	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++	if (huawei_wmi->wdev) {
+ 		huawei_wmi_debugfs_exit(&pdev->dev);
+ 		huawei_wmi_battery_exit(&pdev->dev);
+ 		huawei_wmi_fn_lock_exit(&pdev->dev);
+@@ -936,14 +948,46 @@ static struct platform_driver huawei_wmi_driver = {
+ 	.remove = huawei_wmi_remove,
+ };
+ 
+-static __init int huawei_wmi_init(void)
++/*
++ * Keep the platform device and its existing userspace paths on both
++ * method-capable and older event-only machines.
++ */
++static struct platform_device *legacy_pdev;
 +
- static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
++static int huawei_wmi_method_probe(struct wmi_device *wdev, const void *context)
  {
- 	struct huawei_wmi *huawei = m->private;
- 	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
- 	struct acpi_buffer in;
+ 	struct platform_device *pdev;
 -	int err;
  
- 	in.length = sizeof(u64);
- 	in.pointer = &huawei->debug.arg;
+-	huawei_wmi = kzalloc_obj(struct huawei_wmi);
+-	if (!huawei_wmi)
+-		return -ENOMEM;
++	pdev = platform_device_register_data(NULL, "huawei-wmi", PLATFORM_DEVID_NONE,
++					     &wdev, sizeof(wdev));
++	if (IS_ERR(pdev))
++		return PTR_ERR(pdev);
++
++	dev_set_drvdata(&wdev->dev, pdev);
++	return 0;
++}
++
++static void huawei_wmi_method_remove(struct wmi_device *wdev)
++{
++	platform_device_unregister(dev_get_drvdata(&wdev->dev));
++}
++
++static const struct wmi_device_id huawei_wmi_method_ids[] = {
++	{ HWMI_METHOD_GUID },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, huawei_wmi_method_ids);
++
++static struct wmi_driver huawei_wmi_method_driver = {
++	.driver.name = "huawei-wmi-method",
++	.id_table = huawei_wmi_method_ids,
++	.probe = huawei_wmi_method_probe,
++	.remove = huawei_wmi_method_remove,
++};
++
++static __init int huawei_wmi_init(void)
++{
++	int err;
  
--	err = huawei_wmi_call(huawei, &in, &out);
--	if (err)
--		return err;
-+	if (ACPI_FAILURE(huawei_wmi_debugfs_call(huawei, &in, &out)))
-+		return -ENODEV;
+ 	quirks = &quirk_unknown;
+ 	dmi_check_system(huawei_quirks);
+@@ -954,37 +998,34 @@ static __init int huawei_wmi_init(void)
  
- 	union acpi_object *obj __free(kfree) = out.pointer;
+ 	err = platform_driver_register(&huawei_wmi_driver);
+ 	if (err)
+-		goto pdrv_err;
++		return err;
  
+-	pdev = platform_device_register_simple("huawei-wmi", PLATFORM_DEVID_NONE, NULL, 0);
+-	if (IS_ERR(pdev)) {
+-		err = PTR_ERR(pdev);
+-		goto pdev_err;
++	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++		err = wmi_driver_register(&huawei_wmi_method_driver);
++	} else {
++		legacy_pdev = platform_device_register_simple("huawei-wmi", PLATFORM_DEVID_NONE,
++							      NULL, 0);
++		err = PTR_ERR_OR_ZERO(legacy_pdev);
+ 	}
++	if (err)
++		platform_driver_unregister(&huawei_wmi_driver);
+ 
+-	return 0;
+-
+-pdev_err:
+-	platform_driver_unregister(&huawei_wmi_driver);
+-pdrv_err:
+-	kfree(huawei_wmi);
+ 	return err;
+ }
+ 
+ static __exit void huawei_wmi_exit(void)
+ {
+-	struct platform_device *pdev = to_platform_device(huawei_wmi->dev);
++	if (legacy_pdev)
++		platform_device_unregister(legacy_pdev);
++	else
++		wmi_driver_unregister(&huawei_wmi_method_driver);
+ 
+-	platform_device_unregister(pdev);
+ 	platform_driver_unregister(&huawei_wmi_driver);
+-
+-	kfree(huawei_wmi);
+ }
+ 
+ module_init(huawei_wmi_init);
+ module_exit(huawei_wmi_exit);
+ 
+-MODULE_ALIAS("wmi:"HWMI_METHOD_GUID);
+ MODULE_DEVICE_TABLE(wmi, huawei_wmi_events_id_table);
+ MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
+ MODULE_DESCRIPTION("Huawei WMI laptop extras driver");
 -- 
 2.55.0
