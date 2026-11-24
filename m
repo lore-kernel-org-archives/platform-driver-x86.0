@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.243.244.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795541283;
-	b=pZP38yOnCpZZB+24fSQTXia+KKVFZB1z0ukiCH0Ldwt+1hmG37M64hK5ohoJnUcKVvk8
-	 acPjz4C37m6eCyDIZNkhNpSHGNAmTSDKgpohXft1WGVQRtW7ZeCdylNdJcxh74KhM0wIv
-	 884WwiXJn43LCqPH0YTzHuetQllHvkA9yb/9itiGiQeNLcAFUzUvgyEdRwaoVLpiK2Oq7
-	 axt65Mu9WiQj35Y7N5bZqkusB27xvdVao4qoU4b4+pg5z6uXCO9VbFoGgWuOeXAXosfpa
-	 RXO3Z0pxz/IdWKvdEXmV22Z/LbwpOoXY9w3LdoCnA9mg4z0j0BzMQiETnPsFJTfPdDg==
+	t=1795541284;
+	b=XYjEoLqhG3thY2HpXyWS5TQ1ME4wDVH3eb0btD5dMtcpvnAc2SCFYmp9y0iHvbg+bcm0
+	 0eyKEzoxI7M6myu/IO3ocWRhk6bt2APOM9fJEMqoFpOKQIkN4UkdvtnEH2kjPtl7l1TtE
+	 70TkXNOFt8fMFCjVqTcNZ0IFqTUvB+iXkMhsQ6/aVKzzI//HI9aaGoRi7HYuzkgp2y5l0
+	 Vwr4/ELdzca+V/c1QoHORh2926MxI2GsYUVmerQ/f0WZEu8qN2Ssq9YzHNrH2l7Zwptuk
+	 WhTPmSMGqRlFoL6mEfoNwhYgAur4dX+z6r4zj3ZguvzlFtNRXuYfDOYEjkRGVGGQvUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795541283;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795541284;
 	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
 	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:EX-QQ-RecipientCnt:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
 	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=tZM1u14LTPc/UonuLehf8zS0uVlSz1+MtBNWVvOUSC0=;
-	b=weYa6eh9mh2hZa+4C2xWiEr5njNLD6rOsG/oq7jR4DPKe7rtCB2GbkjeMvNzhByo1p+c
-	 VRZkY8pyDrHj9xmFQmZE4nXJ6Wh+IKfuxySa4NxIoE8R+Yh6/5nmqbdJPSIkLyFo2dnGe
-	 044NQ5lvi0+0TNoK26Isc3oN2n4PbF9Rf5UHOTbaO8EpqrhkBkhgJo8P9QNO6bnrsvdHd
-	 Q0o1reoG4amg/gXoqI/KGJk9BKikZaG9c0/fS74l8OjJWaiZ+ff4n5HPaPxihObygyvdW
-	 CNHe5VdO191CYkty62axjP6x/r5Of30bgF7YEEF1SJDVVzhv8kBJwGXBFYkZ7vCNXMw==
+	bh=btuqp/NU9Ngt66DLJ4H1O8xQwjMO8DGc4b51EvYEnjA=;
+	b=Rt2ywdOd7rSDcohoT2gLsM4HWm8BHOkBE36oNGUBmXXsSTMd/L+B2rlAGrV116ej1GSj
+	 NIP9N26Q+KB97QnmhGAVyNkvpeEIfN593iMi68iT01BxLFbvrMZxaP4Uv2hXG33QhJDBk
+	 LIFTi3pU1E/Pk6Qr6z3zgETUZszhcdOkJNq1vOYn1V0KPDL8XyhCdv5dRDNwCDwBtu3D4
+	 kaWicOIoIyihf+CLvRU0y6LFBEMsEI6BogyqjmuGbZvSnwGmfk8hRhikcvXM4c5sDmX6G
+	 lGv89LGBRd+qvWGPI+ZW4jU4U79PtqmDxNRL8e/qxGsfKNugoqYXPoUR0jGY6im1cbQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mail.sustech.edu.cn;
 	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
-	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=STFfU4+2;
-	arc=none smtp.remote-ip=54.206.16.166
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b="IO+/2yKR";
+	arc=none smtp.remote-ip=54.243.244.52
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6D1606A323;
-	Tue, 24 Nov 2026 17:27:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A6D1606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B59606A327;
+	Tue, 24 Nov 2026 17:28:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 63B59606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=STFfU4+2
+	dkim=pass (1024-bit key) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=IO+/2yKR
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
-	s=oemc2211; t=1795541223;
-	bh=tZM1u14LTPc/UonuLehf8zS0uVlSz1+MtBNWVvOUSC0=;
+	s=oemc2211; t=1795541221;
+	bh=btuqp/NU9Ngt66DLJ4H1O8xQwjMO8DGc4b51EvYEnjA=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=STFfU4+25YuTJ79NQm6yngfNIibS78rTrHf+m4+6BkHrwMTOfSjPG2AsnDeHsa0l6
-	 nwMiOxzXh6V/u6p1KFKe875eehD2+RPRPIEa7fn2pDb2fpsuF2w28grl7eLu60yX1x
-	 GNi9tDeHpkUE6EHG48tEgHeUV4vkCX8mCWtUNU1o=
-X-QQ-mid: zesmtpgz9t1795541218t77e056d4
-X-QQ-Originating-IP: AWkdI6DI2K+mTponPegtwFKaU1+86ZDZlRNoBIBFCbk=
+	b=IO+/2yKRy8zYGYDANKDqSHuoOP+QHuElc7NJy7K/9TUIHHUCQRExMo3jctJuJwdSD
+	 7cGQf/4KqlCowDr8U7Zl7WsWIxe8P9zLrg4/jZn2KmGvoIDtb/r+3eMWj5k7Ab0Az4
+	 WGe3hGmIGmoW+QqpIlRH9t/X+RtkNh7KW5MwLWZg=
+X-QQ-mid: zesmtpgz9t1795541215t9dde1f49
+X-QQ-Originating-IP: WUvYmrX2zvPXBcfRQozLfizPRUaiI9AUrw9XU8nsO7c=
 Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.244])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 25 Nov 2026 01:26:57 +0800 (CST)
+	id ; Wed, 25 Nov 2026 01:26:53 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 5848384891573786241
+X-BIZMAIL-ID: 17900397123399840377
 EX-QQ-RecipientCnt: 7
 From: Fuwei Xie <12313607@mail.sustech.edu.cn>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -58,12 +58,10 @@ Cc: Fuwei Xie <12313607@mail.sustech.edu.cn>,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Eren=20=C3=96zen?= <erenozen@protonmail.com>,
 	Zheng Shuyang <yhshzh0@gmail.com>
-Subject: [RFC PATCH v3 1/5] platform/x86: huawei-wmi: scope method responses to each call
-Date: Wed, 25 Nov 2026 01:25:28 +0800
-Message-ID: <E3BDBB5E9304B11C+20261124172651.37716-2-12313607@mail.sustech.edu.cn>
+Subject: [RFC PATCH v3 0/5] platform/x86: huawei-wmi: expose native firmware power profiles
+Date: Wed, 25 Nov 2026 01:25:27 +0800
+Message-ID: <4F34E5193B4633F6+20261124172651.37716-1-12313607@mail.sustech.edu.cn>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261124172651.37716-1-12313607@mail.sustech.edu.cn>
-References: <20261124172651.37716-1-12313607@mail.sustech.edu.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -76,163 +74,208 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: MgYKvQLNvE4jtUwru2D+Ncuhyo1pwEsNKo+HKEBvpSdJTTt5pCMlU1Ff
-	3eSUuYlhCnbqvPrZrn/8UUwYE6S+SuO3WU060M95wX55j0rUWrPKRP0J+vDpO1ix5yiX8Ef
-	yJpns1myhQ5UpXg5cvEOKQcH3u7QvByMaXDdDmY+L4rJk3+JjeKpmnhUQajrCTQEhmI6+9k
-	4ixG98TNa/BM4vFHXoPoUMo7vqFgzY8k4k0tMJzEV6F0a5c3gOIL5tm9RmVb5zdWYZisAL6
-	CSUe96Adx8cgszwCpBoCNI3Y1q7kNFR1R9CmY78b2+wX4sM+nHkgRWLcyXXw5po4F0qrtuN
-	L2KCOHslBSvxjELrU4wDtLxgb4iFrOnrsMx9Rg2lWsuk0cNAIc1PhWrX6XbzF2mrf+C/faD
-	bCQwVlF86UIwyfDjfyaksn8I403yNVRiazXmkfTjKpVRJ799x3KKk637TGK3mg4E2d46o40
-	zIxqJV7PR9vDRCNhoJ7+aNdnei/adMUk8VM63T8ZY907tBnr5Bh95U40q8TFS2Y5IIayT3R
-	BR8pvwZxJe2rfiAVzvlU4TMgDrRdcxxT9/5if948iGJ6UjgQhV7opVV7CSkXmEykS1CwSla
-	A034uBjHCj4gKY8Z8GWk4tLNOFcqodSrnYVsaRf7lGvGwg1msP0dM8056DxW+nZlTMB4+34
-	bfUATj+12cg5vwg70Ey5vHHhNa5ciOzujGDRVrwRfe2HLQQF7imKFUc4EgazHiSD/FghUMh
-	CqtRyNtPK2Ap+68cdhR1kmZaLqiClxpsO9S6bBTKNazyR0qywSLPL2+17trMVVr9GVfc5X9
-	240r6qKyaWqBFbNHWt2bwAWlvnjFtyHt0yGoxNALqiUaWgwShwbzP73SyXhZJEcMYf4dWMI
-	i3ysE3tMU8Wklp/6WqRN98WQg5he2w7TGymBBZ9Kr+kJXo5o2CsVIp05GNPhbDqYZ3Z32Yo
-	EW338C0CGYb9FsBQ62xpKlP/ZDi7Xo0EjGgRfRXEhDNhB2cVm+nO6B5Q9sVYE8Jm+7uzylV
-	i3kC79EO60zeXbbNxLqD9zYwZQgzLwUZOyFqUlmI9sEzyWhdVqkfs2bD0RQfnx3k4JZXqc+
-	Q==
-X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
+X-QQ-XMAILINFO: MwQdfXoP8nuzApoFzAGAat0zwadEjWNu7XxSj4AMG/coiteb8uxzf9nc
+	lCun8JxiyussoGUQZ6KBjDl6i/8f2mOqQ9Tcbhwbvg7xBZwz4ylbWoofBjqG7CweKtY5bNP
+	t3bnQInfR+OtcdDJIE9peovyZDjTrotWz/g2+Oz4YW/28MzVhqaBtiTxRFNXNIpfm/9kKUt
+	CFqQN+SV4CgF3WWpgGCJtX4qTgNnlrRLTrBleCKHRYLaoSHcGfRZE5c8OLlwLsPCzRL1sCi
+	VY3AfJIx744OJ1eIWKR+ZWUblLC7uf26R3lKdYfVhMSsxmCvPI77PrQwAHyjLJ5TTOPdzFX
+	VqK8fKnz5OZvENYICjO5vSHdsa8bLVN9qE933SIPagB4ky2MGUYOAfVLIt5vmfo7UWnxhm2
+	LPVeBAmvxj2dARxpzcwAXNMeQfsHqt2y6htwslUhVyDUqob2OUMEmpVMXwYl8jH31nE0j1L
+	umYI2WAi2Glw2ygvg1bJE7JVkqklaK3o/LtN6kQAL7Kx+TaN/E+2Uf97mT1RdF8b+PWFfw/
+	H+u6vG5br/JPQl4wvfJapyOcIFTA9HDLvwqLb3hNJDBB3nFLA6P7SkgUdlWfeN4NTpAG5Bc
+	33iexEewRvf9bffUaV0Xm32TVSLCzXnX8Mdyr+An/KVgA8EjD1fys//c+cEtuQxE1BZ1CIo
+	wKNLUYz0YPuxdhro/kbcCqnChheHHKKBaAq7VMO+oR4Qfy5Dd8ADHCVE4xHcm1Nja65UacU
+	fU86oz76bjzDhvLZvMa+wRyVSQ8dLb1FeW9bkjCTWigwLQ+NoBjN1dl5z79bV6LQwlSXuBW
+	0YM0thLfT9OMfUTJG3UTUXt5ZjVk+ovy7AAnqel5P2IFRIMuGdmmBGiAjogtK1GZCzLTR43
+	D/gYAOdtzAXQILeFuBGaxWWIBfY/qnPzANRiowx4/Ee6RI8pmFjXLjVX+m9scXH67ATHpxw
+	REBH8Udy3Muize/Qiu6DX/4FX246sNkkMg/Z7MrcxbcQeFAjdipr0xaFeKSxuhXW31dwEM6
+	p7kFJ7chlrshnwTioamCj526Lt2t7tZ2gePi94VnKBP+ok5RqQjt068uzVmiI=
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
 X-QQ-RECHKSPAM: 0
 
-Keep each ACPI allocation alive while decoding its response and release
-it on every exit with __free(kfree). Give each handshake attempt a
-fresh output descriptor so retrying cannot reuse the first allocation.
+Hi Ilpo, Hans, Eren and Zheng,
 
-Signed-off-by: Fuwei Xie <12313607@mail.sustech.edu.cn>
----
- drivers/platform/x86/huawei-wmi.c | 59 ++++++++++++-------------------
- 1 file changed, 23 insertions(+), 36 deletions(-)
+This is RFC v3. Thank you for the review of v2 and for the tests from
+Eren and Zheng.
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 96ee9a97c..559731d15 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -177,9 +177,7 @@ static int huawei_wmi_call(struct huawei_wmi *huawei,
- static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- {
- 	struct huawei_wmi *huawei = huawei_wmi;
--	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
- 	struct acpi_buffer in;
--	union acpi_object *obj;
- 	size_t len;
- 	int err, i;
- 
-@@ -190,15 +188,17 @@ static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- 	 * HWMI and if we get a non-zero return status we evaluate it again.
- 	 */
- 	for (i = 0; i < 2; i++) {
-+		struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
-+
- 		err = huawei_wmi_call(huawei, &in, &out);
- 		if (err)
--			goto fail_cmd;
-+			return err;
- 
--		obj = out.pointer;
--		if (!obj) {
--			err = -EIO;
--			goto fail_cmd;
--		}
-+		union acpi_object *allocation __free(kfree) = out.pointer;
-+		union acpi_object *obj = allocation;
-+
-+		if (!obj)
-+			return -EIO;
- 
- 		switch (obj->type) {
- 		/* Models that implement both "legacy" and HWMI tend to return a 0x104
-@@ -211,8 +211,7 @@ static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- 				len = 0x100;
- 			} else {
- 				dev_err(huawei->dev, "Bad buffer length, got %d\n", obj->buffer.length);
--				err = -EIO;
--				goto fail_cmd;
-+				return -EIO;
- 			}
- 
- 			break;
-@@ -222,15 +221,13 @@ static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- 		case ACPI_TYPE_PACKAGE:
- 			if (obj->package.count != 2) {
- 				dev_err(huawei->dev, "Bad package count, got %d\n", obj->package.count);
--				err = -EIO;
--				goto fail_cmd;
-+				return -EIO;
- 			}
- 
- 			obj = &obj->package.elements[1];
- 			if (obj->type != ACPI_TYPE_BUFFER) {
- 				dev_err(huawei->dev, "Bad package element type, got %d\n", obj->type);
--				err = -EIO;
--				goto fail_cmd;
-+				return -EIO;
- 			}
- 			len = obj->buffer.length;
- 
-@@ -238,24 +235,19 @@ static int huawei_wmi_cmd(u64 arg, u8 *buf, size_t buflen)
- 		/* Shouldn't get here! */
- 		default:
- 			dev_err(huawei->dev, "Unexpected obj type, got: %d\n", obj->type);
--			err = -EIO;
--			goto fail_cmd;
-+			return -EIO;
- 		}
- 
--		if (!*obj->buffer.pointer)
--			break;
--	}
-+		if (*obj->buffer.pointer && !i)
-+			continue;
- 
--	err = (*obj->buffer.pointer) ? -ENODEV : 0;
-+		if (buf)
-+			memcpy(buf, obj->buffer.pointer, min(buflen, len));
- 
--	if (buf) {
--		len = min(buflen, len);
--		memcpy(buf, obj->buffer.pointer, len);
-+		return *obj->buffer.pointer ? -ENODEV : 0;
- 	}
- 
--fail_cmd:
--	kfree(out.pointer);
--	return err;
-+	return -ENODEV;
- }
- 
- /* LEDs */
-@@ -753,7 +745,6 @@ static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
- 	struct huawei_wmi *huawei = m->private;
- 	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
- 	struct acpi_buffer in;
--	union acpi_object *obj;
- 	int err;
- 
- 	in.length = sizeof(u64);
-@@ -763,17 +754,13 @@ static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
- 	if (err)
- 		return err;
- 
--	obj = out.pointer;
--	if (!obj) {
--		err = -EIO;
--		goto fail_debugfs_call;
--	}
-+	union acpi_object *obj __free(kfree) = out.pointer;
- 
--	huawei_wmi_debugfs_call_dump(m, huawei, obj);
-+	if (!obj)
-+		return -EIO;
- 
--fail_debugfs_call:
--	kfree(out.pointer);
--	return err;
-+	huawei_wmi_debugfs_call_dump(m, huawei, obj);
-+	return 0;
- }
- 
- DEFINE_SHOW_ATTRIBUTE(huawei_wmi_debugfs_call);
+1. What this series does
+
+   Huawei firmware on some MateBook and HONOR machines provides a
+   balanced/performance mode through the WMI methods \GTUB (read) and
+   \STUB (write). This series exposes that mode through platform_profile,
+   so the desktop power mode control can switch it.
+
+   The driver only maps the firmware state and reports changes. It does
+   not write RAPL limits, does not force a fixed wattage, and does not
+   add a background daemon. Probe checks that both methods exist and
+   samples the current mode once; it never changes the mode to probe.
+   Profile reads use the cached mode. A userspace write sends STUB and
+   returns its status. Fn+P events carry the new mode; on 0x2a6 and
+   0x2a5 the driver re-reads the firmware mode.
+
+2. What changed since v2
+
+   2.1 Reply ownership and the two-call handshake.
+       A preparatory patch moves each ACPI reply into a __free(kfree)
+       scope, so the first reply is released before a retry. The method
+       mutex is held across both attempts.
+
+   2.2 The sized WMI interface.
+       Following the review, normal commands use wmidev_invoke_method()
+       with its min_size argument. Both firmware layouts have a
+       four-byte prefix followed by the status byte; the WMI core
+       unmarshals them and the driver checks the fields each getter
+       needs. On the NbF-XX, WMAA returns status 1 in a full-sized reply
+       on the first call and dispatches the command on the second.
+
+   2.3 Binding the WMI devices.
+       The method GUID is bound through the WMI bus, and the hotkey and
+       legacy key data GUIDs are bound by two more WMI drivers. The
+       existing platform device and its sysfs paths are kept as the
+       parent of the userspace interfaces. Event-only machines keep
+       working without the method device.
+
+   2.4 0x2a6 and 0x2a5.
+       A STUB write can return success while the EC still reverts the
+       mode a few tens of milliseconds later. The driver therefore
+       refreshes the reported mode on 0x2a6 instead of trusting an
+       immediate readback. Zheng measured the revert at about 51.8 ms
+       on FMB-P; that firmware also emits 0x2a5 for TBF2-restricted
+       transitions, and v3 refreshes on 0x2a5 as well.
+
+3. What the five patches do
+
+   Patch 1 scopes each ACPI reply and releases it with __free(kfree)
+   before a retry.
+
+   Patch 2 binds the method GUID and gives the platform device the
+   bound wmi_device, keeping the existing sysfs location and the
+   event-only path.
+
+   Patch 3 moves normal commands to wmidev_invoke_method() with
+   min_size, holds the mutex across both attempts, and validates the
+   data each getter needs.
+
+   Patch 4 registers platform_profile, samples the firmware once, reads
+   from the cache, writes STUB, and refreshes on the WMI mode events.
+
+   Patch 5 binds the hotkey and legacy key data devices on the WMI bus,
+   keeps the existing input and sysfs paths, and displays the marshalled
+   WMI reply bytes in debugfs.
+
+4. What I tested
+
+   4.1 Hardware.
+       Capability detection, platform_profile registration and
+       switching work without a DMI entry on:
+
+         - NbF-XX, Intel i5-1240P, BIOS 3.07, Ubuntu 7.3.0-10
+         - MateBook 16 CREM-WXX9, Ryzen 7 5800H, BIOS 2.32
+         - HONOR MagicBook Pro 14 FMB-P, Core Ultra 5 225H, BIOS 1.16
+
+       On NbF-XX the final series was hot-loaded; platform_profile
+       reads balanced, Fn Lock reads 0 and the charge thresholds read
+       75/80. Eren covered Fn+P and AC unplug on CREM-WXX9; Zheng
+       covered those plus s2idle, battery thresholds, Fn Lock, the
+       micmute LED and module reload on FMB-P. Physical Fn+P and unplug
+       on NbF-XX with the current revision are still pending.
+
+   4.2 0x2a6 timing.
+       Zheng measured a refused STUB returning success in 0.8 ms while
+       GTUB still read 1 at 0.9 ms; the EC reverted CRWM at 51.8 ms and
+       emitted 0x2a6. The driver therefore refreshes on the event
+       instead of reading back immediately.
+
+   4.3 Build and host tests.
+       The five patches apply to c339f4010dea and build as modules with
+       W=1 for the development tree and Ubuntu 7.3.0-10-generic; the
+       final revision was built by DKMS and hot-loaded. QEMU covered
+       modern and event-only firmware, duplicate GUIDs, and
+       unbind/rebind; the transport and profile harnesses passed 54 and
+       19 cases with ASan and UBSan.
+
+   4.4 thermald.
+       Ubuntu's default thermald 2.5.12-1 caps PL1 below the firmware
+       ceiling (25.2 W instead of 28 W on NbF-XX); thermald_next
+       (8eeddcff786b, including f9411e884698) returns the full 28 W.
+       That ceiling is set outside this driver.
+
+   4.5 Firmware quirk on NbF-XX (BIOS 3.07).
+       Fn+P enables Turbo at about 20% displayed charge, while STUB
+       enables Turbo at about 20% battery health. The driver reports
+       the firmware state and does not paper over the difference; the
+       21% boundary is not tested.
+
+5. What I did not test
+
+   - other models, BIOS versions or firmware revisions
+   - long runs, repeated suspend cycles, or concurrent stress
+   - 0x2a5 semantics beyond Zheng's FMB-P observation
+   - fan RPM; this machine exposes no fan sensor
+
+6. Userspace counterparts
+
+   6.1 ppd reads a firmware notification after about two seconds.
+       sysfs_notify() generates a modification event without a
+       close-write event. power-profiles-daemon 0.30's platform-profile
+       driver only acts on G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT, so a
+       Fn+P change reaches D-Bus about 2 s later. Handling
+       G_FILE_MONITOR_EVENT_CHANGED as well, watching the inode with
+       G_FILE_MONITOR_WATCH_HARD_LINKS, and setting the monitor rate
+       limit to zero brings the observed Fn+P-to-D-Bus latency to
+       11.6 ms going to performance and 6.8 ms going back to balanced
+       with the same kernel. That change belongs to ppd and will be sent
+       to the ppd project separately.
+
+   6.2 tuned-ppd needs sysfs_acpi_monitor for firmware-initiated changes.
+       Stock power-profiles-daemon 0.30 follows the notification
+       immediately. Fedora's tuned-ppd only follows external
+       platform_profile changes while its sysfs_acpi_monitor option is
+       enabled (off by default before tuned commit bd5f2850, which
+       enables it); see
+       https://github.com/redhat-performance/tuned/issues/710. Enabling
+       the option in ppd.conf or upgrading tuned makes the menu follow
+       Fn+P.
+
+7. Related change: Eren's charge-mode patch
+
+   Eren's \SBCM patch also touches huawei_wmi_battery_get(), so the two
+   series conflict in a few lines. v3 changes the helper signatures and
+   the reply offsets; after his patch lands I will rebase on top of it.
+   The combined tree builds cleanly; a hardware retest is pending.
+
+8. Questions
+
+   1. Is keeping the platform device for the existing sysfs ABI while
+      binding the method, event and data devices on the WMI bus the
+      right shape?
+   2. Is treating 0x2a5 like 0x2a6 (re-read the mode, notify only on a
+      change) acceptable, or would you prefer to leave 0x2a5 unhandled
+      until its meaning is confirmed?
+   3. Would you like the series split differently, for example the
+      transport and __free changes sent separately first?
+
+9. AI assistance
+
+   OpenAI Codex assisted with code, test tooling and drafting this RFC.
+   I set the scope, reviewed the changes and ran the hardware tests; the
+   observations above are mine.
+
+Thanks,
+Fuwei
+
+Fuwei Xie (5):
+  platform/x86: huawei-wmi: scope method responses to each call
+  platform/x86: huawei-wmi: bind the Huawei method device
+  platform/x86: huawei-wmi: use the sized WMI method interface
+  platform/x86: huawei-wmi: expose native firmware power profiles
+  platform/x86: huawei-wmi: bind hotkeys and key data on the WMI bus
+
+ drivers/platform/x86/Kconfig      |   1 +
+ drivers/platform/x86/huawei-wmi.c | 778 +++++++++++++++++++++++---------------
+ 2 files changed, 468 insertions(+), 311 deletions(-)
+
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
 -- 
 2.55.0
+
