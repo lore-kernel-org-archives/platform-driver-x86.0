@@ -1,47 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.2
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795505920;
-	b=BUS6Tb8RZ80O6cu2mErTL9GU0yjd6vu+gTFHs+q51dFHjdEYb8REMdonaFXXZ7vGTrv0
-	 XmXE7ZF0pgkV6F2Q2doMe9aw3igM10mxLI1AZSUUL1r6NcxdNR+CuXeDT0snrwS4Kl8zT
-	 W6ypZ5wWR1PCTQ+wH/2OnkQZKUXgHpJL/lwtmZ/mnHINhJO8vxbVkt6x8PAwMkjXmLwtB
-	 TaHfWpY/aHVLZ+7qDMz33cEypAFSFMyXieKSv9oeizCNXfWkSprvhu/wSoYKacW2FWBF9
-	 rhuh3IsOC5WbuO4TKfLHI0zdUKX/7LcCbYWZxv2C1rC41yVm/yM4qGzjoLEjUfXITXQ==
+	t=1795506286;
+	b=ETTyGYnatg/Ga92bpKEurMyYK8vD4e+zAEZkKjgy9IpfgCWTMN0vrMXGljghBrBqDAtJ
+	 6ZJ9jsDrC7B1gep12dm+72NGZzO5CPyEnyZr7i8vlf3+IdnjKE8HMJZB/V4660d6kMNy+
+	 Mt9/uhriWUUEHJWeCOvNPSmF7wgt2vS6ONNHKyylZj3vsJEMYlVhaaa/K8FMxo/mnD0Y6
+	 yvzzCHoj86kLfp60wqAl50fIVI6VocMbIyUDq/YIAiA8nQ0Fy5xyu+qRQuvlZvxI6UGYs
+	 E8klqiPDDGxXprXzWj1PNPBBHeibaB4RpYjsE3HVVbyANe5uER5tGDonuX7YRGSQ56Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795505920;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795506286;
 	h=DMARC-Filter:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
 	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=ktivcff5YhXmCgYBdixf03CRfgnJAwXEY/ur6PjxkoA=;
-	b=QKm0jijlT6EbvBjQVb0ErkTj563f9fAydxWgDGlaM65GkLv8AwFbOtzsHV1nZ+7AfRW5
-	 yjtPbd3pu1UXg30/rrGAhYRJc404gjp22wBjVNzidFUzs1ISpzytmOe20Hv0T1rGs4+iN
-	 oPCpPOVpDebg09ztz1NhJAuZFBuhEiV8aW3X+ATx+S2KjQ02ssmZBq0TPWPGVXUF8Xib9
-	 4zxUxQFWllA78yLgyPvZdBWwFkn1aB34Hm4cu9dZx4Opz6cqVFOWOO3E7R7LsmZEJrLC9
-	 HEnQCvx0ip0xY72CwTlbEg1INceWVj9K/jwApUJG01KbIV7CEda14HmGTZAhN2qQ+ow==
+	bh=7p+204KUb5GSyd+xtDxqdDVjNrl4AxCJM7RsXDWrElo=;
+	b=VxV2RoyGFXwYrvT3V4UOO/okYiOyzipwYASFirtjMby+GovTW+QchkFtkuakDwxiCAr5
+	 c3yuW7Vat+s0WEoHYtsCaw4soKufEVzF5Z5okbcgilYIg1+7G+wyQESM3UTLuaDD0erK5
+	 Ya/eOJWcaT/iE4KFmm14PS0u0cVj3N39fleFjajeARmsjX1tm7VbNVRCi9/9ZOrmZMTrJ
+	 BjRyYFSS9FWZQ63klzduQcygROePC8RV9aWEDFySUef0AzOyGkWeBVaNn6/9fiDDYlepA
+	 WUdMAnvZtztWBdvhhBZcr3XTFyhaucbdCHXSteAXLTjvutqfO4AnRzYHUduXdnKNkyQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=163.com;
 	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=SJu0NOYd;
-	arc=none smtp.remote-ip=117.135.210.3
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b="AZ/eOOSV";
+	arc=none smtp.remote-ip=220.197.31.2
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33D7606A31E;
-	Tue, 24 Nov 2026 07:38:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C33D7606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A788606A327;
+	Tue, 24 Nov 2026 07:44:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A788606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=SJu0NOYd
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=AZ/eOOSV
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=ktivcff5YhXmCgYBdixf03CRfgnJAwXEY/ur6PjxkoA=;
-	b=SJu0NOYdF7Tsnm5hGETbI6nj5WtbBE+jujNFNGrA4sU0MH1NSYOWL/ZxUXYdTN
-	iaTkXqxLaWkk2iOMPxQUXitO7lp+YEkk9w1BnoN3VJp8gfPfCMDJNQd9onZV8KRn
-	pZ7w/WEc4AX1Py7XuBkwmQxbtVvEQaJ38qSSU1xpROUSU=
-Message-ID: <1e923186-be5a-4640-b56f-a6d019747c83@163.com>
-Date: Tue, 24 Nov 2026 15:34:23 +0800
+	Content-Type; bh=7p+204KUb5GSyd+xtDxqdDVjNrl4AxCJM7RsXDWrElo=;
+	b=AZ/eOOSV1MTLaT6DWy0Ge+6ZW3wKSrLoeN+zb5Iqgijsk0Buw8iJSNzm06T8M7
+	vEXv4enz16CTvvf6ZSd6tr4Iacy1woAoCBQfNZDvuXMVhEw6usLJP309YBBYgiTR
+	NQagU9D2AtR2z1pnmZtbtizNfJ7O8QwqrLK8OnHJgBQoE=
+Message-ID: <63c35a46-41ea-4028-b3b9-54a46ea31af3@163.com>
+Date: Tue, 24 Nov 2026 15:39:23 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -54,32 +54,33 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw
  GetDataByPackage interface
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Rong Zhang <i@rong.moe>
-Cc: platform-driver-x86@vger.kernel.org,
- Mark Pearson <mpearson-lenovo@squebb.ca>, derekjohn.clark@gmail.com,
- W_Armin@gmx.de, corbet@lwn.net, skhan@linuxfoundation.org,
- rdunlap@infradead.org, Hans de Goede <hansg@kernel.org>,
- linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Rong Zhang <i@rong.moe>, platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, W_Armin@gmx.de,
+ corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
+ hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 References: <20261116040532.154928-1-alanpluto@163.com>
  <20261123061120.18740-1-alanpluto@163.com>
  <fcabaf8647e0c1ab487cd612d5a290082613ec0b.camel@rong.moe>
- <983f2e32-cc6e-fa3f-3aee-6aad1e5fa7c8@linux.intel.com>
+ <5b327bf279357b68b91ec66b465501a2760b23eb.camel@rong.moe>
 Content-Language: en-US
 From: Alan <alanpluto@163.com>
-In-Reply-To: <983f2e32-cc6e-fa3f-3aee-6aad1e5fa7c8@linux.intel.com>
+In-Reply-To: <5b327bf279357b68b91ec66b465501a2760b23eb.camel@rong.moe>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXdRGmPgVrsZZhJw--.34443S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Zw4xCry8XFy3Gry3Jr1xuFg_yoWkGr15pF
-	Z8Cay8tr4DJr17Gr12q3W2vFnYvr1rJw15uryDJ3Wjyr9FyryfWF1F9FWF9ryqvrZrGw1F
-	vayUGrZxurs8XrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jctxfUUUUU=
-X-CM-SenderInfo: hdod01poxw0qqrwthudrp/xtbC8wfUyGsFPqcLqgAA3+
+X-CM-TRANSID:PCgvCgB3_uXSPwVrExwLHA--.59895S2
+X-Coremail-Antispam: 1Uf129KBjvAXoW3Zw4xCry8XFy3Gry3Jr1xuFg_yoW8Xry7Wo
+	WftFs3Ww1xtr1UAr4UA347AasFga48Wr1DXFWYyrsxJa1jy3W5urW3Wa1fGay5KFyrKr4D
+	Was7Jr4FvFW0qr1rn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUxBHqUUUUU
+X-CM-SenderInfo: hdod01poxw0qqrwthudrp/xtbC0hMgFGsFP9PB7gAA3Y
 
-On 11/23/2026 8:35 PM, Ilpo Järvinen wrote:
-> On Mon, 23 Nov 2026, Rong Zhang wrote:
+Hi Rong,
+
+On 11/23/2026 8:34 PM, Rong Zhang wrote:
+> Hi Alan,
 > 
+> On Mon, 2026-11-23 at 20:21 +0800, Rong Zhang wrote:
 >> Hi Alan,
 >>
 >> On Mon, 2026-11-23 at 14:11 +0800, Alan Pluto wrote:
@@ -329,6 +330,18 @@ On 11/23/2026 8:35 PM, Ilpo Järvinen wrote:
 >>> +				   &input, &output, 0);
 >>> +	if (ret)
 >>> +		return ret;
+> 
+> If you don't care about the first call's response, use
+> wmidev_invoke_procedure().
+
+I'll use wmidev_invoke_procedure() for the first call.
+
+Thanks,
+Alan
+> 
+> Thanks,
+> Rong
+> 
 >>> +
 >>> +	kfree_sensitive(output.data);
 >>> +
@@ -375,15 +388,147 @@ On 11/23/2026 8:35 PM, Ilpo Järvinen wrote:
 >> While ACQUIRE_ERR(mutex_try, &state_guard) should return -EBUSY, a
 >> pending state->response should return something like -EALREADY or
 >> -ENOTEMPTY.
-> 
-> Generally, one should be mostly be returning the error from ACQUIRE_ERR() 
-> for that case.
-> 
-> 	ret = ACQUIRE_ERR(..);
-> 	if (ret)
-> 		return ret;
-> 
-I'll split the two cases: return the error from ACQUIRE_ERR()
-directly, and return a separate -EALREADY for the pending
-state->response case. Thanks!
+>>
+>>> +
+>>> +	if (copy_from_user(input, buffer, count))
+>>> +		return -EFAULT;
+>>> +
+>>> +	ret = lwmi_package_invoke(state, input);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	return count;
+>>> +}
+>>> +
+>>> +static ssize_t lwmi_package_read(struct file *file, char __user *buffer,
+>>> +				 size_t count, loff_t *ppos)
+>>> +{
+>>> +	struct lwmi_package_file *state = file->private_data;
+>>> +	size_t len;
+>>> +
+>>> +	if (!count)
+>>> +		return 0;
+>>> +
+>>> +	ACQUIRE(mutex_try, state_guard)(&state->lock);
+>>> +	if (ACQUIRE_ERR(mutex_try, &state_guard))
+>>> +		return -EBUSY;
+>>> +
+>>> +	if (!state->response)
+>>> +		return 0;
+>>
+>> Reading the file without writing to it in prior is a mistake, isn't it?
+>> Thus:
+>>
+>> 		return -ENODATA;
+>>
+>>> +
+>>> +	len = state->response_len;
+>>> +	if (len > count)
+>>> +		return -ENOSPC;
+>>
+>> Returning -ENOSPC is confusing as there is nothing to allocate during
+>> read. How about -ENOBUFS?
+>>
+>>> +
+>>> +	if (copy_to_user(buffer, state->response, len))
+>>> +		return -EFAULT;
+>>> +
+>>> +	kfree_sensitive(state->response);
+>>> +	state->response = NULL;
+>>> +	return len;
+>>> +}
+>>> +
+>>> +static const struct file_operations lwmi_package_fops = {
+>>> +	.owner = THIS_MODULE,
+>>> +	.open = lwmi_package_open,
+>>> +	.release = lwmi_package_release,
+>>> +	.read = lwmi_package_read,
+>>> +	.write = lwmi_package_write,
+>>> +};
+>>> +
+>>> +static void lwmi_package_debugfs_remove(void *data)
+>>> +{
+>>> +	debugfs_remove_recursive(data);
+>>> +}
+>>> +
+>>> +static int devm_lwmi_package_debugfs_add(struct lwmi_om_priv *priv)
+>>> +{
+>>> +	struct device *dev = &priv->wdev->dev;
+>>> +	struct dentry *dir, *entry;
+>>> +	int ret;
+>>> +
+>>> +	if (!wmidev_instance_count(priv->wdev))
+>>> +		return 0;
+>>> +
+>>> +	dir = lwmi_debugfs_create_dir(priv->wdev);
+>>> +	if (IS_ERR(dir))
+>>> +		return PTR_ERR(dir);
+>>> +
+>>> +	atomic_set(&priv->package_opened, 0);
+>>
+>> Why would you need this? The struct is kzalloc()-allocated.
+>>
+>>> +
+>>> +	ret = devm_add_action_or_reset(dev, lwmi_package_debugfs_remove, dir);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	entry = debugfs_create_file("get_data_by_package", 0600, dir, priv, &lwmi_package_fops);
+>>> +	if (IS_ERR(entry)) {
+>>> +		devm_release_action(dev, lwmi_package_debugfs_remove, dir);
+>>> +		return PTR_ERR(entry);
+>>> +	}
+>>> +
+>>> +	priv->debugfs_dir = dir;
+>>
+>> Why would you need this? The dir is devm-managed.
+>>
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  /**
+>>>   * lwmi_om_master_bind() - Bind all components of the other mode driver
+>>>   * @dev: The lenovo-wmi-other driver basic device.
+>>> @@ -1693,6 +1888,7 @@ static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
+>>>  {
+>>>  	struct component_match *master_match = NULL;
+>>>  	struct lwmi_om_priv *priv;
+>>> +	int ret;
+>>>  
+>>>  	priv = devm_kzalloc_obj(&wdev->dev, *priv);
+>>>  	if (!priv)
+>>> @@ -1708,12 +1904,24 @@ static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
+>>>  	if (IS_ERR(master_match))
+>>>  		return PTR_ERR(master_match);
+>>>  
+>>> +	if (enable_get_data_by_package) {
+>>> +		ret = devm_lwmi_package_debugfs_add(priv);
+>>> +		if (ret)
+>>> +			dev_warn(&wdev->dev, "failed to create GetDataByPackage debugfs files: %d\n",
+>>
+>> The file is named get_data_by_package.
+>>
+>>> +				 ret);
+>>> +	}
+>>> +
+>>>  	return component_master_add_with_match(&wdev->dev, &lwmi_om_master_ops,
+>>>  					       master_match);
+>>>  }
+>>>  
+>>>  static void lwmi_other_remove(struct wmi_device *wdev)
+>>>  {
+>>> +	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
+>>> +
+>>> +	if (priv->debugfs_dir)
+>>> +		devm_release_action(&wdev->dev, lwmi_package_debugfs_remove, priv->debugfs_dir);
+>>
+>> Why would you need this? The interface does not depend on the components.
+>>
+>> Thanks,
+>> Rong
+>>
+>>> +
+>>>  	component_master_del(&wdev->dev, &lwmi_om_master_ops);
+>>>  }
+>>>  
 
