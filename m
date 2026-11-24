@@ -1,56 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795544438;
-	b=2X+jNq5TFscNaqJmpPXfyup5fpPscS/90fVw6uhx7FMaJ1tDi3RDi/IdD4hYxrypkoVq
-	 JvDB6LM6EAGliT1lf4N0rFR+Ikw7O6uO4hzH0bdaPh019sAQ4GcsdhbG6WOdTRSo086+q
-	 iubrtTl8g06PEpCgBLjG/9t3PpFiloGI6frRrDrwMOEUYqrA2lDooZsn1zcU7Tf4eqKOQ
-	 YFK+at0zzAMBfuRiYWELCdeCFfheMxRY28McURY8HASSHEbdvcMXBllhQhfZTOOld6/Jh
-	 3mhHY/aw38XNHNuc6T8YRACAxVsy/ClVV+XYegdxtnHF9qeq14vL+A2NMLv+SFp1R7Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795544438;
-	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer:X-ZohoMailClient;
-	bh=ELtphjr+DUQvE0cavmN1fqbzSfP2pfSWNeP+KWNKicw=;
-	b=h+S/w7tQgRWlq/Y8CJBrTwJR/2U1Fn9Ogdm87/vBLjJHUKY09CsSqoA6LKopyVp61Vnw
-	 PtH8O/Zk/MrTC9qnZ6xYt3qfmMgM1sOFqDRyHHUFMWWZexIkS9wP/iOiZmF1gOyFM8eWH
-	 /II3zCooEg4kVIp66ZJGOlqA7JUNlf5ZXQNAqn/GzBH0NUudZ0l7V4+VEmTfD5Q1wr4U9
-	 rZihzif7M/TnZOikd/s5Ulh2mRXlDqZipwR6TCkNIQkX6ljd2RL3HTg1wKgAYQoVDb093
-	 V08cRULfgAhaiIMzPPDtYoeZ14k16/U13u7al/LT7T3NTXwAE6oY8LzDGZkaoZUvSdg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=EC5slpNm;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.17
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795546124;
+	b=efQiw3H5PpCVP8bIuDdttlfTQJlrVLFvTUBd+CT7qbC3KGqzVFT2mqdtFneNKXdAktWn
+	 k4JNEdXhgpkt7ynOS9gqNKPD2ZaLta1x6h0up6zq2HGXIiQ7M8625YnJMkrLcWRn8ZWwM
+	 7cvAGJ+O0qYYalF/GGcc8vemOutaAc0m5ULUuqvQMbmD3nVIPzuAbkY/ORia4WXK5pUxe
+	 BT75QJQXacNA64VUMAJY0fxOBuKS5rchuHTkRNd9PM8n9eRtlaK8i25YW6KCupTgFZZe8
+	 zQK5LPB7TG8fDyPmgalaz5V9KN5Qlienlph4m+FE5630mpktT+oDivv2b0Ou+sebjoQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795546124;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=cs4S4AFueWMRJdnxFgQMD1WAaGda78f/+6PBqoLRN3E=;
+	b=qP8R/fxptUPA9nfT5b7Na8oYBJippsrW1rB8IyWC/kF903EABAKCmy9Vl3DvLUg0jXba
+	 d4cw6b6DALqwa6DGbSZGtdhqI9sMho7yjVlFJRd8kOUU/La3s4DrZz4F6/zm5rZa/i1zN
+	 ajLvRyfMWnfqGNIjp5dcLN71L/ywZTPRZCzTmk49qkamQGwqWz0UMWGMHNS5EicUsRHad
+	 FxOlcJwbnPYLZsYBNtxHAHsAc8t/vX6Cpq5DrqMIdHR34+/yJL7FG6yCpuW5yb6V9jXeh
+	 S9b5qxTMIvrYWOor/mrJILLKjx+35Sj3G9XWMNisO+bsiZogTcPh89/ZC7htWlhmwcw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=JG3+xIma;
+	arc=none smtp.remote-ip=95.215.58.17
+Received: from mta1.migadu.com (out-17.mta1.migadu.com [95.215.58.17])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FD9606A333;
-	Tue, 24 Nov 2026 18:20:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 94FD9606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0216B606A323
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 18:48:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0216B606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=EC5slpNm
-ARC-Seal: i=1; a=rsa-sha256; t=1795544288; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=L39ZnSMBqcmkWYnTRZJmwJlxlw2OC7Kze7LZhxEGFWlLjLvjT0oWxvszMbuRFM6sVoTKBmZ4QP2DArPnP8MXUHpaO3Wu9HRB/hWlhQBtd5S6IY/uyjbBl5qmf5Jk8RnMmA6vdlUzST4Q/9DyfyeTUBLbJO29H9IgmCWkix8Ydsk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795544288; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ELtphjr+DUQvE0cavmN1fqbzSfP2pfSWNeP+KWNKicw=; 
-	b=Pip0DEYx+OnkS/CTcaRJSlXVgjq5Labguyvxj57gRUH2sFvi1iXfRiq3guGbnwYlCR4fTwbHI7kRnfZjhKHkkTViM5ij92OQ86p/wVL8ML/6V8JBJc/R3W3QDYYIHa6zyrAkUHg9d+Umw++tMaBFo7Jay7WtEa4ioTovmkJtV/M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=EC5slpNmln3oVwA/qaVYZUBkJ/+1h3UzEi0YA2A3QYNyYX0T0pWFuYxP9yQ2+3bf/C0isK/JbOborUUWw614ssa7KDca8DchhaRBoaZG84kFuD1MaXu1UpoxIjtp+kdJCGawHZ+A6i+OYENaSKIBHGay1Nm2NYlfzFFGEylBrAPwQVjyQa2661UGXE71qVq6orBxG+KBwsSD/+x8B+yAg6Bb5xiRyuURf1gg2u59ytDReWGEwGtepHRhsrriBCe6j3bOkqmBa2i+bAFucRv6n5PFJ7PDkBQ61v3nxID6bjwf6tlVk1wtuHrgKKcGZTsZPG14E8Ols2tKFloWdjNS3g==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=ELtphjr+DUQvE0cavmN1fqbzSfP2pfSWNeP+KWNKicw=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795544287026756.0312791299377;
-	Tue, 24 Nov 2026 10:18:07 -0800 (PST)
-From: Rong Zhang <i@rong.moe>
-Date: Wed, 25 Nov 2026 02:17:03 +0800
-Subject: [PATCH v2 7/7] platform/x86: ideapad-laptop: Enable ymc_ec_trigger
- for Lenovo Yoga 7 14IRL8
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=JG3+xIma
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=CmkSQ4CxcyR76apA7iTWwA9ibRDNgTzGuxBahYNrUVM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795546121; v=1; x=1796150921;
+ b=JG3+xImaz7IrACxZNVbOKlGaQciMorRBEMoZDjyVkWUmjQzQusPu9b2K1qdkzSJAFWaE9ner
+ WbfeDsaprUuf7UTFq5Ibq1RQJzCC2cM+c6p7k2CsnsuofRrZV3uz+muMDD8XRKB3bpRLMAQ4Qq7
+ weSBZgRU6SGL6lWFhnZPhyjQ=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 53aa10411055c488;
+	Tue, 24 Nov 2026 18:48:41 +0000
+X-Mizu-Trace-ID: 53aa10411055c488
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <f1b7d729-771a-4fba-89c0-996a8a168126@linux.dev>
+Date: Tue, 24 Nov 2026 19:48:40 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -60,56 +58,94 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261125-ymc-82yl-v2-7-624bdcb3c50e@rong.moe>
-References: <20261125-ymc-82yl-v2-0-624bdcb3c50e@rong.moe>
-In-Reply-To: <20261125-ymc-82yl-v2-0-624bdcb3c50e@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Gergo Koteles <soyer@irl.hu>, Ike Panhc <ikepanhc@gmail.com>, 
- Andrew Kallmeyer <kallmeyeras@gmail.com>
-Cc: Eduard Aliman <edialiman20@gmail.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mahir Faisal <mahirfaisalantiq33@gmail.com>, Rong Zhang <i@rong.moe>
-X-Mailer: b4 0.17-dev-ce4c1
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] ASUS TUF Gaming A16 FA608UM: working backlight device
+ differs between MUX modes
+To: =?UTF-8?Q?Riccardo_Zangh=C3=AD?= <riccardo.z.dev@gmail.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ "luke@ljones.dev" <luke@ljones.dev>, "ddadap@nvidia.com"
+ <ddadap@nvidia.com>, linux-acpi@vger.kernel.org
+References: <CAMnz_-Dgg2eCgZxcCaGuKPV=3-kCfg7ajd9w=vs2fGL-Cb6hvw@mail.gmail.com>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <CAMnz_-Dgg2eCgZxcCaGuKPV=3-kCfg7ajd9w=vs2fGL-Cb6hvw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The Lenovo Yoga 7 14IRL8's EC must be triggered by software on YMC
-events, or else the enable state of touchpad, keyboard, and keyboard
-backlight become out of sync.
 
-Add a DMI quirk table entry for the said device.
+On 11/24/26 00:27, Riccardo Zanghí wrote:
+> Hello,
+>
+> On an ASUS TUF Gaming A16 (AMD iGPU + RTX 5060 Max-Q, MUX switch) no
+> single kernel command line gives working brightness control in all
+> graphics modes.
+>
+> Laptop: ASUS TUF Gaming A16 FA608UM_FA608UM
+> BIOS: FA608UM.311
+> Kernel: 7.3.5-2-cachyos
+> NVIDIA: nvidia-open 620.73.04 (nvidia-drm modeset=Y)
+> Distro: CachyOS, KDE Plasma (Wayland)
+>
+> asus-nb-wmi exposes gpu_mux_mode on this machine.
+>
+> Observed ("type" in parentheses where recorded):
+>
+> 1. Integrated and hybrid, no backlight parameters:
+>    /sys/class/backlight contains only nvidia_wmi_ec_backlight
+>    (firmware). Brightness control works.
+>
+> 2. dGPU (MUX), no backlight parameters:
+>    Same single device (firmware, max 200). Writes are accepted but
+>    the panel does not change. The kernel log contains:
+>    "nvidia-modeset: ACPI reported no NVIDIA native backlight
+>    available; attempting to use ACPI backlight."
+>
+> 3. dGPU with acpi_backlight=native:
+>    Only nvidia_0 exists (raw, max 100), and it controls the panel.
+>    The message above no longer appears in the kernel log. If
+>    nvidia_wmi_ec_backlight.force=1 is added as well,
+>    nvidia_wmi_ec_backlight (max 200) also appears, but only
+>    nvidia_0 changes the panel.
+>
+> 4. Integrated with acpi_backlight=native:
+>    Only amdgpu_bl1 exists. It accepts writes but the panel does not
+>    change.
+>
+> So integrated and dGPU need opposite settings: the default works in
+> integrated (and hybrid), while dGPU needs acpi_backlight=native, and
+> each setting breaks the other mode. I have not tested hybrid with
+> acpi_backlight=native. In dGPU mode the NVIDIA driver appears to ask
+> ACPI for a native backlight, get "no", and fall back to a device that
+> does not control the panel.
+>
+> Similar reports on other A16 models:
+> https://github.com/OpenGamingCollective/asusctl/issues/118
+> https://bugs.launchpad.net/ubuntu/+source/linux-hwe-6.14/+bug/2134615
+>
+> Would a MUX-aware backlight choice be acceptable here, or is a DMI
+> quirk the expected route? I can test patches and provide dmesg or
+> acpidump output if that helps.
 
-Reported-by: Mahir Faisal <mahirfaisalantiq33@gmail.com>
-Closes: https://msgid.link/CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n8Cp3AzhVQ@mail.gmail.com
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Rong Zhang <i@rong.moe>
----
- drivers/platform/x86/lenovo/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hi Riccardo,
 
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index 4f9dc95d8c65..f9453de6df76 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -1872,6 +1872,13 @@ static const struct dmi_system_id ymc_ec_trigger_quirk_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82N7"),
- 		},
- 	},
-+	{
-+		/* Lenovo Yoga 7 14IRL8 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82YL"),
-+		},
-+	},
- 	{ }
- };
- 
+I have tried to check what the nvidia driver does, I am not sure but I think the
+problem is that on kernel code does not return true on acpi_video_backlight_use_native()
+and thus something else (that doesn't work) gets selected.
 
--- 
-2.55.0
+Probably because the ACPI is returning something wrong or that the kernel
+is not interpreting correctly: unsure.
 
+However this has little to do with the gpu switch as the switch itself, so IMHO
+the best thing is to identify the correct people that maintain the code in
+acpi_video_backlight_use_native and CC them.
+
+I am unsure if a DMI switch can solve the problem in both configurations,
+and having a check to use acpi_backlight=native in dGPU mode will surely
+break a lot of other laptops, maybe a combination of the two could work...
+
+But either way we need to hear them: I don't know enough on that to be
+useful on solving this without causing more troubles than I would solve.
+
+> Thanks,
+> Riccardo
