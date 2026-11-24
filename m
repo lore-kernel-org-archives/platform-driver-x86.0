@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795543389;
-	b=szU6JRw3Thpx0temfUwKJ3gKusgHWFRRwEhcQU2kUyEU5c0fSyRjcuBFx3WhkNnFfDg1
-	 Z8EJnKj1U6lvHjGgRbWcgGzG4EroPKHLXqzuMQRB3eJPS9eSoGkNrvLTVAL84DqACLOPo
-	 NunM1peaAGAiCvaFxHO4TGmLI9HlcwIFx8kPhhZ7SxeWmO/woBYCkOejHGwrcOoUKyrIB
-	 toGujIc/mdDfJdOC8LDxhKJkv4QVYhdVzv2vpnXwQMXvw+vvC4qc39YqJYgZGcrdFOAnC
-	 XvoRccsZWMh7dPwiMoJmtbdG62xpasB89OGY8VZ8VxuABJy4ewP8DIFEIPBWf3AY9Yg==
+	t=1795543409;
+	b=To2/7cwDW8R0+OWn++6oehAx7NO2GYzFtzGJvddCuHUE+1HdJpr2BSWLcvZF0mqZX0oA
+	 yc7wZLmYzFcJ3lfnthVBYdDzOJfOFrdWv4EC8Lmf73tCTI2wM7FpwJnzAX0CYS3lrJIVe
+	 2ld57wFd3ux26GiLDlW1bqV2m4tNZ5wfUpIV3ee6lMTVE6jzfyHsdI5dEZ3jL0688yo/q
+	 CWxc3Ig8b16yr4YpvjdvJF/7Mfvuc1GEo+WgoEfa3mhAwKv+81S/Qph/i912r7yL5KAA9
+	 jfv01GQtSiS2pu5AIwvW/EvonBBmLWv0a1bf4p3H6e+Q/S7DoyxGIAgTR7TnUlLfIeA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795543389;
-	h=DMARC-Filter:DKIM-Signature:Received:From:Subject:Date:Message-Id:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
-	 X-Change-ID:To:Cc:X-Mailer:X-ZohoMailClient;
-	bh=dz9+ADitlgzsDNxkxrOPLbIYSXSNRs/g5s6tyi3QL/o=;
-	b=Wnr9ALDPV5VGN8g4dSMXs1igx5oLt/y5Bft6z8Ly/iCIuCIJKx5GL/qQRKKcnUVAoP0S
-	 EEx0g8F3lZlV9V956JbE0qQ2T7nr3ioMMJGGbDzAcSsXD6ZO13KhBHZ25lEHEsl3aOGwU
-	 D715P+4uylxAwUhfremL7lBqyZ+7SOglwQP/VxOcVtkX5NX3LXe/kL6mfQ+/iiHJ/VGxE
-	 7C5okDrR2GeeJ+WsKVGvnP6tdRLnFSBgAKxmHPrpSjyxStfOWUpgHkgQmlqAQGoeCzbSN
-	 mJkWc+8BziMNgFpgQdWPHCkRmzuoEKd3cC0S5eCEhUo/RQXnf7/6mkYfo5EpDvyT6yg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795543409;
+	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer:X-ZohoMailClient;
+	bh=j/SG/DUg2z4KV+ZcQAUS9i2yJHVt3YWd0v5WH1bdfDc=;
+	b=c/ZdzFu0Lfhe0jT8YwwZaLOOBcddY/qLPg1/Aq36azPfbhOoYkluxt0H4C7vBQDhYK0X
+	 woIJtl7XrnyB0bpcmSTld26ktB1dKnAxGUb7G7QbYlsx9guG4+E59pgu4Vi63c2ltJ15g
+	 BbZ78UVtTKK/Ao9mjWhAalc7a2V2CngmbtdRTF62tqDvUiwViBTyKALPagH/Rh6DkJXXC
+	 g2+3baeaVvFeV8fLBRIOpvQdy6C8PCOkq1S/XyGt+/fzexJyP+Lz7AEUl5ODFZfW5deDW
+	 xNE26w2Nvli6XVk6BE+a0fxYwYmOKBefrrmG3xd/kyPrlZjEpY9k9w6pGVAomi7uqGQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=rong.moe;
 	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=cXs6Ucuz;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b="leOLZ/nB";
 	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
 Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C98606A31E;
-	Tue, 24 Nov 2026 18:03:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B8C98606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC51606A31E;
+	Tue, 24 Nov 2026 18:03:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0EC51606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=cXs6Ucuz
-ARC-Seal: i=1; a=rsa-sha256; t=1795543376; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=leOLZ/nB
+ARC-Seal: i=1; a=rsa-sha256; t=1795543378; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=NNFBFMo/ThAZEubmvkR+AYAyokT/nxT7TA9MvODY/V4u9EpCn2ZYY0/mIdPZNe22AX9DwPGnXOcwjWlCXN+0GB957DJU94z9PKXBkvve8Qk5K1XutHvGjSdd8aKu13eerYQ9vEP82gn6KgQ8N6vBIzizJpvhhF8Chubb8pDocaU=
+	b=b2+nNu+yB3pit+40KI3TFv7JI9FB6mnQU87Ge5fZ9SMCkdJSwca8QqjsHbJN8afP2h5MpCdCpjP+r2dP3X9X9g5XSbgpO2XonwERyT+O/nD+sEEAKRFbDzKNrpSA76GgScUWq6qzTYFjH6t7gcU9vum7jIIWBLFmMroXaVWQn90=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795543376; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dz9+ADitlgzsDNxkxrOPLbIYSXSNRs/g5s6tyi3QL/o=; 
-	b=X9vY875rdy1DiMmZdSfQ/kWSYkGy8y85nxw5cJgh5Nx4ypu0eSs+hHcHR4JX4osKwWgRxmlL69ZmxrfXgPURvbr5IrRifnOl/5bBowdeZG+p5mrE4dpyoUijqgE0LEzpjGmN7MVNANtaqC1bxriECYRvsz6HCWBCrGo7ilLnO4o=
+	t=1795543378; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=j/SG/DUg2z4KV+ZcQAUS9i2yJHVt3YWd0v5WH1bdfDc=; 
+	b=IkJC/mfR+hRsSck5DsS8R6qqrsAbjJ5sH3LnLKvee8+D/6JVp2l3P8mGF9L6mVB79GXOAi7SVAPuwzjtvJ6Q/ramqM63cxYYg3F8UtXo4sGoEnAO01aq062B8edPjnGm0vOufUTUlPzPv5YIUg+ssSWcXsGBGX3hdERk2fvHKkw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=cXs6UcuzCkevhdrLgRv0Wt0InGaLqACynNkxUm8D4dnq7aJcpRi1QacWapDVoa30cOKtfyOG5W7M/mzQit2AlO3bHsYBVw1c72I2DX+ZcANwfcq2Q4pY8Z3968H3QP83IiRebf44H8RCZY3HvilKUbzbzg3JH0WvCICpRRoai89UwQGU6ZaiqqJGIAZ+rtc8ZE3k+mf703G7bNyVEeGSai3SdHm9I5o41LdzO8GizqVFQuSHSuhqmgDtxVJ0E8TSwL9qs7DBPHuc9icnzlICDH4Rnpc10dDu5HfZ8P6dLLobWBGute3PIZweQDFvZK0H/nOm8/mYv1XGZ5GnDDtLqg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=dz9+ADitlgzsDNxkxrOPLbIYSXSNRs/g5s6tyi3QL/o=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 179554337431539.146940877737165;
-	Tue, 24 Nov 2026 10:02:54 -0800 (PST)
+DKIM-Signature: a=rsa-sha256; b=leOLZ/nBRXfzAGXkyhjSjyr3Cu0X3kLqrKP/NboTuzd9QsuOWiOl2DCBE9IQcQwDhaZwJ6u2wFHI/VPu/xRQ2DxMRY4yc7CCHxqmfY6lHgzsT1s2UucR3/AH6lutkC2KfnbpBZIMGnE3kb10fpBDcKApwWRmj7T11njiyBtcOxRq0XDncvhFTNwOYpn+QFzrdGH/2g8Mpn6q+PJH/jUn6Qa4cXbplJe1L8a3Di3LvfFGN2MdgdZuE+JVY/HQnD9RiRrOEIkR//quxVkysv7QKnf04aqWO6fjWA2cMVmqI/6UfXyAAl1EdE8RVUyuE9QX3bC8jM8aqfSeF2UPLrLv9g==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=j/SG/DUg2z4KV+ZcQAUS9i2yJHVt3YWd0v5WH1bdfDc=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795543377027365.18746490809224;
+	Tue, 24 Nov 2026 10:02:57 -0800 (PST)
 From: Rong Zhang <i@rong.moe>
-Subject: [PATCH v2 0/5] platform/x86: lenovo-wmi-other: Refine
- firmware_attributes interface
-Date: Wed, 25 Nov 2026 02:02:38 +0800
-Message-Id: <20261125-lwmi-no-singleton-v2-0-37611a7b2fc4@rong.moe>
+Date: Wed, 25 Nov 2026 02:02:39 +0800
+Subject: [PATCH v2 1/5] platform/x86: lenovo-wmi-other: Retrieve private
+ data from firmware_attributes device
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -63,11 +62,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22NQQ6CMBBFr0JmbU2nQhVX3sOwgDqFMdCaFlFDu
- LsFty5f8v77M0QKTBHO2QyBJo7sXQK1y8B0tWtJ8C0xKCPJnDAX/Wtg4byI7NqeRu9EfbBlXuC
- xrAsJafcIZPm9Na/Vj+OzuZMZ19BqdBxHHz7b6YSrB0oqjYjln/6EQgrdSG2NbQpU+hK8a/eDJ
- 6iWZfkC8qVn+sMAAAA=
-X-Change-ID: 2c0ec814-lwmi-no-singleton-a3f945179a50
+Message-Id: <20261125-lwmi-no-singleton-v2-1-37611a7b2fc4@rong.moe>
+References: <20261125-lwmi-no-singleton-v2-0-37611a7b2fc4@rong.moe>
+In-Reply-To: <20261125-lwmi-no-singleton-v2-0-37611a7b2fc4@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
  "Derek J. Clark" <derekjohn.clark@gmail.com>, 
  Hans de Goede <hansg@kernel.org>, 
@@ -78,46 +75,131 @@ Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.17-dev-ce4c1
 X-ZohoMailClient: External
 
-The driver declares `.no_singleton = true' but stores device-specific
-data to statically allocated tunable_attr_01 variables. This violates
-the requirements of a no_singleton driver (even though no device in wild
-ever has more than one such WMI device).
+Currently, each tunable_attr_01 stores a pointer to the WMI device,
+which is unnecessary, as attributes' show/store callbacks can always
+access the firmware_attributes device through the kobject hierarchy.
+This also makes the driver fail to satisfy the requirements of a
+no_singleton driver.
 
-The series moves tunable_attr_01.device to the firmware_attributes
-device's drvdata and introduces a tunable_attr_01_ctx array to struct
-to store c[dv]_mode_id. In this manner, all statically allocated
-variables relevant to our firmware_attributes interface are constified.
+Store a pointer to the driver's privated data in the firmware_attributes
+device's drvdata, and retrieve it in attributes' show/store callbacks,
+so that we can get rid of tunable_attr_01.device and make it possible
+for upcoming refactoring to eliminate all wrapper callbacks created by
+macros and constify all statically allocated variables relevant to our
+firmware_attributes interface.
 
-This also eliminates all attribute-specific callbacks by moving their
-data into a newly-introduced container struct capdata01_attr, so that
-all remaining attribute callbacks becomes generic and are shared among
-different attributes, which shrinks the module size by 42.7%.
-
-To further follow the common practice of sysfs attributes, all attribute
-groups are now created and removed at once using sysfs_create_groups()
-and sysfs_remove_groups() by providing an is_visible() callback.
-
+Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Driver")
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
-Changes in v2:
-- Swap device_id and feature_id in tunable_attr_01 (thanks Mark Pearson)
-- Rephrase the commit message of PATCH 4 (ditto)
-- Link to v1: https://patch.msgid.link/20261119-lwmi-no-singleton-v1-0-6b06fcfb5126@rong.moe
+ drivers/platform/x86/lenovo/wmi-other.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
----
-Rong Zhang (5):
-      platform/x86: lenovo-wmi-other: Retrieve private data from firmware_attributes device
-      platform/x86: lenovo-wmi-other: Eliminate attribute-specific callbacks
-      platform/x86: lenovo-wmi-other: Factor out tunable_attr_01 definition into a macro
-      platform/x86: lenovo-wmi-other: Constify tunable_attr_01 variables
-      platform/x86: lenovo-wmi-other: Hide unsupported attributes using is_visible() callback
+diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+index bd64e7b44669..c31a8bd08a85 100644
+--- a/drivers/platform/x86/lenovo/wmi-other.c
++++ b/drivers/platform/x86/lenovo/wmi-other.c
+@@ -967,7 +967,6 @@ static void lwmi_om_psy_remove(struct lwmi_om_priv *priv)
+ /* ======== fw_attributes (component: lenovo-wmi-capdata 01) ======== */
+ 
+ struct tunable_attr_01 {
+-	struct device *dev;
+ 	u8 feature_id;
+ 	u8 device_id;
+ 	u8 type_id;
+@@ -1124,6 +1123,11 @@ struct capdata01_attr_group {
+ 	struct tunable_attr_01 *tunable_attr;
+ };
+ 
++static inline struct lwmi_om_priv *kobj_to_om_priv(const struct kobject *kobj)
++{
++	return dev_get_drvdata(kobj_to_dev(kobj->parent));
++}
++
+ /* Attribute Methods */
+ 
+ /**
+@@ -1163,7 +1167,7 @@ static ssize_t attr_capdata01_show(struct kobject *kobj,
+ 				   struct tunable_attr_01 *tunable_attr,
+ 				   enum attribute_property prop)
+ {
+-	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
++	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
+ 	struct capdata01 capdata;
+ 	u32 attribute_id;
+ 	int value, ret;
+@@ -1219,7 +1223,7 @@ static ssize_t attr_current_value_store(struct kobject *kobj,
+ 					const char *buf, size_t count,
+ 					struct tunable_attr_01 *tunable_attr)
+ {
+-	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
++	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
+ 	struct wmi_method_args_32 args = {};
+ 	struct capdata01 capdata;
+ 	enum thermal_mode mode;
+@@ -1277,7 +1281,7 @@ static ssize_t attr_current_value_show(struct kobject *kobj,
+ 				       struct kobj_attribute *kattr, char *buf,
+ 				       struct tunable_attr_01 *tunable_attr)
+ {
+-	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
++	struct lwmi_om_priv *priv = kobj_to_om_priv(kobj);
+ 	struct wmi_method_args_32 args = {};
+ 	enum thermal_mode mode;
+ 	int retval;
+@@ -1304,6 +1308,7 @@ static ssize_t attr_current_value_show(struct kobject *kobj,
+ 
+ /**
+  * lwmi_attr_01_is_supported() - Determine if the given attribute is supported.
++ * @priv: Driver private data
+  * @tunable_attr: The attribute to verify.
+  *
+  * For an attribute to be supported it must have a functional get/set method,
+@@ -1324,10 +1329,10 @@ static ssize_t attr_current_value_show(struct kobject *kobj,
+  *
+  * Return: true if capdata and set/get modes are found, otherwise false.
+  */
+-static bool lwmi_attr_01_is_supported(struct tunable_attr_01 *tunable_attr)
++static bool lwmi_attr_01_is_supported(struct lwmi_om_priv *priv,
++				      struct tunable_attr_01 *tunable_attr)
+ {
+ 	u8 modes[2] = { LWMI_GZ_THERMAL_MODE_CUSTOM, LWMI_GZ_THERMAL_MODE_NONE };
+-	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
+ 	struct wmi_method_args_32 args = {};
+ 	bool cd_mode_found = false;
+ 	bool cv_mode_found = false;
+@@ -1350,8 +1355,7 @@ static bool lwmi_attr_01_is_supported(struct tunable_attr_01 *tunable_attr)
+ 	if (!cd_mode_found)
+ 		return cd_mode_found;
+ 
+-	dev_dbg(tunable_attr->dev,
+-		"cd_mode_id: %#010x\n", args.arg0);
++	dev_dbg(&priv->wdev->dev, "cd_mode_id: %#010x\n", args.arg0);
+ 
+ 	/* Determine tunable_attr->cv_mode_id, returns 1 if supported */
+ 	for (i = 0; i < ARRAY_SIZE(modes); i++) {
+@@ -1371,7 +1375,7 @@ static bool lwmi_attr_01_is_supported(struct tunable_attr_01 *tunable_attr)
+ 	if (!cv_mode_found)
+ 		return cv_mode_found;
+ 
+-	dev_dbg(tunable_attr->dev, "cv_mode_id: %#010x, attribute support level: %#010x\n",
++	dev_dbg(&priv->wdev->dev, "cv_mode_id: %#010x, attribute support level: %#010x\n",
+ 		args.arg0, capdata.supported);
+ 
+ 	return capdata.supported > 0;
+@@ -1558,9 +1562,10 @@ static void lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+ 		goto err_destroy_classdev;
+ 	}
+ 
++	dev_set_drvdata(priv->fw_attr_dev, priv);
++
+ 	for (i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
+-		cd01_attr_groups[i].tunable_attr->dev = &priv->wdev->dev;
+-		if (!lwmi_attr_01_is_supported(cd01_attr_groups[i].tunable_attr))
++		if (!lwmi_attr_01_is_supported(priv, cd01_attr_groups[i].tunable_attr))
+ 			continue;
+ 
+ 		err = sysfs_create_group(&priv->fw_attr_kset->kobj,
 
- drivers/platform/x86/lenovo/wmi-other.c | 566 +++++++++++++++-----------------
- 1 file changed, 259 insertions(+), 307 deletions(-)
----
-base-commit: 8d7fe9885c62fc9a95bf55d9db244d9672a8aadc
-change-id: 2c0ec814-lwmi-no-singleton-a3f945179a50
-
-Thanks,
-Rong
+-- 
+2.55.0
 
