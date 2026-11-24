@@ -1,66 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795529393;
-	b=PTQ4k8GCZumcQzCa3rm8C+OYdA00Wi5j0aBPM7xm2y9llnttq5LIKw0ZhlMVEJuacqQb
-	 Cf5WC6V0XRiO2BPyDtKpsYe8KEhaxOJK3nhdBeoyaYdmyonjJeR4odcua8IV1sK5GKV9N
-	 m/ScHym7961WVDAP/EAb1q54pw5Tjjajjbj4CJ9Mlh/BzCjXkSO2+3k2xRQMRV+uMdOKp
-	 nXJxUesNqaSA8TKCiQaqWZ3RpIBaI83ZcpkvDzT/GtyiR29IVPdVtp6vpLld0+uqVF7JF
-	 EJXeNea4ea6prtvDuy0PLgU/O77GrCWluea2/ueWJuunphFSJ7SdxiMPEErU8adqblQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795529393;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=a4RfNBQTBp/UFVGqh2i/392nxbtU56+kwab0+TxIlZw=;
-	b=U7+FY1aABlRfiyFCA7epypDs4nSe+Ofy+FHYg2XWf0SA3IpafP5K3vtAwTGvRfF3qZLa
-	 uh+gEMn+fzJKh7RdxVC61oKyW5IxI+o1/xkeDNxMmlwhzrcUyc+awfTG5oWvYaddsV+EW
-	 S1HO7v0v9Zt8GRtIGnFk3RCJnofPrOWcbv/VP5gl9vwuEitEg5pYTHNm4TNrIjgXJiv7B
-	 JzS5xmWJtCkmokJqqZBB25LpLcgEEI3syW54/qwIvFA+djzkvh0itoUhsdf9uz7SJUBdw
-	 Q83sugNfz7MLjwuBXqVgOANKjt5C+nIqRapGDrmgZj/+/TCbGuTRIQqEoYjVvoeOlLw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=lvQ10+Ef;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795530007;
+	b=MlQcMWl/vwHLqzGHZ27naPfS60d1bK5vyV8UwuliFDJiZg9UBdrgLMqwH/F9TazZohvz
+	 htXYfvYzC6dF+QXqUwH9AvAKlldJ3Hr6/zoSSh3Yc9i/2CUXHZq7r7KhBF/2FKfh+xolU
+	 6IxCEZ07yQLHXI9KjxWa4eWt22Y/qsAiondL5S4uFxEcq7GO9uMxXH/GvWedxFvQj+fPD
+	 2rwlFzz29llbn3Q0+lNsTKB/C9mcirci28VSDSPdpDrAa36++E8V3QokG53Frl8RuR7x8
+	 wmmnxsFSUqEGfc3njN4y7rUE5lrzJn5eB6VMsHiW3k0w6kMhmgvoiyZ48OsnC2iiKQA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795530007;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
+	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:
+	 Content-ID;
+	bh=ZX14mWVlFUFvAroRXVoq9BmZQ5674+JrtoPFJUzJT2E=;
+	b=e4F5RYD5+qgBaZpUujXuXSuqZm6GSI6XKAWtas3oXnsrEtMAjVF6sLxSlRgBuY5WoiTR
+	 CnmD06kvVRItZKNxIApwGC9EU5k2tr/cqe1dC398ZGP5OIZgjI9MpZnFyu5KkxOExWvP/
+	 lVDDGWEPHx5Cn5qu1kZMqmjGt0Rf6eYtMFwlWYKJi8aqwqYtcf5o3KpCTsR6rrcsW4vqL
+	 O9vNNWD2iagUWHp/2qID1KHLUA6YqVynPXUntUolibA7IFwPeSkREZVu4mPumMwbWDz5v
+	 0Jc/W0qW8MBNmkYt62L9yCVrkAJ4bJjWFvJT3B5T7DQhRr1Dg0dJPwhs+45KRrznomA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nrHOo9ok;
+	arc=none smtp.remote-ip=198.175.65.10
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA63E606A697;
-	Tue, 24 Nov 2026 14:09:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA63E606A697
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F013C606A338;
+	Tue, 24 Nov 2026 14:20:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F013C606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=lvQ10+Ef
-ARC-Seal: i=1; a=rsa-sha256; t=1795529350; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=g4m5swNtNX2Wa/Em07Orl+751l9WyGQB/ouMSuznju+lZU79CJMrQcz4aGYKh8vgD9Ctb0+yha+Tzv0PS+ex6kYioxcd8/Xdai5xx8CPrQL2rlaS0y+3Soxc4vFA1uPl5yDMa3ntU1NcHdZJD3O1BiNfQdBMAxsdxaFiPKMMvmI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795529350; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=a4RfNBQTBp/UFVGqh2i/392nxbtU56+kwab0+TxIlZw=; 
-	b=FAUJgi7NZlXDBLsTCviKlvzcoDMPV8Or7I1C95ndFsveAlrrqUtH+Zbqx/XBQ5LhKYPDiTvEeBxtsetfUba9dTbF2Gmg/Tu5Ocp8Si1E8/ghEGflhoYoRW00y8jUNE3d2yvNBI4moynRffMYUM0XcLyhVyhIuiq0hDDb4pgn7yc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=lvQ10+Efyd7eU4BlGQ6BOxkaD+Cb1mWFrO5MMj2GRsfluN252iAAspGhbbfpfnEhnO8F9gciNx3JyDOM2wpC0VMbyVxv0bcGbup/8fsX7spoNqocezpi4p1PpSsZyW1TJ4bOE7Z3ROWgWaHBcOvOy4k70fLs4oa0VwFQzuZ/yc5wpncse8rtatr+rQ3wCgr37byF6pHGljDC2iuNZMUQfoQkyk/LmJr10mDdZBxqR72as+iUlmAeeHwgk2r9D3xAODjxCsWVUcCswdDkt0CpuCOPkZ/DqceaZL/UBkeyxb1H30rycIS/JBBorDfThnlSITLY5FKkVW6CSDZDTUen5Q==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=a4RfNBQTBp/UFVGqh2i/392nxbtU56+kwab0+TxIlZw=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 179552934634154.10946730104092;
-	Tue, 24 Nov 2026 06:09:06 -0800 (PST)
-Message-ID: <d776d4ca05cd2378e344881b82725fda168f6556.camel@rong.moe>
-Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Only check
- charge_start against a known charge_stop
-From: Rong Zhang <i@rong.moe>
-To: Tom Hu <huxiaoying@kylinos.cn>, linux-kernel@vger.kernel.org
-Cc: hmh@hmh.eng.br, mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, 
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, xiaoying_hu@126.com
-In-Reply-To: <20261124103946.897642-2-huxiaoying@kylinos.cn>
-References: <20261124103946.897642-1-huxiaoying@kylinos.cn>
-	 <20261124103946.897642-2-huxiaoying@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 22:02:34 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nrHOo9ok
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795530007; x=1827066007;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=IE8hHtc50kPBPBJMlwFyegjl7tVOJnTXdX1VwtXzJ4k=;
+  b=nrHOo9okdTbJzm21xp84ImNXTzghboJ4Kqd1rMt/whLWQGeXlxax2q7E
+   84f2xnHPZZEhOfNpwv88+3G+s7VDaAN//VYrbqrH1/PoWwPzmpCBFRoMH
+   8h7ahw4sIQIfVt0RYeJkRG2033/3ZcHaBxl6WIlNNk4WIVrS0OszRXmw6
+   zOfY8+RAV+fjWneqXO4jFrKp66W2iUBF2b/UtqugeaRrvfz+TEIciagnn
+   nsh+7zSaTqt3QOFQ8OZ4A860gETvNV1T3y0E1UuQuHL7i5A2L51qkV+0G
+   n2SsWX6mX0yKggAAfds7BoNXZdDD3M8NHQ6LnEA0CH7qP2Sx1U3xUWDet
+   Q==;
+X-CSE-ConnectionGUID: JgdGAZf+SseFgAyX0N5EXQ==
+X-CSE-MsgGUID: pb1KKsgIQHyG98kCgn8UCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11976"; a="4287036"
+X-IronPort-AV: E=Sophos;i="6.27,231,1787036400"; 
+   d="scan'208";a="4287036"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2026 06:20:06 -0800
+X-CSE-ConnectionGUID: 7JmhZtc8QliHqxwgbiKajA==
+X-CSE-MsgGUID: M1v1GBUjRBe8g3pwkKughQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,231,1787036400"; 
+   d="scan'208";a="11694762"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.190])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2026 06:20:04 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 24 Nov 2026 16:20:00 +0200 (EET)
+To: Rosen Penev <rosenp@gmail.com>
+cc: Matthew Garrett <mjg59@srcf.ucam.org>, 
+    =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>, 
+    Hans de Goede <hansg@kernel.org>, 
+    Gabriele Mazzotta <gabriele.mzt@gmail.com>, 
+    Darren Hart <dvhart@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] platform/x86: dell-laptop: Parse the charge end
+ threshold as an int
+In-Reply-To: <CAKxU2N8cn+hbUH4iwP2w6myQV28LM1+djvmQfN92A8z1G9Y5Tw@mail.gmail.com>
+Message-ID: <ce0f3108-ef9e-08a7-9b5c-b0a330159988@linux.intel.com>
+References: <cover.1795219225.git.rosenp@gmail.com> <6abac23d8f9985b55282ee56c97155a67076257c.1795219225.git.rosenp@gmail.com> <51f6631e-62df-0e64-b358-805d343475b7@linux.intel.com> <CAKxU2N8cn+hbUH4iwP2w6myQV28LM1+djvmQfN92A8z1G9Y5Tw@mail.gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -70,51 +84,71 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-4 
-X-ZohoMailClient: External
+Content-Type: multipart/mixed; BOUNDARY="8323328-414250409-1795529647=:1182"
+Content-ID: <f590003e-111a-cb9b-e8da-ccf1ca6af971@linux.intel.com>
 
-Hi Tom,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks for working on this.
+--8323328-414250409-1795529647=:1182
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <065521a9-8536-430e-7dbc-b75d7d7f3972@linux.intel.com>
 
-On Tue, 2026-11-24 at 18:39 +0800, Tom Hu wrote:
-> From: huxiaoying <huxiaoying@kylinos.cn>
+On Mon, 23 Nov 2026, Rosen Penev wrote:
+
+> On Mon, Nov 23, 2026 at 12:32=E2=80=AFAM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Fri, 20 Nov 2026, Rosen Penev wrote:
+> >
+> > > charge_control_end_threshold_store() passes a pointer to an int to
+> > > kstrtouint(), which only builds because the kernel disables
+> > > -Wpointer-sign, and makes the following "end < 0" check dead code.
+> > > Use kstrtoint() like charge_control_start_threshold_store(). Values
+> > > outside 0 to 100 are rejected either way.
+> >
+> > Why the <0 check has to be kept on the driver side?
+>
+> It's currently a one line change instead of three.
+
+Huh!?! What criteria is that?! :-/
+
+=2E..Could you then, like change those three lines instead. Please.
+
+--
+ i.
+
+> >
+> > Why not change the variable type instead and remove the then dead code
+> > check?
+> >
+> > It's somewhat disappointing this even has to be pointed out by review.
+> >
+> > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > > ---
+> > >  drivers/platform/x86/dell/dell-laptop.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platfo=
+rm/x86/dell/dell-laptop.c
+> > > index eca348497ac3..c512267be4c4 100644
+> > > --- a/drivers/platform/x86/dell/dell-laptop.c
+> > > +++ b/drivers/platform/x86/dell/dell-laptop.c
+> > > @@ -2382,7 +2382,7 @@ static ssize_t charge_control_end_threshold_sto=
+re(struct device *dev,
+> > >  {
+> > >       int ret, end;
+> > >
+> > > -     ret =3D kstrtouint(buf, 10, &end);
+> > > +     ret =3D kstrtoint(buf, 10, &end);
+> > >       if (ret)
+> > >               return ret;
+> > >       if (end < 0 || end > 100)
+> > >
+> >
+> > --
+> >  i.
+> >
 >=20
-> When the EC does not provide GET_STOP, stop_support stays clear and the
-> cached charge_stop is never probed, so it remains 0.  charge_start is
-> still validated against that value, which rejects every level above 0
-> even though the start threshold is supported.
->=20
-> Only apply the cross check when the stop threshold is supported.
->=20
-> Signed-off-by: huxiaoying <huxiaoying@kylinos.cn>
-
-FWIW:
-
-Reviewed-by: Rong Zhang <i@rong.moe>
-
-A random thought: perhaps initializing charge_stop with 100 could make
-the code cleaner?
-
-Thanks,
-Rong
-
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
-rm/x86/lenovo/thinkpad_acpi.c
-> index 8fc5569131f6..842045272ffa 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -9832,7 +9832,8 @@ static ssize_t tpacpi_battery_store(int what,
->  =09=09/* valid values are [0, 99] */
->  =09=09if (value > 99)
->  =09=09=09return -EINVAL;
-> -=09=09if (value > battery_info.batteries[battery].charge_stop)
-> +=09=09if (battery_info.batteries[battery].stop_support &&
-> +=09=09    value > battery_info.batteries[battery].charge_stop)
->  =09=09=09return -EINVAL;
->  =09=09if (tpacpi_battery_set(THRESHOLD_START, battery, value))
->  =09=09=09return -ENODEV;
+--8323328-414250409-1795529647=:1182--
