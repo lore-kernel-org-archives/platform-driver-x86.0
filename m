@@ -1,103 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.66
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795507007;
-	b=Dt05Y4JFwuURRkcrGjAANH54a+CKjnXSuKGtraw26kluirS5lOyIC9qSueHGxLBo1nSn
-	 UHoDpCkhFN4f72JnXZsF9cKxHyAcaw73Wyf2BWcScmRD+LnpvsEcDxeF/+G92hFD17/SH
-	 JAl7fz6nApBzBWKtyg6O+KkGAJXWphT2I2cyEy3C/TJExFRIvAJiwvDeZtOVxtJL++LBR
-	 linGwZ5WTb2z4PLA+Dnhjo7VgTkMPcjjZhrQEex7wvx7fAk9xRlV5Ug6n6Lqee9AOMVKI
-	 WrXCxg7rsaA1OMfdwky5k5auszn/OJ2mtLo+SuJQRh4kmZl7LufBjF7RAG3egyYxFjQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795507007;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=xtWpcJUXfu5EkRDB1B1nw39Ks7cR2UdfCBIT+OT36yM=;
-	b=4Fb7T9HR5U6IVW9/jMzueEy8oTejpQawH4nRVf1pubXKzfPLxI4kmt2NLjjwPVcZqKXN
-	 jZGzox5oItUEG3YcPoi7m4H1d0NLJjyQmpUMAM3ZKC7z/uNzTu2tvzoqndUS9p0JlIm+Q
-	 eh55twYshDyyPq2C8yDRYftXMDZ1X8gJjqpJruz6c7KMKMm6eAfnrX6tP+1J220Eerai5
-	 jIY6GJNDC3XhCgh+QpPXI3zs21vOO+e18DXu9AszEq3y2DrUwiDTiv/cqEh0QBdz0F2pP
-	 awOZhgr9WuBsG3c9it+qUYlBsOc3dpm4D5Aq/R9L8nxU7sKnd5ZDeB7d2IY17M2nx5A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=rNAqDckD;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.66
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010066.outbound.protection.outlook.com [52.101.193.66])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.3
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795507807;
+	b=1YfWDMKi81fS4hMjmrDw/Xx0BTySi5aCsLIHmwjbiSEkt15XO+2Xv1XN8ntuTZgYBWcF
+	 yNKVkmWniWoU1723zrSdn0mmhdkjZvuqvpy47/dP1jBkpZwL2pqqpqynKnk8cbSCCW0rP
+	 RWsKOtmk+Tkh73pyEKBl0gUpUEtRNp/lKGntjAItMQJxdkqhf0KpdidQbPHq7AkBPzCuL
+	 85KOLly416fl0r2RFBii9GwZSLIEPQDPfxa2ldgvxXFicLq4V4PwdrDhfSlqjlCFNPw27
+	 1RFYrQewUr21CjlEfjOp3tdnnZwh9xOpGUbFq0ZmvxRL6GBEKvOCJeoYqy4d5kg0FTw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795507807;
+	h=DMARC-Filter:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=HUFKq0NtZt0mAtg8MNFLsQ6JW3ap6Rns1MfxgTE8oyc=;
+	b=dMG4g+JXrYZGsh1Dc4Gwka18DINaINtscs9UCHzWvyFgXtC7+PGOnMkHH+HQhVzNk3JN
+	 PrG1HyUXuf1Uw0067g87L+UVKG+qSYv/4x7yXm2NBidc+aRC34IntTeJxdAjgL4Xh6zU8
+	 w+bSLqKAsXGFoj9R8wmc/rCSpf9jI/cvuwM6+qtR9AsJAc3YULWfxaj24hMpyIgTxwEoY
+	 Bzl97sQTJ9RkKsgx8LgT39nFiyR2KqRibGayzZs2D7DgxrklR3haol8FM2d9I5DXBNpUf
+	 +a5XQGkKQ6AVT6cKY3NVQ6I0476TOKB/nixZ9Afe5fh17rMdP8u66QRLAsWOIZxCQHg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b="bABrv/7y";
+	arc=none smtp.remote-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1D4606A31E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 07:56:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D1D4606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3674D606A31E;
+	Tue, 24 Nov 2026 08:10:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3674D606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=rNAqDckD
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rHi/o1xzICQXBQLCVwZsT4Vo2RYi0QPRL0tH8gK/fiJW25j1e0msDbHL4W0Of3NjunpDWmB69QT2vMZCb7KtvwXnLyyZvXyVhdDc3TU/pVhFCEFDAj6PECMhhX4KShYOmtb2F/x6F2rBsv+IuMikjBVyCo9WfCH7KY/thEx9BvyBtk5xfDqBfNgfORQl0YiRBbz+iWUyqvPwZBxise8pJlkLZfWAQEt/OqU0hiYtqS94KCochKpDwSiXTSHQe0o0HweCTPRJBtDjvVItzNfAvbJWYn5fnOF6rD2sX9hlza0JjoN4i9WyoA6LtaJOeDgOtyx2sDAm1cvRDYGF17DJqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xtWpcJUXfu5EkRDB1B1nw39Ks7cR2UdfCBIT+OT36yM=;
- b=WuvYxa0BqHYF/L6YDW1k/K6A2PVGjWQynU7BMjOMR+FmKnb7ODSdxar7b+lw/YxOPx3GAPapDmFwXwBTeGtE4wBiyjv41lLN5nUE92OjDXo/g+uUD7OwPwu9oB/WiBnHyQzwwmm8Hv8J6rBpsUcva4bnU0/w7cZTA9JDg3M4P8CBwNO0XuXwCoaboMromEemn6lJ/ZphHGJKTAZPXaY+Jh2ukafxlJAv6Bj+1/j8cxGib6HiPw7U2c7GKsz+mEf5Ks4C2NAYvtCc+rbOtxycnT2JfgiH4piF71XJohRSwOyF817apybisQ1t4gTgb/ZrpGXvfelqu6S5t/5ldANbLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xtWpcJUXfu5EkRDB1B1nw39Ks7cR2UdfCBIT+OT36yM=;
- b=rNAqDckDZIvzXtx0Lau1Mc3GT+4nHRLxI6II098GC4HpzvYO06GVbPr4/SMgYXabCmxikAoRT7ZSXstOReVnCFgAHNjG7dJ1KqDbo+KAlTcov8dXx8gR5zWv4AC07BFNZ2Z5/p+ukhUg87bAQ+mY3haiw0DbW7uwWUyEkEKkTVo=
-Received: from MW4PR04CA0385.namprd04.prod.outlook.com (2603:10b6:303:81::30)
- by PH9PR12MB409658.namprd12.prod.outlook.com (2603:10b6:510:412::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Tue, 24 Nov
- 2026 07:52:40 +0000
-Received: from SJ5PEPF000001D5.namprd05.prod.outlook.com
- (2603:10b6:303:81:cafe::2f) by MW4PR04CA0385.outlook.office365.com
- (2603:10b6:303:81::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.639.14 via Frontend Transport; Tue,
- 24 Nov 2026 07:52:39 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ5PEPF000001D5.mail.protection.outlook.com (10.167.242.57) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.662.3 via Frontend Transport; Tue, 24 Nov 2026 07:52:39 +0000
-Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Tue, 24 Nov
- 2026 01:52:36 -0600
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Mario Limonciello <superm1@kernel.org>
-Subject: [PATCH v4 01/11] platform/x86/amd/pmf: Skip legacy DRAM address commands on 1AH_M80H
-Date: Tue, 24 Nov 2026 13:22:03 +0530
-Message-ID: <20261124075213.2317127-2-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261124075213.2317127-1-Shyam-sundar.S-k@amd.com>
-References: <20261124075213.2317127-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=bABrv/7y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=HUFKq0NtZt0mAtg8MNFLsQ6JW3ap6Rns1MfxgTE8oyc=;
+	b=bABrv/7ysIAtYR/FmL9RJ0ySGM+QOGP2dW7CLaZKKJ1rqq6VIdu8K2YRwbEyQD
+	E8KrTdL8043Tu5l0hzIheB9K4vza1xLvSMknfyB5Wkxhpp7tvLIqBB4VgcUxREOb
+	S50GMLZp4stFmk5EeNaarFzL46ccp4FlZ6SvdgSOzJnC8=
+Message-ID: <f5b36363-45a8-43f6-863b-5c7df6cee7eb@163.com>
+Date: Tue, 24 Nov 2026 16:05:58 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -107,130 +51,532 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw
+ GetDataByPackage interface
+To: Rong Zhang <i@rong.moe>, platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, W_Armin@gmx.de,
+ corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
+ hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261116040532.154928-1-alanpluto@163.com>
+ <20261123061120.18740-1-alanpluto@163.com>
+ <fcabaf8647e0c1ab487cd612d5a290082613ec0b.camel@rong.moe>
+ <5b327bf279357b68b91ec66b465501a2760b23eb.camel@rong.moe>
+ <7442b878b63d67c44af0bdb379a9de04dae76669.camel@rong.moe>
+Content-Language: en-US
+From: Alan <alanpluto@163.com>
+In-Reply-To: <7442b878b63d67c44af0bdb379a9de04dae76669.camel@rong.moe>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D5:EE_|PH9PR12MB409658:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4edb0ee8-8fdb-4859-cdc6-08df49ffe9d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|23010399003|36860700016|261009223027099003|18002099003|22082099003|3023799007|261026121527099003|261028144727099003|261102123227099003|261021121427099003|261022075727099003|261022105027099003|261021123027099003|56012099006|261026140227099003|10067099003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	YIRUO/jOHkcupSaDpiSZXRywlFA9tZEkRPboTTZf77CM0Ua42q8g3jV3KoQMPms4RASszliGHgAv7iIPkBDspWKOvcASevEIFPLgDGv5qeSv3a/KZ681wmaKlltr/8hOhq8UQx8kdXGjezQ+NfOJxSfeXuR8tHKCjJd7F0DwfdjVWswju+X1pDYCdTG02eqBgN4jM2XaVSirSntAfVCoflxMv+71MfVK1xr/4CftSicPJ7cRcsK9zA5SXgH7kLtAwM/TUdCSKuDuAlJjwZamL1slXak+OXpjYInqXpgGzdjMziILY/39U4TQuaksn/ioPdwNYlp5O2iMk9aB1Jt3TI12h1HtQTyCfrNcJv4m6trwAkwel4vpKT5w+I2rLzUv2fOCvMcHdozj0+lspAluDTQ23YcsTMhvW0p5BBwK10Lk89grLYaLRd+iobHRtgdV66UgZO2dGaNL44NQQkebrz2Z6Whw7cr4NpcKtZ0zWEUGxcc0ZpSWxvi979R33nNUG7jHIwWl2AqlOcIQ6pLEPv2Y2O+ENUlscJDKxjcrzu67PSmzu506gDj3W5e8bmulj62qppFuIrc1m8JbOtTaQmoitfbwW6oGRnaLRRejAGu49HPtqX2snZTxdpO8HKEc3Tj15GTCgO804sqMTfS5u33ICgaYp9/wUaPHO4cx89vnlhyIOCPQy/BhmnIKiPLFePcO8s3VnUCfZLqsNECtNw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(23010399003)(36860700016)(261009223027099003)(18002099003)(22082099003)(3023799007)(261026121527099003)(261028144727099003)(261102123227099003)(261021121427099003)(261022075727099003)(261022105027099003)(261021123027099003)(56012099006)(261026140227099003)(10067099003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	zN4u0ftKSxMH+Ygha84hbesw0UOtc0ojf1VBIVz6pCrfmcTHycxUGYEZu7gHTA1U78ZXXRWZyyA580O+ij1kRY49OX/soIfMGhkyZctzoP9HFrcZwzomaGJ72qStT/Ti1vTrxfTvgc5gVd7sQK2tSF+9MQKiuSBaJsTU8W3BQ1JlQHuX52PHS/HcfvKRe4NHkNoyqB/mjZY04MLNXbt4w/8NlU5580JRkazGXJqfVM+YLEy5fmY2KPLY+fEkrSj/TTWnchvAHI84yBd7MJTSAk/v7VJD6KXiOO0+jV7Xtj0HdjDK9bj1IUCS5cNIpUlrK4a64eP1sFpXA1iwTF6kR1CD3+6s9SaUf9LzV7p3X2jp6tVWFwLkG2TKsT8WKp6EoUL+fS6qYS6RYXnkr8RHjP7rIyEl7cPMF8OvBPf5iugA5ZPwq3InJjPI6/mys2wP
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2026 07:52:39.7359
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4edb0ee8-8fdb-4859-cdc6-08df49ffe9d7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D5.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH9PR12MB409658
+X-CM-TRANSID:PigvCgD3Xz8NRgVrM0fAHw--.21298S2
+X-Coremail-Antispam: 1Uf129KBjvAXoWfJr4UGF4fCr4rCr1rAry7Jrb_yoW8Ar15Go
+	WftFs3Ww18tr1UAr1UA39rAa429a48Gr1DXrW5Ars8Ja1jy3W3ur4UWw1fGFW5KFyrKr4D
+	Wa4kJr4rZFWYqr1rn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUxxpnUUUUU
+X-CM-SenderInfo: hdod01poxw0qqrwthudrp/xtbC0Q6wpGsFRg4xRgAA3a
 
-1AH_M80H gets the metrics table address from PMFW through
-GET_1AH_M80H_METRICS_TABLE_DRAM_ADDR and does not support the
-SET_DRAM_ADDR_HIGH/LOW commands used by earlier platforms.
+Hi Rong,
 
-amd_pmf_set_dram_addr() is still called on this platform from the
-Smart PC and auto mode/CnQF init paths. It logs an "Invalid CPU id"
-error and sends the address of its local buffer to PMFW using message
-IDs that mean something else on 1AH_M80H.
+On 11/23/2026 11:36 PM, Rong Zhang wrote:
+> Hi Alan,
+> 
+> On Mon, 2026-11-23 at 20:34 +0800, Rong Zhang wrote:
+>> Hi Alan,
+>>
+>> On Mon, 2026-11-23 at 20:21 +0800, Rong Zhang wrote:
+>>> Hi Alan,
+>>>
+>>> On Mon, 2026-11-23 at 14:11 +0800, Alan Pluto wrote:
+>>>> Lenovo's userspace utility uses the Other Mode WMI GetDataByPackage
+>>>
+>>> What's the purpose of the utility? Could you provide some context? You
+>>> can ignore this question if it's confidential, but in general providing
+>>> necessary context can help maintainers and reviewers learn about the
+>>> intent.
+>>>
+>>>> method (99) to check device readiness. Expose the method through debugfs
+>>>> so the firmware request and response can be inspected on Linux without
+>>>> adding a stable userspace ABI.
+>>>>
+>>>> The interface is disabled by default and can be enabled by passing
+>>>> enable_get_data_by_package=1 when loading the module.
+>>>>
+>>>> Signed-off-by: Alan Pluto <alanpluto@163.com>
+>>>> ---
+>>>> Changes in v2:
+>>>> - Replace the character device with a debugfs file, disabled by default.
+>>>> - Allow one open per WMI device and require a single read for the response.
+>>>> - Use scoped locks, lockdep checks, automatic buffer cleanup, and the
+>>>>   WMI helper's minimum response size check.
+>>>>
+>>>>  Documentation/wmi/devices/lenovo-wmi-other.rst |  12 +-
+>>>>  drivers/platform/x86/lenovo/wmi-other.c        | 208 +++++++++++++++++++++++++
+>>>>  2 files changed, 219 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
+>>>> index 011054d64eac5b601333373c4d405f9c5117ffc2..42e1525a8852bd7c8ddc04cc4047b1f09c5b770f 100644
+>>>> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+>>>> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+>>>> @@ -33,6 +33,15 @@ under the following path:
+>>>>  
+>>>>  Additionally, this driver also exports attributes to HWMON.
+>>>>  
+>>>> +GetDataByPackage diagnostics
+>>>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>
+>>> Missing a ~
+>>>
+>>>> +
+>>>> +The driver does not create the diagnostic file by default. To enable it,
+>>>> +pass ``enable_get_data_by_package=1`` when loading ``lenovo-wmi-other``.
+>>>> +The file is at ``lenovo_wmi/<WMI device>/get_data_by_package``.
+>>>> +Not all devices support the method. Use only commands whose behavior and
+>>>> +side effects are understood.
+>>>> +
+>>>>  LENOVO_CAPABILITY_DATA_00
+>>>>  -------------------------
+>>>>  
+>>>> @@ -107,7 +116,8 @@ WMI interface description
+>>>>  =========================
+>>>>  
+>>>>  The WMI interface description can be decoded from the embedded binary MOF (bmof)
+>>>> -data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+>>>> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility. This older
+>>>> +example lists ``Max(40)`` for GetDataByPackage; newer firmware uses 100 bytes.
+>>>
+>>> ??? Could you move the sentence to the right place?
+>>>
+>>>>  
+>>>>  ::
+>>>>  
+>>>> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+>>>> index bd64e7b44669db684145298ae088dd2c7f539d29..827b4215c612fbfc052bbadff0672e68e65517f0 100644
+>>>> --- a/drivers/platform/x86/lenovo/wmi-other.c
+>>>> +++ b/drivers/platform/x86/lenovo/wmi-other.c
+>>>> @@ -27,13 +27,16 @@
+>>>>   */
+>>>>  
+>>>>  #include <linux/acpi.h>
+>>>> +#include <linux/atomic.h>
+>>>>  #include <linux/bitfield.h>
+>>>>  #include <linux/cleanup.h>
+>>>>  #include <linux/component.h>
+>>>>  #include <linux/container_of.h>
+>>>> +#include <linux/debugfs.h>
+>>>>  #include <linux/device.h>
+>>>>  #include <linux/export.h>
+>>>>  #include <linux/firmware_attributes.h>
+>>>> +#include <linux/fs.h>
+>>>>  #include <linux/gfp_types.h>
+>>>>  #include <linux/hwmon.h>
+>>>>  #include <linux/idr.h>
+>>>> @@ -41,9 +44,12 @@
+>>>>  #include <linux/kobject.h>
+>>>>  #include <linux/limits.h>
+>>>>  #include <linux/module.h>
+>>>> +#include <linux/mutex.h>
+>>>>  #include <linux/platform_profile.h>
+>>>>  #include <linux/power_supply.h>
+>>>> +#include <linux/slab.h>
+>>>>  #include <linux/types.h>
+>>>> +#include <linux/uaccess.h>
+>>>>  #include <linux/wmi.h>
+>>>>  
+>>>>  #include <acpi/battery.h>
+>>>> @@ -90,6 +96,8 @@ enum lwmi_feature_id_psu {
+>>>>  
+>>>>  #define LWMI_FEATURE_VALUE_GET 17
+>>>>  #define LWMI_FEATURE_VALUE_SET 18
+>>>> +#define LWMI_DATA_PACKAGE_GET 99
+>>>> +#define LWMI_DATA_PACKAGE_INPUT_MAX 100
+>>>>  
+>>>>  #define LWMI_FAN_ID_BASE 1
+>>>>  #define LWMI_FAN_NR 4
+>>>> @@ -141,6 +149,8 @@ struct lwmi_om_priv {
+>>>>  	struct device *fw_attr_dev;
+>>>>  	struct kset *fw_attr_kset;
+>>>>  	struct wmi_device *wdev;
+>>>> +	struct dentry *debugfs_dir;
+>>>> +	atomic_t package_opened;
+>>>>  	int ida_id;
+>>>>  
+>>>>  	struct lwmi_fan_info fan_info[LWMI_FAN_NR];
+>>>> @@ -156,6 +166,23 @@ struct lwmi_om_priv {
+>>>>  	bool bh_registered;
+>>>>  };
+>>>>  
+>>>> +struct lwmi_package_response {
+>>>> +	__le32 data_size;
+>>>> +	u8 data[];
+>>>> +};
+>>>
+>>> Even though there is no gap between data_size and data, please add a
+>>> __packed annotation to clearly indicate your intent.
+>>>
+>>>> +
+>>>> +struct lwmi_package_file {
+>>>> +	struct lwmi_om_priv *priv;
+>>>> +	/* Protects the pending response on shared descriptors. */
+>>>> +	struct mutex lock;
+>>>> +	struct lwmi_package_response *response;
+>>>> +	size_t response_len;
+>>>> +};
+>>>> +
+>>>> +static bool enable_get_data_by_package;
+>>>> +module_param(enable_get_data_by_package, bool, 0400);
+>>>> +MODULE_PARM_DESC(enable_get_data_by_package, "Enable the GetDataByPackage debugfs interface");
+>>>> +
+>>>>  /*
+>>>>   * Visibility of fan channels:
+>>>>   *
+>>>> @@ -1611,6 +1638,174 @@ static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
+>>>>  
+>>>>  /* ======== Self (master: lenovo-wmi-other) ======== */
+>>>>  
+>>>> +static int lwmi_package_open(struct inode *inode, struct file *file)
+>>>> +{
+>>>> +	struct lwmi_om_priv *priv = inode->i_private;
+>>>> +	struct lwmi_package_file *state __free(kfree) = NULL;
+>>>
+>>> The declarations of __free() pointers should be placed at where it's
+>>> allocated, i.e., ...
+>>>
+>>>> +
+>>>> +	if ((file->f_mode & (FMODE_READ | FMODE_WRITE)) != (FMODE_READ | FMODE_WRITE))
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	state = kzalloc_obj(*state);
+>>>
+>>> ...here.
+>>>
+>>> Meanwhile, opening the file while priv->package_opened == 1 allocates
+>>> memory in vain. Could you move it below the package_opened check? In this
+>>> manner you don't need the __free() either.
+>>>
+>>>> +	if (!state)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	if (atomic_cmpxchg(&priv->package_opened, 0, 1))
+>>>
+>>> atomic_cmpxchg_acquire()
+>>>
+>>>> +		return -EBUSY;
+>>>> +
+>>>> +	mutex_init(&state->lock);
+>>>> +	state->priv = priv;
+>>>> +	file->private_data = no_free_ptr(state);
+>>>> +
+>>>> +	return stream_open(inode, file);
+>>>> +}
+>>>> +
+>>>> +static int lwmi_package_release(struct inode *inode, struct file *file)
+>>>> +{
+>>>> +	struct lwmi_package_file *state = file->private_data;
+>>>> +	struct dentry *dentry = file->f_path.dentry;
+>>>> +
+>>>> +	kfree_sensitive(state->response);
+>>>
+>>> You didn't explain what data it is in your replies. "Can contain
+>>> sensitive data" is not an acceptable explanation.
+>>>
+>>> Please grep the occurrence of kfree_sensitive() in the kernel tree, and
+>>> you'll find that they are mostly credentials. Does the data passed by the
+>>> interface fall into the same category? 
+>>>
+>>> TBH, anything goes through WMI is *never* secret. If a manufacturer ever
+>>> decided to use it to deliver "sensitive" data, it either misunderstood
+>>> the word or chose the wrong interface.
+>>>
+>>> An ACPI-WMI method goes through the ACPICA, then the WMI core, and
+>>> finally here. The former two's temporary buffers are either on stack or
+>>> freed by the vanilla kfree(). If leaking "sensitive" response were really
+>>> a concern, it must had been leaked before it reached your code.
+>>>
+>>> Please don't use kfree_sensitive() unless you really understand the data
+>>> flow path and have a strong reason to use it. If you insist on it, please
+>>> answer both questions.
+>>>
+>>>> +	mutex_destroy(&state->lock);
+>>>> +
+>>>> +	/* Unlike read and write, release can run after debugfs removal. */
+>>>
+>>> The comment is not helpful, as it's just repeating well-known knowledge.
+>>> Please explain what it protects:
+>>>
+>>>    The release() callback may be called after state->priv has been freed.
+>>>    Only when the debugfs file hasn't been removed is the pointer valid.
+>>>
+>>>> +	if (!debugfs_file_get(dentry)) {
+>>>> +		atomic_set(&state->priv->package_opened, 0);
+>>>
+>>> atomic_set_release()
+>>>
+>>>> +		debugfs_file_put(dentry);
+>>>> +	}
+>>>> +
+>>>> +	kfree(state);
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int lwmi_package_invoke(struct lwmi_package_file *state, u8 *data)
+>>>> +{
+>>>> +	struct lwmi_om_priv *priv = state->priv;
+>>>> +	struct wmi_buffer input = { .length = LWMI_DATA_PACKAGE_INPUT_MAX, .data = data };
+>>>> +	struct wmi_buffer output;
+>>>> +	u32 data_size;
+>>>> +	int ret;
+>>>> +
+>>>> +	lockdep_assert_held(&state->lock);
+>>>> +
+>>>> +	/* The tested firmware needs two calls before its response is usable. */
+>>>> +	ret = wmidev_invoke_method(priv->wdev, 0, LWMI_DATA_PACKAGE_GET,
+>>>> +				   &input, &output, 0);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>
+>> If you don't care about the first call's response, use
+>> wmidev_invoke_procedure().
+>>
+>> Thanks,
+>> Rong
+>>
+>>>> +
+>>>> +	kfree_sensitive(output.data);
+>>>> +
+>>>> +	ret = wmidev_invoke_method(priv->wdev, 0, LWMI_DATA_PACKAGE_GET,
+>>>> +				   &input, &output, sizeof(struct lwmi_package_response));
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	struct lwmi_package_response *response __free(kfree_sensitive) = output.data;
+>>>> +
+>>>> +	data_size = le32_to_cpu(response->data_size);
+>>>> +	if (data_size > output.length - sizeof(*response))
+>>>
+>>> Why not use struct_size() here? Considering that...
+>>>
+>>>> +		return -EPROTO;
+>>>> +
+>>>> +	state->response_len = struct_size(response, data, data_size);
+>>>
+>>> ...you've used it here, you may introduce a on-stack variable to
+>>> temporarily store the calculated size and use it here and there.
+>>>
+>>>> +	state->response = no_free_ptr(response);
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static ssize_t lwmi_package_write(struct file *file, const char __user *buffer,
+>>>> +				  size_t count, loff_t *ppos)
+>>>> +{
+>>>> +	struct lwmi_package_file *state = file->private_data;
+>>>> +	u8 input[LWMI_DATA_PACKAGE_INPUT_MAX] = {};
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!count || count > sizeof(input))
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	ACQUIRE(mutex_try, state_guard)(&state->lock);
+>>>> +	if (ACQUIRE_ERR(mutex_try, &state_guard) || state->response)
+>>>> +		return -EBUSY;
+>>>
+>>> I don't think it's a good idea to share the same errno between the two
+>>> cases.
+>>>
+>>> While ACQUIRE_ERR(mutex_try, &state_guard) should return -EBUSY, a
+>>> pending state->response should return something like -EALREADY or
+>>> -ENOTEMPTY.
+>>>
+>>>> +
+>>>> +	if (copy_from_user(input, buffer, count))
+>>>> +		return -EFAULT;
+>>>> +
+>>>> +	ret = lwmi_package_invoke(state, input);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	return count;
+>>>> +}
+>>>> +
+>>>> +static ssize_t lwmi_package_read(struct file *file, char __user *buffer,
+>>>> +				 size_t count, loff_t *ppos)
+>>>> +{
+>>>> +	struct lwmi_package_file *state = file->private_data;
+>>>> +	size_t len;
+>>>> +
+>>>> +	if (!count)
+>>>> +		return 0;
+>>>> +
+>>>> +	ACQUIRE(mutex_try, state_guard)(&state->lock);
+>>>> +	if (ACQUIRE_ERR(mutex_try, &state_guard))
+>>>> +		return -EBUSY;
+>>>> +
+>>>> +	if (!state->response)
+>>>> +		return 0;
+>>>
+>>> Reading the file without writing to it in prior is a mistake, isn't it?
+>>> Thus:
+>>>
+>>> 		return -ENODATA;
+>>>
+>>>> +
+>>>> +	len = state->response_len;
+>>>> +	if (len > count)
+>>>> +		return -ENOSPC;
+>>>
+>>> Returning -ENOSPC is confusing as there is nothing to allocate during
+>>> read. How about -ENOBUFS?
+>>>
+>>>> +
+>>>> +	if (copy_to_user(buffer, state->response, len))
+>>>> +		return -EFAULT;
+>>>> +
+>>>> +	kfree_sensitive(state->response);
+>>>> +	state->response = NULL;
+>>>> +	return len;
+>>>> +}
+>>>> +
+>>>> +static const struct file_operations lwmi_package_fops = {
+>>>> +	.owner = THIS_MODULE,
+>>>> +	.open = lwmi_package_open,
+>>>> +	.release = lwmi_package_release,
+>>>> +	.read = lwmi_package_read,
+>>>> +	.write = lwmi_package_write,
+>>>> +};
+>>>> +
+>>>> +static void lwmi_package_debugfs_remove(void *data)
+>>>> +{
+>>>> +	debugfs_remove_recursive(data);
+>>>> +}
+>>>> +
+>>>> +static int devm_lwmi_package_debugfs_add(struct lwmi_om_priv *priv)
+>>>> +{
+>>>> +	struct device *dev = &priv->wdev->dev;
+>>>> +	struct dentry *dir, *entry;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!wmidev_instance_count(priv->wdev))
+>>>> +		return 0;
+> 
+> Is the bail-out reachable? See commit cbf54f37600e ("platform/x86: wmi:
+> Skip blocks with zero instances").
+> 
+>>>> +
+>>>> +	dir = lwmi_debugfs_create_dir(priv->wdev);
+>>>> +	if (IS_ERR(dir))
+>>>> +		return PTR_ERR(dir);
+> 
+> IIRC, usually any error returned by debugfs methods can (and should) be
+> blindly (yeah!) ignored by passing the returned pointer to the next
+> debugfs method regardless.
+> 
+> See the kdoc of debugfs_create_dir() and debugfs_create_file().
+> 
+>>>> +
+>>>> +	atomic_set(&priv->package_opened, 0);
+>>>
+>>> Why would you need this? The struct is kzalloc()-allocated.
+>>>
+>>>> +
+>>>> +	ret = devm_add_action_or_reset(dev, lwmi_package_debugfs_remove, dir);
+>>>> +	if (ret)
+>>>> +		return ret;
+> 
+> Technically, by postponing devm_add_action_or_reset() after
+> debugfs_create_file(), we can blindly ignore the former's error, too.
+> Several drivers have already been doing so.
+> 
+> That being said, if doing so seems weird, it's also acceptable to store a
+> pointer in priv and manage it manually instead of using devres.
+> 
+>>>> +
+>>>> +	entry = debugfs_create_file("get_data_by_package", 0600, dir, priv, &lwmi_package_fops);
+>>>> +	if (IS_ERR(entry)) {
+>>>> +		devm_release_action(dev, lwmi_package_debugfs_remove, dir);
+>>>> +		return PTR_ERR(entry);
+> 
+> This error should also be ignored.
+> 
+>>>> +	}
+>>>> +
+>>>> +	priv->debugfs_dir = dir;
+>>>
+>>> Why would you need this? The dir is devm-managed.
+>>>
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>>  /**
+>>>>   * lwmi_om_master_bind() - Bind all components of the other mode driver
+>>>>   * @dev: The lenovo-wmi-other driver basic device.
+>>>> @@ -1693,6 +1888,7 @@ static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
+>>>>  {
+>>>>  	struct component_match *master_match = NULL;
+>>>>  	struct lwmi_om_priv *priv;
+>>>> +	int ret;
+>>>>  
+>>>>  	priv = devm_kzalloc_obj(&wdev->dev, *priv);
+>>>>  	if (!priv)
+>>>> @@ -1708,12 +1904,24 @@ static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
+>>>>  	if (IS_ERR(master_match))
+>>>>  		return PTR_ERR(master_match);
+>>>>  
+>>>> +	if (enable_get_data_by_package) {
+> 
+> It'd be better to move the check inside the helper function.
+> 
+>>>> +		ret = devm_lwmi_package_debugfs_add(priv);
+>>>> +		if (ret)
+>>>> +			dev_warn(&wdev->dev, "failed to create GetDataByPackage debugfs files: %d\n",
+>>>
+>>> The file is named get_data_by_package.
+>>>
+>>>> +				 ret);
+> 
+> With error paths removed, the dev_warn() is no longer needed.
+> 
+> Thanks,
+> Rong
+> 
+>>>> +	}
+>>>> +
+>>>>  	return component_master_add_with_match(&wdev->dev, &lwmi_om_master_ops,
+>>>>  					       master_match);
+>>>>  }
+>>>>  
+>>>>  static void lwmi_other_remove(struct wmi_device *wdev)
+>>>>  {
+>>>> +	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
+>>>> +
+>>>> +	if (priv->debugfs_dir)
+>>>> +		devm_release_action(&wdev->dev, lwmi_package_debugfs_remove, priv->debugfs_dir);
+>>>
+>>> Why would you need this? The interface does not depend on the components.
+>>>
+>>> Thanks,
+>>> Rong
+>>>
+>>>> +
+>>>>  	component_master_del(&wdev->dev, &lwmi_om_master_ops);
+>>>>  }
+>>>>  
+Thanks a lot for the detailed suggestions. I need some more time to go
+through them carefully and respond.
 
-Do not send these commands on platforms that use accumulator based
-metrics. The buffer is still allocated, as the existing metrics paths
-use it. Add the 1AH_M80H case to the size switch, and move
-amd_pmf_supports_accumulator_metrics() to pmf.h so that it can be used
-from metrics.c.
+There is one important issue I'd like to discuss first: the userspace
+interface.
 
-Fixes: 641b41a7a125 ("platform/x86/amd/pmf: Add 1AH_M80H metrics table and NPU metrics support")
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmf/core.c    | 10 ----------
- drivers/platform/x86/amd/pmf/metrics.c |  7 +++++++
- drivers/platform/x86/amd/pmf/pmf.h     | 10 ++++++++++
- 3 files changed, 17 insertions(+), 10 deletions(-)
+V1 used a character device, and V2 switched to debugfs. However, we have
+since realized that debugfs is not suitable for our use case. We have a
+production userspace application that needs read/write access to this
+WMI interface, while access to debugfs is restricted when Secure Boot is
+enabled.
 
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 926de4de2cdb..19b75609f554 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -68,16 +68,6 @@ static bool smart_pc_support = true;
- module_param(smart_pc_support, bool, 0444);
- MODULE_PARM_DESC(smart_pc_support, "Smart PC Support (default = true)");
- 
--static bool amd_pmf_supports_accumulator_metrics(struct amd_pmf_dev *pdev)
--{
--	switch (pdev->cpu_id) {
--	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
--		return true;
--	default:
--		return false;
--	}
--}
--
- static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
- {
- 	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
-diff --git a/drivers/platform/x86/amd/pmf/metrics.c b/drivers/platform/x86/amd/pmf/metrics.c
-index 6bad7a409ddd..4e9e39e0816a 100644
---- a/drivers/platform/x86/amd/pmf/metrics.c
-+++ b/drivers/platform/x86/amd/pmf/metrics.c
-@@ -158,6 +158,9 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
- 		case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
- 			dev->mtable_size = sizeof(dev->m_table_v2);
- 			break;
-+		case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
-+			dev->mtable_size = sizeof(dev->mtable_v3);
-+			break;
- 		default:
- 			dev_err(dev->dev, "Invalid CPU id: 0x%x\n", dev->cpu_id);
- 		}
-@@ -167,6 +170,10 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
- 			return -ENOMEM;
- 	}
- 
-+	/* Accumulator based platforms get the table address from PMFW instead */
-+	if (amd_pmf_supports_accumulator_metrics(dev))
-+		return 0;
-+
- 	phys_addr = virt_to_phys(dev->buf);
- 	hi = upper_32_bits(phys_addr);
- 	low = lower_32_bits(phys_addr);
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 9f64ab833c08..b29c5192d878 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -1105,6 +1105,16 @@ static inline int amd_pmf_get_power_source(void)
- 		return POWER_SOURCE_DC;
- }
- 
-+static inline bool amd_pmf_supports_accumulator_metrics(struct amd_pmf_dev *pdev)
-+{
-+	switch (pdev->cpu_id) {
-+	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
- /**
-  * fixp_q88_fromint: Convert integer to Q8.8
-  * @val: input value
--- 
-2.34.1
+So we need to reconsider the interface. Would exposing it through sysfs
+be acceptable, for example as a binary attribute under
+/sys/bus/wmi/devices/DC2A8805-.../, similar to
+drivers/platform/x86/dell/dcdbas.c?
+
+What do you think?
 
