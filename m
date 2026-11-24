@@ -1,102 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.48
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795479690;
-	b=Xm3KvYqb5G+YQVvrn9JnlGCA6UFTJG2iFhhQpuohMs2G2TAKzFwIpafK6KG2JqwkuuNh
-	 UqgT5mfc5zKx0EDmp7AyPsxFsFY3t5+0tU3yueEm+v4oSRoWSz7Q75TDxiOkpQC+NJjee
-	 Bb9fGHnEZfDZekur/2PGfZRN7Ti6DoWX0nv3eOABy70v+LV/SUV99BOEhw2EHnAhIoWMd
-	 gXxsmBZfypd57Br7dBW2aviaCgmcce6I+1RauLhs+mQv4yyD4vpMxQo2GNBbUDww5X+r3
-	 VQ+guCvtE0DFgvD4PY9tB6BawJ3HaqfEoeH202IXooUXCse7IWARuk9PHyFGMbu4pPQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795479690;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795480228;
+	b=fukrjjU9dSs/z1r+Bx1anbviPMxUaecZ7+4xQsg38qvE9A+K8wxhtqg36lF0MK+/ZmbV
+	 9svISj9lRLPgCQs/9f5JtrskQ+a5ZX8qO6XX+gxJaiHHBj8q0XJ9xpLS7FaUkjyBQlb7k
+	 JfhwjVC3a09i5nQ/HLmR23HsPSXDC4T1EwEqvtkr6LbqYU5i0/TXP4XVFwKYjJ5J034wE
+	 5VFHQWR7NbZ/6yfMXdITOzLWi8itQbM16lDAbEHIVnDt2Iwv83//LdP2UDKUg22OtBEmw
+	 6v4i3xghzsVZ+fGErPEnTFFaCAFWkPzmBqiuf4yRpiB1G9KPVMI1S3bi+oQRPLp2scw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795480228;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=FqRh/LX34nQF3qudAfGlfiwq6IAwp90MpzECot2f3+Q=;
-	b=0quy3a0xiZyczVeTZhCrc0uzp2dZmCwGRBvf0iFWs2ra5CDxQsJjYxQFTWUDI6AuYcrX
-	 LjdAozBAF0toB5H+LVzApwGgoSTgwnyp0y8gBNCxLeSzE3adKXFZkdRSpbH5RBKzsA1XN
-	 kOPcR5T8X3So7r7/fPeAwCWWnuRiXdQAeVp1JPIjTTGUfJQ6ViowW6tlu1xEcftH6oSxK
-	 gstZdILylJ5GJ4trggusC9PkiRdgLU6WevDcC21pdMP30BuflP6T1jkFmjCQ7/xBgUUKF
-	 7tNHJrenCzpipZlbBsiBxIMHHIpv/ehGwTBcnZNR8y92NyBmIH3Ce6ZiQDJTNJCxy0Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Mime-Version:Content-Transfer-Encoding:Content-Type:Date:Message-Id:
+	 Subject:From:To:Cc:X-Mailer:References:In-Reply-To;
+	bh=MzipZ8odBG4jdrhH2ZJejfMmjUk7sUkd+9+WpxV2B+M=;
+	b=CGL5KR0ZReuIMU3z85tO6j72FKi/bTPynVjIBLf/DvlluM8DdZoPFT7BhEGLuk8kX/tD
+	 biNk1imshEebDJ1Ub9maloS66trleCdFYXvNaY3deHwd1Q9HU3PvtBUbh2RizCv4Otg3i
+	 QsKenkXxVxHY5VoW2yom57VqA58AR+QvSo2Vrd+xFM/FYvSIIORTHffaXXL6zpwKlBcxC
+	 LdhaaXexWs0mcB8DHJLXkQQh5NXZdnUyjN8cvHvE/i+Q/Ix56w8cX+ah1osJl8LrkkEqk
+	 Sk5hqFxEZNiiLGMtXR/Ijxs5K04RQyTtOmr6bVvtoVVmx80ll2QgEzwwXvzl/djTEhQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rLKF5rHs;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.48
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nHmCKCeW;
+	arc=none smtp.remote-ip=74.125.82.182
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68504606A321
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 00:21:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 68504606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBDF606A31E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 00:30:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4DBDF606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rLKF5rHs
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6b4bd3d98bfso4808112a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 16:21:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795479689; cv=none;
-        d=google.com; s=arc-20260327;
-        b=P95VhAWAkEtCUSisYzGzzOA16jXQchZNpFAQGGF01dV3oUPzqiz8WTeJ99It2Ck8Gk
-         doMEDsAvKUG4J5hjtficnsFaAW4oXkDQOSXhHmy9iPboOX9ay/dnS6uOHqj0W+aVtW4d
-         1yhu10sb6srtsOGSr5TjegN4XLt8AE3gKYlukel0w19jUkw35AkWCfFxwny6nhneJ+e7
-         1fJj0bvxE/OC1IlrmxM2f5tP9MebabZK9fMxxJSG4UWJcCEgbz4u0Dlv4vrBGZbIUWEC
-         OesJjdRlvvv91IiNlBxpxbiiTyTILffIPhhzqzWr9gKB4IZs6HCTZxJjGSNHrUOo776w
-         4Zhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=FqRh/LX34nQF3qudAfGlfiwq6IAwp90MpzECot2f3+Q=;
-        fh=Hb/KHRkjqCQiaV3JmlZ1Gvyl+eYZYWXqnfc/tRZx/qQ=;
-        b=NjbEWcAokomDDyuUBI/TZQ0kYLuK7TefL2XPUHa84OJV6SPBY6X+9FTdz2OfzJYR+5
-         mmsqr7TZMO+aVcAQDDBTcOv1AC6Dg9KAJSB2+hf3Ohdt5cc265MV1H8lVS33a8TxME1V
-         /nhA9ByyaO88iWyksMw22rIU9aV3uW2MgFmnRLK9OupiYPaIMq1xIjCLvfydNmloeOFF
-         MNQNXV/A8PKvJqR0MgKSp1qgRZG1/pfgFH5ksyGM6O5JbXjw5b/tQ2FdyXzi8T9udCJA
-         8C69WE01o/fRH/e+Tg9HpYtuR9a9mZwETU1J7VEsDNprrtL9Sqqup233t+6XTWf7ZNM+
-         Hd8A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nHmCKCeW
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-386ab9ab619so3500194eec.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2026 16:30:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795479689; x=1796084489; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FqRh/LX34nQF3qudAfGlfiwq6IAwp90MpzECot2f3+Q=;
-        b=rLKF5rHsPOTUzw8jA6fcmSGCc3SISVvG81SEj/QnbdI73VCFd2+SvR+URp4aXbiwTU
-         NMzD3TIeDed3u7sxPq/mCjWshoSmyEAY8hkCMRuzffM052x+L2ClWbWN82//8ypEiyTM
-         sylrTabCRhpuD57mx4ich2UOC1noPuAsuxFcdLWZQXGd64dsy0YiiWJN3A4OiFN+1CU4
-         kiisVQS6vXOMCrTfeUSa+jCc6n0Kq54zLFRF+wI6o11KR5+XHpHa45ghp190zJ2UD7c3
-         aW21p/V88n0SbjTTz37tVvwVZmMqG6jAKQ3VX58m7OvQHDhS2nxf/e5meFyf0jok55yq
-         1M8g==
+        d=gmail.com; s=20260707; t=1795480227; x=1796085027; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=MzipZ8odBG4jdrhH2ZJejfMmjUk7sUkd+9+WpxV2B+M=;
+        b=nHmCKCeWqvmzQA2LdmWMoIutUf95eOE0JytLF45VaLqPVqSomrbHwXD6J/kqx0k2uO
+         UgxUClZJQD8n6VvySSnKAgpfQd5y7WBOH9ubnOzp7ZdY4iDmCwvXf6Wj1kFOgQG2oGRn
+         4rga4sIj+PdC9twy0WyYf7KxaXnZZUx9Tm5bShwj2C4R4ic2lT/xb5yR62tKvCW9ylQq
+         f7kgT/uZu1AK6Tru5Q1lLKWIrwfGKpVv5istLs+vETD3vIcpC/FB68TLNuM9STZfSUHF
+         7Ts5YIEHK4fwP1khdsGNR4ThInjEPOkYWOh56LJdZAXRZ2WeZ2cuo0BmH/BqL76J5Ldn
+         kIPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795479689; x=1796084489;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1795480227; x=1796085027;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=FqRh/LX34nQF3qudAfGlfiwq6IAwp90MpzECot2f3+Q=;
-        b=cwjstxnQCWcAIwrFhYNVxfhmj0H/Zh79Csut4XQ03C3nvpQq7e33SzAPW+f1AYHSrG
-         rVZUCROESJLmZbrp4fW0ccUmaTRhBe+/oMp5OS0C5Idn/tulz1aKBXAf9v5L3oij2V0l
-         l2tve7YLaIat7UugWU22VYfzPD8WPa/7OiejYej4EXN87nvsth8hrfv0GBcLK1hdDTow
-         b4Dqbow1vMcCemHEeqfq3mMtoEou/cbq9N+mA/4Mzq2oYvbvAnMdp1AckFXi8MqwK/aJ
-         z/PPFhWd6+C/N5VEJwX+eWZwDVP611KRFzkf3bKQisnucXvaGfsMNBaQx/qJVxE/m2S8
-         C/DA==
-X-Forwarded-Encrypted: i=1; AL+hErGrKRpb8UvL0NWbBq/MgoHoqqLCUNexI7DgeZZWy6F/mzaxfhxZE9vSxdFYF0KtY3K4JXI/iXO0kUnx6UFLemLtJjYG@vger.kernel.org
-X-Gm-Message-State: APuU4Z8BwMfB6pS5pWtug0yLB0doflQVsJ+9lK/9lC4e74tAEqXJ7GyE
-	4E1PNcfctkHa47ZaNYcYpCiLxy0LkDEjm8GyvtknJER3ffhAWzs1iNDUdgmITIFV+Jr4FYYx5S/
-	iU02TBeoLERCJP3Q8a8wa4TWJhzfWxxU=
-X-Gm-Gg: AZFdTZdwHorRYr2xyrf7iPrqRcrqu/LbkU9ZJZBOuNrnoSQiBoWaNmn5x4U+ktHP19Z
-	om8/PgKZJaHFU9cAmru8bzLF4iWMwnhY8/xGidtlRW0eMqDaHgMRQLRJI4gthJjAurePxy12zUY
-	Dt8BKZB95U/5csLvIK2wM1DS07Mes5ge6Rk1yFu8MH0p5sHK/S4S8mIpTLss88V0SwRam7Zvc7V
-	bOK9YyVJXwST2zS+fol+XgDAgG3DAguH1Qa4WRPQ0oyCuqBhhCIQIhrx9Z/aBeHumjpl0M8+h9L
-	Poco+gIof6Uzc5ZtjTFZ1QfM0pO9EJHyrenxP54PTNSmrTiOR+/PQhWVPj5yRcZs4F/7hTblIZ5
-	GmZbCCYCxEz58fIbyGulwjEBQjMMd1GO6FaGYr+PmB/rdAZiE/h4IC2M3ifxUnEbVGDAa1UImyc
-	Qqw4NTO/8nWnSr16zwBlq1J6a5r5RtgCtL/+DXW+tSKjyEtSEpqOG7y5dfcepHIkxbVue7qsfT3
-	HMA9gYuXvu+nlwMD0/o/n1BYCUfBlJjVQYe5zf5m0pd08C/KQ==
-X-Received: by 2002:a05:6402:4009:b0:6b9:c43e:19df with SMTP id
- 4fb4d7f45d1cf-6ba37ed9a8bmr8687510a12.41.1795479688502; Mon, 23 Nov 2026
- 16:21:28 -0800 (PST)
+        bh=MzipZ8odBG4jdrhH2ZJejfMmjUk7sUkd+9+WpxV2B+M=;
+        b=2E543kHoi7IwqQ8kxIJkYNBW6bmQWrLyrmnCmytE2yRk0FU9C5e30vkPNpYII+h4+J
+         fscbRKWBjMhgD6o92c9Pzm8pVHIgYKOgaksMgLEIQKSgaMP7N5Sf7A4h2CVIzyQXfCsS
+         w8evc5+19+MVwHA6X/SlGzaVs9KKCHenwefM+jtbOG+fmLkD/oCCU2Cu/tMNri0KsNsl
+         0xnqrw2tJ7BIiHLsoT0jhcql3NRXI74UGc2og8SYopIu2LQxevoxhYcvXLS7GJsJniPg
+         EGB51AhAhY1ZpFIAmn6wfn+elFLWNbtyLAILFMAST8EcNC3IYO6N78l1Til6kPce3N2Z
+         m0oA==
+X-Forwarded-Encrypted: i=1; AL+hErE3AD8p4Pv3OZAAcXIZDUnr+nRBBcKZHwY3riBby/IEcdrshokzWvw08yw/zIZFc+Bf4UuOAx/UxGadIm2mu1QWJ5gq@vger.kernel.org
+X-Gm-Message-State: APuU4Z/r6occnjig8nlv89sW/hWviNFkEd9nqb+nFjnc3eSEdu7bkM/b
+	fmpCe+baNqvbi0ejJ+byPzwKMGzBBlpLYUIiRY56FPJZ+OsdIdlVEfFJ
+X-Gm-Gg: AZFdTZeSTlNreRQ031ouCwLlg7CHfNOqHN248LI8FL9DDUyTkP7dzEdHIDGQ35TMr06
+	1aq0jKJyAZedVNYQHiKkuNkOIUQNaHnemPE7R2/7p5J9mSxgVHs2YeVmBYcMC1edYa0T5seUhSO
+	zWQ+IXV7uBDEz3uq48Fo4xvuAiwj25NtAhCoT1bkqUypYJaua69I/eaPMmX3sj5eMQ7hlFCkffd
+	KkYifUIi724jeYVd8emndHD+HIYMjw1Btc5Z24ZchKY3RcVKcqhwPt6o8DQDUFeO9XEAAP2tynU
+	SJ5jNRzIJdb7x5u3iLXiyT3nb//H22TUmq6J2+PpX/+Gc4TwROyrQbUS3E6k78CBcFaGbUy2neR
+	44kERska4LhTX0LMJ8gMM+enErwiUFN+hQTIoRnsZkYu8K/FbndkaXxFVzHZB8ebD+G/ZIzWahB
+	NFhFf406ILE7EmjaWLlu/7Uh/2zsfBiNKzTSYBxyxCDJVYHfqE8fPAR02Hv0DpNgZb2l8gZv5dZ
+	1m28V5kISag+fki10Ka1hwsl4ockcNUTZJYsLHe6b0xInKtmR6GkEdAyvXkQVbI/P9ccNMPBCL7
+	mjF08X2g+XS/eq3vD2wDyOcl7dA=
+X-Received: by 2002:a05:7300:1486:b0:383:6eb6:5730 with SMTP id 5a478bee46e88-38570e24c0fmr16179852eec.32.1795480226923;
+        Mon, 23 Nov 2026 16:30:26 -0800 (PST)
+Received: from localhost ([2001:8004:6c10:7f51:567e:69bc:1f6e:349a])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385666e99fdsm49453974eec.5.2026.11.23.16.30.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Nov 2026 16:30:26 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,65 +87,106 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <cover.1795219225.git.rosenp@gmail.com> <6abac23d8f9985b55282ee56c97155a67076257c.1795219225.git.rosenp@gmail.com>
- <51f6631e-62df-0e64-b358-805d343475b7@linux.intel.com>
-In-Reply-To: <51f6631e-62df-0e64-b358-805d343475b7@linux.intel.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Mon, 23 Nov 2026 16:21:15 -0800
-X-Gm-Features: Aa3M54pIlzL6e3JOmkuHYZ-2pLUgxSjaakZlAQWrxfICjUxUzInmwGW9UZ0eKFk
-Message-ID: <CAKxU2N8cn+hbUH4iwP2w6myQV28LM1+djvmQfN92A8z1G9Y5Tw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-laptop: Parse the charge end
- threshold as an int
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Hans de Goede <hansg@kernel.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, 
-	Darren Hart <dvhart@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 24 Nov 2026 08:30:13 +0800
+Message-Id: <DN30M72ZZA9J.3VPYTARKK218H@gmail.com>
+Subject: Re: [PATCH 0/4] platform/x86: clevo-laptop: add initial Rust driver
+ for keyboard backlight
+From: "Nick Dowsett" <nick42d@gmail.com>
+To: "Werner Sembach" <wse@tuxedocomputers.com>, <nick42d@gmail.com>, "Hans
+ de Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun
+ Feng" <boqun@kernel.org>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Tamir Duberstein" <tamird@kernel.org>,
+ "Alexandre Courbot" <acourbot@nvidia.com>, =?utf-8?q?Onur_=C3=96zkan?=
+ <work@onurozkan.dev>
+Cc: "Armin Wolf" <W_Armin@gmx.de>, <linux-kernel@vger.kernel.org>,
+ <platform-driver-x86@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+X-Mailer: aerc 0.22.0-0-gc2f86b7abde3
+References: <20261122-clevo-laptop-v1-0-881debf4d4b0@gmail.com>
+ <a07938a4-32e8-4aa5-984c-d17df8054df1@tuxedocomputers.com>
+In-Reply-To: <a07938a4-32e8-4aa5-984c-d17df8054df1@tuxedocomputers.com>
 
-On Mon, Nov 23, 2026 at 12:32=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
+Hi Werner,
+
+Thanks for the reply. I guess for some context for those that aren't
+aware, Werner/TUXEDO maintain an out-of-tree driver (`tuxedo-drivers`)
+that includes support for TUXEDO-branded Clevo drivers. This driver
+was influenced by their work, and I reached out to Werner briefly by
+email before submitting this series to the mailing list.
+
+On Mon Nov 23, 2026 at 9:58 PM AWST, Werner Sembach wrote:
+> Hi,
 >
-> On Fri, 20 Nov 2026, Rosen Penev wrote:
+> First: I never have touched rust code, but I'm not opposed to it in princ=
+iple.=20
+> Just to excuse a little bit of knowledge gap.
 >
-> > charge_control_end_threshold_store() passes a pointer to an int to
-> > kstrtouint(), which only builds because the kernel disables
-> > -Wpointer-sign, and makes the following "end < 0" check dead code.
-> > Use kstrtoint() like charge_control_start_threshold_store(). Values
-> > outside 0 to 100 are rejected either way.
+> Am 22.11.26 um 05:35 schrieb Nick Dowsett via B4 Relay:
+>> This series adds a new Rust platform driver MVP (`clevo-laptop`) for
+>> Clevo barebones and rebranded laptops (Metabox, Tuxedo, Sager, XMG,
+>> etc.), starting with 5-step white keyboard backlight control.
 >
-> Why the <0 check has to be kept on the driver side?
-It's currently a one line change instead of three.
+> The driver will have to interact at least with these subsystems when fini=
+shed=20
+> (If I haven't forgotten any):
 >
-> Why not change the variable type instead and remove the then dead code
-> check?
+> - Platform/ACPI
+> - WMI
+> - Power Supply/Battery
+> - LEDs
+> - Input
+> - HWMon
 >
-> It's somewhat disappointing this even has to be pointed out by review.
+> And maybe:
 >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > ---
-> >  drivers/platform/x86/dell/dell-laptop.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform=
-/x86/dell/dell-laptop.c
-> > index eca348497ac3..c512267be4c4 100644
-> > --- a/drivers/platform/x86/dell/dell-laptop.c
-> > +++ b/drivers/platform/x86/dell/dell-laptop.c
-> > @@ -2382,7 +2382,7 @@ static ssize_t charge_control_end_threshold_store=
-(struct device *dev,
-> >  {
-> >       int ret, end;
-> >
-> > -     ret =3D kstrtouint(buf, 10, &end);
-> > +     ret =3D kstrtoint(buf, 10, &end);
-> >       if (ret)
-> >               return ret;
-> >       if (end < 0 || end > 100)
-> >
+> - Thermal
+> - HID
+> - Component
 >
-> --
->  i.
+> I don't know how much this influences the feasibility of doing it in rust=
+.
+
+I understand this is referring to the feasibility of rewriting the
+entire `tuxedo-drivers` package in Rust. Perhaps someone more experienced
+on the RFL front could jump in here in terms of the feasibility of
+writing the mentioned bindings (from what I can see, workable patches
+exist already for LEDs and WMI), but I'll give my perspective:
+ - This is a beneficial effort regardless of full compatibility for
+   now; even this MVP solves a real problem for users with this specific
+   non-TUXEDO branded, Clevo laptop.
+ - Some modularity between C and Rust may still be able to exist, for
+   example, perhaps the existing HID keyboard backlight drivers may be
+   better to remain in C.
+ - In terms of feasibilty, whilst some waiting for bindings to reach
+   full parity with `tuxedo-drivers` may be required, this is still
+   more feasible for myself than writing and maintaining significant
+   amounts of C.
+
+>> It is intended as the first in-tree user of the Rust WMI abstractions,
+>> and a starting point to be extended to additional Clevo models and EC
+>> features.
+>>
+>> What's included:
+>> - Minimal driver skeleton, Kconfig/Makefile plumbing, and MAINTAINERS
+>>    entry.
+>> - Type-safe EC WMI query interface.
+>> - Driver registration and backlight type detection following
+>>    tuxedo-drivers business rules.
 >
+> Just wanna make sure what you are referring to here exactly?
+
+Specifically, I am referring to the logic used for board capability
+detection; ie how to determine if a device supports fixed colour vs.
+RGB backlight etc. TUXEDO has already done a significant volume of work
+here.
+
+Any questions or concerns please shout out.
+
+Cheers Nick
