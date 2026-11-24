@@ -1,77 +1,139 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.21
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795534796;
-	b=eFQ20WvNzVcAX6tcYWXIUBrCfW3BAy2FPbxrjlLWPT6fOYIjBdrmNaod24A1zGYC4SId
-	 7hYU8KFT3xTTCJeVBbycMCidb8W+xRCF2Bi/2K/BuDFoD0AscP+s7J91rDCL7PGs9OKFB
-	 mZJQLfU2Z1c2ebCCSZYFK5M8Up5QJLr/66jhAhQ+I8v0BXwBLCPg1V/GI5Fdeb/IYuj+G
-	 ZRaz0881Kx3tBcZZHs2cjHg/aZnEMAvz6dqF9+8cdDV9h7GO6ERaTw9r84+AvLcGzzJiR
-	 kV0qliNR1AfODHTFSgziFv+1BAPViaYVf8TLVm6KzNfxH/efkUpWtEXg2smSZQgZwDw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795534796;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
-	 UI-OutboundReport;
-	bh=OYPrV8hXvhuntKwG5p3Iglqruciu9KECE577Pogmpjw=;
-	b=3KCCRmnmFjwkzn/ftRs78uYMs0+m8VnhAFgPEuWXRrCtJKwM32MX1u62iOy/U0wmisGK
-	 wsTKvEWiiy4mcchoRVId0JUbUxwAz20lZpB4UWnQnWmZ6cKsxHJrrslu5Ptj96iGjfj8P
-	 N6Zkkt5v6cdZLZHzn/BSGCxsWUpnj1dMK6dF75LHQS+GRSrmB7KmS8MwtY3v6YM3ZIxjf
-	 bm9PTXDQRimS/MABG6J1zTuVc2t17TsvsfVuZdwPYC/1OCtmeyMcTbHVzPJlbD8ANHcSN
-	 qSoUMghFxl1vA8PAl0L1Omb5kfJA9wsoxOcQ3cdtAqlWN4rstA009pUXdt7bUft8dQA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmx.de;
-	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=qwUWnu27;
-	arc=none smtp.remote-ip=212.227.17.21
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=192.198.163.11
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795535235;
+	b=1pNsHhGdWc5fBmX+KErH69JyxpUKbVXivPtUA9bvynpJp4VYlUj/a5DRcIHabXdMYyhl
+	 2G+okTMZVUsXMRFITwNhUv5yJmh3qSEdDBMZgEk5/wXEXwaMA1ecT+zdzxCuIhZ7xTIKZ
+	 GU5NkHlgBfTCnhdq81z1bYTYgFaJ7fwNYiQMdEkM1JkF2EuiQKxJswSqKzHb9r4b0DP5y
+	 qvbEQQ5B+0bLkBDQiAYjFwrzeN1aPeVhyLQM5ZtFxMvk4MR4eWzCpBLvNy5378J1TE5DB
+	 lMaf3M8A3ipEgvu9hdiLE+BAzkEtNahidtIxbLZVZ+tcfiOGh5zGOxhOVZEUfMpyq1A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795535235;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
+	 Received:DKIM-Signature:Received:Received:Date:From:To:CC:Subject:
+	 Message-ID:References:Content-Type:Content-Disposition:In-Reply-To:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	bh=t1S94APbudn4v2XohrlhUapBoULBjOMGBNGNeOD/Dp0=;
+	b=R14N90ll8r4jazn+pn+LxblpKaIKzsWeDmTyWeFeSI79oUWImhoPX8+/Rn8LSYw8PEBR
+	 PsimMY66SXR4rQJvDXfZq4CKT1CxhCKG+eYGkeI3Obk+W8/LyPMenF/ZYeKk6A1AxvYAm
+	 ZP5w+dhJkNh0Qy952FKFFC2QpzTVQCcmxkjQRx1gvLqu9b18fGeltF//K0Yz50OtIjszm
+	 npsZ2E7tn2EidSUQ/BISqjWMfcSt7Q0d/UUXXKGaEi17p8uzlmXm3mbVMTJgYu3yo6gq8
+	 pCUm0Nrl5Vmbmu4ALBzfnzct4jomUZnmxRyBbj8cgS+YbMAOKyPFIb54GYG6tIGjClg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="VCn//SU6";
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=selector1 header.b=l3xzQwrF;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=192.198.163.11
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C578F606A32A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 15:39:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C578F606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CA1606A330
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 15:47:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3CA1606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=qwUWnu27
-DKIM2-Signature:  i=1; m=1; t=1795534793;
- mf=PFdfQXJtaW5AZ214LmRlPg==;
- rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
- d=gmx.de;
- s=s31663417:rsa-sha256:FmdkRsd86M+oNzFBhj/G79nQmSLa
-   Df8QmId4KAa0oCxREaHr+HfUXlUaJ/cBkreR3IardSElPr8lvrbMPLygPYovP7sbMxEBhjyw5tC
-   vBBZQialXydHmrAqTj3uzyOFlGLxFo3Tp7Cz14gpXXb2D1GVvB1b7PAoJSe+LNUWN1pxWr+cM2e
-   NOq3GPouGevms4sYfIVkz5wIethqpoIQqOUTJdqQkC/MdTJ/SHIAN8PUk1dLtC9FTi5rRYw/OC3
-   y0Hc36H7PRUgQFC/TmzxjSDhNreTEMTRRgvBc7/5kIKIr0q5/0M+lFi3hAq2xNFF6FI1n9H3UUe
-   tqomXUz9Nf68cA==;
-Message-Instance:  m=1;
- h=sha256:
-   opIVfuWk7g1nE20RL3SLI6Ou7EpAB8cisuCS9VJtp1s=:
-   I9UMvducYLxBtNrj1aGKbrYb+CdCSFxiliU+iHDodRk=,
-  sha512:
-   XDaDo5RZNHTZDtikXqKSdoaC/BAVXUerzBLkzmO26kihk1RYOZZtw4eB+24MyGrpplBYxHX+N5mUzSnH+2f9wA==:
-   RU1YafkXsQgFSogDOuIZ5xIt/y+zfQ71XvlFNedHgR/lEv1lBHIHpLOnju7yFdnjNrYTy5pVC44l/WtK50boZA==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1795534779; x=1796139579; i=w_armin@gmx.de;
-	bh=OYPrV8hXvhuntKwG5p3Iglqruciu9KECE577Pogmpjw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=qwUWnu27UcjojpjunWbUyOeHg055gbx4Huh0GuD6AOJ52Pq2CMrWCO2t6azYLmn+
-	 o1ntf2uN29FRV4PKqX1ZIcmqL+0J6ng5/MTRstW5ysjNMLm0akeKzDp2ao3eu4SCY
-	 G1FFvkLrdObGN0jsoBjWd3q7Dtlfdu9bQkGEC7G5Qiec53f5wgS3Y9mdE9JfZkBEN
-	 Gnlrs2joqYesshBpv45JKhpfiSJphdpmki9m9Ft7Zzga/wYs8Kz0LYb1rQ2pd+7NQ
-	 FAX+BsiqajzQ4hZfkpiWIrdOs4oamUbfJszNu+HKNvhlSBvs0Q6K091XsPhPMXvcw
-	 AKuJ1cXQs5sBPyC3mw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MowKc-1yJkwu3rKg-00pSfZ; Tue, 24
- Nov 2026 16:39:39 +0100
-Message-ID: <90a3cf06-ab77-4995-ab27-8e10eb9d8e87@gmx.de>
-Date: Tue, 24 Nov 2026 16:39:37 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=VCn//SU6;
+	dkim=pass (1024-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=selector1 header.b=l3xzQwrF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795535235; x=1827071235;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=16iX4q9sOKhROAizkxzgPKEapPyRlXJAQJ/UpY0i5dY=;
+  b=VCn//SU69xRCphXxdtof0vbm2ignpB1I5d73TffKnGLGVHow7t78oijU
+   zB/BQDxw7cogLxSllAa6I2zpcB5Oj2QXOxSCJzwyyzfJ7x+4vvl5ywusN
+   reHAIOqu6nJmH2Cq09zMgWW0Emew5GnAyhggR8+kTZC7lw3mC4etZbOPy
+   yUUa2lgjg1pugN/+JD6bFOeTbeaeAiC4+c2Al2vnJ3isnUPIPbZrvyBB2
+   rd73/7MS36ydDQmN5ZVoNoerNJgxm9z6LiDcIAW/cMpTunEBhi6w0CtM5
+   bs/m81jYS+Hg8LMEagOrTvEBHHkSCXkiNTyi8ZUkm651Dy+WEKLQQDy/F
+   Q==;
+X-CSE-ConnectionGUID: C38fiwoTSKGzZuKxJBGimw==
+X-CSE-MsgGUID: tQV9Uh6BQ6u3R+XdKa974w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11976"; a="4293674"
+X-IronPort-AV: E=Sophos;i="6.27,231,1787036400"; 
+   d="scan'208";a="4293674"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2026 07:47:09 -0800
+X-CSE-ConnectionGUID: rXZAPsSkQv+ta8Mhn91Oyg==
+X-CSE-MsgGUID: VbqKuN4PSzWDYbCtInCLYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,231,1787036400"; 
+   d="scan'208";a="11923784"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2026 07:47:10 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.57; Tue, 24 Nov 2026 07:47:08 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.57 via Frontend Transport; Tue, 24 Nov 2026 07:47:08 -0800
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.1) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.57; Tue, 24 Nov 2026 07:47:08 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i+imHrlF/yzSzYxWykaG7duGuHxlfvz/1Mr4gx78fBajztH88LNEAdR8QuRX1QW7XZuUjb986bUkj3r6GkbmnVksOT+rTFrEnbka7xWdDhK+IRqwYPfVFRqMrCypu+x2gjnPX2ihOPKlT6yUVVFX/RCmq4KGoEkBlT3j+aLkAbxylF9X8enBWk/PbR0u0bDeelQOHolk/f3Jd0B2QJIldNV+sQLsABFZ8hZGDmaQ2pb4QTh7ldri5sdAEkuKptjjDdhf+3NTLSbZE0NXOdhOKZ3agQsRjfRIwrKbHkgh22yKD2yQIkYmOc7gfcKf/fLOD3+56blC2H78UB97V03CWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t1S94APbudn4v2XohrlhUapBoULBjOMGBNGNeOD/Dp0=;
+ b=JCaI0W20KB6V8rsU/IRzHf8dnhYcm7QktfbqlKkbmM81z3UKsvgGjANI7T8iGDjKQ/yuPP/TUWCv9mdurY6mYdXC6/lGOokQmNl5OqYhZLyP3sov3f882yFIhH4nXLWv/X4AmOw0xqXOyqf49+YZdB2NiwjGKgjM5OfsdkorjTlzfPhAnMyL2AZVpg8EtHMKPDpHIoLpA40FXXpTLNoAhYiDjqyKTFlTVzcY2qk8YJWKP34lhhX6OLoMoVlzBaGwIA/pXqrPmmCpD4G+TZ4k9SkXrWD8JD1CHDkJdNe6TV0R6N7RBlPP9KAQaF5WZ1WkhCtpMgNpm6qDLVs9JJ6opQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t1S94APbudn4v2XohrlhUapBoULBjOMGBNGNeOD/Dp0=;
+ b=l3xzQwrF2BtJlEN4OFXAXtSzmLZaUHryRCbhjdN+qIe51WU3cepFIgD2HC/lo2FWqo3BkUp8UrTI0BxNcfOB/NdTUjeIDyntQquSt8adSCSBUdQGq52pxXLik1PCOFz3KzWGTVyPCObu7a2TWchYNngdE2kcec1Ak1dJZPohia4=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5990.namprd11.prod.outlook.com (2603:10b6:8:71::5) by
+ DM3PPFCA4893B55.namprd11.prod.outlook.com (2603:10b6:f:fc00::f4d) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Tue, 24 Nov
+ 2026 15:46:55 +0000
+Received: from DS7PR11MB5990.namprd11.prod.outlook.com
+ ([fe80::133c:5eed:3aec:b899]) by DS7PR11MB5990.namprd11.prod.outlook.com
+ ([fe80::133c:5eed:3aec:b899%3]) with mapi id 15.21.0639.011; Tue, 24 Nov 2026
+ 15:46:55 +0000
+Date: Tue, 24 Nov 2026 10:46:51 -0500
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
+	<matthew.brost@intel.com>, <thomas.hellstrom@linux.intel.com>,
+	<airlied@gmail.com>, <simona@ffwll.ch>, <david.e.box@linux.intel.com>,
+	<anoop.c.vijay@intel.com>, <badal.nilawar@intel.com>,
+	<matthew.d.roper@intel.com>, <james.ausmus@intel.com>
+Subject: Re: [PATCH v23 14/19] drm/xe/vsec: Crescent Island PMT callbacks
+Message-ID: <awWxayAlkhX_5zrO@intel.com>
+References: <20261124020752.30551-21-michael.j.ruhl@intel.com>
+ <20261124020752.30551-35-michael.j.ruhl@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261124020752.30551-35-michael.j.ruhl@intel.com>
+X-ClientProxiedBy: SJ0PR05CA0207.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::32) To DS7PR11MB5990.namprd11.prod.outlook.com
+ (2603:10b6:8:71::5)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -81,267 +143,312 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: uniwill-laptop: Remove cTGP control from
- unsupported devices
-To: Werner Sembach <wse@tuxedocomputers.com>, Hans de Goede
- <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261124151303.435534-1-wse@tuxedocomputers.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20261124151303.435534-1-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iZsdawWUuuO4kHfV8D4uwy+kIF/99JzU7/wLGKW5vA9P59CfwHP
- 6DzX2KwUD5fH7iWxTKqpZb5eXJWXxqZ2NhGm3uD5rsBbic5MJAHaWtXI5rRaxzMSQvsIKgA
- F8Z4CJ1az7iILawKw4OhGv5jBeowwk7nwjFMsn4lo637yLEWTtUyZQaPYKk6IMVPWe4yd1u
- V+qdkn4bEecCFufTjknEg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:PAgnk6pX+y0=;VcMUsh5DnhNtsTqn/lmNhHzGjmo
- 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
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5990:EE_|DM3PPFCA4893B55:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03cdf2fd-8c8b-4bde-1988-08df4a422aa5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|1800799024|376014|366016|261026140227099003|261026130827099003|261026121527099003|261026135527099003|261102123227099003|261022075727099003|261022115727099003|261022105027099003|261022113327099003|261028144727099003|261021133027099003|261021123027099003|261021135927099003|261021130227099003|261021121427099003|11063799006|4143699003|56012099006|10067099003|261009223027099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: oT5ENEtwVzsIkOgHnrzLFUMjrJAbA5c24NJbGe84H9mUCFzAm4PDI2tZLxeMmJ3DD/twrmm8Ar4xebjWuUzWoHufogWv6KfzyOkAIXBfibohWRysDsU935opk560XBfBCld1eOQRFJbCrVeHYz4bMe6u83//F04jT1SArL2pCKzJ5rTNl2Ruu2Hlx9/FvqDP9Z+SZs0ncFT26RiPDAz7iHJQhLKDiQ2mBGHKuqK/fS0fJqjQAvmG7zALYQM8BiLUanaP3Ha3yCIymKQ1TmF/DVduoH84aMXbGRWjS21tQXTKFCTmNZ1Wla4oSaxV1KV/AeYTCXKHUzcHOQnM8/RaLNfrFc+NwCsz9B91f3jqta6JEK/YW3zQ9oBKYrvGIJKCjcrFespsc7XSnp8b+AQXt2DI1dztsGwM6GsW1KRe+uA0jI9bsyroqSmneW/c/mnCIu9vry0GdOZjoMprE7YBxnu0zUY/mAzVfxnnqhv7nv5siyTjSevMqokWLXognkA5kIFsaYPB1++arWCPpmOWcoP4h9FEkDjUgAhiUGjgPxhNQ4ABzg6EJQshAbFrcP02Jp1aZL3P2GApby/8Bz/LVeM9YLrvwnpujfjRi5O3/KBmDm7KYa0plwLIpoQpdxnQSGs/aqlqBxGVvaac+YyiFiUHqAzgUepJ9vuXG6M/MNU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5990.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(366016)(261026140227099003)(261026130827099003)(261026121527099003)(261026135527099003)(261102123227099003)(261022075727099003)(261022115727099003)(261022105027099003)(261022113327099003)(261028144727099003)(261021133027099003)(261021123027099003)(261021135927099003)(261021130227099003)(261021121427099003)(11063799006)(4143699003)(56012099006)(10067099003)(261009223027099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yGGWe3pRQMuEkBCyqWd/ECNRISOuyi1EA5Vk7SsILvygcCqDvU9Zq6ViUE4T?=
+ =?us-ascii?Q?IW0cwsS12B7n9qVCZc4BgsQELqXjyl51+2nYZojM30fs70TMrBAl6oXGnvke?=
+ =?us-ascii?Q?bpxWwCJS9UQDwLebQIdsqlzQtRMbs1ikGT5t1hOFF8ehcX2z/ZcpXj4rcYQu?=
+ =?us-ascii?Q?P4Et7C3gXfg9L/gANwnyf6h/pIj+3nAg3hOe+1jl55aCmEKOjr211PWr9vc4?=
+ =?us-ascii?Q?7tLCmA1tDOzjKTowmd+ETl5TUh+XQZsjQdBJNhrum7n6dn5O7shGCnZBchGa?=
+ =?us-ascii?Q?77mFJAnVsVoqWE5/8+GVHQhLf0pTsXjzcfWhRiKcXarZ3yA0aIn3SHHmqwrr?=
+ =?us-ascii?Q?+qMPevrHjpc+hfScauzgZl/6QG8FUQpRtcZHvu5dr6tY1WGj5Nh/TLPObWOA?=
+ =?us-ascii?Q?nTrUKb/sJ3v6jiMSblq2+dmc/8Mz2WG8pjOcEuLffjbcR/rRzxi61yyHDPe+?=
+ =?us-ascii?Q?DELKvWppxgkeiqyraBuqvZhWQy6Mvfhqhoq3ZZWhSypwyCQ9V2INiWGIGiKi?=
+ =?us-ascii?Q?V5ahVotRm7WL6dY7wBFhCRiDpwedkYZSW7y9lN1rP1F58o9LfZUDvHVVepEZ?=
+ =?us-ascii?Q?1x6yjWGs0ZT+s6CJrUlIsefZPLRgZ9polw1CUwS5UOj1ExXVYx+7bBMtfKRT?=
+ =?us-ascii?Q?fe02VB0cp4ET9PCGSTgfbiny35ppLnwP5Kf2U9byxWwWDAHwqy2dwinQh4qT?=
+ =?us-ascii?Q?oy32fNg4jklx4Gwz9BXVXAGxVBpeNr8lH2KXjhEcGbdOBKvRPBdvxVlTmtRx?=
+ =?us-ascii?Q?ik8L+QdLsuL7eBUxiFLhIUAin0D16Zsgzazvte1QQ0eWZfQm1obZYuXmX8iw?=
+ =?us-ascii?Q?dZqpj9qj0Y1IVC7BmdhbBRBBzv77BM8TLagGf00PRBVCAIltA68z55HlUGO/?=
+ =?us-ascii?Q?IJLrfMIVlp837v7C2QDY1XMqjRXqKRa2fxkt69ADAvhaYhuSsL8VdW6o9ST+?=
+ =?us-ascii?Q?VGZV9xz/9MvCD2X5VCvr3JNbfVq+bjX1+b4j/Q58tmuaV2/SjespNMkC3msi?=
+ =?us-ascii?Q?3lqqazLgzSl65kLca7ecQ+6DvOhGXpEjFd6B2ZXPK49K4Ib+cQS7t+BlTKva?=
+ =?us-ascii?Q?jeSMTicd4wrV3a1NhaLgISPH5SP65fRjUsFSeX8SHVffI4hxpSS2RnukicTp?=
+ =?us-ascii?Q?f5nSOeum+7MZorPSLPBuydwsOtQXI58ZQpCX5aF29pJE30zeCBQPXgeYjl6A?=
+ =?us-ascii?Q?qvx5PN9xDhUjbQWwXzuWmxq9BhhtzceZ+Y9Xy+eYiI849afZdnP2wUQQ5DLL?=
+ =?us-ascii?Q?+3EQQjo5KNjzK9uXm7jlw+D1EmuHEvLIj7Mq2FiT0MXGSoFloAhBfAtet2Xh?=
+ =?us-ascii?Q?MJ6ajaMA3q0RhEolMsHSjh+nT4Py2oMdRQpaH2BucywipQLGbNZw7KvFLFjF?=
+ =?us-ascii?Q?x8Jv8nGMbN7FQ1emqR2egiQOz1Y62WlmLSHJSVBA/J9NCqqQ6JrJqiEpU/qV?=
+ =?us-ascii?Q?1zCRk6VFZ7iDf6EHeV1yUh17a0rXbr1tOt6s3BausdK5tX1f+ULOqhUCHn79?=
+ =?us-ascii?Q?ZzOX7D/RMGNzvCDc+rOnBW5k2OS0g6iY+pzsFWLZw9snLJqx3MVsNuWgvPxX?=
+ =?us-ascii?Q?go5ZFzXTlE7KbpKrIezAYnEed7/Tt7yPQkUvK7vrhS8WfQC3+ZddoJ1xIPzk?=
+ =?us-ascii?Q?U6wO/gjkHg897Sodcn7QvqDI8/EgQKr7n2z4K88nsFEW8rLDeyP5fAIaOjMT?=
+ =?us-ascii?Q?lZDpWhioHAtAL79gWFnsxXjkZiSiJJHlvkmLmeVrUMpGcKIOZSD0c7Of2g4Y?=
+ =?us-ascii?Q?zth634TeLg=3D=3D?=
+X-Exchange-RoutingPolicyChecked: IS8UOZAU1ugIkNen+bwXbvIFwtndWrVXTuYCDzg0mpyHyzt4MiG9jdmKDtSNcoC2RF7AFUD/NmGJQH4IcgRG4/kvoKav9mDBgbLslogZb2CtS7UXP4op0/zjdsjrz1P+etQqEizFBLA1O/qzf13oJw8fKsh8m1uheuuhmG0hOnZO3hf2rWAImMmZbdWvJHMaHrBoWcOjSD0aImylQWyI18pusf4eG0kTdeP0rAAZCp66a4nXUxgMNwbjXOny3hYs84XqVcm5HgZRroHwYplF4o8PYzAFTIWl3y+SCY7l99qFLSfz4wL2K+Ur/ex2HNHkzrAC3uyAIGCh8gg+gDDw9g==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03cdf2fd-8c8b-4bde-1988-08df4a422aa5
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5990.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2026 15:46:55.5749
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SSZ/pJMZOWxKjM2nbZDGkaQUn+mvFR4JA4t5cd0gVhFfiRmy3zc8S3M0N/eAD9RGFSmvAIiYUoqXIfEaeM+nyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFCA4893B55
+X-OriginatorOrg: intel.com
 
-Am 24.11.26 um 16:11 schrieb Werner Sembach:
-> Some devices like the InfinityBook Pro series have Dynamic Boost support=
-,
-> but the cTGP setting is actually ignored.
->=20
-> This commit adds the ability to still initialize DB, but hide the noop c=
-TGP
-> sysfs attribute and applies this to the respective devices.
->=20
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+On Mon, Nov 23, 2026 at 06:08:06PM -0800, Michael J. Ruhl wrote:
+> CRI PMT support requires callbacks to access the discovery data and
+> control areas. Access is a common MMIO area that requires an index to
+> be set before access is allowed.
+> 
+> Introduce the necessary callbacks to get the discovery, status and
+> control information for CRI PMT usage.
+> 
+> Add the glue logic to register the CRI PMT functionality.
+> 
+> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+
 > ---
-> V2: Fix "force" mode not respecting mutual exclusivity of new feature bi=
-t.
->=20
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 30 ++++++++++++++-------
->   1 file changed, 20 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platf=
-orm/x86/uniwill/uniwill-acpi.c
-> index e2a6a704e942e..bef072f9f1b55 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -366,10 +366,12 @@
->   #define UNIWILL_FEATURE_PRIMARY_FAN		BIT(8)
->   #define UNIWILL_FEATURE_SECONDARY_FAN		BIT(9)
->   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(10)
-> -#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(11)
-> -#define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT	BIT(12)
-> -#define UNIWILL_FEATURE_AC_AUTO_BOOT		BIT(13)
-> -#define UNIWILL_FEATURE_USB_POWERSHARE		BIT(14)
-> +/* Mutually exclusive with the cTGP control feature */
-> +#define UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY	BIT(11)
-
-Hi,
-
-i think it would be better to instead split=20
-UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL into=20
-UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL and UNIWILL_FEATURE_NVIDIA_DB_CONTROL.
-
-Devices that currently support cTGP control just need to also set=20
-UNIWILL_FEATURE_NVIDIA_DB_CONTROL, and devices that only support dynamic=
-=20
-boost only need to set UNIWILL_FEATURE_NVIDIA_DB_CONTROL.
-
-This way we can avoid having another set of mutally exclusive feature flag=
-s.
-
-> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(12)
-> +#define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT	BIT(13)
-> +#define UNIWILL_FEATURE_AC_AUTO_BOOT		BIT(14)
-> +#define UNIWILL_FEATURE_USB_POWERSHARE		BIT(15)
->  =20
->   enum usb_c_power_priority_options {
->   	USB_C_POWER_PRIORITY_CHARGING =3D 0,
-> @@ -1004,7 +1006,9 @@ static int uniwill_nvidia_ctgp_init(struct uniwill=
-_data *data)
->   {
->   	int ret;
->  =20
-> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=
-))
-> +	if (!uniwill_device_supports_any(data,
-> +					 UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
-> +					 UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY))
->   		return 0;
-
-Should we still set CTGP_DB_CTGP_ENABLE if cTGP control is not=20
-supported? Also i think we should not touch EC_ADDR_CTGP_DB_CTGP_OFFSET=20
-if cTGP support is not present, the same goes for dynamic boost.
-
-Thanks,
-Armin Wolf
-
->  =20
->   	ret =3D regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, 0);
-> @@ -2577,7 +2581,9 @@ static int uniwill_suspend_usb_powershare(struct u=
-niwill_data *data)
->  =20
->   static int uniwill_suspend_nvidia_ctgp(struct uniwill_data *data)
->   {
-> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=
-))
-> +	if (!uniwill_device_supports_any(data,
-> +					 UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
-> +					 UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY))
->   		return 0;
->  =20
->   	return regmap_clear_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
-> @@ -2686,7 +2692,9 @@ static int uniwill_resume_usb_powershare(struct un=
-iwill_data *data)
->  =20
->   static int uniwill_resume_nvidia_ctgp(struct uniwill_data *data)
->   {
-> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=
-))
-> +	if (!uniwill_device_supports_any(data,
-> +					 UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
-> +					 UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY))
->   		return 0;
->  =20
->   	return regmap_set_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
-> @@ -2910,7 +2918,7 @@ static struct uniwill_device_descriptor phxtqxx_ph=
-xagxx_phxaqxx_phxpgxx_descript
->   		    UNIWILL_FEATURE_GPU_TEMP |
->   		    UNIWILL_FEATURE_PRIMARY_FAN |
->   		    UNIWILL_FEATURE_SECONDARY_FAN |
-> -		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
-> +		    UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY |
->   		    UNIWILL_FEATURE_USB_C_POWER_PRIORITY |
->   		    UNIWILL_FEATURE_KEYBOARD_BACKLIGHT,
->   	.kbd_led_single_color =3D true,
-> @@ -3106,7 +3114,7 @@ static int phxarxx_phxaqxx_probe(struct uniwill_da=
-ta *data)
->  =20
->   	if (value & HAS_GPU)
->   		data->features |=3D UNIWILL_FEATURE_GPU_TEMP |
-> -				  UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL;
-> +				  UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY;
->  =20
->   	return 0;
->   };
-> @@ -3711,7 +3719,9 @@ static int __init uniwill_init(void)
->  =20
->   	if (force) {
->   		/* Assume that the device supports all features except the charge li=
-mit */
-> -		device_descriptor.features =3D UINT_MAX & ~UNIWILL_FEATURE_BATTERY_CH=
-ARGE_LIMIT;
-> +		device_descriptor.features =3D UINT_MAX &
-> +			~(UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
-> +			UNIWILL_FEATURE_NVIDIA_DB_SUPPORT_ONLY);
->   		/* Some models only have a (white) single color keyboard backlight *=
-/
->   		device_descriptor.kbd_led_single_color =3D false;
->   		/* Some models only support 3 brightness levels */
-
+>  drivers/gpu/drm/xe/xe_vsec.c | 188 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 184 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+> index a814d7151eea..77fbb1257e09 100644
+> --- a/drivers/gpu/drm/xe/xe_vsec.c
+> +++ b/drivers/gpu/drm/xe/xe_vsec.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/errno.h>
+> +#include <linux/log2.h>
+>  #include <linux/intel_vsec.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -344,10 +345,15 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
+>  	}
+>  
+>  	scoped_guard(mutex, &xe->pmt.lock) {
+> +		u32 device_id = FIELD_GET(GUID_DEVICE_ID, guid);
+> +
+>  		/* set SoC re-mapper index register based on GUID memory region */
+>  		xe->soc_remapper.set_telem_region(xe, mem_region);
+>  
+>  		memcpy_fromio(data, telem_addr, count);
+> +
+> +		if (device_id == CRI_DEVICE_ID)
+> +			xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+>  	}
+>  
+>  	xe_pm_runtime_put(xe);
+> @@ -358,20 +364,188 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
+>  	return ret == 0 ? count : ret;
+>  }
+>  
+> -static struct pmt_callbacks xe_pmt_cb = {
+> +/**
+> + * xe_pmt_discovery_read - Given a device and an index, read discovery data into a buffer
+> + * @dev: valid Xe device
+> + * @cap_id: PMT type
+> + * @element: element to access
+> + * @disc_data: buffer for discovery data
+> + *
+> + * This is a callback API.  I.e this can be accessed external to the XE driver
+> + * (PMT driver scope).  Because of this, DRM hotplug needs to be verified
+> + * (drm_dev_enter()).
+> + *
+> + * Runtime is required to be active.  Calling this out of that scope is not a
+> + * correct use case (probe, late-bind probe).
+> + *
+> + * Return:
+> + * * -ENODEV device is not available (hotplug)
+> + * * -EINVAL for unsupported device or PMT feature
+> + * * -ENODATA incorrect power state
+> + * * 0 on success
+> + */
+> +static int xe_pmt_discovery_read(struct device *dev, unsigned long cap_id, u32 element,
+> +				 u32 *disc_data)
+> +{
+> +	struct xe_device *xe = kdev_to_xe_device(dev);
+> +	void __iomem *disc_addr = xe->mmio.regs;
+> +	struct intel_vsec_header *headers;
+> +	int ret = 0;
+> +	u32 offset;
+> +	int idx;
+> +
+> +	if (!drm_dev_enter(&xe->drm, &idx))
+> +		return -ENODEV;
+> +
+> +	if (xe->info.platform != XE_CRESCENTISLAND) {
+> +		ret = -EINVAL;
+> +		goto dev_exit;
+> +	}
+> +
+> +	if (!xe_pm_runtime_get_if_active(xe)) {
+> +		ret = -ENODATA;
+> +		goto dev_exit;
+> +	}
+> +
+> +	switch (cap_id) {
+> +	case ilog2(VSEC_CAP_TELEMETRY):
+> +		headers = &cri_telemetry;
+> +		break;
+> +
+> +	case ilog2(VSEC_CAP_CRASHLOG):
+> +		headers = &cri_crashlog;
+> +		break;
+> +
+> +	default:
+> +		ret = -EINVAL;
+> +		goto runtime_exit;
+> +	}
+> +
+> +	offset = element * (headers->entry_size * sizeof(u32));
+> +	disc_addr += headers->offset + offset;
+> +
+> +	scoped_guard(mutex, &xe->pmt.lock) {
+> +		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+> +		memcpy_fromio(disc_data, disc_addr, PMT_DISC_DWORDS * sizeof(u32));
+> +	}
+> +
+> +runtime_exit:
+> +	xe_pm_runtime_put(xe);
+> +dev_exit:
+> +	drm_dev_exit(idx);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * xe_pmt_read_reg() - read a crashlog register
+> + * @dev: the xe device that registered the callback
+> + * @guid: PMT guid of the crashlog instance
+> + * @reg: data read from the PMT data structure
+> + * @offset: which data to read from the PMT data structure
+> + *
+> + * Read the requested PMT register based on the pcie device and guid.  The
+> + * supported struct is the Crashlog Type1 Version2.
+> + *
+> + * Currently this is for CRI only.
+> + *
+> + * Return:
+> + * * -ENODEV device is not available (hotplug)
+> + * * -EINVAL invalid guid
+> + * * 0       success
+> + */
+> +static int xe_pmt_read_reg(struct device *dev, u32 guid, u32 *reg, u32 offset)
+> +{
+> +	struct xe_device *xe = kdev_to_xe_device(dev);
+> +	void __iomem *disc_addr = xe->mmio.regs + xe->pmt.base_offset;
+> +	int ret = 0;
+> +	u32 inst;
+> +	int idx;
+> +
+> +	if (FIELD_GET(GUID_DEVICE_ID, guid) != CRI_DEVICE_ID ||
+> +	    FIELD_GET(GUID_CAP_TYPE, guid) != CRASHLOG)
+> +		return -EINVAL;
+> +
+> +	if (!drm_dev_enter(&xe->drm, &idx))
+> +		return -ENODEV;
+> +
+> +	inst = FIELD_GET(GUID_RECORD_ID, guid) == PUNIT ?
+> +		CRI_CRASHLOG_PUNIT_DISC_OFFSET : CRI_CRASHLOG_OOBMSM_DISC_OFFSET;
+> +	disc_addr += inst + offset;
+> +
+> +	xe_pm_runtime_get(xe);
+> +
+> +	scoped_guard(mutex, &xe->pmt.lock) {
+> +		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+> +
+> +		*reg = readl(disc_addr);
+> +	}
+> +
+> +	xe_pm_runtime_put(xe);
+> +
+> +	drm_dev_exit(idx);
+> +
+> +	return ret;
+> +}
+> +
+> +static int xe_pmt_write_reg(struct device *dev, u32 guid, u32 reg, u32 offset)
+> +{
+> +	struct xe_device *xe = kdev_to_xe_device(dev);
+> +	void __iomem *disc_addr = xe->mmio.regs + xe->pmt.base_offset;
+> +	int ret = 0;
+> +	u32 inst;
+> +	int idx;
+> +
+> +	if (FIELD_GET(GUID_DEVICE_ID, guid) != CRI_DEVICE_ID ||
+> +	    FIELD_GET(GUID_CAP_TYPE, guid) != CRASHLOG)
+> +		return -EINVAL;
+> +
+> +	if (!drm_dev_enter(&xe->drm, &idx))
+> +		return -ENODEV;
+> +
+> +	inst = FIELD_GET(GUID_RECORD_ID, guid) == PUNIT ?
+> +		CRI_CRASHLOG_PUNIT_DISC_OFFSET : CRI_CRASHLOG_OOBMSM_DISC_OFFSET;
+> +	disc_addr += inst + offset;
+> +
+> +	xe_pm_runtime_get(xe);
+> +
+> +	scoped_guard(mutex, &xe->pmt.lock) {
+> +		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+> +
+> +		writel(reg, disc_addr);
+> +	}
+> +
+> +	xe_pm_runtime_put(xe);
+> +
+> +	drm_dev_exit(idx);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct pmt_callbacks xe_bmg_pmt_cb = {
+>  	.read_telem = xe_pmt_telem_read,
+>  };
+>  
+> +static struct pmt_callbacks xe_cri_pmt_cb = {
+> +	.read_telem = xe_pmt_telem_read,
+> +	.read_discovery = xe_pmt_discovery_read,
+> +	.read_reg = xe_pmt_read_reg,
+> +	.write_reg = xe_pmt_write_reg,
+> +};
+> +
+>  static const int vsec_platforms[] = {
+>  	[XE_BATTLEMAGE] = XE_VSEC_BMG,
+> +	[XE_CRESCENTISLAND] = XE_VSEC_CRI,
+>  };
+>  
+>  static enum xe_vsec get_platform_info(struct xe_device *xe)
+>  {
+> -	if (xe->info.platform > XE_BATTLEMAGE)
+> +	if (xe->info.platform > XE_CRESCENTISLAND)
+>  		return XE_VSEC_UNKNOWN;
+>  
+> -	if (IS_SRIOV_VF(xe) && xe->info.platform == XE_BATTLEMAGE)
+> +	if (IS_SRIOV_VF(xe) &&
+> +	    (xe->info.platform == XE_BATTLEMAGE ||
+> +	     xe->info.platform == XE_CRESCENTISLAND))
+>  		return XE_VSEC_UNKNOWN;
+>  
+>  	return vsec_platforms[xe->info.platform];
+> @@ -399,8 +573,14 @@ void xe_vsec_init(struct xe_device *xe)
+>  	switch (platform) {
+>  	case XE_VSEC_BMG:
+>  		xe->pmt.base_offset = BMG_TELEMETRY_OFFSET;
+> -		info->priv_data = &xe_pmt_cb;
+> +		info->priv_data = &xe_bmg_pmt_cb;
+>  		break;
+> +
+> +	case XE_VSEC_CRI:
+> +		xe->pmt.base_offset = CRI_PMT_OFFSET;
+> +		info->priv_data = &xe_cri_pmt_cb;
+> +		break;
+> +
+>  	default:
+>  		break;
+>  	}
+> -- 
+> 2.43.0
+> 
