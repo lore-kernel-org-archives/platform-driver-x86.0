@@ -1,111 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795543252;
-	b=pvYQNndN/vAu9zSYfXAyOCrONAPPrdY8/LkD0LR/rR6LgaN5OWetorGqFzIy+6kgTpvt
-	 UxW13eWdIc0oBLfI8PBXyzamIIob06Glcjr7osf70jo2CiPWgJzQVEsnM41Ml9Kt83+Ak
-	 TZUP4dYuhbHeSUhgxksNZlJKkQXUZtrJYy3uCmYuapuIpervZQBdNt2QzNTB/aAbHSjHk
-	 Hwajk8N2SRQTVfk5I7TW22SQKcL4jsdqWGNXCR0o9EDIp/LGQj+BQoKPMI7ADbNdMEOLM
-	 kXFz742p3o/EOIdgLriTeIRbiZqS9RoRqmi+JmthtYxHDG4kOQLvudObwRSuL8J+9XQ==
+	t=1795543289;
+	b=gQc51/Jk3JJMa0GShQzUX9FuBw/wBgaCdy5HcUUAD46k5r8JjzCk4lFC9HZ0OhAlDH0L
+	 VMOKjVvHUmyo6JeAQSiGqhGS6JB24eILYzCGlG+xUlVeDbF+D49ruHcuX5OToYs0UR1bm
+	 CHVbIqzrUzbCSHSYk/f+K2VYW9jZdmTyn+LlctiUnJWe7aoEdhPqD7aVJd2T2kdXreZKu
+	 6QWx48ZpHvbTgAhnpJqBfakImMBSqaYCW7JqIqrmMHVmO0K2ZPXJNcuR7mahTDdJuuWAH
+	 3qGoMF6BlhZ0UGGX68HEzRx5H2dMVuEra+AGoaFzvtA7KNQ1P29vewLrO9/eNdRpnmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795543252;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=FBEp+8epSZbnBEYjDF/iU0fcUTP9S0egShLX5gq4Fg0=;
-	b=w1WYouoxLugBaaYYnvtfgDBXCn76XoM3dxUk0YJPa6bFzePiZXye73mo0uD5PDJA5EAi
-	 61bKKXzgaF1xGDmqQpQQxT/oIuRemQCayEzbIBhspKk6zH4xIaOkuzEPETGuAJVXiLPnN
-	 tj/6n/vn57GNPVXs58ecfjSFeJOhPQBPGGzFYjOLa8sIkAs4JtPvldyHrgdHTUiN7Slj4
-	 /pPjsyXLqcyC7ixNyr+kWpJG3AEwEajngJKtLd6Q3R6635EM16wTosCP6CdTQvzh0aHNa
-	 0HVLm7gyR9NlhPm/HmHrbK3mKCFlAz3aswsyFLiKKdyvHfSSX5oUeJJ0V3GbyPoBNEA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795543289;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=cXgPOFXiKx+ZpHqEDiDlyzVT/pIW6o47fkit5HtZgIU=;
+	b=GJRZiSZb58mHen31/91Rzb19OGtOoIQ5khiF89DaJSq9gBtASyuhRwp/yBaw0yJUHL1r
+	 gWz4WavagDVHqbhDjPJ0ukBxpxlAKF1fobThFFTsz8Z4viy59hersuHPunVVQS/cGM3iL
+	 hb1Xy4v9QdnYTPe5BJX04g8IognMZlEJfQBWyq0dGQ37eJnv6lAPDrCHzqT94gxoBJ+xV
+	 /8e/wVrg/0yM1A9+jZd7lojZ1f+fWOYrh7LoMAFYHL2A+wS+1G8ND8ffsJmvASUYbz3Yj
+	 QSX40GXht9UQ2Fa23AkSktbYFx0gQhRoqRRLxA3bFXrMWNL7uNYLLmAB7QzRDG1J/vA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=squebb.ca;
-	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=cxL5f87t;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=3JsH6CTw;
-	arc=none smtp.remote-ip=202.12.124.148
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=J9AyLsM6;
+	arc=none smtp.remote-ip=192.198.163.16
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC92606A321
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 18:00:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AC92606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DCE606A321;
+	Tue, 24 Nov 2026 18:01:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23DCE606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=cxL5f87t;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=3JsH6CTw
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfout.stl.internal (Postfix) with ESMTP id E53FF1D005DD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2026 13:00:50 -0500 (EST)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Tue, 24 Nov 2026 13:00:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795543250;
-	 x=1795629650; bh=FBEp+8epSZbnBEYjDF/iU0fcUTP9S0egShLX5gq4Fg0=; b=
-	cxL5f87tD93PM6iTwx/ID3wRKLndhZAvlqy4RizYBLcaxIbYZ2u7xlTA/+tJptoz
-	Ef8Hcod1x6cywby9QmXyoPT8Tovh4iKkXpFUQMt/EWyszL83+HLe6EO3qhMJ8hlT
-	L8n32oaGMkgAAMMl4/nDcr3EMXkMnO1YYnucDls8mocB/gJW1it2nkKvp9YW4IV3
-	YAEdPBhLNoNyQqO/dBnAREXtXjfchV3rPg5KpqoL2xAL6C8dlEBP3xePse1wyUdf
-	R4bRH2w4KB5MZTqziC82nbvxUXg8iRizE/p7C5w7piL1uYNwRTCjcAcdkkRWjBLL
-	Vb5W8Mu7vFkC2DStezpZ/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795543250; x=
-	1795629650; bh=FBEp+8epSZbnBEYjDF/iU0fcUTP9S0egShLX5gq4Fg0=; b=3
-	JsH6CTwU5Kdf4EO/8eSeyH8Cp7BvA42Pd7bb0aF+zfnGBwGP5jQU378FFH92v6tz
-	+vdPxvIdaLcCY0P1DWqhXLH7DD3Xi2yV9DPOoCcJlHPqKDDDs0LoLpChangzDhxD
-	cztD5EXXZRefjbwH/1zGRWLNRHuODJ02BcpYrrqk+V5w4ff60IvbwAF9ZmFh85nz
-	sRDBR28wRT1AXkCokBAy3ua50V/DLw+xZY32Nhpx3p6xSVChVVmpC6/dXz0ZNXLS
-	POvOJOEpWaa8618WHIjFkNHlpnolBJLk0mo1qqm22jTK8rDWaMxttE7lX8cMduuw
-	PCj1D0nNuZrk21vZRwrlw==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795543250; d=squebb.ca;
-	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:M3z9ETORKqO/A2rYme5EapF7PwiINaBVvuBMB2P0jgJRAYr
-	qKD7ESbAiSelEyenmFgzAdN1mivhEVGqeq/O3LoklmhrRs4LLxWHDv2W3D9LFAb4
-	29dMcDYB8m1+ARWVWAUGE5SOCIVCyc0U/8YE8qXOnCMOv4j4NseOTzUuyWaYXRcJ
-	Ds+PitXc10d8UdJ7xwRc06831/9TH/Kcr42eOp6gjg1DzrgpvaTYwB9bpesrJMdK
-	x0yjMbBfetUETD9sCi+wPuoOH7iyzWIoYVRCpMEHJlHMiN+mLebXydylt4zmFume
-	zaBtoLWDMEGshMfo0Kt2/YIa6OckRu3VlFcMD4A==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:Q7U4h3D6eG11vM44QGkD+40b6c5bFN6q0MA+b5JCchI=:hKNTHTa+AxgtA0QdIvDGfFoGqi79K1NXiQhb/TbYj2g=;
-X-ME-Sender: <xms:0dAFa9pxMT5OhsBOwRu9Ma9XzbzN5S-V1ic7D0RFQ930QSixLIEa7A>
-    <xme:0dAFa6cp3sP0cB0mDyUDBMVu96foqSvbNDIY9vXjzjzBavYiJQ5hfdX8qXKi8e3JK
-    5SHTSPgz_vPrdIhQAurD-1IJFjCXK_QE7iZ7BTxNrAhFm1slJvU9xUE>
-X-ME-Proxy-Cause: dmFkZTEm/iC9G/ls5AwymuqfOXpm63Qg4DVEotXnOP3r+83ztVCEwF+zN21mTGp4D+7KUO
-    QAkXg3CueB/gO9TECUyfxvk5eoxJOBBwJcGbrrV2Wa9UL3G94UTITLZv7GDONL26tztqCX
-    dG0nG62CYStkrCaOvXO44okBo4APzjeSd3WsZzifLB7sHj23tS2ysvHkxlhZJplif+s49j
-    1OzrEJhjIvL6q1xfjh/yjXyRf/AayhivS3/8bT0K4K1JYcmfXYc62BIY4WRSxNdQ4exlIJ
-    +10f5pC1OmelT7Ybw0LZBZ9JBxZcjZERcKYHlSaXDWwqnaOvPAn3yEgIGs5XbIcRqb2qOi
-    PiaK0qEqsXTHNf432JP49Q0jdrr/gxxMMLqZ2PbATWfoBI//M5ErYeXoQ9QaU7ekPu/OST
-    gRJK/ioP/2K4PaU5eTlIKVA7soddG1NvBHjwWcWH0fvHAxns5b5q9xOFKVkYIwiov2oFCJ
-    JsdieDQNSIYlNPsCMqgEuQuLsEkJSHnwRohBwAgc03YXvGjOlBnEAjMRnKjl+z+nFssnTm
-    G4h1zSofJam5Mgi3n6LQyGAaBWEslZ1gBBy81Pr5IeG1otBK2izFdov5J9UDQy515wgadc
-    Ifhpw2o7NcMiVi/TgCf79uWkjQtfpKHWmdrIgRdKklMwQW+Mm2/NIduQ+v2w
-X-ME-Proxy: <xmx:0dAFa5L_lexSkXIxXpiHh3rcm1jYnFIgja7xknDGVBryZqvsVmf5RA>
-    <xmx:0dAFa4P-h-Y0hx46S9XJI0bd5oJr14e_lPNRvXCHsC290AZqXHCPUQ>
-    <xmx:0dAFa8Xncu0K1sIBKHwqt3IY2yet9FBZzIBd22fxMq-Su26IKdsQww>
-    <xmx:0dAFa2kkxq7YUIrj3hp38L7OM9UJh3KtCiwYbvy_LC9SxGcCjY_E7g>
-    <xmx:0tAFa2VIchIMHDvvPdWSMlgVW_xQCo-M0NN21nT8hEEnmhllD2u1g_hf>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 9279F2C00085; Tue, 24 Nov 2026 13:00:49 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=J9AyLsM6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795543289; x=1827079289;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ttoqj9NNfxE0tdFYrGZnAp+BjYX3nf5XKKyleXrRzww=;
+  b=J9AyLsM6a4esTUloo+cq6qgA3+EluWBMyRuFvw/4Fxwg5fHznJDLPSXG
+   8WYvzLClTf83IkPVW3k5dBSXxqB+7yUZje0MzDhTY9FW7SOoS3M604RHs
+   apqc9L20+CMvd5CRvASsg8xEyBusJ15FozfZwjSAff01dsIdHyTI0tH9L
+   VqKH//CIkPdAtm6YCkktbiq2e9gxtxrQHqsaahIRbSWDel3X/rgibGBDm
+   Oo318WcZZiAO5SPKcuJN6rZMtkfZ+xWdYQOkiekOjRlFhVqVdUwTGZB7p
+   s5L3KPPAbPWf4iN3N+m549a79Nwa8SNYfmLpSVaIifmccIIKtSzMe1a1N
+   g==;
+X-CSE-ConnectionGUID: +s1mtMtSQC63THQOHXJ0Rw==
+X-CSE-MsgGUID: sgIYcRAcSHSL7mIK5+x+uw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11976"; a="4432874"
+X-IronPort-AV: E=Sophos;i="6.27,231,1787036400"; 
+   d="scan'208";a="4432874"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2026 09:03:15 -0800
+X-CSE-ConnectionGUID: F8Mx1U9oTEmxZEiLSzt94g==
+X-CSE-MsgGUID: RE+eTp9VQMCvWMeAiprIvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,231,1787036400"; 
+   d="scan'208";a="13403255"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.125])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2026 09:03:12 -0800
+Date: Tue, 24 Nov 2026 19:03:00 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ondrej Zary <linux@zary.sk>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] Introduce Synology x86 NAS LEDs driver
+Message-ID: <awXDRNPad3iWtwdp@ashevche-desk.local>
+References: <20261124125616.1168560-1-linux@zary.sk>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,60 +79,134 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AfY4cavotJas
-Date: Tue, 24 Nov 2026 13:00:29 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Tom Hu" <huxiaoying@kylinos.cn>, linux-kernel@vger.kernel.org
-Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, "Rong Zhang" <i@rong.moe>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- xiaoying_hu@126.com
-Message-Id: <6066c701-55c8-494f-9348-f9835b258b44@app.fastmail.com>
-In-Reply-To: <20261124103946.897642-2-huxiaoying@kylinos.cn>
-References: <20261124103946.897642-1-huxiaoying@kylinos.cn>
- <20261124103946.897642-2-huxiaoying@kylinos.cn>
-Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Only check charge_start against a
- known charge_stop
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261124125616.1168560-1-linux@zary.sk>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+
+On Tue, Nov 24, 2026 at 01:45:46PM +0100, Ondrej Zary wrote:
+> Add platform driver for Synology x86-based NAS devices to support HDD LEDs
+> controlled by ICH9 GPIO pins.
+> 
+> Only DS411+II is supported for now (DS411+ should be the same except CPU).
+> 
+> Unfortunately, the DMI data in BIOS is not very helpful to identify the
+> device as almost all strings are "To be filled by O.E.M.". Match also the
+> BIOS date and then check presence of PCI devices (host bridge, LPC bridge,
+> onboard SiI3531 SATA controller and i82574L ethernet controller) to avoid
+> activation on other systems.
+> 
+> Buttons and other LEDs are not supported by this driver because they're
+> controlled by a PIC MCU (connected through serial port).
+
+...
+
+> +struct synology_pci_dev {
+> +	unsigned int bus;
+> +	unsigned int devfn;
+> +	struct pci_device_id id;
+> +};
+> +
+> +/* onboard PCI devices found in DS411+ to confirm the machine type (after DMI match) */
+> +static const struct synology_pci_dev ds411plus_pci_devices[] __initconst = {
+> +	/* 00:00.0 Host bridge: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx DMI Bridge */
+> +	{ 0, PCI_DEVFN(0, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0xa000,
+> +					       PCI_VENDOR_ID_INTEL, 0xa000) } },
+> +	/* 00:1f.0 ISA bridge: Intel Corporation 82801IR (ICH9R) LPC Interface Controller */
+> +	{ 0, PCI_DEVFN(0x1f, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x2916,
+> +						  PCI_VENDOR_ID_INTEL, 0x2916) } },
+
+> +	/* 02:00.0 Mass storage controller: Silicon Image, Inc. SiI 3531 Serial ATA Controller */
+> +	{ 2, PCI_DEVFN(0x00, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_CMD, 0x3531,
+> +						  PCI_VENDOR_ID_CMD, 0x3531) } },
+> +	/* 03:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection */
+> +	{ 3, PCI_DEVFN(0x00, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x10d3,
+> +						  PCI_VENDOR_ID_INTEL, 0x0000) } },
+> +	{}
+
+> +};
+
+> +/* check if all PCI devices in the list are present at specified locations */
+> +static bool __init synology_pci_devices_present(const struct synology_pci_dev *list)
+> +{
+> +	const struct synology_pci_dev *d;
+> +
+> +	for (d = list; d->id.vendor; d++) {
+> +		struct pci_dev *pdev = pci_get_domain_bus_and_slot(0, d->bus, d->devfn);
+> +
+> +		if (!pdev)
+> +			return false;
+
+> +		bool matched = d->id.vendor == pdev->vendor &&
+> +			       d->id.device == pdev->device &&
+> +			       d->id.subvendor == pdev->subsystem_vendor &&
+> +			       d->id.subdevice == pdev->subsystem_device;
+
+Don't mix variable definitions with the code (it's exceptionally possible
+for a couple of cases, none of which is this one). Can't it use
+pci_match_id() approach with driver_data? (If we ever need this check.)
+
+> +		pci_dev_put(pdev);
+> +		if (!matched)
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+
+Yeah, this becomes an ugly part of the patch...
+
+...
+
+> +static int __init synology_init(void)
+> +{
+> +	struct platform_device_info leds_info = {
+> +		.name = "leds-gpio",
+> +		.id = PLATFORM_DEVID_NONE,
+> +	};
+> +	int err;
+
+> +
+
+No blank line in the definition block.
+
+> +	const struct dmi_system_id *dmi = dmi_first_match(synology_systems);
+
+Split assignment and keep the variables in reversed xmas tree order.
+
+> +	if (!dmi)
+> +		return -ENODEV;
+> +
+> +	/* DS411+ DMI match is too generic, confirm by onboard PCI devices */
+> +	if (!strcmp(dmi->ident, "DS411+") && !synology_pci_devices_present(ds411plus_pci_devices))
+> +		return -ENODEV;
+> +
+> +	pr_info("Detected Synology NAS %s\n", dmi->ident);
+> +
+> +	err = software_node_register_node_group(synology_swnodes);
+> +	if (err) {
+> +		pr_err("failed to register software nodes: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	leds_info.fwnode = software_node_fwnode(&synology_gpio_leds_node);
+> +	synology_leds_pdev = platform_device_register_full(&leds_info);
+> +	err = PTR_ERR_OR_ZERO(synology_leds_pdev);
+> +	if (err) {
+> +		pr_err("error registering platform device: %pe\n", synology_leds_pdev);
+> +		goto err_unregister;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_unregister:
+> +	software_node_unregister_node_group(synology_swnodes);
+> +	return err;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On Tue, Nov 24, 2026, at 5:39 AM, Tom Hu wrote:
-> From: huxiaoying <huxiaoying@kylinos.cn>
->
-> When the EC does not provide GET_STOP, stop_support stays clear and the
-> cached charge_stop is never probed, so it remains 0.  charge_start is
-> still validated against that value, which rejects every level above 0
-> even though the start threshold is supported.
->
-> Only apply the cross check when the stop threshold is supported.
->
-> Signed-off-by: huxiaoying <huxiaoying@kylinos.cn>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 8fc5569131f6..842045272ffa 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -9832,7 +9832,8 @@ static ssize_t tpacpi_battery_store(int what,
->  		/* valid values are [0, 99] */
->  		if (value > 99)
->  			return -EINVAL;
-> -		if (value > battery_info.batteries[battery].charge_stop)
-> +		if (battery_info.batteries[battery].stop_support &&
-> +		    value > battery_info.batteries[battery].charge_stop)
->  			return -EINVAL;
->  		if (tpacpi_battery_set(THRESHOLD_START, battery, value))
->  			return -ENODEV;
-> -- 
-
-Looks good to me.
-Out of curiousity - have you seen this happen on any actual HW? If you did I think it would be a FW bug as having a start threshold and not a stop threshold would be definitely odd.
-
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Mark
