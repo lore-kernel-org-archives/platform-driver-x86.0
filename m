@@ -1,47 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795619363;
-	b=d8Jb3frR9F2sakTfds4BCjDoYhj2jcwsYX7JEvKyDilq9kgJwOgy+fTPi9mDjw6U8wXr
-	 zXlvzobc31ij0rZ9DDLcPNQv3nGNYE2Yyia7nQaS0Y5JBcxHhjEddsgidCpLB8nyPJSBp
-	 JnGRdJ9pcmvERzNA3vW4+XZWbMqkwEDHKaGwgrsXGAo3myHAKuyZaic1Krc72OfBDH95O
-	 sVWxbZ7eeVkhHilbBVRKTKj4JY6pj1Rj7b0iaNbcjY9MHufU22TRSZnCplMiVNNF0P4AJ
-	 X127fks2p5QcjP1QydHZ/SKoYXj6zyWRp1l4VIk0yQBbnsWhX2oojJgpF94qTJ9v9Bw==
+	t=1795619536;
+	b=q8JDf3UTIpLPp9vC1xPsgIGHxLE0wyDqhf/siYTL5JaJrctg0YEPKMk8Y3xFx4rJ2tqm
+	 +L8ebMvmPk8LMkEf5sdJSp2jX8uYEsqa3S3+hBNu0WLwQPVyUz2D/tA5T5RKASyNZzCAw
+	 kyFnIDDSOm0FfhEb7vsQTqpve2ZwFiavW9SExxycT444EvFuP2gDkP4hDEKR4EXBR+K4S
+	 5vyt0AQS1OJMPBkKoXpvH1y02U1RywaVX/0nu/F9Mbs/LHlFcdlI+0Lp1vTGBecDHMv7B
+	 xsPZWt87cYBwHBnzzRjhY/1Hm4CfH6NAIyWvjcC1NvWhDYtcuNp5/E1Kalu0MB++4Vg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795619363;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=cw6WqeSI8Sbldj9sBKcSk0EfyCmtivDG/+cdqzNXI4U=;
-	b=fmKd3i5vSQ7nebgSdgNNy2MnPGC7hVLZC2hYEX56pU9OYsiYHTHUSUno6d6QEF99vwkL
-	 DvGnmGAkhsJY/vkySJzG5DI9zElBJpFCh+dp8LsLkafl5ZZ4AnQ6KphS+wmwMnveR8LJO
-	 aW4Y7txs2d48tF+ZFQPO5xmVbqMSCD2lK+a+BydlqhAOh8OE20LJRiXhrPDasNKK/vlej
-	 Dv8kaaksRkTKaANDczP8AVe9o1BpZgBoOK1c0FdnyfgHuCd0NkDKgEgHBZ/G1yfgKqqdO
-	 jGmIwWr013KRpS9obLhtQNA1+CHcm4ONbNQCtNigC+EEaGUd5FHCsJonjQWzRt0OxvA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795619536;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=ElgVmBZSI40ArvK7n+gAM2cqYteYpfiSDzMahlW/TpY=;
+	b=D5zqQ7tEsqgJr+KDYioXFiP2fLCWndbOGES+6rETxH8lSVtShbYRzkXiYS0DWdyt8/30
+	 Lk2IFxZcxJf7GM3xcBCgDfRC8mAySmPoxTpIrb7vn9y88cllM0LmGAAK4mV9SPbAnylaa
+	 cygiIkE3Q7AjJrFyLsnUXTIx8VKaIMgD5EQCqP5LLYAzwBWMgGmdBQkkRR7HhxFHOId87
+	 bReOALoj9zI64lRoj6PcBGAZ8QScf6bkK6BcNS2bmz8/67zJRF/94Rd5s2jV36BwV2rOw
+	 19pOBye6dD0FJPMeH4YwbU5aPodb45z+8Kmsil8eNGMgX/UvLx8Kfzkaomn/5H5VMqA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HrXGqfgA;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="n5/MBIhn";
+	arc=none smtp.remote-ip=74.125.82.52
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED71606A323
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E849606A31E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:12:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E849606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HrXGqfgA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB7E1F000C0;
-	Wed, 25 Nov 2026 15:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795619362;
-	bh=cw6WqeSI8Sbldj9sBKcSk0EfyCmtivDG/+cdqzNXI4U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=HrXGqfgAjY8lerVmWZ2+YkIxO+l+HTvOhAw1DnAGn6Gk1TBKGvrNqJsSsgxmOznr9
-	 hQKHREjkviHw7tBDxXKjj7r7XINnTWKCgbG8C/MnQWiDLoQ5k1pUaw83JuKnD0jyXV
-	 fB6Ww+QsgCLA1XXfPOIe8O4NGegW63S3rygHNZuCEKHWbpW9rFYVrmWUFKSaiHXuue
-	 yII4A3GxnugTExhuWlKtYbKHK9f/3DB7pITH9HqviszmucYom893IO2N69e7FDbYtk
-	 tGZvPn7X9M3GcfEexcQgmK4nhs4vYT3aPrbKa4n8AHhLug61qOczElLSXjd1gdE/zR
-	 ChPOh/5AcQ+Dg==
-Message-ID: <1638fde5-80da-47b5-957f-1485ef9269d0@kernel.org>
-Date: Wed, 25 Nov 2026 16:09:19 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=n5/MBIhn
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-15ea896ddc8so9785576c88.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 07:12:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795619535; x=1796224335; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ElgVmBZSI40ArvK7n+gAM2cqYteYpfiSDzMahlW/TpY=;
+        b=n5/MBIhnCL/zVOA4b/c1x6qcbGRbxNI+kGSh4sg5AuoYqgX66GuM/5qxAAePmcoMoV
+         osD3sDhJa5TKAF1RlU1uYAerep9tcobEaSKo2BHJL0zaOE0oA2/+NicnVx7unk0eAi+L
+         o6e61z/0F5neL7/Uy+NZbmX8gSB4ZLcdw3TZIhof1b0RA0Tw29Xy8LDwYJ7q52IjkFmE
+         ykVr4O4PveiSYxZJJDLI0FqrjIaQESglA0qc2+Vu5GJhc3FIK8WSM9gPZqtox2NYTCEg
+         YaWdzcXJifRAw9G1KVRRiiPub1FqE8NfnhV+CpmX6Nos276Ym7MgiADCx63dQiqzQ+nI
+         2UBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795619535; x=1796224335;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ElgVmBZSI40ArvK7n+gAM2cqYteYpfiSDzMahlW/TpY=;
+        b=wtnfivnoAmrp32dZ35OoX7tLMqR2b7C0Eb6BZ8x5c8EpHy8MqkGBLjFDQqgd102x8A
+         vcO6XxP+FOmPtwQvJ/txlpSrJaZrHwxdB8hT4VS3b37PC2Vy/Oxmuus+rn0kgzCg2fpz
+         lfqS0EcuxIqUSC6YVRa5SsaWtJ1N0OU3K0uOT3q1T7t1FaC7AJThvP9k8JmcxcZ4yCQd
+         IC2krSmaliP8yZBEnXn0tZytg5zOSBJ8vTEaQvvdPTBl1RiQOI7gipG33beSdSyVuoCV
+         YDydcYFaOKdQkbQ6k/MpZaENnrRQ4LXGG4xcqEev3wyrPlaQYmMER9f0E9g29AHFVBVS
+         Xp9Q==
+X-Forwarded-Encrypted: i=1; AL+hErGd+qiiHzM2BlzqC7CuzNWGtaG5uPMFnfynnDY6nRsH+b8dG+gXYkI3v4pMMubyeNxugHpwqUIFHSaw2McfpQwiggKM@vger.kernel.org
+X-Gm-Message-State: APuU4Z9G7jklwjtzvkDCq/GrJHDWxWMUzn3X9PiIsVQnW6voxL6sKKHe
+	j+8OCYW8aq/buEeihinn8tRYZLnhz5FU6woHRnMX9w2Zl0Z0ryM05m3h
+X-Gm-Gg: AZFdTZfIj363ujBymUPgVPTAouyEamLpAPKNqovYOJFcWH8h3dhUTnynLSvDnZpMNNT
+	GFT1Cas8/pQ8zOF3h3Ao6ARZMN+8x7TLzdk6NT04NlcvFB/8fpckz5atQD2hY+EseeLpHG2ub70
+	0Tlkyn67nsBMB11M7hpfzqCi+JJ3fpC/9y4Vhxvw9jlIfVzANn5WA3j69H/KAC0hQSTfEdsgulq
+	LtzK0+3D6WJZv8bUgrMSwP8xiL2Q3YxURgnq6AWoBBxSsl59camHGiq/JYmkLPJ3THs+67cK4Dg
+	AtrgVEOnCytOOvXM3bSovNzlo9iUEjDwP+uNbVt9YNpNYqQIQKt/zpvQUGLDVjRSnWBS88fWeMm
+	FN2x98WUChN5AxQQPr5geZp+4Pk0GS/nesWWhOgPlLeaxwhnY3Z2ximzQmRB/uaUukQzHASjdG4
+	vKFMjDOFApBx1Sx1gZkwPI3yMLraVzriaZqkhENuLbvmVEBjKTVWf3NoiX3whQOYHEtU1nXi3wN
+	Si5Xci7/baaLbZx2ognA0H5oq2ovRyhIgHI6tKrdXDAljX7TSLYeOKIVIk9coqgwz9Zb1vVj82K
+	AIOhpLPtooyPHBwK
+X-Received: by 2002:a05:701a:c9c1:10b0:15e:6541:3099 with SMTP id a92af1059eb24-1b55687eb4dmr16271046c88.7.1795619535175;
+        Wed, 25 Nov 2026 07:12:15 -0800 (PST)
+Received: from arch ([179.255.154.194])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385f68bc0adsm51090121eec.13.2026.11.25.07.12.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 07:12:14 -0800 (PST)
+From: Zheng Shuyang <yhshzh0@gmail.com>
+To: =?UTF-8?q?Eren=20=C3=96zen?= <erenozen@protonmail.com>,
+	Fuwei Xie <12313607@mail.sustech.edu.cn>
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/5] platform/x86: huawei-wmi: expose native firmware power profiles
+Date: Wed, 25 Nov 2026 23:11:49 +0800
+Message-ID: <20261125151211.83173-1-yhshzh0@gmail.com>
+X-Mailer: git-send-email 2.56.1
+In-Reply-To: <Tf4l0QLSFWfEcunMVtUNowKIhzNRJjmjCYJKXUFzo-5xhOXhZpn-sUEN57KHkDgKanu1FrS-JHBYcI3K7Mjv176Tg0kMQ4QPIUoEcsYKQig=@protonmail.com>
+References: <4F34E5193B4633F6+20261124172651.37716-1-12313607@mail.sustech.edu.cn> <Tf4l0QLSFWfEcunMVtUNowKIhzNRJjmjCYJKXUFzo-5xhOXhZpn-sUEN57KHkDgKanu1FrS-JHBYcI3K7Mjv176Tg0kMQ4QPIUoEcsYKQig=@protonmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -51,88 +101,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Digma
- CITI 1804 tablet
-To: Artur Bakirov <darkonline.android@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <20261125100819.337-1-darkonline.android@gmail.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20261125100819.337-1-darkonline.android@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Eren and Fuwei,
 
-On 25-Nov-26 11:08, Artur Bakirov wrote:
-> Add touchscreen info for the Digma CITI 1804 (CS1069EW) tablet,
-> an Intel Atom x5-Z8350 (Cherry Trail) tablet with a Silead MSSL1680
-> touchscreen.
-> 
-> The firmware, extracted from the Windows driver of the tablet, is
-> submitted to the gsl-firmware repository as gsl1680-digma-citi-1804.fw.
-> The same settings were tested with the i2c_touchscreen_props kernel
-> parameter on a 6.18 kernel: touch works across the whole panel and the
-> Windows logo works as home button.
-> 
-> Link: https://github.com/onitake/gsl-firmware/pull/269
-> Signed-off-by: Artur Bakirov <darkonline.android@gmail.com>
+On Wed, Nov 25, 2026 at 08:17:27AM +0000, Eren Özen wrote:
+> Zheng, did your s2idle test on FMB-P start in performance mode?
 
-Thanks, patch looks good to me:
+Yes, my earlier v2 s2idle test started in performance mode. I just ran
+dedicated s2idle and fast-write checks on FMB-P (BIOS 1.16, Arch
+7.3.5-arch1-1) with power-profiles-daemon stopped, on both unmodified v3
+and v3 with your two changes folded in:
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Unmodified RFC v3:
+- s2idle starting in performance (plugged in, ~9 s): on resume, FMB-P
+  preserved performance (cached=performance, GTUB=1, ODVP2=1). Unlike
+  CREM-WXX9, BIOS 1.16 does not clear Turbo across a plugged-in s2idle.
+- s2idle starting in performance with AC unplugged during sleep (~11 s):
+  on wake (AC=0), cached platform_profile, GTUB, and ODVP all matched
+  balanced (GTUB=0, ODVP1=1).
+- Fast writes (6 rounds x 50 balanced/performance pairs, alternating
+  final mode): 0/6 stale rounds (cached == GTUB after every round).
 
-Regards,
+RFC v3 + both of your changes (method resume sync + 0x2a0/0x2a1 using
+huawei_wmi_profile_sync()):
+- Built with W=1 without warnings.
+- Fast writes (same 6 x 50 pairs): 0/6 stale rounds.
+- Fn+P and s2idle starting in performance (~7 s) kept cached
+  platform_profile, GTUB, and ODVP in sync with no kernel warnings, and
+  module unload/reload was clean.
 
-Hans
+So on FMB-P, \GTUB is already updated by the time 0x2a0/0x2a1 arrives,
+and both of your changes work cleanly here without regressions.
 
+Note: Gemini helped with the test scripts and drafting this report; I
+performed the physical steps on the machine and verified the results.
 
-
-> ---
->  drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index d83c387..606bdbb 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -369,6 +369,20 @@ static const struct ts_dmi_data dexp_ursus_kx210i_data = {
->  	.properties	= dexp_ursus_kx210i_props,
->  };
->  
-> +static const struct property_entry digma_citi_1804_props[] = {
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1152),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-digma-citi-1804.fw"),
-> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +	{ }
-> +};
-> +
-> +static const struct ts_dmi_data digma_citi_1804_data = {
-> +	.acpi_name	= "MSSL1680:00",
-> +	.properties	= digma_citi_1804_props,
-> +};
-> +
->  static const struct property_entry digma_citi_e200_props[] = {
->  	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
->  	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-> @@ -1308,6 +1322,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
->  			DMI_MATCH(DMI_PRODUCT_NAME, "S107I"),
->  		},
->  	},
-> +	{
-> +		/* Digma CITI 1804 (CS1069EW) */
-> +		.driver_data = (void *)&digma_citi_1804_data,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Digma"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "CITI 1804 CS1069EW"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "J210Z"),
-> +		},
-> +	},
->  	{
->  		/* Digma Citi E200 */
->  		.driver_data = (void *)&digma_citi_e200_data,
-
+Thanks,
+Zheng Shuyang
