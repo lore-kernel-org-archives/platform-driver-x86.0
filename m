@@ -1,56 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795630178;
-	b=w7KnIofPrG4O+y+CaU4Qgj9VVYuZD3yI7tDPNl/jyaYpmcfmID8f8l4h15G0CuuW2gnS
-	 ZnLt7HzWdvznUOKjk6Wm0Cg2bh0UyU9zGDn+1mUCuo+Ktfl8NnfiRdEHpSFhwqjdm5wI7
-	 k4H0hxUEJK21y+bEQHRf3wHua2ZGCF9JiJOANQrI0rBv1ipinHoXiNtCgZacxJZ1tILeA
-	 s/mUPAyDKN04+vPeA9owO4scSSVzMDgxjVGNJ7Mg+ZrS+afp0AHXE22DA4tCMOCzfz+R+
-	 dMB6nv5WyvrErF0hJAOi7nNDe2lYPbbSAOZXmqys725C7WGYsyqXwWk5Rkf2sn64ZTA==
+	t=1795630202;
+	b=Kf8GWHZT2iQXpN6tehL3zfQjMGCGKPKH/kozTO/Niz4W87DeA0iVaNOpNXn/JEZmsb63
+	 wZkjD6R94Zrv/vXO7VW2XPkmGOn2rW+f2Ho3u3FX0sktobARSWfTSgM8jBsBg2baEgUcE
+	 /n/HTk7cJL45ArJR1NJxlStSSX575mS185jjLC21iGa0xKEU+Qf6vz3vW/Akzbj0oKpVR
+	 0QhELTCS4JK6dHx/3xNyBqJoye+xo7Q+RZVAFuFhec269ynWBMxTxg4nPu2a+TyOOmruC
+	 ejN+je83I589q+Q0GSKm1A79fykd9rbUw7IcmmK/4XDFJ1GysobXqQtgC8HV8fdk5qw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795630178;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795630202;
 	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer:X-ZohoMailClient;
-	bh=Z0sd2p2w8g/E6dKVKe7xrIpR79ZuVn/raKaxHWztKwc=;
-	b=J145uVVWRI+MWyYakyMQid9MRsEX75msoIKA5ZY5RuKCAjdQu708B6k1Y6Ytn1fck02G
-	 7qZ2cncgjWH/ndbWb2qNi+EL6OyA2iDFhMy9YoJ1xbeM6UtdcC/eTwJPxMHaZUNgfwYKZ
-	 qTjXA64EclYgxGFhH//rI0QyMvQTHlov+uy6GgyBqPPBxIsopznOEHyxK/4JEbSDNrOYc
-	 O07RUwcxWFtE8/LB95FU+KE21Vq/X/nLxesP2rLWmxfAMV3HE3U59au3oc0PzasvNg4y3
-	 P75iW2Kcyzl43KFHA6W0877CrFYB6JtITl/iB1llWr5AJLFEqTD1I6V2XnmZ2E7gXZQ==
+	bh=SwbJI8zY+X1/DDKPIgRAXUORFw02sO9uTFGJvCcjbk0=;
+	b=wnXkYWEteOiRZYNSlN+1cytiBkRcdSrCeXvvViI1bRzKko5h9M2twa9Lonbh9SS2xtMJ
+	 ZQRV0Rf9EikM2e9wAMKLrWmxLsbFeSAmQd8QcaQzsK3zU1cRmcMxvtYd+trHpdxpE9UPv
+	 S340Z7V0nRO+opYsypA6DFU/00cH+E9wB3h+xd93x11Q6VGGTpVhrDsEdjgqV0ZVmlzSs
+	 TLOxjbuIficCFsRxZeEh9TlCdV4ZqHwzhWZsbpTWZypMIqGk3eAHZOFdsrRjQ/wj9q3Q6
+	 +5KPOdREZItTFGOM7t0XQCvmbSGj87uV+a4lwSbKmhTm67laEeYjPuYU9RV/Ccp7TPw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=rong.moe;
 	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=cmE66od4;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
-Received: from sender6-pp-f112.zoho.com (sender6-pp-f112.zoho.com [165.173.180.112])
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=pfqlsIqL;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CA3606A321;
-	Wed, 25 Nov 2026 18:09:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20CA3606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C32606A327;
+	Wed, 25 Nov 2026 18:10:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4C32606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=cmE66od4
-ARC-Seal: i=1; a=rsa-sha256; t=1795630131; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=pfqlsIqL
+ARC-Seal: i=1; a=rsa-sha256; t=1795630133; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=QxiU+s9v9q2SkB5V5fSeHtQYYL0xGyXzmiza+Ux07EJNmbqa4EoIb+8PW0m1/QU4ZhPJ2gqKwbNClZz+vq6LzO9ukkzt+f8mY3qxm140NbD+dKwuBuDvsOcqBlStMIkmr9+ejEwkDXYUqGFbMDOWj0hqr2+jGnqGWPKb+mp5cvs=
+	b=YHSAKrK5krRhD0HOSEkHnZivBEIiG66i98SGBBIrk74dC693C6kIjoxelEwDwXGWa37OyZl81cvSsSF7c+Z8sb1CC8lwpmY7Mj0saP6oFCxK+73oRQQTBIjL7/v4qrZwsfJ3jBAemUp7Lh2VlAlkgtqXVXYRTssyp+KmUu1oE+4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795630131; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Z0sd2p2w8g/E6dKVKe7xrIpR79ZuVn/raKaxHWztKwc=; 
-	b=dn9J6TYq4QLMtInEef/9GrrpIPbdqBsD66bZj0ftmBXfjuF7qy2slEZa57vfvLB9DDCM1cqOKt7+7az+SZ+ALtfiCPlQlSxI1cDYrH4qHChhQhcW3U7fwZpDpNqu1PpSDQ+FdRTezBdLWeXjLNau4F/Ztq1OFpY2jFpgeKVaf9k=
+	t=1795630133; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=SwbJI8zY+X1/DDKPIgRAXUORFw02sO9uTFGJvCcjbk0=; 
+	b=YWIkfVknbybxbXKPMR5jwxNDnjbAG6gSSh3r63xKlxelHV1UXglWOTmXxHXhm0mvhKuGVAK6bQZBY2RGYvRxQBgrHRNV6snFTtlZDumy3Zaf3DtHqcZEFBxLulIPJl0k6H5VPAySJIUiaK0DSMjtyqDuYfHFiLR0l8jjdPBLF1s=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=cmE66od48+2Ls6ZauvNgqxBjkgWf3VEC01oKWJOhvRYoNZd0K5WaJmG/XuJNeDWc9zPZ5KefjrtU21aThtXErngYR8wzePLvMi4MDxaSJHJ0xoEGD7jGYnCJI+vd9y120kTj5+KWgyyP4M8yr7TtvheK9Ij/npuTbksaXeMjh9/Oeuf8LELg1+jXpK2tt2damJoO2JFJaJniWvWMAreZWsveBm41RBRJ63gl+IXAOSCF40MEz2EBQKFzd/6fBRmZJJFQSZQ7CUZe7WXvkCT1uQzZBQlcqOU1nP36Zfz3RztXJ5+zaPOPZn83bjdpgPTYpCpj0RfU/vKFj1WtoQSmrA==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=Z0sd2p2w8g/E6dKVKe7xrIpR79ZuVn/raKaxHWztKwc=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795630128785648.309770875165;
-	Wed, 25 Nov 2026 10:08:48 -0800 (PST)
+DKIM-Signature: a=rsa-sha256; b=pfqlsIqLBv1nMCC7as7nLOwBd8kXqCZ4C3s9Yp8mNpB+k8RwuG7TTS0vRhCtgwz7sEUVzMet7GCoo454kz2rqJQ9zQtFMAzsMsGlKD33qrfosKJ+F/dGbOqDcT4+P52z/8KG4CLh2BpuRoefF5kEk0oQYuDktkUWhDBrLCDb7mP8nxmiMrumJy7GN5g4jgrIYGnb62KJSwisz5i9WpN8qqAON0Qm4U4FUykz6Juc8XHWwgdO2LM8L44gn877AR6g5jPVAF0TC/TlogTJJJiAi0L+yr5W5gB1ua5imszQe0HbBH49Xxuzrf9g9c5WwggBcSWDsSpou9mgOL1MId+X5g==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=SwbJI8zY+X1/DDKPIgRAXUORFw02sO9uTFGJvCcjbk0=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795630131787396.25831423159264;
+	Wed, 25 Nov 2026 10:08:51 -0800 (PST)
 From: Rong Zhang <i@rong.moe>
-Date: Thu, 26 Nov 2026 02:08:20 +0800
-Subject: [PATCH v3 2/8] platform/x86: lenovo-ymc: Serialize WMI event
- handling
+Date: Thu, 26 Nov 2026 02:08:21 +0800
+Subject: [PATCH v3 3/8] platform/x86: lenovo-wmi-events: Modernize WMI
+ event handling
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -62,7 +62,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261126-ymc-82yl-v3-2-e30842671ec3@rong.moe>
+Message-Id: <20261126-ymc-82yl-v3-3-e30842671ec3@rong.moe>
 References: <20261126-ymc-82yl-v3-0-e30842671ec3@rong.moe>
 In-Reply-To: <20261126-ymc-82yl-v3-0-e30842671ec3@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
@@ -73,76 +73,116 @@ To: Mark Pearson <mpearson-lenovo@squebb.ca>,
  Andrew Kallmeyer <kallmeyeras@gmail.com>
 Cc: Eduard Aliman <edialiman20@gmail.com>, 
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mahir Faisal <mahirfaisalantiq33@gmail.com>, Rong Zhang <i@rong.moe>, 
- stable@vger.kernel.org
+ Mahir Faisal <mahirfaisalantiq33@gmail.com>, Rong Zhang <i@rong.moe>
 X-Mailer: b4 0.17-dev-ce4c1
 X-ZohoMailClient: External
 
-WMI events may arrive in parallel, causing race conditions, e.g.,
+The WMI core calls the new notify_new() callback with unmarshaled event
+data and size check, aligning with the Windows behavior that the ACPI
+object type doesn't matter but the size does.
 
-  CPU1				CPU2
-  query: posture A
-  				query: posture B
-  				input report B
-  input report A
-  				trigger EC with B
-  trigger EC with A
+Adopt it to modernize the driver and hopefully improve robustness on
+various firmware, like previously did for lenovo-wmi-{capdata,helpers}.
 
-Fix it by serializing lenovo_ymc_notify() with a mutex.
+The blocking_notifier_call_chain() code path is also moved, so that it
+will be easier when adding new GUIDs to the driver.
 
-Fixes: e82882cdd241 ("platform/x86: Add driver for Yoga Tablet Mode switch")
-Cc: stable@vger.kernel.org
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Tested-by: Eduard Aliman <edialiman20@gmail.com>
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
- drivers/platform/x86/lenovo/ymc.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/lenovo/wmi-events.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/ymc.c b/drivers/platform/x86/lenovo/ymc.c
-index 70f3ae20d3e3..eba22600161e 100644
---- a/drivers/platform/x86/lenovo/ymc.c
-+++ b/drivers/platform/x86/lenovo/ymc.c
-@@ -10,9 +10,11 @@
- #include <linux/acpi.h>
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/cleanup.h>
- #include <linux/dmi.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-+#include <linux/mutex.h>
+diff --git a/drivers/platform/x86/lenovo/wmi-events.c b/drivers/platform/x86/lenovo/wmi-events.c
+index 3a82192dc9e5..01ad5bcf0437 100644
+--- a/drivers/platform/x86/lenovo/wmi-events.c
++++ b/drivers/platform/x86/lenovo/wmi-events.c
+@@ -9,13 +9,14 @@
+  * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+  */
+ 
+-#include <linux/acpi.h>
+ #include <linux/export.h>
+ #include <linux/module.h>
+ #include <linux/notifier.h>
+ #include <linux/types.h>
  #include <linux/wmi.h>
- #include "ideapad-laptop.h"
  
-@@ -60,6 +62,7 @@ static const struct dmi_system_id allowed_chasis_types_dmi_table[] = {
++#include <asm/byteorder.h>
++
+ #include "wmi-events.h"
+ #include "wmi-helpers.h"
  
- struct lenovo_ymc_private {
- 	struct input_dev *input_dev;
-+	struct mutex mutex; /* Protects event handling. */
+@@ -110,25 +111,23 @@ EXPORT_SYMBOL_NS_GPL(devm_lwmi_events_register_notifier, "LENOVO_WMI_EVENTS");
+ /**
+  * lwmi_events_notify() - Call functions for the notifier call chain.
+  * @wdev: The parent WMI device of the driver.
+- * @obj: ACPI object passed by the registered WMI Event.
++ * @buf: WMI buffer passed by the registered WMI Event.
+  *
+  * Validate WMI event data and notify all registered drivers of the event and
+  * its output.
+  *
+  * Return: 0 on success, or an error code.
+  */
+-static void lwmi_events_notify(struct wmi_device *wdev, union acpi_object *obj)
++static void lwmi_events_notify(struct wmi_device *wdev, const struct wmi_buffer *buf)
+ {
+ 	struct lwmi_events_priv *priv = dev_get_drvdata(&wdev->dev);
++	void *notif_data = NULL;
+ 	int sel_prof;
+ 	int ret;
+ 
+ 	switch (priv->type) {
+ 	case LWMI_EVENT_THERMAL_MODE:
+-		if (obj->type != ACPI_TYPE_INTEGER)
+-			return;
+-
+-		sel_prof = obj->integer.value;
++		sel_prof = le32_to_cpup(buf->data);
+ 
+ 		switch (sel_prof) {
+ 		case LWMI_GZ_THERMAL_MODE_QUIET:
+@@ -136,13 +135,8 @@ static void lwmi_events_notify(struct wmi_device *wdev, union acpi_object *obj)
+ 		case LWMI_GZ_THERMAL_MODE_PERFORMANCE:
+ 		case LWMI_GZ_THERMAL_MODE_EXTREME:
+ 		case LWMI_GZ_THERMAL_MODE_CUSTOM:
+-			ret = blocking_notifier_call_chain(&events_chain_head,
+-							   LWMI_EVENT_THERMAL_MODE,
+-							   &sel_prof);
+-			if (ret == NOTIFY_BAD)
+-				dev_err(&wdev->dev,
+-					"Failed to send notification to call chain for WMI Events\n");
+-			return;
++			notif_data = &sel_prof;
++			break;
+ 		default:
+ 			dev_err(&wdev->dev, "Got invalid thermal mode: %x",
+ 				sel_prof);
+@@ -152,6 +146,13 @@ static void lwmi_events_notify(struct wmi_device *wdev, union acpi_object *obj)
+ 	default:
+ 		return;
+ 	}
++
++	ret = blocking_notifier_call_chain(&events_chain_head, priv->type, notif_data);
++	if (ret == NOTIFY_BAD) {
++		dev_err(&wdev->dev,
++			"Failed to send notification to call chain for WMI event type %d\n",
++			priv->type);
++	}
+ }
+ 
+ static int lwmi_events_probe(struct wmi_device *wdev, const void *context)
+@@ -185,7 +186,7 @@ static struct wmi_driver lwmi_events_driver = {
+ 	.id_table = lwmi_events_id_table,
+ 	.min_event_size = sizeof(u32),
+ 	.probe = lwmi_events_probe,
+-	.notify = lwmi_events_notify,
++	.notify_new = lwmi_events_notify,
+ 	.no_singleton = true,
  };
  
- static const struct key_entry lenovo_ymc_keymap[] = {
-@@ -82,6 +85,8 @@ static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
- 	acpi_status status;
- 	int code;
- 
-+	guard(mutex)(&priv->mutex);
-+
- 	status = wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
- 				LENOVO_YMC_QUERY_INSTANCE,
- 				LENOVO_YMC_QUERY_METHOD,
-@@ -137,6 +142,10 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
- 	if (!input_dev)
- 		return -ENOMEM;
- 
-+	err = devm_mutex_init(&wdev->dev, &priv->mutex);
-+	if (err)
-+		return err;
-+
- 	input_dev->name = "Lenovo Yoga Tablet Mode Control switch";
- 	input_dev->phys = LENOVO_YMC_EVENT_GUID "/input0";
- 	input_dev->id.bustype = BUS_HOST;
 
 -- 
 2.55.0
