@@ -1,99 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.8
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795648895;
-	b=pZmIID2j/VJqzm80ELfq1a7/t0Ncdz8z8ybZNUPCs2iBhwtStNdwR/XW6Y7EF9B1C5NB
-	 Aym8VSW/ZpZ78y5LMtVjx8iDCHhlfn/ZUY6rHLY+NgLMzU/cpJHwYaFE08Xz+fVvrPd4+
-	 0zYYx/uKLL0aiVkf1qzwH97Jx7J1ow+jMRh+Qt7QjB5wpPvy7VZtFS77doN14VsjnEnNS
-	 IqaNaPAYbQd5pdzk44yNsNpEMHr/b8SodvXim+YxtVI30TSkViTt+0GNKIGTSUe4kT4TG
-	 pXTAO6Dpf3c4PTGluOmiVR8EB+dJizwNrW0hmnH1Q9vEqnSuMGxvyNT9vdYPLClEF3A==
+	t=1795649261;
+	b=BzBZcIYmdlyJI2u9iAS0MeCE3C3GFqkD1/1q7ZKMW4rYBsZvpVpyzfXUde7xTXWsyphr
+	 SR6+QjB4OrD97lMX1uj91RUEEBegpEzqt6Uu2RF7CtPFTjPpzBFmv/zVS7Gc+eWJirQ5a
+	 73j7oq06tPPwhGhdqYSAF4cB6TY+1fjBg5pWrAlk4uo3QessYTXyBQSuha5kI1Aq13yYd
+	 1602knMAJvqxFA9x9+kFPdrX+pIuIldHichZbW4r3g4DYh0mWtnFzpT/N934tKlcs0svG
+	 GxcAtAPR3xGJSpBewdrEAzeVbaaBy1l/mdHG/j3NFYdVg2YsSFVxLYZ0xueMvMwS7jA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795648895;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=pCW63ny83XiZTDhtRYPG7u2cPmHKUXsowEsKPqJdTRw=;
-	b=JZWaARMIkgqAv9KtOzOOE+boQ6oQ9cenOA2VdUeYmZPauSHDyoirjvcJSNf9suiXNW53
-	 ICGZ/DzMBYpykRC8uJNolpIPYkLnso7UDY8GqTev0NRrkMytxTkKN6zsiYl/2HL/Ih87g
-	 UjNTtj9bS0aW42SuF08PD+nUEKdstT4ONe/PErb7zd7D/2OT674MW9uOUKb4G+RaH7KXu
-	 FlbX3vOLLXcGvOuMzJUHrW/oZarXkhe4peUJZw7BqNMGR+z/okyjuexOcl0xEf1VV690Y
-	 Vw/8Y0VELF3gr+7t2FLfDHsufYpAWUPtA5mIgb98MeSTVR5AXeqsNyOaZ69lKOObaIA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795649261;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
+	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-Mailer;
+	bh=B4FdeZp3dbdZYETSC5IaHd/pwl354K+xUDc2fBshgRU=;
+	b=Lces44bYFZu7YyZ+8EtvLr4ABOjJF8sE0CheKpKGEX57QN1aykcryEfJUR59v7nfLDlN
+	 OdUsQgIn/bGKq4RwrGpyNbnpjD4kBt/YGhM10DkenKOa3J/GhgM1qdckilSiL4S15M8sB
+	 K2PT6fpu+D2E5x8y9+8Wkv3T9EuoKc0KLyNmLzy+O+Zhq7WzWYpxw8Rj/+vcUbR6scubW
+	 jWEbtKI2ZuTljDNlom6iK4s+ISlf2LBdlEUMZCmxIftJJouJ9Y4nb0E85uDZP763WiyBz
+	 H6GsWbZk1ojjPiU3ShJeApZdiSIdMuzddGOHby65d/DcgJWVf1H/hawWjTpDZPcNk4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EduQ3it1;
-	arc=none smtp.remote-ip=209.85.210.178
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=B3j1Kscu;
+	arc=none smtp.remote-ip=192.198.163.8
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E77606A32E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:21:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C3E77606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4469606A321;
+	Wed, 25 Nov 2026 23:27:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4469606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EduQ3it1
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-8ca6a12efd9so2175677b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:21:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795648894; x=1796253694; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=pCW63ny83XiZTDhtRYPG7u2cPmHKUXsowEsKPqJdTRw=;
-        b=EduQ3it10AvwcrGZFygvafX4/s08ajPrZ9AFWJASWXvAkNzzb6C0JwTNLauQAZEn57
-         8sbshVnuB/Bzlup5YhWPh4OyOTkWtrbgapT+9XioRGKoKAcSZrIIB/byvCoU8fz1Yv8M
-         0QADQwsC0vX7O0DKa1loHDk/wjHyrCBaMU/w6QggYVd/3eoZi0nmGJP+dyOZjoysWKdA
-         Z2U+OxVTDohfsxXfQ5g59D2w1+RWJx4Ao2LG0fnBHQn8yFkmRE21KMr/i7f6dF8oII3N
-         JVLrPACYEgQVor8fpl+BLLAKFX6U5yvuggCsm+/ulZgS2RPv6P6l/woNPtSFvs3sTj5I
-         XSOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795648894; x=1796253694;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=pCW63ny83XiZTDhtRYPG7u2cPmHKUXsowEsKPqJdTRw=;
-        b=BVfoKdaprWCBOmnIVj8zyV9TNUDrq4AN8hOaQL1LcOslBm3M+u5mhocBEmqaXS9aTM
-         PEhtuCaqDjh3qA58Cg8N0PwXc9HMM0P1CZzCYo9B99L0jHRyh+5ucQ7gALfofeRmMVW/
-         avhjGPWggIGg4BR6A3WvXbhj4er35C8k0FKpeKZNBYj0i44PnQxeBxmjF52nF6Jd462v
-         TyYT41edchOctG2moZ3yO/HHC3AOsqiw2H8xwmlp+IM27RyKlYzxqCQxMvg8+WFJCfd/
-         PO5Z76Shph0hre/iRf750heBW2YlACE+3fLoAK5cX9G2mJYfSjipj9oeLAOh458nJghO
-         h5Mg==
-X-Gm-Message-State: APuU4Z/ysyQOT0vv2XTDWksKo8zhNtCGNsLZR1siDFhgjvc9Voe3r4Wd
-	Hl6Cj3cIxBVIARlvD4CXDxra3+PMuuoD0NXXG8Dsa2cgBYQB7Zi5PvLg
-X-Gm-Gg: AZFdTZfQfRcK00TOpS/wvZlmNQkph1tgPf3LmKRcoC4zfkZRUNzTthgpbVKPEHzU4TL
-	LLgQ2nie5aIQ1tgvcAbc1Ikz0jQQ8ah4/6bB+WneORnNbdgen+o2qRJ1K1iv2i+AAVosW2gWzE3
-	CR+lPKzmEO4xCo1CPZ0uuq+Uxnj/XfjLO80wO5dVKVwKaJE9lrHMCaZj4Y1ihLcszukt7qAeCRO
-	CsgD8x5l+gEtanloIL1CE7UgRi1f/pepd4+JM5MLAKTJliNkNRusFHMLulD+C04BCj11Mzf0shq
-	3B355+MFox3mjhXBTkYeGfeMY+rmV+Fu5tA3Oko3ey6KMaRv+LaV+JNq65L7iUMmXEQBivmR/Ut
-	lOG5gJoLQReK0KspMNun2+47VMuI3OX2xgmznlw9BJprS0RXPR5C31LYb6ipwFX6gVqDBpvA+QX
-	S5trfW0HsvVF/tLyXxpcC0FexoaTjS3eSIH21kgiSt8CXzK0xSC2MSxplGeJQ86GM6xWYjh3dUD
-	nKKaESQWxXMJp0db0v0pN5Xky8WauAF4oS0qVggqPy/BoHXb4JUsPGQZTE6NcynCC/zh/7cXgO5
-	8v3Mg9qI2piIq4tn9jeqXLz4/nmKaK8OvckX9I7p4QPVlTG/ynhvU0RNDV+1MJUoUKZYjrj/z1F
-	s0A7cgetJo4obc7Sk9SAsegmaKmxoMgsREsq/lbwDlsky/wXJ2x4vFBGD46K3KTYQT/+h5d8O1w
-	4UJCCs1Yom28xkZ2XbTfHD55o=
-X-Received: by 2002:a05:6372:a748:b0:3e1:885f:b4ab with SMTP id adf61e73a8af0-4014a27e905mr15369180637.8.1795648894120;
-        Wed, 25 Nov 2026 15:21:34 -0800 (PST)
-Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c873b25bfasm9864471b3a.46.2026.11.25.15.21.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 15:21:33 -0800 (PST)
-From: Rosen Penev <rosenp@gmail.com>
-To: Matthew Garrett <mjg59@srcf.ucam.org>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Darren Hart <dvhart@linux.intel.com>,
-	Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] platform/x86: dell-laptop: Make the charge end threshold unsigned
-Date: Wed, 25 Nov 2026 15:21:09 -0800
-Message-ID: <d46ed46896f3712e8a5368f9c2d8ef1bbc36f815.1795648586.git.rosenp@gmail.com>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <cover.1795648586.git.rosenp@gmail.com>
-References: <cover.1795648586.git.rosenp@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=B3j1Kscu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795649260; x=1827185260;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=rBRoB8ImHOqg7KzHlh1YAEAf/0D4nJ4KriRuJOWN7Xw=;
+  b=B3j1Kscu+ZSH8MLDasCpmeFG3xg0kgB3N6nT9NFfTCvph9EuXQWwSnbe
+   AbYqAHuheerDkPkNah1lGOPW217ZTxT0pkdruqS2sJm5z1n44kcvJpZBh
+   NVqs5skHsSeIrcWLKgibFo74O+NQnNgbsAHllmprdSlGbwPlsB1hsfF6Z
+   gOPxa+StsV3gkyGT1qwWputz8zjvFMrsNiCpR5czwYwSRtIiAMxBNeoJJ
+   o1GAXPMDDaKHRBtdsDxS1of2FlTEkZxNmWQ+xBw17jD6a0IBrS7RGMqdc
+   JHUfrurZ4w+yaoi5L/vn9gCClkEKn9OT6Dj8GmgCc31wB+7I8NAA19YFg
+   g==;
+X-CSE-ConnectionGUID: eVPBfoAHRcOMKWa9gkdB7A==
+X-CSE-MsgGUID: 00JYK1DlTSqz7TUUsqMbsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4429732"
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="4429732"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:27:39 -0800
+X-CSE-ConnectionGUID: WHTMfsPGQTuYyeqx6WBHlA==
+X-CSE-MsgGUID: b1K/7LcQQ/ijx9fLyQeBQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="12002401"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.96])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:27:36 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: jlee@suse.com, Mulky Fauzan <qapkyy3@gmail.com>
+Cc: hansg@kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20261123155520.121595-1-qapkyy3@gmail.com>
+References: <20261123155520.121595-1-qapkyy3@gmail.com>
+Subject: Re: [PATCH] platform/x86: acer-wmi: Add support for Acer Nitro
+ ANV16-71
+Message-Id: <179564925162.9828.11274906574803839292.b4-ty@b4>
+Date: Thu, 26 Nov 2026 01:27:31 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -103,45 +80,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-charge_control_end_threshold_store() passes a pointer to an int to
-kstrtouint(), which only builds because the kernel disables
--Wpointer-sign, and makes the following "end < 0" check dead code.
+On Mon, 23 Nov 2026 22:55:20 +0700, Mulky Fauzan wrote:
 
-Declare end as unsigned int to match kstrtouint() and drop the dead
-check. kstrtouint() already rejects negative input, so the accepted
-range is unchanged.
+> Add a DMI quirk for the Acer Nitro ANV16-71.
+> 
+> The existing acer-wmi driver supports hardware monitoring, fan
+> control and platform profile management on this laptop.
+> 
+> Enable CPU and GPU fan monitoring, PWM control, hardware
+> monitoring and platform profile support for this model.
+> 
+> [...]
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
-v3: make end unsigned int and drop the dead check instead of switching
-    to kstrtoint(); retitled (review feedback)
-v2: unchanged
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
- drivers/platform/x86/dell/dell-laptop.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index eca348497ac3..1e2867f182c8 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -2380,12 +2380,13 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
- 		struct device_attribute *attr,
- 		const char *buf, size_t size)
- {
--	int ret, end;
-+	unsigned int end;
-+	int ret;
- 
- 	ret = kstrtouint(buf, 10, &end);
- 	if (ret)
- 		return ret;
--	if (end < 0 || end > 100)
-+	if (end > 100)
- 		return -EINVAL;
- 
- 	ret = dell_battery_set_custom_charge_end(end);
--- 
-2.56.1
+The list of commits applied:
+[1/1] platform/x86: acer-wmi: Add support for Acer Nitro ANV16-71
+      commit: c4e781b590a13f8a80ff83039923dbb6274118bd
+
+--
+ i.
 
