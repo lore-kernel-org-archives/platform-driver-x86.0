@@ -1,76 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795644980;
-	b=22X90v7GBunQTVOJFjTvKfxzguxpo+KbWwEhcU+siCW3LaRE2AkKTeoARYyftVXARA7w
-	 h3VrEowUsQOj7a71EnETWDLmjLRmh6Xo6V7L1TwrQhEsSMihzpykefKODMU53H0/sUPm0
-	 dihDH9kEVKIkQg8gJnPxTBKEzgZKdS/H7yrFEFIjEXf6YkCR8IRcXo0uNpG/Xb3B2B8Ci
-	 Pmd6oi0+1Pfu4lhoyVkeHM4E27iU0F8re76yYK665pbvzTWF8aoAa9T5R1H2OBJVBMKer
-	 Z3aa7896CM5BS9hs79NjVDCMI2/GsFywNycmGSIRtlE3OrIpPowWbsv9Xjk7UweIRaQ==
+	t=1795645086;
+	b=y6N/FOUP5fTsHamuSRefcGu+inoe0ltD/JAU3TpLtnx5vCmvF1OzQoHIYMDBQJwD1eZD
+	 cli0oaOOGz/6DSK9vgrsGLjdf7auy0jMdivCr93LvSQ0xnntl4Aw43MmcpKI7V05rbovO
+	 n/vmhq8IHLbzHrOTLkiQcHZVmWMLbH9l5awcqvPUuiHzbG2rOTLJdJ6Uuj9xIOkZu7ZVx
+	 /s+zNlPNzOqtyDHYoe9Zr4yuTS9/xA92EmD4ERgFcqD9sFZtXpXrWmxpAmLbC80y4T5xh
+	 u/zjFmVKX52fmEByfO2dsFDX6wO+h7E+pxcCP1oJ3xHiEeujuyChgyJucdjJs1FVnaA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795644980;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=kfUNaRZSkv/Ef6A5TUayjRC4WnjLOM5LEmKK/LXlUrI=;
-	b=B8DIaKCcSUbj/wo75ygjXf7McJ7OhxDPZTulVc4HAel9kOU5xZqL+mhAF6SZRtubwpf8
-	 ZhhSa/TX8l2pO/xoivnmjEVLiDEBYIfeJO355stmozx11e+/jn/i+wxAezt3eMyhXNNpB
-	 DUDf96IZ7UuCd7gtrPod9MiMOXQgkNuZiZY0PDq4sociafZe4kRqrPLj5PmfB2K+NkDTs
-	 bvpjQpH22OgHpAD0UH1x1VSmQFxoZ9UzZ2QehefhaFFlNKHl0s4j/vmF08IXzXFzFKnGR
-	 D4QyYmybl7h3aAAA+zUz0NrwooGLViSAZryl1UHBzy0pFIuuvzUKNE2Yhgvth3LeGSQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795645086;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=0ipuY/GPGnzCJlnHWCO1S3xz7owRUdE8H+HL99PrQAY=;
+	b=5idPw5WWf6TrmcCVF6Cytc7lZZ4Q+GhIJxJR2pDEH/nWmole3BdLxl3gxyC3ZIWo/Awg
+	 ftMgkKOqljwhL/x9mNN8bCqD1cCVtVYTWxIfOYF6jrx3Qhy9VIg15xVg3a1iIy0ARM08X
+	 sBTpY9BI80bz+9Nn73Cuoc3UaWwZ65P5Zqkfc4CQ5FqqWyKhp7z7fgNgsqH7n2lbMBRi5
+	 WX6jkrLRxtnmIakgpivUDkR9fLwtRZH1gvdf0kluU3uViIOAF1twLNMmJr/n4UlyUCw+x
+	 lEBT93xcFD02sBWRyfbyoK62WfkSamjdUBKdDSfWixfO/4DIPCO+IxP/hyQdmQff+ng==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nkOmjp4Z;
-	arc=none smtp.remote-ip=198.175.65.17
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=d4C4hDru;
+	arc=none smtp.remote-ip=74.125.82.171
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A13E606A31E;
-	Wed, 25 Nov 2026 22:16:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A13E606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A963B606A323
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 22:18:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A963B606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=nkOmjp4Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795644979; x=1827180979;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=n4ELc8L3YaCmsc2ZSu1ax654BvWJDwQmSQMvIGtVfAY=;
-  b=nkOmjp4ZKufpOjzYp6AAeW5ziZ1GBrmprH4KgvfvcuNi+Xf5v4HNnPgp
-   Ce94SAn0MZIncWQ2vl6XXBUuMQVXbPLq00XAw+K1Tnq+ELh7MW0LavfWZ
-   5pcBZYoWsqofYYfIZOass18OGRg43QMHOg75lXuI6XtflPYjWR8IhQfFQ
-   ASIi2nNjZSxIJbZnPSRQXGzEgpMQgKPbjzxiP5qe/d6Akb4IboTJ04e9M
-   g6x8lkJ0zk82U9x78r7upTZ+IU7GeJLOic/te1yWLRc4AabN2qYCiq5Om
-   rNfujyOPtGlvvw51vzVC8Ra7/621ZNzzPPB0FkDo4Y1auXEhILY6Zi2E6
-   g==;
-X-CSE-ConnectionGUID: RCeHbLIPR165zi8uIqxaQQ==
-X-CSE-MsgGUID: Q1B5tyATTlmeBo/Uy8LnOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4542216"
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="4542216"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 14:11:41 -0800
-X-CSE-ConnectionGUID: ZKtWRnyHS3GlGsbkOc5cxQ==
-X-CSE-MsgGUID: Eu09bAPrQe+nNwEE0Ns01w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="12411890"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.96])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 14:11:36 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 26 Nov 2026 00:11:33 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: matan@svgalib.org, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    daxter1992@gmail.com
-Subject: Re: [PATCH 2/2] platform/x86: lg-laptop: Improve keyboard backlight
- detection
-In-Reply-To: <20261121141221.19245-2-W_Armin@gmx.de>
-Message-ID: <c7675821-77f4-74e1-280a-0b28e3ae485a@linux.intel.com>
-References: <20261121141221.19245-1-W_Armin@gmx.de> <20261121141221.19245-2-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=d4C4hDru
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-38644aedba1so9571293eec.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 14:18:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795645085; x=1796249885; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0ipuY/GPGnzCJlnHWCO1S3xz7owRUdE8H+HL99PrQAY=;
+        b=d4C4hDruGezjryJjUXDGrcMNv91JTeaHoH02IBRRrhMTYsm+KdaIq8zPvV135GrEUc
+         cvTs7SLLqIRI3xDB36dHNrwLjadHZcmthjeYZBAcbMxsjuMh6oR1Xuj7J8OhSDZxXLWh
+         HRNsSiqMMhd1VVny4P3EaxuOdbqriGk/39ad7BTzpvIXsVMvfLzWWJ5nH4uow1MRDTeY
+         UhRPjh+jgIiUaw8Au4cOkmXtrbFuYujQGXJAvddaXTjGjbNpXX2RlpIR0po5hxehRSXu
+         Rl6cw/hPk0q9VfnwoiSJaYbhSkZwBtCc8ZoEGexB5piGnbQYaLNac+56G22AemftWcA+
+         dLcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795645085; x=1796249885;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=0ipuY/GPGnzCJlnHWCO1S3xz7owRUdE8H+HL99PrQAY=;
+        b=kigZyWyhHIJZBKIOW7lE02uzDYPsBZLJz9/vInkDuCda/xTkgNOoxpuk/1Omu0l/em
+         NGUiEHlvRwjed4xjzN3389u/Bl2W40wyfHE0nzBubfto0KzFiiiLpMb/Rf8gHM87HSoc
+         tPShIaIkFp4mEVu/aYAwFemAZ5M2ia6S76HWYZCjpZ3T3F346lVNX/U7WJrdatNQw13l
+         sSjGOIeJPl5mMkR2ut9fSdCBMifCLMty4MNWayP7TkxoB3vInXIn9Rf+xYatqmxa1ObB
+         f5JZ+MCu2Pjk1i0wB5ZBUn9H7tqASfZS5BA110xk5taoQp1qLWksA+huJTLfwac7yoj2
+         8vmQ==
+X-Forwarded-Encrypted: i=1; AL+hErF6mK+KBIslUhSq5TT6gOaDGO653lu+uq7TBUevfIG5RjQe0HAgfMwNv5TTh5NRaUZgusdZ6pqE43PBB87y8/cGRDo+@vger.kernel.org
+X-Gm-Message-State: APuU4Z8o4r8QvNwOyf5PwtlRPI2/6x2xZWC88aRGhbsfcQW0p+HCyPwh
+	WFMznQVkBKxtjYft/PwcE+4ah4a4y764SU2lMZIIE4FhHtLllIK1JSOl
+X-Gm-Gg: AZFdTZehvVM206da6uNi8HO6lCq5u6720CoiCOIA6lJuEAVrb/kMQyFYSOOolEp7BqL
+	x/gaWKiP0CD9/3luGUDUM6hhtDJBtUhX235jMzJEO3n6qJKbXiEfYHcE3yQIZ5Cly+BuFsqmxbu
+	hVtoESuLTlAh8zoGpes5APcuwgUIfotQg7UdrUAs5t5hDSn8zW29tH9SYbkTa3yegVRnUs3jhRf
+	4emEKhMel7/GnvXXSlUvOv95AiL5TVFLkndgNGkm7fUpBHYf+oM5bL6A7Q5/ppgyG/6BKlHusEY
+	cC1IIXqME2ygewVU9XbKuV7V9KHZxwNZd73eqLGtTj116MqIAnVujZJve4vHvqHcRPdApXGWeZU
+	oubzT9+vW5kzn8kWvIcXVuoHKQtFFNCdLaiIA3ruInLfjpHYHMrQ/wijMrkR6ZtZNxG9MQrD1Tu
+	vhLcR4RFb7S2jC5l/UvM9wx+xG6mKdz+WgKfjuCAqzelaifGTZIK9YRkEQGLf+9vlLDY9bopvuD
+	TbcIpOrz79iabHextyll3U8bCPz4VjpZhNcdZz4z+gaTn8Yyx5PV3/qzLCdbLXKUNJyvsVfiYUC
+	CZstB0sHgfFTVaN9HeEUGA==
+X-Received: by 2002:a05:7300:ce93:b0:36c:a44c:1763 with SMTP id 5a478bee46e88-386bbfa6402mr7456394eec.32.1795645084664;
+        Wed, 25 Nov 2026 14:18:04 -0800 (PST)
+Received: from a1-free ([2603:c021:8021:f000:0:1865:8c38:18fc])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385666e99fdsm69581357eec.5.2026.11.25.14.18.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 14:18:04 -0800 (PST)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	TAKANO Mitsuhiro <takano32@gmail.com>
+Subject: [PATCH v2 1/3] docs: ABI: mlxreg-io: Drop the second shutdown_unlock entry
+Date: Wed, 25 Nov 2026 22:17:56 +0000
+Message-ID: <20261125221758.2535044-2-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261125221758.2535044-1-takano32@gmail.com>
+References: <20261125221758.2535044-1-takano32@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -80,77 +108,62 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Sat, 21 Nov 2026, Armin Wolf wrote:
+Commit 4e29dd3821df ("Documentation/ABI: Add new attribute for
+mlxreg-io sysfs interfaces") added shutdown_unlock as a new attribute,
+but sysfs-driver-mlxreg-io already described it in the October 2021
+block.  The tree ended up with two entries for the same file, and with
+two different defaults: the older one says "Default is 1", the newer
+one says "Default value is 0".
 
-> Not all devices support the keyboard backlight feature, instead they
-> will return an error when trying to read/write the backlight level.
-> 
-> Avoid registering the associated LED class device on such devices
-> by first verifying that reading of the backlight level works. For
-> this the get_kbd_backlight_level() function has to be modified to
-> stop hiding any errors coming from the WMAB call.
-> 
-> Reported-by: Carlos Javier Alvarez <daxter1992@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=222275
-> Tested-by: Carlos Javier Alvarez <daxter1992@gmail.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/lg-laptop.c | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index a784071de8b3..72955fc868af 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -641,10 +641,10 @@ static enum led_brightness get_kbd_backlight_level(struct device *dev)
->  
->  	ret = lg_wmab_get(dev, WM_KEY_LIGHT, &value);
->  	if (ret < 0)
-> -		return LED_OFF;
-> +		return ret;
->  
->  	if (FIELD_GET(KBD_LED_MAGIC_MASK, value) != KBD_LED_MAGIC)
-> -		return LED_OFF;
-> +		return -EIO;
+Keep the entry that came first, which documents the behaviour in full
+and carries the kernel version the attribute appeared in, and drop the
+later copy.
 
-Please check sashiko's complaint about missing error handling.
+Which default applies is a property of the board's CPLD, not of the
+driver: mlxreg_io_attr_show() returns the register bit as it is.
 
--- 
- i.
+Verification: get_abi.py --dir Documentation/ABI validate no longer
+reports shutdown_unlock twice.
+
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+---
+Changes in v2:
+- The documents are fixed before the checker is added, so the tree
+  does not gain warnings in the middle of the series.
+- The internal MCU protocol_version entry points at the top-level
+  attribute; v1 gave it the prefix of the removable controller's
+  group, which made it name the same file as that entry.
+- The checker keeps its warning for an entry without a file, counts
+  lines rather than occurrences, and drops an unused loop key.
+
+ Documentation/ABI/stable/sysfs-driver-mlxreg-io | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+index f59461111221..00cff8965b22 100644
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -741,18 +741,6 @@ Description:	This file, when set 1, indicates that access to protected
  
->  	if (FIELD_GET(KBD_LED_MODE_MASK, value) == KBD_LED_MODE_OFF)
->  		return LED_OFF;
-> @@ -823,6 +823,21 @@ static int lg_laptop_input_init(struct device *dev, acpi_handle handle)
->  	return 0;
->  }
->  
-> +static int lg_laptop_kbd_backlight_init(struct device *dev)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * Devices that do not support the keyboard backlight feature
-> +	 * usually return a error when trying to read the backlight level.
-> +	 */
-> +	ret = get_kbd_backlight_level(dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return devm_led_classdev_register(dev, &kbd_backlight);
-> +}
-> +
->  static acpi_status lg_laptop_address_space_write(struct device *dev, acpi_physical_address address,
->  						 size_t size, u64 value)
->  {
-> @@ -1035,7 +1050,7 @@ static int acpi_probe(struct platform_device *pdev)
->  		battery_limit_use_wmbb = 1;
->  
->  	/* LEDs are optional */
-> -	ret = devm_led_classdev_register(&pdev->dev, &kbd_backlight);
-> +	ret = lg_laptop_kbd_backlight_init(&pdev->dev);
->  	if (ret < 0)
->  		kbd_backlight_available = false;
->  	else
-> 
+ 		The file is read only.
+ 
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/shutdown_unlock
+-Date:		May 2025
+-KernelVersion:	6.16
+-Contact:	Vadim Pasternak <vadimp@nvidia.com>
+-Description:	When ASICs are getting overheated, system protection
+-		hardware mechanism enforces system reboot. After system
+-		reboot ASICs come up in locked state. To unlock ASICs,
+-		this file should be written 1
+-		Default value is 0.
+-
+-		The file is read/write.
+-
+ What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/boot_progress
+ Date:		May 2025
+ KernelVersion:	6.16
+-- 
+2.53.0
+
