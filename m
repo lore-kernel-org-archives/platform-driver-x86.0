@@ -1,105 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.229.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.120
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795596557;
-	b=baf0mUqCTH6z7fGWHS2NJCKw+knjtTyVmRYkGcSxOizZHj0Sysac3k9ArYkXiESMTiht
-	 dwYFGNoWD327AUwh4Kb3/oIbUB1eT0rdkax37sL4rJRc2B+OLqHIvvLPY2NsNUP5ygfiC
-	 IyujDv0Gc63yThPTncVUKxefdzwQHFFdJ8DVejrlb8/Rf+tz4/BYloOmIJB6NV0lDJK9U
-	 ks5bg/6EuolBFeDW6pDXJiUcQvnr90clHYh2nYYdL47dMAFXhntnsYYKCS5CZuB+i9YhR
-	 Zbx2KzYi4K/tc6JQmtqBdMs2CoveedcPz7ViqjX7693EnXse85v3GKrExlF92qATO0Q==
+	t=1795597779;
+	b=xvFwI2PecFC4X0jZ9cEOLdRISrv3JI9YstkhiPDBaiYJWp8R0kjGnfLFOKLmyiHbGPm/
+	 rrGOsLrwFaFm0hVtMqebn/2qCMr2MBdfPDcoebGmaOzFatmdOClVLuoGiJn+B5RGL+yMz
+	 362EEMmR+cpjabp3+4J6TpTxjyTYsA31ViTE81hAYn2Q81DRoIg2SeJrpa+IWurlHTXbq
+	 xkTlReBx61aCtORHq0uyGqDjWVG+IzJxOOVE/8FOEhpgYsupzkQZmBkci/QCzbOzLepdk
+	 4uEyqX8YC7NP+7uUusQ3B/EgxwRpQTG3t3znMgC5j4DZU5mThBGFe9ihK43p/HLtIJg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795596557;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795597779;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=/styZDo3HIOWYzqCGtu0zg7wLv8vADgHpzW2PCNwSlE=;
-	b=xB4wIJLkDMEhNhpDdJXIyv3T+/3y8tCzJrJNUGr2WK0cm8agurLZ3IPUDblUCSABwhRw
-	 s+qvjwAufkui5HA58ssho9vK1RjMZa+gR6XlE2LVSdi3+AXo8HYX5ahDuRQDirTfYSBVL
-	 3PRrEX5xqUVQn4Q2f3Ei9Jgdxh2Qo6xxUgg1dLPoCy/s5k7Mnty0HBTu2XF2wZAr8EfeJ
-	 U/lj1pXSeYSD6ZpTT8w+Fu7KKUyBUZCB8PPGci+mPoIMMm3IaFrr9m8Z55ZgJT+g1hpPE
-	 mjF84oDXZmMTyIub0b3S3MTfvJ9sHDDrICVu8tgnptGED4bNel5Ao4vbCg3LHL8cIFQ==
+	bh=atA20MoJCKOu8hezGD9x11s/X5t0L0tiUzUV7Xg5yA0=;
+	b=CJ9MgwhNr3vMybXNsRWYRidJIR2sj1Iew9ivsUdi+A031FRGEDTiQcF3VhZJdAxqsTBY
+	 b8/sZbpfSIlW3cxwh3BIuTdY+1Ik97VOA7H8UiD8Jn5XRiADwN2O8TE6LmU35bxLmKIvM
+	 NEzqFDg26fiaOrI27Q595wIPzmNh9AQRwinl/ktrPgZi14uHWw1iQeWyJaGYu9Hng8Uy4
+	 I1P9SHOiFmP10h516g1P1QQUX8UASbTJZ+ogKfyXRh7uytDC8omRG9GrnvJgALAwj0EsD
+	 BBZZN/KyOL9xG6FGU/9oNU9Zs6Mru7RGrklvbFovoAa195XYAW7eYEGZEb4mMm8Oj5w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Ad6RNdKv;
-	arc=none smtp.remote-ip=74.125.229.5
-Received: from mail-dy2-f5.google.com (mail-dy2-f5.google.com [74.125.229.5])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=pm.me;
+	spf=pass smtp.mailfrom=pm.me;
+	dkim=pass header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b="rQhU9a2/";
+	arc=none smtp.remote-ip=79.135.106.120
+Received: from mail-106120.protonmail.ch (mail-106120.protonmail.ch [79.135.106.120])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585D6606A332
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 08:49:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 585D6606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCCF606A31E;
+	Wed, 25 Nov 2026 09:09:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FCCF606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Ad6RNdKv
-Received: by mail-dy2-f5.google.com with SMTP id 5a478bee46e88-386a9c93b4eso2024132eec.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 00:49:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795596556; x=1796201356; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/styZDo3HIOWYzqCGtu0zg7wLv8vADgHpzW2PCNwSlE=;
-        b=Ad6RNdKv/U2VbR9/IrvjerS0c0dP/hE1gokKFykqf46KtGuaxBtytB9+Obi8CPN1f9
-         n9kCi2iKHQupuYa2EslELbR6WrQwtpi0ctOeqhmqRYxwlHA+ag2sxIzgnLW2dnAa13/M
-         +vyGW/LJ/KnNi9kYOSiEGuR61IuBZMHahQRnKDJMO5ia6OS8NkNB/SWrgdgIsuU8q5RE
-         /zBW90VgdcIsUgZcsKuyflloAH6klWqXcInafsb465xiLHWB33czfsN8um0H5kqCIeZt
-         ZUS9keDgJ72xFn9BEDUaukNqkUxSXglaL9Rbb44SQQ8m1ZkvD8bo3sbOQnhE3w9XWfwq
-         FeZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795596556; x=1796201356;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/styZDo3HIOWYzqCGtu0zg7wLv8vADgHpzW2PCNwSlE=;
-        b=O6IryMlC7N7QlxYRnQNS+s5tHyhgyCc6xxEjiAmb9Z7EaCZxcISCrDckIGYS7flqjP
-         MujPQwV0I1zQmYvHK6Wv7uSkTPXjG91DzSYLLpCOwgkiYciY+g0n8947ZquNqacw331x
-         jHr5WL79yp8UUqa/vB6fguuRIjn8eiz7RsAOmJt9Rhbwo9rs+oJXeu7mV0fnwJTiiB/k
-         I3v1DtktABffyTK6faNvpjofV/81x7UxJyCFtrkMxT06RB7GDlTxxmAt2gVOFvTVdsuy
-         4Ry3lwFe1q/pvRjnOUC9RDpAhBRhtOlEapMW8XJrvfjeA1CqOJEhU4feexR94AELPZ8X
-         KrRA==
-X-Gm-Message-State: APuU4Z8YhzGXlNHowletDxXKbWckvbQkk37b0EkTxxB08fhnht8CpHxX
-	jjm/hjvaYHFhK7d7bwdocXWr0DcVclGDvTnNbWyu1ZGSbcGtnMCMBMlD
-X-Gm-Gg: AZFdTZeWU8NoK8oaovVA+Qc21ZBrlibE+ehfd5XIpFG0z+496BvtSa3CtmNH08l8FVl
-	WtfTKhOUgToK9zmlQNffeIka/7bGm/42AYJnpNiJxRVGyHmOlaUu6e1g4iH/BCeACGh5zomuLKX
-	lS12nopZXpgVuyuT7eJAQePK5199DGmpdaHiPPBc2tmjVK1JneK6YLBfbIx8rsn2hVJRbN4v0gZ
-	OuBMYYg0+z689rmW3w0znrjnVcINqYRG4ThWSte75j0a1J2Z4hYu846RUrFsoplofIhVRsbj1lc
-	Y3BXTA897iBx7tqayjCPtMLzSunbgtix5pTuPLcgbCIfYSK7iGZuloCoGkLVdazoIhV3Fb/b7aP
-	nMkGENv/zcjxNW2Sc77BWToocWG31dxkUCquaGjBbGGIrQmyt+fz5gKDgJXW0fQbgCJ8ofYt7OC
-	vATWh5yWwyN7SHCSQLT8bnRpMn3bwe2OOdyUJ2JsZEG4SpkqnG2w1xPlPFVIfzc4pznVcdIJKVN
-	xJhZri11EmpP6JYjdMgx1apuX6sMwT6ggeEQjBr3kzENEyQiMsWtS9pq9mU+Rxcdr+IgNBW8odh
-	M0Q0dTxujpFtCaWwd0qpED1x3QXE
-X-Received: by 2002:a05:7301:923:b0:36a:1709:458 with SMTP id 5a478bee46e88-3856f859121mr19687590eec.27.1795596556422;
-        Wed, 25 Nov 2026 00:49:16 -0800 (PST)
-Received: from ThinkPad ([192.220.23.71])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386b9bdafb5sm18879252eec.9.2026.11.25.00.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 00:49:16 -0800 (PST)
-From: Qiling Zhu <kmatzkaczor244@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Rong Zhang <i@rong.moe>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Griffin Kroah-Hartman <griffin@kroah.com>,
-	linux-leds@vger.kernel.org,
-	vishnuocv@gmail.com,
-	vsankar@lenovo.com,
-	Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>
-Subject: [PATCH v4 6/6] platform/x86: thinkpad_acpi: Add a keyboard backlight auto-mode trigger
-Date: Wed, 25 Nov 2026 16:46:43 +0800
-Message-ID: <20261125084644.137506-7-kmatzkaczor244@gmail.com>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
-References: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=rQhU9a2/
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1795597776; x=1795856976;
+	bh=atA20MoJCKOu8hezGD9x11s/X5t0L0tiUzUV7Xg5yA0=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=rQhU9a2/ZrgHQcCSn7A+tDJRx7mN2T8RvxF6JMmcj9/9MflOI4cpPhTwZ6Acu8zq6
+	 zFkedFpYp5HFS0fOSoDbq5JBSOuCMygSfDtHuhcTPEwanrI7tru6tZkK7AA8LpHvg2
+	 IMy2nJU+hHe6OkUi3ID7jHfkzOthET3Q1iotYlzqHW0vaPsa2yCT4G5hr1zjudGMBR
+	 G62G5FWE1lVnZ6TcT0J28bvHCv1yfrZ5VB44eYCWFhZG2zhNYFL9lbEIJaRvEVBAoH
+	 15WB84B2Q8GAdA92PPPjQWO12pyVinAdaM+fQmcQUNdk6Gfa5I+UkNZGpZaa8gM4nm
+	 5yx4qu7AkEU7A==
+Date: Wed, 25 Nov 2026 09:09:28 +0000
+To: Daniel Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Hao Yao <hao.yao@intel.com>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bingbu Cao <bingbu.cao@amd.com>, Fernando Rimoli <fernandorimoli11@gmail.com>, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/x86: int3472: Use actual clock frequency for DSM method
+Message-ID: <20261125090921.46652-1-lsa.uz@pm.me>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: 30ca2397b51263ce57e2d4ad33e31b19f083b272
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -109,145 +61,129 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On ThinkPads that advertise the auto mode in MLCG bit 20, expose EC
-level 3 as a private LED trigger named "tpacpi-kbd-auto".  Select
-LEDS_TRIGGERS so that the trigger is available in stripped-down
-configurations.  If registering the trigger fails, register the
-keyboard backlight LED as before.
+From: Hao Yao <hao.yao@intel.com>
 
-Activating the trigger writes EC level 3 and records it in the cached
-level; whether the LED is hardware-controlled is derived from that
-cached level, so reading brightness returns -ENODATA while the trigger
-is active and the EC is in auto mode.  If the EC is already in auto
-mode when the driver loads, make the trigger the default one, to
-reflect a selection made before the driver was loaded.
+The third argument (args[2]) to the _DSM method was hardcoded to 1,
+which selects 19.2MHz. A sensor whose SSDB asks for 24MHz therefore
+runs from 19.2MHz, and everything it derives from its clock runs at
+four fifths of the expected rate.
 
-A sysfs brightness write leaves auto mode through the LED core's own
-trigger removal.  With CONFIG_LEDS_TRIGGERS_HW_CHANGED enabled, the LED
-core also switches between "none" and the trigger in response to
-Fn+Space, or to a procfs write that leaves auto mode.
+Pass the frequency from the SSDB instead, with 19.2MHz as the default.
+1 selects 19.2MHz everywhere, but the value for 24MHz depends on the
+platform. Where the frequency field is one bit wide (Tiger Lake, Jasper
+Lake, Alder Lake, Raptor Lake) it is 0, and 3 would also set the clock's
+enable bit again when the clock is turned off. From Meteor Lake on the
+field is two bits wide and it is 3; 0 and 2 leave the clock unchanged
+there, as measured with an oscilloscope.
 
-Deliberately unchanged: max_brightness stays 2.
-
-Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
+Fixes: e4543de8b6ff ("platform/x86: int3472: Evaluate device's _DSM method =
+to control imaging clock")
+Signed-off-by: Hao Yao <hao.yao@intel.com>
+[Sergey: pick the 24MHz value per platform]
+Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
 ---
- drivers/platform/x86/lenovo/Kconfig         |  1 +
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 60 +++++++++++++++++++++
- 2 files changed, 61 insertions(+)
+v3, sent by me as offered in the v2 thread, with Hao as the author:
+- The 24MHz value is chosen per platform. On a Surface Pro 9 (Alder
+  Lake) Fernando Rimoli measured that 3 gives 19.2MHz and 0 gives 24MHz
+  [1]. coreboot's camera_clock_ctl.asl has a one-bit frequency field for
+  Tiger Lake, Jasper Lake and Alder Lake (which covers Raptor Lake) and
+  a two-bit one for Meteor Lake, Panther Lake and Nova Lake.
+- The Fixes: tag and the note on 0 and 2 that Ilpo asked for.
+- v2's Reviewed-by and Acked-by tags dropped, since the code changed.
 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index 516594993..77d159a3a 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -83,6 +83,7 @@ config THINKPAD_ACPI
- 	select NVRAM
- 	select NEW_LEDS
- 	select LEDS_CLASS
-+	select LEDS_TRIGGERS
- 	select INPUT_SPARSEKMAP
- 	help
- 	  This is a driver for the IBM and Lenovo ThinkPad laptops. It adds
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index ee8f7429d..f9a835fe2 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -5222,6 +5222,27 @@ static bool kbdlight_is_supported(void)
- 	return status & BIT(9);
- }
- 
-+static struct led_hw_trigger_type kbdlight_auto_trigger_type;
+Tested on a Surface Pro 11 (Lunar Lake), with the module built from
+Ubuntu's 7.0 source, where this file is the same as in media-committers
+next. The VD55G0, whose SSDB asks for 24MHz, streams at 59.14 fps as
+its controls give, against 47.29 fps without the patch. The two 19.2MHz
+sensors are unchanged. The Alder Lake branch has not run as posted.
+
+v2: https://lore.kernel.org/all/20251208035122.2147678-1-hao.yao@intel.com/
+[1] https://lore.kernel.org/all/20261026111012.33347-1-fernandorimoli11@gma=
+il.com/
+
+Tool use, per Documentation/process/generated-content.rst (Assisted-by
+tags in commits were dropped in 7.4-rc1):
+
+* My contributions to this series were prepared with Claude Code
+  (claude-opus-5-5); work by others in it is their own.
+* This replaces any Assisted-by tags in earlier versions.
+
+ .../x86/intel/int3472/clk_and_regulator.c     | 39 ++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drive=
+rs/platform/x86/intel/int3472/clk_and_regulator.c
+index 9e052b164a1..47dc23c5184 100644
+--- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
++++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+@@ -10,6 +10,9 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/slab.h>
+=20
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
 +
-+static int kbdlight_auto_trigger_activate(struct led_classdev *led_cdev)
-+{
-+	return kbdlight_set_level_and_update(TPACPI_KBD_LIGHT_AUTO_LEVEL);
-+}
+ /*
+  * 82c0d13a-78c5-4244-9bb1-eb8b539a8d11
+  * This _DSM GUID allows controlling the sensor clk when it is not control=
+led
+@@ -19,6 +22,40 @@ static const guid_t img_clk_guid =3D
+ =09GUID_INIT(0x82c0d13a, 0x78c5, 0x4244,
+ =09=09  0x9b, 0xb1, 0xeb, 0x8b, 0x53, 0x9a, 0x8d, 0x11);
+=20
++/*
++ * The third argument to the _DSM method selects the clock frequency. 1 is
++ * 19.2MHz everywhere. 24MHz is 0 where the frequency field is one bit wid=
+e
++ * (Tiger Lake, Jasper Lake, Alder Lake, Raptor Lake) and 3 where it is tw=
+o
++ * bits wide (Meteor Lake and later).
++ */
++#define INT3472_DSM_CLK_FREQ_19M2=091
++#define INT3472_DSM_CLK_FREQ_24M=093
++#define INT3472_DSM_CLK_FREQ_24M_1BIT=090
 +
-+static bool kbdlight_auto_trigger_hw_offloaded(struct led_classdev *led_cdev)
-+{
-+	guard(mutex)(&kbdlight_mutex);
-+
-+	return kbdlight_brightness == TPACPI_KBD_LIGHT_AUTO_LEVEL;
-+}
-+
-+static struct led_trigger kbdlight_auto_trigger = {
-+	.name		= "tpacpi-kbd-auto",
-+	.trigger_type	= &kbdlight_auto_trigger_type,
-+	.activate	= kbdlight_auto_trigger_activate,
-+	.hw_offloaded	= kbdlight_auto_trigger_hw_offloaded,
++static const struct x86_cpu_id int3472_dsm_clk_freq_1bit_ids[] =3D {
++=09X86_MATCH_VFM(INTEL_TIGERLAKE_L, NULL),
++=09X86_MATCH_VFM(INTEL_TIGERLAKE, NULL),
++=09X86_MATCH_VFM(INTEL_ATOM_TREMONT_L, NULL),
++=09X86_MATCH_VFM(INTEL_ALDERLAKE, NULL),
++=09X86_MATCH_VFM(INTEL_ALDERLAKE_L, NULL),
++=09X86_MATCH_VFM(INTEL_ATOM_GRACEMONT, NULL),
++=09X86_MATCH_VFM(INTEL_RAPTORLAKE, NULL),
++=09X86_MATCH_VFM(INTEL_RAPTORLAKE_P, NULL),
++=09X86_MATCH_VFM(INTEL_RAPTORLAKE_S, NULL),
++=09{}
 +};
 +
- static int kbdlight_sysfs_set(struct led_classdev *led_cdev,
- 			enum led_brightness brightness)
- {
-@@ -5249,6 +5270,35 @@ static struct tpacpi_led_classdev tpacpi_led_kbdlight = {
- 	}
- };
- 
-+static void __init kbdlight_init_auto_trigger(void)
++static u32 skl_int3472_dsm_clk_freq(struct int3472_clock *clk)
 +{
-+	struct led_classdev *led_cdev = &tpacpi_led_kbdlight.led_classdev;
-+	int rc;
++=09if (clk->frequency !=3D 24000000)
++=09=09return INT3472_DSM_CLK_FREQ_19M2;
 +
-+	rc = devm_led_trigger_register(&tpacpi_pdev->dev, &kbdlight_auto_trigger);
-+	if (rc) {
-+		/*
-+		 * Auto-mode trigger unavailable; basic backlight
-+		 * control keeps working.
-+		 */
-+		dev_warn(&tpacpi_pdev->dev, "auto-mode trigger unavailable\n");
-+		return;
-+	}
++=09if (x86_match_cpu(int3472_dsm_clk_freq_1bit_ids))
++=09=09return INT3472_DSM_CLK_FREQ_24M_1BIT;
 +
-+	led_cdev->flags |= LED_TRIG_HW_CHANGED;
-+	led_cdev->trigger_type = &kbdlight_auto_trigger_type;
-+	led_cdev->hw_control_trigger = kbdlight_auto_trigger.name;
-+
-+	/*
-+	 * The EC does not keep the level across boots, but it may already
-+	 * be in auto mode when the driver loads: Fn+Space works at the
-+	 * BIOS or disk-encryption prompt, and while the module is
-+	 * unloaded.  Sync the initial trigger state with the EC then.
-+	 */
-+	if (kbdlight_brightness == TPACPI_KBD_LIGHT_AUTO_LEVEL)
-+		led_cdev->default_trigger = kbdlight_auto_trigger.name;
++=09return INT3472_DSM_CLK_FREQ_24M;
 +}
 +
- static int __init kbdlight_init(struct ibm_init_struct *iibm)
+ static void skl_int3472_enable_clk(struct int3472_clock *clk, int enable)
  {
- 	int rc;
-@@ -5269,6 +5319,9 @@ static int __init kbdlight_init(struct ibm_init_struct *iibm)
- 
- 	tp_features.kbdlight = 1;
- 
-+	if (tp_features.kbdlight_auto)
-+		kbdlight_init_auto_trigger();
-+
- 	rc = led_classdev_register(&tpacpi_pdev->dev,
- 				   &tpacpi_led_kbdlight.led_classdev);
- 	if (rc < 0) {
-@@ -5289,6 +5342,7 @@ static void kbdlight_exit(void)
- static void kbdlight_notify_level(int level)
- {
- 	struct led_classdev *led_cdev = &tpacpi_led_kbdlight.led_classdev;
-+	bool was_auto, is_auto;
- 
- 	lockdep_assert_held(&kbdlight_mutex);
- 
-@@ -5299,6 +5353,12 @@ static void kbdlight_notify_level(int level)
- 	if (level == kbdlight_brightness)
- 		return;
- 
-+	was_auto = kbdlight_brightness == TPACPI_KBD_LIGHT_AUTO_LEVEL;
-+	is_auto = level == TPACPI_KBD_LIGHT_AUTO_LEVEL;
-+
-+	if (is_auto != was_auto && led_cdev->hw_control_trigger)
-+		led_trigger_notify_hw_control_changed(led_cdev, is_auto);
-+
- 	kbdlight_brightness = level;
- 	led_classdev_notify_brightness_hw_changed(led_cdev, kbdlight_level_to_brightness(level));
- }
--- 
-2.56.1
+ =09struct int3472_discrete_device *int3472 =3D to_int3472_device(clk);
+@@ -35,7 +72,7 @@ static void skl_int3472_enable_clk(struct int3472_clock *=
+clk, int enable)
+ =09args[1].integer.type =3D ACPI_TYPE_INTEGER;
+ =09args[1].integer.value =3D enable;
+ =09args[2].integer.type =3D ACPI_TYPE_INTEGER;
+-=09args[2].integer.value =3D 1;
++=09args[2].integer.value =3D skl_int3472_dsm_clk_freq(clk);
+=20
+ =09argv4.type =3D ACPI_TYPE_PACKAGE;
+ =09argv4.package.count =3D 3;
+--=20
+2.54.0
+
 
