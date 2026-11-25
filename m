@@ -1,88 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795648301;
-	b=mn+fonn2LlyYlC2QW2nkJhuIX4+4fwZq2W8rrhVfx5n9uLYB/riOuLUnI5R2qkHOMD5L
-	 8odIrSJ0zwKpQrvQASrmrs/2pKMmuGb/akyWw7SHrNrzCcCUowfg+64/wjNcwlym9tJMN
-	 R+TXN6nvsuMX37y6xgMoRiOFOcti1DR73IEQyC5poZ5Wr+9h0ipLbY07TCLYxm0sCwV/T
-	 avhUR8WzEX0znl9+iGGgrnm9iPtNly4wwgmZZamDez8XEM/go6j0auGy3JzzT8Za2kIUA
-	 y/mfeIc80IkF/sXy5kpgYTmXtfRfgWCR1Wy36chWMteddHzU3wUjPF/j1fdkKyHMGig==
+	t=1795648303;
+	b=JJR2ACLgoriwVscJiio6bGeKHqSM91UzVfWXcEXhEQs7Q9HIoDr6q4+415HUiNPiGodt
+	 5jAm4lPVd4d6+HpDUlLqG8efKmJcZa9vAdwl6Nxc5gvUfpVXdlQui65jUpAFtWmkBQxDT
+	 AfkJnMpSukMHT7O9kDUGrJ5BXkvdfudZ5Z3W83KJP2Fi8QpvDpq/qUoadHfHyDyML05QN
+	 NEAj17iwoUCavPcKK04u1I720lSjVwJYeUuSg9T8/5GXMn0gO7dxZ/p7C4L8+GA1S7VJm
+	 QG3zDvb7UodV120qI/DA3gonB5cVietFAlIEsKS3q2+862zmu4WO6EMts0Irg8ISEeQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795648301;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795648303;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=FYzpa+fF/4UHchQ/95yGL3VchrdjPBxjmxj9HUS14RM=;
-	b=2qbTUDtThnuyTbWcNG2JzwxiIbAKtWcWBa31OjJ+ggqzxhpKZgYENoHnoGROagZLzUBK
-	 YdOcb5yUYL7WCPApsu4q7d8Lxr0oF+exTHCL5HJNlGRdtgr6nDYcP4virP6E3to9dSjnA
-	 qpJ5rNltt+j+YEBqhwX+Z7dMBBacLmzHySV9KqtSHYbtL+txb4OiS1p4t6ISAVH+oPzm4
-	 3YhtEOt5l8aRSvgIn0JQDMtCkX720+xvkLNAK3u1H1nlkGrR7/bR7MSvEmZ6quxDehqOG
-	 +BD0tSHGy1RYb1zxyr7VoqfvjGVToTBhfwG6zW4LuIyB1wzvZo0co2BAvADUB3mZWMg==
+	bh=QpYNJ549fdADTammIXtO9Dh/diEXsHFrpOZSN7ztXJM=;
+	b=XfvHLyzlebG2+SA22xh9Rn1wmbhrmCA+GQdOHBdTOrc5Rh1uKVR/HDOFKozu0sbTgti6
+	 2D9AsLugxLLuiKXsdn2OgFHlmwZGa+9fxnGQfZEGcavAnipWyr+yLzyhBFBmkZn8OQrHO
+	 gNWEOXdy73tpOJWECDiuRTPKle6gni1/Ct93WEs3xB7+uzgiVw5blgrSrvd8ghBEy8XkJ
+	 3+24n8e6v+OIsvzF3ERvktvN8oD/PUPr87p5Eq7NQ/VDiBGQV7QKCOKh/VUwV1cyLSx0j
+	 X6dyoIm0NdFQ7KE12NDa3eIrwRIL72+hi8C2oCCUvWfp5h5jRtFwCNhPWVOCaT43b8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nE3TJw5O;
-	arc=none smtp.remote-ip=74.125.82.169
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MKdcU70H;
+	arc=none smtp.remote-ip=74.125.82.182
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150A2606A32D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:11:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 150A2606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10CE606A684
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:11:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A10CE606A684
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nE3TJw5O
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-33bf40b0c8bso13508326eec.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:11:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MKdcU70H
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-385c497bf94so4051803eec.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:11:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795648300; x=1796253100; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795648302; x=1796253102; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=FYzpa+fF/4UHchQ/95yGL3VchrdjPBxjmxj9HUS14RM=;
-        b=nE3TJw5ODewB5h+10ldTDNc+wgEeYw58B6z1N1YSKhFXm85tAGn15diJM4h4iTXvjD
-         YMRWiehLZdPNJI1/F2jlxe38pYY8oPCAZVFAU/mF+IRoTt6+Q+WHadcXJX79lwKL5RtZ
-         QDRLcBNT9pc3ZgXFwFytOWzaAWVIlUpuv+AmDv6zryeE+H4o0U9RCr0vTrAtN+8JAO8y
-         P3P6wXoZ/euqgyUPX1Cshuh2ROGs81KkG4ivPmEyMnr/fxpuuiCPQdA1XReZXRNV58pv
-         tOYdxgUt186oaA5Vv6PjDeafk0paF3+EKcetRU+hAx7e87PE3qi4iOQpPzGllIfDi2uA
-         GdHA==
+        bh=QpYNJ549fdADTammIXtO9Dh/diEXsHFrpOZSN7ztXJM=;
+        b=MKdcU70Hbeyrbz4m6ifJxxgfGyivclLBcaeiSI/5fg4Rz8alar9D0opUBIUXxmXrAm
+         wECPBC30/ZEPFQj2N/nYXvMToTXNJU7gRkCtN8c8HfPj2PdDkMeXMy37LJC6kKuL4sHE
+         /Wp0NXWhn9U2FMyS1SmTlXydf/YJs2d22AcE9+cQ9HSjG/VzaB8tOZ50ouVKwDx55S9h
+         jg1BRArw7hzsstUUT9yJszG9PAjcbMvs0cC+5xzX7/w2EEcRMEX/30TKCABa41C+u16K
+         TA+tx9wriIv0bO7zOSVnMnYQuOO+2gniQ6SAWd8dXcgUxXsyel3TbI72DqsGLQOSZOZU
+         ++gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795648300; x=1796253100;
+        d=1e100.net; s=20260707; t=1795648302; x=1796253102;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=FYzpa+fF/4UHchQ/95yGL3VchrdjPBxjmxj9HUS14RM=;
-        b=LyYRxilfV059+9YKUfoRbuNsO4rcMfxcW3ZY/YU5yH/C5FhxR2EZLe/jYv0Brdm5HL
-         1q63/Hpid5dZeCyejbYqLUhS2pn6SCp0kuSzRL/7j8FDpE3KLv8cbjkEBPIxwte8kMc2
-         NUTHUJgEV3dmFNK4LqCHjo+HR7sU0ZZQXrCaMa0DTc/2FxwaJV1jVOxW9+Ps8lkcwyb0
-         E2LpLSKU8zvaiUyrj3THFX9COPS6qRrEjFooO/aNUZzSoaZkTp+FSGO4Rv0+YKREeRZX
-         eF2dHbwpekZdUfcZgngxCgclMtUq+pIIjZ/tZCjP1Czm6IUecGgyVO7Bcu820xtC4UQD
-         9yOQ==
-X-Gm-Message-State: APuU4Z/A7Sbe3x6PQ+YGKlnAyTyKIu+O8Co222+P6n3QFyECuqDFDhuO
-	n3Nj/lQvbXQFZlRuUxpBJiHSq/uAT6QZMNiTY/INw2z9qaqQ5cRUVQWF
-X-Gm-Gg: AZFdTZeWcshnFgA59ddrErHU9WpVVoV9aAp4SjKX+NyBYW3LECJvLRGqH6Ts/22Bm78
-	4RjXLKRiG7uUKBhLi2PXK34usXBDiNSmMByVjN9Pl9f0OeVrLNZb1y0KSNpLuOTq6vbVwOnUGfm
-	0Rln4NO+1g/z5hyJ+93AIYj6vmwRDIgeJoS1f4/oWPMA/JMkwgJ5uNuEoD63AbyOaBIqE0pOr5t
-	WzFBXWImclVRk3SeA3XPWlEmRZziUtpGlHEjnouaa04kpEVAhY104KHM2DJuNF1nIO6ubv2pjs+
-	cIXm/2TFcwXGlJWuGddzL8lF0CAY97VTrRK51mt30x+JP1MXasNOyyJnqUKbVRj8is9SJxFtY0F
-	6QUijbYAPXrUJQsr4E/ft8KTXBBxiCwPkl1fV0pFXNJC/PY/U25yDfuc98Z8luzHHI3pxyyw/M4
-	kJHVQLVZV6zirsqTsQVC75WfAGpua4BdsDPFgaa6mC962UtiOUYyj0pGIX3+KrU1yCk4jhnX6NP
-	vsfuNFrSko6LJeh+tEErZXD4g1l69caJSIk8818u5LVbj8+BcaF1uUgVOBuYpzOo2MFSVZzeGQC
-	hNmVGKLCtTILgXOoo3GSwV6/XZKV/vvMimk4X32/iT43UAPwf9ZoWSgKeBpiaJF0lwrHQIEHfUk
-	73kFxdAVaQMhX2fMh+Q==
-X-Received: by 2002:a05:693c:87d2:10b0:386:b5a8:1c5b with SMTP id 5a478bee46e88-386b5a82496mr9851480eec.18.1795648300088;
-        Wed, 25 Nov 2026 15:11:40 -0800 (PST)
+        bh=QpYNJ549fdADTammIXtO9Dh/diEXsHFrpOZSN7ztXJM=;
+        b=EdCpQhwFNfGK11PXcH5DPl/LMocV6EOeM695m1Ag4pQRTPxFwY7PZo7M7Qx0019a+7
+         sc2P+7FvqLeIsTFbNcyYxdwgzmFjnhnFKtjtorIpovruDtjbOH8oB+tQKTLsdBZd/2oZ
+         ELyZPpVYzBLjSTr4tlyIluKXfW4t1bgH9fXwNB1rZ3Gf2XjtS7VprkxcoV6uyb4DP3p1
+         7xzwaJjagF+wLGdRSXTGk5bqRdDLLgdFPaa+x7BWVM1qy424EGGD0WrwyQTg4nfPqXhO
+         8bI2AeZumy00LHZJAANQ08MFS5MvAftXKUkj6fcraVdEn6lqUinAx7yDB+R8hoM4Q3z2
+         rtHw==
+X-Gm-Message-State: APuU4Z+yb4elLkgxt0AbZS0VtylYb2lPLIHKhjxtZ3NqV5F64rhqv7Z2
+	GW2gv4tVDqP0W/wZB7e9TgZ4xET8qpZKimCHlVXpSKTEX7vD6KDv3qk9
+X-Gm-Gg: AZFdTZcz0/2VCuQxBNegV9tzKYUfSnN3B+8cuAo6uS45jhLN52kVeKT3dat19UAG4P8
+	zgJtZbpkLiotmmTuZ/NFTxyaIuoadna5q6jCSVVpvV0MiBcmRikErIqlN0u0cwsrc7dRpOruh0F
+	v8t/6RheGMIVHokTY+rZjYc3tj/Xi8ri9lfTj0G4h06QHoAb1FprhXLsayRXKAWVZIMpVa4ei+D
+	7JVUsUAVUpZoP/n93MiuFdasSVmj+IkISetlGt2arTx1Zf6ESmMRIVW5EBrWE9r2no7ZJ1S/vQJ
+	OJ53ZPXKFCmMXjN4Yk5BdDMwbms1skQOTtT89PXy71oed1eiGXFf1bZFQAcJtbwenEFEirvoe8T
+	Tp2Dm8H7G+5xMj9HrZx6oR7syFBXu4y4LJogDx9moRF/GaL2+loiOBhe6y4hEHc5cT7R0HGelEC
+	q4Y7mUKcyV2keRLCYwgzuzYW4jLeRN+sh9iFUUnFU1xiJgHR+7SdZCfc/y/IbV7CEhsMqdwbFvi
+	JGhiNwzZFNFtgqPlPQKPr3xCcNRwgQetYZQA8lZGHAJCtLi26bffPbesaZ5k3h+RiK/sw7vhXf7
+	HPe3Lb72bK8xqdju+PAGXLyN4yVu+viJXpxP9Mjc/hPw4dCoxeOlVjiVPWTouWet2uHxkdjyJSA
+	gwk4h4pNpmlmtptMrJA==
+X-Received: by 2002:a05:7300:c00f:10b0:384:bc32:fe6b with SMTP id 5a478bee46e88-3856e63b194mr23394607eec.13.1795648301528;
+        Wed, 25 Nov 2026 15:11:41 -0800 (PST)
 Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:f528:8797:fe51:9f7e])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567cafec4sm64430145eec.26.2026.11.25.15.11.38
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567cafec4sm64430145eec.26.2026.11.25.15.11.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 15:11:39 -0800 (PST)
+        Wed, 25 Nov 2026 15:11:40 -0800 (PST)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Wed, 25 Nov 2026 15:11:16 -0800
-Subject: [PATCH 3/8] platform/x86: thinkpad_acpi: simplify hotkey
- open/close and poll setup
+Date: Wed, 25 Nov 2026 15:11:17 -0800
+Subject: [PATCH 4/8] platform/x86: thinkpad_acpi: update polling state in
+ hotkey_user_mask_set()
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -94,7 +94,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261125-thinkpad-acpi-hotkey-poll-v1-3-6dee57519c2e@gmail.com>
+Message-Id: <20261125-thinkpad-acpi-hotkey-poll-v1-4-6dee57519c2e@gmail.com>
 References: <20261125-thinkpad-acpi-hotkey-poll-v1-0-6dee57519c2e@gmail.com>
 In-Reply-To: <20261125-thinkpad-acpi-hotkey-poll-v1-0-6dee57519c2e@gmail.com>
 To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
@@ -106,144 +106,45 @@ Cc: platform-driver-x86@vger.kernel.org,
  ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.17-dev
 
-Since commit 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver
-initialization to tpacpi_pdriver's probe."), tpacpi_subdrivers_release()
-is registered via devm_add_action_or_reset() before tpacpi_inputdev is
-registered. Because devres resources are unwound in reverse order,
-tpacpi_inputdev is always unregistered (closing any open handles and
-preventing new opens) before hotkey_exit() is called. Combined with
-hotkey_kthread() no longer exiting early on TPACPI_LIFE_EXITING, the
-lifecycle guards in the input callbacks are unnecessary.
+hotkey_user_mask_set() is called from both hotkey_mask_store() (sysfs)
+and hotkey_write() (/proc/acpi/ibm/hotkey), but only hotkey_mask_store()
+called hotkey_poll_setup(true) afterwards. As a result, updating the
+hotkey mask through /proc/acpi/ibm/hotkey did not start or stop the
+NVRAM polling thread to match the new mask.
 
-Drop the obsolete tpacpi_lifecycle checks and BUG() from
-hotkey_inputdev_open() and hotkey_inputdev_close(), as well as the
-redundant driver mask check in hotkey_inputdev_close() (which
-hotkey_poll_setup() already evaluates).
-
-Also call hotkey_poll_setup() directly inside the existing hotkey_mutex
-critical sections in hotkey_init() and hotkey_resume(), and remove the
-now-unused hotkey_poll_setup_safe() wrapper.
+Move the hotkey_poll_setup(true) call into hotkey_user_mask_set(),
+matching tpacpi_hotkey_driver_mask_set(), and drop the redundant #ifdef
+guard from hotkey_mask_store().
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 52 +++++++++--------------------
- 1 file changed, 15 insertions(+), 37 deletions(-)
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 659a2c5d1982..e5f78107bd1a 100644
+index e5f78107bd1a..7a82a9014a3e 100644
 --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
 +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -2546,12 +2546,6 @@ static void hotkey_poll_setup(const bool may_warn)
- 	}
- }
+@@ -2137,6 +2137,8 @@ static int hotkey_user_mask_set(const u32 mask)
+ 	/* Enable the available bits in hotkey_user_mask */
+ 	hotkey_user_mask = mask & (hotkey_acpi_mask | hotkey_source_mask);
  
--static void hotkey_poll_setup_safe(const bool may_warn)
--{
--	guard(mutex)(&hotkey_mutex);
--	hotkey_poll_setup(may_warn);
--}
--
- static void hotkey_poll_set_freq(unsigned int freq)
- {
- 	lockdep_assert_held(&hotkey_mutex);
-@@ -2568,10 +2562,6 @@ static void hotkey_poll_setup(const bool __unused)
- {
- }
- 
--static void hotkey_poll_setup_safe(const bool __unused)
--{
--}
--
- static void hotkey_poll_stop_sync(void)
- {
- }
-@@ -2579,21 +2569,12 @@ static void hotkey_poll_stop_sync(void)
- 
- static int hotkey_inputdev_open(struct input_dev *dev)
- {
--	switch (tpacpi_lifecycle) {
--	case TPACPI_LIFE_INIT:
--	case TPACPI_LIFE_RUNNING:
--		scoped_guard(mutex, &hotkey_mutex) {
--			hotkey_input_enabled = true;
--			hotkey_poll_setup(false);
--		}
--		return 0;
--	case TPACPI_LIFE_EXITING:
--		return -EBUSY;
--	}
-+	guard(mutex)(&hotkey_mutex);
++	hotkey_poll_setup(true);
 +
-+	hotkey_input_enabled = true;
-+	hotkey_poll_setup(false);
- 
--	/* Should only happen if tpacpi_lifecycle is corrupt */
--	BUG();
--	return -EBUSY;
-+	return 0;
+ 	return rc;
  }
  
- static void hotkey_inputdev_close(struct input_dev *dev)
-@@ -2601,11 +2582,7 @@ static void hotkey_inputdev_close(struct input_dev *dev)
- 	guard(mutex)(&hotkey_mutex);
+@@ -2647,10 +2649,6 @@ static ssize_t hotkey_mask_store(struct device *dev,
  
- 	hotkey_input_enabled = false;
+ 	res = hotkey_user_mask_set(t);
+ 
+-#ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+-	hotkey_poll_setup(true);
+-#endif
 -
--	/* disable hotkey polling when possible */
--	if (tpacpi_lifecycle != TPACPI_LIFE_EXITING &&
--	    !(hotkey_source_mask & hotkey_driver_mask))
--		hotkey_poll_setup(false);
-+	hotkey_poll_setup(false);
- }
+ 	tpacpi_disclose_usertask("hotkey_mask", "set to 0x%08lx\n", t);
  
- /* sysfs hotkey enable ------------------------------------------------- */
-@@ -3571,22 +3548,23 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		res = hotkey_mask_set(((hotkey_all_mask & ~hotkey_reserved_mask)
- 				       | hotkey_driver_mask)
- 				      & ~hotkey_source_mask);
-+		if (!res) {
-+			hotkey_user_mask = (hotkey_acpi_mask | hotkey_source_mask)
-+						& ~hotkey_reserved_mask;
-+			vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
-+				    "initial masks: user=0x%08x, fw=0x%08x, poll=0x%08x\n",
-+				    hotkey_user_mask, hotkey_acpi_mask, hotkey_source_mask);
-+			hotkey_poll_setup(true);
-+		}
- 	}
- 	if (res) {
- 		hotkey_exit();
- 		return res;
- 	}
--	hotkey_user_mask = (hotkey_acpi_mask | hotkey_source_mask)
--				& ~hotkey_reserved_mask;
--	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
--		"initial masks: user=0x%08x, fw=0x%08x, poll=0x%08x\n",
--		hotkey_user_mask, hotkey_acpi_mask, hotkey_source_mask);
- 
- 	tpacpi_inputdev->open = &hotkey_inputdev_open;
- 	tpacpi_inputdev->close = &hotkey_inputdev_close;
- 
--	hotkey_poll_setup_safe(true);
--
- 	/* Enable TrackPoint doubletap event reporting by default. */
- 	tp_features.trackpoint_doubletap_enable = 1;
- 
-@@ -4024,6 +4002,7 @@ static void hotkey_resume(void)
- 		if (hotkey_status_set(true) < 0 ||
- 		    hotkey_mask_set(hotkey_acpi_mask) < 0)
- 			pr_err("error while attempting to reset the event firmware interface\n");
-+		hotkey_poll_setup(false);
- 	}
- 
- 	tpacpi_send_radiosw_update();
-@@ -4033,7 +4012,6 @@ static void hotkey_resume(void)
- 	keyboard_attached_on_screen_notify_change();
- 	hotkey_wakeup_reason_notify_change();
- 	hotkey_wakeup_hotunplug_complete_notify_change();
--	hotkey_poll_setup_safe(false);
- 
- 	/* restore previous mode of adaptive keyboard of X1 Carbon */
- 	if (tp_features.has_adaptive_kbd) {
+ 	return (res) ? res : count;
 
 -- 
 2.56.1.839.g22a8290db9-goog
