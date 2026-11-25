@@ -1,77 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795649296;
-	b=WFsNOEBAevsIblL5Y0qftljF5C6ziDT3whUylLA4+w2kfmg9phK2znIEnhzlrK3nZou0
-	 1Jf7UGXe2Ti3jb9QiXL83nqYoH7FyuEsHimCstzBBZmtvpjk+V/z3E+IJM4mYJOyZNajg
-	 tSjvatNRy//OlLKvEVBUul66mmc1uEs+M0vJ873mML0OZZFMUHmF8SX+wlwKN990HmCsR
-	 WxhME7EeyeFmbyRNh4hvnpqvgz50sO+TTO3suRg+FC5yPERuqUd7BDsU1xpt9oFFVSr+g
-	 ZyEjskvx1IVMuGO1EqabZUEAVwHcKLeT3HhUsXvlOfdehuA3u8v8uDAUQOPsM+qpbUA==
+	t=1795649303;
+	b=IB9qeWK3lk86k3c+VXoVBNkqxuzNHx7755wE/OeqLBLwn6Sb5DYZeWOZ/PJH5phpjEUA
+	 sN3gIg0t+qm2v7+TPxbpZZm/itv4CWmsUe/fjhZXo3zuJ/3nIP24J1LTNDcThohHAoIaD
+	 6LDGu8e7ZpPhCLgOG/JERv645IHrk3Gy9RMaSEnuZ6pDyCCinyb49SCZPhxySTtBl5DlT
+	 pQxx6Ecyki50/HBR2KITrhdO/rf/xJ/vsYJ9Fsj4qB+xj5RTbj1Zelhuk+5vPyuOBbcYT
+	 cDwrlx2M6YxkeAlQeygznQNQNli8P45MTQvauHvNQnGLj1MoQ2EJ0XX7oTCk7ihoRhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795649296;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795649303;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
 	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=YZKNPz9PG3QrKLxSqkizeV9QLKpF7n0r7auD7Pqs79w=;
-	b=o84gBEy4O/6x/N0rlzodzkg8oEKsfz7QD0RddVTepi2ppK92TqzLJ4j6CQAeqpl/bPes
-	 41i3ReRdpCg4WmLmEKtzUCMFADj2O9X27+1A3wdazvB54UJAQr5gvHqwZ5a24yjcVcg+P
-	 iTaM1FSjHLGxsIiO5acmaYTp8W17L8H5Yb5+X/aKziWCqD89bxDnS5Sf3V9qx8kJyDGWs
-	 UKc2yitUQAZ5cwVCSYPtah9b7XEACQAE4SYxwGzgE9vxPDS2FK0wDHjgsKOZfhMrfDGxO
-	 sCnzRIEL4lu8pdx8QwV4Ml3FwXuv4YCgdaXrlGW0jKRznvQJX2PsMbOOsRl7t3yMwpw==
+	bh=WEzyNmdo9KVVo6P7hVY3A3Nk1m2HIc3texOdrqPC9h0=;
+	b=zvWxmVvDs+4g39FMARXkVo8QEZsS+YgdhyRzcdernE+plUWTOCVNJn6t5PRIsQWe2G/Z
+	 byrc5wvHahSKxXKvSAfHnJKoyurmkwbjCYAJZ1OHQhgKvka6bWWp2uyIho6zVjW4LJLCU
+	 CdEMPQ0awMAfdlHWsOzBAh9y8Vsku96Mh85imosr0wnhx4w9g+2L1WzxgSB1B4LZciWwP
+	 GnuXBOssB9urC8z/ZwptcjWlSqic+DQMXrhZFGtWdZYKRBN2Fb9reiNpmYg7OfCILRa1+
+	 2pvnlXf/ll6bLj36vNFKEayUMQIou3vsPyolaXzIjFqPcjIdjrVcGLG/slCmPXO/rJg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ElpfnpdH;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ivcniLXM;
 	arc=none smtp.remote-ip=192.198.163.17
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6D5606A321;
-	Wed, 25 Nov 2026 23:28:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BB6D5606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9D606A331
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:28:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5AC9D606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ElpfnpdH
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ivcniLXM
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795649296; x=1827185296;
+  t=1795649304; x=1827185304;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ZoYqhiSJo7Aiz5L1iPTzKO6TEVFUUZQnz1R2hmjXZOU=;
-  b=ElpfnpdHc9DJgwc+sC5XPLz8VF+7TR17sL9Os7Eql+JvSHreabNhFHj1
-   mkKOzfRb1K3ucfw7yaDgMqnYUCUFKLwFY8ih9SUwXAT3yyUntQM39CnVQ
-   H7Zm40Q6L9bfVMIm/sfWEknvpFKhXen9/1IS9hBD1ufGMVuW9glsykK+j
-   AlXJ7Z/6fOE3MAo+goF0ZeUqfkD+sBSiW1NI3aIcC1h++04O/TZjb4wDR
-   Bx0Etbhc//qCpbyz6tHPwCOaHfahfZUXtqnrY1BOL/2sjq/Wv2ztwA67C
-   Qt1pt6xueDyjmkSo2pRBiD8BQR8ze7jTimzSzy5EpB3LV+CL2jELkYrX+
-   Q==;
-X-CSE-ConnectionGUID: 6EmV7Pr3Tn6H5yTeDK1/0g==
-X-CSE-MsgGUID: efSV4NDXRsWxd4AnsySR/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4539575"
+  bh=rpbWtkHJ/KqR5a1bZORP0S+f3x4andCkmbluOJIZzxs=;
+  b=ivcniLXMu/zGBSCqSGr34ArYEsU8n5wuKCtt0yHGlOai9RQdjCoA2yjN
+   HnRoNOnszTTOpQ8Cqlvv2q8u3ggOCebJlmuOwi57fExDbLACRH3voQpTy
+   W/sm4/goLiBzvLfwVlbJewrSW5QiyF7kyJuiGx0f34bWIXLYKdpj930kK
+   jX4KMVGIsaPoHPp9K8fZIoyaqrompzx2EHv3WlXdizaLIiMX7tcp1znej
+   oiqN1pm4CEK1TRWhZJnNrbyPLr8LSfGJrrIijE2NhDcrEYTabGoUjawNs
+   BKSnb60Zj/avm/13HGMc7e1GcFgx+1ViGm9ZjqKIPGosD8KSGZnpG9E9t
+   w==;
+X-CSE-ConnectionGUID: uwmYaiV0Q4aS3ToxY5eVJw==
+X-CSE-MsgGUID: h5ZlumenS2yuBmeuMwISPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4539588"
 X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="4539575"
+   d="scan'208";a="4539588"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:16 -0800
-X-CSE-ConnectionGUID: ySWwS8pXRKyt5Bv96gY4qQ==
-X-CSE-MsgGUID: 9bpLFjIuQeekO9GEdUlceQ==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:23 -0800
+X-CSE-ConnectionGUID: ggjWknxOTTip5wsf0v/mHQ==
+X-CSE-MsgGUID: 4W55myQJRfaW/daHOHF1uA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="11869117"
+   d="scan'208";a="11869144"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.96])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:13 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:20 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Sebastian Reichel <sre@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Abel Vesa <abel.vesa@oss.qualcomm.com>
-Cc: platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20261118-platform-arm64-t14s-ec-irq-suspended-v1-1-635eb3e7325e@oss.qualcomm.com>
-References: <20261118-platform-arm64-t14s-ec-irq-suspended-v1-1-635eb3e7325e@oss.qualcomm.com>
-Subject: Re: [PATCH] platform: arm64: lenovo-thinkpad-t14s: Keep the
- interrupt off while suspended
-Message-Id: <179564928768.9828.8032613501238646797.b4-ty@b4>
-Date: Thu, 26 Nov 2026 01:28:07 +0200
+To: platform-driver-x86@vger.kernel.org, Jeff Hagadorn <jeff@aletheia.io>
+Cc: Antheas Kapenekakis <lkml@antheas.dev>, 
+ Derek John Clark <derekjohn.clark@gmail.com>, 
+ =?utf-8?q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20261118052557.143089-1-jeff@aletheia.io>
+References: <20261118052557.143089-1-jeff@aletheia.io>
+Subject: Re: [PATCH] platform/x86: oxpec: Use the APEX charge registers on
+ X2 Mini Pro
+Message-Id: <179564929546.9828.13919431875495486305.b4-ty@b4>
+Date: Thu, 26 Nov 2026 01:28:15 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,18 +86,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 18 Nov 2026 17:39:25 +0200, Abel Vesa wrote:
+On Tue, 17 Nov 2026 21:25:57 -0800, Jeff Hagadorn wrote:
 
-> The interrupt handler reads the event from the EC over I2C. Nothing
-> keeps it from running while the system is suspending or resuming, when
-> the I2C controller cannot be used.
-> 
-> On resume the interrupts are enabled again after the noirq phase, while
-> runtime PM of the I2C controller stays disabled until its early resume.
-> An EC interrupt that is pending by then fails, and so does every further
-> one until the controller is back. On the ThinkPad T14s Gen 7 that showed
-> up as more than a thousand of these in a few milliseconds when resuming
-> from hibernation:
+> The OneXPlayer X2 Mini Pro was added as oxp_fly because it ships the
+> same system board as the OneXPlayer APEX, which was oxp_fly at the time.
+> Commit 0ccdf9a1381c ("platform/x86: oxpec: Fix Apex charge limit
+> control") then gave the APEX its own board type, because its EC keeps
+> the charge limit and charge bypass at 0xE5/0xE6 rather than 0xA3/0xA4.
+> The X2 Mini Pro's EC does the same: values written to 0xA3/0xA4 read
+> back, but have no effect on charging, so the charge limit and
+> charge_behaviour are not enforced.
 > 
 > [...]
 
@@ -111,8 +110,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform: arm64: lenovo-thinkpad-t14s: Keep the interrupt off while suspended
-      commit: e5340c0623fb9cd699fbc095c5ef5976286c8134
+[1/1] platform/x86: oxpec: Use the APEX charge registers on X2 Mini Pro
+      commit: d30cf7b16234df677c264b19edc8278a518b7a09
 
 --
  i.
