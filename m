@@ -1,99 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795629810;
-	b=zC7lYAla33NkGNJ1mOBfFln++lujLvJ7nb/ZzlcpkuTyhlDfEbaWvhPfqlmHnUTrxE9X
-	 e3H4aDgd50dXMnL6zIyjkxqzr/j4abc/BefdQ7S3VWdLxyhpdQkEaQWi+OwP/sl23n8St
-	 FRoVpc8hwt8O/Mp4FNTaoSOqKsma7iNoljUKiF3SY2IWxIj2wKDyeK/AquSZkjmqzC7OO
-	 5PYRv8mVEzM4AWJ45cU0LlLKdur89/02LP+Uo2J46SruzrVP8fUadPHw9gW02thYZpg+r
-	 QBaKYB4ItlG0zcaatuvbjuQ0hA/3LNuouNCEayrvrt4VkS6tV/VgyDeXw6rkrPv26pQ==
+	t=1795630144;
+	b=H0EQqf162gyNaO0q7wd1+lSrJp4Rrxu74Xo4PCfVRC/0yYajwA6uUb4SZYKAegADEHGh
+	 DFVEiskvtJMdlys3jmjNLRt8s5nNASKMUkRlC63NS2CjLBI+2DmNv/x8V3Prif/l79yTX
+	 vrJmGBwv9k41qkJSFwdyF6EyFun+0zzZ87QoBjQ8eDsg4j4S/toqprIRUbCEixKiimWW9
+	 E8+NFZE2zk1jhSIWZ2apQNFlwoxpcymNTsuvm+IoXlchPu04d/byGbyKzc/cGLILaNdh9
+	 ZPvJuPtfTRjlThd29XuOQ9eguOFvRJ9iVBRXWQbpSvULgmtjC8PIgeUs/kYFfxPGlUg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795629810;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
-	b=ZyE3aCBksK+paM1+ZsUTZ6qrmalRfAF6J58gRKVdH5VN3HnY3QfSHRo7XRJu1fdJk5ej
-	 HbPL+RKahwXcjBdpZzeWwmKSd+MZ639JTNYl70YgR4YRU3y1YeyRPgWyUzeDDlfyMXxcm
-	 0NbDl7gOAWOlL6WrN/LW6jk/VRN81ZoeHk44ynSuoOLZ0PrO6WmlYTEzvIUzuYA1HTwW8
-	 /cgbDT6l83PqE8l3+Q8zmTnxtSvUSZQTXwxdMed2GxHJSvLoGoao+3bNngFJ7oi2zv1Xq
-	 JTXg6tD5Gy3xenP0U/CtIz8gRLDxN/xhctGhSeNAZqWyz4gGtrgv3GdKQTaapfV1cjQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795630144;
+	h=DMARC-Filter:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-ZohoMailClient;
+	bh=W3UTAwZ6fmN3bnxYi+Rd1BmsmeXOgoLChUG1cnYvgGA=;
+	b=QxLCQtMUqFra9CWG38vYc4W+CWxZuzlASvJmk50QpeKuA9NKNEnrF4TPUSAzSb5rkmZ1
+	 kPC0jxhvO0OmB1qCSxOm78+iLjb09c4wrr0ma+tifqdAC6dSUTronBVhx+2ElIinx7Rjp
+	 /zK5RDrZ5sZd41UX9HHtTw1or9z8BRHcmSca/3OeONWv7A84LDjmJl3P8217gAUKVKW29
+	 f9xgl1ewDYJzOI0S8qYJLXXI53jrmEVDhR81NqtrYnEVoRQkA9oefJIpzwri7g178QvtR
+	 LDgWbdEXmeN2vt1h90z5WenfxvH6OPALDhmPDXYwavep7+RSwahRD2Q6XUD7kHgzWSA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Utu5jKWE;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=ixiWA+ex;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
+Received: from sender6-pp-f112.zoho.com (sender6-pp-f112.zoho.com [165.173.180.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AC9606A331
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 18:03:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24AC9606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77EC606A330;
+	Wed, 25 Nov 2026 18:09:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A77EC606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Utu5jKWE
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-67da564d9f2so8222293d50.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 10:03:29 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795629809; cv=none;
-        d=google.com; s=arc-20260327;
-        b=kxCRXoxl2xywKnhrhdxl4WlIO6BCv59rxFWB1daBcLtTuh/leuBv2xerISN/2Cq+rG
-         EdlP8MgtJtf1QsYG7PgTyG9umFL6gXxliLfcAKKt5dNu3FrkPd5M1E2uYuw7w4Z2twOP
-         DIdCxAmMjFKPYgYxRaKtzpgNQFQ4+yQnzeiK8H5wOar0+u/hcSV3Wk4vOcbjhfjgHGUi
-         uvf4bOWTWSHqBcdATXoYAUHqnOyztThIukTufTn8kwr0W+y3SezXfh2YUNl2/DxbZS+K
-         AZ7MH4QhA+mS2urvFw3I1GjMHDo5HL2BDMdplbDCqLvJAMy0/B4y775QH4+UNbAP8ED5
-         OPRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
-        fh=5tpVPdfoNgfZ96xbsOUd8WOs4l+cFsOlQUlp/RCD9HM=;
-        b=YWRxVuFTRg1LH+f2QFVTurtKvYabAK3oWHxus4kYGgj2VxvhyERHCkZBHdpwlADDl0
-         pD5z0WZ3bt4sB2mQ/JJ7FhyTYoOzLfExRxK6RYOjMV9Ra94OztBAfMObRDCmbERKlXeF
-         UxXfMFarsw6iDfjUH7ZWPnOm+bTtcmvqVrtC+4aqAmh+GBWITZ+8SwAziui9P5iuHRgl
-         WUT0s9zeZvqFaI+Oy2+WKhbmSm9bcRYwgGbLs16wHctM4smaBQ4cOg2MdMCdxsO09q2w
-         I2GzF/eTw8zPfty/5XflU+hIsnm+pU8p2v3x1s3/m1qbfhr8SCX0U5FxjE2jwhS8hjBv
-         iNLg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795629809; x=1796234609; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
-        b=Utu5jKWEGVIdW35vjoBuglbD4NrMX23BcDFTZcJWrrMJ3d2BRMRGAThzxlSxiCojHd
-         q5uOLfCrMA3eZnVg/MCWfE+dUcrMUbMV4+UcpUH/JM9erURiXwa1ilXIJ1XhiC+Cd3s4
-         txrDqiOiE4HSWH1wNyFf/pUWa3NxRHWxZiY/W4QWU6XzT3/ttNTKGRXAKBAWrXSYZd5j
-         OGa1e8Fe47nAvuj8JR+afsvzSk/Kc6o0dWyQeaA2JND7UiumCEg/ZpnDcLydLeWosxrw
-         vjNqhzym6IABNJBEOFLcMEG+jtdJQE1VRhi5j3KvkQpPfn7LyMwqnqhR9mODKxATSjwv
-         oLWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795629809; x=1796234609;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
-        b=IZPBEt0tkQ3c1cPA/N/+SOvhpj7AaABdX8vQ/vUmNQRAdidQqAm8DaVDDz776KHkpR
-         mQTuGbOpSnKt1XZq3ahBG8UTByupWZ2ZrlhJMFnPg/TrK9Rvy8rGFoXahlm6KeuAFx7j
-         kIur2/MCLSBNVt6uZN4gdWRbkxtO0FFWRXZ49c/pZZSYQ5Jk+PTojF2WJqm6Yv1Ecr9d
-         gFSmXfjMEQbEZM/Sc2mpGOHrNaGs5YPXJ75JFB2WT6go/OtsEISoC1Q3BBq106kNI6QU
-         5aSMstusjNjdjbfmJqbfz3YUyfo9OI/w/fvi4sc/JaRG4cT8nf28/ee7LEH6bfGzadsD
-         seNQ==
-X-Forwarded-Encrypted: i=1; AL+hErGp246D7NWfEcdtVWUEBrXby1aGCrOHI2HoLIP6f33IbilbJedr8jR7165GQ5yxVN09AvfHAU8VqTr9s4i+8j32vDlO@vger.kernel.org
-X-Gm-Message-State: APuU4Z/FOiiRLOqkHsHr1/Ubw5dnbyYQOIQF86KO9Zf+0wABvPz0oUu9
-	rx/YrzNRpjHJdUkOD9+5hvbNqyT8ViB9KOI/DuntFencbjMremj7OvjzFrKofzsF2CQdV967TyT
-	5GLX+07yqk2DELLdlI/0mjt/r69//iLY=
-X-Gm-Gg: AZFdTZdti5io1HKypxyL0K8JNXe6NusNH+m0y1hUvV0BVF9SIYM88UbCCr5RSp/uGCO
-	yMetoqhCKBi+nRRD63072GnlFTrpbF6hRyp5Y5O3GwJDH1YlsOSZYEveH/39Rbrp1MpWnNWQasL
-	cPTJNXr2DsRIlXMaEig6b21fLRwXEPundESesKShgMaHOFiVRdXnt4Rklefgop47UxDg806FXbb
-	HGrXKKARPB4MhMspNYD41nZu3n7xxva0kyMU2Fp8n10WlRDzPxjAlkatRPOubigrzVNyFLdk2jC
-	YgXa4XD1WnqIvazVTTW7u6VGrmoJI3GOH5H9weAN1aYZ4PoFlcq0hlkkVMDQawJ5Onpep1JU/2y
-	hngVKnfaL4bsY+pSceOTQp6tX8fFcApym4dYe
-X-Received: by 2002:a05:690e:4849:b0:67d:bd5a:cf4a with SMTP id
- 956f58d0204a3-67df42d0aa2mr4895252d50.5.1795629809087; Wed, 25 Nov 2026
- 10:03:29 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=ixiWA+ex
+ARC-Seal: i=1; a=rsa-sha256; t=1795630125; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QAm6XZwVIMUr2wf73DxmKG4hZYjwyqbuvJHpdAbx6DjFhuL2+turqtHpWlwvoGTgQ27lv2ensfJ581cHlmXvvPoRaaV6XssabZihKcn3YI93FZRYHr0uYrIzH3ym6gqu0G3h8spspLqPqCkaUbBiQ0gnCVxbb/1ZJynOCCVmzTc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795630125; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=W3UTAwZ6fmN3bnxYi+Rd1BmsmeXOgoLChUG1cnYvgGA=; 
+	b=kb2OEXrk7SBL8RCqpqVGyNYbeAKZzKzc3BkzNfPCfmLWB1NIhXP5XAHWO/erajYVEbZiNSTFyUZ2CFIiwmVnQ1NUwRLixJF0E5zw44uaau44Nd5+p5vkd12qqHcsuCanhmXOl7HvvWAwWZ54nemIGidf8FY2pNxDtfuxHG7/8xs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=ixiWA+exoOBd7eMuVqO9ABcuZEk+/hqcg1TYEekNFrUWsw4RfBer3hYpiIZabjReNK6uAdMA2opD4onTWeGgv+hm8g52qmPcd2RxFsd9mi0msqJRFjV0z/gs+MqRQxU6rdWMQ4xTXRx2jNsZed19zu7Yx4grLJHfA+nXaXte0MsHFDDnUtq8zLbe8760CbFMgrSg95V68qg72DcQ4OBEG19goUuC3cWZAWKtFGVJceaYuBmw6pj6HQTLWbmWQaExqqZnAiam7u6qJcTE3q2zPLm+dAjnryfdpYPXoaNEvsCymty/9Ns951Z1SeMltd/atwvjlSncxRPN8YXISQ1hhg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=W3UTAwZ6fmN3bnxYi+Rd1BmsmeXOgoLChUG1cnYvgGA=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795630121080693.7539799516549;
+	Wed, 25 Nov 2026 10:08:41 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+Subject: [PATCH v3 0/8] platform/x86: ideapad-laptop: Trigger the EC on YMC
+ events following Windows behavior
+Date: Thu, 26 Nov 2026 02:08:18 +0800
+Message-Id: <20261126-ymc-82yl-v3-0-e30842671ec3@rong.moe>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -103,40 +61,93 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <CAMnz_-Dgg2eCgZxcCaGuKPV=3-kCfg7ajd9w=vs2fGL-Cb6hvw@mail.gmail.com>
- <f1b7d729-771a-4fba-89c0-996a8a168126@linux.dev> <ce46d69f-2a3e-45fe-abe2-f643f683d09f@gmx.de>
- <CAMnz_-Dztuj3CRsxcVnfe2=OCB3tTJzK6Lu7-AKfkbuqn5N-UQ@mail.gmail.com> <DSVPR12MB66402023AE5250384B26515942BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
-In-Reply-To: <DSVPR12MB66402023AE5250384B26515942BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
-From: =?UTF-8?Q?Riccardo_Zangh=C3=AD?= <riccardo.z.dev@gmail.com>
-Date: Wed, 25 Nov 2026 19:03:18 +0100
-X-Gm-Features: Aa3M54o3ejowZkwXNaB2whcv1q9ei4v9f7X_tsdIHarYRrDqpjLNLgFm4DNkp9Y
-Message-ID: <CAMnz_-C02J6CznPD68GgWCPCWEDSGsq6hoC+AJhsZjw39H+hhQ@mail.gmail.com>
-Subject: Re: [BUG] ASUS TUF Gaming A16 FA608UM: working backlight device
- differs between MUX modes
-To: Daniel Dadap <ddadap@nvidia.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Denis Benato <denis.benato@linux.dev>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hansg@kernel.org" <hansg@kernel.org>, 
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, "luke@ljones.dev" <luke@ljones.dev>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/02NQQ6DIBQFr2JYl4aPSLCr3qPpAvCjNK02YEmN8
+ e4Vu2E5yZt5K4kYPEZyqVYSMPnop3GH+lQRO+ixR+q7nYmQGpRmki4vSxVfnrRrWiOccqoFJPv
+ 8HdD575G63f8cP+aBds5+Xgw+zlNYjq8EeUc44xIAimwCyqjTFjQ3DLQS1zCN/fk1IcnVxAuPN
+ 4XHd09yYTpratswLLxt234D+1ZF6QAAAA==
+X-Change-ID: 46a18a06-ymc-82yl-d59b4f8f891e
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Gergo Koteles <soyer@irl.hu>, Ike Panhc <ikepanhc@gmail.com>, 
+ Andrew Kallmeyer <kallmeyeras@gmail.com>
+Cc: Eduard Aliman <edialiman20@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mahir Faisal <mahirfaisalantiq33@gmail.com>, Rong Zhang <i@rong.moe>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.17-dev-ce4c1
+X-ZohoMailClient: External
 
-On Wed, 25 Nov 2026 at 07:13, Daniel Dadap <ddadap@nvidia.com> wrote:
-> So, as an experiment, if you could read the LSb at physical address
-> 0xFEDD83B8 in both iGPU and dGPU modes, and report on the value, that
-> would help.
+Currently, the ideapad-laptop driver triggers the EC with YMC command
+0x01, which is necessary for existing devices in the DMI quirk table to
+clear the pending event to allow further events to be emitted.
 
-Hi Daniel,
+Newer models do not require command 0x01 anymore (writing it is a
+no-op), but some of them require other commands to properly synchronize
+and set the hardware state.
 
-Thanks for the detailed analysis. I believe I received your full message by
-mail.
+It turned out that Lenovo's YMC driver for Windows (YMC.exe) writes YMC
+command 0x08/0x09 on fold/unfold YMC events, in which "unfold" means
+laptop mode and "fold" means other modes.
 
-Result of: od -An -t x1 -j $((0xFEDD83B8)) -N 1 /dev/mem
+Adopt the said sequence and combine it with command 0x01 to make
+ymc_ec_trigger work on all relevant devices. For the sake of caution,
+write command 0x08 only for the known fold postures. For all other
+postures (including unknown ones), write 0x09 to make sure the touchpad
+and keyboard are still functional. Finally, 0x01 is always written to
+ensure the pending event is cleared.
 
-integrated mode:              4a  (bit 0 = 0)
-dGPU mode (gpu_mux_mode = 0): 07  (bit 0 = 1)
+Beforehand, also fix pre-existing issues, modernize relevant WMI
+drivers, and add a resume callback refreshing the posture and poke
+ideapad-laptop to trigger the EC. See each patch for details.
 
-So G40C does differ between the two modes. I can try the DSDT
-override next and report back, or test any other patch.
+With these changes, add DMI quirk table entries for the Lenovo Yoga 7
+14IRL8 and 14ARP8 as their EC must be triggered by software on YMC
+events with command 0x08/0x09, or else the enable states of touchpad,
+keyboard, and keyboard backlight become out of sync.
+
+Reported-by: Mahir Faisal <mahirfaisalantiq33@gmail.com>
+Closes: https://msgid.link/CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n8Cp3AzhVQ@mail.gmail.com
+Reported-by: Eduard Aliman <edialiman20@gmail.com>
+Closes: https://msgid.link/CAA4HgYKab7_GMCNdHF9+E=9ECVBHRs_axefeCOnZbUNUoyVSoQ@mail.gmail.co
+Signed-off-by: Rong Zhang <i@rong.moe>
+---
+Changes in v3:
+- Always write YMC command 0x01 at last (thanks Gergo Koteles)
+- New patch to address Eduard Aliman's report
+- Drop Eduard Aliman's Tested-by: since PATCH 6, please test again
+- Link to v2: https://patch.msgid.link/20261125-ymc-82yl-v2-0-624bdcb3c50e@rong.moe
+
+Changes in v2:
+- Rephrase the commit message of PATCH 6 (thanks Mark Pearson)
+- Fix typos (ditto)
+- Link to v1: https://patch.msgid.link/20261116-ymc-82yl-v1-0-fac1a2b01a84@rong.moe
+
+---
+Rong Zhang (8):
+      platform/x86: lenovo-ymc: Use enumeration to represent device posture
+      platform/x86: lenovo-ymc: Serialize WMI event handling
+      platform/x86: lenovo-wmi-events: Modernize WMI event handling
+      platform/x86: lenovo-ymc: Modernize WMI driver and factor out events
+      platform/x86: lenovo-ymc: Refresh posture on resume
+      platform/x86: ideapad-laptop: Trigger the EC on YMC events following Windows behavior
+      platform/x86: ideapad-laptop: Enable ymc_ec_trigger for Lenovo Yoga 7 14IRL8
+      platform/x86: ideapad-laptop: Enable ymc_ec_trigger for Lenovo Yoga 7 14ARP8
+
+ drivers/platform/x86/lenovo/Kconfig          |   2 +
+ drivers/platform/x86/lenovo/ideapad-laptop.c |  74 +++++++++++++++--
+ drivers/platform/x86/lenovo/ideapad-laptop.h |   9 ++
+ drivers/platform/x86/lenovo/wmi-events.c     |  38 +++++----
+ drivers/platform/x86/lenovo/wmi-events.h     |   1 +
+ drivers/platform/x86/lenovo/ymc.c            | 118 +++++++++++++++++----------
+ 6 files changed, 175 insertions(+), 67 deletions(-)
+---
+base-commit: 8d7fe9885c62fc9a95bf55d9db244d9672a8aadc
+change-id: 46a18a06-ymc-82yl-d59b4f8f891e
 
 Thanks,
-Riccardo
+Rong
+
