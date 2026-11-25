@@ -1,78 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795612867;
-	b=NIfk3oRiR6jvxEL3lAPATtpERvaQjsavkyagsm9H438iaG0TmHr5Kz2ID2OWcOzKunmo
-	 RfulSF2hhnbtwVz37guwM1pU51kUuVsHVGYoZkOfucLjUhAWELbmaJKBpLhmDPb1oXl+L
-	 WmjDshFKkZ3mYuG0n1zMAZyAt0vE8K2fJhb0I/NFfrOZ9WnFJDp8PKfBVTOxlJZWKabEZ
-	 lATXzQr7axmiAnMxMX4OD/XWG/yxmfLeIjV+L8C74NVHsBRQlQ1XrSlhJkeOTzSICp/i+
-	 SMmn27p65vgitjnIFrv1vjW0XrktGTR2MLAjPYvwHI5nmLyzPQMsINPklyKRDCDC5jQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795612867;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=8Ic1EhCFkcAYLsZqw9I8kXHV2yS0VJRTmaaEIA/0PkU=;
-	b=rbjDEKKofbfqqSQ5CE2yum+3if9fbwurCwLFtkR5FCEjfOpqhfPFZfsJWPgx86fkGLBM
-	 bhK2/0B3wTv8ToGZfvuPojUP0APqcdFBwMHsNRUbEsh0xyhk0Qlj1YyNs8PFLJ8bGGYOK
-	 nuSil8wP5ZdF5PQIRU34SkJVgBU4dMuaflw+HayhZi3FOoEFSlDLpSHuOYpTqhtp4YbEd
-	 xcsBv8D9hp8XB+QGa6ZjXYRP0CSM27QuTgnd/0uWdSIx8VXCAZE3yXN5cQjopSTSDkrnf
-	 nFB+RxMgXpHZDnjzt9YyN7nHUc3ccGxDFCo5sjMBGn8/TzxmYS1zyOWc8LPZU9Ksw+Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IwPCKNGv;
-	arc=none smtp.remote-ip=198.175.65.19
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795612958;
+	b=QZ6MxOm5aTtwaMWj1LteV6Qy4pEXtMmKGeQCevN+EBcNKzOLzycjWT2XCXsHPMhTUE82
+	 buuA4qx+UEfaL0djZ9Tp5i9xSCkjxMQEvmVnvEtNyUiEgdHkPWqMEykQ6jwp8jrS7OKKs
+	 c9xtRrzOH3iZk4otwE6TRtCGPsmSvg9oXDX7oLzseXlH9HanDYr2+90ttQEnxrPcpkUjg
+	 lR3G5SQ1c/pm3yrj7YRIEyuD+NtQEPQOioxPilQRfX5I5RVzFM67K/zvVVhFhPT7EyPqb
+	 TShb93nkHRhyX9re+6VitT6rgSFk3XRmeg/6QRTMP3yrN7SGaZ7HphIL/1XyZoEqxHg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795612958;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=gTZ5RCXqmBhZUpuuWBBkcgRt74bv///8083+IQ+cJcI=;
+	b=ln7waPwFz6+TTCkkMGloaaoR6HD64ezY0Zb7wXAYFy9dIS6AfSxgl2wNRTKn2M60FwRI
+	 1CAsWFyobMLo63s+KepZ7eQbYEfufFoMM7u7CUEy0sR5drsR0QOEjKr+E5TGH+CXbwaQY
+	 Z1DxyKaN5MTdN4W6UiGuFoJgCAzn+RLZN5JyZiEJ+yZ35DU+qxOg+jliFauAJHggby56b
+	 MIY+8yV5E8thEkGIOqJtZxwYo1opultE77EkQ/EFNDt50RiWDTvGFGM3NuueiggGsfG2K
+	 lGLOxpTAL8z96XO/+LEU6JbRR9EuzKNNsI0pRcj3Anm8rJPveDfSlnTiZ6eAo7B1uSQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=hMazQX8g;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1856606A327;
-	Wed, 25 Nov 2026 13:21:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B1856606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430D7606A31E;
+	Wed, 25 Nov 2026 13:22:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 430D7606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IwPCKNGv
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795612866; x=1827148866;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=60MMvgDbNvf5zWteWDJVTh6HvO9zUAVLuTKAckYaQN0=;
-  b=IwPCKNGvedoDAZWFkHCuAxPcEaXIK5xPPVxvgymCSgjknPholY/975hq
-   SOKgJcpPMehnze87mUG1VRndFUG9B4sirRdnjxAdptdjTDyrLQSIJFP6X
-   vTz6yczpJ6bMqmrPIWadELixtL3FIT+0dr0kv++HLk+o4v54FGrVvtvDS
-   jvpgUwKI6gsxgv86GpduvgEWnqoV8v+UiH8r8Ne0NFiy4HCpH3Xas6gw+
-   W4sHV2uyd1Omzg3w4rhdVvhxMo+/2n+qWHX/Lcw0gVGUmyk+fv2LRUbsm
-   Dd5JOQT3kFkvTSJFuLtBQrd6k9MV2thuos2IY1LwMwJ+l0RYF4FKNybw6
-   Q==;
-X-CSE-ConnectionGUID: fwyR1Ce3Rlyg16oZ3+So1w==
-X-CSE-MsgGUID: kyEJC5fORiC9Ji3yve1sjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4553109"
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="4553109"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 05:21:06 -0800
-X-CSE-ConnectionGUID: Od0t126aQJihwpfwPVDA9Q==
-X-CSE-MsgGUID: nz9njnnzSrWaToWUuUsYSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="11739619"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.73])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 05:21:05 -0800
-Date: Wed, 25 Nov 2026 15:21:02 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ondrej Zary <linux@zary.sk>
-Cc: linux-kernel@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] Introduce Synology x86 NAS LEDs driver
-Message-ID: <awbgvsJINVuB40M8@ashevche-desk.local>
-References: <20261124125616.1168560-1-linux@zary.sk>
- <202611250911.51673.linux@zary.sk>
- <awa4YJkwVaoqaF0L@ashevche-desk.local>
- <202611251233.56539.linux@zary.sk>
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=hMazQX8g
+ARC-Seal: i=1; a=rsa-sha256; t=1795612923; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Go6rWjUIstgwrKFEQDYKMH+ISTgcSsRWzYYqf4flPBYGBK/UM3qeVuG4mLETwzkKexflGY45Mgo45gM2FIVekQ1MCyN0hWg3FYqI5EeVMZPLct39Hqzkb4Bbw0WfI9U1ZbYvX0TvhmZNhKGP/fgQ4g95hfLeg4zwH+vNKJuzf9E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795612923; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=gTZ5RCXqmBhZUpuuWBBkcgRt74bv///8083+IQ+cJcI=; 
+	b=Vq9JazDnFPxFIEHS4I7Zh4hP/RwqSf27FgYYVxvDgFS3qtAA4TvpHoZj0QkRr55E6rjy6EWlLSCNpIt9Qgdb2YGUoe3jcH7ZgSoEZZ+9m/o5S5tLsvxfeXOMbnyLYJto1zzhNMvP1tqg8AhI5F69sEHnJ7/GBEKektloTKf2NWs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=hMazQX8gWtIDXcnCaWd4tIPe5ZyLA3E8v7Xgqx2kl5d8wstrUg0BRddB3aeSjAXj5L/Dcno3ODkSINYiM3Luxhh0LWZoeJsFb8LIShR+o2hCF9nww45HPFpD3YoHk5v3w1ZwlIxVN5vD13x+N06ixDYhyWo+u0DO6XO8rhPJSShHH/tms4iq2iOMKB9FGi6R1me31z8xqH86+oD8kQUES+7pMF3cWppuGEMuSFpXmEQZ7Fpg6N7yTZ8V4XXIPuR8voVSBxINscVkqfO+o92VO0/KSMbUqhzmWN0GDXs7P3+cR0cOUZy/3xDnG2PDpSgAd2irroqckeVK3FuWRVq/lg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=gTZ5RCXqmBhZUpuuWBBkcgRt74bv///8083+IQ+cJcI=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795612920119490.9209554113056;
+	Wed, 25 Nov 2026 05:22:00 -0800 (PST)
+Message-ID: <2acea8e2f1a457be724c9475881f1d5f47ade7d2.camel@rong.moe>
+Subject: Re: [PATCH v4 4/6] platform/x86: thinkpad_acpi: Restore keyboard
+ backlight level ourselves
+From: Rong Zhang <i@rong.moe>
+To: Qiling Zhu <kmatzkaczor244@gmail.com>, Mark Pearson	
+ <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  Henrique de Moraes Holschuh	
+ <hmh@hmh.eng.br>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ibm-acpi-devel@lists.sourceforge.net, Lee Jones <lee@kernel.org>, Pavel
+ Machek	 <pavel@kernel.org>, Griffin Kroah-Hartman <griffin@kroah.com>, 
+	linux-leds@vger.kernel.org, vishnuocv@gmail.com, vsankar@lenovo.com, Andrea
+ Rabbaglietti <rabbagliettiandrea@gmail.com>
+In-Reply-To: <20261125084644.137506-5-kmatzkaczor244@gmail.com>
+References: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
+	 <20261125084644.137506-5-kmatzkaczor244@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 21:16:31 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -82,154 +76,142 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202611251233.56539.linux@zary.sk>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Evolution 3.62.1-4 
+X-ZohoMailClient: External
 
-On Wed, Nov 25, 2026 at 12:33:55PM +0100, Ondrej Zary wrote:
-> On Wednesday 25 November 2026, Andy Shevchenko wrote:
-> > On Wed, Nov 25, 2026 at 09:11:51AM +0100, Ondrej Zary wrote:
-> > > On Tuesday 24 November 2026, Andy Shevchenko wrote:
-> > > > On Tue, Nov 24, 2026 at 07:54:47PM +0100, Ondrej Zary wrote:
-> > > > > On Tuesday 24 November 2026 18:03:00 Andy Shevchenko wrote:
-> > > > > > On Tue, Nov 24, 2026 at 01:45:46PM +0100, Ondrej Zary wrote:
+Hi Qiling,
 
-...
+On Wed, 2026-11-25 at 16:46 +0800, Qiling Zhu wrote:
+> kbdlight_suspend() and kbdlight_resume() leave the keyboard backlight to
+> the LED core across sleep: the LED core caches the current brightness
+> and turns the backlight off on suspend, and writes that brightness back
+> on resume.
+>=20
+> On a ThinkPad X1 Carbon Gen 14 with thinkpad_acpi unloaded, the firmware
+> turned the backlight off when entering both s2idle and hibernation.
+> After waking from s2idle the EC was back at its previous level, for each
+> of the four levels tested; after waking from hibernation it was at 0.
+>=20
+> Drop kbdlight_suspend() and leave turning the backlight off to the
+> firmware.  On resume, write the cached level back to the EC on all
+> models, instead of relying on the LED core: this brings the backlight
+> back where the firmware came up with it off, and changes nothing
+> where the EC already has that level.  For this to hold for every
+> mode, have kbdlight_brightness track the EC level itself, 0 to 3,
+> rather than the brightness reported to the LED core, in which the auto
+> mode (level 3) shows up as 0; translate it only when reporting a
+> brightness.
+>=20
+> Only s2idle and S4 were available on the test machine; S3-capable
+> models were not tested.
+>=20
+> Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
+> ---
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 38 +++++++++++----------
+>  1 file changed, 20 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
+rm/x86/lenovo/thinkpad_acpi.c
+> index 16bf2267d..764b1efa6 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -5105,7 +5105,12 @@ static struct ibm_struct video_driver_data =3D {
+>  /* EC level that selects the auto mode for the keyboard backlight */
+>  #define TPACPI_KBD_LIGHT_AUTO_LEVEL 3
+> =20
+> -static enum led_brightness kbdlight_brightness;
+> +/*
+> + * Cached EC level, including TPACPI_KBD_LIGHT_AUTO_LEVEL.  All state
+> + * tracking compares EC levels; the auto mode is translated to a
+> + * brightness value only when reporting to the LED core.
+> + */
+> +static int kbdlight_brightness;
+>  static DEFINE_MUTEX(kbdlight_mutex);
+> =20
+>  static int kbdlight_set_level(int level)
+> @@ -5247,7 +5252,10 @@ static int __init kbdlight_init(struct ibm_init_st=
+ruct *iibm)
+>  =09=09return -ENODEV;
+>  =09}
+> =20
+> -=09kbdlight_brightness =3D kbdlight_sysfs_get(NULL);
+> +=09kbdlight_brightness =3D kbdlight_get_level();
+> +=09if (kbdlight_brightness < 0)
+> +=09=09kbdlight_brightness =3D 0;
+> +
+>  =09tp_features.kbdlight =3D 1;
+> =20
+>  =09rc =3D led_classdev_register(&tpacpi_pdev->dev,
+> @@ -5281,14 +5289,20 @@ static void kbdlight_notify_level(int level)
+>  =09=09return;
+> =20
+>  =09kbdlight_brightness =3D level;
+> -=09led_classdev_notify_brightness_hw_changed(led_cdev, level);
+> +=09led_classdev_notify_brightness_hw_changed(led_cdev, kbdlight_level_to=
+_brightness(level));
+>  }
+> =20
+>  static void kbdlight_notify_change(void)
+>  {
+> +=09int level;
+> +
+>  =09guard(mutex)(&kbdlight_mutex);
+> =20
+> -=09kbdlight_notify_level(kbdlight_sysfs_get(NULL));
+> +=09level =3D kbdlight_get_level();
+> +=09if (level < 0)
+> +=09=09return;
+> +
+> +=09kbdlight_notify_level(level);
 
-> > > > > > > +struct synology_pci_dev {
-> > > > > > > +	unsigned int bus;
-> > > > > > > +	unsigned int devfn;
-> > > > > > > +	struct pci_device_id id;
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +/* onboard PCI devices found in DS411+ to confirm the machine type (after DMI match) */
-> > > > > > > +static const struct synology_pci_dev ds411plus_pci_devices[] __initconst = {
-> > > > > > > +	/* 00:00.0 Host bridge: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx DMI Bridge */
-> > > > > > > +	{ 0, PCI_DEVFN(0, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0xa000,
-> > > > > > > +					       PCI_VENDOR_ID_INTEL, 0xa000) } },
-> > > > > > > +	/* 00:1f.0 ISA bridge: Intel Corporation 82801IR (ICH9R) LPC Interface Controller */
-> > > > > > > +	{ 0, PCI_DEVFN(0x1f, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x2916,
-> > > > > > > +						  PCI_VENDOR_ID_INTEL, 0x2916) } },
-> > > > > > 
-> > > > > > > +	/* 02:00.0 Mass storage controller: Silicon Image, Inc. SiI 3531 Serial ATA Controller */
-> > > > > > > +	{ 2, PCI_DEVFN(0x00, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_CMD, 0x3531,
-> > > > > > > +						  PCI_VENDOR_ID_CMD, 0x3531) } },
-> > > > > > > +	/* 03:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection */
-> > > > > > > +	{ 3, PCI_DEVFN(0x00, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x10d3,
-> > > > > > > +						  PCI_VENDOR_ID_INTEL, 0x0000) } },
-> > > > > > > +	{}
-> > > > > > 
-> > > > > > > +};
-> > > > > > 
-> > > > > > > +/* check if all PCI devices in the list are present at specified locations */
-> > > > > > > +static bool __init synology_pci_devices_present(const struct synology_pci_dev *list)
-> > > > > > > +{
-> > > > > > > +	const struct synology_pci_dev *d;
-> > > > > > > +
-> > > > > > > +	for (d = list; d->id.vendor; d++) {
-> > > > > > > +		struct pci_dev *pdev = pci_get_domain_bus_and_slot(0, d->bus, d->devfn);
-> > > > > > > +
-> > > > > > > +		if (!pdev)
-> > > > > > > +			return false;
-> > > > > > 
-> > > > > > > +		bool matched = d->id.vendor == pdev->vendor &&
-> > > > > > > +			       d->id.device == pdev->device &&
-> > > > > > > +			       d->id.subvendor == pdev->subsystem_vendor &&
-> > > > > > > +			       d->id.subdevice == pdev->subsystem_device;
-> > > > > > 
-> > > > > > Don't mix variable definitions with the code (it's exceptionally possible
-> > > > > > for a couple of cases, none of which is this one). Can't it use
-> > > > > > pci_match_id() approach with driver_data? (If we ever need this check.)
-> > > > > 
-> > > > > I don't see how can pci_match_id() be used here. I can merge pci bus and
-> > > > > devfun into driver_data to fit into pci_device_id table but there's no
-> > > > > pci_dev which could be matched against that table (and walking all PCI
-> > > > > devices does not seem to be an improvement).
-> > > > 
-> > > > _After_ DMI match the walk over all PCI devices is not a big deal. The code
-> > > > will be nicer. But maybe there is a better choice? Like checking CPUID? Or
-> > > > maybe something interesting is present in the ACPI tables?
-> > > > 
-> > > 
-> > > I don't know much about ACPI but can't find any Synology traces.
-> > > 
-> > > # acpidump -s
-> > > Firmware Warning (ACPI): Incorrect checksum in table [GSCI] - 0x83, should be 0x34 (20250404/utcksum-100)
-> > > ACPI: GSCI 0x0000000000000000 002024 (v01 052112 GMCHSCI  20120521 MSFT 00000097)
-> > > ACPI: MCFG 0x0000000000000000 00003C (v01 052112 OEMMCFG  20120521 MSFT 00000097)
-> > > ACPI: APIC 0x0000000000000000 00006C (v01 052112 APIC1409 20120521 MSFT 00000097)
-> > > Firmware Warning (ACPI): Incorrect checksum in table [OEMB] - 0x6F, should be 0x03 (20250404/utcksum-100)
-> > > ACPI: OEMB 0x0000000000000000 000082 (v01 052112 OEMB1409 20120521 MSFT 00000097)
-> > > ACPI: DSDT 0x0000000000000000 006B21 (v01 1AAAA  1AAAA005 00000005 INTL 20051117)
-> > > ACPI: FACP 0x0000000000000000 000084 (v01 052112 FACP1409 20120521 MSFT 00000097)
-> > > ACPI: HPET 0x0000000000000000 000038 (v01 052112 OEMHPET  20120521 MSFT 00000097)
-> > > ACPI: FACS 0x0000000000000000 000040
-> > > 
-> > > 
-> > > ACPI devices look very generic:
-> > > AWY0001:00
-> > > INT0800:00
-> > > INTC0102:00
-> > > ITE8704:00
-> > > LNXCPU:00
-> > > LNXCPU:01
-> > > LNXCPU:02
-> > > LNXCPU:03
-> > > LNXPWRBN:00
-> > > LNXSYBUS:00
-> > > LNXSYBUS:01
-> > > LNXSYSTM:00
-> > > PNP0000:00
-> > > PNP0100:00
-> > > PNP0103:00
-> > > PNP0200:00
-> > > PNP0303:00
-> > > PNP0401:00
-> > > PNP0501:00
-> > > PNP0501:01
-> > > PNP0700:00
-> > > PNP0800:00
-> > > PNP0A08:00
-> > > PNP0B00:00
-> > > PNP0C01:00
-> > > PNP0C01:01
-> > > PNP0C02:00
-> > > PNP0C02:01
-> > > PNP0C02:02
-> > > PNP0C02:03
-> > > PNP0C02:04
-> > > PNP0C04:00
-> > > PNP0C0C:00
-> > > PNP0C0E:00
-> > > PNP0C0F:00
-> > > PNP0C0F:01
-> > > PNP0C0F:02
-> > > PNP0C0F:03
-> > > PNP0C0F:04
-> > > PNP0C0F:05
-> > > PNP0C0F:06
-> > > PNP0C0F:07
-> > > PNP0C31:00
-> > > PNP0F03:00
-> > 
-> > Can you add the platform to https://linux-hardware.org/?view=howto ?
-> 
-> https://linux-hardware.org/?probe=1d48e86441
+I believe these changes doesn't affect the behavior of
+TP_HKEY_EV_KBD_LIGHT. Usually you can move the changes to the factor-out
+patch (i.e., PATCH 2) to reduce back-and-forth changes, with a brief
+explanation added to the commit message there.
 
-Thanks!
+With them moved:
 
-Based on that I would drop the PCI hack and use these DMI matches together:
+Reviewed-by: Rong Zhang <i@rong.moe>
 
-	Vendor: American Megatrends Inc.
-	Version: 080016
-	Release Date: 05/21/2012
+Note that you don't need to drop my R-b from PATCH 2.
 
-If ever we need to make this narrower, we would use CPUID.
+Thanks,
+Rong
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  }
+> =20
+>  static int kbdlight_read(struct seq_file *m)
+> @@ -5337,31 +5351,19 @@ static int kbdlight_write(char *buf)
+>  =09return 0;
+>  }
+> =20
+> -static void kbdlight_suspend(void)
+> -{
+> -=09struct led_classdev *led_cdev;
+> -
+> -=09if (!tp_features.kbdlight)
+> -=09=09return;
+> -
+> -=09led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
+> -=09led_update_brightness(led_cdev);
+> -=09led_classdev_suspend(led_cdev);
+> -}
+> -
+>  static void kbdlight_resume(void)
+>  {
+>  =09if (!tp_features.kbdlight)
+>  =09=09return;
+> =20
+> -=09led_classdev_resume(&tpacpi_led_kbdlight.led_classdev);
+> +=09guard(mutex)(&kbdlight_mutex);
+> +=09kbdlight_set_level(kbdlight_brightness);
+>  }
+> =20
+>  static struct ibm_struct kbdlight_driver_data =3D {
+>  =09.name =3D "kbdlight",
+>  =09.read =3D kbdlight_read,
+>  =09.write =3D kbdlight_write,
+> -=09.suspend =3D kbdlight_suspend,
+>  =09.resume =3D kbdlight_resume,
+>  =09.exit =3D kbdlight_exit,
+>  };
