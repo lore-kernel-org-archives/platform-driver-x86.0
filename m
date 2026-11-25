@@ -1,79 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795647996;
-	b=E6V7ZufsfDLdYgPyOpXuQq7i0V3+jnEZuSTTGhfVXnhpDiL25gE79riJ3/MT2qfSY4+L
-	 77/JP2NZrhP6532FIBxTbi7GqQb3C4/hLJPkiioOyw+seDs8ZuMEH4CQmYbfaI8eCaLlw
-	 zj8DvddeuXNT9jKrdTmD0o51mUeYVRxJklct1zNQXZ+oKgBndw6pnh7b5TOrpMNjmZvNd
-	 fNNjGnQX/a4sW+9pBHIxyzSGpENojBxEFbG20Zfhxnl/sFqQQYgOT1bgA8TT3rl/I1ie3
-	 vLiuUzRxE2aT99M/pVeN8RTwGiHfPdB/hdmpVi/dbpI8Kf+ti5HqdUhsGfSmEBU4Gqw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795647996;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=MCU1hyXnqlzSyru55X8RjiRxlqURXvrM/c8OHkhnVlE=;
-	b=gA80ndeaRLEfrazxVB9l2ovyy4SvqTgIZpXUErg75XBhJ0dTKaKdGMhcQGrbVaVoE+xZ
-	 2i2Z6NP3TTSx726d0PjWFyaR13kgk+brun8ilhUvQOlBAJbTQeeA6bLNqrTAds/mQB3/R
-	 xGIJQxysUPG/kozf6k/WSIm/GCheO3YwohDIemqUGUzViRkFkODmMQZUjL5y7YXFQFbZZ
-	 Mx/05YeE+M9QCt3j2VD+wfL56472ueqDmO4MpIz3iuUYCGSBvjprXLmhk1Hpq+yUd/ztN
-	 HwzdrI1C/VGJDtfuZ6SZM4ibR0wySsJPNU8VbbFm+qjgLLRCqaRw9IBmp5hwN0/fqEA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HVm3rNos;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795648290;
+	b=m8ftiFtl4jaueGHb4Ck1iRlikC29OPqBZ+aVdsBdEaQ3MDA7E3z8uh1/wujAq5HcBnjT
+	 f0J75H2zMm0/rfMGBhGAmSymACwRKS9FY7unOWlKJlprq/Wlwnyo/8eWj0hk+37CPhnzC
+	 kmUJ3VWI4ppo4B5HoupzhnOUmyWGH7CBUW+lOiF6KIYpiEj9yz1YOuslVehEHf2l5/kPQ
+	 libtF3ZNSbkeBysObIhh+wo21yGw+UpguFRH0owApGrRQZ2/lV6a8f0yY+moPPN4JDfzw
+	 DN/V/SoMFcaLQMJheafDzfWzREBYIaLYbVvrOjOQDkhsFWtlfNUdn7LSrbB0rga0jUw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795648290;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Subject:Date:
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=i+0u+HqeGmZLWf35gxn5eDoXSBf6DyMSKsWuaoQuICQ=;
+	b=vH1zNHZqD85V6H+fmyw0JuDuLpjoIGa2jYUeFzoTjREcIc09iAbqy0pfYk2PicWxAUQO
+	 mTCLbRikKYIl801cZ/hbgExR6w+PszctGvVYbYmxL80fQZv9SuvVTZ8KOHPdvcmbWxWAi
+	 bVkS8cuLyu9F0MxlHjG3Oy51Q+8XYlvn1xKigbLPP7+FTieB2gAEU+QPfe9WFMOOI3gVy
+	 QyGWbzcCaoq5FZV18Fpr8djpyAelHR++NZIA6iqFou1B9p2QXIOr+PxgzKWFwq69cpDJv
+	 FLX+2Aq5Yhxpj7OZGTAsSGArEeXUlFXSUp0OLhG/I2Ip+M8Tl2a4FPHj6ElBND2yGbQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XPsDlx1z;
+	arc=none smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1368606A31E;
-	Wed, 25 Nov 2026 23:06:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D98606A31E;
+	Wed, 25 Nov 2026 23:11:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4D98606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HVm3rNos
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795647995;
-	b=dvQqKTr70kvT560uzgp+UgPRIDTtNwFKkrOgamXxYj3yGWChb1vaCG6i+hJEwdfwc1X1
-	 r6nn+oH/HHzGZQCL2rGafpvTm05KodLH9ELCXlkKqQibv9vdZyApUy2a0jbISLL2+Rk6p
-	 qIVInwSjKzD7LDTPqZUO7eKsCIDIQg6TkXleiQm6e8/ybBBIHXK2M0y4/hNrKALtJ50Hv
-	 XC/VsasfulEftwn/SUaBe4pl7N7oVUuRPnmIs2sHXxaEk8qXmY3FOVrGl9ZgOpzzcw9Q3
-	 WocDm3CLODJXScfh8OcNsb++B0Xxliyqc5udbUmzGxhxzvLC1f9hdtiLEOipRx1gKNA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795647995;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=MCU1hyXnqlzSyru55X8RjiRxlqURXvrM/c8OHkhnVlE=;
-	b=akRPPWrE14yf+QVoRJCs+3LInl4/dgdhYApRorjNlREeFICnJSdzpEPiV4zVAIFMEoIY
-	 bljtNlQWFml6ii2VBJ5CzyGo+TJZXDS+ClXdEPrrwVu2aapfxgE9MAk46Vz020dMKcytN
-	 7ISJYsrHXycV/7FiRmlg8LoyNYm3JBQA9+GyTIRalcEaNNPhZkk2ABBYJKxAl7JeCQpK1
-	 RsltFM4Hc6XkvPKNsKiwdjSiqQoovw4YXdGECiu7Pr+z3K9sk+xPPqhvbk6VMIOKzbBR3
-	 oHBcpyFDxPNB4HMbO86W6/2Nk7g0bNxf9KOso9PoSaxJN1Go8sCDqsyMXnAmQjH0coA==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 8AAD81F000C6;
-	Wed, 25 Nov 2026 23:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795647995;
-	bh=MCU1hyXnqlzSyru55X8RjiRxlqURXvrM/c8OHkhnVlE=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=HVm3rNosm+24Rma3HTP/pxUgMAAaxgpww14fGxWms2JjU5ps7luvFSkLkfj1ufG2o
-	 dXb+Y+X/WjhFYhaODJ2HmrMDf2HqNkvdt5ut5H8hFl8k4xKw7XuXG64ZmlQa39O9kF
-	 3Jz9s6G5N8gltxzyXT41SSXRWEHOSnG9ufEV1kw+wpOgrwDNcLkBO+xmrIxcNdMbYD
-	 imONC2nVwFCHmrSuC8Hsetw4LVhT1Y5Dp/3yMW40CHFOkugkyLSQNo+MnqS/+GwtdQ
-	 7rClv2gOAvqnxig9zsYolmVJNpC80NHGqejmP2yLyqMhwnQeaKFo2CtbzhOYgm040T
-	 3VSpPsjZ1ME8g==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id DA70C4D0A1;
-	Wed, 25 Nov 2026 23:06:30 +0000 (UTC)
-From: Alexis Calin via B4 Relay <devnull+alexiscalin.protonmail.com@kernel.org>
-Date: Thu, 26 Nov 2026 00:06:12 +0100
-Subject: [PATCH] platform/x86: panasonic-laptop: Support the hardware
- wireless switch
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XPsDlx1z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795648290; x=1827184290;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=CbIRwVJoGyc+aTQrU4rnggeB4iLRtXrYrCHBACKqLjs=;
+  b=XPsDlx1z9HPc0Z+XY4epezM3If1l8tXCP1LgcFSr2Rm/ZsWBk9wKQs1c
+   KICT9Bmn3oEhzrlHopVavj+orWrv2OOd8voAO0qw+ku59WTgUJd9hHuO4
+   FdQYtve+uzX44yD+A+3mRK3yAAD36uWUllidgVHvKMOYlwluE5t+NyOeh
+   PGhK0w1GUpJiC8FYvK78KhFcEacS5woz0XY7LTIV1n4e+DfxOsWolLZAj
+   V2n5kAF2B+j8+LfocFeTdNylxZU4uMrkyomb9WXPf6GcDmvvuZC4mVhow
+   0HOhsQVhKVK22fsKx+FHShqemTNYtT+jltdtqsZMMnUPI3ERWO0xOf6qg
+   Q==;
+X-CSE-ConnectionGUID: r1PHRXtbQRm5cP3/tzU5lA==
+X-CSE-MsgGUID: hS3yg7cKSeK2GyRFyBguOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4515589"
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="4515589"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:11:29 -0800
+X-CSE-ConnectionGUID: HVLI6yG4Tm64sNrUPvvzqg==
+X-CSE-MsgGUID: G1yppDUXRA+sTdzAbEf6mQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="12309352"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.96])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:11:24 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	David Matlack <dmatlack@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 11/17] platform/x86: asus-wmi: Convert to pci_assign_unassigned_bus_resources()
+Date: Thu, 26 Nov 2026 01:09:10 +0200
+Message-ID: <20261125230925.2441-12-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20261125230925.2441-1-ilpo.jarvinen@linux.intel.com>
+References: <20261125230925.2441-1-ilpo.jarvinen@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,324 +91,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261126-panasonic-wireless-switch-v1-1-97f4e3a207da@protonmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAA/x3MWwqDMBAF0K0M99sBk1If2Yr0I00ndUCiZKQWx
- L0XehZwTphUFUOgE1U+aroWBHINIc2xvIX1hUDwre+c83feYom2Fk18aJVFzNgO3dPMQ+zG/pb
- 7/BwEDWGrkvX7v6fHdf0AQFGnEmsAAAA=
-X-Change-ID: 20261125-panasonic-wireless-switch-8a6973f7fb8e
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Kenneth Chan <kenneth.t.chan@gmail.com>
-Cc: Alex Yeo <alexyeo362@gmail.com>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Alexis Calin <alexiscalin@protonmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795647990; l=10330;
- i=alexiscalin@protonmail.com; s=20261114; h=from:subject:message-id;
- bh=cpAQygnhRQC+zvGun1GukJAWmpC+SrBXmDzkX7bdkVc=;
- b=mAqfCFNP0Gw3eOpN7pzwsUMNIUKNhbfqx7rRgUirdxk3vmlFgdrRJSRUeX0mD0VXd4Ds6aNMA
- 123GOROxdjmAnrF1wV2nsLLkQH85mExOlRzk9f5N4nQwn4dkU6k7Q4Z
-X-Developer-Key: i=alexiscalin@protonmail.com; a=ed25519;
- pk=oNYBG1X8+3bGmJMn0tnt+BbJC1vI7dgqomx4pGPM+4c=
-X-Endpoint-Received: by B4 Relay for alexiscalin@protonmail.com/20261114
- with auth_id=1528
-X-Original-From: Alexis Calin <alexiscalin@protonmail.com>
-Reply-To: alexiscalin@protonmail.com
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Alexis Calin <alexiscalin@protonmail.com>
+The asus-wmi driver scans a single device and then attempts to assign
+its resources using pci_bus_assign_resources(). That function makes
+bridge window sizing disjoint from the assignment phase and is going to
+be removed.
 
-The Let's Note CF-SV7 has a hardware wireless switch and an ACPI device
-MAT0028 ("WLSW"). When the switch is flipped, the firmware queues hotkey
-index 0x50 on the HKEY device, which this driver reports as "Unknown
-hotkey event: 0x0050". If a driver for MAT0028 is loaded, the vendor
-ASL notifies that device instead; no such driver exists in Linux. The
-firmware itself cuts Bluetooth but leaves Wi-Fi on, so under Linux the
-switch only turns Bluetooth off.
+Convert pci_bus_assign_resources() to
+pci_assign_unassigned_bus_resources() which is likely a no-op in this
+case as it looks like bridges are not involved here.
 
-The switch position is available as SINF[0x0B]: the firmware returns
-0xC0 when the radios are enabled and 0x80 when they are disabled (vendor
-HKEY.SGET(0x0B), from an EC status bit). Bit 7 is used as a check that
-the entry is a wireless switch, bit 6 as its position.
-
-When MAT0028 is present and SINF[0x0B] has bit 7 set:
-- register a read-only rfkill device whose hard block follows the
-  switch, as dell-rbtn does for its slider; NetworkManager and GNOME,
-  which take over rfkill handling from rfkill-input, honour it;
-- report SW_RFKILL_ALL on the hotkey input device, for systems that
-  rely on rfkill-input.
-Both are updated at probe, on each 0x50 event and after resume.
-
-SINF is now read before the input device is registered, because the
-switch capability depends on it.
-
-Tested on a CF-SV7 (BIOS V3.00L14) only, with this change backported to
-Debian's 6.12.118: with GNOME and NetworkManager, Wi-Fi is disabled
-while the switch is off and reconnects after it is switched back on,
-and evtest shows SW_RFKILL_ALL following the switch.
-
-Assisted-by: LLM
-Signed-off-by: Alexis Calin <alexiscalin@protonmail.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
 ---
-Notes beyond the changelog:
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-A first version reported only SW_RFKILL_ALL. It had no effect on Wi-Fi
-under GNOME, because gsd-rfkill disables rfkill-input and does not act on
-the switch event; hence the rfkill hard block, as in dell-rbtn.
-
-The meaning of SINF[0x0B] comes from the CF-SV7 DSDT (HKEY.SGET(0x0B),
-WLSW/MAT0028). I checked that the EC status bit behind it (EC RAM 0xA6
-bit 0, read with ec_sys) follows the switch, and that the driver, loaded
-while the switch is off, starts with the rfkill device hard-blocked.
-
-Built with W=1, with CONFIG_RFKILL=y and =n, on platform-drivers-x86
-for-next. Not checked with sparse. checkpatch flags the Assisted-by
-trailer as a non-standard signature.
-
-The code and the changelog were drafted with an LLM coding assistant,
-which also did the DSDT and firmware analysis behind them. I reviewed
-the change and ran the tests on my machine.
-
-Alex, Cc'ing you since you have several Let's Note models: if any of
-them has a MAT0028 device, a test there would be very welcome. This is
-independent of your pending platform_profile RFC, but both touch probe.
----
- drivers/platform/x86/Kconfig            |   1 +
- drivers/platform/x86/panasonic-laptop.c | 126 ++++++++++++++++++++++++++++++--
- 2 files changed, 122 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 78e39cafea91..6ee410f4d490 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -677,6 +677,7 @@ config PANASONIC_LAPTOP
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on ACPI_VIDEO=n || ACPI_VIDEO
- 	depends on SERIO_I8042 || SERIO_I8042 = n
-+	depends on RFKILL || RFKILL = n
- 	select INPUT_SPARSEKMAP
- 	help
- 	  This driver adds support for access to backlight control and hotkeys
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index ef2ada1ba627..6d24dc0f8363 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -132,6 +132,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/rfkill.h>
- #include <linux/seq_file.h>
- #include <linux/serio.h>
- #include <linux/slab.h>
-@@ -157,6 +158,15 @@ MODULE_LICENSE("GPL");
- #define METHOD_HKEY_SSET	"SSET"
- #define METHOD_ECWR		"\\_SB.ECWR"
- #define HKEY_NOTIFY		0x80
-+/*
-+ * Hardware wireless switch (Let's Note models with a MAT0028 "WLSW" device,
-+ * e.g. CF-SV7). Each flip queues hotkey index 0x50 and SINF[SINF_WIRELESS_SW]
-+ * reports the position: bit 7 = switch present, bit 6 = radios on.
-+ */
-+#define PCC_WIRELESS_SW_HID	"MAT0028"
-+#define PCC_WIRELESS_SW_KEY	0x50
-+#define PCC_WIRELESS_SW_PRESENT	BIT(7)
-+#define PCC_WIRELESS_SW_ON	BIT(6)
- #define ECO_MODE_OFF		0x00
- #define ECO_MODE_ON		0x80
- 
-@@ -178,6 +188,7 @@ enum SINF_BITS { SINF_NUM_BATTERIES = 0,
- 		 SINF_MUTE,
- 		 SINF_RESERVED,
- 		 SINF_ECO_MODE = 0x0A,
-+		 SINF_WIRELESS_SW = 0x0B,
- 		 SINF_CUR_BRIGHT = 0x0D,
- 		 SINF_STICKY_KEY = 0x80,
- 	};
-@@ -247,6 +258,8 @@ struct pcc_acpi {
- 	int			ac_brightness;
- 	int			dc_brightness;
- 	int			current_brightness;
-+	bool			has_wireless_sw;
-+	struct rfkill		*wireless_sw_rfkill;
- 	struct acpi_device	*device;
- 	struct input_dev	*input_dev;
- 	struct backlight_device	*backlight;
-@@ -838,6 +851,85 @@ static const struct attribute_group pcc_attr_group = {
- 
- /* hotkey input device driver */
- 
-+/* Returns 1 if the switch enables the radios, 0 if not, -errno on error. */
-+static int acpi_pcc_wireless_sw_on(struct pcc_acpi *pcc)
-+{
-+	if (!acpi_pcc_retrieve_biosdata(pcc))
-+		return -EIO;
-+
-+	return !!(pcc->sinf[SINF_WIRELESS_SW] & PCC_WIRELESS_SW_ON);
-+}
-+
-+/*
-+ * Report the switch position as the rfkill master switch (for rfkill-input)
-+ * and as the hard block of a read-only rfkill device (for userspace that
-+ * takes over rfkill handling, such as NetworkManager and GNOME). On the
-+ * CF-SV7 the firmware does not cut the Wi-Fi radio itself.
-+ */
-+static void acpi_pcc_report_wireless_sw(struct pcc_acpi *pcc)
-+{
-+	int on;
-+
-+	if (!pcc->has_wireless_sw)
-+		return;
-+
-+	on = acpi_pcc_wireless_sw_on(pcc);
-+	if (on < 0)
-+		return;
-+
-+	if (pcc->wireless_sw_rfkill)
-+		rfkill_set_hw_state(pcc->wireless_sw_rfkill, !on);
-+
-+	input_report_switch(pcc->input_dev, SW_RFKILL_ALL, on);
-+	input_sync(pcc->input_dev);
-+}
-+
-+static int acpi_pcc_wireless_sw_set_block(void *data, bool blocked)
-+{
-+	/* the switch is read-only, it has no soft block */
-+	return -EINVAL;
-+}
-+
-+static const struct rfkill_ops acpi_pcc_wireless_sw_ops = {
-+	.set_block = acpi_pcc_wireless_sw_set_block,
-+};
-+
-+static void acpi_pcc_wireless_sw_rfkill_init(struct pcc_acpi *pcc)
-+{
-+	struct rfkill *rfkill;
-+
-+	if (!pcc->has_wireless_sw)
-+		return;
-+
-+	/* the switch acts on all radios; rfkill has no "any" type, use WLAN */
-+	rfkill = rfkill_alloc("panasonic-wireless-sw", &pcc->device->dev,
-+			      RFKILL_TYPE_WLAN, &acpi_pcc_wireless_sw_ops, pcc);
-+	if (IS_ERR_OR_NULL(rfkill))
-+		return;
-+
-+	/* pcc->sinf was just read by probe */
-+	rfkill_set_hw_state(rfkill,
-+			    !(pcc->sinf[SINF_WIRELESS_SW] & PCC_WIRELESS_SW_ON));
-+
-+	if (rfkill_register(rfkill)) {
-+		pr_warn("Couldn't register the wireless switch rfkill device\n");
-+		rfkill_destroy(rfkill);
-+		return;
-+	}
-+
-+	pcc->wireless_sw_rfkill = rfkill;
-+}
-+
-+static void acpi_pcc_wireless_sw_rfkill_exit(struct pcc_acpi *pcc)
-+{
-+	if (!pcc->wireless_sw_rfkill)
-+		return;
-+
-+	rfkill_unregister(pcc->wireless_sw_rfkill);
-+	rfkill_destroy(pcc->wireless_sw_rfkill);
-+	pcc->wireless_sw_rfkill = NULL;
-+}
-+
- static int sleep_keydown_seen;
- static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
- {
-@@ -857,6 +949,11 @@ static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
- 	key = result & GENMASK(6, 0);
- 	updown = result & BIT(7); /* 0x80 == key down; 0x00 = key up */
- 
-+	if (key == PCC_WIRELESS_SW_KEY && pcc->has_wireless_sw) {
-+		acpi_pcc_report_wireless_sw(pcc);
-+		return;
-+	}
-+
- 	/* hack: some firmware sends no key down for sleep / hibernate */
- 	if (key == 7 || key == 10) {
- 		if (updown)
-@@ -965,6 +1062,9 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
- 		goto err_free_dev;
- 	}
- 
-+	if (pcc->has_wireless_sw)
-+		input_set_capability(input_dev, EV_SW, SW_RFKILL_ALL);
-+
- 	error = input_register_device(input_dev);
- 	if (error) {
- 		pr_err("Unable to register input device\n");
-@@ -996,6 +1096,9 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
- 	if (pcc->num_sifr > SINF_CUR_BRIGHT)
- 		acpi_pcc_write_sset(pcc, SINF_CUR_BRIGHT, pcc->current_brightness);
- 
-+	/* the switch may have been flipped while suspended */
-+	acpi_pcc_report_wireless_sw(pcc);
-+
- 	return 0;
- }
- #endif
-@@ -1039,17 +1142,24 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
- 	pcc->handle = device->handle;
- 	device->driver_data = pcc;
- 
-+	/* read before the input device is set up: it decides the switch capability */
-+	if (!acpi_pcc_retrieve_biosdata(pcc)) {
-+		result = -EIO;
-+		pr_err("Couldn't retrieve BIOS data\n");
-+		goto out_hotkey;
-+	}
-+
-+	pcc->has_wireless_sw = pcc->num_sifr > SINF_WIRELESS_SW &&
-+			       (pcc->sinf[SINF_WIRELESS_SW] & PCC_WIRELESS_SW_PRESENT) &&
-+			       acpi_dev_present(PCC_WIRELESS_SW_HID, NULL, -1);
-+
- 	result = acpi_pcc_init_input(pcc);
- 	if (result) {
- 		pr_err("Error installing keyinput handler\n");
- 		goto out_hotkey;
- 	}
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc)) {
--		result = -EIO;
--		pr_err("Couldn't retrieve BIOS data\n");
--		goto out_input;
--	}
-+	acpi_pcc_report_wireless_sw(pcc);
- 
- 	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
- 		/* initialize backlight */
-@@ -1110,6 +1220,9 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
- 	}
- 
- 	i8042_install_filter(panasonic_i8042_filter, NULL);
-+
-+	/* not fatal: the SW_RFKILL_ALL event still works without it */
-+	acpi_pcc_wireless_sw_rfkill_init(pcc);
- 	return 0;
- 
- out_platform:
-@@ -1146,6 +1259,9 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
- 	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
- 				       acpi_pcc_hotkey_notify);
- 
-+	/* after the notify handler is gone: switch events use the rfkill */
-+	acpi_pcc_wireless_sw_rfkill_exit(pcc);
-+
- 	sysfs_remove_group(&device->dev.kobj, &pcc_attr_group);
- 
- 	backlight_device_unregister(pcc->backlight);
-
----
-base-commit: 61c0dac952b9308884936d05cce97565a5c89af4
-change-id: 20261125-panasonic-wireless-switch-8a6973f7fb8e
-
-Best regards,
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index b33ebdb21aa2..9eb783eb53c6 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2325,7 +2325,7 @@ static void asus_rfkill_hotplug(struct asus_wmi *asus)
+ 			}
+ 			dev = pci_scan_single_device(bus, 0);
+ 			if (dev) {
+-				pci_bus_assign_resources(bus);
++				pci_assign_unassigned_bus_resources(bus);
+ 				pci_bus_add_device(dev);
+ 			}
+ 		} else {
 -- 
-Alexis Calin <alexiscalin@protonmail.com>
-
+2.47.3
 
