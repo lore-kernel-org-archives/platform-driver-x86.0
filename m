@@ -1,22 +1,22 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.28
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.23
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795632439;
-	b=Jiya8aU2jxszNyGhHuDOpY4lHO9+Kk6n9a9Ed1dcbE5GKdhjDDZJaDtKC+LQtfylIP6c
-	 +AqeEuw5wdrawCpWBcT8bEijTpbcN4wpqyEjte0IkcVb/1BGUxQtH31tpYzMz6E5/8YkA
-	 hcQFH/lIHLmmOu0iH2uZmL4GO2SnycIhoRKG+eUEmL1wtfIIzXT8gMMll1qzq4iUyVFOr
-	 hviHRi6yxQCbHEa6Y0WIha04JCYh7RgjYbtjQ/nKfeMUUzmh/QrJdu026uZH98JURCuxp
-	 Ud0NAwk6M3mB2Y+XpuQmtuyWeEEZlupeFE4AMuunRoTO67hy6RoeD38YECG1OLqwY/A==
+	t=1795632462;
+	b=giuEyha0Vys9TIFO1SAKCEjctT3qt2wY3kyj1JLtwMRl2bKSuaWJIyBsQFXszYXGzu4X
+	 cGa5vAW8OflQs19Adma7V5ZFe6cSbvwaJo4Wea51BZ4UKvvpmWBbneK5o28fDcjk+57l3
+	 0hDOe6DQ0YYxC9tjNBjnvorNZ0lDb2Tp64WIFCZVjyz259+YTUc0zChQsj6M7KMT4Mzl4
+	 9iE6lrw0BGeYR3WrFmAIXdwd1l0AY2aeHRMsI2rCK83bHnYYWSzQQqT/HgZOeSEFDc/MS
+	 tPBJNQTa+x5MrS8BBnoRR1JUNXChor2/7rn5wWNqE9ewV5yaB+Cq/c+8Lytp4q0WqSQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795632439;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795632462;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:
 	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
+	 Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:Content-Type:
+	 X-Originating-IP:X-ClientProxiedBy:X-EOPAttributedMessage:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
 	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
 	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
 	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
@@ -26,35 +26,35 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=7TfjaClFq6Uyv4JDoIeINRosi4DLjI7qRWi9LqCTzA4=;
-	b=xqgXicIooHAUb482Fw++HJu2fI0OSXkpOdspN7YLjye7mHlXPYR+DRmmjw7NvGryTzMs
-	 Mero6hd166EJcLZNkY+Kl2uSJRgR2x0ErOiGsbeFfdJCRYPSonsAbx+o4R/7sL3uK9IfE
-	 hR+X/VQJu63Q3qxvALmO9k/bMGnGoxE8maUbnldrW2B/7HCLpcg15gFj98LRUbR0UHFAX
-	 IB1L5K+u/h0nh4ZwiyKpRnyFyOFxvBzFK/8Bj4YxZDpDTzUG9sGkRTJXHSeqPtIU1Yrds
-	 ZJ3Kqe6wQBwCsnlIWKxkpI7nRAttyNhAYV1u8VWq37YqAeNNIpxeVVvU59lWE+CkRUA==
+	bh=qOWArkFHVIFNHvxttanomc4QVnZSq531AiJ4qJyKcr8=;
+	b=OHUDx7woXREYtg6idhwhCZmKi5Dz1reevYfAiGEPplgCJWBwV0Kgr7oOpABnPCiyumlS
+	 UKga1dvHs43cQs8FnNC3B+6M2YJGN6G6kXwzOIIw6XSRlXFS2wSA1suPFdEocLHenOzh9
+	 NFhBT7YelLdy/GmvkLtTecvXwSAI45BbKpzOQtaOOlFDKeMcUfrVTw4aIPEmvk9Loitjt
+	 JQ9ZI+BCT5t/a2/xPEYqfG2G80gJbFF+UFTBNetHoRKePwkmfmM0ssMP/QZ3VymmNuxfS
+	 cb/EHdd2nboAzDdYv/jVXWRdYDsb/cAIcfAxq5L/VAZFMwiUE1ksDsFyQPkhoR1Op8g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=nvidia.com;
 	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=XEkWY+e5;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.46.28
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010028.outbound.protection.outlook.com [52.101.46.28])
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=e7SQUt5R;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.23
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013023.outbound.protection.outlook.com [40.93.201.23])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1221D606A321
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 18:47:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1221D606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D372606A335
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 18:47:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D372606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=XEkWY+e5
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=e7SQUt5R
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E7jVEaPCPR77mzgHbRnhEfRuskCsCrAo/a1palJOztyUXJJDhUOg9F9PHhkOHI/87fzm6D4ejhJCAi1r1vaoNgyHYGMPEyuSdBR2vU/k1NaPRTnWHY4M7ejKVFTitmx5xRMR8wFvntBSAtfxVQOjVNLPjMlHVdDc7OpYU6uAMkPn0Mtswtctjlz4IDHAr6JUH7Hpfn8tmAqmqBtmagD7tmx0EPNsSB6Zv0w8IVsAY1VG1Sm9xtmMIOlfydar2tAeSv7hzkrgYQ8lHrVYLEV2OxOwl5RIGAMJxBHcWGjEwQNZg4sm2LA2gwFQF6bWokB5tAL3h8CvUg3wElqPZhdpSA==
+ b=KZdHXEj+DkPTwQ0sy2Qbk1Slr0K4Pfy/PS4d71g+IeZx+anFqCinTZgC02+YIzLjn8pUlhidVaxgcwJqYDgYbIiVFnevaw3ouQu3u3dqe2qfhp8OsoXPCz5YxTE8Cmh3REVQUFWbCzTc5kihlZOeyXQIXIwnCHiLd+aoDaA99UjJwt7xqjBahKvRcGPavDWL+/g5Ncf4dTD065uJ8L3JDxZEeXKm4oesD9AK7mwDwNVi6EOJXe6oZB/w18K9rm4i3JS1KkI1A1RMJat8+KIcxEHjcGavNsJb99X74y4W3P5kCkz9DsogjGavQDxzRXaNiGjn7bfNyFn3vMQGbpn1FQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7TfjaClFq6Uyv4JDoIeINRosi4DLjI7qRWi9LqCTzA4=;
- b=Psp+Amm/R3Lucl9HyR0gfHqSFFcMMTe669ikbsx3er9Z+H1fez81iCigMeuAVBrqt9oKjZd0NrFlFQEO0pAuGRoosPa7AEwCSwqLf2Eu6SabrBBq9JACIzn4Pl4ZzuGNlJWDk1e7RnT7cU7Hxk6Bs2DRIRBZCTXMOju68sJfjaQFgBS+v9d1dvVxDyzLLXNnoZi/bd5PxS+feqMJsQwf4IuS3uAUNrJYWrDL9GKJeJpkfg4mye9fitoVtyKn3FXXsvCSKWdsf0T4XqFOSKGZBS1U/2BnoFayyINT6vslc+zmnIwdFMMrFeScCmTPyCf02I13VXu1hL2z8zaI2z4YYg==
+ bh=qOWArkFHVIFNHvxttanomc4QVnZSq531AiJ4qJyKcr8=;
+ b=Hx4o7u3eGEJY1H/KqEH3qWOePGV3OpCW0IXRvXJEDiil2/29CB6m6lSTWmzo+JT84Y0YYJAVgHPOSKk2M9SFobwv6xblh1FDm7rIqkBsaN0tuVagY7dWgCZSKiIt/CaBFad96odjvA0MVmEI9y4hFUz7Jh9ZZuAAQqHjHbOCIYYqwFwiK1VI5xJ9IXlwmtoRRYYMxbimdkAjr3YZF0YamkTKiOPixGWVzzQ5IGGOmxpIZgFoJ3SPPSdnxl/8k3m1JpSDst5L+pUR1dL8oSsZrGVT+Ia6chJ5Me60sNAvr7gemZvagEfLSTdFQHZ66AgkoCmW22ffydTeOhsOxbvQTQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -62,18 +62,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7TfjaClFq6Uyv4JDoIeINRosi4DLjI7qRWi9LqCTzA4=;
- b=XEkWY+e5nbZ1Jx0LSMxHKGK3QOPyJLANMbt9YPOrwPeRs6yzvjLTQaJtoAiwgCDGkfF88ygpMkAdTptuwalZNPFtriO/7jDBr8FbsTvfEdyqyE0yiYabVYz2EVucrEiV8EhjJ7AuPEUo40dT9E+qCtvcYewbwCyEEbAVbahwsZ4zfk33Vz2cNnNb+SHRdMdx7H54XNv0IZ6OLAAbqgvxJ38G7Pe2P87y44lLFBOnhdMqeC8do2VLfn+AmU/J8JdDwBaUEuqkrNe+pag8ECm3/BKdAfFudR6vy8sGInNM3rw5hdBnDhAgkR7vcc2zFZ5oytsrkmQT+MCMy5ZQ8LECTA==
-Received: from BY1P220CA0025.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:5c3::12)
- by SA5PPFB1A5CE29A.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8dc) with
+ bh=qOWArkFHVIFNHvxttanomc4QVnZSq531AiJ4qJyKcr8=;
+ b=e7SQUt5RiLFtu8Uetr6URc1U7wENqNrwipv5aHgbIA1DKI3D+kvDEbPc1ysYQKCQUzRTQpgnxQ20tGRIhr44lbUvn145Qvg5Tjt8wPZH/wBvIRxhqKYZaeaaJk6Iwt9vDbKntih2ttZStgHd/DzIwqpLYkK4eVwo14XbimtEBe3iMMrCrLOBZXoteZVkjXbNHWNzuPPsII5gCCdNV1gACXsXgugCQSkpOA2Lr2fR1OTeQNMU+c9f/8A6zFmgApO6gL6uMW/m690VcGFVYTjP2AK/r/HBo5PTcJGSVrYOd7qVh5+XRDIucez1nNY4Zx4HjYKYmt+8dcuBRn2h3TM90g==
+Received: from MW4P222CA0015.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::20)
+ by LV2PR12MB290147.namprd12.prod.outlook.com (2603:10b6:408:3a8::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.662.4; Wed, 25 Nov
- 2026 18:47:12 +0000
-Received: from SJ1PEPF000037AE.namprd03.prod.outlook.com
- (2603:10b6:a03:5c3:cafe::72) by BY1P220CA0025.outlook.office365.com
- (2603:10b6:a03:5c3::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.662.6; Wed, 25 Nov
+ 2026 18:47:33 +0000
+Received: from SJ1PEPF000037AC.namprd03.prod.outlook.com
+ (2603:10b6:303:114:cafe::98) by MW4P222CA0015.outlook.office365.com
+ (2603:10b6:303:114::20) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.662.7 via Frontend Transport; Wed, 25
- Nov 2026 18:47:12 +0000
+ Nov 2026 18:47:33 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 216.228.117.160) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -81,26 +81,28 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- SJ1PEPF000037AE.mail.protection.outlook.com (10.167.244.183) with Microsoft
+ SJ1PEPF000037AC.mail.protection.outlook.com (10.167.244.186) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.662.3 via Frontend Transport; Wed, 25 Nov 2026 18:47:12 +0000
+ 15.21.662.3 via Frontend Transport; Wed, 25 Nov 2026 18:47:33 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Wed, 25 Nov
- 2026 10:46:54 -0800
+ 2026 10:47:06 -0800
 Received: from r-build-bsp-06.mtr.labs.mlnx (10.126.231.37) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.57; Wed, 25 Nov 2026 10:46:51 -0800
+ 15.2.2562.57; Wed, 25 Nov 2026 10:47:04 -0800
 From: Felix Radensky <fradensky@nvidia.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
  Goede" <hansg@kernel.org>, Vadim Pasternak <vadimp@nvidia.com>
 CC: Felix Radensky <fradensky@nvidia.com>,
 	<platform-driver-x86@vger.kernel.org>
-Subject: [PATCH platform-next v4 0/3] platform/mellanox: Add nvsw core and SPC6 host driver
-Date: Wed, 25 Nov 2026 20:46:30 +0200
-Message-ID: <20261125184633.2825486-1-fradensky@nvidia.com>
+Subject: [PATCH v4 3/3] platform/mellanox: nvsw-host-spc6: Add support for SPC6 air cooled switches
+Date: Wed, 25 Nov 2026 20:46:33 +0200
+Message-ID: <20261125184633.2825486-4-fradensky@nvidia.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261125184633.2825486-1-fradensky@nvidia.com>
+References: <20261125184633.2825486-1-fradensky@nvidia.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -116,359 +118,955 @@ X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000037AE:EE_|SA5PPFB1A5CE29A:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae4f4950-2675-4b6e-ddc2-08df4b248468
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000037AC:EE_|LV2PR12MB290147:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12ab6db2-a8c2-4fcf-59ac-08df4b2490e2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|23010399003|36860700016|82310400026|10067099003|261026121527099003|261102123227099003|56012099006|11063799006|5023799004|261022075727099003|261021123027099003|261022105027099003|261026140227099003|261028144727099003|261009223027099003|261021121427099003|261102130727099003|18002099003|6133799003|3023799007;
+	BCL:0;ARA:13230040|376014|36860700016|1800799024|82310400026|23010399003|11063799006|56012099006|10067099003|5023799004|261022075727099003|261022105027099003|261026121527099003|261028144727099003|261021121427099003|261026140227099003|261102123227099003|261009223027099003|18002099003|22082099003|6133799003|3023799007;
 X-Microsoft-Antispam-Message-Info:
-	Ryizfp71Lwompna2T3K9+4E8cccWafCkQ8LkNKCciaQHNMeSgpe5I9tKqHXdcCU2uAcXS9L4Z+Fa+bOYzd39+6hPdznWmd6NS+FyUdxGdvOQTEVj5ef/kilgcPvTF3z7uRlqLRYQ7SgcFuGGVKLWa2UefnEr9cuDemx11tQqJqYY96anzcczWzR1e9opacj0IEJcOr3068Dn9LpZSF6CStdKSVUiq/ic6s6V+70z+UnrFwBd7gEqaR5c+Al3xXNsAmRHL1UT0PARXFtVRnaiA8Y7aSZjA7g30jGceIUHfMm4ojCkgVnmar+cXM/PMh+EpLJbeYoEsG00i2jzEEZPiSwfH2f5qIF5FO6kVJNjETBd9pYK+JAW22+Tj+J5c6hcXXtae4fuIIhFSkg92JgoMKf4jlDWcB0ZJkicA7Wap6uEVTadFIgq9LKA78mxa41VPr7lsB8oeZmtADXKLhkc6YVsq+MOjKj0j9OH0K30sU4hUxPlaT9DSrRb7e+nUBXbTQa5wo+h7wxsdYR4DIucT9HoRp/cNuKoyI+ITZAjCsarMis3NN5ynKB+gvJFXOe5sGTznKpdQJU4SzhHnGTtiPQS5a2C2dEFa3IDfZKmQUgCDczzJl0SNW8QDo7qi4ilxoFo1RefKKMl0QLpfGbDihfx19eRvO4zvSwsULHiz7uOKwWVG/OBaRAWzFMK7qVgPYgV7yEmUO2eyJHLvXDA+g==
+	cSyvWHGpPOZMdsHEjtjS0SMBGOx/OacuKgi3YwtBOhgbbYq2RRPXBg1SmoFHBo/F3QildLVtzp0P/MrTZBVSRUILwsbuH0b1cy8VOGQvsC60zngdWIwmJEaqWdsmniXy4Pm3bKaRCp3YRtMFnH040mK4c6AxBqF6kUPfsZToHI6Y+Zhst3ja5r+OCLDRm34Z9bIb3Vxr/3WHxaS1FfTn3kB9+mujuEewuligmhkx8RhEr5ike2anB/ifRuio0eM5xWFfHQThG02HGzkG5ZqZqe3kBmVoWnyZ7IDVj8cNlAdjKbxY2oxcWt0frtr+2D+Bc5sz0rRgcZZqLHQtw5prLZEb8UF5efbcKDxyWDuc+LuxndUIfUNVTEK8MztlbVpjxuspui/OTmh3oekrFMrWQZtD+wHnFq171WWohozIkO0Af3gp928dOO1eTY89XjGjJeiwXqGrs8XUhKZjohIRpbwnKKHXLa85p0b13gVuOTycRnlya9HyuBb+/ySitaB5NRBvpZ7Qf6FdHm1SxMMODE4P+U98YUNUwRSkH4JhpruURTA6MbezUR1SZ+SuX0N7r/zp/+jAblq54pWqzAGXpAWCWc33LKmy/VJLOse5xttIRh1SJ1y5CY2NwnqzFht2xt1WgOmtbOh7Ra7fNAhToclgnO6J7usvQ2Pkna8Ib0PNW3Xv2/oyYrGngL3XADgZMSvjd1DgiLBbKvcQtvRbXw==
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(23010399003)(36860700016)(82310400026)(10067099003)(261026121527099003)(261102123227099003)(56012099006)(11063799006)(5023799004)(261022075727099003)(261021123027099003)(261022105027099003)(261026140227099003)(261028144727099003)(261009223027099003)(261021121427099003)(261102130727099003)(18002099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(36860700016)(1800799024)(82310400026)(23010399003)(11063799006)(56012099006)(10067099003)(5023799004)(261022075727099003)(261022105027099003)(261026121527099003)(261028144727099003)(261021121427099003)(261026140227099003)(261102123227099003)(261009223027099003)(18002099003)(22082099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	/MtZVYrGT8rgnrjix8a6wT4U2tgvwx9o6+kgOfiXcKWrAWWvsvWy3ZdZXvGuZ1KWOZhyEN3J/gWjcZFsJKLC8sc0QYI++GocWJpq9MjnYwGH8HUf2RbEvlf/EAfpa4HLs/jhKIV1u0OCQOdv2gFLbOlP5clZQpW7f61/x3RAan2HLBoLogzU/g5WwCQuHLF93Tg3XuYDR1p+74u5oDuwPm1xFlLcwgUiguTK3maZFaAyR6FEjDZtUROSBG/yNI10sutyx1tBSeWzAZoPlaQRwbCccy7JQNLPcpDaY9F3Oe6IBc9pDClln/wf3enRvqhcNInmuXc3E2QhUyzrlPem5DbnHrhYaiZJ7kKvzUIrpgcx8HDFSbxItD+kZvbBpaik75pzQZOquilpTOdzFS7te+cm8QIgzVWOImhANuX2JLrkWLJq3jq50ikwO0S7vhEz
+	9ECz6cCPgsX/3DQR16gtvTHJj7X016GmEP7CVHA8ybGxwpEN6jJnyfZT1XchV/89ptuYJIKF/Z/mBm/k4SyyRLOCHM/OBfIZeydmIwq2TzfoJ+pbmY6SPrXYUszJTmej4lqYqEUW2DCcQzeAQ2K+IK/lNj0V1xgAocjWB3Rvn6ZnfyL1inA4k0EtHDu5JhhCSJB+wo6jSdXyleOusgFAu71dWLx82hd71R7A+oTbGTS2UCWHX4lio+Sv4LCTMLV02lIIINWx4c54iY/TLrYuVt5dCfRtZIbqtQl1cUXVakHgQVzUSBTdpQZKgVbLIo9WzgHbjfrXameXODgwhNEociiFqCZb6UIHXAk0bkuC7dMKU1eOUfZh8BTtIxT7L82RTuwqY7+bo9j6ptvCpuVSv+ilfn52C0aPay1qXB1cOApqWTnYTWAeIvvGvBlu1693
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2026 18:47:12.1910
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2026 18:47:33.1098
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae4f4950-2675-4b6e-ddc2-08df4b248468
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12ab6db2-a8c2-4fcf-59ac-08df4b2490e2
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000037AE.namprd03.prod.outlook.com
+	SJ1PEPF000037AC.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFB1A5CE29A
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB290147
 
-This series adds support for system control and monitoring on Nvidia
-SPC6 based switches, through the CPLD/FPGA devices attached to the host
-CPU.
+Add support for air cooled Ethernet switches based on the Nvidia SPC6
+ASIC. Unlike the liquid cooled systems already supported by the
+driver, these carry their own power supplies and fan drawers.
 
-Patch 1 adds nvsw-core, which implements the register map setup, the I2C
-mux topology and the creation of the mlxreg-* platform devices shared by
-all Nvidia switch board drivers. Patch 2 adds nvsw-host-spc6, the first
-user of that core, covering the liquid cooled systems, along with
-documentation for the register access attributes it exposes. Patch 3
-adds the air cooled SPC6 systems, which unlike the liquid cooled ones
-carry their own power supplies and fan drawers.
+They therefore expose a different set of register access attributes:
+power supply presence, AC and DC status and fan drawer presence, in
+place of the coolant leakage detection and power distribution board
+status of the liquid cooled systems. They also come with their own LED
+layout, adding power supply and per fan drawer LEDs, and with fan
+control. Add the LED and power supply registers these attributes use
+to the nvsw-core register map. As for the other status registers in the
+map, the mask registers of the two power supply status registers are
+added too, so that a board can describe hotplug items over them. These
+systems do not create a hotplug device; they report power supply and
+fan events through the mlxreg-io event attributes.
 
-The functionality covered is component resets and reset cause
-reporting, mux selection for hardware components, general purpose
-registers, LED control, watchdog control, and fan control on the
-systems that have fans. The core also creates an mlxreg-hotplug device
-for boards that describe one; no SPC6 system does, and that path comes
-into use with the BMC driver mentioned below.
+The CPLD of these systems can override the fan PWM and drive the fans at
+full speed when it detects a fan fault. The override is enabled by bit 0
+of the general purpose register at 0x252e, which is set by default.
+Clear it through the set_reg_default callback, which runs before the fan
+device is registered, leaving the fan speed to the software. Set it
+again through restore_reg_default when the driver is removed or fails to
+probe, so that the CPLD handles fan faults whenever no software controls
+the fans.
 
-Why a new core instead of extending mlx-platform
-================================================
+Describe the system and select its description through the driver_data
+of the matching DMI entry, so that the board data is chosen by the SKU
+that was matched rather than by inspecting DMI again.
 
-The obvious question is why this does not go into mlx-platform.c, which
-already serves the existing Mellanox switch generations. There are two
-reasons.
+Document the power supply and fan drawer attributes the new system
+exposes, which are not yet covered by
+Documentation/ABI/stable/sysfs-driver-mlxreg-io.
 
-The first is that mlx-platform.c cannot reach this hardware. It is
-built around a single memory mapped LPC window: it calls
-devm_ioport_map() once, hands the resulting base to devm_regmap_init()
-with its own ioread8()/iowrite8() callbacks, and every system it
-supports is described in terms of offsets into that window. On SPC6 the
-CPLD is not on the LPC bus at all, it is an I2C device, and the driver
-reaches it with devm_regmap_init_i2c() through a client on the host I2C
-tree. Supporting SPC6 in mlx-platform.c would mean giving it a second,
-parallel register access path and making its register map setup
-conditional, which is a larger and more invasive change than adding a
-separate driver.
+Signed-off-by: Felix Radensky <fradensky@nvidia.com>
+Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+---
 
-The same applies beyond SPC6. The identical CPLD register layout is
-also managed from an ARM Baseboard Management Controller, where the
-device is reached over I2C in the same way but is described in device
-tree rather than discovered through DMI. nvsw-core holds only the parts
-that do not depend on how the board was found, so the register
-definitions and the mlxreg-* device descriptions are shared, and each
-board driver supplies its own instantiation. mlx-platform.c is
-inherently x86 and DMI bound and cannot serve the BMC side.
+Notes:
+    v3->v4
+    Comments pointed out by Ilpo:
+    - Take the fan platform data and the set_reg_default callback from
+      the matched board description in the probe path, following the
+      rework in patch 2. The two module scope copies are gone.
+    - Update the ABI Date and KernelVersion to November 2026 and 7.5, as
+      in patch 2.
+    Issues reported by a local sashiko review:
+    - Add only the registers this patch uses to the nvsw-core register
+      map. The power supply alarm status, event and mask registers,
+      TACHO13 to TACHO20, and CURRENT_TEMP_RO and SWITCH_IC_QTY were made
+      accessible with no attribute, LED or fan entry over them, widening
+      regmap and debugfs access for no user. They are dropped from the
+      tables, along with the definitions this patch introduced for them,
+      and the commit message now says which registers are added. The mask
+      registers of the power supply and power supply AC status registers
+      (0x255d, 0x2563) stay, so that every status register in the map has
+      its event and mask registers, as in patch 1. Nothing in the series
+      accesses them, since these systems create no hotplug device and
+      report power supply and fan events through mlxreg-io, and the commit
+      message says so.
+    - Restore the CPLD fan fault override on remove and on probe failure.
+      The override was cleared at probe and never set again, so after an
+      unbind, or a probe that failed past set_reg_default, the fans were
+      left at their last PWM value with neither the CPLD nor software
+      reacting to a fan fault. The new restore_reg_default callback sets
+      NVSW_FAN_CONTROL_EN_MASK again once the fan device is gone.
+    - Drop the claim that mlx-platform clears the same override. Its
+      defaults write PWM_CONTROL, whose SPC6 counterpart at 0x2537 holds
+      SPD write protect and power controls instead. The override is bit 0
+      of 0x252e on the air cooled CPLD only; the liquid cooled one uses
+      that bit for a USB to UART bridge reset. The commit message names
+      the register, and NVSW_FAN_CONTROL_EN_MASK carries a comment.
+    - Say in the ABI what a write to psu_event, psu_ac_event,
+      psu_dc_event and fan_event does to the other bits. The attributes
+      cover the whole register, so a write reaches every bit of it, and
+      the CPLD clears the bits written as 0 and leaves those written as 1
+      unchanged. The text only said that writing 0 to a bit clears it.
+    - On the sashiko.dev finding against this patch: it is valid, and it
+      is fixed in the LED tree rather than here. The fan drawer LEDs are
+      described by a slot index because the capability register of these
+      systems reports a count rather than a bitmap, and
+      mlxreg_led_config() only understood the bitmap flavour. The same
+      description style is used by mlx-platform, which has been losing
+      all twenty of its fan LEDs since v6.16, so the gap belongs to
+      leds-mlxreg. Lee has applied the fix, commit 68a2bfdf7b4d ("leds:
+      mlxreg: Fix missing fan LEDs on systems reporting a unit count"),
+      queued for the same merge window. The LED table is unchanged here.
+    Additional fixes added by Felix:
+    - Make asic_reset write only, as in patch 2.
+    - Drop the cpu_mctp_ready attribute, as in patch 2.
+    - Drop the asic_pg_fail attribute, which the liquid cooled table does
+      not have either. GP4_RO, the register only it used, is dropped from
+      the patch 1 register map with it.
+    
+    v2->v3
+    Additional fixes added by Felix:
+    - Describe jtag_enable as the single bit it is, as in patch 2.
+    - Drop the aux_pwr_cycle attribute, which is not supported on systems
+      with power supply units.
+    - Clear the CPLD fan fault override enable bit, so that the fan speed
+      is left to the software. This is done from the board driver through
+      the set_reg_default callback, which the core calls before the fan
+      device is registered.
+    
+    Issues reported by the sashiko.dev review:
+    - Fix the documented polarity of psu_status. The CPLD reports power
+      supply presence active low, so bit value 0 means the unit is
+      present. psu_ac_status and psu_dc_status share the same
+      description block but are active high, so the polarity is now
+      spelled out per attribute instead of in one sentence covering all
+      three.
+    - Fix the documented polarity of fan_status. The CPLD reports fan
+      drawer presence active low, so bit value 0 means the drawer is
+      present, which is what mlxreg_fan_read() already assumes when it
+      reads the same register through .reg_prsnt. The ABI text claimed
+      the opposite.
+    - Drop the claim that this system exposes power supply alarm
+      indications from the commit message. The alarm registers are
+      defined and reachable through the register map, but no attribute is
+      described over them.
+    - Correct the mode of the pwr_cycle attribute, which was 0244 instead
+      of the 0200 used by the liquid cooled table and documented in the
+      ABI. 0244 denied read access to root while granting it to everyone
+      else on a write only attribute.
+    
+    v1->v2
+    - No change. The hunk offsets moved because of the include additions
+      in patches 1 and 2.
 
-The second reason is structural. mlx-platform.c has grown to roughly
-8600 lines covering 49 DMI matches, with the per-system description
-data and the device creation logic interleaved in a single translation
-unit. Adding another switch generation to it makes the file harder to
-review and makes it impossible to build support for one system without
-carrying the tables for all the others. nvsw splits the two concerns:
-the core holds the logic (391 lines) and each board driver holds only
-its own description data, so a kernel can be built with just the boards
-it needs.
+ .../ABI/stable/sysfs-driver-mlxreg-io         |  46 ++
+ drivers/platform/mellanox/nvsw-core.c         |  16 +
+ drivers/platform/mellanox/nvsw-host-spc6.c    | 600 ++++++++++++++++++
+ drivers/platform/mellanox/nvsw.h              |  15 +
+ 4 files changed, 677 insertions(+)
 
-The core is not speculative generality. The SPC6 host driver in this
-series is its first user, and we intend to submit a BMC driver and an
-NVL7 host driver on top of it once the core has been reviewed.
-
-Why the SPC6 driver is split over two patches
-=============================================
-
-Patches 2 and 3 add a single driver, split along a hardware line
-rather than chopped into arbitrary pieces. Patch 2 is complete and
-useful on its own: it covers the liquid cooled SPC6 systems, which
-shipped first. Patch 3 adds the air cooled systems, which arrived
-later and expose a different set of CPLD attributes because they carry
-their own power supplies and fan drawers.
-
-Most of both patches is register description data, and the two sets
-are largely disjoint. Folding them together would give a single patch
-of roughly 1700 lines in which two unrelated board descriptions are
-interleaved, with nothing in the diff to indicate which attribute
-belongs to which system.
-
-Patch 3 is purely additive: it does not modify or remove a single line
-introduced by patch 2. The per SKU description struct and the
-driver_data based DMI dispatch are introduced in patch 2, so patch 3
-adds only the new register definitions, the new board description and
-the DMI entry that selects it.
-
-On the shared "mlxplat" platform device name
-============================================
-
-nvsw-host-spc6 registers its platform device as "mlxplat", the same
-name used by mlx-platform.c. This is deliberate. The mlxreg-io
-attributes are a long standing userspace ABI documented in
-Documentation/ABI/stable/sysfs-driver-mlxreg-io, and the management
-software reads them from
-/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/. Keeping the name
-keeps those paths stable across switch generations, so existing tooling
-works unchanged on SPC6.
-
-The two drivers cannot collide at runtime: each matches DMI and returns
--ENODEV before registering anything, and their DMI tables are disjoint,
-so on any given system exactly one of them instantiates.
-If you would still rather the new driver used a distinct name, we can
-change it, but it would mean a new sysfs path and a userspace ABI break
-for the affected systems.
-
-Symbol namespace
-================
-
-The two symbols the core exports to its board drivers are exported as
-EXPORT_SYMBOL_NS_GPL() in the NVSW namespace. They are still global
-exported symbols, but a module can only use them after importing the
-namespace with MODULE_IMPORT_NS(), which modpost and the module loader
-enforce, so the dependency is explicit in each consumer.
-
-Testing
-=======
-
-Built on x86_64 against pdx86/for-next with gcc W=1 and with clang 17
-W=1 plus CONFIG_WERROR, both warning free, at every patch in the
-series. Checked with sparse v0.6.5-rc1, smatch and the coccinelle
-report mode scripts, all clean. checkpatch --strict reports
-no errors and no checks. Module linkage and the namespace import were
-verified with modpost and modinfo.
-
-v3->v4
-Comments pointed out by Ilpo:
-- Stop fanning the matched board description out into module scope.
-  The per SKU data is held in struct nvsw_host_spc6_cfg and reached
-  through the driver_data of the DMI entry, so nvsw_host_init() now
-  matches with dmi_first_match(), hands that description to the
-  platform device as its platform data, and the probe path reads it
-  back from there. A single pointer is carried over instead of ten
-  copies, and the DMI match callback is gone with them.
-- Keep the mux parent adapter and the mux client out of module scope
-  too. The client lives in struct nvsw_core, which is already the
-  drvdata, and the adapter is reached through client->adapter where
-  it has to be released. Together with the above this removes every
-  module scope pointer in nvsw-host-spc6 except the platform device
-  itself, and with them the NULL stores on the error paths that the
-  v2 review had already flagged. The board tables remain static.
-- Update the ABI Date and KernelVersion in patches 2 and 3, as 7.4
-  was missed. They now read November 2026 and 7.5.
-Issues reported by a local sashiko review:
-- Correct the patch 1 commit message, which said the core implements
-  the I2C mux topology. The core only runs the board's mux_init and
-  mux_exit callbacks, and the message and kernel-doc now say so.
-- Stop calling set_reg_default from nvsw_core_exit(). It only wrote
-  the probe-time defaults again, so the callback now runs once, from
-  nvsw_core_init().
-- Drop the nvsw.h definitions that no driver in the series uses,
-  among them CURRENT_TEMP_RO and SWITCH_IC_QTY, which were missing
-  from nvsw_readable_reg(), NVSW_REG_MIN, NVSW_NR_NONE and 37 masks.
-- Drop the unused ASIC2 to ASIC4 health, event and mask registers,
-  which on SPC6 hold thermal and VR signals rather than ASIC health,
-  and say in a comment that 0x2550 packs the health of all four ASICs.
-- Drop nvsw_volatile_reg(). With no register cache since v3 it was
-  never consulted, and it listed every readable register, so a cache
-  would have had nothing to hold either. Behaviour is unchanged.
-- Stop setting .platform_data on the mux I2C board info in patch 2.
-  i2c-mux-mlxcpld is a platform driver and takes its data from the mux
-  platform devices, so nothing read it. The board info is now const.
-- Update the existing asic_reset and asic2_reset ABI entry. On systems
-  which provide asic1_reset to asic4_reset, asic_reset resets all the
-  ASICs at once and the others reset one each.
-- Stop creating 32 attributes over reserved bits, or over CPLDs that
-  are not fitted, on the single ASIC liquid cooled systems. They now
-  sit in a table of their own, appended at init to a copy of the
-  common table for the four ASIC system.
-- Drop the unused linux/i2c-mux.h include from nvsw-host-spc6.
-- Add only the registers patch 3 uses to the nvsw-core register map.
-  Thirteen registers, among them the power supply alarm group and
-  TACHO13 to TACHO20, were made accessible with nothing using them.
-- Restore the CPLD fan fault override when the air cooled driver is
-  removed or fails to probe, through a new restore_reg_default core
-  callback paired with set_reg_default. It was cleared at probe and
-  never set again, leaving the fans without fault handling.
-- Correct the patch 3 commit message, which said mlx-platform clears
-  the same override. mlx-platform writes a different register, and the
-  override bit, bit 0 of 0x252e, exists only on the air cooled CPLD.
-  The NVSW_FAN_CONTROL_EN_MASK definition now says so.
-- Correct the patch 1 commit message and the cover letter, which said
-  the NVSW namespace keeps the core's exports out of the global symbol
-  table. They are still global symbols, and the namespace only makes
-  each user import it with MODULE_IMPORT_NS().
-- Shorten the patch 2 commit message on the per SKU description, and
-  describe the host I2C topology the probe relies on, with the CPLD on
-  bus 2 and the deferral until host bus 3 exists.
-- Report the bus 3 deferral in nvsw-host-spc6 with dev_err_probe(),
-  and say in the patch 2 commit message that the fixed bus numbers
-  rely on the host I2C controller driver registering first.
-- Say in the patch 3 ABI that a write to the psu and fan event files
-  reaches every bit of the register, clearing the bits written as 0
-  and leaving those written as 1 unchanged.
-- Make NVSW_CORE depend on I2C, which REGMAP_I2C and the core itself
-  require, rather than relying on every selecting driver to depend
-  on it.
-- Keep the aggregation registers and the event and mask registers of
-  every status register in the nvsw-core register map when dropping
-  the unused registers, since mlxreg-hotplug programs them at probe
-  and would otherwise fail on any board that describes hotplug items.
-Additional fixes added by Felix:
-- Make the ASIC reset attributes write only in patches 2 and 3, as
-  asic_reset and asic2_reset are in mlx-platform and in the ABI. They
-  were exposed with mode 0644.
-- Drop the HI187 SKU, an intermediate system that will not be
-  manufactured.
-- Drop the 69 registers that no driver in the series uses from
-  nvsw.h and from the nvsw-core register map, which now holds only
-  the registers the SPC6 driver accesses and those mlxreg-hotplug
-  programs for its status registers.
-- Drop the cpu_mctp_ready attribute and its ABI entry from both
-  tables, as the CPLD signal will be removed in future CPLD releases.
-- Drop asic_pg_fail from the air cooled table, which the liquid
-  cooled table does not have either.
-Other:
-- Rebase onto the current platform-drivers-x86 for-next.
-
-On the one finding sashiko.dev reported against v3, the fan drawer
-LEDs that patch 3 describes: it is valid, and it is now fixed, in the
-LED tree rather than here. The capability register of these systems
-reports a count of the fan drawers present rather than a bitmap, so
-the LED entries carry a slot index and leave the capability bit at
-zero, which mlxreg_led_config() did not understand. The same
-description style is used by mlxplat_mlxcpld_xdr_led_data in
-mlx-platform.c, which has been losing all twenty of its fan LEDs
-since the table was introduced in v6.16, so the gap belongs to
-leds-mlxreg. Lee has applied the fix, commit 68a2bfdf7b4d ("leds:
-mlxreg: Fix missing fan LEDs on systems reporting a unit count"),
-currently in for-leds-next and so queued for the same merge window as
-this series. There is no build or apply dependency between the two
-and the LED table here is unchanged.
-
-v2->v3
-Comments pointed out by Ilpo:
-- Return directly from nvsw_core_init() when
-  nvsw_core_mux_topology_init() fails, instead of jumping to a label
-  that only does a return.
-Issues reported by the sashiko.dev review, which Ilpo asked us to
-check:
-- Fix the shift for asic2_health..asic4_health. The four ASIC health
-  fields share one register, two bits each, but all four entries
-  carried .bit = 1, so only asic_health was right aligned and the
-  other three reported their field still shifted up. Set .bit to the
-  one based position of each mask's least significant bit.
-- Drop nvsw_core_reg_def and the register cache configuration that
-  went with it. The review pointed out that the array was unsorted
-  and that its entries never reached the hardware. Neither register
-  is relevant on SPC6, so the array is removed rather than sorted,
-  which leaves the cache with nothing to hold. This also drops
-  linux/bits.h from nvsw-core.c, whose only user there was the
-  GENMASK in that array. The one default SPC6 does need is written by
-  the board driver instead, see patch 3.
-- Make pdb1_pwr_status..pdb4_pwr_status read only. They were exposed
-  with mode 0644 over a register that is not in nvsw_writeable_reg(),
-  so a write returned -EIO. The ABI documentation is updated to match.
-- Correct the mode of the air cooled pwr_cycle attribute, which was
-  0244 instead of 0200.
-- Fix the documented polarity of fan_status and psu_status. The CPLD
-  reports fan drawer and power supply presence active low, so bit
-  value 0 means present. For fan_status that is what
-  mlxreg_fan_read() already assumes when it reads the same register
-  through .reg_prsnt, so only the ABI text was wrong. psu_status
-  shares a description block with psu_ac_status and psu_dc_status,
-  which are active high, so the polarity is now stated per attribute.
-- Drop the claim that the air cooled system exposes power supply
-  alarm indications from the patch 3 commit message, since no
-  attribute is described over the alarm registers.
-Additional fixes added by Felix:
-- Describe jtag_enable as the single bit it is. It was given a two bit
-  mask, but only the lower bit is defined in the CPLD register map, so
-  values 2 and 3 were accepted and wrote a reserved bit.
-- Drop the aux_pwr_cycle attribute from the air cooled table, as it is
-  not supported on systems with power supply units.
-- Drop the shutdown_unlock attribute. It was described over bit 5 of
-  the general purpose register, which the CPLD register map lists as
-  reserved. Thermal shutdown unlock is handled by the BMC on SPC6, so
-  the attribute is removed rather than moved to the right bit.
-- Clear the CPLD fan fault override enable bit on air cooled systems,
-  so that the fan speed is left to the software. This is done from the
-  board driver through the set_reg_default callback, which until now
-  had no user.
-- Drop NVSW_REG_FU_CAP_OFFSET from nvsw_writeable_reg(). It is read
-  only in hardware and the only attribute over it is 0444, so the
-  entry could never be reached. Found by checking every register in
-  nvsw_writeable_reg() against the CPLD register map; it is the only
-  mismatch.
-- Rename the last remaining *_fail label in nvsw-core to err_*, for
-  consistency with the rest of the file.
-
-v1->v2
-Comments pointed out by Ilpo:
-- Add the direct includes for the macros the two drivers use rather
-  than relying on them arriving transitively: linux/array_size.h for
-  ARRAY_SIZE, linux/bits.h for BIT and GENMASK, linux/err.h for IS_ERR
-  and PTR_ERR and linux/dev_printk.h for the dev_*() helpers, plus
-  linux/export.h and linux/types.h in the core.
-- Remove the redundant NULL assignments from the error paths. The
-  registration helpers now return into a local variable, so a struct
-  nvsw_core field is only ever assigned a valid pointer and never an
-  ERR_PTR, which is what the NULL stores were papering over. 19 of the
-  23 assignments are gone; the 4 that remain are on the two module
-  scope pointers in nvsw-host-spc6, which outlive a failed probe.
-- Rework the rollback in nvsw_core_platform_init() and
-  nvsw_host_spc6_mux_topology_init() to be positional, and drop the
-  defensive pointer tests from the matching exit paths, which can no
-  longer see a partially initialised state.
-Additional fixes added by Felix:
-- Sort the include blocks in both drivers.
-Link to v1: https://lore.kernel.org/platform-driver-x86/20261008061704.794379-1-fradensky@nvidia.com/
-Link to v2: https://lore.kernel.org/platform-driver-x86/20261018101156.699575-1-fradensky@nvidia.com/
-Link to v3: https://lore.kernel.org/platform-driver-x86/20261020172756.4160946-1-fradensky@nvidia.com/
-
-Felix Radensky (3):
-  platform/mellanox: nvsw-core: Add core driver for Nvidia switches
-  platform/mellanox: nvsw-host-spc6: Add driver for Nvidia SPC6 switches
-  platform/mellanox: nvsw-host-spc6: Add support for SPC6 air cooled
-    switches
-
- .../ABI/stable/sysfs-driver-mlxreg-io         |  205 ++-
- drivers/platform/mellanox/Kconfig             |   20 +
- drivers/platform/mellanox/Makefile            |    2 +
- drivers/platform/mellanox/nvsw-core.c         |  391 +++++
- drivers/platform/mellanox/nvsw-host-spc6.c    | 1485 +++++++++++++++++
- drivers/platform/mellanox/nvsw.h              |  202 +++
- 6 files changed, 2304 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/mellanox/nvsw-core.c
- create mode 100644 drivers/platform/mellanox/nvsw-host-spc6.c
- create mode 100644 drivers/platform/mellanox/nvsw.h
-
-
-base-commit: 2268d837dea13a78639fa3dad60472bb67478709
+diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+index 8d59181d7196..25f722379873 100644
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -970,3 +970,49 @@ Description:	These files show the system reset cause. Respectively:
+ 		the last reset.
+ 
+ 		The files are read only.
++
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu_status
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu_ac_status
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu_dc_status
++Date:		November 2026
++KernelVersion:	7.5
++Contact:	Felix Radensky <fradensky@nvidia.com>
++Description:	These files show the state of the system power supply units, one
++		bit per unit. Respectively: unit presence, unit AC power good
++		and unit DC power good. In psu_status bit value 0 means the
++		related unit is present, 1 - otherwise. In psu_ac_status and
++		psu_dc_status bit value 1 means the related power is good,
++		0 - otherwise.
++
++		The files are read only.
++
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_status
++Date:		November 2026
++KernelVersion:	7.5
++Contact:	Felix Radensky <fradensky@nvidia.com>
++Description:	This file shows the presence of the system fan drawers, one bit
++		per drawer. Bit value 0 means the related drawer is present,
++		1 - otherwise.
++
++		The file is read only.
++
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu_event
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu_ac_event
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu_dc_event
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_event
++Date:		November 2026
++KernelVersion:	7.5
++Contact:	Felix Radensky <fradensky@nvidia.com>
++Description:	These files show the sticky indication of a change in the
++		matching status file: power supply unit presence, power supply
++		unit AC power, power supply unit DC power and fan drawer
++		presence. Bit value 1 means the related unit changed its state
++		since the indication was last cleared.
++
++		A write applies to all the bits of the file at once: a bit
++		written as 0 is cleared, and a bit written as 1 is left
++		unchanged. Writing 0 clears all the indications, and writing
++		a value with only the bit of one unit at 0 clears the
++		indication of that unit alone.
++
++		The files are read/write.
+diff --git a/drivers/platform/mellanox/nvsw-core.c b/drivers/platform/mellanox/nvsw-core.c
+index 82b2d856292b..e9d0ff9b2c1a 100644
+--- a/drivers/platform/mellanox/nvsw-core.c
++++ b/drivers/platform/mellanox/nvsw-core.c
+@@ -33,10 +33,17 @@ static bool nvsw_writeable_reg(struct device *dev, unsigned int reg)
+ 	case NVSW_REG_ASIC1_EVENT_OFFSET:
+ 	case NVSW_REG_ASIC1_MASK_OFFSET:
+ 	case NVSW_REG_LED1_OFFSET:
++	case NVSW_REG_LED2_OFFSET:
++	case NVSW_REG_LED3_OFFSET:
++	case NVSW_REG_LED4_OFFSET:
+ 	case NVSW_REG_LED5_OFFSET:
+ 	case NVSW_REG_LED6_OFFSET:
++	case NVSW_REG_PS_AC_2_EVENT_OFFSET:
++	case NVSW_REG_PS_AC_2_MASK_OFFSET:
+ 	case NVSW_REG_PS_DC_OK_EVENT_OFFSET:
+ 	case NVSW_REG_PS_DC_OK_MASK_OFFSET:
++	case NVSW_REG_PS_2_EVENT_OFFSET:
++	case NVSW_REG_PS_2_MASK_OFFSET:
+ 	case NVSW_REG_FAN_EVENT_OFFSET:
+ 	case NVSW_REG_FAN_MASK_OFFSET:
+ 	case NVSW_REG_LEAK_EVENT_OFFSET:
+@@ -82,6 +89,9 @@ static bool nvsw_readable_reg(struct device *dev, unsigned int reg)
+ 	case NVSW_REG_RESET_CAUSE1_OFFSET:
+ 	case NVSW_REG_RESET_CAUSE2_OFFSET:
+ 	case NVSW_REG_LED1_OFFSET:
++	case NVSW_REG_LED2_OFFSET:
++	case NVSW_REG_LED3_OFFSET:
++	case NVSW_REG_LED4_OFFSET:
+ 	case NVSW_REG_LED5_OFFSET:
+ 	case NVSW_REG_LED6_OFFSET:
+ 	case NVSW_REG_CPLD7_PN_OFFSET:
+@@ -100,6 +110,12 @@ static bool nvsw_readable_reg(struct device *dev, unsigned int reg)
+ 	case NVSW_REG_ASIC1_HEALTH_OFFSET:
+ 	case NVSW_REG_ASIC1_EVENT_OFFSET:
+ 	case NVSW_REG_ASIC1_MASK_OFFSET:
++	case NVSW_REG_PS_AC_2_OFFSET:
++	case NVSW_REG_PS_AC_2_EVENT_OFFSET:
++	case NVSW_REG_PS_AC_2_MASK_OFFSET:
++	case NVSW_REG_PS_2_OFFSET:
++	case NVSW_REG_PS_2_EVENT_OFFSET:
++	case NVSW_REG_PS_2_MASK_OFFSET:
+ 	case NVSW_REG_PS_DC_OK_OFFSET:
+ 	case NVSW_REG_PS_DC_OK_EVENT_OFFSET:
+ 	case NVSW_REG_PS_DC_OK_MASK_OFFSET:
+diff --git a/drivers/platform/mellanox/nvsw-host-spc6.c b/drivers/platform/mellanox/nvsw-host-spc6.c
+index a3ed8dde9403..9480398aafc8 100644
+--- a/drivers/platform/mellanox/nvsw-host-spc6.c
++++ b/drivers/platform/mellanox/nvsw-host-spc6.c
+@@ -33,10 +33,16 @@
+  * struct nvsw_host_spc6_cfg - per SKU board description
+  * @regs_io: register access platform data;
+  * @led: led platform data;
++ * @fan: fan platform data, NULL on systems without fans;
++ * @set_reg_default: set default registers callback, NULL if not required;
++ * @restore_reg_default: restore default registers callback, NULL if not required;
+  */
+ struct nvsw_host_spc6_cfg {
+ 	struct mlxreg_core_platform_data *regs_io;
+ 	struct mlxreg_core_platform_data *led;
++	struct mlxreg_core_platform_data *fan;
++	int (*set_reg_default)(struct regmap *regmap);
++	int (*restore_reg_default)(struct regmap *regmap);
+ };
+ 
+ /* Platform mux channels */
+@@ -567,6 +573,346 @@ static struct mlxreg_core_platform_data nvsw_host_spc6_lc_4asic_regs_io = {
+ 	.counter = ARRAY_SIZE(nvsw_host_spc6_lc_4asic_regs_io_data),
+ };
+ 
++/* Platform register access data for air cooled system */
++static struct mlxreg_core_data nvsw_host_spc6_ac_regs_io_data[] = {
++	{
++		.label = "cpld1_version",
++		.reg = NVSW_REG_CPLD1_VER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld1_version_min",
++		.reg = NVSW_REG_CPLD1_MVER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld2_version",
++		.reg = NVSW_REG_CPLD2_VER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld2_version_min",
++		.reg = NVSW_REG_CPLD2_MVER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld3_version",
++		.reg = NVSW_REG_CPLD3_VER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld3_version_min",
++		.reg = NVSW_REG_CPLD3_MVER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld4_version",
++		.reg = NVSW_REG_CPLD4_VER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld4_version_min",
++		.reg = NVSW_REG_CPLD4_MVER_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpld1_pn",
++		.reg = NVSW_REG_CPLD1_PN_OFFSET,
++		.bit = GENMASK(15, 0),
++		.mode = 0444,
++		.regnum = 2,
++	},
++	{
++		.label = "cpld2_pn",
++		.reg = NVSW_REG_CPLD2_PN_OFFSET,
++		.bit = GENMASK(15, 0),
++		.mode = 0444,
++		.regnum = 2,
++	},
++	{
++		.label = "cpld3_pn",
++		.reg = NVSW_REG_CPLD3_PN_OFFSET,
++		.bit = GENMASK(15, 0),
++		.mode = 0444,
++		.regnum = 2,
++	},
++	{
++		.label = "cpld4_pn",
++		.reg = NVSW_REG_CPLD4_PN_OFFSET,
++		.bit = GENMASK(15, 0),
++		.mode = 0444,
++		.regnum = 2,
++	},
++	{
++		.label = "asic_reset",
++		.reg = NVSW_REG_RESET_GP2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0200,
++	},
++	{
++		.label = "reset_long_pb",
++		.reg = NVSW_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(0),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_short_pb",
++		.reg = NVSW_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(1),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_aux_pwr_or_reload",
++		.reg = NVSW_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(2),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_swb_dc_dc_pwr_fail",
++		.reg = NVSW_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_platform",
++		.reg = NVSW_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(4),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_swb_wd",
++		.reg = NVSW_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(6),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_asic_thermal",
++		.reg = NVSW_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(7),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_soc",
++		.reg = NVSW_REG_RESET_CAUSE1_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(5),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_system",
++		.reg = NVSW_REG_RESET_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(1),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_sw_pwr_off",
++		.reg = NVSW_REG_RESET_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(2),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_cpu_thermal",
++		.reg = NVSW_REG_RESET_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_ac_pwr_fail",
++		.reg = NVSW_REG_RESET_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(6),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_mgmt_pwr",
++		.reg = NVSW_REG_RESET_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(7),
++		.mode = 0444,
++	},
++	{
++		.label = "fan_dir",
++		.reg = NVSW_REG_GP0_RO_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "cpu_shutdown_req",
++		.reg = NVSW_REG_GP0_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(2),
++		.mode = 0444,
++	},
++	{
++		.label = "vpd_wp",
++		.reg = NVSW_REG_GP0_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0644,
++		.secured = 1,
++	},
++	{
++		.label = "pcie_asic_reset_dis",
++		.reg = NVSW_REG_GP0_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(4),
++		.mode = 0644,
++	},
++	{
++		.label = "cpu_power_off_ready",
++		.reg = NVSW_REG_GP0_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(6),
++		.mode = 0644,
++	},
++	{
++		.label = "pwr_converter_prog_en",
++		.reg = NVSW_REG_GP7_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(0),
++		.mode = 0644,
++	},
++	{
++		.label = "graceful_pwr_off",
++		.reg = NVSW_REG_GP7_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0644,
++	},
++	{
++		.label = "pwr_cycle",
++		.reg = NVSW_REG_GP1_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(2),
++		.mode = 0200,
++	},
++	{
++		.label = "pwr_down",
++		.reg = NVSW_REG_GP1_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0200,
++	},
++	{
++		.label = "bmc_to_cpu_ctrl",
++		.reg = NVSW_REG_GP1_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(5),
++		.mode = 0644,
++	},
++	{
++		.label = "uart_sel",
++		.reg = NVSW_REG_GP1_OFFSET,
++		.mask = NVSW_UART_SEL_MASK,
++		.bit = 7,
++		.mode = 0644,
++	},
++	{
++		.label = "psu1_on",
++		.reg = NVSW_REG_GP4_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(0),
++		.mode = 0200,
++	},
++	{
++		.label = "psu2_on",
++		.reg = NVSW_REG_GP4_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(1),
++		.mode = 0200,
++	},
++	{
++		.label = "psu3_on",
++		.reg = NVSW_REG_GP4_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(2),
++		.mode = 0200,
++	},
++	{
++		.label = "psu4_on",
++		.reg = NVSW_REG_GP4_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0200,
++	},
++	{
++		.label = "jtag_enable",
++		.reg = NVSW_REG_FIELD_UPGRADE,
++		.mask = GENMASK(7, 0) & ~BIT(0),
++		.mode = 0644,
++	},
++	{
++		.label = "jtag_cap",
++		.reg = NVSW_REG_FU_CAP_OFFSET,
++		.mask = NVSW_FU_CAP_MASK,
++		.bit = 1,
++		.mode = 0444,
++	},
++	{
++		.label = "asic_health",
++		.reg = NVSW_REG_ASIC1_HEALTH_OFFSET,
++		.mask = NVSW_ASIC_MASK,
++		.bit = 1,
++		.mode = 0444,
++	},
++	{
++		.label = "psu_status",
++		.reg = NVSW_REG_PS_2_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "psu_event",
++		.reg = NVSW_REG_PS_2_EVENT_OFFSET,
++		.mask = GENMASK(7, 0),
++		.bit = 1,
++		.mode = 0644,
++	},
++	{
++		.label = "psu_ac_status",
++		.reg = NVSW_REG_PS_AC_2_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "psu_ac_event",
++		.reg = NVSW_REG_PS_AC_2_EVENT_OFFSET,
++		.mask = GENMASK(7, 0),
++		.bit = 1,
++		.mode = 0644,
++	},
++	{
++		.label = "psu_dc_status",
++		.reg = NVSW_REG_PS_DC_OK_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "psu_dc_event",
++		.reg = NVSW_REG_PS_DC_OK_EVENT_OFFSET,
++		.mask = GENMASK(7, 0),
++		.bit = 1,
++		.mode = 0644,
++	},
++	{
++		.label = "fan_status",
++		.reg = NVSW_REG_FAN_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "fan_event",
++		.reg = NVSW_REG_FAN_EVENT_OFFSET,
++		.mask = GENMASK(7, 0),
++		.bit = 1,
++		.mode = 0644,
++	},
++	{
++		.label = "spi_chnl_select",
++		.reg = NVSW_REG_SPI_CHNL_SELECT,
++		.mask = GENMASK(7, 0),
++		.bit = 1,
++		.mode = 0644,
++	},
++};
++
++static struct mlxreg_core_platform_data nvsw_host_spc6_ac_regs_io = {
++	.data = nvsw_host_spc6_ac_regs_io_data,
++	.counter = ARRAY_SIZE(nvsw_host_spc6_ac_regs_io_data),
++};
++
+ /* Platform led data for liquid cooled system */
+ static struct mlxreg_core_data nvsw_host_spc6_lc_led_data[] = {
+ 	{
+@@ -601,6 +947,219 @@ static struct mlxreg_core_platform_data nvsw_host_spc6_lc_led = {
+ 	.counter = ARRAY_SIZE(nvsw_host_spc6_lc_led_data),
+ };
+ 
++/* Platform led data for air cooled system */
++static struct mlxreg_core_data nvsw_host_spc6_ac_led_data[] = {
++	{
++		.label = "status:green",
++		.reg = NVSW_REG_LED1_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++	},
++	{
++		.label = "status:amber",
++		.reg = NVSW_REG_LED1_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++	},
++	{
++		.label = "psu:green",
++		.reg = NVSW_REG_LED1_OFFSET,
++		.mask = NVSW_LED_HI_NIBBLE_MASK,
++	},
++	{
++		.label = "psu:amber",
++		.reg = NVSW_REG_LED1_OFFSET,
++		.mask = NVSW_LED_HI_NIBBLE_MASK,
++	},
++	{
++		.label = "fan:green",
++		.reg = NVSW_REG_LED6_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++	},
++	{
++		.label = "fan:amber",
++		.reg = NVSW_REG_LED6_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++	},
++	{
++		.label = "uid:blue",
++		.reg = NVSW_REG_LED5_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++	},
++	{
++		.label = "fan1:green",
++		.reg = NVSW_REG_LED2_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 1,
++	},
++	{
++		.label = "fan1:orange",
++		.reg = NVSW_REG_LED2_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 1,
++	},
++	{
++		.label = "fan2:green",
++		.reg = NVSW_REG_LED2_OFFSET,
++		.mask = NVSW_LED_HI_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 2,
++	},
++	{
++		.label = "fan2:orange",
++		.reg = NVSW_REG_LED2_OFFSET,
++		.mask = NVSW_LED_HI_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 2,
++	},
++	{
++		.label = "fan3:green",
++		.reg = NVSW_REG_LED3_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 3,
++	},
++	{
++		.label = "fan3:orange",
++		.reg = NVSW_REG_LED3_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 3,
++	},
++	{
++		.label = "fan4:green",
++		.reg = NVSW_REG_LED3_OFFSET,
++		.mask = NVSW_LED_HI_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 4,
++	},
++	{
++		.label = "fan4:orange",
++		.reg = NVSW_REG_LED3_OFFSET,
++		.mask = NVSW_LED_HI_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 4,
++	},
++	{
++		.label = "fan5:green",
++		.reg = NVSW_REG_LED4_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 5,
++	},
++	{
++		.label = "fan5:orange",
++		.reg = NVSW_REG_LED4_OFFSET,
++		.mask = NVSW_LED_LO_NIBBLE_MASK,
++		.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++		.slot = 5,
++	},
++};
++
++static struct mlxreg_core_platform_data nvsw_host_spc6_ac_led = {
++	.data = nvsw_host_spc6_ac_led_data,
++	.counter = ARRAY_SIZE(nvsw_host_spc6_ac_led_data),
++};
++
++/* Platform fan data for air cooled system */
++static struct mlxreg_core_data nvsw_host_spc6_ac_fan_data[] = {
++	{
++		.label = "pwm1",
++		.reg = NVSW_REG_PWM1_OFFSET,
++	},
++	{
++		.label = "tacho1",
++		.reg = NVSW_REG_TACHO1_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 1,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho2",
++		.reg = NVSW_REG_TACHO2_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 2,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho3",
++		.reg = NVSW_REG_TACHO3_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 3,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho4",
++		.reg = NVSW_REG_TACHO4_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 4,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho5",
++		.reg = NVSW_REG_TACHO5_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 5,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho6",
++		.reg = NVSW_REG_TACHO6_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 6,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho7",
++		.reg = NVSW_REG_TACHO7_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 7,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho8",
++		.reg = NVSW_REG_TACHO8_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 8,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho9",
++		.reg = NVSW_REG_TACHO9_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 9,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "tacho10",
++		.reg = NVSW_REG_TACHO10_OFFSET,
++		.mask = GENMASK(7, 0),
++		.capability = NVSW_REG_FAN_CAP1_OFFSET,
++		.slot = 10,
++		.reg_prsnt = NVSW_REG_FAN_OFFSET,
++	},
++	{
++		.label = "conf",
++		.capability = NVSW_REG_TACHO_SPEED_OFFSET,
++	},
++};
++
++static struct mlxreg_core_platform_data nvsw_host_spc6_ac_fan = {
++	.data = nvsw_host_spc6_ac_fan_data,
++	.counter = ARRAY_SIZE(nvsw_host_spc6_ac_fan_data),
++	.capability = NVSW_REG_FAN_DRW_CAP_OFFSET,
++	.version = 1,
++};
++
+ /* Watchdog platform data */
+ static struct mlxreg_core_data nvsw_host_spc6_wd_main_regs[] = {
+ 	{
+@@ -712,6 +1271,28 @@ static void nvsw_host_spc6_mux_topology_exit(struct nvsw_core *nvsw_core)
+ 		platform_device_unregister(nvsw_core->mux[i]);
+ }
+ 
++/* Register default values callback. */
++static int nvsw_host_spc6_set_reg_default(struct regmap *regmap)
++{
++	/* The CPLD can override the fan PWM and drive the fans at full speed
++	 * on a fan fault. Clear the enable bit for that override, leaving the
++	 * fan speed to the software.
++	 */
++	return regmap_update_bits(regmap, NVSW_REG_GP0_OFFSET,
++				  NVSW_FAN_CONTROL_EN_MASK, 0);
++}
++
++/* Register default values restore callback. */
++static int nvsw_host_spc6_restore_reg_default(struct regmap *regmap)
++{
++	/* Hand fan fault handling back to the CPLD, as no software controls
++	 * the fans once the fan device is gone.
++	 */
++	return regmap_update_bits(regmap, NVSW_REG_GP0_OFFSET,
++				  NVSW_FAN_CONTROL_EN_MASK,
++				  NVSW_FAN_CONTROL_EN_MASK);
++}
++
+ /* Liquid cooled single ASIC systems, without power supplies and fans. */
+ static const struct nvsw_host_spc6_cfg nvsw_host_spc6_cfg_lc = {
+ 	.regs_io = &nvsw_host_spc6_lc_regs_io,
+@@ -724,7 +1305,23 @@ static const struct nvsw_host_spc6_cfg nvsw_host_spc6_cfg_lc_4asic = {
+ 	.led = &nvsw_host_spc6_lc_led,
+ };
+ 
++/* Air cooled system, equipped with power supplies and fan drawers. */
++static const struct nvsw_host_spc6_cfg nvsw_host_spc6_cfg_ac = {
++	.regs_io = &nvsw_host_spc6_ac_regs_io,
++	.led = &nvsw_host_spc6_ac_led,
++	.fan = &nvsw_host_spc6_ac_fan,
++	.set_reg_default = nvsw_host_spc6_set_reg_default,
++	.restore_reg_default = nvsw_host_spc6_restore_reg_default,
++};
++
+ static const struct dmi_system_id nvsw_host_dmi_table[] __initconst = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "VMOD0025"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "HI186"),
++		},
++		.driver_data = (void *)&nvsw_host_spc6_cfg_ac,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "VMOD0025"),
+@@ -803,6 +1400,9 @@ static int nvsw_host_probe(struct platform_device *pdev)
+ 		nvsw_core->wd_data[i] = &nvsw_host_spc6_wd_set[i];
+ 	nvsw_core->regio_data = cfg->regs_io;
+ 	nvsw_core->led_data = cfg->led;
++	nvsw_core->fan_data = cfg->fan;
++	nvsw_core->set_reg_default = cfg->set_reg_default;
++	nvsw_core->restore_reg_default = cfg->restore_reg_default;
+ 	nvsw_core->mux_init = nvsw_host_spc6_mux_topology_init;
+ 	nvsw_core->mux_exit = nvsw_host_spc6_mux_topology_exit;
+ 	platform_set_drvdata(pdev, nvsw_core);
+diff --git a/drivers/platform/mellanox/nvsw.h b/drivers/platform/mellanox/nvsw.h
+index 65746e4b539b..0b3544fbee49 100644
+--- a/drivers/platform/mellanox/nvsw.h
++++ b/drivers/platform/mellanox/nvsw.h
+@@ -37,6 +37,9 @@ struct regmap;
+ #define NVSW_REG_RESET_CAUSE1_OFFSET	0x251e
+ #define NVSW_REG_RESET_CAUSE2_OFFSET	0x251f
+ #define NVSW_REG_LED1_OFFSET		0x2520
++#define NVSW_REG_LED2_OFFSET		0x2521
++#define NVSW_REG_LED3_OFFSET		0x2522
++#define NVSW_REG_LED4_OFFSET		0x2523
+ #define NVSW_REG_LED5_OFFSET		0x2524
+ #define NVSW_REG_LED6_OFFSET		0x2525
+ #define NVSW_REG_CPLD7_PN_OFFSET	0x2528
+@@ -55,6 +58,12 @@ struct regmap;
+ #define NVSW_REG_ASIC1_HEALTH_OFFSET	0x2550
+ #define NVSW_REG_ASIC1_EVENT_OFFSET	0x2551
+ #define NVSW_REG_ASIC1_MASK_OFFSET	0x2552
++#define NVSW_REG_PS_2_OFFSET		0x255b
++#define NVSW_REG_PS_2_EVENT_OFFSET	0x255c
++#define NVSW_REG_PS_2_MASK_OFFSET	0x255d
++#define NVSW_REG_PS_AC_2_OFFSET		0x2561
++#define NVSW_REG_PS_AC_2_EVENT_OFFSET	0x2562
++#define NVSW_REG_PS_AC_2_MASK_OFFSET	0x2563
+ #define NVSW_REG_PS_DC_OK_OFFSET	0x2567
+ #define NVSW_REG_PS_DC_OK_EVENT_OFFSET	0x2568
+ #define NVSW_REG_PS_DC_OK_MASK_OFFSET	0x2569
+@@ -113,6 +122,12 @@ struct regmap;
+ #define NVSW_REG_TACHO_SPEED_OFFSET	0x25f8
+ #define NVSW_REG_MAX			0x26ff
+ 
++/*
++ * CPLD fan PWM override on fan failure, in NVSW_REG_GP0_OFFSET of the air
++ * cooled SPC6 systems only. The liquid cooled ones use the same bit for a
++ * pulsed USB to UART bridge reset.
++ */
++#define NVSW_FAN_CONTROL_EN_MASK	BIT(0)
+ /*
+  * Health fields of the first to the fourth ASIC, two bits each, all held in
+  * NVSW_REG_ASIC1_HEALTH_OFFSET.
 -- 
 2.34.1
 
