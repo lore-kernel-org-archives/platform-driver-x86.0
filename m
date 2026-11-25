@@ -1,80 +1,82 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.229.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795596495;
-	b=yauiO1albISo/wwd1kvGuuc9cHF6s8iJPkv2YMb4xLWvfOp4ao/gKGEL6KHFboGSg5c0
-	 BUhm6G+lxs+/gSpoGKZVy13azM49kCWsLtu28VFYZBdLfWmOuMfsIBDV1SqrYERtAvWCE
-	 qUuixKlYGUJE/0K4rj87J+vrhOLLY5Rc49wgeYmWKDa3zP4fsXp0G7QnZVEJQoyy7egjW
-	 rZlfulc2DpDGC+2DmHl2V6mG4kvEOaa5U+gHWOXcY3A8Zn45+yqjWNGA2LgEvJReqvW+x
-	 BIGmtaXmfmo0TyE0B8Z74CTTHCoKtDaSD6yisoxcisG8aHXhCczVpTjPGxgNWh9+wNA==
+	t=1795596521;
+	b=OYygVdo0nNlYEaR4U3K+5xnRKBKp0KnGU8wYICwYrO1f4c3ujOYUlSXa80WpchpGdCRq
+	 vLf/BPiSN+QXhlFbAp0g+J+bG0J9fLLZbiW7Vj3q0DGVPjNuBEGZQVT48Vxlmt1kyGKBF
+	 t2BQNyqbJb21bABBE4ll4zl1w2/EqUlCZFAEpbXVEHamFL/PvbQJp9y7pAlI9F571/xPt
+	 U7VHC2MINyBn54CDB5x5Ah9EagUMk0RbkblSCwikQCSQdRwcRH706VnZrxtIgRlZFTWK8
+	 n4cwy1qMWpkULbRjKbJL5IplhWNKMupDhoq9Q07wBOl2ORPlF1M61I52xXSHChfJcTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795596495;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795596521;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=wv9c8S5oFF0tJwBxIAPQ2CpHZNWF2YXmchzsVyS3ZOg=;
-	b=sX3llPUQLlkRRER9KtmqAlSCZRQloCp2rUTESp4P4KcK1K8Eoxe2gskDzYm2IkwQtnuJ
-	 k172E0DHCP+UAXQI/8G3DFZ3BJwkHMDVYUJAkXsBpzYXbnav0DeRgncIX5/PnWVUvr7Ub
-	 8EqjLMsdLiBgLHFyiZG+CBFoNrw85KrkEBDNylNeql40hJTCV7i3l3POF/DRfGnKqwJmN
-	 hdCs5/NWGQMrn4UmsL5hDXWRXDzVEaTOyya8mA4CvYZUjb5gpa6qXsxAQGBse1/M4zfHP
-	 Q4TCB6b5yD9PwXCAgWzJ3EAraVFTxb40RaFAklQyMqooI+J5EMdJdUcsy4EGuwdABkA==
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=P+wd9JyZvI+Ds8ItKadr6A0TrwDEYi2YNevvWKQHylE=;
+	b=0+laenZPCsA4I+zMeloIGI/RMfSCcZ1eWscSPETSZSibkLQo1fyxeh04vNFeivVoZKJA
+	 tCO5rBDWonoHiZoOMKMoC2jB8aXf0672gKqp9c4GrNFVSpWyx+izygBziS3No9k/6Nrus
+	 Ug1AhVjHpYM6czmJ0nU2qj6bBSM7RVz50WHGNtzXVuPgYDQdKME+6bRGLPxxwAyOKVsf5
+	 r8LnWBtXkhBpybwIhk52q+hehmsstVbqvNnP1/4lsAKbxXWN50F2F/Ib+xnJewF1PV7QG
+	 0V/ulmdbdqnfxzR2OBh6cATUv30MFrDh3jjJE16IiBoyPVIgkCSqQj8bvYFAyma/dhA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=TENQTGKO;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="RYMn/SoQ";
 	arc=none smtp.remote-ip=74.125.229.9
 Received: from mail-dy2-f9.google.com (mail-dy2-f9.google.com [74.125.229.9])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243FD606A330
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 08:48:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 243FD606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B686606A321
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 08:48:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0B686606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=TENQTGKO
-Received: by mail-dy2-f9.google.com with SMTP id 5a478bee46e88-377157fde7bso1869983eec.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 00:48:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=RYMn/SoQ
+Received: by mail-dy2-f9.google.com with SMTP id 5a478bee46e88-377157fde7bso1870147eec.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 00:48:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795596494; x=1796201294; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wv9c8S5oFF0tJwBxIAPQ2CpHZNWF2YXmchzsVyS3ZOg=;
-        b=TENQTGKOk6g7kZ9FlbbGSf1mfOxsE4KdhEi4uBuv6FblPFCagzMtMYAhrIOtlqTdGp
-         oZRX8JuntDuRfyqeWy4QE0EK0fdyN/bmkpqSlfpWWNx5ax9ZlYIdae+8Agz9kmb+bEsE
-         ngSXEqXjxmIsyrMh3ciZyq7EKMUN1VQQqaU04fHJ7T09wYcWfVcR3yrJCeeyutVBEDWa
-         g5F23NSaKzIsNSVPXpSr66u1PyekeKjQDgPrlO/exthUpqZDrmLMEhOb0c2neMZ4trOf
-         h0kmobjg0rvjzTxSI9EV65MbB9L+Jj6QH5Yc21isYEFuqvh+7zFfpHTF1BY0eFjCdtOl
-         9T0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795596494; x=1796201294;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795596520; x=1796201320; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=wv9c8S5oFF0tJwBxIAPQ2CpHZNWF2YXmchzsVyS3ZOg=;
-        b=Jtu+qR9PiptEt0ZvJtRXooUkNQYMQ+UTR/4wTU6fBXn43DzZumjk6UiJC3bqvKnja2
-         YaNHsmA0zRayaGi0obFtc3qJg9U3GQNcxWnvis4Lq0LqcOnvG9GBSUW7Ojs2I4UviW9A
-         LtIPNqdXt39m+DeGniIIpiiLVKOzBRxfFM+/NOp96czgb5K+AQLkPmK3yf3fxOSk45Rt
-         cNLfsNmI0UTzcbmcLFp197Bp4gPpE+r0fKjYckH4w7Xff0g7CoIfpoWNlk7Vvvu65MjJ
-         LnsRFGs6K+sPlL/FENjQ5OI3cPDHEWl3aTqcbFO4buLvpuRofPsIbz0DOP27kqQHg97l
-         0m5Q==
-X-Gm-Message-State: APuU4Z82vmYU50PtodxZFDJ/VhkOAOilpJ9eVhD7GSLbWUa+X3Z87gxg
-	c1/bJlIKpmgNqbA98ua1EcZC7z617Y9yjBxnX0Du1YT2lCHs9EV5uLuG
-X-Gm-Gg: AZFdTZe4/b8aGaQ/8bxcEQEb3szS4TbJo6PwM1NQTjDY0UB2/CaPAAM8Usg0CXca3En
-	R/x5uEPKCw7RzjyNSU1d1qL7cK1noqcaJOPb8DpCPYFME+SceSodH9fWM7LkI8Lr1fm5dB5m+3T
-	yghgnqGDuSk0sE6oe2qU+Ila6DoHuZIhh0Y9etRA62E/zkI7vDzJW2VEkcQchqPpPJ9lsUFlUuH
-	O1cLzgryK0M9MwfeRDejNrabc7ptDmPrJSQP3K7LP40B/HMuVeytn5ySsHWIt9tRDWyjSrcuUuR
-	YuA0vMzrHmhpp6ODX3m3g9YXyO0bF5m8oKq39/M207b5k1jKyY2qt2tbETW3HiLGS4MJ5Xo+ga6
-	oRXlsOwsPiGSCQS6YLblPoKP+vA8mVG2l7k2hFA4bIk02CM/mXe3ydq1jC/TTm9QKkMNBMX9YxU
-	PM8H1tibFj7tiszpnCmtwOJ1MOLv5mIGq8X26KkHdOPCoYeFn5ngexJv683mh3rjmHT/FZtgd7F
-	CglaxOKVj8fpRLsI6W7rEXSoMWG0lNy+8FBxr44AVABB+L4tqwOkPGDP9M+hEsEiuzXYLmqT4Ha
-	GuVwXz//2Dh3N7DGSSjQxm6BmbOp
-X-Received: by 2002:a05:7300:b089:b0:386:9c9f:83d8 with SMTP id 5a478bee46e88-3869c9f86bbmr14134981eec.17.1795596494078;
-        Wed, 25 Nov 2026 00:48:14 -0800 (PST)
+        bh=P+wd9JyZvI+Ds8ItKadr6A0TrwDEYi2YNevvWKQHylE=;
+        b=RYMn/SoQcx7Wdjnvdd1EPOCTHZ/QS6ZqKmnjEg9C7Gkwnemv1AZtInz9AH1DeL0C78
+         4cYjAQE9JMzqNo/aJGHpD1YpTTkbr4QNcNy+6I4v7UEsRWrKYBwG2nY8MIapgtyrhq+J
+         DRh9yTGf8RiHae9Oa5bhBFQhQcafPHm7B9w8wQaplQ1dA2p55c68uLZ7+h8fInuqY6aK
+         PhSnu1cooMe3qksY0t+GB+lzhtEOz//5kiBAc6uVGUvLxWUamSd2LSHrK6GmbXI18/ny
+         evTL8ldRhykDqEt2VNdVFPKYlzgpt4UjeGVCPqqAepEdwvFEKHgIZm6wFDdhgJBaILo6
+         EshQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795596520; x=1796201320;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=P+wd9JyZvI+Ds8ItKadr6A0TrwDEYi2YNevvWKQHylE=;
+        b=Znla4ccBx83kySzWv38HyTSj6807bBzGgHJfPnRl3ucLrD8DU/6V3QpwWW3o8fkQ9p
+         SWpL4L7AoYvN4SDVR/+5j4EOC/gBcERQRsRX+JcFbKImpfkxPKL5nuL3b+gtDu8AtzKz
+         cgwy5eYJ+300/+qB4fjF4tWzeRjhejDfQeOG1BGdQIdTLfSgXM8m0VIKDhURWCrJcxTK
+         Ju3liPSFmbp7mo1DywAZJPzP1Om1qUIzSgus2z1Z9FMn7THanJ6bk5wx4SiH/q2gYj9S
+         L4tfxO0vcwsajNcIwZ4uc0BV3A/zbRzXDoHrkzf0di0jb+rm7n4Z1NyKX84SL0C9u3S1
+         lLFw==
+X-Gm-Message-State: APuU4Z8kGOTwXJZmdngdEyrDJT0QpaWNDuI/vL5GCmyu7yrbx3GZ11HO
+	u/HqrWJWQGzvT/EsUxb8oBUpDY2nTlqQna/JeQBqQ/+K/TDnvDF35zkB
+X-Gm-Gg: AZFdTZecKJXaAC+cETMijd1PM8XJQZE6Hnp+98QmkwF9tHFLhQtsul4uvCI0JZ8AkE1
+	wkLKQQ0cWw9AmvuVi5OQ7Zv4YG40m0Bou75ux24N6xrwzOfYUaxt2cgzlP99OSt/VH9g6Qy6fEh
+	f2mz+9x0PS9y7aSSAjHcmlfAMbELcDEqpskQnDMHHrltyB/cnpyoVgjCTv4wrRWWfSktklJ6PGh
+	xc/kxAGouZlA3hTlx9GWbJsuivccQ4oXy3G+iMyGtFeSrDsS6StlRZGjE42cW9w+QNRjRbZOlfl
+	F+7gZAMB1S+2LO7On3frSe7x+PN9wJy412DMBK14CL//AEnsvn8gl5hLmQyD13PTv1qGIi1JwKL
+	hXvftHxk5QuDAm/TGGRrTMWcFmJ3+pCFIwMqEoNYLOON3OdeJMSKxlCAnnL9c6ZV+p42JOMzRWA
+	/biaWwRCBFM3xOsSgMC3AzwVf9qq75GVQNvEKneB9jquHKMf/9I/VdrF/KpUW+z7Nd0AgbuyxxK
+	1Jym3xaOdqnkSJ5FxNOUXmvdNjwWQFGIXNxeyqxBtXK4detkFxXeWmW7Vk/BScbpXWfkEdJjSus
+	jAJz0mn3n2JhkSFQKRX96xWevFoD
+X-Received: by 2002:a05:7300:ec8e:b0:386:a97c:f80d with SMTP id 5a478bee46e88-386ce3a8f03mr1873307eec.27.1795596520027;
+        Wed, 25 Nov 2026 00:48:40 -0800 (PST)
 Received: from ThinkPad ([192.220.23.71])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386b9bdafb5sm18879252eec.9.2026.11.25.00.48.08
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386b9bdafb5sm18879252eec.9.2026.11.25.00.48.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 00:48:13 -0800 (PST)
+        Wed, 25 Nov 2026 00:48:39 -0800 (PST)
 From: Qiling Zhu <kmatzkaczor244@gmail.com>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	"Derek J. Clark" <derekjohn.clark@gmail.com>,
@@ -92,10 +94,12 @@ Cc: platform-driver-x86@vger.kernel.org,
 	vishnuocv@gmail.com,
 	vsankar@lenovo.com,
 	Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>
-Subject: [PATCH v4 0/6] platform/x86: thinkpad_acpi: Add a keyboard backlight auto-mode trigger
-Date: Wed, 25 Nov 2026 16:46:37 +0800
-Message-ID: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
+Subject: [PATCH v4 1/6] platform/x86: thinkpad_acpi: Report auto keyboard backlight mode as off
+Date: Wed, 25 Nov 2026 16:46:38 +0800
+Message-ID: <20261125084644.137506-2-kmatzkaczor244@gmail.com>
 X-Mailer: git-send-email 2.56.1
+In-Reply-To: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
+References: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -107,123 +111,82 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+The EC keyboard backlight level 3, which selects the auto mode, is
+passed to the LED classdev verbatim by kbdlight_sysfs_get().  The LED
+then reports a brightness of 3 with max_brightness 2, both through the
+brightness sysfs attribute and through brightness_hw_changed
+notifications.
 
-On supported ThinkPads, Fn+Space can select automatic keyboard
-backlight control.  This series exposes that mode through the private
-LED trigger "tpacpi-kbd-auto".  The first patch fixes an out-of-range
-brightness value that was reported to make UPower stop tracking hotkey
-changes on a ThinkPad X9-14 Gen 1.
+This is not only cosmetic.  According to a report on a ThinkPad X9-14
+Gen 1, UPower 1.91.x treats the out-of-range value as invalid and stops
+watching brightness_hw_changed, so the desktop no longer follows the
+Fn+Space hotkey after auto mode has been entered.
 
-This is v4 of the thinkpad_acpi keyboard backlight auto mode series.
-Many thanks to Rong, Mark and Vishnu for the reviews and the firmware
-side answers so far, and to Andrea for the report behind the first
-patch.  I have tried to follow the v3 comments one by one; where I was
-not sure how to read a comment, I say so below and would be glad to be
-corrected.
+The auto mode is not a brightness level.  Report it as 0, which is
+within the exported brightness range, in a new helper,
+kbdlight_level_to_brightness(), as ideapad-laptop does for its auto
+mode.
 
-As Rong asked, this version starts a new thread.  For reference, v3
-is here:
+Fixes: bb28f3d51ff5 ("thinkpad_acpi: Add support for keyboard backlight")
+Reported-by: Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>
+Closes: https://lore.kernel.org/r/CAENjc+w0Rqy=kDSew7XtNJCSvyPiXPJ5faWdmCr5RGYFhpunCA@mail.gmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
+Reviewed-by: Rong Zhang <i@rong.moe>
 
-  https://lore.kernel.org/r/20261114174814.62153-1-kmatzkaczor244@gmail.com/
+---
+Mark Pearson's Reviewed-by was given on the v3 version of this patch,
+which did the mapping inline in kbdlight_sysfs_get().  The helper was
+added at Rong's request, so the tag is not carried over.
 
-and my reply with the sleep test data is here:
+With this patch on its own, on kernels that still use the LED core
+suspend/resume path, a backlight that went to sleep in auto mode comes
+back off after resume; before, it came back in auto mode, since that
+path wrote the unmapped value back.  The rest of this series restores
+the level the EC had.
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-  https://lore.kernel.org/r/av14Sp6_nKwU5F-i@ThinkPad/
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 4f81855ad..31d3721bb 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -5102,6 +5102,9 @@ static struct ibm_struct video_driver_data = {
+  * Keyboard backlight subdriver
+  */
+ 
++/* EC level that selects the auto mode for the keyboard backlight */
++#define TPACPI_KBD_LIGHT_AUTO_LEVEL 3
++
+ static enum led_brightness kbdlight_brightness;
+ static DEFINE_MUTEX(kbdlight_mutex);
+ 
+@@ -5135,6 +5138,15 @@ static int kbdlight_get_level(void)
+ 	return status & 0x3;
+ }
+ 
++static int kbdlight_level_to_brightness(int level)
++{
++	/* Auto mode is not a brightness level; report it as off. */
++	if (level == TPACPI_KBD_LIGHT_AUTO_LEVEL)
++		return 0;
++
++	return level;
++}
++
+ static bool kbdlight_is_supported(void)
+ {
+ 	int status = 0;
+@@ -5194,7 +5206,7 @@ static enum led_brightness kbdlight_sysfs_get(struct led_classdev *led_cdev)
+ 	if (level < 0)
+ 		return 0;
+ 
+-	return level;
++	return kbdlight_level_to_brightness(level);
+ }
+ 
+ static struct tpacpi_led_classdev tpacpi_led_kbdlight = {
+-- 
+2.56.1
 
-The series went from seven patches to six: the two suspend/resume
-patches of v3 are replaced by one, which now sits before the trigger
-patch.
-
-  1/6  Report auto keyboard backlight mode as off          (stable)
-  2/6  Extract kbdlight notify helpers                  (refactor)
-  3/6  Don't poke keyboard backlight's LED core brightness (writes)
-  4/6  Restore keyboard backlight level ourselves       (sleep/wake)
-  5/6  Detect auto-mode capability via MLCG             (groundwork)
-  6/6  Add a keyboard backlight auto-mode trigger         (feature)
-
-Changes since v3, by comment:
-
-- 1/6 does the mapping in a small helper with an int return type, as
-  Rong suggested while reviewing the trigger patch; 4/6 reuses the
-  helper for brightness notifications.  With 1/6 on its own, on kernels
-  that still use the LED core suspend/resume path, a backlight that
-  went to sleep in auto mode comes back off after resume, where the
-  unmapped value used to be written back; 4/6 restores the level the EC
-  had.  I kept 1/6 small so that it can go to stable on its own, and
-  would like to hear if this trade-off looks wrong for stable.
-
-- 2/6 takes the title Rong suggested, states the locking contract with
-  lockdep_assert_held() instead of a comment, and drops the braces.
-  The helpers are placed where the later patches need them, in the
-  hope that no later patch has to add a forward declaration.
-
-- 3/6 takes Rong's title.  Of the two software write paths, only the
-  proc path reports changes through brightness_hw_changed; the sysfs
-  path just writes the level and updates the cached one.  Fn+Space
-  changes continue to be reported.  The text after the --- line is my
-  attempt to explain why leaving the LED core's cached brightness alone
-  seems acceptable to me; if the reasoning there falls short, please
-  tell me.
-
-- 4/6 replaces v3 5/7 and 7/7.  With the driver unloaded on my
-  machine, the backlight went out when entering s2idle and
-  hibernation; on wake from s2idle the EC was back at its previous
-  level, and on wake from hibernation it was at 0 for each of the four
-  starting levels.  So kbdlight_suspend() is gone and kbdlight_resume()
-  writes the cached EC level back on resume, for every model rather
-  than only auto mode ones.  The cached level becomes the raw EC level
-  in this patch, so that resume treats the auto mode like any other
-  level.  I did not add a check on LED_SUSPENDED: this LED does not set
-  LED_CORE_SUSPENDRESUME, and with the suspend callback gone I do not
-  see what would set the flag for it; my understanding of Rong's reply
-  was that such a gate might not be needed.  The patch comes before the
-  trigger patch so that no intermediate commit has the trigger together
-  with the old LED core suspend/resume path.
-
-- 5/6 uses a symbolic name for bit 20, as Rong asked.
-
-- 6/6 routes trigger activation through the helper that also updates
-  the cached level, which I believe addresses the stale cache Sashiko
-  reported.  It also skips the trigger notification when the trigger
-  could not be registered, pulls the registration into a small helper,
-  and still makes the trigger the default one at init when the EC is
-  already in auto mode, now with a comment on the case this is meant
-  for, as Rong suggested on Nov 19.  The title was changed to say more
-  precisely what the patch adds.
-
-On the Reviewed-by tags: the changes to 1/6 and 5/6 are small, but the
-diffs are no longer the ones Mark reviewed, so I dropped his tags there
-and noted it under the --- line.  Mark, when you have the time, could
-you take another look at these two?
-
-I could only test on a ThinkPad X1 Carbon Gen 14 (linux-next
-next-20261030): the software paths (selecting and dropping the trigger,
-brightness returning -ENODATA in auto mode), the trigger following
-Fn+Space in and out of auto mode, and suspend/resume from manual
-levels and from auto mode, with s2idle and with S4.  No S3-capable
-machine and no other model was available to me, so testing elsewhere
-would be very welcome.  Vishnu, Mark, thank you for offering.
-
-One observation from testing with a desktop session, since it can look
-like a driver bug at first: the level restored on wake was sometimes
-overwritten again a few seconds later.  KDE's power management writes
-back the keyboard brightness it last knew about after resume, and a
-level written directly through sysfs does not appear to reach it;
-changes made with Fn+Space or through the desktop itself did not seem
-affected.  I do not think there is anything for this series to do
-about it, but I wanted to mention it.
-
-One naming note: kbdlight_brightness now holds the raw EC level,
-including the auto mode, rather than a brightness; a comment above the
-variable says so, and the name is unchanged.
-
-The only checkpatch.pl --strict warnings I see are for three commit
-IDs that are missing from my shallow clone.
-
-This series was developed with LLM assistance; I reviewed every design
-decision against the framework sources and validated the behavior on
-real hardware myself.
-
-Regards,
-Qiling Zhu
