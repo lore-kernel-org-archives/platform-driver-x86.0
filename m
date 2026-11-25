@@ -1,67 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.182.83.82
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795592505;
-	b=ViyRDwGFCVQoe3gt9mn8JqhYbB76M2CcbJO3NBXn9qBQ41fR8jCqwCCkO371oUsXsorh
-	 xXAivGIpGHGCuvLwlj2wWfO+tJJ6DDIxvlv2aBo6TSYMfLUNskg51LPJ+HV37l8mftfS2
-	 j++QTyBwJHkxasWuUMaaomubLH5GIRMNpeXQWZIUEFN7myMibJNbJSgKHMMhNOMSF2N5E
-	 sf4+R8aVojuwj0Y1n9OYpYJaf7MZZzpVYkFWEBAowlhUJlnfYP6HHjTxN8wmV3ZQ3uxps
-	 ndP9hhLhypSStUl9+T6TzBT2xLrRtwDGPJl8BtLfLS0Lf5NedIaquXnu0x9I5y0MU4Q==
+	t=1795594324;
+	b=w/MDUlK0kbU3UGyvZKazJySbWXkSm7zJPcvAhuqnWwrFY3A2jRv5/citDqjzAaV0CSeO
+	 CWHnoFkcRcbjAyLLCnFeE35ZdZ8qcmuQNgxeUtXoIRINVYiL28Aw0r3r6zYfvwMpGvIn5
+	 zEJQdZ88obDTUQRTWfLIsdUycz7t8lXrAA6mnZ/0O6EgV0DMfPCXdgBy5QaFUlRfY5Mar
+	 aLEuvtVnkmNno53IJkKKfsVoP7X9AUR8nigFYsZb4ziKhnPkXB/51Zd4JDuA4PT7M4UpZ
+	 dptlyu6nC3kAH7v0sckANuom8Xsntpv4fx1hbn6c3eYAX3rF4qTnYP2o1s+3rwLGA5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795592505;
-	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
-	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
-	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=v7Af5kyLjyd57eXzMOWlzKezBBqvzAGbw4YXHx+soII=;
-	b=o14BFy7JOfhRWQjpeMCy0Sk40OHVV62LcXCR8yVOolhGJ0gk4AIN8e7MKlW3juCOiK7t
-	 cFs2ODlorDj1UJZS7wfkarwNmp24i8gsTV3i4o+dHNTo7sc6DUJV7flV7FgRV3Cqf15a8
-	 JeU6q/8PrTsTQGagOG4WEYxMAjZ7MY9IbcbyMczvTvE57v6gBtIo1dI7xJTBmgYePL6VC
-	 qTBiHJN4X1K8WYlcjfQnwg8yJ1IeYoGozjf3efRkGQWATTssgYvrKruU9RWQuOL/KRIko
-	 39TXAlB7P3gBs6VWKkffkxLFbn7k19VeJBIP7gqPuABXiZtzK/kSNLT0W2M0SsEWUTA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795594324;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Subject:Date:User-Agent:
+	 Cc:References:In-Reply-To:X-KMail-QuotePrefix:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Content-Disposition:
+	 Message-Id;
+	bh=a9qCTY1NIGw5UGhEXJKljT597rhRErhlO3rB4TkUTFA=;
+	b=seOXwGz8om6Z9jbFgtfWMEahvHDahf7Hkm61bYejFp7UHa4K9YHbcWVVEoOHGcGVe4wQ
+	 FPZnsp65PDI8aLiK1EtAC7o3FbLNp7EBncsrx75yKxgPs34xlMz4tTKsOHwNcOvalHw+E
+	 RQozxIARDaA8FdXlQazEdJDttbIdhhFFrQeU2BUh4UBctaMKsqHYMnGroJoDT7JWRy1DZ
+	 SnBbmXQ+mvmmQ5tC9WOZNnymaJYZqH78aEfMYYJPLxBjhrDXWBJzbBVj90bGrFcHtghcQ
+	 6ZViYciiZWbzRHyaaH+f7v458ucdqBXhNHKNeLyAoFzXu88Isf3YAb+4gD1EvuJc5IA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mail.sustech.edu.cn;
-	spf=pass smtp.mailfrom=mail.sustech.edu.cn;
-	dkim=pass header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=sy49Ax0U;
-	arc=none smtp.remote-ip=54.243.244.52
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=zary.sk;
+	spf=pass smtp.mailfrom=zary.sk;
+	dkim=pass header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=hatQUuGD;
+	arc=none smtp.remote-ip=194.182.83.82
+Received: from mail.zary.sk (mail.zary.sk [194.182.83.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19796606A31E;
-	Wed, 25 Nov 2026 07:41:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19796606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sustech.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sustech.edu.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEA6606A332;
+	Wed, 25 Nov 2026 08:12:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1AEA6606A332
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=zary.sk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zary.sk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.sustech.edu.cn header.i=@mail.sustech.edu.cn header.a=rsa-sha256 header.s=oemc2211 header.b=sy49Ax0U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.sustech.edu.cn;
-	s=oemc2211; t=1795592465;
-	bh=v7Af5kyLjyd57eXzMOWlzKezBBqvzAGbw4YXHx+soII=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=sy49Ax0UuCdKhGRdbbqNy0O3b0pEYlXTiKH6zF5lOrRLWyU0NVMlAfyuMmJd0pGDM
-	 S3pvcgBjLsmnbYqpxk3M+zu+lewkZMWoRuHxxR/RosdEm4QMVLF6Q/zCeexMg0mlcr
-	 Jry5433fVbvwNXUmtqkqGhIsR6fPzYbA2eVhIL4c=
-X-QQ-mid: zesmtpgz3t1795592456t30fdd3f6
-X-QQ-Originating-IP: RZcLAf6M8hNp/UOKkyyuqcOf1oo2B6Y9ue1s/CdfF8s=
-Received: from sakura-NbF-XX.sustech.edu.cn ( [116.7.234.242])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 25 Nov 2026 15:40:54 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 8071275655235200260
-From: Fuwei Xie <12313607@mail.sustech.edu.cn>
-To: erenozen@protonmail.com
-Cc: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yhshzh0@gmail.com
-Subject: Re: [RFC PATCH v3 0/5] platform/x86: huawei-wmi: expose native firmware power profiles
-Date: Wed, 25 Nov 2026 15:40:44 +0800
-Message-ID: <CCE496207C6C15CE+20261125074048.50842-1-12313607@mail.sustech.edu.cn>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <hCsVvRfdJna6QMofi0p51idPd_JLLislzGzqFjePf9_91ayfS92LIselCT-narFk2u5zTRqLQsKFnz4bgRrNmjY5EKgq9UYj0n_CfmaCJjs=@protonmail.com>
-References: <4F34E5193B4633F6+20261124172651.37716-1-12313607@mail.sustech.edu.cn> <hCsVvRfdJna6QMofi0p51idPd_JLLislzGzqFjePf9_91ayfS92LIselCT-narFk2u5zTRqLQsKFnz4bgRrNmjY5EKgq9UYj0n_CfmaCJjs=@protonmail.com>
+	dkim=pass (2048-bit key) header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=hatQUuGD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=zary.sk; s=key1;
+	t=1795594320; bh=RMmrCVOEy+6SVAfkNAe3euV4rQK+MMDlmmzYe/4R6bY=;
+	h=From:To:Subject:Date:Cc:References:In-Reply-To:From;
+	b=hatQUuGDmaB7PdUK8DSbUacNuSTI+OXqFAzq5AKO8bGRXJ2eetVAMu7Jo2OVAzbIn
+	 SzqKdtzUlWTM+5gWZiF7dpTfFMr/2oAxwc7pG3vMWdvYVZHj32UGh7CGiifLtEL13t
+	 QPFWH7JvoZOANcmqxicqMoQKYAJPXJ09EQ3BUL5z8mhkOypcC+lh13A7rCrVcBczb5
+	 tG+ZQ3JtFr33lnN+6L9ovRmVH1W6Q+iYnCB6c6eI6QF/wGp4Vu8E4aC9IiW47YSprL
+	 LmN12ExRkhw7a+W34cjm4iJcu78pZIN3Pm/M4e50kKJAA84+G30mThQNt78UJ63oUj
+	 nV9E5yx2d6otA==
+Received: from [192.168.1.3] (mail.gsystem.sk [37.58.14.130])
+	by mail.zary.sk (Postfix) with ESMTPSA id 29F2CBED51;
+	Wed, 25 Nov 2026 09:12:00 +0100 (CET)
+From: Ondrej Zary <linux@zary.sk>
+To: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] Introduce Synology x86 NAS LEDs driver
+Date: Wed, 25 Nov 2026 09:11:51 +0100
+User-Agent: KMail/1.9.10
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>,
+ Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20261124125616.1168560-1-linux@zary.sk> <202611241954.47791.linux@zary.sk> <awXv4b3cjVlOc0NT@ashevche-desk.local>
+In-Reply-To: <awXv4b3cjVlOc0NT@ashevche-desk.local>
+X-KMail-QuotePrefix: > 
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,40 +67,134 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:mail.sustech.edu.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NqgmE/hXVl+ugpZXbuS6VYozec/P+R6gW8vbeOAudaWTmI63YjsHnA6x
-	zNAhFdfKC7Nz2QdPp9i3LeECn9vbcm1393M3XlQ4a0C3faIuUni6K0mbi/i/Jra+i9FSwLG
-	EpTjiFnt+Z4eMBsmZqtySghtrtBE2KBQJwyAZCftOTUmAx/sx8wgZlMz3/jbVl5yAzy/3uz
-	FTVGCOw8i5P+TG5VNl0Pw+im2dWErSYOmrG5XSy+NJvkrl3qWcmsf25zU2oCIzUG8xAHdO3
-	JJWFoU3THly8oJKb+WETufkM9igAnh9m63W69ILtLilZwkYlrp4tRuha3odAnprzH2Bcp8F
-	BBXqjOacl+eAsUwIyD0SVNLF66U8P2s6SmmO0lSYCbwKVpeUp4tJBoxi5C36/80nUQ/cE51
-	1CmCPHVSc4BuBzrn2/blOMKirKG4/T7U3zHAg8RNuDvsr4rnUc+ypWpRhUAQnEm9PVbrnkK
-	CuxvFsIhO9D8lL2lqYPdL343Tl/IQwmzBx//BELF/bl2mSTyZjX/pLLds0QboOVWXoj4rEX
-	MLQ0HZ7e4UK2tfKAyz2sHjxRS+1/iRi2l8Ar9SB/LWbUKpP1cgXLq+yuon7T1bS0lXCb4QL
-	jLqxTvOiVLsInJTkBZvtgryQs9ULxvkQx0PNcQw8Sc0CuhzUisQbKNboufhSvruo61NgsfY
-	dLoc4Rpz1jAbgwcb/ynWxrSAGfzmuo8IuN2dQit1oqJUjm4V8bRzGlR5gbu0Hy4dLeuUGza
-	Ya9q45Y1RChm4uCo2+vWlpWilp+xisCB5CJqJWAUhJbRo6c/SMuATNfCrHEclwNWFlItOB9
-	n1fliVSRJYHvkXrOPb2OQ1rRAylvkEYfgTXqZeExsleESG3pmXXwDNMhkfo/6UzI/brETza
-	6bRobzH58WzrHOq/x/zfbelQp046soWsqRpjffA8h//60SSyiLbL4LqX4alhBByWbeizMOX
-	ver5PD7OfYSlQcvDXorWwjXy6uRrO1/5mzSZlVMMzcBzKcX5DcyYl02dIJLGd3Cu09Y1wKN
-	5ZDxJ5zpn/FcEt3Tbv2zr4wIKdPJ+jf7f0PirXKAdRxkcnxNtE6eF63yba1kiUJz5Umupq4
-	rV8uSYVpTkgL7juydGj0iBr30RDpwxI3t+Q8FiNE8QU/RfqToOWHAA=
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-X-QQ-RECHKSPAM: 0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <202611250911.51673.linux@zary.sk>
 
-Hi Eren,
+On Tuesday 24 November 2026, Andy Shevchenko wrote:
+> On Tue, Nov 24, 2026 at 07:54:47PM +0100, Ondrej Zary wrote:
+> > On Tuesday 24 November 2026 18:03:00 Andy Shevchenko wrote:
+> > > On Tue, Nov 24, 2026 at 01:45:46PM +0100, Ondrej Zary wrote:
+> 
+> ...
+> 
+> > > > +struct synology_pci_dev {
+> > > > +	unsigned int bus;
+> > > > +	unsigned int devfn;
+> > > > +	struct pci_device_id id;
+> > > > +};
+> > > > +
+> > > > +/* onboard PCI devices found in DS411+ to confirm the machine type (after DMI match) */
+> > > > +static const struct synology_pci_dev ds411plus_pci_devices[] __initconst = {
+> > > > +	/* 00:00.0 Host bridge: Intel Corporation Atom Processor D4xx/D5xx/N4xx/N5xx DMI Bridge */
+> > > > +	{ 0, PCI_DEVFN(0, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0xa000,
+> > > > +					       PCI_VENDOR_ID_INTEL, 0xa000) } },
+> > > > +	/* 00:1f.0 ISA bridge: Intel Corporation 82801IR (ICH9R) LPC Interface Controller */
+> > > > +	{ 0, PCI_DEVFN(0x1f, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x2916,
+> > > > +						  PCI_VENDOR_ID_INTEL, 0x2916) } },
+> > > 
+> > > > +	/* 02:00.0 Mass storage controller: Silicon Image, Inc. SiI 3531 Serial ATA Controller */
+> > > > +	{ 2, PCI_DEVFN(0x00, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_CMD, 0x3531,
+> > > > +						  PCI_VENDOR_ID_CMD, 0x3531) } },
+> > > > +	/* 03:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection */
+> > > > +	{ 3, PCI_DEVFN(0x00, 0), { PCI_DEVICE_SUB(PCI_VENDOR_ID_INTEL, 0x10d3,
+> > > > +						  PCI_VENDOR_ID_INTEL, 0x0000) } },
+> > > > +	{}
+> > > 
+> > > > +};
+> > > 
+> > > > +/* check if all PCI devices in the list are present at specified locations */
+> > > > +static bool __init synology_pci_devices_present(const struct synology_pci_dev *list)
+> > > > +{
+> > > > +	const struct synology_pci_dev *d;
+> > > > +
+> > > > +	for (d = list; d->id.vendor; d++) {
+> > > > +		struct pci_dev *pdev = pci_get_domain_bus_and_slot(0, d->bus, d->devfn);
+> > > > +
+> > > > +		if (!pdev)
+> > > > +			return false;
+> > > 
+> > > > +		bool matched = d->id.vendor == pdev->vendor &&
+> > > > +			       d->id.device == pdev->device &&
+> > > > +			       d->id.subvendor == pdev->subsystem_vendor &&
+> > > > +			       d->id.subdevice == pdev->subsystem_device;
+> > > 
+> > > Don't mix variable definitions with the code (it's exceptionally possible
+> > > for a couple of cases, none of which is this one). Can't it use
+> > > pci_match_id() approach with driver_data? (If we ever need this check.)
+> > 
+> > I don't see how can pci_match_id() be used here. I can merge pci bus and
+> > devfun into driver_data to fit into pci_device_id table but there's no
+> > pci_dev which could be matched against that table (and walking all PCI
+> > devices does not seem to be an improvement).
+> 
+> _After_ DMI match the walk over all PCI devices is not a big deal. The code
+> will be nicer. But maybe there is a better choice? Like checking CPUID? Or
+> maybe something interesting is present in the ACPI tables?
+> 
 
-Resending in plain text since the lists rejected my previous reply.
+I don't know much about ACPI but can't find any Synology traces.
 
-Thanks for trying this out and for catching the silent fallback to
-\SBTT. I'd appreciate a copy of the diff you tested.
+# acpidump -s
+Firmware Warning (ACPI): Incorrect checksum in table [GSCI] - 0x83, should be 0x34 (20250404/utcksum-100)
+ACPI: GSCI 0x0000000000000000 002024 (v01 052112 GMCHSCI  20120521 MSFT 00000097)
+ACPI: MCFG 0x0000000000000000 00003C (v01 052112 OEMMCFG  20120521 MSFT 00000097)
+ACPI: APIC 0x0000000000000000 00006C (v01 052112 APIC1409 20120521 MSFT 00000097)
+Firmware Warning (ACPI): Incorrect checksum in table [OEMB] - 0x6F, should be 0x03 (20250404/utcksum-100)
+ACPI: OEMB 0x0000000000000000 000082 (v01 052112 OEMB1409 20120521 MSFT 00000097)
+ACPI: DSDT 0x0000000000000000 006B21 (v01 1AAAA  1AAAA005 00000005 INTL 20051117)
+ACPI: FACP 0x0000000000000000 000084 (v01 052112 FACP1409 20120521 MSFT 00000097)
+ACPI: HPET 0x0000000000000000 000038 (v01 052112 OEMHPET  20120521 MSFT 00000097)
+ACPI: FACS 0x0000000000000000 000040
 
-Ilpo, taking Eren's charge-mode fix first works for me. Once it lands,
-I'll rebase my series on top and use Eren's diff to cross-check the
-charge-mode changes.
 
-Thanks,
-Fuwei
+ACPI devices look very generic:
+AWY0001:00
+INT0800:00
+INTC0102:00
+ITE8704:00
+LNXCPU:00
+LNXCPU:01
+LNXCPU:02
+LNXCPU:03
+LNXPWRBN:00
+LNXSYBUS:00
+LNXSYBUS:01
+LNXSYSTM:00
+PNP0000:00
+PNP0100:00
+PNP0103:00
+PNP0200:00
+PNP0303:00
+PNP0401:00
+PNP0501:00
+PNP0501:01
+PNP0700:00
+PNP0800:00
+PNP0A08:00
+PNP0B00:00
+PNP0C01:00
+PNP0C01:01
+PNP0C02:00
+PNP0C02:01
+PNP0C02:02
+PNP0C02:03
+PNP0C02:04
+PNP0C04:00
+PNP0C0C:00
+PNP0C0E:00
+PNP0C0F:00
+PNP0C0F:01
+PNP0C0F:02
+PNP0C0F:03
+PNP0C0F:04
+PNP0C0F:05
+PNP0C0F:06
+PNP0C0F:07
+PNP0C31:00
+PNP0F03:00
+
+-- 
+Ondrej Zary
