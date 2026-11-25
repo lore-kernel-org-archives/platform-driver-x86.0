@@ -1,80 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.75
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795645275;
-	b=4450d4JQ8+Xsiv54sq1FDToWeGMA2VBPjsGKQkstdOEa08WNw0lX8UPOnNGDpH+2X3Fk
-	 XD+bA2gL9t36mgzGz1eh1T8jRYXWPJrkxzkJQv2lhU7EVrFu/LtopVIVCPjtNkMNIZGje
-	 KpJTgszhWUT1B516s8fKhIuEKxSTxtAZMVfxrjDwzPtqLq/GuK6LsghRRpa5I0ljvTYll
-	 JTuxwrIkr6Ngjl16XXgCQcLtCKwYX7reSKoW/CBKiZpaaERREI9CkPExXn4DBBIPlGPPC
-	 M7Zl3/7AGy0dU0fv/D3lRIE5MgAOscMW0ZJb4b9ELNjo4IsMg5hlNI9L3RM3OK6YdEg==
+	t=1795645574;
+	b=aZynFORjTDR/JP/+PsTeGnfXthbo2nBElW2v8XJFxLS7ZqjXNpFRKXYNUM3tMzZfVi6J
+	 8zTbxEYmxz2Vf7UXVa+nAan7gHZu9RMqkLMWnsXWGd7EevfHS99XmLg1MB2BDvE25bvxq
+	 WuPVlRTaASlWx7OHMolz6uUW3GY4jhNnVvr9kcTNkRyNUetw+nxfNfKYeIPiSYp+apbRp
+	 VW8gPQK7NNcTo1jSxbNM3KwObQKA1eyOkv2oz6UMvCAEhZAJqQA8zvxG6gU/mLzEKeXdQ
+	 R7vTKnli5TRdGrqy4zk4SEFz23llghUOiic54gvHm1DmaN6fp0nWjxJz+UTYgHCZVPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795645275;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=11TDe3gS9pRX0XRL1VMGKFlVGcY2lBYMb+DakDAFDDY=;
-	b=S40XHr3rvvgH+trhORQzkRyIBkiVfl8RjbsxaTgeiWCtOlYA2l84jAe2uGGHubsQhZ2P
-	 flP2f8l9i2MH8EkyvfWboIUeIFpxDw4vNK7BiPqLx/xpjHgUfaUqxxXFHtYxqv19Zpjjg
-	 SzOJgEFVIBEhnaCHBToR6/zcDFTYaVnkDFbv9VBDXWjrWBxRlYjL1hfXwCfHinTJtumqF
-	 cJUvzAtPJdWcy3rMIYBSboTl37VM7PdF/oLysZ2mf0etX4SWBY6yNbzfH5GQmJfDKHtf/
-	 neU2XY4CuucRK1VL6MG3zjFaMQo9Qpur/YEfP0X2VCLD//AAb9B9t/2u7iTNpLQhkkQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795645574;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=GOlTtxoLjmhi9GWN4jeIxFdH6/5f9rXla0tb49Wzau0=;
+	b=VBu+MBprJ7Yh/wukWFyIOH3526Gif4eFD/+fjjh5uv7cHJ5XxB60BGri+9Zef7zprqRU
+	 BYBTeF+3Q3YnGEJqrWk1hQw79RkiT179UGefy36qNKdzfpvYta37C/vSsbiJI02uhjBh8
+	 VH8AvqAvGZw9bLpFBny4JQqwi3omsGxW3lbXGXZmtiZHtQyyEx4NSVpbQQI5QXqZIKEpp
+	 yM159AiHEkCteNBhJnpnMV5XcarRJGti1d40MW3I3fc72DjlA/Hhqzz2ln02A32dz1X1P
+	 62Gue/O4yy9/HFlck940mQKH0WR/g4agV+x4E85zZh7P1fySRoIhthNNE2soxGZeBIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IN+WP60s;
-	arc=none smtp.remote-ip=192.198.163.19
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QNDhXAX9;
+	arc=none smtp.remote-ip=91.218.175.75
+Received: from mta0.migadu.com (out-75.mta0.migadu.com [91.218.175.75])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C61606A321;
-	Wed, 25 Nov 2026 22:21:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 93C61606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9646360A2621
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 22:26:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9646360A2621
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IN+WP60s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795645275; x=1827181275;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Sp9nuAmHBRpQpIajIScS71fCF/afPcXY+L+/0tVamVI=;
-  b=IN+WP60s1LO4aMcSGSh2zAtabXJm0av8/eE2od72NjhcnKiluxPqbP+t
-   /zHHbOAmpQLMuLpt6brTwzijVzx/idR71fYwm3u5+kWpJp0SPYflCLtbl
-   NtFcp2GOdIWoYAdxa0bKvgmoEun4URvUXrK11wC7u5tDrloP52uGGrsXv
-   jjdtKu3isVSm7AK09iV0LBeFI1QF/FOZuJAjnFT3FjuSlTF/Fn+C5fofN
-   eNc71y7EgQ4QIf+wEkqV9LZIVv4/HALJUasHkDJHu63cddvB5uthu0q1W
-   0msidQW27mlLeFXQ+akzYa4+zbJ6fyaeaxC1LFI7cUBHUv0LTDARafG94
-   Q==;
-X-CSE-ConnectionGUID: rHyG03erTbWfKjWnGzOnOg==
-X-CSE-MsgGUID: PRZ4uxisTzW+ycyPZKepRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4555964"
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="4555964"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 14:21:14 -0800
-X-CSE-ConnectionGUID: ia7PWoQDQsqVwihGocCofg==
-X-CSE-MsgGUID: OuM3TZL+SbuGiE531UNmZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="12314873"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.96])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 14:21:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 26 Nov 2026 00:21:05 +0200 (EET)
-To: Bartu Alev <bartualev@gmail.com>
-cc: Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
-    Hans de Goede <hansg@kernel.org>, Antheas Kapenekakis <lkml@antheas.dev>, 
-    Benjamin Tissoires <bentiss@kernel.org>, Alex Bogusta <alex@bogusta.com>, 
-    Denis Benato <benato.denis96@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] platform/asus: asus-wmi: clamp keyboard brightness
- hotkey updates
-In-Reply-To: <20261121-b4-asus-kbd-fixes-v2-1-52cda07d233f@gmail.com>
-Message-ID: <2ed99bdc-21f6-6dab-8a19-25d7d5061fae@linux.intel.com>
-References: <20261121-b4-asus-kbd-fixes-v2-0-52cda07d233f@gmail.com> <20261121-b4-asus-kbd-fixes-v2-1-52cda07d233f@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QNDhXAX9
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=zD8sKd+VxbbCz7vjRU8Ivea6I/NBp6c1QiP6Kcvw3oc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795645570; v=1; x=1796250370;
+ b=QNDhXAX9i3yNi/2qS39AsXZ3+mBkVpy0OgI2tLIzlE5DEWIoPHqV1Rnv+QxKfcw9wOcOb5B/
+ 1jSVPQL4wxYuZFNhlv5jo6eXfAjin0/HDDGzW5hEqvrNkue/re6gxqnPqI43kpEND3aSPSksqPN
+ eUYqrGEkcqA1RW/Hui/0lEc4=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 5507a07e32284521;
+	Wed, 25 Nov 2026 22:26:10 +0000
+X-Mizu-Trace-ID: 5507a07e32284521
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <94785b4d-c807-4465-84a1-25ae317df4b8@linux.dev>
+Date: Wed, 25 Nov 2026 23:26:07 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -84,122 +58,143 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1409852672-1795645265=:1189"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] ASUS TUF Gaming A16 FA608UM: working backlight device
+ differs between MUX modes
+To: Daniel Dadap <ddadap@nvidia.com>,
+ =?UTF-8?Q?Riccardo_Zangh=C3=AD?= <riccardo.z.dev@gmail.com>
+Cc: Armin Wolf <W_Armin@gmx.de>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "hansg@kernel.org" <hansg@kernel.org>,
+ "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+ "luke@ljones.dev" <luke@ljones.dev>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+References: <CAMnz_-Dgg2eCgZxcCaGuKPV=3-kCfg7ajd9w=vs2fGL-Cb6hvw@mail.gmail.com>
+ <f1b7d729-771a-4fba-89c0-996a8a168126@linux.dev>
+ <ce46d69f-2a3e-45fe-abe2-f643f683d09f@gmx.de>
+ <CAMnz_-Dztuj3CRsxcVnfe2=OCB3tTJzK6Lu7-AKfkbuqn5N-UQ@mail.gmail.com>
+ <DSVPR12MB66402023AE5250384B26515942BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
+ <CAMnz_-C02J6CznPD68GgWCPCWEDSGsq6hoC+AJhsZjw39H+hhQ@mail.gmail.com>
+ <DSVPR12MB66402044074D6A8B1EDC584825BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <DSVPR12MB66402044074D6A8B1EDC584825BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1409852672-1795645265=:1189
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On 11/25/26 23:14, Daniel Dadap wrote:
+> On Wed, Nov 25, 2026 at 07:03:18PM +0100, Riccardo Zanghí wrote:
+>> On Wed, 25 Nov 2026 at 07:13, Daniel Dadap <ddadap@nvidia.com> wrote:
+>>> So, as an experiment, if you could read the LSb at physical address
+>>> 0xFEDD83B8 in both iGPU and dGPU modes, and report on the value, that
+>>> would help.
+>> Hi Daniel,
+>>
+>> Thanks for the detailed analysis. I believe I received your full message by
+>> mail.
+> Right, I only got bounces from the lists, not the individual recipients, so
+> you very likely got three copies. (Sorry.)
+>
+>> Result of: od -An -t x1 -j $((0xFEDD83B8)) -N 1 /dev/mem
+>>
+>> integrated mode:              4a  (bit 0 = 0)
+>> dGPU mode (gpu_mux_mode = 0): 07  (bit 0 = 1)
+>>
+>> So G40C does differ between the two modes. I can try the DSDT
+>> override next and report back, or test any other patch.
+>>
+> Yes, I think doing the DSDT override as the next experiment makes the most
+> sense. The ASL should be amended to read:
+>
+>> If ((MODF == Zero))
+>> {
+>>     If ((^^SBRG.EC0.G40C == One))
+>>     {
+>>         Return (One)
+>>     }
+>>     Else
+>>     {
+>>         Return (0x02)
+>>     }
+>> } 
+> which I suspect will reflect the design intent better.
+>
+> You could also try patching the kernel instead, maybe with something along
+> these lines (completely untested; you'll need to supply your own DMI ID
+> strings from your machine's SMBIOS):
+>
 
-On Sat, 21 Nov 2026, Bartu Alev wrote:
+I can ask ASUS to try fixing things that are out of spec, but we have to
+prepare to the eventuality that it won't get touched.
 
-> The NOTIFY_KBD_BRTUP/DWN/TOGGLE handlers pass led_value =C2=B1 1 into
-> kbd_led_set_by_kbd(), which stores the value into asus->kbd_led_wk
-> without clamping it. Pressing brightness-down at level 0 drives the
-> cached level negative (-1, -2, ...); kbd_led_update_all() then drops
-> every hardware update on its "value >=3D 0" check while
-> led_classdev_notify_brightness_hw_changed() hands the wrapped negative
-> to userspace, so brightness_hw_changed reports 4294967294+ or ENODATA
-> and the brightness-up key appears dead until the counter climbs back
-> to 0. Pressing brightness-up at maximum reports 4, above
-> max_brightness.
->=20
-> Compute the level as int and clamp it in kbd_led_set_by_kbd(): the
-> stepping must happen in a signed type, because enum led_brightness is
-> an unsigned type in practice and 0 - 1 passed through it wraps to a
-> value that clamps to full brightness instead of staying off.
->=20
-> Also clear kbd_led_notify when snapshotting it in
-> kbd_led_update_all() instead of after updating the hardware, so a
-> keypress queued while the worker runs is not swallowed by the late
-> clear.
->=20
-> This addresses the same bug as Alex Bogusta's earlier patch
-> (reviewed by Denis Benato) [1], while also closing the kbd_led_notify
-> race in kbd_led_update_all()."
+An ACPI override means secure boot won't work on these models,
+so despite being (probably) the best thing to so it has its own downside.
 
-Yeah, and that's why you should have made a separate patch for the other=20
-thing. Don't mix logically separate changes into a single change.
-
-=2E..Also, Alex's patch is already applied.
-
---=20
- i.
-
-> [1] https://lore.kernel.org/r/20261016015117.32174-1-alex@bogusta.com/
->=20
-> Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kb=
-d led handlers")
-> Cc: stable@vger.kernel.org
-> Cc: Antheas Kapenekakis <lkml@antheas.dev>
-> Cc: Alex Bogusta <alex@bogusta.com>
-> Cc: Denis Benato <denis.benato@linux.dev>
-> Signed-off-by: Bartu Alev <bartualev@gmail.com>
-> ---
->  drivers/platform/asus/asus-wmi.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/platform/asus/asus-wmi.c b/drivers/platform/asus/asu=
-s-wmi.c
-> index b33ebdb21aa2..f1a94bcdb0c0 100644
-> --- a/drivers/platform/asus/asus-wmi.c
-> +++ b/drivers/platform/asus/asus-wmi.c
-> @@ -1784,6 +1784,7 @@ static void kbd_led_update_all(struct work_struct *=
-work)
->  =09=09registered =3D asus->kbd_led_registered;
->  =09=09value =3D asus->kbd_led_wk;
->  =09=09notify =3D asus->kbd_led_notify;
-> +=09=09asus->kbd_led_notify =3D false;
->  =09}
-> =20
->  =09if (!registered) {
-> @@ -1806,11 +1807,8 @@ static void kbd_led_update_all(struct work_struct =
-*work)
-> =20
->  =09if (value >=3D 0)
->  =09=09do_kbd_led_set(&asus->kbd_led, value);
-> -=09if (notify) {
-> -=09=09scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> -=09=09=09asus->kbd_led_notify =3D false;
-> +=09if (notify)
->  =09=09led_classdev_notify_brightness_hw_changed(&asus->kbd_led, value);
-> -=09}
+> --- a/drivers/acpi/video_detect.c
+> +++ b/drivers/acpi/video_detect.c
+> @@ -131,6 +131,44 @@ static int video_detect_portege_r100(const struct dmi_system_id *d)
+>  	return 0;
 >  }
-> =20
->  /*
-> @@ -1958,10 +1956,16 @@ static int kbd_led_set(struct led_classdev *led_c=
-dev, enum led_brightness value)
->  =09return 0;
->  }
-> =20
-> -static void kbd_led_set_by_kbd(struct asus_wmi *asus, enum led_brightnes=
-s value)
-> +static void kbd_led_set_by_kbd(struct asus_wmi *asus, int value)
->  {
-> +=09/*
-> +=09 * The hotkey callers step the level by one, which must happen in
-> +=09 * a signed type: enum led_brightness is an unsigned type in
-> +=09 * practice, so -1 passed through it wraps to a value that clamps
-> +=09 * to ASUS_EV_MAX_BRIGHTNESS instead of staying off.
-> +=09 */
->  =09scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-> -=09=09asus->kbd_led_wk =3D value;
-> +=09=09asus->kbd_led_wk =3D clamp_val(value, 0, ASUS_EV_MAX_BRIGHTNESS);
->  =09=09asus->kbd_led_notify =3D true;
->  =09}
->  =09queue_work(asus->led_workqueue, &asus->kbd_led_work);
-> @@ -4677,7 +4681,7 @@ static int asus_wmi_get_event_code(union acpi_objec=
-t *obj)
-> =20
->  static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->  {
-> -=09enum led_brightness led_value;
-> +=09int led_value;
->  =09unsigned int key_value =3D 1;
->  =09bool autorelease =3D 1;
-> =20
->=20
->=20
---8323328-1409852672-1795645265=:1189--
+>  
+> +struct video_detect_runtime_dependent_data {
+> +	phys_addr_t address;
+> +	u8 mask;
+> +	enum acpi_backlight_type backlight_type_if_true;
+> +	enum acpi_backlight_type backlight_type_if_false;
+> +};
+> +
+> +static struct video_detect_runtime_dependent_data asus_a16_dmi_drvdata = {
+> +	.address = 0xfedd83b8,
+> +	.mask = 1,
+> +	.backlight_type_if_true = acpi_backlight_native,
+> +	.backlight_type_if_false = acpi_backlight_nvidia_wmi_ec,
+> +};
+> +
+> +static int video_detect_runtime_dependent(const struct dmi_system_id *d)
+> +{
+> +	const struct video_detect_runtime_dependent_data *data = d->driver_data;
+> +	void __iomem *map;
+> +	u8 val;
+> +
+> +	map = ioremap(data->address, 1);
+> +	if (!map) {
+> +		pr_warn("Unable to map backlight selection register at %pa; skipping quirk\n",
+> +		       &data->address);
+> +		return 0;
+> +	}
+> +
+> +	val = readb(map);
+> +	iounmap(map);
+> +
+> +	if (val & data->mask)
+> +		acpi_backlight_dmi = data->backlight_type_if_true;
+> +	else
+> +		acpi_backlight_dmi = data->backlight_type_if_false;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct dmi_system_id video_detect_dmi_table[] = {
+>  	/*
+>  	 * Models which should use the vendor backlight interface,
+> @@ -986,6 +1024,19 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+>  		DMI_MATCH(DMI_PRODUCT_NAME, "Mipad2"),
+>  		},
+>  	},
+> +
+> +	/*
+> +	 * This notebook is supposed to select the backlight control device
+> +	 * based on runtime state readable from the EC's MMIO region, but
+> +	 * ends up requesting the EC backlight driver regardless of the state.
+> +	 */
+> +	{
+> +	 .callback = video_detect_runtime_dependent,
+> +	 .matches = {
+> +		 /* XXX supply appropriate DMI_MATCH() macros here */
+> +		},
+> +	 .driver_data = &asus_a16_dmi_drvdata,
+> +	},
+>  	{ },
+>  };
+>  
