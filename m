@@ -1,111 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.157
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795633789;
-	b=pYDnZkdvY/X44gllwa1zuAM6Pmr+ZophzRWAI9Mz8eFn8vN7rJkV2kjkrLnG69m0RQw9
-	 nlnILyZEbQ249yPmCEBgkkYOd1ZWesm2dqdNHjBuYzgaFC7upnuAi3JIgDcwWTkJWovp4
-	 UAtaIKESoiPasjkdzVeuU7ionQq6QW5CZi23JJH/dADVP/tdmUWpcVbf7oaVZLJyTOGcM
-	 TF3q052eoNX1mZL8s21+2hqL2kpVYqhw4GDVtSY14D7SgR8tFf+BSlken+vHHQLJYiHK7
-	 0768vhEd5bKxloNiZeZTAR/KSR4Kjf/UcFND1nIExE+nt0KP08uF/3L+FeIy8/FA3XQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795633789;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=j66RKb5l2l5mpAtY8HXgIUDK8pcSYZliet/rKrMgG/A=;
-	b=VIekc7X/4pCIXU0yQMjPPUTWGGVO3xNu9V2emGrUil9VjW4HQx95kOhdl1qnGbwktTXb
-	 6lriuIWLGCAia6SIsaGhE5SdPmcbkRwknxuKSDef9YqtWSgxGqlncSAyF15YAcVYb/rBV
-	 Jw6HePbP+yXGENXNr6WA4VgQx9S6plxfqMUxq9w70E6DGGgDa+mUGGOfirsNiCZPQdE+M
-	 ISYjIFSzM/iUJddKqIsuPnZFgUhiyEIwJ56DDUNPF7xRC5KvakDvwOSq0XdRlHGzkAmLh
-	 nuZX+qGx8vSv7xogjVpmdXS5ZdDz9Ji4Pvh0sm5QZLTyjJNRlJx7962gddIjvCnzViQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=squebb.ca;
-	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=CuOaT4KK;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b="I/OulOiy";
-	arc=none smtp.remote-ip=202.12.124.157
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795634096;
+	b=FK7UtquhhVs2zbWu5k/JPiCgTv12JrPeIqbVt1sQIPmJAL8NP7VvVWRs5XzEUk0k3+5J
+	 9p0fyBNEeqnpMHNujWN6/cSEheJ9v2nHkJ7xvYcyzeNIuFQe5EJ3447rN10mc2tzQ84YA
+	 BNFAaHeDe2M4LdeCaKtBdoCvHFDAxo4M45S580CX4MGEFaFCgwGqlKqpRrtbzWEmKDbUO
+	 wrIYYVyWz4AspMXLU66nOyp7sz1wnvWSAJRgkW+xR7g7BcZM5me3YgF7EHumCzoxxT7U7
+	 swwBeRqvG74TXyUquP3Qf4tuB/Bcrc+OdlRlpwd8xyjFaUQJFGpKdvX4SzQmPHbyy+Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795634096;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 In-Reply-To:References:MIME-Version:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Content-Type;
+	bh=4Zwr6dBwoEAPGqRmkM3SYrI36353cOO24+3gk4v1MbE=;
+	b=j1jeFOOsCvM6coZzXzhGzWPAgbL1bImfHKHro8skgcPNY2SUgQcr2iIirXPZ9ZiQ8KJC
+	 PCxeJn6iiHDKIPm4M9PCn82W8RcjAIF/dEyHHp3girbH79qUs60oAyXo8Om50IXJSgPnu
+	 9Y6XMU+CIMzBeRSD7qhEXWyp5ZrpiQrpHUDqMhu+dc+gWwqkZoYNFN6OregvJQVbx2j4J
+	 J3h9hObQJG8F0IMMcL4TiRv0xPwUZ0s+UDdJUwVugYphbyFD+WKk6QdH/8YD7rgvzYcwI
+	 GJhlQqz+zp699uVikxs+se1NO+gByaaZdJvOPUGCoLwgLvv25eHTHgusJl3ksJo7/Yg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=V2dPPlwZ;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02CB606A321
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 19:09:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E02CB606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A5D606A681
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 19:14:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0A5D606A681
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=CuOaT4KK;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=I/OulOiy
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 5C2397A05A5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 14:09:48 -0500 (EST)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Wed, 25 Nov 2026 14:09:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795633788;
-	 x=1795720188; bh=j66RKb5l2l5mpAtY8HXgIUDK8pcSYZliet/rKrMgG/A=; b=
-	CuOaT4KKTqlIOPru7/uoGPENJDMQb5GSnTAkfzeSYI/sug4i9G1YjV22O0io7aW6
-	SOaFOxYMUFOd4qnyXA3TNb3UB0uiqBm46hy1Ka/9ALaPf4KfuMOug5X4MlVGwZre
-	+Ptswu151wTOTt4lLGOdIUHu5ac/FEXqP276TjMj6z9WVi3ixS8Vymn0W7gRzPER
-	pdWK4RUc07yjp3G4FRNhl6dm4q0lSxOB1WJGDjDlkoJ/Fd2zT0ydluzD0NN/UEr3
-	DCiLIKem8hemBIaPHEbGNdXSl2p8wGeK28cEfva1CIdFDvxSKqbaq/31kIbbGIa/
-	msl2BkE//j5+9G/ztxce8A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795633788; x=
-	1795720188; bh=j66RKb5l2l5mpAtY8HXgIUDK8pcSYZliet/rKrMgG/A=; b=I
-	/OulOiyatYVPhKL1fmm+ClcF3feVeR5/A0Mq5Rjsbqu1buVNTZsLMw8Xq0LLgVkE
-	BjNlnQ0IqY9LEOoTF76LY2qDEJqJqe9ADvim24Sa7uHRPBbIk+fRPsnMNPdyTjD3
-	/43UvDfslveRy9J6eWNVEbLcsFN3iePqCHK1rjAELr2BuPB/+BsOATGb9uH8sFU2
-	d8odCIsBKRgWYfRIQnl1bFeqESw+x/EOJ0lNbk58Ly5PU9inTBUY5YT3ZRpWXvQu
-	mmCBDajnF890Wse8vzdl6YNwDz998FZTD5ssIqkPplDG7d9Yjk2GIS2KSXvtmKGv
-	znlFLle15b0+bbD7zhsFw==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795633788; d=squebb.ca;
-	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:NIml3Z9Vncl58qiMPh500dczEA+tJjAtpZauNyR5firOlEg
-	lipG2afZRI//IQ3mUm8WSqOKJli1JrFdTtpBsUGiThySHfL+TurfDznhy8c631NA
-	vB4bgpUKz/wREydCrJmwNemjjBANp3gt0Y17iarj4Km8ERZY1Li39xoolEdYoP7x
-	3BjbOFcgyS+yLbe5jMmZtpyb0/NaXRvEqs0bNo8gHNLz8CnDu9H20V5w7YvXC26W
-	OZbLwGgyZE8xGMddiIMH24DM8wOiCT3mr0aHGfucb8TYjuHpf317dk6yO0vul3nJ
-	QYAU/pfDG6cWd/Pi5J8mXDGcsD2Ci+dxNUvh5KA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:yfuBIi7hVYPol6wkIi7AhdvxOOzxGOf95xvy7CATZ2U=:cDOxVkY4CKLQwsW+7YbuB/+Y4dELsoW9itMN7kM1y4s=;
-X-ME-Sender: <xms:ezIHa4FBndDCl-r6GtGB67uDLGutDP9I-b8yfPqFF_N6y5XbY4rAYA>
-    <xme:ezIHa8KdSTgDeIYjgp1mw5UEBRe_kQ9tMWyzCQn52w1AkFx-wozB9HXzlt60yOV0T
-    TjTuJILaXtPN7XBqU29oLIXfByKYNx17_6YRFC8YaQGzhfVtDyGAs1y>
-X-ME-Proxy-Cause: dmFkZTEAS9i35RwxKrEukZh+BUpLuXgL+MPQH1yJv3Iuj20lOBTFeojOWEwWkQHa+hR1db
-    XR+t/qzQPuZIophWefuEorAkc4cSX9KB8DmDon57BLE1t9ENQkCYj1EqnqERu2nMu+4zHG
-    /0x0dcH3sTbg9iwB1ylIHcJ9Q/hLDAC5XAnad6kRyw1vW/9oHrFm1mC3+5ipj2ZVVGGZcz
-    G4Ky01Z0U4THkD6Jbxv0NmJ4BtQX86bkgc8a0LdLZksWcFUtczQPFI0HVW1TAQMrMsThyu
-    b9oXHe/ODwvKIziL1zzUNF5Nb6N7HvxACQ6LeeuQ3jgZHsP0aCLWljhrMPI4TZTRGj81cg
-    miP9Z9zx12w+UZlQ6GPoBvXiTa39Bc6Kg57keC47Mab2bFy1OD2fxiBrl+PI4t9YZY4hPS
-    gvWl5bENP8jnXR+zb6T1zN4ReuxufWvTkAmq2xhZbX0aDo80qO2pXUr5MbSKm2g1l3BsVq
-    iQ6+Dkl8t5RNSlJ4KmQGxSve7WlyTl7QynVg6Cum6XasCam+YIKY48i5k8PNwunvojAV15
-    7FvWH26idSUlxig26BDH6DVvFqfcMLnbqgenERQ+A0EILFJupBsJnRV5BO89oIcY+biHTy
-    p+8EcC4kZGY/hfhhe8o1/3OhZyGXJ21zHh96Sx/3NE6ttKnW78F5NHjrX1rg
-X-ME-Proxy: <xmx:ezIHa4nyVui12v4JVG58PonCnRTDKzHYkALgCUodnucuzA6dHX16Sw>
-    <xmx:ezIHa0IkuhwKdgpF8djMM3_hVcpXkV6e9eV-o8he4H1m080H4tAltw>
-    <xmx:ezIHa4ReotrRg6Gk5T3pFCPD2MA2sY3t8A-QYNJnJtkfwZAcbe42Rw>
-    <xmx:ezIHaxuVAdtLAoaZKTpXSVaCVMATyJez2WpkhwHZnTy6VrKUWrjU_g>
-    <xmx:fDIHa23ereAQZwqItLv5vLTCeOxC61RFtVSHKWXyytc8kJi9yFvhNqet>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 59EB92C00085; Wed, 25 Nov 2026 14:09:47 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=V2dPPlwZ
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-c5118deebcfso927703566b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 11:14:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795634094; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jP0zZczHultKHHeMuI2lsuxjt4+nccWIgOnTjS5NSDFX2SvNuckTD3cFl2SE9Z+cAQ
+         xjGrQ685wwpEnl7WDnaGg6bXCKmCpnx4zIB28IuxvulR13WczkFlH9/Dpl/NQlvA2O4Z
+         VbKwASEx3qg/JotTp6ElXRNYWvHBDt7GOs6XyPDkpJmqGyL6XH7hyz3C/Cj2nAf5qEyq
+         vlSISw1uPQjROj7q2EA8YtpC43LqS2oXijmDKL3rUYrpcNwZ+GScmMHGlONR+eOuh4W1
+         l903g47LVrf2myvXmjVHAj6hmy4rRM18qTJkaOzKh5Z6XMO0H8etpM3FTOwQAQ6XeiWd
+         ffng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:mime-version:references:in-reply-to
+         :dkim-signature;
+        bh=4Zwr6dBwoEAPGqRmkM3SYrI36353cOO24+3gk4v1MbE=;
+        fh=Xc8gMlWPXq1ZD5D/sSgi4BsJdgtSOcXmQrWq0VjR98c=;
+        b=DBVZ2e1crj9rCoqO6KhPpMpXb7TavJTTMQlnjiGqngsZLRATIeK1fBStXDHXjPSDsK
+         eYfFeNsvg/J3HMUtTDPoTrsae7JG/3TJabxbrj6d4F22U4J5Znmakn5sRt/8b6ezFIhA
+         OXOhRHQJvqaaFnnUL+IBjU3YoLRFABtlAb0EMi+tHapQlijfUT5CJjxcUdzesX7rBw0F
+         5tX2yXCX2+xN0LlZN9RNukc1yCRrgKOnVsgGfQAV1eAGEprxm2cIT4H+aFWy8zs+blao
+         5AnaV38XMT+UUqFSZZEhB9uBxgZ85tSJlvVf+Q1nrSDwk0N+2CFB/ZZRiqzzZmZe0qq/
+         tutg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795634094; x=1796238894; darn=vger.kernel.org;
+        h=content-type:to:subject:message-id:date:from:mime-version
+         :references:in-reply-to:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4Zwr6dBwoEAPGqRmkM3SYrI36353cOO24+3gk4v1MbE=;
+        b=V2dPPlwZIw8RSSYGBiPS9riHjLKCbIKmhGH746G9Vw+WKNGoF1pK34jlxV6OxHliUD
+         +4x8KQFOyHBv93Eslcb6ZQriJzQCg8lh+cuxhnJBCYxOkDEVeu6mFhuZ8Irk8YxD7JUI
+         P0nrT+QohI1JLu+JiKfjBL99fAacsNfpvOFSzRO2EuUFWuP/NxYQnBYkkbBxIr2fZEKs
+         KChRl/Mn72Pp2hAbFTBPHSRIemdxOYB5HdFyXI6WcRruvX4i2bkXwNbHo9fn6WKdOno0
+         LUxobXi06oVo37gsBPfVfk8QKYDCnnLoBAUUHoKmqMFM/0Ywp/PVJ9W/q50ehnOTkPa/
+         1Z6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795634094; x=1796238894;
+        h=content-type:to:subject:message-id:date:from:mime-version
+         :references:in-reply-to:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=4Zwr6dBwoEAPGqRmkM3SYrI36353cOO24+3gk4v1MbE=;
+        b=A42N/W5wQr+yvbxNEgD7Qvt289OHJwLw46668fhRo+9u+H/3FAMvKj8O2rP427tf0B
+         Zz9QlSI5lQqjPy5KQYbBKWLxLTWLKfbh2u1lV2Mhlsm2yaM35lr40MNqORLLzW4hJVc4
+         9jPSZbuTuTbrvzfjbDQsmzFEFe+36C4nANkGUzF0TPrQL6hEu6Bdio5hlCmbP4EYebcL
+         e9yJQK+3wKwhZyrr7pm0B95snkrWur/jTKzBZdx0FC8FHYJxBYlwPfXsI8HnFgEWU9+q
+         VtdpnAJT0++8K8CmHzLdWHypC2keCTqBQwSRCpOe80En2HSMwi82Qv1NiL5/cW7oax9S
+         Nsog==
+X-Forwarded-Encrypted: i=1; AL+hErE8qvLCLRkN+sToBsBe7SZ11l/8grdgUKSyO3D4CsFi/QU0sUN0pl1aIEPWB0vnbhdYozWpbNF0WaqYHXRLwceQL6sY@vger.kernel.org
+X-Gm-Message-State: APuU4Z+6Bx/duoplAnp5J1Sr5FCbHTnqYIzZ3XQMzSBpV1PBEd3EB7iJ
+	X7j9y6ZTM6Jk9GTFP4JR0fvNfwP+PK0YEn93TNngJzyP10+tZWxvjxTb17B8jJKItvgRT/ERX2l
+	AUeMjCh1thfeaQnuwfriiStEavADdJak=
+X-Gm-Gg: AZFdTZfX7Il+t/s4APRwsr0K8FkjcT6sAwB6lFmLBw8KoOgH9Un2rMXcfVBZMl/skr/
+	qZ/CRZPG+cl4HzzYtRiX8wyaVKxmdBPNjzTJ2H3jHQdZzx3GPAV1kwcgl2XUyUVLTehm6sPQqNi
+	OpkmfRbg6elMFcGxAUQofFgjBrqCWQz/yhpec/9F++JpOIXjwmVZOGLG82GHMS7OUVwV+GZO4xM
+	HCTnqq0E3IpUD5xuuYuKrMXLJBlhdeFMDn0MJzO4z+t69z9X7TF4IkuoidLhHo31bnRP6/fglaw
+	zVmY8n65wfk+iOEK9aKDxbluGtgG4lYPyBtUCIu+p0O+IKza1YSAtlVlPJ8eEMcES7hGIgHPbKs
+	J2SDuZA4RPjw2t3z3C/7w06TBblFonh4IN320ag==
+X-Received: by 2002:a17:907:9693:b0:c4c:ddd1:d006 with SMTP id
+ a640c23a62f3a-c513ab47f40mr1465563266b.38.1795634093898; Wed, 25 Nov 2026
+ 11:14:53 -0800 (PST)
+Received: from 1087654160852 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 25 Nov 2026 11:14:53 -0800
+In-Reply-To: <20261126-ymc-82yl-v3-0-e30842671ec3@rong.moe>
+References: <20261126-ymc-82yl-v3-0-e30842671ec3@rong.moe>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,118 +107,33 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: ACbI3-LYI2HV
-Date: Wed, 25 Nov 2026 14:09:27 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Qiling Zhu" <kmatzkaczor244@gmail.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, "Rong Zhang" <i@rong.moe>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
-Cc: 
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
- "Lee Jones" <lee@kernel.org>, "Pavel Machek" <pavel@kernel.org>,
- "Griffin Kroah-Hartman" <griffin@kroah.com>, linux-leds@vger.kernel.org,
- "Vishnu Sankar" <vishnuocv@gmail.com>, "Vishnu Sankar" <vsankar@lenovo.com>,
- "Andrea Rabbaglietti" <rabbagliettiandrea@gmail.com>
-Message-Id: <fa3ebfcf-ae2d-4075-b61a-93559f0e3e6c@app.fastmail.com>
-In-Reply-To: <20261125084644.137506-3-kmatzkaczor244@gmail.com>
-References: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
- <20261125084644.137506-3-kmatzkaczor244@gmail.com>
-Subject: Re: [PATCH v4 2/6] platform/x86: thinkpad_acpi: Extract kbdlight notify
- helpers
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Eduard Aliman <edialiman20@gmail.com>
+Date: Wed, 25 Nov 2026 11:14:53 -0800
+X-Gm-Features: Aa3M54qj30q9oeFFdGB4n11RJStBUerkgEvp5gMN6LeWlAY5SA1VjQECSLu4Xro
+Message-ID: <CAA4HgYJpBHnAVav3SS0b+WZhAG0ryrJ2icNcV+uSbMof5_O6TA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] platform/x86: ideapad-laptop: Trigger the EC on
+ YMC events following Windows behavior
+To: Rong Zhang <i@rong.moe>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Gergo Koteles <soyer@irl.hu>, Ike Panhc <ikepanhc@gmail.com>, 
+	Andrew Kallmeyer <kallmeyeras@gmail.com>, Eduard Aliman <edialiman20@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mahir Faisal <mahirfaisalantiq33@gmail.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Rong,
 
-On Wed, Nov 25, 2026, at 3:46 AM, Qiling Zhu wrote:
-> TP_HKEY_EV_KBD_LIGHT handling in tpacpi_driver_event() reads back the
-> brightness, compares it with the cached value and notifies the LED core
-> inline.  Extract this block into two helpers: kbdlight_notify_level()
-> takes a brightness, compares it with the cached value, updates the cache
-> and notifies the LED core; kbdlight_notify_change() reads the brightness
-> back and calls the former under kbdlight_mutex, like the original inline
-> code did.
->
-> kbdlight_notify_level() expects the caller to hold kbdlight_mutex, so
-> that the proc write path can reuse it with the brightness it has just
-> written in a subsequent change.
->
-> No functional change intended.
->
-> Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
-> Reviewed-by: Rong Zhang <i@rong.moe>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 42 +++++++++++++--------
->  1 file changed, 26 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 31d3721bb..b4b3d7dcc 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -5267,6 +5267,30 @@ static int kbdlight_set_level_and_update(int 
-> level)
->  	return ret;
->  }
-> 
-> +static void kbdlight_notify_level(int level)
-> +{
-> +	struct led_classdev *led_cdev = &tpacpi_led_kbdlight.led_classdev;
-> +
-> +	lockdep_assert_held(&kbdlight_mutex);
-> +
-> +	/*
-> +	 * Check the level actually changed, setting the level
-> +	 * through kbdlight_set_level() also triggers this event.
-> +	 */
-> +	if (level == kbdlight_brightness)
-> +		return;
-> +
-> +	kbdlight_brightness = level;
-> +	led_classdev_notify_brightness_hw_changed(led_cdev, level);
-> +}
-> +
-> +static void kbdlight_notify_change(void)
-> +{
-> +	guard(mutex)(&kbdlight_mutex);
-> +
-> +	kbdlight_notify_level(kbdlight_sysfs_get(NULL));
-> +}
-> +
->  static int kbdlight_read(struct seq_file *m)
->  {
->  	int level;
-> @@ -11593,22 +11617,8 @@ static bool tpacpi_driver_event(const unsigned 
-> int hkey_event)
->  		/* Key events are suppressed by default hotkey_user_mask */
->  		return false;
->  	case TP_HKEY_EV_KBD_LIGHT:
-> -		if (tp_features.kbdlight) {
-> -			enum led_brightness brightness;
-> -
-> -			guard(mutex)(&kbdlight_mutex);
-> -
-> -			/*
-> -			 * Check the brightness actually changed, setting the brightness
-> -			 * through kbdlight_set_level() also triggers this event.
-> -			 */
-> -			brightness = kbdlight_sysfs_get(NULL);
-> -			if (kbdlight_brightness != brightness) {
-> -				kbdlight_brightness = brightness;
-> -				led_classdev_notify_brightness_hw_changed(
-> -					&tpacpi_led_kbdlight.led_classdev, brightness);
-> -			}
-> -		}
-> +		if (tp_features.kbdlight)
-> +			kbdlight_notify_change();
->  		/* Key events are suppressed by default hotkey_user_mask */
->  		return false;
->  	case TP_HKEY_EV_DFR_CHANGE_ROW:
-> -- 
-> 2.56.1
+I tested this v3 series (patches 1-8/8) on top of Linux 7.3.4 (Fedora 45)
+on my Lenovo Yoga 7 14ARP8 (82YM) without setting ymc_ec_trigger=1
+manually (relying on the DMI quirk added in patch 8/8).
 
-Looks good to me
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Mark
+Folding into tablet mode now automatically turns off the keyboard
+backlight, and unfolding restores it as expected.
+
+Tested-by: Eduard Aliman <edialiman20@gmail.com>
+
+Thanks again for adding the quirk for the 14ARP8!
+
+Best regards,
+Eduard Aliman
