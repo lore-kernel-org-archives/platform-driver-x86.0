@@ -1,54 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.75
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795645574;
-	b=aZynFORjTDR/JP/+PsTeGnfXthbo2nBElW2v8XJFxLS7ZqjXNpFRKXYNUM3tMzZfVi6J
-	 8zTbxEYmxz2Vf7UXVa+nAan7gHZu9RMqkLMWnsXWGd7EevfHS99XmLg1MB2BDvE25bvxq
-	 WuPVlRTaASlWx7OHMolz6uUW3GY4jhNnVvr9kcTNkRyNUetw+nxfNfKYeIPiSYp+apbRp
-	 VW8gPQK7NNcTo1jSxbNM3KwObQKA1eyOkv2oz6UMvCAEhZAJqQA8zvxG6gU/mLzEKeXdQ
-	 R7vTKnli5TRdGrqy4zk4SEFz23llghUOiic54gvHm1DmaN6fp0nWjxJz+UTYgHCZVPA==
+	t=1795646020;
+	b=UhW+6L/LlTdqeUd+0PrFUbU14y/F7rQyTJDfW8NOVBf+gZGywLmhLh2Kyq2hNLy22JCQ
+	 j83lU/nAtmJx4jID2tc+AoicsUBbFbrUIAtiWFTqEAFKNIfaei1M97wQcchm/9UuOsYpC
+	 /ur+zpxHC7eJ24/nQIBT7y1jaM0/q+FyCUwdxgoIY7Sma5Hhw5ascguVGpJJGwNM4gD1o
+	 mn32qN1d4D/DKPWfraJyEMePJv5eKpgV3Aj2CS4FNU/vao9zVC2iujoMxso4lLuaJfBWi
+	 XrfxKrZ6DlGMd4R6Cq+7bDA0HhcnELpOLLQwGQRsy87u8MWfXCQDCtZq84WH6Ypf+LA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795645574;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=GOlTtxoLjmhi9GWN4jeIxFdH6/5f9rXla0tb49Wzau0=;
-	b=VBu+MBprJ7Yh/wukWFyIOH3526Gif4eFD/+fjjh5uv7cHJ5XxB60BGri+9Zef7zprqRU
-	 BYBTeF+3Q3YnGEJqrWk1hQw79RkiT179UGefy36qNKdzfpvYta37C/vSsbiJI02uhjBh8
-	 VH8AvqAvGZw9bLpFBny4JQqwi3omsGxW3lbXGXZmtiZHtQyyEx4NSVpbQQI5QXqZIKEpp
-	 yM159AiHEkCteNBhJnpnMV5XcarRJGti1d40MW3I3fc72DjlA/Hhqzz2ln02A32dz1X1P
-	 62Gue/O4yy9/HFlck940mQKH0WR/g4agV+x4E85zZh7P1fySRoIhthNNE2soxGZeBIA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795646020;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=OMJjrlQAA5OxnqC8ZYE1EnS7m2y+hQ1Luhj6opN30CI=;
+	b=IcmZI1PP+zi/Iwc+v0JLwD8Xiq+V4HYLLlI1mdvAhmnPsNGxBB8AU2A30ZHn3zR16Iap
+	 QmPsJ0PPuy8K+axFKFBSw7jXFc3bppD4m+JGFrxBQCa1cl2N/MQ/fXKp7BXWfepJIZS15
+	 GpzRzC+epzhi6HG4MYaYsblBp+UP8g7rJb+CXZeuqSjwZtigpjAXlHSqS9wF9XgznDHZI
+	 yI+ut/MDogHw6YxyFijiHjC9aTlMLB4pOI8mysV29wl3jzzdrLR3lplISs7x3wB9YvJNZ
+	 Surs5OksVIgoXEtHCXR0A0kWlFoTn1L+dEnNMZe8vIAitEtQiC8GmTxm7qx5cQR9h8w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QNDhXAX9;
-	arc=none smtp.remote-ip=91.218.175.75
-Received: from mta0.migadu.com (out-75.mta0.migadu.com [91.218.175.75])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uvbIU76Y;
+	arc=none smtp.remote-ip=209.85.221.42
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9646360A2621
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 22:26:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9646360A2621
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8504C606A323
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 22:33:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8504C606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QNDhXAX9
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=zD8sKd+VxbbCz7vjRU8Ivea6I/NBp6c1QiP6Kcvw3oc=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795645570; v=1; x=1796250370;
- b=QNDhXAX9i3yNi/2qS39AsXZ3+mBkVpy0OgI2tLIzlE5DEWIoPHqV1Rnv+QxKfcw9wOcOb5B/
- 1jSVPQL4wxYuZFNhlv5jo6eXfAjin0/HDDGzW5hEqvrNkue/re6gxqnPqI43kpEND3aSPSksqPN
- eUYqrGEkcqA1RW/Hui/0lEc4=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5507a07e32284521;
-	Wed, 25 Nov 2026 22:26:10 +0000
-X-Mizu-Trace-ID: 5507a07e32284521
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <94785b4d-c807-4465-84a1-25ae317df4b8@linux.dev>
-Date: Wed, 25 Nov 2026 23:26:07 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uvbIU76Y
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-4ac109a8a12so3713731f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 14:33:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795646019; x=1796250819; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=OMJjrlQAA5OxnqC8ZYE1EnS7m2y+hQ1Luhj6opN30CI=;
+        b=uvbIU76YmRbB2UhE9D1LZZBa/l8dRxut0yxVt2071vvI5AcMIHK/ZU250BdANmVxLJ
+         CBCbLMNkNzt6e2LoHOrS+0tu55XSGDiR8UjH2oeGnAjp+tAiHGEmcWQhaPo+zMo2huEW
+         DAzkB4sCvP0yDkbimY4BbPA+G6WTRvK/ADHhmW/55NIjJU6ZpaSWnVI35VkrlXAE8wqg
+         BSHUd7LdZZ3hCsQgxgdwhH59P0ZaDbkdZwhCOwy2J3LdmxCEFbPGXwyvb8brtoNMvJU8
+         7cztvg+WU5t6V8dZk76tuDfjverFh6VRX1dQHsA5Kaux0aGngxwB1697P0KsmC7tRv1q
+         2SCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795646019; x=1796250819;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=OMJjrlQAA5OxnqC8ZYE1EnS7m2y+hQ1Luhj6opN30CI=;
+        b=XXgpnjVO9JsBgqN33QF+PqVcCQ5DKOewmow71kRWHZxqcH1zfBhcS8v4+dWXDa4DOc
+         h1cj0MbEH/KYrjiFgwp6S8mlgO70Ap/ORKMl1BjkjuLi9zzNnPMywvr6s9eGaALPvmLs
+         O44Uwu/FVBxY9B9jWi/2b3C65onuK37Ku8sR4Qir8tAveK3cJ4RDhzhnUcS20DX3sdrR
+         Q+VncEnFcr7eBue39JmnOf/065MkmsDZ+yuBOh7ap/hKHDekdNkskjoSFyaDvrgidt4+
+         RpISvjMj5g+wmKgFe4Ou8LRCaoRJGB/IR3EViubyxucRrEA7wpiF2NQpGWAR5bhi0Djm
+         7ETg==
+X-Gm-Message-State: APuU4Z+ZFhX+aX8uHUAzQRjUhwOsvOIsD5lKX++wYihUG7/FU5LTHkQQ
+	yoyuj59r0lI+a5Ki86nI9qxHenRByZGYCcu4l+2XZ+QnOk9kmnfMHDT3xDRXSKmRIWhRkw==
+X-Gm-Gg: AZFdTZczos1pght4TUgmD54v6aCc2rv/TCQ21RsAoSA1eOTPUZefBzyhgBudu+6neHz
+	v/FfLdrdbvqfJF9P/ooHunnzu0mx9KMiCAFWqYDtpnreS1pz3kwRyblmoqnhglvtJz3EvQczRgG
+	9X/O0e8+kGF0vX47cV7sRqxTSHkihSYkzllJjbNIvrtgKjayUO/drW1BGWSnYOKR5iCn9m69ir8
+	3bw6z7eDfZ50wSRBCDS1bpDNAXr1rQbna4rJk48Lqu8bxAIkHAo2arbymtHKyhCglu78OirRsT+
+	JNkhiT4On+w3pXsqoUwBHUkb3uOx1K/F3RNTs3jYjP4tadcSO8V71Yu63yxp98N4a3eRM8ZwCGB
+	ZWqM8o/Mz5cs4Dt16FSdiw53XvmjplcnGcI5nzMOfo02b8tU7mKcxYXJLMeDCZ0v68+h+QutUIw
+	1Jr/u8zsO7BfwMyFW/g0qrPUyGJIAg6MidehwiWOzqnZhGvVq9iwli6sv/ymEajZ4lkPrbV9k9Z
+	ElNuAiM7qBcWUXdI3QGDWI9rs/tOfxShqqiz/EzDXnjB9ptjhzWOseQw1TCDDCFwMOWiC92vW0o
+	fGXxaafJ/cHxoP62O0op4SVA+xA=
+X-Received: by 2002:a05:600c:1d0a:b0:4a2:59:f568 with SMTP id 5b1f17b1804b1-4bb8880ef6amr415788395e9.14.1795646018700;
+        Wed, 25 Nov 2026 14:33:38 -0800 (PST)
+Received: from archlinux ([135.136.39.206])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb90660cb4sm503423905e9.2.2026.11.25.14.33.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 14:33:38 -0800 (PST)
+From: Martiya Aryan Mehr <martiya.ar@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: qby140326@gmail.com,
+	ilya.gladyshev@linux.dev,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v2 1/1] platform/x86: bitland-mifs-wmi: add profile support for Xiaomi TM2309
+Date: Thu, 26 Nov 2026 02:03:22 +0330
+Message-ID: <20261125223322.3720-1-martiya.ar@gmail.com>
+X-Mailer: git-send-email 2.56.1
+In-Reply-To: <6610f046-b98d-06ad-2fd9-183ce33ad88f@linux.intel.com>
+References: <6610f046-b98d-06ad-2fd9-183ce33ad88f@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -58,143 +98,84 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] ASUS TUF Gaming A16 FA608UM: working backlight device
- differs between MUX modes
-To: Daniel Dadap <ddadap@nvidia.com>,
- =?UTF-8?Q?Riccardo_Zangh=C3=AD?= <riccardo.z.dev@gmail.com>
-Cc: Armin Wolf <W_Armin@gmx.de>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "hansg@kernel.org" <hansg@kernel.org>,
- "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
- "luke@ljones.dev" <luke@ljones.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-References: <CAMnz_-Dgg2eCgZxcCaGuKPV=3-kCfg7ajd9w=vs2fGL-Cb6hvw@mail.gmail.com>
- <f1b7d729-771a-4fba-89c0-996a8a168126@linux.dev>
- <ce46d69f-2a3e-45fe-abe2-f643f683d09f@gmx.de>
- <CAMnz_-Dztuj3CRsxcVnfe2=OCB3tTJzK6Lu7-AKfkbuqn5N-UQ@mail.gmail.com>
- <DSVPR12MB66402023AE5250384B26515942BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
- <CAMnz_-C02J6CznPD68GgWCPCWEDSGsq6hoC+AJhsZjw39H+hhQ@mail.gmail.com>
- <DSVPR12MB66402044074D6A8B1EDC584825BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
-Content-Language: en-US
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <DSVPR12MB66402044074D6A8B1EDC584825BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+From: Martiya Aryan Mehr <Martiya.ar@gmail.com>
 
-On 11/25/26 23:14, Daniel Dadap wrote:
-> On Wed, Nov 25, 2026 at 07:03:18PM +0100, Riccardo Zanghí wrote:
->> On Wed, 25 Nov 2026 at 07:13, Daniel Dadap <ddadap@nvidia.com> wrote:
->>> So, as an experiment, if you could read the LSb at physical address
->>> 0xFEDD83B8 in both iGPU and dGPU modes, and report on the value, that
->>> would help.
->> Hi Daniel,
->>
->> Thanks for the detailed analysis. I believe I received your full message by
->> mail.
-> Right, I only got bounces from the lists, not the individual recipients, so
-> you very likely got three copies. (Sorry.)
->
->> Result of: od -An -t x1 -j $((0xFEDD83B8)) -N 1 /dev/mem
->>
->> integrated mode:              4a  (bit 0 = 0)
->> dGPU mode (gpu_mux_mode = 0): 07  (bit 0 = 1)
->>
->> So G40C does differ between the two modes. I can try the DSDT
->> override next and report back, or test any other patch.
->>
-> Yes, I think doing the DSDT override as the next experiment makes the most
-> sense. The ASL should be amended to read:
->
->> If ((MODF == Zero))
->> {
->>     If ((^^SBRG.EC0.G40C == One))
->>     {
->>         Return (One)
->>     }
->>     Else
->>     {
->>         Return (0x02)
->>     }
->> } 
-> which I suspect will reflect the design intent better.
->
-> You could also try patching the kernel instead, maybe with something along
-> these lines (completely untested; you'll need to supply your own DMI ID
-> strings from your machine's SMBIOS):
->
+Add platform profile support for Xiaomi Redmi Book Pro 16 2024
+(TM2309), using firmware QFAN values 2, 1, 3 and 4 for low-power,
+balanced, performance and max-power, respectively.
 
-I can ask ASUS to try fixing things that are out of spec, but we have to
-prepare to the eventuality that it won't get touched.
+The firmware can report QFAN 0 as a stale balanced state after
+resume. Map it to balanced for readback, but mark it non-settable
+so selecting balanced writes QFAN 1.
 
-An ACPI override means secure boot won't work on these models,
-so despite being (probably) the best thing to so it has its own downside.
+Add a battery-specific performance entry and skip the AC-type
+check, which is not implemented by this model's firmware.
 
-> --- a/drivers/acpi/video_detect.c
-> +++ b/drivers/acpi/video_detect.c
-> @@ -131,6 +131,44 @@ static int video_detect_portege_r100(const struct dmi_system_id *d)
->  	return 0;
->  }
->  
-> +struct video_detect_runtime_dependent_data {
-> +	phys_addr_t address;
-> +	u8 mask;
-> +	enum acpi_backlight_type backlight_type_if_true;
-> +	enum acpi_backlight_type backlight_type_if_false;
-> +};
-> +
-> +static struct video_detect_runtime_dependent_data asus_a16_dmi_drvdata = {
-> +	.address = 0xfedd83b8,
-> +	.mask = 1,
-> +	.backlight_type_if_true = acpi_backlight_native,
-> +	.backlight_type_if_false = acpi_backlight_nvidia_wmi_ec,
-> +};
-> +
-> +static int video_detect_runtime_dependent(const struct dmi_system_id *d)
-> +{
-> +	const struct video_detect_runtime_dependent_data *data = d->driver_data;
-> +	void __iomem *map;
-> +	u8 val;
-> +
-> +	map = ioremap(data->address, 1);
-> +	if (!map) {
-> +		pr_warn("Unable to map backlight selection register at %pa; skipping quirk\n",
-> +		       &data->address);
-> +		return 0;
-> +	}
-> +
-> +	val = readb(map);
-> +	iounmap(map);
-> +
-> +	if (val & data->mask)
-> +		acpi_backlight_dmi = data->backlight_type_if_true;
-> +	else
-> +		acpi_backlight_dmi = data->backlight_type_if_false;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct dmi_system_id video_detect_dmi_table[] = {
->  	/*
->  	 * Models which should use the vendor backlight interface,
-> @@ -986,6 +1024,19 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
->  		DMI_MATCH(DMI_PRODUCT_NAME, "Mipad2"),
->  		},
->  	},
-> +
-> +	/*
-> +	 * This notebook is supposed to select the backlight control device
-> +	 * based on runtime state readable from the EC's MMIO region, but
-> +	 * ends up requesting the EC backlight driver regardless of the state.
-> +	 */
-> +	{
-> +	 .callback = video_detect_runtime_dependent,
-> +	 .matches = {
-> +		 /* XXX supply appropriate DMI_MATCH() macros here */
-> +		},
-> +	 .driver_data = &asus_a16_dmi_drvdata,
-> +	},
->  	{ },
->  };
->  
+Link: https://lore.kernel.org/all/20260930015058.3076905-1-uselessfire@gmail.com/
+Signed-off-by: Martiya Aryan Mehr <Martiya.ar@gmail.com>
+---
+
+Changes in v2:
+- Move TM2309 profile definitions before TM2424.
+- Move the TM2309 DMI entry before TM2424.
+
+ChatGPT (GPT-6) assisted with analyzing the existing profile-entry
+implementation, interpreting firmware observations, proposing the
+TM2309 profile table and DMI match, and drafting the changelog.
+The submitter reviewed the changes and tested the profile behavior
+on the device using the local development driver.
+
+Both patched and unmodified driver objects were built against
+linux-next-20261120 without compiler warnings. The exact standalone
+patch was not independently loaded as a module; full modpost and
+runtime testing of that isolated patch were not performed.
+
+ drivers/platform/x86/bitland-mifs-wmi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+index f71c93a..e0f7911 100644
+--- a/drivers/platform/x86/bitland-mifs-wmi.c
++++ b/drivers/platform/x86/bitland-mifs-wmi.c
+@@ -139,6 +139,22 @@ static const struct bitland_mifs_quirks tm2135_quirks = {
+ 	.skip_ac_type_check = true,
+ };
+ 
++/* Xiaomi Redmi Book Pro 16 2024 (TM2309) */
++static const struct bitland_profile_entry tm2309_profile_entries[] = {
++	{ PLATFORM_PROFILE_LOW_POWER, 2 },
++	{ PLATFORM_PROFILE_BALANCED, 0, .no_set = true },
++	{ PLATFORM_PROFILE_BALANCED, 1 },
++	{ PLATFORM_PROFILE_PERFORMANCE, 3 },
++	{ PLATFORM_PROFILE_PERFORMANCE, 3, .battery = true },
++	{ PLATFORM_PROFILE_MAX_POWER, 4 },
++};
++
++static const struct bitland_mifs_quirks tm2309_quirks = {
++	.profile_entries = tm2309_profile_entries,
++	.num_profile_entries = ARRAY_SIZE(tm2309_profile_entries),
++	.skip_ac_type_check = true,
++};
++
+ static const struct bitland_profile_entry tm2424_profile_entries[] = {
+ 	{ PLATFORM_PROFILE_LOW_POWER,   0x02 },
+ 	{ PLATFORM_PROFILE_LOW_POWER,   0x0a, true },
+@@ -169,6 +185,13 @@ static const struct dmi_system_id bitland_mifs_dmi_table[] = {
+ 		},
+ 		.driver_data = (void *)&tm2135_quirks,
+ 	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2309"),
++		},
++		.driver_data = (void *)&tm2309_quirks,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
+-- 
+2.56.1
+
